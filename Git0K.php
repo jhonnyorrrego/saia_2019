@@ -15,11 +15,14 @@ class Git0K extends Git {
 	 */
 	protected $origin;
 	
+	/**
+	 * Guarda el repositorio local pasado en el constructor
+	 */
 	protected $repo;
 	
 	function __construct($repo_path) {
 		$this->repo_path = $repo_path;
-		$this->repo = self::open('/home/cerok/proyectos/refactor-git/saia_base');
+		$this->repo = parent::open($repo_path);
 	}
 	
 	function get_repo() {
