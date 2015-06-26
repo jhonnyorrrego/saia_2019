@@ -1,0 +1,68 @@
+[cerok@cerokgm saia_base]$ echo "Modificacion local\n" > test.txt 
+[cerok@cerokgm saia_base]$ git status -b --porcelain
+## master...origin/master [ahead 1]
+ M test.txt
+
+[cerok@cerokgm saia_base]$ touch test2.txt
+[cerok@cerokgm saia_base]$ git status -b --porcelain
+## master...origin/master [ahead 1]
+ M test.txt
+?? test2.txt
+
+[cerok@cerokgm saia_base]$ git add .
+[cerok@cerokgm saia_base]$ git status -b --porcelain
+## master...origin/master
+M  test.txt
+A  test2.txt
+
+[cerok@cerokgm saia_base]$ git status -b --porcelain
+## master...origin/master
+M  test.txt
+AM test2.txt
+
+[cerok@cerokgm saia_base]$ git commit -m "archivo de prueba test2.txt"
+[master d2094ca] archivo de prueba test2.txt
+ 2 files changed, 1 insertion(+)
+ create mode 100644 test2.txt
+
+[cerok@cerokgm saia_base]$ git status -b --porcelain
+## master...origin/master [ahead 1]
+ M test2.txt
+
+Si no proporciona usuario y contraseña
+
+Array ( [0] => master [1] => test2.txt ) 
+Exception Object ( [message:protected] => fatal: could not read Username for 'http://laboratorio.netsaia.com:82': No existe el dispositivo o la dirección [string:Exception:private] => [code:protected] => 0 [file:protected] => /home/cerok/proyectos/workspace_php/TestGitLab/Git.php [line:protected] => 330 [trace:Exception:private] => Array ( [0] => Array ( [file] => /home/cerok/proyectos/workspace_php/TestGitLab/Git.php [line] => 345 [function] => run_command [class] => GitRepo [type] => -> [args] => Array ( [0] => /usr/bin/git push --tags origin master ) ) [1] => Array ( [file] => /home/cerok/proyectos/workspace_php/TestGitLab/Git.php [line] => 674 [function] => run [class] => GitRepo [type] => -> [args] => Array ( [0] => push --tags origin master ) ) [2] => Array ( [file] => /home/cerok/proyectos/workspace_php/TestGitLab/conectar.php [line] => 18 [function] => push [class] => GitRepo [type] => -> [args] => Array ( [0] => origin [1] => master ) ) ) [previous:Exception:private] => ) 
+
+
+Falla al hacer push porque hay cambios para descargar
+
+
+[cerok@cerokgm saia_base]$ git push --tags origin master
+To http://laboratorio.netsaia.com:82/giovanni.montes/saia_base.git
+ ! [rejected]        master -> master (fetch first)
+error: failed to push some refs to 'http://laboratorio.netsaia.com:82/giovanni.montes/saia_base.git'
+hint: Updates were rejected because the remote contains work that you do
+hint: not have locally. This is usually caused by another repository pushing
+hint: to the same ref. You may want to first integrate the remote changes
+hint: (e.g., 'git pull ...') before pushing again.
+hint: See the 'Note about fast-forwards' in 'git push --help' for details.
+
+Hacer fetch para obtener los cambios
+
+[cerok@cerokgm saia_base]$ git fetch
+Pass a valid window to KWallet::Wallet::openWallet().
+Pass a valid window to KWallet::Wallet::openWallet().
+remote: Counting objects: 3, done.
+remote: Compressing objects: 100% (2/2), done.
+remote: Total 3 (delta 1), reused 0 (delta 0)
+Unpacking objects: 100% (3/3), done.
+From http://laboratorio.netsaia.com:82/giovanni.montes/saia_base
+ * [new branch]      master     -> origin/master
+
+Falla el auto merge
+
+[cerok@cerokgm saia_base]$ git merge origin/master
+Auto-merging test.txt
+CONFLICT (content): Merge conflict in test.txt
+Automatic merge failed; fix conflicts and then commit the result.
