@@ -21,21 +21,13 @@ echo "<br>";
 //nuevo repo con varios remotes
 echo "<br>";
 
-<<<<<<< HEAD
 /*try {
-=======
-try {
->>>>>>> 7bfc6d2d0b9b12fa525ba550fe0b4976292acdfa
     echo "cambio credenciales: " . $repo->change_remote_credentials("origin", "info.cerok", "cerok_saia", $url);
 } catch (Exception $e) {
     $estado = $e;
 }
 print_r($estado);
-<<<<<<< HEAD
 */
-=======
-
->>>>>>> 7bfc6d2d0b9b12fa525ba550fe0b4976292acdfa
 //die();
 try {
 	$estado = $repo->push_with_credentials("origin", "master", "info.cerok", "cerok_saia", $url);
