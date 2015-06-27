@@ -327,8 +327,11 @@ class GitRepo {
 		}
 
 		$status = trim(proc_close($resource));
-		if ($status) throw new Exception($stderr);
-
+		if ($status) {
+		    echo "Error: $status <br>";
+		    throw new Exception($stderr);
+		}
+		    echo "Exito: $status <br>";
 		return $stdout;
 	}
 
@@ -342,6 +345,7 @@ class GitRepo {
 	 * @return  string
 	 */
 	public function run($command) {
+	    echo "Ejecutando comando: $command <br>";
 		return $this->run_command(Git::get_bin()." ".$command);
 	}
 
@@ -680,12 +684,24 @@ class GitRepo {
 	 * Accepts the name of the remote and local branch
 	 *
 	 * @param string $remote
-	 * @param string $branch
+	 * @param string $user
+	 * @param string $pass
+	 * @param string $url
 	 * @return string
 	 */
-	public function change_credentials($remote, $user, $pass, $url) {
+	public function change_remote_credentials($remote, $user, $pass, $url) {
 		//remote set-url origin http://laboratorio.netsaia.com:82/usuario/saia_base.git
-		return $this->run("push --tags $remote $branch");
+	    $url_data = parse_url($url);
+	    //si url = http://usuario:clave@laboratorio.netsaia.com:82/giovanni.montes/saia_cerok.git
+	    //Array ( [scheme] => http [host] => laboratorio.netsaia.com [port] => 82 [user] => usuario [pass] => clave [path] => /giovanni.montes/saia_cerok.git )
+	    if($url_data["user"] !== $user) {
+	        $url_data["user"] = $user;
+	    }
+	    $url_data["pass"] = $pass;
+	    $repo_name = explode("/", $url_data['path'])[2];
+	    $nueva_url= sprintf("%s://%s:%s@%s:%s/%s/%s",$url_data['scheme'],$url_data['user'],$url_data['pass'],$url_data['host'],$url_data[port],$url_data['user'],$repo_name);
+	    //return  $nueva_url;
+	    return $this->run("remote set-url $remote $nueva_url");
 	}
 
 	public function list_remotes() {
