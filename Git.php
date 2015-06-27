@@ -706,7 +706,11 @@ class GitRepo {
 	    $repo_name = explode("/", $url_data['path'])[2];
 	    $nueva_url= sprintf("%s://%s:%s@%s:%s/%s/%s",$url_data['scheme'],$url_data['user'],$url_data['pass'],$url_data['host'],$url_data[port],$url_data['user'],$repo_name);
 	    //return  $nueva_url;
+<<<<<<< HEAD
 	    $this->run("remote set-url $remote $nueva_url");
+=======
+	    return $this->run("remote set-url $remote $nueva_url");
+>>>>>>> 7bfc6d2d0b9b12fa525ba550fe0b4976292acdfa
 	}
 
 	public function list_remotes() {
