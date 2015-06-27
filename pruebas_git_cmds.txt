@@ -66,3 +66,6 @@ Falla el auto merge
 Auto-merging test.txt
 CONFLICT (content): Merge conflict in test.txt
 Automatic merge failed; fix conflicts and then commit the result.
+
+El archivo queda con ===> y <==== hay que editarlo y arreglar
+
