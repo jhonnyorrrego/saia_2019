@@ -309,6 +309,7 @@ class GitRepo {
 		 *
 		 * If $_ENV is not empty, then we can just copy it and be done with it.
 		 */
+		
 		if(count($_ENV) === 0) {
 			$env = NULL;
 			foreach($this->envopts as $k => $v) {
@@ -317,6 +318,10 @@ class GitRepo {
 		} else {
 			$env = array_merge($_ENV, $this->envopts);
 		}
+		/*echo "Entorno: ";
+		var_dump($env);
+		echo "Ruta: ";
+		var_dump($this->repo_path);*/
 		$cwd = $this->repo_path;
 		$resource = proc_open($command, $descriptorspec, $pipes, $cwd, $env);
 
@@ -328,10 +333,10 @@ class GitRepo {
 
 		$status = trim(proc_close($resource));
 		if ($status) {
-		    echo "Error: $status <br>";
+		    //echo "Error: $status <br>";
 		    throw new Exception($stderr);
 		}
-		    echo "Exito: $status <br>";
+		    //echo "Exito: $status <br>";
 		return $stdout;
 	}
 
@@ -345,7 +350,7 @@ class GitRepo {
 	 * @return  string
 	 */
 	public function run($command) {
-	    echo "Ejecutando comando: $command <br>";
+	    //echo "Ejecutando comando: $command <br>";
 		return $this->run_command(Git::get_bin()." ".$command);
 	}
 
@@ -679,8 +684,10 @@ class GitRepo {
 	}
 
 	public function push_with_credentials($remote, $branch, $user, $pass, $url) {
-	    $this->change_remote_credentials($remote, $user, $pass, $url);
+	    $push_url = $this->change_remote_credentials($remote, $user, $pass, $url);
+	    var_dump($push_url);
 		return $this->run("push --tags $remote $branch");
+		//return $this->run("push --tags $push_url");
 	}
 	
 	/**
@@ -703,10 +710,17 @@ class GitRepo {
 	        $url_data["user"] = $user;
 	    }
 	    $url_data["pass"] = $pass;
-	    $repo_name = explode("/", $url_data['path'])[2];
-	    $nueva_url= sprintf("%s://%s:%s@%s:%s/%s/%s",$url_data['scheme'],$url_data['user'],$url_data['pass'],$url_data['host'],$url_data[port],$url_data['user'],$repo_name);
-	    //return  $nueva_url;
-	    $this->run("remote set-url $remote $nueva_url");
+	    //$repo_name = explode("/", $url_data['path'])[2]; //debe ser el propieatio del repo y no el que hace el push
+	    $repo_name = $url_data['path'];
+	    $nueva_url= sprintf("%s://%s:%s@%s:%s%s",$url_data['scheme'],$url_data['user'],$url_data['pass'],$url_data['host'],$url_data['port'],$repo_name);
+	    //para no exponer las credenciales: 1. borrar el remoto 2. crear uno nuevo con la nueva url.
+	    //Esto implica tener acceso rw sobre .git/config
+	    //$this->run("remote rm $remote");
+	    //return $this->run("remote add $remote $nueva_url");
+	    //Mientras se soluciona devolver la url
+	    //Este comando tambien necesita permisos de escritura sobre .git/config, pero no devuelve exception
+	    return $this->run("remote set-url $remote $nueva_url");
+	    //return $nueva_url;
 	}
 
 	public function list_remotes() {
