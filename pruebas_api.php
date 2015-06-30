@@ -1,18 +1,14 @@
 <?php
 require_once('Git.php');
-$repo = Git::open('/home/cerok/proyectos/refactor-git/saia_base');  // -or- Git::create('/path/to/repo')
+ini_set('display_errors', 1);
+$repo = Git::open('/Users/giovanni/saia_r2/saia_base');  // -or- Git::create('/path/to/repo')
+//$repo = Git::open('/home/cerok/proyectos/refactor-git/saia_base');
 //$repo->add('.');
 //$repo->commit('Some commit message');
 //$repo->push('origin', 'master');
-//$format = "El autor de %h fue %an, %ar%nEl titulo fue >>%s<<%n";
-$format = "oneline";
-//echo str_replace("\n","<br>", $repo->log($format));
-//echo $repo->status(true);
-
-//print_r($repo->status_porcelain());
 
 // origin por defecto, es necesario poner el nombre del remoto en otros casos
-$url = 'http://usuario:clave@laboratorio.netsaia.com:82/usuario/saia_base.git';
+$url = 'http://laboratorio.netsaia.com:82/giovanni.montes/saia_base.git';
 
 //print_r(parse_url($url));
 echo "<br>";
@@ -33,8 +29,10 @@ try {
 	$estado = $repo->push_with_credentials("origin", "master", "info.cerok", "cerok_saia", $url);
 } catch (Exception $e) {
 	$estado = $e;
+	//la cadena de respuesta tiene el texto [rejected] o
+	//! [remote rejected] master -> master (pre-receive hook declined)
 }
 
-print_r($estado);
+var_dump($estado);
 
 ?>
