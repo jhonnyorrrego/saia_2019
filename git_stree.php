@@ -275,7 +275,7 @@ function get_root_key($nombre)
 // and its WD prefix subdirectory.
 function get_subtree_list()
 {
-	git config --local $--get-regexp 'remote\.stree.*\.url' | sort | while read key url; do
+	git config --local --get-regexp 'remote\.stree.*\.url' | sort | while read key url; do
 		/*local*/ $name="$(sed 's/remote\.stree-\|\.url//g' <<< "$key")"
 				if ( 'simple' == "$1" ) {
 				echo "$name"
