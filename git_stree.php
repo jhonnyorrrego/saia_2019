@@ -37,8 +37,8 @@ $has_tr=true;
 
 
 // Symbols
-$CHECK="✔";
-$CROSS="✖";
+$CHECK="OK";
+$CROSS="KO";
 
 // Grabbing CLI arguments and the main subcommand
 $args=("$@");
@@ -51,6 +51,8 @@ $subcmd=$args[0];
 
 function fake_git($comando, $resto) {
 	//ejecutar comando git
+	echo "git $comando $resto";
+	return true;
 }
 
 /**Command: `git stree add name -P prefix url [branch]`
@@ -79,20 +81,25 @@ function add_subtree()
 	ensure_attached_head();
 	ensure_no_stage();
 
-    (print("git remote add -t $branch $remote_name $url") &&
-	print("git fetch --quiet $remote_name") &&
-	print("git config --local stree.$root_key.prefix $prefix") &&
-	print("git config --local stree.$root_key.branch $branch") &&
-	print("git read-tree --prefix=$prefix -u $remote_name/$branch") &&
-	print("git commit -m '[STree] Added stree \'$root_key\' in $prefix'") &&
-	print("git config --local stree.$root_key.latest-sync" . fake_git("rev-parse --short HEAD)") &&
-	print('') &&
-	yay ("STree '$root_key' configured, 1st injection committed."))
-	 or 
-		(print('') &&
-		print('git remote rm "$remote_name"') &&
-		print('git config --local --remove-section "stree.$root_key"') &&
-		error(false, "STree '$root_key' could not be configured."));
+   $status = fake_git("remote", "add -t $branch $remote_name $url") &&
+	fake_git("fetch", "--quiet $remote_name");
+	$status = $status &&
+	   fake_git("config", "--local stree.$root_key.prefix $prefix");
+	$status = $status &&
+	   fake_git("config", "--local stree.$root_key.branch $branch");
+	$status = $status &&
+	   fake_git("read-tree", "--prefix=$prefix -u $remote_name/$branch");
+	$status = $status &&
+	   fake_git("commit", "-m '[STree] Added stree \'$root_key\' in $prefix'");
+	$status = $status &&
+	   fake_git("config", "--local stree.$root_key.latest-sync") . fake_git("rev-parse --short HEAD)");
+	$status = $status &&
+	yay ("STree '$root_key' configured, 1st injection committed.");
+	if(!$status) {
+		$status = fake_git("remote", "rm $remote_name") &&
+		fake_git("config", "--local --remove-section stree.$root_key");
+		$status = $status && error(false, "STree '$root_key' could not be configured.");
+	}
 }
 
 // Helper: determines whether a branch exists
@@ -103,7 +110,7 @@ function branch_exists($rama) {
 }
 
 // Helper: maintains detected stree conflict state in a file, to work across subshell boundaries.
-function has_conflicts($opc)
+function has_conflicts($opc="otro")
 {
 	/*local*/ $sentinel=fake_git("rev-parse", "--git-dir") . "/STREE_CONFLICTS";
 	switch($opc) {
@@ -117,7 +124,7 @@ function has_conflicts($opc)
 		default:  
 			if(file_exists($sentinel)) {
 			$contenido = file_get_contents($sentinel);
-			return "yes" == $contenido;
+			 return "yes" == $contenido;
 			}
 			return false;
 	}
@@ -130,31 +137,43 @@ function check_conflicting_strees($path)
 {
 	/*local*/ //$path="$1"
 			/*local*/ $list=get_subtree_list();
-			has_conflicts reset
+			has_conflicts('reset');
+			
+			
+			foreach ($list as $value) {
+			    $tupla = preg_split( "/[\s]+/" ,  $value );//deben ser 3
+			    $tree = $tupla[0];
+			    $remoting = $tupla[1];
+			    $prefix = $tupla[2];
+			    if($prefix != $path) {
+			        continue;
+			    }
+				if(!has_conflicts()) {
+				    message( $YELLOW, "Existing strees use that prefix already:");
+				}						
+				message($YELLOW, "  $stree ($remoting)");
+						has_conflicts('yes');
+			}
+						if(!has_conflicts()) {
+						    return;
+						}	
+						has_conflicts('reset');
 
-			echo "$list" | while read stree remoting prefix; do
-				[ "$prefix" != "$path" ] && continue
-
-				has_conflicts || message $YELLOW "Existing strees use that prefix already:"
-						message $YELLOW "  • $stree ($remoting)"
-						has_conflicts yes
-						done
-
-						has_conflicts || return
-						has_conflicts reset
-
-						confirm N "Do you want to proceed and setup another stree with that same prefix?"
+						//confirm('N', "Do you want to proceed and setup another stree with that same prefix?");
 }
 
 // Command: `git stree clear`
-function clear_subtrees
+function clear_subtrees()
 {
-	if ( -n "${args[1]}" ) {
-	error false "This is not the command you're looking for.
-	git stree clear removes all subtrees defined for this repository.  You
-	specified a specific subtree (${args[1]}) on the command line, so you probably
-	want:
-	git stree rm ${args[1]}"
+	if ( !empty(${args[1]}) ) {
+	    $texto = <<<EOT
+	       This is not the command you are looking for.
+	       git stree clear removes all subtrees defined for this repository.  You
+	       specified a specific subtree (${args[1]}) on the command line, so you probably
+	       want:
+	       git stree rm ${args[1]}
+	   EOT;
+	error(false, $texto);
 }
 
 	if ( "$subcmd" == "forget" ) {
@@ -193,7 +212,7 @@ function confirm
 // Helper: discreet info message.  This will show up in gray on STDOUT.
 function discreet()
 {
-	message $GRAY "$@"
+	message ($GRAY, "$@");
 }
 
 // Helper: makes sure we're not on a detached HEAD
@@ -238,9 +257,10 @@ function error($show_usage, $mensaje) {
 {
 	//show_usage=$1;
 	//shift;
-	message $RED "︎$CROSS ""$@"$'\n' >&2
+	message($RED, $message);
 	$show_usage && usage();
-	kill -s ABRT $$
+	//kill -s ABRT $$
+	die();
 }
 
 // Helper: computes a backport branch name based on the passed CLI name.
@@ -273,20 +293,29 @@ function get_root_key($nombre)
 // Helper: returns a list of 3-tuples, one for each defined stree.  Tuples are
 // three quoted strings: the stree’s name, its remoting (remote-name/remote-branch),
 // and its WD prefix subdirectory.
-function get_subtree_list()
+function get_subtree_list($par)
 {
-	git config --local --get-regexp 'remote\.stree.*\.url' | sort | while read key url; do
-		/*local*/ $name="$(sed 's/remote\.stree-\|\.url//g' <<< "$key")"
-				if ( 'simple' == "$1" ) {
-				echo "$name"
-				else
-					/*local*/ $branch="fake_git("config --local $"stree.$name.branch")"
-							/*local*/ $prefix="fake_git("config --local $"stree.$name.prefix")"
-
-									printf "%q %q %q\n" "$name" "$url@$branch" "$prefix"
-									fi
-									done
+	$git_cfg = git_fake("config", "--local --get-regexp 'remote\.stree.*\.url'");
+    asort($git_cfg);
+    $resp = array();
+    foreach ($git_cfg as $value) {
+        list($key, $url) = explode(' ', $value);;
+   		//$name="$(sed 's/remote\.stree-\|\.url//g' <<< "$key")"
+   		$pattern = "remote\.stree-\|\.url";
+   		    preg_replace("/".$pattern."/", "", $key);
+		if ( 'simple' == $par ) {
+			array_push($resp, $name);
+		}
+		else {
+			/*local*/ $branch=fake_git("config", "--local stree.$name.branch");
+			/*local*/ $prefix=fake_git("config", "--local stree.$name.prefix");
+			$tupla = sprintf("%s %s %s\n", $name, "$url@$branch", $prefix);
+			array_push($resp, $tupla);
+		}
+    }
+    return $resp;
 }
+
 
 // Command: `git stree list [-v]`
 function list_subtrees()
@@ -408,25 +437,31 @@ function pull_subtree()
 // from upstream, then the new set is pushed back.
 function push_subtree()
 {
-  /*local*/ $name=$(require_name)
+  /*local*/ $name=require_name();
+    $numargs = func_num_args();
+    echo "Number of arguments: $numargs \n";
+    if ($numargs >= 2) {
+        echo "Second argument is: " . func_get_arg(1) . "\n";
+    }
+  ensure_no_stage();
+  ensure_stree_defined($name);
 
-  ensure_no_stage
-  ensure_stree_defined "$name"
+  /*local*/ $root_key=get_root_key($name);
+  /*local*/ $prefix=fake_git("config", "--local stree.$root_key.prefix");
 
-  /*local*/ $root_key=$(get_root_key "$name")
-  /*local*/ $prefix=fake_git("config --local $"stree.$root_key.prefix")
-
-  /*local*/ $-a commits=(${args[@]:2})
+  $commits = array();
+  /*local*/ //$commits=(${args[@]:2})
+  $commits = func_get_arg(2);
   if ( ${//commits[@]} -eq 0 ) {
-  /*local*/ $latest=fake_git("config --local $"stree.$root_key.latest-sync")
-  if ( -z "$latest" ) {
-  error false "Cannot find the most recent sync point for this subtree :-("
-    fi
+  /*local*/ $latest=fake_git("config", "--local stree.$root_key.latest-sync");
+  if ( empty($latest)) {
+    error( false, "Cannot find the most recent sync point for this subtree :-(");
+  }
 
-    latest=fake_git("rev-parse --short "$latest")
-    /*local*/ $root_dir="$(dirname fake_git("rev-parse --git-dir))"
-    		cd "$root_dir"
-    		commits=(fake_git("rev-list --reverse --abbrev-commit "$latest".. -- "$prefix"))
+    $latest=fake_git("rev-parse", "--short $latest");
+    /*local*/ $root_dir=dirname(fake_git("rev-parse", "--git-dir"));
+    		chdir($root_dir);
+    		$commits=fake_git("rev-list", "--reverse --abbrev-commit \"$latest\".. -- $prefix");
     		cd - > /dev/null
     		if ( ${//commits[@]} -eq 0 ) {
 	meh "No /*local*/ $commits found for subtree '$name' since latest sync ($latest)"
@@ -479,7 +514,7 @@ function require_arg($pos, $err_msg, $tercero) {
 /*local*/ $result="${args[$1]}"
   [  "$3" && "$3" != "$result" ] && result=''
   if ( "$result" ) {
-    echo "$result";
+    //echo "$result";
     return "$result";
   }
 
@@ -495,19 +530,19 @@ function require_name() {
 //
 // Removes all definitions (configuration entries) and backport branch for the given
 // subtree, but leaves the subdirectory contents in place.
-function rm_subtree
+function rm_subtree($name)
 {
-  /*local*/ $name="$1"
-  [ -z "$name" ] && name=$(require_name)
-  /*local*/ $root_key=$(get_root_key "$name")
-  /*local*/ $remote_name=$(get_remote_name "$name")
-  /*local*/ $branch_name=$(get_branch_name "$name")
+  /*local*/ //$name="$1"
+  ( empty($name)) && $name=require_name();
+  /*local*/ $root_key=get_root_key($name);
+  /*local*/ $remote_name=get_remote_name($name);
+  /*local*/ $branch_name=get_branch_name($name);
 
-  git config --local $--remove-section "stree.$root_key" &> /dev/null
-  git remote rm "$remote_name" &> /dev/null
-  git branch -D "$branch_name" &> /dev/null
-  [ -z "$1" ] && yay() "All settings removed for STree '$root_key'.");
-  true
+  fake_git("config", "--local --remove-section stree.$root_key");
+  fake_git("remote", "rm $remote_name");
+  fake_git("branch", "-D $branch_name");
+  ( empty($name) ) && yay() "All settings removed for STree '$root_key'.");
+  return true;
 }
 
 // Command: `git stree split name -P path url [branch]`
@@ -515,47 +550,47 @@ function rm_subtree
 // Creates a proper subtree branch from a subdirectory's contents and history.
 // Then the subtree's backport branch is configured and pushed (to either `master`
 // or the specified branch).
-function split_subtree
+function split_subtree()
 {
   /*local*/ $name=$(require_name)
-  require_arg 2 'Missing -P parameter' '-P' > /dev/null
-  /*local*/ $prefix=$(require_arg 3 'Missing prefix')
-  prefix=$(normalize_prefix "$prefix")
-  /*local*/ $url=$(require_arg 4 'Missing URL')
-  /*local*/ $branch=$(optional_arg 5 'master')
+  require_arg( 2, 'Missing -P parameter', '-P');
+  /*local*/ $prefix=require_arg( 3, 'Missing prefix');
+  prefix=normalize_prefix("$prefix");
+  /*local*/ $url=require_arg (4, 'Missing URL');
+  /*local*/ $branch=optional_arg (5, 'master');
 
-  /*local*/ $root_key=$(get_root_key "$name")
-  /*local*/ $remote_name=$(get_remote_name "$name")
-  if ( fake_git("config --local $--get "remote.$remote_name.url") ) {
-    error false "A remote already exists for '$name' ($remote_name). Subtree already defined?"
+  /*local*/ $root_key=get_root_key ($name);
+  /*local*/ $remote_name=get_remote_name($name);
+  if ( fake_git("config", "--local --get remote.$remote_name.url") ) {
+    error (false, "A remote already exists for '$name' ($remote_name). Subtree already defined?");
   fi
 
-  ensure_attached_head
-  ensure_no_stage
+  ensure_attached_head();
+  ensure_no_stage();
 
-  /*local*/ $latest_head=fake_git("rev-parse --symbolic --abbrev-ref HEAD)
-  /*local*/ $branch_name=$(get_branch_name "$name")
+  /*local*/ $latest_head=fake_git("rev-parse", "--symbolic --abbrev-ref HEAD");
+  /*local*/ $branch_name=get_branch_name($name);
 
-  if branch_exists "$branch_name"; then
-    error false "A subtree backport branch already exists for '$name' ($branch_name).  Subtree already defined/split?"
-  fi
+  if (branch_exists($branch_name)) {
+    error (false, "A subtree backport branch already exists for '$name' ($branch_name).  Subtree already defined/split?");
+  }
 
-  git remote add -t "$branch" "$remote_name" "$url" &&
-    git config --local $"stree.$root_key.prefix" "$prefix" &&
-    git config --local $"stree.$root_key.branch" "$branch" &&
-    git checkout -b "$branch_name" --quiet &&
-    git filter-branch -f --subdirectory-filter "$prefix" > /dev/null &&
-    git push --quiet -u "$remote_name" "$branch_name":"$branch" > /dev/null &&
-    git config --local $"stree.$root_key.latest-sync" "fake_git("rev-parse HEAD)" &&
-    git checkout --quiet --merge "$latest_head" &&
+  fake_git("remote", "add -t $branch $remote_name $url") &&
+  fake_git("config", "--local stree.$root_key.prefix $prefix") &&
+  fake_git("config", "--local stree.$root_key.branch $branch") &&
+  fake_git("checkout", "-b $branch_name --quiet") &&
+  fake_git("filter-branch", "-f --subdirectory-filter $prefix") &&
+  fake_git("push", "--quiet -u $remote_name $branch_name:$branch") &&
+  fake_git("config", "--local stree.$root_key.latest-sync") . fake_git("rev-parse", "HEAD") &&
+  fake_git("checkout", "--quiet --merge $latest_head") &&
     yay ("STree '$root_key' configured, split and pushed.");
 }
 
 // Helper: usage display on STDERR.  Used when an error occurs or when the CLI
 // args don't start with a valid command.
-function usage
+function usage($subcmd)
 {
-  /*local*/ $cmd="$subcmd"
+  /*local*/ $cmd="$subcmd";
 
   if ( "help" == "$cmd" -a -n "${args[1]}" ) {
     cmd="${args[1]}"
@@ -647,21 +682,21 @@ EOT
 }
 
 // Helper: success message.  This will show up in green on STDOUT.
-function yay() {
-message ($GREEN, "$CHECK ""$@"$'\n');
+function yay($mensaje) {
+message ($GREEN, $CHECK, $mensaje);
 }
 
 // Allow subshells (such as functions called within a `$(…)` subshell)
 // to exit the parent script (the main `git-stree` script) by sending it
 // an ABRT (6) signal.  See `error` for the trigger side of this.
-function exit1 {
-  exit 1
+function exit1() {
+  exit (1);
 }
-trap exit1 ABRT
+//trap exit1 ABRT
 
 //// MAIN ENTRY POINT ////
 
-[[ "$subcmd"=~"he?l?p?" ]] || ensure_git_repo
+( "$subcmd"=~"he?l?p?" ) || ensure_git_repo()
 
 case "$subcmd" in
   a|ad|add)
