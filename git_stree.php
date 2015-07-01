@@ -142,7 +142,7 @@ function check_conflicting_strees($path) {
 	$list = get_subtree_list();
 	has_conflicts('reset');
 	
-	foreach ( $list as $value ) {
+	foreach ($list as $value ) {
 		$tupla = preg_split("/[\s]+/", $value); // deben ser 3
 		$tree = $tupla[0];
 		$remoting = $tupla[1];
@@ -290,7 +290,7 @@ function get_subtree_list($par="") {
 	$resp = array ();
 	foreach ( $git_cfg as $value ) {
 		list ( $key, $url ) = explode(' ', $value);
-		;
+		//quitar el prefijo "remote.setree-" y el sufijo ".url" y dejar solo el nombre
 		// $name="$(sed 's/remote\.stree-\|\.url//g' <<< "$key")"
 		$pattern = "remote\.stree-\|\.url";
 		$name = preg_replace("/" . $pattern . "/", "", $key);

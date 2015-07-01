@@ -874,6 +874,17 @@ class GitRepo {
 	public function setenv($key, $value) {
 		$this->envopts[$key] = $value;
 	}
+	
+	public function get_subtree_list() {
+	    
+	    //$git_cfg = $this->run("config --local --get-regexp 'remote\..*\.url'");
+	    $git_cfg = $this->run("log --pretty=oneline --grep 'git-subtree-dir'");
+	    $resp = array ();
+	    if($git_cfg) {
+	       $resp = preg_split ("/[\n\r]/", $git_cfg);
+	    }
+	    return $resp;
+	}
 
 }
 

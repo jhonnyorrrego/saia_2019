@@ -2,7 +2,7 @@
 require_once('Git0K.php');
 
 //nuevo repo con varios remotes
-$git2 = new Git0K('/home/cerok/proyectos/pruebas-git-subtree/saia_cerok_test_subtree1');
+$git2 = new Git0K('/home/cerok/proyectos/workspace_php/saia_editor');
 //$git2 = new Git0K('/Users/giovanni/saia_r2/saia_cerok_test1');
 $repo2 = $git2->getRepo();
 echo "<br>";
@@ -12,7 +12,7 @@ echo "<br>";
 //$format = "El autor de %h fue %an, %ar%nEl titulo fue >>%s<<%n";
 $format = "oneline";
 
-print_r($repo2->status_porcelain());
+//print_r($repo2->status_porcelain());
 
 //var_dump($git2->get_remoto_base());
 //var_dump($git2->get_remoto_formatos());
@@ -20,8 +20,8 @@ print_r($repo2->status_porcelain());
 
 echo "\nEs repositorio: " . GitRepo::is_inside_git_repo();
 echo "<br>";
-//echo json_encode($git2->expose());
-echo "\nRuta repositorio: " . GitRepo::get_repo_root_dir();
+echo "Lista subtree: ";
+var_dump($repo2->get_subtree_list());
 
 die();
 try {

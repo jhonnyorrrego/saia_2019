@@ -25,6 +25,12 @@ class Git0K extends Git {
      */
     protected $repo;
 
+    /**
+     * Mantiene la lista de subarboles. Si existe
+     * @var unknown
+     */
+    protected $subtrees = array();
+
     function __construct($repo_path) {
         $this->repo_path = $repo_path;
         $this->repo = parent::open($repo_path);
@@ -100,6 +106,7 @@ class Git0K extends Git {
             $this->remoto_base = $this->remoto_origin;
         }
     }
+
 }
 
 class Remoto {
