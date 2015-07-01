@@ -170,13 +170,13 @@ function clear_subtrees()
 {
 	if (  func_num_args() > 0 ) {
 	    $argumento = func_get_arg(0);
-	    $texto="";/*<<<EOT
+	    $texto=<<<EOT
 	       This is not the command you are looking for.
 	       git stree clear removes all subtrees defined for this repository.  You
 	       specified a specific subtree ($argumento) on the command line, so you probably
 	       want:
 	       git stree rm $argumento
-	   EOT;*/
+EOT;
 	error(false, $texto);
 }
 
@@ -423,14 +423,15 @@ function pull_subtree($name, $log_size)
     }
     //buscar el archivo SQUASH_MSG en el .git dir
     $msg_file=fake_git("rev-parse", "--git-dir") . "/SQUASH_MSG";
-    //buscar el ultimo mensaje
+    //buscar el ultimo mensaje en el archivo que coincida con el ultimo squash
     //$msg="[STree] Pulled stree '$root_key'"$'\n\n'"$(sed "/^commit $latest_sync/,100000d" "$msg_file")"
-    echo "$msg" > "$msg_file"
-    $commits=$(grep --count '^commit ' "$msg_file")
-    git commit -F "$msg_file" &&
-    git config --local $"stree.$root_key.latest-sync" "fake_git("rev-parse --short HEAD)"
+    echo "$msg" > "$msg_file";
+    //$commits=$(grep --count '^commit ' "$msg_file");
+    $commits = 3; //buscar el numero de commits
+    fake_git("commit", "-F $msg_file") &&
+    fake_git("config", "--local stree.$root_key.latest-sync") . fake_git("rev-parse", "--short HEAD");
     yay ("STree '$root_key' pulled, $commits update(s) committed.");
-  fi
+  }
 }
 
 // Command: `git stree push name [commits...]`
@@ -457,9 +458,9 @@ function push_subtree()
   $commits = array();
   //$commits=(${args[@]:2})
   $commits = func_get_arg(2);
-  if ( ${//commits[@]} -eq 0 ) {
-  $latest=fake_git("config", "--local stree.$root_key.latest-sync");
-  if ( empty($latest)) {
+  if ( $commits == 0 ) {
+    $latest=fake_git("config", "--local stree.$root_key.latest-sync");
+  if (empty($latest)) {
     error( false, "Cannot find the most recent sync point for this subtree :-(");
   }
 
@@ -467,46 +468,49 @@ function push_subtree()
     $root_dir=dirname(fake_git("rev-parse", "--git-dir"));
     		chdir($root_dir);
     		$commits=fake_git("rev-list", "--reverse --abbrev-commit \"$latest\".. -- $prefix");
-    		cd - > /dev/null
-    		if ( ${//commits[@]} -eq 0 ) {
-	meh "No $commits found for subtree '$name' since latest sync ($latest)"
-	return
-	fi
-	else
-		$parsed_ref
-		for ((i = 0; i < ${//commits[@]}; ++i)); do
-			parsed_ref=fake_git("rev-parse --short "${commits[$i]}" 2> /dev/null)
-			if ( 0 = $? ) {
-			commits[$i]=$parsed_ref
-			else
-				error false "Cannot resolve commit: ${commits[$i]}"
-				fi
-				done
-				fi
+    		//cd - > /dev/null
+    		if ( $commits == 0 ) {
+	meh("No $commits found for subtree '$name' since latest sync ($latest)");
+	return;
+    		}
+	else{
+		$parsed_ref='';
+		for ($i = 0; i < $commits; ++$i) {
+			$parsed_ref=fake_git("rev-parse", "--short " . $commits[$i] );
+			//si no falla la ejecuion de rev-parse
+			if ( $parsed ) {
+			$commits[$i]=$parsed_ref;
+			} else {
+				error( false, "Cannot resolve commit: ". $commits[$i]);
+			}
+			}
+		}
 
-				$latest_head=fake_git("rev-parse --symbolic --abbrev-ref HEAD)
+				$latest_head=fake_git("rev-parse", "--symbolic --abbrev-ref HEAD");
 
-				$remote_name=$(get_remote_name "$name")
-				$branch=fake_git("config --local $"stree.$root_key.branch")
-				$branch_name=$(get_branch_name "$name")
+				$remote_name=get_remote_name($name);
+				$branch=fake_git("config", "--local stree.$root_key.branch");
+				$branch_name=get_branch_name ($name);
 
-				if branch_exists "$branch_name"; then
-				git checkout --quiet --merge "$branch_name" &&
-				git fetch "$remote_name" &&
-				git rebase --preserve-merges --autostash --quiet "$remote_name/$branch" &> /dev/null
-				else
-					git checkout --quiet --track -b "$branch_name" "$remote_name/$branch"
-					fi
+				if (branch_exists($branch_name)) {
+				fake_git("checkout", "--quiet --merge $branch_name") &&
+				fake_git("fetch", "$remote_name") &&
+				fake_git("rebase", "--preserve-merges --autostash --quiet $remote_name/$branch");
+				} else {
+					fake_git("checkout", "--quiet --track -b $branch_name $remote_name/$branch");
+				}
 
-					for commit in "${commits[@]}"; do
-						git cherry-pick -x -X subtree="$prefix" "$commit" > /dev/null &&
-						git config --local $"stree.$root_key.latest-sync" "$commit" &&
-						discreet "• fake_git("show -s --oneline "$commit")" ||
-						error false "Could not cherry-pick fake_git("show -s --oneline "$commit")"
-								done
+					foreach($commits as $commit) {
+						$status = fake_git("cherry-pick", "-x -X subtree=$prefix $commit") &&
+						fake_git("config", "--local stree.$root_key.latest-sync $commit") &&
+						discreet("* " . fake_git("show", "-s --oneline $commit"));
+						if(!$status) {
+						error (false, "Could not cherry-pick ") . fake_git("show", "-s --oneline $commit");
+						}
+					}
 
-								git push --quiet "$remote_name" "$branch_name":"$branch" &&
-								git checkout --quiet --merge "$latest_head" &&
+					fake_git("push", "--quiet $remote_name $branch_name:$branch") &&
+					fake_git("checkout", "--quiet --merge $latest_head") &&
 								yay ("STree '$name' successfully backported $changes to its remote");
 }
 
@@ -516,14 +520,15 @@ function push_subtree()
 // An error message *must* be provided as $1 should the argument be missing or incorrect.
 // In such a case, it's passed to `error`, thereby stopping the script.
 function require_arg($pos, $err_msg, $tercero) {
-$result="${args[$1]}"
+/*$result="${args[$1]}"
   [  "$3" && "$3" != "$result" ] && result=''
   if ( "$result" ) {
     //echo "$result";
     return "$result";
   }
 
-  error(true, "$2");
+  error(true, "$2");*/
+    //bullshit
 }
 
 // Helper: just a comfort wrapper over `require_arg` for the most common use case.
@@ -546,7 +551,7 @@ function rm_subtree($name)
   fake_git("config", "--local --remove-section stree.$root_key");
   fake_git("remote", "rm $remote_name");
   fake_git("branch", "-D $branch_name");
-  ( empty($name) ) && yay() "All settings removed for STree '$root_key'.");
+  ( empty($name) ) && yay("All settings removed for STree '$root_key'.");
   return true;
 }
 
@@ -557,10 +562,10 @@ function rm_subtree($name)
 // or the specified branch).
 function split_subtree()
 {
-  $name=$(require_name)
+  $name=require_name();
   require_arg( 2, 'Missing -P parameter', '-P');
   $prefix=require_arg( 3, 'Missing prefix');
-  prefix=normalize_prefix("$prefix");
+  $prefix=normalize_prefix("$prefix");
   $url=require_arg (4, 'Missing URL');
   $branch=optional_arg (5, 'master');
 
@@ -568,7 +573,7 @@ function split_subtree()
   $remote_name=get_remote_name($name);
   if ( fake_git("config", "--local --get remote.$remote_name.url") ) {
     error (false, "A remote already exists for '$name' ($remote_name). Subtree already defined?");
-  fi
+  }
 
   ensure_attached_head();
   ensure_no_stage();
@@ -593,30 +598,31 @@ function split_subtree()
 
 // Helper: usage display on STDERR.  Used when an error occurs or when the CLI
 // args don't start with a valid command.
-function usage($subcmd)
+function usage($subcmd, $otros)
 {
   $cmd=$subcmd;
 
   if ( "help" == $cmd && func_ ) {
-    cmd="${args[1]}"
-  elif ( "help" == "$cmd" ) {
-    cmd=""
-  fi
+    $cmd=$otros; //"${args[1]}";
+} elseif ( "help" == "$cmd" ) {
+    $cmd="";
+}
 
-  if ! [[ "@add@clear@forget@help@list@pull@push@rm@split@"=~"@$cmd@" ]) {
-    cmd=""
-  fi
+$comandos = array('add','clear','forget','help','list','pull','push','rm','split');
+
+  if ( !in_array($cmd, $comandos)) {
+    $cmd="";
+  }
 
   if ( empty($cmd) ) {
   $msg = <<<EOT
   Usage: $0 sub-command [options...]
   Sub-commands:
-  EOT;
-  }
-  else {  
-  $msf <<<EOT
-  Usage: $0 $cmd [options…]
-  EOT;
+EOT;
+  } else {  
+  $msg=<<<EOT
+  Usage: stree $cmd [options…]
+EOT;
   }
 
   if ( empty( $cmd) || "add" == $cmd ) {
@@ -683,7 +689,7 @@ EOT;
   $msg = <<<EOT
   help [command]
   Displays this usage information, or the command’s usage information.
-  EOT;
+EOT;
   }
 }
 
@@ -696,29 +702,34 @@ message ($GREEN, $CHECK, $mensaje);
 // to exit the parent script (the main `git-stree` script) by sending it
 // an ABRT (6) signal.  See `error` for the trigger side of this.
 function exit1() {
-  exit (1);
+  die(1);
 }
 //trap exit1 ABRT
 
 //// MAIN ENTRY POINT ////
 
-( "$subcmd"=~"he?l?p?" ) || ensure_git_repo()
+if( $subcmd != "help" ) {
+    ensure_git_repo();
+}
 
-case "$subcmd" in
-  a|ad|add)
-    add_subtree;;
-  c|cl|cle|clea|clear|f|fo|for|forg|forge|forget)
-    clear_subtrees;;
-  l|li|lis|list)
-    list_subtrees;;
-  pul|pull)
-    pull_subtree;;
-  pus|push)
-    push_subtree;;
-  r|rm)
-    rm_subtree;;
-  s|sp|spl|spli|split)
-    split_subtree;;
-  ""|*)
-  usage;;
-  esac
+switch ($subcmd) {
+  case "add";
+    add_subtree(); break;
+  case "clear":
+  case "forget":
+    clear_subtrees(); break;
+  case "list":
+    list_subtrees(); break;
+  case "pull":
+    pull_subtree(); break;
+  case "push":
+    push_subtree(); break;
+  case "rm":
+    rm_subtree(); break;
+  case "split":
+    split_subtree(); break;
+  default:
+  usage();
+  }
+  
+  ?>
