@@ -43,6 +43,7 @@ class Git0K extends Git {
             return;
         }
         $this->determinar_repositorios_remotos();
+        $this->determinar_lista_subarboles();
     }
 
     /**
@@ -107,6 +108,27 @@ class Git0K extends Git {
         }
     }
 
+    public function determinar_lista_subarboles() {
+        $this->subtrees = $this->repo->get_subtree_list();
+    }
+    
+    /**
+     * determina si una ruta (relativa a la raiz del repo) pertenece a un subarbol
+     * @param string $ruta
+     */
+    public function pertenece_subarbol($ruta) {
+        //e257312163ab209cddad4e47c2292543637a7d0c Squashed 'formatos/formatos_0K/' content from commit b8bcb5c
+        if(count($this->subtrees) > 0) {
+            foreach ($this->subtrees as $value) {
+                $ruta_st = preg_replace("/(.*)(')(.*)(')(.*)/", '${3}', $value);
+                if(strpos($ruta, $ruta_st) === false) {
+                    continue;
+                }
+                return true;
+            }
+        }
+        return false;
+    }
 }
 
 class Remoto {
