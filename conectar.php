@@ -2,9 +2,9 @@
 require_once('Git0K.php');
 
 //nuevo repo con varios remotes
-//$git2 = new Git0K('/home/cerok/proyectos/pruebas-git-subtree/saia_cerok_test_subtree1');
-$git2 = new Git0K('/Users/giovanni/saia_r2/saia_cerok_test1');
-$repo2 = $git2->get_repo();
+$git2 = new Git0K('/home/cerok/proyectos/pruebas-git-subtree/saia_cerok_test_subtree1');
+//$git2 = new Git0K('/Users/giovanni/saia_r2/saia_cerok_test1');
+$repo2 = $git2->getRepo();
 echo "<br>";
 print_r($repo2->list_remotes());
 echo "<br>";
@@ -14,10 +14,14 @@ $format = "oneline";
 
 print_r($repo2->status_porcelain());
 
-var_dump($git2->get_remoto_base());
-var_dump($git2->get_remoto_formatos());
-var_dump($git2->get_remoto_origin());
+//var_dump($git2->get_remoto_base());
+//var_dump($git2->get_remoto_formatos());
+//var_dump($git2->get_remoto_origin());
 
+echo "\nEs repositorio: " . GitRepo::is_inside_git_repo();
+echo "<br>";
+//echo json_encode($git2->expose());
+echo "\nRuta repositorio: " . GitRepo::get_repo_root_dir();
 
 die();
 try {

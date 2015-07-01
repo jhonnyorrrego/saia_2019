@@ -144,6 +144,42 @@ class GitRepo {
 	);
 	
 	/**
+	 * Devuelve true si la ruta especificada o el directorio de trabajo pertenecen a un repositorio Git
+	 * @param string $path
+	 * @return boolean
+	 */
+	public static function is_inside_git_repo($path="") {
+	    
+	    if($path) {
+	       chdir($path);
+	    }
+	    
+        //$status = exec(Git::get_bin()." " . "rev-parse --is-inside-work-tree");
+        $status = self::strun_command(Git::get_bin()." " ."rev-parse --is-inside-work-tree");
+	    return trim($status) == "true" ? true : false;
+	}
+	
+	public static function get_repo_git_dir() {
+	    $status = self::strun_command(Git::get_bin()." " . "rev-parse --git-dir");
+	    /*if($status == ".git") {
+	        return getcwd() . "/$status";
+	    }*/
+	    return $status;
+	}
+
+	public static function get_repo_root_dir() {
+	    $status = self::get_repo_git_dir();
+	    if($status) {
+	        $status = trim($status);
+	    }
+	    if($status == ".git") {
+	        return getcwd();
+	    }
+	    $status = substr($status, 0, strpos($status, ".git")-1);
+	    return $status;
+	}
+	
+	/**
 	 * Create a new git repository
 	 *
 	 * Accepts a creation path, and, optionally, a source path
@@ -340,6 +376,52 @@ class GitRepo {
 		return $stdout;
 	}
 
+	/**
+	 * Run a command in the git repository
+	 *
+	 * Accepts a shell command to run
+	 *
+	 * @access  protected
+	 * @param   string  command to run
+	 * @return  string
+	 */
+	protected static function strun_command($command, $cwd="") {
+	    $descriptorspec = array(
+	        1 => array('pipe', 'w'),
+	        2 => array('pipe', 'w'),
+	    );
+	    $pipes = array();
+	    /* Depending on the value of variables_order, $_ENV may be empty.
+	     * In that case, we have to explicitly set the new variables with
+	     * putenv, and call proc_open with env=null to inherit the reset
+	     * of the system.
+	     *
+	     * This is kind of crappy because we cannot easily restore just those
+	     * variables afterwards.
+	     *
+	     * If $_ENV is not empty, then we can just copy it and be done with it.
+	    */
+	
+        $env = NULL;
+        if(empty($cwd)) {
+	       $cwd = getcwd();
+        }
+	    $resource = proc_open($command, $descriptorspec, $pipes, $cwd, $_ENV);
+
+	    $stdout = stream_get_contents($pipes[1]);
+	    $stderr = stream_get_contents($pipes[2]);
+	    foreach ($pipes as $pipe) {
+	        fclose($pipe);
+	    }
+	
+	    $status = trim(proc_close($resource));
+	    if ($status) {
+	        throw new Exception($stderr);
+	    }
+	    //echo "Exito: $status <br>";
+	    return $stdout;
+	}
+	
 	/**
 	 * Run a git command in the git repository
 	 *

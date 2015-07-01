@@ -39,7 +39,15 @@ class Git0K extends Git {
         $this->determinar_repositorios_remotos();
     }
 
-    public function get_repo() {
+    /**
+     * Devuelve los atributos para serializar
+     * @return multitype:
+     */
+    public function expose() {
+        return get_object_vars($this);
+    }
+    
+    public function getRepo() {
         return $this->repo;
     }
 
