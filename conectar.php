@@ -12,7 +12,7 @@ echo "<br>";
 //$format = "El autor de %h fue %an, %ar%nEl titulo fue >>%s<<%n";
 $format = "oneline";
 
-//print_r($repo2->status_porcelain());
+print_r($repo2->status_porcelain());
 
 //var_dump($git2->get_remoto_base());
 //var_dump($git2->get_remoto_formatos());
