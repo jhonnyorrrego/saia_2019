@@ -160,7 +160,8 @@ class GitRepo {
 	}
 	
 	public static function get_repo_git_dir() {
-	    $status = self::strun_command(Git::get_bin()." " . "rev-parse --git-dir");
+	    //$status = self::strun_command(Git::get_bin()." " . "rev-parse --git-dir");
+	    $status = self::strun_command(Git::get_bin()." " . "rev-parse --show-toplevel");
 	    /*if($status == ".git") {
 	        return getcwd() . "/$status";
 	    }*/
@@ -172,6 +173,7 @@ class GitRepo {
 	    if($status) {
 	        $status = trim($status);
 	    }
+	    //FIXME: Ya no debe ser necesario por el cambio --show-toplevel
 	    if($status == ".git") {
 	        return getcwd();
 	    }
