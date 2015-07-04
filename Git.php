@@ -764,7 +764,7 @@ class GitRepo {
 
 	public function push_with_credentials($remote, $branch, $user, $pass, $url) {
 		//FIXME: Se puede hacer pasando la url completa en el comando
-	    $push_url = $this->get_remote_url_credentials($remote, $user, $pass, $url);
+	    $push_url = $this->get_remote_url_credentials($user, $pass, $url);
 	    //var_dump($push_url);
 		return $this->run("push $remote $branch");
 		//return $this->run("push --tags $push_url");
@@ -828,7 +828,7 @@ class GitRepo {
 	/**
 	 * List log entries.
 	 *
-	 * @param strgin $format: Puede ser enviada por el usuario o una de las predefinidas
+	 * @param string $format: Puede ser enviada por el usuario o una de las predefinidas
 	 * @return string
 	 */
 	public function log($format = null) {
@@ -872,15 +872,26 @@ class GitRepo {
 		$this->envopts[$key] = $value;
 	}
 	
+	/**
+	 * Devuelve la lista de subarboles usados en el repositorio
+	 */
 	public function get_subtree_list() {
 	    
 	    //$git_cfg = $this->run("config --local --get-regexp 'remote\..*\.url'");
 	    $git_cfg = $this->run("log --pretty=oneline --grep 'git-subtree-dir'");
+	    //$git_cfg .= "285b6b87dd2d8463e2bc6dc802e5058e2ac8740d Squashed 'editor_codigo/GitApi2/' content from commit 6f4d128";
+	    //FIXME: La lista 
 	    $resp = array ();
 	    if($git_cfg) {
-	       $resp = preg_split ("/[\n\r]/", $git_cfg);
+	    	$datos = array();
+	       //$resp = preg_split ("/[\n\r]/", $git_cfg);
+	    	preg_match_all("/'[^']+'/", $git_cfg, $datos);
+	    	var_dump($datos);
+	    	$resp = array_map(function($val){
+	    		return str_replace("'", "", $val);
+	    	}, $datos[0]);
 	    }
-	    return $resp;
+	    return array_unique($resp);
 	}
 
 }

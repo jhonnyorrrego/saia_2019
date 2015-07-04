@@ -161,6 +161,42 @@ class Git0K extends Git {
         }
         return false;
     }
+    
+    public function getRepoSubtreeList() {
+    	return $this->repo->get_subtree_list();    	
+    }
+    
+    /**
+     * Pull specific branch from remote
+     *
+     * Accepts the name of the remote and local branch
+     *
+     * @param string $remote
+     * @param string $branch
+     * @return string
+     */
+    
+    public function repoPull($remote, $branch) {
+    	return $this->repo->pull($remote, $branch);
+    }
+ 
+    /**
+     * Push specific branch to a remote
+     *
+     * Accepts the name of the remote and local branch
+     *
+     * @param string $remote
+     * @param string $branch
+     * @return string
+     */
+    public function repoPush($remote, $branch) {
+    	return $this->repo->push($remote, $branch);
+    }
+    
+    public function repoListRemotes() {
+    	return 	$this->repo->list_remotes();
+    }
+
 }
 
 class Remoto {
