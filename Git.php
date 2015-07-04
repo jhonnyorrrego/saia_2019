@@ -160,24 +160,19 @@ class GitRepo {
 	}
 	
 	public static function get_repo_git_dir() {
-	    //$status = self::strun_command(Git::get_bin()." " . "rev-parse --git-dir");
-	    $status = self::strun_command(Git::get_bin()." " . "rev-parse --show-toplevel");
-	    /*if($status == ".git") {
-	        return getcwd() . "/$status";
-	    }*/
+	    $status = self::strun_command(Git::get_bin()." " . "rev-parse --git-dir");
 	    return $status;
 	}
 
-	public static function get_repo_root_dir() {
-	    $status = self::get_repo_git_dir();
+	/**
+	 * Devuelve la ruta del directorio del repositorio. El que contiene la carpeta .git
+	 */
+	public function get_repo_root_dir() {
+		$status = $this->run("rev-parse --show-toplevel");
+		
 	    if($status) {
 	        $status = trim($status);
 	    }
-	    //FIXME: Ya no debe ser necesario por el cambio --show-toplevel
-	    if($status == ".git") {
-	        return getcwd();
-	    }
-	    $status = substr($status, 0, strpos($status, ".git")-1);
 	    return $status;
 	}
 	
@@ -768,9 +763,10 @@ class GitRepo {
 	}
 
 	public function push_with_credentials($remote, $branch, $user, $pass, $url) {
-	    $push_url = $this->change_remote_credentials($remote, $user, $pass, $url);
-	    var_dump($push_url);
-		return $this->run("push --tags $remote $branch");
+		//FIXME: Se puede hacer pasando la url completa en el comando
+	    $push_url = $this->get_remote_url_credentials($remote, $user, $pass, $url);
+	    //var_dump($push_url);
+		return $this->run("push $remote $branch");
 		//return $this->run("push --tags $push_url");
 	}
 	
@@ -782,12 +778,12 @@ class GitRepo {
 	 * @param string $remote
 	 * @param string $user
 	 * @param string $pass
-	 * @param string $url
+	 * @param string $remote_url
 	 * @return string
 	 */
-	public function change_remote_credentials($remote, $user, $pass, $url) {
+	public function get_remote_url_credentials($user, $pass, $remote_url) {
 		//remote set-url origin http://laboratorio.netsaia.com:82/usuario/saia_base.git
-	    $url_data = parse_url($url);
+	    $url_data = parse_url($remote_url);
 	    //si url = http://usuario:clave@laboratorio.netsaia.com:82/giovanni.montes/saia_cerok.git
 	    //Array ( [scheme] => http [host] => laboratorio.netsaia.com [port] => 82 [user] => usuario [pass] => clave [path] => /giovanni.montes/saia_cerok.git )
 	    if($url_data["user"] !== $user) {
@@ -803,8 +799,7 @@ class GitRepo {
 	    //return $this->run("remote add $remote $nueva_url");
 	    //Mientras se soluciona devolver la url
 	    //Este comando tambien necesita permisos de escritura sobre .git/config, pero no devuelve exception
-	    return $this->run("remote set-url $remote $nueva_url");
-	    //return $nueva_url;
+	    return $nueva_url;
 	}
 
 	public function list_remotes() {

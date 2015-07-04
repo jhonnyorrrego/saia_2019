@@ -26,8 +26,8 @@ class Git0K extends Git {
     protected $repo;
 
     /**
-     * Mantiene la lista de subarboles. Si existe
-     * @var unknown
+     * Mantiene la lista de subarboles. Si existe alguno.
+     * @var array
      */
     protected $subtrees = array();
 
@@ -54,8 +54,40 @@ class Git0K extends Git {
         return get_object_vars($this);
     }
     
-    public function getRepo() {
+    /**
+     * Devuelve el repositorio local
+     * @return GitRepo
+     */
+    protected function getRepo() {
         return $this->repo;
+    }
+
+    /**
+     * Devuelve el estado del repositorio local. Sirve para ver si hay cambios
+     * @return string
+     */
+    public function getRepoStatus() {
+    	return $this->repo->status_porcelain();
+    }
+    
+   /**
+    * Agrega el/los archivos al indice
+    * @param mixed $ruta_archivo. files to add
+    * @return string
+    */
+    public function repoAdd($ruta_archivo) {
+    	return $this->repo->add($ruta_archivo);
+    }
+    
+    /**
+     * Hace commit
+     *
+     * @access  public
+     * @param   string  commit message
+     * @return  string
+     */
+    public function repoCommit($message) {
+    	return $this->repo->commit($message, false);
     }
 
     public function get_remoto_base() {
