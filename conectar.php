@@ -23,7 +23,7 @@ echo "<br>";
 //$lista=$git2->getRepoSubtreeList();
 //var_dump($lista);
 
-echo "Raiz: " . $git2->getRepoRootDir() . "<br>";
+echo "Raiz: " . GitRepo::get_root_dir() . "<br>";
 
 
 die();

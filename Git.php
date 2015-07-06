@@ -159,7 +159,7 @@ class GitRepo {
 	    return trim($status) == "true" ? true : false;
 	}
 	
-	public static function get_repo_git_dir() {
+	public static function get_root_dir() {
 	    //$status = self::strun_command(Git::get_bin()." " . "rev-parse --git-dir");
 	    $status = self::strun_command(Git::get_bin()." " . "rev-parse --show-toplevel");
 	    return $status;
