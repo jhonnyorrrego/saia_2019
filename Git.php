@@ -183,7 +183,7 @@ class GitRepo {
 	    if($status == ".git") {
 	        return getcwd();
 	    }
-	    $status = substr($status, 0, strpos($status, ".git")-1);
+	    //$status = substr($status, 0, strpos($status, ".git")-1);
 	    return $status;
 	}
 	
