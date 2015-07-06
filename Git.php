@@ -160,9 +160,10 @@ class GitRepo {
 	}
 	
 	public static function get_repo_git_dir() {
-	    $status = self::strun_command(Git::get_bin()." " . "rev-parse --git-dir");
+	    //$status = self::strun_command(Git::get_bin()." " . "rev-parse --git-dir");
+	    $status = self::strun_command(Git::get_bin()." " . "rev-parse --show-toplevel");
 	    return $status;
-	}
+	}	
 
 	/**
 	 * Devuelve la ruta del directorio del repositorio. El que contiene la carpeta .git
