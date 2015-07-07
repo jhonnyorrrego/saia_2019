@@ -201,7 +201,7 @@ class Git0K extends Git {
     	return $this->repo->push($remote, $branch);
     }
     
-    public function repoPush($remote, $branch, $url) {
+    public function repoPushCredentials($remote, $branch, $url) {
     	return $this->repo->push_with_credentials($remote, $branch, $this->user, $this->pass, $url); 
     }
     	
