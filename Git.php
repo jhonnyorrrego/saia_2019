@@ -824,8 +824,15 @@ class GitRepo {
 		//return $this->run("push --tags $push_url");
 	}
 	
-	public function set_remote_credentials($origin, $url) {
-		$this->run("remote set-url $origin " . $url);
+	public function set_remote_credentials($remote, $url) {
+	    //para no exponer las credenciales: 1. borrar el remoto 2. crear uno nuevo con la nueva url.
+	    //Esto implica tener acceso rw sobre .git/config
+	    $this->run("remote rm $remote");
+	    return $this->run("remote add $remote $url");
+	    //Mientras se soluciona devolver la url
+	    
+	    //Este comando tambien necesita permisos de escritura sobre .git/config, pero no devuelve exception
+	    //$this->run("remote set-url $remote " . $url);
 	}
 	
 	/**
@@ -857,12 +864,6 @@ class GitRepo {
 	    	$nueva_url .= ":" . $url_data['port'];
 	    }
 	    $nueva_url .= $repo_name;
-	    //para no exponer las credenciales: 1. borrar el remoto 2. crear uno nuevo con la nueva url.
-	    //Esto implica tener acceso rw sobre .git/config
-	    //$this->run("remote rm $remote");
-	    //return $this->run("remote add $remote $nueva_url");
-	    //Mientras se soluciona devolver la url
-	    //Este comando tambien necesita permisos de escritura sobre .git/config, pero no devuelve exception
 	    return $nueva_url;
 	}
 
