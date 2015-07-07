@@ -550,6 +550,20 @@ class GitRepo {
 	}
 
 	/**
+	 * Runs a `git commit` call
+	 *
+	 * Accepts a commit message string
+	 *
+	 * @access  public
+	 * @param   string  commit message
+	 * @param   boolean  should all files be committed automatically (-a flag)
+	 * @return  string
+	 */
+	public function commit_simple($message = "") {
+		return $this->run("commit -m ".escapeshellarg($message));
+	}
+	
+	/**
 	 * Runs a `git clone` call to clone the current repository
 	 * into a different directory
 	 *
