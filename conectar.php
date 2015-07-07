@@ -2,8 +2,8 @@
 require_once ('Git0K.php');
 
 // nuevo repo con varios remotes
-// $git2 = new Git0K('/home/cerok/proyectos/workspace_php/saia_editor');
-$git2 = new Git0K('/Users/giovanni/DevTools/workspace_php/saia_editor');
+$git2 = new Git0K('/home/cerok/proyectos/workspace_php/saia_editor');
+//$git2 = new Git0K('/Users/giovanni/DevTools/workspace_php/saia_editor');
 echo "<br>";
 // print_r($git2->repoListRemotes());
 echo "<br>";
@@ -26,23 +26,46 @@ echo "<br>";
 // echo "Raiz: " . GitRepo::get_root_dir() . "<br>";
 
 $estado = $git2->getRepoStatus();
+$do_push = false;
 $do_commit = false;
 $pattern = "/\[ahead [\d]+\]/";
 // FIXME: Precario. hay que tener en cuenta que puede ser un SO Win (C:\\webroot\file). Faltan los espacios
-$pattern_file_mod = "/([A-Z ]{2}) ([a-z_\\-0-9\.\/]+)/";
+$pattern_file_mod = "/([A-Z ]{2}) ([A-Za-z_\-\.\/]+)/";
 if ($estado) {
-	print_r($estado[0]);
+	//print_r($estado);
 	// mirar si tiene "[ahead n]". Posiblemente hacer commit
 	if (preg_match($pattern, $estado[0]) === 1) {
-		echo "Adelante<br>";
-		$do_commit = true;
+		echo "Adelante hacer push<br>";
+		$do_push = true;
 	}
 	if (count($estado) > 1) {
-		for($i = 1; $i < count($estado); $i++) {
-			echo $estado[i] . "<br>";
-			preg_match($pattern_file_mod, $estado[i], $matches);
-			print_r($matches);
-			echo "<br>";
+		for($i = 1; $i < 5; $i++) {
+			$input_line = $estado[$i];
+			//var_dump($input_line);
+		    $output_array = array();
+			if(preg_match("/([A-Z ]{2}) ([A-Za-z_\-\.\/]+)/", $input_line, $output_array) > 0) {
+			    //Modificacion local pero esta en el indice " M". Hacer push porque commit falla
+			    if($output_array[1] == " M") {
+			        $do_push = true;
+			        //nombre del archivo en $output_array[2];
+			    } else if($output_array[1] == "A ") {
+				    echo "git commit " . $output_array[2] . "<br>";
+			        $do_push = true;
+			        //nombre del archivo en $output_array[2];
+			    } else if($output_array[1] == "??") {
+			        echo "git add " . $output_array[2] . "<br>";
+			        $do_push = true;
+			        $do_commit = true;
+			    }
+			}
+		}
+		if($do_commit) {
+		    echo "git commit general<br>";
+		    
+		}
+			if($do_push) {
+		    echo "git push <br>";
+		    
 		}
 		// TODO: es necesario hacer commit. Posiblemente push y luego pull
 		// TODO: tener en cuenta el subtree
