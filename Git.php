@@ -795,8 +795,15 @@ class GitRepo {
 	public function push_with_credentials($remote, $branch, $user, $pass, $url) {
 		//FIXME: Se puede hacer pasando la url completa en el comando
 	    $push_url = $this->get_remote_url_credentials($user, $pass, $url);
-		return $this->run("push $remote $branch");
+	    //FIXME: No funciono con las credenciales directas
+	    $this->set_remote_credentials($remote, $push_url);
+	    return $this->push($remote, $branch);
+		//return $this->run("push $push_url $branch");
 		//return $this->run("push --tags $push_url");
+	}
+	
+	public function set_remote_credentials($origin, $url) {
+		$this->run("remote set-url $origin " . $url);
 	}
 	
 	/**
