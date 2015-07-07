@@ -821,7 +821,13 @@ class GitRepo {
 	    $url_data["pass"] = $pass;
 	    //$repo_name = explode("/", $url_data['path'])[2]; //debe ser el propieatio del repo y no el que hace el push
 	    $repo_name = $url_data['path'];
-	    $nueva_url= sprintf("%s://%s:%s@%s:%s%s",$url_data['scheme'],$url_data['user'],$url_data['pass'],$url_data['host'],$url_data['port'],$repo_name);
+	    //$nueva_url= sprintf("%s://%s:%s@%s:%s%s",$url_data['scheme'],$url_data['user'],$url_data['pass'],$url_data['host'],$url_data['port'],$repo_name);
+	    $nueva_url="";
+	    $nueva_url .= $url_data['scheme'] . "://" . $url_data['user'] . ":" . $url_data['pass'] . "@" . $url_data['host'];
+	    if($url_data['port']) {
+	    	$nueva_url .= ":" . $url_data['port'];
+	    }
+	    $nueva_url .= $repo_name;
 	    //para no exponer las credenciales: 1. borrar el remoto 2. crear uno nuevo con la nueva url.
 	    //Esto implica tener acceso rw sobre .git/config
 	    //$this->run("remote rm $remote");
