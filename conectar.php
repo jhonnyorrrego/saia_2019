@@ -2,8 +2,8 @@
 require_once('Git0K.php');
 
 //nuevo repo con varios remotes
-$git2 = new Git0K('/home/cerok/proyectos/workspace_php/saia_editor');
-//$git2 = new Git0K('/Users/giovanni/DevTools/workspace_php/saia_editor');
+//$git2 = new Git0K('/home/cerok/proyectos/workspace_php/saia_editor');
+$git2 = new Git0K('/Users/giovanni/DevTools/workspace_php/saia_editor');
 echo "<br>";
 print_r($git2->repoListRemotes());
 echo "<br>";
