@@ -906,7 +906,6 @@ class GitRepo {
 	    	$datos = array();
 	       //$resp = preg_split ("/[\n\r]/", $git_cfg);
 	    	preg_match_all("/'[^']+'/", $git_cfg, $datos);
-	    	var_dump($datos);
 	    	$resp = array_map(function($val){
 	    		return str_replace("'", "", $val);
 	    	}, $datos[0]);
