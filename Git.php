@@ -175,15 +175,12 @@ class GitRepo {
 	}
 	
 	public static function get_root_dir() {
-	    $status = self::get_repo_git_dir();
+
+		$status = self::strun_command(Git::get_bin()." " . "rev-parse --show-toplevel");
+		
 	    if($status) {
 	        $status = trim($status);
 	    }
-	    //FIXME: Ya no debe ser necesario por el cambio --show-toplevel
-	    if($status == ".git") {
-	        return getcwd();
-	    }
-	    $status = substr($status, 0, strpos($status, ".git")-1);
 	    return $status;
 	}
 	
@@ -909,7 +906,6 @@ class GitRepo {
 	    	$datos = array();
 	       //$resp = preg_split ("/[\n\r]/", $git_cfg);
 	    	preg_match_all("/'[^']+'/", $git_cfg, $datos);
-	    	var_dump($datos);
 	    	$resp = array_map(function($val){
 	    		return str_replace("'", "", $val);
 	    	}, $datos[0]);
