@@ -90,6 +90,10 @@ class Git0K extends Git {
     	return $this->repo->commit($message, false);
     }
 
+    public function repoCommitSimple($message) {
+    	return $this->repo->commit_simple($message);
+    }
+
     public function get_remoto_base() {
         return $this->remoto_base;
     }

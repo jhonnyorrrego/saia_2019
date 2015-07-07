@@ -371,10 +371,6 @@ class GitRepo {
 		} else {
 			$env = array_merge($_ENV, $this->envopts);
 		}
-		/*echo "Entorno: ";
-		var_dump($env);
-		echo "Ruta: ";
-		var_dump($this->repo_path);*/
 		$cwd = $this->repo_path;
 		$resource = proc_open($command, $descriptorspec, $pipes, $cwd, $env);
 
@@ -553,6 +549,20 @@ class GitRepo {
 		return $this->run("commit ".$flags." -m ".escapeshellarg($message));
 	}
 
+	/**
+	 * Runs a `git commit` call
+	 *
+	 * Accepts a commit message string
+	 *
+	 * @access  public
+	 * @param   string  commit message
+	 * @param   boolean  should all files be committed automatically (-a flag)
+	 * @return  string
+	 */
+	public function commit_simple($message = "") {
+		return $this->run("commit -m ".escapeshellarg($message));
+	}
+	
 	/**
 	 * Runs a `git clone` call to clone the current repository
 	 * into a different directory
@@ -785,7 +795,6 @@ class GitRepo {
 	public function push_with_credentials($remote, $branch, $user, $pass, $url) {
 		//FIXME: Se puede hacer pasando la url completa en el comando
 	    $push_url = $this->get_remote_url_credentials($user, $pass, $url);
-	    //var_dump($push_url);
 		return $this->run("push $remote $branch");
 		//return $this->run("push --tags $push_url");
 	}
