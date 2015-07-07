@@ -67,11 +67,19 @@ class Git0K extends Git {
     }
 
     /**
-     * Devuelve el estado del repositorio local. Sirve para ver si hay cambios
+     * Devuelve el estado del repositorio local. Devuelve la lista de archivos modificados
+     * @return string
+     */
+    public function getParsedRepoStatus() {
+    	return $this->repo->parsed_status_porcelain();
+    }
+
+    /**
+     * Devuelve el estado del repositorio local. Devuelve la lista de archivos modificados
      * @return string
      */
     public function getRepoStatus() {
-    	return $this->repo->status_porcelain();
+        return $this->repo->status_porcelain();
     }
     
    /**
