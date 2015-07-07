@@ -34,6 +34,7 @@ if ($estado) {
 	print_r($estado[0]);
 	// mirar si tiene "[ahead n]". Posiblemente hacer commit
 	if (preg_match($pattern, $estado[0]) === 1) {
+		echo "Adelante<br>";
 		$do_commit = true;
 	}
 	if (count($estado) > 1) {

@@ -30,6 +30,10 @@ class Git0K extends Git {
      * @var array
      */
     protected $subtrees = array();
+    
+    //FIXME: Deben asignarse en el constructor desde la sesion. Privados para no exponerlo en JSON
+    protected $user="info@cerok.com";
+    protected $pass="cerok_saia421_5";
 
     function __construct($repo_path) {
         $this->repo_path = $repo_path;
@@ -197,6 +201,10 @@ class Git0K extends Git {
     	return $this->repo->push($remote, $branch);
     }
     
+    public function repoPush($remote, $branch, $url) {
+    	return $this->repo->push_with_credentials($remote, $branch, $this->user, $this->pass, $url); 
+    }
+    	
     public function repoListRemotes() {
     	return 	$this->repo->list_remotes();
     }
