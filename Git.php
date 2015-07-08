@@ -827,12 +827,12 @@ class GitRepo {
 	public function set_remote_credentials($remote, $url) {
 	    //para no exponer las credenciales: 1. borrar el remoto 2. crear uno nuevo con la nueva url.
 	    //Esto implica tener acceso rw sobre .git/config
-	    $this->run("remote rm $remote");
-	    return $this->run("remote add $remote $url");
+	    //$this->run("remote rm $remote");
+	    //return $this->run("remote add $remote $url");
 	    //Mientras se soluciona devolver la url
 	    
 	    //Este comando tambien necesita permisos de escritura sobre .git/config, pero no devuelve exception
-	    //$this->run("remote set-url $remote " . $url);
+	    $this->run("remote set-url $remote $url");
 	}
 	
 	/**
