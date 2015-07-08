@@ -32,7 +32,7 @@ class Git0K extends Git {
     protected $subtrees = array();
     
     //FIXME: Deben asignarse en el constructor desde la sesion. Privados para no exponerlo en JSON
-    protected $user="info@cerok.com";
+    protected $user="cerok";
     protected $pass="cerok_saia421_5";
 
     function __construct($repo_path) {
