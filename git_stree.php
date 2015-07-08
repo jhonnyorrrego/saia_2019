@@ -725,7 +725,7 @@ switch ($subcmd) {
 		list_subtrees();
 		break;
 	case "pull" :
-		pull_subtree();
+		pull_subtree($args, 20);
 		break;
 	case "push" :
 		push_subtree();
