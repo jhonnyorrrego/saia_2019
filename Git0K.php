@@ -42,13 +42,13 @@ class Git0K extends Git {
         $this->init();
     }
 
-    function __construct($repo_path, $user, $email) {
+    /*function __construct($repo_path, $user, $email) {
     	$this->repo_path = $repo_path;
     	$this->user = $user;
     	$this->email = $email;
     	$this->repo = parent::open($repo_path);
     	$this->init();
-    }
+    }*/
  
     public function init() {
         if (empty($this->repo)) {
