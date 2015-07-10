@@ -34,13 +34,22 @@ class Git0K extends Git {
     //FIXME: Deben asignarse en el constructor desde la sesion. Privados para no exponerlo en JSON
     protected $user="cerok";
     protected $pass="cerok_saia421_5";
-
+    protected $email="info@cerok.com";
+    
     function __construct($repo_path) {
         $this->repo_path = $repo_path;
         $this->repo = parent::open($repo_path);
         $this->init();
     }
 
+    function __construct($repo_path, $user, $email) {
+    	$this->repo_path = $repo_path;
+    	$this->user = $user;
+    	$this->email = $email;
+    	$this->repo = parent::open($repo_path);
+    	$this->init();
+    }
+ 
     public function init() {
         if (empty($this->repo)) {
             echo "repo nulo";
@@ -104,6 +113,10 @@ class Git0K extends Git {
 
     public function repoCommitSimple($message) {
     	return $this->repo->commit_simple($message);
+    }
+
+    public function repoCommitAuthor($message) {
+    	return $this->repo->commit_author($message, $this->user, $this->email);
     }
 
     public function get_remoto_base() {
