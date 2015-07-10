@@ -4,7 +4,7 @@
  * Git STree -- A better Git subtree helper command.
  *
  * http://tdd.github.io/git-stree
- * http://https://medium.com/@porteneuve/mastering-git-subtrees-943d29a798ec
+ * https://medium.com/@porteneuve/mastering-git-subtrees-943d29a798ec
  *
  * Copyright (c) 2014 Christophe Porteneuve <christophe@delicious-insights.com>
  *
@@ -40,8 +40,8 @@ $GREEN=32;
 $RED=31;
 $YELLOW=33;
 // Symbols
-$CHECK = "OK";
-$CROSS = "KO";
+$CHECK = "v/";
+$CROSS = "X";
 
 // Grabbing CLI arguments and the main subcommand
 $args = $argv;
@@ -197,7 +197,8 @@ function confirm() {
 
 // Helper: discreet info message. This will show up in gray on STDOUT.
 function discreet($texto) {
-	message($GRAY, "$@");
+	global $GRAY, $args;
+	message($GRAY, $texto);
 }
 
 // Helper: makes sure we're not on a detached HEAD
@@ -244,10 +245,8 @@ function ensure_stree_defined($name) {
 // Helper: error message. This will show up in red on STDERR, followed by usage info,
 // then exit the script with exit code 1.
 function error($show_usage, $mensaje) {
-	global $show_usage, $RED;
-	// show_usage=$1;
-	// shift;
-	message($RED, '', $mensaje);
+	global $RED, $CROSS;
+	message($RED, $mensaje, $CROSS);
 	$show_usage && usage();
 	// kill -s ABRT $$
 	die("\nKAPUT\n");
@@ -268,8 +267,8 @@ function get_remote_name($nombre) {
 // Helper: computes a root config key based on the passed CLI name.
 function get_root_key($nombre) {
 	global $has_iconv, $has_tr;
-	$result = $nombre;
-	$has_iconv && $result = iconv("UTF-8", 'ASCII//TRANSLIT//IGNORE', $result);
+	//$result = $nombre;
+	$has_iconv && $result = iconv("UTF-8", 'ASCII//TRANSLIT//IGNORE', $nombre);
 	$has_tr && $result = strtr($result, "A-Z", "a-z");
 	// $result=$(echo "$result" | sed 's/[^a-z0-9_ -]\+//g' | sed -e 's/^ \+\| \+$//g' -e 's/ \+/-/g')
 	$result = preg_replace("/[^a-z0-9_ -]\+/", "//", $result);
@@ -316,7 +315,7 @@ function list_subtrees() {
 		$tupla = preg_split("/[\s]+/", $valor); // deben ser 3
 		$stree = $tupla[0];
 		$remoting = $tupla[1];
-		$sprefix = $tupla[2];
+		$prefix = $tupla[2];
 		if (empty($stree)) {
 			continue;
 		}
@@ -346,13 +345,14 @@ function list_subtrees() {
 
 // Helper: info/success message. This will show up in cyan on STDOUT.
 function meh($mensaje) {
-	message($CYAN, '', $mensaje);
+	global $CYAN;
+	message($CYAN, $mensaje, $CHECK);
 }
 
 // Helper: message. Takes a color code as first arg, then the message as remaining
 // args. Only injects VT100 ANSI codes if we're on a color-supporting TTY output
 // (which is detected using STDOUT, by the way, so YMMV when redirecting to STDERR).
-function message($color, $simbolo, $mensaje) {
+function message($color, $mensaje, $simbolo='*') {
 	// shift
 	
 	echo "$color $simbolo $mensaje";
@@ -396,12 +396,15 @@ function optional_arg($pos, $default) {
 // as a single commit in the current branch. This requires a non-detached HEAD and
 // an empty stage, so we don't conflate our work with ongoing commit construction.
 function pull_subtree($name, $log_size) {
-	$name = require_name();
+	//var_dump($name);
+	$name = require_arg(2, 'Missing subtree name');
+	
 	
 	ensure_attached_head();
 	ensure_no_stage();
 	ensure_stree_defined($name);
 	
+	echo "Nombre: $name\n";
 	$root_key = get_root_key($name);
 	$remote = get_remote_name($name);
 	$branch = fake_git("config", "--local stree.$root_key.branch");
@@ -440,11 +443,12 @@ function pull_subtree($name, $log_size) {
 // cherry-picked on a special integration branch that first rebase-pulls
 // from upstream, then the new set is pushed back.
 function push_subtree() {
-	$name = require_name();
-	$numargs = func_num_args();
+	global $args;
+	$name = require_arg(2, 'Missing subtree name');
+	$numargs = count($args);
 	echo "Number of arguments: $numargs \n";
 	if ($numargs >= 2) {
-		echo "Second argument is: " . func_get_arg(1) . "\n";
+		echo "Third argument is: " . $args[2] . "\n";
 	}
 	ensure_no_stage();
 	ensure_stree_defined($name);
@@ -454,8 +458,8 @@ function push_subtree() {
 	
 	$commits = array ();
 	// $commits=(${args[@]:2})
-	$commits = func_get_arg(2);
-	if ($commits == 0) {
+	$commits = array_slice($args, 3);
+	if (count($commits) == 0) {
 		$latest = fake_git("config", "--local stree.$root_key.latest-sync");
 		if (empty($latest)) {
 			error(false, "Cannot find the most recent sync point for this subtree :-(");
@@ -473,10 +477,10 @@ function push_subtree() {
 		}
 	} else {
 		$parsed_ref = '';
-		for($i = 0; i < $commits; ++$i) {
+		for($i = 0; $i < count($commits); ++$i) {
 			$parsed_ref = fake_git("rev-parse", "--short " . $commits[$i]);
 			// si no falla la ejecuion de rev-parse
-			if ($parsed) {
+			if ($parsed_ref) {
 				$commits[$i] = $parsed_ref;
 			} else {
 				error(false, "Cannot resolve commit: " . $commits[$i]);
@@ -503,7 +507,7 @@ function push_subtree() {
 		}
 	}
 	
-	fake_git("push", "--quiet $remote_name $branch_name:$branch") && fake_git("checkout", "--quiet --merge $latest_head") && yay("STree '$name' successfully backported $changes to its remote");
+	fake_git("push", "--quiet $remote_name $branch_name:$branch") && fake_git("checkout", "--quiet --merge $latest_head") && yay("STree '$name' successfully backported local changes to its remote");
 }
 
 // Helper: require that an argument still be available in the list provided on the CLI
@@ -560,12 +564,12 @@ function rm_subtree($name) {
 // Then the subtree's backport branch is configured and pushed (to either `master`
 // or the specified branch).
 function split_subtree() {
-	$name = require_name();
-	require_arg(2, 'Missing -P parameter', '-P');
-	$prefix = require_arg(3, 'Missing prefix');
+	$name = require_arg(2, 'Missing subtree name');
+	require_arg(3, 'Missing -P parameter', '-P');
+	$prefix = require_arg(4, 'Missing prefix');
 	$prefix = normalize_prefix("$prefix");
-	$url = require_arg(4, 'Missing URL');
-	$branch = optional_arg(5, 'master');
+	$url = require_arg(5, 'Missing URL');
+	$branch = optional_arg(6, 'master');
 	
 	$root_key = get_root_key($name);
 	$remote_name = get_remote_name($name);
@@ -588,11 +592,12 @@ function split_subtree() {
 
 // Helper: usage display on STDERR. Used when an error occurs or when the CLI
 // args don't start with a valid command.
-function usage($subcmd, $otros) {
+function usage() {
+	global $subcmd, $args;
 	$cmd = $subcmd;
 	
-	if ("help" == $cmd && func_) {
-		$cmd = $otros; // "${args[1]}";
+	if ("help" == $cmd && !empty($args[2])) {
+		$cmd = $args[2]; // "${args[1]}";
 	} elseif ("help" == "$cmd") {
 		$cmd = "";
 	}
@@ -615,7 +620,7 @@ function usage($subcmd, $otros) {
 	
 	if (empty($cmd)) {
 		$msg = <<<EOT
-  Usage: $0 sub-command [options...]
+  Usage: $args[0] sub-command [options...]
   Sub-commands:
 EOT;
 	} else {
@@ -696,7 +701,7 @@ EOT;
 // Helper: success message. This will show up in green on STDOUT.
 function yay($mensaje) {
 	global $GREEN, $CHECK;
-	message($GREEN, $CHECK, $mensaje);
+	message($GREEN, $mensaje, $CHECK);
 }
 
 // Allow subshells (such as functions called within a `$(…)` subshell)
