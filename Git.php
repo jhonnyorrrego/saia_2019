@@ -584,7 +584,12 @@ class GitRepo {
 	public function commit_simple($message = "") {
 		return $this->run("commit -m ".escapeshellarg($message));
 	}
-	
+
+	public function commit_author($message, $user, $email) {
+		//git commit --author="scor <scor@52142.no-reply.drupal.org>"
+		return $this->run('commit --author="' . $user . '<' . $email . '>" -m ' .escapeshellarg($message));
+	}
+
 	/**
 	 * Runs a `git clone` call to clone the current repository
 	 * into a different directory
