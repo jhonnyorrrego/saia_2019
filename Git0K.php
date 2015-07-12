@@ -258,19 +258,19 @@ class Git0K extends Git {
 	public function processRead(&$estado_git) {
 		try {
 			$do_push = false;
-				// validar que no existan cambios
-				$mensaje = "Commit editor saia. Cambios locales " . date("Y-m-d H:i:s");
-				$this->resolveLocalChanges($mensaje);
-				// TODO: validar sobre cual rama se hacer el pull, si es un subtree cambia
-				// $estado_git=$git->repoPull('origin', 'master');
-				
-				$estado_git = $estado;
+			// validar que no existan cambios
+			$mensaje = "Commit editor saia. Cambios locales " . date("Y-m-d H:i:s");
+			$this->resolveLocalChanges($mensaje);
+			// TODO: validar sobre cual rama se hacer el pull, si es un subtree cambia
+			// $estado_git=$git->repoPull('origin', 'master');
+			
+			$estado_git = $estado;
 		} catch (Exception $e) {
 			echo $e;
 			$estado_git = $e->getMessage();
 		}
 	}
-	
+
 	protected function resolveLocalChanges($mensaje) {
 		$pattern = "/\[ahead [\d]+\]/";
 		$pattern_modificados = "/(^[ACDMRU? ]{2}) ([A-Za-z0-9_\-\.\/]+)/";
@@ -288,17 +288,17 @@ class Git0K extends Git {
 				chdir($this->repo_path);
 				for($i = 1; $i < count($modificados); $i++) {
 					$input_line = $modificados[$i];
-					//The MM means that this file was modified with respect to parent 1 and also modified with respect to parent 2.
-					//The AM status means that the file has been modified on disk since we last added it.
+					// The MM means that this file was modified with respect to parent 1 and also modified with respect to parent 2.
+					// The AM status means that the file has been modified on disk since we last added it.
 					// nombre del archivo en $output_array[2];
 					$output_array = array ();
 					if (preg_match($pattern_modificados, $input_line, $output_array) > 0) {
-						//AM Archivo nuevo. Se hizo add antes y se volvio a modificar
-						//MM Archivo existente. Se hizo add antes y se volvio a modificar
-						//"A " y "M " son staged files (add + commit)
-						//"M " ya se hizo add de un archivo existente modificado
-						//"A " ya se hizo add de un archivo nuevo
-						//"??" Nuevo. Hacer add y commit
+						// AM Archivo nuevo. Se hizo add antes y se volvio a modificar
+						// MM Archivo existente. Se hizo add antes y se volvio a modificar
+						// "A " y "M " son staged files (add + commit)
+						// "M " ya se hizo add de un archivo existente modificado
+						// "A " ya se hizo add de un archivo nuevo
+						// "??" Nuevo. Hacer add y commit
 						if ($output_array[1] == " M") {
 							$this->repoAdd($output_array[2]);
 							$do_commit = true;
@@ -325,20 +325,64 @@ class Git0K extends Git {
 				if ($do_push) {
 					// $git->repoPush($git->get_remoto_base()->alias, "master");
 					// $estado_git = $git->repoPushCredentials($git->get_remoto_base()->alias, "master", $git->get_remoto_base()->url);
+					/**
+					 * git push
+					 * To http://laboratorio.netsaia.com:82/usuario/GitApi.git
+					 * ! [rejected] master -> master (fetch first)
+					 * Si se ejecuta git status -b --porcelain
+					 * ## master...origin/master [ahead M, behind N]
+					 * Solo se resuelve con un git pull
+					 * Auto-merging README
+					 * CONFLICT (content): Merge conflict in README
+					 * Automatic merge failed; fix conflicts and then commit the result.
+					 * Si sale eso hay que arreglar el archivo
+					 */
 					$estado_git = $this->repoPush($this->get_remoto_base()->alias, "master");
 				}
-
+				
 				// TODO: tener en cuenta el subtree
 				// TODO: Hacer analisis de acuerdo con lo descrito en https://www.kernel.org/pub/software/scm/git/docs/git-status.html
 				// $estado_git = $git->repoCommitAuthor($mensaje);
 			}
-		}		
+		}
 	}
-	
+
 	protected function resolveRemoteChanges() {
-		//Pull origin and update current branch [user& git pull origin CURRENT_BRANCH] to make sure you are synced with origin.
-		//You might need to do a manual merge at this point.
-		//Traduccion: Si pull falla hay que hacer merge manual. Mejor se le informa al usuario
+		// Pull origin and update current branch [user& git pull origin CURRENT_BRANCH] to make sure you are synced with origin.
+		// You might need to do a manual merge at this point.
+		// Traduccion: Si pull falla hay que hacer merge manual. Mejor se le informa al usuario
+		/*
+		 * Auto-merging README
+		 * CONFLICT (content): Merge conflict in README
+		 * Automatic merge failed; fix conflicts and then commit the result.
+		 *
+		 */
+		$pattern = "/\[ahead ([\d]+), behind ([\d]+)\]/";
+		$pattern_modificados = "/(^[ACDMRU? ]{2}) ([A-Za-z0-9_\-\.\/]+)/";
+		$modificados = $this->getRepoStatus();
+		if ($modificados) {
+			// mirar si tiene "[ahead n]". Posiblemente hacer commit/push
+			if (preg_match($pattern, $modificados[0]) === 1) {
+				$do_push = true;
+				// FIXME: por defecto origin, pero tener en cuenta si es subtree
+				// FIXME: No esta funcionando asignar credenciales para github
+				// $estado_git = $git->repoPushCredentials($git->get_remoto_base()->alias, "master", $git->get_remoto_base()->url);
+				$estado_git = $this->repoPush($this->get_remoto_base()->alias, "master");
+			}
+			if (count($modificados) > 1) {
+				chdir($this->repo_path);
+				for($i = 1; $i < count($modificados); $i++) {
+					$input_line = $modificados[$i];
+					// The MM means that this file was modified with respect to parent 1 and also modified with respect to parent 2.
+					// The AM status means that the file has been modified on disk since we last added it.
+					// nombre del archivo en $output_array[2];
+					$output_array = array ();
+					if (preg_match($pattern_modificados, $input_line, $output_array) > 0) {
+						
+					}
+				}
+			}
+		}
 	}
 }
 class Remoto {
