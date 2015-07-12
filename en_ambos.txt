@@ -1,2 +1,1 @@
-ALLA: Esta alla y aca
-ACA: Esta aca y alla
+Esta alla y aca
