@@ -362,10 +362,9 @@ class Git0K extends Git {
 		$pattern_behind = "/\[behind [\d]+\]/";
 		$pattern_both = "/\[ahead ([\d]+), behind ([\d]+)\]/";
 		$pattern_modificados = "/(^[ACDMRU? ]{2}) ([A-Za-z0-9_\-\.\/]+)/";
-		// TODO: Hacer un git fech (no pull)
 		$modificados = $this->getRepoStatus();
 		if ($modificados) {
-			// mirar si tiene "[ahead n]". Posiblemente hacer commit/push
+			// mirar si tiene "[ahead m, behind n]".
 			$que_hacer = "";
 			if (preg_match($pattern_both, $modificados[0]) === 1) {
 				$que_hacer = $this->resolveMerge();
@@ -381,6 +380,7 @@ class Git0K extends Git {
 			 * README | 6 ++++--
 			 * 1 file changed, 4 insertions(+), 2 deletions(-)
 			 */
+				$this->repoPull($this->get_remoto_base()->alias, "master");
 			}
 			if (count($modificados) > 1) {
 				chdir($this->repo_path);
@@ -427,6 +427,8 @@ class Git0K extends Git {
 				$output_array = array ();
 				if (preg_match($pattern_modificados, $input_line, $output_array) > 0) {
 					/**
+					 * Estos estados solo se presentan cuando falla el merge. Hay que proceder manualmente. Si el arreglo se hizo manualmente
+					 * Estos estados prevalecen y hay que hacer add, commit
 					 * DD unmerged, eliminado en ambos
 					 * AU unmerged, agregado por nosotros
 					 * UD unmerged, eliminado por ellos
@@ -438,7 +440,7 @@ class Git0K extends Git {
 					if ($output_array[1] == "UU") {//pull hizo un merge automatico y quedo bien
 						$this->repoAdd($output_array[2]);
 						$do_commit = true;
-					} elseif ($output_array[1] == "A ") {
+					} elseif ($output_array[1] == "AA") {
 					} else {
 					}
 				}
