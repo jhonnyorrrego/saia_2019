@@ -215,8 +215,8 @@ class Git0K extends Git {
 	 * @param string $branch        	
 	 * @return string
 	 */
-	public function repoPull($remote, $branch, $ff_only=false) {
-		return $this->repo->pull($remote, $branch);
+	public function repoPull($remote, $branch, $normal=true) {
+		return $this->repo->pull($remote, $branch, $normal);
 	}
 
 	/**
@@ -268,7 +268,15 @@ class Git0K extends Git {
 			// TODO: validar sobre cual rama se hacer el pull, si es un subtree cambia
 			// $estado_git=$git->repoPull('origin', 'master');
 			$estado_git = $this->repoFetch();
-			$this->resolveRemoteChanges();
+			$que_hacer = $this->resolveRemoteChanges();
+			if($que_hacer === "fix_manual") {
+				$lista = get_lista_archivos_merge_manual();
+				$archivos = "";
+				if($lista) {
+					$archivos = implode(",", $lista);
+				}
+				throw new Exception("Hacer merge manual del(os) archivo(s) ". $archivos);
+			}
 		} catch (Exception $e) {
 			echo $e;
 			$estado_git = $e->getMessage();
@@ -371,6 +379,7 @@ class Git0K extends Git {
 				if ($que_hacer === "fix_manual") {
 					return $que_hacer;
 				}
+				$this->repoPush($this->get_remoto_base()->alias, "master");
 				return "ok";
 			} elseif (preg_match($pattern_behind, $modificados[0]) === 1) {
 			
@@ -381,7 +390,6 @@ class Git0K extends Git {
 			 * <archivo> | 6 ++++--
 			 * 1 file changed, 4 insertions(+), 2 deletions(-)
 			 */
-				//TODO: esto fuerza abrir un editor y falla sino se modifica
 				$this->repoPull($this->get_remoto_base()->alias, "master");
 			} elseif (preg_match($pattern_ahead, $modificados[0]) === 1) {
 				$this->repoPush($this->get_remoto_base()->alias, "master");
@@ -398,7 +406,7 @@ class Git0K extends Git {
 		// FIXME: por defecto origin, pero tener en cuenta si es subtree
 		// FIXME: No esta funcionando asignar credenciales para github
 		// $estado_git = $git->repoPushCredentials($git->get_remoto_base()->alias, "master", $git->get_remoto_base()->url);
-		$estado_git = $this->repoPull($this->get_remoto_base()->alias, "master");
+		$estado_git = $this->repoPull($this->get_remoto_base()->alias, "master", false);
 		/*
 		 * Auto-merging README
 		 * CONFLICT (content): Merge conflict in README
@@ -407,7 +415,9 @@ class Git0K extends Git {
 		if (strpos($estado_git, "Automatic merge failed;")) {
 			return "fix_manual";
 		}
+		//Normalmente queda ahead N, hacer push
 		return "ok";
+
 		// TODO: Resolver cambios locales
 		// pull hace commit automatico
 		$modificados = $this->getRepoStatus();
@@ -440,6 +450,38 @@ class Git0K extends Git {
 				}
 			}
 		}
+	}
+	
+	protected function get_lista_archivos_merge_manual(){
+		$pattern_modificados = "/(^[ACDMRU? ]{2}) ([A-Za-z0-9_\-\.\/]+)/";
+		$modificados = $this->getRepoStatus();
+		$problemas = array("DD","AU","UD","UA","DU","AA","UU",);
+		$lista = array();
+		if ($modificados) {
+			if (count($modificados) > 1) {
+				for($i = 1; $i < count($modificados); $i++) {
+					$input_line = $modificados[$i];
+					// The MM means that this file was modified with respect to parent 1 and also modified with respect to parent 2.
+					// The AM status means that the file has been modified on disk since we last added it.
+					// nombre del archivo en $output_array[2];
+					$output_array = array ();
+					if (preg_match($pattern_modificados, $input_line, $output_array) > 0) {
+					/* DD unmerged, eliminado en ambos
+					 * AU unmerged, agregado por nosotros
+					 * UD unmerged, eliminado por ellos
+					 * UA unmerged, agregado por ellos
+					 * DU unmerged, eliminado por nosotros
+					 * AA unmerged, agregado por ambos
+					 * UU unmerged, modificado por ambos
+					 * */
+						if(in_array($needle, $output_array[1])) {
+							$lista[] = $output_array[2];
+						}
+					}
+				}
+			}
+		}
+		return $lista;
 	}
 }
 class Remoto {

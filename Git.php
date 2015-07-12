@@ -891,8 +891,12 @@ class GitRepo {
 	 * @param string $branch
 	 * @return string
 	 */
-	public function pull($remote, $branch) {
-		return $this->run("pull $remote $branch");
+	public function pull($remote, $branch, $normal=true) {
+		//usar la opcion --no-edit porque intenta abrir un editor y falla
+		if($normal) {
+		    return $this->run("pull $remote $branch");
+		}
+	    return $this->run("pull --no-edit $remote $branch");
 	}
 
 	public function pull_ff_only($remote, $branch) {
