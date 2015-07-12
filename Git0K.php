@@ -358,6 +358,8 @@ class Git0K extends Git {
 		 * Automatic merge failed; fix conflicts and then commit the result.
 		 *
 		 */
+		$pattern_ahead = "/\[ahead [\d]+\]/";
+		$pattern_behind = "/\[behind [\d]+\]/";
 		$pattern_both = "/\[ahead ([\d]+), behind ([\d]+)\]/";
 		$pattern_modificados = "/(^[ACDMRU? ]{2}) ([A-Za-z0-9_\-\.\/]+)/";
 		// TODO: Hacer un git fech (no pull)
@@ -367,9 +369,18 @@ class Git0K extends Git {
 			$que_hacer = "";
 			if (preg_match($pattern_both, $modificados[0]) === 1) {
 				$que_hacer = $this->resolveMerge();
-				if($que_hacer === "fix_manual") {
+				if ($que_hacer === "fix_manual") {
 					return $que_hacer;
 				}
+			} elseif (preg_match($pattern_behind, $modificados[0]) === 1) {
+			
+			/**
+			 * git pull
+			 * Updating 40dcd20..a302473
+			 * Fast-forward
+			 * README | 6 ++++--
+			 * 1 file changed, 4 insertions(+), 2 deletions(-)
+			 */
 			}
 			if (count($modificados) > 1) {
 				chdir($this->repo_path);
@@ -400,12 +411,39 @@ class Git0K extends Git {
 		 * CONFLICT (content): Merge conflict in README
 		 * Automatic merge failed; fix conflicts and then commit the result.
 		 */
-		if(strpos($estado_git, "Automatic merge failed;")) {
+		if (strpos($estado_git, "Automatic merge failed;")) {
 			return "fix_manual";
 		}
 		// TODO: Resolver cambios locales
 		// pull hace commit automatico
 		$modificados = $this->getRepoStatus();
+		if (count($modificados) > 1) {
+			chdir($this->repo_path);
+			for($i = 1; $i < count($modificados); $i++) {
+				$input_line = $modificados[$i];
+				// The MM means that this file was modified with respect to parent 1 and also modified with respect to parent 2.
+				// The AM status means that the file has been modified on disk since we last added it.
+				// nombre del archivo en $output_array[2];
+				$output_array = array ();
+				if (preg_match($pattern_modificados, $input_line, $output_array) > 0) {
+					/**
+					 * DD unmerged, eliminado en ambos
+					 * AU unmerged, agregado por nosotros
+					 * UD unmerged, eliminado por ellos
+					 * UA unmerged, agregado por ellos
+					 * DU unmerged, eliminado por nosotros
+					 * AA unmerged, agregado por ambos
+					 * UU unmerged, modificado por ambos
+					 */
+					if ($output_array[1] == "UU") {//pull hizo un merge automatico y quedo bien
+						$this->repoAdd($output_array[2]);
+						$do_commit = true;
+					} elseif ($output_array[1] == "A ") {
+					} else {
+					}
+				}
+			}
+		}
 	}
 }
 class Remoto {
