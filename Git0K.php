@@ -317,6 +317,7 @@ class Git0K extends Git {
 						}
 					}
 				}
+				// TODO: es necesario hacer commit. Posiblemente push y luego pull
 				if ($do_commit) {
 					$estado_git = $this->repoCommitAuthor($mensaje);
 					$do_push = true;
@@ -326,11 +327,9 @@ class Git0K extends Git {
 					// $estado_git = $git->repoPushCredentials($git->get_remoto_base()->alias, "master", $git->get_remoto_base()->url);
 					$estado_git = $this->repoPush($this->get_remoto_base()->alias, "master");
 				}
-		
-				// TODO: es necesario hacer commit. Posiblemente push y luego pull
+
 				// TODO: tener en cuenta el subtree
 				// TODO: Hacer analisis de acuerdo con lo descrito en https://www.kernel.org/pub/software/scm/git/docs/git-status.html
-				// FIXME: Haria un commit por cada carga de archivo
 				// $estado_git = $git->repoCommitAuthor($mensaje);
 			}
 		}		

@@ -1,3 +1,5 @@
+1.    Revisar las ramas (Branches) y Stage area [user& git status] para ver en que rama se está y si se tiene algun archivo sin confirmar (uncommitted files) en el repositorio local 
+
 Para tener en cuenta en los estados (git status --porcelain
 AM y MM indican partially staged (add + commit) . Me suena a merge
 AM Ya se habia agregado pero se volvio a modificar. Hacer add de nuevo?
@@ -6,3 +8,8 @@ AM Ya se habia agregado pero se volvio a modificar. Hacer add de nuevo?
 " M" Existe, se modifico pero no se ha hecho add (no esta en el indice)
 "A " ya se hizo add de un archivo nuevo
 ?? Nuevo, no se ha hecho add ni commit
+
+2.    Commit or stash any uncommitted files before doing the pull. You should generally avoid leaving uncommitted files at the end of a session, but it's not always possible.
+3.    Pull origin and update current branch [user& git pull origin CURRENT_BRANCH] to make sure you are synced with origin.
+        You might need to do a manual merge at this point.
+
