@@ -293,7 +293,8 @@ class Git0K extends Git {
 					// nombre del archivo en $output_array[2];
 					$output_array = array ();
 					if (preg_match($pattern_modificados, $input_line, $output_array) > 0) {
-						//AM y MM indican partially staged (add + commit)
+						//AM Archivo nuevo. Se hizo add antes y se volvio a modificar
+						//MM Archivo existente. Se hizo add antes y se volvio a modificar
 						//"A " y "M " son staged files (add + commit)
 						//"M " ya se hizo add de un archivo existente modificado
 						//"A " ya se hizo add de un archivo nuevo
@@ -307,7 +308,12 @@ class Git0K extends Git {
 						} elseif ($output_array[1] == "??") {
 							$this->repoAdd($output_array[2]);
 							$do_commit = true;
-						} else {
+						} elseif ($output_array[1] == "AM") {
+							$this->repoAdd($output_array[2]);
+							$do_commit = true;
+						} elseif ($output_array[1] == "MM") {
+							$this->repoAdd($output_array[2]);
+							$do_commit = true;
 						}
 					}
 				}
