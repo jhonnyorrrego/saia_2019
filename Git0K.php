@@ -244,6 +244,10 @@ class Git0K extends Git {
 		return $this->repo->get_repo_root_dir();
 	}
 
+	public function repoFetch() {
+		return $this->repo->fetch();
+	}
+
 	public function processSave($ruta_archivo, &$estado_git) {
 		try {
 			// validar que no existan cambios
@@ -259,12 +263,12 @@ class Git0K extends Git {
 		try {
 			$do_push = false;
 			// validar que no existan cambios
-			$mensaje = "Commit editor saia. Cambios locales " . date("Y-m-d H:i:s");
+			$mensaje = "Commit automatico editor saia. Cambios locales " . date("Y-m-d H:i:s");
 			$this->resolveLocalChanges($mensaje);
 			// TODO: validar sobre cual rama se hacer el pull, si es un subtree cambia
 			// $estado_git=$git->repoPull('origin', 'master');
-			
-			$estado_git = $estado;
+			$estado_git = $this->repoFetch();
+			$this->resolveRemoteChanges();
 		} catch (Exception $e) {
 			echo $e;
 			$estado_git = $e->getMessage();
@@ -272,17 +276,15 @@ class Git0K extends Git {
 	}
 
 	protected function resolveLocalChanges($mensaje) {
-		$pattern = "/\[ahead [\d]+\]/";
+		$pattern_ahead = "/\[ahead [\d]+\]/";
+		$pattern_behind = "/\[behind [\d]+\]/";
+		$pattern_both = "/\[ahead ([\d]+), behind ([\d]+)\]/";
 		$pattern_modificados = "/(^[ACDMRU? ]{2}) ([A-Za-z0-9_\-\.\/]+)/";
 		$modificados = $this->getRepoStatus();
 		if ($modificados) {
-			// mirar si tiene "[ahead n]". Posiblemente hacer commit/push
-			if (preg_match($pattern, $modificados[0]) === 1) {
+			// mirar si tiene "[ahead n]". No hay problema se hace add, commit, push
+			if (preg_match($pattern_ahead, $modificados[0]) === 1) {
 				$do_push = true;
-				// FIXME: por defecto origin, pero tener en cuenta si es subtree
-				// FIXME: No esta funcionando asignar credenciales para github
-				// $estado_git = $git->repoPushCredentials($git->get_remoto_base()->alias, "master", $git->get_remoto_base()->url);
-				$estado_git = $this->repoPush($this->get_remoto_base()->alias, "master");
 			}
 			if (count($modificados) > 1) {
 				chdir($this->repo_path);
@@ -320,7 +322,6 @@ class Git0K extends Git {
 				// TODO: es necesario hacer commit. Posiblemente push y luego pull
 				if ($do_commit) {
 					$estado_git = $this->repoCommitAuthor($mensaje);
-					$do_push = true;
 				}
 				if ($do_push) {
 					// $git->repoPush($git->get_remoto_base()->alias, "master");
@@ -357,21 +358,18 @@ class Git0K extends Git {
 		 * Automatic merge failed; fix conflicts and then commit the result.
 		 *
 		 */
-		$pattern = "/\[ahead ([\d]+), behind ([\d]+)\]/";
+		$pattern_both = "/\[ahead ([\d]+), behind ([\d]+)\]/";
 		$pattern_modificados = "/(^[ACDMRU? ]{2}) ([A-Za-z0-9_\-\.\/]+)/";
-		//TODO: Hacer un git fech (no pull)
+		// TODO: Hacer un git fech (no pull)
 		$modificados = $this->getRepoStatus();
 		if ($modificados) {
 			// mirar si tiene "[ahead n]". Posiblemente hacer commit/push
-			if (preg_match($pattern, $modificados[0]) === 1) {
-				//Si tenemos ahead M, behind N. Esto es muuuy peligroso
-				//git pull --rebase
-				//TODO: Resolver cambios locales
-				$do_push = true;
-				// FIXME: por defecto origin, pero tener en cuenta si es subtree
-				// FIXME: No esta funcionando asignar credenciales para github
-				// $estado_git = $git->repoPushCredentials($git->get_remoto_base()->alias, "master", $git->get_remoto_base()->url);
-				$estado_git = $this->repoPush($this->get_remoto_base()->alias, "master");
+			$que_hacer = "";
+			if (preg_match($pattern_both, $modificados[0]) === 1) {
+				$que_hacer = $this->resolveMerge();
+				if($que_hacer === "fix_manual") {
+					return $que_hacer;
+				}
 			}
 			if (count($modificados) > 1) {
 				chdir($this->repo_path);
@@ -382,11 +380,32 @@ class Git0K extends Git {
 					// nombre del archivo en $output_array[2];
 					$output_array = array ();
 					if (preg_match($pattern_modificados, $input_line, $output_array) > 0) {
-						
 					}
 				}
 			}
 		}
+	}
+
+	protected function resolveMerge() {
+		// Si tenemos ahead M, behind N. Esto es muuuy peligroso
+		// git pull --rebase
+		// mejor un git pull
+		
+		// FIXME: por defecto origin, pero tener en cuenta si es subtree
+		// FIXME: No esta funcionando asignar credenciales para github
+		// $estado_git = $git->repoPushCredentials($git->get_remoto_base()->alias, "master", $git->get_remoto_base()->url);
+		$estado_git = $this->repoPull($this->get_remoto_base()->alias, "master");
+		/*
+		 * Auto-merging README
+		 * CONFLICT (content): Merge conflict in README
+		 * Automatic merge failed; fix conflicts and then commit the result.
+		 */
+		if(strpos($estado_git, "Automatic merge failed;")) {
+			return "fix_manual";
+		}
+		// TODO: Resolver cambios locales
+		// pull hace commit automatico
+		$modificados = $this->getRepoStatus();
 	}
 }
 class Remoto {
