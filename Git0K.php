@@ -215,7 +215,7 @@ class Git0K extends Git {
 	 * @param string $branch        	
 	 * @return string
 	 */
-	public function repoPull($remote, $branch) {
+	public function repoPull($remote, $branch, $ff_only=false) {
 		return $this->repo->pull($remote, $branch);
 	}
 
