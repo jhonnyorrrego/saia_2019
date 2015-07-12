@@ -371,28 +371,21 @@ class Git0K extends Git {
 				if ($que_hacer === "fix_manual") {
 					return $que_hacer;
 				}
+				return "ok";
 			} elseif (preg_match($pattern_behind, $modificados[0]) === 1) {
 			
 			/**
 			 * git pull
 			 * Updating 40dcd20..a302473
 			 * Fast-forward
-			 * README | 6 ++++--
+			 * <archivo> | 6 ++++--
 			 * 1 file changed, 4 insertions(+), 2 deletions(-)
 			 */
+				//TODO: esto fuerza abrir un editor y falla sino se modifica
 				$this->repoPull($this->get_remoto_base()->alias, "master");
-			}
-			if (count($modificados) > 1) {
-				chdir($this->repo_path);
-				for($i = 1; $i < count($modificados); $i++) {
-					$input_line = $modificados[$i];
-					// The MM means that this file was modified with respect to parent 1 and also modified with respect to parent 2.
-					// The AM status means that the file has been modified on disk since we last added it.
-					// nombre del archivo en $output_array[2];
-					$output_array = array ();
-					if (preg_match($pattern_modificados, $input_line, $output_array) > 0) {
-					}
-				}
+			} elseif (preg_match($pattern_ahead, $modificados[0]) === 1) {
+				$this->repoPush($this->get_remoto_base()->alias, "master");
+				return "ok";
 			}
 		}
 	}
@@ -414,6 +407,7 @@ class Git0K extends Git {
 		if (strpos($estado_git, "Automatic merge failed;")) {
 			return "fix_manual";
 		}
+		return "ok";
 		// TODO: Resolver cambios locales
 		// pull hace commit automatico
 		$modificados = $this->getRepoStatus();
