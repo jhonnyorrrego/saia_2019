@@ -359,10 +359,14 @@ class Git0K extends Git {
 		 */
 		$pattern = "/\[ahead ([\d]+), behind ([\d]+)\]/";
 		$pattern_modificados = "/(^[ACDMRU? ]{2}) ([A-Za-z0-9_\-\.\/]+)/";
+		//TODO: Hacer un git fech (no pull)
 		$modificados = $this->getRepoStatus();
 		if ($modificados) {
 			// mirar si tiene "[ahead n]". Posiblemente hacer commit/push
 			if (preg_match($pattern, $modificados[0]) === 1) {
+				//Si tenemos ahead M, behind N. Esto es muuuy peligroso
+				//git pull --rebase
+				//TODO: Resolver cambios locales
 				$do_push = true;
 				// FIXME: por defecto origin, pero tener en cuenta si es subtree
 				// FIXME: No esta funcionando asignar credenciales para github
