@@ -247,30 +247,7 @@ class Git0K extends Git {
 	public function processSave($ruta_archivo, &$estado_git) {
 		try {
 			// validar que no existan cambios
-			$estado = $this->getRepoStatus();
-			if ($estado) {
-				// hacer git add archivo
-				// http://stackoverflow.com/questions/7239333/how-to-commit-only-some-files
-				/*
-				 * If you want to make that commit available on both branches you do
-				 * git stash # remove all changes from HEAD and save them somewhere else
-				 * git checkout <other-project> # change branches
-				 * git cherry-pick <commit-id> # pick a commit from ANY branch and apply it to the current
-				 * git checkout <first-project> # change to the other branch
-				 * git stash pop # restore all changes again
-				 */
-				if (count($estado) == 1) {
-					// mirar si tiene "[ahead n]". Posiblemente hacer commit
-				}
-				if (count($estado) > 1) {
-					// TODO: Si estado es <ESP>M (espacio M) ruta archivo
-					// TODO: Se deberia iterar sobre la lista y buscar si alguno coincide con el archivo que se va a guardar
-					$estado_git .= $this->repoAdd($ruta_archivo);
-					$estado_git .= $this->repoCommit("Commit editor saia. Cambios locales " . date("Y-m-d H:i:s"));
-					// TODO: Validar si pertenece a un subtree y hacer commit sobre el
-					// $estado_get .= $repo->push("origin", "master");
-				}
-			}
+			$this->resolveLocalChanges($mensaje);
 			// TODO: validar sobre cual rama se hacer el pull, si es un subtree cambia
 			// $repo->pull('origin', 'master');
 		} catch (Exception $e) {
@@ -279,65 +256,11 @@ class Git0K extends Git {
 	}
 
 	public function processRead(&$estado_git) {
-		$pattern = "/\[ahead [\d]+\]/";
-		$pattern_modificados = "/([A-Z ]{2}) ([A-Za-z0-9_\-\.\/]+)/";
 		try {
 			$do_push = false;
 				// validar que no existan cambios
 				$mensaje = "Commit editor saia. Cambios locales " . date("Y-m-d H:i:s");
-				$modificados = $this->getRepoStatus();
-				if ($modificados) {
-					// mirar si tiene "[ahead n]". Posiblemente hacer commit/push
-					if (preg_match($pattern, $modificados[0]) === 1) {
-						$do_push = true;
-						// FIXME: por defecto origin, pero tener en cuenta si es subtree
-						// FIXME: No esta funcionando asignar credenciales para github
-						// $estado_git = $git->repoPushCredentials($git->get_remoto_base()->alias, "master", $git->get_remoto_base()->url);
-						$estado_git = $this->repoPush($this->get_remoto_base()->alias, "master");
-					}
-					if (count($modificados) > 1) {
-						chdir($this->repo_path);
-						for($i = 1; $i < count($modificados); $i++) {
-							$input_line = $modificados[$i];
-							//The MM means that this file was modified with respect to parent 1 and also modified with respect to parent 2.
-							//The AM status means that the file has been modified on disk since we last added it.
-							// nombre del archivo en $output_array[2];
-							$output_array = array ();
-							if (preg_match($pattern_modificados, $input_line, $output_array) > 0) {
-								// Modificacion local pero esta en el indice " M". Hacer push porque commit falla
-								if ($output_array[1] == " M") {
-									// TODO: No se entiende. add, commit por lo menos
-									$this->repoAdd($output_array[2]);
-									$do_push = true;
-									$do_commit = true;
-								} elseif ($output_array[1] == "A ") {
-									$this->repoCommitAuthor($mensaje);
-									$do_push = true;
-									// nombre del archivo en $output_array[2];
-								} elseif ($output_array[1] == "??") {
-									$this->repoAdd($output_array[2]);
-									$do_push = true;
-									$do_commit = true;
-								} else {
-								}
-							}
-						}
-						if ($do_commit) {
-							$estado_git = $this->repoCommitAuthor($mensaje);
-						}
-						if ($do_push) {
-							// $git->repoPush($git->get_remoto_base()->alias, "master");
-							// $estado_git = $git->repoPushCredentials($git->get_remoto_base()->alias, "master", $git->get_remoto_base()->url);
-							$estado_git = $this->repoPush($this->get_remoto_base()->alias, "master");
-						}
-						
-						// TODO: es necesario hacer commit. Posiblemente push y luego pull
-						// TODO: tener en cuenta el subtree
-						// TODO: Hacer analisis de acuerdo con lo descrito en https://www.kernel.org/pub/software/scm/git/docs/git-status.html
-						// FIXME: Haria un commit por cada carga de archivo
-						// $estado_git = $git->repoCommitAuthor($mensaje);
-					}
-				}
+				$this->resolveLocalChanges($mensaje);
 				// TODO: validar sobre cual rama se hacer el pull, si es un subtree cambia
 				// $estado_git=$git->repoPull('origin', 'master');
 				
@@ -346,6 +269,71 @@ class Git0K extends Git {
 			echo $e;
 			$estado_git = $e->getMessage();
 		}
+	}
+	
+	protected function resolveLocalChanges($mensaje) {
+		$pattern = "/\[ahead [\d]+\]/";
+		$pattern_modificados = "/(^[ACDMRU? ]{2}) ([A-Za-z0-9_\-\.\/]+)/";
+		$modificados = $this->getRepoStatus();
+		if ($modificados) {
+			// mirar si tiene "[ahead n]". Posiblemente hacer commit/push
+			if (preg_match($pattern, $modificados[0]) === 1) {
+				$do_push = true;
+				// FIXME: por defecto origin, pero tener en cuenta si es subtree
+				// FIXME: No esta funcionando asignar credenciales para github
+				// $estado_git = $git->repoPushCredentials($git->get_remoto_base()->alias, "master", $git->get_remoto_base()->url);
+				$estado_git = $this->repoPush($this->get_remoto_base()->alias, "master");
+			}
+			if (count($modificados) > 1) {
+				chdir($this->repo_path);
+				for($i = 1; $i < count($modificados); $i++) {
+					$input_line = $modificados[$i];
+					//The MM means that this file was modified with respect to parent 1 and also modified with respect to parent 2.
+					//The AM status means that the file has been modified on disk since we last added it.
+					// nombre del archivo en $output_array[2];
+					$output_array = array ();
+					if (preg_match($pattern_modificados, $input_line, $output_array) > 0) {
+						//AM y MM indican partially staged (add + commit)
+						//"A " y "M " son staged files (add + commit)
+						//"M " ya se hizo add de un archivo existente modificado
+						//"A " ya se hizo add de un archivo nuevo
+						//"??" Nuevo. Hacer add y commit
+						if ($output_array[1] == " M") {
+							$this->repoAdd($output_array[2]);
+							$do_commit = true;
+						} elseif ($output_array[1] == "A ") {
+							$do_commit = true;
+							// nombre del archivo en $output_array[2];
+						} elseif ($output_array[1] == "??") {
+							$this->repoAdd($output_array[2]);
+							$do_commit = true;
+						} else {
+						}
+					}
+				}
+				if ($do_commit) {
+					$estado_git = $this->repoCommitAuthor($mensaje);
+					$do_push = true;
+				}
+				if ($do_push) {
+					// $git->repoPush($git->get_remoto_base()->alias, "master");
+					// $estado_git = $git->repoPushCredentials($git->get_remoto_base()->alias, "master", $git->get_remoto_base()->url);
+					$estado_git = $this->repoPush($this->get_remoto_base()->alias, "master");
+				}
+		
+				// TODO: es necesario hacer commit. Posiblemente push y luego pull
+				// TODO: tener en cuenta el subtree
+				// TODO: Hacer analisis de acuerdo con lo descrito en https://www.kernel.org/pub/software/scm/git/docs/git-status.html
+				// FIXME: Haria un commit por cada carga de archivo
+				// $estado_git = $git->repoCommitAuthor($mensaje);
+			}
+		}		
+	}
+	
+	protected function resolveRemoteChanges() {
+		//Pull origin and update current branch [user& git pull origin CURRENT_BRANCH] to make sure you are synced with origin.
+		//You might need to do a manual merge at this point.
+		//Traduccion: Si pull falla hay que hacer merge manual. Mejor se le informa al usuario
 	}
 }
 class Remoto {

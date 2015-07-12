@@ -1,0 +1,7 @@
+Para tener en cuenta en los estados (git status --porcelain
+AM y MM indican partially staged (add + commit)
+"A " y "M " son staged files (add + commit)
+"M " ya se hizo add de un archivo existente modificado
+" M" Existe, se modifico pero no se ha hecho add (no esta en el indice)
+"A " ya se hizo add de un archivo nuevo
+?? Nuevo, no se ha hecho add ni commit

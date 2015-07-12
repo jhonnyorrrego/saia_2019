@@ -69,3 +69,87 @@ Automatic merge failed; fix conflicts and then commit the result.
 
 El archivo queda con ===> y <==== hay que editarlo y arreglar
 
+
+****************************
+Otro error
+
+iMac-de-Carlos:saia_editor giovanni$ git branch -v
+* master fa84d01 [ahead 130, behind 17] cambios api
+iMac-de-Carlos:saia_editor giovanni$ git status
+On branch master
+Your branch and 'origin/master' have diverged,
+and have 130 and 17 different commits each, respectively.
+  (use "git pull" to merge the remote branch into yours)
+nothing to commit, working directory clean
+
+iMac-de-Carlos:saia_editor giovanni$ git pull origin
+Performing inexact rename detection: 100% (83100/83100), done.
+CONFLICT (modify/delete): Git0K.php deleted in HEAD and modified in e81681cf0ab90f6112d31d0f0cb8a3975e782c5c. Version e81681cf0ab90f6112d31d0f0cb8a3975e782c5c of Git0K.php left in tree.
+Automatic merge failed; fix conflicts and then commit the result.
+
+iMac-de-Carlos:saia_editor giovanni$ git add editor_codigo/GitApi/Git0K.php 
+iMac-de-Carlos:saia_editor giovanni$ git pull origin
+U	Git0K.php
+Pull is not possible because you have unmerged files.
+Please, fix them up in the work tree, and then use 'git add/rm <file>'
+as appropriate to mark resolution and make a commit.
+
+iMac-de-Carlos:saia_editor giovanni$ git commit -m "resolucion de conflicto"
+U	Git0K.php
+error: commit is not possible because you have unmerged files.
+hint: Fix them up in the work tree, and then use 'git add/rm <file>'
+hint: as appropriate to mark resolution and make a commit.
+fatal: Exiting because of an unresolved conflict.
+
+iMac-de-Carlos:saia_editor giovanni$ git add editor_codigo/GitApi/Git0K.php 
+iMac-de-Carlos:saia_editor giovanni$ git commit -m "resolucion de conflicto"
+U	Git0K.php
+error: commit is not possible because you have unmerged files.
+hint: Fix them up in the work tree, and then use 'git add/rm <file>'
+hint: as appropriate to mark resolution and make a commit.
+fatal: Exiting because of an unresolved conflict.
+
+iMac-de-Carlos:saia_editor giovanni$ git branch -v
+* master fa84d01 [ahead 130, behind 17] cambios api
+iMac-de-Carlos:saia_editor giovanni$ git status
+On branch master
+Your branch and 'origin/master' have diverged,
+and have 130 and 17 different commits each, respectively.
+  (use "git pull" to merge the remote branch into yours)
+You have unmerged paths.
+  (fix conflicts and run "git commit")
+
+Unmerged paths:
+  (use "git add/rm <file>..." as appropriate to mark resolution)
+
+	deleted by us:   Git0K.php
+
+no changes added to commit (use "git add" and/or "git commit -a")
+
+iMac-de-Carlos:saia_editor giovanni$ git commit -am "resolucion de conflicto"
+[master 9485bf3] resolucion de conflicto
+
+iMac-de-Carlos:saia_editor giovanni$ git pull origin
+Already up-to-date.
+
+iMac-de-Carlos:saia_editor giovanni$ git remote -v
+GitApi	http://laboratorio.netsaia.com:82/giovanni.montes/GitApi.git (fetch)
+GitApi	http://laboratorio.netsaia.com:82/giovanni.montes/GitApi.git (push)
+origin	https://github.com/cerok/saia_base.git (fetch)
+origin	https://github.com/cerok/saia_base.git (push)
+
+iMac-de-Carlos:saia_editor giovanni$ git branch -v
+* master 9485bf3 [ahead 131] resolucion de conflicto
+iMac-de-Carlos:saia_editor giovanni$ git status
+On branch master
+Your branch is ahead of 'origin/master' by 131 commits.
+  (use "git push" to publish your local commits)
+nothing to commit, working directory clean
+
+iMac-de-Carlos:saia_editor giovanni$ git push
+Counting objects: 4719, done.
+Delta compression using up to 4 threads.
+Compressing objects: 100% (3585/3585), done.
+error: RPC failed; result=56, HTTP code = 200 3.00 KiB/s   
+fatal: The remote end hung up unexpectedly
+
