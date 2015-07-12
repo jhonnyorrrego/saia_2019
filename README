@@ -1,8 +1,8 @@
 1.    Revisar las ramas (Branches) y Stage area [user& git status] para ver en que rama se está y si se tiene algun archivo sin confirmar (uncommitted files) en el repositorio local 
 
 Para tener en cuenta en los estados (git status --porcelain
-AM y MM indican partially staged (add + commit) . Me suena a merge
-AM Ya se habia agregado pero se volvio a modificar. Hacer add de nuevo?
+"AM" y "MM" indican partially staged (add + commit).
+"AM" Ya se habia agregado pero se volvio a modificar. Hacer add de nuevo?
 "A " y "M " son staged files (add + commit)
 "M " ya se hizo add de un archivo existente modificado
 " M" Existe, se modifico pero no se ha hecho add (no esta en el indice)
