@@ -12,7 +12,3 @@ AM Ya se habia agregado pero se volvio a modificar. Hacer add de nuevo?
 2.    Commit or stash any uncommitted files before doing the pull. You should generally avoid leaving uncommitted files at the end of a session, but it's not always possible.
 3.    Pull origin and update current branch [user& git pull origin CURRENT_BRANCH] to make sure you are synced with origin.
         You might need to do a manual merge at this point.
-<<<<<<< HEAD
-
-=======
->>>>>>> 62abde2e6deee4ffc2540b4ab2447e7226dd3e84
