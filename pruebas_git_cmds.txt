@@ -153,3 +153,26 @@ Compressing objects: 100% (3585/3585), done.
 error: RPC failed; result=56, HTTP code = 200 3.00 KiB/s   
 fatal: The remote end hung up unexpectedly
 
+****
+Un git rebase falla si no puede hacer el merge
+iMac-de-Carlos:GitApi giovanni$ git pull --rebase
+First, rewinding head to replay your work on top of it...
+Applying: Posibles estados para merge
+Using index info to reconstruct a base tree...
+M	README
+Falling back to patching base and 3-way merge...
+Auto-merging README
+CONFLICT (content): Merge conflict in README
+Failed to merge in the changes.
+Patch failed at 0001 Posibles estados para merge
+The copy of the patch that failed is found in:
+   /Users/giovanni/DevTools/workspace_php/GitApi/.git/rebase-apply/patch
+
+When you have resolved this problem, run "git rebase --continue".
+If you prefer to skip this patch, run "git rebase --skip" instead.
+To check out the original branch and stop rebasing, run "git rebase --abort".
+
+iMac-de-Carlos:GitApi giovanni$ git status -b --porcelain
+## HEAD (no branch)
+UU README
+
