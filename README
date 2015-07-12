@@ -12,3 +12,11 @@ AM Ya se habia agregado pero se volvio a modificar. Hacer add de nuevo?
 2.    Confirmar (Commit) o esconder (stash) cualquiera de los archivos sin confirmar antes de hacer el pull. Por lo general se debe evitar dejar archivos sin confirmar (uncommitted) al final de una sesión, aunque no siempre es posible.
 3.    Pull origin and update current branch [user& git pull origin CURRENT_BRANCH] to make sure you are synced with origin.
         You might need to do a manual merge at this point.
+
+DD    unmerged, eliminado en ambos
+AU    unmerged, agregado por nosotros
+UD    unmerged, eliminado por ellos
+UA    unmerged, agregado por ellos
+DU    unmerged, eliminado por nosotros
+AA    unmerged, agregado por ambos
+UU    unmerged, modified por ambos
