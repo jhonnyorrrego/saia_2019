@@ -52,7 +52,7 @@ function manejadorClick(nodeId) {
         return;
     }
     //se cambio el nodo
-	nodoSeleccionado=nodeId;
+	//nodoSeleccionado=nodeId;
     //ignorar los nodos padre (folder)
     //Los nodos padre tienen un identificador del estilo "LVL-1-UID-55863dbe2e8ac"
     var pattern = /LVL-\d+-UID-/g;
@@ -62,13 +62,36 @@ function manejadorClick(nodeId) {
         var ruta_archivo=tree3.getUserData(nodeId,"myurl");
         var extension=tree3.getUserData(nodeId,"myextension");
         //the '*' has to do with cross-domain messaging. leave it like it is for same-domain messaging.
-        window.parent.postMessage({"tipo" : "cambioArchivoSeleccionado", "nodeId" : nodeId, "rutaArchivo" : ruta_archivo, "extension" : extension},'*');
+        window.parent.postMessage({"tipo" : "cambioArchivoSeleccionado", "nodeId" : nodeId, "nodoActual":nodoSeleccionado , "rutaArchivo" : ruta_archivo, "extension" : extension},'*');
         //cargar_editor(nodeId);
     } else {
       	tree3.openItem(nodeId);    
     } 
 
 }
+
+function receiveMessage(event)
+{
+  // Do we trust the sender of this message?  (might be
+  // different from what we originally opened, for example).
+  /*if (event.origin !== "http://example.org") {
+    return;
+  }*/
+
+  var source = event.source.frameElement; //this is the iframe that sent the message
+  var message = event.data; //this is the message
+  //viene json event.data.campo
+  // message.nodeId contiene la ruta original (no traducida a ../../archivo
+  //alert('Llego respuesta: '+message.nodeId);
+  if(message.exito == 'false') {
+	  //volver a seleccionar el anterior
+	  tree3.selectItem(message.nodeId,false,false);
+  }
+  nodoSeleccionado=message.nodeId;
+  // event.source is popup
+  // event.data is "hi there yourself!  the secret response is: rheeeeet!"
+}
+window.addEventListener("message", receiveMessage, false);
 
 function cargando_serie() {
 	  if (browserType == "gecko" )

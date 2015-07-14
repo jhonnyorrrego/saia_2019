@@ -141,14 +141,24 @@ function procesarMensaje(event) {
     // message.nodeId contiene la ruta original (no traducida a ../../archivo
     if(message.tipo == 'cambioArchivoSeleccionado') {
         if(hayCambios()) {
+            var comentario = $("#descripcion_commit").val();
+
             var r = confirm("Quiere guardar los cambios hechos al documento?");
             if (r == true) {
+                if(!comentario){
+                    alert("Debe escribir un comentario para el commit");
+                    event.source.postMessage({"exito":"false", "nodeId":message.nodoActual},
+                            event.origin);
+                    return false;
+                }
                 saveFile();
             }
         }
 
         //message.nodeId tiene la ruta completa del archivo desde la raiz de saia
         cargar_editor(message.rutaArchivo, message.extension, message.nodeId);
+        event.source.postMessage({"exito":"true", "nodeId":message.nodeId},
+                event.origin);
     }
 }
 
