@@ -248,7 +248,7 @@ class Git0K extends Git {
 		return $this->repo->fetch();
 	}
 
-	public function processSave($ruta_archivo, &$estado_git) {
+	public function processSave($ruta_archivo, $comentario, &$estado_git) {
 		try {
 			// validar que no existan cambios
 			$this->resolveLocalChanges($mensaje);

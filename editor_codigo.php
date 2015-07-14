@@ -188,8 +188,12 @@ function saveFile() {
 
     var ruta_archivo = $("#archivo_actual").val();
     var rutaTemporal = $("#archivo_temporal").val();
-    //alert(JSON.stringify(gitInfo));
-    var data = {'ruta' : ruta_archivo, "rutaTemporal" : rutaTemporal, "contenido" : contenido, "gitInfo" : gitInfo}; 
+    var comentario = $("#descripcion_commit").val();
+    if(!comentario){
+        alert("Debe escribir un comentario para el commit");
+        return false;
+    }
+    var data = {'ruta' : ruta_archivo, "rutaTemporal" : rutaTemporal, "comentario" : comentario,  "contenido" : contenido, "gitInfo" : gitInfo}; 
     data = $(this).serialize() + "&" + $.param(data);
     $.ajax({
       type:'POST',

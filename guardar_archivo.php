@@ -17,7 +17,7 @@ include_once($ruta_db_superior."db.php");
 //Se debe validar que al ingresar a la pantalla el usuario se debe autenticar  y almacenar en una tabla el token de conexion
 
 $ruta=str_replace("../","",$_REQUEST["ruta"]);
-
+$mensaje_git = $_REQUEST["comentario"];
 //$contenido = file_get_contents($ruta_db_superior.$ruta);
 $resultado = "ko";
 $mensaje = "error al guardar el archivo";
@@ -41,7 +41,7 @@ if(file_exists($file_name)) {
         	$ruta_git = GitRepo::get_repo_root_dir();
         	$git = new Git0K($ruta_git);
         	if ($git) {
-            	$git->processSave($ruta_archivo, $estado_git);
+            	$git->processSave($ruta_archivo, $mensaje_git, $estado_git);
             	$git_info = $git->expose();
         	}
         }
