@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>ACE Emmet demo</title>
+  <title>Editor de Código SAIA</title>
   <style type="text/css" media="screen">
     body {
         overflow: hidden;
@@ -33,17 +33,6 @@
 	var editor = ace.edit("editor");
 	var modificado = parent.$('#modificado');
 
-	function save(editor) {
-	    $(window).unbind('beforeunload');
-	    $("form[name='note'] input[name='note_title']").val($("#editor-title").val());
-	    // WRONG [ IT WILL RUN THE JS ]
-	    // $("form[name='note'] textarea[name='note_body']").html(editor.getValue());
-	    // CORRECT
-	    $("form[name='note'] textarea[name='note_body']").val(editor.getValue());
-	    $("form[name='note'] input[name='version']").val("ace");
-	    $("form[name='note']").submit();
-	}	
-	
 	modificado.val('false'); //inicialmente en true mientras carga el archivo
   	editor.setTheme("ace/theme/twilight");
   	editor.session.setMode("ace/mode/php"); 
@@ -59,13 +48,12 @@
 	    editor.commands.addCommand({
 	        name: 'save',
 	        bindKey: {win: 'Ctrl-S',  mac: 'Command-S'},
-	        exec: save
+	        exec: parent.saveFile
 	    });
 	   
    editor.on('input', function () {
   		if (editor.curOp && editor.curOp.command.name) {
   	  		alert('Que hace: '+editor.curOp.command.name);
-  			modificado.val('true');
   			//parent.$('#save').removeClass("disabled");
   			//parent.$('#discard').removeClass("disabled");
 		} else {
@@ -75,10 +63,12 @@
   		if (editor.getSession().getUndoManager().hasUndo()) {
   			parent.$('#save').removeClass("disabled");
   			parent.$('#discard').removeClass("disabled");
-  		} else {
+  			modificado.val('true');
+        } else {
   			parent.$('#save').addClass("disabled");
   			parent.$('#discard').addClass("disabled");
-  		}
+  			modificado.val('false');
+       }
 	});
 
 	    var snippetManager = ace.require("ace/snippets").snippetManager;

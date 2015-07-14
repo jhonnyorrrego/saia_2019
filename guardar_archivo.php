@@ -1,5 +1,7 @@
 <?php 
 header('Content-Type: application/json');
+require_once('GitApi/Git0K.php');
+
 $max_salida=10; // Previene algun posible ciclo infinito limitando a 10 los ../
 $ruta_db_superior=$ruta="";
 while($max_salida>0){
@@ -10,35 +12,46 @@ while($max_salida>0){
 	$max_salida--;
 }
 include_once($ruta_db_superior."db.php");
+
 //Procesar archivo debio crear una copia del archivo que se necesita en la carpeta temporal del usuario conectado
 //Se debe validar que al ingresar a la pantalla el usuario se debe autenticar  y almacenar en una tabla el token de conexion
 
-// echo(getcwd());
 $ruta=str_replace("../","",$_REQUEST["ruta"]);
-// echo("<br>".$ruta."<br>");
-//echo(file_get_contents($ruta_db_superior.$ruta));
-
-$path_parts = pathinfo($ruta);
-
-//$path_parts['dirname'];
-//$path_parts['basename'];
-//$path_parts['extension'];
-//$path_parts['filename']; 
 
 //$contenido = file_get_contents($ruta_db_superior.$ruta);
 $resultado = "ko";
 $mensaje = "error al guardar el archivo";
-$fileName = $ruta_db_superior.$ruta;
-if(file_exists($filename)) {
-    $r = file_put_contents($fileName, $_REQUEST["contenido"]);
-    if($r) {
-	    $resultado = "ok";
-	    $mensaje = "archivo actualizado con éxito";
+//Quitar los ./ y ../
+//ltrim($x,"/.");
+$file_name = $ruta_db_superior . ltrim($ruta,"/.");
+clearstatcache();
+if(file_exists($file_name)) {
+	if(is_writable ($file_name )) {
+	    $r = file_put_contents($file_name, $_REQUEST["contenido"]);
+	    if($r !== false) {
+		    $resultado = "ok";
+		    $mensaje = "archivo actualizado con éxito";
+	    }
+        $ruta_git = NULL;
+        $git = NULL;
+        $estado_git = NULL;
+        $git_info = NULL;
+         
+        if(GitRepo::is_inside_git_repo()) {
+        	$ruta_git = GitRepo::get_repo_root_dir();
+        	$git = new Git0K($ruta_git);
+        	if ($git) {
+            	$git->processSave($ruta_archivo, $estado_git);
+            	$git_info = $git->expose();
+        	}
+        }
+	} else {
+    	$mensaje = "No tiene permisos para modificar el archivo en la ruta: " . ($file_name);
     }
 } else {
-	$mensaje = "No existe el archivo en la ruta" . getcwd();
+	$mensaje = "No existe el archivo en la ruta: " . ($file_name);
 }
-/*$tmpfname = tempnam(sys_get_temp_dir(), $path_parts['filename'] . "_");
+/*$tmpfname = tempnam(sys_get_temp_dir(), $path_parts['file_name'] . "_");
 if(!empty($path_parts['extension'])) {
 	$tmpfname .= "." . $path_parts['extension'];
 }
@@ -46,6 +59,6 @@ $tmpHandle = fopen($tmpfname, "w");
 fwrite($tmpHandle, $contenido);
 fclose($tmpHandle);
 */
-echo json_encode(array('resultado' => $resultado,'mensaje'=> $mensaje, 'ruta' => $ruta_db_superior.$ruta));
+echo json_encode(array('resultado' => $resultado,'mensaje'=> $mensaje, 'ruta' => $ruta_db_superior.$ruta, 'gitErrorInfo' => $estado_git));
 
 ?>
