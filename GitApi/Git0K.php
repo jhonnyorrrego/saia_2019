@@ -520,7 +520,7 @@ class Git0K extends Git {
 						 * AA unmerged, agregado por ambos
 						 * UU unmerged, modificado por ambos
 						 */
-					    echo $output_array[1];
+					    
 						if (in_array($output_array[1], $problemas)) {
 							$lista[] = $output_array[2];
 						}
@@ -528,6 +528,7 @@ class Git0K extends Git {
 				}
 			}
 		}
+		var_dump($lista);
 		return $lista;
 	}
 }
