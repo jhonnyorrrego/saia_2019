@@ -123,6 +123,7 @@ echo (librerias_notificaciones ());
 <script type="text/javascript">
 
 var gitInfo;
+var archivosMergeSeleccionados;
 
 $body = $("body");
 
@@ -274,6 +275,7 @@ function cargar_editor(ruta_archivo, extension, nodeId) {
                     	if(errorInfo.includes("Error -> Merge")) {
                             //var lista = [1,2,3,5];
                             var mensaje = '<p>Seleccione los archivos que va a restaurar desde el servidor<p>';
+                            archivosMergeSeleccionados = [];
                             showMergeDialog(mensaje, datos["listaArchivos"]);
                             return false;
                     	} else {
@@ -341,17 +343,20 @@ function showMergeDialog(mensaje, lista){
 	    
 	        Continuar: function() { 
 	            $('.ui-dialog-content input').each(function(){
-	            if($(this).prop('checked')== true)
-	                alert($(this).val());
-	            });
+    	            if($(this).prop('checked')== true)
+    	                //alert($(this).val());
+    	            	archivosMergeSeleccionados = $(this).val();
+    	            });
+	            //TODO: Yo creo que hay que procesarlo manualmente
 	            $(this).dialog("close"); 
+	            alert( $.toJSON(archivosMergeSeleccionados) );
 	        },
-	        Cancel: function() { 
+	        /*Cancel: function() { 
 	            
 	            alert("No!"); 
 	            $(this).dialog("close"); 
 
-	        }
+	        }*/
 	    
 	    },
 	    width: "400px"
