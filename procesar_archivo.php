@@ -55,6 +55,7 @@ if (GitRepo::is_inside_git_repo()) {
 	    		//Lo que viene es una lista de archivos para hacer el merge
 	    	}
 	    	$estado_git = $repuesta_git['Error'];
+	    	var_dump($repuesta_git['Error']);
     	}
 	}
 }
