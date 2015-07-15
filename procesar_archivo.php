@@ -52,8 +52,7 @@ if (GitRepo::is_inside_git_repo()) {
 		$git_info = $git->expose();
     	$repuesta_git = $git->processRead();
     	if($repuesta_git && $repuesta_git['Error']) {
-	    	if(strpos($repuesta_git['Error'], "Error -> Merge") !== false ||
-	    	    strpos($repuesta_git['Error'], "FETCH_HEAD") !== false) {
+	    	if(strpos($repuesta_git['Error'], "FETCH_HEAD") !== false) {
 	    	    $lista_archivos = $repuesta_git['listaArchivos'];
 	    	}
 	    	$estado_git = $repuesta_git['Error'];

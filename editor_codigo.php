@@ -272,7 +272,7 @@ function cargar_editor(ruta_archivo, extension, nodeId) {
                     }
                     if(errorInfo) {
                     	alert(errorInfo);
-                    	if(errorInfo.includes("Error -> Merge")) {
+                    	if(errorInfo.indexOf("FETCH_HEAD") >= 0) {
                             //var lista = [1,2,3,5];
                             var mensaje = '<p>Seleccione los archivos que va a restaurar desde el servidor<p>';
                             archivosMergeSeleccionados = [];

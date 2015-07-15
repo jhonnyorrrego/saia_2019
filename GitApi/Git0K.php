@@ -318,16 +318,9 @@ class Git0K extends Git {
 			$modificados = $this->getRepoStatus();
 			$estado = $this->checkStatus($modificados);
 
-			$que_hacer = "";
 			if ($estado === self::ESTADO_MERGE) {
-				$que_hacer = $this->resolveMerge();
-				if ($que_hacer === "fix_manual") {
-					$lista_archivos = $this->get_lista_archivos_merge_manual();
-					
-					throw new Exception("Error -> Merge");
-				}
-				//$estado_git = $this->repoPush($this->get_remoto_base()->alias, "master");
-
+				$estado_git = $this->resolveMerge();
+                //Devuelve una exception si falla. Hay que hacer el merge manual. ver bloque catch
 			} elseif ($estado === self::ESTADO_BEHIND) {
 			
 				/**
@@ -438,17 +431,15 @@ class Git0K extends Git {
 		// FIXME: No esta funcionando asignar credenciales para github
 		// $estado_git = $git->repoPushCredentials($git->get_remoto_base()->alias, "master", $git->get_remoto_base()->url);
 		$pattern_modificados = "/(^[ACDMRU? ]{2}) ([A-Za-z0-9_\-\.\/]+)/";
+		//falla con una excepcion. Si no todo va bien
 		$estado_git = $this->repoPull($this->get_remoto_base()->alias, "master", false);
 		/*
 		 * Auto-merging README
 		 * CONFLICT (content): Merge conflict in README
 		 * Automatic merge failed; fix conflicts and then commit the result.
 		 */
-		if (strpos($estado_git, "Automatic merge failed;")) {
-			return "fix_manual";
-		}
 		// Normalmente queda ahead N, hacer push
-		return "ok";
+		return $estado_git;
 		
 		// TODO: Resolver cambios locales
 		// pull hace commit automatico
