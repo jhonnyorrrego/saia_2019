@@ -14,8 +14,6 @@ include_once ($ruta_db_superior . "db.php");
 include_once ($ruta_db_superior . "librerias_saia.php");
 //ini_set ( "display_errors", true );
 echo (estilo_bootstrap ());
-echo (librerias_jquery("1.7"));
-echo (librerias_UI());
 
 ?>
 <style>
@@ -118,8 +116,10 @@ body.loading .modal {
 
 <?php
 echo (librerias_jquery ( "1.7" ));
-echo (librerias_principal ());
+echo (librerias_principal());
 echo (librerias_notificaciones ());
+echo (librerias_UI());
+
 ?>
 <script src="src/ace.js"></script>
 
@@ -326,7 +326,7 @@ function showMergeDialog(mensaje, lista){
 
 	$("#dialog_merge").dialog({
 	    
-	    show:'fade' , position:'center', resizable: false, modal:true,
+	    show:'fade' , position:'center', resizable: false, modal:true, width: "400px",
 	    open: function (event, ui) {
 	        if(lista) {
 	            var valor = $(".ui-dialog-content").html();
@@ -361,8 +361,7 @@ function showMergeDialog(mensaje, lista){
 
 	        }*/
 	    
-	    },
-	    width: "400px"
+	    }
 	    
 	});
 	}
