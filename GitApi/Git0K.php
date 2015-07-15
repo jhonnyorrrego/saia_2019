@@ -299,6 +299,7 @@ class Git0K extends Git {
 			
 			// TODO: validar sobre cual rama se hacer el pull, si es un subtree cambia
 			// $estado_git=$git->repoPull('origin', 'master');
+			//Esto falla con error: master     -> FETCH_HEAD
 			$estado_git = $this->repoFetch();
 			$modificados = $this->getRepoStatus();
 			$estado = $this->checkStatus($modificados);
@@ -332,7 +333,11 @@ class Git0K extends Git {
 			}
 		} catch (Exception $e) {
 			//echo $e;
-			$error_git = $e->getMessage();
+			$errmsg = $e->getMessage();
+			if(strpos($errmsg, "FETCH_HEAD")) {
+			    $lista_archivos = get_lista_archivos_merge_manual();
+			}
+			$error_git = $errmsg;
 		}
 		return array("Estado" => $estado_git, "Error" => $error_git, "listaArchivos" => $lista_archivos);
 	}
