@@ -14,6 +14,9 @@ include_once ($ruta_db_superior . "db.php");
 include_once ($ruta_db_superior . "librerias_saia.php");
 //ini_set ( "display_errors", true );
 echo (estilo_bootstrap ());
+echo (librerias_jquery("1.7"));
+echo (librerias_UI());
+
 ?>
 <style>
 #panel_detalles {
