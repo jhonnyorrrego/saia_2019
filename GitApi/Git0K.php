@@ -335,7 +335,7 @@ class Git0K extends Git {
 			//echo $e;
 			$errmsg = $e->getMessage();
 			if(strpos($errmsg, "FETCH_HEAD")) {
-			    $lista_archivos = get_lista_archivos_merge_manual();
+			    $lista_archivos = $this->get_lista_archivos_merge_manual();
 			}
 			$error_git = $errmsg;
 		}
