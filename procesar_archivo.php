@@ -56,7 +56,11 @@ if (GitRepo::is_inside_git_repo()) {
 	    	    $lista_archivos = $repuesta_git['listaArchivos'];
 	    	}
 	    	$estado_git = $repuesta_git['Error'];
-	    	var_dump($repuesta_git['Error']);
+	    	//var_dump($repuesta_git['Error']);
+	    	//Otro error
+	    	/*From http://laboratorio.netsaia.com:82/giovanni.montes/saia_editor
+ * branch            master     -> FETCH_HEAD
+	    	 * */
     	}
 	}
 }
