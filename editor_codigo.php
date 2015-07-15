@@ -119,6 +119,7 @@ echo (librerias_jquery ( "1.7" ));
 echo (librerias_principal());
 echo (librerias_notificaciones ());
 echo (librerias_UI());
+//echo (librerias_highslide());
 
 ?>
 <script src="src/ace.js"></script>
@@ -177,6 +178,7 @@ function hayCambios() {
 }
 
 $(document).ready(function(){
+
     var alto=($(document).height()-8); 
 
     function llamado_pantalla(ruta,datos,destino,nombre){                
@@ -369,4 +371,3 @@ function showMergeDialog(mensaje, lista){
 </script>
 
 <div id="dialog_merge" title="Selecci&oacute;n de archivos" style="display:none;"></div>
-
