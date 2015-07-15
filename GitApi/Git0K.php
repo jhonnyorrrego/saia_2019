@@ -1,6 +1,10 @@
 <?php
 require_once 'Git.php';
 class Git0K extends Git {
+	const ESTADO_AHEAD = 'ahead';
+	const ESTADO_BEHIND = 'behind';
+	const ESTADO_MERGE = 'merge';
+	const ESTADO_CLEAN = 'clean';
 	protected $repo_path;
 	
 	/**
@@ -215,7 +219,7 @@ class Git0K extends Git {
 	 * @param string $branch        	
 	 * @return string
 	 */
-	public function repoPull($remote, $branch, $normal=true) {
+	public function repoPull($remote, $branch, $normal = true) {
 		return $this->repo->pull($remote, $branch, $normal);
 	}
 
@@ -259,41 +263,108 @@ class Git0K extends Git {
 		}
 	}
 
-	public function processRead(&$estado_git) {
+	public function processRead($mensaje="") {
+		$estado_git = NULL;
 		try {
 			$do_push = false;
 			// validar que no existan cambios
-			$mensaje = "Commit automatico editor saia. Cambios locales " . date("Y-m-d H:i:s");
-			$this->resolveLocalChanges($mensaje);
+			if(empty($mensaje)) {
+				$mensaje = "Commit automatico editor saia. Cambios locales " . date("Y-m-d H:i:s");
+			}
+			// No hacer push
+			$modificados = $this->getRepoStatus();
+			$estado = $this->checkStatus($modificados);
+			if($estado !== self::ESTADO_CLEAN) {
+				$this->resolveLocalChanges($mensaje, $modificados);
+			}
+			if ($do_push) {
+				// $git->repoPush($git->get_remoto_base()->alias, "master");
+				// $estado_git = $git->repoPushCredentials($git->get_remoto_base()->alias, "master", $git->get_remoto_base()->url);
+				/**
+				 * git push
+				 * To http://laboratorio.netsaia.com:82/usuario/GitApi.git
+				 * ! [rejected] master -> master (fetch first)
+				 * Si se ejecuta git status -b --porcelain
+				 * ## master...origin/master [ahead M, behind N]
+				 * Solo se resuelve con un git pull
+				 * Auto-merging README
+				 * CONFLICT (content): Merge conflict in README
+				 * Automatic merge failed; fix conflicts and then commit the result.
+				 * Si sale eso hay que arreglar el archivo
+				 */
+				$estado_git = $this->repoPush($this->get_remoto_base()->alias, "master");
+			}
+			
 			// TODO: validar sobre cual rama se hacer el pull, si es un subtree cambia
 			// $estado_git=$git->repoPull('origin', 'master');
 			$estado_git = $this->repoFetch();
-			$que_hacer = $this->resolveRemoteChanges();
-			if($que_hacer === "fix_manual") {
-				$lista = get_lista_archivos_merge_manual();
-				$archivos = "";
-				if($lista) {
-					$archivos = implode(",", $lista);
+			$modificados = $this->getRepoStatus();
+			$estado = $this->checkStatus($modificados);
+
+			$que_hacer = "";
+			if ($estado === self::ESTADO_MERGE) {
+				$que_hacer = $this->resolveMerge();
+				if ($que_hacer === "fix_manual") {
+					$lista = get_lista_archivos_merge_manual();
+					$archivos = "";
+					if ($lista) {
+						$archivos = implode(",", $lista);
+					}
+					throw new Exception("Hacer merge manual del(os) archivo(s) " . $archivos);
 				}
-				throw new Exception("Hacer merge manual del(os) archivo(s) ". $archivos);
+				//$estado_git = $this->repoPush($this->get_remoto_base()->alias, "master");
+
+			} elseif ($estado === self::ESTADO_BEHIND) {
+			
+				/**
+				 * git pull
+				 * Updating 40dcd20..a302473
+				 * Fast-forward
+				 * <archivo> | 6 ++++--
+				 * 1 file changed, 4 insertions(+), 2 deletions(-)
+				 */
+				$this->repoPull($this->get_remoto_base()->alias, "master");
+			} elseif ($estado === self::ESTADO_AHEAD) {
+				$this->repoPush($this->get_remoto_base()->alias, "master");
+				return "ok";
 			}
 		} catch (Exception $e) {
 			echo $e;
 			$estado_git = $e->getMessage();
 		}
+		return $estado_git;
 	}
 
-	protected function resolveLocalChanges($mensaje) {
+	/**
+	 *
+	 * @param pattern_ahead
+	 * @param pattern_behind
+	 * @param pattern_both
+	 * @param modificados
+	 */
+	protected function checkStatus($modificados) {
 		$pattern_ahead = "/\[ahead [\d]+\]/";
 		$pattern_behind = "/\[behind [\d]+\]/";
 		$pattern_both = "/\[ahead ([\d]+), behind ([\d]+)\]/";
+		// mirar si tiene "[ahead n]".
+		$estado = self::ESTADO_CLEAN;
+		if (preg_match($pattern_ahead, $modificados[0]) === 1) {
+			$estado = self::ESTADO_AHEAD;
+		} elseif (preg_match($pattern_behind, $modificados[0]) === 1) {
+			$estado = self::ESTADO_BEHIND;
+		} elseif (preg_match($pattern_both, $modificados[0]) === 1) {
+			$estado = self::ESTADO_MERGE;
+		} else { // Ni adelante ni atras ni merge. OK
+			$estado = self::ESTADO_CLEAN;
+		}
+		return $estado;
+	}
+
+	protected function resolveLocalChanges($mensaje, $modificados) {
+
 		$pattern_modificados = "/(^[ACDMRU? ]{2}) ([A-Za-z0-9_\-\.\/]+)/";
-		$modificados = $this->getRepoStatus();
 		if ($modificados) {
-			// mirar si tiene "[ahead n]". No hay problema se hace add, commit, push
-			if (preg_match($pattern_ahead, $modificados[0]) === 1) {
-				$do_push = true;
-			}
+			
 			if (count($modificados) > 1) {
 				chdir($this->repo_path);
 				for($i = 1; $i < count($modificados); $i++) {
@@ -331,71 +402,13 @@ class Git0K extends Git {
 				if ($do_commit) {
 					$estado_git = $this->repoCommitAuthor($mensaje);
 				}
-				if ($do_push) {
-					// $git->repoPush($git->get_remoto_base()->alias, "master");
-					// $estado_git = $git->repoPushCredentials($git->get_remoto_base()->alias, "master", $git->get_remoto_base()->url);
-					/**
-					 * git push
-					 * To http://laboratorio.netsaia.com:82/usuario/GitApi.git
-					 * ! [rejected] master -> master (fetch first)
-					 * Si se ejecuta git status -b --porcelain
-					 * ## master...origin/master [ahead M, behind N]
-					 * Solo se resuelve con un git pull
-					 * Auto-merging README
-					 * CONFLICT (content): Merge conflict in README
-					 * Automatic merge failed; fix conflicts and then commit the result.
-					 * Si sale eso hay que arreglar el archivo
-					 */
-					$estado_git = $this->repoPush($this->get_remoto_base()->alias, "master");
-				}
 				
 				// TODO: tener en cuenta el subtree
 				// TODO: Hacer analisis de acuerdo con lo descrito en https://www.kernel.org/pub/software/scm/git/docs/git-status.html
 				// $estado_git = $git->repoCommitAuthor($mensaje);
 			}
 		}
-	}
-
-	protected function resolveRemoteChanges() {
-		// Pull origin and update current branch [user& git pull origin CURRENT_BRANCH] to make sure you are synced with origin.
-		// You might need to do a manual merge at this point.
-		// Traduccion: Si pull falla hay que hacer merge manual. Mejor se le informa al usuario
-		/*
-		 * Auto-merging README
-		 * CONFLICT (content): Merge conflict in README
-		 * Automatic merge failed; fix conflicts and then commit the result.
-		 *
-		 */
-		$pattern_ahead = "/\[ahead [\d]+\]/";
-		$pattern_behind = "/\[behind [\d]+\]/";
-		$pattern_both = "/\[ahead ([\d]+), behind ([\d]+)\]/";
-		$pattern_modificados = "/(^[ACDMRU? ]{2}) ([A-Za-z0-9_\-\.\/]+)/";
-		$modificados = $this->getRepoStatus();
-		if ($modificados) {
-			// mirar si tiene "[ahead m, behind n]".
-			$que_hacer = "";
-			if (preg_match($pattern_both, $modificados[0]) === 1) {
-				$que_hacer = $this->resolveMerge();
-				if ($que_hacer === "fix_manual") {
-					return $que_hacer;
-				}
-				$this->repoPush($this->get_remoto_base()->alias, "master");
-				return "ok";
-			} elseif (preg_match($pattern_behind, $modificados[0]) === 1) {
-			
-			/**
-			 * git pull
-			 * Updating 40dcd20..a302473
-			 * Fast-forward
-			 * <archivo> | 6 ++++--
-			 * 1 file changed, 4 insertions(+), 2 deletions(-)
-			 */
-				$this->repoPull($this->get_remoto_base()->alias, "master");
-			} elseif (preg_match($pattern_ahead, $modificados[0]) === 1) {
-				$this->repoPush($this->get_remoto_base()->alias, "master");
-				return "ok";
-			}
-		}
+		return $estado;
 	}
 
 	protected function resolveMerge() {
@@ -406,6 +419,7 @@ class Git0K extends Git {
 		// FIXME: por defecto origin, pero tener en cuenta si es subtree
 		// FIXME: No esta funcionando asignar credenciales para github
 		// $estado_git = $git->repoPushCredentials($git->get_remoto_base()->alias, "master", $git->get_remoto_base()->url);
+		$pattern_modificados = "/(^[ACDMRU? ]{2}) ([A-Za-z0-9_\-\.\/]+)/";
 		$estado_git = $this->repoPull($this->get_remoto_base()->alias, "master", false);
 		/*
 		 * Auto-merging README
@@ -415,9 +429,9 @@ class Git0K extends Git {
 		if (strpos($estado_git, "Automatic merge failed;")) {
 			return "fix_manual";
 		}
-		//Normalmente queda ahead N, hacer push
+		// Normalmente queda ahead N, hacer push
 		return "ok";
-
+		
 		// TODO: Resolver cambios locales
 		// pull hace commit automatico
 		$modificados = $this->getRepoStatus();
@@ -431,7 +445,8 @@ class Git0K extends Git {
 				$output_array = array ();
 				if (preg_match($pattern_modificados, $input_line, $output_array) > 0) {
 					/**
-					 * Estos estados solo se presentan cuando falla el merge. Hay que proceder manualmente. Si el arreglo se hizo manualmente
+					 * Estos estados solo se presentan cuando falla el merge.
+					 * Hay que proceder manualmente. Si el arreglo se hizo manualmente
 					 * Estos estados prevalecen y hay que hacer add, commit
 					 * DD unmerged, eliminado en ambos
 					 * AU unmerged, agregado por nosotros
@@ -441,7 +456,7 @@ class Git0K extends Git {
 					 * AA unmerged, agregado por ambos
 					 * UU unmerged, modificado por ambos
 					 */
-					if ($output_array[1] == "UU") {//pull hizo un merge automatico y quedo bien
+					if ($output_array[1] == "UU") { // pull hizo un merge automatico y quedo bien
 						$this->repoAdd($output_array[2]);
 						$do_commit = true;
 					} elseif ($output_array[1] == "AA") {
@@ -451,12 +466,20 @@ class Git0K extends Git {
 			}
 		}
 	}
-	
-	protected function get_lista_archivos_merge_manual(){
+
+	protected function get_lista_archivos_merge_manual() {
 		$pattern_modificados = "/(^[ACDMRU? ]{2}) ([A-Za-z0-9_\-\.\/]+)/";
 		$modificados = $this->getRepoStatus();
-		$problemas = array("DD","AU","UD","UA","DU","AA","UU",);
-		$lista = array();
+		$problemas = array (
+				"DD",
+				"AU",
+				"UD",
+				"UA",
+				"DU",
+				"AA",
+				"UU" 
+		);
+		$lista = array ();
 		if ($modificados) {
 			if (count($modificados) > 1) {
 				for($i = 1; $i < count($modificados); $i++) {
@@ -466,15 +489,16 @@ class Git0K extends Git {
 					// nombre del archivo en $output_array[2];
 					$output_array = array ();
 					if (preg_match($pattern_modificados, $input_line, $output_array) > 0) {
-					/* DD unmerged, eliminado en ambos
-					 * AU unmerged, agregado por nosotros
-					 * UD unmerged, eliminado por ellos
-					 * UA unmerged, agregado por ellos
-					 * DU unmerged, eliminado por nosotros
-					 * AA unmerged, agregado por ambos
-					 * UU unmerged, modificado por ambos
-					 * */
-						if(in_array($needle, $output_array[1])) {
+						/*
+						 * DD unmerged, eliminado en ambos
+						 * AU unmerged, agregado por nosotros
+						 * UD unmerged, eliminado por ellos
+						 * UA unmerged, agregado por ellos
+						 * DU unmerged, eliminado por nosotros
+						 * AA unmerged, agregado por ambos
+						 * UU unmerged, modificado por ambos
+						 */
+						if (in_array($needle, $output_array[1])) {
 							$lista[] = $output_array[2];
 						}
 					}
