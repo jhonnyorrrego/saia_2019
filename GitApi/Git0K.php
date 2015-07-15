@@ -253,9 +253,23 @@ class Git0K extends Git {
 	}
 
 	public function processSave($ruta_archivo, $comentario, &$estado_git) {
-		try {
+		    $estado_git = NULL;
+		    $error_git = NULL;
+		    $lista_archivos = array();
+	    try {
+		    
+		        // validar que no existan cambios
+		        if(empty($mensaje)) {
+		            $mensaje = "Commit automatico editor saia. Cambios locales " . date("Y-m-d H:i:s");
+		        }
+		        // No hacer push
+		        $modificados = $this->getRepoStatus();
+		        $estado = $this->checkStatus($modificados);
+		        if($estado !== self::ESTADO_CLEAN) {
+		            $this->resolveLocalChanges($mensaje, $modificados);
+		        }
+		    
 			// validar que no existan cambios
-			$this->resolveLocalChanges($mensaje);
 			// TODO: validar sobre cual rama se hacer el pull, si es un subtree cambia
 			// $repo->pull('origin', 'master');
 		} catch (Exception $e) {
@@ -335,6 +349,7 @@ class Git0K extends Git {
 			//echo $e;
 			$errmsg = $e->getMessage();
 			if(strpos($errmsg, "FETCH_HEAD") !== false) {
+			    echo "encontrado";
 			    $lista_archivos = $this->get_lista_archivos_merge_manual();
 			}
 			$error_git = $errmsg;
