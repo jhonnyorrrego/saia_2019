@@ -324,7 +324,7 @@ class Git0K extends Git {
 				 * <archivo> | 6 ++++--
 				 * 1 file changed, 4 insertions(+), 2 deletions(-)
 				 */
-				$this->repoPull($this->get_remoto_base()->alias, "master");
+				$estado_git = $this->repoPull($this->get_remoto_base()->alias, "master");
 			} elseif ($estado === self::ESTADO_AHEAD) {
 				$estado_git = $this->repoPush($this->get_remoto_base()->alias, "master");
 				//return "ok";
