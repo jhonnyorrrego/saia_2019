@@ -326,7 +326,7 @@ function showMergeDialog(mensaje, lista){
 
 	$("#dialog_merge").dialog({
 	    
-	    show:'fade' , position:'center', resizable: false, modal:true, width: "400px", zIndex: 500,
+	    show:'fade' , position:'center', resizable: false, modal:true, width: "400px", stack: false,
 	    open: function (event, ui) {
 	        if(lista) {
 	            var valor = $(".ui-dialog-content").html();
