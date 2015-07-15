@@ -49,7 +49,13 @@ if (GitRepo::is_inside_git_repo()) {
 	$git = new Git0K($ruta_git);
 	if ($git) {
 		$git_info = $git->expose();
-    	$estado_git = $git->processRead();
+    	$repuesta_git = $git->processRead();
+    	if($repuesta_git && $repuesta_git['Error']) {
+	    	if(strpos($repuesta_git['Error'], "Error -> Merge : ") !== false) {
+	    		//Lo que viene es una lista de archivos para hacer el merge
+	    	}
+	    	$estado_git = $repuesta_git['Error'];
+    	}
 	}
 }
 echo json_encode(array(
