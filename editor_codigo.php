@@ -151,6 +151,12 @@ function procesarMensaje(event) {
                             event.origin);
                     return false;
                 }
+                if(comentario.length < 20) {
+                    alert("El comentario debe ser descriptivo");
+                    event.source.postMessage({"exito":"false", "nodeId":message.nodoActual},
+                            event.origin);
+                    return false;                    
+                }
                 saveFile();
             }
         }
@@ -265,7 +271,14 @@ function cargar_editor(ruta_archivo, extension, nodeId) {
                     }
                     if(errorInfo) {
                     	alert(errorInfo);
-                        //notificacion_saia("Error git: "+ errorInfo, "warning","",3000);
+                    	if(errorInfo.includes("Error -> Merge")) {
+                            //var lista = [1,2,3,5];
+                            var mensaje = '<p>Seleccione los archivos que va a restaurar desde el servidor<p>';
+                            showMergeDialog(mensaje, datos["listaArchivos"]);
+                            return false;
+                    	} else {
+                        	notificacion_saia("Error git: "+ errorInfo, "warning","",3000);
+                    	}
                     }
                     editor.editor.setSession(sesion);
                     $('#save').addClass("disabled");
@@ -303,5 +316,50 @@ function restoreFile() {
     });
 
 }
+
+function showMergeDialog(mensaje, lista){
+
+	$("#dialog_merge").dialog({
+	    
+	    show:'fade' , position:'center', resizable: false, modal:true,
+	    open: function (event, ui) {
+	        if(lista) {
+	            var valor = $(".ui-dialog-content").html();
+	            var text = mensaje;
+	            for(var i in lista) {
+	                text = text + '<p><input value="' +lista[i] +'" type="checkbox"/>' + lista[i] + '<br>';
+	            }
+	            $('#dialog_merge').append(text);
+	        }
+	    },
+	    beforeClose: function( event, ui ) {
+	        //if(text){
+	            $('#dialog_merge').empty();
+	        //} 
+	    },    
+	    buttons: {
+	    
+	        Continuar: function() { 
+	            $('.ui-dialog-content input').each(function(){
+	            if($(this).prop('checked')== true)
+	                alert($(this).val());
+	            });
+	            $(this).dialog("close"); 
+	        },
+	        Cancel: function() { 
+	            
+	            alert("No!"); 
+	            $(this).dialog("close"); 
+
+	        }
+	    
+	    },
+	    width: "400px"
+	    
+	});
+	}
+
 </script>
+
+<div id="dialog_merge" title="Selecci&oacute;n de archivos" style="display:none;"></div>
 

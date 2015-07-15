@@ -266,6 +266,7 @@ class Git0K extends Git {
 	public function processRead($mensaje="") {
 		$estado_git = NULL;
 		$error_git = NULL;
+		$lista_archivos = array();
 		try {
 			$do_push = false;
 			// validar que no existan cambios
@@ -306,12 +307,12 @@ class Git0K extends Git {
 			if ($estado === self::ESTADO_MERGE) {
 				$que_hacer = $this->resolveMerge();
 				if ($que_hacer === "fix_manual") {
-					$lista = get_lista_archivos_merge_manual();
+					$lista_archivos = get_lista_archivos_merge_manual();
 					$archivos = "";
-					if ($lista) {
-						$archivos = implode(",", $lista);
+					if ($lista_archivos) {
+						$archivos = implode(",", $lista_archivos);
 					}
-					throw new Exception("Error -> Merge : " . $archivos);
+					throw new Exception("Error -> Merge");
 				}
 				//$estado_git = $this->repoPush($this->get_remoto_base()->alias, "master");
 
@@ -333,7 +334,7 @@ class Git0K extends Git {
 			//echo $e;
 			$error_git = $e->getMessage();
 		}
-		return array("Estado" => $estado_git, "Error" => $error_git);
+		return array("Estado" => $estado_git, "Error" => $error_git, "listaArchivos" => $lista_archivos);
 	}
 
 	/**

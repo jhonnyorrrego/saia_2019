@@ -44,6 +44,7 @@ $ruta_git = NULL;
 // $git = NULL;
 $estado_git = NULL;
 $git_info = NULL;
+$lista_archivos = NULL;
 if (GitRepo::is_inside_git_repo()) {
 	$ruta_git = GitRepo::get_root_dir();
 	$git = new Git0K($ruta_git);
@@ -51,8 +52,8 @@ if (GitRepo::is_inside_git_repo()) {
 		$git_info = $git->expose();
     	$repuesta_git = $git->processRead();
     	if($repuesta_git && $repuesta_git['Error']) {
-	    	if(strpos($repuesta_git['Error'], "Error -> Merge : ") !== false) {
-	    		//Lo que viene es una lista de archivos para hacer el merge
+	    	if(strpos($repuesta_git['Error'], "Error -> Merge") !== false) {
+	    	    $lista_archivos = $repuesta_git['listaArchivos'];
 	    	}
 	    	$estado_git = $repuesta_git['Error'];
 	    	var_dump($repuesta_git['Error']);
@@ -63,6 +64,7 @@ echo json_encode(array(
     'rutaTemporal' => $tmpfname,
     'gitInfo' => $git_info,
     'errorInfo' => $estado_git,
-    'contenido' => $contenido
+    'contenido' => $contenido,
+    'listaArchivos' => $lista_archivos
 ));
 ?>
