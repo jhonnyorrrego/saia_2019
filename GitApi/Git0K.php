@@ -329,7 +329,7 @@ class Git0K extends Git {
 				return "ok";
 			}
 		} catch (Exception $e) {
-			//echo $e;
+			echo $e;
 			$estado_git = $e->getMessage();
 		}
 		return $estado_git;
