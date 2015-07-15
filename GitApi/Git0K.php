@@ -253,21 +253,21 @@ class Git0K extends Git {
 	}
 
 	public function processSave($ruta_archivo, $comentario, &$estado_git) {
-		    $estado_git = NULL;
-		    $error_git = NULL;
-		    $lista_archivos = array();
+		$estado_git = NULL;
+		$error_git = NULL;
+		$lista_archivos = array();
 	    try {
 		    
-		        // validar que no existan cambios
-		        if(empty($mensaje)) {
-		            $mensaje = "Commit automatico editor saia. Cambios locales " . date("Y-m-d H:i:s");
-		        }
-		        // No hacer push
-		        $modificados = $this->getRepoStatus();
-		        $estado = $this->checkStatus($modificados);
-		        if($estado !== self::ESTADO_CLEAN) {
-		            $this->resolveLocalChanges($mensaje, $modificados);
-		        }
+		    // validar que no existan cambios
+		    if(empty($mensaje)) {
+		        $mensaje = "Commit automatico editor saia. Cambios locales " . date("Y-m-d H:i:s");
+		    }
+		    // No hacer push
+		    $modificados = $this->getRepoStatus();
+		    $estado = $this->checkStatus($modificados);
+		    if($estado !== self::ESTADO_CLEAN) {
+		        $this->resolveLocalChanges($mensaje, $modificados);
+		    }
 		    
 			// validar que no existan cambios
 			// TODO: validar sobre cual rama se hacer el pull, si es un subtree cambia
@@ -322,11 +322,8 @@ class Git0K extends Git {
 			if ($estado === self::ESTADO_MERGE) {
 				$que_hacer = $this->resolveMerge();
 				if ($que_hacer === "fix_manual") {
-					$lista_archivos = get_lista_archivos_merge_manual();
-					$archivos = "";
-					if ($lista_archivos) {
-						$archivos = implode(",", $lista_archivos);
-					}
+					$lista_archivos = $this->get_lista_archivos_merge_manual();
+					
 					throw new Exception("Error -> Merge");
 				}
 				//$estado_git = $this->repoPush($this->get_remoto_base()->alias, "master");
@@ -349,7 +346,6 @@ class Git0K extends Git {
 			//echo $e;
 			$errmsg = $e->getMessage();
 			if(strpos($errmsg, "FETCH_HEAD") !== false) {
-			    echo "encontrado";
 			    $lista_archivos = $this->get_lista_archivos_merge_manual();
 			}
 			$error_git = $errmsg;
@@ -528,7 +524,6 @@ class Git0K extends Git {
 				}
 			}
 		}
-		var_dump($lista);
 		return $lista;
 	}
 }
