@@ -118,7 +118,7 @@ body.loading .modal {
 echo (librerias_jquery ( "1.7" ));
 echo (librerias_principal());
 echo (librerias_notificaciones ());
-echo (librerias_UI());
+echo (librerias_bootstrap());
 //echo (librerias_highslide());
 
 ?>
@@ -138,6 +138,26 @@ $(document).on({
 
 window.addEventListener("message", procesarMensaje, false);  
 
+$("#dialog-ok").on("click", function () {
+    var seleccionados = [];
+    
+	$('.modal-body input').each(function(){
+    if($(this).prop('checked')== true)
+    	//alert($(this).val());
+    	seleccionados.push($(this).val());
+    });
+    actualizarRepositorio(seleccionados);
+});
+
+function actualizarRepositorio(seleccionados) {
+    //$("#dialog2").modal("show").addClass("fade");
+	if(seleccionados) {
+        //var valor = $(".ui-dialog-content").html();
+	    alert('Llamdo ajax: ' + seleccionados);
+	}
+    $("#dialog_merge").removeClass("fade").modal("hide");
+    
+}
 function procesarMensaje(event) {
     //var source = event.source;
     var source = event.source.frameElement; //this is the iframe that sent the message
@@ -324,7 +344,7 @@ function restoreFile() {
 
 }
 
-function showMergeDialog(mensaje, lista){
+function showMergeDialogJQ(mensaje, lista){
 
 	$("#dialog_merge").dialog({
 	    
@@ -368,6 +388,34 @@ function showMergeDialog(mensaje, lista){
 	});
 	}
 
+function showMergeDialog(lista) {
+    //$("#dialog_merge").removeClass("fade").modal("hide");
+    $("#dialog_merge").modal("show").addClass("fade");
+    //$("#dialog_merge").modal("show");
+ 	if(lista) {
+	    var valor = $(".ui-dialog-content").html();
+	    var text = '';
+	    for(var i in lista) {
+	        text = text + '<p><input value="' +lista[i] +'" type="checkbox">' + lista[i] + '<br>';
+	    }
+	    $('#dialog_merge .modal-body').append(text);
+ 	}
+    
+}
+
 </script>
 
-<div id="dialog_merge" title="Selecci&oacute;n de archivos" style="display:none;"></div>
+<div id="dialog_merge" class="modal hide">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                 <h3 class="modal-title">Selecci&oacute;n de archivos</h3>
+
+            </div>
+            <div class="modal-body">Seleccione los archivos que va a restaurar desde el servidor</div>
+            <div class="modal-footer">
+                <button type="button" id="dialog-ok" class="btn btn-default">Continuar</button>
+            </div>
+        </div>
+    </div>
+</div>
