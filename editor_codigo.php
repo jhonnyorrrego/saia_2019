@@ -13,9 +13,14 @@ while ( $max_salida > 0 ) {
 include_once ($ruta_db_superior . "db.php");
 include_once ($ruta_db_superior . "librerias_saia.php");
 //ini_set ( "display_errors", true );
-echo (estilo_bootstrap ());
+//echo (estilo_bootstrap ());
 
 ?>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/2.1.1/css/bootstrap.min.css">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/2.1.1/css/bootstrap-theme.min.css">
+
 <style>
 #panel_detalles {
     margin-top: 0px;
@@ -118,10 +123,12 @@ body.loading .modal {
 echo (librerias_jquery ( "1.7" ));
 echo (librerias_principal());
 echo (librerias_notificaciones ());
-echo (librerias_bootstrap());
+//echo (librerias_bootstrap());
 //echo (librerias_highslide());
 
 ?>
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/2.1.1/js/bootstrap.min.js"></script>
 <script src="src/ace.js"></script>
 
 <script type="text/javascript">
