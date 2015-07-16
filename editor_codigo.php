@@ -194,6 +194,17 @@ $(document).ready(function(){
 
     var alto=($(document).height()-8); 
 
+    $("#dialog-ok").on("click", function () {
+        var seleccionados = [];
+        alert('onClick ejecutado');
+    	$('.modal-body input').each(function(){
+        if($(this).prop('checked')== true)
+        	//alert($(this).val());
+        	seleccionados.push($(this).val());
+        });
+        actualizarRepositorio(seleccionados);
+    });
+    
     function llamado_pantalla(ruta,datos,destino,nombre){                
           if(datos!==''){
             ruta+="?"+datos;
@@ -397,17 +408,6 @@ function showMergeDialog(lista) {
  	}
     
 }
-
-$("#dialog-ok").on("click", function () {
-    var seleccionados = [];
-    alert('onClick ejecutado');
-	$('.modal-body input').each(function(){
-    if($(this).prop('checked')== true)
-    	//alert($(this).val());
-    	seleccionados.push($(this).val());
-    });
-    actualizarRepositorio(seleccionados);
-});
 
 </script>
 
