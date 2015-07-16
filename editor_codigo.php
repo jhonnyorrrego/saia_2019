@@ -18,8 +18,6 @@ include_once ($ruta_db_superior . "librerias_saia.php");
 ?>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/2.1.1/css/bootstrap.min.css">
 
-<!-- Optional theme -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/2.1.1/css/bootstrap-theme.min.css">
 
 <style>
 #panel_detalles {
@@ -142,17 +140,6 @@ $(document).on({
 });
 
 window.addEventListener("message", procesarMensaje, false);  
-
-$("#dialog-ok").on("click", function () {
-    var seleccionados = [];
-    alert('onClick ejecutado');
-	$('.modal-body input').each(function(){
-    if($(this).prop('checked')== true)
-    	//alert($(this).val());
-    	seleccionados.push($(this).val());
-    });
-    actualizarRepositorio(seleccionados);
-});
 
 function actualizarRepositorio(seleccionados) {
     //$("#dialog2").modal("show").addClass("fade");
@@ -410,6 +397,17 @@ function showMergeDialog(lista) {
  	}
     
 }
+
+$("#dialog-ok").on("click", function () {
+    var seleccionados = [];
+    alert('onClick ejecutado');
+	$('.modal-body input').each(function(){
+    if($(this).prop('checked')== true)
+    	//alert($(this).val());
+    	seleccionados.push($(this).val());
+    });
+    actualizarRepositorio(seleccionados);
+});
 
 </script>
 
