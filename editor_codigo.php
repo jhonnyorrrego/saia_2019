@@ -43,7 +43,7 @@ include_once ($ruta_db_superior . "librerias_saia.php");
    with position:fixed. Width, height, top and left speak
    for themselves. Background we set to 80% white with
    our animation centered, and no-repeating */
-.modal {
+.modalload {
     display:    none;
     position:   fixed;
     z-index:    1000;
@@ -65,7 +65,7 @@ body.loading {
 
 /* Anytime the body has the loading class, our
    modal element will be visible */
-body.loading .modal {
+body.loading .modalload {
     display: block;
 }
 
@@ -115,9 +115,7 @@ body.loading .modal {
 
 </div>
 
-<div class="modal"><!-- Place at bottom of page --></div>
-
-<div id="dialog-confirm"></div>
+<div class="modalload"><!-- Place at bottom of page --></div>
 
 <?php
 echo (librerias_jquery ( "1.7" ));
@@ -303,12 +301,14 @@ function cargar_editor(ruta_archivo, extension, nodeId) {
                         $("#git_info").val(JSON.stringify(gitInfo));
                     }
                     if(errorInfo) {
-                    	alert(errorInfo);
+                    	//alert(errorInfo);
                     	if(errorInfo.indexOf("FETCH_HEAD") >= 0) {
                             //var lista = [1,2,3,5];
+                            $body.removeClass("loading");
                             var mensaje = '<p>Seleccione los archivos que va a restaurar desde el servidor<p>';
                             archivosMergeSeleccionados = [];
-                            showMergeDialog(mensaje, datos["listaArchivos"]);
+                            //showMergeDialog(mensaje, datos["listaArchivos"]);
+                            showMergeDialog(datos["listaArchivos"]);
                             return false;
                     	} else {
                         	notificacion_saia("Error git: "+ errorInfo, "warning","",3000);
@@ -412,7 +412,7 @@ function showMergeDialog(lista) {
 
 </script>
 
-<div id="dialog_merge" class="modal hide">
+<div id="dialog_merge" class="modal hide" data-backdrop="false">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
