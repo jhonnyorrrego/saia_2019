@@ -145,7 +145,7 @@ window.addEventListener("message", procesarMensaje, false);
 
 $("#dialog-ok").on("click", function () {
     var seleccionados = [];
-    
+    alert('onClick ejecutado');
 	$('.modal-body input').each(function(){
     if($(this).prop('checked')== true)
     	//alert($(this).val());
@@ -156,6 +156,7 @@ $("#dialog-ok").on("click", function () {
 
 function actualizarRepositorio(seleccionados) {
     //$("#dialog2").modal("show").addClass("fade");
+    alert('Callback ejecutado');
 	if(seleccionados) {
         //var valor = $(".ui-dialog-content").html();
 	    alert('Llamdo ajax: ' + seleccionados);
