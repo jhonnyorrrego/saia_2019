@@ -141,16 +141,6 @@ $(document).on({
 
 window.addEventListener("message", procesarMensaje, false);  
 
-function actualizarRepositorio(seleccionados) {
-    //$("#dialog2").modal("show").addClass("fade");
-    alert('Callback ejecutado');
-	if(seleccionados) {
-        //var valor = $(".ui-dialog-content").html();
-	    alert('Llamdo ajax: ' + seleccionados);
-	}
-    $("#dialog_merge").removeClass("fade").modal("hide");
-    
-}
 function procesarMensaje(event) {
     //var source = event.source;
     var source = event.source.frameElement; //this is the iframe that sent the message
@@ -196,7 +186,7 @@ $(document).ready(function(){
 
     $("#dialog-ok").on("click", function () {
         var seleccionados = [];
-        alert('onClick ejecutado');
+
     	$('.modal-body input').each(function(){
         if($(this).prop('checked')== true)
         	//alert($(this).val());
@@ -409,6 +399,15 @@ function showMergeDialog(lista) {
     
 }
 
+function actualizarRepositorio(seleccionados) {
+    //$("#dialog2").modal("show").addClass("fade");
+	if(seleccionados) {
+        //var valor = $(".ui-dialog-content").html();
+	    alert('Llamado ajax: ' + seleccionados);
+	}
+    $("#dialog_merge").removeClass("fade").modal("hide");
+    
+}
 </script>
 
 <div id="dialog_merge" class="modal hide" data-backdrop="false">
