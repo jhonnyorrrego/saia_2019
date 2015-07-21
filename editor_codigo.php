@@ -90,7 +90,7 @@ body.loading .modalload {
 
         <div id="contenedor_saia" style="width: 100%"></div>
 
-        <div>
+        <div class="form-group">
             <input type="text" name="archivo_actual" value="" readonly="true" id="archivo_actual" width="100%" /> 
             <input type="text" name="archivo_temporal" value="" readonly="true" id="archivo_temporal" /> 
             <input type="text"
@@ -103,9 +103,8 @@ body.loading .modalload {
                 name="descripcion_commit" value="" type="text">-->
                 <label for="descripcion_commit"> Descripci&oacute;n
                 extendida </label>
-            <textarea id="descripcion_commit" name="descripcion_commit"
-                class="input-block input-contrast commit-message js-new-blob-commit-description"
-                placeholder="A&ntilde;adir una descripci&oacute; extendida opcional..."></textarea>
+            <textarea id="descripcion_commit" name="descripcion_commit" rows="3" class="field span12"
+                placeholder="A&ntilde;adir una descripci&oacute;n extendida"></textarea>
 
         </div>
 
