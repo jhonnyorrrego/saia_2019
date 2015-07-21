@@ -970,6 +970,12 @@ class GitRepo {
 	    }
 	    return array_unique($resp);
 	}
+	
+	public function sobreescribir_archivo_local($remote, $branch, $file) {
+	        //$git_cfg = $this->run("git checkout origin/master <filepath>");
+	        $git_cfg = $this->run("git checkout $remote/$branch $file");
+	}
+	
 
 }
 
