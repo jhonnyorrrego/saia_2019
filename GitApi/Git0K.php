@@ -299,12 +299,17 @@ class Git0K extends Git {
         }
     }
 
+    /**
+     * Mientras se define el manejo de los subtree processRead y processSave son iguales.
+     * @param unknown $ruta_archivo
+     * @param unknown $comentario
+     * @param unknown $estado_git
+     */
     public function processSave($ruta_archivo, $comentario, &$estado_git) {
         $estado_git = NULL;
         $error_git = NULL;
         $lista_archivos = array();
         try {
-            
             // validar que no existan cambios
             if (empty($mensaje)) {
                 $mensaje = "Commit automatico editor saia. Cambios locales " . date("Y-m-d H:i:s");
@@ -316,13 +321,43 @@ class Git0K extends Git {
                 $this->resolveLocalChanges($mensaje, $modificados);
             }
             
-            // validar que no existan cambios
             // TODO: validar sobre cual rama se hacer el pull, si es un subtree cambia
-            // $repo->pull('origin', 'master');
+            // $estado_git=$git->repoPull('origin', 'master');
+            // Esto falla con error: master -> FETCH_HEAD
+            $estado_git = $this->repoFetch();
+            $modificados = $this->getRepoStatus();
+            $estado = $this->checkStatus($modificados);
+            
+            if ($estado === self::ESTADO_MERGE) {
+                $estado_git = $this->resolveMerge();
+                // Devuelve una exception si falla. Hay que hacer el merge manual. ver bloque catch
+            } elseif ($estado === self::ESTADO_BEHIND) {
+                
+                /**
+                 * git pull
+                 * Updating 40dcd20..a302473
+                 * Fast-forward
+                 * <archivo> | 6 ++++--
+                 * 1 file changed, 4 insertions(+), 2 deletions(-)
+                 */
+                $estado_git = $this->repoPull($this->get_remoto_base()->alias, "master");
+            } elseif ($estado === self::ESTADO_AHEAD) {
+                $estado_git = $this->repoPush($this->get_remoto_base()->alias, "master");
+                // return "ok";
+            }
         } catch (Exception $e) {
-            $estado_git = $e->getMessage();
+            $errmsg = $e->getMessage();
+            if (strpos($errmsg, "FETCH_HEAD") !== false) {
+                $lista_archivos = $this->get_lista_archivos_merge_manual();
+            }
+            $error_git = $errmsg;
         }
-    }
+        return array(
+            "Estado" => $estado_git,
+            "Error" => $error_git,
+            "listaArchivos" => $lista_archivos
+        );
+     }
 
     public function processRead($mensaje = "") {
         $estado_git = NULL;
