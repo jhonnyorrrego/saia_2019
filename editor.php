@@ -45,20 +45,13 @@ echo (estilo_bootstrap());
 	</div>
 
 	<div class="row span12">
-		<input type="text" name="archivo_actual" value="" readonly="true"
-			id="archivo_actual" width="100%" /> 
-		<input type="text"
-			name="archivo_temporal" value="" readonly="true"
-			id="archivo_temporal" /> 
-		<input type="text" name="modificado"
-			id="modificado" value="" readonly="true" /> 
-		<input type="text" name="git_info" value="" readonly="true" 
-		    id="git_info" />
+		<input type="hidden" id="archivo_actual" name="archivo_actual" value=""/> 
+		<input type="hidden" id="archivo_temporal" name="archivo_temporal" value="" /> 
+		<input type="hidden" id="modificado" name="modificado" value="" /> 
+		<input type="hidden" id="git_info" name="git_info" value="" />
+
 		<h4 class="file-commit-form-heading">Confirmaci&oacute;n de cambios</h4>
 
-		<!-- <label for="descripcion_commit" class="hidden"> Resumen Commit </label><input
-              id="resumen_commit" placeholder="Actualizar mostrar.php"
-              name="descripcion_commit" value="" type="text">-->
 		<label for="descripcion_commit"> Descripci&oacute;n extendida </label>
 		<textarea id="descripcion_commit" name="descripcion_commit" rows="3"
 			class="field span12"
