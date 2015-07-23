@@ -307,7 +307,7 @@ function saveTempFile() {
     //var ruta_archivo = $("#archivo_actual").val();
     //var rutaTemporal = $("#archivo_temporal").val();
     var rutaTemporal = $('iframe[name=editor]').contents().find('#archivo_temporal').val();
-    
+    alert(rutaTemporal);
     var data = {"rutaTemporal" : rutaTemporal, "contenido" : contenido}; 
     data = $(this).serialize() + "&" + $.param(data);
     $.ajax({
@@ -355,7 +355,7 @@ function cargar_editor(ruta_archivo, extension, nodeId) {
                     //$("#archivo_actual").val(nodeId);
                     $('iframe[name=editor]').contents().find('#archivo_actual').val(nodeId);
                     //$("#archivo_temporal").val(datos["rutaTemporal"]);
-                    $('iframe[name=editor]').contents().find('#archivo_temporal').val(nodeId);
+                    $('iframe[name=editor]').contents().find('#archivo_temporal').val(datos["rutaTemporal"]);
                     notificacion_saia("Archivo "+ruta_archivo+" cargado de forma exitosa","success","",3000);
                     //se crea una nueva sesion para resetear el undoManager
                     
