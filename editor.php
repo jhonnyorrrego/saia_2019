@@ -50,7 +50,7 @@
 	        bindKey: {win: 'Ctrl-S',  mac: 'Command-S'},
 	        exec: parent.saveFile
 	    });
-	   
+	   editor.resize();
    editor.on('input', function () {
   		if (editor.curOp && editor.curOp.command.name) {
   	  		alert('Que hace: '+editor.curOp.command.name);

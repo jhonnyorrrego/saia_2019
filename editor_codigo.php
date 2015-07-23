@@ -13,10 +13,10 @@ while ( $max_salida > 0 ) {
 include_once ($ruta_db_superior . "db.php");
 include_once ($ruta_db_superior . "librerias_saia.php");
 //ini_set ( "display_errors", true );
-//echo (estilo_bootstrap ());
+echo (estilo_bootstrap ());
 
 ?>
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/2.1.1/css/bootstrap.min.css">
+<!--link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/2.1.1/css/bootstrap.min.css"-->
 
 
 <style>
@@ -66,20 +66,72 @@ body.loading {
 body.loading .modalload {
     display: block;
 }
+.div_editor {
+    position:relative;
+    margin:0 auto;
+    overflow:hidden;
+    padding:5px;
+    padding-bottom:0px;
+    height:35px;
+}
 
+.lista_tab_editor {
+    position:absolute;
+    left:0px;
+    top:0px;
+    min-width:3000px;
+    margin-left:0px;
+    margin-top:0px;
+    margin-bottom:0px;
+}
+
+.lista_tab_editor li{
+  display:table-cell;
+    position:relative;
+    text-align:center;
+    cursor:grab;
+    cursor:-webkit-grab;
+    color:#efefef;
+    vertical-align:middle;
+}
+
+.scroller {
+  text-align:center;
+  cursor:pointer;
+  display:none;
+  padding:7px;
+  padding-top:11px;
+  white-space:no-wrap;
+  vertical-align:middle;
+  background-color:#fff;
+}
+
+.scroller-right{
+  float:right;
+}
+
+.scroller-left {
+  float:left;
+}
+.btn-buscar{
+  height:27px;
+}
 </style>
 
 <!--aca va el toolbar-->
 
 <div class="btn-toolbar">
         <div class="btn-group">
-            <div class="btn disabled" id="save" onclick="saveFile();"><i class="icon-hdd"></i>Guardar</div>
-            <div class="btn disabled" id="discard"><i class="icon-trash"></i>Descartar</div>
-            <div class="btn disabled" id="restore" onclick="restoreFile();"><i class="icon-upload"></i>Recuperar</div>
+            <div class="btn btn-mini disabled" id="save" onclick="saveFile();"><i class="icon-hdd"></i>Guardar</div>
+            <div class="btn btn-mini disabled" id="discard"><i class="icon-trash"></i>Descartar</div>
+            <div class="btn btn-mini disabled" id="restore" onclick="restoreFile();"><i class="icon-upload"></i>Recuperar</div>
         </div>
-        <div class="btn-group">
-            <div class="btn"><i class="icon-search"></i>Buscar</div>            
-        </div>
+        <!--div class="form-search pull-left">
+          <div class="input-append">
+            <input type="text" class="span2 search-query">
+            <button type="submit" class="btn btn-mini btn-buscar">Buscar</button>
+          </div>
+        </div-->
 </div>
 
 <div class="container row-fluid" style="align: center">
@@ -87,27 +139,31 @@ body.loading .modalload {
         <div id="izquierdo_saia" style="width: 100%"></div>
     </div>
     <div class="span9 pull-right" style="margin-left: 0px;">
+      <div class="scroller scroller-left"><i class="icon-chevron-left"></i></div>
+      <div class="scroller scroller-right"><i class="icon-chevron-right"></i></div>
+      <div class="div_editor">
+        <ul class="nav nav-tabs lista_tab_editor" id="listado_tabs">
+          <li class="active"><a href="#home">Home</a></li>
+        </ul>
+      </div>
+      <div id="contenedor_saia" style="width: 100%"></div>
+      <div class="form-group">
+          <input type="text" name="archivo_actual" value="" readonly="true" id="archivo_actual" width="100%" /> 
+          <input type="text" name="archivo_temporal" value="" readonly="true" id="archivo_temporal" /> 
+          <input type="text"
+              name="modificado" id="modificado" value="" readonly="true" />
+          <input type="text" name="git_info" value="" readonly="true" id="git_info" /> 
+          <h4 class="file-commit-form-heading">Confirmaci&oacute;n de cambios</h4>
 
-        <div id="contenedor_saia" style="width: 100%"></div>
+          <!-- <label for="descripcion_commit" class="hidden"> Resumen Commit </label><input
+              id="resumen_commit" placeholder="Actualizar mostrar.php"
+              name="descripcion_commit" value="" type="text">-->
+              <label for="descripcion_commit"> Descripci&oacute;n
+              extendida </label>
+          <textarea id="descripcion_commit" name="descripcion_commit" rows="3" class="field span12"
+              placeholder="A&ntilde;adir una descripci&oacute;n extendida"></textarea>
 
-        <div class="form-group">
-            <input type="text" name="archivo_actual" value="" readonly="true" id="archivo_actual" width="100%" /> 
-            <input type="text" name="archivo_temporal" value="" readonly="true" id="archivo_temporal" /> 
-            <input type="text"
-                name="modificado" id="modificado" value="" readonly="true" />
-            <input type="text" name="git_info" value="" readonly="true" id="git_info" /> 
-            <h4 class="file-commit-form-heading">Confirmaci&oacute;n de cambios</h4>
-
-            <!-- <label for="descripcion_commit" class="hidden"> Resumen Commit </label><input
-                id="resumen_commit" placeholder="Actualizar mostrar.php"
-                name="descripcion_commit" value="" type="text">-->
-                <label for="descripcion_commit"> Descripci&oacute;n
-                extendida </label>
-            <textarea id="descripcion_commit" name="descripcion_commit" rows="3" class="field span12"
-                placeholder="A&ntilde;adir una descripci&oacute;n extendida"></textarea>
-
-        </div>
-
+      </div>
     </div>
 
 </div>
@@ -125,7 +181,6 @@ echo (librerias_notificaciones ());
 <!-- Latest compiled and minified JavaScript -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/2.1.1/js/bootstrap.min.js"></script>
 <script src="src/ace.js"></script>
-
 <script type="text/javascript">
 
 var gitInfo;
@@ -209,8 +264,8 @@ $(document).ready(function(){
             var alto_menu=30;
             $("#panel_arbol_archivos").height(alto-alto_menu);
             $("#arbol_archivos").height(alto-alto_menu-2);
-            $("#panel_editor").height(alto-alto_menu);
-            $("#editor").height(alto-alto_menu-2);
+            $("#panel_editor").height(alto-alto_menu-30);
+            $("#editor").height(alto-alto_menu-32);
         });
         
     llamado_pantalla("<?php echo($ruta_db_superior);?>editor_codigo/arbol_archivos.php","alto="+alto,$("#izquierdo_saia"),'arbol_archivos');
@@ -281,6 +336,7 @@ function cargar_editor(ruta_archivo, extension, nodeId) {
                     $("#archivo_temporal").val(datos["rutaTemporal"]);
                     notificacion_saia("Archivo "+ruta_archivo+" cargado de forma exitosa","success","",3000);
                     //se crea una nueva sesion para resetear el undoManager
+                    
                     var sesion = ace.createEditSession(datos["contenido"], "ace/mode/"+extension);
                     gitInfo = datos["gitInfo"];
                     errorInfo = datos["errorInfo"];
@@ -407,6 +463,69 @@ function actualizarRepositorio(seleccionados) {
     $("#dialog_merge").removeClass("fade").modal("hide");
     
 }
+$(document).ready(function (){
+  var hidWidth;
+  var scrollBarWidths = 40;
+  
+  var widthOfList = function(){
+    var itemsWidth = 0;
+    $('.lista_tab_editor li').each(function(){
+      var itemWidth = $(this).outerWidth();
+      itemsWidth+=itemWidth;
+    });
+    return itemsWidth;
+  };
+  
+  var widthOfHidden = function(){
+    return (($('.div_editor').outerWidth())-widthOfList()-getLeftPosi())-scrollBarWidths;
+  };
+  
+  var getLeftPosi = function(){
+    return $('.lista_tab_editor').position().left;
+  };
+  
+  var reAdjust = function(){
+    if (($('.div_editor').outerWidth()) < widthOfList()) {
+      $('.scroller-right').show();
+    }
+    else {
+      $('.scroller-right').hide();
+    }
+    
+    if (getLeftPosi()<0) {
+      $('.scroller-left').show();
+    }
+    else {
+      $('.item').animate({left:"-="+getLeftPosi()+"px"},'slow');
+      $('.scroller-left').hide();
+    }
+  }
+  reAdjust();
+  
+  $(window).on('resize',function(e){  
+      reAdjust();
+  });
+  
+  $('.scroller-right').click(function() {
+    
+    $('.scroller-left').fadeIn('slow');
+    $('.scroller-right').fadeOut('slow');
+    
+    $('.lista_tab_editor').animate({left:"+="+widthOfHidden()+"px"},'slow',function(){
+  
+    });
+  });
+  
+  $('.scroller-left').click(function() {
+    
+    $('.scroller-right').fadeIn('slow');
+    $('.scroller-left').fadeOut('slow');
+    
+      $('.lista_tab_editor').animate({left:"-="+getLeftPosi()+"px"},'slow',function(){
+      
+      });
+  });   
+});
 </script>
 
 <div id="dialog_merge" class="modal hide" data-backdrop="false">
