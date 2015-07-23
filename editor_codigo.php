@@ -491,6 +491,40 @@ function actualizarRepositorio(seleccionados) {
 	if(seleccionados) {
         //var valor = $(".ui-dialog-content").html();
 	    alert('Llamado ajax: ' + seleccionados);
+	    //    public function processUnMerge($lista_archivos, $comentario, &$estado_git)
+	    var comentario = $("#descripcion_commit").val();
+	    if(!comentario){
+	    	comentario = "Recuperar archivos desde version anterior";
+	    }
+        var data = {'lista' : seleccionados, "comentario" : comentario};   
+        data = $(this).serialize() + "&" + $.param(data);
+        $.ajax({
+            type:'POST',
+            url: 'solucionar_merge.php', 
+            dataType:"json", 
+            data: data,
+            //beforeSend: cargando_serie(),
+            success: function(datos) {
+                if(datos){ 
+                    if(datos["resultado"]) {
+                        if(datos["resultado"] == 'ok') {
+                            notificacion_saia(datos["mensaje"],"success","",3000);
+                        } else {
+                            notificacion_saia(datos["ruta"] + ": " + datos["mensaje"],"error","",5000);
+                        }
+                        gitErrorInfo = datos["gitErrorInfo"];
+                        //alert(JSON.stringify(gitInfo));
+                        if(gitErrorInfo) {
+                            notificacion_saia("Error git: "+ gitErrorInfo, "warning","",3000);
+                        }
+                    } else {
+                        notificacion_saia("Sin resultado en el llamado","error","",3000);
+                    }
+                } else {
+                    notificacion_saia("Sin respuesta","error","",3000);
+                }
+            }
+        });                            
 	}
     $("#dialog_merge").removeClass("fade").modal("hide");
     

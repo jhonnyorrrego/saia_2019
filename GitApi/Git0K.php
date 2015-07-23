@@ -271,23 +271,22 @@ class Git0K extends Git {
     public function processUnMerge($lista_archivos, $comentario, &$estado_git) {
         $estado_git = NULL;
         $error_git = NULL;
-        $lista_archivos = array();
         try {
             
             // validar que no existan cambios
-            if (empty($mensaje)) {
-                $mensaje = "Commit automatico editor saia. Cambios locales " . date("Y-m-d H:i:s");
+            if (empty($comentario)) {
+                $comentario = "Commit automatico editor saia. Cambios locales " . date("Y-m-d H:i:s");
             }
             if ($lista_archivos) {
                 foreach ($lista_archivos as $value) {
                     // $this->get_remoto_base()->alias, "master"
                     $estado_git = repoOverwriteLocalFile($this->get_remoto_base()->alias, "master", $file);
                 }
-                // No hacer push
+                //TODO: Revisar si mijor se llama a processRead o Save
                 $modificados = $this->getRepoStatus();
                 $estado = $this->checkStatus($modificados);
                 if ($estado !== self::ESTADO_CLEAN) {
-                    $this->resolveLocalChanges($mensaje, $modificados);
+                    $this->resolveLocalChanges($comentario, $modificados);
                 }
             }
 
@@ -295,8 +294,13 @@ class Git0K extends Git {
             // TODO: validar sobre cual rama se hacer el pull, si es un subtree cambia
             // $repo->pull('origin', 'master');
         } catch (Exception $e) {
-            $estado_git = $e->getMessage();
+            $errmsg = $e->getMessage();
+            $error_git = $errmsg;
         }
+        return array(
+            "Estado" => $estado_git,
+            "Error" => $error_git
+        );
     }
 
     /**
