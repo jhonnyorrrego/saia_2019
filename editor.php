@@ -1,37 +1,85 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Editor de Código SAIA</title>
+<meta charset="UTF-8">
+<title>Editor de Código SAIA</title>
+  
+<?php
+ini_set('display_errors', '1');
+
+$max_salida = 6;
+$ruta_db_superior = $ruta = "";
+while ($max_salida > 0) {
+    if (is_file($ruta . "db.php")) {
+        $ruta_db_superior = $ruta;
+    }
+    $ruta .= "../";
+    $max_salida --;
+}
+include_once ($ruta_db_superior . "db.php");
+include_once ($ruta_db_superior . "librerias_saia.php");
+// ini_set ( "display_errors", true );
+echo (estilo_bootstrap());
+
+?>
+  
   <style type="text/css" media="screen">
-    body {
-        overflow: hidden;
-    }
-    
-    #editor { 
-        margin: 0;
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
-    }
-  </style>
+/*body {
+	overflow: hidden;
+}*/
+#editor {
+	margin: 0;
+	/*position: absolute;*/
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	height: 500px;
+}
+</style>
 </head>
 <body>
 
-<pre id="editor"></pre>
+	<div class="row">
+		<pre id="editor"></pre>
+	</div>
 
-<!-- load emmet code and snippets compiled for browser -->
-<script src="emmet.js"></script>
+	<div class="row span12">
+		<input type="text" name="archivo_actual" value="" readonly="true"
+			id="archivo_actual" width="100%" /> 
+		<input type="text"
+			name="archivo_temporal" value="" readonly="true"
+			id="archivo_temporal" /> 
+		<input type="text" name="modificado"
+			id="modificado" value="" readonly="true" /> 
+		<input type="text" name="git_info" value="" readonly="true" 
+		    id="git_info" />
+		<h4 class="file-commit-form-heading">Confirmaci&oacute;n de cambios</h4>
 
-<!-- load ace -->
-<script src="src/ace.js"></script>
-<!-- load ace emmet extension 
+		<!-- <label for="descripcion_commit" class="hidden"> Resumen Commit </label><input
+              id="resumen_commit" placeholder="Actualizar mostrar.php"
+              name="descripcion_commit" value="" type="text">-->
+		<label for="descripcion_commit"> Descripci&oacute;n extendida </label>
+		<textarea id="descripcion_commit" name="descripcion_commit" rows="3"
+			class="field span12"
+			placeholder="A&ntilde;adir una descripci&oacute;n extendida"></textarea>
+
+	</div>
+
+<?php
+echo (librerias_jquery ( "1.7" ));
+
+?>
+	<!-- load emmet code and snippets compiled for browser -->
+	<script src="emmet.js"></script>
+
+	<!-- load ace -->
+	<script src="src/ace.js"></script>
+	<!-- load ace emmet extension 
 <script src="src/ext-emmet.js"></script> -->
-<script>
+	<script>
 	var editor = ace.edit("editor");
-	var modificado = parent.$('#modificado');
+	var modificado = $('#modificado');
 
 	modificado.val('false'); //inicialmente en true mientras carga el archivo
   	editor.setTheme("ace/theme/twilight");
@@ -93,5 +141,6 @@
 	    });
 	});
 </script>
+
 </body>
 </html>

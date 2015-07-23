@@ -146,24 +146,7 @@ body.loading .modalload {
           <li class="active"><a href="#home"><button class="close closeTab" type="button" >&times;</button>Home&nbsp;</a></li>
         </ul>
       </div>
-      <div id="contenedor_saia" style="width: 100%"></div>
-      <div class="form-group">
-          <input type="text" name="archivo_actual" value="" readonly="true" id="archivo_actual" width="100%" /> 
-          <input type="text" name="archivo_temporal" value="" readonly="true" id="archivo_temporal" /> 
-          <input type="text"
-              name="modificado" id="modificado" value="" readonly="true" />
-          <input type="text" name="git_info" value="" readonly="true" id="git_info" /> 
-          <h4 class="file-commit-form-heading">Confirmaci&oacute;n de cambios</h4>
-
-          <!-- <label for="descripcion_commit" class="hidden"> Resumen Commit </label><input
-              id="resumen_commit" placeholder="Actualizar mostrar.php"
-              name="descripcion_commit" value="" type="text">-->
-              <label for="descripcion_commit"> Descripci&oacute;n
-              extendida </label>
-          <textarea id="descripcion_commit" name="descripcion_commit" rows="3" class="field span12"
-              placeholder="A&ntilde;adir una descripci&oacute;n extendida"></textarea>
-
-      </div>
+      <div id="contenedor_saia" class="container row-fluid" style="width: 100%"></div>
     </div>
 
 </div>
@@ -278,9 +261,12 @@ $(document).ready(function(){
 function saveFile() {
     var contenido = editor.editor.getSession().getValue();
 
-    var ruta_archivo = $("#archivo_actual").val();
-    var rutaTemporal = $("#archivo_temporal").val();
-    var comentario = $("#descripcion_commit").val();
+    //var ruta_archivo = $("#archivo_actual").val();
+    var ruta_archivo = $('iframe[name=editor]').contents().find('#archivo_actual').val();
+    //var rutaTemporal = $("#archivo_temporal").val();
+    var rutaTemporal = $('iframe[name=editor]').contents().find('#archivo_temporal').val();
+    //var comentario = $("#descripcion_commit").val();
+    var comentario = $('iframe[name=editor]').contents().find("#descripcion_commit").val();
     if(!comentario){
         alert("Debe escribir un comentario para el commit");
         return false;
@@ -319,7 +305,9 @@ function saveTempFile() {
     var contenido = editor.editor.getSession().getValue();
 
     //var ruta_archivo = $("#archivo_actual").val();
-    var rutaTemporal = $("#archivo_temporal").val();
+    //var rutaTemporal = $("#archivo_temporal").val();
+    var rutaTemporal = $('iframe[name=editor]').contents().find('#archivo_temporal').val();
+    
     var data = {"rutaTemporal" : rutaTemporal, "contenido" : contenido}; 
     data = $(this).serialize() + "&" + $.param(data);
     $.ajax({
@@ -364,8 +352,10 @@ function cargar_editor(ruta_archivo, extension, nodeId) {
             //beforeSend: cargando_serie(),
             success: function(datos) {
                 if(datos) {
-                    $("#archivo_actual").val(nodeId);
-                    $("#archivo_temporal").val(datos["rutaTemporal"]);
+                    //$("#archivo_actual").val(nodeId);
+                    $('iframe[name=editor]').contents().find('#archivo_actual').val(nodeId);
+                    //$("#archivo_temporal").val(datos["rutaTemporal"]);
+                    $('iframe[name=editor]').contents().find('#archivo_temporal').val(nodeId);
                     notificacion_saia("Archivo "+ruta_archivo+" cargado de forma exitosa","success","",3000);
                     //se crea una nueva sesion para resetear el undoManager
                     
@@ -374,7 +364,8 @@ function cargar_editor(ruta_archivo, extension, nodeId) {
                     errorInfo = datos["errorInfo"];
                     //alert(JSON.stringify(gitInfo));
                     if(gitInfo) {
-                        $("#git_info").val(JSON.stringify(gitInfo));
+                        //$("#git_info").val(JSON.stringify(gitInfo));
+                        $('iframe[name=editor]').contents().find('#git_info').val(JSON.stringify(gitInfo));
                     }
                     if(errorInfo) {
                     	//alert(errorInfo);
@@ -393,7 +384,8 @@ function cargar_editor(ruta_archivo, extension, nodeId) {
                     editor.editor.setSession(sesion);
                     $('#save').addClass("disabled");
                     $('#discard').addClass("disabled");
-                    $('#modificado').val('false');
+                    //$('#modificado').val('false');
+                    $('iframe[name=editor]').contents().find('#modificado').val('false');
                 }          
             }
         });                            
@@ -401,9 +393,10 @@ function cargar_editor(ruta_archivo, extension, nodeId) {
 }
 
 function restoreFile() {
-    var ruta_archivo = $("#archivo_actual").val();
-    var rutaTemporal = $("#archivo_temporal").val();
-    //alert('rutaTemporal: ' + rutaTemporal)
+    //var ruta_archivo = $("#archivo_actual").val();
+    var ruta_archivo = $('iframe[name=editor]').contents().find('#archivo_actual').val();
+    //var rutaTemporal = $("#archivo_temporal").val();
+    var rutaTemporal = $('iframe[name=editor]').contents().find('#archivo_temporal').val();
     var data = {'ruta' : ruta_archivo, 'rutaTemporal' : rutaTemporal}; 
     data = $(this).serialize() + "&" + $.param(data);
     $.ajax({
