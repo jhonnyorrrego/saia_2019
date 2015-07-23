@@ -122,7 +122,7 @@ body.loading .modalload {
 
 <div class="btn-toolbar">
         <div class="btn-group">
-            <div class="btn btn-mini disabled" id="save" onclick="saveFile();"><i class="icon-hdd"></i>Guardar</div>
+            <div class="btn btn-mini disabled" id="save" onclick="saveTempFile();"><i class="icon-hdd"></i>Guardar</div>
             <div class="btn btn-mini disabled" id="discard"><i class="icon-trash"></i>Descartar</div>
             <div class="btn btn-mini disabled" id="restore" onclick="restoreFile();"><i class="icon-upload"></i>Recuperar</div>
         </div>
@@ -143,7 +143,7 @@ body.loading .modalload {
       <div class="scroller scroller-right"><i class="icon-chevron-right"></i></div>
       <div class="div_editor">
         <ul class="nav nav-tabs lista_tab_editor" id="listado_tabs">
-          <li class="active"><a href="#home">Home</a></li>
+          <li class="active"><a href="#home"><button class="close closeTab" type="button" >&times;</button>Home&nbsp;</a></li>
         </ul>
       </div>
       <div id="contenedor_saia" style="width: 100%"></div>
@@ -219,8 +219,10 @@ function procesarMensaje(event) {
                             event.origin);
                     return false;                    
                 }
+                //TODO: Cambiar saveFile por saveTempFile cuando se terminen de implementar los tabs 
+                //saveTempFile();
                 saveFile();
-            }
+                     }
         }
 
         //message.nodeId tiene la ruta completa del archivo desde la raiz de saia
@@ -302,6 +304,36 @@ function saveFile() {
                 //alert(JSON.stringify(gitInfo));
                 if(gitErrorInfo) {
                     notificacion_saia("Error git: "+ gitErrorInfo, "warning","",3000);
+                }
+            } else {
+                notificacion_saia("Sin resultado en el llamado","error","",3000);
+            }
+        } else {
+            notificacion_saia("Sin respuesta","error","",3000);
+        }
+      }
+    });
+}
+
+function saveTempFile() {
+    var contenido = editor.editor.getSession().getValue();
+
+    //var ruta_archivo = $("#archivo_actual").val();
+    var rutaTemporal = $("#archivo_temporal").val();
+    var data = {"rutaTemporal" : rutaTemporal, "contenido" : contenido}; 
+    data = $(this).serialize() + "&" + $.param(data);
+    $.ajax({
+      type:'POST',
+      url: 'guardar_archivo_temporal.php', 
+      dataType:"json", 
+      data: data,
+      success: function(datos) {                              
+        if(datos){ 
+            if(datos["resultado"]) {
+                if(datos["resultado"] == 'ok') {
+                    notificacion_saia(datos["mensaje"],"success","",3000);
+                } else {
+                    notificacion_saia(datos["rutaTemp"] + ": " + datos["mensaje"],"error","",5000);
                 }
             } else {
                 notificacion_saia("Sin resultado en el llamado","error","",3000);
