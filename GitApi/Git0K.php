@@ -250,6 +250,10 @@ class Git0K extends Git {
         return $this->repo->list_remotes();
     }
 
+    public function repoListSubtrees() {
+        return $this->repo->get_subtree_list();
+    }
+    
     public function getRepoRootDir() {
         return $this->repo->get_repo_root_dir();
     }
