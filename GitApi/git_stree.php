@@ -345,7 +345,7 @@ function list_subtrees() {
 
 // Helper: info/success message. This will show up in cyan on STDOUT.
 function meh($mensaje) {
-	global $CYAN;
+	global $CYAN, $CHECK;
 	message($CYAN, $mensaje, $CHECK);
 }
 
@@ -500,13 +500,16 @@ function push_subtree() {
 		fake_git("checkout", "--quiet --track -b $branch_name $remote_name/$branch");
 	}
 	
+	if(is_array($commits) || is_object($commits)) {
 	foreach ( $commits as $commit ) {
-		$status = fake_git("cherry-pick", "-x -X subtree=$prefix $commit") && fake_git("config", "--local stree.$root_key.latest-sync $commit") && discreet("* " . fake_git("show", "-s --oneline $commit"));
+		$status = fake_git("cherry-pick", "-x -X subtree=$prefix $commit") && fake_git("config", "--local stree.$root_key.latest-sync $commit");
+		discreet("* " . fake_git("show", "-s --oneline $commit"));
+		echo "\nEstado: $status\n";
 		if (!$status) {
 			error(false, "Could not cherry-pick ") . fake_git("show", "-s --oneline $commit");
 		}
 	}
-	
+	}
 	fake_git("push", "--quiet $remote_name $branch_name:$branch") && fake_git("checkout", "--quiet --merge $latest_head") && yay("STree '$name' successfully backported local changes to its remote");
 }
 
