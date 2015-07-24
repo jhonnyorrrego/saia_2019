@@ -28,7 +28,7 @@ echo "<br>";
 // TODO: validar sobre cual rama se hacer el pull, si es un subtree cambia
 // $estado_git=$git->repoPull('origin', 'master');
 
-var_dump($git2->get_subtree_list());
+var_dump($git2->repoListSubtrees());
 
 $git_info = $git2->expose();
 echo $git_info . "<br>";
