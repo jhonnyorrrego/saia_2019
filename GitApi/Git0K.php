@@ -69,7 +69,7 @@ class Git0K extends Git {
             return;
         }
         $this->determinar_repositorios_remotos();
-        $this->determinar_lista_subarboles();
+         $this->subtrees = $this->repoListSubtrees();
     }
 
     /**
@@ -189,20 +189,14 @@ class Git0K extends Git {
         }
     }
 
-    public function determinar_lista_subarboles() {
-        $this->subtrees = $this->repo->get_subtree_list();
-    }
-
     /**
      * determina si una ruta (relativa a la raiz del repo) pertenece a un subarbol
      *
      * @param string $ruta
      */
     public function pertenece_subarbol($ruta) {
-        // e257312163ab209cddad4e47c2292543637a7d0c Squashed 'formatos/formatos_0K/' content from commit b8bcb5c
         if (count($this->subtrees) > 0) {
-            foreach ($this->subtrees as $value) {
-                $ruta_st = preg_replace("/(.*)(')(.*)(')(.*)/", '${3}', $value);
+            foreach ($this->subtrees as $ruta_st) {
                 if (strpos($ruta, $ruta_st) === false) {
                     continue;
                 }
@@ -287,10 +281,9 @@ class Git0K extends Git {
                     $estado_git = repoOverwriteLocalFile($this->get_remoto_base()->alias, "master", $file);
                 }
                 //TODO: Revisar si mijor se llama a processRead o Save
-                $modificados = $this->getRepoStatus();
-                $estado = $this->checkStatus($modificados);
+                $estado = $this->checkStatus();
                 if ($estado !== self::ESTADO_CLEAN) {
-                    $this->resolveLocalChanges($comentario, $modificados);
+                    $this->resolveLocalChanges($comentario);
                 }
             }
 
@@ -314,7 +307,7 @@ class Git0K extends Git {
      * @param unknown $estado_git
      */
     public function processSave($ruta_archivo, $comentario, &$estado_git) {
-        $estado_git = NULL;
+        //$estado_git = NULL;
         $error_git = NULL;
         $lista_archivos = array();
         try {
@@ -322,37 +315,8 @@ class Git0K extends Git {
             if (empty($mensaje)) {
                 $mensaje = "Commit automatico editor saia. Cambios locales " . date("Y-m-d H:i:s");
             }
-            // No hacer push
-            $modificados = $this->getRepoStatus();
-            $estado = $this->checkStatus($modificados);
-            if ($estado !== self::ESTADO_CLEAN) {
-                $this->resolveLocalChanges($mensaje, $modificados);
-            }
-            
-            // TODO: validar sobre cual rama se hacer el pull, si es un subtree cambia
-            // $estado_git=$git->repoPull('origin', 'master');
-            // Esto falla con error: master -> FETCH_HEAD
-            $estado_git = $this->repoFetch();
-            $modificados = $this->getRepoStatus();
-            $estado = $this->checkStatus($modificados);
-            
-            if ($estado === self::ESTADO_MERGE) {
-                $estado_git = $this->resolveMerge();
-                // Devuelve una exception si falla. Hay que hacer el merge manual. ver bloque catch
-            } elseif ($estado === self::ESTADO_BEHIND) {
-                
-                /**
-                 * git pull
-                 * Updating 40dcd20..a302473
-                 * Fast-forward
-                 * <archivo> | 6 ++++--
-                 * 1 file changed, 4 insertions(+), 2 deletions(-)
-                 */
-                $estado_git = $this->repoPull($this->get_remoto_base()->alias, "master");
-            } elseif ($estado === self::ESTADO_AHEAD) {
-                $estado_git = $this->repoPush($this->get_remoto_base()->alias, "master");
-                // return "ok";
-            }
+            $estado = $this->sincronizarRepositorio($estado_git);
+
         } catch (Exception $e) {
             $errmsg = $e->getMessage();
             if (strpos($errmsg, "FETCH_HEAD") !== false) {
@@ -372,59 +336,12 @@ class Git0K extends Git {
         $error_git = NULL;
         $lista_archivos = array();
         try {
-            $do_push = false;
             // validar que no existan cambios
             if (empty($mensaje)) {
                 $mensaje = "Commit automatico editor saia. Cambios locales " . date("Y-m-d H:i:s");
             }
-            // No hacer push
-            $modificados = $this->getRepoStatus();
-            $estado = $this->checkStatus($modificados);
-            if ($estado !== self::ESTADO_CLEAN) {
-                $this->resolveLocalChanges($mensaje, $modificados);
-            }
-            if ($do_push) {
-                // $git->repoPush($git->get_remoto_base()->alias, "master");
-                // $estado_git = $git->repoPushCredentials($git->get_remoto_base()->alias, "master", $git->get_remoto_base()->url);
-                /**
-                 * git push
-                 * To http://laboratorio.netsaia.com:82/usuario/GitApi.git
-                 * ! [rejected] master -> master (fetch first)
-                 * Si se ejecuta git status -b --porcelain
-                 * ## master...origin/master [ahead M, behind N]
-                 * Solo se resuelve con un git pull
-                 * Auto-merging README
-                 * CONFLICT (content): Merge conflict in README
-                 * Automatic merge failed; fix conflicts and then commit the result.
-                 * Si sale eso hay que arreglar el archivo
-                 */
-                $estado_git = $this->repoPush($this->get_remoto_base()->alias, "master");
-            }
-            
-            // TODO: validar sobre cual rama se hacer el pull, si es un subtree cambia
-            // $estado_git=$git->repoPull('origin', 'master');
-            // Esto falla con error: master -> FETCH_HEAD
-            $estado_git = $this->repoFetch();
-            $modificados = $this->getRepoStatus();
-            $estado = $this->checkStatus($modificados);
-            
-            if ($estado === self::ESTADO_MERGE) {
-                $estado_git = $this->resolveMerge();
-                // Devuelve una exception si falla. Hay que hacer el merge manual. ver bloque catch
-            } elseif ($estado === self::ESTADO_BEHIND) {
-                
-                /**
-                 * git pull
-                 * Updating 40dcd20..a302473
-                 * Fast-forward
-                 * <archivo> | 6 ++++--
-                 * 1 file changed, 4 insertions(+), 2 deletions(-)
-                 */
-                $estado_git = $this->repoPull($this->get_remoto_base()->alias, "master");
-            } elseif ($estado === self::ESTADO_AHEAD) {
-                $estado_git = $this->repoPush($this->get_remoto_base()->alias, "master");
-                // return "ok";
-            }
+            $estado = $this->sincronizarRepositorio($estado_git);
+
         } catch (Exception $e) {
             // echo $e;
             $errmsg = $e->getMessage();
@@ -439,18 +356,100 @@ class Git0K extends Git {
             "listaArchivos" => $lista_archivos
         );
     }
+    
+    /**
+     * 
+     */
+     protected function sincronizarRepositorio($mensaje, &$estado_git) {
+        // No hacer push
+        $estado = $this->checkStatus();
+        
+        if ($estado !== self::ESTADO_CLEAN) {
+           $lista_agregados = $this->resolveLocalChanges($mensaje);
+           if(count($lista_agregados)>0) {
+               $files = $this->filesInIndex($lista_archivos);
+               if(count($files) > 0 &&  count($files["tree"])>0) {
+                   $estado_git = $this->sincronizarSubtree($files["tree"]);
+               }
+           }
+        }
+        
+        // TODO: validar sobre cual rama se hacer el pull, si es un subtree cambia
+        // $estado_git=$git->repoPull('origin', 'master');
+        // Esto falla con error: master -> FETCH_HEAD
+        $estado_git = $this->repoFetch();
+        $estado = $this->checkStatus();
+        
+        if ($estado === self::ESTADO_MERGE) {
+            $estado_git = $this->resolveMerge();
+            return $this->sincronizarRepositorio($estado_git);
+            // Devuelve una exception si falla. Hay que hacer el merge manual. ver bloque catch
+        } elseif ($estado === self::ESTADO_BEHIND) {
+            $estado_git = $this->repoPull($this->get_remoto_base()->alias, "master");
+            return $this->sincronizarRepositorio($estado_git);
+        } elseif ($estado === self::ESTADO_AHEAD) {
+            $estado_git = $this->repoPush($this->get_remoto_base()->alias, "master");
+        }
+        $estado = $this->checkStatus();
+        return $estado;
+    }
+
+    protected function sincronizarSubtree($mensaje, $lista_archivos) {
+        // No hacer push
+        $estado = $this->checkStatus();
+    
+        if ($estado !== self::ESTADO_CLEAN) {
+            $lista_agregados = $this->resolveLocalChanges($mensaje);
+            if(count($lista_agregados)>0) {
+                $files = $this->filesInIndex($lista_archivos);
+                if(count($files) > 0 &&  count($files["tree"])>0) {
+                    $estado_git = $this->sincronizarSubtree();
+                }
+            }
+        }
+    
+        // TODO: validar sobre cual rama se hacer el pull, si es un subtree cambia
+        // $estado_git=$git->repoPull('origin', 'master');
+        // Esto falla con error: master -> FETCH_HEAD
+        $estado_git = $this->repoFetch();
+        $estado = $this->checkStatus();
+    
+        if ($estado === self::ESTADO_MERGE) {
+            $estado_git = $this->resolveMerge();
+            return $this->sincronizarRepositorio($estado_git);
+            // Devuelve una exception si falla. Hay que hacer el merge manual. ver bloque catch
+        } elseif ($estado === self::ESTADO_BEHIND) {
+            $estado_git = $this->repoPull($this->get_remoto_base()->alias, "master");
+            return $this->sincronizarRepositorio($estado_git);
+        } elseif ($estado === self::ESTADO_AHEAD) {
+            $estado_git = $this->repoPush($this->get_remoto_base()->alias, "master");
+        }
+        $estado = $this->checkStatus();
+        return $estado;
+    }
+    
+    private function filesInIndex($lista_archivos) {
+        $resp = array();
+        foreach ($lista_archivos as $archivo) {
+            if($this->pertenece_subarbol($archivo)) {
+                $resp["tree"][] = $archivo;
+            } else {
+                $resp["main"][] = $archivo;
+            }
+        }
+        return $resp;
+    }
 
     /**
-     *
-     * @param pattern_ahead
-     * @param pattern_behind
-     * @param pattern_both
-     * @param modificados
+     * Valida el estado del repositorio para determinar las acciones de git a realizar
+     * @return string
      */
-    protected function checkStatus($modificados) {
+    protected function checkStatus() {
         $pattern_ahead = "/\[ahead [\d]+\]/";
         $pattern_behind = "/\[behind [\d]+\]/";
         $pattern_both = "/\[ahead ([\d]+), behind ([\d]+)\]/";
+        $modificados = $this->getRepoStatus();
+        
         // mirar si tiene "[ahead n]".
         $estado = self::ESTADO_CLEAN;
         if (preg_match($pattern_ahead, $modificados[0]) === 1) {
@@ -465,16 +464,16 @@ class Git0K extends Git {
         return $estado;
     }
 
-    protected function resolveLocalChanges($mensaje, $modificados) {
+    protected function resolveLocalChanges($mensaje) {
         $pattern_modificados = "/(^[ACDMRU? ]{2}) ([A-Za-z0-9_\-\.\/]+)/";
+        $lista_agregados = array();
+        $modificados = $this->getRepoStatus();
         if ($modificados) {
             
             if (count($modificados) > 1) {
                 chdir($this->repo_path);
                 for ($i = 1; $i < count($modificados); $i ++) {
                     $input_line = $modificados[$i];
-                    // The MM means that this file was modified with respect to parent 1 and also modified with respect to parent 2.
-                    // The AM status means that the file has been modified on disk since we last added it.
                     // nombre del archivo en $output_array[2];
                     $output_array = array();
                     if (preg_match($pattern_modificados, $input_line, $output_array) > 0) {
@@ -484,21 +483,16 @@ class Git0K extends Git {
                         // "M " ya se hizo add de un archivo existente modificado
                         // "A " ya se hizo add de un archivo nuevo
                         // "??" Nuevo. Hacer add y commit
-                        if ($output_array[1] == " M") {
+                        switch($output_array[1]) {
+                            case " M":
+                            case "A ":
+                            case "??":
+                            case "AM":
+                            case "MM":
                             $this->repoAdd($output_array[2]);
                             $do_commit = true;
-                        } elseif ($output_array[1] == "A ") {
-                            $do_commit = true;
-                            // nombre del archivo en $output_array[2];
-                        } elseif ($output_array[1] == "??") {
-                            $this->repoAdd($output_array[2]);
-                            $do_commit = true;
-                        } elseif ($output_array[1] == "AM") {
-                            $this->repoAdd($output_array[2]);
-                            $do_commit = true;
-                        } elseif ($output_array[1] == "MM") {
-                            $this->repoAdd($output_array[2]);
-                            $do_commit = true;
+                            $lista_agregados($output_array[2]);
+                            break;
                         }
                     }
                 }
@@ -512,7 +506,7 @@ class Git0K extends Git {
                 // $estado_git = $git->repoCommitAuthor($mensaje);
             }
         }
-        return $estado;
+        return $lista_agregados;
     }
 
     protected function resolveMerge() {
