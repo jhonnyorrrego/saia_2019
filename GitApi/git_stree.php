@@ -66,21 +66,20 @@ function fake_git($comando, $resto) {
  * Does not create a commit out of it. Some configuration is added to retain
  * subtree information (e.g. prefix, url, branch and latest sync'd commit).
  */
-//function add_subtree($name, $prefix, $url, $branch) {
-function add_subtree($params) {
-	$name = require_arg(2, 'Missing subtree name');
-	var_dump($name);
+//function add_subtree($params) {
+function add_subtree($name, $prefix, $url, $branch) {
+    //$name = require_arg(2, 'Missing subtree name');	var_dump($name);
 	if (empty($name)) {
 		return 'Missing subtree name';
 	}
-	require_arg(3, 'Missing -P parameter', '-P');
-	$prefix = require_arg(4, 'Missing prefix');
-	$prefix = normalize_prefix("$prefix");
-	$url = require_arg(5, 'Missing URL');
-	$branch = optional_arg(6, 'master');
+	//require_arg(3, 'Missing -P parameter', '-P');
+	//$prefix = require_arg(4, 'Missing prefix');
+	$prefix = normalize_prefix($prefix);
+	//$url = require_arg(5, 'Missing URL');
+	//$branch = optional_arg(6, 'master');
 	
-	$root_key = get_root_key("$name");
-	$remote_name = get_remote_name("$name");
+	$root_key = get_root_key($name);
+	$remote_name = get_remote_name($name);
 	//FIXME: fake_git siempre devuelve true
 	if (!fake_git("config", "--local --get remote.$remote_name.url")) {
 		error(false, "A remote already exists for '$name' ($remote_name). Subtree already defined?");
@@ -269,9 +268,9 @@ function get_root_key($nombre) {
 	global $has_iconv, $has_tr;
 	//$result = $nombre;
 	$has_iconv && $result = iconv("UTF-8", 'ASCII//TRANSLIT//IGNORE', $nombre);
-	$has_tr && $result = strtr($result, "A-Z", "a-z");
+	$result =  strtolower($result);
 	// $result=$(echo "$result" | sed 's/[^a-z0-9_ -]\+//g' | sed -e 's/^ \+\| \+$//g' -e 's/ \+/-/g')
-	$result = preg_replace("/[^a-z0-9_ -]\+/", "//", $result);
+	$result = preg_replace("/[^a-z0-9_-]+/", "-", $result);
 	if (empty($result)) {
 		error(false, "STree name '$nombre' does not yield a usable remote name.  Try using ASCII letters/numbers in it.");
 	}
@@ -360,8 +359,9 @@ function message($color, $mensaje, $simbolo='*') {
 
 // Helper: normalizes a cwd-relative prefix so it starts from the root of the working directory.
 function normalize_prefix($nombre) {
-	$root = dirname(fake_git("rev-parse", "--git-dir"));
-	
+    //FIXME: Se simula el resultado
+	//$root = dirname(fake_git("rev-parse", "--git-dir"));
+	return $nombre;
 	if ('.' == "$root") {
 		return $nombre;
 	}
@@ -723,7 +723,18 @@ if ($subcmd != "help") {
 
 switch ($subcmd) {
 	case "add" :
-		add_subtree($args);
+	    
+	    $name = require_arg(2, 'Missing subtree name');
+	    if (empty($name)) {
+	        return 'Missing subtree name';
+	    }
+	    require_arg(3, 'Missing -P parameter', '-P');
+	    $prefix = require_arg(4, 'Missing prefix');
+	    //$prefix = normalize_prefix("$prefix");
+	    $url = require_arg(5, 'Missing URL');
+	    $branch = optional_arg(6, 'master');
+	     
+		add_subtree($name, $prefix, $url, $branch);
 		break;
 	case "clear" :
 	case "forget" :

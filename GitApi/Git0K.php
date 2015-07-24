@@ -69,7 +69,7 @@ class Git0K extends Git {
             return;
         }
         $this->determinar_repositorios_remotos();
-         $this->subtrees = $this->repoListSubtrees();
+        $this->subtrees = $this->repoListSubtrees();
     }
 
     /**
@@ -181,7 +181,10 @@ class Git0K extends Git {
                     $this->remoto_base = $x;
                 } elseif (strpos($value, "formatos") !== false) {
                     $this->remoto_formatos = $x;
-                } else {}
+                } else {
+                    //TODO: Por ahora agregar otros como si fueran formatos
+                    $this->remoto_formatos = $x;
+                }
             }
         }
         if (empty($this->remoto_base)) {
@@ -397,7 +400,8 @@ class Git0K extends Git {
     protected function sincronizarSubtree($mensaje, $lista_archivos) {
         // No hacer push
         $estado = $this->checkStatus();
-    
+    //git fetch GitApi
+    //git subtree pull --prefix editor_codigo GitApi master
         if ($estado !== self::ESTADO_CLEAN) {
             $lista_agregados = $this->resolveLocalChanges($mensaje);
             if(count($lista_agregados)>0) {

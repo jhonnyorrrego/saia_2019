@@ -1,3 +1,25 @@
+CONFIGURACION
+
+- Agregar el remoto con un nombre:
+git remote add nombre_remoto url
+
+- Hacer fetch:
+git fetch nombre_remoto
+
+- Si ya existe el directorio destino, se debe eliminar antes de configurar el subtree
+git rm -r ruta_prefijo
+git commit -m "elimar archivos nombre_prefijo"
+
+- Crear el subtree. Debe estar parado en la raiz del repo local
+git subtree add -P ruta_prefijo -m "Leido ObjectiveBlip as a subproject" nombre_remoto/master
+
+Es recomendable usar --squash para no traer todo el historial del subproyecto
+git subtree add --prefix ruta_prefijo -m "Leido ObjectiveBlip as a subproject" nombre_remoto master --squash
+
+- Crear una nueva llave de configuracion para el subtree:
+git config --local remote.nombre_remoto.prefix ruta_prefijo
+
+RESOLUCION DE CONFLICTOS
 1.    Revisar las ramas (Branches) y Stage area [user& git status] para ver en que rama se está y si se tiene algun archivo sin confirmar (uncommitted files) en el repositorio local 
 
 Para tener en cuenta en los estados (git status --porcelain

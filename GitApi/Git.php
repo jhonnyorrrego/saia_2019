@@ -940,6 +940,28 @@ class GitRepo {
 		return file_get_contents($path."/description");
 	}
 
+	public function set_config($key, $value, $global=false) {
+	    $cmd = "config "; 
+	    if ($global) {
+	        $cmd .= "--global ";
+	    } else {
+	        $cmd .= "--local ";
+	    }
+	        //git config --local stree.git-api.prefix editor_codigo
+	    return $this->run($cmd . "$key $value");
+	}
+
+	public function get_config($key, $global=false) {
+	    $cmd = "config ";
+	    if ($global) {
+	        $cmd .= "--global ";
+	    } else {
+	        $cmd .= "--local ";
+	    }
+	    //git config --local stree.git-api.prefix editor_codigo
+	    return $this->run($cmd . "$key $value");
+	}
+	
 	/**
 	 * Sets custom environment options for calling Git
 	 *
