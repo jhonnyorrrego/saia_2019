@@ -28,10 +28,14 @@ echo "<br>";
 // TODO: validar sobre cual rama se hacer el pull, si es un subtree cambia
 // $estado_git=$git->repoPull('origin', 'master');
 
-var_dump($git2->repoListSubtrees());
-
+$lista = $git2->repoListSubtrees();
+//var_dump($git2->repoListSubtrees());
+foreach ($lista as $value) {
+    var_dump($value);
+    echo "<br>";
+}
 $git_info = $git2->expose();
-echo $git_info . "<br>";
+//echo $git_info . "<br>";
 die();
 try {
 	$estado = $git2->repoPush("origin", "master");

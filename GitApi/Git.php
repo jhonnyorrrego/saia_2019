@@ -955,18 +955,19 @@ class GitRepo {
 	 */
 	public function get_subtree_list() {
 	    
-	    //$git_cfg = $this->run("config --local --get-regexp 'remote\..*\.url'");
 	    $git_cfg = $this->run("log --pretty=oneline --grep 'git-subtree-dir'");
 	    //$git_cfg .= "285b6b87dd2d8463e2bc6dc802e5058e2ac8740d Squashed 'editor_codigo/GitApi2/' content from commit 6f4d128";
 	    //FIXME: La lista 
+	    $lineas = preg_split("/[\n\r]+/", $git_cfg);
 	    $resp = array ();
-	    if($git_cfg) {
-	    	$datos = array();
-	       //$resp = preg_split ("/[\n\r]/", $git_cfg);
-	    	preg_match_all("/'[^']+'/", $git_cfg, $datos);
-	    	$resp = array_map(function($val){
-	    		return str_replace("'", "", $val);
-	    	}, $datos[0]);
+	    $pattern_stree = "/([A-Fa-f0-9]+) ([A-Za-z ]+) ('[^']+') (.*)/";
+	    if(is_array($lineas)) {
+	        foreach ($lineas as $linea) {
+	            $output_array = array();
+                if(preg_match($pattern_stree, $linea, $output_array)){
+                    $resp[] = str_replace("'", "", $output_array[3]);
+	            }
+	        }
 	    }
 	    return array_unique($resp);
 	}
