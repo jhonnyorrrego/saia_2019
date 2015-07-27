@@ -402,6 +402,7 @@ class Git0K extends Git {
            return $estado;
         }
         
+        echo "ARCHIVOS CAMBIADOS " . count($lista_agregados);
         if (count($lista_agregados) > 0) {
             $files = $this->filesInIndex($lista_archivos);
             if (count($files) > 0 && count($files["tree"]) > 0) {
@@ -432,7 +433,7 @@ class Git0K extends Git {
     protected function sincronizarSubtree($mensaje, $lista_archivos) {
         $estado_git = "";
         if (count($lista_archivos) > 0) { //Habia cambios locales, verificar si pertenecian al subtree
-            $mensaje = "SUBTREE" . $mensaje;
+            $mensaje = "SUBTREE " . $mensaje;
             foreach ($this->get_remoto_formatos() as $remoto) {
                 //Hacer fetch del remoto del subtree no sirve. Pull o Pull
                 //$estado_git = $this->repoSubtreeFetch($remoto->alias, "master");
