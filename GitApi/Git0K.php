@@ -453,7 +453,6 @@ class Git0K extends Git {
                     }*/
                     echo "PUSH en $prefijo " . $remoto->alias . "<br>";
                     $estado_git = $this->repoSubtreePush($prefijo, $remoto->alias, "master");
-                    die();
                 }
             }
         }
