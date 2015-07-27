@@ -464,8 +464,10 @@ class Git0K extends Git {
             echo "ARCHIVO CAMBIADO " . $archivo;
             
             if ($this->pertenece_subarbol($archivo)) {
+            echo "TREE " . $archivo;
                 $resp["tree"][] = $archivo;
             } else {
+             echo "MAIN " . $archivo;
                 $resp["main"][] = $archivo;
             }
         }
