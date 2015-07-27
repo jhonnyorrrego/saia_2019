@@ -1,16 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<title>Editor de Código SAIA</title>
-  
 <?php
-ini_set('display_errors', '1');
-
 $max_salida = 6;
 $ruta_db_superior = $ruta = "";
-while ($max_salida > 0) {
-    if (is_file($ruta . "db.php")) {
+while ( $max_salida > 0 ) {
+    if (is_file ( $ruta . "db.php" )) {
         $ruta_db_superior = $ruta;
     }
     $ruta .= "../";
@@ -18,61 +10,44 @@ while ($max_salida > 0) {
 }
 include_once ($ruta_db_superior . "db.php");
 include_once ($ruta_db_superior . "librerias_saia.php");
-// ini_set ( "display_errors", true );
-echo (estilo_bootstrap());
-
+echo(estilo_bootstrap ());
+echo(librerias_jquery("1.7"));
+echo (librerias_principal());
+echo (librerias_notificaciones ());
+///echo(librerias_bootstrap());
 ?>
-  
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Editor de Código SAIA</title>
   <style type="text/css" media="screen">
-/*body {
-	overflow: hidden;
-}*/
-#editor {
-	margin: 0;
-	/*position: absolute;*/
-	top: 0;
-	bottom: 0;
-	left: 0;
-	right: 0;
-	height: 500px;
-}
-</style>
+    body {
+        overflow: hidden;
+    }
+    
+    #editor { 
+        margin: 0;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+    }
+  </style>
 </head>
 <body>
 
-	<div class="row">
-		<pre id="editor"></pre>
-	</div>
+<pre id="editor"></pre>
 
-	<div class="row span12">
-		<input type="hidden" id="archivo_actual" name="archivo_actual" value=""/> 
-		<input type="hidden" id="archivo_temporal" name="archivo_temporal" value="" /> 
-		<input type="hidden" id="modificado" name="modificado" value="" /> 
-		<input type="hidden" id="git_info" name="git_info" value="" />
-
-		<h4 class="file-commit-form-heading">Confirmaci&oacute;n de cambios</h4>
-
-		<label for="descripcion_commit"> Descripci&oacute;n extendida </label>
-		<textarea id="descripcion_commit" name="descripcion_commit" rows="3"
-			class="field span12"
-			placeholder="A&ntilde;adir una descripci&oacute;n extendida"></textarea>
-
-	</div>
-
-<?php
-echo (librerias_jquery ( "1.7" ));
-
-?>
-	<!-- load emmet code and snippets compiled for browser -->
-	<script src="emmet.js"></script>
-
-	<!-- load ace -->
-	<script src="src/ace.js"></script>
-	<!-- load ace emmet extension 
-<script src="src/ext-emmet.js"></script> -->
-	<script>
+<!-- load ace -->
+<script src="src/ace.js"></script>
+<!-- load emmet code and snippets compiled for browser -->
+<script src="emmet.js"></script>
+<script src="src/ext-emmet.js"></script> 
+<script>
 	var editor = ace.edit("editor");
-	var modificado = $('#modificado');
+	var modificado = parent.$('#modificado');
 
 	modificado.val('false'); //inicialmente en true mientras carga el archivo
   	editor.setTheme("ace/theme/twilight");
@@ -91,7 +66,7 @@ echo (librerias_jquery ( "1.7" ));
 	        bindKey: {win: 'Ctrl-S',  mac: 'Command-S'},
 	        exec: parent.saveFile
 	    });
-	   editor.resize();
+	 editor.resize();
    editor.on('input', function () {
   		if (editor.curOp && editor.curOp.command.name) {
   	  		alert('Que hace: '+editor.curOp.command.name);
@@ -133,7 +108,64 @@ echo (librerias_jquery ( "1.7" ));
 	        }
 	    });
 	});
+	function cargar_editor(ruta_archivo, extension) {    
+    //var ruta_archivo=tree3.getUserData(nodeId,"myurl");
+    //var extension=tree3.getUserData(nodeId,"myextension");
+    if(extension == 'js') {
+        extension = 'javascript';
+    }
+    if(ruta_archivo!=='' && ruta_archivo!==undefined && extension!=='' && extension!==undefined) {
+        
+        var data = {'ruta' : ruta_archivo, "rand" : Math.round(Math.random()*100000)};   
+        data = $(this).serialize() + "&" + $.param(data);
+        $.ajax({
+            type:'POST',
+            url: 'procesar_archivo.php', 
+            dataType:"json", 
+            data: data,
+            //beforeSend: cargando_serie(),
+            success: function(datos) {
+                if(datos) {
+                    $("#archivo_actual").val(ruta_archivo);
+                    $("#archivo_temporal").val(datos["rutaTemporal"]);
+                    notificacion_saia("Archivo "+ruta_archivo+" cargado de forma exitosa","success","topRight",3000);
+                    //se crea una nueva sesion para resetear el undoManager
+                    
+                    var sesion = ace.createEditSession(datos["contenido"], "ace/mode/"+extension);
+                    gitInfo = datos["gitInfo"];
+                    errorInfo = datos["errorInfo"];
+                    //alert(JSON.stringify(gitInfo));
+                    if(gitInfo) {
+                        $("#git_info").val(JSON.stringify(gitInfo));
+                    }
+                    if(errorInfo) {
+                      //alert(errorInfo);
+                      if(errorInfo.indexOf("FETCH_HEAD") >= 0) {
+                            //var lista = [1,2,3,5];
+                            $body.removeClass("loading");
+                            var mensaje = '<p>Seleccione los archivos que va a restaurar desde el servidor<p>';
+                            archivosMergeSeleccionados = [];
+                            //showMergeDialog(mensaje, datos["listaArchivos"]);
+                            showMergeDialog(datos["listaArchivos"]);
+                            return false;
+                      } else {
+                          notificacion_saia("Error git: "+ errorInfo, "warning","topRight",3000);
+                      }
+                    }
+                    editor.setSession(sesion);
+                    $('#save').addClass("disabled");
+                    $('#discard').addClass("disabled");
+                    $('#modificado').val('false');
+                }          
+            }
+        });                            
+    }
+}
+<?php
+if($_REQUEST["ruta_archivo"] && $_REQUEST["extension"]){
+  echo('cargar_editor("'.$_REQUEST["ruta_archivo"].'", "'.$_REQUEST["extension"].'");');
+}
+?>
 </script>
-
 </body>
 </html>

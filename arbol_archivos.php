@@ -24,6 +24,7 @@ echo (librerias_notificaciones());
 <div id="dialog-confirm"></div>
 
 <script type="text/javascript">
+$(document).ready(function(){
 var alto=<?php echo(intval($_REQUEST["alto"]));?>;
 var browserType;
 var tab_acciones=false;
@@ -60,7 +61,16 @@ function manejadorClick(nodeId) {
     	//El mensaje puede ser de cualualquier tipo, string, number, array, object
         var message=nodeId;
         var ruta_archivo=tree3.getUserData(nodeId,"myurl");
+        var nombre_archivo=tree3.getUserData(nodeId,"name_url");
         var extension=tree3.getUserData(nodeId,"myextension");
+        if($.inArray(nodeId,parent.abiertos)===-1){
+            parent.adicionar_tab(ruta_archivo,extension,nombre_archivo,nodeId);
+            parent.abiertos.push(nodeId);
+          }
+          else{
+            notificacion_saia("Archivo "+ruta_archivo+" ya se encuentra abierto","information","topRight",3000); 
+            parent.abrir_tab_editor(nodeId);
+          }
         //the '*' has to do with cross-domain messaging. leave it like it is for same-domain messaging.
         window.parent.postMessage({"tipo" : "cambioArchivoSeleccionado", "nodeId" : nodeId, "nodoActual":nodoSeleccionado , "rutaArchivo" : ruta_archivo, "extension" : extension},'*');
         //cargar_editor(nodeId);
@@ -118,6 +128,7 @@ function fin_cargando_serie() {
 	        eval('document.layers["esperando_archivo"]');
 	  document.poppedLayer.style.visibility = "hidden";
 }
+});
 </script>
 <?php
 
