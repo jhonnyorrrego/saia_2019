@@ -461,7 +461,6 @@ class Git0K extends Git {
     private function filesInIndex($lista_archivos) {
         $resp = array();
         foreach ($lista_archivos as $archivo) {
-            echo "ARCHIVO CAMBIADO " . $archivo;
             
             if ($this->pertenece_subarbol($archivo)) {
             echo "TREE " . $archivo;
