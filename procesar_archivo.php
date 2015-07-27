@@ -42,20 +42,20 @@ fclose($tmpHandle);
 // $ruta_db_superior es una ruta relativa. se necesita la absolua
 $ruta_git = NULL;
 // $git = NULL;
-$estado_git = NULL;
-$git_info = NULL;
+$error_git = NULL;
+$git_data = NULL;
 $lista_archivos = NULL;
 if (GitRepo::is_inside_git_repo()) {
 	$ruta_git = GitRepo::get_root_dir();
 	$git = new Git0K($ruta_git);
 	if ($git) {
-		$git_info = $git->expose();
+		$git_data = $git->expose();
     	$repuesta_git = $git->processRead();
     	if($repuesta_git && $repuesta_git['Error']) {
 	    	if(strpos($repuesta_git['Error'], "FETCH_HEAD") !== false) {
 	    	    $lista_archivos = $repuesta_git['listaArchivos'];
 	    	}
-	    	$estado_git = $repuesta_git['Error'];
+	    	$error_git = $repuesta_git['Error'];
 	    	//var_dump($repuesta_git['Error']);
 	    	//Otro error
 	    	/*From http://laboratorio.netsaia.com:82/giovanni.montes/saia_editor
@@ -66,8 +66,8 @@ if (GitRepo::is_inside_git_repo()) {
 }
 echo json_encode(array(
     'rutaTemporal' => $tmpfname,
-    'gitInfo' => $git_info,
-    'errorInfo' => $estado_git,
+    'gitInfo' => $git_data,
+    'errorInfo' => $error_git,
     'contenido' => $contenido,
     'listaArchivos' => $lista_archivos
 ));

@@ -165,13 +165,10 @@ class GitRepo {
 	    return $status;
 	}	*/
 
-	public static function get_repo_git_dir() {
-	    $status = self::strun_command(Git::get_bin()." " . "rev-parse --git-dir");
-	    //$status = self::strun_command(Git::get_bin()." " . "rev-parse --show-toplevel");
-	    /*if($status == ".git") {
-	     return getcwd() . "/$status";
-	    }*/
-	    return $status;
+	public static function st_repo_git_dir() {
+	    //$status = self::strun_command(Git::get_bin()." " . "rev-parse --git-dir");
+		$status = self::strun_command(Git::get_bin()." " . "rev-parse --show-toplevel");
+	    return trim($status, "\n\r");
 	}
 	
 	public static function get_root_dir() {

@@ -5,11 +5,11 @@ require_once ('GitApi/Git0K.php');
 $max_salida = 10; // Previene algun posible ciclo infinito limitando a 10 los ../
 $ruta_db_superior = $ruta = "";
 while ($max_salida > 0) {
-	if (is_file($ruta . "db.php")) {
-		$ruta_db_superior = $ruta; // Preserva la ruta superior encontrada
-	}
-	$ruta .= "../";
-	$max_salida--;
+    if (is_file($ruta . "db.php")) {
+        $ruta_db_superior = $ruta; // Preserva la ruta superior encontrada
+    }
+    $ruta .= "../";
+    $max_salida --;
 }
 include_once ($ruta_db_superior . "db.php");
 
@@ -23,39 +23,46 @@ $resultado = "ko";
 $mensaje = "error al guardar el archivo";
 // Quitar los ./ y ../
 // ltrim($x,"/.");
+ini_set('display_errors', '1');
 $file_name = $ruta_db_superior . ltrim($ruta, "/.");
 clearstatcache();
 if (file_exists($file_name)) {
-	if (is_writable($file_name)) {
-		$r = file_put_contents($file_name, $_REQUEST["contenido"]);
-		if ($r !== false) {
-			$resultado = "ok";
-			$mensaje = "archivo actualizado con éxito";
-		}
-		$ruta_git = NULL;
-		$git = NULL;
-		$estado_git = NULL;
-		$git_info = NULL;
-		
-		if (GitRepo::is_inside_git_repo()) {
-			$ruta_git = GitRepo::get_repo_root_dir();
-			$git = new Git0K($ruta_git);
-			if ($git) {
-				$git_info = $git->expose();
-				$repuesta_git = $git->processSave($ruta_archivo, $mensaje_git, $estado_git);
-				if ($repuesta_git && $repuesta_git['Error']) {
-					if (strpos($repuesta_git['Error'], "FETCH_HEAD") !== false) {
-						$lista_archivos = $repuesta_git['listaArchivos'];
-					}
-					$estado_git = $repuesta_git['Error'];
-				}
-			}
-		}
-	} else {
-		$mensaje = "No tiene permisos para modificar el archivo en la ruta: " . ($file_name);
-	}
+    if (is_writable($file_name)) {
+        $r = file_put_contents($file_name, $_REQUEST["contenido"]);
+        if ($r !== false) {
+            $resultado = "ok";
+            $mensaje = "archivo actualizado con éxito";
+        }
+        $ruta_git = NULL;
+        $git = NULL;
+        $error_git = NULL;
+        $git_data = NULL;
+        $estado_git = NULL;
+        //echo "Path: " . $ruta_db_superior . "<br>";
+        if (GitRepo::is_inside_git_repo()) {
+            $ruta_git = GitRepo::st_repo_git_dir();
+            $git = new Git0K($ruta_git);
+            if ($git) {
+                $git_data = $git->expose();
+                $repuesta_git = $git->processSave($ruta_archivo, $mensaje_git);
+                if ($repuesta_git) {
+                    $estado_git = $repuesta_git['Estado'];
+                    if ($repuesta_git['Error']) {
+                        if (strpos($repuesta_git['Error'], "FETCH_HEAD") !== false) {
+                            $lista_archivos = $repuesta_git['listaArchivos'];
+                        }
+                        $error_git = $repuesta_git['Error'];
+                    }
+                }
+            } else {
+                echo "KAPUT: No es un repo";
+            }
+        }
+    } else {
+        $mensaje = "No tiene permisos para modificar el archivo en la ruta: " . ($file_name);
+    }
 } else {
-	$mensaje = "No existe el archivo en la ruta: " . ($file_name);
+    $mensaje = "No existe el archivo en la ruta: " . ($file_name);
 }
 /*
  * $tmpfname = tempnam(sys_get_temp_dir(), $path_parts['file_name'] . "_");
@@ -66,12 +73,13 @@ if (file_exists($file_name)) {
  * fwrite($tmpHandle, $contenido);
  * fclose($tmpHandle);
  */
-echo json_encode(array (
-		'resultado' => $resultado,
-		'mensaje' => $mensaje,
-		'ruta' => $ruta_db_superior . $ruta,
-		'gitErrorInfo' => $estado_git,
-		'listaArchivos' => $lista_archivos
+echo json_encode(array(
+    'resultado' => $resultado,
+    'mensaje' => $mensaje,
+    'ruta' => $ruta_db_superior . $ruta,
+    'gitErrorInfo' => $error_git,
+    'gitInfo' => $estado_git,
+    'listaArchivos' => $lista_archivos
 ));
 
 ?>

@@ -343,7 +343,7 @@ class Git0K extends Git {
      * @param unknown $comentario
      * @param unknown $estado_git
      */
-    public function processSave($ruta_archivo, $comentario, &$estado_git) {
+    public function processSave($ruta_archivo, $comentario) {
         // $estado_git = NULL;
         $error_git = NULL;
         $lista_archivos = array();
@@ -523,6 +523,7 @@ class Git0K extends Git {
                 }
                 // TODO: es necesario hacer commit. Posiblemente push y luego pull
                 if ($do_commit) {
+                    "echo haciendo commit";
                     $estado_git = $this->repoCommitAuthor($mensaje);
                 }
                 

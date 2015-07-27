@@ -23,18 +23,18 @@ $mensaje = "error al guardar el archivo";
 
 $ruta_git = NULL;
 $git = NULL;
-$estado_git = NULL;
-$git_info = NULL;
+$error_git = NULL;
+$git_data = NULL;
 
 if (GitRepo::is_inside_git_repo()) {
 	$ruta_git = GitRepo::get_repo_root_dir();
 	$git = new Git0K($ruta_git);
 	if ($git) {
-		$git_info = $git->expose();
+		$git_data = $git->expose();
 		// {'lista' : seleccionados, "comentario" : comentario};
-		$repuesta_git = $git->processUnMerge($_REQUEST["lista"], $mensaje_git, &$estado_git);
+		$repuesta_git = $git->processUnMerge($_REQUEST["lista"], $mensaje_git, &$error_git);
 		if ($repuesta_git && $repuesta_git['Error']) {
-			$estado_git = $repuesta_git['Error'];
+			$error_git = $repuesta_git['Error'];
 		} else {
 			$resultado = "ok";
 			$mensaje = "archivo actualizado con éxito";
@@ -46,7 +46,7 @@ echo json_encode(array (
 		'resultado' => $resultado,
 		'mensaje' => $mensaje,
 		'ruta' => $ruta_db_superior . $ruta,
-		'gitErrorInfo' => $estado_git 
+		'gitErrorInfo' => $error_git 
 ));
 
 ?>
