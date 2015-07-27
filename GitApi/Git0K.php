@@ -432,6 +432,7 @@ class Git0K extends Git {
     protected function sincronizarSubtree($mensaje, $lista_archivos) {
         $estado_git = "";
         if (count($lista_archivos) > 0) { //Habia cambios locales, verificar si pertenecian al subtree
+            $mensaje = "SUBTREE" . $mensaje;
             foreach ($this->get_remoto_formatos() as $remoto) {
                 //Hacer fetch del remoto del subtree no sirve. Pull o Pull
                 //$estado_git = $this->repoSubtreeFetch($remoto->alias, "master");
@@ -440,6 +441,7 @@ class Git0K extends Git {
                 //El estado no sirve para saber como estaba el subtree
                 if ($prefijo) {
                     $estado_git = $this->repoSubtreePull($prefijo, $remoto->alias, "master", $mensaje, false);
+                    echo "PULL en $prefijo " . $remoto->alias . "<br>";
                     /*if ($estado === self::ESTADO_MERGE) {
                         // TODO: Houston, tenemos un problema
                         // $estado_git = $this->repo->subtree_push($prefijo, $remoto->alias, "master");
