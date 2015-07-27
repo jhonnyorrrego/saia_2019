@@ -405,6 +405,7 @@ class Git0K extends Git {
         if (count($lista_agregados) > 0) {
             $files = $this->filesInIndex($lista_agregados);
             if (count($files) > 0 && count($files["tree"]) > 0) {
+                echo "HAY CAMBIOS EN EL TREE<br>";
                 $estado_git = $this->sincronizarSubtree($mensaje, $files["tree"]);
             }
         }
@@ -461,12 +462,9 @@ class Git0K extends Git {
     private function filesInIndex($lista_archivos) {
         $resp = array();
         foreach ($lista_archivos as $archivo) {
-            
             if ($this->pertenece_subarbol($archivo)) {
-            echo "TREE " . $archivo;
                 $resp["tree"][] = $archivo;
             } else {
-             echo "MAIN " . $archivo;
                 $resp["main"][] = $archivo;
             }
         }
