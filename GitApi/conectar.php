@@ -3,7 +3,7 @@ require_once ('Git0K.php');
 
 // nuevo repo con varios remotes
 $git2 = new Git0K('/home/cerok/proyectos/workspace_php/saia_editor');
-//$git2 = new Git0K('/Users/giovanni/DevTools/workspace_php/saia_editor');
+// $git2 = new Git0K('/Users/giovanni/DevTools/workspace_php/saia_editor');
 echo "<br>";
 // print_r($git2->repoListRemotes());
 echo "<br>";
@@ -20,7 +20,7 @@ $format = "oneline";
 echo "\nEs repositorio: " . GitRepo::is_inside_git_repo();
 echo "<br>";
 // echo "Lista subtree: ";
-// $lista=$git2->getRepoSubtreeList();
+// $lista_st=$git2->repoListSubtrees();
 // var_dump($lista);
 
 // echo "Raiz: " . GitRepo::get_root_dir() . "<br>";
@@ -28,19 +28,29 @@ echo "<br>";
 // TODO: validar sobre cual rama se hacer el pull, si es un subtree cambia
 // $estado_git=$git->repoPull('origin', 'master');
 
-$lista = $git2->repoListSubtrees();
-//var_dump($git2->repoListSubtrees());
-foreach ($lista as $value) {
-    var_dump($value);
+$lista_st = $git2->repoListSubtrees();
+// var_dump($git2->repoListSubtrees());
+$lista_remotos = $git2->repoListRemotes();
+$remoto = $git2->get_remoto_formatos();
+echo "<br>";
+// Buscar un prefijo para cada remoto para determinar si es un subtree.
+foreach ($git2->get_remoto_formatos() as $remoto) {
+    // var_dump($remoto);
+    echo $remoto->alias . "<br>";
+    $prefijo = $git2->find_subtree_prefix($remoto->alias);
+    var_dump($prefijo);
     echo "<br>";
 }
-$git_info = $git2->expose();
-//echo $git_info . "<br>";
+$prefijo = $git2->find_subtree_prefix("hola");
+var_dump($prefijo);
+
+// $git_info = $git2->expose();
+// echo $git_info . "<br>";
 die();
 try {
-	$estado = $git2->repoPush("origin", "master");
+    $estado = $git2->repoPush("origin", "master");
 } catch (Exception $e) {
-	$estado = $e;
+    $estado = $e;
 }
 
 print_r($estado);

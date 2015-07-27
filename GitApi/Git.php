@@ -770,6 +770,20 @@ class GitRepo {
 	}
 
 	/**
+	 * Runs a git fetch on the remote repository
+	 *
+	 * @access  public
+	 * @return  string
+	 */
+	public function subtree_fetch($repository, $branch="") {
+	    $cmd = "fetch $repository ";
+	    if(!empty($branch)) {
+	        $cmd .= $branch;
+	    }
+	    return $this->run($cmd);
+	}
+	
+	/**
 	 * Add a new tag on the current position
 	 *
 	 * Accepts the name for the tag and the message
@@ -818,7 +832,11 @@ class GitRepo {
 	public function push($remote, $branch) {
 		return $this->run("push --tags $remote $branch");
 	}
-
+	
+	public function subtree_push($prefix, $remote, $branch) {
+	    return $this->run("subtree push --prefix $remote $branch");
+	}
+	
 	public function push_with_credentials($remote, $branch, $user, $pass, $url) {
 		//FIXME: Se puede hacer pasando la url completa en el comando
 	    $push_url = $this->get_remote_url_credentials($user, $pass, $url);
@@ -899,6 +917,18 @@ class GitRepo {
 	    return $this->run("pull --no-edit $remote $branch");
 	}
 
+	public function subtree_pull($prefix, $remote, $branch, $mensaje="", $aplastar=false) {
+	    $cmd = "subtree pull --prefix $prefix $remote ";
+	    if(!empty($mensaje)) {
+	        $cmd .= "-m '$mensaje' ";
+	    }
+	    $cmd .= "$branch";
+	    if($aplastar) {
+	        $cmd .= " --squash";
+	    }
+        return $this->run($cmd);
+	}
+	
 	public function pull_ff_only($remote, $branch) {
 		return $this->run("pull --ff-only $remote $branch");
 	}
@@ -958,8 +988,10 @@ class GitRepo {
 	    } else {
 	        $cmd .= "--local ";
 	    }
+	     
 	    //git config --local stree.git-api.prefix editor_codigo
-	    return $this->run($cmd . "$key $value");
+	    $cmd .= $key;
+	    return $this->run($cmd);
 	}
 	
 	/**

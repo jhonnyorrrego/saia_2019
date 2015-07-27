@@ -143,16 +143,30 @@ class Git0K extends Git {
         return $this->remoto_base;
     }
 
+    /**
+     * Devuelve los datos del repositorio remoto en un objeto Remoto
+     * @return Remoto
+     */
     public function get_remoto_origin() {
         return $this->remoto_origin;
     }
 
+    /**
+     * Devuelve un array con la lista de subtrees
+     * @return multitype:Ambigous <unknown, Remoto> |Ambigous <unknown, Remoto>
+     */
     public function get_remoto_formatos() {
-        return $this->remoto_formatos;
+        $remotos = $this->remoto_formatos;
+        if (! is_array($remotos)) {
+            return array(
+                $remotos
+            );
+        }
+        return $remotos;
     }
 
     private function determinar_repositorios_remotos() {
-        $lista = $this->repo->list_remotes();
+        $lista = $this->repoListRemotes();
         $a_fetch = array();
         $a_push = array();
         // separar los fetch de los push
@@ -182,7 +196,7 @@ class Git0K extends Git {
                 } elseif (strpos($value, "formatos") !== false) {
                     $this->remoto_formatos = $x;
                 } else {
-                    //TODO: Por ahora agregar otros como si fueran formatos
+                    // TODO: Por ahora agregar otros como si fueran formatos
                     $this->remoto_formatos = $x;
                 }
             }
@@ -209,10 +223,6 @@ class Git0K extends Git {
         return false;
     }
 
-    public function getRepoSubtreeList() {
-        return $this->repo->get_subtree_list();
-    }
-
     /**
      * Pull specific branch from remote
      *
@@ -224,6 +234,10 @@ class Git0K extends Git {
      */
     public function repoPull($remote, $branch, $normal = true) {
         return $this->repo->pull($remote, $branch, $normal);
+    }
+
+    public function repoSubtreePull($prefix, $remote, $branch, $mensaje = "", $aplastar = false) {
+        return $this->repo->subtree_pull($prefix, $remote, $branch, $mensaje, $aplastar);
     }
 
     /**
@@ -239,6 +253,10 @@ class Git0K extends Git {
         return $this->repo->push($remote, $branch);
     }
 
+    public function repoSubtreePush($prefijo, $remote, $branch) {
+        $this->repo->subtree_push($prefijo, $remote, "master");
+    }
+
     public function repoPushCredentials($remote, $branch, $url) {
         return $this->repo->push_with_credentials($remote, $branch, $this->user, $this->pass, $url);
     }
@@ -250,13 +268,29 @@ class Git0K extends Git {
     public function repoListSubtrees() {
         return $this->repo->get_subtree_list();
     }
-    
+
     public function getRepoRootDir() {
         return $this->repo->get_repo_root_dir();
     }
 
+    /**
+     * Sincroniza los cambios remotos
+     */
     public function repoFetch() {
         return $this->repo->fetch();
+    }
+
+    /**
+     * Sincroniza los cambios remotos
+     */
+    public function repoSubtreeFetch($repostitory, $branch = "") {
+        return $this->repo->subtree_fetch($repository);
+    }
+
+    public function find_subtree_prefix($un_subtree) {
+        // Si es un subtree debe existir una llave de configuracion remote.SubTree.prefix
+        $llave = "remote.$un_subtree.prefix";
+        return $this->repo->get_config($llave);
     }
 
     /**
@@ -283,13 +317,13 @@ class Git0K extends Git {
                     // $this->get_remoto_base()->alias, "master"
                     $estado_git = repoOverwriteLocalFile($this->get_remoto_base()->alias, "master", $file);
                 }
-                //TODO: Revisar si mijor se llama a processRead o Save
+                // TODO: Revisar si mijor se llama a processRead o Save
                 $estado = $this->checkStatus();
                 if ($estado !== self::ESTADO_CLEAN) {
                     $this->resolveLocalChanges($comentario);
                 }
             }
-
+            
             // validar que no existan cambios
             // TODO: validar sobre cual rama se hacer el pull, si es un subtree cambia
             // $repo->pull('origin', 'master');
@@ -310,7 +344,7 @@ class Git0K extends Git {
      * @param unknown $estado_git
      */
     public function processSave($ruta_archivo, $comentario, &$estado_git) {
-        //$estado_git = NULL;
+        // $estado_git = NULL;
         $error_git = NULL;
         $lista_archivos = array();
         try {
@@ -319,7 +353,6 @@ class Git0K extends Git {
                 $mensaje = "Commit automatico editor saia. Cambios locales " . date("Y-m-d H:i:s");
             }
             $estado = $this->sincronizarRepositorio($estado_git);
-
         } catch (Exception $e) {
             $errmsg = $e->getMessage();
             if (strpos($errmsg, "FETCH_HEAD") !== false) {
@@ -332,7 +365,7 @@ class Git0K extends Git {
             "Error" => $error_git,
             "listaArchivos" => $lista_archivos
         );
-     }
+    }
 
     public function processRead($mensaje = "") {
         $estado_git = NULL;
@@ -344,7 +377,6 @@ class Git0K extends Git {
                 $mensaje = "Commit automatico editor saia. Cambios locales " . date("Y-m-d H:i:s");
             }
             $estado = $this->sincronizarRepositorio($estado_git);
-
         } catch (Exception $e) {
             // echo $e;
             $errmsg = $e->getMessage();
@@ -359,22 +391,21 @@ class Git0K extends Git {
             "listaArchivos" => $lista_archivos
         );
     }
-    
+
     /**
-     * 
      */
-     protected function sincronizarRepositorio($mensaje, &$estado_git) {
+    protected function sincronizarRepositorio($mensaje, &$estado_git) {
         // No hacer push
         $estado = $this->checkStatus();
         
         if ($estado !== self::ESTADO_CLEAN) {
-           $lista_agregados = $this->resolveLocalChanges($mensaje);
-           if(count($lista_agregados)>0) {
-               $files = $this->filesInIndex($lista_archivos);
-               if(count($files) > 0 &&  count($files["tree"])>0) {
-                   $estado_git = $this->sincronizarSubtree($files["tree"]);
-               }
-           }
+            $lista_agregados = $this->resolveLocalChanges($mensaje);
+            if (count($lista_agregados) > 0) {
+                $files = $this->filesInIndex($lista_archivos);
+                if (count($files) > 0 && count($files["tree"]) > 0) {
+                    $estado_git = $this->sincronizarSubtree($mensaje, $files["tree"]);
+                }
+            }
         }
         
         // TODO: validar sobre cual rama se hacer el pull, si es un subtree cambia
@@ -398,44 +429,34 @@ class Git0K extends Git {
     }
 
     protected function sincronizarSubtree($mensaje, $lista_archivos) {
-        // No hacer push
-        $estado = $this->checkStatus();
-    //git fetch GitApi
-    //git subtree pull --prefix editor_codigo GitApi master
-        if ($estado !== self::ESTADO_CLEAN) {
-            $lista_agregados = $this->resolveLocalChanges($mensaje);
-            if(count($lista_agregados)>0) {
-                $files = $this->filesInIndex($lista_archivos);
-                if(count($files) > 0 &&  count($files["tree"])>0) {
-                    $estado_git = $this->sincronizarSubtree();
+        $estado_git = "";
+        if (count($lista_archivos) > 0) {
+            foreach ($this->get_remoto_formatos() as $remoto) {
+                $estado_git = $this->repoSubtreeFetch($remoto->alias, "master");
+                $prefijo = $this->find_subtree_prefix($remoto->alias);
+                $estado = $this->checkStatus();
+                
+                if ($prefijo) {
+                    if ($estado === self::ESTADO_MERGE) {
+                        // TODO: Houston, tenemos un problema
+                    // $estado_git = $this->repo->subtree_push($prefijo, $remoto->alias, "master");
+                    } elseif ($estado === self::ESTADO_BEHIND) {
+                        $estado_git = $this->repoSubtreePull($this->get_remoto_base()->alias, "master");
+                        // return $this->sincronizarRepositorio($estado_git);
+                    } elseif ($estado === self::ESTADO_AHEAD) {
+                        $estado_git = $this->repoSubtreePush($this->get_remoto_base()->alias, "master");
+                    }
+                    
                 }
             }
         }
-    
-        // TODO: validar sobre cual rama se hacer el pull, si es un subtree cambia
-        // $estado_git=$git->repoPull('origin', 'master');
-        // Esto falla con error: master -> FETCH_HEAD
-        $estado_git = $this->repoFetch();
-        $estado = $this->checkStatus();
-    
-        if ($estado === self::ESTADO_MERGE) {
-            $estado_git = $this->resolveMerge();
-            return $this->sincronizarRepositorio($estado_git);
-            // Devuelve una exception si falla. Hay que hacer el merge manual. ver bloque catch
-        } elseif ($estado === self::ESTADO_BEHIND) {
-            $estado_git = $this->repoPull($this->get_remoto_base()->alias, "master");
-            return $this->sincronizarRepositorio($estado_git);
-        } elseif ($estado === self::ESTADO_AHEAD) {
-            $estado_git = $this->repoPush($this->get_remoto_base()->alias, "master");
-        }
-        $estado = $this->checkStatus();
-        return $estado;
+        return $estado_git;
     }
-    
+
     private function filesInIndex($lista_archivos) {
         $resp = array();
         foreach ($lista_archivos as $archivo) {
-            if($this->pertenece_subarbol($archivo)) {
+            if ($this->pertenece_subarbol($archivo)) {
                 $resp["tree"][] = $archivo;
             } else {
                 $resp["main"][] = $archivo;
@@ -487,16 +508,16 @@ class Git0K extends Git {
                         // "M " ya se hizo add de un archivo existente modificado
                         // "A " ya se hizo add de un archivo nuevo
                         // "??" Nuevo. Hacer add y commit
-                        switch($output_array[1]) {
+                        switch ($output_array[1]) {
                             case " M":
                             case "A ":
                             case "??":
                             case "AM":
                             case "MM":
-                            $this->repoAdd($output_array[2]);
-                            $do_commit = true;
-                            $lista_agregados($output_array[2]);
-                            break;
+                                $this->repoAdd($output_array[2]);
+                                $do_commit = true;
+                                $lista_agregados($output_array[2]);
+                                break;
                         }
                     }
                 }
@@ -506,8 +527,6 @@ class Git0K extends Git {
                 }
                 
                 // TODO: tener en cuenta el subtree
-                // TODO: Hacer analisis de acuerdo con lo descrito en https://www.kernel.org/pub/software/scm/git/docs/git-status.html
-                // $estado_git = $git->repoCommitAuthor($mensaje);
             }
         }
         return $lista_agregados;
