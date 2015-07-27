@@ -441,9 +441,7 @@ class Git0K extends Git {
                 //El estado no sirve para saber como estaba el subtree
                 if ($prefijo) {
                     $prefijo = trim($prefijo, "\n\r");
-                    echo "PULL en $prefijo " . $remoto->alias . "<br>";
                     $estado_git = $this->repoSubtreePull($prefijo, $remoto->alias, "master", $mensaje, false);
-                    die();
                     /*if ($estado === self::ESTADO_MERGE) {
                         // TODO: Houston, tenemos un problema
                         // $estado_git = $this->repo->subtree_push($prefijo, $remoto->alias, "master");
@@ -454,6 +452,8 @@ class Git0K extends Git {
                         $estado_git = $this->repoSubtreePush($this->get_remoto_base()->alias, "master");
                     }*/
                     $estado_git = $this->repoSubtreePush($prefijo, $remote, $branch);
+                    echo "PUSH en $prefijo " . $remoto->alias . "<br>";
+                    die();
                 }
             }
         }
