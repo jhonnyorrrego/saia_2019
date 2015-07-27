@@ -529,7 +529,7 @@ class Git0K extends Git {
                 }
                 // TODO: es necesario hacer commit. Posiblemente push y luego pull
                 if ($do_commit) {
-                    "echo haciendo commit";
+                    //"echo haciendo commit";
                     $estado_git = $this->repoCommitAuthor($mensaje);
                 }
                 
