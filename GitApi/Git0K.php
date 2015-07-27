@@ -451,7 +451,7 @@ class Git0K extends Git {
                     } elseif ($estado === self::ESTADO_AHEAD) {
                         $estado_git = $this->repoSubtreePush($this->get_remoto_base()->alias, "master");
                     }*/
-                    $estado_git = $this->repoSubtreePush($prefijo, $remote, $branch);
+                    $estado_git = $this->repoSubtreePush($prefijo, $remoto->alias, "master");
                     echo "PUSH en $prefijo " . $remoto->alias . "<br>";
                     die();
                 }
