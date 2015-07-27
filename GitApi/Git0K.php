@@ -399,7 +399,7 @@ class Git0K extends Git {
         $lista_agregados = $this->resolveLocalChanges($mensaje);
         $estado = $this->checkStatus();
         if ($estado === self::ESTADO_CLEAN) {
-            echo "Saliendo cone estado : CLEAN <br>";
+           return $estado;
         }
         
         if (count($lista_agregados) > 0) {
@@ -431,12 +431,12 @@ class Git0K extends Git {
 
     protected function sincronizarSubtree($mensaje, $lista_archivos) {
         $estado_git = "";
-        if (count($lista_archivos) > 0) {
+        if (count($lista_archivos) > 0) { //Habia cambios locales, verificar si pertenecian al subtree
             foreach ($this->get_remoto_formatos() as $remoto) {
                 $estado_git = $this->repoSubtreeFetch($remoto->alias, "master");
                 $prefijo = $this->find_subtree_prefix($remoto->alias);
                 $estado = $this->checkStatus();
-                
+                //El estado no sirve para saber como estaba el subtree
                 if ($prefijo) {
                     if ($estado === self::ESTADO_MERGE) {
                         // TODO: Houston, tenemos un problema
