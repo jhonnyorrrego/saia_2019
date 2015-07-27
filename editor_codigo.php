@@ -1,6 +1,4 @@
 <?php
-ini_set('display_errors', '1');
-
 $max_salida = 6;
 $ruta_db_superior = $ruta = "";
 while ( $max_salida > 0 ) {
@@ -12,13 +10,13 @@ while ( $max_salida > 0 ) {
 }
 include_once ($ruta_db_superior . "db.php");
 include_once ($ruta_db_superior . "librerias_saia.php");
-//ini_set ( "display_errors", true );
-echo (estilo_bootstrap ());
-
+echo(estilo_bootstrap ());
+echo(librerias_jquery("1.7"));
+echo(librerias_bootstrap());
+echo (librerias_principal());
+echo (librerias_notificaciones ());
+echo(librerias_highslide());
 ?>
-<!--link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/2.1.1/css/bootstrap.min.css"-->
-
-
 <style>
 #panel_detalles {
     margin-top: 0px;
@@ -27,7 +25,9 @@ echo (estilo_bootstrap ());
     overflow: auto;
     <?php if (@$_SESSION["tipo_dispositivo"] == 'movil') { ?>-webkit-overflow-scrolling: touch;    <?php } ?>
 }
-
+.panel{
+  margin-left: 0px;
+}
 #detalles {
     height: 100%;
 }
@@ -67,14 +67,12 @@ body.loading .modalload {
     display: block;
 }
 .div_editor {
+    overflow:hidden;
     position:relative;
     margin:0 auto;
-    overflow:hidden;
     padding:5px;
-    padding-bottom:0px;
-    height:35px;
+    padding-top:22px;
 }
-
 .lista_tab_editor {
     position:absolute;
     left:0px;
@@ -84,17 +82,15 @@ body.loading .modalload {
     margin-top:0px;
     margin-bottom:0px;
 }
-
 .lista_tab_editor li{
   display:table-cell;
-    position:relative;
-    text-align:center;
-    cursor:grab;
-    cursor:-webkit-grab;
-    color:#efefef;
-    vertical-align:middle;
+  position:relative;
+  text-align:center;
+  cursor:grab;
+  cursor:-webkit-grab;
+  color:#efefef;
+  vertical-align:middle;
 }
-
 .scroller {
   text-align:center;
   cursor:pointer;
@@ -113,14 +109,10 @@ body.loading .modalload {
 .scroller-left {
   float:left;
 }
-.btn-buscar{
-  height:27px;
-}
 </style>
-
-<!--aca va el toolbar-->
-
-<div class="btn-toolbar">
+<div class="row-fluid" style="align: center">
+  <div class="span3 panel">
+    <div class="btn-toolbar">
         <div class="btn-group">
             <div class="btn btn-mini disabled" id="save" onclick="saveTempFile();"><i class="icon-hdd"></i>Guardar</div>
             <div class="btn btn-mini disabled" id="discard"><i class="icon-trash"></i>Descartar</div>
@@ -132,39 +124,24 @@ body.loading .modalload {
             <button type="submit" class="btn btn-mini btn-buscar">Buscar</button>
           </div>
         </div-->
-</div>
-
-<div class="container row-fluid" style="align: center">
-    <div class="span3">
-        <div id="izquierdo_saia" style="width: 100%"></div>
     </div>
-    <div class="span9 pull-right" style="margin-left: 0px;">
-      <div class="scroller scroller-left"><i class="icon-chevron-left"></i></div>
-      <div class="scroller scroller-right"><i class="icon-chevron-right"></i></div>
-      <div class="div_editor">
-        <ul class="nav nav-tabs lista_tab_editor" id="listado_tabs">
-          <li class="active"><a href="#home"><button class="close closeTab" type="button" >&times;</button>Home&nbsp;</a></li>
-        </ul>
+    <div id="izquierdo_saia" style="width: 100%"></div>
+  </div>
+  <div class="span9 panel">
+    <div class="scroller scroller-left"><i class="icon-chevron-left"></i></div>
+    <div class="scroller scroller-right"><i class="icon-chevron-right"></i></div>
+    <div class="div_editor" id="contendor_editor">
+      <ul class="nav nav-tabs lista_tab_editor" id="lista_archivos">
+        <li class="tab_editor" numero="1"></li>
+      </ul>
+      <div class="tab-content">
       </div>
-      <div id="contenedor_saia" class="container row-fluid" style="width: 100%"></div>
     </div>
-
+  </div>
 </div>
-
-<div class="modalload"><!-- Place at bottom of page --></div>
-
-<?php
-echo (librerias_jquery ( "1.7" ));
-echo (librerias_principal());
-echo (librerias_notificaciones ());
-//echo (librerias_bootstrap());
-//echo (librerias_highslide());
-
-?>
-<!-- Latest compiled and minified JavaScript -->
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/2.1.1/js/bootstrap.min.js"></script>
-<script src="src/ace.js"></script>
 <script type="text/javascript">
+var alto=($(document).height()-8); 
+var abiertos=Array();
 
 var gitInfo;
 var archivosMergeSeleccionados;
@@ -420,50 +397,6 @@ function restoreFile() {
 
 }
 
-function showMergeDialogJQ(mensaje, lista){
-
-	$("#dialog_merge").dialog({
-	    
-	    show:'fade' , position:'center', resizable: false, modal:true, width: "400px", stack: false,
-	    open: function (event, ui) {
-	        if(lista) {
-	            var valor = $(".ui-dialog-content").html();
-	            var text = mensaje;
-	            for(var i in lista) {
-	                text = text + '<p><input value="' +lista[i] +'" type="checkbox"/>' + lista[i] + '<br>';
-	            }
-	            $('#dialog_merge').append(text);
-	        }
-	    },
-	    beforeClose: function( event, ui ) {
-	        //if(text){
-	            $('#dialog_merge').empty();
-	        //} 
-	    },    
-	    buttons: {
-	    
-	        Continuar: function() { 
-	            $('.ui-dialog-content input').each(function(){
-    	            if($(this).prop('checked')== true)
-    	                //alert($(this).val());
-    	            	archivosMergeSeleccionados = $(this).val();
-    	            });
-	            //TODO: Yo creo que hay que procesarlo manualmente
-	            $(this).dialog("close"); 
-	            alert( $.toJSON(archivosMergeSeleccionados) );
-	        },
-	        /*Cancel: function() { 
-	            
-	            alert("No!"); 
-	            $(this).dialog("close"); 
-
-	        }*/
-	    
-	    }
-	    
-	});
-	}
-
 function showMergeDialog(lista) {
     //$("#dialog_merge").removeClass("fade").modal("hide");
     $("#dialog_merge").modal("show").addClass("fade");
@@ -523,44 +456,10 @@ function actualizarRepositorio(seleccionados) {
     
 }
 $(document).ready(function (){
+  
   var hidWidth;
   var scrollBarWidths = 40;
-  
-  var widthOfList = function(){
-    var itemsWidth = 0;
-    $('.lista_tab_editor li').each(function(){
-      var itemWidth = $(this).outerWidth();
-      itemsWidth+=itemWidth;
-    });
-    return itemsWidth;
-  };
-  
-  var widthOfHidden = function(){
-    return (($('.div_editor').outerWidth())-widthOfList()-getLeftPosi())-scrollBarWidths;
-  };
-  
-  var getLeftPosi = function(){
-    return $('.lista_tab_editor').position().left;
-  };
-  
-  var reAdjust = function(){
-    if (($('.div_editor').outerWidth()) < widthOfList()) {
-      $('.scroller-right').show();
-    }
-    else {
-      $('.scroller-right').hide();
-    }
     
-    if (getLeftPosi()<0) {
-      $('.scroller-left').show();
-    }
-    else {
-      $('.item').animate({left:"-="+getLeftPosi()+"px"},'slow');
-      $('.scroller-left').hide();
-    }
-  }
-  reAdjust();
-  
   $(window).on('resize',function(e){  
       reAdjust();
   });
@@ -576,15 +475,130 @@ $(document).ready(function (){
   });
   
   $('.scroller-left').click(function() {
-    
     $('.scroller-right').fadeIn('slow');
     $('.scroller-left').fadeOut('slow');
     
       $('.lista_tab_editor').animate({left:"-="+getLeftPosi()+"px"},'slow',function(){
       
       });
-  });   
+  }); 
+  
+  $("#adicionar_tab").click(function(){
+    adicionar_tab();
+  });  
+  
+  $(".tab_editor").live("click",function(){
+    var numero=$(this).attr("numero");
+    $(".tab_editor").removeClass("active");
+    $(".tab-pane").removeClass("active");
+    $(this).addClass("active");
+    $("#div_tab"+numero).addClass("active");
+  });
+});  
+var widthOfList = function(){
+  var itemsWidth = 0;
+  $('.lista_tab_editor li').each(function(){
+    var itemWidth = $(this).outerWidth();
+    itemsWidth+=itemWidth;
+  });
+  return itemsWidth;
+};
+
+var widthOfHidden = function(){
+  return (($('.div_editor').outerWidth())-widthOfList()-getLeftPosi())-scrollBarWidths;
+};
+
+var getLeftPosi = function(){
+  return $('.lista_tab_editor').position().left;
+};
+  
+var reAdjust = function(){
+  if (($('.div_editor').outerWidth()) < widthOfList()) {
+    $('.scroller-right').show();
+  }
+  else {
+    $('.scroller-right').hide();
+  }
+  
+  if (getLeftPosi()<0) {
+    $('.scroller-left').show();
+  }
+  else {
+    $('.item').animate({left:"-="+getLeftPosi()+"px"},'slow');
+    $('.scroller-left').hide();
+  }
+}
+reAdjust();
+
+function llamado_pantalla(ruta,datos,destino,nombre){
+  var alto_frame=($(document).height()-60);                
+  if(datos!==''){
+    ruta+="?"+datos;
+  }
+  if(nombre === "<?php echo(@$_REQUEST['destino_click']);?>"){      
+      ruta = ruta+'&click_clase=<?php echo(@$_REQUEST['click_clase']); ?>';      
+      destino.html('<div id="panel_'+nombre+'"><iframe name="'+nombre+'" src="'+ruta+'" width="100%" id="'+nombre+'" frameborder="0" height="'+alto_frame+'"></iframe></div>'); 
+  }
+  
+      destino.html('<div id="panel_'+nombre+'"><iframe name="'+nombre+'" src="'+ruta+'" width="100%" id="'+nombre+'" frameborder="0" height="'+alto_frame+'"></iframe></div>'); 
+}
+function adicionar_tab(ruta_archivo,extension,nombre_archivo,nodeId){
+  var numero=parseInt($(".tab_editor:last").attr("numero"))+1;
+  $(".lista_tab_editor").append('<li class="tab_editor" numero="'+numero+'"><a class="enlace_tab" id="enlace_tab'+(numero)+'" href="#div_tab'+numero+'" nodoid="'+nodeId+'">'+(nombre_archivo+"."+extension)+'<span class="icon-remove cerrar_tab" id="cerrar_tab'+numero+'"></span></a></li>');
+  $(".tab-content").append('<div class="tab-pane" id="div_tab'+numero+'" ></div>');
+  reAdjust();
+  llamado_pantalla("<?php echo($ruta_db_superior);?>editor_codigo/editor.php","ruta_archivo="+ruta_archivo+"&extension="+extension,$("#div_tab"+numero),"editor_"+numero);
+  $('.nav-tabs a[href=#div_tab'+numero+']').tab('show') ;
+}
+hs.graphicsDir = '<?php echo($ruta_db_superior);?>anexosdigitales/highslide-4.0.10/highslide/graphics/';
+hs.forceAjaxReload = true;
+hs.outlineType = 'rounded-white';
+hs.targetX = 'descriptor -350px';
+hs.targetY = 'descriptor 300px';
+hs.zIndexCounter = 10010;
+hs.Expander.prototype.onAfterClose = function() {
+  alert("AQUI"); 
+  if (this.isClosing) {
+    alert(this);
+    console.log(this);          
+    //cerrar_tab_editor("#"+$(this).attr("id"));                      
+  }
+}
+$(".cerrar_tab").live("click",function(e){
+  var enlace="guardar_editor.php"
+  hs.htmlExpand(this, { objectType: 'iframe',width: 350, height: 350,contentId:'commit', preserveContent:false, src:enlace, outlineType: 'rounded-white', wrapperClassName:'highslide-wrapper drag-header'});
+  e.preventDefault();
+  e.stopPropagation();
 });
+function cerrar_tab_editor(enlace){
+  var tabContentId = $(enlace).parent().attr("href");
+  var nodoid=$(enlace).parent().attr("nodoid");
+  $(enlace).parent().parent().remove(); //remove li of tab
+  $(tabContentId).remove(); //remove respective tab content
+  var numero=($(".tab_editor:last").attr("numero"));
+  abiertos.remove(nodoid,true);
+  //$('#enlace_tab'+numero).click();
+  $('.nav-tabs a[href=#div_tab'+numero+']').tab('show') ;
+}
+function abrir_tab_editor(nodeId){
+  $('.nav-tabs a[nodoid="'+nodeId+'"]').tab('show') ;
+}
+if (!Array.prototype.remove) {
+  Array.prototype.remove = function(val, all) {
+    var i, removedItems = [];
+    if (all) {
+      for(i = this.length; i--;){
+        if (this[i] === val) removedItems.push(this.splice(i, 1));
+      }
+    }
+    else {  //same as before...
+      i = this.indexOf(val);
+      if(i>-1) removedItems = this.splice(i, 1);
+    }
+    return removedItems;
+  };
+}
+llamado_pantalla("<?php echo($ruta_db_superior);?>editor_codigo/arbol_archivos.php","alto="+alto,$("#izquierdo_saia"),'arbol_archivos');
 </script>
 
 <div id="dialog_merge" class="modal hide" data-backdrop="false">
