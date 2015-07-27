@@ -442,6 +442,7 @@ class Git0K extends Git {
                 if ($prefijo) {
                     echo "PULL en $prefijo " . $remoto->alias . "<br>";
                     $estado_git = $this->repoSubtreePull($prefijo, $remoto->alias, "master", $mensaje, false);
+                    die();
                     /*if ($estado === self::ESTADO_MERGE) {
                         // TODO: Houston, tenemos un problema
                         // $estado_git = $this->repo->subtree_push($prefijo, $remoto->alias, "master");
