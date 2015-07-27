@@ -376,7 +376,7 @@ class Git0K extends Git {
             if (empty($mensaje)) {
                 $mensaje = "Commit automatico editor saia. Cambios locales " . date("Y-m-d H:i:s");
             }
-            $estado = $this->sincronizarRepositorio($estado_git);
+            $estado = $this->sincronizarRepositorio($mensaje, $estado_git);
         } catch (Exception $e) {
             // echo $e;
             $errmsg = $e->getMessage();
@@ -396,15 +396,16 @@ class Git0K extends Git {
      */
     protected function sincronizarRepositorio($mensaje, &$estado_git) {
         // No hacer push
+        $lista_agregados = $this->resolveLocalChanges($mensaje);
         $estado = $this->checkStatus();
+        if ($estado === self::ESTADO_CLEAN) {
+            echo "Saliendo cone estado : CLEAN <br>";
+        }
         
-        if ($estado !== self::ESTADO_CLEAN) {
-            $lista_agregados = $this->resolveLocalChanges($mensaje);
-            if (count($lista_agregados) > 0) {
-                $files = $this->filesInIndex($lista_archivos);
-                if (count($files) > 0 && count($files["tree"]) > 0) {
-                    $estado_git = $this->sincronizarSubtree($mensaje, $files["tree"]);
-                }
+        if (count($lista_agregados) > 0) {
+            $files = $this->filesInIndex($lista_archivos);
+            if (count($files) > 0 && count($files["tree"]) > 0) {
+                $estado_git = $this->sincronizarSubtree($mensaje, $files["tree"]);
             }
         }
         
@@ -439,14 +440,13 @@ class Git0K extends Git {
                 if ($prefijo) {
                     if ($estado === self::ESTADO_MERGE) {
                         // TODO: Houston, tenemos un problema
-                    // $estado_git = $this->repo->subtree_push($prefijo, $remoto->alias, "master");
+                        // $estado_git = $this->repo->subtree_push($prefijo, $remoto->alias, "master");
                     } elseif ($estado === self::ESTADO_BEHIND) {
                         $estado_git = $this->repoSubtreePull($this->get_remoto_base()->alias, "master");
                         // return $this->sincronizarRepositorio($estado_git);
                     } elseif ($estado === self::ESTADO_AHEAD) {
                         $estado_git = $this->repoSubtreePush($this->get_remoto_base()->alias, "master");
                     }
-                    
                 }
             }
         }
