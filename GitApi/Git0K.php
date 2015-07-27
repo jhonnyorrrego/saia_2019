@@ -405,7 +405,6 @@ class Git0K extends Git {
         if (count($lista_agregados) > 0) {
             $files = $this->filesInIndex($lista_agregados);
             if (count($files) > 0 && count($files["tree"]) > 0) {
-                echo "HAY CAMBIOS EN EL TREE<br>";
                 $estado_git = $this->sincronizarSubtree($mensaje, $files["tree"]);
             }
         }
@@ -441,8 +440,8 @@ class Git0K extends Git {
                 $estado = $this->checkStatus();
                 //El estado no sirve para saber como estaba el subtree
                 if ($prefijo) {
-                    $estado_git = $this->repoSubtreePull($prefijo, $remoto->alias, "master", $mensaje, false);
                     echo "PULL en $prefijo " . $remoto->alias . "<br>";
+                    $estado_git = $this->repoSubtreePull($prefijo, $remoto->alias, "master", $mensaje, false);
                     /*if ($estado === self::ESTADO_MERGE) {
                         // TODO: Houston, tenemos un problema
                         // $estado_git = $this->repo->subtree_push($prefijo, $remoto->alias, "master");
