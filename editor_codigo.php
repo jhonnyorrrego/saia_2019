@@ -139,6 +139,7 @@ body.loading .modalload {
     </div>
   </div>
 </div>
+<script src="src/ace.js"></script>
 <script type="text/javascript">
 var alto=($(document).height()-8); 
 var abiertos=Array();
@@ -193,7 +194,8 @@ function procesarMensaje(event) {
 }
 
 function hayCambios() {
-    return parent.editor.editor.getSession().getUndoManager().hasUndo();
+    //return parent.editor.editor.getSession().getUndoManager().hasUndo();
+    return false;
 }
 
 $(document).ready(function(){

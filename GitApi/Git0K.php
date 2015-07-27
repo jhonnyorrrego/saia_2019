@@ -516,7 +516,7 @@ class Git0K extends Git {
                             case "MM":
                                 $this->repoAdd($output_array[2]);
                                 $do_commit = true;
-                                $lista_agregados($output_array[2]);
+                                $lista_agregados[] = $output_array[2];
                                 break;
                         }
                     }
