@@ -831,7 +831,9 @@ class GitRepo {
 	}
 	
 	public function subtree_push($prefix, $remote, $branch) {
-	    return $this->run("subtree push --prefix $remote $branch");
+	    $cmd = "subtree push --prefix $remote $branch";
+	    echo "COMANDO: $cmd";
+	    return $this->run($cmd);
 	}
 	
 	public function push_with_credentials($remote, $branch, $user, $pass, $url) {
