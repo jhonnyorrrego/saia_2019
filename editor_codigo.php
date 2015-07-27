@@ -186,8 +186,8 @@ function procesarMensaje(event) {
     // message.nodeId contiene la ruta original (no traducida a ../../archivo
     if(message.tipo == 'cambioArchivoSeleccionado') {
         if(hayCambios()) {
-            var comentario = $("#descripcion_commit").val();
-
+            //var comentario = $("#descripcion_commit").val();
+            var comentario = $('iframe[name=editor]').contents().find('#descripcion_commit').val()
             var r = confirm("Quiere guardar los cambios hechos al documento?");
             if (r == true) {
                 if(!comentario){
@@ -205,7 +205,7 @@ function procesarMensaje(event) {
                 //TODO: Cambiar saveFile por saveTempFile cuando se terminen de implementar los tabs 
                 //saveTempFile();
                 saveFile();
-                     }
+            }
         }
 
         //message.nodeId tiene la ruta completa del archivo desde la raiz de saia
