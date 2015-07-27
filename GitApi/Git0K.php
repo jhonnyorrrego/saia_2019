@@ -402,9 +402,9 @@ class Git0K extends Git {
            return $estado;
         }
         
-        echo "ARCHIVOS CAMBIADOS " . count($lista_agregados);
         if (count($lista_agregados) > 0) {
             $files = $this->filesInIndex($lista_archivos);
+        echo "ARCHIVOS CAMBIADOS " . count($files);
             if (count($files) > 0 && count($files["tree"]) > 0) {
                 $estado_git = $this->sincronizarSubtree($mensaje, $files["tree"]);
             }
