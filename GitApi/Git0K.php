@@ -455,7 +455,6 @@ class Git0K extends Git {
                 // Hacer fetch del remoto del subtree no sirve. Pull o Pull
                 // $estado_git = $this->repoSubtreeFetch($remoto->alias, "master");
                 $prefijo = $this->find_subtree_prefix($remoto->alias);
-                $estado = $this->checkStatus();
                 // El estado no sirve para saber como estaba el subtree
                 if ($prefijo) {
                     $estado_git = $this->repoSubtreePull($prefijo, $remoto->alias, "master", $mensaje, false);
@@ -469,7 +468,6 @@ class Git0K extends Git {
                 // Hacer fetch del remoto del subtree no sirve. Pull o Pull
                 // $estado_git = $this->repoSubtreeFetch($remoto->alias, "master");
                 $prefijo = $this->find_subtree_prefix($remoto->alias);
-                $estado = $this->checkStatus();
                 // El estado no sirve para saber como estaba el subtree
                 if ($prefijo) {
                     $estado_git = $this->repoSubtreePull($prefijo, $remoto->alias, "master", $mensaje, false);
