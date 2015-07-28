@@ -34,7 +34,7 @@ class Git0K extends Git {
     protected $repo;
 
     /**
-     * Mantiene la lista de subarboles.
+     * Mantiene la lista de carpetas (prefix) que posiblemente pertenecen a un subarbol.
      * Si existe alguno.
      *
      * @var array

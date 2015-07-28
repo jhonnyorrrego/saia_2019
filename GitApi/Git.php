@@ -1021,7 +1021,10 @@ class GitRepo {
 	        foreach ($lineas as $linea) {
 	            $output_array = array();
                 if(preg_match($pattern_stree, $linea, $output_array)){
-                    $resp[] = str_replace("'", "", $output_array[3]);
+                    $prefix = str_replace("'", "", $output_array[3]);
+                    if(file_exists($prefix)) {
+                        $resp[] = $prefix;
+                    }
 	            }
 	        }
 	    }
