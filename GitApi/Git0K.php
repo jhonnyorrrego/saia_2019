@@ -286,7 +286,7 @@ class Git0K extends Git {
     public function repoFetchAll() {
         return $this->repo->fetch(true);
     }
-    
+
     /**
      * Sincroniza los cambios remotos
      */
@@ -297,7 +297,11 @@ class Git0K extends Git {
     public function find_subtree_prefix($un_subtree) {
         // Si es un subtree debe existir una llave de configuracion remote.SubTree.prefix
         $llave = "remote.$un_subtree.prefix";
-        return $this->repo->get_config($llave);
+        $prefijo = $this->repo->get_config($llave);
+        if ($prefijo) {
+            $prefijo = trim($prefijo, "\n\r");
+        }
+        return $prefijo;
     }
 
     /**
@@ -402,30 +406,32 @@ class Git0K extends Git {
     /**
      */
     protected function sincronizarRepositorio($mensaje, &$estado_git) {
-        //Esto garantiza que los cambios locales no interrumpan la sincro y que se puedan perder cambios.
+        // Esto garantiza que los cambios locales no interrumpan la sincro y que se puedan perder cambios.
         $lista_agregados = $this->resolveLocalChanges($mensaje);
         $estado_git = $this->repoFetchAll();
-        $estado = $this->checkStatus();
-        if ($estado === self::ESTADO_CLEAN) {
-           return $estado;
-        }
-        //TODO: Opciones
-        //1. hacer un git fetch -all para sincronizar base y subtrees
-        //2. Si 1 -> no se puede retornar si estado_clean
-        //3. Si no hay cambios locales que afecten el subtree se debe hacer subtree pull?
         
+        // TODO: Opciones
+        // 1. hacer un git fetch -all para sincronizar base y subtrees
+        // 2. Si 1 -> no se puede retornar si estado_clean
+        // 3. Si no hay cambios locales que afecten el subtree se debe hacer subtree pull?
+        
+        $cambios_arbol = array();
         if (count($lista_agregados) > 0) {
             $files = $this->filesInIndex($lista_agregados);
             if (count($files) > 0 && count($files["tree"]) > 0) {
-                $estado_git = $this->sincronizarSubtree($mensaje, $files["tree"]);
+                $cambios_arbol = $files["tree"];
             }
-        } else {
-            //TODO: Validar si se debe hacer subtree pull
         }
+        
+        $estado_git = $this->sincronizarSubtree($mensaje, $cambios_arbol);
         
         // Esto falla con error: master -> FETCH_HEAD
         $estado_git = $this->repoFetch();
         $estado = $this->checkStatus();
+        
+        if ($estado === self::ESTADO_CLEAN) {
+            return $estado;
+        }
         
         if ($estado === self::ESTADO_MERGE) {
             $estado_git = $this->resolveMerge();
@@ -443,27 +449,30 @@ class Git0K extends Git {
 
     protected function sincronizarSubtree($mensaje, $lista_archivos) {
         $estado_git = "";
-        if (count($lista_archivos) > 0) { //Habia cambios locales, verificar si pertenecian al subtree
-            $mensaje = "SUBTREE " . $mensaje;
+        $mensaje = "SUBTREE " . $mensaje;
+        if (count($lista_archivos) > 0) { // Habia cambios locales, pertenecen al subtree
             foreach ($this->get_remoto_formatos() as $remoto) {
-                //Hacer fetch del remoto del subtree no sirve. Pull o Pull
-                //$estado_git = $this->repoSubtreeFetch($remoto->alias, "master");
+                // Hacer fetch del remoto del subtree no sirve. Pull o Pull
+                // $estado_git = $this->repoSubtreeFetch($remoto->alias, "master");
                 $prefijo = $this->find_subtree_prefix($remoto->alias);
                 $estado = $this->checkStatus();
-                //El estado no sirve para saber como estaba el subtree
+                // El estado no sirve para saber como estaba el subtree
                 if ($prefijo) {
-                    $prefijo = trim($prefijo, "\n\r");
                     $estado_git = $this->repoSubtreePull($prefijo, $remoto->alias, "master", $mensaje, false);
-                    /*if ($estado === self::ESTADO_MERGE) {
-                        // TODO: Houston, tenemos un problema
-                        // $estado_git = $this->repo->subtree_push($prefijo, $remoto->alias, "master");
-                    } elseif ($estado === self::ESTADO_BEHIND) {
-                        $estado_git = $this->repoSubtreePull($this->get_remoto_base()->alias, "master");
-                        // return $this->sincronizarRepositorio($estado_git);
-                    } elseif ($estado === self::ESTADO_AHEAD) {
-                        $estado_git = $this->repoSubtreePush($this->get_remoto_base()->alias, "master");
-                    }*/
-                    //echo "PUSH en $prefijo " . $remoto->alias . "<br>";
+                    $estado_git = $this->repoSubtreePush($prefijo, $remoto->alias, "master");
+                }
+            }
+        } else {
+            // TODO: A ciegas pull y push en cada subtree!!!
+            // Por ahora se repite el anterior
+            foreach ($this->get_remoto_formatos() as $remoto) {
+                // Hacer fetch del remoto del subtree no sirve. Pull o Pull
+                // $estado_git = $this->repoSubtreeFetch($remoto->alias, "master");
+                $prefijo = $this->find_subtree_prefix($remoto->alias);
+                $estado = $this->checkStatus();
+                // El estado no sirve para saber como estaba el subtree
+                if ($prefijo) {
+                    $estado_git = $this->repoSubtreePull($prefijo, $remoto->alias, "master", $mensaje, false);
                     $estado_git = $this->repoSubtreePush($prefijo, $remoto->alias, "master");
                 }
             }
@@ -541,7 +550,7 @@ class Git0K extends Git {
                 }
                 // TODO: es necesario hacer commit. Posiblemente push y luego pull
                 if ($do_commit) {
-                    //"echo haciendo commit";
+                    // "echo haciendo commit";
                     $estado_git = $this->repoCommitAuthor($mensaje);
                 }
                 
