@@ -15,51 +15,56 @@ include_once ($ruta_db_superior . "db.php");
 
 // Procesar archivo debio crear una copia del archivo que se necesita en la carpeta temporal del usuario conectado
 // Se debe validar que al ingresar a la pantalla el usuario se debe autenticar y almacenar en una tabla el token de conexion
-
-$ruta = str_replace("../", "", $_REQUEST["ruta"]);
-$mensaje_git = $_REQUEST["comentario"];
+$ruta_archivo = str_replace("../", "", $_REQUEST["rutaTemporal"]);
+$ruta_original = $_REQUEST["ruta_archivo"];
+if (@$_REQUEST["saveType"] == 'gyc') {
+    $mensaje_git = $_REQUEST["comentario"];
+}
 // $contenido = file_get_contents($ruta_db_superior.$ruta);
 $resultado = "ko";
 $mensaje = "error al guardar el archivo";
 // Quitar los ./ y ../
 // ltrim($x,"/.");
-ini_set('display_errors', '1');
-$file_name = $ruta_db_superior . ltrim($ruta, "/.");
+$file_name = $ruta_archivo;
 clearstatcache();
-if (file_exists($file_name)) {
-    if (is_writable($file_name)) {
+if (file_exists($file_name) && file_exists($ruta_original)) {
+    if (is_writable($file_name) && is_writable($ruta_original)) {
         $r = file_put_contents($file_name, $_REQUEST["contenido"]);
         if ($r !== false) {
             $resultado = "ok";
-            $mensaje = "archivo actualizado con éxito";
+            $mensaje = "archivo guardado con &eacute;xito";
         }
-        $ruta_git = NULL;
-        $git = NULL;
-        $error_git = NULL;
-        $git_data = NULL;
-        $estado_git = NULL;
-        //echo "Path: " . $ruta_db_superior . "<br>";
-        if (GitRepo::is_inside_git_repo()) {
-            $ruta_git = GitRepo::st_repo_git_dir();
-            $git = new Git0K($ruta_git);
-            if ($git) {
-                $git_data = $git->expose();
-                $repuesta_git = $git->processSave($ruta_archivo, $mensaje_git);
-                if ($repuesta_git) {
-                    $estado_git = $repuesta_git['Estado'];
-                    if ($repuesta_git['Error']) {
-                        if (strpos($repuesta_git['Error'], "FETCH_HEAD") !== false) {
-                            $lista_archivos = $repuesta_git['listaArchivos'];
+        if ($_REQUEST["saveType"] == 'gyc') {
+            if (copy($file_name, $ruta_original)) {
+                $ruta_git = NULL;
+                $git = NULL;
+                $error_git = NULL;
+                $git_data = NULL;
+                $estado_git = NULL;
+
+                if (GitRepo::is_inside_git_repo()) {
+                    $ruta_git = GitRepo::st_repo_git_dir();
+                    $git = new Git0K($ruta_git);
+                    if ($git) {
+                        $git_data = $git->expose();
+                        $repuesta_git = $git->processSave($ruta_archivo, $mensaje_git);
+                        if ($repuesta_git) {
+                            $estado_git = $repuesta_git['Estado'];
+                            if ($repuesta_git['Error']) {
+                                if (strpos($repuesta_git['Error'], "FETCH_HEAD") !== false) {
+                                    $lista_archivos = $repuesta_git['listaArchivos'];
+                                }
+                                $error_git = $repuesta_git['Error'];
+                            }
                         }
-                        $error_git = $repuesta_git['Error'];
                     }
                 }
             } else {
-                echo "KAPUT: No es un repo";
+                $mensaje = "No se puede copiar el archivo temporal (" . $file_name . ") al archivo original (" . $ruta_original . ")";
             }
         }
     } else {
-        $mensaje = "No tiene permisos para modificar el archivo en la ruta: " . ($file_name);
+        $mensaje = "No tiene permisos para modificar el archivo temporal (" . ($file_name) . ") o el archivo original  (" . ($ruta_original) . ")";
     }
 } else {
     $mensaje = "No existe el archivo en la ruta: " . ($file_name);
@@ -76,7 +81,7 @@ if (file_exists($file_name)) {
 echo json_encode(array(
     'resultado' => $resultado,
     'mensaje' => $mensaje,
-    'ruta' => $ruta_db_superior . $ruta,
+    'ruta_archivo' => $ruta_archivo,
     'gitErrorInfo' => $error_git,
     'gitInfo' => $estado_git,
     'listaArchivos' => $lista_archivos

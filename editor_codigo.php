@@ -154,45 +154,6 @@ $(document).on({
      ajaxStop: function() { $body.removeClass("loading"); }    
 });
 
-//window.addEventListener("message", procesarMensaje, false);  
-
-/*function procesarMensaje(event) {
-    //var source = event.source;
-    var source = event.source.frameElement; //this is the iframe that sent the message
-    var message = event.data; //this is the message
-    //viene json event.data.campo
-    // message.nodeId contiene la ruta original (no traducida a ../../archivo
-    if(message.tipo == 'cambioArchivoSeleccionado') {
-        if(hayCambios()) {
-            //var comentario = $("#descripcion_commit").val();
-            var comentario = $('iframe[name=editor]').contents().find('#descripcion_commit').val()
-            var r = confirm("Quiere guardar los cambios hechos al documento?");
-            if (r == true) {
-                if(!comentario){
-                    alert("Debe escribir un comentario para el commit");
-                    event.source.postMessage({"exito":"false", "nodeId":message.nodoActual},
-                            event.origin);
-                    return false;
-                }
-                if(comentario.length < 20) {
-                    alert("El comentario debe ser descriptivo");
-                    event.source.postMessage({"exito":"false", "nodeId":message.nodoActual},
-                            event.origin);
-                    return false;                    
-                }
-                //TODO: Cambiar saveFile por saveTempFile cuando se terminen de implementar los tabs 
-                //saveTempFile();
-                saveFile();
-            }
-        }
-    }
-}
-*/
-function hayCambios() {
-    //return parent.editor.editor.getSession().getUndoManager().hasUndo();
-    return false;
-}
-
 $(document).ready(function(){
 
     var alto=($(document).height()-8); 
@@ -230,51 +191,6 @@ $(document).ready(function(){
     llamado_pantalla("<?php echo($ruta_db_superior);?>editor_codigo/arbol_archivos.php","alto="+alto,$("#izquierdo_saia"),'arbol_archivos');
     llamado_pantalla("<?php echo($ruta_db_superior);?>editor_codigo/editor.php","",$("#contenedor_saia"),"editor");
 });
-
-
-function saveFile() {
-  return false;
-    var contenido = null;//editor.editor.getSession().getValue();
-
-    //var ruta_archivo = $("#archivo_actual").val();
-    var ruta_archivo = $('iframe[name=editor]').contents().find('#archivo_actual').val();
-    //var rutaTemporal = $("#archivo_temporal").val();
-    var rutaTemporal = $('iframe[name=editor]').contents().find('#archivo_temporal').val();
-    //var comentario = $("#descripcion_commit").val();
-    var comentario = $('iframe[name=editor]').contents().find("#descripcion_commit").val();
-    if(!comentario){
-        alert("Debe escribir un comentario para el commit");
-        return false;
-    }
-    var data = {'ruta' : ruta_archivo, "rutaTemporal" : rutaTemporal, "comentario" : comentario,  "contenido" : contenido, "gitInfo" : gitInfo}; 
-    data = $(this).serialize() + "&" + $.param(data);
-    $.ajax({
-      type:'POST',
-      url: 'guardar_archivo.php', 
-      dataType:"json", 
-      data: data,
-      success: function(datos) {                              
-        if(datos){ 
-            if(datos["resultado"]) {
-                if(datos["resultado"] == 'ok') {
-                    notificacion_saia(datos["mensaje"],"success","",3000);
-                } else {
-                    notificacion_saia(datos["ruta"] + ": " + datos["mensaje"],"error","",5000);
-                }
-                gitErrorInfo = datos["gitErrorInfo"];
-                //alert(JSON.stringify(gitInfo));
-                if(gitErrorInfo) {
-                    notificacion_saia("Error git: "+ gitErrorInfo, "warning","",3000);
-                }
-            } else {
-                notificacion_saia("Sin resultado en el llamado","error","",3000);
-            }
-        } else {
-            notificacion_saia("Sin respuesta","error","",3000);
-        }
-      }
-    });
-}
 
 function saveTempFile() {
     return;
@@ -476,50 +392,20 @@ function llamado_pantalla(ruta,datos,destino,nombre){
     ruta+="?"+datos;
   }
   if(nombre === "<?php echo(@$_REQUEST['destino_click']);?>"){      
-      ruta = ruta+'&click_clase=<?php echo(@$_REQUEST['click_clase']); ?>';      
-      destino.html('<div id="panel_'+nombre+'"><iframe name="'+nombre+'" src="'+ruta+'" width="100%" id="'+nombre+'" frameborder="0" height="'+alto_frame+'"></iframe></div>'); 
+    ruta = ruta+'&click_clase=<?php echo(@$_REQUEST['click_clase']); ?>';      
+    destino.html('<div id="panel_'+nombre+'"><iframe name="'+nombre+'" src="'+ruta+'" width="100%" id="'+nombre+'" frameborder="0" height="'+alto_frame+'"></iframe></div>'); 
   }
-  
-      destino.html('<div id="panel_'+nombre+'"><iframe name="'+nombre+'" src="'+ruta+'" width="100%" id="'+nombre+'" frameborder="0" height="'+alto_frame+'"></iframe></div>'); 
+  destino.html('<div id="panel_'+nombre+'"><iframe name="'+nombre+'" src="'+ruta+'" width="100%" id="'+nombre+'" frameborder="0" height="'+alto_frame+'"></iframe></div>'); 
 }
 function adicionar_tab(ruta_archivo,extension,nombre_archivo,nodeId){
   var numero=parseInt($(".tab_editor:last").attr("numero"))+1;
-  $(".lista_tab_editor").append('<li class="tab_editor" numero="'+numero+'"><a class="enlace_tab" id="enlace_tab'+(numero)+'" href="#div_tab'+numero+'" nodoid="'+nodeId+'">'+(nombre_archivo+"."+extension)+'<span class="icon-remove cerrar_tab" id="cerrar_tab'+numero+'"></span></a></li>');
+  $(".lista_tab_editor").append('<li class="tab_editor" numero="'+numero+'"><a class="enlace_tab" id="enlace_tab'+(numero)+'" href="#div_tab'+numero+'" nodoid="'+nodeId+'">'+(nombre_archivo+"."+extension)+'</a></li>');
   $(".tab-content").append('<div class="tab-pane" id="div_tab'+numero+'" ></div>');
   reAdjust();
   llamado_pantalla("<?php echo($ruta_db_superior);?>editor_codigo/editor.php","ruta_archivo="+ruta_archivo+"&extension="+extension,$("#div_tab"+numero),"editor_"+numero);
   $('.nav-tabs a[href=#div_tab'+numero+']').tab('show') ;
 }
-hs.graphicsDir = '<?php echo($ruta_db_superior);?>anexosdigitales/highslide-4.0.10/highslide/graphics/';
-hs.forceAjaxReload = true;
-hs.outlineType = 'rounded-white';
-hs.targetX = 'descriptor -350px';
-hs.targetY = 'descriptor 300px';
-hs.zIndexCounter = 10010;
-hs.Expander.prototype.onAfterClose = function() {
-  if (this.isClosing) {
-    console.log(this);          
-    cerrar_tab_editor("#"+$(this).attr("id"));                      
-  }
-}
-$(".cerrar_tab").live("click",function(e){
-  var enlace="guardar_editor.php"
-  hs.htmlExpand(this, { objectType: 'iframe',width: 350, height: 350,contentId:'commit', preserveContent:false, src:enlace, outlineType: 'rounded-white', wrapperClassName:'highslide-wrapper drag-header'});
-  e.preventDefault();
-  e.stopPropagation();
-});
-function cerrar_tab_editor(enlace){
-  alert(enlace);
-  var tabContentId = $(enlace).parent().attr("href");
-  var nodoid=$(enlace).parent().attr("nodoid");
-  $(enlace).parent().parent().remove(); //remove li of tab
-  $(tabContentId).remove(); //remove respective tab content
-  var numero=($(".tab_editor:last").attr("numero"));
-  abiertos.remove(nodoid,true);
-  alert(abiertos);
-  //$('#enlace_tab'+numero).click();
-  $('.nav-tabs a[href=#div_tab'+numero+']').tab('show') ;
-}
+
 function abrir_tab_editor(nodeId){
   $('.nav-tabs a[nodoid="'+nodeId+'"]').tab('show') ;
 }

@@ -19,22 +19,23 @@ include_once ($ruta_db_superior . "db.php");
 // Se debe validar que al ingresar a la pantalla el usuario se debe autenticar y almacenar en una tabla el token de conexion
 
 // echo(getcwd());
-$ruta = str_replace("../", "", $_REQUEST["ruta"]);
+$ruta_archivo = str_replace("../", "", $_REQUEST["ruta_archivo"]);
 // echo("<br>".$ruta."<br>");
 // echo(file_get_contents($ruta_db_superior.$ruta));
 
-$path_parts = pathinfo($ruta);
+$path_parts = pathinfo($ruta_archivo);
 
 // $path_parts['dirname'];
 // $path_parts['basename'];
 // $path_parts['extension'];
 // $path_parts['filename'];
 
-$contenido = file_get_contents($ruta_db_superior . $ruta);
+$contenido = file_get_contents($ruta_db_superior . $ruta_archivo);
+$ruta_real=realpath($ruta_db_superior . $ruta_archivo);
 $tmpfname = tempnam(sys_get_temp_dir(), $path_parts['filename'] . "_");
-if (! empty($path_parts['extension'])) {
+/*if (! empty($path_parts['extension'])) {
     $tmpfname .= "." . $path_parts['extension'];
-}
+}*/
 $tmpHandle = fopen($tmpfname, "w");
 fwrite($tmpHandle, $contenido);
 fclose($tmpHandle);
@@ -69,6 +70,7 @@ echo json_encode(array(
     'gitInfo' => $git_data,
     'errorInfo' => $error_git,
     'contenido' => $contenido,
-    'listaArchivos' => $lista_archivos
+    'listaArchivos' => $lista_archivos,
+    'ruta_archivo' => $ruta_real
 ));
 ?>
