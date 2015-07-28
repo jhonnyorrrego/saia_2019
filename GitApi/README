@@ -19,6 +19,9 @@ git subtree add --prefix ruta_prefijo -m "Leido ObjectiveBlip as a subproject" n
 - Crear una nueva llave de configuracion para el subtree:
 git config --local remote.nombre_remoto.prefix ruta_prefijo
 
+- Guardar las credemciales del repositorio remoto
+git remote set-url nombre_remoto usuario:clave@https://github.com/usuario_prop/repo.git
+
 RESOLUCION DE CONFLICTOS
 1.    Revisar las ramas (Branches) y Stage area [user& git status] para ver en que rama se está y si se tiene algun archivo sin confirmar (uncommitted files) en el repositorio local 
 
