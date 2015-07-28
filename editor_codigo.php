@@ -139,6 +139,7 @@ body.loading .modalload {
     </div>
   </div>
 </div>
+<script src="src/ace.js"></script>
 <script type="text/javascript">
 var alto=($(document).height()-8); 
 var abiertos=Array();
@@ -153,9 +154,9 @@ $(document).on({
      ajaxStop: function() { $body.removeClass("loading"); }    
 });
 
-window.addEventListener("message", procesarMensaje, false);  
+//window.addEventListener("message", procesarMensaje, false);  
 
-function procesarMensaje(event) {
+/*function procesarMensaje(event) {
     //var source = event.source;
     var source = event.source.frameElement; //this is the iframe that sent the message
     var message = event.data; //this is the message
@@ -184,16 +185,12 @@ function procesarMensaje(event) {
                 saveFile();
             }
         }
-
-        //message.nodeId tiene la ruta completa del archivo desde la raiz de saia
-        cargar_editor(message.rutaArchivo, message.extension, message.nodeId);
-        event.source.postMessage({"exito":"true", "nodeId":message.nodeId},
-                event.origin);
     }
 }
-
+*/
 function hayCambios() {
-    return parent.editor.editor.getSession().getUndoManager().hasUndo();
+    //return parent.editor.editor.getSession().getUndoManager().hasUndo();
+    return false;
 }
 
 $(document).ready(function(){
@@ -236,7 +233,8 @@ $(document).ready(function(){
 
 
 function saveFile() {
-    var contenido = editor.editor.getSession().getValue();
+  return false;
+    var contenido = null;//editor.editor.getSession().getValue();
 
     //var ruta_archivo = $("#archivo_actual").val();
     var ruta_archivo = $('iframe[name=editor]').contents().find('#archivo_actual').val();
@@ -279,7 +277,8 @@ function saveFile() {
 }
 
 function saveTempFile() {
-    var contenido = editor.editor.getSession().getValue();
+    return;
+    var contenido = null; //editor.editor.getSession().getValue();
 
     //var ruta_archivo = $("#archivo_actual").val();
     //var rutaTemporal = $("#archivo_temporal").val();
@@ -310,65 +309,6 @@ function saveTempFile() {
     });
 }
 
-function cargar_editor(ruta_archivo, extension, nodeId) {    
-
-    //var ruta_archivo=tree3.getUserData(nodeId,"myurl");
-    //var extension=tree3.getUserData(nodeId,"myextension");
-    if(extension == 'js') {
-        extension = 'javascript';
-    }
-    if(ruta_archivo!=='' && ruta_archivo!==undefined && extension!=='' && extension!==undefined) {
-        
-        var data = {'ruta' : ruta_archivo, "rand" : Math.round(Math.random()*100000)};   
-        data = $(this).serialize() + "&" + $.param(data);
-        $.ajax({
-            type:'POST',
-            url: 'procesar_archivo.php', 
-            dataType:"json", 
-            data: data,
-            //beforeSend: cargando_serie(),
-            success: function(datos) {
-                if(datos) {
-                    //$("#archivo_actual").val(nodeId);
-                    $('iframe[name=editor]').contents().find('#archivo_actual').val(nodeId);
-                    //$("#archivo_temporal").val(datos["rutaTemporal"]);
-                    $('iframe[name=editor]').contents().find('#archivo_temporal').val(datos["rutaTemporal"]);
-                    notificacion_saia("Archivo "+ruta_archivo+" cargado de forma exitosa","success","",3000);
-                    //se crea una nueva sesion para resetear el undoManager
-                    
-                    var sesion = ace.createEditSession(datos["contenido"], "ace/mode/"+extension);
-                    gitInfo = datos["gitInfo"];
-                    errorInfo = datos["errorInfo"];
-                    //alert(JSON.stringify(gitInfo));
-                    if(gitInfo) {
-                        //$("#git_info").val(JSON.stringify(gitInfo));
-                        $('iframe[name=editor]').contents().find('#git_info').val(JSON.stringify(gitInfo));
-                    }
-                    if(errorInfo) {
-                    	//alert(errorInfo);
-                    	if(errorInfo.indexOf("FETCH_HEAD") >= 0) {
-                            //var lista = [1,2,3,5];
-                            $body.removeClass("loading");
-                            var mensaje = '<p>Seleccione los archivos que va a restaurar desde el servidor<p>';
-                            archivosMergeSeleccionados = [];
-                            //showMergeDialog(mensaje, datos["listaArchivos"]);
-                            showMergeDialog(datos["listaArchivos"]);
-                            return false;
-                    	} else {
-                        	notificacion_saia("Error git: "+ errorInfo, "warning","",3000);
-                    	}
-                    }
-                    editor.editor.setSession(sesion);
-                    $('#save').addClass("disabled");
-                    $('#discard').addClass("disabled");
-                    //$('#modificado').val('false');
-                    $('iframe[name=editor]').contents().find('#modificado').val('false');
-                }          
-            }
-        });                            
-    }
-}
-
 function restoreFile() {
     //var ruta_archivo = $("#archivo_actual").val();
     var ruta_archivo = $('iframe[name=editor]').contents().find('#archivo_actual').val();
@@ -385,7 +325,7 @@ function restoreFile() {
         if(datos){
             if(datos["resultado"] == 'ok') {
                    notificacion_saia(datos["mensaje"],"success","",3000);
-                editor.editor.setValue(datos["contenido"]);
+                //editor.editor.setValue(datos["contenido"]);
             } else {
                 notificacion_saia(datos["ruta"] + ": " + datos["mensaje"],"error","",5000);
             }
@@ -557,11 +497,9 @@ hs.targetX = 'descriptor -350px';
 hs.targetY = 'descriptor 300px';
 hs.zIndexCounter = 10010;
 hs.Expander.prototype.onAfterClose = function() {
-  alert("AQUI"); 
   if (this.isClosing) {
-    alert(this);
     console.log(this);          
-    //cerrar_tab_editor("#"+$(this).attr("id"));                      
+    cerrar_tab_editor("#"+$(this).attr("id"));                      
   }
 }
 $(".cerrar_tab").live("click",function(e){
@@ -571,12 +509,14 @@ $(".cerrar_tab").live("click",function(e){
   e.stopPropagation();
 });
 function cerrar_tab_editor(enlace){
+  alert(enlace);
   var tabContentId = $(enlace).parent().attr("href");
   var nodoid=$(enlace).parent().attr("nodoid");
   $(enlace).parent().parent().remove(); //remove li of tab
   $(tabContentId).remove(); //remove respective tab content
   var numero=($(".tab_editor:last").attr("numero"));
   abiertos.remove(nodoid,true);
+  alert(abiertos);
   //$('#enlace_tab'+numero).click();
   $('.nav-tabs a[href=#div_tab'+numero+']').tab('show') ;
 }

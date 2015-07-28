@@ -762,8 +762,12 @@ class GitRepo {
 	 * @access  public
 	 * @return  string
 	 */
-	public function fetch() {
-		return $this->run("fetch");
+	public function fetch($total = false) {
+	    $cmd = "fetch ";
+	    if($total) {
+	        $cmd .= "--all";
+	    }
+		return $this->run($cmd);
 	}
 
 	/**
@@ -831,7 +835,8 @@ class GitRepo {
 	}
 	
 	public function subtree_push($prefix, $remote, $branch) {
-	    return $this->run("subtree push --prefix $remote $branch");
+	    $cmd = "subtree push --prefix $prefix $remote $branch";
+	    return $this->run($cmd);
 	}
 	
 	public function push_with_credentials($remote, $branch, $user, $pass, $url) {
