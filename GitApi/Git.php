@@ -762,8 +762,12 @@ class GitRepo {
 	 * @access  public
 	 * @return  string
 	 */
-	public function fetch() {
-		return $this->run("fetch");
+	public function fetch($total = false) {
+	    $cmd = "fetch ";
+	    if($total) {
+	        $cmd .= "--all";
+	    }
+		return $this->run($cmd);
 	}
 
 	/**

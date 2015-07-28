@@ -281,6 +281,13 @@ class Git0K extends Git {
     }
 
     /**
+     * Sincroniza los cambios remotos en todos los repositorios configurados
+     */
+    public function repoFetchAll() {
+        return $this->repo->fetch(true);
+    }
+    
+    /**
      * Sincroniza los cambios remotos
      */
     public function repoSubtreeFetch($repostitory, $branch = "") {
@@ -395,22 +402,27 @@ class Git0K extends Git {
     /**
      */
     protected function sincronizarRepositorio($mensaje, &$estado_git) {
-        // No hacer push
+        //Esto garantiza que los cambios locales no interrumpan la sincro y que se puedan perder cambios.
         $lista_agregados = $this->resolveLocalChanges($mensaje);
+        $estado_git = $this->repoFetchAll();
         $estado = $this->checkStatus();
         if ($estado === self::ESTADO_CLEAN) {
            return $estado;
         }
+        //TODO: Opciones
+        //1. hacer un git fetch -all para sincronizar base y subtrees
+        //2. Si 1 -> no se puede retornar si estado_clean
+        //3. Si no hay cambios locales que afecten el subtree se debe hacer subtree pull?
         
         if (count($lista_agregados) > 0) {
             $files = $this->filesInIndex($lista_agregados);
             if (count($files) > 0 && count($files["tree"]) > 0) {
                 $estado_git = $this->sincronizarSubtree($mensaje, $files["tree"]);
             }
+        } else {
+            //TODO: Validar si se debe hacer subtree pull
         }
         
-        // TODO: validar sobre cual rama se hacer el pull, si es un subtree cambia
-        // $estado_git=$git->repoPull('origin', 'master');
         // Esto falla con error: master -> FETCH_HEAD
         $estado_git = $this->repoFetch();
         $estado = $this->checkStatus();
