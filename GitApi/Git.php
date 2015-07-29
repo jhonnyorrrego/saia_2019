@@ -586,7 +586,7 @@ class GitRepo {
 		//git commit --author="scor <scor@52142.no-reply.drupal.org>"
 		$autor = "$user <$email>";
 		$mensaje = escapeshellarg($message);
-		$cmd = "commit -m '" .  $mensaje . "'";
+		$cmd = "commit -m $mensaje";
 		$cmd .= ' --author="' . $autor . "'";
 		return $this->run($cmd);
 	}
