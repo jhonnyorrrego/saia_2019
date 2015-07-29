@@ -435,11 +435,11 @@ class Git0K extends Git {
         
         if ($estado === self::ESTADO_MERGE) {
             $estado_git = $this->resolveMerge();
-            return $this->sincronizarRepositorio($estado_git);
+            //return $this->sincronizarRepositorio($estado_git);
             // Devuelve una exception si falla. Hay que hacer el merge manual. ver bloque catch
         } elseif ($estado === self::ESTADO_BEHIND) {
             $estado_git = $this->repoPull($this->get_remoto_base()->alias, "master");
-            return $this->sincronizarRepositorio($estado_git);
+            //return $this->sincronizarRepositorio($estado_git);
         } elseif ($estado === self::ESTADO_AHEAD) {
             $estado_git = $this->repoPush($this->get_remoto_base()->alias, "master");
         }
