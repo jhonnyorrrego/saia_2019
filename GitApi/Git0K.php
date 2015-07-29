@@ -363,7 +363,7 @@ class Git0K extends Git {
             if (empty($mensaje)) {
                 $mensaje = "Commit automatico editor saia. Cambios locales " . date("Y-m-d H:i:s");
             }
-            $estado = $this->sincronizarRepositorio($estado_git);
+            $estado_git = $this->sincronizarRepositorio($comentario);
         } catch (Exception $e) {
             $errmsg = $e->getMessage();
             if (strpos($errmsg, "FETCH_HEAD") !== false) {
@@ -388,7 +388,7 @@ class Git0K extends Git {
                 $mensaje = "Commit automatico editor saia. Cambios locales " . date("Y-m-d H:i:s");
             }
             //FIXME: No hacer sincronizacion al leer. Es muy lento. Solo resolver los cambios locales
-            //$estado = $this->sincronizarRepositorio($mensaje, $estado_git);
+            //$estado_git = $this->sincronizarRepositorio($mensaje);
             $lista_agregados = $this->resolveLocalChanges($mensaje);
         } catch (Exception $e) {
             // echo $e;
@@ -406,8 +406,13 @@ class Git0K extends Git {
     }
 
     /**
+     * Sincroniza el working tree con el repositorio remoto. Falla si no se puede hacer merge.
+     * Si se invoca directamente es necesario ponerlo un bloque try...catch. @see Git0K::processSave
+     * @param string $mensaje
+     * @return string. El resultado del ultimo comando git ejecutado
+     * @throws Exception. Una excepcion en caso de no poder ejecutar un comando git i.e. merge  
      */
-    protected function sincronizarRepositorio($mensaje, &$estado_git) {
+    protected function sincronizarRepositorio($mensaje) {
         // Esto garantiza que los cambios locales no interrumpan la sincro y que se puedan perder cambios.
         $lista_agregados = $this->resolveLocalChanges($mensaje);
         $estado_git = $this->repoFetchAll();
@@ -432,7 +437,7 @@ class Git0K extends Git {
         $estado = $this->checkStatus();
         
         if ($estado === self::ESTADO_CLEAN) {
-            return $estado;
+            return $estado_git;
         }
         
         if ($estado === self::ESTADO_MERGE) {
@@ -446,7 +451,7 @@ class Git0K extends Git {
             $estado_git = $this->repoPush($this->get_remoto_base()->alias, "master");
         }
         $estado = $this->checkStatus();
-        return $estado;
+        return $estado_git;
     }
 
     protected function sincronizarSubtree($mensaje, $lista_archivos) {
@@ -548,13 +553,9 @@ class Git0K extends Git {
                         }
                     }
                 }
-                // TODO: es necesario hacer commit. Posiblemente push y luego pull
                 if ($do_commit) {
-                    // "echo haciendo commit";
                     $estado_git = $this->repoCommitAuthor($mensaje);
                 }
-                
-                // TODO: tener en cuenta el subtree
             }
         }
         return $lista_agregados;
