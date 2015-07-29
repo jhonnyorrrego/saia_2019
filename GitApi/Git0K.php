@@ -387,7 +387,9 @@ class Git0K extends Git {
             if (empty($mensaje)) {
                 $mensaje = "Commit automatico editor saia. Cambios locales " . date("Y-m-d H:i:s");
             }
-            $estado = $this->sincronizarRepositorio($mensaje, $estado_git);
+            //FIXME: No hacer sincronizacion al leer. Es muy lento. Solo resolver los cambios locales
+            //$estado = $this->sincronizarRepositorio($mensaje, $estado_git);
+            $lista_agregados = $this->resolveLocalChanges($mensaje);
         } catch (Exception $e) {
             // echo $e;
             $errmsg = $e->getMessage();
