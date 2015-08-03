@@ -50,8 +50,8 @@ echo (librerias_notificaciones ());
           <div class="controls">
             <input type="hidden" name="modificado" id="modificado" value="false">
             <input type="hidden" name="info_commit" id="info_commit" value="false">
-            <input type="text" name="archivo_actual" id="archivo_actual" value="false">
-            <input type="text" name="archivo_temporal" id="archivo_temporal" value="">
+            <input type="hidden" name="archivo_actual" id="archivo_actual" value="false">
+            <input type="hidden" name="archivo_temporal" id="archivo_temporal" value="">
             <div class="btn btn-warning" id="guardar">Guardar</div>
             <div class="btn btn-success" id="guardar_cerrar">Guardar y cerrar</div>
             <div class="btn btn-danger" id="cerrar">Cancelar</div>
@@ -68,10 +68,10 @@ echo (librerias_notificaciones ());
       <div class="span2">
       <h6 style="margin-top:0px;">Ruta real archivo:</h6>  
       </div>
-      <div class="span6">
+      <div class="span7">
         <span id="ruta_real">Ruta Real</span>
       </div>
-      <div class="span4">
+      <div class="span3">
         <span id="icono_modificado"><i class="icon-eye-close"></i></span>
         <span id="icono_commit"><i class="icon-globe"></i></span>
       </div>
@@ -87,21 +87,22 @@ echo (librerias_notificaciones ());
 <script src="src/ext-emmet.js"></script> 
 <script type="text/javascript">
 	var editor = ace.edit("editor");
+	
   $("#guardar_cerrar").click(function(){
     saveFile('gyc');
-    parent.cerrar_tab("#cerrar_tab2");    
   });
   $("#guardar").click(function(){
     if(!$(this).hasClass("disabled"))
       saveFile('');
   });
   $("#cerrar").click(function(){
-    parent.cerrar_tab("#cerrar_tab2");
+    //1 para que saque la alerta del archivo que cerro de lo contrario muestra el mensaje de guardado
+    parent.cerrar_tab_editor("<?php echo($_REQUEST['numero']);?>",1);
   });
-  $("#editor").height($(document).height());
+  $("#editor").height($(document).height()-120);
 	$("#modificado").val('false'); //inicialmente en true mientras carga el archivo
-	$("#icono-modificado").html('<i class="icon-eye-close"></i>');
-	$("#icono-commit").html('<i class="icon-warning-sign"></i>');
+	$("#icono_modificado").html('<i class="icon-eye-close"></i>');
+	$("#icono_commit").html('<i class="icon-globe"></i>');
   	editor.setTheme("ace/theme/twilight");
   	editor.session.setMode("ace/mode/php"); 
   	editor.getSession().setUseWrapMode(true);
@@ -131,13 +132,14 @@ echo (librerias_notificaciones ());
   			$("#guardar_cerrar").removeClass("disabled");
   			
   			$("#modificado").val('true');
-  			$("#icono-modificado").html('<i class="icon-eye-open"></i>');
-  			 $("#icono-commit").html('<i class="icon-warning-sign"></i>');
+  			$("#icono_modificado").html('<i class="icon-eye-open"></i>');
+  			$("#icono_commit").html('<i class="icon-warning-sign"></i>');
       } else {
   			$('#guardar').addClass("disabled");
   			$("#guardar_cerrar").addClass("disabled");
   			$("#modificado").val('false');
-  			$("#icono-modificado").html('<i class="icon-eye-close"></i>');
+  			$("#icono_modificado").html('<i class="icon-eye-close"></i>');
+  			$("#icono_commit").html('<i class="icon-globe"></i>');
       }
 	});
 
@@ -170,8 +172,8 @@ echo (librerias_notificaciones ());
 
     var comentario = $("#comentario").val()+" "+$("#comentario_extendido").val();
     //save_type=='gyc' es guardar y cerrar
-    if(!comentario && save_type==='gyc'){
-        alert("Debe escribir un comentario para el commit");
+    if(comentario===" " && save_type==='gyc'){
+        notificacion_saia("Debe escribir un comentario para el commit","error","",5000);
         return false;
     }
     var data = {'ruta_archivo' : ruta_archivo, "rutaTemporal" : rutaTemporal, "comentario" : comentario,  "contenido" : contenido, "gitInfo" : gitInfo, "saveType" : save_type}; 
@@ -186,6 +188,11 @@ echo (librerias_notificaciones ());
             if(datos["resultado"]) {
                 if(datos["resultado"] == 'ok') {
                     notificacion_saia(datos["mensaje"],"success","",3000);
+                    if(save_type=="gyc"){
+                      parent.cerrar_tab_editor("<?php echo($_REQUEST['numero']);?>",0);
+                    }
+                    $("#icono_modificado").html('<i class="icon-eye-close"></i>');
+                    return true;
                 } else {
                     notificacion_saia(datos["ruta_archivo"] + ": " + datos["mensaje"],"error","",5000);
                 }
@@ -254,7 +261,8 @@ echo (librerias_notificaciones ());
                     $('#guardar').addClass("disabled");
                     $("#guardar_cerrar").addClass("disabled");
                     $('#modificado').val('false');
-                    $("#icono-modificado").html('<i class="icon-eye-close"></i>')
+                    $("#icono_modificado").html('<i class="icon-eye-close"></i>');
+                    $("#icono_commit").html('<i class="icon-globe"></i>');
                 }          
             }
         });                            

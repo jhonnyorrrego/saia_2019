@@ -15,7 +15,6 @@ echo(librerias_jquery("1.7"));
 echo(librerias_bootstrap());
 echo (librerias_principal());
 echo (librerias_notificaciones ());
-echo(librerias_highslide());
 ?>
 <style>
 #panel_detalles {
@@ -73,6 +72,13 @@ body.loading .modalload {
     padding:5px;
     padding-top:22px;
 }
+.div_opciones {
+    overflow:hidden;
+    position:relative;
+    margin:0 auto;
+    /*padding:5px;
+    padding-top:22px;*/
+}
 .lista_tab_editor {
     position:absolute;
     left:0px;
@@ -109,32 +115,65 @@ body.loading .modalload {
 .scroller-left {
   float:left;
 }
+.btn-append{
+  height:21px;
+}
+input[type=text] {
+  font-size:12px;
+}
 </style>
 <div class="row-fluid" style="align: center">
-  <div class="span3 panel">
-    <div class="btn-toolbar">
-        <div class="btn-group">
-            <div class="btn btn-mini disabled" id="save" onclick="saveTempFile();"><i class="icon-hdd"></i>Guardar</div>
-            <div class="btn btn-mini disabled" id="discard"><i class="icon-trash"></i>Descartar</div>
-            <div class="btn btn-mini disabled" id="restore" onclick="restoreFile();"><i class="icon-upload"></i>Recuperar</div>
-        </div>
-        <!--div class="form-search pull-left">
+  <div id="panel_izquierdo" class="span3 panel">
+     <div class="div_opciones" id="contendor_opciones">
+      <ul class="nav nav-tabs lista_tab_opciones" id="lista_opciones">
+        <li class="tab_opciones active" id="explorador"><a class="enlace_opciones" id="enlace_explorador" href="#izquierdo_saia">Explorar</a></li>
+        <li class="tab_opciones" id="nuevo"><a class="enlace_opciones" id="enlace_nuevo" href="#div_nuevo">Nuevo</a></li>
+        <li class="tab_opciones" id="buscar"><a class="enlace_opciones" id="enlace_buscar" href="#div_buscar">Buscar</a></li>
+        <li class="tab_opciones" id="varios"><a class="enlace_opciones" id="enlace_varios" href="#div_varios">Varios</a></li>
+      </ul>
+      <div class="tab-content tab_opciones">
+        <div class="tab-pane active" id="izquierdo_saia" style="width: 100%"></div>
+        <div class="tab-pane" id="div_nuevo">Nuevo</div>
+        <div class="tab-pane" id="div_buscar">
           <div class="input-append">
-            <input type="text" class="span2 search-query">
-            <button type="submit" class="btn btn-mini btn-buscar">Buscar</button>
+            <input type="text"  name="buscar_infecciones" id="buscar_infecciones" placeholder="Cadena">
+            <div class="btn btn-mini btn-primary btn-append" id="btn_buscar_infecciones">Buscar</div>
           </div>
-        </div-->
+          Buscar dentro del archivo  <input type="checkbox" id="op_buscar_infecciones" class="check_op" value="in_file"><br />
+          Reemplazar dentro del archivo  <input type="checkbox" id="op_reemplazar_buscar_infecciones" class="check_op" value="reemplazar">
+          <div id="div_reemplazo" style="display:none;">
+            <input type="text"  name="buscar_infecciones_reemplazo" id="buscar_infecciones_reemplazo" placeholder="Reemplazar por ">
+          </div>
+          <div id="resultados_busqueda">
+            
+          </div>
+        </div>
+        <div class="tab-pane" id="div_varios">
+          <div id="reproductor_video">
+            <div class="input-append">
+              <input type="text"  name="buscar_musica" id="buscar_musica" placeholder="M&uacute;sica a buscar">
+              <div class="btn btn-mini btn-primary btn-append" id="btn_buscar_yt">Buscar</div>
+            </div>
+              <iframe width="100%" height="300" allowfullscreen name="player_yt" id="player_yt" src="" frameborder="0"></iframe>
+          </div>
+        </div>
+      </div>
     </div>
-    <div id="izquierdo_saia" style="width: 100%"></div>
+    <!--div class="btn-toolbar">
+        <div class="btn-group">
+            <div class="btn btn-mini disabled" id="archivo_nuevo"><i class="icon-hdd"></i>Nuevo</div>
+            <div class="btn btn-mini disabled" id="sincronizar"><i class="icon-upload"></i>Sincronizar</div>
+        </div>
+    </div-->
   </div>
-  <div class="span9 panel">
+  <div id="panel_derecho" class="span9 panel">
     <div class="scroller scroller-left"><i class="icon-chevron-left"></i></div>
     <div class="scroller scroller-right"><i class="icon-chevron-right"></i></div>
     <div class="div_editor" id="contendor_editor">
       <ul class="nav nav-tabs lista_tab_editor" id="lista_archivos">
         <li class="tab_editor" numero="1"></li>
       </ul>
-      <div class="tab-content">
+      <div class="tab-content tab-editor">
       </div>
     </div>
   </div>
@@ -142,6 +181,7 @@ body.loading .modalload {
 <script src="src/ace.js"></script>
 <script type="text/javascript">
 var alto=($(document).height()-8); 
+var alto_menu=30;
 var abiertos=Array();
 
 var gitInfo;
@@ -151,13 +191,89 @@ $body = $("body");
 
 $(document).on({
     ajaxStart: function() { $body.addClass("loading");    },
-     ajaxStop: function() { $body.removeClass("loading"); }    
+    ajaxStop: function() { $body.removeClass("loading"); }    
 });
 
 $(document).ready(function(){
-
-    var alto=($(document).height()-8); 
-
+  $("#panel_arbol_archivos").height(alto-alto_menu-80);
+  $("#izquierdo_saia").height(alto-alto_menu-80);
+  $("#arbol_archivos").height(alto-alto_menu-80);
+  $("#panel_editor").height(alto-alto_menu-80);
+  $("#editor").height(alto-alto_menu-32);
+  $(".tab_editor").live("click",function(){
+    var numero=$(this).attr("numero");
+    $('.lista_tab_editor a[href=#div_tab'+numero+']').tab('show') ;
+  });
+  $(".tab_editor").live("dblclick",function(){
+    var numero=$(this).attr("numero");
+    document.getElementById("editor_"+numero).contentWindow.document.getElementById("ocultar_arbol").click();
+  });
+  $("#btn_buscar_yt").click(function(){
+    var url_video="http://www.youtube.com/embed?listType=search&amp;list="+$("#buscar_musica").val()+"&autoplay=1&autohide=0&modestbranding=1";
+    window.open(url_video,"player_yt");
+  });
+  $("#archivo_nuevo").click(function(){
+    adicionar_tab(ruta_archivo,extension,nombre_archivo,nodeId)  
+  });
+  $("#btn_buscar_infecciones").click(function(){
+    var buscar_contenido=0;
+    var palabra=$("#buscar_infecciones").val();
+    var palabra_reemplazar='';
+    var reemplazar=''
+    var buscar_archivo=1;
+    var dir='<?php echo("../".$ruta_db_superior);?>';
+    if($("#op_buscar_infecciones:checked").val()==='in_file'){
+      buscar_contenido=1;
+      buscar_archivo=0; 
+    }
+    else{
+      buscar_archivo=1;
+    }
+    if($("#op_buscar_reemplazar_infecciones:checked").val()==='in_file'){
+      reemplazar=1;
+      palabra_reemplazar=$("#buscar_infecciones_reemplazo").val();
+      buscar_archivo=0;
+    }
+    var datos_post = "ejecutar_funcion=1&funcion=buscar_archivos&parametros="+dir+";"+palabra+";"+buscar_contenido+";"+buscar_archivo+";"+reemplazar+";"+palabra_reemplazar;
+    alert(datos_post);
+    $.ajax({
+      type:'POST',
+      url: '<?php echo($ruta_db_superior);?>pantallas/lib/librerias_archivo.php', 
+      dataType:"json",
+      data: datos_post,
+      success: function(datos) {
+        alert();
+        alert(datos) ;         
+        if(datos){
+          alert("AQUI");
+            /*if(datos["resultado"]) {
+                if(datos["resultado"] == 'ok') {
+                    notificacion_saia(datos["mensaje"],"success","",3000);
+                } else {
+                    notificacion_saia(datos["rutaTemp"] + ": " + datos["mensaje"],"error","",5000);
+                }
+            } else {
+                notificacion_saia("Sin resultado en el llamado","error","",3000);
+            }*/
+        } else {
+            notificacion_saia("Sin respuesta","error","",3000);
+        }
+      }
+    });
+  });  
+  $(".check_op").click(function(){
+   if($("#op_reemplazar_buscar_infecciones:checked").val()==='reemplazar'){
+    $("#div_reemplazo").show(); 
+    $("#btn_buscar_infecciones").html("Reemplazar");
+   } 
+   else{
+     $("#div_reemplazo").hide();
+     $("#buscar_infecciones_reemplazo").val("");
+     $("#btn_buscar_infecciones").html("Buscar");
+   }
+   
+  });
+  /*
     $("#dialog-ok").on("click", function () {
         var seleccionados = [];
 
@@ -167,7 +283,7 @@ $(document).ready(function(){
         	seleccionados.push($(this).val());
         });
         actualizarRepositorio(seleccionados);
-    });
+    });*/
     
     function llamado_pantalla(ruta,datos,destino,nombre){                
           if(datos!==''){
@@ -175,20 +291,10 @@ $(document).ready(function(){
           }
           if(nombre === "<?php echo(@$_REQUEST['destino_click']);?>"){      
               ruta = ruta+'&click_clase=<?php echo(@$_REQUEST['click_clase']); ?>';      
-              destino.html('<div id="panel_'+nombre+'"><iframe name="'+nombre+'" src="'+ruta+'" width="100%" id="'+nombre+'" frameborder="0"></iframe></div>'); 
+              destino.html('<div id="panel_'+nombre+'" border="1px"><iframe name="'+nombre+'" src="'+ruta+'" width="100%" id="'+nombre+'" frameborder="0"></iframe></div>'); 
           }
               destino.html('<div id="panel_'+nombre+'"><iframe name="'+nombre+'" src="'+ruta+'" width="100%" id="'+nombre+'" frameborder="0"></iframe></div>'); 
     }
-    
-    $(document).ready(function(){
-            var alto_menu=30;
-            $("#panel_arbol_archivos").height(alto-alto_menu);
-            $("#arbol_archivos").height(alto-alto_menu-2);
-            $("#panel_editor").height(alto-alto_menu-30);
-            $("#editor").height(alto-alto_menu-32);
-        });
-        
-    llamado_pantalla("<?php echo($ruta_db_superior);?>editor_codigo/arbol_archivos.php","alto="+alto,$("#izquierdo_saia"),'arbol_archivos');
     llamado_pantalla("<?php echo($ruta_db_superior);?>editor_codigo/editor.php","",$("#contenedor_saia"),"editor");
 });
 
@@ -199,7 +305,6 @@ function saveTempFile() {
     //var ruta_archivo = $("#archivo_actual").val();
     //var rutaTemporal = $("#archivo_temporal").val();
     var rutaTemporal = $('iframe[name=editor]').contents().find('#archivo_temporal').val();
-    alert(rutaTemporal);
     var data = {"rutaTemporal" : rutaTemporal, "contenido" : contenido}; 
     data = $(this).serialize() + "&" + $.param(data);
     $.ajax({
@@ -272,7 +377,6 @@ function actualizarRepositorio(seleccionados) {
     //$("#dialog2").modal("show").addClass("fade");
 	if(seleccionados) {
         //var valor = $(".ui-dialog-content").html();
-	    alert('Llamado ajax: ' + seleccionados);
 	    //    public function processUnMerge($lista_archivos, $comentario, &$estado_git)
 	    var comentario = $("#descripcion_commit").val();
 	    if(!comentario){
@@ -338,18 +442,6 @@ $(document).ready(function (){
       
       });
   }); 
-  
-  $("#adicionar_tab").click(function(){
-    adicionar_tab();
-  });  
-  
-  $(".tab_editor").live("click",function(){
-    var numero=$(this).attr("numero");
-    $(".tab_editor").removeClass("active");
-    $(".tab-pane").removeClass("active");
-    $(this).addClass("active");
-    $("#div_tab"+numero).addClass("active");
-  });
 });  
 var widthOfList = function(){
   var itemsWidth = 0;
@@ -400,14 +492,32 @@ function llamado_pantalla(ruta,datos,destino,nombre){
 function adicionar_tab(ruta_archivo,extension,nombre_archivo,nodeId){
   var numero=parseInt($(".tab_editor:last").attr("numero"))+1;
   $(".lista_tab_editor").append('<li class="tab_editor" numero="'+numero+'"><a class="enlace_tab" id="enlace_tab'+(numero)+'" href="#div_tab'+numero+'" nodoid="'+nodeId+'">'+(nombre_archivo+"."+extension)+'</a></li>');
-  $(".tab-content").append('<div class="tab-pane" id="div_tab'+numero+'" ></div>');
+  $(".tab-editor").append('<div class="tab-pane" id="div_tab'+numero+'" ></div>');
   reAdjust();
-  llamado_pantalla("<?php echo($ruta_db_superior);?>editor_codigo/editor.php","ruta_archivo="+ruta_archivo+"&extension="+extension,$("#div_tab"+numero),"editor_"+numero);
-  $('.nav-tabs a[href=#div_tab'+numero+']').tab('show') ;
+  llamado_pantalla("<?php echo($ruta_db_superior);?>editor_codigo/editor.php","ruta_archivo="+ruta_archivo+"&extension="+extension+"&numero="+numero,$("#div_tab"+numero),"editor_"+numero);
+  $('.lista_tab_editor a[href=#div_tab'+numero+']').tab('show') ;
 }
 
 function abrir_tab_editor(nodeId){
-  $('.nav-tabs a[nodoid="'+nodeId+'"]').tab('show') ;
+  $('.lista_tab_editor a[nodoid="'+nodeId+'"]').tab('show') ;
+}
+$(".tab_opciones").click(function(){
+  $('#enlace_'+$(this).attr("id")).tab('show') ;
+});
+function abrir_tab_opciones(opcion){
+  $('.lista_tab_editor a[nodoid="'+nodeId+'"]').tab('show') ;
+}
+function cerrar_tab_editor(numero,notificar_cierre){
+  var tabContentId = $("#enlace_tab"+numero).attr("href");
+  var nodoid=$("#enlace_tab"+numero).attr("nodoid");
+  $("#enlace_tab"+numero).parent().remove(); //remove li of tab
+  $(tabContentId).remove(); //remove respective tab content
+  var numero_abrir=($(".tab_editor:last").attr("numero"));
+  abiertos.remove(nodoid,true);
+  $('.lista_tab_editor a[href=#div_tab'+numero_abrir+']').tab('show') ;
+  if(notificar_cierre==1){
+    notificacion_saia("Archivo "+nodoid+" cerrado","error","topRight",4500);
+  }
 }
 if (!Array.prototype.remove) {
   Array.prototype.remove = function(val, all) {
@@ -424,7 +534,7 @@ if (!Array.prototype.remove) {
     return removedItems;
   };
 }
-llamado_pantalla("<?php echo($ruta_db_superior);?>editor_codigo/arbol_archivos.php","alto="+alto,$("#izquierdo_saia"),'arbol_archivos');
+llamado_pantalla("<?php echo($ruta_db_superior);?>editor_codigo/arbol_archivos.php","alto="+(alto-alto_menu-40),$("#izquierdo_saia"),'arbol_archivos');
 </script>
 
 <div id="dialog_merge" class="modal hide" data-backdrop="false">
