@@ -176,6 +176,9 @@ class GitRepo {
 	
 	public static function get_root_dir() {
 
+        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+           self::windows_mode();
+        }       
 		$status = self::strun_command(Git::get_bin()." " . "rev-parse --show-toplevel");
 		
 	    if($status) {

@@ -297,9 +297,14 @@ class Git0K extends Git {
     public function find_subtree_prefix($un_subtree) {
         // Si es un subtree debe existir una llave de configuracion remote.SubTree.prefix
         $llave = "remote.$un_subtree.prefix";
-        $prefijo = $this->repo->get_config($llave);
-        if ($prefijo) {
-            $prefijo = trim($prefijo, "\n\r");
+        $prefijo = NULL;
+        try {
+            $prefijo = $this->repo->get_config($llave);
+            if ($prefijo) {
+                $prefijo = trim($prefijo, "\n\r");
+            }
+        } catch(Exception $e) {
+            //No hacer nada
         }
         return $prefijo;
     }
