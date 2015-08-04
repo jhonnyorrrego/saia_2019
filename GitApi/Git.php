@@ -80,6 +80,9 @@ class Git {
 	 * @return  GitRepo
 	 */
 	public static function open($repo_path) {
+        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+           self::windows_mode();
+        }       
 		return new GitRepo($repo_path);
 	}
 
@@ -359,7 +362,13 @@ class GitRepo {
 		 *
 		 * If $_ENV is not empty, then we can just copy it and be done with it.
 		 */
-		
+		if(count($_ENV) === 0 && strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+		   $ruta = getenv("PATH");
+           if(!empty($ruta)) {
+               $_ENV["PATH"] = $ruta; 
+           }
+        }       
+            
 		if(count($_ENV) === 0) {
 			$env = NULL;
 			foreach($this->envopts as $k => $v) {
@@ -412,7 +421,13 @@ class GitRepo {
 	     * If $_ENV is not empty, then we can just copy it and be done with it.
 	    */
 	
-        $env = NULL;
+        if(count($_ENV) === 0 && strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+           $ruta = getenv("PATH");
+           if(!empty($ruta)) {
+               $_ENV["PATH"] = $ruta; 
+           }
+        }       
+
         if(empty($cwd)) {
 	       $cwd = getcwd();
         }
