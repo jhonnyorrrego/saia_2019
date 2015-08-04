@@ -400,7 +400,7 @@ class GitRepo {
 	 */
 	protected static function strun_command($command, $cwd="") {
         if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-           self::windows_mode();
+           Git::windows_mode();
         }       
         $command = Git::get_bin()." " .	$command;
 	    $descriptorspec = array(
