@@ -158,28 +158,19 @@ class GitRepo {
 	    }
 	    
         //$status = exec(Git::get_bin()." " . "rev-parse --is-inside-work-tree");
-        $status = self::strun_command(Git::get_bin()." " ."rev-parse --is-inside-work-tree");
+        $status = self::strun_command("rev-parse --is-inside-work-tree");
 	    return trim($status) == "true" ? true : false;
 	}
 	
-	/*public static function get_root_dir() {
-	    //$status = self::strun_command(Git::get_bin()." " . "rev-parse --git-dir");
-	    $status = self::strun_command(Git::get_bin()." " . "rev-parse --show-toplevel");
-	    return $status;
-	}	*/
-
 	public static function st_repo_git_dir() {
-	    //$status = self::strun_command(Git::get_bin()." " . "rev-parse --git-dir");
-		$status = self::strun_command(Git::get_bin()." " . "rev-parse --show-toplevel");
+	    //$status = self::strun_command("rev-parse --git-dir");
+		$status = self::strun_command("rev-parse --show-toplevel");
 	    return trim($status, "\n\r");
 	}
 	
 	public static function get_root_dir() {
 
-        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-           self::windows_mode();
-        }       
-		$status = self::strun_command(Git::get_bin()." " . "rev-parse --show-toplevel");
+		$status = self::strun_command("rev-parse --show-toplevel");
 		
 	    if($status) {
 	        $status = trim($status);
@@ -408,6 +399,10 @@ class GitRepo {
 	 * @return  string
 	 */
 	protected static function strun_command($command, $cwd="") {
+        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+           self::windows_mode();
+        }       
+        $command = Git::get_bin()." " .	$command;
 	    $descriptorspec = array(
 	        1 => array('pipe', 'w'),
 	        2 => array('pipe', 'w'),
