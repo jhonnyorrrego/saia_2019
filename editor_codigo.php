@@ -253,7 +253,7 @@ $(document).ready(function(){
         alert("ERROR");
       }
     });
-  $(".enlace_resultado_buscar_infeccion").on("click",function(){
+  $(".enlace_resultado_buscar_infeccion").live("click",function(){
     adicionar_tab($(this).attr("nodoid"),$(this).attr("nombre_archivo"),$(this).attr("nodoid"));
   });  
   $("#cargando_resultado_busqueda").html("");
