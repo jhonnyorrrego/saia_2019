@@ -472,4 +472,3 @@ llamado_pantalla("<?php echo($ruta_db_superior);?>editor_codigo/arbol_archivos.p
         </div>
     </div>
 </div>
->>>>>>> cb352d8f4f68272046b5df475e7f16317b2dd687
