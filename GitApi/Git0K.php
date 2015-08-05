@@ -320,7 +320,7 @@ class Git0K extends Git {
             }
         }
         
-        return $alias;
+        return $alias_remotos;
     }
 
     /**
