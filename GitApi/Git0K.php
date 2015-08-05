@@ -370,6 +370,7 @@ class Git0K extends Git {
             }
             $estado_git = $this->sincronizarRepositorio($comentario);
             $estado = $this->checkStatus();
+			echo "Estado final: $estado <br>";
             if ($estado === self::ESTADO_AHEAD) {
                 $estado_git = $this->repoPush($this->get_remoto_base()->alias, "master");
             }
