@@ -1,22 +1,27 @@
 <?php
+error_reporting(E_ALL);
 ini_set('display_errors', '1');
 $resp = run_command("git status -b --porcelain");
 echo "Estado <br>$resp <br>";
-//try {
+try {
 $cfg = run_command("git config remote.hola_mundo.prefix");	
-/*} catch (Exception $e) {
+} catch (Exception $e) {
 	
-}*/
+}
 echo "$cfg <br>";
 
 $salida = run_command("git fetch --all");	
 echo "Fetch: <br>$salida<br>";
+die();
+$salida = run_command("git subtree pull --prefix editor_codigo GitApi master");	
+echo "Fetch: <br>$salida<br>";
 
-function run_command($command) {
-	return exec($command);
-}
 
 function run_command2($command) {
+	return shell_exec($command);
+}
+
+function run_command($command) {
     $descriptorspec = array(
         1 => array('pipe', 'w'), //stdout
         2 => array('pipe', 'w'), //stderr
@@ -49,7 +54,7 @@ function run_command2($command) {
     } else {
         $env = array_merge($_ENV, $envopts);
     }
-    $cwd = getcwd();
+    $cwd = "D:/www/release1/saia"; //getcwd();
     if($es_windows) {
         $resource = proc_open($command, $descriptorspec, $pipes, $cwd, $env,  array('bypass_shell'=>TRUE));
     } else {
