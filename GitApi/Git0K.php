@@ -311,7 +311,16 @@ class Git0K extends Git {
                 }
             }
         }
-        return $a_fetch;
+        $alias_remotos = array();
+        foreach ($a_fetch as $value) {
+            if ($value) {
+                $arreglo = preg_split("/\s+/", $value);
+                $alias = $arreglo[0];
+                $alias_remotos[] = $alias;
+            }
+        }
+        
+        return $alias;
     }
 
     /**
