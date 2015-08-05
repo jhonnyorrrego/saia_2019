@@ -1,6 +1,8 @@
 <?php
 header('Content-Type: application/json');
 require_once ('GitApi/Git0K.php');
+error_reporting(E_ALL);
+ini_set('display_errors', '1');
 
 $max_salida = 10; // Previene algun posible ciclo infinito limitando a 10 los ../
 $ruta_db_superior = $ruta = "";
