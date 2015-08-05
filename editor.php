@@ -51,7 +51,7 @@ echo (librerias_notificaciones ());
             <input type="hidden" name="modificado" id="modificado" value="false">
             <input type="hidden" name="info_commit" id="info_commit" value="false">
             <input type="hidden" name="archivo_actual" id="archivo_actual" value="false">
-            <input type="hidden" name="archivo_temporal" id="archivo_temporal" value="">
+            <input type="text" name="archivo_temporal" id="archivo_temporal" value="">
             <div class="btn btn-warning" id="guardar">Guardar</div>
             <div class="btn btn-success" id="guardar_cerrar">Guardar y cerrar</div>
             <div class="btn btn-danger" id="cerrar">Cancelar</div>
@@ -219,7 +219,6 @@ echo (librerias_notificaciones ());
         extension = 'javascript';
     }
     if(ruta_archivo!=='' && ruta_archivo!==undefined && extension!=='' && extension!==undefined) {
-        
         var data = {'ruta_archivo' : ruta_archivo, "rand" : Math.round(Math.random()*100000)};   
         data = $(this).serialize() + "&" + $.param(data);
         $.ajax({
