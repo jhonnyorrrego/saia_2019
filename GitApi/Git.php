@@ -788,6 +788,17 @@ class GitRepo {
 	}
 
 	/**
+	 * Runs a git fetch on the current branch
+	 *
+	 * @access  public
+	 * @return  string
+	 */
+	public function fetch_simple($remote, $ref="master") {
+	    $cmd = "fetch $remote $ref";
+	    return $this->run($cmd);
+	}
+	
+	/**
 	 * Runs a git fetch on the remote repository
 	 *
 	 * @access  public

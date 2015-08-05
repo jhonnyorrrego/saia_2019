@@ -284,9 +284,36 @@ class Git0K extends Git {
      * Sincroniza los cambios remotos en todos los repositorios configurados
      */
     public function repoFetchAll() {
+        if(strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+            $remotos = $this->search_fetch_remotes();
+            $status = NULL;
+            if(count($remotos) > 0 ) {
+                foreach ($remotos as $remote) {
+                    $status = $this->repo->fetch_simple($remote);
+                }
+            }
+            return $status;
+        }
         return $this->repo->fetch(true);
     }
 
+    private function search_fetch_remotes() {
+            $lista = $this->repoListRemotes();
+            $a_fetch = array();
+            $a_push = array();
+            // separar los fetch de los push
+            foreach ($lista as $value) {
+                if ($value) {
+                    if (strpos($value, "fetch") !== false) {
+                        array_push($a_fetch, $value);
+                    } elseif (strpos($value, "push") !== false) {
+                        array_push($a_push, $value);
+                    }
+                }
+            }
+        return $a_fetch();
+    }
+    
     /**
      * Sincroniza los cambios remotos
      */
@@ -303,8 +330,8 @@ class Git0K extends Git {
             if ($prefijo) {
                 $prefijo = trim($prefijo, "\n\r");
             }
-        } catch(Exception $e) {
-            //No hacer nada
+        } catch (Exception $e) {
+            // No hacer nada
         }
         return $prefijo;
     }
@@ -369,11 +396,16 @@ class Git0K extends Git {
                 $mensaje = "Commit automatico editor saia. Cambios locales " . date("Y-m-d H:i:s");
             }
             $estado_git = $this->sincronizarRepositorio($comentario);
+            $estado = $this->checkStatus();
+            if ($estado === self::ESTADO_AHEAD) {
+                $estado_git = $this->repoPush($this->get_remoto_base()->alias, "master");
+            }
         } catch (Exception $e) {
             $errmsg = $e->getMessage();
             if (strpos($errmsg, "FETCH_HEAD") !== false) {
                 $lista_archivos = $this->get_lista_archivos_merge_manual();
             }
+            
             $error_git = $errmsg;
         }
         return array(
@@ -392,8 +424,8 @@ class Git0K extends Git {
             if (empty($mensaje)) {
                 $mensaje = "Commit automatico editor saia. Cambios locales " . date("Y-m-d H:i:s");
             }
-            //FIXME: No hacer sincronizacion al leer. Es muy lento. Solo resolver los cambios locales
-            //$estado_git = $this->sincronizarRepositorio($mensaje);
+            // FIXME: No hacer sincronizacion al leer. Es muy lento. Solo resolver los cambios locales
+            // $estado_git = $this->sincronizarRepositorio($mensaje);
             $lista_agregados = $this->resolveLocalChanges($mensaje);
         } catch (Exception $e) {
             // echo $e;
@@ -411,11 +443,12 @@ class Git0K extends Git {
     }
 
     /**
-     * Sincroniza el working tree con el repositorio remoto. Falla si no se puede hacer merge.
+     * Sincroniza el working tree con el repositorio remoto.
+     * Falla si no se puede hacer merge.
      * Si se invoca directamente es necesario ponerlo un bloque try...catch. @see Git0K::processSave
      * @param string $mensaje
      * @return string. El resultado del ultimo comando git ejecutado
-     * @throws Exception. Una excepcion en caso de no poder ejecutar un comando git i.e. merge  
+     * @throws Exception. Una excepcion en caso de no poder ejecutar un comando git i.e. merge
      */
     protected function sincronizarRepositorio($mensaje) {
         // Esto garantiza que los cambios locales no interrumpan la sincro y que se puedan perder cambios.
@@ -447,11 +480,11 @@ class Git0K extends Git {
         
         if ($estado === self::ESTADO_MERGE) {
             $estado_git = $this->resolveMerge();
-            //return $this->sincronizarRepositorio($estado_git);
+            // return $this->sincronizarRepositorio($estado_git);
             // Devuelve una exception si falla. Hay que hacer el merge manual. ver bloque catch
         } elseif ($estado === self::ESTADO_BEHIND) {
             $estado_git = $this->repoPull($this->get_remoto_base()->alias, "master");
-            //return $this->sincronizarRepositorio($estado_git);
+            // return $this->sincronizarRepositorio($estado_git);
         } elseif ($estado === self::ESTADO_AHEAD) {
             $estado_git = $this->repoPush($this->get_remoto_base()->alias, "master");
         }

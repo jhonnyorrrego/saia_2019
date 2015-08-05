@@ -253,7 +253,7 @@ $(document).ready(function(){
         alert("ERROR");
       }
     });
-  $(".enlace_resultado_buscar_infeccion").on("click",function(){
+  $(".enlace_resultado_buscar_infeccion").live("click",function(){
     adicionar_tab($(this).attr("nodoid"),$(this).attr("nombre_archivo"),$(this).attr("nodoid"));
   });  
   $("#cargando_resultado_busqueda").html("");
@@ -472,3 +472,4 @@ llamado_pantalla("<?php echo($ruta_db_superior);?>editor_codigo/arbol_archivos.p
         </div>
     </div>
 </div>
+>>>>>>> cb352d8f4f68272046b5df475e7f16317b2dd687
