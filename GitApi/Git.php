@@ -957,6 +957,7 @@ class GitRepo {
 	    if($aplastar) {
 	        $cmd .= " --squash";
 	    }
+echo "$$" . $cmd . "$$";
         return $this->run($cmd);
 	}
 	
