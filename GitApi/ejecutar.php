@@ -1,6 +1,12 @@
+<<<<<<< Updated upstream
 <?php
-error_reporting(E_ALL);
+require_once('Command.php');
+use mikehaertl\shellcommand\Command;
+
+// Basic example
 ini_set('display_errors', '1');
+echo "Servidor: " . PHP_OS ."<br>";
+
 $resp = run_command("git status -b --porcelain");
 echo "Estado <br>$resp <br>";
 try {
@@ -12,13 +18,30 @@ echo "$cfg <br>";
 
 $salida = run_command("git fetch --all");	
 echo "Fetch: <br>$salida<br>";
-die();
-$salida = run_command("git subtree pull --prefix editor_codigo GitApi master");	
-echo "Fetch: <br>$salida<br>";
 
+function run_command2($cmd) {
+     $ruta = getenv("PATH");
+echo "Path: " . $ruta ."<br>";
+$command = new Command(array(
+    'command' => $cmd,
 
-function run_command2($command) {
-	return shell_exec($command);
+    // Will be passed as environment variables to the command
+    'procEnv' => array(
+        'PATH' => $ruta
+    ),
+
+    // Will be passed as options to proc_open()
+    'procOptions' => array(
+        'bypass_shell' => true,
+    ),
+    ));	
+	if ($command->execute()) {
+		return $command->getOutput();
+	} else {
+		return $command->getError();
+		$exitCode = $command->getExitCode();
+	}
+	return shell_exec($cmd);
 }
 
 function run_command($command) {
@@ -54,7 +77,7 @@ function run_command($command) {
     } else {
         $env = array_merge($_ENV, $envopts);
     }
-    $cwd = "D:/www/release1/saia"; //getcwd();
+    $cwd = getcwd();
     if($es_windows) {
         $resource = proc_open($command, $descriptorspec, $pipes, $cwd, $env,  array('bypass_shell'=>TRUE));
     } else {

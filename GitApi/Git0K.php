@@ -339,8 +339,8 @@ class Git0K extends Git {
             if ($prefijo) {
                 $prefijo = trim($prefijo, "\n\r");
             }
-        } catch (Exception $e) {
-            // No hacer nada
+        } catch(Exception $e) {
+            //No hacer nada
         }
         return $prefijo;
     }
