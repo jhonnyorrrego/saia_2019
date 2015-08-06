@@ -1,22 +1,49 @@
 <?php
+require_once('Command.php');
+use mikehaertl\shellcommand\Command;
+
+// Basic example
 ini_set('display_errors', '1');
+echo "Servidor: " . PHP_OS ."<br>";
+
 $resp = run_command("git status -b --porcelain");
 echo "Estado <br>$resp <br>";
-//try {
+try {
 $cfg = run_command("git config remote.hola_mundo.prefix");	
-/*} catch (Exception $e) {
+} catch (Exception $e) {
 	
-}*/
+}
 echo "$cfg <br>";
 
 $salida = run_command("git fetch --all");	
 echo "Fetch: <br>$salida<br>";
 
-function run_command($command) {
-	return exec($command);
+function run_command2($cmd) {
+     $ruta = getenv("PATH");
+echo "Path: " . $ruta ."<br>";
+$command = new Command(array(
+    'command' => $cmd,
+
+    // Will be passed as environment variables to the command
+    'procEnv' => array(
+        'PATH' => $ruta
+    ),
+
+    // Will be passed as options to proc_open()
+    'procOptions' => array(
+        'bypass_shell' => true,
+    ),
+    ));	
+	if ($command->execute()) {
+		return $command->getOutput();
+	} else {
+		return $command->getError();
+		$exitCode = $command->getExitCode();
+	}
+	return shell_exec($cmd);
 }
 
-function run_command2($command) {
+function run_command($command) {
     $descriptorspec = array(
         1 => array('pipe', 'w'), //stdout
         2 => array('pipe', 'w'), //stderr
