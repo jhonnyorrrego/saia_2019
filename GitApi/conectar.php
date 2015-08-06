@@ -1,12 +1,14 @@
 <?php
 require_once ('Git0K.php');
-
+ini_set('display_errors', '1');
 // nuevo repo con varios remotes
-$git2 = new Git0K('/home/cerok/proyectos/workspace_php/saia_editor');
-// $git2 = new Git0K('/Users/giovanni/DevTools/workspace_php/saia_editor');
-echo "<br>";
+//$git2 = new Git0K('/home/cerok/proyectos/workspace_php/saia_editor');
+//$git2 = new Git0K('D:/www/release1/saia');
+$ruta = GitRepo::get_root_dir();
+echo $ruta."<br>";
 // print_r($git2->repoListRemotes());
 echo "<br>";
+$git2 = new Git0K($ruta);
 
 // $format = "El autor de %h fue %an, %ar%nEl titulo fue >>%s<<%n";
 $format = "oneline";

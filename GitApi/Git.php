@@ -80,6 +80,9 @@ class Git {
 	 * @return  GitRepo
 	 */
 	public static function open($repo_path) {
+        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+           self::windows_mode();
+        }       
 		return new GitRepo($repo_path);
 	}
 
@@ -155,25 +158,19 @@ class GitRepo {
 	    }
 	    
         //$status = exec(Git::get_bin()." " . "rev-parse --is-inside-work-tree");
-        $status = self::strun_command(Git::get_bin()." " ."rev-parse --is-inside-work-tree");
+        $status = self::strun_command("rev-parse --is-inside-work-tree");
 	    return trim($status) == "true" ? true : false;
 	}
 	
-	/*public static function get_root_dir() {
-	    //$status = self::strun_command(Git::get_bin()." " . "rev-parse --git-dir");
-	    $status = self::strun_command(Git::get_bin()." " . "rev-parse --show-toplevel");
-	    return $status;
-	}	*/
-
 	public static function st_repo_git_dir() {
-	    //$status = self::strun_command(Git::get_bin()." " . "rev-parse --git-dir");
-		$status = self::strun_command(Git::get_bin()." " . "rev-parse --show-toplevel");
+	    //$status = self::strun_command("rev-parse --git-dir");
+		$status = self::strun_command("rev-parse --show-toplevel");
 	    return trim($status, "\n\r");
 	}
 	
 	public static function get_root_dir() {
 
-		$status = self::strun_command(Git::get_bin()." " . "rev-parse --show-toplevel");
+		$status = self::strun_command("rev-parse --show-toplevel");
 		
 	    if($status) {
 	        $status = trim($status);
@@ -359,7 +356,13 @@ class GitRepo {
 		 *
 		 * If $_ENV is not empty, then we can just copy it and be done with it.
 		 */
-		
+		if(count($_ENV) === 0 && strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+		   $ruta = getenv("PATH");
+           if(!empty($ruta)) {
+               $_ENV["PATH"] = $ruta; 
+           }
+        }       
+            
 		if(count($_ENV) === 0) {
 			$env = NULL;
 			foreach($this->envopts as $k => $v) {
@@ -396,6 +399,10 @@ class GitRepo {
 	 * @return  string
 	 */
 	protected static function strun_command($command, $cwd="") {
+        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+           Git::windows_mode();
+        }       
+        $command = Git::get_bin()." " .	$command;
 	    $descriptorspec = array(
 	        1 => array('pipe', 'w'),
 	        2 => array('pipe', 'w'),
@@ -412,7 +419,13 @@ class GitRepo {
 	     * If $_ENV is not empty, then we can just copy it and be done with it.
 	    */
 	
-        $env = NULL;
+        if(count($_ENV) === 0 && strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+           $ruta = getenv("PATH");
+           if(!empty($ruta)) {
+               $_ENV["PATH"] = $ruta; 
+           }
+        }       
+
         if(empty($cwd)) {
 	       $cwd = getcwd();
         }
@@ -587,7 +600,8 @@ class GitRepo {
 		$autor = "$user <$email>";
 		$mensaje = escapeshellarg($message);
 		$cmd = "commit -m $mensaje";
-		$cmd .= ' --author="' . $autor . "'";
+		$cmd .= ' --author="' . $autor . '"';
+echo "$$$cmd$$";
 		return $this->run($cmd);
 	}
 
@@ -774,6 +788,17 @@ class GitRepo {
 		return $this->run($cmd);
 	}
 
+	/**
+	 * Runs a git fetch on the current branch
+	 *
+	 * @access  public
+	 * @return  string
+	 */
+	public function fetch_simple($remote, $ref="master") {
+	    $cmd = "fetch $remote $ref";
+	    return $this->run($cmd);
+	}
+	
 	/**
 	 * Runs a git fetch on the remote repository
 	 *

@@ -121,6 +121,10 @@ body.loading .modalload {
 input[type=text] {
   font-size:12px;
 }
+.nodo_archivo{
+  margin-bottom:2px;
+  padding:2px;
+}
 </style>
 <div class="row-fluid" style="align: center">
   <div id="panel_izquierdo" class="span3 panel">
@@ -144,6 +148,7 @@ input[type=text] {
           <div id="div_reemplazo" style="display:none;">
             <input type="text"  name="buscar_infecciones_reemplazo" id="buscar_infecciones_reemplazo" placeholder="Reemplazar por ">
           </div>
+          <div id="cargando_resultado_busqueda"></div>
           <div id="resultados_busqueda">
             
           </div>
@@ -178,21 +183,14 @@ input[type=text] {
     </div>
   </div>
 </div>
-<script src="src/ace.js"></script>
 <script type="text/javascript">
+alert("1");
 var alto=($(document).height()-8); 
 var alto_menu=30;
 var abiertos=Array();
 
 var gitInfo;
 var archivosMergeSeleccionados;
-
-$body = $("body");
-
-$(document).on({
-    ajaxStart: function() { $body.addClass("loading");    },
-    ajaxStop: function() { $body.removeClass("loading"); }    
-});
 
 $(document).ready(function(){
   $("#panel_arbol_archivos").height(alto-alto_menu-80);
@@ -216,6 +214,7 @@ $(document).ready(function(){
     adicionar_tab(ruta_archivo,extension,nombre_archivo,nodeId)  
   });
   $("#btn_buscar_infecciones").click(function(){
+    $("#cargando_resultado_busqueda").html("cargando...");
     var buscar_contenido=0;
     var palabra=$("#buscar_infecciones").val();
     var palabra_reemplazar='';
@@ -234,32 +233,30 @@ $(document).ready(function(){
       palabra_reemplazar=$("#buscar_infecciones_reemplazo").val();
       buscar_archivo=0;
     }
-    var datos_post = "ejecutar_funcion=1&funcion=buscar_archivos&parametros="+dir+";"+palabra+";"+buscar_contenido+";"+buscar_archivo+";"+reemplazar+";"+palabra_reemplazar;
-    alert(datos_post);
+    var datos_post = "librerias=pantallas/lib/librerias_archivo.php&funcion=buscar_archivos&parametros="+dir+";"+palabra+";"+buscar_contenido+";"+buscar_archivo+";"+reemplazar+";"+palabra_reemplazar;
     $.ajax({
       type:'POST',
-      url: '<?php echo($ruta_db_superior);?>pantallas/lib/librerias_archivo.php', 
-      dataType:"json",
+      url: '<?php echo($ruta_db_superior);?>pantallas/lib/llamado_ajax.php', 
       data: datos_post,
       success: function(datos) {
-        alert();
-        alert(datos) ;         
         if(datos){
-          alert("AQUI");
-            /*if(datos["resultado"]) {
-                if(datos["resultado"] == 'ok') {
-                    notificacion_saia(datos["mensaje"],"success","",3000);
-                } else {
-                    notificacion_saia(datos["rutaTemp"] + ": " + datos["mensaje"],"error","",5000);
-                }
-            } else {
-                notificacion_saia("Sin resultado en el llamado","error","",3000);
-            }*/
-        } else {
-            notificacion_saia("Sin respuesta","error","",3000);
+          var objeto=jQuery.parseJSON(datos);
+          $("#resultados_busqueda").html("");
+          $.each(objeto,function(i,item){
+            $("#resultados_busqueda").append('<div class="well nodo_archivo" nodoid="'+item.nodeid+'" nombre_archivo="'+item.nombre_archivo+'" extension="'+item.extension+'" class="enlace_resultado_buscar_infeccion">'+item.nombre_archivo+"</div>");
+          });
+        }else {
+          notificacion_saia("Sin respuesta","error","",3000);
         }
+      },
+      error:function(){
+        alert("ERROR");
       }
     });
+  $(".enlace_resultado_buscar_infeccion").live("click",function(){
+    adicionar_tab($(this).attr("nodoid"),$(this).attr("nombre_archivo"),$(this).attr("nodoid"));
+  });  
+  $("#cargando_resultado_busqueda").html("");
   });  
   $(".check_op").click(function(){
    if($("#op_reemplazar_buscar_infecciones:checked").val()==='reemplazar'){
@@ -296,82 +293,7 @@ $(document).ready(function(){
               destino.html('<div id="panel_'+nombre+'"><iframe name="'+nombre+'" src="'+ruta+'" width="100%" id="'+nombre+'" frameborder="0"></iframe></div>'); 
     }
     llamado_pantalla("<?php echo($ruta_db_superior);?>editor_codigo/editor.php","",$("#contenedor_saia"),"editor");
-});
-
-function saveTempFile() {
-    return;
-    var contenido = null; //editor.editor.getSession().getValue();
-
-    //var ruta_archivo = $("#archivo_actual").val();
-    //var rutaTemporal = $("#archivo_temporal").val();
-    var rutaTemporal = $('iframe[name=editor]').contents().find('#archivo_temporal').val();
-    var data = {"rutaTemporal" : rutaTemporal, "contenido" : contenido}; 
-    data = $(this).serialize() + "&" + $.param(data);
-    $.ajax({
-      type:'POST',
-      url: 'guardar_archivo_temporal.php', 
-      dataType:"json", 
-      data: data,
-      success: function(datos) {                              
-        if(datos){ 
-            if(datos["resultado"]) {
-                if(datos["resultado"] == 'ok') {
-                    notificacion_saia(datos["mensaje"],"success","",3000);
-                } else {
-                    notificacion_saia(datos["rutaTemp"] + ": " + datos["mensaje"],"error","",5000);
-                }
-            } else {
-                notificacion_saia("Sin resultado en el llamado","error","",3000);
-            }
-        } else {
-            notificacion_saia("Sin respuesta","error","",3000);
-        }
-      }
     });
-}
-
-function restoreFile() {
-    //var ruta_archivo = $("#archivo_actual").val();
-    var ruta_archivo = $('iframe[name=editor]').contents().find('#archivo_actual').val();
-    //var rutaTemporal = $("#archivo_temporal").val();
-    var rutaTemporal = $('iframe[name=editor]').contents().find('#archivo_temporal').val();
-    var data = {'ruta' : ruta_archivo, 'rutaTemporal' : rutaTemporal}; 
-    data = $(this).serialize() + "&" + $.param(data);
-    $.ajax({
-      type:'POST',
-      url: 'restaurar_archivo.php', 
-      dataType:"json", 
-      data: data,
-      success: function(datos){                              
-        if(datos){
-            if(datos["resultado"] == 'ok') {
-                   notificacion_saia(datos["mensaje"],"success","",3000);
-                //editor.editor.setValue(datos["contenido"]);
-            } else {
-                notificacion_saia(datos["ruta"] + ": " + datos["mensaje"],"error","",5000);
-            }
-        } else {
-            notificacion_saia("Sin respuesta","error","",3000);
-        }
-    }
-    });
-
-}
-
-function showMergeDialog(lista) {
-    //$("#dialog_merge").removeClass("fade").modal("hide");
-    $("#dialog_merge").modal("show").addClass("fade");
-    //$("#dialog_merge").modal("show");
- 	if(lista) {
-	    var valor = $(".ui-dialog-content").html();
-	    var text = '';
-	    for(var i in lista) {
-	        text = text + '<p><input value="' +lista[i] +'" type="checkbox">' + lista[i] + '<br>';
-	    }
-	    $('#dialog_merge .modal-body').append(text);
- 	}
-    
-}
 
 function actualizarRepositorio(seleccionados) {
     //$("#dialog2").modal("show").addClass("fade");
@@ -413,7 +335,6 @@ function actualizarRepositorio(seleccionados) {
         });                            
 	}
     $("#dialog_merge").removeClass("fade").modal("hide");
-    
 }
 $(document).ready(function (){
   
