@@ -410,7 +410,8 @@ class Git0K extends Git {
                 $estado_git = $this->repoPush($this->get_remoto_base()->alias, "master");
             }
         } catch (Exception $e) {
-            $errmsg = $e->getTraceAsString();//$e->getMessage();
+            $errmsg = $e->getMessage() ."\n";
+            $errmsg .= $e->getTraceAsString();//$e->getMessage();
             if (strpos($errmsg, "FETCH_HEAD") !== false) {
                 $lista_archivos = $this->get_lista_archivos_merge_manual();
             }

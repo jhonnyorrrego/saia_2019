@@ -600,7 +600,7 @@ class GitRepo {
 		$autor = "$user <$email>";
 		$mensaje = escapeshellarg($message);
 		$cmd = "commit -m $mensaje";
-		$cmd .= ' --author="' . $autor . "'";
+		$cmd .= ' --author="' . $autor . '"';
 		return $this->run($cmd);
 	}
 
