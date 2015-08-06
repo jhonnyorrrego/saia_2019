@@ -951,13 +951,12 @@ class GitRepo {
 	    $cmd = "subtree pull --prefix $prefix $remote ";
 	    if(!empty($mensaje)) {
                 $msg = escapeshellarg($mensaje);
-	        $cmd .= "-m $msg";
+	        $cmd .= " -m $msg ";
 	    }
-	    $cmd .= "$branch";
+	    $cmd .= "$branch ";
 	    if($aplastar) {
 	        $cmd .= " --squash";
 	    }
-echo "$$" . $cmd . "$$";
         return $this->run($cmd);
 	}
 	
