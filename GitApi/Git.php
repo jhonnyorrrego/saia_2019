@@ -795,6 +795,7 @@ class GitRepo {
 	 */
 	public function fetch_simple($remote, $ref="master") {
 	    $cmd = "fetch $remote $ref";
+		echo "$$" . $cmd . "$$";
 	    return $this->run($cmd);
 	}
 	
