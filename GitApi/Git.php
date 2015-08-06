@@ -950,7 +950,8 @@ class GitRepo {
 	public function subtree_pull($prefix, $remote, $branch, $mensaje="", $aplastar=false) {
 	    $cmd = "subtree pull --prefix $prefix $remote ";
 	    if(!empty($mensaje)) {
-	        $cmd .= "-m '$mensaje' ";
+                $msg = escapeshellarg($mensaje);
+	        $cmd .= "-m $msg";
 	    }
 	    $cmd .= "$branch";
 	    if($aplastar) {
