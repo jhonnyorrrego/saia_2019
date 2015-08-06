@@ -243,7 +243,7 @@ $(document).ready(function(){
           var objeto=jQuery.parseJSON(datos);
           $("#resultados_busqueda").html("");
           $.each(objeto,function(i,item){
-            $("#resultados_busqueda").append('<div class="well nodo_archivo" nodoid="'+item.nodeid+'" nombre_archivo="'+item.nombre_archivo+'" etiqueta="'+item.etiqueta+'" extension="'+item.extension+'" class="enlace_resultado_buscar_infeccion">'+item.nombre_archivo+"</div>");
+            $("#resultados_busqueda").append('<div class="well nodo_archivo" nodoid="'+item.nodeid+'" nombre_archivo="'+item.nombre_archivo+'" extension="'+item.extension+'" class="enlace_resultado_buscar_infeccion">'+item.nombre_archivo+"</div>");
           });
         }else {
           notificacion_saia("Sin respuesta","error","",3000);
@@ -253,10 +253,8 @@ $(document).ready(function(){
         alert("ERROR");
       }
     });
-  $(".nodo_archivo").live("click",function(){
-    console.log("rueba");
-    //function adicionar_tab(ruta_archivo,extension,nombre_archivo,nodeId){
-    adicionar_tab($(this).attr("nodoid"),$(this).attr("extension"),$(this).attr("etiqueta"),$(this).attr("nodoid"));
+  $(".enlace_resultado_buscar_infeccion").live("click",function(){
+    adicionar_tab($(this).attr("nodoid"),$(this).attr("nombre_archivo"),$(this).attr("nodoid"));
   });  
   $("#cargando_resultado_busqueda").html("");
   });  
