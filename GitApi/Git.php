@@ -600,7 +600,7 @@ class GitRepo {
 		$autor = "$user <$email>";
 		$mensaje = escapeshellarg($message);
 		$cmd = "commit -m $mensaje";
-		$cmd .= ' --author="' . $autor . "'";
+		$cmd .= ' --author="' . $autor . '"';
 		return $this->run($cmd);
 	}
 
@@ -950,9 +950,10 @@ class GitRepo {
 	public function subtree_pull($prefix, $remote, $branch, $mensaje="", $aplastar=false) {
 	    $cmd = "subtree pull --prefix $prefix $remote ";
 	    if(!empty($mensaje)) {
-	        $cmd .= "-m '$mensaje' ";
+                $msg = escapeshellarg($mensaje);
+	        $cmd .= " -m $msg ";
 	    }
-	    $cmd .= "$branch";
+	    $cmd .= "$branch ";
 	    if($aplastar) {
 	        $cmd .= " --squash";
 	    }

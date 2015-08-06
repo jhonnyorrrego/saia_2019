@@ -284,10 +284,10 @@ class Git0K extends Git {
      * Sincroniza los cambios remotos en todos los repositorios configurados
      */
     public function repoFetchAll() {
-        if(strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
             $remotos = $this->search_fetch_remotes();
             $status = NULL;
-            if(count($remotos) > 0 ) {
+            if (count($remotos) > 0) {
                 foreach ($remotos as $remote) {
                     $status = $this->repo->fetch_simple($remote);
                 }
@@ -298,22 +298,31 @@ class Git0K extends Git {
     }
 
     private function search_fetch_remotes() {
-            $lista = $this->repoListRemotes();
-            $a_fetch = array();
-            $a_push = array();
-            // separar los fetch de los push
-            foreach ($lista as $value) {
-                if ($value) {
-                    if (strpos($value, "fetch") !== false) {
-                        array_push($a_fetch, $value);
-                    } elseif (strpos($value, "push") !== false) {
-                        array_push($a_push, $value);
-                    }
+        $lista = $this->repoListRemotes();
+        $a_fetch = array();
+        $a_push = array();
+        // separar los fetch de los push
+        foreach ($lista as $value) {
+            if ($value) {
+                if (strpos($value, "fetch") !== false) {
+                    array_push($a_fetch, $value);
+                } elseif (strpos($value, "push") !== false) {
+                    array_push($a_push, $value);
                 }
             }
-        return $a_fetch();
+        }
+        $alias_remotos = array();
+        foreach ($a_fetch as $value) {
+            if ($value) {
+                $arreglo = preg_split("/\s+/", $value);
+                $alias = $arreglo[0];
+                $alias_remotos[] = $alias;
+            }
+        }
+        
+        return $alias_remotos;
     }
-    
+
     /**
      * Sincroniza los cambios remotos
      */
@@ -401,7 +410,8 @@ class Git0K extends Git {
                 $estado_git = $this->repoPush($this->get_remoto_base()->alias, "master");
             }
         } catch (Exception $e) {
-            $errmsg = $e->getMessage();
+            $errmsg = $e->getMessage() ."\n";
+            $errmsg .= $e->getTraceAsString();//$e->getMessage();
             if (strpos($errmsg, "FETCH_HEAD") !== false) {
                 $lista_archivos = $this->get_lista_archivos_merge_manual();
             }
