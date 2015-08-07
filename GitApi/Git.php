@@ -14,6 +14,12 @@
 
 if (__FILE__ == $_SERVER['SCRIPT_FILENAME']) die('Bad load order');
 
+/**
+* Esto es necesario para ejecutar comandos git en ambientes windows
+*/
+require_once('Command.php');
+use mikehaertl\shellcommand\Command;
+
 // ------------------------------------------------------------------------
 
 /**
@@ -389,6 +395,30 @@ class GitRepo {
 		return $stdout;
 	}
 
+function run_command_win($cmd) {
+     $ruta = getenv("PATH");
+     $command = new Command(array(
+    'command' => $cmd,
+
+    // Will be passed as environment variables to the command
+    /*'procEnv' => array(
+        'PATH' => $ruta
+    ),*/
+
+    // Will be passed as options to proc_open()
+    'procOptions' => array(
+        'bypass_shell' => true,
+    ),
+    ));	
+	if ($command->execute()) {
+		return $command->getOutput();
+	} else {
+		$stderr = $command->getError();
+		$exitCode = $command->getExitCode();
+	    throw new Exception($stderr);
+	}
+}
+	
 	/**
 	 * Run a command in the git repository
 	 *
@@ -789,14 +819,15 @@ class GitRepo {
 
 	/**
 	 * Runs a git fetch on the current branch
-	 *
+	 * Esta funcion solo se ejecuta en ambiente windows
 	 * @access  public
 	 * @return  string
 	 */
 	public function fetch_simple($remote, $ref="master") {
 	    $cmd = "fetch $remote $ref";
-		echo "$$" . $cmd . "$$";
-	    return $this->run($cmd);
+		//echo "$$" . $cmd . "$$";
+		return $this->run_command_win(Git::get_bin()." ".$cmd);
+	    //return $this->run($cmd);
 	}
 	
 	/**

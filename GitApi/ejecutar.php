@@ -1,4 +1,3 @@
-<<<<<<< Updated upstream
 <?php
 require_once('Command.php');
 use mikehaertl\shellcommand\Command;
@@ -41,7 +40,7 @@ $command = new Command(array(
 		return $command->getError();
 		$exitCode = $command->getExitCode();
 	}
-	return shell_exec($cmd);
+	//return shell_exec($cmd);
 }
 
 function run_command2($command) {
