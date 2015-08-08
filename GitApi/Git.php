@@ -814,6 +814,9 @@ function run_command_win($cmd) {
 	    if($total) {
 	        $cmd .= "--all";
 	    }
+		if(strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+			return $this->run_command_win(Git::get_bin()." ".$cmd);
+		}
 		return $this->run($cmd);
 	}
 
