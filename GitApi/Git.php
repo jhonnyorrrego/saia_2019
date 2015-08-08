@@ -894,7 +894,11 @@ function run_command_win($cmd) {
 	 * @return string
 	 */
 	public function push($remote, $branch) {
-		return $this->run("push --tags $remote $branch");
+		$cmd = "push --tags $remote $branch";
+		if(strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+			return $this->run_command_win(Git::get_bin()." ".$cmd);
+		}
+		return $this->run($cmd);
 	}
 	
 	public function subtree_push($prefix, $remote, $branch) {
