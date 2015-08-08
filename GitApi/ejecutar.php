@@ -9,7 +9,9 @@ echo "Servidor: " . PHP_OS ."<br>";
 $resp = run_command("git status -b --porcelain");
 echo "Estado <br>$resp <br>";
 try {
-$cfg = run_command("git config remote.hola_mundo.prefix");	
+//$cfg = run_command("git config remote.hola_mundo.prefix");
+$cfg = run_command('git config --global user.name "Cerok"');
+$cfg = run_command('git config --global user.email "info@cerok.com"');
 } catch (Exception $e) {
 	
 }
