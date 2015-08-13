@@ -1,0 +1,46 @@
+Bitacora Creacion Plug Ins TinyMCE
+
+*Crea carpeta con el nombre del plugin.
+*Copiar Archivo editor_plugin.js
+*Copiar Archivos de langs donde iran definidos los campos que van a tener tanto el plugin como sus archivos. 
+*editor_plugin.js->
+  *Se modifica la informacion del plugin var TinyMCE_nombrepPlugin=.....
+  *Se modifica tinyMCE.addPlugin('nombrep', TinyMCE_nombrepPlugin);  
+*editor_plugin.js->getControlHTML()
+  *Se modifica la informacion contenida en la funcion con los datos del nuevo plugin asi:
+    *case 'nombrep' (nombre del comando a ser ejecutado).
+    *'lang_nombrep_desc' (nombre de la descripcion al mouse over en el tinyMCE).
+    *'{$pluginurl}/images/imagenp.gif' (Imagen a mostrar en el tinyMCE).
+    *'mcenombrep' funcion Javascript a ejecutar en execCommand. 
+*editor_plugin.js->execCommand : function()
+  *se modifican los datos de la funcion con los datos del nuevo plugin asi:
+  * case  'mcenombrep' (nombre utilizado por el tinyMCE en getControlHTML por medio de mcenombrep)
+  *	template['file'] (nombre del Archivo a ser mostrado relativo a la carpeta theme del tinyMCE../../)
+  *	template['width'] (ancho de la ventana)
+  *	template['height'] (alto de la ventana)
+	*	'lang_nombrep_delta_width' (ancho de lo que necesite ampliarse por motivos del Idioma)
+	*	'lang_nombrep_delta_height' (alto de lo que necesite ampliarse por motivos del Idioma)
+*Se debe insertar este texto en las paginas html que esten relacionados directamente con el plugin para iniciarlo:
+  *<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+	   <title>{$lang_emotions_title}</title>
+	   <script language="javascript" type="text/javascript" src="../../tiny_mce_popup.js"></script>
+	   <script language="javascript" type="text/javascript" src="jscripts/functions.js"></script>
+	   <base target="_self" />
+    </head>
+    <body onload="tinyMCEPopup.executeOnLoad('init();');" style="display: none">
+    ......
+    </body>
+
+Observaciones
+nombrep=Nombre del plugin
+imagenp=Imagen del plugin
+
+
+Donde se vaya a llamar el plugin se debe agregar el nombre del plugin en:
+  *Plugin :
+  *theme_advanced_buttons(X)_add_before
+Cualquier funcion que se piense utilizar se debe realizar en jscript/function.js de la carpeta del script
+Para insertar texto se utiliza 
+  tinyMCE.execCommand('mceInsertContent', false, 'texto');
+Recordar definir el Idioma en el que se realia el plugin    

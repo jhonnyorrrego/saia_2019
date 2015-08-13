@@ -1,0 +1,3 @@
+<?php  ?><?php  ?><?php
+include_once("../db.php");
+?>

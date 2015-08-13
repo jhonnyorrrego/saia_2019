@@ -1,0 +1,29 @@
+ /*.paso5{background-color:#FF0000;} 
+  .paso4{background-color:#FF9900;} 
+  .paso2{background-color:#66FFFF;} 
+  .paso1{background-color:#0066FF;} 
+  .paso6{background-color:#00FF00;} 
+  .paso3{background-color:#FF00FF;} 
+  background: rgba(0, 0, 0, 0.4);
+  .paso1{background: rgba(176, 235, 156, 0.6);} 
+.paso2{background: rgba(176, 235, 156, 0.6);} 
+.paso3{background: rgba(255, 156, 156, 0.6);}   
+.paso4{background: rgba(255, 255, 156, 0.6);} 
+.paso5{background: rgba(255, 156, 156, 0.6);}
+.paso6{background: rgba(176, 235, 156, 0.6);}
+.paso7{background: rgba(255, 156, 156, 0.6);}
+  1,Ejecutado(#99FF66);2,Cerrado(#99FF66),3,Cancelado(#FF00FF);4,Pendiente(#FFFF66);5,Atrasado(#FF3333);6,Iniciado( #FFFF66);7,Devuelto(#D3DCE3)
+  */
+.paso1{background-color:#3C0;} 
+.paso2{background-color:#3C0;} 
+.paso3{background-color:#F00;}   
+.paso4{background-color:#FF0;} 
+.paso5{background-color:#FF0000;}
+.paso6{background-color:#FF0000;}
+.paso7{background-color:#FF0000;}
+.transparencia_paso{
+    position:absolute;
+    opacity:0.4;
+    filter:alpha(opacity=40);
+    text-align:center;       
+    }

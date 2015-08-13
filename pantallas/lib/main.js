@@ -1,0 +1,54 @@
+$('.adicionar_seleccionados').live('click',function(){
+  $(this).removeClass("adicionar_seleccionados");
+  $(this).addClass("eliminar_seleccionado");
+  $(this).children("i").removeClass("icon-uncheck");
+  $(this).children("i").addClass("icon-check");
+  var idregistro=$(this).attr('idregistro');
+  if(idregistro!='undefined'){
+    if($("#seleccionados").val()==''){
+      $("#seleccionados").val(idregistro);
+    }
+    else{
+      $("#seleccionados").val($("#seleccionados").val()+","+idregistro);            
+    }
+    $('#resultado_pantalla_'+idregistro).removeClass("well");
+    $('#resultado_pantalla_'+idregistro).addClass("alert");
+    $('#resultado_pantalla_'+idregistro).addClass("alert-info"); 
+         
+  }    
+}); 
+$(".eliminar_seleccionado").live('click',function(){
+  $(this).removeClass("eliminar_seleccionado");
+  $(this).addClass("adicionar_seleccionados");
+  $(this).children("i").removeClass("icon-check");
+  $(this).children("i").addClass("icon-uncheck");
+  var idregistro=$(this).attr('idregistro');
+  if($("#seleccionados").val()!=''){
+      var selec=$("#seleccionados").val().split(",");
+      var unicos=$.unique(selec);
+      var idx=unicos.indexOf(idregistro);
+      if(idx!=-1){  
+        unicos.splice(idx,1);
+        $("#seleccionados").val(unicos);
+      }
+    }
+    else{
+      alert("no existen datos seleccionados");
+    }
+  $("#seleccionado_"+idregistro).remove();  
+  $('#resultado_pantalla_'+idregistro).removeClass("alert");
+  $('#resultado_pantalla_'+idregistro).removeClass("alert-info");
+  $('#resultado_pantalla_'+idregistro).addClass("well");
+});
+$("#filtrar_seleccionados").click(function(){
+  $("#panel_body .well").hide();
+});
+$("#restaurar_listado").click(function(){
+  $("#panel_body .alert").addClass("well");
+  $("#panel_body .alert").removeClass("alert");  
+  $("#panel_body .alert").removeClass("alert-info");
+  $("#panel_body .well").show();
+});
+$("#restaurar_seleccionados").click(function(){
+  $("#panel_body .well").show();
+});

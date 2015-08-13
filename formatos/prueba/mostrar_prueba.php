@@ -1,0 +1,1 @@
+<?php include_once("funciones.php"); ?><?php include_once("../librerias/header_nuevo.php"); ?><?php include_once("../../class_transferencia.php"); ?><tr><td><p>&iquest;Cu&aacute;l es su sexo?<br /><?php mostrar_valor_campo('sexo_funcionario',244,$_REQUEST['iddoc']);?></p></td></tr><?php include_once("../librerias/footer_nuevo.php"); ?>

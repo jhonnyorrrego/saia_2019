@@ -1,0 +1,10 @@
+<script>
+$(document).ready(function(){
+	$(".kenlace_saia_tareas").live("click",function(){
+		window.open($(this).attr('enlace'),'iframe_detalle');
+	});
+	$(".kenlace_saia_adicionar_tarea").live("click",function(){
+		window.open($(this).attr('enlace'),'_self');
+	});
+});
+</script>

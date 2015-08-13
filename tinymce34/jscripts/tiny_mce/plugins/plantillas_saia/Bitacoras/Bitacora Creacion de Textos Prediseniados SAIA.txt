@@ -1,0 +1,131 @@
+Bitacora Creacion de Textos Prediseniados SAIA
+
+*Se siguen las indicaciones de la bitacora de Creacion de Plug INs TinyMCE.txt con los datos de la nueva funcion de insertar preestablecidos
+
+
+Pendientes
+*Se crea el archivo saia.php que define un listado de todos los contenidos predefinidos por funcionario.
+*Crear la previsualizacion
+*Crear el filtro para que solo salgan los que son del funcionario activo....para ello se debe modificar class.funcionario para que saque el listado similar al de las series.
+
+DATOS SQL.
+
+ORACLE
+
+DROP SEQUENCE SAIA.ENTIDAD_PRETEXTO_SEQ;
+
+CREATE SEQUENCE SAIA.ENTIDAD_PRETEXTO_SEQ
+START WITH 1
+MAXVALUE 999999999999999999999999
+MINVALUE 0
+NOCYCLE
+CACHE 20
+NOORDER;
+
+CREATE TABLE ENTIDAD_PRETEXTO
+(
+identidad_pretexto NUMBER(10) NOT NULL,
+pretexto_idpretexto NUMBER(10) NOT NULL,
+entidad_identidad NUMBER(10) DEFAULT '0' NOT NULL,
+llave_entidad NUMBER(10) DEFAULT '1',
+estado NUMBER(3) NOT NULL,
+FECHA DATE DEFAULT SYSDATE
+)
+LOGGING
+NOCOMPRESS
+NOCACHE
+NOPARALLEL
+MONITORING;
+
+
+CREATE INDEX PK_PRETEXTO ON entidad_pretexto
+(identidad_pretexto)
+LOGGING
+NOPARALLEL;
+
+
+SHOW ERRORS;
+
+
+
+CREATE OR REPLACE TRIGGER identidad_prtexto_TRG BEFORE INSERT OR UPDATE ON entidad_pretexto
+FOR EACH ROW
+BEGIN
+IF INSERTING AND :NEW.identidad_pretexto IS NULL THEN
+SELECT identidad_pretexto_SEQ.NEXTVAL INTO :NEW.identidad_pretexto FROM DUAL;
+END IF;
+END;
+/
+SHOW ERRORS;
+
+DROP SEQUENCE SAIA.PRETEXTO_SEQ;
+
+CREATE SEQUENCE SAIA.PRETEXTO_SEQ
+START WITH 1
+MAXVALUE 999999999999999999999999
+MINVALUE 0
+NOCYCLE
+CACHE 20
+NOORDER;
+
+CREATE TABLE PRETEXTO
+(
+idpretexto NUMBER(10) NOT NULL,
+contenido CLOB,
+ayuda VARCHAR2(1000 BYTE),
+imagen VARCHAR2(255 BYTE) NOT NULL,
+asunto VARCHAR2(1000 BYTE) NOT NULL,
+categoria VARCHAR2(255 BYTE) NOT NULL
+)
+LOGGING
+NOCOMPRESS
+NOCACHE
+NOPARALLEL
+MONITORING;
+
+
+CREATE INDEX PK_PRETEXTO1 ON pretexto
+(idpretexto)
+LOGGING
+NOPARALLEL;
+
+
+SHOW ERRORS;
+
+
+
+CREATE OR REPLACE TRIGGER idpretexto_TRG BEFORE INSERT OR UPDATE ON pretexto
+FOR EACH ROW
+BEGIN
+IF INSERTING AND :NEW.idpretexto IS NULL THEN
+SELECT idpretexto_SEQ.NEXTVAL INTO :NEW.idpretexto FROM DUAL;
+END IF;
+END;
+/
+SHOW ERRORS;
+
+**************************************
+
+MYSQL:
+
+CREATE TABLE `entidad_pretexto` (
+`identidad_pretexto` int(10) unsigned NOT NULL auto_increment,
+`idpretexto` int(10) unsigned NOT NULL default '0',
+`identidad` int(11) NOT NULL default '0',
+`llave_entidad` int(10) unsigned NOT NULL default '0',
+`estado` tinyint(3) unsigned NOT NULL default '1',
+`fecha` date default NULL,
+PRIMARY KEY (`identidad_pretexto`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+
+
+
+CREATE TABLE `pretexto` (
+`idpretexto` int(10) unsigned NOT NULL auto_increment,
+`cuerpo` text,
+`ayuda` text,
+`imagen` varchar(255) default NULL,
+`asunto` varchar(255) default NULL,
+PRIMARY KEY (`idpretexto`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;        

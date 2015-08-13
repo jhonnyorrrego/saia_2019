@@ -1,0 +1,1 @@
+<?php include_once("../../formatos/librerias/funciones_generales.php"); ?><?php include_once("../../formatos/librerias/funciones_generales.php"); ?></body><input type="hidden" name="idbusqueda_componente" value="0">

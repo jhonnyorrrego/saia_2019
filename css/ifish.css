@@ -1,0 +1,41 @@
+body{
+background-color:transparent; 
+}
+.iFishEyeCaption {
+	text-align: justify;
+	font-family:verdana;
+	font-weight:normal;
+	font-size:11px;
+	color: #FFFFFF;
+	text-decoration:none;
+	font-weight:bold;
+	text-transform:uppercase
+	top:0;
+}
+td {
+text-align:center;
+caption-side:center;
+padding:0px;
+}
+.iFishEyeImg{
+  border:none;
+  padding-left: 20px;
+}
+
+#iFishEyeCaption a:visited{
+  color: #FFFFFF;
+  text-decoration:none;
+}
+#iFishEyeCaption a:link{  
+  color: #FFFFFF;
+  text-decoration:none;
+}
+
+#iFishEyeCaption a:active{  
+  color: #FFFFFF;
+  text-decoration:none;
+}
+#iFishEyeCaption a:hover{  
+  color: #FFFFFF;
+  text-decoration:none;
+}

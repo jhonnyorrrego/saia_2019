@@ -1,0 +1,13 @@
+<?php include_once("../../formatos/librerias/funciones_generales.php"); ?><?php include_once("../../formatos/librerias/funciones_generales.php"); ?><div class="control-group"><b>Fecha Ingreso Cliente<input type="hidden" name="bksaiacondicion_g@fecha_ingreso_cliente" id="bksaiacondicion_g@fecha_ingreso_cliente" value="like_total"></b><div class="controls"><input type="text" id="fecha_ingreso_cliente" name="bqsaia_g@fecha_ingreso_cliente"><div class="btn-group" data-toggle="buttons-radio" >
+		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_g@fecha_ingreso_cliente',this.id)">
+		    Y
+		  </button>
+		  <button type="button" class="btn btn-mini" data-toggle="button" id="o" onclick="llenar_valor('bqsaiaenlace_g@fecha_ingreso_cliente',this.id)">
+		    O
+		  </button-->
+		  <input type="hidden" name="bqsaiaenlace_g@fecha_ingreso_cliente" id="bqsaiaenlace_g@fecha_ingreso_cliente" value="y" />
+		</div></div></div>
+                <fieldset>
+                <legend style="font-size:10pt;line-height:15px"><b>Datos del Cliente</b></legend>
+                <div class="control-group;" style="background-color:#F5F5F5">
+                <b>Nombre<input type="hidden" name="bksaiacondicion_f@nombre__1" id="bksaiacondicion_f@nombre__1" value="like_total"></b><div class="controls"><input type="text"  maxlength="255"   id="datos_cliente-nombre" name="g@datos_cliente-nombre" ></div><b>Identificacion</b><div class="controls"><input type="text"  maxlength="255"   id="datos_cliente-identificacion" name="g@datos_cliente-identificacion" ></div><b>Empresa</b><div class="controls"><input type="text"  maxlength="255"   id="datos_cliente-empresa" name="g@datos_cliente-empresa" ></div></div></fieldset><br><div class="control-group"><b>Observaciones<input type="hidden" name="bksaiacondicion_g@observaciones_cliente" id="bksaiacondicion_g@observaciones_cliente" value="like_total"></b><div class="controls"><textarea  maxlength="3999"   id="observaciones_cliente" name="bqsaia_g@observaciones_cliente"  style="width:500px;height:100px"></textarea></div></div><input type="hidden" name="campos_especiales" value="datos_cliente@ejecutor"><input type="hidden" name="filtro_adicional" id="filtro_adicional" value=" ft_datos_cliente g @ AND  g.documento_iddocumento=iddocumento "></body><input type="hidden" name="idbusqueda_componente" value="121">

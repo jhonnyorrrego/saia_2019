@@ -1,0 +1,2 @@
+Falla en la base de datos SQL:INSERT INTO cargo (nombre,cod_padre,tipo_cargo) VALUES (NULL,'',1)
+
