@@ -11,23 +11,61 @@ $max_salida=10; // Previene algun posible ciclo infinito limitando a 10 los ../
   $max_salida--;
   }
 
-include_once($ruta_db_superior."db.php");
-function listar_campos_tabla_externa($tabla=NULL,$conn2=NULL){
+include_once("db.php");
+function listar_tablas_externa($conn2=NULL,$tabla=NULL){
+if($conn2->Conn->Motor=="Oracle"){
+  $sql2="select TABLE_NAME from DBA_TABLES WHERE OWNER='".$conn2->Conn->Usuario."'";
+  if($tabla){
+    $sql2.=" AND TABLE_NAME='".strtoupper($tabla)."'";
+  } 
+}
+if($conn2->Conn->Motor=="MySql"){
+  $sql2="SELECT table_name, table_type FROM information_schema.tables WHERE table_schema =  '".$conn2->Conn->Db."' AND table_type='BASE TABLE'";
+  if($tabla){
+    $sql2.="  AND  table_name LIKE '".strtoupper($tabla)."'";
+  }
+}
+$sql2.=' ORDER BY table_name ';
+$listado=$conn2->Ejecutar_Sql($sql2); 
+$lista_tablas["tablas"]=array();
+$lista_tablas["cantidad"]=0;
+while($fila=phpmkr_fetch_array_externo($listado,$conn2)){
+  array_push($lista_tablas["tablas"],$fila[0]);
+  $lista_tablas["cantidad"]++;
+}  
+return($lista_tablas);
+}
+function listar_campos_tabla_externa($tabla=NULL,$conn2=NULL,$campo=Null){
    if($tabla==NULL)
       $tabla=$_REQUEST["tabla"];
-   if(MOTOR=="MySql"){
-      $datos_tabla=$conn2->Ejecutar_Sql("DESCRIBE ".$tabla);
-
+   if($conn2->Conn->Motor=="MySql"){
+      $sql2="SELECT COLUMN_NAME AS Field, COLUMN_TYPE AS Type, IS_NULLABLE AS Null_, COLUMN_DEFAULT AS Default_ FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '".$tabla."' AND table_schema = '".$conn2->Conn->Db."'";
+      if($campo)
+        $sql2.=" AND column_name LIKE '".$campo."'";      
+      $sql2.=' ORDER BY Field';
+      $datos_tabla=$conn2->Ejecutar_Sql($sql2);
     }
-    else if(MOTOR=="Oracle"){
-      $datos_tabla=$conn2->Ejecutar_Sql("SELECT column_name  Field, data_type Type, nullable Null_, data_default Default_ FROM user_tab_columns WHERE table_name='".strtoupper($tabla)."' ORDER BY column_name ASC");
+    else if($conn2->Conn->Motor=="Oracle"){
+      $sql2="SELECT column_name  Field, data_type Type, nullable Null_, data_default Default_,data_length,data_precision FROM user_tab_columns WHERE table_name='".strtoupper($tabla)."'";
+      if($campo)
+        $sql2.=" AND column_name ='".strtoupper($campo)."'";
+      $sql2.=' ORDER BY Field';
+      $datos_tabla=$conn2->Ejecutar_Sql($sql2); 
     }
-   
-   $lista_campos=array();
-   while($fila=phpmkr_fetch_array($datos_tabla))
-      {
-       $lista_campos[]=$fila[0];
-      }
+   $lista_campos["campos"]=array();
+   $lista_campos["cantidad"]=0;
+   while($fila=phpmkr_fetch_array_externo($datos_tabla,$conn2)){
+   if($fila[1]<>'DATE'){
+    if($conn2->Conn->Motor=="Oracle"){
+      if($fila[5]=="")
+           $fila[1].='('.$fila[4].')';
+          else
+           $fila[1].='('.$fila[5].')';
+     }  
+   }
+       array_push($lista_campos["campos"],array($fila[0],$fila[1],$fila[2],$fila[3]));
+       $lista_campos["cantidad"]++;
+      } 
    return($lista_campos);   
 }  
 function guardar_lob_externa($campo,$tabla,$condicion,$contenido,$tipo,$conn2,$log=1){ 
@@ -180,20 +218,20 @@ END";
 <Clase>
 <Nombre>phpmkr_db_connect
 <Parametros>$HOST: Equipo en el que se encuentra la base de datos
-            $USER: nombre del usuario con el cual se realizar�la conexi�
-            $PASS: contrase� del usuario
+            $USER: nombre del usuario con el cual se realizar?la conexi?
+            $PASS: contrase? del usuario
             $DB: Nombre de la base de datos, o del esquema
             $MOTOR: Motor con el que se realiza la conexion, Oracle o MySql
-<Responsabilidades> Establecer una conexi� entre la base de datos y la aplicacion
+<Responsabilidades> Establecer una conexi? entre la base de datos y la aplicacion
 <Notas> Hace uso de las clases SQL y conexion, retornando el objeto SQL inicializado,
         con el cual se pueden ejecutar los queries en la base de datos.
-<Excepciones>Error al conectarse con la Base de datos, se debe a que no se encuentra disponible o existe algun error en los par�etros
+<Excepciones>Error al conectarse con la Base de datos, se debe a que no se encuentra disponible o existe algun error en los par?etros
 <Salida>
 <Pre-condiciones>
 <Post-condiciones>
 */
-function phpmkr_db_connect_externo($HOST=HOST,$USER=USER,$PASS=PASS,$DB=DB,$MOTOR=MOTOR,$PORT=PORT,$BASEDATOS=BASEDATOS){
-$datos=array('basedatos'=>$BASEDATOS,'db'=>$DB,'motor'=>$MOTOR,'host'=>$HOST,'user'=>$USER,'pass'=>$PASS,'port'=>$PORT);
+function phpmkr_db_connect_externo($HOST=HOST,$USER=USER,$PASS=PASS,$DB=DB,$MOTOR=MOTOR,$PORT=PORT,$BASEDATOS=BASEDATOS,$TABLESPACE=''){
+$datos=array('basedatos'=>$BASEDATOS,'db'=>$DB,'motor'=>$MOTOR,'host'=>$HOST,'user'=>$USER,'pass'=>$PASS,'port'=>$PORT,'tablespace'=>$TABLESPACE);
 $con2=new conexion($datos);
 $conn2=new SQL($con2,$MOTOR);
 if($conn2 && $conn2->Conn){
@@ -213,7 +251,7 @@ else{
 <Clase>
 <Nombre>phpmkr_db_close
 <Parametros>$conn: objeto que contiene la conexion a la base de datos
-<Responsabilidades>Cerrar la conexi� actual
+<Responsabilidades>Cerrar la conexi? actual
 <Notas>Examina que la conexion exista y si es asi se encarga de cerrarla
 <Excepciones>Error al cerrar la base de datos. Si la conexion que se quiere cerrar no existe
 <Salida>
@@ -222,7 +260,7 @@ else{
 */
 function phpmkr_db_close_externo($conn2)
 {
-	$conn2->Conn->Desconecta();
+    $conn2->Conn->Desconecta();
 }
 
 /*
@@ -440,11 +478,11 @@ function phpmkr_field_name_externo($rs,$pos,$conn2){
 */
 
 function phpmkr_num_rows_externo($rs,$conn2){
-	if($conn2){
-	  if(!$rs&&$conn2->res)
-	   $rs = $conn2->res;
-	 return $conn2->Numero_Filas($rs);
-	} 
+    if($conn2){
+      if(!$rs&&$conn2->res)
+       $rs = $conn2->res;
+     return $conn2->Numero_Filas($rs);
+    } 
   else{
      alerta("Error en numero de filas.".$rs->sql);
      return FALSE;
@@ -463,12 +501,12 @@ function phpmkr_num_rows_externo($rs,$conn2){
 <Post-condiciones>
 */
 function phpmkr_fetch_array_externo($rs,$conn2){
-	if($conn2){
-	  if(!$rs&&$conn2->res)
-	   $rs = $conn2->res;
-	   $retorno=$conn2->sacar_fila($rs);
-	 return $retorno;
-	} 
+    if($conn2){
+      if(!$rs&&$conn2->res)
+       $rs = $conn2->res;
+       $retorno=$conn2->sacar_fila($rs);
+     return $retorno;
+    } 
   else{
      alerta("Error en capturar resultado en arreglo.".$rs->sql);
      return FALSE;
@@ -488,12 +526,12 @@ function phpmkr_fetch_array_externo($rs,$conn2){
 */
 
 function phpmkr_fetch_row_externo($rs,$conn2){
-	if($conn2){
-	  if(!$rs&&$conn2->res)
-	   $rs = $conn2->res;
-	   $retorno=$conn2->sacar_fila($rs);
-	 return $retorno;
-	} 
+    if($conn2){
+      if(!$rs&&$conn2->res)
+       $rs = $conn2->res;
+       $retorno=$conn2->sacar_fila($rs);
+     return $retorno;
+    } 
   else{
      alerta("Error en capturar resultado en arreglo.".$rs->sql);
      return FALSE;
@@ -514,9 +552,9 @@ function phpmkr_fetch_row_externo($rs,$conn2){
 */
 function phpmkr_free_result_externo($rs,$conn2){
  if($conn2->motor=="MySql")
-	  @mysql_free_result($conn2->res);
+      @mysql_free_result($conn2->res);
  else if($conn2->motor=="Oracle")
-    @OCIFreeStatement($conn2->res);	  
+    @OCIFreeStatement($conn2->res);   
 }
 
 /*
@@ -555,9 +593,9 @@ function phpmkr_free_result_externo($rs,$conn2){
 */
 function phpmkr_error_externo($conn2){
  if($conn2->motor=="MySql")
-	 {if($conn2->error<>"")
+     {if($conn2->error<>"")
       echo  ($conn2->error." en \"".$conn2->consulta."\"");
-	 }
+     }
  else if($conn2->motor=="Oracle")
   {if($conn2->error<>"")
       echo  ($conn2->error["message"]." en \"".$conn2->consulta."\"");   
@@ -677,7 +715,7 @@ function ejecuta_filtro_tabla_externo($sql2,$conn2){
 <Nombre>evento
 <Parametros>$tabla: Tabla sobre la que se realiza el evento
             $accion: Tipo de evento que se realiza
-            $sql: sentencia que se ejecut�
+            $sql: sentencia que se ejecut?
             $llave: llave primaria del registro sobre el que se realiza la accion
 <Responsabilidades>llevar a cabo la accion y registrar el evento en el log
 <Notas>
@@ -699,13 +737,13 @@ function ejecuta_filtro_tabla_externo($sql2,$conn2){
   $strsql=htmlspecialchars_decode(htmlentities(utf8_decode($strsql)));
   //echo "<br />".$strsql;    
   $rs = $conn->Ejecutar_Sql_Noresult($strsql);
-	return $rs;
+    return $rs;
 }  */
 
 /*
 <Clase>
 <Nombre>ejecuta_sql
-<Parametros>$sql: sentencia que se ejecuta, $con: conexion sobre la que se ejecutar�la sentencia
+<Parametros>$sql: sentencia que se ejecuta, $con: conexion sobre la que se ejecutar?la sentencia
 <Responsabilidades>Ejecuta una sentencia insert y retorna la llave de lo que acaba de insertar
 <Notas>
 <Excepciones>
@@ -727,7 +765,7 @@ phpmkr_free_result();
 /*
 <Clase>
 <Nombre>ejecuta_filtro
-<Parametros>$sql: sentencia que se ejecuta, $con: conexion sobre la que se ejecutar�la sentencia
+<Parametros>$sql: sentencia que se ejecuta, $con: conexion sobre la que se ejecutar?la sentencia
 <Responsabilidades>Ejecuta una sentencia insert y retorna la llave de lo que acaba de insertar
 <Notas>
 <Excepciones>
@@ -743,7 +781,7 @@ $resultado["numcampos"]=@phpmkr_num_rows($rs,$conn2);
 if($resultado["numcampos"]){
   $resultado=@phpmkr_fetch_array($rs,$conn2);
   $resultado["numcampos"]=@phpmkr_num_rows($rs,$conn2);
-}	
+}   
 return($resultado);
 }
 /*
@@ -771,9 +809,9 @@ if($conn2->motor=="Oracle"){
     $resfecha=ereg_replace("([-/:])$ph([-/:])", "\\1$mot\\2", $resfecha);
     $resfecha=ereg_replace("([-/:])$ph$", "\\1$mot", $resfecha);
     $resfecha=ereg_replace("$ph( )", "$mot\\1", $resfecha); // espacio entre fecha y hora            
-  }		     
+  }          
 } 
-elseif($conn2->motor=="MySql"){    	   
+elseif($conn2->motor=="MySql"){        
   $reemplazos=array('d'=>'%d','m'=>'%m','y'=>'%y','Y'=>'%Y','h'=>'%h','H'=>'%H','i'=>'%i','s'=>'%s','M'=>'%b','yyyy'=>'%Y');
   $resfecha=$formato;
   foreach ($reemplazos as $ph => $mot){ 
@@ -786,7 +824,7 @@ elseif($conn2->motor=="MySql"){
   } 
   $fsql="DATE_FORMAT($campo,'$resfecha')";
 }
-return $fsql;	    
+return $fsql;       
 } // Fin Funcion fecha_db_obtener
 /*
 <Clase>
@@ -825,7 +863,7 @@ elseif($conn2->motor=="MySql"){
   } 
   $fsql="DATE_FORMAT($campo,'$resfecha')";
 }
-return $fsql;	    
+return $fsql;       
 } // Fin Funcion fecha_db_obtener
 /*
 <Clase>
@@ -852,28 +890,28 @@ function fecha_db_almacenar_externo($conn2, $fecha, $formato = NULL){
          $resfecha=$formato;
          foreach ($reemplazos as $ph => $mot)
           { // echo $ph," = ",$mot,"<br>","^$ph([-/:])", "%Y\\1","<br>";
-          	$resfecha=ereg_replace("^$ph([-/:])", "$mot\\1", $resfecha);
-          	$resfecha=ereg_replace("( )$ph([-/:])", "\\1$mot\\2", $resfecha);
+            $resfecha=ereg_replace("^$ph([-/:])", "$mot\\1", $resfecha);
+            $resfecha=ereg_replace("( )$ph([-/:])", "\\1$mot\\2", $resfecha);
             $resfecha=ereg_replace("([-/:])$ph([-/:])", "\\1$mot\\2", $resfecha);
             $resfecha=ereg_replace("([-/:])$ph$", "\\1$mot", $resfecha);
             $resfecha=ereg_replace("$ph( )", "$mot\\1", $resfecha); // espacio entre fecha y hora
           }                     
-	   	$fsql="TO_DATE('$fecha','$resfecha')";    	
- 	 } 
-   	elseif($conn2->motor=="MySql"){
+        $fsql="TO_DATE('$fecha','$resfecha')";      
+     } 
+    elseif($conn2->motor=="MySql"){
             $reemplazos=array('d'=>'%d','m'=>'%m','y'=>'%y','Y'=>'%Y','h'=>'%H','H'=>'%H','i'=>'%i','s'=>'%s','M'=>'%b','yyyy'=>'%Y'  );
             $resfecha=$formato;
              foreach ($reemplazos as $ph => $mot)
              { // echo $ph," = ",$mot,"<br>","^$ph([-/:])", "%Y\\1","<br>";
                 $resfecha=ereg_replace("^$ph([-/:])", "$mot\\1", $resfecha);
                 $resfecha=ereg_replace("( )$ph([-/:])", "\\1$mot\\2", $resfecha);
-         		$resfecha=ereg_replace("([-/:])$ph([-/:])", "\\1$mot\\2", $resfecha);
-         		$resfecha=ereg_replace("([-/:])$ph$", "\\1$mot", $resfecha);
-         		$resfecha=ereg_replace("$ph( )", "$mot\\1", $resfecha); // espacio entre fecha y hora
+                $resfecha=ereg_replace("([-/:])$ph([-/:])", "\\1$mot\\2", $resfecha);
+                $resfecha=ereg_replace("([-/:])$ph$", "\\1$mot", $resfecha);
+                $resfecha=ereg_replace("$ph( )", "$mot\\1", $resfecha); // espacio entre fecha y hora
              }                   
-    	 	$fsql="DATE_FORMAT('$fecha','$resfecha')";   	   	
-    	 }
-    	 return $fsql;	    
+            $fsql="DATE_FORMAT('$fecha','$resfecha')";          
+         }
+         return $fsql;      
 } // Fin Funcion fecha_db_almacenar
  
  function suma_fechas_externo($conn2,$fecha1,$cantidad,$tipo="") {
