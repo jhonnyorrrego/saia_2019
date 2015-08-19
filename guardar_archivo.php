@@ -43,13 +43,14 @@ if (file_exists($file_name) && file_exists($ruta_original)) {
                 $error_git = NULL;
                 $git_data = NULL;
                 $estado_git = NULL;
-
+                //TODO: La rama debe seleccionarla el usuario???
+                $rama = "master";
                 if (GitRepo::is_inside_git_repo()) {
                     $ruta_git = GitRepo::st_repo_git_dir();
                     $git = new Git0K($ruta_git);
                     if ($git) {
                         $git_data = $git->expose();
-                        $repuesta_git = $git->processSave($ruta_archivo, $mensaje_git);
+                        $repuesta_git = $git->processSave($ruta_archivo, $mensaje_git, $rama);
                         if ($repuesta_git) {
                             $estado_git = $repuesta_git['Estado'];
                             if ($repuesta_git['Error']) {
