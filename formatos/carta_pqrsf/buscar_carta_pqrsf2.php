@@ -55,7 +55,7 @@
                 			tree_copiainterna.setImagePath("../../imgs/");
                 			tree_copiainterna.enableIEImageFix(true);tree_copiainterna.enableCheckBoxes(1);
                 			tree_copiainterna.enableThreeStateCheckboxes(1);tree_copiainterna.setOnLoadingStart(cargando_copiainterna);
-                      tree_copiainterna.setOnLoadingEnd(fin_cargando_copiainterna);tree_copiainterna.enableSmartXMLParsing(true);tree_copiainterna.loadXML("../../test.php");
+                      tree_copiainterna.setOnLoadingEnd(fin_cargando_copiainterna);tree_copiainterna.enableSmartXMLParsing(true);tree_copiainterna.loadXML("../../test.php?rol=1");
                       tree_copiainterna.setOnCheckHandler(onNodeSelect_copiainterna);
                       function onNodeSelect_copiainterna(nodeId)
                       {valor_destino=document.getElementById("copiainterna");
@@ -114,12 +114,4 @@
 		    O
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_g@vercopiainterna" id="bqsaiaenlace_g@vercopiainterna" value="y" />
-		</div></div></div><div class="control-group"><b>Anexos fisicos<input type="hidden" name="bksaiacondicion_g@anexos_fisicos" id="bksaiacondicion_g@anexos_fisicos" value="like_total"></b><div class="controls"><textarea  maxlength="2000"   id="anexos_fisicos" name="bqsaia_g@anexos_fisicos"  style="width:500px;height:100px"></textarea><div class="btn-group" data-toggle="buttons-radio" >
-		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_g@anexos_fisicos',this.id)">
-		    Y
-		  </button>
-		  <button type="button" class="btn btn-mini" data-toggle="button" id="o" onclick="llenar_valor('bqsaiaenlace_g@anexos_fisicos',this.id)">
-		    O
-		  </button-->
-		  <input type="hidden" name="bqsaiaenlace_g@anexos_fisicos" id="bqsaiaenlace_g@anexos_fisicos" value="y" />
-		</div></div></div><div class="control-group"><label class="string control-label" style="font-size:9pt" for="varios_radicados"><b>&iquest;Asignar un n&uacute;mero de radicado diferente para cada destino?<input type="hidden" name="bksaiacondicion_g@varios_radicados" id="bksaiacondicion_g@varios_radicados" value="="></b></label><div class="controls"><?php genera_campo_listados_editar(308,3619,'',1,'buscar');?></div></div><input type="hidden" name="campos_especiales" value="destinos@ejecutor,copia@ejecutor,copiainterna@arbol"><input type="hidden" name="filtro_adicional" id="filtro_adicional" value=" ft_carta_pqrsf g @ AND  g.documento_iddocumento=iddocumento "><input type="hidden" name="padre" value="<?php echo $_REQUEST["padre"]; ?>"><input type="hidden" name="anterior" value="<?php echo $_REQUEST["anterior"]; ?>"></body><input type="hidden" name="bqtipodato_plantilla" id="bqtipodato_plantilla" value="date|"><input type="hidden" name="idbusqueda_componente" value="199">
+		</div></div></div><div class="control-group"><b>Anexos fisicos<input type="hidden" name="bksaiacondicion_g@anexos_fisicos" id="bksaiacondicion_g@anexos_fisicos" value="like_total"></b><div class="controls"><textarea  maxlength="2000"   id="anexos_fisicos" name="bqsaia_g@anexos_fisicos"  style="width:500px;height:100px"></textarea></div></div><input type="hidden" name="campos_especiales" value="destinos@ejecutor,copia@ejecutor,copiainterna@arbol"><input type="hidden" name="filtro_adicional" id="filtro_adicional" value=" ft_carta_pqrsf g @ AND  g.documento_iddocumento=iddocumento "><input type="hidden" name="padre" value="<?php echo $_REQUEST["padre"]; ?>"><input type="hidden" name="anterior" value="<?php echo $_REQUEST["anterior"]; ?>"></body><input type="hidden" name="bqtipodato_plantilla" id="bqtipodato_plantilla" value="date|"><input type="hidden" name="idbusqueda_componente" value="199">

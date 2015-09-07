@@ -3152,4 +3152,26 @@ function resta_fechasphp($date1, $date2){
  	if (!is_integer($date2)) $date2 = strtotime($date2);  
  	return floor(abs($date1 - $date2) / 60 / 60 / 24);
 }
+function cargar_anexos_documento_web($datos_documento,$anexos){
+	global $conn,$ruta_db_superior;
+	$funcionario = busca_filtro_tabla("idfuncionario","funcionario","funcionario_codigo=".$datos_documento["funcionario_codigo"],"",$conn);
+	foreach ($anexos as $key => $value) {
+		$ruta = RUTA_ARCHIVOS.$datos_documento["estado"]."/".$datos_documento["fecha"]."/".$datos_documento["iddocumento"]."/anexos";
+		crear_destino($ruta_db_superior.$ruta);		
+		$extencion = pathinfo($value['filename']);
+		$ruta .= "/".rand().".".$extencion["extension"];		
+		$archivo = fopen($ruta_db_superior.$ruta, "w+");	 //crea el archivo jpg
+		fclose($archivo);
+		$contenido = base64_decode($value['content']);
+		file_put_contents($ruta_db_superior.$ruta, $contenido); 
+		
+		if(file_exists($ruta_db_superior.$ruta)){
+			$insert_anexo = "insert into anexos(documento_iddocumento, ruta, etiqueta, tipo, formato) VALUES (".$datos_documento["iddocumento"].",'".$ruta."','".$value['filename']."','".$extencion["extension"]."',".$datos_documento["idformato"].")";
+			phpmkr_query($insert_anexo,$conn,$datos_documento["funcionario_codigo"]);
+			$idnexo = phpmkr_insert_id();
+			$insert_permiso = "insert into permiso_anexo (anexos_idanexos, idpropietario, caracteristica_propio, caracteristica_dependencia, caracteristica_cargo, caracteristica_total) VALUES (".$idnexo.",".$funcionario[0]["idfuncionario"].",'lem', '', '', 'l')";
+			phpmkr_query($insert_permiso,$conn,$datos_documento["funcionario_codigo"]);
+		}		
+	}
+}
 ?>

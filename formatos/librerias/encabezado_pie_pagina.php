@@ -219,7 +219,7 @@ function logo_empresa()
  global $conn;
  $logo = busca_filtro_tabla("valor","configuracion","nombre='logo'","",$conn);
  if($logo["numcampos"]){
-  return('<img src="'.PROTOCOLO_CONEXION.RUTA_PDF_LOCAL.'/'.$logo[0][0].'" width="109" />');                                                                        
+  return('<img src="'.PROTOCOLO_CONEXION.RUTA_PDF_LOCAL.'/'.$logo[0][0].'" width="109" />');
  }
 else return ("");
 }

@@ -82,7 +82,7 @@ $(".exportar_listado_saia").click(function(){
 		});
 	}
 	else{
-  	exportar_funcion_excel('');
+  	exportar_funcion_excel('<?php echo($_REQUEST["idbusqueda_filtro_temp"]); ?>');
  	}
 });
 
@@ -90,7 +90,7 @@ $(".exportar_listado_saia").click(function(){
 function exportar_funcion_excel(idfiltro){
 	var busqueda_total=$("#busqueda_total_paginas").val();  
 	var ruta_file="temporal_<?php echo(usuario_actual('login'));?>/reporte_<?php echo($datos_busqueda[0]["nombre"].'_'.date('Ymd').'.xls'); ?>";
-	var url="exportar_saia.php?idbusqueda_componente=<?php echo $datos_busqueda[0]["idbusqueda_componente"]; ?>&page=1&exportar_saia=excel&ruta_exportar_saia="+ruta_file+"&rows="+$("#busqueda_registros").val()*30+"&actual_row=0&variable_busqueda="+$("#variable_busqueda").val()+"&idbusqueda_filtro_temp="+idfiltro+"&idbusqueda_filtro=<?php echo(@$_REQUEST['idbusqueda_filtro']);?>&idbusqueda_temporal=<?php echo (@$_REQUEST['idbusqueda_temporal']);?>";
+	var url="exportar_saia.php?idbusqueda_componente=<?php echo $datos_busqueda[0]["idbusqueda_componente"]; ?>&page=1&exportar_saia=excel&ruta_exportar_saia="+ruta_file+"&rows="+$("#busqueda_registros").val()+"&actual_row=0&variable_busqueda="+$("#variable_busqueda").val()+"&idbusqueda_filtro_temp="+idfiltro+"&idbusqueda_filtro=<?php echo(@$_REQUEST['idbusqueda_filtro']);?>&idbusqueda_temporal=<?php echo (@$_REQUEST['idbusqueda_temporal']);?>";
 	window.open(url,"iframe_exportar_saia");
 }
 function exportar_funcion_excel_para_eliminar_ya_no_sirve(idfiltro){

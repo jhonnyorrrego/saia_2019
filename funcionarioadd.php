@@ -1,14 +1,10 @@
-<?php session_start(); ?>
-<?php ob_start(); ?>
 <?php
-header("Expires: Mon, 26 Jul 1997 05:00:00 GMT"); // date in the past
-header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT"); // always modified
-header("Cache-Control: no-store, no-cache, must-revalidate"); // HTTP/1.1 
-header("Cache-Control: post-check=0, pre-check=0", false); 
-header("Pragma: no-cache"); // HTTP/1.0 
+include_once("db.php");
+include_once("pantallas/lib/librerias_cripto.php");
 ?>
 <script type="text/javascript" src="js/jquery.js"></script>
-<script type="text/javascript">jQuery.noConflict();(function($) {
+<script type="text/javascript" src="js/jquery.validate.js"></script>
+<script type="text/javascript">(function($) {
           $(function() {$('#x_funcionario_codigo').blur(function(){
               $.ajax({
                 type:'POST',
@@ -54,6 +50,10 @@ header("Pragma: no-cache"); // HTTP/1.0
             })});
             	
           })(jQuery);
+
+$(document).ready(function(){
+	$("#funcionarioadd").validate();
+});
         </script>
 <?php
 $ewCurSec = 0; // Initialise
@@ -83,8 +83,7 @@ $x_salario = Null;
 ////Particular Cliente Aguas 
 $x_acceso_web = NULL;
 ?>
-<?php include ("db.php") ?>
-<?php include ("phpmkrfn.php") ?>
+<?php include ("phpmkrfn.php"); ?>
 <?php
 include_once("formatos/librerias/estilo_formulario.php");
 // Get action
@@ -141,66 +140,13 @@ switch ($sAction)
 		break;
 }
 ?>
-<script type="text/javascript" src="ew.js"></script>
-<script type="text/javascript">
-<!--
-EW_dateSep = "/"; // set date separator	
-
-//-->
-</script>
-<script type="text/javascript">
-<!--
-function EW_checkMyForm(EW_this) {
-if (EW_this.x_funcionario_codigo && !EW_hasValue(EW_this.x_funcionario_codigo, "TEXT" )) {
-	if (!EW_onError(EW_this, EW_this.x_funcionario_codigo, "TEXT", "Por favor ingrese los campos requeridos - Codigo de Funcionario"))
-		return false;
-}
-if (EW_this.x_funcionario_codigo && !EW_checkinteger(EW_this.x_funcionario_codigo.value)) {
-	if (!EW_onError(EW_this, EW_this.x_funcionario_codigo, "TEXT", "Entero Incorrecto - Codigo de Funcionario"))
-		return false; 
-}
-if (EW_this.x_login && !EW_hasValue(EW_this.x_login, "TEXT" )) {
-	if (!EW_onError(EW_this, EW_this.x_login, "TEXT", "Por favor ingrese los campos requeridos - Login(intranet)"))
-		return false;
-}
-if (EW_this.x_clave && !EW_hasValue(EW_this.x_clave, "PASSWORD" )) {
-	if (!EW_onError(EW_this, EW_this.x_clave, "PASSWORD", "Por favor ingrese los campos requeridos - Clave"))
-		return false;
-}
-if (EW_this.x_nombres && !EW_hasValue(EW_this.x_nombres, "TEXT" )) {
-	if (!EW_onError(EW_this, EW_this.x_nombres, "TEXT", "Por favor ingrese los campos requeridos - Nombre"))
-		return false;
-}
-if (EW_this.x_estado && !EW_hasValue(EW_this.x_estado, "RADIO" )) {
-	if (!EW_onError(EW_this, EW_this.x_estado, "RADIO", "Por favor ingrese los campos requeridos - Estado"))
-		return false;
-}
-if (EW_this.x_fecha_ingreso && !EW_hasValue(EW_this.x_fecha_ingreso, "TEXT" )) {
-	if (!EW_onError(EW_this, EW_this.x_fecha_ingreso, "TEXT", "Por favor ingrese los campos requeridos - Fecha Ingreso"))
-		return false;
-}
-if (EW_this.x_fecha_ingreso && !EW_checkdate(EW_this.x_fecha_ingreso.value)) {
-	if (!EW_onError(EW_this, EW_this.x_fecha_ingreso, "TEXT", "Formato de fecha incorrecto yyyy/mm/dd - Fecha Ingreso"))
-		return false; 
-}
-numero_permitido=12
-num_caracteres = EW_this.x_funcionario_codigo.value.length;
-if(num_caracteres>numero_permitido){
-alert("El codigo del funcionario debe ser maximo de 12 digitos");
-return false;
-} 
-return true;
-}
-
-//-->
-</script>
 <script type="text/javascript" src="popcalendar.js"></script>
-<!-- New popup calendar -->
-<!--link rel="stylesheet" type="text/css" media="all" href="calendar/calendar-win2k-1.css" title="win2k-1" /-->
-<!--script type="text/javascript" src="calendar/calendar.js"></script-->
-<!--script type="text/javascript" src="calendar/calendar-en.js"></script-->
-<!--script type="text/javascript" src="calendar/calendar-setup.js"></script-->
-<form name="funcionarioadd" id="funcionarioadd" action="funcionarioadd.php" method="post" enctype="multipart/form-data" onSubmit="return EW_checkMyForm(this);">
+<style>
+label.error{
+	color:red;
+}
+</style>
+<form name="funcionarioadd" id="funcionarioadd" action="funcionarioadd.php" method="post" enctype="multipart/form-data">
 <p>
 <input type="hidden" name="a_add" value="A">
 <input type="hidden" name="EW_Max_File_Size" value="2000000">
@@ -209,25 +155,25 @@ return true;
 		<td class="encabezado" title="C&oacute;digo interno asignado a cada funcionario."><span class="phpmaker" style="color: #FFFFFF;">C&Oacute;DIGO DE FUNCIONARIO</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
 <?php //if (!(!is_null($x_funcionario_codigo)) || ($x_funcionario_codigo == "")) { $x_funcionario_codigo = 0;} // Set default value ?>
-<input type="text" name="x_funcionario_codigo" id="x_funcionario_codigo" size="30" value="<?php echo htmlspecialchars(@$x_funcionario_codigo) ?>">
+<input type="text" class="required" name="x_funcionario_codigo" id="x_funcionario_codigo" size="30" value="<?php echo htmlspecialchars(@$x_funcionario_codigo) ?>">
 </span></td>
 	</tr>
 	<tr>
 		<td class="encabezado" title="Login de usuario asignado por la Organizaci&oacute;n."><span class="phpmaker" style="color: #FFFFFF;">LOGIN (INTRANET)</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
-<input type="text" name="x_login" id="x_login" size="30" maxlength="255" value="<?php echo htmlspecialchars(@$x_login) ?>">
+<input class="required" type="text" name="x_login" id="x_login" size="30" maxlength="255" value="<?php echo htmlspecialchars(@$x_login) ?>">
 </span></td>
 	</tr>
 	<tr>
 		<td class="encabezado" title="Clave de acceso del usuario."><span class="phpmaker" style="color: #FFFFFF;">CLAVE</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
-<input type="password" name="x_clave" value="<?php echo $x_clave; ?>" size="30" maxlength="50">
+<input class="required" type="password" name="x_clave" value="<?php echo $x_clave; ?>" size="30" maxlength="50">
 </span></td>
 	</tr>
 	<tr>
 		<td class="encabezado" title="Nombres completos del funcionario."><span class="phpmaker" style="color: #FFFFFF;">NOMBRES</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
-<input type="text" name="x_nombres" id="x_nombres" size="30" maxlength="255" value="<?php echo @$x_nombres ?>">
+<input class="required" type="text" name="x_nombres" id="x_nombres" size="30" maxlength="255" value="<?php echo @$x_nombres ?>">
 </span></td>
 	</tr>
 	<tr>
@@ -296,12 +242,15 @@ return true;
 			$check='';
       for($i=0; $i<$nombre_perfil["numcampos"]; $i++){
       	$adicional='';
+				$adicional2='';
+				if($i==0 && usuario_actual('login')=='cerok')$adicional2=' class="required" ';
+				if($i==1 && usuario_actual('login')!='cerok')$adicional2=' class="required" ';
 				if(in_array($nombre_perfil[$i]["idperfil"],$perfiles))$adicional=" checked ";
-      	if(usuario_actual('login')=='0k'){
-      		$check.='<input type="checkbox" id="x_perfil'.$nombre_perfil[$i]["idperfil"].'" name="x_perfil[]" value="'.$nombre_perfil[$i]["idperfil"].'" '.$adicional.'>'.$nombre_perfil[$i]["nombre"]."<br>";
+      	if(usuario_actual('login')=='cerok'){
+      		$check.='<input type="checkbox" id="x_perfil'.$nombre_perfil[$i]["idperfil"].'" name="x_perfil[]" value="'.$nombre_perfil[$i]["idperfil"].'" '.$adicional.$adicional2.'>'.$nombre_perfil[$i]["nombre"]."<br>";
 				}
 				else if($nombre_perfil[$i]["idperfil"]>1){
-					$check.='<input type="checkbox" id="x_perfil'.$nombre_perfil[$i]["idperfil"].'" name="x_perfil[]" value="'.$nombre_perfil[$i]["idperfil"].'" '.$adicional.'>'.$nombre_perfil[$i]["nombre"]."<br>";
+					$check.='<input type="checkbox" id="x_perfil'.$nombre_perfil[$i]["idperfil"].'" name="x_perfil[]" value="'.$nombre_perfil[$i]["idperfil"].'" '.$adicional.$adicional2.'>'.$nombre_perfil[$i]["nombre"]."<br>";
 				}
       }
 			echo $check;
@@ -408,7 +357,6 @@ function LoadData($sKey,$conn)
 
 function AddData($conn)
 {
-
 	// Add New Record
 	$sSql = "SELECT * FROM funcionario A";
 	$sSql .= " WHERE 0 = 1";
@@ -464,7 +412,7 @@ function AddData($conn)
 
 	// Field clave
 	$theValue = (!get_magic_quotes_gpc()) ? addslashes($GLOBALS["x_clave"]) : $GLOBALS["x_clave"]; 
-	$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
+	$theValue = ($theValue != "") ? " '" . encrypt_md5(trim($theValue)) . "'" : "NULL";
 	$fieldList["clave"] = $theValue;
 
 	// Field nombres

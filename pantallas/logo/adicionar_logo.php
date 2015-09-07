@@ -64,12 +64,12 @@ function guardar_anexo(){
 	$extension=$tipo[$cant-1];
 	if($extension=="jpg"||$extension=="jpeg"){
 		//rename($_FILES["file"]["tmp_name"],$ruta_db_superior."imagenes/logo_demo.jpg");
-		$aleatorio=rand(5,15)."-".date("Ymd");
-		$ruta_imagen=$ruta_imagen.$aleatorio.".".$extension;
+		$aleatorio=rand(1,999)."-".date("Ymd");
+		$ruta_imagen2="imagenes/logo_demo".$aleatorio.".".$extension;
 
-		cambia_tam($_FILES["anexo"]["tmp_name"],$ruta_db_superior.$ruta_imagen,145,90,"");
-		chmod($ruta_db_superior."imagenes/".$ruta_imagen,PERMISOS_ARCHIVOS);
-		$sql="UPDATE configuracion SET valor='".$ruta_imagen."' WHERE nombre='logo'";
+		cambia_tam($_FILES["anexo"]["tmp_name"],$ruta_db_superior.$ruta_imagen2,145,90,"");
+		chmod($ruta_db_superior.$ruta_imagen2,PERMISOS_ARCHIVOS);
+		$sql="UPDATE configuracion SET valor='".$ruta_imagen2."' WHERE nombre='logo'";
 
 		phpmkr_query($sql);
 	}

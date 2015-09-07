@@ -88,7 +88,8 @@ if(isset($_POST["editar_firma"])){
   } 
   $datos_formato=busca_filtro_tabla("","formato a","a.nombre='".$_POST["plantilla"]."'","",$conn);
   if($datos_formato[0]["mostrar_pdf"]==1){
-  	redirecciona("class_impresion.php?iddoc=".$_POST["editar_firma"]);
+  	redirecciona("pantallas/documento/visor_documento.php?iddoc=".$_POST["editar_firma"]."&actualizar_pdf=1");
+		die();
   }
  redirecciona("formatos/".$_POST["plantilla"]."/mostrar_".$_POST["plantilla"].".php?iddoc=".$_POST["editar_firma"]); 
 } 

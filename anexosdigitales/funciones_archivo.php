@@ -861,7 +861,7 @@ function borrar($idanexo)
    $file=$ruta_db_superior.$anexo[0]["ruta"];
    //hago copia del archivo en la carpeta backup/eliminados
    $info=busca_filtro_tabla("","anexos","idanexos=".$idanexo,"",$conn);
-   $carpeta_eliminados="../backup/eliminados/".$info[0]["documento_iddocumento"];
+   $carpeta_eliminados=RUTA_BACKUP_ELIMINADOS.$info[0]["documento_iddocumento"];
    crear_destino($ruta_db_superior.$carpeta_eliminados);
    $nombre=$carpeta_eliminados."/".date("Y-m-d_H_i_s")."_".$info[0]["etiqueta"];
    

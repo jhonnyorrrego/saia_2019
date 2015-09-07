@@ -9,8 +9,9 @@ while ($max_salida > 0) {
     $max_salida--;
 }
 include_once($ruta_db_superior . "db.php");
+include_once($ruta_db_superior . "pantallas/lib/librerias_cripto.php");
 $pass=$_REQUEST["passwordPwd"];
-$sql1="UPDATE funcionario SET clave='".$pass."' WHERE idfuncionario=".usuario_actual("idfuncionario");
+$sql1="UPDATE funcionario SET clave='".encrypt_md5(trim($pass))."' WHERE idfuncionario=".usuario_actual("idfuncionario");
 phpmkr_query($sql1);
 if(phpmkr_insert_id()){
 	alerta("Contraseña cambiada con exito");

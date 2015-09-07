@@ -756,7 +756,10 @@ function aprobar($iddoc=0,$url="")
                  }  */
                  llama_funcion_accion($iddoc,$tipo_radicado[0]["idformato"],"aprobar","POSTERIOR");
 								 if($datos_formato[0]["mostrar_pdf"]==1){
-								 	redirecciona("class_impresion.php?iddoc=".$iddoc);
+								 	$sql1="UPDATE documento SET pdf=null WHERE iddocumento=".$iddoc;
+									phpmkr_query($sql1);
+								 	redirecciona("pantallas/documento/visor_documento.php?iddoc=".$iddoc);
+								 	//redirecciona("class_impresion.php?iddoc=".$iddoc);
 								 }
                 //$url="html2ps/public_html/demo/html2ps.php?plantilla=$formato&iddoc=".$iddoc;
                }
@@ -767,7 +770,10 @@ function aprobar($iddoc=0,$url="")
          aprobar_reemplazo($iddoc);  
   llama_funcion_accion($iddoc,$tipo_radicado[0]["idformato"],"confirmar","POSTERIOR");
 	if($datos_formato[0]["mostrar_pdf"]==1){
-		redirecciona("class_impresion.php?iddoc=".$iddoc);
+		$sql1="UPDATE documento SET pdf=null WHERE iddocumento=".$iddoc;
+		phpmkr_query($sql1);
+		redirecciona("pantallas/documento/visor_documento.php?iddoc=".$iddoc);
+		//redirecciona("class_impresion.php?iddoc=".$iddoc);
 	}
 
 /*if(strpos($_SERVER["PHP_SELF"],"meses")<=0)
@@ -2697,175 +2703,167 @@ exit();
 <Post-condiciones>
 */ 
 
-function formato_devolucion($iddoc=0)
-{global $conn; 
-  $config = busca_filtro_tabla("valor","configuracion","nombre='color_encabezado'","",$conn); 
-  if(@$_REQUEST["iddoc"] || @$_REQUEST["key"]){
-	if(!@$_REQUEST["iddoc"])$_REQUEST["iddoc"]=@$_REQUEST["key"];
-	include_once("pantallas/documento/menu_principal_documento.php");
-	menu_principal_documento($_REQUEST["iddoc"]);
+function formato_devolucion($iddoc=0){
+global $conn,$ruta_db_superior;
+$config = busca_filtro_tabla("valor","configuracion","nombre='color_encabezado'","",$conn);
+if($config[0]["valor"]){
+  $style = "<style type=\"text/css\"><!--INPUT, TEXTAREA, SELECT {font-family: Tahoma; font-size: 10px;} .phpmaker {font-family: Verdana; font-size: 9px;} .encabezado { background-color:".$config[0]["valor"]."; color:white ; padding:10px; text-align: left;  } .encabezado_list { background-color:".$config[0]["valor"]."; color:white ; vertical-align:middle; text-align: center; } --></style>";
+  echo $style;
 }
- if($config[0]["valor"])
- {  $style = "<style type=\"text/css\"><!--INPUT, TEXTAREA, SELECT {font-family: Tahoma; font-size: 10px;} .phpmaker {font-family: Verdana; font-size: 9px;} .encabezado { background-color:".$config[0]["valor"]."; color:white ; padding:10px; text-align: left;	} .encabezado_list { background-color:".$config[0]["valor"]."; color:white ; vertical-align:middle; text-align: center;	} --></style>";
-  echo $style; 
- }
-  if(!$iddoc)
-    $iddoc=$_REQUEST["iddoc"];      
-    $x_recibido=usuarioactual("funcionario_codigo");
-  $transferencias = busca_filtro_tabla("buzon_entrada.destino","buzon_entrada","archivo_idarchivo=".$iddoc." AND origen='".$x_recibido."' AND destino<>'".$x_recibido."' and nombre in('REVISADO','TRANSFERIDO','APROBADO','DEVOLUCION') ORDER BY fecha DESC","",$conn);
-  //print_r($transferencias); die();   
-    if(!$transferencias["numcampos"])
-    {$max_salida=10; // Previene algun posible ciclo infinito limitando a 10 los ../
-      $ruta_db_superior=$ruta="";
-      while($max_salida>0)
-      {
-      if(is_file($ruta."db.php"))
-      {
-      $ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
-      }
-      $ruta.="../";
-      $max_salida--;
-      }
-      //die($iddoc."aaa ".$_REQUEST["iddoc"]);
-     echo "<script>alert('No es posible devolver el documento, por favor transfieralo o terminelo.');</script>";
-     redirecciona_($ruta_db_superior."documentoview.php?key=".$iddoc);
-    }
-    if(!isset($_REQUEST["iddoc"]) || $_REQUEST["iddoc"]=="")
-    $_REQUEST["iddoc"]=$iddoc;
-    $ruta="";  
-  echo '<script type="text/javascript" src="popcalendar.js"></script>';      
-  menu_ordenar($_REQUEST["iddoc"]);
+if(!$iddoc){
+  $iddoc=$_REQUEST["iddoc"];
+}else{
+  $_REQUEST["iddoc"]=$iddoc;
+}
 
-  echo '<p><span style="font-family: Verdana; font-size: 9px; font-weight: bold;">DEVOLVER DOCUMENTOS&nbsp;&nbsp;&nbsp;&nbsp;
-      <br><br></span></p>
-      <form name="transferenciadev" id="transferenciadev" action="'.PROTOCOLO_CONEXION.RUTA_PDF.'/class_transferencia.php" method="post">
-      <p>
-      <table border="0" cellspacing="1" cellpadding="4" bgcolor="#CCCCCC">
-      <tr><td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">CAMBIANDO ESTADO AL DOCUMENTO:</span></td>
-      <td bgcolor="#F5F5F5"><span class="phpmaker">';
-      $arch=busca_filtro_tabla("","documento","iddocumento=".$_REQUEST["iddoc"],"",$conn);
-      echo ($arch[0]["numero"]."-".$arch[0]['descripcion']);
-      // Set default value
-      echo '<input type="hidden" name="iddoc" value="'.$_REQUEST["iddoc"].'">
-        </span></td>
-        </tr><tr>
-        <td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">FECHA</span></td>
-        <td bgcolor="#F5F5F5"><span class="phpmaker">';
-      $x_fecha = date("Y-m-d H:i:s"); // Set default value
-      echo '<input type="hidden" name="x_fecha" id="x_fecha" value="'.$x_fecha.'">'.$x_fecha.'
-        </span></td></tr><tr>
-        <td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">DEVUELTO A:</span></td>
-        <td bgcolor="#F5F5F5"><span class="phpmaker">';
-    $x_recibido=usuarioactual("funcionario_codigo");
-    $transferencias = busca_filtro_tabla("buzon_entrada.destino,fecha","buzon_entrada"," archivo_idarchivo='".$_REQUEST["iddoc"]."' AND origen='".$x_recibido."' AND nombre in('TRANSFERIDO','REVISADO') and destino<>'".$x_recibido."' ORDER BY fecha DESC","",$conn);
+$x_recibido=usuarioactual("funcionario_codigo");
+$reemplazo=0;
+$transferencias = busca_filtro_tabla("buzon_entrada.destino","buzon_entrada","archivo_idarchivo=".$iddoc." AND origen='".$x_recibido."' AND destino<>'".$x_recibido."' and nombre in('REVISADO','TRANSFERIDO','APROBADO','DEVOLUCION') ORDER BY fecha DESC","",$conn);
+if($transferencias["numcampos"]){
+  $retorno=obtener_reemplazo($transferencias[0]['destino'],1);
+  if($retorno['exito']){
+    $reemplazo=$retorno['funcionario_codigo'][0];
+  }
+}else{
+  alerta('No es posible devolver el documento, por favor transfieralo o terminelo.');
+  redirecciona($ruta_db_superior."vacio.php");
+}
 
-    if($transferencias["numcampos"]==0)
-    {$ruta="";   
-     alerta("No existe funcionarios para devolver el documento");
-     redirecciona_($ruta."documentoview.php?key=".$_REQUEST["iddoc"]);
+echo '<p><span style="font-family: Verdana; font-size: 9px; font-weight: bold;">
+<img style="vertical-align:middle" src="http://'.RUTA_PDF.'/botones/comentarios/devolver_documento.png" border="0">&nbsp;&nbsp;DEVOLVER DOCUMENTOS&nbsp;&nbsp;&nbsp;&nbsp;
+<br><br></span></p>
+<form name="transferenciadev" id="transferenciadev" action="http://'.RUTA_PDF.'/class_transferencia.php" method="post">
+<table border="0" cellspacing="1" cellpadding="4" bgcolor="#CCCCCC">
+<tr>
+  <td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">
+    CAMBIANDO ESTADO AL DOCUMENTO:</span>
+  </td>
+  <td bgcolor="#F5F5F5"><span class="phpmaker">';
+    $arch=busca_filtro_tabla("","documento","iddocumento=".$iddoc,"",$conn);
+    echo ($arch[0]["numero"]."-".$arch[0]['descripcion']);
+    echo '<input type="hidden" name="iddoc" value="'.$_REQUEST["iddoc"].'"></span>
+  </td>
+</tr>
+
+<tr>
+  <td class="encabezado">
+    <span class="phpmaker" style="color: #FFFFFF;">FECHA</span>
+  </td>
+  <td bgcolor="#F5F5F5"><span class="phpmaker">';
+    $x_fecha = date("Y-m-d H:i:s");
+    echo '<input type="hidden" name="x_fecha" id="x_fecha" value="'.$x_fecha.'">'.$x_fecha.'</span>
+  </td>
+</tr>
+<tr>
+<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">
+  DEVUELTO A:</span>
+</td>
+<td bgcolor="#F5F5F5"><span class="phpmaker">';
+  $transferencias = busca_filtro_tabla("buzon_entrada.destino,fecha,ruta_idruta","buzon_entrada"," archivo_idarchivo='".$_REQUEST["iddoc"]."' AND origen='".$x_recibido."' AND nombre in('TRANSFERIDO','REVISADO') and destino<>'".$x_recibido."' ORDER BY fecha DESC","",$conn);
+  if($transferencias["numcampos"]){
+    $info_adicional="";
+    if($reemplazo){
+      $transferencias[0]["destino"]=$reemplazo;
+      $info_adicional=" - Reemplazo";
+      echo "<input type='hidden' value='".$retorno['idreemplazo'][0]."' name='campo_reemplazo' id='campo_reemplazo'>";
+      echo "<input type='hidden' value='".$transferencias[0]['ruta_idruta']."' name='campo_idruta' id='campo_idruta'>";
     }
-    else
-    {$funcionario_destino = busca_filtro_tabla("","funcionario","funcionario_codigo=".$transferencias[0]["destino"],"",$conn);
-      echo ucwords($funcionario_destino[0]["nombres"]." ".$funcionario_destino[0]["apellidos"])."<br><br />";
+    $funcionario_destino = busca_filtro_tabla("","funcionario","funcionario_codigo=".$transferencias[0]["destino"]." and estado=1","",$conn);
+    if($funcionario_destino['numcampos']){
+      echo ucwords($funcionario_destino[0]["nombres"]." ".$funcionario_destino[0]["apellidos"]).$info_adicional."<br><br />";
+    }else{
+      alerta("El funcionario NO esta Activo, por favor transfieralo o terminelo.");
+      redirecciona($ruta_db_superior."vacio.php");
     }
-    echo '<input type="hidden" name="x_funcionario_destino" id="x_funcionario_destino" value="'.$funcionario_destino[0]["funcionario_codigo"].'">
-      </span></td>
-      </tr><tr>
-      <td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">ESTADO DE LA TRANSFERENCIA</span></td>
-      <td bgcolor="#F5F5F5"><span class="phpmaker">
-      <input type="hidden" name="x_nombre" value="DEVOLUCION">
-      DEVOLUCI&Oacute;N
-      </span></td></tr>
-      <tr>
-      <td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">OBSERVACIONES DE LA DEVOLUCI&Oacute;N</span></td>
-      <td bgcolor="#F5F5F5"><span class="phpmaker">
-      <textarea cols="55" rows="5" id="x_notas" name="x_notas">'.@$x_notas.'</textarea>
-      </span></td>
-      </tr></table>
-      <p>
-      <input type="hidden" name="funcion" value="devolucion">
-      <input type="hidden" name="ruta_idruta" id="ruta_idruta" value="0">';
-	  $flujo = busca_filtro_tabla("","paso_documento","documento_iddocumento=".$_REQUEST["iddoc"]."","",$conn);
-	  if($flujo["numcampos"] > 0){
-	  		include_once($ruta_db_superior."workflow/libreria_paso.php");
-		  	echo formulario_devolver($_REQUEST["iddoc"]);
-	  }
-      echo '<input type="button" name="Action" value="DEVOLVER" onclick="if(form.x_notas.value=='."''".') alert('."'Debe llenar las notas.'".'); else form.submit(); ">
-      </form>';
+  }else{
+    alerta("No existe funcionarios para devolver el documento");
+    redirecciona($ruta_db_superior."vacio.php");
+  }
+  echo '<input type="hidden" name="x_funcionario_destino" id="x_funcionario_destino" value="'.$funcionario_destino[0]["funcionario_codigo"].'"></span>
+</td>
+</tr>
+<tr>
+<td class="encabezado">
+  <span class="phpmaker" style="color: #FFFFFF;">ESTADO DE LA TRANSFERENCIA</span>
+</td>
+<td bgcolor="#F5F5F5">
+  <span class="phpmaker"><input type="hidden" name="x_nombre" value="DEVOLUCION">DEVOLUCI&Oacute;N</span>
+</td>
+</tr>
+<tr>
+<td class="encabezado">
+  <span class="phpmaker" style="color: #FFFFFF;">MOTIVOS DEVOLUCION</span>
+</td>
+<td bgcolor="#F5F5F5">
+  <span class="phpmaker">
+  <input type="radio" name="motivo" value="Mal direccionamiento de Ventanilla Unica" onclick="document.getElementById(\'x_notas\').value=this.value">Mal direccionamiento de Ventanilla Unica<br/>
+  <input type="radio" name="motivo" value="Cambio de Funciones del Usuario" onclick="document.getElementById(\'x_notas\').value=this.value">Cambio de Funciones del Usuario<br/>
+  <input type="radio" name="motivo" value="Se Necesitan Cambios en el Documento" onclick="document.getElementById(\'x_notas\').value=this.value">Se Necesitan Cambios en el Documento<br/>
+  <input type="radio" name="motivo" value="Otras" onclick="document.getElementById(\'x_notas\').value=this.value">Otras
+  </span>
+</td>
+</tr>
+<tr>
+<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">
+  OBSERVACIONES DE LA DEVOLUCI&Oacute;N</span>
+</td>
+<td bgcolor="#F5F5F5"><span class="phpmaker">
+  <textarea cols="55" rows="5" id="x_notas" name="x_notas">'.@$x_notas.'</textarea></span>
+</td>
+</tr>
+</table>
+<input type="hidden" name="funcion" value="devolucion">
+<input type="hidden" name="ruta_idruta" id="ruta_idruta" value="0">';
+echo '<input type="button" name="Action" value="DEVOLVER" onclick="if(form.x_notas.value=='."''".') alert('."'Debe llenar las notas.'".'); else form.submit(); ">
+</form>';
 }
 /*
 <Clase>
 <Nombre>devolucion
 <Parametros>
 <Responsabilidades>se encarga de devolver el documento a quien corresponda
-<Notas> 
+<Notas>
 <Excepciones>
-<Salida> 
+<Salida>
 <Pre-condiciones>
 <Post-condiciones>
-*/ 
-function devolucion()
-{
-  global $conn;  
-  // Field archivo_idarchivo
+*/
+function devolucion(){
+  global $conn,$ruta_db_superior;
   $theValue = ($_REQUEST["iddoc"] != "") ? intval($_REQUEST["iddoc"]) : "NULL";
   $datos["archivo_idarchivo"] = $theValue;
   $datos["tipo_destino"]=1;
   $datos["tipo"]="";
-  $datos["ruta_idruta"]="";    
-  // Field nombre
-    /*Se adiciona esta linea para las ejecutar las acciones sobre los formatos*/
+  $datos["ruta_idruta"]="";
+  if(isset($_REQUEST['campo_reemplazo']) && $_REQUEST['campo_reemplazo']!=0 && isset($_REQUEST['campo_idruta']) && $_REQUEST['campo_idruta']!=0 ){
+    include_once($ruta_db_superior."pantallas/reemplazos/procesar_reemplazo.php");
+    actualiza_ruta_devolucion($_REQUEST['campo_reemplazo'],$datos["archivo_idarchivo"],$_REQUEST['campo_idruta']);
+  }
   llama_funcion_accion($datos["archivo_idarchivo"],$idformato,"devolver","ANTERIOR");
   $theValue = (!get_magic_quotes_gpc()) ? addslashes($_REQUEST["x_nombre"]) : $_REQUEST["x_nombre"];
   $theValue = ($theValue != "") ? $theValue : "NULL";
   $datos["nombre"] = $theValue;
-  // Field funcionario_destino  
   $destino=explode(",",$_REQUEST["x_funcionario_destino"]);
-  //print_r($destino);
-  //die($_REQUEST["x_funcionario_destino"]);
-  // Field notas
   $theValue = (!get_magic_quotes_gpc()) ? addslashes($_REQUEST["x_notas"]) : $_REQUEST["x_notas"];
   $theValue = ($theValue != "") ? $theValue : NULL;
   $adicionales["notas"] = "'".$theValue."'";
   $documento = busca_filtro_tabla("","documento","iddocumento=".$datos["archivo_idarchivo"],"",$conn);
   $temp="";
   if($documento["numcampos"]>0)
-  { 
+  {
     $temp=$documento[0]["serie"];
     $mensaje = "Acaba de Recibir el Documento: ".$documento[0]["numero"]." Descripcion: ".$documento[0]["descripcion"];
   }
   transferir_archivo_prueba($datos,$destino,$adicionales);
   $estado_doc = busca_filtro_tabla("estado","documento","iddocumento=".$_REQUEST["iddoc"],"",$conn);
   if($estado_doc[0]["estado"]=='ACTIVO')
-  { $update="update buzon_entrada set activo=1 where archivo_idarchivo=".$_REQUEST["iddoc"]." AND nombre='POR_APROBAR' AND destino=".$_REQUEST["x_funcionario_destino"]." AND origen=".usuario_actual("funcionario_codigo");  
+  { $update="update buzon_entrada set activo=1 where archivo_idarchivo=".$_REQUEST["iddoc"]." AND nombre='POR_APROBAR' AND destino=".$_REQUEST["x_funcionario_destino"]." AND origen=".usuario_actual("funcionario_codigo");
     phpmkr_query($update,$conn);
   }
-  $flujo = busca_filtro_tabla("","paso_documento","documento_iddocumento=".$_REQUEST["iddoc"]."","",$conn);
-  if($flujo["numcampos"] > 0){
-	include_once($ruta_db_superior."workflow/libreria_paso.php");
-	$idpaso_instancia = $_REQUEST["idpaso_instancia"];
-	$estado_original = $_REQUEST["estado_original"];
-	$actividad = $_REQUEST["actividad"];
-	$observaciones = $_REQUEST["x_notas"];
-	$idpaso_documento = $_REQUEST["idpaso_documento"];
-	$paso = $_REQUEST["paso"];
-	$cantidad = $_REQUEST["cantidad_actividades"];
-	$seleccionados = $_REQUEST["seleccionados"];
-	$seleccionados = substr ($seleccionados, 0, -1);
-	$buscar = explode(",",$seleccionados);
-	for($i=0;$i<$cantidad;$i++){
-		if(in_array($i,$buscar)){
-			devolver_actividad_paso($idpaso_instancia[$i],$estado_original[$i],$observaciones,$idpaso_documento[$i],$paso);
-		}
-	}
-	//alerta("Actividades devuelta");
-  }
-       
-    /*Se adiciona esta linea para las ejecutar las acciones sobre los formatos*/
   llama_funcion_accion($datos["archivo_idarchivo"],$idformato,"devolver","POSTERIOR");
   if($_REQUEST["retornar"] == 1)
-  	return;
-  enrutar_documento("pendienteslist.php?cmd=resetall");
+    return;
+  enrutar_documento("pantallas/buscador_principal.php?idbusqueda=3");
 }
 /*
 <Clase>

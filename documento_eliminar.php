@@ -6,7 +6,7 @@ $iddocumento=135256;
 
 function datos_documento($doc,$etiqueta="")
 { global $conn;    
-  $ruta_destino="../backup/eliminados/$etiqueta".$doc;
+  $ruta_destino=RUTA_BACKUP_ELIMINADOS.$etiqueta.$doc;
   crear_destino($ruta_destino);  
   $sql_doc = crear_insert("documento","iddocumento",$doc,$ruta_destino);
   $sql_doc .= crear_insert("buzon_entrada","archivo_idarchivo",$doc,$ruta_destino);

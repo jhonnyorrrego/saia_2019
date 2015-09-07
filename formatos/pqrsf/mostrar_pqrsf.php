@@ -1,16 +1,14 @@
-<?php include_once("../carta/funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("../librerias/funciones_generales.php"); ?><script type="text/javascript" src="../../js/jquery.js"></script><?php include_once("../librerias/header_nuevo.php"); ?><?php include_once("../../class_transferencia.php"); ?><tr><td><table style="border-collapse: collapse; font-size: 12px; width: 100%;" border="1">
+<?php include_once("../carta/funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("../librerias/funciones_generales.php"); ?><script type="text/javascript" src="../../js/jquery.js"></script><?php include_once("../librerias/header_nuevo.php"); ?><?php include_once("../../class_transferencia.php"); ?><tr><td><table style="border-collapse: collapse; width: 100%;" border="1">
 <tbody>
 <tr>
-<td style="text-align: left; width: 25%;"><strong>&nbsp;Estado PQRSF</strong></td>
-<td style="text-align: left; width: 30%;">&nbsp;<?php mostrar_valor_campo('estado_reporte',305,$_REQUEST['iddoc']);?></td>
+<td style="text-align: left; width: 30%;"><strong>&nbsp;Estado PQRSF</strong></td>
+<td style="text-align: left; width: 20%;">&nbsp;<?php mostrar_valor_campo('estado_reporte',305,$_REQUEST['iddoc']);?></td>
 <td style="text-align: left; width: 30%;">&nbsp;<strong>Fecha Cambio Estado</strong></td>
-<td style="text-align: left; width: 25%;">&nbsp;<?php ver_fecha_reporte(305,$_REQUEST['iddoc']);?></td>
+<td style="text-align: left; width: 20%;">&nbsp;<?php ver_fecha_reporte(305,$_REQUEST['iddoc']);?></td>
 </tr>
 <tr>
-<td style="text-align: left; width: 25%;"><strong>&nbsp;Fecha Solicitud:</strong></td>
-<td style="text-align: left; width: 30%;">&nbsp;<?php mostrar_valor_campo('fecha',305,$_REQUEST['iddoc']);?></td>
-<td style="text-align: left; width: 30%;"><strong>&nbsp;Tipo Comentario:</strong></td>
-<td style="text-align: left; width: 25%;">&nbsp;<?php mostrar_valor_campo('tipo',305,$_REQUEST['iddoc']);?></td>
+<td style="text-align: left;"><strong>&nbsp;Tipo Comentario:</strong></td>
+<td style="text-align: left;" colspan="3">&nbsp;<?php mostrar_valor_campo('tipo',305,$_REQUEST['iddoc']);?><strong></strong></td>
 </tr>
 <tr>
 <td style="text-align: left;"><strong>&nbsp;Nombre Completo:</strong></td>
@@ -37,7 +35,7 @@
 <td colspan="4">&nbsp;<?php mostrar_valor_campo('comentarios',305,$_REQUEST['iddoc']);?></td>
 </tr>
 <tr>
-<td colspan="4">&nbsp;<strong>Documento Soporte del Comentario:&nbsp;</strong><?php mostrar_valor_campo('anexos',305,$_REQUEST['iddoc']);?><strong></strong></td>
+<td colspan="4">&nbsp;<strong>Documento Soporte del Comentario:&nbsp;</strong><?php mostrar_anexos_pqrsf(305,$_REQUEST['iddoc']);?><strong></strong></td>
 </tr>
 </tbody>
 </table>

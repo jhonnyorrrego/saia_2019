@@ -1,4 +1,7 @@
 <?php
+function encrypt_md5($data){
+	return(md5(md5($data)));
+}
 function decrypt_blowfish($data,$key){
 	if(!defined("LLAVE_SAIA_CRYPTO")){
 		define("LLAVE_SAIA_CRYPTO", "cerok_saia421_5");

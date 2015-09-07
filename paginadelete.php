@@ -317,7 +317,7 @@ $inf_eliminado = busca_filtro_tabla("imagen,ruta","pagina",$sqlKey,"",$conn);
 if($inf_eliminado["numcampos"]>0)
 {  $pag = substr($sqlKey,12); 
    $ruta1=$inf_eliminado[0]["imagen"];
-   $eliminacion="../backup/eliminados/$rutaD";
+   $eliminacion=RUTA_BACKUP_ELIMINADOS.$rutaD;
    $nombre=$eliminacion."/".date("Y-m-d_H_i_s")."_".basename($inf_eliminado[0]["ruta"]);
    crear_destino($eliminacion);
    copy($inf_eliminado[0]["ruta"],$nombre);

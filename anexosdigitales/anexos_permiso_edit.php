@@ -27,7 +27,7 @@ $info=busca_filtro_tabla("","anexos","idanexos=".$_REQUEST["idanexo"],"",$conn);
    /* print_r($info[0]["ruta"]);
     die(); */
   
-  $carpeta_eliminados="../backup/eliminados/".$info[0]["documento_iddocumento"];
+  $carpeta_eliminados=RUTA_BACKUP_ELIMINADOS.$info[0]["documento_iddocumento"];
    crear_destino($ruta_db_superior.$carpeta_eliminados);
   $nombre=$carpeta_eliminados."/".date("Y-m-d_H_i_s")."_".$info[0]["etiqueta"];
    //copio el anterior a eliminados

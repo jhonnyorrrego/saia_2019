@@ -1,14 +1,10 @@
-<?php session_start(); ?>
-<?php ob_start(); ?>
 <?php
-header("Expires: Mon, 26 Jul 1997 05:00:00 GMT"); // date in the past
-header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT"); // always modified
-header("Cache-Control: no-store, no-cache, must-revalidate"); // HTTP/1.1 
-header("Cache-Control: post-check=0, pre-check=0", false); 
-header("Pragma: no-cache"); // HTTP/1.0 
+include_once("db.php");
+include_once("pantallas/lib/librerias_cripto.php");
 ?>
 <script type="text/javascript" src="js/jquery.js"></script>
-<script type="text/javascript">jQuery.noConflict();(function($) {
+<script type="text/javascript" src="js/jquery.validate.js"></script>
+<script type="text/javascript">(function($) {
            
             $(function() {$('#x_salario').blur(function(){
             	if($('#x_salario').val() != ''){
@@ -27,6 +23,9 @@ header("Pragma: no-cache"); // HTTP/1.0
             })});
             	
           })(jQuery);
+$(document).ready(function(){
+	$("#funcionarioedit").validate();
+});
         </script>
 <?php
 $ewCurSec = 0; // Initialise
@@ -58,7 +57,6 @@ $x_perfil = Null;
 $x_sistema = Null;
 $x_salario = Null;
 $x_acceso_web = NULL;
-include_once ("db.php"); 
 include_once ("phpmkrfn.php");
 include_once("formatos/librerias/estilo_formulario.php");
 $sKey = @$_REQUEST["key"];
@@ -111,54 +109,13 @@ switch ($sAction)
 		break;
 }
 ?>
-<script type="text/javascript" src="ew.js"></script>
-<script type="text/javascript">
-<!--
-EW_dateSep = "/"; // set date separator	
 
-//-->
-</script>
-<script type="text/javascript">
-<!--
-function EW_checkMyForm(EW_this) { 
-if (EW_this.x_funcionario_codigo && !EW_hasValue(EW_this.x_funcionario_codigo, "TEXT" )) {
-	if (!EW_onError(EW_this, EW_this.x_funcionario_codigo, "TEXT", "Por favor ingrese los campos requeridos - Codigo de Funcionario"))
-		return false;
-}
-if (EW_this.x_funcionario_codigo && !EW_checkinteger(EW_this.x_funcionario_codigo.value)) {
-	if (!EW_onError(EW_this, EW_this.x_funcionario_codigo, "TEXT", "Entero Incorrecto - Codigo de Funcionario"))
-		return false; 
-}
-if (EW_this.x_login && !EW_hasValue(EW_this.x_login, "TEXT" )) {
-	if (!EW_onError(EW_this, EW_this.x_login, "TEXT", "Por favor ingrese los campos requeridos - Login(intranet)"))
-		return false;
-}
-if (EW_this.x_clave && !EW_hasValue(EW_this.x_clave, "PASSWORD" )) {
-	if (!EW_onError(EW_this, EW_this.x_clave, "PASSWORD", "Por favor ingrese los campos requeridos - Clave"))
-		return false;
-}
-if (EW_this.x_nombres && !EW_hasValue(EW_this.x_nombres, "TEXT" )) {
-	if (!EW_onError(EW_this, EW_this.x_nombres, "TEXT", "Por favor ingrese los campos requeridos - Nombre"))
-		return false;
-}
-if (EW_this.x_estado && !EW_hasValue(EW_this.x_estado, "RADIO" )) {
-	if (!EW_onError(EW_this, EW_this.x_estado, "RADIO", "Por favor ingrese los campos requeridos - Estado"))
-		return false;
-}
-if (EW_this.x_fecha_ingreso && !EW_hasValue(EW_this.x_fecha_ingreso, "TEXT" )) {
-	if (!EW_onError(EW_this, EW_this.x_fecha_ingreso, "TEXT", "Por favor ingrese los campos requeridos - Fecha Ingreso"))
-		return false;
-}
-if (EW_this.x_fecha_ingreso && !EW_checkdate(EW_this.x_fecha_ingreso.value)) {
-	if (!EW_onError(EW_this, EW_this.x_fecha_ingreso, "TEXT", "Formato de fecha incorrecto yyyy/mm/dd - Fecha Ingreso"))
-		return false; 
-}
-return true;
-}
-
-//-->
-</script>
 <script type="text/javascript" src="popcalendar.js"></script>
+<style>
+label.error{
+	color:red;
+}
+</style>
 <form name="funcionarioedit" id="funcionarioedit" action="funcionarioedit.php" method="post" enctype="multipart/form-data" onSubmit="return EW_checkMyForm(this);">
 <p>
 <input type="hidden" name="a_edit" value="U">
@@ -174,27 +131,27 @@ return true;
 	<tr>
 		<td class="encabezado" title="Numero de identificacion del funcionario"><span class="phpmaker" style="color: #FFFFFF;">C&Oacute;DIGO DEL FUNCIONARIO</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
-<input type="hidden" name="x_funcionario_codigo" id="x_funcionario_codigo" size="30" value="<?php echo htmlspecialchars(@$x_funcionario_codigo) ?>">
+<input class="required" type="hidden" name="x_funcionario_codigo" id="x_funcionario_codigo" size="30" value="<?php echo htmlspecialchars(@$x_funcionario_codigo) ?>">
 <?php echo htmlspecialchars(@$x_funcionario_codigo) ?>
 </span></td>
 	</tr>
 	<tr>
 		<td class="encabezado" title="Nombre de usuario con el cual se ingresa al sistema"><span class="phpmaker" style="color: #FFFFFF;">LOGIN (intranet)</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
-<input type="hidden" name="x_login" id="x_login" size="30" maxlength="255" value="<?php echo htmlspecialchars(@$x_login) ?>">
+<input class="required" type="hidden" name="x_login" id="x_login" size="30" maxlength="255" value="<?php echo htmlspecialchars(@$x_login) ?>">
 <?php echo htmlspecialchars(@$x_login) ?>
 </span></td>
 	</tr>
 	<tr>
 		<td class="encabezado" title="Contraseña asignada al funcionario para ingresar al sistema"><span class="phpmaker" style="color: #FFFFFF;">CLAVE</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
-<input type="password" name="x_clave" value="<?php echo $x_clave; ?>" size="30" maxlength="50">
+<input type="password" name="x_clave" value="" size="30" maxlength="50">
 </span></td>
 	</tr>
 	<tr>
 		<td class="encabezado" title="Nombre(s) del funcionario"><span class="phpmaker" style="color: #FFFFFF;">NOMBRES</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
-<input type="text" name="x_nombres" id="x_nombres" size="30" maxlength="255" value="<?php echo @$x_nombres; ?>">
+<input class="required" type="text" name="x_nombres" id="x_nombres" size="30" maxlength="255" value="<?php echo @$x_nombres; ?>">
 </span></td>
 	</tr>
 	<tr>
@@ -270,12 +227,15 @@ return true;
 			$check='';
       for($i=0; $i<$nombre_perfil["numcampos"]; $i++){
       	$adicional='';
+				$adicional2='';
+				if($i==0 && usuario_actual('login')=='cerok')$adicional2=' class="required" ';
+				if($i==1 && usuario_actual('login')!='cerok')$adicional2=' class="required" ';
 				if(in_array($nombre_perfil[$i]["idperfil"],$perfiles))$adicional=" checked ";
-      	if(usuario_actual('login')=='0k'){
-      		$check.='<input type="checkbox" id="x_perfil'.$nombre_perfil[$i]["idperfil"].'" name="x_perfil[]" value="'.$nombre_perfil[$i]["idperfil"].'" '.$adicional.'>'.$nombre_perfil[$i]["nombre"]."<br>";
+      	if(usuario_actual('login')=='cerok'){
+      		$check.='<input type="checkbox" id="x_perfil'.$nombre_perfil[$i]["idperfil"].'" name="x_perfil[]" value="'.$nombre_perfil[$i]["idperfil"].'" '.$adicional.$adicional2.'>'.$nombre_perfil[$i]["nombre"]."<br>";
 				}
 				else if($nombre_perfil[$i]["idperfil"]>1){
-					$check.='<input type="checkbox" id="x_perfil'.$nombre_perfil[$i]["idperfil"].'" name="x_perfil[]" value="'.$nombre_perfil[$i]["idperfil"].'" '.$adicional.'>'.$nombre_perfil[$i]["nombre"]."<br>";
+					$check.='<input type="checkbox" id="x_perfil'.$nombre_perfil[$i]["idperfil"].'" name="x_perfil[]" value="'.$nombre_perfil[$i]["idperfil"].'" '.$adicional.$adicional2.'>'.$nombre_perfil[$i]["nombre"]."<br>";
 				}
       }
 			echo $check;
@@ -431,9 +391,12 @@ function EditData($sKey,$conn)
 		$theValue = (!get_magic_quotes_gpc()) ? addslashes($GLOBALS["x_login"]) : $GLOBALS["x_login"]; 
 		$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
 		$fieldList["login"] = $theValue;
-		$theValue = (!get_magic_quotes_gpc()) ? addslashes($GLOBALS["x_clave"]) : $GLOBALS["x_clave"]; 
-		$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
-		$fieldList["clave"] = $theValue;
+		
+		if($GLOBALS["x_clave"]){
+			$theValue = " '" .encrypt_md5(trim($GLOBALS["x_clave"])). "'";
+			$fieldList["clave"] = $theValue;
+		}
+		
 		$theValue = (!get_magic_quotes_gpc()) ? addslashes($GLOBALS["x_nombres"]) : $GLOBALS["x_nombres"]; 
 		$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
 		$fieldList["nombres"] = ($theValue);
@@ -567,4 +530,3 @@ if(confirm("<?php echo $texto ;?>"))
 <?php
 }
 ?>
-

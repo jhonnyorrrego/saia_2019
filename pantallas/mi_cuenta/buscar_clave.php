@@ -9,8 +9,9 @@ while ($max_salida > 0) {
     $max_salida--;
 }
 include_once($ruta_db_superior . "db.php");
+include_once($ruta_db_superior . "pantallas/lib/librerias_cripto.php");
 $pass=$_REQUEST["clave"];
-$busqueda=busca_filtro_tabla("","funcionario","idfuncionario=".usuario_actual('idfuncionario')." AND clave='".$pass."'","",$conn);
+$busqueda=busca_filtro_tabla("","funcionario","idfuncionario=".usuario_actual('idfuncionario')." AND clave='".encrypt_md5(trim($pass))."'","",$conn);
 if($busqueda["numcampos"]){
 	echo '0';
 }

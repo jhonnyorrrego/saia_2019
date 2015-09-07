@@ -502,7 +502,7 @@ function filtro_funcionario($funcionario){
 return($retorno);  
 }
 function barra_inferior_documentos_activos($iddoc,$numero){
-$dato_prioridad=busca_filtro_tabla("","prioridad_documento","documento_iddocumento=".$iddoc,"fecha_asignacion DESC",$conn);	
+$dato_prioridad=busca_filtro_tabla("","prioridad_documento","documento_iddocumento=".$iddoc." and funcionario_idfuncionario=".usuario_actual('idfuncionario'),"fecha_asignacion DESC",$conn);	
 $prioridad="icon-flag";
 if($dato_prioridad["numcampos"]){
   switch ($dato_prioridad[0]["prioridad"]) {  	
@@ -557,9 +557,10 @@ return(str_replace("\\r","",str_replace("\\n","",$texto)));
 }
 function exportar_excel(){
 	global $conn;
-	$texto='<li class="divider-vertical"></li><li><div class="btn-group">                    
+ 	$texto.='<li class="divider-vertical"></li><li><div class="btn-group">                    
           <button class="btn btn-mini btn-primary exportar_listado_saia pull-left" enlace="pantallas/documento/busqueda_avanzada_documento.php" title="Exportar reporte" id="boton_exportar_excel" style="display:none">Exportar a excel</button></div></li><li  style="margin-top:5px;margin-left:5px;width:200px"><iframe name="iframe_exportar_saia" id="iframe_exportar_saia" allowtransparency="1" frameborder="0" framespacing="2px" scrolling="no" width="100%" src=""  hspace="0" vspace="0" height="28px"></iframe></li>';
-	//return($texto);
+		  
+	return($texto);
 }
 function origen_documento2_excel($doc,$numero,$origen="",$tipo_radicado="",$estado="",$serie="",$tipo_ejecutor=""){
 $ruta="";

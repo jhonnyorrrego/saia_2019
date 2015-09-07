@@ -19,7 +19,6 @@ echo(estilo_bootstrap());
 <div class="progress progress-striped active" style="margin-bottom: 0px;"><div class="bar bar-success" id="barra_exp" ></div></div>
 </div>
 <?php 
-
 $_REQUEST["no_imprime"]=1;
 if($_REQUEST['tipo_reporte']==1){
 	$_REQUEST['tipo_busqueda']=1;
@@ -40,10 +39,11 @@ if((@$_REQUEST["actual_row"]<@$_REQUEST["cantidad_total"] )|| @$_REQUEST["page"]
 				$request.=$key."=".$valor;
 				$i++;
 			}
-			$porcentaje=ceil(($_REQUEST["actual_row"]/$_REQUEST["cantidad_total"])*100);
+			$porcentaje=floor(($_REQUEST["actual_row"]/$_REQUEST["cantidad_total"])*100);
 			if($porcentaje>=100){
 				$porcentaje=100;
 			}
+
 			echo('<script type="text/javascript">');
 			if($porcentaje==100){
 				$texto='$("#barra_exp_ppal").html("<a href=\''.$ruta_db_superior.$_REQUEST["ruta_exportar_saia"].'\' align=\'center\'><div class=\'btn btn-mini btn-primary\'>Descargar</div></a>");';

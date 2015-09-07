@@ -12,10 +12,11 @@ include_once($ruta_db_superior . "db.php");
 include_once($ruta_db_superior . "librerias_saia.php");
 include_once($ruta_db_superior."pantallas/pagina/librerias.php");
 echo(estilo_bootstrap());
+echo(librerias_notificaciones());
+
 if($_REQUEST['evento'] == 'Aceptar'){
-	eliminar_paginas_documento($_REQUEST['paginas'],$_REQUEST['iddocumento'],$_REQUEST['justificacion']);	
+	eliminar_paginas_documento2($_REQUEST['paginas'],$_REQUEST['iddocumento'],$_REQUEST['justificacion']);	
 }
-$pagina=  busca_filtro_tabla("", "pagina", "consecutivo=".$key, "", $conn);
 ?>
 <form class="form-horizontal" name="confirma_eliminacion_pagina" id="eliminar_pagina" action="#" method="POST">
 	<legend class="texto-azul">Eliminar p&aacute;ginas</legend>
@@ -41,37 +42,47 @@ $pagina=  busca_filtro_tabla("", "pagina", "consecutivo=".$key, "", $conn);
       <input type="hidden" name="paginas" value="<?php echo($_REQUEST['paginas']);?>">        
     	<input type="hidden" name="iddocumento" value="<?php echo($_REQUEST['iddocumento']);?>">
 			<input type="submit" name="evento" class="btn btn-mini btn-primary" style="font-family: verdana; font-size: 10px;" value="Aceptar">
-			<buttom name="cancelar" id="cancelar" class="btn btn-mini" style="font-family: verdana; font-size: 10px;">Cancelar</button>      
+
     </div>
   </div>
 </form>
 <?php	
-	function eliminar_paginas_documento($paginas,$iddocumento,$justificacion){
+	function eliminar_paginas_documento2($paginas,$iddocumento,$justificacion){
 		global $conn,$ruta_db_superior;		
 		$idpaginas = explode(',',$paginas);				
 		$idfuncionario = usuario_actual('idfuncionario');			
-		foreach ($idpaginas as $key){			
-			$sql_delete = "DELETE FROM pagina WHERE consecutivo=".$key.' AND id_documento='.$iddocumento;						
-				phpmkr_query($sql_delete);
-			$sql_digitalizacion ="INSERT INTO digitalizacion (documento_iddocumento,fecha,accion,funcionario, justificacion)VALUES (".$iddocumento.",'".date('Y-m-d H:m:s')."','ELIMINACION PAGINA','".$idfuncionario."','Identificador:".$key.",".$justificacion."')";
-				phpmkr_query($sql_digitalizacion);
-									
+		foreach ($idpaginas as $key){
+			$inf_eliminado = busca_filtro_tabla("imagen,ruta","pagina","consecutivo=".$key,"",$conn);
+			if($inf_eliminado["numcampos"]){
+			   $imagen=$ruta_db_superior.$inf_eliminado[0]["imagen"];
+				 $ruta=$ruta_db_superior.$inf_eliminado[0]["ruta"];
+				 
+			   $eliminacion=$ruta_db_superior."../backup/eliminados/".$iddocumento;
+			   $nombre=$eliminacion."/".date("Y-m-d_H_i_s")."_".basename($inf_eliminado[0]["ruta"]);
+			   crear_destino($eliminacion);
+			   copy($ruta,$nombre);
+				  if(unlink($imagen) && unlink($ruta)){
+							$sql_delete = "DELETE FROM pagina WHERE consecutivo=".$key.' AND id_documento='.$iddocumento;						
+							phpmkr_query($sql_delete);
+							$sql_digitalizacion ="INSERT INTO digitalizacion (documento_iddocumento,fecha,accion,funcionario, justificacion)VALUES (".$iddocumento.",'".date('Y-m-d H:m:s')."','ELIMINACION PAGINA','".$idfuncionario."','Identificador:".$key.",".$justificacion."')";
+							phpmkr_query($sql_digitalizacion);
+					}
+			}						
 		}		
-		$resultado = ordenar_paginas_documento($iddocumento);		
-?>
-<script type="text/javascript">
-parent.window.hs.close();
-</script>
-<?php	
+		$resultado = ordenar_paginas_documento($iddocumento);	
+		?>
+		<script>
+			notificacion_saia('Se ha eliminado la pagina','success','',4000);
+			window.open("<?php echo $ruta_db_superior;?>ordenar.php?key=<?php echo $iddocumento;?>&mostrar_formato=1","_parent")
+		</script>
+		<?php
+		die();
 	}	
 echo(librerias_jquery('1.7'));		
 echo(librerias_validar_formulario());
 ?>
 <script type="text/javascript">
 $(document).ready(function(){
-	$('#cancelar').live('click',function(){
-		parent.window.hs.close();	
-	});
 	$('#eliminar_pagina').validate();	
 });
 </script>

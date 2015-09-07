@@ -102,6 +102,10 @@ $(document).ready(function(){
   	$('.pagina_siguiente').attr("disabled","");
     $('.pagina_siguiente').removeClass("pagina_siguiente");
   }
+
+  $('.eliminar_pagina').live('click',function(){    	
+		window.open("<?php echo($ruta_db_superior);?>pantallas/pagina/eliminar_pagina.php?paginas=<?php echo($_REQUEST["idpagina"]);?>&iddocumento=<?php echo($_REQUEST['iddocumento']);?>","detalles");
+  });
   
   $('.pagina_anterior').live('click',function(){
   	window.open("<?php echo($ruta_db_superior);?>pantallas/pagina/mostrar_pagina.php?idpagina=<?php echo($pagina_anterior[0]['consecutivo']);?>&iddocumento=<?php echo($_REQUEST['iddocumento']);?>","detalles");

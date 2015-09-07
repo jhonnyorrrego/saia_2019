@@ -1,9 +1,22 @@
 <?php
 include_once("header.php");
 
-if(@$_REQUEST["accion"]=="adicionar" && $_REQUEST["key"])
-{$documento=busca_filtro_tabla("","documento","iddocumento=".$_REQUEST["key"],"",$conn);
- $anulacion=busca_filtro_tabla("","documento_anulacion","documento_iddocumento='".$_REQUEST["key"]."'","",$conn);
+if(@$_REQUEST["accion"]=="adicionar" && $_REQUEST["key"]){
+	$documento=busca_filtro_tabla("","documento","iddocumento=".$_REQUEST["key"],"",$conn);
+	if($documento[0]["ejecutor"]!=usuario_actual('funcionario_codigo')){
+		$ruta_formato=busca_filtro_tabla("","formato a","lower(a.nombre)='".strtolower($documento[0]["plantilla"])."'","",$conn);
+		include_once("librerias_saia.php");
+		echo(librerias_notificaciones());
+		?>
+		<script>
+		notificacion_saia('Usted no es el creador del documento','success','',4000);
+		window.open("formatos/<?php echo($ruta_formato[0]["nombre"]); ?>/<?php echo($ruta_formato[0]["ruta_mostrar"]); ?>?iddoc=<?php echo($_REQUEST["key"]); ?>&idformato=<?php echo($ruta_formato[0]["idformato"]); ?>","_self");
+		</script>
+		<?php
+		die();
+	}
+	
+ 	$anulacion=busca_filtro_tabla("","documento_anulacion","documento_iddocumento='".$_REQUEST["key"]."'","",$conn);
 ?>
 <div  align="center">
 <?php

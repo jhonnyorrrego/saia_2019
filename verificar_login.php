@@ -1,5 +1,6 @@
 <?php
 include_once("db.php");
+include_once("pantallas/lib/librerias_cripto.php");
 $salida=0;
 $bValidPwd = false;	
 $dias_sesion=busca_filtro_tabla("","configuracion","tipo='empresa' AND nombre='tiempo_cookie_login'","",$conn);
@@ -39,7 +40,7 @@ if (@$_REQUEST["userid"]<>"" && @$_REQUEST["passwd"]<>"") {
         }
         if($row["dep_estado"]){    
           if($row["cargo_estado"]){
-    				if ($row["clave"] == $sPassWd) {
+    				if ($row["clave"] == encrypt_md5(trim($sPassWd))) {
               $_SESSION["LOGIN".LLAVE_SAIA]= $row["login"];
     					$bValidPwd = TRUE;
     				}

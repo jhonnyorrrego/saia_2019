@@ -261,8 +261,11 @@ if(@$_REQUEST["idbusqueda_temporal"]){
 }
 if(!@$_REQUEST["cantidad_total"]){
 	$result = ejecuta_filtro_tabla("SELECT COUNT(*) AS cant FROM ".$tablas_consulta." WHERE ".$condicion.$ordenar_consulta,$conn);
-	
-	$_REQUEST["cantidad_total"]=$result[0]["cant"];
+	if($result["numcampos"]>1){
+		$_REQUEST["cantidad_total"]=$result["numcampos"];
+	}else{
+		$_REQUEST["cantidad_total"]=$result[0]["cant"];
+	}
 }
 else{
 	$result["numcampos"]=@$_REQUEST["cantidad_total"];
@@ -273,7 +276,12 @@ $response=new stdClass;
 $response->exito=0;
 $response->mensaje='Error inesperado';
 if(trim($agrupar_consulta)!=""&&!@$count&&$datos_busqueda[0]["tipo_busqueda"]==2){
-  $count = ($result["numcampos"]-1);
+  if(@$_REQUEST["exportar_saia"]){
+	$count = ($result["numcampos"]);
+  }
+  else{
+  	$count = ($result["numcampos"]-1);
+  }
 }
 else if(trim($agrupar_consulta)!=""&&!@$count){
   $count = ($result["numcampos"]);
@@ -345,29 +353,71 @@ if(@$_REQUEST["exportar_saia"]){
 	$listado_funciones=array_merge($listado_funciones,$listado_funciones2);
 }
 if($result["numcampos"]){
-	$response->exito=1;	
-	$response->mensaje="Registros encontrados"; 
-	if(@$_REQUEST["exportar_saia"]=='excel'){
+	$response->exito=1;
+	$archivo_excel=0;
+	$response->mensaje="Registros encontrados";
+	if(@$_REQUEST["exportar_saia"]){
 		if(@$_REQUEST["ruta_exportar_saia"]){
+			
 			if(file_exists($ruta_db_superior.$_REQUEST["ruta_exportar_saia"])===false || $page==1){
 				if($page==1 && file_exists($ruta_db_superior.$_REQUEST["ruta_exportar_saia"])){
 					unlink($ruta_db_superior.$_REQUEST["ruta_exportar_saia"]);
 				}
 				crear_destino($ruta_db_superior."temporal_".usuario_actual('login'));
+				if($_REQUEST["exportar_saia"]=="excel"){
+					//AQUI SE CREA EL ARCHIVO SI NO EXISTE
+					include_once($ruta_db_superior.'pantallas/busquedas/PHPExcel/IOFactory.php');
+					
+					$archivo_excel=1;
+					$objPHPExcel = new PHPExcel();
+					$nombre=usuario_actual("nombres")." ".usuario_actual("apellidos");
+					if(@$_REQUEST["titulo_reporte_saia"]){
+						$titulo=@$_REQUEST["titulo_reporte_saia"];
+					}
+					else{
+						$titulo="Reporte_SAIA_".$datos_busqueda[0]["busqueda_componente.etiqueta"];
+					}
+					ksort($array_export);
+					$objPHPExcel->getProperties()->setCreator($nombre)
+					->setLastModifiedBy($nombre)
+					->setTitle($titulo)
+					->setSubject($titulo)
+					->setKeywords("cerok SAIA reporte");
+					$highestRow=0;
+					
+				}
 			}
-			$file_export=fopen($ruta_db_superior.$_REQUEST["ruta_exportar_saia"],"a+");
-			if($page==1){
-				fputcsv($file_export,$array_export[-1],",",'"');
+			else if($_REQUEST["exportar_saia"]=="excel"){
+				// AQUI SE ABRE EL ARCHIVO DE EXCEL
+				include_once($ruta_db_superior.'pantallas/busquedas/PHPExcel/IOFactory.php');
+				$fileType = 'Excel5';
+				$objReader = PHPExcel_IOFactory::createReader($fileType);
+				$objPHPExcel = $objReader->load($ruta_db_superior.$_REQUEST["ruta_exportar_saia"]);
+				$highestRow = $objPHPExcel->setActiveSheetIndex(0)->getHighestRow();				
+			}
+			if($_REQUEST["exportar_saia"]=="csv"){
+				$file_export=fopen($ruta_db_superior.$_REQUEST["ruta_exportar_saia"],"a+");
 			}
 		}
 	}
+
+	if($_REQUEST["exportar_saia"]=="csv" && $page==1){
+		fputcsv($file_export,$array_export[-1],",",'"');
+	}
+	else if($_REQUEST["exportar_saia"]=="excel" && $page==1){
+		$highestRow++;
+		$objPHPExcel->getActiveSheet()->fromArray($array_export[-1], NULL, 'A'.($highestRow));
+		$objWriter = new PHPExcel_Writer_Excel5($objPHPExcel);
+		$objWriter->save($ruta_db_superior.$_REQUEST["ruta_exportar_saia"]);
+	}
+
 	for($i=0;$i<$result["numcampos"];$i++){
 	  $response->rows[$i]=new stdClass;
-		if(@$_REQUEST["exportar_saia"]!=''){			
+		if(@$_REQUEST["exportar_saia"]!=''){
 			$array_export=array();
 		}
 	  unset($listado_campos);
-	  $listado_campos=array();     
+	  $listado_campos=array();
 	  $info=$info_base;
 	  for($j=0;$j<$cant_campos;$j++){
 	    $caden=' \ ';   
@@ -392,8 +442,8 @@ if($result["numcampos"]){
 			if(function_exists($funcion[0])){
 	    	$valor_funcion=call_user_func_array($funcion[0],$valor_variables);     
 	    	$info=str_replace("{*".$valor."*}",$valor_funcion,$info);
-				
-				if(@$_REQUEST["exportar_saia"]=="excel"){
+
+				if(@$_REQUEST["exportar_saia"]=="excel" || @$_REQUEST["exportar_saia"]=='csv'){
 					$response->rows[$i]->$funcion[0]=$valor_funcion;
 				}
 				if($datos_busqueda[0]["tipo_busqueda"]==2){
@@ -409,11 +459,12 @@ if($result["numcampos"]){
 	      $response->rows[$i]->info.="</div>";
 			$response->rows[$i]->info=str_replace("\n","",str_replace("\r","",$info));
 			$response->rows[$i]->llave=$result[$i][$llave];
-			
-			if(@$_REQUEST["exportar_saia"]=='excel'){
+
+			if(@$_REQUEST["exportar_saia"]=='excel' || @$_REQUEST["exportar_saia"]=='csv'){
 				for($k=0;$k<$cant_columnas_excel;$k++){
 					$array_export[$columnas_excel[$k]] = utf8_encode(html_entity_decode(strip_tags($response->rows[$i]->$columnas_excel[$k])));
 				}
+				
 			}
 	  }
 		else if($datos_busqueda[0]["tipo_busqueda"]==2){
@@ -421,83 +472,23 @@ if($result["numcampos"]){
 				$array_export[$columnas_excel[$k]]=utf8_encode(html_entity_decode(strip_tags($response->rows[$i]->$columnas_excel[$k])));
 			}
 		}
-		if($_REQUEST["exportar_saia"]=="excel"){
+		if($_REQUEST["exportar_saia"]=="csv"){
 			fputcsv($file_export,$array_export,",",'"');
 			unset($response->rows[$i]);
+		}
+		else if($_REQUEST["exportar_saia"]=="excel"){
+			$highestRow++;
+			$objPHPExcel->getActiveSheet()->fromArray($array_export, NULL, 'A'.($highestRow));
+			$objWriter = new PHPExcel_Writer_Excel5($objPHPExcel);
+			$objWriter->save($ruta_db_superior.$_REQUEST["ruta_exportar_saia"]);
+			unset($response->rows[$i]);
+			$response->exito=1;
 		}
 	}
 	if(@$file_export){
 		fclose($file_export);
 	}
 }
-/*
-if(@$_REQUEST["exportar_saia"]=='excel'){
-  if(@$_REQUEST["ruta_exportar_saia"]){  
-		if(file_exists($ruta_db_superior.$_REQUEST["ruta_exportar_saia"])===false || $page==1){
-			if($page==1 && file_exists($ruta_db_superior.$_REQUEST["ruta_exportar_saia"])){
-				unlink($ruta_db_superior.$_REQUEST["ruta_exportar_saia"]);
-			}
-			crear_destino($ruta_db_superior."temporal_".usuario_actual('login'));
-			$objPHPExcel = new PHPExcel();			
-			$nombre=usuario_actual("nombres")." ".usuario_actual("apellidos");
-			if(@$_REQUEST["titulo_reporte_saia"]){
-				$titulo=@$_REQUEST["titulo_reporte_saia"];
-			}
-			else{
-				$titulo="Reporte_SAIA_".$datos_busqueda[0]["busqueda_componente.etiqueta"];
-			}
-			ksort($array_export);
-			$objPHPExcel->getProperties()->setCreator($nombre)
-									                 ->setLastModifiedBy($nombre)
-									                 ->setTitle($titulo)
-									                 ->setSubject($titulo)
-									                 ->setKeywords("cerok SAIA reporte");
-			$objPHPExcel->getActiveSheet()->fromArray($array_export, NULL, 'A1');
-			foreach(range('A','Z') as $columnID) {
-			  if(!in_array($columnID,$indices_columnas)){
-					$objPHPExcel->getActiveSheet()->getColumnDimension($columnID)
-			        ->setAutoSize(true);
-				}
-			}
-			
-			if($datos_busqueda[0]["exportar_encabezado"] && count($imagenes)){
-				$cantidad=count($imagenes);
-				for($k=0;$k<$cantidad;$k++){
-					if($imagenes[$k]["ruta"] && $imagenes[$k]["coordenada"]){
-						$objDrawing = new PHPExcel_Worksheet_Drawing();
-						$objDrawing->setPath($imagenes[$k]["ruta"]);
-						$objDrawing->setCoordinates($imagenes[$k]["coordenada"]);
-						$objDrawing->setWorksheet($objPHPExcel->getActiveSheet());
-						if($imagenes[$k]["ancho"]){
-							$objPHPExcel->getActiveSheet()->getColumnDimension($imagenes[$k]["coordenada"][0])->setWidth($imagenes[$k]["ancho"]);
-						}
-						if($imagenes[$k]["alto"]){
-							$objPHPExcel->getActiveSheet()->getRowDimension($imagenes[$k]["coordenada"][1])->setRowHeight($imagenes[$k]["alto"]);
-						}
-					}
-				}
-			}
-			
-			$objWriter = new PHPExcel_Writer_Excel5($objPHPExcel);
-			//$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'HTML');
-			$objWriter->save($ruta_db_superior.$_REQUEST["ruta_exportar_saia"]);				
-			$response->exito=1;
-			$response->mensaje="Archivo creado y almacenado";			
-		}
-		else{
-			include_once($ruta_db_superior.'pantallas/busquedas/PHPExcel/IOFactory.php');
-			$fileType = 'Excel5';
-			$objReader = PHPExcel_IOFactory::createReader($fileType);
-			$objPHPExcel = $objReader->load($ruta_db_superior.$_REQUEST["ruta_exportar_saia"]);
-			$highestRow = $objPHPExcel->setActiveSheetIndex(0)->getHighestRow();
-			$objPHPExcel->getActiveSheet()->fromArray($array_export, NULL, 'A'.($highestRow+1));			
-			$objWriter = new PHPExcel_Writer_Excel5($objPHPExcel);
-			$objWriter->save($ruta_db_superior.$_REQUEST["ruta_exportar_saia"]);
-			$response->exito=1;
-			$response->mensaje="Archivo almacenado";		
-		}						                 
-  }
-}*/
 $response->actual_row=$actual_row+$i; 
 if($response->actual_row>$response->records){
   $response->actual_row=$response->records;

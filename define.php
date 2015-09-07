@@ -64,6 +64,9 @@ define("RUTA_IMAGENES","../almacenamiento/");
 define("RUTA_QR","../almacenamiento/");
 define("RUTA_INFO_QR","http://75.101.166.85/info_doc.php");
 
+define("RUTA_BACKUP","../backup/");
+define("RUTA_BACKUP_ELIMINADOS",RUTA_BACKUP."eliminados/");
+
 define("LLAVE_SAIA","SAIA_PRODUCTIVO_RELEASE");
 
 if(@$_SERVER["HTTPS"]=='on'){

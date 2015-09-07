@@ -17,7 +17,7 @@ if($idft[0]['estado']!='APROBADO' && $_REQUEST['tipo']!=5){
 	echo '<a href="../item_causas_pqrsf/adicionar_item_causas_pqrsf.php?pantalla=padre&amp;idpadre='.$_REQUEST['iddoc'].'&amp;idformato=222&amp;padre='.$idft[0][0].'"><img width="16px" border="0" src="../../botones/formatos/adicionar.gif">Adicionar Items</a>';	
 }
 
-$item=busca_filtro_tabla("I.accion_causa,(F.nombres+' '+apellidos) as nombre,".fecha_db_obtener('I.fecha_limite','Y-m-d')." as fecha_limite,idft_item_causas_pqrsf","ft_item_causas_pqrsf I,dependencia_cargo D, funcionario F","F.idfuncionario=D.funcionario_idfuncionario AND D.iddependencia_cargo=I.responsable AND I.ft_analisis_pqrsf=".$idft[0][0],"",$conn);
+$item=busca_filtro_tabla("I.accion_causa,nombres, apellidos,".fecha_db_obtener('I.fecha_limite','Y-m-d')." as fecha_limite,idft_item_causas_pqrsf","ft_item_causas_pqrsf I,vfuncionario_dc F","F.iddependencia_cargo=I.responsable AND I.ft_analisis_pqrsf=".$idft[0][0],"",$conn);
 
 $html='<table  style="border-collapse: collapse; font-size: 12px; width: 100%;" border="1">';
 $html.="<tr align='center'><th>Accion</th> <th>Responsable</th> <th>Fecha Limite</th>";
@@ -26,11 +26,9 @@ if($idft[0]['estado']!='APROBADO' && $_REQUEST['tipo']!=5){
 }
 $html.="</tr>";
 for($i=0;$i<$item['numcampos'];$i++){
-	$html.='<tr> <td>'.$item[$i]['accion_causa'].'</td> <td>'.$item[$i]['nombre'].'</td> <td>'.$item[$i]['fecha_limite'].'</td>';
+	$html.='<tr> <td>'.$item[$i]['accion_causa'].'</td> <td>'.ucwords(strtolower($item[$i]['nombres'].' '.$item[$i]['apellidos'])).'</td> <td>'.$item[$i]['fecha_limite'].'</td>';
 	if($idft[0]['estado']!='APROBADO' && $_REQUEST['tipo']!=5){
 		$html.='<td>
-			<a href="../item_causas_pqrsf/editar_item_causas_pqrsf.php?idformato=222&amp;item='.$item[$i]['idft_item_causas_pqrsf'].'">
-			<img border="0" src="../../botones/comentarios/editar_documento.png"></a>
 			<a href="#" onclick="if(confirm(&quot;En realidad desea borrar este elemento?&quot;)) window.location=&quot;../librerias/funciones_item.php?formato=222&amp;idpadre='.$_REQUEST['iddoc'].'&amp;accion=eliminar_item&amp;tabla=ft_item_causas_pqrsf&amp;id='.$item[$i]['idft_item_causas_pqrsf'].'&quot;;">
 			<img border="0" src="../../images/eliminar_pagina.png"></a>	</td>';
 	}

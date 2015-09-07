@@ -56,17 +56,17 @@ for($i=0;$i<$clasificacion['numcampos'];$i++){
 	$html.='<table style="border-collapse: collapse; font-size: 12px; width: 100%;" border="1">
 	<tr>
 	<td style="text-align: left;"><strong>&nbsp;Clasificacion del Reclamo</strong></td>
-	<td>&nbsp;'.mostrar_valor_campo('serie',220,$clasificacion[$i]['documento_iddocumento'],1).'</td>
+	<td>&nbsp;'.mostrar_valor_campo('serie',306,$clasificacion[$i]['documento_iddocumento'],1).'</td>
 	</tr>
 	<tr>
 	<td style="text-align: left;"><strong>&nbsp;Resonsable:&nbsp;</strong></td>
-	<td style="text-align: left;">&nbsp;'.ver_responsable(220,$clasificacion[$i]['documento_iddocumento'],1).'</td>
+	<td style="text-align: left;">&nbsp;'.ver_responsable(306,$clasificacion[$i]['documento_iddocumento'],1).'</td>
 	</tr>
 	<tr>
 	<td style="text-align: left;" colspan="2"><strong>&nbsp;Observaciones:</strong></td>
 	</tr>
 	<tr>
-	<td colspan="2">&nbsp;'.mostrar_valor_campo('observaciones',220,$clasificacion[$i]['documento_iddocumento'],1).'</td>
+	<td colspan="2">&nbsp;'.mostrar_valor_campo('observaciones',306,$clasificacion[$i]['documento_iddocumento'],1).'</td>
 	</tr>
 	</table><br/>';
 	
@@ -92,14 +92,14 @@ function mostrar_items($idformato,$iddoc){
 global $conn;
 $idft=busca_filtro_tabla("idft_analisis_pqrsf,estado","ft_analisis_pqrsf,documento","iddocumento=documento_iddocumento and documento_iddocumento=".$iddoc,"",$conn);
 
-$item=busca_filtro_tabla("I.accion_causa,(F.nombres+' '+apellidos) as nombre,".fecha_db_obtener('I.fecha_limite','Y-m-d')." as fecha_limite,idft_item_causas_pqrsf","ft_item_causas_pqrsf I,dependencia_cargo D, funcionario F","F.idfuncionario=D.funcionario_idfuncionario AND D.iddependencia_cargo=I.responsable AND I.ft_analisis_pqrsf=".$idft[0][0],"",$conn);
+$item=busca_filtro_tabla("I.accion_causa,nombres, apellidos,".fecha_db_obtener('I.fecha_limite','Y-m-d')." as fecha_limite,idft_item_causas_pqrsf","ft_item_causas_pqrsf I,dependencia_cargo D, funcionario F","F.idfuncionario=D.funcionario_idfuncionario AND D.iddependencia_cargo=I.responsable AND I.ft_analisis_pqrsf=".$idft[0][0],"",$conn);
 
 $html='<table  style="border-collapse: collapse; font-size: 12px; width: 100%;" border="1">';
 $html.="<tr align='center'><th>Accion</th> <th>Responsable</th> <th>Fecha Limite</th>";
 
 $html.="</tr>";
 for($i=0;$i<$item['numcampos'];$i++){
-	$html.='<tr> <td>'.$item[$i]['accion_causa'].'</td> <td>'.$item[$i]['nombre'].'</td> <td>'.$item[$i]['fecha_limite'].'</td>';
+	$html.='<tr> <td>'.$item[$i]['accion_causa'].'</td> <td>'.ucwords(strtolower($item[$i]['nombres'].' '.$item[$i]['apellidos'])).'</td> <td>'.$item[$i]['fecha_limite'].'</td>';
 	$html.='</tr>';
 }	
 $html.="</table><br/>";
@@ -108,5 +108,26 @@ if($item['numcampos']>0){
 	return  $html;
 }
 }
-
+function mostrar_anexos_pqrsf($idformato,$iddoc){
+	global $conn,$ruta_db_superior;
+	$anexos=busca_filtro_tabla("","anexos a","a.documento_iddocumento=".$iddoc,"",$conn);
+	$anexos_array=array();
+	for($i=0;$i<$anexos["numcampos"];$i++){
+		$anexos_array[]='<a class="previo_high" style="cursor:pointer" enlace="'.$anexos[$i]["ruta"].'">'.$anexos[$i]["etiqueta"].'</a>';
+	}
+	echo(implode(", ",$anexos_array));
+	if($_REQUEST["tipo"]!=5){
+		?>
+		<script>
+		$(document).ready(function(){
+			$(".previo_high").click(function(e){
+				var enlace=$(this).attr("enlace");
+				top.hs.htmlExpand(this, { objectType: 'iframe',width: 1000, height: 600,contentId:'cuerpo_paso', preserveContent:false, src:enlace,outlineType: 'rounded-white',wrapperClassName:'highslide-wrapper drag-header'});
+				
+			});
+		});
+		</script>
+		<?php
+	}
+}
 ?>
