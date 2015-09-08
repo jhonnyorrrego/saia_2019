@@ -47,11 +47,11 @@ tree3.loadXML("<?php echo($ruta_db_superior);?>pantallas/lib/test_archivos_carpe
 function manejadorClick(nodeId) {
 	//ignorar si selecciono el mismo nodo
 	//alert(nodoSeleccionado + ":" + nodeId);
-	if(!nodoSeleccionado) {
+	/*if(!nodoSeleccionado) {
 		nodoSeleccionado=nodeId;
 	} else if(nodoSeleccionado == nodeId) {
         return;
-    }
+    }*/
     //se cambio el nodo
 	//nodoSeleccionado=nodeId;
     //ignorar los nodos padre (folder)
