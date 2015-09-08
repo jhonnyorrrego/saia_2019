@@ -1700,7 +1700,7 @@ exit();
 <Pre-condiciones><Pre-condiciones>
 <Post-condiciones><Post-condiciones>
 </Clase>*/ 
-function enviar_mensaje($correo="",$tipo_usuario='codigo',$usuarios,$asunto="",$mensaje,$anexos=array(),$copia_oculta=0){
+function enviar_mensaje($correo="",$tipo_usuario='codigo',$usuarios,$asunto="",$mensaje,$anexos=array(),$copia_oculta=0, $iddoc=''){
 global $conn;
  
   $to = array();
@@ -1777,12 +1777,15 @@ global $conn;
  
  $mail->ClearAllRecipients();
  $mail->ClearAddresses();
+ $para=array();
  
  foreach($to as $fila){
  	if($copia_oculta==1){
  		$mail->AddBCC($fila,$fila);
+		$para[]=$fila;
  	}else{
  		$mail->AddAddress($fila,$fila);
+		$para[]=$fila;
 	}
  }
  /*
@@ -1797,6 +1800,31 @@ global $conn;
    if(!$mail->Send()){
    	return($mail->ErrorInfo);
    }else{
+   	if($iddoc){
+	   	$radicador_salida=busca_filtro_tabla("","configuracion","nombre LIKE 'radicador_salida'","",$conn);
+	    if($radicador_salida["numcampos"]){
+	    	$funcionario=busca_filtro_tabla("","funcionario","login LIKE '".$radicador_salida[0]["valor"]."'","",$conn);
+	      if($funcionario["numcampos"]){
+	        $ejecutores=array($funcionario[0]["funcionario_codigo"]);
+	      }
+	      else {
+	        $ejecutores=array(usuario_actual("funcionario_codigo"));
+	      }
+	    }
+	    if(!count($ejecutores))
+	      $ejecutores=array(usuario_actual("funcionario_codigo"));
+			
+			$otros["notas"]="'Documento enviado por e-mail por medio del correo: ".$mail->FromName;
+		  if(count($para)){
+		    $otros["notas"].= " Para :".implode(",",$para);
+		  }
+		  $otros["notas"].="'";
+		  $datos["archivo_idarchivo"]=@$iddoc;
+		  $datos["tipo_destino"]=1;
+		  $datos["tipo"]="";
+		  $datos["nombre"]="DISTRIBUCION";
+		  transferir_archivo_prueba($datos,$ejecutores,$otros);
+		}
    	return (true);
    } 
   }

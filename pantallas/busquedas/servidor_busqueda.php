@@ -23,7 +23,7 @@ $sord = @$_REQUEST['sord']; // Orden de la consulta
 $actual_row = @$_REQUEST['actual_row']; 
 $count=false;
 $start = @$_REQUEST['actual_row']; 
-
+crear_log_busqueda_excel($ruta_db_superior."../backup/log_exportar.txt", "INICIO-------".date("Y-m-d H:i:s")."-----------\n");
 //$filtro= @$_REQUEST['filtros']; //get the filters from pantalla
 if(!$limit) $limit=30;
 //if(!$sord) $sord ='desc';
@@ -315,7 +315,12 @@ if(@$start!==0&&$aux_limit!="todos"&&@$_REQUEST["reporte"]){
   $start = $limit*$page - $limit; // do not put $limit*($page - 1)
 }
 if ($start<0) $start = 0;
-$result=busca_filtro_tabla_limit($campos_consulta,$tablas_consulta,$condicion,$ordenar_consulta2,intval($start),intval($limit-1),$conn);
+if(MOTOR=='SqlServer'){
+	//Sin esta validacion, los reportes de grillas embolan 1 registro en cada pagina
+	$result=busca_filtro_tabla_limit($campos_consulta,$tablas_consulta,$condicion,$ordenar_consulta2,intval($start),intval($limit),$conn);
+}else{
+	$result=busca_filtro_tabla_limit($campos_consulta,$tablas_consulta,$condicion,$ordenar_consulta2,intval($start),intval($limit-1),$conn);
+}
 
 $start = $limit*$page - $limit; // do not put $limit*($page - 1)
 if($datos_busqueda[0]["tipo_busqueda"]==1 || $_REQUEST['tipo_busqueda']==1){
@@ -364,6 +369,7 @@ if($result["numcampos"]){
 					unlink($ruta_db_superior.$_REQUEST["ruta_exportar_saia"]);
 				}
 				crear_destino($ruta_db_superior."temporal_".usuario_actual('login'));
+        crear_log_busqueda_excel($ruta_db_superior."../backup/log_exportar.txt", "INICIO CREAR ARCHIVO ".$ruta_db_superior.$_REQUEST["ruta_exportar_saia"]." -------".date("Y-m-d H:i:s")."-----------\n");
 				if($_REQUEST["exportar_saia"]=="excel"){
 					//AQUI SE CREA EL ARCHIVO SI NO EXISTE
 					include_once($ruta_db_superior.'pantallas/busquedas/PHPExcel/IOFactory.php');
@@ -377,23 +383,27 @@ if($result["numcampos"]){
 					else{
 						$titulo="Reporte_SAIA_".$datos_busqueda[0]["busqueda_componente.etiqueta"];
 					}
+          crear_log_busqueda_excel($ruta_db_superior."../backup/log_exportar.txt", "ANTES DEL SORT -------".date("Y-m-d H:i:s")."-----------\n");
 					ksort($array_export);
+          crear_log_busqueda_excel($ruta_db_superior."../backup/log_exportar.txt", "DESPUES DEL SORT -------".date("Y-m-d H:i:s")."-----------\n");
 					$objPHPExcel->getProperties()->setCreator($nombre)
 					->setLastModifiedBy($nombre)
 					->setTitle($titulo)
 					->setSubject($titulo)
 					->setKeywords("cerok SAIA reporte");
 					$highestRow=0;
-					
 				}
 			}
 			else if($_REQUEST["exportar_saia"]=="excel"){
 				// AQUI SE ABRE EL ARCHIVO DE EXCEL
 				include_once($ruta_db_superior.'pantallas/busquedas/PHPExcel/IOFactory.php');
 				$fileType = 'Excel5';
+        crear_log_busqueda_excel($ruta_db_superior."../backup/log_exportar.txt", "INICIO LEER ARCHIVO ".$ruta_db_superior.$_REQUEST["ruta_exportar_saia"]." -------".date("Y-m-d H:i:s")."-----------\n");
 				$objReader = PHPExcel_IOFactory::createReader($fileType);
 				$objPHPExcel = $objReader->load($ruta_db_superior.$_REQUEST["ruta_exportar_saia"]);
-				$highestRow = $objPHPExcel->setActiveSheetIndex(0)->getHighestRow();				
+				crear_log_busqueda_excel($ruta_db_superior."../backup/log_exportar.txt", "FIN LEER ARCHIVO ".$ruta_db_superior.$_REQUEST["ruta_exportar_saia"]." -------".date("Y-m-d H:i:s")."-----------\n");
+        $highestRow =$_REQUEST["actual_row"];
+				//$highestRow = $objPHPExcel->setActiveSheetIndex(0)->getHighestRow();				
 			}
 			if($_REQUEST["exportar_saia"]=="csv"){
 				$file_export=fopen($ruta_db_superior.$_REQUEST["ruta_exportar_saia"],"a+");
@@ -406,16 +416,19 @@ if($result["numcampos"]){
 	}
 	else if($_REQUEST["exportar_saia"]=="excel" && $page==1){
 		$highestRow++;
+    crear_log_busqueda_excel($ruta_db_superior."../backup/log_exportar.txt", "INICIO CARGA ARREGLO PAG1 ".$ruta_db_superior.$_REQUEST["ruta_exportar_saia"]." -------".date("Y-m-d H:i:s")."-----------\n");
 		$objPHPExcel->getActiveSheet()->fromArray($array_export[-1], NULL, 'A'.($highestRow));
+    crear_log_busqueda_excel($ruta_db_superior."../backup/log_exportar.txt", "FIN CARGA ARREGLO INICIO WRITE EXCEL5 PAG 1".$ruta_db_superior.$_REQUEST["ruta_exportar_saia"]." -------".date("Y-m-d H:i:s")."-----------\n");
 		$objWriter = new PHPExcel_Writer_Excel5($objPHPExcel);
+    crear_log_busqueda_excel($ruta_db_superior."../backup/log_exportar.txt", "FIN WRITE EXCEL INICIO SAVE ARCHIVO PAG 1".$ruta_db_superior.$_REQUEST["ruta_exportar_saia"]." -------".date("Y-m-d H:i:s")."-----------\n");
 		$objWriter->save($ruta_db_superior.$_REQUEST["ruta_exportar_saia"]);
+    crear_log_busqueda_excel($ruta_db_superior."../backup/log_exportar.txt", "FIN SAVE ARCHIVO PAG 1".$ruta_db_superior.$_REQUEST["ruta_exportar_saia"]." -------".date("Y-m-d H:i:s")."-----------\n");
 	}
-
+  if(@$_REQUEST["exportar_saia"]!=''){
+    $array_export=array();
+  }
 	for($i=0;$i<$result["numcampos"];$i++){
 	  $response->rows[$i]=new stdClass;
-		if(@$_REQUEST["exportar_saia"]!=''){
-			$array_export=array();
-		}
 	  unset($listado_campos);
 	  $listado_campos=array();
 	  $info=$info_base;
@@ -462,29 +475,37 @@ if($result["numcampos"]){
 
 			if(@$_REQUEST["exportar_saia"]=='excel' || @$_REQUEST["exportar_saia"]=='csv'){
 				for($k=0;$k<$cant_columnas_excel;$k++){
-					$array_export[$columnas_excel[$k]] = utf8_encode(html_entity_decode(strip_tags($response->rows[$i]->$columnas_excel[$k])));
+					$array_export[$i][$columnas_excel[$k]] = utf8_encode(html_entity_decode(strip_tags($response->rows[$i]->$columnas_excel[$k])));
 				}
 				
 			}
 	  }
 		else if($datos_busqueda[0]["tipo_busqueda"]==2){
 			for($k=0;$k<$cant_columnas_excel;$k++){
-				$array_export[$columnas_excel[$k]]=utf8_encode(html_entity_decode(strip_tags($response->rows[$i]->$columnas_excel[$k])));
+				$array_export[$i][$columnas_excel[$k]]=utf8_encode(html_entity_decode(strip_tags($response->rows[$i]->$columnas_excel[$k])));
 			}
 		}
-		if($_REQUEST["exportar_saia"]=="csv"){
-			fputcsv($file_export,$array_export,",",'"');
-			unset($response->rows[$i]);
-		}
-		else if($_REQUEST["exportar_saia"]=="excel"){
-			$highestRow++;
-			$objPHPExcel->getActiveSheet()->fromArray($array_export, NULL, 'A'.($highestRow));
-			$objWriter = new PHPExcel_Writer_Excel5($objPHPExcel);
-			$objWriter->save($ruta_db_superior.$_REQUEST["ruta_exportar_saia"]);
-			unset($response->rows[$i]);
-			$response->exito=1;
-		}
+    if($_REQUEST["export_saia"]=="csv" || $_REQUEST["export_saia"]=="excel"){
+      unset($response->rows[$i]);  
+    }
 	}
+  if(@$_REQUEST["exportar_saia"]=="csv"){
+    fputcsv($file_export,$array_export,",",'"');
+  }
+  else if(@$_REQUEST["exportar_saia"]=="excel"){
+    $highestRow++;
+    crear_log_busqueda_excel($ruta_db_superior."../backup/log_exportar.txt", "INICIO CARGA ARREGLO PAG(".$page.") ".$ruta_db_superior.$_REQUEST["ruta_exportar_saia"]." -------".date("Y-m-d H:i:s")."-----------\n");
+    $objPHPExcel->getActiveSheet()->fromArray($array_export, NULL, 'A'.($highestRow));
+    crear_log_busqueda_excel($ruta_db_superior."../backup/log_exportar.txt", "FIN CARGA ARREGLO INICIO WRITE EXCEL5 PAG(".$page.")".$ruta_db_superior.$_REQUEST["ruta_exportar_saia"]." -------".date("Y-m-d H:i:s")."-----------\n");
+    $objWriter = new PHPExcel_Writer_Excel5($objPHPExcel);
+    crear_log_busqueda_excel($ruta_db_superior."../backup/log_exportar.txt", "FIN WRITE EXCEL INICIO SAVE ARCHIVO PAG (".$page.")".$ruta_db_superior.$_REQUEST["ruta_exportar_saia"]." -------".date("Y-m-d H:i:s")."-----------\n");
+    $objWriter->save($ruta_db_superior.$_REQUEST["ruta_exportar_saia"]);
+    crear_log_busqueda_excel($ruta_db_superior."../backup/log_exportar.txt", "FIN SAVE ARCHIVO PAG (".$page.")".$ruta_db_superior.$_REQUEST["ruta_exportar_saia"]." -------".date("Y-m-d H:i:s")."-----------\n");
+    crear_log_busqueda_excel($ruta_db_superior."../backup/log_exportar.txt", "INICIO DATOS--- ".date("Y-m-d H:i:s")."-----------\n");
+    crear_log_busqueda_excel($ruta_db_superior."../backup/log_exportar.txt", implode("--",$array_export)."\n");
+    crear_log_busqueda_excel($ruta_db_superior."../backup/log_exportar.txt", "FIN DATOS--- ".date("Y-m-d H:i:s")."-----------\n");
+    $response->exito=1;
+  }
 	if(@$file_export){
 		fclose($file_export);
 	}
@@ -498,6 +519,10 @@ if($response->records<0){
 }
 if(!@$_REQUEST["no_imprime"])
 	echo json_encode($response);
+function crear_log_busqueda_excel($file,$texto){
+  // Solo sirve para validar la informacion que se genera al momento de modificar el reporte
+  //file_put_contents($file, $texto,FILE_APPEND);
+}
 function crear_condicion_sql($idbusqueda,$idcomponente,$filtros=''){
 global $conn;
 $condicion_filtro='';

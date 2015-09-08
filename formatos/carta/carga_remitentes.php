@@ -57,11 +57,11 @@ switch($_REQUEST["opcion"])
    		<td>
    			<ul>
    				<li>Se debe crear el excel</li>
-   				<li>El excel debe tener 9 columnas con los siguientes datos:<br />Nombres,Identificaci&oacute;n,Cargo,Empresa,Direcci&oacute;n,Tel&eacute;fono,Correo,Titulo,Ciudad</li>
-   				<li>Despu&eacute;s de tener el excel de esta manera, se debe exportar al formato "csv", con la opci&oacute;n delimitado por pipe (|)</li>
+   				<li>El excel debe tener 9 columnas como lo muestra el siguiente ejemplo <a href="carga.xls" target="_blank">ejemplo.xls</a></li>
+   				<li>Despu&eacute;s de tener el excel de esta manera, se debe exportar al formato "csv", con la opci&oacute;n delimitado por coma (,)</li>
    				<li>Notas:<br />
    				1. El archivo de excel siempre debe tener las 9 columnas, en caso de que no exista datos para esa columna se debe dejar vacio y la columna se conserva.<br />
-   				2. Los datos no deben contener caracteres especiales y el caracter pipe(|) ya que este es el delimitador de las columnas.<br />
+   				2. Los datos no deben contener caracteres especiales y el caracter coma(,) ya que este es el delimitador de las columnas.<br />
    				Nota: Se deben seguir las instrucciones para que los datos sean cargados sin inconvenientes.
    				</li>
    				<li>Posterior a estos pasos, ya se puede subir el archivo para que los remitentes sean cargados</li>
@@ -78,9 +78,11 @@ switch($_REQUEST["opcion"])
     else{
     	$link=fopen($_FILES["archivo"]["tmp_name"],'r');
     	$valores=array();
-			while($linea=fgetcsv($link,0,"|")){
+			$a=0;
+			while($linea=fgetcsv($link,0,",")){
+				$a++;
+				if($a==1)continue;
 				$valores[]=datos_proveedor($linea[0],$linea[1],$linea[2],$linea[3],$linea[4],$linea[5],$linea[6],$linea[7],$linea[8]);
-			  $a++;
 			}
       fclose($link);
       $cant=count($valores);
@@ -96,6 +98,22 @@ switch($_REQUEST["opcion"])
 function datos_proveedor($nombre,$identificacion,$cargo,$empresa,$direccion,$telefono,$email,$titulo,$ciudad){
   global $conn;
   unset($_POST);
+	
+	/*$search=array("?","ñ","Ñ");
+	$replace=array("&Ntilde;","&ntilde;","&Ntilde;");
+	$nombre=str_replace($search, $replace, $nombre);
+	$cargo=str_replace($search, $replace, $cargo);
+	$empresa=str_replace($search, $replace, $empresa);
+	$direccion=str_replace($search, $replace, $direccion);
+	$email=str_replace($search, $replace, $email);
+	$titulo=str_replace($search, $replace, $titulo);*/
+	
+	$nombre=htmlentities($nombre);
+	$cargo=htmlentities($cargo);
+	$empresa=htmlentities($empresa);
+	$direccion=htmlentities($direccion);
+	$email=htmlentities($email);
+	$titulo=htmlentities($titulo);
   
   $campos_ejecutor=array();
   if($cargo){
@@ -156,6 +174,7 @@ function datos_proveedor($nombre,$identificacion,$cargo,$empresa,$direccion,$tel
   else{
     $sql="INSERT INTO ejecutor(nombre,identificacion)VALUES('".@$nombre."','".@$identificacion."')";
     phpmkr_query($sql);
+		$idejecutor=phpmkr_insert_id();
     $insertado=1;
   }
   $campos_excluidos=array("nombre","identificacion");

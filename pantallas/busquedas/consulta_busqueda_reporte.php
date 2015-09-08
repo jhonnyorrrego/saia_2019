@@ -59,17 +59,17 @@ echo(estilo_bootstrap());
 #barra_exportar_ppal{ margin-right:50px;}
 .progress{margin-bottom: 0px;}
 </Style>
-<div style="container" align="center" id="contenedor">  
+<div style="container" align="center" id="contenedor">
 <table id="datos_busqueda"></table>
 <div id="nav_busqueda"></div>
 </div>
-<input type="hidden" value="<?php echo($datos_busqueda[0]['cantidad_registros']);?>" name="busqueda_total_registros" id="busqueda_registros">  
-<input type="hidden" value="1" name="busqueda_pagina" id="busqueda_pagina">  
-<input type="hidden" value="1" name="busqueda_total_paginas" id="busqueda_total_paginas">  
+<input type="hidden" value="<?php echo($datos_busqueda[0]['cantidad_registros']);?>" name="busqueda_total_registros" id="busqueda_registros">
+<input type="hidden" value="1" name="busqueda_pagina" id="busqueda_pagina">
+<input type="hidden" value="1" name="busqueda_total_paginas" id="busqueda_total_paginas">
 <input type="hidden" value="<?php echo($datos_componente);?>" name="iddatos_componente" id="iddatos_componente">
 <input type="hidden" value="0" name="fila_actual" id="fila_actual">
-<input type="hidden" value="<?php echo(@$_REQUEST["variable_busqueda"]);?>" name="variable_busqueda" id="variable_busqueda">    
-<input type="hidden" value="1" name="complementos_busqueda" id="complementos_busqueda">    
+<input type="hidden" value="<?php echo(@$_REQUEST["variable_busqueda"]);?>" name="variable_busqueda" id="variable_busqueda">
+<input type="hidden" value="1" name="complementos_busqueda" id="complementos_busqueda">
 <?php
 echo(librerias_jquery("1.7"));
 echo(librerias_UI());
@@ -100,7 +100,7 @@ $(document).ready(function(){
         }
       ?>   	            
    	],
-   	rowNum:15,
+   	rowNum:20,
     rownumbers: true,
 	  rownumWidth: 40,
     rowList : [20,30,50],
@@ -111,7 +111,6 @@ $(document).ready(function(){
    	pager: '#nav_busqueda',
     caption:"<button class=\"btn btn-mini btn-primary kenlace_saia pull-left\" titulo=\"B&uacute;squeda <?php echo($datos_busqueda[0]['etiqueta']);?>\" title=\"B&uacute;squeda <?php echo($datos_busqueda[0]['etiqueta']);?>\" conector=\"iframe\" enlace=\"<?php echo($datos_busqueda[0]['busqueda_avanzada']);?>\">B&uacute;squeda &nbsp;</button> <button class=\"btn btn-mini btn-primary exportar_reporte_saia pull-left\" title=\"Exportar reporte <?php echo($datos_busqueda[0]['etiqueta']);?>\" enlace=\"<?php echo($datos_busqueda[0]['busqueda_avanzada']);?>\">Exportar &nbsp;</button><div class=\"pull-left\" style=\"text-align:center; width:60%;\"><?php echo($datos_busqueda[0]['etiqueta']);?></div><div id=\"barra_exportar_ppal\"><iframe name='iframe_exportar_saia' height='25px' width='150px' frameborder=0 scrolling='no'></iframe></div></div>"
 });
-
 jQuery("#datos_busqueda").jqGrid('navGrid','#nav_busqueda',{edit:false,add:false,del:false,search:false});
 
 $(".exportar_reporte_saia").click(function(){	
@@ -136,7 +135,7 @@ $(window).bind('resize', function() {
 function exportar_funcion_excel_reporte(){
 	var busqueda_total=$("#busqueda_total_paginas").val(); 
 	var ruta_file="temporal_<?php echo(usuario_actual('login'));?>/reporte_<?php echo($datos_busqueda[0]["nombre"].'_'.date('Ymd').'.xls'); ?>";
-	var url="exportar_saia.php?tipo_reporte=1&idbusqueda_componente=<?php echo $datos_busqueda[0]["idbusqueda_componente"]; ?>&page=1&exportar_saia=excel&ruta_exportar_saia="+ruta_file+"&rows="+$("#busqueda_registros").val()*3+"&actual_row=0&variable_busqueda="+$("#variable_busqueda").val()+"&idbusqueda_filtro_temp=<?php echo(@$_REQUEST['idbusqueda_filtro_temp']);?>&idbusqueda_filtro=<?php echo(@$_REQUEST['idbusqueda_filtro']);?>&idbusqueda_temporal=<?php echo (@$_REQUEST['idbusqueda_temporal']);?>";
+	var url="exportar_saia.php?tipo_reporte=1&idbusqueda_componente=<?php echo $datos_busqueda[0]["idbusqueda_componente"]; ?>&page=1&exportar_saia=excel&ruta_exportar_saia="+ruta_file+"&rows="+$("#busqueda_registros").val()*4+"&actual_row=0&variable_busqueda="+$("#variable_busqueda").val()+"&idbusqueda_filtro_temp=<?php echo(@$_REQUEST['idbusqueda_filtro_temp']);?>&idbusqueda_filtro=<?php echo(@$_REQUEST['idbusqueda_filtro']);?>&idbusqueda_temporal=<?php echo (@$_REQUEST['idbusqueda_temporal']);?>";
 	window.open(url,"iframe_exportar_saia");
 }
 
@@ -157,26 +156,25 @@ function exportar_funcion_excel_para_eliminar_ya_no_sirve(){
       success: function(html){
         if(html){
           var objeto=jQuery.parseJSON(html);
-          if(objeto.exito){          
-	          var aumento=((i+1)*inc);          
-	          $("#barra_exportar").css("width",aumento+"%");	         
-          }                   
-          else{          	
+          if(objeto.exito){
+	          var aumento=((i+1)*inc);
+	          $("#barra_exportar").css("width",aumento+"%");
+          }
+          else{
           	notificacion_saia('Error:al exportar el archivo','error','',3500);
           	error=1;
           	$("#barra_exportar_ppal").html("");
           }
-        }                     
+        }
       }
-    });  	
+    });
   }
   if(!error){
   	notificacion_saia('Archivo exportado de forma exitosa','success','',3500);
   	$("#barra_exportar_ppal").html('<a href="<?php echo($ruta_db_superior);?>'+ruta_file+'">Descargar</a>');
-  	
   }
 }
-</script>    
+</script>
 <?php
 
 function incluir_librerias_busqueda($elemento,$indice){
@@ -188,4 +186,5 @@ function incluir_librerias_pantalla($elemento,$indice){
   global $ruta_db_superior;
   include_once($ruta_db_superior.$elemento);
 }
+
 ?>
