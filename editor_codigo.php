@@ -184,7 +184,7 @@ input[type=text] {
   </div>
 </div>
 <script type="text/javascript">
-alert("1");
+//alert("1");
 var alto=($(document).height()-8); 
 var alto_menu=30;
 var abiertos=Array();

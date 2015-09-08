@@ -25,14 +25,15 @@ $ruta_git = NULL;
 $git = NULL;
 $error_git = NULL;
 $git_data = NULL;
-
+//TODO: La rama debe seleccionarla el usuario???
+$rama = "master";
 if (GitRepo::is_inside_git_repo()) {
 	$ruta_git = GitRepo::get_repo_root_dir();
 	$git = new Git0K($ruta_git);
 	if ($git) {
 		$git_data = $git->expose();
 		// {'lista' : seleccionados, "comentario" : comentario};
-		$repuesta_git = $git->processUnMerge($_REQUEST["lista"], $mensaje_git, &$error_git);
+		$repuesta_git = $git->processUnMerge($_REQUEST["lista"], $mensaje_git, $rama);
 		if ($repuesta_git && $repuesta_git['Error']) {
 			$error_git = $repuesta_git['Error'];
 		} else {

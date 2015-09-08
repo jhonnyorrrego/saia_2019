@@ -85,6 +85,9 @@ function obtener_archivo_temporal($ruta_archivo) {
             $tmpfname = tempnam($ruta_db_superior . RUTA_ARCHIVOS, $nombre_temporal);
         }
     }
+    if ($tmpfname === false) {
+        $tmpfname = tempnam(sys_get_temp_dir(), $nombre_temporal);
+    }
     return $tmpfname;
 }
 ?>

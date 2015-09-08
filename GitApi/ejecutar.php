@@ -9,7 +9,9 @@ echo "Servidor: " . PHP_OS ."<br>";
 $resp = run_command("git status -b --porcelain");
 echo "Estado <br>$resp <br>";
 try {
-$cfg = run_command("git config remote.hola_mundo.prefix");	
+//$cfg = run_command("git config remote.hola_mundo.prefix");
+$cfg = run_command('git config --global user.name "Cerok"');
+$cfg = run_command('git config --global user.email "info@cerok.com"');
 } catch (Exception $e) {
 	
 }
@@ -18,16 +20,16 @@ echo "$cfg <br>";
 $salida = run_command("git fetch --all");	
 echo "Fetch: <br>$salida<br>";
 
-function run_command2($cmd) {
+function run_command($cmd) {
      $ruta = getenv("PATH");
-echo "Path: " . $ruta ."<br>";
+//echo "Path: " . $ruta ."<br>";
 $command = new Command(array(
     'command' => $cmd,
 
     // Will be passed as environment variables to the command
-    'procEnv' => array(
+    /*'procEnv' => array(
         'PATH' => $ruta
-    ),
+    ),*/
 
     // Will be passed as options to proc_open()
     'procOptions' => array(
@@ -40,10 +42,10 @@ $command = new Command(array(
 		return $command->getError();
 		$exitCode = $command->getExitCode();
 	}
-	return shell_exec($cmd);
+	//return shell_exec($cmd);
 }
 
-function run_command($command) {
+function run_command2($command) {
     $descriptorspec = array(
         1 => array('pipe', 'w'), //stdout
         2 => array('pipe', 'w'), //stderr

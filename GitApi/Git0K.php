@@ -254,7 +254,7 @@ class Git0K extends Git {
     }
 
     public function repoSubtreePush($prefijo, $remote, $branch) {
-        $this->repo->subtree_push($prefijo, $remote, "master");
+        $this->repo->subtree_push($prefijo, $remote, $branch);
     }
 
     public function repoPushCredentials($remote, $branch, $url) {
@@ -284,7 +284,7 @@ class Git0K extends Git {
      * Sincroniza los cambios remotos en todos los repositorios configurados
      */
     public function repoFetchAll() {
-        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+        /*if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
             $remotos = $this->search_fetch_remotes();
             $status = NULL;
             if (count($remotos) > 0) {
@@ -293,7 +293,7 @@ class Git0K extends Git {
                 }
             }
             return $status;
-        }
+        }*/
         return $this->repo->fetch(true);
     }
 
@@ -355,7 +355,7 @@ class Git0K extends Git {
         return $this->repo->sobreescribir_archivo_local();
     }
 
-    public function processUnMerge($lista_archivos, $comentario, &$estado_git) {
+    public function processUnMerge($lista_archivos, $comentario, $rama = "master") {
         $estado_git = NULL;
         $error_git = NULL;
         try {
@@ -366,8 +366,7 @@ class Git0K extends Git {
             }
             if ($lista_archivos) {
                 foreach ($lista_archivos as $value) {
-                    // $this->get_remoto_base()->alias, "master"
-                    $estado_git = repoOverwriteLocalFile($this->get_remoto_base()->alias, "master", $file);
+					$estado_git = $this->repoOverwriteLocalFile($this->get_remoto_base()->alias, $rama, $file);
                 }
                 // TODO: Revisar si mijor se llama a processRead o Save
                 $estado = $this->checkStatus();
@@ -376,9 +375,6 @@ class Git0K extends Git {
                 }
             }
             
-            // validar que no existan cambios
-            // TODO: validar sobre cual rama se hacer el pull, si es un subtree cambia
-            // $repo->pull('origin', 'master');
         } catch (Exception $e) {
             $errmsg = $e->getMessage();
             $error_git = $errmsg;
@@ -395,7 +391,7 @@ class Git0K extends Git {
      * @param unknown $comentario
      * @param unknown $estado_git
      */
-    public function processSave($ruta_archivo, $comentario) {
+    public function processSave($ruta_archivo, $comentario, $rama = "master") {
         // $estado_git = NULL;
         $error_git = NULL;
         $lista_archivos = array();
@@ -404,10 +400,10 @@ class Git0K extends Git {
             if (empty($mensaje)) {
                 $mensaje = "Commit automatico editor saia. Cambios locales " . date("Y-m-d H:i:s");
             }
-            $estado_git = $this->sincronizarRepositorio($comentario);
+            $estado_git = $this->sincronizarRepositorio($comentario, $rama);
             $estado = $this->checkStatus();
             if ($estado === self::ESTADO_AHEAD) {
-                $estado_git = $this->repoPush($this->get_remoto_base()->alias, "master");
+				$estado_git = $this->repoPush($this->get_remoto_base()->alias, $rama);
             }
         } catch (Exception $e) {
             $errmsg = $e->getMessage() ."\n";
@@ -460,7 +456,7 @@ class Git0K extends Git {
      * @return string. El resultado del ultimo comando git ejecutado
      * @throws Exception. Una excepcion en caso de no poder ejecutar un comando git i.e. merge
      */
-    protected function sincronizarRepositorio($mensaje) {
+    protected function sincronizarRepositorio($mensaje, $rama="master") {
         // Esto garantiza que los cambios locales no interrumpan la sincro y que se puedan perder cambios.
         $lista_agregados = $this->resolveLocalChanges($mensaje);
         $estado_git = $this->repoFetchAll();
@@ -489,31 +485,30 @@ class Git0K extends Git {
         }
         
         if ($estado === self::ESTADO_MERGE) {
-            $estado_git = $this->resolveMerge();
-            // return $this->sincronizarRepositorio($estado_git);
+            $estado_git = $this->resolveMerge($rama);
+            // return $this->sincronizarRepositorio($estado_git, $rama);
             // Devuelve una exception si falla. Hay que hacer el merge manual. ver bloque catch
         } elseif ($estado === self::ESTADO_BEHIND) {
-            $estado_git = $this->repoPull($this->get_remoto_base()->alias, "master");
-            // return $this->sincronizarRepositorio($estado_git);
+            $estado_git = $this->repoPull($this->get_remoto_base()->alias, $rama);
+            // return $this->sincronizarRepositorio($estado_git, $rama);
         } elseif ($estado === self::ESTADO_AHEAD) {
-            $estado_git = $this->repoPush($this->get_remoto_base()->alias, "master");
+            $estado_git = $this->repoPush($this->get_remoto_base()->alias, $rama);
         }
         $estado = $this->checkStatus();
         return $estado_git;
     }
 
-    protected function sincronizarSubtree($mensaje, $lista_archivos) {
+    protected function sincronizarSubtree($mensaje, $lista_archivos, $rama = "master") {
         $estado_git = "";
         $mensaje = "SUBTREE " . $mensaje;
-        if (count($lista_archivos) > 0) { // Habia cambios locales, pertenecen al subtree
+		if (count($lista_archivos) > 0) { // Habia cambios locales, pertenecen al subtree
             foreach ($this->get_remoto_formatos() as $remoto) {
                 // Hacer fetch del remoto del subtree no sirve. Pull o Pull
-                // $estado_git = $this->repoSubtreeFetch($remoto->alias, "master");
                 $prefijo = $this->find_subtree_prefix($remoto->alias);
                 // El estado no sirve para saber como estaba el subtree
                 if ($prefijo) {
-                    $estado_git = $this->repoSubtreePull($prefijo, $remoto->alias, "master", $mensaje, false);
-                    $estado_git = $this->repoSubtreePush($prefijo, $remoto->alias, "master");
+                    $estado_git = $this->repoSubtreePull($prefijo, $remoto->alias, $rama, $mensaje, false);
+                    $estado_git = $this->repoSubtreePush($prefijo, $remoto->alias, $rama);
                 }
             }
         } else {
@@ -521,12 +516,11 @@ class Git0K extends Git {
             // Por ahora se repite el anterior
             foreach ($this->get_remoto_formatos() as $remoto) {
                 // Hacer fetch del remoto del subtree no sirve. Pull o Pull
-                // $estado_git = $this->repoSubtreeFetch($remoto->alias, "master");
                 $prefijo = $this->find_subtree_prefix($remoto->alias);
                 // El estado no sirve para saber como estaba el subtree
                 if ($prefijo) {
-                    $estado_git = $this->repoSubtreePull($prefijo, $remoto->alias, "master", $mensaje, false);
-                    $estado_git = $this->repoSubtreePush($prefijo, $remoto->alias, "master");
+                    $estado_git = $this->repoSubtreePull($prefijo, $remoto->alias, $rama, $mensaje, false);
+                    $estado_git = $this->repoSubtreePush($prefijo, $remoto->alias, $rama);
                 }
             }
         }
@@ -609,17 +603,17 @@ class Git0K extends Git {
         return $lista_agregados;
     }
 
-    protected function resolveMerge() {
+    protected function resolveMerge($rama="master") {
         // Si tenemos ahead M, behind N. Esto es muuuy peligroso
         // git pull --rebase
         // mejor un git pull
         
         // FIXME: por defecto origin, pero tener en cuenta si es subtree
         // FIXME: No esta funcionando asignar credenciales para github
-        // $estado_git = $git->repoPushCredentials($git->get_remoto_base()->alias, "master", $git->get_remoto_base()->url);
+        // $estado_git = $git->repoPushCredentials($git->get_remoto_base()->alias, $rama, $git->get_remoto_base()->url);
         $pattern_modificados = "/(^[ACDMRU? ]{2}) ([A-Za-z0-9_\-\.\/]+)/";
         // falla con una excepcion. Si no todo va bien
-        $estado_git = $this->repoPull($this->get_remoto_base()->alias, "master", false);
+        $estado_git = $this->repoPull($this->get_remoto_base()->alias, $rama, false);
         /*
          * Auto-merging README
          * CONFLICT (content): Merge conflict in README
