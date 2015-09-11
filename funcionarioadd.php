@@ -32,22 +32,6 @@ include_once("pantallas/lib/librerias_cripto.php");
                 }
               });
             })});
-            
-            $(function() {$('#x_salario').blur(function(){
-            	if($('#x_salario').val() != ''){
-	            	$.ajax({
-	                type:'POST',
-	                url:'buscar_rol_funcionario.php',
-	                data:'funcionario_codigo='+$('#x_funcionario_codigo').val(),
-	                success: function(datos,exito){
-	                  if(datos==0){
-	                    alert('El funcionario no tiene rol asignado.');
-			    $('#x_salario').val("");
-	                  }  
-	                }
-	              });
-	           	}
-            })});
             	
           })(jQuery);
 
@@ -79,7 +63,6 @@ $x_estado = Null;
 $x_fecha_ingreso = Null;
 $x_nit = Null;
 $x_perfil = Null;
-$x_salario = Null;
 ////Particular Cliente Aguas 
 $x_acceso_web = NULL;
 ?>
@@ -197,13 +180,6 @@ label.error{
 		<td class="encabezado" title="Correo electronico del funcionario."><span class="phpmaker" style="color: #FFFFFF;">EMAIL</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
 <input type="text" name="x_email" id="x_email" size="30" maxlength="255" value="<?php echo @$x_email ?>">
-</span></td>
-	</tr>
-	
-	<tr>
-		<td class="encabezado" title="Salario del funcionario."><span class="phpmaker" style="color: #FFFFFF;">SALARIO</span></td>
-		<td bgcolor="#F5F5F5"><span class="phpmaker">
-<input type="text" name="x_salario" id="x_salario" size="30" maxlength="255" value="<?php echo @$x_salario ?>">
 </span></td>
 	</tr>
 	

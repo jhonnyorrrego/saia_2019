@@ -63,9 +63,9 @@ function completo(){
 global $fecha_inicio,$fecha_final,$items,$destino_scriptdb,$destino_scripts,
   $destino_paginas,$destino_logs,$destino_anexos,$ruta_bk,$fecha_copia,$dominio_servidor,$usuario_ftp,$clave_ftp,$ruta_origen_datos,$ruta_destino_datos,$borrar_origen,$copiar_ftp,$empresa; 
   echo "Ejecutando backup completo de $empresa<br />"; 
-$ruta_bk="../backup/copia_completa"; 
+$ruta_bk=RUTA_BACKUP."copia_completa"; 
 crear_destino($ruta_bk);
-$ruta_origen_datos="../backup/copia_completa";
+$ruta_origen_datos=RUTA_BACKUP."copia_completa";
 $ruta_destino_datos="backups/$empresa/copia_completa";
 //$copiar_ftp=0;
 if(realizar_copia()){
@@ -124,7 +124,7 @@ $fecha_inicio=date("Y-m-d");
 $fecha_final=date("Y-m-d"); 
 $fecha_copia=date("Y-m-d-H-i");
 echo "Ejecutando copia diaria de $empresa";
-$ruta_bk="../backup/copias_diarias/".date("Y")."/".date("m")."/".date("d");
+$ruta_bk=RUTA_BACKUP."copias_diarias/".date("Y")."/".date("m")."/".date("d");
 crear_destino($ruta_bk);
 $litems=explode(",",$items);
 $origen_zip=" ";
@@ -378,7 +378,7 @@ if($diaria==0)//copio toda la carpeta
   $origen_zip="../".CARPETA_SAIA;
   return(comprimir($origen_zip,$destino_scripts));
  }
-else //copio solo los modificados en el día
+else //copio solo los modificados en el dï¿½a
  {$lista=array();
   $lista=revisar_cambios_archivos("../".CARPETA_SAIA,$lista);
   if(count($lista))

@@ -5,22 +5,6 @@ include_once("pantallas/lib/librerias_cripto.php");
 <script type="text/javascript" src="js/jquery.js"></script>
 <script type="text/javascript" src="js/jquery.validate.js"></script>
 <script type="text/javascript">(function($) {
-           
-            $(function() {$('#x_salario').blur(function(){
-            	if($('#x_salario').val() != ''){
-	            	$.ajax({
-	                type:'POST',
-	                url:'buscar_rol_funcionario.php',
-	                data:'funcionario_codigo='+$('#x_funcionario_codigo').val(),
-	                success: function(datos,exito){
-	                  if(datos==0){
-	                    alert('El funcionario no tiene rol asignado.');
-			    $('#x_salario').val("");
-	                  }  
-	                }
-	              });
-	           	}
-            })});
             	
           })(jQuery);
 $(document).ready(function(){
@@ -55,7 +39,6 @@ $x_fecha_ingreso = Null;
 $x_nit = Null;
 $x_perfil = Null;
 $x_sistema = Null;
-$x_salario = Null;
 $x_acceso_web = NULL;
 include_once ("phpmkrfn.php");
 include_once("formatos/librerias/estilo_formulario.php");
@@ -85,7 +68,6 @@ if (($sAction == "") || ((is_null($sAction)))) {
 	$x_nit = @$_POST["x_nit"];
 	$x_perfil = @$_POST["x_perfil"];
 	$x_sistema = @$_POST["x_sistema"];
-	$x_salario = @$_POST["x_salario"];
   $x_acceso_web = implode(",",@$_POST["x_acceso_web"]);
 }
 if (($sKey == "") || ((is_null($sKey)))) {
@@ -176,13 +158,6 @@ label.error{
 		<td class="encabezado" title="Correo electronico del funcionario."><span class="phpmaker" style="color: #FFFFFF;">Email</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
 <input type="text" name="x_email" id="x_email" size="30" maxlength="255" value="<?php echo @$x_email ?>">
-</span></td>
-	</tr>
-	
-	<tr>
-		<td class="encabezado" title="Salario del funcionario."><span class="phpmaker" style="color: #FFFFFF;">SALARIO</span></td>
-		<td bgcolor="#F5F5F5"><span class="phpmaker">
-<input type="text" name="x_salario" id="x_salario" size="30" maxlength="255" value="<?php echo @$x_salario ?>">
 </span></td>
 	</tr>
 	
@@ -334,11 +309,6 @@ function LoadData($sKey,$conn)
 		$GLOBALS["x_nit"] = $row["nit"];
 		$GLOBALS["x_perfil"] = $row["perfil"];
 		$GLOBALS["x_sistema"] = $row["sistema"];
-		
-		$salario = busca_filtro_tabla("","dependencia_cargo a, funcionario_salario b","funcionario_idfuncionario=".$sKeyWrk." AND a.estado=1 AND dependencia_cargo_iddependencia_cargo=iddependencia_cargo","",$conn);
-		if($salario["numcampos"] > 0){
-			$GLOBALS["x_salario"] = $salario[0]["salario"];
-		}
 	}
 	phpmkr_free_result($rs);
 	return $LoadData;
@@ -504,16 +474,6 @@ function EditData($sKey,$conn)
     //die();
    $EditData = true; // Update Successful  
 	//cargar_permisos_funcionario($sKeyWrk);
-	}
-	$rol = busca_filtro_tabla("","dependencia_cargo a,funcionario_salario b","dependencia_cargo_iddependencia_cargo=iddependencia_cargo AND funcionario_idfuncionario=".$sKeyWrk." AND a.estado=1","iddependencia_cargo desc",$conn);
-	if($rol["numcampos"] > 0){
-		$sql = "UPDATE funcionario_salario SET salario='".@$_POST["x_salario"]."' WHERE dependencia_cargo_iddependencia_cargo=".$rol[0]["iddependencia_cargo"];
-		phpmkr_query($sql);
-	}
-	else {
-		$rol = busca_filtro_tabla("","dependencia_cargo a","funcionario_idfuncionario=".$sKeyWrk." AND a.estado=1","",$conn);
-		$sql = "INSERT INTO funcionario_salario (salario,dependencia_cargo_iddependencia_cargo) values('".@$_POST["x_salario"]."',".$rol[0]["iddependencia_cargo"].")";
-		phpmkr_query($sql);
 	}
 	return $EditData;
 }

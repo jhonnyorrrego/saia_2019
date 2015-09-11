@@ -145,7 +145,7 @@ function asignar_expediente($idexp, $tipo_entidad, $llave_entidad, $permiso="", 
 	if($indice>100)return false;
 	$busqueda=busca_filtro_tabla("","entidad_expediente a","entidad_identidad=".$tipo_entidad." and llave_entidad=".$llave_entidad." and expediente_idexpediente=".$idexp,"",$conn);
 	if(!$busqueda["numcampos"]){
-		$sql1="insert into entidad_expediente(entidad_identidad, expediente_idexpediente, llave_entidad, estado, permiso, fecha)values(".$tipo_entidad.",".$idexp.",".$llave_entidad.",'1', '".$permiso."', '".date('Y-m-d H:i:s')."')";
+		$sql1="insert into entidad_expediente(entidad_identidad, expediente_idexpediente, llave_entidad, estado, permiso, fecha)values(".$tipo_entidad.",".$idexp.",".$llave_entidad.",'1', '".$permiso."', ".fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s').")";
 	}
 	else{
 		$sql1="update entidad_expediente set entidad_identidad=".$tipo_entidad.", expediente_idexpediente=".$idexp.", llave_entidad=".$llave_entidad.", permiso='".$permiso."' where identidad_expediente=".$busqueda[0]["identidad_expediente"];
@@ -165,7 +165,7 @@ function insertar_expediente_automatico($idserie,$hijo="",$indice=1){
 	if($serie["numcampos"]){
 		$busqueda=busca_filtro_tabla("","expediente a","a.serie_idserie=".$serie[0]["idserie"],"",$conn);
 		if(!$busqueda["numcampos"]){
-			$sql1="insert into expediente(nombre, fecha, serie_idserie)values('".$serie[0]["nombre"]."', '".date('Y-m-d')."', '".$serie[0]["idserie"]."')";
+			$sql1="insert into expediente(nombre, fecha, serie_idserie)values('".$serie[0]["nombre"]."', ".fecha_db_almacenar(date('Y-m-d'),'Y-m-d').", '".$serie[0]["idserie"]."')";
 			phpmkr_query($sql1);
 			$id=phpmkr_insert_id();
 		}
@@ -278,7 +278,7 @@ function negar_expediente($idexp, $tipo_entidad, $llave_entidad, $permiso="", $i
 	if($indice>100)return false;
 	$busqueda=busca_filtro_tabla("","entidad_expediente a","entidad_identidad=".$tipo_entidad." and llave_entidad=".$llave_entidad." and expediente_idexpediente=".$idexp." and estado='2'","",$conn);
 	if(!$busqueda["numcampos"]){
-		$sql1="insert into entidad_expediente(entidad_identidad, expediente_idexpediente, llave_entidad, estado, permiso, fecha)values(".$tipo_entidad.",".$idexp.",".$llave_entidad.",'2', '".$permiso."', '".date('Y-m-d H:i:s')."')";
+		$sql1="insert into entidad_expediente(entidad_identidad, expediente_idexpediente, llave_entidad, estado, permiso, fecha)values(".$tipo_entidad.",".$idexp.",".$llave_entidad.",'2', '".$permiso."', ".fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s').")";
 	}
 	else{
 		$sql1="update entidad_expediente set entidad_identidad=".$tipo_entidad.", expediente_idexpediente=".$idexp.", llave_entidad=".$llave_entidad.", permiso='".$permiso."', estado='2' where identidad_expediente=".$busqueda[0]["identidad_expediente"];

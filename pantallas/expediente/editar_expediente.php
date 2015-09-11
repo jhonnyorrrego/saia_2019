@@ -20,7 +20,7 @@ $max_salida=6; $ruta_db_superior=$ruta=""; while($max_salida>0){ if(is_file($rut
 <?php include_once($ruta_db_superior."db.php"); ?>
 <script type="text/javascript" src="<?php echo($ruta_db_superior);?>js/jquery-1.7.min.js"></script>
 <?php include_once($ruta_db_superior."librerias_saia.php");
-$datos=busca_filtro_tabla(fecha_db_obtener('a.fecha','Y-m-d')." as x_fecha,a.*","expediente a","a.idexpediente=".$_REQUEST["idexpediente"],"",$conn);
+$datos=busca_filtro_tabla(fecha_db_obtener('a.fecha','Y-m-d')." as x_fecha, ".fecha_db_obtener('a.fecha_extrema_i','Y-m-d')." as x_fecha_extrema_i, ".fecha_db_obtener('a.fecha_extrema_f','Y-m-d')." x_fecha_extrema_f,a.*","expediente a","a.idexpediente=".$_REQUEST["idexpediente"],"",$conn);
 $dato_padre=busca_filtro_tabla("","expediente a","a.idexpediente=".$datos[0]["cod_padre"],"",$conn);
 ?>
 <form name="formulario_expediente" id="formulario_expediente">
@@ -187,7 +187,7 @@ if($dato_padre["numcampos"]){
 	  <label class="control-label" for="fecha_extrema_i">Fecha extrema inicial
 	  </label>
 	  <div id="fecha_extrema_i" class="input-append date">
-			<input data-format="yyyy-MM-dd" type="text" name="fecha_extrema_i" value="<?php if(is_object($datos[0]["fecha_extrema_i"]))$datos[0]["fecha_extrema_i"]=$datos[0]["fecha_extrema_i"]->format('Y-m-d'); echo($datos[0]["fecha_extrema_i"]);?>" readonly />
+			<input data-format="yyyy-MM-dd" type="text" name="fecha_extrema_i" value="<?php if(is_object($datos[0]["x_fecha_extrema_i"]))$datos[0]["x_fecha_extrema_i"]=$datos[0]["x_fecha_extrema_i"]->format('Y-m-d'); echo($datos[0]["x_fecha_extrema_i"]);?>" readonly />
 			<span class="add-on">
 				<i data-time-icon="icon-time" data-date-icon="icon-calendar">
 				</i>
@@ -199,7 +199,7 @@ if($dato_padre["numcampos"]){
 	  <label class="control-label" for="fecha_extrema_f">Fecha extrema final
 	  </label>	  
 	  <div id="fecha_extrema_f" class="input-append date">
-			<input data-format="yyyy-MM-dd" type="text" name="fecha_extrema_f" value="<?php if(is_object($datos[0]["fecha_extrema_f"]))$datos[0]["fecha_extrema_f"]=$datos[0]["fecha_extrema_f"]->format('Y-m-d'); echo($datos[0]["fecha_extrema_f"]);?>" readonly />
+			<input data-format="yyyy-MM-dd" type="text" name="fecha_extrema_f" value="<?php if(is_object($datos[0]["x_fecha_extrema_f"]))$datos[0]["x_fecha_extrema_f"]=$datos[0]["x_fecha_extrema_f"]->format('Y-m-d'); echo($datos[0]["x_fecha_extrema_f"]);?>" readonly />
 			<span class="add-on">
 				<i data-time-icon="icon-time" data-date-icon="icon-calendar">
 				</i>

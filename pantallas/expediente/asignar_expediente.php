@@ -214,7 +214,7 @@ $(document).ready(function(){
                 parent.window.hs.getExpander().close();                  
               }
               notificacion_saia(objeto.mensaje,"success","",2500);
-              window.open("detalles_expediente.php?idexpediente="+objeto.idexpediente+"&idbusqueda_componente=<?php echo($_REQUEST['idbusqueda_componente']);?>&rand="+Math.round(Math.random()*100000),"_self");                                                                                                 	
+              window.open("detalles_expediente.php?idexpediente=<?php echo(@$_REQUEST["idexpediente"]); ?>&idbusqueda_componente=<?php echo($_REQUEST['idbusqueda_componente']);?>&rand="+Math.round(Math.random()*100000),"_self");
             }
             else{
               $('#cargando_enviar').html("Terminado ...");

@@ -41,8 +41,13 @@ function respuesta_pqr($datos){
 				$respuesta_pqr = busca_filtro_tabla("a.pdf as pdf_respuesta","documento a, respuesta b","a.iddocumento=b.destino and lower(a.estado) not in('eliminado','anulado','activo') and lower(a.plantilla) not in('clasificacion_pqrsf') and b.origen=".$documento[$i]["iddocumento"],"",$conn);
 				
 				if($respuesta_pqr["numcampos"]){
-					$documento[$i]["pdf_respuesta"]=$respuesta_pqr[0]["pdf_respuesta"];
-				}			
+					for($j=0;$j<$respuesta_pqr["numcampos"];$j++){
+						if($respuesta_pqr[$j]["pdf_respuesta"]){
+							$documento[$i]["pdf_respuesta"]=$respuesta_pqr[$j]["pdf_respuesta"];
+							break;
+						}
+					}
+				}
 			}
 		}
 						

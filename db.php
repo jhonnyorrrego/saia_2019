@@ -438,7 +438,7 @@ function evento_archivo($cadena){
   /*$ruta_evento=busca_filtro_tabla("valor","configuracion","nombre like 'ruta_evento'","",$conn);
   
   $nombre=$ruta_db_superior."../".$ruta_evento[0]['valor']."/".DB."_log_".date("Y_m_d").".txt";*/
-  $nombre=$ruta_db_superior."../evento/".DB."_log_".date("Y_m_d").".txt";
+  $nombre=$ruta_db_superior.RUTA_BACKUP_EVENTO.DB."_log_".date("Y_m_d").".txt";
   if(!@is_file($nombre))
     crear_archivo($nombre);
   $contenido="";
@@ -1782,7 +1782,6 @@ global $conn;
  foreach($to as $fila){
  	if($copia_oculta==1){
  		$mail->AddBCC($fila,$fila);
-		$para[]=$fila;
  	}else{
  		$mail->AddAddress($fila,$fila);
 		$para[]=$fila;

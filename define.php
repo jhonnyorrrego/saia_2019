@@ -50,6 +50,8 @@ ini_set("safe_mode",false);
 /**************Soluciona limite de texto a mostrar con BD SQL SERVER*************/
 /*ini_set ( 'mssql.textlimit' , '65536' );
 ini_set ( 'mssql.textsize' , '65536' );*/
+//Solucion error pcre con cadenas grandes devuelve array vacio
+ini_set(‘pcre.backtrack_limit’,’200000′);
 
 define("RUTA_SCRIPT","saia_release1");
 date_default_timezone_set ("America/Bogota");
@@ -66,6 +68,8 @@ define("RUTA_INFO_QR","http://75.101.166.85/info_doc.php");
 
 define("RUTA_BACKUP","../backup/");
 define("RUTA_BACKUP_ELIMINADOS",RUTA_BACKUP."eliminados/");
+define("RUTA_BACKUP_EVENTO",RUTA_BACKUP."evento/");
+define("RUTA_BACKUP_SESION",RUTA_BACKUP."sesiones/");
 
 define("LLAVE_SAIA","SAIA_PRODUCTIVO_RELEASE");
 

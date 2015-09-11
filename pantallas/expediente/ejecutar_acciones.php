@@ -202,7 +202,7 @@ function asignar_permiso_expediente(){
 $retorno=new stdClass;
 $retorno->exito=0;
 $retorno->mensaje="Error al asignar el expediente";
-if(@$_REQUEST["idexpediente"] && @$_REQUEST["tipo_entidad"] && @$_REQUEST["entidad_identidad"]){  
+if(@$_REQUEST["idexpediente"] && @$_REQUEST["tipo_entidad"]){  
   //$llaves_entidad=busca_filtro_tabla("idfuncionario","funcionario","funcionario_codigo IN(".$_REQUEST["entidad_identidad"].")","",$conn);
 	$llaves_entidad=busca_filtro_tabla("distinct (funcionario_idfuncionario) as idfuncionario","dependencia_cargo","iddependencia_cargo IN(".$_REQUEST["entidad_identidad"].")","",$conn);
 	if($_REQUEST["tipo_entidad"]==5)$_REQUEST["tipo_entidad"]=1;

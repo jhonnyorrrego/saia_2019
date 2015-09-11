@@ -28,7 +28,7 @@ echo(librerias_jquery("1.7"));
 if(@$_REQUEST["idexpediente"]){
 	$idexpediente=$_REQUEST["idexpediente"];	
 } 
-$expediente=busca_filtro_tabla("*,".fecha_db_obtener("fecha","Y-m-d")." AS fecha","expediente","idexpediente=".$idexpediente,"",$conn);
+$expediente=busca_filtro_tabla("a.*,".fecha_db_obtener("a.fecha","Y-m-d")." AS fecha, ".fecha_db_obtener("a.fecha_extrema_i","Y-m-d")." as fecha_extrema_i, ".fecha_db_obtener("a.fecha_extrema_f","Y-m-d")." as fecha_extrema_f","expediente a","idexpediente=".$idexpediente,"",$conn);
 ?>   
 <style>
 .well{ margin-bottom: 3px; min-height: 11px; padding: 10px;}.alert{ margin-bottom: 3px;  padding: 10px;}  body{ font-size:12px; line-height:100%;}.navbar-fixed-top, .navbar-fixed-bottom{ position: fixed;} .navbar-fixed-top, .navbar-fixed-bottom, .navbar-static-top{margin-right: 0px; margin-left: 0px;}
