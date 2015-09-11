@@ -59,4 +59,56 @@ function poner_ceros($str,$numero,$cantidad){
     return $str;
   }
 }
+/*
+ * @fecha_base: corresponde a la fecha base del calculo
+ * @fecha_ref: corresponde a la fecha con la que se quiere comparar la base  o fecha de referencia
+ * Se realiza la resta de la fecha_base - fecha_ref
+ * Retorna un objeto tipo diff de la clase DateTime
+ * */
+function resta_dos_fechas_saia($fecha_base='',$fecha_ref=''){
+  if($fecha_ref==''){
+    $fecha_r=new DateTime();
+  }
+  else{
+    $fecha_r=new DateTime($fecha_ref);
+  }
+  if($fecha_base==''){
+    $fecha_b=new DateTime();
+  }
+  else{
+    $fecha_b=new DateTime($fecha_base);
+  }
+  $diff=$fecha_b->diff($fecha_r);
+  return($diff);
+}
+function fecha_atrasada($fecha_base,$fecha_ref){
+$diff=resta_dos_fechas_saia($fecha_base,$fecha_ref);
+if($diff->invert){
+  return(true);
+}
+return(false);
+}
+function sumar_fechas_saia($fecha_base,$intervalo){
+
+}
+function texto_atraso_saia($diferencia,$formato){
+  $vencimiento='<b>';
+  $vencimiento.=texto_atraso_saia_componente($diferencia,$formato,"y","a&ntilde;o");
+  $vencimiento.=texto_atraso_saia_componente($diferencia,$formato,"m","mes","es");
+  $vencimiento.=texto_atraso_saia_componente($diferencia,$formato,"d","d&iacute;a");
+  $vencimiento.=texto_atraso_saia_componente($diferencia,$formato,"h","hora");
+  $vencimiento.=texto_atraso_saia_componente($diferencia,$formato,"i","minuto");
+  $vencimiento.='</b>';
+  return($vencimiento);
+}
+function texto_atraso_saia_componente($diferencia,$formato,$componente,$cadena,$plural="s"){
+$vencimiento='';
+  if($diferencia->$componente && strpos($formato,$componente)!==FALSE){
+    $vencimiento.=" ".$diferencia->$componente.' '.$cadena;
+    if($diferencia->$componente>1){
+      $vencimiento.=$plural;
+    }
+  }
+return($vencimiento);
+}
 ?>
