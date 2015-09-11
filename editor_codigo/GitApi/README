@@ -1,0 +1,49 @@
+CONFIGURACION
+
+- Agregar el remoto con un nombre:
+git remote add nombre_remoto url
+
+- Hacer fetch:
+git fetch nombre_remoto
+
+- Si ya existe el directorio destino, se debe eliminar antes de configurar el subtree
+git rm -r ruta_prefijo
+git commit -m "elimar archivos nombre_prefijo"
+
+- Crear el subtree. Debe estar parado en la raiz del repo local
+git subtree add -P ruta_prefijo -m "Leido ObjectiveBlip as a subproject" nombre_remoto/master
+
+Es recomendable usar --squash para no traer todo el historial del subproyecto
+git subtree add --prefix ruta_prefijo -m "Leido ObjectiveBlip as a subproject" nombre_remoto master --squash
+
+- Crear una nueva llave de configuracion para el subtree:
+git config --local remote.nombre_remoto.prefix ruta_prefijo
+
+- Guardar las credemciales del repositorio remoto
+git remote set-url nombre_remoto usuario:clave@https://github.com/usuario_prop/repo.git
+
+RESOLUCION DE CONFLICTOS
+1.    Revisar las ramas (Branches) y Stage area [user& git status] para ver en que rama se está y si se tiene algun archivo sin confirmar (uncommitted files) en el repositorio local 
+
+Para tener en cuenta en los estados (git status --porcelain
+"AM" y "MM" indican partially staged (add + commit).
+"AM" Ya se habia agregado pero se volvio a modificar. Hacer add de nuevo?
+"A " y "M " son staged files (add + commit)
+"M " ya se hizo add de un archivo existente modificado
+" M" Existe, se modifico pero no se ha hecho add (no esta en el indice)
+"A " ya se hizo add de un archivo nuevo
+?? Nuevo, no se ha hecho add ni commit
+
+2.    Confirmar (Commit) o esconder (stash) cualquiera de los archivos sin confirmar antes de hacer el pull. Por lo general se debe evitar dejar archivos sin confirmar (uncommitted) al final de una sesión, aunque no siempre es posible.
+3.    Halar (Pull) origin y actualizar la rama actual (current branch) [user& git pull origin CURRENT_BRANCH] para asegurar que se está sincronizado con origin.
+        Puede ser necesario hacer un merge manual en este punto.
+
+DD    unmerged, eliminado en ambos
+AU    unmerged, agregado por nosotros
+UD    unmerged, eliminado por ellos
+UA    unmerged, agregado por ellos
+DU    unmerged, eliminado por nosotros
+AA    unmerged, agregado por ambos
+UU    unmerged, modified por ambos
+
+Que se debe hacer en cada caso?

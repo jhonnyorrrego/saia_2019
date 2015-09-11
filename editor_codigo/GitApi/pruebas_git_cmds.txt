@@ -1,0 +1,178 @@
+[cerok@cerokgm saia_base]$ echo "Modificacion local\n" > test.txt 
+[cerok@cerokgm saia_base]$ git status -b --porcelain
+## master...origin/master [ahead 1]
+ M test.txt
+
+[cerok@cerokgm saia_base]$ touch test2.txt
+[cerok@cerokgm saia_base]$ git status -b --porcelain
+## master...origin/master [ahead 1]
+ M test.txt
+?? test2.txt
+
+[cerok@cerokgm saia_base]$ git add .
+[cerok@cerokgm saia_base]$ git status -b --porcelain
+## master...origin/master
+M  test.txt
+A  test2.txt
+
+[cerok@cerokgm saia_base]$ git status -b --porcelain
+## master...origin/master
+M  test.txt
+AM test2.txt
+
+[cerok@cerokgm saia_base]$ git commit -m "archivo de prueba test2.txt"
+[master d2094ca] archivo de prueba test2.txt
+ 2 files changed, 1 insertion(+)
+ create mode 100644 test2.txt
+
+[cerok@cerokgm saia_base]$ git status -b --porcelain
+## master...origin/master [ahead 1]
+ M test2.txt
+
+Si no proporciona usuario y contraseña
+
+Array ( [0] => master [1] => test2.txt ) 
+Exception Object ( [message:protected] => fatal: could not read Username for 'http://laboratorio.netsaia.com:82': No existe el dispositivo o la dirección [string:Exception:private] => [code:protected] => 0 [file:protected] => /home/cerok/proyectos/workspace_php/TestGitLab/Git.php [line:protected] => 330 [trace:Exception:private] => Array ( [0] => Array ( [file] => /home/cerok/proyectos/workspace_php/TestGitLab/Git.php [line] => 345 [function] => run_command [class] => GitRepo [type] => -> [args] => Array ( [0] => /usr/bin/git push --tags origin master ) ) [1] => Array ( [file] => /home/cerok/proyectos/workspace_php/TestGitLab/Git.php [line] => 674 [function] => run [class] => GitRepo [type] => -> [args] => Array ( [0] => push --tags origin master ) ) [2] => Array ( [file] => /home/cerok/proyectos/workspace_php/TestGitLab/conectar.php [line] => 18 [function] => push [class] => GitRepo [type] => -> [args] => Array ( [0] => origin [1] => master ) ) ) [previous:Exception:private] => ) 
+
+
+Falla al hacer push porque hay cambios para descargar
+
+
+[cerok@cerokgm saia_base]$ git push --tags origin master
+To http://laboratorio.netsaia.com:82/giovanni.montes/saia_base.git
+ ! [rejected]        master -> master (fetch first)
+error: failed to push some refs to 'http://laboratorio.netsaia.com:82/giovanni.montes/saia_base.git'
+hint: Updates were rejected because the remote contains work that you do
+hint: not have locally. This is usually caused by another repository pushing
+hint: to the same ref. You may want to first integrate the remote changes
+hint: (e.g., 'git pull ...') before pushing again.
+hint: See the 'Note about fast-forwards' in 'git push --help' for details.
+
+Hacer fetch para obtener los cambios
+
+[cerok@cerokgm saia_base]$ git fetch
+Pass a valid window to KWallet::Wallet::openWallet().
+Pass a valid window to KWallet::Wallet::openWallet().
+remote: Counting objects: 3, done.
+remote: Compressing objects: 100% (2/2), done.
+remote: Total 3 (delta 1), reused 0 (delta 0)
+Unpacking objects: 100% (3/3), done.
+From http://laboratorio.netsaia.com:82/giovanni.montes/saia_base
+ * [new branch]      master     -> origin/master
+
+Falla el auto merge
+
+[cerok@cerokgm saia_base]$ git merge origin/master
+Auto-merging test.txt
+CONFLICT (content): Merge conflict in test.txt
+Automatic merge failed; fix conflicts and then commit the result.
+
+El archivo queda con ===> y <==== hay que editarlo y arreglar
+
+
+****************************
+Otro error
+
+iMac-de-Carlos:saia_editor giovanni$ git branch -v
+* master fa84d01 [ahead 130, behind 17] cambios api
+iMac-de-Carlos:saia_editor giovanni$ git status
+On branch master
+Your branch and 'origin/master' have diverged,
+and have 130 and 17 different commits each, respectively.
+  (use "git pull" to merge the remote branch into yours)
+nothing to commit, working directory clean
+
+iMac-de-Carlos:saia_editor giovanni$ git pull origin
+Performing inexact rename detection: 100% (83100/83100), done.
+CONFLICT (modify/delete): Git0K.php deleted in HEAD and modified in e81681cf0ab90f6112d31d0f0cb8a3975e782c5c. Version e81681cf0ab90f6112d31d0f0cb8a3975e782c5c of Git0K.php left in tree.
+Automatic merge failed; fix conflicts and then commit the result.
+
+iMac-de-Carlos:saia_editor giovanni$ git add editor_codigo/GitApi/Git0K.php 
+iMac-de-Carlos:saia_editor giovanni$ git pull origin
+U	Git0K.php
+Pull is not possible because you have unmerged files.
+Please, fix them up in the work tree, and then use 'git add/rm <file>'
+as appropriate to mark resolution and make a commit.
+
+iMac-de-Carlos:saia_editor giovanni$ git commit -m "resolucion de conflicto"
+U	Git0K.php
+error: commit is not possible because you have unmerged files.
+hint: Fix them up in the work tree, and then use 'git add/rm <file>'
+hint: as appropriate to mark resolution and make a commit.
+fatal: Exiting because of an unresolved conflict.
+
+iMac-de-Carlos:saia_editor giovanni$ git add editor_codigo/GitApi/Git0K.php 
+iMac-de-Carlos:saia_editor giovanni$ git commit -m "resolucion de conflicto"
+U	Git0K.php
+error: commit is not possible because you have unmerged files.
+hint: Fix them up in the work tree, and then use 'git add/rm <file>'
+hint: as appropriate to mark resolution and make a commit.
+fatal: Exiting because of an unresolved conflict.
+
+iMac-de-Carlos:saia_editor giovanni$ git branch -v
+* master fa84d01 [ahead 130, behind 17] cambios api
+iMac-de-Carlos:saia_editor giovanni$ git status
+On branch master
+Your branch and 'origin/master' have diverged,
+and have 130 and 17 different commits each, respectively.
+  (use "git pull" to merge the remote branch into yours)
+You have unmerged paths.
+  (fix conflicts and run "git commit")
+
+Unmerged paths:
+  (use "git add/rm <file>..." as appropriate to mark resolution)
+
+	deleted by us:   Git0K.php
+
+no changes added to commit (use "git add" and/or "git commit -a")
+
+iMac-de-Carlos:saia_editor giovanni$ git commit -am "resolucion de conflicto"
+[master 9485bf3] resolucion de conflicto
+
+iMac-de-Carlos:saia_editor giovanni$ git pull origin
+Already up-to-date.
+
+iMac-de-Carlos:saia_editor giovanni$ git remote -v
+GitApi	http://laboratorio.netsaia.com:82/giovanni.montes/GitApi.git (fetch)
+GitApi	http://laboratorio.netsaia.com:82/giovanni.montes/GitApi.git (push)
+origin	https://github.com/cerok/saia_base.git (fetch)
+origin	https://github.com/cerok/saia_base.git (push)
+
+iMac-de-Carlos:saia_editor giovanni$ git branch -v
+* master 9485bf3 [ahead 131] resolucion de conflicto
+iMac-de-Carlos:saia_editor giovanni$ git status
+On branch master
+Your branch is ahead of 'origin/master' by 131 commits.
+  (use "git push" to publish your local commits)
+nothing to commit, working directory clean
+
+iMac-de-Carlos:saia_editor giovanni$ git push
+Counting objects: 4719, done.
+Delta compression using up to 4 threads.
+Compressing objects: 100% (3585/3585), done.
+error: RPC failed; result=56, HTTP code = 200 3.00 KiB/s   
+fatal: The remote end hung up unexpectedly
+
+****
+Un git rebase falla si no puede hacer el merge
+iMac-de-Carlos:GitApi giovanni$ git pull --rebase
+First, rewinding head to replay your work on top of it...
+Applying: Posibles estados para merge
+Using index info to reconstruct a base tree...
+M	README
+Falling back to patching base and 3-way merge...
+Auto-merging README
+CONFLICT (content): Merge conflict in README
+Failed to merge in the changes.
+Patch failed at 0001 Posibles estados para merge
+The copy of the patch that failed is found in:
+   /Users/giovanni/DevTools/workspace_php/GitApi/.git/rebase-apply/patch
+
+When you have resolved this problem, run "git rebase --continue".
+If you prefer to skip this patch, run "git rebase --skip" instead.
+To check out the original branch and stop rebasing, run "git rebase --abort".
+
+iMac-de-Carlos:GitApi giovanni$ git status -b --porcelain
+## HEAD (no branch)
+UU README
+
