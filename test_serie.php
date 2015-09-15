@@ -23,7 +23,10 @@ if(isset($_REQUEST["estado"]) && $_REQUEST["estado"]!="")
 if(isset($_REQUEST["seleccionado"]))
   $seleccionado=explode(",",$_REQUEST["seleccionado"]);
 else
-  $seleccionado=array();  
+  $seleccionado=array();
+if(@$_REQUEST["excluidos"]){
+	$excluidos=" and id".$tabla." not in(".$_REQUEST["excluidos"].") ";
+}
 if ( stristr($_SERVER["HTTP_ACCEPT"],"application/xhtml+xml") ) 
 { 
   header("Content-type: application/xhtml+xml"); 
@@ -100,15 +103,15 @@ $activo = "";
 <?php
 
 function llena_serie($serie,$condicion=""){
-global $conn,$tabla,$seleccionado,$activo;
+global $conn,$tabla,$seleccionado,$activo,$excluidos;
 if(isset($_REQUEST["orden"]))
   $orden=$_REQUEST["orden"];
 else
   $orden="nombre";
 if($serie=="NULL")
-  $papas=busca_filtro_tabla("*",$tabla,"(cod_padre IS NULL OR cod_padre=0) $activo $condicion","$orden ASC",$conn);
+  $papas=busca_filtro_tabla("*",$tabla,"(cod_padre IS NULL OR cod_padre=0) $activo $condicion $excluidos","$orden ASC",$conn);
 else
-  $papas=busca_filtro_tabla("*",$tabla,"cod_padre=".$serie.$activo.$condicion,"$orden ASC",$conn); 
+  $papas=busca_filtro_tabla("*",$tabla,"cod_padre=".$serie.$activo.$condicion.$excluidos,"$orden ASC",$conn); 
 
 if($papas["numcampos"])
 { 

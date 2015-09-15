@@ -93,44 +93,4 @@ function exportar_funcion_excel(idfiltro){
 	var url="exportar_saia.php?idbusqueda_componente=<?php echo $datos_busqueda[0]["idbusqueda_componente"]; ?>&page=1&exportar_saia=excel&ruta_exportar_saia="+ruta_file+"&rows="+$("#busqueda_registros").val()+"&actual_row=0&variable_busqueda="+$("#variable_busqueda").val()+"&idbusqueda_filtro_temp="+idfiltro+"&idbusqueda_filtro=<?php echo(@$_REQUEST['idbusqueda_filtro']);?>&idbusqueda_temporal=<?php echo (@$_REQUEST['idbusqueda_temporal']);?>";
 	window.open(url,"iframe_exportar_saia");
 }
-function exportar_funcion_excel_para_eliminar_ya_no_sirve(idfiltro){
-	if(!isChrome&&!isIE){
-		$("#barra_exp_ppal").html('<div class="progress progress-striped active" style="margin-bottom: 0px;"><div class="bar bar-success" id="barra_exp" ></div></div>');
-		$("#barra_exp").css("width","0%");
- 	}
-  var busqueda_total=$("#busqueda_total_paginas").val();        
-  var cantidad_ciclos=parseInt(busqueda_total);
-  var inc=Math.ceil(100/cantidad_ciclos);
-  var error=0; 
-  var aumento=0;
-  var ruta_file="temporal_<?php echo(usuario_actual('login'));?>/reporte_<?php echo($datos_busqueda[0]["nombre"].'_'.date('Ymd').'.xls'); ?>";
-  for(var i=0;i<cantidad_ciclos;i++){      
-    $.ajax({
-      type:'POST',
-      async:false,
-      url:"servidor_busqueda.php?idbusqueda_componente=<?php echo $datos_busqueda[0]["idbusqueda_componente"]; ?>&page="+(i+1)+"&exportar_saia=excel&ruta_exportar_saia="+ruta_file+"&rows="+$("#busqueda_registros").val()+"&actual_row="+$("#fila_actual").val()+"&variable_busqueda="+$("#variable_busqueda").val()+"&reporte=1&idbusqueda_filtro_temp="+idfiltro+"&idbusqueda_filtro=<?php echo(@$_REQUEST['idbusqueda_filtro']);?>&idbusqueda_temporal=<?php echo (@$_REQUEST['idbusqueda_temporal']);?>", 
-      success: function(html){
-        if(html){
-          var objeto=jQuery.parseJSON(html);
-          if(objeto.exito){
-          	if(objeto.total!=cantidad_ciclos)cantidad_ciclos=objeto.total;
-            aumento=((i+1)*inc);
-            if(!isChrome&&!isIE){
-            	$("#barra_exp").css("width",aumento+"%");
-            }
-          }
-          else{
-            notificacion_saia('Error:al exportar el archivo','error','',3500);
-            error=1;
-            $("#barra_exp_ppal").html("");
-          }
-        }
-      }
-    });   
-  } 
-  if(!error){
-  	notificacion_saia('Archivo exportado de forma exitosa','success','',3500);
-  	$("#barra_exp_ppal").html('<a href="<?php echo($ruta_db_superior);?>'+ruta_file+'" style="margin-top:-9px">Descargar</a>');
-  }
-}
 </script>

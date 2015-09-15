@@ -278,7 +278,7 @@ function arbol_cargos($campo,$seleccionados)
                       tree_<?php echo $campo; ?>.setOnLoadingStart(cargando_<?php echo $campo; ?>);
                       tree_<?php echo $campo; ?>.setOnLoadingEnd(fin_cargando_<?php echo $campo; ?>);
                       tree_<?php echo $campo; ?>.enableSmartXMLParsing(true);
-                      tree_<?php echo $campo; ?>.loadXML("<?php echo $ruta_db_superior; ?>test_serie.php?tabla=cargo&estado=1&seleccionado=<?php echo $seleccionados; ?>");
+                      tree_<?php echo $campo; ?>.loadXML("<?php echo $ruta_db_superior; ?>test_serie.php?tabla=cargo&estado=1&seleccionado=<?php echo $seleccionados; ?>&excluidos=<?php echo(@$_REQUEST["key"]); ?>");
                 	    tree_<?php echo $campo; ?>.setOnCheckHandler(onNodeSelect_<?php echo $campo; ?>);
                       function onNodeSelect_<?php echo $campo; ?>(nodeId)
                       {valor_destino=document.getElementById("<?php echo $campo; ?>");

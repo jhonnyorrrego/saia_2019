@@ -5,8 +5,9 @@ include_once("librerias_saia.php");
 
 echo(librerias_notificaciones());
 ?>
+<script src="js/jquery.js"></script>
+<script src="js/jquery.validate.js"></script>
 <script type="text/javascript">
-<!--
 function no_palitos(evt)
   {
    evt = (evt) ? evt : event;
@@ -17,7 +18,9 @@ function no_palitos(evt)
    }
    return true;
   }
--->
+$(document).ready(function(){
+	$("#documento_eliminar").validate();
+});
 </script>
 <?php
 $x_id_documento = Null;
@@ -78,8 +81,13 @@ $llave = $_REQUEST["iddoc"];
 			die();
   	}
     ?>
+    <style>
+		label.error{
+			color:red;
+		}
+		</style>
     <span style="font-family:verdana"><img class="imagen_internos" src="images/eliminar_pagina.png" border="0">&nbsp;&nbsp;ElIMINAR BORRADOR</span>
-    <form action="documento_borrar.php" method="POST">
+    <form action="documento_borrar.php" method="POST" id="documento_eliminar" name="documento_eliminar">
     <p>    
     <input type="hidden" name="iddoc" value="<?php echo  ($llave); ?>">
     <input type="hidden" name="doc_principal" value="<?php echo $_REQUEST["doc_principal"]; ?>">
@@ -123,7 +131,7 @@ $llave = $_REQUEST["iddoc"];
     <tr class="encabezado">
     <td width="131" valign="top"><span class="phpmaker" style="color: #FFFFFF; text-aling:justify; font-family: Verdana;font-size: 9px;">JUSTIFICACI&Oacute;N</span></td>
     <td valign="top" bgcolor="#F5F5F5" colspan="3"><span class="phpmaker"><font color="#000000">
-    <textarea cols="50" rows="2" id="x_detalle" name="x_detalle"  onkeypress='return no_palitos(event)' style="font-family: Verdana;font-size: 9px;"><?php echo @$x_detalle; ?></textarea>
+    <textarea cols="50" rows="2" id="x_detalle" name="x_detalle"  onkeypress='return no_palitos(event)' style="font-family: Verdana;font-size: 9px;" class="required"><?php echo @$x_detalle; ?></textarea>
     </font></span></td>
     </tr>
     <tr><td colspan="4" bgcolor="#F5F5F5"><span style="text-aling:justify; font-family: Verdana;font-size: 11px;"><center>    

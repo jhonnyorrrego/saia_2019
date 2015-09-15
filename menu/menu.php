@@ -88,7 +88,8 @@ if(isset($_GET["modulo"])&&$_GET["modulo"]){
     $condicion="A.modulo_idmodulo=B.idmodulo AND B.cod_padre in (".implode(",",$modulos_array).") AND A.funcionario_idfuncionario=".$usuario_actual;
     $adicionados=busca_filtro_tabla("B.idmodulo","permiso A, modulo B",$condicion." AND A.accion=1","",$conn);
     $suprimidos= busca_filtro_tabla("B.idmodulo","permiso A, modulo B",$condicion." AND (A.accion=0 OR A.accion IS NULL)","",$conn);
-    $permisos_perfil=busca_filtro_tabla("C.idmodulo","permiso_perfil A,funcionario B,modulo C","A.perfil_idperfil=B.perfil AND A.modulo_idmodulo=C.idmodulo AND C.cod_padre in (".implode(",",$modulos_array).") AND B.idfuncionario=".$usuario_actual,"",$conn);
+	$perfiles=busca_filtro_tabla("perfil","funcionario","idfuncionario=".$usuario_actual,"",$conn);
+    $permisos_perfil=busca_filtro_tabla("C.idmodulo","permiso_perfil A,funcionario B,modulo C","A.perfil_idperfil in (".$perfiles[0]["perfil"].") AND A.modulo_idmodulo=C.idmodulo AND C.cod_padre in (".implode(",",$modulos_array).") AND B.idfuncionario=".$usuario_actual,"",$conn);
 
     $adicionales=extrae_campo($adicionados,"idmodulo","U");
     $suprimir=extrae_campo($suprimidos,"idmodulo","U");

@@ -16,7 +16,7 @@ include_once("funciones_generales.php");
 $alto_frame="100%";
 function listado_hijos_formato($idformato,$iddoc){
 global $conn,$alto_frame;
-if(@$_REQUEST["llave"] && $idformato){
+if($idformato){
   $formato=busca_filtro_tabla("","formato","idformato=".$idformato,"",$conn);
   
   if($formato["numcampos"]){
@@ -28,20 +28,18 @@ campo: campo que sirve de enlace entre padre e hijo
 llave: llave que sirve de enlace id del padre
 orden: campo por el que se debe ordenar
 */
-    
     $lcampos=extrae_campo($campos,"nombre","U");
     $tabla=$formato[0]["nombre_tabla"];
-    $llaves=explode("-",$_REQUEST["llave"]); 
 
-    $formato_padre=busca_filtro_tabla("","formato","idformato=".$llaves[0],"",$conn);
-    $id_padre=busca_filtro_tabla("id".$formato_padre[0]["nombre_tabla"]." as id,documento_iddocumento as iddoc",$formato_padre[0]["nombre_tabla"],"id".$formato_padre[0]["nombre_tabla"]."=".$llaves[2],"",$conn);
+    $formato_padre=busca_filtro_tabla("","formato","idformato=".$formato[0]["cod_padre"],"",$conn);
+    $id_padre=busca_filtro_tabla("id".$formato_padre[0]["nombre_tabla"]." as id",$formato_padre[0]["nombre_tabla"],"documento_iddocumento=".$iddoc,"",$conn);
 
     $campo_enlace=$formato_padre[0]["nombre_tabla"];
-    $id=$llaves[2];
+    $id=$id_padre[0]["id"];
     $enlace_adicionar="";
-    array_push($lcampos,"id".$tabla);     
+    array_push($lcampos,"id".$tabla);
     
-    if(@$_REQUEST["enlace_adicionar_formato"] && @$_REQUEST["iddoc"]){
+    if(@$_REQUEST["iddoc"]){
       agrega_boton("texto","../../botones/formatos/adicionar.gif","../../responder.php?idformato=".$idformato."&iddoc=".$_REQUEST["padre"],"","Adicionar ".$formato[0]["etiqueta"],$formato[0]["nombre_tabla"],"","",0);
       $enlace_adicionar.="<br /><br />";
       $alto_frame="94%";

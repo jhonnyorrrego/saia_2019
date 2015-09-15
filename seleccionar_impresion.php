@@ -258,7 +258,12 @@ else $nodoinicial=$iddoc;
               if(list_seleccionados == "")
                 selectos=list_medios;
               else
-                selectos=list_seleccionados+","+list_medios;';
+                selectos=list_seleccionados+","+list_medios;
+              if(selectos=="" || !selectos){
+              	alert("Seleccione algun item del arbol para imprimir");
+              	return false;
+              }  
+              ';
               $exportar_pdf=busca_filtro_tabla("valor","configuracion A","A.nombre='exportar_pdf'","",$conn);
 							if($exportar_pdf[0]["valor"]=='html2ps'){
               	$texto.='window.open("exportar_impresion.php?seleccionados="+selectos+"&iddoc='.$iddocumento.'&margenes="+configuracion.margenes.value+"&font_size="+configuracion.font_size.value+"&orientacion="+configuracion.orientacion.value+"&papel="+configuracion.papel.value+"&ocultar_firmas="+configuracion.ocultar_firmas.value,"_blank");';

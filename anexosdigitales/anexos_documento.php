@@ -1,12 +1,20 @@
 <?php
-header("Expires: Mon, 26 Jul 1997 05:00:00 GMT"); // date in the past
-header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT"); // always modified
-header("Cache-Control: no-store, no-cache, must-revalidate"); // HTTP/1.1
-header("Cache-Control: post-check=0, pre-check=0", false);
-header("Pragma: no-cache"); // HTTP/1.0 ISO-8859-1
-if(@$_REQUEST["iddoc"] || @$_REQUEST["key"]){
+$max_salida=10; // Previene algun posible ciclo infinito limitando a 10 los ../
+$ruta_db_superior=$ruta="";
+while($max_salida>0)
+{
+if(is_file($ruta."db.php"))
+{
+$ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
+}
+$ruta.="../";
+$max_salida--;
+}
+include_once($ruta_db_superior."db.php");
+include_once($ruta_db_superior."librerias_saia.php");
+if((@$_REQUEST["iddoc"] || @$_REQUEST["key"]) && @$_REQUEST["no_menu"]!=1){
 	if(!@$_REQUEST["iddoc"])$_REQUEST["iddoc"]=@$_REQUEST["key"];
-	include_once("../pantallas/documento/menu_principal_documento.php");
+	include_once($ruta_db_superior."pantallas/documento/menu_principal_documento.php");
 	menu_principal_documento($_REQUEST["iddoc"]);
 }
 ?>
@@ -19,14 +27,6 @@ if(@$_REQUEST["iddoc"] || @$_REQUEST["key"]){
     hs.outlineType = 'rounded-white';
 </script>
 <style type=\"text/css\">
-<!--
-INPUT, TEXTAREA, SELECT,text,body,tr
-{
-  font-family: Verdana,Tahoma,arial;
-  font-size: 12px;
-  /*text-transform:Uppercase;*/
- }
--->
 </style>
 <?php
 include_once("funciones_archivo.php");
