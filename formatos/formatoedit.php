@@ -36,6 +36,7 @@ $x_cod_padre = Null;
 $x_tipo_edicion = Null;
 $x_tabla = Null; 
 $x_mostrar = Null;
+$x_paginar = Null;
 $x_serie_idserie = Null;
 $x_banderas = Null;
 $x_font_size = Null;  
@@ -100,6 +101,7 @@ if (($sAction == "") || ((is_null($sAction)))) {
   $x_autoguardado= @$_POST["x_autoguardado"];
   $x_mostrar_pdf= @$_POST["x_mostrar_pdf"];
   $x_mostrar= @$_POST["x_mostrar"];
+  $x_paginar= @$_POST["x_paginar"];
 	if(isset($_POST["x_item"]))
      $x_item = @$_POST["x_item"];
   else
@@ -377,6 +379,7 @@ echo $x_contador_idcontadorList;
       <input type="checkbox" name="x_banderas[]" id="x_banderas" value="e" <?php if(in_array("e",$x_banderas)) echo("checked");?> >Aprobacion Automatica
       <input type="checkbox" name="x_mostrar" id="x_mostrar" value="1" <?php if($x_mostrar==1) echo("checked");?> >Mostrar
       <br>
+      <input type="checkbox" name="x_paginar" id="x_paginar" value="1" <?php if($x_paginar==1) echo("checked");?> >Paginar al mostrar
       <input type="checkbox" name="x_banderas[]" id="x_banderas" value="r" <?php if(in_array("r",$x_banderas)) echo("checked");?> >Tomar el asunto del padre al responder
       <!--input type="checkbox" name="x_firma_digital[]" id="x_firma_digital" value="r" <?php if($x_firma_digital==1) echo "checked"; ?>>Estampar documento al aprobar-->
       </span>
@@ -582,7 +585,7 @@ echo $x_exportarChk;
 
 function LoadData($sKey,$conn)
 {
-    global $enter2tab,$x_autoguardado, $x_mostrar_pdf,$x_item,$x_idformato, $x_nombre, $x_etiqueta, $x_contador_idcontador, $x_ruta_mostrar, $x_ruta_editar,	$x_ruta_adicionar, $x_librerias, $x_encabezado,	$x_cuerpo, $x_pie_pagina, $x_margenes, $x_orientacion, $x_papel, $x_exportar, $x_tabla, $x_detalle, $x_cod_padre,$x_tipo_edicion,$x_serie_idserie,$x_banderas,$x_font_family, $x_font_size,$x_mostrar,$x_firma_digital,$x_fk_categoria_formato,$x_flujo_idflujo,$x_funcion_predeterminada;
+    global $enter2tab,$x_autoguardado, $x_mostrar_pdf,$x_item,$x_idformato, $x_nombre, $x_etiqueta, $x_contador_idcontador, $x_ruta_mostrar, $x_ruta_editar,	$x_ruta_adicionar, $x_librerias, $x_encabezado,	$x_cuerpo, $x_pie_pagina, $x_margenes, $x_orientacion, $x_papel, $x_exportar, $x_tabla, $x_detalle, $x_cod_padre,$x_tipo_edicion,$x_serie_idserie,$x_banderas,$x_font_family, $x_font_size,$x_mostrar,$x_firma_digital,$x_fk_categoria_formato,$x_flujo_idflujo,$x_funcion_predeterminada,$x_paginar;
     $formato=busca_filtro_tabla("","formato","idformato=".$sKey,"",$conn);
     $LoadData=0;
     if($formato["numcampos"]){
@@ -613,6 +616,7 @@ function LoadData($sKey,$conn)
       $x_autoguardado = $row["tiempo_autoguardado"];
     	$x_mostrar_pdf = $row["mostrar_pdf"];
     	$x_mostrar = $row["mostrar"];
+    	$x_paginar = $row["paginar"];
       $enter2tab = $row["enter2tab"];
       $x_banderas = explode(",",$row["banderas"]);
       $x_firma_digital = $row["firma_digital"];
@@ -633,7 +637,7 @@ function LoadData($sKey,$conn)
 
 function EditData($sKey,$conn)
 {
-  global $enter2tab,$x_autoguardado, $x_mostrar_pdf,$x_item,$x_idformato, $x_nombre, $x_etiqueta, $x_contador_idcontador, $x_ruta_mostrar, $x_ruta_editar,	$x_ruta_adicionar, $x_librerias, $x_encabezado,	$x_cuerpo, $x_pie_pagina, $x_margenes, $x_orientacion, $x_papel, $x_exportar, $x_tabla, $x_detalle, $x_cod_padre, $x_tipo_edicion,$x_serie_idserie,$x_banderas,$x_font_family,$x_font_size,$x_mostrar,$x_firma_digital,$x_fk_categoria_formato,$x_flujo_idflujo,$x_funcion_predeterminada;
+  global $enter2tab,$x_autoguardado, $x_mostrar_pdf,$x_item,$x_idformato, $x_nombre, $x_etiqueta, $x_contador_idcontador, $x_ruta_mostrar, $x_ruta_editar,	$x_ruta_adicionar, $x_librerias, $x_encabezado,	$x_cuerpo, $x_pie_pagina, $x_margenes, $x_orientacion, $x_papel, $x_exportar, $x_tabla, $x_detalle, $x_cod_padre, $x_tipo_edicion,$x_serie_idserie,$x_banderas,$x_font_family,$x_font_size,$x_mostrar,$x_firma_digital,$x_fk_categoria_formato,$x_flujo_idflujo,$x_funcion_predeterminada,$x_paginar;
 	// Open record
 	$sKeyWrk = "" . addslashes($sKey) . "";
 	$sSql = "SELECT idformato FROM formato";
@@ -669,7 +673,7 @@ function EditData($sKey,$conn)
     elseif(is_array($x_banderas))
 	   $fieldList["banderas"] = "'".implode(",",$x_banderas)."'";
 	  $fieldList["tiempo_autoguardado"] = $x_autoguardado; 
-		$fieldList["etiqueta"] = $theValue;
+		$fieldList["etiqueta"] = htmlentities($theValue);
 		$theValue = ($x_contador_idcontador != "") ? intval($x_contador_idcontador) : crear_contador($x_nombre);
 		$fieldList["contador_idcontador"] = $theValue;
 		
@@ -738,7 +742,12 @@ function EditData($sKey,$conn)
 	  // Field mostrar
 	  $theValue = ($x_mostrar != 0) ? intval($x_mostrar) : 0;
 	  $fieldList["mostrar"] = $theValue;
-    $fieldList["enter2tab"] = $enter2tab;
+
+	  //paginar al mostrar
+	  $theValue = ($x_paginar != 0) ? intval($x_paginar) : 0;
+	  $fieldList["paginar"] = $theValue;
+
+	$fieldList["enter2tab"] = $enter2tab;
 	$fieldList["fk_categoria_formato"]="'".$x_fk_categoria_formato."'";
 	$fieldList["flujo_idflujo"]="'".$x_flujo_idflujo."'";
 	$fieldList["funcion_predeterminada"]="'".implode(",",$x_funcion_predeterminada)."'";

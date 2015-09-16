@@ -79,7 +79,7 @@ $fuente = busca_filtro_tabla("valor","configuracion","nombre='tipo_letra'","",$c
  if(isset($_REQUEST["font_size"])&&$_REQUEST["font_size"])
     $formato[0]["font_size"]=$_REQUEST["font_size"];
  if($fuente["numcampos"])
-  echo "<style> body,table,div,p,td { font-size:".$formato[0]["font_size"]."pt; font-family:".$fuente[0]["valor"]."; }
+  echo "<style> body,table,tr,td,div,p,span { font-size:".$formato[0]["font_size"]."pt; font-family:".$fuente[0]["valor"]."; }
   </style>";
   
 ?>
@@ -133,7 +133,8 @@ if( !isset($_REQUEST["tipo"]) || $_REQUEST["tipo"]==1){
   }else{
     $alto_paginador=$tam_pagina[$formato[0]["papel"]]["alto"];
     $ancho_paginador=$tam_pagina[$formato[0]["papel"]]["ancho"];
-  }	
+  }
+  if($formato[0]["paginar"] == '1') {
   echo('<style type="text/css">
 .page_border { border: 1px solid #CACACA; margin-bottom: 8px; box-shadow: 0 0 4px rgba(0, 0, 0, 0.1); -moz-box-shadow: 0 0 4px rgba(0, 0, 0, 0.1); -webkit-box-shadow: 0 0 4px rgba(0, 0, 0, 0.1); }
 .paginador_docs { width: '.$ancho_paginador.'px; height:'.($alto_paginador+50).'px; margin: auto; padding-left: 0px; margin-bottom:10px; background-color:#FFF; overflow:hidden; box-shadow: 5px 5px 5px #888888;}
@@ -170,7 +171,37 @@ if( !isset($_REQUEST["tipo"]) || $_REQUEST["tipo"]==1){
 			$("#documento").append(pagina);
 		}
 	});
-</script>    
+</script>');
+  } else {
+      echo('
+<script>
+	$(document).ready(function(){
+		var alto_papel='.$alto_paginador.';
+        var alto_encabezado='.$tam_pagina["margen_superior"].';
+        var alto_pie_pagina='.$tam_pagina["margen_inferior"].';
+		var altopagina = alto_papel-(alto_encabezado+alto_pie_pagina);
+        var paginas=1;
+        var alto=0;
+        var inicial=$("#documento").offset().top;
+        $(".page_break").each(function(){
+            pos=$(this).offset().top;
+            paginas =Math.ceil(pos/altopagina);
+            var nuevo_alto=(inicial+((altopagina)*paginas))-(pos)+(alto_encabezado);
+            $(this).height(nuevo_alto);
+      
+        });
+        alto = $("#page_overflow").height();
+        paginas =Math.ceil(alto/altopagina);
+		var contenido = $("#page_overflow").html();
+		var encabezado = $("#doc_header").html();
+		var piedepagina = $("#doc_footer").html();
+		$("#documento").append(encabezado);
+		$("#documento").append(contenido);
+		$("#documento").append(piedepagina);
+});
+</script>');      
+  }
+echo ('
 <body bgcolor="#f5f5f5">  
 <div id="documento">
   <div class="paginador_docs page_border">
