@@ -172,34 +172,6 @@ if( !isset($_REQUEST["tipo"]) || $_REQUEST["tipo"]==1){
 		}
 	});
 </script>');
-  } else {
-      echo('
-<script>
-	$(document).ready(function(){
-		var alto_papel='.$alto_paginador.';
-        var alto_encabezado='.$tam_pagina["margen_superior"].';
-        var alto_pie_pagina='.$tam_pagina["margen_inferior"].';
-		var altopagina = alto_papel-(alto_encabezado+alto_pie_pagina);
-        var paginas=1;
-        var alto=0;
-        var inicial=$("#documento").offset().top;
-        $(".page_break").each(function(){
-            pos=$(this).offset().top;
-            paginas =Math.ceil(pos/altopagina);
-            var nuevo_alto=(inicial+((altopagina)*paginas))-(pos)+(alto_encabezado);
-            $(this).height(nuevo_alto);
-      
-        });
-        alto = $("#page_overflow").height();
-        paginas =Math.ceil(alto/altopagina);
-		var contenido = $("#page_overflow").html();
-		var encabezado = $("#doc_header").html();
-		var piedepagina = $("#doc_footer").html();
-		$("#documento").append(encabezado);
-		$("#documento").append(contenido);
-		$("#documento").append(piedepagina);
-});
-</script>');      
   }
 echo ('
 <body bgcolor="#f5f5f5">  
@@ -220,6 +192,6 @@ echo ('
       <div id="page_overflow">
 <table style="width:100%">');  
 }  
-ELSE
+else
   echo '<table border="0" width="100%" cellpadding="0" cellspacing="0">';  
 ?>
