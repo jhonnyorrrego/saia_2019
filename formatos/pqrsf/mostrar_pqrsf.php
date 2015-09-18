@@ -25,6 +25,18 @@
 <tr>
 <td style="text-align: left;"><strong>&nbsp;<strong>Rol en la Insitucion:</strong></strong></td>
 <td style="text-align: left;">&nbsp;<?php mostrar_valor_campo('rol_institucion',305,$_REQUEST['iddoc']);?></td>
+<td style="text-align: left;"><strong>&nbsp;Iniciativa p&uacute;blica:</strong></td>
+<td style="text-align: left;">&nbsp;<?php mostrar_valor_campo('iniciativa_publica',305,$_REQUEST['iddoc']);?></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>&nbsp;Sector de la iniciativa:</strong></td>
+<td style="text-align: left;">&nbsp;<?php mostrar_valor_campo('sector_iniciativa',305,$_REQUEST['iddoc']);?></td>
+<td style="text-align: left;"><strong>&nbsp;Cluster:</strong></td>
+<td style="text-align: left;">&nbsp;<?php mostrar_valor_campo('cluster',305,$_REQUEST['iddoc']);?></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>&nbsp;Region:</strong></td>
+<td style="text-align: left;">&nbsp;<?php mostrar_valor_campo('region',305,$_REQUEST['iddoc']);?></td>
 <td style="text-align: left;">&nbsp;</td>
 <td style="text-align: left;">&nbsp;</td>
 </tr>

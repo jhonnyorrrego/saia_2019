@@ -41,9 +41,8 @@ function validar_email(){
 /*MOSTRAR*/
 function ver_fecha_reporte($idformato,$iddoc){
 	global $conn;
-	$fecha=busca_filtro_tabla("fecha_reporte","ft_pqrsf","documento_iddocumento=".$iddoc,"",$conn);
-	$date = new DateTime($fecha[0]['fecha_reporte']);
-	echo date_format($date, 'Y-m-d');
+	$fecha=busca_filtro_tabla(fecha_db_obtener("Y-m-d","fecha_reporte"),"ft_pqrsf","documento_iddocumento=".$iddoc,"",$conn);
+	echo($fecha[0]['fecha_reporte']);
 }
 
 function mostrar_datos_hijos($idformato,$iddoc){
@@ -129,5 +128,11 @@ function mostrar_anexos_pqrsf($idformato,$iddoc){
 		</script>
 		<?php
 	}
+}
+/*ADICIONAR*/
+function mostrar_radicado_pqrsf($idformato,$iddoc){
+	global $conn;
+	$contador=busca_filtro_tabla("b.consecutivo","formato a, contador b","a.contador_idcontador=b.idcontador AND a.idformato=".$idformato,"",$conn);
+	echo("<td><input type='text' readonly id='numero_radicado' name='numero_radicado' value='".$contador[0]['consecutivo']."'></td>");
 }
 ?>

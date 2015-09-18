@@ -71,6 +71,12 @@ echo(estilo_bootstrap());
 <input type="hidden" value="<?php echo(@$_REQUEST["variable_busqueda"]);?>" name="variable_busqueda" id="variable_busqueda">
 <input type="hidden" value="1" name="complementos_busqueda" id="complementos_busqueda">
 <?php
+
+$boton_buscar="";
+if($datos_busqueda[0]['busqueda_avanzada']!=""){
+	$boton_buscar='<button class=\"btn btn-mini btn-primary kenlace_saia pull-left\" titulo=\"B&uacute;squeda'.$datos_busqueda[0]["etiqueta"].'\" title=\"B&uacute;squeda'.$datos_busqueda[0]["etiqueta"].'\" conector=\"iframe\" enlace=\"'.$datos_busqueda[0]['busqueda_avanzada'].'\">B&uacute;squeda &nbsp;</button>';
+}
+
 echo(librerias_jquery("1.7"));
 echo(librerias_UI());
 echo(librerias_jqgrid());
@@ -109,7 +115,7 @@ $(document).ready(function(){
 	    total: function (obj) {$("#busqueda_total_paginas").val(obj.total); return(obj.total);  }	   
 		},
    	pager: '#nav_busqueda',
-    caption:"<button class=\"btn btn-mini btn-primary kenlace_saia pull-left\" titulo=\"B&uacute;squeda <?php echo($datos_busqueda[0]['etiqueta']);?>\" title=\"B&uacute;squeda <?php echo($datos_busqueda[0]['etiqueta']);?>\" conector=\"iframe\" enlace=\"<?php echo($datos_busqueda[0]['busqueda_avanzada']);?>\">B&uacute;squeda &nbsp;</button> <button class=\"btn btn-mini btn-primary exportar_reporte_saia pull-left\" title=\"Exportar reporte <?php echo($datos_busqueda[0]['etiqueta']);?>\" enlace=\"<?php echo($datos_busqueda[0]['busqueda_avanzada']);?>\">Exportar &nbsp;</button><div class=\"pull-left\" style=\"text-align:center; width:60%;\"><?php echo($datos_busqueda[0]['etiqueta']);?></div><div id=\"barra_exportar_ppal\"><iframe name='iframe_exportar_saia' height='25px' width='150px' frameborder=0 scrolling='no'></iframe></div></div>"
+    caption:"<?php echo $boton_buscar;?><button class=\"btn btn-mini btn-primary exportar_reporte_saia pull-left\" title=\"Exportar reporte <?php echo($datos_busqueda[0]['etiqueta']);?>\" enlace=\"<?php echo($datos_busqueda[0]['busqueda_avanzada']);?>\">Exportar &nbsp;</button><div class=\"pull-left\" style=\"text-align:center; width:60%;\"><?php echo($datos_busqueda[0]['etiqueta']);?></div><div id=\"barra_exportar_ppal\"><iframe name='iframe_exportar_saia' height='25px' width='150px' frameborder=0 scrolling='no'></iframe></div></div>"
 });
 jQuery("#datos_busqueda").jqGrid('navGrid','#nav_busqueda',{edit:false,add:false,del:false,search:false});
 

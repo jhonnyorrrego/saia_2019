@@ -22,6 +22,56 @@ include_once($ruta_db_superior."asignacion.php");
 include_once($ruta_db_superior."formatos/librerias/funciones_generales.php");
 include_once($ruta_db_superior."formatos/pqrsf/funciones.php");
 
+function consultar_iniciativa($datos){
+	global $conn;
+	$iniciativa=busca_filtro_tabla("a.idserie as id,a.nombre as nombre","serie a, serie b","a.estado=1 and a.cod_padre=b.idserie and b.nombre like 'Iniciativas publicas'","nombre",$conn);
+	$resultado="<option value=''>Seleccione</optcion>";
+	for ($i=0; $i < $iniciativa['numcampos'] ; $i++) { 
+		$resultado.="<option value='".$iniciativa[$i]['id']."'>".$iniciativa[$i]['nombre']."</optcion>";
+	}
+	return($resultado);
+}
+function consultar_sector($datos){
+	global $conn;
+	$sector=busca_filtro_tabla("a.idserie as id,a.nombre as nombre","serie a, serie b","a.estado=1 and a.cod_padre=b.idserie and b.nombre like 'Sector de la iniciativa'","nombre",$conn);
+	$resultado="<option value=''>Seleccione</optcion>";
+	for ($i=0; $i < $sector['numcampos'] ; $i++) { 
+		$resultado.="<option value='".$sector[$i]['id']."'>".$sector[$i]['nombre']."</optcion>";
+	}
+	return($resultado);
+}
+function consultar_cluster($datos){
+	global $conn;
+	$cluster=busca_filtro_tabla("a.idserie as id,a.nombre as nombre","serie a, serie b","a.estado=1 and a.cod_padre=b.idserie and b.nombre like 'cluster'","nombre",$conn);
+	$resultado="<option value=''>Seleccione</optcion>";
+	for ($i=0; $i < $cluster['numcampos'] ; $i++) { 
+		$resultado.="<option value='".$cluster[$i]['id']."'>".$cluster[$i]['nombre']."</optcion>";
+	}
+	return($resultado);
+}
+function consultar_region($datos){
+	global $conn;
+	$region=busca_filtro_tabla("a.idserie as id,a.nombre as nombre","serie a, serie b","a.estado=1 and a.cod_padre=b.idserie and b.nombre like 'Region'","nombre",$conn);
+	$resultado="<option value=''>Seleccione</optcion>";
+	for ($i=0; $i < $region['numcampos'] ; $i++) { 
+		$resultado.="<option value='".$region[$i]['id']."'>".$region[$i]['nombre']."</optcion>";
+	}
+	return($resultado);
+}
+function consultar_numero_radicado($datos){
+	global $conn;
+	$contador=busca_filtro_tabla("b.consecutivo","formato a, contador b","a.contador_idcontador=b.idcontador AND a.idformato=305","",$conn);
+	return($contador[0]['consecutivo']);
+}
+function datos_select($idserie){
+	global $conn;
+	$serie=busca_filtro_tabla("idserie as id,nombre as nombre","serie","estado=1 and cod_padre=".$idserie,"nombre",$conn);
+	$resultado="<option value=''>Seleccione</optcion>";
+	for ($i=0; $i < $serie['numcampos'] ; $i++) { 
+		$resultado.="<option value='".$serie[$i]['id']."'>".$serie[$i]['nombre']."</optcion>";
+	}
+	return($resultado);
+}
 function ejecutar_consultas($datos){
 global $conn;
 $datos = json_decode($datos);

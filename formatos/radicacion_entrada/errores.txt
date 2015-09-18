@@ -1,2 +1,2 @@
-Fallo la busqueda SQL buzon_entrada:insert into buzon_entrada(archivo_idarchivo,nombre,fecha,origen,tipo_origen,destino,tipo_destino,tipo) values(1125,'LEIDO',DATE_FORMAT('2015-07-29 16:35:22','%Y-%m-%d %H:%i:%s'),,1,,1,'DOCUMENTO')
+NO EXISTE UN CONSECUTIVO LLAMADO radicacion_entrada
 
