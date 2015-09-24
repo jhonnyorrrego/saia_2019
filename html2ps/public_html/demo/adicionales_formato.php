@@ -61,6 +61,12 @@ if(!isset($_REQUEST["URL"])){
 			if($borrador[0]["estado"]=="ANULADO"){
 				$marca="ANULADO";
 			}
+			else{
+				$anulado=busca_filtro_tabla("","documento_anulacion a","a.documento_iddocumento=".$_REQUEST["iddoc"]." and estado='ANULADO'","",$conn);
+				if($anulado["numcampos"]){
+					$marca="ANULADO";
+				}
+			}
 			
 			if($borrador["numcampos"] && isset($borrador[0]["estado"]) && ($borrador[0]["estado"]=='ACTIVO' || $borrador[0]["estado"]=='TRAMITE' || $borrador[0]["estado"]=='BORRADOR')){
 				$marca="BORRADOR";

@@ -127,7 +127,7 @@ label.error{
 	<tr>
 		<td class="encabezado" title="Contraseña asignada al funcionario para ingresar al sistema"><span class="phpmaker" style="color: #FFFFFF;">CLAVE</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
-<input type="password" name="x_clave" value="" size="30" maxlength="50">
+<input type="password" name="x_clave" value="" size="30" maxlength="50" placeholder="Cambiar contrase&ntilde;a">
 </span></td>
 	</tr>
 	<tr>

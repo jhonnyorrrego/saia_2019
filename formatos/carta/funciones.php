@@ -25,7 +25,7 @@ function mostrar_qr_carta($idformato,$iddoc){
 	}
 }
 
-function generar_codigo_qr_carta($idformato,$iddoc){	
+function generar_codigo_qr_carta($idformato,$iddoc){
   global $conn,$ruta_db_superior;	
 	include_once($ruta_db_superior."pantallas/lib/librerias_fechas.php");
   $codigo_qr=busca_filtro_tabla("ruta_qr, iddocumento_verificacion","documento_verificacion","documento_iddocumento=".$iddoc,"", $conn);

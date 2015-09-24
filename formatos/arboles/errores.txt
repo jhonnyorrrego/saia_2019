@@ -1,2 +1,2 @@
-Fallo la busqueda SQL buzon_entrada:insert into buzon_entrada(archivo_idarchivo,nombre,fecha,origen,tipo_origen,destino,tipo_destino,tipo) values(1148,'LEIDO',DATE_FORMAT('2015-07-28 17:05:24','%Y-%m-%d %H:%i:%s'),,1,,1,'DOCUMENTO')
+Fallo la busqueda SQL buzon_entrada:insert into buzon_entrada(archivo_idarchivo,nombre,fecha,origen,tipo_origen,destino,tipo_destino,tipo) values(1275,'LEIDO',DATE_FORMAT('2015-09-22 10:54:53','%Y-%m-%d %H:%i:%s'),,1,,1,'DOCUMENTO')
 

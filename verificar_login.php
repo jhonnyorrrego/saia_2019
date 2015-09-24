@@ -61,14 +61,14 @@ if (@$_REQUEST["userid"]<>"" && @$_REQUEST["passwd"]<>"") {
         if(@$retorno["ingresar"]==0){
 			   	/*@session_unset();
           @session_destroy();*/
-          almacenar_sesion(0,$sUserId); 
+          //almacenar_sesion(0,$sUserId); 
         }
 			}
 			else{
           $retorno["mensaje"]="El funcionario esta inactivo o no pertenece al sistema.";
 			   	/*@session_unset();
           @session_destroy();*/
-          almacenar_sesion(0,$sUserId);
+          //almacenar_sesion(0,$sUserId);
 			}
 	 phpmkr_free_result($rs);
 	}
@@ -90,7 +90,10 @@ if (@$_REQUEST["userid"]<>"" && @$_REQUEST["passwd"]<>"") {
   else {	  
 		/*@session_unset();
     @session_destroy();*/
-    almacenar_sesion(0,$sUserId);
+    $dato=almacenar_sesion(0,$sUserId);
+		if($dato["mensaje"]){
+			$retorno["mensaje"]=$dato["mensaje"];
+		}
 		$retorno["ruta"]=$redirecciona;
 	}
 }
