@@ -11,6 +11,12 @@ $ruta.="../";
 $max_salida--;
 }
 include_once($ruta_db_superior."db.php");
+
+
+
+
+
+
 function lista_destinos($idformato,$iddoc=NULL){
  global $conn;
  $datos=busca_filtro_tabla("nombre,nombre_tabla","formato","idformato=$idformato","",$conn);
@@ -38,10 +44,10 @@ function lista_destinos($idformato,$iddoc=NULL){
  foreach ($lista as $value) {
  	$des = explode(',', $value);
   if(sizeof($des)> 1){
-  	echo('<b>'.$des[0].'</b><br />');
+  	echo(''.$des[0].'<br />');
 		echo($des[1]);
   }else{
-  	echo('<b>'.$des[0].'</b>');
+  	echo(''.$des[0].'');
   }
 	echo('<br />');
  }
@@ -66,6 +72,8 @@ function jerarquia_destinos($lista,$fecha)
  return(true);  
 }
 
+
+
 function mostrar_origen($idformato,$iddoc=NULL){
 	global $conn;
  $formato=busca_filtro_tabla("nombre_tabla,nombre","formato","idformato=$idformato","",$conn);
@@ -73,7 +81,7 @@ function mostrar_origen($idformato,$iddoc=NULL){
  $origen = explode(',',$resultado[0]["origen"]);  
  for($i=0; $i<count($origen); $i++){
  	$dependencia=busca_filtro_tabla("C.nombre,D.nombres,D.apellidos","dependencia_cargo A, cargo B, dependencia C,funcionario D","A.iddependencia_cargo=".$origen[$i]." AND D.idfuncionario=A.funcionario_idfuncionario AND B.idcargo=A.cargo_idcargo AND A.dependencia_iddependencia=C.iddependencia AND A.estado=1","",$conn);	 
-     echo('<b>'.$dependencia[0]["nombre"]."</b><br />");
+     echo(''.$dependencia[0]["nombre"]."<br />");
 	}
 
 }
@@ -83,7 +91,7 @@ function mostrar_copias_memo($idformato,$iddoc=NULL)
  $datos=busca_filtro_tabla("nombre,nombre_tabla","formato","idformato=$idformato","",$conn);
  $inf_memorando=busca_filtro_tabla("copia",$datos[0]["nombre_tabla"],"documento_iddocumento=$iddoc","",$conn);
  if($inf_memorando[0]["copia"]<>"")
-    {echo '<tr ><td colspan=2>Copia: ';
+    {echo '<span>Copia: ';
      $destinos=explode(",",$inf_memorando[0]["copia"]);
      $destinos=array_unique($destinos);
      sort($destinos);
@@ -91,18 +99,17 @@ function mostrar_copias_memo($idformato,$iddoc=NULL)
         	for($i=0;$i<count($destinos);$i++) 
             {//si el destino es una dependencia
              if(strpos($destinos[$i],"#")>0)
-                {$resultado=busca_filtro_tabla("nombre",DB.".dependencia","iddependencia=".str_replace("#","",$destinos[$i]),"",$conn);
+                {$resultado=busca_filtro_tabla("nombre","dependencia","iddependencia=".str_replace("#","",$destinos[$i]),"",$conn);
                  $lista[]=ucwords($resultado[0]["nombre"]); 
                 }
              else//si el destino es un funcionario
-                {$resultado=busca_filtro_tabla("funcionario_codigo,nombres,idfuncionario,apellidos,c.nombre",DB.".funcionario,".DB.".cargo c,".DB.".dependencia_cargo dc","dc.cargo_idcargo=c.idcargo and dc.funcionario_idfuncionario=idfuncionario and iddependencia_cargo=".$destinos[$i],"",$conn);                 
+                {$resultado=busca_filtro_tabla("funcionario_codigo,nombres,idfuncionario,apellidos,c.nombre","funcionario,cargo c,dependencia_cargo dc","dc.cargo_idcargo=c.idcargo and dc.funcionario_idfuncionario=idfuncionario and iddependencia_cargo=".$destinos[$i],"",$conn);                 
                  $lista[]=ucwords(strtolower($resultado[0]["nombres"]." ".$resultado[0]["apellidos"]));
                 }
             }    
      echo implode(", ",$lista);       
-     echo '<br /></td>           
-            </tr>';          
-    }     
+     echo '</span><br/><br/>';
+}
 }
 
 function nomenclatura($idformato,$iddoc=NULL)
