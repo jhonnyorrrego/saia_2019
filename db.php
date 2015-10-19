@@ -581,7 +581,7 @@ if($conn){
     break;
     case("INSERT"):
       $values=substr($strsql,strpos("VALUES",strtoupper($strsql)+6));
-      $rs=$conn->Ejecutar_Sql(htmlspecialchars_decode(htmlentities(utf8_decode($strsql))));     
+      $rs=$conn->Ejecutar_Sql(htmlspecialchars_decode(htmlentities(codifica_encabezado($strsql))));     
       $llave = $conn->Ultimo_Insert();
       preg_match("/insert into (\w*\.)*(\w+)/", strtolower($strsql), $resultados);
       if(isset($resultados[2]))
@@ -3312,6 +3312,7 @@ return $client_ip;
 </Clase>  */
 function almacenar_sesion($exito,$login){
 global $conn;
+$datos=array();
 if($login==""){
   $login=usuario_actual("login");
   $id=usuario_actual("id");
@@ -3324,7 +3325,28 @@ if($iplocal=="" || $ipremoto==""){
   else $ipremoto=$iplocal;
 }
 if(!$exito){
+	$intentos=busca_filtro_tabla("intento_login, idfuncionario, estado","funcionario a","a.login='".$login."'","",$conn);
+	if($intentos["numcampos"] && $intentos[0]["estado"]!=0){//Desarrollo de validacion de intentos al loguearse
+		if(!$intentos[0]["intento_login"])$consecutivo=1;
+		else $consecutivo=$intentos[0]["intento_login"]+1;
+		$sql2="UPDATE funcionario SET intento_login=".$consecutivo." WHERE idfuncionario=".$intentos[0]["idfuncionario"];
+		$conn->Ejecutar_Sql($sql2);
+		$configuracion=busca_filtro_tabla("","configuracion a","a.nombre='intentos_login'","",$conn);
+		if($consecutivo>=$configuracion[0]["valor"]){
+			$correo_admin=busca_filtro_tabla("", "configuracion a", "a.nombre='correo_administrador'", "", $conn);
+			$sql3="INSERT INTO lista_negra_acceso(login,iplocal,ipremota,fecha)VALUES('".$login."', '".$iplocal."', '".$ipremoto."', ".fecha_db_almacenar(date("Y-m-d H:i:s"),"Y-m-d H:i:s").")";
+			$conn->Ejecutar_Sql($sql3);
+			$sql4="UPDATE funcionario SET estado='0' WHERE idfuncionario=".$intentos[0]["idfuncionario"];
+			$conn->Ejecutar_Sql($sql4);
+			//alerta("Usuario inactivado por exceso de intentos. Favor comunicarse con el administrador");
+			$datos["mensaje"]="Usuario inactivado por exceso de intentos. Favor comunicarse con el administrador ".$correo_admin[0]["valor"];
+		}
+	}
   $sql="INSERT INTO log_acceso(iplocal,ipremota,login,exito,fecha) VALUES('$iplocal','$ipremoto','".$login."',0,".fecha_db_almacenar(date("Y-m-d H:i:s"),"Y-m-d H:i:s").")";
+}
+else{
+	$sql2="UPDATE funcionario SET intento_login=0 WHERE idfuncionario=".$id;
+	$conn->Ejecutar_Sql($sql2);
 }
 $idsesion=ultima_sesion();
 $accion="";
@@ -3352,7 +3374,7 @@ else{
   if($datos_sesion["datos"]=="")
     alerta("Su sesion no fue encontrada. Por favor comunicarle al Administrador del sistema");
 }
-return("");
+return($datos);
 }
 /*<Clase>
 <Nombre>datos_sesion</Nombre>
@@ -3807,5 +3829,13 @@ function rename_saia($origen,$destino){
     return FALSE;
  	}
  	return TRUE;
+}
+/*EN ALGUNOS CLIENTES SE TIENE PROBLEMA CON LA CODIFICACION, ESTO LO SOLUCIONA DE FORMA GENERICA*/
+function codifica_encabezado($texto){
+	if(CODIFICA_ENCABEZADO){
+		return(utf8_encode($texto));
+	}else{
+		return($texto);
+	}
 }
 ?>

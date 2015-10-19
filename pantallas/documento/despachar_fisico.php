@@ -51,9 +51,10 @@ else if($documentos[0]["tipo_radicado"]==2){
 
 function reporte_entradas(){
 	global $conn,$documentos;
+	$logo=busca_filtro_tabla("valor","configuracion","nombre='logo'","",$conn);
 	$texto.='<table style="border-collapse:collapse;width:100%" border="1px">';
 	$texto.='<tr style="height:120px">';
-	$texto.='<td style="text-align:center;" colspan="2"><img src="'.PROTOCOLO_CONEXION.RUTA_PDF.'/imagenes/logo_demo.jpg" width="190px"></td>';
+	$texto.='<td style="text-align:center;" colspan="2"><img src="'.PROTOCOLO_CONEXION.RUTA_PDF.'/'.$logo[0]['valor'].'" width="190px"></td>';
 	$texto.='<td style="text-align:center" colspan="4"><b>CONTROL DE ENTREGA DE DOCUMENTOS RECIBO Y RADICACI&Oacute;N DE CORRESPONDENCIA</b></td>';
 	$texto.='<td style="text-align:right" colspan="2"><b>C&Oacute;DIGO:GF-01</b></td>';
 	$texto.='</tr>';
@@ -137,9 +138,10 @@ function reporte_salidas(){
 		
 		$texto.='<span style="font-family:Verdana"><b>Seleccionar el mensajero:</b></span> <select name="x_mensajero" id="x_mensajero"><option value="">Por favor seleccione...</option>'.implode("",$options).'</select><input type="button" id="registrar_despacho" value="Realizar despacho"><br /><br />';
 	}
+	$logo=busca_filtro_tabla("valor","configuracion","nombre='logo'","",$conn);
 	$texto.='<table style="border-collapse:collapse;width:100%" border="1px">';
 	$texto.='<tr style="height:120px">';
-	$texto.='<td style="text-align:center;" colspan="3"><img src="'.PROTOCOLO_CONEXION.RUTA_PDF.'/imagenes/logo_demo.jpg" width="190px"></td>';
+	$texto.='<td style="text-align:center;" colspan="3"><img src="'.PROTOCOLO_CONEXION.RUTA_PDF.'/'.$logo[0]['valor'].'" width="190px"></td>';
 	$texto.='<td style="text-align:center" colspan="8"><b>CONTROL DE ENTREGA DE DOCUMENTOS RECIBO Y RADICACI&Oacute;N DE CORRESPONDENCIA</b></td>';
 	$texto.='<td style="text-align:right" colspan="4"><b>C&Oacute;DIGO:GF-01</b></td>';
 	$texto.='</tr>';

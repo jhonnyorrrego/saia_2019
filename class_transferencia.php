@@ -1310,6 +1310,226 @@ function formulario_rechazar_aprobar_reemplazo($iddoc,$pagina)
 <Post-condiciones>
 */  
 function mostrar_estado_proceso($idformato,$iddoc){
+global $idfactura;
+   global $conn;
+   $rol = false;
+   $rol = false;
+   if(@$_REQUEST['tipo']==6)
+    $ruta=RUTA_PDF_LOCAL;
+  else
+    $ruta=RUTA_PDF; 
+   if(!isset($_REQUEST["ocultar_firmas"])||$_REQUEST["ocultar_firmas"]==0) 
+    {$firma_actual = false;   
+    $estado_doc=busca_filtro_tabla("A.estado,A.serie,A.ejecutor,A.documento_antiguo","documento A","A.iddocumento=".$iddoc,"",$conn);
+    $iniciales = $estado_doc[0]["ejecutor"];  
+    $ultimo_ruta=busca_filtro_tabla("max(A.idtransferencia) as idbuzon","buzon_entrada A","A.archivo_idarchivo=".$iddoc,"",$conn);
+    if($pagina<>"mostrar_calidad")
+      {$tabla=busca_filtro_tabla("nombre_tabla","formato A","A.idformato=".$idformato,"",$conn);
+       $mostrar_firmas_doc=busca_filtro_tabla("A.firma,dependencia".$campos_formato,"".$tabla[0]["nombre_tabla"]." A,documento B","A.documento_iddocumento=B.iddocumento and B.iddocumento=".$iddoc,"",$conn);
+       if($mostrar_firmas_doc["numcampos"]>0)
+         $mostrar_firmas=$mostrar_firmas_doc[0]["firma"];
+      }
+    else
+      $mostrar_firmas=1;   
+    if(!array_key_exists("tipo",$_REQUEST))
+     {$_REQUEST["tipo"]=1;}
+     if($_REQUEST["tipo"]==1 && $pagina=="base_factura")                  
+         {echo '<form name="form1" action="'.$pagina.'.php?mostrar=true" method="get" target="_blank"><span class="phpmaker">
+                <input type="hidden" name="iddoc" value="'.$iddoc.'">
+                <input type="hidden" name="tipo" id="tipo" value="">  
+                <input type="hidden" name="idfactura" id="tipo" value="'.$idfactura.'">
+                <input type=button name="factura" value="Imprimir documento" onclick="document.getElementById('."'tipo'".').value='."'2'".'; form1.submit();">
+                <input type=button name="factura" value="Imprimir Completo" onclick="document.getElementById('."'tipo'".').value='."'3'".'; form1.submit();">
+                </span> ';     
+         if($estado_doc[0]["estado"]=="APROBADO")  
+            {echo "<span class='phpmaker'>"; 
+             echo '<input type=button name="backup" value='."'Crear Plano' onclick='open(\"/saia/saia1.0/factura/backup.php\",\"crear_backup\",\"\")'>";
+            }
+         echo "</form>";               
+         } 
+
+    if(($_REQUEST["tipo"]==2 || $_REQUEST["tipo"]==3) && $pagina=="base_factura")
+        echo '<script>document.getElementById("header").style.display="none";</script>';      
+    if($estado_doc[0]["estado"]<>"RECHAZADO" )  
+        {$resultado = cargo_rol($_REQUEST["iddoc"]); 
+            if(!$resultado["numcampos"])
+            {if(!$estado_doc[0]["documento_antiguo"]){ 
+              $resultado=busca_filtro_tabla("distinct iddependencia_cargo as origen,idfuncionario,funcionario_codigo,nombres,apellidos,1 as activo,1 as obligatorio,nombre","funcionario,dependencia_cargo,buzon_entrada","archivo_idarchivo=".$_REQUEST["iddoc"]." and destino=funcionario_codigo and (nombre in ('APROBADO','REVISADO') or(nombre='POR_APROBAR' AND activo=1)) and idfuncionario=funcionario_idfuncionario and iddependencia_cargo=".$mostrar_firmas_doc[0]["dependencia"],"",$conn); 
+               $resultado[0]["tipo_origen"] = 5; 
+              }
+             else
+              {$resultado=busca_filtro_tabla("distinct iddependencia_cargo as origen,idfuncionario,funcionario_codigo,nombres,apellidos,1 as activo,1 as obligatorio,nombre","funcionario,dependencia_cargo,buzon_entrada","archivo_idarchivo=".$_REQUEST["iddoc"]." and destino=funcionario_codigo and (nombre in ('APROBADO','REVISADO') or(nombre='POR_APROBAR' AND activo=1)) and idfuncionario=funcionario_idfuncionario and dependencia_iddependencia=".$mostrar_firmas_doc[0]["dependencia"],"",$conn); 
+               if(!$resultado["numcampos"])
+                 $resultado=busca_filtro_tabla("distinct iddependencia_cargo as origen,idfuncionario,funcionario_codigo,nombres,apellidos,1 as activo,1 as obligatorio,nombre","funcionario,dependencia_cargo,buzon_entrada","archivo_idarchivo=".$_REQUEST["iddoc"]." and destino=funcionario_codigo and (nombre in ('APROBADO','REVISADO') or(nombre='POR_APROBAR' AND activo=1)) and idfuncionario=funcionario_idfuncionario","",$conn); 
+               $resultado[0]["tipo_origen"] = 5;
+               }  
+             if(!$resultado["numcampos"])
+                {echo "<font color='red'>El documento no tiene responsable(s) asignado(s).</font>";
+                }
+            }
+
+            if($_SESSION["pagina_actual"]=="54838"){
+			 	$resultado["numcampos"]="2";
+
+			}
+            
+         $num_cols=2;
+         $i=0;
+         $firmas=0;
+         $fila_abierta=0;
+         if($resultado["numcampos"])
+            {array_unique($resultado);
+             $ancho_firma=busca_filtro_tabla("valor","configuracion A","A.nombre='ancho_firma'","",$conn);
+             if(!$ancho_firma["numcampos"])
+              $ancho_firma[0]["valor"]=280;
+             $alto_firma=busca_filtro_tabla("valor","configuracion A","A.nombre='alto_firma'","",$conn);
+             if(!$alto_firma["numcampos"])
+              $alto_firma[0]["valor"]=100;
+             echo "<table border='0' cellpadding='0' cellspacing='0' align='left' width='100%'>";
+			 
+			 
+             for($k=0;$k<$resultado["numcampos"];$k++)
+                {$fila=$resultado[$k];
+                 
+                 if($fila["tipo_origen"]==5){  //rol
+                 	$cargos=busca_filtro_tabla("cargo as nombre,funcionario_codigo,iddependencia,tipo_cargo","vfuncionario_dc","iddependencia_cargo=".$fila["origen"],"",$conn);
+                 	if($cargos[0]['tipo_cargo']==2){ 
+								 			$cargos=busca_filtro_tabla("distinct cargo as nombre","vfuncionario_dc","tipo_cargo=1 and funcionario_codigo=".$cargos[0]['funcionario_codigo']." and fecha_inicial<='".$fila["fecha"]."' and fecha_final>='".$fila["fecha"]."'","",$conn);
+								 		}
+								 }                   
+                elseif($fila["tipo_origen"]==1)  //funcionario_codigo 
+                   {$cargos=busca_filtro_tabla("distinct funcionario_codigo,nombres,idfuncionario,apellidos,cargo as nombre","vfuncionario_dc","tipo_cargo=1 and fecha_inicial<='".$fila["fecha"]."' and fecha_final>='".$fila["fecha"]."' and funcionario_codigo='".$fila["origen"]."'","",$conn); 	
+                    if(!$cargos["numcampos"])
+                      $cargos=busca_filtro_tabla("distinct funcionario_codigo,nombres,idfuncionario,apellidos,cargo as nombre","vfuncionario_dc","tipo_cargo=1 and funcionario_codigo='".$fila["origen"]."'","fecha desc",$conn); 	
+                   } 
+                                      
+                 if(!isset($fila["obligatorio"]))
+                    $fila["obligatorio"]=1;
+                 //si voy a mostrar el formato normal  
+                    if($fila["obligatorio"]==1 )
+                      {
+                       if($firmas==0)
+                          {echo "<tr>";
+                           $fila_abierta=1;
+                           }      
+                       if($fila["nombre"]=="POR_APROBAR")
+                          {echo '<td align=left><img src="http://'.$ruta.'/firmas/faltante.jpg" width="'.$ancho_firma[0]["valor"].'" height="'.$alto_firma[0]["valor"].'"><br />
+                         '.mayusculas($fila["nombres"]." ".$fila["apellidos"]).'<br />'; 
+													  if($cargos["numcampos"])
+                              {
+                              	for($h=0;$h<$cargos["numcampos"];$h++){
+                              		echo formato_cargo($cargos[$h]["nombre"])."&nbsp;&nbsp;&nbsp;<br/>";
+                              	}    
+                              }
+															echo '</td>';      
+                          if($iniciales == ($fila["funcionario_codigo"]))
+                            $firma_actual = true;     
+                          }
+                       else if($mostrar_firmas==1)
+                          {$firma=busca_filtro_tabla("firma","funcionario","funcionario_codigo='".$fila["funcionario_codigo"]."'","",$conn);
+					   
+					    
+					   
+                           echo '<td align="left">';
+                           if($firma[0]["firma"]<>"")
+                             { //echo $firma[0]["firma"]."..";                              
+                              $pagina_actual=$_SERVER["PHP_SELF"];
+                              //echo $pagina_actual;
+                               if(strpos($pagina_actual,"factura_final")>0)
+                                {$ruta="../librerias/";
+                                }
+                               else
+                                {//$ruta="../librerias/";
+																 $ruta=RUTA_PDF;
+                                } 
+                              echo '<img src="http://'.$ruta.'/formatos/librerias/mostrar_foto.php?codigo='.$fila["funcionario_codigo"];
+                              echo '" width="'.$ancho_firma[0]["valor"].'" height="'.$alto_firma[0]["valor"].'"/><br />';
+                             }
+                           else
+                              echo '<img src="http://'.$ruta.'/firmas/blanco.gif" width="'.$ancho_firma[0]["valor"].'" height="'.$alto_firma[0]["valor"].'" ><br />'; 
+                           echo "".mayusculas($fila["nombres"]." ".$fila["apellidos"])."&nbsp;&nbsp;&nbsp;<br />";
+                          if($cargos["numcampos"]) 
+                            {for($h=0;$h<$cargos["numcampos"];$h++)
+                              echo formato_cargo($cargos[$h]["nombre"])."&nbsp;&nbsp;&nbsp;<br/>";                           
+                            }
+                          if($iniciales == ($fila["funcionario_codigo"]))
+                            $firma_actual = true;  
+                           echo "</td>";                           
+                          }
+                       else   
+                          {echo "<font size='2'><td align='left'><img src='http://".$ruta."/firmas/faltante.gif' width='".$ancho_firma[0]["valor"]."' height='".$alto_firma[0]["valor"]."'>
+                                 <br />".mayusculas($fila["nombres"]." ".$fila["apellidos"])."</b>&nbsp;<br />";
+                           
+                           if($cargos["numcampos"])
+                              {for($h=0;$h<$cargos["numcampos"];$h++)
+                                   echo formato_cargo($cargos[$h]["nombre"])."&nbsp;&nbsp;&nbsp;<br/>";
+                              }     
+                           if($iniciales == ($fila["funcionario_codigo"]))
+                              $firma_actual = true;        
+                           echo "</font></td>";      
+                          }
+                       $firmas++;
+                          }
+                    elseif($fila["obligatorio"]==2) // Revisado
+                          { 
+                           if($fila["nombre"]=="POR_APROBAR")
+     $revisados.="<tr><td><br><span style='font-size:13px;' class='phpmaker'>Revis&oacute; : ".mayusculas($fila["nombres"]." ".$fila["apellidos"])."-".formato_cargo($cargos[0]["nombre"])." (Pendiente)</span></td><td>&nbsp;</td></tr>";
+elseif($fila["nombre"]=="APROBADO"||$fila["nombre"]=="REVISADO")
+   $revisados.="<tr><td><br><span style='font-size:13px;' class='phpmaker'>Revis&oacute; : ".mayusculas($fila["nombres"]." ".$fila["apellidos"])."-".formato_cargo($cargos[0]["nombre"])."</span> <img src=\"http://".$ruta."/images/check.jpg\">"." </td><td></td></tr>";
+
+
+                         
+                          }                              
+                    if($firmas==$num_cols )
+                      {$firmas=0;
+                       echo "</tr>";
+                       $fila_abierta=0;
+                      }
+                   }
+             if($firmas<$num_cols && $fila_abierta==1)
+                {while($firmas<$num_cols)
+                    {echo "<td>&nbsp;</td>";
+                     $firmas++;
+                    }
+                 echo "</tr>";
+                }   
+            /**/
+	    }
+            //echo "</td></tr>";
+            if($revisados<>"")
+				{echo "<tr>";
+            echo "<td colspan='$num_cols'>";
+            echo "<table border=\"0\" width=\"100%\" >";
+
+            echo $revisados;
+            echo "</table>";
+            echo "</td></tr>";
+					
+				}
+            echo "</table><br>";   
+    
+            }              
+        if($_REQUEST["tipo"]==5)
+          echo "<script>window.print();</script>";
+        }
+    else
+         {
+          echo "<span class='phpmaker'>El documento ha sido rechazado</span>";          
+         } 
+		
+   if(!$firma_actual)   
+    return (true);  
+  else     
+    return (false);           
+}
+
+
+
+
+
+
+
+function mostrar_estado_proceso_bk($idformato,$iddoc){
 global $conn,$idfactura;
 	$rol = false;
 		if(!isset($_REQUEST["ocultar_firmas"])||$_REQUEST["ocultar_firmas"]==0){
@@ -1515,6 +1735,11 @@ global $conn,$idfactura;
 	else     
 		return (false);
 }
+
+
+
+
+
 
   /*
 <Clase>
@@ -2839,7 +3064,8 @@ function devolucion(){
     include_once($ruta_db_superior."pantallas/reemplazos/procesar_reemplazo.php");
     actualiza_ruta_devolucion($_REQUEST['campo_reemplazo'],$datos["archivo_idarchivo"],$_REQUEST['campo_idruta']);
   }
-  llama_funcion_accion($datos["archivo_idarchivo"],$idformato,"devolver","ANTERIOR");
+  $idformato=busca_filtro_tabla("idformato","formato f,documento d","lower(f.nombre)=lower(d.plantilla) and iddocumento=".$datos["archivo_idarchivo"],"",$conn);
+  llama_funcion_accion($datos["archivo_idarchivo"],$idformato[0]["idformato"],"devolver","ANTERIOR");
   $theValue = (!get_magic_quotes_gpc()) ? addslashes($_REQUEST["x_nombre"]) : $_REQUEST["x_nombre"];
   $theValue = ($theValue != "") ? $theValue : "NULL";
   $datos["nombre"] = $theValue;
@@ -2860,7 +3086,7 @@ function devolucion(){
   { $update="update buzon_entrada set activo=1 where archivo_idarchivo=".$_REQUEST["iddoc"]." AND nombre='POR_APROBAR' AND destino=".$_REQUEST["x_funcionario_destino"]." AND origen=".usuario_actual("funcionario_codigo");
     phpmkr_query($update,$conn);
   }
-  llama_funcion_accion($datos["archivo_idarchivo"],$idformato,"devolver","POSTERIOR");
+  llama_funcion_accion($datos["archivo_idarchivo"],$idformato[0]["idformato"],"devolver","POSTERIOR");
   if($_REQUEST["retornar"] == 1)
     return;
   enrutar_documento("pantallas/buscador_principal.php?idbusqueda=3");

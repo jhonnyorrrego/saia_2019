@@ -115,7 +115,7 @@ $(document).ready(function(){
     var cantidades=$(this);
     $.ajax({
       type:'POST',
-      url: "http://<?php echo(RUTA_PDF);?>/pantallas/busquedas/servidor_busqueda.php",
+      url: "<?php echo($ruta_db_superior); ?>pantallas/busquedas/servidor_busqueda.php",
       data: "idbusqueda_componente="+$(this).attr("idcomponente")+"&page=0&rows=1&actual_row=0",
       success: function(html){
         if(html){         

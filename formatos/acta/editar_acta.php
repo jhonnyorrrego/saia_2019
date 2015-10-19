@@ -20,7 +20,7 @@
                     </tr><tr>
                      <td class="encabezado" width="20%" title="">N&Uacute;MERO DEL ACTA*</td>
                      <td bgcolor="#F5F5F5"><input  maxlength="255"  class="required"   tabindex='4'  type="text" size="100" id="numero_acta" name="numero_acta"  value="<?php echo(mostrar_valor_campo('numero_acta',309,$_REQUEST['iddoc'])); ?>"></td>
-                    </tr><tr>
+                    </tr><tr id="tr_caracter" >
                      <td class="encabezado" width="20%" title="">CARACTER DE LA REUNI&Oacute;N*</td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(309,3625,$_REQUEST['iddoc']);?></td></tr><tr>
                      <td class="encabezado" width="20%" title="">OBJETIVO DE LA REUNI&Oacute;N*</td>
                      <td class="celda_transparente"><textarea  tabindex='5'  name="objetivo_reunion" id="objetivo_reunion" cols="53" rows="3" class="tiny_basico required"><?php echo(mostrar_valor_campo('objetivo_reunion',309,$_REQUEST['iddoc'])); ?></textarea></td>
@@ -254,4 +254,4 @@
                   for(m=0;m<vector2.length;m++)
                     {tree_firma_secretaria.setCheck(vector2[m],true);
                     }}
---></script></td></tr><input type="hidden" name="documento_iddocumento" value="<?php echo(mostrar_valor_campo('documento_iddocumento',309,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="firma" value="<?php echo(mostrar_valor_campo('firma',309,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="codigo" value="<?php echo(mostrar_valor_campo('codigo',309,$_REQUEST['iddoc'])); ?>"><?php digitalizar_formato(309,NULL,$_REQUEST['iddoc']);?><input type="hidden" name="campo_descripcion" value="<?php echo('3637'); ?>"><input type="hidden" name="formato" value="309"><tr><td colspan='2'><?php submit_formato(309,$_REQUEST['iddoc']);?></td></tr></table><input type='hidden' name='permisos_anexos' id='permisos_anexos' value=''></form></body></html><?php include_once("../librerias/footer_plantilla.php");?>
+--></script></td></tr><input type="hidden" name="documento_iddocumento" value="<?php echo(mostrar_valor_campo('documento_iddocumento',309,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="firma" value="<?php echo(mostrar_valor_campo('firma',309,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="codigo" value="<?php echo(mostrar_valor_campo('codigo',309,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="campo_descripcion" value="<?php echo('3637'); ?>"><input type="hidden" name="formato" value="309"><tr><td colspan='2'><?php submit_formato(309,$_REQUEST['iddoc']);?></td></tr></table><input type='hidden' name='permisos_anexos' id='permisos_anexos' value=''></form></body></html><?php include_once("../librerias/footer_plantilla.php");?>

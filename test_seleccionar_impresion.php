@@ -52,10 +52,11 @@ $permiso=new PERMISO();
   $ok=$permiso->permiso_usuario($formato[0]["nombre"],"");
   if($ok){
     $descripcion=busca_filtro_tabla("","campos_formato","formato_idformato=".$formato[0]["idformato"]." AND (acciones LIKE '%d%' OR acciones LIKE '%p%')","orden ASC",$conn);
-    //print_r($descripcion);
-   
     if($descripcion["numcampos"]){
       for($i=0;$i<$descripcion["numcampos"];$i++){
+				if(is_object($descripcion[$i]["nombre"])){
+					$descripcion[$i]["nombre"]=1;
+				}
         array_push($campo_descripcion,array("nombre"=>$descripcion[$i]["nombre"],"etiqueta"=>$descripcion[$i]["etiqueta"]));
       }
     }
@@ -67,7 +68,7 @@ $permiso=new PERMISO();
     $imagenes='im0="'.strtolower($formato[0]["nombre"]).'.gif" im1="'.strtolower($formato[0]["nombre"]).'.gif" im2="'.strtolower($formato[0]["nombre"]).'.gif" ';
     if($estado){
       $texto.='<item style="font-family:verdana; font-size:7pt;" '.$imagenes;
-      $texto.=decodifica('text="'.$formato[0]["etiqueta"].'" nocheckbox="1" id="'.$formato[0]["idformato"]."-".$arreglo[2]."-r".rand().'">');
+      $texto.=('text="'.decodifica(strip_tags(stripslashes($formato[0]["etiqueta"]))).'" nocheckbox="1" id="'.$formato[0]["idformato"]."-".$arreglo[2]."-r".rand().'">');
     }
     $texto.=llena_datos($idformato,$formato[0]["nombre_tabla"],$campo_descripcion);
     if($estado){
@@ -79,13 +80,10 @@ return;
 }
 
 function decodifica($cadena){
-	if(strpos($cadena,'&quot;')){
-		$cadena = str_replace('&quot;',"'",$cadena);
-	}
-	else if(strpos($cadena,'"')){
-		$cadena = str_replace('"',"'",$cadena);
-	}
-return(utf8_encode(html_entity_decode($cadena)));
+$cadena=htmlspecialchars(codifica_encabezado(strip_tags(htmlspecialchars_decode($cadena))));
+//$cadena=htmlspecialchars(strip_tags($cadena)); 
+$cadena=str_replace('"','',$cadena);
+return($cadena);
 }
 
 function llena_datos($idformato,$tabla,$campo){	
@@ -104,12 +102,12 @@ else{
 	$dato=busca_filtro_tabla($cad_tips.",id".$tabla.",documento_iddocumento",$tabla,$arreglo[2]."=".$arreglo[1],"",$conn);
 }
 for($i=0;$i<$dato["numcampos"];$i++){
-  $tips="";
+	$tips="";
   for($j=0;$j<$num_campo;$j++){
-  	if(is_object($dato[$i][$j])){
-  		$dato[$i][$j]=$dato[$i][$j]->format('Y-m-d');
-  	}
-    $tips.=$campo[$j]["etiqueta"].": ".$dato[$i][$j]."";
+		if(is_object($dato[$i][$j])){
+			$dato[$i][$j]=$dato[$i][$j]->format("Y-m-d");
+		}
+    $tips.=decodifica((stripslashes($campo[$j]["etiqueta"]))).": ".$dato[$i][$j]."";
   }
   $texto.='<item style="font-family:verdana; font-size:7pt;" '.$imagenes;
   $llave=$arreglo[0]."-".$arreglo[2]."-".$dato[$i]["id".$tabla];
@@ -117,8 +115,10 @@ for($i=0;$i<$dato["numcampos"];$i++){
   	 $GLOBALS['contador']++;
      $texto.=" checked='1' ";	  
   }
-	if(is_object($dato[$i][$campo[0]["nombre"]]))$dato[$i][$campo[0]["nombre"]]=$dato[$i][$campo[0]["nombre"]]->format('Y-m-d');
-  $texto.=strip_tags(decodifica('text="'.$dato[$i][$campo[0]["nombre"]].'" id="'.$llave.'" ')).' tooltip="'.decodifica($tips).'">';
+	if(is_object($dato[$i][$campo[0]["nombre"]])){
+		$dato[$i][$campo[0]["nombre"]]=$dato[$i][$campo[0]["nombre"]]->format("Y-m-d");
+	}
+  $texto.=('text="'.decodifica((stripslashes($dato[$i][$campo[0]["nombre"]]))).'" id="'.$llave.'"'." tooltip='".str_replace("'",'"',decodifica((stripslashes($tips)))))."'>";
   $texto.=llena_hijos($arreglo[0],$dato[$i]["id".$tabla],$tabla,$dato[$i]["documento_iddocumento"]);
   $texto.=llenar_vistas($idformato);
   $texto.='</item>';

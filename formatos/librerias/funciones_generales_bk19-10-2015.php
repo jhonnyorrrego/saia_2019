@@ -999,7 +999,7 @@ switch($tipo){
       }
       if(htmlentities($listado3[$j][0])==$default)
         $texto.=' checked ';
-      $texto.='>'.codifica_encabezado($listado3[$j][1])."</label></td>";
+      $texto.='>'.utf8_encode($listado3[$j][1])."</label></td>";
       if($fila==($columnas-1)){
         $texto.='</tr>';
       }      
@@ -1022,7 +1022,7 @@ switch($tipo){
 
       if(in_array(htmlentities($listado3[$j][0]),$lista_default))
         $texto.=' checked ';
-      $texto.='>'.codifica_encabezado(strip_tags($listado3[$j][1]))."</label></td>";
+      $texto.='>'.utf8_encode(strip_tags($listado3[$j][1]))."</label></td>";
       if($fila==($columnas-1)){
         $texto.='</tr>';
       }      
@@ -1043,7 +1043,7 @@ switch($tipo){
         $texto.='<option value="'.htmlentities($listado3[$j][0]).'"';
         if(htmlentities($listado3[$j][0])==$default)
           $texto.=' selected ';
-        $texto.='>'.codifica_encabezado($listado3[$j][1]).'</option>';  
+        $texto.='>'.utf8_encode($listado3[$j][1]).'</option>';  
       }
       $texto.='</select>';
   break;
@@ -1388,7 +1388,7 @@ if($datos["numcampos"])
       elseif($datos[0]["etiqueta_html"]=="autocompletar") 
          $retorno=$campos[0][0];
       elseif($datos[0]["etiqueta_html"]=="textarea"){
-        $retorno=codifica_encabezado(html_entity_decode($campos[0][0]));
+        $retorno=utf8_encode(html_entity_decode($campos[0][0]));
       }
       elseif($datos[0]["etiqueta_html"]=="link" && basename($_SERVER["PHP_SELF"])==basename($datos[0]["ruta_mostrar"])){
         $retorno="<a target='_blank' href='".$campos[0][0]."'>".$campos[0][0]."</a>";
@@ -1499,7 +1499,7 @@ if($datos["numcampos"])
 function formatea_campo($valor,$tipo,$llenado){
 global $conn;
 $resultado=array();
-$valores=explode(",",codifica_encabezado(html_entity_decode($valor)));
+$valores=explode(",",utf8_encode(html_entity_decode($valor)));
 $select=array();
 if($llenado && $llenado!="" && strpos($llenado,"*}")===false)
 {
@@ -1512,7 +1512,7 @@ if($llenado && $llenado!="" && strpos($llenado,"*}")===false)
         {
          foreach($valores as $fila)
            {
-            if(codifica_encabezado(html_entity_decode($valor2[$i]["id"]))==$fila)
+            if(utf8_encode(html_entity_decode($valor2[$i]["id"]))==$fila)
              {$resultado[]=$valor2[$i]["nombre"];
              }
            }
@@ -1531,7 +1531,7 @@ if($llenado && $llenado!="" && strpos($llenado,"*}")===false)
        $datos=ejecuta_filtro_tabla($sql_datos,$conn);
        $valores=array();
        for($j=0;$j<$datos["numcampos"];$j++)
-          $valores[]=codifica_encabezado($datos[$j]["nombre"]);
+          $valores[]=utf8_encode($datos[$j]["nombre"]);
    
        if($datos["numcampos"])
          return(implode(", ",$valores));
@@ -1594,7 +1594,7 @@ function asignar_responsables($campo,$idformato,$iddoc=NULL)
     <tr>
       <td class="encabezado" width="21%">';
       $nombre=busca_filtro_tabla("nombres,apellidos","funcionario","funcionario_codigo=".usuario_actual("funcionario_codigo"),"",$conn);
-      echo codifica_encabezado(strtoupper(html_entity_decode($nombre[0]["nombres"]." ".$nombre[0]["apellidos"])));
+      echo utf8_encode(strtoupper(html_entity_decode($nombre[0]["nombres"]." ".$nombre[0]["apellidos"])));
     echo'
        FIRMA:</td>
       <td width="79%" bgcolor="#F5F5F5">

@@ -20,7 +20,7 @@
                     </tr><tr>
                      <td class="encabezado" width="20%" title="">N&Uacute;MERO DEL ACTA*</td>
                      <td bgcolor="#F5F5F5"><input  maxlength="255"  class="required"   tabindex='4'  type="text" size="100" id="numero_acta" name="numero_acta"  value="<?php echo(validar_valor_campo(3636)); ?>"></td>
-                    </tr><tr>
+                    </tr><tr id="tr_caracter" >
                      <td class="encabezado" width="20%" title="">CARACTER DE LA REUNI&Oacute;N*</td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(309,3625,$_REQUEST['iddoc']);?></td></tr><tr>
                      <td class="encabezado" width="20%" title="">OBJETIVO DE LA REUNI&Oacute;N*</td>
                      <td class="celda_transparente"><textarea  tabindex='5'  name="objetivo_reunion" id="objetivo_reunion" cols="53" rows="3" class="tiny_basico required"><?php echo(validar_valor_campo(3637)); ?></textarea></td>
@@ -229,4 +229,4 @@
                                eval('document.layers["esperando_firma_secretaria"]');
                         document.poppedLayer.style.display = "";
                       }
-                	--></script></td></tr><input type="hidden" name="documento_iddocumento" value="<?php echo(validar_valor_campo(3643)); ?>"><input type="hidden" name="firma" value="<?php echo(validar_valor_campo(3646)); ?>"><input type="hidden" name="serie_idserie" value="<?php echo(validar_valor_campo(3621)); ?>"><input type="hidden" name="codigo" value="<?php echo(validar_valor_campo(3626)); ?>"><?php asignar_responsables(309,NULL);?><?php digitalizar_formato(309,NULL);?><input type="hidden" name="campo_descripcion" value="3637"><tr><td colspan='2'><?php submit_formato(309);?></td></tr></table><input type='hidden' name='permisos_anexos' id='permisos_anexos' value=''></form></body></html>
+                	--></script></td></tr><input type="hidden" name="documento_iddocumento" value="<?php echo(validar_valor_campo(3643)); ?>"><input type="hidden" name="firma" value="<?php echo(validar_valor_campo(3646)); ?>"><input type="hidden" name="serie_idserie" value="<?php echo(validar_valor_campo(3621)); ?>"><input type="hidden" name="codigo" value="<?php echo(validar_valor_campo(3626)); ?>"><?php asignar_responsables(309,NULL);?><input type="hidden" name="campo_descripcion" value="3637"><tr><td colspan='2'><?php submit_formato(309);?></td></tr></table><input type='hidden' name='permisos_anexos' id='permisos_anexos' value=''></form></body></html>

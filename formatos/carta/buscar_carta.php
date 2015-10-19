@@ -1,4 +1,4 @@
-<html><title>.:BUSCAR COMUNICACI&OACUTE;N EXTERNA:.</title><head><link rel="stylesheet" type="text/css" href="../../css/dhtmlXTree.css"/><script type="text/javascript" src="../../js/jquery.fcbkcomplete.js"></script><link rel="stylesheet" type="text/css" href="../../css/style_fcbkcomplete.css"/></head><body bgcolor="#F5F5F5"><form name="formulario_formatos" id="formulario_formatos" method="post" action="../librerias/funciones_buscador.php" enctype="multipart/form-data"><table width="100%" cellspacing="1" cellpadding="4" border="0"><tr><td colspan="4" class="encabezado_list">B&Uacute;SQUEDA COMUNICACI&Oacute;N EXTERNA</td></tr><tr><td class="encabezado">&nbsp;<select name="condicion_tipo_copia_interna" id="condicion_tipo_copia_interna"><option value="AND">Y</option><option value="OR">O</option></td>
+<html><title>.:BUSCAR COMUNICACION EXTERNA:.</title><head><link rel="stylesheet" type="text/css" href="../../css/dhtmlXTree.css"/><script type="text/javascript" src="../../js/jquery.fcbkcomplete.js"></script><link rel="stylesheet" type="text/css" href="../../css/style_fcbkcomplete.css"/></head><body bgcolor="#F5F5F5"><form name="formulario_formatos" id="formulario_formatos" method="post" action="../librerias/funciones_buscador.php" enctype="multipart/form-data"><table width="100%" cellspacing="1" cellpadding="4" border="0"><tr><td colspan="4" class="encabezado_list">B&Uacute;SQUEDA COMUNICACION EXTERNA</td></tr><tr><td class="encabezado">&nbsp;<select name="condicion_tipo_copia_interna" id="condicion_tipo_copia_interna"><option value="AND">Y</option><option value="OR">O</option></td>
                      <td class="encabezado" width="20%" title="">TIPO COPIA INTERNA</td><td class="encabezado">&nbsp;<select name="compara_tipo_copia_interna" id="compara_tipo_copia_interna"> <option value="or">Alguno</option><option value="and">Todos</option></select></td>
                      <td bgcolor="#F5F5F5"><select multiple id="tipo_copia_interna" name="tipo_copia_interna"></select><script>
                      $(document).ready(function() 
@@ -78,13 +78,13 @@
                       });
                      </script></td>
                     </tr><tr><td class="encabezado">&nbsp;<select name="condicion_copiainterna" id="condicion_copiainterna"><option value="AND">Y</option><option value="OR">O</option></td>
-                   <td class="encabezado" width="20%" title="">CON COPIA INTERNA A</td><td class="encabezado">&nbsp;<select name="compara_copiainterna" id="compara_copiainterna"> <option value="or">Alguno</option><option value="and">Todos</option></select></td><td bgcolor="#F5F5F5"><div id="esperando_copiainterna"><img src="../../imagenes/cargando.gif"></div><div id="seleccionados"><?php mostrar_seleccionados(1,2,'0',$_REQUEST['iddoc']);?></div>
+                   <td class="encabezado" width="20%" title="">CON COPIA INTERNA A</td><td class="encabezado">&nbsp;<select name="compara_copiainterna" id="compara_copiainterna"> <option value="or">Alguno</option><option value="and">Todos</option></select></td><td bgcolor="#F5F5F5"><div id="esperando_copiainterna"><img src="../../imagenes/cargando.gif"></div><div id="seleccionados"><?php mostrar_seleccionados(1,2,'5',$_REQUEST['iddoc']);?></div>
                           <br />  Buscar: <input type="text" id="stext_copiainterna" width="200px" size="25">
                    <a href="javascript:void(0)" onclick="tree_copiainterna.findItem(htmlentities(document.getElementById('stext_copiainterna').value),1)"><img src="../../botones/general/anterior.png"border="0px"></a>
                    <a href="javascript:void(0)" onclick="tree_copiainterna.findItem(htmlentities(document.getElementById('stext_copiainterna').value),0,1)"><img src="../../botones/general/buscar.png"border="0px"></a>
                           <a href="javascript:void(0)" onclick="tree_copiainterna.findItem(htmlentities(document.getElementById('stext_copiainterna').value))"><img src="../../botones/general/siguiente.png"border="0px"></a>
                           <br /><br />
-                <div id="treeboxbox_copiainterna" height="90%"></div><input type="hidden" maxlength="2000"  name="copiainterna" id="copiainterna"   value="" ><label style="display:none" class="error" for="copiainterna">Campo obligatorio.</label><script type="text/javascript">
+                <div id="treeboxbox_copiainterna" height="90%"></div><input type="hidden"  name="copiainterna" id="copiainterna"   value="" ><label style="display:none" class="error" for="copiainterna">Campo obligatorio.</label><script type="text/javascript">
                   <!--
                       var browserType;
                       if (document.layers) {browserType = "nn4"}
@@ -96,7 +96,7 @@
                 			tree_copiainterna.setImagePath("../../imgs/");
                 			tree_copiainterna.enableIEImageFix(true);tree_copiainterna.enableCheckBoxes(1);
                 			tree_copiainterna.enableThreeStateCheckboxes(1);tree_copiainterna.setOnLoadingStart(cargando_copiainterna);
-                      tree_copiainterna.setOnLoadingEnd(fin_cargando_copiainterna);tree_copiainterna.enableSmartXMLParsing(true);tree_copiainterna.loadXML("../../test.php");
+                      tree_copiainterna.setOnLoadingEnd(fin_cargando_copiainterna);tree_copiainterna.enableSmartXMLParsing(true);tree_copiainterna.loadXML("../../test.php?rol=1");
                       tree_copiainterna.setOnCheckHandler(onNodeSelect_copiainterna);
                       function onNodeSelect_copiainterna(nodeId)
                       {valor_destino=document.getElementById("copiainterna");

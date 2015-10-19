@@ -127,8 +127,11 @@ class Imprime_Pdf {
       $marca_agua = 0;
 
       if ($this->documento[0]["estado"] == "ACTIVO") {
-        $marca_agua = 1;
+        $marca_agua=1;
       }
+      if($this->documento[0]["estado"]=="ANULADO"){
+			  $marca_agua=1;
+			}
 
       $this->pdf->set_header(crear_encabezado_pie_pagina($encabezado[0]["contenido"], $this->documento[0]["iddocumento"], $this->formato[0]["idformato"], 1), $marca_agua);
     }
@@ -513,7 +516,11 @@ class MYPDF extends TCPDF {
 	
     //$this->writeHTMLCell(216, 0, 0, 0, stripslashes($texto), "", 1, 0, false, '', true);
 
-    $img_file = 'imagenes/marca_agua_pdf.png';    
+    $img_file = 'imagenes/marca_agua_borrador.png';
+		$doc=busca_filtro_tabla("plantilla, estado","documento","iddocumento=".$_REQUEST["iddoc"],"",$conn);
+		if($doc_carta[0]["estado"]=='ANULADO'){
+			$img_file = 'imagenes/marca_agua_anulado.png';
+		}
 
     if ($this->marca_agua) {// get the current page break margin
       $bMargin = $this->getBreakMargin();
@@ -522,7 +529,7 @@ class MYPDF extends TCPDF {
       // disable auto-page-break
       $this->SetAutoPageBreak(false, 0);
       // set bacground image
-      $this->Image($img_file, 50, 50, 110, 197, '', '', '', false, 300, '', false, false, 0);
+      $this->Image($img_file, 10, 50, 200, 197, '', '', '', false, 300, '', false, false, 0);
       // restore auto-page-break status
       $this->SetAutoPageBreak($auto_page_break, $bMargin);
       // set the starting point for the page content

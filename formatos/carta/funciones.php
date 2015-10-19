@@ -11,7 +11,10 @@ $ruta.="../";
 $max_salida--;
 }
 include_once($ruta_db_superior."db.php");
+include_once($ruta_db_superior."formatos/librerias_funciones_generales.php");
+include_once($ruta_db_superior."librerias_saia.php"); 
 
+//ini_set('display_errors',true);
 //***************
 function mostrar_qr_carta($idformato,$iddoc){
 	global $conn,$ruta_db_superior;
@@ -109,14 +112,16 @@ function cargar_destinos_carta($idformato,$idcampo,$iddoc)
 
 function mostrar_anexos($idformato,$iddoc){
 	global $conn,$ruta_db_superior; 
-  $anexos=busca_filtro_tabla("ruta,etiqueta","anexos","documento_iddocumento=".$iddoc,"",$conn);
-  if($anexos["numcampos"]>0){
-  	$srt_anexos=array();
-    for($i=0;$i<$anexos["numcampos"];$i++){
-    	$srt_anexos[]="<a href=".$ruta_db_superior.$anexos[$i]["ruta"].">".preg_replace('/\.\w*/','',$anexos[$i]["etiqueta"])."</a>";
-    }
-		echo("Anexos: ".implode(", ",$srt_anexos));
-  }
+		$html="Anexos: ";
+		$anexos_fis=busca_filtro_tabla("anexos_fisicos","ft_comunicacion_interna","documento_iddocumento=".$iddoc,"",conn);
+	  $html.=$anexos_fis[0]['anexos_fisicos']."&nbsp";
+	  $anex=busca_filtro_tabla("","anexos","documento_iddocumento=".$iddoc,"",$conn);
+		for($i=0;$i<$anex['numcampos'];$i++){
+		$html.= '<a title="Descargar" href="../../anexosdigitales/parsea_accion_archivo.php?idanexo='.$anex[$i]['idanexos'].'&amp;accion=descargar" border="0px"><font size="2">'.$anex[$i]['etiqueta'].'</font></a> &nbsp;';
+		}
+		if($anexos_fis[0]['anexos_fisicos']!='' || $anex['numcampos']>0){
+			echo $html."<br/><br/>";
+		}
 }
 
 function asunto_carta($idformato,$idcampo,$iddoc){
@@ -567,18 +572,95 @@ function autocompletar(idcomponente,digitado,tipo)
 } 
 function mostrar_datos_radicaion($idformato, $iddoc){
 	global $conn;
-	//echo(estilo_bootstrap());
+	echo(estilo_bootstrap());
 	$datos_radicacion = busca_filtro_tabla("","documento","iddocumento=".$iddoc,"",$conn);
 	$nombre_empresa = busca_filtro_tabla("valor","configuracion","LOWER(nombre) LIKE'nombre'","",$conn);
-	$ejecutor =  busca_filtro_tabla("","funcionario","funcionario_codigo=".$datos_radicacion[0]['ejecutor'],"",$conn);
-	$datos="<div style='float:right; border: solid 1px; padding:10px; font-size: 11px; border-radius: 5px; margin-top:37px;width:75%'><b style='float:rigth;'>".$nombre_empresa[0]['valor']."</b><br />";
-	//$datos="<div style='float:right; border: solid 1px; padding:10px; font-size: 11px; border-radius: 5px; margin-top:37px;'><b style='float:right;'>".$nombre_empresa[0]['valor']."</b><br />";
-	$datos.="<b >Radicado No:</b> ".$datos_radicacion[0]['numero'].'<br />';
-	$datos.="<b>Fecha:</b> ".$datos_radicacion[0]['fecha'].'<br />';
-	//$datos.="<b>Radicado por:</b> ".$ejecutor[0]['nombres'].' '.$ejecutor[0]['apellidos'];$datos.="<b style='float:left;'>Radicado No:</b> ".$datos_radicacion[0]['numero'].'<br />';
-	$datos.="</div>";
-	echo($datos);
-	//print_r($datos_radicacion);
+	if($_REQUEST['tipo']!=5){
+		$margin="margin-top:37px;";
+		
+	}else{
+		$margin="margin-top:-30px;";
+	}	
+	$datos="<div id='header_first_page' style='float:right; border-radius: 5px; ".$margin."'>
+	<div style='border: solid 1px; padding:10px; font-size: 16px; '><b style='float:right;'>".$nombre_empresa[0]['valor']."</b><br />";
+	$datos.="<b>Radicado No:</b> ".formato_numero($idformato,$iddoc,1).'<br />';
+	$date = new DateTime($datos_radicacion[0]['fecha']);
+	$datos.="<b>Fecha:</b> ".$date->format('Y-m-d H:i').'<br />';
+	$datos.="</div></div>";
+
+	return($datos);
 	
 }
+function mostrar_anexos_externa($idformato,$iddoc){
+	$fisicos=mostrar_valor_campo('anexos_fisicos',$idformato,$iddoc,1);
+	$digitales=mostrar_valor_campo('anexos_digitales',$idformato,$iddoc,1);
+	if($fisicos!="" || $digitales!=""){
+		$digitales=preg_replace("%(<div.*?>)(.*?)(<\/div.*?>)%is","",$digitales);
+		echo "Anexos: ".$fisicos." ".strip_tags($digitales, '<a>')."<br/><br/>";
+	}
+}
+function tamanio_texto_anexos_ext($idformato,$iddoc){
+	global $conn;
+	if(@$_REQUEST['tipo']!=5){
+	?>
+		<script type="text/javascript">
+			$(document).ready(function(){
+				//$("table tbody tr td a font").css("font-size","12pt");
+				$('*').css('font-family','arial');
+			});
+		</script>
+	<?php		
+	}
+}
+
+
+function mostrar_copias_comunicacion_ext($idformato,$iddoc=NULL){
+	global $conn;
+	$datos=busca_filtro_tabla("nombre,nombre_tabla","formato","idformato=$idformato","",$conn);
+	$inf_memorando=busca_filtro_tabla("copia,copiainterna,vercopiainterna",$datos[0]["nombre_tabla"],"documento_iddocumento=".$iddoc,"",$conn);
+	if($inf_memorando[0][0]<>""){
+		echo '<span>Copia: ';
+		$destinos=explode(",",$inf_memorando[0][0]);
+		$destinos=array_unique($destinos);
+		sort($destinos);
+		$lista=array();
+		for($i=0;$i<count($destinos);$i++){
+			$ejecutores=busca_filtro_tabla("nombre,cargo","ejecutor e,datos_ejecutor de","de.ejecutor_idejecutor=e.idejecutor and iddatos_ejecutor=".$destinos[$i],"",$conn);
+			if($ejecutores[0][1]!=""){
+				$cargo=",".ucwords(strtolower($ejecutores[0][1]));
+			}
+			$lista[]=ucwords(strtolower($ejecutores[0][0])).$cargo;
+		}    
+		echo implode(", ",$lista);
+		if($inf_memorando[0]['vercopiainterna']==1 && $inf_memorando[0]['copiainterna']<>""){
+			$copiainterna=mostrar_cop_interna_externa($inf_memorando[0]['copiainterna']);
+			echo ",".implode(", ",$copiainterna);
+		}      
+		echo '</span><br/><br/>';         
+	}elseif($inf_memorando[0]['vercopiainterna']==1 && $inf_memorando[0]['copiainterna']<>""){
+		echo '<span>Copia: ';
+		$copiainterna=mostrar_cop_interna_externa($inf_memorando[0]['copiainterna']);
+		echo implode(", ",$copiainterna).'</span><br/><br/>';
+	}    
+}
+function mostrar_cop_interna_externa($copiainterna){
+global $conn;
+ $destinos=explode(",",$copiainterna);
+ $destinos=array_unique($destinos);
+ sort($destinos);
+ $lista=array();
+ for($i=0;$i<count($destinos);$i++){//si el destino es una dependencia
+   if(strpos($destinos[$i],"#")>0){
+      	$resultado=busca_filtro_tabla("nombre","dependencia","iddependencia=".str_replace("#","",$destinos[$i]),"",$conn);
+			  $lista[]=ucwords(strtolower($resultado[0]["nombre"]));
+      }else{
+   		$resultado=busca_filtro_tabla("funcionario_codigo,nombres,idfuncionario,apellidos,c.nombre","funcionario,cargo c,dependencia_cargo dc","dc.cargo_idcargo=c.idcargo and dc.funcionario_idfuncionario=idfuncionario and iddependencia_cargo=".$destinos[$i],"",$conn);                 
+      $lista[]=ucwords(strtolower($resultado[0]["nombres"]." ".$resultado[0]["apellidos"]));
+			if($resultado[0]['nombre']<>""){
+				 $lista[]=ucwords(strtolower($resultado[0]["nombre"]));
+			}
+   }
+  }    
+return $lista;
+}   
 ?>

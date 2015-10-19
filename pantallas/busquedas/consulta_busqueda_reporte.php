@@ -46,6 +46,16 @@ for($i=0;$i<$cant;$i++){
   }
 	array_push($columnas["modelo"],'{"encabezado":"'.$datos[0].'","name":"'.$datos2[0].'","align":"'.$datos[2].'"'.$width.'}');
 }
+
+$encabezado=stripslashes($datos_busqueda[0]["encabezado_grillas"]);
+$grupos=explode("|-|",$encabezado);
+$cant=count($grupos);
+$titulos=array();
+for($i=0;$i<$cant;$i++){
+	$datos=explode("|",$grupos[$i]);
+	$titulos[]="{startColumnName: '".$datos[1]."', numberOfColumns: ".$datos[2].", titleText: '<em>".$datos[0]."</em>'}";
+}
+
 echo(estilo_jqgrid());
 echo(estilo_redmond());
 echo(estilo_bootstrap());                           
@@ -118,6 +128,16 @@ $(document).ready(function(){
     caption:"<?php echo $boton_buscar;?><button class=\"btn btn-mini btn-primary exportar_reporte_saia pull-left\" title=\"Exportar reporte <?php echo($datos_busqueda[0]['etiqueta']);?>\" enlace=\"<?php echo($datos_busqueda[0]['busqueda_avanzada']);?>\">Exportar &nbsp;</button><div class=\"pull-left\" style=\"text-align:center; width:60%;\"><?php echo($datos_busqueda[0]['etiqueta']);?></div><div id=\"barra_exportar_ppal\"><iframe name='iframe_exportar_saia' height='25px' width='150px' frameborder=0 scrolling='no'></iframe></div></div>"
 });
 jQuery("#datos_busqueda").jqGrid('navGrid','#nav_busqueda',{edit:false,add:false,del:false,search:false});
+
+<?php
+ if($datos_busqueda[0]["encabezado_grillas"]){ ?>
+jQuery("#datos_busqueda").jqGrid('setGroupHeaders', {useColSpanStyle: false, groupHeaders:[
+  <?php
+  echo(implode(",",$titulos));
+  ?>
+  ]
+});
+<?php } ?>
 
 $(".exportar_reporte_saia").click(function(){	
 	isOpera = !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;

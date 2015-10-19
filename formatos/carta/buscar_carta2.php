@@ -35,7 +35,7 @@
                    <a href="javascript:void(0)" onclick="tree_copiainterna.findItem(htmlentities(document.getElementById('stext_copiainterna').value),1)"><img src="../../botones/general/anterior.png"border="0px"></a>
                    <a href="javascript:void(0)" onclick="tree_copiainterna.findItem(htmlentities(document.getElementById('stext_copiainterna').value),0,1)"><img src="../../botones/general/buscar.png"border="0px"></a>
                           <a href="javascript:void(0)" onclick="tree_copiainterna.findItem(htmlentities(document.getElementById('stext_copiainterna').value))"><img src="../../botones/general/siguiente.png"border="0px"></a>
-                          <br /><br /><div id="treeboxbox_copiainterna" height=""></div><input type="hidden" maxlength="2000"  name="g@copiainterna" id="copiainterna"   value="" ><label style="display:none" class="error" for="copiainterna">Campo obligatorio.</b></label><script type="text/javascript">
+                          <br /><br /><div id="treeboxbox_copiainterna" height=""></div><input type="hidden"  name="g@copiainterna" id="copiainterna"   value="" ><label style="display:none" class="error" for="copiainterna">Campo obligatorio.</b></label><script type="text/javascript">
                   <!--
                       var browserType;
                       if (document.layers) {browserType = "nn4"}
@@ -47,7 +47,7 @@
                 			tree_copiainterna.setImagePath("../../imgs/");
                 			tree_copiainterna.enableIEImageFix(true);tree_copiainterna.enableCheckBoxes(1);
                 			tree_copiainterna.enableThreeStateCheckboxes(1);tree_copiainterna.setOnLoadingStart(cargando_copiainterna);
-                      tree_copiainterna.setOnLoadingEnd(fin_cargando_copiainterna);tree_copiainterna.enableSmartXMLParsing(true);tree_copiainterna.loadXML("../../test.php");
+                      tree_copiainterna.setOnLoadingEnd(fin_cargando_copiainterna);tree_copiainterna.enableSmartXMLParsing(true);tree_copiainterna.loadXML("../../test.php?rol=1");
                       tree_copiainterna.setOnCheckHandler(onNodeSelect_copiainterna);
                       function onNodeSelect_copiainterna(nodeId)
                       {valor_destino=document.getElementById("copiainterna");

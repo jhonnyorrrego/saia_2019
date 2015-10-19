@@ -1,4 +1,4 @@
-<?php include_once("../../formatos/librerias/funciones_generales.php"); ?><?php include_once("../../calendario/calendario.php"); ?><?php include_once("../librerias/header_formato.php"); ?><legend id="label_formato" class="legend" style="font-size:9pt;">B&uacute;squeda en formato ACTA</legend><br /><br /><?php include_once("../../formatos/librerias/funciones_generales.php"); ?><div class="control-group"><b>Grupo Que Se Reune<input type="hidden" name="bksaiacondicion_g@grupo_reunido" id="bksaiacondicion_g@grupo_reunido" value="like_total"></b><div class="controls"><input type="text" id="grupo_reunido" name="bqsaia_g@grupo_reunido"><div class="btn-group" data-toggle="buttons-radio" >
+<?php include_once("../../formatos/librerias/funciones_generales.php"); ?><?php include_once("../../calendario/calendario.php"); ?><?php include_once("../librerias/header_formato.php"); ?><legend id="label_formato" class="legend">B&uacute;squeda en formato ACTA</legend><br /><br /><?php include_once("../../formatos/librerias/funciones_generales.php"); ?><div class="control-group"><b>Grupo que se reune<input type="hidden" name="bksaiacondicion_g@grupo_reunido" id="bksaiacondicion_g@grupo_reunido" value="like_total"></b><div class="controls"><input type="text" id="grupo_reunido" name="bqsaia_g@grupo_reunido"><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_g@grupo_reunido',this.id)">
 		    Y
 		  </button>
@@ -7,7 +7,7 @@
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_g@grupo_reunido" id="bqsaiaenlace_g@grupo_reunido" value="y" />
 		</div></div></div><div class="control-group">
-                  <label class="string control-label" for="fecha_reunion"><b>Fecha</b></label>
+                  <label class="string control-label" for="fecha_reunion"><b>fecha</b></label>
                   <input type="hidden" name="bksaiacondicion_g@fecha_reunion_x" id="bksaiacondicion_g@fecha_reunion_x" value=">=">
                   <div class="controls">
                   Entre <input type="text"  name="bqsaia_g@fecha_reunion_x" id="fecha_reunion_x" tipo="fecha" value="" style="width:100px" placeholder="Inicio"><?php selector_fecha("fecha_reunion_x","kformulario_saia","Y-m-d",date("m"),date("Y"),"default.css","../../","AD:VALOR"); ?> y 
@@ -28,7 +28,7 @@
 		    O
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_g@hora" id="bqsaiaenlace_g@hora" value="y" />
-		</div></div></div><div class="control-group"><b>N&uacute;mero Del Acta<input type="hidden" name="bksaiacondicion_g@numero_acta" id="bksaiacondicion_g@numero_acta" value="like_total"></b><div class="controls"><input type="text" id="numero_acta" name="bqsaia_g@numero_acta"><div class="btn-group" data-toggle="buttons-radio" >
+		</div></div></div><div class="control-group"><b>N&uacute;mero del Acta<input type="hidden" name="bksaiacondicion_g@numero_acta" id="bksaiacondicion_g@numero_acta" value="like_total"></b><div class="controls"><input type="text" id="numero_acta" name="bqsaia_g@numero_acta"><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_g@numero_acta',this.id)">
 		    Y
 		  </button>
@@ -36,7 +36,7 @@
 		    O
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_g@numero_acta" id="bqsaiaenlace_g@numero_acta" value="y" />
-		</div></div></div><div class="control-group"><label class="string control-label" style="font-size:9pt" for="caracter"><b>Caracter De La Reuni&oacute;n<input type="hidden" name="bksaiacondicion_g@caracter" id="bksaiacondicion_g@caracter" value="="></b></label><div class="controls"><?php genera_campo_listados_editar(309,3625,'',1,'buscar');?><div class="btn-group" data-toggle="buttons-radio" >
+		</div></div></div><div class="control-group"><label class="string control-label" style="font-size:9pt" for="caracter"><b>Caracter de la reuni&oacute;n<input type="hidden" name="bksaiacondicion_g@caracter" id="bksaiacondicion_g@caracter" value="="></b></label><div class="controls"><?php genera_campo_listados_editar(309,3625,'',1,'buscar');?><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_g@caracter',this.id)">
 		    Y
 		  </button>
@@ -44,7 +44,7 @@
 		    O
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_g@caracter" id="bqsaiaenlace_g@caracter" value="y" />
-		</div></div></div><div class="control-group"><b>Objetivo De La Reuni&oacute;n<input type="hidden" name="bksaiacondicion_g@objetivo_reunion" id="bksaiacondicion_g@objetivo_reunion" value="like_total"></b><div class="controls"><textarea  maxlength="4000"   id="objetivo_reunion" name="bqsaia_g@objetivo_reunion"  style="width:500px;height:100px"></textarea><div class="btn-group" data-toggle="buttons-radio" >
+		</div></div></div><div class="control-group"><b>Objetivo de la reuni&oacute;n<input type="hidden" name="bksaiacondicion_g@objetivo_reunion" id="bksaiacondicion_g@objetivo_reunion" value="like_total"></b><div class="controls"><textarea  maxlength="4000"   id="objetivo_reunion" name="bqsaia_g@objetivo_reunion"  style="width:500px;height:100px"></textarea><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_g@objetivo_reunion',this.id)">
 		    Y
 		  </button>
@@ -137,7 +137,7 @@
 		  <input type="hidden" name="bqsaiaenlace_asistentes" id="bqsaiaenlace_asistentes" value="y" />
 		</div></div></div>
                 <fieldset>
-                <legend style="line-height:15px;font-size:9pt;"><b>Invitados</b></legend>
+                <legend style="font-size:10pt;line-height:15px"><b>Invitados</b></legend>
                 <div class="control-group;" style="background-color:#F5F5F5">
                 <b>Nombre<input type="hidden" name="bksaiacondicion_f@nombre__9" id="bksaiacondicion_f@nombre__9" value="like_total"></b><div class="controls"><input type="text"  maxlength="3000"   id="invitados-nombre" name="g@invitados-nombre" ></div><b>Identificacion</b><div class="controls"><input type="text"  maxlength="3000"   id="invitados-identificacion" name="g@invitados-identificacion" ></div><b>Empresa</b><div class="controls"><input type="text"  maxlength="3000"   id="invitados-empresa" name="g@invitados-empresa" ></div></div></fieldset><br><div class="control-group"><b>Ausentes<input type="hidden" name="bksaiacondicion_g@ausentes" id="bksaiacondicion_g@ausentes" value="like_total"></b><div class="controls"><input type="text" id="ausentes" name="bqsaia_g@ausentes"><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_g@ausentes',this.id)">
@@ -147,7 +147,7 @@
 		    O
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_g@ausentes" id="bqsaiaenlace_g@ausentes" value="y" />
-		</div></div></div><div class="control-group"><b>Acciones Tareas Y Compromisos<input type="hidden" name="bksaiacondicion_g@tareas" id="bksaiacondicion_g@tareas" value="="></b><div class="controls"><input type="text" id="tareas" name="bqsaia_g@tareas"><div class="btn-group" data-toggle="buttons-radio" >
+		</div></div></div><div class="control-group"><b>Acciones tareas y compromisos<input type="hidden" name="bksaiacondicion_g@tareas" id="bksaiacondicion_g@tareas" value="="></b><div class="controls"><input type="text" id="tareas" name="bqsaia_g@tareas"><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_g@tareas',this.id)">
 		    Y
 		  </button>
@@ -155,8 +155,8 @@
 		    O
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_g@tareas" id="bqsaiaenlace_g@tareas" value="y" />
-		</div></div></div><div class="control-group"><label class="string control-label" style="font-size:9pt" for="fecha_proxima_reunion"><b>Fecha Pr&oacute;xima Reuni&oacute;n<input type="hidden" name="bksaiacondicion_fecha_proxima_reunion" id="bksaiacondicion_fecha_proxima_reunion" value="like_total"></b></label><div class="controls">
-                    Entre &nbsp;<input type="text" readonly="true" name="fecha_proxima_reunion_1"  id="fecha_proxima_reunion_1" value=""><?php selector_fecha("fecha_proxima_reunion_1","kformulario_saia","Y-m-d H:i",date("m"),date("Y"),"default.css","../../","AD:VALOR"); ?> y <input type="text" readonly="true" name="fecha_proxima_reunion_2"  id="fecha_proxima_reunion_2" value=""><?php selector_fecha("fecha_proxima_reunion_2","kformulario_saia","Y-m-d H:i",date("m"),date("Y"),"default.css","../../","AD:VALOR"); ?><div class="btn-group" data-toggle="buttons-radio" >
+		</div></div></div><div class="control-group"><label class="string control-label" style="font-size:9pt" for="fecha_proxima_reunion"><b>Fecha pr&oacute;xima reuni&oacute;n<input type="hidden" name="bksaiacondicion_fecha_proxima_reunion" id="bksaiacondicion_fecha_proxima_reunion" value="like_total"></b></label><div class="controls">
+                    ENTRE &nbsp;<input type="text" readonly="true" name="fecha_proxima_reunion_1"  id="fecha_proxima_reunion_1" value=""><?php selector_fecha("fecha_proxima_reunion_1","kformulario_saia","Y-m-d H:i",date("m"),date("Y"),"default.css","../../","AD:VALOR"); ?>&nbsp;&nbsp; Y &nbsp;&nbsp;<input type="text" readonly="true" name="fecha_proxima_reunion_2"  id="fecha_proxima_reunion_2" value=""><?php selector_fecha("fecha_proxima_reunion_2","kformulario_saia","Y-m-d H:i",date("m"),date("Y"),"default.css","../../","AD:VALOR"); ?><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_fecha_proxima_reunion',this.id)">
 		    Y
 		  </button>
@@ -164,7 +164,7 @@
 		    O
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_fecha_proxima_reunion" id="bqsaiaenlace_fecha_proxima_reunion" value="y" />
-		</div></div></div><div class="control-group"><b>Lugar Pr&oacute;xima Reuni&oacute;n<input type="hidden" name="bksaiacondicion_g@lugar_proxima_reunion" id="bksaiacondicion_g@lugar_proxima_reunion" value="like_total"></b><div class="controls"><input type="text" id="lugar_proxima_reunion" name="bqsaia_g@lugar_proxima_reunion"><div class="btn-group" data-toggle="buttons-radio" >
+		</div></div></div><div class="control-group"><b>Lugar pr&oacute;xima reuni&oacute;n<input type="hidden" name="bksaiacondicion_g@lugar_proxima_reunion" id="bksaiacondicion_g@lugar_proxima_reunion" value="like_total"></b><div class="controls"><input type="text" id="lugar_proxima_reunion" name="bqsaia_g@lugar_proxima_reunion"><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_g@lugar_proxima_reunion',this.id)">
 		    Y
 		  </button>
