@@ -61,7 +61,7 @@ if(@$_REQUEST["idbusqueda_componente"]){
 	$cadena=implode("",$arreglo);
 	if($cadena_adicional=='')
 	$cadena=limpiar_cadena($cadena);
-    if(count($arreglo)||count($arreglo_sub)){
+    if(count($arreglo)||count($arreglo_sub) || $consulta_adicional){
       $cadena=str_replace("@",".",$cadena);
       $cadena_adicional=str_replace("@",".",$cadena_adicional);
 			

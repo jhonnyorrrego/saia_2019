@@ -22,7 +22,7 @@ if($_REQUEST['evento'] == 'Aceptar'){
 	<legend class="texto-azul">Eliminar p&aacute;ginas</legend>
   <div class="control-group">
   	<?php $pagina=  busca_filtro_tabla("", "pagina A, documento B","A.id_documento=B.iddocumento AND consecutivo IN (".$_REQUEST['paginas'].") " , "", $conn);?>  	
-    <label class="control-label">Documento <?php echo($pagina[0]['numero'].'-'.$pagina[0]['plantilla']);?></label>    
+    <label class="control-label"><b>Documento <?php echo($pagina[0]['numero'].'-'.$pagina[0]['plantilla']);?></b></label>    
     <div class="controls">            	      
       	<?php		
 				for($i=0 ; $i< $pagina['numcampos']; $i++) {
@@ -31,8 +31,9 @@ if($_REQUEST['evento'] == 'Aceptar'){
 				echo($texto);
   			?>   
   	</div>
+  </div>
   <div class="control-group">
-    <label class="control-label" for="inputJustificacion">Justificaci&oacute;n</label>
+    <label class="control-label" for="inputJustificacion"><b>Justificaci&oacute;n</b></label>
     <div class="controls">
       <textarea id="inputJustificacion" name="justificacion" required></textarea>
     </div>

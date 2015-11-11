@@ -330,6 +330,10 @@ if($tipo=='ver_tareas'||$tipo=='todos'){
 	$tareas=busca_filtro_tabla("count(*) AS tareas","tareas","documento_iddocumento=".$doc,"",$conn);
 	$cantidades["ver_tareas"]=intval($tareas[0]["tareas"]);
 }
+if($tipo=='ver_versiones'||$tipo=='todos'){
+	$versiones=busca_filtro_tabla("count(*) AS tareas","version_documento","documento_iddocumento=".$doc,"",$conn);
+	$cantidades["ver_versiones"]=intval($versiones[0]["tareas"]);
+}
 return($cantidades);
 }
 function serie_documento($idserie){

@@ -85,9 +85,11 @@ if(!isset($_REQUEST["URL"])){
 				 //******nueva ruta *******          
 				$ruta_almacenamiento=ruta_almacenamiento("pdf",0);
 				$ruta_almacenamiento2=ruta_almacenamiento("pdf");     
-				$ruta_nueva =$ruta_almacenamiento2.$borrador[0]["estado"]."/".$borrador[0]["fecha2"]."/".$borrador[0]["numero"]."/pdf/";
+				$fecha_array=explode("-",$borrador[0]["fecha"]);
+				
+				$ruta_nueva =$ruta_almacenamiento2.$borrador[0]["estado"]."/".$fecha_array[0]."-".$fecha_array[1]."/".$borrador[0]["numero"]."/pdf/";
 				crear_destino($ruta_nueva);          	
-				$nomarch=$ruta_almacenamiento.$borrador[0]["estado"]."/".$borrador[0]["fecha2"]."/".$borrador[0]["iddocumento"]."/pdf/".$filename.".pdf";
+				$nomarch=$ruta_almacenamiento.$borrador[0]["estado"]."/".$fecha_array[0]."-".$fecha_array[1]."/".$borrador[0]["iddocumento"]."/pdf/".$filename.".pdf";
 				//********fin nueva ruta **********
 				
 				$formato=busca_filtro_tabla("","formato","lower(nombre)='".strtolower($_REQUEST["plantilla"])."'","",$conn);

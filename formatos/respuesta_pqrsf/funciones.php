@@ -57,28 +57,26 @@ function ver_comentario($idformato,$iddoc){
 //enviar_correo_pqr(307,834);
 function enviar_correo_pqr($idformato,$iddoc){
 	global $conn;
+	$max_salida=6; // Previene algun posible ciclo infinito limitando a 10 los ../
+	$ruta_db_superior=$ruta="";
+	while($max_salida>0){
+	  if(is_file($ruta."db.php")){
+	    $ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
+	  }
+	  $ruta.="../";
+	  $max_salida--;
+	}
+	
 	$iddoc_papa=buscar_papa_formato_campo($idformato,$iddoc,"ft_pqrsf","documento_iddocumento");
 	$update_estado="UPDATE ft_pqrsf SET estado_reporte=3,funcionario_reporte=".usuario_actual("idfuncionario").",fecha_reporte=".fecha_db_almacenar(date("Y-m-d H:i:s"),"Y-m-d H:i:s")." WHERE documento_iddocumento=".$iddoc_papa;//Cambio a Entregado
 	phpmkr_query($update_estado);
 	
-	 /*$abrir=fopen("log_curl.txt","a+"); 
-	 $ch = curl_init();
-	 $fila = "http://".RUTA_PDF_LOCAL."/class_impresion.php?iddoc=".$iddoc."&conexion_remota=1";
-	 fwrite($abrir,"En la fecha ".date('Y-m-d H:i:s')." se ejecutaron las siguientes tareas \n");
-	 curl_setopt($ch, CURLOPT_URL,$fila); 
-	 curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
-	 curl_setopt($ch, CURLOPT_VERBOSE, true); 
-	 curl_setopt($ch, CURLOPT_STDERR, $abrir);
-	 $contenido=curl_exec($ch);    
-	 fwrite($abrir,"En la fecha ".date('Y-m-d H:i:s')." Termina el proceso =>  ".$contenido." \n \n");
-	 curl_close ($ch); 
-	 fclose($abrir);*/
+	$documento=busca_filtro_tabla("","documento a","a.iddocumento=".$iddoc,"",$conn);
+	$ruta=generar_pdf_pqrsf($documento);
 
 	$anexos=array();
-	$enviar_pdf=busca_filtro_tabla("pdf","documento","iddocumento=".$iddoc,"",$conn);
-	if($enviar_pdf[0]['pdf']!=""){
-		$anexos[]=$enviar_pdf[0]['pdf'];
-	}
+	$anexos[]=$ruta_db_superior.$ruta;
+	
 	$usuarios=array();
 	$usuarios[]=$_REQUEST['para'];
 	$correo="comunicaciones@ucm.edu.co";
@@ -89,5 +87,38 @@ function enviar_correo_pqr($idformato,$iddoc){
 		alerta("Correo NO Enviado");
 	}
 }
-
+function generar_pdf_pqrsf($documento){
+    $iddoc=$documento[0]["iddocumento"];
+    $exportar_pdf=busca_filtro_tabla("valor","configuracion A","A.nombre='exportar_pdf'","",$conn);
+    if($exportar_pdf[0]["valor"]=='html2ps'){
+	    $export="exportar_impresion.php?iddoc=".$iddoc."&plantilla=".strtolower($documento[0]["plantilla"]);
+    }
+    else if($exportar_pdf[0]["valor"]=='class_impresion'){
+    	$export="class_impresion.php?iddoc=".$iddoc;
+    }
+    else{
+    	$export="exportar_impresion.php?iddoc=".$iddoc."&plantilla=".strtolower($documento[0]["plantilla"]);
+    }
+    
+    $ch = curl_init();
+	//$fila = "http://".RUTA_PDF_LOCAL."/html2ps/public_html/demo/html2ps.php?plantilla=".strtolower($datos_formato[0]["nombre_formato"])."&iddoc=".$iddoc."&conexion_remota=1";
+	$fila = "http://".RUTA_PDF_LOCAL."/".$export."&LOGIN=".$_SESSION["LOGIN".LLAVE_SAIA]."&usuario_actual=".$_SESSION["usuario_actual"]."&LLAVE_SAIA=".LLAVE_SAIA;
+	
+	curl_setopt($ch, CURLOPT_URL,$fila); 
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
+	
+	curl_setopt($ch, CURLOPT_VERBOSE, true); 
+	curl_setopt($ch, CURLOPT_STDERR, $abrir);
+	
+	$contenido=curl_exec($ch);
+	
+	curl_close ($ch);
+	
+	$datos_documento=busca_filtro_tabla(fecha_db_obtener('A.fecha','Y-m-d')." as x_fecha, A.*","documento A","A.iddocumento=".$iddoc,"",$conn);
+	
+	$fecha=explode("-", $datos_documento[0]["x_fecha"]);
+	$ruta=RUTA_PDFS.$datos_documento[0]["estado"]."/".$fecha[0]."-".$fecha[1]."/".$datos_documento[0]["iddocumento"]."/pdf/";
+	$ruta.=($datos_documento[0]["plantilla"])."_".$datos_documento[0]["numero"]."_".str_replace("-","_",$datos_documento[0]["x_fecha"]).".pdf";
+	return($ruta);
+}
 ?>

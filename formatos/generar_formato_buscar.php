@@ -535,23 +535,14 @@ if($tablas_adicionales){
     if($textareas){
       $includes.=incluir_libreria("header_formato.php","librerias");
     }
-    if($arboles){
-      //$includes.=incluir("../../js/dhtmlXCommon.js","javascript");
-      //$includes.=incluir("../../js/dhtmlXTree.js","javascript");
-      //$includes.=incluir("../../css/dhtmlXTree.css","estilos");
-      //$includes=(librerias_arboles());
-    }
-    if($ejecutores){
-      //$includes.=incluir("../../js/jquery.fcbkcomplete.js","javascript");
-      //$includes.=incluir("../../css/style_fcbkcomplete.css","estilos");
-    }
+
     if($autocompletar){
       $includes.=incluir("../librerias/autocompletar.js","javascript");
     }
     if($dependientes>0){
       $includes.=incluir("../librerias/dependientes.js","javascript");
     }  
-    $componente_busqueda=busca_filtro_tabla("","busqueda_componente","nombre='".$formato[0]["nombre_tabla"]."'","",$conn);                           
+    /*$componente_busqueda=busca_filtro_tabla("","busqueda_componente","nombre='".$formato[0]["nombre_tabla"]."'","",$conn);                           
     if($componente_busqueda["numcampos"]){
       $componente=$componente_busqueda[0]["idbusqueda_componente"];
     }
@@ -595,10 +586,11 @@ if($tablas_adicionales){
 			$enlace_bus=phpmkr_insert_id();
 		}
 	}
-    $texto.='<input type="hidden" name="idbusqueda_componente" value="'.$componente.'">';
+    $texto.='<input type="hidden" name="idbusqueda_componente" value="'.$componente.'">';*/
+    
     $contenido=$includes.$enmascarar.$texto;
     $mostrar=crear_archivo($formato[0]["nombre"]."/buscar_".$formato[0]["nombre"]."2.php",$contenido);
-//die();
+
     if($mostrar<>"")
       alerta("Formato Creado con exito por favor verificar la carpeta ".dirname($mostrar));
   }

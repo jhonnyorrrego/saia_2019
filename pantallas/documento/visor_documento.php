@@ -16,13 +16,13 @@ $datos=busca_filtro_tabla("pdf,plantilla","documento A","A.iddocumento=".$iddoc,
 $exportar_pdf=busca_filtro_tabla("valor","configuracion A","A.nombre='exportar_pdf'","",$conn);
 $export="";
 if($exportar_pdf[0]["valor"]=='html2ps'){
-	$export="exportar_impresion.php?iddoc=".$iddoc."&plantilla=".strtolower($datos[0]["plantilla"]);
+	$export="exportar_impresion.php?iddoc=".$iddoc."&plantilla=".strtolower($datos[0]["plantilla"])."&rand=".rand(1,100000);
 }
 else if($exportar_pdf[0]["valor"]=='class_impresion'){
-	$export="class_impresion.php?iddoc=".$iddoc;
+	$export="class_impresion.php?iddoc=".$iddoc."&rand=".rand(1,100000);
 }
 else{
-	$export="exportar_impresion.php?iddoc=".$iddoc."&plantilla=".strtolower($datos[0]["plantilla"]);
+	$export="exportar_impresion.php?iddoc=".$iddoc."&plantilla=".strtolower($datos[0]["plantilla"])."&rand=".rand(1,100000);
 }
 
 if(@$_REQUEST["actualizar_pdf"]==1){

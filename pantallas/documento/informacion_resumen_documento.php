@@ -13,8 +13,8 @@ include_once($ruta_db_superior."librerias_saia.php");
 //include_once($ruta_db_superior."pantallas/documento/librerias_flujo.php");
 echo(estilo_bootstrap());
 $adicionales_enlace="";
-$busquedas=busca_filtro_tabla("", "busqueda_componente", "nombre LIKE 'notas_documento' OR nombre LIKE 'anexos' OR nombre LIKE 'paginas_documento' OR nombre LIKE 'buzon_salida' OR nombre LIKE 'documentos_relacionados' OR nombre LIKE 'documentos_respuesta' OR nombre LIKE 'tareas_documento'", "", $conn);
-$modulos=busca_filtro_tabla("nombre,etiqueta","modulo","nombre LIKE 'ordenar_pag' OR nombre LIKE 'ver_notas' OR nombre LIKE 'adjuntos_documento' OR nombre LIKE 'documentos_relacionados' OR nombre LIKE 'arbol_documento' OR nombre LIKE 'tareas_documento'","",$conn);
+$busquedas=busca_filtro_tabla("", "busqueda_componente", "nombre LIKE 'notas_documento' OR nombre LIKE 'anexos' OR nombre LIKE 'paginas_documento' OR nombre LIKE 'buzon_salida' OR nombre LIKE 'documentos_relacionados' OR nombre LIKE 'documentos_respuesta' OR nombre LIKE 'tareas_documento' OR nombre LIKE 'versiones_documento'", "", $conn);
+$modulos=busca_filtro_tabla("nombre,etiqueta","modulo","nombre LIKE 'ordenar_pag' OR nombre LIKE 'ver_notas' OR nombre LIKE 'adjuntos_documento' OR nombre LIKE 'documentos_relacionados' OR nombre LIKE 'arbol_documento' OR nombre LIKE 'tareas_documento' OR nombre LIKE 'ver_versiones'","",$conn);
 $iconos = array();
 for($i=0; $i< $modulos['numcampos']; $i++){
 	$iconos = array_merge($iconos,array($modulos[$i][nombre] => $modulos[$i]["etiqueta"])); 
@@ -41,6 +41,9 @@ for($i=0;$i<$busquedas["numcampos"];$i++){
         break;
         case 'tareas_documento':
             $tareas_documento=$busquedas[$i]["idbusqueda_componente"];			            
+        break;
+				case 'versiones_documento':
+            $versiones_documento=$busquedas[$i]["idbusqueda_componente"];			            
         break;
     }
 }
@@ -140,7 +143,13 @@ else{
             
             <i class="icon-ver_tareas"><span class="badge badge-info" id="cantidad_tareas"></span></i>
     	</a>        
-    </li>    
+    </li>
+    <li>        
+    	<a href="#versiones" id="ver_versiones" data-toggle="tab" componente="<?php echo($versiones_documento);?>" class="tooltip_saia_izquierda" title="<?php echo($iconos['versiones_documento']);?>">
+            
+            <i class="icon-ver_versiones"><span class="badge badge-info" id="cantidad_versiones"></span></i>
+    	</a>        
+    </li>
   </ul>
   <div class="tab-content" style="overflow: auto;">
     <div class="tab-pane active" id="arbol">
@@ -213,6 +222,17 @@ else{
 			//echo($mostrar_tarea);
     	?>
     	<div id="pie_tareas"></div>
+    </div>
+    <div class="tab-pane" id="versiones">
+      <div id="encabezado_versiones">
+        <b><?php echo($iconos['ver_versiones']);?></b><br/>
+      </div>
+      <span class="phpmaker">
+      <div id="esperando_version"><img src="<?php echo $ruta_db_superior; ?>imagenes/cargando.gif"></div>
+	  <div id="treeboxbox_tree5" class="arbol_saia"></div>
+      </span>
+    	<!--ul id="panel_versiones" class="lista_datos"></ul-->
+    	<!--div id="pie_versiones"></div-->
     </div>
   </div>
 </div>
@@ -358,6 +378,11 @@ function click_funcion(div){
             }            
           });         
         }
+        if(componente==='<?php echo($versiones_documento);?>'){
+            tree5.deleteChildItems(0);
+            tree5.setXMLAutoLoading("<?php echo($ruta_db_superior); ?>pantallas/versiones/test_versiones.php?iddoc=<?php echo($iddocumento); ?>");	
+  	        tree5.loadXML("<?php echo($ruta_db_superior); ?>pantallas/versiones/test_versiones.php?iddoc=<?php echo($iddocumento); ?>");
+        }
       }
     }
   });	
@@ -373,6 +398,7 @@ function click_funcion(div){
           $("#cantidad_paginas").html(objeto.ordenar_pag);                                         
           $("#cantidad_notas").html(objeto.ver_notas);
           $("#cantidad_tareas").html(objeto.ver_tareas);
+          $("#cantidad_versiones").html(objeto.ver_versiones);
           var cantidad_relacionados=parseInt(objeto.documentos_relacionados)+parseInt(<?php echo($origen["numcampos"]); ?>);
           $("#cantidad_documentos_relacionados").html(cantidad_relacionados);                       
         }
@@ -587,5 +613,43 @@ function click_funcion(div){
 	<?php			
 	}
 	?>
+	
+	tree5=new dhtmlXTreeObject("treeboxbox_tree5","","",0);
+	tree5.setImagePath("<?php echo($ruta_db_superior);?>imgs/");
+	tree5.enableIEImageFix(true);
+  
+  tree5.setOnLoadingStart(cargando_version);
+  tree5.setOnLoadingEnd(fin_cargando_version);
+  tree5.enableSmartXMLParsing(true);
+  tree5.setOnClickHandler(onNodeSelect_version);
+    
+  function fin_cargando_version() {
+    if (browserType == "gecko" )
+      document.poppedLayer = eval('document.getElementById("esperando_version")');
+    else if (browserType == "ie")
+      document.poppedLayer = eval('document.getElementById("esperando_version")');
+    else
+      document.poppedLayer = eval('document.layers["esperando_version"]');
+    document.poppedLayer.style.display = "none";
+    //tree5.openAllItems(0);
+  }
+  function cargando_version() {
+    if (browserType == "gecko" )
+      document.poppedLayer = eval('document.getElementById("esperando_version")');
+    else if (browserType == "ie")
+      document.poppedLayer = eval('document.getElementById("esperando_version")');
+    else
+      document.poppedLayer = eval('document.layers["esperando_version"]');
+    document.poppedLayer.style.display = "";
+  }
+  function onNodeSelect_version(nodeId){
+      var llave=0;
+      llave=nodeId;
+      var datos=llave.split("-");
+      if(datos[1]){
+          var conexion="<?php echo($ruta_db_superior); ?>pantallas/versiones/abrir_anexo.php?id="+llave;
+          window.open(conexion,"detalles");
+      }
+  }
 });
 </script>

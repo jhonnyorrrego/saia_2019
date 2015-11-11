@@ -50,9 +50,6 @@ function generar_codigo_qr_carta($idformato,$iddoc){
 	}
 	else{
 	  $sql_documento_qr="INSERT INTO documento_verificacion(documento_iddocumento,funcionario_idfuncionario,fecha,ruta_qr,verificacion) VALUES (".$iddoc.",".usuario_actual('idfuncionario').",to_date('".date("Y-m-d H:m:s")."', 'YYYY-MM-DD HH24:MI:SS'),'".$imagen."','vacio')";
-	  /*if(usuario_actual("login")=="cerok"){
-			print_r($sql_documento_qr);		
-		}*/
 	  phpmkr_query($sql_documento_qr);
 	}
 }
@@ -491,6 +488,7 @@ else if($_REQUEST["iddoc"]){
 }
  return true;  
 }
+
 function mostrar_dependencia_carta($idformato,$iddoc)
 {
 global $conn;

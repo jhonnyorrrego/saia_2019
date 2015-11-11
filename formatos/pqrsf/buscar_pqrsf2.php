@@ -94,4 +94,4 @@
 		    O
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_cluster" id="bqsaiaenlace_cluster" value="y" />
-		</div></div></div><div class="control-group"><label class="string control-label" style="font-size:9pt" for="region"><b>region<input type="hidden" name="bksaiacondicion_region" id="bksaiacondicion_region" value="like_total"></b></label><div class="controls"><?php genera_campo_listados_editar(305,3835,$_REQUEST['iddoc']);?></div></div><input type="hidden" name="filtro_adicional" id="filtro_adicional" value=" ft_pqrsf g @ AND  g.documento_iddocumento=iddocumento "></body><input type="hidden" name="idbusqueda_componente" value="196">
+		</div></div></div><div class="control-group"><label class="string control-label" style="font-size:9pt" for="region"><b>region<input type="hidden" name="bksaiacondicion_region" id="bksaiacondicion_region" value="like_total"></b></label><div class="controls"><?php genera_campo_listados_editar(305,3835,$_REQUEST['iddoc']);?></div></div><input type="hidden" name="filtro_adicional" id="filtro_adicional" value=" ft_pqrsf g @ AND  g.documento_iddocumento=iddocumento "></body>

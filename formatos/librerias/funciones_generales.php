@@ -1477,7 +1477,16 @@ if($datos["numcampos"])
         $retorno=str_replace("<!-- pagebreak -->","<div class='page_break'></div>",$retorno);
     }
 	else if(basename($_SERVER["PHP_SELF"])!=basename($datos[0]["ruta_editar"])){
-		$retorno=str_replace("<!-- pagebreak -->",'<br pagebreak="true"/>',$retorno);		
+		$conf=busca_filtro_tabla("","configuracion a","a.nombre='exportar_pdf'","",$conn);
+		if($conf[0]["valor"]=="html2ps"){
+			$retorno=str_replace("<!-- pagebreak -->",'<pagebreak/>',$retorno);
+		}
+		else if($conf[0]["valor"]=="class_impresion"){
+			$retorno=str_replace("<!-- pagebreak -->",'<br pagebreak="true"/>',$retorno);
+		}
+		else{
+			$retorno=str_replace("<!-- pagebreak -->",'<pagebreak/>',$retorno);
+		}
 	}
     if($tipo==NULL){
       echo(stripslashes($retorno));
