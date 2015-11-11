@@ -216,8 +216,8 @@ return $s;
 <Post-condiciones><Post-condiciones>
 </Clase>
 */  
-function enviar_email($doc=0)
-{global $conn;
+function enviar_email($doc=0){
+	global $conn;
 //  $var_adjunto = false;
    $copia = array();
    $email=busca_filtro_tabla("valor","configuracion","nombre='servidor_correo'","",$conn);    

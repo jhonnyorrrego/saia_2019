@@ -12,6 +12,14 @@ $ruta.="../";
 $max_salida--;
 }
 include_once($ruta_db_superior."db.php");
+if(!@$_SESSION["LOGIN".LLAVE_SAIA]){
+	$_SESSION["LOGIN".LLAVE_SAIA]=@$_REQUEST["LOGIN"];
+	$_SESSION["usuario_actual"]=$_REQUEST["usuario_actual"];
+	$_SESSION["conexion_remota"]=1;
+	global $usuactual;
+	$usuactual=@$_REQUEST["LOGIN"];
+}
+
 include_once($ruta_db_superior.'html2ps/public_html/fpdf/fpdf.php');
 include_once($ruta_db_superior.'manipular_pdf/fpdi.php');
 global $conn;
@@ -151,7 +159,8 @@ if(!empty($listado_pdf)){
 
 $ruta_almacenamiento=ruta_almacenamiento("pdf");
 $doc=busca_filtro_tabla("estado,".fecha_db_obtener("fecha","Y-m-d")." AS fecha,plantilla,numero","documento","iddocumento=".$iddoc,"",$conn);
-$dir= $ruta_almacenamiento.$doc[0]["estado"]."/".str_replace("-","_",$doc[0]["fecha"])."/".$_REQUEST["iddoc"]."/pdf/";
+$datos_fecha=explode("-",$doc[0]["fecha"]);
+$dir= $ruta_almacenamiento.$doc[0]["estado"]."/".$datos_fecha[0]."-".$datos_fecha[1]."/".$_REQUEST["iddoc"]."/pdf/";
 crear_destino($dir);
 
 if(count($listado_pdf)>1||(count($listado_pdf)&&count($listado_paginas))){

@@ -76,8 +76,7 @@ define("LLAVE_SAIA","SAIA_PRODUCTIVO_RELEASE");
 define("CODIFICA_ENCABEZADO", true);
 if(@$_SERVER["HTTPS"]=='on'){
 	define("PROTOCOLO_CONEXION","https://");//Sitio seguro
-}  
-else{
+}else{
 	define("PROTOCOLO_CONEXION","http://");
 }
 ?>

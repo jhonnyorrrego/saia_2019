@@ -23,6 +23,13 @@ while ($max_salida > 0) {
 }
 
 include_once($ruta_db_superior . "db.php");
+if(!$_SESSION["LOGIN".LLAVE_SAIA] && @$_REQUEST["LOGIN"] && @$_REQUEST["usuario_actual"]){
+	$_SESSION["LOGIN".LLAVE_SAIA]=$_REQUEST["LOGIN"];
+	$_SESSION["usuario_actual"]=$_REQUEST["usuario_actual"];
+	$_SESSION["conexion_remota"]=1;
+	global $usuactual;
+	$usuactual=$_REQUEST["LOGIN"];
+}
 include_once($ruta_db_superior . 'formatos/librerias/encabezado_pie_pagina.php');
 require_once($ruta_db_superior . 'tcpdf/config/lang/spa.php');
 require_once($ruta_db_superior . 'tcpdf/tcpdf.php');
@@ -203,11 +210,11 @@ class Imprime_Pdf {
 
       $carpeta = RUTA_PDFS . $this->documento[0]["estado"] . "/" . $fecha[0] . "-" . $fecha[1] . "/" . $this->documento[0]["iddocumento"] . "/pdf";
 
-      $nombre_pdf = $carpeta . "/" . $this->formato[0]["nombre"] . "_" . $this->documento[0]["numero"] . "_" . $this->documento[0]["fecha"] . ".pdf";
+      $nombre_pdf = $carpeta . "/" . strtoupper($this->formato[0]["nombre"]) . "_" . $this->documento[0]["numero"] . "_" . str_replace("-","_",$this->documento[0]["fecha"]) . ".pdf";
 
       crear_destino($carpeta);
     } else {
-      $nombre_pdf = $this->documento[0]["numero"] . "_" . $this->documento[0]["fecha"] . ".pdf";
+      $nombre_pdf = $this->documento[0]["numero"] . "_" . str_replace("-","_",$this->documento[0]["fecha"]) . ".pdf";
     }
 
     if ($this->tipo_salida == "FI" && $this->documento[0]["estado"] <> 'ACTIVO') {

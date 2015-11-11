@@ -758,8 +758,6 @@ function aprobar($iddoc=0,$url="")
 								 if($datos_formato[0]["mostrar_pdf"]==1){
 								 	$sql1="UPDATE documento SET pdf=null WHERE iddocumento=".$iddoc;
 									phpmkr_query($sql1);
-								 	redirecciona("pantallas/documento/visor_documento.php?iddoc=".$iddoc);
-								 	//redirecciona("class_impresion.php?iddoc=".$iddoc);
 								 }
                 //$url="html2ps/public_html/demo/html2ps.php?plantilla=$formato&iddoc=".$iddoc;
                }
@@ -772,8 +770,6 @@ function aprobar($iddoc=0,$url="")
 	if($datos_formato[0]["mostrar_pdf"]==1){
 		$sql1="UPDATE documento SET pdf=null WHERE iddocumento=".$iddoc;
 		phpmkr_query($sql1);
-		redirecciona("pantallas/documento/visor_documento.php?iddoc=".$iddoc);
-		//redirecciona("class_impresion.php?iddoc=".$iddoc);
 	}
 
 /*if(strpos($_SERVER["PHP_SELF"],"meses")<=0)
@@ -2119,7 +2115,8 @@ if(isset($_POST["iddoc"]) && $_POST["iddoc"] && $ruta_def=="")
      {$formato_doc=$formato_hijo;
       if($formato_doc["numcampos"])
          $nom_formato=$formato_doc[0]["nombre"];
-        abrir_url("formatos/$nom_formato/detalles_mostrar_$nom_formato.php?idformato=".$formato_doc[0]["idformato"]."&iddoc=".$_POST["iddoc"],"centro");
+			//Cuando el documento es creado como una respuesta
+        abrir_url("formatos/$nom_formato/detalles_mostrar_$nom_formato.php?idformato=".$formato_doc[0]["idformato"]."&iddoc=".$_POST["iddoc"],"_parent");
           die();
      }   
 die();
@@ -2134,7 +2131,8 @@ die();
        {$formato_doc=busca_filtro_tabla("A.nombre,A.idformato","formato A, documento B","B.iddocumento=".$_POST["iddoc"]." AND lower(A.nombre)=lower(B.plantilla)","",$conn);
        if($formato_doc["numcampos"])
         {$nom_formato=$formato_doc[0]["nombre"];
-        abrir_url("formatos/$nom_formato/detalles_mostrar_$nom_formato.php?idformato=".$formato_doc[0]["idformato"]."&iddoc=".$_POST["iddoc"],"centro");
+			 //Cuando el documento es creado por el modulo formatos
+        abrir_url("formatos/$nom_formato/detalles_mostrar_$nom_formato.php?idformato=".$formato_doc[0]["idformato"]."&iddoc=".$_POST["iddoc"],"_self");
         die();
         }
        } 

@@ -28,7 +28,6 @@ if(@$_REQUEST["key"]){
 }  
 if(@$idformato){
   $formato=busca_filtro_tabla("imagen,ruta_adicionar,nombre,etiqueta,cod_padre","formato A","idformato=".$idformato,"",$conn);
-
 }
 else{
   $lformatos=busca_filtro_tabla("imagen,ruta_adicionar,nombre,etiqueta,cod_padre,idformato","formato A","mostrar=1 AND detalle=0","etiqueta",$conn);
@@ -71,9 +70,9 @@ menu_ordenar($iddoc);
 }
 ?>
 <table border=0 cellspacing=2 width="500px" bgcolor=''>
-  <tr>
+  <!--tr>
     <td class="encabezado_list" width='40%'>PLANTILLAS DISPONIBLES</td>
-  </tr>
+  </tr-->
 <?php
 $paso = false;
 if(isset($_REQUEST["idpaso_actividad"])){
@@ -92,38 +91,16 @@ else {
 		}
 	}
 }
+
 $permiso=new PERMISO();
 
-for($i=0;$i<$lformatos["numcampos"];$i++)
-{ 
-  $ok=$permiso->acceso_modulo_perfil($lformatos[$i]["nombre"]);
-  if($ok && is_file("formatos/".$lformatos[$i]["nombre"]."/".$lformatos[$i]["ruta_adicionar"]) && $lformatos[$i]["nombre"]!="mensaje"){
-  	if($paso == true){
-	  	if(in_array($lformatos[$i]["idformato"],$propios))
-		{
-		    echo "<tr bgcolor='#CCCCCC'>";
-		    echo "<td align=center height='30px'>";
-		    echo "<a href='formatos/".$lformatos[$i]["nombre"]."/".$lformatos[$i]["ruta_adicionar"].$complemento."' target='centro' >".mayusculas($lformatos[$i]["etiqueta"])."</a>";
-		   /* agrega_boton("texto","","formatos/".$lformatos[$i]["nombre"]."/".$lformatos[$i]["ruta_adicionar"]."?idformato=".$lformatos[$i]["idformato"].$complemento,"centro",utf8_encode(strtoupper(html_entity_decode($lformatos[$i]["etiqueta"]))),"",strtolower(utf8_encode($lformatos[$i]["nombre"])));  */
-		    echo "</td>";
-		    echo"</tr>";
-		}
-	}
-	else{
-		echo "<tr bgcolor='#CCCCCC'>";
-	    echo "<td align=center height='30px'>";
-	    echo "<a href='formatos/".$lformatos[$i]["nombre"]."/".$lformatos[$i]["ruta_adicionar"].$complemento."' target='centro' >".mayusculas($lformatos[$i]["etiqueta"])."</a>";
-	   /* agrega_boton("texto","","formatos/".$lformatos[$i]["nombre"]."/".$lformatos[$i]["ruta_adicionar"]."?idformato=".$lformatos[$i]["idformato"].$complemento,"centro",utf8_encode(strtoupper(html_entity_decode($lformatos[$i]["etiqueta"]))),"",strtolower(utf8_encode($lformatos[$i]["nombre"])));  */
-	    echo "</td>";
-	    echo"</tr>";
-	}
-  }  
+echo lista_formatos("", "");
+
+$categorias = busca_filtro_tabla("", "categoria_formato a", "lower(nombre) not like 'radicacion'", "idcategoria_formato asc", $conn);
+for ($j = 0; $j < $categorias["numcampos"]; $j++) {
+  
+  echo lista_formatos($categorias[$j]["idcategoria_formato"], $categorias[$j]["nombre"]);
 }
-/*echo "<tr bgcolor='#CCCCCC'>";
-echo("<td align=center height='30px'>");
-agrega_boton("texto","","formatos/buscar_formato.php","centro",strtoupper("BUSCAR FORMATO"),"","formatos");    
-echo "</td>";
-echo"</tr>";*/ 
 ?>
 </table>
 <?php
@@ -136,9 +113,47 @@ function buscar_formatos_paso($idactividad){
 		if($cantidad == 1){
 			$formato = busca_filtro_tabla("","formato","idformato=".$activi[0]["formato_idformato"],"",$conn);
 			abrir_url("formatos/".$formato[0]["nombre"]."/".$formato[0]["ruta_adicionar"].$complemento,"centro");
-			//echo("formatos/".$formato[0]["nombre"]."/".$formato[0]["ruta_adicionar"].$complemento);
 		}
 	}
 	return $formatos;
 }
+function lista_formatos($idcategoria, $nombre) {
+    global $permiso, $complemento;
+    $adicional = " and fk_categoria_formato is null";
+    if ($idcategoria){
+      $adicional = " and fk_categoria_formato='" . $idcategoria . "'";
+    }
+    $lformatos = busca_filtro_tabla("imagen,ruta_adicionar,nombre,etiqueta,cod_padre,idformato", "formato A", "mostrar=1 AND detalle=0" . $adicional, "etiqueta", $conn);
+    $retorno = '';
+    if ($lformatos["numcampos"] && $nombre) {
+      $retorno.="<tr>
+                  <td class='encabezado_list' width='40%'>" . mayusculas($nombre) . "</td>
+                 </tr>";
+    }
+    $mostrar_formatos=false;
+    for ($i = 0; $i < $lformatos["numcampos"]; $i++) {
+      $ok = $permiso->acceso_modulo_perfil($lformatos[$i]["nombre"]);
+      
+      if ($ok && is_file("formatos/" . $lformatos[$i]["nombre"] . "/" . $lformatos[$i]["ruta_adicionar"]) && $lformatos[$i]["nombre"] != "mensaje") {
+        $mostrar_formatos=true;
+        if ($paso == true) {
+          if (in_array($lformatos[$i]["idformato"], $propios)) {
+            $retorno.= "<tr bgcolor='#CCCCCC'>";
+            $retorno.= "<td align=center height='30px'>";
+            $retorno.= "<a href='formatos/" . $lformatos[$i]["nombre"] . "/" . $lformatos[$i]["ruta_adicionar"] . $complemento . "' target='_self' >" . mayusculas($lformatos[$i]["etiqueta"]) . "</a>";            
+            $retorno.= "</td>";
+            $retorno.="</tr>";
+          }
+          
+        } else {
+          $retorno.= "<tr bgcolor='#CCCCCC'>";
+          $retorno.= "<td align=center height='30px'>";
+          $retorno.= "<a href='formatos/" . $lformatos[$i]["nombre"] . "/" . $lformatos[$i]["ruta_adicionar"] . $complemento . "' target='_self' >" . mayusculas($lformatos[$i]["etiqueta"]) . "</a>";          
+          $retorno.= "</td>";
+          $retorno.="</tr>";
+        }
+      }
+    }
+    if($mostrar_formatos)return $retorno;
+  }
 ?>

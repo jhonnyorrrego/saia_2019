@@ -133,16 +133,18 @@ elseif(@$_REQUEST["accion"]=="anular")
    </script>
    <?php
  $solicitante=busca_filtro_tabla("login,documento.descripcion,numero","funcionario,documento_anulacion,documento","documento_iddocumento=iddocumento and funcionario=funcionario_codigo and documento_iddocumento=".$_REQUEST["key"],"",$conn);
- $revisores=busca_filtro_tabla("login","buzon_salida b,funcionario f","b.nombre in('REVISADO','APROBADO') and origen=funcionario_codigo and archivo_idarchivo='".$_REQUEST["key"]."'","",$conn);
- $mensaje="Ha sido ANULADO el documento con Radicado: ".$solicitante[0]["numero"]." y Descripci�n:".$solicitante[0]["descripcion"].".";
+ $datos_documento=busca_filtro_tabla("a.iddocumento,b.idformato","documento a, formato b","lower(a.plantilla)=b.nombre AND a.iddocumento=".$_REQUEST["key"],"",$conn);
+ $revisores=busca_filtro_tabla("origen","buzon_salida","nombre in('REVISADO','APROBADO') and archivo_idarchivo='".$_REQUEST["key"]."'","",$conn);
+ $mensaje="Ha sido ANULADO el documento con Radicado: ".$solicitante[0]["numero"]." y Descripci&oacute;n:".$solicitante[0]["descripcion"].".";
  for($i=0;$i<$revisores["numcampos"];$i++)
-   enviar_mensaje($revisores[$i]["login"],$mensaje,'msg'); 
+   enviar_mensaje("",'codigo',array($revisores[$i]["login"]),"Solicitud de Anulacion".$datos[0]['numero'],utf8_encode($mensaje)); 
  alerta("El documento ha sido ANULADO");
    $flujo = busca_filtro_tabla("","paso_documento","documento_iddocumento=".$_REQUEST["key"],"idpaso_documento desc",$conn);
    if($flujo["numcampos"] > 0){
    		include_once("workflow/libreria_paso.php");
    		cancelar_flujo($flujo[0]["idpaso_documento"]);
-   }  
+   }
+   llama_funcion_accion($datos_documento[0]['iddocumento'],$datos_documento[0]['idformato'],"anular","POSTERIOR");
  abrir_url("pantallas/buscador_principal.php?idbusqueda=26","centro");
 }
 elseif(@$_REQUEST["accion"]=="listado_pendientes")
