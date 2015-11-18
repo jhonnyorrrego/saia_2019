@@ -581,7 +581,7 @@ if($conn){
     break;
     case("INSERT"):
       $values=substr($strsql,strpos("VALUES",strtoupper($strsql)+6));
-      $rs=$conn->Ejecutar_Sql(htmlspecialchars_decode(htmlentities(codifica_encabezado($strsql))));     
+      $rs=$conn->Ejecutar_Sql(htmlspecialchars_decode(htmlentities(decodifica_encabezado($strsql))));     
       $llave = $conn->Ultimo_Insert();
       preg_match("/insert into (\w*\.)*(\w+)/", strtolower($strsql), $resultados);
       if(isset($resultados[2]))
@@ -615,7 +615,7 @@ if($conn){
       $llave=trim($resultados[2]);
       $campo_llave=$resultados[1];
       $detalle=busca_filtro_tabla("",$tabla,$campo_llave."=".$llave,"",$conn);                  
-      $rs=$conn->Ejecutar_Sql(htmlspecialchars_decode(htmlentities(utf8_decode($strsql)))); 
+      $rs=$conn->Ejecutar_Sql(htmlspecialchars_decode(htmlentities(decodifica_encabezado($strsql)))); 
       $detalle2=busca_filtro_tabla("",$tabla,$campo_llave."=".$llave,"",$conn);
       //************ miro cuales campos cambiaron en la tabla  ****************
       $nombres_campos=array();
@@ -1615,11 +1615,12 @@ return(Null);
 */
 function error($cad)
 {
-  if(DEBUGEAR)
-   echo ($cad."<BR>");
-   $archivo=fopen ("errores.txt" , "w");
-   fwrite($archivo,$cad."\n\r");
-   fclose($archivo);
+  if(DEBUGEAR){
+  	echo ($cad."<BR>");
+	$archivo=fopen ("errores.txt" , "w");
+	fwrite($archivo,$cad."\n\r");
+	fclose($archivo);
+  }
 }
 /*
 <Clase>
@@ -3834,6 +3835,13 @@ function rename_saia($origen,$destino){
 function codifica_encabezado($texto){
 	if(CODIFICA_ENCABEZADO){
 		return(utf8_encode($texto));
+	}else{
+		return($texto);
+	}
+}
+function decodifica_encabezado($texto){
+	if(CODIFICA_ENCABEZADO){
+		return(utf8_decode($texto));
 	}else{
 		return($texto);
 	}

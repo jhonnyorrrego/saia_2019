@@ -40,7 +40,7 @@ if(!defined("PERMISOS_CARPETAS"))
   define("PERMISOS_CARPETAS",0777);
 if(!defined("PERMISOS_ARCHIVOS"))
   define("PERMISOS_ARCHIVOS",0777);
-define("DEBUGEAR",1);
+define("DEBUGEAR",0);
 //ini_set(magic_quotes_gpc,0);
 ini_set("memory_limit","400M");
 //ini_set('default_charset','utf8'); DESCOMENTAR CUANDO SE TENGAN PROBLEMA DE CARACTERES ESPECIALES

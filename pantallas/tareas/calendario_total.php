@@ -29,6 +29,6 @@ if($datos["numcampos"]){
 		array_push($arreglo["rows"],array("id"=>$datos[$i]["idtareas"],"titulo"=>$datos[$i]["tarea"]."(".implode(",",$responsables).")","inicio"=>$datos[$i]["fecha_tarea"],"fin"=>$datos[$i]["fecha_tarea"],"url"=>"../pantallas/tareas/mostrar_tareas.php?idtareas=".$datos[0]["idtareas"],"color"=>""));
 	}	
 }
-
+print_r($arreglo);
 echo(json_encode($arreglo));
 ?>
