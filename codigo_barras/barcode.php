@@ -25,7 +25,7 @@
  */
 
 require("php-barcode.php");
-ini_set("display_errors",true);
+
 function getvar($name){
     global $_GET, $_POST;
     if (isset($_GET[$name])) return $_GET[$name];
@@ -39,9 +39,11 @@ if (get_magic_quotes_gpc()){
     $code=getvar('code');
 }
 if (!$code) $code='123456789012';
+//if (!$code) $code='000000'; people
 
 //barcode_print($code,getvar('encoding'),getvar('scale'),getvar('mode'));
 barcode_print($code,getvar('encoding'),getvar('scale'),getvar('mode'));
+//barcode_print($code,'128B',1,getvar('mode')); people
 //barcode_print($code,'128B',1,'jpg');
 /*
  * call

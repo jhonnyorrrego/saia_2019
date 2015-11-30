@@ -35,6 +35,7 @@ if($documento[0]["estado"]=='ACTIVO'){
 }
 
 $version=version_documento($documento);
+version_vista($documento,$version);
 version_anexos($documento,$version);
 version_pagina($documento,$version);
 actualizar_documento($documento,$version);
@@ -66,6 +67,32 @@ function version_documento($documento){
     phpmkr_query($sql1);
     $id=phpmkr_insert_id();
     return($id);
+}
+function version_vista($documento,$id){
+    global $conn, $ruta_db_superior, $formato;
+		
+    $busqueda=busca_filtro_tabla("max(a.version) as maximo","version_documento a","a.documento_iddocumento=".$documento[0]["iddocumento"],"",$conn);
+		
+		$arreglo_fecha=explode("-",$documento[0]["x_fecha"]);
+    $consecutivo=$busqueda[0]["maximo"];
+		
+    $destino=RUTA_PDFS.$documento[0]["estado"]."/".$arreglo_fecha[0]."-".$arreglo_fecha[1]."/".$documento[0]["iddocumento"]."/versiones/version".$consecutivo."/vistas/";
+    
+    $vistas=busca_filtro_tabla("","vista_formato a","a.formato_padre=".$formato[0]["idformato"],"",$conn);
+		if($vistas["numcampos"]){
+			crear_destino($ruta_db_superior.$destino);
+		}
+		
+    for($i=0;$i<$vistas["numcampos"];$i++){
+    	$ruta=generar_pdf_vista($documento,$vistas[$i]["idvista_formato"]);
+			$origen=$ruta;
+			
+      $nombre_archivo=basename($origen);
+      copy($ruta_db_superior.$origen,$ruta_db_superior.$destino.$nombre_archivo);
+			
+      $sql1="insert into version_vista(documento_iddocumento,pdf,fk_idversion_documento)values('".$documento[0]["iddocumento"]."', '".$destino.$nombre_archivo."', '".$id."')";
+      phpmkr_query($sql1);
+    }
 }
 function version_anexos($documento,$id){
     global $conn, $ruta_db_superior;
@@ -122,20 +149,22 @@ function actualizar_documento($documento,$id){
     phpmkr_query($sql1);
 }
 function generar_pdf($documento){
-    $iddoc=$documento[0]["iddocumento"];
+	$iddoc=$documento[0]["iddocumento"];
     
-    $exportar_pdf=busca_filtro_tabla("valor","configuracion A","A.nombre='exportar_pdf'","",$conn);
-    if($exportar_pdf[0]["valor"]=='html2ps'){
-	    $export="exportar_impresion.php?iddoc=".$iddoc."&plantilla=".strtolower($documento[0]["plantilla"]);
-    }
-    else if($exportar_pdf[0]["valor"]=='class_impresion'){
-    	$export="class_impresion.php?iddoc=".$iddoc;
-    }
-    else{
-    	$export="exportar_impresion.php?iddoc=".$iddoc."&plantilla=".strtolower($documento[0]["plantilla"]);
-    }
-    
-    $ch = curl_init();
+  $exportar_pdf=busca_filtro_tabla("valor","configuracion A","A.nombre='exportar_pdf'","",$conn);
+  if($exportar_pdf[0]["valor"]=='html2ps'){
+	  $export="exportar_impresion.php?iddoc=".$iddoc."&plantilla=".strtolower($documento[0]["plantilla"]);
+  }
+  else if($exportar_pdf[0]["valor"]=='class_impresion'){
+  	$export="class_impresion.php?iddoc=".$iddoc;
+  }
+  else{
+  	$export="exportar_impresion.php?iddoc=".$iddoc."&plantilla=".strtolower($documento[0]["plantilla"]);
+  }
+  $sql1="update documento set pdf=null where iddocumento=".$iddoc;
+	phpmkr_query($sql1);
+  
+  $ch = curl_init();
 	//$fila = "http://".RUTA_PDF_LOCAL."/html2ps/public_html/demo/html2ps.php?plantilla=".strtolower($datos_formato[0]["nombre_formato"])."&iddoc=".$iddoc."&conexion_remota=1";
 	$fila = "http://".RUTA_PDF_LOCAL."/".$export."&LOGIN=".$_SESSION["LOGIN".LLAVE_SAIA]."&usuario_actual=".$_SESSION["usuario_actual"]."&LLAVE_SAIA=".LLAVE_SAIA;
 	
@@ -154,6 +183,40 @@ function generar_pdf($documento){
 	$fecha=explode("-", $datos_documento[0]["x_fecha"]);
 	$ruta=RUTA_PDFS.$datos_documento[0]["estado"]."/".$fecha[0]."-".$fecha[1]."/".$datos_documento[0]["iddocumento"]."/pdf/";
 	$ruta.=($datos_documento[0]["plantilla"])."_".$datos_documento[0]["numero"]."_".str_replace("-","_",$datos_documento[0]["x_fecha"]).".pdf";
+	return($ruta);
+}
+function generar_pdf_vista($documento,$vista){
+	$iddoc=$documento[0]["iddocumento"];
+    
+  $exportar_pdf=busca_filtro_tabla("valor","configuracion A","A.nombre='exportar_pdf'","",$conn);
+  if($exportar_pdf[0]["valor"]=='html2ps'){
+	  $export="exportar_impresion.php?iddoc=".$iddoc."&plantilla=".strtolower($documento[0]["plantilla"]);
+  }
+  else if($exportar_pdf[0]["valor"]=='class_impresion'){
+  	$export="class_impresion.php?iddoc=".$iddoc;
+  }
+  else{
+  	$export="exportar_impresion.php?iddoc=".$iddoc."&plantilla=".strtolower($documento[0]["plantilla"]);
+  }
+    
+  $ch = curl_init();
+	$fila = "http://".RUTA_PDF_LOCAL."/".$export."&LOGIN=".$_SESSION["LOGIN".LLAVE_SAIA]."&usuario_actual=".$_SESSION["usuario_actual"]."&LLAVE_SAIA=".LLAVE_SAIA."&vista=".$vista;
+	
+	curl_setopt($ch, CURLOPT_URL,$fila); 
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
+	
+	curl_setopt($ch, CURLOPT_VERBOSE, true); 
+	curl_setopt($ch, CURLOPT_STDERR, $abrir);
+	
+	$contenido=curl_exec($ch);
+	
+	curl_close ($ch);
+	
+	$datos_documento=busca_filtro_tabla(fecha_db_obtener('A.fecha','Y-m-d')." as x_fecha, A.*","documento A","A.iddocumento=".$iddoc,"",$conn);
+	
+	$fecha=explode("-", $datos_documento[0]["x_fecha"]);
+	$ruta=RUTA_PDFS.$datos_documento[0]["estado"]."/".$fecha[0]."-".$fecha[1]."/".$datos_documento[0]["iddocumento"]."/pdf/";
+	$ruta.=($datos_documento[0]["plantilla"])."_".$datos_documento[0]["numero"]."_".str_replace("-","_",$datos_documento[0]["x_fecha"])."_vista".$vista.".pdf";
 	return($ruta);
 }
 ?>

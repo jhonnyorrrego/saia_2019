@@ -122,8 +122,8 @@ if(@$_REQUEST["id"]){
           alerta("El documento tiene notas relacionadas, Por favor revise el icono ver notas o el rastro");          */ 
           if($datos_formato["numcampos"]){
             if($datos_formato[0]["pdf"]&&$formato[0]["mostrar_pdf"]){
-							$ruta="../../pantallas/documento/visor_documento.php?iddoc=".$datos_formato[0]["documento_iddocumento"]."&actualizar_pdf=1";
-              redirecciona($ruta."&rnd=".rand(0,100));
+            	$ruta="../../pantallas/documento/visor_documento.php?iddoc=".$datos_formato[0]["documento_iddocumento"];
+				redirecciona($ruta."&rnd=".rand(0,100));
             }
             else{
             	if($formato[0]["mostrar_pdf"]){

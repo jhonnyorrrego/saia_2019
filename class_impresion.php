@@ -209,8 +209,13 @@ class Imprime_Pdf {
     } elseif ($this->formato["numcampos"]) {
 
       $carpeta = RUTA_PDFS . $this->documento[0]["estado"] . "/" . $fecha[0] . "-" . $fecha[1] . "/" . $this->documento[0]["iddocumento"] . "/pdf";
+			
+			$adicional="";
+      if($this->imprimir_vistas){
+        $adicional="_vista".@$_REQUEST["vista"];
+      }
 
-      $nombre_pdf = $carpeta . "/" . strtoupper($this->formato[0]["nombre"]) . "_" . $this->documento[0]["numero"] . "_" . str_replace("-","_",$this->documento[0]["fecha"]) . ".pdf";
+      $nombre_pdf = $carpeta . "/" . strtoupper($this->formato[0]["nombre"]) . "_" . $this->documento[0]["numero"] . "_" . str_replace("-","_",$this->documento[0]["fecha"]) .$adicional. ".pdf";
 
       crear_destino($carpeta);
     } else {
@@ -224,7 +229,12 @@ class Imprime_Pdf {
     	phpmkr_query("update documento set pdf='" . $nombre_pdf . "' where iddocumento=" . $this->documento[0]["iddocumento"]);
     }
     elseif ($this->tipo_salida == "I") {
-      $nombre_pdf = basename($nombre_pdf);
+      if($this->imprimir_vistas){
+      	$this->tipo_salida="FI";
+      }
+     	else{
+      	$nombre_pdf = basename($nombre_pdf);
+    	}
     }
 
     $this->pdf->Output($nombre_pdf, $this->tipo_salida);

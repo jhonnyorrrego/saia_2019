@@ -46,6 +46,10 @@ for($i=0;$i<$datos_version["numcampos"];$i++){
     echo("<item style=\"font-family:verdana; font-size:7pt;\" text=\"Paginas\" id=\"paginas".$datos_version[$i]["idversion_documento"]."\" nocheckbox=\"1\" >\n");
     echo paginas($datos_version[$i]["idversion_documento"]);
     echo("</item>");
+		
+		echo("<item style=\"font-family:verdana; font-size:7pt;\" text=\"Vistas\" id=\"vistas".$datos_version[$i]["idversion_documento"]."\" nocheckbox=\"1\" >\n");
+    echo vistas($datos_version[$i]["idversion_documento"]);
+    echo("</item>");
     
     echo("</item>");
 }
@@ -79,6 +83,16 @@ function paginas($version){
         $dato_pagina=busca_filtro_tabla("","pagina a","a.consecutivo=".$datos[$i]["pagina_idpagina"],"",$conn);
         $archivo=("Documento ".$dato_pagina[0]["pagina"]);
         $cadena[]="<item style=\"font-family:verdana; font-size:7pt;\" text=\"".$archivo."\" id=\"pagina-".$datos[$i]["idversion_pagina"]."\" nocheckbox=\"1\" ></item>";
+    }
+    return(implode("",$cadena));
+}
+function vistas($version){
+    global $conn;
+    $datos=busca_filtro_tabla("","version_vista a","a.fk_idversion_documento=".$version,"",$conn);
+    $cadena=array();
+    for($i=0;$i<$datos["numcampos"];$i++){
+        $archivo=basename($datos[$i]["pdf"]);
+        $cadena[]="<item style=\"font-family:verdana; font-size:7pt;\" text=\"".$archivo."\" id=\"vista-".$datos[$i]["idversion_vista"]."\" nocheckbox=\"1\" ></item>";
     }
     return(implode("",$cadena));
 }

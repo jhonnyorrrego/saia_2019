@@ -21,6 +21,9 @@ if($tipo=='pdf'){
 }else if($tipo=='pagina'){
     $dato=busca_filtro_tabla("","version_pagina a","a.idversion_pagina=".$datos[1],"",$conn);
     $ruta=$dato[0]["ruta"];
+}else if($tipo=='vista'){
+    $dato=busca_filtro_tabla("","version_vista a","a.idversion_vista=".$datos[1],"",$conn);
+    $ruta=$dato[0]["pdf"];
 }
 abrir_url($ruta_db_superior.$ruta,"_self");
 ?>
