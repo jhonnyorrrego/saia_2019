@@ -15,7 +15,7 @@ $documento='';
  * @param type $iddoc es el iddocumento
  * @param type $tipo_visualizacion es el tipo de visualizacion por defecto vacio que equivale a documento 
 **/
-function menu_principal_documento($iddoc,$tipo_visualizacion="",$modulo_adicional=""){            
+function menu_principal_documento($iddoc,$tipo_visualizacion="",$modulo_adicional=""){
 global  $documento,$conn,$ruta_db_superior;
 $formato=busca_filtro_tabla("","formato,documento","lower(plantilla)=lower(nombre) and iddocumento=".$iddoc,"",$conn);
 $nombre=$formato[0]["nombre"];
@@ -254,7 +254,17 @@ function permisos_modulo_menu_intermedio($iddoc, $modulo_padre,$lista,$target="_
     }
     else{    
         $datos_modulos=  modulos_menu_intermedio($modulo_padre);
-    }        
+    }
+	$estado=busca_filtro_tabla("estado","documento","iddocumento=".$iddoc,"",$conn);
+	
+	$cont=count($datos_modulos);
+	if($estado[0]['estado']!='ACTIVO'){
+		for ($i=0; $i < $cont ; $i++) {
+			if($datos_modulos[$i]=='eliminar_borrador'){
+				unset($datos_modulos[$i]);
+			}
+		}
+	}
     $permiso=new PERMISO();    
     $modulo=  busca_filtro_tabla("", "modulo", "nombre IN ('".implode("','",$datos_modulos)."')", "orden", $conn);
     //$ok=1;

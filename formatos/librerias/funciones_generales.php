@@ -3161,6 +3161,11 @@ function resta_fechasphp($date1, $date2){
  	if (!is_integer($date2)) $date2 = strtotime($date2);  
  	return floor(abs($date1 - $date2) / 60 / 60 / 24);
 }
+function suma_fechasphp($fecha,$dias){
+	$nuevafecha=strtotime( '+'.$dias.' day',strtotime($fecha));
+	$nuevafecha=date('Y-m-d',$nuevafecha);
+	return($nuevafecha);
+}
 function cargar_anexos_documento_web($datos_documento,$anexos){
 	global $conn,$ruta_db_superior;
 	$funcionario = busca_filtro_tabla("idfuncionario","funcionario","funcionario_codigo=".$datos_documento["funcionario_codigo"],"",$conn);

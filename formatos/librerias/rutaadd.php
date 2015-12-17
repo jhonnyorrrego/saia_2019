@@ -927,10 +927,15 @@ function AddData($conn)
   $plantilla=busca_filtro_tabla("lower(plantilla) as plantilla,idformato,mostrar_pdf","documento,formato","iddocumento=".$fieldList["documento_iddocumento"]." and lower(plantilla)=lower(nombre)","",$conn);
     //aprobar($fieldList["documento_iddocumento"]);
   if($plantilla[0]["mostrar_pdf"]==1){
-  	$sql1="UPDATE documento SET pdf='' WHERE iddocumento=".$fieldList["documento_iddocumento"];
+  	$sql1="UPDATE documento SET pdf=null WHERE iddocumento=".$fieldList["documento_iddocumento"];
   	phpmkr_query($sql1);
+  	
+  	if(!@$_REQUEST["x_plantilla"]){
+			abrir_url("../../pantallas/documento/visor_documento.php?iddoc=".$fieldList["documento_iddocumento"]."&actualizar_pdf=1","_self");
+			die();
+		}
   }
-  abrir_url("../../formatos/".$plantilla[0]["plantilla"]."/detalles_mostrar_".$plantilla[0]["plantilla"].".php?iddoc=".$fieldList["documento_iddocumento"]."&idformato=".$plantilla[0]["idformato"]."&key=".$fieldList["documento_iddocumento"],"centro");     
+  abrir_url("../../formatos/".$plantilla[0]["plantilla"]."/detalles_mostrar_".$plantilla[0]["plantilla"].".php?iddoc=".$fieldList["documento_iddocumento"]."&idformato=".$plantilla[0]["idformato"]."&key=".$fieldList["documento_iddocumento"],"_self");
   }   
 	return true;
 	} 

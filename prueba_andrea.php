@@ -1,6 +1,5 @@
 <?php
-echo phpinfo();
-/*fopen("formatos/verifica_informacion/buscar_afiliado.php", "w+a");
-chmod("formatos/verifica_informacion/buscar_afiliado.php", 0777);
-echo("listo");*/
+echo(utf8_decode("ñ"));
+echo("<hr>");
+echo((htmlentities(utf8_decode("ñ"))));
 ?>

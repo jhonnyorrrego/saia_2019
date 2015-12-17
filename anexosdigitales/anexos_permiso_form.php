@@ -22,7 +22,7 @@ include_once("funciones_archivo.php");
 <div class="textwrapper">
 	<a href="anexos_permiso_add.php" id="formexample" class="highslide" onclick="return hs.htmlExpand( this, {
     	objectType: 'iframe', outlineType: 'rounded-white', wrapperClassName: 'highslide-wrapper drag-header',
-        outlineWhileAnimating: true, preserveContent: false, width: 250 } )">Permisos</a>
+        outlineWhileAnimating: true, preserveContent: false, width: 200 } )">Permisos</a>
 </div>
 <body>
 </html>

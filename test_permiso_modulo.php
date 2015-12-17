@@ -68,7 +68,6 @@ if($papas["numcampos"])
   for($i=0; $i<$papas["numcampos"]; $i++)
   {$hijos = busca_filtro_tabla("count(*)",$tabla,"cod_padre=".$papas[$i]["id$tabla"].$activo.$condicion,"",$conn);
    $hijos_seleccionados = busca_filtro_tabla("count(*)",$tabla,"cod_padre=".$papas[$i]["id$tabla"]." and idmodulo in(".implode(',',$seleccionado).")","",$conn);
-    print_r($hijos_seleccionados);
     echo("<item style=\"font-family:verdana; font-size:7pt;\" ");
     echo "text=\"".htmlspecialchars(($papas[$i]["etiqueta"]))." (".$papas[$i]["nombre"].") \" ";
     if(isset($_REQUEST["filtro_perfil"]))
