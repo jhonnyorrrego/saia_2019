@@ -1,19 +1,22 @@
 <?php
 include_once("db.php");
 include_once("pantallas/lib/librerias_cripto.php");
+include_once("librerias_saia.php");
+echo(librerias_notificaciones());
 ?>
 <script type="text/javascript" src="js/jquery.js"></script>
 <script type="text/javascript" src="js/jquery.validate.js"></script>
 <script type="text/javascript">(function($) {
-          $(function() {$('#x_funcionario_codigo').blur(function(){
+          $(function() {$('#x_nit').blur(function(){
               $.ajax({
                 type:'POST',
                 url:'formatos/librerias/validar_unico.php',
-                data:'nombre=funcionario_codigo&valor='+$('#x_funcionario_codigo').val()+'&tabla=funcionario',
+                data:'nombre=nit&valor='+$('#x_nit').val()+'&tabla=funcionario',
                 success: function(datos,exito){
                   if(datos==0){
-                    alert('El campo codigo de funcionario debe Ser unico');
-		    $('#x_funcionario_codigo').val("");
+                  //  alert('El campo codigo de funcionario debe Ser unico');
+                    notificacion_saia('<B>ATENCI&Oacute;N!</B> <BR> El campo Identificaci&oacute;n debe Ser unico','success','',4000);
+		    $('#x_nit').val("");
                   }  
                 }
               });
@@ -26,7 +29,8 @@ include_once("pantallas/lib/librerias_cripto.php");
                 data:'nombre=login&valor='+$('#x_login').val()+'&tabla=funcionario',
                 success: function(datos,exito){
                   if(datos==0){
-                    alert('El campo login de funcionario debe Ser unico');
+                  	 notificacion_saia('<B>ATENCI&Oacute;N!</B> <BR> El campo login de funcionario debe Ser unico','success','',4000);
+                   // alert('El campo login de funcionario debe Ser unico');
 		    $('#x_login').val("");
                   }  
                 }
@@ -133,12 +137,13 @@ label.error{
 <p>
 <input type="hidden" name="a_add" value="A">
 <input type="hidden" name="EW_Max_File_Size" value="2000000">
+<input type="hidden"  name="x_funcionario_codigo" id="x_funcionario_codigo" size="30" value="0">
 <table border="0" cellspacing="1" cellpadding="4" bgcolor="#CCCCCC">
 	<tr>
-		<td class="encabezado" title="C&oacute;digo interno asignado a cada funcionario."><span class="phpmaker" style="color: #FFFFFF;">C&Oacute;DIGO DE FUNCIONARIO</span></td>
+		<td class="encabezado" title="C&oacute;digo interno asignado a cada funcionario."><span class="phpmaker" style="color: #FFFFFF;">IDENTIFICACI&Oacute;N*</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
 <?php //if (!(!is_null($x_funcionario_codigo)) || ($x_funcionario_codigo == "")) { $x_funcionario_codigo = 0;} // Set default value ?>
-<input type="text" class="required" name="x_funcionario_codigo" id="x_funcionario_codigo" size="30" value="<?php echo htmlspecialchars(@$x_funcionario_codigo) ?>">
+<input type="text" class="required" name="x_nit" id="x_nit" size="30" >
 </span></td>
 	</tr>
 	<tr>
@@ -357,6 +362,11 @@ function AddData($conn)
 		}
 	}
 
+
+	// Field nit
+	$theValue = (!get_magic_quotes_gpc()) ? addslashes($GLOBALS["x_nit"]) : $GLOBALS["x_nit"]; 
+	$fieldList["nit"] = $theValue;
+
 	// Field funcionario_codigo
 	$theValue = ($GLOBALS["x_funcionario_codigo"] != "") ? $GLOBALS["x_funcionario_codigo"] : "NULL";
 	$sTmp = $theValue;
@@ -417,6 +427,12 @@ function AddData($conn)
 	$theValue = ($GLOBALS["x_estado"] != "") ? intval($GLOBALS["x_estado"]) : "NULL";
 	$fieldList["estado"] = $theValue;
 
+
+
+
+
+
+
 	// Field fecha_ingreso
 	$theValue = $GLOBALS["x_fecha_ingreso"];
   $fieldList["fecha_ingreso"] = fecha_db_almacenar($theValue,"Y/m/d");
@@ -443,10 +459,17 @@ function AddData($conn)
 	$strsql .= ",tipo) VALUES (";
 	$strsql .= implode(",", array_values($fieldList));
 	$strsql .= ",'1') ";
-	//die($strsql);
+
 	phpmkr_query($strsql,$conn);
 	//para guardar la firma
   $sKeyWrk=phpmkr_insert_id();
+  
+  	$ufcsql="update funcionario set funcionario_codigo='$sKeyWrk' where idfuncionario=$sKeyWrk";
+	phpmkr_query($ufcsql,$conn);
+  
+
+  
+  
   if (is_uploaded_file($_FILES["x_firma"]["tmp_name"])) 
      {
 			$fileHandle = fopen($_FILES["x_firma"]["tmp_name"], "rb");

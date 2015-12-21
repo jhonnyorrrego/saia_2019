@@ -14,27 +14,60 @@ include_once ("db.php");
 include_once ("librerias_saia.php");
 echo(estilo_bootstrap());
 echo(librerias_jquery());
+echo(librerias_notificaciones());
 if($_REQUEST['login']){
 	if(!$_SESSION["LOGIN".LLAVE_SAIA]){
 		$_SESSION["LOGIN".LLAVE_SAIA]="cerok";
 	}
 	$busca_login=busca_filtro_tabla("funcionario_codigo,email,nombres,apellidos","funcionario","login='".$_REQUEST['login']."'","",$conn);
 	if($busca_login['numcampos']){
-		$usuario_administrador=busca_filtro_tabla("a.valor","configuracion a","a.nombre ='correo_administrador'","",$conn);
-		$contenido="Cordial saludo,<br/><br/>".$_REQUEST['contenido']."<br/><br/>
-					Funcionario: <b>".$busca_login[0]['nombres']." ".$busca_login[0]['apellidos']."</b><br/><br/> Login: <b>".$_REQUEST['login']."</b><br/><br/> Email:<b>".$busca_login[0]['email']."<b/><br/><br/><br/>Por Favor no imprima este E-mail a menos que usted realmente lo necesite. Contribuya a respirar en un planeta mejor.";
+		//$usuario_administrador=busca_filtro_tabla("a.valor","configuracion a","a.nombre ='correo_administrador'","",$conn);
+		$usuario_administrador=busca_filtro_tabla("a.nombre,a.valor,b.nombres,b.apellidos,b.email","configuracion a,funcionario b","b.login=a.valor AND a.nombre ='login_administrador'","nombre",$conn);
 		
-		$envio_correo=enviar_mensaje("",'email',array($usuario_administrador[0]['valor']),"SAIA - RESTABLECER CLAVE DE ACCESO ".$_REQUEST['login'],$contenido,"",0);
+		
+		$contenido="
+			<br>
+			<br>
+			<b>RECUPERACIÓN DE CONTRASEÑA</b><br><br><br>
+			
+			Cordial saludo,<br/><br/>".$_REQUEST['contenido']."<br/><br/>
+			Funcionario: <b>".$busca_login[0]['nombres']." ".$busca_login[0]['apellidos']."</b><br/><br/> 
+			Login: <b>".$_REQUEST['login']."</b><br/><br/> 
+			Email:<b>".$busca_login[0]['email']."<b/><br/><br/><br/>
+			Este email te ha sido enviado automáticamente desde SAIA (Sistema de Administración Integral de Documentos y Procesos).
+			<br>
+			<br>
+			Por favor NO responda a este email.
+			<br>
+			<br>
+			Para obtener soporte o realizar preguntas, envíe un correo electrónico a ".$usuario_administrador[0]['email']."
+			<br>
+			<br>
+		";
+		
+		$envio_correo=enviar_mensaje("",'email',array($usuario_administrador[0]['email']),"SAIA - RESTABLECER CLAVE DE ACCESO ".$_REQUEST['login'],$contenido,"",0);
 		if($envio_correo){
 			?>
 			<script>
-				noty({text: "Solicitud enviada con exito",type: 'success',layout: "topCenter",timeout:5000});
+				//noty({text: "Solicitud enviada con exito",type: 'success',layout: "topCenter",timeout:5000});
+				notificacion_saia('<b>Solicitud enviada con exito!</b> <br> el administrador se pondra en contacto','success','',5000);
 				window.parent.hs.close();
 			</script>
 <?php
 			echo("<div class='alert-success'>Solicitud enviada con &eacute;xito!</div>");
 		}else{
+						
+			?>
+				<script>
+					notificacion_saia('<b>Error al enviar la solicitud! </b> <br> por favor intente de nuevo','error','',5000);
+					window.parent.hs.close();
+				</script>				
+			<?php		
+				
 			echo("<div class='alert alert-error'>Error al enviar la solicitud, por favor intente de nuevo</div>");
+			
+			
+			
 		}
 		$_SESSION["LOGIN".LLAVE_SAIA]="";
 	}else{

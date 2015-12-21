@@ -1,4 +1,5 @@
 <?php
+
 require_once("define.php");
 require_once("conexion.php");
 require_once("sql.php");
@@ -1893,8 +1894,8 @@ function usuario_actual($campo){
 global $usuactual,$sql,$conn;
 
 if(!isset($_SESSION["LOGIN".LLAVE_SAIA]))
-   salir(utf8_decode("La sesion ha expirado, por favor ingrese de nuevo."));
-   
+   salir(utf8_decode("Su sesi&oacute;n ha expirado, por favor ingrese de nuevo."));
+
 if($usuactual<>""){
 $dato=busca_filtro_tabla("A.*,A.idfuncionario AS id","funcionario A","A.login='".$usuactual."'","",$conn);
 
@@ -1917,15 +1918,21 @@ else
 <Post-condiciones>
 */
 function salir($texto){
-global $usuactual,$conn;
-if($texto)
-  alerta($texto);  
+	global $usuactual,$conn;
 
-$usuactual="";  
-$conn->Conn->Desconecta();
-@session_unset();
-@session_destroy();
-abrir_url(PROTOCOLO_CONEXION.RUTA_PDF."/logout.php","_top");
+	if($texto){
+		$usuactual="";  
+		$conn->Conn->Desconecta();
+		@session_unset();
+		@session_destroy();
+		abrir_url(PROTOCOLO_CONEXION.RUTA_PDF."/logout.php?texto_salir=".urlencode($texto),"_top");		
+	}else{
+		$usuactual="";  
+		$conn->Conn->Desconecta();
+		@session_unset();
+		@session_destroy();
+		abrir_url(PROTOCOLO_CONEXION.RUTA_PDF."/logout.php","_top"); 		
+	}
 }
 
 
@@ -2279,7 +2286,7 @@ var $perfil;
 function PERMISO(){
 global $usuario_actual,$conn;
 if(!isset($_SESSION["LOGIN".LLAVE_SAIA]))
-   salir("La sesion ha expirado, por favor ingrese de nuevo.");
+   salir("La sesi&oacute;n ha expirado, por favor ingrese de nuevo.");
 $this->login=@$_SESSION["LOGIN".LLAVE_SAIA];
 $this->conn=$conn;
 if($this->acceso_root()){
@@ -3317,6 +3324,7 @@ $datos=array();
 if($login==""){
   $login=usuario_actual("login");
   $id=usuario_actual("id");
+  $idfun_intentetos=usuario_actual("idfuncionario");
 }
 $iplocal=getRealIP();
 $ipremoto=servidor_remoto();
@@ -3346,7 +3354,7 @@ if(!$exito){
   $sql="INSERT INTO log_acceso(iplocal,ipremota,login,exito,fecha) VALUES('$iplocal','$ipremoto','".$login."',0,".fecha_db_almacenar(date("Y-m-d H:i:s"),"Y-m-d H:i:s").")";
 }
 else{
-	$sql2="UPDATE funcionario SET intento_login=0 WHERE idfuncionario=".$id;
+	$sql2="UPDATE funcionario SET intento_login=0 WHERE idfuncionario=".$idfun_intentetos;
 	$conn->Ejecutar_Sql($sql2);
 }
 $idsesion=ultima_sesion();

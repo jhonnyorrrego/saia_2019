@@ -12,7 +12,16 @@ if(@$_SESSION["INDEX"]!=''){
 else if($_REQUEST["INDEX"]){  
   $cadena="index.php?fin=1&INDEX=".$_REQUEST["INDEX"];
 }
-else $cadena="index.php?fin=1&INDEX=actualizacion";
+else{
+	 $cadena="index.php?fin=1&INDEX=actualizacion";
+}
+
+
+if(@$_REQUEST['texto_salir']){
+	$cadena.="&texto_salir=".urlencode(@$_REQUEST['texto_salir'])."";	
+}
+
+
 cerrar_sesion();
 @session_unset();
 @session_destroy();

@@ -1,9 +1,20 @@
 <?php
 include_once("db.php");
 include_once("pantallas/lib/librerias_cripto.php");
+
 ?>
 <script type="text/javascript" src="js/jquery.js"></script>
 <script type="text/javascript" src="js/jquery.validate.js"></script>
+
+<?php
+include_once("librerias_saia.php");
+echo(librerias_notificaciones());
+
+?>
+
+
+
+
 <script type="text/javascript">(function($) {
             	
           })(jQuery);
@@ -40,6 +51,9 @@ $x_nit = Null;
 $x_perfil = Null;
 $x_sistema = Null;
 $x_acceso_web = NULL;
+$x_intento_login = NULL;
+
+
 include_once ("phpmkrfn.php");
 include_once("formatos/librerias/estilo_formulario.php");
 $sKey = @$_REQUEST["key"];
@@ -69,6 +83,15 @@ if (($sAction == "") || ((is_null($sAction)))) {
 	$x_perfil = @$_POST["x_perfil"];
 	$x_sistema = @$_POST["x_sistema"];
   $x_acceso_web = implode(",",@$_POST["x_acceso_web"]);
+  
+  if($x_estado==1){
+  	$x_intento_login=0;
+  }else{
+  	$x_intento_login=@$_POST["x_intento_login"];;
+  }
+  
+
+
 }
 if (($sKey == "") || ((is_null($sKey)))) {
   abrir_url("funcionariolist.php","_parent");
@@ -98,23 +121,50 @@ label.error{
 	color:red;
 }
 </style>
+
+<script type="text/javascript">
+
+(function($) {
+          $(function() {$('#x_nit').blur(function(){
+          	var x_nits='<?php echo(@$x_nit); ?>';
+          	if($(this).val()!=x_nits){
+              $.ajax({
+                type:'POST',
+                url:'formatos/librerias/validar_unico.php',
+                data:'nombre=nit&valor='+$('#x_nit').val()+'&tabla=funcionario',
+                success: function(datos,exito){
+                  if(datos==0){
+                  //  alert('El campo codigo de funcionario debe Ser unico');
+                    notificacion_saia('<B>ATENCI&Oacute;N!</B> <BR> El campo Identificaci&oacute;n debe Ser unico','success','',4000);
+		   			 $('#x_nit').val(x_nits);
+                  }  
+                }
+              });
+              
+            }
+            })});
+  })(jQuery);
+</script>
+
+
+
+
+
+
+
 <form name="funcionarioedit" id="funcionarioedit" action="funcionarioedit.php" method="post" enctype="multipart/form-data" onSubmit="return EW_checkMyForm(this);">
 <p>
 <input type="hidden" name="a_edit" value="U">
 <input type="hidden" name="key" value="<?php echo htmlspecialchars($sKey); ?>">
 <input type="hidden" name="EW_Max_File_Size" value="2000000">
+<input type="hidden" name="x_idfuncionario" id="x_idfuncionario" value="<?php echo $x_idfuncionario; ?>">
 <table border="0" cellspacing="1" cellpadding="4" bgcolor="#CCCCCC">
+
 	<tr>
-		<td class="encabezado" title="Numero automatico entregado por el sistema que identifica el funcionario"><span class="phpmaker" style="color: #FFFFFF;" >IDENTIFICACI&Oacute;N DEL FUNCIONARIO</span></td>
-		<td bgcolor="#F5F5F5"><span class="phpmaker">
-<?php echo $x_idfuncionario; ?><input type="hidden" name="x_idfuncionario" id="x_idfuncionario" value="<?php echo $x_idfuncionario; ?>">
-</span></td>
-	</tr>
-	<tr>
-		<td class="encabezado" title="Numero de identificacion del funcionario"><span class="phpmaker" style="color: #FFFFFF;">C&Oacute;DIGO DEL FUNCIONARIO</span></td>
+		<td class="encabezado" title="Numero de identificacion del funcionario"><span class="phpmaker" style="color: #FFFFFF;">IDENTIFICACI&Oacute;N</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
 <input class="required" type="hidden" name="x_funcionario_codigo" id="x_funcionario_codigo" size="30" value="<?php echo htmlspecialchars(@$x_funcionario_codigo) ?>">
-<?php echo htmlspecialchars(@$x_funcionario_codigo) ?>
+<input class="required" type="text" name="x_nit" id="x_nit" size="30" maxlength="255" value="<?php echo @$x_nit; ?>">
 </span></td>
 	</tr>
 	<tr>
@@ -184,7 +234,12 @@ label.error{
 <?php echo "Inactivo"; ?>
 <?php echo EditOptionSeparator(1);
 ?>
-</span></td>
+
+
+</span>
+<input type="hidden" name="x_intento_login" id="x_intento_login" value="<?php echo(@$x_intento_login); ?>">
+
+</td>
 	</tr>
 	<tr>
 		<td class="encabezado" title="Fecha de ingreso del funcionario"><span class="phpmaker" style="color: #FFFFFF;">FECHA DE INGRESO</span></td>
@@ -309,6 +364,7 @@ function LoadData($sKey,$conn)
 		$GLOBALS["x_nit"] = $row["nit"];
 		$GLOBALS["x_perfil"] = $row["perfil"];
 		$GLOBALS["x_sistema"] = $row["sistema"];
+		$GLOBALS["x_intento_login"] = $row["intento_login"];
 	}
 	phpmkr_free_result($rs);
 	return $LoadData;
@@ -355,9 +411,17 @@ function EditData($sKey,$conn)
 			}
 		}
 		$a_x_firma = @$_POST["a_x_firma"];
+		
+
+		$theValue =(!get_magic_quotes_gpc()) ? addslashes($GLOBALS["x_nit"]) : $GLOBALS["x_nit"]; 
+		$fieldList["nit"] = "'".$theValue."'";			
+				
+		
+		
 		$theValue = ($GLOBALS["x_funcionario_codigo"] != "") ? intval($GLOBALS["x_funcionario_codigo"]) : "NULL";
 		$fieldList["funcionario_codigo"] = "'".$theValue."'";	
-    $codigo = $theValue;			
+
+   		$codigo = $theValue;			
 		$theValue = (!get_magic_quotes_gpc()) ? addslashes($GLOBALS["x_login"]) : $GLOBALS["x_login"]; 
 		$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
 		$fieldList["login"] = $theValue;
@@ -397,6 +461,9 @@ function EditData($sKey,$conn)
 				@unlink($_FILES["x_firma"]["tmp_name"]);
 			}
 		}
+		 $theValue = intval($GLOBALS["x_intento_login"]);
+		 $fieldList["intento_login"] = "'".$theValue."'";
+		
     $theValue = ($GLOBALS["x_estado"] != "") ? intval($GLOBALS["x_estado"]) : "NULL";
 		$fieldList["estado"] = "'".$theValue."'";
     		
@@ -465,7 +532,8 @@ function EditData($sKey,$conn)
 			$sSql = substr($sSql, 0, strlen($sSql)-2);
 		}
 		$sSql .= " WHERE idfuncionario ='". $sKeyWrk."'";    
-     phpmkr_query($sSql);
+	
+    	phpmkr_query($sSql);
      /// ACTUALIZO LAS FIRMAS DIGITALES 
      //echo $fieldList["firma"];
      if($firma!=NULL)

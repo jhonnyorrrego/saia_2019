@@ -122,8 +122,8 @@ global $conn;
   
     $cadena='<table border="0" cellspacing="1" cellpadding="4" bgcolor="#CCCCCC">
 	<tr>
-		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">C&Oacute;DIGO DEL FUNCIONARIO</span></td>
-		<td bgcolor="#F5F5F5"><span class="phpmaker">'.$dato[0]["funcionario_codigo"].'</span></td>
+		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">IDENTIFICACI&Oacute;N</span></td>
+		<td bgcolor="#F5F5F5"><span class="phpmaker">'.$dato[0]["nit"].'</span></td>
 	</tr>
 	<tr>
 		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">LOGIN (intranet)</span></td>

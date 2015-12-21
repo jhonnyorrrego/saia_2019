@@ -125,5 +125,14 @@ body
 		}
 	);
 </script>
+
+
+<script>
+	$(document).ready(function(){
+		window.open('funcionario_detalles_start.php?key=<?php echo(@$_REQUEST['key']); ?>','detalles');
+	});
+</script>
+
+
   </body>
 </html>

@@ -36,7 +36,8 @@ tab_focus : ':prev,:next',
 external_image_list_url : "librerias/image_list.js",
 content_css : "librerias/estilo.css",
 height:"300px",
-width:"350px"
+width:"350px",
+theme_advanced_path : false
 });  
 tinyMCE.init({
 mode : "textareas",
@@ -56,7 +57,8 @@ theme_advanced_resizing : true,tab_focus : ':prev,:next',
 external_image_list_url : "librerias/image_list.js",
 content_css : "librerias/estilo.css",
 height:"300px",
-width:"350px"
+width:"350px",
+theme_advanced_path : false
 });
 tinyMCE.init({
 mode : "textareas",
@@ -76,7 +78,8 @@ spellchecker_languages : "+Espa=es,Ingles=en",
 external_image_list_url : "librerias/image_list.js",
 content_css : "librerias/estilo.css",
 height:"200px",
-width:"350px"
+width:"350px",
+theme_advanced_path : false
 });
 
 tinyMCE.init({
@@ -91,7 +94,8 @@ theme_advanced_statusbar_location : "bottom",
 theme_advanced_resizing : true,
 tab_focus : ':prev,:next',
 height:"200px",
-width:"350px"
+width:"350px",
+theme_advanced_path : false
 });
 tinyMCE.init({
 mode : "textareas",
@@ -105,7 +109,8 @@ theme_advanced_statusbar_location : "bottom",
 theme_advanced_resizing : true,
 tab_focus : ':prev,:next',
 height:"200px",
-width:"350px"
+width:"350px",
+theme_advanced_path : false
 });
 tinyMCE.init({
 mode : "textareas",
@@ -119,7 +124,8 @@ theme_advanced_statusbar_location : "bottom",
 theme_advanced_resizing : true,
 tab_focus : ':prev,:next',
 height:"200px",
-width:"350px"
+width:"350px",
+theme_advanced_path : false
 });
 function htmlentities(txt)
 {

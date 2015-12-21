@@ -14,6 +14,26 @@ while($max_salida>0){
 include_once("db.php");
 include_once("librerias_saia.php");
 include_once("cargando.php");
+
+
+if(@$_REQUEST['texto_salir']){
+	
+
+	echo(librerias_jquery("1.7"));
+	echo(librerias_notificaciones());
+	
+	
+	?>
+		<script>
+			var texto_salir='<?php echo(@$_REQUEST['texto_salir']); ?>';
+			texto_salir='<b>ATENCION!</b><br>'+texto_salir;
+			notificacion_saia(texto_salir,'success','',4000);
+		</script>
+	<?php	
+	
+}
+
+
 if(!isset($_SESSION["LOGIN".LLAVE_SAIA])){
   @session_name();
   @session_start();
@@ -95,14 +115,14 @@ $mayor_informacion=busca_filtro_tabla("valor","configuracion","nombre='mayor_inf
             <td width="18" rowspan="2" align="left" valign="top">&nbsp;</td>
             <td width="102" height="50" nowrap class="blueTexts">Nombre de usuario:</td>
             <td width="225">
-              <input type="text" name="userid" id="userid">
+              <input type="text" name="userid" id="userid" style="width:200px; height:40px;">
             </td>
             <td width="168" rowspan="2">&nbsp;</td>
           </tr>
           <tr>
             <td height="50" nowrap class="blueTexts">Clave de Acceso:</td>
             <td height="50">
-              <input type="password" name="passwd" id="passwd">
+              <input type="password" name="passwd" id="passwd" style="width:200px; height:40px;">
             </td>
           </tr>
           <tr>
@@ -149,7 +169,7 @@ $mayor_informacion=busca_filtro_tabla("valor","configuracion","nombre='mayor_inf
   echo(librerias_notificaciones());
 ?>
 <script>
-var mensaje="El nombre de usuario o contrase&ntilde;a introducidos no son correctos";
+var mensaje="<b>El nombre de usuario o contrase&ntilde;a introducidos no son correctos! </b> <br> intente de nuevo";
 var tiempo=3500;
 $("#tabla_principal").height($(window).height()-56);
 $("#ingresar").click(function(){	
@@ -178,7 +198,7 @@ $("#ingresar").click(function(){
     });
   }
   else{                         
-    noty({text: "Por favor ingrese un usuario y una clave v&aacute;lidos <br />intente de nuevo",type: 'error',layout: "topCenter",timeout:tiempo});
+    noty({text: "<b>Por favor ingrese un usuario y una clave v&aacute;lidos!</b> <br> intente de nuevo",type: 'error',layout: "topCenter",timeout:tiempo});
   }  
 });
 $(document).keypress(function(event) {

@@ -58,12 +58,12 @@ switch ($sAction)
 <table border="1" class="table table-bordered table-striped" width="100%">
   <thead>
 	<tr class="encabezado_list phpmaker">
-		<th>ID</th>
-		<th>C&Oacute;DIGO</th>
+		
+		<th>IDENTIFICACI&Oacute;N</th>
 		<th>LOGIN</th>
     <th>NOMBRES</th>
     <th>APELLIDOS</th>
-		<th>NIT</th>
+		
     <th>CAMBIAR ESTADO</th>
 	</tr>
   </thead>
@@ -77,12 +77,12 @@ foreach ($arRecKey as $sRecKey) {
 	if (LoadData($sRecKey,$conn)) {
 ?>
 	<tr>
-		<td><?php echo $x_idfuncionario; ?> &nbsp;</td>
-		<td><?php echo $x_funcionario_codigo; ?> &nbsp;</td>  
+		
+		<td><?php echo $x_nit; ?> &nbsp;</td>  
 		<td><?php echo $x_login; ?> &nbsp;</td>
     <td><?php echo $x_nombres; ?> &nbsp;</td>
     <td><?php echo $x_apellidos; ?> &nbsp;</td>
-		<td><?php echo $x_nit; ?>&nbsp;</td>
+		
     <td>Fecha fin de inactividad<br>
     	<?php if($x_fecha_fin_inactivo)echo $x_fecha_fin_inactivo."<br>"; ?>
     	<input type="text" name="fecha_fin_inactivo<?php echo $x_idfuncionario; ?>" id="fecha_fin_inactivo<?php echo $x_idfuncionario; ?>" value="<?php echo date('Y-m-d'); ?>" style="width:100px">

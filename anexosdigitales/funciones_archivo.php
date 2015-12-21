@@ -357,43 +357,55 @@ function acciones_anexos_usuario($idfunc,$idanexo,$limita_accion=NULL,$num=-1){
 
 
 // Genera uan tabla con los anexos acciones para documentos o formatos 
-function listar_anexos_documento($iddocumento,$idformato=NULL,$idcampo=NULL,$tipo=NULL,$limita_accion=NULL){
+function listar_anexos_documento($iddocumento, $idformato = NULL, $idcampo = NULL, $tipo = NULL, $limita_accion = NULL) {
 	global $conn;
-  if(!$limita_accion)
-  	$limita_accion="DESCARGAR|ELIMINAR|PERMISOS|PROPIETARIO|ICONO|ENCABEZADO|EDITAR";
-  if(!$idformato&&!$idcampo)//Se muestran todos los anexos
-  	$anexos=busca_filtro_tabla("*","anexos","documento_iddocumento=".$iddocumento,"",$conn);
-  else{
-  	$anexos=busca_filtro_tabla("*","anexos","documento_iddocumento=".$iddocumento." AND formato=".$idformato." AND campos_formato=".$idcampo,"",$conn);
-  }
-  if($anexos["numcampos"]>0){
-    if(!isset($_REQUEST["idfunc"])){
-    	$idfunc=usuario_actual("id");
-    }
-    else{ 
-   		$func=busca_filtro_tabla("idfuncionario","funcionario","funcionario_codigo=".$_REQUEST["idfunc"],"",$conn);
-      $idfunc=$func[0][0];
-		}
-		$arreglo_anexos=array();
-	  for($i=0;$i<$anexos["numcampos"];$i++){
-	  	$arreglo_anexos[]=acciones_anexos_usuario($idfunc,$anexos[$i]["idanexos"],$limita_accion,$i);
-	  }
-		if(in_array("ENCABEZADO",explode("|",$limita_accion))&&$arreglo_anexos){
-			$tabla.='<table>';
-			$tabla.='<tr><td class="encabezado_list">Anexos Digitales</td></tr>';
-			$tabla.='<tr><td style="text-align:right">';
-			$tabla.=implode('</td></tr><tr><td style="text-align:right">',$arreglo_anexos);
-			$tabla.='</td></tr>';
-			$tabla.='</table>';
-		}
-		else{
-			$tabla.=implode(", ",$arreglo_anexos);
-		}
+	if (!$limita_accion) {
+		$limita_accion = "DESCARGAR|ELIMINAR|PERMISOS|PROPIETARIO|ICONO|ENCABEZADO|EDITAR";
 	}
-  else 
-		$tabla="";   	    
-
-  return($tabla);
+	if (!$idformato && !$idcampo) {//Se muestran todos los anexos
+		$anexos = busca_filtro_tabla("a.*,d.estado", "anexos a,documento d", "a.documento_iddocumento=d.iddocumento and d.iddocumento=" . $iddocumento, "", $conn);
+	} else {
+		$anexos = busca_filtro_tabla("a.*,d.estado", "anexos a,documento d", "a.documento_iddocumento=d.iddocumento and d.iddocumento=" . $iddocumento . " AND a.formato=" . $idformato . " AND a.campos_formato=" . $idcampo, "", $conn);
+	}
+	if ($anexos["numcampos"] > 0) {
+	    $impedir=0;
+	    $conf=busca_filtro_tabla("valor","configuracion","tipo='anexos' and nombre='impedir_eliminar'","",$conn);
+	    if($conf["numcampos"] && $conf[0]["valor"]==1){
+	        $impedir=1;
+	    }
+		if (!isset($_REQUEST["idfunc"])) {
+			$idfunc = usuario_actual("id");
+		} else {
+			$func = busca_filtro_tabla("idfuncionario", "funcionario", "funcionario_codigo=" . $_REQUEST["idfunc"], "", $conn);
+			$idfunc = $func[0][0];
+		}
+		$array_estados=array('ACTIVO');// Por si necesitan agregar mas estados
+		$arreglo_anexos = array();
+		for ($i = 0; $i < $anexos["numcampos"]; $i++) {
+        if(in_array($anexos[$i]["estado"],$array_estados) || $impedir==0){
+		        $arreglo_anexos[] = acciones_anexos_usuario($idfunc, $anexos[$i]["idanexos"], $limita_accion, $i);
+		    }else{// aplica solo a los subidos por el formato
+		        if($anexos[$i]["campos_formato"]=="" || $anexos[$i]["campos_formato"]==0){
+		          $arreglo_anexos[] = acciones_anexos_usuario($idfunc, $anexos[$i]["idanexos"], $limita_accion, $i); 
+		        }else{
+		          $arreglo_anexos[] = acciones_anexos_usuario($idfunc, $anexos[$i]["idanexos"], "DESCARGAR|ICONO|ENCABEZADO", $i); 
+		        }
+		    }
+		}
+		if (in_array("ENCABEZADO", explode("|", $limita_accion)) && $arreglo_anexos) {
+			$tabla .= '<table>';
+			$tabla .= '<tr><td class="encabezado_list" colspan="4">Anexos Digitales</td></tr>';
+			$tabla .= '<tr><td style="text-align:right">';
+			$tabla .= implode('</td></tr><tr><td style="text-align:right">', $arreglo_anexos);
+			$tabla .= '</td></tr>';
+			$tabla .= '</table>';
+		} else {
+			$tabla .= implode(", ", $arreglo_anexos);
+		}
+	} else {
+		$tabla = "";
+	}
+	return ($tabla);
 }
 
 
