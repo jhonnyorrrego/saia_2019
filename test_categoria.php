@@ -70,6 +70,11 @@ if($papas["numcampos"])
 		else if($papas[$i]["estado"]==2){
 			$estado=' (Inactivo)';
 		}
+		
+		$concatenar_padre='';
+		if($papas[$i]["cod_padre"]!=0 &&  $papas[$i]["cod_padre"]!=NULL){
+			$concatenar_padre=','.$papas[$i]["cod_padre"];
+		}
 		echo("text=\"".htmlspecialchars($papas[$i]["nombre"]).$estado." \" id=\"".$papas[$i]["idcategoria_formato"]."\"");
 		if(in_array($papas[$i]["idcategoria_formato"],$seleccionados)){
 			echo (" checked=\"1\" >");

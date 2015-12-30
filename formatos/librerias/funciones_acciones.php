@@ -12,6 +12,7 @@ while($max_salida>0){
 include_once($ruta_db_superior."db.php");
 /*Adicionado para hacer las acciones del flujo */
 include_once($ruta_db_superior."workflow/libreria_paso.php");
+include_once($ruta_db_superior."bpmn/librerias_formato.php");
 /*<Clase>
 <Nombre>listar_acciones_formato</Nombre>
 <Parametros>$idformato:id del formato;$accion:nombre de la accion;$momento:en que momento se debe ejecutar la accion(anterior,posterior)</Parametros>
@@ -244,6 +245,22 @@ for($i=0;$i<count($ar_func);$i++){
 </Clase>  */
 function llama_funcion_accion($iddoc=NULL,$idformato=NULL,$accion=NULL,$momento=NULL){
 global $conn;
+if($momento=="ANTERIOR" && $accion!='adicionar' && $accion!='responder'){
+  terminar_actividad_paso($iddoc,$accion);
+}
+if($momento=='POSTERIOR' && ($accion=='adicionar' || $accion=='responder')){
+  terminar_actividad_paso($iddoc,$accion); 
+}
+$listado_acciones=listar_acciones_formato($idformato,$accion,$momento);
+if($listado_acciones != ""){
+  ejecutar_acciones_formato($iddoc,$idformato,$listado_acciones);
+}
+}
+
+
+/*
+function llama_funcion_accion($iddoc=NULL,$idformato=NULL,$accion=NULL,$momento=NULL){
+global $conn;
 if($momento=="POSTERIOR")
   terminar_actividad_paso($iddoc,$accion);
 $listado_acciones=listar_acciones_formato($idformato,$accion,$momento);
@@ -252,5 +269,6 @@ if($listado_acciones != ""){
 }
 }
 
+*/
 
 ?>

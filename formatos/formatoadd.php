@@ -564,6 +564,10 @@ echo $x_exportarChk;
 
 	</p>
 </form>
+
+
+
+
 <?php include ("footer.php")?>
 <?php
 // //phpmkr_db_close($conn);
@@ -878,6 +882,9 @@ Buscar:
 		}
                     
                     --></script>
+                    
+                    
+
 <?php
 }
 

@@ -83,11 +83,24 @@ $().ready(function() {
 	function formatResult(row) {
 		return row[1].replace(/(<.+?>)/gi, '');
 	}
+  function iddatos_ejecutor(idejecutor,nombre)
+    {$.ajax({
+        type:'POST',
+        url:'ultimo_dato_ejecutor.php',
+        data:'idejecutor='+idejecutor,
+        success: function(datos,exito){
+          vector=datos.split("|");
+            $("#destinos_seleccionados").val(vector[1]);
+            $("#estado_actualizacion").html(nombre);
+            llenar_llamado();
+            }
+          });
+    }
 
 	$("#nombre_ejecutor").autocomplete('../librerias/seleccionar_ejecutor.php?tipo=nombre', {
 		width: 500,
 		max:20,
-    scroll: true,
+		scroll: false,
 		scrollHeight: 150,
 		matchContains: true,
     minChars:4,
@@ -101,6 +114,9 @@ $().ready(function() {
       $("#identificacion_ejecutor").val(data[2]);
       $("#codigo_ejecutor").val(data[5]);
 			llenar_ejecutor(data[0]);
+			if("unico"=="<?php echo $_REQUEST['tipo'];?>")
+        {iddatos_ejecutor(data[0],data[4]);         
+        }
 		}
 	}); 
 	$("#identificacion_ejecutor").result(function(event, data, formatted) {
@@ -108,6 +124,9 @@ $().ready(function() {
 		  $("#nombre_ejecutor").val(data[4]);
 		  $("#codigo_ejecutor").val(data[5]);
 			llenar_ejecutor(data[0]);
+			if("unico"=="<?php echo $_REQUEST['tipo'];?>")
+        {iddatos_ejecutor(data[0],data[4]);
+        }
 		}
 	});
 	/*$("#identificacion_ejecutor").keyup(function (event){
@@ -122,13 +141,14 @@ $().ready(function() {
      }
   });*/
    $("#identificacion_ejecutor").keyup(function (event){
+	$("#identificacion_ejecutor").focus();
     this.value = (this.value + '').replace(/[^0-9a-zA-Z]/g, '');
   });
 	
   $("#identificacion_ejecutor").autocomplete('../librerias/seleccionar_ejecutor.php?tipo=identificacion', {
 		width: 500,
 		max:20,
-		scroll: true,
+		scroll: false,
 		scrollHeight: 200,
 		matchContains: true,
     minChars:4,
@@ -141,7 +161,7 @@ $().ready(function() {
 	$("#codigo_ejecutor").autocomplete('../librerias/seleccionar_ejecutor.php?tipo=codigo', {
 		width: 500,
 		max:20,
-    scroll: true,
+    scroll: false,
 		scrollHeight: 150,
 		matchContains: true,
     minChars:4,
@@ -159,6 +179,7 @@ $().ready(function() {
 	});
 	
 	$("#codigo_ejecutor").keyup(function (event){
+		$("#codigo_ejecutor").focus();
    if(event.keyCode<96 || event.keyCode>105)
      {actual=$("#codigo_ejecutor").val();
       if(isNaN(actual)||actual.indexOf(".")>0)
@@ -235,14 +256,11 @@ $().ready(function() {
        parametros+='&codigo='+$("#codigo_ejecutor").val();
                  
     if($("#nombre_ejecutor").val()!=""){
+
       $.ajax({
         type:'POST',
-        url:'actualizar_ejecutor.php',
-        data:'seleccionados_ejecutor='+$("#seleccionados_ejecutor").val()+
-        '&iddatos_ejecutor='+$("#iddatos_ejecutor").val()+
-        '&nombre='+$("#nombre_ejecutor").val()+
-        parametros+
-        '&campos=<?php echo $_REQUEST["campos"]; ?>',
+        url:'actualizar_ejecutor.php?'+parametros,
+				data:{seleccionados_ejecutor:$("#seleccionados_ejecutor").val(),iddatos_ejecutor:$("#iddatos_ejecutor").val(),nombre:$("#nombre_ejecutor").val(),campos:"<?php echo $_REQUEST["campos"]; ?>"},
         success: function(datos,exito){
         	//alert(datos);
           vector=datos.split("|");
@@ -250,7 +268,7 @@ $().ready(function() {
             {$("#estado_actualizacion").html(vector[1]);
             }
           else   
-            {cadena="<option value='"+vector[0]+"'>"+vector[1]+"</option>";
+            {cadena="<option value='"+vector[0]+"' selected>"+vector[1]+"</option>";
              $("#estado_actualizacion").append(cadena);
             } 
           
@@ -365,10 +383,11 @@ $().ready(function() {
         	$destinos=busca_filtro_tabla($_REQUEST["campo_autocompletar"],$_REQUEST["tabla"],"documento_iddocumento=".$iddoc,"",$conn);
         if(@$destinos["numcapos"]);
          {$lista=busca_filtro_tabla("iddatos_ejecutor,nombre","datos_ejecutor,ejecutor","ejecutor_idejecutor=idejecutor and iddatos_ejecutor in(".$_REQUEST["destinos"].")","nombre",$conn);
-		for($i=0;$i<$lista["numcampos"];$i++)
-			echo $lista[$i]["nombre"]."<br>";
-         }
-
+		if($_REQUEST["tipo"]!='unico'){
+			for($i=0;$i<$lista["numcampos"];$i++)
+				echo $lista[$i]["nombre"]."<br>";
+	         }
+		 }
         }
     if($_REQUEST["tipo"]=="multiple")
      {
@@ -409,7 +428,30 @@ $().ready(function() {
                   <input type="text" id="'.$nombre.'_ejecutor" name="'.$nombre.'" /><br />
                 </td>
               </tr>';
-         } 
+         }
+         if($_REQUEST["tipo"]=="unico")
+ {?>  
+</table>
+<div id="datos_ejecutor">
+</div>
+<table width="500px">
+  <tr >
+    <td width="33%">
+      <div id="borrar_todos" class="boton">Quitar Seleccionado</div>
+    </td>
+    <td width="33%">
+      <div id="actualizar" class="boton">Actualizar</div>
+    </td>
+  </tr>
+</table>
+<input type="hidden"  id="destinos_seleccionados" name="destinos_seleccionados">
+</form>
+</body>
+</html>
+ <?php
+ }
+ else
+ {
      ?>  
 </table>
 <div id="datos_ejecutor">
@@ -431,3 +473,6 @@ $().ready(function() {
 </form>
 </body>
 </html>
+ <?php
+ }
+ ?>

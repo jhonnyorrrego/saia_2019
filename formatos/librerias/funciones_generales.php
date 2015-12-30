@@ -2772,6 +2772,20 @@ function buscar_papa_primero($iddoc){
 <Post-condiciones><Post-condiciones>
 </Clase>  */
 function generar_ruta_documento($idformato,$iddoc){
+  global $conn;
+  $diagram_instance=busca_filtro_tabla('','paso_documento A, diagram_instance B','A.diagram_iddiagram_instance=B.iddiagram_instance AND A.documento_iddocumento='.$iddoc,'',conn);
+  $listado_pasos=busca_filtro_tabla("","paso A, paso_actividad B, accion C","A.idpaso=B.paso_idpaso AND B.accion_idaccion=C.idaccion AND (C.nombre LIKE 'confirmar%' OR C.nombre LIKE 'aprobar%') AND A.diagram_iddiagram=".$diagram_instance[0]["diagram_iddiagram"],"",$conn);
+  $ruta=array();
+  //pasos_ruta se debe almacenar por medio de acciones si se va a confirmar, confirmar y firmar, aprobar o aprobar y firmar, confirmar y responsable, aprobar y responsable o confirmar y firma manual o confirmar y firma manual validar si se hace por medio del paso_actividad o por medio de la accion intencionalidad por medio del paso_actividad
+  for($i=0;$i<$listado_pasos["numcampos"];$i++){
+     array_push($ruta,array("funcionario"=>-1,"tipo_firma"=>1,"paso_actividad"=>$listado_pasos[$i]["idpaso_actividad"]));
+  }
+  insertar_ruta($ruta,$iddoc,0);
+}
+
+
+
+function generar_ruta_documento_version0($idformato,$iddoc){
 	global $conn,$ruta_db_superior;
 	include_once($ruta_db_superior."formatos/librerias/funciones_formatos_generales.php");
 	$dato=busca_filtro_tabla("","formato_ruta","formato_idformato=".$idformato,"orden",$conn);

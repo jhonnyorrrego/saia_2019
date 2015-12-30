@@ -712,4 +712,42 @@ function mostrar_prioridad_tareas($prioridad){
 		break;
 	}
 }
+
+
+function filtro_categoria($categoria){
+
+	if(@$_REQUEST['filtro_categoria']){
+					
+		if($_REQUEST['filtro_categoria']==''){
+			return('');
+		}else{
+			return(' AND ( C.fk_categoria_formato like"%,'.$_REQUEST['filtro_categoria'].'" or C.fk_categoria_formato like"'.$_REQUEST['filtro_categoria'].',%" or C.fk_categoria_formato like"%,'.$_REQUEST['filtro_categoria'].',%" ) ');		
+		}				
+
+	}
+	
+}
+
+function filtro_indicadores($prioridad){
+
+	if(@$_REQUEST['filtro_indicadores']){
+				
+		if($_REQUEST['filtro_indicadores']==''){
+			return('');
+		}else{
+			return(' AND b.prioridad="'.$_REQUEST['filtro_indicadores'].'"');		
+		}	
+		
+		
+	}
+	
+}
+
+function filtro_funcionario_etiquetados($funcionario){
+
+ 	$retorno=" AND d.funcionario='".usuario_actual("funcionario_codigo")."'";
+	return($retorno);  
+}
+
+
 ?>

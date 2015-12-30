@@ -14,6 +14,11 @@ else
   header("Content-type: text/xml"); 
 }
 echo("<?xml version=\"1.0\" encoding=\"UTF-8\"?".">");
+$seleccionados=array();
+$filtrar=@$_REQUEST["filtrar"];
+if(@$_REQUEST["seleccionados"]){
+  $seleccionados=explode(",",$_REQUEST["seleccionados"]);
+}
 if($id and $id<>"")
   echo("<tree id=\"".$id."\">\n"); 
 else
@@ -28,23 +33,28 @@ echo("</tree>\n");
 <?php
 
 function llena_formato($id){
-global $conn,$sql;
+global $conn,$sql,$seleccionados, $filtrar;
+$adicionales="";
+if($filtrar){
+  $adicionales=' AND idformato IN('.$filtrar.')';
+}
 if($id=="NULL")
-  $papas=busca_filtro_tabla("*","formato","detalle<>1 AND cod_padre=0","etiqueta ASC",$conn);
+  $papas=busca_filtro_tabla("","formato","item<>1 AND (cod_padre=0 OR cod_padre IS NULL)".$adicionales,"etiqueta ASC",$conn);
 else
-  $papas=busca_filtro_tabla("*","formato","detalle<>1 AND cod_padre=".$id,"etiqueta ASC",$conn);
-if($papas["numcampos"])
-{ 
-  for($i=0; $i<$papas["numcampos"]; $i++)
-  {
-    $hijos = busca_filtro_tabla("count(*)","formato","detalle<>1 AND cod_padre=".$papas[$i]["idformato"],"",$conn);
+  $papas=busca_filtro_tabla("","formato","item<>1 AND cod_padre=".$id.$adicionales,"etiqueta ASC",$conn);
+if($papas["numcampos"]){ 
+  for($i=0; $i<$papas["numcampos"]; $i++){
+    $hijos = busca_filtro_tabla("count(*)","formato","item<>1 AND cod_padre=".$papas[$i]["idformato"],"",$conn);
     echo("<item style=\"font-family:verdana; font-size:7pt;\" ");
+    if(in_array($papas[$i]["idformato"],$seleccionados)){
+      echo(" checked=\"1\" ");
+    }
     echo("text=\"".htmlspecialchars($papas[$i]["etiqueta"])." \" id=\"".$papas[$i]["idformato"]);
     if($hijos[0][0])
       echo("#2#".$papas[$i]["nombre"]."\" child=\"1\">\n");
     else
       echo("#2#".$papas[$i]["nombre"]."\" child=\"0\">\n");
-    //llena_serie($papas[$i]["id$tabla"]);
+    llena_formato($papas[$i]["idformato"]);
     echo("</item>\n");
   }     
 }

@@ -9,6 +9,7 @@ while($max_salida>0){
     $max_salida--;
 }
 include_once($ruta_db_superior."db.php");
+include_once($ruta_db_superior."formatos/librerias/funciones_generales.php");
 ?>
 <meta http-equiv="X-UA-Compatible" content="IE=9">
 <?php
@@ -90,8 +91,9 @@ function incluir_librerias_busqueda($elemento,$indice){
           ?>                                
         </ul>             
       </div>
+
       <!-- /btn-group -->               
-      </li>                 
+      </li>              
       <li class="divider-vertical">
       </li>             
       <li>            
@@ -121,6 +123,161 @@ function incluir_librerias_busqueda($elemento,$indice){
       </div>
       <!-- /btn-group -->                   
       </li>
+      
+      
+      <!-- LISTA DE PROCESO -->
+      <li class="divider-vertical"></li>
+      <li>
+      <div class="btn-group">
+         <button class="btn dropdown-toggle btn-mini" data-toggle="dropdown">Procesos &nbsp;
+          <span class="caret">
+          </span>&nbsp;
+        </button>
+         <ul class="dropdown-menu" id='listado_procesos'>
+
+	          <li>
+	          <a href="#">
+	            <div name="filtro_categoria" valor=""><b>Restaurar Listado</b>
+	            </div></a>
+	          </li> 
+
+			<?php
+				$fun=usuario_actual("funcionario_codigo");
+				$fun_id=usuario_actual("idfuncionario");
+				
+				if($datos_busqueda[0]["nombre"]=='documento_pendiente'){  //Documentos Recibidos
+					
+					$documentos=busca_filtro_tabla("","documento A,asignacion B","lower(A.estado)<>'eliminado' AND A.iddocumento=B.documento_iddocumento AND B.tarea_idtarea<>-1 AND B.entidad_identidad=1 AND B.llave_entidad='".$fun."'   GROUP BY A.fecha, A.estado, A.ejecutor, A.serie, A.descripcion, A.pdf, A.tipo_radicado, A.plantilla, A.numero, A.tipo_ejecutor, DATE_FORMAT( B.fecha_inicial,  'y-m-d' ) , A.iddocumento
+			 ","B.fecha_inicial DESC",$conn);
+				}
+				else if($datos_busqueda[0]["nombre"]=='documentos_importantes'){  //Con Indicador
+					
+					$documentos=busca_filtro_tabla("","prioridad_documento A, documento B","A.prioridad in (1,2,3,4,5) AND iddocumento=documento_iddocumento AND funcionario_idfuncionario=".$fun_id." AND B.estado not in('ELIMINADO')","",$conn);
+			 
+				}				
+				else if($datos_busqueda[0]["nombre"]=='borradores'){  //Borradores
+					
+					$documentos=busca_filtro_tabla("","documento A","ejecutor=".$fun." AND A.estado='ACTIVO' AND A.numero='0'","",$conn);
+				}
+				else if($datos_busqueda[0]["nombre"]=='documentos_etiquetados'){  //Etiquetados
+					
+					$documentos=busca_filtro_tabla("","documento a, documento_etiqueta b, etiqueta c","a.iddocumento=b.documento_iddocumento and b.etiqueta_idetiqueta=c.idetiqueta AND c.funcionario='".$fun."'","",$conn);
+				}				
+ 
+
+
+			 	$papas_array=array();
+				for($i=0;$i<$documentos['numcampos'];$i++){			
+					$formato=busca_filtro_tabla('a.idformato,b.iddocumento,a.nombre,a.cod_padre,a.nombre','formato a, documento b','a.nombre=lower(b.plantilla) AND b.iddocumento='.$documentos[$i]['iddocumento'],'',$conn);	
+					$papa_iddoc=buscar_papa_formato($formato[0]['idformato'],$formato[0]['iddocumento'],'ft_',$formato[0]['nombre']);	
+					if($papa_iddoc==0 or $papa_iddoc==NULL){
+						$formato_papa=busca_filtro_tabla('','formato a, documento b','a.nombre=lower(b.plantilla) AND b.iddocumento='.$formato[0]['iddocumento'],'',$conn);	
+					}else{
+						$formato_papa=busca_filtro_tabla('','formato a, documento b','a.nombre=lower(b.plantilla) AND b.iddocumento='.$papa_iddoc,'',$conn);	
+					}
+					if(!in_array($formato_papa[0]['idformato'], $papas_array)){
+						$papas_array[]=$formato_papa[0]['idformato'];
+						$categoria_formato=busca_filtro_tabla('','categoria_formato','idcategoria_formato in('.$formato_papa[0]['fk_categoria_formato'].')','',$conn);
+						$categorias_novisibles=array(1,2,3);
+						for($j=0;$j<$categoria_formato['numcampos'];$j++){
+									
+							if(!in_array($categoria_formato[$j]['idcategoria_formato'], $categorias_novisibles)){
+								echo'
+						          <li>
+						          <a href="#">
+						            <div name="filtro_categoria" valor="'.$categoria_formato[$j]['idcategoria_formato'].'">'.$categoria_formato[$j]['nombre'].'
+						            </div></a>
+						          </li> 			
+								';					
+							}	
+						}
+					}	
+				}	 	
+			?>          
+        </ul>
+        <script>
+        	$(document).ready(function(){
+        		$('[name="filtro_categoria"]').click(function(){
+        			
+        			var valor=$(this).attr('valor');
+        			window.location='consulta_busqueda_documento.php?idbusqueda_componente=<?php echo($datos_busqueda[0]['idbusqueda_componente']); ?>&filtro_categoria='+valor+'';
+        		});
+        	});
+        </script>
+        
+             	
+      </div>      	
+      </li>      
+
+	
+	<?php
+		if(@$datos_busqueda[0]["nombre"]=='documentos_importantes'){
+	?>
+
+      <!-- LISTA DE INDICADORES -->
+      <li class="divider-vertical"></li>
+      <li>
+      <div class="btn-group">
+         <button class="btn dropdown-toggle btn-mini" data-toggle="dropdown">Indicadores &nbsp;
+          <span class="caret">
+          </span>&nbsp;
+        </button>
+         <ul class="dropdown-menu" id='listado_indicadores'>
+
+	          <li>
+	          <a href="#">
+	            <div name="filtro_indicadores" valor=""><b>Restaurar Listado</b>
+	            </div></a>
+	          </li>    
+	          <li>
+	          <a href="#">
+	            <div name="filtro_indicadores" valor="1"><span class="icon-flag-rojo"></span>&nbsp; Rojo
+	            </div></a>
+	          </li> 
+	          </li>    
+	          <li>
+	          <a href="#">
+	            <div name="filtro_indicadores" valor="2"><span class="icon-flag-morado"></span>&nbsp; Morado
+	            </div></a>
+	          </li> 	          
+	          <li>
+	          <a href="#">
+	            <div name="filtro_indicadores" valor="3"><span class="icon-flag-naranja"></span>&nbsp; Naranja
+	            </div></a>
+	          </li> 	          
+	          <li>
+	          <a href="#">
+	            <div name="filtro_indicadores" valor="4"><span class="icon-flag-amarillo"></span>&nbsp; Amarillo
+	            </div></a>
+	          </li> 	          
+	          <li>
+	          <a href="#">
+	            <div name="filtro_indicadores" valor="5"><span class="icon-flag-verde"></span>&nbsp; Verde
+	            </div></a>
+	          </li>	
+	          <li>
+	          <a href="#">
+	            <div name="filtro_indicadores" valor="0"><span class="icon-flag"></span>&nbsp; Sin indicador
+	            </div></a>
+	          </li>	                    	               
+        </ul>	
+        <script>
+        	$(document).ready(function(){
+        		$('[name="filtro_indicadores"]').click(function(){
+        			
+        			var valor=$(this).attr('valor');
+        			window.location='consulta_busqueda_documento.php?idbusqueda_componente=<?php echo($datos_busqueda[0]['idbusqueda_componente']); ?>&filtro_indicadores='+valor+'';
+        		});
+        	});
+        </script>        
+        
+      </div>      	
+      </li>    
+
+	<?php
+		}
+	?>
+
       <?php if(@$datos_busqueda[0]["enlace_adicionar"]){
       	?>
       	<li class="divider-vertical"></li><li><div class="btn-group">                    
@@ -138,7 +295,11 @@ function incluir_librerias_busqueda($elemento,$indice){
 					if(function_exists(exportar_excel))
           	echo(exportar_excel());
 				}        
-      ?>             
+      ?> 
+
+
+      
+             
     </ul>      
   </div>
 </div>
@@ -198,7 +359,7 @@ $(document).ready(function(){
     $.ajax({
       type:'POST',
       url: "servidor_busqueda.php",
-      data: "idbusqueda_componente=<?php echo($datos_componente);?>&page="+$("#busqueda_pagina").val()+"&rows="+$("#busqueda_registros").val()+"&idbusqueda_filtro_temp=<?php echo(@$_REQUEST['idbusqueda_filtro_temp']);?>&idbusqueda_filtro=<?php echo(@$_REQUEST['idbusqueda_filtro']);?>&idbusqueda_temporal=<?php echo (@$_REQUEST['idbusqueda_temporal']);?>&actual_row="+$("#fila_actual").val()+"&variable_busqueda="+$("#variable_busqueda").val()+"&cantidad_total="+$("#cantidad_total").val(),
+      data: "idbusqueda_componente=<?php echo($datos_componente);?>&page="+$("#busqueda_pagina").val()+"&rows="+$("#busqueda_registros").val()+"&idbusqueda_filtro_temp=<?php echo(@$_REQUEST['idbusqueda_filtro_temp']);?>&idbusqueda_filtro=<?php echo(@$_REQUEST['idbusqueda_filtro']);?>&idbusqueda_temporal=<?php echo (@$_REQUEST['idbusqueda_temporal']);?>&actual_row="+$("#fila_actual").val()+"&variable_busqueda="+$("#variable_busqueda").val()+"&cantidad_total="+$("#cantidad_total").val()+"<?php if(@$_REQUEST['filtro_categoria']){ echo('&filtro_categoria='.$_REQUEST['filtro_categoria']); } ?>"+"<?php if(@$_REQUEST['filtro_indicadores']){ echo('&filtro_indicadores='.$_REQUEST['filtro_indicadores']); } ?>",
       success: function(html){
         if(html){
           var objeto=jQuery.parseJSON(html);
@@ -271,7 +432,7 @@ $(document).ready(function(){
   		type:'POST',
 	    url: "servidor_busqueda.php",
 	    rsync:false,
-	    data: "idbusqueda_componente="+idcomponente+"&page=0&rows="+$("#busqueda_registros").val()+"&actual_row=0&idbusqueda_filtro_temp=<?php echo(@$_REQUEST['idbusqueda_filtro_temp']);?>&idbusqueda_filtro=<?php echo(@$_REQUEST['idbusqueda_filtro']);?>&idbusqueda_temporal=<?php echo (@$_REQUEST['idbusqueda_temporal']);?>&variable_busqueda="+$("#variable_busqueda").val(),
+	    data: "idbusqueda_componente="+idcomponente+"&page=0&rows="+$("#busqueda_registros").val()+"&actual_row=0&idbusqueda_filtro_temp=<?php echo(@$_REQUEST['idbusqueda_filtro_temp']);?>&idbusqueda_filtro=<?php echo(@$_REQUEST['idbusqueda_filtro']);?>&idbusqueda_temporal=<?php echo (@$_REQUEST['idbusqueda_temporal']);?>&variable_busqueda="+$("#variable_busqueda").val()+"<?php if(@$_REQUEST['filtro_categoria']){ echo('&filtro_categoria='.$_REQUEST['filtro_categoria']); } ?>"+"<?php if(@$_REQUEST['filtro_indicadores']){ echo('&filtro_indicadores='.$_REQUEST['filtro_indicadores']); } ?>",
 	    success: function(html){
 	    	if(html){
 	      	var objeto=jQuery.parseJSON(html);

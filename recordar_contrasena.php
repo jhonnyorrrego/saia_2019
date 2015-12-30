@@ -15,6 +15,19 @@ include_once ("librerias_saia.php");
 echo(estilo_bootstrap());
 echo(librerias_jquery());
 echo(librerias_notificaciones());
+
+if(isset($_REQUEST['login']) && $_REQUEST['login']==''){
+
+	?>
+		<script>
+			notificacion_saia('<b>ATENCI&Oacute;N!</b> <br> Debe ingresar el login!','error','',4000);
+		</script>	
+	
+	<?php	
+	
+}
+
+
 if($_REQUEST['login']){
 	if(!$_SESSION["LOGIN".LLAVE_SAIA]){
 		$_SESSION["LOGIN".LLAVE_SAIA]="cerok";
@@ -72,10 +85,18 @@ if($_REQUEST['login']){
 		$_SESSION["LOGIN".LLAVE_SAIA]="";
 	}else{
 		$_SESSION["LOGIN".LLAVE_SAIA]="";
-		alerta("El login no existe!");
+		
+		?>
+		<script>
+			notificacion_saia('<b>ATENCI&Oacute;N!</b> <br> El login no existe!','error','',5000);
+		</script>
+		<?php
+		
 		redirecciona("recordar_contrasena.php");
 	}
 }else{
+
+	
 if(!$_SESSION["LOGIN".LLAVE_SAIA]){
 	$_SESSION["LOGIN".LLAVE_SAIA]="cerok";
 }

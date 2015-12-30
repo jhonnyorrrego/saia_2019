@@ -160,10 +160,10 @@ else{
 <?php
 if($documento_origen_flujo["numcampos"]){
 ?>
-<div data-toggle="collapse" data-target="#div_info_flujo">
-  <i class="icon-minus-sign"></i>  <b>Informaci&oacute;n del Flujo</b>
-</div>
-<div id="div_info_flujo"  class="collapse in opcion_informacion">
+<!-- div data-toggle="collapse" data-target="#div_info_flujo">
+  < i class="icon-plus-sign"></i >  <b>Informaci&oacute;n del Flujo</b>
+</div -->
+<div id="div_info_flujo"  class="collapse  opcion_informacion">
 <table class="table table-bordered">
   <tr>
     <td width="20%" class="prettyprint">

@@ -103,6 +103,55 @@ return($texto);
 <Post-condiciones>Ruta completa del documento<Post-condiciones>
 </Clase> */
 
+
+function insertar_ruta($ruta2,$iddoc,$firma1=1){
+global $conn;
+  $ruta=array();
+  array_push($ruta,array("funcionario"=>usuario_actual("funcionario_codigo"),"tipo_firma"=>$firma1,"tipo"=>1));
+  $ruta=array_merge($ruta,$ruta2);
+  if(count($ruta)>0){
+    $radicador=busca_filtro_tabla("f.funcionario_codigo","configuracion c,funcionario f","c.nombre='radicador_salida' and f.login=c.valor","",$conn);
+    array_push($ruta,array("funcionario"=>$radicador[0]["funcionario_codigo"],"tipo_firma"=>0,"tipo"=>1));
+    //Se modifica estado activo=0 para que no queden activos los por_aprobar en el buzon
+    phpmkr_query("UPDATE buzon_entrada SET activo=0, nombre=".concatenar_cadena_sql(array("'ELIMINA_'","nombre"))." where archivo_idarchivo='$iddoc' and (nombre='POR_APROBAR' OR nombre='REVISADO' OR nombre='APROBADO' OR nombre='VERIFICACION')");
+    phpmkr_query("UPDATE buzon_salida SET nombre=".concatenar_cadena_sql(array("'ELIMINA_'","nombre"))." WHERE archivo_idarchivo='$iddoc' and nombre IN('POR_APROBAR','LEIDO','COPIA','BLOQUEADO','RECHAZADO','REVISADO','APROBADO','DEVOLUCION','TRANSFERIDO','TERMINADO')",$conn);
+    phpmkr_query("delete from ruta where documento_iddocumento='$iddoc'");
+  }
+  
+  for($i=0;$i<count($ruta)-1;$i++){
+    if(!isset($ruta[$i]["tipo_firma"])){
+      $ruta[$i]["tipo_firma"]=1;
+    }
+    if(!isset($ruta[$i]["tipo"])){
+      $ruta[$i]["tipo"]=1;
+    }
+    if(!isset($ruta[$i+1]["tipo"])){
+      $ruta[$i+1]["tipo"]=1;
+    }    
+    
+    $sql="insert into ruta(destino,origen,documento_iddocumento,condicion_transferencia,tipo_origen,tipo_destino,orden,obligatorio,idenlace_nodo) values('".$ruta[$i+1]["funcionario"]."','".$ruta[$i]["funcionario"]."','$iddoc','POR_APROBAR',".$ruta[$i]["tipo"].",".$ruta[$i+1]["tipo"].",$i,".$ruta[$i]["tipo_firma"].",'".@$ruta[$i]["paso_actividad"]."')" ;
+    phpmkr_query($sql);
+    $idruta=phpmkr_insert_id();
+    $fecha=fecha_db_almacenar(date("Y-m-d H:i:s"),'Y-m-d H:i:s');
+    if($ruta[$i]["tipo"]==5){
+      $func_codigo1=busca_filtro_tabla("funcionario_codigo","vfuncionario_dc","iddependencia_cargo=".$ruta[$i]["funcionario"],"",$conn);
+      $funcionario1=$func_codigo1[0]['funcionario_codigo'];
+    }else{
+      $funcionario1=$ruta[$i]["funcionario"];
+    }
+    if($ruta[$i+1]["tipo"]==5){
+      $func_codigo2=busca_filtro_tabla("funcionario_codigo","vfuncionario_dc","iddependencia_cargo=".$ruta[$i+1]["funcionario"],"",$conn);
+      $funcionario2=$func_codigo2[0]['funcionario_codigo'];
+    }else{
+      $funcionario2=$ruta[$i+1]["funcionario"];
+    }
+    $sql="insert into buzon_entrada(origen,destino,archivo_idarchivo,activo,tipo_origen,tipo_destino,ruta_idruta,nombre,fecha) values('".$funcionario2."','".$funcionario1."','$iddoc',1,".$ruta[$i+1]["tipo"].",".$ruta[$i]["tipo"].",$idruta,'POR_APROBAR',".$fecha.")" ;
+    phpmkr_query($sql);
+  }
+}
+
+
+ /*
 function insertar_ruta($ruta2,$iddoc,$firma1=1){
 global $conn;
   $ruta=array();
@@ -147,6 +196,8 @@ global $conn;
     phpmkr_query($sql);
   }
 }
+*/
+
 /*<Clase>
 <Nombre>validar_digitalizacion_formato_radicacion</Nombre>
 <Parametros>$_REQUEST["digitalizacion"]:Debe aparecer la opcion desea digitalizar Si/No en el formato con el nombre digitalizacion;  $idformto:Llave del formato que se vincula ;$iddoc=documento que  debe vincular con la accion</Parametros>
