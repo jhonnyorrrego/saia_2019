@@ -56,6 +56,11 @@ if(@$fecha[0][0]<0)
 }
 $usuario=usuario_actual("funcionario_codigo");
 $idfuncionario=usuario_actual("idfuncionario");
+
+$etiquetados=busca_filtro_tabla("count(*) AS cant","documento a, documento_etiqueta b, etiqueta c","a.iddocumento=b.documento_iddocumento and b.etiqueta_idetiqueta=c.idetiqueta AND c.funcionario='".$usuario."'","",$conn);
+
+
+
 $pendientes=busca_filtro_tabla("count(*) AS cant","documento A,asignacion B","A.estado<>'ELIMINADO' AND A.iddocumento=B.documento_iddocumento AND B.tarea_idtarea<>-1 AND B.entidad_identidad=1 AND B.llave_entidad=".$usuario,"GROUP BY A.iddocumento",$conn);
 $con_indicador=busca_filtro_tabla("","prioridad_documento A, documento B","A.prioridad in (1,2,3,4,5) AND iddocumento=documento_iddocumento AND funcionario_idfuncionario=".usuario_actual("idfuncionario")." AND B.estado not in('ELIMINADO')","",$conn);
 //$destacados=busca_filtro_tabla("","prioridad_documento A, documento B","A.prioridad=2 AND iddocumento=documento_iddocumento AND B.estado<>'ELIMINADO' AND funcionario_idfuncionario=".usuario_actual("idfuncionario"),"",$conn);
@@ -81,6 +86,7 @@ revisar_fechas2("gestion");
 revisar_fechas2("central");
 revisar_fechas2("historico");*/ 
 }
+$componente_etiquetados=busca_filtro_tabla("","busqueda_componente A","A.nombre='documentos_etiquetados'","",$conn);
 $componente_pendiente=busca_filtro_tabla("","busqueda_componente A","A.nombre='documento_pendiente'","",$conn);
 $componente_prioridad=busca_filtro_tabla("","busqueda_componente A","A.nombre='documentos_importantes'","",$conn);
 $componente_borrador=busca_filtro_tabla("","busqueda_componente A","A.nombre='borradores'","",$conn);
@@ -153,7 +159,7 @@ $mayor_informacion=busca_filtro_tabla("valor","configuracion","nombre='mayor_inf
         <div class="icon-collapser ui-corner-tr"></div>
         <div class="modbox-saia-main-content ui-corner-bottom">
           <ul id="MenuSaiaVin">
-            <li><i class="icon-inbox"></i><a href="pantallas/buscador_principal.php?idbusqueda=3&cmd=resetall" target="centro" class="enlace_indicadores_index" idcomponente="<?php echo($componente_pendiente[0]["idbusqueda_componente"]); ?>" nombre_componente="documento_pendiente">Documentos Pendientes <div class="pull-right"><span class="badge" id="documento_pendiente"><?php echo($pendientes["numcampos"]);?></span></div></a>
+            <li><i class="icon-inbox"></i><a href="pantallas/buscador_principal.php?idbusqueda=3&cmd=resetall" target="centro" class="enlace_indicadores_index" idcomponente="<?php echo($componente_pendiente[0]["idbusqueda_componente"]); ?>" nombre_componente="documento_pendiente">Documentos Recibidos <div class="pull-right"><span class="badge" id="documento_pendiente"><?php echo($pendientes["numcampos"]);?></span></div></a>
             </li>
             <li><i class="icon-star"></i><a href="pantallas/buscador_principal.php?idbusqueda=24&cmd=resetall" target="centro" class="enlace_indicadores_index" idcomponente="<?php echo($componente_prioridad[0]["idbusqueda_componente"]); ?>" nombre_componente="documentos_importantes">Con Indicador <div class="pull-right"><span class="badge" id="documentos_importantes"><?php echo(intval($con_indicador["numcampos"]));?></span></div></a>
             </li>
@@ -165,6 +171,15 @@ $mayor_informacion=busca_filtro_tabla("valor","configuracion","nombre='mayor_inf
             </li>
             <li><i class="icon-tasks"></i><a href="pantallas/buscador_principal.php?nombre=listado_tareas&cmd=resetall" target="centro" class="enlace_indicadores_index" idcomponente="<?php echo($componente_tareas[0]["idbusqueda_componente"]); ?>" nombre_componente="listado_tareas_pendientes">Mis Tareas <div class="pull-right"><span class="badge" id="listado_tareas_pendientes"><?php echo($tareas[0]["cant"]);?></span></div></a>
             </li>
+ 
+
+            
+            <li><i class="icon-tag"></i><a href="pantallas/buscador_principal.php?nombre=documentos_etiquetados&cmd=resetall" target="centro" class="enlace_indicadores_index" idcomponente="<?php echo($componente_etiquetados[0]["idbusqueda_componente"]); ?>" nombre_componente="documentos_etiquetados">Etiquetados <div class="pull-right"><span class="badge" id="documentos_etiquetados"><?php echo($etiquetados[0]["cant"]);?></span></div></a>
+            </li>            
+ 
+ 
+ 
+             
             <li><i class="icon-refresh"></i><a href="#" id="actualizar_info_index">Actualizado<div class="pull-right"><span class="badge" id="div_actualizar_info_index"></span></div></a>
             </li>
             <!--li><i class="icon-tasks"></i><a href="pantallas/buscador_principal.php?idbusqueda=3&cmd=resetall" target="centro"> Tareas Pendientes <div class="pull-right"><span class="badge" id="documentos_pendientes"><?php echo(0);?></span></div></a>

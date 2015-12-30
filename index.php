@@ -67,6 +67,23 @@ if($logo["numcampos"] && is_file($logo[0]["valor"])){
 <head>
 <title>SAIA</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<!-- PERMITE QUE LAS NOTICIAS FLOTEN EN LA PARTE INFERIOR IZQUIERDA DE LA PANTALLA-->
+<style type="text/css">
+
+#div_noticias{
+position: absolute;
+bottom: 0px;
+left: 0px;
+margin-bottom: 40px;
+margin-left: 40px;
+background-color: transparent;
+vertical-align: sub;
+width:400px;
+
+}
+</style>
+
 <style type="text/css">
 body { overflow-x:hidden; margin-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; background-image: url(imagenes/login/mainbkg.png); background-repeat: repeat-x; background-position: left top; background-color: #e7e7e7; font-family: Verdana, Geneva, sans-serif; font-size: 10px; font-weight: normal; }
 #LoginBkg { background-image: url(imagenes/login/loginbkg.png); background-repeat: no-repeat; background-position: center center; }
@@ -99,6 +116,7 @@ $mayor_informacion=busca_filtro_tabla("valor","configuracion","nombre='mayor_inf
   </table>
 </div>
 <table width="100%" height="100%" border="0"  cellpadding="0" cellspacing="0" id="tabla_principal"  align="bottom" >  
+	
   <tr align="center">
     <td colspan="3" align="center" valign="middle" id="LoginBkg"> 
       <div id="loginForm">
@@ -147,19 +165,68 @@ $mayor_informacion=busca_filtro_tabla("valor","configuracion","nombre='mayor_inf
                   	<input type="hidden" name="boton_ui" value="Acceder">
                   	<a href="recordar_contrasena.php" style="cursor:pointer" class="highslide" onclick="return hs.htmlExpand(this,{objectType:'iframe',width: 550, height: 300, preserveContent:false})">¿No puedes acceder a tu cuenta?</a>
                   	</p>
+                  	
+                  	
                   </td>
+                </tr>
+                <tr>
+				<td align="left">
+					<br/>
+					<br/>
+
+				</td>
+                	
                 </tr>
               </table>
             </td>
             <td>&nbsp;</td>
-          </tr>        
+          </tr>
+                  
         </table>
+       
         <br>
         </form>
       </div>
     </td>
   </tr>
+	
 </table>
+
+
+
+
+  		<div id="div_noticias">
+			<?php
+		      	$titulo_mostrar=busca_filtro_tabla('','configuracion','nombre="titulo_index"','',$conn);
+				$subtitulo_mostrar=busca_filtro_tabla('','configuracion','nombre="subtitulo_index"','',$conn);
+				
+				$texto_tabla="<p style='font-weight:bold;color: #4099D2;text-align:left;font-size:16px;'>".$titulo_mostrar[0]['valor']."<p>";
+				$texto_tabla.="<hr>";
+				$texto_tabla.="<p style='color:#4099D2;text-align:left;font-size:15px'>".$subtitulo_mostrar[0]['valor']."</p><br />";
+				global $conn;
+				$dato=busca_filtro_tabla("","noticia_index","estado=1 AND mostrar=1","",$conn);
+				//print_r($dato);die();
+				if ($dato["numcampos"]){
+					$texto_tabla.="<table align='bottom' style='text-align:justify;'>";
+					for ($i=0;$i<$dato["numcampos"];$i++){
+						$texto_tabla.="<tr><td>";
+						$texto_tabla.="<p id='texto_pequenio'>";
+						$texto_tabla.=$dato[$i]["previo"].'...';
+						$texto_tabla .='<a href="noticia_index/mostrar_noticia.php?idnoticia_index='.$dato[$i]["idnoticia_index"].'" class="highslide" onclick="return         hs.htmlExpand(this, { objectType: \'iframe\',width:450, height:550,preserveContent:false } )"style="text-decoration: underline; cursor:pointer;"> Ver m&aacute;s</a><br>';
+						$texto_tabla.="</p>";
+						$texto_tabla.="</td></tr>";
+					}
+					$texto_tabla.="</table>";
+					$texto_tabla.="<br/>";
+					echo $texto_tabla;
+				}
+			?>
+		</div>	
+
+
+
+
+
 </body>
 </html>
 <?php include_once("fin_cargando.php");

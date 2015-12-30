@@ -114,9 +114,17 @@ $texto='<script type="text/javascript" src="'.$raiz_saia.'js/bootstrap.js"></scr
 $texto.='<script type="text/javascript" src="'.$raiz_saia.'js/jasny-bootstrap.min.js"></script>';
 return($texto);
 }
-function librerias_validar_formulario(){
+function librerias_validar_formulario($version=''){
 global $raiz_saia; 
-$texto='<script type="text/javascript" src="'.$raiz_saia.'js/jquery.validate.js"></script>';
+
+
+if($version==11){
+	$texto='<script type="text/javascript" src="'.$raiz_saia.'js/jquery.validate_v1.11.js"></script>';
+}else{
+	$texto='<script type="text/javascript" src="'.$raiz_saia.'js/jquery.validate.js"></script>';
+}
+
+
 $texto.='<style>label.valid {width: 24px; height: 24px; background: url('.$raiz_saia.'asset/img/layout/valid.png) center center no-repeat; display: inline-block;text-indent: -9999px;}label.error {font-weight: bold;color: red;padding: 2px 8px;margin-top: 2px;}</style>';
 return($texto);
 }
@@ -285,4 +293,23 @@ $texto='';
 $texto.='<script src="'.$raiz_saia.'js/jquery_rotate.js" type="text/javascript" charset="utf-8"></script>';
 return($texto);
 }
+
+function librerias_file_upload(){		
+  global $raiz_saia;		
+  $texto='';		
+  $texto.='<script src="'.$raiz_saia.'pantallas/anexos/js/jquery.ui.widget.js" type="text/javascript"></script>';		
+  $texto.='<script src="'.$raiz_saia.'pantallas/anexos/js/jquery.iframe-transport.js" type="text/javascript"></script>';		
+  $texto.='<script src="'.$raiz_saia.'pantallas/anexos/js/jquery.fileupload.js" type="text/javascript"></script>';		
+  $texto.='<script src="'.$raiz_saia.'pantallas/anexos/js/jquery.fileupload-process.js" type="text/javascript"></script>';		
+  $texto.='<script src="'.$raiz_saia.'pantallas/anexos/js/jquery.fileupload-validate.js" type="text/javascript"></script>';		
+  return($texto);		
+}
+function estilo_file_upload(){		
+  global $raiz_saia;		
+  $texto='';		
+  $texto.='<link rel="stylesheet" href="'.$raiz_saia.'pantallas/anexos/css/jquery.fileupload-ui.css" type="text/css" />';		
+  return($texto);		
+}		
+
+
 ?>

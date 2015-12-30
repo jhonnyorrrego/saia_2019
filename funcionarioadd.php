@@ -22,7 +22,12 @@ echo(librerias_notificaciones());
               });
             })});
             
-            $(function() {$('#x_login').blur(function(){
+            $(function() {
+	           $('#x_login').keyup(function(){
+								 this.value = (this.value + '').replace(/([^a-zA-Z0-9_.])+/, '');
+							});
+            	$('#x_login').blur(function(){
+            		this.value = (this.value + '').replace(/([^a-zA-Z0-9_.])+/, '');
               $.ajax({
                 type:'POST',
                 url:'formatos/librerias/validar_unico.php',

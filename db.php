@@ -2031,21 +2031,10 @@ function ingresar_documento($doc,$tipo_contador,$arreglo,$destino,$archivos=NULL
        /// Nuevo Procesamiento de anexos ... los anexos seran almacenados en documento edit..  
   
       }
-	  global $ruta_db_superior;
-	    if($flujo != ''){
-	      include_once($ruta_db_superior."workflow/libreria_paso.php");
-	      if($flujo){  
-	        iniciar_flujo($doc,$flujo);
-	        //echo($idflujo." AQUI");
-	      }  
-	      /*elseif(@$_REQUEST["idpaso_documento"]){
-	        $paso_documento=busca_filtro_tabla("","paso_documento","idpaso_documento=".$_REQUEST["idpaso_documento"],"",$conn);
-	        if($paso_documento){
-	          vincular_documento_paso($paso_documento[0]["diagram_iddiagram_instance"],$paso_documento[0]["paso_idpaso"],$doc);
-	        }
-	      }*/
-	    }
-return $doc;
+  global $ruta_db_superior;
+  include_once($ruta_db_superior."workflow/libreria_paso.php");
+  iniciar_flujo($doc,$flujo);
+  return $doc;
 }
 
 /*

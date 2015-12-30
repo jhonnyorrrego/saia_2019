@@ -17,6 +17,7 @@ include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."sql.php");
 include_once($ruta_db_superior."asignacion.php");
 include_once($ruta_db_superior."formatos/librerias/funciones_acciones.php");
+include_once($ruta_db_superior."bpmn/librerias_formato.php");
 /*<Clase>
 <Nombre>buscar_funcionarios</Nombre>
 <Parametros>$dependencia:id de las dependencias a revisar;$arreglo:variable donde se va a guardar el resultado</Parametros>
@@ -318,13 +319,9 @@ function radicar_documento_prueba($tipo_contador,$arreglo,$archivos=NULL,$idfluj
     global $ruta_db_superior;
     if(!$idflujo && @$_REQUEST["idflujo"])
       $idflujo=$_REQUEST["idflujo"];
-    if($idflujo){
-      include_once($ruta_db_superior."workflow/libreria_paso.php");
-      if($idflujo){  
-        iniciar_flujo($doc,$idflujo);
-        //echo($idflujo." AQUI");
-      }  
-    } 
+    //Modificacion 01-06-2015 para que la validacion al iniciar flujo se realice dentro de la funcion  
+    include_once($ruta_db_superior."workflow/libreria_paso.php");  
+    iniciar_flujo($doc,$idflujo); 
     return ($doc); 
 }
 /*
@@ -556,9 +553,10 @@ function aprobar($iddoc=0,$url="")
 	 $datos_formato=busca_filtro_tabla("mostrar_pdf","formato a","a.idformato='".$tipo_radicado[0]["idformato"]."'","",$conn);
    
    $formato=strtolower($tipo_radicado[0]["plantilla"]);
-   $registro_actual=busca_filtro_tabla("A.*","buzon_entrada A","A.archivo_idarchivo=".$iddoc." and A.activo=1 and (A.nombre='POR_APROBAR') and A.destino=".$_SESSION["usuario_actual"],"A.idtransferencia",$conn);     
-   /*Se adiciona esta linea para las ejecutar las acciones sobre los formatos*/
+    /*Se adiciona esta linea para las ejecutar las acciones sobre los formatos*/
    llama_funcion_accion($iddoc,$tipo_radicado[0]["idformato"],"confirmar","ANTERIOR");
+   $registro_actual=busca_filtro_tabla("A.*","buzon_entrada A","A.archivo_idarchivo=".$iddoc." and A.activo=1 and (A.nombre='POR_APROBAR') and A.destino=".$_SESSION["usuario_actual"],"A.idtransferencia",$conn);     
+  
    if($registro_actual["numcampos"]>0)
       {$registro_anterior=busca_filtro_tabla("A.*","buzon_entrada A","A.nombre='POR_APROBAR' and A.activo=1 and A.idtransferencia<".$registro_actual[0]["idtransferencia"]." and A.archivo_idarchivo=".$iddoc." and origen=".$_SESSION["usuario_actual"],"A.idtransferencia desc",$conn);
        $terminado=busca_filtro_tabla("A.*","buzon_entrada A","A.archivo_idarchivo=".$iddoc." and A.nombre='POR_APROBAR' and A.activo=1","A.idtransferencia",$conn);
@@ -2496,9 +2494,14 @@ function guardar_documento($iddoc,$tipo=0)
     $campo=busca_filtro_tabla("","campos_formato","idcampos_formato IN(".$_REQUEST["campo_descripcion"].")","orden",$conn);
     for($i=0;$i<$campo["numcampos"];$i++){
       if(isset($_REQUEST[$campo[$i]["nombre"]])){
-        if($i==0)
-          $descripcion=$campo[$i]["etiqueta"].": ".mostrar_valor_campo($campo[$i]["nombre"],$idformato,$iddoc,1);
-        else  $descripcion.="<br />".$campo[$i]["etiqueta"].": ".mostrar_valor_campo($campo[$i]["nombre"],$idformato,$iddoc,1);
+        if($i==0){
+        	 //$descripcion=$campo[$i]["etiqueta"].": ".mostrar_valor_campo($campo[$i]["nombre"],$idformato,$iddoc,1);
+		  $descripcion=mostrar_valor_campo($campo[$i]["nombre"],$idformato,$iddoc,1);
+        } 
+        else{
+        	 //$descripcion.="<br />".$campo[$i]["etiqueta"].": ".mostrar_valor_campo($campo[$i]["nombre"],$idformato,$iddoc,1);
+        	 $descripcion.="<br />".mostrar_valor_campo($campo[$i]["nombre"],$idformato,$iddoc,1);
+        } 
       }
     }
    }

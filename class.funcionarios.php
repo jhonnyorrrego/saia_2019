@@ -536,6 +536,10 @@ switch($tipo_dato){
 }
 function verificar_existencia_funcionario($entidad,$llave_entidad,$funcionario_codigo){
 global $conn;
+//llave_entidad =-1 es la llave generica es decir cualquiera lo puede hacer
+if($llave_entidad==-1)
+  return(true);
+
 $condicion='';
 switch($entidad){
     case 1://funcionario
