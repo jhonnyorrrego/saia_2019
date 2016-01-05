@@ -63,7 +63,7 @@ if($formato["numcampos"])
       redirecciona("formatos/".$formato[0]["nombre"]."/".$formato[0]["ruta_adicionar"]);
     }*/
   }
-  else alerta("El formato ".$formato[0]["nombre"]." No ha sido enontrado!");   
+  else alerta("El formato ".$formato[0]["nombre"]." No ha sido encontrado!");   
 }
 if($documento["numcampos"]){
 menu_ordenar($iddoc);
@@ -96,7 +96,7 @@ $permiso=new PERMISO();
 
 echo lista_formatos("", "");
 
-$categorias = busca_filtro_tabla("", "categoria_formato a", "lower(nombre) not like 'radicacion'", "idcategoria_formato asc", $conn);
+$categorias = busca_filtro_tabla("", "categoria_formato a", "lower(nombre)<>'radicacion'", "idcategoria_formato asc", $conn);
 for ($j = 0; $j < $categorias["numcampos"]; $j++) {
   
   echo lista_formatos($categorias[$j]["idcategoria_formato"], $categorias[$j]["nombre"]);
@@ -121,7 +121,8 @@ function lista_formatos($idcategoria, $nombre) {
     global $permiso, $complemento;
     $adicional = " and fk_categoria_formato is null";
     if ($idcategoria){
-      $adicional = " and fk_categoria_formato='" . $idcategoria . "'";
+      	$adicional = " and fk_categoria_formato='" . $idcategoria . "'";
+	  //$adicional = " and (fk_categoria_formato like'" . $idcategoria . "'  or  fk_categoria_formato like'%," . $idcategoria . "' or fk_categoria_formato like'" . $idcategoria . ",%' or fk_categoria_formato like'%," . $idcategoria . ",%') ";
     }
     $lformatos = busca_filtro_tabla("imagen,ruta_adicionar,nombre,etiqueta,cod_padre,idformato", "formato A", "mostrar=1 AND detalle=0" . $adicional, "etiqueta", $conn);
     $retorno = '';

@@ -135,4 +135,7 @@ function mostrar_radicado_pqrsf($idformato,$iddoc){
 	$contador=busca_filtro_tabla("b.consecutivo","formato a, contador b","a.contador_idcontador=b.idcontador AND a.idformato=".$idformato,"",$conn);
 	echo("<td><input type='text' readonly id='numero_radicado' name='numero_radicado' value='".$contador[0]['consecutivo']."'></td>");
 }
+
+
+
 ?>

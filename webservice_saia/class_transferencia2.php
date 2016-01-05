@@ -318,6 +318,12 @@ function radicar_documento_prueba($tipo_contador,$arreglo,$archivos=NULL,$idfluj
     global $ruta_db_superior;
     if(!$idflujo && @$_REQUEST["idflujo"])
       $idflujo=$_REQUEST["idflujo"];
+	
+    //Modificacion 01-06-2015 para que la validacion al iniciar flujo se realice dentro de la funcion  
+    include_once($ruta_db_superior."workflow/libreria_paso.php");  
+    iniciar_flujo($doc,$idflujo); 	
+	/*
+	
     if($idflujo){
       include_once($ruta_db_superior."workflow/libreria_paso.php");
       if($idflujo){  
@@ -325,6 +331,8 @@ function radicar_documento_prueba($tipo_contador,$arreglo,$archivos=NULL,$idfluj
         //echo($idflujo." AQUI");
       }  
     } 
+    */
+    
     return ($doc); 
 }
 /*
@@ -551,9 +559,10 @@ function aprobar($iddoc=0,$url="")
    $tipo_radicado=busca_filtro_tabla("documento.*,contador.nombre,idformato","documento,contador,formato","idcontador=tipo_radicado and iddocumento=$iddoc and lower(plantilla)=lower(formato.nombre)","",$conn);
    
    $formato=strtolower($tipo_radicado[0]["plantilla"]);
+   llama_funcion_accion($iddoc,$tipo_radicado[0]["idformato"],"confirmar","ANTERIOR");
    $registro_actual=busca_filtro_tabla("A.*","buzon_entrada A","A.archivo_idarchivo=".$iddoc." and A.activo=1 and (A.nombre='POR_APROBAR') and A.destino=".$_SESSION["usuario_actual"],"A.idtransferencia",$conn);     
    /*Se adiciona esta linea para las ejecutar las acciones sobre los formatos*/
-   llama_funcion_accion($iddoc,$tipo_radicado[0]["idformato"],"confirmar","ANTERIOR");
+   
    if($registro_actual["numcampos"]>0)
       {$registro_anterior=busca_filtro_tabla("A.*","buzon_entrada A","A.nombre='POR_APROBAR' and A.activo=1 and A.idtransferencia<".$registro_actual[0]["idtransferencia"]." and A.archivo_idarchivo=".$iddoc." and origen=".$_SESSION["usuario_actual"],"A.idtransferencia desc",$conn);
        $terminado=busca_filtro_tabla("A.*","buzon_entrada A","A.archivo_idarchivo=".$iddoc." and A.nombre='POR_APROBAR' and A.activo=1","A.idtransferencia",$conn);

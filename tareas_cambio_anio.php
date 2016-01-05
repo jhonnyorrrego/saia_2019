@@ -1,11 +1,19 @@
 <?php
+set_time_limit(0);
 include_once("db.php");
+if(!$_SESSION["LOGIN"] && !$_SESSION["LOGIN".LLAVE_SAIA]){
+	@session_start();
+	$_SESSION["LOGIN"]="cerok";
+	$_SESSION["LOGIN".LLAVE_SAIA]="cerok";
+	$_SESSION["usuario_actual"]="1";
+}
+//usuario_actual('login');
 function inicio_actualizacion(){
 	$inicio=busca_filtro_tabla("valor","configuracion","nombre='inicio_actualizacion'","",$conn);
 	if($inicio["numcampos"])
   	$sql="update configuracion set valor='".date("Y-m-d H:i:s")."' where nombre='inicio_actualizacion'";
 	else
-  	$sql="insert into configuracion(nombre,valor) values('inicio_actualizacion','".date("Y-m-d H:i:s")."')";  
+  	$sql="insert into configuracion(nombre,valor,tipo) values('inicio_actualizacion','".date("Y-m-d H:i:s")."', 'actualizacion')";  
 	phpmkr_query($sql,$conn);
 	$sql="update configuracion set valor='".date("Y")."-12-31' where nombre='actualizacion_fin_anio'";
 	phpmkr_query($sql,$conn);
@@ -13,31 +21,32 @@ function inicio_actualizacion(){
 }
 function actualizar_contadores(){
 	global $conn;
- 	$cont=busca_filtro_tabla("","contador","reiniciar_cambio_anio=1","",$conn);
+ 	$cont=busca_filtro_tabla("","contador","reiniciar_cambio_anio='1'","",$conn);
  	$texto="";
 
 	if(!is_dir("../backup"))
   	mkdir("../backup",0777);
 	$nombre="../backup/backup_contadores_".date("Y").".txt";
-	if(!is_file($nombre)){
-  	for($i=0;$i<$cont["numcampos"];$i++){
-  		$sql="update contador set consecutivo=1 where idcontador='".$cont[$i]["idcontador"]."'";
-     	phpmkr_query($sql,$conn); 
-     	$texto.="update contador set consecutivo='".$cont[$i]["consecutivo"]."' where idcontador='".$cont[$i]["idcontador"]."';\n";
-		}
-  	$archi=fopen($nombre,"w");  
-  	chmod($nombre,0777);
-  	fwrite($archi,$texto);
-  	fclose($archi);  
-	}  
+
+	for($i=0;$i<$cont["numcampos"];$i++){
+		$sql="update contador set consecutivo='1' where idcontador=".$cont[$i]["idcontador"];
+   	phpmkr_query($sql,$conn); 
+   	$texto.="update contador set consecutivo='".$cont[$i]["consecutivo"]."' where idcontador=".$cont[$i]["idcontador"].";\n";
+	}
+	
+	$archi=fopen($nombre,"w");
+	chmod($nombre,0777);
+	fwrite($archi,$texto);
+	fclose($archi);
+
 	actualizar_festivos();
 }
 function actualizar_festivos(){
 	global $conn;
  	if(($handle = fopen("festivos.csv", "r")) !== FALSE){
-  	while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
-    	$existe=busca_filtro_tabla("","asignacion","documento_iddocumento=-1 and ".fecha_db_obtener("fecha_inicial","d-m-y")." like '".$data[0]."' and ".fecha_db_obtener("fecha_final","d-m-y")." like '".$data[1]."'","",$conn);
-    
+  	while (($data = fgetcsv($handle, 1000, ",")) !== FALSE){
+    	$existe=busca_filtro_tabla("","asignacion","documento_iddocumento=-1 and ".fecha_db_obtener("fecha_inicial","d/m/y")." like '".$data[0]."' and ".fecha_db_obtener("fecha_final","d/m/y")." like '".$data[1]."'","",$conn);
+			
      	if(!$existe["numcampos"]){
      		$sql="insert into asignacion(fecha_inicial,fecha_final,documento_iddocumento,tarea_idtarea) values(".fecha_db_almacenar($data[0],"d-m-y").",".fecha_db_almacenar($data[1],"d-m-y").",-1,1)";
         phpmkr_query($sql);
@@ -55,54 +64,90 @@ function actualizar_rol(){
   for($n=0; $n<$antes["numcampos"]; $n++){
   	fwrite($archi,"update dependencia_cargo set fecha_final=".fecha_db_almacenar($antes[$n]["fecha_final"],"Y-m-d")." where iddependencia_cargo=".$antes[$n]["iddependencia_cargo"].";\n\r");             
   }
-  fclose($archi);   
-  $sql="update dependencia_cargo set fecha_final=".suma_fechas("fecha_final","1","YEAR")." where estado=1";
+  fclose($archi);
+  $sql="update dependencia_cargo set fecha_final=".fecha_db_almacenar(date("Y")."-12-31","Y-m-d")." where estado=1";
   $conn->Ejecutar_Sql($sql);
-  limpiar_evento();
-}
-function limpiar_evento(){
-	global $conn;
- 	$sql="TRUNCATE TABLE evento";
- 	$conn->Ejecutar_Sql($sql);
- 	guardar_log_acceso_archivo();
+  guardar_log_acceso_archivo();
 }
 function guardar_log_acceso_archivo(){
 	global $conn;
  	if(!is_dir("../backup"))
  		mkdir("../backup",0777);
- 	$nombre="../backup/backup_log_acceso_".date("Y").".txt";
-  if(!is_file($nombre)){
-  	$archi=fopen($nombre,"w");
-   	chmod($nombre,0777);
-   	$aux=$conn->Ejecutar_Sql("select * from log_acceso where ".fecha_db_obtener("fecha","Y")."<'".date("Y")."'");
-
-   	while($evento = @phpmkr_fetch_array($aux)){
-   		fwrite($archi,$evento["idlog_acceso"]."||@@||".$evento["iplocal"]."||@@||".$evento["login"]."||@@||".$evento["ipremota"]."||@@||".$evento["exito"]."||@@||".$evento["fecha"]."||@@||".$evento["fecha_cierre"]."||@@||".$evento["funcionario_idfuncionario"]."||@@||".$evento["idsesion_php"]."||@@||".$evento["sesion_php"]."\n"); 
-    }
-   	fclose($archi);
-	}
- 	$sql="delete from log_acceso where ".fecha_db_obtener("fecha","Y-m-d")."<'".date("Y-m-d")."'";
- 	$conn->Ejecutar_sql($sql);
+ 	$evento=busca_filtro_tabla("","log_acceso","".fecha_db_obtener("fecha","y")."<='".date("Y")."'","",$conn);
+	$texto="";
+ 	for($i=0;$i<$evento["numcampos"];$i++){
+ 		$texto.="insert into log_acceso(idlog_acceso, iplocal, login, ipremota, exito, fecha, fecha_cierre, funcionario_idfuncionario, idsesion_php, sesion_php)values('".$evento[$i]["idlog_acceso"]."', '".$evento[$i]["iplocal"]."', '".$evento[$i]["login"]."', '".$evento[$i]["ipremota"]."', '".$evento[$i]["exito"]."', '".$evento[$i]["fecha"]."', '".$evento[$i]["fecha_cierre"]."', '".$evento[$i]["funcionario_idfuncionario"]."', '".$evento[$i]["idsesion_php"]."', '".$evento[$i]["sesion_php"]."')\n\r";
+  }
+	$nombre="../backup/backup_log_acceso_".date("Y").".txt";
+	$archi=fopen($nombre,"w");
+ 	chmod($nombre,0777);
+	fwrite($archi,$texto);
+ 	fclose($archi);
+	
+ 	$sql2="delete from log_acceso where ".fecha_db_obtener("fecha","Y-m-d")."<'".date("Y-m-d")."'";
+ 	$conn->Ejecutar_sql($sql2);
  	borrar_eliminados();
 }
 function borrar_eliminados(){
 	global $conn;
- 	$resultado=busca_filtro_tabla("iddocumento,fecha,numero","documento","estado='ELIMINADO' and ".fecha_db_obtener("fecha","Y-m-d H:i:s")."<'2009-12-31 23:59:59'","fecha asc",$conn);
+ 	$resultado=busca_filtro_tabla("iddocumento,fecha,numero","documento","estado='ELIMINADO' and ".fecha_db_obtener("fecha","Y-m-d H:i:s")."<'".date('Y-m-d H:i:s')."'","fecha asc",$conn);
 	$m=0;
-	include_once("documento_eliminar.php");  
+	include_once("documento_eliminar.php");
 	for($m=0;$m<$resultado["numcampos"];$m++)
-  	datos_documento($resultado[$m]["iddocumento"],"eliminados/");
+  	datos_documento($resultado[$m]["iddocumento"],"");
+ 	limpiar_evento();
+}
+function limpiar_evento(){
+	global $conn;
+ 	$sql1="truncate table evento;";
+ 	$conn->Ejecutar_Sql($sql1);
+	
  	finalizar_actualizacion();
 }
 function finalizar_actualizacion(){
 	global $conn;
  	$fin=busca_filtro_tabla("valor","configuracion","nombre='fin_actualizacion'","",$conn);
- 	if($inicio["numcampos"])
+ 	if($fin["numcampos"])
   	$sql="update configuracion set valor='".date("Y-m-d H:i:s")."' where nombre='fin_actualizacion'";
  	else
-  	$sql="insert into configuracion(nombre,valor) values('fin_actualizacion','".date("Y-m-d H:i:s")."')"; 
- 	phpmkr_query($sql); 
- 	//redirecciona("index.php"); 
+  	$sql="insert into configuracion(nombre,valor,tipo) values('fin_actualizacion','".date("Y-m-d H:i:s")."','actualizacion')"; 
+ 	phpmkr_query($sql);
+ 	//redirecciona("index.php");
+ 	generar_reporte();
+}
+function generar_reporte(){
+	global $conn;
+	$festivos=busca_filtro_tabla("count(*) as cantidad","asignacion A","A.documento_iddocumento=-1 AND ".fecha_db_obtener('A.fecha_inicial','Y').">='2015'","",$conn);
+	
+	$festivo=2;
+	if($festivos[0]["cantidad"]>68){
+		$festivo=1;
+	}
+	
+	$log_accesos=busca_filtro_tabla("","log_acceso A","A.login not in('cerok')","",$conn);
+	$log_acceso=1;
+	if($log_accesos["numcampos"]){
+		$log_acceso=2;
+	}
+	
+	$actualizar_contadores=busca_filtro_tabla("","contador A","reiniciar_cambio_anio='1' AND consecutivo<>1","",$conn);
+	$actualizar_contadore=1;
+	if($actualizar_contadores["numcampos"]){
+		$actualizar_contadore=2;
+	}
+	
+	$borrar_eliminados=busca_filtro_tabla("","documento A","A.estado='ELIMINADO'","",$conn);
+	$borrar_eliminado=1;
+	if($borrar_eliminados["numcampos"]){
+		$borrar_eliminado=2;
+	}
+	
+	$ch=curl_init();
+	$fila="http://75.101.166.85/saia_cerok/verificacion_cliente/llamado_prueba_web.php?documento_cliente=".@$_REQUEST["cliente"]."&dato1=Actualizacion&dato2=Actualizacion&dato3=Actualizacion&adicionales=festivos/".$festivo.",log_acceso/".$log_acceso.",contadores/".$actualizar_contadore.",eliminados/".$borrar_eliminado;	
+	curl_setopt($ch, CURLOPT_URL,$fila);
+ 	curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);  
+ 	$contenido=curl_exec($ch);
+	curl_close($ch);
 }
 /*function actualizar_contadores()
 {global $conn;
@@ -159,7 +204,7 @@ function terminar_pendientes()
  include_once("documento_eliminar.php");
  for($j=0; $j<$funcionarios["numcampos"]; $j++)
  {
- $doc_destino="../backup/terminados/".$funcionarios[$j]["cod"];
+ $doc_destino="../backup/terminados/".date("Y-m-d")."/".$funcionarios[$j]["cod"];
  crear_destino($doc_destino);
  $text = terminar_documentos($funcionarios[$j]["cod"]);
  if($text!="")
@@ -273,6 +318,10 @@ function eliminar_transferencias($llave,$fun)
   return $texto;  
 }
 
-if(isset($_REQUEST["ejecutar_funcion"])&&$_REQUEST["ejecutar_funcion"])
+if(isset($_REQUEST["ejecutar_funcion"])&&$_REQUEST["ejecutar_funcion"] && date('Y-m-d')=='2016-01-01'){
   $_REQUEST["ejecutar_funcion"]();
+}else{
+  echo("Aun no se puede ejecutar el script. La fecha de ejecucion es 2016-01-01");
+  die();
+}
 ?>

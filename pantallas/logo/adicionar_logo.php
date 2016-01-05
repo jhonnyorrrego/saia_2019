@@ -30,21 +30,74 @@ function formulario(){
 	<fieldset id="content_form_name">
     <legend>Cargar logo</legend>
   </fieldset>
-	<div class="control-group">
-		<label class="control-label" for="logo"><b>Ingresar logo(Formato .jpg, tama&ntilde;o 100px x 90px)</b></label>
-		<div class="controls">
-			<input type="file" name="anexo" id="anexo">
-		</div>
-	</div>
+
 	<div class="control-group">
 		<label class="control-label" for="imagen"><b>Logo actual</b></label>
 		<div class="controls">
 			<?php echo($imagen); ?>
 		</div>
 	</div>
+	<br>  
+	<div class="control-group">
+		<label class="control-label" for="logo"><b>Ingresar logo(Formato .jpg, tama&ntilde;o 100px x 90px)</b></label>
+		<div class="controls">
+			<input type="file" name="anexo" id="anexo">
+		</div>
+	</div>
+
+	<div class="control-group">
+		<label class="control-label" for="logo"><b>Vista Previa</b></label>
+		<div class="controls">
+			<img id="imagen_previa" />
+		</div>
+	</div>	
+
 		<td colspan="2"><input type="submit" value="Guardar" name="enviar" class="btn btn-primary btn-mini"></td>
 		<input type="hidden" name="accion" value="guardar">
 	</form>
+
+	
+
+<style>
+#imagen_previa{
+    width: 15em;
+    height: 10em;
+    opacity: 0;
+    display: block;
+    transition: 2.5s;
+}	
+</style>
+
+<script>
+var input = document.getElementById("anexo"),
+    img = document.getElementById("imagen_previa");
+
+input.addEventListener("change", function(){
+    var file = this.files[0],
+        reader = new FileReader();
+			    
+    reader.addEventListener("load", function(e){
+	    if (img.style.opacity == 0){
+		    img.src = e.target.result;
+			img.style.opacity = 1;
+        }
+		else{
+		    img.style.opacity = 0;
+			setTimeout(function(){
+			    img.src = e.target.result;
+			    img.style.opacity = 1;
+            }, 1000);
+        }
+    }, false);
+			  
+	reader.readAsDataURL(file);
+}, false);	
+</script>	
+
+
+
+	
+	
 	<?php
 }
 function guardar_imagen(){
