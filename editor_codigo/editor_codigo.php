@@ -10,11 +10,18 @@ while ( $max_salida > 0 ) {
 }
 include_once ($ruta_db_superior . "db.php");
 include_once ($ruta_db_superior . "librerias_saia.php");
+include_once ($ruta_db_superior . "editor_codigo/GitApi/Git0K.php");
+//ini_set("display_errors",true);
+session_start();
 echo(estilo_bootstrap ());
 echo(librerias_jquery("1.7"));
 echo(librerias_bootstrap());
-echo (librerias_principal());
-echo (librerias_notificaciones ());
+echo(librerias_principal());
+echo(librerias_notificaciones());
+echo(librerias_arboles());
+if(!isset($_SESSION["LOGIN".LLAVE_SAIA_EDITOR]) || !isset($_SESSION["EMAIL".LLAVE_SAIA_EDITOR])){
+  abrir_url($ruta_db_superior."editor_codigo/index.php","_top");
+}
 ?>
 <style>
 #panel_detalles {
@@ -137,7 +144,44 @@ input[type=text] {
       </ul>
       <div class="tab-content tab_opciones">
         <div class="tab-pane active" id="izquierdo_saia" style="width: 100%"></div>
-        <div class="tab-pane" id="div_nuevo">Nuevo</div>
+        <div class="tab-pane" id="div_nuevo">
+            <form id="formulario_archivo_nuevo" class="form-horizontal">
+    			<div class="control-group">
+    				<label class="control-label" for="nuevo">Nuevo*:</label>
+    				<div class="controls">
+    					<input type="radio" class="required" name="tipo_nuevo" id="tipo_nuevo0" value="1" checked>Archivo
+    					<input type="radio" name="tipo_nuevo" id="tipo_nuevo1" value="2">Carpeta
+    				</div>
+			    </div>
+    			<div class="control-group">
+    				<label class="control-label" for="nombre_archivo">Nombre*:</label>
+    				<div class="controls">
+    					<input type="text" name="nombre_archivo" id="nombre_archivo" class="required"  value="">
+    				</div>
+    			</div>
+    			<div class="control-group">
+    				<label class="control-label" for="extension">Extensi&oacute;n:</label>
+    				<div class="controls">
+    					<input type="radio" class="required" name="extension_archivo" id="extension_php" value="php" checked>PHP
+    					<input type="radio" name="extension_archivo" id="extension_js" value="js">JS
+    					<input type="radio" name="extension_archivo" id="extension_css" value="css">CSS
+    				</div>
+			    </div>
+    			<div class="control-group">
+    				<label class="control-label" for="nombre_carpeta">Nombre Carpeta*:</label>
+    				<div class="controls">
+    				    <div id="arbol_carpetas"></div>
+	                    <input type="hidden" name="nombre_carpeta" id="nombre_carpeta" value="">
+	                    <input type="hidden" name="carpeta_actual" id="carpeta_actual" value="">
+    				</div>
+    			</div>
+    			<div class="control-group">
+    				<div class="controls">
+                        <div class="btn btn-mini btn-primary" id="boton_crear_archivo">Crear</div>    					
+    				</div>
+    			</div>
+            </form>
+        </div>
         <div class="tab-pane" id="div_buscar">
           <div class="input-append">
             <input type="text"  name="buscar_infecciones" id="buscar_infecciones" placeholder="Cadena">
@@ -164,12 +208,14 @@ input[type=text] {
         </div>
       </div>
     </div>
-    <!--div class="btn-toolbar">
+    <div class="btn-toolbar">
         <div class="btn-group">
-            <div class="btn btn-mini disabled" id="archivo_nuevo"><i class="icon-hdd"></i>Nuevo</div>
-            <div class="btn btn-mini disabled" id="sincronizar"><i class="icon-upload"></i>Sincronizar</div>
+            <!--div class="btn btn-mini disabled" id="archivo_nuevo"><i class="icon-hdd"></i>Nuevo</div-->
+            <div id="esperando_sincronizar" class="pull-left"><img src="<?php echo($ruta_db_superior);?>imagenes/cargando.gif"></div>
+            <div class="btn btn-mini" id="sincronizar"><i class="icon-upload"></i>Sincronizar</div>
+            <div class="btn btn-mini" id="sincronizar_cerrar"><i class="icon-off"></i>Cerrar</div>
         </div>
-    </div-->
+    </div>
   </div>
   <div id="panel_derecho" class="span9 panel">
     <div class="scroller scroller-left"><i class="icon-chevron-left"></i></div>
@@ -193,6 +239,8 @@ var gitInfo;
 var archivosMergeSeleccionados;
 
 $(document).ready(function(){
+  sincronizar_repositorio_saia();
+  var toggle=false;
   $("#panel_arbol_archivos").height(alto-alto_menu-80);
   $("#izquierdo_saia").height(alto-alto_menu-80);
   $("#arbol_archivos").height(alto-alto_menu-80);
@@ -212,6 +260,73 @@ $(document).ready(function(){
   });
   $("#archivo_nuevo").click(function(){
     adicionar_tab(ruta_archivo,extension,nombre_archivo,nodeId)  
+  });
+  $("#sincronizar").click(function(){
+      sincronizar_repositorio_saia();
+  });
+  $("#sincronizar_cerrar").click(function(){
+      window.open("<?php echo($ruta_db_superior); ?>editor_codigo/index.php","_self");
+  });
+  $(window).bind('beforeunload', function(){
+    sincronizar_repositorio_saia();  
+	return 'Seguro que quiere Salir';
+  });
+  function sincronizar_repositorio_saia(){
+    iniciar_cargando(); 
+    var data = {'ruta_archivo' : "", "rutaTemporal" : "", "comentario" : "Sincronizacion de todo el repositorio por medio del boton",  "contenido" : "", "gitInfo" : gitInfo, "saveType" : "push"}; 
+    data = $.param(data);
+    $.ajax({
+      type:'POST',
+      url: 'guardar_archivo.php', 
+      dataType:"json", 
+      data: data,
+      success: function(datos) {                              
+        if(datos){ 
+            if(datos["resultado"]) {
+                if(datos["resultado"] == 'ok') {
+                    notificacion_saia(datos["mensaje"],"success","",3000);
+                    fin_cargando();
+                    return true;
+                } else {
+                    notificacion_saia(datos["ruta_archivo"] + ": " + datos["mensaje"],"error","",5000);
+                }
+                gitErrorInfo = datos["gitErrorInfo"];
+                //alert(JSON.stringify(gitInfo));
+                if(gitErrorInfo) {
+                    notificacion_saia("Error git: "+ gitErrorInfo, "warning","",3000);
+                }
+            } else {
+                notificacion_saia("Sin resultado en el llamado","error","",3000);
+            }
+        } else {
+            notificacion_saia("Sin respuesta","error","",3000);
+        }
+      }
+    });
+  }
+  $("#boton_crear_archivo").click(function(){
+    var datos_post = "librerias=pantallas/lib/librerias_archivo.php&funcion=crear_archivo_carpeta&parametros="+$("#nombre_archivo").val()+";"+$("#nombre_carpeta").val()+";"+$("input[name='extension_archivo']:checked").val()+";"+$("input[name='tipo_nuevo']:checked").val();
+    $.ajax({
+      type:'POST',
+      url: '<?php echo($ruta_db_superior);?>pantallas/lib/llamado_ajax.php', 
+      data: datos_post,
+      success: function(datos) {
+        if(datos){
+            $("#arbol_archivos").attr( 'src', function () { return $( this )[0].src; } );
+            //si el tipo es carpeta
+            if($("input[name='tipo_nuevo']:checked").val()===2){
+                tree_carpetas.deleteChildItems(0);
+                tree_carpetas.loadXML("<?php echo($ruta_db_superior);?>pantallas/lib/test_archivos_carpetas.php?solo_carpetas=1&random="+Math.random());
+            }
+            notificacion_saia(datos,"success","",3000);
+        }else {
+          notificacion_saia("Sin respuesta","error","",3000);
+        }
+      },
+      error:function(){
+        alert("ERROR");
+      }
+    });
   });
   $("#btn_buscar_infecciones").click(function(){
     $("#cargando_resultado_busqueda").html("cargando...");
@@ -270,29 +385,18 @@ $(document).ready(function(){
    }
    
   });
-  /*
-    $("#dialog-ok").on("click", function () {
-        var seleccionados = [];
-
-    	$('.modal-body input').each(function(){
-        if($(this).prop('checked')== true)
-        	//alert($(this).val());
-        	seleccionados.push($(this).val());
-        });
-        actualizarRepositorio(seleccionados);
-    });*/
-    
+    /*
     function llamado_pantalla(ruta,datos,destino,nombre){                
           if(datos!==''){
             ruta+="?"+datos;
           }
           if(nombre === "<?php echo(@$_REQUEST['destino_click']);?>"){      
               ruta = ruta+'&click_clase=<?php echo(@$_REQUEST['click_clase']); ?>';      
-              destino.html('<div id="panel_'+nombre+'" border="1px"><iframe name="'+nombre+'" src="'+ruta+'" width="100%" id="'+nombre+'" frameborder="0"></iframe></div>'); 
+              destino.html('<div id="panel_'+nombre+'" border="1px"><iframe class=""name="'+nombre+'" src="'+ruta+'" width="100%" id="'+nombre+'" frameborder="0"></iframe></div>'); 
           }
               destino.html('<div id="panel_'+nombre+'"><iframe name="'+nombre+'" src="'+ruta+'" width="100%" id="'+nombre+'" frameborder="0"></iframe></div>'); 
-    }
-    llamado_pantalla("<?php echo($ruta_db_superior);?>editor_codigo/editor.php","",$("#contenedor_saia"),"editor");
+    }*/
+    llamado_pantalla("<?php echo($ruta_db_superior);?>editor_codigo/editor.php","",$("#contenedor_saia"),"editor","");
     });
 
 function actualizarRepositorio(seleccionados) {
@@ -399,24 +503,35 @@ var reAdjust = function(){
 }
 reAdjust();
 
-function llamado_pantalla(ruta,datos,destino,nombre){
+function llamado_pantalla(ruta,datos,destino,nombre,clase){
   var alto_frame=($(document).height()-60);                
   if(datos!==''){
     ruta+="?"+datos;
   }
+  clase_frame='';
+  if(clase!==""){
+      clase_frame=' class="'+clase+'" ';
+  }
   if(nombre === "<?php echo(@$_REQUEST['destino_click']);?>"){      
     ruta = ruta+'&click_clase=<?php echo(@$_REQUEST['click_clase']); ?>';      
-    destino.html('<div id="panel_'+nombre+'"><iframe name="'+nombre+'" src="'+ruta+'" width="100%" id="'+nombre+'" frameborder="0" height="'+alto_frame+'"></iframe></div>'); 
+    destino.html('<div id="panel_'+nombre+'"><iframe '+clase_frame+' name="'+nombre+'" src="'+ruta+'" width="100%" id="'+nombre+'" frameborder="0" height="'+alto_frame+'"></iframe></div>'); 
   }
-  destino.html('<div id="panel_'+nombre+'"><iframe name="'+nombre+'" src="'+ruta+'" width="100%" id="'+nombre+'" frameborder="0" height="'+alto_frame+'"></iframe></div>'); 
+  destino.html('<div id="panel_'+nombre+'"><iframe '+clase_frame+' name="'+nombre+'" src="'+ruta+'" width="100%" id="'+nombre+'" frameborder="0" height="'+alto_frame+'"></iframe></div>'); 
 }
 function adicionar_tab(ruta_archivo,extension,nombre_archivo,nodeId){
   var numero=parseInt($(".tab_editor:last").attr("numero"))+1;
-  $(".lista_tab_editor").append('<li class="tab_editor" numero="'+numero+'"><a class="enlace_tab" id="enlace_tab'+(numero)+'" href="#div_tab'+numero+'" nodoid="'+nodeId+'">'+(nombre_archivo+"."+extension)+'</a></li>');
+  $(".lista_tab_editor").append('<li class="tab_editor" numero="'+numero+'"><a class="enlace_tab" id="enlace_tab'+(numero)+'" href="#div_tab'+numero+'" nodoid="'+nodeId+'">'+(nombre_archivo+"."+extension)+'<div id="estado_'+numero+'" class="pull-right"></div></a></li>');
   $(".tab-editor").append('<div class="tab-pane" id="div_tab'+numero+'" ></div>');
   reAdjust();
-  llamado_pantalla("<?php echo($ruta_db_superior);?>editor_codigo/editor.php","ruta_archivo="+ruta_archivo+"&extension="+extension+"&numero="+numero,$("#div_tab"+numero),"editor_"+numero);
+  llamado_pantalla("<?php echo($ruta_db_superior);?>editor_codigo/editor.php","ruta_archivo="+ruta_archivo+"&extension="+extension+"&numero="+numero,$("#div_tab"+numero),"editor_"+numero,"panel_editor");
   $('.lista_tab_editor a[href=#div_tab'+numero+']').tab('show') ;
+}
+
+function tab_pendiente_commit(numero){
+    $("#estado_"+numero).html("*");
+}
+function tab_commit_completo(numero){
+    $("#estado_"+numero).html("");
 }
 
 function abrir_tab_editor(nodeId){
@@ -428,7 +543,7 @@ $(".tab_opciones").click(function(){
 function abrir_tab_opciones(opcion){
   $('.lista_tab_editor a[nodoid="'+nodeId+'"]').tab('show') ;
 }
-function cerrar_tab_editor(numero,notificar_cierre){
+function cerrar_tab_editor(numero,notificar_cierre,tipo_alerta){
   var tabContentId = $("#enlace_tab"+numero).attr("href");
   var nodoid=$("#enlace_tab"+numero).attr("nodoid");
   $("#enlace_tab"+numero).parent().remove(); //remove li of tab
@@ -437,7 +552,7 @@ function cerrar_tab_editor(numero,notificar_cierre){
   abiertos.remove(nodoid,true);
   $('.lista_tab_editor a[href=#div_tab'+numero_abrir+']').tab('show') ;
   if(notificar_cierre==1){
-    notificacion_saia("Archivo "+nodoid+" cerrado","error","topRight",4500);
+    notificacion_saia("Archivo "+nodoid+" cerrado",tipo_alerta,"topRight",4500);
   }
 }
 if (!Array.prototype.remove) {
@@ -456,19 +571,45 @@ if (!Array.prototype.remove) {
   };
 }
 llamado_pantalla("<?php echo($ruta_db_superior);?>editor_codigo/arbol_archivos.php","alto="+(alto-alto_menu-40),$("#izquierdo_saia"),'arbol_archivos');
+var browserType;
+if (document.layers) {browserType = "nn4"}
+if (document.all) {browserType = "ie"}
+if (window.navigator.userAgent.toLowerCase().match("gecko")) {
+   browserType= "gecko"
+}
+
+tree_carpetas=new dhtmlXTreeObject("arbol_carpetas","100%",(alto-270),0);
+tree_carpetas.setImagePath("<?php echo($ruta_db_superior);?>imgs/");
+tree_carpetas.enableTreeImages(false);
+tree_carpetas.enableTextSigns(true);
+tree_carpetas.setOnLoadingStart(iniciar_cargando);
+tree_carpetas.setOnLoadingEnd(fin_cargando);
+tree_carpetas.setOnClickHandler(click_carpetas);
+tree_carpetas.loadXML("<?php echo($ruta_db_superior);?>pantallas/lib/test_archivos_carpetas.php?solo_carpetas=1");
+function click_carpetas(nodeId){
+    var nombre_archivo=tree_carpetas.getUserData(nodeId,"name_url");
+    var ruta_carpeta=tree_carpetas.getUserData(nodeId,"realpath");
+    $("#nombre_carpeta").val(ruta_carpeta);
+    $("#carpeta_actual").val(nodeId);
+}
+
+function iniciar_cargando() {
+    if (browserType == "gecko" )
+        document.poppedLayer =eval('document.getElementById("esperando_sincronizar")');
+    else if (browserType == "ie")
+        document.poppedLayer =eval('document.getElementById("esperando_sincronizar")');
+    else
+        document.poppedLayer =eval('document.layers["esperando_archivo"]');
+    document.poppedLayer.style.visibility = "visible";
+}
+
+function fin_cargando() {
+    if (browserType == "gecko" )
+        document.poppedLayer =eval('document.getElementById("esperando_sincronizar")');
+    else if (browserType == "ie")
+        document.poppedLayer =eval('document.getElementById("esperando_sincronizar")');
+    else
+        document.poppedLayer =eval('document.layers["esperando_sincronizar"]');
+    document.poppedLayer.style.visibility = "hidden";
+}
 </script>
-
-<div id="dialog_merge" class="modal hide" data-backdrop="false">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                 <h3 class="modal-title">Selecci&oacute;n de archivos</h3>
-
-            </div>
-            <div class="modal-body">Seleccione los archivos que va a restaurar desde el servidor</div>
-            <div class="modal-footer">
-                <button type="button" id="dialog-ok" class="btn btn-default">Continuar</button>
-            </div>
-        </div>
-    </div>
-</div>

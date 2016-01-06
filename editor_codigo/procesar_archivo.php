@@ -45,7 +45,15 @@ if (GitRepo::is_inside_git_repo()) {
     $ruta_git = GitRepo::get_root_dir();
     $git = new Git0K($ruta_git);
     if ($git) {
+        $usuario = $_SESSION["LOGIN".LLAVE_SAIA_EDITOR];
+        $correo = $_SESSION["EMAIL".LLAVE_SAIA_EDITOR];
+        if(empty($usuario)) {
+            echo json_encode(array('rutaTemporal' => $tmpfname, 'gitInfo' => '', 'errorInfo' => 'El  funcionario esta inactivo o no pertenece al sistema', 'contenido' => '', 'listaArchivos' => null, 'ruta_archivo' => $ruta_real));
+            return;
+        }
         $git_data = $git -> expose();
+        $git->setUser($usuario);
+        $git->setEmail($correo);
         $repuesta_git = $git -> processRead();
         if ($repuesta_git && $repuesta_git['Error']) {
             if (strpos($repuesta_git['Error'], "FETCH_HEAD") !== false) {

@@ -42,7 +42,7 @@ tree3.setOnLoadingStart(cargando_serie);
 tree3.setOnLoadingEnd(fin_cargando_serie);
 tree3.setOnClickHandler(manejadorClick);
 tree3.enableThreeStateCheckboxes(true);
-tree3.loadXML("<?php echo($ruta_db_superior);?>pantallas/lib/test_archivos_carpetas.php?carpeta_inicial=pantallas,formatos,bpmn&extensiones_permitidas=php,js");
+tree3.loadXML("<?php echo($ruta_db_superior);?>pantallas/lib/test_archivos_carpetas.php?extensiones_permitidas=php,js,css,json");
 
 function manejadorClick(nodeId) {
 	//ignorar si selecciono el mismo nodo

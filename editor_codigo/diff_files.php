@@ -93,5 +93,7 @@ var aceDiffer = new AceDiff({
 });
 </script>
 
+<!-- esto no funciona con versiones viejas de jquery. Debe ser una version 2 o superior -->
+
 </body>
 </html>

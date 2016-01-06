@@ -90,6 +90,18 @@ class Git0K extends Git {
         return $this->repo;
     }
 
+    public function setUser($user) {
+        if(!empty($user)) {
+            $this->user = $user;
+        }
+    }
+
+    public function setEmail($email) {
+        if(!empty($email)) {
+            $this->email = $email;
+        }
+    }
+    
     /**
      * Devuelve el estado del repositorio local.
      * Devuelve la lista de archivos modificados
@@ -107,7 +119,8 @@ class Git0K extends Git {
      * @return string
      */
     public function getRepoStatus() {
-        return $this->repo->status_porcelain();
+        //return $this->repo->status_porcelain();
+        return $this->repo->status_short();
     }
 
     /**
@@ -385,11 +398,8 @@ class Git0K extends Git {
         );
     }
 
-    /**
-     * Mientras se define el manejo de los subtree processRead y processSave son iguales.
-     * @param unknown $ruta_archivo
-     * @param unknown $comentario
-     * @param unknown $estado_git
+    /*
+     * Guarda los cambios locales al archivo $ruta_archivo en el directorio de trabajo
      */
     public function processSave($ruta_archivo, $comentario, $rama = "master") {
         // $estado_git = NULL;
@@ -397,12 +407,46 @@ class Git0K extends Git {
         $lista_archivos = array();
         try {
             // validar que no existan cambios
-            if (empty($mensaje)) {
-                $mensaje = "Commit automatico editor saia. Cambios locales " . date("Y-m-d H:i:s");
+            if (empty($comentario)) {
+                $comentario = "Commit automatico editor saia. Cambios archivo " . $ruta_archivo . "::" . date("Y-m-d H:i:s");
             }
-            $estado_git = $this->sincronizarRepositorio($comentario, $rama);
+
+            // Cambiar a la raiz del repositorio
+            chdir($this->repo_path);
+            $estado_git = $this->repoAdd($ruta_archivo);
+            $estado_git = $this->repoCommitAuthor($comentario);
+            
+        } catch (Exception $e) {
+            $errmsg = $e->getMessage() ."\n";
+            $errmsg .= $e->getTraceAsString();
+            $error_git = $errmsg;
+            $lista_archivos[] = $ruta_archivo;
+        }
+        return array(
+            "Estado" => $estado_git,
+            "Error" => $error_git,
+            "listaArchivos" => $lista_archivos
+        );
+    }
+    
+    /**
+     * Mientras se define el manejo de los subtree processRead y processSave son iguales.
+     * @param unknown $ruta_archivo
+     * @param unknown $comentario
+     * @param unknown $estado_git
+     */
+    public function processPush($ruta_archivo, $comentario, $rama = "master", $hacer_push=false) {
+        // $estado_git = NULL;
+        $error_git = NULL;
+        $lista_archivos = array();
+        try {
+            // validar que no existan cambios
+            if (empty($comentario)) {
+                $comentario = "Commit automatico editor saia. Cambios locales " . date("Y-m-d H:i:s");
+            }
+            $estado_git = $this->sincronizarRepositorio($comentario, $rama, $hacer_push);
             $estado = $this->checkStatus();
-            if ($estado === self::ESTADO_AHEAD) {
+            if ($estado === self::ESTADO_AHEAD && $hacer_push) {
 				$estado_git = $this->repoPush($this->get_remoto_base()->alias, $rama);
             }
         } catch (Exception $e) {
@@ -421,7 +465,7 @@ class Git0K extends Git {
         );
     }
 
-    public function processRead($mensaje = "") {
+    public function processRead($mensaje = "", $sincronizar=false) {
         $estado_git = NULL;
         $error_git = NULL;
         $lista_archivos = array();
@@ -431,7 +475,9 @@ class Git0K extends Git {
                 $mensaje = "Commit automatico editor saia. Cambios locales " . date("Y-m-d H:i:s");
             }
             // FIXME: No hacer sincronizacion al leer. Es muy lento. Solo resolver los cambios locales
-            // $estado_git = $this->sincronizarRepositorio($mensaje);
+            if($sincronizar){
+             $estado_git = $this->sincronizarRepositorio($mensaje);
+            }
             $lista_agregados = $this->resolveLocalChanges($mensaje);
         } catch (Exception $e) {
             // echo $e;
@@ -456,7 +502,7 @@ class Git0K extends Git {
      * @return string. El resultado del ultimo comando git ejecutado
      * @throws Exception. Una excepcion en caso de no poder ejecutar un comando git i.e. merge
      */
-    protected function sincronizarRepositorio($mensaje, $rama="master") {
+    protected function sincronizarRepositorio($mensaje, $rama="master", $hacer_push=false) {
         // Esto garantiza que los cambios locales no interrumpan la sincro y que se puedan perder cambios.
         $lista_agregados = $this->resolveLocalChanges($mensaje);
         $estado_git = $this->repoFetchAll();
@@ -491,7 +537,7 @@ class Git0K extends Git {
         } elseif ($estado === self::ESTADO_BEHIND) {
             $estado_git = $this->repoPull($this->get_remoto_base()->alias, $rama);
             // return $this->sincronizarRepositorio($estado_git, $rama);
-        } elseif ($estado === self::ESTADO_AHEAD) {
+        } elseif ($estado === self::ESTADO_AHEAD && $hacer_push) {
             $estado_git = $this->repoPush($this->get_remoto_base()->alias, $rama);
         }
         $estado = $this->checkStatus();

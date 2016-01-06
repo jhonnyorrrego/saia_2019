@@ -563,6 +563,25 @@ function run_command_win($cmd) {
 	}
 
 	/**
+	 * Devuelve una lista de cambios
+	 * @return multitype:unknown
+	 */
+	public function status_short() {
+	    $output = $this->run("status -b --short");
+	    $changed_items = array();
+	    //$pattern = "/([A-Z ]{2}) ([A-Za-z_\-\.\/]+)/";
+	    if( preg_match_all( '/^.+?\\s(.*)$/m', $output, $changes, PREG_SET_ORDER ) ){
+	
+	        foreach( $changes  as $changed_item ){
+	            $changed_items[] = $changed_item[0];
+	        }
+	
+	    }
+	
+	    return $changed_items;
+	}
+	
+	/**
 	 * Runs a `git add` call
 	 *
 	 * Accepts a list of files to add
