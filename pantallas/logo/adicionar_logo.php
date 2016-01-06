@@ -26,6 +26,9 @@ function formulario(){
 		$imagen="<img src='".$ruta_db_superior.$ruta_imagen."' border='1px'>";
 	}
 	?>
+	<br/>
+
+	<div class="container">
 	<form class="form-horizontal" name="formulario_formatos" id="formulario_formatos" method="post" enctype="multipart/form-data">
 	<fieldset id="content_form_name">
     <legend>Cargar logo</legend>

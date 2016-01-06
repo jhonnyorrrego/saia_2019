@@ -1,6 +1,8 @@
 <?php
 include_once("../db.php");
 include_once("../header.php");
+include_once($ruta_db_superior . "librerias_saia.php");
+echo(estilo_bootstrap());
 
 $max_salida=10; // Previene algun posible ciclo infinito limitando a 10 los ../
 $ruta_db_superior=$ruta="";
@@ -13,6 +15,14 @@ $ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
 $ruta.="../";
 $max_salida--;
 }
+
+?>
+<div class="container">
+		<h5>CONFIGURACI&Oacute;N DE CARRUSEL Y CONTENIDOS RELACIONADOS</h5>
+		<br/>
+		
+
+<?php
 
 if($_REQUEST["accion"]=="adicionar" || $_REQUEST["accion"]=="editar")
   {if(isset($_REQUEST["id"])&&$_REQUEST["id"])
@@ -72,10 +82,28 @@ width:"350px"
         ['NumberedList','BulletedList','-','Outdent','Indent','Blockquote']        
     ];
     </script>
+    
+		<ul class="nav nav-tabs">
+		
+			 <li ><a href='sliderconfig.php'>Inicio</a ></li>
+		<?php if($_REQUEST["accion"]=='adicionar'){ ?>
+					
+				 <li><a href='sliderconfig.php?accion=adicionar'>Adicionar Carrusel</a ></li>
+				 <li  class="active"><a href='contenidoconfig.php?accion=adicionar'>Adicionar Contenido</a ></li>
+		<?php }else{ ?>	
+				
+				  <li ><a href='sliderconfig.php?accion=adicionar'>Adicionar Carrusel</a ></li>
+			      <li><a href='contenidoconfig.php?accion=adicionar'>Adicionar Contenido</a ></li>
+			      <li class="active"><a href='#'>Editar Contenido</a ></li>
+		<?php } ?>			
+			
+		</ul>		
+		<br/>   
+    
    <?php    
-   echo "<br /><b>".ucwords($_REQUEST["accion"]." Contenido")."</b><br /><br /><form name='form1' method='post' id='form1' enctype='multipart/form-data'><table width=100%>";
-   echo "<tr><td class='encabezado' width=20%>NOMBRE*</td><td><input class='required'  type='text' name='nombre' value='".@$contenido[0]["nombre"]."'></td></tr>";
-   echo "<tr><td class='encabezado'>CARRUSEL*</td><td><select class='required'  type='text' name='carrusel_idcarrusel'>";
+   echo "<br /><fieldset><legend>".ucwords($_REQUEST["accion"]." contenido")."</legend></fieldset><br /><br /><form name='form1' method='post' id='form1' enctype='multipart/form-data'><table class='table table-bordered table-striped'>";
+   echo "<tr><td  style='text-align: center; background-color:#57B0DE; color: #ffffff;'>NOMBRE*</td><td><input class='required'  type='text' name='nombre' value='".@$contenido[0]["nombre"]."'></td></tr>";
+   echo "<tr><td  style='text-align: center; background-color:#57B0DE; color: #ffffff;'>CARRUSEL*</td><td><select class='required'  type='text' name='carrusel_idcarrusel'>";
    $carrusel=busca_filtro_tabla("idcarrusel,nombre","carrusel","","nombre",$conn);
    for($i=0;$i<$carrusel["numcampos"];$i++)
       {echo "<option value='".$carrusel[$i]["idcarrusel"]."' ";
@@ -84,22 +112,22 @@ width:"350px"
        echo ">".$carrusel[$i]["nombre"]."</option>";
       }
    echo "</select></td></tr>";
-   echo "<tr><td class='encabezado'>FECHA DE PUBLICACI&Oacute;N*</td><td>".'<input type="text" readonly="true" name="fecha_inicio"  class="required dateISO"  id="fecha_inicio" value="'.@$contenido[0]["fecha_inicio"].'">';
+   echo "<tr><td  style='text-align: center; background-color:#57B0DE; color: #ffffff;'>FECHA DE PUBLICACI&Oacute;N*</td><td>".'<input type="text" readonly="true" name="fecha_inicio"  class="required dateISO"  id="fecha_inicio" value="'.@$contenido[0]["fecha_inicio"].'">';
    selector_fecha("fecha_inicio","form1","Y-m-d",date("m"),date("Y"),"default.css","../","AD:VALOR");
    echo "</td></tr>";
-   echo "<tr><td class='encabezado'>FECHA CADUCIDAD*</td><td>";
+   echo "<tr><td  style='text-align: center; background-color:#57B0DE; color: #ffffff;'>FECHA CADUCIDAD*</td><td>";
    echo '<input type="text" readonly="true" name="fecha_fin"  class="required dateISO"  id="fecha_fin" value="'.@$contenido[0]["fecha_fin"].'">';
    selector_fecha("fecha_fin","form1","Y-m-d",date("m"),date("Y"),"default.css","../","AD:VALOR");
    echo "</td></tr>";
-   echo "<tr><td class='encabezado'>CONTENIDO*</td><td><textarea class='required tiny_avanzado2' name='contenido' id='contenido'>".stripslashes(@$contenido[0]["contenido"])."</textarea></td></tr>";
-   echo "<tr><td class='encabezado'>PREVISUALIZAR</td><td><textarea name='preview' id='preview' class=''>".stripslashes(@$contenido[0]["preview"])."</textarea></td></tr>";
-   echo "<tr><td class='encabezado'>IMAGEN</td><td>";
+   echo "<tr><td  style='text-align: center; background-color:#57B0DE; color: #ffffff;'>CONTENIDO*</td><td><textarea class='required tiny_avanzado2' name='contenido' id='contenido'>".stripslashes(@$contenido[0]["contenido"])."</textarea></td></tr>";
+   echo "<tr><td  style='text-align: center; background-color:#57B0DE; color: #ffffff;'>PREVISUALIZAR</td><td><textarea name='preview' id='preview' class=''>".stripslashes(@$contenido[0]["preview"])."</textarea></td></tr>";
+   echo "<tr><td  style='text-align: center; background-color:#57B0DE; color: #ffffff;'>IMAGEN</td><td>";
    if($contenido[0]["imagen"]<>"")
      echo "<a href='".$ruta_db_superior.$contenido[0]["imagen"]."' target='_blank'>Ver Imagen Actual</a><br />Borrar Imagen<input type='checkbox' value='1' name='borrar_imagen'><br />Subir nueva <input type='file' name='imagen' id='imagen' >";
    else
      echo "<input type=file name='imagen' id='imagen' >";  
    echo "</td></tr>";
-   echo "<tr><td class='encabezado' width=20%>ALINEACION DE LA IMAGEN</td><td>";
+   echo "<tr><td  style='text-align: center; background-color:#57B0DE; color: #ffffff;' width=20%>ALINEACION DE LA IMAGEN</td><td>";
    $opciones=array("left"=>"Izquierda","right"=>"Derecha");
    foreach($opciones as $valor=>$nombre)
      {echo "<input type='radio' name='align' value='$valor' ";
@@ -108,8 +136,8 @@ width:"350px"
       echo ">$nombre&nbsp;&nbsp;"; 
      }
    echo "</td></tr>";
-   echo "<tr><td class='encabezado' width=20%>Orden*</td><td><input class='required'  type='input' name='orden' id='orden' value='".@$contenido[0]["orden"]."'></td></tr>";
-   echo "<tr><td><input type='submit' value='Continuar'>
+   echo "<tr><td  style='text-align: center; background-color:#57B0DE; color: #ffffff;' width=20%>Orden*</td><td><input class='required'  type='input' name='orden' id='orden' value='".@$contenido[0]["orden"]."'></td></tr>";
+   echo "<tr><td><input class='btn btn-primary' type='submit' value='Continuar'>
    <input type='hidden' name='id' value='".@$contenido[0]["idcontenidos_carrusel"]."'>
    <input type='hidden' name='accion' value='guardar_".@$_REQUEST["accion"]."'>
    </td></tr>";
@@ -202,3 +230,4 @@ elseif($_REQUEST["accion"]=="eliminar")
 }
 include_once("../footer.php");
 ?>
+</div>

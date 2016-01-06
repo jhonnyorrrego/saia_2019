@@ -1,4 +1,15 @@
 <?php 
+
+$max_salida=10; // Previene algun posible ciclo infinito limitando a 10 los ../
+$ruta_db_superior=$ruta="";
+while($max_salida>0){
+  if(is_file($ruta."db.php")){
+    $ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
+  }
+  $ruta.="../";
+  $max_salida--;
+}
+
 function barra_superior_funcionario($idfuncionario,$nombres,$apellidos){
 $texto='<div class="btn-group barra_superior">
 <button type="button" class="adicionar_seleccionados btn btn-mini tooltip_saia" title="Seleccionar Funcionario" idregistro="'.$idfuncionario.'"><i class="icon-uncheck"></i></button>
@@ -43,4 +54,16 @@ function estado_funcionario($estado){
 	}
 	return($texto);
 }
+
+function fotografia_funcionario($idfuncionario){
+	global $ruta_db_superior;
+	//realizar desarrollo de subida de foto y recorte
+	return("<img src='".$ruta_db_superior."imagenes/funcionario_sin_foto.jpg'	width='60' height='60' />");
+	
+}
+
+
+
+
+
 ?>

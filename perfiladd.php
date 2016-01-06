@@ -76,11 +76,29 @@ return true;
 
 //-->
 </script>
-<p><span class="internos"><img class="imagen_internos" src="botones/configuracion/perfil.gif" border="0">&nbsp;&nbsp;ADICIONAR PERFIL<br><br><a href="javascript:window.history.go(-1);">REGRESAR</a></span></p>
+
+
+<?php
+include_once($ruta_db_superior."librerias_saia.php"); 
+echo(librerias_jquery('1.7'));
+echo(estilo_bootstrap());
+
+?>
+
+<div class="container">
+		<h5><span class="internos"><img class="imagen_internos" src="botones/configuracion/perfil.gif" border="0"></span>ADICIONAR PERFIL</h5>
+
+		<ul class="nav nav-tabs">
+		  <li ><a href="permiso_perfiladd.php">Adicionar Permiso</a></li>
+		     <li class="active"><a href="perfiladd.php">Adicionar Perfil</a></li>
+		</ul>		
+		<br/>
+
+
 <form name="perfiladd" id="perfiladd" action="perfiladd.php" method="post" onSubmit="return EW_checkMyForm(this);">
 <p>
 <input type="hidden" name="a_add" value="A">
-<table border="0" cellspacing="1" cellpadding="4" bgcolor="#CCCCCC">
+<table border="0" cellspacing="1" cellpadding="4" bgcolor="#CCCCCC" style="width:100%;">
 	<tr>
 		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">nombre</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
@@ -90,7 +108,7 @@ return true;
 	</tr>
 </table>
 <p>
-<input type="submit" name="Action" value="ADICIONAR">
+<input type="submit" name="Action" value="Adicionar"  class='btn btn-primary'>
 </form>
 <?php include ("footer.php") ?>
 <?php

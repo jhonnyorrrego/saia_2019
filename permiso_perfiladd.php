@@ -88,8 +88,30 @@ function ninguno_check(elemento,campo)
 } 
 //-->
 </script>
-<p><span class="internos">ADICIONAR PERMISO PERFIL<br></span></p>
-<a href="perfiladd.php">Adicionar Perfil</a>
+
+
+
+
+
+
+<?php
+include_once($ruta_db_superior."librerias_saia.php"); 
+
+echo(estilo_bootstrap());
+
+?>
+
+
+<div class="container">
+		<h5>ADICIONAR PERMISO PERFIL</h5>
+		<br/>
+
+		<ul class="nav nav-tabs">
+		  <li class="active"><a href="permiso_perfiladd.php">Adicionar Permiso</a></li>
+		     <li><a href="perfiladd.php">Adicionar Perfil</a></li>
+		</ul>		
+		<br/>
+
 <form name="permiso_perfiladd" id="permiso_perfiladd" action="permiso_perfiladd.php" method="post">
 <?php
 if(isset($_REQUEST["pantalla"]))
@@ -97,7 +119,7 @@ if(isset($_REQUEST["pantalla"]))
 ?>
 <p>
 <input type="hidden" name="a_add" value="A">
-<table border="0" cellspacing="1" cellpadding="4" bgcolor="#CCCCCC" >
+<table border="0" cellspacing="1" cellpadding="4" bgcolor="#CCCCCC" style="width:100%;">
 <tr>
 		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">PERFIL</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker">		
@@ -216,7 +238,7 @@ echo $x_perfil_idperfilList;
   </tr-->
 </table>
 <p>
-<input type="submit" name="Action" value="ADICIONAR">
+<input type="submit" name="Action" value="Adicionar" class='btn btn-primary'>
 </form>
 <?php include ("footer.php") ?>
 <?php

@@ -1,19 +1,60 @@
 <?php
 include_once("../db.php");
 include_once("../header.php");
-if(!isset($_REQUEST["accion"]))
-{$carrusel=busca_filtro_tabla("carrusel.*,".fecha_db_obtener('fecha_inicio','Y-m-d')." as fecha_inicio,".fecha_db_obtener('fecha_fin','Y-m-d')." as fecha_fin","carrusel","","nombre",$conn);
+
+include_once($ruta_db_superior . "librerias_saia.php");
+echo(estilo_bootstrap());
+echo(librerias_jquery('1.7'));
+echo(librerias_kaiten());
+
+
 ?>
-<br><br><B>CONFIGURACI&Oacute;N DE CARRUSEL Y CONTENIDOS RELACIONADOS</B><br><br>
-<a href='sliderconfig.php?accion=adicionar'>Adicionar Carrusel</a>&nbsp;&nbsp;<a href='contenidoconfig.php?accion=adicionar'>Adicionar Contenido</a><!--&nbsp;&nbsp;<a target="_blank" href='mostrar_todos.php'>Mostrar Vigentes</a--><br /><br />
+<div class="container">
+		<h5>CONFIGURACI&Oacute;N DE CARRUSEL Y CONTENIDOS RELACIONADOS</h5>
+		<br/>
+		
+
+		
+
+<?php
+
+
+if(!isset($_REQUEST["accion"]))
+{	$carrusel=busca_filtro_tabla("carrusel.*,".fecha_db_obtener('fecha_inicio','Y-m-d')." as fecha_inicio,".fecha_db_obtener('fecha_fin','Y-m-d')." as fecha_fin","carrusel","","nombre",$conn);
+?>
+
+		<ul class="nav nav-tabs">
+		 <li class="active" ><a href='sliderconfig.php'>Inicio</a ></li>
+		  <li ><a href='sliderconfig.php?accion=adicionar'>Adicionar Carrusel</a ></li>
+		   <li><a href='contenidoconfig.php?accion=adicionar'>Adicionar Contenido</a ></li>
+		</ul>		
+		<br/>
+
+
+<!--a href='sliderconfig.php?accion=adicionar'>Adicionar Carrusel</a -->&nbsp;&nbsp;
+
+<!-- div class="kenlace_saia" style="cursor:pointer" titulo="Adicionar Carrusel" title="Adicionar Carrusel" enlace="sliderconfig.php?accion=adicionar" conector="iframe">Adicionar Carrusel</div -->
+
+
+
+
+<!--a href='contenidoconfig.php?accion=adicionar'>Adicionar Contenido</a -->
+
+
+
+
+
+<!--&nbsp;&nbsp;<a target="_blank" href='mostrar_todos.php'>Mostrar Vigentes</a--><br /><br />
 <?php
 if(!$carrusel["numcampos"])
   echo "No se encontraron registros.";
 else
-  {echo "<table width='100%' border='1' style='border-collapse:collapse'>
-         <tr class='encabezado_list'><td colspan=3>OPCIONES</td>
-         <td>NOMBRE</td><td>FECHA DE PUBLICACION</td><td>FECHA DE CADUCIDAD</td>
-         <td>CONTENIDOS</td></tr>";
+  {echo "<table width='100%'  class='table table-bordered table-striped'>
+         <tr ><td colspan=3 style='text-align: center; background-color:#57B0DE; color: #ffffff;'>OPCIONES</td>
+         <td style='text-align: center; background-color:#57B0DE; color: #ffffff;'>NOMBRE</td>
+         <td style='text-align: center; background-color:#57B0DE; color: #ffffff;'>FECHA DE PUBLICACION</td>
+         <td style='text-align: center; background-color:#57B0DE; color: #ffffff;'>FECHA DE CADUCIDAD</td>
+         <td style='text-align: center; background-color:#57B0DE; color: #ffffff;'>CONTENIDOS</td></tr>";
    for($i=0;$i<$carrusel["numcampos"];$i++)
       {
       	$contenidos=busca_filtro_tabla("","contenidos_carrusel","carrusel_idcarrusel=".$carrusel[$i]["idcarrusel"]." and '".date("Y-m-d")."'<=".fecha_db_obtener("fecha_fin","Y-m-d")." and '".date("Y-m-d")."'>=".fecha_db_obtener("fecha_inicio","Y-m-d"),"orden",$conn);
@@ -33,7 +74,7 @@ else
        echo "<td>".$carrusel[$i]["nombre"]."</td>";
        echo "<td>".$carrusel[$i]["fecha_inicio"]."</td>";
        echo "<td>".$carrusel[$i]["fecha_fin"]."</td>";
-       echo "<td><table width=100% border=1><tr class='encabezado_list'><td>NOMBRE</td><td>F. INICIO</td><td>F. FINAL</td><td colspan=2>OPCIONES</td></tr>";
+       echo "<td><table width=100% class='table table-bordered table-striped'><tr><td style='text-align: center; background-color:#57B0DE; color: #ffffff;'>NOMBRE</td><td style='text-align: center; background-color:#57B0DE; color: #ffffff;'>F. INICIO</td><td style='text-align: center; background-color:#57B0DE; color: #ffffff;'>F. FINAL</td><td colspan=2 style='text-align: center; background-color:#57B0DE; color: #ffffff;'>OPCIONES</td></tr>";
        $contenidos=busca_filtro_tabla("contenidos_carrusel.*,".fecha_db_obtener('fecha_inicio','Y-m-d')." as fecha_inicio,".fecha_db_obtener('fecha_fin','Y-m-d')." as fecha_fin","contenidos_carrusel","carrusel_idcarrusel=".$carrusel[$i]["idcarrusel"],"orden",$conn);
        for($j=0;$j<$contenidos["numcampos"];$j++)
          echo "<tr><td>".$contenidos[$j]["nombre"]."</td><td>".$contenidos[$j]["fecha_inicio"]."</td><td>".$contenidos[$j]["fecha_fin"]."</td><td><a href='contenidoconfig.php?accion=editar&id=".$contenidos[$j]["idcontenidos_carrusel"]."'>Editar</a></td><td><a href='contenidoconfig.php?accion=eliminar&id=".$contenidos[$j]["idcontenidos_carrusel"]."'>Eliminar</a></td></tr>";
@@ -62,18 +103,36 @@ elseif($_REQUEST["accion"]=="adicionar" || $_REQUEST["accion"]=="editar")
     	$('#form1').validate();
     });
     </script>
+    
+		<ul class="nav nav-tabs">
+		
+			 <li ><a href='sliderconfig.php'>Inicio</a ></li>
+		<?php if($_REQUEST["accion"]=='adicionar'){ ?>
+					
+				 <li class="active"><a href='sliderconfig.php?accion=adicionar'>Adicionar Carrusel</a ></li>
+				 <li><a href='contenidoconfig.php?accion=adicionar'>Adicionar Contenido</a ></li>
+		<?php }else{ ?>	
+				
+				  <li ><a href='sliderconfig.php?accion=adicionar'>Adicionar Carrusel</a ></li>
+			      <li><a href='contenidoconfig.php?accion=adicionar'>Adicionar Contenido</a ></li>
+			      <li class="active"><a href='#'>Editar Carrusel</a ></li>
+		<?php } ?>			
+			
+		</ul>		
+		<br/>    
+ 		
    <?php    
-   echo "<br /><b>".ucwords($_REQUEST["accion"]." carrusel")."</b><br /><br /><form name='form1' id='form1' method='post'><table>";
-   echo "<tr><td class='encabezado'>Nombre*</td><td><input class='required'  type='text' name='nombre' value='".@$carrusel[0]["nombre"]."'></td></tr>";
+   echo "<br /><fieldset><legend>".ucwords($_REQUEST["accion"]." carrusel")."</legend></fieldset>     <br /><br /><form name='form1' id='form1' method='post'><table class='table table-bordered table-striped'>";
+   echo "<tr><td style='text-align: center; background-color:#57B0DE; color: #ffffff;'>Nombre*</td><td><input class='required'  type='text' name='nombre' value='".@$carrusel[0]["nombre"]."'></td></tr>";
 
-   echo "<tr><td class='encabezado'>Fecha de publicaci&oacute;n*</td><td>".'<input type="text" readonly="true" name="fecha_inicio"  class="required dateISO"  id="fecha_inicio" value="'.@$carrusel[0]["fecha_inicio"].'">';
+   echo "<tr><td style='text-align: center; background-color:#57B0DE; color: #ffffff;'>Fecha de publicaci&oacute;n*</td><td>".'<input type="text" readonly="true" name="fecha_inicio"  class="required dateISO"  id="fecha_inicio" value="'.@$carrusel[0]["fecha_inicio"].'">';
    selector_fecha("fecha_inicio","form1","Y-m-d",date("m"),date("Y"),"default.css","../","AD:VALOR");
    echo "</td></tr>";
-   echo "<tr><td class='encabezado'>Fecha caducidad*</td><td>";
+   echo "<tr><td style='text-align: center; background-color:#57B0DE; color: #ffffff;'>Fecha caducidad*</td><td>";
    echo '<input type="text" readonly="true" name="fecha_fin"  class="required dateISO"  id="fecha_fin" value="'.@$carrusel[0]["fecha_fin"].'">';
    selector_fecha("fecha_fin","form1","Y-m-d",date("m"),date("Y"),"default.css","../","AD:VALOR");
    echo "</td></tr>";
-   echo "<tr><td class='encabezado'>Efecto*</td><td>";
+   echo "<tr><td style='text-align: center; background-color:#57B0DE; color: #ffffff;'>Efecto*</td><td>";
 	 $easing0="";
 	 $easing1="";
 	 $easing2="";
@@ -108,15 +167,15 @@ elseif($_REQUEST["accion"]=="adicionar" || $_REQUEST["accion"]=="editar")
 	 if($carrusel[0]["autoplay"]==1)$autoplay1="checked";
 	 else if($carrusel[0]["autoplay"]==0)$autoplay0="checked";
 	 else $default_autoplay="checked";
-   echo "<tr><td class='encabezado'>Reproducci&oacute;n Autom&aacute;tica*</td>
+   echo "<tr><td style='text-align: center; background-color:#57B0DE; color: #ffffff;'>Reproducci&oacute;n Autom&aacute;tica*</td>
    <td><input type='radio' name='autoplay' value='1' ".$autoplay1." ".$default_autoplay.">Si
    <input type='radio' name='autoplay' value='0' ".$autoplay0.">No
    </td></tr>";
-   echo "<tr><td class='encabezado'>Tiempo entre Paginas*</td><td><input class='required'  type='text' name='delay' value='".@$carrusel[0]["delay"]."'></td></tr>";
+   echo "<tr><td style='text-align: center; background-color:#57B0DE; color: #ffffff;'>Tiempo entre Paginas*</td><td><input class='required'  type='text' name='delay' value='".@$carrusel[0]["delay"]."'></td></tr>";
 
-   echo "<tr><td class='encabezado'>Tiempo de animaci&oacute;n*</td><td><input class='required'  type='text' name='animationtime' value='".@$carrusel[0]["animationtime"]."'></td></tr>";
+   echo "<tr><td style='text-align: center; background-color:#57B0DE; color: #ffffff;'>Tiempo de animaci&oacute;n*</td><td><input class='required'  type='text' name='animationtime' value='".@$carrusel[0]["animationtime"]."'></td></tr>";
 
-   echo "<tr><td><input type='submit' value='Continuar'>
+   echo "<tr><td><input class='btn btn-primary' type='submit' value='Continuar'>
    <input type='hidden' name='id' value='".@$carrusel[0]["idcarrusel"]."'>
    <input type='hidden' name='accion' value='guardar_".@$_REQUEST["accion"]."'>
    </td></tr>";
@@ -168,3 +227,4 @@ function botones($nombre,$valor)
 }
 include_once("../footer.php");
 ?>
+</DIV>	
