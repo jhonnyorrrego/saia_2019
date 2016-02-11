@@ -1,7 +1,7 @@
 <?php
-if(!@$ruta_actual){
   $max_salida=10; // Previene algun posible ciclo infinito limitando a 10 los ../
   $ruta_db_superior=$ruta="";
+if(!@$ruta_actual){
   while($max_salida>0){
     if(is_file($ruta."db.php")){
       $ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
@@ -261,6 +261,7 @@ global $raiz_saia;
 $texto='';
 $texto.='<script src="'.$raiz_saia.'js/noty/jquery.noty.js" type="text/javascript" charset="utf-8"></script>';
 $texto.='<script src="'.$raiz_saia.'js/noty/layouts/topCenter.js" type="text/javascript" charset="utf-8"></script>';
+$texto.='<script src="'.$raiz_saia.'js/noty/layouts/topRight.js" type="text/javascript" charset="utf-8"></script>';
 $texto.='<script src="'.$raiz_saia.'js/noty/themes/default.js" type="text/javascript" charset="utf-8"></script>';
 $texto.='<script src="'.$raiz_saia.'pantallas/lib/librerias_notificaciones.js" type="text/javascript" charset="utf-8"></script>';
 return($texto);

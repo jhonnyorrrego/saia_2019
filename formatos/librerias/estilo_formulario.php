@@ -55,7 +55,35 @@ $config = busca_filtro_tabla("valor","configuracion","nombre='color_encabezado'"
     		font-family: Verdana; 
         font-size: 9px;
     	 }
+    	 .ac_results {
+				padding: 0px;
+				border: 0px solid black;
+				background-color: white;
+				overflow: hidden;
+				z-index: 99999;
+			}
     	 
+			.ac_results ul {
+				width: 100%;
+				list-style-position: outside;
+				list-style: none;
+				padding: 0;
+				margin: 0;
+			}
+			.ac_results li:hover {
+			background-color: A9E2F3;
+			}
+			
+			.ac_results li {
+				margin: 0px;
+				padding: 2px 5px;
+				cursor: default;
+				display: block;
+				font: menu;
+				font-size: 10px;
+				line-height:10px;
+				overflow: hidden;
+			}
        -->
        </style>";
   echo $style;
