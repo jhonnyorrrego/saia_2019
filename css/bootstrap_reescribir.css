@@ -187,3 +187,6 @@ background-image:url('../imagenes/cargando.gif');
         background-color: transparent;
         border-top:0px;
 }
+.navbar .nav{
+    margin:0px;
+}

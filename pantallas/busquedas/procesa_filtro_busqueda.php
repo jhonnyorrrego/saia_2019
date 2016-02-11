@@ -136,6 +136,7 @@ echo (json_encode($retorno));
 
 // $url="pantallas/busquedas/consulta_busqueda.php?idbusqueda_componente=".$_REQUEST["idbusqueda_componente"]."&idbusqueda_filtro_temp=".$idbusqueda_temp.$filtro;
 // redirecciona($ruta_db_superior.$url);
+
 function parsear_cadena_temporal($key, $valor, $contador_campos) {
 	$key = str_replace("bqsaia_", "", $key);
 	$valor = str_replace("@", "%", $valor); // Cuando quieren buscar una cadena con @ no estaba buscando, esto soluciona el problema
