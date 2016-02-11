@@ -3,3 +3,7 @@ html2ps/**/cache
 tcpdf/**/cache
 html2ps_release/**/cache
 phpqrcode/**/cache
+errores.txt
+.project
+.settings/
+

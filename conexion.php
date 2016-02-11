@@ -105,7 +105,6 @@ class Conexion
    function  Conectar_Oracle()
     {
       $this->conn = @oci_connect($this->Usuario,$this->Pass,"(DESCRIPTION =(ADDRESS =(PROTOCOL = TCP)(HOST = ".$this->Host.")(PORT =".$this->Puerto."))(CONNECT_DATA = (SID = ".$this->Nombredb.")))") ;
-      print_r(oci_error($this->conn));
     }
 /*
 <Clase>Conexion
