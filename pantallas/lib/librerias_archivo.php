@@ -42,5 +42,39 @@ while (false !== ($obj = readdir($dh))) {
 closedir($dh); 
 return($resultado_buscar_archivo); 
 }
-
+function crear_archivo_carpeta($nombre,$ruta,$extension,$tipo){
+    //1=archivos, 2=carpetas
+    $extensiones_permitidas_permitidas=array("php","css","js","txt","csv");
+    global $ruta_db_superior;
+    $reultado='';
+    if(strpos($ruta,".")===0 || strpos($ruta,"/")===0){
+        $ruta=substr($ruta,1);
+    }
+    if($tipo==1){
+        if(in_array($extension,$extensiones_permitidas)){
+            return("La extensi&oacute;n ".$extension." no esta permitida");
+        }
+        if(file_exists($ruta_db_superior.$ruta."/".$nombre.".".$extension)){
+            $resultado="EL archivo ya existe";
+        }
+        else if(file_put_contents($ruta_db_superior.$ruta."/".$nombre.".".$extension,"")){
+            $resultado="Archivo creado con &eacute;xito";
+        }
+        else{
+            $resultado="Error al tratar de crear el archivo";
+        }
+    }
+    else if($tipo==2){
+        if(is_dir($ruta_db_superior.$ruta."/".$nombre)){
+            $resultado="La carpeta ya existe";
+        }
+        else if(crear_destino($ruta_db_superior.$ruta."/".$nombre)!==""){
+            $resultado="Carpeta creada con &eacute;xito";
+        }
+        else{
+            $resultado="Error al tratar de crear la carpeta";
+        }
+    }
+    return($resultado);
+}
 ?>

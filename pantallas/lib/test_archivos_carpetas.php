@@ -13,6 +13,11 @@ if (stristr($_SERVER["HTTP_ACCEPT"], "application/xhtml+xml")) {
 } else {
 	header("Content-type: text/xml");
 }
+header("Expires: Mon, 26 Jul 1997 05:00:00 GMT"); // date in the past
+header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT"); // always modified
+header("Cache-Control: no-store, no-cache, must-revalidate"); // HTTP/1.1 
+header("Cache-Control: post-check=0, pre-check=0", false); 
+header("Pragma: no-cache"); // HTTP/1.0 ISO-8859-1
 echo ("<?xml version=\"1.0\" encoding=\"UTF-8\"?" . ">");
 $inicio = valida("inicio", @$_REQUEST["carpeta_inicial"]);
 if (@$include != "") {
@@ -30,7 +35,7 @@ function listar_directorios_ruta2($ruta, $nivel, $padre) {
 				$info = info_archivo($ruta, $file, $nivel);
 				$info["nivel"] = $nivel;
 				$info["cod_padre"] = $padre;
-				if ($file != "." && $file != "..") {
+				if ($file != "." && $file != ".." && $file!=".git") {
 					if (is_dir($ruta . "/" . $file)) {
 						// solo si el archivo es un directorio, distinto que "." y ".."
 						directorio1($info);
@@ -50,11 +55,13 @@ function listar_directorios_ruta2($ruta, $nivel, $padre) {
 
 function directorio1($info) {
 	global $texto;
+	$id_item = str_replace("//", "/", str_replace("../../", "", $info["ruta"]) . "/" . $info["nombre"] );
 	$texto .= "<item style=\"font-family:verdana; font-size:7pt;\" ";
 	$uid = uniqid("LVL-" . $info["nivel"] . "-UID-");
 	$texto .= "text=\"" . $info ["nombre"] . "\" id=\"" . $uid . "\">\n";
 	$texto .= "<userdata name='myurl'></userdata>\n";
   $texto .= "<userdata name='name_url'>".$info["nombre"]."</userdata>\n";
+    $texto .= "<userdata name='realpath'>" . trim($id_item) . "</userdata>\n";
 	return;
 }
 
@@ -66,7 +73,7 @@ function directorio2($info) {
 
 function archivo($info) {
 	global $texto, $extensiones_permitidas;
-	if (!in_array($info["extension"], $extensiones_permitidas))
+	if (!in_array($info["extension"], $extensiones_permitidas) || @$_REQUEST["solo_carpetas"])
 		return;
 	$id = 0;
 	$nombre = $info["etiqueta"];
@@ -116,7 +123,8 @@ if (@$_REQUEST["extensiones_permitidas"]) {
 } else
 	$extensiones_permitidas = array (
 			"php",
-			"js" 
+			"js",
+			"css"
 	);
 
 $iniciales = explode(",", $inicio);

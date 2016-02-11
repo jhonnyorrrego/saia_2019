@@ -59,6 +59,10 @@ function obtener_panel_kaiten(){
    $panel=parent.$('#contenedor_busqueda').kaiten("getPanel",($id-1)); 
    return($panel);
 }
+function redireccion_panel_kaiten_actual(data_url,titulo){
+    var $panel=obtener_panel_kaiten();
+    parent.parent.$('#contenedor_busqueda').kaiten('reload',{ kConnector:'iframe', url:data_url, 'kTitle':titulo});
+}
 /*
  * @@actualizar_paneles_kaiten 
  * @param name

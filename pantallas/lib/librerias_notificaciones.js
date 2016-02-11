@@ -11,8 +11,18 @@ function notificacion_saia(mensaje,tipo,ubicacion,tiempo){
   if(ubicacion===''){
     ubicacion="topCenter";
   }
+  try{
   top.noty({text:mensaje, type:tipo, layout:ubicacion,timeout:tiempo});
 }
+  catch(err){
+    alert(mensaje);
+  }
+}
 function cerrar_notificaciones_saia(){  
+  try{  
   top.$.noty.closeAll();
+  }
+  catch(err){
+     
+  }
 }
