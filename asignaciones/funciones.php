@@ -127,7 +127,7 @@ if($documento["numcampos"]){
     $tareas=extrae_campo($tareas_series,"tarea_idtarea","U");
   }
 }
-else alerta("El sistema no ha podido encontrar el documento");
+else alerta("El sistema no ha podido encontrar el documento",'error',4000);
 return($tareas);
 }
 /*Asigna las tareas a un Documento y define los responsables definidos en la tarea
@@ -242,12 +242,12 @@ if($datos_tarea["numcampos"]){
       }
     }
    else{
-     alerta("Diligencie correctamente los datos e intente nuevamente");
+     alerta("Diligencie correctamente los datos e intente nuevamente",'error',4000);
      return FALSE;
   }
 }// Fin if $datos_tarea["num_campos"]
 else{
-  alerta("Error la informacion de la tarea no pudo ser obtenida");
+  alerta("Error la informacion de la tarea no pudo ser obtenida",'error',4000);
   return(FALSE);
 }
 return TRUE;
@@ -293,7 +293,7 @@ global $conn;
     }
   }
   else{
-     alerta("Diligencie correctamente los datos e intente nuevamente");
+     alerta("Diligencie correctamente los datos e intente nuevamente",'error',4000);
   }
 return ($lasignaciones);
 }
@@ -416,18 +416,18 @@ if($accion=="ELIMINA")
     	$sql="DELETE FROM asignacion WHERE idasignacion=".$idasignacion;
     	phpmkr_query($sql,$conn);
     	//echo($sql."<br /><br /><br />");
-    	alerta("La asignacion se ha Eliminado");
+    	alerta("La asignacion se ha Eliminado",'success',4000);
      }
     else 
      {
        $resultado=FALSE;
-       alerta(" Esta es una Asignacion especial que involucra alertas automaticas de los formatos de la empresa - no se permite su eliminacion");
+       alerta(" Esta es una Asignacion especial que involucra alertas automaticas de los formatos de la empresa - no se permite su eliminacion",'error',5000);
      }
 	}
  else 
   { 
    $resultado=FALSE; 
-    alerta(" No se encuentran datos de la asignacion");		 	 
+    alerta(" No se encuentran datos de la asignacion",'error',4000);		 	 
   }
  return($resultado);
 }
@@ -467,17 +467,17 @@ elseif($accion=="REPROGRAMA") 	 // SE REPROGRAMA LA ASIGNACION
 	      phpmkr_query($sql,$conn);
 	      //echo($sql."<br /><br />");
 	    }
-	    alerta("La asignacion se ha reprogramado");
+	    alerta("La asignacion se ha reprogramado",'success',4000);
 	  }
 	  else{
 	  		   	$resultado=FALSE; 
-            alerta("La asignacion no posee informacion para la reprogramacion");
+            alerta("La asignacion no posee informacion para la reprogramacion",'error',4000);
         }
 		}    
 	 else 
 	  { 
 	   $resultado=FALSE; 
-     alerta(" No se encuentran datos de la asignacion");		 	 
+     alerta(" No se encuentran datos de la asignacion",'error',4000);		 	 
 	  }
 	  return($resultado);
  } // Fin ELSEIF REPROGRAMA

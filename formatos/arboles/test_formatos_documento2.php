@@ -33,7 +33,14 @@ $campo_descripcion=array();
 $permiso=new PERMISO();
 $formato=busca_filtro_tabla("","formato","idformato='".$arreglo[0]."'","etiqueta",$conn);
 $ok=$permiso->permiso_usuario($formato[0]["nombre"],"");
+/*
+	Si el funcionario no tiene el permiso de forma regular se valida si tiene permiso asociado a un flujo 
 
+if(!$ok){
+	$doc=busca_filtro_tabla("documento_iddocumento",$arreglo[2]." A","A.id".$arreglo[2]."=".$arreglo[1],"",$conn);
+	$ok=$permiso->acceso_flujo($doc[0]["documento_iddocumento"],$arreglo[0]);	
+}
+*/
 if($formato["numcampos"]&& $ok){
   $descripcion=busca_filtro_tabla("","campos_formato","formato_idformato=".$formato[0]["idformato"]." AND acciones LIKE '%p%'","orden ASC",$conn);
 

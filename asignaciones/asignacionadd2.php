@@ -205,7 +205,7 @@ else
 	else
 	  $idserie=$_REQUEST['idserie'];
 	if(!$iddoc && !$idserie){
-	  alerta("Las tareas deben ser Asignadas a una Serie o Documento");
+	  alerta("Las tareas deben ser Asignadas a una Serie o Documento",'error',4000);
 	 // redirecciona("../pendienteslist.php?cmd=resetall");
 	}
 }
@@ -405,9 +405,9 @@ if(isset($_POST['enviar']) && $_POST['enviar']){ // Verifica INICIAR PROCESAMIEN
     for($i=0;$i<count($lista_asignaciones) && @$_REQUEST["x_control_accion"]!="";$i++){
       asignar_control($lista_asignaciones[$i]);
     }
-    alerta("Tareas Adicionadas Exitosamente");
+    alerta("Tareas Adicionadas Exitosamente",'success',4000);
   }
-  else alerta("Las Tareas No Fueron Adicionadas");
+  else alerta("Las Tareas No Fueron Adicionadas",'error',4000);
   if($popup) // Retorna el valor al campo oculto
    {
     echo "<script>

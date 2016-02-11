@@ -12,9 +12,10 @@ include_once($ruta_db_superior."db.php");
 @set_time_limit(0);
 $tarea=array();
 $tarea[0]["ruta_ejecucion"]='tareas_administrativas_saia/desactivar_reemplazos.php';
-$tarea[0]["ruta_ejecucion"]='tareas_administrativas_saia/activar_funcionario_inactivos.php';
+$tarea[1]["ruta_ejecucion"]='tareas_administrativas_saia/activar_funcionario_inactivos.php';
+$tarea[2]["ruta_ejecucion"]='pantallas/funcionario/inactivar_roles_funcionario.php';
 //$tarea[1]["ruta_ejecucion"]='terminar_solicitudes.php';
-$tarea["numcampos"]=2;
+$tarea["numcampos"]=3;
 if($tarea["numcampos"]){
   //$mh = curl_multi_init();
   $ch = curl_init();

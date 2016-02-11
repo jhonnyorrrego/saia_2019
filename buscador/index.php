@@ -419,12 +419,12 @@ if(isset($_REQUEST["busqueda"]))
     {
       if($_REQUEST["salto_pagina"]<1)
         {
-          alerta("Acaba de Elegir una página no válida y será enviado a la primera página");
+          alerta("Acaba de Elegir una página no válida y será enviado a la primera página",'error',5000);
           $anterior=0;
         }  
       else if(($_REQUEST["salto_pagina"]-1)*$_REQUEST["registros"]>=$_REQUEST["num_reg"])
         {
-          alerta("Acaba de Elegir una página que no existe y será enviado a la última página");
+          alerta("Acaba de Elegir una página que no existe y será enviado a la última página",'error',4000);
           $anterior=((ceil($_REQUEST["num_reg"]/$_REQUEST["registros"])-1)*$_REQUEST["registros"]);
         }
       else $anterior=(($_REQUEST["salto_pagina"]-1)*$_REQUEST["registros"]);

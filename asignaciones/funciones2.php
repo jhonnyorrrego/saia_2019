@@ -110,7 +110,7 @@ if($documento["numcampos"]){
     $tareas=extrae_campo($tareas_series,"tarea_idtarea","U");
   }
 }
-else alerta("El sistema no ha podido encontrar el documento");
+else alerta("El sistema no ha podido encontrar el documento",'error',4000);
 return($tareas);
 }
 /*Asigna las tareas a un Documento y define los responsables definidos en la tarea
@@ -204,12 +204,12 @@ if($datos_tarea["numcampos"]){
 
         }
    else{
-     alerta("Diligencie correctamente los datos e intente nuevamente");
+     alerta("Diligencie correctamente los datos e intente nuevamente",'error',4000);
      return FALSE;
   }
 }// Fin if $datos_tarea["num_campos"]
 else{
-  alerta("Error la informacion de la tarea no pudo ser obtenida");
+  alerta("Error la informacion de la tarea no pudo ser obtenida",'error',4000);
   return(FALSE); 	
 }  
 return TRUE; 

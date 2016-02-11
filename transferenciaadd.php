@@ -454,11 +454,12 @@ $x_recibido=$tmp;
 			tree2.setImagePath("imgs/");
 			tree2.enableIEImageFix(true);
 			tree2.enableCheckBoxes(1);
+			tree2.enableRadioButtons(true);
 			tree2.setOnLoadingStart(cargando_func);
       tree2.setOnLoadingEnd(fin_cargando_func);
 			tree2.enableThreeStateCheckboxes(true);
       tree2.enableSmartXMLParsing(true);
-			tree2.loadXML("test.php?key=<?php echo($x_archivo_idarchivo.@$accion_flujo);?>");
+			tree2.loadXML("test.php?key=<?php echo($x_archivo_idarchivo.@$accion_flujo);?>&sin_padre=1");
 			function fin_cargando_func() {
         if (browserType == "gecko" )
            document.poppedLayer =
@@ -580,7 +581,8 @@ $x_recibido=$tmp;
 if(@$x_imprime<>1){
 ?>
 <input type="hidden" name="a_add" value="A">
-<input type="submit" name="Action" class="btn btn-mini btn-primary"value="CONTINUAR">
+  <input type="button" class="btn btn-mini btn-danger" value="Cancelar" onclick="window.history.back(-1);">
+<input type="submit" name="Action" class="btn btn-mini btn-primary"value="Continuar">
 <?php }
 else {
 // La P es de Print

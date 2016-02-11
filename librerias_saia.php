@@ -20,6 +20,7 @@ if(@$_SESSION["generando_pantalla"]){
 else{
  $raiz_saia=$ruta_db_superior;
 }
+include_once($raiz_saia."css/index_estilos.php");
 function librerias_jquery($version="1.4.2"){
 global $raiz_saia;
 $texto='';
@@ -30,6 +31,9 @@ switch($version){
   case "1.7": 
     $texto='<script src="'.$raiz_saia.'js/jquery-1.7.min.js" type="text/javascript"></script>';
   break;
+  case "1.2.3": 
+    $texto='<script src="'.$raiz_saia.'js/jquery-1.2.3.min.js" type="text/javascript"></script>';
+  break;  
   case "sapi":
     $texto='<script type="text/javascript" src="http://www.google.com/jsapi"></script>
 <script type="text/javascript">
@@ -94,6 +98,7 @@ return($texto);
 function estilo_principal($estilo="estilo_lightness"){
 global $raiz_saia; 
 $texto='<link rel="stylesheet" type="text/css" href="'.$raiz_saia.'asset/css/main.css">';
+$texto.=index_estilos('temas_main');
 $texto.=$estilo();
 return($texto);
 }
@@ -106,6 +111,7 @@ $texto.='<link rel="stylesheet" type="text/css" href="'.$raiz_saia.'css/jasny-bo
 $texto.='<link rel="stylesheet" type="text/css" href="'.$raiz_saia.'css/bootstrap_reescribir.css">';
 $texto.='<link rel="stylesheet" type="text/css" href="'.$raiz_saia.'pantallas/lib/librerias_css.css">';
 $texto.='<link rel="stylesheet" type="text/css" href="'.$raiz_saia.'css/bootstrap_iconos_segundarios.css">';
+$texto.=index_estilos('temas_bootstrap');
 return($texto);
 }
 function librerias_bootstrap(){
@@ -234,7 +240,8 @@ $texto.='<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">';
 $texto.='<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />';
 $texto.='<link rel="stylesheet" type="text/css" href="'.$raiz_saia.'css/kaiten.min.css" />';
 $texto.='<script type="text/javascript" src="'.$raiz_saia.'js/kaiten.js"></script>';
-$texto.='<script type="text/javascript" src="'.$raiz_saia.'js/jquery.ba-resize.min.js"></script>';			
+$texto.='<script type="text/javascript" src="'.$raiz_saia.'js/jquery.ba-resize.min.js"></script>';		
+$texto.=index_estilos('temas_kaiten');		
 return($texto);			
 }		 
 function librerias_acciones_kaiten(){
@@ -310,6 +317,14 @@ function estilo_file_upload(){
   $texto.='<link rel="stylesheet" href="'.$raiz_saia.'pantallas/anexos/css/jquery.fileupload-ui.css" type="text/css" />';		
   return($texto);		
 }		
+function librerias_jqcrop(){
+global $raiz_saia; 
 
+	$texto='<script src="'.$raiz_saia.'js/jquery.Jcrop.pack.js"></script>';
+	$texto.='<link rel="stylesheet" href="'.$raiz_saia.'css/jquery.Jcrop.css" type="text/css" />';	
+
+
+return($texto);
+}
 
 ?>

@@ -16,7 +16,7 @@ if(@$_REQUEST["key"]&&@$_REQUEST["key"]!=""&&@$_REQUEST["Guardar"]){
   asignar_permiso($idanexo,"CARACTERISTICA_CARGO",$tabla,$cargo);
   asignar_permiso($idanexo,"CARACTERISTICA_TOTAL",$tabla,$todos);
   echo "<script> parent.hs.close();</script>";
-  alerta("Su permiso ha sido adicionado");
+  alerta("Su permiso ha sido adicionado",'success',4000);
   exit();
 }
 else{ // Carga los permisos si estan definidos*/

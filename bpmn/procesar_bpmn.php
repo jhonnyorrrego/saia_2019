@@ -48,6 +48,8 @@ if(@$_REQUEST["idpaso_documento"]){
 	  	$bpmn->get_tareas_bpmn();
 	  	$idpaso_documento=$bpmn->estado_flujo[0]["idpaso_documento"];
 			$datos_documento=busca_filtro_tabla("","documento A","A.iddocumento=".$bpmn->estado_flujo[0]["documento_iddocumento"],"",$conn);
+			$datos_doc_inicio=busca_filtro_tabla("","documento","iddocumento=".$bpmn->tarea_inicio_instancia[0]["documento_iddocumento"],"",$conn);
+      
 	  }
 	}  
 ?>
@@ -61,13 +63,13 @@ if(@$_REQUEST["idpaso_documento"]){
 		<i class="icon-info-sign"></i> <b>PROCESO: <?php echo($bpmn->bpmn[0]["title"]);?></b>
 		<?php if(!@$_REQUEST["vista_bpmn"]){ ?>
 		<address style="margin-bottom:0px; line-height: 15px;">
-		<b>Descripci&oacute;n:</b> <?php echo($bpmn->bpmn[0]["description"]); ?><br />
-		<b>Inicio del proceso:</b> <?php echo(mostrar_fecha_saia($bpmn->estado_flujo[0]["fecha_asignacion"]));?><br>
-		<!--b>Terminados:</b> (<?php echo(count($bpmn->tareas_exito)."/".$bpmn->tareas["numcampos"]);?>) : <?php echo($bpmn->estado_flujo["porcentaje"]);?>%<br-->
-		<b>Fecha L&iacute;mite:</b> <?php echo(mostrar_fecha_saia($bpmn->estado_flujo["fecha_final_diagrama"]));
-?> <br>
-		<b>Estado:</b> <?php echo($bpmn->imprime_estado_bpmni());?><br>
-		</address>
+  		<b>Descripci&oacute;n:</b> <?php echo($bpmn->bpmn[0]["description"]); ?><br />
+  		<b>Inicio del proceso:</b> <?php echo(mostrar_fecha_saia($bpmn->estado_flujo[0]["fecha_asignacion"]));?><br>
+  		<!--b>Terminados:</b> (<?php echo(count($bpmn->tareas_exito)."/".$bpmn->tareas["numcampos"]);?>) : <?php echo($bpmn->estado_flujo["porcentaje"]);?>%<br-->
+  		<b>Fecha L&iacute;mite:</b> <?php echo(mostrar_fecha_saia($bpmn->estado_flujo["fecha_final_diagrama"]));
+  ?>  <br>
+  		<b>Estado:</b> <?php echo($bpmn->imprime_estado_bpmni());?><br>
+	  </address>
 		<?php } ?>
 	</div>
 	<div class="span6">
@@ -76,7 +78,10 @@ if(@$_REQUEST["idpaso_documento"]){
 		<address style="margin-bottom:0px; line-height: 15px;">
 			<!--b>N&uacute;mero del flujo:</b> <?php echo($bpmn->estado_flujo[0]["iddiagram_instance"]); ?><br /-->
 			<!--b>Radicado:</b> <?php echo($datos_documento[0]["numero"]); ?><br /-->
-			<b>Descripci&oacute;n del documento:</b> <a href="<?php echo($ruta_db_superior);?>ordenar.php?key=<?php echo($datos_documento[0]["iddocumento"]); ?>&mostarr=1&mostrar_formato=1"><?php echo($datos_documento[0]["descripcion"]); ?></a><br />
+			<b>Descripci&oacute;n del documento principal:</b> <a href="<?php echo($ruta_db_superior);?>ordenar.php?key=<?php echo($datos_doc_inicio[0]["iddocumento"]); ?>&mostarr=1&mostrar_formato=1"><?php echo($datos_doc_inicio[0]["descripcion"]); ?></a><br />
+			<?php if($datos_documento[0]["iddocumento"]!=$datos_doc_inicio[0]["iddocumento"]) {?>
+        <b>Descripci&oacute;n del documento actual:</b> <a href="<?php echo($ruta_db_superior);?>ordenar.php?key=<?php echo($datos_documento[0]["iddocumento"]); ?>&mostarr=1&mostrar_formato=1"><?php echo($datos_documento[0]["descripcion"]); ?></a><br />			   
+			<?php } ?>
 			<!--a onclick="llamado_bpmn('<?php echo($ruta_db_superior); ?>workflow/rastro_flujo.php?idflujo_instancia=<?php echo($bpmn->estado_flujo[0]["iddiagram_instance"]); ?>','600','350');" style="cursor:pointer">Ver rastro del flujo</a-->
 		</address>
 		<?php } ?>		

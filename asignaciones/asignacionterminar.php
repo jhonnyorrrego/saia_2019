@@ -55,7 +55,7 @@ if(isset($_REQUEST["Action"]))
   { 
     if($_REQUEST["justificacion"]=='')
       { 
-         alerta("Se debe ingresar una justificacion para declarar terminada una asignacion");
+         alerta("Se debe ingresar una justificacion para declarar terminada una asignacion",'error',4000);
        }
      else 
       {
@@ -225,7 +225,7 @@ $x_entidad,$x_llave;
 	if ($sOrderBy <> "") {
 		$sSql .= " ORDER BY " . $sOrderBy;
 	}
-	$rs = phpmkr_query($sSql,$conn) or die("Falló la búsqueda" . phpmkr_error() . ' SQL:' . $sSql);
+	$rs = phpmkr_query($sSql,$conn) or die("Fallï¿½ la bï¿½squeda" . phpmkr_error() . ' SQL:' . $sSql);
 	if (phpmkr_num_rows($rs) == 0) {
 		$LoadData = false;
 	}else{

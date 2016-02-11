@@ -2,6 +2,14 @@
  /* if(!isset($_SESSION))
        session_start();*/
   include_once("db.php");
+  include_once("librerias_saia.php");
+echo(estilo_bootstrap());   
+  
+if(@$_REQUEST["iddoc"] || @$_REQUEST["key"] || @$_REQUEST["doc"]){
+	$_REQUEST["iddoc"]=@$_REQUEST["iddoc"];
+	include_once("pantallas/documento/menu_principal_documento.php");
+	echo(menu_principal_documento(@$_REQUEST["iddoc"],1));
+}  
  /* header("Expires: Mon, 26 Jul 1997 05:00:00 GMT"); // date in the past
   header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT"); // always modified
   header("Cache-Control: no-store, no-cache, must-revalidate"); // HTTP/1.1 
@@ -95,13 +103,14 @@ $config = busca_filtro_tabla("valor","configuracion","nombre='color_encabezado'"
 		width:6px;
 		position:absolute;
 		display:none;
+		
 
 	}
 	
 	#insertionMarkerLine{
 		width:6px;	/* No need to change this value */
 		height:145px;	/* To adjust the height of the div that indicates where the dragged image will be dropped */
-	
+		
 	}
 		
 	#insertionMarker img{
@@ -122,6 +131,7 @@ $config = busca_filtro_tabla("valor","configuracion","nombre='color_encabezado'"
 		position:absolute;
 		z-index:10;
 		display:none;
+
 			
 	}
 /*
@@ -534,7 +544,13 @@ unset($_SESSION['pagina_actual']);
 menu_ordenar($llave);
 ?>
 </div>
-<span class="internos"><img class="imagen_internos" src="botones/comentarios/ver_documentos.png" border="0">&nbsp;&nbsp;</span>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<span class="internos"></span>
 <?php 
 if(!(isset($_GET["accion"]) && $_GET["accion"]=="mostrar"))
  {
@@ -583,6 +599,7 @@ if($detalle_doc[0]["estado"]=="ANULADO")
 ?>
 </span>
 <hr>
+
 <?php
 if($plantilla<>"")
     {$tabla=busca_filtro_tabla("tabla_imagenes","plantillas","plantilla='".strtolower($plantilla)."'","",$conn);
@@ -620,7 +637,7 @@ else
   }
   else
    $codigo="<span class=\"imageBox_label\"><center><label style='font-family: Verdana;font-size: 9px;'><b>El documento no tiene p&aacute;ginas digitalizadas.</b></center></span>";
-  echo $codigo."<br><br><br><br><br><br><br>";
+  echo "<div class='container'>".$codigo."</div><br><br><br><br><br><br><br>";
   //muestra los formatos que esta relacionado con el documento    
 $destino='targee="centro"';
   if($plantilla<>"")  
@@ -638,6 +655,8 @@ $destino='targee="centro"';
     $tabla=@$serie[0]["nombre"];    
     $serie = strtolower($tabla);            
   ?>
+  <div class="container">   
+
   <!-- el div es parte del codigo que muestra las miniaturas -->
   <div id="insertionMarker">
   	<img src="images/marker_top.gif">
@@ -648,10 +667,16 @@ $destino='targee="centro"';
   <div id="dragDropContent"></div>
   <div id="debug" style="clear:both"></div>
   <div style="clear:both;padding-bottom:10px">
+
+  	
+  	
   <?php
   /*------------------------------------------------------------------------------------
   crea la lista con las respuestas del documento y los enlaces para visualizarlas
   ------------------------------------------------------------------------------------*/
+  
+  /*
+  
   $respuestas=busca_filtro_tabla("B.numero,B.descripcion,A.destino,A.plantilla","respuesta A,documento B","B.iddocumento=A.destino and B.estado in ('APROBADO','CENTRAL','HISTORICO','GESTION') and A.origen=".$llave,"", $conn);
   $ruta = "";
   if($respuestas["numcampos"]>0)
@@ -674,10 +699,16 @@ $destino='targee="centro"';
   else  
     echo "<br /><center><label style='font-family: Verdana;font-size: 9px;'>
           <b>El documento no tiene respuestas asociadas.</b></label></center>";
+   
+   */
+   
+   
   /*------------------------------------------------------------------------------------
   Busca si el documento actual es una respuesta, para mostrar su documento asociado
   ------------------------------------------------------------------------------------*/
 
+  /*  
+  
   global $conn;        
   $respuestas=busca_filtro_tabla("B.iddocumento,B.numero,B.descripcion","respuesta A,documento B","B.iddocumento=A.origen and A.destino=".$llave,"",$conn); 
     if($respuestas["numcampos"]>0)
@@ -696,14 +727,22 @@ $destino='targee="centro"';
                </tr>";
         }
       echo "</table>";   
-    } 
+    }
+
+   */   
+    
+/*	 
 //si tiene anexos imprimo un texto con la cantidad
 $anexos=busca_filtro_tabla("count(*)","anexos","documento_iddocumento=".$llave,"",$conn); 
 if($anexos[0][0]>0)
   echo "<br /><center><b>El documento tiene <a href='anexosdigitales/anexos_documento.php?key=$llave&no_menu=1&iddoc=$llave'>".$anexos[0][0]." anexos digitales</a></b></center>";
 else
-  echo "<br /><center><b>El documento no tiene anexos digitales</b></center>";            
-  ?>    
+  echo "<br /><center><b>El documento no tiene anexos digitales</b></center>";     
+  
+*/  
+         
+  ?>  
+ 
   <form id="ordenar" name="ordenar" action="ordenar_paginas.php" method="POST">
     <input type="hidden" name="key" value="<?php echo $llave;?>">
     <input type="hidden" name="orden">
@@ -713,7 +752,8 @@ else
      if(!(isset($_GET["accion"]) && $accion =="mostrar") && $listado["numcampos"]>0)
      {
     ?> 
-    	<input type="submit" style="width:100px" value="Guardar orden" onclick="saveImageOrder()">
+    	 <input type="button" class="btn btn-mini btn-danger" value="Cancelar" onclick="window.history.back(-1);">
+    	<input type="submit" class="btn btn-mini btn-primary" value="Guardar orden" onclick="saveImageOrder()">
     <?php 
      }
     ?>
@@ -726,6 +766,7 @@ else
   <iframe name='listar_archivos' id='listar_archivos' src="listar_anexos.php?iddoc=<?php echo $llave;if($plantilla=="CALIDAD") echo("&calidad=1");?>" width="100%" height="100%" frameborder=0 scrolling="no" marginwidth=0>
   </iframe-->
   </form>
+  </div>
   </div>
   
 <?php

@@ -32,7 +32,7 @@ if($_POST['user']){
 	}
 }
 ?>
-<form method="post" name="login_prueba" action="login_prueba.php">
+<form method="post" name="login_prueba" action="test_ldap.php">
 	<table style="border-collapse:collapse;" border="0">
 		<tr><td>Servidor: </td><td> <input type="text" name='servidor' value="appad.intracoomeva.com.co"/></td>
 		</tr>

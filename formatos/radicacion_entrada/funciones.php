@@ -249,8 +249,7 @@ function imagenes_digitalizadas_funcion($idformato,$iddoc){
 				var tipo=$(this).attr("tipo");
 				if(tipo=='anexo'){
 					top.hs.htmlExpand(this, { objectType: 'iframe',width: 1000, height: 600,contentId:'cuerpo_paso', preserveContent:false, src:enlace,outlineType: 'rounded-white',wrapperClassName:'highslide-wrapper drag-header'});
-				}
-				else if(tipo=='pagina'){
+				}else if(tipo=='pagina'){
 					top.hs.htmlExpand(this, { objectType: 'iframe',width: 1000, height: 600,contentId:'cuerpo_paso', preserveContent:false, src:'pantallas/documento/pagina_documento.php?idpagina='+enlace,outlineType: 'rounded-white',wrapperClassName:'highslide-wrapper drag-header'});
 				}
 			});

@@ -1,12 +1,21 @@
 <?php
 include_once("header.php");
 include_once("db.php");
+include_once("librerias_saia.php");
+echo(estilo_bootstrap() );
+
+if(@$_REQUEST["key"] && @$_REQUEST["accion"]=='seleccionar_etiqueta'){
+	$doc_menu=@$_REQUEST["key"];
+	include_once("pantallas/documento/menu_principal_documento.php");
+	echo(menu_principal_documento($doc_menu,1));
+}
+
 ?>
 <div  align="center">
 <?php
 menu_ordenar($_REQUEST["key"]);
 ?>
-</div><br /><br />
+</div>
 
 <?php
 $usuario=usuario_actual("funcionario_codigo");
@@ -70,16 +79,19 @@ elseif($_REQUEST["accion"]=="adicionar"||$_REQUEST["accion"]=="editar")
 {global $conn;
  if($_REQUEST["accion"]=="editar")
    $dato=busca_filtro_tabla("","etiqueta","idetiqueta=".$_REQUEST["key"],"",$conn); 
- echo "<br /><br /><b>".strtoupper($_REQUEST["accion"]." Etiqueta")."</b><br /><br />";
+ echo "<br /><br /><p><span class='internos'>".strtoupper($_REQUEST["accion"]." Etiqueta")."</p></span><br /><br />";
  ?>
  <form name="form1" method="post">
  <table>
  <tr>
  <td class="encabezado">NOMBRE*</td>
- <td><input type="text" name="nombre" value="<?php echo @$dato[0]["nombre"]; ?>"></td>
+ <td bgcolor="#F5F5F5"><input type="text" name="nombre" value="<?php echo @$dato[0]["nombre"]; ?>"></td>
  </tr>
  <td >
- <input type="button" value="Guardar" onclick="if(form1.nombre.value!='')form1.submit(); else alert('Debe llenar el campo nombre');">
+ 	<br/>
+ 	
+ 	<input type="button" class="btn btn-mini btn-danger" value="Cancelar" onclick="window.parent.hs.close();">
+ <input type="button" value="Guardar"  class="btn btn-mini btn-primary" onclick="if(form1.nombre.value!='')form1.submit(); else alert('Debe llenar el campo nombre');">
  <input type="hidden" name="accion" value="guardar_<?php echo $_REQUEST["accion"]; ?>">
  <input type="hidden" name="key" value="<?php echo $_REQUEST["key"]; ?>">
  </td>
@@ -138,10 +150,37 @@ elseif($_REQUEST["accion"]=="seleccionar_etiqueta")
     hs.graphicsDir = 'anexosdigitales/highslide-4.0.10/highslide/graphics/';
     hs.outlineType = 'rounded-white';
 </script>
- <br /><br /><b>Etiquetar documento</b><br /><br /><form name='form1' method='post'>
- <a href='etiqueta.php?accion=adicionar' onclick='return hs.htmlExpand(this, { objectType: "iframe",width: 400, height:200,preserveContent:false } )'>Adicionar</a><br /><br />
- <table width='400px'><tr><td>Etiquetas: 
- </td><td><select id='etiquetas' name='etiquetas[]' multiple='multiple'>
+ <br /><br /><p><span class="internos">ETIQUETAR DOCUMENTO</span></p><br /><br /><form name='form1' method='post'>
+
+		<ul class="nav nav-tabs">
+		 <li ><a href='etiqueta.php?accion=adicionar' onclick='return hs.htmlExpand(this, { objectType: "iframe",width: 400, height:200,preserveContent:false } )'>Adicionar Etiqueta</a ></li>
+		</ul>
+ <br />
+ <table border="0" cellspacing="1" cellpadding="4" bgcolor="#CCCCCC"  width="100%"><tr><td  class="encabezado">Etiquetas: 
+ </td><td bgcolor="#F5F5F5">
+
+ <?php 
+ $max_etiquetas=1;   
+ for($i=0;$i<$etiquetas["numcampos"];$i++)
+    {echo "<input type='checkbox' name='etiquetas[]' value='".$etiquetas[$i]["idetiqueta"]."'";
+     if(in_array($etiquetas[$i]["idetiqueta"],$seleccionados)){
+     	echo " checked ";
+     }
+        
+     echo ">&nbsp;".$etiquetas[$i]["nombre"]."&nbsp;&nbsp;&nbsp;&nbsp;";
+    
+     if($max_etiquetas==4){
+     	echo('<br/><br/>');
+     	$max_etiquetas=1;
+     }else{
+     	$max_etiquetas++;
+     }
+	  
+    }
+ ?>
+
+ 	
+ <!-- select id='etiquetas' name='etiquetas[]' multiple='multiple'>
  <?php    
  for($i=0;$i<$etiquetas["numcampos"];$i++)
     {echo "<option value='".$etiquetas[$i]["idetiqueta"]."'";
@@ -150,12 +189,16 @@ elseif($_REQUEST["accion"]=="seleccionar_etiqueta")
      echo ">".$etiquetas[$i]["nombre"]."</option>";
     }
  ?>
- </select></td></tr>
+ </select -->
+ 
+ </td></tr>
  <tr><td colspan=2>
- <input type=submit value=Guardar>
+	<br/>
  <input type='hidden' name='documento' value='<?php echo $_REQUEST["key"]; ?>'>
  <input type='hidden' name='accion' value='etiquetar_documento'>
  </table>
+     <input type="button" class="btn btn-mini btn-danger" value="Cancelar" onclick="window.history.back(-1);">
+    <input type="submit"  class="btn btn-mini btn-primary"value="Guardar">
  </form>
  <script>
  $(document).ready(function() {

@@ -1,8 +1,16 @@
 <?php
-//die("die");
 set_time_limit(0);
-include_once("../db.php");
-include_once("../class_transferencia.php");
+$max_salida = 6; // Previene algun posible ciclo infinito limitando a 10 los ../
+$ruta_db_superior = $ruta = "";
+while ($max_salida > 0) {
+    if (is_file($ruta . "db.php")) {
+        $ruta_db_superior = $ruta; //Preserva la ruta superior encontrada
+    }
+    $ruta.="../";
+    $max_salida--;
+}
+include_once($ruta_db_superior."db.php");
+include_once($ruta_db_superior."class_transferencia.php");
 $archivo = fopen('files/hojas_bogota.csv','r');
 $a=1;
 while($linea = fgetcsv($archivo,0,"/")){
@@ -386,8 +394,8 @@ function aprobar2($iddoc=0,$url="")
                $tipo_radicado=busca_filtro_tabla("documento.*,contador.nombre,plantilla,idformato","documento,contador,formato C","idcontador=tipo_radicado and iddocumento=$iddoc AND lower(plantilla)=lower(C.nombre)","",$conn);
 
                if($tipo_radicado[0]["numero"]==0)
-                  {$numero=contador($tipo_radicado[0]["nombre"]);
-                   phpmkr_query("UPDATE documento SET estado='APROBADO',numero=".$numero[0]["consecutivo"].", fecha=".fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s')." WHERE iddocumento=".$iddoc,$conn);
+                  {$numero=contador($iddoc,$tipo_radicado[0]["nombre"]);
+                   phpmkr_query("UPDATE documento SET estado='APROBADO', fecha=".fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s')." WHERE iddocumento=".$iddoc,$conn);
                   }
                else
                    phpmkr_query("UPDATE documento SET estado='APROBADO',activa_admin=0, fecha=".fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s')." WHERE iddocumento=".$iddoc,$conn);               

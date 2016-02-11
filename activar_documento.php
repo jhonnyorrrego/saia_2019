@@ -106,6 +106,6 @@ document.getElementById("ocultar").style.display="none";
 </table>
 <?php      
 }
-else alerta("Por Favor Seleccione un Documento");
+else alerta("Por Favor Seleccione un Documento",'error',4000);
 include_once("footer.php");
 ?>

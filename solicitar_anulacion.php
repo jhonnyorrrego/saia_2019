@@ -1,5 +1,15 @@
 <?php
+
+if(@$_REQUEST["iddoc"] || @$_REQUEST["key"] || @$_REQUEST["doc"]){
+	$_REQUEST["iddoc"]=@$_REQUEST["doc"];
+	include_once("pantallas/documento/menu_principal_documento.php");
+	echo(menu_principal_documento(@$_REQUEST["iddoc"],@$_REQUEST["vista"]));
+}
+
 include_once("header.php");
+
+include_once("librerias_saia.php");
+echo(estilo_bootstrap());
 
 if(@$_REQUEST["accion"]=="adicionar" && $_REQUEST["key"]){
 	$documento=busca_filtro_tabla("","documento","iddocumento=".$_REQUEST["key"],"",$conn);
@@ -41,21 +51,23 @@ menu_ordenar($_REQUEST["key"]);
 });
 </script>
 <form name='form1' method='post' id='form1'>
-<table border="1" style="border-collapse:collapse">
+<table border="0" style="WIDTH:100%;" bgcolor="#CCCCCC" cellpadding="4" cellspacing="4">
  <tr>
   <td class="encabezado">Fecha Solicitud</td>
-  <td><input type="text" readonly="true" name="fecha_solicitud" id="fecha_solicitud" class="required" value="<?php echo date("Y-m-d H:i:s"); ?>"></td>
+  <td bgcolor="#F5F5F5"><input type="text" readonly="true" name="fecha_solicitud" id="fecha_solicitud" class="required" value="<?php echo date("Y-m-d H:i:s"); ?>"></td>
  </tr><tr>
   <td class="encabezado">Documento</td>
-  <td><input type="hidden" name="documento_iddocumento" id="documento_iddocumento" class="required" value="<?php echo $_REQUEST["key"]; ?>"><?php echo $documento[0]["numero"]." - ".$documento[0]["descripcion"]; ?></td>
+  <td bgcolor="#F5F5F5"><input type="hidden" name="documento_iddocumento" id="documento_iddocumento" class="required" value="<?php echo $_REQUEST["key"]; ?>"><?php echo $documento[0]["numero"]." - ".$documento[0]["descripcion"]; ?></td>
  </tr>
  <tr>
   <td class="encabezado">Justificaci&oacute;n</td>
-  <td><textarea cols="50" rows="5" name="descripcion" id="descripcion" class="required" ></textarea></td>
+  <td bgcolor="#F5F5F5"><textarea cols="50" rows="5" name="descripcion" id="descripcion" class="required" ></textarea></td>
  </tr>
  <tr>
   <td colspan="2">
-  <input type="submit" value="Continuar">
+  	<br>
+  <input type="button" class="btn-mini btn-danger" value="Cancelar" onclick="window.history.back(-1);">
+  <input type="submit" class="btn-mini btn-primary" value="Continuar">
   <input type="hidden" name="funcionario" value="<?php echo usuario_actual("funcionario_codigo"); ?>">
   <input type="hidden" name="estado" value="SOLICITADO">
   <input type="hidden" name="accion" value="guardar_adicionar">

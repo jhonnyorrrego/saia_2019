@@ -43,7 +43,7 @@ if(@$_POST) // llegan datos del formulario  y los procesa
     }
    } 
    else{
-     alerta("Error al crear la tarea");
+     alerta("Error al crear la tarea",'error',4000);
      $enlace="tarealist.php";
    }  
    redirecciona($enlace);

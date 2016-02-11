@@ -92,7 +92,7 @@ else
 	else 
 	  $idserie=$_REQUEST['idserie'];
 	if(!$iddoc && !$idserie){
-	  alerta("Las tareas deben ser Asignadas a una Serie o Documento");
+	  alerta("Las tareas deben ser Asignadas a una Serie o Documento",'error',4000);
 	 // redirecciona("../pendienteslist.php?cmd=resetall");
 	}
 		
@@ -115,27 +115,27 @@ if(responsables && responsables.length){
 }
 
 if(EW_this.x_descripcion.value==""){
-  alert("Por favor ingrese el campo requerido - Descripción");
+  alerta("Por favor ingrese el campo requerido - Descripción",'error',5000);
   return(false);
 }
 if(EW_this.x_destino.value==""){
-  alert("Por favor ingrese el campo requerido - responsable(s) de la tarea");
+  alerta("Por favor ingrese el campo requerido - responsable(s) de la tarea",'error',5000);
   return(false);
 }
 if(EW_this.fecha_final.value=="" || EW_this.fecha_inicial.value==""){
   if(EW_this.fecha_final.value==""){
-    alert("Por favor Ingrese el Valor de la Fecha Vencimiento");
+    alerta("Por favor Ingrese el Valor de la Fecha Vencimiento",'error',5000);
     return(false);
   }
   if(EW_this.fecha_inicial.value==""){
-    alert("Por favor Ingrese el Valor de la Fecha Inicio");
+    alerta("Por favor Ingrese el Valor de la Fecha Inicio",'error',5000);
     return(false);
   }
 }
 else{
 	//alert(EW_this.fecha_final.value+EW_this.fecha_inicial.value);
   if(EW_this.fecha_final.value<EW_this.fecha_inicial.value){
-    alert("Por favor Seleccione su fecha de vencimiento MAYOR que la Fecha Inicio");
+    alerta("Por favor Seleccione su fecha de vencimiento MAYOR que la Fecha Inicio",'error',5000);
     return(false);
   }
 }
@@ -308,9 +308,9 @@ if(isset($_POST['enviar']) && $_POST['enviar']){ // Verifica INICIAR PROCESAMIEN
     for($i=0;$i<count($lista_asignaciones) && @$_REQUEST["x_control_accion"]!="";$i++){
       asignar_control($lista_asignaciones[$i]);
     }
-    alerta("Tareas Adicionadas Exitosamente");
+    alerta("Tareas Adicionadas Exitosamente",'success',4000);
   }     
-  else alerta("Las Tareas No Fueron Adicionadas");
+  else alerta("Las Tareas No Fueron Adicionadas",'error',4000);
   
  if($popup) // Retorna el valor al campo oculto
    {

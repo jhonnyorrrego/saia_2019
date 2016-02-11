@@ -36,8 +36,11 @@ else
   header("Content-type: text/xml"); 
 }
 echo("<?xml version=\"1.0\" encoding=\"UTF-8\"?".">");
-if($id and $id<>""){
-  echo("<tree id=\"0\">\n");
+if($id and $id<>"" && @$_REQUEST["uid"]){
+  echo("<tree id=\"".$id."\">\n");
+	llena_serie($id);
+	echo("</tree>\n");
+	die();
   $dato_papa=busca_filtro_tabla("",$tabla,"id".$tabla."=".$id,"",$conn);
 
   if(@$_REQUEST["cargar_dato_padre"]){
@@ -53,10 +56,10 @@ if($id and $id<>""){
 } 
 else
   echo("<tree id=\"0\">\n");  
-if($tabla=="serie")
+if($tabla=="serie" && !$id)
   {if(isset($_REQUEST["categoria"])&&$_REQUEST["categoria"])
    {switch($_REQUEST["categoria"])
-      {case 1:echo  "<item style=\"font-family:verdana; font-size:7pt;\" text=\"Comunicaciones Oficiales\" id=\"1-categoria-Comunicaciones Oficiales\" >\n"; 
+      {case 1:echo  "<item style=\"font-family:verdana; font-size:7pt;\" text=\"Comunicaciones Oficiales\" id=\"1-categoria-Comunicaciones Oficiales\"   >\n"; 
        llena_serie("NULL"," and categoria=1 ");
    echo "</item>\n";
               break;
@@ -75,13 +78,13 @@ if($tabla=="serie")
    }
    else
    {
-   echo  "<item style=\"font-family:verdana; font-size:7pt;\" text=\"Comunicaciones Oficiales\" id=\"1-categoria-Comunicaciones Oficiales\"  >\n"; 
+   echo  "<item style=\"font-family:verdana; font-size:7pt;\" text=\"Comunicaciones Oficiales\" id=\"1-categoria-Comunicaciones Oficiales\"  nocheckbox=\"1\">\n"; 
        llena_serie("NULL"," and categoria=1 ");
    echo "</item>\n";
-   echo  "<item style=\"font-family:verdana; font-size:7pt;\" text=\"Produccion Documental\" id=\"2-categoria-Produccion Documental\" >\n"; 
+   echo  "<item style=\"font-family:verdana; font-size:7pt;\" text=\"Produccion Documental\" id=\"2-categoria-Produccion Documental\" nocheckbox=\"1\" >\n"; 
        llena_serie("NULL"," and categoria=2 ");
    echo "</item>\n";
-   echo  "<item style=\"font-family:verdana; font-size:7pt;\" text=\"Otras categorias\" id=\"3-categoria-Otras categorias\" >\n"; 
+   echo  "<item style=\"font-family:verdana; font-size:7pt;\" text=\"Otras categorias\" id=\"3-categoria-Otras categorias\" nocheckbox=\"1\">\n"; 
        llena_serie("NULL"," and categoria=3 ");
    echo "</item>\n";
    }
@@ -123,16 +126,35 @@ if($papas["numcampos"])
     if(@$papas[$i]["codigo"]){
       $cadena_codigo="(".$papas[$i]["codigo"].")";
     }
+	
+		if($tabla=="serie"){
+			if(@$papas[$i]["estado"]==1){
+				$estado_serie=' - ACTIVA';	
+			}else{
+				$estado_serie=' - INACTIVA';				
+			}
+		}	
+	
     echo("text=\"".htmlspecialchars(($papas[$i]["nombre"])).$cadena_codigo." \" id=\"".$papas[$i]["id$tabla"]."\"");
-    if($hijos[0]["cant"]!=0 && (@$_REQUEST["sin_padre"]))
-      echo(" nocheckbox=\"1\" "); 
+		if(@$_REQUEST["arbol_series"]){		
+				
+	}		
+	else if($hijos[0]["cant"]!=0 && ($tabla=="serie" || @$_REQUEST["sin_padre"])){		
+      echo(" nocheckbox=\"1\" ");		
+	}
     if(in_array($papas[$i]["id$tabla"],$seleccionado)!==false)
       echo " checked=\"1\" ";  
     if($hijos[0][0])
       echo(" child=\"1\">\n");
     else
       echo(" child=\"0\">\n");
-    llena_serie($papas[$i]["id$tabla"]);
+		if(!$_REQUEST["id"] && $tabla!='serie')
+    	llena_serie($papas[$i]["id$tabla"]);
+		else{
+			if(!$_REQUEST["admin"]){
+				llena_serie($papas[$i]["id$tabla"]);
+			}
+		}
     echo("</item>\n");
   }     
 }

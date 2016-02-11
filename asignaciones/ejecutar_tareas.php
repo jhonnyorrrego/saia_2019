@@ -41,7 +41,7 @@ else
     }
   }
   else{
-    alerta("Error de Envio");
+    alerta("Error de Envio",'error',4000);
     enviar_mensaje_administrador();
   }
 return($salida);

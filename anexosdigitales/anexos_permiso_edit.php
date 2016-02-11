@@ -43,7 +43,7 @@ $info=busca_filtro_tabla("","anexos","idanexos=".$_REQUEST["idanexo"],"",$conn);
    die();*/
    
    phpmkr_query($sql,$conn);
-   alerta("Anexo editado.");
+   alerta("Anexo editado.",'success',4000);
    echo "<script>window.parent.hs.close();</script>";
   }  
 }

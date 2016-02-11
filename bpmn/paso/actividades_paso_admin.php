@@ -41,7 +41,7 @@ if($paso["numcampos"]){
       $usuarios["numcampos"]=1;
       $usuarios[0]["nombres"]='Cualquier usuario';
       $usuarios[0]["apellidos"]='';
-      $usuarios[0]["cargo"]='';
+      $usuarios[0]["cargo"]='Cualquier Usuario';
       $cargo["numcampos"]=0;
     }
     else{
@@ -53,7 +53,7 @@ if($paso["numcampos"]){
     }
 		if($usuarios["numcampos"]){
 			for($j=0;$j<$usuarios["numcampos"];$j++){
-				array_push($dato_usuarios,'---<div class="detalle_cargo" tipo_actividad="4" idcargo="'.$usuarios[$j]["idcargo"].'"><legend>'.$usuarios[$j]["cargo"].'</legend></div>');
+				array_push($dato_usuarios,'<div class="detalle_cargo" tipo_actividad="4" idcargo="'.$usuarios[$j]["idcargo"].'"><legend>'.$usuarios[$j]["cargo"].'</legend></div>');
 			}
       if($cargo["numcampos"]){
         $texto_usuario='<div class="detalle_cargo" tipo_actividad="4" idcargo="'.$cargo[0]["idcargo"].'"><legend>'.$cargo[0]["nombre"].'</legend></div>';
@@ -65,13 +65,36 @@ if($paso["numcampos"]){
 		else{
 			$texto_usuario='<div class="badge badge-important">Usuarios no encontrados con el cargo '.$tipo_cargo.'<br>'.$cargo[0]["nombre"].'</div>';
 		}
+		//paso tipo=1 del sistema ; 0  manual.
 		if($paso[$i]["tipo"]){
 		  $icono_tipo_actividad.='<a  class="tooltip_saia" title="actividad del sistema"><i class="icon-cog actividad" tipo_actividad="1" idactividad="'.$paso[$i]["idpaso_actividad"].'" id="actividad_'.$paso[$i]["idpaso_actividad"].'"></i></a>';
+		  $adicional_actividad=array();
+		  if($usuarios["numcampos"]>2){
+				array_push($adicional_actividad, "Existen varios funcionarios con el mismo cargo.");		  
+		  }
+		  if($paso[$i]["formato_idformato"] && $paso[$i]["llave_entidad"]!=-1){
+			  $formato=busca_filtro_tabla("","formato","idformato=".$paso[$i]["formato_idformato"],"",$conn);
+			  $permiso=new PERMISO();
+			  $permiso->asignar_usuario($usuarios[0]["login"]);
+			  $ok=$permiso->permiso_usuario($formato[0]["nombre"],1);
+			  
+			  if(!$ok){
+				  array_push($adicional_actividad, "El usuario principal no cuenta con permisos en el formato");
+			  }
+		  }
 		  if($paso[$i]["accion_idaccion"]){
 		    //se obtienen los datos del modulo para mostrar la imagen de la accion
 		    $accion=busca_filtro_tabla("B.imagen,A.etiqueta, B.enlace","accion A, modulo B","A.modulo_idmodulo=B.idmodulo AND A.idaccion=".$paso[$i]["accion_idaccion"],"",$conn);
 		    if($accion["numcampos"]){
-		      $icono_tipo_actividad.='<a   border="0" class="tooltip_saia" title="'.$accion[0]["etiqueta"].'"><img src="'.$ruta_db_superior.$accion[0]["imagen"].'" border="0"></a>';
+		      $icono_tipo_actividad.='<a border="0" class="tooltip_saia" title="'.$accion[0]["etiqueta"].'"><img src="'.$ruta_db_superior.$accion[0]["imagen"].'"></a>';
+		    }
+		    $texto_adicional_actividad='';
+		    print_r($adicional_actividad);
+		    if(count($adicional_actividad)){
+			    $texto_adicional_actividad='<ul><li>';
+			    $texto_adicional_actividad.=implode('</li><li>', $adicional_actividad);
+			    $texto_adicional_actividad.='</li></ul>';
+				$icono_tipo_actividad.='<a border="0" class="tooltip_saia" title="'.$texto_adicional_actividad.'"><i class="icon-warning-sign"></i></a>';
 		    }
 		  }
 		}

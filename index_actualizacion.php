@@ -50,7 +50,7 @@ $proxima=busca_filtro_tabla("valor","configuracion","nombre='actualizacion_fin_a
 if($proxima["numcampos"]){
 $fecha=busca_filtro_tabla(resta_fechas("'".$proxima[0][0]."'","'".date("Y-m-d")."'"),"dual","","",$conn);
 if(@$fecha[0][0]<0)
-  {alerta("Se van a realizar algunas actualizaciones por el cambio de año, por favor espere.");
+  {alerta("Se van a realizar algunas actualizaciones por el cambio de año, por favor espere.",'success',6000);
    abrir_url("actualizacion_cambio_anio.php");
   }
 }
@@ -106,6 +106,10 @@ $componente_tareas=busca_filtro_tabla("","busqueda_componente A","A.nombre='list
 .footer_login { font-weight: bold; background-image: url(imagenes/login/footerbkg.png); background-repeat: repeat-x; background-position: left top; height: 25px; width: 100%; padding-top: 0px; padding-bottom: 0px; text-align: right; color: #FFF; position: fixed; bottom: 0px; }
 .footer_login_text, .footer_login_text * { color:#FFF; font-size:10px; font-weight:bold; }
 </style>
+<?php
+include_once("css/index_estilos.php");
+echo index_estilos('temas_main');
+?>
 </head>
 <?php
 $mayor_informacion=busca_filtro_tabla("valor","configuracion","nombre='mayor_informacion'","",$conn);

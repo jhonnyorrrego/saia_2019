@@ -33,5 +33,5 @@ if(isset($anio)&&isset($id_documento))
 	
  }
 else 
- alerta("No se enviaron los parametros anio - identificador documento para efectuar la operaci�n"); 
+ alerta("No se enviaron los parametros anio - identificador documento para efectuar la operaci&oacute;n",'error',5000); 
 ?>

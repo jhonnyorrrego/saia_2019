@@ -1,4 +1,5 @@
 <?php
+die();
 include_once("db.php");
 
 

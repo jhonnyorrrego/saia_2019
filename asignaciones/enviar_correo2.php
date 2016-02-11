@@ -50,7 +50,7 @@ if($argv[1]!=""){
       else $cuerpo=" Existe un problema con la verificacion de la asignacion con valor ID:".$valor[1];
     }
     else if($valor[0]=="lasignaciones"){
-    alerta("HOLA");
+    alerta("HOLA",'success',4000);
     }
   }
 }

@@ -69,9 +69,15 @@ if($papas["numcampos"])
 	 	$permitido=1;
 	 }
 	 else continue;
-  if(!in_array($papas[$i]["idexpediente"],$excluidos))
-   {echo("<item style=\"font-family:verdana; font-size:7pt;\" ");
-    echo("text=\"".htmlspecialchars($papas[$i]["nombre"])." \" id=\"".$papas[$i]["idexpediente"]."\"");
+  if(!in_array($papas[$i]["idexpediente"],$excluidos)){
+  	$texto_item="";
+		$texto_item=($papas[$i]["nombre"]);
+		if($papas[$i]["estado_cierre"]==2){
+			$texto_item.=" <span style=\"color:red\">(CERRADO)</span>";
+		}
+		
+  	echo("<item style=\"font-family:verdana; font-size:7pt;\" ");
+    echo("text=\"".htmlspecialchars($texto_item)." \" id=\"".$papas[$i]["idexpediente"]."\"");
     if(@$_REQUEST["doc"]){
       if($_REQUEST["accion"]==1 && in_array($papas[$i]["idexpediente"],$exp_doc)){
       	if(!$varios){
@@ -87,7 +93,10 @@ if($papas["numcampos"])
     elseif(@$_REQUEST["seleccionado"]&&$_REQUEST["seleccionado"]==$papas[$i]["idexpediente"])
        echo " checked=\"1\" ";
     if(!$permitido)
-      echo(" nocheckbox=\"1\" ");    
+      echo(" nocheckbox=\"1\" ");
+		if($papas[$i]["estado_cierre"]==2){
+			echo(" nocheckbox=\"1\" ");
+		}    
     echo(">");
     llena_expediente($papas[$i]["idexpediente"]);
     echo("</item>\n");

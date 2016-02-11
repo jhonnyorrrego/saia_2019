@@ -74,12 +74,12 @@ function asignar_permiso_formato($idformato,$tipo,$permiso=NULL,$idpropietario=N
 	    }
 	   else 
        {
-           alerta( "El primer Permiso debe asignar el propietario del formato, ");
+           alerta( "El primer Permiso debe asignar el propietario del formato, ",'error',4000);
          } 
  }
   else 
    {
-     alerta( "El permiso no puede asignarse .. el identificador del anexo no fue encontrado");
+     alerta( "El permiso no puede asignarse .. el identificador del anexo no fue encontrado",'error',4000);
    }  
 }
 
@@ -197,7 +197,7 @@ function asignar_permiso_anexo($idanexo,$tipo,$permiso=NULL,$idpropietario=NULL)
     }
   else 
    {
-     alerta( "El permiso no puede asignarse .. el identificador del anexo no fue encontrado");
+     alerta( "El permiso no puede asignarse .. el identificador del anexo no fue encontrado",'error',4000);
    }  
 }
 
@@ -397,7 +397,7 @@ function descargar_archivo($id,$tipo_al=NULL)   //Recibe el id del anexo y opcin
     $datos=busca_filtro_tabla("","anexos","idanexos=".$id,"",$conn);
   
     if(!$datos["numcampos"])
-       alerta('problema con el archivo anexo');
+       alerta('problema con el archivo anexo','error',4000);
     else
     $file=$datos[0]["ruta"];  
     
@@ -473,7 +473,7 @@ if($campo["numcampos"]){
           echo("Archivos Copiados a:".$dir_anexos);
           if($tipo_almacenamiento=="archivo"){ // Los anexos estan guardados en archivos
             $sql="INSERT INTO anexos(documento_iddocumento,ruta,tipo,etiqueta,formato,campos_formato) values(".$iddoc.",'".$dir_anexos.$temp_filename."','".$datos_anexo["extension"]."','".$nombre."'".",".$idformato.",".$campo[$i]["idcampos_formato"].")";
-            phpmkr_query(htmlentities($sql),$conn) or alerta("No se puede Adicionar el Anexo ".$ruta_origen);
+            phpmkr_query(htmlentities($sql),$conn) or alerta("No se puede Adicionar el Anexo ".$ruta_origen,'error',4000);
             $idanexo=phpmkr_insert_id();
             //echo("<br />SQL:".$sql."<br />");
           }
@@ -490,7 +490,7 @@ if($campo["numcampos"]){
 
             }
             else {
-              alerta("No se puede Adicionar el Anexo ".$ruta_origen);
+              alerta("No se puede Adicionar el Anexo ".$ruta_origen,'error',4000);
               return(FALSE);
             }
 
@@ -501,14 +501,14 @@ if($campo["numcampos"]){
 
           }
           if(!$idanexo){
-            alerta("No se puede Adicionar el Anexo ".$ruta_origen);
+            alerta("No se puede Adicionar el Anexo ".$ruta_origen,'error',4000);
             return(FALSE);
           }
           if($idanexo)
             array_push($larchivos,$idanexo);
         }
         else {
-          alerta("Se ha generado un error al tratar de copiar el archivo ".$nombre." a la carpeta ".$dir_anexos);
+          alerta("Se ha generado un error al tratar de copiar el archivo ".$nombre." a la carpeta ".$dir_anexos,'error',4000);
           return(FALSE);
         }
     }
@@ -575,7 +575,7 @@ if($config["numcampos"]){
      	    else 
 	     $sql="INSERT INTO anexos(documento_iddocumento,ruta,tipo,etiqueta) values(".$iddoc.",'".$dir_anexos.$temp_filename."','".$datos_anexo["extension"]."','".$nombre."'".")";
 	   //die($sql);
-	    phpmkr_query(htmlentities($sql),$conn) or alerta("No se puede Adicionar el Anexo ".$_FILES['anexos']['name'][$j]);
+	    phpmkr_query(htmlentities($sql),$conn) or alerta("No se puede Adicionar el Anexo ".$_FILES['anexos']['name'][$j],'error',4000);
             $idanexo=phpmkr_insert_id();
            // echo("<br />SQL:".$sql."<br />");
           }
@@ -591,7 +591,7 @@ if($config["numcampos"]){
 			 // EN EL MOMENTO SE HACE ALMACENAMIENTO DUAL
               //unlink($dir_anexos.$temp_filename); // Se elimina el temporal .. el blob se almaceno correctamente
              }
-             else alerta("No se puede Adicionar el Anexo ".$_FILES['anexos']['name'][$j]);
+             else alerta("No se puede Adicionar el Anexo ".$_FILES['anexos']['name'][$j],'error',4000);
           	}
           }
           if($idanexo){ // SE ASIGNAN LOS PERMISOS
@@ -614,7 +614,7 @@ if($config["numcampos"]){
           }
         }
         else {
-          alerta("Se ha generado un error al tratar de copiar el archivo ".$nombre);
+          alerta("Se ha generado un error al tratar de copiar el archivo ".$nombre,'error',4000);
         }
       } // Fin  if is uploaded
     } // Fin for
@@ -667,7 +667,7 @@ if($campo["numcampos"]){
           if($tipo_almacenamiento=="archivo"){ // Los anexos estan guardados en archivos
             $sql="INSERT INTO anexos(documento_iddocumento,ruta,tipo,etiqueta,formato,campos_formato) values(".$iddoc.",'".$dir_anexos.$temp_filename."','".$datos_anexo["extension"]."','".$nombre."'".",".$idformato.",".$campo[$i]["idcampos_formato"].")";
             //die($sql);
-	    phpmkr_query(htmlentities($sql),$conn) or alerta("No se puede Adicionar el Anexo ".$_FILES[$campo[$i]["nombre"]]['name'][$j]);
+	    phpmkr_query(htmlentities($sql),$conn) or alerta("No se puede Adicionar el Anexo ".$_FILES[$campo[$i]["nombre"]]['name'][$j],'error',4000);
             $idanexo=phpmkr_insert_id();
             //echo("<br />SQL:".$sql."<br />");
           }
@@ -683,7 +683,7 @@ if($campo["numcampos"]){
 			  // EN EL MOMENTO SE HACE ALMACENAMIENTO DUAL NO SE BORRA EL ARCHIVO
               //unlink($dir_anexos.$temp_filename); // Se elimina el temporal .. el blob se almaceno correctamente
              }
-             else alerta("No se puede Adicionar el Anexo xx".$_FILES[$campo[$i]["nombre"]]['name'][$j]);
+             else alerta("No se puede Adicionar el Anexo xx".$_FILES[$campo[$i]["nombre"]]['name'][$j],'error',4000);
           	}
           }
           if($idanexo){
@@ -709,7 +709,7 @@ if($campo["numcampos"]){
           }
         }
         else {
-          alerta("Se ha generado un error al tratar de copiar el archivo ".$nombre);
+          alerta("Se ha generado un error al tratar de copiar el archivo ".$nombre,'error',4000);
         }
       }
     }
@@ -751,7 +751,7 @@ for($i=0;$i<$cont;$i++){
     if(mkdir($dir1,0777))
       $exito=TRUE;
     else{
-     alerta("La carpeta ".$ruta." No se ha podido Crear.");
+     alerta("La carpeta ".$ruta." No se ha podido Crear.",'error',4000);
      return(FALSE);
     }
   }

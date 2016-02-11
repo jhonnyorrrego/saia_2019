@@ -38,7 +38,7 @@ elseif(isset($_REQUEST["idanexo"]))// Obtiene el parametro y verifica la existen
 {  $idanexo=$_REQUEST["idanexo"];
     $anexo=busca_filtro_tabla("","anexos","idanexos=".$idanexo,"",$conn);
     if(!$anexo["numcampos"]>0) // Se recibe un anexo invalido no se imprime el formulario 
-    { alerta("No se encontraron los datos del anexo a eliminar"); 
+    { alerta("No se encontraron los datos del anexo a eliminar",'error',4000); 
       exit();
      }
  }

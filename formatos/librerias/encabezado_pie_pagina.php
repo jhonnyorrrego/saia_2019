@@ -247,6 +247,15 @@ function nombre_empresa()
 }
 else return ("");
 }
+function nombre_empresa2()
+{
+ global $conn;
+ $logo = busca_filtro_tabla("valor","configuracion","nombre='nombre'","",$conn);
+ if($logo["numcampos"]){
+  return (mayusculas($logo[0]["valor"]));
+}
+else return ("");
+}
 
 function estilo_formato($idformato,$iddoc,$pagina)
 {global $conn;

@@ -110,7 +110,9 @@ function accion_responder(){
         --></script>
           <?php 
           }
-						if(@$_REQUEST["idaccion"]==1){
+            //las acciones 1-adicionar, 3-aprobar y 7- confirmar 
+            $accion_paso_anterior=array(1,3,7);
+						if(in_array(@$_REQUEST["idaccion"],$accion_paso_anterior)){
 	            echo("<br/><div id=\"vinculado_paso_anterior\">Vinculado con paso anterior*:<br>");
 	            $paso=busca_filtro_tabla("","paso_actividad","idpaso_actividad=".$_REQUEST["idpaso_actividad"],"",$conn);
 	            if(!$paso["numcampos"]){

@@ -45,7 +45,7 @@ if(isset($_REQUEST['idasignacion']))
 }
 else 
 {
-   alerta("No se ha recibido la informacion de la asignacion para asociar el control");
+   alerta("No se ha recibido la informacion de la asignacion para asociar el control",'error',4000);
    volver(1);
 }
 
@@ -225,7 +225,7 @@ function LoadData($sKey,$conn)
 	if ($sOrderBy <> "") {
 		$sSql .= " ORDER BY " . $sOrderBy;
 	}
-	$rs = phpmkr_query($sSql,$conn) or die("Falló la búsqueda" . phpmkr_error() . ' SQL:' . $sSql);
+	$rs = phpmkr_query($sSql,$conn) or die("Fallï¿½ la bï¿½squeda" . phpmkr_error() . ' SQL:' . $sSql);
 	if (phpmkr_num_rows($rs) == 0) {
 		$LoadData = false;
 	}else{
@@ -313,7 +313,7 @@ function AddData($conn)
 	$strsql .= ") VALUES (";
 	$strsql .= implode(",", array_values($fieldList));
 	$strsql .= ")";
-	phpmkr_query($strsql, $conn) or die("Falló la búsqueda" . phpmkr_error() . ' SQL:' . $sSql);
+	phpmkr_query($strsql, $conn) or die("Fallï¿½ la bï¿½squeda" . phpmkr_error() . ' SQL:' . $sSql);
 	return true;
 }
 ?>

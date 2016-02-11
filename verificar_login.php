@@ -83,7 +83,7 @@ if (@$_REQUEST["userid"]<>"" && @$_REQUEST["passwd"]<>"") {
     else setCookie("alcalde_userid", "" ,0);
      include_once("tarea_limpiar_carpeta.php");
      borrar_archivos_carpeta("temporal_".$_POST["userid"],false);
-     $retorno["mensaje"]="<b>Bienvenidos</b> <br>has ingresado al sistema SAIA";
+     $retorno["mensaje"]="<b>Bienvenido</b> <br>has ingresado al sistema SAIA";
      $retorno["ruta"]=$redirecciona_exito; 
      $retorno["ingresar"]=1;   
 	} 

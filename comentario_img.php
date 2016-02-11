@@ -450,18 +450,42 @@ if (isset($_GET["accion"]) && $_GET["accion"]=="adicionar")
    { 
      if($tipo_pag =="PAGINA")
       $pag=$_SESSION["pagina_actual"];
-     ?>
-    <div id="adicionar">
-    <form action="comentario_img.php" method="post">
-    <input type="hidden" name="adicion" value="A">
-    <input type="hidden" name="key" value=<?php echo $llave; ?>>
-    <input type="hidden" name="tipo" value=<?php echo $tipo_pag; ?>>
-    <input type="hidden" name="pag" value=<?php echo $pag; ?>>
-    <textarea  class="estilotextarea" id="x_comentario" name="x_comentario" onkeypress='return no_enter(event)'></textarea><br />
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="submit" value="Adicionar">
-    </form>
-    </div>
-    <?php
+	 
+	 $recuadro_postit='
+	    <div id="adicionar">
+	    <form action="comentario_img.php" method="post" name="adicionar_nota" id="adicionar_nota">
+	    <input type="hidden" name="adicion" value="A">
+	    <input type="hidden" name="key" value='.$llave.'>
+	    <input type="hidden" name="tipo" value='.$tipo_pag.'>
+	    <input type="hidden" name="pag" value='.$pag.'>
+	    <textarea  class="estilotextarea" id="x_comentario" name="x_comentario" onkeypress="return no_enter(event)"></textarea><br />
+	    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="submit"  value="Adicionar">
+	    </form>
+	    </div>	
+		<script>
+			$( "#adicionar" ).hide();
+			$( "#adicionar_nota" ).submit();
+		</script>	     
+	 ';
+	 
+	 
+	 $valida_formato_pdf=busca_filtro_tabla("", "documento a, formato b","lower(a.plantilla)=b.nombre  and a.iddocumento=".$llave,"",$conn);
+	 
+	 
+	 if($valida_formato_pdf[0]['mostrar_pdf']==1){
+		include_once("librerias_saia.php");
+		echo(librerias_notificaciones());
+		?>
+		<script>
+		notificacion_saia('No es posible adicionar Notas a documentos en PDF','warning','',4000);
+		</script>
+		<?php
+		abrir_url('pantallas/documento/visor_documento.php?iddoc='.$llave,'_self'); 
+		die();	 	
+	 }else{
+	 	echo($recuadro_postit);
+	 }
+
    }
  }
 }
@@ -522,7 +546,7 @@ $plantilla = $detalle_doc[0]["plantilla"];
 </div>
 
 <?php
- 
+
 if($enlace!="")  //si no se trata de una pagina sino de un formato se crea un frame con el formato
 { //error($enlace);
  ?>
@@ -533,6 +557,8 @@ else  //se muestra la pagina actual con sus comentarios
 {
  $listado=busca_filtro_tabla("A.*","pagina A","id_documento=".$llave." AND consecutivo=".$pag,"pagina",$conn);
 }
+
+
 if($listado["numcampos"]>0 || $tipo_pag != "PAGINA")  //Se muestarn la pagna o el formato con los comentarios.
 {     
   if($tipo_pag=="PAGINA")
@@ -575,6 +601,9 @@ if($listado["numcampos"]>0 || $tipo_pag != "PAGINA")  //Se muestarn la pagna o e
            <input type="image" name="eliminar" src="images/eliminar_nota.gif" alt="Eliminar comentario" onclick="<?php echo utf8_encode("javascript:if(confirm('Esta seguro de eliminar el comentario?'))parent.$frame.location ='comentario_img.php?eliminar=e&id=$id&key=$llave&plantilla=$plantilla';return false;");?>"></td></tr>
            </table>
            </div>
+           
+           
+           
            <?php
            $componentes.="'d".$id."',"; 
          }
@@ -618,4 +647,5 @@ if($permisos == false)
 ?>
 </div>
 <?php include("footer.php");?>
+
 </html>

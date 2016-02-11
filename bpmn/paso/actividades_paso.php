@@ -230,6 +230,10 @@ else{
     <td><b>Terminados:</b> <?php echo($estado_paso["terminados"]."/".($estado_paso["restrictivas"]+$estado_paso["opcionales"]));?></td>
     <td><span class="pull-left"><b>Vencimiento:  </b></span><?php echo($texto2);?></td>
   </tr>
+  <!--tr>
+    <td><a href="<?php echo($ruta_db_superior."bpmn/paso/cancelar_paso.php?idpaso_doc=".$paso_doc[0]["idpaso_documento"]."&paso=".$paso_doc[0]["paso_idpaso"]);?>">Cancelar paso</a></td>
+    <td>&nbsp</td>
+  </tr-->
 </table>
 <div data-toggle="collapse" data-target="#div_actividades_paso">
   <i class="icon-minus-sign"></i>  <b>Actividades del paso</b>

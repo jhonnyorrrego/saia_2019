@@ -2,6 +2,8 @@
 include_once("db.php");
 include_once("header.php");
 include_once("pantallas/expediente/librerias.php");
+include_once("librerias_saia.php");
+echo(librerias_notificaciones());
 
 function eliminar_permiso($idserie,$tipo_entidad,$entidad)
 {global $conn;
@@ -50,14 +52,23 @@ if(isset($_REQUEST["serie_entidad"]) && $_REQUEST["serie_entidad"])
  }
 $ruta="asignarserie_entidad.php";
 //print_r($_REQUEST);
+
+?>
+<script>
+notificacion_saia('Asignacion realizada','success','',4000);
+</script>
+<?php
+
 if(@$_REQUEST["tipo_entidad"] && @$_REQUEST["llave_entidad"])
   $ruta.="?tipo_entidad=".$_REQUEST["tipo_entidad"]."&llave_entidad=".$_REQUEST["llave_entidad"];
 if(@$_REQUEST["origen"])
   $ruta.="&origen=".$_REQUEST["origen"];
 if(@$_REQUEST["filtrar_categoria"])
   $ruta.="?filtrar_categoria=".$_REQUEST["filtrar_categoria"]; 
-if(@$_REQUEST["filtrar_serie"])
+if(@$_REQUEST["filtrar_serie"]){
   $ruta.="?filtrar_serie=".$_REQUEST["filtrar_serie"];
+  abrir_url("arbolserie.php","arbol");
+}
 if(@$_REQUEST["pantalla"]){
 	if($_REQUEST["pantalla"]=="funcionario"){
 		abrir_url("funcionario.php?key=".$_REQUEST["llave_entidad"],"_parent");

@@ -171,7 +171,7 @@ $iddocumento=$_REQUEST["doc"];
   }
 }
 else {
-  alerta("No se ha podido encontrar el Documento");
+  alerta("No se ha podido encontrar el Documento",'error',5000);
   volver(1);
 }
 $_SESSION["iddoc"]=$iddocumento;

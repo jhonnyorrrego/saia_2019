@@ -12,18 +12,18 @@ if(isset($_REQUEST["accion"]))
      $insertado=ejecuta_sql($sql);
     $busqueda=busca_filtro_tabla("","funciones_busqueda","idfunciones_busqueda=".$_REQUEST["idfunciones_busqueda"],"",$conn);
      if($busqueda["numcampos"])
-       alerta("Creado.");
+       alerta("Creado.",'success',4000);
      else 
-       alerta("No se pudo crear.");
+       alerta("No se pudo crear.",'error',4000);
     break;
     case 'guardar_editar':
     
      $sql="UPDATE funciones_busqueda SET etiqueta='".$_REQUEST["etiqueta"]."',tipo='".$_REQUEST["tipo"]."',busquedas_idbusqueda='".$_REQUEST["busquedas_idbusqueda"]."',orden='".$_REQUEST["orden"]."',pagina='".$_REQUEST["pagina"]."',parametros='".$_REQUEST["parametros"]."' WHERE idfunciones_busqueda='".$_REQUEST["idfunciones_busqueda"]."'";
      $insertado=ejecuta_sql($sql);
      if($insertado)
-       alerta("Actualizado.");
+       alerta("Actualizado.",'success',4000);
      else 
-       alerta("No se pudo actualizar.");  
+       alerta("No se pudo actualizar.",'error',4000);  
     break;
     case 'guardar_eliminar':
     /* $sql="DELETE FROM modulo WHERE idmodulo='".$_REQUEST["idmodulo"]."'";
@@ -65,7 +65,7 @@ function formato_adicionar($idmodulo=NULL,$ver=0)
  if($idmodulo<>NULL)
     {$modulo=busca_filtro_tabla("","funciones_busqueda","idfunciones_busqueda=$idmodulo","",$conn);
      if(!$modulo["numcampos"])
-        {alerta('Modulo no encontrado.');
+        {alerta('Modulo no encontrado.','error',4000);
         }
     }
  else   

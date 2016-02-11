@@ -18,6 +18,7 @@ include_once($ruta_db_superior."sql.php");
 include_once($ruta_db_superior."asignacion.php");
 include_once($ruta_db_superior."formatos/librerias/funciones_acciones.php");
 include_once($ruta_db_superior."bpmn/librerias_formato.php");
+
 /*<Clase>
 <Nombre>buscar_funcionarios</Nombre>
 <Parametros>$dependencia:id de las dependencias a revisar;$arreglo:variable donde se va a guardar el resultado</Parametros>
@@ -117,7 +118,7 @@ function usuarioactual($campo)
     if($dato!="")
       return($dato[0][$campo]);
   }
-  alerta("No se encuentra el funcionario en el sistema, por favor comuniquese con el administrador");
+  alerta("No se encuentra el funcionario en el sistema, por favor comuniquese con el administrador",'error');
   redirecciona("logout.php");
 }
 /*
@@ -225,7 +226,7 @@ function radicar_documento_prueba($tipo_contador,$arreglo,$archivos=NULL,$idfluj
   elseif(array_key_exists("serie",$arreglo))
       $tipo_contador=$arreglo["serie"];
   else 
-      alerta("No es posible radicar el Documento. Error No existe clasificaci&oacute;n del documento");
+      alerta("No es posible radicar el Documento. Error No existe clasificaci&oacute;n del documento",'error');
   	if(!array_key_exists("numero",$arreglo) && $tipo_contador){
        $arreglo["numero"] =0;
       }
@@ -308,7 +309,7 @@ function radicar_documento_prueba($tipo_contador,$arreglo,$archivos=NULL,$idfluj
     	      		//echo "INSERT INTO anexos(ruta,documento_iddocumento,tipo,etiqueta) VALUES ('$idbin',".$doc.",'".$datos_anexo[2]."','".$datos_anexo[1]."')";    	      		
     	      	}
     	      	else 
-    	      	{ alerta("No se Pudo Almacenar el Anexo en la Base de Datos");
+    	      	{ alerta("No se Pudo Almacenar el Anexo en la Base de Datos",'error');
     	      	 //DESCIDIR QUE SE HACE CON EL ARCHIVO TEMPORAL
     	      	 // POR EL MOMENTO SE MANTIENE PARA RECUPERACION DE ALGUN DOCUMENTO
     	      	}
@@ -764,12 +765,11 @@ function aprobar($iddoc=0,$url="")
         }
         else
          aprobar_reemplazo($iddoc);  
-  llama_funcion_accion($iddoc,$tipo_radicado[0]["idformato"],"confirmar","POSTERIOR");
 	if($datos_formato[0]["mostrar_pdf"]==1){
 		$sql1="UPDATE documento SET pdf=null WHERE iddocumento=".$iddoc;
 		phpmkr_query($sql1);
 	}
-
+  llama_funcion_accion($iddoc,$tipo_radicado[0]["idformato"],"confirmar","POSTERIOR");
 /*if(strpos($_SERVER["PHP_SELF"],"meses")<=0)
    {
     if($url=="")
@@ -780,7 +780,8 @@ function aprobar($iddoc=0,$url="")
    }*/
  /*Manejo de redireccion al aprobar */
     //enrutar_documento();       
-  }
+//die("Prueba de aprobar en flujo");  
+}
 
 /*<Clase>
 <Nombre>crear_pdf</Nombre>
@@ -1854,7 +1855,7 @@ function radicar_plantilla()
             $dato=busca_filtro_tabla("",$formato[0]["nombre_tabla"],$campos[$l]["nombre"]."=".$_REQUEST[$campo[$l]["nombre"]],"",$conn);
             //print_r($dato);
             if($dato["numcampos"]){
-              alerta("El campo ".$campos[$l]["nombre"]." Debe ser Unico por Favor Vuelva a Insertar la informacion");
+              alerta("El campo ".$campos[$l]["nombre"]." Debe ser Unico por Favor Vuelva a Insertar la informacion",'error',5000);
               volver(1);
             }
           }  
@@ -1905,7 +1906,7 @@ function radicar_plantilla()
         $_POST["tipo_radicado"]=$tipo_rad[0]["nombre"];
     }
     else{
-      alerta("El Documento que intenta Radicar no posee Secuencia");
+      alerta("El Documento que intenta Radicar no posee Secuencia",'error',5000);
       volver(1);
     } 
 
@@ -2013,7 +2014,7 @@ function radicar_plantilla()
 			
  	  //die();
     if(!$idplantilla)  
-      {alerta("No se ha podido Crear el Formato..");
+      {alerta("No se ha podido Crear el Formato..",'error',5000);
        phpmkr_query("update documento set estado='ELIMINADO' where iddocumento=".$_POST["iddoc"],$conn);
        redirecciona("responder.php");
       } 
@@ -2057,12 +2058,10 @@ function radicar_plantilla()
     }
     elseif(isset($_POST["firmado"]) && $_POST["firmado"]=="varias")
     {
-    	generar_ruta_documento($idformato,$_POST["iddoc"]);
     	llama_funcion_accion($_POST["iddoc"],$idformato,"adicionar","POSTERIOR");
      redirecciona("formatos/librerias/rutaadd.php?x_plantilla=$plantilla&doc=".$_POST["iddoc"]."&obligatorio=".$_POST["obligatorio"]."&origen=".$usuario_origen[0][0]);
      die();
     }
-		generar_ruta_documento($idformato,$_POST["iddoc"]);
     llama_funcion_accion($_POST["iddoc"],$idformato,"adicionar","POSTERIOR");
     if(in_array("e",$banderas)){
       aprobar($_POST["iddoc"]);
@@ -2460,7 +2459,7 @@ function guardar_documento($iddoc,$tipo=0)
       phpmkr_query($sql,$conn);
      }
      else
-      {alerta("No se ha podido Crear el Formato.");  
+      {alerta("No se ha podido Crear el Formato.",'error',5000);  
        die($sql);
       }
    }
@@ -2945,14 +2944,19 @@ if(!$iddoc){
 $x_recibido=usuarioactual("funcionario_codigo");
 $reemplazo=0;
 $transferencias = busca_filtro_tabla("buzon_entrada.destino","buzon_entrada","archivo_idarchivo=".$iddoc." AND origen='".$x_recibido."' AND destino<>'".$x_recibido."' and nombre in('REVISADO','TRANSFERIDO','APROBADO','DEVOLUCION') ORDER BY fecha DESC","",$conn);
+
 if($transferencias["numcampos"]){
   $retorno=obtener_reemplazo($transferencias[0]['destino'],1);
   if($retorno['exito']){
     $reemplazo=$retorno['funcionario_codigo'][0];
   }
 }else{
-  alerta('No es posible devolver el documento, por favor transfieralo o terminelo.');
-  redirecciona($ruta_db_superior."vacio.php");
+  alerta('No es posible devolver el documento, por favor transfieralo o terminelo.','error',4000);
+  
+  $mostar_formato_devolver=busca_filtro_tabla('','documento a, formato b','b.nombre=lower(a.plantilla) AND a.iddocumento='.$iddoc,'',$conn);
+  
+  redirecciona($ruta_db_superior."formatos/".$mostar_formato_devolver[0]['nombre']."/mostrar_".$mostar_formato_devolver[0]['nombre'].".php?iddoc=".$iddoc."&idformato=".$mostar_formato_devolver[0]['idformato']);
+  //redirecciona($ruta_db_superior."vacio.php");
 }
 
 echo '<p><span style="font-family: Verdana; font-size: 9px; font-weight: bold;">
@@ -2998,11 +3002,11 @@ echo '<p><span style="font-family: Verdana; font-size: 9px; font-weight: bold;">
     if($funcionario_destino['numcampos']){
       echo ucwords($funcionario_destino[0]["nombres"]." ".$funcionario_destino[0]["apellidos"]).$info_adicional."<br><br />";
     }else{
-      alerta("El funcionario NO esta Activo, por favor transfieralo o terminelo.");
+      alerta("El funcionario NO esta Activo, por favor transfieralo o terminelo.",'success',4000);
       redirecciona($ruta_db_superior."vacio.php");
     }
   }else{
-    alerta("No existe funcionarios para devolver el documento");
+    alerta("No existe funcionarios para devolver el documento",'success',4000);
     redirecciona($ruta_db_superior."vacio.php");
   }
   echo '<input type="hidden" name="x_funcionario_destino" id="x_funcionario_destino" value="'.$funcionario_destino[0]["funcionario_codigo"].'"></span>

@@ -85,7 +85,7 @@ switch ($sAction)
 			  abrir_url("arbolexpediente.php?mostrarexp=".$id,"arbol_expediente");
 			die();
     }
-    else alerta("Error al tratar de crear el expediente");
+    else alerta("Error al tratar de crear el expediente",'error',4000);
 		break;
 }
 ?>

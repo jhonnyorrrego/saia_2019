@@ -77,7 +77,7 @@ function cargar_datos_asignacion($idasignacion)
    }
  else 
    {
-     alerta("No se encontro una asignacion asociada para editar");
+     alerta("No se encontro una asignacion asociada para editar",'error',4000);
      volver(1);
    }
  

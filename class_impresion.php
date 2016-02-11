@@ -604,7 +604,6 @@ class MYPDF extends TCPDF {
 }
 
 if (@$_REQUEST["iddoc"]) {
-
   $pdf = new Imprime_Pdf($_REQUEST["iddoc"]);
   $pdf->configurar_pagina($_REQUEST);
   $pdf->imprimir();

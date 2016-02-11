@@ -16,24 +16,24 @@ if(isset($_REQUEST["accion"]))
 
      $insertado=ejecuta_sql($sql);
      if($insertado)
-       alerta("Modulo creado.");
+       alerta("Modulo creado.",'success',4000);
      else 
-       alerta("No se pudo crear el modulo.");
+       alerta("No se pudo crear el modulo.",'error',4000);
     abrir_url("moduloadd.php?accion=listar","_self");   
     break;
     case 'guardar_editar':
      $sql="UPDATE modulo SET nombre='".$_REQUEST["nombre"]."',tipo='".$_REQUEST["tipo"]."',imagen='".$_REQUEST["imagen"]."',etiqueta='".$_REQUEST["etiqueta"]."',enlace='".$_REQUEST["enlace"]."',destino='".$_REQUEST["destino"]."',cod_padre='".$_REQUEST["cod_padre"]."',orden='".$_REQUEST["orden"]."',parametros='".$_REQUEST["parametros"]."',busqueda_idbusqueda='".$_REQUEST["busqueda_idbusqueda"]."',ayuda='".$_REQUEST["ayuda"]."',permiso_admin=".$_REQUEST["permiso_admin"].", busqueda='".$_REQUEST["busqueda"]."' WHERE idmodulo='".$_REQUEST["idmodulo"]."'";
      $insertado=ejecuta_sql($sql);
      if($insertado)
-       alerta("Modulo actualizado.");
+       alerta("Modulo actualizado.",'success',4000);
      else 
-       alerta("No se pudo actualizar el modulo.");
+       alerta("No se pudo actualizar el modulo.",'error',4000);
     abrir_url("moduloadd.php?key=".$_REQUEST["idmodulo"]."&accion=editar","_self");   
     break;
     case 'guardar_eliminar':
      $sql="DELETE FROM modulo WHERE idmodulo='".$_REQUEST["idmodulo"]."'";
      ejecuta_sql($sql);
-     alerta("Modulo Eliminado.");
+     alerta("Modulo Eliminado.",'success',4000);
     abrir_url("moduloadd.php?accion=listar","_self"); 
     break;
     case 'adicionar':
@@ -78,7 +78,7 @@ function formato_adicionar($idmodulo=NULL,$ver=0)
     {$modulo=busca_filtro_tabla("","modulo","idmodulo=$idmodulo","",$conn);
     //print_r($modulo);
      if(!$modulo["numcampos"])
-        {alerta('Modulo no encontrado.');
+        {alerta('Modulo no encontrado.','error',4000);
         }
     }
  else

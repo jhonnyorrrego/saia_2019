@@ -65,7 +65,7 @@ switch ($sAction)
 			//phpmkr_db_close($conn);
                 abrir_url("asignaciones.php?modo=".$_REQUEST["modo"],"centro");
 		}
-		else alerta("No se ha sido posible Realizar la eliminacion");
+		else alerta("No se ha sido posible Realizar la eliminacion",'error',4000);
 		break;
 }
 ?>

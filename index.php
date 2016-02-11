@@ -98,6 +98,11 @@ body { overflow-x:hidden; margin-left: 0px; margin-top: 0px; margin-right: 0px; 
 hr {margin: 2px 0;border: 0;border-top: 1px solid rgb(77, 167, 226);border-bottom: 1px solid rgb(84, 167, 233);}
 #userid, #passwd { background-color: transparent; height: auto; width: 200px; font-family: Verdana, Geneva, sans-serif; font-size: 20px; color: #999; font-weight: bold; margin-bottom:3px}
 </style>
+<?php
+include_once("css/index_estilos.php");
+echo index_estilos('temas_main');
+?>
+
 </head>
 <?php
 $mayor_informacion=busca_filtro_tabla("valor","configuracion","nombre='mayor_informacion'","",$conn);

@@ -228,7 +228,7 @@ else{
 	}else{
 		$nombre_archivo2=$listado_final[0];
 	}
-  redirecciona($nombre_archivo2);
+  redirecciona($nombre_archivo2."?rand=".rand(1,100000));
 }  	
 
 function parsea_idformato($id=0){

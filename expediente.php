@@ -58,7 +58,7 @@ $nDisplayRecs = 10;
 ?>
 <?php }
 else
- { alerta("Su session ha terminado, por favor vuelva a iniciar sesion en SAIA");
+ { alerta("Su session ha terminado, por favor vuelva a iniciar sesion en SAIA",'error',4000);
    redirecciona("logout.php");
  } 
 if(isset($_GET["idexpediente"]))
@@ -293,7 +293,7 @@ function llenarcarrito()
       else
       	documentos += "," + itemBox.rows[no].id.substring(27);
     if(documentos=="")
-      alert("NO HA SELECCIONADO NINGUN DOCUMENTO PARA ADICIONAR EN LA CARPETA");
+      alerta("NO HA SELECCIONADO NINGUN DOCUMENTO PARA ADICIONAR EN LA CARPETA",'error',5000);
     else
       window.location="expedienteadd.php?documentos="+documentos+"&posicion=0&expediente="+folder;
 }

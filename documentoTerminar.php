@@ -15,7 +15,10 @@ while($max_salida>0){
 }
 include_once("db.php");
 include_once("librerias_saia.php");
+echo(estilo_bootstrap());
 echo(librerias_notificaciones());
+
+
 ?>
 <?php include_once("class_transferencia.php"); 
 include_once("header.php"); ?>
@@ -120,7 +123,7 @@ menu_ordenar($x_id_documento);
     <p>
     <input type="hidden" name="a_delete" value="D">
     <input type="hidden" name="llave_d" value="<?php echo  ($llave); ?>">
-    <table border="0" cellspacing="1" cellpadding="4" bgcolor="#CCCCCC">
+    <table  border="0" style="WIDTH:100%;" bgcolor="#CCCCCC" cellpadding="4" cellspacing="4">
     <tr class="encabezado">
     <td width="175" valign="top"><span class="phpmaker" style="color: #FFFFFF;">DOCUMENTO N&Uacute;MERO</span></td>
     <td valign="top" bgcolor="#F5F5F5"><span class="phpmaker"><font color="#000000"><?php echo $x_numero; ?></font></span></td>
@@ -163,16 +166,37 @@ menu_ordenar($x_id_documento);
     <tr class="encabezado">
     <td width="131" valign="top"><span class="phpmaker" style="color: #FFFFFF; text-aling:justify; font-family: Verdana;font-size: 9px;">JUSTIFICACI&Oacute;N</span></td>
     <td valign="top" bgcolor="#F5F5F5" colspan="3"><span class="phpmaker"><font color="#000000">
-    <input type='radio' name='detalle' onclick='document.getElementById("x_detalle").value=this.value;' style="font-family: Verdana;font-size: 9px;" value='Ya fue le&iacute;do'>Ya fue le&iacute;do<br>
-    <input type='radio' name='detalle' onclick='document.getElementById("x_detalle").value=this.value;' style="font-family: Verdana;font-size: 9px;" value='Recibido en medio f&iacute;sico'>Recibido en medio f&iacute;sico<br> 
-    <input type='radio' name='detalle' onclick='document.getElementById("x_detalle").value=this.value;' style="font-family: Verdana;font-size: 9px;" value='Documento Informativo'>Documento Informativo<br>  
+    	
+    <?php
+    	$justificaciones_configuracion=busca_filtro_tabla('','configuracion','nombre="justificacion_terminar"','',$conn);
+		$justificaciones=explode(',',$justificaciones_configuracion[0]['valor']);
+		echo('<dl>');
+		for($i=0;$i<count($justificaciones);$i++){
+			echo("<dd><input type='radio' name='detalle' onclick='document.getElementById(\"x_detalle\").value=this.value;' style='font-family: Verdana;font-size: 9px;' value='".$justificaciones[$i]."'>".$justificaciones[$i]."</dd>");
+					
+		}
+		echo('</dl>');
+		echo('<br/>');
+    ?>
+    
+    	
+    	
+
+    
+    
+     
     <textarea cols="100" rows="4" id="x_detalle" name="x_detalle" style="font-family: Verdana;font-size: 9px;"><?php echo @$x_detalle; ?></textarea>
     </font></span></td>
     </tr>
-    <tr><td colspan="4" bgcolor="#F5F5F5"><!--span style="text-aling:justify; font-family: Verdana;font-size: 9px;">
+    <tr><td colspan="4" ><!--span style="text-aling:justify; font-family: Verdana;font-size: 9px;">
     IMPORTANTE<br><br> Usted est&aacute; a punto de terminar el proceso de gesti&oacute;n de este documento, al hacerlo el estado del documento ser&aacute; de "TERMINADO" para todas las personas que tienen acceso al documento. Por esta raz&oacute;n debe estar seguro que todos los responsables del documento hayan ejecutado las acciones correspondientes, y que por lo tanto NO HAY NING&Uacute;N PROCESO PENDIENTE por ejecutar. �Realmente quiere TERMINAR el proceso de este documento?<br> 
-    </span--><center><br>
-    <input type="submit" name="Action" value="Terminar Documento" style="font-family: Verdana;font-size: 9px;"></center></td></tr>
+    </span--><br>
+    
+     <input type="button" class="btn btn-mini btn-danger" value="Cancelar" onclick="window.history.back(-1);">
+  	<input type="submit" name="Action" value="Terminar Documento" class="btn btn-mini btn-primary">
+    
+    
+   </td></tr>
     </table>
     <p>
     </form>

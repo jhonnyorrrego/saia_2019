@@ -166,7 +166,7 @@ if($config["numcampos"]){
         $dato_formato=array("","");
         if($tipo_almacenamiento=="archivo"){ // Los anexos estan guardados en archivos
             $sql="INSERT INTO anexos(documento_iddocumento,ruta,tipo,etiqueta".$dato_formato[0].") values(".$iddoc.",'".$dir_anexos_tmp.$temp_filename."','".$datos_anexo["extension"]."','".$nombre."'".$dato_formato[1].")";
-     	    phpmkr_query(htmlentities($sql),$conn) or alerta("No se puede Adicionar el Anexo ".$_FILES['anexos']['name'][$j]);
+     	    phpmkr_query(htmlentities($sql),$conn) or alerta("No se puede Adicionar el Anexo ".$_FILES['anexos']['name'][$j],'error',4000);
             $idanexo=phpmkr_insert_id();
           }
           elseif($tipo_almacenamiento=="db"){
@@ -185,7 +185,7 @@ if($config["numcampos"]){
 			 // EN EL MOMENTO SE HACE ALMACENAMIENTO DUAL
               //unlink($dir_anexos.$temp_filename); // Se elimina el temporal .. el blob se almaceno correctamente
              }
-             else alerta("No se puede Adicionar el Anexo ".$_FILES['anexos']['name'][$j]);
+             else alerta("No se puede Adicionar el Anexo ".$_FILES['anexos']['name'][$j],'error',4000);
           	}
           }
 
@@ -209,7 +209,7 @@ if($config["numcampos"]){
           }
         }
         else {
-          alerta("Se ha generado un error al tratar de copiar el archivo ".$nombre);
+          alerta("Se ha generado un error al tratar de copiar el archivo ".$nombre,'error',4000);
         }
       } // Fin  if is uploaded
     } // Fin for

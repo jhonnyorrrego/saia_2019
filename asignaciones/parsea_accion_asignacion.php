@@ -25,7 +25,7 @@ switch($accion){
       redirecciona("asignaciondelete.php?key=".$key);
     }
     else
-      alerta("Debe Seleccionar una Asignacion");
+      alerta("Debe Seleccionar una Asignacion",'error',4000);
   break;
   case "completar":
     if($key){
@@ -35,7 +35,7 @@ switch($accion){
 	    //abrir_url("asignaciones.php?modo=".$modo,"centro");
       }
     else
-      alerta("Debe Seleccionar una Asignacion");
+      alerta("Debe Seleccionar una Asignacion",'error',4000);
      break;
     case "editar":
     if($key){
@@ -44,7 +44,7 @@ switch($accion){
 	    exit();
       }
     else
-      alerta("Debe Seleccionar una Asignacion");
+      alerta("Debe Seleccionar una Asignacion",'error',4000);
      break;   
      
     case "eliminar":
@@ -55,7 +55,7 @@ switch($accion){
 	    
       }
     else
-      alerta("Debe Seleccionar una Asignacion");
+      alerta("Debe Seleccionar una Asignacion",'error',4000);
      break;    
   default:
     if($key)

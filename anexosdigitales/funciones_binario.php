@@ -45,7 +45,7 @@ function almacena_binario_db($archivo,$descripcion)
            $strsql = "DELETE FROM binario WHERE idbinario=".$sKeyWrk;
            phpmkr_query($strsql,$conn);
 			  $sKeyWrk =NULL;
-	        alerta("No se Pudo almacenar el archivo :".$nombre_original."en la base de datos");
+	        alerta("No se Pudo almacenar el archivo :".$nombre_original."en la base de datos",'error',4000);
 	          
 	      } 
 	   }  

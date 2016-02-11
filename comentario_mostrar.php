@@ -1,5 +1,12 @@
 <?php
 include_once("db.php");
+
+if(@$_REQUEST["iddoc"] || @$_REQUEST["key"] || @$_REQUEST["doc"]){
+	$_REQUEST["iddoc"]=@$_REQUEST["key"];
+	include_once("pantallas/documento/menu_principal_documento.php");
+	echo(menu_principal_documento(@$_REQUEST["iddoc"],1));
+}  
+
 include_once("header.php");
   header("Expires: Mon, 26 Jul 1997 05:00:00 GMT"); // date in the past
   header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT"); // always modified
@@ -214,14 +221,14 @@ menu_ordenar($llave);
 </div>   
 <div id="tool" style="display:block;"><br /><br />
 
-<span class="internos"><img class="imagen_internos" src="botones/comentarios/ver_documentos.png" border="0">&nbsp;&nbsp;DOCUMENTO:&nbsp;</span>
+<span class="internos">&nbsp;&nbsp;DOCUMENTO:&nbsp;</span>
 
 <span class="phpmaker" margin-top="0"> 
 <?php echo $detalle_doc[0]["numero"]." - ".str_replace(chr(10), "<br>", stripslashes($detalle_doc[0]["descripcion"]));?>
 </span>
 <hr>
 <div align="center">
-<table width="400px" border="0" cellpadding="0" cellspacing="0"><tr>
+<table width="100%" border="0" cellpadding="0" cellspacing="0"><tr>
 <?php
 $aux_formato=strtolower($detalle_doc[0]["plantilla"]);
  
@@ -239,6 +246,8 @@ $aux_formato=strtolower($detalle_doc[0]["plantilla"]);
  {  echo "<td align='center'>";
     agrega_boton("images","enlaces/imprimir_pdf.png","borrar_pdf.php?iddoc=$llave","centro_prueba","Actualizar PDF","","regenerar_pdf");
     echo "</td>";
+	
+	
  }
  
  if($paginas_doc["numcampos"]>0 || ($tipo_pag=='PLANTILLA' && $detalle_doc[0]["numero"]==0))
@@ -261,15 +270,17 @@ $aux_formato=strtolower($detalle_doc[0]["plantilla"]);
 		});
 	}
 </script>
- <td align="center">
+ 	<td align="center">
  	<!--a href="#" onclick="comprobar_estampa(<?php echo $_REQUEST["pag"]; ?>);">Estampa</a-->&nbsp;&nbsp;
-   <a href="comentario_mostrar.php?rotar=izq&key=<?php echo $_REQUEST["key"]; ?>" target="<?php echo $frame;?>"><img src="botones/comentarios/rotar_derecha.png" alt="Girar a la derecha" border="0"></a>&nbsp
+  &nbsp;&nbsp;&nbsp; <a href="comentario_mostrar.php?rotar=izq&key=<?php echo $_REQUEST["key"]; ?>" target="<?php echo $frame;?>"><img src="botones/comentarios/rotar_derecha.png" alt="Girar a la derecha" border="0" /></a>&nbsp
    <a href="comentario_mostrar.php?rotar=derecha&key=<?php echo $_REQUEST["key"]; ?>" target="<?php echo $frame;?>"><img src="botones/comentarios/rotar_izquierda.png" alt="Girar a la izquierda" border="0"></a>&nbsp&nbsp&nbsp
-   </td><td align="center"><br>
+   </td>
+   <td align="center"><br>
      <?php
      agrega_boton("images","botones/comentarios/eliminar_pagina.png","paginadelete.php","$frame","","","eliminar_pagina");
      ?> 
-     </td><td align="center"><br>
+   </td>
+   <td align="center"><br>
    <form>
    <select name="valor" id="valor" onchange="zoom('+','prueba',valor.value,<?php echo $pag?>); this.blur();">
    <option value="25">25%</option>
