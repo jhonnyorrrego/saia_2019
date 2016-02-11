@@ -5638,4 +5638,9 @@ a.badge:hover {
 .affix {
   position: fixed;
 }
+    
+
+.icon-no_visto {
+ background-position: -2px 1px;
+}     
       

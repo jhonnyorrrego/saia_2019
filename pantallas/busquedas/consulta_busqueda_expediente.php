@@ -9,6 +9,7 @@ while($max_salida>0){
     $max_salida--;
 }
 include_once($ruta_db_superior."db.php");
+usuario_actual("login");
 ?>
 <meta http-equiv="X-UA-Compatible" content="IE=9">
 <?php
@@ -102,6 +103,7 @@ if(@$_REQUEST["idbusqueda_componente"]){
 </div>
 <br>
 <input type="hidden" id="seleccionados" value="" name="seleccionados">
+<input type="hidden" id="seleccionados_expediente" value="" name="seleccionados_expediente">
 <div class="panel_body pull-left" id="panel_body">  
     <div id="resultado_busqueda_principal<?php echo($datos_componente);?>" class="panel_hidden">  
       <div id="resultado_busqueda<?php echo($datos_componente);?>">  

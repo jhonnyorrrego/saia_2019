@@ -56,7 +56,7 @@ if($dato_padre["numcampos"]){
   </div>
 </div>
 <div class="control-group element">
-  <label class="control-label" for="nombre">Descripci&oacute;n *
+  <label class="control-label" for="nombre">Descripci&oacute;n
   </label>
   <div class="controls"> 
     <textarea name="descripcion" id="descripcion"><?php echo($datos[0]["descripcion"]); ?></textarea>
@@ -479,9 +479,10 @@ $(document).ready(function(){
   }
   });
   $("#submit_formulario_expediente").click(function(){  
-    $('#cargando_enviar').html("<div id='icon-cargando'></div>Procesando");
-		$(this).attr('disabled', 'disabled');  
     if(formulario_expediente.valid()){
+    	$('#cargando_enviar').html("<div id='icon-cargando'></div>Procesando");
+			$(this).attr('disabled', 'disabled');
+			
       $.ajax({
         type:'GET',
         async:false,

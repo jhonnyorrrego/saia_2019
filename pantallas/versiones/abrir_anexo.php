@@ -9,6 +9,10 @@ while($max_salida>0){
 	$max_salida--;
 }
 include_once($ruta_db_superior."db.php");
+include_once($ruta_db_superior."pantallas/documento/menu_principal_documento.php");
+menu_principal_documento(@$_REQUEST["id"],1);
+
+
 $datos=explode("-",@$_REQUEST["id"]);
 $tipo=$datos[0];
 $ruta="";
@@ -25,5 +29,19 @@ if($tipo=='pdf'){
     $dato=busca_filtro_tabla("","version_vista a","a.idversion_vista=".$datos[1],"",$conn);
     $ruta=$dato[0]["pdf"];
 }
-abrir_url($ruta_db_superior.$ruta,"_self");
+//abrir_url($ruta_db_superior.$ruta,"_self");
 ?>
+<script>
+$(document).ready(function(){
+	var alto_menu=$("#menu_principal_documento").height();
+	if(parseInt(alto_menu)>=0){
+		var alto=($(document).height());
+		$("#detalles").height((alto-alto_menu)-20);
+	}
+	else{
+		var alto=($(document).height());
+		$("#detalles").height(alto-20);
+	}
+});
+</script>
+<iframe id="detalles" width="100%" frameborder="0" name="detalles" src="<?php echo($ruta_db_superior.$ruta); ?>"></iframe>

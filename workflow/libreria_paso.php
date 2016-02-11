@@ -10,6 +10,7 @@ while($max_salida>0){
 }
 include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."class.funcionarios.php");
+include_once($ruta_db_superior."formatos/librerias/funciones_generales.php");
 //include_once($ruta_db_superior."class_transferencia.php");
 $pasos_anteriores=array();
 $nivel=0;
@@ -87,7 +88,7 @@ function terminar_actividad_paso($iddocumento,$accion,$tipo_terminacion=1,$paso_
   global $conn;
   $listado_acciones_paso='';
   $sql2='';
-  
+  error("INICIA TERMINAR ACTIVIDAD PASO--->");
  //Se adiciona para validar que el paso actual sea una respuesta del paso anterior para que el paso actual actualice el iddocumento
 if($accion=="adicionar"){
   //Se consulta la informacion del documento actual para sacar los pasos y las actividades vinculadas
@@ -98,22 +99,27 @@ if($accion=="adicionar"){
       //Estado 4 en paso_documento = pendiente y 7= devuelto
       $paso_doc=busca_filtro_tabla("","paso_documento A,paso_actividad C","A.paso_idpaso=C.paso_idpaso AND C.estado=1 AND A.paso_idpaso=".$formato[$i]["paso_idpaso"]." AND A.estado_paso_documento IN(4,7) AND (C.llave_entidad=-1) AND C.formato_idformato=".$formato[$i]["idformato"],"",$conn);
       if(!$paso_doc["numcampos"]){
+        error("SI NO EXISTE PASO DOCUMENTO--->");
         $paso_doc=busca_filtro_tabla("","paso_documento A,paso_actividad C, vfuncionario_dc B","A.paso_idpaso=C.paso_idpaso AND C.estado=1 AND A.paso_idpaso=".$formato[$i]["paso_idpaso"]." AND A.estado_paso_documento IN(4,7) AND (C.llave_entidad=B.idcargo AND B.funcionario_codigo=".$_SESSION["usuario_actual"].") AND C.formato_idformato=".$formato[$i]["idformato"],"",$conn);
       }
       if($paso_doc["numcampos"]){
         $paso_doc_terminado["numcampos"]=0;
         if($formato[$i]["paso_anterior"]){
+          error("PASO DOC TEMP-->");
           $paso_doc_temp=busca_filtro_tabla("","paso_documento A, respuesta B","A.documento_iddocumento=B.origen AND B.destino=".$iddocumento." AND A.paso_idpaso=".$formato[$i]["paso_anterior"],"B.idrespuesta DESC",$conn);
           if($paso_doc_temp["numcampos"]){
+            error("PASO DOC TERMINADO 1-->");
             $paso_doc_terminado=busca_filtro_tabla("","paso_documento A, paso_actividad B","A.paso_idpaso=B.paso_idpaso AND A.diagram_iddiagram_instance=".$paso_doc_temp[0]["diagram_iddiagram_instance"]." AND B.formato_idformato=".$formato[$i]["formato_idformato"]." AND A.estado_paso_documento>3","",$conn);
             $sql2="UPDATE paso_documento SET documento_iddocumento=".$iddocumento." WHERE idpaso_documento=".$paso_doc_terminado[0]["idpaso_documento"];
           }
         }
         else if($_REQUEST["anterior"]){
+          error("PASO DOC TERMINADO 2-->");
           $paso_doc_terminado=busca_filtro_tabla("","paso_documento A, respuesta B","A.documento_iddocumento=B.origen AND A.documento_iddocumento=".$_REQUEST["anterior"]." AND A.paso_idpaso=".$formato[$i]["paso_idpaso"]." AND A.estado_paso_documento>3","B.idrespuesta DESC",$conn);
           $sql2="UPDATE paso_documento SET documento_iddocumento=".$iddocumento." WHERE idpaso_documento=".$paso_doc_terminado[0]["idpaso_documento"];
         }
         if($paso_doc_terminado["numcampos"] && $sql2!=''){
+          error("SQL PASO DOC TERMINADO --->");
           phpmkr_query($sql2);
         }  
       }
@@ -123,17 +129,20 @@ if($accion=="adicionar"){
 if($accion!="" && $tipo_terminacion==1){ 
 //La condicion c.estado_paso_documento>4 es para verificar que el paso no este terminado o cerrado
   if($iddocumento){
+    error("LISATDO ACCIONES 1");
     $listado_acciones_paso=busca_filtro_tabla("B.idpaso_actividad, A.idaccion, C.idpaso_documento, B.entidad_identidad, B.llave_entidad, C.diagram_iddiagram_instance, B.paso_idpaso,C.documento_iddocumento, B.formato_idformato", "accion A, paso_actividad B, paso_documento C","A.idaccion=B.accion_idaccion AND B.paso_idpaso=C.paso_idpaso AND C.documento_iddocumento=".$iddocumento." AND A.nombre='".$accion."' AND C.estado_paso_documento>3 AND B.estado=1","B.orden",$conn);
   }               
 }
 else if($paso_documento && $idactividad){
+  error("LISATDO ACCIONES 2--->");
   $listado_acciones_paso=busca_filtro_tabla("B.idpaso_actividad,B.accion_idaccion AS idaccion,C.idpaso_documento,B.entidad_identidad,B.llave_entidad,C.diagram_iddiagram_instance,B.paso_idpaso,C.documento_iddocumento, B.formato_idformato"," paso_actividad B, paso_documento C"," B.paso_idpaso=C.paso_idpaso AND C.idpaso_documento=".$paso_documento." AND B.idpaso_actividad=".$idactividad." AND C.estado_paso_documento>3 AND B.estado=1","B.orden",$conn);
 }
 else{
   return (0);
 }
 if(!$listado_acciones_paso["numcampos"] && $accion=='confirmar'){
-    $listado_acciones_paso=busca_filtro_tabla("B.idpaso_actividad, A.idaccion, C.idpaso_documento, B.entidad_identidad, B.llave_entidad, C.diagram_iddiagram_instance, B.paso_idpaso,C.documento_iddocumento, B.formato_idformato", "accion A, paso_actividad B, paso_documento C","A.idaccion=B.accion_idaccion AND B.paso_idpaso=C.paso_idpaso AND C.documento_iddocumento=".$iddocumento." AND A.nombre='aprobar' AND C.estado_paso_documento>3 AND B.estado=1","B.orden",$conn);
+    error("LISATDO ACCIONES 2--->");
+    $listado_acciones_paso=busca_filtro_tabla("B.idpaso_actividad, A.idaccion, C.idpaso_documento, B.entidad_identidad, B.llave_entidad, C.diagram_iddiagram_instance, B.paso_idpaso,C.documento_iddocumento, B.formato_idformato", "accion A, paso_actividad B, paso_documento C","A.idaccion=B.accion_idaccion AND B.paso_idpaso=C.paso_idpaso AND C.documento_iddocumento=".$iddocumento." AND (A.nombre='aprobar' OR A.nombre='confirmar') AND C.estado_paso_documento>3 AND B.estado=1","B.orden",$conn);
     if($listado_acciones_paso["numcampos"])
         $accion='aprobar';
 }
@@ -142,81 +151,68 @@ for($i=0;$i<@$listado_acciones_paso["numcampos"];$i++){
   	$cualquier_usuario=busca_filtro_tabla("","paso_actividad","idpaso_actividad=".$idactividad,"",$conn);
     $verifica_funcionario=verificar_existencia_funcionario($listado_acciones_paso[$i]["entidad_identidad"],$listado_acciones_paso[$i]["llave_entidad"],$_SESSION["usuario_actual"]);
     //----------------------------------------------------
-  if($verifica_funcionario){
-    $terminada_actual=verificar_instancia_terminada($listado_acciones_paso[$i]["idpaso_actividad"],$iddocumento,$_SESSION["usuario_actual"],$tipo_terminacion);
-    
-    if($terminada_actual["numcampos"])
-      return($terminada_actual[0]["idpaso_instancia_terminada"]);
-    $sql_accion="INSERT INTO paso_instancia_terminada(actividad_idpaso_actividad,documento_iddocumento,responsable,fecha,tipo_terminacion) VALUES(".$listado_acciones_paso[$i]["idpaso_actividad"].",".$iddocumento.",".$_SESSION["usuario_actual"].",".fecha_db_almacenar(date("Y-m-d H:i:s"),"Y-m-d H:i:s").",".$tipo_terminacion.")";
-        phpmkr_query($sql_accion);
-        $idterminacion=phpmkr_insert_id();
-        //escribe_log('entra antes de verificar_terminacion_paso con idterminacion='.$idterminacion.'<br>');
-        if(verificar_terminacion_paso($listado_acciones_paso[$i]["paso_idpaso"],$iddocumento)){
-        	//escribe_log('entra despues de verificar_terminacion_paso<br>'); 
-          //iniciar_paso_siguiente($idpaso_documento,$anterior,$documento){
-          finalizar_paralelos($listado_acciones_paso[$i]["diagram_iddiagram_instance"],$listado_acciones_paso[$i]["paso_idpaso"],$iddocumento);
-          $paso_siguiente=iniciar_paso_siguiente($listado_acciones_paso[$i]["idpaso_documento"],$listado_acciones_paso[$i]["documento_iddocumento"],$iddocumento,$accion);
-          //escribe_log($paso_siguiente);
-          //escribe_log('entra a paso_siguinte<br>');
-          if($paso_siguiente==2){
-            //Actualizar para Cerrar el FLujo
-            //escribe_log('entra paso siguiente=2 <br>');
-            $sql_cerrar_flujo="UPDATE diagram_instance SET estado_diagram_instance=2 WHERE iddiagram_instance=".$listado_acciones_paso[$i]["diagram_iddiagram_instance"]; 
-            phpmkr_query($sql_cerrar_flujo);
-			//escribe_log('ejecuta'.$sql_cerrar_flujo.'<br>');
-			//escribe_log('Paso siguiente=2',$tipo_terminacion);
-            return($idterminacion);
-          }
-          else if($paso_siguiente==1){
-            $documento=$listado_acciones_paso[$i]["documento_iddocumento"];
-            if($accion=="responder" || $accion=='adicionar' || $accion=="radicar"){          
-              $respuesta=busca_filtro_tabla("","respuesta","origen=".$listado_acciones_paso[$i]["documento_iddocumento"],"",$conn); 
-              //si es una respuesta de un documento del paso anterior, actualiza el paso actual con el id del nuevo documento
-              if($respuesta["numcampos"]){
-                $paso_siguiente=busca_filtro_tabla("B.idpaso_documento","paso_enlace A,paso_documento B","A.destino=B.paso_idpaso AND A.origen=".$listado_acciones_paso[$i]["paso_idpaso"]." AND B.documento_iddocumento=".$listado_acciones_paso[$i]["documento_iddocumento"]." AND tipo_origen='bpmn_tarea'","",$conn);
-                //escribe_log($paso_siguiente,$tipo_terminacion);
-				///escribe_log("PASO siguiente para respuesta de documentos");
-                $sql_responder="UPDATE paso_documento SET documento_iddocumento=".$respuesta[0]["destino"]." WHERE idpaso_documento=".$paso_siguiente[0]["idpaso_documento"];
-                $documento=$respuesta[0]["destino"];
-                phpmkr_query($sql_responder);
-                //escribe_log("sqsl responder ".$sql_responder."<br>",$tipo_terminacion);
-              } 
-            }
-            //Pasos Siguientes Insertados
-            //escribe_log("return idterminacion ".$idterminacion." paso_siguiente=1<br>",$tipo_terminacion); 
-            return($idterminacion);
-          } 
-          else if(!$paso_siguiente==0){
-            //Existe error
-            //escribe_log("Retorno error ",$tipo_terminacion);
-            return (0);
-          }
+    if($verifica_funcionario){
+      $terminada_actual=verificar_instancia_terminada($listado_acciones_paso[$i]["idpaso_actividad"],$iddocumento,$_SESSION["usuario_actual"],$tipo_terminacion);
+      error("TERMINADA ACTUAL-->".print_r($terminada_actual, true));
+      if($terminada_actual["numcampos"]){
+        return($terminada_actual[0]["idpaso_instancia_terminada"]);
+      }
+      error("TERMINAR PASO INSTANCIA");
+      $sql_accion="INSERT INTO paso_instancia_terminada(actividad_idpaso_actividad,documento_iddocumento,responsable,fecha,tipo_terminacion) VALUES(".$listado_acciones_paso[$i]["idpaso_actividad"].",".$iddocumento.",".$_SESSION["usuario_actual"].",".fecha_db_almacenar(date("Y-m-d H:i:s"),"Y-m-d H:i:s").",".$tipo_terminacion.")";
+      phpmkr_query($sql_accion);
+      $idterminacion=phpmkr_insert_id();
+      //escribe_log('entra antes de verificar_terminacion_paso con idterminacion='.$idterminacion.'<br>');
+      if(verificar_terminacion_paso($listado_acciones_paso[$i]["paso_idpaso"],$iddocumento)){
+      	//escribe_log('entra despues de verificar_terminacion_paso<br>'); 
+        //iniciar_paso_siguiente($idpaso_documento,$anterior,$documento){
+        finalizar_paralelos($listado_acciones_paso[$i]["diagram_iddiagram_instance"],$listado_acciones_paso[$i]["paso_idpaso"],$iddocumento);
+        $paso_siguiente=iniciar_paso_siguiente($listado_acciones_paso[$i]["idpaso_documento"],$listado_acciones_paso[$i]["documento_iddocumento"],$iddocumento,$accion);
+        //escribe_log($paso_siguiente);
+        //escribe_log('entra a paso_siguinte<br>');
+        if($paso_siguiente==2){
+          error('entra paso siguiente=2 para cerrar el flujo');
+          $sql_cerrar_flujo="UPDATE diagram_instance SET estado_diagram_instance=2 WHERE iddiagram_instance=".$listado_acciones_paso[$i]["diagram_iddiagram_instance"]; 
+          phpmkr_query($sql_cerrar_flujo);
+    //escribe_log('ejecuta'.$sql_cerrar_flujo.'<br>');
+    //escribe_log('Paso siguiente=2',$tipo_terminacion);
+          return($idterminacion);
         }
-        else{
-          $sql="UPDATE paso_documento SET estado_paso_documento=6 WHERE idpaso_documento=".$listado_acciones_paso[$i]["idpaso_documento"];
-			//echo'entra UPDATE PASO documento estado=6<br>';
+        else if($paso_siguiente==1){
+          $documento=$listado_acciones_paso[$i]["documento_iddocumento"];
+          error('entra paso siguiente=1 para responder adicionar o radicar');
+          if($accion=="responder" || $accion=='adicionar' || $accion=="radicar"){          
+            $respuesta=busca_filtro_tabla("","respuesta","origen=".$listado_acciones_paso[$i]["documento_iddocumento"],"",$conn); 
+            //si es una respuesta de un documento del paso anterior, actualiza el paso actual con el id del nuevo documento
+            if($respuesta["numcampos"]){
+              $paso_siguiente=busca_filtro_tabla("B.idpaso_documento","paso_enlace A,paso_documento B","A.destino=B.paso_idpaso AND A.origen=".$listado_acciones_paso[$i]["paso_idpaso"]." AND B.documento_iddocumento=".$listado_acciones_paso[$i]["documento_iddocumento"]." AND tipo_origen='bpmn_tarea'","",$conn);
+    	        error("PASO siguiente para respuesta de documentos");
+              $sql_responder="UPDATE paso_documento SET documento_iddocumento=".$respuesta[0]["destino"]." WHERE idpaso_documento=".$paso_siguiente[0]["idpaso_documento"];
+              $documento=$respuesta[0]["destino"];
+              phpmkr_query($sql_responder);
+              //escribe_log("sqsl responder ".$sql_responder."<br>",$tipo_terminacion);
+            } 
+          }
+          //Pasos Siguientes Insertados
+          error("return idterminacion ".$idterminacion." paso_siguiente=1"); 
+          return($idterminacion);
+        } 
+        else if(!$paso_siguiente==0){
+          //Existe error
+          error("Retorno error ");
+          return (0);
         }
-		//escribe_log("return idterminacion".$idterminacion."<br>",$tipo_terminacion);
+      }
+      else{
+        $sql="UPDATE paso_documento SET estado_paso_documento=6 WHERE idpaso_documento=".$listado_acciones_paso[$i]["idpaso_documento"];
+    //echo'entra UPDATE PASO documento estado=6<br>';
+      }
+      error("return idterminacion".$idterminacion);
       return($idterminacion);
     }
 }
 //escribe_log("0",$tipo_terminacion);
 return (0);
 }
-/*function escribe_log($cadena,$tipo_terminacion=0){
-	if(is_array($cadena)){
-		$cadena2='';
-		foreach($cadena AS $key=>$valor){
-			$cadena2.=$key."=>".$valor."\n";
-		}
-		$cadena=$cadena2;
-	}
-$texto=$cadena;	
-echo($texto);
-if( $tipo_terminacion==2){
-	//die("<hr>");
-}
-}*/
 function listado_pasos_anteriores_admin($idpaso,$tipo_paso="bpmn_tarea"){
   global $pasos_anteriores,$nivel;
   $nivel++;
@@ -371,6 +367,15 @@ function iniciar_paso_siguiente($idpaso_documento,$documento,$iddoc,$accion){
                   $idpaso_documento=phpmkr_insert_id();
                   array_push($pasos_evaluar,$idpaso_documento);
                 }
+                if($accion=="adicionar"){
+	                ///Adicionar aqui la ruta 
+	                $formato_nuevo=busca_filtro_tabla("B.idformato","documento A,formato B","lower(A.plantilla)=lower(B.nombre) AND A.iddocumento=".$documento,"",$conn);
+					generar_ruta_documento($formato_nuevo[0]["idformato"],$documento);
+                }
+                error("PASOS A EVALUAR RUTA: ".print_r($pasos_evaluar,true));
+                error("DOCUMENTO A EVALUAR RUTA:".$documento);
+				error("PASO ANTERIOR:".print_r($paso_anterior,true));
+				
                 if(count($pasos_evaluar)){
                     //TODO: validar que se puede hacer para las rutas paralelas aqui se debe hacer 
                     validar_ruta_documento_flujo($documento,$pasos_evaluar,$paso_anterior,$accion);
@@ -401,52 +406,57 @@ return(false);
  * Funcion encagada de excluir los pasos que se pueden ejecutar despues de ejecutar el condicional, el retorno sera el mismo paso_siguiente con los valores excluidos 
  */
 function validar_ruta_documento_flujo($iddoc,$pasos_evaluar,$paso_anterior,$accion){
+    error("VALIDAR RUTA DOCUMENTO PASO RUTA");
     $dato_paso_ruta=busca_filtro_tabla("","paso_documento C, paso_actividad A, accion B","A.accion_idaccion=B.idaccion AND A.paso_idpaso=C.paso_idpaso AND C.idpaso_documento IN(".implode(",",$pasos_evaluar).") AND (B.nombre='aprobar' OR nombre='confirmar')","",$conn);
-    //print_r($dato_paso_ruta);
     if($dato_paso_ruta["numcampos"]){
-        $ruta1=busca_filtro_tabla("","buzon_entrada A, ruta B","A.ruta_idruta=B.idruta AND A.archivo_idarchivo=".$iddoc." AND A.nombre='POR_APROBAR' AND A.origen=-1 AND A.activo=1 AND A.destino=".usuario_actual("funcionario_codigo"),"B.orden ASC",$conn);
-        /*echo("RUTA1 :<br>");
-        print_r($ruta1);
-        echo("<hr>");*/
+        error("RUTA 1");
+        $ruta1=busca_filtro_tabla("","buzon_entrada A, ruta B","A.ruta_idruta=B.idruta AND A.archivo_idarchivo=".$iddoc." AND A.nombre='POR_APROBAR' AND A.origen=-1 AND A.destino=".usuario_actual("funcionario_codigo"),"B.orden ASC",$conn);
         if(!$ruta1["numcampos"]){
             //verifica el ultimo funcionario de la ruta pendiente por asignar si no encuentra el usuario actual
+            error("RUTA 1 NO EXISTE ");
             $funcionario_ultima_ruta=busca_filtro_tabla("","buzon_entrada","archivo_idarchivo=".$iddoc." AND nombre='POR_APROBAR'  AND destino<>-1 AND origen=-1","idtransferencia DESC",$conn);
             $ruta1=busca_filtro_tabla("","buzon_entrada A, ruta B","A.ruta_idruta=B.idruta AND A.archivo_idarchivo=".$iddoc." AND A.nombre='POR_APROBAR' AND A.origen=-1 AND A.destino=".$funcionario_ultima_ruta[0]["destino"],"B.orden ASC",$conn);
         }
-        for($i=0;$i<$ruta1["numcampos"];$i++){
-            $ruta2=busca_filtro_tabla("","ruta A","A.idruta>".$ruta1[$i]["idruta"]." AND A.orden=".($ruta1[$i]["orden"]+1)." AND A.documento_iddocumento=".$iddoc." AND A.tipo='ACTIVO'","",$conn);
-            /*echo("RUTA2 :<br>");
-            print_r($ruta2);
-            echo("<hr>");*/
-            //Se debe actualizar la ruta para que tome el dato del paso y haga las actualizaciones necesarias
-            if($ruta2["numcampos"]){
-                $funcionario=busca_filtro_tabla("","vfuncionario_dc","idcargo=".$dato_paso_ruta[0]["llave_entidad"]." AND estado_dc=1 AND estado=1","",$conn);
-                //Verificar que pasa cuando se tienen varios funcionarios con el mismo cargo 
-                //Se actualiza la ruta se modifica el destino por el funcionario asignado en la actividad por medio del cargo y el origen en la ruta siguiente
-                $sql2="UPDATE ruta SET destino=".$funcionario[0]["iddependencia_cargo"]." , tipo_destino=5 WHERE idruta=".$ruta1[0]["ruta_idruta"];
-                phpmkr_query($sql2);
-                $sql2="UPDATE ruta SET origen=".$funcionario[0]["iddependencia_cargo"]." , tipo_origen=5 WHERE idruta=".$ruta2[0]["idruta"];
-                phpmkr_query($sql2);
-                //Se actualiza el buzon de entrada, el origen con el funcionario asignado en la actividad por medio del cargo y el destino en la ruta siguiente
-                $sql2="UPDATE buzon_entrada SET origen=".$funcionario[0]["funcionario_codigo"]." WHERE idtransferencia=".$ruta1[0]["idtransferencia"]." AND nombre='POR_APROBAR'";
-                phpmkr_query($sql2);
-                $sql2="UPDATE buzon_entrada SET destino=".$funcionario[0]["funcionario_codigo"]." WHERE ruta_idruta=".$ruta2[0]["idruta"]." AND nombre='POR_APROBAR'";
-                phpmkr_query($sql2);
-            }
+        if($ruta1["numcampos"]){
+          for($i=0;$i<$ruta1["numcampos"];$i++){
+              error("RUTA 2");
+              $ruta2=busca_filtro_tabla("","ruta A","A.idruta>".$ruta1[$i]["idruta"]." AND A.orden=".($ruta1[$i]["orden"]+1)." AND A.documento_iddocumento=".$iddoc." AND A.tipo='ACTIVO'","",$conn);
+              //Se debe actualizar la ruta para que tome el dato del paso y haga las actualizaciones necesarias
+              if($ruta2["numcampos"]){
+                  error("EXISTE RUTA 2 Y EL FUNCIONARIO ESTA ACTIVO");
+                  $funcionario=busca_filtro_tabla("","vfuncionario_dc","idcargo=".$dato_paso_ruta[0]["llave_entidad"]." AND estado_dc=1 AND estado=1","",$conn);
+                  //Verificar que pasa cuando se tienen varios funcionarios con el mismo cargo 
+                  //Se actualiza la ruta se modifica el destino por el funcionario asignado en la actividad por medio del cargo y el origen en la ruta siguiente
+                  error("ACTUALIZA RUTA ");
+                  $sql2="UPDATE ruta SET destino=".$funcionario[0]["iddependencia_cargo"]." , tipo_destino=5 WHERE idruta=".$ruta1[0]["ruta_idruta"];
+                  phpmkr_query($sql2);
+                  $sql2="UPDATE ruta SET origen=".$funcionario[0]["iddependencia_cargo"]." , tipo_origen=5 WHERE idruta=".$ruta2[0]["idruta"];
+                  phpmkr_query($sql2);
+                  //Se actualiza el buzon de entrada, el origen con el funcionario asignado en la actividad por medio del cargo y el destino en la ruta siguiente
+                  error("ACTUALIZA BUZON ENTRADA");
+                  $sql2="UPDATE buzon_entrada SET origen=".$funcionario[0]["funcionario_codigo"]." WHERE idtransferencia=".$ruta1[0]["idtransferencia"]." AND nombre='POR_APROBAR'";
+                  phpmkr_query($sql2);
+                  $sql2="UPDATE buzon_entrada SET destino=".$funcionario[0]["funcionario_codigo"]." WHERE ruta_idruta=".$ruta2[0]["idruta"]." AND nombre='POR_APROBAR'";
+                  phpmkr_query($sql2);
+              }
+          }
+          ///insert asignacion
+          error("INSERTA ASIGNACION PARA QUE QUEDE PENDIENTE EL DOCUMENTO VINCULADO CON LA RUTA");
+          $sql2="INSERT INTO asignacion(entidad_identidad,llave_entidad,documento_iddocumento,fecha_inicial)VALUES(1,".$funcionario[0]["funcionario_codigo"].",".$iddoc.",".fecha_db_almacenar("","Y-m-d H:i:s").")"; 
+          phpmkr_query($sql2);
+          //echo(" SQL ASIGNACION: <br>".$sql2."<hr>");
         }
-
-	///insert asignacion
-	$sql2="INSERT INTO asignacion(entidad_identidad,llave_entidad,documento_iddocumento,fecha_inicial)VALUES(1,".$funcionario[0]["funcionario_codigo"].",".$iddoc.",".fecha_db_almacenar("","Y-m-d H:i:s").")";	
-	phpmkr_query($sql2);
-
     }
     else if($accion=='aprobar'){
+        error("ACCION APROBAR");
         $ruta=busca_filtro_tabla("","buzon_entrada A, ruta B","A.ruta_idruta=B.idruta AND A.archivo_idarchivo=".$iddoc." AND A.nombre='POR_APROBAR' AND A.origen=-1 AND A.activo=1 AND A.destino=".usuario_actual("funcionario_codigo"),"B.orden ASC",$conn);
         $radicador_salida=busca_filtro_tabla("","configuracion a, vfuncionario_dc b","a.nombre='radicador_salida' and valor=b.login","",$conn);
+        error("ELIMINA TODAS LAS RUTAS PENDIENTES CON ORIGEN -1 (Sin ruta asignada)");
         $sql1="delete from ruta where origen=-1 and documento_iddocumento=".$iddoc;
         phpmkr_query($sql1);
         $sql2="delete from buzon_entrada where destino=-1 and archivo_idarchivo=".$iddoc;
         phpmkr_query($sql2);
+        error("ACTUALIZA LA ULTIMA RUTA CON EL USUARIO RADICADOR");
         $ruta1=busca_filtro_tabla("","ruta a","a.documento_iddocumento=".$iddoc." and destino=-1","",$conn);
         $sql3="update ruta set destino=".$radicador_salida[0]["funcionario_codigo"]." where idruta=".$ruta1[0]["idruta"];
         phpmkr_query($sql3);
@@ -454,10 +464,11 @@ function validar_ruta_documento_flujo($iddoc,$pasos_evaluar,$paso_anterior,$acci
         phpmkr_query($sql4);
         
     }
+    //die("PRUEBA RUTA");
     return(0);
 }
 
-
+ 
 /*
  * $condicional=busca_filtro_tabla de paso_enlace que continua tiene el diagrama, tipo_destino y destino
  * $paso_siguiente=busca_filtro_tabla de lo que sigue al paso posterior al condicional
@@ -532,7 +543,7 @@ return;
 <Nombre>ejecutar_acciones_actividad</Nombre> 
 <Parametros>$idactividad: Identificador de la actividad a la cual se le desean mostrar las acciones</Parametros>
 <Responsabilidades>Generar los enlaces a cada una de las actividades que vienen relacionadas con cada uno de los objetos y las acciones que se encuentran vinculadas con ellos por ejemplo adicionar->formato, aprobar->documento, transferir->serie,etc..Estas acciones deben de validarse con cada uno de los permisos a cada uno de los funcionarios para cada uno de los usuarios comparado con el usuario actual<Responsabilidades>
-<Notas></Notas>
+<Notas></Notas> 
 <Excepciones></Excepciones>
 <Salida>Muestra los enlaces para acceder a las acciones de la actividad</Salida>
 <Pre-condiciones><Pre-condiciones>
@@ -696,8 +707,8 @@ $paso_documento=busca_filtro_tabla("","paso_documento","idpaso_documento=".$idpa
  /*1,Ejecutado(#99FF66);2,Cerrado(#99FF66),3,Cancelado;4,Pendiente(#FFFF66);5,Atrasado(#FF3333);6,Iniciado( #FFFF66)*/ 
 $flujo=busca_filtro_tabla("A.idpaso_documento, A.estado_paso_documento,B.diagram_iddiagram,B.plazo_paso, ".fecha_db_obtener("fecha_asignacion","Y-m-d H:i:s")." AS fecha_asignacion, C.estado_diagram_instance, C.fecha AS fecha_diagram,B.nombre_paso,C.iddiagram_instance,paso_idpaso,A.documento_iddocumento","paso_documento A,paso B, diagram_instance C","A.paso_idpaso=B.idpaso AND A.diagram_iddiagram_instance=C.iddiagram_instance AND A.diagram_iddiagram_instance=".$paso_documento[0]["diagram_iddiagram_instance"]." AND estado_paso_documento<>7 AND estado_paso_documento<>3 AND estado_paso_documento<>0","idpaso_documento DESC",$conn);
 $plazo=explode("@",$flujo[0]["plazo_paso"]);
-$fecha_final=dias_habiles(($plazo[0]/24),"Y-m-d",$flujo[0]["fecha_asignacion"]);
-$fecha_fina2=dias_habiles((($plazo[0]/24)),"Y-m-d",$flujo[0]["fecha_asignacion"]);
+$fecha_final=dias_habiles_listado(($plazo[0]/24),"Y-m-d",$flujo[0]["fecha_asignacion"]);
+$fecha_fina2=dias_habiles_listado((($plazo[0]/24)),"Y-m-d",$flujo[0]["fecha_asignacion"]);
 $hoy=date("Y-m-d H:i:s");
 $diferencia=compara_fechas($fecha_final,$hoy);
 if($flujo[0]["estado_paso_documento"]>3){
@@ -719,7 +730,7 @@ for($i=0;$i<$pasos_flujo["numcampos"];$i++){
   $total_restrictivos+=$peso[0];
   $total_paso+=$peso[1];
 }
-$fecha_final_diagram=dias_habiles((($total_restrictivos)/24),"Y-m-d",@$flujo[0]["fecha_diagram_instance"]);
+$fecha_final_diagram=dias_habiles_listado((($total_restrictivos)/24),"Y-m-d",@$flujo[0]["fecha_diagram_instance"]);
 $diferenciad=compara_fechas($fecha_final_diagram,$hoy);
 if($flujo[0]["estado_diagram_instance"]>3){
   if(@$diferenciad["tiempo"]&& in_array($flujo[0]["estado_paso_documento"],array(4,6))){
@@ -924,7 +935,7 @@ if($restrictivo==0){
 else{ 
   $plazo=explode("@",$actividades_paso[0]["plazo_paso"]);
   include_once("../calendario/calendario.php");
-  $fecha_final=dias_habiles(($plazo[0]/24),"Y-m-d",$paso_documento[0]["fecha_asignacion"]);
+  $fecha_final=dias_habiles_listado(($plazo[0]/24),"Y-m-d",$paso_documento[0]["fecha_asignacion"]);
   $hoy=date("Y-m-d H:i:s");
   $diferencia=compara_fechas($fecha_final,$hoy);
   if($diferencia["tiempo"] && in_array($actividades_paso[0]["estado_paso_documento"],array(4,6,7))){
@@ -1000,6 +1011,11 @@ function cancelar_flujo($idpaso_documento){
     }
   }
 }
+
+function cancelar_paso($idpaso_documento,$idpaso){
+ 
+  
+} 
 /*
  * $iddoc=iddocumento
  * 

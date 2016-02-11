@@ -10,6 +10,7 @@ while($max_salida>0){
 	$max_salida--;
 }
 include_once($ruta_db_superior."db.php");
+usuario_actual("login");
 include_once($ruta_db_superior."librerias_saia.php");
 $funciones=array();
 $datos_componente=$_REQUEST["idbusqueda_componente"];

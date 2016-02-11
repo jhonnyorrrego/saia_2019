@@ -25,6 +25,7 @@ include_once($ruta_db_superior."pantallas/anexos/librerias.php");
 include_once($ruta_db_superior."pantallas/tareas/librerias.php");
 include_once($ruta_db_superior."pantallas/workflow/librerias.php");
 echo(librerias_jquery("1.7"));
+echo(librerias_notificaciones());
 if(@$_REQUEST["idexpediente"]){
 	$idexpediente=$_REQUEST["idexpediente"];	
 } 
@@ -119,6 +120,88 @@ $expediente=busca_filtro_tabla("a.*,".fecha_db_obtener("a.fecha","Y-m-d")." AS f
        ?>
     </td>
   </tr>
+  <?php
+  $cadena_cierre=array();
+  if(is_object($expediente[0]["fecha_cierre"]))$expediente[0]["fecha_cierre"]=$expediente[0]["fecha_cierre"]->format('Y-m-d');
+	$usuario_cierre=busca_filtro_tabla("","vfuncionario_dc a","a.idfuncionario=".$expediente[0]["funcionario_cierre"],"",$conn);
+	$estado_cierre="";
+	if($expediente[0]["estado_cierre"]==1){
+		$estado_cierre="Abierto";
+	}else if($expediente[0]["estado_cierre"]==2){
+		$estado_cierre="Cerrado";
+	}
+	
+	$cadena_cierre[]="<b>Estado:</b> ".$estado_cierre;
+	$cadena_cierre[]=$expediente[0]["fecha_cierre"];
+	$cadena_cierre[]=ucwords(strtolower($usuario_cierre[0]["nombres"]." ".$usuario_cierre[0]["apellidos"]));
+  ?>
+  <tr>
+  	<td class="prettyprint">    	
+      <b>Acciones:</b>
+    </td>
+    <td>
+    	<table class="table table-bordered">
+    		<tr>
+    			<td style="text-align:center"><a style="cursor:pointer" class="accion_abrir_cierre" accion="1">Abrir</a></td>
+    			<td rowspan="2" style="text-align:center" class="prettyprint"><?php echo(implode("<br/>",$cadena_cierre)); ?></td>
+    		</tr>
+    		<tr>
+    			<td style="text-align:center"><a style="cursor:pointer" class="accion_abrir_cierre" accion="2">Cerrar</a></td>
+    		</tr>
+    	</table>
+    </td>
+  </tr>
+  <script>
+  $(document).ready(function(){
+  	$(".accion_abrir_cierre").click(function(){
+  		if(confirm('Esta seguro de realizar esta accion?')){
+  			var x_accion=$(this).attr("accion");
+  			$.ajax({
+  				url:"<?php echo($ruta_db_superior);?>pantallas/expediente/ejecutar_acciones.php",
+  				data:{ejecutar_expediente: 'abrir_cerrar_expediente', tipo_retorno: 1, accion: x_accion, idexpediente: '<?php echo($expediente[0]["idexpediente"]); ?>'},
+  				type:"POST",
+  				success: function(html){
+  					if(html){
+  						var objeto=jQuery.parseJSON(html);
+  						if(objeto.exito){
+  							notificacion_saia(objeto.mensaje,"success","",2500);
+  							window.open("detalles_expediente.php?idexpediente=<?php echo(@$_REQUEST["idexpediente"]); ?>&idbusqueda_componente=<?php echo(@$_REQUEST["idbusqueda_componente"]); ?>","_self");
+  						}
+  					}
+  				}
+  			});
+  		}
+  	});
+  });
+ 	</script>
+  <?php
+  if(MOTOR=='MySql'){
+  	$transferencia_doc=busca_filtro_tabla("","ft_transferencia_doc a, documento b","a.documento_iddocumento=b.iddocumento and b.estado not in('ELIMINADO', 'ACTIVO') and (CONCAT(',',a.expediente_vinculado,',') like '%,".$expediente[0]["idexpediente"].",%')","",$conn);
+	}
+	if(MOTOR=='Oracle'){
+  	$transferencia_doc=busca_filtro_tabla("","ft_transferencia_doc a, documento b","a.documento_iddocumento=b.iddocumento and b.estado not in('ELIMINADO', 'ACTIVO') and (CONCAT(',',CONCAT(a.expediente_vinculado,',')) like '%,".$expediente[0]["idexpediente"].",%')","",$conn);
+	}
+	if(MOTOR=='SqlServer'){
+  	$transferencia_doc=busca_filtro_tabla("","ft_transferencia_doc a, documento b","a.documento_iddocumento=b.iddocumento and b.estado not in('ELIMINADO', 'ACTIVO') and (','+a.expediente_vinculado+',' like '%,".$expediente[0]["idexpediente"].",%')","",$conn);
+	}
+	
+  if($transferencia_doc["numcampos"]){
+  	if(is_object($transferencia_doc[0]["fecha"]))$transferencia_doc[0]["fecha"]=$transferencia_doc[0]["fecha"]->format('Y-m-d H:i');
+  ?>
+  <tr>
+  	<td class="prettyprint"><b>Transferencia documental</b></td>
+  	<td><a class="previo_high" enlace="<?php echo($ruta_db_superior.$transferencia_doc[0]["pdf"]); ?>" style="cursor:pointer">Ver transferencia No <?php echo($transferencia_doc[0]["numero"]); ?> (<?php echo($transferencia_doc[0]["fecha"]); ?>)</a></td>
+  </tr>
+  <script>
+		$(document).ready(function(){
+			$(".previo_high").click(function(e){
+				var enlace=$(this).attr("enlace");
+				top.hs.htmlExpand(this, { objectType: 'iframe',width: 1000, height: 600,contentId:'cuerpo_paso', preserveContent:false, src:"pantallas/expediente/visor_pdf.php?ruta="+enlace,outlineType: 'rounded-white',wrapperClassName:'highslide-wrapper drag-header'});
+				
+			});
+		});
+		</script>
+  <?php } ?>
 </table>
 </div>
 <?php 

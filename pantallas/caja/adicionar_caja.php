@@ -19,6 +19,14 @@ $max_salida=6; $ruta_db_superior=$ruta=""; while($max_salida>0){ if(is_file($rut
 <input type="hidden" id="cerrar_higslide" value="<?php echo(@$_REQUEST["cerrar_higslide"]);?>">
 <legend>Crear caja</legend>
 <div class="control-group element">
+  <label class="control-label" for="no_consecutivo">No consecutivo
+  </label>
+  <div class="controls"> 
+    <input type="text" name="no_consecutivo" id="no_consecutivo" value="">
+  </div>
+</div>
+
+<div class="control-group element">
   <label class="control-label" for="fondo">Fondo
   </label>
   <div class="controls"> 
@@ -92,14 +100,6 @@ $max_salida=6; $ruta_db_superior=$ruta=""; while($max_salida>0){ if(is_file($rut
   </label>
   <div class="controls"> 
     <input type="text" name="no_cajas" id="no_cajas" value="">
-  </div>
-</div>
-
-<div class="control-group element">
-  <label class="control-label" for="no_consecutivo">No consecutivo
-  </label>
-  <div class="controls"> 
-    <input type="text" name="no_consecutivo" id="no_consecutivo" value="">
   </div>
 </div>
 
@@ -219,10 +219,10 @@ $(document).ready(function(){
   submitHandler: function(form) {
   }
   });
-  $("#submit_formulario_caja").click(function(){  
-    $('#cargando_enviar').html("<div id='icon-cargando'></div>Procesando");
-		$(this).attr('disabled', 'disabled');  
+  $("#submit_formulario_caja").click(function(){
     if(formulario_caja.valid()){
+    	$('#cargando_enviar').html("<div id='icon-cargando'></div>Procesando");
+			$(this).attr('disabled', 'disabled');
       $.ajax({
         type:'GET',
         async:false,

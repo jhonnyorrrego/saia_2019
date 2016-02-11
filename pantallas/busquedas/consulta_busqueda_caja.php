@@ -54,44 +54,7 @@ function incluir_librerias_busqueda($elemento,$indice){
         ?>                                 
       </div>
       <!-- /btn-group -->        
-      </li>             
-      <li>          
-      <div class="btn-group">            
-        <button class="btn dropdown-toggle btn-mini" data-toggle="dropdown">Seleccionados &nbsp;
-          <span class="caret">
-          </span>&nbsp;
-        </button>            
-        <ul class="dropdown-menu" id='listado_seleccionados'>              
-          <li>
-          <a href="#">
-            <div id="filtrar_seleccionados">Filtrar Seleccionados
-            </div></a>
-          </li>              
-          <li>
-          <a href="#">
-            <div id="restaurar_seleccionados">Restaurar Listado
-            </div></a>
-          </li>              
-          <li>
-          <a href="#">
-            <div id="restaurar_listado">Restaurar  Seleccionados
-            </div></a>
-          </li>
-          <?php 
-            if($datos_busqueda[0]["acciones_seleccionados"]!=''){
-              echo('<li class="nav-header">Acciones</li>');
-            $acciones=explode(",",$datos_busqueda[0]["acciones_seleccionados"]);
-            $cantidad=count($acciones);
-            for($i=0;$i<$cantidad;$i++){
-                echo($acciones[$i]());
-            }
-              
-            }              
-          ?>                                
-        </ul>             
-      </div>
-      <!-- /btn-group -->               
-      </li>                 
+      </li>
       <li class="divider-vertical">
       </li>             
       <li>            

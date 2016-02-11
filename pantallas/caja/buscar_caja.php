@@ -44,72 +44,62 @@ echo(librerias_validar_formulario());
         <legend>Filtrar Caja</legend>  
         
         <div class="control-group">
-          <label class="string required control-label" for="numero">
-			Numero
-			<input type="hidden" name="bksaiacondicion_a@numero" id="bksaiacondicion_a-numero" value="like_total">
+          <label class="string required control-label" for="no_consecutivo">
+			No consecutivo
+			<input type="hidden" name="bksaiacondicion_a@no_consecutivo" id="bksaiacondicion_a-no_consecutivo" value="like_total">
           </label>
           <div class="controls">
-            <input id="bqsaia_a-numero" name="bqsaia_a@numero" size="50" type="text">
+            <input id="bqsaia_a-no_consecutivo" name="bqsaia_a@no_consecutivo" size="50" type="text">
           </div>
         </div>
         
         <div class="control-group">
-          <label class="string required control-label" for="ubicacion">
-			Ubicacion
-			<input type="hidden" name="bksaiacondicion_a@ubicacion" id="bksaiacondicion_a-ubicacion" value="like_total">
+          <label class="string required control-label" for="fondo">
+			Fondo
+			<input type="hidden" name="bksaiacondicion_a@fondo" id="bksaiacondicion_a-fondo" value="like_total">
           </label>
           <div class="controls">
-            <input id="bqsaia_a-ubicacion" name="bqsaia_a@ubicacion" size="50" type="text">
+            <input id="bqsaia_a-fondo" name="bqsaia_a@fondo" size="50" type="text">
           </div>
         </div>
         
         <div class="control-group">
-          <label class="string required control-label" for="estanteria">
-			Estanteria
-			<input type="hidden" name="bksaiacondicion_a@estanteria" id="bksaiacondicion_a-estanteria" value="like_total">
+          <label class="string required control-label" for="seccion">
+			Seccion
+			<input type="hidden" name="bksaiacondicion_a@seccion" id="bksaiacondicion_a-seccion" value="like_total">
           </label>
           <div class="controls">
-            <input id="bqsaia_a-estanteria" name="bqsaia_a@estanteria" size="50" type="text">
+            <input id="bqsaia_a-seccion" name="bqsaia_a@seccion" size="50" type="text">
           </div>
         </div>
         
         <div class="control-group">
-          <label class="string required control-label" for="nivel">
-			Nivel
-			<input type="hidden" name="bksaiacondicion_a@nivel" id="bksaiacondicion_a-nivel" value="like_total">
+          <label class="string required control-label" for="subseccion">
+			Subseccion
+			<input type="hidden" name="bksaiacondicion_a@subseccion" id="bksaiacondicion_a-subseccion" value="like_total">
           </label>
           <div class="controls">
-            <input id="bqsaia_a-nivel" name="bqsaia_a@nivel" size="50" type="text">
+            <input id="bqsaia_a-subseccion" name="bqsaia_a@subseccion" size="50" type="text">
           </div>
         </div>
         
         <div class="control-group">
-          <label class="string required control-label" for="panel">
-			Panel
-			<input type="hidden" name="bksaiacondicion_a@panel" id="bksaiacondicion_a-panel" value="like_total">
+          <label class="string required control-label" for="division">
+			Division
+			<input type="hidden" name="bksaiacondicion_a@division" id="bksaiacondicion_a-division" value="like_total">
           </label>
           <div class="controls">
-            <input id="bqsaia_a-panel" name="bqsaia_a@panel" size="50" type="text">
+            <input id="bqsaia_a-division" name="bqsaia_a@division" size="50" type="text">
           </div>
         </div>
         
         <div class="control-group">
-          <label class="string required control-label" for="material">
-			Material
-			<input type="hidden" name="bksaiacondicion_a@material" id="bksaiacondicion_a-material" value="like_total">
+          <label class="string required control-label" for="codigo">
+			Codigo
+			<input type="hidden" name="bksaiacondicion_a@codigo" id="bksaiacondicion_a-codigo" value="like_total">
           </label>
           <div class="controls">
-            <input id="bqsaia_a-material" name="bqsaia_a@material" size="50" type="text">
-          </div>
-        </div>
-        
-        <div class="control-group">
-          <label class="string required control-label" for="seguridad">
-			Seguridad
-			<input type="hidden" name="bksaiacondicion_a@seguridad" id="bksaiacondicion_a-seguridad" value="like_total">
-          </label>
-          <div class="controls">
-            <input id="bqsaia_a-seguridad" name="bqsaia_a@seguridad" size="50" type="text">
+            <input id="bqsaia_a-codigo" name="bqsaia_a@codigo" size="50" type="text">
           </div>
         </div>
         

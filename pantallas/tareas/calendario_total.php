@@ -14,7 +14,7 @@ $max_salida--;
 }
 include_once($ruta_db_superior."db.php");
 $arreglo=array("exito"=>0);
-$datos=busca_filtro_tabla("","tareas","fecha_tarea > ".fecha_db_obtener("'".date("Y-m-d",$_REQUEST["start"])."'","Y-m-d")." AND fecha_tarea < ".fecha_db_obtener("'".date("Y-m-d",$_REQUEST["end"])."'","Y-m-d"),"",$conn);
+$datos=busca_filtro_tabla("","tareas","fecha_tarea > ".fecha_db_obtener("'".$_REQUEST["start"]."'","Y-m-d")." AND fecha_tarea < ".fecha_db_obtener("'".$_REQUEST["end"]."'","Y-m-d"),"",$conn);
 if($datos["numcampos"]){
 	$arreglo["exito"]=1;
 	$arreglo["rows"]=array();
@@ -29,6 +29,5 @@ if($datos["numcampos"]){
 		array_push($arreglo["rows"],array("id"=>$datos[$i]["idtareas"],"titulo"=>$datos[$i]["tarea"]."(".implode(",",$responsables).")","inicio"=>$datos[$i]["fecha_tarea"],"fin"=>$datos[$i]["fecha_tarea"],"url"=>"../pantallas/tareas/mostrar_tareas.php?idtareas=".$datos[0]["idtareas"],"color"=>""));
 	}	
 }
-print_r($arreglo);
 echo(json_encode($arreglo));
 ?>

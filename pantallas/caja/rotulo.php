@@ -86,7 +86,7 @@ function rotulo_caja($id){
 		include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
 		$cadena="idcaja=".$id;
 		$codificada=encrypt_blowfish($cadena,LLAVE_SAIA_CRYPTO);
-		$datos_qr="http://75.101.166.85/saia_release1/saia/pantallas/caja/info_caja_exp.php?key_cripto=".$codificada;
+		$datos_qr=PROTOCOLO_CONEXION.RUTA_PDF."/pantallas/caja/info_caja_exp.php?key_cripto=".$codificada;
 		$ruta=RUTA_QR."caja/".$id."/";
 		$imagen=generar_qr_datos($ruta,$datos_qr);
 		$sql_documento_qr="UPDATE caja SET ruta_qr='".$imagen."' WHERE idcaja=".$id;	  	  

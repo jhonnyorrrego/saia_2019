@@ -9,6 +9,7 @@ while($max_salida>0){
     $max_salida--;
 }
 include_once($ruta_db_superior."db.php");
+usuario_actual("login");
 ?>
 <meta http-equiv="X-UA-Compatible" content="IE=9">
 <?php

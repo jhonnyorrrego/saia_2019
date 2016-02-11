@@ -18,7 +18,7 @@ $retorno=new stdClass;
 $retorno->exito=0;
 $retorno->mensaje="Error al guardar Prueba";
 $exito=0;
-$campos=array("nombre","descripcion","cod_padre","codigo","fecha", "serie_idserie", "no_tomo", "codigo_numero", "fondo", "proceso", "fecha_extrema_i", "fecha_extrema_f", "no_unidad_conservacion", "no_folios", "no_carpeta", "soporte", "frecuencia_consulta", "ubicacion", "unidad_admin");
+$campos=array("nombre","descripcion","cod_padre","codigo","fecha", "serie_idserie", "no_tomo", "codigo_numero", "fondo", "proceso", "fecha_extrema_i", "fecha_extrema_f", "no_unidad_conservacion", "no_folios", "no_carpeta", "soporte", "frecuencia_consulta", "ubicacion", "unidad_admin", "estado_archivo", "estado_cierre");
 $valores=array();
 foreach($campos AS $key=>$campo){
   if(@$_REQUEST[$campo]){
@@ -267,5 +267,24 @@ if($exito){
   $retorno->mensaje="Documento eliminado de este expediente con exito"; 
 }
 return($retorno);
+}
+function abrir_cerrar_expediente(){
+	global $conn;
+	
+	$retorno=new stdClass;
+	$retorno->exito=0;
+	$retorno->mensaje="Error al realizar la accion";
+	
+	$idexpediente=@$_REQUEST["idexpediente"];
+	$accion=@$_REQUEST["accion"];
+	
+	$sql1="update expediente set estado_cierre='".$accion."', fecha_cierre=".fecha_db_almacenar(date('Y-m-d'),'Y-m-d').", funcionario_cierre='".usuario_actual('idfuncionario')."' where idexpediente=".$idexpediente;
+	phpmkr_query($sql1);
+	
+	$retorno->idexpediente=$idexpediente;
+  $retorno->exito=1;
+  $retorno->mensaje="Accion realizada";
+  
+  return($retorno);
 }
 ?>

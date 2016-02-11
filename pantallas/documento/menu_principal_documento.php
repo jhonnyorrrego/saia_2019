@@ -247,14 +247,14 @@ $lista=arreglo con nombre: nombre del modulo y tipo=1 botones con enlace, tipo=2
 $target=destino donde se debe abrir el enlace 
 */
 function permisos_modulo_menu_intermedio($iddoc, $modulo_padre,$lista,$target="_self"){    
-    global $ruta_db_superior,$documento;    
-    $texto='';
-    if($modulo_padre=="rapidos_menu_intermedio"){
-        $datos_modulos=array('devolucion','transferir','responder','seguimiento','terminar_documento','vista_previa');
-    }
-    else{    
-        $datos_modulos=  modulos_menu_intermedio($modulo_padre);
-    }
+  global $ruta_db_superior,$documento;    
+  $texto='';
+  if($modulo_padre=="rapidos_menu_intermedio"){
+      $datos_modulos=array('devolucion','transferir','responder','seguimiento','terminar_documento','vista_previa');
+  }
+  else{    
+      $datos_modulos=  modulos_menu_intermedio($modulo_padre);
+  }
 	$estado=busca_filtro_tabla("estado","documento","iddocumento=".$iddoc,"",$conn);
 	
 	$cont=count($datos_modulos);

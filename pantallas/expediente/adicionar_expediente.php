@@ -23,6 +23,12 @@ $max_salida=6; $ruta_db_superior=$ruta=""; while($max_salida>0){ if(is_file($rut
 $dato_padre=busca_filtro_tabla("","expediente a","a.idexpediente=".$_REQUEST["cod_padre"],"",$conn);
 ?>
 <form name="formulario_expediente" id="formulario_expediente">
+<input type="hidden" name="estado_cierre" id="estado_cierre" value="1">
+<?php if($dato_padre["numcampos"]){ ?>
+	<input type="hidden" name="estado_archivo" id="estado_archivo" value="<?php echo($dato_padre[0]["estado_archivo"]);?>">
+<?php }else{ ?>
+	<input type="hidden" name="estado_archivo" id="estado_archivo" value="<?php echo($_REQUEST["estado_archivo"]);?>">
+<?php } ?>
 <input type="hidden" name="cod_padre" id="cod_padre" value="<?php echo($_REQUEST["cod_padre"]);?>">
 <input type="hidden" name="iddocumento" id="iddocumento" value="<?php echo($_REQUEST["iddocumento"]);?>">
 <input type="hidden" id="cerrar_higslide" value="<?php echo(@$_REQUEST["cerrar_higslide"]);?>">
@@ -51,7 +57,7 @@ $dato_padre=busca_filtro_tabla("","expediente a","a.idexpediente=".$_REQUEST["co
   </div>
 </div>
 <div class="control-group element">
-  <label class="control-label" for="nombre">Descripci&oacute;n *
+  <label class="control-label" for="nombre">Descripci&oacute;n
   </label>
   <div class="controls"> 
     <textarea name="descripcion" id="descripcion"></textarea>
@@ -319,9 +325,9 @@ $(document).ready(function(){
   }
   });
   $("#submit_formulario_expediente").click(function(){  
-    $('#cargando_enviar').html("<div id='icon-cargando'></div>Procesando");
-		$(this).attr('disabled', 'disabled');  
     if(formulario_expediente.valid()){
+    	$('#cargando_enviar').html("<div id='icon-cargando'></div>Procesando");
+			$(this).attr('disabled', 'disabled');
     	<?php if(@$_REQUEST["volver"]&&@$_REQUEST["enlace"]){ ?>
     		window.open('<?php echo($ruta_db_superior.$_REQUEST["enlace"]); ?>?variable_busqueda=idexpediente/**/<?php echo($_REQUEST["cod_padre"]); ?>&idbusqueda_componente=<?php echo($_REQUEST["idbusqueda_componente"]); ?>','_self');
     	<?php } ?>
@@ -338,7 +344,7 @@ $(document).ready(function(){
                 type:'POST',
                 async:false,
                 url: "<?php echo($ruta_db_superior);?>pantallas/busquedas/servidor_busqueda.php",
-                data: "idbusqueda_componente=<?php echo($_REQUEST['idbusqueda_componente']); ?>&page=1&rows=1&actual_row=0&expediente_actual="+objeto.idexpediente+"&idexpediente=<?php echo(@$_REQUEST['cod_padre']);?>",
+                data: "idbusqueda_componente=<?php echo($_REQUEST['idbusqueda_componente']); ?>&page=1&rows=1&actual_row=0&expediente_actual="+objeto.idexpediente+"&idexpediente=<?php echo(@$_REQUEST['cod_padre']);?>&variable_busqueda=<?php echo(@$_REQUEST["estado_archivo"]); ?>",
                 success: function(html2){               
                   if(html2){      
                     var objeto2=jQuery.parseJSON(html2);

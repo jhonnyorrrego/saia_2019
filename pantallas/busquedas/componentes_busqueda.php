@@ -9,6 +9,7 @@ while($max_salida>0){
 	$max_salida--;
 }
 include_once($ruta_db_superior."db.php");
+usuario_actual("login");
 include_once($ruta_db_superior."librerias_saia.php");
 include_once($ruta_db_superior."pantallas/lib/encabezado_componente.php");
 $componentes=busca_filtro_tabla("A.*,B.ruta_visualizacion, B.badge_cantidades","busqueda_componente A, busqueda B","A.busqueda_idbusqueda=B.idbusqueda AND B.idbusqueda=".$_REQUEST["idbusqueda"]." AND A.estado<>0","orden",$conn);

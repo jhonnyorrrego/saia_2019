@@ -16,18 +16,13 @@ echo(librerias_notificaciones());
 $iddoc=@$_REQUEST["iddoc"];
 $documento=busca_filtro_tabla(fecha_db_obtener('a.fecha','Y-m-d')." as x_fecha, a.*","documento a","a.iddocumento=".$iddoc,"",$conn);
 $formato=busca_filtro_tabla("","formato a","lower(a.nombre)='".strtolower($documento[0]["plantilla"])."'","",$conn);
-if($formato[0]["mostrar_pdf"]==1){
-	$ruta_documento=$ruta_db_superior."pantallas/documento/visor_documento.php?iddoc=".$iddoc;
-}
-else{
-	$ruta_documento=$ruta_db_superior."formatos/".$formato[0]["nombre"]."/".$formato[0]["ruta_mostrar"]."?iddoc=".$iddoc."&idformato=".$formato[0]["idformato"];
-}
+$ruta_documento=$ruta_db_superior."pantallas/documento/informacion_resumen_documento.php?idformato=".$formato[0]['idformato']."&iddoc=".$iddoc;
 if($documento[0]["estado"]=='ACTIVO'){
 	?>
 	<script>
 	$(document).ready(function(){
 	   notificacion_saia('El documento esta en borrador','warning','',3000);
-	   window.open("<?php echo($ruta_documento); ?>","_self");
+	   window.open("<?php echo($ruta_documento); ?>","arbol_formato");
 	});
 	</script>
 	<?php
@@ -44,7 +39,7 @@ actualizar_documento($documento,$version);
 <script>
 $(document).ready(function(){
    notificacion_saia('Version creada con exito','success','',3000);
-   window.open("<?php echo($ruta_documento); ?>","_self");
+   window.open("<?php echo($ruta_documento); ?>","arbol_formato");
 });
 </script>
 <?php

@@ -19,6 +19,14 @@ $datos=busca_filtro_tabla("","caja a","a.idcaja=".$_REQUEST["idcaja"],"",$conn);
 <input type="hidden" id="cerrar_higslide" value="<?php echo(@$_REQUEST["cerrar_higslide"]);?>">
 <legend>Crear caja</legend>
 <div class="control-group element">
+  <label class="control-label" for="no_consecutivo">No consecutivo
+  </label>
+  <div class="controls"> 
+    <input type="text" name="no_consecutivo" id="no_consecutivo" value="<?php echo($datos[0]["no_consecutivo"]); ?>">
+  </div>
+</div>
+
+<div class="control-group element">
   <label class="control-label" for="fondo">Fondo
   </label>
   <div class="controls"> 
@@ -92,14 +100,6 @@ $datos=busca_filtro_tabla("","caja a","a.idcaja=".$_REQUEST["idcaja"],"",$conn);
   </label>
   <div class="controls"> 
     <input type="text" name="no_cajas" id="no_cajas" value="<?php echo($datos[0]["no_cajas"]); ?>">
-  </div>
-</div>
-
-<div class="control-group element">
-  <label class="control-label" for="no_consecutivo">No consecutivo
-  </label>
-  <div class="controls"> 
-    <input type="text" name="no_consecutivo" id="no_consecutivo" value="<?php echo($datos[0]["no_consecutivo"]); ?>">
   </div>
 </div>
 
@@ -215,9 +215,9 @@ $(document).ready(function(){
 	
   var formulario_caja=$("#formulario_caja");
   $("#submit_formulario_caja").click(function(){  
-    $('#cargando_enviar').html("<div id='icon-cargando'></div>Procesando");
-		$(this).attr('disabled', 'disabled');  
     if(formulario_caja.valid()){
+    	$('#cargando_enviar').html("<div id='icon-cargando'></div>Procesando");
+			$(this).attr('disabled', 'disabled');
       $.ajax({
         type:'GET',
         async:false,

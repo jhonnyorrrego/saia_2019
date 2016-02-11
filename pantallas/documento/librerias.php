@@ -40,7 +40,24 @@ if($dato_prioridad["numcampos"]){
     break;
   }
 }
-$texto.='<div class="btn-group pull" >
+
+
+
+$dato_leido=documento_leido($iddoc);
+$texto.='<div class="btn-group pull" >';
+
+/*boton leido no leido utiliza funcion ( documento_leido() ) ubicada en este archivo*/
+
+$texto.='
+	  <button type="button" class="btn btn-mini  tooltip_saia documento_leido" titulo="'.$dato_leido[0].'"  idregistro="'.$iddoc.'" >
+	    <i class="'.$dato_leido[1].'"></i>
+	  </button>	
+	';
+
+/*---------------------*/
+
+$texto.='
+
   <button type="button" class="btn btn-mini detalle_documento_saia tooltip_saia" enlace="ordenar.php?accion=mostrar&mostrar_formato=1&key='.$iddoc.'" title="No.'.$numero.'" idregistro="'.$iddoc.'"><i class="icon-info-sign"></i></button>
   <button type="button" class="btn btn-mini tooltip_saia adicionar_seleccionados" title="Seleccionar" idregistro="'.$iddoc.'">
     <i class="icon-uncheck"></i>
@@ -60,7 +77,23 @@ $texto.='<div class="btn-group pull" >
 //$texto.=barra_estandar_documento($iddoc,$funcionario);
 return($texto);
 }
-
+function documento_leido($iddoc){
+$pendiente = busca_filtro_tabla(fecha_db_obtener("fecha_inicial","Y-m-d H:i:s")." as fecha_inicial","asignacion","documento_iddocumento=".$iddoc." and llave_entidad=".$_SESSION["usuario_actual"],"fecha_inicial DESC",$conn);
+$leido["numcampos"]=0;
+$dato_leido[1]="icon-no_visto";  //icono en css/bootstrap.css
+$dato_leido[0]='Sin leer';
+if($pendiente["numcampos"]){
+  $leido = busca_filtro_tabla("nombre,idtransferencia","buzon_entrada","archivo_idarchivo=".$iddoc." and origen=".$_SESSION["usuario_actual"]." and nombre='LEIDO' AND fecha >= ".fecha_db_almacenar($pendiente[0]["fecha_inicial"],"Y-m-d H:i:s"),"",$conn);
+}
+else{
+	$leido = busca_filtro_tabla("nombre,idtransferencia","buzon_entrada","archivo_idarchivo=".$iddoc." and origen=".$_SESSION["usuario_actual"]." and nombre='LEIDO'","",$conn);
+}
+if($leido["numcampos"]){
+  $dato_leido[1]="icon-eye-open";
+  $dato_leido[0]="Leido ";
+}
+return($dato_leido);
+}
 function fecha_barra_documento($iddoc){
 $fecha_vencimiento=fecha_documento($iddoc);
 $texto.='<div class="btn-group fecha_barra_documento pull-right">';
@@ -281,23 +314,7 @@ else{
  
 return (array($color,$terminados,$actividades["numcampos"]));
 }
-function documento_leido($iddoc){
-$pendiente = busca_filtro_tabla(fecha_db_obtener("fecha_inicial","Y-m-d H:i:s")." as fecha_inicial","asignacion","documento_iddocumento=".$iddoc." and llave_entidad=".$_SESSION["usuario_actual"],"fecha_inicial DESC",$conn);
-$leido["numcampos"]=0;
-$dato_leido[1]="icon-leido";
-$dato_leido[0]='Documento<br />sin leer';
-if($pendiente["numcampos"]){
-  $leido = busca_filtro_tabla("nombre,idtransferencia","buzon_entrada","archivo_idarchivo=".$iddoc." and origen=".$_SESSION["usuario_actual"]." and nombre='LEIDO' AND fecha >= ".fecha_db_almacenar($pendiente[0]["fecha_inicial"],"Y-m-d H:i:s"),"",$conn);
-}
-else{
-	$leido = busca_filtro_tabla("nombre,idtransferencia","buzon_entrada","archivo_idarchivo=".$iddoc." and origen=".$_SESSION["usuario_actual"]." and nombre='LEIDO'","",$conn);
-}
-if($leido["numcampos"]){
-  $dato_leido[1]="icon-no_leido";
-  $dato_leido[0]="Documento<br />leido";
-}
-return($dato_leido);
-}
+
 function contar_cantidad($doc,$funcionario,$tipo){
 global $conn;        	
 $cantidades=array();

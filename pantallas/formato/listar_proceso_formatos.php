@@ -1,0 +1,72 @@
+<?php 
+$max_salida=10; // Previene algun posible ciclo infinito limitando a 10 los ../
+$ruta_db_superior=$ruta="";
+while($max_salida>0){
+	if(is_file($ruta."db.php")){
+		$ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
+	}
+	$ruta.="../";
+	$max_salida--;
+}
+include_once($ruta_db_superior."db.php");
+include_once($ruta_db_superior."librerias_saia.php");
+include_once($ruta_db_superior."pantallas/lib/encabezado_componente.php");
+usuario_actual("login");
+
+$consulta=busca_filtro_tabla('','categoria_formato','cod_padre=2 and estado=1','nombre ASC',$conn);
+
+
+
+?>
+<div class="panel-body">	
+  <div class="block-nav">    
+	<?php 
+	      $texto='';
+		  $conector='iframe';
+	      for($i=0;$i<$consulta["numcampos"];$i++){
+	      	
+	      		$idcategoria_formato=$consulta[$i]['idcategoria_formato'];
+			  
+				$cuantos_formatos=busca_filtro_tabla("","formato","cod_padre=0 AND (fk_categoria_formato like'".$idcategoria_formato."' OR   fk_categoria_formato like'%,".$idcategoria_formato."'  OR   fk_categoria_formato like'".$idcategoria_formato.",%' OR   fk_categoria_formato like'%,".$idcategoria_formato.",%') ","etiqueta ASC",$conn);
+			
+				$ok=1;
+				if($cuantos_formatos['numcampos']==1){
+					$url=$ruta_db_superior.'formatos/'.$cuantos_formatos[0]['nombre'].'/'.$cuantos_formatos[0]['ruta_adicionar'];
+					$proceso='';
+					
+					$modulo_formato=busca_filtro_tabla('','modulo','nombre="'.$cuantos_formatos[0]['nombre'].'"','',$conn);
+					$ok=acceso_modulo($modulo_formato[0]['idmodulo']);		
+					
+				}else{
+					$url='listar_formatos.php?idcategoria_formato='.$consulta[$i]["idcategoria_formato"];
+					$proceso='Proceso';
+				}
+		
+				if($ok){						
+		              $texto.='<div title="'.$consulta[$i]["nombre"].'" data-load=\'{"kConnector":"'.$conector.'", "url":"'.$url.'", "kTitle":"'.$proceso.' '.$consulta[$i]["nombre"].'"}\' class="items navigable">';
+		              $texto.='<div class="head"></div>';              				            
+		              $texto.='<div class="label">'.utf8_encode(html_entity_decode($consulta[$i]["nombre"])).'</div>';
+		              $texto.='<div class="info"></div>'; 		
+		              $texto.='<div class="tail"></div>';
+				      $texto.='</div>'; 
+				}	  
+	      }
+	      echo($texto);
+	?>	
+  </div>
+</div>
+
+
+<?php
+	function acceso_modulo($idmodulo){
+	  if($idmodulo=='' || $idmodulo==Null || $idmodulo==0 ||  usuario_actual("login")=="cerok"){
+	    return true;
+	  }
+	  $ok=new Permiso();
+	  $modulo=busca_filtro_tabla("","modulo","idmodulo=".$idmodulo,"");
+	  $acceso=$ok->acceso_modulo_perfil($modulo[0]["nombre"]);
+	  return $acceso;
+	}	
+	
+
+?>
