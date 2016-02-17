@@ -18,6 +18,7 @@ $x_margenes = Null;
 $x_orientacion = Null;
 $x_papel = Null;
 $x_exportar = Null;
+$_pertenece_nucleo = Null;
 ?>
 <?php include ("db.php") ?>
 <?php include ("phpmkrfn.php") ?>
@@ -61,7 +62,8 @@ switch ($sAction)
 <a href="<?php echo $ruta_db_superior; ?>formatos/llamado_formatos.php?acciones_formato=formato,adicionar,buscar,editar,mostrar,tabla&accion=generar&condicion=idformato@<?php echo $_REQUEST["key"];?>">Generar el Formato</a>&nbsp;&nbsp;
 <a href="<?php echo $ruta_db_superior; ?>formatos/formatoadd.php?x_cod_padre=<?php echo $_REQUEST["key"];?>">Adicionar hijo</a>&nbsp;&nbsp;
 <a href="<?php echo $ruta_db_superior; ?>formatos/transferencias_automaticas.php?idformato=<?php echo $_REQUEST["key"];?>">Transferencias automaticas</a>&nbsp;&nbsp;
-<a href="<?php echo $ruta_db_superior; ?>formatos/rutas_automaticas.php?idformato=<?php echo $_REQUEST["key"];?>">Rutas</a>
+<a href="<?php echo $ruta_db_superior; ?>formatos/rutas_automaticas.php?idformato=<?php echo $_REQUEST["key"];?>">Rutas</a>&nbsp;&nbsp;
+<a href="<?php echo $ruta_db_superior; ?>formatos/formatoexport.php?key=<?php echo $_REQUEST["key"];?>">Exportar Formato</a>
 </span></p>
 </span></p>
 <p>
@@ -248,6 +250,19 @@ $x_exportar = $sTmp;
 <?php $x_exportar = $ox_exportar; // Restore Original Value ?>
 </span></td>
 	</tr>
+	<tr>
+    <td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">Formato pertenece al n&uacute;cleo</span></td>
+    <td bgcolor="#F5F5F5"><span class="phpmaker">
+    <?php 
+    if(intval($x_pertenece_nucleo)){
+      echo("Si");
+    }
+    else{
+      echo('No');
+    }
+?>
+</span></td>
+  </tr>
 </table>
 </form>
 <p>
@@ -302,6 +317,7 @@ function LoadData($sKey,$conn)
 		$GLOBALS["x_orientacion"] = $row["orientacion"];
 		$GLOBALS["x_papel"] = $row["papel"];
 		$GLOBALS["x_exportar"] = $row["exportar"];
+		$GLOBALS["x_pertenece_nucleo"] = $row["pertenece_nucleo"];
 	}
 	phpmkr_free_result($rs);
 	return $LoadData;
