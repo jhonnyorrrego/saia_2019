@@ -98,14 +98,22 @@ else{
 }
 
 function barra_superior_busqueda(){
-	return('
+	$permiso=new Permiso();
+	$ok1=$permiso->acceso_modulo_perfil('adicionar_expediente');
+	$ok2=$permiso->acceso_modulo_perfil('transferencia_doc');
+	$cadena='';
+	
+	if($ok1){
+		$cadena.='
 	<li class="divider-vertical"></li>                          
 	<li>            
 	 <div class="btn-group">                    
 	    <button class="btn btn-mini" id="adicionar_expediente" idbusqueda_componente="'.$_REQUEST["idbusqueda_componente"].'" title="Adicionar expediente hijo" enlace="pantallas/expediente/adicionar_expediente.php?cod_padre='.@$_REQUEST["idexpediente"].'&div_actualiza=resultado_busqueda'.$_REQUEST["idbusqueda_componente"].'&target_actualiza=parent&idbusqueda_componente='.$_REQUEST["idbusqueda_componente"].'&cod_padre='.$_REQUEST["idexpediente"].'&estado_archivo='.@$_REQUEST["variable_busqueda"].'">Adicionar Expediente</button>                                            
-	  </div>    
-	</li>
-	<li class="divider-vertical"></li>                          
+	  </div>
+	</li>';
+	}
+	if($ok2){
+		$cadena.='<li class="divider-vertical"></li>                          
 		<li>
 		 <div class="btn-group">                    
 		    <button class="btn btn-mini" id="transferencia_documental" titulo="Transferencia documental">Transferencia documental</button>                                            
@@ -121,7 +129,10 @@ function barra_superior_busqueda(){
 				alert("Seleccione por lo menos un expediente");
 			}
 		});
-		</script>');
+		</script>';
+	}
+		
+	return($cadena);
 }
 function listado_expedientes_documento($iddocumento){
 $expedientes=busca_filtro_tabla("","expediente A, expediente_doc B","A.idexpediente=B.expediente_idexpediente AND B.documento_iddocumento=".$iddocumento,"",$conn);
@@ -315,14 +326,23 @@ function enlaces_adicionales_expediente($idexpediente,$nombre){
 	$permiso=new Permiso();
 	$ok1=$permiso->acceso_modulo_perfil("eliminar_expediente");
 	$ok2=$permiso->acceso_modulo_perfil("editar_expediente");
+	$ok3=$permiso->acceso_modulo_perfil("asignar_expediente");
 	
-	$texto.='<div class=\'btn btn-mini eliminar_expediente tooltip_saia pull-right\' idregistro=\''.$idexpediente.'\' title=\'Eliminar '.$nombre.'\'><i class=\'icon-remove\'></i></div>';
-
-	$texto.='<div class=\'btn btn-mini enlace_expediente tooltip_saia pull-right\' idregistro=\''.$idexpediente.'\' title=\'Editar '.$nombre.'\' enlace=\'pantallas/expediente/editar_expediente.php?idexpediente='.$idexpediente.'\'><i class=\'icon-pencil\'></i></div>';
+	if($ok1){
+		$texto.='<div class=\'btn btn-mini eliminar_expediente tooltip_saia pull-right\' idregistro=\''.$idexpediente.'\' title=\'Eliminar '.$nombre.'\'><i class=\'icon-remove\'></i></div>';
+	}
+	
+	if($ok2){
+		$texto.='<div class=\'btn btn-mini enlace_expediente tooltip_saia pull-right\' idregistro=\''.$idexpediente.'\' title=\'Editar '.$nombre.'\' enlace=\'pantallas/expediente/editar_expediente.php?idexpediente='.$idexpediente.'\'><i class=\'icon-pencil\'></i></div>';
+	}
 
 	$texto.='<div class=\'btn btn-mini link kenlace_saia tooltip_saia pull-right\' title=\'Imprimir rotulo\' titulo=\'Imprimir rotulo\' enlace=\'pantallas/caja/rotulo.php?idexpediente='.$idexpediente.'\' conector=\'iframe\'><i class=\'icon-print\'></i></div>';
 	
 	$texto.='<div idregistro=\''.$idexpediente.'\' titulo=\'Seleccionar\' class=\'btn btn-mini tooltip_saia adicionar_seleccionados_expediente pull-right\'><i class=\'icon-uncheck\'></i></div>';
+	
+	if($ok3){
+		$texto.='<div class=\'btn btn-mini enlace_expediente tooltip_saia pull-right\' idregistro=\''.$idexpediente.'\' title=\'Asignar '.$nombre.'\' enlace=\'pantallas/expediente/asignar_expediente.php?idexpediente='.$idexpediente.'\'><i class=\'icon-lock\'></i></div>';
+	}
 	
 	return($texto);
 }

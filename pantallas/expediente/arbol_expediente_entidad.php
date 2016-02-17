@@ -20,7 +20,7 @@ elseif($entidad=="4"){
   $xml.="test_serie_entidad.php?tabla=cargo&estado=1&series=$series";
 }
 elseif($entidad=="5"){
-  $xml.="test.php?sin_padre=1&series=$series&rol=1&seleccionado=".@$_REQUEST["seleccionado"];
+  $xml.="test.php?series=$series&rol=1&seleccionado=".@$_REQUEST["seleccionado"];
 }
 if(@$_REQUEST["tipo_entidad"] && @$_REQUEST["llave_entidad"]) 
    $xml.="&tipo_entidad=".$_REQUEST["tipo_entidad"]."&llave_entidad=".$_REQUEST["llave_entidad"];          
@@ -54,7 +54,18 @@ Buscar: <input type="text" id="stext<?php echo $entidad; ?>" width="200px" size=
 			tree<?php echo $entidad; ?>.loadXML("<?php echo $xml; ?>");
       tree<?php echo $entidad; ?>.setOnCheckHandler(onNodeSelect<?php echo $entidad; ?>);
 			function onNodeSelect<?php echo $entidad; ?>(nodeId)
-      {document.getElementById("<?php echo $campo; ?>").value=tree<?php echo $entidad; ?>.getAllChecked();
+      {
+      	var seleccionados=tree<?php echo $entidad; ?>.getAllChecked();
+      	var arreglo=seleccionados.split(",");
+      	var cant=arreglo.length;
+      	var nuevo_arreglo=new Array();
+      	var a=0;
+      	for(i=0;i<cant;i++){
+      		if(arreglo[i].indexOf("#")!=-1)continue;
+      		nuevo_arreglo[a]=arreglo[i];
+      		a++;
+      	}
+      	document.getElementById("<?php echo $campo; ?>").value=nuevo_arreglo.join(",");
       }
       function fin_cargando<?php echo $entidad; ?>() {
       if (browserType == "gecko" )
