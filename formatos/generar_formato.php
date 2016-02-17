@@ -2842,7 +2842,11 @@ function generar_formato($idformato){
   global $sql,$conn,$ruta_db_superior;
   $formato=busca_filtro_tabla("*","formato A","A.idformato=".$idformato,"",$conn);
   $encabezado=busca_filtro_tabla("contenido","encabezado_formato","idencabezado_formato='".$formato[0]["encabezado"]."'","",$conn);
-
+  $data=' ';
+  if(intval($formato[0]["pertenece_nucleo"])){
+    $data='*';
+  }
+  file_put_contents($ruta_db_superior."formatos/".$formato[0]["nombre"]."/.gitignore", $data);
   $pie=busca_filtro_tabla("contenido","encabezado_formato","idencabezado_formato='".$formato[0]["pie_pagina"]."'","",$conn);
   $lcampos="";
   $regs=array();

@@ -768,7 +768,7 @@ function EditData($sKey,$conn)
 		
 		$data=' ';
     if(intval($x_pertenece_nucleo)){
-      $data='**//';
+      $data='*';
     }
     if(file_put_contents($x_nombre."/.gitignore", $data)){
       alerta("No se crea el archivo .gitignore para versionamiento");  

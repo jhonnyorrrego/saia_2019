@@ -738,7 +738,7 @@ function AddData($conn) {
 		mkdir($x_nombre, 0777);
     $data=' ';
     if(intval($x_pertenece_nucleo)){
-      $data='**//';
+      $data='*';
     }
     if(!file_put_contents($x_nombre."/.gitignore", $data)){
       alerta("No se crea el archivo .gitignore para versionamiento");  
