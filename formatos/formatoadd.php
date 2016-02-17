@@ -41,6 +41,7 @@ $x_firma_digital = Null;
 $x_flujo_idflujo = Null;
 $x_fk_categoria_formato = Null;
 $x_funcion_predeterminada = Null;
+$x_pertenece_nucleo = Null;
 
 if (isset($_REQUEST["consultar_contador"])) {
 	consultar_contador();
@@ -99,6 +100,7 @@ if (($sAction == "") || ((is_null($sAction)))) {
 	$x_fk_categoria_formato = @$_POST["x_fk_categoria_formato"];
 	$x_flujo_idflujo = @$_POST["x_flujo_idflujo"];
 	$x_funcion_predeterminada = @$_POST["x_funcion_predeterminada"];
+  $x_pertenece_nucleo = @$_POST["x_pertenece_nucleo"];
 	if (isset($_POST["x_item"]))
 		$x_item = @$_POST["x_item"];
 	else
@@ -527,6 +529,14 @@ echo $x_exportarChk;
 </span></td>
 		</tr>
 		<tr>
+      <td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">El formato pertenece al n&uacute;cleo</span></td>
+      <td bgcolor="#F5F5F5"><span class="phpmaker">
+              <input type="radio" name="x_pertenece_nucleo" value=0 <?php if(!$x_pertenece_nucleo) echo "checked";?>>No&nbsp;&nbsp;
+              <input type="radio" name="x_pertenece_nucleo" value=1 <?php if($x_pertenece_nucleo) echo "checked";?>>Si
+              </span>
+          </td>
+    </tr>
+		<tr>
 			<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">Categor&iacute;a</span></td>
 			<td bgcolor="#F5F5F5"><span class="phpmaker"><?php echo arbol_categorias('x_fk_categoria_formato'); ?></span></td>
 		</tr>
@@ -579,6 +589,7 @@ echo $x_exportarChk;
 // - Load Data based on Key Value sKey
 // - Variables setup: field variables
 function LoadData($sKey, $conn) {
+  global $enter2tab, $x_autoguardado, $x_mostrar_pdf, $x_item, $x_idformato, $x_nombre, $x_etiqueta, $x_contador_idcontador, $x_ruta_mostrar, $x_ruta_editar, $x_ruta_adicionar, $x_librerias, $x_encabezado, $x_cuerpo, $x_pie_pagina, $x_margenes, $x_orientacion, $x_papel, $x_exportar, $x_tabla, $x_detalle, $x_cod_padre, $x_tipo_edicion, $x_serie_idserie, $x_banderas, $x_font_size, $x_firma_digital, $x_fk_categoria_formato, $x_flujo_idflujo, $x_funcion_predeterminada, $x_pertenece_nucleo;
 	$sKeyWrk = "" . addslashes($sKey) . "";
 	$sSql = "SELECT * FROM formato";
 	$sSql .= " WHERE idformato = " . $sKeyWrk;
@@ -600,7 +611,7 @@ function LoadData($sKey, $conn) {
 	} else {
 		$LoadData = true;
 		$row = phpmkr_fetch_array($rs);
-		global $enter2tab, $x_autoguardado, $x_mostrar_pdf, $x_item, $x_idformato, $x_nombre, $x_etiqueta, $x_contador_idcontador, $x_ruta_mostrar, $x_ruta_editar, $x_ruta_adicionar, $x_librerias, $x_encabezado, $x_cuerpo, $x_pie_pagina, $x_margenes, $x_orientacion, $x_papel, $x_exportar, $x_tabla, $x_detalle, $x_cod_padre, $x_tipo_edicion, $x_serie_idserie, $x_banderas, $x_font_size, $x_firma_digital, $x_fk_categoria_formato, $x_flujo_idflujo, $x_funcion_predeterminada;
+		
 
 		// Get the field contents
 		$x_idformato = $row["idformato"];
@@ -631,6 +642,7 @@ function LoadData($sKey, $conn) {
 		$x_fk_categoria_formato = $row["fk_categoria_formato"];
 		$x_flujo_idflujo = $row["flujo_idflujo"];
 		$x_funcion_predeterminada = $row["funcion_predeterminada"];
+    $x_pertenece_nucleo =$row["pertenece_nucleo"];
 	}
 	phpmkr_free_result($rs);
 	return $LoadData;
@@ -643,7 +655,7 @@ function LoadData($sKey, $conn) {
 // - Add Data
 // - Variables used: field variables
 function AddData($conn) {
-	global $enter2tab, $x_autoguardado, $x_mostrar_pdf, $x_item, $x_idformato, $x_nombre, $x_etiqueta, $x_contador_idcontador, $x_ruta_mostrar, $x_ruta_editar, $x_ruta_adicionar, $x_librerias, $x_encabezado, $x_cuerpo, $x_pie_pagina, $x_margenes, $x_orientacion, $x_papel, $x_exportar, $x_tabla, $x_detalle, $x_cod_padre, $x_serie_idserie, $x_banderas, $x_font_size, $x_mostrar, $x_tipo_edicion, $x_firma_digital, $x_fk_categoria_formato, $x_flujo_idflujo, $x_funcion_predeterminada, $x_paginar;
+	global $enter2tab, $x_autoguardado, $x_mostrar_pdf, $x_item, $x_idformato, $x_nombre, $x_etiqueta, $x_contador_idcontador, $x_ruta_mostrar, $x_ruta_editar, $x_ruta_adicionar, $x_librerias, $x_encabezado, $x_cuerpo, $x_pie_pagina, $x_margenes, $x_orientacion, $x_papel, $x_exportar, $x_tabla, $x_detalle, $x_cod_padre, $x_serie_idserie, $x_banderas, $x_font_size, $x_mostrar, $x_tipo_edicion, $x_firma_digital, $x_fk_categoria_formato, $x_flujo_idflujo, $x_funcion_predeterminada, $x_paginar,$x_pertenece_nucleo;
 
   // Field Banderas
 	if(is_array($x_banderas))
@@ -724,6 +736,13 @@ function AddData($conn) {
 	$fieldList["exportar"] = $theValue;
 	if(!is_dir($x_nombre)) {
 		mkdir($x_nombre, 0777);
+    $data=' ';
+    if(intval($x_pertenece_nucleo)){
+      $data='**//';
+    }
+    if(!file_put_contents($x_nombre."/.gitignore", $data)){
+      alerta("No se crea el archivo .gitignore para versionamiento");  
+    }
 	}
 
 	// Field cod_padre
@@ -755,7 +774,8 @@ function AddData($conn) {
 	$fieldList["ruta_editar"] = "'" . "editar_" . $x_nombre . ".php'";
 	$fieldList["ruta_adicionar"] = "'" . "adicionar_" . $x_nombre . ".php'";
 	$fieldList["funcionario_idfuncionario"] = usuario_actual("funcionario_codigo");
-
+  $fieldList["pertenece_nucleo"] = intval($x_pertenece_nucleo);
+  print_r($fieldList);
 	// insert into database
 	$strsql = "INSERT INTO formato (";
 	$strsql .= implode(",", array_keys($fieldList));

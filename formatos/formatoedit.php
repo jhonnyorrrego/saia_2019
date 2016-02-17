@@ -47,6 +47,7 @@ $x_firma_digital = Null;
 $x_fk_categoria_formato = Null;
 $x_flujo_idflujo = Null;
 $x_funcion_predeterminada = Null;
+$x_pertenece_nucleo= Null;
   echo(librerias_jquery("1.7"));
   echo(librerias_arboles());    
 ?>
@@ -115,6 +116,7 @@ if (($sAction == "") || ((is_null($sAction)))) {
   $x_fk_categoria_formato = @$_POST["x_fk_categoria_formato"];
   $x_flujo_idflujo = @$_POST["x_flujo_idflujo"];
   $x_funcion_predeterminada = @$_POST["x_funcion_predeterminada"];
+  $x_pertenece_nucleo = @$_POST["x_pertenece_nucleo"];
 	//print_r($_POST);
 }
 if (($sKey == "") || ((is_null($sKey)))) {
@@ -524,7 +526,15 @@ echo $x_exportarChk;
 ?>
 </span></td>
 	</tr>
-		<tr>
+	<tr>
+    <td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">El formato pertenece al n&uacute;cleo</span></td>
+    <td bgcolor="#F5F5F5"><span class="phpmaker">
+            <input type="radio" name="x_pertenece_nucleo" value=0 <?php if(!$x_pertenece_nucleo) echo "checked";?>>No&nbsp;&nbsp;
+            <input type="radio" name="x_pertenece_nucleo" value=1 <?php if($x_pertenece_nucleo) echo "checked";?>>Si
+            </span>
+        </td>
+  </tr>
+	<tr>
 		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">Categor&iacute;a</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker"><?php
 		 echo arbol_categorias('x_fk_categoria_formato',$x_fk_categoria_formato); ?></span></td>
@@ -584,9 +594,8 @@ echo $x_exportarChk;
 // - Load Data based on Key Value sKey
 // - Variables setup: field variables
 
-function LoadData($sKey,$conn)
-{
-    global $enter2tab,$x_autoguardado, $x_mostrar_pdf,$x_item,$x_idformato, $x_nombre, $x_etiqueta, $x_contador_idcontador, $x_ruta_mostrar, $x_ruta_editar,	$x_ruta_adicionar, $x_librerias, $x_encabezado,	$x_cuerpo, $x_pie_pagina, $x_margenes, $x_orientacion, $x_papel, $x_exportar, $x_tabla, $x_detalle, $x_cod_padre,$x_tipo_edicion,$x_serie_idserie,$x_banderas,$x_font_family, $x_font_size,$x_mostrar,$x_firma_digital,$x_fk_categoria_formato,$x_flujo_idflujo,$x_funcion_predeterminada,$x_paginar;
+function LoadData($sKey,$conn){
+    global $enter2tab,$x_autoguardado, $x_mostrar_pdf,$x_item,$x_idformato, $x_nombre, $x_etiqueta, $x_contador_idcontador, $x_ruta_mostrar, $x_ruta_editar,	$x_ruta_adicionar, $x_librerias, $x_encabezado,	$x_cuerpo, $x_pie_pagina, $x_margenes, $x_orientacion, $x_papel, $x_exportar, $x_tabla, $x_detalle, $x_cod_padre,$x_tipo_edicion,$x_serie_idserie,$x_banderas,$x_font_family, $x_font_size,$x_mostrar,$x_firma_digital,$x_fk_categoria_formato,$x_flujo_idflujo,$x_funcion_predeterminada,$x_paginar, $x_pertenece_nucleo;
     $formato=busca_filtro_tabla("","formato","idformato=".$sKey,"",$conn);
     $LoadData=0;
     if($formato["numcampos"]){
@@ -623,7 +632,8 @@ function LoadData($sKey,$conn)
       $x_firma_digital = $row["firma_digital"];
       $x_fk_categoria_formato=$row["fk_categoria_formato"];
       $x_flujo_idflujo=$row["flujo_idflujo"];
-	  $x_funcion_predeterminada=$row["funcion_predeterminada"];
+	    $x_funcion_predeterminada=$row["funcion_predeterminada"];
+      $x_pertenece_nucleo =$row["pertenece_nucleo"];
     	$LoadData=1;
 	  }
 	return $LoadData;
@@ -638,7 +648,7 @@ function LoadData($sKey,$conn)
 
 function EditData($sKey,$conn)
 {
-  global $enter2tab,$x_autoguardado, $x_mostrar_pdf,$x_item,$x_idformato, $x_nombre, $x_etiqueta, $x_contador_idcontador, $x_ruta_mostrar, $x_ruta_editar,	$x_ruta_adicionar, $x_librerias, $x_encabezado,	$x_cuerpo, $x_pie_pagina, $x_margenes, $x_orientacion, $x_papel, $x_exportar, $x_tabla, $x_detalle, $x_cod_padre, $x_tipo_edicion,$x_serie_idserie,$x_banderas,$x_font_family,$x_font_size,$x_mostrar,$x_firma_digital,$x_fk_categoria_formato,$x_flujo_idflujo,$x_funcion_predeterminada,$x_paginar;
+  global $enter2tab,$x_autoguardado, $x_mostrar_pdf,$x_item,$x_idformato, $x_nombre, $x_etiqueta, $x_contador_idcontador, $x_ruta_mostrar, $x_ruta_editar,	$x_ruta_adicionar, $x_librerias, $x_encabezado,	$x_cuerpo, $x_pie_pagina, $x_margenes, $x_orientacion, $x_papel, $x_exportar, $x_tabla, $x_detalle, $x_cod_padre, $x_tipo_edicion,$x_serie_idserie,$x_banderas,$x_font_family,$x_font_size,$x_mostrar,$x_firma_digital,$x_fk_categoria_formato,$x_flujo_idflujo,$x_funcion_predeterminada,$x_paginar, $x_pertenece_nucleo;
 	// Open record
 	$sKeyWrk = "" . addslashes($sKey) . "";
 	$sSql = "SELECT idformato FROM formato";
@@ -752,8 +762,17 @@ function EditData($sKey,$conn)
 	$fieldList["fk_categoria_formato"]="'".$x_fk_categoria_formato."'";
 	$fieldList["flujo_idflujo"]="'".$x_flujo_idflujo."'";
 	$fieldList["funcion_predeterminada"]="'".implode(",",$x_funcion_predeterminada)."'";
+	$fieldList["pertenece_nucleo"] = intval($x_pertenece_nucleo);
      //print_r($fieldList);die();
 		// update
+		
+		$data=' ';
+    if(intval($x_pertenece_nucleo)){
+      $data='**//';
+    }
+    if(file_put_contents($x_nombre."/.gitignore", $data)){
+      alerta("No se crea el archivo .gitignore para versionamiento");  
+    }
 		$sSql = "UPDATE formato SET ";
 		foreach ($fieldList as $key=>$temp) {
 			$sSql .= "$key = $temp, ";
