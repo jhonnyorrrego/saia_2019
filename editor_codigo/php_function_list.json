@@ -9280,5 +9280,10 @@
       "type": "function",
       "descriptionMoreURL": "http://php.net/manual/en/function.zlib-get-coding-type.php",
       "snippet": "zlib_get_coding_type()${1}"
+    },
+    {
+      "text": "busca_filtro",
+      "type": "function_saia",
+      "snippet": "busca_filtro_tabla()${1}"
     }
 ]

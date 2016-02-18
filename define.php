@@ -72,7 +72,7 @@ define("RUTA_BACKUP_ELIMINADOS",RUTA_BACKUP."eliminados/");
 define("RUTA_BACKUP_EVENTO",RUTA_BACKUP."evento/");
 define("RUTA_BACKUP_SESION",RUTA_BACKUP."sesiones/");
 define("RUTA_FOTOGRAFIA_FUNCIONARIO","../adicionales_funcionario/fotografia/");
-
+define("RUTA_EVENTO_FORMATO","../evento_formato/");
 
 
 

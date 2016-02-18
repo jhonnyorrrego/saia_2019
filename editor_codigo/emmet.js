@@ -1257,8 +1257,10 @@ var emmet = (function(global) {
 		 * Log message into console if it exists
 		 */
 		log: function() {
-			if (global.console && global.console.log)
+		    return;
+			if (global.console && global.console.log){
 				global.console.log.apply(global.console, arguments);
+			}	
 		},
 		
 		/**

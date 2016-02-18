@@ -31,6 +31,10 @@ if(!isset($_SESSION["LOGIN".LLAVE_SAIA_EDITOR]) || !isset($_SESSION["EMAIL".LLAV
         left: 0;
         right: 0;
     }
+    div#ul_completar_comentario_tema li {
+        border-bottom: 1px solid;
+        list-style-type: none;
+    }    
   </style>
 </head>
 <body>
@@ -54,7 +58,9 @@ if(!isset($_SESSION["LOGIN".LLAVE_SAIA_EDITOR]) || !isset($_SESSION["EMAIL".LLAV
         </div>
         <div class="control-group">
           <div class="controls">
-            <input type="text" id="comentario" name="comentario" class="input-xxlarge" placeholder="Escriba un comentario que sea expl&iacute;cito">
+            <input type="text" id="comentario_tema" name="comentario_tema" class="input-xlarge" placeholder="Tema relacionado con la actividad seg&uacute;n m&oacute;dulo">
+            <input type="text" id="comentario" name="comentario" class="input-xlarge" placeholder="Escriba un comentario"><br>
+            <div id='ul_completar_comentario_tema' class='ac_results'></div>
           </div>
         </div>
         <div class="control-group">
@@ -92,28 +98,50 @@ if(!isset($_SESSION["LOGIN".LLAVE_SAIA_EDITOR]) || !isset($_SESSION["EMAIL".LLAV
 <script src="src/ext-emmet.js"></script> 
 <script type="text/javascript">
 	var editor = ace.edit("editor");
-  $("#guardar_cerrar").click(function(){
-    saveFile('gyc');
-  });
-  $("#guardar").click(function(){
-    if(!$(this).hasClass("disabled"))
-      saveFile('');
-  });
-  $("#cerrar").click(function(){
-    if($("#modificado").val()==="false"){
-        parent.cerrar_tab_editor("<?php echo($_REQUEST['numero']);?>",1,"success");
-    }
-    else{
-        //1 para que saque la alerta del archivo que cerro de lo contrario muestra el mensaje de guardado
-       parent.cerrar_tab_editor("<?php echo($_REQUEST['numero']);?>",1);
-    }
-  });
-  $("#editor").height($(document).height()-120);
-	$("#modificado").val('false'); //inicialmente en true mientras carga el archivo
+    $("#guardar_cerrar").click(function(){
+        saveFile('gyc');
+    });
+    $("#guardar").click(function(){
+        if(!$(this).hasClass("disabled"))
+            saveFile('');
+    });
+    $("#cerrar").click(function(){
+        if($("#modificado").val()==="false"){
+            parent.cerrar_tab_editor("<?php echo($_REQUEST['numero']);?>",1,"success");
+        }
+        else{
+            //1 para que saque la alerta del archivo que cerro de lo contrario muestra el mensaje de guardado
+           parent.cerrar_tab_editor("<?php echo($_REQUEST['numero']);?>",1);
+        }
+    });
+    $("#editor").height($(document).height()-120);
+    $("#modificado").val('false'); //inicialmente en true mientras carga el archivo
 	$("#icono_modificado").html('<i class="icon-thumbs-up"></i>');
 	parent.tab_commit_completo(<?php echo($_REQUEST['numero']);?>);
 	$("#icono_commit").html('<i class="icon-globe"></i>');
 	$("#icono_wrap").html('<i class="icon-resize-small"></i>');
+	var delay = (function(){
+		var timer = 0;
+		return function(callback, ms){
+			clearTimeout (timer);
+			timer = setTimeout(callback, ms);
+		};
+	})();
+	
+	$("#comentario_tema").attr("autocomplete","off");
+	$("#comentario_tema").keyup(function() {
+		var x_valor=$(this).val();
+		delay(function(){
+  		$("#ul_completar_comentario_tema").load( "cargar_datos_temas.php", { valor: x_valor, campo: 'comentario_tema'});
+  	},300);
+	});
+	function cargar_datos_comentario_tema(id,descripcion){
+		$("#ul_completar_comentario_tema").empty();
+		$("#comentario_tema").val(descripcion);
+	}
+	function eliminar_comentario_tema(id){
+		$("#fila_"+id).remove();
+	}
   	editor.setTheme("ace/theme/twilight");
   	editor.session.setMode("ace/mode/php"); 
   	var langTools =ace.require("ace/ext/language_tools");
@@ -137,7 +165,6 @@ if(!isset($_SESSION["LOGIN".LLAVE_SAIA_EDITOR]) || !isset($_SESSION["EMAIL".LLAV
                         callback(null, wordList.filter(function(item){
                             return(item.text.indexOf(prefix)!==-1);
                         }).map(function(item) {
-                            console.log(item.text);
                             return {name: item.snippet, value: item.text, score: item.snippet, meta: item.type+" PHP"}
                         }));
                         
@@ -176,7 +203,6 @@ if(!isset($_SESSION["LOGIN".LLAVE_SAIA_EDITOR]) || !isset($_SESSION["EMAIL".LLAV
         exec: function(editor) {
             parent.toggle=!parent.toggle;
             top.$("#panel_izquierdo").toggle();
-            console.log(parent.toggle);
             if(parent.toggle){
                 top.$("#panel_derecho").removeClass("span9");
                 top.$("#panel_derecho").addClass("span11");
@@ -247,20 +273,24 @@ if(!isset($_SESSION["LOGIN".LLAVE_SAIA_EDITOR]) || !isset($_SESSION["EMAIL".LLAV
         if (m) {
             snippetManager.files.php = m;
             m.snippets = snippetManager.parseSnippetFile(m.snippetText);
-            m.snippets.push({
-        	    content: "$${1:variable}=busca_filtro_tabla(${2:''},${3:''},${4:''},${5:''},${6:conn});",
-        	    name: "busca_filtro_tabla",
-        	    tabTrigger: "saia_bft"
-        	  });
-            m.snippets.push({
-        	    content: "$${1:max_salida} = 6; $${1:ruta_db_superior} = $${1:ruta} = ''; while ($${1:max_salida} > 0) {if (is_file($${1:ruta} . 'db.php')) {$${1:ruta_db_superior} = $${1:ruta};}$${1:ruta}.='../';$${1:max_salida}--;}\n\ninclude_once($${1:ruta_db_superior} . 'db.php');",
-        	    name: "ruta_superior",
-        	    tabTrigger: "saia_ruta"
-        	  });
-            snippetManager.register(m.snippets, m.scope);
-        }
+            var texto_snippets='';
+            $.ajax({
+              type:'POST',
+              url: '<?php echo($ruta_db_superior)?>editor_codigo/src/snippets/saia.js', 
+              dataType:"json", 
+              success: function(datos) { 
+                if(datos.length){ 
+                    for(i=0;i<datos.length;i++){
+                        m.snippets.push(datos[i]);    
+                    }
+                    snippetManager.register(m.snippets, m.scope);
+                } else {
+                    notificacion_saia("Sin respuesta","error","",3000);
+                }
+              }
+            });
+        } 
     });
-	
 	function saveFile() {
 	    alert('Capturado evento Ctrl-S');
 	}
@@ -270,10 +300,14 @@ if(!isset($_SESSION["LOGIN".LLAVE_SAIA_EDITOR]) || !isset($_SESSION["EMAIL".LLAV
     var ruta_archivo = $('#archivo_actual').val();
     var rutaTemporal = $('#archivo_temporal').val();
 
-    var comentario = $("#comentario").val()+" "+$("#comentario_extendido").val();
+    var comentario = "";
+    if($("#comentario_tema").val() && ($("#comentario").val()||$("#comentario_extendido").val())){
+        comentario="["+$("#comentario_tema").val()+"]["+parent.autor+"]"+$("#comentario").val()+" "+$("#comentario_extendido").val();
+        $("#comentario_extendido").val(comentario);
+    }    
     //save_type=='gyc' es guardar y cerrar
-    if(comentario===" " && save_type==='gyc'){
-        notificacion_saia("Debe escribir un comentario para el commit","error","",5000);
+    if(comentario==="" && save_type==='gyc'){
+        notificacion_saia("Debe escribir un tema y un comentario para el commit","error","",5000);
         return false;
     }
     var data = {'ruta_archivo' : ruta_archivo, "rutaTemporal" : rutaTemporal, "comentario" : comentario,  "contenido" : contenido, "gitInfo" : gitInfo, "saveType" : save_type}; 

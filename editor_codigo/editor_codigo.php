@@ -8,11 +8,13 @@ while ( $max_salida > 0 ) {
     $ruta .= "../";
     $max_salida --;
 }
+if(!isset($_SESSION["LOGIN".LLAVE_SAIA_EDITOR])){
+    session_start();
+}
 include_once ($ruta_db_superior . "db.php");
 include_once ($ruta_db_superior . "librerias_saia.php");
 include_once ($ruta_db_superior . "editor_codigo/GitApi/Git0K.php");
 //ini_set("display_errors",true);
-session_start();
 echo(estilo_bootstrap ());
 echo(librerias_jquery("1.7"));
 echo(librerias_bootstrap());
@@ -82,7 +84,7 @@ body.loading .modalload {
 .div_opciones {
     overflow:hidden;
     position:relative;
-    margin:0 auto;
+    margin:0 10;
     /*padding:5px;
     padding-top:22px;*/
 }
@@ -230,11 +232,10 @@ input[type=text] {
   </div>
 </div>
 <script type="text/javascript">
-//alert("1");
 var alto=($(document).height()-8); 
 var alto_menu=30;
 var abiertos=Array();
-
+var autor='<?php echo($_SESSION["LOGIN".LLAVE_SAIA_EDITOR]);?>';
 var gitInfo;
 var archivosMergeSeleccionados;
 
@@ -245,6 +246,7 @@ $(document).ready(function(){
   $("#izquierdo_saia").height(alto-alto_menu-80);
   $("#arbol_archivos").height(alto-alto_menu-80);
   $("#panel_editor").height(alto-alto_menu-80);
+  $("#div_buscar").height(alto-alto_menu-80);
   $("#editor").height(alto-alto_menu-32);
   $(".tab_editor").live("click",function(){
     var numero=$(this).attr("numero");
@@ -329,7 +331,8 @@ $(document).ready(function(){
     });
   });
   $("#btn_buscar_infecciones").click(function(){
-    $("#cargando_resultado_busqueda").html("cargando...");
+    iniciar_cargando(); 
+    $("#resultados_busqueda").html("");
     var buscar_contenido=0;
     var palabra=$("#buscar_infecciones").val();
     var palabra_reemplazar='';
@@ -348,31 +351,41 @@ $(document).ready(function(){
       palabra_reemplazar=$("#buscar_infecciones_reemplazo").val();
       buscar_archivo=0;
     }
-    var datos_post = "librerias=pantallas/lib/librerias_archivo.php&funcion=buscar_archivos&parametros="+dir+";"+palabra+";"+buscar_contenido+";"+buscar_archivo+";"+reemplazar+";"+palabra_reemplazar;
+    var datos_post = "ejecutar_accion_saia=1&funcion=buscar_archivos&parametros="+dir+";"+palabra+";"+buscar_contenido+";"+buscar_archivo+";"+reemplazar+";"+palabra_reemplazar;
     $.ajax({
       type:'POST',
-      url: '<?php echo($ruta_db_superior);?>pantallas/lib/llamado_ajax.php', 
+      url: '<?php echo($ruta_db_superior);?>pantallas/lib/librerias_archivo.php', 
       data: datos_post,
+      async:true,
       success: function(datos) {
         if(datos){
           var objeto=jQuery.parseJSON(datos);
           $("#resultados_busqueda").html("");
           $.each(objeto,function(i,item){
-            $("#resultados_busqueda").append('<div class="well nodo_archivo" nodoid="'+item.nodeid+'" nombre_archivo="'+item.nombre_archivo+'" extension="'+item.extension+'" class="enlace_resultado_buscar_infeccion">'+item.nombre_archivo+"</div>");
+            $("#resultados_busqueda").append('<div class="well nodo_archivo enlace_resultado_buscar_infeccion" style="overflow:hidden" nodoid="'+item.nombre_archivo+'" nombre_archivo="'+item.etiqueta+'" extension="'+item.extension+'">'+item.nombre_archivo+"</div>");
           });
         }else {
           notificacion_saia("Sin respuesta","error","",3000);
         }
+        fin_cargando(); 
       },
       error:function(){
         alert("ERROR");
       }
     });
+  });  
   $(".enlace_resultado_buscar_infeccion").live("click",function(){
-    adicionar_tab($(this).attr("nodoid"),$(this).attr("nombre_archivo"),$(this).attr("nodoid"));
-  });  
-  $("#cargando_resultado_busqueda").html("");
-  });  
+    $(this).addClass("alert alert-info");
+    var nodeId=$(this).attr("nodoid");
+    if($.inArray(nodeId,abiertos)===-1){
+        adicionar_tab($(this).attr("nodoid"),$(this).attr("extension"),$(this).attr("nombre_archivo"),$(this).attr("nodoid"));
+        abiertos.push(nodeId);
+    }
+    else{
+        notificacion_saia("Archivo "+$(this).attr("nombre_archivo")+" ya se encuentra abierto","information","topRight",3000); 
+        abrir_tab_editor(nodeId);
+    }
+  }); 
   $(".check_op").click(function(){
    if($("#op_reemplazar_buscar_infecciones:checked").val()==='reemplazar'){
     $("#div_reemplazo").show(); 
