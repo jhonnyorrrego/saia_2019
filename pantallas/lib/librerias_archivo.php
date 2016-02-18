@@ -77,4 +77,12 @@ function crear_archivo_carpeta($nombre,$ruta,$extension,$tipo){
     }
     return($resultado);
 }
+if(@$_REQUEST["ejecutar_accion_saia"]){
+    if(@$_REQUEST["funcion"]){
+        $retorno=call_user_func_array ( $_REQUEST["funcion"], explode(";",@$_REQUEST["parametros"]));
+    }
+    if($retorno){
+        echo json_encode($retorno);
+    }
+}
 ?>
