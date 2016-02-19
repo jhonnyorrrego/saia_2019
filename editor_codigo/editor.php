@@ -165,7 +165,7 @@ if(!isset($_SESSION["LOGIN".LLAVE_SAIA_EDITOR]) || !isset($_SESSION["EMAIL".LLAV
                         callback(null, wordList.filter(function(item){
                             return(item.text.indexOf(prefix)!==-1);
                         }).map(function(item) {
-                            return {name: item.snippet, value: item.text, score: item.snippet, meta: item.type+" PHP"}
+                            return {name: item.text, value: item.snippet, score: item.snippet, meta: item.type+" PHP"}
                         }));
                         
                     }
@@ -197,13 +197,10 @@ if(!isset($_SESSION["LOGIN".LLAVE_SAIA_EDITOR]) || !isset($_SESSION["EMAIL".LLAV
         },
         readOnly: true
     });
-    editor.commands.addCommand({
+    /*editor.commands.addCommand({
         name: 'find_help',
         bindKey: {win: 'Ctrl-Shift-A', mac: 'Command-Shift-A'},
         exec: function(editor) {
-            /*if(!permite_consulta){
-                return;
-            }*/
             var cad_help_php=editor.getSession().doc.getTextRange(editor.selection.getRange());
             if(cad_help_php){
                 cad_help_php.replace("_","-");
@@ -222,7 +219,7 @@ if(!isset($_SESSION["LOGIN".LLAVE_SAIA_EDITOR]) || !isset($_SESSION["EMAIL".LLAV
             }    
         },
         readOnly: true
-    });
+    });*/
     editor.commands.addCommand({
         name: "Toggle Fullscreen",
         bindKey: {win: 'Ctrl-K', mac: 'Command-K'},
