@@ -297,7 +297,7 @@ if(!isset($_SESSION["LOGIN".LLAVE_SAIA_EDITOR]) || !isset($_SESSION["EMAIL".LLAV
                   console.log(datos2);
                 if(datos2.length){ 
                     for(i=0;i<datos2.length;i++){
-                        m.snippets.push(datos2[i][snippet]);    
+                        m.snippets.push(datos2[i]["snippet"]);    
                     }
                     snippetManager.register(m.snippets, m.scope);
                 } else {
