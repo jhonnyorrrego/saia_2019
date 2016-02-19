@@ -16,7 +16,7 @@ while (false !== ($obj = readdir($dh))) {
   $extension=substr($obj, (strrpos($obj,".")+1));
   $nombre_archivo=str_replace("../", "",$dir.'/'.$obj );
   if(strpos($nombre_archivo,"/")===0){
-    $nombre_archivo=str_replace("/","",$nombre_archivo);
+    $nombre_archivo=str_replace("/","",$nombre_archivo,1);
   }
   if($buscar_archivo){
     if(strpos($obj,$palabra)!==false){
