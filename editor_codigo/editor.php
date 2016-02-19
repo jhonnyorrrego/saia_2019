@@ -165,7 +165,7 @@ if(!isset($_SESSION["LOGIN".LLAVE_SAIA_EDITOR]) || !isset($_SESSION["EMAIL".LLAV
                         callback(null, wordList.filter(function(item){
                             return(item.text.indexOf(prefix)!==-1);
                         }).map(function(item) {
-                            return {name: item.snippet, value: item.snippet, score: item.snippet, meta: item.type+" PHP"}
+                            return {name: item.snippet, value: item.text, score: item.snippet, meta: item.type+" PHP"}
                         }));
                         
                     }
@@ -282,6 +282,21 @@ if(!isset($_SESSION["LOGIN".LLAVE_SAIA_EDITOR]) || !isset($_SESSION["EMAIL".LLAV
                 if(datos.length){ 
                     for(i=0;i<datos.length;i++){
                         m.snippets.push(datos[i]);    
+                    }
+                    snippetManager.register(m.snippets, m.scope);
+                } else {
+                    notificacion_saia("Sin respuesta","error","",3000);
+                }
+              }
+            });
+            $.ajax({
+              type:'POST',
+              url: '<?php echo($ruta_db_superior)?>editor_codigo/php_function_list.json', 
+              dataType:"json", 
+              success: function(datos2) { 
+                if(datos2.length){ 
+                    for(i=0;i<datos2.length;i++){
+                        m.snippets.push(datos2[i][snippet]);    
                     }
                     snippetManager.register(m.snippets, m.scope);
                 } else {
