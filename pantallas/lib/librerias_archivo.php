@@ -13,11 +13,10 @@ while (false !== ($obj = readdir($dh))) {
     continue; 
   }   
   $contador_archivos++;
+  $extension=substr($obj, (strrpos($obj,".")+1));
   if($buscar_archivo){
     if(strpos($obj,$palabra)!==false){
-      $extension=substr($obj, (strpos($obj,".")+1));
-      
-      $resultado_buscar_archivo[$contador_archivos]=array("etiqueta"=>str_replace(substr($obj, strrpos($obj,".")),"",$obj),"nodeid"=>$dir.'/'.$obj,"nombre_archivo"=>str_replace("../", "",$dir.'/'.$obj ),"extension"=>$extension);
+      $resultado_buscar_archivo[$contador_archivos]=array("etiqueta"=>str_replace(".".$extension,"",$obj),"nodeid"=>$dir.'/'.$obj,"nombre_archivo"=>str_replace("../", "",$dir.'/'.$obj ),"extension"=>$extension);
     }
   }
   else if ($buscar_contenido && $obj<>"busca_infecciones.php" && filesize($dir.'/'.$obj) && $palabra){
