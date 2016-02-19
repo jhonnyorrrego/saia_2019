@@ -71,7 +71,7 @@ if(!isset($_SESSION["LOGIN".LLAVE_SAIA_EDITOR]) || !isset($_SESSION["EMAIL".LLAV
       </form>
     </div>
     <div class="span3" id="utilidades">
-      Utilidades
+      <div id='ayuda_editor'></div>
     </div>
   </div>
   <div class="row-fluid">
