@@ -14,10 +14,10 @@ while (false !== ($obj = readdir($dh))) {
   }   
   $contador_archivos++;
   $extension=substr($obj, (strrpos($obj,".")+1));
+  $nombre_archivo=str_replace("../", "",$dir.'/'.$obj );
   if(strpos($nombre_archivo,"/")===0){
     $nombre_archivo=str_replace("/","",$nombre_archivo);
   }
-  $nombre_archivo=str_replace("../", "",$dir.'/'.$obj );
   if($buscar_archivo){
     if(strpos($obj,$palabra)!==false){
       $resultado_buscar_archivo[$contador_archivos]=array("etiqueta"=>str_replace(".".$extension,"",$obj),"nodeid"=>$dir.'/'.$obj,"nombre_archivo"=>str_replace("../", "",$dir.'/'.$obj ),"extension"=>$extension);
