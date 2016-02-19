@@ -198,6 +198,14 @@ if(!isset($_SESSION["LOGIN".LLAVE_SAIA_EDITOR]) || !isset($_SESSION["EMAIL".LLAV
         readOnly: true
     });
     editor.commands.addCommand({
+        name: 'find_help',
+        bindKey: {win: 'Ctrl-Shift-A', mac: 'Command-Shift-A'},
+        exec: function(editor) {
+        alert(editor.getSession().doc.getTextRange(editor.selection.getRange()));
+        },
+        readOnly: true
+    });
+    editor.commands.addCommand({
         name: "Toggle Fullscreen",
         bindKey: {win: 'Ctrl-K', mac: 'Command-K'},
         exec: function(editor) {
