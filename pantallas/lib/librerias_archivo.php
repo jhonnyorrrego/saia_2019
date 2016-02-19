@@ -14,6 +14,7 @@ while (false !== ($obj = readdir($dh))) {
   }   
   $contador_archivos++;
   $extension=substr($obj, (strrpos($obj,".")+1));
+  $nombre_archivo=str_replace("../", "",$dir.'/'.$obj );
   if($buscar_archivo){
     if(strpos($obj,$palabra)!==false){
       $resultado_buscar_archivo[$contador_archivos]=array("etiqueta"=>str_replace(".".$extension,"",$obj),"nodeid"=>$dir.'/'.$obj,"nombre_archivo"=>str_replace("../", "",$dir.'/'.$obj ),"extension"=>$extension);
@@ -33,14 +34,14 @@ while (false !== ($obj = readdir($dh))) {
           array_push($resultado_buscar_archivo,$dir.'/'.$obj);
         }
       }
-      $resultado_buscar_archivo[$contador_archivos]=array("etiqueta"=>str_replace(".".$extension,"",$obj),"nodeid"=>$dir.'/'.$obj,"nombre_archivo"=>str_replace("../", "",$dir.'/'.$obj ),"extension"=>$extension);
+      print_r($nombre_archivo);
+      if(strpos($nombre_archivo,"/")===0){
+        $nombre_archivo=str_replace("/","",$nombre_archivo);
+      }
+      print_r($nombre_archivo);
+      $resultado_buscar_archivo[$contador_archivos]=array("etiqueta"=>str_replace(".".$extension,"",$obj),"nodeid"=>$dir.'/'.$obj,"nombre_archivo"=>$nombre_archivo,"extension"=>$extension);
     }
   }
-  print_r($nombre_archivo);
-  if(strpos($nombre_archivo,"/")===0){
-      $resultado_buscar_archivo[$contador_archivos]["nombre_archivo"]=str_replace("/","",$nombre_archivo);
-  }
-  print_r($nombre_archivo);
   buscar_archivos($dir.'/'.$obj,$palabra,$buscar_contenido,$buscar_archivo,$reemplazar,$palabra_reemplazar); 
 } 
 closedir($dh); 
