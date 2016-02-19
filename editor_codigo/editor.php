@@ -179,6 +179,7 @@ if(!isset($_SESSION["LOGIN".LLAVE_SAIA_EDITOR]) || !isset($_SESSION["EMAIL".LLAV
     }
     langTools.addCompleter(PHPCompleter);
     editor.$blockScrolling = Infinity;
+    var popup = editor.completer.popup;
     editor.commands.addCommand({
         name: 'save',
         bindKey: {win: 'Ctrl-S', mac: 'Command-S', sender: 'editor|cli'},
