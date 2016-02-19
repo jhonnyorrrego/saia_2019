@@ -177,6 +177,7 @@ if(!isset($_SESSION["LOGIN".LLAVE_SAIA_EDITOR]) || !isset($_SESSION["EMAIL".LLAV
             }
         }    
     }
+    console.log(PHPCompleter);
     langTools.addCompleter(PHPCompleter);
     editor.$blockScrolling = Infinity;
     //var popup = editor.completer.popup;
