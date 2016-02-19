@@ -45,7 +45,7 @@ define("DEBUGEAR_FLUJOS",0);
 //ini_set(magic_quotes_gpc,0);
 ini_set("memory_limit","400M");
 //ini_set('default_charset','utf8'); DESCOMENTAR CUANDO SE TENGAN PROBLEMA DE CARACTERES ESPECIALES
-ini_set('error_reporting', E_ALL & ~E_NOTICE & ~E_WARNING);  
+ini_set('error_reporting', E_ALL & ~E_NOTICE & ~E_WARNING & ~E_DEPRECATED);  
 ini_set("display_errors",true);
 ini_set("safe_mode",false);
 /**************Soluciona limite de texto a mostrar con BD SQL SERVER*************/
