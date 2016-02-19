@@ -149,6 +149,7 @@ if(!isset($_SESSION["LOGIN".LLAVE_SAIA_EDITOR]) || !isset($_SESSION["EMAIL".LLAV
   	var snippetManager = ace.require("ace/snippets").snippetManager;
     var config = ace.require("ace/config");
     var dom = ace.require("ace/lib/dom");
+    var permite_consulta=1;
     editor.setOptions({
         "enableBasicAutocompletion": true,
         "enableSnippets": true,
@@ -212,6 +213,7 @@ if(!isset($_SESSION["LOGIN".LLAVE_SAIA_EDITOR]) || !isset($_SESSION["EMAIL".LLAV
               }
               error:function(){
                 $("#ayuda_editor").html('<div class="alert alert-danger">No soportado</div>');  
+                permite_consulta=0;
               }
             });
             
