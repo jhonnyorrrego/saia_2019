@@ -165,6 +165,7 @@ if(!isset($_SESSION["LOGIN".LLAVE_SAIA_EDITOR]) || !isset($_SESSION["EMAIL".LLAV
                         callback(null, wordList.filter(function(item){
                             return(item.text.indexOf(prefix)!==-1);
                         }).map(function(item) {
+                            $("utilidades").html(item.text);
                             return {name: item.snippet, value: item.text, score: item.snippet, meta: item.type+" PHP"}
                         }));
                         
