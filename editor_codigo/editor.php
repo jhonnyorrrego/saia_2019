@@ -204,18 +204,22 @@ if(!isset($_SESSION["LOGIN".LLAVE_SAIA_EDITOR]) || !isset($_SESSION["EMAIL".LLAV
             /*if(!permite_consulta){
                 return;
             }*/
-            $.ajax({
-              type:'POST',
-              url: 'http://php.net/manual/es/function.'+editor.getSession().doc.getTextRange(editor.selection.getRange())+'.php', 
-              dataType:"json", 
-              success: function(datos) { 
-                $("#ayuda_editor").html(datos);
-              },
-              error:function(){
-                $("#ayuda_editor").html('<div class="alert alert-danger">No soportado</div>');  
-                permite_consulta=0;
-              }
-            });
+            var cad_help_php=editor.getSession().doc.getTextRange(editor.selection.getRange());
+            if(cad_help_php){
+                cad_help_php.replace("_","-");
+                $.ajax({
+                  type:'POST',
+                  url: 'http://php.net/manual/es/function.'+cad_help_php+'.php', 
+                  dataType:"json", 
+                  success: function(datos) { 
+                    $("#ayuda_editor").html(datos);
+                  },
+                  error:function(){
+                    $("#ayuda_editor").html('<div class="alert alert-danger">No soportado</div>');  
+                    permite_consulta=0;
+                  }
+                });
+            }    
         },
         readOnly: true
     });
