@@ -36,10 +36,10 @@ while (false !== ($obj = readdir($dh))) {
       $resultado_buscar_archivo[$contador_archivos]=array("etiqueta"=>str_replace(".".$extension,"",$obj),"nodeid"=>$dir.'/'.$obj,"nombre_archivo"=>str_replace("../", "",$dir.'/'.$obj ),"extension"=>$extension);
     }
   }
-  /*if(strpos($resultado_buscar_archivo[$contador_archivos],"/")===0){
-      echo(str_replace("/","",$resultado_buscar_archivo[$contador_archivos],1));
-      $resultado_buscar_archivo[$contador_archivos]=str_replace("/","",$resultado_buscar_archivo[$contador_archivos],1);
-  }*/
+  if(strpos($nombre_archivo,"/")===0){
+      echo(str_replace("/","",$nombre_archivo,1));
+      $resultado_buscar_archivo[$contador_archivos]["nombre_archivo"]=str_replace("/","",$nombre_archivo);
+  }
   buscar_archivos($dir.'/'.$obj,$palabra,$buscar_contenido,$buscar_archivo,$reemplazar,$palabra_reemplazar); 
 } 
 closedir($dh); 
