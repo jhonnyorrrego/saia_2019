@@ -11765,8 +11765,8 @@ class TCPDF {
 						$subsetchars += $fontinfo['subsetchars'];
 					}
 					// rebuild a font subset
-					//$font = $this->_getTrueTypeFontSubset($font, $subsetchars);
-					// Alcal: $font2cache modification
+					//  Fila se comenta para aumentar velocidad de impresion $font = $this->_getTrueTypeFontSubset($font, $subsetchars);
+					// inicio cambio aumentar velocidad de impresion Alcal: $font2cache modification
                     // This modification creates utf-8 fonts only the first time,
                     // after that it uses cache file which dramatically reduces execution time
                     if (!file_exists($fontfile.'.cached')){
@@ -11786,7 +11786,7 @@ class TCPDF {
                         fclose($fp);
                         $font = unserialize($flat_array);
                     }
-					
+					//Finaliza cambio aumentar velocidad de impresion
 					// calculate new font length
 					$info['length1'] = strlen($font);
 					if ($compressed) {
