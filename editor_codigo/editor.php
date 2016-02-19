@@ -289,21 +289,6 @@ if(!isset($_SESSION["LOGIN".LLAVE_SAIA_EDITOR]) || !isset($_SESSION["EMAIL".LLAV
                 }
               }
             });
-            $.ajax({
-              type:'POST',
-              url: '<?php echo($ruta_db_superior)?>editor_codigo/src/snippets/php.js', 
-              dataType:"json", 
-              success: function(datos) { 
-                if(datos.length){ 
-                    for(i=0;i<datos.length;i++){
-                        m.snippets.push(datos[i]);    
-                    }
-                    snippetManager.register(m.snippets, m.scope);
-                } else {
-                    notificacion_saia("Sin respuesta","error","",3000);
-                }
-              }
-            });
         } 
     });
 	function saveFile() {
