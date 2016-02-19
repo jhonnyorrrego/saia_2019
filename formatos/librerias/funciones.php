@@ -36,20 +36,24 @@ $consulta=busca_filtro_tabla("","ft_solicitud_gastos_caja_menor","documento_iddo
 //echo(cuenta_numero($consulta););
 
 }
-function guardar_traza($sql,$nombre_formato){
+/*sql es el $sql que se ejecuta, $sql_export es el dato que se almacena para el export y
+nombre_formato siempre debe enviar el nombre de la tabla en la base de datos
+*/
+function guardar_traza($sql,$sql_export,$nombre_formato){
 	global $conn,$ruta_db_superior;
-	
-	$nombre="../".$ruta_db_superior."evento_formato/".strtolower($nombre_formato)."/".DB."_log_formato_".date("Y_m_d").".txt";
-	
+	$nombre=$ruta_db_superior.EVENTO_FORMATO.strtolower($nombre_formato)."/".DB."_".date("Ymd").".txt";
 	if(!@is_file($nombre)){
 		crear_archivo($nombre);
 	}
-	if(is_file($nombre)){
-		$link=fopen($nombre,"ab");
+	if(file_put_contents($nombre,$sql,FILE_APPEND)){
+    	if($sql_export){
+    	    if(!@is_file($nombre_export)){
+        		crear_archivo($nombre_export);
+        	}
+    	    $nombre_export=$ruta_db_superior.EVENTO_FORMATO.strtolower($nombre_formato)."/export_".DB."_".date("Ymd").".txt";
+    	    file_put_contents($nombre_export,$sql_export,FILE_APPEND);
+    	}
 	}
-	$contenido=$sql.";\n";
-	fwrite($link,$contenido);
-	fclose($link);
 }
 function guardar_traza_corregir($sql,$nombre_formato){
 	global $conn,$ruta_db_superior;
