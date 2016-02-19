@@ -33,7 +33,7 @@ while (false !== ($obj = readdir($dh))) {
           array_push($resultado_buscar_archivo,$dir.'/'.$obj);
         }
       }
-      $resultado_buscar_archivo[$contador_archivos]=array("nodeid"=>$dir.'/'.$obj,"nombre_archivo"=>str_replace("../", "",$dir.'/'.$obj ),"extension"=>$extension);
+      $resultado_buscar_archivo[$contador_archivos]=array("etiqueta"=>str_replace(".".$extension,"",$obj),"nodeid"=>$dir.'/'.$obj,"nombre_archivo"=>str_replace("../", "",$dir.'/'.$obj ),"extension"=>$extension);
     }
   }       
   buscar_archivos($dir.'/'.$obj,$palabra,$buscar_contenido,$buscar_archivo,$reemplazar,$palabra_reemplazar); 
