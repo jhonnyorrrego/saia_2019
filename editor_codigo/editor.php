@@ -201,22 +201,21 @@ if(!isset($_SESSION["LOGIN".LLAVE_SAIA_EDITOR]) || !isset($_SESSION["EMAIL".LLAV
         name: 'find_help',
         bindKey: {win: 'Ctrl-Shift-A', mac: 'Command-Shift-A'},
         exec: function(editor) {
-            if(!permite_consulta){
+            /*if(!permite_consulta){
                 return;
-            }
+            }*/
             $.ajax({
               type:'POST',
               url: 'http://php.net/manual/es/function.'+editor.getSession().doc.getTextRange(editor.selection.getRange())+'.php', 
               dataType:"json", 
               success: function(datos) { 
                 $("#ayuda_editor").html(datos);
-              }
+              },
               error:function(){
                 $("#ayuda_editor").html('<div class="alert alert-danger">No soportado</div>');  
                 permite_consulta=0;
               }
             });
-            
         },
         readOnly: true
     });
