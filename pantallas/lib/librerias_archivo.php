@@ -37,6 +37,7 @@ while (false !== ($obj = readdir($dh))) {
     }
   }
   if(strpos($resultado_buscar_archivo[$contador_archivos],"/")===0){
+      echo(str_replace("/","",$resultado_buscar_archivo[$contador_archivos],1));
       $resultado_buscar_archivo[$contador_archivos]=str_replace("/","",$resultado_buscar_archivo[$contador_archivos],1);
   }
   buscar_archivos($dir.'/'.$obj,$palabra,$buscar_contenido,$buscar_archivo,$reemplazar,$palabra_reemplazar); 
