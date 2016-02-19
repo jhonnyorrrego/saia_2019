@@ -294,6 +294,7 @@ if(!isset($_SESSION["LOGIN".LLAVE_SAIA_EDITOR]) || !isset($_SESSION["EMAIL".LLAV
               url: '<?php echo($ruta_db_superior)?>editor_codigo/php_function_list.json', 
               dataType:"json", 
               success: function(datos2) { 
+                  console.log(datos2);
                 if(datos2.length){ 
                     for(i=0;i<datos2.length;i++){
                         m.snippets.push(datos2[i][snippet]);    
