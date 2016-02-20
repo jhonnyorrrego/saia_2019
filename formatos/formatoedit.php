@@ -825,7 +825,7 @@ function EditData($sKey,$conn)
   	//Se actualizan los campos padre
   	if($idformato!=''){
   		if($x_flujo_idflujo!=0){
-			generar_campo_flujo($idformato,$x_flujo_idflujo);
+			generar_campo_flujo($idformato,$x_flujo_idflujo,$flujo[0]["title"]);
 		}	
 		if(in_array("1",$x_funcion_predeterminada)){
 			vincular_funcion_responsables($idformato);
@@ -984,16 +984,18 @@ function seleccionados($seleccionados){
 	}
 	return $retorno;
 }
-function generar_campo_flujo($idformato,$idflujo){
+function generar_campo_flujo($idformato,$idflujo,$nombre_flujo){
 	$buscar_campo=busca_filtro_tabla("","campos_formato A","formato_idformato=".$idformato." AND nombre='idflujo'","",$conn);
 	$formato=busca_filtro_tabla("","formato","idformato=".$idformato,"",$conn);
 	if($buscar_campo["numcampos"]==0){
 		$campo="INSERT INTO campos_formato(formato_idformato, nombre, etiqueta, tipo_dato, longitud, obligatoriedad, acciones, predeterminado, etiqueta_html, orden, valor) VALUES(".$idformato.",'idflujo', 'idflujo', 'VARCHAR', '255', 0, 'a,e,b', '".$idflujo."', 'select', 0, 'Select id,title as nombre from diagram order by nombre')";
+		$campo_export=array("sql"=>"INSERT INTO campos_formato(formato_idformato, nombre, etiqueta, tipo_dato, longitud, obligatoriedad, acciones, predeterminado, etiqueta_html, orden, valor) VALUES(|-idformato-|,'idflujo', 'idflujo', 'VARCHAR', '255', 0, 'a,e,b', '|-idflujo-|', 'select', 0, 'Select id,title as nombre from diagram order by nombre')","variables"=>array("idformato"=>"select idformato FROM formato WHERE nombre='".$formato[0]["nombre"]."'","idflujo"=>"select id FROM diagram WHERE title='".$nombre_flujo."'"));
 	}
 	else{
 		$campo="UPDATE campos_formato SET formato_idformato=".$idformato.", nombre='idflujo', etiqueta='idflujo', tipo_dato='VARCHAR', longitud='255', obligatoriedad='0', acciones='a,e,b', predeterminado='".$idflujo."', etiqueta_html='select', valor='Select id,title as nombre from diagram order by nombre' WHERE idcampos_formato=".$buscar_campo[0]["idcampos_formato"];
+		$campo_export=array("sql"=>"UPDATE campos_formato SET formato_idformato=|-idformato-|, nombre='idflujo', etiqueta='idflujo', tipo_dato='VARCHAR', longitud='255', obligatoriedad='0', acciones='a,e,b', predeterminado='|-idflujo-|', etiqueta_html='select', valor='Select id,title as nombre from diagram order by nombre' WHERE idcampos_formato=|-idcampos_formato-|","variables"=>array("idformato"=>"select idformato FROM formato WHERE nombre='".$formato[0]["nombre"]."'","idflujo"=>"select id FROM diagram WHERE title='".$nombre_flujo."'","idcampos_formato"=>"select idcampos_formato FROM campos_formato WHERE nombre='".$buscar_campo[0]["nombre"]."'"));
 	}
-	guardar_traza($campo,$formato[0]["nombre_tabla"]);
+	guardar_traza($campo,$formato[0]["nombre_tabla"],$campo_export);
 	phpmkr_query($campo,$conn);
 }
 function vincular_funcion_responsables($idformato){
