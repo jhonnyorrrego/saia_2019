@@ -328,7 +328,6 @@ if(!isset($_SESSION["LOGIN".LLAVE_SAIA_EDITOR]) || !isset($_SESSION["EMAIL".LLAV
     var comentario = "";
     if($("#comentario_tema").val() && ($("#comentario").val()||$("#comentario_extendido").val())){
         comentario="["+$("#comentario_tema").val()+"]["+parent.autor+"]"+$("#comentario").val()+" "+$("#comentario_extendido").val();
-        $("#comentario_extendido").val(comentario);
     }    
     //save_type=='gyc' es guardar y cerrar
     if(comentario==="" && save_type==='gyc'){
