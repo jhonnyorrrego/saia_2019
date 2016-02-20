@@ -876,7 +876,7 @@ function EditData($sKey,$conn)
       if(!$campo_padre && $fieldList["cod_padre"] && $cod_padre["numcampos"] && $fieldList["cod_padre"]){
         $strsql="INSERT INTO campos_formato (formato_idformato, nombre, etiqueta, tipo_dato, longitud, obligatoriedad, valor, acciones, ayuda, banderas, etiqueta_html) VALUES (".$idformato.",'".$cod_padre[0]["nombre_tabla"]."', ".$fieldList["nombre"].", 'INT', 11, 1,".$fieldList["cod_padre"].", 'a',".$fieldList["etiqueta"].", 'fk', 'detalle')";
         $strsql_export=array("sql"=>"INSERT INTO campos_formato (formato_idformato, nombre, etiqueta, tipo_dato, longitud, obligatoriedad, valor, acciones, ayuda, banderas, etiqueta_html) VALUES (|-idformato-|,'".$cod_padre[0]["nombre_tabla"]."', ".$fieldList["nombre"].", 'INT', 11, 1,|-cod_padre-|, 'a',".$fieldList["etiqueta"].", 'fk', 'detalle')","variables"=>array("idformato"=>"select idformato FROM formato WHERE nombre='".$x_nombre."'","cod_padre"=>"select idformato FROM formato WHERE nombre LIKE '".$cod_padre[0]["nombre"]."'"));
-		  guardar_traza($strsql,$x_tabla);
+		  guardar_traza($strsql,$x_tabla,$strsql_export);
 	      phpmkr_query($strsql, $conn) or die("Falla al Ejecutar la busqueda " . phpmkr_error() . ' SQL:' . $strsql);
       }
     }
