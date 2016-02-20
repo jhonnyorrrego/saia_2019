@@ -693,16 +693,21 @@ function EditData($sKey,$conn)
      if($_REQUEST["reiniciar_contador"]&&$_REQUEST["reiniciar_contador"])
        $reinicio=1;
 	 $sql="update contador set reiniciar_cambio_anio=$reinicio where idcontador=".$fieldList["contador_idcontador"];
-	 guardar_traza($sql,$x_tabla);
+	 $nombre_contador=busca_filtro_tabla("","contador","idcontador=".$fieldList["contador_idcontador"],"",$conn);
+	 $sql_export=array("sql"=>"update contador set reiniciar_cambio_anio=$reinicio where idcontador=|-idcontador-|","variables"=>array("idcontador"=>"select idcontador from contador WHERE nombre LIKE '".$nombre_contador[0]["nombre"]."'"));
+	 guardar_traza($sql,$x_tabla,$sql_export);
      phpmkr_query($sql);  
     }
-  	if($x_serie_idserie=="")//crear la serie con el nombre del formato
-	 {$sql="insert into serie(nombre,categoria) values('".$x_etiqueta."',3)";
-	  guardar_traza($sql,$x_tabla);
+    //crear la serie con el nombre del formato
+  	if($x_serie_idserie==""){
+  	  $sql="insert into serie(nombre,categoria) values('".$x_etiqueta."',3)";
+  	  $sql_export=array("sql"=>$sql);
+	  guardar_traza($sql,$x_tabla,$sql_export);
 	  phpmkr_query($sql);
 	  $fieldList["serie_idserie"]=phpmkr_insert_id();
 	  $sql="update campos_formato set predeterminado=".$fieldList["serie_idserie"]."  where lower(nombre)='serie_idserie' and formato_idformato=".$sKeyWrk;
-	  guardar_traza($sql,$x_tabla);
+	  $sql_export=array("sql"=>"update campos_formato set predeterminado=|-idserie-|  where lower(nombre)='serie_idserie' and formato_idformato=|-idformato-|","variables"=>array("idserie"=>"select idserie FROM serie WHERE nombre='".$x_etiqueta."' AND categoria=3","idformato"=>"select idformato FROM formato WHERE nombre='".$x_nombre."'"));
+	  guardar_traza($sql,$x_tabla,$sql_export);
 	  phpmkr_query($sql);
    }
 	else{  //otra serie elegida o sin serie
@@ -770,22 +775,52 @@ function EditData($sKey,$conn)
     if(intval($x_pertenece_nucleo)){
       $data='*';
     }
-    if(file_put_contents($x_nombre."/.gitignore", $data)){
+    if(file_put_contents($x_nombre."/.gitignore", $data)===false){
       alerta("No se crea el archivo .gitignore para versionamiento");  
     }
-		$sSql = "UPDATE formato SET ";
-		foreach ($fieldList as $key=>$temp) {
-			$sSql .= "$key = $temp, ";
-		}
-		if (substr($sSql, -2) == ", ") {
-			$sSql = substr($sSql, 0, strlen($sSql)-2);
-		}
-		$sSql .= " WHERE idformato =". $sKeyWrk;
-		
-		guardar_traza($sSql,$x_tabla);
-		
-		phpmkr_query($sSql,$conn) or die("Failed to execute query" . phpmkr_error() . ' SQL:' . $sSql);
-		$EditData = true; // Update Successful
+	$sSql = "UPDATE formato SET ";
+	foreach ($fieldList as $key=>$temp) {
+		$sSql .= "$key = $temp, ";
+	}
+	if (substr($sSql, -2) == ", ") {
+		$sSql = substr($sSql, 0, strlen($sSql)-2);
+	}
+	$sSql .= " WHERE idformato =". $sKeyWrk;
+	/* --------------------------------------*/
+	
+	$sSql_export = "UPDATE formato SET ";
+	$arreglo_variables=array("cod_padre","serie_idserie","fk_categoria_formato","flujo_idflujo");
+	foreach ($fieldList as $key=>$temp){
+	    if(in_array($key,$arreglo_variables)){
+	        $sSql_export.= "$key=|-$key-|, ";
+	    }
+	    else{
+		    $sSql_export .= "$key = $temp, ";
+	    }
+	}
+	if (substr($sSql_export, -2) == ", ") {
+		$sSql_export = substr($sSql_export, 0, strlen($sSql_export)-2);
+	}
+	$sSql_export .= " WHERE idformato =|-idformato-|";
+	$cod_padre=busca_filtro_tabla("","formato","idformato=".$x_cod_padre,"",$conn);
+	$cat_formatos=explode(",",$x_fk_categoria_formato);
+	$nombre_cat=array();
+	$sql_cat='';
+	foreach($cat_formatos AS $key_cat=>$val_cat){
+	    $fk_categoria_formato=busca_filtro_tabla("","categoria_formato","idcategoria_formato=".$val_cat,"",$conn);
+	    if($fk_categoria_formato["numcampos"]){
+	        array_push($nombre_cat," nombre='".$fk_categoria_formato[0]["nombre"]."' ");
+	    }
+	}
+	if(count($nombre_cat)){
+	    $sql_cat="select idcategoria_formato FROM categoria_formato WHERE (".implode(" OR ",$nombre_cat).")";
+	}
+	$flujo=busca_filtro_tabla("","diagram","id=".$x_flujo_idflujo,"",$conn);
+	$sql_export=array("sql"=>$sSql_export,"variables"=>array("cod_padre"=>"select idformato FROM formato WHERE nombre LIKE '".$cod_padre[0]["nombre"]."'","serie_idserie"=>"select idserie FROM serie WHERE nombre='".$x_etiqueta."' AND categoria=3","fk_categoria_formato"=>$sql_cat,"flujo_idflujo"=>"select id from diagram WHERE title LIKE '".$flujo[0]["title"]."'","idformato"=>"select idformato FROM formato WHERE nombre='".$x_nombre."'"));
+	guardar_traza($sSql,$x_tabla,$sql_export);
+	phpmkr_query($sSql,$conn) or die("Failed to execute query" . phpmkr_error() . ' SQL:' . $sSql);
+	$EditData = true; // Update Successful
+	
   	$idformato=$sKeyWrk;
   	//Se actualizan los campos padre
   	if($idformato!=''){
@@ -826,14 +861,16 @@ function EditData($sKey,$conn)
         }
         if($formato_padre["numcampos"] && $campos_formato[$i]["nombre"]==$formato_padre[0]["nombre_tabla"]){
           $sql="UPDATE campos_formato SET valor=".$fieldList["cod_padre"]." WHERE idcampos_formato=".$campos_formato[$i]["idcampos_formato"];
-			guardar_traza($sql,$x_tabla);
+          $sql_export=array("sql"=>"UPDATE campos_formato SET valor=|-cod_padre-| WHERE idcampos_formato=|-idcampos_formato-|","variables"=>array("cod_padre"=>"select idformato FROM formato WHERE nombre LIKE '".$cod_padre[0]["nombre"]."'","idcampos_formato"=>"select idcampos_formato FROM campos_formato WHERE nombre LIKE '".$campos_formato[$i]["nombre"]."'"));
+		  guardar_traza($sql,$x_tabla,$sql_export);
           phpmkr_query($sql,$conn) or die("Failed to execute query" . phpmkr_error() . ' SQL:' . $sSql);
           $campo_padre=1;
         }
       }
       if(!$campo_serie){
         $strsql="INSERT INTO campos_formato (formato_idformato, nombre, etiqueta, tipo_dato, longitud, obligatoriedad, valor, acciones, ayuda, banderas, etiqueta_html) VALUES (".$idformato.",'serie_idserie', 'SERIE DOCUMENTAL', 'INT', 11, 1,".$fieldList["serie_idserie"].", 'a',".$fieldList["etiqueta"].", 'fk', 'hidden')";
-		  guardar_traza($strsql,$x_tabla);
+        ///////////PENDIENTE POR PASAR SQL_EXPORT TRAZA
+		guardar_traza($strsql,$x_tabla);
       	phpmkr_query($strsql, $conn) or die("Falla al Ejecutar la busqueda " . phpmkr_error() . ' SQL:' . $strsql);
       }
       if(!$campo_padre && $fieldList["cod_padre"] && $formato_padre["numcampos"] && $fieldList["cod_padre"]){
