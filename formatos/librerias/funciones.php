@@ -36,8 +36,9 @@ $consulta=busca_filtro_tabla("","ft_solicitud_gastos_caja_menor","documento_iddo
 //echo(cuenta_numero($consulta););
 
 }
-/*sql es el $sql que se ejecuta, $sql_export es el dato que se almacena para el export y
-nombre_formato siempre debe enviar el nombre de la tabla en la base de datos
+/*sql es el $sql que se ejecuta, $sql_export es el dato que se almacena para el export representado por un json con 
+el sql y las variables estos 2 campos del json deben tener el sql a ejecutar y en variables cada una de las variables 
+que se relacionan en el sql y nombre_formato siempre debe enviar el nombre de la tabla en la base de datos
 */
 function guardar_traza($sql,$sql_export,$nombre_formato){
 	global $conn,$ruta_db_superior;
@@ -49,9 +50,15 @@ function guardar_traza($sql,$sql_export,$nombre_formato){
     	if($sql_export){
     	    if(!@is_file($nombre_export)){
         		crear_archivo($nombre_export);
+    	        $arreglo_export=array();
         	}
+        	else{
+        	    $json_export=file_get_contents($nombre_export);
+        	    $arreglo_export=json_decode($json_export);
+        	}
+        	array_push($arreglo_export,$sql_export);
     	    $nombre_export=$ruta_db_superior.EVENTO_FORMATO.strtolower($nombre_formato)."/export_".DB."_".date("Ymd").".txt";
-    	    file_put_contents($nombre_export,$sql_export,FILE_APPEND);
+    	    file_put_contents($nombre_export,json_encode($arreglo_export),FILE_APPEND);
     	}
 	}
 }
