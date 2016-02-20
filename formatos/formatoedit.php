@@ -1016,6 +1016,7 @@ function vincular_funcion_responsables($idformato){
 }
 function vincular_funcion_digitalizacion($idformato,$x_banderas){
 	global $conn;
+	//PENDIENTE VINCULAR TRAZAS
 	//--Vinculando funcion al adicionar de digitalizar
 	$buscar_funcion=busca_filtro_tabla("","funciones_formato A","nombre_funcion='digitalizar_formato'","",$conn);
 	$formato=busca_filtro_tabla("","formato","idformato=".$idformato,"",$conn);
