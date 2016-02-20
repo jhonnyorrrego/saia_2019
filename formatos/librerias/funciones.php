@@ -40,7 +40,7 @@ $consulta=busca_filtro_tabla("","ft_solicitud_gastos_caja_menor","documento_iddo
 el sql y las variables estos 2 campos del json deben tener el sql a ejecutar y en variables cada una de las variables 
 que se relacionan en el sql y nombre_formato siempre debe enviar el nombre de la tabla en la base de datos
 */
-function guardar_traza($sql,$sql_export,$nombre_formato){
+function guardar_traza($sql,$nombre_formato,$sql_export){
 	global $conn,$ruta_db_superior;
 	$nombre=$ruta_db_superior.EVENTO_FORMATO.strtolower($nombre_formato)."/".DB."_".date("Ymd").".txt";
 	if(!@is_file($nombre)){
