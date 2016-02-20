@@ -685,7 +685,7 @@ function EditData($sKey,$conn)
 	   $fieldList["banderas"] = "'".implode(",",$x_banderas)."'";
 	  $fieldList["tiempo_autoguardado"] = $x_autoguardado; 
 		$fieldList["etiqueta"] = htmlentities($theValue);
-		$theValue = ($x_contador_idcontador != "") ? intval($x_contador_idcontador) : crear_contador($x_nombre);
+		$theValue = ($x_contador_idcontador != "") ? intval($x_contador_idcontador) : crear_contador($x_nombre,$x_tabla);
 		$fieldList["contador_idcontador"] = $theValue;
 		
     if($fieldList["contador_idcontador"])
@@ -884,12 +884,13 @@ function EditData($sKey,$conn)
 	return $EditData;
 }
 
-function crear_contador($contador){
+function crear_contador($contador,$x_tabla){
 global $conn;
-  $cont=busca_filtro_tabla("*","contador","nombre LIKE '".$contador."","",$conn);
+  $cont=busca_filtro_tabla("","contador","nombre LIKE '".$contador."","",$conn);
   if(!$cont["numcampos"]){
     $sql= "INSERT INTO contador(consecutivo,nombre ) VALUE(1,'".$contador."')";
-	guardar_traza($sql,"ft_".$contador);
+    $sql_export=array("sql"=>"INSERT INTO contador(consecutivo,nombre ) VALUE(1,'".$contador."')","variables"=>array());
+	guardar_traza($sql,$x_tabla,$sql_export);
     phpmkr_query($sql, $conn) or die("Failed to execute query" . phpmkr_error() . ' SQL:' . $sql);
     return(phpmkr_insert_id());
   }  
