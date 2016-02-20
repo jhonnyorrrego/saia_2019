@@ -868,7 +868,6 @@ function EditData($sKey,$conn)
       }
       if(!$campo_serie){
         $strsql="INSERT INTO campos_formato (formato_idformato, nombre, etiqueta, tipo_dato, longitud, obligatoriedad, valor, acciones, ayuda, banderas, etiqueta_html) VALUES (".$idformato.",'serie_idserie', 'SERIE DOCUMENTAL', 'INT', 11, 1,".$fieldList["serie_idserie"].", 'a',".$fieldList["etiqueta"].", 'fk', 'hidden')";
-        ///////////PENDIENTE POR PASAR SQL_EXPORT TRAZA
         $strsql_export=array("sql"=>"INSERT INTO campos_formato (formato_idformato, nombre, etiqueta, tipo_dato, longitud, obligatoriedad, valor, acciones, ayuda, banderas, etiqueta_html) VALUES (|-idformato-|,'serie_idserie', 'SERIE DOCUMENTAL', 'INT', 11, 1,|-idserie-|, 'a',".$fieldList["etiqueta"].", 'fk', 'hidden')","variables"=>array("idserie"=>"select idserie FROM serie WHERE nombre='".$x_etiqueta."' AND categoria=3","idformato"=>"select idformato FROM formato WHERE nombre='".$x_nombre."'"));
 		guardar_traza($strsql,$x_tabla,$strsql_export);
       	phpmkr_query($strsql, $conn) or die("Falla al Ejecutar la busqueda " . phpmkr_error() . ' SQL:' . $strsql);
@@ -1004,15 +1003,16 @@ function vincular_funcion_responsables($idformato){
 	$buscar_funcion=busca_filtro_tabla("","funciones_formato A","nombre_funcion='asignar_responsables'","",$conn);
 	if($buscar_funcion["numcampos"]==0){
 		$nueva_funcion="INSERT INTO funciones_formato (nombre,nombre_funcion,etiqueta,descripcion, ruta, formato, acciones) VALUES ('{*asignar_responsables*}','asignar_responsables','asignar_responsables','asignar_responsables', 'funciones.php','".$idformato."','a')";
-		guardar_traza($nueva_funcion,$formato[0]["nombre_tabla"]);
+		$nueva_funcion_export=array("sql"=>"INSERT INTO funciones_formato (nombre,nombre_funcion,etiqueta,descripcion, ruta, formato, acciones) VALUES ('{*asignar_responsables*}','asignar_responsables','asignar_responsables','asignar_responsables', 'funciones.php','|-idformato-|','a')","variables"=>array("idformato"=>"select idformato FROM formato WHERE nombre='".$formato[0]["nombre"]."'"));
+		guardar_traza($nueva_funcion,$formato[0]["nombre_tabla"],$nueva_funcion_export);
 		phpmkr_query($nueva_funcion,$conn);
 	}
-	$buscar_funcion=busca_filtro_tabla("","funciones_formato A","nombre_funcion='asignar_responsables'","",$conn);
 	if(!in_array($idformato,explode(",",$buscar_funcion[0]["formato"]))){
 		$sql="UPDATE funciones_formato SET formato='".$buscar_funcion[0]["formato"].",".$idformato."' WHERE idfunciones_formato=".$buscar_funcion[0]["idfunciones_formato"];
+		$sql_export=array("sql"=>"UPDATE funciones_formato SET formato='|-funciones_formato-|,|-idformato-|' WHERE idfunciones_formato=|-idfunciones_formato-|","variables"=>array("funciones_formato"=>"select formato funciones_formato WHERE nombre='".$buscar_funcion[0]["nombre"]."'","idfunciones_formato"=>"select idfunciones_formato funciones_formato WHERE nombre='".$buscar_funcion[0]["nombre"]."'","idformato"=>"select idformato FROM formato WHERE nombre='".$formato[0]["nombre"]."'"),);
+        guardar_traza($sql,$formato[0]["nombre_tabla"],$sql_export);
+	    phpmkr_query($sql,$conn);		
 	}
-	guardar_traza($sql,$formato[0]["nombre_tabla"]);
-	phpmkr_query($sql,$conn);
 }
 function vincular_funcion_digitalizacion($idformato,$x_banderas){
 	global $conn;
@@ -1024,7 +1024,6 @@ function vincular_funcion_digitalizacion($idformato,$x_banderas){
 		guardar_traza($nueva_funcion,$formato[0]["nombre_tabla"]);
 		phpmkr_query($nueva_funcion);
 	}
-$buscar_funcion=busca_filtro_tabla("","funciones_formato A","nombre_funcion='digitalizar_formato'","",$conn);
 	if(!in_array($idformato,explode(",",$buscar_funcion[0]["formato"]))){
 		$sql="UPDATE funciones_formato SET formato='".$buscar_funcion[0]["formato"].",".$idformato."' WHERE idfunciones_formato=".$buscar_funcion[0]["idfunciones_formato"];
 		
@@ -1039,7 +1038,6 @@ $buscar_funcion=busca_filtro_tabla("","funciones_formato A","nombre_funcion='dig
 		guardar_traza($nueva_funcion,$formato[0]["nombre_tabla"]);
 		phpmkr_query($nueva_funcion);
 	}
-	$buscar_funcion=busca_filtro_tabla("","funciones_formato A","nombre_funcion='validar_digitalizacion_formato'","",$conn);
 	if(!in_array($idformato,explode(",",$buscar_funcion[0]["formato"]))){
 		$sql="UPDATE funciones_formato SET formato='".$buscar_funcion[0]["formato"].",".$idformato."' WHERE idfunciones_formato=".$buscar_funcion[0]["idfunciones_formato"];
 		guardar_traza($sql,$formato[0]["nombre_tabla"]);
