@@ -849,7 +849,6 @@ function EditData($sKey,$conn)
   	if($idformato){
       $campo_padre=0;
       $campo_serie=0;  	 
-  	  $formato_padre=busca_filtro_tabla("nombre_tabla","formato","idformato=".$fieldList["cod_padre"],"",$conn);
      $campos_formato=busca_filtro_tabla("nombre,idcampos_formato,etiqueta_html","campos_formato","formato_idformato=".$idformato,"",$conn);
       //print_r($campos_formato);
       for($i=0;$i<$campos_formato["numcampos"];$i++){
@@ -859,7 +858,7 @@ function EditData($sKey,$conn)
           phpmkr_query($sql,$conn) or die("Failed to execute query" . phpmkr_error() . ' SQL:' . $sSql);
           */$campo_serie=1;
         }
-        if($formato_padre["numcampos"] && $campos_formato[$i]["nombre"]==$formato_padre[0]["nombre_tabla"]){
+        if($cod_padre["numcampos"] && $campos_formato[$i]["nombre"]==$cod_padre[0]["nombre_tabla"]){
           $sql="UPDATE campos_formato SET valor=".$fieldList["cod_padre"]." WHERE idcampos_formato=".$campos_formato[$i]["idcampos_formato"];
           $sql_export=array("sql"=>"UPDATE campos_formato SET valor=|-cod_padre-| WHERE idcampos_formato=|-idcampos_formato-|","variables"=>array("cod_padre"=>"select idformato FROM formato WHERE nombre LIKE '".$cod_padre[0]["nombre"]."'","idcampos_formato"=>"select idcampos_formato FROM campos_formato WHERE nombre LIKE '".$campos_formato[$i]["nombre"]."'"));
 		  guardar_traza($sql,$x_tabla,$sql_export);
@@ -870,11 +869,13 @@ function EditData($sKey,$conn)
       if(!$campo_serie){
         $strsql="INSERT INTO campos_formato (formato_idformato, nombre, etiqueta, tipo_dato, longitud, obligatoriedad, valor, acciones, ayuda, banderas, etiqueta_html) VALUES (".$idformato.",'serie_idserie', 'SERIE DOCUMENTAL', 'INT', 11, 1,".$fieldList["serie_idserie"].", 'a',".$fieldList["etiqueta"].", 'fk', 'hidden')";
         ///////////PENDIENTE POR PASAR SQL_EXPORT TRAZA
-		guardar_traza($strsql,$x_tabla);
+        $strsql_export=array("sql"=>"INSERT INTO campos_formato (formato_idformato, nombre, etiqueta, tipo_dato, longitud, obligatoriedad, valor, acciones, ayuda, banderas, etiqueta_html) VALUES (|-idformato-|,'serie_idserie', 'SERIE DOCUMENTAL', 'INT', 11, 1,|-idserie-|, 'a',".$fieldList["etiqueta"].", 'fk', 'hidden')","variables"=>array("idserie"=>"select idserie FROM serie WHERE nombre='".$x_etiqueta."' AND categoria=3","idformato"=>"select idformato FROM formato WHERE nombre='".$x_nombre."'"));
+		guardar_traza($strsql,$x_tabla,$strsql_export);
       	phpmkr_query($strsql, $conn) or die("Falla al Ejecutar la busqueda " . phpmkr_error() . ' SQL:' . $strsql);
       }
-      if(!$campo_padre && $fieldList["cod_padre"] && $formato_padre["numcampos"] && $fieldList["cod_padre"]){
-        $strsql="INSERT INTO campos_formato (formato_idformato, nombre, etiqueta, tipo_dato, longitud, obligatoriedad, valor, acciones, ayuda, banderas, etiqueta_html) VALUES (".$idformato.",'".$formato_padre[0]["nombre_tabla"]."', ".$fieldList["nombre"].", 'INT', 11, 1,".$fieldList["cod_padre"].", 'a',".$fieldList["etiqueta"].", 'fk', 'detalle')";
+      if(!$campo_padre && $fieldList["cod_padre"] && $cod_padre["numcampos"] && $fieldList["cod_padre"]){
+        $strsql="INSERT INTO campos_formato (formato_idformato, nombre, etiqueta, tipo_dato, longitud, obligatoriedad, valor, acciones, ayuda, banderas, etiqueta_html) VALUES (".$idformato.",'".$cod_padre[0]["nombre_tabla"]."', ".$fieldList["nombre"].", 'INT', 11, 1,".$fieldList["cod_padre"].", 'a',".$fieldList["etiqueta"].", 'fk', 'detalle')";
+        $strsql_export=array("sql"=>"INSERT INTO campos_formato (formato_idformato, nombre, etiqueta, tipo_dato, longitud, obligatoriedad, valor, acciones, ayuda, banderas, etiqueta_html) VALUES (|-idformato-|,'".$cod_padre[0]["nombre_tabla"]."', ".$fieldList["nombre"].", 'INT', 11, 1,|-cod_padre-|, 'a',".$fieldList["etiqueta"].", 'fk', 'detalle')","variables"=>array("idformato"=>"select idformato FROM formato WHERE nombre='".$x_nombre."'","cod_padre"=>"select idformato FROM formato WHERE nombre LIKE '".$cod_padre[0]["nombre"]."'"));
 		  guardar_traza($strsql,$x_tabla);
 	      phpmkr_query($strsql, $conn) or die("Falla al Ejecutar la busqueda " . phpmkr_error() . ' SQL:' . $strsql);
       }
