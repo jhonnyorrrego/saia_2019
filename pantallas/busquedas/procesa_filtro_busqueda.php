@@ -979,13 +979,10 @@ function guardar_lob2($campo, $tabla, $condicion, $contenido, $tipo, $conn, $log
 }
 
 function parsear_cadena_tildes($cadena) {
-	$texto = strtolower($cadena);
-	$texto = str_replace("á", "%", $texto);
-	$texto = str_replace("é", "%", $texto);
-	$texto = str_replace("í", "%", $texto);
-	$texto = str_replace("ó", "%", $texto);
-	$texto = str_replace("ú", "%", $texto);
+	$texto = ($cadena);
+	$buscar=array('á','é','í','ó','ú','ñ','Á','É','Í','Ó','Ú','Ñ');
+	$reemplazar=array('%','%','%','%','%','%','%','%','%','%','%','%');
+	$texto = str_replace($buscar, $reemplazar, $texto);
 	return $texto;
 }
 ?>
-

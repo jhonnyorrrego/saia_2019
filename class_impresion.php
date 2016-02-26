@@ -236,8 +236,8 @@ class Imprime_Pdf {
       	$nombre_pdf = basename($nombre_pdf);
     	}
     }
+	$this->pdf->Output($nombre_pdf, $this->tipo_salida);
 
-    $this->pdf->Output($nombre_pdf, $this->tipo_salida);
   }
 
   function imprimir_paginas() {

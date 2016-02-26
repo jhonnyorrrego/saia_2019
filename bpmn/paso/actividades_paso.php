@@ -54,7 +54,21 @@ else{
     max-width:24px;
   }
 </style>
-<legend> <?php echo($paso[0]["nombre_paso"]);?></legend><br>
+<legend> <?php echo($paso[0]["nombre_paso"]);?> &nbsp; 
+	
+	<?php 
+	$estados_no_permitidos=array(1,2,3,6);  //1: ejecutado , 2: cerrado , 3: cancelado , 6: iniciado
+	
+	if(!in_array($paso_doc[0]['estado_paso_documento'], $estados_no_permitidos)){ 
+	?>
+		<!-- i class="icon-remove" title="Cancelar Paso" style="cursor:pointer;" id="cancelar_paso" iddocumento="<?php echo($paso_doc[0]['documento_iddocumento']); ?>" idpaso_documento="<?php echo($paso_doc[0]['idpaso_documento']); ?>" idpaso="<?php echo($paso_doc[0]['paso_idpaso']); ?>"></i --> 
+		
+
+	<?php 
+	} 
+	?>
+	
+</legend><br>
 <?php 
 $texto='';
 $texto2='';
@@ -433,4 +447,31 @@ $(document).ready(function(){
     });
 	});
 });
+</script>
+<script>
+	$(document).ready(function(){
+		$('#cancelar_paso').click(function(){
+			if(confirm('Esta seguro de cancelar el paso?')){	
+				$.ajax({
+		        	type:'POST',
+		            dataType: 'json',
+		            url: "<?php echo($ruta_db_superior);?>bpmn/paso/actividades_paso_detalle.php",
+		            data: {
+		            	iddocumento:$(this).attr('iddocumento'),
+		            	idpaso_documento:$(this).attr('idpaso_documento'),
+		            	idpaso:$(this).attr('idpaso'),
+		            	tipo_accion:5
+		            },
+		            success: function(datos){
+		            	
+		            	if(datos.exito==1){
+		            		notificacion_saia("Paso cancelado Satisfactoriamente","success","",3500);
+		            		window.location.reload();
+		            	}
+						
+		            }
+		         });	  			
+			}
+		});
+	});
 </script>

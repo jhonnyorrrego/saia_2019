@@ -1,0 +1,1 @@
+insert into serie(nombre,categoria) values('Formato cancelar paso',3)

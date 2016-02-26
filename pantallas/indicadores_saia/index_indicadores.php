@@ -94,7 +94,7 @@ for($i=0;$i<$reportes["numcampos"];$i++){
 			<div class='alert-info' id='desc_reporte_<?php echo($reportes[$i]["idbusqueda_indicador"]);?>'>
 				<h6 style="text-align: center;"><?php echo($reportes[$i]["etiqueta"]);?></h6>			
 			</div>
-			<div style='width:<?php echo($reportes[0]["ancho"]);?>px; height:<?php echo($reportes[0]["alto"]);?>px;'>
+			<div style='width:<?php echo($reportes[$i]["ancho"]);?>px; height:<?php echo($reportes[$i]["alto"]);?>px;'>
 				<?php echo($reportes[$i]["descripcion"]);?>
 			</div>	
 		</div>	

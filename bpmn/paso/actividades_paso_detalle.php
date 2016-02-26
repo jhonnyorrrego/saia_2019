@@ -3,6 +3,8 @@ $max_salida=6; $ruta_db_superior=$ruta=""; while($max_salida>0){ if(is_file($rut
 include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."librerias_saia.php");
 include_once($ruta_db_superior."pantallas/lib/librerias_fechas.php");
+include_once($ruta_db_superior."formatos/librerias/funciones_generales.php");
+include_once($ruta_db_superior."workflow/libreria_paso.php");
 $retorno=array();
 $retorno["exito"]=0;
 $retorno["html"]='';
@@ -140,6 +142,66 @@ switch($_REQUEST["tipo_accion"]){
       }
     }
   break;
+  case 5:
+	  //cancelacion de paso desde la pantalla de usuario final
+	  $retorno["exito"]=0;
+	  if(@$_REQUEST['iddocumento'] && @$_REQUEST['idpaso_documento'] && @$_REQUEST['idpaso']){
+			
+	  	//CANCELO ACTIVIDADES
+	  	
+	  		$actividades=busca_filtro_tabla("idpaso_actividad","paso_actividad","paso_idpaso=".$_REQUEST['idpaso'],"",$conn);
+			
+			$actividades_cancelar=implode(',',extrae_campo($actividades,'idpaso_actividad'));
+		
+		//CANCELO PASO
+		
+		
+		
+		//VERIFICAR QUE HACER CON CADA ACTIVIDAD CANCELADA
+		
+		/*
+		 * 
+		$ruta=busca_filtro_tabla("","ruta","documento_iddocumento=".$_REQUEST['iddocumento'],"",$conn);   //VALIDO SI EXISTE RUTA
+		if($ruta['numcampos']){  //SI EXISTE RUTA
+			$sql1="UPDATE  ruta SET tipo='INACTIVO' WHERE documento_iddocumento=".$_REQUEST['iddocumento'];   //DESACTIVO RUTA
+			phpmkr_query($sql1);
+			$sql2= "UPDATE buzon_entrada SET activo=0, nombre=".concatenar_cadena_sql(array("'ELIMINA_'","nombre"))." WHERE archivo_idarchivo='".$_REQUEST['iddocumento']."' AND nombre NOT LIKE 'ELIMINA_%' ";  //DESACTIVO BZN ENTRADA
+			phpmkr_query($sql2);
+		}  
+		
+		$pasos_anteriores=listado_pasos_anteriores_admin($_REQUEST['idpaso'],$tipo_paso="bpmn_tarea");   //OBTENGO PASOS ANTERIORES
+		$paso_anterior=$pasos_anteriores[ count($pasos_anteriores)-1 ];  //OBTENGO EL PASO ANTERIOR
+		
+		
+		$actividades_paso_anterior=busca_filtro_tabla("paso_idpaso","paso_actividad","estado=1 AND paso_anterior=".$paso_anterior,"",$conn);  //obtendo los pasos que dependen del paso anterior
+		$pasos_cancelar=implode(',',extrae_campo($actividades_paso_anterior,'paso_idpaso'));
+		
+		
+		$sql3="UPDATE paso_documento SET estado_paso_documento=3 WHERE paso_idpaso IN(".$pasos_cancelar.") AND documento_iddocumento=".$_REQUEST['iddocumento'];   //cancelamos los pasos que dependian del paso anterior
+		//phpmkr_query($sql3);
+		
+		$sql4="UPDATE paso_documento SET estado_paso_documento=4 WHERE paso_idpaso=".$paso_anterior." AND documento_iddocumento=".$_REQUEST['iddocumento']; //activa paso anterior a estado pendiente
+		//phpmkr_query($sql4);
+		
+		//falta averiguar como reiniciar la ruta 
+		*/
+		
+		//$retorno["verifica"]=$sql_acpa;
+		
+		/*
+		 * CANCELAR TODAS LAS ACTIVDADES
+		 * CANCELAR EL PASO
+		 * SI ES RUTA DEVOLVER AL PASO ANTERIOR (NO TODA LA RUTA) ()
+		 * EMPEZAR A VALIDAR UNA A UNA LAS ACTIVIDADES QUE PASA SI SE CANCELA
+		 * */
+		
+		
+
+		$retorno["exito"]=1;  
+		  
+	  }
+
+	break;
 }
 echo(json_encode($retorno));
 ?>

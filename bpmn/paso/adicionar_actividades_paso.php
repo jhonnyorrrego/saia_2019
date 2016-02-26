@@ -105,10 +105,15 @@ $paso=busca_filtro_tabla("","paso","idpaso=".$_REQUEST["idpaso"],"",$conn);
             <select name="x_accion_idaccion" id="x_accion_idaccion">
               <option value='0'>Seleccionar...</option>
               <?php
+              $bloquear_acciones=array(11,13,4,9,10); //ACCIONES QUE ESTAN PRESENTANDO FALLAS  
+              
               $hidden_adicionar='';
               $accion=busca_filtro_tabla("idaccion,etiqueta,nombre","accion","etiqueta<>''","lower(etiqueta)",$conn);
               for($i=0;$i<$accion["numcampos"];$i++){
-                echo "<option value='".$accion[$i]["idaccion"]."' >".$accion[$i]["etiqueta"]."</option>";
+              		
+              	if(!in_array($accion[$i]["idaccion"], $bloquear_acciones)){
+              		 echo "<option value='".$accion[$i]["idaccion"]."' >".$accion[$i]["etiqueta"]."</option>";
+              	}
                 if($accion[$i]["nombre"]=="adicionar"){
                   //$hidden_adicionar='<input type="hidden" name="accion_adicionar" value="'.$accion[$i]["idaccion"].'">';
                 }

@@ -1,4 +1,15 @@
 <?php
+
+$max_salida=6; // Previene algun posible ciclo infinito limitando a 10 los ../
+$ruta_db_superior=$ruta="";
+while($max_salida>0){
+  if(is_file($ruta."db.php")){
+    $ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
+  }
+  $ruta.="../";
+  $max_salida--;
+}
+
 //============================================================+
 // File name   : tcpdf.php
 // Version     : 5.9.193
@@ -11727,6 +11738,10 @@ class TCPDF {
 		}
 		$mqr = $this->get_mqr();
 		$this->set_mqr(false);
+		
+
+    	file_put_contents($ruta_db_superior."tcpdf/aaa_velocidad.txt",  "INICIO (codigo velocidad)-------".date("Y-m-d H:i:s")."-----------\n",FILE_APPEND);							
+		
 		foreach ($this->FontFiles as $file => $info) {
 			// search and get font file to embedd
 			$fontdir = $info['fontdir'];
@@ -11787,6 +11802,9 @@ class TCPDF {
                         $font = unserialize($flat_array);
                     }
 					//Finaliza cambio aumentar velocidad de impresion
+					
+
+					
 					// calculate new font length
 					$info['length1'] = strlen($font);
 					if ($compressed) {
@@ -11811,6 +11829,10 @@ class TCPDF {
 				$this->_out($out);
 			}
 		}
+
+    	file_put_contents($ruta_db_superior."tcpdf/aaa_velocidad.txt",  "FIN (codigo velocidad)-------".date("Y-m-d H:i:s")."-----------\n",FILE_APPEND);						
+					
+
 		$this->set_mqr($mqr);
 		foreach ($this->fontkeys as $k) {
 			//Font objects
