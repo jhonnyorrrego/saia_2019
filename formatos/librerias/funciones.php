@@ -42,7 +42,7 @@ que se relacionan en el sql y nombre_formato siempre debe enviar el nombre de la
 */
 function guardar_traza($sql,$nombre_formato,$sql_export){
 	global $conn,$ruta_db_superior;
-	$nombre=$ruta_db_superior.EVENTO_FORMATO.strtolower($nombre_formato)."/".DB."_".date("Ymd").".txt";
+	$nombre=$ruta_db_superior.RUTA_EVENTO_FORMATO.strtolower($nombre_formato)."/".DB."_".date("Ymd").".txt";
 	if(!@is_file($nombre)){
 		crear_archivo($nombre);
 	}
@@ -57,7 +57,7 @@ function guardar_traza($sql,$nombre_formato,$sql_export){
         	    $arreglo_export=json_decode($json_export);
         	}
         	array_push($arreglo_export,$sql_export);
-    	    $nombre_export=$ruta_db_superior.EVENTO_FORMATO.strtolower($nombre_formato)."/export_".DB."_".date("Ymd").".txt";
+    	    $nombre_export=$ruta_db_superior.RUTA_EVENTO_FORMATO.strtolower($nombre_formato)."/export_".DB."_".date("Ymd").".txt";
     	    file_put_contents($nombre_export,json_encode($arreglo_export),FILE_APPEND);
     	}
 	}
