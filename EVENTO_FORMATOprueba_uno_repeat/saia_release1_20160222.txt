@@ -1,1 +1,0 @@
-insert into serie(nombre,categoria) values('prueba_uno_repeat',3)
