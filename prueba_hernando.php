@@ -1,8 +1,1 @@
-<?php
-include_once("db.php");
-$datos=busca_filtro_tabla("","ft_resumen_presupuestal a","cod_padre=0 or cod_padre is null","",$conn);
-for($i=0;$i<$datos["numcampos"];$i++){
-	$sql1="update ft_resumen_presupuestal set tipo=2 where cod_padre=".$datos[$i]["idft_resumen_presupuestal"];
-	phpmkr_query($sql1);
-}
-?>
+<script type='text/javascript' src='https://10az.online.tableau.com/javascripts/api/viz_v1.js'></script><div class='tableauPlaceholder' style='width: 1255px; height: 611px;'><object class='tableauViz' width='1255' height='611' style='display:none;'><param name='host_url' value='https%3A%2F%2F10az.online.tableau.com%2F' /> <param name='site_root' value='&#47;t&#47;itperformademo' /><param name='name' value='entrevista&#47;Hoja10' /><param name='tabs' value='yes' /><param name='toolbar' value='yes' /><param name='showVizHome' value='n' /><param name='bootstrapWhenNotified' value='y' /><param name='filter' value='%3AopenAuthoringInTopWindow=true' /><param name='filter' value='%3AbrowserBackButtonUndo=true' /><param name='filter' value='%3AreloadOnCustomViewSave=true' /><param name='filter' value='%3AshowShareOptions=true' /></object></div>
