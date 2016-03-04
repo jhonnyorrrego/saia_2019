@@ -190,3 +190,9 @@ background-image:url('../imagenes/cargando.gif');
 .navbar .nav{
     margin:0px;
 }
+input[type="radio"], input[type="checkbox"] {
+  margin: 0px;
+  margin-right: 5px;
+  line-height: normal;
+  cursor: pointer;
+}

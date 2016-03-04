@@ -7,8 +7,16 @@ header("Pragma: no-cache"); // HTTP/1.0
 include_once($ruta_db_superior."db.php");
 usuario_actual("login");
 include_once($ruta_db_superior."librerias_saia.php");
+$data_form_saia=null;
+echo(estilo_bootstrap("3"));
 ?>
 <meta http-equiv="X-UA-Compatible" content="IE=9">
 <?php
 echo(librerias_html5());
 ?>
+<style type="text/css">
+  label.error {
+    font-weight: bold;
+    color: red;
+  }
+</style>
