@@ -155,7 +155,7 @@ function limpia_tabla($tabla)
   $max_salida--;
   }
 
- include_once($ruta_db_superior."kses-0.2.2/kses.php");
+ include_once($ruta_db_superior."kses-0.2.3/kses.php");
 
  $allowed = array('table' => array('cellpadding' => 1, 
                                    'cellspacing' => 1, 
