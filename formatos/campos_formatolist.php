@@ -443,9 +443,9 @@ function SetUpAdvancedSearch()
 
 	// Field idcampos_formato
 	$x_idcampos_formato = (get_magic_quotes_gpc()) ? stripslashes(@$_GET["x_idcampos_formato"]) : @$_GET["x_idcampos_formato"];
-	$arrFldOpr = "";
+	$arrFldOpr = array();
 	$z_idcampos_formato = (get_magic_quotes_gpc()) ? stripslashes(@$_GET["z_idcampos_formato"]) : @$_GET["z_idcampos_formato"];
-	$arrFldOpr = split(",",$z_idcampos_formato);
+	$arrFldOpr = explode(",",$z_idcampos_formato);
 	if ($x_idcampos_formato <> "") {
 		$sSrchAdvanced .= "idcampos_formato "; // Add field
 		$sSrchAdvanced .= @$arrFldOpr[0] . " "; // Add operator
@@ -461,9 +461,9 @@ function SetUpAdvancedSearch()
 
 	// Field formato_idformato
 	$x_formato_idformato = (get_magic_quotes_gpc()) ? stripslashes(@$_GET["x_formato_idformato"]) : @$_GET["x_formato_idformato"];
-	$arrFldOpr = "";
+	$arrFldOpr = array();
 	$z_formato_idformato = (get_magic_quotes_gpc()) ? stripslashes(@$_GET["z_formato_idformato"]) : @$_GET["z_formato_idformato"];
-	$arrFldOpr = split(",",$z_formato_idformato);
+	$arrFldOpr = explode(",",$z_formato_idformato);
 	if ($x_formato_idformato <> "") {
 		$sSrchAdvanced .= "formato_idformato "; // Add field
 		$sSrchAdvanced .= @$arrFldOpr[0] . " "; // Add operator
@@ -479,9 +479,9 @@ function SetUpAdvancedSearch()
 
 	// Field nombre
 	$x_nombre = (get_magic_quotes_gpc()) ? stripslashes(@$_GET["x_nombre"]) : @$_GET["x_nombre"];
-	$arrFldOpr = "";
+	$arrFldOpr = array();
 	$z_nombre = (get_magic_quotes_gpc()) ? stripslashes(@$_GET["z_nombre"]) : @$_GET["z_nombre"];
-	$arrFldOpr = split(",",$z_nombre);
+	$arrFldOpr = explode(",",$z_nombre);
 	if ($x_nombre <> "") {
 		$sSrchAdvanced .= "nombre "; // Add field
 		$sSrchAdvanced .= @$arrFldOpr[0] . " "; // Add operator
@@ -497,9 +497,9 @@ function SetUpAdvancedSearch()
 
 	// Field etiqueta
 	$x_etiqueta = (get_magic_quotes_gpc()) ? stripslashes(@$_GET["x_etiqueta"]) : @$_GET["x_etiqueta"];
-	$arrFldOpr = "";
+	$arrFldOpr = array();
 	$z_etiqueta = (get_magic_quotes_gpc()) ? stripslashes(@$_GET["z_etiqueta"]) : @$_GET["z_etiqueta"];
-	$arrFldOpr = split(",",$z_etiqueta);
+	$arrFldOpr = explode(",",$z_etiqueta);
 	if ($x_etiqueta <> "") {
 		$sSrchAdvanced .= "etiqueta "; // Add field
 		$sSrchAdvanced .= @$arrFldOpr[0] . " "; // Add operator
@@ -515,9 +515,9 @@ function SetUpAdvancedSearch()
 
 	// Field tipo_dato
 	$x_tipo_dato = (get_magic_quotes_gpc()) ? stripslashes(@$_GET["x_tipo_dato"]) : @$_GET["x_tipo_dato"];
-	$arrFldOpr = "";
+	$arrFldOpr = array();
 	$z_tipo_dato = (get_magic_quotes_gpc()) ? stripslashes(@$_GET["z_tipo_dato"]) : @$_GET["z_tipo_dato"];
-	$arrFldOpr = split(",",$z_tipo_dato);
+	$arrFldOpr = explode(",",$z_tipo_dato);
 	if ($x_tipo_dato <> "") {
 		$sSrchAdvanced .= "tipo_dato "; // Add field
 		$sSrchAdvanced .= @$arrFldOpr[0] . " "; // Add operator
@@ -533,9 +533,9 @@ function SetUpAdvancedSearch()
 
 	// Field longitud
 	$x_longitud = (get_magic_quotes_gpc()) ? stripslashes(@$_GET["x_longitud"]) : @$_GET["x_longitud"];
-	$arrFldOpr = "";
+	$arrFldOpr = array();
 	$z_longitud = (get_magic_quotes_gpc()) ? stripslashes(@$_GET["z_longitud"]) : @$_GET["z_longitud"];
-	$arrFldOpr = split(",",$z_longitud);
+	$arrFldOpr = explode(",",$z_longitud);
 	if ($x_longitud <> "") {
 		$sSrchAdvanced .= "longitud "; // Add field
 		$sSrchAdvanced .= @$arrFldOpr[0] . " "; // Add operator
@@ -551,9 +551,9 @@ function SetUpAdvancedSearch()
 
 	// Field obligatoriedad
 	$x_obligatoriedad = (get_magic_quotes_gpc()) ? stripslashes(@$_GET["x_obligatoriedad"]) : @$_GET["x_obligatoriedad"];
-	$arrFldOpr = "";
+	$arrFldOpr = array();
 	$z_obligatoriedad = (get_magic_quotes_gpc()) ? stripslashes(@$_GET["z_obligatoriedad"]) : @$_GET["z_obligatoriedad"];
-	$arrFldOpr = split(",",$z_obligatoriedad);
+	$arrFldOpr = explode(",",$z_obligatoriedad);
 	if ($x_obligatoriedad <> "") {
 		$sSrchAdvanced .= "obligatoriedad "; // Add field
 		$sSrchAdvanced .= @$arrFldOpr[0] . " "; // Add operator
@@ -569,9 +569,9 @@ function SetUpAdvancedSearch()
 
 	// Field acciones
 	$x_acciones = (get_magic_quotes_gpc()) ? stripslashes(@$_GET["x_acciones"]) : @$_GET["x_acciones"];
-	$arrFldOpr = "";
+	$arrFldOpr = array();
 	$z_acciones = (get_magic_quotes_gpc()) ? stripslashes(@$_GET["z_acciones"]) : @$_GET["z_acciones"];
-	$arrFldOpr = split(",",$z_acciones);
+	$arrFldOpr = explode(",",$z_acciones);
 	if ($x_acciones <> "") {
 		$sSrchAdvanced .= "acciones "; // Add field
 		$sSrchAdvanced .= @$arrFldOpr[0] . " "; // Add operator
@@ -587,9 +587,9 @@ function SetUpAdvancedSearch()
 
 	// Field etiqueta_html
 	$x_etiqueta_html = (get_magic_quotes_gpc()) ? stripslashes(@$_GET["x_etiqueta_html"]) : @$_GET["x_etiqueta_html"];
-	$arrFldOpr = "";
+	$arrFldOpr = array();
 	$z_etiqueta_html = (get_magic_quotes_gpc()) ? stripslashes(@$_GET["z_etiqueta_html"]) : @$_GET["z_etiqueta_html"];
-	$arrFldOpr = split(",",$z_etiqueta_html);
+	$arrFldOpr = explode(",",$z_etiqueta_html);
 	if ($x_etiqueta_html <> "") {
 		$sSrchAdvanced .= "etiqueta_html "; // Add field
 		$sSrchAdvanced .= @$arrFldOpr[0] . " "; // Add operator
@@ -605,9 +605,9 @@ function SetUpAdvancedSearch()
 
 	// Field valor
 	$x_valor = (get_magic_quotes_gpc()) ? stripslashes(@$_GET["x_valor"]) : @$_GET["x_valor"];
-	$arrFldOpr = "";
+	$arrFldOpr = array();
 	$z_valor = (get_magic_quotes_gpc()) ? stripslashes(@$_GET["z_valor"]) : @$_GET["z_valor"];
-	$arrFldOpr = split(",",$z_valor);
+	$arrFldOpr = explode(",",$z_valor);
 	if ($x_valor <> "") {
 		$sSrchAdvanced .= "valor "; // Add field
 		$sSrchAdvanced .= @$arrFldOpr[0] . " "; // Add operator
@@ -623,9 +623,9 @@ function SetUpAdvancedSearch()
 
 	// Field predeterminado
 	$x_predeterminado = (get_magic_quotes_gpc()) ? stripslashes(@$_GET["x_predeterminado"]) : @$_GET["x_predeterminado"];
-	$arrFldOpr = "";
+	$arrFldOpr = array();
 	$z_predeterminado = (get_magic_quotes_gpc()) ? stripslashes(@$_GET["z_predeterminado"]) : @$_GET["z_predeterminado"];
-	$arrFldOpr = split(",",$z_predeterminado);
+	$arrFldOpr = explode(",",$z_predeterminado);
 	if ($x_predeterminado <> "") {
 		$sSrchAdvanced .= "predeterminado "; // Add field
 		$sSrchAdvanced .= @$arrFldOpr[0] . " "; // Add operator
@@ -641,9 +641,9 @@ function SetUpAdvancedSearch()
 
 	// Field ayuda
 	$x_ayuda = (get_magic_quotes_gpc()) ? stripslashes(@$_GET["x_ayuda"]) : @$_GET["x_ayuda"];
-	$arrFldOpr = "";
+	$arrFldOpr = array();
 	$z_ayuda = (get_magic_quotes_gpc()) ? stripslashes(@$_GET["z_ayuda"]) : @$_GET["z_ayuda"];
-	$arrFldOpr = split(",",$z_ayuda);
+	$arrFldOpr = explode(",",$z_ayuda);
 	if ($x_ayuda <> "") {
 		$sSrchAdvanced .= "ayuda "; // Add field
 		$sSrchAdvanced .= @$arrFldOpr[0] . " "; // Add operator
@@ -698,7 +698,7 @@ function SetUpBasicSearch()
 			while (strpos($sSearch, "  ") != false) {
 				$sSearch = str_replace("  ", " ",$sSearch);
 			}
-			$arKeyword = split(" ", trim($sSearch));
+			$arKeyword = explode(" ", trim($sSearch));
 			foreach ($arKeyword as $sKeyword)
 			{
 				$sSrchBasic .= "(" . BasicSearchSQL($sKeyword) . ") " . $sSearchType . " ";
