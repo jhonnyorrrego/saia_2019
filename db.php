@@ -1,12 +1,17 @@
 <?php
 
+
+
 require_once("define.php");
 require_once("conexion.php");
 require_once("sql.php");
+
+
 if(!isset($_SESSION["LOGIN".LLAVE_SAIA])){
   @session_start();
   @ob_start();
 }   
+
 //print_r(session_id());
 $error=array();
 $dat_orig=0;
