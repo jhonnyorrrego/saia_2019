@@ -88,9 +88,13 @@ function terminar_actividad_paso($iddocumento,$accion,$tipo_terminacion=1,$paso_
   global $conn;
   $listado_acciones_paso='';
   $sql2='';
+  
+
+  
   error("INICIA TERMINAR ACTIVIDAD PASO--->");
  //Se adiciona para validar que el paso actual sea una respuesta del paso anterior para que el paso actual actualice el iddocumento
 if($accion=="adicionar"){
+
   //Se consulta la informacion del documento actual para sacar los pasos y las actividades vinculadas
   $formato=busca_filtro_tabla("","formato A, documento B, paso_actividad C, accion D","A.nombre=lower(B.plantilla) AND A.idformato=C.formato_idformato AND C.accion_idaccion = D.idaccion AND D.nombre='".$accion."' AND B.iddocumento=".$iddocumento." AND C.estado=1","",$conn);
   if($formato["numcampos"]){
@@ -126,7 +130,9 @@ if($accion=="adicionar"){
     }
   }
 }   
-if($accion!="" && $tipo_terminacion==1){ 
+if($accion!="" && $tipo_terminacion==1){
+	
+
 //La condicion c.estado_paso_documento>4 es para verificar que el paso no este terminado o cerrado
   if($iddocumento){
     error("LISATDO ACCIONES 1");
@@ -134,10 +140,16 @@ if($accion!="" && $tipo_terminacion==1){
   }               
 }
 else if($paso_documento && $idactividad){
+				  
+	
   error("LISATDO ACCIONES 2--->");
-  $listado_acciones_paso=busca_filtro_tabla("B.idpaso_actividad,B.accion_idaccion AS idaccion,C.idpaso_documento,B.entidad_identidad,B.llave_entidad,C.diagram_iddiagram_instance,B.paso_idpaso,C.documento_iddocumento, B.formato_idformato"," paso_actividad B, paso_documento C"," B.paso_idpaso=C.paso_idpaso AND C.idpaso_documento=".$paso_documento." AND B.idpaso_actividad=".$idactividad." AND C.estado_paso_documento>3 AND B.estado=1","B.orden",$conn);
+ // $listado_acciones_paso=busca_filtro_tabla("B.idpaso_actividad,B.accion_idaccion AS idaccion,C.idpaso_documento,B.entidad_identidad,B.llave_entidad,C.diagram_iddiagram_instance,B.paso_idpaso,C.documento_iddocumento, B.formato_idformato"," paso_actividad B, paso_documento C"," B.paso_idpaso=C.paso_idpaso AND C.idpaso_documento=".$paso_documento." AND B.idpaso_actividad=".$idactividad." AND C.estado_paso_documento>3 AND B.estado=1","B.orden",$conn);
+  $listado_acciones_paso=busca_filtro_tabla("B.idpaso_actividad,B.accion_idaccion AS idaccion,C.idpaso_documento,B.entidad_identidad,B.llave_entidad,C.diagram_iddiagram_instance,B.paso_idpaso,C.documento_iddocumento, B.formato_idformato"," paso_actividad B, paso_documento C"," B.paso_idpaso=C.paso_idpaso AND C.idpaso_documento=".$paso_documento." AND B.idpaso_actividad=".$idactividad." AND C.estado_paso_documento>=3 AND B.estado=1","B.orden",$conn);
+  
+  
 }
 else{
+
   return (0);
 }
 if(!$listado_acciones_paso["numcampos"] && $accion=='confirmar'){

@@ -35,7 +35,7 @@ echo(librerias_notificaciones());
                 success: function(datos,exito){
                   if(datos==0){
                   	 notificacion_saia('<B>ATENCI&Oacute;N!</B> <BR> El campo login de funcionario debe Ser unico','success','',4000);
-                   // alert('El campo login de funcionario debe Ser unico');
+     
 		    $('#x_login').val("");
                   }  
                 }

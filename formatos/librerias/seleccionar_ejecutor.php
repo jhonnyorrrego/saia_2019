@@ -15,7 +15,7 @@ $max_salida--;
 include_once($ruta_db_superior."db.php");
 $where = ' and ejecutor_idejecutor=idejecutor';
 $tabla = ',datos_ejecutor';
-$select = 'distinct(idejecutor),nombre,identificacion,codigo';
+$select = 'distinct(idejecutor),nombre,identificacion';
 
 if(@$_REQUEST["tipo"])
   $tipo=@$_REQUEST["tipo"];
@@ -23,7 +23,7 @@ else $tipo="nombre";
 if($tipo == 'codigo'){
 	$tabla = ',datos_ejecutor';
 	$where = ' and ejecutor_idejecutor=idejecutor';
-	$select = 'distinct(idejecutor),nombre,identificacion,codigo';
+	$select = 'distinct(idejecutor),nombre,identificacion';
 }
 
 $busqueda=busca_filtro_tabla("".$select,"ejecutor".$tabla,"lower(".$tipo.") LIKE lower('".$q."%')".$where,"",$conn);

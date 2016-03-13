@@ -1,12 +1,7 @@
 <?php
-
-
-
 require_once("define.php");
 require_once("conexion.php");
 require_once("sql.php");
-
-
 if(!isset($_SESSION["LOGIN".LLAVE_SAIA])){
   @session_start();
   @ob_start();
@@ -600,13 +595,10 @@ if($conn){
           break;  
       }       
       //guardo el evento
-      if(MOTOR=="MSSql" || MOTOR=="SqlServer"){
-      	$sqleve="INSERT INTO evento(funcionario_codigo, fecha, evento, tabla_e, registro_id, estado,codigo_sql,detalle) VALUES('".$func."',".fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s').",'ADICIONAR', '$tabla', $llave, '0','','')";
-      }
-			else{
-      	$sqleve="INSERT INTO evento(funcionario_codigo, fecha, evento, tabla_e, registro_id, estado) VALUES('".$func."',".fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s').",'ADICIONAR', '$tabla', $llave, '0')";
-			}
-			$conn->Ejecutar_Sql($sqleve);
+      
+      $sqleve="INSERT INTO evento(funcionario_codigo, fecha, evento, tabla_e, registro_id, estado,codigo_sql,detalle) VALUES('".$func."',".fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s').",'ADICIONAR', '$tabla', $llave, '0','','')";
+      
+      $conn->Ejecutar_Sql($sqleve);
     	$registro=$conn->Ultimo_Insert();
       if($registro){
         guardar_lob('codigo_sql','evento',"idevento=".$registro,$strsql,'texto',$conn,0);
@@ -639,12 +631,8 @@ if($conn){
       if(count($cambios)){
         if(!is_numeric($llave))
           $llave=$detalle[0]["id".$tabla];
-				if(MOTOR=="MSSql" || MOTOR=="SqlServer"){
-					$sqleve="INSERT INTO evento(funcionario_codigo, fecha, evento, tabla_e, registro_id, estado,codigo_sql,detalle) VALUES('".$func."',".fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s').",'MODIFICAR', '$tabla', ".intval($llave).", '0','','')"; 
-				}
-				else{
-        			$sqleve="INSERT INTO evento(funcionario_codigo, fecha, evento, tabla_e, registro_id, estado) VALUES('".$func."',".fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s').",'MODIFICAR', '$tabla', ".intval($llave).", '0')";
-				} 
+		  $sqleve="INSERT INTO evento(funcionario_codigo, fecha, evento, tabla_e, registro_id, estado,codigo_sql,detalle) VALUES('".$func."',".fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s').",'MODIFICAR', '$tabla', ".intval($llave).", '0','','')"; 
+
 				
         $conn->Ejecutar_Sql($sqleve);
         $registro=$conn->Ultimo_Insert();
@@ -676,12 +664,7 @@ if($conn){
           }     
         }         
         $string_detalle="insert into $tabla(".implode(",",$datos1).") values(".implode(",",$datos2).")";
-				if(MOTOR=="MSSql" || MOTOR=="SqlServer"){
-					$sqleve="INSERT INTO evento(funcionario_codigo, fecha, evento, tabla_e, registro_id, estado,codigo_sql,detalle) VALUES('".$func."',".fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s').",'ELIMINAR', '$tabla', $llave, '0','','')";
-				}
-				else{         
-        	$sqleve="INSERT INTO evento(funcionario_codigo, fecha, evento, tabla_e, registro_id, estado) VALUES('".$func."',".fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s').",'ELIMINAR', '$tabla', $llave, '0')";
-				}
+		$sqleve="INSERT INTO evento(funcionario_codigo, fecha, evento, tabla_e, registro_id, estado,codigo_sql,detalle) VALUES('".$func."',".fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s').",'ELIMINAR', '$tabla', $llave, '0','','')";
         $conn->Ejecutar_Sql($sqleve);
         $registro=$conn->Ultimo_Insert();
         if($registro){
