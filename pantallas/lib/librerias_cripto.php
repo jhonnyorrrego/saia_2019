@@ -3,7 +3,7 @@ function encrypt_md5($data){
 	return(md5(md5($data)));
 }
 function decrypt_blowfish($data,$key){
-	if(!defined("LLAVE_SAIA_CRYPTO")){
+	if(!$key && !defined("LLAVE_SAIA_CRYPTO")){
 		define("LLAVE_SAIA_CRYPTO", "cerok_saia421_5");
 		$key=LLAVE_SAIA_CRYPTO;
 	}
@@ -14,7 +14,7 @@ function decrypt_blowfish($data,$key){
 }
 
 function encrypt_blowfish($data,$key){
-	if(!defined("LLAVE_SAIA_CRYPTO")){
+	if(!$key && !defined("LLAVE_SAIA_CRYPTO")){
 		define("LLAVE_SAIA_CRYPTO", "cerok_saia421_5");
 		$key=LLAVE_SAIA_CRYPTO;
 	}

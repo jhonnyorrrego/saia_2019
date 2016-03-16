@@ -11,6 +11,7 @@ $paso=busca_filtro_tabla("","paso A, paso_actividad B","A.idpaso=B.paso_idpaso A
 $paso_doc='';
 if(@$_REQUEST["idpaso_documento"]){
 	$paso_doc=busca_filtro_tabla("","paso_documento","idpaso_documento=".$_REQUEST["idpaso_documento"],"",$conn);
+
 }
 else if(@$_REQUEST["iddocumento"] && @$_REQUEST["idpaso"]){
 	$paso_doc=busca_filtro_tabla("","paso_documento","paso_idpaso=".$_REQUEST["idpaso"]." AND documento_iddocumento=".$_REQUEST["iddocumento"],"",$conn);
@@ -57,13 +58,11 @@ else{
 <legend> <?php echo($paso[0]["nombre_paso"]);?> &nbsp; 
 	
 	<?php 
-	$estados_no_permitidos=array(1,2,3,6);  //1: ejecutado , 2: cerrado , 3: cancelado , 6: iniciado
+	$estados_no_permitidos=array(1,2,6);  //1: ejecutado , 2: cerrado , 3: cancelado , 6: iniciado
 	
 	if(!in_array($paso_doc[0]['estado_paso_documento'], $estados_no_permitidos)){ 
 	?>
-		<!-- i class="icon-remove" title="Cancelar Paso" style="cursor:pointer;" id="cancelar_paso" iddocumento="<?php echo($paso_doc[0]['documento_iddocumento']); ?>" idpaso_documento="<?php echo($paso_doc[0]['idpaso_documento']); ?>" idpaso="<?php echo($paso_doc[0]['paso_idpaso']); ?>"></i --> 
-		
-
+		<i class="icon-remove" title="Cancelar Paso" style="cursor:pointer;" id="cancelar_paso" iddocumento="<?php echo($paso_doc[0]['documento_iddocumento']); ?>" idpaso_documento="<?php echo($paso_doc[0]['idpaso_documento']); ?>" idpaso="<?php echo($paso_doc[0]['paso_idpaso']); ?>"></i> 
 	<?php 
 	} 
 	?>
@@ -137,8 +136,7 @@ if($paso_doc["numcampos"] && $paso["numcampos"]){
           $estado_actividad='<div class="label label-important">Vencido</div>';
 				}
 				else{
-					$estado_actividad='<div class="label label-warning">Pendiente</div>';  
-					//
+					$estado_actividad='<div class="label label-warning">Pendiente</div>';  					
 				}
 			 $icono_informacion='<i class="icon-info-sign actividad" tipo_actividad="3" id="actividadi_'.$actividad["idpaso_actividad"].'" idactividad="'.$paso[$i]["idpaso_actividad"].'" idpaso_documento="'.$paso_doc[0]["idpaso_documento"].'"></i>';
       }
@@ -335,7 +333,7 @@ function listado_funcionarios($entidad,$llave_entidad){
 	return($dato);
 }
 function actividades_terminadas_paso($idactividad,$documento){
-	$paso_documento=busca_filtro_tabla("B.idpaso_instancia,B.fecha, B.responsable","paso_instancia_terminada B","B.documento_iddocumento=".$documento." AND actividad_idpaso_actividad=".$idactividad,"",$conn);
+	$paso_documento=busca_filtro_tabla("B.idpaso_instancia,B.fecha, B.responsable","paso_instancia_terminada B","B.documento_iddocumento=".$documento." AND estado_actividad<3 AND actividad_idpaso_actividad=".$idactividad,"",$conn);
 return($paso_documento);
 }
 echo(librerias_jquery("1.7"));
@@ -385,6 +383,8 @@ $(document).ready(function(){
 	$(".actividad").click(function(){
 		var idactividad=$(this).attr("idactividad");
 		var idpaso_documento=$(this).attr("idpaso_documento");
+		var idpaso='<?php echo(@$_REQUEST['idpaso']); ?>';
+		var diagrama='<?php echo(@$_REQUEST['diagrama']); ?>';
 		//0,pendiente de ejecucion;  1,ejecutada; 
 		var tipo_actividad=0;
 		var datos="idactividad="+idactividad+"&idpaso_documento="+idpaso_documento;
@@ -395,7 +395,7 @@ $(document).ready(function(){
 			datos+='&idactividad_instancia='+idinstancia;
 		}
 		if(este.attr("tipo_actividad")==="2"){
-			window.open("<?php echo($ruta_db_superior)?>bpmn/paso/terminar_actividad.php?idactividad="+idactividad+"&idpaso_documento="+idpaso_documento+"&documento=<?php echo($paso_doc[0]['documento_iddocumento']); ?>","_self");
+			window.open("<?php echo($ruta_db_superior)?>bpmn/paso/terminar_actividad.php?idactividad="+idactividad+"&idpaso_documento="+idpaso_documento+"&documento=<?php echo($paso_doc[0]['documento_iddocumento']); ?>&idpaso="+idpaso+"&diagrama="+diagrama,"_self");
 		}
 		else if(este.attr("tipo_actividad")==="0"){
 			alert("Pendiente cancelar actividades del paso");
@@ -451,16 +451,16 @@ $(document).ready(function(){
 <script>
 	$(document).ready(function(){
 		$('#cancelar_paso').click(function(){
-			if(confirm('Esta seguro de cancelar el paso?')){	
+			if(confirm('Esta seguro/a de cancelar el paso?')){	
 				$.ajax({
 		        	type:'POST',
 		            dataType: 'json',
-		            url: "<?php echo($ruta_db_superior);?>bpmn/paso/actividades_paso_detalle.php",
+		            url: "<?php echo($ruta_db_superior);?>bpmn/paso/ejecutar_acciones.php",
 		            data: {
 		            	iddocumento:$(this).attr('iddocumento'),
 		            	idpaso_documento:$(this).attr('idpaso_documento'),
 		            	idpaso:$(this).attr('idpaso'),
-		            	tipo_accion:5
+		            	ejecutar_accion:2  
 		            },
 		            success: function(datos){
 		            	

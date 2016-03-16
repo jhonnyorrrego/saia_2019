@@ -11,7 +11,9 @@ while($max_salida>0){
 include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."librerias_saia.php");
 include_once($ruta_db_superior."formatos/librerias/funciones_generales.php");
-
+include_once($ruta_db_superior."librerias_saia.php");
+include_once($ruta_db_superior."class_transferencia.php");	
+echo(librerias_notificaciones());
 
 function recibir_datos($idformato, $iddoc){
 	global $ruta_db_superior, $conn;
@@ -20,8 +22,16 @@ function recibir_datos($idformato, $iddoc){
 	$contenido = $datos_correo->contenido;
 	$de = $datos_correo->from;
 	$para = $datos_correo->to;
-  $fecha= $datos_correo->fecha_oficio_entrada;
+  	$fecha= $datos_correo->fecha_oficio_entrada;
 	$anexos = $datos_correo->anexos;
+	$tipo_radicado=$datos_correo->tipo_radicado;
+	
+	if($tipo_radicado=="Sent"){
+		$tipo_radicado="radicacion_salida";	
+	}else{//INBOX
+		$tipo_radicado="radicacion_entrada";
+	}
+	
   $cadena_anexos='';
   if($anexos){
     $cadena_anexos='<tr><td class="encabezado">Anexos</td><td>';
@@ -31,13 +41,16 @@ function recibir_datos($idformato, $iddoc){
 ?>
 <script type="text/javascript">
 	$(document).ready(function(){
+
 			$('#asunto').val('<?php echo($asunto);?>');
 			$('#de').val('<?php echo($de);?>');
+			$("input[name=tipo_radicado]").val('<?php echo($tipo_radicado);?>');
 			$('#para').val('<?php echo($para);?>');
 			$('input[name=anexos]').val('<?php echo($anexos);?>');
 			$('#fecha_oficio_entrada').val('<?php echo($fecha);?>');
 			$("#formulario_formatos").find("tr:last").prev().prev().after('<?php echo($cadena_anexos);?>');
 	});
+	
 </script>
 <?php
 }
@@ -88,4 +101,111 @@ function guardar_anexos($idformato, $iddoc){
 
     }
 }
+
+function despachar_correo($idformato,$iddoc){
+	global $ruta_db_superior,$conn;
+	
+	$tipo=busca_filtro_tabla("tipo_radicado","documento","iddocumento=".$iddoc,"",$conn);
+	
+	if($tipo[0]["tipo_radicado"]=="2"){
+		despachar_documento($iddoc);
+	}
+}
+
+function redirreciona_correo($idformato,$iddoc){
+	global $ruta_db_superior,$conn;
+	$numero=busca_filtro_tabla("numero","documento","iddocumento=".$iddoc,"",$conn);
+?>
+<script>
+notificacion_saia('El documento ha sido radicado con el numero <?php echo($numero[0]["numero"]); ?>','success','',4000);
+</script>
+<?php
+	redirecciona($ruta_db_superior."index_correo.php");
+}
+
+
+function despachar_documento($iddoc){
+  
+  
+  $_REQUEST["lista_despachos"]=$iddoc;
+  $_REQUEST["x_empresa0"]=usuario_actual("nombres")." ".usuario_actual("apellidos");
+  $_REQUEST["guia"]="0";
+  $_REQUEST["x_responsable0"]=usuario_actual("nombres")." ".usuario_actual("apellidos");
+
+  global $conn,$sql; 
+  $notificacion = false;
+  $envio = busca_filtro_tabla("valor","configuracion","nombre='correo_despacho'","",$conn);
+  if($envio["numcampos"]>0 && $envio[0]["valor"]==1)
+   $notificacion = true;
+  $destinos=explode(",",$_REQUEST["lista_despachos"]);
+  $empresa=@$_REQUEST["x_empresa0"];
+  $guia=@$_REQUEST["guia"];
+  $responsable=htmlentities(htmlspecialchars_decode(html_entity_decode(utf8_decode(trim($_REQUEST["x_responsable0"])))));
+  $lresponsable=busca_filtro_tabla("A.*","ejecutor A","A.nombre LIKE '".$responsable."'","",$conn); 
+  if($lresponsable["numcampos"] ){
+    $idresponsable=$lresponsable[0]["idejecutor"];
+  } 
+  else if($responsable<>"")
+  {
+    $sql="INSERT INTO ejecutor(nombre) VALUES('".$responsable."')";    
+    phpmkr_query($sql,$conn);
+    $idresponsable=phpmkr_insert_id();
+  }  
+  $lempresa=busca_filtro_tabla("A.*","ejecutor A","A.nombre LIKE'".$empresa."'","",$conn); 
+  if($lempresa["numcampos"] ){
+    $idempresa=$lempresa[0]["idejecutor"];
+  }
+  else if($empresa<>""){
+    $sql="INSERT INTO ejecutor(nombre) VALUES('".$empresa."')";
+    phpmkr_query($sql,$conn);
+    $idempresa=phpmkr_insert_id();
+  }  
+  if($idresponsable<>"" ){
+    $datos["origen"]=usuario_actual("funcionario_codigo");
+    $enviado=usuario_actual("login");
+    for($i=0;$i<count($destinos);$i++){
+    	$ejecutores=array();
+      $ejecutor["numcampos"]=0;
+      $ejecutor=busca_filtro_tabla("ejecutor","documento","iddocumento=".$destinos[$i],"",$conn);
+      if($ejecutor["numcampos"]){
+        array_push($ejecutores,$ejecutor[0]["ejecutor"]);
+        $ejecutores=array_unique($ejecutores);
+      }
+      if($idempresa=="")
+         $valores="'".$guia."','".$destinos[$i]."',NULL,'$idresponsable'";
+      elseif($idresponsable=="")
+         $valores="'".$guia."','".$destinos[$i]."','".$idempresa."',NULL";
+      else 
+         $valores="'".$guia."','".$destinos[$i]."','".$idempresa."','$idresponsable'";    
+      $valores.= ",".fecha_db_almacenar(date("Y-m-d H:i:s"),"Y-m-d H:i:s"); 
+      $sql="INSERT INTO salidas(numero_guia,documento_iddocumento,empresa,responsable,fecha_despacho,tipo_despacho) VALUES (".$valores.",'1')";
+      //die($sql);
+      phpmkr_query($sql,$conn);
+       $sql="update documento set estado='GESTION',tipo_despacho='1' where iddocumento=".$destinos[$i];      
+      phpmkr_query($sql,$conn);
+      $datos["archivo_idarchivo"]=$destinos[$i];
+      $datos["tipo_destino"]=1;
+      $datos["tipo"]="";
+      $datos["nombre"]="DISTRIBUCION";
+     // $otros["notas"]="'Documento despachado En $empresa ($responsable) con Guia: $guia Por $enviado'";  
+	  $otros["notas"]="Se despacho el documento por correo electronico";
+      transferir_archivo_prueba($datos,$ejecutores,$otros);
+      //Envio de notificacion sobre el despacho de un documento al ejecutor
+      /*if($notificacion)
+      {
+      $documento_mns = busca_filtro_tabla("descripcion,plantilla","documento","iddocumento=".$destinos[$i],"",$conn);
+      $mensaje = "Tiene un nuevo documento para su revision: Tipo: ".ucfirst($documento_mns[0]["plantilla"])." - Descripcion: ".$documento_mns[0]["descripcion"];
+      $x_tipo_envio[] = 'msg';
+      $x_tipo_envio[] = 'e-interno';                         
+      $destino_mns[0] = $ejecutores;             
+      enviar_mensaje("origen",$destino_mns,$mensaje);
+     } */
+    }
+  }
+  else {
+    alerta("No se puede realizar el despacho");
+  }
+	
+}
+
 ?>

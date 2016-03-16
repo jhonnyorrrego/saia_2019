@@ -130,7 +130,7 @@ $paso=busca_filtro_tabla("","paso","idpaso=".$_REQUEST["idpaso"],"",$conn);
         <div class="controls">
           <!--Entidad 4 es la entidad del cargo-->
           <input type="hidden" name="x_tipo_entidad" id="x_tipo_entidad" value="4" class="required">
-          <input type="hidden" name="x_llave_entidad" id="x_llave_entidad" value="<?php echo htmlspecialchars(@$x_llave_entidad) ?>">
+          <input type="hidden" name="x_llave_entidad" id="x_llave_entidad" class="required" >
             Buscar:<br><input type="text" id="stext_3" width="200px" size="20">     
             <a href="javascript:void(0)" onclick="tree3.findItem(document.getElementById('stext_3').value,1)">
             <img src="<?php echo($ruta_db_superior);?>botones/general/anterior.png" border="0px" alt="Anterior"></a>
@@ -149,7 +149,7 @@ $paso=busca_filtro_tabla("","paso","idpaso=".$_REQUEST["idpaso"],"",$conn);
           <select name="x_orden" id="x_orden">
             <option value='0'>Primero en la lista de acciones</option>
             <?php
-              $orden=busca_filtro_tabla("descripcion,orden","paso_actividad","paso_idpaso=".$_REQUEST["idpaso"],"orden",$conn);
+              $orden=busca_filtro_tabla("descripcion,orden","paso_actividad","estado=1 AND paso_idpaso=".$_REQUEST["idpaso"],"orden",$conn);
             for($i=0;$i<$orden["numcampos"];$i++){
               echo "<option value='".$orden[$i]["orden"]."' ";
               if($i==($orden["numcampos"]-1)){
@@ -185,7 +185,9 @@ $paso=busca_filtro_tabla("","paso","idpaso=".$_REQUEST["idpaso"],"",$conn);
 	</div>
 	<script>
 		$(document).ready(function(){
+			
 			$('#submit').click(function(){
+				
 				var tipo=$('[name="x_tipo"]').val();
 				var accion=$('[name="x_accion_idaccion"]').val();
 				var user=$('[name="x_llave_entidad"]').val();
@@ -198,12 +200,49 @@ $paso=busca_filtro_tabla("","paso","idpaso=".$_REQUEST["idpaso"],"",$conn);
 						}
 					}
 				}
-				return true;
-			});
+				if(accion==3 || accion==5 || accion==7){
+					return validar_adicionar_actividades_anteriores();
+				}
+				
+			}); 
+			
+			function validar_adicionar_actividades_anteriores(){
+				var accion=$('[name="x_accion_idaccion"]').val();
+				var retornar=true;
+				if(accion==3 || accion==5 || accion==7){ //confirmar - editar - aprobar
+					$.ajax({
+		            	type:'POST',
+		                dataType: 'json',
+		                url: "<?php echo($ruta_db_superior); ?>bpmn/paso/ejecutar_acciones.php",
+		                async:false,
+		                data: {
+		                	idpaso:'<?php echo(@$_REQUEST['idpaso']); ?>',
+		                	ejecutar_accion:3
+		                },
+		                success: function(datos){
+		                	if(datos.exito==0){
+		                		notificacion_saia('<span style="color:white;"><b>ATENCI&Oacute;N!</b><br>Debe existir el adicionar de un formato antes de realizar esta actividad</span>','error','',4000);
+		                		retornar=false;
+		                	}
+		                	
+		                }
+		        	}); 
+	        	}					
+				return retornar;
+			}				
+			
 		});
+		
 	</script>
 <script type="text/javascript">
   $(document).ready(function(){
+  	
+  	
+  	$("#adicionar_actividad_paso").validate();
+	
+  	
+
+  	
     $(".x_tipo").change(function(){
       var tipo=$(this).val();
       if(tipo==="1"){
@@ -228,7 +267,7 @@ $paso=busca_filtro_tabla("","paso","idpaso=".$_REQUEST["idpaso"],"",$conn);
         $("#arbol_accion").show();
       });
     }  
-    $("#adicionar_actividad_paso").validate();
+    
   });
   var browserType;
   if (document.layers) {browserType = "nn4"}

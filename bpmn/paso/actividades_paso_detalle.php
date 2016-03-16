@@ -49,7 +49,8 @@ switch($_REQUEST["tipo_accion"]){
 				
 				
 				if($actividad[0]["tipo_terminacion"]==2){ //confirma si la actividad manual tiene anexos para visualizarlos
-					$anexos_manual=busca_filtro_tabla('','paso_actividad_anexo','actividad_idactividad='.$_REQUEST["idactividad"].' AND documento_iddocumento='.$actividad[0]['documento_iddocumento'],'',$conn);
+					$anexos_manual=busca_filtro_tabla('','paso_actividad_anexo','actividad_idactividad='.$actividad[0]["idpaso_actividad"].' AND documento_iddocumento='.$actividad[0]['documento_iddocumento'],'',$conn);
+					$retorno['sql']=$anexos_manual;
 					
 					if($anexos_manual['numcampos']){			
 						$retorno["html"].='<div class="pull-left">Anexos: <a href="'.$ruta_db_superior.$anexos_manual[0]['ruta'].'" target="_blank"><b>'.$anexos_manual[0]['etiqueta'].'</b></a>  </div>';

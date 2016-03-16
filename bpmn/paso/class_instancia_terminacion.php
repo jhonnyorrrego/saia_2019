@@ -22,7 +22,9 @@ if(@$_REQUEST["idactividad"] && @$_REQUEST["iddocumento"] && @$_REQUEST["idpaso_
   }else{
   	
     $terminacion=terminar_actividad_paso($_REQUEST["iddocumento"],'',2,$_REQUEST["idpaso_documento"],$_REQUEST["idactividad"]);
-    if($terminacion){
+	
+    if($terminacion){  
+    	
       $idterminacion_manual=terminar_actividad_manual($_REQUEST["idpaso_documento"],$terminacion,$_REQUEST["observaciones"]);
       if($idterminacion_manual){
         $retorno->exito=1;
@@ -32,7 +34,7 @@ if(@$_REQUEST["idactividad"] && @$_REQUEST["iddocumento"] && @$_REQUEST["idpaso_
       else{
         $retorno->mensaje='Error al terminar la actividad de forma manual';
       }    
-    }  
+    } 
   }
 }  
 echo(json_encode($retorno));

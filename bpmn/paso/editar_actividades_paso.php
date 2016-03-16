@@ -151,7 +151,7 @@ $paso=busca_filtro_tabla("","paso","idpaso=".$x_paso_idpaso,"",$conn);
         <label class="control-label" for="x_orden">Orden*:</label>
         <div class="controls">
           <?php
-          $orden=busca_filtro_tabla("descripcion,orden","paso_actividad","paso_idpaso=".$x_paso_idpaso." AND idpaso_actividad<>".$x_idactividad_paso,"orden",$conn);
+          $orden=busca_filtro_tabla("descripcion,orden","paso_actividad","estado=1 AND paso_idpaso=".$x_paso_idpaso." AND idpaso_actividad<>".$x_idactividad_paso,"orden",$conn);
           ?>
           <select name="x_orden" id="x_orden">
             <option value='0'>Primero en la lista de acciones</option>

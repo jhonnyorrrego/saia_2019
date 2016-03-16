@@ -84,4 +84,14 @@ if(@$_SERVER["HTTPS"]=='on'){
 }else{
 	define("PROTOCOLO_CONEXION","http://");
 }
+
+/*CONFIGURAR EL CORREO ELECTRONICO PARA ROUNDCUBE*/
+if(!defined("SERVIDOR_CORREO_SALIDA"))
+  define("SERVIDOR_CORREO_SALIDA","ssl://smtp.gmail.com");
+if(!defined("SERVIDOR_CORREO_IMAP"))
+  define("SERVIDOR_CORREO_IMAP","ssl://imap.gmail.com");
+if(!defined("PUERTO_SERVIDOR_CORREO"))
+  define("PUERTO_SERVIDOR_CORREO",993);
+if(!defined("PUERTO_CORREO_SALIDA"))
+  define("PUERTO_CORREO_SALIDA",465);
 ?>

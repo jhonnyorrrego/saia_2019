@@ -1,23 +1,37 @@
 <?php
   $max_salida=6; $ruta_db_superior=$ruta=""; while($max_salida>0){ if(is_file($ruta."db.php")){ $ruta_db_superior=$ruta;} $ruta.="../"; $max_salida--; } 
+  
+
 include_once($ruta_db_superior."db.php");
+
+
 include_once($ruta_db_superior."librerias_saia.php");
 include_once($ruta_db_superior."pantallas/lib/librerias_fechas.php");
-ini_set("display_errors",true);
+
 echo(estilo_bootstrap());
+
+
+
 echo(librerias_jquery("1.7"));
+
+  
 echo(librerias_bootstrap());
 echo(librerias_datepicker_bootstrap());
 echo(librerias_notificaciones());
 
+
 $paso=busca_filtro_tabla("A.nombre_paso, B.*","paso A, paso_actividad B","A.idpaso=B.paso_idpaso AND A.idpaso=".$_REQUEST["idpaso"]." AND B.estado=1","B.orden",$conn);
+
+
 if($paso["numcampos"]){
   $nombre_paso=$paso[0]["nombre_paso"];
 }
 else{
   $paso2=busca_filtro_tabla("","paso","idpaso=".$_REQUEST["idpaso"],"",$conn);
-  $nombre_paso=@$paso2[0]["nombre_paso"];
+  $nombre_paso=$paso2[0]["nombre_paso"];
 }
+
+
 ?>
 <style>
   .detalle_cargo legend{
@@ -25,14 +39,33 @@ else{
     cursor:hand;
   }
 </style>
-Actividades del paso: <b> <?php echo($nombre_paso);?></b><br>
+
+
+
+Actividades del paso: <b> <?php echo($nombre_paso); ?></b><br>
+
+
+
 <?php 
 $texto='';
 $texto.='<br><div><b><a href="'.$ruta_db_superior.'bpmn/paso/adicionar_actividades_paso.php?idpaso='.$_REQUEST["idpaso"].'"><i class="icon-plus"></i> Adicionar actividades del paso</a></b></div><br>';
+
+
+
 if($paso["numcampos"]){
+		
+	
 	$texto.='<table class="table">';
 	$texto.='<thead><tr><th>Descripci&oacute;n</th><th>Responsable</th><th>Acciones</th><th>&nbsp;</th></tr></thead>';
+	
+	
+	
+	
+	
 	for($i=0;$i<$paso["numcampos"];$i++){
+		
+		
+		
 		$dato_usuarios=array();
 		$texto_usuario='';
     $icono_tipo_actividad='';
@@ -43,8 +76,12 @@ if($paso["numcampos"]){
       $usuarios[0]["apellidos"]='';
       $usuarios[0]["cargo"]='Cualquier Usuario';
       $cargo["numcampos"]=0;
+	 
+	  
     }
     else{
+    	
+		
       $usuarios=listado_funcionarios($paso[$i]["entidad_identidad"],$paso[$i]["llave_entidad"]);
       $cargo=busca_filtro_tabla("","cargo","idcargo IN(".$paso[$i]["llave_entidad"].")","",$conn);
       if($cargo["numcampos"]){
@@ -89,7 +126,7 @@ if($paso["numcampos"]){
 		      $icono_tipo_actividad.='<a border="0" class="tooltip_saia" title="'.$accion[0]["etiqueta"].'"><img src="'.$ruta_db_superior.$accion[0]["imagen"].'"></a>';
 		    }
 		    $texto_adicional_actividad='';
-		    print_r($adicional_actividad);
+		    //print_r($adicional_actividad);
 		    if(count($adicional_actividad)){
 			    $texto_adicional_actividad='<ul><li>';
 			    $texto_adicional_actividad.=implode('</li><li>', $adicional_actividad);
@@ -115,6 +152,7 @@ if($paso["numcampos"]){
 
 
 echo($texto);
+
 ///TODO: PILAS esta funcion se debe pasar a una libreria ya que se usa mucho
 function listado_funcionarios($entidad,$llave_entidad){
 	global $conn;
@@ -189,18 +227,21 @@ function listado_funcionarios($entidad,$llave_entidad){
                     $.ajax({
                         type:'POST',
                         dataType: 'json',
-                        url: "eliminar_actividades_paso.php",
+                        url: "<?php echo($ruta_db_superior);?>bpmn/paso/ejecutar_acciones.php",
                         data: {
-                                        idpaso_actividad:$(this).attr('valor')
+                        	idpaso_actividad:$(this).attr('valor'),
+                      		ejecutar_accion:1
                         },
                         success: function(datos){
-							notificacion_saia('Actividad eliminada satisfactoriamente','success','',4000);
-							window.location=ruta;
+                        	if(datos.exito=1){
+	  							notificacion_saia('Actividad eliminada satisfactoriamente','success','',4000);
+								window.location=ruta;                      		
+                        	}
                         }
                     });	
                     
               } 		
 		});
 	});	
-</script>
+</script> 
 			

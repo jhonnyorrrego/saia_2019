@@ -153,6 +153,7 @@ else{
   return (0);
 }
 if(!$listado_acciones_paso["numcampos"] && $accion=='confirmar'){
+	
     error("LISATDO ACCIONES 2--->");
     $listado_acciones_paso=busca_filtro_tabla("B.idpaso_actividad, A.idaccion, C.idpaso_documento, B.entidad_identidad, B.llave_entidad, C.diagram_iddiagram_instance, B.paso_idpaso,C.documento_iddocumento, B.formato_idformato", "accion A, paso_actividad B, paso_documento C","A.idaccion=B.accion_idaccion AND B.paso_idpaso=C.paso_idpaso AND C.documento_iddocumento=".$iddocumento." AND (A.nombre='aprobar' OR A.nombre='confirmar') AND C.estado_paso_documento>3 AND B.estado=1","B.orden",$conn);
     if($listado_acciones_paso["numcampos"])
@@ -219,6 +220,7 @@ for($i=0;$i<@$listado_acciones_paso["numcampos"];$i++){
     //echo'entra UPDATE PASO documento estado=6<br>';
       }
       error("return idterminacion".$idterminacion);
+      
       return($idterminacion);
     }
 }
@@ -296,6 +298,7 @@ function verificar_terminacion_paso($idpaso,$iddocumento){
       $condicion_actividades=" AND idpaso_actividad NOT IN(".implode(",",$lactividades).")";
     }
     $pasos_restrictivos=busca_filtro_tabla("","paso_actividad","paso_idpaso=".$idpaso." AND restrictivo=1 AND estado=1".$condicion_actividades,"",$conn);
+   
     if($pasos_restrictivos["numcampos"]){
       return(false);
     }
