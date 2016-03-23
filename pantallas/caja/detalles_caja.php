@@ -48,18 +48,109 @@ $caja=busca_filtro_tabla("","caja","idcaja=".$idcaja,"",$conn);
 <table class="table table-bordered">
   <tr>
     <td width="40%" class="prettyprint">
-      <b>N&uacute;mero de la caja:</b>
+      <b>No consecutivo:</b>
     </td>
     <td>
-       <?php echo($caja[0]["numero"]);?>
+       <?php echo($caja[0]["no_consecutivo"]);?>
     </td>    
   </tr>
   <tr>
     <td class="prettyprint">
-      <b>Ubicaci&oacute;n:</b>
+      <b>Fondo:</b>
     </td>
     <td colspan="3">
-       <?php echo($caja[0]["ubicacion"]);?>
+       <?php echo($caja[0]["fondo"]);?>
+    </td>
+  </tr>
+  <tr>
+    <td class="prettyprint">
+      <b>Seccion:</b>
+    </td>
+    <td colspan="3">
+       <?php echo($caja[0]["seccion"]);?>
+    </td>
+  </tr>
+  <tr>
+    <td class="prettyprint">
+      <b>Subseccion:</b>
+    </td>
+    <td colspan="3">
+       <?php echo($caja[0]["subseccion"]);?>
+    </td>
+  </tr>
+  <tr>
+    <td class="prettyprint">
+      <b>Division:</b>
+    </td>
+    <td colspan="3">
+       <?php echo($caja[0]["division"]);?>
+    </td>
+  </tr>
+  <tr>
+    <td class="prettyprint">
+      <b>Codigo:</b>
+    </td>
+    <td colspan="3">
+       <?php echo($caja[0]["codigo"]);?>
+    </td>
+  </tr>
+  <tr>
+<?php
+$nombre_serie=busca_filtro_tabla("","serie a","a.idserie=".$caja[0]["serie_idserie"],"",$conn);
+?>
+    <td class="prettyprint">
+      <b>Serie vinculada:</b>
+    </td>
+    <td colspan="3">
+       <?php echo($nombre_serie[0]["nombre"]);?>
+    </td>
+  </tr>
+  <tr>
+    <td class="prettyprint">
+      <b>No carpetas:</b>
+    </td>
+    <td colspan="3">
+       <?php echo($caja[0]["no_carpetas"]);?>
+    </td>
+  </tr>
+  <tr>
+    <td class="prettyprint">
+      <b>No caja:</b>
+    </td>
+    <td colspan="3">
+       <?php echo($caja[0]["no_cajas"]);?>
+    </td>
+  </tr>
+  <tr>
+    <td class="prettyprint">
+      <b>No correlativo:</b>
+    </td>
+    <td colspan="3">
+       <?php echo($caja[0]["no_correlativo"]);?>
+    </td>
+  </tr>
+  <tr>
+    <td class="prettyprint">
+      <b>Fecha extrema inicial:</b>
+    </td>
+    <td colspan="3">
+       <?php 
+       if(is_object($caja[0]["fecha_extrema_i"])){
+       	$caja[0]["fecha_extrema_i"]=$caja[0]["fecha_extrema_i"]->format('Y-m-d');
+       }
+       echo($caja[0]["fecha_extrema_i"]);?>
+    </td>
+  </tr>
+  <tr>
+    <td class="prettyprint">
+      <b>Fecha extrema final:</b>
+    </td>
+    <td colspan="3">
+       <?php 
+       if(is_object($caja[0]["fecha_extrema_f"])){
+       	$caja[0]["fecha_extrema_f"]=$caja[0]["fecha_extrema_f"]->format('Y-m-d');
+       }
+       echo($caja[0]["fecha_extrema_f"]);?>
     </td>
   </tr>
   <tr>
@@ -68,14 +159,6 @@ $caja=busca_filtro_tabla("","caja","idcaja=".$idcaja,"",$conn);
     </td>
     <td colspan="3">
        <?php echo($caja[0]["estanteria"]);?>
-    </td>
-  </tr>
-  <tr>
-    <td class="prettyprint">
-      <b>Nivel:</b>
-    </td>
-    <td colspan="3">
-       <?php echo($caja[0]["nivel"]);?>
     </td>
   </tr>
   <tr>
@@ -99,7 +182,10 @@ $caja=busca_filtro_tabla("","caja","idcaja=".$idcaja,"",$conn);
       <b>Seguridad:</b>
     </td>
     <td colspan="3">
-       <?php echo($caja[0]["seguridad"]);?>
+<?php 
+	$seguridad=array(1=>'Confidencial',2=>'Publica', 3=>'Rutinario');
+       echo($seguridad[$caja[0]["seguridad"]]);
+?>
     </td>
   </tr>
 </table>

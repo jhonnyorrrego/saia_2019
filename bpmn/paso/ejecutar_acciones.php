@@ -9,7 +9,7 @@ while($max_salida>0){
   $max_salida--;
 }
 include_once($ruta_db_superior."db.php");
-
+include_once($ruta_db_superior."workflow/libreria_paso.php");
 if(@$_REQUEST['ejecutar_accion']){
 	
 	$retorno=array();
@@ -30,27 +30,12 @@ if(@$_REQUEST['ejecutar_accion']){
 			break;
 			
 		case 3: //VALIDA QUE EXISTA ADICIONAR CUANDO SE SELECCIONA (APROBAR-CONFIRMAR-EDITAR), al crear una nueva actividad
-				$idpaso=@$_REQUEST['idpaso'];
-				$paso=busca_filtro_tabla("diagram_iddiagram","paso","estado=1 AND idpaso=".$idpaso,"",$conn);
-				$pasos_hermanos=busca_filtro_tabla("idpaso","paso","estado=1 AND diagram_iddiagram=".$paso[0]['diagram_iddiagram'],"",$conn);
-			
-				$valor=extrae_campo($pasos_hermanos,'idpaso');
-				$longitud=count($valor);
-				for($i=0;$i<$longitud;$i++){
-					if($valor[$i]>$idpaso){
-						unset($valor[$i]); 
-					}
-				}
-				$valor=array_values($valor);
-				$valor=implode(',',$valor);		
-				
-				$cadena_pasos_hermanos=$valor;
-				$actividad_adicionar=busca_filtro_tabla("","paso_actividad","tipo=1 AND estado=1 AND accion_idaccion=1 AND paso_idpaso IN(".$cadena_pasos_hermanos.")","",$conn);
-				$retorno['sql']=$actividad_adicionar;
+				$cadena_pasos=implode(',',listado_pasos_anteriores_admin(@$_REQUEST['idpaso']));
+				$cadena_pasos.=','.@$_REQUEST['idpaso'];
+				$actividad_adicionar=busca_filtro_tabla("","paso_actividad","tipo=1 AND estado=1 AND accion_idaccion=1 AND paso_idpaso IN(".$cadena_pasos.")","",$conn);
+				$retorno['exito']=0;
 				if($actividad_adicionar['numcampos']){
 					$retorno['exito']=1;
-				}else{
-					$retorno['exito']=0;
 				}
 			break;				
 	

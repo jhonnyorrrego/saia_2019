@@ -101,6 +101,8 @@ var isSafari ="";
 var isChrome="";
 var isIE="";
 $(document).ready(function(){
+	window.parent.$(".block-iframe").attr("style","margin-top:0px; width: 100%; border:0px solid; overflow:auto; -webkit-overflow-scrolling:touch;");
+	
 	var alto_document=($(document).height()-120);
   jQuery("#datos_busqueda").jqGrid({
     height:alto_document,

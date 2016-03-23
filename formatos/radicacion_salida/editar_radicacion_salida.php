@@ -1,4 +1,4 @@
-<html><title>.:EDITAR SALIDA:.</title><head><script type="text/javascript" src="../librerias/funciones_formatos.js"></script><script type="text/javascript" src="../../js/cmxforms.js"></script><?php include_once("../carta/funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("../librerias/funciones_generales.php"); ?><?php include_once("../librerias/funciones_acciones.php"); ?><?php include_once("../librerias/estilo_formulario.php"); ?><?php include_once("../librerias/header_formato.php"); ?><script type="text/javascript" src="../../js/jquery.js"></script><script type="text/javascript" src="../../js/jquery.validate.js"></script><script type="text/javascript" src="../../js/title2note.js"></script><script type="text/javascript" src="../../js/dhtmlXCommon.js"></script><script type="text/javascript" src="../../js/dhtmlXTree.js"></script><link rel="STYLESHEET" type="text/css" href="../../css/dhtmlXTree.css"><script type='text/javascript'>
+<html><title>.:EDITAR SALIDA:.</title><head><script type="text/javascript" src="../librerias/funciones_formatos.js"></script><script type="text/javascript" src="../../js/cmxforms.js"></script><?php include_once("../carta/funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("../librerias/funciones_generales.php"); ?><?php include_once("../librerias/funciones_acciones.php"); ?><?php include_once("../librerias/estilo_formulario.php"); ?><?php include_once("../librerias/header_formato.php"); ?><script type="text/javascript" src="../../js/jquery.js"></script><script type="text/javascript" src="../../js/jquery.validate.js"></script><script type="text/javascript" src="../../js/title2note.js"></script><script type="text/javascript" src="../../js/dhtmlXCommon.js"></script><script type="text/javascript" src="../../js/dhtmlXTree.js"></script><link rel="STYLESHEET" type="text/css" href="../../css/dhtmlXTree.css"><script type="text/javascript" src="../../js/jquery.spin.js"></script><script type='text/javascript'>
   $().ready(function() {
 	// validar los campos del formato
 	$('#formulario_formatos').validate();
@@ -98,9 +98,17 @@
                      <td class="encabezado" width="20%" title="">DESCRIPCION O ASUNTO*</td>
                      <td class="celda_transparente"><textarea  tabindex='2'  name="descripcion_salida" id="descripcion_salida" cols="53" rows="3" class="tiny_sin_tiny required"><?php echo(mostrar_valor_campo('descripcion_salida',207,$_REQUEST['iddoc'])); ?></textarea></td>
                     </tr><tr>
+                     <td class="encabezado" width="20%" title="">NUMERO DE FOLIOS*</td>
+                     <td bgcolor="#F5F5F5"><input  maxlength="11"  class="required" min="0" max="1000"  tabindex='3'  type="input" id="num_folios" name="num_folios"  value="<?php echo(mostrar_valor_campo('num_folios',207,$_REQUEST['iddoc'])); ?>"></td>
+                    </tr>
+                 <script type="text/javascript">
+              $(document).ready(function(){
+		            $("#num_folios").spin({imageBasePath:'../../images/',min:0,max:1000,interval:1});
+              });
+              </script><tr>
                      <td class="encabezado" width="20%" title="">ANEXOS FISICOS</td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(207,2189,$_REQUEST['iddoc']);?></td></tr><tr>
                      <td class="encabezado" width="20%" title="">DESCRIPCION ANEXOS FISICOS</td>
-                     <td class="celda_transparente"><textarea  tabindex='3'  name="descripcion_anexos" id="descripcion_anexos" cols="53" rows="3" class="tiny_sin_tiny"><?php echo(mostrar_valor_campo('descripcion_anexos',207,$_REQUEST['iddoc'])); ?></textarea></td>
+                     <td class="celda_transparente"><textarea  tabindex='4'  name="descripcion_anexos" id="descripcion_anexos" cols="53" rows="3" class="tiny_sin_tiny"><?php echo(mostrar_valor_campo('descripcion_anexos',207,$_REQUEST['iddoc'])); ?></textarea></td>
                     </tr><tr id="tr_tipo_mensajeria" >
                      <td class="encabezado" width="20%" title="">TIPO DE MENSAJERIA*</td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(207,2202,$_REQUEST['iddoc']);?></td></tr><tr>
                      <td class="encabezado" width="20%" title="">MENSAJEROS</td>

@@ -65,7 +65,9 @@ switch ($sAction)
 		break;
 	case "A": // Add
 		if ($id=AddData($conn)){ // Add New Record
-			abrir_url($ruta_db_superior."bpmn/procesar_bpmn.php?idbpmn=".$id."&vista_bpmn=1","_self");
+			//abrir_url($ruta_db_superior."bpmn/procesar_bpmn.php?idbpmn=".$id."&vista_bpmn=1","_self");
+			abrir_url($ruta_db_superior."pantallas/buscador_principal.php?idbusqueda=23","centro");
+			
 			exit();
 		}
 		break;

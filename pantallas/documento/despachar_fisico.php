@@ -163,12 +163,12 @@ function reporte_salidas(){
 	$texto.='<td style="text-align:center"><b>Direcci&oacute;n</b></td>';
 	$texto.='<td style="text-align:center"><b>Tel&eacute;fono</b></td>';
 	$texto.='<td style="text-align:center"><b>Ciudad</b></td>';
-	$texto.='<td style="text-align:center"><b>Acci&oacute;n</b></td>';
+	/*$texto.='<td style="text-align:center"><b>Acci&oacute;n</b></td>';
 	$texto.='<td style="text-align:center"><b>Centro de costos</b></td>';
 	$texto.='<td style="text-align:center"><b>Departamento</b></td>';
 	$texto.='<td style="text-align:center"><b>L&iacute;nea</b></td>';
 	$texto.='<td style="text-align:center"><b>Origen</b></td>';
-	$texto.='<td style="text-align:center"><b>Proyecto</b></td>';
+	$texto.='<td style="text-align:center"><b>Proyecto</b></td>';*/
 	$texto.='<td style="text-align:center"><b>Recibido por</b></td>';
 	$texto.='</tr>';
 	for($i=0;$i<$documentos["numcampos"];$i++){
@@ -181,7 +181,7 @@ function reporte_salidas(){
 		$texto.='<td style="text-align:left;">'.direccion_destino_remitente($documentos[$i]["iddocumento"]).'</td>';
 		$texto.='<td style="text-align:center;">'.telefono_destino_remitente($documentos[$i]["iddocumento"]).'</td>';
 		$texto.='<td style="text-align:center;">'.ciudad_destino_remitente($documentos[$i]["iddocumento"]).'</td>';
-		if($documentos[$i]["plantilla"]=='RADICACION_SALIDA'){
+		/*if($documentos[$i]["plantilla"]=='RADICACION_SALIDA'){
 			$texto.='<td style="text-align:center;">'.ucwords(mostrar_campo_salida($documentos[$i]["iddocumento"],'accion_mensajeria')).'</td>';
 			$texto.='<td style="text-align:center;">'.ucwords(mostrar_campo_salida($documentos[$i]["iddocumento"],'centro_mensajeria')).'</td>';
 			$texto.='<td style="text-align:center;">'.ucwords(mostrar_campo_salida($documentos[$i]["iddocumento"],'departamento_mensaje')).'</td>';
@@ -196,7 +196,7 @@ function reporte_salidas(){
 			$texto.='<td style="text-align:center;">&nbsp;</td>';
 			$texto.='<td style="text-align:center;">&nbsp;</td>';
 			$texto.='<td style="text-align:center;">&nbsp;</td>';
-		}
+		}*/
 		$texto.='<td style="text-align:center;">&nbsp;</td>';
 		$texto.='</tr>';
 	}

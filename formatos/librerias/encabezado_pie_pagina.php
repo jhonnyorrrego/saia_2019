@@ -136,8 +136,8 @@ if($carta["numcampos"]&&$carta[0]["varios_radicados"])
      $documento[0]["numero"]= $radicado[0][0];
   }
   
-if($documento["numcampos"])
-{if($tipo)
+if($documento["numcampos"]){
+	if($tipo)
    return ($documento[0]["numero"]);
  else
    echo  $documento[0]["numero"];

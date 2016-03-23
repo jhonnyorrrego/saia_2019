@@ -765,6 +765,22 @@ function filtro_funcionario_etiquetados($funcionario){
  	$retorno=" AND d.funcionario='".usuario_actual("funcionario_codigo")."'";
 	return($retorno);  
 }
-
+function carga_soporte($iddocumento){
+	global $ruta_db_superior;
+	if(@$_REQUEST['idbusqueda_filtro_temp']){
+		$texto='<li><a href="#" id="cargar_soporte">Cargar soporte</a></li>';
+	  $texto.='<script>
+	    $("#cargar_soporte").click(function(){	    	
+	      var docus=$("#seleccionados").val();
+			  if(docus!=""){			  	
+						top.hs.htmlExpand(this, { objectType: "iframe",width: 400, height: 300, src:"http://'.RUTA_PDF.'/pantallas/documento/anexos_despacho.php?docs="+docus,outlineType: "rounded-white",wrapperClassName:"highslide-wrapper drag-header"});
+			  }else{
+			  	alert("Seleccione por lo menos un documento");
+			  }
+		   });
+	  </script>';
+  	return $texto;
+	}	
+}
 
 ?>

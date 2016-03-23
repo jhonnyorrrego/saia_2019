@@ -269,6 +269,7 @@ if($ubucación_fisica['numcampos'] || $despacho['numcampos']){
 		<?php
 			if($despacho['numcampos']){
 				for ($i=0; $i < $despacho['numcampos']; $i++) {
+					$anexos=busca_filtro_tabla("","anexos","documento_iddocumento=".$iddocumento,"idanexos desc",$conn);
 					if(is_object($despacho[$i]["fecha_despacho"])){
             $despacho[$i]["fecha_despacho"]=$despacho[$i]["fecha_despacho"]->format("Y-m-d");
           }
@@ -288,6 +289,8 @@ if($ubucación_fisica['numcampos'] || $despacho['numcampos']){
 					if($despacho[$i]['notas']){
 						$texto .= "Observaciones: ".$despacho[$i]['notas']."<br />";
 					}
+					if($anexos['numcampos'] && $despacho[$i]['tipo_despacho']==1)
+					$texto .= "Soporte: <a href='".$ruta_db_superior."anexosdigitales/parsea_accion_archivo.php?idanexo=".$anexos[0]['idanexos']."&accion=descargar'>".$anexos[0]['etiqueta']."</a><br />";
 					echo("<div class='well'>".$texto."</div>");
 				}
 			}

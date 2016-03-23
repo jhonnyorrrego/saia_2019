@@ -8,6 +8,8 @@ include_once($ruta_db_superior."workflow/libreria_paso.php");
 echo(estilo_bootstrap());
 $paso=busca_filtro_tabla("","paso A, paso_actividad B","A.idpaso=B.paso_idpaso AND A.idpaso=".$_REQUEST["idpaso"]." AND B.estado=1","orden",$conn);
 
+
+
 $paso_doc='';
 if(@$_REQUEST["idpaso_documento"]){
 	$paso_doc=busca_filtro_tabla("","paso_documento","idpaso_documento=".$_REQUEST["idpaso_documento"],"",$conn);
@@ -60,14 +62,20 @@ else{
 	<?php 
 	$estados_no_permitidos=array(1,2,6);  //1: ejecutado , 2: cerrado , 3: cancelado , 6: iniciado
 	
-	if(!in_array($paso_doc[0]['estado_paso_documento'], $estados_no_permitidos)){ 
+	if(!in_array($paso_doc[0]['estado_paso_documento'], $estados_no_permitidos)){
+		$permiso_mod=new Permiso();
+		$ok=$permiso_mod->acceso_modulo_perfil("cancelar_paso_flujo");
+		
+		if($ok){
 	?>
 		<i class="icon-remove" title="Cancelar Paso" style="cursor:pointer;" id="cancelar_paso" iddocumento="<?php echo($paso_doc[0]['documento_iddocumento']); ?>" idpaso_documento="<?php echo($paso_doc[0]['idpaso_documento']); ?>" idpaso="<?php echo($paso_doc[0]['paso_idpaso']); ?>"></i> 
 	<?php 
+		}
 	} 
 	?>
 	
-</legend><br>
+</legend>
+<br>
 <?php 
 $texto='';
 $texto2='';
@@ -465,8 +473,18 @@ $(document).ready(function(){
 		            success: function(datos){
 		            	
 		            	if(datos.exito==1){
-		            		notificacion_saia("Paso cancelado Satisfactoriamente","success","",3500);
-		            		window.location.reload();
+		            		
+		            		if(datos.doc_aprobado==1){
+		            			notificacion_saia("No es posible cancelar el paso, el documento esta aprobado","error","",3500);
+		            		}else{
+		            			notificacion_saia("Paso cancelado Satisfactoriamente","success","",3500);
+		            		}
+		            		
+		            		window.parent.hs.close();
+		            		window.parent.location.reload();
+		            		
+		            	}else{
+		            		notificacion_saia("No es posible cancelar el paso, no hay ninguna actividad terminada","warning","",3500);    
 		            	}
 						
 		            }

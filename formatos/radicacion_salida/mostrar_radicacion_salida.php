@@ -26,6 +26,10 @@
 <td><?php mostrar_valor_campo('descripcion_anexos',207,$_REQUEST['iddoc']);?></td>
 </tr>
 <tr>
+<td><strong>No. Folios:</strong></td>
+<td colspan="3"><?php mostrar_valor_campo('num_folios',207,$_REQUEST['iddoc']);?>&nbsp;&nbsp;</td>
+</tr>
+<tr>
 <td><strong>Funcionario responsable:</strong></td>
 <td colspan="3"><?php mostrar_valor_campo('area_responsable',207,$_REQUEST['iddoc']);?><strong></strong></td>
 </tr>

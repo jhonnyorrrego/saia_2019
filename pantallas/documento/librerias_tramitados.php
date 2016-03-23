@@ -22,11 +22,29 @@ function despachar_fisico_doc(){
     $("#despachar_fisico_documentos").click(function(){
       var docus=$("#seleccionados").val();
 	  if(docus!=""){
-	  	enlace_katien_saia("pantallas/documento/despachar_fisico.php?docs="+docus+",","Despachar documentos","iframe","");
+	  	//enlace_katien_saia("pantallas/documento/despachar_fisico.php?docs="+docus+",","Despachar documentos","iframe","");
+			enlace_katien_saia("formatos/despacho_fisico/adicionar_despacho_fisico.php?docs="+docus+",","Despachar documentos","iframe","");
 	  }
 	  else{
 	  	alert("Seleccione por lo menos un documento");
 	  }
+    });
+  </script>';
+  return $texto;
+}
+function planilla_control(){
+  global $ruta_db_superior;
+  $texto='<li><a href="#" id="planilla_control">Entrega Interna</a></li>';
+  $texto.='<script>
+    $("#planilla_control").click(function(){
+      var docus=$("#seleccionados").val();
+    if(docus!=""){
+      //enlace_katien_saia("pantallas/documento/planilla_control.php?docs="+docus+",","Entrega Interna","iframe","");
+      enlace_katien_saia("formatos/despacho_ingresados/adicionar_despacho_ingresados.php?docs="+docus+",","Entrega Interna","iframe","");
+    }
+    else{
+      alert("Seleccione por lo menos un documento");
+    }
     });
   </script>';
   return $texto;

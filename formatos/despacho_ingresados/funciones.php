@@ -1,0 +1,240 @@
+<?php
+$max_salida=10; // Previene algun posible ciclo infinito limitando a 10 los ../
+$ruta_db_superior=$ruta="";
+while($max_salida>0){
+  if(is_file($ruta."db.php")){
+    $ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
+  }
+  $ruta.="../";
+  $max_salida--;
+}
+include_once($ruta_db_superior."db.php");
+include_once($ruta_db_superior."librerias_saia.php");
+include_once($ruta_db_superior."pantallas/documento/librerias_tramitados.php");
+include_once($ruta_db_superior."formatos/librerias/encabezado_pie_pagina.php");
+echo(librerias_validar_formulario());
+echo(librerias_notificaciones());
+echo (librerias_jquery("1.7"));
+//------------------------------Adicionar------------------------------------//
+function campos_ocultos_entrega($idformato,$iddoc){
+	global $conn,$ruta_db_superior;
+	$valores=trim($_REQUEST['docs'],',');
+	$hoy=date("Y-m-d");
+	?>
+	<script>
+		$(document).ready(function (){
+			var valores='<?php echo $valores;?>';
+			if(valores=='' || valores==0){
+				alerta("Por favor seleccione documentos");
+			}else{
+				$("input[name=docs_seleccionados]").val('<?php echo $valores;?>');
+				$("input[name=fecha_entrega]").val('<?php echo $hoy;?>');
+			}
+		});
+		$("#formulario_formatos").validate({
+				submitHandler: function(form){
+					var seguro=confirm("Esta seguro que desea crear la entrega?");
+					if(seguro){				
+						form.submit();
+					}else{
+						$('input[type=button]').hide();
+						$("#continuar").show();
+						return false;
+					}
+				}
+		});
+	</script>
+	<?php 
+}
+//----------------------------------Mostrar-------------------------------------//
+function mostrar_seleccionados_entrega($idformato,$iddoc){
+	global $conn,$ruta_db_superior,$registros;
+	$seleccionado=busca_filtro_tabla("","ft_despacho_ingresados","documento_iddocumento=".$iddoc,"",$conn);
+	$documentos=explode(",",$seleccionado[0]['docs_seleccionados']);
+	$docs=array_filter($documentos);
+	$texto='';
+	$registros=busca_filtro_tabla("","documento A"," A.iddocumento in(".implode(",",$docs).")","",$conn);
+	if($registros[0]["tipo_radicado"]==1){
+		$texto.=reporte_entradas2($idformato,$iddoc);
+		echo($texto);
+	}else if($registros[0]["tipo_radicado"]==2){
+		$texto.=reporte_salidas2($idformato,$iddoc);
+		echo($texto);
+	}
+}
+//------------------------------Posterior aprobar------------------------------------//
+function generar_pdf_entrega($idformato,$iddoc){
+	global $conn,$ruta_db_superior;
+	/*$ch = curl_init();
+	$fila = "http://".RUTA_PDF_LOCAL."/html2ps/public_html/demo/html2ps.php?plantilla=".strtolower($datos_formato[0]["nombre_formato"])."&iddoc=".$iddoc."&conexion_remota=1";
+	$fila = "http://".RUTA_PDF_LOCAL."/class_impresion.php?iddoc=".$iddoc."&LOGIN=".$_SESSION["LOGIN".LLAVE_SAIA]."&usuario_actual=".$_SESSION["usuario_actual"]."&LLAVE_SAIA=".LLAVE_SAIA;
+	curl_setopt($ch, CURLOPT_URL,$fila); 
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
+	curl_setopt($ch, CURLOPT_VERBOSE, true); 
+	curl_setopt($ch, CURLOPT_STDERR, $abrir);
+	$contenido=curl_exec($ch);
+	curl_close ($ch);*/
+	$seleccionado=busca_filtro_tabla("","ft_despacho_ingresados,documento","documento_iddocumento=iddocumento and documento_iddocumento=".$iddoc,"",$conn);	
+	if($seleccionado[0]['mensajero']==0 || $seleccionado[0]['mensajero']==''){
+		$sql1_mensajero="UPDATE ft_despacho_ingresados SET mensajero='".usuario_actual('idfuncionario')."' where idft_despacho_ingresados=".$seleccionado[0]['idft_despacho_ingresados'];
+		phpmkr_query($sql1_mensajero);
+		$seleccionado=busca_filtro_tabla("","ft_despacho_ingresados,documento","documento_iddocumento=iddocumento and documento_iddocumento=".$iddoc,"",$conn);
+	}
+	$mensajero=$seleccionado[0]['mensajero'];
+	
+	/*$documentos=explode(",",$seleccionado[0]['docs_seleccionados']);
+	$tipo_despacho=2;
+	$j=0;
+	$cant=count($documentos);
+	for($i=0;$i<$cant;$i++){
+		if($documentos[$i]){
+			$sql1_salidas="INSERT INTO salidas(documento_iddocumento,responsable,fecha_despacho,tipo_despacho,notas,radicado_despacho) VALUES ('".$documentos[$i]."','".$mensajero."',".fecha_db_almacenar(date("Y-m-d H:i:s"),"Y-m-d H:i:s").",'".$tipo_despacho."','Despacho realizado por despacho fisico.','".$seleccionado[0]['numero']."')";
+			phpmkr_query($sql1_salidas);
+			$id=phpmkr_insert_id();
+			if($id){
+				$j++;
+			}
+		}
+	}
+	if($j==$i){
+		alerta("Despachos realizados");
+	}*/
+	abrir_url($ruta_db_superior."class_impresion.php?iddoc=".$iddoc,"_self");
+	die();
+}
+
+function reporte_entradas2($idformato,$iddoc){
+	global $conn,$registros;
+	$documentos2=busca_filtro_tabla("","documento A,ft_despacho_ingresados","documento_iddocumento=iddocumento and A.iddocumento =".$iddoc,"",$conn);
+	$funcionario=busca_filtro_tabla("","vfuncionario_dc","idfuncionario=".$documentos2[0]['mensajero'],"",$conn);
+	$logo=busca_filtro_tabla("valor","configuracion","nombre='logo'","",$conn);
+	$texto='<table style="border-collapse:collapse;width:100%" border="1px">';
+	$texto.='<tr>';
+	$texto.='<td style="text-align:center;" colspan="2" rowspan="2"><br/><br/><img src="'.PROTOCOLO_CONEXION.RUTA_PDF.'/'.$logo[0]['valor'].'" width="125px" heigth="83px"></td>';
+	$texto.='<td style="text-align:center" colspan="5" rowspan="2"><br/><br/><br/><br/><br/><b>PLANILLA DE CONTROL DE COMUNICACIONES DE LA DEPENDENCIA </b></td>';
+	$texto.='<td style="text-align:left" colspan="2"><br/><br/><br/><br/><b>C&Oacute;DIGO: GDC-FT-003<br/>RADICADO: '.formato_numero($idformato,$iddoc,1).'</b></td></tr>';
+	$texto.='<tr><td colspan="2" style="text-align:left"><b>VERSI&Oacute;N:</b> 001</td></tr>';
+	$texto.='<tr>';
+	$texto.='<td colspan="10"><b>MENSAJERO O ENCARGADO: '.$funcionario[0]['nombres'].' '.$funcionario[0]['apellidos'].'</b></td>';
+	$texto.='</tr>';
+	$texto.='</table>';
+	$texto.='<br />';
+	$texto.='<table style="border-collapse:collapse;width:100%" border="1px">';
+	$texto.='<tr style="height:70px">';
+	$texto.='<td style="text-align:center"><b>N° RADICADO</b></td>';
+	$texto.='<td style="text-align:center"><b>FECHA DE RECIBO(DD/MM/AAAA)</b></td>';
+	$texto.='<td style="text-align:center"><b>FOLIOS</b></td>';
+	$texto.='<td style="text-align:center"><b>REMITENTE</b></td>';
+	$texto.='<td style="text-align:center"><b>ASUNTO</b></td>';
+	
+	$texto.='<td style="text-align:center"><b>ASIGNADA A (NOMBRE Y FIRMA)</b></td>';
+	$texto.='<td style="text-align:center"><b>FECHA DE ASIGNACIÓN</b></td>';
+	
+	$texto.='<td style="text-align:center"><b>FIRMA DE QUIEN RECIBE</b></td>';	
+	$texto.='<td style="text-align:center"><b>FECHA DE RESPUESTA</b></td>';
+	$texto.='</tr>';
+	
+	for($i=0;$i<$registros["numcampos"];$i++){
+		if($registros[$i]['plantilla']=='RADICACION_ENTRADA'){
+			$documentos=busca_filtro_tabla("r.*,numero,iddocumento,fecha,paginas","ft_radicacion_entrada r,documento A","documento_iddocumento=iddocumento and A.iddocumento=".$registros[$i]['iddocumento'],"",$conn);
+			//print_r($documentos);	
+		}
+		if($registros[$i]['plantilla']=='REGISTRO_PQRS'){
+			$documentos=busca_filtro_tabla("r.*,numero,iddocumento,fecha,paginas","ft_registro_pqrs r,documento A","documento_iddocumento=iddocumento and A.iddocumento=".$registros[$i]['iddocumento'],"",$conn);	
+			//print_r($documentos);
+		}
+		
+		$datos_remitente=busca_filtro_tabla("B.nombre,A.*","datos_ejecutor A, ejecutor B","A.ejecutor_idejecutor=B.idejecutor AND A.iddatos_ejecutor=".$documentos[0]['persona_natural'],"",$conn);
+		$datos_destino=busca_filtro_tabla("","vfuncionario_dc","iddependencia_cargo=".$documentos[0]['destino'],"",$conn);
+		if($registros[$i]['plantilla']=='REGISTRO_PQRS'){
+			$datos_destino=busca_filtro_tabla("","vfuncionario_dc","iddependencia_cargo=".$documentos[0]['destino'],"",$conn);
+		}
+		$buzon_salida=busca_filtro_tabla("","buzon_salida A","nombre='TRANSFERIDO' and A.archivo_idarchivo=".$documentos[0]["iddocumento"],"fecha asc",$conn);
+		$fecha_respuesta=busca_filtro_tabla("","respuesta, documento","estado='APROBADO' and destino=iddocumento and origen=".$documentos[0]["iddocumento"],"",$conn);
+
+		if($fecha_respuesta['numcampos']>0){
+			$fecha=date('d-m-Y', strtotime($fecha_respuesta[0]['fecha']));
+		}else{
+			$fecha='';
+		}
+		$texto.='<tr>';
+		$texto.='<td style="text-align:center">'.$documentos[0]["numero"].'</td>';
+		$texto.='<td style="text-align:center;">'.date('d-m-Y', strtotime($documentos[0]["fecha"])).'</td>';
+		
+		if($registros[$i]['plantilla']=='RADICACION_ENTRADA'){
+			$texto.='<td style="text-align:center;">'.$documentos[0]["numero_folios"].'</td>';
+			$texto.='<td style="text-align:left;">'.$datos_remitente[0]["nombre"].'</td>';
+			$texto.='<td style="text-align:left;">'.$documentos[0]["descripcion"].'</td>';
+			$texto.='<td style="text-align:center;">'.$datos_destino[0]['nombres']." ".$datos_destino[0]['apellidos'].'</td>';
+		}
+		
+		if($registros[$i]['plantilla']=='REGISTRO_PQRS'){
+			$texto.='<td style="text-align:left;">'.$documentos[0]["nombre_solicita_pqr"].'</td>';
+			$texto.='<td style="text-align:left;">'.$documentos[0]["descripcion_pqr"].'</td>';
+			$texto.='<td style="text-align:center;">'.$fecha_respuesta[0]['descripcion'].'</td>';
+		}
+		if($buzon_salida['numcampos']==0){
+			$texto.='<td style="text-align:center;"></td>';
+		}else{
+			$texto.='<td style="text-align:center;">'.date('d-m-Y', strtotime($buzon_salida[0]['fecha'])).'</td>';
+		}
+		$texto.='<td style="text-align:left;"></td>';
+		$texto.='<td style="text-align:center;">'.$fecha.'</td>';
+		$texto.='</tr>';
+	}
+	$texto.='</table>';
+	return($texto);
+}
+function reporte_salidas2($idformato,$iddoc){
+	global $conn,$documentos,$ruta_db_superior;
+	$documentos2=busca_filtro_tabla("","documento A,ft_despacho_fisico","documento_iddocumento=iddocumento and A.iddocumento =".$iddoc,"",$conn);
+	$funcionario=busca_filtro_tabla("","vfuncionario_dc","idfuncionario=".$documentos2[0]['mensajero'],"",$conn);
+	$texto='';
+	$logo=busca_filtro_tabla("valor","configuracion","nombre='logo'","",$conn);
+	$texto.='<table style="border-collapse:collapse;width:100%" border="1px">';
+	$texto.='<tr style="height:120px">';
+	$texto.='<td style="text-align:center;" colspan="3"><br/><br/><img src="'.PROTOCOLO_CONEXION.RUTA_PDF.'/'.$logo[0]['valor'].'" width="125px" heigth="83px"></td>';
+	//$texto.='<td style="text-align:center;" colspan="3"><img src="'.PROTOCOLO_CONEXION.RUTA_PDF.'/imagenes/logo_demo755-20160224.jpg"></td>';
+	$texto.='<td style="text-align:center;" colspan="8"><br/><br/><br/><br/><b>CONTROL DE ENTREGA DE DOCUMENTOS RECIBO Y RADICACI&Oacute;N DE CORRESPONDENCIA</b></td>';
+	$texto.='<td style="text-align:center;" colspan="4"><br/><br/><br/><br/><b>C&Oacute;DIGO:GF-01<br/>RADICADO: '.formato_numero($idformato,$iddoc,1).'</b></td>';
+	$texto.='</tr>';
+	$texto.='<tr>';
+	$texto.='<td colspan="3"><b>VERSI&Oacute;N:1</b></td>';
+	$texto.='<td colspan="4"><b>FECHA DE EMISI&Oacute;N:'.date('d/m/Y').'</b></td>';
+	$texto.='<td colspan="4"><b>FECHA ULTIMO CAMBIO:</b></td>';
+	$texto.='<td colspan="4"><b>PAGINA:</b></td>';
+	$texto.='</tr>';
+	$texto.='<tr>';
+	$texto.='<td colspan="15"><b>MENSAJERO O ENCARGADO: '.$funcionario[0]['nombres'].' '.$funcionario[0]['apellidos'].'</b></td>';
+	$texto.='</tr>';
+	$texto.='</table>';
+	$texto.='<br />';
+	$texto.='<table style="border-collapse:collapse;width:100%" border="1px">';
+	$texto.='<tr style="height:70px">';
+	$texto.='<td style="text-align:center;width:8%;"><b>No radicado</b></td>';
+	$texto.='<td style="text-align:center"><b>Fecha</b></td>';
+	$texto.='<td style="text-align:center;width:10%;"><b>Remitente</b></td>';
+	$texto.='<td style="text-align:center"><b>Asunto</b></td>';
+	$texto.='<td style="text-align:center"><b>Destino</b></td>';
+	$texto.='<td style="text-align:center"><b>Direcci&oacute;n</b></td>';
+	$texto.='<td style="text-align:center"><b>Tel&eacute;fono</b></td>';
+	$texto.='<td style="text-align:center"><b>Ciudad</b></td>';
+	$texto.='<td style="text-align:center"><b>Recibido por</b></td>';
+	$texto.='</tr>';
+	for($i=0;$i<$documentos["numcampos"];$i++){
+		$texto.='<tr>';
+		$texto.='<td style="text-align:center">'.$documentos[$i]["numero"].'</td>';
+		$texto.='<td style="text-align:center;">'.$documentos[$i]["fecha"].'</td>';
+		$texto.='<td style="text-align:left;">'.usuario_aprobador_tramitados($documentos[$i]["iddocumento"]).'</td>';
+		$texto.='<td style="text-align:left;">'.($documentos[$i]["descripcion"]).'</td>';
+		$texto.='<td style="text-align:left;">'.destino_remitente($documentos[$i]["iddocumento"],$documentos[$i]["plantilla"]).'</td>';
+		$texto.='<td style="text-align:left;">'.direccion_destino_remitente($documentos[$i]["iddocumento"]).'</td>';
+		$texto.='<td style="text-align:center;">'.telefono_destino_remitente($documentos[$i]["iddocumento"]).'</td>';
+		$texto.='<td style="text-align:center;">'.ciudad_destino_remitente($documentos[$i]["iddocumento"]).'</td>';
+		$texto.='<td style="text-align:center;">&nbsp;</td>';
+		$texto.='</tr>';
+	}
+	$texto.='</table>';
+	return($texto);
+}
+?>

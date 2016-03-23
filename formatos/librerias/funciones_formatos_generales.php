@@ -118,7 +118,7 @@ global $conn;
     phpmkr_query("delete from ruta where documento_iddocumento='$iddoc'");
   }
   
-  for($i=0;$i<count($ruta)-1;$i++){
+  for($i=0;$i<count($ruta)-1;$i++){ //ANTES ESTABA "count($ruta)-1", se cambia a "count($ruta)-2" y se arregla las rutas en flujos y la devolucion de documentos
     if(!isset($ruta[$i]["tipo_firma"])){
       $ruta[$i]["tipo_firma"]=1;
     }

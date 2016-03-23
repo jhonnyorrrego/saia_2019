@@ -35,7 +35,9 @@
 </tr>
 <tr>
 <td><strong>Anexos digitales:</strong></td>
-<td colspan="3"><?php mostrar_valor_campo('anexos_digitales',3,$_REQUEST['iddoc']);?>&nbsp;&nbsp;</td>
+<td><?php mostrar_valor_campo('anexos_digitales',3,$_REQUEST['iddoc']);?>&nbsp;&nbsp;</td>
+<td><strong>No. Folios:</strong></td>
+<td><?php mostrar_valor_campo('numero_folios',3,$_REQUEST['iddoc']);?></td>
 </tr>
 <tr>
 <td><strong>Destino:</strong></td>

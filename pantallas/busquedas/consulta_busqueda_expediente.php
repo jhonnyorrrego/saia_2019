@@ -128,7 +128,11 @@ if(@$_REQUEST["idbusqueda_componente"]){
 <div class="pull-left" id="panel_detalle">
     <iframe id="iframe_detalle" name="iframe_detalle" style="width: 100%;" frameborder="no"></iframe>
 </div>
-<script>         
+<script>
+$(document).ready(function(){
+	window.parent.$(".block-iframe").attr("style","margin-top:0px; width: 100%; border:0px solid; overflow:auto; -webkit-overflow-scrolling:touch;");
+});
+
   var espacio_menu=$("#menu_buscador").height()+18;
   var alto_inicial=($(document).height()-espacio_menu); 
   var carga_final=false;

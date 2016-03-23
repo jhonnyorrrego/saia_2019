@@ -219,6 +219,8 @@ $padre=explode("/**/",$_REQUEST["variable_busqueda"]);
 <script type="text/javascript" src="<?php echo($ruta_db_superior."js/jquery.nicescroll.js");?>"></script>
 <script type="text/javascript">
 $(document).ready(function() {
+	window.parent.$(".block-iframe").attr("style","margin-top:0px; width: 100%; border:0px solid; overflow:auto; -webkit-overflow-scrolling:touch;");
+	
   $("#resultado_panel").height("");
   $("#resultado_panel").height(alto_inicial);
   $("#resultado_panel").niceScroll({autohidemode:false, cursorwidth: 8});

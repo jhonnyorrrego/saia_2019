@@ -58,12 +58,12 @@ elseif(@$_REQUEST["llave"]){
 else $nodoinicial=$llave_formato;
 ?>
 <style>
-    #panel_detalles{margin-top:0px; width: 100%; border:0px solid; overflow:auto; <?php if($_SESSION["tipo_dispositivo"]=='movil'){?>-webkit-overflow-scrolling:touch;<?php } ?>} 
+    #contenedor{margin-top:0px; width: 100%; border:0px solid; overflow:auto; <?php if($_SESSION["tipo_dispositivo"]=='movil'){?>-webkit-overflow-scrolling:touch;<?php } ?>} 
     #detalles{height:100%; } 
     #panel_arbol_formato{border:0px solid;}
 
 </style>
-<div class="container row-fluid" style="align:center">
+<div class="container row-fluid" id="contenedor" style="align:center">
     <div class="span3">         
         <div id="izquierdo_saia" >          
         </div>

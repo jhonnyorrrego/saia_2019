@@ -199,7 +199,7 @@ else
  */  
 function terminar_actividad_paso($iddocumento,$accion,$tipo_terminacion=1,$paso_documento=0,$idactividad=0){
   global $conn;
-alerta($accion."-->".$iddocumento."--->".$tipo_terminacion."---->".$paso_documento."---->".$idactividad);
+//alerta($accion."-->".$iddocumento."--->".$tipo_terminacion."---->".$paso_documento."---->".$idactividad);
 if($accion!="" && $tipo_terminacion==1){ 
 //La condicion c.estado_paso_documento>4 es para verificar que el paso no este terminado o cerrado
   if($iddocumento){
@@ -320,7 +320,7 @@ global $conn;
   if(!$idflujo){
     $documento=busca_filtro_tabla("","documento A, formato B","lower(A.plantilla)=lower(B.nombre) AND A.iddocumento=".$iddocumento,"",$conn);
     $flujo=busca_filtro_tabla("B.diagram_iddiagram","paso B, paso_actividad C, accion D, paso_enlace E, vfuncionario_dc F","B.idpaso=C.paso_idpaso AND C.accion_idaccion=D.idaccion AND D.nombre='adicionar' AND C.formato_idformato=".$documento[0]["idformato"]." AND E.destino=B.idpaso AND E.origen=-1 AND D.nombre = 'adicionar' AND ((C.llave_entidad=F.idcargo OR C.llave_entidad=-1) AND F.funcionario_codigo=".usuario_actual("funcionario_codigo").")","",$conn);
-    print_r($flujo);
+    //print_r($flujo);
     //TODO: Aqui se debe validar que el idflujo llegue como un arreglo en caso de que existan varios formatos vinculados a varios flujos.  Se debe validar que el usuario que inicia el flujo sea el encargado de adicionar el formato y que una de las acciones del paso inicial sea adicionar el formato actual
     if($flujo["numcampos"]){
        $idflujo=$flujo[0]["diagram_iddiagram"];

@@ -96,6 +96,17 @@
                       });
                       });
                      </script></td>
+                    </tr><tr><td class="encabezado">&nbsp;<select name="condicion_num_folios" id="condicion_num_folios"><option value="AND">Y</option><option value="OR">O</option></td>
+                     <td class="encabezado" width="20%" title="">NUMERO DE FOLIOS</td><td class="encabezado">&nbsp;<select name="compara_num_folios" id="compara_num_folios"> <option value="or">Alguno</option><option value="and">Todos</option></select></td>
+                     <td bgcolor="#F5F5F5"><select multiple id="num_folios" name="num_folios"></select><script>
+                     $(document).ready(function() 
+                      {
+                      $("#num_folios").fcbkcomplete({
+                        complete_text:"Presione enter para agregar una palabra.",
+                        newel: true
+                      });
+                      });
+                     </script></td>
                     </tr><tr><td class="encabezado">&nbsp;<select name="condicion_anexos_fisicos" id="condicion_anexos_fisicos"><option value="AND">Y</option><option value="OR">O</option></td>
                      <td class="encabezado" width="20%" title="">ANEXOS FISICOS</td><td class="encabezado">&nbsp;<select name="compara_anexos_fisicos" id="compara_anexos_fisicos"> <option value="=|@|@">Igual</option><option value="-|@|@">Menor</option><option value="+|@|@">Mayor</option><option value="!|@|@">Diferente</option></select></td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(207,2189,'',1);?></td></tr><tr><td class="encabezado">&nbsp;<select name="condicion_descripcion_anexos" id="condicion_descripcion_anexos"><option value="AND">Y</option><option value="OR">O</option></td>
                      <td class="encabezado" width="20%" title="">DESCRIPCION ANEXOS FISICOS</td><td class="encabezado">&nbsp;<select name="compara_descripcion_anexos" id="compara_descripcion_anexos"> <option value="or">Alguno</option><option value="and">Todos</option></select></td>

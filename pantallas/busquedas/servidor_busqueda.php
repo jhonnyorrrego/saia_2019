@@ -482,7 +482,11 @@ if($result["numcampos"]){
 	  }
 		else if($datos_busqueda[0]["tipo_busqueda"]==2){
 			for($k=0;$k<$cant_columnas_excel;$k++){
-				$array_export[$i][$columnas_excel[$k]]=utf8_encode(html_entity_decode(strip_tags($response->rows[$i]->$columnas_excel[$k])));
+				if(@$_REQUEST["exportar_saia"]=='excel' || @$_REQUEST["exportar_saia"]=='csv'){
+					$array_export[$i][$columnas_excel[$k]]=(html_entity_decode(strip_tags($response->rows[$i]->$columnas_excel[$k])));
+				}else{
+					$array_export[$i][$columnas_excel[$k]]=utf8_encode(html_entity_decode(strip_tags($response->rows[$i]->$columnas_excel[$k])));
+				}
 			}
 		}
     if($_REQUEST["export_saia"]=="csv" || $_REQUEST["export_saia"]=="excel"){

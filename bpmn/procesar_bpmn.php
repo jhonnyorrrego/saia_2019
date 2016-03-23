@@ -3,10 +3,11 @@
 <?php 
 include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."librerias_saia.php"); 
-include_once($ruta_db_superior."bpmn/bpmn/class_bpmn.php");
 include_once($ruta_db_superior."pantallas/lib/svg/class_canvas.php");
+include_once($ruta_db_superior."pantallas/lib/svg/class_imagen.php");
 include_once($ruta_db_superior."pantallas/lib/svg/class_cuadro_texto.php");
 include_once($ruta_db_superior."pantallas/lib/svg/class_circulo.php");
+include_once($ruta_db_superior."bpmn/bpmn/class_bpmn.php");
 include_once($ruta_db_superior."pantallas/lib/librerias_fechas.php");
 echo(estilo_bootstrap());
 ?>

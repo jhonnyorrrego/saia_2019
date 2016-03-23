@@ -245,10 +245,10 @@ for($i=0;$i<count($ar_func);$i++){
 </Clase>  */
 function llama_funcion_accion($iddoc=NULL,$idformato=NULL,$accion=NULL,$momento=NULL){
 global $conn;
-if($momento=="ANTERIOR" && $accion!='adicionar' && $accion!='responder'){
+if($momento=="ANTERIOR" && $accion!='adicionar' && $accion!='responder' && $accion!='transferir'){
   terminar_actividad_paso($iddoc,$accion);
 }
-if($momento=='POSTERIOR' && ($accion=='adicionar' || $accion=='responder')){
+if($momento=='POSTERIOR' && ($accion=='adicionar' || $accion=='responder' || $accion=='transferir')){
   terminar_actividad_paso($iddoc,$accion); 
 }
 error($iddoc."-->".$idformato."-->".$accion."-->".$momento);

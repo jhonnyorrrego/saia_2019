@@ -150,6 +150,8 @@ function incluir_librerias_busqueda($elemento,$indice){
     cargar_datos_scroll();
   });    
 $(document).ready(function(){
+	window.parent.$(".block-iframe").attr("style","margin-top:0px; width: 100%; border:0px solid; overflow:auto; -webkit-overflow-scrolling:touch;");
+	
   cargar_datos_scroll();
   setTimeout("contador_buzon("+<?php echo($datos_componente);?>+",'cantidad_maxima')",<?php echo($datos_busqueda[0]["tiempo_refrescar"]); ?>);
 });

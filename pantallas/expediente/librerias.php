@@ -108,7 +108,7 @@ function barra_superior_busqueda(){
 	<li class="divider-vertical"></li>                          
 	<li>            
 	 <div class="btn-group">                    
-	    <button class="btn btn-mini" id="adicionar_expediente" idbusqueda_componente="'.$_REQUEST["idbusqueda_componente"].'" title="Adicionar expediente hijo" enlace="pantallas/expediente/adicionar_expediente.php?cod_padre='.@$_REQUEST["idexpediente"].'&div_actualiza=resultado_busqueda'.$_REQUEST["idbusqueda_componente"].'&target_actualiza=parent&idbusqueda_componente='.$_REQUEST["idbusqueda_componente"].'&cod_padre='.$_REQUEST["idexpediente"].'&estado_archivo='.@$_REQUEST["variable_busqueda"].'">Adicionar Expediente</button>                                            
+	    <button class="btn btn-mini" id="adicionar_expediente" idbusqueda_componente="'.$_REQUEST["idbusqueda_componente"].'" title="Adicionar expediente hijo" enlace="pantallas/expediente/adicionar_expediente.php?cod_padre='.@$_REQUEST["idexpediente"].'&div_actualiza=resultado_busqueda'.$_REQUEST["idbusqueda_componente"].'&target_actualiza=parent&idbusqueda_componente='.$_REQUEST["idbusqueda_componente"].'&cod_padre='.$_REQUEST["idexpediente"].'&estado_archivo='.@$_REQUEST["variable_busqueda"].'&fk_idcaja='.$_REQUEST["idcaja"].'">Adicionar Expediente</button>                                            
 	  </div>
 	</li>';
 	}
@@ -347,6 +347,27 @@ function enlaces_adicionales_expediente($idexpediente,$nombre){
 	return($texto);
 }
 function expedientes_asignados(){
+	global $conn;
+	
+	if(@$_REQUEST["idbusqueda_componente"]){
+		$busqueda_componente=busca_filtro_tabla("","busqueda_componente A","A.nombre='expediente_admin' AND A.idbusqueda_componente=".$_REQUEST["idbusqueda_componente"],"",$conn);
+		if($busqueda_componente["numcampos"]){
+			return("1=1");
+		}
+	}
+	
+	$roles=busca_filtro_tabla("","dependencia_cargo a","a.estado='1' and a.funcionario_idfuncionario=".usuario_actual('idfuncionario'),"",$conn);
+	$dependencias=extrae_campo($roles,"dependencia_iddependencia");
+	$cargos=extrae_campo($roles,"cargo_idcargo");
+	
+	$cadena.="";
+	$cadena.="(((a.identidad_exp=1 AND a.llave_exp='".usuario_actual("idfuncionario")."') or (a.identidad_exp=2 AND a.llave_exp in ('".implode("','",$dependencias)."')) or (a.identidad_exp=4 AND a.llave_exp in('".implode("','",$cargos)."'))) or ((a.identidad_ser=1 AND a.llave_ser='".usuario_actual("idfuncionario")."') or (a.identidad_ser=2 AND a.llave_ser in ('".implode("','",$dependencias)."')) or (a.identidad_ser=4 AND a.llave_ser in('".implode("','",$cargos)."')) and a.estado_entidad_serie not in(2)))";
+	
+	$cadena.=" and a.idexpediente not in(select idexpediente from vexpediente_serie b where ((b.identidad_ser=1 AND b.llave_ser='".usuario_actual("idfuncionario")."') or (b.identidad_ser=2 AND b.llave_ser in ('".implode("','",$dependencias)."')) or (b.identidad_ser=4 AND b.llave_ser in('".implode("','",$cargos)."'))) and (b.estado_entidad_serie =2))";
+	
+	return($cadena);
+}
+function expedientes_asignados2(){
 	$arreglo=arreglo_expedientes_asignados();
 	if(count($arreglo)){
 		$texto=implode(",",$arreglo);
@@ -354,7 +375,8 @@ function expedientes_asignados(){
 	else{
 		$texto="''";
 	}
-	return($texto);
+	$cadena="a.idexpediente in(".$texto.")";
+	return($cadena);
 }
 function arreglo_expedientes_asignados(){
 	global $conn;
@@ -383,11 +405,9 @@ function arreglo_expedientes_asignados(){
 	$array_expedientes_serie_negado=extrae_campo($expedientes_serie_negado,"idexpediente");
 	
 	$series_asignadas=array_diff($array_expedientes_serie,$array_expedientes_serie_negado);
-	$expedientes_adicionales=busca_filtro_tabla("A.idexpediente,A.serie_idserie","expediente A","A.serie_idserie in(".implode(",",$series_asignadas).")","",$conn);
-	$expediente_adicional=extrae_campo($expedientes_adicionales,"idexpediente");
 	
 	$lista=extrae_campo($asignacion_expediente,"expediente_idexpediente");
-	$lista=array_merge($lista,$expediente_adicional);
+	$lista=array_merge($lista,$series_asignadas);
 	return($lista);
 }
 function barra_inferior_documento_expediente($iddoc,$numero,$idexpediente){

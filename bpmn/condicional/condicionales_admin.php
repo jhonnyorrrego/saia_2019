@@ -5,7 +5,7 @@ include_once($ruta_db_superior."librerias_saia.php");
 include_once($ruta_db_superior."pantallas/lib/librerias_fechas.php");
 //ini_set("display_errors",true);
 echo(estilo_bootstrap());
-$condicional=busca_filtro_tabla("","paso_condicional A, paso_condicional_admin B","A.idpaso_condicional=B.fk_paso_condicional AND A.idpaso_condicional=".$_REQUEST["idpaso_condicional"],"B.orden ASC",$conn);
+$condicional=busca_filtro_tabla("","paso_condicional A, paso_condicional_admin B","B.estado=1 AND A.idpaso_condicional=B.fk_paso_condicional AND A.idpaso_condicional=".$_REQUEST["idpaso_condicional"],"B.orden ASC",$conn);
 if($condicional["numcampos"]){
   $nombre_condicional=$condicional[0]["etiqueta"];
 }

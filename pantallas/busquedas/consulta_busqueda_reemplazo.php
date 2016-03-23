@@ -86,6 +86,10 @@ $datos_reemplazo=busca_filtro_tabla("B.nombres AS nombres_origen,B.apellidos AS 
     </div>
 </div>
 <script>
+$(document).ready(function(){
+	window.parent.$(".block-iframe").attr("style","margin-top:0px; width: 100%; border:0px solid; overflow:auto; -webkit-overflow-scrolling:touch;");
+});
+
   var espacio_menu=90;
   var alto_inicial=($(document).height()-espacio_menu);
   var carga_final=false;

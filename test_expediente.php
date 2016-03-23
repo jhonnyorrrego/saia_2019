@@ -38,8 +38,8 @@ $funcionarios=array();
 $idfunc=usuario_actual("idfuncionario");
 $datos = busca_datos_administrativos_funcionario();
 
-$arreglo_lista2=arreglo_expedientes_asignados();
-$lista2=implode(",",$arreglo_lista2);
+$arreglo_lista2=expedientes_asignados();
+$lista2=$arreglo_lista2;
 
 echo("<?xml version=\"1.0\" encoding=\"UTF-8\"?".">");
 echo("<tree id=\"0\">\n");
@@ -51,24 +51,21 @@ global $conn,$sql,$exp_doc,$funcionarios,$excluidos,$datos,$dependencias,$varios
 include_once("permisos_tabla.php");
 $lista= "'".implode("','",$datos["series"])."'";
 if($id==0){
-  $papas=busca_filtro_tabla("*","expediente","idexpediente IN (".$lista2.") AND (cod_padre=0 OR cod_padre IS NULL)","nombre ASC",$conn);
-	if(!$papas["numcampos"]){
-		$papas=busca_filtro_tabla("*","expediente","serie_idserie IN (".$lista.") AND (cod_padre=0 OR cod_padre IS NULL)","nombre ASC",$conn);
-	}
+  $papas=busca_filtro_tabla("a.fecha, a
+.nombre, a.descripcion, a.cod_arbol, a.idexpediente, estado_cierre","vexpediente_serie a",$lista2." and (a.cod_padre=0 OR a.cod_padre IS NULL)","GROUP BY a.fecha, a
+.nombre, a.descripcion, a.cod_arbol, a.idexpediente, estado_cierre order by idexpediente desc",$conn);
+	
 }
 else{
-	$papas=busca_filtro_tabla("*","expediente","cod_padre=".$id,"nombre ASC",$conn);
+	$papas=busca_filtro_tabla("a.fecha, a
+.nombre, a.descripcion, a.cod_arbol, a.idexpediente, a.estado_cierre","vexpediente_serie a",$lista2." and (a.cod_padre=".$id.")","GROUP BY a.fecha, a
+.nombre, a.descripcion, a.cod_arbol, a.idexpediente, estado_cierre order by idexpediente desc",$conn);
 } 
 
 if($papas["numcampos"])
 { 
   for($i=0; $i<$papas["numcampos"]; $i++)
   {$permitido=0;
-   $permisos_exp=busca_filtro_tabla("editar_todos,propietario","expediente","idexpediente=".$papas[$i]["idexpediente"],"",$conn);
-	 if(in_array($papas[$i]["idexpediente"],$arreglo_lista2)){
-	 	$permitido=1;
-	 }
-	 else continue;
   if(!in_array($papas[$i]["idexpediente"],$excluidos)){
   	$texto_item="";
 		$texto_item=($papas[$i]["nombre"]);
@@ -87,13 +84,12 @@ if($papas["numcampos"])
         	echo(" nocheckbox=\"1\" ");
 				}
 			}
-      elseif($_REQUEST["accion"]==0 && !in_array($papas[$i]["idexpediente"],$exp_doc))
-        echo(" nocheckbox=\"1\" ");       
+      elseif($_REQUEST["accion"]==0 && !in_array($papas[$i]["idexpediente"],$exp_doc)){
+        echo(" nocheckbox=\"1\" ");
+			}
     }
     elseif(@$_REQUEST["seleccionado"]&&$_REQUEST["seleccionado"]==$papas[$i]["idexpediente"])
-       echo " checked=\"1\" ";
-    if(!$permitido)
-      echo(" nocheckbox=\"1\" ");
+    	echo " checked=\"1\" ";
 		if($papas[$i]["estado_cierre"]==2){
 			echo(" nocheckbox=\"1\" ");
 		}    

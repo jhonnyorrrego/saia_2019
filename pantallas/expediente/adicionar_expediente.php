@@ -212,7 +212,8 @@ $dato_padre=busca_filtro_tabla("","expediente a","a.idexpediente=".$_REQUEST["co
 	</div>
 </div>
 <br />
-
+<input type="hidden" name="fk_idcaja" value="<?php echo(@$_REQUEST["fk_idcaja"]);?>">
+<input type="hidden" name="estado_archivo" value="1">
 <input type="hidden" name="key_formulario_saia" value="<?php echo(generar_llave_md5_saia());?>">
 <div>
 <button class="btn btn-primary btn-mini" id="submit_formulario_expediente">Aceptar</button>
@@ -330,14 +331,14 @@ $(document).ready(function(){
 			$(this).attr('disabled', 'disabled');
     	<?php if(@$_REQUEST["volver"]&&@$_REQUEST["enlace"]){ ?>
     		window.open('<?php echo($ruta_db_superior.$_REQUEST["enlace"]); ?>?variable_busqueda=idexpediente/**/<?php echo($_REQUEST["cod_padre"]); ?>&idbusqueda_componente=<?php echo($_REQUEST["idbusqueda_componente"]); ?>','_self');
-    	<?php } ?>
+    	<?php }  ?>
       $.ajax({
         type:'GET',
         async:false,
         url: "<?php echo($ruta_db_superior);?>pantallas/expediente/ejecutar_acciones.php",
         data: "ejecutar_expediente=set_expediente&tipo_retorno=1&rand="+Math.round(Math.random()*100000)+"&"+formulario_expediente.serialize(),
         success: function(html){               
-          if(html){                   
+          if(html){    
             var objeto=jQuery.parseJSON(html);                  
             if(objeto.exito){
               $.ajax({
@@ -345,10 +346,12 @@ $(document).ready(function(){
                 async:false,
                 url: "<?php echo($ruta_db_superior);?>pantallas/busquedas/servidor_busqueda.php",
                 data: "idbusqueda_componente=<?php echo($_REQUEST['idbusqueda_componente']); ?>&page=1&rows=1&actual_row=0&expediente_actual="+objeto.idexpediente+"&idexpediente=<?php echo(@$_REQUEST['cod_padre']);?>&variable_busqueda=<?php echo(@$_REQUEST["estado_archivo"]); ?>",
-                success: function(html2){               
+                success: function(html2){              
                   if(html2){      
                     var objeto2=jQuery.parseJSON(html2);
-                    $("#<?php echo($_REQUEST['div_actualiza']);?>", parent.document).prepend(objeto2.rows[0].info);
+                    if(objeto2.exito!==0){
+                      $("#<?php echo($_REQUEST['div_actualiza']);?>", parent.document).prepend(objeto2.rows[0].info);
+                    }  
                   }
                 }
               });   
