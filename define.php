@@ -52,7 +52,7 @@ ini_set("safe_mode",false);
 /*ini_set ( 'mssql.textlimit' , '65536' );
 ini_set ( 'mssql.textsize' , '65536' );*/
 //Solucion error pcre con cadenas grandes devuelve array vacio
-ini_set(‘pcre.backtrack_limit’,’200000′);
+ini_set('pcre.backtrack_limit','200000');
 
 define("RUTA_SCRIPT","saia_release1");
 date_default_timezone_set ("America/Bogota");
