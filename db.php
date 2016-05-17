@@ -1539,7 +1539,7 @@ function sincronizar_carpetas($tipo, $conn) {
 <Pre-condiciones>
 <Post-condiciones>
 */
-function cambia_tam($nombreorig,$nombredest,$nwidth,$nheight,$tipo){
+function cambia_tam($nombreorig,$nombredest,$nwidth,$nheight,$tipo=''){
 $ext='jpg';
 // Se obtienen las nuevas dimensiones
 list($width, $height) = getimagesize($nombreorig);
@@ -1749,6 +1749,56 @@ global $conn;
 	}else{
 		$mail->Subject = $asunto_defecto_correo;
 	}
+	
+	
+
+
+  $config = busca_filtro_tabla("valor","configuracion","nombre='color_encabezado'","",$conn);
+  $admin_saia= busca_filtro_tabla("valor","configuracion","nombre='login_administrador'","",$conn);
+  $correo_admin=busca_filtro_tabla("email","funcionario","login='".$admin_saia[0]['valor']."'","",$conn);
+  $texto_pie="
+  	<table style='border:none; width:100%; font-size:11px;font-family:Roboto,Arial,Helvetica,sans-serif;color:#646464;vertical-align:middle;	padding: 10px;'>
+		<tr>
+			<td>
+				Este email ha sido enviado automáticamente desde SAIA (Sistema de Administración Integral de Documentos y Procesos). 
+				<br>
+				<br>
+				Por favor, NO responda a este mail. 
+				<br>
+				<br>
+				Para obtener soporte o realizar preguntas, envié un correo electrónico a ".$correo_admin[0]['email']."
+			</td>
+			<td style='text-align:right;'>
+				<img src='".PROTOCOLO_CONEXION.RUTA_PDF_LOCAL."/imagenes/saia_gray.png'>				
+			</td>
+		</tr>
+	</table>
+";  
+  
+
+  $inicio_style='
+  <div id="fondo" style="   padding: 10px; 	background-color: #f5f5f5;	">
+  
+  	<div id="encabezado" style="background-color:'.$config[0]["valor"].';color:white ;  vertical-align:middle;   text-align: left;    font-weight: bold;  border-top-left-radius:5px;   border-top-right-radius:5px;   padding: 10px;">
+  		NOTIFICACIÓN - SAIA
+  	</div>
+ 
+  	<div id="cuerpo" style="padding: 10px;background-color:white;">
+  		<br>
+  		<span style="font-weight:bold;color:'.$config[0]["valor"].';">'.$asunto.'</span>
+  		<hr>
+  		<br>';
+  
+  $fin_style='
+  	</div>
+  	<div  id="pie" style="font-size:11px;font-family:Roboto,Arial,Helvetica,sans-serif;color:#646464;vertical-align:middle;padding: 10px;">
+  		'.$texto_pie.'
+  	</div>
+  </div>';	
+	
+ $mensaje=$inicio_style.$mensaje.$fin_style;	
+
+	
 	
  $mail->Body = $mensaje;
  $mail -> IsHTML (true);

@@ -273,6 +273,8 @@ function enlace_expediente2($idexpediente,$nombre){
 function obtener_descripcion_expediente($descripcion){
 	return($descripcion);
 }
+
+/*
 function mostrar_contador_expediente($idexpediente,$cod_arbol){
 	global $conn, $dependencia,$arreglo;
 	$expedientes=arreglo_expedientes_asignados();
@@ -285,7 +287,39 @@ function mostrar_contador_expediente($idexpediente,$cod_arbol){
 	
 	if(!$documentos["numcampos"])$documentos[0]["cantidad"]=0;
 	return("<span class='pull-right badge' style='margin-top:3px' id='contador_docs_".$idexpediente."'>".$documentos[0]["cantidad"]."</span>");
+}*/
+
+function mostrar_contador_expediente($idexpediente,$cod_arbol){
+	
+	
+	global $conn, $dependencia,$arreglo;
+	$_REQUEST["idbusqueda_componente"]=110;
+	$expedientes=expedientes_asignados();
+	$_REQUEST['idexpediente']=$idexpediente;
+	$request_exp_padre=request_expediente_padre();
+	
+	$arreglo=array();
+	//obtener_expedientes_padre($idexpediente,$expedientes);
+	
+	//$texto.=" AND a.idexpediente=".$_REQUEST["expediente_actual"];
+	
+	$arreglo=array_merge($arreglo,array($idexpediente));
+	//return(implode(",",$arreglo));
+	$documentos=busca_filtro_tabla("count(*) as cantidad","vexpediente_serie a","a.estado_archivo=1 and ".$expedientes." and ".$request_exp_padre."  ","group by a.fecha,a.nombre,a.descripcion,a.cod_arbol,a.idexpediente",$conn);
+	
+	print_r($documentos);die();
+	
+	//print_r($documentos);
+	//$documentos=busca_filtro_tabla("count(*) as cantidad","vexpediente_serie a,documento b,expediente_doc c ","a.idexpediente=c.expediente_idexpediente and b.iddocumento=c.documento_iddocumento and b.estado<>'eliminado' and b.estado<>'anulado' and c.expediente_idexpediente=".$idexpediente,"",$conn);
+	
+	
+	//return($cantidad["sql"]);
+	
+	if(!$documentos["numcampos"])$documentos[0]["cantidad"]=0;
+	return("<span class='pull-right badge' style='margin-top:3px' id='contador_docs_".$idexpediente."'>".$documentos[0]["cantidad"]."</span>");
 }
+
+
 function obtener_expedientes_padre($idexpediente,$expedientes){
 	global $arreglo;
 	$expediente=busca_filtro_tabla("","expediente A","A.cod_padre=".$idexpediente."","",$conn);

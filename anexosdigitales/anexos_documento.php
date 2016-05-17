@@ -56,6 +56,13 @@ if(isset($_REQUEST["Adicionar"])) // Se procesa el formulario
     cargar_archivo($iddocumento,$permisos);
     if(!isset($_REQUEST["menu"])||$_REQUEST["menu"]!="0") // Si esta en menu_ordenar omite el header el footer y el menu
     {
+      ?>
+      <script>
+      /*$(document).ready(function(){
+        $("#adjuntos_documento",window.parent.arbol_formato).click();
+      });*/
+      </script>
+      <?php
       abrir_url("anexos_documento.php?key=".$iddocumento."&adicional=".rand(),"_self");
      }
     else 

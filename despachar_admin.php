@@ -9,9 +9,15 @@
 <Salida></Salida>
 </Archivo>
 */
-session_start();
-include_once("header.php");
+
+$max_salida=6; $ruta_db_superior=$ruta=""; while($max_salida>0){ if(is_file($ruta."db.php")){ $ruta_db_superior=$ruta;} $ruta.="../"; $max_salida--; }
+
 include_once("db.php");
+$doc_menu=@$_REQUEST["doc"];
+include_once("pantallas/documento/menu_principal_documento.php");
+echo(menu_principal_documento($doc_menu,1));
+
+include_once("header.php");
 include_once("class_transferencia.php");
 include_once("class.funcionarios.php");
 ?>
@@ -76,6 +82,7 @@ if(isset($_REQUEST["anular_despacho"]))
  mostrar_despacho();
  if(isset($_REQUEST["funcion_despacho"]))    
    echo $_REQUEST["funcion_despacho"]();
+ echo("<br/><br/>");
 /*
 <Clase>
 <Nombre>anular_despacho</Nombre> 
@@ -113,10 +120,10 @@ function mostrar_despacho()
 $x_doc=$_REQUEST["doc"];
  menu_ordenar($_REQUEST["doc"]);
  
- echo '<br /><br /><span class="internos"><img class="imagen_internos" src="botones/comentarios/package_go.png" border="0">&nbsp;&nbsp;DESPACHO DE DOCUMENTOS<br><br></span>';
+ echo '<br /><br /><span class="internos">DESPACHO DE DOCUMENTOS<br><br></span>';
  $documento = busca_filtro_tabla("numero,descripcion","documento","iddocumento=$x_doc","",$conn);
  
- echo "<table borde=0><tr><td class='encabezado'>N&Uacute;MERO DE DOCUMENTO</td><td bgcolor='#f5f5f5'>".$documento[0]["numero"]."</td></tr><tr><td class='encabezado'>DESCRIPCI&Oacute;N</td><td bgcolor='#f5f5f5'>".stripslashes($documento[0]["descripcion"])."</td></tr></table><br /><br /><a href='despachar_admin.php?funcion_despacho=adicionar_despacho&doc=$x_doc'>Adicionar Despacho</a><br /><br />"; 
+ echo "<table borde=0><tr><td class='encabezado'>N&Uacute;MERO DE DOCUMENTO</td><td bgcolor='#f5f5f5'>".$documento[0]["numero"]."</td></tr><tr><td class='encabezado'>DESCRIPCI&Oacute;N</td><td bgcolor='#f5f5f5'>".($documento[0]["descripcion"])."</td></tr></table><br /><br /><a href='despachar_admin.php?funcion_despacho=adicionar_despacho&doc=$x_doc'>Adicionar Despacho</a><br /><br />"; 
  $despacho = busca_filtro_tabla("*","salidas","documento_iddocumento=$x_doc and estado=1","",$conn); 
   if($despacho["numcampos"]>0)
   {
@@ -400,7 +407,12 @@ function transferir()
       else 
          $valores="'".$guia."','".$x_doc."','".$idempresa."','$idresponsable'";    
       $valores.= ",".fecha_db_almacenar(date("Y-m-d H:i:s"),"Y-m-d H:i:s");
-      $sql="INSERT INTO salidas(numero_guia,documento_iddocumento,empresa,responsable,fecha_despacho,tipo_despacho) VALUES (".$valores.",'$x_tipo_despacho')";
+	
+	  $x_notas=@$_REQUEST['notas'];
+      $sql="INSERT INTO salidas(numero_guia,documento_iddocumento,empresa,responsable,fecha_despacho,tipo_despacho,notas) VALUES (".$valores.",'$x_tipo_despacho','".$x_notas."')";
+	  
+	  
+	  
       $otros["notas"]="'Documento despachado";
       if($empresa!="")
         $otros["notas"].=" En $empresa ";

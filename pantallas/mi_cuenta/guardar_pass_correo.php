@@ -13,5 +13,12 @@ $pass_correo=$_REQUEST["passwordPwd"];
 $sql1="UPDATE funcionario SET email_contrasena='".$pass_correo."' WHERE idfuncionario=".usuario_actual("idfuncionario");
 phpmkr_query($sql1);
 alerta("Contraseña cambiada con exito");
-abrir_url($ruta_db_superior."index_actualizacion.php","_self");
+
+if(@$_REQUEST['from_correo']){
+	abrir_url($ruta_db_superior."index_correo.php","_self");
+}else{
+	abrir_url($ruta_db_superior."index_actualizacion.php","_self");
+}
+
+
 ?>

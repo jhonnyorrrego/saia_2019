@@ -29,36 +29,43 @@ $datos = busca_datos_administrativos_funcionario($funcionario);
 $datos["series_encontradas"]=0;
 if($id!=""){
 $valor=$id;
-$padre=" and idserie=".$id."";
+//$padre=" and idserie=".$id."";
 }
- 
-if($id==""){
+else{
+	$id="NULL";
+}
+$categoria=$_REQUEST["categoria"];
+if($categoria==""){
    echo  "\n<tree id=\"0\">\n";
-   /*echo "<item style=\"font-family:verdana; font-size:7pt;\" text=\"Comunicaciones Oficiales\" id=\"cat1\" nocheckbox=\"1\" >\n"; 
-   echo llena_serie("NULL"," and categoria=1 ");
+   echo "<item style=\"font-family:verdana; font-size:7pt;\" text=\"Comunicaciones Oficiales\" id=\"cat1\" nocheckbox=\"1\" >\n"; 
+   echo llena_serie($id," and categoria=1 ");
    echo "</item>\n";
-   */
-   //echo  "<item style=\"font-family:verdana; font-size:7pt;\" text=\"Produccion Documental\" id=\"cat2\" nocheckbox=\"1\" >\n"; 
-   echo llena_serie("NULL"," and categoria=2 ",$padre);
-   //echo "</item>\n";
-  /* echo  "<item style=\"font-family:verdana; font-size:7pt;\" text=\"Otras categorias\" id=\"cat3\" nocheckbox=\"1\" >\n"; 
-   echo  llena_serie("NULL"," and categoria=3 ");
-   echo "</item>\n"; */
+   
+   echo  "<item style=\"font-family:verdana; font-size:7pt;\" text=\"Produccion Documental\" id=\"cat2\" nocheckbox=\"1\" >\n"; 
+   echo llena_serie($id," and categoria=2 ",$padre);
+   echo "</item>\n";
+   echo  "<item style=\"font-family:verdana; font-size:7pt;\" text=\"Otras categorias\" id=\"cat3\" nocheckbox=\"1\" >\n"; 
+   echo  llena_serie($id," and categoria=3 ");
+   echo "</item>\n";
 echo("</tree>\n");
 } 
-if($id!=""){
+if($categoria!=""){
    echo  "\n<tree id=\"0\">\n";
-   /*echo "<item style=\"font-family:verdana; font-size:7pt;\" text=\"Comunicaciones Oficiales\" id=\"cat1\" nocheckbox=\"1\" >\n"; 
-   echo llena_serie("NULL"," and categoria=1 ");
-   echo "</item>\n"; */
-   
-  // echo  "<item style=\"font-family:verdana; font-size:7pt;\" text=\"Produccion Documental\" id=\"cat2\" nocheckbox=\"1\" >\n"; 
-   echo llena_serie("NULL"," and categoria=2 ",$padre);
-   //echo "</item>\n";
-   
-   /*echo  "<item style=\"font-family:verdana; font-size:7pt;\" text=\"Otras categorias\" id=\"cat3\" nocheckbox=\"1\" >\n"; 
-   echo  llena_serie("NULL"," and categoria=1 ");
-   echo "</item>\n"; */
+	if($categoria==1){
+	   echo "<item style=\"font-family:verdana; font-size:7pt;\" text=\"Comunicaciones Oficiales\" id=\"cat1\" nocheckbox=\"1\" >\n"; 
+	   echo llena_serie($id," and categoria=1 ", $padre);
+	   echo "</item>\n";
+	}
+	if($categoria==2){
+	   echo  "<item style=\"font-family:verdana; font-size:7pt;\" text=\"Produccion Documental\" id=\"cat2\" nocheckbox=\"1\" >\n"; 
+	   echo llena_serie($id," and categoria=2 ",$padre);
+	   echo "</item>\n";
+	}
+	if($categoria==3){
+	   echo  "<item style=\"font-family:verdana; font-size:7pt;\" text=\"Otras categorias\" id=\"cat3\" nocheckbox=\"1\" >\n"; 
+	   echo  llena_serie($id," and categoria=3 ", $padre);
+	   echo "</item>\n";
+	} 
 echo("</tree>\n");
 } 
 
@@ -67,10 +74,6 @@ echo("</tree>\n");
 
 function llena_serie($serie,$condicion="",$padre=""){ 
 global $conn,$datos,$seleccionado;
-if(@$_REQUEST["pantalla"]=='expediente'){
-	$condicion.=" AND tipo in(1,2)";
-}
-
 $lista_papas = array();
 $texto="";
 $lista= "'".implode("','",$datos["series"])."'";

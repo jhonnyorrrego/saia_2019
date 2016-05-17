@@ -9,6 +9,7 @@ while($max_salida>0){
   $ruta.="../";
   $max_salida--;
 }
+include_once($ruta_db_superior."db.php");
 
 function barra_superior_funcionario($idfuncionario,$nombres,$apellidos){
 $texto='<div class="btn-group barra_superior">
@@ -56,9 +57,24 @@ function estado_funcionario($estado){
 }
 
 function fotografia_funcionario($idfuncionario){
-	global $ruta_db_superior;
-	//realizar desarrollo de subida de foto y recorte
-	return("<img src='".$ruta_db_superior."imagenes/funcionario_sin_foto.jpg'	width='60' height='60' />");
+	global $conn,$ruta_db_superior;
+	
+	$href='pantallas/funcionario/fotografia/foto.php?idfuncionario='.$idfuncionario;
+	$id_contenedor='id="foto_funcionario_'.$idfuncionario.'"';
+	$foto_recorte=busca_filtro_tabla("foto_recorte","funcionario","idfuncionario=".$idfuncionario,"",$conn);
+	if($foto_recorte[0]['foto_recorte']!=''){
+		if(file_exists($ruta_db_superior.$foto_recorte[0]['foto_recorte'])){
+			$imagen='<img src="'.$ruta_db_superior.$foto_recorte[0]['foto_recorte'].'"	width="60" height="60" '.$id_contenedor.' />';
+			$href.='&recortar=1';
+		}else{
+			$imagen='<img src="'.$ruta_db_superior.'imagenes/funcionario_sin_foto.jpg"	width="60" height="60" '.$id_contenedor.' />';
+		}
+	}else{
+		$imagen='<img src="'.$ruta_db_superior.'imagenes/funcionario_sin_foto.jpg"	width="60" height="60" '.$id_contenedor.' />';
+	}
+	
+	$html='<a class="open_highslide" id="highslide_funcionario_'.$idfuncionario.'" style="cursor:pointer;" enlace="'.$href.'" identificador="'.$idfuncionario.'">'.$imagen.'</a>'; 	
+	return($html);
 	
 }
 

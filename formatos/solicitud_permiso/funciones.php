@@ -208,8 +208,56 @@ echo $id=$documento[0]['idfuncionario'];
 function motivo($idformato,$iddoc)//---->daña el pdf
 {global $conn;
 $consulta=busca_filtro_tabla("","ft_solicitud_permiso","documento_iddocumento=".$iddoc,"",$conn);
-$permisos=busca_filtro_tabla("A.nombre","serie A,ft_solicitud_permiso B","A.cod_padre=856 AND B.documento_iddocumento=".$iddoc,"",$conn);
+$permisos=busca_filtro_tabla("A.nombre,A.idserie","serie A","A.cod_padre=856 ","",$conn);
+
+
 $condiciones=explode(",",$consulta[0]["motivo_permiso"]);
+$condiciones=array_map('intval', $condiciones);
+
+$texto='<table style="width: 100%; text-align:left;" border="0">
+	<tbody>';
+for($i=0;$i<$permisos['numcampos'];$i++){
+	$x='';
+	
+	if($permisos[$i]['idserie']==intval($consulta[0]["motivo_permiso"])){
+		$x='X';
+	}	
+	
+	if($i%2==0){
+		
+		$texto.='
+			<tr>
+			<td style="width:35%;">'.$permisos[$i]['nombre'].'</td>
+			<td style="text-align: center;border:1px solid #000000; width:5%;">'.$x.'</td>
+			<td style="width:20%;">&nbsp;</td>		
+		';		
+
+	}else{
+		$texto.='
+			<td style="width:35%;">'.$permisos[$i]['nombre'].'</td>
+			<td style="text-align: center; border: 1px solid #000000; width:5%;">'.$x.'</td>
+			</tr>		
+		';	
+		
+	}
+	
+	
+	if($i+1==$permisos['numcampos']){
+		if($i%2==0){
+			$texto.='
+			<td ></td>
+			<td ></td>
+			</tr>				
+			
+			';
+		}
+	}
+	
+	
+	$texto.='';
+}
+$texto.='</tbody>
+	</table>';
 
 ///1,Cita medica;2,Permiso educativo;3,Permiso para ir al banco;4,Permiso compensatorio;5,Enfermedad general;6,Cita Odontologica;7,Acto funebre;8,Permiso matrimonial;9,Retiro de cesantias;10,Urgencia medica;11,Reclamar examen medico;12,Tramite compra de casa;13,Otro 
 $v1="&nbsp;";
@@ -228,38 +276,38 @@ $v13="&nbsp;";
 
 	for($i=0;$i<count($condiciones);$i++){
 	
-		if($condiciones[$i]==857){
+		if($condiciones[$i]==857){ //cita medica
 			$v1="X";
 		}		
-		if($condiciones[$i]==858){		
+		if($condiciones[$i]==858){		//Permiso educativo
 			$v2="X";
 		}
-		if($condiciones[$i]==859){
+		if($condiciones[$i]==859){ //Permiso para ir al banco
 			$v3="X";
 		}
-		if($condiciones[$i]==860){
+		if($condiciones[$i]==860){ //Permiso compensatorio
 			$v4="X";
 		}
-		if($condiciones[$i]==861){
+		if($condiciones[$i]==861){ //Enfermedad general
 			$v5="X";
 		}
-		if($condiciones[$i]==862){
+		if($condiciones[$i]==862){ //Cita Odontol&oacute;gica
 			$v6="X";
 		}
-		if($condiciones[$i]==863){
+		if($condiciones[$i]==863){ // //Actofunebre
 			$v7="X";
 		}
-		if($condiciones[$i]==864){
+		if($condiciones[$i]==864){ //Matrimonial
 			$v8="X";
 		}
-		if($condiciones[$i]==865){
+		if($condiciones[$i]==865){ //Retiro de cesantias
 			$v9="X";
 		}
-		if($condiciones[$i]==866){
+		if($condiciones[$i]==866){ //Urgencia medica
 			$v10="X";
 		
 		}
-		if($condiciones[$i]==867){
+		if($condiciones[$i]==867){ //
 			$v11.="X";
 		}
 		
@@ -276,7 +324,7 @@ $v13="&nbsp;";
 	}
 ///1,Cita medica;2,Permiso educativo;3,Permiso para ir al banco;4,Permiso compensatorio;5,Enfermedad general;6,Cita Odontologica;7,Acto funebre;8,Permiso matrimonial;9,Retiro de cesantias;10,Urgencia medica;11,Reclamar examen medico;12,Tramite compra de casa;13,Otro
 
-	$texto='<table style="width: 100%; text-align:left;" border="0">
+	/*$texto='<table style="width: 100%; text-align:left;" border="0">
 	<tbody>
 	<tr>
 	<td style="width:35%;">'.$permisos[0]['nombre'].'</td>
@@ -328,7 +376,7 @@ $v13="&nbsp;";
 	</tr>
 	
 	</tbody>
-	</table>';
+	</table>';*/
 	echo $texto;
 }    
 

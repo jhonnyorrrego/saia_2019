@@ -7,10 +7,9 @@ header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT"); // always modifie
 header("Cache-Control: no-store, no-cache, must-revalidate"); // HTTP/1.1 
 header("Cache-Control: post-check=0, pre-check=0", false); 
 header("Pragma: no-cache"); // HTTP/1.0
-if ( stristr($_SERVER["HTTP_ACCEPT"],"application/xhtml+xml") ) { 
+if ( stristr($_SERVER["HTTP_ACCEPT"],"application/xhtml+xml")){ 
   header("Content-type: application/xhtml+xml"); 
-} 
-else { 
+}else{ 
   header("Content-type: text/xml"); 
 }
 include_once($ruta_db_superior."db.php");

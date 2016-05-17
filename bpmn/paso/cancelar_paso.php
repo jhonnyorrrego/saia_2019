@@ -76,6 +76,7 @@ if(@$_REQUEST['iddocumento'] && @$_REQUEST['idpaso_documento'] && @$_REQUEST['id
 			$actividades_paso_sistema=busca_filtro_tabla("","paso_actividad a, paso_instancia_terminada b","a.paso_idpaso=".$_REQUEST['idpaso']."  AND  a.idpaso_actividad=b.actividad_idpaso_actividad AND a.estado=1 AND a.idpaso_actividad IN(".implode(',',$vector_actividades_paso_sistema).") AND b.estado_actividad IN(1,2,6) AND b.documento_iddocumento=".$_REQUEST['iddocumento'],"",$conn);  //obtengo las actividades iniciadas, cerradas, terminadas //obtengo las actividades iniciadas, cerradas, terminadas
 			$vector_actividades_no_cancelar=array();
 			
+			$tiene_ruta=0;
 			//$retorno['actividades_paso_terminadas']=$actividades_paso_sistema;
 			if($actividades_paso_sistema['numcampos']){ //SI EXISTEN ACTIVIDADES DEL SISTEMA
 				
@@ -91,6 +92,7 @@ if(@$_REQUEST['iddocumento'] && @$_REQUEST['idpaso_documento'] && @$_REQUEST['id
 								
 								//TODO: validar que hacer con el usuario que radico el documento							
 							}else{
+								$retorno["doc_aprobado"]=1;
 								$vector_actividades_no_cancelar[]=$actividades_paso_sistema[$i]['idpaso_actividad'];
 							}
 
@@ -103,6 +105,7 @@ if(@$_REQUEST['iddocumento'] && @$_REQUEST['idpaso_documento'] && @$_REQUEST['id
 							break;	
 							
 						case 7: //CONFIRMAR
+						    
 							$datos_documento_confirmar=busca_filtro_tabla("iddocumento","documento","estado='APROBADO' AND iddocumento=".$_REQUEST['iddocumento'],"",$conn);
 
 							if(!$datos_documento_confirmar['numcampos']){
@@ -110,6 +113,7 @@ if(@$_REQUEST['iddocumento'] && @$_REQUEST['idpaso_documento'] && @$_REQUEST['id
 								$existe_ruta=busca_filtro_tabla("","ruta","destino<>18 AND documento_iddocumento=".$_REQUEST['iddocumento'],"",$conn);	
 								
 								if($existe_ruta['numcampos']){
+									$tiene_ruta=1;
 									//INICIO DESARROLLO CANCELAR RUTA
 									
 										$iddoc=$_REQUEST['iddocumento'];
@@ -196,7 +200,7 @@ if(@$_REQUEST['iddocumento'] && @$_REQUEST['idpaso_documento'] && @$_REQUEST['id
 										}
 										
 										$diagram_iddiagram=busca_filtro_tabla("diagram_iddiagram","paso","idpaso=".$_REQUEST['idpaso'],"",$conn);
-										$idpaso_anterior=paso_anterior($_REQUEST['idpaso'],$diagram_iddiagram[0]['diagram_iddiagram']);	
+										$idpaso_anterior=paso_anterior($_REQUEST['idpaso'],$diagram_iddiagram[0]['diagram_iddiagram'],$iddoc);	
 										if($idpaso_anterior!=0){
 											$sql13="UPDATE paso_documento SET estado_paso_documento=4 WHERE paso_idpaso=".$idpaso_anterior." AND documento_iddocumento=".$iddoc;
 											
@@ -221,15 +225,24 @@ if(@$_REQUEST['iddocumento'] && @$_REQUEST['idpaso_documento'] && @$_REQUEST['id
 							}							
 							
 							break;	
+						case 9: //TRANSFERIR
+							$vector_actividades_no_cancelar[]=$actividades_paso_sistema[$i]['idpaso_actividad'];
+							//POR AHORA NO CASNCELA LA ACTIVIDAD			
+							break;
+	
 					}		
 						
 						
 				}				
 			} //FIN SI EXISTEN ACTIVIDADES DEL SISTEMA
 
-			
+			if($tiene_ruta){
+				$sql1="DELETE FROM paso_documento WHERE paso_idpaso=".$_REQUEST['idpaso']." AND documento_iddocumento=".$_REQUEST['iddocumento'];	
+			}else{
+				$sql1="UPDATE paso_documento SET estado_paso_documento=3 WHERE paso_idpaso=".$_REQUEST['idpaso']." AND documento_iddocumento=".$_REQUEST['iddocumento'];   //Pongo el paso cancelado 
+			}
 	  		//$sql1="UPDATE paso_documento SET estado_paso_documento=3 WHERE paso_idpaso=".$_REQUEST['idpaso']." AND documento_iddocumento=".$_REQUEST['iddocumento'];   //Pongo el paso cancelado 
-	  		$sql1="DELETE FROM paso_documento WHERE paso_idpaso=".$_REQUEST['idpaso']." AND documento_iddocumento=".$_REQUEST['iddocumento'];
+	  		//$sql1="DELETE FROM paso_documento WHERE paso_idpaso=".$_REQUEST['idpaso']." AND documento_iddocumento=".$_REQUEST['iddocumento'];
 	  		phpmkr_query($sql1);
 
 			$vector_actividades_paso=array_diff($vector_actividades_paso,$vector_actividades_no_cancelar); //retiro las actividades que no se pueden cancelar

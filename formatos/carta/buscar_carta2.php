@@ -1,4 +1,4 @@
-<?php include_once("../../formatos/librerias/funciones_generales.php"); ?><?php include_once("../../calendario/calendario.php"); ?><?php include_once("../librerias/header_formato.php"); ?><legend id="label_formato" class="legend">B&uacute;squeda en formato Comunicacion externa</legend><br /><br /><?php include_once("../../formatos/librerias/funciones_generales.php"); ?><div class="control-group"><label class="string control-label" style="font-size:9pt" for="fecha_carta"><b>Fecha de Creacion<input type="hidden" name="bksaiacondicion_g@fecha_carta" id="bksaiacondicion_g@fecha_carta" value="date"></b></label><div class="controls">
+<?php include_once("../librerias/funciones_generales.php"); ?><?php include_once("../../calendario/calendario.php"); ?><?php include_once("../librerias/header_formato.php"); ?><legend id="label_formato" class="legend">B&uacute;squeda en formato Comunicacion externa</legend><br /><br /><?php include_once("../librerias/funciones_generales.php"); ?><div class="control-group"><label class="string control-label" style="font-size:9pt" for="fecha_carta"><b>Fecha de Creacion<input type="hidden" name="bksaiacondicion_g@fecha_carta" id="bksaiacondicion_g@fecha_carta" value="date"></b></label><div class="controls">
                    <input type="text" readonly="true"  name="bqsaia_g@fecha_carta" id="fecha_carta" tipo="fecha" value=""><?php selector_fecha("fecha_carta","kformulario_saia","Y-m-d",date("m"),date("Y"),"default.css","../../","AD:VALOR"); ?></form><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_g@fecha_carta',this.id)">
 		    Y
@@ -90,4 +90,12 @@
                                eval('document.layers["esperando_copiainterna"]');
                         document.poppedLayer.style.visibility = "visible";
                       }
-                	--></script></div></div><input type="hidden" name="campos_especiales" value="destinos@ejecutor,copia@ejecutor,copiainterna@arbol"><input type="hidden" name="filtro_adicional" id="filtro_adicional" value=" ft_carta g @ AND  g.documento_iddocumento=iddocumento "></body><input type="hidden" name="bqtipodato_plantilla" id="bqtipodato_plantilla" value="date|"><input type="hidden" name="idbusqueda_componente" value="82">
+                	--></script><div class="btn-group" data-toggle="buttons-radio" >
+		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_copiainterna',this.id)">
+		    Y
+		  </button>
+		  <button type="button" class="btn btn-mini" data-toggle="button" id="o" onclick="llenar_valor('bqsaiaenlace_copiainterna',this.id)">
+		    O
+		  </button-->
+		  <input type="hidden" name="bqsaiaenlace_copiainterna" id="bqsaiaenlace_copiainterna" value="y" />
+		</div></div></div><div class="control-group"><label class="string control-label" style="font-size:9pt" for="email_aprobar"><b>Aprobar fuera de SAIA<input type="hidden" name="bksaiacondicion_g@email_aprobar" id="bksaiacondicion_g@email_aprobar" value="="></b></label><div class="controls"><?php genera_campo_listados_editar(1,4086,'',1,'buscar');?></div></div><input type="hidden" name="campos_especiales" value="destinos@ejecutor,copia@ejecutor,copiainterna@arbol"><input type="hidden" name="filtro_adicional" id="filtro_adicional" value=" ft_carta g @ AND  g.documento_iddocumento=iddocumento "></body><input type="hidden" name="bqtipodato_plantilla" id="bqtipodato_plantilla" value="date|">

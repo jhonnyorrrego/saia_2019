@@ -2,8 +2,9 @@
 
 if(@$_REQUEST["iddoc"] || @$_REQUEST["key"] || @$_REQUEST["doc"]){
 	$_REQUEST["iddoc"]=@$_REQUEST["doc"];
+	$doc_menu=@$_REQUEST["key"];
 	include_once("pantallas/documento/menu_principal_documento.php");
-	echo(menu_principal_documento(@$_REQUEST["iddoc"],@$_REQUEST["vista"]));
+	echo(menu_principal_documento($doc_menu,@$_REQUEST["vista"]));
 }
 
 include_once("header.php");
@@ -123,34 +124,31 @@ elseif(@$_REQUEST["accion"]=="rechazar")
  alerta("La solicitud ha sido RECHAZADA"); 
  abrir_url("pantallas/buscador_principal.php?idbusqueda=26","centro");
 }
-elseif(@$_REQUEST["accion"]=="anular")
-{$sql="UPDATE documento SET documento.estado  = 'ANULADO',documento.pdf='' WHERE documento.iddocumento='".$_REQUEST["key"]."'";  
+elseif(@$_REQUEST["accion"]=="anular"){
+
+ $sql="UPDATE documento SET estado  = 'ANULADO',pdf='' WHERE iddocumento=".$_REQUEST["key"];  
  phpmkr_query($sql,$conn); 
- //$sql="UPDATE buzon_entrada SET nombre = ".concatenar_cadena_sql(array("'ELIMINA_'","nombre"))." WHERE archivo_idarchivo='".$_REQUEST["key"]."' and nombre<>'BORRADOR'";  
- //phpmkr_query($sql,$conn); 
- //$sql="UPDATE buzon_salida SET nombre = ".concatenar_cadena_sql(array("'ELIMINA_'","nombre"))." WHERE archivo_idarchivo='".$_REQUEST["key"]."' and nombre<>'BORRADOR'";  
- //phpmkr_query($sql,$conn); 
+
  $sql="UPDATE documento_anulacion SET estado='ANULADO',fecha_anulacion=".fecha_db_almacenar(date("Y-m-d H:i:s"),"Y-m-d H:i:s")." WHERE documento_iddocumento='".$_REQUEST["key"]."' and estado='SOLICITADO'";
  phpmkr_query($sql,$conn);
  $doc=busca_filtro_tabla("lower(plantilla)","documento","iddocumento='".$_REQUEST["key"]."'","",$conn);
- /*if($doc[0][0]<>"")
-   abrir_url("html2ps/public_html/demo/html2ps.php?plantilla=".$doc[0][0]."&iddoc='".$_REQUEST["key"]."'","_blank");*/
-   ?>
-<script type="text/javascript">
-	$.ajax({
-		type: "POST",
-        url: "html2ps/public_html/demo/html2ps.php",
-        data: 'plantilla=<?php echo strtolower($doc[0]["plantilla"]); ?>&iddoc=<?php echo $_REQUEST["key"]; ?>'        
- 	   });
-   </script>
-   <?php
+
+ $ch = curl_init();
+ $fila = "http://".RUTA_PDF_LOCAL."/class_impresion.php?iddoc=".$iddoc."&conexion_remota=1&usuario_actual=".$_SESSION["usuario_actual"]."&LOGIN=".$_SESSION["LOGIN".LLAVE_SAIA];
+ curl_setopt($ch, CURLOPT_URL,$fila); 
+ curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
+ $contenido=curl_exec($ch);    
+ curl_close ($ch); 
+
+ 
  $solicitante=busca_filtro_tabla("login,documento.descripcion,numero","funcionario,documento_anulacion,documento","documento_iddocumento=iddocumento and funcionario=funcionario_codigo and documento_iddocumento=".$_REQUEST["key"],"",$conn);
  $datos_documento=busca_filtro_tabla("a.iddocumento,b.idformato","documento a, formato b","lower(a.plantilla)=b.nombre AND a.iddocumento=".$_REQUEST["key"],"",$conn);
  $revisores=busca_filtro_tabla("origen","buzon_salida","nombre in('REVISADO','APROBADO') and archivo_idarchivo='".$_REQUEST["key"]."'","",$conn);
  $mensaje="Ha sido ANULADO el documento con Radicado: ".$solicitante[0]["numero"]." y Descripci&oacute;n:".$solicitante[0]["descripcion"].".";
  for($i=0;$i<$revisores["numcampos"];$i++)
-   enviar_mensaje("",'codigo',array($revisores[$i]["login"]),"Solicitud de Anulacion".$datos[0]['numero'],utf8_encode($mensaje)); 
- alerta("El documento ha sido ANULADO");
+   enviar_mensaje("",'codigo',array($revisores[$i]["login"]),"Solicitud de Anulacion".$datos[0]['numero'],utf8_encode($mensaje));
+  
+ 	alerta("El documento ha sido ANULADO");
    $flujo = busca_filtro_tabla("","paso_documento","documento_iddocumento=".$_REQUEST["key"],"idpaso_documento desc",$conn);
    if($flujo["numcampos"] > 0){
    		include_once("workflow/libreria_paso.php");

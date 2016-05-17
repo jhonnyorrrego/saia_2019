@@ -73,10 +73,22 @@ $().ready(function() {
   
 });
 function todos_check(elemento,campo)
-{seleccionados=elemento.getAllLeafs();
+{
+	
+ seleccionados=elemento.getAllLeafs(); 
  nodos=seleccionados.split(",");
- for(i=0;i<nodos.length;i++)
-   elemento.setCheck(nodos[i],true);
+
+ for(i=0;i<nodos.length;i++){
+ 	elemento.setCheck(nodos[i],true);
+ }
+   
+ seleccionados_padres=elemento.getAllFatItems();	 
+ nodos_padre=seleccionados_padres.split(",");
+ for(i=0;i<nodos_padre.length;i++){
+ 	elemento.setCheck(nodos_padre[i],true);   
+ }
+   
+   
  document.getElementById(campo).value=elemento.getAllChecked();   
 } 
 function ninguno_check(elemento,campo)
@@ -84,6 +96,14 @@ function ninguno_check(elemento,campo)
  nodos=seleccionados.split(",");
  for(i=0;i<nodos.length;i++)
    elemento.setCheck(nodos[i],false);
+   
+ seleccionados_padres=elemento.getAllFatItems();	 
+ nodos_padre=seleccionados_padres.split(",");
+ for(i=0;i<nodos_padre.length;i++){
+ 	elemento.setCheck(nodos_padre[i],false);   
+ }
+      
+   
  document.getElementById(campo).value="";
 } 
 //-->
@@ -196,6 +216,8 @@ echo $x_perfil_idperfilList;
                   eval('document.layers["esperando_modulo"]');
             document.poppedLayer.style.visibility = "hidden";
             $('#x_modulo_idmodulo').val(tree3.getAllChecked() );
+            
+            $("#x_perfil_idperfil").show();
           }
           function onNodeSelect(nodeId)
             {
@@ -218,6 +240,8 @@ echo $x_perfil_idperfilList;
                document.poppedLayer =
                    eval('document.layers["esperando_modulo"]');
             document.poppedLayer.style.visibility = "visible";
+            
+            $("#x_perfil_idperfil").hide();
           }
     	-->
     	</script>

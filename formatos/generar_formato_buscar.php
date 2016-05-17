@@ -54,7 +54,7 @@ function crear_formato_buscar($idformato,$accion){
     if($formato[0]["librerias"] && $formato[0]["librerias"]<>""){
       $includes.=incluir($formato[0]["librerias"],"librerias",1);
     }
-    $texto1='<?php include_once("'.$ruta_db_superior.'formatos/librerias/funciones_generales.php';
+    $texto1='<?php include_once("'.$ruta_db_superior.'librerias/funciones_generales.php';
     $texto2='"); ? >';
 	$includes.=$texto1.$texto2;
     //$includes.=incluir_libreria("funciones_formatos.js","javascript");

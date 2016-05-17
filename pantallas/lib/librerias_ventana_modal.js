@@ -1,5 +1,4 @@
 $(".enlace_ventana_modal").live('click',function(){
-   alert("Prueba");
    top.$("#ventana_modal").css("margin-top",0);
    top.$("#ventana_modal").css("top",0);
    top.$("#ventana_modal").css("margin-left",0);

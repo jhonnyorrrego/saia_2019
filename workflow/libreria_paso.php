@@ -535,7 +535,7 @@ function validar_ruta_documento_flujo($iddoc,$pasos_evaluar,$paso_anterior,$acci
  */
 function validar_condicional_paso_siguiente($condicional,$paso_siguiente,$idpaso_documento,$documento,$diagram_instance){
  //Entra si estan iniciadas todas las tareas siguientes y se deben filtrar por medio de los condicionales
-  $condicional_admin=busca_filtro_tabla("","paso_condicional_admin A","A.fk_paso_condicional=".$condicional[0]["destino"],"",$conn);
+  $condicional_admin=busca_filtro_tabla("","paso_condicional_admin A","A.estado=1 AND A.fk_paso_condicional=".$condicional[0]["destino"],"",$conn);
   $incluir_condicional=array();
   if($condicional_admin["numcampos"]){
     //Buscar todos los documentos que se han ejecutado y no estan devueltos o cancelados, para validar los campos y formatos e identificar si se deben habilitar las tareaas o no de los pasos siguientes
@@ -1201,7 +1201,7 @@ function imprimir_estado_paso_documento($estado){
   return($texto);
 }
 
-function paso_anterior($idpaso,$iddiagram){
+function paso_anterior($idpaso,$iddiagram,$iddoc=0){
 	global $conn;
 	$paso_enlace=busca_filtro_tabla("a.origen,a.tipo_origen","paso_enlace a","a.diagram_iddiagram='".$iddiagram."' AND a.destino='".$idpaso."'","idpaso_enlace",$conn);
 	if($paso_enlace['numcampos']){
@@ -1212,7 +1212,14 @@ function paso_anterior($idpaso,$iddiagram){
 				return(0); 
 			}		
 		}else{
-			return $idpaso_anterior=paso_anterior($paso_enlace[0]['origen'],$iddiagram);
+			if($iddoc!=0){
+				$paso_referencia=busca_filtro_tabla("","paso_documento","documento_iddocumento=".$iddoc." AND paso_idpaso=".$idpaso,"paso_idpaso ASC",$conn);	
+				$paso_condicionado=busca_filtro_tabla("","paso_documento","documento_iddocumento=".$iddoc." AND idpaso_documento<".$paso_referencia[0]['idpaso_documento'],"idpaso_documento ASC",$conn);	
+				if($paso_condicionado['numcampos']){
+					return $paso_condicionado[ $paso_condicionado['numcampos']-1 ]['paso_idpaso'];
+				}				
+			}		
+			return $idpaso_anterior=paso_anterior($paso_enlace[0]['origen'],$iddiagram,$iddoc);
 		}		
 	}else{
 		return(0); 

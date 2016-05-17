@@ -98,8 +98,8 @@ function validar_digitalizacion_formato_radicacion($idformato,$iddoc){
   		abrir_url($ruta_db_superior."colilla.php?key=".$iddoc."&enlace=".$enlace,'centro');
   }
 }
-function digitalizar_formato_radicacion($idformato,$iddoc)
-{global $conn;
+function digitalizar_formato_radicacion($idformato,$iddoc){
+	global $conn;
   echo "<tr><td class='encabezado'>DESEA DIGITALIZAR</td><td><input name='digitalizacion' type='radio' value='1' checked>Si  <input name='digitalizacion' type='radio' value='2'>No</td></tr>";
 }
 function actualizar_campos_documento($idformato,$iddoc){

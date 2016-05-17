@@ -35,10 +35,12 @@ if(@$_REQUEST["doc"] || @$_REQUEST["key"]){
   }
   //registrar_accion_digitalizacion($doc,'IMPRIME COLILLA');
 }else{
-	if(@$_REQUEST["generar_consecutivo"]){
-		$formato=$_REQUEST["generar_consecutivo"];
-	}
-	else{
+	if(@$_REQUEST["generar_consecutivo"]){	
+		validar_confirmacion_salida($_REQUEST["generar_consecutivo"]);
+	}else if(@$_REQUEST["consecutivo"] && @$_REQUEST["salidas"]){
+		$formato=$_REQUEST["consecutivo"];
+		$_REQUEST["enlace"]="pantallas/buscador_principal.php?idbusqueda=10";
+	}else{
 		$formato='radicacion_entrada';
 	}
   $doc=generar_ingreso_formato($formato);
@@ -299,9 +301,11 @@ function generar_ingreso_formato($nombre_formato){
 	}
 	if($nombre_formato=='radicacion_entrada'){
 		$_REQUEST["descripcion"]='Pendiente por llenar datos';
+    $_REQUEST["campo_descripcion"] = "39"; //se colocan los idcampos del campo descripcion;
 	}
 	else if($nombre_formato=='radicacion_salida'){
 		$_REQUEST["descripcion_salida"]='Pendiente por llenar datos';
+    $_REQUEST["campo_descripcion"] = "2191"; //se colocan los idcampos del campo descripcion;
 	}
 	
 	$_REQUEST["serie_idserie"] = $formato[0]["serie_idserie"]; //idserie del formato;
@@ -310,7 +314,7 @@ function generar_ingreso_formato($nombre_formato){
 	$_REQUEST["firma"] = 1;
 	$_REQUEST["fecha_almacenar"] = date('Y-m-d');
 	//$_REQUEST["padre"] = $id;
-	$_REQUEST["campo_descripcion"] = "39"; //se colocan los idcampos del campo descripcion;
+	
 	$_REQUEST["accion"] = "guardar_detalle";
 	$_REQUEST["tipo_radicado"] = $nombre_formato; //se envia el nombre del radicado del formato;
 	$_REQUEST["funcion"] = "radicar_plantilla";// esto siempre va
@@ -571,5 +575,21 @@ function validar_confirmacion(){
 	}
 	else
 		return;
+}
+function validar_confirmacion_salida($consecutivo){
+	global $conn;
+	if($consecutivo=='radicacion_salida'){
+		?>
+		<script>
+		var ingreso=confirm("Esta seguro de generar un nuevo radicado?");
+		if(ingreso){
+			window.open("colilla.php?consecutivo=radicacion_salida&salidas=1","_self");
+		}else{
+			window.open("pantallas/buscador_principal.php?idbusqueda=10","_self");
+		}
+		</script>
+		<?php
+		die();
+	}
 }
 ?>

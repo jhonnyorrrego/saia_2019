@@ -103,6 +103,14 @@ function todos_check(elemento,campo)
  nodos=seleccionados.split(",");
  for(i=0;i<nodos.length;i++)
    elemento.setCheck(nodos[i],true);
+   
+   
+ seleccionados_padres=elemento.getAllFatItems();	 
+ nodos_padre=seleccionados_padres.split(",");
+ for(i=0;i<nodos_padre.length;i++){
+ 	elemento.setCheck(nodos_padre[i],true);   
+ }   
+   
  document.getElementById(campo).value=elemento.getAllChecked();   
 } 
 function ninguno_check(elemento,campo)
@@ -110,6 +118,13 @@ function ninguno_check(elemento,campo)
  nodos=seleccionados.split(",");
  for(i=0;i<nodos.length;i++)
    elemento.setCheck(nodos[i],false);
+   
+ seleccionados_padres=elemento.getAllFatItems();	 
+ nodos_padre=seleccionados_padres.split(",");
+ for(i=0;i<nodos_padre.length;i++){
+ 	elemento.setCheck(nodos_padre[i],false);   
+ }   
+   
  document.getElementById(campo).value="";
 }
 //-->

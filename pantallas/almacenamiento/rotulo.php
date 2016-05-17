@@ -48,8 +48,11 @@ function imprime(atras){
   window.print();
   if(url!="")
      window.open("<?php echo $enlace; ?>","previsualizar");       
-  else
-  	window.close();
+  else{
+  	setTimeout(function() {
+  		window.close();
+  	}, 100);
+  }
 }	
 -->
 </script>
@@ -106,7 +109,7 @@ function rotulo_caja($id){
 	</tr>
 	<tr>
 		<td><b>No. CAJA</b></td>
-		<td colspan="2" style="text-align:center;font-size:18pt"><?php echo mayusculas($datos[0]["no_cajas"]); ?></td>
+		<td colspan="2" style="text-align:center"><?php echo mayusculas($datos[0]["no_cajas"]); ?></td>
 	</tr>
 	<tr>
 		<td><b>No. CONSECUTIVO</b></td>

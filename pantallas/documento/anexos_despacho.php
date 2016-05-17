@@ -14,7 +14,8 @@ include_once($ruta_db_superior."class_transferencia.php");
 include_once($ruta_db_superior."librerias_saia.php");
 echo (librerias_jquery("1.7"));  
 echo(librerias_notificaciones());
-function cargar_anexos_documento_web($datos_documento,$anexos){
+echo(estilo_bootstrap());
+function cargar_anexos_documento_despacho($datos_documento,$anexos){
 	global $conn,$ruta_db_superior;
 	$funcionario = busca_filtro_tabla("idfuncionario","funcionario","funcionario_codigo=".$datos_documento["funcionario_codigo"],"",$conn);
 	foreach ($anexos as $key => $value) {
@@ -111,6 +112,11 @@ if($_REQUEST['docs']){
 }
 
 if(isset($_REQUEST["Adicionar"])){
+					
+				
+			
+		
+	
 		$permisos = $_REQUEST["permisos_anexos"];
 		$documento=$_REQUEST['key'];
 		$iddoc=explode(",",$documento);
@@ -143,7 +149,7 @@ if(isset($_REQUEST["Adicionar"])){
 					$datos_anexo["fecha"]=$info_doc[0]['fecha'];
 					$datos_anexo["estado"]=$info_doc[0]['estado'];
 					$datos_anexo["idformato"]=$idformato[0]["idformato"];
-					$info = cargar_anexos_documento_web($datos_anexo,$info_anexo['anexos']);
+					$info = cargar_anexos_documento_despacho($datos_anexo,$info_anexo['anexos']);
 				}
 				$documento_mns = busca_filtro_tabla("descripcion,plantilla,ejecutor,numero", "documento", "iddocumento=".$iddoc[$i], "", $conn);
 				$datos["origen"] = usuario_actual("funcionario_codigo");
@@ -155,7 +161,7 @@ if(isset($_REQUEST["Adicionar"])){
 				transferir_archivo_prueba($datos, array($documento_mns[0]["ejecutor"]), $otros);
 				$j++;
 			}
-	}
+		}
 	?>
 		<script>
 			window.parent.hs.close();
@@ -171,29 +177,58 @@ $adicional = "";
 if ($validaciones[0]["valor"]){
 	$adicional = 'accept="' . $validaciones[0]["valor"] . '"';
 }
+
+
+$config = busca_filtro_tabla("valor","configuracion","nombre='color_encabezado'","",$conn);
 ?>
-</br>
+<br>
+<div >
+	<div style="font-size: 12px;font-weight:bold;color:<?php echo($config[0]['valor']); ?>;">Adicionar Anexos</div>
+<hr>	
 <form action="anexos_despacho.php" method="POST" enctype="multipart/form-data" >
 <input type="hidden" value="" id="permisos_anexos" name="permisos_anexos"/>
 <input type="hidden" value="<?php echo $documento; ?>" id="key" name="key"/>
 <input type="hidden" value="" id="idcampo" name="idcampo"/>
 <input type="hidden" value="centro" id="frame" name="frame"/>
 
-<table>
+<table width="100%;" border='0' cellspacing=2 cellpadding=2>
+
 	<tr>
-		<td> Adicionar Anexos </td>
-	</tr>
-	<tr>
-		<td class="celda_transparente">
+		<td class="celda_transparente" style="vertical-align:top; color:black; ">
+			<b>Anexo:</b>
+		</td>
+		<td class="celda_transparente" align='center' style="vertical-align:middle;">
 			<input type="file" name="anexos[]" class="multi" <?php echo($adicional); ?>
 		</td>
 	</tr>
 	<tr>
-		<td>
+		<td colspan="2" style='text-align:center; vertical-align:middle;'>
+			<br>
 			<input type="submit" value="Adicionar" name="Adicionar">
 		</td>
 	</tr>
 </table>
 </form>
+</div>
 </body>
 </html>
+
+<script>
+	$(document).ready(function(){
+		$('[name="Adicionar"]').click(function(){
+			$.ajax({
+                type:'POST',
+                dataType: 'json',
+                async:false,
+                url: "<?php echo($ruta_db_superior); ?>bpmn/paso/terminar_actividad_despacho.php",
+                data: {
+	                iddocs:'<?php echo($documento); ?>',
+	                accion:'despacho_documento'
+                },
+                success: function(datos){
+						
+            	}
+        	}); 			
+		});
+	});
+</script>

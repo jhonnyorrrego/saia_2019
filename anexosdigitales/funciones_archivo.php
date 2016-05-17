@@ -301,13 +301,17 @@ function acciones_anexos_usuario($idfunc,$idanexo,$limita_accion=NULL,$num=-1){
     if(in_array("ICONO",$limita_accion))
     	$resultado.=utf8_encode($etiqueta);
     if(in_array ("l", $arper1)&&in_array("DESCARGAR",$limita_accion)){// Simpre se muestra la opcion de descarga
-   		if(in_array("ICONO",$limita_accion)) // IMPRIME CON ICONOS 	
+   		if(in_array("ICONO",$limita_accion)){ // IMPRIME CON ICONOS
+   		  $resultado.='<a title="Ver" class="" onclick="return top.hs.htmlExpand(this, { objectType: \'iframe\',width: 1000, height: 600,contentId:\'cuerpo_paso\', preserveContent:false} )" href="'.$ruta.'pantallas/documento/visor_pdf.php?ruta=../'.$ruta.$anexo[0]["ruta"].'" border="0px"><img title="Descargar" src="'.$ruta.'botones/anexos/application.png" style="border-width:0px; cursor:auto;" /></a>'; 	
+        
     		$resultado.='<a href="'.$ruta.'anexosdigitales/parsea_accion_archivo.php?idanexo='.$idanexo.'&accion=descargar" border="0px"><img title="Descargar" src="'.$ruta.'botones/anexos/application.png" style="border-width:0px; cursor:auto;" /></a>';
+    	}
       else{// ES SOLO LA OPCION DE DESCARGA SE IMPRIME EL LINK CON EL NOMBRE DEL ARCHIVO
 				if(@$_REQUEST["tipo"]==5)
 					$resultado.=($anexo[0]["etiqueta"]);
-				else	  
+				else{
 					$resultado.='<a title="Descargar" href="'.$ruta.'anexosdigitales/parsea_accion_archivo.php?idanexo='.$idanexo.'&accion=descargar" border="0px">'.($anexo[0]["etiqueta"]).'</a>';
+				}
       }
     }
     if(in_array ("e", $arper1)&&in_array("ELIMINAR",$limita_accion)){// Verifica el permismo y que no se pida solo mostrar la opcion de descarga
@@ -337,7 +341,7 @@ function acciones_anexos_usuario($idfunc,$idanexo,$limita_accion=NULL,$num=-1){
     		$objeto="Permisos";
     	}
 	    if($datos_permisos[0]["idpropietario"]==$idfunc&&in_array("PERMISOS",$limita_accion)){// Si es el propietario ademas se agrega el permiso para modificar permisos
-      	$resultado.= '<a href="'.$ruta.'anexosdigitales/anexos_permiso_add.php?idanexo='.$idanexo.'" id="el_'.$idanexo.'" class="highslide" onclick="return hs.htmlExpand(this,{objectType: \'iframe\', outlineWhileAnimating: true, width: 250 } )" style="border-width:0px; cursor:auto;">'.$objeto.'</a>';
+      	//$resultado.= '<a href="'.$ruta.'anexosdigitales/anexos_permiso_add.php?idanexo='.$idanexo.'" id="el_'.$idanexo.'" class="highslide" onclick="return hs.htmlExpand(this,{objectType: \'iframe\', outlineWhileAnimating: true, width: 250 } )" style="border-width:0px; cursor:auto;">'.$objeto.'</a>';
 	     }
 		}
    	if(!isset($_REQUEST["idfunc"])){ 

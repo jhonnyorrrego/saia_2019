@@ -31,8 +31,8 @@ global $conn;
 		}
 	}
 }
-function transferencia_automatica($idformato,$iddoc,$destinos,$tipo,$notas="",$nombre="TRANSFERIDO")
-{global $conn;
+function transferencia_automatica($idformato,$iddoc,$destinos,$tipo,$notas="",$nombre="TRANSFERIDO"){
+	global $conn;
  if($tipo=="1") //cuando es una lista de funcionarios fijos (roles)
    $vector=explode("@",$destinos);
  elseif($tipo=="3") //cuando es una lista de funcionarios fijos (funcionario_codigo)
@@ -675,8 +675,7 @@ function ciudad($idformato=0,$iddoc=0,$tipo=0)
    if($ciudad["numcampos"])
       {$nombre_ciudad=busca_filtro_tabla("nombre","municipio","idmunicipio=".$ciudad[0]["valor"],"",$conn);
        $ciudad_valor=$ciudad[0][0];
-       $valor= ucwords(strtolower($nombre_ciudad[0][0]));
-       
+        $valor= $nombre_ciudad[0][0];
        
       }
    else

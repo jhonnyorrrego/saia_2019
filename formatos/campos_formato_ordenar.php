@@ -112,7 +112,7 @@ $(document).ready(
   
   function salir_tiny(){
     serial = $.SortSerialize('listacampos');
-    ruta="../tinymce/jscripts/tiny_mce/plugins/formatos/formatos.php?formato=<?php echo $_REQUEST['idformato']; ?>&tipo=campos_formato";
+    ruta="../tinymce34/jscripts/tiny_mce/plugins/formatos/formatos.php?formato=<?php echo $_REQUEST['idformato']; ?>&tipo=campos_formato";
     window.open(ruta,'_self');
   }
 	//-->

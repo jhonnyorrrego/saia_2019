@@ -12,6 +12,7 @@ include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."librerias_saia.php");
 include_once($ruta_db_superior."pantallas/documento/librerias_tramitados.php");
 include_once($ruta_db_superior."formatos/librerias/encabezado_pie_pagina.php");
+include_once($ruta_db_superior."class_transferencia.php");
 echo(librerias_validar_formulario());
 echo(librerias_notificaciones());
 echo (librerias_jquery("1.7"));
@@ -57,9 +58,9 @@ function mostrar_seleccionados_despacho($idformato,$iddoc){
 	if($documentos[0]["tipo_radicado"]==1){
 		$texto.=reporte_entradas2($idformato,$iddoc);
 		echo($texto);
-	}else if($documentos[0]["tipo_radicado"]==2){
+	}else if($documentos[0]["tipo_radicado"]==2 || $documentos[0]['plantilla']=='RESPUESTA_PQRSF'){
 		$texto.=reporte_salidas2($idformato,$iddoc);
-		echo($texto);
+		echo($texto); 
 	}
 }
 //------------------------------Posterior aprobar------------------------------------//
@@ -88,12 +89,23 @@ function generar_pdf_despacho($idformato,$iddoc){
 	$cant=count($documentos);
 	for($i=0;$i<$cant;$i++){
 		if($documentos[$i]){
+			$documento_mns = busca_filtro_tabla("descripcion,plantilla,ejecutor,numero", "documento", "iddocumento=".$documentos[$i], "", $conn);
 			$sql1_salidas="INSERT INTO salidas(documento_iddocumento,responsable,fecha_despacho,tipo_despacho,notas,radicado_despacho) VALUES ('".$documentos[$i]."','".$mensajero."',".fecha_db_almacenar(date("Y-m-d H:i:s"),"Y-m-d H:i:s").",'".$tipo_despacho."','Despacho realizado por despacho fisico.','".$seleccionado[0]['numero']."')";
 			phpmkr_query($sql1_salidas);
 			$id=phpmkr_insert_id();
 			if($id){
 				$j++;
 			}
+			$funcionario=busca_filtro_tabla("","vfuncionario_dc","idfuncionario=".$mensajero,"",$conn);
+			$datos["origen"] = usuario_actual("funcionario_codigo");
+			$datos["archivo_idarchivo"] = $documentos[$i];
+			$datos["tipo_destino"] =1;
+			$datos["ver_notas"]=1;
+			$datos["tipo_origen"]=1;    
+			$datos["tipo"] = "";
+			$datos["nombre"] = "DISTRIBUCION";
+			$otros["notas"] = "'Consecutivo despacho: ".$seleccionado[0]["numero"]."<br/>Responsable o mensajero: ".$funcionario[0]['nombres']." ".$funcionario[0]['apellidos']."'";
+			transferir_archivo_prueba($datos, array($documento_mns[0]["ejecutor"]), $otros);
 		}
 	}
 	if($j==$i){

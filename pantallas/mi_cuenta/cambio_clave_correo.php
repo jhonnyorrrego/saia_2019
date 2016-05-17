@@ -1,7 +1,89 @@
+<?php
+$ruta_db_superior='';
+if(@$_REQUEST['from_correo']){
+
+	$max_salida=6; // Previene algun posible ciclo infinito limitando a 10 los ../
+	$ruta_db_superior=$ruta="";
+	while($max_salida>0){
+	  if(is_file($ruta."db.php")){
+	    $ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
+	  }
+	  $ruta.="../";
+	  $max_salida--;
+	}
+	include_once($ruta_db_superior."db.php");
+	include_once($ruta_db_superior."librerias_saia.php");
+	echo(librerias_jquery('1.7'));
+	echo(estilo_bootstrap());
+	
+	$correo_funcionario=busca_filtro_tabla("email","funcionario","idfuncionario=".usuario_actual('idfuncionario'),"",$conn);
+
+	?>
+<script>
+$(document).ready(function(){
+	$("#enviar_form").click(function(){
+		var nueva_con=$("#passwordPwd").val();
+			var confi_con=$("#passwordTxt").val();
+			
+			if(nueva_con!=confi_con){
+				alert('Las contraseñas deben ser iguales');
+				$("#passwordPwd").val('');
+				$("#passwordTxt").val('');
+				return false;
+			}	
+			if(nueva_con==''){
+				alert('Debe ingresar una contraseña valida');
+				return false;			
+			}	
+			$("#cambio_pass").submit();
+	});
+});
+</script>
+<div class="container">
+<form class="form-vertical" method="post" action="<?php echo($ruta_db_superior); ?>pantallas/mi_cuenta/guardar_pass_correo.php" id="cambio_pass">  
+ 			<input type="hidden" name="from_correo" value="1" /> 			
+            <div class="control-group">
+                <label class="control-label" for="new_password"><b>Nueva Contrase&ntilde;a</b></label>
+              <div class="controls">
+                <input type="password" id="passwordPwd" name="passwordPwd"  placeholder="Nueva Contrase&ntilde;a">
+                <div id="nueva_pass"></div>
+              </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="re_new_password"><b>Confirmar nueva Contrase&ntilde;a</b></label>
+              <div class="controls">
+                <input type="password" id="passwordTxt" name="passwordTxt" placeholder="Confirmar nueva Contrase&ntilde;a">
+                <div id="confirmacion_pass"></div>
+              </div>
+            </div>                               
+            <div class="control-group">
+                <button type="button" class="btn btn-mini btn-primary" id="enviar_form">Cambiar contrase&ntilde;a</button>
+                <button type="button" class="btn btn-mini " id="cancelar_form">Cancelar</button>
+            </div>           
+</form>
+<div>
+ <ul>
+    <li>Usa cuatro caracteres como m&iacute;nimo.
+    </li>
+    <li>Elige una contrase&ntilde;a que no hayas utilizado.
+    </li>
+    <li>Combina letras, n&uacute;meros y s&iacute;mbolos para que tu contrase&ntilde;a sea m&aacute;s segura.
+    </li>
+ </ul>
+</div>
+</div>    
+	<?php	
+	die();
+}
+?>
+
+
 <head>
 <script type="text/javascript" src="pantallas/mi_cuenta/js/pwd_meter.js"></script>
 <script>
 $("#enviar_form").click(function(){
+	
+	
 	var nueva_con=$("#passwordPwd").val();
 		var confi_con=$("#passwordTxt").val();
 		
@@ -26,7 +108,8 @@ $("#passwordTxt").blur(function(){
 <!--link rel="STYLESHEET" type="text/css" href="pantallas/mi_cuenta/css/password.css"-->
 </head>
 <div class="container">
-<form class="form-vertical" method="post" action="pantallas/mi_cuenta/guardar_pass_correo.php" id="cambio_pass">            
+<form class="form-vertical" method="post" action="pantallas/mi_cuenta/guardar_pass_correo.php" id="cambio_pass">  
+ 
             <div class="control-group">
                 <label class="control-label" for="new_password"><b>Nueva Contrase&ntilde;a</b></label>
               <div class="controls">

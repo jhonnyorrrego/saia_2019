@@ -761,7 +761,6 @@ function filtro_indicadores($prioridad){
 }
 
 function filtro_funcionario_etiquetados($funcionario){
-
  	$retorno=" AND d.funcionario='".usuario_actual("funcionario_codigo")."'";
 	return($retorno);  
 }
@@ -782,5 +781,85 @@ function carga_soporte($iddocumento){
   	return $texto;
 	}	
 }
+function iddoc_seleccionados(){
+	if(!($_REQUEST['idbusqueda_filtro_temp'])){
+		$docs=busca_filtro_tabla("","documento,ft_despacho_ingresados","documento_iddocumento=iddocumento and estado not in ('ELIMINADO','ANULADO')","",$conn);
+		$iddocs="";
+		for($i=0;$i<$docs['numcampos'];$i++){
+			if($i==($docs['numcampos']-1)){
+				$iddocs.=$docs[$i]['docs_seleccionados'];
+			}else{
+				$iddocs.=$docs[$i]['docs_seleccionados'].",";
+			}
+		}
+		$campos=(explode(",",$iddocs));
+		$cantidad=count($campos);
+		$where='';
+		$where.="(";
+		for($i=0;$i<$cantidad;$i++){	
+			if($i==0){
+				//$where.="'iddocumento' like '".$campos[$i]."'";
+				$where.="(CONCAT(',',CONCAT(iddocumento,',')) like '%,".$campos[$i].",%')";
+			}else{
+				//$where.=" or 'iddocumento' like '".$campos[$i]."'";
+				$where.=" or (CONCAT(',',CONCAT(iddocumento,',')) like '%,".$campos[$i].",%')";
+			}
+		}
+		$where.=")";
+		return($where);
+	}else{
+		$where="documento_iddocumento=iddocumento";
+		return($where);
+	}
+}
+function no_distribuidos(){
 
+	$docs=busca_filtro_tabla("","documento,ft_despacho_ingresados","documento_iddocumento=iddocumento and estado not in ('ELIMINADO','ANULADO')","",$conn);
+	$iddocs="";
+	for($i=0;$i<$docs['numcampos'];$i++){
+		if($i==($docs['numcampos']-1)){
+			$iddocs.=$docs[$i]['docs_seleccionados'];
+		}else{
+			$iddocs.=$docs[$i]['docs_seleccionados'].",";
+		}
+	}
+	$campos=explode(",",$iddocs);
+	$cantidad=count($campos);
+	$where='';
+	$where.="(";
+	for($i=0;$i<$cantidad;$i++){	
+		if($i==0){
+			$where.="(CONCAT(',',CONCAT(iddocumento,',')) not like '%,".$campos[$i].",%')";
+		}else{
+			$where.=" and (CONCAT(',',CONCAT(iddocumento,',')) not like '%,".$campos[$i].",%')";
+		}
+	}
+	$where.=")";
+	return($where);
+}
+function carga_soporte_ingresados($iddocumento){
+	global $ruta_db_superior;
+	if(isset($_REQUEST['variable_busqueda'])){
+		$texto='<li><a href="#" id="cargar_soporte">Cargar soporte</a></li>';
+		$texto.='<script>
+		  $("#cargar_soporte").click(function(){	    	
+		    var docus=$("#seleccionados").val();
+			  if(docus!=""){			  	
+						top.hs.htmlExpand(this, { objectType: "iframe",width: 400, height: 300, src:"http://'.RUTA_PDF.'/formatos/despacho_ingresados/anexos_despacho.php?docs="+docus,outlineType: "rounded-white",wrapperClassName:"highslide-wrapper drag-header"});
+			  }else{
+			  	alert("Seleccione por lo menos un documento");
+			  }
+		   });
+		</script>';
+		return $texto;
+	}
+}
+function filtro_despacho(){
+	global $ruta_db_superior;
+	if(($_REQUEST['variable_busqueda'])){
+		$docs=busca_filtro_tabla("","documento,ft_despacho_ingresados","documento_iddocumento=iddocumento and estado not in ('ELIMINADO','ANULADO') and numero=".$_REQUEST['variable_busqueda'],"",$conn);
+		$where=" and iddocumento in(".$docs[0]['docs_seleccionados'].")";
+		return($where);
+	}
+}	
 ?>

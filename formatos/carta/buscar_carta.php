@@ -151,7 +151,8 @@
                       });
                       });
                      </script></td>
-                    </tr><input type="hidden" name="campo_descripcion" value="10"><?php submit_formato(1);?></table><?php if(@$_REQUEST["campo__retorno"]){ ?>
+                    </tr><tr id="tr_email_aprobar"><td class="encabezado">&nbsp;<select name="condicion_email_aprobar" id="condicion_email_aprobar"><option value="AND">Y</option><option value="OR">O</option></td>
+                     <td class="encabezado" width="20%" title="">APROBAR FUERA DE SAIA</td><td class="encabezado">&nbsp;<select name="compara_email_aprobar" id="compara_email_aprobar"> <option value="=|@|@">Igual</option><option value="-|@|@">Menor</option><option value="+|@|@">Mayor</option><option value="!|@|@">Diferente</option></select></td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(1,4086,'',1);?></td></tr><input type="hidden" name="campo_descripcion" value="10"><?php submit_formato(1);?></table><?php if(@$_REQUEST["campo__retorno"]){ ?>
                 <input type="hidden" name="campo__retorno" value="<?php echo($_REQUEST["campo__retorno"]); ?>">
               <?php }
                if(@$_REQUEST["formulario__retorno"]){ ?>

@@ -6,6 +6,9 @@ include_once("db.php");
 include_once("pantallas/expediente/librerias.php");
 
 $iddoc = $_REQUEST["iddoc"];
+$doc_menu=@$_REQUEST["iddoc"];
+include_once("pantallas/documento/menu_principal_documento.php");
+echo(menu_principal_documento($doc_menu,1));
 $expedientes_asignados=arreglo_expedientes_asignados();
 $documento=busca_filtro_tabla("","expediente_doc","documento_iddocumento in(".$iddoc.") and expediente_idexpediente in(".implode(",",$expedientes_asignados).")","",$conn);
 $exp_doc=extrae_campo($documento,"expediente_idexpediente","U");

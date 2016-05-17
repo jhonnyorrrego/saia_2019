@@ -164,10 +164,11 @@ else{
     </div>
     <div class="tab-pane" id="anexos">
   		<b><?php echo($iconos['adjuntos_documento']);?></b>
+  		<div><button class="btn btn-mini" id="adicionar_anexos">Adicionar</button></div>
   		<form name="listado_anexos" method="post" id="listado_anexos">
   			<ul class="lista_datos" id="panel_anexos">
         </ul>
-  		</form>    	
+  		</form>
 		</div>
     <div class="tab-pane" id="respuesta">
       <div id="encabezado_relacionados">
@@ -245,6 +246,13 @@ echo(librerias_bootstrap());
 echo(librerias_notificaciones());
 echo(librerias_acciones_kaiten());
 ?>
+<script>
+$(document).ready(function(){
+  $("#adicionar_anexos").live('click',function(){
+    window.open("<?php echo($ruta_db_superior); ?>anexosdigitales/anexos_documento.php?key=<?php echo($iddocumento); ?>","detalles");
+  });
+});
+</script>
 <script type="text/javascript">	
 $(document).ready(function(){
 var item="<?php echo($nodoinicial);?>";
@@ -298,6 +306,7 @@ function click_funcion(div){
         							$('#encabezado_paginas').hide(); 
         						break;
         						case 'anexos': 
+        						alert("12");
         							$(div).append("<li class='alert'>No hay "+etiqueta+"</li>");
         						break;
         						case 'respuesta': 

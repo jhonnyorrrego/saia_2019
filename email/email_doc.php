@@ -271,6 +271,7 @@ function enviar_email($doc=0){
         $mail->ClearAddresses();
         $mail->ClearBCCs();
         $mail->ClearCCs();
+		
         $para=explode(",",$destinos);
         foreach($para as $direccion)          
         {  
@@ -290,8 +291,62 @@ function enviar_email($doc=0){
           {  
            $mail->AddBCC("$direccion","$direccion");
           }
-        }              
+        }     
+		
+  $config = busca_filtro_tabla("valor","configuracion","nombre='color_encabezado'","",$conn);
+  $admin_saia= busca_filtro_tabla("valor","configuracion","nombre='login_administrador'","",$conn);
+  $correo_admin=busca_filtro_tabla("email","funcionario","login='".$admin_saia[0]['valor']."'","",$conn);
+  $texto_pie="
+  	<table style='border:none; width:100%; font-size:11px;font-family:Roboto,Arial,Helvetica,sans-serif;color:#646464;vertical-align:middle;	padding: 10px;'>
+		<tr>
+			<td>
+				Este email ha sido enviado autom&aacute;ticamente desde SAIA (Sistema de Administraci&oacute;n Integral de Documentos y Procesos). 
+				<br>
+				<br>
+				Por favor, NO responda a este mail. 
+				<br>
+				<br>
+				Para obtener soporte o realizar preguntas, envi&eacute; un correo electr&oacute;nico a ".$correo_admin[0]['email']."
+			</td>
+			<td style='text-align:right;'>
+				<img src='".PROTOCOLO_CONEXION.RUTA_PDF_LOCAL."/imagenes/saia_gray.png'>				
+			</td>
+		</tr>
+	</table>
+";  
+  
+
+  $inicio_style='
+  <div id="fondo" style="   padding: 10px; 	background-color: #f5f5f5;	">
+  
+  	<div id="encabezado" style="background-color:'.$config[0]["valor"].';color:white ;  vertical-align:middle;   text-align: left;    font-weight: bold;  border-top-left-radius:5px;   border-top-right-radius:5px;   padding: 10px;">
+  		NOTIFICACI&Oacute;N - SAIA
+  	</div>
+ 
+  	<div id="cuerpo" style="padding: 10px;background-color:white;">
+  		<br>
+  		<span style="font-weight:bold;color:'.$config[0]["valor"].';">'.$asunto.'</span>
+  		<hr>
+  		<br>';
+  
+  $fin_style='
+  	</div>
+  	<div  id="pie" style="font-size:11px;font-family:Roboto,Arial,Helvetica,sans-serif;color:#646464;vertical-align:middle;padding: 10px;">
+  		'.$texto_pie.'
+  	</div>
+  </div>';	
+	
+ 		$contenido=$inicio_style.$contenido.$fin_style;			
+		
+		
+		
+		
+		
+		         
         $mail->Body = $contenido;
+		$mail -> IsHTML (true);
+		
+		
         $anexo=@$_REQUEST["anexos"];
         if($anexo!=""){
           $anexos=busca_filtro_tabla("ruta,etiqueta,idanexos","anexos","idanexos IN(".implode(",",$anexo).")","",$conn);

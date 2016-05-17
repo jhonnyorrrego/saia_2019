@@ -335,5 +335,22 @@ function encabezado_orden($idformato,$iddoc){
   return ("<img src='http://".RUTA_PDF."/".$logo[0]["valor"]."' border='0' />");
  } */
 }
-
+function mostrar_datos_radicaion($idformato, $iddoc){
+	global $conn;
+	//echo(estilo_bootstrap());
+	$datos_radicacion = busca_filtro_tabla("","documento","iddocumento=".$iddoc,"",$conn);
+	$nombre_empresa = busca_filtro_tabla("valor","configuracion","LOWER(nombre) LIKE'nombre'","",$conn);
+	if($_REQUEST['tipo']!=5){
+		$margin="margin-top:37px;";
+	}else{
+		$margin="margin-top:-30px;";
+	}	
+	$datos="<div id='header_first_page' style='float:right; border-radius: 5px; ".$margin."'>
+	<div style='border: solid 1px; padding:10px; font-size: 16px; '><b style='float:right;'>".$nombre_empresa[0]['valor']."</b><br />";
+	$datos.="<b>Radicado No:</b> ".formato_numero($idformato,$iddoc,1).'<br />';
+	$date = new DateTime($datos_radicacion[0]['fecha']);
+	$datos.="<b>Fecha:</b> ".$date->format('Y-m-d H:i').'<br />';
+	$datos.="</div></div>";
+	return($datos);
+}
 ?>

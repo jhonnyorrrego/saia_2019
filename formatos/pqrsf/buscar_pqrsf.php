@@ -78,10 +78,50 @@
                       });
                      </script></td>
                     </tr><tr><td class="encabezado">&nbsp;<select name="condicion_iniciativa_publica" id="condicion_iniciativa_publica"><option value="AND">Y</option><option value="OR">O</option></td>
-                     <td class="encabezado" width="20%" title="">INICIATIVA P&Uacute;BLICA</td><td class="encabezado">&nbsp;<select name="compara_iniciativa_publica" id="compara_iniciativa_publica"> <option value="LIKE|%|%">Similar</option><option value="LIKE|%|@">Inicia Con</option><option value="LIKE|@|%">Finaliza Con</option></select></td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(305,3834,$_REQUEST['iddoc']);?></td></tr><tr><td class="encabezado">&nbsp;<select name="condicion_sector_iniciativa" id="condicion_sector_iniciativa"><option value="AND">Y</option><option value="OR">O</option></td>
-                     <td class="encabezado" width="20%" title="">SECTOR DE LA INICIATIVA</td><td class="encabezado">&nbsp;<select name="compara_sector_iniciativa" id="compara_sector_iniciativa"> <option value="=|@|@">Igual</option><option value="-|@|@">Menor</option><option value="+|@|@">Mayor</option><option value="!|@|@">Diferente</option></select></td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(305,3832,'',1);?></td></tr><tr><td class="encabezado">&nbsp;<select name="condicion_cluster" id="condicion_cluster"><option value="AND">Y</option><option value="OR">O</option></td>
-                     <td class="encabezado" width="20%" title="">CLUSTER</td><td class="encabezado">&nbsp;<select name="compara_cluster" id="compara_cluster"> <option value="LIKE|%|%">Similar</option><option value="LIKE|%|@">Inicia Con</option><option value="LIKE|@|%">Finaliza Con</option></select></td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(305,3833,$_REQUEST['iddoc']);?></td></tr><tr><td class="encabezado">&nbsp;<select name="condicion_region" id="condicion_region"><option value="AND">Y</option><option value="OR">O</option></td>
-                     <td class="encabezado" width="20%" title="">REGION</td><td class="encabezado">&nbsp;<select name="compara_region" id="compara_region"> <option value="LIKE|%|%">Similar</option><option value="LIKE|%|@">Inicia Con</option><option value="LIKE|@|%">Finaliza Con</option></select></td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(305,3835,$_REQUEST['iddoc']);?></td></tr><tr><td class="encabezado">&nbsp;<select name="condicion_anexos" id="condicion_anexos"><option value="AND">Y</option><option value="OR">O</option></td>
+                     <td class="encabezado" width="20%" title="">INICIATIVA P&Uacute;BLICA</td><td class="encabezado">&nbsp;<select name="compara_iniciativa_publica" id="compara_iniciativa_publica"> <option value="or">Alguno</option><option value="and">Todos</option></select></td>
+                     <td bgcolor="#F5F5F5"><select multiple id="iniciativa_publica" name="iniciativa_publica"></select><script>
+                     $(document).ready(function() 
+                      {
+                      $("#iniciativa_publica").fcbkcomplete({
+                        complete_text:"Presione enter para agregar una palabra.",
+                        newel: true
+                      });
+                      });
+                     </script></td>
+                    </tr><tr><td class="encabezado">&nbsp;<select name="condicion_sector_iniciativa" id="condicion_sector_iniciativa"><option value="AND">Y</option><option value="OR">O</option></td>
+                     <td class="encabezado" width="20%" title="">SECTOR DE LA INICIATIVA</td><td class="encabezado">&nbsp;<select name="compara_sector_iniciativa" id="compara_sector_iniciativa"> <option value="or">Alguno</option><option value="and">Todos</option></select></td>
+                     <td bgcolor="#F5F5F5"><select multiple id="sector_iniciativa" name="sector_iniciativa"></select><script>
+                     $(document).ready(function() 
+                      {
+                      $("#sector_iniciativa").fcbkcomplete({
+                        complete_text:"Presione enter para agregar una palabra.",
+                        newel: true
+                      });
+                      });
+                     </script></td>
+                    </tr><tr><td class="encabezado">&nbsp;<select name="condicion_cluster" id="condicion_cluster"><option value="AND">Y</option><option value="OR">O</option></td>
+                     <td class="encabezado" width="20%" title="">CLUSTER</td><td class="encabezado">&nbsp;<select name="compara_cluster" id="compara_cluster"> <option value="or">Alguno</option><option value="and">Todos</option></select></td>
+                     <td bgcolor="#F5F5F5"><select multiple id="cluster" name="cluster"></select><script>
+                     $(document).ready(function() 
+                      {
+                      $("#cluster").fcbkcomplete({
+                        complete_text:"Presione enter para agregar una palabra.",
+                        newel: true
+                      });
+                      });
+                     </script></td>
+                    </tr><tr><td class="encabezado">&nbsp;<select name="condicion_region" id="condicion_region"><option value="AND">Y</option><option value="OR">O</option></td>
+                     <td class="encabezado" width="20%" title="">REGION</td><td class="encabezado">&nbsp;<select name="compara_region" id="compara_region"> <option value="or">Alguno</option><option value="and">Todos</option></select></td>
+                     <td bgcolor="#F5F5F5"><select multiple id="region" name="region"></select><script>
+                     $(document).ready(function() 
+                      {
+                      $("#region").fcbkcomplete({
+                        complete_text:"Presione enter para agregar una palabra.",
+                        newel: true
+                      });
+                      });
+                     </script></td>
+                    </tr><tr><td class="encabezado">&nbsp;<select name="condicion_anexos" id="condicion_anexos"><option value="AND">Y</option><option value="OR">O</option></td>
                      <td class="encabezado" width="20%" title="">DOCUMENTO SOPORTE COMENTARIO</td><td class="encabezado">&nbsp;<select name="compara_anexos" id="compara_anexos"> <option value="or">Alguno</option><option value="and">Todos</option></select></td>
                      <td bgcolor="#F5F5F5"><select multiple id="anexos" name="anexos"></select><script>
                      $(document).ready(function() 

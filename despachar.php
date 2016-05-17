@@ -55,8 +55,8 @@ global $conn,$campo_destino;
 						<input type='text' style='width:100px' name='guia_" . $id . "' id='guia_" . $id . "'>
 					</td>
 					<td>
-						<input type='radio' name='estado_despacho_" . $id . "' id='estado_despacho_" . $id . "' value='Entregado'>Entregado <br/>  
-						<input type='radio' name='estado_despacho_" . $id . "' id='estado_despacho_" . $id . "' value='Devolucion'>Devolución
+						<input type='radio' name='estado_despacho_" . $id . "' id='estado_despacho_" . $id . "' value='1' checked='true'>Entregado <br/>  
+						<input type='radio' name='estado_despacho_" . $id . "' id='estado_despacho_" . $id . "' value='0'>Devolución
 					</td>						
 					<td>
 						<textarea name='observaciones_" . $id . "'   id='observaciones_" . $id . "'></textarea>
@@ -87,8 +87,8 @@ global $conn,$campo_destino;
 						<input type='text' style='width:100px' name='guia_" . $id . "' id='guia_" . $id . "'>
 					</td>
 					<td>
-						<input type='radio' name='estado_despacho_" . $id . "' id='estado_despacho_" . $id . "' value='Entregado'>Entregado <br/>  
-						<input type='radio' name='estado_despacho_" . $id . "' id='estado_despacho_" . $id . "' value='Devolucion'>Devolución
+						<input type='radio' name='estado_despacho_" . $id . "' id='estado_despacho_" . $id . "' value='1' checked='true'>Entregado <br/>  
+						<input type='radio' name='estado_despacho_" . $id . "' id='estado_despacho_" . $id . "' value='0'>Devolución
 					</td>						
 					<td>
 						<textarea name='observaciones_" . $id . "'   id='observaciones_" . $id . "'></textarea>
@@ -167,6 +167,7 @@ global $conn,$campo_destino;
 			$guia = $_REQUEST["guia_".$key];
 			$observaciones=$_REQUEST["observaciones_".$key];
 			$estado_despacho=$_REQUEST["estado_despacho_".$key];
+			//$estado_despacho=1;
 			
 			$valores = "'" . $guia . "','" . $iddoc_ideje[0] . "',".$idempresa.",'".$idresponsable."'," . fecha_db_almacenar($_REQUEST["fecha_despacho"."_".$key], "Y-m-d H:i:s").",'1','" . $observaciones . "', '" . $estado_despacho . "'";
 			
@@ -223,6 +224,24 @@ global $conn;
 				$sql1 = "INSERT INTO anexos_despacho(documento_iddocumento, ruta, tipo, etiqueta, fk_idsalidas) VALUES ('" . $iddoc . "', '" . $nuevo_destino . "', '".$extension."', '" . $nombre . "', '" . $idsalida . "')";
 				phpmkr_query($sql1);
 				$idanexos_despacho = phpmkr_insert_id();
+				
+				$idfuncionario = usuario_actual("idfuncionario");
+				$idformato=busca_filtro_tabla("", "formato", "lower(nombre) like '".strtolower($datos_documento[0]['plantilla'])."'", "", $conn);
+				$insert_anexo = "insert into anexos(documento_iddocumento, ruta, etiqueta, tipo, formato,fecha_anexo) VALUES (".$iddoc.",'".$nuevo_destino."','".$nombre."','".$extension."',".$idformato[0]["idformato"].",".fecha_db_almacenar(date("Y-m-d H:i:s"),'Y-m-d H:i:s').")";
+				phpmkr_query($insert_anexo);
+				$idnexo = phpmkr_insert_id();
+				
+				$insert_permiso = "insert into permiso_anexo (anexos_idanexos, idpropietario, caracteristica_propio, caracteristica_dependencia, caracteristica_cargo, caracteristica_total) VALUES (".$idnexo.",".$idfuncionario.",'lem', '', '', 'l')";
+				phpmkr_query($insert_permiso);
+				$idnexo_permiso = phpmkr_insert_id();
+				
+				$datos["origen"] = usuario_actual("funcionario_codigo");
+				$datos["archivo_idarchivo"] = $iddoc;
+				$datos["tipo_destino"] = 1;
+				$datos["tipo"] = "";
+				$datos["nombre"] = "DISTRIBUCION";
+				$otros["notas"] = "'Anexos despacho por guia'";
+				transferir_archivo_prueba($datos, array($datos_documento[0]["ejecutor"]), $otros);
 			}
 		}
 	}

@@ -1304,7 +1304,7 @@ function formulario_rechazar_aprobar_reemplazo($iddoc,$pagina)
 <Pre-condiciones>
 <Post-condiciones>
 */  
-function mostrar_estado_proceso($idformato,$iddoc){
+function mostrar_estado_proceso_bk($idformato,$iddoc){
 global $idfactura;
    global $conn;
    $rol = false;
@@ -1382,8 +1382,8 @@ global $idfactura;
               $alto_firma[0]["valor"]=100;
              echo "<table border='0' cellpadding='0' cellspacing='0' align='left' width='100%'>";
 			 
-			 
-             for($k=0;$k<$resultado["numcampos"];$k++)
+			 //for($k=0;$k<$resultado["numcampos"];$k++)   //ordena firmas al derecho
+             for($k=$resultado["numcampos"]-1;$k>=0;$k--)  //ordena firmas al reves
                 {$fila=$resultado[$k];
                  
                  if($fila["tipo_origen"]==5){  //rol
@@ -1524,7 +1524,7 @@ elseif($fila["nombre"]=="APROBADO"||$fila["nombre"]=="REVISADO")
 
 
 
-function mostrar_estado_proceso_bk($idformato,$iddoc){
+function mostrar_estado_proceso($idformato,$iddoc){
 global $conn,$idfactura;
 	$rol = false;
 		if(!isset($_REQUEST["ocultar_firmas"])||$_REQUEST["ocultar_firmas"]==0){
@@ -1599,8 +1599,9 @@ global $conn,$idfactura;
 					$tamano_fuente[0]["valor"]='10pt';
 				}
 				
-				echo "<table border=\"0\" cellpadding='0' cellspacing='0' align='left' width=\"100%\" style=\"font-size:".$tamano_fuente[0]["valor"]."\">";
-				for($k=0;$k<$resultado["numcampos"];$k++){
+				echo "<table border=\"0\" cellpadding='0' cellspacing='0' align='left' width=\"100%\">";
+				//for($k=0;$k<$resultado["numcampos"];$k++){
+			      for($k=$resultado["numcampos"]-1;$k>=0;$k--){ 
 					if(!$resultado[$k])continue;
 					$fila=$resultado[$k];
 					if($fila["tipo_origen"]==5){  //rol
@@ -1642,7 +1643,7 @@ global $conn,$idfactura;
 								$firma_actual = true;  
 							echo "</td>";                           
 						}else{
-							echo "<td align='left'><img src='".PROTOCOLO_CONEXION.RUTA_PDF_LOCAL."/firmas/blanco.jpg' width='".$ancho_firma[0]["valor"]."' height='".$alto_firma[0]["valor"]."'><font size='2'>
+							echo "<td align='left'><img src='".PROTOCOLO_CONEXION.RUTA_PDF_LOCAL."/firmas/blanco.jpg' width='".$ancho_firma[0]["valor"]."' height='".$alto_firma[0]["valor"]."'>
 							<br /><b>".mayusculas($fila["nombres"]." ".$fila["apellidos"])."</b>&nbsp;&nbsp;&nbsp;<br />";
 							if($cargos["numcampos"]){
 								for($h=0;$h<$cargos["numcampos"];$h++)
@@ -1650,7 +1651,7 @@ global $conn,$idfactura;
 							}
 							if($iniciales == ($fila["funcionario_codigo"]))
 								$firma_actual = true;        
-							echo "</font></td>";      
+							echo "</td>";      
 						}
 						$firmas++;
 					}elseif($fila["obligatorio"]==2){ // Revisado
@@ -1707,7 +1708,7 @@ global $conn,$idfactura;
 			if($revisados<>""){
 				echo "<tr>";
 				echo "<td colspan=\"$num_cols\">";
-				echo "<table border=\"0\" width=\"100%\" style='font-size:".$tamano_fuente[0]["valor"]."'>";
+				echo "<table border=\"0\" width=\"100%\">";
 				echo $revisados;
 				echo "</table>";
 				echo "</td></tr>";
@@ -2112,7 +2113,7 @@ if(isset($_POST["iddoc"]) && $_POST["iddoc"] && $ruta_def=="")
       if($formato_doc["numcampos"])
          $nom_formato=$formato_doc[0]["nombre"];
 			//Cuando el documento es creado como una respuesta
-        abrir_url("formatos/$nom_formato/detalles_mostrar_$nom_formato.php?idformato=".$formato_doc[0]["idformato"]."&iddoc=".$_POST["iddoc"],"_parent");
+        abrir_url("formatos/$nom_formato/detalles_mostrar_$nom_formato.php?idformato=".$formato_doc[0]["idformato"]."&iddoc=".$_POST["iddoc"],"_self");
           die();
      }   
 die();
@@ -3069,7 +3070,7 @@ function devolucion(){
     actualiza_ruta_devolucion($_REQUEST['campo_reemplazo'],$datos["archivo_idarchivo"],$_REQUEST['campo_idruta']);
   }
   $idformato=busca_filtro_tabla("idformato","formato f,documento d","lower(f.nombre)=lower(d.plantilla) and iddocumento=".$datos["archivo_idarchivo"],"",$conn);
-  llama_funcion_accion($datos["archivo_idarchivo"],$idformato[0]["idformato"],"devolver","ANTERIOR");
+  //llama_funcion_accion($datos["archivo_idarchivo"],$idformato[0]["idformato"],"devolver","ANTERIOR");
   $theValue = (!get_magic_quotes_gpc()) ? addslashes($_REQUEST["x_nombre"]) : $_REQUEST["x_nombre"];
   $theValue = ($theValue != "") ? $theValue : "NULL";
   $datos["nombre"] = $theValue;
@@ -3084,13 +3085,51 @@ function devolucion(){
     $temp=$documento[0]["serie"];
     $mensaje = "Acaba de Recibir el Documento: ".$documento[0]["numero"]." Descripcion: ".$documento[0]["descripcion"];
   }
-  transferir_archivo_prueba($datos,$destino,$adicionales);
+  /*transferir_archivo_prueba($datos,$destino,$adicionales);
   $estado_doc = busca_filtro_tabla("estado","documento","iddocumento=".$_REQUEST["iddoc"],"",$conn);
   if($estado_doc[0]["estado"]=='ACTIVO')
   { $update="update buzon_entrada set activo=1 where archivo_idarchivo=".$_REQUEST["iddoc"]." AND nombre='POR_APROBAR' AND destino=".$_REQUEST["x_funcionario_destino"]." AND origen=".usuario_actual("funcionario_codigo");
     phpmkr_query($update,$conn);
   }
-  llama_funcion_accion($datos["archivo_idarchivo"],$idformato[0]["idformato"],"devolver","POSTERIOR");
+  llama_funcion_accion($datos["archivo_idarchivo"],$idformato[0]["idformato"],"devolver","POSTERIOR");*/
+  
+  	//NUEVO DESARROLLO DEVOLVER
+  
+	$sql1=" UPDATE buzon_salida SET nombre='ELIMINA_REVISADO' WHERE archivo_idarchivo=".$_REQUEST["iddoc"]." AND origen=".$_REQUEST["x_funcionario_destino"]." AND destino=".usuario_actual('funcionario_codigo')." AND nombre='REVISADO'; ";
+	phpmkr_query($sql1);
+	
+	$sql2=" UPDATE buzon_entrada SET nombre='ELIMINA_REVISADO' WHERE archivo_idarchivo=".$_REQUEST["iddoc"]." AND destino=".$_REQUEST["x_funcionario_destino"]." AND origen=".usuario_actual('funcionario_codigo')."  AND nombre='REVISADO';";
+	phpmkr_query($sql2);
+		
+	$sql3=" UPDATE buzon_entrada SET activo=1 WHERE archivo_idarchivo=".$_REQUEST["iddoc"]." AND destino=".$_REQUEST["x_funcionario_destino"]." AND origen=".usuario_actual('funcionario_codigo')."  AND nombre='POR_APROBAR'; ";
+	phpmkr_query($sql3); 
+	
+	$sql4=" UPDATE asignacion SET tarea_idtarea=-1 WHERE documento_iddocumento=".$_REQUEST["iddoc"]." AND llave_entidad='".usuario_actual('funcionario_codigo')."'; ";
+	phpmkr_query($sql4); 
+  
+
+   $strsql = "INSERT INTO asignacion (tarea_idtarea,fecha_inicial,documento_iddocumento,serie_idserie,estado,entidad_identidad,llave_entidad)";
+   $strsql .= "VALUES";				
+   $strsql .= "(2,'".date('Y-m-d H:i:s')."',".$_REQUEST["iddoc"].",0,'PENDIENTE',1,'".$_REQUEST["x_funcionario_destino"]."')";  
+   $sql5=$strsql;
+   phpmkr_query($sql5); 
+   
+   
+   $strsql = "INSERT INTO buzon_entrada (archivo_idarchivo,nombre,destino,tipo_destino,fecha,origen,tipo_origen,notas,tipo,activo,ruta_idruta)";
+   $strsql .= "VALUES";				
+   $strsql .= "(".$_REQUEST["iddoc"].",'DEVOLUCION','".usuario_actual('funcionario_codigo')."',1,'".date('Y-m-d H:i:s')."','".$_REQUEST["x_funcionario_destino"]."',1,'".$_REQUEST["x_notas"]."','ARCHIVO',0,0)";  
+   $sql6=$strsql;
+   phpmkr_query($sql6); 
+      
+   
+   $strsql = "INSERT INTO buzon_salida (archivo_idarchivo,nombre,destino,tipo_destino,fecha,origen,tipo_origen,notas,tipo,ruta_idruta)";
+   $strsql .= "VALUES";				
+   $strsql .= "(".$_REQUEST["iddoc"].",'DEVOLUCION','".$_REQUEST["x_funcionario_destino"]."',1,'".date('Y-m-d H:i:s')."','".usuario_actual('funcionario_codigo')."',1,'".$_REQUEST["x_notas"]."','ARCHIVO',0)";  
+   $sql7=$strsql;
+   phpmkr_query($sql7);   
+    
+   //FIN NUEVO DESARROLLO DEVOLVER 
+  
   if($_REQUEST["retornar"] == 1)
     return;
   enrutar_documento("pantallas/buscador_principal.php?idbusqueda=3");

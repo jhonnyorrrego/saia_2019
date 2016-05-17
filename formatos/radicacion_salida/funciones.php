@@ -44,9 +44,9 @@ function enviar_adicionar_salida($idformato,$iddoc){
 }
 function cambiar_estado_salida($idformato,$iddoc){
 	global $conn;
-	$doc=busca_filtro_tabla("","documento A","iddocumento=".$iddoc,"",$conn);
+	$doc=busca_filtro_tabla("A.estado, B.descripcion_salida","documento A, ft_radicacion_salida B","iddocumento=".$iddoc." and A.iddocumento=B.documento_iddocumento","",$conn);
 	if($doc[0]["estado"]=='INICIADO'){
-		$sql1="UPDATE documento SET estado='APROBADO' WHERE iddocumento=".$iddoc;
+		$sql1="UPDATE documento SET estado='APROBADO', descripcion='".$doc[0]["descripcion_salida"]."' WHERE iddocumento=".$iddoc;
 		phpmkr_query($sql1);
 	}
 }

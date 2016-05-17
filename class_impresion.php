@@ -535,7 +535,7 @@ class MYPDF extends TCPDF {
 
     $img_file = 'imagenes/marca_agua_borrador.png';
 		$doc=busca_filtro_tabla("plantilla, estado","documento","iddocumento=".$_REQUEST["iddoc"],"",$conn);
-		if($doc_carta[0]["estado"]=='ANULADO'){
+		if($doc[0]["estado"]=='ANULADO'){
 			$img_file = 'imagenes/marca_agua_anulado.png';
 		}
 

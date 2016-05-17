@@ -1,5 +1,16 @@
 <?php
-include_once(dirname(__FILE__)."../../db.php");
+$max_salida=6; // Previene algun posible ciclo infinito limitando a 10 los ../
+$ruta_db_superior=$ruta="";
+while($max_salida>0)
+{
+if(is_file($ruta."db.php"))
+{
+$ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
+}
+$ruta.="../";
+$max_salida--;
+}
+include_once ($ruta_db_superior."db.php");
 function mostrar_datos_almacenamiento($iddoc){
 $caja='';
 $talmacenamiento='';
@@ -32,10 +43,11 @@ function datos_almacenamiento($iddoc){
 	return($datos);
 }
 function ver_caja($idcaja,$fondo){
+	global $ruta_db_superior;
 	$texto.='
   <button type="button" class="btn btn-mini kenlace_saia tooltip_saia documento_leido" enlace="pantallas/almacenamiento/almacenamiento.php?idcaja='.$idcaja.'" titulo="'.$fondo.'" conector="iframe" idregistro="'.$idcaja.'" onClick=" ">Ir a la caja
   </button>
-  <button type="button" class="btn btn-mini btn-success tooltip_saia" value="../almacenamiento/rotulo.php?idcaja='.$idcaja.'&no_redireccionar=1" titulo="Imprimir rotulo" idregistro="'.$idcaja.'" onClick="window.open(this.value)">Rotulo
+  <button type="button" class="btn btn-mini btn-success tooltip_saia" value="'.$ruta_db_superior.'pantallas/almacenamiento/rotulo.php?idcaja='.$idcaja.'&no_redireccionar=1" titulo="Imprimir rotulo" idregistro="'.$idcaja.'" onClick="window.open(this.value)">Rotulo
   </button>
   ';
 	return ($texto);

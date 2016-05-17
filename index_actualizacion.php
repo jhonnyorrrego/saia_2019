@@ -144,7 +144,7 @@ $mayor_informacion=busca_filtro_tabla("valor","configuracion","nombre='mayor_inf
       <a href="#" class="dropdown-toggle" data-toggle="dropdown">Mi Cuenta<b class="caret"></b></a>
       <ul class="dropdown-menu" >
       <li><a href="<?php echo($ruta_db_superior);?>pantallas/mi_cuenta/cambio_clave.php" data-toggle="modal" data-target="#ventana_modal" class="cambiar_pwd" titulo="Cambiar Contrase&ntilde;a">Cambiar Contrase&ntilde;a</a></li>
-      <!--li><a href="<?php echo($ruta_db_superior);?>pantallas/mi_cuenta/cambio_clave_correo.php" data-toggle="modal" data-target="#ventana_modal" class="cambiar_pwd" titulo="Cambiar Contrase&ntilde;a de correo">Contrase&ntilde;a de correo</a></li-->
+      <li><a href="<?php echo($ruta_db_superior);?>pantallas/mi_cuenta/cambio_clave_correo.php" data-toggle="modal" data-target="#ventana_modal" class="cambiar_pwd" titulo="Cambiar Contrase&ntilde;a de correo">Contrase&ntilde;a de correo</a></li>
       <!--li><a href="#">Another action</a></li>
       <li><a href="#">Something else here</a></li>
       <li class="divider"></li>

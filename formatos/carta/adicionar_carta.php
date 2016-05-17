@@ -166,7 +166,8 @@
                      <td class="celda_transparente"><input  tabindex='5'  type="file" maxlength="2000"  class='multi'  name="anexos_digitales[]" accept="xls|doc|pdf|jpg|zip|rar"><tr>
                      <td class="encabezado" width="20%" title="Listado con Los Anexos de la Carta">ANEXOS FISICOS</td>
                      <?php anexos_fisicos(1,4);?></tr><input type="hidden" name="varios_radicados" value="<?php echo(validar_valor_campo(18)); ?>"><tr id="tr_vercopiainterna" >
-                     <td class="encabezado" width="20%" title="">VISIBLE LA COPIA INTERNA*</td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(1,12,$_REQUEST['iddoc']);?></td></tr><?php cargar_destinos_carta(1,NULL);?><?php asignar_responsables(1,NULL);?><?php guardar_plantilla(1,NULL);?><?php mostrar_imagenes_escaneadas(1,NULL);?><input type="hidden" name="campo_descripcion" value="10"><tr><td colspan='2'><?php submit_formato(1);?></td></tr></table><input type='hidden' name='permisos_anexos' id='permisos_anexos' value=''></form></body>
+                     <td class="encabezado" width="20%" title="">VISIBLE LA COPIA INTERNA*</td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(1,12,$_REQUEST['iddoc']);?></td></tr><tr id="tr_email_aprobar" >
+                     <td class="encabezado" width="20%" title="">APROBAR FUERA DE SAIA*</td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(1,4086,$_REQUEST['iddoc']);?></td></tr><?php cargar_destinos_carta(1,NULL);?><?php asignar_responsables(1,NULL);?><?php guardar_plantilla(1,NULL);?><?php mostrar_imagenes_escaneadas(1,NULL);?><input type="hidden" name="campo_descripcion" value="10"><tr><td colspan='2'><?php submit_formato(1);?></td></tr></table><input type='hidden' name='permisos_anexos' id='permisos_anexos' value=''></form></body>
               <script type="text/javascript">
               setInterval("auto_save('contenido','carta')",300000);
               </script></html>

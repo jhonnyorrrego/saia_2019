@@ -12,6 +12,37 @@ include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."formatos/librerias/funciones_generales.php"); 
 include_once("../clasificacion_pqrsf/funciones.php");
 
+
+function validar_digitalizacion_formato_pqr($idformato,$iddoc){
+	global $conn,$ruta_db_superior;
+
+  if($_REQUEST["digitalizacion"]==1){
+  	if(@$_REQUEST["iddoc"]){
+  		$enlace="pantallas/buscador_principal.php?idbusqueda=9";
+  		//abrir_url($ruta_db_superior."colilla.php?key=".$_REQUEST["iddoc"]."&enlace=paginaadd.php?key=".$_REQUEST["iddoc"]."&enlace2=".$enlace,'_self');
+  		abrir_url($ruta_db_superior."paginaadd.php?key=".$_REQUEST["iddoc"]."&enlace=".$enlace,'centro');
+  	}
+	else{
+		$enlace="busqueda_categoria.php?idcategoria_formato=1&defecto=radicacion_entrada";
+		abrir_url($ruta_db_superior."colilla.php?key=".$iddoc."&enlace=paginaadd.php?key=".$iddoc."&enlace2=".$enlace,'centro');
+	}
+    //redirecciona($ruta_db_superior."paginaadd.php?&key=".$iddoc."&enlace=".$enlace);
+  }elseif($_REQUEST["digitalizacion"]==2 && $_REQUEST['no_sticker'] == 1){
+  	abrir_url($ruta_db_superior."formatos/radicacion_entrada/mostrar_radicacion_entrada.php?iddoc=".$iddoc."&idformato=".$idformato,'_self');
+  }else if($_REQUEST["digitalizacion"]==2){
+  	if(@$_REQUEST["iddoc"]){
+  		$iddoc=$_REQUEST["iddoc"];
+  		$enlace="pantallas/buscador_principal.php?idbusqueda=9";
+  	}
+	else{
+		$enlace="busqueda_categoria.php?idcategoria_formato=1&defecto=pqrsf";
+	}
+  		abrir_url($ruta_db_superior."colilla.php?key=".$iddoc."&enlace=".$enlace,'centro');
+  }
+}
+
+
+
 /*ADICIONAR-EDITAR*/
 function ver_mensajes (){
 global $ruta_db_superior;
@@ -136,6 +167,20 @@ function mostrar_radicado_pqrsf($idformato,$iddoc){
 	echo("<td><input type='text' readonly id='numero_radicado' name='numero_radicado' value='".$contador[0]['consecutivo']."'></td>");
 }
 
+function generar_qr_pqrsf($idformato,$iddoc){
+	global $conn,$ruta_db_superior;	
+	$codigo_qr=busca_filtro_tabla("","documento_verificacion","documento_iddocumento=".$iddoc,"", $conn);
+	if($codigo_qr['numcampos']){
+	$qr='<img src="http://'.RUTA_PDF_LOCAL.'/'.$codigo_qr[0]['ruta_qr'].'" >';	
+	}else{
+		include_once($ruta_db_superior."pantallas/qr/librerias.php");
+		generar_codigo_qr($idformato,$iddoc);
+		
+		$codigo_qr=busca_filtro_tabla("","documento_verificacion","documento_iddocumento=".$iddoc,"", $conn);	
+		$qr="<img src='http://".RUTA_PDF_LOCAL."/".$codigo_qr[0]['ruta_qr']."' >";	
+	}
+	echo $qr;
+}
 
 
 ?>

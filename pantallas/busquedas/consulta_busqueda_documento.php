@@ -126,6 +126,14 @@ function incluir_librerias_busqueda($elemento,$indice){
       </li>
       
       
+      
+      
+      <?php 
+      /*
+      $sin_proceso=array('pendientes_ingresar','pendiente_salida','tramitados');
+	  if(!in_array(@$datos_busqueda[0]["nombre"], $sin_proceso)){
+      ?>
+      
       <!-- LISTA DE PROCESO -->
       <li class="divider-vertical"></li>
       <li>
@@ -143,57 +151,17 @@ function incluir_librerias_busqueda($elemento,$indice){
 	          </li> 
 
 			<?php
-				$fun=usuario_actual("funcionario_codigo");
-				$fun_id=usuario_actual("idfuncionario");
-				
-				if($datos_busqueda[0]["nombre"]=='documento_pendiente'){  //Documentos Recibidos
-					
-					$documentos=busca_filtro_tabla("","documento A,asignacion B","lower(A.estado)<>'eliminado' AND A.iddocumento=B.documento_iddocumento AND B.tarea_idtarea<>-1 AND B.entidad_identidad=1 AND B.llave_entidad='".$fun."'   GROUP BY A.fecha, A.estado, A.ejecutor, A.serie, A.descripcion, A.pdf, A.tipo_radicado, A.plantilla, A.numero, A.tipo_ejecutor, DATE_FORMAT( B.fecha_inicial,  'y-m-d' ) , A.iddocumento
-			 ","B.fecha_inicial DESC",$conn);
+				$categoria_formato=busca_filtro_tabla('','categoria_formato','cod_padre=2 AND estado=1','',$conn);
+				for($j=0;$j<$categoria_formato['numcampos'];$j++){
+					echo'
+						<li>
+							<a href="#">
+						    	<div name="filtro_categoria" valor="'.$categoria_formato[$j]['idcategoria_formato'].'">'.$categoria_formato[$j]['nombre'].'
+						        </div>
+						    </a>
+						</li> 			
+					';						
 				}
-				else if($datos_busqueda[0]["nombre"]=='documentos_importantes'){  //Con Indicador
-					
-					$documentos=busca_filtro_tabla("","prioridad_documento A, documento B","A.prioridad in (1,2,3,4,5) AND iddocumento=documento_iddocumento AND funcionario_idfuncionario=".$fun_id." AND B.estado not in('ELIMINADO')","",$conn);
-			 
-				}				
-				else if($datos_busqueda[0]["nombre"]=='borradores'){  //Borradores
-					
-					$documentos=busca_filtro_tabla("","documento A","ejecutor=".$fun." AND A.estado='ACTIVO' AND A.numero='0'","",$conn);
-				}
-				else if($datos_busqueda[0]["nombre"]=='documentos_etiquetados'){  //Etiquetados
-					
-					$documentos=busca_filtro_tabla("","documento a, documento_etiqueta b, etiqueta c","a.iddocumento=b.documento_iddocumento and b.etiqueta_idetiqueta=c.idetiqueta AND c.funcionario='".$fun."'","",$conn);
-				}				
- 
-
-
-			 	$papas_array=array();
-				for($i=0;$i<$documentos['numcampos'];$i++){			
-					$formato=busca_filtro_tabla('a.idformato,b.iddocumento,a.nombre,a.cod_padre,a.nombre','formato a, documento b','a.nombre=lower(b.plantilla) AND b.iddocumento='.$documentos[$i]['iddocumento'],'',$conn);	
-					$papa_iddoc=buscar_papa_formato($formato[0]['idformato'],$formato[0]['iddocumento'],'ft_',$formato[0]['nombre']);	
-					if($papa_iddoc==0 or $papa_iddoc==NULL){
-						$formato_papa=busca_filtro_tabla('','formato a, documento b','a.nombre=lower(b.plantilla) AND b.iddocumento='.$formato[0]['iddocumento'],'',$conn);	
-					}else{
-						$formato_papa=busca_filtro_tabla('','formato a, documento b','a.nombre=lower(b.plantilla) AND b.iddocumento='.$papa_iddoc,'',$conn);	
-					}
-					if(!in_array($formato_papa[0]['idformato'], $papas_array)){
-						$papas_array[]=$formato_papa[0]['idformato'];
-						$categoria_formato=busca_filtro_tabla('','categoria_formato','idcategoria_formato in('.$formato_papa[0]['fk_categoria_formato'].')','',$conn);
-						$categorias_novisibles=array(1,2,3);
-						for($j=0;$j<$categoria_formato['numcampos'];$j++){
-									
-							if(!in_array($categoria_formato[$j]['idcategoria_formato'], $categorias_novisibles)){
-								echo'
-						          <li>
-						          <a href="#">
-						            <div name="filtro_categoria" valor="'.$categoria_formato[$j]['idcategoria_formato'].'">'.$categoria_formato[$j]['nombre'].'
-						            </div></a>
-						          </li> 			
-								';					
-							}	
-						}
-					}	
-				}	 	
 			?>          
         </ul>
         <script>
@@ -204,12 +172,14 @@ function incluir_librerias_busqueda($elemento,$indice){
         			window.location='consulta_busqueda_documento.php?idbusqueda_componente=<?php echo($datos_busqueda[0]['idbusqueda_componente']); ?>&filtro_categoria='+valor+'';
         		});
         	});
-        </script>
-        
-             	
+        </script>	
       </div>      	
-      </li>      
-
+      </li> 
+      
+      <?php
+      	  }*/
+      ?>     
+		
 	
 	<?php
 		if(@$datos_busqueda[0]["nombre"]=='documentos_importantes'){

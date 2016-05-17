@@ -1,4 +1,6 @@
-<?php include_once("../carta/funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("../librerias/funciones_generales.php"); ?><script type="text/javascript" src="../../js/jquery.js"></script><?php include_once("../librerias/header_nuevo.php"); ?><?php include_once("../../class_transferencia.php"); ?><tr><td><table style="border-collapse: collapse; width: 100%;" border="1">
+<?php include_once("../carta/funciones.php"); ?><?php include_once("../radicacion_entrada/funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("../librerias/funciones_generales.php"); ?><?php include_once("../correo_saia/funciones.php"); ?><script type="text/javascript" src="../../js/jquery.js"></script><?php include_once("../librerias/header_nuevo.php"); ?><?php include_once("../../class_transferencia.php"); ?><tr><td><p style="text-align: right;">&nbsp;<span><?php generar_qr_pqrsf(305,$_REQUEST['iddoc']);?></span></p>
+<p>&nbsp;</p>
+<table style="border-collapse: collapse; width: 100%;" border="1">
 <tbody>
 <tr>
 <td style="text-align: left; width: 30%;"><strong>&nbsp;Estado PQRSF</strong></td>
@@ -24,21 +26,7 @@
 </tr>
 <tr>
 <td style="text-align: left;"><strong>&nbsp;<strong>Rol en la Insitucion:</strong></strong></td>
-<td style="text-align: left;">&nbsp;<?php mostrar_valor_campo('rol_institucion',305,$_REQUEST['iddoc']);?></td>
-<td style="text-align: left;"><strong>&nbsp;Iniciativa p&uacute;blica:</strong></td>
-<td style="text-align: left;">&nbsp;<?php mostrar_valor_campo('iniciativa_publica',305,$_REQUEST['iddoc']);?></td>
-</tr>
-<tr>
-<td style="text-align: left;"><strong>&nbsp;Sector de la iniciativa:</strong></td>
-<td style="text-align: left;">&nbsp;<?php mostrar_valor_campo('sector_iniciativa',305,$_REQUEST['iddoc']);?></td>
-<td style="text-align: left;"><strong>&nbsp;Cluster:</strong></td>
-<td style="text-align: left;">&nbsp;<?php mostrar_valor_campo('cluster',305,$_REQUEST['iddoc']);?></td>
-</tr>
-<tr>
-<td style="text-align: left;"><strong>&nbsp;Region:</strong></td>
-<td style="text-align: left;">&nbsp;<?php mostrar_valor_campo('region',305,$_REQUEST['iddoc']);?></td>
-<td style="text-align: left;">&nbsp;</td>
-<td style="text-align: left;">&nbsp;</td>
+<td style="text-align: left;" colspan="3">&nbsp;<?php mostrar_valor_campo('rol_institucion',305,$_REQUEST['iddoc']);?></td>
 </tr>
 <tr>
 <td style="text-align: left;" colspan="4"><strong>&nbsp;Comentario:</strong></td>

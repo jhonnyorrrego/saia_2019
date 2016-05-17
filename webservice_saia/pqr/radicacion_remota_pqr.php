@@ -121,8 +121,12 @@ function radicar_documento_remoto($datos){
 		$datos_anexo["idformato"]=$datos_formato[0]['idformato'];
 		$info = cargar_anexos_documento_web($datos_anexo,$datos['anexos']);
 	}
+
 	
 	if($iddoc){
+		include_once($ruta_db_superior."pantallas/qr/librerias.php");
+		generar_codigo_qr($datos_formato[0]['idformato'],$iddoc,$_SESSION["usuario_actual"]);		
+		
 		$ch = curl_init();
 		//$fila = "http://".RUTA_PDF_LOCAL."/html2ps/public_html/demo/html2ps.php?plantilla=".strtolower($datos_formato[0]["nombre_formato"])."&iddoc=".$iddoc."&conexion_remota=1";
 		$fila = "http://".RUTA_PDF_LOCAL."/class_impresion.php?iddoc=".$iddoc."&LOGIN=".$_SESSION["LOGIN".LLAVE_SAIA]."&usuario_actual=".$_SESSION["usuario_actual"]."&LLAVE_SAIA=".LLAVE_SAIA;
@@ -148,8 +152,13 @@ function radicar_documento_remoto($datos){
 		if(file_exists($ruta_db_superior.$ruta)){
 			$retorno['pdf']="http://".RUTA_PDF."/".$ruta;
 		}
+		
 		//$retorno['data']=$info;
 		if($retorno['numero']!="" || $retorno['numero']!=0){
+			$anexos_pqrsf=busca_filtro_tabla("","anexos","documento_iddocumento=".$iddoc,"",$conn);
+			if(file_exists($ruta_db_superior.$anexos_pqrsf[0]['ruta'])){
+				$retorno["anexos"]=$ruta_db_superior.$anexos_pqrsf[0]['ruta'];
+			}
 			$mensaje="Cordial Saludo,<br/>
 			Se adjunta copia de la solicitud PQR No ".$retorno['numero']." diligenciada el dia de hoy.<br/><br/>
 			Antes de imprimir este mensaje, asegurese que es necesario. Proteger el medio ambiente tambien esta en nuestras manos.<br/>
@@ -171,7 +180,7 @@ function enviar_correo_solicitante($datos){
 	Antes de imprimir este mensaje, asegurese que es necesario. Proteger el medio ambiente tambien esta en nuestras manos.<br/>
 	ESTE ES UN MENSAJE AUTOMATICO, FAVOR NO RESPONDER";
 	if($datos['correo']){
-		$algo=enviar_mensaje("","email",array($datos['correo']),"SOLICITUD PQR NO ".$datos['numero'],$mensaje,array($datos["pdf2"]));
+		$algo=enviar_mensaje("","email",array($datos['correo']),"SOLICITUD PQR NO ".$datos['numero'],$mensaje,array($datos["pdf2"],$datos["anexos"]));
 	}
 	return(json_encode(true));
 }

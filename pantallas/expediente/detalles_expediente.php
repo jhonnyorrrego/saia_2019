@@ -111,7 +111,7 @@ $expediente=busca_filtro_tabla("a.*,".fecha_db_obtener("a.fecha","Y-m-d")." AS f
         if($expediente[0]["fk_idcaja"]){
           $caja=busca_filtro_tabla("","caja","idcaja=".$expediente[0]["fk_idcaja"],"",$conn);
           if($caja["numcampos"]){
-            echo($caja[0]["numero"]." - ".$caja[0]["ubicacion"]);
+            echo($caja[0]["codigo"]." - ".$caja[0]["fondo"]);
           }
         }  
         else{

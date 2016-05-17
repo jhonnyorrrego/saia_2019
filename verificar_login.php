@@ -21,6 +21,7 @@ if (@$_REQUEST["userid"]<>"" && @$_REQUEST["passwd"]<>"") {
 	$clave_admin=busca_filtro_tabla("A.valor","configuracion A","A.tipo='clave' AND A.nombre='clave_administrador'","",$conn); 
 	if($configuracion["numcampos"]&&$clave_admin["numcampos"] && $configuracion[0]["valor"]==$sUserId && $clave_admin[0]["valor"]==$sPassWd){
     $_SESSION["LOGIN".LLAVE_SAIA]=$sUserId;
+    cerrar_sesiones_activas($sUserId);
     $bValidPwd=true;
     $retorno["mensaje"]="<b>IMPORTANTE!</b> <br> Acaba de ingresar como Administrador del sistema, todas las acciones realizadas son registradas bajo su responsabilidad";    
     $retorno["ingresar"]=1;
@@ -43,6 +44,7 @@ if (@$_REQUEST["userid"]<>"" && @$_REQUEST["passwd"]<>"") {
     				if ($row["clave"] == encrypt_md5(trim($sPassWd))) {
               $_SESSION["LOGIN".LLAVE_SAIA]= $row["login"];
     					$bValidPwd = TRUE;
+              cerrar_sesiones_activas($row["login"]);
     				}
     				else{           
               $retorno["mensaje"]="<b>Error en la clave de acceso!</b> <br> intente de nuevo";

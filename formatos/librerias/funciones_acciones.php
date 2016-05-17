@@ -174,6 +174,7 @@ else{
 <Post-condiciones><Post-condiciones>
 </Clase>  */
 function ejecutar_funcion($nombre_funcion,$ubicacion=NULL,$parametros=NULL){
+
   if(function_exists($nombre_funcion)){
 
     if(call_user_func_array($nombre_funcion,explode(",",$parametros))!==false)

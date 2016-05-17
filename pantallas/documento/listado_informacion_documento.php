@@ -45,7 +45,7 @@ function mostrar_anexos_documento($iddoc,$ruta,$etiqueta){
 	return($texto);
 }
 
-function menu_informacion_documento($iddocumento,$idanexos,$ruta,$etiqueta){
+function menu_informacion_documento($iddocumento,$idanexos,$ruta,$etiqueta,$extension){
 	global $conn,$ruta_db_superior;
 	$modulo_anexos = busca_filtro_tabla("idmodulo","modulo","nombre LIKE 'adjuntos_documento'","",$conn);		
 	if($modulo_anexos['numcampos']){
@@ -58,7 +58,8 @@ function menu_informacion_documento($iddocumento,$idanexos,$ruta,$etiqueta){
 				//if($ok){					
 					switch ($modulo_hijos[$i]['nombre']) {
 						case 'descargar_anexo':
-							$texto.='<a href="'.$ruta_db_superior.'pantallas/anexos/librerias.php?idanexo='.$idanexos.'&ejecutar_anexos=descargar_anexo"><i class="'.$modulo_hijos[$i]['imagen'].' tooltip_saia_izquierda" title="'.$modulo_hijos[$i]['ayuda'].'"></i></a>';	
+							$texto.=redirecciona_visores($iddocumento,$idanexos,$ruta,$etiqueta,$extension);	
+							$texto.='<a href="'.$ruta_db_superior.'pantallas/anexos/librerias.php?idanexo='.$idanexos.'&ejecutar_anexos=descargar_anexo"><i class="'.$modulo_hijos[$i]['imagen'].' tooltip_saia_izquierda" title="'.$modulo_hijos[$i]['ayuda'].'"></i></a>';
 							break;						
 						case 'informacion_anexos':
 							//$texto.='<a href="#" style="border-width:0px; cursor:auto;" class="abrir_highslide" enlace="pantallas/anexos/informacion_anexos.php?idanexo='.$idanexos.'&iddocumento='.$iddocumento.'" id="adjuntos_documento"><i class="'.$modulo_hijos[$i]['imagen'].' tooltip_saia_izquierda" title="'.$modulo_hijos[$i]['ayuda'].'"></i></a>';							
@@ -80,7 +81,7 @@ function menu_informacion_documento($iddocumento,$idanexos,$ruta,$etiqueta){
 							}	*/						
 							break;																				
 						default:
-							$texto.='<a href="'.$modulo_hijos[$i]['enlace'].'"><i class="'.$modulo_hijos[$i]['imagen'].' tooltip_saia_derecha" title="'.$modulo_hijos[$i]['ayuda'].'"></i></a>';	
+							$texto.='<a href="'.$modulo_hijos[$i]['enlace'].'"><i class="'.$modulo_hijos[$i]['imagen'].' tooltip_saia_derecha" title="'.$modulo_hijos[$i]['ayuda'].'"></i></a>';
 							break;
 					}
 				//}				
@@ -90,6 +91,20 @@ function menu_informacion_documento($iddocumento,$idanexos,$ruta,$etiqueta){
 	}	
 	return($texto);
 }
+function redirecciona_visores($iddocumento,$idanexos,$ruta,$etiqueta,$extension){
+global $conn,$ruta_db_superior;
+	$html='';
+	$array=array("pdf","jpg","png");
+	if(in_array(strtolower($extension), $array)){
+		$html='<a href="'.$ruta_db_superior.$ruta.'" target="detalles"><i class="icon-ver_pag_documento" tooltip_saia_izquierda" title=""></i></a>';
+	}
+  if($extension=="eml"){
+    $ruta=$ruta_db_superior."pantallas/visores_saia/visor_eml.php?filename=".$ruta_db_superior.$ruta;
+    $html='<a href="'.$ruta.'" target="detalles"><i class="icon-ver_pag_documento" tooltip_saia_izquierda" title=""></i></a>';
+  }
+	return($html);
+}
+
 function funcionario($funcionario_codigo){
     $nombre = busca_filtro_tabla("nombres, apellidos","funcionario","funcionario_codigo=".$funcionario_codigo,"",$conn);     
     return($nombre[0]['nombres']." ".$nombre[0]["apellidos"]);

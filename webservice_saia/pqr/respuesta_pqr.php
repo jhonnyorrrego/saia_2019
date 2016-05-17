@@ -22,24 +22,25 @@ function respuesta_pqr($datos){
   
 	$datos = json_decode($datos);
 	
-	$where ="";
+	$where = "a.documento like '".$datos->valor."' and b.numero ='".$datos->valor2."'";
 		
-	switch ($datos->tipo) {
+	/*switch ($datos->tipo) {
 		case '1':
 			$where = "a.documento like '".$datos->valor."'";
 		break;
 		case '2':
 			$where = "b.numero ='".$datos->valor."'";
 		break;		
-	}
+	}*/
 			
 	if($where){
 		$documento = busca_filtro_tabla("b.numero, ".fecha_db_obtener("b.fecha","Y-m-d h:i:s")." as fecha, b.pdf, b.iddocumento, a.comentarios as resumen_hechos","ft_pqrsf a, documento b","a.documento_iddocumento=b.iddocumento and lower(b.estado) not in('eliminado','anulado') and ".$where," numero desc",$conn);
 		
 		if($documento["numcampos"]){
 			for($i=0;$i<$documento["numcampos"];$i++){
-				$respuesta_pqr = busca_filtro_tabla("a.pdf as pdf_respuesta","documento a, respuesta b","a.iddocumento=b.destino and lower(a.estado) not in('eliminado','anulado','activo') and lower(a.plantilla) not in('clasificacion_pqrsf') and b.origen=".$documento[$i]["iddocumento"],"",$conn);
-				
+				$respuesta_pqr = busca_filtro_tabla("a.pdf as pdf_respuesta,b.destino","documento a, respuesta b","a.iddocumento=b.destino and lower(a.estado) not in('eliminado','anulado','activo') and lower(a.plantilla) not in('clasificacion_pqrsf') and b.origen=".$documento[$i]["iddocumento"],"",$conn);
+				$numero_respuesta=busca_filtro_tabla("","documento","iddocumento=".$respuesta_pqr[0]['destino'],"",$conn);
+				$documento[$i]["numero_respuesta"]=$numero_respuesta[0]['numero'];
 				if($respuesta_pqr["numcampos"]){
 					for($j=0;$j<$respuesta_pqr["numcampos"];$j++){
 						if($respuesta_pqr[$j]["pdf_respuesta"]){
@@ -49,8 +50,7 @@ function respuesta_pqr($datos){
 					}
 				}
 			}
-		}
-						
+		}			
 	}else{
 		$documento["numcampos"] = 0;
 	}	

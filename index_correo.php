@@ -18,6 +18,9 @@ if(is_dir("roundcubemail")){
   ?>
   <div class="alert alert-error">El usuario  con la cuenta de correo no existe en su sistema o no esta configurado por favor comuniquese con su administrador</div>
   <?php  
+  }else if($funcionario[0]["email_contrasena"]=='' or is_null($funcionario[0]["email_contrasena"])){
+  		alerta('Debe Tener una contraseña configurada');
+ 		redirecciona($ruta_db_superior.'pantallas/mi_cuenta/cambio_clave_correo.php?from_correo=1');
   }
 ?>
 <!--

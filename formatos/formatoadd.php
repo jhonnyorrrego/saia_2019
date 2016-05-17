@@ -1014,7 +1014,7 @@ function crear_modulo_formato($idformato) {
 			} else {
 				$papa = $modulo_formato[0]["idmodulo"];
 			}
-			$sql = "INSERT INTO modulo(nombre,tipo,imagen,etiqueta,enlace,destino,cod_padre,orden,ayuda) VALUES ('" . $datos_formato[0]["nombre"] . "','secundario','botones/formatos/modulo.gif','" . $datos_formato[0]["etiqueta"] . "','formatos/" . $datos_formato[0]["ruta_mostrar"] . "','centro','" . $papa . "','1','Permite administrar el formato " . $datos_formato[0]["etiqueta"] . ".')";
+			$sql = "INSERT INTO modulo(nombre,tipo,imagen,etiqueta,enlace,destino,cod_padre,orden,ayuda,busqueda) VALUES ('" . $datos_formato[0]["nombre"] . "','secundario','botones/formatos/modulo.gif','" . $datos_formato[0]["etiqueta"] . "','formatos/" . $datos_formato[0]["ruta_mostrar"] . "','centro','" . $papa . "','1','Permite administrar el formato " . $datos_formato[0]["etiqueta"] . ".',1)";
 			
 			guardar_traza($sql, $datos_formato[0]["nombre_tabla"]);
 			phpmkr_query($sql, $conn);

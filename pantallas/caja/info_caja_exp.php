@@ -23,10 +23,13 @@ else if(@$parametros["idcaja"]){
 	mostrar_informacion_caja($parametros["idcaja"]);
 }
 function mostrar_informacion_expediente($idexpediente){
-	global $conn;
+	global $conn, $arreglo2;
 	$expediente=busca_filtro_tabla("","expediente A","A.idexpediente=".$idexpediente,"",$conn);
 	$documentos=mostrar_contador_expediente($idexpediente);
-	
+  $arreglo2=array();
+  obtener_expedientes_padre2($idexpediente);
+  $cant=count($arreglo2);
+  
 	$tabla='';
 	$tabla.='<table style="width:100%;border-collapse:collapse" border="1px">';
 	$tabla.='<tr>';
@@ -37,6 +40,24 @@ function mostrar_informacion_expediente($idexpediente){
 	$tabla.='<td>Cantidad documentos almacenados</td>';
 	$tabla.='<td>'.$documentos.'</td>';
 	$tabla.='</tr>';
+  if($cant){
+    $tabla.='<tr>';
+    $tabla.='<td colspan="2" style="text-align:center"><b>Expedientes hijos</b></td>';
+    $tabla.='</tr>';
+    for($i=0;$i<$cant;$i++){
+      $datos=explode("|-|",$arreglo2[$i]);
+      $documentos=mostrar_contador_expediente($datos[0]);
+      
+      $tabla.='<tr>';
+      $tabla.='<td>Nombre: </td>';
+      $tabla.='<td>'.$datos[1].'</td>';
+      $tabla.='</tr>';
+      $tabla.='<tr>';
+      $tabla.='<td>Cantidad documentos almacenados</td>';
+      $tabla.='<td>'.$documentos.'</td>';
+      $tabla.='</tr>';
+    } 
+  }
 	$tabla.='</table>';
 	echo($tabla);
 }
@@ -85,5 +106,19 @@ function obtener_expedientes_padre($idexpediente){
 		}
 	}
 	return(true);
+}
+function obtener_expedientes_padre2($idexpediente){
+  global $arreglo2;
+  $expediente=busca_filtro_tabla("","expediente A","A.cod_padre=".$idexpediente."","",$conn);
+  if($expediente["numcampos"]){
+    for($i=0;$i<$expediente["numcampos"];$i++){
+      array_push($arreglo2,$expediente[$i]["idexpediente"]."|-|".$expediente[$i]["nombre"]);
+      $hijos=busca_filtro_tabla("","expediente A","A.cod_padre=".$expediente[$i]["idexpediente"],"",$conn);
+      if($hijos["numcampos"]){
+        obtener_expedientes_padre2($expediente[$i]["idexpediente"]);
+      }
+    }
+  }
+  return(true);
 }
 ?>

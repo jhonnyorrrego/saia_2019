@@ -1,4 +1,14 @@
-<?php
+<?php 
+$max_salida=10; // Previene algun posible ciclo infinito limitando a 10 los ../
+$ruta_db_superior=$ruta="";
+while($max_salida>0){
+	if(is_file($ruta."db.php")){
+		$ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
+	}
+	$ruta.="../";
+	$max_salida--;
+}
+include_once($ruta_db_superior."db.php");
 if(@$_REQUEST["iddoc"] || @$_REQUEST["key"]){
 	if(!@$_REQUEST["iddoc"])$_REQUEST["iddoc"]=@$_REQUEST["key"];
 	include_once("pantallas/documento/menu_principal_documento.php");
@@ -62,7 +72,7 @@ if($formato["numcampos"])
       redirecciona("formatos/".$formato[0]["nombre"]."/".$formato[0]["ruta_adicionar"]);
     }*/
   }
-  else alerta("El formato ".$formato[0]["nombre"]." No ha sido encontrado!",'error',4000);   
+  else alerta("El formato ".$formato[0]["nombre"]." No ha sido encontrado!",'error',4000);
 }
 if($documento["numcampos"]){
 menu_ordenar($iddoc);
@@ -97,7 +107,7 @@ $permiso=new PERMISO();
 
 echo lista_formatos("", "");
 
-$categorias = busca_filtro_tabla("", "categoria_formato a", "lower(nombre)<>'radicacion'", "idcategoria_formato asc", $conn);
+$categorias = busca_filtro_tabla("", "categoria_formato a", "lower(nombre)<>'radicacion' and lower(nombre)<>'formatos'", "idcategoria_formato asc", $conn);
 for ($j = 0; $j < $categorias["numcampos"]; $j++) {
   echo lista_formatos($categorias[$j]["idcategoria_formato"], $categorias[$j]["nombre"]);
 }
@@ -148,7 +158,7 @@ function lista_formatos($idcategoria, $nombre) {
         } else {
           $retorno.= "<tr>";
           $retorno.= "<td>";
-          $retorno.= "<a href='formatos/" . $lformatos[$i]["nombre"] . "/" . $lformatos[$i]["ruta_adicionar"] . $complemento . "' target='_self' >" . mayusculas($lformatos[$i]["etiqueta"]) . "</a>";          
+          $retorno.= "<a class='kenlace_saia' style='cursor:pointer' conector='iframe' titulo='".$lformatos[$i]["etiqueta"]."' title='".$lformatos[$i]["etiqueta"]."' enlace='formatos/" . $lformatos[$i]["nombre"] . "/" . $lformatos[$i]["ruta_adicionar"] . $complemento . "' target='_self' >" . mayusculas($lformatos[$i]["etiqueta"]) . "</a>";          
           $retorno.= "</td>";
           $retorno.="</tr>";
         }

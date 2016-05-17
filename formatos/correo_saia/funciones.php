@@ -24,20 +24,36 @@ function recibir_datos($idformato, $iddoc){
 	$para = $datos_correo->to;
   	$fecha= $datos_correo->fecha_oficio_entrada;
 	$anexos = $datos_correo->anexos;
-	$tipo_radicado=$datos_correo->tipo_radicado;
 	
+	$lista_anexo=array_pop(explode("/",$anexos));
+	
+	$tipo_radicado=$datos_correo->tipo_radicado;
 	if($tipo_radicado=="Sent"){
 		$tipo_radicado="radicacion_salida";	
-	}else{//INBOX
+	}else if($tipo_radicado=="INBOX"){//INBOX
 		$tipo_radicado="radicacion_entrada";
+	}else {
+		$tipo=explode("/",$tipo_radicado);
+		if($tipo[1]=='Enviados');
+		$tipo_radicado="radicacion_salida";
 	}
-	
-  $cadena_anexos='';
+
+	$cadena_anexos='';
   if($anexos){
-    $cadena_anexos='<tr><td class="encabezado">Anexos</td><td>';
-    $cadena_anexos.="<ul><li>".implode("</li><li>",explode(",",$anexos))."</li>";
+  	$cadena_anexos='<tr><td class="encabezado">Anexos</td><td>';
+  	$cant_anexo=explode(",",$anexos);
+  	for ($i=0; $i <count($cant_anexo) ; $i++) { 
+		  $cadena_anexos.="<li>".array_pop(explode("/",$cant_anexo[$i]))."</li>";
+	  }
+
     $cadena_anexos.="</td></tr>";
   }
+	    
+ /* if($anexos){
+    $cadena_anexos='<tr><td class="encabezado">Anexos</td><td>';
+    $cadena_anexos.="<li>".implode("</li><li>",explode(",",$anexos))."</li>";
+    $cadena_anexos.="</td></tr>";
+  }*/
 ?>
 <script type="text/javascript">
 	$(document).ready(function(){
@@ -207,5 +223,28 @@ function despachar_documento($iddoc){
   }
 	
 }
-
+function transferencia_copia_correo($idformato,$iddoc){
+	global $conn;
+	transferencia_automatica($idformato,$iddoc,"copia_correo",2,'COPIA');
+}
+function mostrar_anexos_correo($idformato,$iddoc){
+	global $conn,$ruta_db_superior;
+	require_once($ruta_db_superior."anexosdigitales/funciones_archivo.php"); 
+	$datos=busca_filtro_tabla('','anexos','documento_iddocumento='.$iddoc,'',$conn);
+	if($datos['numcampos']){
+		$anexo="<br/><br/><b>Anexos: </b><br/>";
+		for($i=0;$i<$datos['numcampos'];$i++){
+			if($_REQUEST['tipo']!=5){	
+				if($datos[$i]['tipo']=='jpg' || $datos[$i]['tipo']=='png' || $datos[$i]['tipo']=='pdf'){
+					$anexo.="<a href='".$ruta_db_superior.$datos[$i]['ruta']."' target='_self'>".$datos[$i]['etiqueta']."</a><br/>";
+				}else{
+					$anexo.='<a href="'.$ruta_db_superior.'anexosdigitales/parsea_accion_archivo.php?idanexo='.$datos[$i]['idanexos'].'&accion=descargar" border="0px">'.$datos[$i]['etiqueta']."</a><br/>";
+				}
+			}else{
+				$anexo.=$datos[$i]['etiqueta']."<br/>";
+			}
+		}
+		echo $anexo;
+	}
+}
 ?>

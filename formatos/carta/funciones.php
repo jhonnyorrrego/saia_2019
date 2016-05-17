@@ -14,16 +14,22 @@ include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."formatos/librerias_funciones_generales.php");
 include_once($ruta_db_superior."librerias_saia.php"); 
 
-//ini_set('display_errors',true);
+ini_set('display_errors',false);
 //***************
 function mostrar_qr_carta($idformato,$iddoc){
 	global $conn,$ruta_db_superior;
-
-	$codigo_qr=busca_filtro_tabla("","documento_verificacion","documento_iddocumento=".$iddoc,"", $conn);	
-	if($codigo_qr['numcampos']){
-		$extension=explode(".",$codigo_qr[0]['ruta_qr']);
-		
-		$img='<img src="http://'.RUTA_PDF.'/'.$codigo_qr[0]['ruta_qr'].'" />';
+	$estado_doc=busca_filtro_tabla("","documento","iddocumento=".$iddoc,"", $conn);
+	if($estado_doc[0]['estado']=='APROBADO'){
+		$codigo_qr=busca_filtro_tabla("","documento_verificacion","documento_iddocumento=".$iddoc,"iddocumento_verificacion DESC", $conn);
+		if($codigo_qr['numcampos']){
+			$extension=explode(".",$codigo_qr[0]['ruta_qr']);
+			$img='<img src="http://'.RUTA_PDF.'/'.$codigo_qr[0]['ruta_qr'].'"  />';
+		}else{
+			generar_codigo_qr_carta($idformato,$iddoc);
+			$codigo_qr=busca_filtro_tabla("","documento_verificacion","documento_iddocumento=".$iddoc,"iddocumento_verificacion DESC", $conn);
+			$extension=explode(".",$codigo_qr[0]['ruta_qr']);
+			$img='<img src="http://'.RUTA_PDF.'/'.$codigo_qr[0]['ruta_qr'].'"   />';
+		}
 		echo($img);
 	}
 }
@@ -47,9 +53,8 @@ function generar_codigo_qr_carta($idformato,$iddoc){
 	
 	if($imagen==false){
 	  alerta("Error al tratar de crear el codigo qr");
-	}
-	else{
-	  $sql_documento_qr="INSERT INTO documento_verificacion(documento_iddocumento,funcionario_idfuncionario,fecha,ruta_qr,verificacion) VALUES (".$iddoc.",".usuario_actual('idfuncionario').",to_date('".date("Y-m-d H:m:s")."', 'YYYY-MM-DD HH24:MI:SS'),'".$imagen."','vacio')";
+	}else{
+	  $sql_documento_qr="INSERT INTO documento_verificacion(documento_iddocumento,funcionario_idfuncionario,fecha,ruta_qr,verificacion) VALUES (".$iddoc.",".usuario_actual('idfuncionario').",".fecha_db_almacenar(date("Y-m-d H:i:s"),'Y-m-d H:i:s').",'".$imagen."','vacio')";
 	  phpmkr_query($sql_documento_qr);
 	}
 }
@@ -111,14 +116,18 @@ function mostrar_anexos($idformato,$iddoc){
 	global $conn,$ruta_db_superior; 
 		$html="Anexos: ";
 		$anexos_fis=busca_filtro_tabla("anexos_fisicos","ft_comunicacion_interna","documento_iddocumento=".$iddoc,"",conn);
-	  $html.=$anexos_fis[0]['anexos_fisicos']."&nbsp";
+	  $html.=$anexos_fis[0]['anexos_fisicos']."&nbsp;";
 	  $anex=busca_filtro_tabla("","anexos","documento_iddocumento=".$iddoc,"",$conn);
 		for($i=0;$i<$anex['numcampos'];$i++){
-		$html.= '<a title="Descargar" href="../../anexosdigitales/parsea_accion_archivo.php?idanexo='.$anex[$i]['idanexos'].'&amp;accion=descargar" border="0px"><font size="2">'.$anex[$i]['etiqueta'].'</font></a> &nbsp;';
+			if($_REQUEST["tipo"]==5)
+				$html.= '<a title="Descargar" href="anexosdigitales/parsea_accion_archivo.php?idanexo='.$anex[$i]['idanexos'].'&amp;accion=descargar" border="0px">'.$anex[$i]['etiqueta'].'</a> &nbsp;';
+			else
+				$html.= '<a title="Descargar" href="../../anexosdigitales/parsea_accion_archivo.php?idanexo='.$anex[$i]['idanexos'].'&amp;accion=descargar" border="0px">'.$anex[$i]['etiqueta'].'</a> &nbsp;';
 		}
 		if($anexos_fis[0]['anexos_fisicos']!='' || $anex['numcampos']>0){
 			echo $html."<br/><br/>";
 		}
+		
 }
 
 function asunto_carta($idformato,$idcampo,$iddoc){
@@ -568,27 +577,25 @@ function autocompletar(idcomponente,digitado,tipo)
 </script>
 <?php 
 } 
-function mostrar_datos_radicaion($idformato, $iddoc){
+function mostrar_datos_radicacion($idformato, $iddoc){
 	global $conn;
 	echo(estilo_bootstrap());
 	$datos_radicacion = busca_filtro_tabla("","documento","iddocumento=".$iddoc,"",$conn);
 	$nombre_empresa = busca_filtro_tabla("valor","configuracion","LOWER(nombre) LIKE'nombre'","",$conn);
 	if($_REQUEST['tipo']!=5){
 		$margin="margin-top:37px;";
-		
 	}else{
 		$margin="margin-top:-30px;";
 	}	
-	$datos="<div id='header_first_page' style='float:right; border-radius: 5px; ".$margin."'>
-	<div style='border: solid 1px; padding:10px; font-size: 16px; '><b style='float:right;'>".$nombre_empresa[0]['valor']."</b><br />";
-	$datos.="<b>Radicado No:</b> ".formato_numero($idformato,$iddoc,1).'<br />';
+	$datos="<br/><b>
+	".$nombre_empresa[0]['valor']."</b><br />";
+	$datos.="<b>&nbsp;Radicación No:</b> ".formato_numero($idformato,$iddoc,1).'<br />';
 	$date = new DateTime($datos_radicacion[0]['fecha']);
-	$datos.="<b>Fecha:</b> ".$date->format('Y-m-d H:i').'<br />';
-	$datos.="</div></div>";
-
-	return($datos);
+	$datos.="<b>&nbsp;Fecha:</b> ".$date->format('Y-m-d H:i').'<br />';
 	
+	echo($datos);
 }
+
 function mostrar_anexos_externa($idformato,$iddoc){
 	$fisicos=mostrar_valor_campo('anexos_fisicos',$idformato,$iddoc,1);
 	$digitales=mostrar_valor_campo('anexos_digitales',$idformato,$iddoc,1);
@@ -660,5 +667,74 @@ global $conn;
    }
   }    
 return $lista;
-}   
+}  
+function generar_correo_confirmacion($idformato,$iddoc){
+	global $conn,$ruta_db_superior;
+	$formato_carta=busca_filtro_tabla("","ft_carta,documento","documento_iddocumento=iddocumento and documento_iddocumento=".$iddoc,"",$conn);
+	$usuario_confirma=busca_filtro_tabla("destino","buzon_entrada","nombre='POR_APROBAR' and activo=1 and archivo_idarchivo=".$iddoc,"idtransferencia asc",$conn);
+	if($formato_carta[0]['email_aprobar']==1 && $formato_carta[0]['estado']=='ACTIVO'){
+		$resultado=busca_filtro_tabla("","ruta","documento_iddocumento=".$iddoc,"idruta",$conn);
+		if($resultado['numcampos']){
+			if(!is_dir($ruta_db_superior."temporal_".$_SESSION["LOGIN"])){
+        mkdir($ruta_db_superior."temporal_".$_SESSION["LOGIN"],0777);
+      }
+			$borrar_pdf="UPDATE documento set pdf='' where iddocumento=".$iddoc;
+			phpmkr_query($borrar_pdf);
+			$consulta=busca_filtro_tabla("","documento","iddocumento=".$iddoc,"",$conn);
+			if($consulta[0]['pdf']!=""){
+	      $anexos[]=$ruta_db_superior.$consulta[0]['pdf'];
+	    }else{	
+				//$nombre_archivo="temporal_".$_SESSION["LOGIN"]."/".$iddoc;
+				$ch = curl_init();
+		    //$fila = "http://".RUTA_PDF_LOCAL."/class_impresion.php?iddoc=".$iddoc."&LOGIN=".$_SESSION["LOGIN".LLAVE_SAIA]."&conexion_remota=1&usuario_actual=".$_SESSION["usuario_actual"]."&LLAVE_SAIA=".LLAVE_SAIA;
+		    $fila = "http://".RUTA_PDF_LOCAL."/class_impresion.php?plantilla=carta&iddoc=".$iddoc."&conexion_remota=1&conexio_usuario=".$_SESSION["LOGIN".LLAVE_SAIA]."&usuario_actual=".$_SESSION["usuario_actual"]."&LOGIN=".$_SESSION["LOGIN".LLAVE_SAIA]."&LLAVE_SAIA=".LLAVE_SAIA;
+		    curl_setopt($ch, CURLOPT_URL,$fila); 
+		    curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
+		    $contenido=curl_exec($ch);    
+		    curl_close ($ch); 
+				//$anexos[]=$ruta_db_superior.$nombre_archivo.".pdf";
+	    }
+			$consulta=busca_filtro_tabla("","documento","iddocumento=".$iddoc,"",$conn);
+			if($consulta[0]['pdf']!=""){
+	      $anexos[]=$ruta_db_superior.$consulta[0]['pdf'];
+	    }
+			$funcionario=busca_filtro_tabla("","vfuncionario_dc","estado_dc=1 and estado=1 and funcionario_codigo=".$usuario_confirma[0]['destino'],"",$conn);
+			$adjuntos=busca_filtro_tabla("ruta","anexos","documento_iddocumento=".$iddoc,"",$conn);
+	    if($adjuntos["numcampos"]){
+	      for($k=0;$k<$adjuntos["numcampos"];$k++){
+	        $anexos[]=$ruta_db_superior.$adjuntos[$k]["ruta"]; 
+	      }
+	    }
+			
+			$info='iddoc-'.$iddoc.',usuario-'.$funcionario[0]['login'];
+	    $resultado=base64_encode($info); 
+			$enlaces='<a href="http://75.101.166.85/saia_release1/email_aprobacion/index.php?info='.$resultado.'" target="_blank">Gestionar Documento</a><br />';
+			
+			
+			/*$mensaje='Saludos '.$funcionario[0]['nombres'].' '.$funcionario[0]['apellidos'].',<br /><br />
+	        A continuaci&oacute;n se adjunta en formato PDF el documento de la comunicacion externa donde se encuentra usted como responsable.<br /><br />
+	        Por favor dar click en los siguiente(s) enlace(s) y Aprobar o Rechazar el documento.<br/>'.$enlaces.'<br /><br />Antes de imprimir este mensaje, asegurese que es necesario. Proteger el medio ambiente tambien esta en nuestras manos.<br /><br />
+	        ESTE ES UN MENSAJE AUTOMATICO, FAVOR NO RESPONDER.';*/
+			
+			$mensaje='
+			
+			Saludos '.$funcionario[0]['nombres'].' '.$funcionario[0]['apellidos'].',<br /><br />
+                        Por medio de la presente se permite solicitar su aprobación o rechazo al documento adjunto donde se encuentra usted como responsable de aprobación, para hacer esto por favor siga estos dos pasos:
+                        <br /><br />
+                        1. Haga lectura del documento adjunto. 
+                        <br /><br />
+                        2. Una vez tenga conocimiento del documento, acceda al siguiente link y decida si Aprobar o Rechazar.
+                        <br /><br />
+                        '.$enlaces.'
+                        <br /><br />
+                        ';  			
+			
+			enviar_mensaje('','codigo',array($funcionario[0]['funcionario_codigo']),'GESTION DE COMUNICACIONES EXTERNAS',$mensaje,$anexos);
+		}
+	}
+	
+	if(!isset($_REQUEST['refrescar'])){
+		mostrar_formato($idformato,$iddoc);
+	}
+} 
 ?>

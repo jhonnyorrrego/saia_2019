@@ -478,7 +478,11 @@ switch ($sAction)
 		break;
 	case "A": // Add
 		if (AddData($conn)) { // Add New Record	
-			redirecciona("rutaadd.php?doc=".$x_doc."&x_plantilla=".$_REQUEST["x_plantilla"]."&x_orden=$x_orden&origen=".$x_destino."&tipo_origen=5");
+			$adicional='';
+			if(@$_REQUEST['cargar']){
+				$adicional='&cargar=1';
+			}
+			redirecciona("rutaadd.php?doc=".$x_doc."&x_plantilla=".$_REQUEST["x_plantilla"]."&x_orden=$x_orden&origen=".$x_destino."&tipo_origen=5".$adicional);
 			exit();
 		}
 		else {    
@@ -736,6 +740,15 @@ mostrar_ruta($_GET['doc']);
   else
     echo $_REQUEST["obligatorio"];  
   ?>">
+  
+  <?php
+  	if(@$_REQUEST['cargar']){
+  		?>
+  		<input type="hidden" name="cargar" value="1"/>
+  		<?php
+  	}
+  ?>
+  
   <input type="hidden" name="x_condicion_transferencia" value="POR_APROBAR">
   <input type="submit" name="Action" id="Action" value="AGREGAR OTRO RESPONSABLE" onclick="add.value='A';">
   <input type="submit" name="terminar" value="CONTINUAR" onclick="add.value='T';">
@@ -935,7 +948,16 @@ function AddData($conn)
 			die();
 		}
   }
-  abrir_url("../../formatos/".$plantilla[0]["plantilla"]."/detalles_mostrar_".$plantilla[0]["plantilla"].".php?iddoc=".$fieldList["documento_iddocumento"]."&idformato=".$plantilla[0]["idformato"]."&key=".$fieldList["documento_iddocumento"],"_self");
+  
+  if(@$_REQUEST['cargar']){
+  	abrir_url("../../formatos/".$plantilla[0]["plantilla"]."/mostrar_".$plantilla[0]["plantilla"].".php?iddoc=".$fieldList["documento_iddocumento"]."&idformato=".$plantilla[0]["idformato"],"_self");
+      	
+  }else{
+  	abrir_url("../../formatos/".$plantilla[0]["plantilla"]."/detalles_mostrar_".$plantilla[0]["plantilla"].".php?iddoc=".$fieldList["documento_iddocumento"]."&idformato=".$plantilla[0]["idformato"]."&key=".$fieldList["documento_iddocumento"],"_self");  	
+  }
+
+  
+  
   }   
 	return true;
 	} 

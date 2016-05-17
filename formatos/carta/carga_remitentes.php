@@ -99,14 +99,14 @@ function datos_proveedor($nombre,$identificacion,$cargo,$empresa,$direccion,$tel
   global $conn;
   unset($_POST);
 	
-	/*$search=array("?","ñ","Ñ");
-	$replace=array("&Ntilde;","&ntilde;","&Ntilde;");
-	$nombre=str_replace($search, $replace, $nombre);
-	$cargo=str_replace($search, $replace, $cargo);
-	$empresa=str_replace($search, $replace, $empresa);
-	$direccion=str_replace($search, $replace, $direccion);
+	$search=array("ñ","Ñ");
+	$replace=array("&ntilde;","&Ntilde;");
+	$nombre=html_entity_decode(str_replace($search, $replace, $nombre));
+	$cargo=html_entity_decode(str_replace($search, $replace, $cargo));
+	$empresa=html_entity_decode(str_replace($search, $replace, $empresa));
+	$direccion=html_entity_decode(str_replace($search, $replace, $direccion));
 	$email=str_replace($search, $replace, $email);
-	$titulo=str_replace($search, $replace, $titulo);*/
+	$titulo=html_entity_decode(str_replace($search, $replace, $titulo));
 	
 	$nombre=htmlentities($nombre);
 	$cargo=htmlentities($cargo);

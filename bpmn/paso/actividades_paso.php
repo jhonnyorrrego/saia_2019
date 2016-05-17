@@ -6,8 +6,72 @@ include_once($ruta_db_superior."pantallas/lib/librerias_fechas.php");
 include_once($ruta_db_superior."workflow/libreria_paso.php");
 //ini_set("display_errors",true);
 echo(estilo_bootstrap());
+
+function mostrar_informacion_paso($idpaso){
+  $texto='<tr><td colspan="2">';
+  $paso=busca_filtro_tabla("","paso","idpaso=".$idpaso,"",$conn);
+  $texto.='<b>'.$paso[0]["nombre_paso"].'</b></td></tr>';
+  $actividades_paso=busca_filtro_tabla("","paso_actividad A","A.paso_idpaso=".$paso[0]["idpaso"]." AND estado=1","",$conn);
+ 
+ for($i=0;$i<$actividades_paso["numcampos"];$i++){
+    $dato_usuarios=array();
+    if($actividades_paso[$i]["llave_entidad"]==-1){
+      array_push($dato_usuarios,"Cualquier usuario");
+    }
+    else{
+      $usuarios=listado_funcionarios(4,$actividades_paso[$i]["llave_entidad"]);
+		
+     for($j=0;$j<$usuarios["numcampos"];$j++){
+        array_push($dato_usuarios,'<div class="detalle_cargo" tipo_actividad="4" idcargo="'.$usuarios[$j]["idcargo"].'"><legend>'.$usuarios[$j]["cargo"].'</legend></div');
+      }        
+    }
+    $texto.='<tr><td>'.$actividades_paso[$i]["descripcion"].'</td><td>'.implode("<br>",$dato_usuarios).'</td></tr>';
+  }
+  return($texto);
+}
+function verificar_fechas(){
+	
+}
+function listado_funcionarios($entidad,$llave_entidad){
+	global $conn;
+	$condicion='';
+	$funcionario_codigo=array();
+	switch($entidad){
+	    case 1://funcionario
+	        $condicion="funcionario_codigo IN(".$llave_entidad.")";
+	    break;
+	    case 2://dependencia
+	    		$condiciones=array();
+	    		$dependencias=busca_filtro_tabla("","dependencia","iddependencia IN(".$llave_entidad.")","",$conn);
+	    		$codigos=extrae_campo($dependencias,"cod_arbol");
+	    		$cant_codigos=count($codigos);
+	    		for($j=0;$j<$cant_codigos;$j++){
+	    			array_push($condiciones,"cod_arbol_dep LIKE '".$codigos[$j].".%' ");
+	    		}
+	    		$condicion="(".implode(" OR ",$condiciones).")";
+	    break;
+	    case 3://ejecutor
+	    break;
+	    case 4://cargo
+	        $condicion='idcargo IN('.$llave_entidad.")";
+	    break;
+	    case 5://dependencia cargo
+	    		$condicion='iddependencia_cargo IN('.$llave_entidad.')';
+	    break;            
+	}
+	$dato=busca_filtro_tabla("","vfuncionario_dc",$condicion." AND estado_dc=1 AND estado_dep=1 AND estado=1","GROUP BY funcionario_codigo",$conn);
+	return($dato);
+}
+function actividades_terminadas_paso($idactividad,$documento){
+	$paso_documento=busca_filtro_tabla("B.idpaso_instancia,B.fecha, B.responsable","paso_instancia_terminada B","B.documento_iddocumento=".$documento." AND estado_actividad<3 AND actividad_idpaso_actividad=".$idactividad,"",$conn);
+return($paso_documento);
+}
+
+
 $paso=busca_filtro_tabla("","paso A, paso_actividad B","A.idpaso=B.paso_idpaso AND A.idpaso=".$_REQUEST["idpaso"]." AND B.estado=1","orden",$conn);
 
+if($paso['numcampos']){
+	
 
 
 $paso_doc='';
@@ -285,65 +349,7 @@ else{
   ?>
   <div id="detalles_actividad"></div>
 <?php
-function mostrar_informacion_paso($idpaso){
-  $texto='<tr><td colspan="2">';
-  $paso=busca_filtro_tabla("","paso","idpaso=".$idpaso,"",$conn);
-  $texto.='<b>'.$paso[0]["nombre_paso"].'</b></td></tr>';
-  $actividades_paso=busca_filtro_tabla("","paso_actividad A","A.paso_idpaso=".$paso[0]["idpaso"]." AND estado=1","",$conn);
- 
- for($i=0;$i<$actividades_paso["numcampos"];$i++){
-    $dato_usuarios=array();
-    if($actividades_paso[$i]["llave_entidad"]==-1){
-      array_push($dato_usuarios,"Cualquier usuario");
-    }
-    else{
-      $usuarios=listado_funcionarios(4,$actividades_paso[$i]["llave_entidad"]);
-		
-     for($j=0;$j<$usuarios["numcampos"];$j++){
-        array_push($dato_usuarios,'<div class="detalle_cargo" tipo_actividad="4" idcargo="'.$usuarios[$j]["idcargo"].'"><legend>'.$usuarios[$j]["cargo"].'</legend></div');
-      }        
-    }
-    $texto.='<tr><td>'.$actividades_paso[$i]["descripcion"].'</td><td>'.implode("<br>",$dato_usuarios).'</td></tr>';
-  }
-  return($texto);
-}
-function verificar_fechas(){
-	
-}
-function listado_funcionarios($entidad,$llave_entidad){
-	global $conn;
-	$condicion='';
-	$funcionario_codigo=array();
-	switch($entidad){
-	    case 1://funcionario
-	        $condicion="funcionario_codigo IN(".$llave_entidad.")";
-	    break;
-	    case 2://dependencia
-	    		$condiciones=array();
-	    		$dependencias=busca_filtro_tabla("","dependencia","iddependencia IN(".$llave_entidad.")","",$conn);
-	    		$codigos=extrae_campo($dependencias,"cod_arbol");
-	    		$cant_codigos=count($codigos);
-	    		for($j=0;$j<$cant_codigos;$j++){
-	    			array_push($condiciones,"cod_arbol_dep LIKE '".$codigos[$j].".%' ");
-	    		}
-	    		$condicion="(".implode(" OR ",$condiciones).")";
-	    break;
-	    case 3://ejecutor
-	    break;
-	    case 4://cargo
-	        $condicion='idcargo IN('.$llave_entidad.")";
-	    break;
-	    case 5://dependencia cargo
-	    		$condicion='iddependencia_cargo IN('.$llave_entidad.')';
-	    break;            
-	}
-	$dato=busca_filtro_tabla("","vfuncionario_dc",$condicion." AND estado_dc=1 AND estado_dep=1 AND estado=1","GROUP BY funcionario_codigo",$conn);
-	return($dato);
-}
-function actividades_terminadas_paso($idactividad,$documento){
-	$paso_documento=busca_filtro_tabla("B.idpaso_instancia,B.fecha, B.responsable","paso_instancia_terminada B","B.documento_iddocumento=".$documento." AND estado_actividad<3 AND actividad_idpaso_actividad=".$idactividad,"",$conn);
-return($paso_documento);
-}
+
 echo(librerias_jquery("1.7"));
 echo(librerias_bootstrap());
 echo(librerias_datepicker_bootstrap());
@@ -493,3 +499,13 @@ $(document).ready(function(){
 		});
 	});
 </script>
+
+<?php
+}
+else{
+	?>
+		<div class="well alert-warning"><center>ATENCI&Oacute;N<br>Este paso no tiene actividades definidas aun</center></div>
+	<?php
+}
+?>
+

@@ -15,14 +15,24 @@ function mostrar_codigo_qr($idformato, $iddoc){
 		echo("<img src='".PROTOCOLO_CONEXION.RUTA_PDF."/".$codigo_qr[0]['ruta_qr']."'>");	
 	}
 }
-function  generar_codigo_qr($idformato,$iddoc){
+function  generar_codigo_qr($idformato,$iddoc,$idfunc=0){
   global $conn,$ruta_db_superior;
 	include_once($ruta_db_superior."formatos/librerias/funciones_generales.php");
 	include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
 	
   $codigo_qr = busca_filtro_tabla("ruta_qr, iddocumento_verificacion","documento_verificacion","documento_iddocumento=".$iddoc,"", $conn);	
   $datos = busca_filtro_tabla("A.fecha,A.estado,A.numero","documento A","A.iddocumento=".$iddoc,"",$conn);  
-  
+  $idfun="";
+	if($_REQUEST['tipo']==5){
+		$idfun=$_REQUEST['idfunc'];
+	}else{
+		$idfun=usuario_actual('idfuncionario');
+	}
+	
+	if($idfunc){
+		$idfun=$idfunc;
+	}
+	
 	$fecha=date_parse($datos[0]['fecha']);
 	$datos_qr="";
 	$cadena="id=".$iddoc;
@@ -45,7 +55,7 @@ function  generar_codigo_qr($idformato,$iddoc){
 	  alerta("Error al tratar de crear el codigo qr");
 	}
 	else{
-	  $sql_documento_qr="INSERT INTO documento_verificacion(documento_iddocumento,funcionario_idfuncionario,fecha,ruta_qr,verificacion) VALUES (".$iddoc.",".usuario_actual('idfuncionario').",".fecha_db_almacenar(date("Y-m-d H:m:s"),'Y-m-d H:i:S').",'".$imagen."','vacio')";	  	  
+	  $sql_documento_qr="INSERT INTO documento_verificacion(documento_iddocumento,funcionario_idfuncionario,fecha,ruta_qr,verificacion) VALUES (".$iddoc.",".$idfun.",".fecha_db_almacenar(date("Y-m-d H:m:s"),'Y-m-d H:i:S').",'".$imagen."','vacio')";	  	  
 	  phpmkr_query($sql_documento_qr);	  	 
 	}
 }

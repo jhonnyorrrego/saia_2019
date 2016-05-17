@@ -55,12 +55,13 @@ if(is_object($documento[0]["fecha"])){
 echo(origen_documento($documento[0]["iddocumento"],$documento[0]["numero"],$documento[0]["ejecutor"],$documento[0]["tipo_radicado"],$documento[0]["estado"],$documento[0]["serie"],$documento[0]["tipo_ejecutor"])); ?>
 <?php echo(fecha_creacion_documento($documento[0]["fecha"],$documento[0]["plantilla"],$documento[0]["iddocumento"])); ?><br></div>
 <div class="row">
-	<div class="pull-left"><b>Proceso: </b><?php echo(nombre_flujo($iddocumento,$documento[0]["plantilla"])); ?></div>
+
+	<!--div class="pull-left"><b>Proceso: </b><?php echo(nombre_flujo($iddocumento,$documento[0]["plantilla"])); ?></div>
 	<b><div class="texto-azul pull-right paso_actual"></div></b>
 </div>
-	<br /><br />
+	<br />
 	<div style="text-align: justify;"><?php echo(utf8_encode(html_entity_decode($documento[0]["descripcion"])));?></div><br />
-	<div class="btn-group pull-center"><?php echo(barra_adicional_documento($iddocumento));?></div><br />
+	<div class="btn-group pull-center"><?php echo(barra_adicional_documento($iddocumento));?></div><br /--><br />
 <div data-toggle="collapse" data-target="#div_info_doc">
   <i class="icon-minus-sign"></i>  <b>Informaci&oacute;n del documento</b>
 </div>
@@ -253,14 +254,14 @@ if($ubucación_fisica['numcampos'] || $despacho['numcampos']){
 </div>
 <div id="div_info_disposicion"  class="collapse in opcion_informacion">
 <table class="table table-bordered" id="listado_disposicion">
-<tr>
+<!--tr>
 	<td class="prettyprint">
 		Ubicaci&oacute;n f&iacute;sica
 	</td>
 	<td>
 
 	</td>
-</tr>
+</tr-->
 <tr>
 	<td class="prettyprint">
 		Despachos
@@ -275,15 +276,15 @@ if($ubucación_fisica['numcampos'] || $despacho['numcampos']){
           }
 					$empresa = busca_filtro_tabla("nombre","ejecutor","idejecutor=".$despacho[$i]["empresa"],"",$conn);
 					if($despacho[$i]['tipo_despacho']==2){ //Mensajeria Interna
-						$responsable = busca_filtro_tabla(concatenar_cadena_sql(array("nombres"," ","apellidos"))." as nombre","funcionario","idfuncionario=".$despacho[$i]["responsable"],"",$conn); //Mensajeros
+						$responsable = busca_filtro_tabla(concatenar_cadena_sql(array("nombres","''","apellidos"))." as nombre","funcionario","idfuncionario=".$despacho[$i]["responsable"],"",$conn); //Mensajeros
 					}else{ //Mensajeria Externa
 						$responsable = busca_filtro_tabla("nombre","ejecutor","idejecutor=".$despacho[$i]["responsable"],"",$conn);
 					}
 					$tipo_despacho=array(1=>"Mensajeria Externa",2=>"Mensajeria Interna",3=>"Entrega Personal");
 					$texto="Tipo Despacho: ".$tipo_despacho[$despacho[$i]['tipo_despacho']]." <br />";					
 					$texto .= "Fecha: ".$despacho[$i]['fecha_despacho']."<br />";
-					$texto .= "Destino: <br />";
-					$texto .= "Empresa de mansajeria: ".$empresa[0]['nombre']."<br />";
+					//$texto .= "Destino: <br />";
+					$texto .= "Empresa de mensajeria: ".$empresa[0]['nombre']."<br />";
 					$texto .= "Responsable: ".$responsable[0]['nombre']."<br />";
 					$texto .= "Gu&iacute;a: ".$despacho[$i]['numero_guia']."<br />";
 					if($despacho[$i]['notas']){

@@ -22,7 +22,7 @@ echo(estilo_bootstrap());
     echo(librerias_UI());
     echo(librerias_kaiten());   
     echo(librerias_acciones_kaiten());       
-    ?>         
+    ?>
 </head>
 <body>                      
 <style>
@@ -32,12 +32,22 @@ echo(estilo_bootstrap());
   .k-panel .block-nav .items .label{color:#000000; line-height:30px; text-shadow:0 -1px 0 transparent; background-color:rgba(153, 153, 153, 0)}
 </style>   
   <div id="contenedor_busqueda">
-  </div>      
+  </div>
+<?php
+$adicional="";
+$request=array();
+foreach(@$_REQUEST as $id => $value){
+  $request[]=$id."=".$value;
+}
+if(count($request)){
+  $adicional="?".implode("&",$request);
+}
+?>
 <script type="text/javascript">   
         $('#contenedor_busqueda').kaiten({ 
           columnWidth : '100%',
           startup : function(dataFromURL){          
-            this.kaiten('load', { kConnector:'html.page', url:'listar_proceso_formatos.php', 'kTitle':'Procesos '});
+            this.kaiten('load', { kConnector:'html.page', url:'listar_proceso_formatos.php<?php echo($adicional); ?>', 'kTitle':'Procesos '});
 
           }
         });
