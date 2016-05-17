@@ -307,7 +307,7 @@ function mostrar_contador_expediente($idexpediente,$cod_arbol){
 	//return(implode(",",$arreglo));
 	$documentos=busca_filtro_tabla("count(*) as cantidad","vexpediente_serie a","a.estado_archivo=1 and ".$expedientes." and ".$request_exp_padre."  ","group by a.fecha,a.nombre,a.descripcion,a.cod_arbol,a.idexpediente",$conn);
 	
-	print_r($documentos);die();
+	//print_r($documentos);die();
 	
 	//print_r($documentos);
 	//$documentos=busca_filtro_tabla("count(*) as cantidad","vexpediente_serie a,documento b,expediente_doc c ","a.idexpediente=c.expediente_idexpediente and b.iddocumento=c.documento_iddocumento and b.estado<>'eliminado' and b.estado<>'anulado' and c.expediente_idexpediente=".$idexpediente,"",$conn);
@@ -316,7 +316,8 @@ function mostrar_contador_expediente($idexpediente,$cod_arbol){
 	//return($cantidad["sql"]);
 	
 	if(!$documentos["numcampos"])$documentos[0]["cantidad"]=0;
-	return("<span class='pull-right badge' style='margin-top:3px' id='contador_docs_".$idexpediente."'>".$documentos[0]["cantidad"]."</span>");
+	//return("<span class='pull-right badge' style='margin-top:3px' id='contador_docs_".$idexpediente."'>".$documentos[0]["cantidad"]."</span>");
+	return("<span class='pull-right badge' style='margin-top:3px' id='contador_docs_".$idexpediente."'>".$documentos["numcampos"]."</span>");
 }
 
 

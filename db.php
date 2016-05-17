@@ -3584,7 +3584,7 @@ function ultima_sesion(){
 global $conn;
 $iplocal=getRealIP();
 $ipremoto=servidor_remoto();
-$conexion=$conn->Ejecutar_sql("Select A.idsesion_php FROM log_acceso A WHERE A.iplocal='".$iplocal."' AND A.ipremota='".$ipremoto."' AND fecha_cierre IS NULL ORDER BY A.fecha DESC");
+$conexion=$conn->Ejecutar_sql("Select A.idsesion_php FROM log_acceso A WHERE A.iplocal='".$iplocal."' AND A.ipremota='".$ipremoto."' AND fecha_cierre IS NULL AND A.exito=1 ORDER BY A.fecha DESC");
 if($conexion->num_rows){
  $dato=$conn->sacar_fila();
  return($dato["idsesion_php"]);
@@ -3606,6 +3606,21 @@ global $conn;
 $iplocal=getRealIP();
 $ipremoto=servidor_remoto();
 $sql="UPDATE log_acceso SET fecha_cierre=".fecha_db_almacenar(date("Y-m-d H:i:s"),"Y-m-d H:i:s")." WHERE iplocal='".$iplocal."' AND ipremota='".$ipremoto."' AND fecha_cierre IS NULL AND exito=1";
+$conn->Ejecutar_sql($sql);
+}
+/*<Clase>
+<Nombre>cerrar_sesiones_activas</Nombre>
+<Parametros>$login</Parametros>
+<Responsabilidades>Guarda la fecha de cierre del ultimo logueo<Responsabilidades>
+<Notas></Notas>
+<Excepciones></Excepciones>
+<Salida></Salida>
+<Pre-condiciones><Pre-condiciones>
+<Post-condiciones><Post-condiciones>
+</Clase>  */
+function cerrar_sesiones_activas($login){
+global $conn;
+$sql="UPDATE log_acceso SET fecha_cierre=".fecha_db_almacenar(date("Y-m-d H:i:s"),"Y-m-d H:i:s")." WHERE fecha_cierre IS NULL AND exito=1 AND login='".$login."'";
 $conn->Ejecutar_sql($sql);
 }
 

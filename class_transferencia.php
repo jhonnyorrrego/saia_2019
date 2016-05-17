@@ -2059,7 +2059,7 @@ function radicar_plantilla()
     elseif(isset($_POST["firmado"]) && $_POST["firmado"]=="varias")
     {
     	llama_funcion_accion($_POST["iddoc"],$idformato,"adicionar","POSTERIOR");
-     redirecciona("formatos/librerias/rutaadd.php?x_plantilla=$plantilla&doc=".$_POST["iddoc"]."&obligatorio=".$_POST["obligatorio"]."&origen=".$usuario_origen[0][0]);
+     	redirecciona("formatos/librerias/rutaadd.php?x_plantilla=$plantilla&doc=".$_POST["iddoc"]."&obligatorio=".$_POST["obligatorio"]."&origen=".$usuario_origen[0][0]);
      die();
     }
     llama_funcion_accion($_POST["iddoc"],$idformato,"adicionar","POSTERIOR");
