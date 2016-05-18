@@ -40,7 +40,7 @@ function permiso_funcionario_expediente($expediente,$entidad,$llave){
 	return("");
 }
 function enlace_expediente($idexpediente,$nombre){
-return("<div style='' class='link kenlace_saia' enlace='pantallas/busquedas/consulta_busqueda_expediente.php?idbusqueda_componente=".$_REQUEST["idbusqueda_componente"]."&idexpediente=".$idexpediente."' conector='iframe' titulo='".$nombre."'><b>".$nombre."</b></div>");
+return("<div style='' class='link kenlace_saia' enlace='pantallas/busquedas/consulta_busqueda_expediente.php?idbusqueda_componente=".$_REQUEST["idbusqueda_componente"]."&idexpediente=".$idexpediente."&variable_busqueda=".@$_REQUEST['variable_busqueda']."' conector='iframe' titulo='".$nombre."'><b>".$nombre."</b></div>");
 }
 function request_expediente_padre(){
 $texto='';
@@ -274,7 +274,6 @@ function obtener_descripcion_expediente($descripcion){
 	return($descripcion);
 }
 
-/*
 function mostrar_contador_expediente($idexpediente,$cod_arbol){
 	global $conn, $dependencia,$arreglo;
 	$expedientes=arreglo_expedientes_asignados();
@@ -286,9 +285,14 @@ function mostrar_contador_expediente($idexpediente,$cod_arbol){
 	//return($cantidad["sql"]);
 	
 	if(!$documentos["numcampos"])$documentos[0]["cantidad"]=0;
+	
+	
+	
+	
 	return("<span class='pull-right badge' style='margin-top:3px' id='contador_docs_".$idexpediente."'>".$documentos[0]["cantidad"]."</span>");
-}*/
-
+}
+ 
+/*
 function mostrar_contador_expediente($idexpediente,$cod_arbol){
 	
 	
@@ -305,7 +309,13 @@ function mostrar_contador_expediente($idexpediente,$cod_arbol){
 	
 	$arreglo=array_merge($arreglo,array($idexpediente));
 	//return(implode(",",$arreglo));
-	$documentos=busca_filtro_tabla("count(*) as cantidad","vexpediente_serie a","a.estado_archivo=1 and ".$expedientes." and ".$request_exp_padre."  ","group by a.fecha,a.nombre,a.descripcion,a.cod_arbol,a.idexpediente",$conn);
+	$documentos=busca_filtro_tabla("a.idexpediente","vexpediente_serie a","a.estado_archivo=1 and ".$expedientes." and (".$request_exp_padre.")  ","group by a.fecha,a.nombre,a.descripcion,a.cod_arbol,a.idexpediente",$conn);
+	
+	$documentos_expediente=busca_filtro_tabla("count(*) as cantidad","expediente_doc","expediente_idexpediente IN(".implode(',',extrae_campo($documentos,'idexpediente')).")","",$conn);
+	
+	if(!$documentos_expediente['numcampos']){
+		$documentos=busca_filtro_tabla("count(*) as cantidad","expediente_doc A, documento B","A.expediente_idexpediente in(".implode(",",$arreglo).") AND A.documento_iddocumento=B.iddocumento AND B.estado not in('ELIMINADO')","",$conn);
+	}
 	
 	//print_r($documentos);die();
 	
@@ -320,15 +330,15 @@ function mostrar_contador_expediente($idexpediente,$cod_arbol){
 	return("<span class='pull-right badge' style='margin-top:3px' id='contador_docs_".$idexpediente."'>".$documentos["numcampos"]."</span>");
 }
 
-
+*/
 function obtener_expedientes_padre($idexpediente,$expedientes){
 	global $arreglo;
-	$expediente=busca_filtro_tabla("","expediente A","A.cod_padre=".$idexpediente."","",$conn);
+	$expediente=busca_filtro_tabla("","expediente A","A.cod_padre=".$idexpediente." AND A.estado_archivo=".$_REQUEST['variable_busqueda'],"",$conn);
 	if($expediente["numcampos"]){
 		for($i=0;$i<$expediente["numcampos"];$i++){
 			if(in_array($expediente[$i]["idexpediente"],$expedientes)){
 				array_push($arreglo,$expediente[$i]["idexpediente"]);
-				$hijos=busca_filtro_tabla("","expediente A","A.cod_padre=".$expediente[$i]["idexpediente"],"",$conn);
+				$hijos=busca_filtro_tabla("","expediente A","A.cod_padre=".$expediente[$i]["idexpediente"]." AND A.estado_archivo=".$_REQUEST['variable_busqueda'],"",$conn);
 				if($hijos["numcampos"]){
 					obtener_expedientes_padre($expediente[$i]["idexpediente"],$expedientes);
 				}
@@ -338,6 +348,7 @@ function obtener_expedientes_padre($idexpediente,$expedientes){
 	}
 	return(true);
 }
+
 function eliminar_permiso_expediente($idexpediente,$tipo_entidad,$entidad){
 	$sql1="DELETE from entidad_expediente where expediente_idexpediente='$idexpediente' and entidad_identidad='$tipo_entidad' and llave_entidad='$entidad'";
 	phpmkr_query($sql1);
@@ -433,10 +444,12 @@ function arreglo_expedientes_asignados(){
 	
 	$asignacion_expediente=busca_filtro_tabla("A.expediente_idexpediente","entidad_expediente A","A.estado=1 AND((entidad_identidad=1 AND llave_entidad='".usuario_actual("idfuncionario")."') or (entidad_identidad=2 AND llave_entidad in ('".implode("','",$dependencias)."')) or (entidad_identidad=4 AND llave_entidad in('".implode("','",$cargos)."')))","",$conn);
 	
-	$expedientes_serie=busca_filtro_tabla("A.idexpediente","expediente A, serie B, entidad_serie C","A.serie_idserie=B.idserie AND B.idserie=C.serie_idserie AND B.estado=1 AND ((C.entidad_identidad=1 AND C.llave_entidad='".usuario_actual("idfuncionario")."') or (C.entidad_identidad=2 AND C.llave_entidad in ('".implode("','",$dependencias)."')) or (C.entidad_identidad=4 AND C.llave_entidad in('".implode("','",$cargos)."')))","",$conn);
+	$where_estado_archivo=" AND estado_archivo=".$_REQUEST['variable_busqueda'];
+	
+	$expedientes_serie=busca_filtro_tabla("A.idexpediente","expediente A, serie B, entidad_serie C","A.serie_idserie=B.idserie AND B.idserie=C.serie_idserie AND B.estado=1 AND ((C.entidad_identidad=1 AND C.llave_entidad='".usuario_actual("idfuncionario")."') or (C.entidad_identidad=2 AND C.llave_entidad in ('".implode("','",$dependencias)."')) or (C.entidad_identidad=4 AND C.llave_entidad in('".implode("','",$cargos)."')))".$where_estado_archivo,"",$conn);
 	$array_expedientes_serie=extrae_campo($expedientes_serie,"idexpediente");
 	
-	$expedientes_serie_negado=busca_filtro_tabla("A.idexpediente","expediente A, serie B, entidad_serie C","A.serie_idserie=B.idserie AND B.idserie=C.serie_idserie AND B.estado=1 AND C.estado=2 AND ((C.entidad_identidad=1 AND C.llave_entidad='".usuario_actual("idfuncionario")."') or (C.entidad_identidad=2 AND C.llave_entidad in ('".implode("','",$dependencias)."')) or (C.entidad_identidad=4 AND C.llave_entidad in('".implode("','",$cargos)."')))","",$conn);
+	$expedientes_serie_negado=busca_filtro_tabla("A.idexpediente","expediente A, serie B, entidad_serie C","A.serie_idserie=B.idserie AND B.idserie=C.serie_idserie AND B.estado=1 AND C.estado=2 AND ((C.entidad_identidad=1 AND C.llave_entidad='".usuario_actual("idfuncionario")."') or (C.entidad_identidad=2 AND C.llave_entidad in ('".implode("','",$dependencias)."')) or (C.entidad_identidad=4 AND C.llave_entidad in('".implode("','",$cargos)."')))".$where_estado_archivo,"",$conn);
 	$array_expedientes_serie_negado=extrae_campo($expedientes_serie_negado,"idexpediente");
 	
 	$series_asignadas=array_diff($array_expedientes_serie,$array_expedientes_serie_negado);

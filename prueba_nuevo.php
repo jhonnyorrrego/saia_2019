@@ -1,8 +1,5 @@
+<?php 
+	include_once('db.php');
 
-
-<?php
-
-
-
-$_REQUEST=array();
 ?>
+

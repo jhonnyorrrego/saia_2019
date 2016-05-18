@@ -1,0 +1,11 @@
+,,,,,,,,,,,,,,,
+,,,,TABLA PARA DIGITAR LA INFORMACIÓN DE LA CLASIFICACIÓN DOCUMENTAL,,,,,,,,,,,
+,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,
+ID,CÓDIGO,NOMBRE ,CATEGORÍA (2-Producción Documental),"TIPO (1-serie, 2-subserie, 3-tipo documental)","ID SERIE , SUBSERIE SUPERIOR",Tiempo de Respuesta (Días),RETENCIÓN GESTIÓN,RETENCIÓN CENTRAL,"CONSERVACIÓN (1-Conservación Total, 2-Eliminación)","SELECCIÓN (1-Sí, 2-No)","DIGITALIZACIÓN (1-Sí, 2-No)",PROCEDIMIENTO,"PERMITE COPIA (1-Sí, 0-No)",DEPENDENCIA,ESTADO(1)
+1,101,ACTAS,2,1,,8,3,6,1,1,1,,0,DIRECCION GENERAL,1
+,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,
+,"NOTA: En caso de que la presente información no se encuentre organizada sistemáticamente, puede servir para los mismos efectos un listado de los documentos que la Organización considere indispensables para ser registrados en un Sistema de Gestión documental. ",,,,,,,,,,,,,,
