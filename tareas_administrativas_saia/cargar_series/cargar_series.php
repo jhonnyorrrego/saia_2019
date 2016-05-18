@@ -12,19 +12,19 @@ while($max_salida>0){
 
 
 include_once($ruta_db_superior."db.php");
-global $conn;
- $archivo="prueba_carga.csv";
- $gestor = fopen($archivo, "rb");
- if($gestor)
+
+$archivo="prueba_carga.csv";
+$gestor = fopen($archivo, "rb");
+if($gestor){
     $contenido = fread($gestor, filesize($archivo));
- else
- {
+}
+else{
     alerta("No Se Realizo la Actualizacion de Datos de Intranet por el archivo");
     return(false);
- }
- fclose($gestor);
- $records = explode("\n",$contenido);
- for($i=6;$i<count($records);$i++){
+}
+fclose($gestor);
+$records = explode("\n",$contenido);
+for($i=6;$i<count($records);$i++){
 	$valores=explode(',',$records[$i]);
 	if( $valores[2]!='' && $valores[4]!=''){  // C - E
 		$entidad=$valores[14]; // O
@@ -59,9 +59,9 @@ global $conn;
 		
 		
 		
-	}
- }
+    }
+}
  
- die();
+die();
       
 ?> 
