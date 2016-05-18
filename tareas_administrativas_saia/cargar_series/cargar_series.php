@@ -39,9 +39,13 @@ global $conn;
 		$strsql .= ") VALUES ('";			
 		$strsql .= implode("','", array_values($fieldList));			
 		$strsql .= "')";
+        phpmkr_query($strsql);
 
-		
+
 		print_r($strsql);
+		
+		
+		
 		
 	}
  }
