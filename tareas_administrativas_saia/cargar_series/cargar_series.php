@@ -28,6 +28,8 @@ for($i=6;$i<count($records);$i++){
 	if( $valores[2]!='' && $valores[4]!=''){  // C - E
 		$entidad=$valores[14]; // O
 
+
+        //SERIE
 		$fieldList=array();//cols
 		$fieldList["codigo"] = $valores[1]; //B
 		$fieldList["nombre"] = utf8_encode($valores[2]); //C
@@ -53,7 +55,8 @@ for($i=6;$i<count($records);$i++){
         phpmkr_query($strsql);
         $idserie=phpmkr_insert_id();
         
-
+        //ENTIDAD_SERIE
+        
 
 
 		print_r($strsql);
