@@ -47,6 +47,8 @@ global $conn;
 		$strsql .= "')";
 
 		
+		print_r($strsql);
+		
 	}
  }
  
