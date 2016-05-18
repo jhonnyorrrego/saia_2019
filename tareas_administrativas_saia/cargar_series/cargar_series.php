@@ -24,17 +24,17 @@ global $conn;
 
 		
 		$fieldList=array();//cols
-		$fieldList["nombre"] = $valores[1]; //B
+		$fieldList["codigo"] = $valores[1]; //B
 		$fieldList["nombre"] = $valores[2]; //C
-		$fieldList["nombre"] = $valores[3]; //D
-		$fieldList["nombre"] = $valores[4]; //E
-		$fieldList["nombre"] = $valores[5]; //F
-		$fieldList["nombre"] = $valores[6]; //G
-		$fieldList["nombre"] = $valores[7]; //H
-		$fieldList["nombre"] = $valores[8]; //I
-		$fieldList["nombre"] = $valores[9]; //J
-		$fieldList["nombre"] = $valores[10]; //K
-		$fieldList["nombre"] = $valores[11]; //L
+		$fieldList["categoria"] = $valores[3]; //D
+		$fieldList["tipo"] = $valores[4]; //E
+		$fieldList["cod_padre"] = $valores[5]; //F
+		$fieldList["dias_entrega"] = $valores[6]; //G
+		$fieldList["retencion_gestion"] = $valores[7]; //H
+		$fieldList["retencion_central"] = $valores[8]; //I
+		$fieldList["conservacion"] = $valores[9]; //J
+		$fieldList["seleccion"] = $valores[10]; //K
+		$fieldList["digitalizacion"] = $valores[11]; //L
 		$fieldList["nombre"] = $valores[12]; //M
 		$fieldList["nombre"] = $valores[13]; //N
 		$fieldList["nombre"] = $valores[15]; //P
