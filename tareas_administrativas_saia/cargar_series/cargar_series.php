@@ -18,6 +18,9 @@ global $conn;
  for($i=6;$i<count($records);$i++){
  	
 	$valores=explode(',',$records[$i]);
+	
+	print_r($valores);die();
+	
 	if( $valores[2]!='' && $valores[4]!=''){  // C - E
 		
 		$entidad=$valores[14]; // O
@@ -35,8 +38,8 @@ global $conn;
 		$fieldList["conservacion"] = $valores[9]; //J
 		$fieldList["seleccion"] = $valores[10]; //K
 		$fieldList["digitalizacion"] = $valores[11]; //L
-		$fieldList["nombre"] = $valores[12]; //M
-		$fieldList["nombre"] = $valores[13]; //N
+		$fieldList["procedimiento"] = $valores[12]; //M
+		$fieldList["copia"] = $valores[13]; //N
 		$fieldList["nombre"] = $valores[15]; //P
 		
 		$tabla="";
