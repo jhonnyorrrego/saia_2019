@@ -60,11 +60,7 @@ for($i=6;$i<count($records);$i++){ //EMPIEZSA A VALIDAD APARTIR DE LA COLUMNA 6
         //PENDIENTE DESARROLLAR INSERT ENTIDAD SERIE 
         //$entidad : llega el nombre, solo hay que hacer la busqueda like a dependencia.
 
-	
-		
-		
-		
-		
+
     }
 }
  
