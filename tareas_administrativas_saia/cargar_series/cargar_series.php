@@ -30,7 +30,7 @@ for($i=6;$i<count($records);$i++){
 
 		$fieldList=array();//cols
 		$fieldList["codigo"] = $valores[1]; //B
-		$fieldList["nombre"] = $valores[2]; //C
+		$fieldList["nombre"] = utf8_encode($valores[2]); //C
 		$fieldList["categoria"] = $valores[3]; //D
 		$fieldList["tipo"] = $valores[4]; //E
 		$fieldList["cod_padre"] = $valores[5]; //F
@@ -51,6 +51,9 @@ for($i=6;$i<count($records);$i++){
 		$strsql .= implode("','", array_values($fieldList));			
 		$strsql .= "')";
         phpmkr_query($strsql);
+        $idserie=phpmkr_insert_id();
+        
+
 
 
 		print_r($strsql);
