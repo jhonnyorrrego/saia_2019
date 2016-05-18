@@ -23,7 +23,7 @@ else{
 }
 fclose($gestor);
 $records = explode("\n",$contenido);
-for($i=6;$i<count($records);$i++){
+for($i=6;$i<count($records);$i++){ //EMPIEZSA A VALIDAD APARTIR DE LA COLUMNA 6
 	$valores=explode(',',$records[$i]);
 	if( $valores[2]!='' && $valores[4]!=''){  // C - E
 
