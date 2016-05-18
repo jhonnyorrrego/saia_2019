@@ -40,7 +40,7 @@ global $conn;
 		$fieldList["digitalizacion"] = $valores[11]; //L
 		$fieldList["procedimiento"] = $valores[12]; //M
 		$fieldList["copia"] = $valores[13]; //N
-		$fieldList["nombre"] = $valores[15]; //P
+		$fieldList["estado"] = $valores[15]; //P
 		
 		$tabla="";
 		$strsql = "INSERT INTO ".$tabla." (";
