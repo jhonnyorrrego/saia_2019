@@ -12,20 +12,11 @@ global $conn;
  }
  fclose($gestor);
  $records = explode("\n",$contenido);
- 
-
- 
  for($i=6;$i<count($records);$i++){
- 	
 	$valores=explode(',',$records[$i]);
-	
-
-	
 	if( $valores[2]!='' && $valores[4]!=''){  // C - E
-		
 		$entidad=$valores[14]; // O
 
-		
 		$fieldList=array();//cols
 		$fieldList["codigo"] = $valores[1]; //B
 		$fieldList["nombre"] = $valores[2]; //C
