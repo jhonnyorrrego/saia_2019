@@ -11,7 +11,7 @@ while($max_salida>0){
 }
 
 
-include_once("db.php");
+include_once($ruta_db_superior."db.php");
 global $conn;
  $archivo="prueba_carga.csv";
  $gestor = fopen($archivo, "rb");
