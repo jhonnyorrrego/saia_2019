@@ -60,7 +60,7 @@ for($i=6;$i<count($records);$i++){
         //PENDIENTE DESARROLLAR INSERT ENTIDAD SERIE 
         //$entidad : llega el nombre, solo hay que hacer la busqueda like a dependencia.
 
-		print_r($strsql);
+	
 		
 		
 		
