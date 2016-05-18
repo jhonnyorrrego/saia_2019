@@ -19,7 +19,7 @@ global $conn;
  	
 	$valores=explode(',',$records[$i]);
 	
-	print_r($valores);die();
+
 	
 	if( $valores[2]!='' && $valores[4]!=''){  // C - E
 		
