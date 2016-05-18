@@ -26,8 +26,6 @@ $records = explode("\n",$contenido);
 for($i=6;$i<count($records);$i++){
 	$valores=explode(',',$records[$i]);
 	if( $valores[2]!='' && $valores[4]!=''){  // C - E
-		$entidad=$valores[14]; // O
-
 
         //SERIE
 		$fieldList=array();//cols
@@ -57,6 +55,10 @@ for($i=6;$i<count($records);$i++){
         
         //ENTIDAD_SERIE
         
+        $entidad=utf8_encode($valores[14]); // O
+        
+        //PENDIENTE DESARROLLAR INSERT ENTIDAD SERIE 
+        //$entidad : llega el nombre, solo hay que hacer la busqueda like a dependencia.
 
 
 		print_r($strsql);
