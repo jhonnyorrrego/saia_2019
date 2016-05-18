@@ -44,7 +44,7 @@ for($i=6;$i<count($records);$i++){
 		$fieldList["copia"] = $valores[13]; //N
 		$fieldList["estado"] = $valores[15]; //P
 		
-		$tabla="";
+		$tabla="serie";
 		$strsql = "INSERT INTO ".$tabla." (";
 		$strsql .= implode(",", array_keys($fieldList));			
 		$strsql .= ") VALUES ('";			
