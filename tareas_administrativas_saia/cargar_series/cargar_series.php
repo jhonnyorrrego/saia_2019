@@ -54,48 +54,49 @@ if(count($dependencias)==count($iddependencias)){
     $realizar_insert=1;
 }
 
-
-
-for($i=6;$i<count($records);$i++){ //EMPIEZA A VALIDAD APARTIR DE LA COLUMNA 6
-	$valores=explode(',',$records[$i]);
-	if( $valores[2]!='' && $valores[4]!=''){  // C - E
-
-        //SERIE
-		$fieldList=array();//cols
-		$fieldList["codigo"] = $valores[1]; //B
-		$fieldList["nombre"] = utf8_encode($valores[2]); //C
-		$fieldList["categoria"] = $valores[3]; //D
-		$fieldList["tipo"] = $valores[4]; //E
-		$fieldList["cod_padre"] = $valores[5]; //F
-		$fieldList["dias_entrega"] = $valores[6]; //G
-		$fieldList["retencion_gestion"] = $valores[7]; //H
-		$fieldList["retencion_central"] = $valores[8]; //I
-		$fieldList["conservacion"] = $valores[9]; //J
-		$fieldList["seleccion"] = $valores[10]; //K
-		$fieldList["digitalizacion"] = $valores[11]; //L
-		$fieldList["procedimiento"] = $valores[12]; //M
-		$fieldList["copia"] = $valores[13]; //N
-		$fieldList["estado"] = $valores[15]; //P
-		
-		$tabla="serie";
-		$strsql = "INSERT INTO ".$tabla." (";
-		$strsql .= implode(",", array_keys($fieldList));			
-		$strsql .= ") VALUES ('";			
-		$strsql .= implode("','", array_values($fieldList));			
-		$strsql .= "')";
-       // phpmkr_query($strsql);
-        $idserie=phpmkr_insert_id();
-        
-        //ENTIDAD_SERIE
-        
-        $entidad=utf8_encode($valores[14]); // O
-        
-        //PENDIENTE DESARROLLAR INSERT ENTIDAD SERIE 
-        //$entidad : llega el nombre, solo hay que hacer la busqueda like a dependencia.
-        $dependencia=busca_filtro_tabla("","dependencia","","",$conn);
-
+if($realizar_insert){
+    for($i=6;$i<count($records);$i++){ //EMPIEZA A VALIDAD APARTIR DE LA COLUMNA 6
+    	$valores=explode(',',$records[$i]);
+    	if( $valores[2]!='' && $valores[4]!=''){  // C - E
+    
+            //SERIE
+    		$fieldList=array();//cols
+    		$fieldList["codigo"] = $valores[1]; //B
+    		$fieldList["nombre"] = utf8_encode($valores[2]); //C
+    		$fieldList["categoria"] = $valores[3]; //D
+    		$fieldList["tipo"] = $valores[4]; //E
+    		$fieldList["cod_padre"] = $valores[5]; //F
+    		$fieldList["dias_entrega"] = $valores[6]; //G
+    		$fieldList["retencion_gestion"] = $valores[7]; //H
+    		$fieldList["retencion_central"] = $valores[8]; //I
+    		$fieldList["conservacion"] = $valores[9]; //J
+    		$fieldList["seleccion"] = $valores[10]; //K
+    		$fieldList["digitalizacion"] = $valores[11]; //L
+    		$fieldList["procedimiento"] = $valores[12]; //M
+    		$fieldList["copia"] = $valores[13]; //N
+    		$fieldList["estado"] = $valores[15]; //P
+    		
+    		$tabla="serie";
+    		$strsql = "INSERT INTO ".$tabla." (";
+    		$strsql .= implode(",", array_keys($fieldList));			
+    		$strsql .= ") VALUES ('";			
+    		$strsql .= implode("','", array_values($fieldList));			
+    		$strsql .= "')";
+           // phpmkr_query($strsql);
+            $idserie=phpmkr_insert_id();
+            
+            //ENTIDAD_SERIE
+            
+            $entidad=utf8_encode($valores[14]); // O
+            
+            //PENDIENTE DESARROLLAR INSERT ENTIDAD SERIE 
+            //$entidad : llega el nombre, solo hay que hacer la busqueda like a dependencia.
+            $dependencia=busca_filtro_tabla("","dependencia","","",$conn);
+    
+        }
     }
 }
+
  
 die();
       
