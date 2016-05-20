@@ -104,7 +104,6 @@ if($realizar_insert){
     		$fieldList2["entidad_identidad"] = 2;
     		$fieldList2["serie_idserie"] = $idserie;
     		$fieldList2["llave_entidad"] = $iddependencias[$entidad];
-    
         }
     }
 }
