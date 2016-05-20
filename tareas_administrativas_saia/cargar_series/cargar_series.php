@@ -90,20 +90,23 @@ if($realizar_insert){
     		$strsql .= ") VALUES ('";			
     		$strsql .= implode("','", array_values($fieldList));			
     		$strsql .= "')";
-           // phpmkr_query($strsql);
+            phpmkr_query($strsql);
             $idserie=phpmkr_insert_id();
             
             //ENTIDAD_SERIE
-            
-            $entidad=html_entity_decode($valores[14]); // O
- 
-            //PENDIENTE DESARROLLAR INSERT ENTIDAD SERIE 
-            //$entidad : llega el nombre, solo hay que hacer la busqueda like a dependencia.
-
-    		$fieldList2=array();//cols
-    		$fieldList2["entidad_identidad"] = 2;
-    		$fieldList2["serie_idserie"] = $idserie;
-    		$fieldList2["llave_entidad"] = $iddependencias[$entidad];
+            if($idserie){
+                $entidad=html_entity_decode($valores[14]); // O
+        		$fieldList2=array();//cols
+        		$fieldList2["entidad_identidad"] = 2;
+        		$fieldList2["serie_idserie"] = $idserie;
+        		$fieldList2["llave_entidad"] = $iddependencias[$entidad];
+         		$tabla="entidad_serie";
+        		$strsql2 = "INSERT INTO ".$tabla." (";
+        		$strsql2 .= implode(",", array_keys($fieldList2));			
+        		$strsql2 .= ") VALUES ('";			
+        		$strsql2 .= implode("','", array_values($fieldList2));			
+        		$strsql2 .= "')";                   
+            }
         }
     }
 }
