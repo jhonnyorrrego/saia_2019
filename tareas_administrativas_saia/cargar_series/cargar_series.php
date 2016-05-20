@@ -55,6 +55,9 @@ for($i=0;$i<count($dependencias);$i++){
 $realizar_insert=0;
 if(count($dependencias)==count($iddependencias)){
     $realizar_insert=1;
+}else{
+    echo('No fue posible encontrar las siguientes dependencias: <br><br>');
+    echo(implode('<br>',$dependencias_no_encontradas););
 }
 
 
@@ -100,8 +103,6 @@ if($realizar_insert){
     
         }
     }
-}else{
-    
 }
 
  
