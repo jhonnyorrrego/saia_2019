@@ -147,8 +147,8 @@ if($realizar_insert){
         fwrite($fp, "Entidad Series NO insertadas (".date('Y-m-d H:i:s').")");
         fwrite($fp, "\n");
         fwrite($fp, "\n");        
-        for($i=0;$i<count($series_no_insertadas);$i++){
-            fwrite($fp, $series_no_insertadas[$i]);
+        for($i=0;$i<count($entidad_series_no_insertadas);$i++){
+            fwrite($fp, $entidad_series_no_insertadas[$i]);
             fwrite($fp, "\n");
         }
         fwrite($fp, "\n");
