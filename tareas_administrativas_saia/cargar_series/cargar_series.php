@@ -121,7 +121,7 @@ if($realizar_insert){
     if( count($series_no_insertadas) ){
         $fp = fopen('errores.txt', 'a');
         fwrite($fp, "----------------------------------------------------------------------------");
-        fwrite($fp, "Series no insertadas (".date('Y-m-d H:i:s').")");
+        fwrite($fp, "Series NO insertadas (".date('Y-m-d H:i:s').")");
         fwrite($fp, "\n");
         fwrite($fp, "\n");
         for($i=0;$i<count($series_no_insertadas);$i++){
@@ -135,7 +135,7 @@ if($realizar_insert){
     if( count($entidad_series_no_insertadas) ){
         $fp = fopen('errores.txt', 'a');
         fwrite($fp, "----------------------------------------------------------------------------");
-        fwrite($fp, "Entidad Series no insertadas (".date('Y-m-d H:i:s').")");
+        fwrite($fp, "Entidad Series NO insertadas (".date('Y-m-d H:i:s').")");
         fwrite($fp, "\n");
         fwrite($fp, "\n");        
         for($i=0;$i<count($series_no_insertadas);$i++){
