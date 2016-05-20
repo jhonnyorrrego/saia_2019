@@ -25,8 +25,6 @@ fclose($gestor);
 $records = explode("\n",$contenido);
 
 //VALIDO EXISTENCIA DE TODAS LAS DEPENDENCIAS
-
-
 $dependencias=array();
 for($i=6;$i<count($records);$i++){ //EMPIEZA A VALIDAD APARTIR DE LA COLUMNA 6
 	$valores=explode(',',$records[$i]);
@@ -35,11 +33,22 @@ for($i=6;$i<count($records);$i++){ //EMPIEZA A VALIDAD APARTIR DE LA COLUMNA 6
 	    $dependencias[]=$entidad;
 	}
 }	
-
 $dependencias=array_unique($dependencias);
+$iddependencias=array();
+for($i=0;$i<count($dependencias);$i++){
+    $busca_dependencia=busca_filtro_tabla("","dependencia","estado=1 AND lower(nombre) like'".strtolower($dependencias[$i])."' ","",$conn);
+    
+    if($busca_dependencia['numcampos']){
+        $iddependencias[$dependencias[$i]]=$busca_dependencia[0]['iddependencia'];
+    }
+    
+    
+    
+}
 
 
-print_r($dependencias);
+
+print_r($iddependencias);
 
 for($i=6;$i<count($records);$i++){ //EMPIEZA A VALIDAD APARTIR DE LA COLUMNA 6
 	$valores=explode(',',$records[$i]);
