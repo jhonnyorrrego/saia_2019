@@ -23,7 +23,20 @@ else{
 }
 fclose($gestor);
 $records = explode("\n",$contenido);
-for($i=6;$i<count($records);$i++){ //EMPIEZSA A VALIDAD APARTIR DE LA COLUMNA 6
+
+//VALIDO EXISTENCIA DE TODAS LAS DEPENDENCIAS
+
+for($i=6;$i<count($records);$i++){ //EMPIEZA A VALIDAD APARTIR DE LA COLUMNA 6
+	$valores=explode(',',$records[$i]);
+	if( $valores[2]!='' && $valores[4]!=''){  // C - E
+	    $entidad=utf8_encode($valores[14]); // O
+	    
+	    echo($entidad.'<br>');
+	    
+	}
+}	
+
+for($i=6;$i<count($records);$i++){ //EMPIEZA A VALIDAD APARTIR DE LA COLUMNA 6
 	$valores=explode(',',$records[$i]);
 	if( $valores[2]!='' && $valores[4]!=''){  // C - E
 
@@ -50,7 +63,7 @@ for($i=6;$i<count($records);$i++){ //EMPIEZSA A VALIDAD APARTIR DE LA COLUMNA 6
 		$strsql .= ") VALUES ('";			
 		$strsql .= implode("','", array_values($fieldList));			
 		$strsql .= "')";
-        phpmkr_query($strsql);
+       // phpmkr_query($strsql);
         $idserie=phpmkr_insert_id();
         
         //ENTIDAD_SERIE
@@ -59,7 +72,7 @@ for($i=6;$i<count($records);$i++){ //EMPIEZSA A VALIDAD APARTIR DE LA COLUMNA 6
         
         //PENDIENTE DESARROLLAR INSERT ENTIDAD SERIE 
         //$entidad : llega el nombre, solo hay que hacer la busqueda like a dependencia.
-
+        $dependencia=busca_filtro_tabla("","dependencia","","",$conn);
 
     }
 }
