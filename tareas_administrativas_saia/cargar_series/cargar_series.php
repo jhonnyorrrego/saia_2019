@@ -70,7 +70,7 @@ if($realizar_insert){
             //SERIE
     		$fieldList=array();//cols
     		$fieldList["codigo"] = $valores[1]; //B
-    		$fieldList["nombre"] = utf8_encode($valores[2]); //C
+    		$fieldList["nombre"] = html_entity_decode($valores[2]); //C
     		$fieldList["categoria"] = $valores[3]; //D
     		$fieldList["tipo"] = $valores[4]; //E
     		$fieldList["cod_padre"] = $valores[5]; //F
@@ -95,11 +95,15 @@ if($realizar_insert){
             
             //ENTIDAD_SERIE
             
-            $entidad=utf8_encode($valores[14]); // O
-            
+            $entidad=html_entity_decode($valores[14]); // O
+ 
             //PENDIENTE DESARROLLAR INSERT ENTIDAD SERIE 
             //$entidad : llega el nombre, solo hay que hacer la busqueda like a dependencia.
-            $dependencia=busca_filtro_tabla("","dependencia","","",$conn);
+
+    		$fieldList2=array();//cols
+    		$fieldList2["entidad_identidad"] = 2;
+    		$fieldList2["serie_idserie"] = $idserie;
+    		$fieldList2["llave_entidad"] = $iddependencias[$entidad];
     
         }
     }
