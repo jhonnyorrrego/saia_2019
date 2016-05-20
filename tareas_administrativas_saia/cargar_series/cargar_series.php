@@ -12,6 +12,12 @@ while($max_salida>0){
 
 include_once($ruta_db_superior."db.php");
 
+function TildesHtml($cadena){ 
+    return str_replace(array("á","é","í","ó","ú","ñ","Á","É","Í","Ó","Ú","Ñ"),
+                                         array("&aacute;","&eacute;","&iacute;","&oacute;","&uacute;","&ntilde;",
+                                                    "&Aacute;","&Eacute;","&Iacute;","&Oacute;","&Uacute;","&Ntilde;"), $cadena);     
+}
+
 $archivo="prueba_carga.csv";
 $gestor = fopen($archivo, "rb");
 if($gestor){
@@ -34,25 +40,13 @@ for($i=6;$i<count($records);$i++){ //EMPIEZA A VALIDAD APARTIR DE LA COLUMNA 6
 	}
 }	
 $dependencias=array_unique($dependencias);
-
 $dependencias=explode(',',TildesHtml(implode(',',$dependencias)));
-
-function TildesHtml($cadena){ 
-    return str_replace(array("á","é","í","ó","ú","ñ","Á","É","Í","Ó","Ú","Ñ"),
-                                         array("&aacute;","&eacute;","&iacute;","&oacute;","&uacute;","&ntilde;",
-                                                    "&Aacute;","&Eacute;","&Iacute;","&Oacute;","&Uacute;","&Ntilde;"), $cadena);     
-}
-
 $iddependencias=array();
 for($i=0;$i<count($dependencias);$i++){
     $busca_dependencia=busca_filtro_tabla("","dependencia","estado=1 AND lower(nombre) like'".strtolower($dependencias[$i])."' ","",$conn);
-    
     if($busca_dependencia['numcampos']){
         $iddependencias[$dependencias[$i]]=$busca_dependencia[0]['iddependencia'];
     }
-    
-    
-    
 }
 
 
