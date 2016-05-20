@@ -119,6 +119,11 @@ if($realizar_insert){
     }
 }
 
+
+if(count($series_no_insertadas)){
+    
+}
+
  
 die();
       
