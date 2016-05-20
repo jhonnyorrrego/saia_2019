@@ -57,7 +57,7 @@ if(count($dependencias)==count($iddependencias)){
     $realizar_insert=1;
 }else{
     echo('No fue posible encontrar las siguientes dependencias: <br><br>');
-    echo(implode('<br>',$dependencias_no_encontradas););
+    echo(implode('<br>',$dependencias_no_encontradas));
 }
 
 
