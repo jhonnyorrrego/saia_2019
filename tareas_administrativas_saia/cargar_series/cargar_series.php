@@ -26,15 +26,20 @@ $records = explode("\n",$contenido);
 
 //VALIDO EXISTENCIA DE TODAS LAS DEPENDENCIAS
 
+
+$dependencias=array();
 for($i=6;$i<count($records);$i++){ //EMPIEZA A VALIDAD APARTIR DE LA COLUMNA 6
 	$valores=explode(',',$records[$i]);
 	if( $valores[2]!='' && $valores[4]!=''){  // C - E
 	    $entidad=html_entity_decode($valores[14]); // O
-	    
-	    echo($entidad.'<br>');
-	    
+	    $dependencias[]=$entidad;
 	}
 }	
+
+$dependencias=array_unique($dependencias);
+
+
+print_r($dependencias);
 
 for($i=6;$i<count($records);$i++){ //EMPIEZA A VALIDAD APARTIR DE LA COLUMNA 6
 	$valores=explode(',',$records[$i]);
