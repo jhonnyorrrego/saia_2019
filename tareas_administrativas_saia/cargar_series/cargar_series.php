@@ -37,8 +37,6 @@ $dependencias=array_unique($dependencias);
 
 $dependencias=explode(',',TildesHtml(implode(',',$dependencias)));
 
-print_r($dependencias);die();
-
 function TildesHtml($cadena){ 
     return str_replace(array("á","é","í","ó","ú","ñ","Á","É","Í","Ó","Ú","Ñ"),
                                          array("&aacute;","&eacute;","&iacute;","&oacute;","&uacute;","&ntilde;",
