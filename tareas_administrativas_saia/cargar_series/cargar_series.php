@@ -128,6 +128,8 @@ if($realizar_insert){
             fwrite($fp, $series_no_insertadas[$i]);
             fwrite($fp, "\n");
         }
+        fwrite($fp, "\n");
+        fwrite($fp, "\n");         
         fclose($fp);
     }
     if( count($entidad_series_no_insertadas) ){
@@ -140,6 +142,8 @@ if($realizar_insert){
             fwrite($fp, $series_no_insertadas[$i]);
             fwrite($fp, "\n");
         }
+        fwrite($fp, "\n");
+        fwrite($fp, "\n");         
         fclose($fp);        
     }
 }
