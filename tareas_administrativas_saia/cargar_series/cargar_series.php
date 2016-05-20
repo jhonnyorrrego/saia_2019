@@ -42,10 +42,13 @@ for($i=6;$i<count($records);$i++){ //EMPIEZA A VALIDAD APARTIR DE LA COLUMNA 6
 $dependencias=array_unique($dependencias);
 $dependencias=explode(',',tildes_html(implode(',',$dependencias)));
 $iddependencias=array();
+$dependencias_no_encontradas=array();
 for($i=0;$i<count($dependencias);$i++){
     $busca_dependencia=busca_filtro_tabla("","dependencia","estado=1 AND lower(nombre) like'".strtolower($dependencias[$i])."' ","",$conn);
     if($busca_dependencia['numcampos']){
         $iddependencias[$dependencias[$i]]=$busca_dependencia[0]['iddependencia'];
+    }else{
+        $dependencias_no_encontradas[]=$dependencias[$i];
     }
 }
 
@@ -55,7 +58,6 @@ if(count($dependencias)==count($iddependencias)){
 }
 
 
-print_r($realizar_insert);die();
 
 if($realizar_insert){
     for($i=6;$i<count($records);$i++){ //EMPIEZA A VALIDAD APARTIR DE LA COLUMNA 6
@@ -98,6 +100,8 @@ if($realizar_insert){
     
         }
     }
+}else{
+    
 }
 
  
