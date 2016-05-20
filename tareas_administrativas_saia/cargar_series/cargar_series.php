@@ -61,6 +61,7 @@ if(count($dependencias)==count($iddependencias)){
 }else{
     echo('No fue posible encontrar las siguientes dependencias: <br><br>');
     echo(implode('<br>',$dependencias_no_encontradas));
+    echo('<br><br>Por favor verifique el nombre de las dependencias e intentelo nuevamente');
 }
 
 
