@@ -49,7 +49,13 @@ for($i=0;$i<count($dependencias);$i++){
     }
 }
 
-print_r($iddependencias);
+if(count($dependencias)==count($iddependencias)){
+    echo('iguales');
+}else{
+    echo('no iguales');
+}
+
+
 
 for($i=6;$i<count($records);$i++){ //EMPIEZA A VALIDAD APARTIR DE LA COLUMNA 6
 	$valores=explode(',',$records[$i]);
