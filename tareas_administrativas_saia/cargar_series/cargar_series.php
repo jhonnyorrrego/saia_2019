@@ -55,7 +55,7 @@ if(count($dependencias)==count($iddependencias)){
 }
 
 
-print_r($iddependencias);die();
+print_r($realizar_insert);die();
 
 if($realizar_insert){
     for($i=6;$i<count($records);$i++){ //EMPIEZA A VALIDAD APARTIR DE LA COLUMNA 6
