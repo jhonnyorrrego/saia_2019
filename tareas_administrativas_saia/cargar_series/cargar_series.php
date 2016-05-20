@@ -125,6 +125,8 @@ if($realizar_insert){
         }
     }//fin for
     
+    //LOG_ERROR
+    
     if( count($series_no_insertadas) ){
         $fp = fopen('errores.txt', 'a');
         fwrite($fp, "----------------------------------------------------------------------------");
