@@ -51,7 +51,7 @@ for($i=0;$i<count($dependencias);$i++){
     if($busca_dependencia['numcampos']){
         $iddependencias[$dependencias[$i]]=$busca_dependencia[0]['iddependencia'];
     }else{
-        $dependencias_no_encontradas[]=$dependencias[$i];
+        $dependencias_no_encontradas[]='- '.$dependencias[$i];
     }
 }
 
