@@ -49,10 +49,9 @@ for($i=0;$i<count($dependencias);$i++){
     }
 }
 
+$realizar_insert=0;
 if(count($dependencias)==count($iddependencias)){
-    echo('iguales');
-}else{
-    echo('no iguales');
+    $realizar_insert=1;
 }
 
 
