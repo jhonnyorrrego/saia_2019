@@ -120,7 +120,10 @@ if($realizar_insert){
 }
 
 
-if(count($series_no_insertadas)){
+if( count($series_no_insertadas) ){
+    
+}
+if( count($entidad_series_no_insertadas) ){
     
 }
 
