@@ -11,18 +11,18 @@ while ($max_salida > 0) {
 include_once($ruta_db_superior . "db.php");
 include_once($ruta_db_superior . "librerias_saia.php");
 $documento='';
+$funcionario=usuario_actual("funcionario_codigo");
 /**
  * @param type $iddoc es el iddocumento
  * @param type $tipo_visualizacion es el tipo de visualizacion por defecto vacio que equivale a documento 
 **/
 function menu_principal_documento($iddoc,$tipo_visualizacion="",$modulo_adicional=""){
-global  $documento,$conn,$ruta_db_superior;
+global  $documento,$conn,$ruta_db_superior,$funcionario;
 $formato=busca_filtro_tabla("","formato,documento","lower(plantilla)=lower(nombre) and iddocumento=".$iddoc,"",$conn);
 $nombre=$formato[0]["nombre"];
 $_SESSION["pagina_actual"]=$iddoc;
 $_SESSION["tipo_pagina"]="formatos/$nombre/mostrar_$nombre.php?iddoc=$iddoc";
 
-$funcionario=usuario_actual("funcionario_codigo");
 echo(librerias_jquery("1.7"));
 //if(usuario_actual('login')!='cerok' || !$tipo_visualizacion)return true;
 echo(estilo_bootstrap());
@@ -247,7 +247,7 @@ $lista=arreglo con nombre: nombre del modulo y tipo=1 botones con enlace, tipo=2
 $target=destino donde se debe abrir el enlace 
 */
 function permisos_modulo_menu_intermedio($iddoc, $modulo_padre,$lista,$target="_self"){    
-  global $ruta_db_superior,$documento;    
+  global $ruta_db_superior,$documento,$funcionario;    
   $texto='';
   if($modulo_padre=="rapidos_menu_intermedio"){
       $datos_modulos=array('devolucion','transferir','responder','seguimiento','terminar_documento','vista_previa');
@@ -255,22 +255,16 @@ function permisos_modulo_menu_intermedio($iddoc, $modulo_padre,$lista,$target="_
   else{    
       $datos_modulos=  modulos_menu_intermedio($modulo_padre);
   }
-	$estado=busca_filtro_tabla("estado","documento","iddocumento=".$iddoc,"",$conn);
-	
-	$cont=count($datos_modulos);
-	if($estado[0]['estado']!='ACTIVO'){
-		for ($i=0; $i < $cont ; $i++) {
-			if($datos_modulos[$i]=='eliminar_borrador'){
-				unset($datos_modulos[$i]);
-			}
-		}
-	}
+		
     $permiso=new PERMISO();    
     $modulo=  busca_filtro_tabla("", "modulo", "nombre IN ('".implode("','",$datos_modulos)."')", "orden", $conn);
     //$ok=1;
     for($i=0;$i<$modulo["numcampos"];$i++){       
       $ok=$permiso->acceso_modulo_perfil($modulo[$i]["nombre"],1);        
       if($ok || usuario_actual('login')=='cerok'){
+				if($modulo[$i]["nombre"]=="eliminar_borrador" && ($documento[0]["estado"]!="ACTIVO" || $documento[0]["ejecutor"]!=$funcionario)){
+					continue;
+				}
       	if($modulo[$i]["nombre"]=='vista_previa' && @$_REQUEST["vista"]){
       		$modulo[$i]["enlace"].="&vista=".$_REQUEST["vista"];
       	}
