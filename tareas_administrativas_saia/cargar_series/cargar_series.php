@@ -36,6 +36,8 @@ for($i=6;$i<count($records);$i++){ //EMPIEZA A VALIDAD APARTIR DE LA COLUMNA 6
 $dependencias=array_unique($dependencias);
 $dependencias=htmlentities($dependencias);
 
+print_r($dependencias);
+
 $dependencias=explode(',',TildesHtml(implode(',',$dependencias)));
 
 print_r($dependencias);
