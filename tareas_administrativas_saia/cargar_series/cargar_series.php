@@ -60,6 +60,8 @@ if(count($dependencias)==count($iddependencias)){
     echo(implode('<br>',$dependencias_no_encontradas));
 }
 
+
+$series_no_insertadas=array();
 if($realizar_insert){
     for($i=6;$i<count($records);$i++){ //EMPIEZA A VALIDAD APARTIR DE LA COLUMNA 6
     	$valores=explode(',',$records[$i]);
@@ -103,7 +105,9 @@ if($realizar_insert){
         		$strsql2 .= implode(",", array_keys($fieldList2));			
         		$strsql2 .= ") VALUES ('";			
         		$strsql2 .= implode("','", array_values($fieldList2));			
-        		$strsql2 .= "')";                   
+        		$strsql2 .= "')";  
+            }else{
+                $series_no_insertadas[]=$strsql;
             }
         }
     }
