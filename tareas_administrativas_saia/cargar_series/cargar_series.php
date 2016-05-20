@@ -19,6 +19,9 @@ function tildes_html($cadena){
 }
 
 $archivo="prueba_carga.csv";
+$insertar_entidad_serie=1; //SI SE DESEA O NO INSERTAR EN ENTIDAD_SERIE;
+
+
 $gestor = fopen($archivo, "rb");
 if($gestor){
     $contenido = fread($gestor, filesize($archivo));
@@ -95,7 +98,7 @@ if($realizar_insert){
             $idserie=phpmkr_insert_id();
             
             //ENTIDAD_SERIE
-            if($idserie){
+            if($idserie && $insertar_entidad_serie){
                 $entidad=html_entity_decode($valores[14]); // O
         		$fieldList2=array();//cols
         		$fieldList2["entidad_identidad"] = 2;
