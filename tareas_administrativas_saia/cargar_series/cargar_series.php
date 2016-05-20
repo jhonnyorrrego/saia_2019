@@ -60,8 +60,6 @@ if(count($dependencias)==count($iddependencias)){
     echo(implode('<br>',$dependencias_no_encontradas));
 }
 
-
-
 if($realizar_insert){
     for($i=6;$i<count($records);$i++){ //EMPIEZA A VALIDAD APARTIR DE LA COLUMNA 6
     	$valores=explode(',',$records[$i]);
