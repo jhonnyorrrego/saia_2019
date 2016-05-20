@@ -116,16 +116,36 @@ if($realizar_insert){
                 $series_no_insertadas[]=$strsql;
             }
         }
+    }//fin for
+    
+    if( count($series_no_insertadas) ){
+        $fp = fopen('errores.txt', 'a');
+        fwrite($fp, "----------------------------------------------------------------------------");
+        fwrite($fp, "Series no insertadas (".date('Y-m-d H:i:s').")");
+        fwrite($fp, "\n");
+        fwrite($fp, "\n");
+        for($i=0;$i<count($series_no_insertadas);$i++){
+            fwrite($fp, $series_no_insertadas[$i]);
+            fwrite($fp, "\n");
+        }
+        fclose($fp);
+    }
+    if( count($entidad_series_no_insertadas) ){
+        $fp = fopen('errores.txt', 'a');
+        fwrite($fp, "----------------------------------------------------------------------------");
+        fwrite($fp, "Entidad Series no insertadas (".date('Y-m-d H:i:s').")");
+        fwrite($fp, "\n");
+        fwrite($fp, "\n");        
+        for($i=0;$i<count($series_no_insertadas);$i++){
+            fwrite($fp, $series_no_insertadas[$i]);
+            fwrite($fp, "\n");
+        }
+        fclose($fp);        
     }
 }
 
 
-if( count($series_no_insertadas) ){
-    
-}
-if( count($entidad_series_no_insertadas) ){
-    
-}
+
 
  
 die();
