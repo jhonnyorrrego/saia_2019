@@ -109,12 +109,9 @@ if($realizar_insert){
         		$strsql2 .= "')";  
         		phpmkr_query($strsql2);
         		$entidad_serie=phpmkr_insert_id();
-        		
-        		
         		if(!$entidad_serie){
         		    $entidad_series_no_insertadas[]=$strsql2;
         		}
-        		
             }else{
                 $series_no_insertadas[]=$strsql;
             }
