@@ -62,6 +62,7 @@ if(count($dependencias)==count($iddependencias)){
 
 
 $series_no_insertadas=array();
+$entidad_series_no_insertadas=array();
 if($realizar_insert){
     for($i=6;$i<count($records);$i++){ //EMPIEZA A VALIDAD APARTIR DE LA COLUMNA 6
     	$valores=explode(',',$records[$i]);
@@ -106,6 +107,14 @@ if($realizar_insert){
         		$strsql2 .= ") VALUES ('";			
         		$strsql2 .= implode("','", array_values($fieldList2));			
         		$strsql2 .= "')";  
+        		phpmkr_query($strsql2);
+        		$entidad_serie=phpmkr_insert_id();
+        		
+        		
+        		if(!$entidad_serie){
+        		    $entidad_series_no_insertadas[]=$strsql2;
+        		}
+        		
             }else{
                 $series_no_insertadas[]=$strsql;
             }
