@@ -29,7 +29,7 @@ $records = explode("\n",$contenido);
 for($i=6;$i<count($records);$i++){ //EMPIEZA A VALIDAD APARTIR DE LA COLUMNA 6
 	$valores=explode(',',$records[$i]);
 	if( $valores[2]!='' && $valores[4]!=''){  // C - E
-	    $entidad=utf8_encode($valores[14]); // O
+	    $entidad=htmlentities($valores[14]); // O
 	    
 	    echo($entidad.'<br>');
 	    
