@@ -112,7 +112,7 @@ if($realizar_insert){
         		if(!$entidad_serie){
         		    $entidad_series_no_insertadas[]=$strsql2;
         		}
-            }else{
+            }else if(!$idserie){
                 $series_no_insertadas[]=$strsql;
             }
         }
