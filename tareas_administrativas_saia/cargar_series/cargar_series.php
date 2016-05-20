@@ -150,7 +150,6 @@ if($realizar_insert){
         fclose($fp);        
     }
 }
-
  
 die();
       
