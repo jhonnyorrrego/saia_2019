@@ -44,19 +44,10 @@ if($dato_prioridad["numcampos"]){
 
 
 $dato_leido=documento_leido($iddoc);
-$texto.='<div class="btn-group pull" >';
-
-/*boton leido no leido utiliza funcion ( documento_leido() ) ubicada en este archivo*/
-
-$texto.='
-	  <button type="button" class="btn btn-mini  tooltip_saia documento_leido" titulo="'.$dato_leido[0].'"  idregistro="'.$iddoc.'" >
-	    <i class="'.$dato_leido[1].'"></i>
-	  </button>	
-	';
-
-/*---------------------*/
-
-$texto.='
+$texto.='<div class="btn-group pull" >
+	<button type="button" class="btn btn-mini kenlace_saia tooltip_saia documento_leido" onClick=" " enlace="pantallas/documento/detalles_documento.php?iddoc='.$iddoc.'&idbusqueda_componente='.$_REQUEST["idbusqueda_componente"].'" titulo="Detalle Doc No.'.$numero.'" conector="iframe" idregistro="'.$iddoc.'"ancho_columna="470" eliminar_hijos_kaiten="1">
+    <i class="'.$dato_leido[1].'"></i>
+  </button>
 
   <button type="button" class="btn btn-mini detalle_documento_saia tooltip_saia" enlace="ordenar.php?accion=mostrar&mostrar_formato=1&key='.$iddoc.'" title="No.'.$numero.'" idregistro="'.$iddoc.'"><i class="icon-info-sign"></i></button>
   <button type="button" class="btn btn-mini tooltip_saia adicionar_seleccionados" title="Seleccionar" idregistro="'.$iddoc.'">
@@ -77,23 +68,7 @@ $texto.='
 //$texto.=barra_estandar_documento($iddoc,$funcionario);
 return($texto);
 }
-function documento_leido($iddoc){
-$pendiente = busca_filtro_tabla(fecha_db_obtener("fecha_inicial","Y-m-d H:i:s")." as fecha_inicial","asignacion","documento_iddocumento=".$iddoc." and llave_entidad=".$_SESSION["usuario_actual"],"fecha_inicial DESC",$conn);
-$leido["numcampos"]=0;
-$dato_leido[1]="icon-no_visto";  //icono en css/bootstrap.css
-$dato_leido[0]='Sin leer';
-if($pendiente["numcampos"]){
-  $leido = busca_filtro_tabla("nombre,idtransferencia","buzon_entrada","archivo_idarchivo=".$iddoc." and origen=".$_SESSION["usuario_actual"]." and nombre='LEIDO' AND fecha >= ".fecha_db_almacenar($pendiente[0]["fecha_inicial"],"Y-m-d H:i:s"),"",$conn);
-}
-else{
-	$leido = busca_filtro_tabla("nombre,idtransferencia","buzon_entrada","archivo_idarchivo=".$iddoc." and origen=".$_SESSION["usuario_actual"]." and nombre='LEIDO'","",$conn);
-}
-if($leido["numcampos"]){
-  $dato_leido[1]="icon-eye-open";
-  $dato_leido[0]="Leido ";
-}
-return($dato_leido);
-}
+
 function fecha_barra_documento($iddoc){
 $fecha_vencimiento=fecha_documento($iddoc);
 $texto.='<div class="btn-group fecha_barra_documento pull-right">';
@@ -222,7 +197,11 @@ if(!$ruta){
     $ruta="Error al buscar remitente-".serie_documento($serie);
 	}
 }
-$pre_texto="<div class='link kenlace_saia pull-left' enlace='ordenar.php?key=".$doc."&accion=mostrar&mostrar_formato=1' conector='iframe' titulo='Documento No.".$numero."'><b>".$numero."-".$ruta."</b></div>";
+$ver_estado='';
+if($estado=='ANULADO'){
+	$ver_estado='<font color="red">-(ANULADO)</font>';
+}
+$pre_texto="<div class='link kenlace_saia pull-left' enlace='ordenar.php?key=".$doc."&accion=mostrar&mostrar_formato=1' conector='iframe' titulo='Documento No.".$numero."'><b>".$numero."-".$ruta.$ver_estado."</b></div>";
  
 return($pre_texto);
 }
@@ -314,7 +293,23 @@ else{
  
 return (array($color,$terminados,$actividades["numcampos"]));
 }
-
+function documento_leido($iddoc){
+$pendiente = busca_filtro_tabla(fecha_db_obtener("fecha_inicial","Y-m-d H:i:s")." as fecha_inicial","asignacion","documento_iddocumento=".$iddoc." and llave_entidad=".$_SESSION["usuario_actual"],"fecha_inicial DESC",$conn);
+$leido["numcampos"]=0;
+$dato_leido[1]="icon-leido";
+$dato_leido[0]='Documento<br />sin leer';
+if($pendiente["numcampos"]){
+  $leido = busca_filtro_tabla("nombre,idtransferencia","buzon_entrada","archivo_idarchivo=".$iddoc." and origen=".$_SESSION["usuario_actual"]." and nombre='LEIDO' AND fecha >= ".fecha_db_almacenar($pendiente[0]["fecha_inicial"],"Y-m-d H:i:s"),"",$conn);
+}
+else{
+    $leido = busca_filtro_tabla("nombre,idtransferencia","buzon_entrada","archivo_idarchivo=".$iddoc." and origen=".$_SESSION["usuario_actual"]." and nombre='LEIDO'","",$conn);
+}
+if($leido["numcampos"]){
+  $dato_leido[1]="icon-no_leido";
+  $dato_leido[0]="Documento<br />leido";
+}
+return($dato_leido);
+}
 function contar_cantidad($doc,$funcionario,$tipo){
 global $conn;        	
 $cantidades=array();
@@ -523,7 +518,7 @@ function filtro_funcionario($funcionario){
 return($retorno);  
 }
 function barra_inferior_documentos_activos($iddoc,$numero){
-$dato_prioridad=busca_filtro_tabla("","prioridad_documento","documento_iddocumento=".$iddoc." and funcionario_idfuncionario=".usuario_actual('idfuncionario'),"fecha_asignacion DESC",$conn);	
+$dato_prioridad=busca_filtro_tabla("","prioridad_documento","documento_iddocumento=".$iddoc,"fecha_asignacion DESC",$conn); 
 $prioridad="icon-flag";
 if($dato_prioridad["numcampos"]){
   switch ($dato_prioridad[0]["prioridad"]) {  	
@@ -577,11 +572,10 @@ $texto.=barra_estandar_documento($iddoc,$funcionario);
 return(str_replace("\\r","",str_replace("\\n","",$texto)));
 }
 function exportar_excel(){
-	global $conn;
- 	$texto.='<li class="divider-vertical"></li><li><div class="btn-group">                    
-          <button class="btn btn-mini btn-primary exportar_listado_saia pull-left" enlace="pantallas/documento/busqueda_avanzada_documento.php" title="Exportar reporte" id="boton_exportar_excel" style="display:none">Exportar a excel</button></div></li><li  style="margin-top:5px;margin-left:5px;width:200px"><iframe name="iframe_exportar_saia" id="iframe_exportar_saia" allowtransparency="1" frameborder="0" framespacing="2px" scrolling="no" width="100%" src=""  hspace="0" vspace="0" height="28px"></iframe></li>';
-		  
-	return($texto);
+    global $conn;
+    $texto='<li class="divider-vertical"></li><li><div class="btn-group">                    
+          <button class="btn btn-mini btn-primary exportar_listado_saia pull-left" enlace="pantallas/documento/busqueda_avanzada_documento.php" title="Exportar reporte" id="boton_exportar_excel" style="display:none">Exportar a excel</button></div></li><li id="barra_exp_ppal" style="margin-top:5px;margin-left:5px;width:100px"></li>';
+    //return($texto);
 }
 function origen_documento2_excel($doc,$numero,$origen="",$tipo_radicado="",$estado="",$serie="",$tipo_ejecutor=""){
 $ruta="";
@@ -678,188 +672,54 @@ function obtener_pantilla_documento($plantilla){
 function obtener_descripcion($descripcion){
     return (delimita(strip_tags($descripcion), 150));    
 }
-function obtener_iddocumento(){	
-	return($_REQUEST['iddocumento']);
-}
-function ver_pendientes_usuario(){
-	$compartidos=busca_filtro_tabla("B.funcionario_codigo, B.nombres, B.apellidos","permiso_funcionario A, vfuncionario_dc B","(A.entidad_propietaria=1 AND A.llave_propietaria=".usuario_actual('idfuncionario').") AND A.llave_compartida=B.iddependencia_cargo","group by B.funcionario_codigo, B.nombres, B.apellidos",$conn);
-	if($compartidos["numcampos"]){
-		$select.="<select name='funcionario_codigo' id='funcionario_codigo'><option value=''>Por favor seleccione...</option>";
-		for($i=0;$i<$compartidos["numcampos"];$i++){
-			$selected="";
-			if(@$_REQUEST["variable_busqueda"]==$compartidos[$i]["funcionario_codigo"])$selected="selected";
-			$select.='<option value="'.$compartidos[$i]["funcionario_codigo"].'" '.$selected.'>'.ucwords(strtolower($compartidos[$i]["nombres"]." ".$compartidos[$i]["apellidos"])).'</option>';
-		}
-		$select.="</select>";
-		$texto='<li class="divider-vertical"></li>
-		<li>'.$select.'
-		</li>';
-		$texto.="<script>
-		$('#funcionario_codigo').change(function(){
-			var funcionario_codigo=$(this).val();
-			if(funcionario_codigo!=''){
-				var valor = $('#funcionario_codigo option:selected').html();
-				var datos_pantalla = { kConnector:'iframe', url:'pantallas/busquedas/consulta_busqueda.php?idbusqueda_componente=7&variable_busqueda='+funcionario_codigo, kTitle:'Pendientes '+valor, kWidth:'100%'};
-				
-				if(typeof(parent.parent.crear_pantalla_busqueda)=='function'){
-			    parent.parent.crear_pantalla_busqueda(datos_pantalla,0);
-			  }
-			  else if(typeof(parent.crear_pantalla_busqueda)=='function'){
-			    parent.crear_pantalla_busqueda(datos_pantalla,0);
-			  }
-			  else if(typeof(crear_pantalla_busqueda)=='function'){   
-			    crear_pantalla_busqueda(datos_pantalla,0);
-			  }
-		  }
-		});
-		</script>";
-		return($texto);
-	}
+function obtener_iddocumento(){ 
+    return($_REQUEST['iddocumento']);
 }
 function mostrar_prioridad_tareas($prioridad){
-	switch ($prioridad) {
-		case 0:
-			return("Baja");
-		break;
-		case 1:
-			return("Media");
-		break;
-		case 2:
-			return("Alta");
-		break;
-	}
+    switch ($prioridad) {
+        case 0:
+            return("Baja");
+        break;
+        case 1:
+            return("Media");
+        break;
+        case 2:
+            return("Alta");
+        break;
+    }
 }
-
-
-function filtro_categoria($categoria){
-
-	if(@$_REQUEST['filtro_categoria']){
-					
-		if($_REQUEST['filtro_categoria']==''){
-			return('');
-		}else{
-			return(' AND ( C.fk_categoria_formato like"%,'.$_REQUEST['filtro_categoria'].'" or C.fk_categoria_formato like"'.$_REQUEST['filtro_categoria'].',%" or C.fk_categoria_formato like"%,'.$_REQUEST['filtro_categoria'].',%" ) ');		
-		}				
-
-	}
-	
-}
-
-function filtro_indicadores($prioridad){
-
-	if(@$_REQUEST['filtro_indicadores']){
-				
-		if($_REQUEST['filtro_indicadores']==''){
-			return('');
-		}else{
-			return(' AND b.prioridad="'.$_REQUEST['filtro_indicadores'].'"');		
-		}	
-		
-		
-	}
-	
-}
-
-function filtro_funcionario_etiquetados($funcionario){
- 	$retorno=" AND d.funcionario='".usuario_actual("funcionario_codigo")."'";
-	return($retorno);  
-}
-function carga_soporte($iddocumento){
+/*function distribucion_interna_doc(){
 	global $ruta_db_superior;
-	if(@$_REQUEST['idbusqueda_filtro_temp']){
-		$texto='<li><a href="#" id="cargar_soporte">Cargar soporte</a></li>';
-	  $texto.='<script>
-	    $("#cargar_soporte").click(function(){	    	
-	      var docus=$("#seleccionados").val();
-			  if(docus!=""){			  	
-						top.hs.htmlExpand(this, { objectType: "iframe",width: 400, height: 300, src:"http://'.RUTA_PDF.'/pantallas/documento/anexos_despacho.php?docs="+docus,outlineType: "rounded-white",wrapperClassName:"highslide-wrapper drag-header"});
-			  }else{
-			  	alert("Seleccione por lo menos un documento");
-			  }
-		   });
-	  </script>';
-  	return $texto;
-	}	
-}
-function iddoc_seleccionados(){
-	if(!($_REQUEST['idbusqueda_filtro_temp'])){
-		$docs=busca_filtro_tabla("","documento,ft_despacho_ingresados","documento_iddocumento=iddocumento and estado not in ('ELIMINADO','ANULADO')","",$conn);
-		$iddocs="";
-		for($i=0;$i<$docs['numcampos'];$i++){
-			if($i==($docs['numcampos']-1)){
-				$iddocs.=$docs[$i]['docs_seleccionados'];
-			}else{
-				$iddocs.=$docs[$i]['docs_seleccionados'].",";
-			}
-		}
-		$campos=(explode(",",$iddocs));
-		$cantidad=count($campos);
-		$where='';
-		$where.="(";
-		for($i=0;$i<$cantidad;$i++){	
-			if($i==0){
-				//$where.="'iddocumento' like '".$campos[$i]."'";
-				$where.="(CONCAT(',',CONCAT(iddocumento,',')) like '%,".$campos[$i].",%')";
-			}else{
-				//$where.=" or 'iddocumento' like '".$campos[$i]."'";
-				$where.=" or (CONCAT(',',CONCAT(iddocumento,',')) like '%,".$campos[$i].",%')";
-			}
-		}
-		$where.=")";
-		return($where);
-	}else{
-		$where="documento_iddocumento=iddocumento";
-		return($where);
-	}
-}
-function no_distribuidos(){
+  $texto='<li><a href="#" id="distribucion_interna_doc">Despacho f&iacute;sico</a></li>';
+  $texto.='<script>
+    $("#distribucion_interna_doc").click(function(){
+      var docus=$("#seleccionados").val();
+	  if(docus!=""){
+	  	enlace_katien_saia("pantallas/documento/despachar_fisico.php?docs="+docus+",","Despachar documentos","iframe","");
+	  }
+	  else{
+	  	alert("Seleccione por lo menos un documento");
+	  }
+    });
+  </script>';
+  //return $texto;
+}*/
 
-	$docs=busca_filtro_tabla("","documento,ft_despacho_ingresados","documento_iddocumento=iddocumento and estado not in ('ELIMINADO','ANULADO')","",$conn);
-	$iddocs="";
-	for($i=0;$i<$docs['numcampos'];$i++){
-		if($i==($docs['numcampos']-1)){
-			$iddocs.=$docs[$i]['docs_seleccionados'];
-		}else{
-			$iddocs.=$docs[$i]['docs_seleccionados'].",";
-		}
-	}
-	$campos=explode(",",$iddocs);
-	$cantidad=count($campos);
-	$where='';
-	$where.="(";
-	for($i=0;$i<$cantidad;$i++){	
-		if($i==0){
-			$where.="(CONCAT(',',CONCAT(iddocumento,',')) not like '%,".$campos[$i].",%')";
-		}else{
-			$where.=" and (CONCAT(',',CONCAT(iddocumento,',')) not like '%,".$campos[$i].",%')";
-		}
-	}
-	$where.=")";
-	return($where);
+function vincular_documentos_busqueda(){
+	 global $ruta_db_superior;
+  $texto='<li><a href="#" id="distribucion_interna_doc">Despacho fisico</a></li>';
+  $texto.='<script>
+    $("#distribucion_interna_doc").click(function(){
+      var docus=$("#seleccionados").val();
+	  if(docus!=""){
+	  	enlace_katien_saia("pantallas/documento/despachar_fisico.php?docs="+docus+",","Despachar documentos","iframe","");
+	  }
+	  else{
+	  	alert("Seleccione por lo menos un documento");
+	  }
+    });
+  </script>';
+  return $texto;
 }
-function carga_soporte_ingresados($iddocumento){
-	global $ruta_db_superior;
-	if(isset($_REQUEST['variable_busqueda'])){
-		$texto='<li><a href="#" id="cargar_soporte">Cargar soporte</a></li>';
-		$texto.='<script>
-		  $("#cargar_soporte").click(function(){	    	
-		    var docus=$("#seleccionados").val();
-			  if(docus!=""){			  	
-						top.hs.htmlExpand(this, { objectType: "iframe",width: 400, height: 300, src:"http://'.RUTA_PDF.'/formatos/despacho_ingresados/anexos_despacho.php?docs="+docus,outlineType: "rounded-white",wrapperClassName:"highslide-wrapper drag-header"});
-			  }else{
-			  	alert("Seleccione por lo menos un documento");
-			  }
-		   });
-		</script>';
-		return $texto;
-	}
-}
-function filtro_despacho(){
-	global $ruta_db_superior;
-	if(($_REQUEST['variable_busqueda'])){
-		$docs=busca_filtro_tabla("","documento,ft_despacho_ingresados","documento_iddocumento=iddocumento and estado not in ('ELIMINADO','ANULADO') and numero=".$_REQUEST['variable_busqueda'],"",$conn);
-		$where=" and iddocumento in(".$docs[0]['docs_seleccionados'].")";
-		return($where);
-	}
-}	
+
 ?>

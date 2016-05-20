@@ -31,45 +31,47 @@ global $conn;
 		}
 	}
 }
-function transferencia_automatica($idformato,$iddoc,$destinos,$tipo,$notas="",$nombre="TRANSFERIDO"){
+
+function transferencia_automatica($idformato, $iddoc, $destinos, $tipo, $notas = "", $nombre = "TRANSFERIDO") {
 	global $conn;
- if($tipo=="1") //cuando es una lista de funcionarios fijos (roles)
-   $vector=explode("@",$destinos);
- elseif($tipo=="3") //cuando es una lista de funcionarios fijos (funcionario_codigo)
-   $vector=explode("@",$destinos);  
- elseif($tipo=="2")  //cuando el listado se toma de un campo del formato  (roles)
-   {$formato=busca_filtro_tabla("nombre_tabla","formato","idformato=$idformato","",$conn);
-    $dato=busca_filtro_tabla($destinos,$formato[0][0],"documento_iddocumento=$iddoc","",$conn);
-    $vector=explode(",",@$dato[0][0]);
-   } 
- $adicionales=array();
- if($notas<>"")
-   {$adicionales["notas"]="'".$notas."'";
-    $datos["ver_notas"]=1;
-   }
- 
- foreach($vector as $fila){ 	
- 	if(!strpos($fila,"#") ){
- 		if($tipo==3){
-    	$lista=array($fila);
-		}else{
-			$codigos=busca_filtro_tabla("funcionario_codigo","funcionario,dependencia_cargo","funcionario_idfuncionario=idfuncionario AND iddependencia_cargo=$fila","",$conn);
-			$lista=array($codigos[0]["funcionario_codigo"]);
-		}  
+	if ($tipo == "1") {//cuando es una lista de funcionarios fijos (roles)
+		$vector = explode("@", $destinos);
+	} elseif ($tipo == "3") {//cuando es una lista de funcionarios fijos (funcionario_codigo)
+		$vector = explode("@", $destinos);
+	} elseif ($tipo == "2") {//cuando el listado se toma de un campo del formato  (roles)
+		$formato = busca_filtro_tabla("nombre_tabla", "formato", "idformato=$idformato", "", $conn);
+		$dato = busca_filtro_tabla($destinos, $formato[0][0], "documento_iddocumento=$iddoc", "", $conn);
+		$vector = explode(",", @$dato[0][0]);
 	}
-	else{
-		$lista=buscar_funcionarios(str_replace("#","",$fila));
+	$adicionales = array();
+	if ($notas <> "") {
+		$adicionales["notas"] = "'" . $notas . "'";
+		$datos["ver_notas"] = 1;
 	}
-		
-    $datos["tipo_destino"]="1";  
-    $datos["archivo_idarchivo"]=$iddoc;
-    $datos["origen"]=usuario_actual("funcionario_codigo");
-    $datos["nombre"]=$nombre;
-    $datos["tipo"]="";
-    $datos["tipo_origen"]="1";      
-    transferir_archivo_prueba($datos,$lista,$adicionales);  
-   }
+
+	foreach ($vector as $fila) {
+		if (!strpos($fila, "#")) {
+			if ($tipo == 3) {
+				$lista = array($fila);
+			} else {
+				$codigos = busca_filtro_tabla("funcionario_codigo", "funcionario,dependencia_cargo", "funcionario_idfuncionario=idfuncionario AND iddependencia_cargo=$fila", "", $conn);
+				$lista = array($codigos[0]["funcionario_codigo"]);
+			}
+		} else {
+			$lista = buscar_funcionarios(str_replace("#", "", $fila));
+		}
+
+		$datos["tipo_destino"] = "1";
+		$datos["archivo_idarchivo"] = $iddoc;
+		$datos["origen"] = usuario_actual("funcionario_codigo");
+		$datos["nombre"] = $nombre;
+		$datos["tipo"] = "";
+		$datos["tipo_origen"] = "1";
+		transferir_archivo_prueba($datos, $lista, $adicionales);
+	}
 }
+
+
 function mostrar_preparo($idformato,$iddoc)
 { global $conn;
   $ejecutor = busca_filtro_tabla("ejecutor","documento","iddocumento=$iddoc","",$conn);
