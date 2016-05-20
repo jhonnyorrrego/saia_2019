@@ -151,9 +151,6 @@ if($realizar_insert){
     }
 }
 
-
-
-
  
 die();
       
