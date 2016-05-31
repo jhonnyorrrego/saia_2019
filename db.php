@@ -1702,6 +1702,7 @@ global $conn;
 	include_once("PHPMaile/language/phpmailer.lang-es.php"); 
 	
 	$configuracion_correo=busca_filtro_tabla("valor,nombre","configuracion","nombre in('servidor_correo','puerto_servidor_correo','puerto_correo_salida','servidor_correo_salida','correo_notificacion','clave_correo_notificacion','asunto_defecto_correo')","",$conn);
+
 	for($i=0;$i<$configuracion_correo['numcampos'];$i++){
 		switch ($configuracion_correo[$i]['nombre']) {
 			case 'servidor_correo':
