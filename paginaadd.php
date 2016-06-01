@@ -1,16 +1,5 @@
 <?php
-$max_salida = 5;
-$ruta_db_superior = $ruta = "";
-while ($max_salida > 0) {
-	if (is_file($ruta . "db.php")) {
-		$ruta_db_superior = $ruta;
-	}
-	$ruta .= "../";
-	$max_salida--;
-}
-include_once ($ruta_db_superior . "db.php");
-include_once ($ruta_db_superior . "formatos/librerias/funciones_acciones.php");
-
+include_once ("db.php");
 if (@$_REQUEST["iddoc"] || @$_REQUEST["key"]) {
   include_once ("pantallas/documento/menu_principal_documento.php");
   if (!$_REQUEST["iddoc"])
@@ -89,6 +78,7 @@ if ($_REQUEST["mostrar_formato"]) {
 
   switch ($sAction) {
     case "A" :
+      // Add
       if (sincronizar_carpetas($tabla, $conn)) {// Add New Record
        if($key && $idformato[0][0]){
           llama_funcion_accion($key,$idformato[0][0],"digitalizar","POSTERIOR");
@@ -158,17 +148,17 @@ if ($_REQUEST["mostrar_formato"]) {
 		<!--
 	function EW_checkMyForm(EW_this) {
 	if (EW_this.x_id_documento && !EW_hasValue(EW_this.x_id_documento, "TEXT" )) {
-		if (!EW_onError(EW_this, EW_this.x_id_documento, "TEXT", "POR FAVOR INGRESE EL CAMPO REQUERIDO - DOCUMENTO ASOCIADO"))
-			return false;
-		}
-		if (EW_this.x_id_documento && !EW_checkinteger(EW_this.x_id_documento.value)) {
-			if (!EW_onError(EW_this, EW_this.x_id_documento, "TEXT", "ENTERO INCORRECTO - DOCUMENTO ASOCIADO"))
-			return false;
-		}
-		if (EW_this.x_imagen && !EW_hasValue(EW_this.x_imagen, "FILE" )) {
-			if (!EW_onError(EW_this, EW_this.x_imagen, "FILE", "POR FAVOR INGRESE EL CAMPO REQUERIDO - IMAGEN"))
-			return false;
-		}
+	if (!EW_onError(EW_this, EW_this.x_id_documento, "TEXT", "POR FAVOR INGRESE EL CAMPO REQUERIDO - DOCUMENTO ASOCIADO"))
+	return false;
+	}
+	if (EW_this.x_id_documento && !EW_checkinteger(EW_this.x_id_documento.value)) {
+	if (!EW_onError(EW_this, EW_this.x_id_documento, "TEXT", "ENTERO INCORRECTO - DOCUMENTO ASOCIADO"))
+	return false;
+	}
+	if (EW_this.x_imagen && !EW_hasValue(EW_this.x_imagen, "FILE" )) {
+	if (!EW_onError(EW_this, EW_this.x_imagen, "FILE", "POR FAVOR INGRESE EL CAMPO REQUERIDO - IMAGEN"))
+	return false;
+	}
 	}
 	--></script>
 <div  align="center">
@@ -221,6 +211,41 @@ if ($_REQUEST["mostrar_formato"]) {
         break;
     }
   }
+  /*function LoadData($sKey, $conn) {
+    global $_SESSION;
+    global $x_consecutivo;
+    global $x_id_documento;
+    global $x_imagen;
+    global $x_pagina;
+    $sKeyWrk = "" . addslashes($sKey) . "";
+    $sSql = "SELECT * FROM pagina";
+    $sSql .= " WHERE consecutivo = " . $sKeyWrk;
+    $sGroupBy = "";
+    $sHaving = "";
+    $sOrderBy = "";
+    if ($sGroupBy <> "") {
+      $sSql .= " GROUP BY " . $sGroupBy;
+    }
+    if ($sHaving <> "") {
+      $sSql .= " HAVING " . $sHaving;
+    }
+    if ($sOrderBy <> "") {
+      $sSql .= " ORDER BY " . $sOrderBy;
+    }
+    $rs = phpmkr_query($sSql, $conn) or error("PROBLEMAS AL EJECUTAR LA B�SQUEDA" . phpmkr_error() . ' SQL:' . $sSql);
+    if (phpmkr_num_rows($rs) == 0) {
+      $LoadData = false;
+    } else {
+      $LoadData = true;
+      $row = phpmkr_fetch_array($rs);
+      $x_consecutivo = $row["consecutivo"];
+      $x_id_documento = $row["id_documento"];
+      $x_imagen = $row["imagen"];
+      $x_pagina = $row["pagina"];
+    }
+    phpmkr_free_result($rs);
+    return $LoadData;
+  }*/
 	?>
 	<input type="hidden" name="EW_Max_File_Size" value="<?php echo($peso); ?>">
 	<input type="hidden" name="x_enlace" value="<?php echo($x_enlace); ?>">

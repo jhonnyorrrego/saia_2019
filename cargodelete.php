@@ -4,13 +4,13 @@
 <?php
 header("Expires: Mon, 26 Jul 1997 05:00:00 GMT"); // date in the past
 header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT"); // always modified
-header("Cache-Control: no-store, no-cache, must-revalidate"); // HTTP/1.1 
-header("Cache-Control: post-check=0, pre-check=0", false); 
-header("Pragma: no-cache"); // HTTP/1.0 
+header("Cache-Control: no-store, no-cache, must-revalidate"); // HTTP/1.1
+header("Cache-Control: post-check=0, pre-check=0", false);
+header("Pragma: no-cache"); // HTTP/1.0
 ?>
 <?php
 $ewCurSec = 0; // Initialise
-		
+
 ?>
 <?php
 
@@ -34,7 +34,7 @@ $arRecKey = split(",",$sKey);
 if (($sKey == "") || ((is_null($sKey)))) {
 	ob_end_clean();
 	header("Location: cargolist.php");
-	exit(); 
+	exit();
 }
 	$sKey = (get_magic_quotes_gpc()) ? $sKey : addslashes($sKey);
 $sDbWhere .= "idcargo=" . trim($sKey) . "";
@@ -61,7 +61,7 @@ switch ($sAction)
 }
 ?>
 <?php include ("header.php") ?>
-<p><span class="internos"><img class="imagen_internos" src="botones/configuracion/cargo.png" border="0">&nbsp;&nbsp;ELIMINAR CARGOS<br><br><a href="cargolist.php">Regresar al listado</a></span></p>
+<p><span class="internos"><img class="imagen_internos" src="botones/configuracion/cargo.png" border="0">&nbsp;&nbsp;INACTIVAR CARGOS<br><br><a href="cargolist.php">Regresar al listado</a></span></p>
 <form action="cargodelete.php" method="post">
 <p>
 <input type="hidden" name="a_delete" value="D">
@@ -102,7 +102,7 @@ foreach ($arRecKey as $sRecKey) {
 ?>
 </table>
 <p>
-<input type="submit" name="Action" value="Confirmar Borrado">
+<input type="submit" name="Action" value="Confirmar Inactivaci&oacute;n">
 </form>
 <?php include ("footer.php") ?>
 <?php
@@ -207,7 +207,7 @@ global $x_nombre;
 		$sSql .= " ORDER BY " . $sOrderBy;
 	}
 	phpmkr_query($sSql,$conn) or error("Fall� la b�squeda" . phpmkr_error() . ' SQL:' . $sSql);
-	$update_rol = "UPDATE dependencia_cargo SET estado=0 WHERE cargo_idcargo=".substr($sqlKey,8);	
+	$update_rol = "UPDATE dependencia_cargo SET estado=0 WHERE cargo_idcargo=".substr($sqlKey,8);
 	phpmkr_query($update_rol,$conn) or error("Fall� la b�squeda" . phpmkr_error() . ' SQL:' . $update_rol);
 	return true;
 }

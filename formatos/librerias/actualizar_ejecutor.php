@@ -1,9 +1,9 @@
 <?php
 include_once("../../db.php");
 /*
-Si la identificacion llega y es valida se mira si existe alg�n ejecutor que 
-la tenga asignada, si es asi, se actualizan los datos de la tabla ejecutor 
-con los que vengan del formulario, de lo contrario se crea 
+Si la identificacion llega y es valida se mira si existe alg�n ejecutor que
+la tenga asignada, si es asi, se actualizan los datos de la tabla ejecutor
+con los que vengan del formulario, de lo contrario se crea
 un registro nuevo en la tabla ejecutor
 */
 $condicion="";
@@ -21,8 +21,8 @@ if(trim(@$_REQUEST["identificacion"])<>"")
 
  if(!$ejecutor["numcampos"])
    {$ejecutor=busca_filtro_tabla("","ejecutor","lower(nombre) LIKE lower('".@$nombre."') and (identificacion is null or identificacion='')","",$conn);
-   } 
-  
+   }
+
 }
 elseif(trim(@$_REQUEST["nombre"])<>"")
   $ejecutor=busca_filtro_tabla("","ejecutor","lower(nombre) LIKE lower('".@$nombre."')","",$conn);
@@ -32,13 +32,13 @@ if($ejecutor["numcampos"]){
   if(isset($_REQUEST["tipo_documento"])&&$_REQUEST["tipo_documento"]<>""&&$_REQUEST["tipo_documento"]<>"undefined")
      $otros.=",tipo_documento=".$_REQUEST["tipo_documento"];
   if(isset($_REQUEST["lugar_expedicion"])&&$_REQUEST["lugar_expedicion"]&&$_REQUEST["lugar_expedicion"]<>"undefined")
-     $otros.=",lugar_expedicion='".$_REQUEST["lugar_expedicion"]."'"; 
+     $otros.=",lugar_expedicion='".$_REQUEST["lugar_expedicion"]."'";
   if(isset($_REQUEST["identificacion"])&&$_REQUEST["identificacion"]&&$_REQUEST["identificacion"]<>"undefined")
      $otros.=",identificacion='".$_REQUEST["identificacion"]."'";
-  
+
   /*if(isset($_REQUEST["codigo"])&&$_REQUEST["codigo"]){
-  	$datos = busca_filtro_tabla("","datos_ejecutor","ejecutor_idejecutor=".$ejecutor[0]["idejecutor"],"",$conn); 
-  
+  	$datos = busca_filtro_tabla("","datos_ejecutor","ejecutor_idejecutor=".$ejecutor[0]["idejecutor"],"",$conn);
+
   if($datos["numcampos"] > 0)
   		phpmkr_query("UPDATE datos_ejecutor SET codigo=".$_REQUEST["codigo"]." where ejecutor_idejecutor=".$ejecutor[0]["idejecutor"]);
   }   */
@@ -50,16 +50,16 @@ if($ejecutor["numcampos"]){
 }
 else{
   $sql="INSERT INTO ejecutor(nombre,identificacion)VALUES('".@$nombre."','".@$identificacion."')";
-  
+
 //  die($sql);
   phpmkr_query($sql,$conn);
   $idejecutor=phpmkr_insert_id();
   if(isset($_REQUEST["lugar_expedicion"])&&$_REQUEST["lugar_expedicion"])
     phpmkr_query("update ejecutor set lugar_expedicion='".$_REQUEST["lugar_expedicion"]."' where idejecutor=$idejecutor",$conn);
-  
+
   if(isset($_REQUEST["tipo_documento"])&&$_REQUEST["tipo_documento"])
     phpmkr_query("update ejecutor set tipo_documento='".$_REQUEST["tipo_documento"]."' where idejecutor=$idejecutor",$conn);
-    
+
   /*if(isset($_REQUEST["codigo"])&&$_REQUEST["codigo"]){
   	$datos = busca_filtro_tabla("","datos_ejecutor","ejecutor_idejecutor=".$idejecutor,"",$conn);
   	if($datos["numcampos"] > 0)
@@ -69,7 +69,7 @@ else{
 }
 /*
 se busca con el idejecutor si ya existen datos en la tabla datos_ejecutor,
-*/ 
+*/
 $campos_ejecutor=explode(",",$_REQUEST["campos"]);
 $campos_excluidos=array("nombre","identificacion");
 $campos_ejecutor=array_diff($campos_ejecutor,$campos_excluidos);
@@ -86,7 +86,7 @@ for($i=0;$i<count($campos_ejecutor);$i++){
    else {
     $condicion_actualiza.=' AND ('.$campos_ejecutor[$i]." IS NULL or ".$campos_ejecutor[$i]."='')";
    }
-  }  
+  }
 }
 $datos_ejecutor=busca_filtro_tabla("","datos_ejecutor","ejecutor_idejecutor=".$idejecutor.$condicion_actualiza,"",$conn);
 //print_r($datos_ejecutor);
@@ -112,9 +112,9 @@ if((!$datos_ejecutor["numcampos"] ||$insertado) && $condicion_actualiza!=""){$da
        {array_push($valores,$datos_ejecutor[0][$campos_todos[$i]]);
         array_push($campos,$campos_todos[$i]);
        }
-     }     
+     }
   }
-  
+
   if($actualizado){
     $valor_insertar="'".implode("','",$valores)."',";
     $campos_insertar=implode(",",$campos).",";
@@ -129,7 +129,7 @@ if((!$datos_ejecutor["numcampos"] ||$insertado) && $condicion_actualiza!=""){$da
      $campos_insertar.="fecha_nacimiento,";
     } */
   /*****************************************/
-  
+
   //print_r($_REQUEST);
   $sql='INSERT INTO datos_ejecutor('.$campos_insertar."ejecutor_idejecutor,fecha) VALUES(".$valor_insertar.$idejecutor.",".fecha_db_almacenar(date("Y-m-d H:i:s"),"Y-m-d H:i:s").")";
   //echo "<br />$sql<br />";

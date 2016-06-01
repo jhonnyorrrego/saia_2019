@@ -4,9 +4,9 @@
 <?php
 header("Expires: Mon, 26 Jul 1997 05:00:00 GMT"); // date in the past
 header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT"); // always modified
-header("Cache-Control: no-store, no-cache, must-revalidate"); // HTTP/1.1 
-header("Cache-Control: post-check=0, pre-check=0", false); 
-header("Pragma: no-cache"); // HTTP/1.0 
+header("Cache-Control: no-store, no-cache, must-revalidate"); // HTTP/1.1
+header("Cache-Control: post-check=0, pre-check=0", false);
+header("Pragma: no-cache"); // HTTP/1.0
 
 $ewCurSec = 0; // Initialise
 
@@ -17,11 +17,11 @@ $x_cod_padre = Null;
 $x_tipo_cargo = Null;
 $sKey = @$_GET["key"];
 if (($sKey == "") || ((is_null($sKey)))) {
-	$sKey = @$_GET["key"]; 
+	$sKey = @$_GET["key"];
 }
 if (($sKey == "") || ((is_null($sKey)))) {
-	ob_end_clean(); 
-	header("Location:cargolist.php"); 
+	ob_end_clean();
+	header("Location:cargolist.php");
 	exit();
 }
 if (!empty($sKey)) $sKey = (get_magic_quotes_gpc()) ? stripslashes($sKey) : $sKey;
@@ -49,7 +49,7 @@ switch ($sAction)
 <?php include ("header.php") ?>
 <p><span class="internos">
 <a href="<?php echo "cargoedit.php?key=" . urlencode($sKey); ?>">Editar</a>&nbsp;
-<a href="<?php echo "cargodelete.php?key=" . urlencode($sKey); ?>">Eliminar</a>&nbsp;
+<a href="<?php echo "cargodelete.php?key=" . urlencode($sKey); ?>">Inactivar</a>&nbsp;
 <a href="<?php echo "asignarserie_entidad.php?llave_entidad=".$sKey."&tipo_entidad=4&origen=cargo"; ?>">Asignar serie / categor&iacute;a</a>&nbsp;
 </span></p>
 
@@ -85,7 +85,7 @@ echo $x_tipo_cargo;
 	<tr>
 		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">CARGO PADRE</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
-<?php 
+<?php
 $cargo=busca_filtro_tabla("nombre","cargo","idcargo=".$x_cod_padre,"",$conn);
 echo @$cargo[0][0];
 ?>
@@ -144,7 +144,7 @@ global $x_tipo_cargo;
 		$x_idcargo = $row["idcargo"];
 		$x_nombre = $row["nombre"];
 		$x_estado = $row["estado"];
-		$x_tipo_cargo = $row["tipo_cargo"]; 
+		$x_tipo_cargo = $row["tipo_cargo"];
     $x_cod_padre = $row["cod_padre"];
 	}
 	phpmkr_free_result($rs);

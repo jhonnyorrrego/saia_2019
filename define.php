@@ -7,12 +7,12 @@ define("ewAllowList", 8, true);
 define("ewAllowReport", 8, true);
 define("ewAllowSearch",8, true);
 define("ewAllowAdmin", 16, true);
-if(!defined("HOST"))	
+if(!defined("HOST"))
   define("HOST", "saia-aguas.ct00qljbq3lp.us-east-1.rds.amazonaws.com");
 if(!defined("USER"))
   define("USER", "saia");
 if(!defined("PASS"))
-  define("PASS", "cerok_saia421_5"); 
+  define("PASS", "cerok_saia421_5");
 if(!defined("DB"))
   define("DB", "saia_release1");//INSTANCIA
 define("MOTOR","MySql");
@@ -45,7 +45,7 @@ define("DEBUGEAR_FLUJOS",0);
 //ini_set(magic_quotes_gpc,0);
 ini_set("memory_limit","400M");
 //ini_set('default_charset','utf8'); DESCOMENTAR CUANDO SE TENGAN PROBLEMA DE CARACTERES ESPECIALES
-ini_set('error_reporting', E_ALL & ~E_NOTICE & ~E_WARNING & ~E_DEPRECATED);  
+ini_set('error_reporting', E_ALL & ~E_NOTICE & ~E_WARNING & ~E_DEPRECATED);
 ini_set("display_errors",false);
 ini_set("safe_mode",false);
 /**************Soluciona limite de texto a mostrar con BD SQL SERVER*************/
@@ -56,23 +56,23 @@ ini_set('pcre.backtrack_limit','200000');
 
 define("RUTA_SCRIPT","saia_release1");
 date_default_timezone_set ("America/Bogota");
-define("RUTA_DISCO","..");  
+define("RUTA_DISCO","..");
 define("SO","linux");
 define("CARPETA_SAIA","saia_release1");
 define("LLAVE_SAIA_CRYPTO","cerok_saia421_5");
 
-define("RUTA_ARCHIVOS","../almacenamiento/");
-define("RUTA_PDFS","../almacenamiento/");
-define("RUTA_IMAGENES","../almacenamiento/");
-define("RUTA_QR","../almacenamiento/");
-define("RUTA_INFO_QR","http://75.101.166.85/info_doc.php");
+define("RUTA_ARCHIVOS","../../almacenamiento1/");
+define("RUTA_PDFS","../../almacenamiento1/");
+define("RUTA_IMAGENES","../../almacenamiento1/");
+define("RUTA_QR","../../almacenamiento1/");
+define("RUTA_INFO_QR","http://75.101.166.85/saia_release1/info_doc.php");
 
-define("RUTA_BACKUP","../backup/");
+define("RUTA_BACKUP","../../almacenamiento1/backup/");
 define("RUTA_BACKUP_ELIMINADOS",RUTA_BACKUP."eliminados/");
 define("RUTA_BACKUP_EVENTO",RUTA_BACKUP."evento/");
 define("RUTA_BACKUP_SESION",RUTA_BACKUP."sesiones/");
-define("RUTA_FOTOGRAFIA_FUNCIONARIO","../adicionales_funcionario/fotografia/");
-define("RUTA_EVENTO_FORMATO","../evento_formato/");
+define("RUTA_FOTOGRAFIA_FUNCIONARIO","../../almacenamiento1/adicionales_funcionario/fotografia/");
+define("RUTA_EVENTO_FORMATO","../../almacenamiento1/evento_formato/");
 
 
 

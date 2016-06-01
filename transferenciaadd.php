@@ -756,7 +756,7 @@ function AddData($conn)
 	// Field notas
 	$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_notas) : $x_notas;
 	$theValue = ($theValue != "") ? $theValue  : NULL;
-	$fieldList["notas"] = htmlentities($theValue);
+	$fieldList["notas"] = $theValue;
 
 	//ver notas
   $fieldList["ver_notas"] = $x_ver_nota;

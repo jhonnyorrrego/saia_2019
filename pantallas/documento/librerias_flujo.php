@@ -11,7 +11,7 @@ while($max_salida>0){
 include_once($ruta_db_superior."pantallas/lib/librerias_fechas.php");
 function barra_superior_flujo($iddoc,$idpaso_documento,$plantilla){
 if($plantilla!="plantilla"){
-  $etiqueta = busca_filtro_tabla("etiqueta,idformato","formato","lower(nombre)='".strtolower($plantilla)."'","",$conn);  
+  $etiqueta = busca_filtro_tabla("etiqueta,idformato","formato","lower(nombre)='".strtolower($plantilla)."'","",$conn);
   $enlace_ver="formatos/".strtolower($plantilla)."/detalles_mostrar_".strtolower($plantilla).".php?tipo=1&iddoc=$iddoc&idformato=".$etiqueta[0]["idformato"];
 }
 else{
@@ -32,7 +32,7 @@ function filtro_funcionario_flujo($funcionario){
   else{
     $retorno=" AND G.llave_entidad='".$funcionario."'";
   }
-return($retorno);  
+return($retorno);
 }
 function tareas_flujo($idpaso_documento){
 $flujo=estado_flujo_instancia_documento($idpaso_documento);
@@ -45,15 +45,15 @@ for($i=0;$i<$actividades["numcampos"];$i++){
 	if($terminada["numcampos"] > 0){
 		$terminados++;
 	}
-}  
+}
 $porcentaje = round((($terminados*100)/$actividades["numcampos"]),2);
-$pocentaje_tarea = '('.$terminados.'/'.$actividades["numcampos"].'):'.$porcentaje.'%';	
+$pocentaje_tarea = '('.$terminados.'/'.$actividades["numcampos"].'):'.$porcentaje.'%';
 $tareas = busca_filtro_tabla("","paso_actividad","paso_idpaso=".$flujo[0]["paso_idpaso"],"idpaso_actividad asc",$conn);
 for($i=0;$i<$tareas["numcampos"];$i++){
 	$tarea .= ($i+1).". ".$tareas[$i]["descripcion"]."<br>";
 }
-$dia = busca_filtro_tabla(resta_fechas(fecha_db_almacenar($flujo["fecha_final_paso"],'Y-m-d'),fecha_db_almacenar(date('Y-m-d'),'Y-m-d'))."as dias");  
-$dias = $dia[0]["dias"]; 
+$dia = busca_filtro_tabla(resta_fechas(fecha_db_almacenar($flujo["fecha_final_paso"],'Y-m-d'),fecha_db_almacenar(date('Y-m-d'),'Y-m-d'))."as dias");
+$dias = $dia[0]["dias"];
 if($dias < 0){
   $color = 'alert-error';
 }
@@ -73,9 +73,9 @@ if($mesinicial < 10)
 if($diainicial < 10)
   $diainicial = '0'.$diainicial;
 $paso[0]["fecha_asignacion"] = $anioinicial.'-'.$mesinicial.'-'.$diainicial;
-$texto = '';  
-$texto.= '<b>Inicio:</b> '.$paso[0]["fecha_asignacion"].'<br /><b>Terminados:</b>'.$pocentaje_tarea.'<br /><b>Fecha l&iacute;mite: </b>'.$flujo["fecha_final_paso"].'<br /><b>Tareas: </b><br />'.$tarea; 
-	return("<div class='alert ".$color."'><b>Informaci&oacute;n Paso Actual</b><br />".$texto."</div>"); 
+$texto = '';
+$texto.= '<b>Inicio:</b> '.$paso[0]["fecha_asignacion"].'<br /><b>Terminados:</b>'.$pocentaje_tarea.'<br /><b>Fecha l&iacute;mite: </b>'.$flujo["fecha_final_paso"].'<br /><b>Tareas: </b><br />'.$tarea;
+	return("<div class='alert ".$color."'><b>Informaci&oacute;n Paso Actual</b><br />".$texto."</div>");
 }
 function estado_flujo_actual($idpaso_documento){
 $flujo=estado_flujo_instancia_documento($idpaso_documento);
@@ -97,9 +97,9 @@ $dia = busca_filtro_tabla(resta_fechas(fecha_db_almacenar($fecha_final_diagram,'
 	else if($dias > 1){
 		$color = 'alert-success';
 	}
-   
+
   $texto="<div class='alert ".$color."'><b>Informaci&oacute;n del Flujo</b><br /><b>Paso Actual:</b> ".$flujo[0]["nombre_paso"]."<br /><b>Inicio: </b>".$fecha_inicio[0]["fecha_inicio"]."</br><b>Terminados:</b> (".(($flujo["numcampos"]))."/".$flujo["pasos_flujo"]."):".$porcentaje."%<br /><b>Fecha limite: </b>".$fecha_final_diagram."<br /><b>Estado: </b>Vence en ".$dias." dia(s)<br /></div>";
-  
+
     return($texto);
 }
 function estado_flujo_instancia_documento($idpaso_documento){
@@ -117,7 +117,7 @@ if($flujo[0]["estado_paso_documento"]>3){
     phpmkr_query($sql_paso);
     $flujo[0]["estado_paso_documento"]=5;
   }
-}     
+}
 $estado="";
 $estadod="";
 $pasos_flujo=busca_filtro_tabla("","paso","diagram_iddiagram=".$flujo[0]["diagram_iddiagram"],"",$conn);
@@ -140,12 +140,12 @@ if($flujo[0]["estado_diagram_instance"]>3){
 }
 if($flujo["numcampos"] && !in_array($flujo[0]["estado_paso_documento"],array(1,2))){
   $flujo["numcampos"]--;
-}      
+}
 if($pasos_flujo["numcampos"])
   $porcentaje=round((($flujo["numcampos"])*100)/$pasos_flujo["numcampos"],2);
-else 
+else
   $porcentaje=0;
-$flujo["devueltos"]=$pasos_devueltos["numcampos"];  
+$flujo["devueltos"]=$pasos_devueltos["numcampos"];
 $flujo["porcentaje"]=$porcentaje;
 $flujo["pasos_flujo"]=$pasos_flujo["numcampos"];
 $flujo["fecha_final_diagrama"]=$fecha_final_diagram;
@@ -154,20 +154,20 @@ $flujo["diferencia"]=$diferencia;
 $flujo["diferenciad"]=$diferenciad;
 $flujo["fecha_final_paso"]=$fecha_fina2;
 return($flujo);
-}   
+}
 function nombre_flujo($iddocumento,$plantilla=""){
 	global $ruta_db_superior;
 	$flujo=documento_origen_flujo($iddocumento, $plantilla);
 	if($flujo["numcampos"]){
 		return($flujo[0]["title"]);
 	}
-	else{		
+	else{
 		$plantilla2=busca_filtro_tabla("","formato B","lower(nombre)=lower('".$plantilla."')","",$conn);
 		if($plantilla2["numcampos"]){
 			return($plantilla2[0]["etiqueta"]);
 		}
 	}
-return;	
+return;
 }
 function documento_origen_flujo($iddocumento,$plantilla){
 	global $ruta_db_superior;
@@ -175,7 +175,7 @@ function documento_origen_flujo($iddocumento,$plantilla){
 	if($flujo["numcampos"]){
 		return($flujo);
 	}
-elseif($plantilla!=''){		
+elseif($plantilla!=''){
 		$plantilla2=busca_filtro_tabla("","formato B","lower(nombre)=lower('".$plantilla."')","",$conn);
 		if($plantilla2["numcampos"]){
 			if($plantilla2[0]["cod_padre"]){
@@ -190,7 +190,7 @@ elseif($plantilla!=''){
 			}
 			else{
 				return(array("numcampos"=>0));
-			}	
+			}
 		}
 	}
 return(array("numcampos"=>0));

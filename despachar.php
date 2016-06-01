@@ -7,11 +7,11 @@ while($max_salida>0){
   }
   $ruta.="../";
   $max_salida--;
-}    
+}
 include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."calendario/calendario.php");
 include_once($ruta_db_superior."librerias_saia.php");
-include_once($ruta_db_superior."class_transferencia.php");  
+include_once($ruta_db_superior."class_transferencia.php");
 echo (estilo_bootstrap());
 echo (librerias_jquery("1.7"));
 $campo_destino=array("CARTA"=>array("ft_carta","destinos"),"COMUNICACION_EXTERNA"=>array("ft_comunicacion_externa","destinos"),"RADICACION_SALIDA"=>array("ft_radicacion_salida","persona_natural"));
@@ -29,7 +29,7 @@ global $conn,$campo_destino;
 	}
 	$nombres = busca_filtro_tabla("iddocumento,numero,descripcion,plantilla", "documento", "iddocumento IN(" . $docs . ")", "", $conn);
 	$parte_html="";
-		
+
 	for($i=0;$i<$nombres["numcampos"];$i++){
 		$consulta_destinatario=busca_filtro_tabla($campo_destino[$nombres[$i]["plantilla"]][1],$campo_destino[$nombres[$i]["plantilla"]][0],"documento_iddocumento=".$nombres[$i]["iddocumento"],"",$conn);
 		if($consulta_destinatario["numcampos"]){
@@ -55,9 +55,9 @@ global $conn,$campo_destino;
 						<input type='text' style='width:100px' name='guia_" . $id . "' id='guia_" . $id . "'>
 					</td>
 					<td>
-						<input type='radio' name='estado_despacho_" . $id . "' id='estado_despacho_" . $id . "' value='1' checked='true'>Entregado <br/>  
+						<input type='radio' name='estado_despacho_" . $id . "' id='estado_despacho_" . $id . "' value='1' checked='true'>Entregado <br/>
 						<input type='radio' name='estado_despacho_" . $id . "' id='estado_despacho_" . $id . "' value='0'>Devolución
-					</td>						
+					</td>
 					<td>
 						<textarea name='observaciones_" . $id . "'   id='observaciones_" . $id . "'></textarea>
 					</td>
@@ -87,12 +87,12 @@ global $conn,$campo_destino;
 						<input type='text' style='width:100px' name='guia_" . $id . "' id='guia_" . $id . "'>
 					</td>
 					<td>
-						<input type='radio' name='estado_despacho_" . $id . "' id='estado_despacho_" . $id . "' value='1' checked='true'>Entregado <br/>  
+						<input type='radio' name='estado_despacho_" . $id . "' id='estado_despacho_" . $id . "' value='1' checked='true'>Entregado <br/>
 						<input type='radio' name='estado_despacho_" . $id . "' id='estado_despacho_" . $id . "' value='0'>Devolución
-					</td>						
+					</td>
 					<td>
 						<textarea name='observaciones_" . $id . "'   id='observaciones_" . $id . "'></textarea>
-					</td>					
+					</td>
 					<td>
 						<input type='file' name='anexos_" . $id . "' id='anexos_" . $id .  "'>
 					</td>
@@ -134,12 +134,12 @@ global $conn,$campo_destino;
 
 function transferir(){
 global $conn,$campo_destino;
-	
+
 	$destinos = explode(",", $_REQUEST["lista_despachos"]);
 	foreach ($destinos as $key) {
-		$responsable=$_REQUEST["x_responsable0_".$key];	
+		$responsable=$_REQUEST["x_responsable0_".$key];
 		$lresponsable = busca_filtro_tabla("A.*", "ejecutor A", "A.idejecutor = '" . $_REQUEST["responsable_".$key] . "'", "", $conn);
-		
+
 
 		if ($lresponsable["numcampos"]) {
 			$idresponsable = $lresponsable[0]["idejecutor"];
@@ -157,8 +157,8 @@ global $conn,$campo_destino;
 			$sql = "INSERT INTO ejecutor(nombre) VALUES('" . $_REQUEST["x_empresa0_".$key] . "')";
 			phpmkr_query($sql);
 			$idempresa = phpmkr_insert_id();
-		}	
-		
+		}
+
 		if ($idresponsable <> "") {
 			$iddoc_ideje=explode("_", $key);
 			$documento_mns = busca_filtro_tabla("descripcion,plantilla,ejecutor,numero", "documento", "iddocumento=" . $iddoc_ideje[0], "", $conn);
@@ -168,17 +168,17 @@ global $conn,$campo_destino;
 			$observaciones=$_REQUEST["observaciones_".$key];
 			$estado_despacho=$_REQUEST["estado_despacho_".$key];
 			//$estado_despacho=1;
-			
+
 			$valores = "'" . $guia . "','" . $iddoc_ideje[0] . "',".$idempresa.",'".$idresponsable."'," . fecha_db_almacenar($_REQUEST["fecha_despacho"."_".$key], "Y-m-d H:i:s").",'1','" . $observaciones . "', '" . $estado_despacho . "'";
-			
+
 			$sql_salida = "INSERT INTO salidas(numero_guia,documento_iddocumento,empresa,responsable,fecha_despacho,tipo_despacho,notas,estado) VALUES (" . $valores . ")";
 			phpmkr_query($sql_salida);
 			$idsalidas = phpmkr_insert_id();
-		
+
 			$idanexos_despacho = cargar_anexos_despacho($iddoc_ideje[0], $idsalidas,$_REQUEST["responsable_".$key]);
 			$sql = "update documento set estado='GESTION',tipo_despacho='1' where iddocumento=" . $iddoc_ideje[0];
 			phpmkr_query($sql, $conn);
-			
+
 			$datos["archivo_idarchivo"] = $iddoc_ideje[0];
 			$datos["tipo_destino"] = 1;
 			$datos["tipo"] = "";
@@ -213,7 +213,7 @@ global $conn;
 
 		$extension = end(explode(".", $_FILES["anexos_" . $iddoc."_".$responsable]["name"]));
 		$archivo_destino = RUTA_ARCHIVOS . $datos_documento[0]["estado"] . "/" . $datos_documento[0]["x_fecha"] . "/" . $datos_documento[0]["iddocumento"] . "/anexos_despacho/";
-		
+
 		if (!is_dir($archivo_destino)) {
 			crear_destino($archivo_destino);
 		}
@@ -224,17 +224,17 @@ global $conn;
 				$sql1 = "INSERT INTO anexos_despacho(documento_iddocumento, ruta, tipo, etiqueta, fk_idsalidas) VALUES ('" . $iddoc . "', '" . $nuevo_destino . "', '".$extension."', '" . $nombre . "', '" . $idsalida . "')";
 				phpmkr_query($sql1);
 				$idanexos_despacho = phpmkr_insert_id();
-				
+
 				$idfuncionario = usuario_actual("idfuncionario");
 				$idformato=busca_filtro_tabla("", "formato", "lower(nombre) like '".strtolower($datos_documento[0]['plantilla'])."'", "", $conn);
 				$insert_anexo = "insert into anexos(documento_iddocumento, ruta, etiqueta, tipo, formato,fecha_anexo) VALUES (".$iddoc.",'".$nuevo_destino."','".$nombre."','".$extension."',".$idformato[0]["idformato"].",".fecha_db_almacenar(date("Y-m-d H:i:s"),'Y-m-d H:i:s').")";
 				phpmkr_query($insert_anexo);
 				$idnexo = phpmkr_insert_id();
-				
+
 				$insert_permiso = "insert into permiso_anexo (anexos_idanexos, idpropietario, caracteristica_propio, caracteristica_dependencia, caracteristica_cargo, caracteristica_total) VALUES (".$idnexo.",".$idfuncionario.",'lem', '', '', 'l')";
 				phpmkr_query($insert_permiso);
 				$idnexo_permiso = phpmkr_insert_id();
-				
+
 				$datos["origen"] = usuario_actual("funcionario_codigo");
 				$datos["archivo_idarchivo"] = $iddoc;
 				$datos["tipo_destino"] = 1;
@@ -268,7 +268,7 @@ $().ready(function() {
 				}
 			}
 		});
-	
+
 		function formatItem(row) {
 			return row[1] + " (<strong>Documento: " + row[2] + "</strong>)";
 		}
@@ -293,7 +293,7 @@ $().ready(function() {
 				$("#empresa_"+iddoc).val(data[0]);
 			}
 		});
-		
+
 		$(".auto1").autocomplete('formatos/librerias/seleccionar_ejecutor.php?tipo=nombre', {
 			width : 500,
 			max : 10,
@@ -312,7 +312,7 @@ $().ready(function() {
 				$("#responsable_"+iddoc).val(data[0]);
 			}
 		});
-		
+
 
 	$("#despachar_documentos").click(function(event){
 	  event.preventDefault();
@@ -330,7 +330,7 @@ $().ready(function() {
 	  		}
 	  	}
 	  });
-	  
+
   	if(exito){
   		$("#lista_despachos").val(seleccionados.join(","));
   		$("#form1").submit();
@@ -342,5 +342,5 @@ $().ready(function() {
   	}
 	});
 
-}); 
+});
 </script>

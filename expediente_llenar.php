@@ -8,7 +8,7 @@ include_once("pantallas/expediente/librerias.php");
 $iddoc = $_REQUEST["iddoc"];
 $doc_menu=@$_REQUEST["iddoc"];
 include_once("pantallas/documento/menu_principal_documento.php");
-echo(menu_principal_documento($doc_menu,1));
+
 $expedientes_asignados=arreglo_expedientes_asignados();
 $documento=busca_filtro_tabla("","expediente_doc","documento_iddocumento in(".$iddoc.") and expediente_idexpediente in(".implode(",",$expedientes_asignados).")","",$conn);
 $exp_doc=extrae_campo($documento,"expediente_idexpediente","U");
@@ -25,14 +25,14 @@ $nombres_exp=array_unique(extrae_campo($nombres_expedientes,"nombre"));
 <link rel="stylesheet" type="text/css" href="<?php echo($ruta_db_superior);?>pantallas/lib/librerias_css.css"/>
 <link rel="stylesheet" type="text/css" href="<?php echo($ruta_db_superior);?>css/bootstrap_reescribir.css"/>
 <link rel="stylesheet" type="text/css" href="<?php echo($ruta_db_superior);?>css/bootstrap-iconos-segundarios.css"/>
-
+<?php echo(menu_principal_documento($doc_menu,1)); ?>
 <script type="text/javascript" src="js/jquery.js"></script>
 <script type="text/javascript" src="js/jquery.validate.js"></script>
 <script type="text/javascript" src="js/dhtmlXCommon.js"></script>
 <script type="text/javascript" src="js/dhtmlXTree.js"></script>
 <legend>Adicionar a un expediente ya existente</legend>
 <?php
-$doc=busca_filtro_tabla("","documento","iddocumento in($iddoc)","",$conn); 
+$doc=busca_filtro_tabla("","documento","iddocumento in($iddoc)","",$conn);
 ?>
 <form id="form1" name="form1" method="post" action="expediente_guardar.php">
 <div class="control-group element">
@@ -50,13 +50,13 @@ $doc=busca_filtro_tabla("","documento","iddocumento in($iddoc)","",$conn);
 	</div>
 </div>
 				<script type="text/javascript">
-  <!--		
+  <!--
 			tree2=new dhtmlXTreeObject("treeboxbox_tree2","100%","",0);
 			tree2.setImagePath("imgs/");
 			tree2.enableIEImageFix(true);
       tree2.enableCheckBoxes(1);
-      tree2.enableSmartXMLParsing(true);			
-			tree2.loadXML("test_expediente.php?doc=<?php echo($iddoc); ?>&accion=1&permiso_editar=1"); 
+      tree2.enableSmartXMLParsing(true);
+			tree2.loadXML("test_expediente.php?doc=<?php echo($iddoc); ?>&accion=1&permiso_editar=1");
 			-->
       </script>
 <?php if($doc["numcampos"]>1){ ?>
@@ -81,7 +81,7 @@ else{ ?>
  <input type="submit" value="Continuar" class="btn btn-primary btn-mini">
  <button class="btn btn-mini" id="" onclick="window.open('<?php echo($ruta_db_superior); ?>pantallas/expediente/adicionar_expediente_documento.php?iddoc=<?php echo(@$_REQUEST["iddoc"]); ?>','_self'); return false;">Adicionar a un nuevo expediente</button>
 </div>
- </form> 
+ </form>
  <script>
  $().ready(function() {
 	$('#form1').submit(function(){
@@ -90,12 +90,12 @@ else{ ?>
       {$('#expedientes').val(seleccionados);
        return(true);
       }
-    else  
+    else
       {$('#expedientes').val('');
        //alert("Debe seleccionar al menos un expediente");
        return(true);
       }
-    return(false);   
+    return(false);
   });
   $('#accion1').click(function(){
     tree2.deleteChildItems(0);
@@ -104,6 +104,6 @@ else{ ?>
   $('#accion0').click(function(){
     tree2.deleteChildItems(0);
     tree2.loadXML("test_expediente.php?doc=<?php echo($iddoc); ?>&accion=0&permiso_editar=1");
-  }); 
+  });
 });
 </script>

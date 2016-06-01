@@ -2620,10 +2620,10 @@ table .span24 {
 }
 
 .icon-leido{
- background-position: -144px -168px;
+ background-position: -96px -120px;
 }
 .icon-no_leido {
- background-position: -168px -168px;
+ background-position: 0px 0px;
 }
 
 .dropup,
@@ -5617,7 +5617,7 @@ a.badge:hover {
 
 .pull-right {
   float: right;
-}      
+}
 
 .pull-left {
   float: left;
@@ -5638,9 +5638,8 @@ a.badge:hover {
 .affix {
   position: fixed;
 }
-    
+
 
 .icon-no_visto {
  background-position: -2px 1px;
-}     
-      
+}
