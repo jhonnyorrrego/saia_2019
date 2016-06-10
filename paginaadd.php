@@ -377,7 +377,7 @@ include_once("librerias_saia.php");
         }
 
         function onOpen(evt) {
-            writeToScreen("CONNECTED: " + clientId);
+            //writeToScreen("CONNECTED: " + clientId);
             //doSend("WebSocket rocks");
              notificacion_saia('Ejecutando Scanner','success','',1500);
         }
