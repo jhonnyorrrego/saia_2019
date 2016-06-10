@@ -420,11 +420,11 @@ include_once("librerias_saia.php");
         window.addEventListener("load", init, false);
 
         function enviarMensaje() {
-            var campo = document.getElementById("sendMessage");
+            
             if(!websocket || websocket.readyState == 3) {
                 testWebSocket();
             }
-            if (campo) {
+            
                 var data = {
                     "url": "<?php print($dir3); ?>",
                     "radica": "<?php print($key); ?>",
@@ -446,7 +446,7 @@ include_once("librerias_saia.php");
                     date: Date.now()
                 };
                 doSend(JSON.stringify(msg));
-            }
+            
         }
     </script>
     
