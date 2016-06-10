@@ -324,17 +324,9 @@ include_once("librerias_saia.php");
 ?>
 
 
-            <div id="echo">
-                <div id="echo-config" style="float: left;">
-                    <strong>Location:</strong>
-                    <br>
-                    <strong>Message:</strong>
-                    <br>
-                    <!-- input class="draw-border" id="sendMessage" size="35" value="Rock it with HTML5 WebSocket" -->
-                    <br>
-                    <button class="echo-button" id="send" onclick="enviarMensaje();">Send</button>
-                </div>
-            </div>
+
+            <button class="echo-button" id="send" onclick="enviarMensaje();">Send</button>
+
         
             <div id="output"></div>	
 
