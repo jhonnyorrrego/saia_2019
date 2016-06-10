@@ -38,7 +38,12 @@ if($id and $id<>"" && @$_REQUEST["uid"] && $id!=-1){
 	$dep=str_replace("d","",$parseo[0]);
 	
 	$series_disponibles=busca_filtro_tabla("serie_idserie","entidad_serie a","a.entidad_identidad='2' and a.llave_entidad='".$dep."' and a.estado='1'","",$conn);
-	$series_dispon=extrae_campo($series_disponibles,"serie_idserie");
+	if(!$series_disponibles['numcampos']){
+		$series_dispon=array();
+		$dep=0;
+	}else{
+		$series_dispon=extrae_campo($series_disponibles,"serie_idserie");		
+	}
 	
   echo("<tree id=\"".$id."\">\n");
 	llenar_hijos_series($parseo[1],$dep,$series_dispon);
@@ -57,6 +62,14 @@ llena_serie("NULL");
 echo("<item style=\"font-family:verdana; font-size:7pt;\" text=\"Series sin asignar\" id=\"-1\" child=\"1\">");
 //series_sin_asignar();
 echo("</item>");
+
+
+
+$tabla_otra = 'serie';
+echo  "<item style=\"font-family:verdana; font-size:7pt;\" text=\"Otras categorias\" id=\"3-categoria-Otras categorias\" >\n"; 
+       llena_serie_otras("NULL"," and categoria=3 ");
+echo "</item>\n";	
+
 echo("</tree>\n");
 $activo = "";
 ?>
@@ -81,7 +94,13 @@ if($papas["numcampos"]){
     if(@$papas[$i]["codigo"]){
       $cadena_codigo="(".$papas[$i]["codigo"].")";
     }
-    echo("text=\"".htmlspecialchars($papas[$i]["nombre"]).$cadena_codigo." \" id=\"d".$papas[$i]["id$tabla"]."\"");
+    
+	if($tabla=="serie"){
+		echo("text=\"".htmlspecialchars($papas[$i]["nombre"]).$cadena_codigo." \" id=\"d".$papas[$i]["id$tabla"].'-'.$papas[$i]["id$tabla"]."\"");
+	}else{
+		echo("text=\"".htmlspecialchars($papas[$i]["nombre"]).$cadena_codigo." \" id=\"d".$papas[$i]["id$tabla"]."\"");
+	}    
+    
     if($hijos[0]["cant"]!=0 && ($tabla=="serie" || @$_REQUEST["sin_padre"]))
       echo(" nocheckbox=\"1\" "); 
     if(in_array($papas[$i]["id$tabla"],$seleccionado)!==false)
@@ -121,7 +140,11 @@ function llena_series_asignadas($id){
 }
 function llenar_hijos_series($id,$dep,$series_dispon){
 	global $conn;
-	$series=busca_filtro_tabla("","serie a","a.cod_padre=".$id." and a.idserie in(".implode(",",$series_dispon).")","",$conn);
+	if(count($series_dispon)){
+		$series=busca_filtro_tabla("","serie a","a.cod_padre=".$id." and a.idserie in(".implode(",",$series_dispon).")","",$conn);		
+	}else{
+		$series=busca_filtro_tabla("","serie a","a.cod_padre=".$id."","",$conn);	
+	}
 
 	for($i=0;$i<$series["numcampos"];$i++){
 		$hijos = busca_filtro_tabla("count(*) AS cant","serie","cod_padre=".$series[$i]["idserie"],"",$conn);
@@ -145,4 +168,60 @@ function series_sin_asignar(){
 		echo("</item>\n");
 	}
 } 
+
+function llena_serie_otras($serie,$condicion=""){
+global $conn,$tabla_otra,$seleccionado,$activo,$excluidos;
+if(isset($_REQUEST["orden"]))
+  $orden=$_REQUEST["orden"];
+else
+  $orden="nombre";
+if($serie=="NULL")
+  $papas=busca_filtro_tabla("*",$tabla_otra,"(cod_padre IS NULL OR cod_padre=0) $activo $condicion $excluidos","$orden ASC",$conn);
+else
+  $papas=busca_filtro_tabla("*",$tabla_otra,"cod_padre=".$serie.$activo.$condicion.$excluidos,"$orden ASC",$conn); 
+
+if($papas["numcampos"])
+{ 
+  for($i=0; $i<$papas["numcampos"]; $i++)
+  {
+    $hijos = busca_filtro_tabla("count(*) AS cant",$tabla_otra,"cod_padre=".$papas[$i]["id$tabla_otra"].$activo.$condicion,"",$conn);
+    echo("<item style=\"font-family:verdana; font-size:7pt;\" ");
+    $cadena_codigo='';
+    if(@$papas[$i]["codigo"]){
+      $cadena_codigo="(".$papas[$i]["codigo"].")";
+    }
+	
+		if($tabla=="serie"){
+			if(@$papas[$i]["estado"]==1){
+				$estado_serie=' - ACTIVA';	
+			}else{
+				$estado_serie=' - INACTIVA';				
+			}
+		}	
+	
+    echo("text=\"".htmlspecialchars(($papas[$i]["nombre"])).$cadena_codigo." \" id=\"".$papas[$i]["id$tabla_otra"]."-".$papas[$i]["id$tabla_otra"]."\"");
+		if(@$_REQUEST["arbol_series"]){		
+				
+	}		
+	else if($hijos[0]["cant"]!=0 && ($tabla_otra=="serie" || @$_REQUEST["sin_padre"])){		
+      echo(" nocheckbox=\"1\" ");		
+	}
+    if(in_array($papas[$i]["id$tabla"],$seleccionado)!==false)
+      echo " checked=\"1\" ";  
+    if($hijos[0][0])
+      echo(" child=\"1\">\n");
+    else
+      echo(" child=\"0\">\n");
+		if(!$_REQUEST["id_otra"] && $tabla_otra!='serie')
+    	llena_serie_otras($papas[$i]["id$tabla_otra"]);
+		else{
+			if(!$_REQUEST["admin"]){
+				llena_serie_otras($papas[$i]["id$tabla_otra"]);
+			}
+		}
+    echo("</item>\n");
+  }     
+}
+return;
+}
 ?>
