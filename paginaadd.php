@@ -314,6 +314,16 @@ if ($_REQUEST["mostrar_formato"]) {
 </form>
 
 
+<?php
+//poner notificaciones noty
+include_once("librerias_saia.php");
+	global $raiz_saia;
+	$raiz_saia='';
+    echo(librerias_notificaciones());
+
+?>
+
+
             <div id="echo">
                 <div id="echo-config" style="float: left;">
                     <strong>Location:</strong>
