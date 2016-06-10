@@ -289,6 +289,25 @@ if ($_REQUEST["mostrar_formato"]) {
 				<input type="radio" name="x_escaneo" value="0" checked>
 			</span></td>
 		</tr>
+		
+		<tr>
+            <div id="echo">
+                <div id="echo-config" style="float: left;">
+                    <strong>Location:</strong>
+                    <br>
+                    <strong>Message:</strong>
+                    <br>
+                    <input class="draw-border" id="sendMessage" size="35" value="Rock it with HTML5 WebSocket">
+                    <br>
+                    <button class="echo-button" id="send" onclick="enviarMensaje();">Send</button>
+                </div>
+            </div>
+        
+        
+            <div id="output"></div>		    
+		</tr>
+		
+		
 		<!--tr>
 			<td colspan="3">
 			<applet code="uk.co.mmscomputing.application.imageviewer.MainApp.class"  archive="visor.jar" width="100%" height="640" name="scaner">
