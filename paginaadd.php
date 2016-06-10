@@ -308,6 +308,12 @@ if ($_REQUEST["mostrar_formato"]) {
 			</applet></td>
 		</tr-->
 	</table>
+
+	
+	
+</form>
+
+
             <div id="echo">
                 <div id="echo-config" style="float: left;">
                     <strong>Location:</strong>
@@ -321,9 +327,6 @@ if ($_REQUEST["mostrar_formato"]) {
             </div>
         
             <div id="output"></div>	
-	
-	
-</form>
 
     <script language="javascript" type="text/javascript">
         //var wsUri = "ws://echo.websocket.org/";
