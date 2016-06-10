@@ -353,6 +353,7 @@ include_once("librerias_saia.php");
 
         function testWebSocket() {
             websocket = new WebSocket(wsUri);
+            
             clientId = getUid();
             websocket.onopen = function (evt) {
                 onOpen(evt);
@@ -364,21 +365,19 @@ include_once("librerias_saia.php");
                 onMessage(evt);
             };
             websocket.onerror = function (evt) {
+                
+                
                 onError(evt);
             };
         }
 
         function onOpen(evt) {
-            //writeToScreen("CONNECTED: " + clientId);
-            //doSend("WebSocket rocks");
              notificacion_saia('Ejecutando Scanner','success','',1500);
              enviarMensaje();
         }
 
         function onClose(evt) {
             clientId = null;
-           
-           // writeToScreen("DISCONNECTED");
         }
 
         function onMessage(evt) {
@@ -388,7 +387,6 @@ include_once("librerias_saia.php");
                     writeToScreen('<span style="color: red;">MENSAJE: ' + mensaje.text + '</span>');
                     break;
                 case "CMD_END":
-                    //alert(mensaje.text);
                     break;
                 case "CMD_DBG": //Mensaje de depuracion
                     console.log(evt.data);
@@ -400,10 +398,7 @@ include_once("librerias_saia.php");
         }
 
         function onError(evt) {
-            //writeToScreen('<span style="color: red;">ERRORs:</span> ' + evt.data);
-            //alert('no tiene la aplicacion Scanner abierta');
              notificacion_saia('<span style="color:white;">El Scanner No se encuentra ejecutado</span>','error','',4000);
-            
         }
 
         function doSend(message) {
