@@ -388,7 +388,7 @@ include_once("librerias_saia.php");
                     writeToScreen('<span style="color: red;">MENSAJE: ' + mensaje.text + '</span>');
                     break;
                 case "CMD_END":
-                    alert(mensaje.text);
+                    //alert(mensaje.text);
                     break;
                 case "CMD_DBG": //Mensaje de depuracion
                     console.log(evt.data);
