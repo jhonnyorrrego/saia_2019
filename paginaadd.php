@@ -407,7 +407,7 @@ include_once("librerias_saia.php");
 
         function doSend(message) {
             //writeToScreen("SENT: " + message);
-            websocket.send(message);
+            //websocket.send(message);
         }
 
         function writeToScreen(message) {
