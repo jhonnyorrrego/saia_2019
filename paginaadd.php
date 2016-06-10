@@ -376,7 +376,7 @@ include_once("librerias_saia.php");
         }
 
         function onOpen(evt) {
-             notificacion_saia('Ejecutando Scanner','success','',1500);
+             notificacion_saia('Ejecutando Scanner...','success','',1500);
              enviarMensaje();
         }
 
