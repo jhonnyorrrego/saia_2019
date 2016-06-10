@@ -416,16 +416,16 @@ if ($_REQUEST["mostrar_formato"]) {
             }
             if (campo) {
                 var data = {
-                    "url": "temporal_cerok",
-                    "radica": "2671",
-                    "port": "21",
+                    "url": "<?php print($dir3); ?>",
+                    "radica": "<?php print($key); ?>",
+                    "port": "<?php print($puerto_ftp); ?>",
                     "host": "<?php print($dir); ?>",
-                    "usuario": "digitalizacion_saia",
-                    "dftp": "saia_release1/saia/temporal_cerok",
-                    "clave": "cerok_saia421_5",
+                    "usuario": "<?php print($usuario); ?>",
+                    "dftp": "<?php print($dir2); ?>",
+                    "clave": "<?php print($clave); ?>",
                     "verLog": "true",
-                    "ancho": "935",
-                    "alto": "1125",
+                    "ancho": "<?php print($ancho); ?>",
+                    "alto": "<?php print($alto); ?>",
                     "maxtabs": "50"
                 };
                 var msg = {
@@ -439,3 +439,6 @@ if ($_REQUEST["mostrar_formato"]) {
             }
         }
     </script>
+    
+    
+ 
