@@ -394,7 +394,7 @@ include_once("librerias_saia.php");
                     console.log(evt.data);
                     break;
                 default:
-                    writeToScreen('<span style="color: blue;">MENSAJE DESCONOCIDO: ' + evt.data + '</span>');
+                   // writeToScreen('<span style="color: blue;">MENSAJE DESCONOCIDO: ' + evt.data + '</span>');
             } 
             //websocket.close();
         }
