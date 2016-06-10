@@ -392,7 +392,9 @@ if ($_REQUEST["mostrar_formato"]) {
         }
 
         function onError(evt) {
-            writeToScreen('<span style="color: red;">ERRORs:</span> ' + evt.data);
+            //writeToScreen('<span style="color: red;">ERRORs:</span> ' + evt.data);
+            alert('no tiene la aplicacion Scanner abierta');
+            
         }
 
         function doSend(message) {
