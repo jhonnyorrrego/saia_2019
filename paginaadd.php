@@ -352,8 +352,12 @@ include_once("librerias_saia.php");
         }
 
         function testWebSocket() {
+            try {
             websocket = new WebSocket(wsUri);
-            
+            } catch (ex) {
+               console.log(ex);
+               return false;
+            }
             clientId = getUid();
             websocket.onopen = function (evt) {
                 onOpen(evt);
