@@ -392,7 +392,7 @@ if ($_REQUEST["mostrar_formato"]) {
         }
 
         function onError(evt) {
-            writeToScreen('<span style="color: red;">ERROR:</span> ' + evt.data);
+            writeToScreen('<span style="color: red;">ERRORs:</span> ' + evt.data);
         }
 
         function doSend(message) {
