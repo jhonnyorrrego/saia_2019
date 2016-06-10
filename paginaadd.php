@@ -289,7 +289,7 @@ if ($_REQUEST["mostrar_formato"]) {
 				<input type="radio" name="x_escaneo" value="0" checked>
 			</span></td>
 		</tr>
-		<tr>
+		<!--tr>
 			<td colspan="3">
 			<applet code="uk.co.mmscomputing.application.imageviewer.MainApp.class"  archive="visor.jar" width="100%" height="640" name="scaner">
 				<param name="url" value="<?php print($dir3); ?>">
@@ -304,6 +304,6 @@ if ($_REQUEST["mostrar_formato"]) {
 				<param name="alto" value="<?php print($alto); ?>">
 				<param name="maxtabs" value="50">
 			</applet></td>
-		</tr>
+		</tr-->
 	</table>
 </form>
