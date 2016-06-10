@@ -358,7 +358,7 @@ include_once("librerias_saia.php");
                 onOpen(evt);
             };
             websocket.onclose = function (evt) {
-                //onClose(evt);
+                onClose(evt);
             };
             websocket.onmessage = function (evt) {
                 onMessage(evt);
