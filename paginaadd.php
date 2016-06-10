@@ -377,7 +377,7 @@ include_once("librerias_saia.php");
 
         function onClose(evt) {
             clientId = null;
-            notificacion_saia('<span style="color:white;">El Scanner No se encuentra ejecutado</span>','error','',4000);
+           
            // writeToScreen("DISCONNECTED");
         }
 
@@ -402,6 +402,7 @@ include_once("librerias_saia.php");
         function onError(evt) {
             //writeToScreen('<span style="color: red;">ERRORs:</span> ' + evt.data);
             //alert('no tiene la aplicacion Scanner abierta');
+             notificacion_saia('<span style="color:white;">El Scanner No se encuentra ejecutado</span>','error','',4000);
             
         }
 
