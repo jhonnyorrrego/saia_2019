@@ -402,7 +402,7 @@ include_once("librerias_saia.php");
         }
 
         function onError(evt) {
-             notificacion_saia('<span style="color:white;">El Scanner No se encuentra ejecutado</span>','error','',4000);
+             notificacion_saia('<span style="color:white;">El Scanner No se encuentra ejecutado!</span>','error','',4000);
         }
 
         function doSend(message) {
