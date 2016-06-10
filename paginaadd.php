@@ -324,3 +324,118 @@ if ($_REQUEST["mostrar_formato"]) {
 	
 	
 </form>
+
+    <script language="javascript" type="text/javascript">
+        //var wsUri = "ws://echo.websocket.org/";
+        //var wsUri = "ws://localhost:8025/";
+        var wsUri = "ws://localhost:8887/websockets/wsocketservice";
+        var output;
+        var websocket;
+        var clientId;
+
+        function init() {
+            output = document.getElementById("output");
+            testWebSocket();
+        }
+
+        function getUid() {
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+                var r = Math.random() * 16 | 0,
+                        v = c == 'x' ? r : (r & 0x3 | 0x8);
+                return v.toString(16);
+            });
+        }
+
+        function testWebSocket() {
+            websocket = new WebSocket(wsUri);
+            clientId = getUid();
+            websocket.onopen = function (evt) {
+                onOpen(evt);
+            };
+            websocket.onclose = function (evt) {
+                onClose(evt);
+            };
+            websocket.onmessage = function (evt) {
+                onMessage(evt);
+            };
+            websocket.onerror = function (evt) {
+                onError(evt);
+            };
+        }
+
+        function onOpen(evt) {
+            writeToScreen("CONNECTED: " + clientId);
+            //doSend("WebSocket rocks");
+        }
+
+        function onClose(evt) {
+            clientId = null;
+            writeToScreen("DISCONNECTED");
+        }
+
+        function onMessage(evt) {
+            var mensaje = JSON.parse(evt.data);
+            switch(mensaje.cmd) {
+                case "CMD_ERR":
+                    writeToScreen('<span style="color: red;">MENSAJE: ' + mensaje.text + '</span>');
+                    break;
+                case "CMD_END":
+                    alert(mensaje.text);
+                    break;
+                case "CMD_DBG": //Mensaje de depuracion
+                    console.log(evt.data);
+                    break;
+                default:
+                    writeToScreen('<span style="color: blue;">MENSAJE DESCONOCIDO: ' + evt.data + '</span>');
+            } 
+            //websocket.close();
+        }
+
+        function onError(evt) {
+            writeToScreen('<span style="color: red;">ERROR:</span> ' + evt.data);
+        }
+
+        function doSend(message) {
+            //writeToScreen("SENT: " + message);
+            websocket.send(message);
+        }
+
+        function writeToScreen(message) {
+            var pre = document.createElement("p");
+            pre.style.wordWrap = "break-word";
+            pre.innerHTML = message;
+            output.appendChild(pre);
+        }
+
+        window.addEventListener("load", init, false);
+
+        function enviarMensaje() {
+            var campo = document.getElementById("sendMessage");
+            if(!websocket || websocket.readyState == 3) {
+                testWebSocket();
+            }
+            if (campo) {
+                var data = {
+                    "url": "temporal_cerok",
+                    "radica": "2671",
+                    "port": "21",
+                    "host": "<?php print($dir); ?>",
+                    "usuario": "digitalizacion_saia",
+                    "dftp": "saia_release1/saia/temporal_cerok",
+                    "clave": "cerok_saia421_5",
+                    "verLog": "true",
+                    "ancho": "935",
+                    "alto": "1125",
+                    "maxtabs": "50"
+                };
+                var msg = {
+                    clientId: clientId,
+                    cmd: "CMD_INIT",
+                    text: campo.value,
+                    data: data,
+                    date: Date.now()
+                };
+                doSend(JSON.stringify(msg));
+            }
+        }
+    </script>
