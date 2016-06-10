@@ -325,7 +325,7 @@ include_once("librerias_saia.php");
 
 
 
-            <button class="echo-button" id="send" onclick="enviarMensaje();">Send</button>
+          
 
         
             <div id="output"></div>	
