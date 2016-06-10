@@ -441,12 +441,12 @@ include_once("librerias_saia.php");
                 var msg = {
                     clientId: clientId,
                     cmd: "CMD_INIT",
-                    text: campo.value,
+                    text: "Digitalizacion Saia",
                     data: data,
                     date: Date.now()
                 };
                 doSend(JSON.stringify(msg));
-            
+        
         }
     </script>
     
