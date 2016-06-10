@@ -1,5 +1,4 @@
 <?php
-
 $max_salida=6; // Previene algun posible ciclo infinito limitando a 10 los ../
 $ruta_db_superior=$ruta="";
 while($max_salida>0){
@@ -9,8 +8,24 @@ while($max_salida>0){
   $ruta.="../";
   $max_salida--;
 }
-
 include_once($ruta_db_superior."db.php");
+
+//CONFIGURACION
+
+/*CONDICIONES DEL ARCHIVO A SUBIR:
+	- No debe existir comas(,) en los textos
+ 	- No debe existir saltos de linea dentro de las celdas
+ 	- Si se va a almacenar entidad_serie se debe validar que las dependencias existan en saia y que tengan el mismo nombre (incluidas tildes), de igual manera no funciona si no encuentra una dependencia. 
+	 
+*/
+die();
+$archivo="carga_final_series.csv"; //RUTA ARCHIVO A CARGAR
+$insertar_entidad_serie=1; //SI SE DESEA O NO INSERTAR EN ENTIDAD_SERIE;
+$consecutivo_serie=153; //EL ULTIMO CONSECUTIVO INGRESADO EN LA TABLA SERIE A INSERTAR
+$cod_padre_fijos=array(); //COD_PADRES QUE NO CAMBIAN DE VALOR, ES DECIR QUE YA ESTAN CREADOS EN BASE DE DATOS
+
+//---------------------------------------------------------------------------------------------------------------------
+
 
 function tildes_html($cadena){ 
     return str_replace(array("á","é","í","ó","ú","ñ","Á","É","Í","Ó","Ú","Ñ"),
@@ -18,16 +33,12 @@ function tildes_html($cadena){
                                                     "&Aacute;","&Eacute;","&Iacute;","&Oacute;","&Uacute;","&Ntilde;"), $cadena);     
 }
 
-$archivo="prueba_carga.csv";
-$insertar_entidad_serie=1; //SI SE DESEA O NO INSERTAR EN ENTIDAD_SERIE;
-
-
 $gestor = fopen($archivo, "rb");
 if($gestor){
     $contenido = fread($gestor, filesize($archivo));
 }
 else{
-    alerta("No Se Realizo la Actualizacion de Datos de Intranet por el archivo");
+    alerta("No se encuentra el CSV, verifique la ruta o los permisos");
     return(false);
 }
 fclose($gestor);
@@ -43,6 +54,8 @@ for($i=6;$i<count($records);$i++){ //EMPIEZA A VALIDAD APARTIR DE LA COLUMNA 6
 	}
 }	
 $dependencias=array_unique($dependencias);
+
+
 $dependencias=explode(',',tildes_html(implode(',',$dependencias)));
 $iddependencias=array();
 $dependencias_no_encontradas=array();
@@ -77,30 +90,44 @@ if($realizar_insert){
     
             //SERIE
     		$fieldList=array();//cols
+    		
+    		$fieldList["idserie"] = intval($valores[0])+$consecutivo_serie; //A
     		$fieldList["codigo"] = $valores[1]; //B
     		$fieldList["nombre"] = html_entity_decode($valores[2]); //C
-    		$fieldList["categoria"] = $valores[3]; //D
-    		$fieldList["tipo"] = $valores[4]; //E
-    		$fieldList["cod_padre"] = $valores[5]; //F
-    		$fieldList["dias_entrega"] = $valores[6]; //G
-    		$fieldList["retencion_gestion"] = $valores[7]; //H
-    		$fieldList["retencion_central"] = $valores[8]; //I
-    		$fieldList["conservacion"] = $valores[9]; //J
-    		$fieldList["seleccion"] = $valores[10]; //K
-    		$fieldList["digitalizacion"] = $valores[11]; //L
-    		$fieldList["procedimiento"] = $valores[12]; //M
-    		$fieldList["copia"] = $valores[13]; //N
-    		$fieldList["estado"] = $valores[15]; //P
+    		$fieldList["categoria"] = intval($valores[3]); //D
+    		$fieldList["tipo"] = intval($valores[4]); //E
     		
+    		if($valores[5]!='' && !is_null($valores[5])){
+    			
+				if(in_array($valores[5], $cod_padre_fijos)){
+					$fieldList["cod_padre"] = intval($valores[5]); //F
+				}else{
+					$fieldList["cod_padre"] = intval($valores[5])+$consecutivo_serie; //F
+				}	
+    		}
+    		
+    		$fieldList["dias_entrega"] = intval($valores[6]); //G
+    		$fieldList["retencion_gestion"] = intval($valores[7]); //H
+    		$fieldList["retencion_central"] = intval($valores[8]); //I
+    		$fieldList["conservacion"] = intval($valores[9]); //J
+    		$fieldList["seleccion"] = intval($valores[10]); //K
+    		$fieldList["digitalizacion"] = intval($valores[11]); //L
+    		$fieldList["procedimiento"] = $valores[12]; //M
+    		$fieldList["copia"] = intval($valores[13]); //N
+    		$fieldList["estado"] =intval($valores[15]); //P
+    		 
     		$tabla="serie";
     		$strsql = "INSERT INTO ".$tabla." (";
     		$strsql .= implode(",", array_keys($fieldList));			
     		$strsql .= ") VALUES ('";			
     		$strsql .= implode("','", array_values($fieldList));			
     		$strsql .= "')";
+			
+			//print_r($strsql);die('');
+			
             phpmkr_query($strsql);
-            $idserie=phpmkr_insert_id();
-            
+            $idserie=$fieldList["idserie"];              
+			 
             //ENTIDAD_SERIE
             if($idserie && $insertar_entidad_serie){
                 $entidad=html_entity_decode($valores[14]); // O
@@ -114,6 +141,7 @@ if($realizar_insert){
         		$strsql2 .= ") VALUES ('";			
         		$strsql2 .= implode("','", array_values($fieldList2));			
         		$strsql2 .= "')";  
+
         		phpmkr_query($strsql2);
         		$entidad_serie=phpmkr_insert_id();
         		if(!$entidad_serie){
@@ -128,7 +156,9 @@ if($realizar_insert){
     //LOG_ERROR
     
     if( count($series_no_insertadas) ){
-        $fp = fopen('errores.txt', 'a');
+    	$ruta_log='errores.txt';
+		
+        $fp = fopen($ruta_log, 'a');
         fwrite($fp, "----------------------------------------------------------------------------");
         fwrite($fp, "Series NO insertadas (".date('Y-m-d H:i:s').")");
         fwrite($fp, "\n");
@@ -140,9 +170,12 @@ if($realizar_insert){
         fwrite($fp, "\n");
         fwrite($fp, "\n");         
         fclose($fp);
+        chmod($ruta_log,0777);
+		echo('problemas al insertar algunas series<br>');
     }
     if( count($entidad_series_no_insertadas) ){
-        $fp = fopen('errores.txt', 'a');
+    	$ruta_log='errores.txt';
+        $fp = fopen($ruta_log, 'a');
         fwrite($fp, "----------------------------------------------------------------------------");
         fwrite($fp, "Entidad Series NO insertadas (".date('Y-m-d H:i:s').")");
         fwrite($fp, "\n");
@@ -153,10 +186,13 @@ if($realizar_insert){
         }
         fwrite($fp, "\n");
         fwrite($fp, "\n");         
-        fclose($fp);        
+        fclose($fp); 
+		chmod($ruta_log,0777);
+        echo('problemas al insertar algunas entidad series<br>');       
     }
 }
- 
+
+echo('fin: '.date('Y-m-d H:i:s')); 
 die();
       
 ?> 
