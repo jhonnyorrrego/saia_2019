@@ -31,7 +31,7 @@ if(!$_SESSION["LOGIN".LLAVE_SAIA] && @$_REQUEST["LOGIN"] && @$_REQUEST["usuario_
 	$usuactual=$_REQUEST["LOGIN"];
 }
 include_once($ruta_db_superior . 'formatos/librerias/encabezado_pie_pagina.php');
-require_once($ruta_db_superior . 'tcpdf/config/lang/spa.php');
+//require_once($ruta_db_superior . 'tcpdf/config/lang/spa.php');
 require_once($ruta_db_superior . 'tcpdf/tcpdf.php');
 
 class Imprime_Pdf {
