@@ -68,7 +68,7 @@ if (@$_REQUEST["userid"]<>"" && @$_REQUEST["passwd"]<>"") {
 			}
 			else{
 			     $retorno["ingresar"]=0;
-          $retorno["mensaje"]="<b>El funcionario esta inactivo o no pertenece al sistema!<b> <br> por favor comuniquese con el administrador del sistema.";
+                 $retorno["mensaje"]="<b>El funcionario esta inactivo o no pertenece al sistema!<b> <br> por favor comuniquese con el administrador del sistema.";
 			   	/*@session_unset();
           @session_destroy();*/
           //almacenar_sesion(0,$sUserId);
