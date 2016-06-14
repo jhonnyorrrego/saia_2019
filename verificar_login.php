@@ -20,6 +20,7 @@ if (@$_REQUEST["userid"]<>"" && @$_REQUEST["passwd"]<>"") {
 	$configuracion=busca_filtro_tabla("A.valor","configuracion A","A.tipo='usuario' AND A.nombre='login_administrador'","",$conn);
 	$clave_admin=busca_filtro_tabla("A.valor","configuracion A","A.tipo='clave' AND A.nombre='clave_administrador'","",$conn); 
 	if($configuracion["numcampos"]&&$clave_admin["numcampos"] && $configuracion[0]["valor"]==$sUserId && $clave_admin[0]["valor"]==$sPassWd){
+	    $estado_admin=busca_filtro_tabla("","funcionario","lower(login)='".strtolower($sUserId)."'","",$conn);
     $_SESSION["LOGIN".LLAVE_SAIA]=$sUserId;
     cerrar_sesiones_activas($sUserId);
     $bValidPwd=true;
