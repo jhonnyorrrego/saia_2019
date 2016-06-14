@@ -28,6 +28,7 @@ if (@$_REQUEST["userid"]<>"" && @$_REQUEST["passwd"]<>"") {
     $retorno["ruta"]=$redirecciona_exito;
     die(stripslashes(json_encode($retorno)));           
   }
+  $seguir_validando=1;
 	if (!($bValidPwd)) {			
 			$sUserId = (!get_magic_quotes_gpc()) ? addslashes($sUserId) : $sUserId;
 			$usuario = busca_filtro_tabla("A.*,".fecha_db_obtener("A.ultimo_pwd",'Y-m-d')." AS ultimo_pwd1 ,1 AS dep_estado,1 AS cargo_estado, ".resta_fechas('ultimo_pwd','')." AS dias","funcionario A","A.login = '" . $sUserId . "' AND A.estado=1","",$conn);
@@ -67,6 +68,7 @@ if (@$_REQUEST["userid"]<>"" && @$_REQUEST["passwd"]<>"") {
         }
 			}
 			else{
+			     $seguir_validando=0;
 			     $retorno["ingresar"]=0;
                  $retorno["mensaje"]="<b>El funcionario esta inactivo o no pertenece al sistema!<b> <br> por favor comuniquese con el administrador del sistema.";
 			   	/*@session_unset();
