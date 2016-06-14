@@ -23,7 +23,7 @@ include_once($ruta_db_superior."db.php");
  
 function crear_modulo_formato_importar($idformato) {
 	global $conn;
-	$datos_formato = busca_filtro_tabla("nombre,etiqueta,cod_padre,nombre_tabla,ruta_mostrar", "formato", "idformato=" . $idformato, "", $conn);
+	$datos_formato = busca_filtro_tabla("nombre,etiqueta,cod_padre,nombre_tabla,ruta_mostrar,ruta_adicionar", "formato", "idformato=" . $idformato, "", $conn);
 	$modulo_formato = busca_filtro_tabla("", "modulo", "nombre = 'ver_formatos'", "", $conn);
 	if(!$modulo_formato['numcampos']){
 		$modulo_formato = busca_filtro_tabla("", "modulo", "nombre = 'creacion_formatos'", "", $conn);
@@ -449,6 +449,7 @@ function generar_importar($datos){
 						$strsql .= implode("','", array_values($vector_funciones_formato));			
 						$strsql .= "')";
 						phpmkr_query($strsql);
+						$idfunciones_formato=0;
 						$idfunciones_formato=phpmkr_insert_id();		
 					}
 					
@@ -481,6 +482,7 @@ function generar_importar($datos){
 									$strsql .= implode("','", array_values($vector_accion_funcion));			
 									$strsql .= "')";
 									phpmkr_query($strsql);
+									$idfunciones_formato_accion=0;
 									$idfunciones_formato_accion=phpmkr_insert_id();	
 									if(!$idfunciones_formato_accion){
 										$formato['funciones_formato_accion_error']['funciones_formato_accion_error_'.$j]=$strsql;

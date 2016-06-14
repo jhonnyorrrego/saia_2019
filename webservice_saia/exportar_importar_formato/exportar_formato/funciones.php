@@ -125,7 +125,7 @@ function generar_funciones_formato($idformato){
 
 		//FUNCIONES_FORMATO
 		$formato=array();
-		$condicional="formato LIKE'%,$idformato,%' OR formato LIKE '$idformato,%' OR formato LIKE'%,$idformato' OR formato=$idformato";
+		$condicional="formato LIKE'%,$idformato,%' OR formato LIKE '$idformato,%' OR formato LIKE'%,$idformato' OR formato='$idformato'";
 		$funciones_formato=busca_filtro_tabla("","funciones_formato",$condicional,"",$conn);
 		
 		if($funciones_formato['numcampos']){

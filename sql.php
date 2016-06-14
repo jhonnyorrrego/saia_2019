@@ -1436,7 +1436,7 @@ $conn-objeto de tipo sql
 <Post-condiciones>
 */
   function Ultimo_Insert_Mysql()
-    {// alerta(@mysql_insert_id());
+    { 
     	return @mysqli_insert_id($this->Conn->conn);
     }
 

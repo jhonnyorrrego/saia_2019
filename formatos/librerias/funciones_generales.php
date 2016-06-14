@@ -2414,6 +2414,34 @@ $hijo=busca_filtro_tabla("",$tabla,$campo_enlace."=".$llave,$orden,$lcampos);
  
 return($texto);
 }        */
+function listar_formato_hijo($campos,$tabla,$campo_enlace,$llave,$orden,$alinear='center',$condicion=''){
+global $conn,$idformato;
+$where="";
+if(count($campos)){
+  $where.=" AND A.nombre IN('".implode("','",$campos)."')";
+}
+$lcampos=busca_filtro_tabla("A.*,B.idformato","campos_formato A,formato B","B.nombre_tabla LIKE '".$tabla."' AND A.formato_idformato=B.idformato".$where,"A.orden",$conn);
+$hijo=busca_filtro_tabla("a.*",$tabla." a,documento d","documento_iddocumento=iddocumento and d.estado<>'ELIMINADO' and ".$campo_enlace."=".$llave.$condicion,$orden,$lcampos);
+
+    if($hijo["numcampos"] && $lcampos["numcampos"]){
+      $texto='<table bordercolor="black" style="border-collapse:collapse" border="1" width="100%"><tr class="encabezado_list">';
+      for($j=0;$j<$lcampos["numcampos"];$j++){
+        $texto.='<td>'.$lcampos[$j]["etiqueta"]."</td>";
+      }
+      $texto.="</tr>";
+      for($i=0;$i<$hijo["numcampos"];$i++){
+        $texto.='<tr class="celda_transparente">';
+        for($j=0;$j<$lcampos["numcampos"];$j++){
+          $texto.='<td align="center">'.mostrar_valor_campo($lcampos[$j]["nombre"],$lcampos[$j]["formato_idformato"],$hijo[$i]["documento_iddocumento"],1)."</td>";
+        }
+        $texto.='</tr>';
+      }
+      $texto.='</table>';
+    }
+ 
+return($texto);
+}  
+
 /*Hace referencia al documento del cual es respuesta de existir*/
 /*<Clase>
 <Nombre></Nombre>

@@ -57,6 +57,12 @@
 		
 		$ok=acceso_modulo($modulo_formato[0]['idmodulo']);
 		
+		if(!$ok){
+			$modulo_formato=busca_filtro_tabla('','modulo','nombre="crear_'.$lista_formatos[$i]['nombre'].'"','',$conn);
+			$ok=acceso_modulo($modulo_formato[0]['idmodulo']);			
+		}
+		
+		
 		if($ok && $modulo_formato['numcampos']){
 			$etiqueta=codifica_encabezado(html_entity_decode($lista_formatos[$i]['etiqueta']));
 			$etiqueta=strtolower($etiqueta);

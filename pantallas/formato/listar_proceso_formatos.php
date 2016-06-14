@@ -43,14 +43,31 @@ if(count($request)){
 					$ok=acceso_modulo($modulo_formato[0]['idmodulo']);
 					if($ok){
 						$mostrar=1;
+					}else{
+						$modulo_formato=busca_filtro_tabla('','modulo','nombre="crear_'.$cuantos_formatos[0]['nombre'].'"','',$conn);
+						$ok=acceso_modulo($modulo_formato[0]['idmodulo']);
+						if($ok){
+							$mostrar=1;
+						}						
 					}
+					
+					
+					
+					
+					
 				}elseif($cuantos_formatos['numcampos']){
 					for ($j=0; $j < $cuantos_formatos['numcampos']; $j++) { 
 						$modulo_formato=busca_filtro_tabla('','modulo','nombre="'.$cuantos_formatos[$j]['nombre'].'"','',$conn);
 						if($modulo_formato['numcampos']){
 							$ok2=acceso_modulo($modulo_formato[0]['idmodulo']);
+						}else{
+							$modulo_formato=busca_filtro_tabla('','modulo','nombre="crear_'.$cuantos_formatos[$j]['nombre'].'"','',$conn);
+							if($modulo_formato['numcampos']){
+								$ok2=acceso_modulo($modulo_formato[0]['idmodulo']);
+							}								
 						}
-						if($ok2 && $muestra_categoria==0){
+					
+						if($ok2){
 							$url='listar_formatos.php?idcategoria_formato='.$consulta[$i]["idcategoria_formato"];
 							$proceso='Proceso';
 							$mostrar=1;

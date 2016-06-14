@@ -2380,15 +2380,19 @@ function guardar_documento($iddoc,$tipo=0)
      llama_funcion_accion($iddoc,$idformato,"adicionar","ANTERIOR");
 
     $sql="INSERT INTO ".strtolower($_REQUEST["tabla"])."(".implode(",",$campos).") VALUES (".implode(",",$valores).")";
-  		/*if(usuario_actual("login")=="cerok"){
-  			print_r($sql);die();
-  		}*/
-     phpmkr_query($sql,$conn);
-    //echo ($sql);
-   $insertado=phpmkr_insert_id();
-   $sql="insert into permiso_documento(funcionario,documento_iddocumento,permisos) values('".usuario_actual("funcionario_codigo")."','".$iddoc."','e,m,r')";
+	
+	
+	
+  		//if(usuario_actual("login")=="cerok"){
+  			//print_r('<pre>'.$sql.'</pre>');die();
+  		//}
    phpmkr_query($sql,$conn);
-
+   $insertado=phpmkr_insert_id();
+  //print_r('insertado:'.$insertado);die();
+   
+   $sql1="insert into permiso_documento(funcionario,documento_iddocumento,permisos) values('".usuario_actual("funcionario_codigo")."','".$iddoc."','e,m,r')";
+   phpmkr_query($sql1,$conn);
+	
      if($insertado){
         //guardo los campos tipo clob y blob
          for($j=0;$j<$lcampos["numcampos"];$j++)

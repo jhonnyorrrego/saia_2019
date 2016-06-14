@@ -1,5 +1,6 @@
 <?php
 include_once("../../db.php");
+include_once("../../librerias_saia.php");
 include_once("../../header.php");
 $archivo="test_calidad_prueba2.php";
 $cadena="";
@@ -31,8 +32,25 @@ for($i=0;$i<$dependencia["numcampos"];$i++){
         <?php
         agrega_boton("texto","","../proceso/previo_mostrar_proceso.php?editar=1","detalles","Editar Mapa","","administracion_calidad");
         agrega_boton("texto","","../../documento_trasladar2.php","detalles","Trasladar Documentos","","administracion_calidad");
-        agrega_boton("texto","","test_calidad_prueba.php","detalles","Actualizar Arbol","","actualizar_calidad");
+       // agrega_boton("texto","","test_calidad_prueba.php","detalles","Actualizar Arbol","","actualizar_calidad");
+        echo(librerias_jquery('1.7'));
+		global $raiz_saia;
+		$raiz_saia="../../";
+		echo(librerias_notificaciones());
         ?>
+        <a title="" id="actualizar_arbol" style="color: -webkit-link; text-decoration: underline; cursor: pointer;"><span class="phpmaker">ACTUALIZAR ARBOL</span></a>
+        <script>
+        	$('#actualizar_arbol').click(function(){
+				$.ajax({
+                    dataType: 'html',
+                    url: "test_calidad_prueba.php",
+              
+                    success: function(datos){
+                    	notificacion_saia("Arbol Actualizado Satisfactoriamente","success",'',3000);
+                	}
+            	});         		
+        	});
+        </script>
         <!--div id="div_secretarias">
         Filtro de procesos Por secretaria
           <select name="secretarias" onchange="redireccionar(this.value)">

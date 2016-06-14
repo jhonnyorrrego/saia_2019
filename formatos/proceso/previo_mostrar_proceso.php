@@ -35,7 +35,7 @@ if(is_uploaded_file(@$_FILES['imagen_mapa']['tmp_name']) && $_FILES['imagen_mapa
 $arreglo=array("vision","mision","objetivos_calidad","politica_calidad","manual_calidad");
 foreach($arreglo AS $imagen){
 
-if(is_uploaded_file(@$_FILES['imagen_'.$imagen]['tmp_name']) && $_FILES['imagen_'.$imagen]['size'] ){
+if(is_uploaded_file(@$_FILES['imagen_'.$imagen]['tmp_name'])){
 
 $anexo_ext=explode(".",$_FILES['imagen_'.$imagen]['name']);
 $cantidad=count($anexo_ext)-1;
