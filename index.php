@@ -257,7 +257,7 @@ $("#ingresar").click(function(){
           mensaje=objeto.mensaje;          
           if(objeto.ingresar==1){
             noty({text: mensaje,type: 'success',layout: "topCenter",timeout:tiempo});
-            setTimeout(function(){window.location=objeto.ruta},(tiempo+100));
+            //setTimeout(function(){window.location=objeto.ruta},(tiempo+100));
           }  
           else{
             noty({text: mensaje,type: 'error',layout: "topCenter",timeout:tiempo});
