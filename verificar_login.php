@@ -20,14 +20,22 @@ if (@$_REQUEST["userid"]<>"" && @$_REQUEST["passwd"]<>"") {
 	$configuracion=busca_filtro_tabla("A.valor","configuracion A","A.tipo='usuario' AND A.nombre='login_administrador'","",$conn);
 	$clave_admin=busca_filtro_tabla("A.valor","configuracion A","A.tipo='clave' AND A.nombre='clave_administrador'","",$conn); 
 	if($configuracion["numcampos"]&&$clave_admin["numcampos"] && $configuracion[0]["valor"]==$sUserId && $clave_admin[0]["valor"]==$sPassWd){
-	    $estado_admin=busca_filtro_tabla("","funcionario","lower(login)='".strtolower($sUserId)."'","",$conn);
-    $_SESSION["LOGIN".LLAVE_SAIA]=$sUserId;
-    cerrar_sesiones_activas($sUserId);
-    $bValidPwd=true;
-    $retorno["mensaje"]="<b>IMPORTANTE!</b> <br> Acaba de ingresar como Administrador del sistema, todas las acciones realizadas son registradas bajo su responsabilidad";    
-    $retorno["ingresar"]=1;
-    $retorno["ruta"]=$redirecciona_exito;
-    die(stripslashes(json_encode($retorno)));           
+	$estado_admin=busca_filtro_tabla("estado","funcionario","lower(login)='".strtolower($sUserId)."'","",$conn);
+	if($estado_admin[0]['estado']){
+        $_SESSION["LOGIN".LLAVE_SAIA]=$sUserId;
+        cerrar_sesiones_activas($sUserId);
+        $bValidPwd=true;
+        $retorno["mensaje"]="<b>IMPORTANTE!</b> <br> Acaba de ingresar como Administrador del sistema, todas las acciones realizadas son registradas bajo su responsabilidad";    
+        $retorno["ingresar"]=1;
+        $retorno["ruta"]=$redirecciona_exito;
+        die(stripslashes(json_encode($retorno)));  	    
+	}else{
+	     $retorno["ingresar"]=0;
+	      $retorno["mensaje"]="<b>El funcionario esta inactivo o no pertenece al sistema!<b> <br> por favor comuniquese con el administrador del sistema.";
+	      die(stripslashes(json_encode($retorno)));  	  
+	}
+	
+         
   }
 	if (!($bValidPwd)) {			
 			$sUserId = (!get_magic_quotes_gpc()) ? addslashes($sUserId) : $sUserId;
