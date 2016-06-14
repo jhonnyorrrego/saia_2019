@@ -28,7 +28,7 @@ if (@$_REQUEST["userid"]<>"" && @$_REQUEST["passwd"]<>"") {
     $retorno["ruta"]=$redirecciona_exito;
     die(stripslashes(json_encode($retorno)));           
   }
-  $seguir_validando=1;
+   $seguir_validando=1;
 	if (!($bValidPwd)) {			
 			$sUserId = (!get_magic_quotes_gpc()) ? addslashes($sUserId) : $sUserId;
 			$usuario = busca_filtro_tabla("A.*,".fecha_db_obtener("A.ultimo_pwd",'Y-m-d')." AS ultimo_pwd1 ,1 AS dep_estado,1 AS cargo_estado, ".resta_fechas('ultimo_pwd','')." AS dias","funcionario A","A.login = '" . $sUserId . "' AND A.estado=1","",$conn);
@@ -77,30 +77,33 @@ if (@$_REQUEST["userid"]<>"" && @$_REQUEST["passwd"]<>"") {
 			}
 	 phpmkr_free_result($rs);
 	}
-	if ($bValidPwd) {
-  	if (@$_POST["rememberme"] <> "") {
-			setCookie("alcalde_userid", $sUserId, time()+$dias_sess*24*60*60); 
-  		if (@$_POST["rememberme_pwd"] <> "") {
-  			setCookie("alcalde_pwd", $sPassWd, time()+$dias_sess*24*60*60); 
-  		}
-  		else setCookie("alcalde_pwd", "", 0);
-    }
-    else setCookie("alcalde_userid", "" ,0);
-     include_once("tarea_limpiar_carpeta.php");
-     borrar_archivos_carpeta("temporal_".$_POST["userid"],false);
-     $retorno["mensaje"]="<b>Bienvenido</b> <br>has ingresado al sistema SAIA";
-     $retorno["ruta"]=$redirecciona_exito; 
-     $retorno["ingresar"]=1;   
-	} 
-  else {	  
-		/*@session_unset();
-    @session_destroy();*/
-    $dato=almacenar_sesion(0,$sUserId);
-		if($dato["mensaje"]){
-			$retorno["mensaje"]=$dato["mensaje"];
-		}
-		$retorno["ruta"]=$redirecciona;
-	}
+	
+	if($seguir_validando){
+    	if ($bValidPwd) {
+      	if (@$_POST["rememberme"] <> "") {
+    			setCookie("alcalde_userid", $sUserId, time()+$dias_sess*24*60*60); 
+      		if (@$_POST["rememberme_pwd"] <> "") {
+      			setCookie("alcalde_pwd", $sPassWd, time()+$dias_sess*24*60*60); 
+      		}
+      		else setCookie("alcalde_pwd", "", 0);
+        }
+        else setCookie("alcalde_userid", "" ,0);
+         include_once("tarea_limpiar_carpeta.php");
+         borrar_archivos_carpeta("temporal_".$_POST["userid"],false);
+         $retorno["mensaje"]="<b>Bienvenido</b> <br>has ingresado al sistema SAIA";
+         $retorno["ruta"]=$redirecciona_exito; 
+         $retorno["ingresar"]=1;   
+    	} 
+      else {	  
+    		/*@session_unset();
+        @session_destroy();*/
+        $dato=almacenar_sesion(0,$sUserId);
+    		if($dato["mensaje"]){
+    			$retorno["mensaje"]=$dato["mensaje"];
+    		}
+    		$retorno["ruta"]=$redirecciona;
+    	}
+	}	
 }
 else{
 $retorno["ruta"]=$redirecciona;
