@@ -31,7 +31,7 @@ if (@$_REQUEST["userid"]<>"" && @$_REQUEST["passwd"]<>"") {
         die(stripslashes(json_encode($retorno)));  	    
 	}else{
 	     $retorno["ingresar"]=0;
-	      $retorno["mensaje"]="<span style='color:white;'><b>aEl funcionario esta inactivo o no pertenece al sistema!<b> <br> por favor comuniquese con el administrador del sistema.</span>";
+	      $retorno["mensaje"]="<span style='color:white;'><b>El funcionario esta inactivo o no pertenece al sistema!<b> <br> por favor comuniquese con el administrador del sistema.</span>";
 	      die(stripslashes(json_encode($retorno)));  	  
 	}
 	
