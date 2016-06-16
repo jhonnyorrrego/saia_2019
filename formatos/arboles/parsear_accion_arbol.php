@@ -97,7 +97,7 @@ if(@$_REQUEST["id"]){
         { $ruta="../".$formato[0]["nombre"]."/".$formato[0]["ruta_mostrar"]."?iddoc=".$datos[2]."&idformato=".$formato[0]["idformato"];
         }
        else  
-        {$descargable=array("instructivo","formato","guia","manual","plan_calidad","otros_calidad");
+        {$descargable=array("instructivo","formato","guia","manual","plan_calidad","otros_calidad","proceso");
 	   leido(usuario_actual("funcionario_codigo"),$datos_formato[0]["iddocumento"]);  
         if(in_array($formato[0]["nombre"],$descargable) && @$_REQUEST["pantalla"]=="calidad"){
             
