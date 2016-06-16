@@ -2508,3 +2508,11 @@ INICIO (codigo velocidad)-------2016-06-16 16:14:16-----------
 FIN (codigo velocidad)-------2016-06-16 16:14:16-----------
 INICIO (codigo velocidad)-------2016-06-16 16:15:01-----------
 FIN (codigo velocidad)-------2016-06-16 16:15:01-----------
+INICIO (codigo velocidad)-------2016-06-16 16:28:27-----------
+FIN (codigo velocidad)-------2016-06-16 16:28:27-----------
+INICIO (codigo velocidad)-------2016-06-16 16:35:52-----------
+FIN (codigo velocidad)-------2016-06-16 16:35:52-----------
+INICIO (codigo velocidad)-------2016-06-16 16:39:14-----------
+FIN (codigo velocidad)-------2016-06-16 16:39:14-----------
+INICIO (codigo velocidad)-------2016-06-16 16:40:51-----------
+FIN (codigo velocidad)-------2016-06-16 16:40:51-----------
