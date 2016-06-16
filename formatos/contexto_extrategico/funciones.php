@@ -31,8 +31,11 @@ function obtener_valor_campos($idformato,$iddoc){
 function mostrar_objetivo_contexto_estrategico($idformato,$iddoc){
     global $conn,$ruta_db_superior;
     
-    $objetivo=busca_filtro_tabla("","ft_contexto_extrategico","documento_iddocumento=".$iddoc,"",$conn);
-    print_r($objetivo);
+    $objetivo=busca_filtro_tabla("objetivo","ft_contexto_extrategico","documento_iddocumento=".$iddoc,"",$conn);
+    
+    $cadena=strip_tags($objetivo[0]['objetivo']);
+    
+    echo($cadena);
 }
 
 function adiconar_factores_contexto($idformato,$iddoc){
