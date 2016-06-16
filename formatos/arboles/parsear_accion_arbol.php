@@ -124,6 +124,8 @@ if(@$_REQUEST["id"]){
         $nota_trans=busca_filtro_tabla("notas","buzon_salida,funcionario","funcionario_codigo=origen and destino=".usuario_actual("funcionario_codigo")." and notas is not null and nombre in('TRANSFERIDO','DEVOLUCION') and archivo_idarchivo=".$datos_formato[0]["iddocumento"],"fecha desc",$conn);      
         /*if($postit[0][0] || $nota_trans["numcampos"])
           alerta("El documento tiene notas relacionadas, Por favor revise el icono ver notas o el rastro");          */ 
+          
+          print_r($datos_formato);die();
           if($datos_formato["numcampos"]){
             if($datos_formato[0]["pdf"]&&$formato[0]["mostrar_pdf"]){
             	$ruta="../../pantallas/documento/visor_documento.php?iddoc=".$datos_formato[0]["documento_iddocumento"];
@@ -140,7 +142,7 @@ if(@$_REQUEST["id"]){
             	}
             }
             
-            print_r($ruta); die();
+            
             if(is_file("../".$formato[0]["nombre"]."/".$formato[0]["ruta_mostrar"]))
               redirecciona($ruta);
             else if(is_file("../".$formato[0]["nombre"]."/previo_".$formato[0]["ruta_mostrar"]))
