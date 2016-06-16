@@ -101,7 +101,7 @@ if(@$_REQUEST["id"]){
 	   leido(usuario_actual("funcionario_codigo"),$datos_formato[0]["iddocumento"]);  
         if(in_array($formato[0]["nombre"],$descargable) && @$_REQUEST["pantalla"]=="calidad"){
             
-            print_r('entra a calidad ');die();
+           
         if($datos_formato["numcampos"]){
         
             $anexo=busca_filtro_tabla("","anexos","(formato=".$formato[0]["idformato"]." AND documento_iddocumento=".$datos_formato[0]["iddocumento"].")","idanexos desc",$conn);   
