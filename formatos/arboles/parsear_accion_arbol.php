@@ -140,7 +140,7 @@ if(@$_REQUEST["id"]){
             	}
             }
             
-            print_r($ruta);
+            print_r($ruta); die();
             if(is_file("../".$formato[0]["nombre"]."/".$formato[0]["ruta_mostrar"]))
               redirecciona($ruta);
             else if(is_file("../".$formato[0]["nombre"]."/previo_".$formato[0]["ruta_mostrar"]))
