@@ -63,21 +63,21 @@ function adiconar_factores_contexto($idformato,$iddoc){
 		}
 	}
 	
-	$factores_internos = '<table border="1" style="border-collapse: collapse;width: 49%; float: left;">
+	$factores_internos = '<table border="1" style="border-collapse: collapse;width: 100%; float: left;">
 				<tr>
 					<td style="text-align: center;" colspan="2"><a href="'.$ruta_db_superior.'formatos/factores_contexto/adicionar_factores_contexto.php?padre='.$contexto_estrategico[0]['idft_contexto_extrategico'].'&idformato=213&no_menu=1&tipo_factor=1">FACTORES INTERNOS</a></td>
 				</tr>'.$internos.'
 			 </table>
 			';
 			 
-	$factores_externos = '<table border="1" style="border-collapse: collapse;width: 49%; float:right;">
+	$factores_externos = '<table border="1" style="border-collapse: collapse;width: 100%; float:right;">
 				<tr>
 					<td style="text-align: center;" colspan="2"><a href="'.$ruta_db_superior.'formatos/factores_contexto/adicionar_factores_contexto.php?padre='.$contexto_estrategico[0]['idft_contexto_extrategico'].'&idformato=213&no_menu=1&tipo_factor=2">FACTORES EXTERNOS</a></td>
 				</tr>'.$externos.'				
 			  </table>
 			 ';
 			 
-			 $tabla_factores_ini='<table border="1" style="border-collapse: collapse;width: 100%; float: left;"><tr><td>'.$factores_internos.'</td><td>'.$factores_externos.'</td></tr></table>';
+			 $tabla_factores_ini='<table border="0" style="border-collapse: collapse;width: 100%; float: left;"><tr><td>'.$factores_internos.'</td><td>'.$factores_externos.'</td></tr></table>';
 			 ;
 			 
 			 echo($tabla_factores_ini);die();
