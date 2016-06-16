@@ -125,7 +125,7 @@ if(@$_REQUEST["id"]){
         /*if($postit[0][0] || $nota_trans["numcampos"])
           alerta("El documento tiene notas relacionadas, Por favor revise el icono ver notas o el rastro");          */ 
           
-          print_r($datos_formato);die();
+        
           if($datos_formato["numcampos"]){
             if($datos_formato[0]["pdf"]&&$formato[0]["mostrar_pdf"]){
             	$ruta="../../pantallas/documento/visor_documento.php?iddoc=".$datos_formato[0]["documento_iddocumento"];
