@@ -91,17 +91,13 @@ if(@$_REQUEST["id"]){
        // die($ruta);
       break;
       case "mostrar": 
-          
-         
         if($formato[0]["item"])
         { $ruta="../".$formato[0]["nombre"]."/".$formato[0]["ruta_mostrar"]."?iddoc=".$datos[2]."&idformato=".$formato[0]["idformato"];
         }
        else  
-        {$descargable=array("instructivo","formato","guia","manual","plan_calidad","otros_calidad","proceso");
+        {$descargable=array("instructivo","formato","guia","manual","plan_calidad","otros_calidad");
 	   leido(usuario_actual("funcionario_codigo"),$datos_formato[0]["iddocumento"]);  
-        if(in_array($formato[0]["nombre"],$descargable) && @$_REQUEST["pantalla"]=="calidad"){
-            
-           
+        if(in_array($formato[0]["nombre"],$descargable)){
         if($datos_formato["numcampos"]){
         
             $anexo=busca_filtro_tabla("","anexos","(formato=".$formato[0]["idformato"]." AND documento_iddocumento=".$datos_formato[0]["iddocumento"].")","idanexos desc",$conn);   
@@ -124,8 +120,6 @@ if(@$_REQUEST["id"]){
         $nota_trans=busca_filtro_tabla("notas","buzon_salida,funcionario","funcionario_codigo=origen and destino=".usuario_actual("funcionario_codigo")." and notas is not null and nombre in('TRANSFERIDO','DEVOLUCION') and archivo_idarchivo=".$datos_formato[0]["iddocumento"],"fecha desc",$conn);      
         /*if($postit[0][0] || $nota_trans["numcampos"])
           alerta("El documento tiene notas relacionadas, Por favor revise el icono ver notas o el rastro");          */ 
-          
-        
           if($datos_formato["numcampos"]){
             if($datos_formato[0]["pdf"]&&$formato[0]["mostrar_pdf"]){
             	$ruta="../../pantallas/documento/visor_documento.php?iddoc=".$datos_formato[0]["documento_iddocumento"];
@@ -141,8 +135,6 @@ if(@$_REQUEST["id"]){
             		//$ruta="../../class_impresion.php?iddoc=".$datos_formato[0]["documento_iddocumento"];
             	}
             }
-            
-            
             if(is_file("../".$formato[0]["nombre"]."/".$formato[0]["ruta_mostrar"]))
               redirecciona($ruta);
             else if(is_file("../".$formato[0]["nombre"]."/previo_".$formato[0]["ruta_mostrar"]))
