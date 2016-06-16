@@ -1,18 +1,18 @@
-<?php include_once("../carta/funciones.php"); ?><?php include_once("../correo_saia/funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("../librerias/funciones_generales.php"); ?><script type="text/javascript" src="../../js/jquery.js"></script><?php include_once("../librerias/header_nuevo.php"); ?><?php include_once("../../class_transferencia.php"); ?><tr><td><table style="border-collapse: collapse; attr-margin-left: 20; attr-margin-top: 30; width: 80%;" border="1">
+<?php include_once("../carta/funciones.php"); ?><?php include_once("../correo_saia/funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("../librerias/funciones_generales.php"); ?><script type="text/javascript" src="../../js/jquery.js"></script><?php include_once("../librerias/header_nuevo.php"); ?><?php include_once("../../class_transferencia.php"); ?><tr><td><table style="border-collapse: collapse; width: 100%;" border="1">
 <tbody>
 <tr>
-<td colspan="2" valign="top" width="532">
+<td>
 <p align="center"><strong>CONTEXTO ESTRAT&Eacute;GICO</strong></p>
 </td>
 </tr>
 <tr>
-<td colspan="2" valign="top" width="532">
+<td>
 <p>PROCESO:&nbsp;<?php mostrar_valor_campo('proceso',375,$_REQUEST['iddoc']);?></p>
 </td>
 </tr>
 <tr>
-<td colspan="2" valign="top" width="532">
-<p>OBJETIVO:&nbsp;<?php mostrar_valor_campo('objetivo',375,$_REQUEST['iddoc']);?></p>
+<td>
+<p>OBJETIVO:&nbsp;</p>
 </td>
 </tr>
 </tbody>

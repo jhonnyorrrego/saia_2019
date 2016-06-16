@@ -110,7 +110,7 @@ function enlace_normograma($idformato,$iddoc){
   }else{
   	$texto.="<a href='".$ruta_db_superior."/formatos/normograma/previo_mostrar_normograma.php?llave=0&iddoc=&no_menu=1' target='_self'>VER NORMOGRAMA</a>";
   }
-  echo($texto);
+  //echo($texto);
 }
 function mostrar_riesgos($idformato,$iddoc){
   global $conn;
@@ -140,7 +140,7 @@ if($formato["numcampos"]){
     $texto=listar_formato_hijo($campos,"ft_riesgos_proceso","ft_proceso",$proceso[0]["id".$formato[0]["nombre_tabla"]],"idft_riesgos_proceso ASC",'left');
   }
 }*/
-echo($texto);
+//echo($texto);
 }
 
 function enlace_listado_maestro_documentos($idformato,$iddoc){

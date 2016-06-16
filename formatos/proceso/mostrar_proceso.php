@@ -22,8 +22,8 @@
 <td class="celda_transparente" style="windowtext 0.5pt solid; border: #000000 1px solid;" colspan="2"><?php mostrar_valor_campo('alcance',194,$_REQUEST['iddoc']);?></td>
 </tr>
 <tr>
-<td class="encabezado" style="windowtext 0.5pt solid; border: #000000 1px solid;">Secretarias participantes:</td>
-<td class="celda_transparente" style="windowtext 0.5pt solid; border: #000000 1px solid;" colspan="2"><?php mostrar_valor_campo('secretarias',194,$_REQUEST['iddoc']);?></td>
+<td class="encabezado" style="windowtext 0.5pt solid; border: #000000 1px solid;">Dependencias participantes:</td>
+<td class="celda_transparente" style="windowtext 0.5pt solid; border: #000000 1px solid;" colspan="2"><?php mostrar_valor_campo('dependencias_partici',194,$_REQUEST['iddoc']);?></td>
 </tr>
 <tr>
 <td class="celda_transparente" style="windowtext 0.5pt solid; text-align: center;" colspan="3"><?php actividades_proceso(194,$_REQUEST['iddoc']);?></td>

@@ -1,4 +1,4 @@
-<?php include_once("../librerias/funciones_generales.php"); ?><?php include_once("../../calendario/calendario.php"); ?><?php include_once("../librerias/header_formato.php"); ?><legend id="label_formato" class="legend">B&uacute;squeda en formato MAPA DE PROCESOS</legend><br /><br /><?php include_once("../librerias/funciones_generales.php"); ?><div class="control-group"><b>C&oacute;digo<input type="hidden" name="bksaiacondicion_g@codigo" id="bksaiacondicion_g@codigo" value="like_total"></b><div class="controls"><input type="text" id="codigo" name="bqsaia_g@codigo"><div class="btn-group" data-toggle="buttons-radio" >
+<?php include_once("../librerias/funciones_generales.php"); ?><?php include_once("../../calendario/calendario.php"); ?><?php include_once("../librerias/header_formato.php"); ?><legend id="label_formato" class="legend">B&uacute;squeda en formato Proceso</legend><br /><br /><?php include_once("../librerias/funciones_generales.php"); ?><div class="control-group"><b>C&oacute;digo<input type="hidden" name="bksaiacondicion_g@codigo" id="bksaiacondicion_g@codigo" value="like_total"></b><div class="controls"><input type="text" id="codigo" name="bqsaia_g@codigo"><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_g@codigo',this.id)">
 		    Y
 		  </button>
@@ -197,81 +197,15 @@
 		    O
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_fecha_aprobacion" id="bqsaiaenlace_fecha_aprobacion" value="y" />
-		</div></div></div><div class="control-group"><b>Fecha en que se revis&oacute;<input type="hidden" name="bksaiacondicion_g@fecha_revision" id="bksaiacondicion_g@fecha_revision" value="like_total"></b><div class="controls"><input type="text" id="fecha_revision" name="bqsaia_g@fecha_revision"><div class="btn-group" data-toggle="buttons-radio" >
-		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_g@fecha_revision',this.id)">
+		</div></div></div><div class="control-group"><label class="string control-label" style="font-size:9pt" for="fecha_revision"><b>Fecha en que se revis&oacute;<input type="hidden" name="bksaiacondicion_fecha_revision" id="bksaiacondicion_fecha_revision" value="like_total"></b></label><div class="controls">
+                    ENTRE &nbsp;<input type="text" readonly="true" name="fecha_revision_1"  id="fecha_revision_1" value=""><?php selector_fecha("fecha_revision_1","kformulario_saia","Y-m-d H:i",date("m"),date("Y"),"default.css","../../","AD:VALOR"); ?>&nbsp;&nbsp; Y &nbsp;&nbsp;<input type="text" readonly="true" name="fecha_revision_2"  id="fecha_revision_2" value=""><?php selector_fecha("fecha_revision_2","kformulario_saia","Y-m-d H:i",date("m"),date("Y"),"default.css","../../","AD:VALOR"); ?><div class="btn-group" data-toggle="buttons-radio" >
+		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_fecha_revision',this.id)">
 		    Y
 		  </button>
-		  <button type="button" class="btn btn-mini" data-toggle="button" id="o" onclick="llenar_valor('bqsaiaenlace_g@fecha_revision',this.id)">
+		  <button type="button" class="btn btn-mini" data-toggle="button" id="o" onclick="llenar_valor('bqsaiaenlace_fecha_revision',this.id)">
 		    O
 		  </button-->
-		  <input type="hidden" name="bqsaiaenlace_g@fecha_revision" id="bqsaiaenlace_g@fecha_revision" value="y" />
-		</div></div></div><div class="control-group"><div class="controls"><b>Secretarias Vinculadas <input type="hidden" name="bksaiacondicion_secretarias" id="bksaiacondicion_secretarias" value="like_total"></b><div id="esperando_secretarias"><img src="../../imagenes/cargando.gif"></div><div id="seleccionados"></div><input type="text" id="stext_secretarias" placeholder="Buscar" width="200px" size="25">
-                   <a href="javascript:void(0)" onclick="tree_secretarias.findItem(htmlentities(document.getElementById('stext_secretarias').value),1)"><img src="../../botones/general/anterior.png"border="0px"></a>
-                   <a href="javascript:void(0)" onclick="tree_secretarias.findItem(htmlentities(document.getElementById('stext_secretarias').value),0,1)"><img src="../../botones/general/buscar.png"border="0px"></a>
-                          <a href="javascript:void(0)" onclick="tree_secretarias.findItem(htmlentities(document.getElementById('stext_secretarias').value))"><img src="../../botones/general/siguiente.png"border="0px"></a>
-                          <br /><br /><div id="treeboxbox_secretarias" height=""></div><input type="hidden" maxlength="255"  name="g@secretarias" id="secretarias"   value="" ><label style="display:none" class="error" for="secretarias">Campo obligatorio.</b></label><script type="text/javascript">
-                  <!--
-                      var browserType;
-                      if (document.layers) {browserType = "nn4"}
-                      if (document.all) {browserType = "ie"}
-                      if (window.navigator.userAgent.toLowerCase().match("gecko")) {
-                         browserType= "gecko"
-                      }
-                			tree_secretarias=new dhtmlXTreeObject("treeboxbox_secretarias","","",0);
-                			tree_secretarias.setImagePath("../../imgs/");
-                			tree_secretarias.enableIEImageFix(true);tree_secretarias.enableCheckBoxes(1);
-                			tree_secretarias.enableThreeStateCheckboxes(1);tree_secretarias.setOnLoadingStart(cargando_secretarias);
-                      tree_secretarias.setOnLoadingEnd(fin_cargando_secretarias);tree_secretarias.enableSmartXMLParsing(true);tree_secretarias.loadXML("../arboles/test_secretarias.xml");
-                      tree_secretarias.setOnCheckHandler(onNodeSelect_secretarias);
-                      function onNodeSelect_secretarias(nodeId)
-                      {valor_destino=document.getElementById("secretarias");
-                       destinos=tree_secretarias.getAllChecked();
-                       var nuevos_valores=destinos.split(",");
-						var cantidad=nuevos_valores.length;
-						var funcionarios=new Array();
-						var indice=0;
-						for(var i=0;i<cantidad;i++){
-							//if(nuevos_valores[i].indexOf("#")=="-1"){
-								if(nuevos_valores[i]!=""){
-									funcionarios[indice]=nuevos_valores[i];
-									indice++;
-								}
-							//}
-						}
-						valor_destino.value=funcionarios.join(",");
-                      }
-                      function fin_cargando_secretarias() {
-                        if (browserType == "gecko" )
-                           document.poppedLayer =
-                               eval('document.getElementById("esperando_secretarias")');
-                        else if (browserType == "ie")
-                           document.poppedLayer =
-                              eval('document.getElementById("esperando_secretarias")');
-                        else
-                           document.poppedLayer =
-                              eval('document.layers["esperando_secretarias"]');
-                        document.poppedLayer.style.visibility = "hidden";
-                      }
-                      function cargando_secretarias() {
-                        if (browserType == "gecko" )
-                           document.poppedLayer =
-                               eval('document.getElementById("esperando_secretarias")');
-                        else if (browserType == "ie")
-                           document.poppedLayer =
-                              eval('document.getElementById("esperando_secretarias")');
-                        else
-                           document.poppedLayer =
-                               eval('document.layers["esperando_secretarias"]');
-                        document.poppedLayer.style.visibility = "visible";
-                      }
-                	--></script><div class="btn-group" data-toggle="buttons-radio" >
-		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_secretarias',this.id)">
-		    Y
-		  </button>
-		  <button type="button" class="btn btn-mini" data-toggle="button" id="o" onclick="llenar_valor('bqsaiaenlace_secretarias',this.id)">
-		    O
-		  </button-->
-		  <input type="hidden" name="bqsaiaenlace_secretarias" id="bqsaiaenlace_secretarias" value="y" />
+		  <input type="hidden" name="bqsaiaenlace_fecha_revision" id="bqsaiaenlace_fecha_revision" value="y" />
 		</div></div></div><div class="control-group"><div class="controls"><b>permisos de acceso<input type="hidden" name="bksaiacondicion_permisos_acceso" id="bksaiacondicion_permisos_acceso" value="like_total"></b><div id="esperando_permisos_acceso"><img src="../../imagenes/cargando.gif"></div><div id="seleccionados"></div><input type="text" id="stext_permisos_acceso" placeholder="Buscar" width="200px" size="25">
                    <a href="javascript:void(0)" onclick="tree_permisos_acceso.findItem(htmlentities(document.getElementById('stext_permisos_acceso').value),1)"><img src="../../botones/general/anterior.png"border="0px"></a>
                    <a href="javascript:void(0)" onclick="tree_permisos_acceso.findItem(htmlentities(document.getElementById('stext_permisos_acceso').value),0,1)"><img src="../../botones/general/buscar.png"border="0px"></a>
@@ -339,36 +273,6 @@
 		    O
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_permisos_acceso" id="bqsaiaenlace_permisos_acceso" value="y" />
-		</div></div></div><div class="control-group">
-                  <label class="string control-label" for="fecha"><b>Fecha</b></label>
-                  <input type="hidden" name="bksaiacondicion_g@fecha_x" id="bksaiacondicion_g@fecha_x" value=">=">
-                  <div class="controls">
-                  Entre <input type="text"  name="bqsaia_g@fecha_x" id="fecha_x" tipo="fecha" value="" style="width:100px" placeholder="Inicio"><?php selector_fecha("fecha_x","kformulario_saia","Y-m-d",date("m"),date("Y"),"default.css","../../","AD:VALOR"); ?> y 
-                  <input type="hidden" name="bksaiacondicion_g@fecha_y" id="bksaiacondicion_g@fecha_y" value="<=">
-                  <input type="text"  name="bqsaia_g@fecha_y" id="fecha_y" tipo="fecha" value="" style="width:100px" placeholder="Fin"><?php selector_fecha("fecha_y","kformulario_saia","Y-m-d",date("m"),date("Y"),"default.css","../../","AD:VALOR"); ?><div class="btn-group" data-toggle="buttons-radio" >
-		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_fecha',this.id)">
-		    Y
-		  </button>
-		  <button type="button" class="btn btn-mini" data-toggle="button" id="o" onclick="llenar_valor('bqsaiaenlace_fecha',this.id)">
-		    O
-		  </button-->
-		  <input type="hidden" name="bqsaiaenlace_fecha" id="bqsaiaenlace_fecha" value="y" />
-		</div></div></div><div class="control-group"><b>Coordenadas<input type="hidden" name="bksaiacondicion_g@coordenadas" id="bksaiacondicion_g@coordenadas" value="like_total"></b><div class="controls"><input type="text" id="coordenadas" name="bqsaia_g@coordenadas"><div class="btn-group" data-toggle="buttons-radio" >
-		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_g@coordenadas',this.id)">
-		    Y
-		  </button>
-		  <button type="button" class="btn btn-mini" data-toggle="button" id="o" onclick="llenar_valor('bqsaiaenlace_g@coordenadas',this.id)">
-		    O
-		  </button-->
-		  <input type="hidden" name="bqsaiaenlace_g@coordenadas" id="bqsaiaenlace_g@coordenadas" value="y" />
-		</div></div></div><div class="control-group"><b>Politica de operacion<input type="hidden" name="bksaiacondicion_g@politica_operacion" id="bksaiacondicion_g@politica_operacion" value="like_total"></b><div class="controls"><textarea    id="politica_operacion" name="bqsaia_g@politica_operacion"  style="width:500px;height:100px"></textarea><div class="btn-group" data-toggle="buttons-radio" >
-		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_g@politica_operacion',this.id)">
-		    Y
-		  </button>
-		  <button type="button" class="btn btn-mini" data-toggle="button" id="o" onclick="llenar_valor('bqsaiaenlace_g@politica_operacion',this.id)">
-		    O
-		  </button-->
-		  <input type="hidden" name="bqsaiaenlace_g@politica_operacion" id="bqsaiaenlace_g@politica_operacion" value="y" />
 		</div></div></div><div class="control-group"><div class="controls"><b>Aprobado por<input type="hidden" name="bksaiacondicion_aprobado" id="bksaiacondicion_aprobado" value="like_total"></b><div id="esperando_aprobado"><img src="../../imagenes/cargando.gif"></div><div id="seleccionados"></div><input type="text" id="stext_aprobado" placeholder="Buscar" width="200px" size="25">
                    <a href="javascript:void(0)" onclick="tree_aprobado.findItem(htmlentities(document.getElementById('stext_aprobado').value),1)"><img src="../../botones/general/anterior.png"border="0px"></a>
                    <a href="javascript:void(0)" onclick="tree_aprobado.findItem(htmlentities(document.getElementById('stext_aprobado').value),0,1)"><img src="../../botones/general/buscar.png"border="0px"></a>
@@ -436,4 +340,71 @@
 		    O
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_aprobado" id="bqsaiaenlace_aprobado" value="y" />
-		</div></div></div><div class="control-group"><label class="string control-label" style="font-size:9pt" for="macroproceso"><b>Macroproceso<input type="hidden" name="bksaiacondicion_g@macroproceso" id="bksaiacondicion_g@macroproceso" value="="></b></label><div class="controls"><?php genera_campo_listados_editar(194,2609,'',1,'buscar');?></div></div><input type="hidden" name="campos_especiales" value="responsable@arbol,lider_proceso@arbol,secretarias@arbol,permisos_acceso@arbol,aprobado@arbol"><input type="hidden" name="filtro_adicional" id="filtro_adicional" value=" ft_proceso g @ AND  g.documento_iddocumento=iddocumento "></body><input type="hidden" name="bqtipodato_plantilla" id="bqtipodato_plantilla" value="date|g@fecha_x,g@fecha_y">
+		</div></div></div><div class="control-group"><div class="controls"><b>Dependencias Participantes<input type="hidden" name="bksaiacondicion_dependencias_partici" id="bksaiacondicion_dependencias_partici" value="like_total"></b><div id="esperando_dependencias_partici"><img src="../../imagenes/cargando.gif"></div><div id="seleccionados"></div><input type="text" id="stext_dependencias_partici" placeholder="Buscar" width="200px" size="25">
+                   <a href="javascript:void(0)" onclick="tree_dependencias_partici.findItem(htmlentities(document.getElementById('stext_dependencias_partici').value),1)"><img src="../../botones/general/anterior.png"border="0px"></a>
+                   <a href="javascript:void(0)" onclick="tree_dependencias_partici.findItem(htmlentities(document.getElementById('stext_dependencias_partici').value),0,1)"><img src="../../botones/general/buscar.png"border="0px"></a>
+                          <a href="javascript:void(0)" onclick="tree_dependencias_partici.findItem(htmlentities(document.getElementById('stext_dependencias_partici').value))"><img src="../../botones/general/siguiente.png"border="0px"></a>
+                          <br /><br /><div id="treeboxbox_dependencias_partici" height=""></div><input type="hidden" maxlength="255"  name="g@dependencias_partici" id="dependencias_partici"   value="" ><label style="display:none" class="error" for="dependencias_partici">Campo obligatorio.</b></label><script type="text/javascript">
+                  <!--
+                      var browserType;
+                      if (document.layers) {browserType = "nn4"}
+                      if (document.all) {browserType = "ie"}
+                      if (window.navigator.userAgent.toLowerCase().match("gecko")) {
+                         browserType= "gecko"
+                      }
+                			tree_dependencias_partici=new dhtmlXTreeObject("treeboxbox_dependencias_partici","","",0);
+                			tree_dependencias_partici.setImagePath("../../imgs/");
+                			tree_dependencias_partici.enableIEImageFix(true);tree_dependencias_partici.enableCheckBoxes(1);
+                			tree_dependencias_partici.enableThreeStateCheckboxes(1);tree_dependencias_partici.setOnLoadingStart(cargando_dependencias_partici);
+                      tree_dependencias_partici.setOnLoadingEnd(fin_cargando_dependencias_partici);tree_dependencias_partici.enableSmartXMLParsing(true);tree_dependencias_partici.loadXML("../../test_serie.php?tabla=dependencia&estado=1");
+                      tree_dependencias_partici.setOnCheckHandler(onNodeSelect_dependencias_partici);
+                      function onNodeSelect_dependencias_partici(nodeId)
+                      {valor_destino=document.getElementById("dependencias_partici");
+                       destinos=tree_dependencias_partici.getAllChecked();
+                       var nuevos_valores=destinos.split(",");
+						var cantidad=nuevos_valores.length;
+						var funcionarios=new Array();
+						var indice=0;
+						for(var i=0;i<cantidad;i++){
+							//if(nuevos_valores[i].indexOf("#")=="-1"){
+								if(nuevos_valores[i]!=""){
+									funcionarios[indice]=nuevos_valores[i];
+									indice++;
+								}
+							//}
+						}
+						valor_destino.value=funcionarios.join(",");
+                      }
+                      function fin_cargando_dependencias_partici() {
+                        if (browserType == "gecko" )
+                           document.poppedLayer =
+                               eval('document.getElementById("esperando_dependencias_partici")');
+                        else if (browserType == "ie")
+                           document.poppedLayer =
+                              eval('document.getElementById("esperando_dependencias_partici")');
+                        else
+                           document.poppedLayer =
+                              eval('document.layers["esperando_dependencias_partici"]');
+                        document.poppedLayer.style.visibility = "hidden";
+                      }
+                      function cargando_dependencias_partici() {
+                        if (browserType == "gecko" )
+                           document.poppedLayer =
+                               eval('document.getElementById("esperando_dependencias_partici")');
+                        else if (browserType == "ie")
+                           document.poppedLayer =
+                              eval('document.getElementById("esperando_dependencias_partici")');
+                        else
+                           document.poppedLayer =
+                               eval('document.layers["esperando_dependencias_partici"]');
+                        document.poppedLayer.style.visibility = "visible";
+                      }
+                	--></script><div class="btn-group" data-toggle="buttons-radio" >
+		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_dependencias_partici',this.id)">
+		    Y
+		  </button>
+		  <button type="button" class="btn btn-mini" data-toggle="button" id="o" onclick="llenar_valor('bqsaiaenlace_dependencias_partici',this.id)">
+		    O
+		  </button-->
+		  <input type="hidden" name="bqsaiaenlace_dependencias_partici" id="bqsaiaenlace_dependencias_partici" value="y" />
+		</div></div></div><div class="control-group"><label class="string control-label" style="font-size:9pt" for="macroproceso"><b>Macroproceso<input type="hidden" name="bksaiacondicion_g@macroproceso" id="bksaiacondicion_g@macroproceso" value="="></b></label><div class="controls"><?php genera_campo_listados_editar(194,2609,'',1,'buscar');?></div></div><input type="hidden" name="campos_especiales" value="responsable@arbol,lider_proceso@arbol,permisos_acceso@arbol,aprobado@arbol,dependencias_partici@arbol"><input type="hidden" name="filtro_adicional" id="filtro_adicional" value=" ft_proceso g @ AND  g.documento_iddocumento=iddocumento "></body><input type="hidden" name="bqtipodato_plantilla" id="bqtipodato_plantilla" value="date|">

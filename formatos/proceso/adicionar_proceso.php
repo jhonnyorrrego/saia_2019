@@ -1,4 +1,4 @@
-<html><title>.:ADICIONAR MAPA DE PROCESOS:.</title><head><script type="text/javascript" src="../librerias/funciones_formatos.js"></script><script type="text/javascript" src="../../js/cmxforms.js"></script><?php include_once("../librerias/funciones_generales.php"); ?><?php include_once("../librerias/funciones_acciones.php"); ?><?php include_once("../librerias/estilo_formulario.php"); ?><?php include_once("../librerias/header_formato.php"); ?><?php include_once("../../calendario/calendario.php"); ?><script type="text/javascript" src="../../js/jquery.js"></script><script type="text/javascript" src="../../js/jquery.validate.js"></script><script type="text/javascript" src="../../js/title2note.js"></script><script type="text/javascript" src="../../js/dhtmlXCommon.js"></script><script type="text/javascript" src="../../js/dhtmlXTree.js"></script><link rel="STYLESHEET" type="text/css" href="../../css/dhtmlXTree.css"><script type="text/javascript" src="../../anexosdigitales/multiple-file-upload/jquery.MultiFile.js"></script><?php include_once("../../anexosdigitales/funciones_archivo.php"); ?><script type="text/javascript" src="../../anexosdigitales/highslide-4.0.10/highslide/highslide-with-html.js"></script><link rel="stylesheet" type="text/css" href="../../anexosdigitales/highslide-4.0.10/highslide/highslide.css" />
+<html><title>.:ADICIONAR PROCESO:.</title><head><script type="text/javascript" src="../librerias/funciones_formatos.js"></script><script type="text/javascript" src="../../js/cmxforms.js"></script><?php include_once("../librerias/funciones_generales.php"); ?><?php include_once("../librerias/funciones_acciones.php"); ?><?php include_once("../librerias/estilo_formulario.php"); ?><?php include_once("../librerias/header_formato.php"); ?><?php include_once("../../calendario/calendario.php"); ?><script type="text/javascript" src="../../js/jquery.js"></script><script type="text/javascript" src="../../js/jquery.validate.js"></script><script type="text/javascript" src="../../js/title2note.js"></script><script type="text/javascript" src="../../js/dhtmlXCommon.js"></script><script type="text/javascript" src="../../js/dhtmlXTree.js"></script><link rel="STYLESHEET" type="text/css" href="../../css/dhtmlXTree.css"><script type="text/javascript" src="../../anexosdigitales/multiple-file-upload/jquery.MultiFile.js"></script><?php include_once("../../anexosdigitales/funciones_archivo.php"); ?><script type="text/javascript" src="../../anexosdigitales/highslide-4.0.10/highslide/highslide-with-html.js"></script><link rel="stylesheet" type="text/css" href="../../anexosdigitales/highslide-4.0.10/highslide/highslide.css" />
     </style><script type='text/javascript'>
     hs.graphicsDir = '../../anexosdigitales/highslide-4.0.10/highslide/graphics/';
     hs.outlineType = 'rounded-white';
@@ -8,7 +8,7 @@
 	$('#formulario_formatos').validate();
 	
 });
-</script> </head><body bgcolor="#F5F5F5"><?php llama_funcion_accion(@$_REQUEST["iddoc"],@$_REQUEST["idformato"],"ingresar","ANTERIOR");?><form name="formulario_formatos" id="formulario_formatos" method="post" action="../../class_transferencia.php" enctype="multipart/form-data"><table width="100%" cellspacing="1" cellpadding="4"><tr><td colspan="2" class="encabezado_list">MAPA DE PROCESOS</td></tr><input type="hidden" name="fecha_aprobacion_rie" value="<?php echo(validar_valor_campo(4118)); ?>"><input type="hidden" name="fecha_revision_riesg" value="<?php echo(validar_valor_campo(4119)); ?>"><tr>
+</script> </head><body bgcolor="#F5F5F5"><?php llama_funcion_accion(@$_REQUEST["iddoc"],@$_REQUEST["idformato"],"ingresar","ANTERIOR");?><form name="formulario_formatos" id="formulario_formatos" method="post" action="../../class_transferencia.php" enctype="multipart/form-data"><table width="100%" cellspacing="1" cellpadding="4"><tr><td colspan="2" class="encabezado_list">PROCESO</td></tr><input type="hidden" name="fecha_aprobacion_rie" value="<?php echo(validar_valor_campo(4118)); ?>"><input type="hidden" name="fecha_revision_riesg" value="<?php echo(validar_valor_campo(4119)); ?>"><tr>
                      <td class="encabezado" width="20%" title="">DEPENDENCIA DEL CREADOR DEL DOCUMENTO*</td>
                      <?php buscar_dependencia(194,2012);?></tr><tr>
                      <td class="encabezado" width="20%" title="Hace referencia al Codigo del Proceso (Campos Alfa Numericos)">C&Oacute;DIGO</td>
@@ -213,85 +213,10 @@ ELABORACION,REVISION,APROBACION,DISTRIBUCION,INACTIVO ">ESTADO*</td><td bgcolor=
                         document.poppedLayer.style.display = "";
                       }
                 	--></script></td></tr><tr>
-                    <td class="encabezado" width="20%" title="Fecha en que se aprob&oacute;">FECHA EN QUE SE APROB&Oacute;</td><td colspan="2" bgcolor="#F5F5F5"><font size="1,5" face="Verdana, Arial, Helvetica, sans-serif"><span ><input  tabindex='14'  type="text" readonly="true" name="fecha_aprobacion"  id="fecha_aprobacion" value="<?php echo(date("0000-00-00 00:00")); ?>"><?php selector_fecha("fecha_aprobacion","formulario_formatos","Y-m-d H:i",date("m"),date("Y"),"default.css","../../","AD:VALOR"); ?></span></font></td><tr>
-                     <td class="encabezado" width="20%" title="Fecha en que se revis&oacute;">FECHA EN QUE SE REVIS&Oacute;</td>
-                     <td bgcolor="#F5F5F5"><input    tabindex='15'  type="text" size="100" id="fecha_revision" name="fecha_revision"  value="<?php echo(validar_valor_campo(4128)); ?>"></td>
-                    </tr><tr>
-                   <td class="encabezado" width="20%" title="Secretarias Vinculadas ">SECRETARIAS VINCULADAS *</td><td bgcolor="#F5F5F5"><div id="seleccionados"><?php mostrar_seleccionados(194,4129,'2',$_REQUEST['iddoc']);?></div>
-                          <br />  Buscar: <input  tabindex='16'  type="text" id="stext_secretarias" width="200px" size="25"><a href="javascript:void(0)" onclick="tree_secretarias.findItem(htmlentities(document.getElementById('stext_secretarias').value),1)"> <img src="../../botones/general/anterior.png"border="0px"></a>
-                   <a href="javascript:void(0)" onclick="tree_secretarias.findItem(htmlentities(document.getElementById('stext_secretarias').value),0,1)"><img src="../../botones/general/buscar.png"border="0px"></a>                          
-                   <a href="javascript:void(0)" onclick="tree_secretarias.findItem(htmlentities(document.getElementById('stext_secretarias').value))"><img src="../../botones/general/siguiente.png"border="0px"></a> 
-                          <br /><div id="esperando_secretarias"><img src="../../imagenes/cargando.gif"></div><div id="treeboxbox_secretarias" height="90%"></div><input type="hidden" maxlength="255"  class="required"  name="secretarias" id="secretarias"   value="" ><label style="display:none" class="error" for="secretarias">Campo obligatorio.</label><script type="text/javascript">
-                  <!--
-                      var browserType;
-                      if (document.layers) {browserType = "nn4"}
-                      if (document.all) {browserType = "ie"}
-                      if (window.navigator.userAgent.toLowerCase().match("gecko")) {
-                         browserType= "gecko"
-                      }
-                			tree_secretarias=new dhtmlXTreeObject("treeboxbox_secretarias","100%","100%",0);
-                			tree_secretarias.setImagePath("../../imgs/");
-                			tree_secretarias.enableIEImageFix(true);tree_secretarias.enableCheckBoxes(1);
-                			tree_secretarias.enableThreeStateCheckboxes(1);tree_secretarias.setOnLoadingStart(cargando_secretarias);
-                      tree_secretarias.setOnLoadingEnd(fin_cargando_secretarias);tree_secretarias.enableSmartXMLParsing(true);tree_secretarias.loadXML("../arboles/test_secretarias.xml");
-                	        
-                      tree_secretarias.setOnCheckHandler(onNodeSelect_secretarias);
-                      function onNodeSelect_secretarias(nodeId)
-                      {valor_destino=document.getElementById("secretarias");
-                       destinos=tree_secretarias.getAllChecked();
-                       nuevo=destinos.replace(/\,{2,}(d)*/gi,",");
-                       nuevo=nuevo.replace(/\,$/gi,"");
-                       vector=destinos.split(",");
-                       for(i=0;i<vector.length;i++)
-                          {if(vector[i].indexOf("_")!=-1)
-                             {vector[i]=vector[i].substr(0,vector[i].indexOf("_"));
-                             }
-                           nuevo=vector.join(",");  
-                           if(vector[i].indexOf("#")!=-1)
-                              {hijos=tree_secretarias.getAllSubItems(vector[i]);
-                               hijos=hijos.replace(/\,{2,}(d)*/gi,",");
-                               hijos=hijos.replace(/\,$/gi,"");
-                               vectorh=hijos.split(",");
-                               
-                               for(h=0;h<vectorh.length;h++)
-                                  {if(vectorh[h].indexOf("_")!=-1)
-                                      vectorh[h]=vectorh[h].substr(0,vectorh[h].indexOf("_"));
-                                   nuevo=eliminarItem(nuevo,vectorh[h]);
-                                  } 
-                              }
-                          }
-                       nuevo=nuevo.replace(/\,{2,}(d)*/gi,",");
-                       nuevo=nuevo.replace(/\,$/gi,"");   
-                       valor_destino.value=nuevo;
-                      }
-                      function fin_cargando_secretarias() {
-                        if (browserType == "gecko" )
-                           document.poppedLayer =
-                               eval('document.getElementById("esperando_secretarias")');
-                        else if (browserType == "ie")
-                           document.poppedLayer =
-                              eval('document.getElementById("esperando_secretarias")');
-                        else
-                           document.poppedLayer =
-                              eval('document.layers["esperando_secretarias"]');
-                        document.poppedLayer.style.display = "none";
-                      }
-
-                      function cargando_secretarias() {
-                        if (browserType == "gecko" )
-                           document.poppedLayer =
-                               eval('document.getElementById("esperando_secretarias")');
-                        else if (browserType == "ie")
-                           document.poppedLayer =
-                              eval('document.getElementById("esperando_secretarias")');
-                        else
-                           document.poppedLayer =
-                               eval('document.layers["esperando_secretarias"]');
-                        document.poppedLayer.style.display = "";
-                      }
-                	--></script></td></tr><tr>
+                    <td class="encabezado" width="20%" title="Fecha en que se aprob&oacute;">FECHA EN QUE SE APROB&Oacute;</td><td colspan="2" bgcolor="#F5F5F5"><font size="1,5" face="Verdana, Arial, Helvetica, sans-serif"><span ><input  tabindex='14'  type="text" readonly="true" name="fecha_aprobacion"  id="fecha_aprobacion" value="<?php echo(date("Y-m-d H:i")); ?>"><?php selector_fecha("fecha_aprobacion","formulario_formatos","Y-m-d H:i",date("m"),date("Y"),"default.css","../../","AD:VALOR"); ?></span></font></td><tr>
+                    <td class="encabezado" width="20%" title="Fecha en que se revis&oacute;">FECHA EN QUE SE REVIS&Oacute;</td><td colspan="2" bgcolor="#F5F5F5"><font size="1,5" face="Verdana, Arial, Helvetica, sans-serif"><span ><input  tabindex='15'  type="text" readonly="true" name="fecha_revision"  id="fecha_revision" value="<?php echo(date("Y-m-d H:i")); ?>"><?php selector_fecha("fecha_revision","formulario_formatos","Y-m-d H:i",date("m"),date("Y"),"default.css","../../","AD:VALOR"); ?></span></font></td><tr>
                    <td class="encabezado" width="20%" title="">PERMISOS DE ACCESO</td><td bgcolor="#F5F5F5"><div id="seleccionados"><?php mostrar_seleccionados(194,4130,'0',$_REQUEST['iddoc']);?></div>
-                          <br />  Buscar: <input  tabindex='17'  type="text" id="stext_permisos_acceso" width="200px" size="25"><a href="javascript:void(0)" onclick="tree_permisos_acceso.findItem(htmlentities(document.getElementById('stext_permisos_acceso').value),1)"> <img src="../../botones/general/anterior.png"border="0px"></a>
+                          <br />  Buscar: <input  tabindex='16'  type="text" id="stext_permisos_acceso" width="200px" size="25"><a href="javascript:void(0)" onclick="tree_permisos_acceso.findItem(htmlentities(document.getElementById('stext_permisos_acceso').value),1)"> <img src="../../botones/general/anterior.png"border="0px"></a>
                    <a href="javascript:void(0)" onclick="tree_permisos_acceso.findItem(htmlentities(document.getElementById('stext_permisos_acceso').value),0,1)"><img src="../../botones/general/buscar.png"border="0px"></a>                          
                    <a href="javascript:void(0)" onclick="tree_permisos_acceso.findItem(htmlentities(document.getElementById('stext_permisos_acceso').value))"><img src="../../botones/general/siguiente.png"border="0px"></a> 
                           <br /><div id="esperando_permisos_acceso"><img src="../../imagenes/cargando.gif"></div><div id="treeboxbox_permisos_acceso" height="90%"></div><input type="hidden" maxlength="255"  name="permisos_acceso" id="permisos_acceso"   value="" ><label style="display:none" class="error" for="permisos_acceso">Campo obligatorio.</label><script type="text/javascript">
@@ -363,15 +288,8 @@ ELABORACION,REVISION,APROBACION,DISTRIBUCION,INACTIVO ">ESTADO*</td><td bgcolor=
                         document.poppedLayer.style.display = "";
                       }
                 	--></script></td></tr><tr>
-                       <td class="encabezado" width="20%" title="">FECHA*</td><td colspan="2" bgcolor="#F5F5F5"><span class="phpmaker"><input  tabindex='18'  type="text" readonly="true"  class="required dateISO"  name="fecha" id="fecha" tipo="fecha" value="<?php echo(date("Y-m-d")); ?>"><?php selector_fecha("fecha","formulario_formatos","Y-m-d",date("m"),date("Y"),"default.css","../../","AD:VALOR","VENTANA",FALSE,FALSE); ?></span></font></td><tr>
-                     <td class="encabezado" width="20%" title="">COORDENADAS</td>
-                     <td bgcolor="#F5F5F5"><input  maxlength="255"   tabindex='19'  type="text" size="100" id="coordenadas" name="coordenadas"  value="<?php echo(validar_valor_campo(2015)); ?>"></td>
-                    </tr><tr>
-                     <td class="encabezado" width="20%" title="">POLITICA DE OPERACION</td>
-                     <td class="celda_transparente"><textarea  tabindex='20'  name="politica_operacion" id="politica_operacion" cols="53" rows="3" class="tiny_basico"><?php echo(validar_valor_campo(2009)); ?></textarea></td>
-                    </tr><tr>
                    <td class="encabezado" width="20%" title="">APROBADO POR*</td><td bgcolor="#F5F5F5"><div id="seleccionados"><?php mostrar_seleccionados(194,2608,'5',$_REQUEST['iddoc']);?></div>
-                          <br />  Buscar: <input  tabindex='21'  type="text" id="stext_aprobado" width="200px" size="25"><a href="javascript:void(0)" onclick="tree_aprobado.findItem(htmlentities(document.getElementById('stext_aprobado').value),1)"> <img src="../../botones/general/anterior.png"border="0px"></a>
+                          <br />  Buscar: <input  tabindex='17'  type="text" id="stext_aprobado" width="200px" size="25"><a href="javascript:void(0)" onclick="tree_aprobado.findItem(htmlentities(document.getElementById('stext_aprobado').value),1)"> <img src="../../botones/general/anterior.png"border="0px"></a>
                    <a href="javascript:void(0)" onclick="tree_aprobado.findItem(htmlentities(document.getElementById('stext_aprobado').value),0,1)"><img src="../../botones/general/buscar.png"border="0px"></a>                          
                    <a href="javascript:void(0)" onclick="tree_aprobado.findItem(htmlentities(document.getElementById('stext_aprobado').value))"><img src="../../botones/general/siguiente.png"border="0px"></a> 
                           <br /><div id="esperando_aprobado"><img src="../../imagenes/cargando.gif"></div><div id="treeboxbox_aprobado" height="90%"></div><input type="hidden" maxlength="255"  class="required"  name="aprobado" id="aprobado"   value="" ><label style="display:none" class="error" for="aprobado">Campo obligatorio.</label><script type="text/javascript">
@@ -425,6 +343,79 @@ ELABORACION,REVISION,APROBACION,DISTRIBUCION,INACTIVO ">ESTADO*</td><td bgcolor=
                         else
                            document.poppedLayer =
                                eval('document.layers["esperando_aprobado"]');
+                        document.poppedLayer.style.display = "";
+                      }
+                	--></script></td></tr><tr>
+                   <td class="encabezado" width="20%" title="">DEPENDENCIAS PARTICIPANTES*</td><td bgcolor="#F5F5F5"><div id="seleccionados"><?php mostrar_seleccionados(194,4574,'2',$_REQUEST['iddoc']);?></div>
+                          <br />  Buscar: <input  tabindex='18'  type="text" id="stext_dependencias_partici" width="200px" size="25"><a href="javascript:void(0)" onclick="tree_dependencias_partici.findItem(htmlentities(document.getElementById('stext_dependencias_partici').value),1)"> <img src="../../botones/general/anterior.png"border="0px"></a>
+                   <a href="javascript:void(0)" onclick="tree_dependencias_partici.findItem(htmlentities(document.getElementById('stext_dependencias_partici').value),0,1)"><img src="../../botones/general/buscar.png"border="0px"></a>                          
+                   <a href="javascript:void(0)" onclick="tree_dependencias_partici.findItem(htmlentities(document.getElementById('stext_dependencias_partici').value))"><img src="../../botones/general/siguiente.png"border="0px"></a> 
+                          <br /><div id="esperando_dependencias_partici"><img src="../../imagenes/cargando.gif"></div><div id="treeboxbox_dependencias_partici" height="90%"></div><input type="hidden" maxlength="255"  class="required"  name="dependencias_partici" id="dependencias_partici"   value="" ><label style="display:none" class="error" for="dependencias_partici">Campo obligatorio.</label><script type="text/javascript">
+                  <!--
+                      var browserType;
+                      if (document.layers) {browserType = "nn4"}
+                      if (document.all) {browserType = "ie"}
+                      if (window.navigator.userAgent.toLowerCase().match("gecko")) {
+                         browserType= "gecko"
+                      }
+                			tree_dependencias_partici=new dhtmlXTreeObject("treeboxbox_dependencias_partici","100%","100%",0);
+                			tree_dependencias_partici.setImagePath("../../imgs/");
+                			tree_dependencias_partici.enableIEImageFix(true);tree_dependencias_partici.enableCheckBoxes(1);
+                			tree_dependencias_partici.enableThreeStateCheckboxes(1);tree_dependencias_partici.setOnLoadingStart(cargando_dependencias_partici);
+                      tree_dependencias_partici.setOnLoadingEnd(fin_cargando_dependencias_partici);tree_dependencias_partici.enableSmartXMLParsing(true);tree_dependencias_partici.loadXML("../../test_serie.php?tabla=dependencia&estado=1");
+                	        
+                      tree_dependencias_partici.setOnCheckHandler(onNodeSelect_dependencias_partici);
+                      function onNodeSelect_dependencias_partici(nodeId)
+                      {valor_destino=document.getElementById("dependencias_partici");
+                       destinos=tree_dependencias_partici.getAllChecked();
+                       nuevo=destinos.replace(/\,{2,}(d)*/gi,",");
+                       nuevo=nuevo.replace(/\,$/gi,"");
+                       vector=destinos.split(",");
+                       for(i=0;i<vector.length;i++)
+                          {if(vector[i].indexOf("_")!=-1)
+                             {vector[i]=vector[i].substr(0,vector[i].indexOf("_"));
+                             }
+                           nuevo=vector.join(",");  
+                           if(vector[i].indexOf("#")!=-1)
+                              {hijos=tree_dependencias_partici.getAllSubItems(vector[i]);
+                               hijos=hijos.replace(/\,{2,}(d)*/gi,",");
+                               hijos=hijos.replace(/\,$/gi,"");
+                               vectorh=hijos.split(",");
+                               
+                               for(h=0;h<vectorh.length;h++)
+                                  {if(vectorh[h].indexOf("_")!=-1)
+                                      vectorh[h]=vectorh[h].substr(0,vectorh[h].indexOf("_"));
+                                   nuevo=eliminarItem(nuevo,vectorh[h]);
+                                  } 
+                              }
+                          }
+                       nuevo=nuevo.replace(/\,{2,}(d)*/gi,",");
+                       nuevo=nuevo.replace(/\,$/gi,"");   
+                       valor_destino.value=nuevo;
+                      }
+                      function fin_cargando_dependencias_partici() {
+                        if (browserType == "gecko" )
+                           document.poppedLayer =
+                               eval('document.getElementById("esperando_dependencias_partici")');
+                        else if (browserType == "ie")
+                           document.poppedLayer =
+                              eval('document.getElementById("esperando_dependencias_partici")');
+                        else
+                           document.poppedLayer =
+                              eval('document.layers["esperando_dependencias_partici"]');
+                        document.poppedLayer.style.display = "none";
+                      }
+
+                      function cargando_dependencias_partici() {
+                        if (browserType == "gecko" )
+                           document.poppedLayer =
+                               eval('document.getElementById("esperando_dependencias_partici")');
+                        else if (browserType == "ie")
+                           document.poppedLayer =
+                              eval('document.getElementById("esperando_dependencias_partici")');
+                        else
+                           document.poppedLayer =
+                               eval('document.layers["esperando_dependencias_partici"]');
                         document.poppedLayer.style.display = "";
                       }
                 	--></script></td></tr><tr>
