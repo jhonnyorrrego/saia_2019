@@ -77,6 +77,9 @@ function adiconar_factores_contexto($idformato,$iddoc){
 			  </table>
 			 ';
 			 
+			 $tabla_factores='<table border="1" style="border-collapse: collapse;width: 100%; float: left;">';
+			 
+			 
 	echo($factores_internos);
 	echo($factores_externos);
 }
