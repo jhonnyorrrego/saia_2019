@@ -139,6 +139,8 @@ if(@$_REQUEST["id"]){
             		//$ruta="../../class_impresion.php?iddoc=".$datos_formato[0]["documento_iddocumento"];
             	}
             }
+            
+            print_r($ruta);
             if(is_file("../".$formato[0]["nombre"]."/".$formato[0]["ruta_mostrar"]))
               redirecciona($ruta);
             else if(is_file("../".$formato[0]["nombre"]."/previo_".$formato[0]["ruta_mostrar"]))
