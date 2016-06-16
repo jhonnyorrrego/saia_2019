@@ -48,16 +48,22 @@ function adiconar_factores_contexto($idformato,$iddoc){
 	
 	for($i=0; $i<$factores_contexto_estrategico['numcampos']; $i++){
 		
+		$imagen_eliminar='';
+		if($_REQUEST['tipo']!=5){
+		    $imagen_eliminar='<img border=0 src="'.$ruta_db_superior.'images/eliminar_pagina.png" />';
+		}
+		
+		
 		if($factores_contexto_estrategico[$i]['factores_contexto'] == 1){
 			$internos .= '<tr>
 							<td>'.html_entity_decode($factores_contexto_estrategico[$i]['descripcion']).'</td>
-							<td><a href="#" onclick="if(confirm(\'En realidad desea borrar este elemento?\')) window.location=\''.$ruta_db_superior.'formatos/librerias/funciones_item.php?formato=213&idpadre='.$iddoc.'&accion=eliminar_item&tabla=ft_factores_contexto&id='.$factores_contexto_estrategico[$i]['idft_factores_contexto'].'\';"><img border=0 src="'.$ruta_db_superior.'images/eliminar_pagina.png" /></a></td>			
+							<td><a href="#" onclick="if(confirm(\'En realidad desea borrar este elemento?\')) window.location=\''.$ruta_db_superior.'formatos/librerias/funciones_item.php?formato=213&idpadre='.$iddoc.'&accion=eliminar_item&tabla=ft_factores_contexto&id='.$factores_contexto_estrategico[$i]['idft_factores_contexto'].'\';">'.$imagen_eliminar.'</a></td>			
 						  </tr>
 						';
 		}else{
 			$externos .= '<tr>
 							<td>'.html_entity_decode($factores_contexto_estrategico[$i]['descripcion']).'</td>							
-							<td><a href="#" onclick="if(confirm(\'En realidad desea borrar este elemento?\')) window.location=\''.$ruta_db_superior.'formatos/librerias/funciones_item.php?formato=213&idpadre='.$iddoc.'&accion=eliminar_item&tabla=ft_factores_contexto&id='.$factores_contexto_estrategico[$i]['idft_factores_contexto'].'\';"><img border=0 src="'.$ruta_db_superior.'images/eliminar_pagina.png" /></a></td>
+							<td><a href="#" onclick="if(confirm(\'En realidad desea borrar este elemento?\')) window.location=\''.$ruta_db_superior.'formatos/librerias/funciones_item.php?formato=213&idpadre='.$iddoc.'&accion=eliminar_item&tabla=ft_factores_contexto&id='.$factores_contexto_estrategico[$i]['idft_factores_contexto'].'\';">'.$imagen_eliminar.'</a></td>
 						  </tr>					  
 						';
 		}
