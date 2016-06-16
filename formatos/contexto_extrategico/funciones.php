@@ -80,10 +80,10 @@ function adiconar_factores_contexto($idformato,$iddoc){
 			 $tabla_factores_ini='<table border="0" style="border-collapse: collapse;width: 100%; float: left;"><tr><td>'.$factores_internos.'</td><td>'.$factores_externos.'</td></tr></table>';
 			 ;
 			 
-			 echo($tabla_factores_ini);die();
+			 echo($tabla_factores_ini);
 			 
-	echo($factores_internos);
-	echo($factores_externos);
+	        //echo($factores_internos);
+	        //echo($factores_externos);
 }
 
 ?>
