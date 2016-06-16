@@ -79,6 +79,7 @@ function adiconar_factores_contexto($idformato,$iddoc){
 			 
 			 $tabla_factores_ini='<table border="1" style="border-collapse: collapse;width: 100%; float: left;">';
 			 $tabla_factores_fin='</table>';
+			 $cadena_factores=$tabla_factores_ini.$tabla_factores_fin;
 			 
 	echo($factores_internos);
 	echo($factores_externos);
