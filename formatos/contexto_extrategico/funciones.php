@@ -33,7 +33,7 @@ function mostrar_objetivo_contexto_estrategico($idformato,$iddoc){
     
     $objetivo=busca_filtro_tabla("objetivo","ft_contexto_extrategico","documento_iddocumento=".$iddoc,"",$conn);
     
-    $cadena=strip_tags($objetivo[0]['objetivo']);
+    $cadena=strip_tags(html_entity_decode($objetivo[0]['objetivo']));
     
     echo($cadena);
 }
