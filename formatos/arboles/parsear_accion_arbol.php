@@ -91,6 +91,8 @@ if(@$_REQUEST["id"]){
        // die($ruta);
       break;
       case "mostrar": 
+          
+          print_r($formato);die();
         if($formato[0]["item"])
         { $ruta="../".$formato[0]["nombre"]."/".$formato[0]["ruta_mostrar"]."?iddoc=".$datos[2]."&idformato=".$formato[0]["idformato"];
         }
