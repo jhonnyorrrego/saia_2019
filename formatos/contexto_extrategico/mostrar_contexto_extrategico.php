@@ -1,4 +1,4 @@
-<?php include_once("../carta/funciones.php"); ?><?php include_once("../correo_saia/funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("../librerias/funciones_generales.php"); ?><script type="text/javascript" src="../../js/jquery.js"></script><?php include_once("../librerias/header_nuevo.php"); ?><?php include_once("../../class_transferencia.php"); ?><tr><td><table style="border-collapse: collapse; width: 100%;" border="1">
+<?php include_once("../carta/funciones.php"); ?><?php include_once("../correo_saia/funciones.php"); ?><?php include_once("../librerias/header_nuevo.php"); ?><?php include_once("../../class_transferencia.php"); ?><tr><td><table style="border-collapse: collapse; width: 100%;" border="1">
 <tbody>
 <tr>
 <td>
@@ -12,7 +12,7 @@
 </tr>
 <tr>
 <td>
-<p>OBJETIVO:&nbsp;</p>
+<p>OBJETIVO:&nbsp;<?php mostrar_objetivo_contexto_estrategico(375,$_REQUEST['iddoc']);?></p>
 </td>
 </tr>
 </tbody>
