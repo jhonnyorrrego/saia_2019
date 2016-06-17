@@ -86,7 +86,7 @@ $formato=busca_filtro_tabla("A.idformato,A.nombre,A.nombre_tabla,A.etiqueta","fo
 	    
 	    if($formato[0]["nombre"]!='normograma' && !@$_REQUEST["id"]){
 	    	llenar_documentos($iddoc);
-			}  
+		}  
 	    if($nombre=="ft_proceso"){
 	      crear_macroprocesos($formato);
 	    }
