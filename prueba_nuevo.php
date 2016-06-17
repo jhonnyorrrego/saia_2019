@@ -60,7 +60,7 @@ $formato=busca_filtro_tabla("","formato","idformato='".$arreglo[0]."'","",$conn)
 
 if($formato["numcampos"]){
   $descripcion=busca_filtro_tabla("","campos_formato","formato_idformato=".$formato[0]["idformato"]." AND acciones LIKE '%d%'","",$conn);    
-  print_r($descripcion);die();
+ 
   if($descripcion["numcampos"]){
     $campo_descripcion=$descripcion[0]["nombre"];
   }
@@ -68,6 +68,8 @@ if($formato["numcampos"]){
     $campo_descripcion="id".$formato[0]["nombre_tabla"];
   }
   $idformato=$formato[0]["idformato"]."-".$arreglo[1]."-".$arreglo[2]."-".$arreglo[0];
+  
+   print_r($idformato);die();
   //echo($idformato."<br />");
   $imagenes='im0="'.strtolower($formato[0]["nombre"]).'.gif" im1="'.strtolower($formato[0]["nombre"]).'.gif" im2="'.strtolower($formato[0]["nombre"]).'.gif" ';
   if($estado){
