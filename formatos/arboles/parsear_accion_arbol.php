@@ -175,9 +175,10 @@ if(@$_REQUEST["id"]){
           else if(!@$datos_formato2[0]["numero"]){
             $alerta="No se puede responder el documento porque no ha terminado su proceso.";
           }
-					if(is_file("../".$formato[0]["nombre"]."/previo_".$formato[0]["ruta_mostrar"])){
-          	redirecciona("../".$formato[0]["nombre"]."/previo_".$formato[0]["ruta_mostrar"]."?padre=".$datos_formato2[0]["id".$formato2[0]["nombre_tabla"]]."&iddoc=".$datos_formato2[0]["iddocumento"]);
-					}
+          
+				/*	if(is_file("../".$formato[0]["nombre"]."/previo_".$formato[0]["ruta_mostrar"])){
+          	    redirecciona("../".$formato[0]["nombre"]."/previo_".$formato[0]["ruta_mostrar"]."?padre=".$datos_formato2[0]["id".$formato2[0]["nombre_tabla"]]."&iddoc=".$datos_formato2[0]["iddocumento"]);
+					}*/
         }
       break;
       case "vincular":
