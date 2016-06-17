@@ -153,7 +153,7 @@ global $conn,$texto;
    $formato=busca_filtro_tabla("A.numero,A.descripcion ,A.iddocumento","documento A","lower(A.plantilla)='".strtolower($arreglo[1])."' AND A.estado<>'ELIMINADO'".$validacion_formato,"iddocumento asc",$conn);
   } 
   for($i=0;$i<$formato["numcampos"];$i++){
-      $papas=busca_filtro_tabla("id".$arreglo[2]." AS llave",$arreglo[2],"documento_iddocumento=".$formato[$i]["iddocumento"],"",$conn);
+      $papas=busca_filtro_tabla("id".$arreglo[2]." AS llave,'".$arreglo[2]."' AS nombre_tabla",$arreglo[2],"documento_iddocumento=".$formato[$i]["iddocumento"],"",$conn);
     if($papas["numcampos"])
       $iddoc=$arreglo[0]."-".$papas[0]["llave"]."-id".$arreglo[2];
     else $iddoc=0;
@@ -232,8 +232,8 @@ function llena_datos($idformato,$tabla,$campo,$categoria){//--
 			$texto.=' child="1" ';
 		}
 	  $llave=$arreglo[0]."-".$arreglo[2]."-".$dato[$i]["id".$tabla];
-	 // $texto.=strip_tags('text="'.decodifica(utf8_encode(html_entity_decode(htmlspecialchars_decode($dato[$i][$campo])))).'" id="'.$llave.'">');
-	 $texto.=strip_tags('text="'.decodifica(utf8_encode(html_entity_decode(htmlspecialchars_decode(mostrar_valor_campo($campo,$arreglo[0],$dato[$i]["documento_iddocumento"],1))))).'" id="'.$llave.'">');
+	  $texto.=strip_tags('text="'.decodifica(utf8_encode(html_entity_decode(htmlspecialchars_decode($dato[$i][$campo])))).'" id="'.$llave.'">');
+	 //$texto.=strip_tags('text="'.decodifica(utf8_encode(html_entity_decode(htmlspecialchars_decode(mostrar_valor_campo($campo,$arreglo[0],$dato[$i]["documento_iddocumento"],1))))).'" id="'.$llave.'">');
 	  if(@$dato[$i]["nombre"]=="EVALUACION INDEPENDIENTE" && $tabla=="ft_proceso" && isset($_REQUEST["id"])){
 	     crear_dato_formato('ft_elemento_subproceso');
 	  }
