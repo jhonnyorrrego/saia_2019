@@ -77,7 +77,7 @@ if($formato["numcampos"]){
     $texto.='<item style="font-family:verdana; font-size:7pt;" '.$imagenes;
     $texto.=strip_tags('text="'.decodifica(utf8_encode(html_entity_decode(htmlspecialchars_decode($formato[0]["etiqueta"])))).'" id="'.$formato[0]["idformato"]."-".$arreglo[2]."-r".rand().'">'."\n");
   }
-  
+  print_r($formato);die();
   
 	if(($formato[0]["nombre"]=="proceso"))
  	 print_r('entra proceso');die();
