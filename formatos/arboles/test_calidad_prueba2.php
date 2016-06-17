@@ -210,7 +210,7 @@ function llena_datos($idformato,$tabla,$campo,$categoria){//--
 	   $orden="id$tabla asc";  
 	if($tabla=="ft_proceso" && !$validar_macro){
 	  $dato = busca_filtro_tabla("",$tabla,$arreglo[2]."=".$arreglo[1],"",$conn);
-	  if($dato["numcampos"] && @$dato[0]["macroproceso"]!=''){
+	  if($dato["numcampos"] && @$dato[0]["macroproceso"]){
 	    return($texto);
 	  }
 	}  
