@@ -77,9 +77,11 @@ if($formato["numcampos"]){
     $texto.=strip_tags('text="'.decodifica(utf8_encode(html_entity_decode(htmlspecialchars_decode($formato[0]["etiqueta"])))).'" id="'.$formato[0]["idformato"]."-".$arreglo[2]."-r".rand().'">'."\n");
   }
   
-  print_r($formato);die();
-	if(($formato[0]["nombre"]=="proceso"))
-  	llena_datos($idformato,$formato[0]["nombre_tabla"],$campo_descripcion);
+  
+	if(($formato[0]["nombre"]=="proceso")){
+	    print_r('entra nombre proceso');die();
+	    llena_datos($idformato,$formato[0]["nombre_tabla"],$campo_descripcion);
+	}
 	else if(isset($_REQUEST["id"])){
 		llena_datos($idformato,$formato[0]["nombre_tabla"],$campo_descripcion);
 	}
