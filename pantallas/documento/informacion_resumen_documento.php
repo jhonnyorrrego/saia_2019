@@ -493,7 +493,7 @@ function click_funcion(div){
            {
         ?>
         tree2.selectItem(item,true,false);
-        //tree2.openAllItems(0);
+        //tree2.openAllItems(0); //esta linea permite que los arboles carguen abiertos totalmente
         <?php   
            }
         ?>
