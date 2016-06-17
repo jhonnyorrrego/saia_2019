@@ -28,7 +28,7 @@ $formato=busca_filtro_tabla("A.idformato,A.nombre,A.nombre_tabla,A.etiqueta","fo
  
  
  
- print_r($validacion_macroproceso);
+ print_r($orden);
  
 ?>
 
