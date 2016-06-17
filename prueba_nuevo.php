@@ -104,13 +104,15 @@ function llena_datos($idformato,$tabla,$campo,$categoria){//--
 	$estado=busca_filtro_tabla("estado",$tabla,$arreglo[2]."=".$arreglo[1],"",$conn);
 	
 	$campo_ordenar=busca_filtro_tabla("c.nombre,nombre_tabla","campos_formato c,formato f","formato_idformato=idformato and (c.banderas like 'oc' or c.banderas like '%,oc' or c.banderas like 'oc,%' or c.banderas like '%,oc,%') and f.idformato='".strtolower($arreglo[0])."'","",$conn);
-	print_r($campo_ordenar);die();
+	
 	 if($campo_ordenar["numcampos"])
 	   { $orden="a.".$campo_ordenar[0]["nombre"]." asc";
 	   }
 	 else
 	   $orden="id$tabla asc";  
 	if($tabla=="ft_proceso" && !$validar_macro){
+	    
+	    print_r('entrea dsitnto valida macro');die();
 	  $dato = busca_filtro_tabla("",$tabla,$arreglo[2]."=".$arreglo[1],"",$conn);
 	  if($dato["numcampos"] && @$dato[0]["macroproceso"]!=''){
 	    return($texto);
