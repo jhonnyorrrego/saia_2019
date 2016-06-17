@@ -35,6 +35,12 @@ if(@$_REQUEST['idformato'] || @$idformato){ //idformato a exportar
 	
 	if($ridformato->exito){
 		$exportar=json_encode($ridformato);
+		
+		if(@$_REQUEST["imprimir_json"]){
+			print_r($exportar);
+			die();
+		}
+		
 		$medio = new nusoap_client(SERVIDOR_MEDIO);
 		$respuesta_medio = $medio->call('conexion_exportar_importar', array($exportar));
 		
