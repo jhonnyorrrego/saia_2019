@@ -79,7 +79,6 @@ if($formato["numcampos"]){
   
   
 	if(($formato[0]["nombre"]=="proceso")){
-	    print_r('entra nombre proceso');die();
 	    llena_datos($idformato,$formato[0]["nombre_tabla"],$campo_descripcion);
 	}
 	else if(isset($_REQUEST["id"])){
@@ -98,6 +97,9 @@ function llena_datos($idformato,$tabla,$campo,$categoria){//--
 	global $conn,$texto,$imagenes,$validar_macro;
 	$where_serie='';
 	$arreglo=explode("-",$idformato);
+	
+	
+	print_r($arreglo);die();
 	//echo("<br />".$idformato."<br />");
 	$estado=busca_filtro_tabla("estado",$tabla,$arreglo[2]."=".$arreglo[1],"",$conn);
 	$campo_ordenar=busca_filtro_tabla("c.nombre,nombre_tabla","campos_formato c,formato f","formato_idformato=idformato and (c.banderas like 'oc' or c.banderas like '%,oc' or c.banderas like 'oc,%' or c.banderas like '%,oc,%') and f.idformato='".strtolower($arreglo[0])."'","",$conn);
