@@ -99,9 +99,10 @@ function llena_datos($idformato,$tabla,$campo,$categoria){//--
 	$arreglo=explode("-",$idformato);
 	
 	
-	print_r($arreglo);die();
+	
 	//echo("<br />".$idformato."<br />");
 	$estado=busca_filtro_tabla("estado",$tabla,$arreglo[2]."=".$arreglo[1],"",$conn);
+	print_r($estado);die();
 	$campo_ordenar=busca_filtro_tabla("c.nombre,nombre_tabla","campos_formato c,formato f","formato_idformato=idformato and (c.banderas like 'oc' or c.banderas like '%,oc' or c.banderas like 'oc,%' or c.banderas like '%,oc,%') and f.idformato='".strtolower($arreglo[0])."'","",$conn);
 	 if($campo_ordenar["numcampos"])
 	   { $orden="a.".$campo_ordenar[0]["nombre"]." asc";
