@@ -79,6 +79,7 @@ if($formato["numcampos"]){
   
   
 	if(($formato[0]["nombre"]=="proceso")){
+	    $validar_macro=1;
 	    llena_datos($idformato,$formato[0]["nombre_tabla"],$campo_descripcion);
 	}
 	else if(isset($_REQUEST["id"])){
