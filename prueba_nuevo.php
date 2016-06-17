@@ -30,6 +30,17 @@ $formato=busca_filtro_tabla("A.idformato,A.nombre,A.nombre_tabla,A.etiqueta","fo
   if($campo_ordenar["numcampos"]){ 
     $formato=busca_filtro_tabla("A.numero,A.descripcion ,A.iddocumento","documento A,".$campo_ordenar[0]["nombre_tabla"]." b","documento_iddocumento=iddocumento AND A.estado<>'ELIMINADO'".$validacion_macroproceso,$orden,$conn);
   }  
+  
+  for($i=0;$i<$formato["numcampos"];$i++){
+      $papas=busca_filtro_tabla("id".$arreglo[2]." AS llave,'".$arreglo[2]."' AS nombre_tabla",$arreglo[2],"documento_iddocumento=".$formato[$i]["iddocumento"],"",$conn);
+    if($papas["numcampos"])
+      $iddoc=$arreglo[0]."-".$papas[0]["llave"]."-id".$arreglo[2];
+    else $iddoc=0;
+   // llena_datos_formato($iddoc,0);
+   
+   echo($iddoc.'<br><br>');
+  }  
+  
  print_r($formato);
  
 ?>
