@@ -5,6 +5,10 @@
 <td><?php mostrar_valor_campo('nombre',371,$_REQUEST['iddoc']);?></td>
 </tr>
 <tr>
+<td class="encabezado" valign="top">Estado:</td>
+<td>&nbsp;<?php mostrar_valor_campo('estado',371,$_REQUEST['iddoc']);?></td>
+</tr>
+<tr>
 <td class="encabezado" valign="top">Documento Soporte:</td>
 <td>&nbsp;<?php mostrar_anexos_memo(371,$_REQUEST['iddoc']);?></td>
 </tr>
