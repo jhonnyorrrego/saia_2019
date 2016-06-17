@@ -79,33 +79,19 @@ $formato=busca_filtro_tabla("A.idformato,A.nombre,A.nombre_tabla,A.etiqueta","fo
     $imagenes=' im0="'.strtolower($formato[0]["nombre"]).'.gif" im1="'.strtolower($formato[0]["nombre"]).'.gif" im2="'.strtolower($formato[0]["nombre"]).'.gif" ';
     $iddoc=$formato[0]["idformato"]."-".$formato[0]["nombre"]."-".$formato[0]["nombre_tabla"];
 	
-	if($perfil!="consulta"){	
-		$child="";
-	    $texto.='<item style="font-family:verdana; font-size:7pt;" '.$imagenes;
-	    $texto.=strip_tags('text="'.decodifica($formato[0]["etiqueta"]).'" id="'.$formato[0]["idformato"].'" '.$child.'>'."\n");
+	
+	$child="";
+	$texto.='<item style="font-family:verdana; font-size:7pt;" '.$imagenes;
+	$texto.=strip_tags('text="'.decodifica($formato[0]["etiqueta"]).'" id="'.$formato[0]["idformato"].'" '.$child.'>'."\n");
 	    
-	    if($formato[0]["nombre"]!='normograma' && !@$_REQUEST["id"]){
-	    	llenar_documentos($iddoc);
-			}  
-	    if($nombre=="ft_proceso"){
-	      crear_macroprocesos($formato);
-	    }
-	    $texto.="</item>\n";
-	}else{
-	  	if($nombre!="ft_elemento_subproceso" && $perfil=="consulta"){
-	  		$child="";
-	   		$texto.='<item style="font-family:verdana; font-size:7pt;" '.$imagenes;
-	    	$texto.=strip_tags('text="1 '.decodifica($formato[0]["etiqueta"]).'" id="'.$formato[0]["idformato"].'" '.$child.'>'."\n");
-			if($formato[0]["nombre"]!='normograma'){
-				llenar_documentos($iddoc);
-			}
-	    	if($nombre=="ft_proceso"){
-	   		   crear_macroprocesos($formato);
-	    	}
-	   		 $texto.="</item>\n";
-	  	}
-	  }
-  } 
+	if($formato[0]["nombre"]!='normograma' && !@$_REQUEST["id"]){
+	  	llenar_documentos($iddoc);
+	}  
+	if($nombre=="ft_proceso"){
+	    crear_macroprocesos($formato);
+	}
+	$texto.="</item>\n";
+	
 }
 function crear_macroprocesos($formato){  
 global $texto,$conn,$imagenes,$formatos_calidad,$validar_macro,$perfil;
