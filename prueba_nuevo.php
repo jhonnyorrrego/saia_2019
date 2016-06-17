@@ -56,11 +56,11 @@ global $conn,$texto,$imagenes,$formatos_calidad;
 $arreglo=explode("-",$formato);
 $formato=busca_filtro_tabla("","formato","idformato='".$arreglo[0]."'","",$conn);
 
-print_r($formato);die();
+
 
 if($formato["numcampos"]){
   $descripcion=busca_filtro_tabla("","campos_formato","formato_idformato=".$formato[0]["idformato"]." AND acciones LIKE '%d%'","",$conn);    
-  
+  print_r($descripcion);die();
   if($descripcion["numcampos"]){
     $campo_descripcion=$descripcion[0]["nombre"];
   }
