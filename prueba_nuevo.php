@@ -41,7 +41,7 @@ $formato=busca_filtro_tabla("A.idformato,A.nombre,A.nombre_tabla,A.etiqueta","fo
    echo($iddoc.'<br><br>');
   }  
   
- print_r($formato);
+ //print_r($formato);
  
 ?>
 
