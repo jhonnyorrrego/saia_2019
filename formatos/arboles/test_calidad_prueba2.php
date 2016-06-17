@@ -23,8 +23,6 @@ if($perfil_usuario["numcampos"]){
 	$perfil="consulta";
 }
 
-
-
 //$formatos_calidad=array('ft_proceso','ft_procedimiento','ft_instructivo','ft_manual','ft_guia','ft_plan_calidad','ft_otros_calidad','ft_formatos','ft_listados_maestros','ft_plan_mejoramiento','ft_hallazgo_plan_mejoramiento','ft_seguimiento_plan_mejoramiento','ft_mision_calidad','ft_vision_calidad','ft_objetivos_calidad','ft_politicas','ft_riesgos_proceso','ft_macroproceso','ft_proceso_macroproceso','ft_subproceso','ft_politicas_macroproceso','ft_guia_educacion','ft_instructivo_educacion','ft_formato_educacion','ft_politicas_proceso','ft_norma_meci','ft_elemento_subproceso','ft_componente_subsistema','ft_documentos_meci','ft_norma','ft_documentos_consulta','ft_gestion_educativo','ft_docu_calidad_edu','ft_programas','ft_norma_proceso','ft_norma_procedimiento','ft_indicadores_calidad', 'ft_docu_calidad_edu_macro','ft_normograma');
 $formatos_calidad=array('ft_proceso','ft_procedimiento','ft_instructivo','ft_manual','ft_guia','ft_plan_calidad','ft_otros_calidad','ft_formatos','ft_listados_maestros','ft_plan_mejoramiento','ft_hallazgo_plan_mejoramiento','ft_seguimiento_plan_mejoramiento','ft_mision_calidad','ft_vision_calidad','ft_objetivos_calidad','ft_politicas','ft_macroproceso','ft_proceso_macroproceso','ft_subproceso','ft_politicas_macroproceso','ft_guia_educacion','ft_instructivo_educacion','ft_formato_educacion','ft_politicas_proceso','ft_norma_meci','ft_elemento_subproceso','ft_componente_subsistema','ft_documentos_meci','ft_norma','ft_documentos_consulta','ft_gestion_educativo','ft_docu_calidad_edu','ft_programas','ft_norma_proceso','ft_norma_procedimiento','ft_indicadores_calidad', 'ft_docu_calidad_edu_macro','ft_normograma'); //SIN RIESGOS
 
@@ -60,16 +58,11 @@ echo($texto);
 
 function llenar_formatos(){
 global $texto;
-
-    
-
   crear_dato_formato('ft_mision_calidad');
   crear_dato_formato('ft_vision_calidad');
   crear_dato_formato('ft_objetivos_calidad');
   crear_dato_formato('ft_politicas');
   crear_dato_formato('ft_valores_calidad');
-  
-  
   crear_dato_formato('ft_proceso');
   //$texto.='<item style="font-family:verdana; font-size:7pt;" ';
   //$texto.=strip_tags('text="Planes de mejoramiento" id="pm-general" >'."\n");
