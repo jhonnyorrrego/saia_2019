@@ -36,7 +36,9 @@ $formato=busca_filtro_tabla("A.idformato,A.nombre,A.nombre_tabla,A.etiqueta","fo
     if($papas["numcampos"])
       $iddoc=$arreglo[0]."-".$papas[0]["llave"]."-id".$arreglo[2];
     else $iddoc=0;
-   echo llena_datos_formato($iddoc,0);
+  
+  
+   llena_datos_formato($iddoc,0);
    
   
    
@@ -53,6 +55,9 @@ $formato=busca_filtro_tabla("A.idformato,A.nombre,A.nombre_tabla,A.etiqueta","fo
 global $conn,$texto,$imagenes,$formatos_calidad;
 $arreglo=explode("-",$formato);
 $formato=busca_filtro_tabla("","formato","idformato='".$arreglo[0]."'","",$conn);
+
+print_r($formato);die();
+
 if($formato["numcampos"]){
   $descripcion=busca_filtro_tabla("","campos_formato","formato_idformato=".$formato[0]["idformato"]." AND acciones LIKE '%d%'","",$conn);    
   
