@@ -97,7 +97,7 @@ if(@$_REQUEST["id"]){
        else  
         {$descargable=array("instructivo","formato","guia","manual","plan_calidad","otros_calidad");
 	   leido(usuario_actual("funcionario_codigo"),$datos_formato[0]["iddocumento"]);  
-        if(in_array($formato[0]["nombre"],$descargable)){
+        if(in_array($formato[0]["nombre"],$descargable) && @$_REQUEST['pantalla']=='calidad'){
         if($datos_formato["numcampos"]){
         
             $anexo=busca_filtro_tabla("","anexos","(formato=".$formato[0]["idformato"]." AND documento_iddocumento=".$datos_formato[0]["iddocumento"].")","idanexos desc",$conn);   
