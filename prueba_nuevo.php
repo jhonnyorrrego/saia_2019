@@ -74,12 +74,14 @@ if($formato["numcampos"]){
   $imagenes='im0="'.strtolower($formato[0]["nombre"]).'.gif" im1="'.strtolower($formato[0]["nombre"]).'.gif" im2="'.strtolower($formato[0]["nombre"]).'.gif" ';
   if($estado){
       
-      print_r('entra estado');die();
     $texto.='<item style="font-family:verdana; font-size:7pt;" '.$imagenes;
     $texto.=strip_tags('text="'.decodifica(utf8_encode(html_entity_decode(htmlspecialchars_decode($formato[0]["etiqueta"])))).'" id="'.$formato[0]["idformato"]."-".$arreglo[2]."-r".rand().'">'."\n");
   }
+  
+  
 	if(($formato[0]["nombre"]=="proceso"))
-  	llena_datos($idformato,$formato[0]["nombre_tabla"],$campo_descripcion);
+ 	 print_r('entra proceso');die();
+  	 llena_datos($idformato,$formato[0]["nombre_tabla"],$campo_descripcion);
 	else if(isset($_REQUEST["id"])){
 		llena_datos($idformato,$formato[0]["nombre_tabla"],$campo_descripcion);
 	}
