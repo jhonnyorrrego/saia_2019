@@ -1,11 +1,11 @@
 <?php 
-$carpeta="webservice_saia/exportar_importar_formato/exportar_importar_medio/define_remoto.php";
-if(file_exists($carpeta)){
-    chmod($carpeta,0777);
-    echo "Permisos Agregados a la carpeta ".$carpeta;
-}else{
-    echo "la carpeta ".$carpeta." no existe";
-}
 
+
+include_once('db.php');
+
+
+$nombre="ft_proceso";
+$formato=busca_filtro_tabla("A.idformato,A.nombre,A.nombre_tabla,A.etiqueta","formato A","A.nombre_tabla LIKE '".$nombre."'","idformato DESC",$conn);
+print_r($formato);
 ?>
 
