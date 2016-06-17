@@ -114,7 +114,7 @@ function llena_datos($idformato,$tabla,$campo,$categoria){//--
 	  $dato = busca_filtro_tabla("",$tabla,$arreglo[2]."=".$arreglo[1],"",$conn);
 	  
 	
-	  if($dato["numcampos"] && @$dato[0]["macroproceso"]!=''){
+	  if($dato["numcampos"] && @$dato[0]["macroproceso"]){
 	        print_r('entra fin');die();
 	    return($texto);
 	  }
