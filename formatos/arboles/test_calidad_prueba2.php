@@ -232,8 +232,8 @@ function llena_datos($idformato,$tabla,$campo,$categoria){//--
 			$texto.=' child="1" ';
 		}
 	  $llave=$arreglo[0]."-".$arreglo[2]."-".$dato[$i]["id".$tabla];
-	  $texto.=strip_tags('text="'.decodifica(utf8_encode(html_entity_decode(htmlspecialchars_decode($dato[$i][$campo])))).'" id="'.$llave.'">');
-	 //$texto.=strip_tags('text="'.decodifica(utf8_encode(html_entity_decode(htmlspecialchars_decode(mostrar_valor_campo($campo,$arreglo[0],$dato[$i]["documento_iddocumento"],1))))).'" id="'.$llave.'">');
+	 // $texto.=strip_tags('text="'.decodifica(utf8_encode(html_entity_decode(htmlspecialchars_decode($dato[$i][$campo])))).'" id="'.$llave.'">');
+	 $texto.=strip_tags('text="'.decodifica(utf8_encode(html_entity_decode(htmlspecialchars_decode(mostrar_valor_campo($campo,$arreglo[0],$dato[$i]["documento_iddocumento"],1))))).'" id="'.$llave.'">');
 	  if(@$dato[$i]["nombre"]=="EVALUACION INDEPENDIENTE" && $tabla=="ft_proceso" && isset($_REQUEST["id"])){
 	     crear_dato_formato('ft_elemento_subproceso');
 	  }
