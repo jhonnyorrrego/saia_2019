@@ -88,6 +88,8 @@ $formato=busca_filtro_tabla("A.idformato,A.nombre,A.nombre_tabla,A.etiqueta","fo
 	    	llenar_documentos($iddoc);
 		}  
 	    if($nombre=="ft_proceso"){
+	        print_r('entra ft_proceso'); die();
+	        
 	      crear_macroprocesos($formato);
 	    }
 	    $texto.="</item>\n";
