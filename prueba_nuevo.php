@@ -27,8 +27,10 @@ $formato=busca_filtro_tabla("A.idformato,A.nombre,A.nombre_tabla,A.etiqueta","fo
   }
  
  
- 
- print_r($orden);
+  if($campo_ordenar["numcampos"]){ 
+    $formato=busca_filtro_tabla("A.numero,A.descripcion ,A.iddocumento","documento A,".$campo_ordenar[0]["nombre_tabla"]." b","documento_iddocumento=iddocumento AND A.estado<>'ELIMINADO'".$validacion_macroproceso,$orden,$conn);
+  }  
+ print_r($formato);
  
 ?>
 
