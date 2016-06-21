@@ -2522,3 +2522,11 @@ INICIO (codigo velocidad)-------2016-06-16 17:47:07-----------
 FIN (codigo velocidad)-------2016-06-16 17:47:07-----------
 INICIO (codigo velocidad)-------2016-06-17 12:40:48-----------
 FIN (codigo velocidad)-------2016-06-17 12:40:48-----------
+INICIO (codigo velocidad)-------2016-06-21 07:58:38-----------
+FIN (codigo velocidad)-------2016-06-21 07:58:38-----------
+INICIO (codigo velocidad)-------2016-06-21 07:58:58-----------
+FIN (codigo velocidad)-------2016-06-21 07:58:58-----------
+INICIO (codigo velocidad)-------2016-06-21 08:10:39-----------
+FIN (codigo velocidad)-------2016-06-21 08:10:39-----------
+INICIO (codigo velocidad)-------2016-06-21 08:10:52-----------
+FIN (codigo velocidad)-------2016-06-21 08:10:52-----------
