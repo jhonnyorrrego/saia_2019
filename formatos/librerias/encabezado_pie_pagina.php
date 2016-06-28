@@ -353,4 +353,8 @@ function mostrar_datos_radicaion($idformato, $iddoc){
 	$datos.="</div></div>";
 	return($datos);
 }
+function pie_pagina_carta($idformato, $iddoc){
+   global $conn;         
+     return('<img src="'.PROTOCOLO_CONEXION.RUTA_PDF_LOCAL.'/imagenes/pie_pagina_carta.jpg" />');  
+}
 ?>

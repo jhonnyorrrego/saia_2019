@@ -12,9 +12,6 @@ echo(librerias_notificaciones());
 
 ?>
 
-
-
-
 <script type="text/javascript">(function($) {
             	
           })(jQuery);

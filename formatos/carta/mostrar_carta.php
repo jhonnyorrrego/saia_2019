@@ -19,7 +19,7 @@
 </tr>
 <tr>
 <td style="border-left-style: solid;">&nbsp;</td>
-<td style="padding-right: 10px; border-bottom-style: solid;" rowspan="3"><?php mostrar_qr_carta(1,$_REQUEST['iddoc']);?>&nbsp;</td>
+<td style="padding-right: 10px; border-bottom-style: solid;" rowspan="3">&nbsp;</td>
 <td>&nbsp;</td>
 <td style="font-size: 7pt; padding: 10px; border-bottom-style: solid;" rowspan="3"><br /><br /> <span style="font-size: 7pt;"><?php mostrar_datos_radicacion(1,$_REQUEST['iddoc']);?></span></td>
 <td style="border-right-style: solid;">&nbsp;</td>

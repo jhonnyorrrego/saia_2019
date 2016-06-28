@@ -35,7 +35,9 @@ if((!isset($_REQUEST["tipo"]) || $_REQUEST["tipo"]==1)&&!$formato[0]["item"]){
   </div>
    <?php
    //print_r($_REQUEST);
-    for($i=0; $i<$comentario["numcampos"]; $i++){  
+    for($i=0; $i<$comentario["numcampos"]; $i++){
+    	if(!$comentario[$i]["posx"] || $comentario[$i]["posx"]==0){$comentario[$i]["posx"]=25;}
+			if(!$comentario[$i]["posy"] || $comentario[$i]["posy"]==0){$comentario[$i]["posy"]=130;}  
       $posx=$comentario[$i]["posx"];
       $posy=$comentario[$i]["posy"];
       $texto=$comentario[$i]["comentario"];

@@ -433,7 +433,7 @@ include_once("librerias_saia.php");
                     "usuario": "<?php print($usuario); ?>",
                     "dftp": "<?php print($dir2); ?>",
                     "clave": "<?php print($clave); ?>",
-                    "verLog": "true",
+                    "verLog": "false",
                     "ancho": "<?php print($ancho); ?>",
                     "alto": "<?php print($alto); ?>",
                     "maxtabs": "50"
