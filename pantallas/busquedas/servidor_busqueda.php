@@ -260,12 +260,17 @@ if(@$_REQUEST["idbusqueda_temporal"]){
 	}
 }
 if(!@$_REQUEST["cantidad_total"]){
-	$result = ejecuta_filtro_tabla("SELECT COUNT(*) AS cant FROM ".$tablas_consulta." WHERE ".$condicion.$ordenar_consulta,$conn);
-	if($result["numcampos"]>1){
-		$_REQUEST["cantidad_total"]=$result["numcampos"];
-	}else{
-		$_REQUEST["cantidad_total"]=$result[0]["cant"];
-	}
+    if(MOTOR=='SqlServer' || MOTOR=='MSSql'){
+        $conteo_filas = $conn->Ejecutar_sql("WITH conteo AS (SELECT ".$campos_consulta." AS cant2 FROM ".$tablas_consulta." WHERE ".$condicion.$ordenar_consulta.") SELECT COUNT(*) as cant FROM conteo");
+    }else{
+        $conteo_filas = $conn->Ejecutar_sql("SELECT COUNT(*) AS cant FROM ".$tablas_consulta." WHERE ".$condicion.$ordenar_consulta);
+    }
+    $result=phpmkr_fetch_array($conteo_filas);
+    $result[0]=array();
+    $result[0]['cant']=$result['cant'];
+    $result["numcampos"]=$result['cant'];
+    $_REQUEST["cantidad_total"]=$result["numcampos"];    
+
 }
 else{
 	$result["numcampos"]=@$_REQUEST["cantidad_total"];
@@ -273,6 +278,7 @@ else{
 }
 
 $response=new stdClass;
+$response->cantidad_total=$result[0]['cant'];
 $response->exito=0;
 $response->mensaje='Error inesperado';
 if(trim($agrupar_consulta)!=""&&!@$count&&$datos_busqueda[0]["tipo_busqueda"]==2){
