@@ -246,6 +246,8 @@ function radicar_documento_prueba($tipo_contador,$arreglo,$archivos=NULL,$idfluj
     $campos = implode(",",array_keys($arreglo));
 
     $sql="INSERT INTO documento(".$campos.")"." VALUES (".$valores.")";
+    
+    print_r($sql);die();
     phpmkr_query($sql, $conn) or error($sql."    <br> -".phpmkr_error());
     $doc = phpmkr_insert_id();
     if($doc && $arreglo["estado"] == "'APROBADO'"){
