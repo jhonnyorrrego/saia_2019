@@ -1632,20 +1632,22 @@ die();
 */
 function abrir_url($location,$target="_blank")
 {
-if($target){
-?>
-<script language="javascript">
-	window.open("<?php print($location);?>","<?php print($target);?>");
-</script>
-<?php
-}
-else {
-?>
-<script language="javascript">
-	window.open("<?php print($location);?>","centro");
-</script>
-<?php
-}
+  if(!@$_SESSION['radicacion_masiva']){  
+    if($target){
+    ?>
+    <script language="javascript">
+    	window.open("<?php print($location);?>","<?php print($target);?>");
+    </script>
+    <?php
+    }
+    else {
+    ?>
+    <script language="javascript">
+    	window.open("<?php print($location);?>","centro");
+    </script>
+    <?php
+    }
+
 }
 
 /*
