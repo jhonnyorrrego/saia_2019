@@ -1660,12 +1660,15 @@ else {
 <Post-condiciones>
 */
 function redirecciona($location){
-?>
-<script language="javascript">
-	window.location="<?php print($location);?>";
-</script>
-<?php
-exit();
+    if(!@$_SESSION['radicacion_masiva']){
+        ?>
+        <script language="javascript">
+        	window.location="<?php print($location);?>";
+        </script>
+        <?php
+        exit();
+    }
+
 }
 /*
 <Clase>
