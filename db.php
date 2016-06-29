@@ -1647,7 +1647,7 @@ function abrir_url($location,$target="_blank")
     </script>
     <?php
     }
-
+  }
 }
 
 /*
