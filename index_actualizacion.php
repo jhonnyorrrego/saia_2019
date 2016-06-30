@@ -105,6 +105,9 @@ $componente_tareas=busca_filtro_tabla("","busqueda_componente A","A.nombre='list
 .modal-footer{min-height:0}
 .footer_login { font-weight: bold; background-image: url(imagenes/login/footerbkg.png); background-repeat: repeat-x; background-position: left top; height: 25px; width: 100%; padding-top: 0px; padding-bottom: 0px; text-align: right; color: #FFF; position: fixed; bottom: 0px; }
 .footer_login_text, .footer_login_text * { color:#FFF; font-size:10px; font-weight:bold; }
+<?php if($_SESSION["tipo_dispositivo"]=="movil"){ ?>
+body {padding-right:0px;padding-left:0px;}
+<?php }?>
 </style>
 <?php
 include_once("css/index_estilos.php");
