@@ -302,7 +302,7 @@ $mayor_informacion=busca_filtro_tabla("valor","configuracion","nombre='mayor_inf
 		  </div>
         </div>
       </div></td>
-    <td width="16px" id="collapser_mainui">&nbsp;
+    <td width="16px" id="collapser_mainui">AQUI
     </td>  
     <td align="left" valign="top" id="CellContainer">
     <div class="container-saia ui-corner-all shadow">
