@@ -11,7 +11,7 @@ else{
   header("Content-type: text/xml");
 }
 $imagenes="";
-
+vcvc
 $texto="<?xml version=\"1.0\" encoding=\"UTF-8\"?".">";
 include_once("../librerias/funciones_generales.php");
 include_once("../../db.php");
