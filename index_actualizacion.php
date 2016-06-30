@@ -152,7 +152,7 @@ $mayor_informacion=busca_filtro_tabla("valor","configuracion","nombre='mayor_inf
     </ul>
   </div>
   <div class="dropdown pull-right">|<b><?php echo(usuario_actual("nombres")." ".usuario_actual("apellidos"));?></b></div>
-  <div class="dropdown pull-right"><div class="icon-fullscreen"></div></div>
+  <div class="dropdown pull-right"><div class="icon-fullscreen" id="resize_centro"></div></div>
   <!--a href="#">Opciones</a-->
 </div>
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
@@ -459,5 +459,9 @@ echo(librerias_notificaciones());
 $(document).ready(function(){
 	hs.graphicsDir = '<?php echo($ruta_db_superior);?>anexosdigitales/highslide-4.0.10/highslide/graphics/';
 	hs.outlineType = 'rounded-white';
+	$("#resize_centro").click(function(){
+	    var nuevo_alto=$(top).height()-($(".footer_login").height()+$(".user-menu-top").height());
+	    $("#iFrameContainer").height(nuevo_alto);
+	});
 });
 </script>
