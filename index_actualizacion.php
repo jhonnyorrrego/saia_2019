@@ -151,7 +151,7 @@ $mayor_informacion=busca_filtro_tabla("valor","configuracion","nombre='mayor_inf
       <li><a href="#">Separated link</a></li-->
     </ul>
   </div>
-  <div class="dropdown pull-right">| <div ><i class="icon-fullscreen"></i></div></div>
+  <div class="dropdown pull-right">| <div class="icon-fullscreen"></div></div>
   <div class="dropdown pull-right"><b><?php echo(usuario_actual("nombres")." ".usuario_actual("apellidos"));?></b></div>
   <!--a href="#">Opciones</a-->
 </div>
