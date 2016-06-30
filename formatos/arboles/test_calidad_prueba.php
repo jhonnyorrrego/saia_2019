@@ -13,7 +13,7 @@ else
 {
   header("Content-type: text/xml");
 }
-csdvfd
+
 $imagenes="";
 
 $texto="<?xml version=\"1.0\" encoding=\"UTF-8\"?".">";
