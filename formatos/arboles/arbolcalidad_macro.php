@@ -43,7 +43,7 @@ for($i=0;$i<$dependencia["numcampos"];$i++){
         	$('#actualizar_arbol').click(function(){
 				$.ajax({
                     dataType: 'html',
-                    url: "test_calidad_prueba.php",
+                    url: "test_calidad_prueba2.php",
               
                     success: function(datos){
                     	notificacion_saia("Arbol Actualizado Satisfactoriamente","success",'',3000);
