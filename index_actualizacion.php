@@ -115,6 +115,9 @@ echo index_estilos('temas_main');
 $mayor_informacion=busca_filtro_tabla("valor","configuracion","nombre='mayor_informacion'","",$conn);
 ?>
 <body>
+<?php
+if($_SESSION["tipo_dispositivo"]!="movil"){
+?>
 <div class="footer_login">
   <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
     <tr class="footer_login_text">
@@ -127,6 +130,7 @@ $mayor_informacion=busca_filtro_tabla("valor","configuracion","nombre='mayor_inf
     </tr>
   </table>
 </div>
+<?php } ?>
 <div id="ventana_modal" class="modal hide" tabindex="-1" role="dialog">
 <div class="modal-header">
 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
@@ -302,7 +306,7 @@ $mayor_informacion=busca_filtro_tabla("valor","configuracion","nombre='mayor_inf
 		  </div>
         </div>
       </div></td>
-    <td width="16px" id="collapser_mainui">AQUI
+    <td width="16px" id="collapser_mainui">
     </td>  
     <td align="left" valign="top" id="CellContainer">
     <div class="container-saia ui-corner-all shadow">
