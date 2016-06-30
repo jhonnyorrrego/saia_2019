@@ -536,7 +536,7 @@ for($i=0;$i<$datos_condicion["numcampos"];$i++){
   if(@$datos_condicion[$i]["comparacion"]==''){      
     $datos_condicion[$i]["comparacion"]="AND";
   }
-  if(@$datos_condicion[$i]["fk_busqueda_condicion"]) {
+  if(@$datos_condicion[$i]["idbusqueda_condicion"]) {
     if($i>0) {
       $condicion.=" ".$datos_condicion[$i]["comparacion"]." ";
     }
