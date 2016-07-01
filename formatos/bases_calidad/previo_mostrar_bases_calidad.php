@@ -20,7 +20,7 @@ if(@$_REQUEST['id']){
     $idft_bases_calidad=$keys[2];
     $iddoc=$keys[3];
     
-    $datos=busca_filtro_tabla("","ft_bases_calidad","documento_iddocumento=".$iddoc,"",$conn);
+    $datos=busca_filtro_tabla("","ft_bases_calidad a, documento b","b.iddocumento=a.documento_iddocumento AND lower(b.estado)='aprobado' AND a.documento_iddocumento=".$iddoc,"",$conn);
     $serie_seleccionada=busca_filtro_tabla("","serie","estado=1 and idserie=".$datos[0]['tipo_base_calidad'],"",$conn);
     
     $tabla='<table class="table table-bordered">';
