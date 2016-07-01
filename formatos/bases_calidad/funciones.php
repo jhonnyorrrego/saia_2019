@@ -32,7 +32,7 @@ function bases_calidad_ocultar_tipo($idformato,$iddoc){
                 var cantidad=parseInt('<?php echo(count($tipos_existentes)); ?>');
                 
                 for(i=0;i<cantidad;i++){
-                     $('[name="tipo_base_calidad"][value="1253"]').parent().parent().hide();
+                     $('[name="tipo_base_calidad"][value="'+registros[i]+'"]').parent().parent().hide();
                 }
       
             });
