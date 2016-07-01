@@ -98,7 +98,7 @@ for($i=0;$i<$dependencia["numcampos"];$i++){
         tree_calidad.openItem(nodeId);
         tree_calidad.openItem(tree_calidad.getParentId(nodeId));
        
-        var bases_calidad = nodeId.split('_');
+        var bases_calidad = nodeId.split('|');
         
         if(bases_calidad[0]=='bcp'){
             alert('es padre bases calidad');
