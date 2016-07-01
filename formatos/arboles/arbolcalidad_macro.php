@@ -101,7 +101,7 @@ for($i=0;$i<$dependencia["numcampos"];$i++){
         var bases_calidad = nodeId.split('|');
         
         if(bases_calidad[0]=='bcp'){
-            alert('es padre bases calidad');
+            
         }else if(bases_calidad[0]=='bc'){
              conexion="../bases_calidad/previo_mostrar_bases_calidad.php?iddoc="+bases_calidad[1];
              window.parent.open(conexion,"detalles"); 
