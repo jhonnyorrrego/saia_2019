@@ -101,16 +101,16 @@ for($i=0;$i<$dependencia["numcampos"];$i++){
         var bases_calidad = nodeId.split('|');
         
         if(bases_calidad[0]=='bcp'){
-            
+            conexion="../bases_calidad/previo_mostrar_bases_calidad.php?iddoc=todos";
         }else if(bases_calidad[0]=='bc'){
-             conexion="../bases_calidad/previo_mostrar_bases_calidad.php?iddoc="+bases_calidad[1];
-             window.parent.open(conexion,"detalles"); 
+            conexion="../bases_calidad/previo_mostrar_bases_calidad.php?iddoc="+bases_calidad[1];
         }else{
             accion="mostrar";
             conexion="parsear_accion_arbol.php?riesgos=2&id="+nodeId+"&accion="+accion+"&llave="+llave+"&pantalla=calidad";
-            window.parent.open(conexion,"detalles"); 
+           
         }
         
+        window.parent.open(conexion,"detalles"); 
         //tree2.refreshItem(nodeId);
        
       }
