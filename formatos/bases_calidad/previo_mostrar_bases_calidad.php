@@ -27,7 +27,7 @@ if(@$_REQUEST['id']){
     
     $tabla.='
         <tr>
-            <th>'.ucwords(strtolower($serie_seleccionada[0]['nombre'])).'</th>
+            <th>'.strtoupper($serie_seleccionada[0]['nombre']).'</th>
         </tr>
         
     ';
