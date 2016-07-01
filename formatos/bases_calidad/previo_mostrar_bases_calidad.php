@@ -32,7 +32,7 @@ if(@$_REQUEST['iddoc']){
                 border-top-right-radius: 5px;
                 border-top-left-radius: 5px;
             }
-            #version span{
+            #version_estado span{
                 font-weight:bold;
             }
         </style>
@@ -49,10 +49,10 @@ if(@$_REQUEST['iddoc']){
             <td>'.$datos[0]['descripcion_base'].'</td>
         </tr> 
         <tr>
-            <td id="version"><span>Version:</span></td>
+            <td class="version_estado"><span>Version:</span></td>
         </tr>
         <tr>
-            <td id="estado"><span>Estado:</span></td>
+            <td class="version_estado"><span>Estado:</span></td>
         </tr>         
     ';
     
