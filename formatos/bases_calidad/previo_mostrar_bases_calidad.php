@@ -20,6 +20,7 @@ if(@$_REQUEST['id']){
     $idft_bases_calidad=$datos_documento[2];
     $iddoc=$datos_documento[3];
     
+    $tabla='';
     
     
     
