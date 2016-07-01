@@ -38,8 +38,9 @@ for($i=0;$i<$dependencia["numcampos"];$i++){
 		$raiz_saia="../../";
 		echo(librerias_notificaciones());
         ?>
-        <!-- a title="" id="actualizar_arbol" style="color: -webkit-link; text-decoration: underline; cursor: pointer;"><span class="phpmaker">ACTUALIZAR ARBOL</span></a -->
-        <!-- script>
+        <!-- 
+        <a title="" id="actualizar_arbol" style="color: -webkit-link; text-decoration: underline; cursor: pointer;"><span class="phpmaker">ACTUALIZAR ARBOL</span></a >
+        <script>
         	$('#actualizar_arbol').click(function(){
 				$.ajax({
                     dataType: 'html',
@@ -50,7 +51,9 @@ for($i=0;$i<$dependencia["numcampos"];$i++){
                 	}
             	});         		
         	});
-        </script -->
+        </script>
+        
+        -->
         <!--div id="div_secretarias">
         Filtro de procesos Por secretaria
           <select name="secretarias" onchange="redireccionar(this.value)">
