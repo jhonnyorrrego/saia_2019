@@ -114,7 +114,7 @@ for($i=0;$i<$dependencia["numcampos"];$i++){
         //tree2.refreshItem(nodeId);
        
       }
-      function fin_cargando(nodeId) {
+      function fin_cargando() {
         if (browserType == "gecko" )
            document.poppedLayer =
                eval('document.getElementById("esperando")');
@@ -130,7 +130,7 @@ for($i=0;$i<$dependencia["numcampos"];$i++){
       	tree_calidad.selectItem(item,true,false);
       <?php } ?>
       
-      alert(nodeId[0]);
+     
    //    tree_calidad.selectItem(194,true,false); /*por defecto Mapa de proceso*/
 
        
