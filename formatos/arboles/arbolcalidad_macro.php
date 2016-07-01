@@ -136,7 +136,7 @@ for($i=0;$i<$dependencia["numcampos"];$i++){
            
       <?php 
             $_SESSION['from_modulo_calidad']=0;  
-          
+            unset($_SESSION['from_modulo_calidad']);
         } 
       ?>
        
