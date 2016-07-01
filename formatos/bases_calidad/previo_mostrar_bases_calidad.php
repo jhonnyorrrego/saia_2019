@@ -67,7 +67,7 @@ if(@$_REQUEST['iddoc']){
         ';
         
         
-        $tabla.='</table>';        
+        $tabla.='</table><hr/>';        
         
     }
     
