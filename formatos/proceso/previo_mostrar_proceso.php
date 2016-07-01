@@ -203,6 +203,7 @@ $ok=@$_REQUEST["editar"];
 			<input type="hidden" size="4" id="w" name="w" />
 			<input type="hidden" size="4" id="h" name="h" />
       <input type="hidden" size="4" id="editar" name="editar"  value="0" />
+      </td>
       </tr>
       <tr>
       <td class="encabezado">Asignar al proceso:</td><td><select name="proceso">
