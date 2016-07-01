@@ -25,6 +25,7 @@ if(@$_REQUEST['iddoc']){
                 margin:10px;
                 padding-right: 10px;
                 width:100%;
+                border-radius:5px;
             }
         </style>
     
