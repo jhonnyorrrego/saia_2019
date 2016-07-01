@@ -385,7 +385,7 @@ function mostrar_iconos($modulo_actual){
             $tablas[$j]["enlace"].='?cmd=resetall"';
           else 
             $tablas[$j]["enlace"].='&cmd=resetall"';
-          echo('<li><a tabindex="-1" href="'.$tablas[$j]["enlace"].'" target="'.$tablas[$j]["destino"].'">'.$tablas[$j]["etiqueta"].'</a></li>');
+          echo('<li class="enlace_final"><a tabindex="-1" href="'.$tablas[$j]["enlace"].'" target="'.$tablas[$j]["destino"].'">'.$tablas[$j]["etiqueta"].'</a></li>');
         }
       }
       if($_SESSION["tipo_dispositivo"]=="movil"){
@@ -565,5 +565,8 @@ $(document).ready(function(){
 	    $("#iFrameContainer").height(nuevo_alto);
 	});
 	$("#resize_centro").click();
+	$(".enlace_final").click(function(){
+	  $(".dropdown-menu").css("display","none");
+	});
 });
 </script>
