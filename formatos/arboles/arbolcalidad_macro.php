@@ -104,6 +104,9 @@ for($i=0;$i<$dependencia["numcampos"];$i++){
             alert('es padre bases calidad');
         }else if(bases_calidad[0]=='bc'){
              alert('es hijo bases calidad');
+             accion="mostrar";
+             conexion="parsear_accion_arbol.php?riesgos=2&id="+nodeId+"&accion="+accion+"&llave="+llave+"&pantalla=calidad";
+             window.parent.open(conexion,"detalles"); 
         }else{
             accion="mostrar";
             conexion="parsear_accion_arbol.php?riesgos=2&id="+nodeId+"&accion="+accion+"&llave="+llave+"&pantalla=calidad";
