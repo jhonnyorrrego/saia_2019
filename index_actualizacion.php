@@ -147,23 +147,31 @@ $mayor_informacion=busca_filtro_tabla("valor","configuracion","nombre='mayor_inf
 <?php 
 //Menu SAIA para movil
 if($_SESSION["tipo_dispositivo"]=="movil"){ ?>    
-  <div class="dropdown pull-left">
-    <a href="#" class="dropdown-toggle" data-toggle="dropdown">SAIA <b class="caret"></b></a>
-    <ul class="dropdown-menu" >
-      <li class="dropdown-submenu">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown">SAIA2 <b class="caret"></b></a>
-          <ul class="dropdown-menu" >
-              <li>Menu1 </li>
-              <li>Menu2 </li>
-          </ul>
-      </li>
-      <li><a href="<?php echo($ruta_db_superior);?>pantallas/mi_cuenta/cambio_clave_correo.php" data-toggle="modal" data-target="#ventana_modal" class="cambiar_pwd" titulo="Cambiar Contrase&ntilde;a de correo">Contrase&ntilde;a de correo</a></li>
-      <!--li><a href="#">Another action</a></li>
-      <li><a href="#">Something else here</a></li>
-      <li class="divider"></li>
-      <li><a href="#">Separated link</a></li-->
-    </ul>
-  </div>
+    <div class="dropdown pull-left">
+        <a id="dLabel" role="button" data-toggle="dropdown" class="btn btn-primary" data-target="#" href="/page.html">
+            Dropdown <span class="caret"></span>
+        </a>
+    	<ul class="dropdown-menu multi-level" role="menu" aria-labelledby="dropdownMenu">
+          <li><a href="#">Some action</a></li>
+          <li><a href="#">Some other action</a></li>
+          <li class="divider"></li>
+          <li class="dropdown-submenu">
+            <a tabindex="-1" href="#">Hover me for more options</a>
+            <ul class="dropdown-menu">
+              <li><a tabindex="-1" href="#">Second level</a></li>
+              <li class="dropdown-submenu">
+                <a href="#">Even More..</a>
+                <ul class="dropdown-menu">
+                    <li><a href="#">3rd level</a></li>
+                	<li><a href="#">3rd level</a></li>
+                </ul>
+              </li>
+              <li><a href="#">Second level</a></li>
+              <li><a href="#">Second level</a></li>
+            </ul>
+          </li>
+        </ul>
+    </div>
 <?php } ?>  
   <div class="dropdown pull-right">| <a href="logout.php<?php if(@$_SESSION["INDEX"]!='')echo("?INDEX_SALIDA=".$_SESSION["INDEX"]);?>">Salir</a></div>
   <div class="dropdown pull-right">| 
