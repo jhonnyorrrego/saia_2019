@@ -160,7 +160,7 @@ for($i=0;$i<$dependencia["numcampos"];$i++){
     </td>
   </tr>
 </table>
-<input type="hidden" id="ejecutar_evento_mapa_proceso" value="">
+<input type="hidden" id="ejecutar_evento_mapa_proceso" value="<?php echo(@$_SESSION['from_modulo_calidad']); ?>">
 <?php
 include_once("../../footer.php");
 ?>
