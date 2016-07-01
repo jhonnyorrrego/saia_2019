@@ -30,7 +30,7 @@ for($i=0;$i<$dependencia["numcampos"];$i++){
   <tr>
     <td>
         <?php
-        agrega_boton("texto","","../proceso/previo_mostrar_proceso.php?editar=1","detalles","Editar Mapa","","administracion_calidad");
+        //agrega_boton("texto","","../proceso/previo_mostrar_proceso.php?editar=1","detalles","Editar Mapa","","administracion_calidad");
         agrega_boton("texto","","../../documento_trasladar2.php","detalles","Trasladar Documentos","","administracion_calidad");
        // agrega_boton("texto","","test_calidad_prueba.php","detalles","Actualizar Arbol","","actualizar_calidad");
         echo(librerias_jquery('1.7'));
