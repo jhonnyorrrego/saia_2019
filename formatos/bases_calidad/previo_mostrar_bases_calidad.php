@@ -34,7 +34,7 @@ if(@$_REQUEST['id']){
     
     
     $tabla.='</table>';
-    
+    echo($tabla);
 }
 
 die();
