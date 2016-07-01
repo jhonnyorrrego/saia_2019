@@ -21,7 +21,7 @@ if(@$_REQUEST['id']){
     $iddoc=$keys[3];
     
     $datos=busca_filtro_tabla("","ft_bases_calidad","documento_iddocumento=".$iddoc,"",$conn);
-    
+    print_r($datos);
     $tabla='<table class="table">';
     
     $tabla.='
