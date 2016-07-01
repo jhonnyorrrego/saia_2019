@@ -27,6 +27,9 @@ if(@$_REQUEST['iddoc']){
                 width:100%;
                 border-radius:5px;
             }
+            .table th{
+                text-align:center;
+            }
         </style>
     
     ';
