@@ -566,7 +566,7 @@ $(document).ready(function(){
 	});
 	$("#resize_centro").click();
 	$(".enlace_final").click(function(){
-	  $(".dropdown-menu").css("display","none");
+	  $(".dropdown").removeClass("open");
 	});
 });
 </script>
