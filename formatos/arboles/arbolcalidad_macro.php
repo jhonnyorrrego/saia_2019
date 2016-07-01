@@ -25,6 +25,9 @@ for($i=0;$i<$dependencia["numcampos"];$i++){
 #div_contenido {
    overflow: hidden;
 }
+.treeboxbox_tree_calidad.containerTableStyle{
+    height:800px;
+}
 	</style>
 <table  border="0" >
   <tr>
