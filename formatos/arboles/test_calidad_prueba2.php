@@ -86,13 +86,16 @@ if($_SESSION['LOGIN'.LLAVE_SAIA]=='cerok'){
 }
 
 function crear_bases_calidad(){
-    global $conn;
-    
-    $bases_calidad=busca_filtro_tabla("","ft_bases_validad a, documento b","a.documento_iddocumento=b.iddocumento AND lower(b.estado)='aprobado'","",$conn);
+    global $conn,$texto;
+    $bases_calidad=busca_filtro_tabla("","ft_bases_validad a, documento b, formato c","lower(b.plantilla)=c.nombre AND a.documento_iddocumento=b.iddocumento AND lower(b.estado)='aprobado'","",$conn);
     if($bases_calidad["numcampos"]){
+        $texto.='<item style="font-family:verdana; font-size:7pt;"';
+	    $texto.=strip_tags('text="'.decodifica($bases_calidad[0]["etiqueta"]).'" id="'.$formato[0]["idformato"].'" >'."\n");
         for($i=0;$i<$bases_calidad["numcampos"];$i++){
-            
+            $texto.='<item style="font-family:verdana; font-size:7pt;"';
+	        $texto.=strip_tags('text="'.decodifica($bases_calidad[0]["etiqueta"]).'" id="'.$formato[0]["idformato"].'" '.$child.'>'."\n");
         }
+        
     }
     
 }
