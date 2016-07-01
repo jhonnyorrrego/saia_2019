@@ -69,7 +69,7 @@ for($i=0;$i<$dependencia["numcampos"];$i++){
             <a href="javascript:void(0)" onclick="tree_calidad.findItem(document.getElementById('stext').value)"> Siguiente</a>  |
             <a href="javascript:void(0)" onclick="tree_calidad.findItem(document.getElementById('stext').value,1)"> Anterior</a><br /><br / >
         -->    
-            
+         <hr/>   
     	<div id="treeboxbox_tree_calidad"></div>
     	<script type="text/javascript">
       <!--
