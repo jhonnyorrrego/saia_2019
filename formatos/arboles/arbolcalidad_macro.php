@@ -97,10 +97,21 @@ for($i=0;$i<$dependencia["numcampos"];$i++){
         tree_calidad.closeAllItems(tree_calidad.getParentId(nodeId))
         tree_calidad.openItem(nodeId);
         tree_calidad.openItem(tree_calidad.getParentId(nodeId));
+       
+        var bases_calidad = nodeId.split('_');
+        
+        if(bases_calidad[0]=='bcp'){
+            alert('es padre bases calidad');
+        }else if(bases_calidad[0]=='bc'){
+             alert('es hijo bases calidad');
+        }else{
+            accion="mostrar";
+            conexion="parsear_accion_arbol.php?riesgos=2&id="+nodeId+"&accion="+accion+"&llave="+llave+"&pantalla=calidad";
+            window.parent.open(conexion,"detalles"); 
+        }
+        
         //tree2.refreshItem(nodeId);
-        accion="mostrar";
-        conexion="parsear_accion_arbol.php?riesgos=2&id="+nodeId+"&accion="+accion+"&llave="+llave+"&pantalla=calidad";
-        window.parent.open(conexion,"detalles");
+       
       }
       function fin_cargando() {
         if (browserType == "gecko" )
