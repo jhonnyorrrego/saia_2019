@@ -195,7 +195,7 @@ $mayor_informacion=busca_filtro_tabla("valor","configuracion","nombre='mayor_inf
 //Menu SAIA para movil
 if($_SESSION["tipo_dispositivo"]=="movil"){ ?>    
     <div class="dropdown pull-left">
-        <a id="dLabel" role="button" data-toggle="dropdown" data-target="#" href="/page.html">
+        <a id="dLabel"data-toggle="dropdown" data-target="#" href="/page.html">
             Dropdown <span class="caret"></span>
         </a>
     	<ul class="dropdown-menu multi-level" role="menu" aria-labelledby="dropdownMenu">
