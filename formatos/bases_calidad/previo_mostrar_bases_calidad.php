@@ -29,7 +29,7 @@ if(@$_REQUEST['iddoc']){
             .table th{
                 text-align:center;
                 font-size:12pt;
-               
+                border-top-right-radius: 5px;
                 border-top-left-radius: 5px;
             }
             .table td{
