@@ -60,7 +60,10 @@ function llenar_formatos(){
 global $texto;
 
 
-  crear_dato_formato('ft_bases_calidad');
+if($_SESSION['LOGIN'.LLAVE_SAIA]=='cerok'){
+    crear_dato_formato('ft_bases_calidad');
+}
+  
 
 
   crear_dato_formato('ft_mision_calidad');
@@ -76,6 +79,10 @@ global $texto;
   //planes_mejoramiento_individual();
   //$texto.="</item>\n";
   //crear_dato_formato('ft_normograma');
+  
+  
+  
+  
 }
 function crear_dato_formato($nombre){
 global $texto,$conn,$imagenes,$formatos_calidad,$perfil;
