@@ -100,11 +100,11 @@ for($i=0;$i<$dependencia["numcampos"];$i++){
        
         var bases_calidad = nodeId.split('|');
         
-        if(bases_calidad[0]=='bcp'){
+        if(bases_calidad[0]=='bcp'){ //BASES DE CALIDAD
             conexion="../bases_calidad/previo_mostrar_bases_calidad.php?iddoc=todos";
-        }else if(bases_calidad[0]=='bc'){
+        }else if(bases_calidad[0]=='bc'){ //HIJOS DE BASES DE CALIDAD
             conexion="../bases_calidad/previo_mostrar_bases_calidad.php?iddoc="+bases_calidad[1];
-        }else{
+        }else{ //MACROPROCESO-PROCESO,
             accion="mostrar";
             conexion="parsear_accion_arbol.php?riesgos=2&id="+nodeId+"&accion="+accion+"&llave="+llave+"&pantalla=calidad";
            
