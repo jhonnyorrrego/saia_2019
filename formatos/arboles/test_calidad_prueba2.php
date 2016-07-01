@@ -96,6 +96,7 @@ function crear_bases_calidad(){
 	    $texto.=strip_tags('text="'.decodifica($bases_calidad[0]["etiqueta"]).'" id="'.$bases_calidad[0]["idformato"].'" >'."\n");
         for($i=0;$i<$bases_calidad["numcampos"];$i++){
             $serie_seleccionada=busca_filtro_tabla("","serie","estado=1 and idserie=".$bases_calidad[$i]['tipo_base_calidad'],"",$conn);
+            print_r($serie_seleccionada);
             $texto.='<item style="font-family:verdana; font-size:7pt;" '.$imagenes;
 	        $texto.=strip_tags('text="'.decodifica($serie_seleccionada[0]["nombre"]).'" id="'.$bases_calidad[0]["iddocumento"].'" child="1" >'."\n");
 	        $texto.="</item>\n";
