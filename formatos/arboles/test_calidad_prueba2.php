@@ -58,6 +58,11 @@ echo($texto);
 
 function llenar_formatos(){
 global $texto;
+
+
+  crear_dato_formato('ft_bases_calidad');
+
+
   crear_dato_formato('ft_mision_calidad');
   crear_dato_formato('ft_vision_calidad');
   crear_dato_formato('ft_objetivos_calidad');
