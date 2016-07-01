@@ -160,6 +160,7 @@ for($i=0;$i<$dependencia["numcampos"];$i++){
     </td>
   </tr>
 </table>
+<input type="hidden" id="ejecutar_evento_mapa_proceso" value="">
 <?php
 include_once("../../footer.php");
 ?>
