@@ -206,13 +206,6 @@ if($_SESSION["tipo_dispositivo"]=="movil"){ ?>
             <a tabindex="-1" href="#">Hover me for more options</a>
             <ul class="dropdown-menu">
               <li><a tabindex="-1" href="#">Second level</a></li>
-              <li class="dropdown-submenu">
-                <a href="#">Even More..</a>
-                <ul class="dropdown-menu">
-                    <li><a href="#">3rd level</a></li>
-                	<li><a href="#">3rd level</a></li>
-                </ul>
-              </li>
               <li><a href="#">Second level</a></li>
               <li><a href="#">Second level</a></li>
             </ul>
