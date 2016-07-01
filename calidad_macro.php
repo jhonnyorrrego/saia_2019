@@ -10,6 +10,6 @@ if(!isset($_SESSION['LOGIN'])){
 }
 ?>
 <frameset cols="350px,*" >
-     <frame name="izquierda" src="formatos/arboles/arbolcalidad_macro.php<?php echo("?edita=".@$_REQUEST["edita"]); echo("&from_modulo_calidadedita=".@$_REQUEST["from_modulo_calidad"]);  ?>" border="1" marginwidth="0" noresize scrolling="no" >
+     <frame name="izquierda" src="formatos/arboles/arbolcalidad_macro.php<?php echo("?edita=".@$_REQUEST["edita"]); echo("&from_modulo_calidad=".@$_REQUEST["from_modulo_calidad"]);  ?>" border="1" marginwidth="0" noresize scrolling="no" >
      <frame name="detalles" src="" marginwidth="10" marginheight="10" scrolling="auto" >
 </frameset>  
