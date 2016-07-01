@@ -97,7 +97,8 @@ function crear_bases_calidad(){
         for($i=0;$i<$bases_calidad["numcampos"];$i++){
             $serie_seleccionada=busca_filtro_tabla("","serie","estado=1 and idserie=".$bases_calidad[$i]['tipo_base_calidad'],"",$conn);
             $texto.='<item style="font-family:verdana; font-size:7pt;" '.$imagenes;
-	        $texto.=strip_tags('text="'.decodifica($serie_seleccionada[0]["nombre"]).'" id="bc_'.$bases_calidad[0]["iddocumento"].'" child="0" >'."\n");
+            $idparseo='bc_'.$bases_calidad[0]["idformato"].'-'.$bases_calidad[0]["iddocumento"];
+	        $texto.=strip_tags('text="'.decodifica($serie_seleccionada[0]["nombre"]).'" id="" child="0" >'."\n");
 	        $texto.="</item>\n";
         }
          $texto.="</item>\n";
