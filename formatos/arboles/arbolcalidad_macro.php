@@ -131,7 +131,7 @@ for($i=0;$i<$dependencia["numcampos"];$i++){
       <?php } ?>
       
        
-      	tree_calidad.selectItem(194,true,false);
+      	tree_calidad.selectItem(194,true,false); //por defecto Mapa de proceso
           
       
       }
