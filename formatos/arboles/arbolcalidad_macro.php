@@ -136,6 +136,7 @@ for($i=0;$i<$dependencia["numcampos"];$i++){
             var ejecutar=1;
             if(ejecutar){
                 tree_calidad.selectItem(194,true,false); //por defecto Mapa de proceso
+               
                 ejecutar=0;
             }
            
