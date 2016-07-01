@@ -252,60 +252,6 @@ if($_SESSION["tipo_dispositivo"]!="movil"){
             }
           }
          }
-        function mostrar_iconos($modulo_actual){
-          global $conn;
-          $cols=4;
-          $usuario_actual=usuario_actual("funcionario_codigo");
-		      $idfuncionario_actual=usuario_actual("idfuncionario");
-          $modulo=busca_filtro_tabla("A.idmodulo","modulo A","A.idmodulo=".$modulo_actual,"",$conn);
-          if($modulo["numcampos"]){
-            $condicion="A.modulo_idmodulo=B.idmodulo AND B.cod_padre=".$modulo[0]["idmodulo"]." AND A.funcionario_idfuncionario=".$idfuncionario_actual;
-            $adicionados=busca_filtro_tabla("B.idmodulo","permiso A, modulo B",$condicion." AND A.accion=1","",$conn);
-            $suprimidos= busca_filtro_tabla("B.idmodulo","permiso A, modulo B",$condicion." AND (A.accion=0 OR A.accion IS NULL)","",$conn);
-            $permisos_perfil=busca_filtro_tabla("C.idmodulo","permiso_perfil A,modulo C","A.perfil_idperfil in(".usuario_actual('perfil').") AND A.modulo_idmodulo=C.idmodulo AND C.cod_padre=".$modulo[0]["idmodulo"],"",$conn);
-            $adicionales=extrae_campo($adicionados,"idmodulo","U");
-            $suprimir=extrae_campo($suprimidos,"idmodulo","U");
-            $permisos=extrae_campo($permisos_perfil,"idmodulo","U");
-            $finales=array_diff(array_merge((array)$permisos,(array)$adicionales),$suprimir);
-            if(count($finales))
-              $tablas=busca_filtro_tabla("A.nombre,A.etiqueta,A.imagen,A.enlace,A.destino,A.ayuda,A.parametros","modulo A","A.idmodulo IN(".implode(",",$finales).")","A.orden ASC",$conn);
-            else
-              $tablas["numcampos"]=0; 
-            if($tablas["numcampos"]){
-              echo('<table width="100%" border="0" cellspacing="5" cellpadding="0"><tr>');
-              for($j=0;$j<$tablas["numcampos"];$j++){
-                $ayuda_submenu=$tablas[$j]["ayuda"];
-                $arreglo=explode(",",$tablas[$j]["parametros"]);
-                for($h=0;$h<count($arreglo)-1;$h++){
-                  if(array_search($arreglo[$h],$_REQUEST)!==FALSE && $_REQUEST[$arreglo[$h]]){
-                    if(!strpos($tablas[$j]["enlace"],"?"))
-                      $tablas[$j]["enlace"].="?".$arreglo[$h]."=".$_REQUEST[$arreglo[$h]];
-                    else  
-                      $tablas[$j]["enlace"].="&".$arreglo[$h]."=".$_REQUEST[$arreglo[$h]];
-                  }
-                }
-                if(isset($_REQUEST["key"]) && $_REQUEST["key"]<>""){
-                  $tablas[$j]["enlace"]=str_replace("@key@",$_REQUEST["key"],$tablas[$j]["enlace"]);
-                }
-      	        if($j>0&&$j%$cols==0){
-                  echo('</tr><tr>');
-                }    
-                echo('<td width="'.(($cols*35)) .'px" height="44" align="center" valign="top"><a href="'.$tablas[$j]["enlace"]);
-                if(!strpos($tablas[$j]["enlace"],"?"))
-                  echo('?cmd=resetall"');
-                else 
-                  echo("&cmd=resetall\"");
-                echo(' target="'.$tablas[$j]["destino"].'"><img src="'.$tablas[$j]["imagen"].'" border="0" width="35px"');
-                echo (' ><br />'.$tablas[$j]["etiqueta"].'</a></td>');
-              }
-              for(;$j%$cols!=0;$j++){
-                echo('<td>&nbsp;</td>');
-              }
-              echo('</tr></table>'); 
-            }
-//print_r($tablas);          
-		  }
-        }
         ?>
 		  </div>
         </div>
@@ -343,6 +289,60 @@ if($_SESSION["tipo_dispositivo"]!="movil"){
 echo(librerias_UI());
 //echo(libreria_principal());
 echo(librerias_notificaciones());
+function mostrar_iconos($modulo_actual){
+  global $conn;
+  $cols=4;
+  $usuario_actual=usuario_actual("funcionario_codigo");
+      $idfuncionario_actual=usuario_actual("idfuncionario");
+  $modulo=busca_filtro_tabla("A.idmodulo","modulo A","A.idmodulo=".$modulo_actual,"",$conn);
+  if($modulo["numcampos"]){
+    $condicion="A.modulo_idmodulo=B.idmodulo AND B.cod_padre=".$modulo[0]["idmodulo"]." AND A.funcionario_idfuncionario=".$idfuncionario_actual;
+    $adicionados=busca_filtro_tabla("B.idmodulo","permiso A, modulo B",$condicion." AND A.accion=1","",$conn);
+    $suprimidos= busca_filtro_tabla("B.idmodulo","permiso A, modulo B",$condicion." AND (A.accion=0 OR A.accion IS NULL)","",$conn);
+    $permisos_perfil=busca_filtro_tabla("C.idmodulo","permiso_perfil A,modulo C","A.perfil_idperfil in(".usuario_actual('perfil').") AND A.modulo_idmodulo=C.idmodulo AND C.cod_padre=".$modulo[0]["idmodulo"],"",$conn);
+    $adicionales=extrae_campo($adicionados,"idmodulo","U");
+    $suprimir=extrae_campo($suprimidos,"idmodulo","U");
+    $permisos=extrae_campo($permisos_perfil,"idmodulo","U");
+    $finales=array_diff(array_merge((array)$permisos,(array)$adicionales),$suprimir);
+    if(count($finales))
+      $tablas=busca_filtro_tabla("A.nombre,A.etiqueta,A.imagen,A.enlace,A.destino,A.ayuda,A.parametros","modulo A","A.idmodulo IN(".implode(",",$finales).")","A.orden ASC",$conn);
+    else
+      $tablas["numcampos"]=0; 
+    if($tablas["numcampos"]){
+      echo('<table width="100%" border="0" cellspacing="5" cellpadding="0"><tr>');
+      for($j=0;$j<$tablas["numcampos"];$j++){
+        $ayuda_submenu=$tablas[$j]["ayuda"];
+        $arreglo=explode(",",$tablas[$j]["parametros"]);
+        for($h=0;$h<count($arreglo)-1;$h++){
+          if(array_search($arreglo[$h],$_REQUEST)!==FALSE && $_REQUEST[$arreglo[$h]]){
+            if(!strpos($tablas[$j]["enlace"],"?"))
+              $tablas[$j]["enlace"].="?".$arreglo[$h]."=".$_REQUEST[$arreglo[$h]];
+            else  
+              $tablas[$j]["enlace"].="&".$arreglo[$h]."=".$_REQUEST[$arreglo[$h]];
+          }
+        }
+        if(isset($_REQUEST["key"]) && $_REQUEST["key"]<>""){
+          $tablas[$j]["enlace"]=str_replace("@key@",$_REQUEST["key"],$tablas[$j]["enlace"]);
+        }
+          if($j>0&&$j%$cols==0){
+          echo('</tr><tr>');
+        }    
+        echo('<td width="'.(($cols*35)) .'px" height="44" align="center" valign="top"><a href="'.$tablas[$j]["enlace"]);
+        if(!strpos($tablas[$j]["enlace"],"?"))
+          echo('?cmd=resetall"');
+        else 
+          echo("&cmd=resetall\"");
+        echo(' target="'.$tablas[$j]["destino"].'"><img src="'.$tablas[$j]["imagen"].'" border="0" width="35px"');
+        echo (' ><br />'.$tablas[$j]["etiqueta"].'</a></td>');
+      }
+      for(;$j%$cols!=0;$j++){
+        echo('<td>&nbsp;</td>');
+      }
+      echo('</tr></table>'); 
+    }
+//print_r($tablas);          
+  }
+}
 ?>
 <script type="text/javascript">
 	$(document).ready(function(){ 
