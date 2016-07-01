@@ -104,7 +104,6 @@ function crear_bases_calidad(){
         }
          $texto.="</item>\n";
     }
-    
 }
 
 
