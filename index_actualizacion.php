@@ -199,21 +199,11 @@ $mayor_informacion=busca_filtro_tabla("valor","configuracion","nombre='mayor_inf
 if($_SESSION["tipo_dispositivo"]=="movil" || 1){ ?>    
     <div class="dropdown pull-left">
         <a id="dLabel" data-toggle="dropdown" data-target="#" >
-            <div class="icon-home">&nbsp;</div> SAIA <span class="caret"></span>
+            <!--div class="icon-home">&nbsp;</div--> SAIA <span class="caret"></span>
         </a>
-    	<ul class="dropdown-menu multi-level" role="menu" aria-labelledby="dropdownMenu">
-          <li><a href="#">Some action</a></li>
-          <li><a href="#">Some other action</a></li>
-          <li class="divider"></li>
-          <li class="dropdown-submenu">
-            <a tabindex="-1" href="#">Hover me for more options</a>
-            <ul class="dropdown-menu">
-              <li><a tabindex="-1" href="#">Second level</a></li>
-              <li><a href="#">Second level</a></li>
-              <li><a href="#">Second level</a></li>
-            </ul>
-          </li>
-        </ul>
+    	  <?php
+    	    menu_saia();
+    	  ?>
     </div>
 <?php } ?>  
   <div class="dropdown pull-right">| <a href="logout.php<?php if(@$_SESSION["INDEX"]!='')echo("?INDEX_SALIDA=".$_SESSION["INDEX"]);?>">Salir</a></div>
