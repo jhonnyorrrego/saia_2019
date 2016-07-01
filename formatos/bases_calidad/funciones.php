@@ -25,7 +25,7 @@ function bases_calidad_ocultar_tipo($idformato,$iddoc){
                 var vector_registros=registros.split(',');
                 var cantidad=parseInt('<?php echo($cantidad); ?>');
                 for(i=0;i<cantidad;i++){
-                     $('[name="tipo_base_calidad"][value="'+vector_registros[i]+'"]').parent().parent().attr('disabled','disabled');
+                     $('[name="tipo_base_calidad"][value="'+vector_registros[i]+'"]').parent().parent().css('pointer-events','none');
                 }
             });
         </script>
