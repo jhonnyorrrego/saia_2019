@@ -14,15 +14,25 @@ echo(estilo_bootstrap());
 
 if(@$_REQUEST['id']){
     
-    $datos_documento=explode('-',$_REQUEST['id']);
-    $idformato=$datos_documento[0];
-    $idft=$datos_documento[1];
-    $idft_bases_calidad=$datos_documento[2];
-    $iddoc=$datos_documento[3];
+    $keys=explode('-',$_REQUEST['id']);
+    $idformato=$keys[0];
+    $idft=$keys[1];
+    $idft_bases_calidad=$keys[2];
+    $iddoc=$keys[3];
+    
+    $datos=busca_filtro_tabla("","ft_bases_calidad","documento_iddocumento=".$iddoc,"",$conn);
     
     $tabla='<table class="table">';
     
+    $tabla.='
+        <tr>
+            <td>'..'</td>
+        </tr>
+        
+    ';
     
+    
+    $tabla.='</table>';
     
 }
 
