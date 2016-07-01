@@ -15,6 +15,7 @@ function bases_calidad_ocultar_tipo($idformato,$iddoc){
     
     $datos=busca_filtro_tabla("","ft_bases_calidad a, documento b","b.iddocumento=a.documento_iddocumento AND lower(b.estado)='aprobado'","",$conn);
     
+    $tipos_existentes=extrae_campo($datos,'tipo_base_calidad');
     
     
 }
