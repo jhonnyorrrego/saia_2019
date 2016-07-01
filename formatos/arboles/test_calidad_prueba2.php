@@ -64,13 +64,13 @@ if($_SESSION['LOGIN'.LLAVE_SAIA]=='cerok'){
     crear_bases_calidad();
 }
   
-
+/*
 
   crear_dato_formato('ft_mision_calidad');
   crear_dato_formato('ft_vision_calidad');
   crear_dato_formato('ft_objetivos_calidad');
   crear_dato_formato('ft_politicas');
-  crear_dato_formato('ft_valores_calidad');
+  crear_dato_formato('ft_valores_calidad');*/
   crear_dato_formato('ft_proceso');
   //$texto.='<item style="font-family:verdana; font-size:7pt;" ';
   //$texto.=strip_tags('text="Planes de mejoramiento" id="pm-general" >'."\n");
