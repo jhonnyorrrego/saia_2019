@@ -154,7 +154,8 @@ for($i=0;$i<$dependencia["numcampos"];$i++){
     	
     	$(document).ready(function(){
     	    alert('entra');
-            tree_calidad.selectItem(194,true,false); //por defecto Mapa de proceso
+    	    setTimeout(function(){ tree_calidad.selectItem(194,true,false); /*por defecto Mapa de proceso*/ }, 1000);
+            
     	});
     	
     	</script>
