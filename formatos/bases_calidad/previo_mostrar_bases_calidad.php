@@ -22,7 +22,7 @@ if(@$_REQUEST['iddoc']){
     
     $tabla.='
         <tr>
-            <th>'.strtoupper(utf8_encode(html_entity_decode($serie_seleccionada[0]['nombre']))).'</th>
+            <th class="encabezado_list">'.strtoupper(utf8_encode(html_entity_decode($serie_seleccionada[0]['nombre']))).'</th>
         </tr>
         <tr>
             <td>'.$datos[0]['descripcion_base'].'</td>
