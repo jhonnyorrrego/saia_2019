@@ -103,7 +103,6 @@ for($i=0;$i<$dependencia["numcampos"];$i++){
         if(bases_calidad[0]=='bcp'){
             alert('es padre bases calidad');
         }else if(bases_calidad[0]=='bc'){
-             alert('es hijo bases calidad');
              conexion="../bases_calidad/previo_mostrar_bases_calidad.php?id="+bases_calidad[1];
              window.parent.open(conexion,"detalles"); 
         }else{
