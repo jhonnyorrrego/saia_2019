@@ -32,8 +32,8 @@ if(@$_REQUEST['iddoc']){
                 border-top-right-radius: 5px;
                 border-top-left-radius: 5px;
             }
-            .table tr td{
-                
+            .table tr #version{
+                font-weight:bold;
             }
         </style>
     
