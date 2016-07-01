@@ -31,9 +31,5 @@ function bases_calidad_ocultar_tipo($idformato,$iddoc){
             });
         </script>
     <?php
-    
-    
 }
-
-
 ?>
