@@ -21,7 +21,7 @@ if(@$_REQUEST['iddoc']){
     
     
     $datos=busca_filtro_tabla("","ft_bases_calidad a, documento b","b.iddocumento=a.documento_iddocumento AND lower(b.estado)='aprobado'".$condicion,"",$conn);
-    $serie_seleccionada=busca_filtro_tabla("","serie","estado=1 and idserie=".$datos[0]['tipo_base_calidad'],"",$conn);
+    
     
     
     $style='
@@ -44,25 +44,32 @@ if(@$_REQUEST['iddoc']){
     
     ';
     
-    $tabla=$style.'<table class="table table-bordered">';
+    for($i=0;$i<$datos['numcampos'];$i++){
+        $serie_seleccionada=busca_filtro_tabla("","serie","estado=1 and idserie=".$datos[$i]['tipo_base_calidad'],"",$conn);
+        
+        $tabla=$style.'<table class="table table-bordered">';
+        
+        $tabla.='
+            <tr>
+                <th class="encabezado_list">'.strtoupper(utf8_encode(html_entity_decode($serie_seleccionada[0]['nombre']))).'</th>
+            </tr>
+            <tr>
+                <td>'.$datos[0]['descripcion_base'].'</td>
+            </tr> 
+            <tr>
+                <td class="version_estado"><span>Version:</span> &nbsp; '.$datos[0]['version_base_calidad'].'</td>
+            </tr>
+            <tr>
+                <td class="version_estado"><span>Estado:</span> &nbsp; '.$datos[0]['estado_base_calidad'].' </td>
+            </tr>         
+        ';
+        
+        
+        $tabla.='</table>';        
+        
+    }
     
-    $tabla.='
-        <tr>
-            <th class="encabezado_list">'.strtoupper(utf8_encode(html_entity_decode($serie_seleccionada[0]['nombre']))).'</th>
-        </tr>
-        <tr>
-            <td>'.$datos[0]['descripcion_base'].'</td>
-        </tr> 
-        <tr>
-            <td class="version_estado"><span>Version:</span> &nbsp; '.$datos[0]['version_base_calidad'].'</td>
-        </tr>
-        <tr>
-            <td class="version_estado"><span>Estado:</span> &nbsp; '.$datos[0]['estado_base_calidad'].' </td>
-        </tr>         
-    ';
-    
-    
-    $tabla.='</table>';
+
     echo($tabla);
 }
 
