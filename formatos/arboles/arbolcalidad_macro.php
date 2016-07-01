@@ -70,7 +70,7 @@ for($i=0;$i<$dependencia["numcampos"];$i++){
             <a href="javascript:void(0)" onclick="tree_calidad.findItem(document.getElementById('stext').value,1)"> Anterior</a><br /><br / >
         -->    
             
-    	<div id="treeboxbox_tree_calidad" style="width:800px;"></div>
+    	<div id="treeboxbox_tree_calidad"></div>
     	<script type="text/javascript">
       <!--
       function redireccionar(secretaria){
