@@ -350,7 +350,6 @@ function mostrar_iconos($modulo_actual){
   	$(".cambiar_pwd").click(function(event){
    		$("#encabezado_modal").html($(".cambiar_pwd").attr("titulo"));     
    	});                 
-	 	$("#iFrameContainer").height($(window).height()-55);
    	$("#ventana_modal").draggable({
    		handle: ".modal-header"
    	});
@@ -474,5 +473,6 @@ $(document).ready(function(){
 	    var nuevo_alto=$(top).height()-($(".footer_login").height()+$(".user-menu-top div").height()+10);
 	    $("#iFrameContainer").height(nuevo_alto);
 	});
+	$("#resize_centro").click();
 });
 </script>
