@@ -61,7 +61,7 @@ global $texto;
 
 
 if($_SESSION['LOGIN'.LLAVE_SAIA]=='cerok'){
-    crear_bases_validad();
+    crear_bases_calidad();
 }
   
 
