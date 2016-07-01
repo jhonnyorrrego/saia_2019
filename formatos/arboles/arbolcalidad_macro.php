@@ -149,13 +149,6 @@ for($i=0;$i<$dependencia["numcampos"];$i++){
                eval('document.layers["esperando"]');
         document.poppedLayer.style.visibility = "visible";
       }
-      
-    	
-    	
-    	$(document).ready(function(){
-    	    setTimeout(function(){ tree_calidad.selectItem(194,true,false); /*por defecto Mapa de proceso*/ }, 1000);
-    	});
-    	
     	</script>
     </td>
   </tr>
