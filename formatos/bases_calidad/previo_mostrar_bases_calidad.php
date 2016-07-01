@@ -35,7 +35,7 @@ if(@$_REQUEST['iddoc']){
                 border-top-right-radius: 5px;
                 border-top-left-radius: 5px;
             }
-            .version_estado span{
+            .version .pull-left span{
                 font-weight:bold;
             }
         </style>
@@ -55,7 +55,7 @@ if(@$_REQUEST['iddoc']){
                 <td>'.$datos[$i]['descripcion_base'].'</td>
             </tr> 
             <tr>
-                <td class="version_estado"><span class="pull-left"><span>Version:</span> &nbsp; '.$datos[$i]['version_base_calidad'].'</span><span class="pull-right"><span>Estado:</span> &nbsp; '.$datos[$i]['estado_base_calidad'].'</span></td>
+                <td class="version"><span class="pull-left"><span>Version:</span> &nbsp; '.$datos[$i]['version_base_calidad'].'</span><span class="pull-right"><span>Estado:</span> &nbsp; '.$datos[$i]['estado_base_calidad'].'</span></td>
             </tr>
         ';
         
