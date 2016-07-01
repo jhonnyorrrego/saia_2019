@@ -169,7 +169,9 @@ $ok=@$_REQUEST["editar"];
             .version_estado .pull-left,.pull-right{
                 font-size:7pt;
             }
-            
+            .div_contenido table{
+                width:98%;
+            }
         </style>
     
 	    
