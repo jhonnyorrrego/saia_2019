@@ -146,7 +146,35 @@ $ok=@$_REQUEST["editar"];
 		<?php } ?>
 	</head>
 	<body>
-	<table border="0px">
+	    
+
+        <style>
+            .table{
+                margin:10px;
+                width:97%;
+                border-radius:5px;
+            }
+            .table tr th{
+                text-align:center;
+                font-size:12pt;
+                border-top-right-radius: 5px;
+                border-top-left-radius: 5px;
+            }
+            .version_estado .pull-left span{
+                font-weight:bold;
+            }
+            .version_estado .pull-right span{
+                font-weight:bold;
+            }            
+            .version_estado .pull-left,.pull-right{
+                font-size:7pt;
+            }
+            
+        </style>
+    
+	    
+	    
+	<table border="0px" class="table">
 	<?php if($ok){ ?>                                            
 		<?php }
     ?>
