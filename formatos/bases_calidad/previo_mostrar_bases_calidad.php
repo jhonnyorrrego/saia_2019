@@ -33,7 +33,7 @@ if(@$_REQUEST['iddoc']){
                 border-top-left-radius: 5px;
             }
             .table td{
-                font-size:11pt;
+                
             }
         </style>
     
