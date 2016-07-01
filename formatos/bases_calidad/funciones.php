@@ -9,6 +9,8 @@ while($max_salida>0){
   $max_salida--;
 }
 include_once($ruta_db_superior."db.php");
+include_once($ruta_db_superior."librerias_saia.php");
+echo(librerias_jquery('1.7'));
 
 function bases_calidad_ocultar_tipo($idformato,$iddoc){
     global $conn;
@@ -18,6 +20,11 @@ function bases_calidad_ocultar_tipo($idformato,$iddoc){
     $tipos_existentes=extrae_campo($datos,'tipo_base_calidad');
     
     print_r($tipos_existentes);
+    
+    
+    ?>
+    
+    <?php
     
     
 }
