@@ -232,7 +232,7 @@ if($_SESSION["tipo_dispositivo"]=="movil"){ ?>
   <div class="dropdown pull-right"><div class="icon-fullscreen" id="resize_centro"></div></div>
   <!--a href="#">Opciones</a-->
 </div>
-<table width="100%" border="1" cellspacing="0" cellpadding="0">
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
   <tr>
     <?php if($_SESSION["tipo_dispositivo"]!="movil"){ ?>  
     <td width="275" align="left" valign="top" id="PanelLaterialMainUI">
