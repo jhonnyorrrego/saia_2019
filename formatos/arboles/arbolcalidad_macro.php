@@ -26,7 +26,7 @@ for($i=0;$i<$dependencia["numcampos"];$i++){
    overflow: hidden;
 }
 	</style>
-<table  border="0" style="height: 600px;">
+<table  border="0" >
   <tr>
     <td>
         <?php
