@@ -22,7 +22,7 @@ if(@$_REQUEST['iddoc']){
     $style='
         <style>
             .table{
-                margin:5px;
+                margin:10px;
                 width:100%;
             }
         </style>
