@@ -423,7 +423,7 @@ function menu_saia(){
         if($_SESSION["tipo_dispositivo"]=="movil"){
           echo('<li class="dropdown-submenu"><a tabindex="-1" href="#">'.strtoupper($modulo[$i]["etiqueta"]).'</a>');
           mostrar_iconos($modulo[$i]["idmodulo"]);
-          echo('</ul></li>');
+          echo('</li>');
         }
         else{
           echo '<div class="ac-title">'.strtoupper($modulo[$i]["etiqueta"]).'</div>';
