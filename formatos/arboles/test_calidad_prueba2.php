@@ -88,6 +88,8 @@ if($_SESSION['LOGIN'.LLAVE_SAIA]=='cerok'){
 function crear_bases_calidad(){
     global $conn,$texto;
     $bases_calidad=busca_filtro_tabla("c.etiqueta,c.idformato","ft_bases_validad a, documento b, formato c","lower(b.plantilla)=c.nombre AND a.documento_iddocumento=b.iddocumento AND lower(b.estado)='aprobado'","",$conn);
+    
+    print_r($bases_calidad);
     if($bases_calidad["numcampos"]){
         $texto.='<item style="font-family:verdana; font-size:7pt;"';
 	    $texto.=strip_tags('text="'.decodifica($bases_calidad[0]["etiqueta"]).'" id="'.$bases_calidad[0]["idformato"].'" >'."\n");
