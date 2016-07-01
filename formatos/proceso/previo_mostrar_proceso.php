@@ -179,7 +179,7 @@ $ok=@$_REQUEST["editar"];
 		<?php }
     ?>
     <tr><th class="encabezado_list">Mapa de Proceso</th></tr>
-    <tr><td>
+    <tr><td style="text-align:center;">
     <img src="mapa_proceso.jpg" id="cropbox" border="0" usemap="#Map" />
 		<map name="Map">
 		
