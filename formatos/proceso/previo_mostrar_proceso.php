@@ -172,7 +172,7 @@ $ok=@$_REQUEST["editar"];
     
     <?php
     if(!$ok){
-        die('frenelo');
+       
     ?>
     <tr><td>boton</td></tr>
     <?php
