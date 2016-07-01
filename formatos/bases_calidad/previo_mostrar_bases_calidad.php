@@ -27,7 +27,7 @@ if(@$_REQUEST['id']){
     
     $tabla.='
         <tr>
-            <th>'.strtoupper(html_entity_decode($serie_seleccionada[0]['nombre'])).'</th>
+            <th>'.strtoupper(utf8_encode(html_entity_decode($serie_seleccionada[0]['nombre']))).'</th>
         </tr>
         
     ';
