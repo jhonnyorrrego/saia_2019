@@ -54,13 +54,13 @@ if(@$_REQUEST['iddoc']){
                 <th class="encabezado_list">'.strtoupper(utf8_encode(html_entity_decode($serie_seleccionada[0]['nombre']))).'</th>
             </tr>
             <tr>
-                <td>'.$datos[0]['descripcion_base'].'</td>
+                <td>'.$datos[$i]['descripcion_base'].'</td>
             </tr> 
             <tr>
-                <td class="version_estado"><span>Version:</span> &nbsp; '.$datos[0]['version_base_calidad'].'</td>
+                <td class="version_estado"><span>Version:</span> &nbsp; '.$datos[$i]['version_base_calidad'].'</td>
             </tr>
             <tr>
-                <td class="version_estado"><span>Estado:</span> &nbsp; '.$datos[0]['estado_base_calidad'].' </td>
+                <td class="version_estado"><span>Estado:</span> &nbsp; '.$datos[$i]['estado_base_calidad'].' </td>
             </tr>         
         ';
         
