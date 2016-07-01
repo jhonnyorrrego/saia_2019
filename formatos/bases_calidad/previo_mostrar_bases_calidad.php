@@ -52,7 +52,7 @@ if(@$_REQUEST['iddoc']){
     for($i=0;$i<$datos['numcampos'];$i++){
         $serie_seleccionada=busca_filtro_tabla("","serie","estado=1 and idserie=".$datos[$i]['tipo_base_calidad'],"",$conn);
         
-        $tabla.='<hr><table class="table table-bordered">';
+        $tabla.='<hr/><table class="table table-bordered">';
         
         $tabla.='
             <tr>
