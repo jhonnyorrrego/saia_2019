@@ -17,7 +17,7 @@ function bases_calidad_ocultar_tipo($idformato,$iddoc){
     
     $datos=busca_filtro_tabla("","ft_bases_calidad a, documento b","b.iddocumento=a.documento_iddocumento AND lower(b.estado)='aprobado'","",$conn);
     
-    $tipos_existentes=extrae_campo($datos,'tipo_base_calidad');
+    $tipos_existentes=json_decode(extrae_campo($datos,'tipo_base_calidad'));
     
     print_r($tipos_existentes);
     
@@ -26,13 +26,13 @@ function bases_calidad_ocultar_tipo($idformato,$iddoc){
         <script>
             $(document).ready(function(){
                 
-                $('[name="tipo_base_calidad"][value="1253"]').parent().parent().hide();
+               
                 
                 
                 var cantidad=parseInt('<?php echo(count($tipos_existentes)); ?>');
                 
                 for(i=0;i<cantidad;i++){
-                    
+                     $('[name="tipo_base_calidad"][value="1253"]').parent().parent().hide();
                 }
       
             });
