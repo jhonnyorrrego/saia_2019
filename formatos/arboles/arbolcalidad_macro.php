@@ -127,7 +127,6 @@ for($i=0;$i<$dependencia["numcampos"];$i++){
                eval('document.layers["esperando"]');
         document.poppedLayer.style.visibility = "visible";
       }
-      
       function fin_cargando() {
         if (browserType == "gecko" )
            document.poppedLayer =
@@ -153,6 +152,7 @@ for($i=0;$i<$dependencia["numcampos"];$i++){
       
       
       }      
+      
       
     	</script>
     </td>
