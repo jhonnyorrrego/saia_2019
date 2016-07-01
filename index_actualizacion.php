@@ -154,6 +154,9 @@ body {padding-right:0px;padding-left:0px;}
     -moz-border-radius: 6px 0 6px 6px;
     border-radius: 6px 0 6px 6px;
 }
+ul.nav li.dropdown:hover ul.dropdown-menu{
+    display: block;
+}
 <?php }?>
 </style>
 <?php
