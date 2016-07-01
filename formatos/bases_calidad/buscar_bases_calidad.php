@@ -22,7 +22,18 @@
                       });
                      </script></td>
                     </tr><tr id="tr_estado_base_calidad"><td class="encabezado">&nbsp;<select name="condicion_estado_base_calidad" id="condicion_estado_base_calidad"><option value="AND">Y</option><option value="OR">O</option></td>
-                     <td class="encabezado" width="20%" title="">ESTADO</td><td class="encabezado">&nbsp;<select name="compara_estado_base_calidad" id="compara_estado_base_calidad"> <option value="LIKE|%|%">Similar</option><option value="LIKE|%|@">Inicia Con</option><option value="LIKE|@|%">Finaliza Con</option></select></td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(387,4589,'',1);?></td></tr><input type="hidden" name="campo_descripcion" value="4586"><?php submit_formato(387);?></table><?php if(@$_REQUEST["campo__retorno"]){ ?>
+                     <td class="encabezado" width="20%" title="">ESTADO</td><td class="encabezado">&nbsp;<select name="compara_estado_base_calidad" id="compara_estado_base_calidad"> <option value="LIKE|%|%">Similar</option><option value="LIKE|%|@">Inicia Con</option><option value="LIKE|@|%">Finaliza Con</option></select></td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(387,4589,'',1);?></td></tr><tr><td class="encabezado">&nbsp;<select name="condicion_soporte_base_calidad" id="condicion_soporte_base_calidad"><option value="AND">Y</option><option value="OR">O</option></td>
+                     <td class="encabezado" width="20%" title="">SOPORTE</td><td class="encabezado">&nbsp;<select name="compara_soporte_base_calidad" id="compara_soporte_base_calidad"> <option value="or">Alguno</option><option value="and">Todos</option></select></td>
+                     <td bgcolor="#F5F5F5"><select multiple id="soporte_base_calidad" name="soporte_base_calidad"></select><script>
+                     $(document).ready(function() 
+                      {
+                      $("#soporte_base_calidad").fcbkcomplete({
+                        complete_text:"Presione enter para agregar una palabra.",
+                        newel: true
+                      });
+                      });
+                     </script></td>
+                    </tr><input type="hidden" name="campo_descripcion" value="4586"><?php submit_formato(387);?></table><?php if(@$_REQUEST["campo__retorno"]){ ?>
                 <input type="hidden" name="campo__retorno" value="<?php echo($_REQUEST["campo__retorno"]); ?>">
               <?php }
                if(@$_REQUEST["formulario__retorno"]){ ?>
