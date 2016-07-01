@@ -13,8 +13,7 @@ include_once($ruta_db_superior."db.php");
 function bases_calidad_ocultar_tipo($idformato,$iddoc){
     global $conn;
     
-    
-    $datos=busca_filtro_tabla("","ft_bases_calidad a, documento b","b.iddocumento=a.documento_iddocumento AND lower(b.estado)='aprobado'".$condicion,"",$conn);
+    $datos=busca_filtro_tabla("","ft_bases_calidad a, documento b","b.iddocumento=a.documento_iddocumento AND lower(b.estado)='aprobado'","",$conn);
     
     
     
