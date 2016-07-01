@@ -151,7 +151,7 @@ $ok=@$_REQUEST["editar"];
         <style>
             .table{
                 margin:10px;
-                width:95%;
+                width:90%;
                 border-radius:5px;
             }
             .table tr th{
