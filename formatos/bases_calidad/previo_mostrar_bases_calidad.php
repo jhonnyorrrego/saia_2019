@@ -23,7 +23,7 @@ if(@$_REQUEST['iddoc']){
         <style>
             .table{
                 margin:10px;
-                width:95%;
+                width:97%;
                 border-radius:5px;
             }
             .table th{
