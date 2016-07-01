@@ -84,7 +84,7 @@ for($i=0;$i<$dependencia["numcampos"];$i++){
 			tree_calidad.setImageArrays("plus","plus.gif","plus.gif","plus.gif","plus.gif","plus.gif");
 			tree_calidad.setImageArrays("minus","minus.gif","minus.gif","minus.gif","minus.gif","minus.gif");
       		tree_calidad.setOnLoadingStart(cargando);
-      		tree_calidad.setOnLoadingEnd(fin_cargando(onNodeSelect));
+      		tree_calidad.setOnLoadingEnd(fin_cargando);
 			tree_calidad.setOnClickHandler(onNodeSelect);
 			tree_calidad.enableAutoTooltips(true);
 			tree_calidad.setXMLAutoLoading("<?php echo($archivo); ?>");
