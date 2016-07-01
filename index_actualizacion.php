@@ -368,21 +368,21 @@ function mostrar_iconos($modulo_actual){
         if(isset($_REQUEST["key"]) && $_REQUEST["key"]<>""){
           $tablas[$j]["enlace"]=str_replace("@key@",$_REQUEST["key"],$tablas[$j]["enlace"]);
         }
-        if($j>0&&$j%$cols==0){
-          if($_SESSION["tipo_dispositivo"]!='movil'){
+        if($j>0&&$j%$cols==0 && $_SESSION["tipo_dispositivo"]!='movil'){
             echo('</tr><tr>');
-            echo('<td width="'.(($cols*35)) .'px" height="44" align="center" valign="top"><a href="'.$tablas[$j]["enlace"]);
-            if(!strpos($tablas[$j]["enlace"],"?"))
-              echo('?cmd=resetall"');
-            else 
-              echo("&cmd=resetall\"");
-            echo(' target="'.$tablas[$j]["destino"].'"><img src="'.$tablas[$j]["imagen"].'" border="0" width="35px"');
-            echo (' ><br />'.$tablas[$j]["etiqueta"].'</a></td>');
-          }
-          else{
-            echo('<li><a tabindex="-1" href="#">Action</a></li>');
-          }
-        } 
+        }    
+        if($_SESSION["tipo_dispositivo"]!='movil'){
+          echo('<td width="'.(($cols*35)) .'px" height="44" align="center" valign="top"><a href="'.$tablas[$j]["enlace"]);
+          if(!strpos($tablas[$j]["enlace"],"?"))
+            echo('?cmd=resetall"');
+          else 
+            echo("&cmd=resetall\"");
+          echo(' target="'.$tablas[$j]["destino"].'"><img src="'.$tablas[$j]["imagen"].'" border="0" width="35px"');
+          echo (' ><br />'.$tablas[$j]["etiqueta"].'</a></td>');
+        }
+        else{
+          echo('<li><a tabindex="-1" href="#">Action</a></li>');
+        }
       }
       if($_SESSION["tipo_dispositivo"]=="movil"){
         echo('</ul>');
