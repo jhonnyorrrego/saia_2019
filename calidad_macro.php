@@ -8,8 +8,6 @@ date_default_timezone_set ("America/Bogota");
 if(!isset($_SESSION['LOGIN'])){
   $_SESSION["LOGIN"]=$_REQUEST['sesion'];
 }
-
-
 $_SESSION['from_modulo_calidad']=1;
 ?>
 <frameset cols="350px,*" >
