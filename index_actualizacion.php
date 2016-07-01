@@ -202,7 +202,7 @@ if($_SESSION["tipo_dispositivo"]=="movil" || 1){ ?>
             <!--div class="icon-home">&nbsp;</div--> SAIA <span class="caret"></span>
         </a>
     	  <?php
-    	    menu_saia();
+    	    //menu_saia();
     	  ?>
     </div>
 <?php } ?>  
