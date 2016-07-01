@@ -12,11 +12,6 @@ $max_salida--;
 }
 include_once($ruta_db_superior."db.php");
 
-
-
-
-
-
 function lista_destinos($idformato,$iddoc=NULL){
  global $conn;
  $datos=busca_filtro_tabla("nombre,nombre_tabla","formato","idformato=$idformato","",$conn);
