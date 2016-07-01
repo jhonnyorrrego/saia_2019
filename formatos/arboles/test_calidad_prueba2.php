@@ -87,6 +87,14 @@ if($_SESSION['LOGIN'.LLAVE_SAIA]=='cerok'){
 
 function crear_bases_calidad(){
     global $conn;
+    
+    $bases_calidad=busca_filtro_tabla("","ft_bases_validad a, documento b","a.documento_iddocumento=b.iddocumento AND lower(b.estado)='aprobado'","",$conn);
+    if($bases_calidad["numcampos"]){
+        for($i=0;$i<$bases_calidad["numcampos"];$i++){
+            
+        }
+    }
+    
 }
 
 
