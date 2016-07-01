@@ -33,7 +33,7 @@ if(@$_REQUEST['iddoc']){
                 border-top-left-radius: 5px;
             }
             .table td{
-                
+                font-size:11pt;
             }
         </style>
     
@@ -47,7 +47,8 @@ if(@$_REQUEST['iddoc']){
         </tr>
         <tr>
             <td>'.$datos[0]['descripcion_base'].'</td>
-        </tr>        
+        </tr> 
+        
     ';
     
     
