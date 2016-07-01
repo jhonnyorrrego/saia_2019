@@ -41,7 +41,7 @@ if(@$_REQUEST['iddoc']){
             .version_estado .pull-right span{
                 font-weight:bold;
             }            
-            .version_estado .pull-left{
+            .version_estado .pull-left,.pull-right{
                 font-size:7pt;
             }
             
