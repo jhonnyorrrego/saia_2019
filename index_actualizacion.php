@@ -194,7 +194,11 @@ $mayor_informacion=busca_filtro_tabla("valor","configuracion","nombre='mayor_inf
 <?php 
 //Menu SAIA para movil
 if($_SESSION["tipo_dispositivo"]=="movil"){ ?>    
-    <ul class="dropdown-menu multi-level">
+    <div class="dropdown pull-left">
+        <a id="dLabel" data-toggle="dropdown" data-target="#" href="/page.html">
+            Dropdown <span class="caret"></span>
+        </a>
+    	<ul class="dropdown-menu multi-level">
                         <li><a href="#">Action</a></li>
                         <li><a href="#">Another action</a></li>
                         <li><a href="#">Something else here</a></li>
@@ -226,6 +230,7 @@ if($_SESSION["tipo_dispositivo"]=="movil"){ ?>
                             </ul>
                         </li>
                     </ul>
+    </div>
 <?php } ?>  
   <div class="dropdown pull-right">| <a href="logout.php<?php if(@$_SESSION["INDEX"]!='')echo("?INDEX_SALIDA=".$_SESSION["INDEX"]);?>">Salir</a></div>
   <div class="dropdown pull-right">| 
