@@ -28,7 +28,7 @@ if(@$_REQUEST['iddoc']){
     
     ';
     
-    $tabla='<table class="table table-bordered">';
+    $tabla=.$style.'<table class="table table-bordered">';
     
     $tabla.='
         <tr>
