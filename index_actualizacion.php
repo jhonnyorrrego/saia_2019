@@ -147,7 +147,23 @@ $mayor_informacion=busca_filtro_tabla("valor","configuracion","nombre='mayor_inf
 <?php 
 //Menu SAIA para movil
 if($_SESSION["tipo_dispositivo"]=="movil"){ ?>    
-  <div class="dropdown pull-left">SAIA</div>
+  <div class="dropdown pull-left">
+    <a href="#" class="dropdown-toggle" data-toggle="dropdown">SAIA <b class="caret"></b></a>
+    <ul class="dropdown-menu" >
+      <li>Menu1 
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">SAIA <b class="caret"></b></a>
+          <ul class="dropdown-menu" >
+              <li>Menu1 </li>
+              <li>Menu2 </li>
+          </ul>
+      </li>
+      <li><a href="<?php echo($ruta_db_superior);?>pantallas/mi_cuenta/cambio_clave_correo.php" data-toggle="modal" data-target="#ventana_modal" class="cambiar_pwd" titulo="Cambiar Contrase&ntilde;a de correo">Contrase&ntilde;a de correo</a></li>
+      <!--li><a href="#">Another action</a></li>
+      <li><a href="#">Something else here</a></li>
+      <li class="divider"></li>
+      <li><a href="#">Separated link</a></li-->
+    </ul>
+  </div>
 <?php } ?>  
   <div class="dropdown pull-right">| <a href="logout.php<?php if(@$_SESSION["INDEX"]!='')echo("?INDEX_SALIDA=".$_SESSION["INDEX"]);?>">Salir</a></div>
   <div class="dropdown pull-right">| 
