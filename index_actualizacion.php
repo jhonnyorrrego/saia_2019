@@ -118,9 +118,7 @@ echo index_estilos('temas_main');
 $mayor_informacion=busca_filtro_tabla("valor","configuracion","nombre='mayor_informacion'","",$conn);
 ?>
 <body>
-<?php
-if($_SESSION["tipo_dispositivo"]!="movil"){
-?>
+<?php if($_SESSION["tipo_dispositivo"]!="movil"){ ?>
 <div class="footer_login">
   <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
     <tr class="footer_login_text">
@@ -146,7 +144,11 @@ if($_SESSION["tipo_dispositivo"]!="movil"){
 </div>
 </div>
 <div class="user-menu-top">
+<?php 
+//Menu SAIA para movil
+if($_SESSION["tipo_dispositivo"]!="movil"){ ?>    
   <div class="dropdown pull-left">SAIA</div>
+<?php } ?>  
   <div class="dropdown pull-right">| <a href="logout.php<?php if(@$_SESSION["INDEX"]!='')echo("?INDEX_SALIDA=".$_SESSION["INDEX"]);?>">Salir</a></div>
   <div class="dropdown pull-right">| 
       <a href="#" class="dropdown-toggle" data-toggle="dropdown">Mi Cuenta<b class="caret"></b></a>
