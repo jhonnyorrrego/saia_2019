@@ -146,6 +146,7 @@ if($_SESSION["tipo_dispositivo"]!="movil"){
 </div>
 </div>
 <div class="user-menu-top">
+  <div class="dropdown pull-left">SAIA</div>
   <div class="dropdown pull-right">| <a href="logout.php<?php if(@$_SESSION["INDEX"]!='')echo("?INDEX_SALIDA=".$_SESSION["INDEX"]);?>">Salir</a></div>
   <div class="dropdown pull-right">| 
       <a href="#" class="dropdown-toggle" data-toggle="dropdown">Mi Cuenta<b class="caret"></b></a>
