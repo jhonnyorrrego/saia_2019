@@ -42,7 +42,7 @@ if(@$_REQUEST['iddoc']){
                 font-weight:bold;
             }            
             .version_estado .pull-left{
-                font-size:8pt;
+                font-size:7pt;
             }
             
         </style>
