@@ -53,7 +53,7 @@ if(@$_REQUEST['iddoc']){
         
         $tabla.='
             <tr>
-                <th class="encabezado_list">'.strtoupper(utf8_encode(html_entity_decode($serie_seleccionada[0]['nombre']))).'</th>
+                <th class="encabezado_list">'.ucwords(strtolower(utf8_encode(html_entity_decode($serie_seleccionada[0]['nombre'])))).'</th>
             </tr>
             <tr>
                 <td>'.$datos[$i]['descripcion_base'].'</td>
