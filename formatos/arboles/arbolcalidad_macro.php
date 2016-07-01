@@ -114,6 +114,20 @@ for($i=0;$i<$dependencia["numcampos"];$i++){
         //tree2.refreshItem(nodeId);
        
       }
+
+      function cargando() {
+        if (browserType == "gecko" )
+           document.poppedLayer =
+               eval('document.getElementById("esperando")');
+        else if (browserType == "ie")
+           document.poppedLayer =
+              eval('document.getElementById("esperando")');
+        else
+           document.poppedLayer =
+               eval('document.layers["esperando"]');
+        document.poppedLayer.style.visibility = "visible";
+      }
+      
       function fin_cargando() {
         if (browserType == "gecko" )
            document.poppedLayer =
@@ -132,29 +146,14 @@ for($i=0;$i<$dependencia["numcampos"];$i++){
       
      
      
-     if( parseInt($('#ejecutar_evento_mapa_proceso').val())==1 ){
-         tree_calidad.selectItem(194,true,false); /*por defecto Mapa de proceso*/
-        $('#ejecutar_evento_mapa_proceso').val(0);
-     }
-       
-
-       
+         if( parseInt($('#ejecutar_evento_mapa_proceso').val())==1 ){
+             tree_calidad.selectItem(194,true,false); /*por defecto Mapa de proceso*/
+            $('#ejecutar_evento_mapa_proceso').val(0);
+         }
       
-          
       
-      }
-      function cargando() {
-        if (browserType == "gecko" )
-           document.poppedLayer =
-               eval('document.getElementById("esperando")');
-        else if (browserType == "ie")
-           document.poppedLayer =
-              eval('document.getElementById("esperando")');
-        else
-           document.poppedLayer =
-               eval('document.layers["esperando"]');
-        document.poppedLayer.style.visibility = "visible";
-      }
+      }      
+      
     	</script>
     </td>
   </tr>
