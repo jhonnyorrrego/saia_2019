@@ -32,6 +32,7 @@ else{
 include_once($ruta_db_superior."pantallas/lib/mobile_detect.php");
 $detect = new Mobile_Detect;
 if ( $detect->isMobile() ) {
+    die("TPM");
 	$_SESSION["tipo_dispositivo"]="movil";
 	print_r($_SESSION);
 }
