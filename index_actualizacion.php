@@ -381,7 +381,11 @@ function mostrar_iconos($modulo_actual){
           echo (' ><br />'.$tablas[$j]["etiqueta"].'</a></td>');
         }
         else{
-          echo('<li><a tabindex="-1" href="#">Action</a></li>');
+          if(!strpos($tablas[$j]["enlace"],"?"))
+            $tablas[$j]["enlace"].='?cmd=resetall"';
+          else 
+            $tablas[$j]["enlace"].='&cmd=resetall"';
+          echo('<li><a tabindex="-1" href="'.$tablas[$j]["enlace"].'" target="'.$tablas[$j]["destino"].'">'.$tablas[$j]["etiqueta"].'</a></li>');
         }
       }
       if($_SESSION["tipo_dispositivo"]=="movil"){
