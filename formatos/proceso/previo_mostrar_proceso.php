@@ -174,7 +174,7 @@ $ok=@$_REQUEST["editar"];
     if(!$ok){
        
     ?>
-    <tr><td>boton</td></tr>
+    <tr><td><a title="Administración del arbol de calidad." href="../proceso/previo_mostrar_proceso.php?editar=1" target="detalles"><span class="phpmaker">EDITAR MAPA</span></a></td></tr>
     <?php
     }
     ?>
