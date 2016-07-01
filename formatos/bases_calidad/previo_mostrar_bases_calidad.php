@@ -26,13 +26,13 @@ if(@$_REQUEST['iddoc']){
                 width:97%;
                 border-radius:5px;
             }
-            .table th{
+            .table tr th{
                 text-align:center;
                 font-size:12pt;
                 border-top-right-radius: 5px;
                 border-top-left-radius: 5px;
             }
-            .table td{
+            .table tr td{
                 
             }
         </style>
@@ -48,7 +48,9 @@ if(@$_REQUEST['iddoc']){
         <tr>
             <td>'.$datos[0]['descripcion_base'].'</td>
         </tr> 
-        
+        <tr>
+            <td>'.$datos[0]['descripcion_base'].'</td>
+        </tr>         
     ';
     
     
