@@ -38,7 +38,7 @@ if(@$_REQUEST['iddoc']){
             <th class="encabezado_list">'.strtoupper(utf8_encode(html_entity_decode($serie_seleccionada[0]['nombre']))).'</th>
         </tr>
         <tr>
-            <td>'.$datos[0]['descripcion_base'].'</td>
+            <td style="width:90%;">'.$datos[0]['descripcion_base'].'</td>
         </tr>        
     ';
     
