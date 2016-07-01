@@ -24,7 +24,7 @@ if(@$_REQUEST['iddoc']){
             .table{
                 margin:10px;
                 padding-right: 10px;
-                width:100%;
+                width:90%;
                 border-radius:5px;
             }
             .table th{
