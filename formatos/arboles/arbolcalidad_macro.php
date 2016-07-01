@@ -131,7 +131,11 @@ for($i=0;$i<$dependencia["numcampos"];$i++){
       <?php } ?>
       
        
-      	tree_calidad.selectItem(194,true,false); //por defecto Mapa de proceso
+      <?php if(@$_REQUEST['from_modulo_calidad']){ ?>
+           	tree_calidad.selectItem(194,true,false); //por defecto Mapa de proceso
+      <?php } ?>
+       
+      
           
       
       }
