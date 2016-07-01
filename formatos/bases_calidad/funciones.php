@@ -17,6 +17,8 @@ function bases_calidad_ocultar_tipo($idformato,$iddoc){
     
     $tipos_existentes=extrae_campo($datos,'tipo_base_calidad');
     
+    print_r($tipos_existentes);
+    
     
 }
 
