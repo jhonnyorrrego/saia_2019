@@ -152,11 +152,7 @@ for($i=0;$i<$dependencia["numcampos"];$i++){
              tree_calidad.selectItem(194,true,false); /*por defecto Mapa de proceso*/
             $('#ejecutar_evento_mapa_proceso').val(0);
          }
-      
-      
       }      
-      
-      
     	</script>
     </td>
   </tr>
