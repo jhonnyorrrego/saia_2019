@@ -26,7 +26,7 @@ if(@$_REQUEST['id']){
     
     $tabla.='
         <tr>
-            <td>'..'</td>
+            <td></td>
         </tr>
         
     ';
