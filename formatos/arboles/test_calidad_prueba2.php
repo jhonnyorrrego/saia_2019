@@ -93,10 +93,10 @@ function crear_bases_calidad(){
     if($bases_calidad["numcampos"]){
         $imagenes=' im0="'.strtolower($bases_calidad[0]["nombre"]).'.gif" im1="'.strtolower($bases_calidad[0]["nombre"]).'.gif" im2="'.strtolower($bases_calidad[0]["nombre"]).'.gif" ';
         $texto.='<item style="font-family:verdana; font-size:7pt;" '.$imagenes;
-	    $texto.='text="'.decodifica($bases_calidad[0]["etiqueta"]).'" id="'.$bases_calidad[0]["idformato"].'" >'."\n";
+	    $texto.=strip_tags('text="'.decodifica($bases_calidad[0]["etiqueta"]).'" id="'.$bases_calidad[0]["idformato"].'" >'."\n");
         for($i=0;$i<$bases_calidad["numcampos"];$i++){
-            //$texto.='<item style="font-family:verdana; font-size:7pt;"';
-	        //$texto.=strip_tags('text="'.decodifica($bases_calidad[0]["etiqueta"]).'" id="'.$formato[0]["idformato"].'" '.$child.'>'."\n");
+            $texto.='<item style="font-family:verdana; font-size:7pt;" '.$imagenes;
+	        $texto.=strip_tags('text="'.decodifica($bases_calidad[0]["etiqueta"]).'" id="'.$formato[0]["idformato"].'" child="1" >'."\n");
         }
          $texto.="</item>\n";
     }
