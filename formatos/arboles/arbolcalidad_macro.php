@@ -131,8 +131,7 @@ for($i=0;$i<$dependencia["numcampos"];$i++){
       <?php } ?>
       
         <?php if(@$_REQUEST["variable_busqueda"]=='from_modulo_calidad'){ ?>
-      	var item="<?php echo $_REQUEST["item"]; ?>";
-      	tree_calidad.selectItem(item,true,false);
+      	tree_calidad.selectItem(194,true,false);
       <?php } ?>      
       
       }
