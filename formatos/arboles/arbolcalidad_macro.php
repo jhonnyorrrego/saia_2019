@@ -114,7 +114,7 @@ for($i=0;$i<$dependencia["numcampos"];$i++){
         //tree2.refreshItem(nodeId);
        
       }
-      function fin_cargando() {
+      function fin_cargando(nodeId) {
         if (browserType == "gecko" )
            document.poppedLayer =
                eval('document.getElementById("esperando")');
