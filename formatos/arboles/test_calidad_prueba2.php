@@ -87,7 +87,7 @@ if($_SESSION['LOGIN'.LLAVE_SAIA]=='cerok'){
 
 function crear_bases_calidad(){
     global $conn,$texto;
-    $bases_calidad=busca_filtro_tabla("b.iddocumento,c.etiqueta,c.idformato,c.nombre,c.nombre_tabla,a.tipo_base_calidad","ft_bases_calidad a, documento b, formato c","lower(b.plantilla)=c.nombre AND a.documento_iddocumento=b.iddocumento AND lower(b.estado)='aprobado'","",$conn);
+    $bases_calidad=busca_filtro_tabla("b.iddocumento,c.etiqueta,c.idformato,c.nombre,c.nombre_tabla,a.tipo_base_calidad,a.idft_bases_calidad","ft_bases_calidad a, documento b, formato c","lower(b.plantilla)=c.nombre AND a.documento_iddocumento=b.iddocumento AND lower(b.estado)='aprobado'","",$conn);
    // $iddoc=$bases_calidad[0]["idformato"]."-".$bases_calidad[0]["nombre"]."-".$bases_calidad[0]["nombre_tabla"];
     //print_r($bases_calidad);
     if($bases_calidad["numcampos"]){
@@ -97,7 +97,7 @@ function crear_bases_calidad(){
         for($i=0;$i<$bases_calidad["numcampos"];$i++){
             $serie_seleccionada=busca_filtro_tabla("","serie","estado=1 and idserie=".$bases_calidad[$i]['tipo_base_calidad'],"",$conn);
             $texto.='<item style="font-family:verdana; font-size:7pt;" '.$imagenes;
-            $idparseo='bc_'.$bases_calidad[0]["idformato"].'-'.$bases_calidad[0]["iddocumento"];
+            $idparseo='bc_'.$bases_calidad[0]["idformato"].'-id'.$bases_calidad[0]["nombre_tabla"].'-'.$bases_calidad[$i]["idft_bases_calidad"];
 	        $texto.=strip_tags('text="'.decodifica($serie_seleccionada[0]["nombre"]).'" id="" child="0" >'."\n");
 	        $texto.="</item>\n";
         }
