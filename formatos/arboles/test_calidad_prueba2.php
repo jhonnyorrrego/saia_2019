@@ -93,11 +93,11 @@ function crear_bases_calidad(){
     if($bases_calidad["numcampos"]){
         $imagenes=' im0="'.strtolower($bases_calidad[0]["nombre"]).'.gif" im1="'.strtolower($bases_calidad[0]["nombre"]).'.gif" im2="'.strtolower($bases_calidad[0]["nombre"]).'.gif" ';
         $texto.='<item style="font-family:verdana; font-size:7pt;" '.$imagenes;
-	    $texto.=strip_tags('text="'.decodifica($bases_calidad[0]["etiqueta"]).'" id="bcp_'.$bases_calidad[0]["idformato"].'" >'."\n");
+	    $texto.=strip_tags('text="'.decodifica($bases_calidad[0]["etiqueta"]).'" id="bcp|'.$bases_calidad[0]["idformato"].'" >'."\n");
         for($i=0;$i<$bases_calidad["numcampos"];$i++){
             $serie_seleccionada=busca_filtro_tabla("","serie","estado=1 and idserie=".$bases_calidad[$i]['tipo_base_calidad'],"",$conn);
             $texto.='<item style="font-family:verdana; font-size:7pt;" '.$imagenes;
-            $idparseo='bc_'.$bases_calidad[0]["idformato"].'-id'.$bases_calidad[0]["nombre_tabla"].'-'.$bases_calidad[$i]["idft_bases_calidad"].'-'.$bases_calidad[$i]["iddocumento"];
+            $idparseo='bc|'.$bases_calidad[0]["idformato"].'-id'.$bases_calidad[0]["nombre_tabla"].'-'.$bases_calidad[$i]["idft_bases_calidad"].'-'.$bases_calidad[$i]["iddocumento"];
             print_r($idparseo);
 	        $texto.=strip_tags('text="'.decodifica($serie_seleccionada[0]["nombre"]).'" id="'.$idparseo.'" child="0" >'."\n");
 	        $texto.="</item>\n";
