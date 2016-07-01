@@ -132,7 +132,13 @@ for($i=0;$i<$dependencia["numcampos"];$i++){
       
        
       <?php if(@$_SESSION['from_modulo_calidad']){ ?>
-           	tree_calidad.selectItem(194,true,false); //por defecto Mapa de proceso
+             
+            var ejecutar=1;
+            if(ejecutar){
+                tree_calidad.selectItem(194,true,false); //por defecto Mapa de proceso
+                ejecutar=0;
+            }
+           
            
       <?php 
             $_SESSION['from_modulo_calidad']=0;  
