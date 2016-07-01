@@ -92,7 +92,7 @@ function crear_bases_calidad(){
     
     if($bases_calidad["numcampos"]){
         $texto.='<item style="font-family:verdana; font-size:7pt;"';
-	    $texto.=strip_tags('text="'.decodifica($bases_calidad[0]["etiqueta"]).'" id="'.$bases_calidad[0]["idformato"].'" >'."\n");
+	    $texto.='text="'.decodifica($bases_calidad[0]["etiqueta"]).'" id="'.$bases_calidad[0]["idformato"].'" >'."\n";
         for($i=0;$i<$bases_calidad["numcampos"];$i++){
             //$texto.='<item style="font-family:verdana; font-size:7pt;"';
 	        //$texto.=strip_tags('text="'.decodifica($bases_calidad[0]["etiqueta"]).'" id="'.$formato[0]["idformato"].'" '.$child.'>'."\n");
