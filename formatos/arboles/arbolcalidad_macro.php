@@ -135,6 +135,8 @@ for($i=0;$i<$dependencia["numcampos"];$i++){
      if($('#ejecutar_evento_mapa_proceso').val()){
          tree_calidad.selectItem(194,true,false); /*por defecto Mapa de proceso*/
         $('#ejecutar_evento_mapa_proceso').val(0);
+        
+        alert( $('#ejecutar_evento_mapa_proceso').val()  );
      }
        
 
