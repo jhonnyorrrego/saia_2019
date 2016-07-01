@@ -86,7 +86,7 @@ if($_SESSION['LOGIN'.LLAVE_SAIA]=='cerok'){
 }
 
 function crear_bases_calidad(){
-    
+    global $conn;
 }
 
 
