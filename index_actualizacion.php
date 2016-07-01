@@ -201,9 +201,11 @@ if($_SESSION["tipo_dispositivo"]=="movil" || 1){ ?>
         <a id="dLabel" data-toggle="dropdown" data-target="#" >
             <!--div class="icon-home">&nbsp;</div--> SAIA <span class="caret"></span>
         </a>
+        <ul class="dropdown-menu multi-level" role="menu" aria-labelledby="dropdownMenu">
     	  <?php
     	    //menu_saia();
     	  ?>
+    	  </ul>
     </div>
 <?php } ?>  
   <div class="dropdown pull-right">| <a href="logout.php<?php if(@$_SESSION["INDEX"]!='')echo("?INDEX_SALIDA=".$_SESSION["INDEX"]);?>">Salir</a></div>
@@ -346,7 +348,12 @@ function mostrar_iconos($modulo_actual){
     else
       $tablas["numcampos"]=0; 
     if($tablas["numcampos"]){
-      echo('<table width="100%" border="0" cellspacing="5" cellpadding="0"><tr>');
+      if($_SESSION["tipo_dispositivo"]=='movil'){
+        echo('<ul class="dropdown-menu">');
+      }
+      else{
+        echo('<table width="100%" border="0" cellspacing="5" cellpadding="0"><tr>');
+      }  
       for($j=0;$j<$tablas["numcampos"];$j++){
         $ayuda_submenu=$tablas[$j]["ayuda"];
         $arreglo=explode(",",$tablas[$j]["parametros"]);
@@ -361,21 +368,30 @@ function mostrar_iconos($modulo_actual){
         if(isset($_REQUEST["key"]) && $_REQUEST["key"]<>""){
           $tablas[$j]["enlace"]=str_replace("@key@",$_REQUEST["key"],$tablas[$j]["enlace"]);
         }
-          if($j>0&&$j%$cols==0){
+          if($j>0&&$j%$cols==0 && $_SESSION["tipo_dispositivo"]!='movil'){
           echo('</tr><tr>');
-        }    
-        echo('<td width="'.(($cols*35)) .'px" height="44" align="center" valign="top"><a href="'.$tablas[$j]["enlace"]);
-        if(!strpos($tablas[$j]["enlace"],"?"))
-          echo('?cmd=resetall"');
-        else 
-          echo("&cmd=resetall\"");
-        echo(' target="'.$tablas[$j]["destino"].'"><img src="'.$tablas[$j]["imagen"].'" border="0" width="35px"');
-        echo (' ><br />'.$tablas[$j]["etiqueta"].'</a></td>');
+          echo('<td width="'.(($cols*35)) .'px" height="44" align="center" valign="top"><a href="'.$tablas[$j]["enlace"]);
+          if(!strpos($tablas[$j]["enlace"],"?"))
+            echo('?cmd=resetall"');
+          else 
+            echo("&cmd=resetall\"");
+          echo(' target="'.$tablas[$j]["destino"].'"><img src="'.$tablas[$j]["imagen"].'" border="0" width="35px"');
+          echo (' ><br />'.$tablas[$j]["etiqueta"].'</a></td>');
+        } 
+        else{
+          echo('<li><a tabindex="-1" href="#">Action</a></li>');
+        }
       }
-      for(;$j%$cols!=0;$j++){
-        echo('<td>&nbsp;</td>');
+      if($_SESSION["tipo_dispositivo"]=="movil"){
+        echo('</ul>');
       }
-      echo('</tr></table>'); 
+      else{
+        for(;$j%$cols!=0;$j++){
+            echo('<td>&nbsp;</td>');
+        }
+        echo('</tr>');
+        echo('</table>');
+      }
     }
 //print_r($tablas);          
   }
@@ -398,10 +414,17 @@ function menu_saia(){
     $modulo=busca_filtro_tabla("A.tipo,A.etiqueta,A.idmodulo","modulo A","A.idmodulo IN(select distinct b.cod_padre from modulo b where b.idmodulo in(".$lista."))","orden",$conn);
     for($i=0;$i<$modulo["numcampos"];$i++){
       if($modulo["numcampos"] && $modulo[$i]["idmodulo"] && $modulo[$i]["etiqueta"] && $modulo[$i]["tipo"]=='1'){ 
-        echo '<div class="ac-title">'.strtoupper($modulo[$i]["etiqueta"]).'</div>';
-        echo('<div class="ac-content">'); 
-        mostrar_iconos($modulo[$i]["idmodulo"]);
-        echo('</div>');             
+        if($_SESSION["tipo_dispositivo"]=="movil"){
+          echo('<li class="dropdown-submenu"><a tabindex="-1" href="#">'.strtoupper($modulo[$i]["etiqueta"]).'</a>');
+          mostrar_iconos($modulo[$i]["idmodulo"]);
+          echo('</ul></li>');
+        }
+        else{
+          echo '<div class="ac-title">'.strtoupper($modulo[$i]["etiqueta"]).'</div>';
+          echo('<div class="ac-content">'); 
+          mostrar_iconos($modulo[$i]["idmodulo"]);
+          echo('</div>');             
+        }  
       }
     }
   }
