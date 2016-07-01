@@ -178,8 +178,8 @@ $ok=@$_REQUEST["editar"];
 	<?php if($ok){ ?>                                            
 		<?php }
     ?>
-    <tr><th class="encabezado_list">Mapa de Proceso</th></tr>
-    <tr><td style="text-align:center;">
+    <tr><th colspan="2" class="encabezado_list">Mapa de Proceso</th></tr>
+    <tr><td colspan="2" style="text-align:center;">
     <img src="mapa_proceso.jpg" id="cropbox" border="0" usemap="#Map" />
 		<map name="Map">
 		
@@ -206,7 +206,7 @@ $ok=@$_REQUEST["editar"];
        //<div data-toggle="tooltip" class="btn btn-mini kenlace_saia pull-right" titulo="Editar  Tarea" enlace="pantallas/tareas_listado/editar_tareas_listado.php?idtareas_listado=411" id="editar_tarea_411" conector="iframe" data-original-title="Editar  Tarea" onclick=" ">	    <i class="icon-pencil"></i>	  </div>
     ?>
         <tr>
-            <td>
+            <td colspan="2">
                 <a class="btn btn-mini pull-left" title="Administración del arbol de calidad." href="../proceso/previo_mostrar_proceso.php?editar=1"  onclick=" ">	    
                     <i class="icon-pencil"></i>	<span>Editar</span> 
                 </a>
