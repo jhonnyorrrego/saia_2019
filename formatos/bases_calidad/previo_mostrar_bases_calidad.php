@@ -22,8 +22,6 @@ if(@$_REQUEST['iddoc']){
     
     $datos=busca_filtro_tabla("","ft_bases_calidad a, documento b","b.iddocumento=a.documento_iddocumento AND lower(b.estado)='aprobado'".$condicion,"",$conn);
     
-    
-    
     $style='
         <style>
             .table{
