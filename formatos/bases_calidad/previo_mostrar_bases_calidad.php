@@ -23,7 +23,7 @@ if(@$_REQUEST['id']){
     $datos=busca_filtro_tabla("","ft_bases_calidad","documento_iddocumento=".$iddoc,"",$conn);
     $serie_seleccionada=busca_filtro_tabla("","serie","estado=1 and idserie=".$datos[0]['tipo_base_calidad'],"",$conn);
     
-    $tabla='<table class="table">';
+    $tabla='<table class="table table-bordered">';
     
     $tabla.='
         <tr>
