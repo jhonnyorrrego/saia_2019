@@ -29,7 +29,7 @@ function bases_calidad_ocultar_tipo($idformato,$iddoc){
                 var registros='<?php echo($tipos_existentes); ?>';
                 var vector_registros=registros.split(',');
                 alert(registros);
-                var cantidad=parseInt('<?php echo(count($tipos_existentes)); ?>');
+                var cantidad=parseInt('<?php echo(count(extrae_campo($datos,'tipo_base_calidad'))); ?>');
                 for(i=0;i<cantidad;i++){
                      $('[name="tipo_base_calidad"][value="'+vector_registros[i]+'"]').parent().parent().hide();
                 }
