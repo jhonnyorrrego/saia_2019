@@ -25,9 +25,6 @@ for($i=0;$i<$dependencia["numcampos"];$i++){
 #div_contenido {
    overflow: hidden;
 }
-.treeboxbox_tree_calidad.containerTableStyle{
-    height:800px;
-}
 	</style>
 <table  border="0" >
   <tr>
@@ -85,7 +82,7 @@ for($i=0;$i<$dependencia["numcampos"];$i++){
       if (window.navigator.userAgent.toLowerCase().match("gecko")) {
          browserType= "gecko"
       }
-			tree_calidad=new dhtmlXTreeObject("treeboxbox_tree_calidad","340px","300px",0);
+			tree_calidad=new dhtmlXTreeObject("treeboxbox_tree_calidad","340px","800px",0);
 			tree_calidad.setImagePath("../../botones/formatos/");
 			tree_calidad.enableIEImageFix(true);
 			tree_calidad.setXMLAutoLoadingBehaviour("id");
@@ -157,7 +154,10 @@ for($i=0;$i<$dependencia["numcampos"];$i++){
              tree_calidad.selectItem(194,true,false); /*por defecto Mapa de proceso*/
             $('#ejecutar_evento_mapa_proceso').val(0);
          }
-      }      
+      }    
+      
+      
+      
     	</script>
     </td>
   </tr>
