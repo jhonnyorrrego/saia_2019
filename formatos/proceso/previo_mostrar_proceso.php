@@ -169,6 +169,16 @@ $ok=@$_REQUEST["editar"];
     </script>
     </td>
     </tr>
+    
+    <?php
+    if(!$ok){
+        die('frenelo');
+    ?>
+    <tr><td>boton</td></tr>
+    <?php
+    }
+    ?>
+    
    <?php
    if($ok){
    ?>
