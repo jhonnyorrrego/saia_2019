@@ -21,7 +21,6 @@ if (@$_REQUEST["userid"]<>"" && @$_REQUEST["passwd"]<>"") {
 	$clave_admin=busca_filtro_tabla("A.valor","configuracion A","A.tipo='clave' AND A.nombre='clave_administrador'","",$conn); 
 	if($configuracion["numcampos"]&&$clave_admin["numcampos"] && $configuracion[0]["valor"]==$sUserId && $clave_admin[0]["valor"]==$sPassWd){
 	$estado_admin=busca_filtro_tabla("estado","funcionario","lower(login)='".strtolower($sUserId)."'","",$conn);
-	print_r($estado_admin);
 	if($estado_admin[0]['estado']){
         $_SESSION["LOGIN".LLAVE_SAIA]=$sUserId;
         cerrar_sesiones_activas($sUserId);
@@ -35,6 +34,8 @@ if (@$_REQUEST["userid"]<>"" && @$_REQUEST["passwd"]<>"") {
 	      $retorno["mensaje"]="<span style='color:white;'><b>El funcionario esta inactivo o no pertenece al sistema!<b> <br> por favor comuniquese con el administrador del sistema.</span>";
 	      die(stripslashes(json_encode($retorno)));  	  
 	}
+	
+         
   }
 	if (!($bValidPwd)) {			
 			$sUserId = (!get_magic_quotes_gpc()) ? addslashes($sUserId) : $sUserId;
