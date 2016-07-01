@@ -130,6 +130,7 @@ for($i=0;$i<$dependencia["numcampos"];$i++){
       	tree_calidad.selectItem(item,true,false);
       <?php } ?>
       
+      alert(nodeId);
    //    tree_calidad.selectItem(194,true,false); /*por defecto Mapa de proceso*/
 
        
