@@ -198,38 +198,19 @@ if($_SESSION["tipo_dispositivo"]=="movil"){ ?>
         <a id="dLabel" data-toggle="dropdown" data-target="#" href="/page.html">
             Dropdown <span class="caret"></span>
         </a>
-    	<ul class="dropdown-menu multi-level">
-                        <li><a href="#">Action</a></li>
-                        <li><a href="#">Another action</a></li>
-                        <li><a href="#">Something else here</a></li>
-                        <li class="divider"></li>
-                        <li><a href="#">Separated link</a></li>
-                        <li class="divider"></li>
-                        <li><a href="#">One more separated link</a></li>
-                        <li class="dropdown-submenu">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown</a>
-                            <ul class="dropdown-menu">
-                                <li><a href="#">Action</a></li>
-                                <li class="dropdown-submenu">
-                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown</a>
-                                    <ul class="dropdown-menu">
-                                        <li class="dropdown-submenu">
-                                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown</a>
-                                            <ul class="dropdown-menu">
-                                                <li><a href="#">Action</a></li>
-                                                <li><a href="#">Another action</a></li>
-                                                <li><a href="#">Something else here</a></li>
-                                                <li class="divider"></li>
-                                                <li><a href="#">Separated link</a></li>
-                                                <li class="divider"></li>
-                                                <li><a href="#">One more separated link</a></li>
-                                            </ul>
-                                        </li>
-                                    </ul>
-                                </li>
-                            </ul>
-                        </li>
-                    </ul>
+    	<ul class="dropdown-menu multi-level" role="menu" aria-labelledby="dropdownMenu">
+          <li><a href="#">Some action</a></li>
+          <li><a href="#">Some other action</a></li>
+          <li class="divider"></li>
+          <li class="dropdown-submenu">
+            <a tabindex="-1" href="#">Hover me for more options</a>
+            <ul class="dropdown-menu">
+              <li><a tabindex="-1" href="#">Second level</a></li>
+              <li><a href="#">Second level</a></li>
+              <li><a href="#">Second level</a></li>
+            </ul>
+          </li>
+        </ul>
     </div>
 <?php } ?>  
   <div class="dropdown pull-right">| <a href="logout.php<?php if(@$_SESSION["INDEX"]!='')echo("?INDEX_SALIDA=".$_SESSION["INDEX"]);?>">Salir</a></div>
