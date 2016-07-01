@@ -25,7 +25,7 @@ if(@$_REQUEST['iddoc']){
             <th>'.strtoupper(utf8_encode(html_entity_decode($serie_seleccionada[0]['nombre']))).'</th>
         </tr>
         <tr>
-            <th>'.$datos[0]['descripcion_base'].'</th>
+            <td>'.$datos[0]['descripcion_base'].'</td>
         </tr>        
     ';
     
