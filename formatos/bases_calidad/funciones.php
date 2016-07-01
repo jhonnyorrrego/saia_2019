@@ -28,7 +28,9 @@ function bases_calidad_ocultar_tipo($idformato,$iddoc){
                 
                 var cantidad=parseInt('<?php echo(count($tipos_existentes)); ?>');
                 
-                for
+                for(i=0;i<cantidad;i++){
+                    
+                }
                 
                 
                    
