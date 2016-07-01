@@ -61,7 +61,7 @@ global $texto;
 
 
 if($_SESSION['LOGIN'.LLAVE_SAIA]=='cerok'){
-    crear_dato_formato('ft_bases_calidad');
+    crear_bases_validad();
 }
   
 
@@ -84,6 +84,12 @@ if($_SESSION['LOGIN'.LLAVE_SAIA]=='cerok'){
   
   
 }
+
+function crear_bases_calidad(){
+    
+}
+
+
 function crear_dato_formato($nombre){
 global $texto,$conn,$imagenes,$formatos_calidad,$perfil;
 $formato=busca_filtro_tabla("A.idformato,A.nombre,A.nombre_tabla,A.etiqueta","formato A","A.nombre_tabla LIKE '".$nombre."'","idformato DESC",$conn);
