@@ -164,6 +164,7 @@ if($_SESSION["tipo_dispositivo"]!="movil"){
 </div>
 <table width="100%" border="1" cellspacing="0" cellpadding="0">
   <tr>
+    <?php if($_SESSION["tipo_dispositivo"]!="movil"){ ?>  
     <td width="275" align="left" valign="top" id="PanelLaterialMainUI">
       <div class="modbox-saia-main ui-corner-all shadow">
         <div class="modbox-saia-main-title ui-corner-top">
@@ -308,9 +309,11 @@ if($_SESSION["tipo_dispositivo"]!="movil"){
         ?>
 		  </div>
         </div>
-      </div></td>
+      </div>
+    </td>
     <td width="16px" id="collapser_mainui">
     </td>  
+    <?php } ?>
     <td align="left" valign="top" id="CellContainer">
     <div class="container-saia ui-corner-all shadow">
         <!--div class="container-saia-title">
