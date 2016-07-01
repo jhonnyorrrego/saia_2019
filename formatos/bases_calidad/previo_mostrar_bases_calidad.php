@@ -49,10 +49,10 @@ if(@$_REQUEST['iddoc']){
             <td>'.$datos[0]['descripcion_base'].'</td>
         </tr> 
         <tr>
-            <td id="version"></td>
+            <td id="version"><span>Version:</span></td>
         </tr>
         <tr>
-            <td id="estado"></td>
+            <td id="estado"><span>Estaddo:</span></td>
         </tr>         
     ';
     
