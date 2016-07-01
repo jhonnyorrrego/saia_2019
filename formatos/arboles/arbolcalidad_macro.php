@@ -64,10 +64,12 @@ for($i=0;$i<$dependencia["numcampos"];$i++){
           </select>
         </div-->
     	<div id="esperando"><img src="../../imagenes/cargando.gif"></div>
-    	Buscar: <input type="text" id="stext" width="200px" size="25"><br>
+    	<!-- Buscar: <input type="text" id="stext" width="200px" size="25"><br>
           <a href="javascript:void(0)" onclick="tree_calidad.findItem(document.getElementById('stext').value,0,1)"> Buscar</a>  |
             <a href="javascript:void(0)" onclick="tree_calidad.findItem(document.getElementById('stext').value)"> Siguiente</a>  |
-            <a href="javascript:void(0)" onclick="tree_calidad.findItem(document.getElementById('stext').value,1)"> Anterior</a><br /><br />
+            <a href="javascript:void(0)" onclick="tree_calidad.findItem(document.getElementById('stext').value,1)"> Anterior</a><br /><br / >
+        -->    
+            
     	<div id="treeboxbox_tree_calidad" style="width:800px;"></div>
     	<script type="text/javascript">
       <!--
