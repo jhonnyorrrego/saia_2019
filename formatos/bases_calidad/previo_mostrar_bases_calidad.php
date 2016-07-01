@@ -52,7 +52,7 @@ if(@$_REQUEST['iddoc']){
             <td id="version"><span>Version:</span></td>
         </tr>
         <tr>
-            <td id="estado"><span>Estaddo:</span></td>
+            <td id="estado"><span>Estado:</span></td>
         </tr>         
     ';
     
