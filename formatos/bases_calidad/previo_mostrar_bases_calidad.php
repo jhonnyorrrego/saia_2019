@@ -32,7 +32,7 @@ if(@$_REQUEST['iddoc']){
                 border-top-right-radius: 5px;
                 border-top-left-radius: 5px;
             }
-            .table tr #version #estado{
+            .table tr #version #estado span{
                 font-weight:bold;
             }
         </style>
