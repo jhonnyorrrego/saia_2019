@@ -150,8 +150,8 @@ if($_SESSION["tipo_dispositivo"]=="movil"){ ?>
   <div class="dropdown pull-left">
     <a href="#" class="dropdown-toggle" data-toggle="dropdown">SAIA <b class="caret"></b></a>
     <ul class="dropdown-menu" >
-      <li>Menu1 
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown">SAIA <b class="caret"></b></a>
+      <li class="dropdown-submenu">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">SAIA2 <b class="caret"></b></a>
           <ul class="dropdown-menu" >
               <li>Menu1 </li>
               <li>Menu2 </li>
