@@ -15,5 +15,5 @@ include_once($ruta_db_superior."db.php");
 $rol=@$_REQUEST["rol"];
 $dependencia=busca_filtro_tabla("","vfuncionario_dc A","A.iddependencia_cargo=".$rol,"",$conn);
 $padre=busca_filtro_tabla("","dependencia A","A.iddependencia=".$dependencia[0]["cod_padre"],"",$conn);
-echo(utf8_encode($dependencia[0]["dependencia"]."|".$padre[0]["nombre"]));
+echo(utf8_encode(html_entity_decode($dependencia[0]["dependencia"]."|".$padre[0]["nombre"])));
 ?>
