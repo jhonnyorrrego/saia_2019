@@ -5,7 +5,7 @@
                    <a href="javascript:void(0)" onclick="tree_gestio_humana.findItem(htmlentities(document.getElementById('stext_gestio_humana').value),0,1)"><img src="../../botones/general/buscar.png"border="0px"></a>
                           <a href="javascript:void(0)" onclick="tree_gestio_humana.findItem(htmlentities(document.getElementById('stext_gestio_humana').value))"><img src="../../botones/general/siguiente.png"border="0px"></a>
                           <br /><br />
-                <div id="treeboxbox_gestio_humana" height="90%"></div><input type="hidden" maxlength="255"  name="gestio_humana" id="gestio_humana"   value="" ><label style="display:none" class="error" for="gestio_humana">Campo obligatorio.</label><script type="text/javascript">
+                <div id="treeboxbox_gestio_humana" height="90%"></div><input type="hidden"  name="gestio_humana" id="gestio_humana"   value="" ><label style="display:none" class="error" for="gestio_humana">Campo obligatorio.</label><script type="text/javascript">
                   <!--
                       var browserType;
                       if (document.layers) {browserType = "nn4"}
@@ -17,7 +17,7 @@
                 			tree_gestio_humana.setImagePath("../../imgs/");
                 			tree_gestio_humana.enableIEImageFix(true);tree_gestio_humana.enableCheckBoxes(1);
                     tree_gestio_humana.enableRadioButtons(true);tree_gestio_humana.setOnLoadingStart(cargando_gestio_humana);
-                      tree_gestio_humana.setOnLoadingEnd(fin_cargando_gestio_humana);tree_gestio_humana.enableSmartXMLParsing(true);tree_gestio_humana.loadXML("../../test.php?rol=1&iddependencia=50");
+                      tree_gestio_humana.setOnLoadingEnd(fin_cargando_gestio_humana);tree_gestio_humana.enableSmartXMLParsing(true);tree_gestio_humana.loadXML("../../test.php?rol=1&iddependencia=40");
                       tree_gestio_humana.setOnCheckHandler(onNodeSelect_gestio_humana);
                       function onNodeSelect_gestio_humana(nodeId)
                       {valor_destino=document.getElementById("gestio_humana");

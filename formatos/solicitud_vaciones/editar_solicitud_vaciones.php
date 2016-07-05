@@ -11,7 +11,7 @@
                           <br />  Buscar: <input  tabindex='1'  type="text" id="stext_gestio_humana" width="200px" size="25"><a href="javascript:void(0)" onclick="tree_gestio_humana.findItem(htmlentities(document.getElementById('stext_gestio_humana').value),1)"> <img src="../../botones/general/anterior.png"border="0px"></a>
                    <a href="javascript:void(0)" onclick="tree_gestio_humana.findItem(htmlentities(document.getElementById('stext_gestio_humana').value),0,1)"><img src="../../botones/general/buscar.png"border="0px"></a>                          
                    <a href="javascript:void(0)" onclick="tree_gestio_humana.findItem(htmlentities(document.getElementById('stext_gestio_humana').value))"><img src="../../botones/general/siguiente.png"border="0px"></a> 
-                          <br /><div id="esperando_gestio_humana"><img src="../../imagenes/cargando.gif"></div><div id="treeboxbox_gestio_humana" height="90%"></div><input type="hidden" maxlength="255"  class="required"  name="gestio_humana" id="gestio_humana"   value="<?php cargar_seleccionados(216,2297,1,$_REQUEST['iddoc']);?>" ><script type="text/javascript">
+                          <br /><div id="esperando_gestio_humana"><img src="../../imagenes/cargando.gif"></div><div id="treeboxbox_gestio_humana" height="90%"></div><input type="hidden"  class="required"  name="gestio_humana" id="gestio_humana"   value="<?php cargar_seleccionados(216,2297,1,$_REQUEST['iddoc']);?>" ><script type="text/javascript">
                   <!--
                       var browserType;
                       if (document.layers) {browserType = "nn4"}
@@ -23,7 +23,7 @@
                 			tree_gestio_humana.setImagePath("../../imgs/");
                 			tree_gestio_humana.enableIEImageFix(true);tree_gestio_humana.enableCheckBoxes(1);
                     tree_gestio_humana.enableRadioButtons(true);tree_gestio_humana.setOnLoadingStart(cargando_gestio_humana);
-                      tree_gestio_humana.setOnLoadingEnd(fin_cargando_gestio_humana);tree_gestio_humana.enableSmartXMLParsing(true);tree_gestio_humana.loadXML("../../test.php?rol=1&iddependencia=50",checkear_arbol);
+                      tree_gestio_humana.setOnLoadingEnd(fin_cargando_gestio_humana);tree_gestio_humana.enableSmartXMLParsing(true);tree_gestio_humana.loadXML("../../test.php?rol=1&iddependencia=40",checkear_arbol);
                 	        tree_gestio_humana.setOnCheckHandler(onNodeSelect_gestio_humana);
                       function onNodeSelect_gestio_humana(nodeId)
                       {valor_destino=document.getElementById("gestio_humana");
