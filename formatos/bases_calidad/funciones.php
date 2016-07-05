@@ -47,6 +47,12 @@ function mostrar_ocultar_anexo_bases_calidad(){
      <script>
          $(document).ready(function(){
              $('[name="anexo_soporte[]"]').parent().parent().parent().hide();
+             
+             $('[name="tipo_base_calidad"]').click(function(){
+                 var valor=$(this).val();
+                 alert(valor);
+             });
+             
          });
      </script>
      
