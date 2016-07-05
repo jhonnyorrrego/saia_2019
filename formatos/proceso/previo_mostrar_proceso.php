@@ -269,7 +269,7 @@ $ok=@$_REQUEST["editar"];
       <td><input type="file" name="imagen_mapa"><br />
       </td>
     </tr>
-    <tr><td class="encabezado" width="20%" title="Anexos digitales"><b>Visi&oacute;n<b></td>
+    <!-- tr><td class="encabezado" width="20%" title="Anexos digitales"><b>Visi&oacute;n<b></td>
     <td><input type="file" maxlenght="3000"  class='multi'  name="imagen_vision"></td></tr>
     <tr><td class="encabezado" width="20%" title="Anexos digitales"><b>Misi&oacute;n<b></td>
     <td><input type="file" maxlenght="3000"  class='multi'  name="imagen_mision"></td></tr>
