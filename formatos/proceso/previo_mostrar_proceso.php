@@ -117,10 +117,10 @@ $ok=@$_REQUEST["editar"];
 ?>
 <html>
 	<head>
-	<?php if($ok){ ?>
-		<script src="../../js/jquery.js"></script>
+	<?php if($ok){ echo(librerias_jqcrop()); ?>
+		<!-- script src="../../js/jquery.js"></script>
 		<script src="../../js/jquery.Jcrop.pack.js"></script>
-		<link rel="stylesheet" href="../../css/jquery.Jcrop.css" type="text/css" />
+		<link rel="stylesheet" href="../../css/jquery.Jcrop.css" type="text/css" / -->
 		<script type='text/javascript'>
     	// Remember to invoke within jQuery(window).load(...)
 			// If you don't, Jcrop may not initialize properly
