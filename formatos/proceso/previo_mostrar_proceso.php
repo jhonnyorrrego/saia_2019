@@ -264,7 +264,7 @@ $ok=@$_REQUEST["editar"];
       </td>
       </tr>
       <tr>
-      <tr><td colspan="2"><hr/></td></tr>      
+       
       <td class="encabezado">Asignar al proceso:</td><td><select name="proceso">
 			<?php
        for($i=0;$i<$proceso["numcampos"];$i++){
