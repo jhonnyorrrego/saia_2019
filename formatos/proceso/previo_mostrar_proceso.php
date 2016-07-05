@@ -223,7 +223,7 @@ $ok=@$_REQUEST["editar"];
     <?php
     
            include_once($ruta_db_superior.'librerias_saia.php');
-       echo(estilo_bootstrap());
+            echo(estilo_bootstrap());
       
     if(!$ok){
 
