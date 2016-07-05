@@ -96,8 +96,6 @@ function crear_bases_calidad(){
             $etiqueta_padre=$nombre_empresa[0]['valor'];
         }
         
-        $nombre_empresa
-        
         $imagenes=' im0="'.strtolower($bases_calidad[0]["nombre"]).'.gif" im1="'.strtolower($bases_calidad[0]["nombre"]).'.gif" im2="'.strtolower($bases_calidad[0]["nombre"]).'.gif" ';
         $texto.='<item style="font-family:verdana; font-size:7pt;" '.$imagenes;
 	    $texto.=strip_tags('text="'.decodifica($bases_calidad[0]["etiqueta"]).'" id="bcp|bcp" >'."\n");
