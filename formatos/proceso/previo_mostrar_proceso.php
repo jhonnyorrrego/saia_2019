@@ -267,7 +267,13 @@ $ok=@$_REQUEST["editar"];
           echo('<option value="'.$proceso[$i]["idft_proceso"].'">'.$proceso[$i]["nombre"]."</option>");
         }   
       ?>
-      </select>   
+      </select> 
+      
+      <script>
+          $(document).ready(function(){
+              
+          });
+      </script>
       </td>
       </tr>
       <!-- tr><td class="encabezado">
