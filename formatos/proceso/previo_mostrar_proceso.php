@@ -13,6 +13,7 @@ $max_salida--;
 include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."header.php");
            include_once($ruta_db_superior.'librerias_saia.php');
+           	echo(librerias_jqcrop());
             echo(estilo_bootstrap());
 
 if(@$_REQUEST["proceso"]){
