@@ -117,7 +117,7 @@ $ok=@$_REQUEST["editar"];
 ?>
 <html>
 	<head>
-	<?php if($ok){ echo(librerias_jqcrop()); ?>
+	<?php if($ok){ ?>
 		<!-- script src="../../js/jquery.js"></script>
 		<script src="../../js/jquery.Jcrop.pack.js"></script>
 		<link rel="stylesheet" href="../../css/jquery.Jcrop.css" type="text/css" / -->
@@ -223,6 +223,7 @@ $ok=@$_REQUEST["editar"];
     <?php
     
            include_once($ruta_db_superior.'librerias_saia.php');
+            echo(librerias_jqcrop());
             echo(estilo_bootstrap());
       
     if(!$ok){
