@@ -40,12 +40,15 @@ function mostrar_anexos_soporte($idformato,$iddoc){
     $datos=busca_filtro_tabla("tipo_base_calidad,documento_iddocumento","ft_bases_calidad","documento_iddocumento=".$iddoc,"",$conn); 
     $mapa_proceso=busca_filtro_tabla("","anexos","documento_iddocumento=".$datos[0]['documento_iddocumento'],"",$conn);
     
-    if($mapa_proceso['numcampos']){
-        $cadena='</td></tr><tr><td style="text-align:left;" class="encabezado_list">Mapa de Proceso</td><td>';
-        $cadena.="<li><a href='".$ruta_db_superior.$mapa_proceso[0]['ruta']."' target='_blank'>Ver</a></li>";
-        echo($cadena);
+    
+    if($serie_mapa_proceso==$datos[0]['tipo_base_calidad']){
         
     }
+        if($mapa_proceso['numcampos']){
+            $cadena='</td></tr><tr><td style="text-align:left;" class="encabezado_list">Mapa de Proceso</td><td>';
+            $cadena.="<li><a href='".$ruta_db_superior.$mapa_proceso[0]['ruta']."' target='_blank'>Ver</a></li>";
+            echo($cadena);
+        }
 }
 function mostrar_ocultar_anexo_bases_calidad($idformato,$iddoc){
      global $conn,$ruta_db_superior;  
