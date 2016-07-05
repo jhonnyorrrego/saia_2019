@@ -14,7 +14,7 @@
 </tr>
 <tr>
 <td class="encabezado_list" style="text-align: left;">Estado</td>
-<td><?php mostrar_valor_campo('estado_base_calidad',387,$_REQUEST['iddoc']);?></td>
+<td><?php mostrar_valor_campo('estado_base_calidad',387,$_REQUEST['iddoc']);?><?php mostrar_anexos_soporte(387,$_REQUEST['iddoc']);?></td>
 </tr>
 </tbody>
 </table>
