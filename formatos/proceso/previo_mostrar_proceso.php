@@ -235,7 +235,7 @@ $ok=@$_REQUEST["editar"];
     ?>
         <tr>
             <td colspan="2">
-               
+                
             </td>
         </tr>      
     
