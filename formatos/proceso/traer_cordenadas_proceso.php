@@ -19,7 +19,7 @@ if(@$_REQUEST['idft_proceso']){
     
     if($cordenadas['numcampos'] && @$coordenadas[0]['coordenadas']!='' && !is_null(@$coordenadas[0]['coordenadas'])){
         
-        $retorno['cordenadas']
+        $retorno['cordenadas']=@$coordenadas[0]['coordenadas'];
     }
     
     
