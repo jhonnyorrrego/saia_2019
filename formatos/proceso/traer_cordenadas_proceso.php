@@ -15,6 +15,12 @@ if(@$_REQUEST['idft_proceso']){
     
     $cordenadas=busca_filtro_tabla("","ft_proceso","idft_proceso=".$_REQUEST['idft_proceso'],"",$conn);
     
+    $retorno=array();
+    
+    if($cordenadas['numcampos']){
+        
+    }
+    
     
 }
 
