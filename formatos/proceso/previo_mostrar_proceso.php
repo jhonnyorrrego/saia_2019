@@ -193,7 +193,7 @@ $ok=@$_REQUEST["editar"];
     if(!$mapa_proceso['numcampos']){
        include_once($ruta_db_superior.'librerias_saia.php');
        echo(estilo_bootstrap());        
-        echo('<div class="well alert-warning">Aun no se a creado el Mapa de Proceso</div></td></tr></table>');
+        echo('<div class="well alert-warning">ATENCI&Oacute;Aun no se a creado el Mapa de Proceso</div></td></tr></table>');
         die();
     }    
     ?>
