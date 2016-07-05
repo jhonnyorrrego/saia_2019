@@ -284,7 +284,7 @@ $ok=@$_REQUEST["editar"];
                             success: function(datos){
                                 if(datos.coordenadas){
                                     $('#cropbox').Jcrop({
-                                        
+                                        	setSelect:[],
                                     });
                                 }
                             }
