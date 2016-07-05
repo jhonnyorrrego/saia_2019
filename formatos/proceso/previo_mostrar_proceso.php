@@ -149,7 +149,11 @@ $ok=@$_REQUEST["editar"];
 		<?php } ?>
 	</head>
 	<body>
-	    
+	<style>
+		#cropbox{
+			max-width:none;
+		} 	
+	</style>
 
         <style>
             .table{
