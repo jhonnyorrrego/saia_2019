@@ -61,9 +61,9 @@ function mostrar_ocultar_anexo_bases_calidad($idformato,$iddoc){
          $(document).ready(function(){
              
              if(parseInt('<?php echo($idserie_mapa_proceso); ?>')!=parseInt('<?php echo($datos_editar[0]['tipo_base_calidad']); ?>')){
-                 
+                  $('#anexo_admin').parent().parent().parent().hide();
              }
-             $('#anexo_admin').parent().parent().parent().hide();
+            
              
              
              
