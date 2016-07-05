@@ -49,23 +49,15 @@ function mostrar_ocultar_anexo_bases_calidad($idformato,$iddoc){
          $idserie_mapa_proceso=$serie_mapa_proceso[0]['idserie'];
      }
      
-     
      if(@$_REQUEST['iddoc']){
-         
          $datos_editar=busca_filtro_tabla("tipo_base_calidad","ft_bases_calidad","documento_iddocumento=".$_REQUEST['iddoc'],"",$conn);
-         
          ?>
-         
-         
      <script>
          $(document).ready(function(){
              
              if(parseInt('<?php echo($idserie_mapa_proceso); ?>')!=parseInt('<?php echo($datos_editar[0]['tipo_base_calidad']); ?>')){
                   $('#anexo_admin').parent().parent().parent().hide();
              }
-            
-             
-             
              
              $('[name="tipo_base_calidad"]').click(function(){
                  var valor=$(this).val();
