@@ -191,8 +191,8 @@ $ok=@$_REQUEST["editar"];
     <?php
     $mapa_proceso=busca_filtro_tabla("","ft_bases_calidad a, serie b","a.tipo_base_calidad=b.idserie AND lower(b.nombre)='mapa de proceso' ","",$conn);
     if(!$mapa_proceso['numcampos']){
-        //echo('hola mundo</td></tr></table>');
-        //die();
+        echo('hola mundo</td></tr></table>');
+        die();
     }    
     ?>
         
