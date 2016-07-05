@@ -279,7 +279,7 @@ $ok=@$_REQUEST["editar"];
                         dataType: 'json',
                         url: "buscar_afiliado.php",
                         data: {
-                                        idft_proceso:idft_proceso
+                            idft_proceso:idft_proceso
                         },
                         success: function(datos){
                         }
