@@ -187,7 +187,7 @@ $ok=@$_REQUEST["editar"];
     ?>
 
 
-    <tr><th colspan="2" class="encabezado_list"><?php echo(html_entity_decode($nombre_mapa_proceso[0]['etiqueta'])); ?></th></tr>
+    <tr><th colspan="2" class="encabezado_list"><?php echo(html_entity_decode($nombre_mapa_proceso[0]['etiqueta'])); ?>1</th></tr>
     <tr><td colspan="2" style="text-align:center;">
     
 
