@@ -18,4 +18,5 @@
 </tr>
 </tbody>
 </table>
+<p>&nbsp;</p>
 <p><?php mostrar_estado_proceso(387,$_REQUEST['iddoc']);?></p></td></tr><?php include_once("../librerias/footer_nuevo.php"); ?>
