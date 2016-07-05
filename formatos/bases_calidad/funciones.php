@@ -42,6 +42,15 @@ function mostrar_anexos_soporte($idformato,$iddoc){
 }
 function mostrar_ocultar_anexo_bases_calidad(){
      global $conn,$ruta_db_superior;  
+     
+     ?>
+     <script>
+         $(document).ready(function(){
+             $('name["anexo_soporte[]"]').
+         });
+     </script>
+     
+     <?php
 }
 
 ?>
