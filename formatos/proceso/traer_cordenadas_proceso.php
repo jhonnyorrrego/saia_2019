@@ -13,7 +13,7 @@ include_once($ruta_db_superior."db.php");
 
 if(@$_REQUEST['idft_proceso']){
     
-    $cordenadas=busca_filtro_tabla("","","","",$conn);
+    $cordenadas=busca_filtro_tabla("","ft_proceso","idft_proceso=".$_REQUEST['idft_proceso'],"",$conn);
     
     
 }
