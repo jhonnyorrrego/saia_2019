@@ -18,6 +18,7 @@ function bases_calidad_ocultar_tipo($idformato,$iddoc){
     $datos=busca_filtro_tabla("","ft_bases_calidad a, documento b","b.iddocumento=a.documento_iddocumento AND lower(b.estado)='aprobado'","",$conn);
     $cantidad=$datos['numcampos'];
     $tipos_existentes=implode(',',(extrae_campo($datos,'tipo_base_calidad')));
+    
     ?>
         <script>
             $(document).ready(function(){
@@ -37,6 +38,7 @@ function mostrar_anexos_soporte($idformato,$iddoc){
     global $conn,$ruta_db_superior;    
     
     $datos=busca_filtro_tabla("tipo_base_calidad","ft_bases_calidad","documento_iddocumento=".$iddoc,"",$conn); 
+    $mapa_proceso=busca_filtro_tabla("","anexos","documento_iddocumento=".$datos[0]['documento_iddocumento'],"",$conn);
     
     
     
