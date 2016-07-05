@@ -50,7 +50,29 @@ function mostrar_ocultar_anexo_bases_calidad(){
      }
      
      
-
+     if(@$_REQUEST['iddoc']){
+         ?>
+         
+         
+     <script>
+         $(document).ready(function(){
+             $('#anexo_admin').parent().parent().parent().hide();
+             
+             $('[name="tipo_base_calidad"]').click(function(){
+                 var valor=$(this).val();
+                
+                 if( parseInt('<?php echo($idserie_mapa_proceso); ?>')==parseInt(valor) ){
+                      $'#anexo_admin').parent().parent().parent().show();
+                 }else{
+                      $('#anexo_admin').parent().parent().parent().hide();
+                 }
+                 
+             });
+             
+         });
+     </script>         
+         <?php
+     }
      
      ?>
      <script>
