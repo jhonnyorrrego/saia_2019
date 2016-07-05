@@ -12,6 +12,6 @@ if(@$_SERVER["HTTPS"]=='on'){
 }
 
 if(!defined("RUTA_PDF_LOCAL")){
-  define("RUTA_PDF_LOCAL", "/75.101.166.85/saia_release1/saia");
+  define("RUTA_PDF_LOCAL", "75.101.166.85/saia_release1/saia");
 }
 ?>
