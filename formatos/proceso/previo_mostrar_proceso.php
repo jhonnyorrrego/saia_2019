@@ -12,7 +12,8 @@ $max_salida--;
 }
 include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."header.php");
-
+           include_once($ruta_db_superior.'librerias_saia.php');
+            echo(estilo_bootstrap());
 
 if(@$_REQUEST["proceso"]){
   if(@$_REQUEST["w"]>10 && @$_REQUEST["h"]>10){
@@ -222,8 +223,7 @@ $ok=@$_REQUEST["editar"];
     
     <?php
     
-           include_once($ruta_db_superior.'librerias_saia.php');
-            echo(estilo_bootstrap());
+
       
     if(!$ok){
 
