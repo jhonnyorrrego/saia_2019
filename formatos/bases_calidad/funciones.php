@@ -42,7 +42,8 @@ function mostrar_anexos_soporte($idformato,$iddoc){
 }
 function mostrar_ocultar_anexo_bases_calidad(){
      global $conn,$ruta_db_superior;  
-     
+    
+     $serie_mapa_proceso=busca_filtro_tabla("","serie","idserie=","",$conn);
      ?>
      <script>
          $(document).ready(function(){
