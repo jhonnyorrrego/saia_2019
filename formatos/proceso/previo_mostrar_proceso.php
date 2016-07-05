@@ -291,14 +291,14 @@ $ok=@$_REQUEST["editar"];
                                     });
                                 }else{
                                     $('#cropbox').Jcrop({
-                                        	setSelect:[0,0,0,0],
+                                        	setSelect:[],
                                     });
                                 }
                             }
                     });                     
                 }else{
                                     $('#cropbox').Jcrop({
-                                        	setSelect:[0,0,0,0],
+                                        	setSelect:[],
                                     });                    
                 }
               });
