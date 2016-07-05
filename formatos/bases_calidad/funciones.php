@@ -49,7 +49,6 @@ function mostrar_ocultar_anexo_bases_calidad(){
          $idserie_mapa_proceso=$serie_mapa_proceso[0]['idserie'];
      }
      
-     
      ?>
      <script>
          $(document).ready(function(){
