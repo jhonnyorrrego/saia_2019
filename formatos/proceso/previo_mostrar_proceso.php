@@ -289,6 +289,10 @@ $ok=@$_REQUEST["editar"];
                                     $('#cropbox').Jcrop({
                                         	setSelect:[parseInt(vector_coordenadas[0]),parseInt(vector_coordenadas[1]),parseInt(vector_coordenadas[2]),parseInt(vector_coordenadas[3])],
                                     });
+                                }else{
+                                    $('#cropbox').Jcrop({
+                                        	setSelect:false,
+                                    });
                                 }
                             }
                     });                     
