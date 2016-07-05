@@ -62,7 +62,7 @@ function mostrar_ocultar_anexo_bases_calidad($idformato,$iddoc){
                  var valor=$(this).val();
                 
                  if( parseInt('<?php echo($idserie_mapa_proceso); ?>')==parseInt(valor) ){
-                      $'#anexo_admin').parent().parent().parent().show();
+                      $('#anexo_admin').parent().parent().parent().show();
                  }else{
                       $('#anexo_admin').parent().parent().parent().hide();
                  }
