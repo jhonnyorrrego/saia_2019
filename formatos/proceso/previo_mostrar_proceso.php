@@ -199,7 +199,7 @@ $ok=@$_REQUEST["editar"];
     ?>
         
         
-    <img src="<?php echo($mapa_proceso[0]['']); ?>" id="cropbox" border="0" usemap="#Map" />    
+    <img src="<?php echo($mapa_proceso[0]['anexo_soporte']); ?>" id="cropbox" border="0" usemap="#Map" />    
     <!-- img src="mapa_proceso.jpg" id="cropbox" border="0" usemap="#Map" / -->
 		<map name="Map">
 		
