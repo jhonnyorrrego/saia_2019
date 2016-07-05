@@ -180,17 +180,20 @@ $ok=@$_REQUEST["editar"];
     ?>
 
     <?php
-    
     $nombre_mapa_proceso=busca_filtro_tabla("etiqueta","formato","lower(nombre)='proceso'","",$conn);
-    $mapa_proceso=busca_filtro_tabla("","ft_bases_calidad a, serie b","a.tipo_base_calidad=b.idserie AND lower(b.nombre)='mapa de proceso' ","",$conn);
-    
     ?>
 
 
     <tr><th colspan="2" class="encabezado_list"><?php echo(html_entity_decode($nombre_mapa_proceso[0]['etiqueta'])); ?></th></tr>
     <tr><td colspan="2" style="text-align:center;">
     
-
+    <?php
+    $mapa_proceso=busca_filtro_tabla("","ft_bases_calidad a, serie b","a.tipo_base_calidad=b.idserie AND lower(b.nombre)='mapa de proceso' ","",$conn);
+    if(!$mapa_proceso['numcampos']){
+        echo();
+        die();
+    }    
+    ?>
         
         
     <img src="mapa_proceso.jpg" id="cropbox" border="0" usemap="#Map" />
