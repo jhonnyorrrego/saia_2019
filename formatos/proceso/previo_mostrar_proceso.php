@@ -180,6 +180,14 @@ $ok=@$_REQUEST["editar"];
     ?>
     <tr><th colspan="2" class="encabezado_list">Mapa de Proceso</th></tr>
     <tr><td colspan="2" style="text-align:center;">
+    
+    <?php
+    
+    $mapa_proceso=busca_filtro_tabla("","ft_bases_calidad","","",$conn);
+    
+    ?>
+        
+        
     <img src="mapa_proceso.jpg" id="cropbox" border="0" usemap="#Map" />
 		<map name="Map">
 		
