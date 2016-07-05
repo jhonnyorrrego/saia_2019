@@ -289,7 +289,7 @@ $ok=@$_REQUEST["editar"];
     <td><input type="file" maxlenght="3000"  class='multi'  name="imagen_objetivos_calidad"></td></tr>
     <!--tr><td class="encabezado" width="20%" title="Anexos digitales"><b>Manual de Operaciones y calidad<b></td>
     <td><input type="file" maxlenght="3000"  class='multi'  name="imagen_manual_calidad"></td></tr-->
-    <tr><td colspan="2" align="center"><input type="submit" value="Vincular"></td></tr>
+    <tr><td colspan="2" align="center"><input class="btn btn-mini" type="submit" value="Vincular"></td></tr>
     
 		</form>
    <?php
