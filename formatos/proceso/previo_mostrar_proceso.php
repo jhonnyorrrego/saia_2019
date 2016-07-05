@@ -273,6 +273,9 @@ $ok=@$_REQUEST["editar"];
           $(document).ready(function(){
               $('[name="proceso"]').change(function(){
                 var valor=$(this).val();
+                
+                
+                
               });
           });
       </script>
