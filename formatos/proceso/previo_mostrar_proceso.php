@@ -183,7 +183,7 @@ $ok=@$_REQUEST["editar"];
     
     $nombre_mapa_proceso=busca_filtro_tabla("etiqueta","formato","lower(nombre)='proceso'","",$conn);
     $mapa_proceso=busca_filtro_tabla("","ft_bases_calidad a, serie b","a.tipo_base_calidad=b.idserie AND lower(b.nombre)='mapa de proceso' ","",$conn);
-    
+    print_r($mapa_proceso);
     ?>
 
 
