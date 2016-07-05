@@ -42,7 +42,7 @@ function mostrar_anexos_soporte($idformato,$iddoc){
     
     if($mapa_proceso['numcampos']){
         $cadena='</td></tr><tr><td>';
-        
+        $cadena.='';
         
         
     }
