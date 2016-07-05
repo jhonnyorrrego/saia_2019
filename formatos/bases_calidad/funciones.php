@@ -41,7 +41,7 @@ function mostrar_anexos_soporte($idformato,$iddoc){
     $mapa_proceso=busca_filtro_tabla("","anexos","documento_iddocumento=".$datos[0]['documento_iddocumento'],"",$conn);
     
     if($mapa_proceso['numcampos']){
-        $cadena='</td></tr><tr><td class="encabezado_list">Mapa de Proceso</td><td>';
+        $cadena='</td></tr><tr><td style="text-align:left;" class="encabezado_list">Mapa de Proceso</td><td>';
         $cadena.='';
         echo($cadena);
         
