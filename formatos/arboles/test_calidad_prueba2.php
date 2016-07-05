@@ -88,7 +88,16 @@ if($_SESSION['LOGIN'.LLAVE_SAIA]=='cerok'){
 function crear_bases_calidad(){
     global $conn,$texto;
     $bases_calidad=busca_filtro_tabla("b.iddocumento,c.etiqueta,c.idformato,c.nombre,c.nombre_tabla,a.tipo_base_calidad,a.idft_bases_calidad","ft_bases_calidad a, documento b, formato c","lower(b.plantilla)=c.nombre AND a.documento_iddocumento=b.iddocumento AND lower(b.estado)='aprobado'","",$conn);
+    
     if($bases_calidad["numcampos"]){
+        $nombre_empresa=busca_filtro_tabla("valor","configuracion","nombre='nombre' AND tipo='empresa'","",$conn);
+        $etiqueta_padre=$bases_calidad[0]["etiqueta"];
+        if($nombre_empresa['numcampos']){
+            $etiqueta_padre=$nombre_empresa[0]['valor'];
+        }
+        
+        $nombre_empresa
+        
         $imagenes=' im0="'.strtolower($bases_calidad[0]["nombre"]).'.gif" im1="'.strtolower($bases_calidad[0]["nombre"]).'.gif" im2="'.strtolower($bases_calidad[0]["nombre"]).'.gif" ';
         $texto.='<item style="font-family:verdana; font-size:7pt;" '.$imagenes;
 	    $texto.=strip_tags('text="'.decodifica($bases_calidad[0]["etiqueta"]).'" id="bcp|bcp" >'."\n");
