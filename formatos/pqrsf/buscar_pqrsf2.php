@@ -1,12 +1,4 @@
-<?php include_once("../librerias/funciones_generales.php"); ?><?php include_once("../librerias/header_formato.php"); ?><legend id="label_formato" class="legend">B&uacute;squeda en formato PQRSF</legend><br /><br /><?php include_once("../librerias/funciones_generales.php"); ?><div class="control-group"><b>n&uacute;mero de radicado<input type="hidden" name="bksaiacondicion_g@numero_radicado" id="bksaiacondicion_g@numero_radicado" value="like_total"></b><div class="controls"><input type="text" id="numero_radicado" name="bqsaia_g@numero_radicado"><div class="btn-group" data-toggle="buttons-radio" >
-		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_g@numero_radicado',this.id)">
-		    Y
-		  </button>
-		  <button type="button" class="btn btn-mini" data-toggle="button" id="o" onclick="llenar_valor('bqsaiaenlace_g@numero_radicado',this.id)">
-		    O
-		  </button-->
-		  <input type="hidden" name="bqsaiaenlace_g@numero_radicado" id="bqsaiaenlace_g@numero_radicado" value="y" />
-		</div></div></div><div class="control-group"><b>fecha<input type="hidden" name="bksaiacondicion_g@fecha" id="bksaiacondicion_g@fecha" value="like_total"></b><div class="controls"><input type="text" id="fecha" name="bqsaia_g@fecha"><div class="btn-group" data-toggle="buttons-radio" >
+<?php include_once("../librerias/funciones_generales.php"); ?><?php include_once("../librerias/header_formato.php"); ?><legend id="label_formato" class="legend">B&uacute;squeda en formato PQRSF</legend><br /><br /><?php include_once("../librerias/funciones_generales.php"); ?><div class="control-group"><b>fecha<input type="hidden" name="bksaiacondicion_g@fecha" id="bksaiacondicion_g@fecha" value="like_total"></b><div class="controls"><input type="text" id="fecha" name="bqsaia_g@fecha"><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_g@fecha',this.id)">
 		    Y
 		  </button>
