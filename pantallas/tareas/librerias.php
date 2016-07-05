@@ -101,7 +101,7 @@ if($documento_iddocumento!="documento_iddocumento"){
 function mostrar_texto_codificado($texto){
     global $conn,$ruta_db_superior;
     
-    $texto=htmlentities($texto);
+    $texto=html_entity_decode($texto);
     
     return($texto);
 }
