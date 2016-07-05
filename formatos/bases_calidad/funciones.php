@@ -42,13 +42,12 @@ function mostrar_anexos_soporte($idformato,$iddoc){
     
     
     if($serie_mapa_proceso[0]['idserie']==$datos[0]['tipo_base_calidad']){
-        
-    }
         if($mapa_proceso['numcampos']){
             $cadena='</td></tr><tr><td style="text-align:left;" class="encabezado_list">Mapa de Proceso</td><td>';
             $cadena.="<li><a href='".$ruta_db_superior.$mapa_proceso[0]['ruta']."' target='_blank'>Ver</a></li>";
             echo($cadena);
         }
+    }    
 }
 function mostrar_ocultar_anexo_bases_calidad($idformato,$iddoc){
      global $conn,$ruta_db_superior;  
