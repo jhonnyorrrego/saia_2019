@@ -221,9 +221,11 @@ $ok=@$_REQUEST["editar"];
     </tr>
     
     <?php
-    if(!$ok){
-       include_once($ruta_db_superior.'librerias_saia.php');
+    
+           include_once($ruta_db_superior.'librerias_saia.php');
        echo(estilo_bootstrap());
+    if(!$ok){
+
        //<div data-toggle="tooltip" class="btn btn-mini kenlace_saia pull-right" titulo="Editar  Tarea" enlace="pantallas/tareas_listado/editar_tareas_listado.php?idtareas_listado=411" id="editar_tarea_411" conector="iframe" data-original-title="Editar  Tarea" onclick=" ">	    <i class="icon-pencil"></i>	  </div>
     ?>
         <tr>
