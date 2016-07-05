@@ -42,7 +42,7 @@ function mostrar_anexos_soporte($idformato,$iddoc){
     
     if($mapa_proceso['numcampos']){
         $cadena='</td></tr><tr><td style="text-align:left;" class="encabezado_list">Mapa de Proceso</td><td>';
-        $cadena.='';
+        $cadena.="<li><a href='".$ruta_db_superior.$anexos[$j]['ruta']."' target='_blank'>".$anexos[$j]['etiqueta']."</a></li>";
         echo($cadena);
         
     }
