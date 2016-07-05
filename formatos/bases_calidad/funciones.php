@@ -40,6 +40,8 @@ function mostrar_anexos_soporte($idformato,$iddoc){
     
     
 }
-
+function mostrar_ocultar_anexo_bases_calidad(){
+    
+}
 
 ?>
