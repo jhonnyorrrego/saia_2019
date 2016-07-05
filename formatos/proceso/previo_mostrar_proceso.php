@@ -272,7 +272,7 @@ $ok=@$_REQUEST["editar"];
       <script>
           $(document).ready(function(){
               $('[name="proceso"]').change(function(){
-                  alert('cambia');
+                var valor=$(this).val();
               });
           });
       </script>
