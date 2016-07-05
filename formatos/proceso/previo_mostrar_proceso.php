@@ -291,7 +291,7 @@ $ok=@$_REQUEST["editar"];
                                     });
                                 }else{
                                     $('#cropbox').Jcrop({
-                                        	setSelect:false,
+                                        	setSelect:[0,0,0,0],
                                     });
                                 }
                             }
