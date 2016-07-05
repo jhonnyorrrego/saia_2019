@@ -271,7 +271,9 @@ $ok=@$_REQUEST["editar"];
       
       <script>
           $(document).ready(function(){
-              
+              $('[name="proceso"]').change(function(){
+                  
+              });
           });
       </script>
       </td>
