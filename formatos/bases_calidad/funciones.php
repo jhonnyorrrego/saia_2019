@@ -56,7 +56,11 @@ function mostrar_ocultar_anexo_bases_calidad(){
              
              $('[name="tipo_base_calidad"]').click(function(){
                  var valor=$(this).val();
-                 alert(valor);
+                
+                 if(parseInt('<?php echo($idserie_mapa_proceso); ?>')){
+                     
+                 }
+                 
              });
              
          });
