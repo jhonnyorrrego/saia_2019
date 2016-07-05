@@ -235,16 +235,18 @@ $ok=@$_REQUEST["editar"];
     ?>
         <tr>
             <td colspan="2">
+               
+            </td>
+        </tr>      
+    
+        <tr>
+            <td colspan="2">
                 <a class="btn btn-mini pull-left" title="Administración del arbol de calidad." href="../proceso/previo_mostrar_proceso.php?editar=1"  onclick=" ">	    
                     <i class="icon-pencil"></i>	<span>Editar</span> 
                 </a>
             </td>
         </tr>
-        <tr>
-            <td colspan="2">
-               
-            </td>
-        </tr>        
+      
         
         
     <?php
