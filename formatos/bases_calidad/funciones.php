@@ -40,7 +40,7 @@ function mostrar_anexos_soporte($idformato,$iddoc){
     
     
 }
-function mostrar_ocultar_anexo_bases_calidad(){
+function mostrar_ocultar_anexo_bases_calidad($idformato,$iddoc){
      global $conn,$ruta_db_superior;  
     
      $serie_mapa_proceso=busca_filtro_tabla("idserie","serie","lower(nombre)='mapa de proceso'","",$conn);
