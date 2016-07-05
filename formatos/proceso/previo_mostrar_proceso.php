@@ -240,6 +240,13 @@ $ok=@$_REQUEST["editar"];
                 </a>
             </td>
         </tr>
+        <tr>
+            <td colspan="2">
+               
+            </td>
+        </tr>        
+        
+        
     <?php
     }
     ?>
