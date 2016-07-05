@@ -466,7 +466,7 @@ if($result["numcampos"]){
 			//$response->rows[$i]->info=str_replace("\n","",str_replace("\r","",$info));
 			
 			if(@$_SESSION['LOGIN'.LLAVE_SAIA]=='agomez'){
-			  $response->rows[$i]->info=str_replace("\n","",str_replace("\r","",'hola mundo'));
+			  $response->rows[$i]->info=str_replace("\n","",str_replace("\r","",codifica_encabezado(html_entity_decode($info)) ));
 			}else{
 			    $response->rows[$i]->info=str_replace("\n","",str_replace("\r","",$info));
 			}
