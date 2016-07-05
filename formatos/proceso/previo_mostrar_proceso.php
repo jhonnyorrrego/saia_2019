@@ -265,7 +265,7 @@ $ok=@$_REQUEST["editar"];
       </tr>
       <tr>
        
-      <td class="encabezado">Asignar al proceso:</td><td><select name="proceso">
+      <td class="encabezado">Asignar al proceso:</td><td><select name="proceso"><option value="0" selected>Seleccione...</option>
 			<?php
        for($i=0;$i<$proceso["numcampos"];$i++){
           echo('<option value="'.$proceso[$i]["idft_proceso"].'">'.$proceso[$i]["nombre"]."</option>");
