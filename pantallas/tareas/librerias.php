@@ -97,4 +97,9 @@ if($documento_iddocumento!="documento_iddocumento"){
 	}	
 }
 }
+
+function mostrar_texto_codificado(){
+    global $conn,$ruta_db_superior;
+}
+
 ?>
