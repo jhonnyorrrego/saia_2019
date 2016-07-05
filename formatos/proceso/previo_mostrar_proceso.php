@@ -196,7 +196,7 @@ $ok=@$_REQUEST["editar"];
     <tr><td colspan="2" style="text-align:center;">
     
     <?php
-    $iddoc_mapa_proceso=busca_filtro_tabla("a.documento_iddocumento","ft_bases_calidad a, serie b,documento c","lower(c.estado)='aprobado' AND a.documento_iddocumento=c.iddocumento AND a.tipo_base_calidad=b.idserie AND lower(b.nombre)='mapa de proceso' ","",$conn);
+    $iddoc_mapa_proceso=busca_filtro_tabla("a.descripcion_base,a.documento_iddocumento","ft_bases_calidad a, serie b,documento c","lower(c.estado)='aprobado' AND a.documento_iddocumento=c.iddocumento AND a.tipo_base_calidad=b.idserie AND lower(b.nombre)='mapa de proceso' ","",$conn);
     $mapa_proceso=busca_filtro_tabla("","anexos","documento_iddocumento=".$iddoc_mapa_proceso[0]['documento_iddocumento'],"",$conn);
     if(!$mapa_proceso['numcampos']){
        include_once($ruta_db_superior.'librerias_saia.php');
@@ -235,7 +235,7 @@ $ok=@$_REQUEST["editar"];
     ?>
         <tr>
             <td colspan="2">
-                
+                <?php echo($iddoc_mapa_proceso[0]['descripcion_base']); ?>
             </td>
         </tr>      
     
