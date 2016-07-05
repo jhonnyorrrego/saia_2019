@@ -11,7 +11,12 @@ while($max_salida>0){
 include_once($ruta_db_superior."db.php");
 
 
-
+if(@$_REQUEST['idft_proceso']){
+    
+    
+    
+    
+}
 
 
 ?>
