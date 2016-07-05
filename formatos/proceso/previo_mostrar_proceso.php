@@ -273,18 +273,18 @@ $ok=@$_REQUEST["editar"];
           $(document).ready(function(){
               $('[name="proceso"]').change(function(){
                 var idft_proceso=$(this).val();
-                
-                $.ajax({
-                        type:'POST',
-                        dataType: 'json',
-                        url: "buscar_afiliado.php",
-                        data: {
-                            idft_proceso:idft_proceso
-                        },
-                        success: function(datos){
-                        }
-                });                 
-                
+                if(idft_proceso!=0){
+                    $.ajax({
+                            type:'POST',
+                            dataType: 'json',
+                            url: "traer_cordenadas_proceso.php",
+                            data: {
+                                idft_proceso:idft_proceso
+                            },
+                            success: function(datos){
+                            }
+                    });                     
+                }
               });
           });
       </script>
