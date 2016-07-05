@@ -282,7 +282,9 @@ $ok=@$_REQUEST["editar"];
                                 idft_proceso:idft_proceso
                             },
                             success: function(datos){
-                                
+                                if(datos.coordenadas){
+                                    
+                                }
                             }
                     });                     
                 }
