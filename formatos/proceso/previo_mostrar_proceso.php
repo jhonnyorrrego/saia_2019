@@ -287,19 +287,19 @@ $ok=@$_REQUEST["editar"];
                                     vector_coordenadas=datos.coordenadas.split(',');
                                     
                                     $('#cropbox').Jcrop({
-                                        	setSelect:[parseInt(vector_coordenadas[0]),parseInt(vector_coordenadas[1]),parseInt(vector_coordenadas[2]),parseInt(vector_coordenadas[3])],
+                                        setSelect:[parseInt(vector_coordenadas[0]),parseInt(vector_coordenadas[1]),parseInt(vector_coordenadas[2]),parseInt(vector_coordenadas[3])],
                                     });
                                 }else{
                                     $('#cropbox').Jcrop({
-                                        	setSelect:[0,0,0,0],
+                                    	setSelect:[0,0,0,0],
                                     });
                                 }
                             }
                     });                     
                 }else{
-                                    $('#cropbox').Jcrop({
-                                        	setSelect:[0,0,0,0],
-                                    });                    
+                    $('#cropbox').Jcrop({
+                    	setSelect:[0,0,0,0],
+                    });                    
                 }
               });
           });
