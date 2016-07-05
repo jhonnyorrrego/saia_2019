@@ -465,7 +465,7 @@ if($result["numcampos"]){
 	      $response->rows[$i]->info.="</div>";
 			$response->rows[$i]->info=str_replace("\n","",str_replace("\r","",$info));
 			
-			if(@$_SESSION['LOGIN'.LLAVE_SAIA]){
+			if(@$_SESSION['LOGIN'.LLAVE_SAIA]=='cerok'){
 			    echo('llegocerok');die();
 			}
 			
