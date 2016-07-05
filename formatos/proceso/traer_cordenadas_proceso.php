@@ -18,7 +18,6 @@ if(@$_REQUEST['idft_proceso']){
         $retorno['cordenadas']=$coordenadas[0]['coordenadas'];
     }
     echo(json_encode($retorno));
-    
 }
 
 
