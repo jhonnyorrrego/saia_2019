@@ -459,7 +459,7 @@ if($result["numcampos"]){
 	  }
 	  if($datos_busqueda[0]["tipo_busqueda"]==1){
 	    if(!@$_REQUEST["estilo_actualizar_informacion"])                                                                
-	      $response->rows[$i]->info="<div id='resultado_pantalla_".$result[$i][$llave]."' class='well'>";
+	      $response->rows[$i]->info="<div id='resultado_pantalla_".codifica($result[$i][$llave])."' class='well'>";
 	    
 	    if(!@$_REQUEST["estilo_actualizar_informacion"])
 	      $response->rows[$i]->info.="</div>";
