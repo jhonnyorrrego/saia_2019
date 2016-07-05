@@ -463,10 +463,12 @@ if($result["numcampos"]){
 	    
 	    if(!@$_REQUEST["estilo_actualizar_informacion"])
 	      $response->rows[$i]->info.="</div>";
-			$response->rows[$i]->info=str_replace("\n","",str_replace("\r","",$info));
+			//$response->rows[$i]->info=str_replace("\n","",str_replace("\r","",$info));
 			
 			if(@$_SESSION['LOGIN'.LLAVE_SAIA]=='agomez'){
-			    echo('llegocerok');die();
+			  $response->rows[$i]->info=str_replace("\n","",str_replace("\r","",html_entity_decode($info)));
+			}else{
+			    $response->rows[$i]->info=str_replace("\n","",str_replace("\r","",$info));
 			}
 			
 			$response->rows[$i]->llave=$result[$i][$llave];
