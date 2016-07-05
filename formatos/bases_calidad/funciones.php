@@ -46,7 +46,7 @@ function mostrar_ocultar_anexo_bases_calidad(){
      ?>
      <script>
          $(document).ready(function(){
-             $('name["anexo_soporte[]"]').
+             $('name["anexo_soporte[]"]').parent().parent().parent().hide();
          });
      </script>
      
