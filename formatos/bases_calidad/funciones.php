@@ -71,8 +71,7 @@ function mostrar_ocultar_anexo_bases_calidad($idformato,$iddoc){
          });
      </script>         
          <?php
-     }
-     
+     }else{
      ?>
      <script>
          $(document).ready(function(){
@@ -93,6 +92,7 @@ function mostrar_ocultar_anexo_bases_calidad($idformato,$iddoc){
      </script>
      
      <?php
+     }
 }
 
 ?>
