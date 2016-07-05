@@ -36,7 +36,9 @@ function bases_calidad_ocultar_tipo($idformato,$iddoc){
 function mostrar_anexos_soporte($idformato,$iddoc){
     global $conn,$ruta_db_superior;    
     
-    $datosr=busca_filtro_tabla("tipo_base_calidad","ft_bases_calidad","documento_iddocumento=".$iddoc,"",$conn); 
+    $datos=busca_filtro_tabla("tipo_base_calidad","ft_bases_calidad","documento_iddocumento=".$iddoc,"",$conn); 
+    
+    
     
     
 }
