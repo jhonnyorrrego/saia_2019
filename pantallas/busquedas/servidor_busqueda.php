@@ -330,7 +330,7 @@ $response->records = $count;
 
 $response->sql= $result["sql"];
 $cant_campos=count($lcampos);
-$info_base=str_replace('"',"'",$datos_busqueda[0]["info"]);
+$info_base=str_replace('"',"'",codifica_encabezado(html_entity_decode($datos_busqueda[0]["info"])) );
 for($j=0;$j<$cant_campos;$j++){
   $as=strpos(strtolower($lcampos[$j])," as ");
   if($as!==false){
