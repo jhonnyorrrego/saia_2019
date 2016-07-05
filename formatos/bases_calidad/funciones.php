@@ -32,4 +32,10 @@ function bases_calidad_ocultar_tipo($idformato,$iddoc){
         </script>
     <?php
 }
+
+function mostrar_anexos_soporte($idformato,$iddoc){
+    global $conn,$ruta_db_superior;    
+}
+
+
 ?>
