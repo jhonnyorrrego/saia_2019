@@ -115,7 +115,7 @@ if(is_uploaded_file(@$_FILES['imagen_politicas']['tmp_name']) && $_FILES['imagen
 
 
 $formato=busca_filtro_tabla("idformato,nombre,ruta_mostrar","formato","nombre_tabla='ft_proceso'","",$conn);
-$proceso=busca_filtro_tabla("","ft_proceso A, documento B","A.estado<>'INACTIVO' AND documento_iddocumento=iddocumento AND B.estado<>'ELIMINADO'","",$conn);
+$proceso=busca_filtro_tabla("","ft_proceso A, documento B","documento_iddocumento=iddocumento AND lower(B.estado)='aprobado'","",$conn);
 $ok=@$_REQUEST["editar"]; 
 ?>
 <html>
