@@ -464,6 +464,11 @@ if($result["numcampos"]){
 	    if(!@$_REQUEST["estilo_actualizar_informacion"])
 	      $response->rows[$i]->info.="</div>";
 			$response->rows[$i]->info=str_replace("\n","",str_replace("\r","",$info));
+			
+			if(@$_SESSION['LOGIN'.LLAVE_SAIA]){
+			    echo('llegocerok');die();
+			}
+			
 			$response->rows[$i]->llave=$result[$i][$llave];
 
 			if(@$_REQUEST["exportar_saia"]=='excel' || @$_REQUEST["exportar_saia"]=='csv'){
