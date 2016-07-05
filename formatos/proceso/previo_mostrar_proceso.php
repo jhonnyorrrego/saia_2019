@@ -283,9 +283,7 @@ $ok=@$_REQUEST["editar"];
                             },
                             success: function(datos){
                                 if(datos.coordenadas){
-                                    
                                     vector_coordenadas=datos.coordenadas.split(',');
-                                    
                                     $('#cropbox').Jcrop({
                                         setSelect:[parseInt(vector_coordenadas[0]),parseInt(vector_coordenadas[1]),parseInt(vector_coordenadas[2]),parseInt(vector_coordenadas[3])],
                                     });
