@@ -40,7 +40,9 @@ function mostrar_anexos_soporte($idformato,$iddoc){
     $datos=busca_filtro_tabla("documento_iddocumento","ft_bases_calidad","documento_iddocumento=".$iddoc,"",$conn); 
     $mapa_proceso=busca_filtro_tabla("","anexos","documento_iddocumento=".$datos[0]['documento_iddocumento'],"",$conn);
     
-    
+    if($mapa_proceso['numcampos']){
+        
+    }
 }
 function mostrar_ocultar_anexo_bases_calidad($idformato,$iddoc){
      global $conn,$ruta_db_superior;  
