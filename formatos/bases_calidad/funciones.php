@@ -58,7 +58,9 @@ function mostrar_ocultar_anexo_bases_calidad(){
                  var valor=$(this).val();
                 
                  if( parseInt('<?php echo($idserie_mapa_proceso); ?>')==parseInt(valor) ){
-                     
+                      $('[name="anexo_soporte[]"]').parent().parent().parent().show();
+                 }else{
+                      $('[name="anexo_soporte[]"]').parent().parent().parent().hide();
                  }
                  
              });
