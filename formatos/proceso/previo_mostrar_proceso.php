@@ -150,7 +150,7 @@ $ok=@$_REQUEST["editar"];
 	</head>
 	<body>
 	<style>
-		#cropbox{
+		img{
 			max-width:none;
 		} 	
 	</style>
