@@ -272,9 +272,18 @@ $ok=@$_REQUEST["editar"];
       <script>
           $(document).ready(function(){
               $('[name="proceso"]').change(function(){
-                var valor=$(this).val();
+                var idft_proceso=$(this).val();
                 
-                
+                $.ajax({
+                        type:'POST',
+                        dataType: 'json',
+                        url: "buscar_afiliado.php",
+                        data: {
+                                        idft_proceso:idft_proceso
+                        },
+                        success: function(datos){
+                        }
+                });                 
                 
               });
           });
