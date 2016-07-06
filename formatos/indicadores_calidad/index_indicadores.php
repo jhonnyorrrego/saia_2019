@@ -43,7 +43,7 @@ $componente_verde=busca_filtro_tabla("","busqueda_componente A","A.nombre='numer
 		<td style=""><a class="link kenlace_saia" style="color:#D4AA00;text-decoration:underline" conector="iframe" enlace="pantallas/busquedas/consulta_busqueda_reporte.php?idbusqueda_componente=<?php echo($componente_amarillo[0]["idbusqueda_componente"]); ?>&variable_busqueda=<?php echo(implode(",",$procesos_amarillo)); ?>" titulo="AMARILLO"><?php echo($colores[1]); ?> INDICADORES EN ZONA AMARILLA</a></td>
 	</tr>
 	<tr>
-		<td style=""><a class="link kenlace_saia" style="color:green;text-decoration:underline" conector="iframe" enlace="pantallas/busquedas/consulta_busqueda_reporte.php?idbusqueda_componente=<?php echo($componente_verde[0]["idbusqueda_componente"]); ?>&variable_busqueda=<?php echo(implode(",",$procesos_verde)); ?>" titulo="VERDE"><?php echo($colores[2]); ?> INDICADORES EN ZONA VERDE</a></td>
+		<td style=""><a class="link kenlace_saia" style="color:green;text-decoration:underline" conector="iframe" enlace="pantallas/busquedas/consulta_busqueda_reporte.php?idbusqueda_componente=<?php echo($componente_verde[0]["idbusqueda_componente"]); ?>&variable_busqueda=<?php if(count($procesos_verde)){ echo(implode(",",$procesos_verde)); }else{ echo('-1'); }  ?>" titulo="VERDE"><?php echo($colores[2]); ?> INDICADORES EN ZONA VERDE</a></td>
 	</tr>
 </table></center>
 <?php
@@ -132,7 +132,7 @@ AND d.estado<>'ELIMINADO'","",$conn);
           	$color="#00FF51";  //VERDE
           	$verde++;
 						$procesos_verde[]=$formulas[$i]["ft_proceso"];
-					} 
+				} 
         }
       }
 		}
