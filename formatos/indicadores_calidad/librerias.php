@@ -45,7 +45,7 @@ function nombre_proceso_rojo_funcion($nombre,$idft_proceso){
     
 	$cantidad=contar_color_funcion($idft_proceso,'rojo');
 	$cadena="";
-	$cadena.='<a class="link kenlace_saia" conector="iframe" titulo="Proceso: '.$nombre.'" enlace="pantallas/busquedas/consulta_busqueda_reporte.php?idbusqueda_componente='+$idbusqueda_componente+'&variable_busqueda='.implode(",",$cantidad[1]).'"><span class="badge">'.$nombre."</span></a>";
+	$cadena.='<a class="link kenlace_saia" conector="iframe" titulo="Proceso: '.$nombre.'" enlace="pantallas/busquedas/consulta_busqueda_reporte.php?idbusqueda_componente='.$idbusqueda_componente.'&variable_busqueda='.implode(",",$cantidad[1]).'"><span class="badge">'.$nombre."</span></a>";
 	return($cadena);
 }
 function nombre_proceso_amarillo_funcion($nombre,$idft_proceso){
@@ -56,7 +56,7 @@ function nombre_proceso_amarillo_funcion($nombre,$idft_proceso){
     
 	$cantidad=contar_color_funcion($idft_proceso,'amarillo');
 	$cadena="";
-	$cadena.='<a class="link kenlace_saia" conector="iframe" titulo="Proceso: '.$nombre.'" enlace="pantallas/busquedas/consulta_busqueda_reporte.php?idbusqueda_componente='+$idbusqueda_componente+'&variable_busqueda='.implode(",",$cantidad[1]).'"><span class="badge">'.$nombre."</span></a>";
+	$cadena.='<a class="link kenlace_saia" conector="iframe" titulo="Proceso: '.$nombre.'" enlace="pantallas/busquedas/consulta_busqueda_reporte.php?idbusqueda_componente='.$idbusqueda_componente.'&variable_busqueda='.implode(",",$cantidad[1]).'"><span class="badge">'.$nombre."</span></a>";
 	return($cadena);
 }
 function nombre_proceso_verde_funcion($nombre,$idft_proceso){
@@ -67,7 +67,7 @@ function nombre_proceso_verde_funcion($nombre,$idft_proceso){
     
 	$cantidad=contar_color_funcion($idft_proceso,'verde');
 	$cadena="";
-	$cadena.='<a class="link kenlace_saia" conector="iframe" titulo="Proceso: '.$nombre.'" enlace="pantallas/busquedas/consulta_busqueda_reporte.php?idbusqueda_componente='+$idbusqueda_componente+'&variable_busqueda='.implode(",",$cantidad[1]).'"><span class="badge">'.$nombre."</span></a>";
+	$cadena.='<a class="link kenlace_saia" conector="iframe" titulo="Proceso: '.$nombre.'" enlace="pantallas/busquedas/consulta_busqueda_reporte.php?idbusqueda_componente='.$idbusqueda_componente.'&variable_busqueda='.implode(",",$cantidad[1]).'"><span class="badge">'.$nombre."</span></a>";
 	return($cadena);
 }
 function nombre_macro($macroproceso){
