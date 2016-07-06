@@ -1,4 +1,4 @@
-<html><title>.:ADICIONAR SOLICITUD DE ELABORACION, MODIFICACION, ELIMINACION DE DOCUMENTOS:.</title><head><script type="text/javascript" src="../librerias/funciones_formatos.js"></script><script type="text/javascript" src="../../js/cmxforms.js"></script><?php include_once("funciones.php"); ?><?php include_once("../librerias/funciones_generales.php"); ?><?php include_once("../librerias/funciones_acciones.php"); ?><?php include_once("../librerias/estilo_formulario.php"); ?><?php include_once("../librerias/header_formato.php"); ?><script type="text/javascript" src="../../js/jquery.js"></script><script type="text/javascript" src="../../js/jquery.validate.js"></script><script type="text/javascript" src="../../js/title2note.js"></script><script type="text/javascript" src="../../js/dhtmlXCommon.js"></script><script type="text/javascript" src="../../js/dhtmlXTree.js"></script><link rel="STYLESHEET" type="text/css" href="../../css/dhtmlXTree.css"><script type="text/javascript" src="../../anexosdigitales/multiple-file-upload/jquery.MultiFile.js"></script><?php include_once("../../anexosdigitales/funciones_archivo.php"); ?><script type="text/javascript" src="../../anexosdigitales/highslide-4.0.10/highslide/highslide-with-html.js"></script><link rel="stylesheet" type="text/css" href="../../anexosdigitales/highslide-4.0.10/highslide/highslide.css" />
+<html><title>.:ADICIONAR SOLICITUD DE ELABORACI&Oacute;N, MODIFICACI&Oacute;N, ELIMINACI&Oacute;N DE DOCUMENTOS:.</title><head><script type="text/javascript" src="../librerias/funciones_formatos.js"></script><script type="text/javascript" src="../../js/cmxforms.js"></script><?php include_once("funciones.php"); ?><?php include_once("../librerias/funciones_generales.php"); ?><?php include_once("../librerias/funciones_acciones.php"); ?><?php include_once("../librerias/estilo_formulario.php"); ?><?php include_once("../librerias/header_formato.php"); ?><script type="text/javascript" src="../../js/jquery.js"></script><script type="text/javascript" src="../../js/jquery.validate.js"></script><script type="text/javascript" src="../../js/title2note.js"></script><script type="text/javascript" src="../../js/dhtmlXCommon.js"></script><script type="text/javascript" src="../../js/dhtmlXTree.js"></script><link rel="STYLESHEET" type="text/css" href="../../css/dhtmlXTree.css"><script type="text/javascript" src="../../anexosdigitales/multiple-file-upload/jquery.MultiFile.js"></script><?php include_once("../../anexosdigitales/funciones_archivo.php"); ?><script type="text/javascript" src="../../anexosdigitales/highslide-4.0.10/highslide/highslide-with-html.js"></script><link rel="stylesheet" type="text/css" href="../../anexosdigitales/highslide-4.0.10/highslide/highslide.css" />
     </style><script type='text/javascript'>
     hs.graphicsDir = '../../anexosdigitales/highslide-4.0.10/highslide/graphics/';
     hs.outlineType = 'rounded-white';
@@ -8,15 +8,12 @@
 	$('#formulario_formatos').validate();
 	
 });
-</script> </head><body bgcolor="#F5F5F5"><?php llama_funcion_accion(@$_REQUEST["iddoc"],@$_REQUEST["idformato"],"ingresar","ANTERIOR");?><form name="formulario_formatos" id="formulario_formatos" method="post" action="../../class_transferencia.php" enctype="multipart/form-data"><table width="100%" cellspacing="1" cellpadding="4"><tr><td colspan="2" class="encabezado_list">SOLICITUD DE ELABORACION, MODIFICACION, ELIMINACION DE DOCUMENTOS</td></tr><input type="hidden" name="idformato_calidad" value="<?php echo(validar_valor_campo(4424)); ?>"><input type="hidden" name="iddocumento_calidad" value="<?php echo(validar_valor_campo(4425)); ?>"><input type="hidden" name="fecha_aprobacion" value="<?php echo(validar_valor_campo(4426)); ?>"><tr>
+</script> </head><body bgcolor="#F5F5F5"><?php llama_funcion_accion(@$_REQUEST["iddoc"],@$_REQUEST["idformato"],"ingresar","ANTERIOR");?><form name="formulario_formatos" id="formulario_formatos" method="post" action="../../class_transferencia.php" enctype="multipart/form-data"><table width="100%" cellspacing="1" cellpadding="4"><tr><td colspan="2" class="encabezado_list">SOLICITUD DE ELABORACI&Oacute;N, MODIFICACI&Oacute;N, ELIMINACI&Oacute;N DE DOCUMENTOS</td></tr><input type="hidden" name="idformato_calidad" value="<?php echo(validar_valor_campo(4592)); ?>"><input type="hidden" name="iddocumento_calidad" value="<?php echo(validar_valor_campo(4593)); ?>"><input type="hidden" name="fecha_aprobacion" value="<?php echo(validar_valor_campo(4594)); ?>"><tr>
                      <td class="encabezado" width="20%" title="">DEPENDENCIA DEL CREADOR DEL DOCUMENTO*</td>
-                     <?php buscar_dependencia(378,4427);?></tr><tr>
-                     <td class="encabezado" width="20%" title="">SERIE DOCUMENTAL*</td>
-                     <td bgcolor="#F5F5F5"><input  maxlength="255"  class="required"   tabindex='1'  type="text" size="100" id="serie_doc_control" name="serie_doc_control"  value="<?php echo(validar_valor_campo(4428)); ?>"></td>
-                    </tr><input type="hidden" name="serie_idserie" value="<?php echo(validar_valor_campo(4429)); ?>"><tr id="tr_tipo_solicitud" >
-                     <td class="encabezado" width="20%" title="">TIPO SOLICITUD*</td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(378,4430,$_REQUEST['iddoc']);?></td></tr><tr>
-                   <td class="encabezado" width="20%" title="">SECRETARIA</td><td bgcolor="#F5F5F5"><div id="seleccionados"><?php mostrar_seleccionados(378,4431,'2',$_REQUEST['iddoc']);?></div>
-                          <br />  Buscar: <input  tabindex='2'  type="text" id="stext_secretaria" width="200px" size="25"><a href="javascript:void(0)" onclick="tree_secretaria.findItem(htmlentities(document.getElementById('stext_secretaria').value),1)"> <img src="../../botones/general/anterior.png"border="0px"></a>
+                     <?php buscar_dependencia(388,4595);?></tr><input type="hidden" name="serie_idserie" value="<?php echo(validar_valor_campo(4596)); ?>"><tr id="tr_tipo_solicitud" >
+                     <td class="encabezado" width="20%" title="">TIPO SOLICITUD*</td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(388,4597,$_REQUEST['iddoc']);?></td></tr><tr>
+                   <td class="encabezado" width="20%" title="">SECRETARIA</td><td bgcolor="#F5F5F5"><div id="seleccionados"><?php mostrar_seleccionados(388,4598,'2',$_REQUEST['iddoc']);?></div>
+                          <br />  Buscar: <input  tabindex='1'  type="text" id="stext_secretaria" width="200px" size="25"><a href="javascript:void(0)" onclick="tree_secretaria.findItem(htmlentities(document.getElementById('stext_secretaria').value),1)"> <img src="../../botones/general/anterior.png"border="0px"></a>
                    <a href="javascript:void(0)" onclick="tree_secretaria.findItem(htmlentities(document.getElementById('stext_secretaria').value),0,1)"><img src="../../botones/general/buscar.png"border="0px"></a>                          
                    <a href="javascript:void(0)" onclick="tree_secretaria.findItem(htmlentities(document.getElementById('stext_secretaria').value))"><img src="../../botones/general/siguiente.png"border="0px"></a> 
                           <br /><div id="esperando_secretaria"><img src="../../imagenes/cargando.gif"></div><div id="treeboxbox_secretaria" height="90%"></div><input type="hidden" maxlength="255"  name="secretaria" id="secretaria"   value="" ><label style="display:none" class="error" for="secretaria">Campo obligatorio.</label><script type="text/javascript">
@@ -88,22 +85,25 @@
                         document.poppedLayer.style.display = "";
                       }
                 	--></script></td></tr><tr id="tr_origen_documento" >
-                     <td class="encabezado" width="20%" title="">ORIGEN DOCUMENTO*</td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(378,4432,$_REQUEST['iddoc']);?></td></tr><tr>
+                     <td class="encabezado" width="20%" title="">ORIGEN DOCUMENTO*</td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(388,4599,$_REQUEST['iddoc']);?></td></tr><tr>
                      <td class="encabezado" width="20%" title="">VERSION</td>
-                     <td bgcolor="#F5F5F5"><input  maxlength="11"   tabindex='3'  type="text" size="100" id="version" name="version"  value="<?php echo(validar_valor_campo(4433)); ?>"></td>
+                     <td bgcolor="#F5F5F5"><input  maxlength="11"   tabindex='2'  type="text" size="100" id="version" name="version"  value="<?php echo(validar_valor_campo(4600)); ?>"></td>
                     </tr><tr>
                      <td class="encabezado" width="20%" title="">VIGENCIA</td>
-                     <td bgcolor="#F5F5F5"><input  maxlength="255"   tabindex='4'  type="text" size="100" id="vigencia" name="vigencia"  value="<?php echo(validar_valor_campo(4434)); ?>"></td>
+                     <td bgcolor="#F5F5F5"><input  maxlength="255"   tabindex='3'  type="text" size="100" id="vigencia" name="vigencia"  value="<?php echo(validar_valor_campo(4601)); ?>"></td>
                     </tr><tr id="tr_tipo_documento" >
-                     <td class="encabezado" width="20%" title="">TIPO DOCUMENTO*</td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(378,4435,$_REQUEST['iddoc']);?></td></tr><tr id="tr_otros_documentos" >
-                     <td class="encabezado" width="20%" title="">OTROS DOCUMENTOS</td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(378,4436,$_REQUEST['iddoc']);?></td></tr><tr>
-                  <td class="encabezado" width="20%" title="">ALMACENAMIENTO</td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(378,4437,$_REQUEST['iddoc']);?></td></tr><tr>
+                     <td class="encabezado" width="20%" title="">TIPO DOCUMENTO*</td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(388,4602,$_REQUEST['iddoc']);?></td></tr><tr>
+                     <td class="encabezado" width="20%" title="">SERIE DOCUMENTAL</td>
+                     <td bgcolor="#F5F5F5"><input  maxlength="255"   tabindex='4'  type="text" size="100" id="serie_doc_control" name="serie_doc_control"  value="<?php echo(validar_valor_campo(4603)); ?>"></td>
+                    </tr><tr id="tr_otros_documentos" >
+                     <td class="encabezado" width="20%" title="">OTROS DOCUMENTOS</td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(388,4604,$_REQUEST['iddoc']);?></td></tr><tr>
+                  <td class="encabezado" width="20%" title="">ALMACENAMIENTO</td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(388,4605,$_REQUEST['iddoc']);?></td></tr><tr>
                      <td class="encabezado" width="20%" title="">NOMBRE DOCUMENTO*</td>
-                     <td bgcolor="#F5F5F5"><input   class="required"   tabindex='5'  type="text" size="100" id="nombre_documento" name="nombre_documento"  value="<?php echo(validar_valor_campo(4438)); ?>"></td>
+                     <td bgcolor="#F5F5F5"><input   class="required"   tabindex='5'  type="text" size="100" id="nombre_documento" name="nombre_documento"  value="<?php echo(validar_valor_campo(4606)); ?>"></td>
                     </tr><tr>
                      <td class="encabezado" width="20%" title="">PROCESO/SUBPROCESO*</td>
-                     <?php listar_macroprocesos_and_procesos(378,4439);?></tr><tr>
-                   <td class="encabezado" width="20%" title="">DOCUMENTO DE CALIDAD VINCULADO*</td><td bgcolor="#F5F5F5"><div id="seleccionados"><?php mostrar_seleccionados(378,4440,'2',$_REQUEST['iddoc']);?></div>
+                     <?php listar_macroprocesos_and_procesos(388,4607);?></tr><tr>
+                   <td class="encabezado" width="20%" title="">DOCUMENTO DE CALIDAD VINCULADO*</td><td bgcolor="#F5F5F5"><div id="seleccionados"><?php mostrar_seleccionados(388,4608,'2',$_REQUEST['iddoc']);?></div>
                           <br />  Buscar: <input  tabindex='6'  type="text" id="stext_documento_calidad" width="200px" size="25"><a href="javascript:void(0)" onclick="tree_documento_calidad.findItem(htmlentities(document.getElementById('stext_documento_calidad').value),1)"> <img src="../../botones/general/anterior.png"border="0px"></a>
                    <a href="javascript:void(0)" onclick="tree_documento_calidad.findItem(htmlentities(document.getElementById('stext_documento_calidad').value),0,1)"><img src="../../botones/general/buscar.png"border="0px"></a>                          
                    <a href="javascript:void(0)" onclick="tree_documento_calidad.findItem(htmlentities(document.getElementById('stext_documento_calidad').value))"><img src="../../botones/general/siguiente.png"border="0px"></a> 
@@ -162,14 +162,14 @@
                       }
                 	--></script></td></tr><tr>
                      <td class="encabezado" width="20%" title="">JUSTIFICACION*</td>
-                     <td class="celda_transparente"><textarea  tabindex='7'  name="justificacion" id="justificacion" cols="53" rows="3" class="tiny_basico required"><?php echo(validar_valor_campo(4441)); ?></textarea></td>
+                     <td class="celda_transparente"><textarea  tabindex='7'  name="justificacion" id="justificacion" cols="53" rows="3" class="tiny_basico required"><?php echo(validar_valor_campo(4609)); ?></textarea></td>
                     </tr><tr>
                      <td class="encabezado" width="20%" title="">PROPUESTA*</td>
-                     <td class="celda_transparente"><textarea  tabindex='8'  name="propuesta" id="propuesta" cols="53" rows="3" class="tiny_basico required"><?php echo(validar_valor_campo(4442)); ?></textarea></td>
+                     <td class="celda_transparente"><textarea  tabindex='8'  name="propuesta" id="propuesta" cols="53" rows="3" class="tiny_basico required"><?php echo(validar_valor_campo(4610)); ?></textarea></td>
                     </tr><tr>
                      <td class="encabezado" width="20%" title="">ANEXO FORMATO</td>
                      <td class="celda_transparente"><input  tabindex='9'  type="file" maxlength="255"  class='multi'  name="anexo_formato[]" accept="<?php echo $extensiones;?>"><tr>
-                   <td class="encabezado" width="20%" title="">REVISADO POR*</td><td bgcolor="#F5F5F5"><div id="seleccionados"><?php mostrar_seleccionados(378,4444,'0',$_REQUEST['iddoc']);?></div>
+                   <td class="encabezado" width="20%" title="">REVISADO POR*</td><td bgcolor="#F5F5F5"><div id="seleccionados"><?php mostrar_seleccionados(388,4612,'0',$_REQUEST['iddoc']);?></div>
                           <br />  Buscar: <input  tabindex='10'  type="text" id="stext_revisado" width="200px" size="25"><a href="javascript:void(0)" onclick="tree_revisado.findItem(htmlentities(document.getElementById('stext_revisado').value),1)"> <img src="../../botones/general/anterior.png"border="0px"></a>
                    <a href="javascript:void(0)" onclick="tree_revisado.findItem(htmlentities(document.getElementById('stext_revisado').value),0,1)"><img src="../../botones/general/buscar.png"border="0px"></a>                          
                    <a href="javascript:void(0)" onclick="tree_revisado.findItem(htmlentities(document.getElementById('stext_revisado').value))"><img src="../../botones/general/siguiente.png"border="0px"></a> 
@@ -227,7 +227,7 @@
                         document.poppedLayer.style.display = "";
                       }
                 	--></script></td></tr><tr>
-                   <td class="encabezado" width="20%" title="">APROBADO POR*</td><td bgcolor="#F5F5F5"><div id="seleccionados"><?php mostrar_seleccionados(378,4445,'0',$_REQUEST['iddoc']);?></div>
+                   <td class="encabezado" width="20%" title="">APROBADO POR*</td><td bgcolor="#F5F5F5"><div id="seleccionados"><?php mostrar_seleccionados(388,4613,'0',$_REQUEST['iddoc']);?></div>
                           <br />  Buscar: <input  tabindex='11'  type="text" id="stext_aprobado" width="200px" size="25"><a href="javascript:void(0)" onclick="tree_aprobado.findItem(htmlentities(document.getElementById('stext_aprobado').value),1)"> <img src="../../botones/general/anterior.png"border="0px"></a>
                    <a href="javascript:void(0)" onclick="tree_aprobado.findItem(htmlentities(document.getElementById('stext_aprobado').value),0,1)"><img src="../../botones/general/buscar.png"border="0px"></a>                          
                    <a href="javascript:void(0)" onclick="tree_aprobado.findItem(htmlentities(document.getElementById('stext_aprobado').value))"><img src="../../botones/general/siguiente.png"border="0px"></a> 
@@ -284,4 +284,4 @@
                                eval('document.layers["esperando_aprobado"]');
                         document.poppedLayer.style.display = "";
                       }
-                	--></script></td></tr><input type="hidden" name="idft_control_documentos" value="<?php echo(validar_valor_campo(4446)); ?>"><input type="hidden" name="documento_iddocumento" value="<?php echo(validar_valor_campo(4447)); ?>"><input type="hidden" name="encabezado" value="<?php echo(validar_valor_campo(4448)); ?>"><input type="hidden" name="firma" value="<?php echo(validar_valor_campo(4449)); ?>"><input type="hidden" name="iddocumento_creado" value="<?php echo(validar_valor_campo(4450)); ?>"><input type="hidden" name="fecha_vigencia" value="<?php echo(validar_valor_campo(4451)); ?>"><input type="hidden" name="fecha_confirmacion" value="<?php echo(validar_valor_campo(4452)); ?>"><?php validar_tipo_documento(378,NULL);?><?php crear_arbol_procesos_calidad(378,NULL);?><input type="hidden" name="campo_descripcion" value="4430,4438"><tr><td colspan='2'><?php submit_formato(378);?></td></tr></table><input type='hidden' name='permisos_anexos' id='permisos_anexos' value=''></form></body></html>
+                	--></script></td></tr><input type="hidden" name="idft_control_documentos" value="<?php echo(validar_valor_campo(4614)); ?>"><input type="hidden" name="documento_iddocumento" value="<?php echo(validar_valor_campo(4615)); ?>"><input type="hidden" name="encabezado" value="<?php echo(validar_valor_campo(4616)); ?>"><input type="hidden" name="firma" value="<?php echo(validar_valor_campo(4617)); ?>"><input type="hidden" name="iddocumento_creado" value="<?php echo(validar_valor_campo(4618)); ?>"><input type="hidden" name="fecha_vigencia" value="<?php echo(validar_valor_campo(4619)); ?>"><input type="hidden" name="fecha_confirmacion" value="<?php echo(validar_valor_campo(4620)); ?>"><?php validar_tipo_documento(388,NULL);?><?php crear_arbol_procesos_calidad(388,NULL);?><input type="hidden" name="campo_descripcion" value="4597,4606"><tr><td colspan='2'><?php submit_formato(388);?></td></tr></table><input type='hidden' name='permisos_anexos' id='permisos_anexos' value=''></form></body></html>
