@@ -40,7 +40,7 @@ function filtrar_indicadores($nada){
 function nombre_proceso_rojo_funcion($nombre,$idft_proceso){
 	global $conn;    
     
-    $reporte_indicadores_calidad =  busca_filtro_tabla("idbusqueda_componente","busqueda_componente","nombre='indicadores_calidad'","",$conn);//indicadores_calidad
+    $reporte_indicadores_calidad =  busca_filtro_tabla("idbusqueda_componente","busqueda_componente","nombre='listar_indicadores_calidad'","",$conn);//indicadores_calidad
     $idbusqueda_componente=$reporte_indicadores_calidad[0]['idbusqueda_componente'];
     
 	$cantidad=contar_color_funcion($idft_proceso,'rojo');
@@ -51,7 +51,7 @@ function nombre_proceso_rojo_funcion($nombre,$idft_proceso){
 function nombre_proceso_amarillo_funcion($nombre,$idft_proceso){
 	global $conn;    
     
-    $reporte_indicadores_calidad =  busca_filtro_tabla("idbusqueda_componente","busqueda_componente","nombre='indicadores_calidad'","",$conn);//indicadores_calidad
+    $reporte_indicadores_calidad =  busca_filtro_tabla("idbusqueda_componente","busqueda_componente","nombre='listar_indicadores_calidad'","",$conn);//indicadores_calidad
     $idbusqueda_componente=$reporte_indicadores_calidad[0]['idbusqueda_componente'];
     
 	$cantidad=contar_color_funcion($idft_proceso,'amarillo');
@@ -62,7 +62,7 @@ function nombre_proceso_amarillo_funcion($nombre,$idft_proceso){
 function nombre_proceso_verde_funcion($nombre,$idft_proceso){
 	global $conn;    
     
-    $reporte_indicadores_calidad =  busca_filtro_tabla("idbusqueda_componente","busqueda_componente","nombre='indicadores_calidad'","",$conn);//indicadores_calidad
+    $reporte_indicadores_calidad =  busca_filtro_tabla("idbusqueda_componente","busqueda_componente","nombre='listar_indicadores_calidad'","",$conn);//indicadores_calidad
     $idbusqueda_componente=$reporte_indicadores_calidad[0]['idbusqueda_componente'];    
     
 	$cantidad=contar_color_funcion($idft_proceso,'verde');
