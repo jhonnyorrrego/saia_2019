@@ -38,6 +38,11 @@ function filtrar_indicadores($nada){
 	return($cadena);
 }
 function nombre_proceso_rojo_funcion($nombre,$idft_proceso){
+	global $conn;    
+    
+    $reporte_indicadores_calidad =  busca_filtro_tabla("idbusqueda_componente","busqueda_componente","nombre='indicadores_calidad'","",$conn);//indicadores_calidad
+    $idbusqueda_componente=$reporte_indicadores_calidad[0]['idbusqueda_componente'];
+    
 	$cantidad=contar_color_funcion($idft_proceso,'rojo');
 	$cadena="";
 	$cadena.='<a class="link kenlace_saia" conector="iframe" titulo="Proceso: '.$nombre.'" enlace="pantallas/busquedas/consulta_busqueda_reporte.php?idbusqueda_componente=249&variable_busqueda='.implode(",",$cantidad[1]).'"><span class="badge">'.$nombre."</span></a>";
