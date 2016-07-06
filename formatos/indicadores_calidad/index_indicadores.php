@@ -37,10 +37,10 @@ $componente_verde=busca_filtro_tabla("","busqueda_componente A","A.nombre='numer
 	</tr>
 	<tr>
 		<td rowspan="3" style="text-align:center"><img src="semaforo.jpg" style="width:90px;height:180px"></td>
-		<td style=""><a class="link kenlace_saia" style="color:red;text-decoration:underline" conector="iframe" enlace="pantallas/busquedas/consulta_busqueda_reporte.php?idbusqueda_componente=<?php echo($componente_rojo[0]["idbusqueda_componente"]); ?>&variable_busqueda=<?php echo(implode(",",$procesos_rojo)); ?>" titulo="ROJO"><?php echo($colores[0]); ?> INDICADORES EN ZONA ROJA</a></td>
+		<td style=""><a class="link kenlace_saia" style="color:red;text-decoration:underline" conector="iframe" enlace="pantallas/busquedas/consulta_busqueda_reporte.php?idbusqueda_componente=<?php echo($componente_rojo[0]["idbusqueda_componente"]); ?>&variable_busqueda=<?php if(count($procesos_rojo)){ echo(implode(",",$procesos_rojo)); }else{ echo('-1'); } ?>" titulo="ROJO"><?php echo($colores[0]); ?> INDICADORES EN ZONA ROJA</a></td>
 	</tr>
 	<tr>
-		<td style=""><a class="link kenlace_saia" style="color:#D4AA00;text-decoration:underline" conector="iframe" enlace="pantallas/busquedas/consulta_busqueda_reporte.php?idbusqueda_componente=<?php echo($componente_amarillo[0]["idbusqueda_componente"]); ?>&variable_busqueda=<?php echo(implode(",",$procesos_amarillo)); ?>" titulo="AMARILLO"><?php echo($colores[1]); ?> INDICADORES EN ZONA AMARILLA</a></td>
+		<td style=""><a class="link kenlace_saia" style="color:#D4AA00;text-decoration:underline" conector="iframe" enlace="pantallas/busquedas/consulta_busqueda_reporte.php?idbusqueda_componente=<?php echo($componente_amarillo[0]["idbusqueda_componente"]); ?>&variable_busqueda=<?php if(count($procesos_amarillo)){ echo(implode(",",$procesos_amarillo)); }else{ echo('-1'); }?>" titulo="AMARILLO"><?php echo($colores[1]); ?> INDICADORES EN ZONA AMARILLA</a></td>
 	</tr>
 	<tr>
 		<td style=""><a class="link kenlace_saia" style="color:green;text-decoration:underline" conector="iframe" enlace="pantallas/busquedas/consulta_busqueda_reporte.php?idbusqueda_componente=<?php echo($componente_verde[0]["idbusqueda_componente"]); ?>&variable_busqueda=<?php if(count($procesos_verde)){ echo(implode(",",$procesos_verde)); }else{ echo('-1'); }  ?>" titulo="VERDE"><?php echo($colores[2]); ?> INDICADORES EN ZONA VERDE</a></td>
