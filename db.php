@@ -572,7 +572,12 @@ if($conn){
   $tabla = ""; 
   $string_detalle="";
   if ($accion<>"SELECT")
-   $func = usuario_actual("funcionario_codigo");
+   //$func = usuario_actual("funcionario_codigo");
+	if($funcionario){
+		$func = $funcionario;
+	}else{
+		$func = usuario_actual("funcionario_codigo");
+	}   
   else
     $rs=$conn->Ejecutar_Sql($strsql);
   $sqleve="";   
