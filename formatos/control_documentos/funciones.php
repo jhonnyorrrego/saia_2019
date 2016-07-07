@@ -30,11 +30,14 @@ function validar_tipo_documento($idformato, $iddoc){
 		$("input[name='almacenamiento[]']").removeClass('required');
 		$("input[name='almacenamiento[]']").parent().parent().parent().parent().parent().parent().parent().hide();
 		
-		
 		if(parseInt($("input[name='tipo_documento']:checked").val()) === 2){
+			$("#tr_serie_doc_control").hide();
+			$("#serie_doc_control").removeClass('required');
 			$("input[name='otros_documentos']").parent().parent().parent().parent().parent().parent().parent().show();
 			$("input[name='otros_documentos']").addClass('required');
 		}else{
+			$("#serie_idserie").addClass('required');
+			$("#serie_idserie").parent().parent().show();
 			$("input[name='otros_documentos']").parent().parent().parent().parent().parent().parent().parent().hide();
 			$("input[name='otros_documentos']").removeClass('required');
 		}
@@ -45,6 +48,10 @@ function validar_tipo_documento($idformato, $iddoc){
 				$("#serie_idserie").addClass('required');
 				$("#serie_idserie").parent().parent().show();
 				
+				
+				$("#tr_serie_doc_control").show();
+				$("#serie_doc_control").addClass('required');
+				
 				$("input[name='almacenamiento[]']").addClass('required');
 				$("input[name='almacenamiento[]']").parent().parent().parent().parent().parent().parent().parent().show();
 				
@@ -52,6 +59,9 @@ function validar_tipo_documento($idformato, $iddoc){
 				$("input[name='otros_documentos']").removeClass('required');
 				
 			}else{
+				$("#tr_serie_doc_control").hide();
+				$("#serie_doc_control").removeClass('required');
+				
 				$("#serie_idserie").removeClass('required');
 				$("#serie_idserie").parent().parent().hide();
 				
@@ -168,7 +178,7 @@ function ruta_aprobacion_control_documentos($idformato, $iddoc){
 	array_push($ruta,array("funcionario"=>$funcionarios_responsables[0]['aprobado'],"tipo_firma"=>1));
 	
 	//lina alzate
-	array_push($ruta,array("funcionario"=>"25166163","tipo_firma"=>1));
+	array_push($ruta,array("funcionario"=>"25166163","tipo_firma"=>2));
 	
 	if(count($ruta)>1){		
 		$radicador_salida=busca_filtro_tabla("origen","buzon_entrada","archivo_idarchivo=".$iddoc,"idtransferencia desc",$conn);
@@ -455,9 +465,15 @@ function mostrar_firma_confirmacion_documento($idformato, $iddoc){
 		$firma.= "FECHA DE TRAMITE Y VIGENCIA DEL DOCUMENTO : ".$fecha_confirmacion[0]["fecha_confirmacion"]."<br />";
 		$firma .= "Solicitud procesada satisfactoriamente, por favor socializar con los involucrados en el proceso.";
 		
-		echo($firma);		
+		echo($firma);	
 	}
-	
+?>
+<script>
+$(document).ready(function(){
+	$("#editar_ruta").hide();
+});
+</script>
+<?php
 }
 
 
@@ -507,7 +523,7 @@ function aprobar_control_documentos($idformato, $iddoc){
 	include_once($ruta_db_superior."class_transferencia.php");
 	if($_REQUEST["activar_accion"]){
 							
-		$control_documento = busca_filtro_tabla("a.revisado,a.aprobado,a.tipo_solicitud,a.listado_procesos,a.documento_calidad,a.nombre_documento,a.origen_documento,a.version,a.vigencia,b.ejecutor","ft_control_documentos a, documento b ","a.documento_iddocumento=b.iddocumento and a.documento_iddocumento=".$iddoc,"",$conn);		
+		$control_documento = busca_filtro_tabla("a.revisado,a.aprobado,a.tipo_solicitud,a.listado_procesos,a.documento_calidad,a.nombre_documento,a.origen_documento,a.version,a.vigencia,b.ejecutor,a.secretaria","ft_control_documentos a, documento b ","a.documento_iddocumento=b.iddocumento and a.documento_iddocumento=".$iddoc,"",$conn);		
 		
 			
 		$datos_formato = explode("|",$control_documento[0]["documento_calidad"]);
@@ -691,23 +707,45 @@ function aprobar_control_documentos($idformato, $iddoc){
 
 function confirmar_control_documentos($idformato, $iddoc){
 	global $conn,$ruta_db_superior;	
-	
+		
 	$funcionario_encargado = busca_filtro_tabla("funcionario_codigo","vfuncionario_dc","LOWER(cargo) LIKE'profesional%universitario%' AND LOWER(dependencia) LIKE'despacho%secretaria%administrativa' AND estado=1 AND estado_dep=1 AND estado_dc=1","",$conn);	
 	$estado= busca_filtro_tabla("estado","documento","estado = 'APROBADO' AND iddocumento=".$iddoc,"",$conn);
 	
 	$fecha_confirmacion = busca_filtro_tabla(fecha_db_obtener("a.fecha_confirmacion","Y-m-d")." as fecha_confirmacion","ft_control_documentos a","a.fecha_confirmacion is not null and a.documento_iddocumento=".$iddoc,"",$conn);
-	$boton = "<button id='confirmar_cambios' >Aprobación de la Solicitud</button>";	
+	$boton = "<button class='btn btn-success' id='confirmar_cambios' >Aprobación de la Solicitud</button>";	
+	
+	if($_REQUEST["tipo"]!=5){
+		echo(estilo_bootstrap());
+		if(($funcionario_encargado[0]["funcionario_codigo"]==usuario_actual("funcionario_codigo")) && $estado["numcampos"]){
+			if(!$fecha_confirmacion["numcampos"]){
+				echo($boton);
+			}			
+		}
+	
+	
+		$funcionario=array();
+		$responsables=busca_filtro_tabla("destino","buzon_entrada","nombre ='POR_APROBAR' and archivo_idarchivo=".$iddoc,"",$conn);
+		for ($i=0; $i <$responsables["numcampos"] ; $i++) { 
+			$funcionario[]=$responsables[$i]["destino"];
+		}
 		
-	if(($funcionario_encargado[0]["funcionario_codigo"]==usuario_actual("funcionario_codigo")) && $estado["numcampos"]){
-		if(!$fecha_confirmacion["numcampos"]){
-			echo($boton);
-		}			
+		$estado=busca_filtro_tabla("","documento","estado='ACTIVO' and iddocumento=".$iddoc,"",$conn);
+		
+		if(in_array(usuario_actual("funcionario_codigo"), $funcionario) && $estado["numcampos"]){
+			echo "<button class='btn btn-info dropdown-toggle' id='btn_editar' >Editar</button>";	
+		}
 	}
+		
 ?>
 <script type="text/javascript">
 	$(document).ready(function(){
 		$("#confirmar_cambios").click(function(){
 			var ruta = "<?php echo($ruta_db_superior); ?>formatos/control_documentos/mostrar_control_documentos.php?activar_accion=1&iddoc=<?php echo($iddoc); ?>&idformato=<?php echo($idformato); ?>";			
+			window.location=ruta;
+		});
+		
+		$("#btn_editar").click(function(){
+			var ruta = "<?php echo($ruta_db_superior); ?>formatos/control_documentos/editar_control_documentos.php?iddoc=<?php echo($iddoc); ?>&idformato=<?php echo($idformato); ?>";			
 			window.location=ruta;
 		});
 	});
@@ -717,7 +755,7 @@ function confirmar_control_documentos($idformato, $iddoc){
 
 function radicar_plantilla3(){ 
    global $conn,$sql,$ruta_db_superior;
-   
+
 	$valores=array();
 	$plantilla="";
 	$idformato=0;
@@ -880,9 +918,8 @@ function radicar_plantilla3(){
       }       
     } 
     llama_funcion_accion($iddoc,$idformato,"adicionar","ANTERIOR");
-   /* if($_POST["iddoc"] && $_POST["tabla"]=="ft_decision_disciplinaria")
-      $idplantilla=guardar_decision_disciplinaria($_POST["iddoc"]);
-    else*/if($_POST["iddoc"])
+    
+    if($_POST["iddoc"])
       $idplantilla=guardar_documento($_POST["iddoc"]);
  	  //die();
     if(!$idplantilla)  
