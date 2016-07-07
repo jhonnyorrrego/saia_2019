@@ -51,7 +51,7 @@ if((@$_REQUEST["iddoc"] || @$_REQUEST["key"])&& !@$_REQUEST["idpaso_documento"])
 			<span class="control-label" for="etiqueta"><b>Responsable:</b> <?php echo($responsable[0]['nombres'] . " " . $responsable[0]['apellidos']); ?></span>
 		</div>
 		<div class="control-group">
-			<span class="control-label" for="etiqueta"><b>Tarea a realizar:</b> <?php echo($tarea[0]['tarea']); ?></span>
+			<span class="control-label" for="etiqueta"><b>Tarea a realizar:</b> <?php echo(html_entity_decode($tarea[0]['tarea'])); ?></span>
 		</div>
 		<div class="control-group">
 			<span class="control-label" for="etiqueta"><b>Descripci&oacute;n:</b> <?php echo($tarea[0]['descripcion']); ?></span>
