@@ -180,7 +180,7 @@ function ruta_aprobacion_control_documentos($idformato, $iddoc){
 	array_push($ruta,array("funcionario"=>$funcionarios_responsables[0]['aprobado'],"tipo_firma"=>1));
 	
 	//lina alzate
-	array_push($ruta,array("funcionario"=>"25166163","tipo_firma"=>2));
+	array_push($ruta,array("funcionario"=>"18532820","tipo_firma"=>2)); //camilo.cardona TEMPORALEMENTE 
 	
 	if(count($ruta)>1){		
 		$radicador_salida=busca_filtro_tabla("origen","buzon_entrada","archivo_idarchivo=".$iddoc,"idtransferencia desc",$conn);
