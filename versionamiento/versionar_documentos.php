@@ -415,6 +415,9 @@ function modificar_etiqueta_documento($datos_documento,$etiqueta){
 function poner_documento_estado_eliminado($datos_documento){
 	global $conn;
 	
+	
+	print_r($datos_documento); die();
+	
 	$sql = "UPDATE documento SET estado='ELIMINADO' WHERE iddocumento=".$datos_documento["iddocumento"];
 	//print_r($update_documento);die();
 	//phpmkr_query($update_documento,"",$datos_documento["funcionario_codigo"]);	
