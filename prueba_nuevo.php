@@ -18,6 +18,16 @@ ini_set('display_errors',true);
                 $iddocumento=11561;
                 $iddoc=11561;
 					if($iddocumento){
+					    
+					    
+					    		$control_documento = busca_filtro_tabla("a.revisado,a.aprobado,a.tipo_solicitud,a.listado_procesos,a.documento_calidad,a.nombre_documento,a.origen_documento,a.version,a.vigencia,b.ejecutor,a.secretaria","ft_control_documentos a, documento b ","a.documento_iddocumento=b.iddocumento and a.documento_iddocumento=".$iddoc,"",$conn);		
+		
+			
+		$datos_formato = explode("|",$control_documento[0]["documento_calidad"]);
+		$datos_formato = array(
+						"idformato"   => $datos_formato[0],
+						"iddocumento" => $datos_formato[1]
+					 );	
 																												
 						//$update_documento_creado = "UPDATE ft_control_documentos SET iddocumento_calidad=".$iddocumento.", iddocumento_creado=".$iddocumento." WHERE documento_iddocumento=".$iddoc;				
 						//phpmkr_query($update_documento_creado);						
