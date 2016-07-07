@@ -14,6 +14,8 @@ include_once($ruta_db_superior."formatos/mod_autocomisorio/funciones.php");
 include_once($ruta_db_superior."librerias_saia.php");
 include_once($ruta_db_superior."pantallas/lib/librerias_notificaciones.php");
 
+ini_set('display_errors',true);
+
 function validar_tipo_documento($idformato, $iddoc){
 	global $conn,$ruta_db_superior;
 	
