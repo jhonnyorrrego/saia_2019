@@ -27,7 +27,7 @@ echo(estilo_bootstrap());
 		<div class="control-group"><!--Filtro para categoria-->
           <label class="string required control-label" for="nombre">
 			<strong>PROCESO/SUBPROCESO</strong>
-			<input type="hidden" name="bksaiacondicion_listado_procesos" id="bksaiacondicion_listado_procesos" value="like">
+			<input type="hidden" name="bksaiacondicion_listado_procesos" id="bksaiacondicion_listado_procesos" value="=">
           </label>
           <div class="controls">
 			<?php 
