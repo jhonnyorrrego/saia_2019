@@ -417,6 +417,6 @@ function poner_documento_estado_eliminado($datos_documento){
 	
 	$sql = "UPDATE documento SET estado='ELIMINADO' WHERE iddocumento=".$datos_documento["iddocumento"];
 	//print_r($update_documento);die();
-	phpmkr_query($SQL,$datos_documento["funcionario_codigo"]);	
+	phpmkr_query($sql,$datos_documento["funcionario_codigo"]);	
 	//phpmkr_query($sql);
 }
