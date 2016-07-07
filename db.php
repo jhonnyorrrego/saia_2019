@@ -571,15 +571,17 @@ if($conn){
   $llave=0;  
   $tabla = ""; 
   $string_detalle="";
-  if ($accion<>"SELECT")
-   //$func = usuario_actual("funcionario_codigo");
-	if($funcionario){
+  if ($accion<>"SELECT"){
+      //$func = usuario_actual("funcionario_codigo");
+    	if($funcionario){
 		$func = $funcionario;
 	}else{
 		$func = usuario_actual("funcionario_codigo");
-	}   
-  else
-    $rs=$conn->Ejecutar_Sql($strsql);
+	}
+  }else{
+      $rs=$conn->Ejecutar_Sql($strsql);
+  }
+    
   $sqleve="";   
   switch($accion){
     case("SELECT"):
