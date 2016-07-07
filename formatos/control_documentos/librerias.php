@@ -137,7 +137,7 @@ function obtener_aprobador_documento($aprobado){
 function obtener_ultima_version_documento(){
 	global $conn;
 	
-	$iddocumento = busca_filtro_tabla("max(b.documento_iddocumento) as iddocumento_control_documento","documento a,ft_control_documentos b, documento_version c, documento d","a.iddocumento=b.documento_iddocumento and lower(a.estado) not in('eliminado', 'anulado' ,'activo') and d.iddocumento=c.documento_iddocumento and lower(d.estado) not in('eliminado', 'anulado') and b.iddocumento_calidad = c.documento_iddocumento","group by c.documento_iddocumento",$conn);		
+	$iddocumento = busca_filtro_tabla("max(b.documento_iddocumento) as iddocumento_control_documento","documento a,ft_control_documentos b, documento_version c, documento d","a.iddocumento=b.documento_iddocumento and lower(a.estado) not in('eliminado', 'anulado' ,'activo') and d.iddocumento=c.documento_iddocumento and lower(d.estado) not in('eliminado', 'anulado','activo') and b.iddocumento_calidad = c.documento_iddocumento","group by c.documento_iddocumento",$conn);		
 	
 	//$iddocumento = extrae_campo($iddocumento,"iddocumento_control_documento","U");	
 	//$iddocumento = implode(",",$iddocumento);
@@ -161,17 +161,17 @@ function obtener_ultima_version_documento2(){
 function obtener_version_documento_obsoleto($iddocumento_version){
 	global $conn;
 	
-	$documento_version = busca_filtro_tabla("iddocumento_version,numero_version, documento_iddocumento","documento_version","iddocumento_version=".$iddocumento_version,"",$conn);
+	$documento_version = busca_filtro_tabla("carga_inicial,iddocumento_version,numero_version, documento_iddocumento","documento_version","iddocumento_version=".$iddocumento_version,"",$conn);
 	
 	if($documento_version["numcampos"]){
-		$version = ('<div class="link kenlace_saia" enlace="versionamiento/listar_versiones.php?iddocumento_version='.$documento_version[0]["iddocumento_version"].'&iddocumento='.$documento_version[0]["documento_iddocumento"].'" conector="iframe" titulo="Version No '.$documento_version[0]["numero_version"].'"><center><span class="badge">'.$documento_version[0]["numero_version"].'</span></center></div>');			
+		$version = ('<div class="link kenlace_saia" enlace="versionamiento/listar_versiones.php?iddocumento_version='.$documento_version[0]["iddocumento_version"].'&iddocumento='.$documento_version[0]["documento_iddocumento"].'&carga_inicial='.$documento_version[0]["carga_inicial"].'" conector="iframe" titulo="Version No '.$documento_version[0]["numero_version"].'"><center><span class="badge">'.$documento_version[0]["numero_version"].'</span></center></div>');			
 	}
 	
 	return($version);	
 }
 function mostrar_nombre_doc($nombre){
 	$nombre=str_replace("&amp;nbsp;", " ", $nombre);
-	return(html_entity_decode($nombre));
+	return(($nombre));
 	
 }
 ?>
