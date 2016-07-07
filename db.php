@@ -573,7 +573,7 @@ if($conn){
   $string_detalle="";
   if ($accion<>"SELECT"){
       //$func = usuario_actual("funcionario_codigo");
-    	if($funcionario){
+    if($funcionario){
 		$func = $funcionario;
 	}else{
 		$func = usuario_actual("funcionario_codigo");
