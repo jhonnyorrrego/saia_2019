@@ -557,7 +557,7 @@ function phpmkr_db_close($conn)
 <Pre-condiciones>
 <Post-condiciones>
 */
-function phpmkr_query($strsql){ 
+function phpmkr_query($strsql,$funcionario=0){ 
 global $conn;
 if(!get_magic_quotes_gpc()) // SI NO ESTAN ACTIVADAS LAS MAGIC QUOTES DE PHP ESCAPA LA SECUENCIA SQL
   $strsql=stripslashes($strsql);
