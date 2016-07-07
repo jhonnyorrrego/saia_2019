@@ -1,12 +1,24 @@
 <?php
 
+$max_salida=6; // Previene algun posible ciclo infinito limitando a 10 los ../
+$ruta_db_superior=$ruta="";
+while($max_salida>0){
+  if(is_file($ruta."db.php")){
+    $ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
+  }
+  $ruta.="../";
+  $max_salida--;
+}
+include_once($ruta_db_superior."db.php");
+include_once($ruta_db_superior."librerias_saia.php");
+
 
                 $iddocumento=11561;
 
 					if($iddocumento){
 																												
-						$update_documento_creado = "UPDATE ft_control_documentos SET iddocumento_calidad=".$iddocumento.", iddocumento_creado=".$iddocumento." WHERE documento_iddocumento=".$iddoc;				
-						phpmkr_query($update_documento_creado);						
+						//$update_documento_creado = "UPDATE ft_control_documentos SET iddocumento_calidad=".$iddocumento.", iddocumento_creado=".$iddocumento." WHERE documento_iddocumento=".$iddoc;				
+						//phpmkr_query($update_documento_creado);						
 						$datos_documento_nuevo = obtener_datos_documento($iddocumento);						
 						
 						$fecha_ruta = date("Y-m", strtotime($datos_documento_nuevo["fecha"]));						
@@ -34,6 +46,8 @@
 								notificaciones("<b>Error al pasar el anexo ".$anexos[$i]["etiqueta"]." a la carpeta del documento.</b>","warning",8500);											
 							}else{								
 								$sql_anexo = "INSERT INTO anexos(documento_iddocumento, ruta, tipo, etiqueta, formato, fecha) VALUES(".$iddocumento.",'".$ruta_destino."','".$anexos[$i]['tipo']."','".$anexos[$i]['etiqueta']."',".$datos_formato['idformato'].",".fecha_db_almacenar(date("Y-m-d"),"Y-m-d").")";							
+								
+								print_r($sql_anexo);die();
 													
 								phpmkr_query($sql_anexo);								
 								$idanexo = phpmkr_insert_id();							 
