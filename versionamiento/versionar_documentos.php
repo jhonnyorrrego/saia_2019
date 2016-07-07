@@ -17,7 +17,7 @@ include_once($ruta_db_superior."formatos/librerias/funciones_generales.php");
 include_once($ruta_db_superior."pantallas/lib/librerias_notificaciones.php");
 
 
-ini_set("display_errors",true);
+//ini_set("display_errors",true);
 $_REQUEST['nombre_documento'] = str_replace("||"," ", $_REQUEST['nombre_documento']);
 
 $datos_documento = obtener_datos_documento($_REQUEST["iddocumento"]);
