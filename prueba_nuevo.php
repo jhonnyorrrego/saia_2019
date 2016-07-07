@@ -16,14 +16,14 @@ include_once($ruta_db_superior."formatos/librerias/funciones_generales.php");
 ini_set('display_errors',true);
 
                 $iddocumento=11561;
-
+                $iddoc=11561;
 					if($iddocumento){
 																												
 						//$update_documento_creado = "UPDATE ft_control_documentos SET iddocumento_calidad=".$iddocumento.", iddocumento_creado=".$iddocumento." WHERE documento_iddocumento=".$iddoc;				
 						//phpmkr_query($update_documento_creado);						
 						$datos_documento_nuevo = obtener_datos_documento($iddocumento);						
 						
-						print_r($datos_documento_nuevo); die();
+						
 						
 						$fecha_ruta = date("Y-m", strtotime($datos_documento_nuevo["fecha"]));						
 						$ruta_anexos = RUTA_ARCHIVOS.$datos_documento_nuevo["estado"]."/".$fecha_ruta."/".$datos_documento_nuevo["iddocumento"]."/anexos";
@@ -36,6 +36,8 @@ ini_set('display_errors',true);
 						}					
 						
 						$anexos = busca_filtro_tabla("","anexos","documento_iddocumento=".$iddoc,"",$conn);
+						
+						
 						
 						$array_anexos = array();
 													
