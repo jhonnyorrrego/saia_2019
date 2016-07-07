@@ -711,7 +711,7 @@ function confirmar_control_documentos($idformato, $iddoc){
 	global $conn,$ruta_db_superior;	
 		
 	$funcionario_encargado = busca_filtro_tabla("funcionario_codigo","vfuncionario_dc","LOWER(cargo) LIKE'coordinador%de%satisfacci%n%al%cliente%' AND  estado=1 AND estado_dep=1 AND estado_dc=1","",$conn);
-	print_r($funcionario_encargado);
+	
 	
 	$estado= busca_filtro_tabla("estado","documento","estado = 'APROBADO' AND iddocumento=".$iddoc,"",$conn);
 	
