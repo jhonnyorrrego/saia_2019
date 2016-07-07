@@ -1,4 +1,4 @@
-<?php include_once("../../formatos/librerias/funciones_generales.php"); ?><?php include_once("../librerias/header_formato.php"); ?><?php include_once("../../formatos/librerias/funciones_generales.php"); ?><div class="control-group"><label class="string control-label" style="font-size:9pt" for="tipo_solicitud"><b>tipo solicitud<input type="hidden" name="bksaiacondicion_g@tipo_solicitud" id="bksaiacondicion_g@tipo_solicitud" value="="></b></label><div class="controls"><?php genera_campo_listados_editar(288,3661,'',1,'buscar');?><div class="btn-group" data-toggle="buttons-radio" >
+<?php include_once("../librerias/funciones_generales.php"); ?><?php include_once("../librerias/header_formato.php"); ?><legend id="label_formato" class="legend">B&uacute;squeda en formato Solicitud de elaboraci&oacute;n, modificaci&oacute;n, eliminaci&oacute;n de documentos</legend><br /><br /><?php include_once("../librerias/funciones_generales.php"); ?><div class="control-group"><label class="string control-label" style="font-size:9pt" for="tipo_solicitud"><b>tipo solicitud<input type="hidden" name="bksaiacondicion_g@tipo_solicitud" id="bksaiacondicion_g@tipo_solicitud" value="="></b></label><div class="controls"><?php genera_campo_listados_editar(388,4597,'',1,'buscar');?><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_g@tipo_solicitud',this.id)">
 		    Y
 		  </button>
@@ -73,7 +73,7 @@
 		    O
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_secretaria" id="bqsaiaenlace_secretaria" value="y" />
-		</div></div></div><div class="control-group"><label class="string control-label" style="font-size:9pt" for="origen_documento"><b>origen documento<input type="hidden" name="bksaiacondicion_g@origen_documento" id="bksaiacondicion_g@origen_documento" value="like_total"></b></label><div class="controls"><?php genera_campo_listados_editar(288,3653,'',1,'buscar');?><div class="btn-group" data-toggle="buttons-radio" >
+		</div></div></div><div class="control-group"><label class="string control-label" style="font-size:9pt" for="origen_documento"><b>origen documento<input type="hidden" name="bksaiacondicion_g@origen_documento" id="bksaiacondicion_g@origen_documento" value="like_total"></b></label><div class="controls"><?php genera_campo_listados_editar(388,4599,'',1,'buscar');?><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_g@origen_documento',this.id)">
 		    Y
 		  </button>
@@ -97,7 +97,7 @@
 		    O
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_g@vigencia" id="bqsaiaenlace_g@vigencia" value="y" />
-		</div></div></div><div class="control-group"><label class="string control-label" style="font-size:9pt" for="tipo_documento"><b>tipo documento<input type="hidden" name="bksaiacondicion_g@tipo_documento" id="bksaiacondicion_g@tipo_documento" value="="></b></label><div class="controls"><?php genera_campo_listados_editar(288,3660,'',1,'buscar');?><div class="btn-group" data-toggle="buttons-radio" >
+		</div></div></div><div class="control-group"><label class="string control-label" style="font-size:9pt" for="tipo_documento"><b>tipo documento<input type="hidden" name="bksaiacondicion_g@tipo_documento" id="bksaiacondicion_g@tipo_documento" value="="></b></label><div class="controls"><?php genera_campo_listados_editar(388,4602,'',1,'buscar');?><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_g@tipo_documento',this.id)">
 		    Y
 		  </button>
@@ -113,7 +113,7 @@
 		    O
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_g@serie_doc_control" id="bqsaiaenlace_g@serie_doc_control" value="y" />
-		</div></div></div><div class="control-group"><label class="string control-label" style="font-size:9pt" for="otros_documentos"><b>Otros documentos<input type="hidden" name="bksaiacondicion_g@otros_documentos" id="bksaiacondicion_g@otros_documentos" value="="></b></label><div class="controls"><?php genera_campo_listados_editar(288,3654,'',1,'buscar');?><div class="btn-group" data-toggle="buttons-radio" >
+		</div></div></div><div class="control-group"><label class="string control-label" style="font-size:9pt" for="otros_documentos"><b>Otros documentos<input type="hidden" name="bksaiacondicion_g@otros_documentos" id="bksaiacondicion_g@otros_documentos" value="="></b></label><div class="controls"><?php genera_campo_listados_editar(388,4604,'',1,'buscar');?><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_g@otros_documentos',this.id)">
 		    Y
 		  </button>
@@ -121,7 +121,7 @@
 		    O
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_g@otros_documentos" id="bqsaiaenlace_g@otros_documentos" value="y" />
-		</div></div></div><div class="control-group"><label class="string control-label" style="font-size:9pt" for="almacenamiento"><b>almacenamiento<input type="hidden" name="bksaiacondicion_almacenamiento" id="bksaiacondicion_almacenamiento" value="like_total"></b></label><div class="controls"><?php genera_campo_listados_editar(288,3640,'',1,'buscar');?><div class="btn-group" data-toggle="buttons-radio" >
+		</div></div></div><div class="control-group"><label class="string control-label" style="font-size:9pt" for="almacenamiento"><b>almacenamiento<input type="hidden" name="bksaiacondicion_almacenamiento" id="bksaiacondicion_almacenamiento" value="like_total"></b></label><div class="controls"><?php genera_campo_listados_editar(388,4605,'',1,'buscar');?><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_almacenamiento',this.id)">
 		    Y
 		  </button>
@@ -137,7 +137,7 @@
 		    O
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_g@nombre_documento" id="bqsaiaenlace_g@nombre_documento" value="y" />
-		</div></div></div><div class="control-group"><label class="string control-label" style="font-size:9pt" for="listado_procesos"><b>Proceso/Subproceso<input type="hidden" name="bksaiacondicion_g@listado_procesos" id="bksaiacondicion_g@listado_procesos" value="like_total"></b></label><div class="controls"><?php genera_campo_listados_editar(288,3651,'',1,'buscar');?><div class="btn-group" data-toggle="buttons-radio" >
+		</div></div></div><div class="control-group"><label class="string control-label" style="font-size:9pt" for="listado_procesos"><b>Proceso/Subproceso<input type="hidden" name="bksaiacondicion_g@listado_procesos" id="bksaiacondicion_g@listado_procesos" value="like_total"></b></label><div class="controls"><?php genera_campo_listados_editar(388,4607,'',1,'buscar');?><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_listado_procesos',this.id)">
 		    Y
 		  </button>
@@ -354,4 +354,4 @@
                                eval('document.layers["esperando_aprobado"]');
                         document.poppedLayer.style.visibility = "visible";
                       }
-                	--></script></div></div><input type="hidden" name="campos_especiales" value="secretaria@arbol,documento_calidad@arbol,revisado@arbol,aprobado@arbol"><input type="hidden" name="filtro_adicional" id="filtro_adicional" value=" ft_control_documentos g @ AND  g.documento_iddocumento=iddocumento "></body><input type="hidden" name="idbusqueda_componente" value="0">
+                	--></script></div></div><input type="hidden" name="campos_especiales" value="secretaria@arbol,documento_calidad@arbol,revisado@arbol,aprobado@arbol"><input type="hidden" name="filtro_adicional" id="filtro_adicional" value=" ft_control_documentos g @ AND  g.documento_iddocumento=iddocumento "></body>
