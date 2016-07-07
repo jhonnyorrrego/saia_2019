@@ -23,6 +23,8 @@ ini_set('display_errors',true);
 						//phpmkr_query($update_documento_creado);						
 						$datos_documento_nuevo = obtener_datos_documento($iddocumento);						
 						
+						print_r($datos_documento_nuevo); die();
+						
 						$fecha_ruta = date("Y-m", strtotime($datos_documento_nuevo["fecha"]));						
 						$ruta_anexos = RUTA_ARCHIVOS.$datos_documento_nuevo["estado"]."/".$fecha_ruta."/".$datos_documento_nuevo["iddocumento"]."/anexos";
 						
