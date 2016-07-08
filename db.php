@@ -687,13 +687,14 @@ if($conn){
     break;   
   }
   
-  print_r('pasa2');
+  
   if ($accion<>"SELECT"){ 
     phpmkr_free_result($rs);
     if(DEBUGEAR_FLUJOS){
       error($strsql);
     }  
   }
+  print_r('pasa2');
   return $rs; 
 }
 }
