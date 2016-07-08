@@ -430,6 +430,9 @@ function listar_macroprocesos_and_procesos($idformato,$iddoc){
 		$("input[name='otros_documentos']").change(function(){
 		    
 		    if($(this).val()==11 || $(this).val()==12 || $(this).val()==13 || $(this).val()==14 || $(this).val()==15 || $(this).val()==16){
+		        $('#bases_calidad_option').remove();
+		         $('#listado_procesos').val("");
+		        
 		        $('#listado_procesos').append('<option id="bases_calidad_option" value="3|3" tipo="3" selected>Bases de Calidad</option>');
 		         $('#listado_procesos').val("3|3");
 		    }else{
