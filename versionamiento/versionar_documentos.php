@@ -176,15 +176,10 @@ function crear_destino_version($datos_documento){
 
 function copiar_anexos_paginas_documento($datos_documento,$documentos, $iddocumento_version){
 	global $ruta_db_superior;
-	
-	
 
-	
 	if(sizeof($documentos["anexos"])){
 		
 		$ruta = RUTA_VERSIONES.$datos_documento['iddocumento']."/".$datos_documento['version']."/anexos";
-	
-		
 		
 		if(!is_dir($ruta_db_superior.$ruta)){				
 			if(!crear_destino($ruta_db_superior.$ruta)){
@@ -192,8 +187,6 @@ function copiar_anexos_paginas_documento($datos_documento,$documentos, $iddocume
 				return(false);				
 			}
 		}
-		
-			
 		
 		if(!is_dir($ruta_db_superior.$ruta)){
 			notificaciones("<b>Error al crear la carpeta de los anexos.</b>","warning",7500);
@@ -204,11 +197,6 @@ function copiar_anexos_paginas_documento($datos_documento,$documentos, $iddocume
 			foreach($documentos["anexos"] as $anexo){
 				$ruta_origen  = $ruta_db_superior.$anexo["ruta"];
 				$ruta_destino = $ruta."/".rand().'.'.$anexo["tipo"];
-				
-			   // print_r($ruta_origen); echo('<br>');print_r($ruta_destino);	die('<-- ruta orgien - destino');
-				
-				//crear_destino($ruta_db_superior.RUTA_VERSIONES);
-				
 				if(!copy($ruta_origen, $ruta_db_superior.$ruta_destino)){					
 					notificaciones("<b>Error al pasar el anexo ".$anexo["etiqueta"]." a la carpeta de los anexos.</b>","warning",7500);
 					return(false);					
