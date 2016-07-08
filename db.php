@@ -581,7 +581,7 @@ if($conn){
   }else{
       $rs=$conn->Ejecutar_Sql($strsql);
   }
-    
+    print_r('pasa');
   $sqleve="";   
   switch($accion){
     case("SELECT"):
@@ -604,7 +604,7 @@ if($conn){
       //guardo el evento
       
       $sqleve="INSERT INTO evento(funcionario_codigo, fecha, evento, tabla_e, registro_id, estado,codigo_sql,detalle) VALUES('".$func."',".fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s').",'ADICIONAR', '$tabla', $llave, '0','','')";
-      print_r($sqleve);
+     
       $conn->Ejecutar_Sql($sqleve);
     	$registro=$conn->Ultimo_Insert();
       if($registro){
