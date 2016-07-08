@@ -86,6 +86,9 @@ if(!$datos_documento){
 				notificaciones("<b>No se creo la versi&oacute;n del documento<br />comuniquese con el administrador del sistema</b>","warning",11500);
 				die();
 			}else{
+			    
+			    print_r('pasa_carpeta destino');die();
+			    
 				if (array_key_exists('iddocumento_anexo', $_REQUEST)) {
 					$anexo_nuevo = busca_filtro_tabla("","anexos","documento_iddocumento=".$_REQUEST["iddocumento_anexo"],"",$conn);
 						
