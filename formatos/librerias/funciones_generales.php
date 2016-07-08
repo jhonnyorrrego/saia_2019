@@ -3362,9 +3362,10 @@ function crear_pdf_documento_tcpdf($datos_documento, $datos_ejecutor=null){
 	}
 	
 	
-	//print_r($ruta);die('<--- ruta pdf');
+
 	if($ruta){	
-		if(file_exists($ruta_db_superior.$ruta)){						
+		if(file_exists($ruta_db_superior.$ruta)){	
+		    	print_r($ruta);die('<--- existe ruta pdf');
 			return ($ruta);
 		}else{						
 			return(false);
