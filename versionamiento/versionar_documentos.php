@@ -339,10 +339,10 @@ function reemplazar_anexo_antiguo($anexo_antiguo,$anexos,$datos_documento){
 	
 	
 	foreach ($anexo_antiguo as $value) {
-		$delete_anexo = "delete anexos where idanexos=".$value["idanexo"];
+		$delete_anexo = "delete FROM anexos where idanexos=".$value["idanexo"];
 		phpmkr_query($delete_anexo,"",$datos_documento["funcionario_codigo"]);		
 		
-		$permiso_anexo = "delete permiso_anexo where anexos_idanexos=".$value["idanexo"];
+		$permiso_anexo = "delete FROM permiso_anexo where anexos_idanexos=".$value["idanexo"];
 		phpmkr_query($permiso_anexo,"",$datos_documento["funcionario_codigo"]);		
 		
 		if(file_exists($ruta_db_superior.$value["ruta"])){
