@@ -79,8 +79,6 @@ if($formato["numcampos"] && $_REQUEST["proceso"]){
     }else{
         	arbol_calidad_formatos($arbol, $formato[0]["idformato"], $formato[0]["nombre_tabla"], $formato[0]["etiqueta"]);	
     }
-    
-
 }
 
 function arbol_bases_calidad(&$arbol,$formato){
