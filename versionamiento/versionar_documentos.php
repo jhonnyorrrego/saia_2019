@@ -87,7 +87,7 @@ if(!$datos_documento){
 				die();
 			}else{
 			    
-			    print_r('pasa_carpeta destino');die();
+			    
 			    
 				if (array_key_exists('iddocumento_anexo', $_REQUEST)) {
 					$anexo_nuevo = busca_filtro_tabla("","anexos","documento_iddocumento=".$_REQUEST["iddocumento_anexo"],"",$conn);
@@ -111,7 +111,11 @@ if(!$datos_documento){
 				
 				$datos_documento['pdf'] = crear_pdf_documento_tcpdf($datos_documento);		 				
 			 
+			 
+			 
 			 	if(!$datos_documento['pdf']){
+			 	    print_r('muere no crea pdf');die();
+			 	    
 					notificaciones("<b>No se creo la versi&oacute;n del documento<br />comuniquese con el administrador del sistema</b>","warning",11500);
 					volver(1);
 					die();
