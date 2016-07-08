@@ -694,9 +694,9 @@ if($conn){
       error($strsql);
     }  
   }
- 
+  print_r($rs);
   return $rs; 
-   print_r('pasa2');
+  
 }
 }
 /*
