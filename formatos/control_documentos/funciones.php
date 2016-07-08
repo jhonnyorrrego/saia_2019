@@ -362,7 +362,16 @@ function listar_macroprocesos_and_procesos($idformato,$iddoc){
 			$texto.='<option value="2|'.$macros[$i]["idft_macroproceso_calidad"].'" tipo="2">'.$macros[$i]["nombre"].' (Macroproceso)</option>';
 		}
 	}
-	
+	for($i=0;$i<$bases_calidad["numcampos"];$i++){
+	    
+	    $nombre_serie=busca_filtro_tabla("nombre","serie","idserie=".$bases_calidad[$i]["tipo_base_calidad"],"",$conn);
+	    
+		if($control_documentos[0]["listado_procesos"] == "2|".$bases_calidad[$i]["idft_bases_calidad"]){
+			$texto.='<option value="2|'.$bases_calidad[$i]["idft_bases_calidad"].'" tipo="2" selected>'.$nombre_serie[0]["nombre"].' (Macroproceso)</option>';
+		}else{		
+			$texto.='<option value="2|'.$bases_calidad[$i]["idft_bases_calidad"].'" tipo="2">'.$nombre_serie[0]["nombre"].' (Macroproceso)</option>';
+		}
+	}	
 	$texto.='</select>';
 	
 	echo '<td>'.$texto.'</td>';	
