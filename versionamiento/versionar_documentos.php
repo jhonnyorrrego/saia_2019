@@ -134,7 +134,7 @@ if(!$datos_documento){
 					}else{
 						notificaciones("<b>Se creo la versi&oacute;n ".$datos_documento["version"]." del documento</b>","success",8500);						
 						$documentos     = obtener_anexos_paginas_documento($datos_documento);
-						print_r($documentos);die();
+						 
 						
 						$copia_archivos = copiar_anexos_paginas_documento($datos_documento,$documentos, $iddocumento_version);				
 																
