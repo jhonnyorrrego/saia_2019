@@ -59,53 +59,11 @@ include_once($ruta_db_superior."db.php");
 	case 10://Formato
 		$formato = busca_filtro_tabla("idformato, nombre_tabla, etiqueta","formato","lower(nombre) like'formato'","",$conn);		
    	break;   
-   	case 11:
-   	case 12:
-   	case 13:
-   	case 14:
-   	case 15:
-   	case 16:
-   	    $formato = busca_filtro_tabla("idformato, nombre_tabla, etiqueta","formato","lower(nombre) like'bases_calidad'","",$conn);
-   	    
-   	break;
 }
 
 $arbol='';
-$valores_bases_calidad=array(11,12,13,14,15,16);
 if($formato["numcampos"] && $_REQUEST["proceso"]){
-    
-    if(in_array(intval($_REQUEST['documento']),$valores_bases_calidad) && $_REQUEST["proceso"]==3){
-         arbol_bases_calidad($arbol,$formato);
-    }else{
-        	arbol_calidad_formatos($arbol, $formato[0]["idformato"], $formato[0]["nombre_tabla"], $formato[0]["etiqueta"]);	
-    }
-}
-
-function arbol_bases_calidad(&$arbol,$formato){
-	global $conn;
-	
-	/*
-11,Mision;
-12,Visión;
-13,Objetivos;
-14,Políticas;
-15,Valores;
-16,Mapa de Proceso;
-	*/
-	$nombres_base_calidad=array(11=>'misi%n',12=>'visi%n',13=>'Objet%vos',14=>'pol%t%cas',15=>'valores',16=>'mapa%de%proceso%');
-	$idserie_seleccionado=busca_filtro_tabla("","serie","cod_padre=(select idserie from serie where nombre like'bases%calidad') AND lower(nombre) like'".$nombres_base_calidad[intval($_REQUEST['documento'])]."'","",$conn);
-	
-//	print_r($idserie_seleccionado);
-	
-	$seleccionado=busca_filtro_tabla("","ft_bases_calidad a, documento b"," a.tipo_base_calidad=".$idserie_seleccionado[0]['idserie']." AND a.documento_iddocumento=b.iddocumento AND b.estado not in ('ELIMINADO', 'ANULADO', 'ACTIVO')","",$conn);
-	
-	
-	//print_r($seleccionado);
-	if($seleccionado['numcampos']){
-	    armar_ramas_arbol($arbol,1, $idserie_seleccionado[0]['nombre'], $formato[0]['idformato']."|".$seleccionado[0]['iddocumento'],$nocheckbox);	
-	}		
-    			
-	
+	arbol_calidad_formatos($arbol, $formato[0]["idformato"], $formato[0]["nombre_tabla"], $formato[0]["etiqueta"]);	
 }
 
 
