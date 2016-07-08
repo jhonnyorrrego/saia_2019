@@ -121,7 +121,7 @@ if(!$datos_documento){
 			 
 			 
 			 	if(!$datos_documento['pdf']){
-			 	    print_r($datos_documento);print_r('<-------- MUERE AQUI');
+			 	   // print_r($datos_documento);print_r('<-------- MUERE AQUI');
 			 	    	
 					notificaciones("<b>No se creo la versi&oacute;n del documento<br />comuniquese con el administrador del sistema</b>","warning",11500);
 					volver(1);
