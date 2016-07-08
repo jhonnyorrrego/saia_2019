@@ -428,7 +428,7 @@ function listar_macroprocesos_and_procesos($idformato,$iddoc){
 		})		
 		
 		$("input[name='otros_documentos']").change(function(){
-		    alert('this is the evento');
+		    alert('this is the event');
 			var documento      = $(this).val();
 			var proceso;				
 			var tipo_solicitud = $("input[name='tipo_solicitud']:checked").val();			
