@@ -350,7 +350,7 @@ function reemplazar_anexo_antiguo($anexo_antiguo,$anexos,$datos_documento){
 		if(!copy($ruta_origen,$ruta_db_superior.$ruta_destino)){			
 			notificaciones("<b>Error al pasar el anexo ".$anexos[0]["etiqueta"]." a la carpeta del documento.</b>","warning",8500);						
 		}else{
-			$sql_anexo = "INSERT INTO anexos(documento_iddocumento, ruta, tipo, etiqueta, formato, fecha) VALUES(".$datos_documento["iddocumento"].",'".$ruta_destino."','".$anexos[$i]["tipo"]."','".$anexos[$i]['etiqueta']."',".$datos_documento['idformato'].",".fecha_db_almacenar(date("Y-m-d"),"Y-m-d").")";		
+			$sql_anexo = "INSERT INTO anexos(documento_iddocumento, ruta, tipo, etiqueta, formato, fecha_anexo) VALUES(".$datos_documento["iddocumento"].",'".$ruta_destino."','".$anexos[$i]["tipo"]."','".$anexos[$i]['etiqueta']."',".$datos_documento['idformato'].",".fecha_db_almacenar(date("Y-m-d"),"Y-m-d").")";		
 																
 			phpmkr_query($sql_anexo,"",$datos_documento["funcionario_codigo"]);
 													
@@ -399,7 +399,7 @@ function adicionar_registro_nuevo_anexo($datos_documento,$anexo){
 		return(false);
 	}
 	
-	$sql_anexo = "INSERT INTO anexos(documento_iddocumento, ruta, tipo, etiqueta, formato, fecha) VALUES(".$datos_documento["iddocumento"].",'".$ruta_anexo."','".$anexo[0]['tipo']."','".$anexo[0]['etiqueta']."',".$datos_documento['idformato'].",".fecha_db_almacenar(date("Y-m-d"),"Y-m-d").")";	
+	$sql_anexo = "INSERT INTO anexos(documento_iddocumento, ruta, tipo, etiqueta, formato, fecha_anexo) VALUES(".$datos_documento["iddocumento"].",'".$ruta_anexo."','".$anexo[0]['tipo']."','".$anexo[0]['etiqueta']."',".$datos_documento['idformato'].",".fecha_db_almacenar(date("Y-m-d"),"Y-m-d").")";	
 	
 	phpmkr_query($sql_anexo,"",$datos_documento["funcionario_codigo"]);				
 	$idanexo = phpmkr_insert_id();
