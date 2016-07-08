@@ -16,7 +16,13 @@ include_once($ruta_db_superior."librerias_saia.php");
 include_once($ruta_db_superior."formatos/librerias/funciones_generales.php");
 include_once($ruta_db_superior."pantallas/lib/librerias_notificaciones.php");
 
-
+if(!@$_SESSION["LOGIN".LLAVE_SAIA]){
+	$_SESSION["LOGIN".LLAVE_SAIA]=@$_REQUEST["LOGIN"];
+	$_SESSION["usuario_actual"]=$_REQUEST["usuario_actual"];
+	$_SESSION["conexion_remota"]=1;
+	global $usuactual;
+	$usuactual=@$_REQUEST["LOGIN"];
+}
 
 //ini_set("display_errors",true);
 $_REQUEST['nombre_documento'] = str_replace("||"," ", $_REQUEST['nombre_documento']);
@@ -434,6 +440,6 @@ function poner_documento_estado_eliminado($datos_documento){
 	
 	$sql = "UPDATE documento SET estado='ELIMINADO' WHERE iddocumento=".$datos_documento["iddocumento"];
 	//print_r($update_documento);die();
-	phpmkr_query($sql,$datos_documento["funcionario_codigo"]);	
-	//phpmkr_query($sql);
+	//phpmkr_query($sql,$datos_documento["funcionario_codigo"]);	
+	phpmkr_query($sql);
 }
