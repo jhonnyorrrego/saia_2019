@@ -336,6 +336,8 @@ function listar_macroprocesos_and_procesos($idformato,$iddoc){
 	
 	$macros=busca_filtro_tabla("","ft_macroproceso_calidad a, documento b","a.documento_iddocumento=b.iddocumento and b.estado not in ('ELIMINADO', 'ANULADO', 'ACTIVO')","nombre ASC",$conn);
 	
+	$bases_calidad=busca_filtro_tabla("","ft_bases_calidad a documento b","a.documento_iddocumento=b.iddocumento AND b.estado not in ('ELIMINADO', 'ANULADO', 'ACTIVO')","",$conn);
+	
 	if($_REQUEST["iddoc"]){
 		$control_documentos = busca_filtro_tabla("listado_procesos","ft_control_documentos","documento_iddocumento=".$_REQUEST["iddoc"],"",$conn);
 	}
