@@ -148,7 +148,7 @@ function crear_destino_version($datos_documento){
 	global $ruta_db_superior;
 	
 	$ruta = $ruta_db_superior.RUTA_VERSIONES.$datos_documento['iddocumento']."/".$datos_documento['version'];
-	
+	print_r($ruta);die();
 	if(!is_dir($ruta)){				
 		if(!crear_destino($ruta)){
 			notificaciones("<b>Error al crear la carpeta de destino.</b>","warning",7500);
