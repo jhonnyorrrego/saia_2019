@@ -114,7 +114,7 @@ if(!$datos_documento){
 			 
 			 
 			 	if(!$datos_documento['pdf']){
-			 	    print_r('muere no crea pdf');die();
+			 	    
 			 	    
 					notificaciones("<b>No se creo la versi&oacute;n del documento<br />comuniquese con el administrador del sistema</b>","warning",11500);
 					volver(1);
