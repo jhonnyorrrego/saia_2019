@@ -721,7 +721,6 @@ function confirmar_control_documentos($idformato, $iddoc){
 		
 	$funcionario_encargado = busca_filtro_tabla("funcionario_codigo","vfuncionario_dc","LOWER(cargo) LIKE'coordinador%de%satisfacci%n%al%cliente%' AND  estado=1 AND estado_dep=1 AND estado_dc=1","",$conn);
 	
-	
 	$estado= busca_filtro_tabla("estado","documento","estado = 'APROBADO' AND iddocumento=".$iddoc,"",$conn);
 	
 	$fecha_confirmacion = busca_filtro_tabla(fecha_db_obtener("a.fecha_confirmacion","Y-m-d")." as fecha_confirmacion","ft_control_documentos a","a.fecha_confirmacion is not null and a.documento_iddocumento=".$iddoc,"",$conn);
