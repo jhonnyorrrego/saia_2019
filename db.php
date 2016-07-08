@@ -557,8 +557,8 @@ function phpmkr_db_close($conn)
 <Pre-condiciones>
 <Post-condiciones>
 */
-function phpmkr_query($strsql,"",$funcionario=0){ 
-global $conn;
+function phpmkr_query($strsql,$conn='',$funcionario=0){ 
+global $conn; 
 if(!get_magic_quotes_gpc()) // SI NO ESTAN ACTIVADAS LAS MAGIC QUOTES DE PHP ESCAPA LA SECUENCIA SQL
   $strsql=stripslashes($strsql);
 $rs=Null;
@@ -571,7 +571,7 @@ if($conn){
   $llave=0;  
   $tabla = ""; 
   $string_detalle="";
-  if ($accion<>"SELECT"){
+  if ($accion<>"SELECT"){ 
       //$func = usuario_actual("funcionario_codigo");
     if($funcionario){
 		$func = $funcionario;
