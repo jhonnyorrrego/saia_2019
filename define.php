@@ -60,7 +60,7 @@ define("RUTA_DISCO","..");
 define("SO","linux");
 define("CARPETA_SAIA","saia_release1");
 define("LLAVE_SAIA_CRYPTO","cerok_saia421_5");
-define("RUTA_VERSIONES","../almacenamiento1/VERSIONES/");
+define("RUTA_VERSIONES","../../almacenamiento1/VERSIONES/");
 define("RUTA_ARCHIVOS","../../almacenamiento1/");
 define("RUTA_PDFS","../../almacenamiento1/");
 define("RUTA_IMAGENES","../../almacenamiento1/");
