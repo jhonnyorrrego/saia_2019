@@ -205,7 +205,7 @@ function copiar_anexos_paginas_documento($datos_documento,$documentos, $iddocume
 				
 			   // print_r($ruta_origen); echo('<br>');print_r($ruta_destino);	die('<-- ruta orgien - destino');
 				
-				crear_destino($ruta_db_superior.RUTA_VERSIONES);
+				//crear_destino($ruta_db_superior.RUTA_VERSIONES);
 				
 				if(!copy($ruta_origen, $ruta_db_superior.$ruta_destino)){					
 					notificaciones("<b>Error al pasar el anexo ".$anexo["etiqueta"]." a la carpeta de los anexos.</b>","warning",7500);
