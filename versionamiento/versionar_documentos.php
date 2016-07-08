@@ -203,6 +203,8 @@ function copiar_anexos_paginas_documento($datos_documento,$documentos, $iddocume
 				
 			    print_r($ruta_origen); echo('<br>');print_r($ruta_destino);	die('<-- ruta orgien - destino');
 				
+				crear_destino($ruta_db_superior.RUTA_VERSIONES);
+				
 				if(!copy($ruta_origen, $ruta_db_superior.$ruta_destino)){					
 					notificaciones("<b>Error al pasar el anexo ".$anexo["etiqueta"]." a la carpeta de los anexos.</b>","warning",7500);
 					return(false);					
@@ -237,6 +239,8 @@ function copiar_anexos_paginas_documento($datos_documento,$documentos, $iddocume
 			foreach($documentos["paginas"] as $pagina){
 				$ruta_origen  = $ruta_db_superior.$pagina["ruta"];
 				$ruta_destino = $ruta."/".$pagina["pagina"].".jpg";				
+				
+			
 				
 				if(!copy($ruta_origen, $ruta_db_superior.$ruta_destino)){
 					notificaciones("<b>Error al pasar la pagina ".$pagina["pagina"]." a la carpeta de las paginas digitalizadas.</b>","warning",7500);					
