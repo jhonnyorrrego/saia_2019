@@ -3323,7 +3323,7 @@ function crear_pdf_documento_tcpdf($datos_documento, $datos_ejecutor=null){
 	
 	$pdf = busca_filtro_tabla("pdf,iddocumento,estado,plantilla,".fecha_db_obtener('fecha','Y-m-d')." as fecha,".fecha_db_obtener('fecha','Y-m')." as fecha2, numero","documento","iddocumento=".$datos_documento['iddocumento'],"",$conn);	
 		
-		print_r($datos_documento);die('<-- datos documento');
+		
 	$ruta = "";
 	
 	if($pdf[0]["pdf"]){
@@ -3358,7 +3358,7 @@ function crear_pdf_documento_tcpdf($datos_documento, $datos_ejecutor=null){
 		$ruta = $pdf[0]["pdf"];		
 	}
 	
-	print_r($ruta_db_superior.$ruta);die('<-- ruta pdf');
+	
 	
 	if($ruta){	
 		if(file_exists($ruta_db_superior.$ruta)){						
