@@ -90,7 +90,7 @@ function arbol_bases_calidad(&$arbol,$formato){
 16,Mapa de Proceso;
 	*/
 	$nombres_base_calidad=array(11=>'misi%n',12=>'visi%n',13=>'Objet%vos',14=>'pol%t%cas',15=>'valores',16=>'mapa%de%proceso%');
-	$idserie_seleccionado=busca_filtro_tabla("","serie","cod_padre=select idserie from serie where nombre like'bases%calidad' AND lower(nombre) like'".$nombres_base_calidad[intval($_REQUEST['documento'])]."'","",$conn);
+	$idserie_seleccionado=busca_filtro_tabla("","serie","cod_padre=(select idserie from serie where nombre like'bases%calidad') AND lower(nombre) like'".$nombres_base_calidad[intval($_REQUEST['documento'])]."'","",$conn);
 	
 	print_r($idserie_seleccionado);
 	
