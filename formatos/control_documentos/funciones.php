@@ -663,7 +663,7 @@ function aprobar_control_documentos($idformato, $iddoc){
 										
 						$url = "http://".RUTA_PDF."/versionamiento/versionar_documentos.php?no_redirecciona=1&iddocumento=".$datos_formato["iddocumento"]."&iddocumento_anexo=".$iddoc."&tipo_versionamiento=".$control_documento[0]["tipo_solicitud"]."&nombre_documento=".$control_documento[0]["nombre_documento"]."&version_numero=".$control_documento[0]["version"]."&funcionario_codigo=".usuario_actual("funcionario_codigo");
 						
-						print_r($url);die();
+						
 					}else{
 						$url = "http://".RUTA_PDF."/versionamiento/versionar_documentos.php?no_redirecciona=1&iddocumento=".$datos_formato["iddocumento"]."&iddocumento_anexo=".$iddoc."&tipo_versionamiento=".$control_documento[0]["tipo_solicitud"]."&nombre_documento=".$control_documento[0]["nombre_documento"]."&version_numero=".$control_documento[0]["version"]."&funcionario_codigo=".usuario_actual("funcionario_codigo");
 					}									
