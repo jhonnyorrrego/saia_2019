@@ -90,6 +90,8 @@ if(!$datos_documento){
 			$documentos     = obtener_anexos_paginas_documento($datos_documento);					
 										
 			if(!$destino){
+			    
+	    		print_r('------>MUERE AQUI<-------');   
 				notificaciones("<b>No se creo la versi&oacute;n del documento<br />comuniquese con el administrador del sistema</b>","warning",11500);
 				die();
 			}else{
