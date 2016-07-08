@@ -429,6 +429,11 @@ function listar_macroprocesos_and_procesos($idformato,$iddoc){
 		
 		$("input[name='otros_documentos']").change(function(){
 		    
+		    if($(this).val()==11 || $(this).val()==12 || $(this).val()==13 || $(this).val()==14 || $(this).val()==15 || $(this).val()==16){
+		        
+		    }
+		    
+		    
 			var documento      = $(this).val();
 			var proceso;				
 			var tipo_solicitud = $("input[name='tipo_solicitud']:checked").val();			
