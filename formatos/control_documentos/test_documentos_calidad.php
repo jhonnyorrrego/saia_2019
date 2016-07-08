@@ -79,6 +79,16 @@ if($formato["numcampos"] && $_REQUEST["proceso"]){
 
 function arbol_bases_calidad(&$arbol,$formato){
 	global $conn;
+	
+	/*
+11,Mision;
+12,Visión;
+13,Objetivos;
+14,Políticas;
+15,Valores;
+16,Mapa de Proceso;
+	*/
+	$idserie_seleccionado=busca_filtro_tabla("","serie","nombre","",$conn);
 			
 	
 	$seleccionado=busca_filtro_tabla("","ft_bases_calidad a, documento b"," A.tipo_base_calidad=".$_REQUEST['documento']." AND a.documento_iddocumento=b.iddocumento AND b.estado not in ('ELIMINADO', 'ANULADO', 'ACTIVO')","",$conn);
