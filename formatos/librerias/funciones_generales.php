@@ -3318,6 +3318,54 @@ function obtener_anexos_paginas_documento($datos_documento){
 	
 	return($documentos);
 }
-
+function crear_pdf_documento_tcpdf($datos_documento, $datos_ejecutor=null){	
+	global $conn, $ruta_db_superior;
+	
+	$pdf = busca_filtro_tabla("pdf,iddocumento,estado,plantilla,".fecha_db_obtener('fecha','Y-m-d')." as fecha,".fecha_db_obtener('fecha','Y-m')." as fecha2, numero","documento","iddocumento=".$datos_documento['iddocumento'],"",$conn);	
+		
+	$ruta = "";
+	
+	if($pdf[0]["pdf"]){
+		$ruta_pdf = $ruta_db_superior.$pdf[0]["pdf"];
+	}else{
+		$ruta_pdf = "";
+	}	
+	
+	if(!file_exists($ruta_pdf)){
+						
+		//inicializa el curl
+		$ch = curl_init();
+	
+		// Establecer URL y otras opciones apropiadas	
+		$url = "http://".RUTA_PDF_LOCAL."/class_impresion.php?iddoc=".$datos_documento['iddocumento'];
+			
+		curl_setopt($ch, CURLOPT_URL, $url);
+		
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+	
+		// Capturar la URL y pasarla al navegador
+		$responce = curl_exec($ch);
+		// Cerrar el recurso cURL y liberar recursos del sistema
+		curl_close($ch);	
+		
+		$fecha = explode("-", $datos_documento["fecha"]);	
+		
+		$ruta = RUTA_PDFS.$datos_documento["estado"]."/".$fecha[0]."-".$fecha[1]."/".$datos_documento["iddocumento"]."/pdf/";			
+		$ruta .= $datos_documento["plantilla"]."_".$datos_documento["numero"]."_".$datos_documento["fecha"].".pdf";
+		
+	}else{
+		$ruta = $pdf[0]["pdf"];		
+	}
+	
+	if($ruta){	
+		if(file_exists($ruta_db_superior.$ruta)){						
+			return ($ruta);
+		}else{						
+			return(false);
+		}	
+	}else{			
+		return(false);
+	}
+}
 
 ?>
