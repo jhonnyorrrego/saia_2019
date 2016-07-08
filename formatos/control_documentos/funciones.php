@@ -735,7 +735,6 @@ function confirmar_control_documentos($idformato, $iddoc){
 			}			
 		}
 	
-	
 		$funcionario=array();
 		$responsables=busca_filtro_tabla("destino","buzon_entrada","nombre ='POR_APROBAR' and archivo_idarchivo=".$iddoc,"",$conn);
 		for ($i=0; $i <$responsables["numcampos"] ; $i++) { 
