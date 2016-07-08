@@ -432,7 +432,8 @@ function modificar_etiqueta_documento($datos_documento,$etiqueta){
 	
 	$update_documento = "UPDATE ".$datos_documento['tabla']." SET nombre='".$etiqueta."' where documento_iddocumento=".$datos_documento['iddocumento'];
 		
-	phpmkr_query($update_documento,"",$datos_documento["funcionario_codigo"]);
+	//phpmkr_query($update_documento,"",$datos_documento["funcionario_codigo"]);
+		phpmkr_query($update_documento);
 }
 
 function poner_documento_estado_eliminado($datos_documento){
