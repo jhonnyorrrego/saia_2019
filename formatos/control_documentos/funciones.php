@@ -336,7 +336,6 @@ function listar_macroprocesos_and_procesos($idformato,$iddoc){
 	
 	$macros=busca_filtro_tabla("","ft_macroproceso_calidad a, documento b","a.documento_iddocumento=b.iddocumento and b.estado not in ('ELIMINADO', 'ANULADO', 'ACTIVO')","nombre ASC",$conn);
 	
-
 	if($_REQUEST["iddoc"]){
 		$control_documentos = busca_filtro_tabla("listado_procesos","ft_control_documentos","documento_iddocumento=".$_REQUEST["iddoc"],"",$conn);
 	}
@@ -428,19 +427,6 @@ function listar_macroprocesos_and_procesos($idformato,$iddoc){
 		})		
 		
 		$("input[name='otros_documentos']").change(function(){
-		    
-		    if($(this).val()==11 || $(this).val()==12 || $(this).val()==13 || $(this).val()==14 || $(this).val()==15 || $(this).val()==16){
-		        $('#bases_calidad_option').remove();
-		         $('#listado_procesos').val("");
-		        
-		        $('#listado_procesos').append('<option id="bases_calidad_option" value="3|3" tipo="3" selected>Bases de Calidad</option>');
-		         $('#listado_procesos').val("3|3");
-		    }else{
-		        $('#bases_calidad_option').remove();
-		         $('#listado_procesos').val("");
-		    }
-		    
-		    
 			var documento      = $(this).val();
 			var proceso;				
 			var tipo_solicitud = $("input[name='tipo_solicitud']:checked").val();			
@@ -740,7 +726,7 @@ function confirmar_control_documentos($idformato, $iddoc){
 	
 	$fecha_confirmacion = busca_filtro_tabla(fecha_db_obtener("a.fecha_confirmacion","Y-m-d")." as fecha_confirmacion","ft_control_documentos a","a.fecha_confirmacion is not null and a.documento_iddocumento=".$iddoc,"",$conn);
 	$boton = "<button class='btn btn-success' id='confirmar_cambios' >Aprobación de la Solicitud</button>";	
-    //echo($boton);
+   //echo($boton);
 	if($_REQUEST["tipo"]!=5){
 		echo(estilo_bootstrap());
 		if(($funcionario_encargado[0]["funcionario_codigo"]==usuario_actual("funcionario_codigo")) && $estado["numcampos"]){
