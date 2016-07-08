@@ -94,7 +94,7 @@ function arbol_bases_calidad(&$arbol,$formato){
 	
 //	print_r($idserie_seleccionado);
 	
-	$seleccionado=busca_filtro_tabla("","ft_bases_calidad a, documento b"," A.tipo_base_calidad=".$idserie_seleccionado[0]['idserie']." AND a.documento_iddocumento=b.iddocumento AND b.estado not in ('ELIMINADO', 'ANULADO', 'ACTIVO')","",$conn);
+	$seleccionado=busca_filtro_tabla("","ft_bases_calidad a, documento b"," a.tipo_base_calidad=".$idserie_seleccionado[0]['idserie']." AND a.documento_iddocumento=b.iddocumento AND b.estado not in ('ELIMINADO', 'ANULADO', 'ACTIVO')","",$conn);
 	
 	
 	print_r($seleccionado);
