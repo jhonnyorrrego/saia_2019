@@ -71,9 +71,10 @@ include_once($ruta_db_superior."db.php");
 }
 
 $arbol='';
+$valores_bases_calidad=array(11,12,13,14,15,16);
 if($formato["numcampos"] && $_REQUEST["proceso"]){
 	arbol_calidad_formatos($arbol, $formato[0]["idformato"], $formato[0]["nombre_tabla"], $formato[0]["etiqueta"]);	
-}else{
+}elseif(in_array(intval($_REQUEST['documento']),$valores_bases_calidad)){
     arbol_bases_calidad($arbol,$formato);
 }
 
