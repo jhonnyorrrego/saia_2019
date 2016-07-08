@@ -3355,7 +3355,7 @@ function crear_pdf_documento_tcpdf($datos_documento, $datos_ejecutor=null){
 		$fecha = explode("-", $datos_documento["fecha"]);	
 		
 		$ruta = RUTA_PDFS.$datos_documento["estado"]."/".$fecha[0]."-".$fecha[1]."/".$datos_documento["iddocumento"]."/pdf/";			
-		$ruta .= strtoupper($datos_documento["plantilla"]."_".$datos_documento["numero"]."_".$datos_documento["fecha"]).".pdf";
+		$ruta .= strtoupper($datos_documento["plantilla"])."_".strtoupper($datos_documento["numero"])."_".strtoupper($datos_documento["fecha"]).".pdf";
 		
 	}else{
 		$ruta = $pdf[0]["pdf"];		
