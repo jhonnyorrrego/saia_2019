@@ -611,7 +611,7 @@ function aprobar_control_documentos($idformato, $iddoc){
 							if(!copy($ruta_origen, $ruta_db_superior.$ruta_destino)){
 								notificaciones("<b>Error al pasar el anexo ".$anexos[$i]["etiqueta"]." a la carpeta del documento.</b>","warning",8500);											
 							}else{								
-								$sql_anexo = "INSERT INTO anexos(documento_iddocumento, ruta, tipo, etiqueta, formato, fecha) VALUES(".$iddocumento.",'".$ruta_destino."','".$anexos[$i]['tipo']."','".$anexos[$i]['etiqueta']."',".$datos_formato['idformato'].",".fecha_db_almacenar(date("Y-m-d"),"Y-m-d").")";							
+								$sql_anexo = "INSERT INTO anexos(documento_iddocumento, ruta, tipo, etiqueta, formato, fecha_anexo) VALUES(".$iddocumento.",'".$ruta_destino."','".$anexos[$i]['tipo']."','".$anexos[$i]['etiqueta']."',".$datos_formato['idformato'].",".fecha_db_almacenar(date("Y-m-d"),"Y-m-d").")";							
 													
 								phpmkr_query($sql_anexo);								
 								$idanexo = phpmkr_insert_id();							 
