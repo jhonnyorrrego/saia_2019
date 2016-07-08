@@ -655,7 +655,10 @@ function aprobar_control_documentos($idformato, $iddoc){
 				}											
 			break;
 			default:						
-				if ($datos_formato["iddocumento"]){							
+				if ($datos_formato["iddocumento"]){	
+				    
+				    print_r($control_documento[0]["origen_documento"]);die();
+				
 					if($control_documento[0]["origen_documento"] == 1){
 										
 						$url = "http://".RUTA_PDF."/versionamiento/versionar_documentos.php?no_redirecciona=1&iddocumento=".$datos_formato["iddocumento"]."&iddocumento_anexo=".$iddoc."&tipo_versionamiento=".$control_documento[0]["tipo_solicitud"]."&nombre_documento=".$control_documento[0]["nombre_documento"]."&version_numero=".$control_documento[0]["version"]."&funcionario_codigo=".usuario_actual("funcionario_codigo");
