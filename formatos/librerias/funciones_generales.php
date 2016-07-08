@@ -3291,6 +3291,33 @@ function obtener_mes_letra($mes){
 	return $mes;
 
 }
+function obtener_anexos_paginas_documento($datos_documento){
+	global $ruta_db_superior;
+	
+	$documentos = array();
+	
+	$anexos = busca_filtro_tabla("ruta, etiqueta, tipo, idanexos","anexos","documento_iddocumento=".$datos_documento["iddocumento"],"",$conn);	
+	
+	for($i=0; $i < $anexos['numcampos']; $i++){
+		$documentos['anexos'][] = array(
+									"ruta"		=> $anexos[$i]['ruta'],
+									"etiqueta" 	=> $anexos[$i]['etiqueta'],
+									"tipo" 	    => $anexos[$i]['tipo'],
+									"idanexo" 	=> $anexos[$i]['idanexos']									
+								);
+	}		
+	
+	$paginas = busca_filtro_tabla("ruta,pagina","pagina","id_documento=".$datos_documento["iddocumento"],"",$conn);	
+	
+	for($i=0; $i < $paginas['numcampos']; $i++){
+		$documentos['paginas'][] = array(
+									"ruta"		=> $paginas[$i]['ruta'],
+									"pagina"    => $paginas[$i]['pagina'],
+								);
+	}
+	
+	return($documentos);
+}
 
 
 ?>
