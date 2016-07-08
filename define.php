@@ -38,7 +38,7 @@ if(!defined("RUTA_PDF_LOCAL")){
 }
 if(!defined("PERMISOS_CARPETAS"))
   define("PERMISOS_CARPETAS",0777);
-if(!defined("PERMISOS_ARCHIVOS"))
+if(!defined("PERMISOS_ARCHIVOS")) 
   define("PERMISOS_ARCHIVOS",0777);
 define("DEBUGEAR",0);
 define("DEBUGEAR_FLUJOS",0);
