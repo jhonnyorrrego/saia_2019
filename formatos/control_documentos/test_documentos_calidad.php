@@ -81,8 +81,6 @@ if($formato["numcampos"] && $_REQUEST["proceso"]){
     }
     
 
-}elseif(){
-   
 }
 
 function arbol_bases_calidad(&$arbol,$formato){
