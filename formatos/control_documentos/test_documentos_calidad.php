@@ -89,7 +89,7 @@ function arbol_bases_calidad(&$arbol,$formato){
 16,Mapa de Proceso;
 	*/
 	$nombres_base_calidad=array(11=>'mision',12=>'vision',13=>'Objetivos',14=>'politicas',15=>'valores',16=>'mapa%de%proceso%');
-	$idserie_seleccionado=busca_filtro_tabla("","serie","lower(nombre) like''","",$conn);
+	$idserie_seleccionado=busca_filtro_tabla("","serie","lower(nombre) like'".$nombres_base_calidad[intval($_REQUEST['documento'])]."'","",$conn);
 			
 	
 	$seleccionado=busca_filtro_tabla("","ft_bases_calidad a, documento b"," A.tipo_base_calidad=".$_REQUEST['documento']." AND a.documento_iddocumento=b.iddocumento AND b.estado not in ('ELIMINADO', 'ANULADO', 'ACTIVO')","",$conn);
