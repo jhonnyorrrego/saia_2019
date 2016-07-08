@@ -571,7 +571,7 @@ if($conn){
   $llave=0;  
   $tabla = ""; 
   $string_detalle="";
-  if ($accion<>"SELECT"){ 
+  if ($accion<>"SELECT"){  
       //$func = usuario_actual("funcionario_codigo");
     if($funcionario){
 		$func = $funcionario;
