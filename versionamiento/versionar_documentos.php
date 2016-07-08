@@ -201,7 +201,7 @@ function copiar_anexos_paginas_documento($datos_documento,$documentos, $iddocume
 				$ruta_origen  = $ruta_db_superior.$anexo["ruta"];
 				$ruta_destino = $ruta."/".rand().'.'.$anexo["tipo"];
 				
-			    print_r($ruta_origen); echo('<br>');print_r($ruta_destino);	die('<-- ruta orgien - destino');
+			   // print_r($ruta_origen); echo('<br>');print_r($ruta_destino);	die('<-- ruta orgien - destino');
 				
 				crear_destino($ruta_db_superior.RUTA_VERSIONES);
 				
