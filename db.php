@@ -694,7 +694,7 @@ if($conn){
       error($strsql);
     }  
   }
-  print_r($rs);
+
   return $rs; 
   
 }
