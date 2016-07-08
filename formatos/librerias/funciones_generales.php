@@ -3185,7 +3185,8 @@ function insertar_ruta_aprobacion_documento($ruta,$iddoc){
 function obtener_datos_documento($iddocumento){
 	global $conn;	
 	
-	$documento = busca_filtro_tabla("A.iddocumento, A.numero ,A.estado, B.nombre, B.etiqueta, A.descripcion, B.nombre_tabla,B.idformato,A.pdf","documento A, formato B","LOWER(A.plantilla) LIKE(B.nombre) AND A.iddocumento=".$iddocumento,"",$conn);	
+	//$documento = busca_filtro_tabla("A.iddocumento, A.numero ,A.estado, B.nombre, B.etiqueta, A.descripcion, B.nombre_tabla,B.idformato,A.pdf","documento A, formato B","LOWER(A.plantilla) LIKE(B.nombre) AND A.iddocumento=".$iddocumento,"",$conn);
+	$documento = busca_filtro_tabla(fecha_db_obtener("A.fecha","Y-m-d")." as fecha, A.numero, A.iddocumento, B.nombre, B.etiqueta, A.descripcion, B.nombre_tabla,B.idformato,A.estado","documento A, formato B","LOWER(A.plantilla) LIKE(B.nombre) AND A.iddocumento=".$iddocumento,"",$conn);
 	
 	if($_REQUEST["funcionario_codigo"]){
 		$funcionario_codigo = $_REQUEST["funcionario_codigo"];
@@ -3205,6 +3206,8 @@ function obtener_datos_documento($iddocumento){
 						"etiqueta"	  			  => 	$documento[0]['etiqueta'],
 						"descripcion"  			  => 	$documento[0]['descripcion'],
 						"tabla"	  	  			  => 	$documento[0]['nombre_tabla'],
+						"fecha"              => $documento[0]['fecha'],
+						"numero"             => $documento[0]['numero'],						
 						"pdf"	  	  			  => 	$documento[0]['pdf'],
 						"funcionario_codigo"	=> $funcionario_codigo
 					);
