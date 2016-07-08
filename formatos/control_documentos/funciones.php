@@ -683,6 +683,8 @@ function aprobar_control_documentos($idformato, $iddoc){
 			$ch = curl_init();
 		
 			//Establecer URL y otras opciones apropiadas
+			$datos_session="";
+			
 			curl_setopt($ch, CURLOPT_URL, $url);		
 			curl_setopt($ch, CURLOPT_HEADER, 0);
 
