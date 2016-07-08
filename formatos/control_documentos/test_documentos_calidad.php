@@ -65,13 +65,26 @@ include_once($ruta_db_superior."db.php");
    	case 14:
    	case 15:
    	case 16:
-   	    $formato = busca_filtro_tabla("idformato, nombre_tabla, etiqueta","formato","lower(nombre) like'bases_calidad'","",$conn);		
+   	    $formato = busca_filtro_tabla("idformato, nombre_tabla, etiqueta","formato","lower(nombre) like'bases_calidad'","",$conn);
+   	    
    	break;
 }
 
 $arbol='';
 if($formato["numcampos"] && $_REQUEST["proceso"]){
 	arbol_calidad_formatos($arbol, $formato[0]["idformato"], $formato[0]["nombre_tabla"], $formato[0]["etiqueta"]);	
+}else{
+    arbol_bases_calidad($arbol,$formato);
+}
+
+function arbol_bases_calidad(&$arbol,$formato){
+	global $conn;
+			
+	
+	$seleccionado=busca_filtro_tabla("","ft_bases_calidad a, documento b"," A.tipo_base_calidad=".$_REQUEST['documento']." AND a.documento_iddocumento=b.iddocumento AND b.estado not in ('ELIMINADO', 'ANULADO', 'ACTIVO')","",$conn);
+			
+    armar_ramas_arbol($arbol,1, $etiqueta, $idformato."|",$nocheckbox);				
+	
 }
 
 
