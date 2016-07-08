@@ -170,7 +170,7 @@ function copiar_anexos_paginas_documento($datos_documento,$documentos, $iddocume
 	global $ruta_db_superior;
 	
 	
-	die('<-- entra aqui');
+
 	
 	if(sizeof($documentos["anexos"])){
 		
@@ -183,7 +183,7 @@ function copiar_anexos_paginas_documento($datos_documento,$documentos, $iddocume
 			}
 		}
 		
-		
+			die('<-- pasa crear carpeta');
 		
 		if(!is_dir($ruta_db_superior.$ruta)){
 			notificaciones("<b>Error al crear la carpeta de los anexos.</b>","warning",7500);
