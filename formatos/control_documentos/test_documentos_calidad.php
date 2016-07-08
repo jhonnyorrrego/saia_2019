@@ -93,7 +93,7 @@ function arbol_bases_calidad(&$arbol,$formato){
 	
 	$seleccionado=busca_filtro_tabla("","ft_bases_calidad a, documento b"," A.tipo_base_calidad=".$idserie_seleccionado[0]['idserie']." AND a.documento_iddocumento=b.iddocumento AND b.estado not in ('ELIMINADO', 'ANULADO', 'ACTIVO')","",$conn);
 			
-    armar_ramas_arbol($arbol,1, $etiqueta, $idformato."|",$nocheckbox);				
+    armar_ramas_arbol($arbol,1, $seleccionado[0]['nombre'], $formato[0]['idformato']."|",$nocheckbox);				
 	
 }
 
