@@ -687,7 +687,7 @@ if($conn){
     break;   
   }
   
-  print_r('pasa');
+  print_r('pasa2');
   if ($accion<>"SELECT"){ 
     phpmkr_free_result($rs);
     if(DEBUGEAR_FLUJOS){
