@@ -59,6 +59,14 @@ include_once($ruta_db_superior."db.php");
 	case 10://Formato
 		$formato = busca_filtro_tabla("idformato, nombre_tabla, etiqueta","formato","lower(nombre) like'formato'","",$conn);		
    	break;   
+   	case 11:
+   	case 12:
+   	case 13:
+   	case 14:
+   	case 15:
+   	case 16:
+   	    $formato = busca_filtro_tabla("idformato, nombre_tabla, etiqueta","formato","lower(nombre) like'bases_calidad'","",$conn);		
+   	break;
 }
 
 $arbol='';
