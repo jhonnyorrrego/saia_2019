@@ -581,7 +581,7 @@ if($conn){
   }else{
       $rs=$conn->Ejecutar_Sql($strsql);
   }
-    print_r('pasa');
+    
   $sqleve="";   
   switch($accion){
     case("SELECT"):
@@ -685,7 +685,9 @@ if($conn){
     default:
       $rs=$conn->Ejecutar_Sql($strsql);
     break;   
-  }  
+  }
+  
+  print_r('pasa');
   if ($accion<>"SELECT"){ 
     phpmkr_free_result($rs);
     if(DEBUGEAR_FLUJOS){
