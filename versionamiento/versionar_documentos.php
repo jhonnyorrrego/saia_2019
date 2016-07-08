@@ -183,6 +183,8 @@ function copiar_anexos_paginas_documento($datos_documento,$documentos, $iddocume
 	if(sizeof($documentos["anexos"])){
 		
 		$ruta = RUTA_VERSIONES.$datos_documento['iddocumento']."/".$datos_documento['version']."/anexos";
+		crear_destino($ruta_db_superior.RUTA_VERSIONES);
+		
 		
 		if(!is_dir($ruta_db_superior.$ruta)){				
 			if(!crear_destino($ruta_db_superior.$ruta)){
