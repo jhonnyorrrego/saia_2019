@@ -102,7 +102,7 @@ function arbol_bases_calidad(&$arbol,$formato){
 	
 	//print_r($seleccionado);
 	if($seleccionado['numcampos']){
-	    armar_ramas_arbol($arbol,1, $idserie_seleccionado[0]['nombre'], $formato[0]['idformato']."|".$seleccionado[0]['idocumento'],$nocheckbox);	
+	    armar_ramas_arbol($arbol,1, $idserie_seleccionado[0]['nombre'], $formato[0]['idformato']."|".$seleccionado[0]['iddocumento'],$nocheckbox);	
 	}		
     			
 	
