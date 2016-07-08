@@ -16,6 +16,7 @@ include_once($ruta_db_superior."librerias_saia.php");
 include_once($ruta_db_superior."formatos/librerias/funciones_generales.php");
 include_once($ruta_db_superior."pantallas/lib/librerias_notificaciones.php");
 
+print_r($_REQUEST);die();
 
 //ini_set("display_errors",true);
 $_REQUEST['nombre_documento'] = str_replace("||"," ", $_REQUEST['nombre_documento']);
