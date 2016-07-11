@@ -16,7 +16,7 @@ include_once($ruta_db_superior."pantallas/lib/librerias_notificaciones.php");
 
 echo(estilo_bootstrap());
 
-ini_set('display_errors',true);
+//ini_set('display_errors',true);
 
 if(array_key_exists('iddocumento_version',$_REQUEST)){		
 	$versiones = busca_filtro_tabla("b.idanexos_version, b.ruta,b.etiqueta,b.tipo,b.version_numero","documento_version a, anexos_version b, version_pivote_anexo c","a.iddocumento_version=c.iddocumento_version and b.idanexos_version=c.idanexos_version and a.iddocumento_version=".$_REQUEST["iddocumento_version"],"a.numero_version DESC",$conn);	
@@ -25,7 +25,7 @@ if(array_key_exists('iddocumento_version',$_REQUEST)){
 }
 
 
-
+ 
 
 if($_REQUEST["carga_inicial"]==1){
 	$versiones = busca_filtro_tabla("","documento_version a, anexos b","a.documento_iddocumento=b.documento_iddocumento and carga_inicial=1 and a.documento_iddocumento=".$_REQUEST["iddocumento"],"",$conn);
