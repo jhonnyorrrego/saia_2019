@@ -174,6 +174,8 @@ function reporte_entradas2($idformato,$iddoc){
 }
 function reporte_salidas2($idformato,$iddoc){
 	global $conn,$documentos,$ruta_db_superior;
+	
+	echo("123");
 	$documentos2=busca_filtro_tabla("","documento A,ft_despacho_fisico","documento_iddocumento=iddocumento and A.iddocumento =".$iddoc,"",$conn);
 	$funcionario=busca_filtro_tabla("","vfuncionario_dc","idfuncionario=".$documentos2[0]['mensajero'],"",$conn);
 	$texto='';
@@ -206,7 +208,7 @@ function reporte_salidas2($idformato,$iddoc){
 	$texto.='<td style="text-align:center"><b>Direcci&oacute;n</b></td>';
 	$texto.='<td style="text-align:center"><b>Tel&eacute;fono</b></td>';
 	$texto.='<td style="text-align:center"><b>Ciudad</b></td>';
-	$texto.='<td style="text-align:center"><b>Recibido por</b></td>';
+	$texto.='<td style="text-align:center"><b>Recibido por...</b></td>';
 	$texto.='</tr>';
 	for($i=0;$i<$documentos["numcampos"];$i++){
 		$texto.='<tr>';
