@@ -18,6 +18,7 @@ if($reportes[$i]["ruta_libreria"]!=''){
 		include_once($ruta_db_superior.$librerias[$j]);
 	}		
 }
+$i=0;
 $regs=array();	
 $resultado=preg_match_all( '({\*([a-z]+[0-9]*[_]*[a-z]*[0-9]*[.]*[,]*[@]*)+\*})',$reportes[$i]["descripcion"], $regs );
 unset($valor_variables);

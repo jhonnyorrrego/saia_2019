@@ -173,6 +173,12 @@ if(isset($_REQUEST['iddoc_verificacion'])){
 	$htmlfun.="<b>Fecha: </b>".date("Y-m-d H:i");
 	echo $htmlfun;
 }
-
+function cantidad_total_funcion(){
+	global $conn;
+	$consulta=busca_filtro_tabla("count(*) as cant","ft_pqrsf a, documento b","a.documento_iddocumento=b.iddocumento and b.estado not in('ELIMINADO')","",$conn);
+	$cadena="Total<br/>";
+	$cadena.=$consulta[0]["cant"];
+	return($cadena);
+}
 
 ?>
