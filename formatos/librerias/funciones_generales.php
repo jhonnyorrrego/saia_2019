@@ -3372,7 +3372,27 @@ function crear_pdf_documento_tcpdf($datos_documento, $datos_ejecutor=null){
 		}	
 	}else{			
 		return(false);
-	}
+	} 
+} 
+
+function obtener_funciones_anexo($idanexo, $tipo, $ruta,$etiqueta){
+	global $ruta_db_superior;	
+	
+	$array_tipos = array('jpg','png','pdf');	
+	//<a class="btn btn-mini abrir_higslide" alto="620" ruta="'.$ruta.'">Ver</a>
+	if(in_array($tipo, $array_tipos) && filesize($ruta_db_superior.$ruta) <= 110000){
+		$button = '<div class="btn-group">
+		<!--a class="btn btn-mini abrir_higslide" alto="620" ruta="'.$ruta.'">Ver</a-->
+		<a href="'.$ruta_db_superior.'versionamiento/download_file.php?etiqueta='.$etiqueta.'&ruta='.$ruta.'" class="btn btn-mini btn-primary" >Descargar</a>						    
+				   </div>
+			      ';	
+	}else{
+		$button = '<div class="btn-group">					
+					<a href="'.$ruta_db_superior.'versionamiento/download_file.php?etiqueta='.$etiqueta.'&ruta='.$ruta.'" class="btn btn-mini btn-primary" >Descargar</a>						    
+				   </div>
+			      ';
+	}			   
+	return($button);
 }
 
 ?>
