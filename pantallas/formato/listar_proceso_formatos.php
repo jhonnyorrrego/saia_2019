@@ -14,7 +14,6 @@ include_once($ruta_db_superior."pantallas/lib/encabezado_componente.php");
 usuario_actual("login");
 
 $consulta=busca_filtro_tabla('','categoria_formato','cod_padre=2 and estado=1','nombre ASC',$conn);
-
 $adicional="";
 $request=array();
 foreach(@$_REQUEST as $id => $value){
