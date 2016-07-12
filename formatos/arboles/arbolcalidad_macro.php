@@ -149,7 +149,7 @@ for($i=0;$i<$dependencia["numcampos"];$i++){
       <?php } ?>
       
          <?php 
-         $iddoc_mapa_proceso=busca_filtro_tabla("idformato","formato","nombre_tabla LIKE'ft_proceso'","",$conn);
+         $iddoc_mapa_proceso=busca_filtro_tabla("idformato","formato","lower(nombre)='proceso'","",$conn);
          ?>
          if( parseInt($('#ejecutar_evento_mapa_proceso').val())==1 ){
              tree_calidad.selectItem(parseInt('<?php echo($iddoc_mapa_proceso[0]['idformato']); ?>'),true,false); /*por defecto Mapa de proceso*/
