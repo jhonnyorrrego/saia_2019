@@ -2,7 +2,7 @@
 
 include_once('db.php');
 
-$idbusqueda=643;
+$idbusqueda=74;
 $consulta=busca_filtro_tabla("","busqueda","idbusqueda=".$idbusqueda,"",$conn);
 $busqueda=$consulta;
 for($i=0;$i<count($busqueda[0]);$i++){
