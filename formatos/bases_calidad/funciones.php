@@ -51,7 +51,7 @@ function mostrar_anexos_soporte($idformato,$iddoc){
 function mostrar_ocultar_anexo_bases_calidad($idformato,$iddoc){
      global $conn,$ruta_db_superior;  
      
-     $serie_mapa_proceso=busca_filtro_tabla("idserie","serie","lower(nombre)='mapa de proceso'","",$conn);
+     $serie_mapa_proceso=busca_filtro_tabla("idserie","serie","lower(nombre) LIKE'mapa de proceso%'","",$conn);
      $idserie_mapa_proceso="";
      if($serie_mapa_proceso['numcampos']){
          $idserie_mapa_proceso=$serie_mapa_proceso[0]['idserie'];
