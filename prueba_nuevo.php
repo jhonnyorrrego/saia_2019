@@ -2,14 +2,13 @@
 
 include_once('db.php');
 
-$idbusqueda=75;
+$idbusqueda=76;
 $consulta=busca_filtro_tabla("","busqueda","idbusqueda=".$idbusqueda,"",$conn);
 $busqueda=$consulta;
 for($i=0;$i<count($busqueda[0]);$i++){
 	unset($busqueda[0][$i]);
 }
 unset($busqueda[0]['idbusqueda']);
-
 $tabla="busqueda";
 $fieldList=array();
 		
