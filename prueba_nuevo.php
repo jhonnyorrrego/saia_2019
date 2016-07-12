@@ -1,90 +1,73 @@
 <?php
 
-$max_salida=6; // Previene algun posible ciclo infinito limitando a 10 los ../
-$ruta_db_superior=$ruta="";
-while($max_salida>0){
-  if(is_file($ruta."db.php")){
-    $ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
-  }
-  $ruta.="../";
-  $max_salida--;
+include_once('db.php');
+
+$idbusqueda=643;
+$consulta=busca_filtro_tabla("","busqueda","idbusqueda=".$idbusqueda,"",$conn);
+$busqueda=$consulta;
+for($i=0;$i<count($busqueda[0]);$i++){
+	unset($busqueda[0][$i]);
 }
-include_once($ruta_db_superior."db.php");
-include_once($ruta_db_superior."librerias_saia.php");
-include_once($ruta_db_superior."formatos/librerias/funciones_generales.php");
+unset($busqueda[0]['idbusqueda']);
 
-ini_set('display_errors',true);
-
-                $iddocumento=11561;
-                $iddoc=11561;
-					if($iddocumento){
-					    
-					    
-					    		$control_documento = busca_filtro_tabla("a.revisado,a.aprobado,a.tipo_solicitud,a.listado_procesos,a.documento_calidad,a.nombre_documento,a.origen_documento,a.version,a.vigencia,b.ejecutor,a.secretaria","ft_control_documentos a, documento b ","a.documento_iddocumento=b.iddocumento and a.documento_iddocumento=".$iddoc,"",$conn);		
+$tabla="busqueda";
+$fieldList=array();
 		
+$strsql = "INSERT INTO ".$tabla." (";
+$strsql .= implode(",", array_keys($busqueda[0]));			
+$strsql .= ") VALUES ('";			
+$strsql .= implode("','", array_values($busqueda[0]));			
+$strsql .= "')";
+		
+echo($strsql); //imprimo busqueda
+
+echo('<br><br><br>');
+
+$consulta_componente=busca_filtro_tabla("","busqueda_componente","busqueda_idbusqueda=".$idbusqueda,"",$conn);
+$busqueda_componente=$consulta_componente;
+
+for($j=0;$j<$busqueda_componente['numcampos'];$j++){
+	for($i=0;$i<count($busqueda_componente[$j]);$i++){
+		unset($busqueda_componente[$j][$i]);
+	}
+	unset($busqueda_componente[$j]['idbusqueda_componente']);
+	$tabla="busqueda_componente";
+	$fieldList=array();
 			
-		$datos_formato = explode("|",$control_documento[0]["documento_calidad"]);
-		$datos_formato = array(
-						"idformato"   => $datos_formato[0],
-						"iddocumento" => $datos_formato[1]
-					 );	
-																												
-						//$update_documento_creado = "UPDATE ft_control_documentos SET iddocumento_calidad=".$iddocumento.", iddocumento_creado=".$iddocumento." WHERE documento_iddocumento=".$iddoc;				
-						//phpmkr_query($update_documento_creado);						
-						$datos_documento_nuevo = obtener_datos_documento($iddocumento);						
-						
-						
-						
-						$fecha_ruta = date("Y-m", strtotime($datos_documento_nuevo["fecha"]));						
-						$ruta_anexos = RUTA_ARCHIVOS.$datos_documento_nuevo["estado"]."/".$fecha_ruta."/".$datos_documento_nuevo["iddocumento"]."/anexos";
-						
-						if(!is_dir($ruta_db_superior.$ruta_anexos)){				
-							if(!crear_destino($ruta_db_superior.$ruta_anexos)){
-								notificaciones("<b>Error al crear la carpeta del anexo.</b>","warning",8500);
-								return(false);			
-							}
-						}					
-						
-						$anexos = busca_filtro_tabla("","anexos","documento_iddocumento=".$iddoc,"",$conn);
-						
-						
-						
-						$array_anexos = array();
-													
-						for ($i=0; $i < $anexos["numcampos"]; $i++) {
-							$nombre_anexo = explode("/", $anexos[$i]['ruta']);
-							$nombre_anexo = $nombre_anexo[sizeof($nombre_anexo)-1];	
-							
-							$ruta_origen  = $ruta_db_superior.$anexos[$i]['ruta'];
-							$ruta_destino = $ruta_anexos."/".$nombre_anexo; 					
-																
-							if(!copy($ruta_origen, $ruta_db_superior.$ruta_destino)){
-								notificaciones("<b>Error al pasar el anexo ".$anexos[$i]["etiqueta"]." a la carpeta del documento.</b>","warning",8500);											
-							}else{								
-								$sql_anexo = "INSERT INTO anexos(documento_iddocumento, ruta, tipo, etiqueta, formato, fecha) VALUES(".$iddocumento.",'".$ruta_destino."','".$anexos[$i]['tipo']."','".$anexos[$i]['etiqueta']."',".$datos_formato['idformato'].",".fecha_db_almacenar(date("Y-m-d"),"Y-m-d").")";							
-								
-								print_r($sql_anexo);die();
-													
-								phpmkr_query($sql_anexo);								
-								$idanexo = phpmkr_insert_id();							 
-								
-								$array_anexos[] = $idanexo;
-								
-								if(!$idanexo){
-									notificaciones("<b>Error al registrar el anexo ".$anexos[$i]["etiqueta"]."</b>","warning",8500);
-								}else{
-									$permiso_anexo = busca_filtro_tabla("","permiso_anexo","anexos_idanexos=".$anexos[$i]["idanexos"],"",$conn);
-									
-									$sql_permiso_anexo = "INSERT INTO permiso_anexo(anexos_idanexos, idpropietario, caracteristica_propio, caracteristica_dependencia, caracteristica_cargo, caracteristica_total) VALUES(".$idanexo.",'".$permiso_anexo[0]['idpropietario']."','".$permiso_anexo[0]['caracteristica_propio']."','".$permiso_anexo[0]['caracteristica_dependencia']."','".$permiso_anexo[0]['caracteristica_cargo']."','".$permiso_anexo[0]["caracteristica_total"]."')";					
-									phpmkr_query($sql_permiso_anexo);						
-									$idpermiso_anexo = phpmkr_insert_id();							
-							
-									if(!$idpermiso_anexo){
-										notificaciones("<b>Error al registrar los permisos del anexo ".$anexos[$i]["etiqueta"]."</b>","warning",8500);
-									}									
-								}															
-							}	
-						}	
-					}	
-						
-						?>
+	$strsql = "INSERT INTO ".$tabla." (";
+	$strsql .= implode(",", array_keys($busqueda_componente[$j]));			
+	$strsql .= ") VALUES ('";			
+	$strsql .= implode("','", array_values($busqueda_componente[$j]));			
+	$strsql .= "')";
+			
+	echo($strsql); //imprimo busqueda componente
+	echo('<br><br>');
+	$sql_condicion='&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>';
+	
+	$consulta_condicion=busca_filtro_tabla("","busqueda_condicion","fk_busqueda_componente=".$consulta_componente[$j]['idbusqueda_componente'],"",$conn);
+	
+	if(!$consulta_condicion['numcampos']){
+		$consulta_condicion=busca_filtro_tabla("","busqueda_condicion","busqueda_idbusqueda=".$idbusqueda,"",$conn);
+	}
+	if($consulta_condicion['numcampos']){
+		
+		for($x=0;$x<count($consulta_condicion[0]);$x++){
+			unset($consulta_condicion[0][$x]);
+		}
+		unset($consulta_condicion[0]['idbusqueda_condicion']);
+		$tabla="busqueda_condicion";
+		$fieldList=array();
+					
+		$strsql = "INSERT INTO ".$tabla." (";
+			$strsql .= implode(",", array_keys($consulta_condicion[0]));			
+			$strsql .= ") VALUES ('";			
+			$strsql .= implode("','", array_values($consulta_condicion[0]));			
+			$strsql .= "')";
+					
+		$sql_condicion.=$strsql.'</b>';
+		echo($sql_condicion); //imprimo busqueda condicion
+		echo('<br><br><br>');		
+	}	
+}
+die();
+?>
