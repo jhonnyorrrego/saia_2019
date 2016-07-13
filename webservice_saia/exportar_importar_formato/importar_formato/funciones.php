@@ -224,6 +224,7 @@ function generar_importar($datos){
 	$keys_datos_formato[]='fk_categoria_formato';
 	
 	$keys_formato_insertar=listar_campos_tabla('formato');  //key a insertar
+	$keys_formato_insertar=array_map('strtolower', $keys_formato_insertar);
 	$campos_no_encontrados=array_diff($keys_datos_formato,$keys_formato_insertar);
 	if(count($campos_no_encontrados)){
 		$cadena_valida_campos.="Los siguientes campos no existen en la tabla formato destino: ".implode(',',$campos_no_encontrados)."<br><br>";
@@ -234,6 +235,7 @@ function generar_importar($datos){
 	if(@$datos['campos_formato']){
 		$keys_campos_formato=array_keys($datos['campos_formato'][0]);  //keys campos_formato recibidas
 		$keys_campos_formato_insertar=listar_campos_tabla('campos_formato');  //keys a insertar
+		$keys_campos_formato_insertar=array_map('strtolower', $keys_campos_formato_insertar);
 		$campos_formato_no_encontrados=array_diff($keys_campos_formato,$keys_campos_formato_insertar);
 		if(count($campos_formato_no_encontrados)){
 			$cadena_valida_campos.="Los siguientes campos no existen en la tabla campos_formato destino: ".implode(',',$campos_formato_no_encontrados)."<br><br>";
@@ -253,6 +255,7 @@ function generar_importar($datos){
 		$keys_funciones_formato=array_values($keys_funciones_formato);		
 		$keys_funciones_formato[]='formato';
 		$keys_funciones_formato_insertar=listar_campos_tabla('funciones_formato');  //keys a insertar
+		$keys_funciones_formato_insertar=array_map('strtolower', $keys_funciones_formato_insertar);
 		$funciones_formato_no_encontrados=array_diff($keys_funciones_formato,$keys_funciones_formato_insertar);
 		if(count($funciones_formato_no_encontrados)){
 			$cadena_valida_campos.="Los siguientes campos no existen en la tabla funciones_formato destino: ".implode(',',$funciones_formato_no_encontrados)."<br><br>";
@@ -275,6 +278,7 @@ function generar_importar($datos){
 			$keys_funciones_formato_accion[]='formato_idformato';
 			$keys_funciones_formato_accion[]='idfunciones_formato';
 			$keys_funciones_formato_accion_insertar=listar_campos_tabla('funciones_formato_accion');  //keys a insertar
+			$keys_funciones_formato_accion_insertar=array_map('strtolower', $keys_funciones_formato_accion_insertar);
 			$funciones_formato_accion_no_encontrados=array_diff($keys_funciones_formato_accion,$keys_funciones_formato_accion_insertar);
 			if(count($funciones_formato_accion_no_encontrados)){
 				$cadena_valida_campos.="Los siguientes campos no existen en la tabla funciones_formato_accion destino: ".implode(',',$funciones_formato_accion_no_encontrados)."<br><br>";
@@ -369,14 +373,13 @@ function generar_importar($datos){
 				$datos['datos_formato']['cod_padre']=$cod_padre;
 			}		
 				
-			//FECHA
-			$datos['datos_formato']['fecha']=date('Y-m-d H:i:s');
+            unset($datos['datos_formato']['fecha']);//FECHA
 			
 			if($insertar_formato){
 				$tabla="formato";
-				$strsql = "INSERT INTO ".$tabla." (";
+				$strsql = "INSERT INTO ".$tabla." (fecha,"; //FECHA
 				$strsql .= implode(",", array_keys($datos['datos_formato']));			
-				$strsql .= ") VALUES ('";			
+				$strsql .= ") VALUES (".fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s').",'";	//FECHA		
 				$strsql .= implode("','", array_values($datos['datos_formato']));			
 				$strsql .= "')";
 				phpmkr_query($strsql);
