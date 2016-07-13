@@ -1,5 +1,8 @@
 <?php
 
+phpinfo();
+
+die();
 include_once('db.php');
 
 $idbusqueda=46;
