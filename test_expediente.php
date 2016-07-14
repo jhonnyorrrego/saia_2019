@@ -36,10 +36,16 @@ if(@$_REQUEST["doc"]){
 
 $funcionarios=array();
 $idfunc=usuario_actual("idfuncionario");
-$datos = busca_datos_administrativos_funcionario();
 
-$arreglo_lista2=expedientes_asignados();
-$lista2=$arreglo_lista2;
+$lista2=expedientes_asignados();
+
+if(@$_REQUEST["id"] && @$_REQUEST["uid"]){
+	echo("<?xml version=\"1.0\" encoding=\"UTF-8\"?".">");
+	echo("<tree id=\"".$_REQUEST["id"]."\">\n");
+	llena_expediente($_REQUEST["id"]);
+	echo("</tree>\n");
+	die();
+}
 
 echo("<?xml version=\"1.0\" encoding=\"UTF-8\"?".">");
 echo("<tree id=\"0\">\n");
@@ -47,9 +53,7 @@ llena_expediente($id);
 echo("</tree>\n");
 
 function llena_expediente($id){
-global $conn,$sql,$exp_doc,$funcionarios,$excluidos,$datos,$dependencias,$varios,$lista2,$arreglo_lista2;
-include_once("permisos_tabla.php");
-$lista= "'".implode("','",$datos["series"])."'";
+global $conn,$sql,$exp_doc,$funcionarios,$excluidos,$dependencias,$varios,$lista2;
 if($id==0){
   $papas=busca_filtro_tabla("a.fecha, a
 .nombre, a.descripcion, a.cod_arbol, a.idexpediente, estado_cierre","vexpediente_serie a",$lista2." and (a.cod_padre=0 OR a.cod_padre IS NULL)","GROUP BY a.fecha, a
@@ -62,41 +66,42 @@ else{
 .nombre, a.descripcion, a.cod_arbol, a.idexpediente, estado_cierre order by idexpediente desc",$conn);
 } 
 
-if($papas["numcampos"])
-{ 
-  for($i=0; $i<$papas["numcampos"]; $i++)
-  {$permitido=0;
-  if(!in_array($papas[$i]["idexpediente"],$excluidos)){
-  	$texto_item="";
-		$texto_item=($papas[$i]["nombre"]);
-		if($papas[$i]["estado_cierre"]==2){
-			$texto_item.=" <span style=\"color:red\">(CERRADO)</span>";
-		}
+if($papas["numcampos"]){
+	for($i=0; $i<$papas["numcampos"]; $i++){
+  	$permitido=0;
+  	if(!in_array($papas[$i]["idexpediente"],$excluidos)){
+  		$texto_item="";
+			$texto_item=($papas[$i]["nombre"]);
+			if($papas[$i]["estado_cierre"]==2){
+				$texto_item.=" <span style=\"color:red\">(CERRADO)</span>";
+			}
 		
-  	echo("<item style=\"font-family:verdana; font-size:7pt;\" ");
-    echo("text=\"".htmlspecialchars($texto_item)." \" id=\"".$papas[$i]["idexpediente"]."\"");
-    if(@$_REQUEST["doc"]){
-      if($_REQUEST["accion"]==1 && in_array($papas[$i]["idexpediente"],$exp_doc)){
-      	if(!$varios){
-      		echo(" checked=\"1\" ");
-      	}
-				else{
+	  	echo("<item style=\"font-family:verdana; font-size:7pt;\" ");
+	    echo("text=\"".htmlspecialchars($texto_item)." \" id=\"".$papas[$i]["idexpediente"]."\"");
+	    if(@$_REQUEST["doc"]){
+      	if($_REQUEST["accion"]==1 && in_array($papas[$i]["idexpediente"],$exp_doc)){
+      		if(!$varios){
+      			echo(" checked=\"1\" ");
+      		}else{
+        		echo(" nocheckbox=\"1\" ");
+					}
+				}
+      	elseif($_REQUEST["accion"]==0 && !in_array($papas[$i]["idexpediente"],$exp_doc)){
         	echo(" nocheckbox=\"1\" ");
 				}
+    	}
+    	elseif(@$_REQUEST["seleccionado"]&&$_REQUEST["seleccionado"]==$papas[$i]["idexpediente"])
+    		echo " checked=\"1\" ";
+			if($papas[$i]["estado_cierre"]==2){
+				echo(" nocheckbox=\"1\" ");
 			}
-      elseif($_REQUEST["accion"]==0 && !in_array($papas[$i]["idexpediente"],$exp_doc)){
-        echo(" nocheckbox=\"1\" ");
+			echo(" child=\"1\" ");
+    	echo(">");
+			if(@$_REQUEST["uid"]){
+    		llena_expediente($papas[$i]["idexpediente"]);
 			}
-    }
-    elseif(@$_REQUEST["seleccionado"]&&$_REQUEST["seleccionado"]==$papas[$i]["idexpediente"])
-    	echo " checked=\"1\" ";
-		if($papas[$i]["estado_cierre"]==2){
-			echo(" nocheckbox=\"1\" ");
-		}    
-    echo(">");
-    llena_expediente($papas[$i]["idexpediente"]);
-    echo("</item>\n");
-   } 
+    	echo("</item>\n");
+   	} 
   }     
 }
 return;
