@@ -464,8 +464,8 @@ function mostrar_firma_confirmacion_documento($idformato, $iddoc){
 		$funcionario_codigo = busca_filtro_tabla("funcionario_codigo","funcionario","lower(login) like'lina.alzate'","",$conn);
 		//$firma .= "<b>FIRMA COORDINADOR SGC:</b><br />";
 		//$firma .= '<img src="http://'.RUTA_PDF.'/formatos/librerias/mostrar_foto.php?codigo='.$funcionario_codigo[0]["funcionario_codigo"].'" width="'.$ancho_firma[0]["valor"].'" height="'.$alto_firma[0]["valor"].'"/>.<br />';
-		$firma.= "FECHA DE TRAMITE Y VIGENCIA DEL DOCUMENTO : ".$fecha_confirmacion[0]["fecha_confirmacion"]."<br />";
-		$firma .= "Solicitud procesada satisfactoriamente, por favor socializar con los involucrados en el proceso.";
+		$firma.= "<span style='font-size:12pt;'>FECHA DE TRAMITE Y VIGENCIA DEL DOCUMENTO : ".$fecha_confirmacion[0]["fecha_confirmacion"]."<br />";
+		$firma .= "Solicitud procesada satisfactoriamente, por favor socializar con los involucrados en el proceso.</span>";
 		
 		echo($firma);	
 	}
