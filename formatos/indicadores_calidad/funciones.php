@@ -15,7 +15,7 @@ function formula_calculo($idformato,$iddoc){
   global $conn;
   $respuesta=busca_filtro_tabla("","respuesta,documento","destino=iddocumento and documento.estado<>'ELIMINADO' and origen=".$iddoc,"",$conn); 
   $texto='<table  class="phpmaker" width="100%">';
-  $texto.='<tr class="encabezado_list" style="font-size:10pt;"><td >Form</td><td>Formula del calculo</td><td>Unidad</td><td>Naturaleza</td><td>Periocidad</td><td>Descripci&oacute;n de varialbes</td><td>Observaciones</td></tr>';
+  $texto.='<tr class="encabezado_list" ><td style="font-size:10pt;">Form</td><td style="font-size:10pt;">Formula del calculo</td><td style="font-size:10pt;">Unidad</td><td style="font-size:10pt;">Naturaleza</td><td style="font-size:10pt;">Periocidad</td><td style="font-size:10pt;">Descripci&oacute;n de variables</td><td style="font-size:10pt;">Observaciones</td></tr>';
   for($i=0;$i<$respuesta["numcampos"];$i++){
     $formula=busca_filtro_tabla("","ft_formula_indicador","documento_iddocumento=".$respuesta[$i]["destino"],"",$conn); 
     $texto.='<tr><td>'.$formula[0]["idft_formula_indicador"].'</td><td align="center">'.$formula[0]["nombre"].'</td><td align="center">'.$formula[0]["unidad"].'</td><td align="center">'.mostrar_valor_campo('naturaleza',51,$respuesta[$i]["destino"],1).'</td><td align="center">'.mostrar_valor_campo('periocidad',51,$respuesta[$i]["destino"],1).'</td><td>'.utf8_encode(html_entity_decode($formula[0]["observacion"])).'</td><td>'.mostrar_valor_campo('observaciones',51,$respuesta[$i]["destino"],1).'</td></tr>';
