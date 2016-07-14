@@ -100,7 +100,7 @@ $dato_padre=busca_filtro_tabla("","expediente a","a.idexpediente=".$_REQUEST["co
     tree2.enableRadioButtons(true);
     tree2.setOnLoadingStart(cargando_expediente);
     tree2.setOnLoadingEnd(fin_cargando_expediente);
-    tree2.enableSmartXMLParsing(true);
+    //tree2.enableSmartXMLParsing(true);
     tree2.setXMLAutoLoading("<?php echo($ruta_db_superior);?>test_expediente.php?accion=1&permiso_editar=1");	
   	tree2.loadXML("<?php echo($ruta_db_superior);?>test_expediente.php?accion=1&permiso_editar=1");
     tree2.setOnCheckHandler(onNodeSelect_expediente);
