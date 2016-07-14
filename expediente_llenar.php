@@ -9,13 +9,12 @@ $iddoc = $_REQUEST["iddoc"];
 $doc_menu=@$_REQUEST["iddoc"];
 include_once("pantallas/documento/menu_principal_documento.php");
 
-$expedientes_asignados=arreglo_expedientes_asignados();
-$documento=busca_filtro_tabla("","expediente_doc","documento_iddocumento in(".$iddoc.") and expediente_idexpediente in(".implode(",",$expedientes_asignados).")","",$conn);
-$exp_doc=extrae_campo($documento,"expediente_idexpediente","U");
+$cadena.="";
+$cadena.=expedientes_asignados();
+$cadena.="AND a.idexpediente=b.expediente_idexpediente AND b.documento_iddocumento in(".$iddoc.")";
 
-$nombres_expedientes=busca_filtro_tabla("nombre","expediente a","idexpediente in(".implode(",",$exp_doc).")","",$conn);
-
-$nombres_exp=array_unique(extrae_campo($nombres_expedientes,"nombre"));
+$expedientes_documento=busca_filtro_tabla("","vexpediente_serie a, expediente_doc b",$cadena,"",$conn);
+$nombres_exp=array_unique(extrae_campo($expedientes_documento,"nombre"));
 
 ?>
 <link rel="STYLESHEET" type="text/css" href="css/dhtmlXTree.css">
@@ -46,17 +45,55 @@ $doc=busca_filtro_tabla("","documento","iddocumento in($iddoc)","",$conn);
       <img src="botones/general/buscar.png"border="0px"></a>
       <a href="javascript:void(0)" onclick="tree2.findItem(htmlentities(document.getElementById('stext').value))">
       <img src="botones/general/siguiente.png"border="0px"></a>
+      <div id="esperando_expediente"><img src="imagenes/cargando.gif"></div>
 			<div id="treeboxbox_tree2"></div>
 	</div>
 </div>
 				<script type="text/javascript">
   <!--
+  		var browserType;
+      if (document.layers) {browserType = "nn4"}
+      if (document.all) {browserType = "ie"}
+      if (window.navigator.userAgent.toLowerCase().match("gecko")) {
+         browserType= "gecko"
+      }
+  		
 			tree2=new dhtmlXTreeObject("treeboxbox_tree2","100%","",0);
 			tree2.setImagePath("imgs/");
 			tree2.enableIEImageFix(true);
       tree2.enableCheckBoxes(1);
-      tree2.enableSmartXMLParsing(true);
+      //tree2.enableSmartXMLParsing(true);
+      tree2.setOnLoadingStart(cargando_expediente);
+      tree2.setOnLoadingEnd(fin_cargando_expediente);
+      
+			tree2.setXMLAutoLoading("test_expediente.php?doc=<?php echo($iddoc); ?>&accion=1&permiso_editar=1");
 			tree2.loadXML("test_expediente.php?doc=<?php echo($iddoc); ?>&accion=1&permiso_editar=1");
+			
+			function fin_cargando_expediente() {
+        if (browserType == "gecko" )
+           document.poppedLayer =
+               eval('document.getElementById("esperando_expediente")');
+        else if (browserType == "ie")
+           document.poppedLayer =
+              eval('document.getElementById("esperando_expediente")');
+        else
+           document.poppedLayer =
+              eval('document.layers["esperando_expediente"]');
+        document.poppedLayer.style.display = "none";
+      }
+
+      function cargando_expediente() {
+        if (browserType == "gecko" )
+           document.poppedLayer =
+               eval('document.getElementById("esperando_expediente")');
+        else if (browserType == "ie")
+           document.poppedLayer =
+              eval('document.getElementById("esperando_expediente")');
+        else
+           document.poppedLayer =
+               eval('document.layers["esperando_expediente"]');
+        document.poppedLayer.style.display = "";
+      }
 			-->
       </script>
 <?php if($doc["numcampos"]>1){ ?>
