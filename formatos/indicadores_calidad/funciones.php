@@ -24,6 +24,15 @@ function formula_calculo($idformato,$iddoc){
   echo($texto);   
 }
 
+function mostrar_fuente_datos($idformato,$iddoc){
+    
+}
+function mostrar_objetivo_calidad_indicador($idformato,$iddoc){
+    
+}
+function mostrar_objetivo_indicador($idformato,$iddoc){
+    
+}
 function documento_referencia2($idformato,$iddoc,$tipo=NULL){
   global $conn;
   $respuesta=busca_filtro_tabla("","respuesta","destino=".$iddoc,"",$conn);
