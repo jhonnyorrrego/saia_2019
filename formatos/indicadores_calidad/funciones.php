@@ -282,7 +282,7 @@ if ($formulas["numcampos"]) {
 			if (is_file("imagenes/resultado_" . $iddoc . "_" . $formulas[$i]["id"] . ".png"))
 				unlink("imagenes/resultado_" . $iddoc . "_" . $formulas[$i]["id"] . ".png");
 			$Test -> Render("imagenes/resultado_" . $iddoc . "_" . $formulas[$i]["id"] . ".png");
-			echo('<tr><td colspan="5"><br /><br /><img src="' . PROTOCOLO_CONEXION . RUTA_PDF . '/formatos/indicadores_calidad/imagenes/resultado_' . $iddoc . "_" . $formulas[$i]["id"] . '.png?rnd=' . rand(0, 100) . '"><br /><b>Nota:</b>Los valores mostrados en el grafico son los valores de cumplimiento del indicador</td></tr>');
+			echo('<tr><td colspan="5"  style="font-size:10pt;"><br /><br /><img src="' . PROTOCOLO_CONEXION . RUTA_PDF . '/formatos/indicadores_calidad/imagenes/resultado_' . $iddoc . "_" . $formulas[$i]["id"] . '.png?rnd=' . rand(0, 100) . '"><br /><b>Nota:</b>Los valores mostrados en el grafico son los valores de cumplimiento del indicador</td></tr>');
 			$Test1 -> drawTitle(20, 20, "RESULTADO POR SEGUIMIENTO", 50, 50, 50, 585);
 			if (is_file("imagenes/resultado_" . $iddoc . "_" . $formulas[$i]["id"] . "_2.png"))
 				unlink("imagenes/resultado_" . $iddoc . "_" . $formulas[$i]["id"] . "_2.png");
