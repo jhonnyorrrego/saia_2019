@@ -29,16 +29,14 @@
 <td class="phpmaker" style="text-align: left; font-size: 10pt;"><?php mostrar_valor_campo('objetivo_indicador',385,$_REQUEST['iddoc']);?></td>
 </tr>
 <tr>
-<td class="encabezado" style="text-align: left;" valign="top">Responsable del an&aacute;lisis</td>
-<td class="phpmaker" style="text-align: left;" valign="middle"><?php mostrar_valor_campo('responsable_analisis',385,$_REQUEST['iddoc']);?></td>
-<td>&nbsp;</td>
-<td>&nbsp;</td>
+<td class="encabezado" style="text-align: left; font-size: 10pt;">Responsable del an&aacute;lisis</td>
+<td class="phpmaker" style="text-align: left; font-size: 10pt;" colspan="3"><?php mostrar_valor_campo('responsable_analisis',385,$_REQUEST['iddoc']);?></td>
 </tr>
 <tr>
-<td class="phpmaker" style="text-align: center;" colspan="4"><?php formula_calculo(385,$_REQUEST['iddoc']);?></td>
+<td class="phpmaker" style="text-align: center; font-size: 10pt;" colspan="4"><?php formula_calculo(385,$_REQUEST['iddoc']);?></td>
 </tr>
 <tr>
-<td class="phpmaker" style="text-align: center;" colspan="4"><?php resultados_indicador(385,$_REQUEST['iddoc']);?></td>
+<td class="phpmaker" style="text-align: center; font-size: 10pt;" colspan="4"><?php resultados_indicador(385,$_REQUEST['iddoc']);?></td>
 </tr>
 </tbody>
 </table></td></tr><?php include_once("../librerias/footer_nuevo.php"); ?>
