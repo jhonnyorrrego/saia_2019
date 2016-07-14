@@ -2426,11 +2426,11 @@ $hijo=busca_filtro_tabla("a.*",$tabla." a,documento d","documento_iddocumento=id
     if($hijo["numcampos"] && $lcampos["numcampos"]){
       $texto='<table bordercolor="black" style="border-collapse:collapse" border="1" width="100%"><tr class="encabezado_list">';
       for($j=0;$j<$lcampos["numcampos"];$j++){
-        $texto.='<td>'.$lcampos[$j]["etiqueta"]."</td>";
+        $texto.='<td style="font-size:10pt;">'.$lcampos[$j]["etiqueta"]."</td>";
       }
       $texto.="</tr>";
       for($i=0;$i<$hijo["numcampos"];$i++){
-        $texto.='<tr class="celda_transparente">';
+        $texto.='<tr class="celda_transparente" style="font-size:10pt;">';
         for($j=0;$j<$lcampos["numcampos"];$j++){
           $texto.='<td align="center">'.mostrar_valor_campo($lcampos[$j]["nombre"],$lcampos[$j]["formato_idformato"],$hijo[$i]["documento_iddocumento"],1)."</td>";
         }
