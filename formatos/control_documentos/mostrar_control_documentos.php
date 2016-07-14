@@ -36,7 +36,7 @@
 <td>&nbsp;<?php obtener_version_documento(388,$_REQUEST['iddoc']);?></td>
 </tr>
 <tr>
-<td class="phpmaker" style="text-align: left;" colspan="2" valign="top"><strong>Justificaci&oacute;n:<br /></strong><?php mostrar_valor_campo('justificacion',388,$_REQUEST['iddoc']);?></td>
+<td style="text-align: left;" colspan="2" valign="top"><strong>Justificaci&oacute;n:</strong><br /><?php mostrar_valor_campo('justificacion',388,$_REQUEST['iddoc']);?></td>
 </tr>
 <tr>
 <td colspan="2"><strong><strong><strong>Propuesta:</strong><br /></strong></strong><?php mostrar_valor_campo('propuesta',388,$_REQUEST['iddoc']);?></td>
