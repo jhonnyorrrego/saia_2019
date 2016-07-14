@@ -409,7 +409,7 @@ function expedientes_asignados(){
 	$cadena.="";
 	$cadena.="(((a.identidad_exp=1 AND a.llave_exp='".usuario_actual("idfuncionario")."') or (a.identidad_exp=2 AND a.llave_exp in ('".implode("','",$dependencias)."')) or (a.identidad_exp=4 AND a.llave_exp in('".implode("','",$cargos)."'))) or ((a.identidad_ser=1 AND a.llave_ser='".usuario_actual("idfuncionario")."') or (a.identidad_ser=2 AND a.llave_ser in ('".implode("','",$dependencias)."')) or (a.identidad_ser=4 AND a.llave_ser in('".implode("','",$cargos)."')) and a.estado_entidad_serie not in(2)))";
 	
-	$cadena.=" and a.idexpediente not in(select idexpediente from vexpediente_serie b where ((b.identidad_ser=1 AND b.llave_ser='".usuario_actual("idfuncionario")."') or (b.identidad_ser=2 AND b.llave_ser in ('".implode("','",$dependencias)."')) or (b.identidad_ser=4 AND b.llave_ser in('".implode("','",$cargos)."'))) and (b.estado_entidad_serie =2))";
+	//$cadena.=" and a.idexpediente not in(select idexpediente from vexpediente_serie b where ((b.identidad_ser=1 AND b.llave_ser='".usuario_actual("idfuncionario")."') or (b.identidad_ser=2 AND b.llave_ser in ('".implode("','",$dependencias)."')) or (b.identidad_ser=4 AND b.llave_ser in('".implode("','",$cargos)."'))) and (b.estado_entidad_serie =2))";
 	
 	return($cadena);
 }
