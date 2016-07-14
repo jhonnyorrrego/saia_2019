@@ -20,13 +20,13 @@
 <td class="encabezado" style="font-size: 10pt;">Nombre Indicador:</td>
 <td class="phpmaker" style="text-align: left; font-size: 10pt;"><?php mostrar_valor_campo('nombre',385,$_REQUEST['iddoc']);?></td>
 <td class="encabezado" style="font-size: 10pt;">Fuente de Datos:</td>
-<td class="phpmaker" style="text-align: left; font-size: 10pt;"><?php mostrar_valor_campo('fuente_datos',385,$_REQUEST['iddoc']);?></td>
+<td class="phpmaker" style="text-align: left; font-size: 10pt;"><?php mostrar_fuente_datos(385,$_REQUEST['iddoc']);?></td>
 </tr>
 <tr>
 <td class="encabezado" style="font-size: 10pt;">Objetivo de Calidad:</td>
-<td class="phpmaker" style="text-align: left; font-size: 10pt;"><?php mostrar_valor_campo('objetivo_calidad_indicador',385,$_REQUEST['iddoc']);?></td>
+<td class="phpmaker" style="text-align: left; font-size: 10pt;"><?php mostrar_objetivo_calidad_indicador(385,$_REQUEST['iddoc']);?></td>
 <td class="encabezado" style="font-size: 10pt;">Objetivo del Indicador:</td>
-<td class="phpmaker" style="text-align: left; font-size: 10pt;"><?php mostrar_valor_campo('objetivo_indicador',385,$_REQUEST['iddoc']);?></td>
+<td class="phpmaker" style="text-align: left; font-size: 10pt;"><?php mostrar_objetivo_indicador(385,$_REQUEST['iddoc']);?></td>
 </tr>
 <tr>
 <td class="encabezado" style="text-align: left; font-size: 10pt;">Responsable del an&aacute;lisis</td>
