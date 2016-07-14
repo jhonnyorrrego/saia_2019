@@ -32,8 +32,8 @@
                       });
                      </script></td>
                     </tr><tr id="tr_tipo_solicitud"><td class="encabezado">&nbsp;<select name="condicion_tipo_solicitud" id="condicion_tipo_solicitud"><option value="AND">Y</option><option value="OR">O</option></td>
-                     <td class="encabezado" width="20%" title="">TIPO SOLICITUD</td><td class="encabezado">&nbsp;<select name="compara_tipo_solicitud" id="compara_tipo_solicitud"> <option value="=|@|@">Igual</option><option value="-|@|@">Menor</option><option value="+|@|@">Mayor</option><option value="!|@|@">Diferente</option></select></td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(288,3661,'',1);?></td></tr><tr id="tr_secretaria"><td class="encabezado">&nbsp;<select name="condicion_secretaria" id="condicion_secretaria"><option value="AND">Y</option><option value="OR">O</option></td>
-                   <td class="encabezado" width="20%" title="">SECRETARIA</td><td class="encabezado">&nbsp;<select name="compara_secretaria" id="compara_secretaria"> <option value="or">Alguno</option><option value="and">Todos</option></select></td><td bgcolor="#F5F5F5"><div id="esperando_secretaria"><img src="../../imagenes/cargando.gif"></div><div id="seleccionados"><?php mostrar_seleccionados(288,3658,'2',$_REQUEST['iddoc']);?></div>
+                     <td class="encabezado" width="20%" title="">TIPO SOLICITUD</td><td class="encabezado">&nbsp;<select name="compara_tipo_solicitud" id="compara_tipo_solicitud"> <option value="=|@|@">Igual</option><option value="-|@|@">Menor</option><option value="+|@|@">Mayor</option><option value="!|@|@">Diferente</option></select></td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(388,4597,'',1);?></td></tr><tr><td class="encabezado">&nbsp;<select name="condicion_secretaria" id="condicion_secretaria"><option value="AND">Y</option><option value="OR">O</option></td>
+                   <td class="encabezado" width="20%" title="">DEPENDENCIAS PARTICIPANTES</td><td class="encabezado">&nbsp;<select name="compara_secretaria" id="compara_secretaria"> <option value="or">Alguno</option><option value="and">Todos</option></select></td><td bgcolor="#F5F5F5"><div id="esperando_secretaria"><img src="../../imagenes/cargando.gif"></div><div id="seleccionados"><?php mostrar_seleccionados(388,4598,'2',$_REQUEST['iddoc']);?></div>
                           <br />  Buscar: <input type="text" id="stext_secretaria" width="200px" size="25">
                    <a href="javascript:void(0)" onclick="tree_secretaria.findItem(htmlentities(document.getElementById('stext_secretaria').value),1)"><img src="../../botones/general/anterior.png"border="0px"></a>
                    <a href="javascript:void(0)" onclick="tree_secretaria.findItem(htmlentities(document.getElementById('stext_secretaria').value),0,1)"><img src="../../botones/general/buscar.png"border="0px"></a>
@@ -51,7 +51,7 @@
                 			tree_secretaria.setImagePath("../../imgs/");
                 			tree_secretaria.enableIEImageFix(true);tree_secretaria.enableCheckBoxes(1);
                 			tree_secretaria.enableThreeStateCheckboxes(1);tree_secretaria.setOnLoadingStart(cargando_secretaria);
-                      tree_secretaria.setOnLoadingEnd(fin_cargando_secretaria);tree_secretaria.enableSmartXMLParsing(true);tree_secretaria.loadXML("../../test_secretarias_fondos.php?no_fondos=1&tabla=dependencia&condicion=tipo=1");
+                      tree_secretaria.setOnLoadingEnd(fin_cargando_secretaria);tree_secretaria.enableSmartXMLParsing(true);tree_secretaria.loadXML("../../test_serie.php?tabla=dependencia&estado=1");
                       tree_secretaria.setOnCheckHandler(onNodeSelect_secretaria);
                       function onNodeSelect_secretaria(nodeId)
                       {valor_destino=document.getElementById("secretaria");
@@ -96,7 +96,7 @@
                         document.poppedLayer.style.visibility = "visible";
                       }
                 	--></script></td></tr><tr id="tr_origen_documento"><td class="encabezado">&nbsp;<select name="condicion_origen_documento" id="condicion_origen_documento"><option value="AND">Y</option><option value="OR">O</option></td>
-                     <td class="encabezado" width="20%" title="">ORIGEN DOCUMENTO</td><td class="encabezado">&nbsp;<select name="compara_origen_documento" id="compara_origen_documento"> <option value="LIKE|%|%">Similar</option><option value="LIKE|%|@">Inicia Con</option><option value="LIKE|@|%">Finaliza Con</option></select></td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(288,3653,'',1);?></td></tr><tr><td class="encabezado">&nbsp;<select name="condicion_version" id="condicion_version"><option value="AND">Y</option><option value="OR">O</option></td>
+                     <td class="encabezado" width="20%" title="">ORIGEN DOCUMENTO</td><td class="encabezado">&nbsp;<select name="compara_origen_documento" id="compara_origen_documento"> <option value="LIKE|%|%">Similar</option><option value="LIKE|%|@">Inicia Con</option><option value="LIKE|@|%">Finaliza Con</option></select></td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(388,4599,'',1);?></td></tr><tr><td class="encabezado">&nbsp;<select name="condicion_version" id="condicion_version"><option value="AND">Y</option><option value="OR">O</option></td>
                      <td class="encabezado" width="20%" title="">VERSION</td><td class="encabezado">&nbsp;<select name="compara_version" id="compara_version"> <option value="or">Alguno</option><option value="and">Todos</option></select></td>
                      <td bgcolor="#F5F5F5"><select multiple id="version" name="version"></select><script>
                      $(document).ready(function() 
@@ -119,7 +119,7 @@
                       });
                      </script></td>
                     </tr><tr id="tr_tipo_documento"><td class="encabezado">&nbsp;<select name="condicion_tipo_documento" id="condicion_tipo_documento"><option value="AND">Y</option><option value="OR">O</option></td>
-                     <td class="encabezado" width="20%" title="">TIPO DOCUMENTO</td><td class="encabezado">&nbsp;<select name="compara_tipo_documento" id="compara_tipo_documento"> <option value="=|@|@">Igual</option><option value="-|@|@">Menor</option><option value="+|@|@">Mayor</option><option value="!|@|@">Diferente</option></select></td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(288,3660,'',1);?></td></tr><tr><td class="encabezado">&nbsp;<select name="condicion_serie_doc_control" id="condicion_serie_doc_control"><option value="AND">Y</option><option value="OR">O</option></td>
+                     <td class="encabezado" width="20%" title="">TIPO DOCUMENTO</td><td class="encabezado">&nbsp;<select name="compara_tipo_documento" id="compara_tipo_documento"> <option value="=|@|@">Igual</option><option value="-|@|@">Menor</option><option value="+|@|@">Mayor</option><option value="!|@|@">Diferente</option></select></td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(388,4602,'',1);?></td></tr><tr><td class="encabezado">&nbsp;<select name="condicion_serie_doc_control" id="condicion_serie_doc_control"><option value="AND">Y</option><option value="OR">O</option></td>
                      <td class="encabezado" width="20%" title="">SERIE DOCUMENTAL</td><td class="encabezado">&nbsp;<select name="compara_serie_doc_control" id="compara_serie_doc_control"> <option value="or">Alguno</option><option value="and">Todos</option></select></td>
                      <td bgcolor="#F5F5F5"><select multiple id="serie_doc_control" name="serie_doc_control"></select><script>
                      $(document).ready(function() 
@@ -131,8 +131,8 @@
                       });
                      </script></td>
                     </tr><tr id="tr_otros_documentos"><td class="encabezado">&nbsp;<select name="condicion_otros_documentos" id="condicion_otros_documentos"><option value="AND">Y</option><option value="OR">O</option></td>
-                     <td class="encabezado" width="20%" title="">OTROS DOCUMENTOS</td><td class="encabezado">&nbsp;<select name="compara_otros_documentos" id="compara_otros_documentos"> <option value="=|@|@">Igual</option><option value="-|@|@">Menor</option><option value="+|@|@">Mayor</option><option value="!|@|@">Diferente</option></select></td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(288,3654,'',1);?></td></tr><tr id="tr_almacenamiento"><td class="encabezado">&nbsp;<select name="condicion_almacenamiento" id="condicion_almacenamiento"><option value="AND">Y</option><option value="OR">O</option></td>
-                  <td class="encabezado" width="20%" title="">ALMACENAMIENTO</td><td class="encabezado">&nbsp;<select name="compara_almacenamiento" id="compara_almacenamiento"> <option value="or">Alguno</option><option value="and">Todos</option></select></td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(288,3640,'',1);?></td></tr><tr><td class="encabezado">&nbsp;<select name="condicion_nombre_documento" id="condicion_nombre_documento"><option value="AND">Y</option><option value="OR">O</option></td>
+                     <td class="encabezado" width="20%" title="">OTROS DOCUMENTOS</td><td class="encabezado">&nbsp;<select name="compara_otros_documentos" id="compara_otros_documentos"> <option value="=|@|@">Igual</option><option value="-|@|@">Menor</option><option value="+|@|@">Mayor</option><option value="!|@|@">Diferente</option></select></td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(388,4604,'',1);?></td></tr><tr><td class="encabezado">&nbsp;<select name="condicion_almacenamiento" id="condicion_almacenamiento"><option value="AND">Y</option><option value="OR">O</option></td>
+                  <td class="encabezado" width="20%" title="">ALMACENAMIENTO</td><td class="encabezado">&nbsp;<select name="compara_almacenamiento" id="compara_almacenamiento"> <option value="or">Alguno</option><option value="and">Todos</option></select></td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(388,4605,'',1);?></td></tr><tr><td class="encabezado">&nbsp;<select name="condicion_nombre_documento" id="condicion_nombre_documento"><option value="AND">Y</option><option value="OR">O</option></td>
                      <td class="encabezado" width="20%" title="">NOMBRE DOCUMENTO</td><td class="encabezado">&nbsp;<select name="compara_nombre_documento" id="compara_nombre_documento"> <option value="or">Alguno</option><option value="and">Todos</option></select></td>
                      <td bgcolor="#F5F5F5"><select multiple id="nombre_documento" name="nombre_documento"></select><script>
                      $(document).ready(function() 
@@ -143,9 +143,9 @@
                       });
                       });
                      </script></td>
-                    </tr><tr id="tr_listado_procesos"><td class="encabezado">&nbsp;<select name="condicion_listado_procesos" id="condicion_listado_procesos"><option value="AND">Y</option><option value="OR">O</option></td>
-                     <td class="encabezado" width="20%" title="">PROCESO/SUBPROCESO</td><td class="encabezado">&nbsp;<select name="compara_listado_procesos" id="compara_listado_procesos"> <option value="LIKE|%|%">Similar</option><option value="LIKE|%|@">Inicia Con</option><option value="LIKE|@|%">Finaliza Con</option></select></td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(288,3651,'',1);?></td></tr><tr id="tr_documento_calidad"><td class="encabezado">&nbsp;<select name="condicion_documento_calidad" id="condicion_documento_calidad"><option value="AND">Y</option><option value="OR">O</option></td>
-                   <td class="encabezado" width="20%" title="">DOCUMENTO DE CALIDAD VINCULADO</td><td class="encabezado">&nbsp;<select name="compara_documento_calidad" id="compara_documento_calidad"> <option value="or">Alguno</option><option value="and">Todos</option></select></td><td bgcolor="#F5F5F5"><div id="esperando_documento_calidad"><img src="../../imagenes/cargando.gif"></div><div id="seleccionados"><?php mostrar_seleccionados(288,3643,'2',$_REQUEST['iddoc']);?></div>
+                    </tr><tr><td class="encabezado">&nbsp;<select name="condicion_listado_procesos" id="condicion_listado_procesos"><option value="AND">Y</option><option value="OR">O</option></td>
+                     <td class="encabezado" width="20%" title="">PROCESO/SUBPROCESO</td><td class="encabezado">&nbsp;<select name="compara_listado_procesos" id="compara_listado_procesos"> <option value="LIKE|%|%">Similar</option><option value="LIKE|%|@">Inicia Con</option><option value="LIKE|@|%">Finaliza Con</option></select></td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(388,4607,'',1);?></td></tr><tr><td class="encabezado">&nbsp;<select name="condicion_documento_calidad" id="condicion_documento_calidad"><option value="AND">Y</option><option value="OR">O</option></td>
+                   <td class="encabezado" width="20%" title="">DOCUMENTO DE CALIDAD VINCULADO</td><td class="encabezado">&nbsp;<select name="compara_documento_calidad" id="compara_documento_calidad"> <option value="or">Alguno</option><option value="and">Todos</option></select></td><td bgcolor="#F5F5F5"><div id="esperando_documento_calidad"><img src="../../imagenes/cargando.gif"></div><div id="seleccionados"><?php mostrar_seleccionados(388,4608,'2',$_REQUEST['iddoc']);?></div>
                           <br />  Buscar: <input type="text" id="stext_documento_calidad" width="200px" size="25">
                    <a href="javascript:void(0)" onclick="tree_documento_calidad.findItem(htmlentities(document.getElementById('stext_documento_calidad').value),1)"><img src="../../botones/general/anterior.png"border="0px"></a>
                    <a href="javascript:void(0)" onclick="tree_documento_calidad.findItem(htmlentities(document.getElementById('stext_documento_calidad').value),0,1)"><img src="../../botones/general/buscar.png"border="0px"></a>
@@ -240,8 +240,8 @@
                       });
                       });
                      </script></td>
-                    </tr><tr id="tr_revisado"><td class="encabezado">&nbsp;<select name="condicion_revisado" id="condicion_revisado"><option value="AND">Y</option><option value="OR">O</option></td>
-                   <td class="encabezado" width="20%" title="">REVISADO POR</td><td class="encabezado">&nbsp;<select name="compara_revisado" id="compara_revisado"> <option value="or">Alguno</option><option value="and">Todos</option></select></td><td bgcolor="#F5F5F5"><div id="esperando_revisado"><img src="../../imagenes/cargando.gif"></div><div id="seleccionados"><?php mostrar_seleccionados(288,3656,'0',$_REQUEST['iddoc']);?></div>
+                    </tr><tr><td class="encabezado">&nbsp;<select name="condicion_revisado" id="condicion_revisado"><option value="AND">Y</option><option value="OR">O</option></td>
+                   <td class="encabezado" width="20%" title="">REVISADO POR</td><td class="encabezado">&nbsp;<select name="compara_revisado" id="compara_revisado"> <option value="or">Alguno</option><option value="and">Todos</option></select></td><td bgcolor="#F5F5F5"><div id="esperando_revisado"><img src="../../imagenes/cargando.gif"></div><div id="seleccionados"><?php mostrar_seleccionados(388,4612,'0',$_REQUEST['iddoc']);?></div>
                           <br />  Buscar: <input type="text" id="stext_revisado" width="200px" size="25">
                    <a href="javascript:void(0)" onclick="tree_revisado.findItem(htmlentities(document.getElementById('stext_revisado').value),1)"><img src="../../botones/general/anterior.png"border="0px"></a>
                    <a href="javascript:void(0)" onclick="tree_revisado.findItem(htmlentities(document.getElementById('stext_revisado').value),0,1)"><img src="../../botones/general/buscar.png"border="0px"></a>
@@ -303,8 +303,8 @@
                                eval('document.layers["esperando_revisado"]');
                         document.poppedLayer.style.visibility = "visible";
                       }
-                	--></script></td></tr><tr id="tr_aprobado"><td class="encabezado">&nbsp;<select name="condicion_aprobado" id="condicion_aprobado"><option value="AND">Y</option><option value="OR">O</option></td>
-                   <td class="encabezado" width="20%" title="">APROBADO POR</td><td class="encabezado">&nbsp;<select name="compara_aprobado" id="compara_aprobado"> <option value="or">Alguno</option><option value="and">Todos</option></select></td><td bgcolor="#F5F5F5"><div id="esperando_aprobado"><img src="../../imagenes/cargando.gif"></div><div id="seleccionados"><?php mostrar_seleccionados(288,3642,'0',$_REQUEST['iddoc']);?></div>
+                	--></script></td></tr><tr><td class="encabezado">&nbsp;<select name="condicion_aprobado" id="condicion_aprobado"><option value="AND">Y</option><option value="OR">O</option></td>
+                   <td class="encabezado" width="20%" title="">APROBADO POR</td><td class="encabezado">&nbsp;<select name="compara_aprobado" id="compara_aprobado"> <option value="or">Alguno</option><option value="and">Todos</option></select></td><td bgcolor="#F5F5F5"><div id="esperando_aprobado"><img src="../../imagenes/cargando.gif"></div><div id="seleccionados"><?php mostrar_seleccionados(388,4613,'0',$_REQUEST['iddoc']);?></div>
                           <br />  Buscar: <input type="text" id="stext_aprobado" width="200px" size="25">
                    <a href="javascript:void(0)" onclick="tree_aprobado.findItem(htmlentities(document.getElementById('stext_aprobado').value),1)"><img src="../../botones/general/anterior.png"border="0px"></a>
                    <a href="javascript:void(0)" onclick="tree_aprobado.findItem(htmlentities(document.getElementById('stext_aprobado').value),0,1)"><img src="../../botones/general/buscar.png"border="0px"></a>
@@ -399,7 +399,7 @@
                       });
                       });
                      </script></td>
-                    </tr><input type="hidden" name="campo_descripcion" value="3652,3661"><?php submit_formato(288);?></table><?php if(@$_REQUEST["campo__retorno"]){ ?>
+                    </tr><input type="hidden" name="campo_descripcion" value="4597,4606"><?php submit_formato(388);?></table><?php if(@$_REQUEST["campo__retorno"]){ ?>
                 <input type="hidden" name="campo__retorno" value="<?php echo($_REQUEST["campo__retorno"]); ?>">
               <?php }
                if(@$_REQUEST["formulario__retorno"]){ ?>

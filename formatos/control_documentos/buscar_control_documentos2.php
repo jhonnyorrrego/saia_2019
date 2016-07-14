@@ -6,7 +6,7 @@
 		    O
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_g@tipo_solicitud" id="bqsaiaenlace_g@tipo_solicitud" value="y" />
-		</div></div></div><div class="control-group"><div class="controls"><b>secretaria<input type="hidden" name="bksaiacondicion_secretaria" id="bksaiacondicion_secretaria" value="like_total"></b><div id="esperando_secretaria"><img src="../../imagenes/cargando.gif"></div><div id="seleccionados"></div><input type="text" id="stext_secretaria" placeholder="Buscar" width="200px" size="25">
+		</div></div></div><div class="control-group"><div class="controls"><b>Dependencias Participantes<input type="hidden" name="bksaiacondicion_secretaria" id="bksaiacondicion_secretaria" value="like_total"></b><div id="esperando_secretaria"><img src="../../imagenes/cargando.gif"></div><div id="seleccionados"></div><input type="text" id="stext_secretaria" placeholder="Buscar" width="200px" size="25">
                    <a href="javascript:void(0)" onclick="tree_secretaria.findItem(htmlentities(document.getElementById('stext_secretaria').value),1)"><img src="../../botones/general/anterior.png"border="0px"></a>
                    <a href="javascript:void(0)" onclick="tree_secretaria.findItem(htmlentities(document.getElementById('stext_secretaria').value),0,1)"><img src="../../botones/general/buscar.png"border="0px"></a>
                           <a href="javascript:void(0)" onclick="tree_secretaria.findItem(htmlentities(document.getElementById('stext_secretaria').value))"><img src="../../botones/general/siguiente.png"border="0px"></a>
@@ -22,7 +22,7 @@
                 			tree_secretaria.setImagePath("../../imgs/");
                 			tree_secretaria.enableIEImageFix(true);tree_secretaria.enableCheckBoxes(1);
                 			tree_secretaria.enableThreeStateCheckboxes(1);tree_secretaria.setOnLoadingStart(cargando_secretaria);
-                      tree_secretaria.setOnLoadingEnd(fin_cargando_secretaria);tree_secretaria.enableSmartXMLParsing(true);tree_secretaria.loadXML("../../test_secretarias_fondos.php?no_fondos=1&tabla=dependencia&condicion=tipo=1");
+                      tree_secretaria.setOnLoadingEnd(fin_cargando_secretaria);tree_secretaria.enableSmartXMLParsing(true);tree_secretaria.loadXML("../../test_serie.php?tabla=dependencia&estado=1");
                       tree_secretaria.setOnCheckHandler(onNodeSelect_secretaria);
                       function onNodeSelect_secretaria(nodeId)
                       {valor_destino=document.getElementById("secretaria");
