@@ -313,7 +313,7 @@ if($dato_padre["numcampos"]){
     tree2.enableRadioButtons(true);
     tree2.setOnLoadingStart(cargando_expediente);
     tree2.setOnLoadingEnd(fin_cargando_expediente);
-    tree2.enableSmartXMLParsing(true);
+    //tree2.enableSmartXMLParsing(true);
     tree2.setXMLAutoLoading("<?php echo($ruta_db_superior);?>test_expediente.php?doc=<?php echo($iddoc); ?>&accion=1&permiso_editar=1&excluidos=<?php echo($_REQUEST["idexpediente"]); ?>&seleccionado=<?php echo($datos[0]["cod_padre"]); ?>");	
   	tree2.loadXML("<?php echo($ruta_db_superior);?>test_expediente.php?doc=<?php echo($iddoc); ?>&accion=1&permiso_editar=1&excluidos=<?php echo($_REQUEST["idexpediente"]); ?>&seleccionado=<?php echo($datos[0]["cod_padre"]); ?>");
     tree2.setOnCheckHandler(onNodeSelect_expediente);
