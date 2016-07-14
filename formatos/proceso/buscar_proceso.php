@@ -226,18 +226,71 @@ ELABORACION,REVISION,APROBACION,DISTRIBUCION,INACTIVO ">ESTADO</td><td class="en
                       });
                      </script></td>
                     </tr><tr><td class="encabezado">&nbsp;<select name="condicion_fecha_aprobacion" id="condicion_fecha_aprobacion"><option value="AND">Y</option><option value="OR">O</option></td>
-                    <td class="encabezado" width="20%" title="Fecha en que se aprob&oacute;">FECHA EN QUE SE APROB&Oacute;</td><td class="encabezado">ENTRE &nbsp;</td><td colspan="2" bgcolor="#F5F5F5"><input type="text" readonly="true" name="fecha_aprobacion_1"  id="fecha_aprobacion_1" value=""><?php selector_fecha("fecha_aprobacion_1","formulario_formatos","Y-m-d H:i",date("m"),date("Y"),"default.css","../../","AD:VALOR"); ?>&nbsp;&nbsp; Y &nbsp;&nbsp;<input type="text" readonly="true" name="fecha_aprobacion_2"  id="fecha_aprobacion_2" value=""><?php selector_fecha("fecha_aprobacion_2","formulario_formatos","Y-m-d H:i",date("m"),date("Y"),"default.css","../../","AD:VALOR"); ?></td></tr><tr><td class="encabezado">&nbsp;<select name="condicion_fecha_revision" id="condicion_fecha_revision"><option value="AND">Y</option><option value="OR">O</option></td>
-                     <td class="encabezado" width="20%" title="Fecha en que se revis&oacute;">FECHA EN QUE SE REVIS&Oacute;</td><td class="encabezado">&nbsp;<select name="compara_fecha_revision" id="compara_fecha_revision"> <option value="or">Alguno</option><option value="and">Todos</option></select></td>
-                     <td bgcolor="#F5F5F5"><select multiple id="fecha_revision" name="fecha_revision"></select><script>
-                     $(document).ready(function() 
-                      {
-                      $("#fecha_revision").fcbkcomplete({
-                        complete_text:"Presione enter para agregar una palabra.",
-                        newel: true
-                      });
-                      });
-                     </script></td>
-                    </tr><tr><td class="encabezado">&nbsp;<select name="condicion_permisos_acceso" id="condicion_permisos_acceso"><option value="AND">Y</option><option value="OR">O</option></td>
+                    <td class="encabezado" width="20%" title="Fecha en que se aprob&oacute;">FECHA EN QUE SE APROB&Oacute;</td><td class="encabezado">ENTRE &nbsp;</td><td colspan="2" bgcolor="#F5F5F5"><input type="text" readonly="true" name="fecha_aprobacion_1"  id="fecha_aprobacion_1" value=""><?php selector_fecha("fecha_aprobacion_1","formulario_formatos","Y-m-d H:i",date("m"),date("Y"),"default.css","../../","AD:VALOR"); ?>&nbsp;&nbsp; Y &nbsp;&nbsp;<input type="text" readonly="true" name="fecha_aprobacion_2"  id="fecha_aprobacion_2" value=""><?php selector_fecha("fecha_aprobacion_2","formulario_formatos","Y-m-d H:i",date("m"),date("Y"),"default.css","../../","AD:VALOR"); ?></td></tr><tr><td class="encabezado">&nbsp;<select name="condicion_revisado_por" id="condicion_revisado_por"><option value="AND">Y</option><option value="OR">O</option></td>
+                   <td class="encabezado" width="20%" title="">REVISADO POR</td><td class="encabezado">&nbsp;<select name="compara_revisado_por" id="compara_revisado_por"> <option value="or">Alguno</option><option value="and">Todos</option></select></td><td bgcolor="#F5F5F5"><div id="esperando_revisado_por"><img src="../../imagenes/cargando.gif"></div><div id="seleccionados"><?php mostrar_seleccionados(194,4621,'5',$_REQUEST['iddoc']);?></div>
+                          <br />  Buscar: <input type="text" id="stext_revisado_por" width="200px" size="25">
+                   <a href="javascript:void(0)" onclick="tree_revisado_por.findItem(htmlentities(document.getElementById('stext_revisado_por').value),1)"><img src="../../botones/general/anterior.png"border="0px"></a>
+                   <a href="javascript:void(0)" onclick="tree_revisado_por.findItem(htmlentities(document.getElementById('stext_revisado_por').value),0,1)"><img src="../../botones/general/buscar.png"border="0px"></a>
+                          <a href="javascript:void(0)" onclick="tree_revisado_por.findItem(htmlentities(document.getElementById('stext_revisado_por').value))"><img src="../../botones/general/siguiente.png"border="0px"></a>
+                          <br /><br />
+                <div id="treeboxbox_revisado_por" height="90%"></div><input type="hidden" maxlength="255"  name="revisado_por" id="revisado_por"   value="" ><label style="display:none" class="error" for="revisado_por">Campo obligatorio.</label><script type="text/javascript">
+                  <!--
+                      var browserType;
+                      if (document.layers) {browserType = "nn4"}
+                      if (document.all) {browserType = "ie"}
+                      if (window.navigator.userAgent.toLowerCase().match("gecko")) {
+                         browserType= "gecko"
+                      }
+                			tree_revisado_por=new dhtmlXTreeObject("treeboxbox_revisado_por","100%","100%",0);
+                			tree_revisado_por.setImagePath("../../imgs/");
+                			tree_revisado_por.enableIEImageFix(true);tree_revisado_por.enableCheckBoxes(1);
+                    tree_revisado_por.enableRadioButtons(true);tree_revisado_por.setOnLoadingStart(cargando_revisado_por);
+                      tree_revisado_por.setOnLoadingEnd(fin_cargando_revisado_por);tree_revisado_por.enableSmartXMLParsing(true);tree_revisado_por.loadXML("../../test.php?rol=1&sin_padre=1");
+                      tree_revisado_por.setOnCheckHandler(onNodeSelect_revisado_por);
+                      function onNodeSelect_revisado_por(nodeId)
+                      {valor_destino=document.getElementById("revisado_por");
+                       destinos=tree_revisado_por.getAllChecked();
+                       nuevo=destinos.replace(/\,{2,}(d)*/gi,",");
+                       nuevo=nuevo.replace(/\,$/gi,"");
+                       vector=destinos.split(",");
+                       for(i=0;i<vector.length;i++)
+                          {if(vector[i].indexOf("#")!=-1)
+                              {hijos=tree_revisado_por.getAllSubItems(vector[i]);
+                               hijos=hijos.replace(/\,{2,}(d)*/gi,",");
+                               hijos=hijos.replace(/\,$/gi,"");
+                               vectorh=hijos.split(",");
+                               for(h=0;h<vectorh.length;h++)
+                                  nuevo=eliminarItem(nuevo,vectorh[h]);
+                              }
+                          }
+                       valor_destino.value=nuevo;
+                      }
+                      function fin_cargando_revisado_por() {
+                        if (browserType == "gecko" )
+                           document.poppedLayer =
+                               eval('document.getElementById("esperando_revisado_por")');
+                        else if (browserType == "ie")
+                           document.poppedLayer =
+                              eval('document.getElementById("esperando_revisado_por")');
+                        else
+                           document.poppedLayer =
+                              eval('document.layers["esperando_revisado_por"]');
+                        document.poppedLayer.style.visibility = "hidden";
+                      }
+                      function cargando_revisado_por() {
+                        if (browserType == "gecko" )
+                           document.poppedLayer =
+                               eval('document.getElementById("esperando_revisado_por")');
+                        else if (browserType == "ie")
+                           document.poppedLayer =
+                              eval('document.getElementById("esperando_revisado_por")');
+                        else
+                           document.poppedLayer =
+                               eval('document.layers["esperando_revisado_por"]');
+                        document.poppedLayer.style.visibility = "visible";
+                      }
+                	--></script></td></tr><tr><td class="encabezado">&nbsp;<select name="condicion_fecha_revision" id="condicion_fecha_revision"><option value="AND">Y</option><option value="OR">O</option></td>
+                    <td class="encabezado" width="20%" title="Fecha en que se revis&oacute;">FECHA EN QUE SE REVIS&Oacute;</td><td class="encabezado">ENTRE &nbsp;</td><td colspan="2" bgcolor="#F5F5F5"><input type="text" readonly="true" name="fecha_revision_1"  id="fecha_revision_1" value=""><?php selector_fecha("fecha_revision_1","formulario_formatos","Y-m-d H:i",date("m"),date("Y"),"default.css","../../","AD:VALOR"); ?>&nbsp;&nbsp; Y &nbsp;&nbsp;<input type="text" readonly="true" name="fecha_revision_2"  id="fecha_revision_2" value=""><?php selector_fecha("fecha_revision_2","formulario_formatos","Y-m-d H:i",date("m"),date("Y"),"default.css","../../","AD:VALOR"); ?></td></tr><tr><td class="encabezado">&nbsp;<select name="condicion_permisos_acceso" id="condicion_permisos_acceso"><option value="AND">Y</option><option value="OR">O</option></td>
                    <td class="encabezado" width="20%" title="">PERMISOS DE ACCESO</td><td class="encabezado">&nbsp;<select name="compara_permisos_acceso" id="compara_permisos_acceso"> <option value="or">Alguno</option><option value="and">Todos</option></select></td><td bgcolor="#F5F5F5"><div id="esperando_permisos_acceso"><img src="../../imagenes/cargando.gif"></div><div id="seleccionados"><?php mostrar_seleccionados(194,4130,'0',$_REQUEST['iddoc']);?></div>
                           <br />  Buscar: <input type="text" id="stext_permisos_acceso" width="200px" size="25">
                    <a href="javascript:void(0)" onclick="tree_permisos_acceso.findItem(htmlentities(document.getElementById('stext_permisos_acceso').value),1)"><img src="../../botones/general/anterior.png"border="0px"></a>
@@ -298,92 +351,6 @@ ELABORACION,REVISION,APROBACION,DISTRIBUCION,INACTIVO ">ESTADO</td><td class="en
                         else
                            document.poppedLayer =
                                eval('document.layers["esperando_permisos_acceso"]');
-                        document.poppedLayer.style.visibility = "visible";
-                      }
-                	--></script></td></tr><tr><td class="encabezado">&nbsp;<select name="condicion_fecha" id="condicion_fecha"><option value="AND">Y</option><option value="OR">O</option></td>
-                       <td class="encabezado" width="20%" title="">FECHA</td><td class="encabezado">ENTRE &nbsp;</td><td colspan="2" bgcolor="#F5F5F5"><span class="phpmaker"><input type="text" readonly="true"  name="fecha_1" id="fecha_1" tipo="fecha" value=""><?php selector_fecha("fecha_1","formulario_formatos","Y-m-d",date("m"),date("Y"),"default.css","../../","AD:VALOR"); ?>&nbsp;&nbsp; Y &nbsp;&nbsp;<input type="text" readonly="true"  name="fecha_2" id="fecha_2" tipo="fecha" value=""><?php selector_fecha("fecha_2","formulario_formatos","Y-m-d",date("m"),date("Y"),"default.css","../../","AD:VALOR"); ?></span></font></td></tr><tr><td class="encabezado">&nbsp;<select name="condicion_coordenadas" id="condicion_coordenadas"><option value="AND">Y</option><option value="OR">O</option></td>
-                     <td class="encabezado" width="20%" title="">COORDENADAS</td><td class="encabezado">&nbsp;<select name="compara_coordenadas" id="compara_coordenadas"> <option value="or">Alguno</option><option value="and">Todos</option></select></td>
-                     <td bgcolor="#F5F5F5"><select multiple id="coordenadas" name="coordenadas"></select><script>
-                     $(document).ready(function() 
-                      {
-                      $("#coordenadas").fcbkcomplete({
-                        complete_text:"Presione enter para agregar una palabra.",
-                        newel: true
-                      });
-                      });
-                     </script></td>
-                    </tr><tr><td class="encabezado">&nbsp;<select name="condicion_politica_operacion" id="condicion_politica_operacion"><option value="AND">Y</option><option value="OR">O</option></td>
-                     <td class="encabezado" width="20%" title="">POLITICA DE OPERACION</td><td class="encabezado">&nbsp;<select name="compara_politica_operacion" id="compara_politica_operacion"> <option value="or">Alguno</option><option value="and">Todos</option></select></td>
-                     <td bgcolor="#F5F5F5"><select multiple id="politica_operacion" name="politica_operacion"></select><script>
-                     $(document).ready(function() 
-                      {
-                      $("#politica_operacion").fcbkcomplete({
-                        complete_text:"Presione enter para agregar una palabra.",
-                        newel: true
-                      });
-                      });
-                     </script></td>
-                    </tr><tr><td class="encabezado">&nbsp;<select name="condicion_aprobado" id="condicion_aprobado"><option value="AND">Y</option><option value="OR">O</option></td>
-                   <td class="encabezado" width="20%" title="">APROBADO POR</td><td class="encabezado">&nbsp;<select name="compara_aprobado" id="compara_aprobado"> <option value="or">Alguno</option><option value="and">Todos</option></select></td><td bgcolor="#F5F5F5"><div id="esperando_aprobado"><img src="../../imagenes/cargando.gif"></div><div id="seleccionados"><?php mostrar_seleccionados(194,2608,'5',$_REQUEST['iddoc']);?></div>
-                          <br />  Buscar: <input type="text" id="stext_aprobado" width="200px" size="25">
-                   <a href="javascript:void(0)" onclick="tree_aprobado.findItem(htmlentities(document.getElementById('stext_aprobado').value),1)"><img src="../../botones/general/anterior.png"border="0px"></a>
-                   <a href="javascript:void(0)" onclick="tree_aprobado.findItem(htmlentities(document.getElementById('stext_aprobado').value),0,1)"><img src="../../botones/general/buscar.png"border="0px"></a>
-                          <a href="javascript:void(0)" onclick="tree_aprobado.findItem(htmlentities(document.getElementById('stext_aprobado').value))"><img src="../../botones/general/siguiente.png"border="0px"></a>
-                          <br /><br />
-                <div id="treeboxbox_aprobado" height="90%"></div><input type="hidden" maxlength="255"  name="aprobado" id="aprobado"   value="" ><label style="display:none" class="error" for="aprobado">Campo obligatorio.</label><script type="text/javascript">
-                  <!--
-                      var browserType;
-                      if (document.layers) {browserType = "nn4"}
-                      if (document.all) {browserType = "ie"}
-                      if (window.navigator.userAgent.toLowerCase().match("gecko")) {
-                         browserType= "gecko"
-                      }
-                			tree_aprobado=new dhtmlXTreeObject("treeboxbox_aprobado","100%","100%",0);
-                			tree_aprobado.setImagePath("../../imgs/");
-                			tree_aprobado.enableIEImageFix(true);tree_aprobado.enableCheckBoxes(1);
-                    tree_aprobado.enableRadioButtons(true);tree_aprobado.setOnLoadingStart(cargando_aprobado);
-                      tree_aprobado.setOnLoadingEnd(fin_cargando_aprobado);tree_aprobado.enableSmartXMLParsing(true);tree_aprobado.loadXML("../../test.php?rol=1&sin_padre=1");
-                      tree_aprobado.setOnCheckHandler(onNodeSelect_aprobado);
-                      function onNodeSelect_aprobado(nodeId)
-                      {valor_destino=document.getElementById("aprobado");
-                       destinos=tree_aprobado.getAllChecked();
-                       nuevo=destinos.replace(/\,{2,}(d)*/gi,",");
-                       nuevo=nuevo.replace(/\,$/gi,"");
-                       vector=destinos.split(",");
-                       for(i=0;i<vector.length;i++)
-                          {if(vector[i].indexOf("#")!=-1)
-                              {hijos=tree_aprobado.getAllSubItems(vector[i]);
-                               hijos=hijos.replace(/\,{2,}(d)*/gi,",");
-                               hijos=hijos.replace(/\,$/gi,"");
-                               vectorh=hijos.split(",");
-                               for(h=0;h<vectorh.length;h++)
-                                  nuevo=eliminarItem(nuevo,vectorh[h]);
-                              }
-                          }
-                       valor_destino.value=nuevo;
-                      }
-                      function fin_cargando_aprobado() {
-                        if (browserType == "gecko" )
-                           document.poppedLayer =
-                               eval('document.getElementById("esperando_aprobado")');
-                        else if (browserType == "ie")
-                           document.poppedLayer =
-                              eval('document.getElementById("esperando_aprobado")');
-                        else
-                           document.poppedLayer =
-                              eval('document.layers["esperando_aprobado"]');
-                        document.poppedLayer.style.visibility = "hidden";
-                      }
-                      function cargando_aprobado() {
-                        if (browserType == "gecko" )
-                           document.poppedLayer =
-                               eval('document.getElementById("esperando_aprobado")');
-                        else if (browserType == "ie")
-                           document.poppedLayer =
-                              eval('document.getElementById("esperando_aprobado")');
-                        else
-                           document.poppedLayer =
-                               eval('document.layers["esperando_aprobado"]');
                         document.poppedLayer.style.visibility = "visible";
                       }
                 	--></script></td></tr><tr><td class="encabezado">&nbsp;<select name="condicion_dependencias_partici" id="condicion_dependencias_partici"><option value="AND">Y</option><option value="OR">O</option></td>
@@ -450,7 +417,7 @@ ELABORACION,REVISION,APROBACION,DISTRIBUCION,INACTIVO ">ESTADO</td><td class="en
                         document.poppedLayer.style.visibility = "visible";
                       }
                 	--></script></td></tr><tr><td class="encabezado">&nbsp;<select name="condicion_macroproceso" id="condicion_macroproceso"><option value="AND">Y</option><option value="OR">O</option></td>
-                     <td class="encabezado" width="20%" title="">MACROPROCESO</td><td class="encabezado">&nbsp;<select name="compara_macroproceso" id="compara_macroproceso"> <option value="=|@|@">Igual</option><option value="-|@|@">Menor</option><option value="+|@|@">Mayor</option><option value="!|@|@">Diferente</option></select></td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(194,2609,'',1);?></td></tr><input type="hidden" name="campo_descripcion" value="2003,2006,2608"><?php submit_formato(194);?></table><?php if(@$_REQUEST["campo__retorno"]){ ?>
+                     <td class="encabezado" width="20%" title="">MACROPROCESO</td><td class="encabezado">&nbsp;<select name="compara_macroproceso" id="compara_macroproceso"> <option value="=|@|@">Igual</option><option value="-|@|@">Menor</option><option value="+|@|@">Mayor</option><option value="!|@|@">Diferente</option></select></td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(194,2609,'',1);?></td></tr><input type="hidden" name="campo_descripcion" value="2003,2006"><?php submit_formato(194);?></table><?php if(@$_REQUEST["campo__retorno"]){ ?>
                 <input type="hidden" name="campo__retorno" value="<?php echo($_REQUEST["campo__retorno"]); ?>">
               <?php }
                if(@$_REQUEST["formulario__retorno"]){ ?>

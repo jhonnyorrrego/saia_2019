@@ -185,7 +185,8 @@ ELABORACION,REVISION,APROBACION,DISTRIBUCION,INACTIVO ">ESTADO*</td><td bgcolor=
 			objectType: \'iframe\', outlineType: \'rounded-white\', wrapperClassName: \'highslide-wrapper drag-header\',
 			outlineWhileAnimating: true, preserveContent: false, width: 400 } )">Administrar Anexos</a>
 			</div>'; ?><tr>
-                   <td class="encabezado" width="20%" title="Nombre y Cargo de quienes Aprueban el documento de Calidad">APROBADO POR</td><td bgcolor="#F5F5F5"><div id="seleccionados"><?php mostrar_seleccionados(194,4126,'5',$_REQUEST['iddoc']);?></div>
+                   <td class="encabezado" width="20%" title="Nombre y Cargo de quienes Aprueban el documento de Calidad">APROBADO POR</td><td bgcolor="#F5F5F5"><div id="seleccionados"><?php mostrar_seleccionados(194,4126,'5
+',$_REQUEST['iddoc']);?></div>
                           <br />  Buscar: <input  tabindex='13'  type="text" id="stext_aprobado_por" width="200px" size="25"><a href="javascript:void(0)" onclick="tree_aprobado_por.findItem(htmlentities(document.getElementById('stext_aprobado_por').value),1)"> <img src="../../botones/general/anterior.png"border="0px"></a>
                    <a href="javascript:void(0)" onclick="tree_aprobado_por.findItem(htmlentities(document.getElementById('stext_aprobado_por').value),0,1)"><img src="../../botones/general/buscar.png"border="0px"></a>                          
                    <a href="javascript:void(0)" onclick="tree_aprobado_por.findItem(htmlentities(document.getElementById('stext_aprobado_por').value))"><img src="../../botones/general/siguiente.png"border="0px"></a> 
@@ -201,7 +202,7 @@ ELABORACION,REVISION,APROBACION,DISTRIBUCION,INACTIVO ">ESTADO*</td><td bgcolor=
                 			tree_aprobado_por.setImagePath("../../imgs/");
                 			tree_aprobado_por.enableIEImageFix(true);tree_aprobado_por.enableCheckBoxes(1);
                     tree_aprobado_por.enableRadioButtons(true);tree_aprobado_por.setOnLoadingStart(cargando_aprobado_por);
-                      tree_aprobado_por.setOnLoadingEnd(fin_cargando_aprobado_por);tree_aprobado_por.enableSmartXMLParsing(true);tree_aprobado_por.loadXML("../../test.php?rol=1",checkear_arbol);
+                      tree_aprobado_por.setOnLoadingEnd(fin_cargando_aprobado_por);tree_aprobado_por.enableSmartXMLParsing(true);tree_aprobado_por.loadXML("../../test.php?rol=1&sin_padre=1",checkear_arbol);
                 	        tree_aprobado_por.setOnCheckHandler(onNodeSelect_aprobado_por);
                       function onNodeSelect_aprobado_por(nodeId)
                       {valor_destino=document.getElementById("aprobado_por");
@@ -251,9 +252,74 @@ ELABORACION,REVISION,APROBACION,DISTRIBUCION,INACTIVO ">ESTADO*</td><td bgcolor=
                     }}
 --></script></td></tr><tr>
                     <td class="encabezado" width="20%" title="Fecha en que se aprob&oacute;">FECHA EN QUE SE APROB&Oacute;</td><td colspan="2" bgcolor="#F5F5F5"><font size="1,5" face="Verdana, Arial, Helvetica, sans-serif"><span ><input  tabindex='14'  type="text" readonly="true" name="fecha_aprobacion"  id="fecha_aprobacion" value="<?php mostrar_valor_campo('fecha_aprobacion',194,$_REQUEST['iddoc']); ?>"><?php selector_fecha("fecha_aprobacion","formulario_formatos","Y-m-d H:i",date("m"),date("Y"),"default.css","../../","AD:VALOR"); ?></span></font></td><tr>
-                    <td class="encabezado" width="20%" title="Fecha en que se revis&oacute;">FECHA EN QUE SE REVIS&Oacute;</td><td colspan="2" bgcolor="#F5F5F5"><font size="1,5" face="Verdana, Arial, Helvetica, sans-serif"><span ><input  tabindex='15'  type="text" readonly="true" name="fecha_revision"  id="fecha_revision" value="<?php mostrar_valor_campo('fecha_revision',194,$_REQUEST['iddoc']); ?>"><?php selector_fecha("fecha_revision","formulario_formatos","Y-m-d H:i",date("m"),date("Y"),"default.css","../../","AD:VALOR"); ?></span></font></td><tr>
+                   <td class="encabezado" width="20%" title="">REVISADO POR</td><td bgcolor="#F5F5F5"><div id="seleccionados"><?php mostrar_seleccionados(194,4621,'5',$_REQUEST['iddoc']);?></div>
+                          <br />  Buscar: <input  tabindex='15'  type="text" id="stext_revisado_por" width="200px" size="25"><a href="javascript:void(0)" onclick="tree_revisado_por.findItem(htmlentities(document.getElementById('stext_revisado_por').value),1)"> <img src="../../botones/general/anterior.png"border="0px"></a>
+                   <a href="javascript:void(0)" onclick="tree_revisado_por.findItem(htmlentities(document.getElementById('stext_revisado_por').value),0,1)"><img src="../../botones/general/buscar.png"border="0px"></a>                          
+                   <a href="javascript:void(0)" onclick="tree_revisado_por.findItem(htmlentities(document.getElementById('stext_revisado_por').value))"><img src="../../botones/general/siguiente.png"border="0px"></a> 
+                          <br /><div id="esperando_revisado_por"><img src="../../imagenes/cargando.gif"></div><div id="treeboxbox_revisado_por" height="90%"></div><input type="hidden" maxlength="255"  name="revisado_por" id="revisado_por"   value="<?php cargar_seleccionados(194,4621,1,$_REQUEST['iddoc']);?>" ><script type="text/javascript">
+                  <!--
+                      var browserType;
+                      if (document.layers) {browserType = "nn4"}
+                      if (document.all) {browserType = "ie"}
+                      if (window.navigator.userAgent.toLowerCase().match("gecko")) {
+                         browserType= "gecko"
+                      }
+                			tree_revisado_por=new dhtmlXTreeObject("treeboxbox_revisado_por","100%","100%",0);
+                			tree_revisado_por.setImagePath("../../imgs/");
+                			tree_revisado_por.enableIEImageFix(true);tree_revisado_por.enableCheckBoxes(1);
+                    tree_revisado_por.enableRadioButtons(true);tree_revisado_por.setOnLoadingStart(cargando_revisado_por);
+                      tree_revisado_por.setOnLoadingEnd(fin_cargando_revisado_por);tree_revisado_por.enableSmartXMLParsing(true);tree_revisado_por.loadXML("../../test.php?rol=1&sin_padre=1",checkear_arbol);
+                	        tree_revisado_por.setOnCheckHandler(onNodeSelect_revisado_por);
+                      function onNodeSelect_revisado_por(nodeId)
+                      {valor_destino=document.getElementById("revisado_por");
+
+                       if(tree_revisado_por.isItemChecked(nodeId))
+                         {if(valor_destino.value!=="")
+                          tree_revisado_por.setCheck(valor_destino.value,false);
+                          if(nodeId.indexOf("_")!=-1)
+                             nodeId=nodeId.substr(0,nodeId.indexOf("_"));
+                          valor_destino.value=nodeId;
+                         }
+                       else
+                         {valor_destino.value="";
+                         }
+                      }
+                      function fin_cargando_revisado_por() {
+                        if (browserType == "gecko" )
+                           document.poppedLayer =
+                               eval('document.getElementById("esperando_revisado_por")');
+                        else if (browserType == "ie")
+                           document.poppedLayer =
+                              eval('document.getElementById("esperando_revisado_por")');
+                        else
+                           document.poppedLayer =
+                              eval('document.layers["esperando_revisado_por"]');
+                        document.poppedLayer.style.display = "none";
+                      }
+
+                      function cargando_revisado_por() {
+                        if (browserType == "gecko" )
+                           document.poppedLayer =
+                               eval('document.getElementById("esperando_revisado_por")');
+                        else if (browserType == "ie")
+                           document.poppedLayer =
+                              eval('document.getElementById("esperando_revisado_por")');
+                        else
+                           document.poppedLayer =
+                               eval('document.layers["esperando_revisado_por"]');
+                        document.poppedLayer.style.display = "";
+                      }
+                	
+                  function checkear_arbol(){
+                  vector2="<?php cargar_seleccionados(194,4621,1,$_REQUEST['iddoc']);?>";
+                  vector2=vector2.split(",");
+                  for(m=0;m<vector2.length;m++)
+                    {tree_revisado_por.setCheck(vector2[m],true);
+                    }}
+--></script></td></tr><tr>
+                    <td class="encabezado" width="20%" title="Fecha en que se revis&oacute;">FECHA EN QUE SE REVIS&Oacute;</td><td colspan="2" bgcolor="#F5F5F5"><font size="1,5" face="Verdana, Arial, Helvetica, sans-serif"><span ><input  tabindex='16'  type="text" readonly="true" name="fecha_revision"  id="fecha_revision" value="<?php mostrar_valor_campo('fecha_revision',194,$_REQUEST['iddoc']); ?>"><?php selector_fecha("fecha_revision","formulario_formatos","Y-m-d H:i",date("m"),date("Y"),"default.css","../../","AD:VALOR"); ?></span></font></td><tr>
                    <td class="encabezado" width="20%" title="">PERMISOS DE ACCESO</td><td bgcolor="#F5F5F5"><div id="seleccionados"><?php mostrar_seleccionados(194,4130,'0',$_REQUEST['iddoc']);?></div>
-                          <br />  Buscar: <input  tabindex='16'  type="text" id="stext_permisos_acceso" width="200px" size="25"><a href="javascript:void(0)" onclick="tree_permisos_acceso.findItem(htmlentities(document.getElementById('stext_permisos_acceso').value),1)"> <img src="../../botones/general/anterior.png"border="0px"></a>
+                          <br />  Buscar: <input  tabindex='17'  type="text" id="stext_permisos_acceso" width="200px" size="25"><a href="javascript:void(0)" onclick="tree_permisos_acceso.findItem(htmlentities(document.getElementById('stext_permisos_acceso').value),1)"> <img src="../../botones/general/anterior.png"border="0px"></a>
                    <a href="javascript:void(0)" onclick="tree_permisos_acceso.findItem(htmlentities(document.getElementById('stext_permisos_acceso').value),0,1)"><img src="../../botones/general/buscar.png"border="0px"></a>                          
                    <a href="javascript:void(0)" onclick="tree_permisos_acceso.findItem(htmlentities(document.getElementById('stext_permisos_acceso').value))"><img src="../../botones/general/siguiente.png"border="0px"></a> 
                           <br /><div id="esperando_permisos_acceso"><img src="../../imagenes/cargando.gif"></div><div id="treeboxbox_permisos_acceso" height="90%"></div><input type="hidden" maxlength="255"  name="permisos_acceso" id="permisos_acceso"   value="<?php cargar_seleccionados(194,4130,1,$_REQUEST['iddoc']);?>" ><script type="text/javascript">
@@ -330,71 +396,6 @@ ELABORACION,REVISION,APROBACION,DISTRIBUCION,INACTIVO ">ESTADO*</td><td bgcolor=
                   vector2=vector2.split(",");
                   for(m=0;m<vector2.length;m++)
                     {tree_permisos_acceso.setCheck(vector2[m],true);
-                    }}
---></script></td></tr><tr>
-                   <td class="encabezado" width="20%" title="">APROBADO POR*</td><td bgcolor="#F5F5F5"><div id="seleccionados"><?php mostrar_seleccionados(194,2608,'5',$_REQUEST['iddoc']);?></div>
-                          <br />  Buscar: <input  tabindex='17'  type="text" id="stext_aprobado" width="200px" size="25"><a href="javascript:void(0)" onclick="tree_aprobado.findItem(htmlentities(document.getElementById('stext_aprobado').value),1)"> <img src="../../botones/general/anterior.png"border="0px"></a>
-                   <a href="javascript:void(0)" onclick="tree_aprobado.findItem(htmlentities(document.getElementById('stext_aprobado').value),0,1)"><img src="../../botones/general/buscar.png"border="0px"></a>                          
-                   <a href="javascript:void(0)" onclick="tree_aprobado.findItem(htmlentities(document.getElementById('stext_aprobado').value))"><img src="../../botones/general/siguiente.png"border="0px"></a> 
-                          <br /><div id="esperando_aprobado"><img src="../../imagenes/cargando.gif"></div><div id="treeboxbox_aprobado" height="90%"></div><input type="hidden" maxlength="255"  class="required"  name="aprobado" id="aprobado"   value="<?php cargar_seleccionados(194,2608,1,$_REQUEST['iddoc']);?>" ><script type="text/javascript">
-                  <!--
-                      var browserType;
-                      if (document.layers) {browserType = "nn4"}
-                      if (document.all) {browserType = "ie"}
-                      if (window.navigator.userAgent.toLowerCase().match("gecko")) {
-                         browserType= "gecko"
-                      }
-                			tree_aprobado=new dhtmlXTreeObject("treeboxbox_aprobado","100%","100%",0);
-                			tree_aprobado.setImagePath("../../imgs/");
-                			tree_aprobado.enableIEImageFix(true);tree_aprobado.enableCheckBoxes(1);
-                    tree_aprobado.enableRadioButtons(true);tree_aprobado.setOnLoadingStart(cargando_aprobado);
-                      tree_aprobado.setOnLoadingEnd(fin_cargando_aprobado);tree_aprobado.enableSmartXMLParsing(true);tree_aprobado.loadXML("../../test.php?rol=1&sin_padre=1",checkear_arbol);
-                	        tree_aprobado.setOnCheckHandler(onNodeSelect_aprobado);
-                      function onNodeSelect_aprobado(nodeId)
-                      {valor_destino=document.getElementById("aprobado");
-
-                       if(tree_aprobado.isItemChecked(nodeId))
-                         {if(valor_destino.value!=="")
-                          tree_aprobado.setCheck(valor_destino.value,false);
-                          if(nodeId.indexOf("_")!=-1)
-                             nodeId=nodeId.substr(0,nodeId.indexOf("_"));
-                          valor_destino.value=nodeId;
-                         }
-                       else
-                         {valor_destino.value="";
-                         }
-                      }
-                      function fin_cargando_aprobado() {
-                        if (browserType == "gecko" )
-                           document.poppedLayer =
-                               eval('document.getElementById("esperando_aprobado")');
-                        else if (browserType == "ie")
-                           document.poppedLayer =
-                              eval('document.getElementById("esperando_aprobado")');
-                        else
-                           document.poppedLayer =
-                              eval('document.layers["esperando_aprobado"]');
-                        document.poppedLayer.style.display = "none";
-                      }
-
-                      function cargando_aprobado() {
-                        if (browserType == "gecko" )
-                           document.poppedLayer =
-                               eval('document.getElementById("esperando_aprobado")');
-                        else if (browserType == "ie")
-                           document.poppedLayer =
-                              eval('document.getElementById("esperando_aprobado")');
-                        else
-                           document.poppedLayer =
-                               eval('document.layers["esperando_aprobado"]');
-                        document.poppedLayer.style.display = "";
-                      }
-                	
-                  function checkear_arbol(){
-                  vector2="<?php cargar_seleccionados(194,2608,1,$_REQUEST['iddoc']);?>";
-                  vector2=vector2.split(",");
-                  for(m=0;m<vector2.length;m++)
-                    {tree_aprobado.setCheck(vector2[m],true);
                     }}
 --></script></td></tr><tr>
                    <td class="encabezado" width="20%" title="">DEPENDENCIAS PARTICIPANTES*</td><td bgcolor="#F5F5F5"><div id="seleccionados"><?php mostrar_seleccionados(194,4574,'2',$_REQUEST['iddoc']);?></div>
@@ -477,4 +478,4 @@ ELABORACION,REVISION,APROBACION,DISTRIBUCION,INACTIVO ">ESTADO*</td><td bgcolor=
                     {tree_dependencias_partici.setCheck(vector2[m],true);
                     }}
 --></script></td></tr><tr>
-                     <td class="encabezado" width="20%" title="">MACROPROCESO</td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(194,2609,$_REQUEST['iddoc']);?></td></tr><input type="hidden" name="campo_descripcion" value="<?php echo('2003,2006,2608'); ?>"><input type="hidden" name="formato" value="194"><tr><td colspan='2'><?php submit_formato(194,$_REQUEST['iddoc']);?></td></tr></table><input type='hidden' name='permisos_anexos' id='permisos_anexos' value=''></form></body></html><?php include_once("../librerias/footer_plantilla.php");?>
+                     <td class="encabezado" width="20%" title="">MACROPROCESO</td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(194,2609,$_REQUEST['iddoc']);?></td></tr><input type="hidden" name="campo_descripcion" value="<?php echo('2003,2006'); ?>"><input type="hidden" name="formato" value="194"><tr><td colspan='2'><?php submit_formato(194,$_REQUEST['iddoc']);?></td></tr></table><input type='hidden' name='permisos_anexos' id='permisos_anexos' value=''></form></body></html><?php include_once("../librerias/footer_plantilla.php");?>
