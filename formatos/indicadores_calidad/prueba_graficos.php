@@ -3,7 +3,7 @@
 $nombres=array();
 
 $nombres['nombres']=array('ruben');
-$nombres['colores']=array('#00FF51');
+$nombres['textStyle']['colores']=array('#00FF51');
 
 
 
