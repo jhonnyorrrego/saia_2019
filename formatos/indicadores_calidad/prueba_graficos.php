@@ -17,7 +17,7 @@ function generar_grafico_barra($idcontenedor,$nombres,$valores,$titulo_grafico='
 
             var option = {
                 title: {
-                text: 'ECharts entry example'
+                text: '<?php echo($titulo_grafico); ?>'
                 },
                 color: ['#3398DB'],
                 tooltip : {
