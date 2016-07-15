@@ -10,7 +10,7 @@
 
     <script src="echarts.min.js"></script>
         <center>
-    <div id="main" style="width: 600px;height:400px;"></div>
+    <div id="main" style="width: 600px;height:400px; display:none;"></div>
     <br>
     <br>
     <br>
