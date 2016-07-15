@@ -16,7 +16,6 @@ function generar_grafico_barra($color,$idcontenedor,$nombres,$valores,$titulo_gr
  		    var myChart = echarts.init(document.getElementById('<?php echo($idcontenedor); ?>'));
 
             var option = {
-                xAxisName:'hola muindo',
                 title: {text: '<?php echo($titulo_grafico); ?>'},
                 color: ['<?php echo($color); ?>'],
                 tooltip : {
