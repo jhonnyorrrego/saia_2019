@@ -3,11 +3,12 @@
         
         
        $dato=array(5,10,15,20,25,30);
-	
+	   $datos3=array('titulo 5','titulo 10','titulo 15','titulo 20','titulo 25','titulo 30');
 	
 	    switch(trim(@$tipo_grafico[0]["tipo_grafico"])){
 			case 'barras':
-			       
+			    $valores=$dato;
+			    $titulos=$dato3;       
 			    break;
 		}
 	
