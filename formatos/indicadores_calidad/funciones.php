@@ -355,7 +355,7 @@ function generar_grafico_barra($color,$contenedores,$nombres,$valores,$titulo_gr
        // echo($titulos);die();
     ?>
         <script type="text/javascript">
- 		    var myChart = echarts.init(document.getElementById('<?php echo($idcontenedor); ?>'));
+ 		    var myChart = echarts.init(document.getElementById('<?php echo($contenedores[0]); ?>'));
 
             var option = {
                 renderAsImage:true,
@@ -422,7 +422,7 @@ function generar_grafico_barra($color,$contenedores,$nombres,$valores,$titulo_gr
             backgroundColor: '#fff'
             });
             
-            document.getElementById('imagen_grafico').appendChild(img);
+            document.getElementById('<?php echo($contenedores[1]); ?>').appendChild(img);
             $('#main').remove();
 
         </script>
