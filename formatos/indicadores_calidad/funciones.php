@@ -339,7 +339,8 @@ echo "</table>";
 
 
 function generar_grafico_barra($color,$idcontenedor,$nombres,$valores,$titulo_grafico='',$titulox='',$tituloy=''){
-        $nombres=json_encode($nombres);
+        $nombres=json_encode($nombres['nombres']);
+        
         $valores=json_encode($valores);
         $color_saia=busca_filtro_tabla("","configuracion","nombre='color_encabezado_list'","",$conn);
         
