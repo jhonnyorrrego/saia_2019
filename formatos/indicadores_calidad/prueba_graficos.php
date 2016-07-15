@@ -27,7 +27,9 @@ function generar_grafico_barra($idcontenedor,$titulos,$valores){
                 xAxis : [
                     {
                         type : 'category',
-                        data : ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                        data : [
+                            <?php echo(implode(',',$titulos)); ?>
+                        ],
                         axisTick: {
                             alignWithLabel: true
                         }
