@@ -8,6 +8,8 @@
 
 function generar_grafico_barra($idcontenedor,$titulos,$valores){
         $titulos=json_encode($titulos);
+        $valores=json_encode($valores);
+        
        // echo($titulos);die();
     ?>
         <script type="text/javascript">
