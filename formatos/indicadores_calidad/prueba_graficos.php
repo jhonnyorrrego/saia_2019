@@ -47,7 +47,7 @@ function generar_grafico_barra($color,$idcontenedor,$nombres,$valores,$titulo_gr
                 ],
                 series : [
                     {
-                        name:'直接访问',
+                        name:'<?php echo($titulo_grafico); ?>',
                         type:'bar',
                         barWidth: '50%',
                         data:<?php echo($valores); ?>
