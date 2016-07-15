@@ -2,7 +2,7 @@
         
         
         
-        $cumplimiento='';
+       $dato=array(5,10,15,20,25,30);
 	
 	
 	    switch(trim(@$tipo_grafico[0]["tipo_grafico"])){
