@@ -367,7 +367,7 @@ function generar_grafico_barra($color,$idcontenedor,$nombres,$valores,$titulo_gr
                     {
                         
                         nameTextStyle:{
-                          color: {'#000000','#ff0608'},
+                          color: '#000000',
                           fontWeight:'bold'
                         },
                         nameLocation:'middle',
