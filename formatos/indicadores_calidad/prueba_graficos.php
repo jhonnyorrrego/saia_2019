@@ -6,6 +6,9 @@ $nombres['nombres']=array('ruben');
 $nombres['colores']=array('#00FF51');
 
 
+
+echo( json_encode($nombres) );
+
 die();
 ?>
 
