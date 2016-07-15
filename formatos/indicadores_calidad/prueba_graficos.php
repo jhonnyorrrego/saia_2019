@@ -144,7 +144,7 @@ function generar_grafico_barra($color,$idcontenedor,$nombres,$valores,$titulo_gr
 			    break;
 		}
 		
-		print_r($nombres);
+		print_r($nombres);die();
 	    generar_grafico_barra($color,$idcontenedor,$nombres,$valores,$titulo_grafico,$titulox,$tituloy);
 	
 	
