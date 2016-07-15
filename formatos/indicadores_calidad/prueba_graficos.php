@@ -19,7 +19,7 @@ echo( librerias_jquery('1.7') );
 
     <script src="echarts.min.js"></script>
         <center>
-    <div id="main" style="width: 600px;height:400px; display:none;"></div>
+    <div id="main" style="width: 600px;height:400px; "></div>
     <br>
     <div id="imagen_grafico"></div>
 <?php
