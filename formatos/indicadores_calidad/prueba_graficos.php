@@ -33,7 +33,7 @@ function generar_grafico_barra($color,$idcontenedor,$nombres,$valores,$titulo_gr
                 },
                 xAxis : [
                     {
-                        name:'hola mundo',
+                        name:{text:'hola mundo'},
                         type : 'category',
                         data: <?php echo($nombres); ?>,
                        
