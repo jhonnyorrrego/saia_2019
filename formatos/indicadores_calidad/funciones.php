@@ -306,7 +306,7 @@ if ($formulas["numcampos"]) {
 						break;
 					case 'barras':
                 	    //$dato3=array('titulo 5','titulo 10','titulo 15','titulo 20','titulo 25','titulo 30');
-                	    $titulo_grafico='Mi Grafico';
+                	    $titulo_grafico='PORCENTAJE DE CUMPLIMIENTO POR SEGUIMIENTO';
                 	    $idcontenedor='main';
                 	    $tipo_grafico='barras';
                 	    $color='#00FF51';
