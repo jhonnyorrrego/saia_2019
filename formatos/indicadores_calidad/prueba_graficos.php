@@ -44,6 +44,7 @@ function generar_grafico_barra($color,$idcontenedor,$nombres,$valores,$titulo_gr
                 ],
                 yAxis : [
                     {
+                        nameRotate:11,
                         name:'hola mundo', //
                         type : 'value'
                     }
