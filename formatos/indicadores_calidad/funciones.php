@@ -102,6 +102,7 @@ if ($formulas["numcampos"]) {
 		$dato3 = array();
 		$dato4 = array();
 		$dato5 = array();
+		$array_colores=array();
 		$DataSet = new pData;
 		$DataSet1 = new pData;
 		for ($j = 0; $j < $seg["numcampos"]; $j++) {
@@ -159,7 +160,7 @@ if ($formulas["numcampos"]) {
 				array_push($dato, $cumplimiento);
 				array_push($dato2, "Fecha:" . $seg[$j]["fecha_seguimiento"] . ", Valor: " . $cumplimiento . "%");
 				array_push($dato3, $seg[$j]["fecha_seguimiento"] . "(" . $cumplimiento . "%)");
-
+	            array_push($array_colores, $color);
 				array_push($dato4, $respuesta);
 				array_push($dato5, $seg[$j]["fecha_seguimiento"] . "(" . $respuesta . "%)");
 			}	
