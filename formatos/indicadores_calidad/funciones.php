@@ -339,10 +339,16 @@ echo "</table>";
 
 
 function generar_grafico_barra($color,$idcontenedor,$nombres,$valores,$titulo_grafico='',$titulox='',$tituloy=''){
-        $nombres=json_encode($nombres['nombres']);
-        
+    global $conn;
         $valores=json_encode($valores);
         $color_saia=busca_filtro_tabla("","configuracion","nombre='color_encabezado_list'","",$conn);
+        
+       $data_nombres=array();
+       for($i=0;$i<count($nombres['nombres']);$i++){
+            $data_nombres[$i]['value']=$nombres['nombres'][$i];
+            $data_nombres[$i]['textStyle']['color']=$nombres['colores'][$i];
+            $data_nombres[$i]['textStyle']['fontWeight']='bold';           
+       }        
         
        // echo($titulos);die();
     ?>
