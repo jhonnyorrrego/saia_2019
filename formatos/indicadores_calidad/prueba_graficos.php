@@ -109,7 +109,7 @@ function generar_grafico_barra($color,$idcontenedor,$nombres,$valores,$titulo_gr
             backgroundColor: '#fff'
             });
             
-           console.log(img);
+          
             document.getElementById('imagen_grafico').appendChild(img);
             $('#main').remove();
             
