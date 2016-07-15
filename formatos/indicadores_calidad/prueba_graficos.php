@@ -2,10 +2,10 @@
         
         
         
-        $cumplimiento
+        $cumplimiento='';
 	
 	
-	    switch(trim($tipo_grafico[0]["tipo_grafico"])){
+	    switch(trim(@$tipo_grafico[0]["tipo_grafico"])){
 			case 'barras':
 			       
 			    break;
