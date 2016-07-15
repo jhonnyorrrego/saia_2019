@@ -47,7 +47,7 @@ function generar_grafico_barra($color,$idcontenedor,$nombres,$valores,$titulo_gr
                               {
                                   value:'barra 1',
                                   textStyle: {
-                                     
+                                      fontWeight:'bold',
                                       color: 'red'
                                   }
                               },
