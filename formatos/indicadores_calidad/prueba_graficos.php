@@ -63,7 +63,7 @@ function generar_grafico_barra($color,$idcontenedor,$nombres,$valores,$titulo_gr
                 ],
                 series : [
                     {
-                        name:'<?php echo($titulo_grafico); ?>',
+                        name:'Valor',
                         type:'bar',
                         barWidth: '50%',
                         data:<?php echo($valores); ?>
