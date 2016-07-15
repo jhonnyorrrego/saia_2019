@@ -52,8 +52,8 @@ function generar_grafico_barra($color,$idcontenedor,$nombres,$valores,$titulo_gr
                                   }
                               },
                               {
-                                  value:'barra 2',
-                                  color:'#ff0524'
+                                  value:'barra 2'
+                                 
                               }
                           ],
                         axisTick: {
