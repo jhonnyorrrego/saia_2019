@@ -143,6 +143,8 @@ function generar_grafico_barra($color,$idcontenedor,$nombres,$valores,$titulo_gr
 			    $nombres['colores']=$colores;
 			    break;
 		}
+		
+		print_r($nombres);
 	    generar_grafico_barra($color,$idcontenedor,$nombres,$valores,$titulo_grafico,$titulox,$tituloy);
 	
 	
