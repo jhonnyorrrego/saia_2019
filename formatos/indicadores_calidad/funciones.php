@@ -294,7 +294,7 @@ if ($formulas["numcampos"]) {
 			?>
 			    <script src="echarts.min.js"></script>
                 
-                <div id="main" style="width: 600px;height:400px;"></div>
+                <div id="porcentaje_cumplimiento_contenedor_grafico" style="width: 600px;height:400px;"></div>
 			<?php
 			
 			
@@ -307,7 +307,7 @@ if ($formulas["numcampos"]) {
 					case 'barras':
                 	    //$dato3=array('titulo 5','titulo 10','titulo 15','titulo 20','titulo 25','titulo 30');
                 	    $titulo_grafico='PORCENTAJE DE CUMPLIMIENTO POR SEGUIMIENTO';
-                	    $idcontenedor='main';
+                	    $idcontenedor='porcentaje_cumplimiento_contenedor_grafico';
                 	    $tipo_grafico='barras';
                 	    $color='#00FF51';
                 	    $titulox='Titulo Eje X';
