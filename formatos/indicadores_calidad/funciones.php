@@ -383,7 +383,8 @@ function generar_grafico_barra($color,$idcontenedor,$nombres,$valores,$titulo_gr
                 yAxis : [
                     {
                         nameTextStyle:{
-                          color: '#000000',
+                         // color: '#000000',
+                         color: '<?php echo($color); ?>',
                           fontWeight:'bold'
                         },
                         nameLocation:'middle',
