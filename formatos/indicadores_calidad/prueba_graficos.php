@@ -6,8 +6,8 @@
 
 
 
-function generar_grafico_barra($idcontenedor,$titulos,$valores){
-        $titulos=json_encode($titulos);
+function generar_grafico_barra($idcontenedor,$nombres,$valores,){
+        $nombres=json_encode($nombres);
         $valores=json_encode($valores);
         
        // echo($titulos);die();
@@ -35,7 +35,7 @@ function generar_grafico_barra($idcontenedor,$titulos,$valores){
                 xAxis : [
                     {
                         type : 'category',
-                        data: <?php echo($titulos); ?>,
+                        data: <?php echo($nombres); ?>,
                        
                         axisTick: {
                             alignWithLabel: true
@@ -73,10 +73,10 @@ function generar_grafico_barra($idcontenedor,$titulos,$valores){
 	    switch($tipo_grafico){
 			case 'barras':
 			    $valores=$dato;
-			    $titulos=$dato3;       
+			    $nombres=$dato3;       
 			    break;
 		}
-	    generar_grafico_barra($idcontenedor,$titulos,$valores);
+	    generar_grafico_barra($idcontenedor,$nombres,$valores);
 	
 	
 ?>
