@@ -6,7 +6,7 @@
 
 
 
-function generar_grafico_barra($idcontenedor,$nombres,$valores,$titulo_grafico=''){
+function generar_grafico_barra($idcontenedor,$nombres,$valores,$titulo_grafico='',$titulox='',$tituloy=''){
         $nombres=json_encode($nombres);
         $valores=json_encode($valores);
         
