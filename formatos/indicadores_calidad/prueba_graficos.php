@@ -6,7 +6,7 @@
 
 
 
-function generar_grafico_barra($idcontenedor,$nombres,$valores,$titulo_grafico='',$titulox='',$tituloy=''){
+function generar_grafico_barra($color='#3398DB',$idcontenedor,$nombres,$valores,$titulo_grafico='',$titulox='',$tituloy=''){
         $nombres=json_encode($nombres);
         $valores=json_encode($valores);
         
@@ -49,7 +49,7 @@ function generar_grafico_barra($idcontenedor,$nombres,$valores,$titulo_grafico='
                     {
                         //name:'直接访问',
                         type:'bar',
-                        barWidth: '60%',
+                        barWidth: '100%',
                         data:<?php echo($valores); ?>
                     }
                 ]
