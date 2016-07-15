@@ -14,7 +14,7 @@
     <br>
     <br>
     <br>
-    <img id="imagen_grafico">
+    <div id="imagen_grafico"></div>
 <?php
         
 
@@ -105,7 +105,7 @@ function generar_grafico_barra($color,$idcontenedor,$nombres,$valores,$titulo_gr
             });
             
            console.log(img);
-            document.getElementById('imagen_grafico').setAttribute("src",img); 
+            document.getElementById('imagen_grafico').appendChild(img);
         </script>
     <?php
 }
