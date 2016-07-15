@@ -2758,3 +2758,9 @@ INICIO (codigo velocidad)-------2016-07-14 10:41:40-----------
 FIN (codigo velocidad)-------2016-07-14 10:41:40-----------
 INICIO (codigo velocidad)-------2016-07-14 11:33:05-----------
 FIN (codigo velocidad)-------2016-07-14 11:33:05-----------
+INICIO (codigo velocidad)-------2016-07-15 11:14:34-----------
+FIN (codigo velocidad)-------2016-07-15 11:14:34-----------
+INICIO (codigo velocidad)-------2016-07-15 11:15:14-----------
+FIN (codigo velocidad)-------2016-07-15 11:15:14-----------
+INICIO (codigo velocidad)-------2016-07-15 11:20:53-----------
+FIN (codigo velocidad)-------2016-07-15 11:20:53-----------
