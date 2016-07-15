@@ -33,6 +33,13 @@ function generar_grafico_barra($color,$idcontenedor,$nombres,$valores,$titulo_gr
                 },
                 xAxis : [
                     {
+                        
+                        nameTextStyle:{
+                          color: '<?php echo($color); ?>',
+                          fontWeight:'bold'
+                        },
+                        nameLocation:'middle',
+                        nameGap:30,                        
                         name:'hola mundo',
                         type : 'category',
                         data: <?php echo($nombres); ?>,
