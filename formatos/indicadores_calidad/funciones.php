@@ -300,8 +300,8 @@ if ($formulas["numcampos"]) {
                     <script src="echarts.min.js"></script>
                     <div id="contenedor_grafico_pc" style="width: 700px;height:240px;"></div>
                     <div id="imagen_grafico_pc"></div>
-                    <div id="contenedor_grafico_rc" style="width: 700px;height:240px;"></div>
-                    <div id="imagen_grafico_rc"></div>                    
+                    <div id="contenedor_grafico_rs" style="width: 700px;height:240px;"></div>
+                    <div id="imagen_grafico_rs"></div>                    
                 </td> </tr>
 			');
 			
