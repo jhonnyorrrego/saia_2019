@@ -349,7 +349,7 @@ function generar_grafico_barra($color,$idcontenedor,$nombres,$valores,$titulo_gr
             $data_nombres[$i]['textStyle']['color']=$nombres['colores'][$i];
             $data_nombres[$i]['textStyle']['fontWeight']='bold';           
        }        
-        
+        $data_nombres=json_encode($data_nombres);
        // echo($titulos);die();
     ?>
         <script type="text/javascript">
