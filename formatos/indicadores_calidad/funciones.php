@@ -383,8 +383,7 @@ function generar_grafico_barra($color,$idcontenedor,$nombres,$valores,$titulo_gr
                 yAxis : [
                     {
                         nameTextStyle:{
-                         // color: '#000000',
-                         color: '<?php echo($color); ?>',
+                          color: '#000000',
                           fontWeight:'bold'
                         },
                         nameLocation:'middle',
@@ -396,7 +395,11 @@ function generar_grafico_barra($color,$idcontenedor,$nombres,$valores,$titulo_gr
                 series : [
                     {
                        
-                        
+                        itemStyle:{
+                         // color: '#000000',
+                          color: '<?php echo($color); ?>',
+                          fontWeight:'bold'
+                        },                        
                         name:'Valor',
                         type:'bar',
                         barWidth: '50%',
