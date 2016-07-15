@@ -303,8 +303,6 @@ if ($formulas["numcampos"]) {
                 </td> </tr>
 			');
 			
-			
-			
 			if ($dato[0] != 0) {
 				switch(trim($tipo_grafico[0]["tipo_grafico"])){
 					case 'torta':
