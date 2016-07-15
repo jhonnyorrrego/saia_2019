@@ -29,7 +29,7 @@ function generar_grafico_barra($idcontenedor,$titulos,$valores){
                     {
                         type : 'category',
                         data:["titulo 5","titulo 10","titulo 15","titulo 20","titulo 25","titulo 30"],
-                        //data : <?php echo($titulos); ?>,
+                       
                         axisTick: {
                             alignWithLabel: true
                         }
