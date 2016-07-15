@@ -29,9 +29,9 @@ function generar_grafico_barra($color,$idcontenedor,$nombres,$valores,$titulo_gr
 
         $data_nombres=array();
        for($i=0;$i<count($nombres['nombres']);$i++){
-            $nombres['value']='ruben';
-            $nombres['textStyle']['color']='#00FF51';
-            $nombres['textStyle']['fontWeight']='bold';           
+            $data_nombres['value']='ruben';
+            $data_nombres['textStyle']['color']='#00FF51';
+            $data_nombres['textStyle']['fontWeight']='bold';           
        }
        
         
