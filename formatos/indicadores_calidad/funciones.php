@@ -298,8 +298,10 @@ if ($formulas["numcampos"]) {
 			echo('
                 <tr><td colspan="5">
                     <script src="echarts.min.js"></script>
-                    <div id="porcentaje_cumplimiento_contenedor_grafico" style="width: 700px;height:240px;"></div>
-                    <div id="imagen_grafico"></div>
+                    <div id="contenedor_grafico_pc" style="width: 700px;height:240px;"></div>
+                    <div id="imagen_grafico_pc"></div>
+                    <div id="contenedor_grafico_rc" style="width: 700px;height:240px;"></div>
+                    <div id="imagen_grafico_rc"></div>                    
                 </td> </tr>
 			');
 			
@@ -316,7 +318,7 @@ if ($formulas["numcampos"]) {
                 	    $color=$color;
                 	    $titulox='Seguimiento';
                 	    $tituloy='Cumplimiento';
-                	    $contenedores=array('porcentaje_cumplimiento_contenedor_grafico','imagen_grafico');
+                	    $contenedores=array('contenedor_grafico_pc','imagen_grafico_pc');
         			    $valores=$dato;
         			    $nombres['nombres']=$dato3;       
                         $nombres['colores']=$array_colores;
@@ -329,7 +331,7 @@ if ($formulas["numcampos"]) {
                 	    $color=$color;
                 	    $titulox='Seguimiento';
                 	    $tituloy='Resultado';
-                	    $contenedores=array('porcentaje_cumplimiento_contenedor_grafico','imagen_grafico');
+                	    $contenedores=array('contenedor_grafico_rs','imagen_grafico_rs');
         			    $valores=$dato;
         			    $nombres['nombres']=$dato3;       
                         $nombres['colores']=$array_colores;
