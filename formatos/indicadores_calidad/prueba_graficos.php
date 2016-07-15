@@ -104,7 +104,7 @@ function generar_grafico_barra($color,$idcontenedor,$nombres,$valores,$titulo_gr
             backgroundColor: '#fff'
             });
             
-            //alert(img);
+           console.log(img);
             document.getElementById('imagen_grafico').setAttribute("src",img); 
         </script>
     <?php
