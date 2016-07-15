@@ -12,8 +12,6 @@
         <center>
     <div id="main" style="width: 600px;height:400px; display:none;"></div>
     <br>
-    <br>
-    <br>
     <div id="imagen_grafico"></div>
 <?php
         
