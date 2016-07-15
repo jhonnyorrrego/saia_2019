@@ -322,6 +322,18 @@ if ($formulas["numcampos"]) {
                         $nombres['colores']=$array_colores;
                 	    generar_grafico_barra($color,$contenedores,$nombres,$valores,$titulo_grafico,$titulox,$tituloy);
                 	    
+
+                	    $titulo_grafico='RESULTADO POR SEGUIMIENTO';
+                	    $idcontenedor='porcentaje_cumplimiento_contenedor_grafico';
+                	    $tipo_grafico='barras';
+                	    $color=$color;
+                	    $titulox='Seguimiento';
+                	    $tituloy='Cumplimiento';
+                	    $contenedores=array('porcentaje_cumplimiento_contenedor_grafico','imagen_grafico');
+        			    $valores=$dato;
+        			    $nombres['nombres']=$dato3;       
+                        $nombres['colores']=$array_colores;
+                	    generar_grafico_barra($color,$contenedores,$nombres,$valores,$titulo_grafico,$titulox,$tituloy);
                 	    
                 	    
 						break;
