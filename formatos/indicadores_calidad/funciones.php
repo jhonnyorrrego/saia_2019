@@ -299,9 +299,9 @@ if ($formulas["numcampos"]) {
                 <tr><td colspan="5">
                     <script src="echarts.min.js"></script>
                     <div id="contenedor_grafico_pc" style="width: 650px;height:240px;display:none;"></div>
-                    <div id="imagen_grafico_pc"></div>
+                    <div id="imagen_grafico_pc" style="width: 650px;height:240px;"></div>
                     <div id="contenedor_grafico_rs" style="width: 650px;height:240px;display:none;"></div>
-                    <div id="imagen_grafico_rs"></div>                    
+                    <div id="imagen_grafico_rs" style="width: 650px;height:240px;"></div>                    
                 </td> </tr>
 			');
 			
