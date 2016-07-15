@@ -340,6 +340,7 @@ echo "</table>";
 function generar_grafico_barra($color,$idcontenedor,$nombres,$valores,$titulo_grafico='',$titulox='',$tituloy=''){
         $nombres=json_encode($nombres);
         $valores=json_encode($valores);
+        $color_saia=busca_filtro_tabla("","configuracion","nombre='color_encabezado_list'","",$conn);
         
        // echo($titulos);die();
     ?>
@@ -349,7 +350,7 @@ function generar_grafico_barra($color,$idcontenedor,$nombres,$valores,$titulo_gr
             var option = {
                 
                 title: {text: '<?php echo($titulo_grafico); ?>', x:'center'},
-                color: ['<?php echo($color); ?>'],
+                color: ['<?php echo($color_saia[0]['valor']); ?>'],
                 tooltip : {
                     trigger: 'axis',
                     axisPointer : {            // 坐标轴指示器，坐标轴触发有效
