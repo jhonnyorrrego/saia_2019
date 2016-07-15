@@ -1,4 +1,6 @@
     <script src="echarts.min.js"></script>
+        <center>
+    <div id="main" style="width: 600px;height:400px;"></div>
 <?php
         
 
@@ -6,7 +8,7 @@
 
 function generar_grafico_barra($idcontenedor,$titulos,$valores){
         $titulos=json_encode($titulos);
-       // echo($titulos);die();
+        echo($titulos);die();
     ?>
         <script type="text/javascript">
  		    var myChart = echarts.init(document.getElementById('main'));
@@ -29,7 +31,7 @@ function generar_grafico_barra($idcontenedor,$titulos,$valores){
                     {
                         type : 'category',
                         data:["titulo 5","titulo 10","titulo 15","titulo 20","titulo 25","titulo 30"],
-                       
+                        //data : <?php echo($titulos); ?>,
                         axisTick: {
                             alignWithLabel: true
                         }
@@ -79,6 +81,5 @@ function generar_grafico_barra($idcontenedor,$titulos,$valores){
 	
 ?>
 
-    <center>
-    <div id="main" style="width: 600px;height:400px;"></div>
+
 
