@@ -316,10 +316,11 @@ if ($formulas["numcampos"]) {
                 	    $color=$color;
                 	    $titulox='Seguimiento';
                 	    $tituloy='Cumplimiento';
+                	    $contenedores=array('porcentaje_cumplimiento_contenedor_grafico','imagen_grafico');
         			    $valores=$dato;
         			    $nombres['nombres']=$dato3;       
                         $nombres['colores']=$array_colores;
-                	    generar_grafico_barra($color,$idcontenedor,$nombres,$valores,$titulo_grafico,$titulox,$tituloy);
+                	    generar_grafico_barra($color,$contenedores,$nombres,$valores,$titulo_grafico,$titulox,$tituloy);
                 	    
                 	    
                 	    
