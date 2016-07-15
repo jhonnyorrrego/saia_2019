@@ -2,9 +2,16 @@
 
 $nombres=array();
 
-$nombres['value']='ruben';
-$nombres['textStyle']['color']='#00FF51';
-$nombres['textStyle']['fontWeight']='bold';
+$nombres['nombres']='ruben';
+$nombres['colores']='';
+
+
+       $data_nombres=array();
+       for($i=0;$i<count($nombres['nombres']);$i++){
+            $data_nombres[$i]['value']=$nombres['nombres'][$i];
+            $data_nombres[$i]['textStyle']['color']=$nombres['colores'][$i];
+            $data_nombres[$i]['textStyle']['fontWeight']='bold';           
+       }
 
 
 echo( json_encode($nombres) );
