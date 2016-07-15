@@ -68,7 +68,7 @@ function generar_grafico_barra($idcontenedor,$titulos,$valores){
 			    break;
 		}
 		
-		 echo(implode(',',$titulos));die();
+		
 	
 	    generar_grafico_barra($idcontenedor,$titulos,$valores);
 	
