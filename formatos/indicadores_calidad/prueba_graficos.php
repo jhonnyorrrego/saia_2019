@@ -16,6 +16,9 @@ function generar_grafico_barra($idcontenedor,$titulos,$valores){
  		    var myChart = echarts.init(document.getElementById('<?php echo($idcontenedor); ?>'));
 
             var option = {
+                title: {
+                text: 'ECharts entry example'
+                },
                 color: ['#3398DB'],
                 tooltip : {
                     trigger: 'axis',
