@@ -69,6 +69,7 @@ function generar_grafico_barra($color,$idcontenedor,$nombres,$valores,$titulo_gr
 	   $titulo_grafico='Mi Grafico';
 	   $idcontenedor='main';
 	   $tipo_grafico='barras';
+	   $color='#00FF51';
 	    switch($tipo_grafico){
 			case 'barras':
 			    $valores=$dato;
