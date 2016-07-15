@@ -5,7 +5,7 @@
 
 
 function generar_grafico_barra($idcontenedor,$titulos,$valores){
-    
+        $titulos=json_encode($titulos);
     ?>
         <script type="text/javascript">
  		    var myChart = echarts.init(document.getElementById('main'));
@@ -63,7 +63,7 @@ function generar_grafico_barra($idcontenedor,$titulos,$valores){
 	    $tipo_grafico='barras';
 	    switch($tipo_grafico){
 			case 'barras':
-			    $valores=json_encode($dato);
+			    $valores=$dato;
 			    $titulos=$dato3;       
 			    break;
 		}
