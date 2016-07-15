@@ -6,7 +6,7 @@
 
 function generar_grafico_barra($idcontenedor,$titulos,$valores){
         $titulos=json_encode($titulos);
-        echo($itulos);die();
+        echo($titulos);die();
     ?>
         <script type="text/javascript">
  		    var myChart = echarts.init(document.getElementById('main'));
