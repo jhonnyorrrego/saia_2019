@@ -86,6 +86,8 @@ function generar_grafico_barra($color,$idcontenedor,$nombres,$valores,$titulo_gr
 	   $idcontenedor='main';
 	   $tipo_grafico='barras';
 	   $color='#00FF51';
+	   $titulox='Titulo Eje X';
+	   $tituloy='Titulo Eje Y';
 	    switch($tipo_grafico){
 			case 'barras':
 			    $valores=$dato;
