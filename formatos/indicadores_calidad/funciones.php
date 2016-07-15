@@ -340,7 +340,7 @@ echo "</table>";
 }
 
 
-function generar_grafico_barra($color,$idcontenedor,$nombres,$valores,$titulo_grafico='',$titulox='',$tituloy=''){
+function generar_grafico_barra($color,$contenedores,$nombres,$valores,$titulo_grafico='',$titulox='',$tituloy=''){
     global $conn;
         $valores=json_encode($valores);
         $color_saia=busca_filtro_tabla("","configuracion","nombre='color_encabezado_list'","",$conn);
