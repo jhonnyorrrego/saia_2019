@@ -90,7 +90,7 @@ function generar_grafico_barra($color,$idcontenedor,$nombres,$valores,$titulo_gr
                               }
                           ]*/
                           
-                          <?php echo($data_nombres); ?>,
+                          data:<?php echo($data_nombres); ?>,
                         axisTick: {
                             alignWithLabel: true
                         }
