@@ -16,6 +16,7 @@ function generar_grafico_barra($color,$idcontenedor,$nombres,$valores,$titulo_gr
  		    var myChart = echarts.init(document.getElementById('<?php echo($idcontenedor); ?>'));
 
             var option = {
+                
                 title: {text: '<?php echo($titulo_grafico); ?>'},
                 color: ['<?php echo($color); ?>'],
                 tooltip : {
@@ -32,6 +33,7 @@ function generar_grafico_barra($color,$idcontenedor,$nombres,$valores,$titulo_gr
                 },
                 xAxis : [
                     {
+                        title:'hola mundo',
                         type : 'category',
                         data: <?php echo($nombres); ?>,
                        
