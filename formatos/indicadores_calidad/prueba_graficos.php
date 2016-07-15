@@ -41,7 +41,7 @@ function generar_grafico_barra($color,$idcontenedor,$nombres,$valores,$titulo_gr
             $data_nombres[$i]['textStyle']['fontWeight']='bold';           
        }
        
-        
+        $data_nombres=json_encode($data_nombres);
         
        // echo($titulos);die();
     ?>
@@ -76,7 +76,7 @@ function generar_grafico_barra($color,$idcontenedor,$nombres,$valores,$titulo_gr
                         name:'<?php echo($titulox); ?>',
                         type : 'category',
                         
-                          data:[
+                        /*  data:[
                               {
                                   value:'barra 1',
                                   textStyle: {
@@ -93,7 +93,7 @@ function generar_grafico_barra($color,$idcontenedor,$nombres,$valores,$titulo_gr
                             alignWithLabel: true
                         }
                     }
-                ],
+                ]*/<?php echo($data_nombres); ?>,
                 yAxis : [
                     {
                         nameTextStyle:{
