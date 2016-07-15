@@ -324,11 +324,11 @@ if ($formulas["numcampos"]) {
                 	    
 
                 	    $titulo_grafico='RESULTADO POR SEGUIMIENTO';
-                	    $idcontenedor='porcentaje_cumplimiento_contenedor_grafico';
+                	    $idcontenedor='resultado_seguimiento_contenedor_grafico';
                 	    $tipo_grafico='barras';
                 	    $color=$color;
                 	    $titulox='Seguimiento';
-                	    $tituloy='Cumplimiento';
+                	    $tituloy='Resultado';
                 	    $contenedores=array('porcentaje_cumplimiento_contenedor_grafico','imagen_grafico');
         			    $valores=$dato;
         			    $nombres['nombres']=$dato3;       
