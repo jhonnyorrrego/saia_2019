@@ -44,7 +44,7 @@ function generar_grafico_barra($color,$idcontenedor,$nombres,$valores,$titulo_gr
                 ],
                 yAxis : [
                     {
-                        boundaryGap:1,
+                       
                         inverse:0,
                         nameRotate:90,
                         nameGap:-150,
