@@ -17,7 +17,7 @@ function generar_grafico_barra($color,$idcontenedor,$nombres,$valores,$titulo_gr
 
             var option = {
                 
-                title: {text: '<?php echo($titulo_grafico); ?>'},
+                title: {text: '<?php echo($titulo_grafico); ?>' x:'center'},
                 color: ['<?php echo($color); ?>'],
                 tooltip : {
                     trigger: 'axis',
