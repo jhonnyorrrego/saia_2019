@@ -48,7 +48,7 @@ function generar_grafico_barra($color,$idcontenedor,$nombres,$valores,$titulo_gr
                         inverse:0,
                         nameLocation:'middle',
                         //nameRotate:90,
-                        nameGap:-20,
+                        nameGap:5,
                         name:'hola mundo', //
                         type : 'value'
                     }
