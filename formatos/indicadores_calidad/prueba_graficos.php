@@ -1,17 +1,5 @@
 <?php
 
-$nombres=array();
-
-$nombres['nombres']=array('Ruben','Kathe');
-$nombres['colores']=array('#00FF51','#D923D0');
-
-
-       $data_nombres=array();
-       for($i=0;$i<count($nombres['nombres']);$i++){
-            $data_nombres[$i]['value']=$nombres['nombres'][$i];
-            $data_nombres[$i]['textStyle']['color']=$nombres['colores'][$i];
-            $data_nombres[$i]['textStyle']['fontWeight']='bold';           
-       }
 
 
 //echo( json_encode($data_nombres) );
