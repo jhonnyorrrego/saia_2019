@@ -92,7 +92,7 @@ function generar_grafico_barra($color,$idcontenedor,$nombres,$valores,$titulo_gr
 			    $nombres=$dato3;       
 			    break;
 		}
-	    generar_grafico_barra($color,$idcontenedor,$nombres,$valores,$titulo_grafico);
+	    generar_grafico_barra($color,$idcontenedor,$nombres,$valores,$titulo_grafico,$titulox,$tituloy);
 	
 	
 ?>
