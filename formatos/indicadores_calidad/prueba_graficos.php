@@ -14,9 +14,9 @@ $nombres['colores']=array('#00FF51','#D923D0');
        }
 
 
-echo( json_encode($data_nombres) );
+//echo( json_encode($data_nombres) );
 
-die();
+//die();
 ?>
 
 
