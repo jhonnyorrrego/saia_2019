@@ -93,6 +93,14 @@ function generar_grafico_barra($color,$idcontenedor,$nombres,$valores,$titulo_gr
             
             myChart.setOption(option);
 
+
+            var img = new Image();
+            img.src = myChart.getDataURL({
+            pixelRatio: 2,
+            backgroundColor: '#fff'
+            });
+            
+            alert(img);
         </script>
     <?php
 }
