@@ -9,7 +9,8 @@ while($max_salida>0){
 	$max_salida--;
 }
 include_once($ruta_db_superior."db.php");
-
+include_once($ruta_db_superior."librerias_saia.php");
+echo( librerias_jquery('1.7') );
 
 function formula_calculo($idformato,$iddoc){
   global $conn;
@@ -298,6 +299,7 @@ if ($formulas["numcampos"]) {
                 <tr><td colspan="5">
                     <script src="echarts.min.js"></script>
                     <div id="porcentaje_cumplimiento_contenedor_grafico" style="width: 700px;height:240px;"></div>
+                    <div id="imagen_grafico"></div>
                 </td> </tr>
 			');
 			
@@ -414,6 +416,15 @@ function generar_grafico_barra($color,$idcontenedor,$nombres,$valores,$titulo_gr
             };
             
             myChart.setOption(option);
+            
+            var img = new Image();
+            img.src = myChart.getDataURL({
+            pixelRatio: 2,
+            backgroundColor: '#fff'
+            });
+            
+            document.getElementById('imagen_grafico').appendChild(img);
+            $('#main').remove();
 
         </script>
     <?php
