@@ -20,9 +20,7 @@
 
 function generar_grafico_barra($color,$idcontenedor,$nombres,$valores,$titulo_grafico='',$titulox='',$tituloy=''){
        // $nombres=json_encode($nombres['nombres']);
-        $valores=json_encode($valores);
-
-        
+       $valores=json_encode($valores);
 
        $data_nombres=array();
        for($i=0;$i<count($nombres['nombres']);$i++){
