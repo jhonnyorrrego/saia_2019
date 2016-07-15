@@ -382,7 +382,7 @@ function generar_grafico_barra($color,$idcontenedor,$nombres,$valores,$titulo_gr
                         nameGap:21,                        
                         name:'<?php echo($titulox); ?>',
                         type : 'category',
-                        data: <?php echo($nombres); ?>,
+                        data: <?php echo($data_nombres); ?>,
                        
                         axisTick: {
                             alignWithLabel: true
