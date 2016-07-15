@@ -13,7 +13,7 @@ function generar_grafico_barra($idcontenedor,$titulos,$valores){
        // echo($titulos);die();
     ?>
         <script type="text/javascript">
- 		    var myChart = echarts.init(document.getElementById('main'));
+ 		    var myChart = echarts.init(document.getElementById('<?php echo($idcontenedor); ?>'));
 
             var option = {
                 color: ['#3398DB'],
