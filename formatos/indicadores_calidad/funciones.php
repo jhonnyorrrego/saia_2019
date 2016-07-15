@@ -313,7 +313,6 @@ if ($formulas["numcampos"]) {
 					case 'barras':
                 	    //$dato3=array('titulo 5','titulo 10','titulo 15','titulo 20','titulo 25','titulo 30');
                 	    $titulo_grafico='PORCENTAJE DE CUMPLIMIENTO POR SEGUIMIENTO';
-                	    $idcontenedor='porcentaje_cumplimiento_contenedor_grafico';
                 	    $tipo_grafico='barras';
                 	    $color=$color;
                 	    $titulox='Seguimiento';
@@ -326,7 +325,6 @@ if ($formulas["numcampos"]) {
                 	    
 
                 	    $titulo_grafico='RESULTADO POR SEGUIMIENTO';
-                	    $idcontenedor='resultado_seguimiento_contenedor_grafico';
                 	    $tipo_grafico='barras';
                 	    $color=$color;
                 	    $titulox='Seguimiento';
