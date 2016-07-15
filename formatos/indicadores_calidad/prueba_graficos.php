@@ -22,7 +22,7 @@ function generar_grafico_barra($color,$idcontenedor,$nombres,$valores,$titulo_gr
 
         
 
-        $data_nombres=array();
+       $data_nombres=array();
        for($i=0;$i<count($nombres['nombres']);$i++){
             $data_nombres[$i]['value']=$nombres['nombres'][$i];
             $data_nombres[$i]['textStyle']['color']=$nombres['colores'][$i];
