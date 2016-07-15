@@ -2,8 +2,8 @@
 
 $nombres=array();
 
-$nombres['nombres']='ruben';
-$nombres['colores']='';
+$nombres['nombres']=array('Ruben','Kathe');
+$nombres['colores']=array('#00FF51','#D923D0');
 
 
        $data_nombres=array();
