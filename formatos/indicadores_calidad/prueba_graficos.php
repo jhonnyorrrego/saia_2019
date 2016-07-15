@@ -73,11 +73,6 @@ function generar_grafico_barra($idcontenedor,$titulos,$valores){
 			    $titulos=$dato3;       
 			    break;
 		}
-		
-		
-	//	echo(json_encode($titulos));
-	//	die();
-	
 	    generar_grafico_barra($idcontenedor,$titulos,$valores);
 	
 	
