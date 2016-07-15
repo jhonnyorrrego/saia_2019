@@ -288,10 +288,98 @@ if ($formulas["numcampos"]) {
 				unlink("imagenes/resultado_" . $iddoc . "_" . $formulas[$i]["id"] . "_2.png");
 			$Test1 -> Render("imagenes/resultado_" . $iddoc . "_" . $formulas[$i]["id"] . "_2.png");
 			echo('<tr><td colspan="5" style="font-size:10pt;"><br /><br /><img src="' . PROTOCOLO_CONEXION . RUTA_PDF . '/formatos/indicadores_calidad/imagenes/resultado_' . $iddoc . "_" . $formulas[$i]["id"] . '_2.png?rnd=' . rand(0, 100) . '"><br /><b>Nota:</b>Los valores mostrados en el grafico son los valores de Resultado del indicador</td></tr>');
-		}
+			
+			if ($dato[0] != 0) {
+				switch(trim($tipo_grafico[0]["tipo_grafico"])){
+					case 'torta':
+
+						break;
+					case 'barras':
+
+						break;
+					case 'lineas' :
+
+						break;
+				}
+			}			
+			
+			
+			
+		} //fin if datos de indicador
 	}
 }
 echo "</table>";
 }
 
+
+function generar_grafico_barra($color,$idcontenedor,$nombres,$valores,$titulo_grafico='',$titulox='',$tituloy=''){
+        $nombres=json_encode($nombres);
+        $valores=json_encode($valores);
+        
+       // echo($titulos);die();
+    ?>
+        <script type="text/javascript">
+ 		    var myChart = echarts.init(document.getElementById('<?php echo($idcontenedor); ?>'));
+
+            var option = {
+                
+                title: {text: '<?php echo($titulo_grafico); ?>', x:'center'},
+                color: ['<?php echo($color); ?>'],
+                tooltip : {
+                    trigger: 'axis',
+                    axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+                        type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                    }
+                },
+                grid: {
+                   // left: '3%',
+                   // right: '4%',
+                    //bottom: '3%',
+                    containLabel: true
+                },
+                xAxis : [
+                    {
+                        
+                        nameTextStyle:{
+                          color: '#000000',
+                          fontWeight:'bold'
+                        },
+                        nameLocation:'middle',
+                        nameGap:21,                        
+                        name:'<?php echo($titulox); ?>',
+                        type : 'category',
+                        data: <?php echo($nombres); ?>,
+                       
+                        axisTick: {
+                            alignWithLabel: true
+                        }
+                    }
+                ],
+                yAxis : [
+                    {
+                        nameTextStyle:{
+                          color: '#000000',
+                          fontWeight:'bold'
+                        },
+                        nameLocation:'middle',
+                        nameGap:30,
+                        name:'<?php echo($tituloy); ?>', //
+                        type : 'value'
+                    }
+                ],
+                series : [
+                    {
+                        name:'Valor',
+                        type:'bar',
+                        barWidth: '50%',
+                        data:<?php echo($valores); ?>
+                    }
+                ]
+            };
+            
+            myChart.setOption(option);
+
+        </script>
+    <?php
+}
 ?>
