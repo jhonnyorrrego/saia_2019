@@ -68,6 +68,7 @@ function generar_grafico_barra($idcontenedor,$nombres,$valores,){
         
        $dato=array(5,10,15,20,25,30);
 	   $dato3=array('titulo 5','titulo 10','titulo 15','titulo 20','titulo 25','titulo 30');
+	   $titulo_grafico='Mi Grafico';
 	   $idcontenedor='main';
 	   $tipo_grafico='barras';
 	    switch($tipo_grafico){
@@ -76,7 +77,7 @@ function generar_grafico_barra($idcontenedor,$nombres,$valores,){
 			    $nombres=$dato3;       
 			    break;
 		}
-	    generar_grafico_barra($idcontenedor,$nombres,$valores);
+	    generar_grafico_barra($idcontenedor,$nombres,$valores,$titulo_grafico);
 	
 	
 ?>
