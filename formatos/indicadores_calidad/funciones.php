@@ -296,7 +296,7 @@ if ($formulas["numcampos"]) {
 			?>
 			    <script src="echarts.min.js"></script>
                 
-                <div id="porcentaje_cumplimiento_contenedor_grafico" style="width: 320px;height:240px;"></div>
+                <div id="porcentaje_cumplimiento_contenedor_grafico" style="width: 900px;height:240px;"></div>
 			<?php
 			
 			
