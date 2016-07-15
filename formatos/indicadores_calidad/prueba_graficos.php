@@ -37,6 +37,7 @@ function generar_grafico_barra($color,$idcontenedor,$nombres,$valores,$titulo_gr
  		    var myChart = echarts.init(document.getElementById('<?php echo($idcontenedor); ?>'));
 
             var option = {
+                renderAsImage:true,
                 title: {text: '<?php echo($titulo_grafico); ?>', x:'center'},
                 color: ['<?php echo($color); ?>'],
                 tooltip : {
@@ -62,22 +63,7 @@ function generar_grafico_barra($color,$idcontenedor,$nombres,$valores,$titulo_gr
                         nameGap:21,                        
                         name:'<?php echo($titulox); ?>',
                         type : 'category',
-                        
-                        /*  data:[
-                              {
-                                  value:'barra 1',
-                                  textStyle: {
-                                      fontWeight:'bold',
-                                      color: 'red'
-                                  }
-                              },
-                              {
-                                  value:'barra 2'    
-                                 
-                              }
-                          ]*/
-                          
-                          data:<?php echo($data_nombres); ?>,
+                        data:<?php echo($data_nombres); ?>,
                         axisTick: {
                             alignWithLabel: true
                         }
