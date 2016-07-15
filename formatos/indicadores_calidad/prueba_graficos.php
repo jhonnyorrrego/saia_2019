@@ -14,7 +14,7 @@ echo( librerias_jquery('1.7') );
 //echo( json_encode($data_nombres) );
 
 //die();
-?>
+?> 
 
 
     <script src="echarts.min.js"></script>
