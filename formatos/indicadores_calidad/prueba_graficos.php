@@ -24,9 +24,14 @@ die();
 function generar_grafico_barra($color,$idcontenedor,$nombres,$valores,$titulo_grafico='',$titulox='',$tituloy=''){
         $nombres=json_encode($nombres['nombres']);
         $valores=json_encode($valores);
+
         
+
+        $data_nombres=array();
        for($i=0;$i<count($nombres['nombres']);$i++){
-           
+            $nombres['value']='ruben';
+            $nombres['textStyle']['color']='#00FF51';
+            $nombres['textStyle']['fontWeight']='bold';           
        }
        
         
