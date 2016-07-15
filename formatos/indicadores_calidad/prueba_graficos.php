@@ -22,7 +22,7 @@
     <script type="text/javascript">
  		var myChart = echarts.init(document.getElementById('main'));
         
-app.title = '坐标轴刻度与标签对齐';
+//app.title = '坐标轴刻度与标签对齐';
 
 var option = {
     color: ['#3398DB'],
