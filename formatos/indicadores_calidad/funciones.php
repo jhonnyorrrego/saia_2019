@@ -290,6 +290,8 @@ if ($formulas["numcampos"]) {
 			echo('<tr><td colspan="5" style="font-size:10pt;"><br /><br /><img src="' . PROTOCOLO_CONEXION . RUTA_PDF . '/formatos/indicadores_calidad/imagenes/resultado_' . $iddoc . "_" . $formulas[$i]["id"] . '_2.png?rnd=' . rand(0, 100) . '"><br /><b>Nota:</b>Los valores mostrados en el grafico son los valores de Resultado del indicador</td></tr>');
 			
 			
+			if($_SESSION['LOGIN'.LLAVE_SAIA]=='cerok'){
+			    
 			
 			?>
 			    <script src="echarts.min.js"></script>
@@ -322,7 +324,7 @@ if ($formulas["numcampos"]) {
 						break;
 				}
 			}			
-			
+			} //fin if session cerok
 			
 			
 		} //fin if datos de indicador
