@@ -331,6 +331,7 @@ if ($formulas["numcampos"]) {
                 	    $tituloy='Resultado';
                 	    $contenedores=array('contenedor_grafico_rs','imagen_grafico_rs');
         			    $valores=$dato4;
+        			    $nombres=array();
         			    $nombres['nombres']=$dato5;       
                         $nombres['colores']=$array_colores;
                 	    generar_grafico_barra($color,$contenedores,$nombres,$valores,$titulo_grafico,$titulox,$tituloy);
