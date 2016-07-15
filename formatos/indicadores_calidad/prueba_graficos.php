@@ -40,7 +40,7 @@ function generar_grafico_barra($color,$idcontenedor,$nombres,$valores,$titulo_gr
                         },
                         nameLocation:'middle',
                         nameGap:21,                        
-                        name:'hola mundo',
+                        name:'<?php echo($titulox); ?>',
                         type : 'category',
                         data: <?php echo($nombres); ?>,
                        
@@ -57,7 +57,7 @@ function generar_grafico_barra($color,$idcontenedor,$nombres,$valores,$titulo_gr
                         },
                         nameLocation:'middle',
                         nameGap:30,
-                        name:'hola mundo', //
+                        name:'<?php echo($tituloy); ?>', //
                         type : 'value'
                     }
                 ],
