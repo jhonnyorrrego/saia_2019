@@ -45,7 +45,8 @@ function generar_grafico_barra($color,$idcontenedor,$nombres,$valores,$titulo_gr
                 yAxis : [
                     {
                         nameTextStyle:{
-                          color: '<?php echo($color); ?>' 
+                          color: '<?php echo($color); ?>',
+                          fontWeight:'bold'
                         },
                         nameLocation:'middle',
                         nameGap:30,
