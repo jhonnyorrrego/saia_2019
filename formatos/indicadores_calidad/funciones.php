@@ -289,7 +289,7 @@ if ($formulas["numcampos"]) {
 			$Test1 -> Render("imagenes/resultado_" . $iddoc . "_" . $formulas[$i]["id"] . "_2.png");
 			echo('<tr><td colspan="5" style="font-size:10pt;"><br /><br /><img src="' . PROTOCOLO_CONEXION . RUTA_PDF . '/formatos/indicadores_calidad/imagenes/resultado_' . $iddoc . "_" . $formulas[$i]["id"] . '_2.png?rnd=' . rand(0, 100) . '"><br /><b>Nota:</b>Los valores mostrados en el grafico son los valores de Resultado del indicador</td></tr>');
 			
-			
+			echo "</table>";
 			
 			?>
 			    <script src="echarts.min.js"></script>
@@ -328,7 +328,7 @@ if ($formulas["numcampos"]) {
 		} //fin if datos de indicador
 	}
 }
-echo "</table>";
+
 }
 
 
