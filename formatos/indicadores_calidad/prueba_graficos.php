@@ -4,7 +4,7 @@ $nombres=array();
 
 $nombres['value']='ruben';
 $nombres['textStyle']['color']='#00FF51';
-$nombres['textStyle']['fontWeight']='#00FF51';
+$nombres['textStyle']['fontWeight']='bold';
 
 
 echo( json_encode($nombres) );
