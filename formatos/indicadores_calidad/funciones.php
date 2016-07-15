@@ -430,8 +430,8 @@ function generar_grafico_barra($color,$contenedores,$nombres,$valores,$titulo_gr
             
             var img = new Image();
             img.src = myChart.getDataURL({
-            pixelRatio: 2,
-            backgroundColor: '#fff'
+                pixelRatio: 2,
+                backgroundColor: '#fff'
             });
             
             document.getElementById('<?php echo($contenedores[1]); ?>').appendChild(img);
