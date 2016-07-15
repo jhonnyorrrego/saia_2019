@@ -17,7 +17,7 @@ function generar_grafico_barra($color='#3398DB',$idcontenedor,$nombres,$valores,
 
             var option = {
                 title: {text: '<?php echo($titulo_grafico); ?>'},
-                color: ['#3398DB'],
+                color: ['<?php echo($color); ?>'],
                 tooltip : {
                     trigger: 'axis',
                     axisPointer : {            // 坐标轴指示器，坐标轴触发有效
