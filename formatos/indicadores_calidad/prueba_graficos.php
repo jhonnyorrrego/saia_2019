@@ -49,7 +49,7 @@ function generar_grafico_barra($idcontenedor,$titulos,$valores){
                         name:'直接访问',
                         type:'bar',
                         barWidth: '60%',
-                        data:[5, 10, 15, 20, 25,30]
+                        data:<?php echo($valores); ?>
                     }
                 ]
             };
