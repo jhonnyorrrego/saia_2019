@@ -397,8 +397,7 @@ function generar_grafico_barra($color,$idcontenedor,$nombres,$valores,$titulo_gr
                        
                         itemStyle:{
                          // color: '#000000',
-                          color: '<?php echo($color); ?>',
-                          fontWeight:'bold'
+                          color: '<?php echo($color); ?>'
                         },                        
                         name:'Valor',
                         type:'bar',
