@@ -45,7 +45,8 @@ function generar_grafico_barra($color,$idcontenedor,$nombres,$valores,$titulo_gr
                         
                           data:[
                               {
-                                  value:'barra 1'
+                                  value:'barra 1',
+                                  color:'#ff0524'
                               },
                               {
                                   value:'barra 2'
