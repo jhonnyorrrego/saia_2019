@@ -39,7 +39,7 @@ function generar_grafico_barra($color,$idcontenedor,$nombres,$valores,$titulo_gr
                           fontWeight:'bold'
                         },
                         nameLocation:'middle',
-                       // nameGap:30,                        
+                        nameGap:5,                        
                         name:'hola mundo',
                         type : 'category',
                         data: <?php echo($nombres); ?>,
