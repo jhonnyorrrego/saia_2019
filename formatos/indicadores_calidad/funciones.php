@@ -311,7 +311,7 @@ if ($formulas["numcampos"]) {
                 	    $titulo_grafico='PORCENTAJE DE CUMPLIMIENTO POR SEGUIMIENTO';
                 	    $idcontenedor='porcentaje_cumplimiento_contenedor_grafico';
                 	    $tipo_grafico='barras';
-                	    $color='#00FF51';
+                	    $color=$color;
                 	    $titulox='Seguimiento';
                 	    $tituloy='Cumplimiento';
         			    $valores=$dato;
