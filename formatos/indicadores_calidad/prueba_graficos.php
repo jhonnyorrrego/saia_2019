@@ -46,10 +46,14 @@ function generar_grafico_barra($color,$idcontenedor,$nombres,$valores,$titulo_gr
                           data:[
                               {
                                   value:'barra 1',
-                                  color:'#ff0524'
+                                  textStyle: {
+                                      fontSize: 20,
+                                      color: 'red'
+                                  }
                               },
                               {
-                                  value:'barra 2'
+                                  value:'barra 2',
+                                  color:'#ff0524'
                               }
                           ],
                         axisTick: {
