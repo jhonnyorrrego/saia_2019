@@ -359,7 +359,7 @@ function generar_grafico_barra($color,$idcontenedor,$nombres,$valores,$titulo_gr
             var option = {
                 
                 title: {text: '<?php echo($titulo_grafico); ?>', x:'center'},
-                color: ['#00FF51','<?php echo($color_saia[0]['valor']); ?>'],
+                color: ['<?php echo($color_saia[0]['valor']); ?>'],
                 tooltip : {
                     trigger: 'axis',
                     axisPointer : {            // 坐标轴指示器，坐标轴触发有效
