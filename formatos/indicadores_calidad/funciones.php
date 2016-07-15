@@ -295,7 +295,17 @@ if ($formulas["numcampos"]) {
 
 						break;
 					case 'barras':
+                	    $dato3=array('titulo 5','titulo 10','titulo 15','titulo 20','titulo 25','titulo 30');
+                	    $titulo_grafico='Mi Grafico';
+                	    $idcontenedor='main';
+                	    $tipo_grafico='barras';
+                	    $color='#00FF51';
+                	    $titulox='Titulo Eje X';
+                	    $tituloy='Titulo Eje Y';
+        			    $valores=$dato;
+        			    $nombres=$dato3;       
 
+                	    generar_grafico_barra($color,$idcontenedor,$nombres,$valores,$titulo_grafico,$titulox,$tituloy);
 						break;
 					case 'lineas' :
 
