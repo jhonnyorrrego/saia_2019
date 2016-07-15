@@ -140,7 +140,7 @@ function generar_grafico_barra($color,$idcontenedor,$nombres,$valores,$titulo_gr
 			case 'barras':
 			    $valores=$dato;
 			    $nombres['nombres']=$dato3;  
-			    $nombres['colores']=$array_colores;
+			    $nombres['colores']=$colores;
 			    break;
 		}
 	    generar_grafico_barra($color,$idcontenedor,$nombres,$valores,$titulo_grafico,$titulox,$tituloy);
