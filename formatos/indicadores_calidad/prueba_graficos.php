@@ -25,6 +25,9 @@ function generar_grafico_barra($color,$idcontenedor,$nombres,$valores,$titulo_gr
         $nombres=json_encode($nombres['nombres']);
         $valores=json_encode($valores);
         
+       for($i=0;$i<count($nombres['nombres']);$i++){
+           
+       }
        
         
         
