@@ -11,6 +11,10 @@
     <script src="echarts.min.js"></script>
         <center>
     <div id="main" style="width: 600px;height:400px;"></div>
+    <br>
+    <br>
+    <br>
+    <img id="imagen_grafico">
 <?php
         
 
@@ -100,7 +104,8 @@ function generar_grafico_barra($color,$idcontenedor,$nombres,$valores,$titulo_gr
             backgroundColor: '#fff'
             });
             
-            alert(img);
+            //alert(img);
+            document.getElementById('imagen_grafico').setAttribute("src",img); 
         </script>
     <?php
 }
