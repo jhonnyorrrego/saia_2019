@@ -88,12 +88,14 @@ function generar_grafico_barra($color,$idcontenedor,$nombres,$valores,$titulo_gr
                                   value:'barra 2'    
                                  
                               }
-                          ],
+                          ]*/
+                          
+                          <?php echo($data_nombres); ?>,
                         axisTick: {
                             alignWithLabel: true
                         }
                     }
-                ]*/<?php echo($data_nombres); ?>,
+                ],
                 yAxis : [
                     {
                         nameTextStyle:{
