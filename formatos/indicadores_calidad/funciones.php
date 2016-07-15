@@ -435,7 +435,7 @@ function generar_grafico_barra($color,$contenedores,$nombres,$valores,$titulo_gr
             });
             
             document.getElementById('<?php echo($contenedores[1]); ?>').appendChild(img);
-            $('<?php echo($contenedores[0]); ?>').hide();
+            $('<?php echo($contenedores[0]); ?>').remove();
 
         </script>
     <?php
