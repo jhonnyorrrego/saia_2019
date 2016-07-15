@@ -1,3 +1,15 @@
+<?php
+
+$nombres=array();
+
+$nombres['nombres']=array('ruben');
+$nombres['colores']=array('#00FF51');
+
+
+die();
+?>
+
+
     <script src="echarts.min.js"></script>
         <center>
     <div id="main" style="width: 600px;height:400px;"></div>
@@ -9,6 +21,9 @@
 function generar_grafico_barra($color,$idcontenedor,$nombres,$valores,$titulo_grafico='',$titulox='',$tituloy=''){
         $nombres=json_encode($nombres['nombres']);
         $valores=json_encode($valores);
+        
+       
+        
         
        // echo($titulos);die();
     ?>
