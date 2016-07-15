@@ -316,8 +316,8 @@ if ($formulas["numcampos"]) {
                 	    $titulox='Seguimiento';
                 	    $tituloy='Cumplimiento';
         			    $valores=$dato;
-        			    $nombres=$dato3;       
-
+        			    $nombres['nombres']=$dato3;       
+                        $nombres['colores']=$array_colores;
                 	    generar_grafico_barra($color,$idcontenedor,$nombres,$valores,$titulo_grafico,$titulox,$tituloy);
                 	    
                 	    
