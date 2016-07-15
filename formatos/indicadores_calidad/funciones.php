@@ -310,8 +310,8 @@ if ($formulas["numcampos"]) {
                 	    $idcontenedor='porcentaje_cumplimiento_contenedor_grafico';
                 	    $tipo_grafico='barras';
                 	    $color='#00FF51';
-                	    $titulox='Titulo Eje X';
-                	    $tituloy='Titulo Eje Y';
+                	    $titulox='Seguimiento';
+                	    $tituloy='Cumplimiento';
         			    $valores=$dato;
         			    $nombres=$dato3;       
 
