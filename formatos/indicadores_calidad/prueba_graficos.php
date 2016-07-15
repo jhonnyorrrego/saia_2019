@@ -1,6 +1,6 @@
     <script src="echarts.min.js"></script>
         <center>
-    <div id="main" style="width: 600px;height:420px;"></div>
+    <div id="main" style="width: 600px;height:400px;"></div>
 <?php
         
 
