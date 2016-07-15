@@ -398,13 +398,6 @@ function generar_grafico_barra($color,$idcontenedor,$nombres,$valores,$titulo_gr
                         type:'bar',
                         barWidth: '50%',
                         data:<?php echo($valores); ?>
-                        itemStyle: {
-                            emphasis: {
-                                shadowBlur: 10,
-                                shadowOffsetX: 0,
-                                shadowColor: 'rgba(0, 0, 0, 0.5)'
-                            }
-                        }                        
                         
                     }
                 ]
