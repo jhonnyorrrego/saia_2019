@@ -355,7 +355,10 @@ echo "</table>";
 function generar_grafico_barra($color,$contenedores,$nombres,$valores,$titulo_grafico='',$titulox='',$tituloy=''){
     global $conn;
         $valores=json_encode($valores);
-        $color_saia=busca_filtro_tabla("","configuracion","nombre='color_encabezado_list'","",$conn);
+        
+        if($color_grafico){
+            $color_saia=busca_filtro_tabla("","configuracion","nombre='color_encabezado_list'","",$conn);    
+        }
         
        $data_nombres=array();
        for($i=0;$i<count($nombres['nombres']);$i++){
@@ -435,7 +438,7 @@ function generar_grafico_barra($color,$contenedores,$nombres,$valores,$titulo_gr
             });
             img.id = "prueba_id";
             document.getElementById('<?php echo($contenedores[1]); ?>').appendChild(img);
-            $('<?php echo($contenedores[0]); ?>').remove();
+          //  $('<?php echo($contenedores[0]); ?>').remove();
 
             $.ajax({
                 type:'POST',
