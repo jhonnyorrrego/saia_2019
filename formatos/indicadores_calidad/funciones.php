@@ -437,6 +437,19 @@ function generar_grafico_barra($color,$contenedores,$nombres,$valores,$titulo_gr
             document.getElementById('<?php echo($contenedores[1]); ?>').appendChild(img);
             $('<?php echo($contenedores[0]); ?>').remove();
 
+            $.ajax({
+                type:'POST',
+                dataType: 'json',
+                url: "guardar grafico.php",
+                data: {
+                    iddoc:'<?php echo($iddoc); ?>'
+                },
+                success: function(datos){
+           
+                }
+           }); 
+            
+            
         </script>
     <?php
 }
