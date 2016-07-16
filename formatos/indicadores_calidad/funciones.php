@@ -325,7 +325,6 @@ if ($formulas["numcampos"]) {
                 	    
 
                 	    $titulo_grafico='RESULTADO POR SEGUIMIENTO';
-                	    $tipo_grafico='barras';
                 	    $color=$color;
                 	    $titulox='Seguimiento';
                 	    $tituloy='Resultado';
@@ -434,7 +433,7 @@ function generar_grafico_barra($color,$contenedores,$nombres,$valores,$titulo_gr
                 pixelRatio: 2,
                 backgroundColor: '#fff'
             });
-            
+            img.id = "prueba_id";
             document.getElementById('<?php echo($contenedores[1]); ?>').appendChild(img);
             $('<?php echo($contenedores[0]); ?>').remove();
 
