@@ -325,7 +325,6 @@ if ($formulas["numcampos"]) {
                 	    
 
                 	    $titulo_grafico='RESULTADO POR SEGUIMIENTO';
-                	    $color=$color;
                 	    $titulox='Seguimiento';
                 	    $tituloy='Resultado';
                 	    $contenedores=array('contenedor_grafico_rs','imagen_grafico_rs');
@@ -333,7 +332,7 @@ if ($formulas["numcampos"]) {
         			    $nombres=array();
         			    $nombres['nombres']=$dato5;       
                         $nombres['colores']=$array_colores;
-                	    generar_grafico_barra($color,$contenedores,$nombres,$valores,$titulo_grafico,$titulox,$tituloy);
+                	    generar_grafico_barra('',$contenedores,$nombres,$valores,$titulo_grafico,$titulox,$tituloy);
                 	    
                  
 						break;
@@ -352,12 +351,13 @@ echo "</table>";
 }
 
 
-function generar_grafico_barra($color,$contenedores,$nombres,$valores,$titulo_grafico='',$titulox='',$tituloy=''){
+function generar_grafico_barra($color_grafico,$contenedores,$nombres,$valores,$titulo_grafico='',$titulox='',$tituloy=''){
     global $conn;
         $valores=json_encode($valores);
         
-        if($color_grafico){
-            $color_saia=busca_filtro_tabla("","configuracion","nombre='color_encabezado_list'","",$conn);    
+        if($color_grafico==''){
+            $color_saia=busca_filtro_tabla("","configuracion","nombre='color_encabezado_list'","",$conn);  
+            $color_grafico=$color_saia[0]['valor'];
         }
         
        $data_nombres=array();
@@ -375,7 +375,7 @@ function generar_grafico_barra($color,$contenedores,$nombres,$valores,$titulo_gr
             var option = {
                 renderAsImage:true,
                 title: {text: '<?php echo($titulo_grafico); ?>', x:'center'},
-                color: ['<?php echo($color_saia[0]['valor']); ?>'],
+                color: ['<?php echo($color_grafico); ?>'],
                 tooltip : {
                     trigger: 'axis',
                     axisPointer : {            // 坐标轴指示器，坐标轴触发有效
