@@ -439,14 +439,16 @@ function generar_grafico_barra($color,$contenedores,$nombres,$valores,$titulo_gr
 
             $.ajax({
                 type:'POST',
-                dataType: 'json',
+                dataType: 'html',
                 url: "guardar grafico.php",
-                data: {
-                    iddoc:'<?php echo($iddoc); ?>'
-                },
-                success: function(datos){
-           
-                }
+                data: {img:$("#IMG"+$("#div_total_evaluacion").attr("_echarts_instance_")).attr("src"),iddoc:<?php echo $iddoc; ?>,img2:$("#IMG"+$("#div_competencias").attr("_echarts_instance_")).attr("src")},
+				success: function(respuesta){
+					if(respuesta==1){
+						console.log("Imagen guardada...");
+					}else{
+						console.log("Error al guardar las imagenes...");
+					}
+				}
            }); 
             
             
