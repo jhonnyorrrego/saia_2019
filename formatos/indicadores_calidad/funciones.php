@@ -444,7 +444,7 @@ function generar_grafico_barra($color_grafico,$contenedores,$nombres,$valores,$t
                 type:'POST',
                 dataType: 'html',
                 url: "guardar grafico.php",
-                data: {img:$("#IMG"+$("#<?php echo($contenedores[0]); ?>").attr("_echarts_instance_")).attr("src"),iddoc:<?php echo $iddoc; ?>,img2:$("#IMG"+$("#<?php echo($contenedores[1]); ?>").attr("_echarts_instance_")).attr("src")},
+                data: {img:$("#IMG"+$("#<?php/* echo($contenedores[0]); ?>").attr("_echarts_instance_")).attr("src"),iddoc:<?php echo $iddoc; ?>,img2:$("#IMG"+$("#<?php echo($contenedores[1]); */?>").attr("_echarts_instance_")).attr("src")},
 				success: function(respuesta){
 					if(respuesta==1){
 						console.log("Imagen guardada...");
