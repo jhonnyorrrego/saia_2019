@@ -314,14 +314,14 @@ if ($formulas["numcampos"]) {
                 	    //$dato3=array('titulo 5','titulo 10','titulo 15','titulo 20','titulo 25','titulo 30');
                 	    $titulo_grafico='PORCENTAJE DE CUMPLIMIENTO POR SEGUIMIENTO';
                 	    $tipo_grafico='barras';
-                	    $color=$color;
+                	    
                 	    $titulox='Seguimiento';
                 	    $tituloy='Cumplimiento';
                 	    $contenedores=array('contenedor_grafico_pc','imagen_grafico_pc');
         			    $valores=$dato;
         			    $nombres['nombres']=$dato3;       
                         $nombres['colores']=$array_colores;
-                	    generar_grafico_barra($color,$contenedores,$nombres,$valores,$titulo_grafico,$titulox,$tituloy);
+                	    generar_grafico_barra('',$contenedores,$nombres,$valores,$titulo_grafico,$titulox,$tituloy);
                 	    
 
                 	    $titulo_grafico='RESULTADO POR SEGUIMIENTO';
