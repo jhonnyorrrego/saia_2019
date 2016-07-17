@@ -438,27 +438,10 @@ function generar_grafico_barra($color_grafico,$contenedores,$nombres,$valores,$t
             });
             img.id = "prueba_id";
             document.getElementById('<?php echo($contenedores[1]); ?>').appendChild(img);
-          //  $('<?php echo($contenedores[0]); ?>').remove();
+            $('<?php echo($contenedores[0]); ?>').remove();
 
 
-        $(document).load(function(){
-            
-        
-            $.ajax({
-                type:'POST',
-                dataType: 'html',
-                url: "guardar grafico.php",
-                data: {img:$("#IMG"+$("#<?phpecho($contenedores[0]); ?>").attr("_echarts_instance_")).attr("src"),iddoc:<?php echo $iddoc; ?>,img2:$("#IMG"+$("#<?php echo($contenedores[1]); ?>").attr("_echarts_instance_")).attr("src")},
-				success: function(respuesta){
-					if(respuesta==1){
-						console.log("Imagen guardada...");
-					}else{
-						console.log("Error al guardar las imagenes...");
-					}
-				}
-           });
-           
-        });   
+
             
             
         </script>
