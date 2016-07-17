@@ -324,7 +324,7 @@ if ($formulas["numcampos"]) {
                        // ini_set('display_errors',true);
                 	    generar_grafico_barra('',$contenedores,$nombres,$valores,$titulo_grafico,$titulox,$tituloy);
                 	   // guardar_grafico($contenedores,$iddoc);
-                        die('aqui fin');
+                       // die('aqui fin');
                 	    $titulo_grafico='RESULTADO POR SEGUIMIENTO';
                 	    $titulox='Seguimiento';
                 	    $tituloy='Resultado';
