@@ -322,7 +322,7 @@ if ($formulas["numcampos"]) {
         			    $nombres['nombres']=$dato3;       
                         $nombres['colores']=$array_colores;
                 	    generar_grafico_barra('',$contenedores,$nombres,$valores,$titulo_grafico,$titulox,$tituloy);
-                	    
+                	    guardar_grafico($contenedores,$iddoc);
 
                 	    $titulo_grafico='RESULTADO POR SEGUIMIENTO';
                 	    $titulox='Seguimiento';
