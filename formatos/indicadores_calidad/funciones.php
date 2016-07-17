@@ -455,8 +455,6 @@ function guardar_grafico($contenedores,$iddoc){
 echo('
     <script>
         $(document).load(function(){
-            
-        
             $.ajax({
                 type:"POST",
                 dataType: "html",
