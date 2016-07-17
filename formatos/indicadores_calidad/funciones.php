@@ -453,6 +453,7 @@ function generar_grafico_barra($color_grafico,$contenedores,$nombres,$valores,$t
 function guardar_grafico($contenedores,$iddoc){
 
 echo('
+    <script>
         $(document).load(function(){
             
         
@@ -471,7 +472,7 @@ echo('
            });
            
         });   
-
+    </script>
 
 ');
     
