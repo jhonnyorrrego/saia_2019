@@ -158,17 +158,7 @@ function generar_grafico_barra($configuracion_grafico){
                         name:'蒸发量',
                         type:'bar',
                         data:<?php echo(json_encode($configuracion_grafico['valores'])); ?>,
-                        markPoint : {
-                            data : [
-                                {type : 'max', name: '最大值'},
-                                {type : 'min', name: '最小值'}
-                            ]
-                        },
-                        markLine : {
-                            data : [
-                                {type : 'average', name: '平均值'}
-                            ]
-                        }
+
                     },
                    /* {
                         name:'降水量',
