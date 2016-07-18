@@ -97,16 +97,6 @@ function generar_grafico_torta($configuracion_grafico){
             
             myChart.setOption(option);
            
-           /*
-           setTimeout(function(){ 
-               var img = new Image();
-               img.src = myChart.getDataURL();
-               img.id = "img_<?php echo($configuracion_grafico['contenedores'][1]); ?>";
-               document.getElementById('<?php echo($configuracion_grafico['contenedores'][1]); ?>').appendChild(img);
-               
-               
-           }, 1500);
-           */
             
            
             } //fin function ec
