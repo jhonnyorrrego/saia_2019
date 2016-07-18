@@ -293,7 +293,7 @@ function generar_grafico_linea($configuracion_grafico){
                     for($x=0;$x<count($configuracion_grafico['valores']);$x++){
                         echo('
                             {
-                                name:"Valor",
+                                name:"'.$configuracion_grafico['valores_nombre'][$x].'",
                                 type:"line",
                                 data:'.json_encode($configuracion_grafico['valores'][$x]).'
                             }  
