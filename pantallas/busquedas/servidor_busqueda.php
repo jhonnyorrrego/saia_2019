@@ -265,7 +265,7 @@ else{
 }
 
 /*
-if(!@$_REQUEST["cantidad_total"]){
+if(!@$_REQUEST["cantidad_total"]){ //DESARROLLO ALEJANDRO CARVAJAL
     $consulta_conteo = "SELECT COUNT(1) AS cant FROM " . $tablas_consulta . " WHERE " . $condicion . $ordenar_consulta;
     if(MOTOR == 'SqlServer' || MOTOR == 'MSSql'){
         $consulta_conteo = "WITH conteo AS (SELECT " . $campos_consulta . " FROM " . $tablas_consulta . " WHERE " . $condicion . $ordenar_consulta.") SELECT COUNT(*) as cant FROM conteo";
@@ -340,7 +340,7 @@ if($datos_busqueda[0]["tipo_busqueda"]==1 || $_REQUEST['tipo_busqueda']==1){
 } else {
   $response->page = $page;
 }
-//$response->total = $count; //DESARROLLO ALEJANDRO
+//$response->total = $count; //DESARROLLO ALEJANDRO CARVAJAL
 $response->total = $total_pages; 
 $response->records = $count;
 
