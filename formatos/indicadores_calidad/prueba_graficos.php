@@ -57,8 +57,8 @@ function generar_grafico_torta($color_grafico,$contenedores,$nombres,$valores,$t
             var option = {
                // renderAsImage:true,
                 title : {
-                    text: '<?php echo($titulo_grafico); ?>',
-                    subtext: '<?php echo($titulo_grafico); ?>',
+                    text: '<?php echo($configuracion_grafico['titulo_grafico']); ?>',
+                    subtext: '<?php echo($configuracion_grafico['titulo_grafico']); ?>',
                     x:'center'
                 },
                 tooltip : {
