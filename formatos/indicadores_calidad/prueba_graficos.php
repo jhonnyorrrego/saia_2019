@@ -158,6 +158,13 @@ function generar_grafico_barra($configuracion_grafico){
                 calculable : true,
                 xAxis : [
                     {
+                        nameTextStyle:{
+                          color: '#000000',
+                          fontWeight:'bold'
+                        },
+                        nameLocation:'middle',
+                        nameGap:21,                        
+                        name:'<?php echo($configuracion_grafico['titulox']); ?>',                        
                         type : 'category',
                         data : <?php echo($data_nombres); ?>
                     }
