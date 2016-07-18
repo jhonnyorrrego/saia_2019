@@ -321,7 +321,7 @@ function generar_grafico_linea($configuracion_grafico){
     
     // -----> TORTA
 	$configuracion_grafico=array();
-	$configuracion_grafico['imagen']=0;
+	$configuracion_grafico['imagen']=1;
 	$configuracion_grafico['titulo_grafico']='Mi Grafico';
 	$configuracion_grafico['subtitulo_grafico']='Mi Subtitulo';
 	$configuracion_grafico['contenedor']='contenedor_grafico_torta';
