@@ -64,7 +64,8 @@ function generar_grafico_torta($color_grafico,$contenedores,$nombres,$valores,$t
                 series : [
                     {
                         name: 'Valor',
-                        type: 'line',
+                        type: 'pie',
+                        selectedMode: 'single',
                         radius : '55%',
                         center: ['50%', '60%'],
                         data:[
