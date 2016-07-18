@@ -152,7 +152,7 @@ function generar_grafico_barra($configuracion_grafico){
                 xAxis : [
                     {
                         type : 'category',
-                        data : ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月']
+                        data : <?php echo(json_encode($configuracion_grafico['nombres'])); ?>
                     }
                 ],
                 yAxis : [
