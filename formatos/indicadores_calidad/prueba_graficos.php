@@ -196,7 +196,7 @@ function generar_grafico_barra($configuracion_grafico){
                         ');
                         
                         if(($x+1)!=count($configuracion_grafico['valores'])){
-                            
+                            echo(',');
                         }
                     }
                     
