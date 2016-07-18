@@ -251,7 +251,6 @@ if(@$_REQUEST["idbusqueda_temporal"]){
 		}
 	}
 }
-/*
 if(!@$_REQUEST["cantidad_total"]){
 	$result = ejecuta_filtro_tabla("SELECT COUNT(*) AS cant FROM ".$tablas_consulta." WHERE ".$condicion.$ordenar_consulta,$conn);
 	if($result["numcampos"]>1){
@@ -264,8 +263,8 @@ else{
 	$result["numcampos"]=@$_REQUEST["cantidad_total"];
 	$result[0]['cant']=@$_REQUEST["cantidad_total"];
 }
-*/
 
+/*
 if(!@$_REQUEST["cantidad_total"]){
     $consulta_conteo = "SELECT COUNT(1) AS cant FROM " . $tablas_consulta . " WHERE " . $condicion . $ordenar_consulta;
     if(MOTOR == 'SqlServer' || MOTOR == 'MSSql'){
@@ -274,10 +273,10 @@ if(!@$_REQUEST["cantidad_total"]){
         $consulta_conteo = "SELECT COUNT(1) AS cant FROM (SELECT " . $campos_consulta . " FROM " . $tablas_consulta . " WHERE " . $condicion . $ordenar_consulta.") as cant";
     }
     $conteo_filas = $conn->Ejecutar_sql($consulta_conteo);
-    $result2=phpmkr_fetch_array($conteo_filas);
+    $result=phpmkr_fetch_array($conteo_filas);
     $result[0]=array();
-    $result[0]['cant']=$result2['cant'];
-    $result["numcampos"]=$result2['cant'];
+    $result[0]['cant']=$result['cant'];
+    $result["numcampos"]=$result['cant'];
     $_REQUEST["cantidad_total"]=$result["numcampos"];    
 
 } else {
@@ -285,7 +284,7 @@ if(!@$_REQUEST["cantidad_total"]){
 	$result[0]['cant']=@$_REQUEST["cantidad_total"];
 }
 
-
+*/
 $response=new stdClass();
 $response->cantidad_total = $result[0]['cant'];
 $response->exito=0;
