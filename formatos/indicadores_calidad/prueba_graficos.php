@@ -108,7 +108,7 @@ function generar_grafico_barra($color,$idcontenedor,$nombres,$valores,$titulo_gr
             pixelRatio: 2,
             backgroundColor: '#fff'
             });
-            
+             img.id = "prueba_id";
           
             document.getElementById('imagen_grafico').appendChild(img);
             $('#main').remove();
@@ -120,6 +120,13 @@ function generar_grafico_barra($color,$idcontenedor,$nombres,$valores,$titulo_gr
 
 function guardar_grafico($contenedores,$iddoc){
 
+
+?>
+<script>
+    alert();
+</script>
+<?php
+die();
 echo('
     <script>
         $(document).load(function(){
