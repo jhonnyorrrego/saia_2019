@@ -118,48 +118,6 @@ function generar_grafico_barra($color,$idcontenedor,$nombres,$valores,$titulo_gr
     <?php
 }
 
-function guardar_grafico($contenedores,$iddoc){
-
-print_r('entra full');
-
-?>
-<script>
-$(document).ready(function(){
-    alert( $('#prueba_id').attr('src') );
-    
-});    
-</script>
-<?php
-die();
-echo('
-    <script>
-        $(document).ready(function(){
-            $.ajax({
-                type:"POST",
-                dataType: "html",
-                url: "guardar grafico.php",
-                data: {
-                    img:$("#IMG"+$("#'.$contenedores[0].'").attr("_echarts_instance_")).attr("src"),
-                    iddoc:'.$iddoc.',
-                    img2:$("#IMG"+$("#'.$contenedores[1].'").attr("_echarts_instance_")).attr("src")
-                    
-                },
-				success: function(respuesta){
-					if(respuesta==1){
-						console.log("Imagen guardada...");
-					}else{
-						console.log("Error al guardar las imagenes...");
-					}
-				}
-           });
-           
-        });   
-    </script>
-
-');
-    
-    
-}
         
         
        $dato=array(5,10,15,20,25,30);
@@ -179,8 +137,8 @@ echo('
 			    break;
 		}
 
-	    generar_grafico_barra($color,$idcontenedor,$nombres,$valores,$titulo_grafico,$titulox,$tituloy);
-	    guardar_grafico('','');
+	   // generar_grafico_barra($color,$idcontenedor,$nombres,$valores,$titulo_grafico,$titulox,$tituloy);
+	   generar_grafico_torta($color,$idcontenedor,$nombres,$valores,$titulo_grafico,$titulox,$tituloy);
 	
 ?>
 
