@@ -155,8 +155,7 @@ function generar_grafico_barra($configuracion_grafico){
                           color: '#000000',
                           fontWeight:'bold'
                         },
-                        nameLocation:'end',
-                                     
+                        nameLocation:'end',      
                         name:'<?php echo($configuracion_grafico['titulox']); ?>',                        
                         type : 'category',
                         data : <?php echo($data_nombres); ?>
@@ -260,8 +259,13 @@ function generar_grafico_linea($configuracion_grafico){
                 calculable : true,
                 xAxis : [
                     {
+                        nameTextStyle:{
+                          color: '#000000',
+                          fontWeight:'bold'
+                        },
+                        nameLocation:'end',      
+                        name:'<?php echo($configuracion_grafico['titulox']); ?>',                         
                         type : 'category',
-                        boundaryGap : false,
                         data : <?php echo($data_nombres); ?>
                     }
                 ],
