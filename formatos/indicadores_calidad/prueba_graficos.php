@@ -213,10 +213,6 @@ function generar_grafico_barra($configuracion_grafico){
 
 function generar_grafico_linea($configuracion_grafico){
     global $conn;
-    
-    
-   
-    
 
         if($configuracion_grafico['color_saia']){
             $color_saia=busca_filtro_tabla("","configuracion","nombre='color_encabezado_list'","",$conn);  
