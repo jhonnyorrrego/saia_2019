@@ -68,7 +68,7 @@ function generar_grafico_torta($color_grafico,$contenedores,$nombres,$valores,$t
                         radius : '55%',
                         center: ['50%', '60%'],
                         data:[
-                            {value:335, name:'直接访问'},
+                            {value:335, name:'Opcion 1'},
                             {value:310, name:'邮件营销'},
                             {value:234, name:'联盟广告'},
                             {value:135, name:'视频广告'},
