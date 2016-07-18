@@ -279,7 +279,7 @@ function generar_grafico_linea($configuracion_grafico){
                             {
                                 name:"Valores",
                                 type:"line",
-                                barWidth: 50,
+                               
                                 data:'.json_encode($configuracion_grafico['valores'][$x]).'
                             }  
                         ');
