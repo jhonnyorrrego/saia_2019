@@ -125,7 +125,7 @@ function generar_grafico_barra($configuracion_grafico){
             });
             require(['echarts','echarts/chart/bar'],// require the specific chart type        
             function (ec) {
- 		    var myChart = ec.init(document.getElementById('<?php echo($configuracion_grafico['contenedores'][0]); ?>'));
+ 		    var myChart = ec.init(document.getElementById('<?php echo($configuracion_grafico['contenedor']); ?>'));
 
             var option = {
                 title : {
@@ -229,7 +229,7 @@ function generar_grafico_barra($configuracion_grafico){
 
     // -----> BARRA
     
-    $configuracion_grafico['contenedores']=array('contenedor_grafico_pc','imagen_grafico_pc');
+    $configuracion_grafico['contenedor']='contenedor_grafico_pc';
     generar_grafico_barra($configuracion_grafico);
 ?>
 
