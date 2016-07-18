@@ -315,10 +315,6 @@ function generar_grafico_linea($configuracion_grafico){
 }
 
 
-
-
-
-    
     // -----> TORTA
 	$configuracion_grafico=array();
 	$configuracion_grafico['imagen']=1;
@@ -329,9 +325,6 @@ function generar_grafico_linea($configuracion_grafico){
 	$configuracion_grafico['valores']=array(5,10,15,20,25,30);
     $configuracion_grafico['colores']=array('#00FF51','#D923D0','#00FF51','#D923D0','#00FF51','#D923D0');
     generar_grafico_torta($configuracion_grafico);
-    
-    
-
     
     // -----> BARRA
     $configuracion_grafico=array();
@@ -347,8 +340,6 @@ function generar_grafico_linea($configuracion_grafico){
     $configuracion_grafico['colores']=array('#00FF51','#D923D0','#00FF51','#D923D0','#00FF51','#D923D0');
     generar_grafico_barra($configuracion_grafico);
     
-    
-    
     // -----> LINEA
     $configuracion_grafico=array();
     $configuracion_grafico['contenedor']='contenedor_grafico_linea';
@@ -362,8 +353,6 @@ function generar_grafico_linea($configuracion_grafico){
     //$configuracion_grafico['color_saia']=1;
     $configuracion_grafico['colores']=array('#00FF51','#D923D0','#00FF51','#D923D0','#00FF51','#D923D0');
     generar_grafico_linea($configuracion_grafico);
-    
-    
     
 ?>
 
