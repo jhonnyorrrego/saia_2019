@@ -81,24 +81,6 @@ function generar_grafico_torta($configuracion_grafico){
                 },
                 toolbox: {
                     show : true,
-                    feature : {
-                        //mark : {show: true},
-                        //dataView : {show: true, readOnly: false},
-                       /* magicType : {
-                            show: true, 
-                            type: ['pie', 'funnel'],
-                            option: {
-                                funnel: {
-                                    x: '25%',
-                                    width: '50%',
-                                    funnelAlign: 'left',
-                                    max: 1548
-                                }
-                            }
-                        },*/
-                       // restore : {show: true},
-                       // saveAsImage : {show: true}
-                    }
                 },
                 calculable : true,
                 series : [
