@@ -357,7 +357,7 @@ function generar_grafico_linea($configuracion_grafico){
     $configuracion_grafico['valores']=array(array(5,10,15,20,25,30));
     $configuracion_grafico['colores']=array('#00FF51','#D923D0','#00FF51','#D923D0','#00FF51','#D923D0');
     //$configuracion_grafico['color_grafico']='#B1B109';
-  //  generar_grafico_linea($configuracion_grafico);
+    generar_grafico_linea($configuracion_grafico);
     
     
     
