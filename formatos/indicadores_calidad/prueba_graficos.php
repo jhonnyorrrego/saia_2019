@@ -353,7 +353,7 @@ function generar_grafico_linea($configuracion_grafico){
     */
     
     
-    // -----> LINEAS
+    // -----> LINEA
     
     generar_grafico_linea($configuracion_grafico);
     
