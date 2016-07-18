@@ -464,9 +464,6 @@ switch($guardar){
         break;
 }
 
-
-
-
 echo('
     <script>
         $(document).ready(function(){
