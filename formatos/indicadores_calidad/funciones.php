@@ -401,7 +401,7 @@ function generar_grafico_barra($color_grafico,$contenedores,$nombres,$valores,$t
  		    var myChart = echarts.init(document.getElementById('<?php echo($contenedores[0]); ?>'));
 
             var option = {
-                renderAsImage:true,
+                
                 title: {text: '<?php echo($titulo_grafico); ?>', x:'center'},
                 color: ['<?php echo($color_grafico); ?>'],
                 tooltip : {
