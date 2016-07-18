@@ -460,6 +460,7 @@ switch($guardar){
         $cadena='img:$("#img_'.$contenedor.'").attr("src"),';
         break;
     case 2:
+        $cadena='img2:$("#img_'.$contenedor.'").attr("src"),';
         break;
 }
 
@@ -475,10 +476,9 @@ echo('
                 dataType: "html",
                 url: "guardar grafico.php",
                 data: {
-                    img:$("#IMG"+$("#'.$contenedores[0].'").attr("_echarts_instance_")).attr("src"),
                     iddoc:'.$iddoc.',
-                    img2:$("#IMG"+$("#'.$contenedores[1].'").attr("_echarts_instance_")).attr("src"),
-                    guardar_imagen:1
+                    guardar_imagen:'.$guardar.',
+                    '.$cadena.'
                 },
 				success: function(respuesta){
 					if(respuesta==1){
