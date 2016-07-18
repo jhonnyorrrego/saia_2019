@@ -258,9 +258,7 @@ function generar_grafico_linea($configuracion_grafico){
                 legend: {
                     data:['最高气温','最低气温']
                 },
-                toolbox: {
-                    show : true
-                },
+           
                 calculable : true,
                 xAxis : [
                     {
