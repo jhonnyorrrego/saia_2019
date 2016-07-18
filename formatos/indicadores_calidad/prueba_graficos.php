@@ -114,8 +114,8 @@ function generar_grafico_torta($color_grafico,$contenedores,$nombres,$valores,$t
                 backgroundColor: '#fff'
             });
            
-            img.id = "img_<?php echo($contenedores[1]); ?>";
-            document.getElementById('<?php echo($contenedores[1]); ?>').appendChild(img);
+            img.id = "img_<?php/* echo($contenedores[1]); ?>";
+            document.getElementById('<?php echo($contenedores[1]); */?>').appendChild(img);
             */
             } //fin function ec
             );
