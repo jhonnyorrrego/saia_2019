@@ -148,9 +148,6 @@ function generar_grafico_barra($configuracion_grafico){
                         type : 'shadow' 
                     }                    
                 },
-                /*toolbox: {
-                    show : true,
-                },*/
                 calculable : true,
                 xAxis : [
                     {
