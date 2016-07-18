@@ -33,7 +33,7 @@ function generar_grafico_torta($configuracion_grafico){
         //PARSEO renderAsImage
         $generar_imagen='';
         if($configuracion_grafico['imagen']){
-            $generar_imagen='';
+            $generar_imagen='renderAsImage:true,';
         }
         
         
