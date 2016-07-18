@@ -460,7 +460,7 @@ function generar_grafico_torta($configuracion_grafico){
                 title : {
                     text: '<?php echo($configuracion_grafico['titulo_grafico']); ?>',
                     subtext: '<?php echo($configuracion_grafico['subtitulo_grafico']); ?>',
-                    x:'center'
+                    x:'right'
                 },
                 tooltip : {
                     trigger: 'item',
