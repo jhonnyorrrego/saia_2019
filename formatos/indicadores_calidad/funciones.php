@@ -348,7 +348,6 @@ if ($formulas["numcampos"]) {
                         $configuracion_grafico['tituloy']='Cumplimiento';
                         $configuracion_grafico['imagen']=1;
                         $configuracion_grafico['color_saia']=1;
-                        
                         $configuracion_grafico['nombres']=$dato3;
                         $configuracion_grafico['valores']=array($dato);
                         $configuracion_grafico['valores_nombre']=array('Valores');    
