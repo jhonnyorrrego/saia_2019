@@ -47,7 +47,7 @@ function generar_grafico_torta($color_grafico,$contenedores,$nombres,$valores,$t
               }
             });
             require(['echarts','echarts/chart/bar'],// require the specific chart type        
-        
+            function (ec) {
  		    var myChart = ec.init(document.getElementById('<?php echo($contenedores[0]); ?>'));
 
             var option = {
@@ -92,7 +92,7 @@ function generar_grafico_torta($color_grafico,$contenedores,$nombres,$valores,$t
             };
             
             myChart.setOption(option);
-            
+            }
             var img = new Image();
             img.src = myChart.getDataURL({
            // img.src = myChart.getConnectedDataURL({ 
