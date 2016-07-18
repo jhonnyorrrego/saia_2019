@@ -97,7 +97,6 @@ function generar_grafico_torta($color_grafico,$contenedores,$nombres,$valores,$t
     <?php
 }
 
-
        $dato=array(5,10,15,20,25,30);
 	   $dato3=array('titulo 5','titulo 10','titulo 15','titulo 20','titulo 25','titulo 30');
 	   $colores=array('#00FF51','#D923D0','#00FF51','#D923D0','#00FF51','#D923D0');
