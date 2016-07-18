@@ -67,7 +67,7 @@ function generar_grafico_torta($color_grafico,$contenedores,$nombres,$valores,$t
                 legend: {
                     orient : 'vertical',
                     x : 'left',
-                    data:<?php echo(json_encode($nombres['nombres'])); ?>
+                    data:<?php echo(json_encode($nombres['name'])); ?>
                 },
                 toolbox: {
                     show : true,
