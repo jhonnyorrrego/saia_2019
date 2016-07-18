@@ -135,22 +135,14 @@ function generar_grafico_torta($configuracion_grafico){
 
 
 
-	   $tipo_grafico='barras';
-	    switch($tipo_grafico){
-	        case 'torta':
-	            
-			case 'barras':
-			    $configuracion_grafico=array();
-			    $configuracion_grafico['imagen']=1;
-			    $configuracion_grafico['titulo_grafico']='Mi Grafico';
-			    $configuracion_grafico['contenedores']=array('contenedor_grafico_pc','imagen_grafico_pc');
-			    $configuracion_grafico['nombres']=array('titulo 5','titulo 10','titulo 15','titulo 20','titulo 25','titulo 30');
-			    $configuracion_grafico['valores']=array(5,10,15,20,25,30);
-			    $configuracion_grafico['colores']=array('#00FF51','#D923D0','#00FF51','#D923D0','#00FF51','#D923D0');
-			   
-			    break;
-		}
-	   generar_grafico_torta($configuracion_grafico);
+	$configuracion_grafico=array();
+	$configuracion_grafico['imagen']=1;
+	$configuracion_grafico['titulo_grafico']='Mi Grafico';
+	$configuracion_grafico['contenedores']=array('contenedor_grafico_pc','imagen_grafico_pc');
+	$configuracion_grafico['nombres']=array('titulo 5','titulo 10','titulo 15','titulo 20','titulo 25','titulo 30');
+	$configuracion_grafico['valores']=array(5,10,15,20,25,30);
+    $configuracion_grafico['colores']=array('#00FF51','#D923D0','#00FF51','#D923D0','#00FF51','#D923D0');
+    generar_grafico_torta($configuracion_grafico);
 ?>
 
 
