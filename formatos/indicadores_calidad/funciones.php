@@ -451,8 +451,21 @@ function generar_grafico_barra($color_grafico,$contenedores,$nombres,$valores,$t
 
 
 
-function guardar_grafico($contenedores,$iddoc){
+function guardar_grafico($contenedor,$iddoc,$guardar){
 
+$cadena='';
+switch($guardar){
+    case 1:
+        $cadena='img:$("#img_'.$contenedor.'").attr("src"),';
+        break;
+    case 2:
+        break;
+}
+
+
+
+print_r($cadena);
+die();
 echo('
     <script>
         $(document).ready(function(){
