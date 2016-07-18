@@ -56,11 +56,11 @@ function generar_grafico_torta($color_grafico,$contenedores,$nombres,$valores,$t
                     trigger: 'item',
                     formatter: "{a} <br/>{b} : {c} ({d}%)"
                 },
-                legend: {
+               /* legend: {
                     orient: 'vertical',
                     left: 'left',
                     data: ['直接访问','邮件营销','联盟广告','视频广告','搜索引擎']
-                },
+                },*/
                 series : [
                     {
                         name: '访问来源',
