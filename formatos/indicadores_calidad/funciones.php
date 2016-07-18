@@ -330,7 +330,7 @@ if ($formulas["numcampos"]) {
                         $configuracion_grafico['subtitulo_grafico']='';
                         $configuracion_grafico['titulox']='Seguimiento';
                         $configuracion_grafico['tituloy']='Cumplimiento';
-                        $configuracion_grafico['imagen']=1;
+                        $configuracion_grafico['imagen']=;
                         $configuracion_grafico['color_saia']=1;
                         $configuracion_grafico['nombres']=$dato3;
                         $configuracion_grafico['valores']=array($dato);
