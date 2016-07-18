@@ -277,7 +277,6 @@ function generar_grafico_linea($configuracion_grafico){
                 ],
                 yAxis : [
                     {
-                        
                         nameTextStyle:{
                           color: '#000000',
                           fontWeight:'bold'
