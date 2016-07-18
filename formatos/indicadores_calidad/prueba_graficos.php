@@ -255,10 +255,6 @@ function generar_grafico_linea($configuracion_grafico){
                 tooltip : {
                     trigger: 'axis'
                 },
-                legend: {
-                    data:['最高气温','最低气温']
-                },
-           
                 calculable : true,
                 xAxis : [
                     {
