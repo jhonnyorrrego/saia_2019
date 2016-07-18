@@ -376,8 +376,39 @@ if ($formulas["numcampos"]) {
 						break;
 					case 'lineas' :
 					    
-					    
-					    
+						$DataSet -> AddPoint($dato, "Serie1");
+						$DataSet -> AddPoint($dato3, "Serie2");
+						$DataSet -> AddAllSeries();
+						$DataSet -> SetAbsciseLabelSerie("Serie2");
+						$DataSet -> SetYAxisName("Cumplimiento");
+						$DataSet -> SetXAxisName("Seguimiento");
+						$Test = new pChart(600, 230);
+						$Test -> setFontProperties("pchart/Fonts/tahoma.ttf", 8);
+						$Test -> setGraphArea(70, 30, 500, 180);
+						$Test -> drawFilledRoundedRectangle(5, 5, 600, 223, 5, 240, 240, 240);
+						$Test -> drawRoundedRectangle(7, 7, 600, 225, 5, 230, 230, 230);
+						$Test -> drawGraphArea(255, 255, 255, TRUE);
+						$Test -> drawScale($DataSet -> GetData(), $DataSet -> GetDataDescription(), SCALE_START0, 150, 150, 150, TRUE, 0, 2);
+						$Test -> drawGrid(4, TRUE, 230, 230, 230, 50);
+						$Test -> drawTreshold(0, 143, 55, 72, TRUE, TRUE);
+						$Test -> drawLineGraph($DataSet -> GetData(), $DataSet -> GetDataDescription());
+						$Test -> drawPlotGraph($DataSet -> GetData(), $DataSet -> GetDataDescription(), 3, 2, 255, 255, 2					    
+
+
+                        // -----> LINEA
+                        $configuracion_grafico=array();
+                        $configuracion_grafico['contenedor']='contenedor_grafico_linea';
+                        $configuracion_grafico['titulo_grafico']='PORCENTAJE DE CUMPLIMIENTO POR SEGUIMIENTO';
+                        $configuracion_grafico['subtitulo_grafico']='';    
+                        $configuracion_grafico['titulox']='Seguimiento';
+                        $configuracion_grafico['tituloy']='Cumplimiento';
+                        $configuracion_grafico['imagen']=1;
+                        $configuracion_grafico['nombres']=$dato3;
+                        $configuracion_grafico['valores']=array($dato);
+                        $configuracion_grafico['valores_nombre']=array('Valores');
+                        //$configuracion_grafico['color_saia']=1;
+                        $configuracion_grafico['colores']=$array_colores;
+                        generar_grafico_linea($configuracion_grafico);					    
 
 						break;
 				}
@@ -591,7 +622,110 @@ function generar_grafico_torta($configuracion_grafico){
     <?php
 }
 
+function generar_grafico_linea($configuracion_grafico){
+    global $conn;
 
+        if($configuracion_grafico['color_saia']){
+            $color_saia=busca_filtro_tabla("","configuracion","nombre='color_encabezado_list'","",$conn);  
+            $configuracion_grafico['color_saia']='color: ["'.$color_saia[0]['valor'].'"],';
+        }
+        
+        //PARSEO renderAsImage
+        $generar_imagen='';
+        if($configuracion_grafico['imagen']){
+            $generar_imagen='renderAsImage:true,';
+        }
+        
+        //PARSEO NOMBRES & COLORES
+       $data_nombres=array();
+       for($i=0;$i<count($configuracion_grafico['nombres']);$i++){
+            $data_nombres[$i]['value']=$configuracion_grafico['nombres'][$i];
+            $data_nombres[$i]['textStyle']['color']=$configuracion_grafico['colores'][$i];
+            if(!$configuracion_grafico['colores'][$i]){
+                 $data_nombres[$i]['textStyle']['color']='#000000';
+            }
+           
+            $data_nombres[$i]['textStyle']['fontWeight']='bold';           
+       }        
+       
+        $data_nombres=json_encode($data_nombres);
+    ?>
+        <script type="text/javascript">
+            require.config({
+              paths: {
+                 echarts: 'build/dist'
+              }
+            });
+            require(['echarts','echarts/chart/line'],// require the specific chart type        
+            function (ec) {
+ 		    var myChart = ec.init(document.getElementById('<?php echo($configuracion_grafico['contenedor']); ?>'));
+
+            var option = {
+                <?php echo($generar_imagen); ?>
+                <?php echo($configuracion_grafico['color_saia']); ?>
+                title : {
+                    text: '<?php echo($configuracion_grafico['titulo_grafico']); ?>',
+                    subtext: '<?php echo($configuracion_grafico['subtitulo_grafico']); ?>',
+                    x:'center'
+                },
+                legend: {
+                    data:<?php echo(json_encode($configuracion_grafico['valores_nombre']) ); ?>,
+                    x:'right'
+                },               
+                tooltip : {
+                    trigger: 'axis'
+                },
+                calculable : true,
+                xAxis : [
+                    {
+                        nameTextStyle:{
+                          color: '#000000',
+                          fontWeight:'bold'
+                        },
+                        nameLocation:'end',      
+                        name:'<?php echo($configuracion_grafico['titulox']); ?>',                         
+                        type : 'category',
+                        data : <?php echo($data_nombres); ?>
+                    }
+                ],
+                yAxis : [
+                    {
+                        type : 'value',
+                        nameTextStyle:{
+                          color: '#000000',
+                          fontWeight:'bold'
+                        },
+                        nameLocation:'end',        
+                        name:'<?php echo($configuracion_grafico['tituloy']); ?>',                         
+                    }
+                ],
+                series : [
+                    <?php
+                    for($x=0;$x<count($configuracion_grafico['valores']);$x++){
+                        echo('
+                            {
+                                
+                                name:"'.$configuracion_grafico['valores_nombre'][$x].'",
+                                type:"line",
+                                data:'.json_encode($configuracion_grafico['valores'][$x]).'
+                            }  
+                        ');
+                        if(($x+1)!=count($configuracion_grafico['valores'])){
+                            echo(',');
+                        }
+                    }
+                    
+                    ?>
+                ]
+            };
+                      
+            myChart.setOption(option);
+            } //fin function ec
+            
+            );
+        </script>
+    <?php
+}
 
 
 
