@@ -260,7 +260,6 @@ function generar_grafico_linea($configuracion_grafico){
                 xAxis : [
                     {
                         type : 'category',
-                        boundaryGap : false,
                         data : <?php echo($data_nombres); ?>
                     }
                 ],
