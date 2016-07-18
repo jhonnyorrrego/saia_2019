@@ -155,7 +155,7 @@ function generar_grafico_barra($configuracion_grafico){
                 ],
                 series : [
                     {
-                        name:'蒸发量',
+                        name:'Valores',
                         type:'bar',
                         data:<?php echo(json_encode($configuracion_grafico['valores'])); ?>
                     },
