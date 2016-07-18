@@ -186,9 +186,6 @@ if ($formulas["numcampos"]) {
 			if($_SESSION['LOGIN'.LLAVE_SAIA]=='cerok'){
 			    
 			if(@$_REQUEST['tipo']!=5){
-			    
-            
-			
 			echo('
                 <tr><td colspan="5">
                      <script src="build/dist/echarts.js"></script>
