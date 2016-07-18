@@ -120,6 +120,7 @@ function generar_grafico_barra($color,$idcontenedor,$nombres,$valores,$titulo_gr
 
 function guardar_grafico($contenedores,$iddoc){
 
+print_r('entra full');
 
 ?>
 <script>
