@@ -258,7 +258,8 @@ function generar_grafico_linea($configuracion_grafico){
                     x:'center'
                 },
                 legend: {
-                    data:['蒸发量','降水量']
+                    data:['蒸发量','降水量'],
+                    x:'right'
                 },               
                 tooltip : {
                     trigger: 'axis'
