@@ -157,6 +157,7 @@ function generar_grafico_barra($configuracion_grafico){
                     {
                         name:'Valores',
                         type:'bar',
+                        barWidth: '50%',
                         data:<?php echo(json_encode($configuracion_grafico['valores'])); ?>
                     },
                    /* {
