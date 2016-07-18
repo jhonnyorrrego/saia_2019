@@ -299,7 +299,6 @@ function generar_grafico_linea($configuracion_grafico){
                         echo('
                             {
                                 name:"'.$configuracion_grafico['valores_nombre'][$x].'",
-                               showScaleText:true,
                                 type:"line",
                                 data:'.json_encode($configuracion_grafico['valores'][$x]).'
                             }  
