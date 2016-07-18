@@ -302,9 +302,7 @@ function generar_grafico_linea($configuracion_grafico){
                     ?>
                 ]
             };
-                    
-                    
-                    
+                      
             myChart.setOption(option);
             } //fin function ec
             
