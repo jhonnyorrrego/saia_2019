@@ -327,7 +327,7 @@ if ($formulas["numcampos"]) {
 						break;
 					case 'barras':
                 	    //$dato3=array('titulo 5','titulo 10','titulo 15','titulo 20','titulo 25','titulo 30');
-                	    $titulo_grafico='PORCENTAJE DE CUMPLIMIENTO POR SEGUIMIENTO';
+                	   /* $titulo_grafico='PORCENTAJE DE CUMPLIMIENTO POR SEGUIMIENTO';
                 	    $tipo_grafico='barras';
                 	    
                 	    $titulox='Seguimiento';
@@ -338,8 +338,23 @@ if ($formulas["numcampos"]) {
                         $nombres['colores']=$array_colores;
                         
                         generar_grafico_barra('',$contenedores,$nombres,$valores,$titulo_grafico,$titulox,$tituloy);
-                	    guardar_grafico($contenedores[1],$iddoc,1);
-
+                        */
+                        // -----> BARRA
+                        $configuracion_grafico=array();
+                        $configuracion_grafico['contenedor']='contenedor_grafico_pc';
+                        $configuracion_grafico['titulo_grafico']='PORCENTAJE DE CUMPLIMIENTO POR SEGUIMIENTO';
+                        $configuracion_grafico['subtitulo_grafico']='';
+                        $configuracion_grafico['titulox']='';
+                        $configuracion_grafico['imagen']=1;
+                        //$configuracion_grafico['color_saia']=1;
+                        $configuracion_grafico['tituloy']='';
+                        $configuracion_grafico['nombres']=$dato3;
+                        $configuracion_grafico['valores']=array($dato);
+                        $configuracion_grafico['valores_nombre']=array('Valores');    
+                        $configuracion_grafico['colores']=$array_colores;
+                        generar_grafico_barra($configuracion_grafico);
+                        die();
+                        
                 	    $titulo_grafico='RESULTADO POR SEGUIMIENTO';
                 	    $titulox='Seguimiento';
                 	    $tituloy='Resultado';
@@ -349,7 +364,7 @@ if ($formulas["numcampos"]) {
         			    $nombres['nombres']=$dato5;       
                         $nombres['colores']=$array_colores;
                 	    generar_grafico_barra('',$contenedores,$nombres,$valores,$titulo_grafico,$titulox,$tituloy);
-                	    guardar_grafico($contenedores[1],$iddoc,2);
+                	   // guardar_grafico($contenedores[1],$iddoc,2);
                  
 						break;
 					case 'lineas' :
@@ -379,102 +394,123 @@ echo "</table>";
 }
 
 
-function generar_grafico_barra($color_grafico,$contenedores,$nombres,$valores,$titulo_grafico='',$titulox='',$tituloy=''){
+function generar_grafico_barra($configuracion_grafico){
     global $conn;
-        $valores=json_encode($valores);
-        
-        if($color_grafico==''){
+
+        if($configuracion_grafico['color_saia']){
             $color_saia=busca_filtro_tabla("","configuracion","nombre='color_encabezado_list'","",$conn);  
-            $color_grafico=$color_saia[0]['valor'];
+            $configuracion_grafico['color_saia']='color: ["'.$color_saia[0]['valor'].'"],';
         }
         
+        //PARSEO renderAsImage
+        $generar_imagen='';
+        if($configuracion_grafico['imagen']){
+            $generar_imagen='renderAsImage:true,';
+        }
+        
+        //PARSEO NOMBRES & COLORES
        $data_nombres=array();
-       for($i=0;$i<count($nombres['nombres']);$i++){
-            $data_nombres[$i]['value']=$nombres['nombres'][$i];
-            $data_nombres[$i]['textStyle']['color']=$nombres['colores'][$i];
+       for($i=0;$i<count($configuracion_grafico['nombres']);$i++){
+            $data_nombres[$i]['value']=$configuracion_grafico['nombres'][$i];
+            $data_nombres[$i]['textStyle']['color']=$configuracion_grafico['colores'][$i];
+            if(!$configuracion_grafico['colores'][$i]){
+                 $data_nombres[$i]['textStyle']['color']='#000000';
+            }
+           
             $data_nombres[$i]['textStyle']['fontWeight']='bold';           
        }        
+       
         $data_nombres=json_encode($data_nombres);
-       // echo($titulos);die();
     ?>
         <script type="text/javascript">
- 		    var myChart = echarts.init(document.getElementById('<?php echo($contenedores[0]); ?>'));
+            require.config({
+              paths: {
+                 echarts: 'build/dist'
+              }
+            });
+            require(['echarts','echarts/chart/bar'],// require the specific chart type        
+            function (ec) {
+ 		    var myChart = ec.init(document.getElementById('<?php echo($configuracion_grafico['contenedor']); ?>'));
 
             var option = {
+                <?php echo($generar_imagen); ?>
+                title : {
+                    text: '<?php echo($configuracion_grafico['titulo_grafico']); ?>',
+                    subtext: '<?php echo($configuracion_grafico['subtitulo_grafico']); ?>',
+                    x:'center'
+                },
                 
-                title: {text: '<?php echo($titulo_grafico); ?>', x:'center'},
-                color: ['<?php echo($color_grafico); ?>'],
+                <?php echo($configuracion_grafico['color_saia']); ?>
+                legend: {
+                    data:<?php echo(json_encode($configuracion_grafico['valores_nombre']) ); ?>,
+                    x:'right'
+                }, 
                 tooltip : {
                     trigger: 'axis',
-                    axisPointer : {            // 坐标轴指示器，坐标轴触发有效
-                        type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
-                    }
+                    axisPointer : {            
+                        type : 'shadow' 
+                    }                    
                 },
-                grid: {
-                   // left: '3%',
-                   // right: '4%',
-                    //bottom: '3%',
-                    containLabel: true
-                },
+                calculable : true,
                 xAxis : [
                     {
-                        
                         nameTextStyle:{
                           color: '#000000',
                           fontWeight:'bold'
                         },
-                        nameLocation:'middle',
-                        nameGap:21,                        
-                        name:'<?php echo($titulox); ?>',
+                        nameLocation:'end',      
+                        name:'<?php echo($configuracion_grafico['titulox']); ?>',                        
                         type : 'category',
-                        data: <?php echo($data_nombres); ?>,
-                       
-                        axisTick: {
-                            alignWithLabel: true
-                        }
+                        data : <?php echo($data_nombres); ?>
                     }
                 ],
                 yAxis : [
                     {
+                        
                         nameTextStyle:{
                           color: '#000000',
                           fontWeight:'bold'
                         },
-                        nameLocation:'middle',
-                        nameGap:30,
-                        name:'<?php echo($tituloy); ?>', //
+                        nameLocation:'end',
+                                     
+                        name:'<?php echo($configuracion_grafico['tituloy']); ?>',                        
                         type : 'value'
                     }
                 ],
                 series : [
-                    {
-                        name:'Valor',
-                        type:'bar',
-                        barWidth: '50%',
-                        data:<?php echo($valores); ?>
-                        
+                    
+                    <?php
+                    for($x=0;$x<count($configuracion_grafico['valores']);$x++){
+                        echo('
+                            {
+                                name:"'.$configuracion_grafico['valores_nombre'][$x].'",
+                                type:"bar",
+                                barWidth: 50,
+                                data:'.json_encode($configuracion_grafico['valores'][$x]).'
+                            }  
+                        ');
+                        if(($x+1)!=count($configuracion_grafico['valores'])){
+                            echo(',');
+                        }
                     }
+                    
+                    ?>
                 ]
             };
-            
+                    
+                    
             myChart.setOption(option);
+            } //fin function ec
             
-            var img = new Image();
-            img.src = myChart.getDataURL({
-                //pixelRatio: 2,
-                backgroundColor: '#fff'
-            });
-            img.id = "img_<?php echo($contenedores[1]); ?>";
-            document.getElementById('<?php echo($contenedores[1]); ?>').appendChild(img);
-            $('<?php echo($contenedores[0]); ?>').remove();
-
-
-
-            
-            
+            );
         </script>
     <?php
 }
+
+
+
+
+
 
 
 
