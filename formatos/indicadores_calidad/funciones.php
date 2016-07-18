@@ -293,9 +293,11 @@ if ($formulas["numcampos"]) {
 			
 			
 			if($_SESSION['LOGIN'.LLAVE_SAIA]=='cerok'){
+			    
+			    print_r('entra cerok');
 			if(@$_REQUEST['tipo']!=5){
 			    
-   
+            
 			
 			echo('
                 <tr><td colspan="5">
