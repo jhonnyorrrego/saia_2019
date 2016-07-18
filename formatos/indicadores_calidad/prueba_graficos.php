@@ -120,6 +120,10 @@ function generar_grafico_barra($configuracion_grafico){
        for($i=0;$i<count($configuracion_grafico['nombres']);$i++){
             $data_nombres[$i]['value']=$configuracion_grafico['nombres'][$i];
             $data_nombres[$i]['textStyle']['color']=$configuracion_grafico['colores'][$i];
+            if(!$configuracion_grafico['colores'][$i]){
+                 $data_nombres[$i]['textStyle']['color']='#000000';
+            }
+           
             $data_nombres[$i]['textStyle']['fontWeight']='bold';           
        }        
        
