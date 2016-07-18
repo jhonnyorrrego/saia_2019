@@ -261,7 +261,7 @@ function generar_grafico_linea($configuracion_grafico){
                     {
                         type : 'category',
                         boundaryGap : false,
-                        data : ['周一','周二','周三','周四','周五','周六','周日']
+                        data : <?php echo($data_nombres); ?>
                     }
                 ],
                 yAxis : [
