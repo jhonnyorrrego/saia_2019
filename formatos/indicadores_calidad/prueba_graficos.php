@@ -63,7 +63,7 @@ function generar_grafico_torta($color_grafico,$contenedores,$nombres,$valores,$t
                 },
                 series : [
                     {
-                        name: '访问来源',
+                        name: 'Valor',
                         type: 'pie',
                         radius : '55%',
                         center: ['50%', '60%'],
