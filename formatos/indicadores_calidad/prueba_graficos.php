@@ -98,9 +98,9 @@ function generar_grafico_torta($configuracion_grafico){
 function generar_grafico_barra($configuracion_grafico){
     global $conn;
 
-        if($$configuracion_grafico['color_grafico']==''){
+        if($configuracion_grafico['color_grafico']==''){
             $color_saia=busca_filtro_tabla("","configuracion","nombre='color_encabezado_list'","",$conn);  
-            $color_grafico=$color_saia[0]['valor'];
+            $configuracion_grafico['color_grafico']=$color_saia[0]['valor'];
         }
         
         //PARSEO renderAsImage
