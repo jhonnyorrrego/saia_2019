@@ -112,7 +112,15 @@ function generar_grafico_torta($color_grafico,$contenedores,$nombres,$valores,$t
             //img.src = myChart.getImage();
            
            // img.id = "img_<?php echo($contenedores[1]); ?>";
-            document.getElementById('<?php echo($contenedores[1]); ?>').appendChild(myChart.getImage());
+           
+           setTimeout(function(){ 
+               
+               document.getElementById('<?php echo($contenedores[1]); ?>').appendChild(myChart.getImage());
+               
+               
+           }, 3000);
+           
+            
            
             } //fin function ec
             
