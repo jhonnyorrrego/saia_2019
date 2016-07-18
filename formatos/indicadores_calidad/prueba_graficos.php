@@ -59,7 +59,7 @@ function generar_grafico_torta($color_grafico,$contenedores,$nombres,$valores,$t
                 legend: {
                     orient: 'vertical',
                     left: 'left',
-                    data: ['Opcion 1','Opcion 2','联盟广告','视频广告','搜索引擎']
+                    data: ['Opcion 1','Opcion 2','Opcion 3','Opcion 4','Opcion 5']
                 },
                 series : [
                     {
@@ -69,10 +69,10 @@ function generar_grafico_torta($color_grafico,$contenedores,$nombres,$valores,$t
                         center: ['50%', '60%'],
                         data:[
                             {value:335, name:'Opcion 1'},
-                            {value:310, name:'邮件营销'},
-                            {value:234, name:'联盟广告'},
-                            {value:135, name:'视频广告'},
-                            {value:1548, name:'搜索引擎'}
+                            {value:310, name:'Opcion 2'},
+                            {value:234, name:'Opcion 3'},
+                            {value:135, name:'Opcion 4'},
+                            {value:1548, name:'Opcion 4'}
                         ],
                         itemStyle: {
                             emphasis: {
