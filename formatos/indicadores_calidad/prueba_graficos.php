@@ -58,7 +58,7 @@ function generar_grafico_torta($color_grafico,$contenedores,$nombres,$valores,$t
   
                 title : {
                     text: '<?php echo($titulo_grafico); ?>',
-                    subtext: '纯属虚构',
+                    subtext: '<?php echo($titulo_grafico); ?>',
                     x:'center'
                 },
                 tooltip : {
