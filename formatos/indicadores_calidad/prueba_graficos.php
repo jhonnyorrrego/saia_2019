@@ -322,6 +322,105 @@ function generar_grafico_linea($configuracion_grafico){
 }
 
 
+
+function generar_grafico_barra_v3($color_grafico,$contenedores,$nombres,$valores,$titulo_grafico='',$titulox='',$tituloy=''){
+    global $conn;
+        $valores=json_encode($valores);
+        
+        if($color_grafico==''){
+            $color_saia=busca_filtro_tabla("","configuracion","nombre='color_encabezado_list'","",$conn);  
+            $color_grafico=$color_saia[0]['valor'];
+        }
+        
+       $data_nombres=array();
+       for($i=0;$i<count($nombres['nombres']);$i++){
+            $data_nombres[$i]['value']=$nombres['nombres'][$i];
+            $data_nombres[$i]['textStyle']['color']=$nombres['colores'][$i];
+            $data_nombres[$i]['textStyle']['fontWeight']='bold';           
+       }        
+        $data_nombres=json_encode($data_nombres);
+       // echo($titulos);die();
+    ?>
+        <script type="text/javascript">
+ 		    var myChart = echarts.init(document.getElementById('<?php echo($contenedores[0]); ?>'));
+
+            var option = {
+                
+                title: {text: '<?php echo($titulo_grafico); ?>', x:'center'},
+                color: ['<?php echo($color_grafico); ?>'],
+                tooltip : {
+                    trigger: 'axis',
+                    axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+                        type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                    }
+                },
+                grid: {
+                   // left: '3%',
+                   // right: '4%',
+                    //bottom: '3%',
+                    containLabel: true
+                },
+                xAxis : [
+                    {
+                        
+                        nameTextStyle:{
+                          color: '#000000',
+                          fontWeight:'bold'
+                        },
+                        nameLocation:'middle',
+                        nameGap:21,                        
+                        name:'<?php echo($titulox); ?>',
+                        type : 'category',
+                        data: <?php echo($data_nombres); ?>,
+                       
+                        axisTick: {
+                            alignWithLabel: true
+                        }
+                    }
+                ],
+                yAxis : [
+                    {
+                        nameTextStyle:{
+                          color: '#000000',
+                          fontWeight:'bold'
+                        },
+                        nameLocation:'middle',
+                        nameGap:30,
+                        name:'<?php echo($tituloy); ?>', //
+                        type : 'value'
+                    }
+                ],
+                series : [
+                    {
+                        name:'Valor',
+                        type:'bar',
+                        barWidth: '50%',
+                        data:<?php echo($valores); ?>
+                        
+                    }
+                ]
+            };
+            
+            myChart.setOption(option);
+            
+            var img = new Image();
+            img.src = myChart.getDataURL({
+                //pixelRatio: 2,
+                backgroundColor: '#fff'
+            });
+            img.id = "img_<?php echo($contenedores[1]); ?>";
+            document.getElementById('<?php echo($contenedores[1]); ?>').appendChild(img);
+            $('<?php echo($contenedores[0]); ?>').remove();
+
+
+
+            
+            
+        </script>
+    <?php
+}
+
+
     // -----> TORTA
 	$configuracion_grafico=array();
 	$configuracion_grafico['imagen']=0;
