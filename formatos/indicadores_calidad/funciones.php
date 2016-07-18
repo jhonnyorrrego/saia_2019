@@ -166,7 +166,17 @@ if ($formulas["numcampos"]) {
 				array_push($dato5, $seg[$j]["fecha_seguimiento"] . "(" . $respuesta . "%)");
 			}	
 		}
-		echo "<tr><td colspan=7  style='font-size:10pt;'><b>Resultado:</b><table class='phpmaker'><tr><td bgcolor='FF4000'  style='font-size:10pt;'>Deficiente</td><td bgcolor='EAFF00'  style='font-size:10pt;'>Satisfactorio</td><td bgcolor='00FF51'  style='font-size:10pt;'>Sobresaliente</td></tr></table><br /></td></tr>";
+		echo "<tr>
+		        <td colspan=7  style='font-size:10pt;'><b>Resultado:</b><table class='phpmaker'>
+		      </tr>
+		      <tr>
+		        <td bgcolor='FF4000'  style='font-size:10pt;'>Deficiente</td>
+		        <td bgcolor='EAFF00'  style='font-size:10pt;'>Satisfactorio</td>
+		        <td bgcolor='00FF51'  style='font-size:10pt;'>Sobresaliente</td>
+		        </tr>
+		        </table><br />
+		        </td>
+		        </tr>";
 		
 		if (empty($dato) || empty($dato2)) {
 			echo("No es posible generar un grafico, no se han generado seguimientos");
