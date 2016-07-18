@@ -323,19 +323,6 @@ if ($formulas["numcampos"]) {
 
 						break;
 					case 'barras':
-                	    //$dato3=array('titulo 5','titulo 10','titulo 15','titulo 20','titulo 25','titulo 30');
-                	   /* $titulo_grafico='PORCENTAJE DE CUMPLIMIENTO POR SEGUIMIENTO';
-                	    $tipo_grafico='barras';
-                	    
-                	    $titulox='Seguimiento';
-                	    $tituloy='Cumplimiento';
-                	    $contenedores=array('contenedor_grafico_pc','imagen_grafico_pc');
-        			    $valores=$dato;
-        			    $nombres['nombres']=$dato3;       
-                        $nombres['colores']=$array_colores;
-                        
-                        generar_grafico_barra('',$contenedores,$nombres,$valores,$titulo_grafico,$titulox,$tituloy);
-                        */
                         // -----> BARRA
                         $configuracion_grafico=array();
                         $configuracion_grafico['contenedor']='contenedor_grafico_pc';
@@ -352,7 +339,7 @@ if ($formulas["numcampos"]) {
                         generar_grafico_barra($configuracion_grafico);
                         
                         
-                        
+                        // -----> BARRA
                         $configuracion_grafico=array();
                         $configuracion_grafico['contenedor']='contenedor_grafico_rs';
                         $configuracion_grafico['titulo_grafico']='RESULTADO POR SEGUIMIENTO';
