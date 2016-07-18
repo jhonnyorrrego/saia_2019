@@ -247,6 +247,9 @@ function generar_grafico_barra($configuracion_grafico){
     
     
     
+    
+    
+    
 ?>
 
 
