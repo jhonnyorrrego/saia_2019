@@ -321,7 +321,6 @@ if ($formulas["numcampos"]) {
 			    //$tipo_grafico[0]["tipo_grafico"]='torta';
 				switch(trim($tipo_grafico[0]["tipo_grafico"])){
 					case 'torta':
-						
                         // -----> TORTA
                     	$configuracion_grafico=array();
                     	$configuracion_grafico['imagen']=1;
@@ -342,8 +341,7 @@ if ($formulas["numcampos"]) {
                     	$configuracion_grafico['nombres']=$dato5;
                     	$configuracion_grafico['valores']=$dato4;
                         $configuracion_grafico['colores']=$array_colores;
-                        generar_grafico_torta($configuracion_grafico);		
-                        
+                        generar_grafico_torta($configuracion_grafico);	
 						break;
 					case 'barras':
                         // -----> BARRA
@@ -361,7 +359,6 @@ if ($formulas["numcampos"]) {
                         $configuracion_grafico['colores']=$array_colores;
                         generar_grafico_barra($configuracion_grafico);
                         
-                        
                         // -----> BARRA
                         $configuracion_grafico=array();
                         $configuracion_grafico['contenedor']='contenedor_grafico_rs';
@@ -376,10 +373,6 @@ if ($formulas["numcampos"]) {
                         $configuracion_grafico['valores_nombre']=array('Valores');    
                         $configuracion_grafico['colores']=$array_colores;
                         generar_grafico_barra($configuracion_grafico);                        
-                        
-                        
-  
-                 
 						break;
 					case 'lineas' :
 					    
