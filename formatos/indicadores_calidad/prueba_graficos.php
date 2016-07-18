@@ -163,7 +163,7 @@ function generar_grafico_barra($configuracion_grafico){
                           fontWeight:'bold'
                         },
                         //nameLocation:'middle',
-                        nameGap:21,                        
+                        nameGap:50,                        
                         name:'<?php echo($configuracion_grafico['titulox']); ?>',                        
                         type : 'category',
                         data : <?php echo($data_nombres); ?>
