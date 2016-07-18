@@ -340,7 +340,8 @@ if($datos_busqueda[0]["tipo_busqueda"]==1 || $_REQUEST['tipo_busqueda']==1){
 } else {
   $response->page = $page;
 }
-$response->total = $count;
+//$response->total = $count; //DESARROLLO ALEJANDRO
+$response->total = $total_pages; 
 $response->records = $count;
 
 $response->sql= $result["sql"];
