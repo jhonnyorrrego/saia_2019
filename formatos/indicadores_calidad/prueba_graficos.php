@@ -133,6 +133,7 @@ function generar_grafico_barra($configuracion_grafico){
                     subtext: '<?php echo($configuracion_grafico['subtitulo_grafico']); ?>',
                     x:'center'
                 },
+                color: ['<?php echo($configuracion_grafico['color_grafico']); ?>'],
                 tooltip : {
                     trigger: 'axis',
                     axisPointer : {            // 坐标轴指示器，坐标轴触发有效
@@ -218,6 +219,7 @@ function generar_grafico_barra($configuracion_grafico){
     $configuracion_grafico['subtitulo_grafico']='Mi Subtitulo';
     $configuracion_grafico['nombres']=array('titulo 5','titulo 10','titulo 15','titulo 20','titulo 25','titulo 30');
     $configuracion_grafico['valores']=array(5,10,15,20,25,30);
+    $configuracion_grafico['color_grafico']='';
     generar_grafico_barra($configuracion_grafico);
     
     
