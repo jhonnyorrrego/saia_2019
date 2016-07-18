@@ -118,7 +118,37 @@ function generar_grafico_barra($color,$idcontenedor,$nombres,$valores,$titulo_gr
     <?php
 }
 
+function guardar_grafico($contenedores,$iddoc){
 
+echo('
+    <script>
+        $(document).load(function(){
+            $.ajax({
+                type:"POST",
+                dataType: "html",
+                url: "guardar grafico.php",
+                data: {
+                    img:$("#IMG"+$("#'.$contenedores[0].'").attr("_echarts_instance_")).attr("src"),
+                    iddoc:'.$iddoc.',
+                    img2:$("#IMG"+$("#'.$contenedores[1].'").attr("_echarts_instance_")).attr("src")
+                    
+                },
+				success: function(respuesta){
+					if(respuesta==1){
+						console.log("Imagen guardada...");
+					}else{
+						console.log("Error al guardar las imagenes...");
+					}
+				}
+           });
+           
+        });   
+    </script>
+
+');
+    
+    
+}
         
         
        $dato=array(5,10,15,20,25,30);
