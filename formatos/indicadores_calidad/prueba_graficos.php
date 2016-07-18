@@ -36,8 +36,9 @@ function generar_grafico_torta($color_grafico,$contenedores,$nombres,$valores,$t
        $data_nombres=array();
        for($i=0;$i<count($nombres['nombres']);$i++){
             $data_nombres[$i]['value']=$nombres['nombres'][$i];
-            $data_nombres[$i]['textStyle']['color']=$nombres['colores'][$i];
-            $data_nombres[$i]['textStyle']['fontWeight']='bold';           
+            $data_nombres[$i]['value']=$nombres['nombres'][$i];
+           // $data_nombres[$i]['textStyle']['color']=$nombres['colores'][$i];
+           // $data_nombres[$i]['textStyle']['fontWeight']='bold';           
        }        
         $data_nombres=json_encode($data_nombres);
        // echo($titulos);die();
@@ -67,7 +68,7 @@ function generar_grafico_torta($color_grafico,$contenedores,$nombres,$valores,$t
                 legend: {
                     orient : 'vertical',
                     x : 'left',
-                    data:<?php echo(json_encode($nombres['name'])); ?>
+                    data:<?php echo(json_encode($nombres['nombres'])); ?>
                 },
                 toolbox: {
                     show : true,
