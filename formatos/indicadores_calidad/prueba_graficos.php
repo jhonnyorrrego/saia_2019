@@ -40,6 +40,7 @@ function generar_grafico_torta($configuracion_grafico){
        for($i=0;$i<count($configuracion_grafico['nombres']);$i++){
             $data_nombres[$i]['value']=$configuracion_grafico['valores'][$i];
             $data_nombres[$i]['name']=$configuracion_grafico['nombres'][$i];
+            
        }        
         $data_nombres=json_encode($data_nombres);
     ?>
@@ -111,10 +112,17 @@ function generar_grafico_barra($configuracion_grafico){
         
         //PARSEO NOMBRES Y VALORES
        $data_nombres=array();
-       for($i=0;$i<count($configuracion_grafico['nombres']);$i++){
+     /*  for($i=0;$i<count($configuracion_grafico['nombres']);$i++){
             $data_nombres[$i]['value']=$configuracion_grafico['valores'][$i];
             $data_nombres[$i]['name']=$configuracion_grafico['nombres'][$i];
+       }   */     
+
+       for($i=0;$i<count($configuracion_grafico['nombres']);$i++){
+            $data_nombres[$i]['value']=$nombres['nombres'][$i];
+            $data_nombres[$i]['textStyle']['color']=$nombres['colores'][$i];
+            $data_nombres[$i]['textStyle']['fontWeight']='bold';           
        }        
+       
         $data_nombres=json_encode($data_nombres);
     ?>
         <script type="text/javascript">
