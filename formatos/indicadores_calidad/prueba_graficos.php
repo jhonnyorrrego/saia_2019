@@ -72,7 +72,7 @@ function generar_grafico_torta($color_grafico,$contenedores,$nombres,$valores,$t
                             {value:310, name:'Opcion 2'},
                             {value:234, name:'Opcion 3'},
                             {value:135, name:'Opcion 4'},
-                            {value:1548, name:'Opcion 4'}
+                            {value:1548, name:'Opcion 5'}
                         ],
                         itemStyle: {
                             emphasis: {
