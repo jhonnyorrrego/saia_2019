@@ -344,10 +344,11 @@ if ($formulas["numcampos"]) {
                         $configuracion_grafico['contenedor']='contenedor_grafico_pc';
                         $configuracion_grafico['titulo_grafico']='PORCENTAJE DE CUMPLIMIENTO POR SEGUIMIENTO';
                         $configuracion_grafico['subtitulo_grafico']='';
-                        $configuracion_grafico['titulox']='';
+                        $configuracion_grafico['titulox']='Seguimiento';
+                        $configuracion_grafico['tituloy']='Cumplimiento';
                         $configuracion_grafico['imagen']=1;
                         $configuracion_grafico['color_saia']=1;
-                        $configuracion_grafico['tituloy']='';
+                        
                         $configuracion_grafico['nombres']=$dato3;
                         $configuracion_grafico['valores']=array($dato);
                         $configuracion_grafico['valores_nombre']=array('Valores');    
