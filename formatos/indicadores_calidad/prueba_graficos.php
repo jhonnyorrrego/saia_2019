@@ -16,9 +16,12 @@ echo( librerias_jquery('1.7') );
 ?> 
     <script src="build/dist/echarts.js"></script>
         <center>
-    <div id="contenedor_grafico_pc" style="width: 600px;height:400px;"></div>
+    <div id="contenedor_grafico_torta" style="width: 600px;height:400px;"></div>
     <br>
-    <div id="imagen_grafico_pc" style="width: 600px;height:400px;"></div>
+    <div id="contenedor_grafico_barra" style="width: 600px;height:400px;"></div>
+    <br>
+    <div id="contenedor_grafico_linea" style="width: 600px;height:400px;"></div>
+    <br>   
 <?php
         
 function generar_grafico_torta($configuracion_grafico){
@@ -321,7 +324,7 @@ function generar_grafico_linea($configuracion_grafico){
 	$configuracion_grafico['imagen']=1;
 	$configuracion_grafico['titulo_grafico']='Mi Grafico';
 	$configuracion_grafico['subtitulo_grafico']='Mi Subtitulo';
-	$configuracion_grafico['contenedor']='contenedor_grafico_pc';
+	$configuracion_grafico['contenedor']='contenedor_grafico_torta';
 	$configuracion_grafico['nombres']=array('titulo 5','titulo 10','titulo 15','titulo 20','titulo 25','titulo 30');
 	$configuracion_grafico['valores']=array(5,10,15,20,25,30);
     $configuracion_grafico['colores']=array('#00FF51','#D923D0','#00FF51','#D923D0','#00FF51','#D923D0');
@@ -332,7 +335,7 @@ function generar_grafico_linea($configuracion_grafico){
     
     // -----> BARRA
     $configuracion_grafico=array();
-    $configuracion_grafico['contenedor']='contenedor_grafico_pc';
+    $configuracion_grafico['contenedor']='contenedor_grafico_barra';
     $configuracion_grafico['titulo_grafico']='Mi Grafico';
     $configuracion_grafico['subtitulo_grafico']='Mi Subtitulo';
     $configuracion_grafico['titulox']='Eje X';
@@ -342,13 +345,13 @@ function generar_grafico_linea($configuracion_grafico){
     $configuracion_grafico['valores']=array(array(5,10,15,20,25,30));
     $configuracion_grafico['colores']=array('#00FF51','#D923D0','#00FF51','#D923D0','#00FF51','#D923D0');
     //$configuracion_grafico['color_grafico']='#B1B109';
-   // generar_grafico_barra($configuracion_grafico);
+    generar_grafico_barra($configuracion_grafico);
     
     
     
     // -----> LINEA
     $configuracion_grafico=array();
-    $configuracion_grafico['contenedor']='contenedor_grafico_pc';
+    $configuracion_grafico['contenedor']='contenedor_grafico_linea';
     $configuracion_grafico['titulo_grafico']='Mi Grafico';
     $configuracion_grafico['titulox']='Eje X';
     $configuracion_grafico['tituloy']='Eje Y';
@@ -358,7 +361,7 @@ function generar_grafico_linea($configuracion_grafico){
     $configuracion_grafico['valores']=array(array(5,10,15,20,25,30));
     $configuracion_grafico['colores']=array('#00FF51','#D923D0','#00FF51','#D923D0','#00FF51','#D923D0');
     //$configuracion_grafico['color_grafico']='#B1B109';
-    //generar_grafico_linea($configuracion_grafico);
+    generar_grafico_linea($configuracion_grafico);
     
     
     
