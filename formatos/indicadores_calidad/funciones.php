@@ -167,7 +167,7 @@ if ($formulas["numcampos"]) {
 			}	
 		}
 		echo "<tr>
-		        <td colspan=7  style='font-size:10pt;'><b>Resultado:</b><br>
+		        <td colspan=7  style='font-size:10pt;'><b>Resultado:</b><br/>
 		            <table class='phpmaker'>
         		      <tr>
         		        <td bgcolor='FF4000'  style='font-size:10pt;'>Deficiente</td>
