@@ -130,7 +130,7 @@ function generar_grafico_barra($configuracion_grafico){
             var option = {
                 title : {
                     text: '<?php echo($configuracion_grafico['titulo_grafico']); ?>',
-                    subtext: '纯属虚构'
+                    subtext: '<?php echo($configuracion_grafico['subtitulo_grafico']); ?>'
                 },
                 tooltip : {
                     trigger: 'axis'
