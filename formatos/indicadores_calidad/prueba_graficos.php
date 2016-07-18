@@ -59,7 +59,7 @@ function generar_grafico_torta($color_grafico,$contenedores,$nombres,$valores,$t
                 legend: {
                     orient: 'vertical',
                     left: 'left',
-                    data: ['Opcion 1','邮件营销','联盟广告','视频广告','搜索引擎']
+                    data: ['Opcion 1','Opcion 2','联盟广告','视频广告','搜索引擎']
                 },
                 series : [
                     {
