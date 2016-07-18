@@ -291,7 +291,6 @@ function generar_grafico_linea($configuracion_grafico){
                             {
                                 name:"Valor",
                                 type:"line",
-                               
                                 data:'.json_encode($configuracion_grafico['valores'][$x]).'
                             }  
                         ');
