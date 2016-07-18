@@ -49,7 +49,7 @@ function generar_grafico_torta($color_grafico,$contenedores,$nombres,$valores,$t
                 
                 title : {
                     text: 'GRAFICO TORTA',
-                    subtext: '纯属虚构',
+                    subtext: 'Subtitulo Grafico Torta',
                     x:'center'
                 },
                 tooltip : {
