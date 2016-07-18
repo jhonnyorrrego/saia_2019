@@ -115,6 +115,7 @@ function generar_grafico_torta($configuracion_grafico){
             
             myChart.setOption(option);
            
+           /*
            setTimeout(function(){ 
                var img = new Image();
                img.src = myChart.getDataURL();
@@ -123,7 +124,7 @@ function generar_grafico_torta($configuracion_grafico){
                
                
            }, 1500);
-           
+           */
             
            
             } //fin function ec
