@@ -110,13 +110,8 @@ function generar_grafico_barra($configuracion_grafico){
             $generar_imagen='renderAsImage:true,';
         }
         
-        //PARSEO NOMBRES Y VALORES
+        //PARSEO NOMBRES & COLORES
        $data_nombres=array();
-     /*  for($i=0;$i<count($configuracion_grafico['nombres']);$i++){
-            $data_nombres[$i]['value']=$configuracion_grafico['valores'][$i];
-            $data_nombres[$i]['name']=$configuracion_grafico['nombres'][$i];
-       }   */     
-
        for($i=0;$i<count($configuracion_grafico['nombres']);$i++){
             $data_nombres[$i]['value']=$configuracion_grafico['nombres'][$i];
             $data_nombres[$i]['textStyle']['color']=$configuracion_grafico['colores'][$i];
