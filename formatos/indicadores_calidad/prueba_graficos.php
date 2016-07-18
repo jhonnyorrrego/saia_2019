@@ -40,7 +40,15 @@ function generar_grafico_torta($color_grafico,$contenedores,$nombres,$valores,$t
        // echo($titulos);die();
     ?>
         <script type="text/javascript">
- 		    var myChart = echarts.init(document.getElementById('<?php echo($contenedores[0]); ?>'));
+        
+            require.config({
+              paths: {
+                 echarts: 'build/dist'
+              }
+            });
+            require(['echarts','echarts/chart/bar'],// require the specific chart type        
+        
+ 		    var myChart = ec.init(document.getElementById('<?php echo($contenedores[0]); ?>'));
 
             var option = {
                 
