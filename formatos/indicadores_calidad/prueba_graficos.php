@@ -83,7 +83,7 @@ function generar_grafico_torta($configuracion_grafico){
                     show : true,
                     feature : {
                         //mark : {show: true},
-                        dataView : {show: true, readOnly: false},
+                        //dataView : {show: true, readOnly: false},
                         magicType : {
                             show: true, 
                             type: ['pie', 'funnel'],
