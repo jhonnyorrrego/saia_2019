@@ -201,7 +201,7 @@ if ($formulas["numcampos"]) {
 					case 'torta':
                         // -----> TORTA
                     	$configuracion_grafico=array();
-                    	$configuracion_grafico['imagen']=0;
+                    	$configuracion_grafico['imagen']=1;
                     	$configuracion_grafico['titulo_grafico']='PORCENTAJE DE CUMPLIMIENTO POR SEGUIMIENTO';
                     	$configuracion_grafico['subtitulo_grafico']='';
                     	$configuracion_grafico['contenedor']='contenedor_grafico_pc';
@@ -212,7 +212,7 @@ if ($formulas["numcampos"]) {
 
                         // -----> TORTA
                     	$configuracion_grafico=array();
-                    	$configuracion_grafico['imagen']=0;
+                    	$configuracion_grafico['imagen']=1;
                     	$configuracion_grafico['titulo_grafico']='RESULTADO POR SEGUIMIENTO';
                     	$configuracion_grafico['subtitulo_grafico']='';
                     	$configuracion_grafico['contenedor']='contenedor_grafico_rs';
