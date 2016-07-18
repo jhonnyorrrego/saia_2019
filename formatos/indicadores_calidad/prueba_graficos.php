@@ -108,7 +108,7 @@ function generar_grafico_torta($color_grafico,$contenedores,$nombres,$valores,$t
            
             var img = new Image();
             img.src = myChart.getDataURL({
-                img.src = myChart.getConnectedDataURL({ 
+                
                 backgroundColor: '#fff'
             });
            
