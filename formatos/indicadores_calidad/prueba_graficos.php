@@ -21,7 +21,7 @@ echo( librerias_jquery('1.7') );
         <center>
     <div id="contenedor_grafico_pc" style="width: 600px;height:400px; "></div>
     <br>
-    <div id="imagen_grafico_pc"></div>
+    <div id="imagen_grafico_pc" style="width: 600px;height:400px; "></div>
 <?php
         
 function generar_grafico_torta($color_grafico,$contenedores,$nombres,$valores,$titulo_grafico='',$titulox='',$tituloy=''){
