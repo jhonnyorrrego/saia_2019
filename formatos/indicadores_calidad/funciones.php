@@ -343,8 +343,6 @@ if ($formulas["numcampos"]) {
                     	$configuracion_grafico['valores']=$dato4;
                         $configuracion_grafico['colores']=$array_colores;
                         generar_grafico_torta($configuracion_grafico);		
-
-						
                         
 						break;
 					case 'barras':
