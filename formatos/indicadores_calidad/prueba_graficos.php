@@ -26,7 +26,7 @@ function generar_grafico_torta($color_grafico,$contenedores,$nombres,$valores,$t
         $valores=json_encode($valores);
         
         
-       // print_r(json_encode($nombres));die();   
+        //print_r(json_encode($nombres['nombres']));die();   
         
         if($color_grafico==''){
             $color_saia=busca_filtro_tabla("","configuracion","nombre='color_encabezado_list'","",$conn);  
@@ -34,14 +34,14 @@ function generar_grafico_torta($color_grafico,$contenedores,$nombres,$valores,$t
         }
         
        $data_nombres=array();
-       for($i=0;$i<count($nombres['name']);$i++){
+       for($i=0;$i<count($nombres['nombres']);$i++){
             $data_nombres[$i]['name']=$nombres['name'][$i];
             $data_nombres[$i]['value']=$nombres['value'][$i];
             //$data_nombres[$i]['textStyle']['color']=$nombres['colores'][$i];
             //$data_nombres[$i]['textStyle']['fontWeight']='bold';           
        }        
         $data_nombres=json_encode($data_nombres);
-        //print_r($data_nombres);die();   
+       // echo($data_nombres));die();   
        // echo($titulos);die();
     ?>
         <script type="text/javascript">
