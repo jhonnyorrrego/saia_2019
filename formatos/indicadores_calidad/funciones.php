@@ -346,7 +346,7 @@ if ($formulas["numcampos"]) {
                         $configuracion_grafico['subtitulo_grafico']='';
                         $configuracion_grafico['titulox']='';
                         $configuracion_grafico['imagen']=1;
-                        //$configuracion_grafico['color_saia']=1;
+                        $configuracion_grafico['color_saia']=1;
                         $configuracion_grafico['tituloy']='';
                         $configuracion_grafico['nombres']=$dato3;
                         $configuracion_grafico['valores']=array($dato);
