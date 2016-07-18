@@ -299,7 +299,7 @@ function generar_grafico_linea($configuracion_grafico){
                         echo('
                             {
                                 name:"'.$configuracion_grafico['valores_nombre'][$x].'",
-                                showLegendSymbol:true,
+                                showLegendSymbol:false,
                                 type:"line",
                                 data:'.json_encode($configuracion_grafico['valores'][$x]).'
                             }  
