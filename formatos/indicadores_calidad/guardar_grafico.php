@@ -26,7 +26,7 @@ if($_REQUEST['iddoc']){
 		$decode=explode(",",$datoimg[1]);
 		$datos=base64_decode($decode[1]);
 
-		$grafico_total_evaluacion="total_evaluacion".rand().".png";
+		$grafico_total_evaluacion="total_evaluacion.png";
 		$archivo = fopen($ruta_grafico.$grafico_total_evaluacion, "w+");	 //crea el archivo
 		fclose($archivo);
 		file_put_contents($ruta_grafico.$grafico_total_evaluacion, $datos);
@@ -41,7 +41,7 @@ if($_REQUEST['iddoc']){
 		$decode=explode(",",$datoimg[1]);
 		$datos=base64_decode($decode[1]);
 		
-		$grafico_competencias="competencias".rand().".png";
+		$grafico_competencias="competencias.png";
 		$archivo = fopen($ruta_grafico.$grafico_competencias, "w+");	 //crea el archivo
 		fclose($archivo);
 		file_put_contents($ruta_grafico.$grafico_competencias, $datos);
