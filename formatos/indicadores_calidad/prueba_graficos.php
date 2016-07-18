@@ -141,9 +141,9 @@ function generar_grafico_torta($color_grafico,$contenedores,$nombres,$valores,$t
 	            
 			case 'barras':
 			    $valores=$dato;
-			    $nombres['name']=$dato3;  
+			    $nombres['nombres']=$dato3;  
 			    $nombres['colores']=$colores;
-			    $nombres['value']=$dato;
+			    $nombres['valores']=$dato;
 			    break;
 		}
 	   generar_grafico_torta('',$contenedores,$nombres,$valores,$titulo_grafico,$titulox,$tituloy);
