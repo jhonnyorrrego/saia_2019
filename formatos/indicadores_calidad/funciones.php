@@ -388,7 +388,22 @@ if ($formulas["numcampos"]) {
                         $configuracion_grafico['valores_nombre']=array('Valores');
                         $configuracion_grafico['color_saia']=1;
                         $configuracion_grafico['colores']=$array_colores;
-                        generar_grafico_linea($configuracion_grafico);					    
+                        generar_grafico_linea($configuracion_grafico);		
+                        
+                        // -----> LINEA
+                        $configuracion_grafico=array();
+                        $configuracion_grafico['contenedor']='contenedor_grafico_rs';
+                        $configuracion_grafico['titulo_grafico']='RESULTADO POR SEGUIMIENTO';
+                        $configuracion_grafico['subtitulo_grafico']='';    
+                        $configuracion_grafico['titulox']='Seguimiento';
+                        $configuracion_grafico['tituloy']='Resultado';
+                        $configuracion_grafico['imagen']=1;
+                        $configuracion_grafico['nombres']=$dato5;
+                        $configuracion_grafico['valores']=array($dato4);
+                        $configuracion_grafico['valores_nombre']=array('Valores');
+                        $configuracion_grafico['color_saia']=1;
+                        $configuracion_grafico['colores']=$array_colores;
+                        generar_grafico_linea($configuracion_grafico);	                        
 
 						break;
 				}
