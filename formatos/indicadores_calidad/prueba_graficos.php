@@ -144,7 +144,12 @@ function generar_grafico_barra($configuracion_grafico){
                     subtext: '<?php echo($configuracion_grafico['subtitulo_grafico']); ?>',
                     x:'center'
                 },
+                
                 <?php echo($configuracion_grafico['color_saia']); ?>
+                legend: {
+                    data:<?php echo(json_encode($configuracion_grafico['valores_nombre']) ); ?>,
+                    x:'right'
+                }, 
                 tooltip : {
                     trigger: 'axis',
                     axisPointer : {            
@@ -183,7 +188,7 @@ function generar_grafico_barra($configuracion_grafico){
                     for($x=0;$x<count($configuracion_grafico['valores']);$x++){
                         echo('
                             {
-                                name:"Valor",
+                                name:"'.$configuracion_grafico['valores_nombre'][$x].'",
                                 type:"bar",
                                 barWidth: 50,
                                 data:'.json_encode($configuracion_grafico['valores'][$x]).'
