@@ -21,12 +21,9 @@ echo( librerias_jquery('1.7') );
     <div id="imagen_grafico_pc" style="width: 600px;height:400px;"></div>
 <?php
         
-function generar_grafico_torta($color_grafico,$contenedores,$nombres,$valores,$titulo_grafico='',$titulox='',$tituloy='',$configuracion_grafico){
+function generar_grafico_torta($configuracion_grafico){
     global $conn;
-        $valores=json_encode($valores);
-        
-        
-        //print_r(json_encode($nombres['nombres']));die();   
+
         
         if($color_grafico==''){
             $color_saia=busca_filtro_tabla("","configuracion","nombre='color_encabezado_list'","",$conn);  
@@ -155,7 +152,7 @@ function generar_grafico_torta($color_grafico,$contenedores,$nombres,$valores,$t
 			    $nombres['valores']=$dato;
 			    break;
 		}
-	   generar_grafico_torta('',$contenedores,$nombres,$valores,$titulo_grafico,$titulox,$tituloy,$configuracion_grafico);
+	   generar_grafico_torta($configuracion_grafico);
 ?>
 
 
