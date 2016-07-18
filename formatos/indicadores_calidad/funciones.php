@@ -320,24 +320,13 @@ if ($formulas["numcampos"]) {
 			if ($dato[0] != 0) {
 				switch(trim($tipo_grafico[0]["tipo_grafico"])){
 					case 'torta':
-                        
-						$DataSet -> AddPoint($dato, "Serie1");
-						$DataSet -> AddPoint($dato2, "Serie2");
-						$DataSet -> AddAllSeries();
-						$DataSet -> SetAbsciseLabelSerie("Serie2");
-						$Test = new pChart(600, 230);
-						$Test -> drawFilledRoundedRectangle(7, 7, 600, 223, 5, 240, 240, 240);
-						$Test -> drawRoundedRectangle(5, 5, 600, 225, 5, 230, 230, 230);
-						$Test -> setFontProperties("pchart/Fonts/tahoma.ttf", 8);
-						$Test -> drawPieGraph($DataSet -> GetData(), $DataSet -> GetDataDescription(), 150, 90, 110, PIE_PERCENTAGE, TRUE, 50, 20, 5);
-						$Test -> drawPieLegend(310, 30, $DataSet -> GetData(), $DataSet -> GetDataDescription(), 250, 250, 250);
 						
                         // -----> TORTA
                     	$configuracion_grafico=array();
-                    	$configuracion_grafico['imagen']=0;
-                    	$configuracion_grafico['titulo_grafico']='Mi Grafico';
-                    	$configuracion_grafico['subtitulo_grafico']='Mi Subtitulo';
-                    	$configuracion_grafico['contenedor']='contenedor_grafico_torta';
+                    	$configuracion_grafico['imagen']=1;
+                    	$configuracion_grafico['titulo_grafico']='PORCENTAJE DE CUMPLIMIENTO POR SEGUIMIENTO';
+                    	$configuracion_grafico['subtitulo_grafico']='';
+                    	$configuracion_grafico['contenedor']='contenedor_grafico_pc';
                     	$configuracion_grafico['nombres']=$dato2;
                     	$configuracion_grafico['valores']=$dato;
                         $configuracion_grafico['colores']=$array_colores;
