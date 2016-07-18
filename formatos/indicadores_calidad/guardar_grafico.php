@@ -52,8 +52,10 @@ if($_REQUEST['iddoc']){
 	}
 	
 }
-if($datos_img2==1 && $datos_img1==1){
+if($datos_img1==1){
 	echo 1;
+}else if($datos_img2==1){
+    echo 1;
 }else{
 	echo 2;
 }
