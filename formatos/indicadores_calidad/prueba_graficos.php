@@ -52,7 +52,7 @@ function generar_grafico_torta($color_grafico,$contenedores,$nombres,$valores,$t
             });
             require(['echarts','echarts/chart/pie'],// require the specific chart type        
             function (ec) {
- 		    var myChart = ec.init(document.getElementById('<?php echo($contenedores[0]); ?>'));
+ 		    var myChart = ec.init(document.getElementById('<?php echo($configuracion_grafico['contenedores'][0]); ?>'));
 
             var option = {
                // renderAsImage:true,
