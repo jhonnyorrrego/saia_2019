@@ -183,7 +183,7 @@ function generar_grafico_barra($configuracion_grafico){
                     for($x=0;$x<count($configuracion_grafico['valores']);$x++){
                         echo('
                             {
-                                name:"Valores",
+                                name:"Valor",
                                 type:"bar",
                                 barWidth: 50,
                                 data:'.json_encode($configuracion_grafico['valores'][$x]).'
