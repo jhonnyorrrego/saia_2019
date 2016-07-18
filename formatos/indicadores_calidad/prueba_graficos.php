@@ -215,7 +215,7 @@ function generar_grafico_barra($configuracion_grafico){
 
 
 
-    /*
+    
     // -----> TORTA
 	$configuracion_grafico=array();
 	$configuracion_grafico['imagen']=1;
@@ -227,9 +227,9 @@ function generar_grafico_barra($configuracion_grafico){
     $configuracion_grafico['colores']=array('#00FF51','#D923D0','#00FF51','#D923D0','#00FF51','#D923D0');
     generar_grafico_torta($configuracion_grafico);
     
-    */
+    
 
-
+    /*
     // -----> BARRA
     $configuracion_grafico=array();
     $configuracion_grafico['contenedor']='contenedor_grafico_pc';
@@ -243,7 +243,7 @@ function generar_grafico_barra($configuracion_grafico){
     $configuracion_grafico['colores']=array('#00FF51','#D923D0','#00FF51','#D923D0','#00FF51','#D923D0');
     //$configuracion_grafico['color_grafico']='#B1B109';
     generar_grafico_barra($configuracion_grafico);
-    
+    */
     
     
     
