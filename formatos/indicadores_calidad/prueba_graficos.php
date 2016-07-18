@@ -116,9 +116,6 @@ function generar_grafico_torta($color_grafico,$contenedores,$nombres,$valores,$t
 			    $nombres['colores']=$colores;
 			    break;
 		}
-
-	   // generar_grafico_barra($color,$idcontenedor,$nombres,$valores,$titulo_grafico,$titulox,$tituloy);
-	  // generar_grafico_torta($color,$idcontenedor,$nombres,$valores,$titulo_grafico,$titulox,$tituloy);
 	   generar_grafico_torta('',$contenedores,$nombres,$valores,$titulo_grafico,$titulox,$tituloy);
 ?>
 
