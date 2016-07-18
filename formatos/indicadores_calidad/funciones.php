@@ -321,8 +321,28 @@ if ($formulas["numcampos"]) {
 				switch(trim($tipo_grafico[0]["tipo_grafico"])){
 					case 'torta':
                         
-                        
-                        
+						$DataSet -> AddPoint($dato, "Serie1");
+						$DataSet -> AddPoint($dato2, "Serie2");
+						$DataSet -> AddAllSeries();
+						$DataSet -> SetAbsciseLabelSerie("Serie2");
+						$Test = new pChart(600, 230);
+						$Test -> drawFilledRoundedRectangle(7, 7, 600, 223, 5, 240, 240, 240);
+						$Test -> drawRoundedRectangle(5, 5, 600, 225, 5, 230, 230, 230);
+						$Test -> setFontProperties("pchart/Fonts/tahoma.ttf", 8);
+						$Test -> drawPieGraph($DataSet -> GetData(), $DataSet -> GetDataDescription(), 150, 90, 110, PIE_PERCENTAGE, TRUE, 50, 20, 5);
+						$Test -> drawPieLegend(310, 30, $DataSet -> GetData(), $DataSet -> GetDataDescription(), 250, 250, 250);
+						
+                        // -----> TORTA
+                    	$configuracion_grafico=array();
+                    	$configuracion_grafico['imagen']=0;
+                    	$configuracion_grafico['titulo_grafico']='Mi Grafico';
+                    	$configuracion_grafico['subtitulo_grafico']='Mi Subtitulo';
+                    	$configuracion_grafico['contenedor']='contenedor_grafico_torta';
+                    	$configuracion_grafico['nombres']=$dato2;
+                    	$configuracion_grafico['valores']=$dato;
+                        $configuracion_grafico['colores']=$array_colores;
+                        generar_grafico_torta($configuracion_grafico);						
+						
                         
 						break;
 					case 'barras':
@@ -502,7 +522,78 @@ function generar_grafico_barra($configuracion_grafico){
 }
 
 
+function generar_grafico_torta($configuracion_grafico){
+    global $conn;
 
+        if($color_grafico==''){
+            $color_saia=busca_filtro_tabla("","configuracion","nombre='color_encabezado_list'","",$conn);  
+            $color_grafico=$color_saia[0]['valor'];
+        }
+        
+        //PARSEO renderAsImage
+        $generar_imagen='';
+        if($configuracion_grafico['imagen']){
+            $generar_imagen='renderAsImage:true,';
+        }
+        
+        //PARSEO NOMBRES Y VALORES
+       $data_nombres=array();
+       for($i=0;$i<count($configuracion_grafico['nombres']);$i++){
+            $data_nombres[$i]['value']=$configuracion_grafico['valores'][$i];
+            $data_nombres[$i]['name']=$configuracion_grafico['nombres'][$i];
+            
+       }        
+        $data_nombres=json_encode($data_nombres);
+    ?>
+        <script type="text/javascript">
+        
+            require.config({
+              paths: {
+                 echarts: 'build/dist'
+              }
+            });
+            require(['echarts','echarts/chart/pie'],// require the specific chart type        
+            function (ec) {
+ 		    var myChart = ec.init(document.getElementById('<?php echo($configuracion_grafico['contenedor']); ?>'));
+
+            var option = {
+                <?php echo($generar_imagen); ?>
+                title : {
+                    text: '<?php echo($configuracion_grafico['titulo_grafico']); ?>',
+                    subtext: '<?php echo($configuracion_grafico['subtitulo_grafico']); ?>',
+                    x:'center'
+                },
+                tooltip : {
+                    trigger: 'item',
+                    formatter: "{a} <br/>{b} : {c} ({d}%)"
+                },
+                legend: {
+                    orient : 'vertical',
+                    x : 'left',
+                    data:<?php echo(json_encode($configuracion_grafico['nombres'])); ?>
+                },
+                toolbox: {
+                    show : true,
+                },
+                calculable : true,
+                series : [
+                    {
+                        name:'Valores',
+                        type:'pie',
+                        radius : '55%',
+                        center: ['50%', '60%'],
+                        data:<?php echo($data_nombres); ?>
+                    }
+                ]
+            };
+                    
+            myChart.setOption(option);
+            } //fin function ec
+            
+            );
+        </script>
+    <?php
+}
 
 
 
