@@ -406,7 +406,7 @@ if ($formulas["numcampos"]) {
                         $configuracion_grafico['nombres']=$dato3;
                         $configuracion_grafico['valores']=array($dato);
                         $configuracion_grafico['valores_nombre']=array('Valores');
-                        //$configuracion_grafico['color_saia']=1;
+                        $configuracion_grafico['color_saia']=1;
                         $configuracion_grafico['colores']=$array_colores;
                         generar_grafico_linea($configuracion_grafico);					    
 
