@@ -31,7 +31,7 @@ function generar_grafico_torta($configuracion_grafico){
         }
         
        $data_nombres=array();
-       for($i=0;$i<count($nombres['nombres']);$i++){
+       for($i=0;$i<count($configuracion_grafico['nombres']);$i++){
             $data_nombres[$i]['value']=$configuracion_grafico['valores'][$i];
             $data_nombres[$i]['name']=$configuracion_grafico['nombres'][$i];
            // $data_nombres[$i]['textStyle']['color']=$nombres['colores'][$i];
