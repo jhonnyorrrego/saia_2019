@@ -105,14 +105,17 @@ function generar_grafico_torta($color_grafico,$contenedores,$nombres,$valores,$t
                     
             
             myChart.setOption(option);
-           
+            alert( myChart.getImage() );
             var img = new Image();
+            
+            /*
             img.src = myChart.getImage();
            
             img.id = "img_<?php echo($contenedores[1]); ?>";
             document.getElementById('<?php echo($contenedores[1]); ?>').appendChild(img);
            
             } //fin function ec
+            */
             );
         </script>
     <?php
