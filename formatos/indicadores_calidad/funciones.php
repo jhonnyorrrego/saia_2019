@@ -492,4 +492,16 @@ echo('
     
     
 }
+function listado_directorio($directorio) {
+	$html=array();
+	if(chdir($directorio)){
+		foreach (scandir($directorio,1) as $elemento){
+			if(file_exists($elemento) && $elemento!="." && $elemento!=".."){
+				$html[].=$elemento;
+			}
+		}
+	}
+	return (implode(",",$html));
+}
+
 ?>
