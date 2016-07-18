@@ -18,16 +18,17 @@ if($_REQUEST['iddoc']){
 	
 	switch(@$_REQUEST['guardar_imagen']){
     case 1:
-        $cadena='img:$("#img_'.$contenedor.'").attr("src")';
+        $archivo_eliminar='total_evaluacion.png';
         break;
     case 2:
-        $cadena='img2:$("#img_'.$contenedor.'").attr("src")';
+        $archivo_eliminar='competencias.png';
         break;
     }
 	
 	
-	if(file_exists($ruta_grafico)){
-		borrar_archivos_graficos($ruta_grafico,0);
+	if(file_exists($ruta_grafico.$archivo_eliminar)){
+		//borrar_archivos_graficos($ruta_grafico,0);
+		unlink($ruta_grafico.$archivo_eliminar);
 	}
 	
 	
