@@ -76,8 +76,8 @@ function generar_grafico_torta($color_grafico,$contenedores,$nombres,$valores,$t
                         ],
                         itemStyle: {
                             /*emphasis: {
-                                shadowBlur: 10,
-                                shadowOffsetX: 0,
+                                //shadowBlur: 10,
+                                //shadowOffsetX: 0,
                                 shadowColor: 'rgba(0, 0, 0, 0.5)'
                             }*/
                         }
