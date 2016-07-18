@@ -473,7 +473,7 @@ echo('
             $.ajax({
                 type:"POST",
                 dataType: "html",
-                url: "guardar grafico.php",
+                url: "guardar_grafico.php",
                 data: {
                     iddoc:'.$iddoc.',
                     guardar_imagen:'.$guardar.',
