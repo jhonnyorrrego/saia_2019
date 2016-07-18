@@ -247,6 +247,7 @@ function generar_grafico_linea($configuracion_grafico){
  		    var myChart = ec.init(document.getElementById('<?php echo($configuracion_grafico['contenedor']); ?>'));
 
             var option = {
+                <?php echo($generar_imagen); ?>
                 title : {
                     text: '<?php echo($configuracion_grafico['titulo_grafico']); ?>',
                     subtext: '<?php echo($configuracion_grafico['subtitulo_grafico']); ?>',
