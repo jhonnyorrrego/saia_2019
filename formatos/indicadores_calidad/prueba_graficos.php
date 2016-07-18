@@ -215,7 +215,7 @@ function generar_grafico_linea($configuracion_grafico){
     global $conn;
     
     
-    echo( json_encode($configuracion_grafico['valores_nombre']) );die();
+    echo(json_encode($configuracion_grafico['valores_nombre']) );die();
     
 
         if($configuracion_grafico['color_saia']){
@@ -262,7 +262,7 @@ function generar_grafico_linea($configuracion_grafico){
                     x:'center'
                 },
                 legend: {
-                    data:['蒸发量','降水量'],
+                    data:<?php echo(json_encode($configuracion_grafico['valores_nombre']) ); ?>,
                     x:'right'
                 },               
                 tooltip : {
