@@ -46,11 +46,6 @@ function generar_grafico_torta($configuracion_grafico){
            // $data_nombres[$i]['textStyle']['fontWeight']='bold';           
        }        
         $data_nombres=json_encode($data_nombres);
-        
-        
-        
-        
-       // echo($titulos);die();
     ?>
         <script type="text/javascript">
         
@@ -94,11 +89,7 @@ function generar_grafico_torta($configuracion_grafico){
                 ]
             };
                     
-            
             myChart.setOption(option);
-           
-            
-           
             } //fin function ec
             
             );
