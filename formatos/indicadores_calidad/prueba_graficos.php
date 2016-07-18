@@ -24,7 +24,7 @@ echo( librerias_jquery('1.7') );
     <div id="imagen_grafico"></div>
 <?php
         
-function generar_grafico_barra($color_grafico,$contenedores,$nombres,$valores,$titulo_grafico='',$titulox='',$tituloy=''){
+function generar_grafico_torta($color_grafico,$contenedores,$nombres,$valores,$titulo_grafico='',$titulox='',$tituloy=''){
     global $conn;
         $valores=json_encode($valores);
         
