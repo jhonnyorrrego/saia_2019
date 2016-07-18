@@ -88,7 +88,8 @@ function generar_grafico_torta($color_grafico,$contenedores,$nombres,$valores,$t
             myChart.setOption(option);
             
             var img = new Image();
-            img.src = myChart.getDataURL({
+            //img.src = myChart.getDataURL({
+            img.src = myChart.getConnectedDataURL({
                 backgroundColor: '#fff'
             });
             img.id = "img_<?php echo($contenedores[1]); ?>";
