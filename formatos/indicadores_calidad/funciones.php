@@ -311,7 +311,7 @@ if ($formulas["numcampos"]) {
 			
 			echo('
                 <tr><td colspan="5">
-                    <script src="echarts.min.js"></script>
+                     <script src="build/dist/echarts.js"></script>
                     <div id="contenedor_grafico_pc" style="width: 650px;height:240px;display:none;"></div>
                     <div id="imagen_grafico_pc" style="width: 650px;height:240px;"></div>
                     
