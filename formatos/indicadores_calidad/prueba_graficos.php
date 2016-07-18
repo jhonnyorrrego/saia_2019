@@ -41,7 +41,7 @@ function generar_grafico_torta($color_grafico,$contenedores,$nombres,$valores,$t
             //$data_nombres[$i]['textStyle']['fontWeight']='bold';           
        }        
         $data_nombres=json_encode($data_nombres);
-        
+      //  print_r($data_nombres);die();   
        // echo($titulos);die();
     ?>
         <script type="text/javascript">
@@ -99,7 +99,7 @@ function generar_grafico_torta($color_grafico,$contenedores,$nombres,$valores,$t
                         type:'pie',
                         radius : '55%',
                         center: ['50%', '60%'],
-                        data:<?php echo($data_nombres); ?>
+                        data:<?php echo(json_encode($nombres['nombres'])); ?>
                     }
                 ]
             };
