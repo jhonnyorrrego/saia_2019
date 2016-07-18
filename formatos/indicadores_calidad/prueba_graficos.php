@@ -276,8 +276,7 @@ function generar_grafico_linea($configuracion_grafico){
                           color: '#000000',
                           fontWeight:'bold'
                         },
-                        nameLocation:'end',
-                                     
+                        nameLocation:'end',        
                         name:'<?php echo($configuracion_grafico['tituloy']); ?>',                         
                     }
                 ],
