@@ -344,7 +344,7 @@ if ($formulas["numcampos"]) {
 
 						break;
 				}
-			}
+			} //fin if dato !=0
 			
 			
 			}else{ //fin if tipo 5
