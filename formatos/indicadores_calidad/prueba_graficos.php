@@ -278,11 +278,6 @@ function generar_grafico_linea($configuracion_grafico){
                         data:[11, 11, 15, 13, 12, 13, 10],
 
                     },
-                    {
-                        name:'最低气温',
-                        type:'line',
-                        data:[1, -2, 2, 5, 3, 2, 0],
-                    }
                 ]
             };
                     
