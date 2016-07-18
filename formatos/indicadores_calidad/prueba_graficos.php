@@ -57,7 +57,7 @@ function generar_grafico_torta($color_grafico,$contenedores,$nombres,$valores,$t
             var option = {
   
                 title : {
-                    text: '某站点用户访问来源',
+                    text: '<?php echo($titulo_grafico); ?>',
                     subtext: '纯属虚构',
                     x:'center'
                 },
