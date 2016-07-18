@@ -177,7 +177,7 @@ function generar_grafico_barra($configuracion_grafico){
                             ]
                         }
                     },
-                    {
+                   /* {
                         name:'降水量',
                         type:'bar',
                         data:[2.6, 5.9, 9.0, 26.4, 28.7, 70.7, 175.6, 182.2, 48.7, 18.8, 6.0, 2.3],
@@ -192,7 +192,7 @@ function generar_grafico_barra($configuracion_grafico){
                                 {type : 'average', name : '平均值'}
                             ]
                         }
-                    }
+                    }*/
                 ]
             };
                     
