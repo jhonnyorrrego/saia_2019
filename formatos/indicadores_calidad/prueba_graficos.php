@@ -191,7 +191,7 @@ function generar_grafico_barra($configuracion_grafico){
                                 name:"Valores",
                                 type:"bar",
                                 barWidth: 50,
-                                data:'.$configuracion_grafico['valores'].'
+                                data:'.$configuracion_grafico['valores'][$x].'
                             }  
                         ');
                         if(($x+1)!=count($configuracion_grafico['valores'])){
@@ -201,13 +201,13 @@ function generar_grafico_barra($configuracion_grafico){
                     
                     ?>
                     
-                    
+                    /*
                     {
                         name:'Valores',
                         type:'bar',
                         barWidth: 50,
                         data:<?php echo(json_encode($configuracion_grafico['valores'])); ?>
-                    },
+                    },*/
                     
                     
                     
