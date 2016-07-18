@@ -84,7 +84,7 @@ function generar_grafico_torta($configuracion_grafico){
                     feature : {
                         //mark : {show: true},
                         //dataView : {show: true, readOnly: false},
-                        magicType : {
+                       /* magicType : {
                             show: true, 
                             type: ['pie', 'funnel'],
                             option: {
@@ -95,7 +95,7 @@ function generar_grafico_torta($configuracion_grafico){
                                     max: 1548
                                 }
                             }
-                        },
+                        },*/
                        // restore : {show: true},
                         saveAsImage : {show: true}
                     }
