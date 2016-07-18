@@ -30,6 +30,14 @@ function generar_grafico_torta($configuracion_grafico){
             $color_grafico=$color_saia[0]['valor'];
         }
         
+        //PARSEO renderAsImage
+        $generar_imagen='';
+        if($configuracion_grafico['imagen']){
+            $generar_imagen='';
+        }
+        
+        
+        //PARSEO NOMBRES Y VALORES
        $data_nombres=array();
        for($i=0;$i<count($configuracion_grafico['nombres']);$i++){
             $data_nombres[$i]['value']=$configuracion_grafico['valores'][$i];
@@ -38,6 +46,10 @@ function generar_grafico_torta($configuracion_grafico){
            // $data_nombres[$i]['textStyle']['fontWeight']='bold';           
        }        
         $data_nombres=json_encode($data_nombres);
+        
+        
+        
+        
        // echo($titulos);die();
     ?>
         <script type="text/javascript">
