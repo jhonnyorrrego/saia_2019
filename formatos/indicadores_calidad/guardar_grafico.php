@@ -13,9 +13,25 @@ $datos_img1=0;
 $datos_img2=0;
 if($_REQUEST['iddoc']){
 	$ruta_grafico=$ruta_db_superior."temporal_".usuario_actual("login")."/".$_REQUEST['iddoc']."/";
+	
+	
+	
+	switch(@$_REQUEST['guardar_imagen']){
+    case 1:
+        $cadena='img:$("#img_'.$contenedor.'").attr("src")';
+        break;
+    case 2:
+        $cadena='img2:$("#img_'.$contenedor.'").attr("src")';
+        break;
+    }
+	
+	
 	if(file_exists($ruta_grafico)){
 		borrar_archivos_graficos($ruta_grafico,0);
 	}
+	
+	
+	
 	if(!file_exists($ruta_grafico)){
 		crear_destino($ruta_grafico);
 	}
