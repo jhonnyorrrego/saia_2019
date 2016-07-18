@@ -19,6 +19,8 @@ if($_REQUEST['iddoc']){
 	if(!file_exists($ruta_grafico)){
 		crear_destino($ruta_grafico);
 	}
+	
+	if(@$_REQUEST['guardar_imagen']==1){
 	if($_REQUEST['img']){
 		$datoimg=explode(";",$_REQUEST['img']);
 		$decode=explode(",",$datoimg[1]);
@@ -32,6 +34,8 @@ if($_REQUEST['iddoc']){
 			$datos_img1=1;
 		}
 	}
+	}
+	if(@$_REQUEST['guardar_imagen']==2){	
 	if($_REQUEST['img2']){
 		$datoimg=explode(";",$_REQUEST['img2']);
 		$decode=explode(",",$datoimg[1]);
@@ -45,6 +49,8 @@ if($_REQUEST['iddoc']){
 			$datos_img2=1;
 		}
 	}
+	}
+	
 }
 if($datos_img2==1 && $datos_img1==1){
 	echo 1;
