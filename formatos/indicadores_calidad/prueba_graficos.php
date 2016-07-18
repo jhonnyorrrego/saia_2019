@@ -365,7 +365,7 @@ function generar_grafico_linea($configuracion_grafico){
     
     
     // -----> LINEA
-    
+    $configuracion_grafico['contenedor']='contenedor_grafico_pc';
     generar_grafico_linea($configuracion_grafico);
     
     
