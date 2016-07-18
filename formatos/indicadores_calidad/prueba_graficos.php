@@ -256,7 +256,7 @@ function generar_grafico_linea($configuracion_grafico){
                     subtext: '<?php echo($configuracion_grafico['subtitulo_grafico']); ?>',
                     x:'center'
                 },
-               // color: ['<?php echo($configuracion_grafico['color_grafico']); ?>'],
+                color: ['<?php echo($configuracion_grafico['color_grafico']); ?>'],
                 tooltip : {
                     trigger: 'axis'
                 },
