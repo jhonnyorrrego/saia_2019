@@ -124,7 +124,7 @@ print_r('entra full');
 
 ?>
 <script>
-$(document).load(function(){
+$(document).ready(function(){
     alert( $('#prueba_id').attr('src') );
     
 });    
