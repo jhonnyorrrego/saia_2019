@@ -82,7 +82,7 @@ function generar_grafico_torta($configuracion_grafico){
                 toolbox: {
                     show : true,
                     feature : {
-                        mark : {show: true},
+                       // mark : {show: true},
                         dataView : {show: true, readOnly: false},
                         magicType : {
                             show: true, 
