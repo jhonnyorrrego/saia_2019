@@ -162,7 +162,7 @@ function generar_grafico_barra($configuracion_grafico){
                           color: '#000000',
                           fontWeight:'bold'
                         },
-                        nameLocation:'start',
+                        nameLocation:'end',
                                      
                         name:'<?php echo($configuracion_grafico['titulox']); ?>',                        
                         type : 'category',
