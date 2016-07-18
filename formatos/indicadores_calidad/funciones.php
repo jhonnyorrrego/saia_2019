@@ -466,8 +466,7 @@ switch($guardar){
 
 
 
-print_r($cadena);
-die();
+
 echo('
     <script>
         $(document).ready(function(){
