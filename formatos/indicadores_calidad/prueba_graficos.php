@@ -134,6 +134,8 @@ function generar_grafico_barra($color_grafico,$contenedores,$nombres,$valores,$t
 	   $titulox='Titulo Eje X';
 	   $tituloy='Titulo Eje Y';
 	    switch($tipo_grafico){
+	        case 'torta':
+	            
 			case 'barras':
 			    $valores=$dato;
 			    $nombres['nombres']=$dato3;  
