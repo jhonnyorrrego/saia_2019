@@ -267,9 +267,6 @@ function generar_grafico_linea($configuracion_grafico){
                 yAxis : [
                     {
                         type : 'value',
-                        axisLabel : {
-                            formatter: '{value} °C'
-                        }
                     }
                 ],
                 series : [
