@@ -198,7 +198,7 @@ if ($formulas["numcampos"]) {
 			');
 			
 			if ($dato[0] != 0) {
-			    $tipo_grafico[0]["tipo_grafico"]='lineas';
+			    
 				switch(trim($tipo_grafico[0]["tipo_grafico"])){
 					case 'torta':
                         // -----> TORTA
