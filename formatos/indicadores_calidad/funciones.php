@@ -293,7 +293,9 @@ if ($formulas["numcampos"]) {
 			
 			
 			if($_SESSION['LOGIN'.LLAVE_SAIA]=='cerok'){
+			if(@$_REQUEST['tipo']!=5){
 			    
+   
 			
 			echo('
                 <tr><td colspan="5">
@@ -342,7 +344,19 @@ if ($formulas["numcampos"]) {
 
 						break;
 				}
-			}			
+			}
+			
+			
+			}else{ //fin if tipo 5
+    			$idfuncionario=busca_filtro_tabla("","vfuncionario_dc","idfuncionario=".$_REQUEST["idfunc"],"",$conn);
+    			$ruta_grafico="temporal_".$idfuncionario[0]['login']."/".$iddoc."/";
+    			if(file_exists($ruta_db_superior.$ruta_grafico)){
+    				$datos=explode(",",listado_directorio($ruta_db_superior.$ruta_grafico));
+    				for($i=0;$i<count($datos);$i++){
+    					echo '<div align="center"><img src="'.RUTA_PDF_LOCAL.'/'.$ruta_grafico.$datos[$i].'"><br/></div>';
+    				}
+    			}			    
+			}
 			} //fin if session cerok
 			
 			
