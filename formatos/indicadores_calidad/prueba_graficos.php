@@ -157,8 +157,7 @@ function generar_grafico_barra($configuracion_grafico){
                     {
                         name:'蒸发量',
                         type:'bar',
-                        data:<?php echo(json_encode($configuracion_grafico['valores'])); ?>,
-
+                        data:<?php echo(json_encode($configuracion_grafico['valores'])); ?>
                     },
                    /* {
                         name:'降水量',
