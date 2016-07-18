@@ -46,7 +46,7 @@ function generar_grafico_torta($color_grafico,$contenedores,$nombres,$valores,$t
  		    var myChart = echarts.init(document.getElementById('<?php echo($contenedores[0]); ?>'));
 
             var option = {
-                renderAsImage:true,
+                
                 title : {
                     text: '某站点用户访问来源',
                     subtext: '纯属虚构',
