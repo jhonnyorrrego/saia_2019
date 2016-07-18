@@ -229,6 +229,8 @@ function generar_grafico_barra($configuracion_grafico){
 
     // -----> BARRA
     
+    $configuracion_grafico['contenedores']=array('contenedor_grafico_pc','imagen_grafico_pc');
+    generar_grafico_torta($configuracion_grafico);
 ?>
 
 
