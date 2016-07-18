@@ -110,7 +110,7 @@ function generar_grafico_torta($color_grafico,$contenedores,$nombres,$valores,$t
 	   $dato3=array('titulo 5','titulo 10','titulo 15','titulo 20','titulo 25','titulo 30');
 	   $colores=array('#00FF51','#D923D0','#00FF51','#D923D0','#00FF51','#D923D0');
 	   $titulo_grafico='Mi Grafico';
-	   $idcontenedor='main';
+	   $contenedores=array('contenedor_grafico_pc','imagen_grafico_pc');
 	   $tipo_grafico='barras';
 	   $color='#00FF51';
 	   $titulox='Titulo Eje X';
@@ -126,8 +126,8 @@ function generar_grafico_torta($color_grafico,$contenedores,$nombres,$valores,$t
 		}
 
 	   // generar_grafico_barra($color,$idcontenedor,$nombres,$valores,$titulo_grafico,$titulox,$tituloy);
-	   generar_grafico_torta($color,$idcontenedor,$nombres,$valores,$titulo_grafico,$titulox,$tituloy);
-	
+	  // generar_grafico_torta($color,$idcontenedor,$nombres,$valores,$titulo_grafico,$titulox,$tituloy);
+	   generar_grafico_barra('',$contenedores,$nombres,$valores,$titulo_grafico,$titulox,$tituloy);
 ?>
 
 
