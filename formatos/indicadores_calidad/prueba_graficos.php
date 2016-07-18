@@ -231,6 +231,10 @@ function generar_grafico_barra($configuracion_grafico){
     $configuracion_grafico=array();
     $configuracion_grafico['contenedor']='contenedor_grafico_pc';
     generar_grafico_barra($configuracion_grafico);
+    
+    
+    
+    
 ?>
 
 
