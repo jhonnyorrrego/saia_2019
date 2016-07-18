@@ -320,7 +320,10 @@ if ($formulas["numcampos"]) {
 			if ($dato[0] != 0) {
 				switch(trim($tipo_grafico[0]["tipo_grafico"])){
 					case 'torta':
-
+                        
+                        
+                        
+                        
 						break;
 					case 'barras':
                         // -----> BARRA
