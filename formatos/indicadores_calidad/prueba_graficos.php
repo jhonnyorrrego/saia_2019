@@ -130,13 +130,11 @@ function generar_grafico_barra($configuracion_grafico){
             var option = {
                 title : {
                     text: '<?php echo($configuracion_grafico['titulo_grafico']); ?>',
-                    subtext: '<?php echo($configuracion_grafico['subtitulo_grafico']); ?>'
+                    subtext: '<?php echo($configuracion_grafico['subtitulo_grafico']); ?>',
+                    x:'center'
                 },
                 tooltip : {
                     trigger: 'axis'
-                },
-                legend: {
-                    data:['蒸发量','降水量']
                 },
                 /*toolbox: {
                     show : true,
