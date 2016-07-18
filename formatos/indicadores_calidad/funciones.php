@@ -377,7 +377,7 @@ if ($formulas["numcampos"]) {
 					case 'lineas' :
                         // -----> LINEA
                         $configuracion_grafico=array();
-                        $configuracion_grafico['contenedor']='contenedor_grafico_linea';
+                        $configuracion_grafico['contenedor']='contenedor_grafico_pc';
                         $configuracion_grafico['titulo_grafico']='PORCENTAJE DE CUMPLIMIENTO POR SEGUIMIENTO';
                         $configuracion_grafico['subtitulo_grafico']='';    
                         $configuracion_grafico['titulox']='Seguimiento';
