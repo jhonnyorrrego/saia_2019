@@ -332,7 +332,7 @@ function generar_grafico_linea($configuracion_grafico){
     $configuracion_grafico['subtitulo_grafico']='Mi Subtitulo';
     $configuracion_grafico['titulox']='Eje X';
     $configuracion_grafico['imagen']=0;
-    //$configuracion_grafico['color_saia']=1;
+    $configuracion_grafico['color_saia']=1;
     $configuracion_grafico['tituloy']='Eje Y';
     $configuracion_grafico['nombres']=array('titulo 5','titulo 10','titulo 15','titulo 20','titulo 25','titulo 30');
     $configuracion_grafico['valores']=array(array(5,10,15,20,25,30));
