@@ -278,7 +278,7 @@ function generar_grafico_linea($configuracion_grafico){
                         echo('
                             {
                                 name:"Valores",
-                                type:"bar",
+                                type:"line",
                                 barWidth: 50,
                                 data:'.json_encode($configuracion_grafico['valores'][$x]).'
                             }  
