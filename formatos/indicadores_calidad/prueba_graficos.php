@@ -55,7 +55,7 @@ function generar_grafico_torta($color_grafico,$contenedores,$nombres,$valores,$t
  		    var myChart = ec.init(document.getElementById('<?php echo($contenedores[0]); ?>'));
 
             var option = {
-                renderAsImage:true,
+               // renderAsImage:true,
                 title : {
                     text: '<?php echo($titulo_grafico); ?>',
                     subtext: '<?php echo($titulo_grafico); ?>',
