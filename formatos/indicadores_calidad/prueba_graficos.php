@@ -250,7 +250,8 @@ function generar_grafico_linea($configuracion_grafico){
             var option = {
                 title : {
                     text: '未来一周气温变化',
-                    subtext: '纯属虚构'
+                    subtext: '纯属虚构',
+                     x:'center'
                 },
                 tooltip : {
                     trigger: 'axis'
