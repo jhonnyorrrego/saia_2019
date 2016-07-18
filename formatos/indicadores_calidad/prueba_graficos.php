@@ -97,7 +97,7 @@ function generar_grafico_torta($configuracion_grafico){
                             }
                         },*/
                        // restore : {show: true},
-                        saveAsImage : {show: true}
+                       // saveAsImage : {show: true}
                     }
                 },
                 calculable : true,
