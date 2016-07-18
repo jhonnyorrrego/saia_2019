@@ -268,6 +268,13 @@ function generar_grafico_linea($configuracion_grafico){
                 yAxis : [
                     {
                         type : 'value',
+                        nameTextStyle:{
+                          color: '#000000',
+                          fontWeight:'bold'
+                        },
+                        nameLocation:'end',
+                                     
+                        name:'<?php echo($configuracion_grafico['tituloy']); ?>',                         
                     }
                 ],
                 series : [
