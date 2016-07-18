@@ -178,7 +178,8 @@ function generar_grafico_barra($configuracion_grafico){
 
 
 
-
+    /*
+    // -----> TORTA
 	$configuracion_grafico=array();
 	$configuracion_grafico['imagen']=1;
 	$configuracion_grafico['titulo_grafico']='Mi Grafico';
@@ -188,6 +189,12 @@ function generar_grafico_barra($configuracion_grafico){
 	$configuracion_grafico['valores']=array(5,10,15,20,25,30);
     $configuracion_grafico['colores']=array('#00FF51','#D923D0','#00FF51','#D923D0','#00FF51','#D923D0');
     generar_grafico_torta($configuracion_grafico);
+    
+    */
+
+
+    // -----> BARRA
+    
 ?>
 
 
