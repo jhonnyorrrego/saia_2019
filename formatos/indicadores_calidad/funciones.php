@@ -455,12 +455,17 @@ function guardar_grafico($contenedores,$iddoc){
 
 echo('
     <script>
-        $(document).load(function(){
+        $(document).ready(function(){
             $.ajax({
                 type:"POST",
                 dataType: "html",
                 url: "guardar grafico.php",
-                data: {img:$("#IMG"+$("#'.$contenedores[0].'").attr("_echarts_instance_")).attr("src"),iddoc:'.$iddoc.',img2:$("#IMG"+$("#'.$contenedores[1].'").attr("_echarts_instance_")).attr("src")},
+                data: {
+                    img:$("#IMG"+$("#'.$contenedores[0].'").attr("_echarts_instance_")).attr("src"),
+                    iddoc:'.$iddoc.',
+                    img2:$("#IMG"+$("#'.$contenedores[1].'").attr("_echarts_instance_")).attr("src"),
+                    guardar_imagen:1
+                },
 				success: function(respuesta){
 					if(respuesta==1){
 						console.log("Imagen guardada...");
