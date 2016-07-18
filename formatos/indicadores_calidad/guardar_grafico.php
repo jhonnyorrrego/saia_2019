@@ -15,7 +15,7 @@ if($_REQUEST['iddoc']){
 	$ruta_grafico=$ruta_db_superior."temporal_".usuario_actual("login")."/".$_REQUEST['iddoc']."/";
 	
 	
-	
+	$archivo_eliminar='';
 	switch(@$_REQUEST['guardar_imagen']){
     case 1:
         $archivo_eliminar='total_evaluacion.png';
