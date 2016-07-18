@@ -31,7 +31,7 @@ if($_REQUEST['iddoc']){
 		unlink($ruta_grafico.$archivo_eliminar);
 	}
 	
-	die();
+	
 	
 	if(!file_exists($ruta_grafico)){
 		crear_destino($ruta_grafico);
