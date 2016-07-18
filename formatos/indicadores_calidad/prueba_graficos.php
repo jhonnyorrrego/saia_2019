@@ -183,12 +183,35 @@ function generar_grafico_barra($configuracion_grafico){
                     }
                 ],
                 series : [
+                    
+                    <?php
+                    for($x=0;$x<count($configuracion_grafico['valores']);$x++){
+                        echo('
+                            {
+                                name:"Valores",
+                                type:"bar",
+                                barWidth: 50,
+                                data:'.$configuracion_grafico['valores'].'
+                            }  
+                        ');
+                        
+                        if(($x+1)!=count($configuracion_grafico['valores'])){
+                            
+                        }
+                    }
+                    
+                    ?>
+                    
+                    
                     {
                         name:'Valores',
                         type:'bar',
                         barWidth: 50,
                         data:<?php echo(json_encode($configuracion_grafico['valores'])); ?>
                     },
+                    
+                    
+                    
                    /* {
                         name:'降水量',
                         type:'bar',
