@@ -209,6 +209,116 @@ function generar_grafico_barra($configuracion_grafico){
 
 
 
+function generar_grafico_linea($configuracion_grafico){
+    global $conn;
+
+        if($configuracion_grafico['color_grafico']==''){
+            $color_saia=busca_filtro_tabla("","configuracion","nombre='color_encabezado_list'","",$conn);  
+            $configuracion_grafico['color_grafico']=$color_saia[0]['valor'];
+        }
+        
+        //PARSEO renderAsImage
+        $generar_imagen='';
+        if($configuracion_grafico['imagen']){
+            $generar_imagen='renderAsImage:true,';
+        }
+        
+        //PARSEO NOMBRES & COLORES
+       $data_nombres=array();
+       for($i=0;$i<count($configuracion_grafico['nombres']);$i++){
+            $data_nombres[$i]['value']=$configuracion_grafico['nombres'][$i];
+            $data_nombres[$i]['textStyle']['color']=$configuracion_grafico['colores'][$i];
+            if(!$configuracion_grafico['colores'][$i]){
+                 $data_nombres[$i]['textStyle']['color']='#000000';
+            }
+           
+            $data_nombres[$i]['textStyle']['fontWeight']='bold';           
+       }        
+       
+        $data_nombres=json_encode($data_nombres);
+    ?>
+        <script type="text/javascript">
+            require.config({
+              paths: {
+                 echarts: 'build/dist'
+              }
+            });
+            require(['echarts','echarts/chart/bar'],// require the specific chart type        
+            function (ec) {
+ 		    var myChart = ec.init(document.getElementById('<?php echo($configuracion_grafico['contenedor']); ?>'));
+
+            var option = {
+                <?php echo($generar_imagen); ?>
+                title : {
+                    text: '<?php echo($configuracion_grafico['titulo_grafico']); ?>',
+                    subtext: '<?php echo($configuracion_grafico['subtitulo_grafico']); ?>',
+                    x:'center'
+                },
+                color: ['<?php echo($configuracion_grafico['color_grafico']); ?>'],
+                tooltip : {
+                    trigger: 'axis',
+                    axisPointer : {            
+                        type : 'shadow' 
+                    }                    
+                },
+                calculable : true,
+                xAxis : [
+                    {
+                        nameTextStyle:{
+                          color: '#000000',
+                          fontWeight:'bold'
+                        },
+                        nameLocation:'end',
+                                     
+                        name:'<?php echo($configuracion_grafico['titulox']); ?>',                        
+                        type : 'category',
+                        data : <?php echo($data_nombres); ?>
+                    }
+                ],
+                yAxis : [
+                    {
+                        
+                        nameTextStyle:{
+                          color: '#000000',
+                          fontWeight:'bold'
+                        },
+                        nameLocation:'end',
+                                     
+                        name:'<?php echo($configuracion_grafico['tituloy']); ?>',                        
+                        type : 'value'
+                    }
+                ],
+                series : [
+                    
+                    <?php
+                    for($x=0;$x<count($configuracion_grafico['valores']);$x++){
+                        echo('
+                            {
+                                name:"Valores",
+                                type:"bar",
+                                barWidth: 50,
+                                data:'.json_encode($configuracion_grafico['valores'][$x]).'
+                            }  
+                        ');
+                        if(($x+1)!=count($configuracion_grafico['valores'])){
+                            echo(',');
+                        }
+                    }
+                    
+                    ?>
+                ]
+            };
+                    
+                    
+            myChart.setOption(option);
+            } //fin function ec
+            
+            );
+        </script>
+    <?php
+}
+
+
 
 
 
