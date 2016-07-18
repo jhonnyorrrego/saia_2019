@@ -134,17 +134,7 @@ function generar_grafico_torta($configuracion_grafico){
 }
 
 
-       
-       $dato=array(5,10,15,20,25,30);
-	   $dato3=array('titulo 5','titulo 10','titulo 15','titulo 20','titulo 25','titulo 30');
-	   $colores=array('#00FF51','#D923D0','#00FF51','#D923D0','#00FF51','#D923D0');
-	   $titulo_grafico='Mi Grafico';
-	   $contenedores=array('contenedor_grafico_pc','imagen_grafico_pc');
-	   
-	   $color='#00FF51';
-	   $titulox='Titulo Eje X';
-	   $tituloy='Titulo Eje Y';
-	   
+
 	   $tipo_grafico='barras';
 	    switch($tipo_grafico){
 	        case 'torta':
@@ -157,12 +147,7 @@ function generar_grafico_torta($configuracion_grafico){
 			    $configuracion_grafico['nombres']=array('titulo 5','titulo 10','titulo 15','titulo 20','titulo 25','titulo 30');
 			    $configuracion_grafico['valores']=array(5,10,15,20,25,30);
 			    $configuracion_grafico['colores']=array('#00FF51','#D923D0','#00FF51','#D923D0','#00FF51','#D923D0');
-			    
-			 
-			    $valores=$dato;
-			    $nombres['nombres']=$dato3;  
-			    $nombres['colores']=$colores;
-			    $nombres['valores']=$dato;
+			   
 			    break;
 		}
 	   generar_grafico_torta($configuracion_grafico);
