@@ -248,64 +248,77 @@ function generar_grafico_linea($configuracion_grafico){
  		    var myChart = ec.init(document.getElementById('<?php echo($configuracion_grafico['contenedor']); ?>'));
 
             var option = {
-                <?php echo($generar_imagen); ?>
                 title : {
-                    text: '<?php echo($configuracion_grafico['titulo_grafico']); ?>',
-                    subtext: '<?php echo($configuracion_grafico['subtitulo_grafico']); ?>',
-                    x:'center'
+                    text: '未来一周气温变化',
+                    subtext: '纯属虚构'
                 },
-                color: ['<?php echo($configuracion_grafico['color_grafico']); ?>'],
                 tooltip : {
-                    trigger: 'axis',
-                    axisPointer : {            
-                        type : 'shadow' 
-                    }                    
+                    trigger: 'axis'
+                },
+                legend: {
+                    data:['最高气温','最低气温']
+                },
+                toolbox: {
+                    show : true,
+                    feature : {
+                        mark : {show: true},
+                        dataView : {show: true, readOnly: false},
+                        magicType : {show: true, type: ['line', 'bar']},
+                        restore : {show: true},
+                        saveAsImage : {show: true}
+                    }
                 },
                 calculable : true,
                 xAxis : [
                     {
-                        nameTextStyle:{
-                          color: '#000000',
-                          fontWeight:'bold'
-                        },
-                        nameLocation:'end',
-                        name:'<?php echo($configuracion_grafico['titulox']); ?>',                        
                         type : 'category',
-                        data : <?php echo($data_nombres); ?>
+                        boundaryGap : false,
+                        data : ['周一','周二','周三','周四','周五','周六','周日']
                     }
                 ],
                 yAxis : [
                     {
-                        nameTextStyle:{
-                          color: '#000000',
-                          fontWeight:'bold'
-                        },
-                        nameLocation:'end',
-                                     
-                        name:'<?php echo($configuracion_grafico['tituloy']); ?>',                        
-                        type : 'value'
+                        type : 'value',
+                        axisLabel : {
+                            formatter: '{value} °C'
+                        }
                     }
                 ],
                 series : [
-                    
-                    <?php
-                    for($x=0;$x<count($configuracion_grafico['valores']);$x++){
-                        echo('
-                            {
-                                name:"Valores",
-                                type:"bar",
-                                barWidth: 50,
-                                data:'.json_encode($configuracion_grafico['valores'][$x]).'
-                            }  
-                        ');
-                        if(($x+1)!=count($configuracion_grafico['valores'])){
-                            echo(',');
+                    {
+                        name:'最高气温',
+                        type:'line',
+                        data:[11, 11, 15, 13, 12, 13, 10],
+                        markPoint : {
+                            data : [
+                                {type : 'max', name: '最大值'},
+                                {type : 'min', name: '最小值'}
+                            ]
+                        },
+                        markLine : {
+                            data : [
+                                {type : 'average', name: '平均值'}
+                            ]
+                        }
+                    },
+                    {
+                        name:'最低气温',
+                        type:'line',
+                        data:[1, -2, 2, 5, 3, 2, 0],
+                        markPoint : {
+                            data : [
+                                {name : '周最低', value : -2, xAxis: 1, yAxis: -1.5}
+                            ]
+                        },
+                        markLine : {
+                            data : [
+                                {type : 'average', name : '平均值'}
+                            ]
                         }
                     }
-                    
-                    ?>
                 ]
             };
+                    
                     
                     
             myChart.setOption(option);
