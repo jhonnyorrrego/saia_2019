@@ -251,12 +251,15 @@ function generar_grafico_linea($configuracion_grafico){
 
             var option = {
                 <?php echo($generar_imagen); ?>
+                <?php echo($configuracion_grafico['color_saia']); ?>
                 title : {
                     text: '<?php echo($configuracion_grafico['titulo_grafico']); ?>',
                     subtext: '<?php echo($configuracion_grafico['subtitulo_grafico']); ?>',
                     x:'center'
                 },
-               <?php echo($configuracion_grafico['color_saia']); ?>
+                legend: {
+                    data:['蒸发量','降水量']
+                },               
                 tooltip : {
                     trigger: 'axis'
                 },
