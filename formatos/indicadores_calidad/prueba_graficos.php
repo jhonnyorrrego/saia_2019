@@ -273,12 +273,22 @@ function generar_grafico_linea($configuracion_grafico){
                     }
                 ],
                 series : [
-                    {
-                        name:'最高气温',
-                        type:'line',
-                        data:[11, 11, 15, 13, 12, 13, 10],
-
-                    },
+                    <?php
+                    for($x=0;$x<count($configuracion_grafico['valores']);$x++){
+                        echo('
+                            {
+                                name:"Valores",
+                                type:"bar",
+                                barWidth: 50,
+                                data:'.json_encode($configuracion_grafico['valores'][$x]).'
+                            }  
+                        ');
+                        if(($x+1)!=count($configuracion_grafico['valores'])){
+                            echo(',');
+                        }
+                    }
+                    
+                    ?>
                 ]
             };
                     
