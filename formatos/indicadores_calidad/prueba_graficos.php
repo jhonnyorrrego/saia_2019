@@ -232,6 +232,7 @@ function generar_grafico_barra($configuracion_grafico){
     $configuracion_grafico['contenedor']='contenedor_grafico_pc';
     $configuracion_grafico['titulo_grafico']='Mi Grafico';
     $configuracion_grafico['subtitulo_grafico']='Mi Subtitulo';
+    $configuracion_grafico['nombres']=array('titulo 5','titulo 10','titulo 15','titulo 20','titulo 25','titulo 30');
     generar_grafico_barra($configuracion_grafico);
     
     
