@@ -249,8 +249,8 @@ function generar_grafico_linea($configuracion_grafico){
 
             var option = {
                 title : {
-                    text: '未来一周气温变化',
-                    subtext: '纯属虚构',
+                    text: '<?php echo($configuracion_grafico['titulo_grafico']); ?>',
+                    subtext: '<?php echo($configuracion_grafico['subtitulo_grafico']); ?>',
                     x:'center'
                 },
                 tooltip : {
