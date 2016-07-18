@@ -155,7 +155,7 @@ function generar_grafico_barra($configuracion_grafico){
                 xAxis : [
                     {
                         type : 'category',
-                        data : <?php echo(json_encode($configuracion_grafico['nombres'])); ?>
+                        data : <?php echo($data_nombres); ?>
                     }
                 ],
                 yAxis : [
