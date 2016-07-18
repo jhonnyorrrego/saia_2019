@@ -14,8 +14,6 @@ echo( librerias_jquery('1.7') );
 //echo( json_encode($data_nombres) );
 //die();
 ?> 
-
-
     <script src="echarts.min.js"></script>
         <center>
     <div id="contenedor_grafico_pc" style="width: 600px;height:400px;"></div>
