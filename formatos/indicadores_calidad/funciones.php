@@ -437,7 +437,7 @@ function generar_grafico_barra($color_grafico,$contenedores,$nombres,$valores,$t
                 pixelRatio: 2,
                 backgroundColor: '#fff'
             });
-            img.id = "prueba_id";
+            img.id = "img_<?php echo($contenedores[1]); ?>";
             document.getElementById('<?php echo($contenedores[1]); ?>').appendChild(img);
             $('<?php echo($contenedores[0]); ?>').remove();
 
