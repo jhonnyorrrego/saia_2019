@@ -133,7 +133,7 @@ $(document).ready(function(){
 die();
 echo('
     <script>
-        $(document).load(function(){
+        $(document).ready(function(){
             $.ajax({
                 type:"POST",
                 dataType: "html",
