@@ -214,9 +214,9 @@ function generar_grafico_barra($configuracion_grafico){
 function generar_grafico_linea($configuracion_grafico){
     global $conn;
 
-        if($configuracion_grafico['color_grafico']==''){
+        if($configuracion_grafico['color_saia']){
             $color_saia=busca_filtro_tabla("","configuracion","nombre='color_encabezado_list'","",$conn);  
-            $configuracion_grafico['color_grafico']=$color_saia[0]['valor'];
+            $configuracion_grafico['color_saia']='color: ["'.$color_saia[0]['valor'].'"],';
         }
         
         //PARSEO renderAsImage
@@ -256,7 +256,7 @@ function generar_grafico_linea($configuracion_grafico){
                     subtext: '<?php echo($configuracion_grafico['subtitulo_grafico']); ?>',
                     x:'center'
                 },
-                color: ['<?php echo($configuracion_grafico['color_grafico']); ?>'],
+               <?php echo($configuracion_grafico['color_saia']); ?>
                 tooltip : {
                     trigger: 'axis'
                 },
