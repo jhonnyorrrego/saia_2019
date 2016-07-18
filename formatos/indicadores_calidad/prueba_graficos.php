@@ -25,6 +25,9 @@ function generar_grafico_torta($color_grafico,$contenedores,$nombres,$valores,$t
     global $conn;
         $valores=json_encode($valores);
         
+        
+        print_r(json_encode($nombres));die();
+        
         if($color_grafico==''){
             $color_saia=busca_filtro_tabla("","configuracion","nombre='color_encabezado_list'","",$conn);  
             $color_grafico=$color_saia[0]['valor'];
