@@ -375,26 +375,6 @@ if ($formulas["numcampos"]) {
                         generar_grafico_barra($configuracion_grafico);                        
 						break;
 					case 'lineas' :
-					    
-						$DataSet -> AddPoint($dato, "Serie1");
-						$DataSet -> AddPoint($dato3, "Serie2");
-						$DataSet -> AddAllSeries();
-						$DataSet -> SetAbsciseLabelSerie("Serie2");
-						$DataSet -> SetYAxisName("Cumplimiento");
-						$DataSet -> SetXAxisName("Seguimiento");
-						$Test = new pChart(600, 230);
-						$Test -> setFontProperties("pchart/Fonts/tahoma.ttf", 8);
-						$Test -> setGraphArea(70, 30, 500, 180);
-						$Test -> drawFilledRoundedRectangle(5, 5, 600, 223, 5, 240, 240, 240);
-						$Test -> drawRoundedRectangle(7, 7, 600, 225, 5, 230, 230, 230);
-						$Test -> drawGraphArea(255, 255, 255, TRUE);
-						$Test -> drawScale($DataSet -> GetData(), $DataSet -> GetDataDescription(), SCALE_START0, 150, 150, 150, TRUE, 0, 2);
-						$Test -> drawGrid(4, TRUE, 230, 230, 230, 50);
-						$Test -> drawTreshold(0, 143, 55, 72, TRUE, TRUE);
-						$Test -> drawLineGraph($DataSet -> GetData(), $DataSet -> GetDataDescription());
-						$Test -> drawPlotGraph($DataSet -> GetData(), $DataSet -> GetDataDescription(), 3, 2, 255, 255, 2					    
-
-
                         // -----> LINEA
                         $configuracion_grafico=array();
                         $configuracion_grafico['contenedor']='contenedor_grafico_linea';
