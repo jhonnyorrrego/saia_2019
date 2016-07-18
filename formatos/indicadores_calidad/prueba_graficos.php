@@ -123,7 +123,7 @@ function guardar_grafico($contenedores,$iddoc){
 
 ?>
 <script>
-    alert();
+    alert( $('#prueba_id').attr('src') );
 </script>
 <?php
 die();
