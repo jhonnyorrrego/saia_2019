@@ -138,9 +138,9 @@ function generar_grafico_barra($configuracion_grafico){
                 legend: {
                     data:['蒸发量','降水量']
                 },
-                toolbox: {
+                /*toolbox: {
                     show : true,
-                },
+                },*/
                 calculable : true,
                 xAxis : [
                     {
