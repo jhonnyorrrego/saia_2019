@@ -129,7 +129,7 @@ function generar_grafico_barra($configuracion_grafico){
 
             var option = {
                 title : {
-                    text: '某地区蒸发量和降水量',
+                    text: '<?php echo($configuracion_grafico['titulo_grafico']); ?>',
                     subtext: '纯属虚构'
                 },
                 tooltip : {
