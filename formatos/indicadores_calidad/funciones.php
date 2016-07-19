@@ -353,7 +353,7 @@ if ($formulas["numcampos"]) {
     				echo('<tr><td colspan="7">');
     				for($x=0;$x<count($datos);$x++){
     					//echo '<img src="'.RUTA_PDF_LOCAL.'/'.$ruta_grafico.$datos[$x].'"><br/>';
-    					echo(RUTA_PDF_LOCAL.'/'.$ruta_grafico.$datos[$x].'<br>');
+    					echo(PROTOCOLO_CONEXION.RUTA_PDF_LOCAL.'/'.$ruta_grafico.$datos[$x].'<br>');
     				}
     				echo('</td></tr>');
     			}			
