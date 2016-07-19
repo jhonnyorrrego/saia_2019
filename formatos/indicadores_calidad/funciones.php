@@ -178,10 +178,10 @@ if ($formulas["numcampos"]) {
 				//VERDE
 			}
 			echo '<tr>
-                    <td align="center" >' . $seg[$j]["fecha_seguimiento"] . '</td>
-                    <td align="right" >' . $seg[$j]["meta_indicador_actual"] . $formulas[$i]["unidad"] . '</td>
-                    <td bgcolor="'.$color.'" align="right" >' . $respuesta . $formulas[$i]["unidad"] . '</td>
-                    <td align="center" >' . $cumplimiento . '%</td>';
+                    <td align="center" style="font-size:10pt;">' . $seg[$j]["fecha_seguimiento"] . '</td>
+                    <td align="right" style="font-size:10pt;" >' . $seg[$j]["meta_indicador_actual"] . $formulas[$i]["unidad"] . '</td>
+                    <td bgcolor="'.$color.'" align="right"  style="font-size:10pt;">' . $respuesta . $formulas[$i]["unidad"] . '</td>
+                    <td align="center" style="font-size:10pt;">' . $cumplimiento . '%</td>';
 			
 			echo "  <td style='text-align:center'><a class='previo_high' enlace='formatos/seguimiento_indicador/mostrar_seguimiento_indicador.php?iddoc=" . $seg[$j]["documento_iddocumento"] . "' style='color:blue;cursor:pointer'>Ver</a></td>";
 			if (!isset($_REQUEST["tipo"]) || $_REQUEST["tipo"] == 1){
