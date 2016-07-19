@@ -227,9 +227,11 @@ if ($formulas["numcampos"]) {
     			echo('
                     <tr>
                         <td colspan="7">
+                        <center>
                          <div id="contenedor_grafico_pc" style="width: 700px;height:240px;"></div>
                          <br/>
                          <div id="contenedor_grafico_rs" style="width: 700px;height:240px;"></div>
+                         </center>
                         </td> 
                     </tr>
     			');
