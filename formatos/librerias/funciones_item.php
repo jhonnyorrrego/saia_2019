@@ -2,10 +2,10 @@
 <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <?php
 include_once("../../db.php");
-
-if(isset($_REQUEST["accion"]))
-  {$_REQUEST["accion"]();     
-  }
+validar_sql_injection_funciones_item();
+if(isset($_REQUEST["accion"])){
+  $_REQUEST["accion"]();     
+}
 
 function editar()
   {global $conn;
@@ -127,4 +127,16 @@ function guardar_item()
         redirecciona("../".$formato[0]["nombre"]."/".$formato[0]["ruta_adicionar"]."?idpadre=".$doc_padre[0][0]."&idformato=".$padre[0]["idformato"]."&padre=".$_REQUEST["padre"]);
      }
   }  
+function validar_sql_injection_funciones_item(){
+//$request_varios=array("accion");
+ $request_enteros=array("formato");
+ 
+foreach($request_enteros AS $index=>$value){
+  //var_dump($_REQUEST[$value]);
+  if(isset($_REQUEST[$value]) && $_REQUEST[$value]!=='' && !is_numeric($_REQUEST[$value])){
+    die($value."-->".$_REQUEST[$value]."(".is_int(trim($_REQUEST[$value])).")"." NO es un valor aceptable para la consulta");
+  }
+} 
+return;
+}
 ?>
