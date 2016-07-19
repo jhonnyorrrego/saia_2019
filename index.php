@@ -131,7 +131,7 @@ $mayor_informacion=busca_filtro_tabla("valor","configuracion","nombre='mayor_inf
   </table>
 </div>
 
-        <form method="post" name="loguin" id="formulario_login" action="login.php" class="form-horizontal">
+        <form method="post" name="loguin" action="login.php" class="form-horizontal">
         <?php if($_SESSION["tipo_dispositivo"]=="movil"){ ?>    
             <div class="control-group">
                 <label class="control-label blueTexts" for="inputEmail">Nombre de usuario:</label>
