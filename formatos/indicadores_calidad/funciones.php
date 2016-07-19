@@ -352,7 +352,7 @@ if ($formulas["numcampos"]) {
     				$datos=explode(",",listado_directorio($ruta_db_superior.$ruta_grafico));
     				echo('<tr><td colspan="7">');
     				for($x=0;$x<count($datos);$x++){
-    					echo '<img src="'.PROTOCOLO_CONEXION.RUTA_PDF_LOCAL.'/'.$ruta_grafico.$datos[$x].'" width="200"><br/>';
+    					echo '<img src="'.PROTOCOLO_CONEXION.RUTA_PDF_LOCAL.'/'.$ruta_grafico.$datos[$x].'" width="300"><br/>';
     					//echo(PROTOCOLO_CONEXION.RUTA_PDF_LOCAL.'/'.$ruta_grafico.$datos[$x].'<br>');
     				}
     				echo('</td></tr>');
