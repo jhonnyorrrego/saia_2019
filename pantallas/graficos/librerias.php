@@ -369,8 +369,7 @@ function guardar_grafico_temporal($datos_guardar){
     guardar_grafico_temporal($datos_guardar);  
     */
     include_once($ruta_db_superior.'pantallas/graficos/guardar_grafico_temporal.php');
-
-
+    
     $attr='$("#IMG"+$("#'.$datos_guardar['contenedor_grafico'].'").attr("_echarts_instance_")).attr("src")';
 
     echo('
