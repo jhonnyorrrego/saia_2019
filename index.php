@@ -112,24 +112,6 @@ else{
 $mayor_informacion=busca_filtro_tabla("valor","configuracion","nombre='mayor_informacion'","",$conn);
 ?>
 <body>
-<div class="footer_login">
-  <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
-    <tr class="footer_login_text">
-      <td width="1%" height="25">&nbsp;</td>
-      <td>©<?php echo date(Y);?> CEROK</td>
-      <!--<td><a href="">Términos de uso y servicio - SAIA</a><sup>®</sup></td>-->
-      <td>Para mayor información: <?php echo($mayor_informacion[0]["valor"]); ?></td>
-      <td>
-        <?php
-        if($_SESSION["tipo_dispositivo"]=="movil"){
-            echo("</tr><tr>");
-        }
-        ?>      
-      </td>
-      <td align="right">Todos los derechos reservados CERO K&nbsp;&nbsp;&nbsp;</td>
-    </tr>
-  </table>
-</div>
 <table class="table table-bordered" width="100%" border="0"  cellpadding="0" cellspacing="0" id="tabla_principal"  align="bottom" >
   <tr align="center">
     <td colspan="3" align="center" valign="middle" id="LoginBkg"> 
