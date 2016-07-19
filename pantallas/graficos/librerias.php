@@ -361,6 +361,7 @@ function guardar_grafico_temporal($iddoc,$contenedor_grafico,$nombre_imagen,$ext
     global $ruta_db_superior,$conn;
 
     include_once($ruta_db_superior.'pantallas/graficos/guardar_grafico_temporal.php');
+
     echo('
         <script>
             $(document).ready(function(){
@@ -371,7 +372,7 @@ function guardar_grafico_temporal($iddoc,$contenedor_grafico,$nombre_imagen,$ext
                     data: {
                         iddoc:'.$iddoc.',
                         guardar_imagen:'.$guardar.',
-                        '.$cadena.'
+                        img:
                     },
     				success: function(respuesta){
     					if(respuesta==1){
