@@ -61,9 +61,7 @@ function nombre_padre($idformato,$iddoc,$tipo=NULL){
 
 function resultados_indicador($idformato,$iddoc){
   global $conn, $ruta_db_superior;
-	
-	include_once("pchart/pChart/pData.class");
-	include_once("pchart/pChart/pChart.class");
+
 ?>
 <script type="text/javascript" src="../../anexosdigitales/highslide-4.0.10/highslide/highslide-with-html.js"></script>
 <link rel="stylesheet" type="text/css" href="../../anexosdigitales/highslide-4.0.10/highslide/highslide.css" />
@@ -103,9 +101,9 @@ if ($formulas["numcampos"]) {
 		            <td  style='font-size:10pt;'>Resultado</td>
 		            <td  style='font-size:10pt;'>Cumplimiento</td>
 		            <td  style='font-size:10pt;'>An&aacute;lisis de Datos</td>
-		            <td colspan=2  style='font-size:10pt;'></td>
+		            <td colspan=2  style='font-size:10pt;'>&nbsp;</td>
 		        </tr>";
-		$DataSet = new pData;
+	
 
 		$seg = busca_filtro_tabla("f.*," . fecha_db_obtener("fecha_seguimiento", "Y-m-d") . " as fecha_seguimiento", "ft_seguimiento_indicador f,documento d", "documento_iddocumento=iddocumento and d.estado<>'ELIMINADO' and ft_formula_indicador=" . $formulas[$i]["id"], "f.fecha_seguimiento", $conn);
 
@@ -117,8 +115,6 @@ if ($formulas["numcampos"]) {
 		$dato4 = array();
 		$dato5 = array();
 		$array_colores=array();
-		$DataSet = new pData;
-		$DataSet1 = new pData;
 		for ($j = 0; $j < $seg["numcampos"]; $j++) {
 			$vector = explode(";", $seg[$j]["resultado"]);
 			$formula2 = $formulas[$i]["nombre"];
