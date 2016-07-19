@@ -35,7 +35,9 @@ function incluir_librerias_busqueda($elemento,$indice){
 ?>
 <style>
 .row-fluid [class*="span"]{min-height:20px;}.row-fluid {min-height:20px;}.well{ margin-bottom: 3px; min-height: 11px; padding: 4px;}.alert{ margin-bottom: 3px; padding: 10px;}  body{ font-size:12px; line-height:100%; margin-top:35px;padding:0px;}.navbar-fixed-top, .navbar-fixed-bottom{ position: fixed;} .navbar-fixed-top, .navbar-fixed-bottom, .navbar-static-top{margin-right: 0px; margin-left: 0px;}
-.texto-azul{ color:#3176c8} #panel_body{margin-top:0px; width: 50%; overflow: auto; <?php if($_SESSION["tipo_dispositivo"]=='movil'){?>-webkit-overflow-scrolling:touch;<?php } ?>} #panel_detalle{margin-top:0px; width: 50%; border: 0px; overflow:auto;<?php if($_SESSION["tipo_dispositivo"]=='movil'){?>-webkit-overflow-scrolling:touch;<?php } ?>}
+.texto-azul{ color:#3176c8} 
+#panel_body{margin-top:0px; <?php if($_SESSION["tipo_dispositivo"]=="movil") { echo("width:100%;");} else{ echo("width:50%;")} ?> overflow: auto; <?php if($_SESSION["tipo_dispositivo"]=='movil'){?>-webkit-overflow-scrolling:touch;<?php } ?>} 
+#panel_detalle{margin-top:0px; <?php if($_SESSION["tipo_dispositivo"]=="movil") { echo("width:0%;");} else{ echo("width:50%;")} ?> border: 0px; overflow:auto;<?php if($_SESSION["tipo_dispositivo"]=='movil'){?>-webkit-overflow-scrolling:touch;<?php } ?>}
 </style>
 <div class="navbar navbar-fixed-top" id="menu_buscador">
   <div class="navbar-inner">
@@ -292,8 +294,11 @@ function incluir_librerias_busqueda($elemento,$indice){
     </div>
 </div>
 <div class="pull-left" id="panel_detalle">
+    <?php if($_SESSION["tipo_dispositivo"]=="movil"){ ?>
     <iframe id="iframe_detalle" style="width: 100%;" frameborder="no"></iframe>
+    <?php } ?>
 </div>
+
 <script>
   var espacio_menu=$("#menu_buscador").height()+18;
   var alto_inicial=($(document).height()-espacio_menu);
