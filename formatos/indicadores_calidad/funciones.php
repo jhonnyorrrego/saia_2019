@@ -240,9 +240,9 @@ if ($formulas["numcampos"]) {
                         
                         $datos_guardar=array();
                         $datos_guardar['iddoc']=$iddoc;
-                        $datos_guardar['nombre_imagen']=$iddoc;
-                        $datos_guardar['extension']=$iddoc;
-                        $datos_guardar['contenedor_grafico']=$iddoc;
+                        $datos_guardar['nombre_imagen']='total_evaluacion'; //competencias
+                        $datos_guardar['extension']='png';
+                        $datos_guardar['contenedor_grafico']='contenedor_grafico_pc';
                         guardar_grafico_temporal($datos_guardar);
                         
                         
