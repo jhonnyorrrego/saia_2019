@@ -87,8 +87,13 @@ function resultados_indicador($idformato,$iddoc){
 	}); 
 </script>
 <?php
-echo "<br /><span class='phpmaker'><b>SEGUIMIENTOS</b></span><br />";
+echo "
+    <br />
+        <span class='phpmaker'><b>SEGUIMIENTOS</b></span>
+    <br />
+";
 $formulas = busca_filtro_tabla("nombre,idft_formula_indicador as id,unidad,rango_colores,tipo_rango", "ft_formula_indicador,documento d", "documento_iddocumento=iddocumento and d.estado<>'ELIMINADO' and ft_indicadores_calidad=(select idft_indicadores_calidad from ft_indicadores_calidad where documento_iddocumento=$iddoc)", "", $conn);
+
 if ($formulas["numcampos"]) {
 	for ($i = 0; $i < $formulas["numcampos"]; $i++) {
 		echo "<table width='100%' cellpadding=5 class='phpmaker'>
@@ -310,7 +315,7 @@ if ($formulas["numcampos"]) {
     			} //fin if dato !=0
 			
 			}else{ //fin if tipo 5
-			    echo('entra al else man');
+			   
     			$idfuncionario=busca_filtro_tabla("","vfuncionario_dc","idfuncionario=".$_REQUEST["idfunc"],"",$conn);
     		
     			$ruta_grafico="temporal_".$idfuncionario[0]['login']."/".$iddoc."/";
