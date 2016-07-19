@@ -130,7 +130,7 @@ $mayor_informacion=busca_filtro_tabla("valor","configuracion","nombre='mayor_inf
     </tr>
   </table>
 </div>
-
+<div class="container">
         <form method="post" name="loguin" action="login.php" class="form-horizontal">
         <?php if($_SESSION["tipo_dispositivo"]=="movil"){ ?>    
             <div class="control-group">
@@ -226,7 +226,7 @@ $mayor_informacion=busca_filtro_tabla("valor","configuracion","nombre='mayor_inf
         ?>
         <br>
         </form>
-
+</div>
 
 
 
