@@ -18,7 +18,7 @@ function formula_calculo($idformato,$iddoc){
   global $conn;
   $respuesta=busca_filtro_tabla("","respuesta,documento","destino=iddocumento and documento.estado<>'ELIMINADO' and origen=".$iddoc,"",$conn); 
   $idformato_formula_indicador=busca_filtro_tabla("b.idformato","documento a, formato b","lower(a.plantilla)=lower(b.nombre) AND a.iddocumento=".$respuesta[0]["destino"],"",$conn);
-  $texto='<table  class="phpmaker" width="100%">';
+  $texto='<table  style="width:100%;">';
   $texto.='<tr class="encabezado_list" >
             <td style="font-size:10pt;">Form</td>
             <td style="font-size:10pt;">Formula del calculo</td>
