@@ -208,7 +208,7 @@ if ($formulas["numcampos"]) {
 		            <br/>
 		            <table>
         		      <tr>
-        		        <td bgcolor="FF4000"  style="font-size:10pt;">Deficiente</td>
+        		        <td style="font-size:10pt;background.color:FF4000;">Deficiente</td>
         		        <td bgcolor="EAFF00"  style="font-size:10pt;">Satisfactorio</td>
         		        <td bgcolor="00FF51"  style="font-size:10pt;">Sobresaliente</td>
         		      </tr>
