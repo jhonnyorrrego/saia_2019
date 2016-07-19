@@ -357,7 +357,7 @@ function generar_grafico_linea($configuracion_grafico){
 
 
 
-function guardar_grafico_temporal($iddoc,$contenedor_grafico,$nombre_imagen,$extension){
+function guardar_grafico_temporal($datos_guardar){
     global $ruta_db_superior,$conn;
     
     /*
