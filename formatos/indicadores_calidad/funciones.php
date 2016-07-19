@@ -329,14 +329,14 @@ if ($formulas["numcampos"]) {
     				$datos_guardar=array();
                     $datos_guardar['iddoc']=$iddoc;
                     $datos_guardar['nombre_imagen']='total_evaluacion'; 
-                    $datos_guardar['extension']='png';
+                    $datos_guardar['extension']='jpg';
                     $datos_guardar['contenedor_grafico']='contenedor_grafico_pc';
                     guardar_grafico_temporal($datos_guardar);
                     
     				$datos_guardar=array();
                     $datos_guardar['iddoc']=$iddoc;
                     $datos_guardar['nombre_imagen']='competencias'; 
-                    $datos_guardar['extension']='png';
+                    $datos_guardar['extension']='jpg';
                     $datos_guardar['contenedor_grafico']='contenedor_grafico_rs';
                     guardar_grafico_temporal($datos_guardar);     
                     
