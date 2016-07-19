@@ -126,7 +126,7 @@ $mayor_informacion=busca_filtro_tabla("valor","configuracion","nombre='mayor_inf
         }
         ?>      
       </td>
-      <td width="30%" align="right">Todos los derechos reservados CERO K&nbsp;&nbsp;&nbsp;</td>
+      <td align="right">Todos los derechos reservados CERO K&nbsp;&nbsp;&nbsp;</td>
     </tr>
   </table>
 </div>
