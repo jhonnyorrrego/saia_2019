@@ -314,7 +314,7 @@ if ($formulas["numcampos"]) {
     				for($i=0;$i<count($datos);$i++){
     					echo '<div align="center"><img src="'.RUTA_PDF_LOCAL.'/'.$ruta_grafico.$datos[$i].'"><br/></div>';
     				}
-    				echo('</td> </tr>');
+    				echo('</td></tr>');
     			}			    
 			}
 			} //fin if session cerok
