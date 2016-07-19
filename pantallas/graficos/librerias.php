@@ -15,7 +15,8 @@ while($max_salida>0){
 }
 include_once($ruta_db_superior."db.php");
 
-function generar_grafico_barra($configuracion_grafico){
+
+function generar_grafico_barra($configuracion_grafico){  // REQUIERE librerias_jquery('1.7') & librerias_graficos()
     global $conn;
     
         /*
