@@ -44,14 +44,18 @@ $detect = new Mobile_Detect;
 if(@$_REQUEST["INDEX"]!=''){
   $_SESSION["INDEX"]=$_REQUEST["INDEX"];
 }
-else if ( $detect->isMobile() ) {
+/*else if ( $detect->isMobile() ) {
+    $_SESSION["tipo_dispositivo"]="movil";
 	$_REQUEST["INDEX"]="mobile";
 	$_SESSION["INDEX"]="mobile";
-}
+}*/
 else{
   $_REQUEST["INDEX"]="actualizacion"; 
   $_SESSION["INDEX"]="actualizacion";
-}  
+} 
+if ( $detect->isMobile() ) {
+    $_SESSION["tipo_dispositivo"]="movil";
+}
 date_default_timezone_set ("America/Bogota");
 if(isset($_REQUEST['sesion']))
   $_SESSION["LOGIN".LLAVE_SAIA]=$_REQUEST['sesion']; 
@@ -84,7 +88,11 @@ margin-left: 40px;
 background-color: transparent;
 vertical-align: sub;
 width:400px;
-
+<?php
+if($_SESSION["tipo_dispositivo"]=="movil"){
+    echo("display:none;");
+}
+?>
 }
 </style>
 
