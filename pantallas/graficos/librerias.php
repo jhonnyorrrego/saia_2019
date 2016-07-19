@@ -359,7 +359,15 @@ function generar_grafico_linea($configuracion_grafico){
 
 function guardar_grafico_temporal($iddoc,$contenedor_grafico,$nombre_imagen,$extension){
     global $ruta_db_superior,$conn;
-
+    
+    /*
+    $datos_guardar=array();
+    $datos_guardar['iddoc']=$iddoc;
+    $datos_guardar['nombre_imagen']='total_evaluacion'; //competencias
+    $datos_guardar['extension']='png';
+    $datos_guardar['contenedor_grafico']='contenedor_grafico_pc';
+    guardar_grafico_temporal($datos_guardar);    
+    */
     include_once($ruta_db_superior.'pantallas/graficos/guardar_grafico_temporal.php');
 
     echo('
