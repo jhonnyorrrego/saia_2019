@@ -17,7 +17,25 @@ include_once($ruta_db_superior."db.php");
 
 function generar_grafico_barra($configuracion_grafico){
     global $conn;
-
+    
+        /*
+        // -----> BARRA
+        $configuracion_grafico=array();
+        $configuracion_grafico['contenedor']='contenedor_grafico_pc';
+        $configuracion_grafico['titulo_grafico']='PORCENTAJE DE CUMPLIMIENTO POR SEGUIMIENTO';
+        $configuracion_grafico['subtitulo_grafico']='';
+        $configuracion_grafico['titulox']='Seguimiento';
+        $configuracion_grafico['tituloy']='Cumplimiento';
+        $configuracion_grafico['imagen']=1;
+        $configuracion_grafico['color_saia']=1;
+        $configuracion_grafico['nombres']=$dato3;
+        $configuracion_grafico['valores']=array($dato);
+        $configuracion_grafico['valores_nombre']=array('Valores');    
+        $configuracion_grafico['colores']=$array_colores;
+        generar_grafico_barra($configuracion_grafico);    
+        */
+        
+        
         if($configuracion_grafico['color_saia']){
             $color_saia=busca_filtro_tabla("","configuracion","nombre='color_encabezado_list'","",$conn);  
             $configuracion_grafico['color_saia']='color: ["'.$color_saia[0]['valor'].'"],';
@@ -131,6 +149,19 @@ function generar_grafico_barra($configuracion_grafico){
 
 function generar_grafico_torta($configuracion_grafico){
     global $conn;
+    
+            /*
+            // -----> TORTA
+            $configuracion_grafico=array();
+            $configuracion_grafico['imagen']=1;
+            $configuracion_grafico['titulo_grafico']='PORCENTAJE DE CUMPLIMIENTO POR SEGUIMIENTO';
+            $configuracion_grafico['subtitulo_grafico']='';
+            $configuracion_grafico['contenedor']='contenedor_grafico_pc';
+            $configuracion_grafico['nombres']=$dato2;
+            $configuracion_grafico['valores']=$dato;
+            $configuracion_grafico['colores']=$array_colores;
+            generar_grafico_torta($configuracion_grafico);
+            */
 
         if($color_grafico==''){
             $color_saia=busca_filtro_tabla("","configuracion","nombre='color_encabezado_list'","",$conn);  
