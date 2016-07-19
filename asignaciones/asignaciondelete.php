@@ -29,10 +29,29 @@ if(isset($_REQUEST["modo"]))
  $modo=$_REQUEST["modo"];
 else 
  $modo="usuario";
- 
+
+if(isset($_REQUEST["key"])) {
+    if(!is_numeric($_REQUEST["key"])) {
+        die("El parametro 'key' debe ser un numero");
+    }
+}
 
 // Load Key Parameters
 $sKey = @$_REQUEST["key"];
+
+if (array_key_exists("form_info", $_POST)) {
+    include_once ($ruta_db_superior . "pantallas/lib/librerias_cripto.php");
+    $data = json_decode($_POST["form_info"], true);
+    unset($_REQUEST);
+    unset($_POST);
+    for($i = 0; $i < count($data); $i ++) {
+        $_REQUEST[decrypt_blowfish($data[$i]["name"], LLAVE_SAIA_CRYPTO)] = decrypt_blowfish($data[$i]["value"], LLAVE_SAIA_CRYPTO);
+        $_POST[decrypt_blowfish($data[$i]["name"], LLAVE_SAIA_CRYPTO)] = decrypt_blowfish($data[$i]["value"], LLAVE_SAIA_CRYPTO);
+    }
+    // print_r($_REQUEST);die();
+}
+
+
 if (($sKey == "") || (($sKey == NULL))) {
 	$sKey = @$_POST["key_d"];
 }
@@ -159,11 +178,41 @@ if($x_tarea_idtarea){
 }
 ?>
 </table>
+
+	<input type="hidden" name="form_info" id="form_info" value="">
+
 <p>
 <?php listado_controles_asignaciones(); ?>
 <br />
-<input type="submit" name="Action" value="Confirmar Eliminacion">
+<input type="hidden" name="form_info" id="form_info" value="">
+<input type="submit" name="Action" value="Confirmar Eliminacion" id="continuar">
 </form>
+
+<?php
+
+include_once ($ruta_db_superior . "librerias_saia.php");
+echo (librerias_jquery("1.7"));
+
+?>
+
+<script type="text/javascript">
+$("#continuar").click(function(){
+	var salida = false;
+  		$.ajax({
+            type:'POST',
+            async: false,
+            url: "<?php echo $ruta_db_superior;?>formatos/librerias/encript_data.php",
+            data: {datos:JSON.stringify($('#asignaciondelete').serializeArray(), null)},
+            success: function(data) {
+            	$("#form_info").empty().val(data);
+            	//console.log($("#form_info").val());
+            	salida = true;
+         	}
+  		});
+    return salida;
+  });
+
+</script>
 <?php
 
 
