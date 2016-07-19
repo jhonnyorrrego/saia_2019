@@ -45,8 +45,8 @@ if(@$_REQUEST["INDEX"]!=''){
   $_SESSION["INDEX"]=$_REQUEST["INDEX"];
 }
 else if ( $detect->isMobile() ) {
-	$_REQUEST["INDEX"]="movil";
-	$_SESSION["INDEX"]="movil";
+	$_REQUEST["INDEX"]="mobile";
+	$_SESSION["INDEX"]="mobile";
 }
 else{
   $_REQUEST["INDEX"]="actualizacion"; 
