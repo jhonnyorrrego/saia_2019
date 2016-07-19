@@ -221,7 +221,7 @@ if ($formulas["numcampos"]) {
 			echo("No es posible generar un grafico, no se han generado seguimientos");
 		} else {
 			$tipo_grafico = busca_filtro_tabla("tipo_grafico", "ft_indicadores_calidad", "documento_iddocumento=$iddoc", "", $conn);
-			if($_SESSION['LOGIN'.LLAVE_SAIA]=='cerok'){
+		
 			    
 			if(@$_REQUEST['tipo']!=5){
     			echo('
@@ -358,7 +358,7 @@ if ($formulas["numcampos"]) {
     			}			
     			*/
 			}
-			} //fin if session cerok
+
 			
 			
 		} //fin if datos de indicador
