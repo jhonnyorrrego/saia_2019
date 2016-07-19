@@ -210,7 +210,7 @@ if ($formulas["numcampos"]) {
         		        <td bgcolor='00FF51'  style='font-size:10pt;'>Sobresaliente</td>
         		      </tr>
 		            </table>
-		            <br />
+		            <br/>
 		        </td>
 		      </tr>";
 		
