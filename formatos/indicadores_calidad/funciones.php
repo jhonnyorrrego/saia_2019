@@ -112,8 +112,7 @@ if(@$_REQUEST['tipo']!=5){
 $formulas = busca_filtro_tabla("nombre,idft_formula_indicador as id,unidad,rango_colores,tipo_rango", "ft_formula_indicador,documento d", "documento_iddocumento=iddocumento and d.estado<>'ELIMINADO' and ft_indicadores_calidad=(select idft_indicadores_calidad from ft_indicadores_calidad where documento_iddocumento=$iddoc)", "", $conn);
 
 if ($formulas["numcampos"]) {
-	for ($i = 0; $i < $formulas["numcampos"]; $i++) {
-		echo "<table style='width:100%;' >
+    echo "<table style='width:100%;'>
 		        <tr>
 		            <td class='encabezado_list' colspan='7' style='font-size:10pt;'>SEGUIMIENTOS</td>
 		        </tr>		        
@@ -127,7 +126,9 @@ if ($formulas["numcampos"]) {
 		            <td  style='font-size:10pt;'>Cumplimiento</td>
 		            <td  style='font-size:10pt;'>An&aacute;lisis de Datos</td>
 		            <td colspan='2' style='font-size:10pt;'>&nbsp;</td>
-		        </tr>";
+	      </tr>";
+	for ($i = 0; $i < $formulas["numcampos"]; $i++) {
+
 	
 
 		$seg = busca_filtro_tabla("f.*," . fecha_db_obtener("fecha_seguimiento", "Y-m-d") . " as fecha_seguimiento", "ft_seguimiento_indicador f,documento d", "documento_iddocumento=iddocumento and d.estado<>'ELIMINADO' and ft_formula_indicador=" . $formulas[$i]["id"], "f.fecha_seguimiento", $conn);
