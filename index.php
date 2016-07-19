@@ -134,7 +134,14 @@ $mayor_informacion=busca_filtro_tabla("valor","configuracion","nombre='mayor_inf
   <tr align="center">
     <td colspan="3" align="center" valign="middle" id="LoginBkg"> 
       <div id="loginForm">
-        <form method="post" name="loguin" id="formulario_login" action="login.php">
+        <form method="post" name="loguin" id="formulario_login" action="login.php" class="form-horizontal">
+        <?php if($_SESSION["tipo_dispositivo"]=="movil"){ ?>    
+            <div class="container">
+                
+            </div>
+        <?php }
+        else{
+          ?>
         <table width="700" border="0" cellspacing="0" cellpadding="0">
           <tr>
             <td height="30" colspan="6">&nbsp;</td>
@@ -187,17 +194,17 @@ $mayor_informacion=busca_filtro_tabla("valor","configuracion","nombre='mayor_inf
 				<td align="left">
 					<br/>
 					<br/>
-
 				</td>
-                	
                 </tr>
               </table>
             </td>
             <td>&nbsp;</td>
           </tr>
-                  
         </table>
-       
+          
+          <?php
+        }
+        ?>
         <br>
         </form>
       </div>
