@@ -192,7 +192,7 @@ if ($formulas["numcampos"]) {
 			}else{
 			    echo '<td></td><td></td><td></td>';
 			}	
-			echo "</tr>";
+			echo '</tr>';
 			if (is_numeric($cumplimiento)) {
 				array_push($dato, $cumplimiento);
 				array_push($dato2, "Fecha:" . $seg[$j]["fecha_seguimiento"] . ", Valor: " . $cumplimiento . "%");
