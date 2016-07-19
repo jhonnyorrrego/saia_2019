@@ -32,6 +32,7 @@ if($_REQUEST['iddoc']){
 		fclose($archivo);
 		file_put_contents($ruta_grafico.$grafico, $datos);
 		if(file_exists($ruta_grafico.$grafico)){
+		    chmod($ruta_grafico.$grafico,0777);
 			$exito=1;
 		}
 	}
