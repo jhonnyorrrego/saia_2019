@@ -109,11 +109,7 @@ if(@$_REQUEST['tipo']!=5){
 </script>
 <?php
 }   
-echo "
-    <br />
-        <span class='phpmaker'><b>SEGUIMIENTOS</b></span>
-    <br />
-";
+
 $formulas = busca_filtro_tabla("nombre,idft_formula_indicador as id,unidad,rango_colores,tipo_rango", "ft_formula_indicador,documento d", "documento_iddocumento=iddocumento and d.estado<>'ELIMINADO' and ft_indicadores_calidad=(select idft_indicadores_calidad from ft_indicadores_calidad where documento_iddocumento=$iddoc)", "", $conn);
 
 if ($formulas["numcampos"]) {
