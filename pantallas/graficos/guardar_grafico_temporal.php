@@ -11,13 +11,10 @@ while($max_salida>0){
 include_once ($ruta_db_superior."db.php");
 $exito=0;
 if($_REQUEST['iddoc']){
-    
 	$ruta_grafico=$ruta_db_superior."temporal_".usuario_actual("login")."/".$_REQUEST['iddoc']."/";
-
 	if(!file_exists($ruta_grafico)){
 		crear_destino($ruta_grafico);
 	}
-	
 	$archivo_eliminar='';
 	if(@$_REQUEST['nombre_imagen'] && @$_REQUEST['extension']){
 	    $archivo_eliminar=$_REQUEST['nombre_imagen'].'.'.$_REQUEST['extension'];
@@ -39,7 +36,5 @@ if($_REQUEST['iddoc']){
 		}
 	}
 }
-
 echo($exito); 
-
 ?>
