@@ -312,46 +312,7 @@ echo "</table>";
 
 
 
-function guardar_grafico($contenedor,$iddoc,$guardar){
 
-$cadena='';
-switch($guardar){
-    case 1:
-        $cadena='img:$("#img_'.$contenedor.'").attr("src")';
-        break;
-    case 2:
-        $cadena='img2:$("#img_'.$contenedor.'").attr("src")';
-        break;
-}
-
-echo('
-    <script>
-        $(document).ready(function(){
-            $.ajax({
-                type:"POST",
-                dataType: "html",
-                url: "guardar_grafico.php",
-                data: {
-                    iddoc:'.$iddoc.',
-                    guardar_imagen:'.$guardar.',
-                    '.$cadena.'
-                },
-				success: function(respuesta){
-					if(respuesta==1){
-						console.log("Imagen guardada...");
-					}else{
-						console.log("Error al guardar las imagenes...");
-					}
-				}
-           });
-           
-        });   
-    </script>
-
-');
-    
-    
-}
 function listado_directorio($directorio) {
 	$html=array();
 	if(chdir($directorio)){
