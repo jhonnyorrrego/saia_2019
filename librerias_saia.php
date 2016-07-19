@@ -331,6 +331,7 @@ function librerias_graficos(){
     global $raiz_saia; 
     
     $texto='<script src="'.$raiz_saia.'js/echarts/echarts.js"></script>';
+    return($texto);
 }
 
 ?>
