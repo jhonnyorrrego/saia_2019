@@ -13,7 +13,7 @@ while($max_salida>0){
 <?php 
 include_once("db.php");
 include_once("librerias_saia.php");
-include_once("cargando.php");
+//include_once("cargando.php");
 
 
 if(@$_REQUEST['texto_salir']){
@@ -95,7 +95,7 @@ if($_SESSION["tipo_dispositivo"]=="movil"){
 }
 </style>
 <?php 
-include_once("css/index_estilos.php");
+/*include_once("css/index_estilos.php");
 echo(estilo_bootstrap());
 if(@$_SESSION["tipo_dispositivo"]=="movil"){ 
     echo(index_estilos('temas_movil'));
@@ -104,31 +104,13 @@ if(@$_SESSION["tipo_dispositivo"]=="movil"){
 else{
     echo(index_estilos('temas_index'));    
     echo(index_estilos('temas_main'));
-}
+}*/
 ?>
 </head>
 <?php
 $mayor_informacion=busca_filtro_tabla("valor","configuracion","nombre='mayor_informacion'","",$conn);
 ?>
 <body>
-<div class="footer_login">
-  <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
-    <tr class="footer_login_text">
-      <td width="1%" height="25">&nbsp;</td>
-      <td>©<?php echo date(Y);?> CEROK</td>
-      <!--<td><a href="">Términos de uso y servicio - SAIA</a><sup>®</sup></td>-->
-      <td>Para mayor información: <?php echo($mayor_informacion[0]["valor"]); ?></td>
-      <td>
-        <?php
-        if($_SESSION["tipo_dispositivo"]=="movil"){
-            echo("</tr><tr>");
-        }
-        ?>      
-      </td>
-      <td align="right">Todos los derechos reservados CERO K&nbsp;&nbsp;&nbsp;</td>
-    </tr>
-  </table>
-</div>
 <div class="container">
         <form method="post" name="loguin" action="login.php" class="form-horizontal">
         <?php if($_SESSION["tipo_dispositivo"]=="movil"){ ?>    
@@ -224,43 +206,12 @@ $mayor_informacion=busca_filtro_tabla("valor","configuracion","nombre='mayor_inf
 
 
 
-  		<div id="div_noticias">
-			<?php
-		      	$titulo_mostrar=busca_filtro_tabla('','configuracion','nombre="titulo_index"','',$conn);
-				$subtitulo_mostrar=busca_filtro_tabla('','configuracion','nombre="subtitulo_index"','',$conn);
-				
-				$texto_tabla="<p style='font-weight:bold;color: #4099D2;text-align:left;font-size:16px;'>".$titulo_mostrar[0]['valor']."<p>";
-				$texto_tabla.="<hr>";
-				$texto_tabla.="<p style='color:#4099D2;text-align:left;font-size:15px'>".$subtitulo_mostrar[0]['valor']."</p><br />";
-				global $conn;
-				$dato=busca_filtro_tabla("","noticia_index","estado=1 AND mostrar=1","",$conn);
-				//print_r($dato);die();
-				if ($dato["numcampos"]){
-					$texto_tabla.="<table align='bottom' style='text-align:justify;'>";
-					for ($i=0;$i<$dato["numcampos"];$i++){
-						$texto_tabla.="<tr><td>";
-						$texto_tabla.="<p id='texto_pequenio'>";
-						$texto_tabla.=$dato[$i]["previo"].'...';
-						$texto_tabla .='<a href="noticia_index/mostrar_noticia.php?idnoticia_index='.$dato[$i]["idnoticia_index"].'" class="highslide" onclick="return         hs.htmlExpand(this, { objectType: \'iframe\',width:450, height:550,preserveContent:false } )"style="text-decoration: underline; cursor:pointer;"> Ver m&aacute;s</a><br>';
-						$texto_tabla.="</p>";
-						$texto_tabla.="</td></tr>";
-					}
-					$texto_tabla.="</table>";
-					$texto_tabla.="<br/>";
-					echo $texto_tabla;
-				}
-			?>
-		</div>	
-
-
-
 
 
 </body>
 </html>
-<?php include_once("fin_cargando.php");
+<?php 
   echo(librerias_jquery("1.7"));
-  echo(librerias_highslide());
   echo(librerias_bootstrap());
   echo(librerias_notificaciones());
 ?>
