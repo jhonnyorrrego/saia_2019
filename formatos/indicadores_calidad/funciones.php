@@ -186,11 +186,11 @@ if ($formulas["numcampos"]) {
 			
 			if (!isset($_REQUEST["tipo"]) || $_REQUEST["tipo"] == 1){
 			    echo '  <td style="text-align:center"><a class="previo_high" enlace="formatos/seguimiento_indicador/mostrar_seguimiento_indicador.php?iddoc=' . $seg[$j]["documento_iddocumento"] . '" style="color:blue;cursor:pointer">Ver</a></td>';
-			    echo "
-			        <td align='center' width='200px'><a target='centro' href='../plan_mejoramiento/adicionar_plan_mejoramiento.php?seguimiento_indicador=" . $seg[$j]["idft_seguimiento_indicador"] . "'>Adicionar Plan</a></td>
-                    <td align='center' ><a class='highslide' onclick='return hs.htmlExpand(this, { objectType: \"iframe\",width: 500, height:400,preserveContent:false } )'  href='planes_relacionados.php?tipo=indicador&seguimiento_indicador=" . $seg[$j]["idft_seguimiento_indicador"] . "'>Ver Planes</a></td>";
+			    echo '
+			        <td align="center" width="200px"><a target="centro" href="../plan_mejoramiento/adicionar_plan_mejoramiento.php?seguimiento_indicador=' . $seg[$j]["idft_seguimiento_indicador"] . '">Adicionar Plan</a></td>
+                    <td align="center" ><a class="highslide" onclick="return hs.htmlExpand(this, { objectType: \"iframe\",width: 500, height:400,preserveContent:false } )"  href="planes_relacionados.php?tipo=indicador&seguimiento_indicador=' . $seg[$j]["idft_seguimiento_indicador"] . '">Ver Planes</a></td>';
 			}else{
-			    echo "<td></td><td></td><td></td>";
+			    echo '<td></td><td></td><td></td>';
 			}	
 			echo "</tr>";
 			if (is_numeric($cumplimiento)) {
