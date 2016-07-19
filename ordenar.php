@@ -69,6 +69,12 @@ elseif(@$_REQUEST["llave"]){
   $nodoinicial=$_REQUEST["llave"];
 }
 else $nodoinicial=$llave_formato;
+$display_span_rigth="";
+$span_left="9";
+if($_SESSION["tipo_dispositivo"]=='movil'){
+    $display_span_rigth=" display:none; ";
+    $span_left="12";
+}
 ?>
 <style>
     #contenedor{margin-top:0px; width: 100%; border:0px solid; overflow:auto; <?php if($_SESSION["tipo_dispositivo"]=='movil'){?>-webkit-overflow-scrolling:touch;<?php } ?>} 
@@ -77,11 +83,11 @@ else $nodoinicial=$llave_formato;
 
 </style>
 <div class="container row-fluid" id="contenedor" style="align:center">
-    <div class="span3">         
+    <div class="span3" style="<?php echo($display_span_rigth);?>">         
         <div id="izquierdo_saia" >          
         </div>
     </div>
-    <div class="span9 pull-right" style="margin-left:0px;">
+    <div class="<?php echo($span_left);?> pull-right" style="margin-left:0px;">
         <div id="contenedor_saia">            
         </div>
     </div>
