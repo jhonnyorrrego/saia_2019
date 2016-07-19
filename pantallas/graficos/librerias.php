@@ -381,7 +381,7 @@ function guardar_grafico_temporal($datos_guardar){
                     dataType: "html",
                     url: "'.$ruta_db_superior.'pantallas/graficos/guardar_grafico_temporal.php",
                     data: {
-                        iddoc:'.$iddoc.',
+                        iddoc:'.$datos_guardar['iddoc'].',
                         nombre_imagen:"'.$datos_guardar['nombre_imagen'].'",
                         extension:"'.$datos_guardar['extension'].'",
                         img:'.$attr.'
