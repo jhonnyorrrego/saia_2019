@@ -375,7 +375,7 @@ function guardar_grafico_temporal($datos_guardar){
 
     echo('
         <script>
-            $(document).ready(function(){
+            $(window).load(function(){
                 alert('.$attr.');
                 $.ajax({
                     type:"POST",
