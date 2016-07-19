@@ -344,10 +344,10 @@ if ($formulas["numcampos"]) {
 			
 			}else{ //fin if tipo 5
 
-    			//$idfuncionario=busca_filtro_tabla("","vfuncionario_dc","idfuncionario=".$_REQUEST["idfunc"],"",$conn);
-    			//$ruta_grafico="temporal_".$idfuncionario[0]['login']."/".$iddoc."/";
-    				echo('<tr><td colspan="7">hola mundo');echo('</td></tr>');
-    			/*
+    			$idfuncionario=busca_filtro_tabla("","vfuncionario_dc","idfuncionario=".$_REQUEST["idfunc"],"",$conn);
+    			$ruta_grafico="temporal_".$idfuncionario[0]['login']."/".$iddoc."/";
+    				
+    			
     			if(file_exists($ruta_db_superior.$ruta_grafico)){
     				$datos=explode(",",listado_directorio($ruta_db_superior.$ruta_grafico));
     				echo('<tr><td colspan="7">');
@@ -356,7 +356,7 @@ if ($formulas["numcampos"]) {
     				}
     				echo('</td></tr>');
     			}			
-    			*/
+    			
 			}
 
 			
