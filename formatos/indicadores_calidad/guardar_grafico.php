@@ -13,6 +13,10 @@ $exito=0;
 if($_REQUEST['iddoc']){
     
 	$ruta_grafico=$ruta_db_superior."temporal_".usuario_actual("login")."/".$_REQUEST['iddoc']."/";
+
+	if(!file_exists($ruta_grafico)){
+		crear_destino($ruta_grafico);
+	}
 	
 	$archivo_eliminar='';
 	if(@$_REQUEST['nombre_imagen'] && @$_REQUEST['extension']){
@@ -22,10 +26,6 @@ if($_REQUEST['iddoc']){
     	}
 	}
 	
-	if(!file_exists($ruta_grafico)){
-		crear_destino($ruta_grafico);
-	}
-
 	if($_REQUEST['img']){
 		$datoimg=explode(";",$_REQUEST['img']);
 		$decode=explode(",",$datoimg[1]);
