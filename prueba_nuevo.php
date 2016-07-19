@@ -22,7 +22,7 @@ function enviar_correo($iddoc){
 	$nombre_funcionario=busca_filtro_tabla("","funcionario a, dependencia_cargo b","a.funcionario_codigo=".$consulta[0]["ejecutor"],"",$conn);
 	
 	$datos_documento=busca_filtro_tabla("","documento","iddocumento=".$iddoc,"",$conn);
-	print_r($datos_documento['sql'].'<br />');
+	print_r($datos_documento[0]['pdf'].'<br />');
 	
 	$ruta=crear_pdf_documento_tcpdf($datos_documento[0]);
 	print_r("Ruta curl".$ruta.'<br />');
