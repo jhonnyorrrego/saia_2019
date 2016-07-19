@@ -98,7 +98,7 @@ if($_SESSION["tipo_dispositivo"]=="movil"){
 <?php 
 include_once("css/index_estilos.php");
 if($_SESSION["tipo_dispositivo"]!="movil"){ 
-    echo(index_estilos('tema_index'));    
+    echo(index_estilos('temas_index'));    
     echo(index_estilos('temas_main'));
 }
 else{
