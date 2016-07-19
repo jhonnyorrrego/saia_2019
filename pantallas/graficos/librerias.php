@@ -357,20 +357,12 @@ function generar_grafico_linea($configuracion_grafico){
 
 
 
-function guardar_grafico_temporal($contenedor,$iddoc,$guardar){
+function guardar_grafico_temporal($iddoc,$contenedor_grafico,$nombre_imagen,$extension){
     global $ruta_db_superior,$conn;
 
     include_once($ruta_db_superior.'pantallas/graficos/guardar_grafico_temporal.php');
 
-$cadena='';
-switch($guardar){
-    case 1:
-        $cadena='img:$("#img_'.$contenedor.'").attr("src")';
-        break;
-    case 2:
-        $cadena='img2:$("#img_'.$contenedor.'").attr("src")';
-        break;
-}
+    
 
 echo('
     <script>
