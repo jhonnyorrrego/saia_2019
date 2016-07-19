@@ -106,6 +106,7 @@ function incluir_librerias_busqueda($elemento,$indice){
         </span>
         <span id="cantidad_maxima" >...)</span>
         </button>
+        <?php if(@$_SESSION["tipo_dispositivo"]!="movil"){ ?>
         <button type="button" class="btn dropdown-toggle btn-mini" data-toggle="dropdown">
           <span class="caret">
           </span>&nbsp;
@@ -123,6 +124,7 @@ function incluir_librerias_busqueda($elemento,$indice){
           <a href="#" id="resultado_100">Mostrar 100 resultados</a>
           </li>
         </ul>
+        <?php } ?>
       </div>
       <!-- /btn-group -->
       </li>
