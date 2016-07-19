@@ -116,7 +116,7 @@ if ($formulas["numcampos"]) {
 		        <tr>
 		            <td class='encabezado_list' colspan='7' style='font-size:10pt;'>SEGUIMIENTOS</td>
 		        </tr>		        
-		        <tr >
+		        <tr>
 		            <td class='encabezado_list' colspan='7' style='font-size:10pt;'>Formula del Calculo:<br />" . $formulas[$i]["nombre"] . "</td>
 		        </tr>
 		        <tr class='encabezado_list'>
