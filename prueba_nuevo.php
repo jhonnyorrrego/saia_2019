@@ -12,6 +12,13 @@ include('db.php');
 include_once("librerias_saia.php");
 include_once($ruta_db_superior."formatos/librerias/funciones_generales.php");
 
+
+
+
+
+
+
+die();
 $respuesta=enviar_correo(11641);
 
 function enviar_correo($iddoc){
