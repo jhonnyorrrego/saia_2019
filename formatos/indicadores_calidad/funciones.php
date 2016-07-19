@@ -93,7 +93,18 @@ echo "<br /><span class='phpmaker'><b>SEGUIMIENTOS</b></span><br />";
 $formulas = busca_filtro_tabla("nombre,idft_formula_indicador as id,unidad,rango_colores,tipo_rango", "ft_formula_indicador,documento d", "documento_iddocumento=iddocumento and d.estado<>'ELIMINADO' and ft_indicadores_calidad=(select idft_indicadores_calidad from ft_indicadores_calidad where documento_iddocumento=$iddoc)", "", $conn);
 if ($formulas["numcampos"]) {
 	for ($i = 0; $i < $formulas["numcampos"]; $i++) {
-		echo "<table width='100%' cellpadding=5 class='phpmaker'><tr class='encabezado_list'><td colspan='7' style='font-size:10pt;'>Formula del Calculo:<br />" . $formulas[$i]["nombre"] . "</td></tr><tr class='encabezado_list'><td  style='font-size:10pt;'>Fecha</td><td  style='font-size:10pt;'>Meta</td><td  style='font-size:10pt;'>Resultado</td><td  style='font-size:10pt;'>Cumplimiento</td><td  style='font-size:10pt;'>An&aacute;lisis de Datos</td><td colspan=2  style='font-size:10pt;'></td></tr>";
+		echo "<table width='100%' cellpadding=5 class='phpmaker'>
+		        <tr class='encabezado_list'>
+		            <td colspan='7' style='font-size:10pt;'>Formula del Calculo:<br />" . $formulas[$i]["nombre"] . "</td>
+		        </tr>
+		        <tr class='encabezado_list'>
+		            <td  style='font-size:10pt;'>Fecha</td>
+		            <td  style='font-size:10pt;'>Meta</td>
+		            <td  style='font-size:10pt;'>Resultado</td>
+		            <td  style='font-size:10pt;'>Cumplimiento</td>
+		            <td  style='font-size:10pt;'>An&aacute;lisis de Datos</td>
+		            <td colspan=2  style='font-size:10pt;'></td>
+		        </tr>";
 		$DataSet = new pData;
 
 		$seg = busca_filtro_tabla("f.*," . fecha_db_obtener("fecha_seguimiento", "Y-m-d") . " as fecha_seguimiento", "ft_seguimiento_indicador f,documento d", "documento_iddocumento=iddocumento and d.estado<>'ELIMINADO' and ft_formula_indicador=" . $formulas[$i]["id"], "f.fecha_seguimiento", $conn);
