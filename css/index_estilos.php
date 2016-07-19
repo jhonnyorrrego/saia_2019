@@ -181,6 +181,7 @@ function index_estilos($tipo_tema) {
 		#contenedor_tabla{width: 25%; padding:10px; vertical-align:bottom}
 		#texto_pequenio{font-size:10px;font-weight:bold;}
 		hr {margin: 2px 0;border: 0;border-top: 1px solid rgb(77, 167, 226);border-bottom: 1px solid rgb(84, 167, 233);}
+		#userid, #passwd { background-color: transparent; height: auto; width: 200px; font-family: Verdana, Geneva, sans-serif; font-size: 20px; color: #999; font-weight: bold; margin-bottom:3px}
 		</style>';
     }
 return $tema_index;
