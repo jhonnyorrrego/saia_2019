@@ -168,6 +168,7 @@ function index_estilos($tipo_tema) {
     		</style>';
 		break;
 	}
-	return $tema_index;
 }
+return $tema_index;
+}	
 ?>
