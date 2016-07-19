@@ -126,7 +126,7 @@ if ($formulas["numcampos"]) {
 		            <td  style='font-size:10pt;'>Cumplimiento</td>
 		            <td  style='font-size:10pt;'>An&aacute;lisis de Datos</td>
 		            <td colspan='2' style='font-size:10pt;'>&nbsp;</td>
-	      </tr>";
+	            </tr>";
 	for ($i = 0; $i < $formulas["numcampos"]; $i++) {
 
 	
