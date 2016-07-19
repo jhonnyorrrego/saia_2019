@@ -15,8 +15,8 @@ if($_REQUEST['iddoc']){
 	$ruta_grafico=$ruta_db_superior."temporal_".usuario_actual("login")."/".$_REQUEST['iddoc']."/";
 	
 	$archivo_eliminar='';
-	if(@$_REQUEST['nombre_imagen']){
-	    $archivo_eliminar=$_REQUEST['nombre_imagen'];
+	if(@$_REQUEST['nombre_imagen'] && @$_REQUEST['extension']){
+	    $archivo_eliminar=$_REQUEST['nombre_imagen'].$_REQUEST['extension'];
     	if(file_exists($ruta_grafico.$archivo_eliminar)){
     		unlink($ruta_grafico.$archivo_eliminar);
     	}
