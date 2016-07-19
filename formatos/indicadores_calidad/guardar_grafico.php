@@ -11,25 +11,16 @@ while($max_salida>0){
 include_once ($ruta_db_superior."db.php");
 $exito=0;
 if($_REQUEST['iddoc']){
+    
 	$ruta_grafico=$ruta_db_superior."temporal_".usuario_actual("login")."/".$_REQUEST['iddoc']."/";
 	
-	
 	$archivo_eliminar='';
-	switch(@$_REQUEST['guardar_imagen']){
-    case 1:
-        $archivo_eliminar='total_evaluacion.png';
-        break;
-    case 2:
-        $archivo_eliminar='competencias.png';
-        break;
-    }
-	
-	
-	if(file_exists($ruta_grafico.$archivo_eliminar)){
-		//borrar_archivos_graficos($ruta_grafico,0);
-		unlink($ruta_grafico.$archivo_eliminar);
+	if(@$_REQUEST['nombre_imagen']){
+	    $archivo_eliminar=$_REQUEST['nombre_imagen'];
+    	if(file_exists($ruta_grafico.$archivo_eliminar)){
+    		unlink($ruta_grafico.$archivo_eliminar);
+    	}
 	}
-	
 	
 	
 	if(!file_exists($ruta_grafico)){
@@ -48,8 +39,6 @@ if($_REQUEST['iddoc']){
 			$exito=1;
 		}
 	}
-	
-
 }
 if($datos_img1==1){
 	echo 1;
