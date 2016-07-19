@@ -59,7 +59,6 @@ if ( $detect->isMobile() ) {
 date_default_timezone_set ("America/Bogota");
 if(isset($_REQUEST['sesion']))
   $_SESSION["LOGIN".LLAVE_SAIA]=$_REQUEST['sesion']; 
-echo(estilo_bootstrap());
 if(@$_SESSION["LOGIN".LLAVE_SAIA]){
     $fondo=busca_filtro_tabla("A.valor","configuracion A","A.tipo='empresa' AND A.nombre='fondo'","A.fecha,A.valor DESC",$conn);
     almacenar_sesion(1,"");
@@ -97,8 +96,8 @@ if($_SESSION["tipo_dispositivo"]=="movil"){
 </style>
 <?php 
 include_once("css/index_estilos.php");
+echo(estilo_bootstrap());
 if(@$_SESSION["tipo_dispositivo"]=="movil"){ 
-    echo(estilo_bootstrap());
     echo(index_estilos('temas_movil'));
     echo(index_estilos('temas_bootstrap'));
 }
