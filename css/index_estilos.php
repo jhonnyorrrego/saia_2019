@@ -153,7 +153,7 @@ function index_estilos($tipo_tema) {
 		break;
 		}
 	}
-    if("temas_index"){
+    if($tipo_tema=="temas_index"){
     	$tema_index .= '<style type="text/css">
 		body { overflow-x:hidden; margin-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; background-image: url('.$ruta_db_superior.'imagenes/login/mainbkg.png); background-repeat: repeat-x; background-position: left top; background-color: #e7e7e7; font-family: Verdana, Geneva, sans-serif; font-size: 10px; font-weight: normal; }
 		#LoginBkg { background-image: url('.$ruta_db_superior.'imagenes/login/loginbkg.png); background-repeat: no-repeat; background-position: center center; }
