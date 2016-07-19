@@ -183,7 +183,7 @@ if ($formulas["numcampos"]) {
                     <td bgcolor="'.$color.'" align="right"  style="font-size:10pt;">' . $respuesta . $formulas[$i]["unidad"] . '</td>
                     <td align="center" style="font-size:10pt;">' . $cumplimiento . '%</td>';
 			
-			echo "  <td style='text-align:center'><a class='previo_high' enlace='formatos/seguimiento_indicador/mostrar_seguimiento_indicador.php?iddoc=" . $seg[$j]["documento_iddocumento"] . "' style='color:blue;cursor:pointer'>Ver</a></td>";
+			echo '  <td style="text-align:center"><a class="previo_high" enlace="formatos/seguimiento_indicador/mostrar_seguimiento_indicador.php?iddoc=' . $seg[$j]["documento_iddocumento"] . '" style="color:blue;cursor:pointer">Ver</a></td>';
 			if (!isset($_REQUEST["tipo"]) || $_REQUEST["tipo"] == 1){
 			    echo "
 			        <td align='center' width='200px'><a target='centro' href='../plan_mejoramiento/adicionar_plan_mejoramiento.php?seguimiento_indicador=" . $seg[$j]["idft_seguimiento_indicador"] . "'>Adicionar Plan</a></td>
