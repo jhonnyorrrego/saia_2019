@@ -21,8 +21,8 @@ if($_REQUEST['iddoc']){
     	if(file_exists($ruta_grafico.$archivo_eliminar)){
     		unlink($ruta_grafico.$archivo_eliminar);
     	}
-	}die();
-	
+	}
+	/*
 	if($_REQUEST['img']){
 		$datoimg=explode(";",$_REQUEST['img']);
 		$decode=explode(",",$datoimg[1]);
@@ -35,6 +35,7 @@ if($_REQUEST['iddoc']){
 			$exito=1;
 		}
 	}
+	*/
 }
 echo($exito); 
 ?>
