@@ -13,16 +13,9 @@ while($max_salida>0){
 <?php 
 include_once("db.php");
 include_once("librerias_saia.php");
-include_once("cargando.php");
-
-
 if(@$_REQUEST['texto_salir']){
-	
-
 	echo(librerias_jquery("1.7"));
 	echo(librerias_notificaciones());
-	
-	
 	?>
 		<script>
 			var texto_salir='<?php echo(@$_REQUEST['texto_salir']); ?>';
@@ -77,32 +70,10 @@ if($logo["numcampos"] && is_file($logo[0]["valor"])){
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <!-- PERMITE QUE LAS NOTICIAS FLOTEN EN LA PARTE INFERIOR IZQUIERDA DE LA PANTALLA-->
-<style type="text/css">
-
-#div_noticias{
-position: absolute;
-bottom: 0px;
-left: 0px;
-margin-bottom: 40px;
-margin-left: 40px;
-background-color: transparent;
-vertical-align: sub;
-width:400px;
-<?php
-if($_SESSION["tipo_dispositivo"]=="movil"){
-    echo("display:none;");
-}
-?>
-}
-</style>
 <?php 
     echo(estilo_bootstrap());
-
 ?>
 </head>
-<?php
-$mayor_informacion=busca_filtro_tabla("valor","configuracion","nombre='mayor_informacion'","",$conn);
-?>
 <body>
 
 <div class="container">
@@ -130,61 +101,11 @@ $mayor_informacion=busca_filtro_tabla("valor","configuracion","nombre='mayor_inf
             </div>
         </form>
 </div>
-
-
-
-  	
-
-
 </body>
 </html>
 <?php 
-
   echo(librerias_jquery("1.7"));
   echo(librerias_highslide());
   echo(librerias_bootstrap());
   echo(librerias_notificaciones());
 ?>
-<script>
-var mensaje="<b>El nombre de usuario o contrase&ntilde;a introducidos no son correctos! </b> <br> intente de nuevo";
-var tiempo=3500;
-$("#tabla_principal").height($(window).height()-56);
-$("#ingresar").click(function(){	
-  if($("#userid").val() && $("#passwd").val()){
-  	//$("#formulario_login").submit();
-    $.ajax({
-      type:'POST',
-      url: "verificar_login.php",
-      data: "userid="+$("#userid").val()+"&passwd="+$("#passwd").val()+"&INDEX=<?php echo(@$_REQUEST['INDEX']);?>",
-      success: function(html){   
-        if(html){
-          var objeto=jQuery.parseJSON(html);
-          mensaje=objeto.mensaje;          
-          if(objeto.ingresar==1){
-            noty({text: mensaje,type: 'success',layout: "topCenter",timeout:tiempo});
-            setTimeout(function(){window.location=objeto.ruta},(tiempo+100));
-          }  
-          else{
-            noty({text: mensaje,type: 'error',layout: "topCenter",timeout:tiempo});
-          }                         
-        }
-      },
-      error:function(){
-        alert("ERROR");
-      }
-    });
-  }
-  else{                         
-    noty({text: "<b>Por favor ingrese un usuario y una clave v&aacute;lidos!</b> <br> intente de nuevo",type: 'error',layout: "topCenter",timeout:tiempo});
-  }  
-});
-$(document).keypress(function(event) {
-    var keycode = (event.keyCode ? event.keyCode : event.which);
-    if(keycode == '13') {
-        $("#ingresar").click();
-    }
-});
-hs.graphicsDir = 'anexosdigitales/highslide-4.0.10/highslide/graphics/';
-hs.outlineType = 'rounded-white';
-
-</script>
