@@ -222,10 +222,11 @@ if ($formulas["numcampos"]) {
 			    
 			if(@$_REQUEST['tipo']!=5){
     			echo('
-                    <tr><td colspan="7">
-                        <div id="contenedor_grafico_pc" style="width: 700px;height:240px;"></div>
-                        <br/>
-                        <div id="contenedor_grafico_rs" style="width: 700px;height:240px;"></div>
+                    <tr>
+                        <td colspan="7">
+                         <div id="contenedor_grafico_pc" style="width: 700px;height:240px;"></div>
+                         <br/>
+                         <div id="contenedor_grafico_rs" style="width: 700px;height:240px;"></div>
                         </td> 
                     </tr>
     			');
