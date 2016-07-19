@@ -108,7 +108,7 @@ if(@$_REQUEST['tipo']!=5){
 	}); 
 </script>
 <?php
-}
+}   
 echo "
     <br />
         <span class='phpmaker'><b>SEGUIMIENTOS</b></span>
