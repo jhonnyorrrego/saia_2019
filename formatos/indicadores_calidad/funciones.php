@@ -322,7 +322,7 @@ if ($formulas["numcampos"]) {
     			if(file_exists($ruta_db_superior.$ruta_grafico)){
     				$datos=explode(",",listado_directorio($ruta_db_superior.$ruta_grafico));
     				echo('<tr><td colspan="5">');
-    				for($i=0;$i<count($datos);$i++){
+    				for($x=0;$x<count($datos);$x++){
     					echo '<div align="center"><img src="'.RUTA_PDF_LOCAL.'/'.$ruta_grafico.$datos[$i].'"><br/></div>';
     				}
     				echo('</td></tr>');
