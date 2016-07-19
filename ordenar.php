@@ -113,7 +113,7 @@ $(document).ready(function(){
 <?php
 if($formato["numcampos"]){ 
  $llave=encrypt_blowfish("idformato=".$formato[0]["idformato"]."&iddoc=".$iddocumento,LLAVE_SAIA_CRYPTO); 
- print_r($llave);
+ print_r("idformato=".$formato[0]["idformato"]."&iddoc=".$iddocumento);
  die();
 ?>
 <script type="text/javascript">
