@@ -17,7 +17,7 @@ include_once($ruta_db_superior."db.php");
 
 
 function generar_grafico_barra($configuracion_grafico){  // REQUIERE librerias_jquery('1.7') & librerias_graficos()
-    global $conn;
+    global $ruta_db_superior,$conn;
     
         /*
         // -----> BARRA
@@ -149,7 +149,7 @@ function generar_grafico_barra($configuracion_grafico){  // REQUIERE librerias_j
 
 
 function generar_grafico_torta($configuracion_grafico){
-    global $conn;
+    global $ruta_db_superior,$conn;
     
             /*
             // -----> TORTA
@@ -235,7 +235,7 @@ function generar_grafico_torta($configuracion_grafico){
 }
 
 function generar_grafico_linea($configuracion_grafico){
-    global $conn;
+    global $ruta_db_superior,$conn;
     
         /*
         // -----> LINEA
