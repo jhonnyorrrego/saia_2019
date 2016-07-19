@@ -13,7 +13,7 @@ while($max_salida>0){
 <?php 
 include_once("db.php");
 include_once("librerias_saia.php");
-//include_once("cargando.php");
+include_once("cargando.php");
 
 
 if(@$_REQUEST['texto_salir']){
@@ -59,6 +59,7 @@ if ( $detect->isMobile() ) {
 date_default_timezone_set ("America/Bogota");
 if(isset($_REQUEST['sesion']))
   $_SESSION["LOGIN".LLAVE_SAIA]=$_REQUEST['sesion']; 
+echo(estilo_bootstrap());
 if(@$_SESSION["LOGIN".LLAVE_SAIA]){
     $fondo=busca_filtro_tabla("A.valor","configuracion A","A.tipo='empresa' AND A.nombre='fondo'","A.fecha,A.valor DESC",$conn);
     almacenar_sesion(1,"");
@@ -95,22 +96,15 @@ if($_SESSION["tipo_dispositivo"]=="movil"){
 }
 </style>
 <?php 
-/*include_once("css/index_estilos.php");
-echo(estilo_bootstrap());
-if(@$_SESSION["tipo_dispositivo"]=="movil"){ 
-    echo(index_estilos('temas_movil'));
-    echo(index_estilos('temas_bootstrap'));
-}
-else{
-    echo(index_estilos('temas_index'));    
-    echo(index_estilos('temas_main'));
-}*/
+    echo(estilo_bootstrap());
+
 ?>
 </head>
 <?php
 $mayor_informacion=busca_filtro_tabla("valor","configuracion","nombre='mayor_informacion'","",$conn);
 ?>
 <body>
+
 <div class="container">
         <form method="post" name="loguin" action="login.php" class="form-horizontal">
         <?php if($_SESSION["tipo_dispositivo"]=="movil"){ ?>    
@@ -134,84 +128,20 @@ $mayor_informacion=busca_filtro_tabla("valor","configuracion","nombre='mayor_inf
                   	<a href="recordar_contrasena.php" style="cursor:pointer" class="highslide" onclick="return hs.htmlExpand(this,{objectType:'iframe',width: 550, height: 300, preserveContent:false})">¿No puedes acceder a tu cuenta?</a>
                 </div>
             </div>
-        <?php }
-        else{
-          ?>
-        <table width="700" border="0" cellspacing="0" cellpadding="0">
-          <tr>
-            <td height="30" colspan="6">&nbsp;</td>
-          </tr>
-          <tr>
-            <td width="62" rowspan="2">&nbsp;</td>
-            <td width="125" rowspan="2" align="left" valign="top">
-              <div id="CustomerLogoContainer" align="center"><img src="<?php echo($ruta_logo);?>"></div>
-            </td>
-            <td width="18" rowspan="2" align="left" valign="top">&nbsp;</td>
-            <td width="102" height="50" nowrap class="blueTexts">Nombre de usuario:</td>
-            <td width="225">
-              <input type="text" name="userid" id="userid" style="width:200px; height:40px;">
-            </td>
-            <td width="168" rowspan="2">&nbsp;</td>
-          </tr>
-          <tr>
-            <td height="50" nowrap class="blueTexts">Clave de Acceso:</td>
-            <td height="50">
-              <input type="password" name="passwd" id="passwd" style="width:200px; height:40px;">
-            </td>
-          </tr>
-          <tr>
-            <td height="50" colspan="5" align="right" valign="bottom">
-              <table width="100%" border="0" cellspacing="0" cellpadding="0">
-                <tr>
-                  <!--td width="60%" align="right" valign="middle" nowrap>Recordar Usuario</td>
-                  <td width="4%" align="right" valign="middle" nowrap>
-                    <input name="rememberme" type="checkbox" id="rememberme" value="1" align="absmiddle">
-                  </td>
-                  <td width="14%" align="right" valign="middle" nowrap>&nbsp;&nbsp;Recordar Clave</td>
-                  <td width="4%" align="right" valign="middle" nowrap>
-                    <input name="rememberme_pwd" type="checkbox" id="rememberme_pwd" value="1" align="absmiddle">
-                  </td-->
-                  <td width="18%" colspan="6" align="right" valign="top" nowrap>
-                    <br />
-                  	<p>
-                  	<input type="hidden" name="boton_ui" value="Acceder">
-                    <button name="boton_ui" type="button" class="btn btn-primary" id="ingresar">Iniciar sesi&oacute;n</button>
-                    </p>
-                  	<p>
-                  	<input type="hidden" name="boton_ui" value="Acceder">
-                  	<a href="recordar_contrasena.php" style="cursor:pointer" class="highslide" onclick="return hs.htmlExpand(this,{objectType:'iframe',width: 550, height: 300, preserveContent:false})">¿No puedes acceder a tu cuenta?</a>
-                  	</p>
-                  	
-                  	
-                  </td>
-                </tr>
-                <tr>
-				<td align="left">
-					<br/>
-					<br/>
-				</td>
-                </tr>
-              </table>
-            </td>
-            <td>&nbsp;</td>
-          </tr>
-        </table>
-          
-          <?php
-        }
-        ?>
-        <br>
         </form>
 </div>
 
 
 
+  	
 
 
 </body>
 </html>
 <?php 
+
   echo(librerias_jquery("1.7"));
+  echo(librerias_highslide());
   echo(librerias_bootstrap());
   echo(librerias_notificaciones());
 ?>
