@@ -3354,7 +3354,6 @@ function crear_pdf_documento_tcpdf($datos_documento, $datos_ejecutor=null){
 		// Establecer URL y otras opciones apropiadas	
 		$url = "http://".RUTA_PDF_LOCAL."/class_impresion.php?iddoc=".$datos_documento['iddocumento'];
 		$datos_session="&LOGIN=".$_SESSION["LOGIN".LLAVE_SAIA]."&usuario_actual=".$_SESSION["usuario_actual"]."&LLAVE_SAIA=".LLAVE_SAIA;
-		//print_r($url);die();
 		$url=$url.$datos_session;
 		curl_setopt($ch, CURLOPT_URL, $url);
 		
@@ -3369,7 +3368,7 @@ function crear_pdf_documento_tcpdf($datos_documento, $datos_ejecutor=null){
 		$fecha_guion_bajo=$fecha[0].'_'.$fecha[1].'_'.$fecha[2];
 		$ruta = RUTA_PDFS.$datos_documento["estado"]."/".$fecha[0]."-".$fecha[1]."/".$datos_documento["iddocumento"]."/pdf/";			
 		$ruta .= strtoupper($datos_documento["plantilla"]."_".$datos_documento["numero"]."_".$fecha_guion_bajo).".pdf";
-		print_r($ruta);die();
+		
 	}else{
 		$ruta = $pdf[0]["pdf"];		
 	}
