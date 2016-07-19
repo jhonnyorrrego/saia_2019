@@ -105,8 +105,8 @@ else{
     echo(index_estilos('temas_index'));    
     echo(index_estilos('temas_main'));
 }
+echo("----FIN-----");
 ?>
-
 </head>
 <?php
 $mayor_informacion=busca_filtro_tabla("valor","configuracion","nombre='mayor_informacion'","",$conn);
