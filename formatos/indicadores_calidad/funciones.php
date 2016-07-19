@@ -177,16 +177,16 @@ if ($formulas["numcampos"]) {
 				//VERDE
 			}
 			echo "<tr>
-                    <td align='center' class='phpmaker'>" . $seg[$j]["fecha_seguimiento"] . "</td>
-                    <td align='right' class='phpmaker'>" . $seg[$j]["meta_indicador_actual"] . $formulas[$i]["unidad"] . "</td>
-                    <td bgcolor='$color' align='right' class='phpmaker'>" . $respuesta . $formulas[$i]["unidad"] . "</td>
-                    <td align='center' class='phpmaker'>" . $cumplimiento . "%</td>";
+                    <td align='center' >" . $seg[$j]["fecha_seguimiento"] . "</td>
+                    <td align='right' >" . $seg[$j]["meta_indicador_actual"] . $formulas[$i]["unidad"] . "</td>
+                    <td bgcolor='$color' align='right' >" . $respuesta . $formulas[$i]["unidad"] . "</td>
+                    <td align='center' >" . $cumplimiento . "%</td>";
 			
 			echo "  <td class='phpmaker' style='text-align:center'><a class='previo_high' enlace='formatos/seguimiento_indicador/mostrar_seguimiento_indicador.php?iddoc=" . $seg[$j]["documento_iddocumento"] . "' style='color:blue;cursor:pointer'>Ver</a></td>";
 			if (!isset($_REQUEST["tipo"]) || $_REQUEST["tipo"] == 1){
 			    echo "
-			        <td align='center' width='200px'  class='phpmaker'><a target='centro' href='../plan_mejoramiento/adicionar_plan_mejoramiento.php?seguimiento_indicador=" . $seg[$j]["idft_seguimiento_indicador"] . "'>Adicionar Plan</a></td>
-                    <td align='center'  class='phpmaker'><a class='highslide' onclick='return hs.htmlExpand(this, { objectType: \"iframe\",width: 500, height:400,preserveContent:false } )'  href='planes_relacionados.php?tipo=indicador&seguimiento_indicador=" . $seg[$j]["idft_seguimiento_indicador"] . "'>Ver Planes</a></td>";
+			        <td align='center' width='200px'><a target='centro' href='../plan_mejoramiento/adicionar_plan_mejoramiento.php?seguimiento_indicador=" . $seg[$j]["idft_seguimiento_indicador"] . "'>Adicionar Plan</a></td>
+                    <td align='center' ><a class='highslide' onclick='return hs.htmlExpand(this, { objectType: \"iframe\",width: 500, height:400,preserveContent:false } )'  href='planes_relacionados.php?tipo=indicador&seguimiento_indicador=" . $seg[$j]["idft_seguimiento_indicador"] . "'>Ver Planes</a></td>";
 			}else{
 			    echo "<td></td><td></td>";
 			}	
