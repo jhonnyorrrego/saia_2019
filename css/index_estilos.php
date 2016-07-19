@@ -77,7 +77,8 @@ function index_estilos($tipo_tema) {
 			}
 		}
 
-		if ($tipo_tema == 'temas_main') {
+		switch($tipo_tema) {
+		   case "tema_main":
 			$tema_index .= '<style type="text/css">
 				body, * { font-family: Verdana, Geneva, sans-serif; font-size: 10px; color: '.$color_letra.'; }
 				body { overflow-x:hidden; margin-left: 0px; margin-top: 0px;margin-right: 0px; margin-bottom: 0px; 
@@ -104,8 +105,8 @@ function index_estilos($tipo_tema) {
 				.boton_saia { font-family: "Trebuchet MS", Arial, Helvetica, sans-serif; font-size: 12px; font-weight: bold; color: #4c4c4c; padding: 5px; width:100px; text-align:center;}
 				.sombra_f5 { -webkit-box-shadow: 0px 0px 10px 0px #E4E4E4; -moz-box-shadow: 0px 0px 10px 0px #E4E4E4; box-shadow: 0px 0px 10px 0px #E4E4E4; color:#4c4c4c; }
 				</style>';
-		}
-		if ($tipo_tema=='temas_bootstrap'){
+		break;
+		case 'temas_bootstrap':
 			$tema_index .= '<style type="text/css">
 			.btn-primary{
 				  background-color: '.$boton_hover.';
@@ -137,8 +138,8 @@ function index_estilos($tipo_tema) {
 			    background-color: '.$label_info.';
 			}
 			</style>';
-		}
-		if ($tipo_tema == 'temas_kaiten') {
+		break;
+		case 'temas_kaiten':
 			$tema_index .= '<style type="text/css">
 			.k-panel.k-focus .titlebar{
 				background:-webkit-linear-gradient('.$barra_busqueda.');
@@ -149,22 +150,23 @@ function index_estilos($tipo_tema) {
 			-webkit-user-select:none;-o-user-select:none;user-select:none;overflow:hidden;
 			white-space:nowrap;-o-text-overflow:ellipsis;text-overflow:ellipsis;white-space:nowrap}
 			</style>';
-		}
-	}else{
-		$tema_index .= '<style type="text/css">
-		body { overflow-x:hidden; margin-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; background-image: url('.$ruta_db_superior.'imagenes/login/mainbkg.png); background-repeat: repeat-x; background-position: left top; background-color: #e7e7e7; font-family: Verdana, Geneva, sans-serif; font-size: 10px; font-weight: normal; }
-		#LoginBkg { background-image: url('.$ruta_db_superior.'imagenes/login/loginbkg.png); background-repeat: no-repeat; background-position: center center; }
-		#loginForm { margin: auto; width: 700px; height: 180px; }
-		.footer_login { font-weight: bold; background-image: url('.$ruta_db_superior.'imagenes/login/footerbkg.png); background-repeat: repeat-x; background-position: left top; height: 25px; width: 100%; padding-top: 0px; padding-bottom: 0px; text-align: right; color: #FFF; position: fixed; bottom: 0px; }
-		.footer_login_text, .footer_login_text * { color:#FFF; font-size:11px; font-weight:bold; }
-		.blueTexts { font-family: Verdana, Geneva, sans-serif; font-size: 9px; font-weight: bold; color: #036; text-decoration: none; }
-		.boton_ui { -webkit-border-radius: 6px; -moz-border-radius: 6px; border-radius: 6px; background-color: #FFF; font-family: Verdana, Geneva, sans-serif; font-size: 10px; font-weight: bold; padding: 10px; border: 1px solid #CCC; }
-		#CustomerLogoContainer { width: 125px; height: 87px; overflow: hidden; margin-top: 10px; margin-bottom: 5px; }   
-		#contenedor_tabla{width: 25%; padding:10px; vertical-align:bottom}
-		#texto_pequenio{font-size:10px;font-weight:bold;}
-		hr {margin: 2px 0;border: 0;border-top: 1px solid rgb(77, 167, 226);border-bottom: 1px solid rgb(84, 167, 233);}
-		#userid, #passwd { background-color: transparent; height: auto; width: 200px; font-family: Verdana, Geneva, sans-serif; font-size: 20px; color: #999; font-weight: bold; margin-bottom:3px}
-		</style>';
+		break;
+		case "temas_index":
+    		$tema_index .= '<style type="text/css">
+    		body { overflow-x:hidden; margin-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; background-image: url('.$ruta_db_superior.'imagenes/login/mainbkg.png); background-repeat: repeat-x; background-position: left top; background-color: #e7e7e7; font-family: Verdana, Geneva, sans-serif; font-size: 10px; font-weight: normal; }
+    		#LoginBkg { background-image: url('.$ruta_db_superior.'imagenes/login/loginbkg.png); background-repeat: no-repeat; background-position: center center; }
+    		#loginForm { margin: auto; width: 700px; height: 180px; }
+    		.footer_login { font-weight: bold; background-image: url('.$ruta_db_superior.'imagenes/login/footerbkg.png); background-repeat: repeat-x; background-position: left top; height: 25px; width: 100%; padding-top: 0px; padding-bottom: 0px; text-align: right; color: #FFF; position: fixed; bottom: 0px; }
+    		.footer_login_text, .footer_login_text * { color:#FFF; font-size:11px; font-weight:bold; }
+    		.blueTexts { font-family: Verdana, Geneva, sans-serif; font-size: 9px; font-weight: bold; color: #036; text-decoration: none; }
+    		.boton_ui { -webkit-border-radius: 6px; -moz-border-radius: 6px; border-radius: 6px; background-color: #FFF; font-family: Verdana, Geneva, sans-serif; font-size: 10px; font-weight: bold; padding: 10px; border: 1px solid #CCC; }
+    		#CustomerLogoContainer { width: 125px; height: 87px; overflow: hidden; margin-top: 10px; margin-bottom: 5px; }   
+    		#contenedor_tabla{width: 25%; padding:10px; vertical-align:bottom}
+    		#texto_pequenio{font-size:10px;font-weight:bold;}
+    		hr {margin: 2px 0;border: 0;border-top: 1px solid rgb(77, 167, 226);border-bottom: 1px solid rgb(84, 167, 233);}
+    		#userid, #passwd { background-color: transparent; height: auto; width: 200px; font-family: Verdana, Geneva, sans-serif; font-size: 20px; color: #999; font-weight: bold; margin-bottom:3px}
+    		</style>';
+		break;
 	}
 	return $tema_index;
 }
