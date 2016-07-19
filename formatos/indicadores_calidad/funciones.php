@@ -17,6 +17,7 @@ echo( librerias_graficos() );
 function formula_calculo($idformato,$iddoc){
   global $conn;
   $respuesta=busca_filtro_tabla("","respuesta,documento","destino=iddocumento and documento.estado<>'ELIMINADO' and origen=".$iddoc,"",$conn); 
+  $idformato_formula_indicador=busca_filtro_tabla("","documento a, formato b","lower(a.plantilla)=lower(b.nombre) AND a.iddocumento=".$respuesta[0]["destino"],"",$conn);
   $texto='<table  class="phpmaker" width="100%">';
   $texto.='<tr class="encabezado_list" >
             <td style="font-size:10pt;">Form</td>
@@ -27,6 +28,8 @@ function formula_calculo($idformato,$iddoc){
             <td style="font-size:10pt;">Descripci&oacute;n de variables</td>
             <td style="font-size:10pt;">Observaciones</td>
             </tr>';
+            
+            //mostrar_valor_campo($campo,$idformato,$iddoc,$tipo=NULL)
   for($i=0;$i<$respuesta["numcampos"];$i++){
     $formula=busca_filtro_tabla("","ft_formula_indicador","documento_iddocumento=".$respuesta[$i]["destino"],"",$conn); 
     $texto.='<tr>
