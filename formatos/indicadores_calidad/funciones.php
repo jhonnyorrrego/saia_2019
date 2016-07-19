@@ -17,7 +17,7 @@ echo( librerias_graficos() );
 function formula_calculo($idformato,$iddoc){
   global $conn;
   $respuesta=busca_filtro_tabla("","respuesta,documento","destino=iddocumento and documento.estado<>'ELIMINADO' and origen=".$iddoc,"",$conn); 
-  $idformato_formula_indicador=busca_filtro_tabla("","documento a, formato b","lower(a.plantilla)=lower(b.nombre) AND a.iddocumento=".$respuesta[0]["destino"],"",$conn);
+  $idformato_formula_indicador=busca_filtro_tabla("b.idformato","documento a, formato b","lower(a.plantilla)=lower(b.nombre) AND a.iddocumento=".$respuesta[0]["destino"],"",$conn);
   $texto='<table  class="phpmaker" width="100%">';
   $texto.='<tr class="encabezado_list" >
             <td style="font-size:10pt;">Form</td>
@@ -36,10 +36,10 @@ function formula_calculo($idformato,$iddoc){
                 <td style="font-size:10pt;">'.$formula[0]["idft_formula_indicador"].'</td>
                 <td align="center">'.$formula[0]["nombre"].'</td>
                 <td align="center">'.$formula[0]["unidad"].'</td>
-                <td align="center" style="font-size:10pt;">'.mostrar_valor_campo('naturaleza',51,$respuesta[$i]["destino"],1).'</td>
-                <td align="center" style="font-size:10pt;">'.mostrar_valor_campo('periocidad',51,$respuesta[$i]["destino"],1).'</td>
+                <td align="center" style="font-size:10pt;">'.mostrar_valor_campo('naturaleza',$idformato_formula_indicador[0]['idformato'],$respuesta[$i]["destino"],1).'</td>
+                <td align="center" style="font-size:10pt;">'.mostrar_valor_campo('periocidad',$idformato_formula_indicador[0]['idformato'],$respuesta[$i]["destino"],1).'</td>
                 <td style="font-size:10pt;">'.strip_tags(utf8_encode(html_entity_decode($formula[0]["observacion"]))).'</td>
-                <td>'.mostrar_valor_campo('observaciones',51,$respuesta[$i]["destino"],1).'</td>
+                <td>'.mostrar_valor_campo('observaciones',$idformato_formula_indicador[0]['idformato'],$respuesta[$i]["destino"],1).'</td>
             </tr>';
   } 
   $texto.='</table>';
