@@ -24,4 +24,4 @@
                     </tr><tr>
                      <td class="encabezado" width="20%" title="Cliente de la Actividad puede ser una Entidad o Porceso">CLIENTE*</td>
                      <td class="celda_transparente"><textarea  tabindex='6'  name="cliente" id="cliente" cols="53" rows="3" class="tiny_basico required"><?php echo(validar_valor_campo(4316)); ?></textarea></td>
-                    </tr><input type="hidden" name="campo_descripcion" value="4313"><tr><td colspan='2'><?php submit_formato(368);?></td></tr></table></form></body></html>
+                    </tr><?php if($_REQUEST["padre"]) {?><input type="hidden"  name="ft_proceso"  value="<?php echo $_REQUEST["padre"]; ?>"><?php } ?><?php if($_REQUEST["anterior"]) {?><input type="hidden"  name="ft_proceso"  value="<?php echo $_REQUEST["anterior"]; ?>"><?php }  else {listar_select_padres(ft_proceso);} ?><input type="hidden" name="campo_descripcion" value="4313"><tr><td colspan='2'><?php submit_formato(368);?></td></tr></table></form></body></html>
