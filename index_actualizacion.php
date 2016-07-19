@@ -29,11 +29,6 @@ if($recarga["numcampos"]){
 else{
   $intervalo_recarga_informacion=900000; ////Esto debería estar en configuración aquí recarga cada 15 minutos
 }  
-include_once($ruta_db_superior."pantallas/lib/mobile_detect.php");
-$detect = new Mobile_Detect;
-if ( $detect->isMobile() ) {
-	$_SESSION["tipo_dispositivo"]="movil";
-}
 /*************actualizacion de fin de año ********/
 /*
 $proxima=busca_filtro_tabla("valor","configuracion","nombre='actualizacion_fin_anio'","",$conn);
