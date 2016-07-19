@@ -390,7 +390,7 @@ function guardar_grafico_temporal($datos_guardar){
     					if(respuesta){
     						console.log("Imagen guardada...");
     					}else{
-    						console.log("Error al guardar las imagenes...");
+    						console.log("Error al guardar la imagen...");
     					}
     				}
                });
