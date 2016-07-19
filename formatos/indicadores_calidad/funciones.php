@@ -80,6 +80,8 @@ function nombre_padre($idformato,$iddoc,$tipo=NULL){
 
 function resultados_indicador($idformato,$iddoc){
   global $conn, $ruta_db_superior;
+if(@$_REQUEST['tipo']!=5){
+    
 
 ?>
 <script type="text/javascript" src="../../anexosdigitales/highslide-4.0.10/highslide/highslide-with-html.js"></script>
@@ -106,6 +108,7 @@ function resultados_indicador($idformato,$iddoc){
 	}); 
 </script>
 <?php
+}
 echo "
     <br />
         <span class='phpmaker'><b>SEGUIMIENTOS</b></span>
