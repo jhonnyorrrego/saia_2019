@@ -45,7 +45,7 @@ function generar_grafico_barra($configuracion_grafico){  // REQUIERE librerias_j
         //PARSEO renderAsImage
         $generar_imagen='';
         if($configuracion_grafico['imagen']){
-            $generar_imagen='renderAsImage:true,';
+            $generar_imagen='renderAsImage:"jpeg",';
         }
         
         //PARSEO NOMBRES & COLORES
