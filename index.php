@@ -139,13 +139,13 @@ $mayor_informacion=busca_filtro_tabla("valor","configuracion","nombre='mayor_inf
             <div class="control-group">
                 <label class="control-label blueTexts" for="inputEmail">Nombre de usuario:</label>
                 <div class="controls">
-                  <input type="text" name="userid" id="userid" style="width:200px; height:40px;">
+                  <input type="text" name="userid" id="userid">
                 </div>
             </div>
             <div class="control-group">
                 <label class="control-label blueTexts" for="inputPassword">Clave de Acceso:</label>
                 <div class="controls">
-                  <input type="password" name="passwd" id="passwd" style="width:200px; height:40px;">
+                  <input type="password" name="passwd" id="passwd">
                 </div>
             </div>
             <div class="control-group">
