@@ -172,7 +172,7 @@ function generar_grafico_torta($configuracion_grafico){
         //PARSEO renderAsImage
         $generar_imagen='';
         if($configuracion_grafico['imagen']){
-            $generar_imagen='renderAsImage:true,';
+            $generar_imagen='renderAsImage:"jpeg",';
         }
         
         //PARSEO NOMBRES Y VALORES
@@ -262,7 +262,7 @@ function generar_grafico_linea($configuracion_grafico){
         //PARSEO renderAsImage
         $generar_imagen='';
         if($configuracion_grafico['imagen']){
-            $generar_imagen='renderAsImage:true,';
+            $generar_imagen='renderAsImage:"jpeg",';
         }
         
         //PARSEO NOMBRES & COLORES
