@@ -102,7 +102,7 @@ if(@$_SESSION["tipo_dispositivo"]=="movil"){
     echo(index_estilos('tema_movil'));
 }
 else{
-    die(index_estilos('temas_index'));    
+    echo(index_estilos('temas_index'));    
     echo(index_estilos('temas_main'));
 }
 ?>
