@@ -145,8 +145,7 @@ if ($formulas["numcampos"]) {
 				//VERDE
 			}
 			echo "<tr>
-              <!--td align='center' class='phpmaker'>" . $seg[$j]["idft_seguimiento_indicador"] . "</td>
-              <td align='center' class='phpmaker'>" . $formulas[$i]["id"] . "</td-->
+              
               <td align='center' class='phpmaker'>" . $seg[$j]["fecha_seguimiento"] . "</td>
               <td align='right' class='phpmaker'>" . $seg[$j]["meta_indicador_actual"] . $formulas[$i]["unidad"] . "</td>
               <td bgcolor='$color' align='right' class='phpmaker'>" . $respuesta . $formulas[$i]["unidad"] . "</td>
