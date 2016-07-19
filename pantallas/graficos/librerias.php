@@ -366,9 +366,12 @@ function guardar_grafico_temporal($datos_guardar){
     $datos_guardar['nombre_imagen']='total_evaluacion'; //competencias
     $datos_guardar['extension']='png';
     $datos_guardar['contenedor_grafico']='contenedor_grafico_pc';
-    guardar_grafico_temporal($datos_guardar);    
+    guardar_grafico_temporal($datos_guardar);  
     */
     include_once($ruta_db_superior.'pantallas/graficos/guardar_grafico_temporal.php');
+
+
+    $attr='$("#IMG"+$("#'.$datos_guardar['contenedor_grafico'].'").attr("_echarts_instance_")).attr("src"),';
 
     echo('
         <script>
@@ -379,8 +382,9 @@ function guardar_grafico_temporal($datos_guardar){
                     url: "'.$ruta_db_superior.'pantallas/graficos/guardar_grafico_temporal.php",
                     data: {
                         iddoc:'.$iddoc.',
-                        guardar_imagen:'.$guardar.',
-                        img:
+                        nombre_imagen:"'.$datos_guardar['nombre_imagen'].'",
+                        extension:"'.$datos_guardar['extension'].'",
+                        img:'.$attr.'
                     },
     				success: function(respuesta){
     					if(respuesta==1){
