@@ -2800,3 +2800,15 @@ INICIO (codigo velocidad)-------2016-07-19 09:07:28-----------
 FIN (codigo velocidad)-------2016-07-19 09:07:28-----------
 INICIO (codigo velocidad)-------2016-07-19 09:11:03-----------
 FIN (codigo velocidad)-------2016-07-19 09:11:03-----------
+INICIO (codigo velocidad)-------2016-07-19 09:13:04-----------
+FIN (codigo velocidad)-------2016-07-19 09:13:04-----------
+INICIO (codigo velocidad)-------2016-07-19 09:13:25-----------
+FIN (codigo velocidad)-------2016-07-19 09:13:25-----------
+INICIO (codigo velocidad)-------2016-07-19 09:13:41-----------
+FIN (codigo velocidad)-------2016-07-19 09:13:41-----------
+INICIO (codigo velocidad)-------2016-07-19 09:13:56-----------
+FIN (codigo velocidad)-------2016-07-19 09:13:56-----------
+INICIO (codigo velocidad)-------2016-07-19 09:15:30-----------
+FIN (codigo velocidad)-------2016-07-19 09:15:30-----------
+INICIO (codigo velocidad)-------2016-07-19 09:16:39-----------
+FIN (codigo velocidad)-------2016-07-19 09:16:39-----------
