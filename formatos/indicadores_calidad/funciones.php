@@ -352,7 +352,8 @@ if ($formulas["numcampos"]) {
     				$datos=explode(",",listado_directorio($ruta_db_superior.$ruta_grafico));
     				echo('<tr><td colspan="7">');
     				for($x=0;$x<count($datos);$x++){
-    					echo '<img src="'.RUTA_PDF_LOCAL.'/'.$ruta_grafico.$datos[$x].'"><br/>';
+    					//echo '<img src="'.RUTA_PDF_LOCAL.'/'.$ruta_grafico.$datos[$x].'"><br/>';
+    					echo(RUTA_PDF_LOCAL.'/'.$ruta_grafico.$datos[$x].'<br>');
     				}
     				echo('</td></tr>');
     			}			
