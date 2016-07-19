@@ -180,7 +180,7 @@ if ($formulas["numcampos"]) {
 			echo '<tr>
                     <td align="center" >' . $seg[$j]["fecha_seguimiento"] . '</td>
                     <td align="right" >' . $seg[$j]["meta_indicador_actual"] . $formulas[$i]["unidad"] . '</td>
-                    <td bgcolor="$color" align="right" >' . $respuesta . $formulas[$i]["unidad"] . '</td>
+                    <td bgcolor="'.$color.'" align="right" >' . $respuesta . $formulas[$i]["unidad"] . '</td>
                     <td align="center" >' . $cumplimiento . '%</td>';
 			
 			echo "  <td style='text-align:center'><a class='previo_high' enlace='formatos/seguimiento_indicador/mostrar_seguimiento_indicador.php?iddoc=" . $seg[$j]["documento_iddocumento"] . "' style='color:blue;cursor:pointer'>Ver</a></td>";
