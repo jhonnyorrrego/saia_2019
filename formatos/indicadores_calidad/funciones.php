@@ -238,6 +238,14 @@ if ($formulas["numcampos"]) {
                         $configuracion_grafico['colores']=$array_colores;
                         generar_grafico_barra($configuracion_grafico);
                         
+                        $datos_guardar=array();
+                        $datos_guardar['iddoc']=$iddoc;
+                        $datos_guardar['nombre_imagen']=$iddoc;
+                        $datos_guardar['extension']=$iddoc;
+                        $datos_guardar['contenedor_grafico']=$iddoc;
+                        guardar_grafico_temporal($datos_guardar);
+                        
+                        
                         // -----> BARRA
                         $configuracion_grafico=array();
                         $configuracion_grafico['contenedor']='contenedor_grafico_rs';
@@ -267,7 +275,7 @@ if ($formulas["numcampos"]) {
                         $configuracion_grafico['valores_nombre']=array('Valores');
                         $configuracion_grafico['color_saia']=1;
                         $configuracion_grafico['colores']=$array_colores;
-                        generar_grafico_linea($configuracion_grafico);		
+                        generar_grafico_linea($configuracion_grafico);	
                         
                         // -----> LINEA
                         $configuracion_grafico=array();
