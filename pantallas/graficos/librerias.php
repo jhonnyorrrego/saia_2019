@@ -387,7 +387,7 @@ function guardar_grafico_temporal($datos_guardar){
                         img:'.$attr.'
                     },
     				success: function(respuesta){
-    					if(respuesta==1){
+    					if(respuesta){
     						console.log("Imagen guardada...");
     					}else{
     						console.log("Error al guardar las imagenes...");
