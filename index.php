@@ -148,6 +148,20 @@ $mayor_informacion=busca_filtro_tabla("valor","configuracion","nombre='mayor_inf
                   <input type="password" name="passwd" id="passwd" style="width:200px; height:40px;">
                 </div>
             </div>
+            <div class="control-group">
+                <label class="control-label blueTexts" for="inputPassword">Clave de Acceso:</label>
+                <div class="controls">
+                    <br />
+                  	<p>
+                  	<input type="hidden" name="boton_ui" value="Acceder">
+                    <button name="boton_ui" type="button" class="btn btn-primary" id="ingresar">Iniciar sesi&oacute;n</button>
+                    </p>
+                  	<p>
+                  	<input type="hidden" name="boton_ui" value="Acceder">
+                  	<a href="recordar_contrasena.php" style="cursor:pointer" class="highslide" onclick="return hs.htmlExpand(this,{objectType:'iframe',width: 550, height: 300, preserveContent:false})">¿No puedes acceder a tu cuenta?</a>
+                  	</p>
+                </div>
+            </div>
         <?php }
         else{
           ?>
