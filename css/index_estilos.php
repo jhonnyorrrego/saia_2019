@@ -171,7 +171,7 @@ function index_estilos($tipo_tema) {
     }
     if($tipo_tema=="temas_movil"){
     	$tema_index .= '<style type="text/css">
-		body { overflow-x:hidden; margin-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; background-repeat: repeat-x; background-position: left top; background-color: #e7e7e7; font-family: Verdana, Geneva, sans-serif; font-size: 10px; font-weight: normal; }
+		body { overflow-x:hidden; margin-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; background-image: url('.$ruta_db_superior.'imagenes/login/mainbkg.png); background-repeat: repeat-x; background-position: left top; background-color: #e7e7e7; font-family: Verdana, Geneva, sans-serif; font-size: 10px; font-weight: normal; }
 		#LoginBkg { background-image: url('.$ruta_db_superior.'imagenes/login/loginbkg.png); background-repeat: no-repeat; background-position: center center; }
 		#loginForm { margin: auto; width: 700px; height: 180px; }
 		.footer_login { font-weight: bold; background-image: url('.$ruta_db_superior.'imagenes/login/footerbkg.png); background-repeat: repeat-x; background-position: left top; height: 25px; width: 100%; padding-top: 0px; padding-bottom: 0px; text-align: right; color: #FFF; position: fixed; bottom: 0px; }
