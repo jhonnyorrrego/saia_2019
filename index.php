@@ -130,7 +130,7 @@ $mayor_informacion=busca_filtro_tabla("valor","configuracion","nombre='mayor_inf
     </tr>
   </table>
 </div>
-<table width="100%" border="0"  cellpadding="0" cellspacing="0" id="tabla_principal"  align="bottom" >
+<table class="table" width="100%" border="0"  cellpadding="0" cellspacing="0" id="tabla_principal"  align="bottom" >
   <tr align="center">
     <td colspan="3" align="center" valign="middle" id="LoginBkg"> 
       <div id="">
