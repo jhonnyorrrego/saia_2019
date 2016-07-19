@@ -65,7 +65,7 @@ function generar_grafico_barra($configuracion_grafico){  // REQUIERE librerias_j
         <script type="text/javascript">
             require.config({
               paths: {
-                 echarts: 'build/dist'
+                 echarts: '<?php echo($ruta_db_superior); ?>js/echarts'
               }
             });
             require(['echarts','echarts/chart/bar'],// require the specific chart type        
@@ -188,7 +188,7 @@ function generar_grafico_torta($configuracion_grafico){
         
             require.config({
               paths: {
-                 echarts: 'build/dist'
+                 echarts: '<?php echo($ruta_db_superior); ?>js/echarts'
               }
             });
             require(['echarts','echarts/chart/pie'],// require the specific chart type        
@@ -282,7 +282,7 @@ function generar_grafico_linea($configuracion_grafico){
         <script type="text/javascript">
             require.config({
               paths: {
-                 echarts: 'build/dist'
+                 echarts: '<?php echo($ruta_db_superior); ?>js/echarts'
               }
             });
             require(['echarts','echarts/chart/line'],// require the specific chart type        
