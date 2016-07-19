@@ -360,6 +360,7 @@ function generar_grafico_linea($configuracion_grafico){
 function guardar_grafico_temporal($contenedor,$iddoc,$guardar){
     global $ruta_db_superior,$conn;
 
+    include_once($ruta_db_superior.'pantallas/graficos/guardar_grafico_temporal.php');
 
 $cadena='';
 switch($guardar){
