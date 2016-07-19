@@ -22,7 +22,6 @@ if($_REQUEST['iddoc']){
     	}
 	}
 	
-	
 	if(!file_exists($ruta_grafico)){
 		crear_destino($ruta_grafico);
 	}
