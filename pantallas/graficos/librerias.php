@@ -358,6 +358,8 @@ function generar_grafico_linea($configuracion_grafico){
 
 
 function guardar_grafico_temporal($contenedor,$iddoc,$guardar){
+    global $ruta_db_superior,$conn;
+
 
 $cadena='';
 switch($guardar){
@@ -375,7 +377,7 @@ echo('
             $.ajax({
                 type:"POST",
                 dataType: "html",
-                url: "guardar_grafico.php",
+                url: "'.$ruta_db_superior.'pantallas/graficos/guardar_grafico.php",
                 data: {
                     iddoc:'.$iddoc.',
                     guardar_imagen:'.$guardar.',
