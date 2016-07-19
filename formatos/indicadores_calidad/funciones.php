@@ -337,7 +337,10 @@ if ($formulas["numcampos"]) {
     			} //fin if dato !=0
 			
 			}else{ //fin if tipo 5
+			echo('<tr><td colspan="7">');
+			   echo('entraaaa');
 			   
+			   echo('</td></tr>');
     			$idfuncionario=busca_filtro_tabla("","vfuncionario_dc","idfuncionario=".$_REQUEST["idfunc"],"",$conn);
     		
     			$ruta_grafico="temporal_".$idfuncionario[0]['login']."/".$iddoc."/";
@@ -355,7 +358,7 @@ if ($formulas["numcampos"]) {
 			
 		} //fin if datos de indicador
 	    echo "</table>";	
-	}
+	} //fin for i
 }
 
 }
