@@ -31,11 +31,11 @@ if($_REQUEST['iddoc']){
 		$datoimg=explode(";",$_REQUEST['img']);
 		$decode=explode(",",$datoimg[1]);
 		$datos=base64_decode($decode[1]);
-		$grafico_total_evaluacion=$_REQUEST['nombre_imagen'].$_REQUEST['extension'];
-		$archivo = fopen($ruta_grafico.$grafico_total_evaluacion, "w+");	 //crea el archivo
+		$grafico=$_REQUEST['nombre_imagen'].$_REQUEST['extension'];
+		$archivo = fopen($ruta_grafico.$grafico, "w+");	 //crea el archivo
 		fclose($archivo);
-		file_put_contents($ruta_grafico.$grafico_total_evaluacion, $datos);
-		if(file_exists($ruta_grafico.$grafico_total_evaluacion)){
+		file_put_contents($ruta_grafico.$grafico, $datos);
+		if(file_exists($ruta_grafico.$grafico)){
 			$exito=1;
 		}
 	}
