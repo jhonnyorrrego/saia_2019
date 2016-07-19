@@ -125,7 +125,7 @@ if ($formulas["numcampos"]) {
 		            <td  style='font-size:10pt;'>Resultado</td>
 		            <td  style='font-size:10pt;'>Cumplimiento</td>
 		            <td  style='font-size:10pt;'>An&aacute;lisis de Datos</td>
-		            <td colspan='2'  style='font-size:10pt;'>&nbsp;</td>
+		            <td colspan='2' style='font-size:10pt;'>&nbsp;</td>
 		        </tr>";
 	
 
@@ -332,7 +332,8 @@ if ($formulas["numcampos"]) {
                     $datos_guardar['nombre_imagen']='competencias'; 
                     $datos_guardar['extension']='png';
                     $datos_guardar['contenedor_grafico']='contenedor_grafico_rs';
-                    guardar_grafico_temporal($datos_guardar);                
+                    guardar_grafico_temporal($datos_guardar);     
+                    
     			} //fin if dato !=0
 			
 			}else{ //fin if tipo 5
