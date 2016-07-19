@@ -423,6 +423,7 @@ function DeleteData($sqlKey,$conn)
 		$sSql .= " HAVING " . $sHaving;
 	}
 	if ($sOrderBy <> "") {
+		$sSql .= " ORDER BY " . $sOrderBy;
 	}
 	$formato=busca_filtro_tabla("A.*,B.nombre_tabla","campos_formato A,formato B","A.formato_idformato=B.idformato AND A.".$sqlKey,"",$conn);
 	
