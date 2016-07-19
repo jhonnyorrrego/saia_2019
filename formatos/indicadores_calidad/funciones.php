@@ -345,8 +345,6 @@ if ($formulas["numcampos"]) {
 			}else{ //fin if tipo 5
 
     			$idfuncionario=busca_filtro_tabla("","vfuncionario_dc","idfuncionario=".$_REQUEST["idfunc"],"",$conn);
-    		echo('<tr><td colspan="7">hi world');
-    		echo('</td></tr>');
     			$ruta_grafico="temporal_".$idfuncionario[0]['login']."/".$iddoc."/";
     			if(file_exists($ruta_db_superior.$ruta_grafico)){
     				$datos=explode(",",listado_directorio($ruta_db_superior.$ruta_grafico));
