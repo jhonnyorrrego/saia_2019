@@ -114,7 +114,7 @@ $formulas = busca_filtro_tabla("nombre,idft_formula_indicador as id,unidad,rango
 
 if ($formulas["numcampos"]) {
 	for ($i = 0; $i < $formulas["numcampos"]; $i++) {
-		echo "<table style='width:100%;' cellpadding=5 >
+		echo "<table style='width:100%;' >
 		        <tr >
 		            <td class='encabezado_list' colspan='7' style='font-size:10pt;'>SEGUIMIENTOS</td>
 		        </tr>		        
