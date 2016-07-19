@@ -20,7 +20,7 @@ if($_REQUEST['iddoc']){
 	
 	$archivo_eliminar='';
 	if(@$_REQUEST['nombre_imagen'] && @$_REQUEST['extension']){
-	    $archivo_eliminar=$_REQUEST['nombre_imagen'].$_REQUEST['extension'];
+	    $archivo_eliminar=$_REQUEST['nombre_imagen'].'.'.$_REQUEST['extension'];
     	if(file_exists($ruta_grafico.$archivo_eliminar)){
     		unlink($ruta_grafico.$archivo_eliminar);
     	}
@@ -30,7 +30,7 @@ if($_REQUEST['iddoc']){
 		$datoimg=explode(";",$_REQUEST['img']);
 		$decode=explode(",",$datoimg[1]);
 		$datos=base64_decode($decode[1]);
-		$grafico=$_REQUEST['nombre_imagen'].$_REQUEST['extension'];
+		$grafico=$_REQUEST['nombre_imagen'].'.'.$_REQUEST['extension'];
 		$archivo = fopen($ruta_grafico.$grafico, "w+");	 //crea el archivo
 		fclose($archivo);
 		file_put_contents($ruta_grafico.$grafico, $datos);
