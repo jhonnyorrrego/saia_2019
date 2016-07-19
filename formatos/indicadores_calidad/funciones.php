@@ -120,6 +120,9 @@ if ($formulas["numcampos"]) {
 	for ($i = 0; $i < $formulas["numcampos"]; $i++) {
 		echo "<table style='width:100%;' cellpadding=5 >
 		        <tr class='encabezado_list'>
+		            <td colspan='7' style='font-size:10pt;'>SEGUIMIENTOS</td>
+		        </tr>		        
+		        <tr class='encabezado_list'>
 		            <td colspan='7' style='font-size:10pt;'>Formula del Calculo:<br />" . $formulas[$i]["nombre"] . "</td>
 		        </tr>
 		        <tr class='encabezado_list'>
