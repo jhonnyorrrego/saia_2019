@@ -357,7 +357,7 @@ function generar_grafico_linea($configuracion_grafico){
 
 
 
-function guardar_grafico($contenedor,$iddoc,$guardar){
+function guardar_grafico_temporal($contenedor,$iddoc,$guardar){
 
 $cadena='';
 switch($guardar){
