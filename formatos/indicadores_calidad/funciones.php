@@ -183,8 +183,9 @@ if ($formulas["numcampos"]) {
 			
 			echo "  <td class='phpmaker' style='text-align:center'><a class='previo_high' enlace='formatos/seguimiento_indicador/mostrar_seguimiento_indicador.php?iddoc=" . $seg[$j]["documento_iddocumento"] . "' style='color:blue;cursor:pointer'>Ver</a></td>";
 			if (!isset($_REQUEST["tipo"]) || $_REQUEST["tipo"] == 1){
-			    echo "<td align='center' width='200px'  class='phpmaker'><a target='centro' href='../plan_mejoramiento/adicionar_plan_mejoramiento.php?seguimiento_indicador=" . $seg[$j]["idft_seguimiento_indicador"] . "'>Adicionar Plan</a></td>
-              <td align='center'  class='phpmaker'><a class='highslide' onclick='return hs.htmlExpand(this, { objectType: \"iframe\",width: 500, height:400,preserveContent:false } )'  href='planes_relacionados.php?tipo=indicador&seguimiento_indicador=" . $seg[$j]["idft_seguimiento_indicador"] . "'>Ver Planes</a></td>";
+			    echo "
+			        <td align='center' width='200px'  class='phpmaker'><a target='centro' href='../plan_mejoramiento/adicionar_plan_mejoramiento.php?seguimiento_indicador=" . $seg[$j]["idft_seguimiento_indicador"] . "'>Adicionar Plan</a></td>
+                    <td align='center'  class='phpmaker'><a class='highslide' onclick='return hs.htmlExpand(this, { objectType: \"iframe\",width: 500, height:400,preserveContent:false } )'  href='planes_relacionados.php?tipo=indicador&seguimiento_indicador=" . $seg[$j]["idft_seguimiento_indicador"] . "'>Ver Planes</a></td>";
 			}else{
 			    echo "<td></td><td></td>";
 			}	
@@ -209,7 +210,7 @@ if ($formulas["numcampos"]) {
 		            </table>
 		        <br />
 		        </td>
-		        </tr>";
+		      </tr>";
 		
 		if (empty($dato) || empty($dato2)) {
 			echo("No es posible generar un grafico, no se han generado seguimientos");
@@ -223,7 +224,8 @@ if ($formulas["numcampos"]) {
                         <div id="contenedor_grafico_pc" style="width: 700px;height:240px;"></div>
                         <br/>
                         <div id="contenedor_grafico_rs" style="width: 700px;height:240px;"></div>
-                    </td> </tr>
+                        </td> 
+                    </tr>
     			');
     			
     			if ($dato[0] != 0) {
@@ -340,7 +342,7 @@ if ($formulas["numcampos"]) {
     			$ruta_grafico="temporal_".$idfuncionario[0]['login']."/".$iddoc."/";
     			if(file_exists($ruta_db_superior.$ruta_grafico)){
     				$datos=explode(",",listado_directorio($ruta_db_superior.$ruta_grafico));
-    				echo('<tr><td colspan="5">');
+    				echo('<tr><td colspan="7">');
     				for($x=0;$x<count($datos);$x++){
     					echo '<div align="center"><img src="'.RUTA_PDF_LOCAL.'/'.$ruta_grafico.$datos[$x].'"><br/></div>';
     				}
