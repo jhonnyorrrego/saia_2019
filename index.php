@@ -105,7 +105,6 @@ if($logo["numcampos"] && is_file($logo[0]["valor"])){
 </html>
 <?php 
   echo(librerias_jquery("1.7"));
-  echo(librerias_highslide());
   echo(librerias_bootstrap());
   echo(librerias_notificaciones());
 ?>
