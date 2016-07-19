@@ -81,8 +81,6 @@ function nombre_padre($idformato,$iddoc,$tipo=NULL){
 function resultados_indicador($idformato,$iddoc){
   global $conn, $ruta_db_superior;
 if(@$_REQUEST['tipo']!=5){
-    
-
 ?>
 <script type="text/javascript" src="../../anexosdigitales/highslide-4.0.10/highslide/highslide-with-html.js"></script>
 <link rel="stylesheet" type="text/css" href="../../anexosdigitales/highslide-4.0.10/highslide/highslide.css" />
