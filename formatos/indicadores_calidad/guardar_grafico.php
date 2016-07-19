@@ -40,7 +40,6 @@ if($_REQUEST['iddoc']){
 		$datoimg=explode(";",$_REQUEST['img']);
 		$decode=explode(",",$datoimg[1]);
 		$datos=base64_decode($decode[1]);
-
 		$grafico_total_evaluacion="total_evaluacion.png";
 		$archivo = fopen($ruta_grafico.$grafico_total_evaluacion, "w+");	 //crea el archivo
 		fclose($archivo);
