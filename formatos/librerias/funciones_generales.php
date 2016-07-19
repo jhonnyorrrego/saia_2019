@@ -444,8 +444,9 @@ function listar_funcionarios($idformato,$nombre_campo,$iddoc)
        {if(strpos($lista[$i],'#')!==false)//dependencia
            {$nombre=busca_filtro_tabla('nombre','dependencia','iddependencia='.str_replace("#","",$lista[$i]),'',$conn);
            }
-        else//funcionario
-           {$nombre=busca_filtro_tabla('nombres,apellidos','funcionario','funcionario_codigo="'.$lista[$i].'"','',$conn);
+        else
+           {//funcionario
+           $nombre=busca_filtro_tabla('nombres,apellidos','funcionario','funcionario_codigo="'.$lista[$i].'"','',$conn);
           // $cargo=cargos_memo();
             $nombre[0]["nombre"]=$nombre[0]["nombres"]." ".$nombre[0]["apellidos"];
            }
