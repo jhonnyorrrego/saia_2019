@@ -13,6 +13,39 @@ include_once($ruta_db_superior."librerias_saia.php");
 include_once($ruta_db_superior."class_transferencia.php");
 include_once($ruta_db_superior."formatos/librerias/funciones_generales.php");
 echo(estilo_bootstrap());
+  
+$sKey  = @$_GET["key"]; 
+ 
+if (array_key_exists("form_info", $_POST)) { 
+include_once ($ruta_db_superior . "pantallas/lib/librerias_cripto.php"); 
+$data = json_decode($_POST["form_info"], true); 
+unset($_REQUEST); 
+unset($_POST); 
+for($i = 0; $i < count($data); $i ++) { 
+ 
+	 $_REQUEST[decrypt_blowfish($data[$i]["name"], LLAVE_SAIA_CRYPTO)] = 
+	decrypt_blowfish($data[$i]["value"], LLAVE_SAIA_CRYPTO); 
+	 
+	 $_POST[decrypt_blowfish($data[$i]["name"], LLAVE_SAIA_CRYPTO)] = 
+	decrypt_blowfish($data[$i]["value"], LLAVE_SAIA_CRYPTO); 
+	} 
+	// print_r($_REQUEST);die(); 
+	} 
+ 
+	if (($sKey == "") || ((is_null($sKey)))) { 
+	$sKey​
+	 = @$_POST["key_d"]; 
+	} 
+	$sDbWhere = ""; 
+	$arRecKey = split(",",$sKey); 
+ 
+	// Single delete record 
+	if (( $sKey == "") || (is_null( $sKey)) || !( is_numeric($sKey ))) { 
+		ob_end_clean(); 
+		header("Location: formatolist.php"); 
+		exit(); 
+	} 
+
 if($_REQUEST['guardar']==1){
 	$sql="INSERT INTO tareas (fecha,tarea,responsable,descripcion,prioridad,fecha_tarea,ejecutor,documento_iddocumento) VALUES(".fecha_db_almacenar($_REQUEST['fecha'],"Y-m-d H:i:s").",'".htmlentities($_REQUEST['tarea'])."','".$_REQUEST['responsable']."','".htmlentities($_REQUEST[descripcion])."','".$_REQUEST[prioridad]."',".fecha_db_almacenar($_REQUEST['fecha_tarea'],"Y-m-d").",'".usuario_actual("funcionario_codigo")."','".$_REQUEST['iddoc']."')";
 	phpmkr_query($sql);
@@ -92,12 +125,43 @@ if($_REQUEST['guardar']==1){
 			</div>
 			<div class="control-group">
 				<div class="controls">
+					
+					<input type="hidden" name="form_info" id="form_info" value=""> 
 					<input type='submit' class="btn btn-primary btn-mini" name="submit" id="submit" value="continuar">
 					<input type="hidden" name="iddoc" value="<?php echo($_REQUEST['iddoc'])?>">
-					<input type="hidden" name="guardar" value="1">
+					<input type="hidden" name="guardar" id="continuar" value="1">
 				</div>
 			</div>
 		</form>
+		<script type="text/javascript"> 
+				$("#continuar").click(function(){ 
+				var salida = false; 
+				 
+				 $.ajax({ 
+				    type:'POST', 
+				    async: false, 
+				 
+				 url: "<?php echo $ruta_db_superior;?>​
+				 formatos/librerias/encript_data.php​
+				 ", 
+				 
+				 data: {datos:JSON.stringify($('#formulario_tareas').serializeArray(), null)}, 
+				 
+				 success: function(data) { 
+				 
+				 $("#form_info").empty().val(data); 
+				 
+				 //console.log($("#form_info").val()); 
+				 
+				 salida = true; 
+				 
+				 } 
+				 
+				 });  
+				return salida; 
+				}); 
+				 
+		</script> 
 	</div>
 	<script type="text/javascript" src="<?php echo($ruta_db_superior); ?>js/jquery.validate.1.13.1.js"></script>
 	<style>
