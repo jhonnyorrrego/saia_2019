@@ -188,123 +188,120 @@ if ($formulas["numcampos"]) {
 			if($_SESSION['LOGIN'.LLAVE_SAIA]=='cerok'){
 			    
 			if(@$_REQUEST['tipo']!=5){
-			echo('
-                <tr><td colspan="5">
-                    <div id="contenedor_grafico_pc" style="width: 700px;height:240px;"></div>
-                    <br/>
-                    <div id="contenedor_grafico_rs" style="width: 700px;height:240px;"></div>
-                </td> </tr>
-			');
-			
-			if ($dato[0] != 0) {
-			    
-				switch(trim($tipo_grafico[0]["tipo_grafico"])){
-					case 'torta':
-                        // -----> TORTA
-                    	$configuracion_grafico=array();
-                    	$configuracion_grafico['imagen']=1;
-                    	$configuracion_grafico['titulo_grafico']='PORCENTAJE DE CUMPLIMIENTO POR SEGUIMIENTO';
-                    	$configuracion_grafico['subtitulo_grafico']='';
-                    	$configuracion_grafico['contenedor']='contenedor_grafico_pc';
-                    	$configuracion_grafico['nombres']=$dato2;
-                    	$configuracion_grafico['valores']=$dato;
-                        $configuracion_grafico['colores']=$array_colores;
-                        generar_grafico_torta($configuracion_grafico);						
-
-                        // -----> TORTA
-                    	$configuracion_grafico=array();
-                    	$configuracion_grafico['imagen']=1;
-                    	$configuracion_grafico['titulo_grafico']='RESULTADO POR SEGUIMIENTO';
-                    	$configuracion_grafico['subtitulo_grafico']='';
-                    	$configuracion_grafico['contenedor']='contenedor_grafico_rs';
-                    	$configuracion_grafico['nombres']=$dato5;
-                    	$configuracion_grafico['valores']=$dato4;
-                        $configuracion_grafico['colores']=$array_colores;
-                        generar_grafico_torta($configuracion_grafico);	
-						break;
-					case 'barras':
-                        // -----> BARRA
-                        $configuracion_grafico=array();
-                        $configuracion_grafico['contenedor']='contenedor_grafico_pc';
-                        $configuracion_grafico['titulo_grafico']='PORCENTAJE DE CUMPLIMIENTO POR SEGUIMIENTO';
-                        $configuracion_grafico['subtitulo_grafico']='';
-                        $configuracion_grafico['titulox']='Seguimiento';
-                        $configuracion_grafico['tituloy']='Cumplimiento';
-                        $configuracion_grafico['imagen']=1;
-                        $configuracion_grafico['color_saia']=1;
-                        $configuracion_grafico['nombres']=$dato3;
-                        $configuracion_grafico['valores']=array($dato);
-                        $configuracion_grafico['valores_nombre']=array('Valores');    
-                        $configuracion_grafico['colores']=$array_colores;
-                        generar_grafico_barra($configuracion_grafico);
-                        
-                        
-                        // -----> BARRA
-                        $configuracion_grafico=array();
-                        $configuracion_grafico['contenedor']='contenedor_grafico_rs';
-                        $configuracion_grafico['titulo_grafico']='RESULTADO POR SEGUIMIENTO';
-                        $configuracion_grafico['subtitulo_grafico']='';
-                        $configuracion_grafico['titulox']='Seguimiento';
-                        $configuracion_grafico['tituloy']='Resultado';
-                        $configuracion_grafico['imagen']=1;
-                        $configuracion_grafico['color_saia']=1;
-                        $configuracion_grafico['nombres']=$dato5;
-                        $configuracion_grafico['valores']=array($dato4);
-                        $configuracion_grafico['valores_nombre']=array('Valores');    
-                        $configuracion_grafico['colores']=$array_colores;
-                        generar_grafico_barra($configuracion_grafico);                        
-						break;
-					case 'lineas' :
-                        // -----> LINEA
-                        $configuracion_grafico=array();
-                        $configuracion_grafico['contenedor']='contenedor_grafico_pc';
-                        $configuracion_grafico['titulo_grafico']='PORCENTAJE DE CUMPLIMIENTO POR SEGUIMIENTO';
-                        $configuracion_grafico['subtitulo_grafico']='';    
-                        $configuracion_grafico['titulox']='Seguimiento';
-                        $configuracion_grafico['tituloy']='Cumplimiento';
-                        $configuracion_grafico['imagen']=1;
-                        $configuracion_grafico['nombres']=$dato3;
-                        $configuracion_grafico['valores']=array($dato);
-                        $configuracion_grafico['valores_nombre']=array('Valores');
-                        $configuracion_grafico['color_saia']=1;
-                        $configuracion_grafico['colores']=$array_colores;
-                        generar_grafico_linea($configuracion_grafico);	
-                        
-                        // -----> LINEA
-                        $configuracion_grafico=array();
-                        $configuracion_grafico['contenedor']='contenedor_grafico_rs';
-                        $configuracion_grafico['titulo_grafico']='RESULTADO POR SEGUIMIENTO';
-                        $configuracion_grafico['subtitulo_grafico']='';    
-                        $configuracion_grafico['titulox']='Seguimiento';
-                        $configuracion_grafico['tituloy']='Resultado';
-                        $configuracion_grafico['imagen']=1;
-                        $configuracion_grafico['nombres']=$dato5;
-                        $configuracion_grafico['valores']=array($dato4);
-                        $configuracion_grafico['valores_nombre']=array('Valores');
-                        $configuracion_grafico['color_saia']=1;
-                        $configuracion_grafico['colores']=$array_colores;
-                        generar_grafico_linea($configuracion_grafico);	                        
-
-						break;
-				}
-				
-				$datos_guardar=array();
-                $datos_guardar['iddoc']=$iddoc;
-                $datos_guardar['nombre_imagen']='total_evaluacion'; 
-                $datos_guardar['extension']='png';
-                $datos_guardar['contenedor_grafico']='contenedor_grafico_pc';
-                guardar_grafico_temporal($datos_guardar);
-                
-				$datos_guardar=array();
-                $datos_guardar['iddoc']=$iddoc;
-                $datos_guardar['nombre_imagen']='competencias'; 
-                $datos_guardar['extension']='png';
-                $datos_guardar['contenedor_grafico']='contenedor_grafico_rs';
-                guardar_grafico_temporal($datos_guardar);                
-                
-				
-			} //fin if dato !=0
-			
+    			echo('
+                    <tr><td colspan="5">
+                        <div id="contenedor_grafico_pc" style="width: 700px;height:240px;"></div>
+                        <br/>
+                        <div id="contenedor_grafico_rs" style="width: 700px;height:240px;"></div>
+                    </td> </tr>
+    			');
+    			
+    			if ($dato[0] != 0) {
+    			    
+    				switch(trim($tipo_grafico[0]["tipo_grafico"])){
+    					case 'torta':
+                            // -----> TORTA
+                        	$configuracion_grafico=array();
+                        	$configuracion_grafico['imagen']=1;
+                        	$configuracion_grafico['titulo_grafico']='PORCENTAJE DE CUMPLIMIENTO POR SEGUIMIENTO';
+                        	$configuracion_grafico['subtitulo_grafico']='';
+                        	$configuracion_grafico['contenedor']='contenedor_grafico_pc';
+                        	$configuracion_grafico['nombres']=$dato2;
+                        	$configuracion_grafico['valores']=$dato;
+                            $configuracion_grafico['colores']=$array_colores;
+                            generar_grafico_torta($configuracion_grafico);						
+    
+                            // -----> TORTA
+                        	$configuracion_grafico=array();
+                        	$configuracion_grafico['imagen']=1;
+                        	$configuracion_grafico['titulo_grafico']='RESULTADO POR SEGUIMIENTO';
+                        	$configuracion_grafico['subtitulo_grafico']='';
+                        	$configuracion_grafico['contenedor']='contenedor_grafico_rs';
+                        	$configuracion_grafico['nombres']=$dato5;
+                        	$configuracion_grafico['valores']=$dato4;
+                            $configuracion_grafico['colores']=$array_colores;
+                            generar_grafico_torta($configuracion_grafico);	
+    						break;
+    					case 'barras':
+                            // -----> BARRA
+                            $configuracion_grafico=array();
+                            $configuracion_grafico['contenedor']='contenedor_grafico_pc';
+                            $configuracion_grafico['titulo_grafico']='PORCENTAJE DE CUMPLIMIENTO POR SEGUIMIENTO';
+                            $configuracion_grafico['subtitulo_grafico']='';
+                            $configuracion_grafico['titulox']='Seguimiento';
+                            $configuracion_grafico['tituloy']='Cumplimiento';
+                            $configuracion_grafico['imagen']=1;
+                            $configuracion_grafico['color_saia']=1;
+                            $configuracion_grafico['nombres']=$dato3;
+                            $configuracion_grafico['valores']=array($dato);
+                            $configuracion_grafico['valores_nombre']=array('Valores');    
+                            $configuracion_grafico['colores']=$array_colores;
+                            generar_grafico_barra($configuracion_grafico);
+                            
+                            
+                            // -----> BARRA
+                            $configuracion_grafico=array();
+                            $configuracion_grafico['contenedor']='contenedor_grafico_rs';
+                            $configuracion_grafico['titulo_grafico']='RESULTADO POR SEGUIMIENTO';
+                            $configuracion_grafico['subtitulo_grafico']='';
+                            $configuracion_grafico['titulox']='Seguimiento';
+                            $configuracion_grafico['tituloy']='Resultado';
+                            $configuracion_grafico['imagen']=1;
+                            $configuracion_grafico['color_saia']=1;
+                            $configuracion_grafico['nombres']=$dato5;
+                            $configuracion_grafico['valores']=array($dato4);
+                            $configuracion_grafico['valores_nombre']=array('Valores');    
+                            $configuracion_grafico['colores']=$array_colores;
+                            generar_grafico_barra($configuracion_grafico);                        
+    						break;
+    					case 'lineas' :
+                            // -----> LINEA
+                            $configuracion_grafico=array();
+                            $configuracion_grafico['contenedor']='contenedor_grafico_pc';
+                            $configuracion_grafico['titulo_grafico']='PORCENTAJE DE CUMPLIMIENTO POR SEGUIMIENTO';
+                            $configuracion_grafico['subtitulo_grafico']='';    
+                            $configuracion_grafico['titulox']='Seguimiento';
+                            $configuracion_grafico['tituloy']='Cumplimiento';
+                            $configuracion_grafico['imagen']=1;
+                            $configuracion_grafico['nombres']=$dato3;
+                            $configuracion_grafico['valores']=array($dato);
+                            $configuracion_grafico['valores_nombre']=array('Valores');
+                            $configuracion_grafico['color_saia']=1;
+                            $configuracion_grafico['colores']=$array_colores;
+                            generar_grafico_linea($configuracion_grafico);	
+                            
+                            // -----> LINEA
+                            $configuracion_grafico=array();
+                            $configuracion_grafico['contenedor']='contenedor_grafico_rs';
+                            $configuracion_grafico['titulo_grafico']='RESULTADO POR SEGUIMIENTO';
+                            $configuracion_grafico['subtitulo_grafico']='';    
+                            $configuracion_grafico['titulox']='Seguimiento';
+                            $configuracion_grafico['tituloy']='Resultado';
+                            $configuracion_grafico['imagen']=1;
+                            $configuracion_grafico['nombres']=$dato5;
+                            $configuracion_grafico['valores']=array($dato4);
+                            $configuracion_grafico['valores_nombre']=array('Valores');
+                            $configuracion_grafico['color_saia']=1;
+                            $configuracion_grafico['colores']=$array_colores;
+                            generar_grafico_linea($configuracion_grafico);	                        
+    
+    						break;
+    				}
+    				
+    				$datos_guardar=array();
+                    $datos_guardar['iddoc']=$iddoc;
+                    $datos_guardar['nombre_imagen']='total_evaluacion'; 
+                    $datos_guardar['extension']='png';
+                    $datos_guardar['contenedor_grafico']='contenedor_grafico_pc';
+                    guardar_grafico_temporal($datos_guardar);
+                    
+    				$datos_guardar=array();
+                    $datos_guardar['iddoc']=$iddoc;
+                    $datos_guardar['nombre_imagen']='competencias'; 
+                    $datos_guardar['extension']='png';
+                    $datos_guardar['contenedor_grafico']='contenedor_grafico_rs';
+                    guardar_grafico_temporal($datos_guardar);                
+    			} //fin if dato !=0
 			
 			}else{ //fin if tipo 5
 			
@@ -313,9 +310,11 @@ if ($formulas["numcampos"]) {
     			$ruta_grafico="temporal_".$idfuncionario[0]['login']."/".$iddoc."/";
     			if(file_exists($ruta_db_superior.$ruta_grafico)){
     				$datos=explode(",",listado_directorio($ruta_db_superior.$ruta_grafico));
+    				echo('<tr><td colspan="5">');
     				for($i=0;$i<count($datos);$i++){
     					echo '<div align="center"><img src="'.RUTA_PDF_LOCAL.'/'.$ruta_grafico.$datos[$i].'"><br/></div>';
     				}
+    				echo('</td> </tr>');
     			}			    
 			}
 			} //fin if session cerok
