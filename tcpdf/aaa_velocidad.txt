@@ -2880,3 +2880,9 @@ INICIO (codigo velocidad)-------2016-07-19 13:39:44-----------
 FIN (codigo velocidad)-------2016-07-19 13:39:44-----------
 INICIO (codigo velocidad)-------2016-07-19 13:40:10-----------
 FIN (codigo velocidad)-------2016-07-19 13:40:10-----------
+INICIO (codigo velocidad)-------2016-07-19 13:41:57-----------
+FIN (codigo velocidad)-------2016-07-19 13:41:57-----------
+INICIO (codigo velocidad)-------2016-07-19 13:42:31-----------
+FIN (codigo velocidad)-------2016-07-19 13:42:31-----------
+INICIO (codigo velocidad)-------2016-07-19 13:43:13-----------
+FIN (codigo velocidad)-------2016-07-19 13:43:13-----------
