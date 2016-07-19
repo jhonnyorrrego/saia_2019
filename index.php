@@ -39,8 +39,13 @@ if(!isset($_SESSION["LOGIN".LLAVE_SAIA])){
   @session_start();
   @ob_start();
 } 
+include_once($ruta_db_superior."pantallas/lib/mobile_detect.php");
+$detect = new Mobile_Detect;
 if(@$_REQUEST["INDEX"]!=''){
   $_SESSION["INDEX"]=$_REQUEST["INDEX"];
+}
+else if ( $detect->isMobile() ) {
+	$_REQUEST["INDEX"]="movil";
 }
 else{
   $_REQUEST["INDEX"]="actualizacion"; 
@@ -51,12 +56,10 @@ if(isset($_REQUEST['sesion']))
   $_SESSION["LOGIN".LLAVE_SAIA]=$_REQUEST['sesion']; 
 echo(estilo_bootstrap());
 if(@$_SESSION["LOGIN".LLAVE_SAIA]){
-$fondo=busca_filtro_tabla("A.valor","configuracion A","A.tipo='empresa' AND A.nombre='fondo'","A.fecha,A.valor DESC",$conn);
-almacenar_sesion(1,"");
-
-redirecciona("index_".$_SESSION["INDEX"].".php");
+    $fondo=busca_filtro_tabla("A.valor","configuracion A","A.tipo='empresa' AND A.nombre='fondo'","A.fecha,A.valor DESC",$conn);
+    almacenar_sesion(1,"");
+    redirecciona("index_".$_SESSION["INDEX"].".php");
 }
-
 $logo=busca_filtro_tabla("valor","configuracion","nombre='logo'","",$conn);
 $ruta_logo="imagenes/".$logo[0]["valor"];
 if($logo["numcampos"] && is_file($logo[0]["valor"])){
