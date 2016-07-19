@@ -358,7 +358,7 @@ if ($formulas["numcampos"]) {
 			
 			
 		} //fin if datos de indicador
-	    echo "</table>";	
+	    echo "</table>";
 	} //fin for i
 }
 
