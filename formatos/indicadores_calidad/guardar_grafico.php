@@ -39,10 +39,7 @@ if($_REQUEST['iddoc']){
 		}
 	}
 }
-if($exito){
-	echo 1;
-}else{
-    echo 0;
-} 
+
+echo($exito); 
 
 ?>
