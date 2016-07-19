@@ -214,6 +214,29 @@ mostrar_funcionarios("nuevo");
 <input type="submit" value="Continuar" >
 <input type="hidden" name="adicionar" value="1">
 </form>
+
+<?php 
+include_once ($ruta_db_superior . "librerias_saia.php");
+echo (librerias_jquery("1.7"));
+?>
+
+<script type="text/javascript">
+$("#continuar").click(function(){
+	var salida = false;
+  		$.ajax({
+            type:'POST',
+            async: false,
+            url: "<?php echo $ruta_db_superior;?>formatos/librerias/encript_data.php",
+            data: {datos:JSON.stringify($('#form1').serializeArray(), null)},
+            success: function(data) {
+            	$("#form_info").empty().val(data);
+            	//console.log($("#form_info").val());
+            	salida = true;
+         	}
+  		});  
+    return salida;
+  });
+</script>
 <?php
 }
 else if(isset($_REQUEST["adicionar"]))
