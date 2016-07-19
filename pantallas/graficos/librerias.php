@@ -367,7 +367,7 @@ function guardar_grafico_temporal($iddoc,$contenedor_grafico,$nombre_imagen,$ext
                 $.ajax({
                     type:"POST",
                     dataType: "html",
-                    url: "'.$ruta_db_superior.'pantallas/graficos/guardar_grafico.php",
+                    url: "'.$ruta_db_superior.'pantallas/graficos/guardar_grafico_temporal.php",
                     data: {
                         iddoc:'.$iddoc.',
                         guardar_imagen:'.$guardar.',
