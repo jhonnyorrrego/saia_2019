@@ -17,6 +17,7 @@ include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."sql.php");
 include_once($ruta_db_superior."asignacion.php");
 include_once($ruta_db_superior."formatos/librerias/funciones_acciones.php");
+include_once($ruta_db_superior."formatos/librerias/librerias_cripto.php");
 include_once($ruta_db_superior."bpmn/librerias_formato.php");
 
 /*<Clase>
