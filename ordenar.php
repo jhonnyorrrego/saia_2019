@@ -122,7 +122,6 @@ if($formato["numcampos"]){
 ?>
 <script type="text/javascript">
 <?php if(usuario_actual('login')=='cerok'){ ?>   
-alert ('<?php echo $llave; ?>');  
 llamado_pantalla("formatos/arboles/arbolformato_documento.php","idformato=<?php echo($formato[0]["idformato"]);?>&iddoc=<?php echo($iddocumento); ?>&alto_pantalla="+alto,$("#izquierdo_saia"),"arbol_formato");
 <?php }else{ ?>
 llamado_pantalla("pantallas/documento/informacion_resumen_documento.php","idformato=<?php echo($formato[0]["idformato"]);?>&iddoc=<?php echo($iddocumento); ?>&alto_pantalla="+(alto-1),$("#izquierdo_saia"),"arbol_formato");
