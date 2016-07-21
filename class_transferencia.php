@@ -1794,18 +1794,12 @@ function transferencias_pendientes($serie)
 <Salida>
 <Pre-condiciones>
 <Post-condiciones>
-*/   
-function radicar_plantilla(){ 
-   global $conn,$sql,$ruta_db_superior;
-   if (array_key_exists("form_info", $_POST)) {
-      $data = json_decode($_POST["form_info"], true);
-      unset($_REQUEST);
-      unset($_POST);
-      for($i = 0; $i < count($data); $i ++) {
-          $_REQUEST[decrypt_blowfish($data[$i]["name"], LLAVE_SAIA_CRYPTO)] = decrypt_blowfish($data[$i]["value"], LLAVE_SAIA_CRYPTO);
-          $_POST[decrypt_blowfish($data[$i]["name"], LLAVE_SAIA_CRYPTO)] = decrypt_blowfish($data[$i]["value"], LLAVE_SAIA_CRYPTO);
-      }
-   }
+*/
+function radicar_plantilla()
+  {
+   global $conn,$sql;
+   global $ruta_db_superior;
+   //print_r($_REQUEST); die("aquiii");
    $valores=array();
    $plantilla="";
    $idformato=0;
