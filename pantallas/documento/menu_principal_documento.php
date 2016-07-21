@@ -125,11 +125,11 @@ if(@$_REQUEST["tipo"]!==5 && !@$_REQUEST["output"] && !@$_REQUEST["imprimir"]){
                     <h6>Acciones r&aacute;pidas</h6>
                 </div>
               </li>
+              <li class="divider-vertical"></li>
               <?php
                 }
                 $estado_documento="";
               ?>
-              <li class="divider-vertical"></li>
               <li>
               	<div class="btn-group pull- btn-under">
               	<?php
