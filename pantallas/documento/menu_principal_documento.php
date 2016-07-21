@@ -198,11 +198,11 @@ if(@$_REQUEST["tipo"]!==5 && !@$_REQUEST["output"] && !@$_REQUEST["imprimir"]){
               <?php } ?>
                 </div>
               </li>
-              <li class="divider-vertical"></li>
               <?php if(@$modulo_adicional["nombre"]!==''){
                     $modulos_adicionales=busca_filtro_tabla("","modulo", "nombre='".$modulo_adicional["nombre"]."'", "", $conn);
                     if($modulos_adicionales["numcampos"]){
                      ?>
+              <li class="divider-vertical"></li>
               <li>
                <div class="btn-group btn-under" id="modulo_adicional_<?php echo($modulos_adicionales[0]["nombre"]);?>">
                    <?php
