@@ -45,7 +45,7 @@ for($i = 0; $i < count($data); $i ++) {
 	// Single delete record 
 	if (( $sKey == "") || (is_null( $sKey)) || !( is_numeric($sKey ))) { 
 		ob_end_clean(); 
-		header("Location: formatolist.php"); 
+		header("Location: ../formatolist.php"); 
 		exit(); 
 	} 
 
