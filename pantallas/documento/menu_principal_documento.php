@@ -45,6 +45,10 @@ if(@$_REQUEST["tipo"]!==5 && !@$_REQUEST["output"] && !@$_REQUEST["imprimir"]){
     if($_SESSION["tipo_dispositivo"]!="movil"){
       $mostrar_menu_acciones_rapidas=1;
       $clase_menu=' menu_movil ';
+      $dropdown_menu=' top:40%; left: 40%; ';
+    }
+    else{
+      $dropdown_menu=' position: fixed; top: 35; left: 0px; ';  
     }
 		$datos_admin=botones_administrativos_menu($iddoc);
     echo(librerias_acciones_kaiten());
@@ -58,7 +62,7 @@ if(@$_REQUEST["tipo"]!==5 && !@$_REQUEST["output"] && !@$_REQUEST["imprimir"]){
         .btn-under {text-align: center;vertical-align: top;}
         .btn-under ul{text-align: left;}
         .btn-under h6{margin-top: 0px; font-size: 11; font-weight:normal;}
-        .btn-under > .dropdown-menu{top:40%; left: 40%;}
+        .btn-under > .dropdown-menu{ <?php echo($dropdown_menu);?>}
         /*.menu_movil{width:100px;}*/
     </style>
     <div class="navbar navbar-fixed-top pull-center" id="menu_principal_documento">
