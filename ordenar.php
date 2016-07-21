@@ -70,10 +70,10 @@ elseif(@$_REQUEST["llave"]){
 }
 else $nodoinicial=$llave_formato;
 $display_span_rigth="";
-$span_left="9";
+$span_left="span9";
 if($_SESSION["tipo_dispositivo"]=='movil'){
     $display_span_rigth=" display:none; ";
-    $span_left="12";
+    $span_left="span12";
 }
 ?>
 <style>
