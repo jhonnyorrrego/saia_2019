@@ -2093,7 +2093,8 @@ die();
        if($formato_doc["numcampos"])
         {$nom_formato=$formato_doc[0]["nombre"];
 			 //Cuando el documento es creado por el modulo formatos
-        abrir_url("formatos/$nom_formato/detalles_mostrar_$nom_formato.php?idformato=".$formato_doc[0]["idformato"]."&iddoc=".$_POST["iddoc"],"_self");
+        abrir_url("formatos/$nom_formato/detalles_mostrar_$nom_formato.php??form_info=".encrypt_blowfish("idformato=".$formato_doc[0]["idformato"]."&iddoc=".$_POST["iddoc"],LLAVE_SAIA_CRYPTO),"_self");
+        //abrir_url("ordenar.php?form_info=".encrypt_blowfish("accion=mostrar&mostrar_formato=1&idformato=".$formato_doc[0]["idformato"]."&iddoc=".$_POST["iddoc"],LLAVE_SAIA_CRYPTO),"_self");
         die();
         }
        }
