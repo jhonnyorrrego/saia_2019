@@ -124,7 +124,7 @@ if($formato["numcampos"]){
 <?php if(usuario_actual('login')=='cerok'){ ?>     
 llamado_pantalla("formatos/arboles/arbolformato_documento.php","idformato=<?php echo($formato[0]["idformato"]);?>&iddoc=<?php echo($iddocumento); ?>&alto_pantalla="+alto,$("#izquierdo_saia"),"arbol_formato");
 <?php }else{ ?>
-llamado_pantalla("pantallas/documento/informacion_resumen_documento.php","form_info=<?php echo $llave;?>&alto_pantalla="+(alto-1),$("#izquierdo_saia"),"arbol_formato");
+llamado_pantalla("pantallas/documento/informacion_resumen_documento.php","form_info=<? echo $llave ;?>&alto_pantalla="+(alto-1),$("#izquierdo_saia"),"arbol_formato");
 <?php } ?>	
 llamado_pantalla("","",$("#contenedor_saia"),'detalles');
 hs.graphicsDir = '<?php echo($ruta_db_superior);?>anexosdigitales/highslide-4.0.10/highslide/graphics/';
