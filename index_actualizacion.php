@@ -104,6 +104,7 @@ $componente_tareas=busca_filtro_tabla("","busqueda_componente A","A.nombre='list
 body {padding-right:0px;padding-left:0px;}
 .dropdown-submenu {
     position: relative;
+    text-align:left;
 }
 
 .dropdown-submenu>.dropdown-menu {
