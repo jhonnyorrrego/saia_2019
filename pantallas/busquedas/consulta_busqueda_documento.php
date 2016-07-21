@@ -296,9 +296,7 @@ function incluir_librerias_busqueda($elemento,$indice){
     </div>
 </div>
 <div class="pull-left" id="panel_detalle">
-    <?php if($_SESSION["tipo_dispositivo"]=="movil"){ ?>
     <iframe id="iframe_detalle" style="width: 100%;" frameborder="no"></iframe>
-    <?php } ?>
 </div>
 
 <script>
