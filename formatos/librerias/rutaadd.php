@@ -16,39 +16,6 @@ Para los documentos de formato MEMO, CIRCULAR o parecidos guardan los responsabl
 include_once("../../db.php"); 
 include_once("../../class_transferencia.php");
 include_once("header_formato.php");
-
-$sKey  = @$_GET["key"]; 
- 
-if (array_key_exists("form_info", $_POST)) { 
-include_once ($ruta_db_superior . "pantallas/lib/librerias_cripto.php"); 
-$data = json_decode($_POST["form_info"], true); 
-unset($_REQUEST); 
-unset($_POST); 
-for($i = 0; $i < count($data); $i ++) { 
- 
-	 $_REQUEST[decrypt_blowfish($data[$i]["name"], LLAVE_SAIA_CRYPTO)] = 
-	decrypt_blowfish($data[$i]["value"], LLAVE_SAIA_CRYPTO); 
-	 
-	 $_POST[decrypt_blowfish($data[$i]["name"], LLAVE_SAIA_CRYPTO)] = 
-	decrypt_blowfish($data[$i]["value"], LLAVE_SAIA_CRYPTO); 
-	} 
-	// print_r($_REQUEST);die(); 
-	} 
- 
-	if (($sKey == "") || ((is_null($sKey)))) { 
-	$sKey​
-	 = @$_POST["key_d"]; 
-	} 
-	$sDbWhere = ""; 
-	$arRecKey = split(",",$sKey); 
- 
-	// Single delete record 
-	if (( $sKey == "") || (is_null( $sKey)) || !( is_numeric($sKey ))) { 
-		ob_end_clean(); 
-		header("Location: formatolist.php"); 
-		exit(); 
-	} 
-
 ?>
 <?php
 $config = busca_filtro_tabla("valor","configuracion","nombre='color_encabezado'","",$conn); 
@@ -783,29 +750,10 @@ mostrar_ruta($_GET['doc']);
   ?>
   
   <input type="hidden" name="x_condicion_transferencia" value="POR_APROBAR">
-  <input type="hidden" name="form_info" id="form_info" value="">
   <input type="submit" name="Action" id="Action" value="AGREGAR OTRO RESPONSABLE" onclick="add.value='A';">
-  <input type="submit" name="terminar" value="CONTINUAR" id="continuar" onclick="add.value='T';">
+  <input type="submit" name="terminar" value="CONTINUAR" onclick="add.value='T';">
   </p>
   </form>
- <script type="text/javascript">
-	$("#continuar").click(function(){
-		var salida = false;
-	  		$.ajax({
-	            type:'POST',
-	            async: false,
-	            url: "<?php echo $ruta_db_superior;?>formatos/librerias/encript_data.php",
-	            data: {datos:JSON.stringify($('#rutaadd').serializeArray(), null)},
-	            success: function(data) {
-	            	$("#form_info").empty().val(data);
-	            	//console.log($("#form_info").val());
-	            	salida = true;
-	         	}
-	  		});  
-	    return salida;
-	  });
-
-</script>
 <?php include ("../../footer.php") ?>
 <?php
 
