@@ -2924,3 +2924,11 @@ INICIO (codigo velocidad)-------2016-07-21 08:28:49-----------
 FIN (codigo velocidad)-------2016-07-21 08:28:49-----------
 INICIO (codigo velocidad)-------2016-07-21 08:34:50-----------
 FIN (codigo velocidad)-------2016-07-21 08:34:50-----------
+INICIO (codigo velocidad)-------2016-07-21 08:44:05-----------
+FIN (codigo velocidad)-------2016-07-21 08:44:05-----------
+INICIO (codigo velocidad)-------2016-07-21 08:44:06-----------
+FIN (codigo velocidad)-------2016-07-21 08:44:06-----------
+INICIO (codigo velocidad)-------2016-07-21 08:46:11-----------
+FIN (codigo velocidad)-------2016-07-21 08:46:11-----------
+INICIO (codigo velocidad)-------2016-07-21 08:46:12-----------
+FIN (codigo velocidad)-------2016-07-21 08:46:12-----------
