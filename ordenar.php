@@ -80,7 +80,7 @@ if($_SESSION["tipo_dispositivo"]=='movil'){
     #contenedor{margin-top:0px; width: 100%; border:0px solid; overflow:auto; <?php if($_SESSION["tipo_dispositivo"]=='movil'){?>-webkit-overflow-scrolling:touch;<?php } ?>} 
     #detalles{height:100%; } 
     #panel_arbol_formato{border:0px solid;}
-
+    body{ padding-right: 0px; padding-left: 0px;}
 </style>
 <div class="container row-fluid" id="contenedor" style="align:center">
     <div class="span3" style="<?php echo($display_span_rigth);?>">         
