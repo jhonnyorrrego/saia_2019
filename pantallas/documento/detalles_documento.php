@@ -13,7 +13,6 @@ include_once($ruta_db_superior."librerias_saia.php");
 ?>
 <!DOCTYPE html>
 <?php
-die("PRUEBAS");
 echo(librerias_html5());
 echo(estilo_bootstrap());
 include_once($ruta_db_superior."pantallas/documento/librerias.php");
