@@ -46,13 +46,14 @@ if(@$_REQUEST["tipo"]!==5 && !@$_REQUEST["output"] && !@$_REQUEST["imprimir"]){
       $mostrar_menu_acciones_rapidas=1;
       $clase_menu=' menu_movil ';
       $dropdown_menu=' top:40%; left: 40%; ';
+      $tipo_pagina=$_SESSION["tipo_pagina"];
     }
     else{
+      $tipo_pagina="pantallas/documento/informacion_resumen_documento.php?iddoc=".$iddoc;
       $dropdown_menu=' position: fixed; top: 35; left: 0px; ';  
     }
 		$datos_admin=botones_administrativos_menu($iddoc);
     echo(librerias_acciones_kaiten());
-    $tipo_pagina=$_SESSION["tipo_pagina"];
         ?>
     <style>
         .navbar-inner{height: 50px;}
