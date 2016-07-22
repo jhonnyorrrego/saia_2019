@@ -187,6 +187,6 @@ background-image:url('../imagenes/cargando.gif');
         background-color: transparent;
         border-top:0px;
 }
-.collapse {
+.collapse .in {
  overflow:auto;
 }
