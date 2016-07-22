@@ -99,7 +99,6 @@ if($_SESSION["tipo_dispositivo"]=="movil"){
 <?php 
 include_once("css/index_estilos.php");
 if(@$_SESSION["tipo_dispositivo"]=="movil"){ 
-    echo(estilo_bootstrap());
     echo(index_estilos('temas_movil'));
     echo(index_estilos('temas_bootstrap'));
 }
