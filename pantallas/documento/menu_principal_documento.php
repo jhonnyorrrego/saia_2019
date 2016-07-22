@@ -52,7 +52,7 @@ if(@$_REQUEST["tipo"]!==5 && !@$_REQUEST["output"] && !@$_REQUEST["imprimir"]){
       $tipo_pagina="pantallas/documento/informacion_resumen_documento.php?iddoc=".$iddoc;
       $dropdown_menu=' position: fixed; top: 35; left: 0px; ';  
     }
-		$datos_admin=botones_administrativos_menu($iddoc);
+	$datos_admin=botones_administrativos_menu($iddoc);
     echo(librerias_acciones_kaiten());
         ?>
     <style>
