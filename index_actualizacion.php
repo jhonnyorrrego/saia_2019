@@ -221,7 +221,7 @@ if($_SESSION["tipo_dispositivo"]=="movil"){ ?>
   </div>
   <div class="dropdown pull-right">|<b><?php echo(usuario_actual("nombres")." ".usuario_actual("apellidos"));?></b></div>
   <?php 
-  if($_SESSION["tipo_dispositivo"]!="movil"){ 
+  if($_SESSION["tipo_dispositivo"]=="movil"){ 
     echo('<div class="dropdown pull-right"><div class="icon-fullscreen" id="resize_centro"></div></div>');    
   }
   ?>
