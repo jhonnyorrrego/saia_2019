@@ -438,7 +438,7 @@ function click_funcion(div){
   tree2.setOnLoadingStart(cargando);
   tree2.setOnLoadingEnd(fin_cargando);
   tree2.setOnClickHandler(onNodeSelect);
-  tree2.loadXML("<?php echo($ruta_db_superior);?>formatos/arboles/test_forma_documento2.php?id=<?php echo($iddoc2);?>");
+  tree2.loadXML("<?php echo($ruta_db_superior);?>formatos/arboles/test_formatos_documento2.php?id=<?php echo($iddoc2);?>");
   function redireccion_ruta(iframe_destino,ruta_enlace){
     if(iframe_destino==''){
       window.location=ruta_enlace;
@@ -497,7 +497,7 @@ function click_funcion(div){
         if(!isset($_REQUEST["no_seleccionar"])) 
            {
         ?>
-        tree2.selectItem(item,true,false);
+        //tree2.selectItem(item,true,false);
         //tree2.openAllItems(0); //esta linea permite que los arboles carguen abiertos totalmente
         <?php   
            }
