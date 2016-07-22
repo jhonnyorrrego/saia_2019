@@ -52,6 +52,7 @@ if(@$_REQUEST["tipo"]!==5 && !@$_REQUEST["output"] && !@$_REQUEST["imprimir"]){
     }
 		$datos_admin=botones_administrativos_menu($iddoc);
     echo(librerias_acciones_kaiten());
+    $tipo_pagina=$_SESSION["tipo_pagina"];
         ?>
     <style>
         .navbar-inner{height: 50px;}
@@ -72,7 +73,7 @@ if(@$_REQUEST["tipo"]!==5 && !@$_REQUEST["output"] && !@$_REQUEST["imprimir"]){
               <li>
               	<div class="btn-group pull-left btn-under">
                     <button type="button" class="btn btn-mini">
-                      <a href="<?php echo($ruta_db_superior.$_SESSION["tipo_pagina"]); ?>" class="kenlace_saia_propio" enlace="<?php echo($_SESSION["tipo_pagina"]); ?>" destino="_centro">
+                      <a href="<?php echo($ruta_db_superior.$tipo_pagina); ?>" class="kenlace_saia_propio" enlace="<?php echo($tipo_pagina); ?>" destino="_centro">
                         <i class="icon-acciones_menu_mostrar"></i>
                       </a>
                     </button>
