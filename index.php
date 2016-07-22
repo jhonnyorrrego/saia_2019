@@ -141,7 +141,7 @@ $mayor_informacion=busca_filtro_tabla("valor","configuracion","nombre='mayor_inf
   <?php
     }
   ?>    
-  <tr align="center">
+  <tr align="top">
     <td colspan="3" align="center" valign="top" id="LoginBkg"> 
       <div id="loginForm">
         <form method="post" name="loguin" id="formulario_login" action="login.php" class="form-horizontal">
