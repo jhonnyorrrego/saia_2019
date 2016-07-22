@@ -53,7 +53,7 @@ $texto.='<div class="btn-group pull" >
     <i class="'.$dato_leido[1].'"></i>
   </button>
 
-  <button type="button" class="btn btn-mini '.$clase_info.' tooltip_saia" conector="iframe" onClick=" " enlace="pantallas/documento/detalles_documento.php?iddoc='.$iddoc.'" title="No.'.$numero.'" idregistro="'.$iddoc.'"><i class="icon-info-sign"></i></button>
+  <button type="button" class="btn btn-mini '.$clase_info.' tooltip_saia" conector="iframe" onClick=" " enlace="pantallas/documento/detalles_documento.php?iddoc='.$iddoc.'" titulo="No.'.$numero.'" idregistro="'.$iddoc.'"><i class="icon-info-sign"></i></button>
   <button type="button" class="btn btn-mini tooltip_saia adicionar_seleccionados" title="Seleccionar" idregistro="'.$iddoc.'">
     <i class="icon-uncheck"></i>
   </button>
