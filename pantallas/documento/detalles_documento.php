@@ -44,6 +44,7 @@ if($documento_origen_flujo["numcampos"]){
 .pull-center .dropdown-menu {text-align: left;}
 .pull-center{text-align:center;}
 .table th, .table td {line-height: 10px;text-align: left;}
+.collapse .in { overflow:auto;}
 </style>
 <body>
 <div class="container">
