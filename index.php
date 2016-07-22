@@ -121,7 +121,11 @@ $mayor_informacion=busca_filtro_tabla("valor","configuracion","nombre='mayor_inf
       <td>Para mayor información: <?php echo($mayor_informacion[0]["valor"]); ?></td>
       <td>
       </td>
-      <td align="right">Todos los derechos reservados CERO K&nbsp;&nbsp;&nbsp;</td>
+      <?php
+        if(@$_SESSION["tipo_dispositivo"]!="movil"){
+            echo('<td align="right">Todos los derechos reservados CERO K&nbsp;&nbsp;&nbsp;</td>');
+        }
+        ?>
     </tr>
   </table>
 </div>
