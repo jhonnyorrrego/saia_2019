@@ -497,7 +497,7 @@ function click_funcion(div){
         if(!isset($_REQUEST["no_seleccionar"])) 
            {
         ?>
-        //tree2.selectItem(item,true,false);
+        tree2.selectItem(item,true,false);
         //tree2.openAllItems(0); //esta linea permite que los arboles carguen abiertos totalmente
         <?php   
            }
