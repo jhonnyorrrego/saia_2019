@@ -10,7 +10,6 @@ while($max_salida>0){
 }
 ?>
 <meta http-equiv="X-UA-Compatible" content="IE=9">
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <?php 
 include_once("db.php");
 include_once("librerias_saia.php");
