@@ -131,7 +131,7 @@ $mayor_informacion=busca_filtro_tabla("valor","configuracion","nombre='mayor_inf
 </div>
 <table width="100%" border="0"  cellpadding="0" cellspacing="0" id="tabla_principal"  align="middle" >
   <?php 
-    if(@$_SESSION["tipo_dispositivo"]!="movil"){
+    if(@$_SESSION["tipo_dispositivo"]=="movil"){
       ?>
       <tr>
         <td valign="bottom" align="center">
