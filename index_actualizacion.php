@@ -563,7 +563,9 @@ $(document).ready(function(){
 	    var nuevo_alto=$(top).height()-($(".footer_login").height()+$(".user-menu-top div").height()+20);
 	    $("#iFrameContainer").height(nuevo_alto);
 	});
-	$("#resize_centro").click();
+	// se saca el codigo porque el resize_centro existe solo para moviles
+	var nuevo_alto=$(top).height()-($(".footer_login").height()+$(".user-menu-top div").height()+20);
+	$("#iFrameContainer").height(nuevo_alto);
 	$(".enlace_final").click(function(){
 	  $(".dropdown").removeClass("open");
 	});
