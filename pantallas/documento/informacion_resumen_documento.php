@@ -421,7 +421,7 @@ function click_funcion(div){
     //iniciar_tooltip();
   } 
   $(".eliminar_pagina").removeClass('abrir_highslide');
-	$(".eliminar_adjunto_menu").removeClass('abrir_highslide');
+  $(".eliminar_adjunto_menu").removeClass('abrir_highslide');
   $(".eliminar_adjunto_menu").attr('id',"adjuntos_documento");
   $(".adicionar_anexos").attr('id',"adjuntos_documento");
   var browserType;
@@ -438,7 +438,7 @@ function click_funcion(div){
   tree2.setOnLoadingStart(cargando);
   tree2.setOnLoadingEnd(fin_cargando);
   tree2.setOnClickHandler(onNodeSelect);
-  tree2.loadXML("<?php echo($ruta_db_superior);?>formatos/arboles/test_formatos_documento2.php?id=<?php echo($iddoc2);?>");
+  tree2.loadXML("<?php echo($ruta_db_superior);?>formatos/arboles/test_forma_documento2.php?id=<?php echo($iddoc2);?>");
   function redireccion_ruta(iframe_destino,ruta_enlace){
     if(iframe_destino==''){
       window.location=ruta_enlace;
@@ -477,7 +477,7 @@ function click_funcion(div){
     llave=tree2.getParentId(nodeId);
 
     tree2.closeAllItems(tree2.getParentId(nodeId))
-    //tree2.openItem(nodeId);
+    tree2.openItem(nodeId);
     tree2.openItem(tree2.getParentId(nodeId));
     conexion="<?php echo($ruta_db_superior); ?>formatos/arboles/parsear_accion_arbol.php?id="+nodeId+"&accion="+accion+"&llave="+llave;
     window.parent.open(conexion,"detalles");
