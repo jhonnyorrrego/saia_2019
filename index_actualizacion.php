@@ -219,7 +219,7 @@ if($_SESSION["tipo_dispositivo"]=="movil"){ ?>
       <li><a href="#">Separated link</a></li-->
     </ul>
   </div>
-  <div class="dropdown pull-right">|<b><?php echo(usuario_actual("nombres")." ".usuario_actual("apellidos"));?></b></div>
+  <div class="dropdown pull-right"><b><?php echo(usuario_actual("nombres")." ".usuario_actual("apellidos"));?></b></div>
   
   <!--a href="#">Opciones</a-->
 </div>
