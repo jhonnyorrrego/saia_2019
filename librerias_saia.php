@@ -202,6 +202,7 @@ $texto='<script src="'.$raiz_saia.'asset/js/main.js" type="text/javascript" char
 return($texto);
 }
 function librerias_tooltips(){
+return;
 //http://craigsworks.com/projects/qtip2/
 global $raiz_saia;
 $texto='';
