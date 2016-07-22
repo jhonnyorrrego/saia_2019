@@ -36,7 +36,7 @@ if($documento_origen_flujo["numcampos"]){
 	$pasos_documento=busca_filtro_tabla("*,".  fecha_db_obtener("fecha_limite","Y-m-d")." AS fecha_limite2","paso_documento","diagram_iddiagram_instance=".$flujo[0]["iddiagram_instance"],"idpaso_documento",$conn);
 }
 ?>
-<style text/css>
+<style type="text/css">
 .well{ margin-bottom: 3px; min-height: 11px; padding: 10px;}.alert{ margin-bottom: 3px;  padding: 10px;}  body{ font-size:12px; line-height:100%;}.navbar-fixed-top, .navbar-fixed-bottom{ position: fixed;} .navbar-fixed-top, .navbar-fixed-bottom, .navbar-static-top{margin-right: 0px; margin-left: 0px;}
 .texto-azul{ color:#3176c8}
 .pull-center.navbar .nav,.pull-center.navbar .nav > li { float:none; display:inline-block; *display:inline;    *zoom:1; vertical-align: top;}
