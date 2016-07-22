@@ -173,7 +173,7 @@ function index_estilos($tipo_tema) {
     	$tema_index .= '<style type="text/css">
 		body { overflow-x:hidden; margin-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; background-color: #e7e7e7; font-family: Verdana, Geneva, sans-serif; font-size: 10px; font-weight: normal; 
 		    background-image: url('.$ruta_db_superior.'asset/img/layout/logosaia.png);background-repeat: no-repeat;}
-		.footer_login { font-weight: bold; background-image: url('.$ruta_db_superior.'imagenes/login/footerbkg.png); background-repeat: repeat-x; background-position: left top; height: 25px; width: 100%; padding-top: 0px; padding-bottom: 0px; text-align: right; color: #FFF; position: fixed; bottom: 0px; left:0px;}
+		.footer_login { display:none; font-weight: bold; background-image: url('.$ruta_db_superior.'imagenes/login/footerbkg.png); background-repeat: repeat-x; background-position: left top; height: 25px; width: 100%; padding-top: 0px; padding-bottom: 0px; text-align: right; color: #FFF; position: fixed; bottom: 0px; left:0px;}
 		.footer_login_text, .footer_login_text * { color:#FFF; font-size:11px; font-weight:bold; }
 		.blueTexts { font-family: Verdana, Geneva, sans-serif; font-size: 9px; font-weight: bold; color: #036; text-decoration: none; }
 		.boton_ui { -webkit-border-radius: 6px; -moz-border-radius: 6px; border-radius: 6px; background-color: #FFF; font-family: Verdana, Geneva, sans-serif; font-size: 10px; font-weight: bold; padding: 10px; border: 1px solid #CCC; }
