@@ -53,7 +53,7 @@ $texto.='<div class="btn-group pull" >
     <i class="'.$dato_leido[1].'"></i>
   </button>
 
-  <button type="button" class="btn btn-mini '.$clase_info.' tooltip_saia" enlace="ordenar.php?accion=mostrar&mostrar_formato=1&key='.$iddoc.'" title="No.'.$numero.'" idregistro="'.$iddoc.'"><i class="icon-info-sign"></i></button>
+  <button type="button" class="btn btn-mini '.$clase_info.' tooltip_saia" onClick=" " enlace="ordenar.php?accion=mostrar&mostrar_formato=1&key='.$iddoc.'" title="No.'.$numero.'" idregistro="'.$iddoc.'"><i class="icon-info-sign"></i></button>
   <button type="button" class="btn btn-mini tooltip_saia adicionar_seleccionados" title="Seleccionar" idregistro="'.$iddoc.'">
     <i class="icon-uncheck"></i>
   </button>
