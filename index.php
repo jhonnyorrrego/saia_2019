@@ -131,12 +131,12 @@ $mayor_informacion=busca_filtro_tabla("valor","configuracion","nombre='mayor_inf
 </div>
 <table width="100%" border="0"  cellpadding="0" cellspacing="0" id="tabla_principal"  align="middle" >
   <tr>
-    <td>
+    <td valign="bottom" align="center">
       <img src="<?php echo($ruta_db_superior);?>asset/img/layout/logosaia.png">
     </td>
   </tr>
   <tr align="center">
-    <td colspan="3" align="center" valign="middle" id="LoginBkg"> 
+    <td colspan="3" align="center" valign="top" id="LoginBkg"> 
       <div id="loginForm">
         <form method="post" name="loguin" id="formulario_login" action="login.php" class="form-horizontal">
         <?php if($_SESSION["tipo_dispositivo"]=="movil"){ ?>    
