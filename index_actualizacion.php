@@ -559,10 +559,10 @@ function menu_saia(){
 $(document).ready(function(){
 	hs.graphicsDir = '<?php echo($ruta_db_superior);?>anexosdigitales/highslide-4.0.10/highslide/graphics/';
 	hs.outlineType = 'rounded-white';
-	$("#resize_centro").click(function(){
+	/*$("#resize_centro").click(function(){
 	    var nuevo_alto=$(top).height()-($(".footer_login").height()+$(".user-menu-top div").height()+20);
 	    $("#iFrameContainer").height(nuevo_alto);
-	});
+	});*/
 	//$("#resize_centro").click();
 	$(".enlace_final").click(function(){
 	  $(".dropdown").removeClass("open");
