@@ -58,7 +58,6 @@ if ( $detect->isMobile() ) {
     $_SESSION["tipo_dispositivo"]="movil";
 }
 date_default_timezone_set ("America/Bogota");
-echo(estilo_bootstrap());
 if(isset($_REQUEST['sesion']))
   $_SESSION["LOGIN".LLAVE_SAIA]=$_REQUEST['sesion']; 
 if(@$_SESSION["LOGIN".LLAVE_SAIA]){
@@ -98,6 +97,7 @@ if($_SESSION["tipo_dispositivo"]=="movil"){
 </style>
 <?php 
 include_once("css/index_estilos.php");
+echo(estilo_bootstrap());
 if(@$_SESSION["tipo_dispositivo"]=="movil"){ 
     echo(index_estilos('temas_movil'));
     echo(index_estilos('temas_bootstrap'));
