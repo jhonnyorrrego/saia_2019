@@ -494,13 +494,14 @@ function click_funcion(div){
               eval('document.layers["esperando_arbol"]');
         document.poppedLayer.style.visibility = "hidden";
         <?php 
-        if(!isset($_REQUEST["no_seleccionar"])) 
-           {
+        if(!isset($_REQUEST["no_seleccionar"])){
+            if($_SESSION["tipo_dispositivo"]!="movil"){
         ?>
         tree2.selectItem(item,true,false);
         //tree2.openAllItems(0); //esta linea permite que los arboles carguen abiertos totalmente
         <?php   
-           }
+            }
+        }
         ?>
         
       }
