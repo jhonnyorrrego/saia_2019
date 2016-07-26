@@ -112,7 +112,7 @@ else{
 ?>
 <style type="text/css">
 .well{padding: 0px;margin-bottom: 3px;}.tabs-right > .nav-tabs{margin-left:0px;}.tabs-right > .nav-tabs > li > a{min-width: 40px;} .badge{line-height:11px;padding: 1px 4px 1px; margin-left: 15px; font-size:11px;} .nav-tabs > li > a, .nav-pills > li > a {padding-right: 2px;padding-left: 2px;} body{padding:5px;} .div_pagina{text-align: center;} .tabs-left,tabs-right {margin-bottom:0px;} .ordenar_paginas { list-style-type: none;}  .btn-group div{line-height: 0px;}
-.navbar-inner {min-height: 15px;} #anexos .well{background: transparent;border: none;} .lista_datos > li{list-style: none; margin-left: 0px; margin-bottom:2px;} #panel_notas_tranferencia > li > .well > div{padding-left:5px;} .lista_datos{margin: 0px;} .alert{padding:0px; margin-bottom:0px;} li {line-height: 15px;} .npaginas{margin-left: 55px;margin-right: -42px; margin-top: 3px;} .cb_pagina{margin-left: 5px; margin-bottom: 3px;}
+/*.navbar-inner {min-height: 15px;} #anexos .well{background: transparent;border: none;} .lista_datos > li{list-style: none; margin-left: 0px; margin-bottom:2px;} #panel_notas_tranferencia > li > .well > div{padding-left:5px;} .lista_datos{margin: 0px;} .alert{padding:0px; margin-bottom:0px;} li {line-height: 15px;} .npaginas{margin-left: 55px;margin-right: -42px; margin-top: 3px;} .cb_pagina{margin-left: 5px; margin-bottom: 3px;}*/
 </style>                
 <div class="tabbable tabs-right">
   <ul class="nav nav-tabs">
@@ -494,7 +494,7 @@ function click_funcion(div){
               eval('document.layers["esperando_arbol"]');
         document.poppedLayer.style.visibility = "hidden";
         <?php 
-        if(!isset($_REQUEST["no_seleccionar"])){
+        if(!isset($_REQUEST["no_seleccionar"]))//{
         ?>
         tree2.selectItem(item,true,false);
         //tree2.openAllItems(0); //esta linea permite que los arboles carguen abiertos totalmente
