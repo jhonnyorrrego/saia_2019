@@ -331,7 +331,6 @@ if($_SESSION["tipo_dispositivo"]=="movil"){ ?>
 <?php //include_once("fin_cargando.php");
 echo(librerias_UI());
 //echo(libreria_principal());
-echo(librerias_jquery("1.7"));
 echo(librerias_notificaciones());
 function mostrar_iconos($modulo_actual){
   global $conn;
