@@ -1798,7 +1798,7 @@ function transferencias_pendientes($serie)
 function radicar_plantilla(){ 
    global $conn,$sql,$ruta_db_superior;
    if (array_key_exists("form_info", $_POST)) {
-      print_r($_POST);
+       print_r($_POST);
       die();
       $data = json_decode($_POST["form_info"], true);
       unset($_REQUEST);
@@ -2085,7 +2085,7 @@ if(isset($_POST["iddoc"]) && $_POST["iddoc"] && $ruta_def=="")
       if($formato_doc["numcampos"])
          $nom_formato=$formato_doc[0]["nombre"];
 			//Cuando el documento es creado como una respuesta
-			abrir_url("formatos/".$nom_formato."/detalles_mostrar_".$nom_formato.".php?prueba_harri=".encrypt_blowfish("idformato=".$formato_doc[0]["idformato"]."&iddoc=".$_POST["iddoc"],LLAVE_SAIA_CRYPTO),"_self");
+			abrir_url("formatos/".$nom_formato."/detalles_mostrar_".$nom_formato.".php?form_info=".encrypt_blowfish("idformato=".$formato_doc[0]["idformato"]."&iddoc=".$_POST["iddoc"],LLAVE_SAIA_CRYPTO),"_self");
           die();
      }
 die();
