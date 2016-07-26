@@ -1801,7 +1801,7 @@ function radicar_plantilla(){
          
       $data = json_decode($_POST, true);
        print_r($data);
-   die();
+        die();
       unset($_REQUEST);
       unset($_POST);
       for($i = 0; $i < count($data); $i ++) {
