@@ -209,7 +209,6 @@ function contador_($tipo_radicado)
    else
      return(0);
 }
-
 /*
 <Clase>
 <Nombre>radicar_documento_prueba
