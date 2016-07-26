@@ -48,7 +48,7 @@ if(@$_REQUEST["tipo"]!==5 && !@$_REQUEST["output"] && !@$_REQUEST["imprimir"]){
       $tipo_pagina=$_SESSION["tipo_pagina"];
     }
     else{
-      $tipo_pagina="pantallas/documento/informacion_resumen_documento.php?iddoc=".$iddoc."";
+      $tipo_pagina="pantallas/documento/informacion_resumen_documento.php?iddoc=".$iddoc."&no_seleccionar=1";
       $dropdown_menu=' position: fixed; top: 35; left: 0px; ';  
     }
 	$datos_admin=botones_administrativos_menu($iddoc);
