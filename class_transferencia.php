@@ -1797,7 +1797,7 @@ function transferencias_pendientes($serie)
 */   
 function radicar_plantilla(){ 
    global $conn,$sql,$ruta_db_superior;
-   print_r($_REQUEST);
+   print_r($_POST);
    die();
    if (array_key_exists("form_info", $_POST)) {
       $data = json_decode($_POST["form_info"], true);
