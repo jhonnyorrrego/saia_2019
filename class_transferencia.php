@@ -1797,10 +1797,9 @@ function transferencias_pendientes($serie)
 */   
 function radicar_plantilla(){ 
    global $conn,$sql,$ruta_db_superior;
-   print_r($_POST);
-      die();
    if (array_key_exists("form_info", $_POST)) {
-       
+       print_r();
+       die();
       $data = json_decode($_POST["form_info"], true);
       unset($_REQUEST);
       unset($_POST);
@@ -2086,7 +2085,7 @@ if(isset($_POST["iddoc"]) && $_POST["iddoc"] && $ruta_def=="")
       if($formato_doc["numcampos"])
          $nom_formato=$formato_doc[0]["nombre"];
 			//Cuando el documento es creado como una respuesta
-			abrir_url("formatos/".$nom_formato."/detalles_mostrar_".$nom_formato.".php?formharri1=".encrypt_blowfish("idformato=".$formato_doc[0]["idformato"]."&iddoc=".$_POST["iddoc"],LLAVE_SAIA_CRYPTO),"_self");
+			abrir_url("formatos/".$nom_formato."/detalles_mostrar_".$nom_formato.".php?form_info=".encrypt_blowfish("idformato=".$formato_doc[0]["idformato"]."&iddoc=".$_POST["iddoc"],LLAVE_SAIA_CRYPTO),"_self");
           die();
      }
 die();
@@ -2094,7 +2093,7 @@ die();
   else
     {
      if(isset($_REQUEST["firmado"]) && $_REQUEST["firmado"]=="varias")
-       {abrir_url("formatos/librerias/rutaadd.php?formharri2=".encrypt_blowfish("doc=".$_POST["iddoc"]."&origen=".usuario_actual("funcionario_codigo"),LLAVE_SAIA_CRYPTO),"centro"); 
+       {abrir_url("formatos/librerias/rutaadd.php?form_info=".encrypt_blowfish("doc=".$_POST["iddoc"]."&origen=".usuario_actual("funcionario_codigo"),LLAVE_SAIA_CRYPTO),"centro"); 
         die();
        }
      else
@@ -2102,7 +2101,7 @@ die();
        if($formato_doc["numcampos"])
         {$nom_formato=$formato_doc[0]["nombre"];
 			 //Cuando el documento es creado por el modulo formatos
-		abrir_url("formatos/".$nom_formato."/detalles_mostrar_".$nom_formato.".php?formharri3=".encrypt_blowfish("idformato=".$formato_doc[0]["idformato"]."&iddoc=".$_POST["iddoc"],LLAVE_SAIA_CRYPTO),"_self");
+		abrir_url("formatos/".$nom_formato."/detalles_mostrar_".$nom_formato.".php?form_info=".encrypt_blowfish("idformato=".$formato_doc[0]["idformato"]."&iddoc=".$_POST["iddoc"],LLAVE_SAIA_CRYPTO),"_self");
         die();
         }
        }
