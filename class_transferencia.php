@@ -1797,6 +1797,8 @@ function transferencias_pendientes($serie)
 */   
 function radicar_plantilla(){ 
    global $conn,$sql,$ruta_db_superior;
+   print_r($_REQUEST);
+   die();
    if (array_key_exists("form_info", $_POST)) {
       $data = json_decode($_POST["form_info"], true);
       unset($_REQUEST);
@@ -1860,8 +1862,6 @@ function radicar_plantilla(){
     if(isset($_REQUEST["dependencia"]) && $_REQUEST["dependencia"]<>"")
       $valores["responsable"]=$_REQUEST["dependencia"];
 
-    print_r($_POST);
-    die();
     if(@$_POST["tipo_radicado"]){
       $tipo_radicado=busca_filtro_tabla("idcontador","contador","nombre='".$_POST["tipo_radicado"]."'","",$conn);
       if($tipo_radicado["numcampos"]){
