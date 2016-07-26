@@ -1799,9 +1799,9 @@ function radicar_plantilla(){
    global $conn,$sql,$ruta_db_superior;
    if (array_key_exists("form_info", $_POST)) {
          
-      $data = json_decode($_POST, true);
-       print_r($_POST);
-        die();
+      $data = json_decode($_POST["form_info"], true);
+       print_r($_POST["form_info"]);
+   die();
       unset($_REQUEST);
       unset($_POST);
       for($i = 0; $i < count($data); $i ++) {
