@@ -1800,8 +1800,6 @@ function radicar_plantilla(){
    if (array_key_exists("form_info", $_POST)) {
        
       $data = json_decode($_POST["form_info"], true);
-      print_r($_POST["form_info"]);
-      die();
       unset($_REQUEST);
       unset($_POST);
       for($i = 0; $i < count($data); $i ++) {
@@ -2086,7 +2084,7 @@ if(isset($_POST["iddoc"]) && $_POST["iddoc"] && $ruta_def=="")
       if($formato_doc["numcampos"])
          $nom_formato=$formato_doc[0]["nombre"];
 			//Cuando el documento es creado como una respuesta
-			abrir_url("formatos/".$nom_formato."/detalles_mostrar_".$nom_formato.".php?form_info=paso","_self");
+			abrir_url("formatos/".$nom_formato."/detalles_mostrar_".$nom_formato.".php?prueba_harri=".encrypt_blowfish("idformato=".$formato_doc[0]["idformato"]."&iddoc=".$_POST["iddoc"],LLAVE_SAIA_CRYPTO),"_self");
           die();
      }
 die();
