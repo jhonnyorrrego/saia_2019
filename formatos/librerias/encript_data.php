@@ -12,6 +12,7 @@ while ( $max_salida > 0 ) {
 include_once ($ruta_db_superior . "db.php");
 include_once ($ruta_db_superior . "pantallas/lib/librerias_cripto.php");
 
+print_r($_REQUEST);
 $data = array();
 if (isset($_POST["datos"])) {
     $info = json_decode($_POST["datos"], true);
