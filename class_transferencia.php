@@ -1800,7 +1800,7 @@ function radicar_plantilla(){
    if (array_key_exists("form_info", $_POST)) {
          
       $data = json_decode($_POST, true);
-       print_r($data);
+       print_r($_POST);
         die();
       unset($_REQUEST);
       unset($_POST);
