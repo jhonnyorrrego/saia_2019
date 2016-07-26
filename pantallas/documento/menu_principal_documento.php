@@ -62,7 +62,7 @@ if(@$_REQUEST["tipo"]!==5 && !@$_REQUEST["output"] && !@$_REQUEST["imprimir"]){
         .texto-azul{ color:#3176c8}
         .btn-under {text-align: center;vertical-align: top;}
         .btn-under ul{text-align: left;}
-        .btn-under h6{margin-top: 0px; font-size: 11; font-weight:normal;}
+        .btn-under h6{margin-top: 0px; font-size: 11; font-weight:normal;font-family: arial;}
         .btn-under > .dropdown-menu{ <?php echo($dropdown_menu);?>}
     </style>
     <div class="navbar navbar-fixed-top pull-center" id="menu_principal_documento">
