@@ -488,7 +488,7 @@ function click_funcion(div){
             window.parent.open(conexion,"detalles");    
         }
         else{
-            no_seleccionar=0
+            no_seleccionar=0;
         }
     }
     function fin_cargando(){
