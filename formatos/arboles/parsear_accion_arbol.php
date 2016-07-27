@@ -11,9 +11,11 @@ include_once ($ruta_db_superior . "pantallas/lib/librerias_cripto.php");
 $formato["numcampos"]=0;
 
 if(@$_REQUEST["id"]){
-  $datos=parsea_idformato($_REQUEST["id"]);
+    $data = decrypt_blowfish($_REQUEST["id"],LLAVE_SAIA_CRYPTO);
+  $datos=parsea_idformato($data);
   print_r($datos);
   die();
+  
   $formato=busca_filtro_tabla("","formato","idformato=".$datos[0],"",$conn);  
   //print_r($datos);
   if(!$datos[2] && $datos[3]=="mostrar"){
