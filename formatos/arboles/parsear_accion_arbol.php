@@ -19,8 +19,6 @@ if(@$_REQUEST["id"]){
   }
   
   if($formato["numcampos"]){
-      print_r($datos);
-  die();
     $ruta="";
     $alerta="existe problema para redireccionar";
     if($datos[1]&&$datos[2]){
