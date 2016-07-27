@@ -23,7 +23,7 @@ if (isset($_REQUEST["form_info"])) {
   unset($_REQUEST);
   unset($_POST);
   unset($_GET);
-  print_r();
+  print_r($datos);
   die();
   foreach($datos AS $key=>$value){
     $valor=explode("=",$value);
