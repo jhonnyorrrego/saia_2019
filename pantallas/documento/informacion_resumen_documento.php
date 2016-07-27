@@ -484,7 +484,6 @@ function click_funcion(div){
     redireccion_detalles(conexion);
     }
     function redireccion_detalles(conexion){
-        console.log(datos);
         console.log(no_seleccionar);
         if(no_seleccionar){
             window.parent.open(conexion,"detalles");    
