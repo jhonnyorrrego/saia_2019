@@ -13,6 +13,7 @@ $x_fecha_ingreso = Null;
 
 // Load Key Parameters
 $sKey = @$_GET["key"];
+
 if (array_key_exists("form_info", $_POST)) {
     include_once ($ruta_db_superior . "pantallas/lib/librerias_cripto.php");
     $data = json_decode($_POST["form_info"], true);
@@ -60,7 +61,7 @@ switch ($sAction)
 <?php include ("header.php") ?>
 <p><span class="internos"><img class="imagen_internos" src="botones/configuracion/dependencia.png" border="0">&nbsp;&nbsp;Inactivar Dependencia<br><br>
 </span></p>
-<form action="dependenciadelete.php" id="dependenciadelete" method="post">
+<form action="dependenciadelete.php" method="post" id="dependenciadelete">
 <p>
 <input type="hidden" name="a_delete" value="D">
 <?php $sKey = (get_magic_quotes_gpc()) ? stripslashes($sKey) : $sKey; ?>
@@ -226,12 +227,8 @@ function DeleteData($sqlKey,$conn)
 	if ($sOrderBy <> "") {
 		$sSql .= " ORDER BY " . $sOrderBy;
 	}
-	print_r($sSql);
-	echo "<br>";
 	phpmkr_query($sSql,$conn) or error("Fall� la b�squeda" . phpmkr_error() . ' SQL:' . $sSql);
-	$update_rol = "UPDATE dependencia_cargo SET estado=0 WHERE dependencia_iddependencia=".substr($sqlKey,14);
-	print_r($update_rol);
-	die();
+	$update_rol = "UPDATE dependencia_cargo SET estado=0 WHERE dependencia_iddependencia=".substr($sqlKey,14);	
 	phpmkr_query($update_rol,$conn) or error("Fall� la b�squeda" . phpmkr_error() . ' SQL:' . $update_rol);
 	return true;
 }
