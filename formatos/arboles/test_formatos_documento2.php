@@ -17,6 +17,7 @@ $imagenes="";
 include_once("../../db.php");
 include_once("../librerias/funciones_generales.php"); 
 include_once("../../pantallas/lib/librerias_cripto.php");
+ini_set("display_errors",true);
 if (isset($_REQUEST["form_info"])) {
   $data = decrypt_blowfish($_REQUEST["form_info"],LLAVE_SAIA_CRYPTO);
   $datos=explode("&", $data);
