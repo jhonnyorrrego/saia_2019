@@ -76,7 +76,7 @@ if($formato["numcampos"]&& $ok){
     }
   elseif($estado){
     $texto.='<item style="font-family:verdana; font-size:7pt;" '.$imagenes;
-$texto.='text="'.decodifica(strip_tags(stripslashes($formato[0]["etiqueta"]))).'" id="'.encrypt_blowfish($formato[0]["idformato"]."-".$arreglo[2],LLAVE_SAIA_CRYPTO)."-r".rand().'">';
+    $texto.='text="'.decodifica(strip_tags(stripslashes($formato[0]["etiqueta"]))).'" id="'.encrypt_blowfish($formato[0]["idformato"]."-".$arreglo[2],LLAVE_SAIA_CRYPTO)."-r".rand().'">';
   }
   if($formato[0]["item"])
     $texto.=llena_datos_item($idformato,$formato[0]["nombre_tabla"],$campo_descripcion);
@@ -146,10 +146,12 @@ for($i=0;$i<$dato["numcampos"];$i++){
 	$version=busca_filtro_tabla("max(version) as max_version","version_documento a","a.documento_iddocumento=".$dato[$i]["documento_iddocumento"],"",$conn);
   if(!$version["numcampos"])$cadena_version=1;
   else $cadena_version=$version[0]["max_version"]+1;
-	
+  $seleccionado='';
+	if(@$_REQUEST["seleccionado"]==$dato[$i]["documento_iddocumento"])
+	 $seleccionado='select="'.$_REQUEST["seleccionado"].'"';
   $texto.='<item style="font-family:verdana; font-size:7pt;" '.$imagenes;
   $llave=$arreglo[0]."-".$arreglo[2]."-".$dato[$i]["id".$tabla]."-".$dato[$i]["documento_iddocumento"];
-  $texto.=strip_tags('text="V'.$cadena_version.'. '. str_replace('"','',decodifica(mostrar_valor_campo($campo[0]["nombre"],$arreglo[0],$dato[$i]["documento_iddocumento"],1))).'" id="'.encrypt_blowfish($llave,LLAVE_SAIA_CRYPTO).'" tooltip="'.decodifica($tips)).'" tooltip="'.decodifica($tips)).'">';
+  $texto.=strip_tags('text="V'.$cadena_version.'. '. str_replace('"','',decodifica(mostrar_valor_campo($campo[0]["nombre"],$arreglo[0],$dato[$i]["documento_iddocumento"],1))).'" id="'.encrypt_blowfish($llave,LLAVE_SAIA_CRYPTO).'" tooltip="'.decodifica($tips)).'" '.$seleccionado.'>';
   $items=llena_items($arreglo[0],$dato[$i]["id".$tabla],$tabla);
   /*if($items<>""){
   $texto.='<item style="font-family:verdana; font-size:7pt;" '.$imagenes.' text="Formatos tipo item" id="item" >';
