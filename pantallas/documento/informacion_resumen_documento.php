@@ -10,6 +10,7 @@ while($max_salida>0){
 }
 include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."librerias_saia.php");
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
 //include_once($ruta_db_superior."pantallas/documento/librerias_flujo.php");
 echo(estilo_bootstrap());
 if($_SESSION["tipo_dispositivo"]=="movil"){
@@ -21,6 +22,18 @@ $adicionales_enlace="";
 $busquedas=busca_filtro_tabla("", "busqueda_componente", "nombre LIKE 'notas_documento' OR nombre LIKE 'anexos' OR nombre LIKE 'paginas_documento' OR nombre LIKE 'buzon_salida' OR nombre LIKE 'documentos_relacionados' OR nombre LIKE 'documentos_respuesta' OR nombre LIKE 'tareas_documento' OR nombre LIKE 'versiones_documento'", "", $conn);
 $modulos=busca_filtro_tabla("nombre,etiqueta","modulo","nombre LIKE 'ordenar_pag' OR nombre LIKE 'ver_notas' OR nombre LIKE 'adjuntos_documento' OR nombre LIKE 'documentos_relacionados' OR nombre LIKE 'arbol_documento' OR nombre LIKE 'tareas_documento' OR nombre LIKE 'ver_versiones'","",$conn);
 $iconos = array();
+if (isset($_REQUEST["form_info"])) {
+  $data = decrypt_blowfish($_REQUEST["form_info"],LLAVE_SAIA_CRYPTO);
+  $datos=explode("&", $data);
+  unset($_REQUEST);
+  unset($_POST);
+  foreach($datos AS $key=>$value){
+    $valor=explode("=",$value);
+    if($valor[1]!==''){
+      $_REQUEST[$valor[0]]=$valor[1];  
+    }
+  }
+}
 for($i=0; $i< $modulos['numcampos']; $i++){
 	$iconos = array_merge($iconos,array($modulos[$i][nombre] => $modulos[$i]["etiqueta"])); 
 }
@@ -189,7 +202,7 @@ else{
     	<?php
     	$origen=busca_filtro_tabla("B.*","respuesta A, documento B","A.destino='".$iddocumento."' AND A.origen=B.iddocumento","",$conn);
     	if($origen["numcampos"]){
-    		echo('<li><div class="row-fluid"><div class="pull-left tootltip_saia_abajo">'.$origen[0]["numero"].'-'.$origen[0]["descripcion"].'</div><div class="pull-right"><a href="#" enlace="ordenar.php?key='.$origen[0]["iddocumento"].'&mostrar_formato=1'.$adicionales_enlace.'" conector="iframe"  titulo="Documento No.'.$origen[0]["numero"].'" class="kenlace_saia pull-left" ><i class="icon-download tooltip_saia_izquierda" title="Ver documento"></i></a></div></div></li>');
+    		echo('<li><div class="row-fluid"><div class="pull-left tootltip_saia_abajo">'.$origen[0]["numero"].'-'.$origen[0]["descripcion"].'</div><div class="pull-right"><a href="#" enlace="ordenar.php?form_info='.encrypt_blowfish($origen[0]["iddocumento"].'&mostrar_formato=1'.$adicionales_enlace,LLAVE_SAIA_CRYPTO).'" conector="iframe"  titulo="Documento No.'.$origen[0]["numero"].'" class="kenlace_saia pull-left" ><i class="icon-download tooltip_saia_izquierda" title="Ver documento"></i></a></div></div></li>');
     	}
 			?>
       </ul><br />
@@ -458,7 +471,8 @@ function click_funcion(div){
   	var llave=0;
     llave=tree2.getParentId(nodeId);
     var datos=nodeId.split("-");
-    if(datos[2][0]=="r"){
+    //TODO:Pilas queda pendiente revisar el tema de la adicion y el r en el envio desde test_formato_documento
+    if(datos[1]=="r"){
     	seleccion_accion('adicionar');
     }
     else{
@@ -502,9 +516,16 @@ function click_funcion(div){
            document.poppedLayer =
               eval('document.layers["esperando_arbol"]');
         document.poppedLayer.style.visibility = "hidden";
-        //Aqui va lo del no_seleccionar
-        tree2.selectItem(item,true,false);
-        //tree2.openAllItems(0); //esta linea permite que los arboles carguen abiertos totalmente
+        <?php 
+        if(!isset($_REQUEST["no_seleccionar"])) 
+           {
+        ?>
+        tree2.selectItem(tree2.getSelectedItemId(),true,false);
+        tree2.openAllItems(0);
+        <?php   
+           }
+        ?>
+        
       }
     function cargando() {
       if (browserType == "gecko" )
