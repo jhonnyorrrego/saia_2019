@@ -16,21 +16,7 @@ echo("<?xml version=\"1.0\" encoding=\"UTF-8\"?".">");
 $imagenes="";
 include_once("../../db.php");
 include_once("../librerias/funciones_generales.php"); 
-include_once("../../pantallas/lib/librerias_cripto.php");
-if (isset($_REQUEST["form_info"])) {
-  $data = decrypt_blowfish($_REQUEST["form_info"],LLAVE_SAIA_CRYPTO);
-  $datos=explode("&", $data);
-  unset($_REQUEST);
-  unset($_POST);
-  unset($_GET);
-  foreach($datos AS $key=>$value){
-    $valor=explode("=",$value);
-    if($valor[1]!==''){
-      $_REQUEST[$valor[0]]=$valor[1];  
-    }
-  }
-}
-$id = @$_REQUEST["id"];
+$id = @$_GET["id"];
 //print_r($id);
 echo("<tree id=\"0\">\n");
 if($id and $id<>""){
@@ -72,11 +58,11 @@ if($formato["numcampos"]&& $ok){
   $imagenes='im0="'.strtolower($formato[0]["nombre"]).'.gif" im1="'.strtolower($formato[0]["nombre"]).'.gif" im2="'.strtolower($formato[0]["nombre"]).'.gif" ';
   if($formato[0]["item"])
     {$texto.='<item style="font-family:verdana; font-size:7pt;" '.$imagenes;
-    $texto.='text="'.decodifica(strip_tags(stripslashes($formato[0]["etiqueta"]))).'" id="'.encrypt_blowfish($formato[0]["idformato"]."-".$arreglo[1],LLAVE_SAIA_CRYPTO)."-r".rand().'">';
+    $texto.='text="'.decodifica(strip_tags(stripslashes($formato[0]["etiqueta"]))).'" id="'.$formato[0]["idformato"]."-".$arreglo[1]."-r".rand().'">';
     }
   elseif($estado){
     $texto.='<item style="font-family:verdana; font-size:7pt;" '.$imagenes;
-$texto.='text="'.decodifica(strip_tags(stripslashes($formato[0]["etiqueta"]))).'" id="'.encrypt_blowfish($formato[0]["idformato"]."-".$arreglo[2],LLAVE_SAIA_CRYPTO)."-r".rand().'">';
+    $texto.='text="'.decodifica(strip_tags(stripslashes($formato[0]["etiqueta"]))).'" id="'.$formato[0]["idformato"]."-".$arreglo[2]."-r".rand().'">';
   }
   if($formato[0]["item"])
     $texto.=llena_datos_item($idformato,$formato[0]["nombre_tabla"],$campo_descripcion);
@@ -103,7 +89,7 @@ $permiso=new PERMISO();
   $vista=busca_filtro_tabla("","vista_formato","formato_padre=".$arreglo[0],"",$conn);
   for($i=0;$i<$vista["numcampos"];$i++){
     $texto.='<item style="font-family:verdana; font-size:7pt;" '.$imagenes;
-    $texto.='text="'.$vista[$i]["etiqueta"].'" id="'.encrypt_blowfish($arreglo[0].'-vista_formato-'.$arreglo[1].'-vista-'.$vista[$i]["idvista_formato"],LLAVE_SAIA_CRYPTO).'">';
+    $texto.='text="'.$vista[$i]["etiqueta"].'" id="'.$arreglo[0].'-vista_formato-'.$arreglo[1].'-vista-'.$vista[$i]["idvista_formato"].'">';
     $texto.='</item>';
   }
 //}
@@ -146,12 +132,10 @@ for($i=0;$i<$dato["numcampos"];$i++){
 	$version=busca_filtro_tabla("max(version) as max_version","version_documento a","a.documento_iddocumento=".$dato[$i]["documento_iddocumento"],"",$conn);
   if(!$version["numcampos"])$cadena_version=1;
   else $cadena_version=$version[0]["max_version"]+1;
-  $seleccionado='';
-	if(@$_REQUEST["seleccionado"]==$dato[$i]["documento_iddocumento"])
-	 $seleccionado='select="'.$_REQUEST["seleccionado"].'"';
+	
   $texto.='<item style="font-family:verdana; font-size:7pt;" '.$imagenes;
   $llave=$arreglo[0]."-".$arreglo[2]."-".$dato[$i]["id".$tabla]."-".$dato[$i]["documento_iddocumento"];
-  $texto.=strip_tags('text="V'.$cadena_version.'. '. str_replace('"','',decodifica(mostrar_valor_campo($campo[0]["nombre"],$arreglo[0],$dato[$i]["documento_iddocumento"],1))).'" id="'.encrypt_blowfish($llave,LLAVE_SAIA_CRYPTO).'" tooltip="'.decodifica($tips)).'" '.$seleccionado.'>';
+  $texto.=strip_tags('text="V'.$cadena_version.'. '. str_replace('"','',decodifica(mostrar_valor_campo($campo[0]["nombre"],$arreglo[0],$dato[$i]["documento_iddocumento"],1))).'" id="'.$llave.'" tooltip="'.decodifica($tips)).'">';
   $items=llena_items($arreglo[0],$dato[$i]["id".$tabla],$tabla);
   /*if($items<>""){
   $texto.='<item style="font-family:verdana; font-size:7pt;" '.$imagenes.' text="Formatos tipo item" id="item" >';
@@ -195,7 +179,7 @@ for($i=0;$i<$dato["numcampos"];$i++){
     }
   $texto.='<item style="font-family:verdana; font-size:7pt;" '.$imagenes;
   $llave=$arreglo[0]."-".$arreglo[2]."-".$dato[$i]["id".$tabla]."-".$formato[0]["nombre_tabla"]."-".$arreglo[1];
-  $texto.=strip_tags('text="'. str_replace('"','',decodifica(mostrar_valor_campo($campo[0]["nombre"],$arreglo[0],$dato[$i]["id".$tabla],1))).'" id="'.encrypt($llave,LLAVE_SAIA_CRYPTO).'" tooltip="'.decodifica($tips)).'">';
+  $texto.=strip_tags('text="'. str_replace('"','',decodifica(mostrar_valor_campo($campo[0]["nombre"],$arreglo[0],$dato[$i]["id".$tabla],1))).'" id="'.$llave.'" tooltip="'.decodifica($tips)).'">';
  $texto.='</item>'; 
 }
 return($texto);
