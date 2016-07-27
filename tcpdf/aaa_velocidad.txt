@@ -3010,3 +3010,7 @@ INICIO (codigo velocidad)-------2016-07-26 14:15:17-----------
 FIN (codigo velocidad)-------2016-07-26 14:15:17-----------
 INICIO (codigo velocidad)-------2016-07-26 14:15:35-----------
 FIN (codigo velocidad)-------2016-07-26 14:15:35-----------
+INICIO (codigo velocidad)-------2016-07-26 14:44:52-----------
+FIN (codigo velocidad)-------2016-07-26 14:44:52-----------
+INICIO (codigo velocidad)-------2016-07-26 22:08:31-----------
+FIN (codigo velocidad)-------2016-07-26 22:08:31-----------
