@@ -429,7 +429,8 @@ function click_funcion(div){
   if (document.all) {browserType = "ie";}
   if (window.navigator.userAgent.toLowerCase().match("gecko")) {
      browserType= "gecko";
-  }                                                                    
+  }                 
+  var no_seleccionar=<?php echo((@$_REQUEST["no_seleccionar"]?"1":"0")); ?>;
   tree2=new dhtmlXTreeObject("tree_box","100%","<?php echo($alto_inicial);?>",0);      
   tree2.enableAutoTooltips(1);
   tree2.enableTreeImages("false");
@@ -458,6 +459,7 @@ function click_funcion(div){
     llave=tree2.getParentId(nodeId);
     var datos=nodeId.split("-");
     console.log(datos);
+    console.log(no_seleccionar);
     if(datos[2][0]=="r"){
     	seleccion_accion('adicionar');
     }
@@ -470,7 +472,6 @@ function click_funcion(div){
 	function seleccion_accion(accion,id){
     var nodeId=0;
     var llave=0;
-    var no_seleccionar=<?php echo((@$_REQUEST["no_seleccionar"]?"1":"0")); ?>;
     nodeId=tree2.getSelectedItemId();
     if(!nodeId){
       alert("Por Favor seleccione un documento del arbol");
