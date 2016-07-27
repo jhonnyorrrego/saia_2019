@@ -467,22 +467,20 @@ function click_funcion(div){
     }
 	}
 	function seleccion_accion(accion,id){
-        var nodeId=0;
-        var llave=0;
-        var no_seleccionar=<?php if(@$_REQUEST["no_seleccionar"]){echo("1");}else{ echo("0");}?>;
-        nodeId=tree2.getSelectedItemId();
-        if(!nodeId){
-          alert("Por Favor seleccione un documento del arbol");
-          return;
-        }
-        llave=tree2.getParentId(nodeId);
-        tree2.closeAllItems(tree2.getParentId(nodeId))
-        tree2.openItem(nodeId);
-        tree2.openItem(tree2.getParentId(nodeId));
-       // alert("AQUI--->"+no_seleccionar);
-        
-            conexion="<?php echo($ruta_db_superior); ?>formatos/arboles/parsear_accion_arbol.php?id="+nodeId+"&accion="+accion+"&llave="+llave;
-            window.parent.open(conexion,"detalles");
+    var nodeId=0;
+    var llave=0;
+    nodeId=tree2.getSelectedItemId();
+    if(!nodeId){
+      alert("Por Favor seleccione un documento del arbol");
+      return;
+    }
+    llave=tree2.getParentId(nodeId);
+
+    tree2.closeAllItems(tree2.getParentId(nodeId))
+    tree2.openItem(nodeId);
+    tree2.openItem(tree2.getParentId(nodeId));
+    conexion="<?php echo($ruta_db_superior); ?>formatos/arboles/parsear_accion_arbol.php?id="+nodeId+"&accion="+accion+"&llave="+llave;
+    window.parent.open(conexion,"detalles");
     }
     function fin_cargando(){
         if (browserType == "gecko" )
@@ -495,8 +493,15 @@ function click_funcion(div){
            document.poppedLayer =
               eval('document.layers["esperando_arbol"]');
         document.poppedLayer.style.visibility = "hidden";
+        <?php 
+        if(!isset($_REQUEST["no_seleccionar"])){
+        ?>
         tree2.selectItem(item,true,false);
         //tree2.openAllItems(0); //esta linea permite que los arboles carguen abiertos totalmente
+        <?php   
+        }
+        ?>
+        
       }
     function cargando() {
       if (browserType == "gecko" )
