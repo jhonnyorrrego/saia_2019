@@ -430,7 +430,7 @@ function click_funcion(div){
   if (window.navigator.userAgent.toLowerCase().match("gecko")) {
      browserType= "gecko";
   }                 
-  var no_seleccionar=<?php print_r($_REQUEST["no_seleccionar"]);echo((@$_REQUEST["no_seleccionar"]?"1":"0")); ?>;
+  var no_seleccionar=<?php echo((@$_REQUEST["no_seleccionar"]?"1":"0")); ?>;
   tree2=new dhtmlXTreeObject("tree_box","100%","<?php echo($alto_inicial);?>",0);      
   tree2.enableAutoTooltips(1);
   tree2.enableTreeImages("false");
