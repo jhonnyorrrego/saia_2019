@@ -6,7 +6,7 @@ header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache"); // HTTP/1.0
 include("../../db.php");
 include("../../class_transferencia.php");
-//print_r($_REQUEST); die();
+include_once ($ruta_db_superior . "pantallas/lib/librerias_cripto.php");
 //echo("<br /><br />");
 $formato["numcampos"]=0;
 
