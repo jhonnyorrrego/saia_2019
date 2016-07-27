@@ -467,26 +467,23 @@ function click_funcion(div){
     }
 	}
 	function seleccion_accion(accion,id){
-    var nodeId=0;
-    var llave=0;
-    nodeId=tree2.getSelectedItemId();
-    if(!nodeId){
-      alert("Por Favor seleccione un documento del arbol");
-      return;
-    }
-    llave=tree2.getParentId(nodeId);
-    tree2.closeAllItems(tree2.getParentId(nodeId))
-    tree2.openItem(nodeId);
-    tree2.openItem(tree2.getParentId(nodeId));
-    <?php 
-        print_r($_REQUEST["no_seleccionar"]);
-        if(!@$_REQUEST["no_seleccionar"]){
-    ?>
-    conexion="<?php echo($ruta_db_superior); ?>formatos/arboles/parsear_accion_arbol.php?id="+nodeId+"&accion="+accion+"&llave="+llave;
-    window.parent.open(conexion,"detalles");
-    <?php   
+        var nodeId=0;
+        var llave=0;
+        var no_seleccionar=<?php if(@$_REQUEST["no_seleccionar"]){echo("1");}else{ echo("0");}?>;
+        nodeId=tree2.getSelectedItemId();
+        if(!nodeId){
+          alert("Por Favor seleccione un documento del arbol");
+          return;
         }
-    ?>
+        llave=tree2.getParentId(nodeId);
+        tree2.closeAllItems(tree2.getParentId(nodeId))
+        tree2.openItem(nodeId);
+        tree2.openItem(tree2.getParentId(nodeId));
+        alert(no_seleccionar);
+        if(!no_seleccionar){
+            conexion="<?php echo($ruta_db_superior); ?>formatos/arboles/parsear_accion_arbol.php?id="+nodeId+"&accion="+accion+"&llave="+llave;
+            window.parent.open(conexion,"detalles");
+        }
     }
     function fin_cargando(){
         if (browserType == "gecko" )
