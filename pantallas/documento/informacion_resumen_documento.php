@@ -480,7 +480,7 @@ function click_funcion(div){
     tree2.closeAllItems(tree2.getParentId(nodeId))
     tree2.openItem(nodeId);
     tree2.openItem(tree2.getParentId(nodeId));
-    alert(no_seleccionar);    
+    console.log(no_seleccionar);    
     conexion="<?php echo($ruta_db_superior); ?>formatos/arboles/parsear_accion_arbol.php?id="+nodeId+"&accion="+accion+"&llave="+llave;
     window.parent.open(conexion,"detalles");
 
