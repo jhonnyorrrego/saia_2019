@@ -458,8 +458,6 @@ function click_funcion(div){
   	var llave=0;
     llave=tree2.getParentId(nodeId);
     var datos=nodeId.split("-");
-    console.log(datos);
-    console.log(no_seleccionar);
     if(datos[2][0]=="r"){
     	seleccion_accion('adicionar');
     }
@@ -486,7 +484,14 @@ function click_funcion(div){
     redireccion_detalles(conexion);
     }
     function redireccion_detalles(conexion){
-        window.parent.open(conexion,"detalles");    
+        console.log(datos);
+        console.log(no_seleccionar);
+        if(no_seleccionar){
+            window.parent.open(conexion,"detalles");    
+        }
+        else{
+            console.log(conexion);
+        }
     }
     function fin_cargando(){
         if (browserType == "gecko" )
