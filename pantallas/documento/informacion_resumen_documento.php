@@ -463,7 +463,7 @@ function click_funcion(div){
     else{
     	cargar_cantidades_documento(datos[3]);
 	    conexion="<?php echo($ruta_db_superior); ?>formatos/arboles/parsear_accion_arbol.php?id="+nodeId+"&accion=mostrar&llave="+llave+"&enlace_adicionar_formato=1";
-	    window.parent.frames["detalles"].location=conexion;
+	    //window.parent.frames["detalles"].location=conexion;
     }
 	}
 	function seleccion_accion(accion,id){
@@ -475,12 +475,20 @@ function click_funcion(div){
       return;
     }
     llave=tree2.getParentId(nodeId);
-
     tree2.closeAllItems(tree2.getParentId(nodeId))
     tree2.openItem(nodeId);
     tree2.openItem(tree2.getParentId(nodeId));
+    <?php 
+        if(!isset($_REQUEST["no_seleccionar"])){
+    ?>
     conexion="<?php echo($ruta_db_superior); ?>formatos/arboles/parsear_accion_arbol.php?id="+nodeId+"&accion="+accion+"&llave="+llave;
     window.parent.open(conexion,"detalles");
+    <?php   
+        }
+        else{
+            unset($_REQUEST["no_seleccionar"]);
+        }
+    ?>
     }
     function fin_cargando(){
         if (browserType == "gecko" )
@@ -493,15 +501,8 @@ function click_funcion(div){
            document.poppedLayer =
               eval('document.layers["esperando_arbol"]');
         document.poppedLayer.style.visibility = "hidden";
-        <?php 
-        if(!isset($_REQUEST["no_seleccionar"])){
-        ?>
         tree2.selectItem(item,true,false);
         //tree2.openAllItems(0); //esta linea permite que los arboles carguen abiertos totalmente
-        <?php   
-           }
-        ?>
-        
       }
     function cargando() {
       if (browserType == "gecko" )
