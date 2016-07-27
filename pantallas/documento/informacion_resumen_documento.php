@@ -114,7 +114,7 @@ if(@$_REQUEST["seleccionar"])
 elseif(@$_REQUEST["llave"]){
   $nodoinicial=$_REQUEST["llave"];
 }
-else $nodoinicial=$llave_formato;
+else $nodoinicial=$iddocumento;
 $form_info=encrypt_blowfish("id=".$iddoc."&seleccionado=".$nodoinicial,LLAVE_SAIA_CRYPTO);
 if(@$_REQUEST["alto_pantalla"]){
   $alto_inicial=($_REQUEST["alto_pantalla"]-47)."px";
