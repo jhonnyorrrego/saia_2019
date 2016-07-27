@@ -12,8 +12,6 @@ $formato["numcampos"]=0;
 
 if(@$_REQUEST["id"]){
   $datos=parsea_idformato($_REQUEST["id"]);
-  print_r($datos);
-  die();
   $formato=busca_filtro_tabla("","formato","idformato=".$datos[0],"",$conn);  
   //print_r($datos);
   if(!$datos[2] && $datos[3]=="mostrar"){
@@ -21,6 +19,8 @@ if(@$_REQUEST["id"]){
   }
   
   if($formato["numcampos"]){
+      print_r($datos);
+  die();
     $ruta="";
     $alerta="existe problema para redireccionar";
     if($datos[1]&&$datos[2]){
