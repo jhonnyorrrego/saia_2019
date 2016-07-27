@@ -18,6 +18,8 @@ include_once($ruta_db_superior."sql.php");
 include_once($ruta_db_superior."asignacion.php");
 include_once($ruta_db_superior."formatos/librerias/funciones_acciones.php");
 include_once($ruta_db_superior."bpmn/librerias_formato.php");
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+
 
 /*<Clase>
 <Nombre>buscar_funcionarios</Nombre>
@@ -1430,9 +1432,9 @@ global $idfactura;
                     elseif($fila["obligatorio"]==2) // Revisado
                           {
                            if($fila["nombre"]=="POR_APROBAR")
-     $revisados.="<tr><td><br><span style='font-size:11pt;' class='phpmaker'>Revis&oacute; : ".mayusculas($fila["nombres"]." ".$fila["apellidos"])."-".formato_cargo($cargos[0]["nombre"])." (Pendiente)</span></td><td>&nbsp;</td></tr>";
+     $revisados.="<tr><td><br><span style='font-size:13px;' class='phpmaker'>Revis&oacute; : ".mayusculas($fila["nombres"]." ".$fila["apellidos"])."-".formato_cargo($cargos[0]["nombre"])." (Pendiente)</span></td><td>&nbsp;</td></tr>";
 elseif($fila["nombre"]=="APROBADO"||$fila["nombre"]=="REVISADO")
-   $revisados.="<tr><td><br><span style='font-size:11pt;' class='phpmaker'>Revis&oacute; : ".mayusculas($fila["nombres"]." ".$fila["apellidos"])."-".formato_cargo($cargos[0]["nombre"])."</span> <img src=\"http://".$ruta."/images/check.jpg\">"." </td><td></td></tr>";
+   $revisados.="<tr><td><br><span style='font-size:13px;' class='phpmaker'>Revis&oacute; : ".mayusculas($fila["nombres"]." ".$fila["apellidos"])."-".formato_cargo($cargos[0]["nombre"])."</span> <img src=\"http://".$ruta."/images/check.jpg\">"." </td><td></td></tr>";
 
 
 
@@ -1596,20 +1598,20 @@ global $conn,$idfactura;
 							}else
 								echo '<img src="'.PROTOCOLO_CONEXION.RUTA_PDF_LOCAL.'/firmas/blanco.jpg" width="'.$ancho_firma[0]["valor"].'" height="'.$alto_firma[0]["valor"].'" ><br />';
 
-							echo "<strong><span style=\"font-size: 11pt\">".mayusculas($fila["nombres"]." ".$fila["apellidos"])."</span></strong>&nbsp;&nbsp;&nbsp;<br />";
+							echo "<strong>".mayusculas($fila["nombres"]." ".$fila["apellidos"])."</strong>&nbsp;&nbsp;&nbsp;<br />";
 							if($cargos["numcampos"]){
 								for($h=0;$h<$cargos["numcampos"];$h++)
-								echo '<span style="font-size: 11pt">'.formato_cargo($cargos[$h]["nombre"])."</span><br/>";
+								echo formato_cargo($cargos[$h]["nombre"])."<br/>";
 							}
 							if($iniciales == ($fila["funcionario_codigo"]))
 								$firma_actual = true;
 							echo "</td>";
 						}else{
 							echo "<td align='left'><img src='".PROTOCOLO_CONEXION.RUTA_PDF_LOCAL."/firmas/blanco.jpg' width='".$ancho_firma[0]["valor"]."' height='".$alto_firma[0]["valor"]."'>
-							<br /><b><span style=\"font-size: 11pt\">".mayusculas($fila["nombres"]." ".$fila["apellidos"])."</span></b>&nbsp;&nbsp;&nbsp;<br />";
+							<br /><b>".mayusculas($fila["nombres"]." ".$fila["apellidos"])."</b>&nbsp;&nbsp;&nbsp;<br />";
 							if($cargos["numcampos"]){
 								for($h=0;$h<$cargos["numcampos"];$h++)
-									echo '<span style="font-size: 11pt">'.formato_cargo($cargos[$h]["nombre"])."</span><br/>";
+									echo formato_cargo($cargos[$h]["nombre"])."<br/>";
 							}
 							if($iniciales == ($fila["funcionario_codigo"]))
 								$firma_actual = true;
@@ -1618,9 +1620,9 @@ global $conn,$idfactura;
 						$firmas++;
 					}elseif($fila["obligatorio"]==2){ // Revisado
 						if($fila["nombre"]=="POR_APROBAR")
-							$revisados.="<tr><td style=\"width:100%;\"><span class='phpmaker' style=\"font-size: 11pt\">Reviso : ".mayusculas($fila["nombres"]." ".$fila["apellidos"])."-".formato_cargo($cargos[0]["nombre"])." (Pendiente)</span></td></tr>";
+							$revisados.="<tr><td style=\"width:100%\"><span class='phpmaker'>Reviso : ".mayusculas($fila["nombres"]." ".$fila["apellidos"])."-".formato_cargo($cargos[0]["nombre"])." (Pendiente)</span></td></tr>";
 						elseif($fila["nombre"]=="APROBADO"||$fila["nombre"]=="REVISADO")
-							$revisados.="<tr><td style=\"width:100%\"><span class='phpmaker' style=\"font-size: 11pt\">Reviso : ".mayusculas($fila["nombres"]." ".$fila["apellidos"])."-".formato_cargo($cargos[0]["nombre"])."</span> <img src=\"".PROTOCOLO_CONEXION.RUTA_PDF_LOCAL."/images/check.jpg\">"." </td></tr>";
+							$revisados.="<tr><td style=\"width:100%\"><span class='phpmaker'>Reviso : ".mayusculas($fila["nombres"]." ".$fila["apellidos"])."-".formato_cargo($cargos[0]["nombre"])."</span> <img src=\"".PROTOCOLO_CONEXION.RUTA_PDF_LOCAL."/images/check.jpg\">"." </td></tr>";
 					}elseif($fila["obligatorio"]==5){//Firma externa
 						if($firmas==0){
 							echo "<tr>";
@@ -1645,7 +1647,7 @@ global $conn,$idfactura;
 							$parte.="<br /><strong>".mayusculas($fila["nombres"]." ".$fila["apellidos"])."</strong><br />";
 							if($cargos["numcampos"]){
 								for($h=0;$h<$cargos["numcampos"];$h++)
-								$parte.='<span style="font-size: 11pt">'.formato_cargo($cargos[$h]["nombre"])."<br/>";
+								$parte.=formato_cargo($cargos[$h]["nombre"])."<br/>";
 							}
 							echo($parte."</td>");
 
@@ -1792,12 +1794,18 @@ function transferencias_pendientes($serie)
 <Salida>
 <Pre-condiciones>
 <Post-condiciones>
-*/
-function radicar_plantilla()
-  {
-   global $conn,$sql;
-   global $ruta_db_superior;
-   //print_r($_REQUEST); die("aquiii");
+*/   
+function radicar_plantilla(){ 
+   global $conn,$sql,$ruta_db_superior;
+   if (array_key_exists("form_info", $_POST)) {
+      $data = json_decode($_POST["form_info"], true);
+      unset($_REQUEST);
+      unset($_POST);
+      for($i = 0; $i < count($data); $i ++) {
+          $_REQUEST[decrypt_blowfish($data[$i]["name"], LLAVE_SAIA_CRYPTO)] = decrypt_blowfish($data[$i]["value"], LLAVE_SAIA_CRYPTO);
+          $_POST[decrypt_blowfish($data[$i]["name"], LLAVE_SAIA_CRYPTO)] = decrypt_blowfish($data[$i]["value"], LLAVE_SAIA_CRYPTO);
+      }
+   }
    $valores=array();
    $plantilla="";
    $idformato=0;
@@ -2066,7 +2074,7 @@ if(isset($_POST["iddoc"]) && $_POST["iddoc"] && $ruta_def=="")
       {echo "<script>
              direccion=new String(window.parent.frames[0].location);
              vector=direccion.split('&');
-             window.parent.frames[0].location=vector[0]+'&'+vector[1]+'&seleccionar=".$formato_hijo[0]["idformato"]."-".$formato_doc[0]["nombre_tabla"]."-".$formato_hijo[0]["nombre_tabla"]."-".$_POST["iddoc"]."';
+             window.parent.frames[0].location=vector[0]+'&'+vector[1]+'&seleccionar=".encrypt_blowfish($formato_hijo[0]["idformato"]."-".$formato_doc[0]["nombre_tabla"]."-".$formato_hijo[0]["nombre_tabla"]."-".$_POST["iddoc"],LLAVE_SAIA_CRYPTO)."';
             </script>";
        die();
       }
@@ -2075,7 +2083,7 @@ if(isset($_POST["iddoc"]) && $_POST["iddoc"] && $ruta_def=="")
       if($formato_doc["numcampos"])
          $nom_formato=$formato_doc[0]["nombre"];
 			//Cuando el documento es creado como una respuesta
-        abrir_url("formatos/$nom_formato/detalles_mostrar_$nom_formato.php?idformato=".$formato_doc[0]["idformato"]."&iddoc=".$_POST["iddoc"],"_self");
+			abrir_url("formatos/".$nom_formato."/detalles_mostrar_".$nom_formato.".php?form_info=".encrypt_blowfish("idformato=".$formato_doc[0]["idformato"]."&iddoc=".$_POST["iddoc"],LLAVE_SAIA_CRYPTO),"_self");
           die();
      }
 die();
@@ -2083,7 +2091,7 @@ die();
   else
     {
      if(isset($_REQUEST["firmado"]) && $_REQUEST["firmado"]=="varias")
-       {abrir_url("formatos/librerias/rutaadd.php?doc=".$_POST["iddoc"]."&origen=".usuario_actual("funcionario_codigo"),"centro");
+       {abrir_url("formatos/librerias/rutaadd.php?form_info=".encrypt_blowfish("doc=".$_POST["iddoc"]."&origen=".usuario_actual("funcionario_codigo"),LLAVE_SAIA_CRYPTO),"centro"); 
         die();
        }
      else
@@ -2091,7 +2099,7 @@ die();
        if($formato_doc["numcampos"])
         {$nom_formato=$formato_doc[0]["nombre"];
 			 //Cuando el documento es creado por el modulo formatos
-        abrir_url("formatos/$nom_formato/detalles_mostrar_$nom_formato.php?idformato=".$formato_doc[0]["idformato"]."&iddoc=".$_POST["iddoc"],"_self");
+		abrir_url("formatos/".$nom_formato."/detalles_mostrar_".$nom_formato.".php?form_info=".encrypt_blowfish("idformato=".$formato_doc[0]["idformato"]."&iddoc=".$_POST["iddoc"],LLAVE_SAIA_CRYPTO),"_self");
         die();
         }
        }
@@ -2305,15 +2313,15 @@ function guardar_documento($iddoc,$tipo=0)
       {//print_r($lcampos[$j]);
        switch(strtoupper($lcampos[$j]["tipo_dato"])){
 
-        case "TEXT":            
+        case "TEXT":
         $_REQUEST[$lcampos[$j]["nombre"]]=str_replace("'","&#39;",stripslashes($_REQUEST[$lcampos[$j]["nombre"]]));
-               
+        //echo $lcampos[$j]["longitud"]."//".$lcampos[$j]["nombre"]."<br />";
          if($tipo==1&&$lcampos[$j]["longitud"]>=4000)
            {
             $contenido=limpia_tabla(@$_REQUEST[$lcampos[$j]["nombre"]]);
             guardar_lob($lcampos[$j]["nombre"],$_REQUEST["tabla"],"documento_iddocumento=".$iddoc,$contenido,"texto",$conn);
            }
-         elseif($lcampos[$j]["longitud"]<=4000)
+         elseif($lcampos[$j]["longitud"]<4000)
            {$contenido=limpia_tabla(@$_REQUEST[$lcampos[$j]["nombre"]]);
             array_push($valores,"'".@$_REQUEST[$lcampos[$j]["nombre"]]."'");
             array_push($campos,$lcampos[$j]["nombre"]);
@@ -2350,24 +2358,24 @@ function guardar_documento($iddoc,$tipo=0)
             array_push($valores,"NULL");
           }
           break;
-         default:                  
-         $_REQUEST[$lcampos[$j]["nombre"]]=str_replace("'","&#39;",stripslashes($_REQUEST[$lcampos[$j]["nombre"]])); 
+         default:
+         $_REQUEST[$lcampos[$j]["nombre"]]=str_replace("'","&#39;",stripslashes($_REQUEST[$lcampos[$j]["nombre"]]));
          if(is_array($_REQUEST[$lcampos[$j]["nombre"]]))
             array_push($valores,"'".implode(',',@$_REQUEST[$lcampos[$j]["nombre"]])."'");
          elseif(@$_REQUEST[$lcampos[$j]["nombre"]]<>'')
-            array_push($valores,"'".codifica_encabezado(html_entity_decode($_REQUEST[$lcampos[$j]["nombre"]]))."'");
+            array_push($valores,"'".htmlentities(utf8_decode($_REQUEST[$lcampos[$j]["nombre"]]))."'");
          else
           {  array_push($valores,"''");
 
           }
-         array_push($campos,$lcampos[$j]["nombre"]);          
+         array_push($campos,$lcampos[$j]["nombre"]);
         break;
       }
      }
     }
     }
    }
-      
+
  if(count($campos) && count($valores) && $tipo==0){
     if(!in_array('documento_iddocumento',$campos))
       {array_push($campos,"documento_iddocumento");
@@ -2380,15 +2388,19 @@ function guardar_documento($iddoc,$tipo=0)
      llama_funcion_accion($iddoc,$idformato,"adicionar","ANTERIOR");
 
     $sql="INSERT INTO ".strtolower($_REQUEST["tabla"])."(".implode(",",$campos).") VALUES (".implode(",",$valores).")";
-  		/*if(usuario_actual("login")=="cerok"){
-  			print_r($sql);die();
-  		}*/
-     phpmkr_query($sql,$conn);
-    //echo ($sql);
-   $insertado=phpmkr_insert_id();
-   $sql="insert into permiso_documento(funcionario,documento_iddocumento,permisos) values('".usuario_actual("funcionario_codigo")."','".$iddoc."','e,m,r')"; 
+	
+	
+	
+  		//if(usuario_actual("login")=="cerok"){
+  			//print_r('<pre>'.$sql.'</pre>');die();
+  		//}
    phpmkr_query($sql,$conn);
-
+   $insertado=phpmkr_insert_id();
+  //print_r('insertado:'.$insertado);die();
+   
+   $sql1="insert into permiso_documento(funcionario,documento_iddocumento,permisos) values('".usuario_actual("funcionario_codigo")."','".$iddoc."','e,m,r')";
+   phpmkr_query($sql1,$conn);
+	
      if($insertado){
         //guardo los campos tipo clob y blob
          for($j=0;$j<$lcampos["numcampos"];$j++)
@@ -2397,7 +2409,7 @@ function guardar_documento($iddoc,$tipo=0)
                switch(strtoupper($lcampos[$j]["tipo_dato"]))
                {
                 case "TEXT":
-                 if($lcampos[$j]["longitud"]>=4000)    
+                 if($lcampos[$j]["longitud"]>=4000)
                    {$contenido=limpia_tabla(@$_REQUEST[$lcampos[$j]["nombre"]]);
                     guardar_lob($lcampos[$j]["nombre"],$_REQUEST["tabla"],"documento_iddocumento=".$iddoc,$contenido,"texto",$conn);
                    }
@@ -2431,15 +2443,15 @@ function guardar_documento($iddoc,$tipo=0)
          $update[]=$campos[$i]."=".$valores[$i];
       /*Se adiciona esta linea para las ejecutar las acciones sobre los formatos*/
       llama_funcion_accion($iddoc,$idformato,"editar","ANTERIOR");
-       $sql="UPDATE ".strtolower($_REQUEST["tabla"])." SET ".implode(",",$update)." WHERE documento_iddocumento=$iddoc"; 
-     //echo ($sql);    
+       $sql="UPDATE ".strtolower($_REQUEST["tabla"])." SET ".implode(",",$update)." WHERE documento_iddocumento=$iddoc";
+     //echo ($sql);
       phpmkr_query($sql,$conn);
       $pos=array_search("serie_idserie",$campos);
       if($pos!==false)
          {//die("$sql<br />serie:".$valores[$pos]);
           if($valores[$pos]=="''")
              $valores[$pos]="'0'";
-          $sql="UPDATE documento SET serie=".$valores[$pos]." WHERE iddocumento='$iddoc'";  
+          $sql="UPDATE documento SET serie=".$valores[$pos]." WHERE iddocumento='$iddoc'";
           phpmkr_query($sql,$conn);
          }
       $insertado=$idplantilla;
