@@ -452,7 +452,7 @@ function click_funcion(div){
   tree2.setOnLoadingStart(cargando);
   tree2.setOnLoadingEnd(fin_cargando);
   tree2.setOnClickHandler(onNodeSelect);
-  tree2.loadXML("<?php echo($ruta_db_superior);?>formatos/arboles/test_formatos_documento2.php?id=<?php echo($iddoc2);?>");
+  tree2.loadXML("<?php echo($ruta_db_superior);?>formatos/arboles/test_formatos_documento2.php?form_info=<?php echo($form_info);?>");
   function redireccion_ruta(iframe_destino,ruta_enlace){
     if(iframe_destino==''){
       window.location=ruta_enlace;
@@ -478,7 +478,7 @@ function click_funcion(div){
     else{
     	cargar_cantidades_documento(datos[3]);
 	    conexion="<?php echo($ruta_db_superior); ?>formatos/arboles/parsear_accion_arbol.php?id="+nodeId+"&accion=mostrar&llave="+llave+"&enlace_adicionar_formato=1";
-	    redireccion_detalles(conexion);
+	    window.parent.frames["detalles"].location=conexion;
     }
 	}
 	function seleccion_accion(accion,id){
