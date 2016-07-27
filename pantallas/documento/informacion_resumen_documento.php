@@ -457,6 +457,7 @@ function click_funcion(div){
   	var llave=0;
     llave=tree2.getParentId(nodeId);
     var datos=nodeId.split("-");
+    console.log(datos);
     if(datos[2][0]=="r"){
     	seleccion_accion('adicionar');
     }
