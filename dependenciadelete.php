@@ -13,7 +13,8 @@ $x_fecha_ingreso = Null;
 
 // Load Key Parameters
 $sKey = @$_GET["key"];
-
+print_r($_POST);
+die();
 if (array_key_exists("form_info", $_POST)) {
     include_once ($ruta_db_superior . "pantallas/lib/librerias_cripto.php");
     $data = json_decode($_POST["form_info"], true);
