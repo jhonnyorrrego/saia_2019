@@ -493,15 +493,9 @@ function click_funcion(div){
            document.poppedLayer =
               eval('document.layers["esperando_arbol"]');
         document.poppedLayer.style.visibility = "hidden";
-        <?php 
-        if(!isset($_REQUEST["no_seleccionar"])){
-        ?>
+        //Aqui va lo del no_seleccionar
         tree2.selectItem(item,true,false);
         //tree2.openAllItems(0); //esta linea permite que los arboles carguen abiertos totalmente
-        <?php   
-           }
-        ?>
-        
       }
     function cargando() {
       if (browserType == "gecko" )
