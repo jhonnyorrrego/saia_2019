@@ -19,10 +19,13 @@ include_once("../librerias/funciones_generales.php");
 include_once("../../pantallas/lib/librerias_cripto.php");
 if (isset($_REQUEST["form_info"])) {
   $data = decrypt_blowfish($_REQUEST["form_info"],LLAVE_SAIA_CRYPTO);
+  print_r($datos);
+  die();
   $datos=explode("&", $data);
   unset($_REQUEST);
   unset($_POST);
   unset($_GET);
+  
   foreach($datos AS $key=>$value){
     $valor=explode("=",$value);
     if($valor[1]!==''){
