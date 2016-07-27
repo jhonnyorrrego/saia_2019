@@ -2364,10 +2364,10 @@ function guardar_documento($iddoc,$tipo=0)
          if(is_array($_REQUEST[$lcampos[$j]["nombre"]]))
             array_push($valores,"'".implode(',',@$_REQUEST[$lcampos[$j]["nombre"]])."'");
          elseif(@$_REQUEST[$lcampos[$j]["nombre"]]<>'')
-            array_push($valores,"'".htmlentities(utf8_decode($_REQUEST[$lcampos[$j]["nombre"]]))."'");
-         else
-          {  array_push($valores,"''");
-
+            array_push($valores,"'".htmlentities(utf8_decode(@$_REQUEST[$lcampos[$j]["nombre"]]))."'");
+         else 
+          {  array_push($valores,"''");  
+             
           }
          array_push($campos,$lcampos[$j]["nombre"]);
         break;
@@ -2389,19 +2389,15 @@ function guardar_documento($iddoc,$tipo=0)
      llama_funcion_accion($iddoc,$idformato,"adicionar","ANTERIOR");
 
     $sql="INSERT INTO ".strtolower($_REQUEST["tabla"])."(".implode(",",$campos).") VALUES (".implode(",",$valores).")";
-	
-	
-	
-  		//if(usuario_actual("login")=="cerok"){
-  			//print_r('<pre>'.$sql.'</pre>');die();
-  		//}
-   phpmkr_query($sql,$conn);
+  		/*if(usuario_actual("login")=="cerok"){  			
+  			print_r($sql);die();
+  		}*/
+     phpmkr_query($sql,$conn);  
+    //echo ($sql);
    $insertado=phpmkr_insert_id();
-  //print_r('insertado:'.$insertado);die();
-   
-   $sql1="insert into permiso_documento(funcionario,documento_iddocumento,permisos) values('".usuario_actual("funcionario_codigo")."','".$iddoc."','e,m,r')";
-   phpmkr_query($sql1,$conn);
-	
+   $sql="insert into permiso_documento(funcionario,documento_iddocumento,permisos) values('".usuario_actual("funcionario_codigo")."','".$iddoc."','e,m,r')";
+   phpmkr_query($sql,$conn);
+
      if($insertado){
         //guardo los campos tipo clob y blob
          for($j=0;$j<$lcampos["numcampos"];$j++)
