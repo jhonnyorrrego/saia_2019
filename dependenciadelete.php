@@ -16,8 +16,7 @@ $sKey = @$_GET["key"];
 if (array_key_exists("form_info", $_POST)) {
     include_once ($ruta_db_superior . "pantallas/lib/librerias_cripto.php");
     $data = json_decode($_POST["form_info"], true);
-    //print_r($data);
-    //die();
+    
     unset($_REQUEST);
     unset($_POST);
     for($i = 0; $i < count($data); $i ++) {
@@ -228,10 +227,10 @@ function DeleteData($sqlKey,$conn)
 	if ($sOrderBy <> "") {
 		$sSql .= " ORDER BY " . $sOrderBy;
 	}
-	print_r($sSql);
-	die();
 	phpmkr_query($sSql,$conn) or error("Fall� la b�squeda" . phpmkr_error() . ' SQL:' . $sSql);
-	$update_rol = "UPDATE dependencia_cargo SET estado=0 WHERE dependencia_iddependencia=".substr($sqlKey,14);	
+	$update_rol = "UPDATE dependencia_cargo SET estado=0 WHERE dependencia_iddependencia=".substr($sqlKey,14);
+	print_r($update_rol);
+	die();
 	phpmkr_query($update_rol,$conn) or error("Fall� la b�squeda" . phpmkr_error() . ' SQL:' . $update_rol);
 	return true;
 }
