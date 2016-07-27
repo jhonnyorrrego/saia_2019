@@ -76,7 +76,7 @@ if($formato["numcampos"]&& $ok){
     }
   elseif($estado){
     $texto.='<item style="font-family:verdana; font-size:7pt;" '.$imagenes;
-    $texto.='text="'.decodifica(strip_tags(stripslashes($formato[0]["etiqueta"]))).'" id="'.encrypt_blowfish($formato[0]["idformato"]."-".$arreglo[2],LLAVE_SAIA_CRYPTO)."-r".rand().'">';
+$texto.='text="'.decodifica(strip_tags(stripslashes($formato[0]["etiqueta"]))).'" id="'.encrypt_blowfish($formato[0]["idformato"]."-".$arreglo[2],LLAVE_SAIA_CRYPTO)."-r".rand().'">';
   }
   if($formato[0]["item"])
     $texto.=llena_datos_item($idformato,$formato[0]["nombre_tabla"],$campo_descripcion);
