@@ -469,6 +469,7 @@ function click_funcion(div){
 	function seleccion_accion(accion,id){
     var nodeId=0;
     var llave=0;
+    var no_seleccionar=<?php echo((@$_REQUEST["no_seleccionar"]?"1":"0")); ?>;
     nodeId=tree2.getSelectedItemId();
     if(!nodeId){
       alert("Por Favor seleccione un documento del arbol");
@@ -479,14 +480,10 @@ function click_funcion(div){
     tree2.closeAllItems(tree2.getParentId(nodeId))
     tree2.openItem(nodeId);
     tree2.openItem(tree2.getParentId(nodeId));
-    <?php 
-    if(!isset($_REQUEST["no_seleccionar"])){
-    ?>
+    alert(no_seleccionar);    
     conexion="<?php echo($ruta_db_superior); ?>formatos/arboles/parsear_accion_arbol.php?id="+nodeId+"&accion="+accion+"&llave="+llave;
     window.parent.open(conexion,"detalles");
-    <?php
-    }
-    ?>
+
     }
     function fin_cargando(){
         if (browserType == "gecko" )
