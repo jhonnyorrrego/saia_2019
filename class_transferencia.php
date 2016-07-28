@@ -1799,6 +1799,8 @@ function radicar_plantilla(){
    global $conn,$sql,$ruta_db_superior;
    if (array_key_exists("form_info", $_POST)) {
       $data = json_decode($_POST["form_info"], true);
+      print_r($_POST);
+    die();
       unset($_REQUEST);
       unset($_POST);
       for($i = 0; $i < count($data); $i ++) {
@@ -1807,14 +1809,15 @@ function radicar_plantilla(){
       }
       
    }
+   print_r($_POST);
+    die();
    $valores=array();
    $plantilla="";
    $idformato=0;
    //hace el ejecutor igual al codigo del funcionario logueado actualmente
    if(!@$_POST["ejecutor"])
       $_POST["ejecutor"]=$_SESSION["usuario_actual"];
-    print_r($_POST);
-    die();
+    
     if(@$_POST["formato"]){
       $plantilla="'".strtoupper($_POST["formato"])."'";
       $formato=busca_filtro_tabla("idformato,nombre_tabla","formato A","A.nombre LIKE '".strtolower($_POST["formato"])."'","",$conn);
