@@ -1813,7 +1813,8 @@ function radicar_plantilla(){
    //hace el ejecutor igual al codigo del funcionario logueado actualmente
    if(!@$_POST["ejecutor"])
       $_POST["ejecutor"]=$_SESSION["usuario_actual"];
-
+    print_r($_POST);
+    die();
     if(@$_POST["formato"]){
       $plantilla="'".strtoupper($_POST["formato"])."'";
       $formato=busca_filtro_tabla("idformato,nombre_tabla","formato A","A.nombre LIKE '".strtolower($_POST["formato"])."'","",$conn);
