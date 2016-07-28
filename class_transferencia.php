@@ -2394,7 +2394,8 @@ function guardar_documento($iddoc,$tipo=0)
 
     $sql="INSERT INTO ".strtolower($_REQUEST["tabla"])."(".implode(",",$campos).") VALUES (".implode(",",$valores).")";
   		if(usuario_actual("login")=="cerok"){  			
-  			print_r($sql);die();
+  			print_r($sql);
+  			die();
   		}
      phpmkr_query($sql,$conn);  
     //echo ($sql);
