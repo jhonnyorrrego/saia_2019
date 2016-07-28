@@ -1801,10 +1801,10 @@ function radicar_plantilla(){
       $data = json_decode($_POST["form_info"], true);
      // print_r($data);
     //die();
-      unset($_REQUEST);
+      //unset($_REQUEST);
       //unset($_POST);
       for($i = 0; $i < count($data); $i ++) {
-          $_REQUEST[decrypt_blowfish($data[$i]["name"], LLAVE_SAIA_CRYPTO)] = decrypt_blowfish($data[$i]["value"], LLAVE_SAIA_CRYPTO);
+          //$_REQUEST[decrypt_blowfish($data[$i]["name"], LLAVE_SAIA_CRYPTO)] = decrypt_blowfish($data[$i]["value"], LLAVE_SAIA_CRYPTO);
           //$_POST[decrypt_blowfish($data[$i]["name"], LLAVE_SAIA_CRYPTO)] = decrypt_blowfish($data[$i]["value"], LLAVE_SAIA_CRYPTO);
       }
       
