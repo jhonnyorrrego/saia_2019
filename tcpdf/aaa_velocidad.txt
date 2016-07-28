@@ -3016,3 +3016,11 @@ INICIO (codigo velocidad)-------2016-07-26 22:08:31-----------
 FIN (codigo velocidad)-------2016-07-26 22:08:31-----------
 INICIO (codigo velocidad)-------2016-07-27 15:30:28-----------
 FIN (codigo velocidad)-------2016-07-27 15:30:29-----------
+INICIO (codigo velocidad)-------2016-07-28 07:21:08-----------
+FIN (codigo velocidad)-------2016-07-28 07:21:08-----------
+INICIO (codigo velocidad)-------2016-07-28 07:22:07-----------
+FIN (codigo velocidad)-------2016-07-28 07:22:07-----------
+INICIO (codigo velocidad)-------2016-07-28 07:24:45-----------
+FIN (codigo velocidad)-------2016-07-28 07:24:45-----------
+INICIO (codigo velocidad)-------2016-07-28 07:29:08-----------
+FIN (codigo velocidad)-------2016-07-28 07:29:08-----------

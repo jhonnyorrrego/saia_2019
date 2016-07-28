@@ -172,4 +172,4 @@
                      <td class="encabezado" width="20%" title="Anexos digitales">ANEXOS DIGITALES</td>
                      <td class="celda_transparente"><input  tabindex='5'  type="file" maxlength="255"  class='multi'  name="anexos[]" accept="<?php echo $extensiones;?>"><tr>
                      <td class="encabezado" width="20%" title="">ANEXOS FISICOS</td>
-                     <?php anexos_fisicos(2,27);?></tr><?php mostrar_imagenes(2,NULL);?><?php guardar_plantilla(2,NULL);?><?php asignar_responsables(2,NULL);?><input type="hidden" name="campo_descripcion" value="23"><tr><td colspan='2'><?php submit_formato(2);?></td></tr></table><input type='hidden' name='permisos_anexos' id='permisos_anexos' value=''></form></body></html>
+                     <?php anexos_fisicos(2,27);?></tr><?php mostrar_imagenes(2,NULL);?><?php guardar_plantilla(2,NULL);?><input type="hidden" name="campo_descripcion" value="23"><tr><td colspan='2'><?php submit_formato(2);?></td></tr></table><input type='hidden' name='permisos_anexos' id='permisos_anexos' value=''></form></body></html>
