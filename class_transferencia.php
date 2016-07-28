@@ -2393,9 +2393,9 @@ function guardar_documento($iddoc,$tipo=0)
      llama_funcion_accion($iddoc,$idformato,"adicionar","ANTERIOR");
 
     $sql="INSERT INTO ".strtolower($_REQUEST["tabla"])."(".implode(",",$campos).") VALUES (".implode(",",$valores).")";
-  		/*if(usuario_actual("login")=="cerok"){  			
+  		if(usuario_actual("login")=="cerok"){  			
   			print_r($sql);die();
-  		}*/
+  		}
      phpmkr_query($sql,$conn);  
     //echo ($sql);
    $insertado=phpmkr_insert_id();
