@@ -1809,7 +1809,7 @@ function radicar_plantilla(){
       }
       
    }
-   print_r($_POST);
+  // print_r($_POST);
     die();
    $valores=array();
    $plantilla="";
