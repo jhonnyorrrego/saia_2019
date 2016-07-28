@@ -1872,8 +1872,6 @@ function radicar_plantilla(){
       }
       else $valores["tipo_radicado"]=0;
     }
-    print_r($formato);
-    die("fdgfdg");
     if(isset($formato) && $formato["numcampos"] && $valores["tipo_radicado"]){
       $tipo_rad=busca_filtro_tabla("","contador","idcontador=".$valores["tipo_radicado"],"",$conn);
       if($tipo_rad["numcampos"])
