@@ -1809,8 +1809,8 @@ function radicar_plantilla(){
       }
       
    }
-   print_r($_POST);
-    die();
+   //print_r($_POST);
+    //die();
    $valores=array();
    $plantilla="";
    $idformato=0;
