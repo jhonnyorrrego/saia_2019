@@ -31,7 +31,9 @@ if(isset($_REQUEST['adicionar2'])){
 			//esta es la ruta donde copiaremos la imagen_modulo
 			//recuerden que deben crear un directorio con este mismo nombre
 			//en el mismo lugar donde se encuentra el archivo subir.php
-			$ruta = $ruta_db_superior."../noticia_imagenes/" . $_FILES['imagen_modulo']['name'];
+			$ruta = $ruta_db_superior."../noticia_imagenes/";
+			crear_destino($ruta);
+			$ruta.=$_FILES['imagen_modulo']['name'];
 			//comprovamos si este archivo existe para no volverlo a copiar.
 			
 			
