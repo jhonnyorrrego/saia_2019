@@ -35,8 +35,8 @@ for($i = 0; $i < count($data); $i ++) {
 	if (!@$sKey  && @$_REQUEST["x_doc"]) {
 	    $sKey= @$_REQUEST["x_doc"]; 
 	}
-	if (!@$sKey  && @$_REQUEST["doc"]) {
-	    $sKey= @$_REQUEST["doc"]; 
+	if (!@$sKey  && @$_REQUEST["iddoc"]) {
+	    $sKey= @$_REQUEST["iddoc"]; 
 	}
 	$sDbWhere = ""; 
 	$arRecKey = split(",",$sKey); 
