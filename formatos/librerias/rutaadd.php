@@ -17,7 +17,7 @@ include_once("../../db.php");
 include_once("../../class_transferencia.php");
 include_once("header_formato.php");
 
-$sKey  = @$_GET["key"]; 
+$sKey  = @$_REQUEST["key"]; 
 
     if (array_key_exists("form_info", $_POST) && $_REQUEST["form_info"]!='') { 
         include_once ($ruta_db_superior . "pantallas/lib/librerias_cripto.php"); 
@@ -34,7 +34,7 @@ $sKey  = @$_GET["key"];
 	} 
  
 	if (($sKey == "") || ((is_null($sKey)))) { 
-	$sKey​= @$_POST["key_d"]; 
+	    $sKey​= @$_POST["key_d"]; 
 	} 
 	if (($sKey == "") || ((is_null($sKey)))) {
 	    echo("AQUI1");
