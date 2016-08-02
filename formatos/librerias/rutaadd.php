@@ -498,8 +498,7 @@ else
 	$x_plantilla=@$_POST["x_plantilla"];
 	$x_orden = @$_POST["x_orden"];
 }
-print_r($x_doc);
-			die();
+
 switch ($sAction)
 {
 	case "C": // Get a record to display
