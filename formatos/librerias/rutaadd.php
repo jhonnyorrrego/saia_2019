@@ -24,6 +24,7 @@ $sKey  = @$_GET["key"];
         $data = json_decode($_POST["form_info"], true); 
         //unset($_REQUEST); 
         //unset($_POST); 
+        echo("AQUI");
         for($i = 0; $i < count($data); $i ++) { 
         	 $_REQUEST[decrypt_blowfish($data[$i]["name"], LLAVE_SAIA_CRYPTO)]=decrypt_blowfish($data[$i]["value"], LLAVE_SAIA_CRYPTO); 
         	 
