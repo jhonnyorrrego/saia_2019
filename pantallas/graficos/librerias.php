@@ -37,9 +37,12 @@ function generar_grafico_barra($configuracion_grafico){  // REQUIERE librerias_j
         */
         
         
+        $configuracion_grafico['color']='';
         if($configuracion_grafico['color_saia']){
-            $color_saia=busca_filtro_tabla("","configuracion","nombre='color_encabezado_list'","",$conn);  
-            $configuracion_grafico['color_saia']='color: ["'.$color_saia[0]['valor'].'"],';
+            $color_saia=busca_filtro_tabla("","configuracion","nombre='color_encabezado'","",$conn); 
+			if($color_saia['numcampos']){
+				$configuracion_grafico['color']='color: ["'.$color_saia[0]['valor'].'"],';
+			}    
         }
         
         //PARSEO renderAsImage
@@ -80,7 +83,7 @@ function generar_grafico_barra($configuracion_grafico){  // REQUIERE librerias_j
                     x:'center'
                 },
                 
-                <?php echo($configuracion_grafico['color_saia']); ?>
+                <?php echo($configuracion_grafico['color']); ?>
                 legend: {
                     data:<?php echo(json_encode($configuracion_grafico['valores_nombre']) ); ?>,
                     x:'right'
@@ -254,9 +257,12 @@ function generar_grafico_linea($configuracion_grafico){
         generar_grafico_linea($configuracion_grafico);    
         */
 
+		$configuracion_grafico['color']='';
         if($configuracion_grafico['color_saia']){
-            $color_saia=busca_filtro_tabla("","configuracion","nombre='color_encabezado_list'","",$conn);  
-            $configuracion_grafico['color_saia']='color: ["'.$color_saia[0]['valor'].'"],';
+            $color_saia=busca_filtro_tabla("","configuracion","nombre='color_encabezado_list'","",$conn); 
+			if($color_saia['numcampos']){
+				$configuracion_grafico['color']='color: ["'.$color_saia[0]['valor'].'"],';
+			}  
         }
         
         //PARSEO renderAsImage
@@ -291,7 +297,7 @@ function generar_grafico_linea($configuracion_grafico){
 
             var option = {
                 <?php echo($generar_imagen); ?>
-                <?php echo($configuracion_grafico['color_saia']); ?>
+                <?php echo($configuracion_grafico['color']); ?>
                 title : {
                     text: '<?php echo($configuracion_grafico['titulo_grafico']); ?>',
                     subtext: '<?php echo($configuracion_grafico['subtitulo_grafico']); ?>',
