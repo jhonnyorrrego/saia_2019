@@ -22,10 +22,9 @@ $sKey  = @$_GET["key"];
     if (array_key_exists("form_info", $_POST) && $_REQUEST["form_info"]!='') { 
         include_once ($ruta_db_superior . "pantallas/lib/librerias_cripto.php"); 
         $data = json_decode($_POST["form_info"], true); 
-        unset($_REQUEST); 
-        unset($_POST); 
+        //unset($_REQUEST); 
+        //unset($_POST); 
         for($i = 0; $i < count($data); $i ++) { 
-         
         	 $_REQUEST[decrypt_blowfish($data[$i]["name"], LLAVE_SAIA_CRYPTO)]=decrypt_blowfish($data[$i]["value"], LLAVE_SAIA_CRYPTO); 
         	 
         	 $_POST[decrypt_blowfish($data[$i]["name"], LLAVE_SAIA_CRYPTO)]=decrypt_blowfish($data[$i]["value"], LLAVE_SAIA_CRYPTO); 
