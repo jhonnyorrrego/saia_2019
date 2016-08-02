@@ -3056,3 +3056,15 @@ INICIO (codigo velocidad)-------2016-07-30 12:34:14-----------
 FIN (codigo velocidad)-------2016-07-30 12:34:14-----------
 INICIO (codigo velocidad)-------2016-07-30 12:45:12-----------
 FIN (codigo velocidad)-------2016-07-30 12:45:12-----------
+INICIO (codigo velocidad)-------2016-08-01 16:26:46-----------
+FIN (codigo velocidad)-------2016-08-01 16:26:46-----------
+INICIO (codigo velocidad)-------2016-08-02 07:24:04-----------
+FIN (codigo velocidad)-------2016-08-02 07:24:04-----------
+INICIO (codigo velocidad)-------2016-08-02 07:42:10-----------
+FIN (codigo velocidad)-------2016-08-02 07:42:10-----------
+INICIO (codigo velocidad)-------2016-08-02 07:47:11-----------
+FIN (codigo velocidad)-------2016-08-02 07:47:11-----------
+INICIO (codigo velocidad)-------2016-08-02 07:52:56-----------
+FIN (codigo velocidad)-------2016-08-02 07:52:56-----------
+INICIO (codigo velocidad)-------2016-08-02 07:53:05-----------
+FIN (codigo velocidad)-------2016-08-02 07:53:05-----------
