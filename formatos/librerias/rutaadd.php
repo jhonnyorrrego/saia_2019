@@ -37,7 +37,7 @@ $sKey  = @$_GET["key"];
 	$sKey​= @$_POST["key_d"]; 
 	} 
 	if (($sKey == "") || ((is_null($sKey)))) {
-	    echo("AQUI");
+	    echo("AQUI1");
 	    $sKey​= @$_REQUEST["doc"]; 
 	}
 	$sDbWhere = ""; 
