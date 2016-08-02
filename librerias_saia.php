@@ -205,8 +205,7 @@ function librerias_tooltips(){
 //http://craigsworks.com/projects/qtip2/
 global $raiz_saia;
 $texto='';
-$texto.='<script src="'.$raiz_saia.'js/jquery.qtip.js" type="text/javascript" charset="utf-8"></script>
-';
+$texto.='<script src="'.$raiz_saia.'js/jquery.qtip.js" type="text/javascript" charset="utf-8"></script>';
 $texto.='<link rel="stylesheet" href="'.$raiz_saia.'css/jquery.qtip.css" type="text/css" />';
 $texto.='<script type="text/javascript" src="'.$raiz_saia.'pantallas/lib/acciones_tooltips.js"></script>';	
 return($texto);
@@ -325,6 +324,11 @@ global $raiz_saia;
 	$texto.='<link rel="stylesheet" href="'.$raiz_saia.'css/jquery.Jcrop.css" type="text/css" />';	
 
 
+return($texto);
+}
+function librerias_graficos(){
+    global $raiz_saia; 
+    $texto='<script src="'.$raiz_saia.'js/echarts/echarts.js"></script>';
     return($texto);
 }
 

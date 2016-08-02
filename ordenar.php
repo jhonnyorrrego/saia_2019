@@ -9,6 +9,20 @@ while ($max_salida > 0) {
     $max_salida--;
 }
 include_once($ruta_db_superior . "db.php");
+include_once ($ruta_db_superior . "pantallas/lib/librerias_cripto.php");
+if (isset($_REQUEST["form_info"]) && $_REQUEST["form_info"]!='') {
+  $data = decrypt_blowfish($_REQUEST["form_info"],LLAVE_SAIA_CRYPTO);
+  $datos=explode("&", $data);
+  unset($_REQUEST);
+  unset($_POST);
+  foreach($datos AS $key=>$value){
+    $valor=explode("=",$value);
+    if($valor[1]!==''){
+      $_REQUEST[$valor[0]]=$valor[1];  
+    }
+  }
+}
+
 $documento=busca_filtro_tabla("","documento A","A.iddocumento=".$_REQUEST["key"],"",$conn);
 if(@$_REQUEST["mostrar_formato"]==""||!$documento[0]["plantilla"]){
 	$valores=array();
@@ -58,12 +72,12 @@ elseif(@$_REQUEST["llave"]){
 else $nodoinicial=$llave_formato;
 ?>
 <style>
-    #contenedor{margin-top:0px; width: 100%; border:0px solid; overflow:auto; <?php if($_SESSION["tipo_dispositivo"]=='movil'){?>-webkit-overflow-scrolling:touch;<?php } ?>} 
+    #panel_detalles{margin-top:0px; width: 100%; border:0px solid; overflow:auto; <?php if($_SESSION["tipo_dispositivo"]=='movil'){?>-webkit-overflow-scrolling:touch;<?php } ?>} 
     #detalles{height:100%; } 
     #panel_arbol_formato{border:0px solid;}
 
 </style>
-<div class="container row-fluid" id="contenedor" style="align:center">
+<div class="container row-fluid" style="align:center">
     <div class="span3">         
         <div id="izquierdo_saia" >          
         </div>
@@ -98,13 +112,11 @@ $(document).ready(function(){
 });    
 </script>
 <?php
-if($formato["numcampos"]){ ?>
+if($formato["numcampos"]){ 
+ $llave=encrypt_blowfish("idformato=".$formato[0]["idformato"]."&iddoc=".$iddocumento,LLAVE_SAIA_CRYPTO); 
+?>
 <script type="text/javascript">
-<?php if(usuario_actual('login')=='cerok'){ ?>     
-llamado_pantalla("formatos/arboles/arbolformato_documento.php","idformato=<?php echo($formato[0]["idformato"]);?>&iddoc=<?php echo($iddocumento); ?>&alto_pantalla="+alto,$("#izquierdo_saia"),"arbol_formato");
-<?php }else{ ?>
-llamado_pantalla("pantallas/documento/informacion_resumen_documento.php","idformato=<?php echo($formato[0]["idformato"]);?>&iddoc=<?php echo($iddocumento); ?>&alto_pantalla="+(alto-1),$("#izquierdo_saia"),"arbol_formato");
-<?php } ?>	
+llamado_pantalla("pantallas/documento/informacion_resumen_documento.php","form_info=<?php echo($llave);?>&alto_pantalla="+(alto-1),$("#izquierdo_saia"),"arbol_formato");
 llamado_pantalla("","",$("#contenedor_saia"),'detalles');
 hs.graphicsDir = '<?php echo($ruta_db_superior);?>anexosdigitales/highslide-4.0.10/highslide/graphics/';
 hs.outlineType = 'rounded-white';

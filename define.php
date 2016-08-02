@@ -78,7 +78,7 @@ define("RUTA_EVENTO_FORMATO","../../almacenamiento1/evento_formato/");
 
 define("LLAVE_SAIA","SAIA_PRODUCTIVO_RELEASE");
 /*EVITA PROBLEMA DE CODIFICACION DE LOS FORMATOS, SE HABILITA O DESHABILITA SEGUN SE PRESENTE EL ERROR*/
-define("CODIFICA_ENCABEZADO", true);
+define("CODIFICA_ENCABEZADO", false);
 if(@$_SERVER["HTTPS"]=='on'){
 	define("PROTOCOLO_CONEXION","https://");//Sitio seguro
 }else{

@@ -29,11 +29,6 @@ if($recarga["numcampos"]){
 else{
   $intervalo_recarga_informacion=900000; ////Esto debería estar en configuración aquí recarga cada 15 minutos
 }  
-include_once($ruta_db_superior."pantallas/lib/mobile_detect.php");
-$detect = new Mobile_Detect;
-if ( $detect->isMobile() ) {
-	$_SESSION["tipo_dispositivo"]="movil";
-}
 /*************actualizacion de fin de año ********/
 /*
 $proxima=busca_filtro_tabla("valor","configuracion","nombre='actualizacion_fin_anio'","",$conn);
@@ -109,6 +104,7 @@ $componente_tareas=busca_filtro_tabla("","busqueda_componente A","A.nombre='list
 body {padding-right:0px;padding-left:0px;}
 .dropdown-submenu {
     position: relative;
+    text-align:left;
 }
 
 .dropdown-submenu>.dropdown-menu {
@@ -197,6 +193,9 @@ $mayor_informacion=busca_filtro_tabla("valor","configuracion","nombre='mayor_inf
 <?php 
 //Menu SAIA para movil
 if($_SESSION["tipo_dispositivo"]=="movil"){ ?>
+<style type="text/css">
+    .container-saia{margin-left:0px; margin-right:0px;}
+</style>
     <div class="dropdown pull-left">
         <a id="dLabel" data-toggle="dropdown" data-target="#" >
             <!--div class="icon-home">&nbsp;</div--> SAIA <span class="caret"></span>
@@ -221,7 +220,12 @@ if($_SESSION["tipo_dispositivo"]=="movil"){ ?>
     </ul>
   </div>
   <div class="dropdown pull-right">|<b><?php echo(usuario_actual("nombres")." ".usuario_actual("apellidos"));?></b></div>
-  <div class="dropdown pull-right"><div class="icon-fullscreen" id="resize_centro"></div></div>
+  <?php 
+  if($_SESSION["tipo_dispositivo"]=="movil"){ 
+    echo('<div class="dropdown pull-right"><div class="icon-fullscreen" id="resize_centro"></div></div>');    
+  }
+  ?>
+  
   <!--a href="#">Opciones</a-->
 </div>
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
@@ -564,7 +568,9 @@ $(document).ready(function(){
 	    var nuevo_alto=$(top).height()-($(".footer_login").height()+$(".user-menu-top div").height()+20);
 	    $("#iFrameContainer").height(nuevo_alto);
 	});
-	$("#resize_centro").click();
+	// se saca el codigo porque el resize_centro existe solo para moviles
+	var nuevo_alto=$(top).height()-($(".footer_login").height()+$(".user-menu-top div").height()+20);
+	$("#iFrameContainer").height(nuevo_alto);
 	$(".enlace_final").click(function(){
 	  $(".dropdown").removeClass("open");
 	});

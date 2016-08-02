@@ -44,7 +44,12 @@ if(@$_REQUEST["tipo"]!==5 && !@$_REQUEST["output"] && !@$_REQUEST["imprimir"]){
     $mostrar_menu_acciones_rapidas=0;
     if($_SESSION["tipo_dispositivo"]!="movil"){
       $mostrar_menu_acciones_rapidas=1;
-      $clase_menu=' menu_movil ';
+      $dropdown_menu=' top:40%; left: 40%; ';
+      $tipo_pagina=$_SESSION["tipo_pagina"];
+    }
+    else{
+      $tipo_pagina="pantallas/documento/informacion_resumen_documento.php?iddoc=".$iddoc."&no_seleccionar=1";
+      $dropdown_menu=' position: fixed; top: 35; left: 0px; ';  
     }
 	$datos_admin=botones_administrativos_menu($iddoc);
     echo(librerias_acciones_kaiten());
@@ -55,11 +60,10 @@ if(@$_REQUEST["tipo"]!==5 && !@$_REQUEST["output"] && !@$_REQUEST["imprimir"]){
         .navbar-fixed-top, .navbar-fixed-bottom{ position: fixed;}
         .navbar-fixed-top, .navbar-fixed-bottom, .navbar-static-top{margin-right: 0px; margin-left: 0px;}
         .texto-azul{ color:#3176c8}
-        .btn-under {text-align: center;vertical-align: top; padding-left: 5px;}
+        .btn-under {text-align: center;vertical-align: top;}
         .btn-under ul{text-align: left;}
-        .btn-under h6{margin-top: 0px; font-size: 11; font-weight:normal;}
-        .btn-under > .dropdown-menu{top:40%; left: 40%;}
-        /*.menu_movil{width:100px;}*/
+        .btn-under h6{margin-top: 0px; font-size: 11; font-weight:normal;font-family: arial;}
+        .btn-under > .dropdown-menu{ <?php echo($dropdown_menu);?>}
     </style>
     <div class="navbar navbar-fixed-top pull-center" id="menu_principal_documento">
       <div class="navbar-inner">
@@ -68,7 +72,7 @@ if(@$_REQUEST["tipo"]!==5 && !@$_REQUEST["output"] && !@$_REQUEST["imprimir"]){
               <li>
               	<div class="btn-group pull-left btn-under">
                     <button type="button" class="btn btn-mini">
-                      <a href="<?php echo($ruta_db_superior.$_SESSION["tipo_pagina"]); ?>" class="kenlace_saia_propio" enlace="<?php echo($_SESSION["tipo_pagina"]); ?>" destino="_centro">
+                      <a href="<?php echo($ruta_db_superior.$tipo_pagina); ?>" class="kenlace_saia_propio" enlace="<?php echo($tipo_pagina); ?>" destino="_centro">
                         <i class="icon-acciones_menu_mostrar"></i>
                       </a>
                     </button>
@@ -125,11 +129,11 @@ if(@$_REQUEST["tipo"]!==5 && !@$_REQUEST["output"] && !@$_REQUEST["imprimir"]){
                     <h6>Acciones r&aacute;pidas</h6>
                 </div>
               </li>
+              <li class="divider-vertical"></li>
               <?php
                 }
                 $estado_documento="";
               ?>
-              <li class="divider-vertical"></li>
               <li>
               	<div class="btn-group pull- btn-under">
               	<?php
@@ -198,11 +202,11 @@ if(@$_REQUEST["tipo"]!==5 && !@$_REQUEST["output"] && !@$_REQUEST["imprimir"]){
               <?php } ?>
                 </div>
               </li>
-              <li class="divider-vertical"></li>
               <?php if(@$modulo_adicional["nombre"]!==''){
                     $modulos_adicionales=busca_filtro_tabla("","modulo", "nombre='".$modulo_adicional["nombre"]."'", "", $conn);
                     if($modulos_adicionales["numcampos"]){
                      ?>
+              <li class="divider-vertical"></li>
               <li>
                <div class="btn-group btn-under" id="modulo_adicional_<?php echo($modulos_adicionales[0]["nombre"]);?>">
                    <?php
