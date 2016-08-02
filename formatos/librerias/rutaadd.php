@@ -516,6 +516,8 @@ switch ($sAction)
 				$adicional='&cargar=1';
 			}
 			$llave=encrypt_blowfish("doc=".$x_doc."&x_plantilla=".$_REQUEST["x_plantilla"]."&x_orden=$x_orden&origen=".$x_destino."&tipo_origen=5".$adicional,LLAVE_SAIA_CRYPTO); 
+			print_r($llave);
+			die();
 			redirecciona("rutaadd.php?form_info=".$llave);
 			exit();
 		}
