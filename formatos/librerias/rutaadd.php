@@ -1007,7 +1007,7 @@ function AddData($conn)
       	
   }else{
     $llave=encrypt_blowfish("iddoc=".$fieldList["documento_iddocumento"]."&idformato=".$plantilla[0]["idformato"]."&key=".$fieldList["documento_iddocumento"],LLAVE_SAIA_CRYPTO); 
-
+    print_r($llave);
   	abrir_url("../../formatos/".$plantilla[0]["plantilla"]."/detalles_mostrar_".$plantilla[0]["plantilla"].".php?form_info=".$llave,"_self");  	
   }
 
