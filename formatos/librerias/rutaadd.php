@@ -19,19 +19,19 @@ include_once("header_formato.php");
 
 $sKey  = @$_GET["key"]; 
  
-if (array_key_exists("form_info", $_POST) && $_REQUEST["form_info"]!='') { 
-include_once ($ruta_db_superior . "pantallas/lib/librerias_cripto.php"); 
-$data = json_decode($_POST["form_info"], true); 
-unset($_REQUEST); 
-unset($_POST); 
-for($i = 0; $i < count($data); $i ++) { 
- 
-	 $_REQUEST[decrypt_blowfish($data[$i]["name"], LLAVE_SAIA_CRYPTO)] = 
-	decrypt_blowfish($data[$i]["value"], LLAVE_SAIA_CRYPTO); 
-	 
-	 $_POST[decrypt_blowfish($data[$i]["name"], LLAVE_SAIA_CRYPTO)] = 
-	decrypt_blowfish($data[$i]["value"], LLAVE_SAIA_CRYPTO); 
-	} 
+    if (array_key_exists("form_info", $_POST) && $_REQUEST["form_info"]!='') { 
+        include_once ($ruta_db_superior . "pantallas/lib/librerias_cripto.php"); 
+        $data = json_decode($_POST["form_info"], true); 
+        unset($_REQUEST); 
+        unset($_POST); 
+        for($i = 0; $i < count($data); $i ++) { 
+     
+    	 $_REQUEST[decrypt_blowfish($data[$i]["name"], LLAVE_SAIA_CRYPTO)] = 
+    	decrypt_blowfish($data[$i]["value"], LLAVE_SAIA_CRYPTO); 
+    	 
+    	 $_POST[decrypt_blowfish($data[$i]["name"], LLAVE_SAIA_CRYPTO)] = 
+    	decrypt_blowfish($data[$i]["value"], LLAVE_SAIA_CRYPTO); 
+    	} 
 	// print_r($_REQUEST);die(); 
 	} 
  
@@ -1005,7 +1005,9 @@ function AddData($conn)
   	abrir_url("../../formatos/".$plantilla[0]["plantilla"]."/mostrar_".$plantilla[0]["plantilla"].".php?iddoc=".$fieldList["documento_iddocumento"]."&idformato=".$plantilla[0]["idformato"],"_self");
       	
   }else{
-  	abrir_url("../../formatos/".$plantilla[0]["plantilla"]."/detalles_mostrar_".$plantilla[0]["plantilla"].".php?iddoc=".$fieldList["documento_iddocumento"]."&idformato=".$plantilla[0]["idformato"]."&key=".$fieldList["documento_iddocumento"],"_self");  	
+    $llave=encrypt_blowfish("iddoc=".$fieldList["documento_iddocumento"]."&idformato=".$plantilla[0]["idformato"]."&key=".$fieldList["documento_iddocumento"],LLAVE_SAIA_CRYPTO); 
+
+  	abrir_url("../../formatos/".$plantilla[0]["plantilla"]."/detalles_mostrar_".$plantilla[0]["plantilla"].".php?form_info=".$llave,"_self");  	
   }
 
   
