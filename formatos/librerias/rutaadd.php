@@ -33,7 +33,7 @@ $sKey  = @$_REQUEST["key"];
 	} 
 	print_r($_REQUEST);
 	if (!@$sKey  && @$_REQUEST["doc"]) {
-	    echo("AQUI1");
+	    die("AQUI1");
 	    $sKey​= @$_REQUEST["doc"]; 
 	}
 	$sDbWhere = ""; 
