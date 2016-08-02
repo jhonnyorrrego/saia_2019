@@ -27,7 +27,7 @@ global $ruta_db_superior;
     .navbar-fixed-top, .navbar-fixed-bottom{ position: fixed;} 
     .navbar-fixed-top, .navbar-fixed-bottom, .navbar-static-top{margin-right: 0px; margin-left: 0px;}
     .texto-azul{ color:#3176c8}
-    .btn-under {text-align: center;vertical-align: top; padding-left: 5px;}
+    .btn-under {text-align: center;vertical-align: top; }
     .btn-under ul{text-align: left;}
     .btn-under h6{margin-top: 0px; font-size: 11; font-weight:normal;}
     .btn-under > .dropdown-menu{top:40%; left: 40%;}

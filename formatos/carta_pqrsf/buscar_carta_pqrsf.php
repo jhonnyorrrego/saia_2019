@@ -1,4 +1,15 @@
-<html><title>.:BUSCAR 3. CARTA PQRSF:.</title><head><link rel="stylesheet" type="text/css" href="../../css/dhtmlXTree.css"/><script type="text/javascript" src="../../js/jquery.fcbkcomplete.js"></script><link rel="stylesheet" type="text/css" href="../../css/style_fcbkcomplete.css"/></head><body bgcolor="#F5F5F5"><form name="formulario_formatos" id="formulario_formatos" method="post" action="../librerias/funciones_buscador.php" enctype="multipart/form-data"><table width="100%" cellspacing="1" cellpadding="4" border="0"><tr><td colspan="4" class="encabezado_list">B&Uacute;SQUEDA 3. CARTA PQRSF</td></tr><tr><td class="encabezado">&nbsp;<select name="condicion_fecha_carta" id="condicion_fecha_carta"><option value="AND">Y</option><option value="OR">O</option></td>
+<html><title>.:BUSCAR 3. CARTA PQRSF:.</title><head><link rel="stylesheet" type="text/css" href="../../css/dhtmlXTree.css"/><script type="text/javascript" src="../../js/jquery.fcbkcomplete.js"></script><link rel="stylesheet" type="text/css" href="../../css/style_fcbkcomplete.css"/></head><body bgcolor="#F5F5F5"><form name="formulario_formatos" id="formulario_formatos" method="post" action="../librerias/funciones_buscador.php" enctype="multipart/form-data"><table width="100%" cellspacing="1" cellpadding="4" border="0"><tr><td colspan="4" class="encabezado_list">B&Uacute;SQUEDA 3. CARTA PQRSF</td></tr><tr><td class="encabezado">&nbsp;<select name="condicion_tipo_copia_interna" id="condicion_tipo_copia_interna"><option value="AND">Y</option><option value="OR">O</option></td>
+                     <td class="encabezado" width="20%" title="">TIPO COPIA INTERNA</td><td class="encabezado">&nbsp;<select name="compara_tipo_copia_interna" id="compara_tipo_copia_interna"> <option value="or">Alguno</option><option value="and">Todos</option></select></td>
+                     <td bgcolor="#F5F5F5"><select multiple id="tipo_copia_interna" name="tipo_copia_interna"></select><script>
+                     $(document).ready(function() 
+                      {
+                      $("#tipo_copia_interna").fcbkcomplete({
+                        complete_text:"Presione enter para agregar una palabra.",
+                        newel: true
+                      });
+                      });
+                     </script></td>
+                    </tr><tr><td class="encabezado">&nbsp;<select name="condicion_fecha_carta" id="condicion_fecha_carta"><option value="AND">Y</option><option value="OR">O</option></td>
                      <td class="encabezado" width="20%" title="Fecha en la que fue Creada la Carta.">FECHA DE CREACION</td><td class="encabezado">&nbsp;<select name="compara_fecha_carta" id="compara_fecha_carta"> <option value="or">Alguno</option><option value="and">Todos</option></select></td>
                      <td bgcolor="#F5F5F5"><select multiple id="fecha_carta" name="fecha_carta"></select><script>
                      $(document).ready(function() 
@@ -85,7 +96,7 @@
                 			tree_copiainterna.setImagePath("../../imgs/");
                 			tree_copiainterna.enableIEImageFix(true);tree_copiainterna.enableCheckBoxes(1);
                 			tree_copiainterna.enableThreeStateCheckboxes(1);tree_copiainterna.setOnLoadingStart(cargando_copiainterna);
-                      tree_copiainterna.setOnLoadingEnd(fin_cargando_copiainterna);tree_copiainterna.enableSmartXMLParsing(true);tree_copiainterna.loadXML("../../test.php");
+                      tree_copiainterna.setOnLoadingEnd(fin_cargando_copiainterna);tree_copiainterna.enableSmartXMLParsing(true);tree_copiainterna.loadXML("../../test.php?rol=1");
                       tree_copiainterna.setOnCheckHandler(onNodeSelect_copiainterna);
                       function onNodeSelect_copiainterna(nodeId)
                       {valor_destino=document.getElementById("copiainterna");
@@ -129,7 +140,7 @@
                                eval('document.layers["esperando_copiainterna"]');
                         document.poppedLayer.style.visibility = "visible";
                       }
-                	--></script></td></tr><tr><td class="encabezado">&nbsp;<select name="condicion_vercopiainterna" id="condicion_vercopiainterna"><option value="AND">Y</option><option value="OR">O</option></td>
+                	--></script></td></tr><tr id="tr_vercopiainterna"><td class="encabezado">&nbsp;<select name="condicion_vercopiainterna" id="condicion_vercopiainterna"><option value="AND">Y</option><option value="OR">O</option></td>
                      <td class="encabezado" width="20%" title="">VISIBLE LA COPIA INTERNA</td><td class="encabezado">&nbsp;<select name="compara_vercopiainterna" id="compara_vercopiainterna"> <option value="LIKE|%|%">Similar</option><option value="LIKE|%|@">Inicia Con</option><option value="LIKE|@|%">Finaliza Con</option></select></td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(308,3612,'',1);?></td></tr><tr><td class="encabezado">&nbsp;<select name="condicion_iniciales" id="condicion_iniciales"><option value="AND">Y</option><option value="OR">O</option></td>
                      <td class="encabezado" width="20%" title="Persona que Genera la Carta ">PERSONA QUE GENERA LA CARTA</td><td class="encabezado">&nbsp;<select name="compara_iniciales" id="compara_iniciales"> <option value="or">Alguno</option><option value="and">Todos</option></select></td>
                      <td bgcolor="#F5F5F5"><select multiple id="iniciales" name="iniciales"></select><script>
@@ -164,7 +175,17 @@
                       });
                      </script></td>
                     </tr><tr><td class="encabezado">&nbsp;<select name="condicion_varios_radicados" id="condicion_varios_radicados"><option value="AND">Y</option><option value="OR">O</option></td>
-                     <td class="encabezado" width="20%" title="">&iquest;ASIGNAR UN N&Uacute;MERO DE RADICADO DIFERENTE PARA CADA DESTINO?</td><td class="encabezado">&nbsp;<select name="compara_varios_radicados" id="compara_varios_radicados"> <option value="=|@|@">Igual</option><option value="-|@|@">Menor</option><option value="+|@|@">Mayor</option><option value="!|@|@">Diferente</option></select></td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(308,3619,'',1);?></td></tr><input type="hidden" name="campo_descripcion" value="3604"><input type="hidden" name="padre" value="<?php echo $_REQUEST["padre"]; ?>"><input type="hidden" name="anterior" value="<?php echo $_REQUEST["anterior"]; ?>"><?php submit_formato(308);?></table><?php if(@$_REQUEST["campo__retorno"]){ ?>
+                     <td class="encabezado" width="20%" title="">&iquest;ASIGNAR UN N&Uacute;MERO DE RADICADO DIFERENTE PARA CADA DESTINO?</td><td class="encabezado">&nbsp;<select name="compara_varios_radicados" id="compara_varios_radicados"> <option value="or">Alguno</option><option value="and">Todos</option></select></td>
+                     <td bgcolor="#F5F5F5"><select multiple id="varios_radicados" name="varios_radicados"></select><script>
+                     $(document).ready(function() 
+                      {
+                      $("#varios_radicados").fcbkcomplete({
+                        complete_text:"Presione enter para agregar una palabra.",
+                        newel: true
+                      });
+                      });
+                     </script></td>
+                    </tr><input type="hidden" name="campo_descripcion" value="3604"><input type="hidden" name="padre" value="<?php echo $_REQUEST["padre"]; ?>"><input type="hidden" name="anterior" value="<?php echo $_REQUEST["anterior"]; ?>"><?php submit_formato(308);?></table><?php if(@$_REQUEST["campo__retorno"]){ ?>
                 <input type="hidden" name="campo__retorno" value="<?php echo($_REQUEST["campo__retorno"]); ?>">
               <?php }
                if(@$_REQUEST["formulario__retorno"]){ ?>

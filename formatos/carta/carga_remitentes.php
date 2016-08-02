@@ -11,6 +11,39 @@ $ruta.="../";
 $max_salida--;
 }
 include_once($ruta_db_superior."db.php");
+
+$sKey  = @$_GET["key"]; 
+ 
+if (array_key_exists("form_info", $_POST)) { 
+	include_once ($ruta_db_superior . "pantallas/lib/librerias_cripto.php"); 
+	$data = json_decode($_POST["form_info"], true); 
+	unset($_REQUEST); 
+	unset($_POST); 
+	for($i = 0; $i < count($data); $i ++) { 
+ 
+	 $_REQUEST[decrypt_blowfish($data[$i]["name"], LLAVE_SAIA_CRYPTO)] = 
+	decrypt_blowfish($data[$i]["value"], LLAVE_SAIA_CRYPTO); 
+	 
+	 $_POST[decrypt_blowfish($data[$i]["name"], LLAVE_SAIA_CRYPTO)] = 
+	decrypt_blowfish($data[$i]["value"], LLAVE_SAIA_CRYPTO); 
+	} 
+	// print_r($_REQUEST);die(); 
+	} 
+ 
+	if (($sKey == "") || ((is_null($sKey)))) { 
+	$sKey​
+	 = @$_POST["key_d"]; 
+	} 
+	$sDbWhere = ""; 
+	$arRecKey = split(",",$sKey); 
+ 
+	// Single delete record 
+	if (( $sKey == "") || (is_null( $sKey)) || !( is_numeric($sKey ))) { 
+		ob_end_clean(); 
+		header("Location: formatolist.php"); 
+		exit(); 
+	}
+
 switch($_REQUEST["opcion"])
 {case '1':
  $padre=busca_filtro_tabla("ejecutor,tipo_radicado,plantilla","documento","iddocumento=".$_REQUEST["adicionales"],"",$conn);
@@ -44,11 +77,41 @@ switch($_REQUEST["opcion"])
  case '3':
 	 include_once($ruta_db_superior."formatos/librerias/estilo_formulario.php");
    ?>
-   <form action="" name="form1" enctype="multipart/form-data" method="post">
+   <form action="" name="form1" id="form1" enctype="multipart/form-data" method="post">
    <input type="file" name="archivo" >
-   <input type="submit" value="Cargar" >
+   <input type="hidden" name="form_info" id="form_info" value=""> 
+   <input type="submit" value="Cargar" id="continuar">
    <input type="hidden" value="4" name="opcion" >
    </form>
+   <script type="text/javascript"> 
+	$("#continuar").click(function(){ 
+	var salida = false; 
+	 
+	 $.ajax({ 
+	    type:'POST', 
+	    async: false, 
+	 
+	 url: "<?php echo $ruta_db_superior;?>​
+	 formatos/librerias/encript_data.php​
+	 ", 
+	 
+	 data: {datos:JSON.stringify($('#form1').serializeArray(), null)}, 
+	 
+	 success: function(data) { 
+	 
+	 $("#form_info").empty().val(data); 
+	 
+	 //console.log($("#form_info").val()); 
+	 
+	 salida = true; 
+	 
+	 } 
+	 
+	 });  
+	return salida; 
+	}); 
+	 
+	</script>
    <table>
    	<tr>
    		<td>Tener en cuenta:</td>

@@ -6,12 +6,14 @@ header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache"); // HTTP/1.0
 include("../../db.php");
 include("../../class_transferencia.php");
-//print_r($_REQUEST); die();
+include_once ($ruta_db_superior . "pantallas/lib/librerias_cripto.php");
 //echo("<br /><br />");
 $formato["numcampos"]=0;
 
 if(@$_REQUEST["id"]){
-  $datos=parsea_idformato($_REQUEST["id"]);
+    $data = decrypt_blowfish($_REQUEST["id"],LLAVE_SAIA_CRYPTO);
+  $datos=parsea_idformato($data);
+  
   $formato=busca_filtro_tabla("","formato","idformato=".$datos[0],"",$conn);  
   //print_r($datos);
   if(!$datos[2] && $datos[3]=="mostrar"){

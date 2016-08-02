@@ -29,7 +29,32 @@ include_once("librerias/funciones.php");
 ?>
 <?php
 $sKey = @$_GET["key"];
+
+if (array_key_exists("form_info", $_POST)) {
+    include_once ($ruta_db_superior . "pantallas/lib/librerias_cripto.php");
+    $data = json_decode($_POST["form_info"], true);
+    unset($_REQUEST);
+    unset($_POST);
+    for($i = 0; $i < count($data); $i ++) {
+        $_REQUEST[decrypt_blowfish($data[$i]["name"], LLAVE_SAIA_CRYPTO)] = decrypt_blowfish($data[$i]["value"], LLAVE_SAIA_CRYPTO);
+        $_POST[decrypt_blowfish($data[$i]["name"], LLAVE_SAIA_CRYPTO)] = decrypt_blowfish($data[$i]["value"], LLAVE_SAIA_CRYPTO);
+    }
+    // print_r($_REQUEST);die();
+}
 $idformato=@$_REQUEST["idformato"];
+
+if (array_key_exists("form_info", $_POST)) {
+    include_once ($ruta_db_superior . "pantallas/lib/librerias_cripto.php");
+    $data = json_decode($_POST["form_info"], true);
+    unset($_REQUEST);
+    unset($_POST);
+    for($i = 0; $i < count($data); $i ++) {
+        $_REQUEST[decrypt_blowfish($data[$i]["name"], LLAVE_SAIA_CRYPTO)] = decrypt_blowfish($data[$i]["value"], LLAVE_SAIA_CRYPTO);
+        $_POST[decrypt_blowfish($data[$i]["name"], LLAVE_SAIA_CRYPTO)] = decrypt_blowfish($data[$i]["value"], LLAVE_SAIA_CRYPTO);
+    }
+    // print_r($_REQUEST);die();
+}
+
 if (($sKey == "") || (is_null($sKey))) { $sKey = @$_POST["key"]; }
 if (!empty($sKey)) $sKey = (get_magic_quotes_gpc()) ? stripslashes($sKey) : $sKey;
 
@@ -228,9 +253,36 @@ echo $x_accionesChk;
 </span></td>
 	</tr>
 </table>
+	<input type="hidden" name="form_info" id="form_info" value="">
 <p>
-<input type="submit" name="Action" value="EDITAR">
+<input type="submit" name="Action" value="EDITAR" id="continuar">
 </form>
+
+<?php
+
+include_once ($ruta_db_superior . "librerias_saia.php");
+echo (librerias_jquery("1.7"));
+
+?>
+
+<script type="text/javascript">
+$("#continuar").click(function(){
+	var salida = false;
+  		$.ajax({
+            type:'POST',
+            async: false,
+            url: "<?php echo $ruta_db_superior;?>formatos/librerias/encript_data.php",
+            data: {datos:JSON.stringify($('#funciones_formatoedit').serializeArray(), null)},
+            success: function(data) {
+            	$("#form_info").empty().val(data);
+            	//console.log($("#form_info").val());
+            	salida = true;
+         	}
+  		});  
+    return salida;
+  });
+
+</script>
 <?php include ("footer.php") ?>
 <?php
 //phpmkr_db_close($conn);
@@ -331,7 +383,7 @@ function EditData($sKey,$conn)
 		$theValue = (!get_magic_quotes_gpc()) ? addslashes($theValue) : $theValue;
 		$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
 		$fieldList["acciones"] = $theValue;
-
+        
 		// update
 		$sSql = "UPDATE funciones_formato SET ";
 		foreach ($fieldList as $key=>$temp) {

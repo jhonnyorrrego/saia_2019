@@ -1671,8 +1671,9 @@ if($iddoc<>NULL)
 <Pre-condiciones><Pre-condiciones>
 <Post-condiciones><Post-condiciones>
 </Clase>  */
-function submit_formato($formato,$iddoc=NULL){
-  global $conn,$ruta_db_superior;
+function submit_formato($formato,$iddoc=NULL)
+{
+  global $conn;
   $datos_f=busca_filtro_tabla("item","formato","idformato=".$formato,"",$conn);
   if($iddoc==NULL || $datos_f[0][0])
      {$contador=busca_filtro_tabla("A.nombre,B.nombre_tabla,B.nombre as formato","contador A,formato B","A.idcontador=B.contador_idcontador AND B.idformato=".$formato,"",$conn);
@@ -1696,7 +1697,6 @@ function submit_formato($formato,$iddoc=NULL){
       echo '<input type="hidden" name="idpaso_documento" value="'.$_REQUEST["idpaso_documento"].'">';  
     
     echo '<input type="hidden" name="funcion" value="radicar_plantilla">
-    		<input type="hidden" name="form_info" id="form_info" value="">
               <input type="hidden" name="tabla" value="'.$contador[0]["nombre_tabla"].'">
               <input type="hidden" name="formato" value="'.$contador[0]["formato"].'">
               <input type="hidden" name="continuar" value="Solicitar Radicado" >
@@ -1723,17 +1723,7 @@ function submit_formato($formato,$iddoc=NULL){
   $("#continuar").click(function(){
     if($('#formulario_formatos').valid()){
   		$("#continuar").hide();
-  		$("#continuar").after('<input id="enviando" type="button" disabled="true" value="Enviando...">');
-  		$.ajax({
-            type:'POST',
-            async: false,
-            url: "<?php echo $ruta_db_superior;?>formatos/librerias/encript_data.php",
-            data: {datos:JSON.stringify($('#formulario_formatos').serializeArray(), null)},
-            success: function(data) {
-            	//$('#formulario_formatos')[0].reset();
-            	$("#form_info").empty().val(data);
-         	}
-  		});  
+  		$("#continuar").after('<input type="button" disabled="true" value="Enviando...">');
      } 
   });  
   </script>

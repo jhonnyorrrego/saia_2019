@@ -1,4 +1,4 @@
-<?php include_once("../../formatos/librerias/funciones_generales.php"); ?><?php include_once("../../calendario/calendario.php"); ?><?php include_once("../librerias/header_formato.php"); ?><legend id="label_formato" class="legend" style="font-size:9pt;">B&uacute;squeda en formato Justificaci&oacute;n de compra</legend><br /><br /><?php include_once("../../formatos/librerias/funciones_generales.php"); ?><div class="control-group">
+<?php include_once("../librerias/funciones_generales.php"); ?><?php include_once("../../calendario/calendario.php"); ?><?php include_once("../librerias/header_formato.php"); ?><legend id="label_formato" class="legend">B&uacute;squeda en formato Justificaci&oacute;n de compra</legend><br /><br /><?php include_once("../librerias/funciones_generales.php"); ?><div class="control-group">
                   <label class="string control-label" for="fecha_justificacion_compra"><b>Fecha</b></label>
                   <input type="hidden" name="bksaiacondicion_g@fecha_justificacion_compra_x" id="bksaiacondicion_g@fecha_justificacion_compra_x" value=">=">
                   <div class="controls">
@@ -12,7 +12,7 @@
 		    O
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_fecha_justificacion_compra" id="bqsaiaenlace_fecha_justificacion_compra" value="y" />
-		</div></div></div><div class="control-group"><div class="controls"><b>Nombre Del Solicitante<input type="hidden" name="bksaiacondicion_nombre_solicitante" id="bksaiacondicion_nombre_solicitante" value="like_total"></b><div id="esperando_nombre_solicitante"><img src="../../imagenes/cargando.gif"></div><div id="seleccionados"></div><input type="text" id="stext_nombre_solicitante" placeholder="Buscar" width="200px" size="25">
+		</div></div></div><div class="control-group"><div class="controls"><b>Nombre del solicitante<input type="hidden" name="bksaiacondicion_nombre_solicitante" id="bksaiacondicion_nombre_solicitante" value="like_total"></b><div id="esperando_nombre_solicitante"><img src="../../imagenes/cargando.gif"></div><div id="seleccionados"></div><input type="text" id="stext_nombre_solicitante" placeholder="Buscar" width="200px" size="25">
                    <a href="javascript:void(0)" onclick="tree_nombre_solicitante.findItem(htmlentities(document.getElementById('stext_nombre_solicitante').value),1)"><img src="../../botones/general/anterior.png"border="0px"></a>
                    <a href="javascript:void(0)" onclick="tree_nombre_solicitante.findItem(htmlentities(document.getElementById('stext_nombre_solicitante').value),0,1)"><img src="../../botones/general/buscar.png"border="0px"></a>
                           <a href="javascript:void(0)" onclick="tree_nombre_solicitante.findItem(htmlentities(document.getElementById('stext_nombre_solicitante').value))"><img src="../../botones/general/siguiente.png"border="0px"></a>
@@ -87,7 +87,7 @@
 		    O
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_g@descripcion_justificacion" id="bqsaiaenlace_g@descripcion_justificacion" value="y" />
-		</div></div></div><div class="control-group"><b>Justificaci&oacute;n De Compra<input type="hidden" name="bksaiacondicion_g@justificacion_compra" id="bksaiacondicion_g@justificacion_compra" value="like_total"></b><div class="controls"><textarea  maxlength="4000"   id="justificacion_compra" name="bqsaia_g@justificacion_compra"  style="width:500px;height:100px"></textarea><div class="btn-group" data-toggle="buttons-radio" >
+		</div></div></div><div class="control-group"><b>Justificaci&oacute;n de compra<input type="hidden" name="bksaiacondicion_g@justificacion_compra" id="bksaiacondicion_g@justificacion_compra" value="like_total"></b><div class="controls"><textarea  maxlength="4000"   id="justificacion_compra" name="bqsaia_g@justificacion_compra"  style="width:500px;height:100px"></textarea><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_g@justificacion_compra',this.id)">
 		    Y
 		  </button>
@@ -95,7 +95,7 @@
 		    O
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_g@justificacion_compra" id="bqsaiaenlace_g@justificacion_compra" value="y" />
-		</div></div></div><div class="control-group"><div class="controls"><b>Primera Aprobacion<input type="hidden" name="bksaiacondicion_primera_aprobacion" id="bksaiacondicion_primera_aprobacion" value="like_total"></b><div id="esperando_primera_aprobacion"><img src="../../imagenes/cargando.gif"></div><div id="seleccionados"></div><input type="text" id="stext_primera_aprobacion" placeholder="Buscar" width="200px" size="25">
+		</div></div></div><div class="control-group"><div class="controls"><b>Primera aprobacion<input type="hidden" name="bksaiacondicion_primera_aprobacion" id="bksaiacondicion_primera_aprobacion" value="like_total"></b><div id="esperando_primera_aprobacion"><img src="../../imagenes/cargando.gif"></div><div id="seleccionados"></div><input type="text" id="stext_primera_aprobacion" placeholder="Buscar" width="200px" size="25">
                    <a href="javascript:void(0)" onclick="tree_primera_aprobacion.findItem(htmlentities(document.getElementById('stext_primera_aprobacion').value),1)"><img src="../../botones/general/anterior.png"border="0px"></a>
                    <a href="javascript:void(0)" onclick="tree_primera_aprobacion.findItem(htmlentities(document.getElementById('stext_primera_aprobacion').value),0,1)"><img src="../../botones/general/buscar.png"border="0px"></a>
                           <a href="javascript:void(0)" onclick="tree_primera_aprobacion.findItem(htmlentities(document.getElementById('stext_primera_aprobacion').value))"><img src="../../botones/general/siguiente.png"border="0px"></a>
@@ -154,4 +154,4 @@
                                eval('document.layers["esperando_primera_aprobacion"]');
                         document.poppedLayer.style.visibility = "visible";
                       }
-                	--></script></div></div><input type="hidden" name="campos_especiales" value="nombre_solicitante@arbol,primera_aprobacion@arbol"><input type="hidden" name="filtro_adicional" id="filtro_adicional" value=" ft_justificacion_compra g @ AND  g.documento_iddocumento=iddocumento "></body><input type="hidden" name="bqtipodato_plantilla" id="bqtipodato_plantilla" value="date|g@fecha_justificacion_compra_x,g@fecha_justificacion_compra_y"><input type="hidden" name="idbusqueda_componente" value="187">
+                	--></script></div></div><input type="hidden" name="campos_especiales" value="nombre_solicitante@arbol,primera_aprobacion@arbol"><input type="hidden" name="filtro_adicional" id="filtro_adicional" value=" ft_justificacion_compra g @ AND  g.documento_iddocumento=iddocumento "></body><input type="hidden" name="bqtipodato_plantilla" id="bqtipodato_plantilla" value="date|g@fecha_justificacion_compra_x,g@fecha_justificacion_compra_y">
