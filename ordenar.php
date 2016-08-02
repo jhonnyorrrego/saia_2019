@@ -10,7 +10,7 @@ while ($max_salida > 0) {
 }
 include_once($ruta_db_superior . "db.php");
 include_once ($ruta_db_superior . "pantallas/lib/librerias_cripto.php");
-if (isset($_REQUEST["form_info"])) {
+if (isset($_REQUEST["form_info"]) && $_REQUEST["form_info"]!='') {
   $data = decrypt_blowfish($_REQUEST["form_info"],LLAVE_SAIA_CRYPTO);
   $datos=explode("&", $data);
   unset($_REQUEST);
@@ -22,6 +22,7 @@ if (isset($_REQUEST["form_info"])) {
     }
   }
 }
+
 $documento=busca_filtro_tabla("","documento A","A.iddocumento=".$_REQUEST["key"],"",$conn);
 if(@$_REQUEST["mostrar_formato"]==""||!$documento[0]["plantilla"]){
 	$valores=array();
