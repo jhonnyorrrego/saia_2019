@@ -28,9 +28,9 @@ die();
         unset($_POST); 
         for($i = 0; $i < count($data); $i ++) { 
          
-        	 $_REQUEST[decrypt_blowfish($data[$i]["name"], LLAVE_SAIA_CRYPTO)] = decrypt_blowfish($data[$i]["value"], LLAVE_SAIA_CRYPTO); 
+        	 $_REQUEST[decrypt_blowfish($data[$i]["name"], LLAVE_SAIA_CRYPTO)]=decrypt_blowfish($data[$i]["value"], LLAVE_SAIA_CRYPTO); 
         	 
-        	 $_POST[decrypt_blowfish($data[$i]["name"], LLAVE_SAIA_CRYPTO)] = decrypt_blowfish($data[$i]["value"], LLAVE_SAIA_CRYPTO); 
+        	 $_POST[decrypt_blowfish($data[$i]["name"], LLAVE_SAIA_CRYPTO)]=decrypt_blowfish($data[$i]["value"], LLAVE_SAIA_CRYPTO); 
     	} 
 	// print_r($_REQUEST);die(); 
 	} 
