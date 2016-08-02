@@ -1800,7 +1800,7 @@ function radicar_plantilla(){
     if (array_key_exists("form_info", $_POST)) {
       include_once ($ruta_db_superior . "pantallas/lib/librerias_cripto.php");
       $data = json_decode($_POST["form_info"], true);
-      print_r($_POST["form_info"]);
+      print_r($_POST);
       echo '<br/>';
       print_r($data);
       die();
