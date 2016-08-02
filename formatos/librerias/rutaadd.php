@@ -32,6 +32,9 @@ $sKey  = @$_REQUEST["key"];
 	// print_r($_REQUEST);die(); 
 	} 
 	print_r($_REQUEST);
+	if (!@$sKey  && @$_REQUEST["x_doc"]) {
+	    $sKey= @$_REQUEST["doc"]; 
+	}
 	if (!@$sKey  && @$_REQUEST["doc"]) {
 	    $sKey= @$_REQUEST["doc"]; 
 	}
