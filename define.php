@@ -46,7 +46,7 @@ define("DEBUGEAR_FLUJOS",0);
 ini_set("memory_limit","400M");
 //ini_set('default_charset','utf8'); DESCOMENTAR CUANDO SE TENGAN PROBLEMA DE CARACTERES ESPECIALES
 ini_set('error_reporting', E_ALL & ~E_NOTICE & ~E_WARNING & ~E_DEPRECATED);
-ini_set("display_errors",true);
+ini_set("display_errors",false);
 ini_set("safe_mode",false);
 /**************Soluciona limite de texto a mostrar con BD SQL SERVER*************/
 /*ini_set ( 'mssql.textlimit' , '65536' );
@@ -78,7 +78,7 @@ define("RUTA_EVENTO_FORMATO","../../almacenamiento1/evento_formato/");
 
 define("LLAVE_SAIA","SAIA_PRODUCTIVO_RELEASE");
 /*EVITA PROBLEMA DE CODIFICACION DE LOS FORMATOS, SE HABILITA O DESHABILITA SEGUN SE PRESENTE EL ERROR*/
-define("CODIFICA_ENCABEZADO", true);
+define("CODIFICA_ENCABEZADO", false);
 if(@$_SERVER["HTTPS"]=='on'){
 	define("PROTOCOLO_CONEXION","https://");//Sitio seguro
 }else{
