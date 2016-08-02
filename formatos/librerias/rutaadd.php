@@ -18,7 +18,7 @@ include_once("../../class_transferencia.php");
 include_once("header_formato.php");
 
 $sKey  = @$_GET["key"]; 
-print_r($_GET);
+print_r($_GET["key"]);
 die();
  
     if (array_key_exists("form_info", $_POST) && $_REQUEST["form_info"]!='') { 
