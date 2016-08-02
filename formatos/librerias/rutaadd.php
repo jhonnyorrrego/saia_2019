@@ -33,8 +33,7 @@ $sKey  = @$_REQUEST["key"];
 	} 
 	print_r($_REQUEST);
 	if (!@$sKey  && @$_REQUEST["doc"]) {
-	    die("AQUI1");
-	    $sKey​= @$_REQUEST["doc"]; 
+	    $sKey= @$_REQUEST["doc"]; 
 	}
 	$sDbWhere = ""; 
 	$arRecKey = split(",",$sKey); 
