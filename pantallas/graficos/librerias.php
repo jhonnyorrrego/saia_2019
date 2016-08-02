@@ -104,6 +104,12 @@ function generar_grafico_barra($configuracion_grafico){  // REQUIERE librerias_j
                         nameLocation:'end',      
                         name:'<?php echo($configuracion_grafico['titulox']); ?>',                        
                         type : 'category',
+                        axisLabel:{
+                        	rotate:18,
+                        	textStyle:{
+                        		fontSize:9
+                        	}
+                        },                        
                         data : <?php echo($data_nombres); ?>
                     }
                 ],
@@ -320,6 +326,12 @@ function generar_grafico_linea($configuracion_grafico){
                         nameLocation:'end',      
                         name:'<?php echo($configuracion_grafico['titulox']); ?>',                         
                         type : 'category',
+                        axisLabel:{
+                        	rotate:18,
+                        	textStyle:{
+                        		fontSize:9
+                        	}
+                        },                          
                         data : <?php echo($data_nombres); ?>
                     }
                 ],
