@@ -36,8 +36,9 @@ $sKey  = @$_GET["key"];
 	if (($sKey == "") || ((is_null($sKey)))) { 
 	$sKey​= @$_POST["key_d"]; 
 	} 
-	if (($sKey == "") || ((is_null($sKey)))) { 
-	$sKey​= @$_REQUEST["doc"]; 
+	if (($sKey == "") || ((is_null($sKey)))) {
+	    echo("AQUI");
+	    $sKey​= @$_REQUEST["doc"]; 
 	}
 	$sDbWhere = ""; 
 	$arRecKey = split(",",$sKey); 
