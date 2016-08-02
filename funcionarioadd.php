@@ -81,21 +81,7 @@ $x_perfil = Null;
 
 $x_acceso_web = NULL;
 
-$sKey = @$_GET["key"];
-
-// TODO: Solo se está encriptando $_POST
-if (array_key_exists("form_info", $_POST)) {
-    include_once ($ruta_db_superior . "pantallas/lib/librerias_cripto.php");
-    $data = json_decode($_POST["form_info"], true);
-    unset($_REQUEST);
-    unset($_POST);
-    for($i = 0; $i < count($data); $i ++) {
-        $_REQUEST[decrypt_blowfish($data[$i]["name"], LLAVE_SAIA_CRYPTO)] = decrypt_blowfish($data[$i]["value"], LLAVE_SAIA_CRYPTO);
-        $_POST[decrypt_blowfish($data[$i]["name"], LLAVE_SAIA_CRYPTO)] = decrypt_blowfish($data[$i]["value"], LLAVE_SAIA_CRYPTO);
-    }
-    //print_r($_REQUEST);die();
-}
-
+include_once ("phpmkrfn.php");
 include_once("formatos/librerias/estilo_formulario.php");
 // Get action
 $sAction = @$_POST["a_add"];
@@ -266,47 +252,12 @@ switch ($sAction) {
 					Transferencias Masivas </td>
 			</tr>
 		</table>
-		<input type="hidden" name="form_info" id="form_info" value="">
-		<input type="submit" name="Action" value="Adicionar" id="continuar">
+	
+		<input type="submit" name="Action" value="Adicionar">
 </form>
 
 <?php
-
-include_once ($ruta_db_superior . "librerias_saia.php");
-echo (librerias_jquery("1.7"));
-
-?>
-
-<script type="text/javascript">
-$("#continuar").live('click', function(){
-	var salida = false;
-  		$.ajax({
-            type:'POST',
-            async: false,
-            url: "<?php echo $ruta_db_superior;?>formatos/librerias/encript_data.php",
-            data: {datos:JSON.stringify($('#funcionarioadd').serializeArray(), null)},
-            success: function(data) {
-            	$("#form_info").empty().val(data);
-            	//console.log($("#form_info").val());
-            	salida = true;
-         	}
-  		});  
-    return salida;
-  });
-
-</script>
-<?php
-
-?>
-<?php
-
-//-------------------------------------------------------------------------------
-// Function LoadData
-// - Load Data based on Key Value sKey
-// - Variables setup: field variables
-
-function LoadData($sKey,$conn)
-{
+function LoadData($sKey, $conn) {
 	$sKeyWrk = "" . addslashes($sKey) . "";
 	$sSql = "SELECT * FROM funcionario A";
 	$sSql .= " WHERE A.idfuncionario = " . $sKeyWrk;
