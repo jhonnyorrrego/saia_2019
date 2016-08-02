@@ -18,9 +18,7 @@ include_once("../../class_transferencia.php");
 include_once("header_formato.php");
 
 $sKey  = @$_GET["key"]; 
-print_r($_GET["key"]);
-die();
- 
+
     if (array_key_exists("form_info", $_POST) && $_REQUEST["form_info"]!='') { 
         include_once ($ruta_db_superior . "pantallas/lib/librerias_cripto.php"); 
         $data = json_decode($_POST["form_info"], true); 
@@ -1009,7 +1007,6 @@ function AddData($conn)
       	
   }else{
     $llave=encrypt_blowfish("iddoc=".$fieldList["documento_iddocumento"]."&idformato=".$plantilla[0]["idformato"]."&key=".$fieldList["documento_iddocumento"],LLAVE_SAIA_CRYPTO); 
-    print_r($llave);
   	abrir_url("../../formatos/".$plantilla[0]["plantilla"]."/detalles_mostrar_".$plantilla[0]["plantilla"].".php?form_info=".$llave,"_self");  	
   }
 
