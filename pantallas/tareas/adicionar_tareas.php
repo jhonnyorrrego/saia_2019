@@ -16,7 +16,7 @@ echo(estilo_bootstrap());
   
 $sKey  = @$_GET["key"]; 
  
-if (array_key_exists("form_info", $_POST)) { 
+/*if (array_key_exists("form_info", $_POST)) { 
 include_once ($ruta_db_superior . "pantallas/lib/librerias_cripto.php"); 
 $data = json_decode($_POST["form_info"], true); 
 unset($_REQUEST); 
@@ -30,7 +30,7 @@ for($i = 0; $i < count($data); $i ++) {
 	decrypt_blowfish($data[$i]["value"], LLAVE_SAIA_CRYPTO); 
 	} 
 	// print_r($_REQUEST);die(); 
-	} 
+	}*/ 
  
 	if (($sKey == "") || ((is_null($sKey)))) { 
 	$sKey​
