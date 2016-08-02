@@ -221,15 +221,17 @@ if ($formulas["numcampos"]) {
 			echo("No es posible generar un grafico, no se han generado seguimientos");
 		} else {
 			$tipo_grafico = busca_filtro_tabla("tipo_grafico", "ft_indicadores_calidad", "documento_iddocumento=$iddoc", "", $conn);
-			if($_SESSION['LOGIN'.LLAVE_SAIA]=='cerok'){
+		
 			    
 			if(@$_REQUEST['tipo']!=5){
     			echo('
                     <tr>
                         <td colspan="7">
+                        <center>
                          <div id="contenedor_grafico_pc" style="width: 700px;height:240px;"></div>
                          <br/>
                          <div id="contenedor_grafico_rs" style="width: 700px;height:240px;"></div>
+                         </center>
                         </td> 
                     </tr>
     			');
@@ -329,14 +331,14 @@ if ($formulas["numcampos"]) {
     				$datos_guardar=array();
                     $datos_guardar['iddoc']=$iddoc;
                     $datos_guardar['nombre_imagen']='total_evaluacion'; 
-                    $datos_guardar['extension']='png';
+                    $datos_guardar['extension']='jpg';
                     $datos_guardar['contenedor_grafico']='contenedor_grafico_pc';
                     guardar_grafico_temporal($datos_guardar);
                     
     				$datos_guardar=array();
                     $datos_guardar['iddoc']=$iddoc;
                     $datos_guardar['nombre_imagen']='competencias'; 
-                    $datos_guardar['extension']='png';
+                    $datos_guardar['extension']='jpg';
                     $datos_guardar['contenedor_grafico']='contenedor_grafico_rs';
                     guardar_grafico_temporal($datos_guardar);     
                     
@@ -344,21 +346,22 @@ if ($formulas["numcampos"]) {
 			
 			}else{ //fin if tipo 5
 
-    			//$idfuncionario=busca_filtro_tabla("","vfuncionario_dc","idfuncionario=".$_REQUEST["idfunc"],"",$conn);
-    			//$ruta_grafico="temporal_".$idfuncionario[0]['login']."/".$iddoc."/";
-    				echo('<tr><td colspan="7">hola mundo');echo('</td></tr>');
-    			/*
+    			$idfuncionario=busca_filtro_tabla("","vfuncionario_dc","idfuncionario=".$_REQUEST["idfunc"],"",$conn);
+    			$ruta_grafico="temporal_".$idfuncionario[0]['login']."/".$iddoc."/";
+    				
+    			
     			if(file_exists($ruta_db_superior.$ruta_grafico)){
     				$datos=explode(",",listado_directorio($ruta_db_superior.$ruta_grafico));
-    				echo('<tr><td colspan="7">');
+    				echo('<tr><td colspan="7"><center>');
     				for($x=0;$x<count($datos);$x++){
-    					echo '<img src="'.RUTA_PDF_LOCAL.'/'.$ruta_grafico.$datos[$x].'"><br/>';
+    					echo '<img src="'.PROTOCOLO_CONEXION.RUTA_PDF_LOCAL.'/'.$ruta_grafico.$datos[$x].'" width="550" /><br/>';
+    					//echo(PROTOCOLO_CONEXION.RUTA_PDF_LOCAL.'/'.$ruta_grafico.$datos[$x].'<br>');
     				}
-    				echo('</td></tr>');
+    				echo('</center></td></tr>');
     			}			
-    			*/
+    			
 			}
-			} //fin if session cerok
+
 			
 			
 		} //fin if datos de indicador
