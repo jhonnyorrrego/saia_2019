@@ -32,7 +32,7 @@ $sKey  = @$_REQUEST["key"];
     	} 
 	// print_r($_REQUEST);die(); 
 	} 
-	if ($sKey == "" || is_null($sKey)) {
+	if (@$sKey == ""  && $_REQUEST["doc"]) {
 	    echo("AQUI1");
 	    $sKey​= @$_REQUEST["doc"]; 
 	}
