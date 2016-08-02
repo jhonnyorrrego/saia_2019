@@ -19,9 +19,6 @@ include_once("header_formato.php");
 
 $sKey  = @$_GET["key"]; 
 
-print_r($_REQUEST);
-print_r($_GET);
-die();
     if (array_key_exists("form_info", $_POST) && $_REQUEST["form_info"]!='') { 
         include_once ($ruta_db_superior . "pantallas/lib/librerias_cripto.php"); 
         $data = json_decode($_POST["form_info"], true); 
