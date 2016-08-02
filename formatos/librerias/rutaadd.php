@@ -47,7 +47,7 @@ $sKey  = @$_REQUEST["key"];
 	if (( $sKey == "") || (is_null( $sKey)) || !( is_numeric($sKey ))) { 
 		ob_end_clean(); 
 		print_r($_REQUEST);
-		die("NO SE ENCUENTRA EL DOCUMENTO"); 
+		die("NO SE ENCUENTRA EL DOCUMENTO ".$sKey); 
 	} 
 
 ?>
