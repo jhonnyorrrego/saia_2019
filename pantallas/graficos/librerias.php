@@ -174,7 +174,7 @@ function generar_grafico_torta($configuracion_grafico){
             */
 
         if($color_grafico==''){
-            $color_saia=busca_filtro_tabla("","configuracion","nombre='color_encabezado_list'","",$conn);  
+            $color_saia=busca_filtro_tabla("","configuracion","nombre='color_encabezado'","",$conn);  
             $color_grafico=$color_saia[0]['valor'];
         }
         
@@ -265,7 +265,7 @@ function generar_grafico_linea($configuracion_grafico){
 
 		$configuracion_grafico['color']='';
         if($configuracion_grafico['color_saia']){
-            $color_saia=busca_filtro_tabla("","configuracion","nombre='color_encabezado_list'","",$conn); 
+            $color_saia=busca_filtro_tabla("","configuracion","nombre='color_encabezado'","",$conn); 
 			if($color_saia['numcampos']){
 				$configuracion_grafico['color']='color: ["'.$color_saia[0]['valor'].'"],';
 			}  
