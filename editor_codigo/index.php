@@ -37,6 +37,7 @@ if($logo["numcampos"] && is_file($logo[0]["valor"])){
 <?php
 include_once($ruta_db_superior."css/index_estilos.php");
 echo index_estilos('temas_main');
+echo index_estilos('temas_index');
 ?>
 
 </head>

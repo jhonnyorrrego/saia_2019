@@ -10,6 +10,7 @@ while($max_salida>0){
 }
 ?>
 <meta http-equiv="X-UA-Compatible" content="IE=9">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <?php 
 include_once("db.php");
 include_once("librerias_saia.php");
@@ -59,7 +60,6 @@ if ( $detect->isMobile() ) {
 date_default_timezone_set ("America/Bogota");
 if(isset($_REQUEST['sesion']))
   $_SESSION["LOGIN".LLAVE_SAIA]=$_REQUEST['sesion']; 
-echo(estilo_bootstrap());
 if(@$_SESSION["LOGIN".LLAVE_SAIA]){
     $fondo=busca_filtro_tabla("A.valor","configuracion A","A.tipo='empresa' AND A.nombre='fondo'","A.fecha,A.valor DESC",$conn);
     almacenar_sesion(1,"");
@@ -97,8 +97,8 @@ if($_SESSION["tipo_dispositivo"]=="movil"){
 </style>
 <?php 
 include_once("css/index_estilos.php");
+echo(estilo_bootstrap());
 if(@$_SESSION["tipo_dispositivo"]=="movil"){ 
-    echo(estilo_bootstrap());
     echo(index_estilos('temas_movil'));
     echo(index_estilos('temas_bootstrap'));
 }
@@ -120,17 +120,21 @@ $mayor_informacion=busca_filtro_tabla("valor","configuracion","nombre='mayor_inf
       <!--<td><a href="">Términos de uso y servicio - SAIA</a><sup>®</sup></td>-->
       <td>Para mayor información: <?php echo($mayor_informacion[0]["valor"]); ?></td>
       <td>
-        <?php
-        if($_SESSION["tipo_dispositivo"]=="movil"){
-            echo("</tr><tr>");
-        }
-        ?>      
       </td>
-      <td align="right">Todos los derechos reservados CERO K&nbsp;&nbsp;&nbsp;</td>
+      <?php
+        if(@$_SESSION["tipo_dispositivo"]!="movil"){
+            echo('<td align="right">Todos los derechos reservados CERO K&nbsp;&nbsp;&nbsp;</td>');
+        }
+        ?>
     </tr>
   </table>
 </div>
-<table width="100%" border="0"  cellpadding="0" cellspacing="0" id="tabla_principal"  align="bottom" >
+<table width="100%" border="0"  cellpadding="0" cellspacing="0" id="tabla_principal"  align="middle" >
+    <?php
+        if(@$_SESSION["tipo_dispositivo"]=="movil"){
+          echo('<tr><td valign="bottom" align="center"><img src="'.$ruta_db_superior.'asset/img/layout/logosaia.png"><br></td></tr>');
+        }
+    ?>
   <tr align="center">
     <td colspan="3" align="center" valign="middle" id="LoginBkg"> 
       <div id="loginForm">

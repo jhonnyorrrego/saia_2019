@@ -12,6 +12,11 @@ include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."librerias_saia.php");
 //include_once($ruta_db_superior."pantallas/documento/librerias_flujo.php");
 echo(estilo_bootstrap());
+if($_SESSION["tipo_dispositivo"]=="movil"){
+    if(!@$_REQUEST["iddoc"]) $_REQUEST["iddoc"]=@$_REQUEST["key"];
+    include_once($ruta_db_superior."pantallas/documento/menu_principal_documento.php");
+    menu_principal_documento($_REQUEST["iddoc"]);
+}
 $adicionales_enlace="";
 $busquedas=busca_filtro_tabla("", "busqueda_componente", "nombre LIKE 'notas_documento' OR nombre LIKE 'anexos' OR nombre LIKE 'paginas_documento' OR nombre LIKE 'buzon_salida' OR nombre LIKE 'documentos_relacionados' OR nombre LIKE 'documentos_respuesta' OR nombre LIKE 'tareas_documento' OR nombre LIKE 'versiones_documento'", "", $conn);
 $modulos=busca_filtro_tabla("nombre,etiqueta","modulo","nombre LIKE 'ordenar_pag' OR nombre LIKE 'ver_notas' OR nombre LIKE 'adjuntos_documento' OR nombre LIKE 'documentos_relacionados' OR nombre LIKE 'arbol_documento' OR nombre LIKE 'tareas_documento' OR nombre LIKE 'ver_versiones'","",$conn);
@@ -416,7 +421,7 @@ function click_funcion(div){
     //iniciar_tooltip();
   } 
   $(".eliminar_pagina").removeClass('abrir_highslide');
-	$(".eliminar_adjunto_menu").removeClass('abrir_highslide');
+  $(".eliminar_adjunto_menu").removeClass('abrir_highslide');
   $(".eliminar_adjunto_menu").attr('id',"adjuntos_documento");
   $(".adicionar_anexos").attr('id',"adjuntos_documento");
   var browserType;
@@ -424,7 +429,8 @@ function click_funcion(div){
   if (document.all) {browserType = "ie";}
   if (window.navigator.userAgent.toLowerCase().match("gecko")) {
      browserType= "gecko";
-  }                                                                    
+  }                 
+  no_seleccionar=<?php echo((@$_REQUEST["no_seleccionar"]?"1":"0")); ?>;
   tree2=new dhtmlXTreeObject("tree_box","100%","<?php echo($alto_inicial);?>",0);      
   tree2.enableAutoTooltips(1);
   tree2.enableTreeImages("false");
@@ -475,7 +481,16 @@ function click_funcion(div){
     tree2.openItem(nodeId);
     tree2.openItem(tree2.getParentId(nodeId));
     conexion="<?php echo($ruta_db_superior); ?>formatos/arboles/parsear_accion_arbol.php?id="+nodeId+"&accion="+accion+"&llave="+llave;
-    window.parent.open(conexion,"detalles");
+    redireccion_detalles(conexion);
+    }
+    function redireccion_detalles(conexion){
+        console.log(no_seleccionar);
+        if(!no_seleccionar){
+            window.parent.open(conexion,"detalles");    
+        }
+        else{
+            no_seleccionar=0;
+        }
     }
     function fin_cargando(){
         if (browserType == "gecko" )

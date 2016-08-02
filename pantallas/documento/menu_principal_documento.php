@@ -46,7 +46,7 @@ if(@$_REQUEST["tipo"]!==5 && !@$_REQUEST["output"] && !@$_REQUEST["imprimir"]){
       $mostrar_menu_acciones_rapidas=1;
       $clase_menu=' menu_movil ';
     }
-		$datos_admin=botones_administrativos_menu($iddoc);
+	$datos_admin=botones_administrativos_menu($iddoc);
     echo(librerias_acciones_kaiten());
         ?>
     <style>

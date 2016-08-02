@@ -29,7 +29,7 @@ if(isset($_REQUEST["modo"]))
  $modo=$_REQUEST["modo"];
 else 
  $modo="usuario";
- 
+
 
 // Load Key Parameters
 $sKey = @$_REQUEST["key"];

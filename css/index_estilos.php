@@ -78,7 +78,7 @@ function index_estilos($tipo_tema) {
 		}
 
 		switch($tipo_tema) {
-		   case "tema_main":
+		   case "temas_main":
 			$tema_index .= '<style type="text/css">
 				body, * { font-family: Verdana, Geneva, sans-serif; font-size: 10px; color: '.$color_letra.'; }
 				body { overflow-x:hidden; margin-left: 0px; margin-top: 0px;margin-right: 0px; margin-bottom: 0px; 
@@ -101,7 +101,7 @@ function index_estilos($tipo_tema) {
 				.icon-collapser { background-color: transparent; background-image: url('.$ruta_db_superior.'asset/img/layout/'.$imagen_minimizar.'); background-repeat: no-repeat; background-position: right top; height: 29px; width: 47px; float: right; cursor:pointer; margin-top:-29px; }
 				.icon-collapser-close { background-color: transparent; background-image: url('.$ruta_db_superior.'asset/img/layout/'.$imagen_minimizar_close.'); background-repeat: no-repeat; background-position: right top; height: 29px; width: 47px; float: right; cursor:pointer; margin-top:-29px; }
 				#menu-modulos .ac-title { font-weight: bold; color: '.$letra_tabs.'; padding: 2px; border: 1px solid #FFF; background: #EDF9FF; background: -moz-linear-gradient(top, '.$fondo_tabs1.' 0%, '.$fondo_tabs2.' 99%); background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, '.$fondo_tabs1.'), color-stop(99%, '.$fondo_tabs2.'));  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr=\''.$fondo_tabs1.'\', endColorstr=\''.$fondo_tabs2.'\', GradientType=0 );}
-				ul#MenuSaiaVin li a { margin: 0px; list-style-type: none; list-style-position: inside; padding: 0px; text-decoration: none; color: '.$letra_tabs.'; }
+				ul#MenuSaiaVin li a { margin: 0px; list-style-type: none; list-style-position: inside; padding: 0px; text-decoration: none; color: '.$color_letra.'; }
 				.boton_saia { font-family: "Trebuchet MS", Arial, Helvetica, sans-serif; font-size: 12px; font-weight: bold; color: #4c4c4c; padding: 5px; width:100px; text-align:center;}
 				.sombra_f5 { -webkit-box-shadow: 0px 0px 10px 0px #E4E4E4; -moz-box-shadow: 0px 0px 10px 0px #E4E4E4; box-shadow: 0px 0px 10px 0px #E4E4E4; color:#4c4c4c; }
 				</style>';
@@ -171,8 +171,8 @@ function index_estilos($tipo_tema) {
     }
     if($tipo_tema=="temas_movil"){
     	$tema_index .= '<style type="text/css">
-		body { overflow-x:hidden; margin-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; background-color: #e7e7e7; font-family: Verdana, Geneva, sans-serif; font-size: 10px; font-weight: normal; }
-		.footer_login { font-weight: bold; background-image: url('.$ruta_db_superior.'imagenes/login/footerbkg.png); background-repeat: repeat-x; background-position: left top; height: 25px; width: 100%; padding-top: 0px; padding-bottom: 0px; text-align: right; color: #FFF; position: fixed; bottom: 0px; }
+		body { overflow-x:hidden; margin-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; background-color: #e7e7e7; font-family: Verdana, Geneva, sans-serif; font-size: 10px; font-weight: normal;}
+		.footer_login { display:none; font-weight: bold; background-image: url('.$ruta_db_superior.'imagenes/login/footerbkg.png); background-repeat: repeat-x; background-position: left top; height: 25px; width: 100%; padding-top: 0px; padding-bottom: 0px; text-align: right; color: #FFF; position: fixed; bottom: 0px; left:0px;}
 		.footer_login_text, .footer_login_text * { color:#FFF; font-size:11px; font-weight:bold; }
 		.blueTexts { font-family: Verdana, Geneva, sans-serif; font-size: 9px; font-weight: bold; color: #036; text-decoration: none; }
 		.boton_ui { -webkit-border-radius: 6px; -moz-border-radius: 6px; border-radius: 6px; background-color: #FFF; font-family: Verdana, Geneva, sans-serif; font-size: 10px; font-weight: bold; padding: 10px; border: 1px solid #CCC; }
@@ -180,6 +180,8 @@ function index_estilos($tipo_tema) {
 		#contenedor_tabla{width: 25%; padding:10px; vertical-align:bottom}
 		#texto_pequenio{font-size:10px;font-weight:bold;}
 		hr {margin: 2px 0;border: 0;border-top: 1px solid rgb(77, 167, 226);border-bottom: 1px solid rgb(84, 167, 233);}
+		.form-horizontal .control-label { width: auto; }
+		.form-horizontal .control{ text-align:left;}
 		</style>';
     }
 return $tema_index;

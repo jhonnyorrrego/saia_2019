@@ -325,12 +325,6 @@ global $raiz_saia;
 	$texto.='<link rel="stylesheet" href="'.$raiz_saia.'css/jquery.Jcrop.css" type="text/css" />';	
 
 
-return($texto);
-}
-function librerias_graficos(){
-    global $raiz_saia; 
-    
-    $texto='<script src="'.$raiz_saia.'js/echarts/echarts.js"></script>';
     return($texto);
 }
 

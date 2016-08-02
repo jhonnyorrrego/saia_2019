@@ -44,12 +44,16 @@ if($dato_prioridad["numcampos"]){
 
 
 $dato_leido=documento_leido($iddoc);
+$clase_info="detalle_documento_saia";
+if($_SESSION["tipo_dispositivo"]=="movil"){
+    $clase_info="kenlace_saia";
+}
 $texto.='<div class="btn-group pull" >
 	<button type="button" class="btn btn-mini kenlace_saia tooltip_saia documento_leido" onClick=" " enlace="pantallas/documento/detalles_documento.php?iddoc='.$iddoc.'&idbusqueda_componente='.$_REQUEST["idbusqueda_componente"].'" titulo="Detalle Doc No.'.$numero.'" conector="iframe" idregistro="'.$iddoc.'"ancho_columna="470" eliminar_hijos_kaiten="1">
     <i class="'.$dato_leido[1].'"></i>
   </button>
 
-  <button type="button" class="btn btn-mini detalle_documento_saia tooltip_saia" enlace="ordenar.php?accion=mostrar&mostrar_formato=1&key='.$iddoc.'" title="No.'.$numero.'" idregistro="'.$iddoc.'"><i class="icon-info-sign"></i></button>
+  <button type="button" class="btn btn-mini '.$clase_info.' tooltip_saia" conector="iframe" onClick=" " enlace="pantallas/documento/detalles_documento.php?iddoc='.$iddoc.'" titulo="No.'.$numero.'" idregistro="'.$iddoc.'"><i class="icon-info-sign"></i></button>
   <button type="button" class="btn btn-mini tooltip_saia adicionar_seleccionados" title="Seleccionar" idregistro="'.$iddoc.'">
     <i class="icon-uncheck"></i>
   </button>

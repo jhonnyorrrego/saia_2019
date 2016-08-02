@@ -2320,15 +2320,15 @@ function volver($back)
 <Post-condiciones><Post-condiciones>
 </Clase>
 */
-class PERMISO{
-var $login;
-var $conn;
-var $acceso_propio;
-var $acceso_grupo;
-var $acceso_total;
-var $idfuncionario;
-var $funcionario_codigo;
-var $perfil;
+class PERMISO {
+	var $login;
+	var $conn;
+	var $acceso_propio;
+	var $acceso_grupo;
+	var $acceso_total;
+	var $idfuncionario;
+	var $funcionario_codigo;
+	var $perfil;
 
 /*
 <Clase>PERMISO
@@ -2341,33 +2341,33 @@ var $perfil;
 <Pre-condiciones>
 <Post-condiciones>
 */
-function PERMISO(){
-global $usuario_actual,$conn;
-if(!isset($_SESSION["LOGIN".LLAVE_SAIA]))
-   salir("La sesi&oacute;n ha expirado, por favor ingrese de nuevo.");
-$this->login=@$_SESSION["LOGIN".LLAVE_SAIA];
-$this->conn=$conn;
-if($this->acceso_root()){
-  $this->idfuncionario=0;
-  $this->funcionario_codigo=0;
-  $this->perfil = 1;
-  return(TRUE);
+	function PERMISO() {
+		global $usuario_actual, $conn;
+		if (!isset($_SESSION["LOGIN" . LLAVE_SAIA]))
+			salir("La sesi&oacute;n ha expirado, por favor ingrese de nuevo.");
+		$this -> login = @$_SESSION["LOGIN" . LLAVE_SAIA];
+		$this -> conn = $conn;
+		if ($this -> acceso_root()) {
+			$this -> idfuncionario = 0;
+			$this -> funcionario_codigo = 0;
+			$this -> perfil = 1;
+			return (TRUE);
 }
 else {
-  $funcionario=busca_filtro_tabla("A.idfuncionario,A.funcionario_codigo,A.perfil","funcionario A","A.login='".$this->login."'","",$this->conn);
-  if($funcionario["numcampos"]){
-    $this->idfuncionario=$funcionario[0]["idfuncionario"];
-    $this->funcionario_codigo=$funcionario[0]["funcionario_codigo"];
-    $this->perfil=$funcionario[0]["perfil"];
-  return(TRUE);
-  } 
-}
-if(!isset($_SESSION["LOGIN".LLAVE_SAIA]))
- salir("No se Puede Encontrar el Funcionario para Permisos");
-else 
- alerta("No se Puede Encontrar el Funcionario para Permisos");
-return(FALSE);
-}
+			$funcionario = busca_filtro_tabla("A.idfuncionario,A.funcionario_codigo,A.perfil", "funcionario A", "A.login='" . $this -> login . "'", "", $this -> conn);
+			if ($funcionario["numcampos"]) {
+				$this -> idfuncionario = $funcionario[0]["idfuncionario"];
+				$this -> funcionario_codigo = $funcionario[0]["funcionario_codigo"];
+				$this -> perfil = $funcionario[0]["perfil"];
+				return (TRUE);
+			}
+		}
+		if (!isset($_SESSION["LOGIN" . LLAVE_SAIA]))
+			salir("No se Puede Encontrar el Funcionario para Permisos");
+		else
+			alerta("No se Puede Encontrar el Funcionario para Permisos");
+		return (FALSE);
+	}
 
 /*
 <Clase>PERMISO
@@ -2380,12 +2380,12 @@ return(FALSE);
 <Pre-condiciones>
 <Post-condiciones>
 */
-function acceso_root(){
-$configuracion=busca_filtro_tabla("A.valor,A.fecha","configuracion A","A.tipo='usuario' AND A.nombre='login_administrador'","",$this->conn);
-if($configuracion["numcampos"] && $this->login==$configuracion[0]["valor"])
-  return(TRUE);
+	function acceso_root() {
+		$configuracion = busca_filtro_tabla("A.valor,A.fecha", "configuracion A", "A.tipo='usuario' AND A.nombre='login_administrador'", "", $this -> conn);
+		if ($configuracion["numcampos"] && $this -> login == $configuracion[0]["valor"])
+			return (TRUE);
 else return(FALSE);  
-}
+	}
 
 /*
 <Clase>PERMISO
@@ -2398,20 +2398,20 @@ else return(FALSE);
 <Pre-condiciones>
 <Post-condiciones>
 */
-function acceso_usuario_documento(){
-global $sql;
-if($this->acceso_root()){
-  $this->acceso_total="l,a,m,e";
-  return(TRUE);  
-  }
-$acceso=busca_filtro_tabla("*","funcionario A,permiso B,modulo C","C.nombre='transferir' AND C.idmodulo=B.modulo_idmodulo AND A.idfuncionario=B.funcionario_idfuncionario AND A.login='".$this->login."'","",$this->conn);
-for($i=0;$i<$acceso["numcampos"];$i++){
-  $this->acceso_propio=$acceso[$i]["caracteristica_propio"];
-  $this->acceso_grupo=$acceso[$i]["caracteristica_grupo"];
-  $this->acceso_total=$acceso[$i]["caracteristica_total"];
-}
-return(TRUE);
-}
+	function acceso_usuario_documento() {
+		global $sql;
+		if ($this -> acceso_root()) {
+			$this -> acceso_total = "l,a,m,e";
+			return (TRUE);
+		}
+		$acceso = busca_filtro_tabla("*", "funcionario A,permiso B,modulo C", "C.nombre='transferir' AND C.idmodulo=B.modulo_idmodulo AND A.idfuncionario=B.funcionario_idfuncionario AND A.login='" . $this -> login . "'", "", $this -> conn);
+		for ($i = 0; $i < $acceso["numcampos"]; $i++) {
+			$this -> acceso_propio = $acceso[$i]["caracteristica_propio"];
+			$this -> acceso_grupo = $acceso[$i]["caracteristica_grupo"];
+			$this -> acceso_total = $acceso[$i]["caracteristica_total"];
+		}
+		return (TRUE);
+	}
 
 /*
 <Clase>PERMISO
@@ -2425,25 +2425,25 @@ return(TRUE);
 <Pre-condiciones>
 <Post-condiciones>
 */
-function permiso_usuario($tabla,$accion){
-  global $sql;
-  $permiso["numcampos"]=0;
-  if($this->acceso_root()&&$accion==1){
-      return(TRUE);
-  }
-  if(isset($tabla) && $tabla<>"" && @$accion<>""&& $this->login<>""){  
-   $permisos=busca_filtro_tabla("*","funcionario,permiso,modulo","funcionario.idfuncionario=permiso.funcionario_idfuncionario AND modulo.idmodulo=permiso.modulo_idmodulo AND funcionario.login='".$this->login."' and funcionario.estado=1 AND accion='".$accion."' AND modulo.nombre='".$tabla."'","",$this->conn);
-    if($permisos["numcampos"]){
-      return(TRUE);
+	function permiso_usuario($tabla, $accion) {
+		global $sql;
+		$permiso["numcampos"] = 0;
+		if ($this -> acceso_root() && $accion == 1) {
+			return (TRUE);
+		}
+		if (isset($tabla) && $tabla <> "" && @$accion <> "" && $this -> login <> "") {
+			$permisos = busca_filtro_tabla("*", "funcionario,permiso,modulo", "funcionario.idfuncionario=permiso.funcionario_idfuncionario AND modulo.idmodulo=permiso.modulo_idmodulo AND funcionario.login='" . $this -> login . "' and funcionario.estado=1 AND accion='" . $accion . "' AND modulo.nombre='" . $tabla . "'", "", $this -> conn);
+			if ($permisos["numcampos"]) {
+				return (TRUE);
     }
     else
-     return(false);
+				return (false);
   }
   else if(isset($tabla) && $tabla<>""){
-    return($this->acceso_modulo_perfil($tabla));
-  }  
-  return(FALSE);
-}
+			return ($this -> acceso_modulo_perfil($tabla));
+		}
+		return (FALSE);
+	}
 
 
 /*
@@ -2457,9 +2457,9 @@ function permiso_usuario($tabla,$accion){
 <Pre-condiciones>
 <Post-condiciones>
 */
-function asignar_usuario($login1){
-$this->login=$login1;
-}
+	function asignar_usuario($login1) {
+		$this -> login = $login1;
+	}
 
 /*
 <Clase>PERMISO
@@ -2472,13 +2472,13 @@ $this->login=$login1;
 <Pre-condiciones>
 <Post-condiciones>
 */
-function verifica($clave){
-  global $sql;
-  $dato=busca_filtro_tabla("*","funcionario A","A.login='".$this->login."' AND A.clave='".$clave."'","",$this->conn);
-  if($dato["numcampos"]>0)
-    return (TRUE);
-  return(FALSE);   
-}
+	function verifica($clave) {
+		global $sql;
+		$dato = busca_filtro_tabla("*", "funcionario A", "A.login='" . $this -> login . "' AND A.clave='" . $clave . "'", "", $this -> conn);
+		if ($dato["numcampos"] > 0)
+			return (TRUE);
+		return (FALSE);
+	}
 /*
 <Clase>PERMISO
 <Nombre>acceso_modulo
@@ -2490,12 +2490,12 @@ function verifica($clave){
 <Pre-condiciones>
 <Post-condiciones>
 */
-function acceso_modulo($nombre){
-$dato=busca_filtro_tabla("modulo.nombre","permiso,modulo","permiso.modulo_idmodulo=modulo.idmodulo AND permiso.funcionario_idfuncionario=".$this->idfuncionario." AND modulo.nombre='".$nombre."'","",$this->conn);
-if($dato["numcampos"])
-  return(TRUE);
-return(FALSE);
-}
+	function acceso_modulo($nombre) {
+		$dato = busca_filtro_tabla("modulo.nombre", "permiso,modulo", "permiso.modulo_idmodulo=modulo.idmodulo AND permiso.funcionario_idfuncionario=" . $this -> idfuncionario . " AND modulo.nombre='" . $nombre . "'", "", $this -> conn);
+		if ($dato["numcampos"])
+			return (TRUE);
+		return (FALSE);
+	}
 
 /*
 <Clase>PERMISO
@@ -2510,20 +2510,21 @@ return(FALSE);
 */
 function acceso_modulo_perfil($nombre)
 {
- $dato=busca_filtro_tabla("modulo.nombre","modulo,permiso_perfil","permiso_perfil.modulo_idmodulo=modulo.idmodulo AND permiso_perfil.perfil_idperfil in(".$this->perfil.") AND modulo.nombre='".$nombre."'","",$this->conn);
- if($this->acceso_root()){
-      return(TRUE);
-  }
+		$dato = busca_filtro_tabla("modulo.nombre", "modulo,permiso_perfil", "permiso_perfil.modulo_idmodulo=modulo.idmodulo AND permiso_perfil.perfil_idperfil in(" . $this -> perfil . ") AND modulo.nombre='" . $nombre . "'", "", $this -> conn);
+		if ($this -> acceso_root()) {
+			return (TRUE);
+		}
 if($dato["numcampos"])
   {$denegado=$this->permiso_usuario($nombre,'0');
-   if($denegado)
-     return(FALSE);
-   else  
-     return(TRUE);
+			if ($denegado)
+				return (FALSE);
+			else
+				return (TRUE);
   }
 else  
-  return($this->acceso_modulo($nombre)); 
-}
+			return ($this -> acceso_modulo($nombre));
+	}
+
 }
 
 /*
