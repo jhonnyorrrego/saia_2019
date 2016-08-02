@@ -2,20 +2,22 @@
 <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <?php
 include_once ("../../db.php");
-validar_sql_injection_funciones_item();
-if (isset($_REQUEST["accion"])) {
-	$_REQUEST["accion"]();
+
+if(isset($_REQUEST["accion"]))
+  {$_REQUEST["accion"]();     
 }
 
-function editar() {
-	global $conn;
+function editar()
+  {global $conn;
 	$lista_campos = listar_campos_tabla();
 	for ($i = 0; $i < count($lista_campos); $i++)
 		$lista_campos[$i] = strtolower($lista_campos[$i]);
 	$update = array();
 	$campos = array();
-	foreach ($_REQUEST as $key => $valor) {
-		if (in_array(strtolower($key), $lista_campos)) {
+   foreach($_REQUEST as $key=>$valor)
+      {
+        if(in_array(strtolower($key),$lista_campos))
+          {
 			$update[] = $key . "='" . htmlentities(utf8_decode($valor)) . "'";
 			$campos[] = $key;
 		}
@@ -29,9 +31,8 @@ function editar() {
 
 	redirecciona("../" . $padre[0]["nombre"] . "/" . $padre[0]["ruta_mostrar"] . "?idformato=" . $padre[0]["idformato"] . "&iddoc=" . $doc_padre[0][0]);
 }
-
-function eliminar_item() {
-	global $conn;
+function eliminar_item()
+  {global $conn;
 	//phpmkr_query("delete from ".$_REQUEST["tabla"]." where id".$_REQUEST["tabla"]."=".$_REQUEST["id"]);
 	//nueva linea
 	phpmkr_query("delete from " . $_REQUEST["tabla"] . " where id" . $_REQUEST["tabla"] . "=" . $_REQUEST["id"]);
@@ -54,16 +55,17 @@ function eliminar_item() {
              window.parent.frames[0].location=direccion;
              </script>";
 }
-
-function guardar_item() {
-	global $conn;
+function guardar_item()
+  {global $conn;
 	$lista_campos = listar_campos_tabla();
 	for ($i = 0; $i < count($lista_campos); $i++)
 		$lista_campos[$i] = strtolower($lista_campos[$i]);
 
 	$formato = busca_filtro_tabla("", "formato", "nombre='" . $_REQUEST["formato"] . "'", "", $conn);
-	foreach ($_REQUEST as $key => $valor) {
-		if (in_array(strtolower($key), $lista_campos) && $key <> "id" . $_REQUEST["tabla"]) {
+   foreach($_REQUEST as $key=>$valor)
+      {
+        if(in_array(strtolower($key),$lista_campos)&&$key<>"id".$_REQUEST["tabla"])
+          {
 			$campos[] = $key;
 			$tipo = busca_filtro_tabla("tipo_dato,etiqueta_html", "campos_formato A", "lower(A.nombre)='" . strtolower($key) . "' and formato_idformato='" . $formato[0]["idformato"] . "'", "", $conn);
 			if (strtolower($tipo[0]["tipo_dato"]) == 'date') {
@@ -71,15 +73,17 @@ function guardar_item() {
 					$valores[] = htmlentities(utf8_decode(fecha_db_almacenar($valor, 'Y-m-d')));
 				else
 					$valores[] = "''";
-			} else if (strtolower($tipo[0]["tipo_dato"]) == 'datetime') {
+           }           
+					 else if(strtolower($tipo[0]["tipo_dato"])=='datetime'){
 				if ($valor != '0000-00-00 00:00')
-					$valores[] = htmlentities(utf8_decode(fecha_db_almacenar($valor, 'Y-m-d H:i:s')));
-				//Y-m-d H:i:s
+           				$valores[]=htmlentities(utf8_decode(fecha_db_almacenar($valor,'Y-m-d H:i:s')));//Y-m-d H:i:s
 				else
 					$valores[] = "''";
-			} else if (strtolower($tipo[0]["etiqueta_html"]) == 'checkbox') {
+           }
+           else if(strtolower($tipo[0]["etiqueta_html"])=='checkbox'){
 				$valores[] = "'" . implode(",", $valor) . "'";
-			} else {
+           }
+           else {
 				$valores[] = "'" . htmlentities(utf8_decode(str_replace("'", "&#39;", $valor))) . "'";
 			}
 		}
@@ -90,7 +94,8 @@ function guardar_item() {
 	phpmkr_query($sql, $conn);
 	$insertado = phpmkr_insert_id();
 	phpmkr_error();
-	if ($insertado > 0) {//alerta("Registro insertado.");
+   if($insertado>0)
+     {//alerta("Registro insertado.");
 		if ($_REQUEST["tabla"] == "ft_informacion_dano") {
 			include_once ("../informacion_dano/funciones.php");
 			redireccionar_papa($insertado);
@@ -121,18 +126,5 @@ function guardar_item() {
 		if ($_REQUEST["opcion_item"] == "adicionar")
 			redirecciona("../" . $formato[0]["nombre"] . "/" . $formato[0]["ruta_adicionar"] . "?idpadre=" . $doc_padre[0][0] . "&idformato=" . $padre[0]["idformato"] . "&padre=" . $_REQUEST["padre"]);
 	}
-}
-
-function validar_sql_injection_funciones_item() {
-	//$request_varios=array("accion");
-	$request_enteros = array("formato");
-
-	foreach ($request_enteros AS $index => $value) {
-		//var_dump($_REQUEST[$value]);
-		if (isset($_REQUEST[$value]) && $_REQUEST[$value] !== '' && !is_numeric($_REQUEST[$value])) {
-			die($value . "-->" . $_REQUEST[$value] . "(" . is_int(trim($_REQUEST[$value])) . ")" . " NO es un valor aceptable para la consulta");
-		}
-	}
-	return;
 }
 ?>

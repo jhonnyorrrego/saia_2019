@@ -145,7 +145,7 @@ $sliders.=']';
 			
 		</div>
 	</div>
-		<div id="bloque-info" style="position: absolute; width: 280px; height: auto; right: auto; top: 50px; padding: 10px; font-size:14px;" class="ui-widget ui-widget-content ui-corner-all">
+		<div id="bloque-info" style="position: absolute; width: 280px; height: auto; right: 60px; top: 50px; padding: 10px; font-size:14px;" class="ui-widget ui-widget-content ui-corner-all">
 		<div>
 </body>
 </html>

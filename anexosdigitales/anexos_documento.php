@@ -29,66 +29,29 @@ if((@$_REQUEST["iddoc"] || @$_REQUEST["key"]) && @$_REQUEST["no_menu"]!=1){
 <style type=\"text/css\">
 </style>
 <?php
-include_once 'funciones_archivo.php';
-include_once 'librerias_saia.php';
-echo estilo_bootstrap();
-
-$sKey  = @$_GET["key"]; 
- 
-if (array_key_exists("form_info", $_POST)) { 
-	include_once ($ruta_db_superior . "pantallas/lib/librerias_cripto.php"); 
-	$data = json_decode($_POST["form_info"], true); 
-	unset($_REQUEST); 
-	unset($_POST); 
-	for($i = 0; $i < count($data); $i ++) { 
-	 
-	 $_REQUEST[decrypt_blowfish($data[$i]["name"], LLAVE_SAIA_CRYPTO)] = 
-	decrypt_blowfish($data[$i]["value"], LLAVE_SAIA_CRYPTO); 
-	 
-	 $_POST[decrypt_blowfish($data[$i]["name"], LLAVE_SAIA_CRYPTO)] = 
-	decrypt_blowfish($data[$i]["value"], LLAVE_SAIA_CRYPTO); 
+include_once("funciones_archivo.php");
+include_once("librerias_saia.php");
+echo(estilo_bootstrap());
+if(!isset($_REQUEST["menu"])||$_REQUEST["menu"]!="0") // Si esta en menu_ordenar omite el header el footer y el menu
+{
+include_once("../header.php");
+menu_ordenar($_REQUEST["key"]);
 	} 
-	// print_r($_REQUEST);die(); 
+echo "<br>";
+if(isset($_REQUEST["key"]))
+ {
+   $iddocumento=$_REQUEST["key"];
+   echo "<div class='row-fluid'><div align='center'>".listar_anexos_documento($iddocumento)."</div>";
+	} 
+else
+{
+  echo "No se recibio la informacion del documento";
 	} 
  
-	if (($sKey == "") || ((is_null($sKey)))) { 
-	$sKey​
-	 = @$_POST["key_d"]; 
-	} 
-	$sDbWhere = ""; 
-	$arRecKey = split(",",$sKey); 
- 
-	// Single delete record 
-	if (( $sKey == "") || (is_null( $sKey)) || !( is_numeric($sKey ))) { 
-		ob_end_clean(); 
-		header("Location: formatolist.php"); 
-		exit(); 
-	} 
+if(isset($_REQUEST["Adicionar"])) // Se procesa el formulario
+  {
 
-
-if(isset($_REQUEST['key'])) {
-		$llave = $_REQUEST['key'];
-		if(!is_numeric($llave)) {
-				die('El parametro "key" debe ser un numero');
-		}
-}
-if (!isset($_REQUEST['menu']) || $_REQUEST['menu'] != '0') {// Si esta en menu_ordenar omite el header el footer y el menu
-		include_once '../header.php';
-    menu_ordenar($_REQUEST['key']);
-}
-echo '<br>';
-if (isset($_REQUEST['key'])) {
-    $iddocumento = $_REQUEST['key'];
-    echo "<div class='row-fluid'><div align='center'>".listar_anexos_documento($iddocumento).'</div>';
-} else {
-    echo 'No se recibio la informacion del documento';
-}
-
-if (isset($_REQUEST['Adicionar'])) {
-    // Se procesa el formulario
-
-
-    $permisos = $_REQUEST['permisos_anexos'];
+    $permisos=$_REQUEST["permisos_anexos"];
     //procesar_anexos($iddocumento,$permisos);
     cargar_archivo($iddocumento,$permisos);
     if(!isset($_REQUEST["menu"])||$_REQUEST["menu"]!="0") // Si esta en menu_ordenar omite el header el footer y el menu
@@ -129,31 +92,9 @@ if($extensiones =='' || $extensiones =='NULL')
 <tr>
 <td class="celda_transparente" align='center'><input type="file" name="anexos[]" class="multi" accept="<?php echo $extensiones;?>"></td>
 </tr>
-
-<tr><td align='center'>
-	<input type="hidden" name="form_info" id="form_info" value=""> 
-	<input type="submit" value="Adicionar" id="continuar" name="Adicionar"> </td></tr>
+<tr><td align='center'><input type="submit" value="Adicionar" name="Adicionar"> </td></tr>
 </table>
 </form>
-
-<script type="text/javascript">
-$("#continuar").click(function(){
-	var salida = false;
-  		$.ajax({
-            type:'POST',
-            async: false,
-            url: "<?php echo $ruta_db_superior;?>formatos/librerias/encript_data.php",
-            data: {datos:JSON.stringify($('#anexos_documento').serializeArray(), null)},
-            success: function(data) {
-            	$("#form_info").empty().val(data);
-            	//console.log($("#form_info").val());
-            	salida = true; 
-         	}
-  		});  
-    return salida;
- });
-</script>
-
 </div>
 </div>
 <?php

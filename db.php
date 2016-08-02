@@ -2330,6 +2330,17 @@ class PERMISO {
 	var $funcionario_codigo;
 	var $perfil;
 
+/*
+<Clase>PERMISO
+<Nombre>PERMISO
+<Parametros>
+<Responsabilidades>Inicializar el objeto permiso actual
+<Notas>
+<Excepciones>No se Puede Encontrar el Funcionario para Permisos. Si no se encuentra el funcionario en la base de datos
+<Salida>
+<Pre-condiciones>
+<Post-condiciones>
+*/
 	function PERMISO() {
 		global $usuario_actual, $conn;
 		if (!isset($_SESSION["LOGIN" . LLAVE_SAIA]))
@@ -2341,7 +2352,8 @@ class PERMISO {
 			$this -> funcionario_codigo = 0;
 			$this -> perfil = 1;
 			return (TRUE);
-		} else {
+}
+else {
 			$funcionario = busca_filtro_tabla("A.idfuncionario,A.funcionario_codigo,A.perfil", "funcionario A", "A.login='" . $this -> login . "'", "", $this -> conn);
 			if ($funcionario["numcampos"]) {
 				$this -> idfuncionario = $funcionario[0]["idfuncionario"];
@@ -2357,14 +2369,35 @@ class PERMISO {
 		return (FALSE);
 	}
 
+/*
+<Clase>PERMISO
+<Nombre>acceso_root
+<Parametros>
+<Responsabilidades>buscar el login del administrador
+<Notas>
+<Excepciones>
+<Salida>
+<Pre-condiciones>
+<Post-condiciones>
+*/
 	function acceso_root() {
 		$configuracion = busca_filtro_tabla("A.valor,A.fecha", "configuracion A", "A.tipo='usuario' AND A.nombre='login_administrador'", "", $this -> conn);
 		if ($configuracion["numcampos"] && $this -> login == $configuracion[0]["valor"])
 			return (TRUE);
-		else
-			return (FALSE);
+else return(FALSE);  
 	}
 
+/*
+<Clase>PERMISO
+<Nombre>acceso_usuario_documento
+<Parametros>
+<Responsabilidades>inicializa el objeto actual con los permisos que tiene dicho usuario para el documento
+<Notas>
+<Excepciones>
+<Salida>
+<Pre-condiciones>
+<Post-condiciones>
+*/
 	function acceso_usuario_documento() {
 		global $sql;
 		if ($this -> acceso_root()) {
@@ -2380,6 +2413,18 @@ class PERMISO {
 		return (TRUE);
 	}
 
+/*
+<Clase>PERMISO
+<Nombre>permiso_usuario
+<Parametros>$tabla: tabla sobre la que se verifica el permiso
+            $accion: accion a realizar sobre la tabla
+<Responsabilidades>Verificar si el usuario actual tiene permiso para realizar $accion sobre $tabla
+<Notas>
+<Excepciones>
+<Salida>
+<Pre-condiciones>
+<Post-condiciones>
+*/
 	function permiso_usuario($tabla, $accion) {
 		global $sql;
 		$permiso["numcampos"] = 0;
@@ -2390,18 +2435,43 @@ class PERMISO {
 			$permisos = busca_filtro_tabla("*", "funcionario,permiso,modulo", "funcionario.idfuncionario=permiso.funcionario_idfuncionario AND modulo.idmodulo=permiso.modulo_idmodulo AND funcionario.login='" . $this -> login . "' and funcionario.estado=1 AND accion='" . $accion . "' AND modulo.nombre='" . $tabla . "'", "", $this -> conn);
 			if ($permisos["numcampos"]) {
 				return (TRUE);
-			} else
+    }
+    else
 				return (false);
-		} else if (isset($tabla) && $tabla <> "") {
+  }
+  else if(isset($tabla) && $tabla<>""){
 			return ($this -> acceso_modulo_perfil($tabla));
 		}
 		return (FALSE);
 	}
 
+
+/*
+<Clase>PERMISO
+<Nombre>asignar_usuario
+<Parametros>$login1: nuevo login
+<Responsabilidades>Asignar un nuevo login al objeto actual
+<Notas>
+<Excepciones>
+<Salida>
+<Pre-condiciones>
+<Post-condiciones>
+*/
 	function asignar_usuario($login1) {
 		$this -> login = $login1;
 	}
 
+/*
+<Clase>PERMISO
+<Nombre>verifica
+<Parametros>$clave: clave a verificar
+<Responsabilidades>Verifica que el login y la clave de acceso existan y concuerden
+<Notas>
+<Excepciones>
+<Salida>
+<Pre-condiciones>
+<Post-condiciones>
+*/
 	function verifica($clave) {
 		global $sql;
 		$dato = busca_filtro_tabla("*", "funcionario A", "A.login='" . $this -> login . "' AND A.clave='" . $clave . "'", "", $this -> conn);
@@ -2409,7 +2479,17 @@ class PERMISO {
 			return (TRUE);
 		return (FALSE);
 	}
-
+/*
+<Clase>PERMISO
+<Nombre>acceso_modulo
+<Parametros>$nombre: nombre del modulo
+<Responsabilidades> Verificar que el permiso para el usuario actual en el modulo $nombre existen
+<Notas>
+<Excepciones>
+<Salida>
+<Pre-condiciones>
+<Post-condiciones>
+*/
 	function acceso_modulo($nombre) {
 		$dato = busca_filtro_tabla("modulo.nombre", "permiso,modulo", "permiso.modulo_idmodulo=modulo.idmodulo AND permiso.funcionario_idfuncionario=" . $this -> idfuncionario . " AND modulo.nombre='" . $nombre . "'", "", $this -> conn);
 		if ($dato["numcampos"])
@@ -2417,20 +2497,33 @@ class PERMISO {
 		return (FALSE);
 	}
 
-	function acceso_modulo_perfil($nombre) {
+/*
+<Clase>PERMISO
+<Nombre>acceso_modulo_perfil
+<Parametros>$nombre: nombre modulo
+<Responsabilidades>Verifica si el usuario actual posee permisos a un modulo con nombre=nombre en permiso_perfil
+<Notas>
+<Excepciones>
+<Salida>
+<Pre-condiciones>
+<Post-condiciones>
+*/
+function acceso_modulo_perfil($nombre)
+{
 		$dato = busca_filtro_tabla("modulo.nombre", "modulo,permiso_perfil", "permiso_perfil.modulo_idmodulo=modulo.idmodulo AND permiso_perfil.perfil_idperfil in(" . $this -> perfil . ") AND modulo.nombre='" . $nombre . "'", "", $this -> conn);
 		if ($this -> acceso_root()) {
 			return (TRUE);
 		}
-		if ($dato["numcampos"]) {$denegado = $this -> permiso_usuario($nombre, '0');
+if($dato["numcampos"])
+  {$denegado=$this->permiso_usuario($nombre,'0');
 			if ($denegado)
 				return (FALSE);
 			else
 				return (TRUE);
-		} else
+  }
+else  
 			return ($this -> acceso_modulo($nombre));
 	}
-
 }
 
 /*

@@ -24,7 +24,6 @@ $x_cod_padre = Null;
 <?php 
 include_once ("db.php");
 include_once ("phpmkrfn.php"); 
-$sKey = @$_GET["key"];
 //include_once ("permisos_tabla.php");
 // Si es para llenar el expediente con documentos
 if(isset($_GET["documentos"]) && isset($_GET["expediente"]))
@@ -42,18 +41,6 @@ if(isset($_GET["documentos"]) && isset($_GET["expediente"]))
  redirecciona("expediente.php?idexpediente=$x_idexpediente");
 }
 
-// TODO: Solo se está encriptando $_POST
-if (array_key_exists("form_info", $_POST)) {
-    include_once ($ruta_db_superior . "pantallas/lib/librerias_cripto.php");
-    $data = json_decode($_POST["form_info"], true);
-    unset($_REQUEST);
-    unset($_POST);
-    for($i = 0; $i < count($data); $i ++) {
-        $_REQUEST[decrypt_blowfish($data[$i]["name"], LLAVE_SAIA_CRYPTO)] = decrypt_blowfish($data[$i]["value"], LLAVE_SAIA_CRYPTO);
-        $_POST[decrypt_blowfish($data[$i]["name"], LLAVE_SAIA_CRYPTO)] = decrypt_blowfish($data[$i]["value"], LLAVE_SAIA_CRYPTO);
-    }
-    // print_r($_REQUEST);die();
-}
 // Get action
 $sAction = @$_POST["a_add"];
 if (($sAction == "") || (($sAction == NULL))) {
@@ -182,9 +169,8 @@ $().ready(function() {
     </span></td>-->
 	</tr>
 </table>
-<input type="hidden" name="form_info" id="form_info" value="">
 <p>
-<input type="submit" name="Action" value="Adicionar" id="continuar">
+<input type="submit" name="Action" value="Adicionar">
 <?php
 if(@$_REQUEST["pantalla"]=="menu_ordenar")
   {echo '<input type="hidden" name="iddoc" value="'.$_REQUEST["iddoc"].'">
@@ -192,31 +178,6 @@ if(@$_REQUEST["pantalla"]=="menu_ordenar")
   }
 ?>
 </form>
-<?php
-
-include_once ($ruta_db_superior . "librerias_saia.php");
-// echo (librerias_jquery("1.7"));
-
-?>
-
-<script type="text/javascript">
-$("#continuar").click(function(){
-	var salida = false;
-  		$.ajax({
-            type:'POST',
-            async: false,
-            url: "<?php echo $ruta_db_superior;?>formatos/librerias/encript_data.php",
-            data: {datos:JSON.stringify($('#expedienteadd').serializeArray(), null)},
-            success: function(data) {
-            	$("#form_info").empty().val(data);
-            	//console.log($("#form_info").val());
-            	salida = true;
-         	}
-  		});  
-    return salida;
-  });
-
-</script>
 <?php include ("footer.php") ?>
 <?php
 

@@ -883,7 +883,7 @@ function crear_formato_mostrar($idformato){
     }
     else{
       $texto.='<frameset cols="250,*" >';
-      $texto.='<frame name="formato_detalles" id="formato_detalles" src="../arboles/arbolformato_documento.php?form_info=<?php echo($_REQUEST['."'"."form_info"."'".']); ? >" marginwidth="0" marginheight="0" scrolling="auto" >';
+      $texto.='<frame name="formato_detalles" id="formato_detalles" src="../arboles/arbolformato_documento.php?idformato='.$idformato.'&iddoc=<?php echo($_REQUEST['."'"."iddoc"."'".']); ? >" marginwidth="0" marginheight="0" scrolling="auto" >';
     }
   $texto.='
   <frame name="detalles" src="" border="0" marginwidth="20px" marginheight="10" scrolling="auto">
