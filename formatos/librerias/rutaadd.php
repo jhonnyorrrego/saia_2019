@@ -34,8 +34,7 @@ $sKey  = @$_GET["key"];
 	} 
  
 	if (($sKey == "") || ((is_null($sKey)))) { 
-	$sKey​
-	 = @$_POST["key_d"]; 
+	$sKey​= @$_POST["key_d"]; 
 	} 
 	$sDbWhere = ""; 
 	$arRecKey = split(",",$sKey); 
