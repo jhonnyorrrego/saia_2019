@@ -8,7 +8,7 @@ define("ewAllowReport", 8, true);
 define("ewAllowSearch",8, true);
 define("ewAllowAdmin", 16, true);
 if(!defined("HOST"))
-  define("HOST", "saia-aguas.ct00qljbq3lp.us-east-1.rds.amazonaws.com");
+  define("HOST", "santa-rosa.ct00qljbq3lp.us-east-1.rds.amazonaws.com");
 if(!defined("USER"))
   define("USER", "saia");
 if(!defined("PASS"))
@@ -25,16 +25,16 @@ if(!defined("PORT"))
 $acceso=explode(".",$_SERVER["REMOTE_ADDR"]);
 //print_r($acceso);
 if($acceso[0]==192 || $acceso[0]==172){
-  $ruta="75.101.166.85";
+  $ruta="52.205.58.68";
 }
 else{
-  $ruta="75.101.166.85";
+  $ruta="52.205.58.68";
 }
 if(!defined("RUTA_PDF")){
   define("RUTA_PDF", $ruta."/saia_release1/saia");
 }
 if(!defined("RUTA_PDF_LOCAL")){
-  define("RUTA_PDF_LOCAL", "75.101.166.85/saia_release1/saia");
+  define("RUTA_PDF_LOCAL", "52.205.58.68/saia_release1/saia");
 }
 if(!defined("PERMISOS_CARPETAS"))
   define("PERMISOS_CARPETAS",0777);
@@ -65,7 +65,7 @@ define("RUTA_ARCHIVOS","../../almacenamiento1/");
 define("RUTA_PDFS","../../almacenamiento1/");
 define("RUTA_IMAGENES","../../almacenamiento1/");
 define("RUTA_QR","../../almacenamiento1/");
-define("RUTA_INFO_QR","http://75.101.166.85/saia_release1/info_doc.php");
+define("RUTA_INFO_QR","http://52.205.58.68/saia_release1/info_doc.php");
 
 define("RUTA_BACKUP","../../almacenamiento1/backup/");
 define("RUTA_BACKUP_ELIMINADOS",RUTA_BACKUP."eliminados/");
