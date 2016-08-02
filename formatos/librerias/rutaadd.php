@@ -18,6 +18,8 @@ include_once("../../class_transferencia.php");
 include_once("header_formato.php");
 
 $sKey  = @$_GET["key"]; 
+print_r($_REQUEST);
+print_r($_GET);
 
     if (array_key_exists("form_info", $_POST) && $_REQUEST["form_info"]!='') { 
         include_once ($ruta_db_superior . "pantallas/lib/librerias_cripto.php"); 
