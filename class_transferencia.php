@@ -18,8 +18,6 @@ include_once($ruta_db_superior."sql.php");
 include_once($ruta_db_superior."asignacion.php");
 include_once($ruta_db_superior."formatos/librerias/funciones_acciones.php");
 include_once($ruta_db_superior."bpmn/librerias_formato.php");
-include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
-
 
 /*<Clase>
 <Nombre>buscar_funcionarios</Nombre>
@@ -1795,22 +1793,11 @@ function transferencias_pendientes($serie)
 <Pre-condiciones>
 <Post-condiciones>
 */   
-function radicar_plantilla(){ 
-   global $conn,$sql,$ruta_db_superior;
-   /*if (array_key_exists("form_info", $_POST)) {
-      include_once ($ruta_db_superior . "pantallas/lib/librerias_cripto.php");
-      $data = json_decode($_POST["form_info"], true);
-      print_r($data);
-      die();
-      unset($_REQUEST);
-      unset($_POST);
-      for($i = 0; $i < count($data); $i ++) {
-          $_REQUEST[decrypt_blowfish($data[$i]["name"], LLAVE_SAIA_CRYPTO)] = decrypt_blowfish($data[$i]["value"], LLAVE_SAIA_CRYPTO);
-          $_POST[decrypt_blowfish($data[$i]["name"], LLAVE_SAIA_CRYPTO)] = decrypt_blowfish($data[$i]["value"], LLAVE_SAIA_CRYPTO);
-      }
-      
-   }*/
-   
+function radicar_plantilla()
+  {
+   global $conn,$sql;
+   global $ruta_db_superior;
+   //print_r($_REQUEST); die("aquiii");
    $valores=array();
    $plantilla="";
    $idformato=0;
@@ -2079,7 +2066,7 @@ if(isset($_POST["iddoc"]) && $_POST["iddoc"] && $ruta_def=="")
       {echo "<script>
              direccion=new String(window.parent.frames[0].location);
              vector=direccion.split('&');
-             window.parent.frames[0].location=vector[0]+'&'+vector[1]+'&seleccionar=".encrypt_blowfish($formato_hijo[0]["idformato"]."-".$formato_doc[0]["nombre_tabla"]."-".$formato_hijo[0]["nombre_tabla"]."-".$_POST["iddoc"],LLAVE_SAIA_CRYPTO)."';
+             window.parent.frames[0].location=vector[0]+'&'+vector[1]+'&seleccionar=".$formato_hijo[0]["idformato"]."-".$formato_doc[0]["nombre_tabla"]."-".$formato_hijo[0]["nombre_tabla"]."-".$_POST["iddoc"]."';
             </script>";
        die();
       }
@@ -2088,7 +2075,7 @@ if(isset($_POST["iddoc"]) && $_POST["iddoc"] && $ruta_def=="")
       if($formato_doc["numcampos"])
          $nom_formato=$formato_doc[0]["nombre"];
 			//Cuando el documento es creado como una respuesta
-			abrir_url("formatos/".$nom_formato."/detalles_mostrar_".$nom_formato.".php?form_info=".encrypt_blowfish("idformato=".$formato_doc[0]["idformato"]."&iddoc=".$_POST["iddoc"],LLAVE_SAIA_CRYPTO),"_self");
+        abrir_url("formatos/$nom_formato/detalles_mostrar_$nom_formato.php?idformato=".$formato_doc[0]["idformato"]."&iddoc=".$_POST["iddoc"],"_self");
           die();
      }
 die();
@@ -2096,7 +2083,7 @@ die();
   else
     {
      if(isset($_REQUEST["firmado"]) && $_REQUEST["firmado"]=="varias")
-       {abrir_url("formatos/librerias/rutaadd.php?form_info=".encrypt_blowfish("doc=".$_POST["iddoc"]."&origen=".usuario_actual("funcionario_codigo"),LLAVE_SAIA_CRYPTO),"centro"); 
+       {abrir_url("formatos/librerias/rutaadd.php?doc=".$_POST["iddoc"]."&origen=".usuario_actual("funcionario_codigo"),"centro");
         die();
        }
      else
@@ -2104,7 +2091,7 @@ die();
        if($formato_doc["numcampos"])
         {$nom_formato=$formato_doc[0]["nombre"];
 			 //Cuando el documento es creado por el modulo formatos
-		abrir_url("formatos/".$nom_formato."/detalles_mostrar_".$nom_formato.".php?form_info=".encrypt_blowfish("idformato=".$formato_doc[0]["idformato"]."&iddoc=".$_POST["iddoc"],LLAVE_SAIA_CRYPTO),"_self");
+        abrir_url("formatos/$nom_formato/detalles_mostrar_$nom_formato.php?idformato=".$formato_doc[0]["idformato"]."&iddoc=".$_POST["iddoc"],"_self");
         die();
         }
        }
@@ -2393,14 +2380,18 @@ function guardar_documento($iddoc,$tipo=0)
      llama_funcion_accion($iddoc,$idformato,"adicionar","ANTERIOR");
 
     $sql="INSERT INTO ".strtolower($_REQUEST["tabla"])."(".implode(",",$campos).") VALUES (".implode(",",$valores).")";
-  		/*if(usuario_actual("login")=="cerok"){  			
-  			print_r($sql);die();
-  		}*/
+	
+	
+	
+  		//if(usuario_actual("login")=="cerok"){
+  			//print_r('<pre>'.$sql.'</pre>');die();
+  		//}
      phpmkr_query($sql,$conn);  
-    //echo ($sql);
    $insertado=phpmkr_insert_id();
-   $sql="insert into permiso_documento(funcionario,documento_iddocumento,permisos) values('".usuario_actual("funcionario_codigo")."','".$iddoc."','e,m,r')";
-   phpmkr_query($sql,$conn);
+  //print_r('insertado:'.$insertado);die();
+   
+   $sql1="insert into permiso_documento(funcionario,documento_iddocumento,permisos) values('".usuario_actual("funcionario_codigo")."','".$iddoc."','e,m,r')";
+   phpmkr_query($sql1,$conn);
 
      if($insertado){
         //guardo los campos tipo clob y blob

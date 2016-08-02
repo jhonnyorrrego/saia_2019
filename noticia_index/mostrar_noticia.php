@@ -19,7 +19,7 @@ echo(estilo_bootstrap());
 echo(librerias_notificaciones());
 
 
-validar_sql_injection_mostrar_noticia();
+
 $noticias=busca_filtro_tabla('','noticia_index','estado=1 and idnoticia_index='.$_REQUEST['idnoticia_index'],'',$conn);
 ?>
 
@@ -69,17 +69,3 @@ $noticias=busca_filtro_tabla('','noticia_index','estado=1 and idnoticia_index='.
 	
 </html>
 
-<?php
-function validar_sql_injection_generar_ciudades(){
-//$request_varios=array("accion");
- $request_enteros=array("idnoticia_index");
- 
-foreach($request_enteros AS $index=>$value){
-  //var_dump($_REQUEST[$value]);
-  if(isset($_REQUEST[$value]) && $_REQUEST[$value]!=='' && !is_numeric($_REQUEST[$value])){
-    die($value."-->".$_REQUEST[$value]."(".is_int(trim($_REQUEST[$value])).")"." NO es un valor aceptable para la consulta");
-  }
-} 
-return;
-}
-?>

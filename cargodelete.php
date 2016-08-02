@@ -62,7 +62,7 @@ switch ($sAction)
 ?>
 <?php include ("header.php") ?>
 <p><span class="internos"><img class="imagen_internos" src="botones/configuracion/cargo.png" border="0">&nbsp;&nbsp;INACTIVAR CARGOS<br><br><a href="cargolist.php">Regresar al listado</a></span></p>
-<form action="cargodelete.php" method="post" id="cargodelete">
+<form action="cargodelete.php" method="post">
 <p>
 <input type="hidden" name="a_delete" value="D">
 <?php $sKey = (get_magic_quotes_gpc()) ? stripslashes($sKey) : $sKey; ?>

@@ -10,7 +10,6 @@ while ($max_salida > 0) {
 }
 include_once ($ruta_db_superior . "db.php");
 include_once ($ruta_db_superior . "sql.php");
-validar_sql_injection_proceso_filtro_busqueda();
 usuario_actual("login");
 
 $filtro = '';
@@ -985,16 +984,5 @@ function parsear_cadena_tildes($cadena) {
 	$reemplazar=array('%','%','%','%','%','%','%','%','%','%','%','%');
 	$texto = str_replace($buscar, $reemplazar, $texto);
 	return $texto;
-}
-function validar_sql_injection_proceso_filtro_busqueda(){
-$request_enteros=array("idbusqueda_componente");
- 
-foreach($request_enteros AS $index=>$value){
-  //var_dump($_REQUEST[$value]);
-  if(isset($_REQUEST[$value]) && $_REQUEST[$value]!=='' && !is_numeric($_REQUEST[$value])){
-    die($value."-->".$_REQUEST[$value]."(".is_int(trim($_REQUEST[$value])).")"." NO es un valor aceptable para la consulta");
-  }
-} 
-return;
 }
 ?>

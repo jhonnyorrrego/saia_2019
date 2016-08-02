@@ -48,7 +48,7 @@ switch ($sAction)
 <?php include ("header.php") ?>
 <p><span class="internos"><img class="imagen_internos" src="botones/configuracion/dependencia.png" border="0">&nbsp;&nbsp;Inactivar Dependencia<br><br>
 </span></p>
-<form action="dependenciadelete.php" method="post" id="dependenciadelete">
+<form action="dependenciadelete.php" method="post">
 <p>
 <input type="hidden" name="a_delete" value="D">
 <?php $sKey = (get_magic_quotes_gpc()) ? stripslashes($sKey) : $sKey; ?>

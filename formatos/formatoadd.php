@@ -56,20 +56,6 @@ include_once($ruta_db_superior . "phpmkrfn.php");
 include_once($ruta_db_superior . "librerias_saia.php");
 include_once($ruta_db_superior . "librerias/funciones.php");
 
-$sKey = @$_GET["key"];
-
-// TODO: Solo se está encriptando $_POST
-if (array_key_exists("form_info", $_POST)) {
-    include_once ($ruta_db_superior . "pantallas/lib/librerias_cripto.php");
-    $data = json_decode($_POST["form_info"], true);
-    unset($_REQUEST);
-    unset($_POST);
-    for($i = 0; $i < count($data); $i ++) {
-        $_REQUEST[decrypt_blowfish($data[$i]["name"], LLAVE_SAIA_CRYPTO)] = decrypt_blowfish($data[$i]["value"], LLAVE_SAIA_CRYPTO);
-        $_POST[decrypt_blowfish($data[$i]["name"], LLAVE_SAIA_CRYPTO)] = decrypt_blowfish($data[$i]["value"], LLAVE_SAIA_CRYPTO);
-    }
-    // print_r($_REQUEST);die();
-}
 // Get action
 $sAction = @$_POST["a_add"];
 if (($sAction == "") || ((is_null($sAction)))) {
@@ -583,38 +569,13 @@ echo $x_exportarChk;
 			</span></td>
 		</tr>
 	</table>
-	<input type="hidden" name="form_info" id="form_info" value="">
 	<p>
-		<input type="submit" name="Action" id="action" value="ADICIONAR" id="continuar">
+		<input type="submit" name="Action" id="action" value="ADICIONAR">
 
 	</p>
 </form>
 
-<?php
 
-include_once ($ruta_db_superior . "librerias_saia.php");
-// echo (librerias_jquery("1.7"));
-
-?>
-
-<script type="text/javascript">
-$("#continuar").click(function(){
-	var salida = false;
-  		$.ajax({
-            type:'POST',
-            async: false,
-            url: "<?php echo $ruta_db_superior;?>formatos/librerias/encript_data.php",
-            data: {datos:JSON.stringify($('#formatoadd').serializeArray(), null)},
-            success: function(data) {
-            	$("#form_info").empty().val(data);
-            	//console.log($("#form_info").val());
-            	salida = true;
-         	}
-  		});  
-    return salida;
-  });
-
-</script>
 
 
 <?php include ("footer.php")?>
