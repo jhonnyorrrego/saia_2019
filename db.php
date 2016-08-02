@@ -2524,7 +2524,6 @@ if($dato["numcampos"])
 else  
 			return ($this -> acceso_modulo($nombre));
 	}
-
 }
 
 /*

@@ -29,17 +29,6 @@ include_once("librerias/funciones.php");
 
 // Load Key Parameters
 $sKey = @$_GET["key"];
-if (array_key_exists("form_info", $_POST)) {
-    include_once ($ruta_db_superior . "pantallas/lib/librerias_cripto.php");
-    $data = json_decode($_POST["form_info"], true);
-    unset($_REQUEST);
-    unset($_POST);
-    for($i = 0; $i < count($data); $i ++) {
-        $_REQUEST[decrypt_blowfish($data[$i]["name"], LLAVE_SAIA_CRYPTO)] = decrypt_blowfish($data[$i]["value"], LLAVE_SAIA_CRYPTO);
-        $_POST[decrypt_blowfish($data[$i]["name"], LLAVE_SAIA_CRYPTO)] = decrypt_blowfish($data[$i]["value"], LLAVE_SAIA_CRYPTO);
-    }
-    // print_r($_REQUEST);die();
-}
 if (($sKey == "") || ((is_null($sKey)))) {
 	$sKey = @$_POST["key_d"];
 }
@@ -194,7 +183,6 @@ $x_exportar = $sTmp;
 }
 ?>
 </table>
-	<input type="hidden" name="form_info" id="form_info" value="">
 <p>
 <p>
 Listado de campos Vinculados con el Formato<br /><br />
@@ -204,35 +192,8 @@ Listado de campos Vinculados con el Formato<br /><br />
 Listado de Funciones de formatos y Fromatos vinculados con el Actual<br /><br />
 <?php listado_funciones_formato(); ?>
 </p>
-<input type="submit" name="Action" value="CONFIRM DELETE" id="continuar">
+<input type="submit" name="Action" value="CONFIRM DELETE">
 </form>
-
-<?php
-
-include_once ($ruta_db_superior . "librerias_saia.php");
-echo (librerias_jquery("1.7"));
-
-?>
-
-<script type="text/javascript">
-$("#continuar").click(function(){
-	var salida = false;
-  		$.ajax({
-            type:'POST',
-            async: false,
-            url: "<?php echo $ruta_db_superior;?>formatos/librerias/encript_data.php",
-            data: {datos:JSON.stringify($('#formatodelete').serializeArray(), null)},
-            success: function(data) {
-            	$("#form_info").empty().val(data);
-            	//console.log($("#form_info").val());
-            	salida = true;
-         	}
-  		});  
-    return salida;
-  });
-
-</script>
-
 <?php include ("footer.php") ?>
 <?php
 //phpmkr_db_close($conn);
