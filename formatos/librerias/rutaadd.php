@@ -18,6 +18,7 @@ include_once("../../class_transferencia.php");
 include_once("header_formato.php");
 
 $sKey  = @$_GET["key"]; 
+
 print_r($_REQUEST);
 print_r($_GET);
 die();
@@ -38,6 +39,9 @@ die();
 	if (($sKey == "") || ((is_null($sKey)))) { 
 	$sKey​= @$_POST["key_d"]; 
 	} 
+	if (($sKey == "") || ((is_null($sKey)))) { 
+	$sKey​= @$_REQUEST["doc"]; 
+	}
 	$sDbWhere = ""; 
 	$arRecKey = split(",",$sKey); 
  
