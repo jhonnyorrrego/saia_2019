@@ -16,6 +16,39 @@ Para los documentos de formato MEMO, CIRCULAR o parecidos guardan los responsabl
 include_once("../../db.php"); 
 include_once("../../class_transferencia.php");
 include_once("header_formato.php");
+
+$sKey  = @$_GET["key"]; 
+ 
+if (array_key_exists("form_info", $_POST) && $_REQUEST["form_info"]!='') { 
+include_once ($ruta_db_superior . "pantallas/lib/librerias_cripto.php"); 
+$data = json_decode($_POST["form_info"], true); 
+unset($_REQUEST); 
+unset($_POST); 
+for($i = 0; $i < count($data); $i ++) { 
+ 
+	 $_REQUEST[decrypt_blowfish($data[$i]["name"], LLAVE_SAIA_CRYPTO)] = 
+	decrypt_blowfish($data[$i]["value"], LLAVE_SAIA_CRYPTO); 
+	 
+	 $_POST[decrypt_blowfish($data[$i]["name"], LLAVE_SAIA_CRYPTO)] = 
+	decrypt_blowfish($data[$i]["value"], LLAVE_SAIA_CRYPTO); 
+	} 
+	// print_r($_REQUEST);die(); 
+	} 
+ 
+	if (($sKey == "") || ((is_null($sKey)))) { 
+	$sKey​
+	 = @$_POST["key_d"]; 
+	} 
+	$sDbWhere = ""; 
+	$arRecKey = split(",",$sKey); 
+ 
+	// Single delete record 
+	if (( $sKey == "") || (is_null( $sKey)) || !( is_numeric($sKey ))) { 
+		ob_end_clean(); 
+		header("Location: formatolist.php"); 
+		exit(); 
+	} 
+
 ?>
 <?php
 $config = busca_filtro_tabla("valor","configuracion","nombre='color_encabezado'","",$conn); 
