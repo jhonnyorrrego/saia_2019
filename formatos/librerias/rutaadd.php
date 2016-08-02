@@ -45,8 +45,8 @@ $sKey  = @$_GET["key"];
 	// Single delete record 
 	if (( $sKey == "") || (is_null( $sKey)) || !( is_numeric($sKey ))) { 
 		ob_end_clean(); 
-		header("Location: formatolist.php"); 
-		exit(); 
+		print_r($_REQUEST);
+		die("NO SE ENCUENTRA EL DOCUMENTO"); 
 	} 
 
 ?>
