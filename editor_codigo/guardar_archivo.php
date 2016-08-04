@@ -29,7 +29,8 @@ $mensaje = "error al guardar el archivo";
 $file_name = $ruta_archivo;
 clearstatcache();
 $fecha=date('Ymd');
-$rama = "master";
+//$lista_ramas = array();
+$rama = "";
 $archivo_log = "editor_codigo/log/log_" . $fecha . ".txt";
 if(@$_REQUEST["saveType"] == 'gyc'){
     if (file_exists($file_name) && file_exists($ruta_original)) {
@@ -51,6 +52,11 @@ if(@$_REQUEST["saveType"] == 'gyc'){
                         $ruta_git = GitRepo::st_repo_git_dir();
                         $git = new Git0K($ruta_git);
                         if ($git) {
+                        	
+                        	//TODO: Para trabajar con ramas.
+                       		$rama = obtenerRama($git);
+                        	
+                        	//$lista_ramas = $git->repoListBranches();
                             
                             $usuario = $_SESSION["LOGIN".LLAVE_SAIA_EDITOR];
                             $correo = $_SESSION["EMAIL".LLAVE_SAIA_EDITOR];
@@ -84,7 +90,10 @@ else if($_REQUEST["saveType"]=="push"){
         $ruta_git = GitRepo::st_repo_git_dir();
         $git = new Git0K($ruta_git);
         if ($git) {
-            $usuario = $_SESSION["LOGIN".LLAVE_SAIA_EDITOR];
+        	//TODO: Para trabajar con ramas.
+            $rama = obtenerRama($git);
+        	
+        	$usuario = $_SESSION["LOGIN".LLAVE_SAIA_EDITOR];
             $correo = $_SESSION["EMAIL".LLAVE_SAIA_EDITOR];
             $git_data = $git->expose();
             $git->setUser($usuario);
@@ -124,7 +133,19 @@ echo json_encode(array(
     'ruta_archivo' => $ruta_archivo,
     'gitErrorInfo' => $error_git,
     'gitInfo' => $estado_git,
-    'listaArchivos' => $lista_archivos
+    'listaArchivos' => $lista_archivos,
+	'ramaActiva' => $rama
 ));
+
+function obtenerRama($git) {
+	if($git == null) {
+		return "master";
+	}
+	$rama = $git->getRepoActiveBranch();
+	if(empty($rama)) {
+		return "master";
+	}
+	return $rama;
+}
 
 ?>

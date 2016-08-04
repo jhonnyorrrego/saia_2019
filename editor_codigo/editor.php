@@ -351,6 +351,7 @@ if(!isset($_SESSION["LOGIN".LLAVE_SAIA_EDITOR]) || !isset($_SESSION["EMAIL".LLAV
                     //}
                     parent.tab_commit_completo(<?php echo($_REQUEST['numero']);?>);
                     $("#icono_modificado").html('<i class="icon-thumbs-up"></i>');
+                    
                     return true;
                 } else {
                     notificacion_saia(datos["ruta_archivo"] + ": " + datos["mensaje"],"error","",5000);
@@ -422,6 +423,7 @@ if(!isset($_SESSION["LOGIN".LLAVE_SAIA_EDITOR]) || !isset($_SESSION["EMAIL".LLAV
                     $("#icono_modificado").html('<i class="icon-thumbs-up"></i>');
                     parent.tab_commit_completo(<?php echo($_REQUEST['numero']);?>);
                     $("#icono_commit").html('<i class="icon-globe"></i>');
+                    
                 }          
             }
         });                            

@@ -1,754 +1,782 @@
 <?php
 require_once 'Git.php';
-
 class Git0K extends Git {
+	const ESTADO_AHEAD = 'ahead';
+	const ESTADO_BEHIND = 'behind';
+	const ESTADO_MERGE = 'merge';
+	const ESTADO_CLEAN = 'clean';
+	protected $repo_path;
+	
+	/**
+	 * Se tienen por lo menos 2 repositorios remotos
+	 * 1.
+	 * Para el nucleo de la app (base)
+	 * 2. Otro para los formatos (formatosXXX, XXX=cod cliente)
+	 */
+	protected $remoto_base;
+	protected $remoto_formatos;
+	
+	/**
+	 * origin debe ser igual al $remoto_base
+	 */
+	protected $remoto_origin;
+	
+	/**
+	 * Guarda el repositorio local pasado en el constructor
+	 */
+	protected $repo;
+	
+	/**
+	 * Mantiene la lista de carpetas (prefix) que posiblemente pertenecen a un subarbol.
+	 * Si existe alguno.
+	 *
+	 * @var array
+	 */
+	protected $subtrees = array();
+	
+	// FIXME: Deben asignarse en el constructor desde la sesion. Privados para no exponerlo en JSON
+	protected $user = "cerok";
+	protected $pass = "cerok_saia421_5";
+	protected $email = "info@cerok.com";
 
-    const ESTADO_AHEAD = 'ahead';
+	function __construct($repo_path) {
+		$this->repo_path = $repo_path;
+		$this->repo = parent::open($repo_path);
+		$this->init();
+	}
 
-    const ESTADO_BEHIND = 'behind';
+	public function init() {
+		if (empty($this->repo)) {
+			echo "repo nulo";
+			return;
+		}
+		$this->determinar_repositorios_remotos();
+		$this->subtrees = $this->repoListSubtrees();
+	}
 
-    const ESTADO_MERGE = 'merge';
+	/**
+	 * Devuelve los atributos para serializar
+	 *
+	 * @return multitype:
+	 */
+	public function expose() {
+		return get_object_vars($this);
+	}
 
-    const ESTADO_CLEAN = 'clean';
+	/**
+	 * Devuelve el repositorio local
+	 *
+	 * @return GitRepo
+	 */
+	protected function getRepo() {
+		return $this->repo;
+	}
 
-    protected $repo_path;
+	public function setUser($user) {
+		if (!empty($user)) {
+			$this->user = $user;
+		}
+	}
 
-    /**
-     * Se tienen por lo menos 2 repositorios remotos
-     * 1.
-     * Para el nucleo de la app (base)
-     * 2. Otro para los formatos (formatosXXX, XXX=cod cliente)
-     */
-    protected $remoto_base;
+	public function setEmail($email) {
+		if (!empty($email)) {
+			$this->email = $email;
+		}
+	}
 
-    protected $remoto_formatos;
+	/**
+	 * Devuelve el estado del repositorio local.
+	 * Devuelve la lista de archivos modificados
+	 *
+	 * @return string
+	 */
+	public function getParsedRepoStatus() {
+		return $this->repo->parsed_status_porcelain();
+	}
 
-    /**
-     * origin debe ser igual al $remoto_base
-     */
-    protected $remoto_origin;
+	/**
+	 * Devuelve el estado del repositorio local.
+	 * Devuelve la lista de archivos modificados
+	 *
+	 * @return string
+	 */
+	public function getRepoStatus() {
+		// return $this->repo->status_porcelain();
+		return $this->repo->status_short();
+	}
 
-    /**
-     * Guarda el repositorio local pasado en el constructor
-     */
-    protected $repo;
+	/**
+	 * Obtiene el nombre de la rama activa
+	 *
+	 * @return string
+	 */
+	public function getRepoActiveBranch() {
+		return $this->repo->active_branch();
+	}
 
-    /**
-     * Mantiene la lista de carpetas (prefix) que posiblemente pertenecen a un subarbol.
-     * Si existe alguno.
-     *
-     * @var array
-     */
-    protected $subtrees = array();
-    
-    // FIXME: Deben asignarse en el constructor desde la sesion. Privados para no exponerlo en JSON
-    protected $user = "cerok";
+	public function repoChangeBranch($rama) {
+		if ($this->repoBranchExists($rama)) {
+			$resp = $this->repo->checkout($rama);
+			return true;
+		}
+		return false;
+	}
 
-    protected $pass = "cerok_saia421_5";
+	public function repoBranchExists($rama) {
+		$lista = $this->repo->list_branches();
+		return in_array($rama, $lista);
+	}
 
-    protected $email = "info@cerok.com";
+	public function repoListBranches() {
+		return $this->repo->list_branches();
+	}
+	
+	/**
+	 * Agrega el/los archivos al indice
+	 *
+	 * @param mixed $ruta_archivo.
+	 *        	files to add
+	 * @return string
+	 */
+	public function repoAdd($ruta_archivo) {
+		return $this->repo->add($ruta_archivo);
+	}
 
-    function __construct($repo_path) {
-        $this->repo_path = $repo_path;
-        $this->repo = parent::open($repo_path);
-        $this->init();
-    }
+	/**
+	 * Hace commit
+	 *
+	 * @access public
+	 * @param
+	 *        	string commit message
+	 * @return string
+	 */
+	public function repoCommit($message) {
+		return $this->repo->commit($message, false);
+	}
 
-    /*
-     * function __construct($repo_path, $user, $email) {
-     * $this->repo_path = $repo_path;
-     * $this->user = $user;
-     * $this->email = $email;
-     * $this->repo = parent::open($repo_path);
-     * $this->init();
-     * }
-     */
-    public function init() {
-        if (empty($this->repo)) {
-            echo "repo nulo";
-            return;
-        }
-        $this->determinar_repositorios_remotos();
-        $this->subtrees = $this->repoListSubtrees();
-    }
+	public function repoCommitSimple($message) {
+		return $this->repo->commit_simple($message);
+	}
 
-    /**
-     * Devuelve los atributos para serializar
-     *
-     * @return multitype:
-     */
-    public function expose() {
-        return get_object_vars($this);
-    }
+	public function repoCommitAuthor($message) {
+		return $this->repo->commit_author($message, $this->user, $this->email);
+	}
 
-    /**
-     * Devuelve el repositorio local
-     *
-     * @return GitRepo
-     */
-    protected function getRepo() {
-        return $this->repo;
-    }
+	public function get_remoto_base() {
+		return $this->remoto_base;
+	}
 
-    public function setUser($user) {
-        if(!empty($user)) {
-            $this->user = $user;
-        }
-    }
+	/**
+	 * Devuelve los datos del repositorio remoto en un objeto Remoto
+	 *
+	 * @return Remoto
+	 */
+	public function get_remoto_origin() {
+		return $this->remoto_origin;
+	}
 
-    public function setEmail($email) {
-        if(!empty($email)) {
-            $this->email = $email;
-        }
-    }
-    
-    /**
-     * Devuelve el estado del repositorio local.
-     * Devuelve la lista de archivos modificados
-     *
-     * @return string
-     */
-    public function getParsedRepoStatus() {
-        return $this->repo->parsed_status_porcelain();
-    }
+	/**
+	 * Devuelve un array con la lista de subtrees
+	 *
+	 * @return multitype:Ambigous <unknown, Remoto> |Ambigous <unknown, Remoto>
+	 */
+	public function get_remoto_formatos() {
+		$remotos = $this->remoto_formatos;
+		if (!is_array($remotos)) {
+			return array(
+					$remotos 
+			);
+		}
+		return $remotos;
+	}
 
-    /**
-     * Devuelve el estado del repositorio local.
-     * Devuelve la lista de archivos modificados
-     *
-     * @return string
-     */
-    public function getRepoStatus() {
-        //return $this->repo->status_porcelain();
-        return $this->repo->status_short();
-    }
+	private function determinar_repositorios_remotos() {
+		$lista = $this->repoListRemotes();
+		$a_fetch = array();
+		$a_push = array();
+		// separar los fetch de los push
+		foreach ($lista as $value) {
+			if ($value) {
+				if (strpos($value, "fetch") !== false) {
+					array_push($a_fetch, $value);
+				} elseif (strpos($value, "push") !== false) {
+					array_push($a_push, $value);
+				}
+			}
+		}
+		
+		// buscar el origin para hacer el push
+		foreach ($a_push as $value) {
+			if ($value) {
+				$arreglo = preg_split("/\s+/", $value);
+				$x = new Remoto();
+				$x->alias = $arreglo[0];
+				$x->url = $arreglo[1];
+				$x->tipo = $arreglo[2];
+				
+				if (strpos($value, "origin") !== false) {
+					$this->remoto_origin = $x;
+				} elseif (strpos($value, "base") !== false) {
+					$this->remoto_base = $x;
+				} elseif (strpos($value, "formatos") !== false) {
+					$this->remoto_formatos = $x;
+				} else {
+					// TODO: Por ahora agregar otros como si fueran formatos
+					$this->remoto_formatos = $x;
+				}
+			}
+		}
+		if (empty($this->remoto_base)) {
+			$this->remoto_base = $this->remoto_origin;
+		}
+	}
 
-    /**
-     * Agrega el/los archivos al indice
-     *
-     * @param mixed $ruta_archivo. files to add
-     * @return string
-     */
-    public function repoAdd($ruta_archivo) {
-        return $this->repo->add($ruta_archivo);
-    }
+	/**
+	 * determina si una ruta (relativa a la raiz del repo) pertenece a un subarbol
+	 *
+	 * @param string $ruta        	
+	 */
+	public function pertenece_subarbol($ruta) {
+		if (count($this->subtrees) > 0) {
+			foreach ($this->subtrees as $ruta_st) {
+				if (strpos($ruta, $ruta_st) === false) {
+					continue;
+				}
+				return true;
+			}
+		}
+		return false;
+	}
 
-    /**
-     * Hace commit
-     *
-     * @access public
-     * @param string commit message
-     * @return string
-     */
-    public function repoCommit($message) {
-        return $this->repo->commit($message, false);
-    }
+	/**
+	 * Pull specific branch from remote
+	 *
+	 * Accepts the name of the remote and local branch
+	 *
+	 * @param string $remote        	
+	 * @param string $branch        	
+	 * @return string
+	 */
+	public function repoPull($remote, $branch, $normal = true) {
+		return $this->repo->pull($remote, $branch, $normal);
+	}
 
-    public function repoCommitSimple($message) {
-        return $this->repo->commit_simple($message);
-    }
+	public function repoSubtreePull($prefix, $remote, $branch, $mensaje = "", $aplastar = false) {
+		return $this->repo->subtree_pull($prefix, $remote, $branch, $mensaje, $aplastar);
+	}
 
-    public function repoCommitAuthor($message) {
-        return $this->repo->commit_author($message, $this->user, $this->email);
-    }
+	/**
+	 * Push specific branch to a remote
+	 *
+	 * Accepts the name of the remote and local branch
+	 *
+	 * @param string $remote        	
+	 * @param string $branch        	
+	 * @return string
+	 */
+	public function repoPush($remote, $branch) {
+		return $this->repo->push($remote, $branch);
+	}
 
-    public function get_remoto_base() {
-        return $this->remoto_base;
-    }
+	public function repoSubtreePush($prefijo, $remote, $branch) {
+		$this->repo->subtree_push($prefijo, $remote, $branch);
+	}
 
-    /**
-     * Devuelve los datos del repositorio remoto en un objeto Remoto
-     * @return Remoto
-     */
-    public function get_remoto_origin() {
-        return $this->remoto_origin;
-    }
+	public function repoPushCredentials($remote, $branch, $url) {
+		return $this->repo->push_with_credentials($remote, $branch, $this->user, $this->pass, $url);
+	}
 
-    /**
-     * Devuelve un array con la lista de subtrees
-     * @return multitype:Ambigous <unknown, Remoto> |Ambigous <unknown, Remoto>
-     */
-    public function get_remoto_formatos() {
-        $remotos = $this->remoto_formatos;
-        if (! is_array($remotos)) {
-            return array(
-                $remotos
-            );
-        }
-        return $remotos;
-    }
+	public function repoListRemotes() {
+		return $this->repo->list_remotes();
+	}
 
-    private function determinar_repositorios_remotos() {
-        $lista = $this->repoListRemotes();
-        $a_fetch = array();
-        $a_push = array();
-        // separar los fetch de los push
-        foreach ($lista as $value) {
-            if ($value) {
-                if (strpos($value, "fetch") !== false) {
-                    array_push($a_fetch, $value);
-                } elseif (strpos($value, "push") !== false) {
-                    array_push($a_push, $value);
-                }
-            }
-        }
-        
-        // buscar el origin para hacer el push
-        foreach ($a_push as $value) {
-            if ($value) {
-                $arreglo = preg_split("/\s+/", $value);
-                $x = new Remoto();
-                $x->alias = $arreglo[0];
-                $x->url = $arreglo[1];
-                $x->tipo = $arreglo[2];
-                
-                if (strpos($value, "origin") !== false) {
-                    $this->remoto_origin = $x;
-                } elseif (strpos($value, "base") !== false) {
-                    $this->remoto_base = $x;
-                } elseif (strpos($value, "formatos") !== false) {
-                    $this->remoto_formatos = $x;
-                } else {
-                    // TODO: Por ahora agregar otros como si fueran formatos
-                    $this->remoto_formatos = $x;
-                }
-            }
-        }
-        if (empty($this->remoto_base)) {
-            $this->remoto_base = $this->remoto_origin;
-        }
-    }
+	public function repoListSubtrees() {
+		return $this->repo->get_subtree_list();
+	}
 
-    /**
-     * determina si una ruta (relativa a la raiz del repo) pertenece a un subarbol
-     *
-     * @param string $ruta
-     */
-    public function pertenece_subarbol($ruta) {
-        if (count($this->subtrees) > 0) {
-            foreach ($this->subtrees as $ruta_st) {
-                if (strpos($ruta, $ruta_st) === false) {
-                    continue;
-                }
-                return true;
-            }
-        }
-        return false;
-    }
+	public function getRepoRootDir() {
+		return $this->repo->get_repo_root_dir();
+	}
 
-    /**
-     * Pull specific branch from remote
-     *
-     * Accepts the name of the remote and local branch
-     *
-     * @param string $remote
-     * @param string $branch
-     * @return string
-     */
-    public function repoPull($remote, $branch, $normal = true) {
-        return $this->repo->pull($remote, $branch, $normal);
-    }
+	/**
+	 * Sincroniza los cambios remotos
+	 */
+	public function repoFetch() {
+		return $this->repo->fetch();
+	}
 
-    public function repoSubtreePull($prefix, $remote, $branch, $mensaje = "", $aplastar = false) {
-        return $this->repo->subtree_pull($prefix, $remote, $branch, $mensaje, $aplastar);
-    }
+	/**
+	 * Sincroniza los cambios remotos en todos los repositorios configurados
+	 */
+	public function repoFetchAll() {
+		/*
+		 * if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+		 * $remotos = $this->search_fetch_remotes();
+		 * $status = NULL;
+		 * if (count($remotos) > 0) {
+		 * foreach ($remotos as $remote) {
+		 * $status = $this->repo->fetch_simple($remote);
+		 * }
+		 * }
+		 * return $status;
+		 * }
+		 */
+		return $this->repo->fetch(true);
+	}
 
-    /**
-     * Push specific branch to a remote
-     *
-     * Accepts the name of the remote and local branch
-     *
-     * @param string $remote
-     * @param string $branch
-     * @return string
-     */
-    public function repoPush($remote, $branch) {
-        return $this->repo->push($remote, $branch);
-    }
+	private function search_fetch_remotes() {
+		$lista = $this->repoListRemotes();
+		$a_fetch = array();
+		$a_push = array();
+		// separar los fetch de los push
+		foreach ($lista as $value) {
+			if ($value) {
+				if (strpos($value, "fetch") !== false) {
+					array_push($a_fetch, $value);
+				} elseif (strpos($value, "push") !== false) {
+					array_push($a_push, $value);
+				}
+			}
+		}
+		$alias_remotos = array();
+		foreach ($a_fetch as $value) {
+			if ($value) {
+				$arreglo = preg_split("/\s+/", $value);
+				$alias = $arreglo[0];
+				$alias_remotos[] = $alias;
+			}
+		}
+		
+		return $alias_remotos;
+	}
 
-    public function repoSubtreePush($prefijo, $remote, $branch) {
-        $this->repo->subtree_push($prefijo, $remote, $branch);
-    }
+	/**
+	 * Sincroniza los cambios remotos
+	 */
+	public function repoSubtreeFetch($repostitory, $branch = "") {
+		return $this->repo->subtree_fetch($repository);
+	}
 
-    public function repoPushCredentials($remote, $branch, $url) {
-        return $this->repo->push_with_credentials($remote, $branch, $this->user, $this->pass, $url);
-    }
+	public function find_subtree_prefix($un_subtree) {
+		// Si es un subtree debe existir una llave de configuracion remote.SubTree.prefix
+		$llave = "remote.$un_subtree.prefix";
+		$prefijo = NULL;
+		try {
+			$prefijo = $this->repo->get_config($llave);
+			if ($prefijo) {
+				$prefijo = trim($prefijo, "\n\r");
+			}
+		} catch (Exception $e) {
+			// No hacer nada
+		}
+		return $prefijo;
+	}
 
-    public function repoListRemotes() {
-        return $this->repo->list_remotes();
-    }
+	/**
+	 * Sobreescribe una archivo local que ha sido seleccionado por el usuario
+	 *
+	 * @param unknown $remote        	
+	 * @param unknown $branch        	
+	 * @param unknown $file        	
+	 */
+	public function repoOverwriteLocalFile($remote, $branch, $file) {
+		return $this->repo->sobreescribir_archivo_local();
+	}
 
-    public function repoListSubtrees() {
-        return $this->repo->get_subtree_list();
-    }
-
-    public function getRepoRootDir() {
-        return $this->repo->get_repo_root_dir();
-    }
-
-    /**
-     * Sincroniza los cambios remotos
-     */
-    public function repoFetch() {
-        return $this->repo->fetch();
-    }
-
-    /**
-     * Sincroniza los cambios remotos en todos los repositorios configurados
-     */
-    public function repoFetchAll() {
-        /*if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-            $remotos = $this->search_fetch_remotes();
-            $status = NULL;
-            if (count($remotos) > 0) {
-                foreach ($remotos as $remote) {
-                    $status = $this->repo->fetch_simple($remote);
-                }
-            }
-            return $status;
-        }*/
-        return $this->repo->fetch(true);
-    }
-
-    private function search_fetch_remotes() {
-        $lista = $this->repoListRemotes();
-        $a_fetch = array();
-        $a_push = array();
-        // separar los fetch de los push
-        foreach ($lista as $value) {
-            if ($value) {
-                if (strpos($value, "fetch") !== false) {
-                    array_push($a_fetch, $value);
-                } elseif (strpos($value, "push") !== false) {
-                    array_push($a_push, $value);
-                }
-            }
-        }
-        $alias_remotos = array();
-        foreach ($a_fetch as $value) {
-            if ($value) {
-                $arreglo = preg_split("/\s+/", $value);
-                $alias = $arreglo[0];
-                $alias_remotos[] = $alias;
-            }
-        }
-        
-        return $alias_remotos;
-    }
-
-    /**
-     * Sincroniza los cambios remotos
-     */
-    public function repoSubtreeFetch($repostitory, $branch = "") {
-        return $this->repo->subtree_fetch($repository);
-    }
-
-    public function find_subtree_prefix($un_subtree) {
-        // Si es un subtree debe existir una llave de configuracion remote.SubTree.prefix
-        $llave = "remote.$un_subtree.prefix";
-        $prefijo = NULL;
-        try {
-            $prefijo = $this->repo->get_config($llave);
-            if ($prefijo) {
-                $prefijo = trim($prefijo, "\n\r");
-            }
-        } catch(Exception $e) {
-            //No hacer nada
-        }
-        return $prefijo;
-    }
-
-    /**
-     * Sobreescribe una archivo local que ha sido seleccionado por el usuario
-     * @param unknown $remote
-     * @param unknown $branch
-     * @param unknown $file
-     */
-    public function repoOverwriteLocalFile($remote, $branch, $file) {
-        return $this->repo->sobreescribir_archivo_local();
-    }
-
-    public function processUnMerge($lista_archivos, $comentario, $rama = "master") {
-        $estado_git = NULL;
-        $error_git = NULL;
-        try {
-            
-            // validar que no existan cambios
-            if (empty($comentario)) {
-                $comentario = "Commit automatico editor saia. Cambios locales " . date("Y-m-d H:i:s");
-            }
-            if ($lista_archivos) {
-                foreach ($lista_archivos as $value) {
+	public function processUnMerge($lista_archivos, $comentario, $rama = "master") {
+		$estado_git = NULL;
+		$error_git = NULL;
+		try {
+			
+			// validar que no existan cambios
+			if (empty($comentario)) {
+				$comentario = "Commit automatico editor saia. Cambios locales " . date("Y-m-d H:i:s");
+			}
+			if ($lista_archivos) {
+				foreach ($lista_archivos as $value) {
 					$estado_git = $this->repoOverwriteLocalFile($this->get_remoto_base()->alias, $rama, $file);
-                }
-                // TODO: Revisar si mijor se llama a processRead o Save
-                $estado = $this->checkStatus();
-                if ($estado !== self::ESTADO_CLEAN) {
-                    $this->resolveLocalChanges($comentario);
-                }
-            }
-            
-        } catch (Exception $e) {
-            $errmsg = $e->getMessage();
-            $error_git = $errmsg;
-        }
-        return array(
-            "Estado" => $estado_git,
-            "Error" => $error_git
-        );
-    }
+				}
+				// TODO: Revisar si mijor se llama a processRead o Save
+				$estado = $this->checkStatus();
+				if ($estado !== self::ESTADO_CLEAN) {
+					$this->resolveLocalChanges($comentario);
+				}
+			}
+		} catch (Exception $e) {
+			$errmsg = $e->getMessage();
+			$error_git = $errmsg;
+		}
+		return array(
+				"Estado" => $estado_git,
+				"Error" => $error_git 
+		);
+	}
 
-    /*
-     * Guarda los cambios locales al archivo $ruta_archivo en el directorio de trabajo
-     */
-    public function processSave($ruta_archivo, $comentario, $rama = "master") {
-        // $estado_git = NULL;
-        $error_git = NULL;
-        $lista_archivos = array();
-        try {
-            // validar que no existan cambios
-            if (empty($comentario)) {
-                $comentario = "Commit automatico editor saia. Cambios archivo " . $ruta_archivo . "::" . date("Y-m-d H:i:s");
-            }
+	/*
+	 * Guarda los cambios locales al archivo $ruta_archivo en el directorio de trabajo
+	 */
+	public function processSave($ruta_archivo, $comentario, $rama = "master") {
+		// $estado_git = NULL;
+		$error_git = NULL;
+		$lista_archivos = array();
+		try {
+			// validar que no existan cambios
+			if (empty($comentario)) {
+				$comentario = "Commit automatico editor saia. Cambios archivo " . $ruta_archivo . "::" . date("Y-m-d H:i:s");
+			}
+			
+			// Cambiar a la raiz del repositorio
+			chdir($this->repo_path);
+			$estado_git = $this->repoAdd($ruta_archivo);
+			$estado_git = $this->repoCommitAuthor($comentario);
+		} catch (Exception $e) {
+			$errmsg = $e->getMessage() . "\n";
+			$errmsg .= $e->getTraceAsString();
+			$error_git = $errmsg;
+			$lista_archivos[] = $ruta_archivo;
+		}
+		return array(
+				"Estado" => $estado_git,
+				"Error" => $error_git,
+				"listaArchivos" => $lista_archivos 
+		);
+	}
 
-            // Cambiar a la raiz del repositorio
-            chdir($this->repo_path);
-            $estado_git = $this->repoAdd($ruta_archivo);
-            $estado_git = $this->repoCommitAuthor($comentario);
-            
-        } catch (Exception $e) {
-            $errmsg = $e->getMessage() ."\n";
-            $errmsg .= $e->getTraceAsString();
-            $error_git = $errmsg;
-            $lista_archivos[] = $ruta_archivo;
-        }
-        return array(
-            "Estado" => $estado_git,
-            "Error" => $error_git,
-            "listaArchivos" => $lista_archivos
-        );
-    }
-    
-    /**
-     * Mientras se define el manejo de los subtree processRead y processSave son iguales.
-     * @param unknown $ruta_archivo
-     * @param unknown $comentario
-     * @param unknown $estado_git
-     */
-    public function processPush($ruta_archivo, $comentario, $rama = "master", $hacer_push=false) {
-        // $estado_git = NULL;
-        $error_git = NULL;
-        $lista_archivos = array();
-        try {
-            // validar que no existan cambios
-            if (empty($comentario)) {
-                $comentario = "Commit automatico editor saia. Cambios locales " . date("Y-m-d H:i:s");
-            }
-            $estado_git = $this->sincronizarRepositorio($comentario, $rama, $hacer_push);
-            $estado = $this->checkStatus();
-            if ($estado === self::ESTADO_AHEAD && $hacer_push) {
+	/**
+	 * Mientras se define el manejo de los subtree processRead y processSave son iguales.
+	 *
+	 * @param unknown $ruta_archivo        	
+	 * @param unknown $comentario        	
+	 * @param unknown $estado_git        	
+	 */
+	public function processPush($ruta_archivo, $comentario, $rama = "master", $hacer_push = false) {
+		// $estado_git = NULL;
+		$error_git = NULL;
+		$lista_archivos = array();
+		try {
+			// validar que no existan cambios
+			if (empty($comentario)) {
+				$comentario = "Commit automatico editor saia. Cambios locales " . date("Y-m-d H:i:s");
+			}
+			$estado_git = $this->sincronizarRepositorio($comentario, $rama, $hacer_push);
+			$estado = $this->checkStatus();
+			if ($estado === self::ESTADO_AHEAD && $hacer_push) {
 				$estado_git = $this->repoPush($this->get_remoto_base()->alias, $rama);
-            }
-        } catch (Exception $e) {
-            $errmsg = $e->getMessage() ."\n";
-            $errmsg .= $e->getTraceAsString();//$e->getMessage();
-            if (strpos($errmsg, "FETCH_HEAD") !== false) {
-                $lista_archivos = $this->get_lista_archivos_merge_manual();
-            }
-            
-            $error_git = $errmsg;
-        }
-        return array(
-            "Estado" => $estado_git,
-            "Error" => $error_git,
-            "listaArchivos" => $lista_archivos
-        );
-    }
+			}
+		} catch (Exception $e) {
+			$errmsg = $e->getMessage() . "\n";
+			$errmsg .= $e->getTraceAsString(); // $e->getMessage();
+			if (strpos($errmsg, "FETCH_HEAD") !== false) {
+				$lista_archivos = $this->get_lista_archivos_merge_manual();
+			}
+			
+			$error_git = $errmsg;
+		}
+		return array(
+				"Estado" => $estado_git,
+				"Error" => $error_git,
+				"listaArchivos" => $lista_archivos 
+		);
+	}
 
-    public function processRead($mensaje = "", $sincronizar=false) {
-        $estado_git = NULL;
-        $error_git = NULL;
-        $lista_archivos = array();
-        try {
-            // validar que no existan cambios
-            if (empty($mensaje)) {
-                $mensaje = "Commit automatico editor saia. Cambios locales " . date("Y-m-d H:i:s");
-            }
-            // FIXME: No hacer sincronizacion al leer. Es muy lento. Solo resolver los cambios locales
-            if($sincronizar){
-             $estado_git = $this->sincronizarRepositorio($mensaje);
-            }
-            $lista_agregados = $this->resolveLocalChanges($mensaje);
-        } catch (Exception $e) {
-            // echo $e;
-            $errmsg = $e->getMessage();
-            if (strpos($errmsg, "FETCH_HEAD") !== false) {
-                $lista_archivos = $this->get_lista_archivos_merge_manual();
-            }
-            $error_git = $errmsg;
-        }
-        return array(
-            "Estado" => $estado_git,
-            "Error" => $error_git,
-            "listaArchivos" => $lista_archivos
-        );
-    }
+	public function processRead($mensaje = "", $rama = "master", $sincronizar = false) {
+		$estado_git = NULL;
+		$error_git = NULL;
+		$lista_archivos = array();
+		try {
+			// validar que no existan cambios
+			if (empty($mensaje)) {
+				$mensaje = "Commit automatico editor saia. Cambios locales " . date("Y-m-d H:i:s");
+			}
+			// FIXME: No hacer sincronizacion al leer. Es muy lento. Solo resolver los cambios locales
+			if ($sincronizar) {
+				$estado_git = $this->sincronizarRepositorio($mensaje, $rama);
+			}
+			$lista_agregados = $this->resolveLocalChanges($mensaje);
+		} catch (Exception $e) {
+			// echo $e;
+			$errmsg = $e->getMessage();
+			if (strpos($errmsg, "FETCH_HEAD") !== false) {
+				$lista_archivos = $this->get_lista_archivos_merge_manual();
+			}
+			$error_git = $errmsg;
+		}
+		return array(
+				"Estado" => $estado_git,
+				"Error" => $error_git,
+				"listaArchivos" => $lista_archivos 
+		);
+	}
 
-    /**
-     * Sincroniza el working tree con el repositorio remoto.
-     * Falla si no se puede hacer merge.
-     * Si se invoca directamente es necesario ponerlo un bloque try...catch. @see Git0K::processSave
-     * @param string $mensaje
-     * @return string. El resultado del ultimo comando git ejecutado
-     * @throws Exception. Una excepcion en caso de no poder ejecutar un comando git i.e. merge
-     */
-    protected function sincronizarRepositorio($mensaje, $rama="master", $hacer_push=false) {
-        // Esto garantiza que los cambios locales no interrumpan la sincro y que se puedan perder cambios.
-        $lista_agregados = $this->resolveLocalChanges($mensaje);
-        $estado_git = $this->repoFetchAll();
-        
-        // TODO: Opciones
-        // 1. hacer un git fetch -all para sincronizar base y subtrees
-        // 2. Si 1 -> no se puede retornar si estado_clean
-        // 3. Si no hay cambios locales que afecten el subtree se debe hacer subtree pull?
-        
-        $cambios_arbol = array();
-        if (count($lista_agregados) > 0) {
-            $files = $this->filesInIndex($lista_agregados);
-            if (count($files) > 0 && count($files["tree"]) > 0) {
-                $cambios_arbol = $files["tree"];
-            }
-        }
-        
-        $estado_git = $this->sincronizarSubtree($mensaje, $cambios_arbol);
-        
-        // Esto falla con error: master -> FETCH_HEAD
-        $estado_git = $this->repoFetch();
-        $estado = $this->checkStatus();
-        
-        if ($estado === self::ESTADO_CLEAN) {
-            return $estado_git;
-        }
-        
-        if ($estado === self::ESTADO_MERGE) {
-            $estado_git = $this->resolveMerge($rama);
-            // return $this->sincronizarRepositorio($estado_git, $rama);
-            // Devuelve una exception si falla. Hay que hacer el merge manual. ver bloque catch
-        } elseif ($estado === self::ESTADO_BEHIND) {
-            $estado_git = $this->repoPull($this->get_remoto_base()->alias, $rama);
-            // return $this->sincronizarRepositorio($estado_git, $rama);
-        } elseif ($estado === self::ESTADO_AHEAD && $hacer_push) {
-            $estado_git = $this->repoPush($this->get_remoto_base()->alias, $rama);
-        }
-        $estado = $this->checkStatus();
-        return $estado_git;
-    }
+	/**
+	 * Sincroniza el working tree con el repositorio remoto.
+	 * Falla si no se puede hacer merge.
+	 * Si se invoca directamente es necesario ponerlo un bloque try...catch. @see Git0K::processSave
+	 *
+	 * @param string $mensaje        	
+	 * @return string. El resultado del ultimo comando git ejecutado
+	 * @throws Exception. Una excepcion en caso de no poder ejecutar un comando git i.e. merge
+	 */
+	protected function sincronizarRepositorio($mensaje, $rama = "master", $hacer_push = false) {
+		// Esto garantiza que los cambios locales no interrumpan la sincro y que se puedan perder cambios.
+		$lista_agregados = $this->resolveLocalChanges($mensaje);
+		$estado_git = $this->repoFetchAll();
+		
+		// TODO: Opciones
+		// 1. hacer un git fetch -all para sincronizar base y subtrees
+		// 2. Si 1 -> no se puede retornar si estado_clean
+		// 3. Si no hay cambios locales que afecten el subtree se debe hacer subtree pull?
+		
+		$cambios_arbol = array();
+		if (count($lista_agregados) > 0) {
+			$files = $this->filesInIndex($lista_agregados);
+			if (count($files) > 0 && count($files["tree"]) > 0) {
+				$cambios_arbol = $files["tree"];
+			}
+		}
+		
+		$estado_git = $this->sincronizarSubtree($mensaje, $cambios_arbol);
+		
+		// Esto falla con error: master -> FETCH_HEAD
+		//20160803: Validar si existe un repositorio remoto
+		$remotos = $this->repo->list_remotes();
+		if(!empty($remotos)) {
+			$estado_git = $this->repoFetch();
+		}
+		$estado = $this->checkStatus();
+		
+		switch ($estado) {
+			case self::ESTADO_CLEAN :
+				return $estado_git;
+				break;
+			case self::ESTADO_MERGE :
+				$estado_git = $this->resolveMerge($rama);
+				// return $this->sincronizarRepositorio($estado_git, $rama);
+				// Devuelve una exception si falla. Hay que hacer el merge manual. ver bloque catch
+				break;
+			case self::ESTADO_BEHIND :
+				$estado_git = $this->repoPull($this->get_remoto_base()->alias, $rama);
+				// return $this->sincronizarRepositorio($estado_git, $rama);
+				break;
+			case self::ESTADO_AHEAD :
+				if ($hacer_push) {
+					$estado_git = $this->repoPush($this->get_remoto_base()->alias, $rama);
+				}
+				break;
+			default :
+				;
+				break;
+		}
+		$estado = $this->checkStatus();
+		return $estado_git;
+	}
 
-    protected function sincronizarSubtree($mensaje, $lista_archivos, $rama = "master") {
-        $estado_git = "";
-        $mensaje = "SUBTREE " . $mensaje;
+	protected function sincronizarSubtree($mensaje, $lista_archivos, $rama = "master") {
+		$estado_git = "";
+		$mensaje = "SUBTREE " . $mensaje;
 		if (count($lista_archivos) > 0) { // Habia cambios locales, pertenecen al subtree
-            foreach ($this->get_remoto_formatos() as $remoto) {
-                // Hacer fetch del remoto del subtree no sirve. Pull o Pull
-                $prefijo = $this->find_subtree_prefix($remoto->alias);
-                // El estado no sirve para saber como estaba el subtree
-                if ($prefijo) {
-                    $estado_git = $this->repoSubtreePull($prefijo, $remoto->alias, $rama, $mensaje, false);
-                    $estado_git = $this->repoSubtreePush($prefijo, $remoto->alias, $rama);
-                }
-            }
-        } else {
-            // TODO: A ciegas pull y push en cada subtree!!!
-            // Por ahora se repite el anterior
-            foreach ($this->get_remoto_formatos() as $remoto) {
-                // Hacer fetch del remoto del subtree no sirve. Pull o Pull
-                $prefijo = $this->find_subtree_prefix($remoto->alias);
-                // El estado no sirve para saber como estaba el subtree
-                if ($prefijo) {
-                    $estado_git = $this->repoSubtreePull($prefijo, $remoto->alias, $rama, $mensaje, false);
-                    $estado_git = $this->repoSubtreePush($prefijo, $remoto->alias, $rama);
-                }
-            }
-        }
-        return $estado_git;
-    }
+			foreach ($this->get_remoto_formatos() as $remoto) {
+				// Hacer fetch del remoto del subtree no sirve. Pull o Pull
+				$prefijo = $this->find_subtree_prefix($remoto->alias);
+				// El estado no sirve para saber como estaba el subtree
+				if ($prefijo) {
+					$estado_git = $this->repoSubtreePull($prefijo, $remoto->alias, $rama, $mensaje, false);
+					$estado_git = $this->repoSubtreePush($prefijo, $remoto->alias, $rama);
+				}
+			}
+		} else {
+			// TODO: A ciegas pull y push en cada subtree!!!
+			// Por ahora se repite el anterior
+			foreach ($this->get_remoto_formatos() as $remoto) {
+				// Hacer fetch del remoto del subtree no sirve. Pull o Pull
+				$prefijo = $this->find_subtree_prefix($remoto->alias);
+				// El estado no sirve para saber como estaba el subtree
+				if ($prefijo) {
+					$estado_git = $this->repoSubtreePull($prefijo, $remoto->alias, $rama, $mensaje, false);
+					$estado_git = $this->repoSubtreePush($prefijo, $remoto->alias, $rama);
+				}
+			}
+		}
+		return $estado_git;
+	}
 
-    private function filesInIndex($lista_archivos) {
-        $resp = array();
-        foreach ($lista_archivos as $archivo) {
-            if ($this->pertenece_subarbol($archivo)) {
-                $resp["tree"][] = $archivo;
-            } else {
-                $resp["main"][] = $archivo;
-            }
-        }
-        return $resp;
-    }
+	private function filesInIndex($lista_archivos) {
+		$resp = array();
+		foreach ($lista_archivos as $archivo) {
+			if ($this->pertenece_subarbol($archivo)) {
+				$resp["tree"][] = $archivo;
+			} else {
+				$resp["main"][] = $archivo;
+			}
+		}
+		return $resp;
+	}
 
-    /**
-     * Valida el estado del repositorio para determinar las acciones de git a realizar
-     * @return string
-     */
-    protected function checkStatus() {
-        $pattern_ahead = "/\[ahead [\d]+\]/";
-        $pattern_behind = "/\[behind [\d]+\]/";
-        $pattern_both = "/\[ahead ([\d]+), behind ([\d]+)\]/";
-        $modificados = $this->getRepoStatus();
-        
-        // mirar si tiene "[ahead n]".
-        $estado = self::ESTADO_CLEAN;
-        if (preg_match($pattern_ahead, $modificados[0]) === 1) {
-            $estado = self::ESTADO_AHEAD;
-        } elseif (preg_match($pattern_behind, $modificados[0]) === 1) {
-            $estado = self::ESTADO_BEHIND;
-        } elseif (preg_match($pattern_both, $modificados[0]) === 1) {
-            $estado = self::ESTADO_MERGE;
-        } else { // Ni adelante ni atras ni merge. OK
-            $estado = self::ESTADO_CLEAN;
-        }
-        return $estado;
-    }
+	/**
+	 * Valida el estado del repositorio para determinar las acciones de git a realizar
+	 *
+	 * @return string
+	 */
+	protected function checkStatus() {
+		$pattern_ahead = "/\[ahead [\d]+\]/";
+		$pattern_behind = "/\[behind [\d]+\]/";
+		$pattern_both = "/\[ahead ([\d]+), behind ([\d]+)\]/";
+		$modificados = $this->getRepoStatus();
+		
+		// mirar si tiene "[ahead n]".
+		$estado = self::ESTADO_CLEAN;
+		if (preg_match($pattern_ahead, $modificados[0]) === 1) {
+			$estado = self::ESTADO_AHEAD;
+		} elseif (preg_match($pattern_behind, $modificados[0]) === 1) {
+			$estado = self::ESTADO_BEHIND;
+		} elseif (preg_match($pattern_both, $modificados[0]) === 1) {
+			$estado = self::ESTADO_MERGE;
+		} else { // Ni adelante ni atras ni merge. OK
+			$estado = self::ESTADO_CLEAN;
+		}
+		return $estado;
+	}
 
-    protected function resolveLocalChanges($mensaje) {
-        $pattern_modificados = "/(^[ACDMRU? ]{2}) ([A-Za-z0-9_\-\.\/]+)/";
-        $lista_agregados = array();
-        $modificados = $this->getRepoStatus();
-        if ($modificados) {
-            
-            if (count($modificados) > 1) {
-                chdir($this->repo_path);
-                for ($i = 1; $i < count($modificados); $i ++) {
-                    $input_line = $modificados[$i];
-                    // nombre del archivo en $output_array[2];
-                    $output_array = array();
-                    if (preg_match($pattern_modificados, $input_line, $output_array) > 0) {
-                        // AM Archivo nuevo. Se hizo add antes y se volvio a modificar
-                        // MM Archivo existente. Se hizo add antes y se volvio a modificar
-                        // "A " y "M " son staged files (add + commit)
-                        // "M " ya se hizo add de un archivo existente modificado
-                        // "A " ya se hizo add de un archivo nuevo
-                        // "??" Nuevo. Hacer add y commit
-                        switch ($output_array[1]) {
-                            case " M":
-                            case "A ":
-                            case "??":
-                            case "AM":
-                            case "MM":
-                                $this->repoAdd($output_array[2]);
-                                $do_commit = true;
-                                $lista_agregados[] = $output_array[2];
-                                break;
-                        }
-                    }
-                }
-                if ($do_commit) {
-                    $estado_git = $this->repoCommitAuthor($mensaje);
-                }
-            }
-        }
-        return $lista_agregados;
-    }
+	protected function resolveLocalChanges($mensaje) {
+		$pattern_modificados = "/(^[ACDMRU? ]{2}) ([A-Za-z0-9_\-\.\/]+)/";
+		$lista_agregados = array();
+		$modificados = $this->getRepoStatus();
+		$do_commit = false;
+		if ($modificados) {
+			
+			if (count($modificados) > 1) {
+				chdir($this->repo_path);
+				for($i = 1; $i < count($modificados); $i++) {
+					$input_line = $modificados[$i];
+					// nombre del archivo en $output_array[2];
+					$output_array = array();
+					if (preg_match($pattern_modificados, $input_line, $output_array) > 0) {
+						// AM Archivo nuevo. Se hizo add antes y se volvio a modificar
+						// MM Archivo existente. Se hizo add antes y se volvio a modificar
+						// "A " y "M " son staged files (add + commit)
+						// "M " ya se hizo add de un archivo existente modificado
+						// "A " ya se hizo add de un archivo nuevo
+						// "??" Nuevo. Hacer add y commit
+						switch ($output_array[1]) {
+							case " M" :
+							case "A " :
+							case "??" :
+							case "AM" :
+							case "MM" :
+								$this->repoAdd($output_array[2]);
+								$do_commit = true;
+								$lista_agregados[] = $output_array[2];
+								break;
+						}
+					}
+				}
+				if ($do_commit) {
+					$estado_git = $this->repoCommitAuthor($mensaje);
+				}
+			}
+		}
+		return $lista_agregados;
+	}
 
-    protected function resolveMerge($rama="master") {
-        // Si tenemos ahead M, behind N. Esto es muuuy peligroso
-        // git pull --rebase
-        // mejor un git pull
-        
-        // FIXME: por defecto origin, pero tener en cuenta si es subtree
-        // FIXME: No esta funcionando asignar credenciales para github
-        // $estado_git = $git->repoPushCredentials($git->get_remoto_base()->alias, $rama, $git->get_remoto_base()->url);
-        $pattern_modificados = "/(^[ACDMRU? ]{2}) ([A-Za-z0-9_\-\.\/]+)/";
-        // falla con una excepcion. Si no todo va bien
-        $estado_git = $this->repoPull($this->get_remoto_base()->alias, $rama, false);
-        /*
-         * Auto-merging README
-         * CONFLICT (content): Merge conflict in README
-         * Automatic merge failed; fix conflicts and then commit the result.
-         */
-        // Normalmente queda ahead N, hacer push
-        return $estado_git;
-        
-        // TODO: Resolver cambios locales
-        // pull hace commit automatico
-        $modificados = $this->getRepoStatus();
-        if (count($modificados) > 1) {
-            chdir($this->repo_path);
-            for ($i = 1; $i < count($modificados); $i ++) {
-                $input_line = $modificados[$i];
-                // The MM means that this file was modified with respect to parent 1 and also modified with respect to parent 2.
-                // The AM status means that the file has been modified on disk since we last added it.
-                // nombre del archivo en $output_array[2];
-                $output_array = array();
-                if (preg_match($pattern_modificados, $input_line, $output_array) > 0) {
-                    /**
-                     * Estos estados solo se presentan cuando falla el merge.
-                     * Hay que proceder manualmente. Si el arreglo se hizo manualmente
-                     * Estos estados prevalecen y hay que hacer add, commit
-                     * DD unmerged, eliminado en ambos
-                     * AU unmerged, agregado por nosotros
-                     * UD unmerged, eliminado por ellos
-                     * UA unmerged, agregado por ellos
-                     * DU unmerged, eliminado por nosotros
-                     * AA unmerged, agregado por ambos
-                     * UU unmerged, modificado por ambos
-                     */
-                    if ($output_array[1] == "UU") { // pull hizo un merge automatico y quedo bien
-                        $this->repoAdd($output_array[2]);
-                        $do_commit = true;
-                    } elseif ($output_array[1] == "AA") {} else {}
-                }
-            }
-        }
-    }
+	protected function resolveMerge($rama = "master") {
+		// Si tenemos ahead M, behind N. Esto es muuuy peligroso
+		// git pull --rebase
+		// mejor un git pull
+		
+		// FIXME: por defecto origin, pero tener en cuenta si es subtree
+		// FIXME: No esta funcionando asignar credenciales para github
+		// $estado_git = $git->repoPushCredentials($git->get_remoto_base()->alias, $rama, $git->get_remoto_base()->url);
+		$pattern_modificados = "/(^[ACDMRU? ]{2}) ([A-Za-z0-9_\-\.\/]+)/";
+		// falla con una excepcion. Si no todo va bien
+		$estado_git = $this->repoPull($this->get_remoto_base()->alias, $rama, false);
+		/*
+		 * Auto-merging README
+		 * CONFLICT (content): Merge conflict in README
+		 * Automatic merge failed; fix conflicts and then commit the result.
+		 */
+		// Normalmente queda ahead N, hacer push
+		return $estado_git;
+		
+		// TODO: Resolver cambios locales
+		// pull hace commit automatico
+		$modificados = $this->getRepoStatus();
+		if (count($modificados) > 1) {
+			chdir($this->repo_path);
+			for($i = 1; $i < count($modificados); $i++) {
+				$input_line = $modificados[$i];
+				// The MM means that this file was modified with respect to parent 1 and also modified with respect to parent 2.
+				// The AM status means that the file has been modified on disk since we last added it.
+				// nombre del archivo en $output_array[2];
+				$output_array = array();
+				if (preg_match($pattern_modificados, $input_line, $output_array) > 0) {
+					/**
+					 * Estos estados solo se presentan cuando falla el merge.
+					 * Hay que proceder manualmente. Si el arreglo se hizo manualmente
+					 * Estos estados prevalecen y hay que hacer add, commit
+					 * DD unmerged, eliminado en ambos
+					 * AU unmerged, agregado por nosotros
+					 * UD unmerged, eliminado por ellos
+					 * UA unmerged, agregado por ellos
+					 * DU unmerged, eliminado por nosotros
+					 * AA unmerged, agregado por ambos
+					 * UU unmerged, modificado por ambos
+					 */
+					if ($output_array[1] == "UU") { // pull hizo un merge automatico y quedo bien
+						$this->repoAdd($output_array[2]);
+						$do_commit = true;
+					} elseif ($output_array[1] == "AA") {
+					} else {
+					}
+				}
+			}
+		}
+	}
 
-    protected function get_lista_archivos_merge_manual() {
-        $pattern_modificados = "/(^[ACDMRU? ]{2}) ([A-Za-z0-9_\-\.\/]+)/";
-        $modificados = $this->getRepoStatus();
-        $problemas = array(
-            "DD",
-            "AU",
-            "UD",
-            "UA",
-            "DU",
-            "AA",
-            "UU"
-        );
-        $lista = array();
-        if ($modificados) {
-            if (count($modificados) > 1) {
-                for ($i = 1; $i < count($modificados); $i ++) {
-                    $input_line = $modificados[$i];
-                    // The MM means that this file was modified with respect to parent 1 and also modified with respect to parent 2.
-                    // The AM status means that the file has been modified on disk since we last added it.
-                    // nombre del archivo en $output_array[2];
-                    $output_array = array();
-                    if (preg_match($pattern_modificados, $input_line, $output_array) > 0) {
-                        /*
-                         * DD unmerged, eliminado en ambos
-                         * AU unmerged, agregado por nosotros
-                         * UD unmerged, eliminado por ellos
-                         * UA unmerged, agregado por ellos
-                         * DU unmerged, eliminado por nosotros
-                         * AA unmerged, agregado por ambos
-                         * UU unmerged, modificado por ambos
-                         */
-                        
-                        if (in_array($output_array[1], $problemas)) {
-                            $lista[] = $output_array[2];
-                        }
-                    }
-                }
-            }
-        }
-        return $lista;
-    }
+	protected function get_lista_archivos_merge_manual() {
+		$pattern_modificados = "/(^[ACDMRU? ]{2}) ([A-Za-z0-9_\-\.\/]+)/";
+		$modificados = $this->getRepoStatus();
+		$problemas = array(
+				"DD",
+				"AU",
+				"UD",
+				"UA",
+				"DU",
+				"AA",
+				"UU" 
+		);
+		$lista = array();
+		if ($modificados) {
+			if (count($modificados) > 1) {
+				for($i = 1; $i < count($modificados); $i++) {
+					$input_line = $modificados[$i];
+					// The MM means that this file was modified with respect to parent 1 and also modified with respect to parent 2.
+					// The AM status means that the file has been modified on disk since we last added it.
+					// nombre del archivo en $output_array[2];
+					$output_array = array();
+					if (preg_match($pattern_modificados, $input_line, $output_array) > 0) {
+						/*
+						 * DD unmerged, eliminado en ambos
+						 * AU unmerged, agregado por nosotros
+						 * UD unmerged, eliminado por ellos
+						 * UA unmerged, agregado por ellos
+						 * DU unmerged, eliminado por nosotros
+						 * AA unmerged, agregado por ambos
+						 * UU unmerged, modificado por ambos
+						 */
+						
+						if (in_array($output_array[1], $problemas)) {
+							$lista[] = $output_array[2];
+						}
+					}
+				}
+			}
+		}
+		return $lista;
+	}
 }
-
 class Remoto {
-
-    public $alias;
-
-    public $url;
-    // fetch o push
-    public $tipo;
+	public $alias;
+	public $url;
+	// fetch o push
+	public $tipo;
 }

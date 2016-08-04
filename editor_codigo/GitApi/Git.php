@@ -980,7 +980,7 @@ function run_command_win($cmd) {
 
 	public function list_remotes() {
 		//puede ser windows \r\n
-		return preg_split("/[\n\r]+/", $this->run("remote -v"));
+		return preg_split("/[\n\r]+/", $this->run("remote -v"), -1, PREG_SPLIT_NO_EMPTY);
 	}
 
 	protected function parse_remote_info($info) {

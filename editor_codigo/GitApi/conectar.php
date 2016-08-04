@@ -48,6 +48,13 @@ var_dump($prefijo);
 
 // $git_info = $git2->expose();
 // echo $git_info . "<br>";
+
+//$rama = $git2->getRepoActiveBranch();
+//var_dump($rama);
+
+echo($git2->repoChangeBranch("editor/rama"));
+
+
 die();
 try {
     $estado = $git2->repoPush("origin", "master");
