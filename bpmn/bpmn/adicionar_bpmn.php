@@ -260,7 +260,7 @@ global $ruta_db_superior;
 		$ultimo=count($extension);
 		$formato=$extension[$ultimo-1];
 		$aleatorio=rand(5,15);
-		$aux="../archivos_bpmn/";
+		$aux=RUTA_ARCHIVOS_BPMN;
 		$archivo=$ruta_db_superior.$aux;
 		crear_destino($archivo);
 		$archivo=$archivo.$aleatorio.".".$formato;

@@ -31,7 +31,7 @@ if(isset($_REQUEST['adicionar2'])){
 			//esta es la ruta donde copiaremos la imagen_modulo
 			//recuerden que deben crear un directorio con este mismo nombre
 			//en el mismo lugar donde se encuentra el archivo subir.php
-			$ruta = $ruta_db_superior."../noticia_imagenes/";
+			$ruta = $ruta_db_superior.RUTA_NOTICIA_IMAGENES;
 			crear_destino($ruta);
 			$ruta.=$_FILES['imagen_modulo']['name'];
 			//comprovamos si este archivo existe para no volverlo a copiar.
@@ -54,7 +54,7 @@ if(isset($_REQUEST['adicionar2'])){
 		if($ejecutar==true){
 			$fecha=date('Y-m-d');
 			$previo=substr($_REQUEST['noticia'], 0,200);
-			$sql="INSERT INTO noticia_index (noticia,previo,imagen,titulo,subtitulo,fecha) values ('".$_REQUEST['noticia']."','".$previo."','../noticia_imagenes/".$_FILES['imagen_modulo']['name']."','".$_REQUEST['titulo']."','".$_REQUEST['subtitulo']."','".$fecha."')";
+			$sql="INSERT INTO noticia_index (noticia,previo,imagen,titulo,subtitulo,fecha) values ('".$_REQUEST['noticia']."','".$previo."','".RUTA_NOTICIA_IMAGENES.$_FILES['imagen_modulo']['name']."','".$_REQUEST['titulo']."','".$_REQUEST['subtitulo']."','".$fecha."')";
 			
 			phpmkr_query($sql);
 			echo "Noticia adicionada satisfactoriamente";  

@@ -169,7 +169,7 @@ elseif($_REQUEST["accion"]=="guardar_adicionar")
 	  $ultimo=count($extension);
 	  $formato=$extension[$ultimo-1];
       $aleatorio=rand(5,15);
-	  $aux="../../banco_imagenes/";
+	  $aux=RUTA_CARRUSEL_IMAGENES;
       $imagen_reducida=$ruta_db_superior.$aux;
       crear_destino($imagen_reducida);
       $imagen_reducida=$imagen_reducida.$aleatorio.".".$formato;
@@ -212,7 +212,7 @@ elseif($_REQUEST["accion"]=="guardar_editar")
 	  $ultimo=count($extension);
 	  $formato=$extension[$ultimo-1];
       $aleatorio=rand(5,15);
-	  $aux="../../banco_imagenes/";
+	  $aux=RUTA_CARRUSEL_IMAGENES;
       $imagen_reducida=$ruta_db_superior.$aux;
       crear_destino($imagen_reducida);
       $imagen_reducida=$imagen_reducida.$aleatorio.".".$formato;
