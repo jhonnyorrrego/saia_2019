@@ -253,7 +253,7 @@ function incluir_librerias_busqueda($elemento,$indice){
       ?>
       <li> 
           <div class="btn-group">
-                <button class="btn btn-mini">
+                <button class="btn btn-mini" disabled>
                         <?php echo($vector_indicadores[ intval($_REQUEST['filtro_indicadores']) ]); ?>
                 </button>          
           </div> 
