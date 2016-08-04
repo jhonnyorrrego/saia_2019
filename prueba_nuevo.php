@@ -14,7 +14,7 @@ include_once($ruta_db_superior."formatos/librerias/funciones_generales.php");
 
 
 	$cadena="'login_wey'";
-	$cadena=stripslashes($cadena);
+	$cadena=str_replace("'","",$cadena);
 	//stripslashes
 	echo $cadena;
 
