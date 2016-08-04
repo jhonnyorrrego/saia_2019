@@ -13,10 +13,11 @@ include_once("librerias_saia.php");
 include_once($ruta_db_superior."formatos/librerias/funciones_generales.php");
 
 
-	$cadena="'login_wey'";
-	$cadena=str_replace("'","",$cadena);
-	//stripslashes
-	echo $cadena;
+$sKeyWrk = phpmkr_insert_id();
+
+    //para que el funcionario_codigo sea el mismo idfuncionario
+	$ufcsql = "update funcionario set funcionario_codigo='$sKeyWrk' where idfuncionario=$sKeyWrk";
+	print_r($ufcsql);
 
 die();
 
