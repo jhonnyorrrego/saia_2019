@@ -411,12 +411,10 @@ function AddData($conn) {
     //para crear la carpeta temporal del usuario
 	$ruta_temporal=busca_filtro_tabla("valor","configuracion","lower(nombre)='ruta_temporal'","",$conn);
 	if($ruta_temporal['numcampos']){
-	    $carpeta_temporal=$ruta_temporal[0]['valor'].'_'.$fieldList["login"];
+	    $carpeta_temporal=$ruta_temporal[0]['valor'].'_'.str_replace("'","",$fieldList["login"]);
 	    crear_destino($carpeta_temporal);
 	}
 		
-	
-	
 	//para guardar la firma
 	$sKeyWrk = phpmkr_insert_id();
 
