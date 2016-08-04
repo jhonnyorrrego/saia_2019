@@ -407,6 +407,18 @@ function AddData($conn) {
 	$strsql .= ",'1') ";
 
 	phpmkr_query($strsql, $conn);
+
+    //para crear la carpeta temporal del usuario
+	$ruta_temporal=busca_filtro_tabla("valor","configuracion","lower(nombre)='ruta_temporal'","",$conn);
+	if($ruta_temporal['numcampos']){
+	    $carpeta_temporal=$ruta_temporal[0]['valor'].'_'.usuario_actual('login');
+	    crear_destino($archivo);
+	    
+	
+	}
+		
+	
+	
 	//para guardar la firma
 	$sKeyWrk = phpmkr_insert_id();
 
