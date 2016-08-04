@@ -4,7 +4,7 @@
 	$('#formulario_formatos').validate();
 	
 });
-</script> </head><body bgcolor="#F5F5F5"><?php llama_funcion_accion(@$_REQUEST["iddoc"],@$_REQUEST["idformato"],"ingresar","ANTERIOR");?><form name="formulario_formatos" id="formulario_formatos" method="post" action="../../class_transferencia.php" enctype="multipart/form-data"><table width="100%" cellspacing="1" cellpadding="4"><tr><td colspan="2" class="encabezado_list">CIERRE DE LA TAREA</td></tr><tr>
+</script> </head><body bgcolor="#F5F5F5"><?php llama_funcion_accion(@$_REQUEST["iddoc"],@$_REQUEST["idformato"],"ingresar","ANTERIOR");?><form name="formulario_formatos" id="formulario_formatos" method="post" action="../../class_transferencia.php" enctype="multipart/form-data"><table width="100%" cellspacing="1" cellpadding="4"><tr><td colspan="2" class="encabezado_list">CIERRE DE LA TAREA</td></tr><tr id="tr_calificacion_tarea" >
                      <td class="encabezado" width="20%" title="">CALIFICACI&Oacute; DE LA TAREA*</td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(241,2717,$_REQUEST['iddoc']);?></td></tr><tr>
                      <td class="encabezado" width="20%" title="">DESCRIPCI&Oacute;N*</td>
                      <td class="celda_transparente"><textarea  tabindex='1'  name="descripcion" id="descripcion" cols="53" rows="3" class="tiny_basico required"><?php echo(mostrar_valor_campo('descripcion',241,$_REQUEST['iddoc'])); ?></textarea></td>
