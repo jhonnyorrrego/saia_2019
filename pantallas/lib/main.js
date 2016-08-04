@@ -14,8 +14,8 @@ $('.adicionar_seleccionados').live('click',function(){
     $('#resultado_pantalla_'+idregistro).removeClass("well");
     $('#resultado_pantalla_'+idregistro).addClass("alert");
     $('#resultado_pantalla_'+idregistro).addClass("alert-info"); 
-    $('.alert-info').css("padding","0px");
-    alert('entra');
+    $('.alert-info').css("padding","1px");
+   // alert('entra');
   }    
 }); 
 $(".eliminar_seleccionado").live('click',function(){
