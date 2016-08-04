@@ -410,7 +410,7 @@ function AddData($conn) {
 
 
 		
-	//para guardar la firma
+	//para guardar la firma y actualizar funcionario_codigo
 	$sKeyWrk = phpmkr_insert_id();
 
     //para que el funcionario_codigo sea el mismo idfuncionario
