@@ -244,6 +244,9 @@ $ok=@$_REQUEST["editar"];
                 <a class="btn btn-mini pull-left" title="Administración del arbol de calidad." href="../proceso/previo_mostrar_proceso.php?editar=1"  onclick=" ">	    
                     <i class="icon-pencil"></i>	<span>Editar</span> 
                 </a>
+                <a class="btn btn-mini pull-left" title="Administración del arbol de calidad." href="<?php echo($ruta_db_superior); ?>documento_trasladar2.php"  onclick=" ">	    
+                    <i class="icon-pencil"></i>	<span>Trasladar Documentos</span> 
+                </a>                
             </td>
         </tr>
       
