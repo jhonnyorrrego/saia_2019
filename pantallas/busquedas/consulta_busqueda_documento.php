@@ -232,7 +232,7 @@ function incluir_librerias_busqueda($elemento,$indice){
 	          </li>
 	          <li>
 	          <a href="#">
-	            <div name="filtro_indicadores" valor="0"><span class="icon-flag"></span>&nbsp; Sin indicador
+	            <div name="filtro_indicadores" valor="0"></span>&nbsp; Todos
 	            </div></a>
 	          </li>
         </ul>
