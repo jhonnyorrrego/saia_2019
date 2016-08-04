@@ -412,9 +412,7 @@ function AddData($conn) {
 	$ruta_temporal=busca_filtro_tabla("valor","configuracion","lower(nombre)='ruta_temporal'","",$conn);
 	if($ruta_temporal['numcampos']){
 	    $carpeta_temporal=$ruta_temporal[0]['valor'].'_'.usuario_actual('login');
-	    crear_destino($archivo);
-	    
-	
+	    crear_destino($carpeta_temporal);
 	}
 		
 	
