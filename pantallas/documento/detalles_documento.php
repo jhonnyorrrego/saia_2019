@@ -63,7 +63,7 @@ echo(origen_documento($documento[0]["iddocumento"],$documento[0]["numero"],$docu
 	<br />
 	<div style="text-align: justify;"><?php echo(utf8_encode(html_entity_decode($documento[0]["descripcion"])));?></div><br />
 	<div class="btn-group pull-center"><?php echo(barra_adicional_documento($iddocumento));?></div><br /--><br />
-<div data-toggle="collapse" data-target="#div_info_doc">
+<div data-toggle="collapse" data-target="#div_info_doc" style="cursor:pointer;">
   <i class="icon-minus-sign"></i>  <b>Informaci&oacute;n del documento</b>
 </div>
 <div id="div_info_doc"  class="collapse in opcion_informacion">

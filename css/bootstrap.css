@@ -2378,11 +2378,11 @@ table .span24 {
 }
 
 .icon-plus-sign {
-  background-position: 0 -96px;
+  background-position: 0 -97px;
 }
 
 .icon-minus-sign {
-  background-position: -24px -96px;
+  background-position: -22px -97px;
 }
 
 .icon-remove-sign {
@@ -2620,10 +2620,10 @@ table .span24 {
 }
 
 .icon-leido{
- background-position: -96px -120px;
+ background-position: -95px -120px;
 }
 .icon-no_leido {
- background-position: 0px 0px;
+ background-position: -2px 1px;
 }
 
 .dropup,

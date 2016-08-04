@@ -230,11 +230,6 @@ function incluir_librerias_busqueda($elemento,$indice){
 	            <div name="filtro_indicadores" valor="5"><span class="icon-flag-verde"></span>&nbsp; Verde
 	            </div></a>
 	          </li>
-	          <li>
-	          <a href="#">
-	            <div name="filtro_indicadores" valor="0"><span class="icon-flag"></span>&nbsp; Sin indicador
-	            </div></a>
-	          </li>
         </ul>
         <script>
         	$(document).ready(function(){
@@ -248,7 +243,17 @@ function incluir_librerias_busqueda($elemento,$indice){
 
       </div>
       </li>
-
+      <?php if(@$_REQUEST['filtro_indicadores']){ 
+        $vector_indicadores=array(0=>'<span class="icon-flag"></span>',1=>'<span class="icon-flag-rojo"></span>',2=>'<span class="icon-flag-morado"></span>',3=>'<span class="icon-flag-naranja"></span>',4=>'<span class="icon-flag-amarillo"></span>',5=>'<span class="icon-flag-verde"></span>');
+      ?>
+      <li> 
+          <div class="btn-group">
+                <button class="btn btn-mini" disabled>
+                        <?php echo($vector_indicadores[ intval($_REQUEST['filtro_indicadores']) ]); ?>
+                </button>          
+          </div> 
+      </li>
+      <?php } ?>
 	<?php
 		}
 	?>

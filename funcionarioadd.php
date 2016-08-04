@@ -407,11 +407,23 @@ function AddData($conn) {
 	$strsql .= ",'1') ";
 
 	phpmkr_query($strsql, $conn);
-	//para guardar la firma
+
+
+		
+	//para guardar la firma y actualizar funcionario_codigo
 	$sKeyWrk = phpmkr_insert_id();
 
+    //para que el funcionario_codigo sea el mismo idfuncionario
 	$ufcsql = "update funcionario set funcionario_codigo='$sKeyWrk' where idfuncionario=$sKeyWrk";
 	phpmkr_query($ufcsql, $conn);
+	
+    //para crear la carpeta temporal del usuario
+	$ruta_temporal=busca_filtro_tabla("valor","configuracion","lower(nombre)='ruta_temporal'","",$conn);
+	if($ruta_temporal['numcampos']){
+	    $carpeta_temporal=$ruta_temporal[0]['valor'].'_'.str_replace("'","",$fieldList["login"]);
+	    crear_destino($carpeta_temporal);
+	}	
+	
 
 	if (is_uploaded_file($_FILES["x_firma"]["tmp_name"])) {
 		$fileHandle = fopen($_FILES["x_firma"]["tmp_name"], "rb");

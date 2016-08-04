@@ -13,6 +13,14 @@ include_once("librerias_saia.php");
 include_once($ruta_db_superior."formatos/librerias/funciones_generales.php");
 
 
+$sKeyWrk = phpmkr_insert_id();
+
+    //para que el funcionario_codigo sea el mismo idfuncionario
+	$ufcsql = "update funcionario set funcionario_codigo='$sKeyWrk' where idfuncionario=$sKeyWrk";
+	print_r($ufcsql);
+
+die();
+
 $formatos=busca_filtro_tabla("idformato,etiqueta","formato","cod_padre IS NULL OR cod_padre='' ","etiqueta ASC",$conn);
 
 for($i=0;$i<$formatos['numcampos'];$i++){
