@@ -230,11 +230,6 @@ function incluir_librerias_busqueda($elemento,$indice){
 	            <div name="filtro_indicadores" valor="5"><span class="icon-flag-verde"></span>&nbsp; Verde
 	            </div></a>
 	          </li>
-	          <li>
-	          <a href="#">
-	            <div name="filtro_indicadores" valor="0"></span>&nbsp; Todos
-	            </div></a>
-	          </li>
         </ul>
         <script>
         	$(document).ready(function(){
