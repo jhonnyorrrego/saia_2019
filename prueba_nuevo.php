@@ -13,8 +13,9 @@ include_once("librerias_saia.php");
 include_once($ruta_db_superior."formatos/librerias/funciones_generales.php");
 
 
-	$ruta_temporal=busca_filtro_tabla("valor","configuracion","lower(nombre)='ruta_temporal'","",$conn);
-	print_r($ruta_temporal);
+	$cadena="'login_wey'";
+	//stripslashes
+	echo $cadena;
 
 die();
 
