@@ -13,7 +13,43 @@ include_once("librerias_saia.php");
 include_once($ruta_db_superior."formatos/librerias/funciones_generales.php");
 
 
-phpinfo();
+$formatos=busca_filtro_tabla("idformato,etiqueta","formato","cod_padre IS NULL OR cod_padre='' ","etiqueta ASC",$conn);
+
+for($i=0;$i<$formatos['numcampos'];$i++){
+	echo('<p><strong>'.($i+1).') '.ucwords(strtolower($formatos[$i]['etiqueta'])).' ('.$formatos[$i]['idformato'].')</strong></p>');
+	$hijos=tiene_hijos($formatos[$i]['idformato']);
+	if($hijos['hijos']){
+		$lista_hijos=lista_hijos($hijos['cuales']);
+	}
+	//print_r($hijos);
+	
+	
+}
+function tiene_hijos($idformato){
+	global $conn;
+
+	$hijos=busca_filtro_tabla("idformato","formato","cod_padre=".$idformato,"",$conn);
+	
+	$retorno=array();
+	$retorno['hijos']=0;
+	if($hijos['numcampos']){
+		$retorno['hijos']=1;
+		$retorno['cuales']=implode(',',extrae_campo($hijos,'idformato'));
+	}
+	return($retorno);
+}
+function lista_hijos($cuales){
+	global $conn;
+	
+	$hijos=busca_filtro_tabla("etiqueta,idformato","formato","idformato IN(".$cuales.")","etiqueta ASC",$conn);
+	if($hijos['numcampos']){
+		for($i=0;$i<$hijos['numcampos'];$i++){
+			echo('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - '.ucwords(strtolower($hijos[$i]['etiqueta'])).' ('.$hijos[$i]['idformato'].')<br/>');
+		}
+	}
+}
+
+
 
 
 

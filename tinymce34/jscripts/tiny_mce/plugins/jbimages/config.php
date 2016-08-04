@@ -38,9 +38,9 @@ include_once($ruta_db_superior."db.php");
 | 
 -------------------------------------------------------------------*/
 
-	
-	$config['img_path'] = '/images/'.$_SESSION["LOGIN".LLAVE_SAIA];
-
+	 
+	//$config['img_path'] = '/images/'.$_SESSION["LOGIN".LLAVE_SAIA];
+	  $config['img_path'] = RUTA_TINY_IMAGENES.$_SESSION["LOGIN".LLAVE_SAIA];
 
 /*-------------------------------------------------------------------
 | 
@@ -136,9 +136,10 @@ include_once($ruta_db_superior."db.php");
 | Target upload folder relative to document root. Most likely, you will not need to change this setting.
 | 
 -------------------------------------------------------------------*/
-
+ 
 	                              
-	$config['upload_path'] = $ruta_db_superior."..".$config['img_path'];
+	//$config['upload_path'] = $ruta_db_superior."..".$config['img_path'];
+	$config['upload_path'] = $ruta_db_superior.$config['img_path'];
 	if(!is_dir($config['upload_path']))
 		crear_destino($config['upload_path']);
 
