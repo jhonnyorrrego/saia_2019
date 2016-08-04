@@ -418,6 +418,7 @@ function AddData($conn) {
 	//para guardar la firma
 	$sKeyWrk = phpmkr_insert_id();
 
+    //para que el funcionario_codigo sea el mismo idfuncionario
 	$ufcsql = "update funcionario set funcionario_codigo='$sKeyWrk' where idfuncionario=$sKeyWrk";
 	phpmkr_query($ufcsql, $conn);
 
