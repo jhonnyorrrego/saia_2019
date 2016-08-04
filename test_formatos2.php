@@ -52,7 +52,7 @@ if($papas["numcampos"])
 { 
   for($i=0; $i<$papas["numcampos"]; $i++)
   {
-  	$formato=busca_filtro_tabla("","formato a","lower(a.nombre)='".strtolower($papas[$i]["nombre"])."'","",$conn);
+  	$formato=busca_filtro_tabla("","formato a","item<>'1' AND lower(a.nombre)='".strtolower($papas[$i]["nombre"])."'","",$conn);
   	if(!$formato["numcampos"])continue;
 		$ok=$permiso->acceso_modulo_perfil(strtolower($papas[$i]["nombre"]));
 		if(!$ok&&usuario_actual('login')!="cerok")continue;
