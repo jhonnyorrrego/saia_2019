@@ -36,3 +36,8 @@ $(document).ready(function(){
 	});
 });
 </script>
+<style>
+    .well{
+        padding:0px;
+    }
+</style>
