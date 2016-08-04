@@ -13,6 +13,11 @@ include_once("librerias_saia.php");
 include_once($ruta_db_superior."formatos/librerias/funciones_generales.php");
 
 
+	$ruta_temporal=busca_filtro_tabla("valor","configuracion","lower(nombre)='ruta_temporal'","",$conn);
+	print_r($ruta_temporal);
+
+die();
+
 $formatos=busca_filtro_tabla("idformato,etiqueta","formato","cod_padre IS NULL OR cod_padre='' ","etiqueta ASC",$conn);
 
 for($i=0;$i<$formatos['numcampos'];$i++){
