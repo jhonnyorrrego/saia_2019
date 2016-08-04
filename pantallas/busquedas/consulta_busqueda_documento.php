@@ -247,7 +247,7 @@ function incluir_librerias_busqueda($elemento,$indice){
         </script>
 
       </div>
-      </li>h
+      </li><li>H </li>
 
 	<?php
 		}
