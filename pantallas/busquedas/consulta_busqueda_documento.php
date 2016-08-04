@@ -241,7 +241,7 @@ function incluir_librerias_busqueda($elemento,$indice){
         		$('[name="filtro_indicadores"]').click(function(){
 
         			var valor=$(this).attr('valor');
-        			window.location='consulta_busqueda_documento.php?idbusqueda_componente=<?php echo($datos_busqueda[0]['idbusqueda_componente']); ?>&filtro_indicadores='+valor+'';
+        			//window.location='consulta_busqueda_documento.php?idbusqueda_componente=<?php echo($datos_busqueda[0]['idbusqueda_componente']); ?>&filtro_indicadores='+valor+'';
         		});
         	});
         </script>
