@@ -15,6 +15,7 @@ $('.adicionar_seleccionados').live('click',function(){
     $('#resultado_pantalla_'+idregistro).addClass("alert");
     $('#resultado_pantalla_'+idregistro).addClass("alert-info"); 
     $('.alert-info').css("padding","0px");
+    alert('pasa');
   }    
 }); 
 $(".eliminar_seleccionado").live('click',function(){
