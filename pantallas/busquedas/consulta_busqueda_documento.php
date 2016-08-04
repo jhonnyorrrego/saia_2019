@@ -248,6 +248,7 @@ function incluir_librerias_busqueda($elemento,$indice){
 
       </div>
       </li>
+      <?php if(@$_REQUEST['filtro_indicadores']){ ?>
       <li> 
           <div class="btn-group">
                 <button class="btn btn-mini">
@@ -255,7 +256,7 @@ function incluir_librerias_busqueda($elemento,$indice){
                 </button>          
           </div> 
       </li>
-
+      <?php } ?>
 	<?php
 		}
 	?>
