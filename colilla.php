@@ -153,14 +153,23 @@ else{
 
 if($datos[0]["numero"]){
 	$codigo_qr=busca_filtro_tabla("","documento_verificacion","documento_iddocumento=".$doc,"", $conn);	
+	$qr='';
 	if($codigo_qr['numcampos']){
-		$qr="<img src='".PROTOCOLO_CONEXION.RUTA_PDF."/".$codigo_qr[0]['ruta_qr']."'>";	
+	    
+	    if(file_exists(PROTOCOLO_CONEXION.RUTA_PDF_LOCAL."/".$codigo_qr[0]['ruta_qr'])){
+	        $qr="<img src='".PROTOCOLO_CONEXION.RUTA_PDF_LOCAL."/".$codigo_qr[0]['ruta_qr']."'>";	
+	    }else{
+    		include_once($ruta_db_superior."pantallas/qr/librerias.php");
+    		generar_codigo_qr('',$doc);
+    		$codigo_qr=busca_filtro_tabla("","documento_verificacion","documento_iddocumento=".$doc,"", $conn);	
+    		$qr="<img src='".PROTOCOLO_CONEXION.RUTA_PDF_LOCAL."/".$codigo_qr[0]['ruta_qr']."'>";		        
+	    }
 	}
 	else{
 		include_once($ruta_db_superior."pantallas/qr/librerias.php");
 		generar_codigo_qr('',$doc);
 		$codigo_qr=busca_filtro_tabla("","documento_verificacion","documento_iddocumento=".$doc,"", $conn);	
-		$qr="<img src='".PROTOCOLO_CONEXION.RUTA_PDF."/".$codigo_qr[0]['ruta_qr']."'>";	
+		$qr="<img src='".PROTOCOLO_CONEXION.RUTA_PDF_LOCAL."/".$codigo_qr[0]['ruta_qr']."'>";	
 	}
 }
 ?>
