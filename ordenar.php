@@ -69,14 +69,15 @@ if($_SESSION["tipo_dispositivo"]=='movil'){
     #contenedor{margin-top:0px; width: 100%; border:0px solid; overflow:auto; <?php echo($webkit)?>} 
     #detalles{height:100%; } 
     #panel_arbol_formato{border:0px solid;}
+    body{ padding-right: 0px; padding-left: 0px;}
 
 </style>
 <div class="container row-fluid" style="align:center">
-    <div class="span3">         
+    <div class="span3" style="<?php echo($display_span_rigth);?>">         
         <div id="izquierdo_saia" >          
         </div>
     </div>
-    <div class="span9 pull-right" style="margin-left:0px;">
+    <div class="<?php echo($span_left);?> pull-right" style="margin-left:0px;">
         <div id="contenedor_saia">            
         </div>
     </div>
