@@ -98,7 +98,7 @@ if(isset($_REQUEST["anular_despacho"]))
 function anular_despacho()
 {global $conn;
  //$sql="update salidas set estado=0 where idsalida='".$_REQUEST["idsalidas"]."'";
- $SQL="DELETE FROM salidas WHERE idsalida=".$_REQUEST["idsalidas"];
+ $sql="DELETE FROM salidas WHERE idsalida=".$_REQUEST["idsalidas"];
  phpmkr_query($sql,$conn);
  alerta("Despacho anulado.");
 }  
