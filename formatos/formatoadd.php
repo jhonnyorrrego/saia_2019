@@ -737,7 +737,7 @@ function AddData($conn) {
 	if(!is_dir($x_nombre)) {
 		mkdir($x_nombre, 0777);
     $data=' ';
-    if(intval($x_pertenece_nucleo)){
+    if(intval($x_pertenece_nucleo) == 0){
       $data='*';
     }
     if(!file_put_contents($x_nombre."/.gitignore", $data)){
