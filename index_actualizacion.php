@@ -300,7 +300,7 @@ if($_SESSION["tipo_dispositivo"]=="movil"){ ?>
     </td>  
     <?php } ?>
     <td align="left" valign="top" id="CellContainer">
-    <div class="container-saia ui-corner-all shadow">
+    <div class="<?if($_SESSION["tipo_dispositivo"]!="movil"){echo("container-saia");}?> ui-corner-all shadow">
         <!--div class="container-saia-title">
           <div class="icon-help  ui-corner-tr"></div>
           <span id="TituloContenedor"></span>
