@@ -120,7 +120,7 @@ function guardar_anexo(){
 	$extension=$tipo[$cant-1];
 	if($extension=="jpg"||$extension=="jpeg"){
 		//rename($_FILES["file"]["tmp_name"],$ruta_db_superior."imagenes/logo_demo.jpg");
-		$aleatorio=rand(1,999)."-".date("Y-m-d");
+		$aleatorio=rand(1,999)."_".date("Y-m-d");
 		$ruta_imagen2=RUTA_LOGO_SAIA."logo_".$aleatorio.".".$extension;
         
         crear_destino($ruta_db_superior.RUTA_LOGO_SAIA);
