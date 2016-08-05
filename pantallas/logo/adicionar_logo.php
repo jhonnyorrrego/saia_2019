@@ -122,7 +122,9 @@ function guardar_anexo(){
 		//rename($_FILES["file"]["tmp_name"],$ruta_db_superior."imagenes/logo_demo.jpg");
 		$aleatorio=rand(1,999)."-".date("Y-m-d");
 		$ruta_imagen2=RUTA_LOGO_SAIA."logo_".$aleatorio.".".$extension;
-
+        
+        crear_destino($ruta_db_superior.RUTA_LOGO_SAIA);
+        
 		cambia_tam($_FILES["anexo"]["tmp_name"],$ruta_db_superior.$ruta_imagen2,145,90,"");
 		chmod($ruta_db_superior.$ruta_imagen2,PERMISOS_ARCHIVOS);
 		$sql="UPDATE configuracion SET valor='".$ruta_imagen2."' WHERE nombre='logo'";
