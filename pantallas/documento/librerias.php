@@ -800,7 +800,7 @@ function iddoc_no_distribuidos(){
   }
    
   $iddoc=array_unique($iddoc);
- 
+  $iddoc=array_values($iddoc);
   $cantidad=count($iddoc);
   $where='';
   $where.="(";
