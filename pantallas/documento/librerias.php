@@ -709,6 +709,21 @@ function mostrar_prioridad_tareas($prioridad){
   //return $texto;
 }*/
 
+
+function filtro_despacho(){
+	global $ruta_db_superior;
+	
+	if($_REQUEST['variable_busqueda'] && $_REQUEST['variable_busqueda']!='' ){
+		$docs=busca_filtro_tabla("","documento,ft_despacho_ingresados","documento_iddocumento=iddocumento and estado not in ('ELIMINADO','ANULADO') and numero=".$_REQUEST['variable_busqueda'],"",$conn);
+		if($docs['numcampos']){
+			$where=" and iddocumento in(".$docs[0]['docs_seleccionados'].")";
+		}else{
+			$where=" and iddocumento in(0)";
+		}
+		return($where);
+	}
+}
+
 function vincular_documentos_busqueda(){
 	 global $ruta_db_superior;
   $texto='<li><a href="#" id="distribucion_interna_doc">Despacho fisico</a></li>';
