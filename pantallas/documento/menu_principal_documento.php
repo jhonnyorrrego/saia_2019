@@ -153,7 +153,7 @@ if(@$_REQUEST["tipo"]!==5 && !@$_REQUEST["output"] && !@$_REQUEST["imprimir"]){
                 </div>
               <?php
 							}
-              if($datos_admin["editar"] || usuario_actual('login')=='cerok'){
+              if($datos_admin["editar"]){ // || usuario_actual('login')=='cerok'
               	$titulo=true;
               	$datos_pantalla=busca_filtro_tabla("ruta_pantalla,nombre","pantalla A","A.idpantalla=".$documento->documento[0]["pantalla_idpantalla"],"",$conn);
               ?>
