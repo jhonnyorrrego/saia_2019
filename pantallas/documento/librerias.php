@@ -804,7 +804,7 @@ function iddoc_no_distribuidos(){
   $cantidad=count($iddoc);
   $where='';
   $where.="(";
-  for($i=0;$i<=$cantidad;$i++){
+  for($i=0;$i<$cantidad;$i++){
     if($i==0){
       $where.="(iddocumento <>'".$iddoc[$i]."')";
     }else{
