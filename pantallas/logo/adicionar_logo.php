@@ -120,8 +120,8 @@ function guardar_anexo(){
 	$extension=$tipo[$cant-1];
 	if($extension=="jpg"||$extension=="jpeg"){
 		//rename($_FILES["file"]["tmp_name"],$ruta_db_superior."imagenes/logo_demo.jpg");
-		$aleatorio=rand(1,999)."-".date("Ymd");
-		$ruta_imagen2="imagenes/logo_demo".$aleatorio.".".$extension;
+		$aleatorio=rand(1,999)."-".date("Y-m-d");
+		$ruta_imagen2=RUTA_LOGO_SAIA."logo_".$aleatorio.".".$extension;
 
 		cambia_tam($_FILES["anexo"]["tmp_name"],$ruta_db_superior.$ruta_imagen2,145,90,"");
 		chmod($ruta_db_superior.$ruta_imagen2,PERMISOS_ARCHIVOS);
