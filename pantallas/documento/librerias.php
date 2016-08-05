@@ -772,10 +772,11 @@ function iddoc_distribuidos(){
   }
 
   $iddoc=array_unique($iddoc);
+  $iddoc=array_values($iddoc);
   $cantidad=count($iddoc);
   $where='';
   $where.="(";
-  for($i=0;$i<=$cantidad;$i++){
+  for($i=0;$i<$cantidad;$i++){
     if($i==0){
       $where.="(iddocumento like '".$iddoc[$i]."')";
     }else{
