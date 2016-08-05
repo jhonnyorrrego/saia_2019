@@ -771,8 +771,8 @@ function EditData($sKey,$conn)
      //print_r($fieldList);die();
 		// update
 		
-		$data=' ';
-    if(intval($x_pertenece_nucleo)){
+	$data=' ';
+    if(intval($x_pertenece_nucleo) == 0){
       $data='*';
     }
     if(file_put_contents($x_nombre."/.gitignore", $data)===false){

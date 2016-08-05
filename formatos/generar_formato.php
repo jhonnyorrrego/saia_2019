@@ -2772,7 +2772,7 @@ function generar_formato($idformato) {
 	$encabezado = busca_filtro_tabla("contenido", "encabezado_formato", "idencabezado_formato='" . $formato[0]["encabezado"] . "'", "", $conn);
 	$data = ' ';
 	if (intval($formato[0]["pertenece_nucleo"]) == 0) {
-		//Ignorar todo el contenido del formato
+		//Ignorar todo el contenido de la carpeta
 		$data = "*";
 	}
 	file_put_contents($ruta_db_superior . "formatos/" . $formato[0]["nombre"] . "/.gitignore", $data);
