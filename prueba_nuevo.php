@@ -12,12 +12,15 @@ include('db.php');
 include_once("librerias_saia.php");
 include_once($ruta_db_superior."formatos/librerias/funciones_generales.php");
 
+$carpeta="../almacenamiento/logo_saia";
+if(file_exists($carpeta)){
+    chmod($carpeta,0777);
+    echo "Permisos Agregados a la carpeta ".$carpeta;
+}else{
+    echo "la carpeta ".$carpeta." no existe";
+}
 
-$sKeyWrk = phpmkr_insert_id();
 
-    //para que el funcionario_codigo sea el mismo idfuncionario
-	$ufcsql = "update funcionario set funcionario_codigo='$sKeyWrk' where idfuncionario=$sKeyWrk";
-	print_r($ufcsql);
 
 die();
 
