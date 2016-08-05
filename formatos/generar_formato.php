@@ -2771,7 +2771,7 @@ function generar_formato($idformato) {
 	$formato = busca_filtro_tabla("*", "formato A", "A.idformato=" . $idformato, "", $conn);
 	$encabezado = busca_filtro_tabla("contenido", "encabezado_formato", "idencabezado_formato='" . $formato[0]["encabezado"] . "'", "", $conn);
 	$data = ' ';
-	if (intval($formato[0]["pertenece_nucleo"]) == 0) {
+	if (!intval($formato[0]["pertenece_nucleo"])) {
 		//Ignorar todo el contenido de la carpeta
 		$data = "*";
 	}
