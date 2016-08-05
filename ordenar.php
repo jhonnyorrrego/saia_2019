@@ -107,7 +107,9 @@ $(document).ready(function(){
 });    
 </script>
 <?php
-if($formato["numcampos"]){ ?>
+if($formato["numcampos"]){ 
+    $llave="idformato=".$formato[0]["idformato"]."&iddoc=".$iddocumento; 
+?>
 <script type="text/javascript">
 llamado_pantalla("pantallas/documento/informacion_resumen_documento.php","form_info=<?php echo($llave);?>&alto_pantalla="+(alto-1),$("#izquierdo_saia"),"arbol_formato");
 llamado_pantalla("","",$("#contenedor_saia"),'detalles');
