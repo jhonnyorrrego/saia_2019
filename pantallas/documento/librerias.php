@@ -789,6 +789,7 @@ function iddoc_distribuidos(){
 function iddoc_no_distribuidos(){
   global $conn;
   $distribuidos=busca_filtro_tabla("docs_seleccionados","ft_despacho_ingresados","","",$conn);
+  
   $iddoc=array();
 
   if($distribuidos['numcampos']){
@@ -797,7 +798,7 @@ function iddoc_no_distribuidos(){
       $iddoc=array_merge($iddoc,$tmp);
     }
   }
-
+    print_r($iddoc);
   $iddoc=array_values($iddoc);
   $iddoc=array_unique($iddoc);
   $cantidad=count($iddoc);
