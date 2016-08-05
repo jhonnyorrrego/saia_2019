@@ -89,7 +89,7 @@ function link_editar_funcion($idformato,$iddoc){
 		$usuario=usuario_actual("funcionario_codigo");
 		$texto="<a href='editar_carta.php?iddoc=".$iddoc."&idformato=".$idformato."'><img width='16' height='16' src='../../botones/comentarios/editar_documento.png'></a>";
 		if($usuario==$firmante[0][0]&&$aprobado["numcampos"]==0){
-		//	echo ($texto);
+			echo ($texto);
 		}
 	}
 }
