@@ -476,6 +476,7 @@ function click_funcion(div){
       return;
     }
     llave=tree2.getParentId(nodeId);
+
     tree2.closeAllItems(tree2.getParentId(nodeId))
     tree2.openItem(nodeId);
     tree2.openItem(tree2.getParentId(nodeId));
@@ -502,15 +503,8 @@ function click_funcion(div){
            document.poppedLayer =
               eval('document.layers["esperando_arbol"]');
         document.poppedLayer.style.visibility = "hidden";
-        <?php 
-        if(!isset($_REQUEST["no_seleccionar"])) 
-           {
-        ?>
         tree2.selectItem(item,true,false);
-        //tree2.openAllItems(0); //esta linea permite que los arboles carguen abiertos totalmente
-        <?php   
-           }
-        ?>
+        tree2.openAllItems(0); //esta linea permite que los arboles carguen abiertos totalmente
         
       }
     function cargando() {
