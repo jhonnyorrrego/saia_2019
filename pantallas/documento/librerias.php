@@ -798,7 +798,7 @@ function iddoc_no_distribuidos(){
     }
   }
 
-  $iddoc=array_map('intval',$iddoc);
+  $iddoc=array_values($iddoc);
   $iddoc=array_unique($iddoc);
   $cantidad=count($iddoc);
   $where='';
