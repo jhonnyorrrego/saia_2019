@@ -798,9 +798,9 @@ function iddoc_no_distribuidos(){
       $iddoc=array_merge($iddoc,$tmp);
     }
   }
-    print_r($iddoc);
-  $iddoc=array_values($iddoc);
+   
   $iddoc=array_unique($iddoc);
+  print_r($iddoc);
   $cantidad=count($iddoc);
   $where='';
   $where.="(";
