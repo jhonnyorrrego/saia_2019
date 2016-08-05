@@ -12,7 +12,7 @@ include('db.php');
 include_once("librerias_saia.php");
 include_once($ruta_db_superior."formatos/librerias/funciones_generales.php");
 
-$carpeta="../almacenamiento/logo_saia";
+$carpeta="../almacenamiento/logo_saia/";
 if(file_exists($carpeta)){
     chmod($carpeta,0777);
     echo "Permisos Agregados a la carpeta ".$carpeta;
