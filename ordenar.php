@@ -56,9 +56,17 @@ elseif(@$_REQUEST["llave"]){
   $nodoinicial=$_REQUEST["llave"];
 }
 else $nodoinicial=$llave_formato;
+$display_span_rigth="";
+$span_left="span9";
+$webkit="";
+if($_SESSION["tipo_dispositivo"]=='movil'){
+    $display_span_rigth=" display:none; ";
+    $span_left="span12";
+    $webkit="-webkit-overflow-scrolling:touch;";
+}
 ?>
 <style>
-    #panel_detalles{margin-top:0px; width: 100%; border:0px solid; overflow:auto; <?php if($_SESSION["tipo_dispositivo"]=='movil'){?>-webkit-overflow-scrolling:touch;<?php } ?>} 
+    #contenedor{margin-top:0px; width: 100%; border:0px solid; overflow:auto; <?php echo($webkit)?>} 
     #detalles{height:100%; } 
     #panel_arbol_formato{border:0px solid;}
 
