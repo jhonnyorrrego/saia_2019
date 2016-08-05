@@ -723,6 +723,25 @@ function filtro_despacho(){
 		return($where);
 	}
 }
+function carga_soporte_ingresados($iddocumento){
+	global $ruta_db_superior;
+	if(isset($_REQUEST['variable_busqueda'])){
+		$texto='<li><a href="#" id="cargar_soporte">Cargar soporte</a></li>';
+		$texto.='<script>
+		  $("#cargar_soporte").click(function(){	    	
+		    var docus=$("#seleccionados").val();
+			  if(docus!=""){			  	
+						top.hs.htmlExpand(this, { objectType: "iframe",width: 400, height: 300, src:"http://'.RUTA_PDF.'/formatos/despacho_ingresados/anexos_despacho.php?docs="+docus,outlineType: "rounded-white",wrapperClassName:"highslide-wrapper drag-header"});
+			  }else{
+			  	alert("Seleccione por lo menos un documento");
+			  }
+		   });
+		</script>';
+		return $texto;
+	}
+}
+
+
 
 function vincular_documentos_busqueda(){
 	 global $ruta_db_superior;
