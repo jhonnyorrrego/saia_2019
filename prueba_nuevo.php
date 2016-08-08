@@ -12,17 +12,7 @@ include('db.php');
 include_once("librerias_saia.php");
 include_once($ruta_db_superior."formatos/librerias/funciones_generales.php");
 
-$carpeta="../almacenamiento/logo_saia/";
-if(file_exists($carpeta)){
-    chmod($carpeta,0777);
-    echo "Permisos Agregados a la carpeta ".$carpeta;
-}else{
-    echo "la carpeta ".$carpeta." no existe";
-}
 
-
-
-die();
 
 $formatos=busca_filtro_tabla("idformato,etiqueta","formato","cod_padre IS NULL OR cod_padre='' ","etiqueta ASC",$conn);
 
@@ -62,55 +52,4 @@ function lista_hijos($cuales){
 
 
 
-
-
-
-die();
-$respuesta=enviar_correo(11641);
-
-function enviar_correo($iddoc){
-	global $conn,$ruta_db_superior;
-	
-	
-	$consulta=busca_filtro_tabla("","documento","iddocumento=".$iddoc,"",$conn);
-	$nombre_funcionario=busca_filtro_tabla("","funcionario a, dependencia_cargo b","a.funcionario_codigo=".$consulta[0]["ejecutor"],"",$conn);
-	
-	$datos_documento=busca_filtro_tabla("","documento","iddocumento=".$iddoc,"",$conn);
-	print_r($datos_documento[0]['pdf'].'<br />');
-	
-	$ruta=crear_pdf_documento_tcpdf($datos_documento[0]);
-	print_r("Ruta curl".$ruta.'<br />');
-	
-	$datos_documento=busca_filtro_tabla("","documento","iddocumento=".$iddoc,"",$conn);
-	
-	//$ruta_nueva=str_replace("_0_", "_".$datos_documento[0]['numero']."_", $datos_documento[0]['pdf']);
-	//print_r("Ruta nueva".$ruta_nueva.'<br />');
-	
-	phpmkr_query("UPDATE documento SET pdf='" . $ruta . "' WHERE iddocumento=".$iddoc);
-	$datos_documento=busca_filtro_tabla("","documento","iddocumento=".$iddoc,"",$conn);
-	
-	print_r("Ruta actualizada".$datos_documento[0]['pdf'].'<br />');
-	
-	die();
-	$nombre=$nombre_funcionario[0]['nombres']." ".$nombre_funcionario[0]['apellidos'];
-	
-	
-	$permiso=busca_filtro_tabla("a.nombre,b.motivo_permiso","serie a,ft_solicitud_permiso b","a.idserie=b.motivo_permiso AND b.documento_iddocumento=".$iddoc,"",$conn);
-	
-	$motivo=html_entity_decode($permiso[0]['nombre']);
-	$numero_radicado=$datos_documento[0]['numero'];
-	
-	$anexos = array($datos_documento[0]['pdf']);
-
-	$destinos = array('1088303313');
-	
-	$asunto="Solicitud de permiso aprobada"." - ".$nombre." - ".strip_tags($motivo);
-
-	$mensaje="La solicitud de permiso No. ".$numero_radicado." ha sido aprobada";
-	
-	//$resp=enviar_mensaje("","codigo",$destinos,$asunto,$mensaje,$anexos,"",$iddoc);	
-}
-
-
-		
 ?>
