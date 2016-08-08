@@ -14,6 +14,9 @@ include_once($ruta_db_superior."formatos/librerias/funciones_generales.php");
 
 
 
+
+die();
+
 $formatos=busca_filtro_tabla("idformato,etiqueta","formato","cod_padre IS NULL OR cod_padre='' ","etiqueta ASC",$conn);
 
 for($i=0;$i<$formatos['numcampos'];$i++){
