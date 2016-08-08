@@ -17,9 +17,9 @@ include_once($ruta_db_superior."formatos/librerias/funciones_generales.php");
 
 
 
-$modulos_menu_intermedio=busca_filtro_tabla("","","","",$conn);
+$modulos_menu_intermedio=busca_filtro_tabla("","modulo","idmodulo=64","",$conn);
 
-
+print_r($modulos_menu_intermedio);
 
 
 
