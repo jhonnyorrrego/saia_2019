@@ -12,7 +12,7 @@ include('db.php');
 include_once("librerias_saia.php");
 include_once($ruta_db_superior."formatos/librerias/funciones_generales.php");
 
- llena_serie(,'modulo','');
+ llena_serie(0,'modulo','');
 
 function llena_serie($serie,$tabla,$padre=''){
 global $conn;
