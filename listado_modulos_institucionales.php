@@ -4,7 +4,7 @@ include_once("header.php");
 $listado=array();
 if(@$_REQUEST["tipo_modulo"]=="solicitudes"){
 $categoria="ninguna";
-$perfil=busca_filtro_tabla("lower(dependencia.nombre)","dependencia_cargo,dependencia","dependencia_iddependencia=iddependencia and dependencia.cod_padre=16716 and funcionario_idfuncionario=".usuario_actual("idfuncionario"),"",$conn); 
+$perfil=busca_filtro_tabla("lower(dependencia.nombre)","dependencia_cargo,dependencia","dependencia_iddependencia=iddependencia and dependencia.cod_padre=16716 and funcionario_idfuncionario=".usuario_actual("idfuncionario"),"",$conn);   //parametrizar esta consulta
   
 if($perfil["numcampos"])
 {if(strpos($perfil[0][0],"administrativa"))
@@ -17,16 +17,16 @@ if($perfil["numcampos"])
     $categoria="Sistemas_educacion";
 }
 $adicional="&categoria=".$categoria;
-$modulos=busca_filtro_tabla("","modulo","cod_padre=605","orden",$conn);
+$modulos=busca_filtro_tabla("","modulo","cod_padre=605","orden",$conn);  //parametrizar esta consulta
 $items_fila=3;
 }
 if(@$_REQUEST["tipo_modulo"]=="planes_mejoramiento"){
 
-$perfil=busca_filtro_tabla("lower(dependencia.nombre)","dependencia_cargo,dependencia","dependencia_iddependencia=iddependencia and dependencia.cod_padre=16716 and funcionario_idfuncionario=".usuario_actual("idfuncionario"),"",$conn);
+$perfil=busca_filtro_tabla("lower(dependencia.nombre)","dependencia_cargo,dependencia","dependencia_iddependencia=iddependencia and dependencia.cod_padre=16716 and funcionario_idfuncionario=".usuario_actual("idfuncionario"),"",$conn);  //parametrizar esta consulta
 	
 	
 $adicional="";
-$modulos=busca_filtro_tabla("","modulo","cod_padre=765","orden",$conn);
+$modulos=busca_filtro_tabla("","modulo","cod_padre=765","orden",$conn);  //parametrizar esta consulta
 $items_fila=3;
 }
 
