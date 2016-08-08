@@ -45,7 +45,7 @@ $texto.='<div align="center"><table border="1px" style="border-collapse:collapse
 for($i=0,$j=0;$i<$modulos["numcampos"];$i++){
   $ok=$perm->acceso_modulo_perfil($modulos[$i]["nombre"]);
   if($ok && $modulos[$i]["enlace"]<>"#"){
-    $texto.='<td title="'.$modulos[$i]["ayuda"].'" align="center" ><a href="'.$modulos[$i]["enlace"].$adicional.'" target="'.$modulos[$i]["destino"].'"><b>'.$modulos[$i]["etiqueta"].'</b><br /><br /><img style="width:80px;height:80px;" src="'.$modulos[$i]["imagen"].'" border="0px";></td>';
+    $texto.='<td title="'.$modulos[$i]["ayuda"].'" align="center" ><a href="'.$modulos[$i]["enlace"].$adicional.'" target="'.$modulos[$i]["destino"].'"><b>'.$modulos[$i]["etiqueta"].'</b><br /><br /><img style="width:60px;height:60px;" src="'.$modulos[$i]["imagen"].'" border="0px";></td>';
     $j++;
     if(($j%$items_fila==0) && $j>0){
       $texto.='</tr><tr>';
