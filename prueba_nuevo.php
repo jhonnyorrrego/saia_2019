@@ -12,9 +12,9 @@ include('db.php');
 include_once("librerias_saia.php");
 include_once($ruta_db_superior."formatos/librerias/funciones_generales.php");
 
- llena_serie(64,'modulo');
+ llena_serie(64,'modulo','');
 
-function llena_serie($serie,$tabla){
+function llena_serie($serie,$tabla,$padre=''){
 global $conn;
   $papas=busca_filtro_tabla("*",$tabla,"cod_padre=".$serie,"nombre ASC",$conn);
 
@@ -24,13 +24,14 @@ if($papas["numcampos"])
   {$hijos = busca_filtro_tabla("count(*)",$tabla,"cod_padre=".$papas[$i]["id$tabla"],"",$conn);
    $hijos_seleccionados = busca_filtro_tabla("count(*)",$tabla,"cod_padre=".$papas[$i]["id$tabla"],"",$conn);
    
-    echo utf8_encode(html_entity_decode(($papas[$i]["etiqueta"])))." (".$papas[$i]["nombre"].") (".$papas[$i]["idmodulo"].") ";
+    echo utf8_encode(html_entity_decode(($papas[$i]["etiqueta"])))." (".$papas[$i]["nombre"].") (".$papas[$i]["idmodulo"].") ---> PADRE: (".$padre.")";
 
-    if($hijos[0][0])
-      echo("<br>&nbsp;&nbsp; -");
-    else
-      echo("<br>");
-    llena_serie($papas[$i]["id$tabla"],'modulo');
+    $padre='';
+    if($hijos[0][0]){
+        $padre='$papas[$i]["nombre"]';  
+    }
+    
+    llena_serie($papas[$i]["id$tabla"],'modulo',$padre);
   }     
 }
 return;
