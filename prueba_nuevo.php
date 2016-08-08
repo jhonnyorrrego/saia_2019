@@ -12,6 +12,7 @@ include('db.php');
 include_once("librerias_saia.php");
 include_once($ruta_db_superior."formatos/librerias/funciones_generales.php");
 
+ llena_serie(64,'modulo');
 
 function llena_serie($serie,$tabla){
 global $conn;
@@ -29,7 +30,7 @@ if($papas["numcampos"])
       echo(" child=\"1\">\n");
     else
       echo(" child=\"0\">\n");
-    llena_serie($papas[$i]["id$tabla"]);
+    llena_serie($papas[$i]["id$tabla"],'modulo');
     echo("</item>\n");
   }     
 }
