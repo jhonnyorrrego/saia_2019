@@ -31,7 +31,6 @@ if($papas["numcampos"])
     else
       echo("<br>");
     llena_serie($papas[$i]["id$tabla"],'modulo');
-    echo("</item>\n");
   }     
 }
 return;
