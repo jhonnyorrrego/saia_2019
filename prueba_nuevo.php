@@ -24,7 +24,7 @@ if($papas["numcampos"])
   {$hijos = busca_filtro_tabla("count(*)",$tabla,"cod_padre=".$papas[$i]["id$tabla"].$activo.$condicion,"",$conn);
    $hijos_seleccionados = busca_filtro_tabla("count(*)",$tabla,"cod_padre=".$papas[$i]["id$tabla"]." and idmodulo in(".implode(',',$seleccionado).")","",$conn);
    
-    echo htmlspecialchars(($papas[$i]["etiqueta"]))." (".$papas[$i]["nombre"].") (".$papas[$i]["idmodulo"].") ";
+    echo html_entity_decode(($papas[$i]["etiqueta"]))." (".$papas[$i]["nombre"].") (".$papas[$i]["idmodulo"].") ";
 
     if($hijos[0][0])
       echo("<br>&nbsp;&nbsp; -");
