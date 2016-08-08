@@ -29,7 +29,7 @@ if($papas["numcampos"])
     if($hijos[0][0])
       echo("<br>&nbsp;&nbsp;");
     else
-      echo(" <br>");
+      echo("<br>");
     llena_serie($papas[$i]["id$tabla"],'modulo');
     echo("</item>\n");
   }     
