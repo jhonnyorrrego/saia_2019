@@ -13,43 +13,18 @@ include_once("librerias_saia.php");
 include_once($ruta_db_superior."formatos/librerias/funciones_generales.php");
 
 
-function llena_serie($serie,$condicion=""){
-global $conn,$tabla,$seleccionado,$activo,$id;
-
-if($serie=="NULL")
-  $papas=busca_filtro_tabla("*",$tabla,"(cod_padre IS NULL OR cod_padre=0) $activo $condicion",limpiar_cadena_sql("etiqueta").",nombre",$conn);
-else
-  $papas=busca_filtro_tabla("*",$tabla,"cod_padre=".$serie.$activo.$condicion,"nombre ASC",$conn);
+function llena_serie($serie,$tabla){
+global $conn;
+  $papas=busca_filtro_tabla("*",$tabla,"cod_padre=".$serie,"nombre ASC",$conn);
 
 if($papas["numcampos"])
 { 
   for($i=0; $i<$papas["numcampos"]; $i++)
   {$hijos = busca_filtro_tabla("count(*)",$tabla,"cod_padre=".$papas[$i]["id$tabla"].$activo.$condicion,"",$conn);
    $hijos_seleccionados = busca_filtro_tabla("count(*)",$tabla,"cod_padre=".$papas[$i]["id$tabla"]." and idmodulo in(".implode(',',$seleccionado).")","",$conn);
-    echo("<item style=\"font-family:verdana; font-size:7pt;\" ");
-    echo "text=\"".htmlspecialchars(($papas[$i]["etiqueta"]))." (".$papas[$i]["nombre"].") \" ";
-    if(isset($_REQUEST["filtro_perfil"]))
-      {
-       if(in_array($papas[$i]["idmodulo"],$seleccionado)!==false)
-          {if(!$hijos[0][0]) //si no tiene hijos
-             echo ' opcion="quitar" im0="green.gif" im1="green.gif" im2="green.gif " ';         
-           elseif($hijos_seleccionados[0][0]==$hijos[0][0]) //si todos los hijos estan seleccionados
-              echo ' opcion="quitar" im0="green.gif" im1="green.gif" im2="green.gif " ';
-           elseif($hijos_seleccionados[0][0])  //si solo algunos est�n seleccionados
-             echo ' opcion="adicionar" im0="blue.gif" im1="blue.gif" im2="blue.gif " ';
-           else //si no hay hijos seleccionados
-             echo ' opcion="adicionar" im0="red.gif" im1="red.gif" im2="red.gif " ';           
-          } 
-       elseif($hijos_seleccionados[0][0])  //si solo algunos est�n seleccionados
-         echo ' opcion="adicionar" im0="blue.gif" im1="blue.gif" im2="blue.gif " ';
-       else
-         echo ' opcion="adicionar" im0="red.gif" im1="red.gif" im2="red.gif " '; 
-      }
+   
+    echo htmlspecialchars(($papas[$i]["etiqueta"]))." (".$papas[$i]["nombre"].") (".$papas[$i]["idmodulo"].") ";
 
-    echo " id=\"".$papas[$i]["idmodulo"]."\"";
-    if(in_array($papas[$i]["idmodulo"],$seleccionado)!==false)
-      echo " checked=\"1\" ";
-        
     if($hijos[0][0])
       echo(" child=\"1\">\n");
     else
