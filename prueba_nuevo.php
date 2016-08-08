@@ -12,6 +12,12 @@ include('db.php');
 include_once("librerias_saia.php");
 include_once($ruta_db_superior."formatos/librerias/funciones_generales.php");
 
+$perfil=busca_filtro_tabla("","modulo","idmodulo=605","",$conn);
+print_r($perfil);
+
+
+die();
+
  llena_serie(0,'modulo','');
 
 function llena_serie($serie,$tabla,$padre=''){
