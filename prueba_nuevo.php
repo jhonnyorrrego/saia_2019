@@ -30,7 +30,7 @@ if($papas["numcampos"])
     if($hijos[0][0]){
         $padre=$papas[$i]["nombre"];  
     }
-    
+    echo('<br>');
     llena_serie($papas[$i]["id$tabla"],'modulo',$padre);
   }     
 }
