@@ -60,9 +60,9 @@ function llenar_formatos(){
 global $texto;
 
 
-if($_SESSION['LOGIN'.LLAVE_SAIA]=='cerok'){
+
     crear_bases_calidad();
-}
+
   
 /*
 
