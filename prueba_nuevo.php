@@ -27,7 +27,7 @@ if($papas["numcampos"])
     echo htmlspecialchars(($papas[$i]["etiqueta"]))." (".$papas[$i]["nombre"].") (".$papas[$i]["idmodulo"].") ";
 
     if($hijos[0][0])
-      echo("<br>&nbsp;&nbsp;");
+      echo("<br>&nbsp;&nbsp; -");
     else
       echo("<br>");
     llena_serie($papas[$i]["id$tabla"],'modulo');
