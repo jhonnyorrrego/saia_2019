@@ -161,7 +161,7 @@ $mayor_informacion=busca_filtro_tabla("valor","configuracion","nombre='mayor_inf
                     </p>
                   	<p>
                   	<input type="hidden" name="boton_ui" value="Acceder">
-                  	<a href="recordar_contrasena.php" style="cursor:pointer" class="highslide" onclick="return hs.htmlExpand(this,{objectType:'iframe',width: 550, height: 300, preserveContent:false})">¿No puedes acceder a tu cuenta?</a>
+                  	<a href="recordar_contrasena.php" style="cursor:pointer" id="recordar_contrasena" class="highslide" onclick="return hs.htmlExpand(this,{objectType:'iframe',width: 550, height: 300, preserveContent:false})">¿No puedes acceder a tu cuenta?</a>
                   	</p>
                 </div>
             </div>
@@ -288,6 +288,7 @@ var tiempo=3500;
 $("#tabla_principal").height($(window).height()-56);
 $("#ingresar").click(function(){	
   if($("#userid").val() && $("#passwd").val()){
+      $('#recordar_contrasena').attr('disabled',true);  
   	//$("#formulario_login").submit();
     $.ajax({
       type:'POST',
@@ -302,6 +303,7 @@ $("#ingresar").click(function(){
             setTimeout(function(){window.location=objeto.ruta},(tiempo+100));
           }  
           else{
+            $('#recordar_contrasena').attr('disabled',false);  
             noty({text: mensaje,type: 'error',layout: "topCenter",timeout:tiempo});
           }                         
         }
