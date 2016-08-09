@@ -210,7 +210,7 @@ $mayor_informacion=busca_filtro_tabla("valor","configuracion","nombre='mayor_inf
                     </p>
                   	<p>
                   	<input type="hidden" name="boton_ui" value="Acceder">
-                  	<a href="recordar_contrasena.php" style="cursor:pointer" class="highslide" onclick="return hs.htmlExpand(this,{objectType:'iframe',width: 550, height: 300, preserveContent:false})">¿No puedes acceder a tu cuenta?</a>
+                  	<a href="recordar_contrasena.php" style="cursor:pointer" class="highslide"  id="recordar_contrasena" onclick="return hs.htmlExpand(this,{objectType:'iframe',width: 550, height: 300, preserveContent:false})">¿No puedes acceder a tu cuenta?</a>
                   	</p>
                   	
                   	
