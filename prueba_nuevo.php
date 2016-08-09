@@ -25,7 +25,7 @@ if($papas["numcampos"])
    $hijos_seleccionados = busca_filtro_tabla("count(*)",$tabla,"cod_padre=".$papas[$i]["id$tabla"],"",$conn);
    
    // echo utf8_encode(html_entity_decode(($papas[$i]["etiqueta"])))." (".$papas[$i]["nombre"].") (".$papas[$i]["idmodulo"].") ---> PADRE: (".$padre.")";
-    echo '<pre>'.$papas[$i]["idmodulo"].' - '.utf8_encode(html_entity_decode($papas[$i]["etiqueta"])).'</pre>';
+    echo '<pre>'.$papas[$i]["idmodulo"].'  '.utf8_encode(html_entity_decode($papas[$i]["etiqueta"])).'</pre>';
     $padre='';
     if($hijos[0][0]){
         $padre=$papas[$i]["nombre"];  
