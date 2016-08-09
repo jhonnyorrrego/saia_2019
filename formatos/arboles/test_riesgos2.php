@@ -117,6 +117,8 @@ global $conn,$texto;
   /*$formato=busca_filtro_tabla("A.numero,A.descripcion ,A.iddocumento","documento A","lower(A.plantilla)='".strtolower($arreglo[1])."' AND A.estado<>'ELIMINADO'".$where,"",$conn); */
    //print_r($formato);
   /*echo("<HR/>");*/
+  print_r($formato);die();
+  
   for($i=0;$i<$formato["numcampos"];$i++){
       $papas=busca_filtro_tabla("id".$arreglo[2]." AS llave,'".$arreglo[2]."' AS nombre_tabla",$arreglo[2],"documento_iddocumento=".$formato[$i]["iddocumento"],"",$conn);
     //print_r($papas);
