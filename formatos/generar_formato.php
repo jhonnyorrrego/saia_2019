@@ -2774,6 +2774,9 @@ function generar_formato($idformato) {
 	if (intval($formato[0]["pertenece_nucleo"]) == 0) {
 		//Ignorar todo el contenido de la carpeta
 		$data = "*";
+		 alerta('Formato NO Versionado','warning',3000);
+	}else{
+	   alerta('Formato Versionado','success',3000);
 	}
 	file_put_contents($ruta_db_superior . "formatos/" . $formato[0]["nombre"] . "/.gitignore", $data);
 	$pie = busca_filtro_tabla("contenido", "encabezado_formato", "idencabezado_formato='" . $formato[0]["pie_pagina"] . "'", "", $conn);
