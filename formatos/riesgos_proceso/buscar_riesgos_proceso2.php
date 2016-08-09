@@ -28,7 +28,7 @@
 		    O
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_g@riesgo" id="bqsaiaenlace_g@riesgo" value="y" />
-		</div></div></div><div class="control-group"><label class="string control-label" style="font-size:9pt" for="tipo_riesgo"><b>Tipo de riesgo<input type="hidden" name="bksaiacondicion_g@tipo_riesgo" id="bksaiacondicion_g@tipo_riesgo" value="like_total"></b></label><div class="controls"><?php genera_campo_listados_editar(363,4237,'',1,'buscar');?><div class="btn-group" data-toggle="buttons-radio" >
+		</div></div></div><div class="control-group"><label class="string control-label" style="font-size:9pt" for="tipo_riesgo"><b>Tipo de riesgo<input type="hidden" name="bksaiacondicion_g@tipo_riesgo" id="bksaiacondicion_g@tipo_riesgo" value="like_total"></b></label><div class="controls"><?php genera_campo_listados_editar(393,4691,'',1,'buscar');?><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_g@tipo_riesgo',this.id)">
 		    Y
 		  </button>

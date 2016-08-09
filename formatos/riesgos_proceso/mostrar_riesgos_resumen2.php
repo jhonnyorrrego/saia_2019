@@ -15,7 +15,6 @@ $max_salida--;
 include_once($ruta_db_superior.'db.php');
 include_once($ruta_db_superior."formatos/librerias/funciones_generales.php");
 include_once($ruta_db_superior.'formatos/riesgos_proceso/librerias_riesgos.php');
-
 ?>
 <link rel="stylesheet" type="text/css" href="<?php echo($ruta_db_superior); ?>css/estilos.css"/>
 <style type="text/css">
@@ -71,13 +70,13 @@ table thead td {
 $datos=explode("-",$_REQUEST["llave"]);
 $riesgos=busca_filtro_tabla("","ft_riesgos_proceso","ft_proceso=".$datos[2]." and estado<>'INACTIVO' and tipo_riesgo<>'Corrupcion'","consecutivo",$conn);
 $proceso=busca_filtro_tabla("","ft_proceso a","a.idft_proceso=".$datos[2],"",$conn);	
-  	
+
 		if($_REQUEST["tipo"] != 5){
 			$url = "http://".RUTA_PDF_LOCAL."/formatos/riesgos_proceso/mostrar_riesgos_resumen2.php?llave=".$_REQUEST["llave"]."|tipo=5";
 			$url_encabezado = "http://".RUTA_PDF_LOCAL."/reportes/encabezado_reporte.php";
 			$ruta = $ruta_db_superior."class_impresion2.php?tipo=5&orientacion=1&url=".$url."&pdf=1&url_encabezado=";
-			$tabla = '
-  					     <a target="_blank" href="'.$ruta.'">
+
+			$tabla ='<a target="_blank" href="'.$ruta.'">
   						    <img src="'.$ruta_db_superior.'enlaces/imprimir.gif" height="30" width="30" border="0">
   					     </a>
   				     ';
@@ -182,7 +181,7 @@ function obtener_controles_riesgo($idft_riesgos_proceso){
 	$controles_riesgo = busca_filtro_tabla("descripcion_control, idft_control_riesgos","ft_control_riesgos a, documento b","a.documento_iddocumento=b.iddocumento and b.estado not in('ELIMINADO', 'ANULADO') and ft_riesgos_proceso=".$idft_riesgos_proceso,"idft_control_riesgos asc",$conn);
 		
 	for($i=0; $i < $controles_riesgo["numcampos"]; $i++){
-		$li .= '<li>'.preg_replace("/(<p.*>)(.*)(<\/p>)/","$2",strip_tags(utf8_encode(html_entity_decode($controles_riesgo[$i]["descripcion_control"])))).'</li><br />';
+		$li .= '<li>'.preg_replace("/(<p.*>)(.*)(<\/p>)/","$2",strip_tags(utf8_encode(html_entity_decode($controles_riesgo[$i]["descripcion_control"])))).'<br /><br /></li>';
 	}
 
 	if($li){
@@ -335,16 +334,14 @@ function acciones($id,$campo){
 			
 			if($campo=="indicador"){	
 				$acciones=busca_filtro_tabla("indicador, iddocumento,acciones_accion","ft_ft_acciones_riesgo a, documento b","a.documento_iddocumento=b.iddocumento and b.estado not in('ELIMINADO', 'ANULADO') and ft_riesgos_proceso='".$id."'","",$conn);
-				//if(usuario_actual('login')=='0k')
-				//print_r($acciones);
+
 			}
 	}else	
 	$acciones=busca_filtro_tabla($campo.",ft_riesgos_proceso,iddocumento","ft_ft_acciones_riesgo a, documento b","a.documento_iddocumento=b.iddocumento and b.estado not in('ELIMINADO', 'ANULADO') and acciones_control='".$id."'","",$conn);
-	//if(usuario_actual('login')=='0k'){
 			
 		if($campo=="acciones_accion"){
 			$acciones=busca_filtro_tabla($campo.", iddocumento","ft_ft_acciones_riesgo a, documento b","a.documento_iddocumento=b.iddocumento and b.estado not in('ELIMINADO', 'ANULADO') and ft_riesgos_proceso='".$id."'","",$conn);
-			echo $acciones["numcampos"];
+			//echo $acciones["numcampos"];
 		}
 		if($campo=="responsables"){
 			$campo="reponsables";
@@ -352,11 +349,8 @@ function acciones($id,$campo){
 		}
 		if($campo=="indicador"){
 			$acciones=busca_filtro_tabla("indicador, iddocumento","ft_ft_acciones_riesgo a, documento b","a.documento_iddocumento=b.iddocumento and b.estado not in('ELIMINADO', 'ANULADO') and ft_riesgos_proceso='".$id."'","",$conn);
-			if(usuario_actual('login')=='0k'){
-				//print_r($acciones);
-			}
 		}
-	//}
+	
 	
 	
 	$texto='';
