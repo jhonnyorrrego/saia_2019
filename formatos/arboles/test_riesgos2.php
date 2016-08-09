@@ -138,7 +138,7 @@ global $conn,$texto,$imagenes,$formatos_calidad;
 $arreglo=explode("-",$formato);
 $formato=busca_filtro_tabla("","formato","idformato='".$arreglo[0]."'","",$conn);
 
-print_r($formato);
+
 
 if($formato["numcampos"]){
   $descripcion=busca_filtro_tabla("","campos_formato","formato_idformato=".$formato[0]["idformato"]." AND acciones LIKE '%d%'","",$conn);    
@@ -172,6 +172,10 @@ global $conn,$texto,$imagenes,$validar_macro;
 $arreglo=explode("-",$idformato);
 //echo("<br />".$idformato."<br />");
 $estado=busca_filtro_tabla("estado",$tabla,$arreglo[2]."=".$arreglo[1],"",$conn);
+
+
+print_r($estado);
+
 $adicional='';
 if($tabla=='ft_seguimiento_riesgo'){
 	$adicional=" and seguimiento_antiguo='2' ";
