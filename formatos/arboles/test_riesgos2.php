@@ -173,7 +173,7 @@ $arreglo=explode("-",$idformato);
 //echo("<br />".$idformato."<br />");
 $estado=busca_filtro_tabla("estado",$tabla,$arreglo[2]."=".$arreglo[1],"",$conn);
 
-print_r($estado);
+
 
 $adicional='';
 if($tabla=='ft_seguimiento_riesgo'){
@@ -181,6 +181,7 @@ if($tabla=='ft_seguimiento_riesgo'){
 }
 if($tabla=="ft_proceso" && !$validar_macro){
   $dato = busca_filtro_tabla("",$tabla,$arreglo[2]."=".$arreglo[1],"",$conn);
+  print_r($dato);
   if($dato["numcampos"] && @$dato[0]["macroproceso"]!=''){
     return($texto);
   }
