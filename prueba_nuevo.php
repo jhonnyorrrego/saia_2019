@@ -12,12 +12,6 @@ include('db.php');
 include_once("librerias_saia.php");
 include_once($ruta_db_superior."formatos/librerias/funciones_generales.php");
 
-$perfil=busca_filtro_tabla("","modulo","idmodulo=605","",$conn);
-print_r($perfil);
-
-
-die();
-
  llena_serie(0,'modulo','');
 
 function llena_serie($serie,$tabla,$padre=''){
@@ -31,7 +25,7 @@ if($papas["numcampos"])
    $hijos_seleccionados = busca_filtro_tabla("count(*)",$tabla,"cod_padre=".$papas[$i]["id$tabla"],"",$conn);
    
    // echo utf8_encode(html_entity_decode(($papas[$i]["etiqueta"])))." (".$papas[$i]["nombre"].") (".$papas[$i]["idmodulo"].") ---> PADRE: (".$padre.")";
-    echo utf8_encode(html_entity_decode(($papas[$i]["etiqueta"])));
+    echo '<pre>'.$papas[$i]["idmodulo"].' - '.utf8_encode(html_entity_decode($papas[$i]["etiqueta"])).'</pre>';
     $padre='';
     if($hijos[0][0]){
         $padre=$papas[$i]["nombre"];  
