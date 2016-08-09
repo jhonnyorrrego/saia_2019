@@ -11,6 +11,46 @@ $ruta.="../";
 $max_salida--;
 }
 include_once($ruta_db_superior."db.php");
+
+function retornar_seleccionados($valor){
+	global $ruta_db_superior;
+	$vector=explode(",",str_replace("#","d",$valor));  	
+  	$vector=array_unique($vector);
+	foreach($vector as $fila){
+		if(strpos($fila,'d')>0){
+			$ids_x=buscar_funcionarios2(str_replace("d","",$fila));
+			$cant=count($ids_x);
+			for($i=0;$i<$cant;$i++){
+				$ids[]=$ids_x[$i];
+			}
+    	}else{
+    		if($pos=strpos($fila,"_"))
+      		$fila=substr($fila,0,$pos);
+      		$ids[]=($fila);
+    	}
+  	}
+	return $ids;
+}
+
+function buscar_funcionarios2($dependencia, $arreglo=NULL){	
+	global $conn, $ruta_db_superior;
+	
+	include_once($ruta_db_superior."class_transferencia.php");
+	$dependencias=dependencias($dependencia);
+	array_push($dependencias,$dependencia);
+	
+	$dependencias=array_unique($dependencias);
+	
+	$funcionarios = busca_filtro_tabla("A.funcionario_codigo","funcionario A,dependencia_cargo B, cargo C,dependencia D","B.cargo_idcargo=C.idcargo AND B.funcionario_idfuncionario=A.idfuncionario AND B.dependencia_iddependencia=D.iddependencia and B.dependencia_iddependencia IN(".implode(",",$dependencias).") AND A.estado=1 AND B.estado=1 AND C.estado=1 AND D.estado=1","",$conn);
+	
+	$arreglo=extrae_campo($funcionarios,"funcionario_codigo","U");
+	
+	return($arreglo);
+}
+
+
+
+
 function serie_subserie($idformato,$iddoc,$tipo=0){
 global $conn;
 
