@@ -121,7 +121,7 @@ global $conn,$texto;
   
   for($i=0;$i<$formato["numcampos"];$i++){
       $papas=busca_filtro_tabla("id".$arreglo[2]." AS llave,'".$arreglo[2]."' AS nombre_tabla",$arreglo[2],"documento_iddocumento=".$formato[$i]["iddocumento"],"",$conn);
-    print_r($papas);die();
+    //print_r($papas);die();
     if($papas["numcampos"]){
         $iddoc=$arreglo[0]."-".$papas[0]["llave"]."-id".$arreglo[2];
     }else{
