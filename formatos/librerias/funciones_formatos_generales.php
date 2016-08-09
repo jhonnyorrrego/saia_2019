@@ -14,6 +14,7 @@ $max_salida--;
 include_once($ruta_db_superior."db.php");
 include_once("funciones_generales.php");
 $alto_frame="100%";
+/*
 function listado_hijos_formato($idformato,$iddoc){
 global $conn,$alto_frame;
 if($idformato){
@@ -27,7 +28,7 @@ tabla: Tabla a mostrar
 campo: campo que sirve de enlace entre padre e hijo
 llave: llave que sirve de enlace id del padre
 orden: campo por el que se debe ordenar
-*/
+*//*
     $lcampos=extrae_campo($campos,"nombre","U");
     $tabla=$formato[0]["nombre_tabla"];
 
@@ -91,7 +92,144 @@ $hijo=busca_filtro_tabla("",$tabla." A, documento B","A.documento_iddocumento=B.
       $texto.='</tbody></table></div>';
     }
 return($texto);
+}*/
+
+function listado_hijos_formato($idformato,$iddoc,$fecha = null){
+global $conn,$alto_frame;
+if(@$_REQUEST["llave"] && $idformato){
+  $formato=busca_filtro_tabla("","formato","idformato=".$idformato,"",$conn);
+  
+  if($formato["numcampos"]){
+    $campos=busca_filtro_tabla("","campos_formato","formato_idformato=".$idformato." AND etiqueta_html NOT IN('detalle','hidden')","",$conn);
+    //$datos_hijo=busca_filtro_tabla("",$formato[0]["nombre_tabla"],$_REQUEST["llave"]."=".$iddoc,"",$conn);
+    /*campos:arreglo con datos a mostrar
+tabla: Tabla a mostrar
+campo: campo que sirve de enlace entre padre e hijo
+llave: llave que sirve de enlace id del padre
+orden: campo por el que se debe ordenar
+*/
+    
+    $lcampos=extrae_campo($campos,"nombre","U");
+    $tabla=$formato[0]["nombre_tabla"];
+    $llaves=explode("-",$_REQUEST["llave"]); 
+
+    $formato_padre=busca_filtro_tabla("","formato","idformato=".$llaves[0],"",$conn);
+    $id_padre=busca_filtro_tabla("id".$formato_padre[0]["nombre_tabla"]." as id,documento_iddocumento as iddoc",$formato_padre[0]["nombre_tabla"],"id".$formato_padre[0]["nombre_tabla"]."=".$llaves[2],"",$conn);
+
+    $campo_enlace=$formato_padre[0]["nombre_tabla"];
+    $id=$llaves[2];
+    $enlace_adicionar="";
+    array_push($lcampos,"id".$tabla);     
+    
+    if(@$_REQUEST["enlace_adicionar_formato"] && @$_REQUEST["iddoc"]){
+      agrega_boton("texto","../../botones/formatos/adicionar.gif","../../responder.php?idformato=".$idformato."&iddoc=".$_REQUEST["padre"],"","Adicionar ".$formato[0]["etiqueta"],$formato[0]["nombre_tabla"],"","",0);
+      $enlace_adicionar.="<br /><br />";
+      $alto_frame="94%";
+    }
+    $texto.=$enlace_adicionar.listar_formato_hijo2($lcampos,$tabla,$campo_enlace,$id,$orden,$fecha);
+    echo($texto);
+  }
 }
+}
+function listar_formato_hijo2($campos,$tabla,$campo_enlace,$llave,$orden,$fecha=null){
+global $conn,$idformato,$alto_frame;
+$where="";
+$condicion=" AND B.estado<>'ELIMINADO'";
+if(in_array("estado",$campos) && !@$_REQUEST["enlace_adicionar_formato"]){
+  $condicion.=" AND A.estado<>'INACTIVO'";
+}
+
+if($fecha){
+	$condicion.=" AND ".fecha_db_obtener('B.fecha','Y-m-d')." >= '".$fecha."'";
+}
+
+if(count($campos)){
+  $where.=" AND A.nombre IN('".implode("','",$campos)."')";
+}            
+$lcampos=busca_filtro_tabla("A.*,B.idformato,B.nombre AS nombre_formato,B.ruta_mostrar","campos_formato A,formato B","B.nombre_tabla LIKE '".$tabla."' AND A.formato_idformato=B.idformato".$where,"A.orden",$conn);
+
+$hijo=busca_filtro_tabla("",$tabla." A, documento B","A.documento_iddocumento=B.iddocumento AND A.".$campo_enlace."=".$llave.$condicion,$orden,$conn); 
+
+if($_SESSION['LOGIN'] == '0k'){
+	//print_r($hijo);
+	//die();
+}
+
+    if($hijo["numcampos"] && $lcampos["numcampos"]){
+      $texto.='<div style="overflow:auto; border:1px solid; width:100%; height:'.$alto_frame.';"><table border="1px" style="border-collapse:collapse;width:60%" ><thead><tr class="encabezado_list">';
+      for($j=0;$j<$lcampos["numcampos"];$j++){
+        if($lcampos[$j]["nombre"]=="id".$tabla){
+          $texto.='<td>&nbsp;</td>';
+        }
+        else
+          $texto.='<td>'.$lcampos[$j]["etiqueta"]."</td>";
+      }
+      $texto.='</tr></thead><tbody style="overflow:auto; ">';
+      for($i=0;$i<$hijo["numcampos"];$i++){
+        $texto.='<tr class="celda_transparente">';
+        for($j=0;$j<$lcampos["numcampos"];$j++){
+        	$avance = '';
+        	if($lcampos[$j]["nombre"] == 'avance')
+        		$avance = '%&nbsp;';
+          if($lcampos[$j]["nombre"]=="id".$tabla){
+            $texto.='<td><a href="../'.$lcampos[0]["nombre_formato"].'/'.$lcampos[0]["ruta_mostrar"].'?idformato='.$lcampos[0]["idformato"].'&iddoc='.$hijo[$i]["documento_iddocumento"].'">Ver</a></td>';
+          }
+          else{
+          	if($lcampos[$j]["nombre"]=="controles_existentes"){
+          		$descripcion="";
+          		$controles=mostrar_valor_campo($lcampos[$j]["nombre"],$lcampos[$j]["formato_idformato"],$hijo[$i]["documento_iddocumento"],1);
+				$datos=explode(",",$controles);
+				for ($h=0; $h <count($datos) ; $h++) { 
+					$control=str_replace('{','',$datos[$h]);
+					$control=str_replace('}','',$control);
+					$control=eregi_replace('&quot;','',$control );
+					$ncontrol=explode(":",$control);
+					$idft=busca_filtro_tabla("descripcion_control","ft_control_riesgos","idft_control_riesgos=".$ncontrol[0],"",$conn);
+					if($ncontrol[1]==1)
+						$respuesta=": Si";
+					if($ncontrol[1]==2)
+						$respuesta=": No";
+					
+					$desc=html_entity_decode($idft[0]["descripcion_control"]);
+					
+					$descripcion.=$desc.$respuesta."<br/>";
+				}
+					$texto.='<td align="center">'.$descripcion.'</td>';
+				
+          	}
+          	else if($lcampos[$j]["nombre"]=="acciones_propuestas"){
+          					$descripcion="";
+          		            $acciones=mostrar_valor_campo($lcampos[$j]["nombre"],$lcampos[$j]["formato_idformato"],$hijo[$i]["documento_iddocumento"],1);
+          					$datos=explode(",",$acciones);
+							for ($h=0; $h <count($datos) ; $h++) { 
+								$control=str_replace('{','',$datos[$h]);
+								$control=str_replace('}','',$control);
+								
+								$control=eregi_replace('&quot;','',$control );
+								$ncontrol=explode(":",$control);
+								$idft=busca_filtro_tabla("acciones_accion","ft_ft_acciones_riesgo","idft_ft_acciones_riesgo=".$ncontrol[0],"",$conn);
+								if($ncontrol[1]==1)
+									$respuesta=": Si";
+								if($ncontrol[1]==2)
+									$respuesta=": No";
+								
+								$desc=html_entity_decode($idft[0]["acciones_accion"]);
+								$descripcion.=$accion.$respuesta."<br/>";
+							}
+								$texto.='<td align="center">'.$descripcion.'</td>';				
+			}
+          	else{
+            $texto.='<td align="center">'.mostrar_valor_campo($lcampos[$j]["nombre"],$lcampos[$j]["formato_idformato"],$hijo[$i]["documento_iddocumento"],1)."&nbsp;".$avance."</td>";
+			}
+		  }
+		  }
+        $texto.='</tr>';
+      }
+      $texto.='</tbody></table></div>';
+    }
+return($texto);
+}
+
 /*<Clase>
 <Nombre>Insertar Ruta</Nombre>
 <Parametros>$ruta:Arreglo con los funcionarios(funcionario_codigo) que se deben incluir en la ruta y el tipo de firma en cada componente como un arreglo ej: $ruta=array(array([funcionario]=>10,[tipo_firma]=>1),array([funcionario]=>2,["tipo_firma"]=>0)) en este caso queda en la ruta el funcionario 10 que debe firmar y el funcionario 2 que no firma;$iddoc:Id del documento:$firma1: Si el primero de la ruta debe o no firmar</Parametros>
