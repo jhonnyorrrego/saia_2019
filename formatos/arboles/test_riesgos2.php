@@ -174,7 +174,7 @@ $arreglo=explode("-",$idformato);
 $estado=busca_filtro_tabla("estado",$tabla,$arreglo[2]."=".$arreglo[1],"",$conn);
 
 
-print_r($estado);
+
 
 $adicional='';
 if($tabla=='ft_seguimiento_riesgo'){
@@ -190,6 +190,9 @@ if($estado["numcampos"])
 $dato=busca_filtro_tabla("a.".$campo.",documento_iddocumento,id".$tabla,$tabla." a,documento b",$arreglo[2]."=".$arreglo[1]." AND a.estado<>'INACTIVO' and lower(b.estado) not in('eliminado','anulado') and documento_iddocumento=iddocumento".$adicional,"id$tabla asc",$conn);
 else
 $dato=busca_filtro_tabla($campo.",documento_iddocumento,id".$tabla,$tabla." a,documento b",$arreglo[2]."=".$arreglo[1]." and lower(b.estado) not in('eliminado','anulado') and documento_iddocumento=iddocumento".$adicional,"id$tabla asc",$conn);
+
+
+print_r($dato);
 
 for($i=0;$i<$dato["numcampos"];$i++){
   $texto.='<item style="font-family:verdana; font-size:7pt;" '.$imagenes;
