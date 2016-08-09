@@ -138,6 +138,8 @@ global $conn,$texto,$imagenes,$formatos_calidad;
 $arreglo=explode("-",$formato);
 $formato=busca_filtro_tabla("","formato","idformato='".$arreglo[0]."'","",$conn);
 
+print_r($formato);
+
 if($formato["numcampos"]){
   $descripcion=busca_filtro_tabla("","campos_formato","formato_idformato=".$formato[0]["idformato"]." AND acciones LIKE '%d%'","",$conn);    
 
