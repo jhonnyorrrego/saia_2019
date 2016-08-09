@@ -173,8 +173,7 @@ $arreglo=explode("-",$idformato);
 //echo("<br />".$idformato."<br />");
 $estado=busca_filtro_tabla("estado",$tabla,$arreglo[2]."=".$arreglo[1],"",$conn);
 
-
-
+print_r($estado);
 
 $adicional='';
 if($tabla=='ft_seguimiento_riesgo'){
