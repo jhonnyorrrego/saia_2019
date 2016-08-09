@@ -16,7 +16,7 @@ $ruta.="../";
 $max_salida--;
 }
 set_time_limit(0);
-
+ini_set('display_errors',true);
 include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."librerias_saia.php");
 include_once($ruta_db_superior."formatos/librerias/funciones_generales.php");
