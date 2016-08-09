@@ -161,7 +161,7 @@ $mayor_informacion=busca_filtro_tabla("valor","configuracion","nombre='mayor_inf
                     </p>
                   	<p id="contenedor_recordar_contrasena">
                   	
-                  	<a href="recordar_contrasena.php" style="cursor:pointer" id="recordar_contrasena" class="highslide" onclick="return hs.htmlExpand(this,{objectType:'iframe',width: 550, height: 300, preserveContent:false})">¿No puedes acceder a tu cuenta?</a>
+                  	<a href="recordar_contrasena.php" style="cursor:pointer"  class="highslide" onclick="return hs.htmlExpand(this,{objectType:'iframe',width: 550, height: 300, preserveContent:false})">¿No puedes acceder a tu cuenta?</a>
                   	</p>
                 </div>
             </div>
@@ -210,7 +210,7 @@ $mayor_informacion=busca_filtro_tabla("valor","configuracion","nombre='mayor_inf
                     </p>
                   	<p id="contenedor_recordar_contrasena">
                   	
-                  	<a href="recordar_contrasena.php" style="cursor:pointer" class="highslide"  id="recordar_contrasena" onclick="return hs.htmlExpand(this,{objectType:'iframe',width: 550, height: 300, preserveContent:false})">¿No puedes acceder a tu cuenta?</a>
+                  	<a href="recordar_contrasena.php" style="cursor:pointer" class="highslide"   onclick="return hs.htmlExpand(this,{objectType:'iframe',width: 550, height: 300, preserveContent:false})">¿No puedes acceder a tu cuenta?</a>
                   	</p>
                   	
                   	
