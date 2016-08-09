@@ -288,7 +288,7 @@ var tiempo=3500;
 $("#tabla_principal").height($(window).height()-56);
 $("#ingresar").click(function(){	
   if($("#userid").val() && $("#passwd").val()){
-      $('#contenedor_recordar_contrasena').attr('disabled',true);  
+      $('#contenedor_recordar_contrasena').css('pointer-events','none');  
   	//$("#formulario_login").submit();
     $.ajax({
       type:'POST',
@@ -303,7 +303,7 @@ $("#ingresar").click(function(){
             setTimeout(function(){window.location=objeto.ruta},(tiempo+100));
           }  
           else{
-            $('#contenedor_recordar_contrasena').attr('disabled',false);  
+            $('#contenedor_recordar_contrasena').css('pointer-events','auto');  
             noty({text: mensaje,type: 'error',layout: "topCenter",timeout:tiempo});
           }                         
         }
