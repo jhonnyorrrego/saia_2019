@@ -297,6 +297,8 @@ function obtener_responsables_accion_riesgo($idft_riesgos_proceso){
 	global $conn;
 	
 	$control_riesgos = busca_filtro_tabla("descripcion_control, idft_control_riesgos","ft_control_riesgos a, documento b","a.documento_iddocumento=b.iddocumento and b.estado not in('ELIMINADO', 'ANULADO') and ft_riesgos_proceso=".$idft_riesgos_proceso,"",$conn);
+
+	
 	if($control_riesgos['numcampos']){
 		//for ($i=0; $i < $control_riesgos["numcampos"]; $i++) {
 			//$acciones .= acciones($control_riesgos[$i]["idft_control_riesgos"],"reponsables"); 
@@ -330,12 +332,19 @@ function obtener_indicador_accion_riesgo($idft_riesgos_proceso){
 function acciones($id,$campo){
 	global $conn;
 	$riesgo=busca_filtro_tabla("","ft_ft_acciones_riesgo a, documento b","a.documento_iddocumento=b.iddocumento and b.estado not in('ELIMINADO', 'ANULADO') and ft_riesgos_proceso='".$id."'","",$conn);
+	
+	
+	
 	if($riesgo[0]['acciones_accion']!=''){
 			
 			if($campo=="indicador"){	
 				$acciones=busca_filtro_tabla("indicador, iddocumento,acciones_accion","ft_ft_acciones_riesgo a, documento b","a.documento_iddocumento=b.iddocumento and b.estado not in('ELIMINADO', 'ANULADO') and ft_riesgos_proceso='".$id."'","",$conn);
 
 			}
+    		if($campo=="responsables"){
+    			$acciones=busca_filtro_tabla($campo.", iddocumento","ft_ft_acciones_riesgo a, documento b","a.documento_iddocumento=b.iddocumento and b.estado not in('ELIMINADO', 'ANULADO') and ft_riesgos_proceso='".$id."'","",$conn);
+    			//echo $acciones["numcampos"];
+    		}			
 	}else	
 	$acciones=busca_filtro_tabla($campo.",ft_riesgos_proceso,iddocumento","ft_ft_acciones_riesgo a, documento b","a.documento_iddocumento=b.iddocumento and b.estado not in('ELIMINADO', 'ANULADO') and acciones_control='".$id."'","",$conn);
 			
@@ -351,7 +360,7 @@ function acciones($id,$campo){
 			$acciones=busca_filtro_tabla("indicador, iddocumento","ft_ft_acciones_riesgo a, documento b","a.documento_iddocumento=b.iddocumento and b.estado not in('ELIMINADO', 'ANULADO') and ft_riesgos_proceso='".$id."'","",$conn);
 		}
 	
-	
+	//return($acciones['sql']);
 	
 	$texto='';
 	for($i=0;$i<$acciones["numcampos"];$i++){
@@ -359,9 +368,25 @@ function acciones($id,$campo){
 			$texto.=utf8_encode(html_entity_decode($acciones[$i][$campo]));
 		}
 		else{
-			$texto.=mostrar_valor_campo($campo,174,$acciones[$i]["iddocumento"],1);
+		    $responsable=busca_filtro_tabla("","funcionario","estado=1 AND funcionario_codigo in(".$acciones[$i][$campo].")","",$conn);
+		    
+		    
+		    for($j=0;$j<$responsable['numcampos'];$j++){
+		        if($j==0){
+		            $texto.='- ';
+		        }
+		        $texto.=$responsable[$j]['nombres'].' '.$responsable[$j]['apellidos'];
+		        if(($j+1)!=$responsable['numcampos']){
+		            $texto.=', ';
+		        }else{
+		            $texto.='<br>';
+		        }
+		    }
 		}		
 	}
+	
+	
+	
 	return $texto;
 }
 ?>

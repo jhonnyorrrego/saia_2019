@@ -25,7 +25,7 @@
                 			tree_reponsables.setImagePath("../../imgs/");
                 			tree_reponsables.enableIEImageFix(true);tree_reponsables.enableCheckBoxes(1);
                 			tree_reponsables.enableThreeStateCheckboxes(1);tree_reponsables.setOnLoadingStart(cargando_reponsables);
-                      tree_reponsables.setOnLoadingEnd(fin_cargando_reponsables);tree_reponsables.enableSmartXMLParsing(true);tree_reponsables.loadXML("../../test.php");
+                      tree_reponsables.setOnLoadingEnd(fin_cargando_reponsables);tree_reponsables.enableSmartXMLParsing(true);tree_reponsables.loadXML("../../test.php?sin_padre=1");
                 	        
                       tree_reponsables.setOnCheckHandler(onNodeSelect_reponsables);
                       function onNodeSelect_reponsables(nodeId)
