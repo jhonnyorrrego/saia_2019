@@ -172,7 +172,7 @@ function obtener_evaluacion_riesgo($idft_riesgos_proceso, $probabilidad, $impact
 	$valoraciones=valoraciones($idft_riesgos_proceso);				
 
 
-	$td = '<td style="text-align:center;" style="background-color:'.obtener_color_celda($color_celda).';">'.texto_evaluacion($evaluacion).'</td>';
+	$td = '<td style="text-align:center;background-color:'.obtener_color_celda($color_celda).';">'.texto_evaluacion($evaluacion).'</td>';
 	
 	return($td);	
 }
