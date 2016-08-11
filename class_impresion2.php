@@ -354,20 +354,7 @@ class Imprime_Pdf {
 			
 			//$contenido ='<link rel="stylesheet" type="text/css" href="http://'.RUTA_PDF_LOCAL.'/css/estilos_riesgos.css"/>'.$contenido;
 						
-			$config = array(
-				           'indent'         => true,
-				           'output-xhtml'   => true,
-				           'wrap'           => 200				           
-								);
-
-			// Tidy
-			$tidy = new tidy;
-			$tidy->errorBuffer;
-			$tidy->parseString($contenido, $config, 'utf8');
-			$tidy->cleanRepair();
-			// Output						
-						
-			$contenido=$tidy; 			
+		
 			
 			if($_REQUEST["url_encabezado"]){
 				$this->pdf->writeHTMLCell(0, 0, '', 27, stripslashes($contenido), "", 1, 0, false, '', true);
