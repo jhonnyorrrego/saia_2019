@@ -101,7 +101,7 @@ $datos=explode("-",$_REQUEST["llave"]);
         	<a href="GUIA_DE_RIESGOS_DAFP_2012_V2.pdf" target="_blank">GU&Iacute;A ADMINISTRACI&Oacute;N DE RIESGOS</a>
         </td>
         <td>
-        	<a title="Los riesgos en los cuales <?php echo usuario_actual('nombres').' '.usuario_actual('apellidos'); ?> aparece como responsable en la administraci&oacute;n del riesgo" href="<?php echo 'previo_mostrar_riesgos_proceso.php?llave='.$_REQUEST["llave"].'&responsable='.usuario_actual('funcionario_codigo');?>" target="_self">MIS RESPONSABILIDADES SOBRE LA ADMINISTRACI&Oacute;N DEL RIESGO</a>
+        	<a title="Los riesgos en los cuales <?php echo usuario_actual('nombres').' '.usuario_actual('apellidos'); ?> aparece como responsable en la administraci&oacute;n del riesgo" href="<?php echo 'previo_mostrar_riesgos_proceso2.php?llave='.$_REQUEST["llave"].'&responsable='.usuario_actual('funcionario_codigo');?>" target="_self">MIS RESPONSABILIDADES SOBRE LA ADMINISTRACI&Oacute;N DEL RIESGO</a>
         </td>
     </tr>
     <tr>     	
