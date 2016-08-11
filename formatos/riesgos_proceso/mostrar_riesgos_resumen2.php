@@ -171,7 +171,8 @@ function obtener_evaluacion_riesgo($idft_riesgos_proceso, $probabilidad, $impact
 	$color_celda=color_evaluacion($evaluacion);
 	$valoraciones=valoraciones($idft_riesgos_proceso);				
 
-	$td = '<td style="text-align:center;" class="'.$color_celda.'">'.texto_evaluacion($evaluacion).'</td>';
+
+	$td = '<td style="text-align:center;" style="background-color:'.obtener_color_celda($color_celda).';">'.texto_evaluacion($evaluacion).'</td>';
 	
 	return($td);	
 }
@@ -394,24 +395,6 @@ function acciones($id,$campo){
 
 
 function obtener_color_celda($valor){
-    
-  /*  
-.colar_A{
-	background-color: #DAAAA6;
-}
-
-.colar_B{
-	background-color: green;
-}
-
-.colar_E{
-	background-color: red;
-}
-
-.colar_M{
-	background-color: yellow;
-}    
-*/
     $color='';
     switch($valor){
         case 'colar_A':
