@@ -348,8 +348,8 @@ class Imprime_Pdf {
 			$contenido = preg_replace('/<dobble-br\/>/',"<br /><br />",$contenido);		
 			
 			if($_SESSION['LOGIN'.LLAVE_SAIA] == 'cerok'){
-  			print_r($contenido);
-			die();
+  		//	print_r($contenido);
+		//	die();
 			}			
 			
 			if($_REQUEST["url_encabezado"]){
@@ -357,7 +357,6 @@ class Imprime_Pdf {
 			}else{
 				$this->pdf->writeHTML(stripslashes($contenido), true, false, false, false, '');	
 			}		
-
     }    
     curl_close($ch);
   }
