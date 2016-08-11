@@ -18,6 +18,35 @@ include_once($ruta_db_superior.'formatos/riesgos_proceso/librerias_riesgos.php')
 ?>
 <link rel="stylesheet" type="text/css" href="<?php echo($ruta_db_superior); ?>css/estilos.css"/>
 <style type="text/css">
+tree.prueba{
+ font-family:arial; 
+ font-size:5pt;
+}
+
+.phpmaker{
+ font-family: Verdana,Tahoma,arial;       
+ color:#000000;
+ /*text-transform:Uppercase;*/
+} 
+
+.encabezado{
+ background-color:#006600; 
+ color:white ; 
+ padding:10px; 
+ text-align: left;        
+} 
+
+.encabezado_list{ 
+ background-color:#006600; 
+ color:white ; 
+ vertical-align:middle;
+ text-align: center;
+ font-weight: bold;       
+}
+
+.colar_A{
+	background-color: #DAAAA6;
+}
 
 .colar_A{
 	background-color: #DAAAA6;
@@ -37,11 +66,18 @@ include_once($ruta_db_superior.'formatos/riesgos_proceso/librerias_riesgos.php')
 
 .titulo_riesgo{
 	background-color: #D2D3D5;
+	text-align: center;
+	text-transform:Uppercase;
+	font-weight:bold;
+}
+
+.riesgo_encabezado{
+	background-color: #D2D3D5;
 }
 
 body, table thead td, table tbody td{
   font-family: Verdana; 
-  font-size: 9px; 
+  font-size: 6pt; 
 } 
 
 .encabezado {
@@ -63,7 +99,7 @@ table thead td {
 	background-color:#006600;
 	text-align: center;
 	text-transform:Uppercase;
-	vertical-align:middle;    
+	vertical-align:middle;
 }
 </style>
 <?php
