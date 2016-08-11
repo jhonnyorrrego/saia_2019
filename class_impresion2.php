@@ -347,7 +347,18 @@ class Imprime_Pdf {
 			$contenido = preg_replace('/(height-pdf:)(.*);/',"${1}height: $2;",$contenido);
 			$contenido = preg_replace('/<dobble-br\/>/',"<br /><br />",$contenido);			
 			$contenido ='<link rel="stylesheet" type="text/css" href="http://'.RUTA_PDF_LOCAL.'/css/estilos_riesgos.css"/>'.$contenido;
-					
+			$config = array(
+				           'indent'         => true,
+				           'output-xhtml'   => true,
+				           'wrap'           => 200				           
+								);
+
+			// Tidy
+			$tidy = new tidy;
+			$tidy->errorBuffer;
+			$tidy->parseString($contenido, $config, 'utf8');
+			$tidy->cleanRepair();
+			// Output					
 			
 			if($_REQUEST["url_encabezado"]){
 				$this->pdf->writeHTMLCell(0, 0, '', 27, stripslashes($contenido), "", 1, 0, false, '', true);
