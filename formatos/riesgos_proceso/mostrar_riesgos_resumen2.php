@@ -105,22 +105,22 @@ $proceso=busca_filtro_tabla("","ft_proceso a","a.idft_proceso=".$datos[2],"",$co
 										</td>
 									</tr>
 									<tr height="80px">
-										<td class="titulo_riesgo" rowspan="2"><p>RIESGO</p></td>
-                    <td class="titulo_riesgo" colspan="2"><p>CALIFICACI&Oacute;N</p></td>
-                    <td class="titulo_riesgo" rowspan="2"><p>EVALUACION RIESGO</p></td>
-                    <td class="titulo_riesgo" rowspan="2"><p>CONTROLES</p></td>
-                    <td class="titulo_riesgo" colspan="2"><p>NUEVA<br>CALIFICACION</p></td>
-                    <td class="titulo_riesgo" rowspan="2"><p>NUEVA EVALUACION</p></td>
-                    <td class="titulo_riesgo" rowspan="2"><p>OPCIONES<br>MANEJO</p></td>
-                    <td class="titulo_riesgo" rowspan="2"><p>ACCIONES</p></td>
-                    <td class="titulo_riesgo" rowspan="2"><p>RESPONSABLE DE LA ACCI&Oacute;N</p></td>
-                    <td class="titulo_riesgo" rowspan="2"><p>INDICADOR</p></td>											
+										<td style="background-color: #D2D3D5;" rowspan="2"><p>RIESGO</p></td>
+                    <td style="background-color: #D2D3D5;" colspan="2"><p>CALIFICACI&Oacute;N</p></td>
+                    <td style="background-color: #D2D3D5;" rowspan="2"><p>EVALUACION RIESGO</p></td>
+                    <td style="background-color: #D2D3D5;" rowspan="2"><p>CONTROLES</p></td>
+                    <td style="background-color: #D2D3D5;" colspan="2"><p>NUEVA<br>CALIFICACION</p></td>
+                    <td style="background-color: #D2D3D5;" rowspan="2"><p>NUEVA EVALUACION</p></td>
+                    <td style="background-color: #D2D3D5;" rowspan="2"><p>OPCIONES<br>MANEJO</p></td>
+                    <td style="background-color: #D2D3D5;" rowspan="2"><p>ACCIONES</p></td>
+                    <td style="background-color: #D2D3D5;" rowspan="2"><p>RESPONSABLE DE LA ACCI&Oacute;N</p></td>
+                    <td style="background-color: #D2D3D5;" rowspan="2"><p>INDICADOR</p></td>											
 									</tr>
 									<tr height="80px">
-										<td class="titulo_riesgo"><p>Probabilidad</p></td>
-                    <td class="titulo_riesgo"><p>Impacto</p></td>
-                    <td class="titulo_riesgo"><p>Probabilidad</p></td>
-                    <td class="titulo_riesgo"><p>Impacto</p></td>
+										<td style="background-color: #D2D3D5;"><p>Probabilidad</p></td>
+                    <td style="background-color: #D2D3D5;"><p>Impacto</p></td>
+                    <td style="background-color: #D2D3D5;"><p>Probabilidad</p></td>
+                    <td style="background-color: #D2D3D5;"><p>Impacto</p></td>
 									</tr>';
 								if(!@$_REQUEST["tipo"])$tabla.='</thead>';
 								$tabla.='<tbody>
