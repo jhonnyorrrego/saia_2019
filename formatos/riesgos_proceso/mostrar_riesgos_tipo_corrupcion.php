@@ -114,7 +114,7 @@ $tabla .='
 							for($j=0;$j<$acciones['numcampos'];$j++){
 								if($acciones[$j]['opcio_admin_riesgo']!=""){
 									//$tabla.=mostrar_valor_campo('opcio_admin_riesgo',174,$acciones[$j]['documento_iddocumento'],1);
-									$tabla.=$acciones['sql'];
+									$tabla.$acciones[$j]['opcio_admin_riesgo'];
 								}
 							}
 							$tabla.='</td>
