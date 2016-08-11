@@ -111,15 +111,15 @@ function guardar_item()
              var direccion = new String(window.parent.frames[0].location);
              param=direccion.split('&');
              direccion=param[0]+'&'+param[1]+'&seleccionar=" . $padre[0]["idformato"] . "-" . $superior[0][0] . "-" . $padre[0]["nombre_tabla"] . "-" . $doc_padre[0][0] . "';
-             window.parent.frames[0].location=direccion;
+             //window.parent.frames[0].location=direccion;
+             window.parent.frames[0].tree_riesgos.selectItem(375,true,false);
              </script>";
 			else
 				echo "<script>
              var direccion = new String(window.parent.frames[0].location);
              param=direccion.split('&');
              direccion=param[0]+'&'+param[1];
-             //window.parent.frames[0].location=direccion;
-             window.parent.frames[0].tree_riesgos.selectItem(375,true,false);
+             window.parent.frames[0].location=direccion;
              </script>";
 		}
 		/*if($_REQUEST["opcion_item"]<>"adicionar")
