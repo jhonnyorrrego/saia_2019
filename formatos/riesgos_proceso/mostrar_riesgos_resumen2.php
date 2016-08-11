@@ -222,7 +222,7 @@ function obtener_nueva_evaluacion_riesgo($idft_riesgos_proceso, $probabilidad, $
 	$evaluacion=tabla_evaluacion($probabilidad_auto,$impacto_auto,1);				
 	$color_celda=color_evaluacion($evaluacion);
 	
-	$td = '<td style="text-align:center;" class="'.$color_celda.'">'.texto_evaluacion($evaluacion).'</td>';
+	$td = '<td style="text-align:center;background-color:'.obtener_color_celda($color_celda).';">'.texto_evaluacion($evaluacion).'</td>';
 	$td .= '<td style="text-align:center;">'.texto_evaluacion($evaluacion,2).'</td>';
 	
 	return($td);	
