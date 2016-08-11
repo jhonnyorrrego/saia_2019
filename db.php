@@ -123,8 +123,6 @@ global $conn;
 			phpmkr_query($insertar, $conn) or error("Fallo la busqueda" . phpmkr_error() . ' SQL buzon_entrada:' . $insertar);
 		}
 	}
-	/*include_once("formatos/librerias/funciones_generales.php");
-	actualizar_dependencia($llave);*/
 }
 /*<Clase>
 <Nombre>limpia_tabla</Nombre>

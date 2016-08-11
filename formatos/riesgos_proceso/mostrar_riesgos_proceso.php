@@ -53,5 +53,4 @@
 </tbody>
 </table>
 <p>&nbsp;</p>
-<p><?php matriz_riesgo(393,$_REQUEST['iddoc']);?></p>
-<p>&nbsp;</p></td></tr><?php include_once("../librerias/footer_nuevo.php"); ?>
+<p><?php matriz_riesgo(393,$_REQUEST['iddoc']);?></p></td></tr><?php include_once("../librerias/footer_nuevo.php"); ?>
