@@ -355,8 +355,8 @@ class Imprime_Pdf {
 				$this->pdf->writeHTML(stripslashes($contenido), false, false, false, false, '');	
 			}		
 			if($_SESSION['LOGIN'.LLAVE_SAIA] == 'cerok'){
-  			print_r($contenido);
-				die();
+  			    //print_r($contenido);
+				//die();
 			}
     }    
     curl_close($ch);
