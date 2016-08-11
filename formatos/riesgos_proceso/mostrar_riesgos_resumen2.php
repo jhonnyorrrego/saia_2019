@@ -91,16 +91,16 @@ $proceso=busca_filtro_tabla("","ft_proceso a","a.idft_proceso=".$datos[2],"",$co
 		if(!@$_REQUEST["tipo"])$tabla.='<thead class="encabezado_table">';
 									$tabla.='
 									<tr>									
-										<td class="riesgo_encabezado titulo_riesgo" colspan="12">MATRIZ DE RIESGOS DEL PROCESO</td>
+										<td style="background-color: #D2D3D5; text-align:center;" colspan="12">MATRIZ DE RIESGOS DEL PROCESO</td>
 									</tr>
 									<tr>
-										<td class="riesgo_encabezado titulo_riesgo" colspan="12">MAPA DE RIESGOS</td>
+										<td style="background-color: #D2D3D5; text-align:center;" colspan="12">MAPA DE RIESGOS</td>
 									</tr>
 									<tr>
-										<td colspan="12" class="riesgo_encabezado titulo_riesgo">PROCESO: '.$proceso[0]["nombre"].'</td>
+										<td colspan="12" style="background-color: #D2D3D5; text-align:center;">PROCESO: '.$proceso[0]["nombre"].'</td>
 									</tr>
 									<tr>
-										<td colspan="12" class="riesgo_encabezado titulo_riesgo">
+										<td colspan="12" style="background-color: #D2D3D5; text-align:center;">
 											OBJETIVO: '.preg_replace("/(<p.*>)(.*)(<\/p>)/","$2", $proceso[0]["objetivo"]).'
 										</td>
 									</tr>
