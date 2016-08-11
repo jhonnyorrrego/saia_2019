@@ -166,9 +166,19 @@ echo($tabla);
 function obtener_evaluacion_riesgo($idft_riesgos_proceso, $probabilidad, $impacto){
 	global $conn;
 	
+
 	$evaluacion=tabla_evaluacion($probabilidad,$impacto);
 	$color_celda=color_evaluacion($evaluacion);
 	$valoraciones=valoraciones($idft_riesgos_proceso);				
+
+    $color="";
+	switch($color_celda){
+	    case 'colar_A':
+	        $color="";
+	        break;
+	        
+	}
+
 	
 	$td = '<td style="text-align:center;" class="'.$color_celda.'">'.texto_evaluacion($evaluacion).'</td>';
 	
