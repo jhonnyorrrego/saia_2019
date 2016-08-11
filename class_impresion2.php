@@ -352,7 +352,7 @@ class Imprime_Pdf {
 	        	//	die();
 			}			
 			
-			$contenido ='<link rel="stylesheet" type="text/css" href="http://'.RUTA_PDF_LOCAL.'/css/estilos_riesgos.css"/>'.$contenido;
+			//$contenido ='<link rel="stylesheet" type="text/css" href="http://'.RUTA_PDF_LOCAL.'/css/estilos_riesgos.css"/>'.$contenido;
 						
 			$config = array(
 				           'indent'         => true,
