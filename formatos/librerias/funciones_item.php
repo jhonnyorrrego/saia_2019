@@ -118,7 +118,8 @@ function guardar_item()
              var direccion = new String(window.parent.frames[0].location);
              param=direccion.split('&');
              direccion=param[0]+'&'+param[1];
-             window.parent.frames[0].location=direccion;
+             //window.parent.frames[0].location=direccion;
+             window.parent.frames[0].tree_riesgos.selectItem(375,true,false);
              </script>";
 		}
 		/*if($_REQUEST["opcion_item"]<>"adicionar")
