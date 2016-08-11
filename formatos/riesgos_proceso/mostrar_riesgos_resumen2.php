@@ -110,7 +110,7 @@ $proceso=busca_filtro_tabla("","ft_proceso a","a.idft_proceso=".$datos[2],"",$co
                     <td class="titulo_riesgo" rowspan="2"><p>EVALUACION RIESGO</p></td>
                     <td class="titulo_riesgo" rowspan="2"><p>CONTROLES</p></td>
                     <td class="titulo_riesgo" colspan="2"><p>NUEVA<br>CALIFICACION</p></td>
-                    <td class="titulo_riesgo" rowspan="2"><p>NUEVA EVALUACION</p></td>
+                    <td style="background-color: #D2D3D5;" class="titulo_riesgo" rowspan="2"><p>NUEVA EVALUACION</p></td>
                     <td class="titulo_riesgo" rowspan="2"><p>OPCIONES<br>MANEJO</p></td>
                     <td class="titulo_riesgo" rowspan="2"><p>ACCIONES</p></td>
                     <td class="titulo_riesgo" rowspan="2"><p>RESPONSABLE DE LA ACCI&Oacute;N</p></td>
