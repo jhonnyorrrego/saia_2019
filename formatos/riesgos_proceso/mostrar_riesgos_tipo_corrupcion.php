@@ -97,7 +97,7 @@ $tabla .='
 							<td>'.strip_tags(utf8_encode(html_entity_decode($riesgos[$i]['fuente_causa']))).'</td>
 							<td>'.$riesgos[$i]['consecutivo'].'</td>
 							<td>'.utf8_encode(html_entity_decode($riesgos[$i]['riesgo'])).'</td>
-							<td>'.mostrar_valor_campo('probabilidad',13,$riesgos[$i]['documento_iddocumento'],1).'</td>
+							<td>'.mostrar_valor_campo('probabilidad',393,$riesgos[$i]['documento_iddocumento'],1).'</td>
 							<td style="text-align:left;">';
 							for($j=0;$j<$valoracion['numcampos'];$j++){
 								$tabla .= ''.strip_tags(html_entity_decode($valoracion[$j]['descripcion_control'])).'';
