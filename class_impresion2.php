@@ -347,16 +347,17 @@ class Imprime_Pdf {
 			$contenido = preg_replace('/(height-pdf:)(.*);/',"${1}height: $2;",$contenido);
 			$contenido = preg_replace('/<dobble-br\/>/',"<br /><br />",$contenido);			
 			
-			if($_SESSION['LOGIN'.LLAVE_SAIA] == 'cerok'){
-  			print_r($contenido);
-				die();
-			}		
+					
 			
 			if($_REQUEST["url_encabezado"]){
 				$this->pdf->writeHTMLCell(0, 0, '', 27, stripslashes($contenido), "", 1, 0, false, '', true);
 			}else{
 				$this->pdf->writeHTML(stripslashes($contenido), false, false, false, false, '');	
-			}						      
+			}		
+			if($_SESSION['LOGIN'.LLAVE_SAIA] == 'cerok'){
+  			print_r($contenido);
+				die();
+			}
     }    
     curl_close($ch);
   }
