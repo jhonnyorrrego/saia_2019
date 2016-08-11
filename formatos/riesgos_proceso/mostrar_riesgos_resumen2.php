@@ -97,10 +97,10 @@ $proceso=busca_filtro_tabla("","ft_proceso a","a.idft_proceso=".$datos[2],"",$co
 										<td class="riesgo_encabezado titulo_riesgo" colspan="12">MAPA DE RIESGOS</td>
 									</tr>
 									<tr>
-										<td colspan="12" class="riesgo_encabezado titulo_riesgo" text-align:left">PROCESO: '.$proceso[0]["nombre"].'</td>
+										<td colspan="12" class="riesgo_encabezado titulo_riesgo">PROCESO: '.$proceso[0]["nombre"].'</td>
 									</tr>
 									<tr>
-										<td colspan="12" class="riesgo_encabezado titulo_riesgo" text-align:left;">
+										<td colspan="12" class="riesgo_encabezado titulo_riesgo">
 											OBJETIVO: '.preg_replace("/(<p.*>)(.*)(<\/p>)/","$2", $proceso[0]["objetivo"]).'
 										</td>
 									</tr>
