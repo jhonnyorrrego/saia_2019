@@ -1,0 +1,83 @@
+tree.prueba{
+ font-family:arial; 
+ font-size:5pt;
+}
+
+.phpmaker{
+ font-family: Verdana,Tahoma,arial;       
+ color:#000000;
+ /*text-transform:Uppercase;*/
+} 
+
+.encabezado{
+ background-color:#006600; 
+ color:white ; 
+ padding:10px; 
+ text-align: left;        
+} 
+
+.encabezado_list{ 
+ background-color:#006600; 
+ color:white ; 
+ vertical-align:middle;
+ text-align: center;
+ font-weight: bold;       
+}
+
+.colar_A{
+	background-color: #DAAAA6;
+}
+
+.colar_A{
+	background-color: #DAAAA6;
+}
+
+.colar_B{
+	background-color: green;
+}
+
+.colar_E{
+	background-color: red;
+}
+
+.colar_M{
+	background-color: yellow;
+}
+
+.titulo_riesgo{
+	background-color: #D2D3D5;
+	text-align: center;
+	text-transform:Uppercase;
+	font-weight:bold;
+}
+
+.riesgo_encabezado{
+	background-color: #D2D3D5;
+}
+
+body, table thead td, table tbody td{
+  font-family: Verdana; 
+  font-size: 6pt; 
+} 
+
+.encabezado {
+	background-color:#006600; 
+	color:white ; 
+	padding:10px; 
+	text-align: left;  
+} 
+
+.encabezado_table td{	 
+	vertical-align:middle;
+	text-align: center;	 
+	font-size: 8px !important;
+}
+
+table thead td {
+	font-weight:bold;
+	cursor:pointer;
+	background-color:#006600;
+	text-align: center;
+	text-transform:Uppercase;
+	vertical-align:middle;
+}
