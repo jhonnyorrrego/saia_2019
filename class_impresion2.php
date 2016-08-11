@@ -346,7 +346,7 @@ class Imprime_Pdf {
 			$contenido = preg_replace('/(table-margin-left:)(.*);/',"${1}margin-left: $2;",$contenido);
 			$contenido = preg_replace('/(height-pdf:)(.*);/',"${1}height: $2;",$contenido);
 			$contenido = preg_replace('/<dobble-br\/>/',"<br /><br />",$contenido);			
-			
+			$contenido ='<link rel="stylesheet" type="text/css" href="http://'.RUTA_PDF_LOCAL.'/css/estilos_riesgos.css"/>'.$contenido;
 					
 			
 			if($_REQUEST["url_encabezado"]){
