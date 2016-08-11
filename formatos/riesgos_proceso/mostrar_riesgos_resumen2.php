@@ -16,8 +16,8 @@ include_once($ruta_db_superior.'db.php');
 include_once($ruta_db_superior."formatos/librerias/funciones_generales.php");
 include_once($ruta_db_superior.'formatos/riesgos_proceso/librerias_riesgos.php');
 ?>
-<link rel="stylesheet" type="text/css" href="<?php echo($ruta_db_superior); ?>css/estilos.css"/>
-<style type="text/css">
+<!--link rel="stylesheet" type="text/css" href="<?php echo($ruta_db_superior); ?>css/estilos.css"/-->
+<style>
 tree.prueba{
  font-family:arial; 
  font-size:5pt;
