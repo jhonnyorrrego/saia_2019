@@ -347,7 +347,7 @@ class Imprime_Pdf {
 			$contenido = preg_replace('/(height-pdf:)(.*);/',"${1}height: $2;",$contenido);
 			$contenido = preg_replace('/<dobble-br\/>/',"<br /><br />",$contenido);			
 			
-			if($_SESSION['LOGIN'] == 'cerok'){
+			if($_SESSION['LOGIN'.LLAVE_SAIA] == 'cerok'){
   			print_r($contenido);
 				die();
 			}		
