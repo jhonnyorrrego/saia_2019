@@ -16,37 +16,8 @@ include_once($ruta_db_superior.'db.php');
 include_once($ruta_db_superior."formatos/librerias/funciones_generales.php");
 include_once($ruta_db_superior.'formatos/riesgos_proceso/librerias_riesgos.php');
 ?>
-<!--link rel="stylesheet" type="text/css" href="<?php echo($ruta_db_superior); ?>css/estilos.css"/-->
-<style>
-tree.prueba{
- font-family:arial; 
- font-size:5pt;
-}
-
-.phpmaker{
- font-family: Verdana,Tahoma,arial;       
- color:#000000;
- /*text-transform:Uppercase;*/
-} 
-
-.encabezado{
- background-color:#006600; 
- color:white ; 
- padding:10px; 
- text-align: left;        
-} 
-
-.encabezado_list{ 
- background-color:#006600; 
- color:white ; 
- vertical-align:middle;
- text-align: center;
- font-weight: bold;       
-}
-
-.colar_A{
-	background-color: #DAAAA6;
-}
+<link rel="stylesheet" type="text/css" href="<?php echo($ruta_db_superior); ?>css/estilos.css"/>
+<style type="text/css">
 
 .colar_A{
 	background-color: #DAAAA6;
@@ -66,18 +37,11 @@ tree.prueba{
 
 .titulo_riesgo{
 	background-color: #D2D3D5;
-	text-align: center;
-	text-transform:Uppercase;
-	font-weight:bold;
-}
-
-.riesgo_encabezado{
-	background-color: #D2D3D5;
 }
 
 body, table thead td, table tbody td{
   font-family: Verdana; 
-  font-size: 6pt; 
+  font-size: 9px; 
 } 
 
 .encabezado {
@@ -99,7 +63,7 @@ table thead td {
 	background-color:#006600;
 	text-align: center;
 	text-transform:Uppercase;
-	vertical-align:middle;
+	vertical-align:middle;    
 }
 </style>
 <?php
@@ -141,22 +105,22 @@ $proceso=busca_filtro_tabla("","ft_proceso a","a.idft_proceso=".$datos[2],"",$co
 										</td>
 									</tr>
 									<tr height="80px">
-										<td style="background-color: #D2D3D5;" rowspan="2"><p>RIESGO</p></td>
-                    <td style="background-color: #D2D3D5;" colspan="2"><p>CALIFICACI&Oacute;N</p></td>
-                    <td style="background-color: #D2D3D5;" rowspan="2"><p>EVALUACION RIESGO</p></td>
-                    <td style="background-color: #D2D3D5;" rowspan="2"><p>CONTROLES</p></td>
-                    <td style="background-color: #D2D3D5;" colspan="2"><p>NUEVA<br>CALIFICACION</p></td>
-                    <td style="background-color: #D2D3D5;" rowspan="2"><p>NUEVA EVALUACION</p></td>
-                    <td style="background-color: #D2D3D5;" rowspan="2"><p>OPCIONES<br>MANEJO</p></td>
-                    <td style="background-color: #D2D3D5;" rowspan="2"><p>ACCIONES</p></td>
-                    <td style="background-color: #D2D3D5;" rowspan="2"><p>RESPONSABLE DE LA ACCI&Oacute;N</p></td>
-                    <td style="background-color: #D2D3D5;" rowspan="2"><p>INDICADOR</p></td>											
+										<td class="titulo_riesgo" rowspan="2"><p>RIESGO</p></td>
+                    <td class="titulo_riesgo" colspan="2"><p>CALIFICACI&Oacute;N</p></td>
+                    <td class="titulo_riesgo" rowspan="2"><p>EVALUACION RIESGO</p></td>
+                    <td class="titulo_riesgo" rowspan="2"><p>CONTROLES</p></td>
+                    <td class="titulo_riesgo" colspan="2"><p>NUEVA<br>CALIFICACION</p></td>
+                    <td class="titulo_riesgo" rowspan="2"><p>NUEVA EVALUACION</p></td>
+                    <td class="titulo_riesgo" rowspan="2"><p>OPCIONES<br>MANEJO</p></td>
+                    <td class="titulo_riesgo" rowspan="2"><p>ACCIONES</p></td>
+                    <td class="titulo_riesgo" rowspan="2"><p>RESPONSABLE DE LA ACCI&Oacute;N</p></td>
+                    <td class="titulo_riesgo" rowspan="2"><p>INDICADOR</p></td>											
 									</tr>
 									<tr height="80px">
-										<td style="background-color: #D2D3D5;"><p>Probabilidad</p></td>
-                    <td style="background-color: #D2D3D5;"><p>Impacto</p></td>
-                    <td style="background-color: #D2D3D5;"><p>Probabilidad</p></td>
-                    <td style="background-color: #D2D3D5;"><p>Impacto</p></td>
+										<td class="titulo_riesgo"><p>Probabilidad</p></td>
+                    <td class="titulo_riesgo"><p>Impacto</p></td>
+                    <td class="titulo_riesgo"><p>Probabilidad</p></td>
+                    <td class="titulo_riesgo"><p>Impacto</p></td>
 									</tr>';
 								if(!@$_REQUEST["tipo"])$tabla.='</thead>';
 								$tabla.='<tbody>
@@ -174,7 +138,7 @@ $proceso=busca_filtro_tabla("","ft_proceso a","a.idft_proceso=".$datos[2],"",$co
 																$tabla.='<td style="text-align: center;">No Aplica</td>';
 															}
 															else{
-																$tabla .='<td>'.obtener_evaluacion_riesgo($riesgos[$i]["idft_riesgos_proceso"], $riesgos[$i]["probabilidad"], $riesgos[$i]["impacto"]).'</td>';
+																$tabla .=''.obtener_evaluacion_riesgo($riesgos[$i]["idft_riesgos_proceso"], $riesgos[$i]["probabilidad"], $riesgos[$i]["impacto"]).'';
 															}
 															$tabla.='<td>'.obtener_controles_riesgo($riesgos[$i]["idft_riesgos_proceso"]).'</td>
 															<td style="text-align:center;">'.obtener_nueva_probabilidad($riesgos[$i]["idft_riesgos_proceso"], $riesgos[$i]["probabilidad"]).'</td>';
@@ -185,7 +149,7 @@ $proceso=busca_filtro_tabla("","ft_proceso a","a.idft_proceso=".$datos[2],"",$co
 																$tabla.='<td style="text-align: center;">No Aplica</td>';
 															}
 															else{
-																$tabla .='<td>'.obtener_nueva_evaluacion_riesgo($riesgos[$i]["idft_riesgos_proceso"], $riesgos[$i]["probabilidad"], $riesgos[$i]["impacto"]).'</td>';
+																$tabla .=obtener_nueva_evaluacion_riesgo($riesgos[$i]["idft_riesgos_proceso"], $riesgos[$i]["probabilidad"], $riesgos[$i]["impacto"]).'</td>';
 															}															
 															$tabla .='<td>'.obtener_acciones_riesgo($riesgos[$i]["idft_riesgos_proceso"]).'</td>
 															<td>'.obtener_responsables_accion_riesgo($riesgos[$i]["idft_riesgos_proceso"]).'</td>
