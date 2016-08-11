@@ -174,7 +174,7 @@ $proceso=busca_filtro_tabla("","ft_proceso a","a.idft_proceso=".$datos[2],"",$co
 																$tabla.='<td style="text-align: center;">No Aplica</td>';
 															}
 															else{
-																$tabla .=''.obtener_evaluacion_riesgo($riesgos[$i]["idft_riesgos_proceso"], $riesgos[$i]["probabilidad"], $riesgos[$i]["impacto"]).'';
+																$tabla .='<td>'.obtener_evaluacion_riesgo($riesgos[$i]["idft_riesgos_proceso"], $riesgos[$i]["probabilidad"], $riesgos[$i]["impacto"]).'</td>';
 															}
 															$tabla.='<td>'.obtener_controles_riesgo($riesgos[$i]["idft_riesgos_proceso"]).'</td>
 															<td style="text-align:center;">'.obtener_nueva_probabilidad($riesgos[$i]["idft_riesgos_proceso"], $riesgos[$i]["probabilidad"]).'</td>';
@@ -185,7 +185,7 @@ $proceso=busca_filtro_tabla("","ft_proceso a","a.idft_proceso=".$datos[2],"",$co
 																$tabla.='<td style="text-align: center;">No Aplica</td>';
 															}
 															else{
-																$tabla .=obtener_nueva_evaluacion_riesgo($riesgos[$i]["idft_riesgos_proceso"], $riesgos[$i]["probabilidad"], $riesgos[$i]["impacto"]).'</td>';
+																$tabla .='<td>'.obtener_nueva_evaluacion_riesgo($riesgos[$i]["idft_riesgos_proceso"], $riesgos[$i]["probabilidad"], $riesgos[$i]["impacto"]).'</td>';
 															}															
 															$tabla .='<td>'.obtener_acciones_riesgo($riesgos[$i]["idft_riesgos_proceso"]).'</td>
 															<td>'.obtener_responsables_accion_riesgo($riesgos[$i]["idft_riesgos_proceso"]).'</td>
