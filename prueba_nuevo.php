@@ -44,6 +44,8 @@ function generar_version_json($iddoc){
     $json_final['reemplazo_documento']=obtener_info_version($iddoc,'reemplazo_documento','documento_iddocumento'); //reemplazo_documento   
     $json_final['salidas']=obtener_info_version($iddoc,'salidas','documento_iddocumento'); //salidas   
     $json_final['version_documento']=obtener_info_version($iddoc,'version_documento','documento_iddocumento'); //version_documento   
+    $json_final['version_pagina']=obtener_info_version($iddoc,'version_pagina','documento_iddocumento'); //version_pagina
+    $json_final['version_anexos']=obtener_info_version($iddoc,'version_anexos','documento_iddocumento'); //version_anexos
     return($json_final);
     
 }
