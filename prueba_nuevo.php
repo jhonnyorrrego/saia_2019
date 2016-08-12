@@ -27,11 +27,6 @@ function obtener_info_version($iddoc,$nombre_tabla,$llave){
     global $conn;
     
     $campos_tabla=listar_campos_tabla($nombre_tabla); 
-    $keys=array();
-    for($i=0;$i<count($campos_tabla);$i++){
-        $keys[$campos_tabla[$i]]='';
-    }
-    
     $select=busca_filtro_tabla('',$nombre_tabla,$llave.'='.$iddoc,'',$conn);
     $json=array();
     for($i=0;$i<$select['numcampos'];$i++){
@@ -39,11 +34,7 @@ function obtener_info_version($iddoc,$nombre_tabla,$llave){
             $json[$i][$campos_tabla[$j]]=$select[$i][$campos_tabla[$j]];
         }
     }    
-    
     return($json);
-    
-    
-    
 }
 
 
