@@ -153,12 +153,12 @@ $datos=explode("-",$_REQUEST["llave"]);
         	}
         	?>
         </td> 
-        <td><a  title="" href="politicas_administracion_riesgo.docx" target="_self">POLITICAS DE ADMINISTRACI&Oacute;N DEL RIESGO</a></td>
-        <td><a href="mostrar_riesgos_tipo_corrupcion.php" target="_self">MAPA DE RIESGOS DE CORRUPCI&Oacute;N INSTITUCIONAL</a></td>  
+       
+        <td><a href="mostrar_riesgos_tipo_corrupcion.php" target="_self">MAPA DE RIESGOS DE CORRUPCI&Oacute;N INSTITUCIONAL</a></td> 
+        	<td><a href="mapa_riesgos_institucional.php" target="_self">MAPA DE RIESGOS INSTITUCIONAL</a></td>
 	</tr>
 	<tr>
-		<td><a href="mapa_riesgos_institucional.php" target="_self">MAPA DE RIESGOS INSTITUCIONAL</a></td>
-		<td><a href="matriz_riesgos_institucional.php" target="_self">MATRIZ DE RIESGOS INSTITUCIONAL</a></td>
+		<td ><a href="matriz_riesgos_institucional.php" target="_self">MATRIZ DE RIESGOS INSTITUCIONAL</a></td>
 	</tr>	
   </table>
   <br /><br /><br />
