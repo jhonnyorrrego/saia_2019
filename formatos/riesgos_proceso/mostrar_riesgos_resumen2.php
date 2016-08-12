@@ -210,7 +210,8 @@ function obtener_nueva_evaluacion_riesgo($idft_riesgos_proceso, $probabilidad, $
 	$probabilidad_auto = obtener_probabilidad_riesgo($idft_riesgos_proceso, $probabilidad);
 	$impacto_auto      = obtener_impacto_riesgo($idft_riesgos_proceso, $impacto);							
 								
-	$evaluacion=tabla_evaluacion($probabilidad_auto,$impacto_auto,1);				
+	$evaluacion=tabla_evaluacion($probabilidad_auto,$impacto_auto,1);	
+	return($evaluacion);
 	$color_celda=color_evaluacion($evaluacion);
 	
 	$td = '<td style="text-align:center;background-color:'.obtener_color_celda($color_celda).';">'.texto_evaluacion($evaluacion).'</td>';
