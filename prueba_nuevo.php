@@ -32,6 +32,7 @@ function obtener_info_version($iddoc,$nombre_tabla,$llave){
         $keys[$campos_tabla[$i]]='';
     }
     
+    $select=busca_filtro_tabla('',$nombre_tabla,$llave.'='.$iddoc,'',$conn);
     
     
     
