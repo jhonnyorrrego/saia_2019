@@ -28,6 +28,10 @@ function generar_version_json($iddoc){
     $json_final['pagina']=obtener_info_version($iddoc,'pagina','id_documento'); //pagina
     $json_final['almacenamiento']=obtener_info_version($iddoc,'almacenamiento','documento_iddocumento'); //almacenamiento
     $json_final['anexos_despacho']=obtener_info_version($iddoc,'anexos_despacho','documento_iddocumento'); //anexos_despacho
+  //  $json_final['anexos_vinculados']=obtener_info_version($iddoc,'anexos_vinculados','documento_iddocumento'); //anexos_vinculados
+    $json_final['asignacion']=obtener_info_version($iddoc,'asignacion','documento_iddocumento'); //asignacion
+    
+    
     
     return($json_final);
     
