@@ -34,6 +34,7 @@ function generar_version_json($iddoc){
     $json_final['documento_etiqueta']=obtener_info_version($iddoc,'documento_etiqueta','documento_iddocumento'); //documento_etiqueta
     $json_final['documento_por_vincular']=obtener_info_version($iddoc,'documento_por_vincular','documento_iddocumento'); //documento_por_vincular
     $json_final['documento_verificacion']=obtener_info_version($iddoc,'documento_verificacion','documento_iddocumento'); //documento_verificacion
+    $json_final['documento_version']=obtener_info_version($iddoc,'documento_version','documento_iddocumento'); //documento_version
     
     return($json_final);
     
