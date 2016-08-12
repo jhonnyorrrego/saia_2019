@@ -28,7 +28,7 @@ function generar_version_json($iddoc){
 function obtener_info_version($iddoc,$nombre_tabla){
     global $conn;
     
-    $campos_tabla=busca_tabla($nombre_tabla);
+    $campos_tabla=listar_campos_tabla($nombre_tabla);  //key a insertar
     return($campos_tabla);
     
 }
