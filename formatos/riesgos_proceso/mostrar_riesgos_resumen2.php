@@ -86,8 +86,11 @@ $proceso=busca_filtro_tabla("","ft_proceso a","a.idft_proceso=".$datos[2],"",$co
   					     </a>
   				     ';*/
 		}
-  	
-  	$tabla .= '<table border="1px" style="border-collapse:collapse; width:100%;">';
+	$tam_menor='';	
+  	if(@$_REQUEST['tipo']==5){
+  	    $tam_menor='font-size:9pt;';	
+  	}
+  	$tabla .= '<table border="1px" style="border-collapse:collapse; width:100%;'.$tam_menor.'">';
 		if(!@$_REQUEST["tipo"])$tabla.='<thead class="encabezado_table">';
 									$tabla.='
 									<tr>									
