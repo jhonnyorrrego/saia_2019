@@ -25,9 +25,8 @@ function generar_version_json($iddoc){
     $json_final[$formato[0]['nombre_tabla']]=obtener_info_version($iddoc,$formato[0]['nombre_tabla'],'documento_iddocumento'); //ft
     $json_final['documento']=obtener_info_version($iddoc,'documento','iddocumento'); //documento
     $json_final['ruta']=obtener_info_version($iddoc,'ruta','documento_iddocumento'); //ruta
-    
-    
-    
+    $json_final['buzon_entrada']=obtener_info_version($iddoc,'buzon_entrada','archivo_idarchivo'); //buzon_entrada
+    $json_final['buzon_salida']=obtener_info_version($iddoc,'buzon_salida','archivo_idarchivo'); //buzon_salida
     return($json_final);
     
 }
