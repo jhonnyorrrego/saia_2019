@@ -186,11 +186,11 @@ function obtener_controles_riesgo($idft_riesgos_proceso){
 	$controles_riesgo = busca_filtro_tabla("descripcion_control, idft_control_riesgos","ft_control_riesgos a, documento b","a.documento_iddocumento=b.iddocumento and b.estado not in('ELIMINADO', 'ANULADO') and ft_riesgos_proceso=".$idft_riesgos_proceso,"idft_control_riesgos asc",$conn);
 		
 	for($i=0; $i < $controles_riesgo["numcampos"]; $i++){
-		$li .= ''.preg_replace("/(<p.*>)(.*)(<\/p>)/","$2",strip_tags(utf8_encode(html_entity_decode($controles_riesgo[$i]["descripcion_control"])))).'<br /><br />';
+		$li .= ($i+1).''.preg_replace("/(<p.*>)(.*)(<\/p>)/","$2",strip_tags(utf8_encode(html_entity_decode($controles_riesgo[$i]["descripcion_control"])))).'<br /><br />';
 	}
 
 	if($li){
-		return('<ol>'.$li.'</ol>');
+		return(''.$li.'');
 	}
 }
 
