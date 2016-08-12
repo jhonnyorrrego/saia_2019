@@ -29,7 +29,6 @@ function generar_version_json($iddoc){
     $json_final['pagina']=obtener_info_version($iddoc,'pagina','id_documento'); //pagina
     $json_final['almacenamiento']=obtener_info_version($iddoc,'almacenamiento','documento_iddocumento'); //almacenamiento
     $json_final['anexos_despacho']=obtener_info_version($iddoc,'anexos_despacho','documento_iddocumento'); //anexos_despacho
-  //  $json_final['anexos_vinculados']=obtener_info_version($iddoc,'anexos_vinculados','documento_iddocumento'); //anexos_vinculados
     $json_final['asignacion']=obtener_info_version($iddoc,'asignacion','documento_iddocumento'); //asignacion
     $json_final['comentario_img']=obtener_info_version($iddoc,'comentario_img','documento_iddocumento'); //comentario_img
     $json_final['documento_etiqueta']=obtener_info_version($iddoc,'documento_etiqueta','documento_iddocumento'); //documento_etiqueta
@@ -47,6 +46,20 @@ function generar_version_json($iddoc){
     $json_final['version_documento']=obtener_info_version($iddoc,'version_documento','documento_iddocumento'); //version_documento   
     $json_final['version_pagina']=obtener_info_version($iddoc,'version_pagina','documento_iddocumento'); //version_pagina
     $json_final['version_anexos']=obtener_info_version($iddoc,'version_anexos','documento_iddocumento'); //version_anexos
+    
+    /*
+        TABLAS PENDIENTES POR PARAMETRIZAR, HABLAR CON HERNANDO
+            - anexos_vinculados
+            - documento_vinculados
+            - pagina_vinculados
+            - paso_instancia_rastro
+            - permiso_anexo
+            - respuesta
+            - tarea
+            - tareas
+            
+        FALTA CREAR ARCHIVO *.json Y ALMACENAR EN LA RUTA DE VERSIONES    
+    */
     
     return($json_final);
     
