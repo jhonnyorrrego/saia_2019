@@ -33,7 +33,8 @@ function generar_version_json($iddoc){
     $json_final['comentario_img']=obtener_info_version($iddoc,'comentario_img','documento_iddocumento'); //comentario_img
     $json_final['documento_etiqueta']=obtener_info_version($iddoc,'documento_etiqueta','documento_iddocumento'); //documento_etiqueta
     $json_final['documento_por_vincular']=obtener_info_version($iddoc,'documento_por_vincular','documento_iddocumento'); //documento_por_vincular
-    $json_final['documento_por_vincular']=obtener_info_version($iddoc,'documento_por_vincular','documento_iddocumento'); //documento_por_vincular
+    $json_final['documento_verificacion']=obtener_info_version($iddoc,'documento_verificacion','documento_iddocumento'); //documento_verificacion
+    
     return($json_final);
     
 }
