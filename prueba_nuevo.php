@@ -23,8 +23,6 @@ function generar_version_json($iddoc){
     $json=array();
     
    return $ft=obtener_info_version($iddoc,$formato[0]['nombre_tabla']);
-    
-    
 }
 function obtener_info_version($iddoc,$nombre_tabla){
     global $conn;
