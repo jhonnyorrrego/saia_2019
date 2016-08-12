@@ -28,7 +28,9 @@ function obtener_info_version($iddoc,$nombre_tabla){
     
     $campos_tabla=listar_campos_tabla($nombre_tabla); 
     $keys=array();
-    $keys=array_values($campos_tabla);
+    for($i=0;$i<count($campos_tabla);$i++){
+        $keys[$campos_tabla[$i]]='';
+    }
     return($keys);
     
 }
