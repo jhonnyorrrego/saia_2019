@@ -251,15 +251,8 @@ if($_SESSION["tipo_dispositivo"]=="movil"){ ?>
             </li>
             <li><i class="icon-tasks"></i><a href="pantallas/buscador_principal.php?nombre=listado_tareas&cmd=resetall" target="centro" class="enlace_indicadores_index" idcomponente="<?php echo($componente_tareas[0]["idbusqueda_componente"]); ?>" nombre_componente="listado_tareas_pendientes">Mis Tareas <div class="pull-right"><span class="badge" id="listado_tareas_pendientes"><?php echo($tareas[0]["cant"]);?></span></div></a>
             </li>
- 
-
-            
             <li><i class="icon-tag"></i><a href="pantallas/buscador_principal.php?nombre=documentos_etiquetados&cmd=resetall" target="centro" class="enlace_indicadores_index" idcomponente="<?php echo($componente_etiquetados[0]["idbusqueda_componente"]); ?>" nombre_componente="documentos_etiquetados">Etiquetados <div class="pull-right"><span class="badge" id="documentos_etiquetados"><?php echo($etiquetados[0]["cant"]);?></span></div></a>
             </li>            
- 
- 
- 
-             
             <li><i class="icon-refresh"></i><a href="#" id="actualizar_info_index">Actualizado<div class="pull-right"><span class="badge" id="div_actualizar_info_index"></span></div></a>
             </li>
             <!--li><i class="icon-tasks"></i><a href="pantallas/buscador_principal.php?idbusqueda=3&cmd=resetall" target="centro"> Tareas Pendientes <div class="pull-right"><span class="badge" id="documentos_pendientes"><?php echo(0);?></span></div></a>
