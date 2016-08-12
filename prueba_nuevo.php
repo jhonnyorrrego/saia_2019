@@ -26,6 +26,7 @@ function generar_version_json($iddoc){
     $json_final['buzon_entrada']=obtener_info_version($iddoc,'buzon_entrada','archivo_idarchivo'); //buzon_entrada
     $json_final['anexos']=obtener_info_version($iddoc,'anexos','documento_iddocumento'); //anexos
     $json_final['pagina']=obtener_info_version($iddoc,'pagina','id_documento'); //pagina
+    $json_final['almacenamiento']=obtener_info_version($iddoc,'almacenamiento','documento_iddocumento'); //almacenamiento
     return($json_final);
     
 }
