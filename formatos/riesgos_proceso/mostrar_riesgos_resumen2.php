@@ -186,8 +186,6 @@ function obtener_nueva_probabilidad($idft_riesgos_proceso, $probabilidad){
 	global $conn;
 	
 	$valoraciones=valoraciones($idft_riesgos_proceso);	
-	return($probabilidad);
-	
 	$probabilidad_auto=nuevo_punto_matriz($probabilidad,$valoraciones[0]);
 	
 	$probabilidad = probabilidad($probabilidad_auto);
@@ -197,7 +195,7 @@ function obtener_nueva_probabilidad($idft_riesgos_proceso, $probabilidad){
 
 function obtener_nuevo_impacto($idft_riesgos_proceso, $impacto){
 	global $conn;
-		return($impacto);
+		
 	$valoraciones=valoraciones($idft_riesgos_proceso);					
 	$impacto_auto=nuevo_punto_matriz($impacto,$valoraciones[1]);			
 				
