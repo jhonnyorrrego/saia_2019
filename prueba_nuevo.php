@@ -17,7 +17,6 @@ print_r(generar_version_json($iddoc));
 function generar_version_json($iddoc){
     global $conn;
     
-    
     $formato=busca_filtro_tabla('','formato a, documento b','lower(b.plantilla)=lower(a.nombre) AND iddocumento='.$iddoc,'',conn);
     
     $json=array();
