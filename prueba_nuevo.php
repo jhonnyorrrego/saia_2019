@@ -35,14 +35,12 @@ function obtener_info_version($iddoc,$nombre_tabla,$llave){
     $select=busca_filtro_tabla('',$nombre_tabla,$llave.'='.$iddoc,'',$conn);
     $json=array();
     for($i=0;$i<$select['numcampos'];$i++){
-        for($j=0;$j<count(array_keys($keys));$j++){
-            
+        for($j=0;$j<count($campos_tabla);$j++){
+            $json[$i][$campos_tabla[$j]]=$select[$i][$campos_tabla[$j]];
         }
-        $json[$i][]=$select[$i][];
-        
     }    
     
-    
+    return($json);
     
     
     
