@@ -27,7 +27,8 @@ function obtener_info_version($iddoc,$nombre_tabla){
     global $conn;
     
     $campos_tabla=listar_campos_tabla($nombre_tabla); 
-    $keys=array_values($campos_tabla);
+    $keys=array();
+    $keys=array_keys(array_values($campos_tabla));
     return($keys);
     
 }
