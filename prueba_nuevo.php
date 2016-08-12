@@ -21,9 +21,9 @@ function generar_version_json($iddoc){
     
     $json=array();
     
-   return $ft=obtener_info_version($iddoc,$formato[0]['nombre_tabla']);
+   return $ft=obtener_info_version($iddoc,$formato[0]['nombre_tabla'],'documento_iddocumento');
 }
-function obtener_info_version($iddoc,$nombre_tabla){
+function obtener_info_version($iddoc,$nombre_tabla,$llave){
     global $conn;
     
     $campos_tabla=listar_campos_tabla($nombre_tabla); 
@@ -31,7 +31,10 @@ function obtener_info_version($iddoc,$nombre_tabla){
     for($i=0;$i<count($campos_tabla);$i++){
         $keys[$campos_tabla[$i]]='';
     }
-    return($keys);
+    
+    
+    
+    
     
 }
 
