@@ -30,6 +30,9 @@ function obtener_info_version($iddoc,$nombre_tabla){
     
     $campos_tabla=busca_tabla($nombre_tabla);
     
+    
+    print_r($campos_tabla);
+    
 }
 
 
