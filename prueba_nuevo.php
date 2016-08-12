@@ -35,10 +35,15 @@ function generar_version_json($iddoc){
     $json_final['documento_por_vincular']=obtener_info_version($iddoc,'documento_por_vincular','documento_iddocumento'); //documento_por_vincular
     $json_final['documento_verificacion']=obtener_info_version($iddoc,'documento_verificacion','documento_iddocumento'); //documento_verificacion
     $json_final['documento_version']=obtener_info_version($iddoc,'documento_version','documento_iddocumento'); //documento_version
-    $json_final['documento_version']=obtener_info_version($iddoc,'documento_version','documento_iddocumento'); //documento_version
-    $json_final['documento_version']=obtener_info_version($iddoc,'documento_version','documento_iddocumento'); //documento_version
-    $json_final['documento_version']=obtener_info_version($iddoc,'documento_version','documento_iddocumento'); //documento_version
-    $json_final['documento_version']=obtener_info_version($iddoc,'documento_version','documento_iddocumento'); //documento_version   
+    $json_final['expediente_doc']=obtener_info_version($iddoc,'expediente_doc','documento_iddocumento'); //expediente_doc
+    $json_final['paso_documento']=obtener_info_version($iddoc,'paso_documento','documento_iddocumento'); //paso_documento
+    $json_final['paso_instancia_pendiente']=obtener_info_version($iddoc,'paso_instancia_pendiente','documento_iddocumento'); //paso_instancia_pendiente
+    $json_final['paso_instancia_terminada']=obtener_info_version($iddoc,'paso_instancia_terminada','documento_iddocumento'); //paso_instancia_terminada   
+    $json_final['permiso_documento']=obtener_info_version($iddoc,'permiso_documento','documento_iddocumento'); //permiso_documento   
+    $json_final['prioridad_documento']=obtener_info_version($iddoc,'prioridad_documento','documento_iddocumento'); //prioridad_documento   
+    $json_final['reemplazo_documento']=obtener_info_version($iddoc,'reemplazo_documento','documento_iddocumento'); //reemplazo_documento   
+    $json_final['salidas']=obtener_info_version($iddoc,'salidas','documento_iddocumento'); //salidas   
+    $json_final['version_documento']=obtener_info_version($iddoc,'version_documento','documento_iddocumento'); //version_documento   
     return($json_final);
     
 }
