@@ -28,8 +28,7 @@ function generar_version_json($iddoc){
 function obtener_info_version($iddoc,$nombre_tabla){
     global $conn;
     
-    
-    
+    $campos_tabla=busca_tabla($nombre_tabla);
     
 }
 
