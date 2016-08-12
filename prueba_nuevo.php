@@ -20,8 +20,15 @@ function generar_version_json($iddoc){
     $formato=busca_filtro_tabla('','formato a, documento b','lower(b.plantilla)=lower(a.nombre) AND iddocumento='.$iddoc,'',conn);
     
     $json_final=array();
+    
+    
     $ft=obtener_info_version($iddoc,$formato[0]['nombre_tabla'],'documento_iddocumento'); //ft
     $documento=obtener_info_version($iddoc,'documento','iddocumento'); //documento
+    $ruta=obtener_info_version($iddoc,'ruta','documento_iddocumento'); //ruta
+    
+    
+    
+    
     return($json_final);
     
 }
