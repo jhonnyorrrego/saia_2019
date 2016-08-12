@@ -22,10 +22,9 @@ function generar_version_json($iddoc){
     $json_final=array();
     
     
-    $ft=obtener_info_version($iddoc,$formato[0]['nombre_tabla'],'documento_iddocumento'); //ft
-    $documento=obtener_info_version($iddoc,'documento','iddocumento'); //documento
-    $ruta=obtener_info_version($iddoc,'ruta','documento_iddocumento'); //ruta
-    
+    $json_final[$formato[0]['nombre_tabla']]=obtener_info_version($iddoc,$formato[0]['nombre_tabla'],'documento_iddocumento'); //ft
+    $json_final['documento']=obtener_info_version($iddoc,'documento','iddocumento'); //documento
+    $json_final['ruta']=obtener_info_version($iddoc,'ruta','documento_iddocumento'); //ruta
     
     
     
