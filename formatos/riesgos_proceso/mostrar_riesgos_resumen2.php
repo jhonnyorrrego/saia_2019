@@ -166,19 +166,7 @@ $tabla .= '			</tbody>
 echo($tabla);											
 
 
-function obtener_evaluacion_riesgo($idft_riesgos_proceso, $probabilidad, $impacto){
-	global $conn;
-	
 
-	$evaluacion=tabla_evaluacion($probabilidad,$impacto);
-	$color_celda=color_evaluacion($evaluacion);
-	$valoraciones=valoraciones($idft_riesgos_proceso);				
-
-
-	$td = '<td style="text-align:center;background-color:'.obtener_color_celda($color_celda).';">'.texto_evaluacion($evaluacion).'</td>';
-	
-	return($td);	
-}
 
 function obtener_controles_riesgo($idft_riesgos_proceso){
 	global $conn;
@@ -227,6 +215,20 @@ function obtener_nueva_evaluacion_riesgo($idft_riesgos_proceso, $probabilidad, $
 	
 	$td = '<td style="text-align:center;background-color:'.obtener_color_celda($color_celda).';">'.texto_evaluacion($evaluacion).'</td>';
 	$td .= '<td style="text-align:center;">'.texto_evaluacion($evaluacion,2).'</td>';
+	
+	return($td);	
+}
+
+function obtener_evaluacion_riesgo($idft_riesgos_proceso, $probabilidad, $impacto){
+	global $conn;
+	
+
+	$evaluacion=tabla_evaluacion($probabilidad,$impacto);
+	$color_celda=color_evaluacion($evaluacion);
+	$valoraciones=valoraciones($idft_riesgos_proceso);				
+
+
+	$td = '<td style="text-align:center;background-color:'.obtener_color_celda($color_celda).';">'.texto_evaluacion($evaluacion).'</td>';
 	
 	return($td);	
 }
