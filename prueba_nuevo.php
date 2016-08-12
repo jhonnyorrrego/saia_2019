@@ -19,9 +19,10 @@ function generar_version_json($iddoc){
     
     $formato=busca_filtro_tabla('','formato a, documento b','lower(b.plantilla)=lower(a.nombre) AND iddocumento='.$iddoc,'',conn);
     
-    $json=array();
+    $json_final=array();
+    $json_final['ft']=obtener_info_version($iddoc,$formato[0]['nombre_tabla'],'documento_iddocumento'); //ft
+    return($json_final);
     
-   return $ft=obtener_info_version($iddoc,$formato[0]['nombre_tabla'],'documento_iddocumento');
 }
 function obtener_info_version($iddoc,$nombre_tabla,$llave){
     global $conn;
