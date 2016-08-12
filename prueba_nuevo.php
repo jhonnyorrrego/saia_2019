@@ -13,7 +13,7 @@ include('db.php');
 
 
 $iddoc=6;
-print_r(generar_version_json($iddoc));
+echo(json_encode(generar_version_json($iddoc)));
 function generar_version_json($iddoc){
     global $conn;
     
