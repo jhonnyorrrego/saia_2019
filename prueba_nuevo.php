@@ -21,6 +21,7 @@ function generar_version_json($iddoc){
     
     $json_final=array();
     $json_final['ft']=obtener_info_version($iddoc,$formato[0]['nombre_tabla'],'documento_iddocumento'); //ft
+    $json_final['documento']=obtener_info_version($iddoc,$formato[0]['nombre_tabla'],'iddocumento'); //ft
     return($json_final);
     
 }
