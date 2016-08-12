@@ -12,7 +12,7 @@ include('db.php');
 
 
 
-
+$iddoc=36;
 function generar_version_json($iddoc){
     global $conn;
     
