@@ -1342,6 +1342,9 @@ function sincronizar_carpetas($tipo, $conn) {
 					$archivos[] = $archivo;
 			}
 			natsort($archivos);
+			
+			
+			
 			foreach ($archivos as $archivo) {
 				$estado = "";
 				$dir3 = "";
@@ -1417,6 +1420,57 @@ function sincronizar_carpetas($tipo, $conn) {
 			}
 			closedir($directorio);
 		} //Fin If directorio
+		
+		
+		//aqui desarrollo para subir digitalizacion de PDF,DOCX,ETC
+		if (is_dir($dir))//ruta_temporal
+			$directorio = opendir("$dir");
+		else
+			$directorio = null;
+
+		if ($directorio) {//ruta_temporal
+			$cont = 1;
+			$ruta = "";
+			$cad = "";
+			$cad_temp = "";
+			$numero_pagina = "";
+			//Aqui toca recorrer la carpeta que se elija como temporal para buscar el listado de las paginas que se van a subir a la base de datos.
+			while ($archivo = readdir($directorio)) {
+				if ($archivo != "." && $archivo != ".." && !is_dir($archivo))
+					$archivos[] = $archivo;
+			}
+			natsort($archivos);
+			
+			
+			$archivos_anexos=array();
+			$extension_image=array('jpg','jpeg'); 
+			$cant=count($archivos);
+			for($i=0;$i<$cant;$i++){
+				$extension=explode('.',$archivos[$i]);
+				$extension=array_map('strtolower', $extension);
+				if( !in_array($extension[($cant-1)],$extension_image) ){
+					$archivos_anexos[]=$archivos[$i];
+					unset($archivos[$i]);
+				}	
+			}		
+			$archivos=array_values($archivos);
+			$archivos_anexos=array_unique($archivos_anexos);
+			$ruta_tem=busca_filtro_tabla("","configuracion","nombre='ruta_temporal'","",$conn);
+			$ruta_temporal=$ruta_tem[0]['valor'].'_'.usuario_actual('login');
+			foreach ($archivos_anexos as $archivo) {
+				$ruta_archivo=$ruta_db_superior.$ruta_temporal.'/'.$archivo;
+				if(file_exists($ruta_archivo)){
+					$ic = strrpos($archivo, "#");
+					$fc = strrpos($archivo, ")");
+					$cad = substr($archivo, $ic + 1, $fc - $ic - 1);
+					if(intval($cad)==intval(@$_REQUEST['x_id_documento'])){
+						vincular_anexo_documento(@$_REQUEST['x_id_documento'],$ruta_temporal.'/'.$archivo);
+						unlink($ruta_db_superior.$ruta_temporal.'/'.$archivo);						
+					}
+				} //fin if file_exist
+			} //recorriendo directorio 				
+		} //fin if directorio
+		
 	} elseif ($tipo_almacenamiento == "db") {// Se almacena en la base de datos
 		if (is_dir($dir))
 			$directorio = opendir("$dir");
@@ -1526,7 +1580,60 @@ function sincronizar_carpetas($tipo, $conn) {
 			$retorno = estampar_imagen($idimagenes, $fieldList);
 		}
 	}
+	
+
 	return (TRUE);
+}
+
+function vincular_anexo_documento($iddoc,$ruta_origen){
+	global $conn,$ruta_db_superior;
+	include_once($ruta_db_superior."anexosdigitales/funciones_archivo.php");
+	$ruta_destino=selecciona_ruta_anexos("",$iddoc,'archivo');
+	$nombre_extension = basename($ruta_db_superior.$ruta_origen);
+
+	$vector_nombre_extension = explode('.',$nombre_extension);
+	$extencion=$vector_nombre_extension[(count($vector_nombre_extension)-1)];
+	$nombre_temporal=time().".".$extencion;
+	mkdir($ruta_db_superior.$ruta_destino,0777);
+	$tmpVar = 1;
+	while(file_exists($ruta_db_superior.$ruta_destino. $tmpVar . '_' . $nombre_temporal)){
+		$tmpVar++;
+	}
+	$nombre_temporal=$tmpVar . '_' . $nombre_temporal;
+	copy($ruta_db_superior.$ruta_origen,$ruta_db_superior.$ruta_destino.$nombre_temporal);
+	
+	$data_sql=array();
+	$data_sql['documento_iddocumento']=$iddoc;
+	$data_sql['ruta']=$ruta_destino.$nombre_temporal;
+	$data_sql['etiqueta']=$nombre_extension;
+	$data_sql['tipo']=$extencion;
+
+	$tabla="anexos";
+	$strsql = "INSERT INTO ".$tabla." (fecha_anexo,"; //fecha_anexo
+	$strsql .= implode(",", array_keys($data_sql));			
+	$strsql .= ") VALUES (".fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s').",'";	//fecha_anexo		
+	$strsql .= implode("','", array_values($data_sql));			
+	$strsql .= "')";
+ 	phpmkr_query($strsql,$conn);
+	$idanexo=phpmkr_insert_id();
+	
+	
+	$data_sql=array();
+	$data_sql['anexos_idanexos']=$idanexo;
+	$data_sql['idpropietario']=usuario_actual('idfuncionario');
+	$data_sql['caracteristica_propio']='lem';
+	$data_sql['caracteristica_total']='1';
+	
+	$tabla="permiso_anexo";
+	$strsql = "INSERT INTO ".$tabla." ("; 
+	$strsql .= implode(",", array_keys($data_sql));			
+	$strsql .= ") VALUES ('";		
+	$strsql .= implode("','", array_values($data_sql));			
+	$strsql .= "')";
+	$sql1=$strsql;
+	phpmkr_query($sql1);	
+	
+	return($idanexo);	
 }
 
 /*Manipulacion de Imagenes*/

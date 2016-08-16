@@ -168,7 +168,7 @@ if ($_REQUEST["mostrar_formato"]) {
 </div>
 <br />
 <br />
-<span class="internos" style="font-family:verdana;font-size:10px">&nbsp;&nbsp;<b>ADICI&Oacute;N DE P&Aacute;GINAS AL DOCUMENTO</b></span>
+<span class="internos" style="display:none;font-family:verdana;font-size:10px">&nbsp;&nbsp;<b>ADICI&Oacute;N DE P&Aacute;GINAS AL DOCUMENTO</b></span>
 <form name="paginaadd" id="paginaadd" action="paginaadd.php<?php echo("?key=".$key) ?>" method="POST" onSubmit="return EW_checkMyForm(this);">
 	<input type="hidden" name="a_add" value="A">
 	<?php
@@ -249,7 +249,7 @@ if ($_REQUEST["mostrar_formato"]) {
 	?>
 	<input type="hidden" name="EW_Max_File_Size" value="<?php echo($peso); ?>">
 	<input type="hidden" name="x_enlace" value="<?php echo($x_enlace); ?>">
-	<table width="100%"  border="0" cellpadding="4" cellspacing="1" bgcolor="#CCCCCC">
+	<table style="display:none;" width="100%"  border="0" cellpadding="4" cellspacing="1" bgcolor="#CCCCCC">
 		<tr>
 			<td width="205" class="encabezado" ><span class="phpmaker" style="color: #FFFFFF;">DOCUMENTO
 				ASOCIADO</span></td>
@@ -281,7 +281,7 @@ if ($_REQUEST["mostrar_formato"]) {
 				<input type="submit" name="Action" value="CONTINUAR" />
 			</span><div align="center"></div></td>
 		</tr>
-		<tr>
+		<tr S> 
 			<td width="205" class="encabezado" ><span class="phpmaker" style="color: #FFFFFF;">ESCANEAR DE NUEVO</span></td>
 			<td width="335" bgcolor="#F5F5F5"><span class="phpmaker"> SI
 				<input type="radio" name="x_escaneo" value="1">
@@ -308,7 +308,7 @@ if ($_REQUEST["mostrar_formato"]) {
 			</applet></td>
 		</tr-->
 	</table>
-
+	<div class="container" id="info_scanner"></div>
 	
 	
 </form>
@@ -377,6 +377,7 @@ include_once("librerias_saia.php");
 
         function onOpen(evt) {
              notificacion_saia('Ejecutando Scanner...','success','',1500);
+             $('#info_scanner').html('<div class="well alert-success" style="text-align:center;"><span style="font-wight:bold;">ATENCI&Oacute;N<br/> El Scanner se encuentra en Ejecuci&oacute;n!</span></div>');
              enviarMensaje();
         }
 
@@ -388,9 +389,10 @@ include_once("librerias_saia.php");
             var mensaje = JSON.parse(evt.data);
             switch(mensaje.cmd) {
                 case "CMD_ERR":
-                    writeToScreen('<span style="color: red;">MENSAJE: ' + mensaje.text + '</span>');
+                    
                     break;
                 case "CMD_END":
+                	$("[name='Action']").click(); //REDIRECCIONA AL CERRAR SCANNER
                     break;
                 case "CMD_DBG": //Mensaje de depuracion
                     console.log(evt.data);
@@ -436,7 +438,8 @@ include_once("librerias_saia.php");
                     "verLog": "false",
                     "ancho": "<?php print($ancho); ?>",
                     "alto": "<?php print($alto); ?>",
-                    "maxtabs": "50"
+                    "maxtabs": "50",
+                    "fileFilter" : "jpg,png,pdf,tiff,tif,doc,docx"
                 };
                 var msg = {
                     clientId: clientId,
