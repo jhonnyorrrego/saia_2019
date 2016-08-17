@@ -21,7 +21,7 @@ include_once($ruta_db_superior."librerias_saia.php");
 function mostrar_nombre_parseo($idformato,$iddoc){
     global $conn;   
     
-    $consulta_parseo=busca_filtro_tabla("","riesgos_proceso","documento_iddocumento=".$iddoc,"",$conn);
+    $consulta_parseo=busca_filtro_tabla("nombre,riesgo,descripcion,fuente_causa,consecuencia","riesgos_proceso","documento_iddocumento=".$iddoc,"",$conn);
 }
 function mostrar_riesgo_parseo($idformato,$iddoc){
     global $conn;
