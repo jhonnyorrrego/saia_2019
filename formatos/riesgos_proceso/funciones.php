@@ -29,7 +29,6 @@ function editar_riesgos_proceso($idformato,$iddoc){
 	global $conn;
  	
  	
- 	echo(@$_REQUEST['tipo']);
     $formato=busca_filtro_tabla("","formato A","A.idformato=".$idformato,"",$conn); 	
 	$ejecutor=busca_filtro_tabla("ejecutor","documento","iddocumento=".$iddoc,"",$conn);
 	
