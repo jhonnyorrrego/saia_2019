@@ -27,7 +27,9 @@ echo($texto);
 
 function editar_riesgos_proceso($idformato,$iddoc){
 	global $conn;
- 	/*
+ 	
+ 	
+ 	echo(@$_REQUEST['tipo']);
     $formato=busca_filtro_tabla("","formato A","A.idformato=".$idformato,"",$conn); 	
 	$ejecutor=busca_filtro_tabla("ejecutor","documento","iddocumento=".$iddoc,"",$conn);
 	
@@ -49,7 +51,6 @@ function editar_riesgos_proceso($idformato,$iddoc){
 	}	
 	
 	*/
-	/*
 	if(@$_REQUEST['tipo']!=5){
 	if(usuario_actual("funcionario_codigo")==$ejecutor[0]["ejecutor"] || usuario_actual("login")=="0k"){		 
 ?>
@@ -80,7 +81,7 @@ function editar_riesgos_proceso($idformato,$iddoc){
 			}
 		}	
 	}
-	} //fin if request tipo 5*/
+	} //fin if request tipo 5
 }
 
 function impacto_nuevo($idformato,$iddoc)
