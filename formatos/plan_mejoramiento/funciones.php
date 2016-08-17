@@ -274,6 +274,7 @@ function listar_hallazgo_plan_mejoramiento($idformato,$iddoc,$condicion=""){
   if($condicion=="" && $documento[0]["idft_plan_mejoramiento"]){
     $condicion="A.ft_plan_mejoramiento=B.idft_plan_mejoramiento AND A.estado<>'INACTIVO' AND A.documento_iddocumento=iddocumento and C.estado<>'ELIMINADO' AND A.ft_plan_mejoramiento=".$documento[0]["idft_plan_mejoramiento"]." ";
   }
+    print_r($condicion);
   if($condicion!=""){
     $formato_hallazgo=busca_filtro_tabla("","formato","nombre LIKE '%hallazgo%'","",$conn);
     //print_r($formato_hallazgo);
