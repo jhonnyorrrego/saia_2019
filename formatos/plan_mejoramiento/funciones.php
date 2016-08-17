@@ -277,9 +277,10 @@ function listar_hallazgo_plan_mejoramiento($idformato,$iddoc,$condicion=""){
     
   if($condicion!=""){
     $formato_hallazgo=busca_filtro_tabla("","formato","nombre LIKE '%hallazgo%'","",$conn);
-    print_r($formato_hallazgo);
+    
     //print_r($formato_hallazgo);
     $hallazgos=busca_filtro_tabla("A.*,B.*,A.documento_iddocumento as hallazgo_iddoc","ft_hallazgo A, ft_plan_mejoramiento B,documento C","A.ft_plan_mejoramiento= b.idft_plan_mejoramiento and a.documento_iddocumento= c.iddocumento and A.estado<>'INACTIVO' and C.estado<>'ELIMINADO' AND ".$condicion,"idft_hallazgo asc",$conn);	
+    print_r($hallazgos);
     //print_r($hallazgos);
   if($hallazgos["numcampos"]){
     $texto.="";
