@@ -324,7 +324,7 @@ $disminuir=valoraciones($riesgos[0]["idft_riesgos_proceso"]);
 $probabilidad_auto=nuevo_punto_matriz($riesgos[0]["probabilidad"],$disminuir[0]);
 $impacto_auto=nuevo_punto_matriz($riesgos[0]["impacto"],$disminuir[1]);
 
-llenar_evaluaciones_particular($impacto_auto,$probabilidad_auto,$texto);
+//llenar_evaluaciones_particular($impacto_auto,$probabilidad_auto,$texto);
 
 $cadena_parseo=$impacto_auto.'_'.$probabilidad.'||'.$texto;
 return($cadena_parseo);
@@ -334,6 +334,7 @@ return($cadena_parseo);
 
 function llenar_evaluaciones_particular($impacto,$probabilidad,$texto){
 	global $conn;
+	
 	?>
 	<script>
 	$(document).ready(function(){
