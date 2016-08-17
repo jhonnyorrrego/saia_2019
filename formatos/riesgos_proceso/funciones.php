@@ -27,8 +27,8 @@ echo($texto);
 
 function editar_riesgos_proceso($idformato,$iddoc){
 	global $conn;
- 	
-$formato=busca_filtro_tabla("","formato A","A.idformato=".$idformato,"",$conn); 	
+ 	/*
+    $formato=busca_filtro_tabla("","formato A","A.idformato=".$idformato,"",$conn); 	
 	$ejecutor=busca_filtro_tabla("ejecutor","documento","iddocumento=".$iddoc,"",$conn);
 	
 	$area=busca_filtro_tabla("area_responsable","ft_riesgos_proceso","documento_iddocumento=".$iddoc,"",$conn);
@@ -49,6 +49,7 @@ $formato=busca_filtro_tabla("","formato A","A.idformato=".$idformato,"",$conn);
 	}	
 	
 	*/
+	/*
 	if(@$_REQUEST['tipo']!=5){
 	if(usuario_actual("funcionario_codigo")==$ejecutor[0]["ejecutor"] || usuario_actual("login")=="0k"){		 
 ?>
@@ -79,7 +80,7 @@ $formato=busca_filtro_tabla("","formato A","A.idformato=".$idformato,"",$conn);
 			}
 		}	
 	}
-	} //fin if request tipo 5
+	} //fin if request tipo 5*/
 }
 
 function impacto_nuevo($idformato,$iddoc)
