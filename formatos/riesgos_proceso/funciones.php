@@ -11,8 +11,8 @@ $ruta.="../";
 $max_salida--;
 }
 include_once($ruta_db_superior."db.php");
-include_once($ruta_db_superior."formatos/seguimiento_riesgo/funciones.php");
-include_once($ruta_db_superior."formatos/librerias/funciones_generales.php");
+//include_once($ruta_db_superior."formatos/seguimiento_riesgo/funciones.php");
+//include_once($ruta_db_superior."formatos/librerias/funciones_generales.php");
 include_once($ruta_db_superior."pantallas/lib/librerias_notificaciones.php");
 include_once($ruta_db_superior."librerias_saia.php");
 
@@ -50,7 +50,7 @@ function editar_riesgos_proceso($idformato,$iddoc){
 	}	
 	
 	*/
-	if(@$_REQUEST['tipo']!=5){
+    if(@$_REQUEST['tipo']!=5){
 	if(usuario_actual("funcionario_codigo")==$ejecutor[0]["ejecutor"] || usuario_actual("login")=="0k"){		 
 ?>
 <script type="text/javascript" src="../../js/jquery.js"></script>
