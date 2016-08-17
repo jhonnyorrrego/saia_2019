@@ -234,8 +234,8 @@ function matriz_riesgo($idformato,$iddoc){
 	
 	$retorno_cuadrante=cuadrante_funcion($idformato,$iddoc);
 	$vector_retorno_cuadrante=explode('||',$retorno_cuadrante);
-	$vector_pintar=array('1_1'=>'','2_1'=>'','3_1'=>'','4_1'=>'','5_1'=>'','1_2'=>'','2_2'=>'','3_2'=>'','4_2'=>'','5_2'=>'','1_3'=>'','2_3'=>'','3_3'=>'','4_3'=>'','5_3'=>'','1_4'=>'','2_4'=>'','3_4'=>'','4_4'=>'','5_4'=>'','1_5'=>'','2_5'=>'','3_5'=>'','4_5'=>'','5_5'=>'');
-	$vector_pintar[$vector_retorno_cuadrante[0]]=$vector_retorno_cuadrante[1];
+	$vector_texto=array('1_1'=>'','2_1'=>'','3_1'=>'','4_1'=>'','5_1'=>'','1_2'=>'','2_2'=>'','3_2'=>'','4_2'=>'','5_2'=>'','1_3'=>'','2_3'=>'','3_3'=>'','4_3'=>'','5_3'=>'','1_4'=>'','2_4'=>'','3_4'=>'','4_4'=>'','5_4'=>'','1_5'=>'','2_5'=>'','3_5'=>'','4_5'=>'','5_5'=>'');
+	$vector_texto[$vector_retorno_cuadrante[0]]=$vector_retorno_cuadrante[1];
 	
 	?>
 	<table border="1" width="100%" cellspacing="0" class="tabla_borde" style="border-collapse:collapse">
@@ -253,43 +253,43 @@ function matriz_riesgo($idformato,$iddoc){
     </tr>
     <tr>
       <td style="text-align:center;">Raro (1)</td>
-      <td style="text-align:center;background-color: green;vertical-align:top;" id="1_1">B<br /></td>
-      <td style="text-align:center;background-color:green;vertical-align:top;" id="2_1">B<br /></td>
-      <td style="text-align:center;background-color:yellow;vertical-align:top;" id="3_1">M<br /></td>
-      <td style="text-align:center;background-color:#DAAAA6;vertical-align:top;" id="4_1">A<br /></td>
-      <td style="text-align:center;background-color:#DAAAA6;vertical-align:top;" id="5_1">A<br /></td>
+      <td style="text-align:center;background-color: green;vertical-align:top;" id="1_1">B<br /><?php echo($vector_texto['1_1']); ?></td>
+      <td style="text-align:center;background-color:green;vertical-align:top;" id="2_1">B<br /><?php echo($vector_texto['2_1']); ?></td>
+      <td style="text-align:center;background-color:yellow;vertical-align:top;" id="3_1">M<br /><?php echo($vector_texto['3_1']); ?></td>
+      <td style="text-align:center;background-color:#DAAAA6;vertical-align:top;" id="4_1">A<br /><?php echo($vector_texto['4_1']); ?></td>
+      <td style="text-align:center;background-color:#DAAAA6;vertical-align:top;" id="5_1">A<br /><?php echo($vector_texto['5_1']); ?></td>
     </tr>
     <tr>
       <td style="text-align:center;">Improbable (2)</td>
-      <td style="text-align:center;background-color:green;vertical-align:top;" id="1_2">B<br /></td>
-      <td style="text-align:center;background-color:green;vertical-align:top;" id="2_2">B<br /></td>
-      <td style="text-align:center; background-color:yellow;vertical-align:top;" id="3_2">M<br /></td>
-      <td style="text-align:center;background-color:#DAAAA6;vertical-align:top;" id="4_2">A<br /></td>
-      <td style="text-align:center;background-color:red;vertical-align:top;" id="5_2">E<br /></td>
+      <td style="text-align:center;background-color:green;vertical-align:top;" id="1_2">B<br /><?php echo($vector_texto['1_2']); ?></td>
+      <td style="text-align:center;background-color:green;vertical-align:top;" id="2_2">B<br /><?php echo($vector_texto['2_2']); ?></td>
+      <td style="text-align:center; background-color:yellow;vertical-align:top;" id="3_2">M<br /><?php echo($vector_texto['3_2']); ?></td>
+      <td style="text-align:center;background-color:#DAAAA6;vertical-align:top;" id="4_2">A<br /><?php echo($vector_texto['4_2']); ?></td>
+      <td style="text-align:center;background-color:red;vertical-align:top;" id="5_2">E<br /><?php echo($vector_texto['5_2']); ?></td>
     </tr>
     <tr>
       <td style="text-align:center;">Posible (3)</td>
-      <td style="text-align:center;background-color:green;vertical-align:top;" id="1_3">B<br /></td>
-      <td style="text-align:center;background-color:yellow;vertical-align:top;" id="2_3">M<br /></td>
-      <td style="text-align:center;background-color:#DAAAA6;vertical-align:top;" id="3_3">A<br /></td>
-      <td style="text-align:center;background-color:red;vertical-align:top;" id="4_3">E<br /></td>
-      <td style="text-align:center;background-color:red;vertical-align:top;" id="5_3">E<br /></td>
+      <td style="text-align:center;background-color:green;vertical-align:top;" id="1_3">B<br /><?php echo($vector_texto['1_3']); ?></td>
+      <td style="text-align:center;background-color:yellow;vertical-align:top;" id="2_3">M<br /><?php echo($vector_texto['2_3']); ?></td>
+      <td style="text-align:center;background-color:#DAAAA6;vertical-align:top;" id="3_3">A<br /><?php echo($vector_texto['3_3']); ?></td>
+      <td style="text-align:center;background-color:red;vertical-align:top;" id="4_3">E<br /><?php echo($vector_texto['4_3']); ?></td>
+      <td style="text-align:center;background-color:red;vertical-align:top;" id="5_3">E<br /><?php echo($vector_texto['5_3']); ?></td>
     </tr>
     <tr>
       <td style="text-align: center;">Probable (4)</td>
-      <td style="text-align:center;background-color:yellow; vertical-align:top;" id="1_4">M<br /></td>
-      <td style="text-align: center; background-color: #DAAAA6;  vertical-align:top;" id="2_4">A<br /></td>
-      <td style="text-align: center; background-color: #DAAAA6; vertical-align:top;" id="3_4">A<br /></td>
-      <td style="text-align: center; background-color: red; vertical-align:top;" id="4_4">E<br /></td>
-      <td style="text-align: center; background-color: red; vertical-align:top;" id="5_4">E<br /></td>
+      <td style="text-align:center;background-color:yellow; vertical-align:top;" id="1_4">M<br /><?php echo($vector_texto['1_4']); ?></td>
+      <td style="text-align: center; background-color: #DAAAA6;  vertical-align:top;" id="2_4">A<br /><?php echo($vector_texto['2_4']); ?></td>
+      <td style="text-align: center; background-color: #DAAAA6; vertical-align:top;" id="3_4">A<br /><?php echo($vector_texto['3_4']); ?></td>
+      <td style="text-align: center; background-color: red; vertical-align:top;" id="4_4">E<br /><?php echo($vector_texto['4_4']); ?></td>
+      <td style="text-align: center; background-color: red; vertical-align:top;" id="5_4">E<br /><?php echo($vector_texto['5_4']); ?></td>
     </tr>
     <tr>
       <td style="text-align:center;">Casi seguro (5)</td>
-      <td style="text-align:center;background-color:#DAAAA6;vertical-align:top;" id="1_5">A<br /></td>
-      <td style="text-align:center;background-color:#DAAAA6;vertical-align:top;" id="2_5">A<br /></td>
-      <td style="text-align:center;background-color:red;vertical-align:top;" id="3_5">E<br /></td>
-      <td style="text-align:center;background-color:red;vertical-align:top;" id="4_5">E<br /></td>
-      <td style="text-align:center;background-color:red;vertical-align:top;" id="5_5">E<br /></td>
+      <td style="text-align:center;background-color:#DAAAA6;vertical-align:top;" id="1_5">A<br /><?php echo($vector_texto['1_5']); ?></td>
+      <td style="text-align:center;background-color:#DAAAA6;vertical-align:top;" id="2_5">A<br /><?php echo($vector_texto['2_5']); ?></td>
+      <td style="text-align:center;background-color:red;vertical-align:top;" id="3_5">E<br /><?php echo($vector_texto['3_5']); ?></td>
+      <td style="text-align:center;background-color:red;vertical-align:top;" id="4_5">E<br /><?php echo($vector_texto['4_5']); ?></td>
+      <td style="text-align:center;background-color:red;vertical-align:top;" id="5_5">E<br /><?php echo($vector_texto['5_5']); ?></td>
     </tr>
     <tr>
     	<td colspan="6" style="text-align: left;">
