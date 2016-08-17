@@ -23,7 +23,7 @@ function mostrar_nombre_parseo($idformato,$iddoc){
     
     $consulta_parseo=busca_filtro_tabla("nombre,riesgo,descripcion,fuente_causa,consecuencia","riesgos_proceso","documento_iddocumento=".$iddoc,"",$conn);
     
-    echo( codifica_encabezado(html_entity_decode($consulta_parseo[0]['nombre'])) );
+    echo( $consulta_parseo[0]['nombre'] );
     
     
 }
