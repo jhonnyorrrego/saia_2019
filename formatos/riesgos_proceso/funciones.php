@@ -33,11 +33,11 @@ function mostrar_descripcion_parseo($idformato,$iddoc){
 }
 function mostrar_fuente_causa_parseo($idformato,$iddoc){
     global $conn,$consulta_parseo; 
-    echo( strip_tags($consulta_parseo[0]['fuente_causa']) );
+    echo( strip_tags(codifica_encabezado(html_entity_decode($consulta_parseo[0]['fuente_causa']))) );
 }
 function mostrar_consecuencia_parseo($idformato,$iddoc){
     global $conn,$consulta_parseo;  
-    echo( strip_tags($consulta_parseo[0]['consecuencia']) );
+    echo( strip_tags(codifica_encabezado(html_entity_decode($consulta_parseo[0]['consecuencia']))) );
 }
 
 
