@@ -82,7 +82,7 @@ function adiconar_factores_contexto($idformato,$iddoc){
 			  </table>
 			 ';
 			 
-			 $tabla_factores_ini='<table border="0" style="border-collapse: collapse;width: 100%; float: left; vertical-align:top;"><tr><td style="width:50%;">'.$factores_internos.'</td><td style="width:50%;">'.$factores_externos.'</td></tr></table>';
+			 $tabla_factores_ini='<table border="0" style="border-collapse: collapse;width: 100%; float: left; vertical-align:top;"><tr><td style="width:50%;vertical-align:top;">'.$factores_internos.'</td><td style="width:50%;vertical-align:top;">'.$factores_externos.'</td></tr></table>';
 			 
 			 
 			 echo($tabla_factores_ini);
