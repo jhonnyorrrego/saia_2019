@@ -30,7 +30,7 @@ function mostrar_nombre_parseo($idformato,$iddoc){
 function mostrar_riesgo_parseo($idformato,$iddoc){
     global $conn,$consulta_parseo;
   
-    echo( codifica_encabezado(html_entity_decode($consulta_parseo[0]['riesgo'])) );    
+   // echo( codifica_encabezado(html_entity_decode($consulta_parseo[0]['riesgo'])) );    
 }
 function mostrar_descripcion_parseo($idformato,$iddoc){
     global $conn,$consulta_parseo;   
