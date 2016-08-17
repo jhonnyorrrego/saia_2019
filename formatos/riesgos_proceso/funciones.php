@@ -318,10 +318,11 @@ function fecha_bloqueada($idformato,$iddoc){//A.A
 }
 function adicionar_acciones_riesgo($idformato,$iddoc){
 	global $conn,$ruta_db_superior;
-	$padre=busca_filtro_tabla("idft_riesgos_proceso, riesgo_antiguo","ft_riesgos_proceso a","documento_iddocumento=".$iddoc,"",$conn);
+	if(@$_REQUEST['tipo']!=5){
+    	$padre=busca_filtro_tabla("idft_riesgos_proceso, riesgo_antiguo","ft_riesgos_proceso a","documento_iddocumento=".$iddoc,"",$conn);
 
 		echo '<a href="'.$ruta_db_superior.'formatos/acciones_riesgo/adicionar_acciones_riesgo.php?padre='.$padre[0]["idft_riesgos_proceso"].'&anterior='.$iddoc.'">Adicionar Acciones</a>';
-		
+	}	
 		//<a href="'.$ruta_db_superior.'formatos/seguimiento_riesgo/adicionar_seguimiento_riesgo.php?padre='.$padre[0]["idft_riesgos_proceso"].'&anterior='.$iddoc.'">Adicionar seguimiento</a>
 }
 
