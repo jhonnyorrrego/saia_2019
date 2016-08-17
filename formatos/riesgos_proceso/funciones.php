@@ -273,9 +273,9 @@ function matriz_riesgo($idformato,$iddoc){
 	cuadrante_funcion($idformato,$iddoc);
 }
 function cuadrante_funcion($idformato,$iddoc){
-global $conn;
+global $conn,$ruta_db_superior;
 $texto="";
-include_once("librerias_riesgos.php");
+include_once($ruta_db_superior."formatos/riesgos_proceso/librerias_riesgos.php");
 
 $riesgos=busca_filtro_tabla("impacto,probabilidad,descripcion AS nombre,idft_riesgos_proceso,consecutivo,documento_iddocumento ","ft_riesgos_proceso","estado<>'INACTIVO' $adicionales AND documento_iddocumento=".$iddoc,"idft_riesgos_proceso asc",$conn);
 
