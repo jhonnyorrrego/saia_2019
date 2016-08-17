@@ -324,6 +324,8 @@ function adicionar_acciones_riesgo($idformato,$iddoc){
 
 function selecion_tipo_riesgo(){
 	global $conn;	
+	
+	
 ?>
 <script type="text/javascript">
 	$(document).ready(function(){
