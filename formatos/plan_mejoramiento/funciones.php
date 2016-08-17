@@ -272,14 +272,14 @@ function listar_hallazgo_plan_mejoramiento($idformato,$iddoc,$condicion=""){
   }
   //print_r($formato);
   if($condicion=="" && $documento[0]["idft_plan_mejoramiento"]){
-    $condicion="A.ft_plan_mejoramiento=B.idft_plan_mejoramiento AND A.estado<>'INACTIVO' AND A.documento_iddocumento=iddocumento and C.estado<>'ELIMINADO' AND A.ft_plan_mejoramiento=".$documento[0]["idft_plan_mejoramiento"]." ";
+    $condicion="a.ft_plan_mejoramiento=b.idft_plan_mejoramiento AND a.estado<>'INACTIVO' AND a.documento_iddocumento=iddocumento and c.estado<>'ELIMINADO' AND a.ft_plan_mejoramiento=".$documento[0]["idft_plan_mejoramiento"]." ";
   }
     
   if($condicion!=""){
     $formato_hallazgo=busca_filtro_tabla("","formato","nombre LIKE '%hallazgo%'","",$conn);
     
     //print_r($formato_hallazgo);
-    $hallazgos=busca_filtro_tabla("A.*,B.*,A.documento_iddocumento as hallazgo_iddoc","ft_hallazgo A, ft_plan_mejoramiento B,documento C","A.ft_plan_mejoramiento= b.idft_plan_mejoramiento and a.documento_iddocumento= c.iddocumento and A.estado<>'INACTIVO' and C.estado<>'ELIMINADO' AND ".$condicion,"idft_hallazgo asc",$conn);	
+    $hallazgos=busca_filtro_tabla("a.*,b.*,a.documento_iddocumento as hallazgo_iddoc","ft_hallazgo a, ft_plan_mejoramiento b,documento c","a.ft_plan_mejoramiento= b.idft_plan_mejoramiento and a.documento_iddocumento= c.iddocumento and a.estado<>'INACTIVO' and c.estado<>'ELIMINADO' AND ".$condicion,"idft_hallazgo asc",$conn);	
     print_r($hallazgos);
     //print_r($hallazgos);
   if($hallazgos["numcampos"]){
