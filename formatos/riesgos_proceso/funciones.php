@@ -323,7 +323,7 @@ $impacto_auto=nuevo_punto_matriz($riesgos[0]["impacto"],$disminuir[1]);
 llenar_evaluaciones_particular($impacto_auto,$probabilidad_auto,$texto);
 
 $cadena_parseo=$impacto_auto.'_'.$probabilidad.'||'.$texto;
-
+return($cadena_parseo);
 
 
 }
