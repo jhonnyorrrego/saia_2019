@@ -19,24 +19,27 @@ include_once($ruta_db_superior."librerias_saia.php");
 
 
 function mostrar_nombre_parseo($idformato,$iddoc){
-    global $conn;   
+    global $conn,$consulta_parseo;   
     
     $consulta_parseo=busca_filtro_tabla("nombre,riesgo,descripcion,fuente_causa,consecuencia","riesgos_proceso","documento_iddocumento=".$iddoc,"",$conn);
+    
+    
+    
 }
 function mostrar_riesgo_parseo($idformato,$iddoc){
-    global $conn;
+    global $conn,$consulta_parseo;
     
 }
 function mostrar_descripcion_parseo($idformato,$iddoc){
-    global $conn;   
+    global $conn,$consulta_parseo;   
     
 }
 function mostrar_fuente_causa_parseo($idformato,$iddoc){
-    global $conn; 
+    global $conn,$consulta_parseo; 
     
 }
 function mostrar_consecuencia_parseo($idformato,$iddoc){
-    global $conn;  
+    global $conn,$consulta_parseo;  
     
 }
 
