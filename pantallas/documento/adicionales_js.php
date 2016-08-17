@@ -1,5 +1,5 @@
 <?php
-echo(librerias_notificaciones());
+//echo(librerias_notificaciones());
 ?>
 <script>
 var isOpera="";
