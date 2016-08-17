@@ -231,6 +231,8 @@ $responsables=busca_filtro_tabla("responsables","ft_riesgos_proceso","documento_
 }
 function matriz_riesgo($idformato,$iddoc){
 	global $conn;
+	
+	cuadrante_funcion($idformato,$iddoc);
 	?>
 	<table border="1" width="100%" cellspacing="0" class="tabla_borde" style="border-collapse:collapse">
   <tbody>
@@ -296,7 +298,7 @@ function matriz_riesgo($idformato,$iddoc){
   </tbody>
 </table>
 	<?php
-	cuadrante_funcion($idformato,$iddoc);
+	
 }
 function cuadrante_funcion($idformato,$iddoc){
 global $conn,$ruta_db_superior;
@@ -326,7 +328,9 @@ function llenar_evaluaciones_particular($impacto,$probabilidad,$texto){
 	global $conn;
 	?>
 	<script>
-	$("#<?php echo $impacto; ?>_<?php echo $probabilidad; ?>").append('<?php echo str_replace("'","\'",$texto); ?>');
+	$(document).ready(function(){
+	    $("#<?php echo $impacto; ?>_<?php echo $probabilidad; ?>").append('<?php echo str_replace("'","\'",$texto); ?>');
+	});
 	</script>
 	<?php
 }
