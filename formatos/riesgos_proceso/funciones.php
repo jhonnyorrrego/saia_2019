@@ -307,9 +307,11 @@ function llenar_evaluaciones_particular($impacto,$probabilidad,$texto){
 }
 function adicionar_control_riesgo($idformato,$iddoc){
 	global $conn, $ruta_db_superior;
-	$padre=busca_filtro_tabla("idft_riesgos_proceso, riesgo_antiguo","ft_riesgos_proceso a","documento_iddocumento=".$iddoc,"",$conn);
+	if(@$_REQUEST['tipo']!=5){
+	    $padre=busca_filtro_tabla("idft_riesgos_proceso, riesgo_antiguo","ft_riesgos_proceso a","documento_iddocumento=".$iddoc,"",$conn);
+	    echo '<a href="'.$ruta_db_superior.'formatos/control_riesgos/adicionar_control_riesgos.php?padre='.$padre[0]["idft_riesgos_proceso"].'&anterior='.$iddoc.'">Adicionar Valoracion Control de Riesgo</a>';	    
+	}
 
-		echo '<a href="'.$ruta_db_superior.'formatos/control_riesgos/adicionar_control_riesgos.php?padre='.$padre[0]["idft_riesgos_proceso"].'&anterior='.$iddoc.'">Adicionar Valoracion Control de Riesgo</a>';
 }
 function fecha_bloqueada($idformato,$iddoc){//A.A
 	echo "<td><input type='text' name='fecha_riesgo' value='".date('Y-m-d')."' readonly='readonly'/></td>";
