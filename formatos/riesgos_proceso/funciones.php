@@ -233,6 +233,7 @@ function matriz_riesgo($idformato,$iddoc){
 	global $conn;
 	
 	$retorno_cuadrante=cuadrante_funcion($idformato,$iddoc);
+	print_r($retorno_cuadrante);
 	$vector_retorno_cuadrante=explode('||',$retorno_cuadrante);
 	$vector_texto=array('1_1'=>'','2_1'=>'','3_1'=>'','4_1'=>'','5_1'=>'','1_2'=>'','2_2'=>'','3_2'=>'','4_2'=>'','5_2'=>'','1_3'=>'','2_3'=>'','3_3'=>'','4_3'=>'','5_3'=>'','1_4'=>'','2_4'=>'','3_4'=>'','4_4'=>'','5_4'=>'','1_5'=>'','2_5'=>'','3_5'=>'','4_5'=>'','5_5'=>'');
 	$vector_texto[$vector_retorno_cuadrante[0]]=$vector_retorno_cuadrante[1];
