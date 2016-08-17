@@ -48,7 +48,8 @@ $formato=busca_filtro_tabla("","formato A","A.idformato=".$idformato,"",$conn);
 		<?php			
 	}	
 	
-	*/	
+	*/
+	if(@$_REQUEST['tipo']!=5){
 	if(usuario_actual("funcionario_codigo")==$ejecutor[0]["ejecutor"] || usuario_actual("login")=="0k"){		 
 ?>
 <script type="text/javascript" src="../../js/jquery.js"></script>
@@ -78,6 +79,7 @@ $formato=busca_filtro_tabla("","formato A","A.idformato=".$idformato,"",$conn);
 			}
 		}	
 	}
+	} //fin if request tipo 5
 }
 
 function impacto_nuevo($idformato,$iddoc)
