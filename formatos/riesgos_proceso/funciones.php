@@ -232,7 +232,7 @@ $responsables=busca_filtro_tabla("responsables","ft_riesgos_proceso","documento_
 function matriz_riesgo($idformato,$iddoc){
 	global $conn;
 	
-	cuadrante_funcion($idformato,$iddoc);
+	$pintar_pdf=cuadrante_funcion($idformato,$iddoc);
 	?>
 	<table border="1" width="100%" cellspacing="0" class="tabla_borde" style="border-collapse:collapse">
   <tbody>
@@ -321,6 +321,10 @@ $probabilidad_auto=nuevo_punto_matriz($riesgos[0]["probabilidad"],$disminuir[0])
 $impacto_auto=nuevo_punto_matriz($riesgos[0]["impacto"],$disminuir[1]);
 
 llenar_evaluaciones_particular($impacto_auto,$probabilidad_auto,$texto);
+
+$cadena_parseo=$impacto_auto.'_'.$probabilidad.'||'.$texto;
+
+
 
 }
 
