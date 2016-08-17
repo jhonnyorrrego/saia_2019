@@ -80,7 +80,10 @@ function editar_riesgos_proceso($idformato,$iddoc){
 			}
 		}	
 	}
-	} //fin if request tipo 5
+	}else{ //fin if request tipo 5
+	
+	    echo('hola mundo');
+	}
 }
 
 function impacto_nuevo($idformato,$iddoc)
