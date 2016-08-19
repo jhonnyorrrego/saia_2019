@@ -13,7 +13,7 @@ include_once($ruta_db_superior."librerias_saia.php");
 echo(librerias_jquery("1.7"));
 echo(librerias_notificaciones());
 
-ini_set('display_errors',true);
+
 
 $iddoc=@$_REQUEST["iddoc"];
 $documento=busca_filtro_tabla(fecha_db_obtener('a.fecha','Y-m-d')." as x_fecha, a.*","documento a","a.iddocumento=".$iddoc,"",$conn);
