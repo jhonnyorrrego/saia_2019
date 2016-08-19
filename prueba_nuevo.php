@@ -12,7 +12,7 @@ include('db.php');
 
 
 
-$iddoc=6;
+$iddoc=107;
 echo(json_encode(generar_version_json($iddoc)));
 function generar_version_json($iddoc){
     global $conn,$ruta_db_superior;
