@@ -68,7 +68,7 @@ function generar_version_json($iddoc){
     if($busqueda["numcampos"])$consecutivo=$busqueda[0]["maximo"]+1;    
 	$arreglo_fecha=explode("-",$documento[0]["x_fecha"]);
     $ruta_json=RUTA_PDFS.$documento[0]["estado"]."/".$arreglo_fecha[0]."-".$arreglo_fecha[1]."/".$documento[0]["iddocumento"]."/versiones/version".$consecutivo."/";
-    crear_destino($ruta_db_superior.$destino);    
+    crear_destino($ruta_db_superior.$ruta_json);    
     $ruta_json.='json.json';
     $archivo_json = fopen($ruta_json, "a");
     fwrite($archivo_json, json_encode($json_final));
