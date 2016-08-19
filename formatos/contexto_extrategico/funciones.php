@@ -55,14 +55,14 @@ function adiconar_factores_contexto($idformato,$iddoc){
 		 
 		if($factores_contexto_estrategico[$i]['factores_contexto'] == 1){
 			$internos .= '<tr>
-							<td>'.html_entity_decode($factores_contexto_estrategico[$i]['descripcion']).'</td>
-							<td><a href="#" onclick="if(confirm(\'En realidad desea borrar este elemento?\')) window.location=\''.$ruta_db_superior.'formatos/librerias/funciones_item.php?formato='.$idformato_item_factores_contexto[0]['idformato'].'&idpadre='.$iddoc.'&accion=eliminar_item&tabla=ft_factores_contexto&id='.$factores_contexto_estrategico[$i]['idft_factores_contexto'].'\';">'.$imagen_eliminar.'</a></td>			
+							<td style="width:94%;">'.html_entity_decode($factores_contexto_estrategico[$i]['descripcion']).'</td>
+							<td style="width:6%;"><a href="#" onclick="if(confirm(\'En realidad desea borrar este elemento?\')) window.location=\''.$ruta_db_superior.'formatos/librerias/funciones_item.php?formato='.$idformato_item_factores_contexto[0]['idformato'].'&idpadre='.$iddoc.'&accion=eliminar_item&tabla=ft_factores_contexto&id='.$factores_contexto_estrategico[$i]['idft_factores_contexto'].'\';">'.$imagen_eliminar.'</a></td>			
 						  </tr>
 						';
 		}else{
 			$externos .= '<tr>
-							<td>'.html_entity_decode($factores_contexto_estrategico[$i]['descripcion']).'</td>							
-							<td><a href="#" onclick="if(confirm(\'En realidad desea borrar este elemento?\')) window.location=\''.$ruta_db_superior.'formatos/librerias/funciones_item.php?formato='.$idformato_item_factores_contexto[0]['idformato'].'&idpadre='.$iddoc.'&accion=eliminar_item&tabla=ft_factores_contexto&id='.$factores_contexto_estrategico[$i]['idft_factores_contexto'].'\';">'.$imagen_eliminar.'</a></td>
+							<td style="width:94%;">'.html_entity_decode($factores_contexto_estrategico[$i]['descripcion']).'</td>							
+							<td style="width:6%;"><a href="#" onclick="if(confirm(\'En realidad desea borrar este elemento?\')) window.location=\''.$ruta_db_superior.'formatos/librerias/funciones_item.php?formato='.$idformato_item_factores_contexto[0]['idformato'].'&idpadre='.$iddoc.'&accion=eliminar_item&tabla=ft_factores_contexto&id='.$factores_contexto_estrategico[$i]['idft_factores_contexto'].'\';">'.$imagen_eliminar.'</a></td>
 						  </tr>					  
 						';
 		}
@@ -82,7 +82,7 @@ function adiconar_factores_contexto($idformato,$iddoc){
 			  </table>
 			 ';
 			 
-			 $tabla_factores_ini='<table border="0" style="border-collapse: collapse;width: 100%; float: left;"><tr><td>'.$factores_internos.'</td><td>'.$factores_externos.'</td></tr></table>';
+			 $tabla_factores_ini='<table border="0" style="border-collapse: collapse;width: 100%; float: left; vertical-align:top;"><tr><td style="width:50%;vertical-align:top;">'.$factores_internos.'</td><td style="width:50%;vertical-align:top;">'.$factores_externos.'</td></tr></table>';
 			 
 			 
 			 echo($tabla_factores_ini);

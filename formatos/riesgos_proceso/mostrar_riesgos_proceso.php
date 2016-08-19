@@ -16,7 +16,7 @@
 </tr>
 <tr>
 <td class="encabezado">Actividad:</td>
-<td><?php mostrar_valor_campo('nombre',393,$_REQUEST['iddoc']);?></td>
+<td><?php mostrar_nombre_parseo(393,$_REQUEST['iddoc']);?></td>
 </tr>
 <tr>
 <td class="encabezado">Area Responsable:</td>
@@ -24,11 +24,11 @@
 </tr>
 <tr>
 <td class="encabezado">Riesgo:</td>
-<td><?php mostrar_valor_campo('riesgo',393,$_REQUEST['iddoc']);?></td>
+<td><?php mostrar_riesgo_parseo(393,$_REQUEST['iddoc']);?></td>
 </tr>
 <tr>
 <td class="encabezado">Descripcion:</td>
-<td><?php mostrar_valor_campo('descripcion',393,$_REQUEST['iddoc']);?></td>
+<td><?php mostrar_descripcion_parseo(393,$_REQUEST['iddoc']);?></td>
 </tr>
 <tr>
 <td class="encabezado">Tipo de Riesgo</td>
@@ -36,11 +36,11 @@
 </tr>
 <tr>
 <td class="encabezado">Fuente/causa:</td>
-<td><?php mostrar_valor_campo('fuente_causa',393,$_REQUEST['iddoc']);?></td>
+<td><?php mostrar_fuente_causa_parseo(393,$_REQUEST['iddoc']);?></td>
 </tr>
 <tr>
 <td class="encabezado">Consecuencia:</td>
-<td><?php mostrar_valor_campo('consecuencia',393,$_REQUEST['iddoc']);?></td>
+<td><?php mostrar_consecuencia_parseo(393,$_REQUEST['iddoc']);?></td>
 </tr>
 <tr>
 <td class="encabezado">Probabilidad:</td>
@@ -53,5 +53,4 @@
 </tbody>
 </table>
 <p>&nbsp;</p>
-<p><?php matriz_riesgo(393,$_REQUEST['iddoc']);?></p>
-<p>&nbsp;</p></td></tr><?php include_once("../librerias/footer_nuevo.php"); ?>
+<p><?php matriz_riesgo(393,$_REQUEST['iddoc']);?></p></td></tr><?php include_once("../librerias/footer_nuevo.php"); ?>

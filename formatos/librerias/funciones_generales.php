@@ -3027,13 +3027,6 @@ function actualizar_dependencia($iddoc){
 			$rol=busca_filtro_tabla("","dependencia_cargo a","a.funcionario_idfuncionario=".$tabla[0]["idfuncionario"],"",$conn);
 			$sql1="UPDATE ".$nombre_tabla." SET dependencia='".$rol[0]["iddependencia_cargo"]."' WHERE documento_iddocumento=".$iddoc;
 		}
-		
-		$buscar_tabla=busca_filtro_tabla("","cambio_campo_dependencia","nuevo_dep='".$formato[0]["dependencia"]."' and documento_iddocumento=".$iddoc,"",$conn);
-
-		if(!$buscar_tabla["numcampos"]){
-			phpmkr_query($sql1);
-			phpmkr_query("insert into cambio_campo_dependencia (documento_iddocumento, nombre_tabla, antiguo_dep, nuevo_dep, fecha) values(".$iddoc.", '".$nombre_tabla."', '".$formato[0]["dependencia"]."', '".$rol[0]["iddependencia_cargo"]."', ".fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s').")");
-		}
 	}
 	else {
 		return ;

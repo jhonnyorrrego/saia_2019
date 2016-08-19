@@ -139,11 +139,17 @@ function validar_tipo_riesgo($idformato, $iddoc){
 
 function botones_valoracion_riesgos($idformato, $iddoc){
   global $ruta_db_superior;
+
+  if(@$_REQUEST['tipo']!=5){
    
   $control = busca_filtro_tabla("a.documento_iddocumento","ft_riesgo_proceso a, ft_control_riesgos b","a.idft_riesgos_proceso=b.ft_riesgos_proceso AND b.documento_iddocumento=".$iddoc,"",$conn);
   $ejecutor=busca_filtro_tabla("ejecutor","documento","iddocumento=".$iddoc,"",$conn);
  $area=busca_filtro_tabla("b.area_responsable","ft_control_riesgos a, ft_riesgos_proceso b","a.ft_riesgos_proceso=b.idft_riesgos_proceso and a.documento_iddocumento=".$iddoc,"",$conn);  
   $funcionario=busca_filtro_tabla("funcionario_codigo","vfuncionario_dc","iddependencia in (".$area[0]["area_responsable"].")","group by funcionario_codigo",$conn);
+	
+
+      
+  	
 		
 	if(usuario_actual("funcionario_codigo")==$ejecutor[0]["ejecutor"]){
 	  		$boton  = '<button type="button" id = "editar_valoracion_riesgo">Editar</button>';
@@ -182,6 +188,7 @@ function botones_valoracion_riesgos($idformato, $iddoc){
  });
 </script>
 <?php
+  }
 }
 
 function registrar_edicion_documento($idformato, $iddoc){ 

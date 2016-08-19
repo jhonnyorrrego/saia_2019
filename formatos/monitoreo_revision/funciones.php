@@ -82,7 +82,10 @@ function obtener_controles_existentes_riesgo($idformato, $iddoc){
 	global $conn;
 	
 	if($_REQUEST["anterior"]){
-		$control_riesgos = busca_filtro_tabla("c.idft_control_riesgos, c.descripcion_control","ft_riesgos_proceso a, documento b, ft_control_riesgos c, documento d","a.idft_riesgos_proceso=c.ft_riesgos_proceso and a.documento_iddocumento=b.iddocumento and c.documento_iddocumento=d.iddocumento and lower(d.estado) not in('eliminado','anulado') and a.documento_iddocumento=".$_REQUEST["anterior"],"dbms_lob.substr(c.descripcion_control,50,1) desc",$conn);
+		$control_riesgos = busca_filtro_tabla("c.idft_control_riesgos, c.descripcion_control","ft_riesgos_proceso a, documento b, ft_control_riesgos c, documento d","a.idft_riesgos_proceso=c.ft_riesgos_proceso and a.documento_iddocumento=b.iddocumento and c.documento_iddocumento=d.iddocumento and lower(d.estado) not in('eliminado','anulado') and a.documento_iddocumento=".$_REQUEST["anterior"],"",$conn);
+		
+		
+		
 	}elseif($_REQUEST["iddoc"]){
 		$calificacion_controles = busca_filtro_tabla("controles_existentes","ft_monitoreo_revision","documento_iddocumento=".$_REQUEST["iddoc"],"",$conn);		
 			
