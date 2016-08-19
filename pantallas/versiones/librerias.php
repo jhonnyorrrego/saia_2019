@@ -55,10 +55,7 @@ function version_documento($documento){
     $origen=$ruta;
     $destino=RUTA_PDFS.$documento[0]["estado"]."/".$arreglo_fecha[0]."-".$arreglo_fecha[1]."/".$documento[0]["iddocumento"]."/versiones/version".$consecutivo."/pdf/";
     crear_destino($ruta_db_superior.$destino);
-    
-    
     generar_version_json($documento[0]["iddocumento"]);
-    
     $nombre_archivo=basename($origen);
     copy($ruta_db_superior.$origen,$ruta_db_superior.$destino.$nombre_archivo);
     
