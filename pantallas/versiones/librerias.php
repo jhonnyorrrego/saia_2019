@@ -55,6 +55,10 @@ function version_documento($documento){
     $origen=$ruta;
     $destino=RUTA_PDFS.$documento[0]["estado"]."/".$arreglo_fecha[0]."-".$arreglo_fecha[1]."/".$documento[0]["iddocumento"]."/versiones/version".$consecutivo."/pdf/";
     crear_destino($ruta_db_superior.$destino);
+    
+    
+    generar_version_json($documento[0]["iddocumento"]);
+    
     $nombre_archivo=basename($origen);
     copy($ruta_db_superior.$origen,$ruta_db_superior.$destino.$nombre_archivo);
     
@@ -218,7 +222,7 @@ function generar_pdf_vista($documento,$vista){
 
 
 function generar_version_json($iddoc){
-    global $conn;
+    global $conn,$ruta_db_superior;
     
     $formato=busca_filtro_tabla('','formato a, documento b','lower(b.plantilla)=lower(a.nombre) AND iddocumento='.$iddoc,'',conn);
     
@@ -264,7 +268,17 @@ function generar_version_json($iddoc){
         FALTA CREAR ARCHIVO *.json Y ALMACENAR EN LA RUTA DE VERSIONES    
     */
     
-    return($json_final);
+    $documento=busca_filtro_tabla(fecha_db_obtener('a.fecha','Y-m-d')." as x_fecha, a.*","documento a","a.iddocumento=".$iddoc,"",$conn);
+    $busqueda=busca_filtro_tabla("max(a.version) as maximo","version_documento a","a.documento_iddocumento=".$documento[0]["iddocumento"],"",$conn);
+    $consecutivo=0;
+    if($busqueda["numcampos"])$consecutivo=$busqueda[0]["maximo"]+1;    
+	$arreglo_fecha=explode("-",$documento[0]["x_fecha"]);
+    $ruta_json=RUTA_PDFS.$documento[0]["estado"]."/".$arreglo_fecha[0]."-".$arreglo_fecha[1]."/".$documento[0]["iddocumento"]."/versiones/version".$consecutivo."/";
+    crear_destino($ruta_db_superior.$ruta_json);    
+    $ruta_json.='json.json';
+    $archivo_json = fopen($ruta_json, "a");
+    fwrite($archivo_json, json_encode($json_final));
+    fclose($archivo_json);
     
 }
 function obtener_info_version($iddoc,$nombre_tabla,$llave){
