@@ -223,7 +223,7 @@ function generar_pdf_vista($documento,$vista){
 function generar_version_json($iddoc){
     global $conn,$ruta_db_superior;
     
-    $formato=busca_filtro_tabla('','formato a, documento b','lower(b.plantilla)=lower(a.nombre) AND iddocumento='.$iddoc,'',conn);
+    $formato=busca_filtro_tabla('','formato a, documento b','lower(b.plantilla)=lower(a.nombre) AND iddocumento='.$iddoc,'',$conn);
     
     $json_final=array();
     $json_final[$formato[0]['nombre_tabla']]=obtener_info_version($iddoc,$formato[0]['nombre_tabla'],'documento_iddocumento'); //ft
