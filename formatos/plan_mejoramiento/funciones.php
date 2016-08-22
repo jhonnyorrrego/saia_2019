@@ -101,7 +101,7 @@ $dato=busca_filtro_tabla("revisado,".fecha_db_obtener("fecha_elaborado","Y-m-d H
     $dato[0][0]=substr($dato[0][0],0,$pos);
   
 if($dato[0][0]){
-  mostrar_valor_campo('revisado',1,$iddoc);   
+  mostrar_valor_campo('revisado',379,$iddoc);   
   if($dato[0]["fecha_elaborado"] && $dato[0]["fecha_elaborado"]>'2010-01-01 00:00:00' && $dato[0]["fecha_revisado"] && $dato[0]["fecha_revisado"]>'2010-01-01 00:00:00'){
     echo("(".$dato[0]["fecha_revisado"].")");
   }
@@ -142,7 +142,7 @@ function aprobado_por($idformato,$iddoc){
 		$dato[0][0]=substr($dato[0][0],0,$pos);
 		if($dato[0][0]){
 		mostrar_valor_campo(
-	'aprobado',1,$iddoc);   
+	'aprobado',379,$iddoc);   
     if($dato[0]["fecha_revisado"] && $dato[0]["fecha_revisado"]>'2010-01-01 00:00:00' && $dato[0]["fecha_aprobado"] && $dato[0]["fecha_aprobado"]>'2010-01-01 00:00:00'){
       echo("(".$dato[0]["fecha_aprobado"].")");
     }
