@@ -62,10 +62,10 @@ function elaborado_por($idformato,$iddoc){
   $pos=strpos($dato[0][0],"_");
   if($pos)
     $dato[0][0]=substr($dato[0][0],0,$pos);
-     print_r($dato[0][0]);
+     
 		
   if($dato[0][0]){
-    mostrar_valor_campo('elaborado',1,$iddoc);   
+    mostrar_valor_campo('elaborado',379,$iddoc);   
     if($dato[0]["fecha_elaborado"] && $dato[0]["fecha_elaborado"]>'2010-01-01 00:00:00'){
       echo("(".$dato[0]["fecha_elaborado"].")");
     }
