@@ -231,7 +231,7 @@ function radicar_documento_prueba($tipo_contador,$arreglo,$archivos=NULL,$idfluj
   else
       alerta("No es posible radicar el Documento. Error No existe clasificaci&oacute;n del documento",'error');
       
-    print_r($arreglo);die();  
+   
       
   	if(!array_key_exists("numero",$arreglo) && $tipo_contador){
        $arreglo["numero"] =0;
@@ -252,6 +252,9 @@ function radicar_documento_prueba($tipo_contador,$arreglo,$archivos=NULL,$idfluj
     $campos = implode(",",array_keys($arreglo));
 
     $sql="INSERT INTO documento(".$campos.")"." VALUES (".$valores.")";
+    
+     print_r($sql);die();  
+    
     phpmkr_query($sql, $conn) or error($sql."    <br> -".phpmkr_error());
     $doc = phpmkr_insert_id();
     if($doc && $arreglo["estado"] == "'APROBADO'"){
