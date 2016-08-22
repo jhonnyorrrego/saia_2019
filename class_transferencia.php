@@ -222,6 +222,9 @@ necesarios en la radicacion; $archivos-cadena con la lista de los anexos del doc
 */
 function radicar_documento_prueba($tipo_contador,$arreglo,$archivos=NULL,$idflujo=Null){
   global $conn;
+  
+  print_r($arreglo);
+  
   if($tipo_contador!=""&&$tipo_contador!=NULL);
   elseif(array_key_exists("serie",$arreglo))
       $tipo_contador=$arreglo["serie"];
