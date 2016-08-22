@@ -1,5 +1,5 @@
 <?php
-/*
+/* 
 <Archivo>
 <Nombre>activar_documento.php</Nombre> 
 <Parametros>$_REQUEST["buscar"]:permite mostrar el fomulario de busqueda, $_REQUEST["key"]:numero de radicado, $_REQUEST["plantilla"]:tipo de plantilla</Parametros>
