@@ -7,6 +7,10 @@ echo(estilo_bootstrap());
   
 if(@$_REQUEST["iddoc"] || @$_REQUEST["key"] || @$_REQUEST["doc"]){
 	$_REQUEST["iddoc"]=@$_REQUEST["iddoc"];
+	if( @$_REQUEST["key"]){
+	    	$_REQUEST["iddoc"]=$_REQUEST["key"];
+	}
+	
 	include_once("pantallas/documento/menu_principal_documento.php");
 	echo(menu_principal_documento(@$_REQUEST["iddoc"],1));
 }  
