@@ -1965,10 +1965,10 @@ function radicar_plantilla()
       $idplantilla=guardar_decision_disciplinaria($_POST["iddoc"]);
     else*/
 
-    /*if($_SESSION["LOGIN".LLAVE_SAIA] == 'cerok'){
+    if($_SESSION["LOGIN".LLAVE_SAIA] == 'cerok'){
   			print_r($_POST);
 				die();
-  		}*/
+  		}
 
     if($_POST["iddoc"]){
     	$idplantilla=guardar_documento($_POST["iddoc"]);//173
