@@ -1966,8 +1966,7 @@ function radicar_plantilla()
     else*/
 
     if($_SESSION["LOGIN".LLAVE_SAIA] == 'cerok'){
-  			print_r($_POST);
-				die();
+  			//print_r($_POST); die();
   		}
 
     if($_POST["iddoc"]){
@@ -2383,9 +2382,9 @@ function guardar_documento($iddoc,$tipo=0)
 	
 	
 	
-  		//if(usuario_actual("login")=="cerok"){
-  			//print_r('<pre>'.$sql.'</pre>');die();
-  		//}
+  		if(usuario_actual("login")=="cerok"){
+  			print_r('<pre>'.$sql.'</pre>');die();
+  		}
      phpmkr_query($sql,$conn);  
    $insertado=phpmkr_insert_id();
   //print_r('insertado:'.$insertado);die();
