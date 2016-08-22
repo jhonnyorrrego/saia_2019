@@ -135,9 +135,9 @@ function reporte(){
 				}else{
 					$observacion="&nbsp";
 				}
-				$tabla.='<td>'.html_entity_decode($logros).'</td>';
+				$tabla.='<td>'.codifica_encabezado(html_entity_decode($logros)).'</td>';
 					
-				$tabla.='<td>'.html_entity_decode($observacion).'</td>';				
+				$tabla.='<td>'.codifica_encabezado(html_entity_decode($observacion)).'</td>';				
 			}else{
 				$tabla.='<td>&nbsp;</td>';					
 				$tabla.='<td>&nbsp;</td>';
