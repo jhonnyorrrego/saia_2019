@@ -311,23 +311,10 @@ class Imprime_Pdf {
 	  $contenido = preg_replace('#onclick="(.*?)"#is', '', $contenido);
 	  
 	  if(usuario_actual('login')=='cerok'){
-	      //print_r($contenido);die();
+	      print_r($contenido);die();
 	  }
 	  
-      $config = array(
-				           'indent'         => true,
-				           'output-xhtml'   => true,
-				           'wrap'           => 200				           
-	   );
-
-				// Tidy
-				$tidy = new tidy;
-				$tidy->errorBuffer;
-				$tidy->parseString($contenido, $config, 'utf8');
-				$tidy->cleanRepair();
-				// Output						
-						
-				$contenido=$tidy; 	  
+	  
 	  
 	  
       $this->pdf->writeHTML(stripslashes($contenido), true, false, false, false, '');
