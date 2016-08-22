@@ -217,7 +217,7 @@ function mostrar_controles_existentes_riesgo($idformato, $iddoc){
 	
 	
 	
-	$tabla ="<table border='1' style='border-collapse:collapse; width:100%;'>";
+	$tabla ="<table border='1' style='border-collapse:collapse; width:100%; border-style:solid;border-width:1px;'>";
 	for ($i=0; $i < $control_riesgos["numcampos"]; $i++) { 
 		$tabla .= "
 					<tr>
