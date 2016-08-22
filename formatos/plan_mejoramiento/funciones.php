@@ -58,7 +58,7 @@ function elaborado_por($idformato,$iddoc){
   	$fun_login=usuario_actual("login");
   }
   $dato=busca_filtro_tabla("elaborado,nombres,apellidos,funcionario_codigo,".fecha_db_obtener("fecha_elaborado","Y-m-d H:i:s")." AS fecha_elaborado","ft_plan_mejoramiento,documento,funcionario","documento_iddocumento=$iddoc and  iddocumento=documento_iddocumento and funcionario_codigo=ejecutor","",$conn);
-
+    print_r($dato);
   $pos=strpos($dato[0][0],"_");
   if($pos)
     $dato[0][0]=substr($dato[0][0],0,$pos);
