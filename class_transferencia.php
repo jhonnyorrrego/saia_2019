@@ -224,7 +224,7 @@ function radicar_documento_prueba($tipo_contador,$arreglo,$archivos=NULL,$idfluj
   global $conn;
   
   
-  print_r($arreglo);die();
+  //print_r($arreglo);die();
   
   if($tipo_contador!=""&&$tipo_contador!=NULL);
   elseif(array_key_exists("serie",$arreglo))
