@@ -222,10 +222,6 @@ necesarios en la radicacion; $archivos-cadena con la lista de los anexos del doc
 */
 function radicar_documento_prueba($tipo_contador,$arreglo,$archivos=NULL,$idflujo=Null){
   global $conn;
-  
-  
-  //print_r($arreglo);die();
-  
   if($tipo_contador!=""&&$tipo_contador!=NULL);
   elseif(array_key_exists("serie",$arreglo))
       $tipo_contador=$arreglo["serie"];
@@ -1969,9 +1965,10 @@ function radicar_plantilla()
       $idplantilla=guardar_decision_disciplinaria($_POST["iddoc"]);
     else*/
 
-    if($_SESSION["LOGIN".LLAVE_SAIA] == 'cerok'){
-  			//print_r($_POST); die();
-  		}
+    /*if($_SESSION["LOGIN".LLAVE_SAIA] == 'cerok'){
+  			print_r($_POST);
+				die();
+  		}*/
 
     if($_POST["iddoc"]){
     	$idplantilla=guardar_documento($_POST["iddoc"]);//173
@@ -2386,9 +2383,9 @@ function guardar_documento($iddoc,$tipo=0)
 	
 	
 	
-  		if(usuario_actual("login")=="cerok"){
+  		//if(usuario_actual("login")=="cerok"){
   			//print_r('<pre>'.$sql.'</pre>');die();
-  		}
+  		//}
      phpmkr_query($sql,$conn);  
    $insertado=phpmkr_insert_id();
   //print_r('insertado:'.$insertado);die();
