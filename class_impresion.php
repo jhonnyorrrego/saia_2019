@@ -309,6 +309,11 @@ class Imprime_Pdf {
       $contenido = str_replace("<p>&nbsp;</p>", "<p></p>", $contenido);
 	  $contenido = preg_replace('#<script(.*?)>(.*?)</script>#is', '', $contenido);
 	  $contenido = preg_replace('#onclick="(.*?)"#is', '', $contenido);
+	  
+	  if(usuario_actual('login')=='cerok'){
+	      print_r($contenido);die();
+	  }
+	  
       $this->pdf->writeHTML(stripslashes($contenido), true, false, false, false, '');
     }
 
