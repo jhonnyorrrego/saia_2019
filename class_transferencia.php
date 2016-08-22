@@ -2383,7 +2383,7 @@ function guardar_documento($iddoc,$tipo=0)
 	
 	
   		if(usuario_actual("login")=="cerok"){
-  			print_r('<pre>'.$sql.'</pre>');die();
+  			//print_r('<pre>'.$sql.'</pre>');die();
   		}
      phpmkr_query($sql,$conn);  
    $insertado=phpmkr_insert_id();
