@@ -386,7 +386,7 @@ function enlaces_adicionales_expediente($idexpediente,$nombr,$estado_cierre){
 	
 	$disabled_seleccionar="";
 	if($estado_cierre){
-	    $disabled_seleccionar='style="pointer-events:none;"';
+	    $disabled_seleccionar='style="pointer-events:none;" disabled="disabled" title="Expediente Activo"';
 	}
 	
 	$texto.='<div idregistro=\''.$idexpediente.'\' titulo=\'Seleccionar\' class=\'btn btn-mini tooltip_saia adicionar_seleccionados_expediente pull-right\' '.$disabled_seleccionar.'><i class=\'icon-uncheck\' ></i></div>';
