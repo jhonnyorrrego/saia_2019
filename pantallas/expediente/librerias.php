@@ -385,7 +385,7 @@ function enlaces_adicionales_expediente($idexpediente,$nombr,$estado_cierre){
 	$texto.='<div class=\'btn btn-mini link kenlace_saia tooltip_saia pull-right\' title=\'Imprimir rotulo\' titulo=\'Imprimir rotulo\' enlace=\'pantallas/caja/rotulo.php?idexpediente='.$idexpediente.'\' conector=\'iframe\'><i class=\'icon-print\'></i></div>';
 	
 	$disabled_seleccionar="";
-	if($estado_cierre){
+	if($estado_cierre==1){
 	    $disabled_seleccionar='style="pointer-events:none;" disabled="disabled" title="Expediente Activo"';
 	}
 	
