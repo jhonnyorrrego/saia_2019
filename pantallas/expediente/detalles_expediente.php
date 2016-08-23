@@ -166,7 +166,7 @@ $expediente=busca_filtro_tabla("a.*,".fecha_db_obtener("a.fecha","Y-m-d")." AS f
   						if(objeto.exito){
   							notificacion_saia(objeto.mensaje,"success","",2500);
   							if(x_accion==1){
-  							    window.parent.$('#seleccionados_expediente_<?php echo(@$_REQUEST["idexpediente"]); ?>').attr('style','pointer-events:none;background-color:gray;');
+  							    window.parent.$('#seleccionados_expediente_<?php echo(@$_REQUEST["idexpediente"]); ?>').attr('style','pointer-events:none;');
   							}else{
   							    window.parent.$('#seleccionados_expediente_<?php echo(@$_REQUEST["idexpediente"]); ?>').attr('style','');
   							}
