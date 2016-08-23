@@ -165,7 +165,14 @@ $expediente=busca_filtro_tabla("a.*,".fecha_db_obtener("a.fecha","Y-m-d")." AS f
   						var objeto=jQuery.parseJSON(html);
   						if(objeto.exito){
   							notificacion_saia(objeto.mensaje,"success","",2500);
-  							window.parent.$('#seleccionados_expediente_<?php echo(@$_REQUEST["idexpediente"]); ?>').attr('style','');
+  							if(x_accion==1){
+  							    window.parent.$('#seleccionados_expediente_<?php echo(@$_REQUEST["idexpediente"]); ?>').attr('style','pointer-events:none;background-color:gray;');
+  							}else{
+  							    window.parent.$('#seleccionados_expediente_<?php echo(@$_REQUEST["idexpediente"]); ?>').attr('style','');
+  							}
+  							
+  							
+  							
   							window.open("detalles_expediente.php?idexpediente=<?php echo(@$_REQUEST["idexpediente"]); ?>&idbusqueda_componente=<?php echo(@$_REQUEST["idbusqueda_componente"]); ?>","_self");
   						}
   					}
