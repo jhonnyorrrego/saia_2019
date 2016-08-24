@@ -27,7 +27,8 @@ if(@$_REQUEST["adruta"]){
 
 $tiene_ruta=busca_filtro_tabla("","ruta","lower(tipo)='activo' AND documento_iddocumento=".$_REQUEST["iddoc"],"",$conn);
 if($tiene_ruta['numcampos']>1){
-    print_r('tiene ruta');
+    $sql="DELETE FROM buzon_salida WHERE lower(nombre) IN('revisado','aprobado') AND archivo_idarchivo=".$_REQUEST["iddoc"];
+    phpmkr_query($sql);
 }
 
 
