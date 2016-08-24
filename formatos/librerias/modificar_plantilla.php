@@ -29,6 +29,11 @@ $tiene_ruta=busca_filtro_tabla("","ruta","lower(tipo)='activo' AND documento_idd
 if($tiene_ruta['numcampos']>1){
     $sql="DELETE FROM buzon_salida WHERE lower(nombre) IN('revisado','aprobado') AND archivo_idarchivo=".$_REQUEST["iddoc"];
     phpmkr_query($sql);
+    $sql="DELETE FROM buzon_entrada WHERE lower(nombre) IN('revisado','aprobado') AND archivo_idarchivo=".$_REQUEST["iddoc"];
+    phpmkr_query($sql);    
+    $sql="UPDATE buzon_entrada SET activo=1 WHERE lower(nombre)='por_aprobar' AND archivo_idarchivo=".$_REQUEST["iddoc"];
+    phpmkr_query($sql);    
+    
 }
 
 
