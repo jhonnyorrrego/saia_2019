@@ -25,5 +25,11 @@ if(@$_REQUEST["adruta"]){
   echo "<script>window.location='rutaadd.php?x_plantilla=".@$_REQUEST["x_plantilla"]."&obligatorio=".$_REQUEST["obligatorio"]."&doc=".$_REQUEST["iddoc"]."&origen=".usuario_actual("funcionario_codigo")."&reset_ruta=1';</script>";
 }
 
+$tiene_ruta=busca_filtro_tabla("","ruta","lower(tipo)='activo' AND documento_iddocumento=".$_REQUEST["iddoc"],"",$conn);
+if($tiene_ruta['numcampos']>1){
+    print_r('tiene ruta');
+}
+
+
 echo "<script>window.location='".$ruta_db_superior."formatos/".$datos_formato[0]["nombre"]."/mostrar_".$datos_formato[0]["nombre"].".php?iddoc=".$_REQUEST["iddoc"]."&tipo_destino=1';</script>";
 ?>
