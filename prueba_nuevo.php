@@ -12,9 +12,7 @@ include('db.php');
 include_once("pantallas/lib/librerias_cripto.php");
 
 
-    $numero_usuarios=encrypt_blowfish(100,LLAVE_SAIA_CRYPTO);
-    print_r($numero_usuarios);
-    die();
+
 
 	$funcionarios=busca_filtro_tabla("","funcionario a","a.estado=1 AND a.funcionario_codigo NOT IN ('1','2','9','111222333')","",$conn);
 	$reemplazos=busca_filtro_tabla("","reemplazo_saia b","b.estado=1","",$conn);
