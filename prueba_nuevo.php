@@ -9,6 +9,26 @@ while($max_salida>0){
   $max_salida--;
 }
 include('db.php');
+
+
+
+
+
+
+
+	$funcionarios=busca_filtro_tabla("count (*) AS funcionarios_activos","funcionario a","a.estado=1 AND a.funcionario_codigo NOT IN ('1','2','9','111222333')","",$conn);
+
+    print_r($funcionarios);
+
+
+
+
+die();
+
+
+
+
+
 include_once("librerias_saia.php");
 include_once($ruta_db_superior."formatos/librerias/funciones_generales.php");
 
