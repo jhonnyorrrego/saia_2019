@@ -399,6 +399,20 @@ function AddData($conn) {
 		redirecciona("funcionarioadd.php");
 	}
 
+    //Verifica si el funcionario se va a adicionar en estado "Activo"		
+    if ($_POST["x_estado"] == "1"){		
+    					
+    $respuesta=validar_usuarios_activos_add();				
+    			
+    }			
+    if($respuesta=="1"){		
+    			
+    	$EditData = false; // Update Error  		
+    	return $EditData;		
+    }
+
+
+
 	// insert into database
 	$strsql = "INSERT INTO funcionario (";
 	$strsql .= implode(",", array_keys($fieldList));
@@ -443,5 +457,38 @@ function AddData($conn) {
 	}
 
 	return true;
+}
+
+function validar_usuarios_activos_add(){
+	global $conn;
+	/*No se incluyen en la validacion los usuarios:
+	 * cerok 			 1
+	 * radicador_salida	 2
+	 * mensajero 		 9
+	 * radicador_web 	 111222333
+	 */		
+		
+	$funcionarios=busca_filtro_tabla("count (*) AS funcionarios_activos","funcionario a","a.estado=1 AND a.funcionario_codigo NOT IN ('1','2','9','111222333')","",$conn);
+	$reemplazos=busca_filtro_tabla("count (*) AS reemplazos_activos","reemplazo_saia b","b.estado=1","",$conn);
+	$funcionarios_activos=$funcionarios[0]['funcionarios_activos'];
+	$reemplazos_activos=$reemplazos[0]['reemplazos_activos'];
+	$cupos_usados=$funcionarios_activos+$reemplazos_activos;
+	
+	//Consulta la cantidad de usuarios definidos en la configuracion y desencripta el valor
+	$consulta_usuarios=busca_filtro_tabla("valor","configuracion","nombre='numero_usuarios'","",$conn);
+	$numero_encript=$consulta_usuarios[0]['valor'];
+	$numero_usuarios=decrypt_blowfish($numero_encript,LLAVE_SAIA_CRYPTO);
+	
+	//Verifica si ya se alzanzó el número de usuarios activos
+	if($cupos_usados>=$numero_usuarios){
+		
+		echo(librerias_notificaciones());
+		echo("<script>
+		notificacion_saia('<span style=\"color:white;\">No es posible adicionar el funcionario en estado activo, actualmente se alcanzó el máximo de cupos. Se tienen ".$funcionarios_activos." Funcionarios activos y ".$reemplazos_activos." Reemplazo(s) activo(s)</span>','error','',7000);
+		</script>");
+		return "1";
+	}
+	
+	
 }
 ?>
