@@ -468,10 +468,10 @@ function validar_usuarios_activos_add(){
 	 * radicador_web 	 111222333
 	 */		
 		
-	$funcionarios=busca_filtro_tabla("count (*) AS funcionarios_activos","funcionario a","a.estado=1 AND a.funcionario_codigo NOT IN ('1','2','9','111222333')","",$conn);
-	$reemplazos=busca_filtro_tabla("count (*) AS reemplazos_activos","reemplazo_saia b","b.estado=1","",$conn);
-	$funcionarios_activos=$funcionarios[0]['funcionarios_activos'];
-	$reemplazos_activos=$reemplazos[0]['reemplazos_activos'];
+	$funcionarios=busca_filtro_tabla("","funcionario a","a.estado=1 AND a.funcionario_codigo NOT IN ('1','2','9','111222333')","",$conn);
+	$reemplazos=busca_filtro_tabla("","reemplazo_saia b","b.estado=1","",$conn);
+	$funcionarios_activos=$funcionarios['numcampos'];
+	$reemplazos_activos=$reemplazos['numcampos'];
 	$cupos_usados=$funcionarios_activos+$reemplazos_activos;
 	
 	//Consulta la cantidad de usuarios definidos en la configuracion y desencripta el valor
