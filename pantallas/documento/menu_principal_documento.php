@@ -264,7 +264,7 @@ function permisos_modulo_menu_intermedio($iddoc, $modulo_padre,$lista,$target="_
     $modulo=  busca_filtro_tabla("", "modulo", "nombre IN ('".implode("','",$datos_modulos)."')", "orden", $conn);
     //$ok=1;
     
-    print_r($modulo);die();
+    //print_r($modulo);die();
     for($i=0;$i<$modulo["numcampos"];$i++){
       $ok=$permiso->acceso_modulo_perfil($modulo[$i]["nombre"],1);
       if($ok || usuario_actual('login')=='cerok'){
