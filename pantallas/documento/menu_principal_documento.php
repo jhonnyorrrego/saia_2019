@@ -274,6 +274,9 @@ function permisos_modulo_menu_intermedio($iddoc, $modulo_padre,$lista,$target="_
             case 'acciones_menu_intermedio':
                 $modulos_documentos_anulados=array('devolucion','transferir','expediente_menu','enviar_documento_correo');
                 break;
+            case 'rapidos_menu_intermedio':
+                $modulos_documentos_anulados=array('transferir','seguimiento','devolucion','vista_previa');
+                break;
             default:
                 break;
         }
