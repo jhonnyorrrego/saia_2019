@@ -9,12 +9,16 @@ while($max_salida>0){
   $max_salida--;
 }
 include('db.php');
+include_once("pantallas/lib/librerias_cripto.php");
 
 
 
-
-
-
+	$consulta_usuarios=busca_filtro_tabla("valor","configuracion","nombre='numero_usuarios'","",$conn);
+$numero_encript=$consulta_usuarios[0]['valor'];
+	$numero_usuarios=decrypt_blowfish($numero_encript,LLAVE_SAIA_CRYPTO);
+	
+    print_r($numero_usuarios);
+die();
 
 	$funcionarios=busca_filtro_tabla("","funcionario a","a.estado=1 AND a.funcionario_codigo NOT IN ('1','2','9','111222333')","",$conn);
 
