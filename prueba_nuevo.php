@@ -12,19 +12,25 @@ include('db.php');
 include_once("pantallas/lib/librerias_cripto.php");
 
 
-
+	$funcionarios=busca_filtro_tabla("count (*) AS funcionarios_activos","funcionario a","a.estado=1 AND a.funcionario_codigo NOT IN ('1','2','9','111222333')","",$conn);
+	$reemplazos=busca_filtro_tabla("count (*) AS reemplazos_activos","reemplazo_saia b","b.estado=1","",$conn);
+	$funcionarios_activos=$funcionarios[0]['funcionarios_activos'];
+	$reemplazos_activos=$reemplazos[0]['reemplazos_activos'];
+	$cupos_usados=$funcionarios_activos+$reemplazos_activos;
+	
+	//Consulta la cantidad de usuarios definidos en la configuracion y desencripta el valor
 	$consulta_usuarios=busca_filtro_tabla("valor","configuracion","nombre='numero_usuarios'","",$conn);
-$numero_encript=$consulta_usuarios[0]['valor'];
+	$numero_encript=$consulta_usuarios[0]['valor'];
 	$numero_usuarios=decrypt_blowfish($numero_encript,LLAVE_SAIA_CRYPTO);
 	
-    print_r($numero_usuarios);
-die();
-
-	$funcionarios=busca_filtro_tabla("","funcionario a","a.estado=1 AND a.funcionario_codigo NOT IN ('1','2','9','111222333')","",$conn);
-
-    print_r($funcionarios['numcampos']);
-
-
+	//Verifica si ya se alzanzó el número de usuarios activos
+	
+	echo($cupos_usados.'>='.$numero_usuarios);die();
+	if($cupos_usados>=$numero_usuarios){
+	    
+	    
+	    
+	}
 
 
 die();
