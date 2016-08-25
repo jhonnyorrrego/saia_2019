@@ -266,7 +266,7 @@ function permisos_modulo_menu_intermedio($iddoc, $modulo_padre,$lista,$target="_
     $documento_anulado=busca_filtro_tabla("estado","documento","iddocumento=".$iddoc,"",$conn);
     //$modulos_documentos_anulados=array('devolucion','transferir','expediente_menu','enviar_documento_correo','Almacenamiento');
     if($documento_anulado[0]['estado']=='ANULADO'){
-        
+        $modulos_documentos_anulados=array();
         switch(strtolower($modulo_padre)){
             case 'otros_menu_intermedio':
                 $modulos_documentos_anulados=array('Almacenamiento');
