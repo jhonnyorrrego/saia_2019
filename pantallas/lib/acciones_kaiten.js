@@ -54,48 +54,64 @@ $(".kenlace_saia_propio").live('click', function (){
   window.open(enlace, "_self")
 });
 function obtener_panel_kaiten(){
-   $id= parent.$(".k-focus").attr("id").replace("kp","");
-   alert($id);
-   $panel=parent.$('#contenedor_busqueda').kaiten("getPanel",($id-1)); 
+   $id= $(".k-focus").attr("id").replace("kp","");
+   $panel=$('#contenedor_busqueda').kaiten("getPanel",($id-1)); 
    return($panel);
 }
 function redireccion_panel_kaiten_actual(data_url,titulo){
     var $panel=obtener_panel_kaiten();
     parent.parent.$('#contenedor_busqueda').kaiten('reload',{ kConnector:'iframe', url:data_url, 'kTitle':titulo});
 }
+function eliminar_panel_kaiten(remover_hijos){
+    $('#contenedor_busqueda').kaiten("remove", obtener_panel_kaiten());
+    if(remover_hijos){
+        $('#contenedor_busqueda').kaiten("removeChildren",  obtener_panel_kaiten(), 0);
+    }
+}
+function refrescar_panel_kaiten(){
+    alert('entra refresh');
+    $('#contenedor_busqueda').kaiten("reload", obtener_panel_kaiten());
+}
 /*
  * @@actualizar_paneles_kaiten 
  * @param name
  */
-function actualizar_paneles_kaiten(idregistro){
+function actualizar_paneles_kaiten(idregistro,componente){
   for(var i=0;i<25;i++){
-    $panel=parent.$('#contenedor_busqueda').kaiten("getPanel",i);    
+    $panel=$('#contenedor_busqueda').kaiten("getPanel",i);    
     if(typeof($panel.attr("id"))=='undefined'){
       break;
     }
     else{        
-     actualizar_informacion_info($panel,idregistro);
+     actualizar_informacion_info($panel,idregistro,componente);
     }
   }
 }
-function actualizar_informacion_info($panel,idregistro){ 
-var consulta_busqueda=$panel.find("iframe").contents().find("#iddatos_componente").val();     
-if(consulta_busqueda!='undefined'){
-  $.ajax({
-    type:'GET',
-    url: "servidor_busqueda.php",
-    data: "estilo_actualizar_informacion=1&idbusqueda_componente="+consulta_busqueda+"&condicion_adicional=AND iddocumento="+idregistro,
-    success: function(html){
-      if(html){
-        var objeto=jQuery.parseJSON(html);
-        $.each(objeto.rows,function(i,item){
-          $panel.find("iframe").contents().find("#resultado_pantalla_"+idregistro).html(item.info+"ACTUALIZADO");
-        });
-      }
+function actualizar_informacion_info($panel,idregistro,componente){ 
+    var consulta_busqueda=componente;
+    var data="idbusqueda_componente="+consulta_busqueda+"&llave_unica="+idregistro;  
+    if(consulta_busqueda!='undefined'){
+      $.ajax({
+        type:'GET',
+        url: "../busquedas/servidor_busqueda.php",
+        data:data,
+        success: function(html){
+          if(html){
+            var objeto=jQuery.parseJSON(html);
+            $.each(objeto.rows,function(i,item){
+              $panel.find("iframe").contents().find("#resultado_pantalla_"+idregistro).html(item.info);
+            });
+          }
+        }
+      });    
     }
-  });    
 }
+function receiveMessage(event) {
+    var datos = event.data;
+    actualizar_paneles_kaiten(datos.llave,datos.idbusqueda_componente);
 }
+window.addEventListener("message", receiveMessage, false);
+
 function eliminar_info_paneles_kaiten(idregistro){
   for(var i=0;i<25;i++){
     $panel=parent.$('#contenedor_busqueda').kaiten("getPanel",i);    
