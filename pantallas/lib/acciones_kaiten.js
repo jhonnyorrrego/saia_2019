@@ -109,6 +109,14 @@ function actualizar_informacion_info($panel,idregistro,componente){
 function receiveMessage(event) {
     var datos = event.data;
     actualizar_paneles_kaiten(datos.llave,datos.idbusqueda_componente);
+    
+    /*
+                //ASI SE LLAMA DESDE OTRA PESATAÑA KAITEN
+				var json={"idbusqueda_componente":220,"llave":5};
+			    parent.postMessage(json,'*');       //actualiza contenedor del listado
+			    parent.eliminar_panel_kaiten(0);    //cierra kaiten actual
+    
+    */    
 }
 window.addEventListener("message", receiveMessage, false);
 
