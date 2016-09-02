@@ -26,6 +26,7 @@ function esDiaNoHabil(){
         for($i=0;$i<count($vector_dias_no_habiles);$i++){
             $vector_dias_no_habiles_int[]=$vector_config[ $vector_dias_no_habiles[$i] ];
         }
+        $vector_dias_no_habiles_int=array_map('strtolower',$vector_dias_no_habiles_int);
         return($vector_dias_no_habiles_int);
     }
 
