@@ -11,13 +11,10 @@ while($max_salida>0){
 include('db.php');
 
 
-echo date('N', strtotime('2016-09-03'));
-
-
-die();
 
 print_r(esDiaNoHabil());
 
+die();
 
 function esDiaNoHabil(){
         global $conn;
