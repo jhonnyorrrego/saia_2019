@@ -9,7 +9,7 @@ while($max_salida>0){
   $max_salida--;
 }
 include('db.php');
-$fecha="2016-09-02";
+$fecha="2016-09-03";
 
 echo(intval(date('N', strtotime($fecha))));
 
