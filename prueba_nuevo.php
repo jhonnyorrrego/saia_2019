@@ -21,10 +21,14 @@ function esCambioAnio($fecha,$dias){
     
     $ar_fechafin=date_parse($fecha);
     $aniofinal=$ar_fechafin["year"];
+    $mesfinal=$ar_fechafin["month"];
+    $diafinal=$ar_fechafin["day"];    
     
-    $cambio=0;
+    $retorno=array('cambio'=>0,'fecha_part1'=>'','fecha_part2'=>'');
     if($aniofinal>date('Y')){
-        $cambio=1;
+        $retorno['cambio']=1;
+        $retorno['fecha_part2']=;
+        
     }
     
     
