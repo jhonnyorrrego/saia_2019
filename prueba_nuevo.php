@@ -12,13 +12,13 @@ include('db.php');
 
 
 
+echo dias_habiles_nuevo(20,'Y-m-d');
 
 
 
 
 
-
-function dias_habiles($dias,$formato=NULL,$fecha_inicial=NULL){ 
+function dias_habiles_nuevo($dias,$formato=NULL,$fecha_inicial=NULL){ 
   global $conn; 
    if(!$formato)
      $formato="d-m-Y"; 
