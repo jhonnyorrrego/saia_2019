@@ -35,15 +35,36 @@ function esCambioAnio($fecha,$dias){
         $retorno['cambio']=1;
 
         $retorno['fecha_part1']=$anioini.'-'.$mesini.'-'.$diaini.'|'.$anioini.'-12-31';
-        $date1=date_create($anioini.'-'.$mesini.'-'.$diaini);
-        $date2=date_create($anioini.'-12-31');
-        $diff=date_diff($date1,$date2);
+        $part1_date1=date_create($anioini.'-'.$mesini.'-'.$diaini);
+        $part1_date2=date_create($anioini.'-12-31');
+        $diff=date_diff($part1_date1,$part1_date2);
         $retorno['diferencia_part1']=$diff->format("%a");
-        $retorno['simbolo_part1']=$diff->format("%R");
-        
-        
-        
+
+        $festivos2 = new CalendarCol(date('Y'));
+        $cantidad_festivos_part1=0;
+        for($i=1;$i<=$retorno['diferencia_part1'];$i++){
+           $fecha=calculaFecha("days",$i,$part1_date1);
+           if($festivos2->esFestivo($fecha)){
+              $cantidad_festivos_part1++;
+           }
+        }        
          
+        $part2_fecha_fin=calculaFecha("days",$cantidad_festivos_part1,$aniofinal.'-'.$mesfinal.'-'.$diafinal);
+        
+        $part2_date1=date_create($aniofinal.'-'.$mesfinal.'-'.$diafinal);
+        $part2_date2=date_create($part2_fecha_fin);
+        $diff2=date_diff($part2_date1,$part2_date2);
+        $retorno['diferencia_part2']=$diff2->format("%a");  
+        
+        $festivos3 = new CalendarCol((intval($aniofinal)+1));
+        $cantidad_festivos_part2=0;
+        for($i=1;$i<=$retorno['diferencia_part1'];$i++){
+           $fecha=calculaFecha("days",$i,$part1_date1);
+           if($festivos2->esFestivo($fecha)){
+              $cantidad_festivos_part1++;
+           }
+        }          
+        
         
         $retorno['fecha_part2']=$aniofinal.'-01-01'.'|'.$aniofinal.'-'.$mesfinal.'-'.$diafinal;
         
