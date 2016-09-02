@@ -13,7 +13,7 @@ include('db.php');
 
 
 $fecha="2016-09-05";
-esCambioAnio($fecha,$dias);
+echo esCambioAnio($fecha,40);
 
 
 function esCambioAnio($fecha,$dias){
