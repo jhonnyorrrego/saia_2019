@@ -11,7 +11,7 @@ while($max_salida>0){
 include('db.php');
 
 
-echo date('N', strtotime('2016-08-28'));
+echo date('N', strtotime('2016-09-03'));
 
 
 die();
