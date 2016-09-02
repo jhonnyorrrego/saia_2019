@@ -19,10 +19,16 @@ echo esCambioAnio($fecha,40);
 function esCambioAnio($fecha,$dias){
     $fecha=calculaFecha("days",$dias,$fecha);
     
-    $ar_fechaini=date_parse($fecha);
-    $anioinicial=$ar_fechaini["year"];
+    $ar_fechafin=date_parse($fecha);
+    $aniofinal=$ar_fechafin["year"];
     
-    return($anioinicial);
+    $cambio=0;
+    if($aniofinal>date('Y')){
+        $cambio=1;
+    }
+    
+    
+    return($cambio);
 
 }
 die();
