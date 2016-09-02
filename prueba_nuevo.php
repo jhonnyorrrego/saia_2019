@@ -16,9 +16,9 @@ if(in_array("",esDiaNoHabil())){
     echo('no habil');
 }
 
-print_r(esDiaNoHabil());
 
-die();
+
+
 
 function esDiaNoHabil(){
         global $conn;
@@ -34,7 +34,7 @@ function esDiaNoHabil(){
         return($vector_dias_no_habiles_int);
     }
 
-
+die();
 function dias_habiles_nuevo($dias,$formato=NULL,$fecha_inicial=NULL){ 
   global $conn; 
    if(!$formato)
