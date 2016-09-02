@@ -9,16 +9,35 @@ while($max_salida>0){
   $max_salida--;
 }
 include('db.php');
+
+
+
 $fecha="2016-09-05";
+esCambioAnio($fecha,$dias);
 
-echo(intval(date('N', strtotime($fecha))));
 
-if(in_array(intval(date('N',strtotime($fecha))),esDiaNoHabil())){
-    echo('no habil');
-}else{
-    echo('habil');
+function esCambioAnio($fecha,$dias){
+    $fecha=calculaFecha("days",$dias,$fecha);
+    return($fecha);
+
 }
+die();
+function calculaFecha($modo,$valor,$fecha_inicio=false,$formato=false){
+    
+    if(!$formato){
+        $formato="Y-m-d";
+    }
+	if($fecha_inicio!=false) {
+		$fecha_base = strtotime($fecha_inicio); 
 
+	}else {
+   		$time=time();          
+		$fecha_actual=date($formato,$time);       
+		$fecha_base=strtotime($fecha_actual);  
+	}     
+	$calculo = strtotime("$valor $modo","$fecha_base");    
+	return date($formato, $calculo);  
+}
 
 
 
