@@ -33,15 +33,21 @@ function esCambioAnio($fecha,$dias){
     $retorno=array('cambio'=>0,'fecha_part1'=>'','fecha_part2'=>'');
     if($aniofinal>date('Y')){
         $retorno['cambio']=1;
-        $retorno['fecha_part2']=$aniofinal.'-01-01'.'|'.$aniofinal.'-'.$mesfinal.'-'.$diafinal;
+
         $retorno['fecha_part1']=$anioini.'-'.$mesini.'-'.$diaini.'|'.$anioini.'-12-31';
-        
-        
         $date1=date_create($anioini.'-'.$mesini.'-'.$diaini);
         $date2=date_create($anioini.'-12-31');
         $diff=date_diff($date1,$date2);
         $retorno['diferencia_part1']=$diff->format("%a");
         $retorno['simbolo_part1']=$diff->format("%R");
+        
+        
+        
+         
+        
+        $retorno['fecha_part2']=$aniofinal.'-01-01'.'|'.$aniofinal.'-'.$mesfinal.'-'.$diafinal;
+        
+        
     }
     
     
