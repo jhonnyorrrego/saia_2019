@@ -34,7 +34,7 @@ function esCambioAnio($fecha,$dias){
     if($aniofinal>date('Y')){
         $retorno['cambio']=1;
         $retorno['fecha_part2']=$aniofinal.'-01-01'.'|'.$aniofinal.'-'.$mesfinal.'-'.$diafinal;
-        $retorno['fecha_part1']=$anioini.'-'.$mesini'-'.$diaini.'|'.$anioini.'-12-31';
+        $retorno['fecha_part1']=$anioini.'-'.$mesini.'-'.$diaini.'|'.$anioini.'-12-31';
         
     }
     
