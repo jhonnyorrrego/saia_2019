@@ -9,6 +9,22 @@ while($max_salida>0){
   $max_salida--;
 }
 include('db.php');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+die();
+
 include_once("pantallas/lib/librerias_cripto.php");
 
 
