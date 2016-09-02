@@ -41,7 +41,7 @@ function esCambioAnio($fecha,$dias){
         $date2=date_create($anioini.'-12-31');
         $diff=date_diff($date1,$date2);
         $retorno['diferencia_part1']=$diff->format("%a");
-        $retorno['simbolo_part1']==$diff->format("%R");
+        $retorno['simbolo_part1']=$diff->format("%R");
     }
     
     
