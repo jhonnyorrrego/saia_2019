@@ -16,10 +16,21 @@ echo date('N', strtotime('2016-09-03'));
 
 die();
 
-echo dias_habiles_nuevo(20,'Y-m-d');
+print_r(esDiaNoHabil());
 
 
-
+function esDiaNoHabil(){
+        global $conn;
+        
+        $dias_no_habiles=busca_filtro_tabla("valor","configuracion","tipo='festivos' AND nombre='dias_no_habiles'","",$conn);
+        $vector_dias_no_habiles=explode(',',$dias_no_habiles[0]['valor']);
+        $vector_dias_no_habiles_int=array();
+        $vector_config=array('l'=>1,'m'=>2,'x'=>3,'j'=>4,'v'=>5,'s'=>6,'d'=>7); //dias de las semana segun php  date('N', strtotime($needle)
+        for($i=0;$i<count($vector_dias_no_habiles);$i++){
+            $vector_dias_no_habiles_int[]=$vector_config[ $vector_dias_no_habiles[$i] ];
+        }
+        return($vector_dias_no_habiles_int);
+    }
 
 
 function dias_habiles_nuevo($dias,$formato=NULL,$fecha_inicial=NULL){ 
