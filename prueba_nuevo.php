@@ -37,7 +37,7 @@ function dias_habiles_nuevo($dias,$formato=NULL,$fecha_inicial=NULL){
   if($asignaciones["numcampos"]){  
     $no_laborales=$asignaciones["numcampos"]; 
 	  $fecha_legal= date($formato, mktime( 0, 0, 0,$mesinicial, $diainicial + $dias,$anioinicial)); 
-    return(dias_habiles_listado($no_laborales,$formato,$fecha_legal));    
+    return(dias_habiles($no_laborales,$formato,$fecha_legal));    
    }
  $fecha_legal= date($formato, mktime( 0, 0, 0,$mesinicial, $diainicial + $dias - 1 ,$anioinicial));   
  return($fecha_legal);
