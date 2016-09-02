@@ -13,7 +13,7 @@ $fecha="2016-09-02";
 
 echo(intval(date('N', $fecha)));
 
-
+die();
 if(in_array(intval(date('N', $fecha)),esDiaNoHabil())){
     echo('habil');
 }else{
