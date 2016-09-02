@@ -11,7 +11,7 @@ while($max_salida>0){
 include('db.php');
 $fecha="2016-09-02";
 
-echo(intval(date('N', $fecha)));
+echo(intval(date('N', strtotime($fecha))));
 
 die();
 if(in_array(intval(date('N', $fecha)),esDiaNoHabil())){
