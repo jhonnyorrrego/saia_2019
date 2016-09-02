@@ -11,6 +11,10 @@ while($max_salida>0){
 include('db.php');
 
 
+echo date('N', strtotime('2016-09-02'));
+
+
+die();
 
 echo dias_habiles_nuevo(20,'Y-m-d');
 
