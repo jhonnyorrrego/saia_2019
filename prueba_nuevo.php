@@ -10,7 +10,11 @@ while($max_salida>0){
 }
 include('db.php');
 
-
+if(in_array("",esDiaNoHabil())){
+    echo('habil');
+}else{
+    echo('no habil');
+}
 
 print_r(esDiaNoHabil());
 
