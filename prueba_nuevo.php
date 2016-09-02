@@ -18,7 +18,11 @@ echo esCambioAnio($fecha,40);
 
 function esCambioAnio($fecha,$dias){
     $fecha=calculaFecha("days",$dias,$fecha);
-    return($fecha);
+    
+    $ar_fechaini=date_parse($fecha);
+    $anioinicial=$ar_fechaini["year"];
+    
+    return($anioinicial);
 
 }
 die();
