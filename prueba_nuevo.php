@@ -9,8 +9,8 @@ while($max_salida>0){
   $max_salida--;
 }
 include('db.php');
-
-if(in_array("",esDiaNoHabil())){
+$fecha="2016-09-02";
+if(in_array(intval(date('N', $fecha)),esDiaNoHabil())){
     echo('habil');
 }else{
     echo('no habil');
