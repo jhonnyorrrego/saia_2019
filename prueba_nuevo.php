@@ -18,7 +18,30 @@ include('db.php');
 
 
 
+function dias_habiles($dias,$formato=NULL,$fecha_inicial=NULL){ 
+  global $conn; 
+   if(!$formato)
+     $formato="d-m-Y"; 
+   $formato_bd= "dd-mm-YYYY"; // Formato validor para el motor y DEBE SER COMPATIBLE CON $formato
+   if(!$fecha_inicial)
+     $fecha_inicial =date($formato);
+ 
+   $ar_fechaini=date_parse($fecha_inicial);
+   $anioinicial=$ar_fechaini["year"];
+   $mesinicial=$ar_fechaini["month"];
+   $diainicial=$ar_fechaini["day"];
+   
+   $fecha_final=date($formato, mktime( 0, 0, 0,$mesinicial, $diainicial + $dias,$anioinicial));
+    $asignaciones=busca_filtro_tabla("idasignacion,".fecha_db_obtener("fecha_inicial",'Y-m-d')." as fecha_inicial,".fecha_db_obtener("fecha_final",'Y-m-d')." as fecha_final","asignacion","asignacion.documento_iddocumento='-1'  AND asignacion.fecha_inicial < ".fecha_db_almacenar($fecha_final,$formato)." AND asignacion.fecha_final > ".fecha_db_almacenar($fecha_inicial,$formato),"",$conn); 
 
+  if($asignaciones["numcampos"]){  
+    $no_laborales=$asignaciones["numcampos"]; 
+	  $fecha_legal= date($formato, mktime( 0, 0, 0,$mesinicial, $diainicial + $dias,$anioinicial)); 
+    return(dias_habiles_listado($no_laborales,$formato,$fecha_legal));    
+   }
+ $fecha_legal= date($formato, mktime( 0, 0, 0,$mesinicial, $diainicial + $dias - 1 ,$anioinicial));   
+ return($fecha_legal);
+}
 
 
 
