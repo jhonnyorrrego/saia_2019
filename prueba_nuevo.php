@@ -17,17 +17,24 @@ echo esCambioAnio($fecha,31);
 
 
 function esCambioAnio($fecha,$dias){
-    $fecha=calculaFecha("days",$dias,$fecha);
+    $fecha_fin=calculaFecha("days",$dias,$fecha);
     
-    $ar_fechafin=date_parse($fecha);
+    $ar_fechafin=date_parse($fecha_fin);
     $aniofinal=$ar_fechafin["year"];
     $mesfinal=$ar_fechafin["month"];
-    $diafinal=$ar_fechafin["day"];    
+    $diafinal=$ar_fechafin["day"];  
+    
+    $ar_fechaini=date_parse($fecha);
+    $anioini=$ar_fechaini["year"];
+    $mesini=$ar_fechaini["month"];
+    $diaini=$ar_fechaini["day"];    
+    
     
     $retorno=array('cambio'=>0,'fecha_part1'=>'','fecha_part2'=>'');
     if($aniofinal>date('Y')){
         $retorno['cambio']=1;
-        $retorno['fecha_part2']=$aniofinal.'-01-01'.'|'.$aniofinal.'-'.$mesfinal.$diafinal;
+        $retorno['fecha_part2']=$aniofinal.'-01-01'.'|'.$aniofinal.'-'.$mesfinal.'-'.$diafinal;
+        $retorno['fecha_part1']=;
         
     }
     
