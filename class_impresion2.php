@@ -279,10 +279,7 @@ class Imprime_Pdf {
         
       $nombre_pdf = basename($nombre_pdf);
     }	
-    
-    
-   // print_r($nombre_pdf);die();
-		
+
     $this->pdf->Output($nombre_pdf, $this->tipo_salida);
     
   }
