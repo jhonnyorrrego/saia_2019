@@ -261,9 +261,8 @@ class Imprime_Pdf {
       crear_destino($carpeta);
       
     }else{    						
-			if($this->documento && @$this->documento[0]["numero"]){	
-			    
-      	$nombre_pdf = $this->documento[0]["numero"] . "_" . $this->documento[0]["fecha"] . ".pdf";
+			if($this->documento && @$this->documento[0]["numero"]){
+      	        $nombre_pdf = $this->documento[0]["numero"] . "_" . $this->documento[0]["fecha"] . ".pdf";
 			}elseif($this->idpaginas){
 				$nombre_pdf = $this->idpaginas . "_" . date("y-m-d") . ".pdf";
 			}else{
