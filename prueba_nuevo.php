@@ -12,7 +12,7 @@ include('db.php');
 include_once($ruta_db_superior.'pruebas_ruben/dias_habiles_nuevo/festivos_colombia.php');
 date_default_timezone_set('America/Bogota');
 
-
+ini_set('display_errors',true);
 $fecha="2016-12-01";
 print_r(esCambioAnio($fecha,40));
 
