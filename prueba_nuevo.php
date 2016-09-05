@@ -61,7 +61,7 @@ function esCambioAnio($fecha,$dias){
         $retorno['diferencia_part2']=$diff2->format("%a");  
         
         
-        $retorno['fecha_part2']=$aniofinal.'-01-01'.'|'.$aniofinal.'-'.$mesfinal.'-'.$diafinal;
+        $retorno['fecha_part2']=$aniofinal.'-01-01'.'|'.$part2_fecha_fin;
         
         
     }
