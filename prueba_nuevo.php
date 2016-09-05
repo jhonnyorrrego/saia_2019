@@ -55,11 +55,8 @@ function esCambioAnio($fecha,$dias){
         
         $part2_date1=date_create($aniofinal.'-01-01');
         $part2_date2=date_create($part2_fecha_fin);
-       
         $diff2=date_diff($part2_date1,$part2_date2);
         $retorno['diferencia_part2']=$diff2->format("%a");  
-        
-        
         $retorno['fecha_part2']=$aniofinal.'-01-01'.'|'.$part2_fecha_fin;
         
         
