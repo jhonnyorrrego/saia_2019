@@ -265,14 +265,13 @@ class Imprime_Pdf {
 			    
       	$nombre_pdf = $this->documento[0]["numero"] . "_" . $this->documento[0]["fecha"] . ".pdf";
 			}elseif($this->idpaginas){
-			   
 				$nombre_pdf = $this->idpaginas . "_" . date("y-m-d") . ".pdf";
 			}else{
 			    $nombre_pdf = "pdf_" . date("y-m-d") . ".pdf";
 			}		
     }		
 		
-		if($this->tipo_salida == "FI" && !$this->documento){
+	if($this->tipo_salida == "FI" && !$this->documento){
     	$nombre_pdf = basename($nombre_pdf);
     	
     }elseif ($this->tipo_salida == "FI" && $this->documento[0]["estado"] <> 'ACTIVO') {      
