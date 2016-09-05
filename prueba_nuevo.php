@@ -57,6 +57,7 @@ function esCambioAnio($fecha,$dias){
         $diff2=date_diff($part2_date1,$part2_date2);
         $retorno['dias_validar']=$diff2->format("%a");  
         $retorno['fecha_validar']=$aniofinal.'-01-01';
+        $retorno['anio_validar']=$aniofinal;
         
     }
     
