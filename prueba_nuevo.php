@@ -38,12 +38,12 @@ function esCambioAnio($fecha,$dias){
         $part1_date1=date_create($anioini.'-'.$mesini.'-'.$diaini);
         $part1_date2=date_create($anioini.'-12-31');
         $diff=date_diff($part1_date1,$part1_date2);
-        $retorno['diferencia_part1']=$diff->format("%a");
+        $diferencia_parte_uno=$diff->format("%a");
         
         $part1_date1=$anioini.'-'.$mesini.'-'.$diaini;
         $festivos2 = new CalendarCol(date('Y'));
         $cantidad_festivos_part1=0;
-        for($i=1;$i<=$retorno['diferencia_part1'];$i++){
+        for($i=1;$i<=$diferencia_parte_uno;$i++){
            $fecha=calculaFecha("days",$i,$part1_date1);
           
            if($festivos2->esFestivo($fecha)){
