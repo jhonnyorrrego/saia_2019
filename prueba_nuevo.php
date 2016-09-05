@@ -34,13 +34,12 @@ function esCambioAnio($fecha,$dias){
     $retorno=array('cambio'=>0,'fecha_part1'=>'','fecha_part2'=>'');
     if($aniofinal>date('Y')){
         $retorno['cambio']=1;
-
-        $retorno['fecha_part1']=$anioini.'-'.$mesini.'-'.$diaini.'|'.$anioini.'-12-31';
+        //$retorno['fecha_part1']=$anioini.'-'.$mesini.'-'.$diaini.'|'.$anioini.'-12-31';
         $part1_date1=date_create($anioini.'-'.$mesini.'-'.$diaini);
         $part1_date2=date_create($anioini.'-12-31');
         $diff=date_diff($part1_date1,$part1_date2);
-        $retorno['diferencia_part1']=$diff->format("%a");
-        
+        //$retorno['diferencia_part1']=$diff->format("%a");
+
         $part1_date1=$anioini.'-'.$mesini.'-'.$diaini;
         $festivos2 = new CalendarCol(date('Y'));
         $cantidad_festivos_part1=0;
