@@ -265,7 +265,7 @@ class Imprime_Pdf {
 			    print_r('entra 1');
       	$nombre_pdf = $this->documento[0]["numero"] . "_" . $this->documento[0]["fecha"] . ".pdf";
 			}else{
-			    print_r('entra 2');
+			   
 				$nombre_pdf = $this->idpaginas . "_" . date("y-m-d") . ".pdf";
 			}		
     }		
