@@ -270,9 +270,11 @@ class Imprime_Pdf {
 		
 		if($this->tipo_salida == "FI" && !$this->documento){
     	$nombre_pdf = basename($nombre_pdf);
+    	print_r('entra 2');
     }elseif ($this->tipo_salida == "FI" && $this->documento[0]["estado"] <> 'ACTIVO') {      
       phpmkr_query("update documento set pdf='" . $nombre_pdf . "' where iddocumento=" . $this->documento[0]["iddocumento"]);
     } elseif ($this->tipo_salida == "I") {
+        print_r('entra 1');
       $nombre_pdf = basename($nombre_pdf);
     }	
     
