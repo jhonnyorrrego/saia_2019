@@ -264,9 +264,11 @@ class Imprime_Pdf {
 			if($this->documento && @$this->documento[0]["numero"]){	
 			    
       	$nombre_pdf = $this->documento[0]["numero"] . "_" . $this->documento[0]["fecha"] . ".pdf";
-			}else{
+			}elseif($this->idpaginas){
 			   
 				$nombre_pdf = $this->idpaginas . "_" . date("y-m-d") . ".pdf";
+			}else{
+			    $nombre_pdf = "pdf_" . date("y-m-d") . ".pdf";
 			}		
     }		
 		
