@@ -31,7 +31,7 @@ function esCambioAnio($fecha,$dias){
     $diaini=$ar_fechaini["day"];    
     
     
-    $retorno=array('cambio'=>0,'fecha_part1'=>'','fecha_part2'=>'');
+    $retorno=array('cambio'=>0,'fecha_part2'=>'');
     if($aniofinal>date('Y')){
         $retorno['cambio']=1;
         //$retorno['fecha_part1']=$anioini.'-'.$mesini.'-'.$diaini.'|'.$anioini.'-12-31';
