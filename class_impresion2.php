@@ -274,7 +274,10 @@ class Imprime_Pdf {
       phpmkr_query("update documento set pdf='" . $nombre_pdf . "' where iddocumento=" . $this->documento[0]["iddocumento"]);
     } elseif ($this->tipo_salida == "I") {
       $nombre_pdf = basename($nombre_pdf);
-    }		
+    }	
+    
+    
+    print_r($nombre_pdf);die();
 		
     $this->pdf->Output($nombre_pdf, $this->tipo_salida);
     
