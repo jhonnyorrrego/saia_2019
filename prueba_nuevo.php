@@ -46,12 +46,11 @@ function esCambioAnio($fecha,$dias){
         $cantidad_festivos_part1=0;
         for($i=1;$i<=$retorno['diferencia_part1'];$i++){
            $fecha=calculaFecha("days",$i,$part1_date1);
-           print_r($fecha);echo('<br>');
+          
            if($festivos2->esFestivo($fecha)){
               $cantidad_festivos_part1++;
            }
         }        
-        print_r($cantidad_festivos_part1); die();
         $part2_fecha_fin=calculaFecha("days",$cantidad_festivos_part1,$aniofinal.'-'.$mesfinal.'-'.$diafinal);
         
         $part2_date1=date_create($aniofinal.'-'.$mesfinal.'-'.$diafinal);
