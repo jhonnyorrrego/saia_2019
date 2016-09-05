@@ -53,7 +53,7 @@ function esCambioAnio($fecha,$dias){
         $part2_fecha_fin=calculaFecha("days",$cantidad_festivos_part1,$aniofinal.'-'.$mesfinal.'-'.$diafinal);
         
         if($mesfinal<10){
-            $mesfinal=0.$mesfinal;
+            //$mesfinal=0.$mesfinal;
         }
         
         $part2_date1=date_create($aniofinal.'-'.$mesfinal.'-'.$diafinal);
