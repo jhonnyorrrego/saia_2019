@@ -56,15 +56,6 @@ function esCambioAnio($fecha,$dias){
         $diff2=date_diff($part2_date1,$part2_date2);
         $retorno['diferencia_part2']=$diff2->format("%a");  
         
-        $festivos3 = new CalendarCol((intval($aniofinal)+1));
-        $cantidad_festivos_part2=0;
-        for($i=1;$i<=$retorno['diferencia_part1'];$i++){
-           $fecha=calculaFecha("days",$i,$part1_date1);
-           if($festivos2->esFestivo($fecha)){
-              $cantidad_festivos_part1++;
-           }
-        }          
-        
         
         $retorno['fecha_part2']=$aniofinal.'-01-01'.'|'.$aniofinal.'-'.$mesfinal.'-'.$diafinal;
         
