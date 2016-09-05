@@ -262,7 +262,7 @@ class Imprime_Pdf {
       
     }else{    						
 			if($this->documento){	
-			    print_r('entra 1');
+			    print_r($this->documento);
       	$nombre_pdf = $this->documento[0]["numero"] . "_" . $this->documento[0]["fecha"] . ".pdf";
 			}else{
 			   
