@@ -57,7 +57,7 @@ if($_REQUEST['guardar']==1){
 			
 		  $busca_perfil_admin=busca_filtro_tabla("idperfil","perfil","lower(nombre)='admin_interno'","",$conn);
 			
-		  if($busca_perfil_admin[0]['idperfil']==$perfil_usuario_actual){
+		  if($busca_perfil_admin[0]['idperfil']==$perfil_usuario_actual || usuario_actual('login')=='cerok'){
 			?>
 			
 			<div class="control-group">
