@@ -47,8 +47,13 @@ if(@$_REQUEST['idtareas_listado_unico']){
   <div class="block-nav">    
 	<?php 
 		  
+		  //COMPONENTES 
+		  $componente_listado_tareas=busca_filtro_tabla("idbusqueda_componente","busqueda_componente","lower(nombre)='listado_tareas_reporte'","",$conn);
+		  $componente_tareas_listado=busca_filtro_tabla("idbusqueda_componente","busqueda_componente","lower(nombre)='tareas_listado_reporte'","",$conn);
+		  
+		  
 		  /*LISTADOS*/
-		  $url=$ruta_db_superior."pantallas/busquedas/consulta_busqueda_listado_tareas.php?idbusqueda_componente=256";
+		  $url=$ruta_db_superior."pantallas/busquedas/consulta_busqueda_listado_tareas.php?idbusqueda_componente=".$componente_listado_tareas[0]['idbusqueda_componente'];
 		  $texto='';
 		  $texto.='<div id="listados" title="Listados" data-load=\'{"kConnector":"iframe", "url":"'.$url.'", "kTitle":"Listados"}\' class="items navigable">';
 		  $texto.='<div class="head"></div>';              				            
@@ -60,7 +65,7 @@ if(@$_REQUEST['idtareas_listado_unico']){
 		  
 		  
 		  /*TAREAS*/
-		  $url=$ruta_db_superior."pantallas/busquedas/consulta_busqueda_tareas_listado2.php?idbusqueda_componente=262".$rol_tareas.$idtareas_listado_unico;
+		  $url=$ruta_db_superior."pantallas/busquedas/consulta_busqueda_tareas_listado2.php?idbusqueda_componente=".$componente_tareas_listado[0]['idbusqueda_componente'].$rol_tareas.$idtareas_listado_unico;
 		  $texto='';
 		  $texto.='<div id="tareas" title="Tareas" data-load=\'{"kConnector":"iframe", "url":"'.$url.'", "kTitle":"Tareas"}\' class="items navigable">';
 		  $texto.='<div class="head"></div>';              				            
@@ -82,7 +87,7 @@ if(@$_REQUEST['idtareas_listado_unico']){
 	      echo($texto);		  
 
 		  /*TAREAS RAPIDAS*/
-		  $url=$ruta_db_superior."pantallas/busquedas/consulta_busqueda_tareas_listado2.php?idbusqueda_componente=262&rol_tareas=tareas_rapidas";
+		  $url=$ruta_db_superior."pantallas/busquedas/consulta_busqueda_tareas_listado2.php?idbusqueda_componente=".$componente_tareas_listado[0]['idbusqueda_componente']."&rol_tareas=tareas_rapidas";
 		  $texto='';
 		  $texto.='<div id="tareas" title="Tareas rapidas" data-load=\'{"kConnector":"iframe", "url":"'.$url.'", "kTitle":"Tareas rapidas"}\' class="items navigable">';
 		  $texto.='<div class="head"></div>';              				            
@@ -93,7 +98,7 @@ if(@$_REQUEST['idtareas_listado_unico']){
 	      echo($texto);  
 
 	      /*TAREAS VENCIDAS*/
-		  $url=$ruta_db_superior."pantallas/busquedas/consulta_busqueda_tareas_listado2.php?idbusqueda_componente=262&rol_tareas=tareas_vencidas";
+		  $url=$ruta_db_superior."pantallas/busquedas/consulta_busqueda_tareas_listado2.php?idbusqueda_componente=".$componente_tareas_listado[0]['idbusqueda_componente']."&rol_tareas=tareas_vencidas";
 		  $texto='';
 		  $texto.='<div id="tareas" title="Tareas vencidas" data-load=\'{"kConnector":"iframe", "url":"'.$url.'", "kTitle":"Tareas vencidas"}\' class="items navigable">';
 		  $texto.='<div class="head"></div>';              				            
@@ -104,7 +109,7 @@ if(@$_REQUEST['idtareas_listado_unico']){
 	      echo($texto); 	  
   
 	      /*TAREAS TERMINADAS*/
-		  $url=$ruta_db_superior."pantallas/busquedas/consulta_busqueda_tareas_listado2.php?idbusqueda_componente=262&rol_tareas=tareas_terminadas";
+		  $url=$ruta_db_superior."pantallas/busquedas/consulta_busqueda_tareas_listado2.php?idbusqueda_componente=".$componente_tareas_listado[0]['idbusqueda_componente']."&rol_tareas=tareas_terminadas";
 		  $texto='';
 		  $texto.='<div id="tareas" title="Tareas terminadas" data-load=\'{"kConnector":"iframe", "url":"'.$url.'", "kTitle":"Tareas terminadas"}\' class="items navigable">';
 		  $texto.='<div class="head"></div>';              				            
@@ -123,7 +128,7 @@ if(@$_REQUEST['idtareas_listado_unico']){
 		  if($busca_perfil_admin[0]['idperfil']==$perfil_usuario_actual){
 				
 	      /*TAREAS GENERICAS*/
-		  $url=$ruta_db_superior."pantallas/busquedas/consulta_busqueda_tareas_listado2.php?idbusqueda_componente=262&rol_tareas=tarea_generica";
+		  $url=$ruta_db_superior."pantallas/busquedas/consulta_busqueda_tareas_listado2.php?idbusqueda_componente=".$componente_tareas_listado[0]['idbusqueda_componente']."&rol_tareas=tarea_generica";
 		  $texto='';
 		  $texto.='<div id="tareas" title="Tareas genericas" data-load=\'{"kConnector":"iframe", "url":"'.$url.'", "kTitle":"Tareas genericas"}\' class="items navigable">';
 		  $texto.='<div class="head"></div>';              				            
