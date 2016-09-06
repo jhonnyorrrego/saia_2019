@@ -37,7 +37,8 @@ if (isset($_REQUEST['iddoc']) && $_REQUEST['opt'] == 3) {
 
 if(isset($_REQUEST['nombre_macro']) && $_REQUEST["opt"]==4){
 	$html="<ul>";	
-	$macro=busca_filtro_tabla("idserie","serie","cod_padre=34 and estado=1","nombre",$conn);
+	$idserie_macro=busca_filtro_tabla("idserie","serie","lower(nombre) LIKE 'macroprocesos%-%procesos'","",$conn);
+	$macro=busca_filtro_tabla("idserie","serie","cod_padre=".$idserie_macro[0]['idserie']." and estado=1","nombre",$conn);
 	if($macro["numcampos"]){
 		$idserie_macro=extrae_campo($macro,"idserie");
 	 	$datos=busca_filtro_tabla("s.idserie,s.nombre,sp.nombre as nombre_padre","serie s, serie sp","s.cod_padre=sp.idserie AND (lower(sp.nombre) like '%".strtolower($_REQUEST['nombre_macro'])."%' OR lower(s.nombre) like '%".strtolower($_REQUEST['nombre_macro'])."%')  and sp.estado=1 and s.estado=1 and s.cod_padre in (".implode(",", $idserie_macro).") ","sp.nombre",$conn);
