@@ -46,7 +46,7 @@ if(@$_REQUEST['idcalendario'] != '' || @$_REQUEST['nombre_calendario']!=''){
    if(@$_REQUEST['nombre_calendario']!=''){
        
        $idcalendario=busca_filtro_tabla("idcalendario_saia","calendario_saia","lower(nombre)='".$_REQUEST['nombre_calendario']."'","",$conn);
-       print_r($idcalendario);
+       print_r($idcalendario); die();
        if($idcalendario['numcampos']){
            $_REQUEST['nombre_calendario']=$idcalendario[0]['idcalendario_saia'];
        }
