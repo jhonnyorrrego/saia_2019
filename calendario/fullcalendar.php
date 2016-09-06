@@ -252,23 +252,25 @@ else{
 </style>
 </head>
 <body>
-<?php if($_REQUEST['idcalendario']==10 || $_REQUEST['idcalendario']==11 || $_REQUEST['idcalendario']==12 || $_REQUEST['idcalendario']==13){ ?>
+<?php 
+    $calendarios_tareas=array('calendario_tareas_responsable','calendario_tareas_coparticipante','calendario_tareas_seguidor','calendario_tareas_planeador');
+    if(in_array($configuracion[0]['nombre'],$calendarios_tareas)){ ?>
 	
 <?php
 	$responsable="";$coparticipante="";$seguidor="";
-	if($_REQUEST['idcalendario']==10){
+	if($configuracion[0]['nombre']==$calendarios_tareas[0]){
 		$responsable="class='active'";
 		$titulo_calendario=" Responsable";
 	}
-	if($_REQUEST['idcalendario']==11){
+	if($configuracion[0]['nombre']==$calendarios_tareas[1]){
 		$coparticipante="class='active'";
 		$titulo_calendario=" Co-participante";
 	}
-	if($_REQUEST['idcalendario']==12){
+	if($configuracion[0]['nombre']==$calendarios_tareas[2]){
 		$seguidor="class='active'";
 		$titulo_calendario=" Seguidor";
 	}
-  if($_REQUEST['idcalendario']==13){
+  if($configuracion[0]['nombre']==$calendarios_tareas[3]){
     $planeador="class='active'";
     $titulo_calendario=" Planeador";
   }	
