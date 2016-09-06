@@ -50,7 +50,7 @@ if(@$_REQUEST['idtareas_listado_unico']){
 		  //COMPONENTES 
 		  $componente_listado_tareas=busca_filtro_tabla("idbusqueda_componente","busqueda_componente","lower(nombre)='listado_tareas_reporte'","",$conn);
 		  $componente_tareas_listado=busca_filtro_tabla("idbusqueda_componente","busqueda_componente","lower(nombre)='tareas_listado_reporte'","",$conn);
-		  
+		  $calendario_responsable=busca_filtro_tabla("idcalendario_saia","calendario_saia","lower(nombre)='calendario_tareas_responsable'","",$conn);
 		  
 		  /*LISTADOS*/
 		  $url=$ruta_db_superior."pantallas/busquedas/consulta_busqueda_listado_tareas.php?idbusqueda_componente=".$componente_listado_tareas[0]['idbusqueda_componente'];
@@ -76,7 +76,7 @@ if(@$_REQUEST['idtareas_listado_unico']){
 	      echo($texto);
 		  
 		  /*CALENDARIOS*/
-		  $url=$ruta_db_superior."calendario/fullcalendar.php?idcalendario=10";
+		  $url=$ruta_db_superior."calendario/fullcalendar.php?idcalendario=".$calendario_responsable[0]['idcalendario_saia'];
 		  $texto='';
 		  $texto.='<div id="calendarios" title="Calendarios" data-load=\'{"kConnector":"iframe", "url":"'.$url.'", "kTitle":"Calendarios"}\' class="items navigable">';
 		  $texto.='<div class="head"></div>';              				            
