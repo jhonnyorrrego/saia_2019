@@ -294,7 +294,7 @@ else{
 		 <li <?php echo($responsable); ?>><a href='fullcalendar.php?nombre_calendario=calendario_tareas_responsable'>Responsable</a ></li>
 		<li <?php echo($coparticipante); ?>><a href='fullcalendar.php?nombre_calendario=calendario_tareas_coparticipante'>Co-participante</a ></li>
 			<li <?php echo($seguidor); ?>><a href='fullcalendar.php?nombre_calendario=calendario_tareas_seguidor'>Seguidor</a ></li>
-			<li <?php echo($planeador); ?>><a href='fullcalendar.php?nombre_calendario=calendario_tareas_planeador&idbusqueda_componente=<?php echo($componente_planeador[0]['idbusqueda_componente']); ?>'>Planeador</a ></li>
+			<li <?php echo($planeador); ?>><a href='fullcalendar.php?idbusqueda_componente=<?php echo($componente_planeador[0]['idbusqueda_componente']); ?>&nombre_calendario=calendario_tareas_planeador'>Planeador</a ></li>
 	</ul>		
 </div>
 <?php } ?>
