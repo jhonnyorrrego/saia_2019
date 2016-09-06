@@ -265,7 +265,7 @@ else{
    
 
     $calendarios_tareas=array('calendario_tareas_responsable','calendario_tareas_coparticipante','calendario_tareas_seguidor','calendario_tareas_planeador');
-    
+    print_r('aqui:');
     print_r($configuracion[0]['nombre']);die();
     
     if(in_array($configuracion[0]['nombre'],$calendarios_tareas)){ ?>
