@@ -54,6 +54,20 @@ else{
   $_REQUEST["INDEX"]="actualizacion"; 
   $_SESSION["INDEX"]="actualizacion";
 } 
+
+
+$parametro_tarea='';
+if(@$_SERVER['QUERY_STRING']){
+	$parametro=$_SERVER['QUERY_STRING'];
+	$parametro_uncrypt=base64_decode($parametro);
+	$vector_parametro=explode('=',$parametro_uncrypt);
+			
+	if(strtolower(@$vector_parametro[0])=='idtareas_listado_unico' && is_numeric(@$vector_parametro[1])){
+		$parametro_tarea='?'.$parametro;
+	}
+}
+
+
 if ( $detect->isMobile() ) {
     $_SESSION["tipo_dispositivo"]="movil";
 }
@@ -63,7 +77,7 @@ if(isset($_REQUEST['sesion']))
 if(@$_SESSION["LOGIN".LLAVE_SAIA]){
     $fondo=busca_filtro_tabla("A.valor","configuracion A","A.tipo='empresa' AND A.nombre='fondo'","A.fecha,A.valor DESC",$conn);
     almacenar_sesion(1,"");
-    redirecciona("index_".$_SESSION["INDEX"].".php");
+    redirecciona("index_".$_SESSION["INDEX"].".php".$parametro_tarea);
 }
 $logo=busca_filtro_tabla("valor","configuracion","nombre='logo'","",$conn);
 $ruta_logo="imagenes/".$logo[0]["valor"];
@@ -300,7 +314,8 @@ $("#ingresar").click(function(){
           mensaje=objeto.mensaje;          
           if(objeto.ingresar==1){
             noty({text: mensaje,type: 'success',layout: "topCenter",timeout:tiempo});
-            setTimeout(function(){window.location=objeto.ruta},(tiempo+100));
+             var ruta=objeto.ruta+'<?php  echo($parametro_tarea);?>';
+            setTimeout(function(){window.location=ruta},(tiempo+100));
           }  
           else{
             $('#contenedor_recordar_contrasena').css('pointer-events','auto');  
