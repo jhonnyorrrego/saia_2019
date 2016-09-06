@@ -37,8 +37,8 @@ if($_REQUEST["opt"]==1){
     	if(@$_REQUEST['listado_tareas_fk']){
     		$condicion_listado=" AND a.idlistado_tareas=".$_REQUEST['listado_tareas_fk'];
     	}
-    	
-    	$macro=busca_filtro_tabla("idserie","serie","cod_padre=34 and estado=1","nombre",$conn);
+    	$idserie_macro=busca_filtro_tabla("idserie","serie","lower(nombre) LIKE 'macroprocesos%-%procesos'","",$conn);
+    	$macro=busca_filtro_tabla("idserie","serie","cod_padre=".$idserie_macro[0]['idserie']." and estado=1","nombre",$conn);
     	$option='<option value="0" selected>Seleccione...</option>';
     	if($macro["numcampos"]){	
     		
