@@ -15,7 +15,9 @@ include_once($ruta_db_superior."class.funcionarios.php");
 
 if(isset($_REQUEST['nombre_lista'])){
 
-$macro=busca_filtro_tabla("idserie","serie","cod_padre=34 and estado=1","nombre",$conn);
+
+$idserie_macro=busca_filtro_tabla("idserie","serie","lower(nombre) LIKE 'macroprocesos%-%procesos'","",$conn);
+$macro=busca_filtro_tabla("idserie","serie","cod_padre=".$idserie_macro[0]['idserie']." and estado=1","nombre",$conn);
 if($macro["numcampos"]){
 	$idserie_macro=extrae_campo($macro,"idserie");	
 	$datos_admin_funcionario=busca_datos_administrativos_funcionario(0);
