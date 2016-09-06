@@ -285,16 +285,16 @@ else{
     $planeador="class='active'";
     $titulo_calendario=" Planeador";
   }	
-
+  $componente_planeador=busca_filtro_tabla("idbusqueda_componente","busqueda_componente","lower(nombre)='tareas_listado_paneador'","",$conn);
 ?>	
 	
 <div class="container">
 	<!--h4>Calendario <?php echo($titulo_calendario);?></h4-->
 	<ul class="nav nav-tabs">
-		 <li <?php echo($responsable); ?>><a href='fullcalendar.php?idcalendario=10'>Responsable</a ></li>
-		<li <?php echo($coparticipante); ?>><a href='fullcalendar.php?idcalendario=11'>Co-participante</a ></li>
-			<li <?php echo($seguidor); ?>><a href='fullcalendar.php?idcalendario=12'>Seguidor</a ></li>
-			<li <?php echo($planeador); ?>><a href='fullcalendar.php?idcalendario=13&idbusqueda_componente=223'>Planeador</a ></li>
+		 <li <?php echo($responsable); ?>><a href='fullcalendar.php?nombre_calendario=calendario_tareas_responsable'>Responsable</a ></li>
+		<li <?php echo($coparticipante); ?>><a href='fullcalendar.php?nombre_calendario=calendario_tareas_coparticipante'>Co-participante</a ></li>
+			<li <?php echo($seguidor); ?>><a href='fullcalendar.php?nombre_calendario=calendario_tareas_seguidor'>Seguidor</a ></li>
+			<li <?php echo($planeador); ?>><a href='fullcalendar.php?nombre_calendario=calendario_tareas_planeador&idbusqueda_componente=<?php echo($componente_planeador[0]['idbusqueda_componente']); ?>'>Planeador</a ></li>
 	</ul>		
 </div>
 <?php } ?>
