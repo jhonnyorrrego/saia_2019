@@ -42,7 +42,7 @@ if($_REQUEST['idcalendario'] != '' ){
   /*
    * busca la configuracioón en la DB con el $_REQUEST['idcalendario]  
    */
-  $configuracion = busca_filtro_tabla(fecha_db_obtener('fecha').' AS fecha, tipo, estilo, datos, encabezado_izquierda, encabezado_centro, encabezado_derecho, adicionar_evento,busqueda_avanzada ',"calendario_saia","idcalendario_saia=".$_REQUEST['idcalendario'],"",$conn);
+  $configuracion = busca_filtro_tabla(fecha_db_obtener('fecha').' AS fecha, tipo, estilo, datos, encabezado_izquierda, encabezado_centro, encabezado_derecho, adicionar_evento,busqueda_avanzada,nombre',"calendario_saia","idcalendario_saia=".$_REQUEST['idcalendario'],"",$conn);
 
   //$calendario_fun=busca_filtro_tabla("idcalendario_saia","calendario_saia","","",$conn);
 
