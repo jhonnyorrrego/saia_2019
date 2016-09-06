@@ -38,13 +38,13 @@ if(@$_REQUEST["iddoc"]){
   include_once($ruta_db_superior."pantallas/documento/menu_principal_documento.php");
   menu_principal_documento($_REQUEST["iddoc"]);
 }
-if(@$_REQUEST['idcalendario'] != '' || @$_REQUEST['nombre_calendario']){
+if(@$_REQUEST['idcalendario'] != '' || @$_REQUEST['nombre_calendario']!=''){
   /*
    * busca la configuracioón en la DB con el $_REQUEST['idcalendario]  
    */
    
    if(@$_REQUEST['nombre_calendario']!=''){
-       
+       print_r('entro aqui fu');
        $idcalendario=busca_filtro_tabla("idcalendario_saia","calendario_saia","lower(nombre)='".$_REQUEST['nombre_calendario']."'","",$conn);
        if($idcalendario['numcampos']){
            $_REQUEST['nombre_calendario']=$idcalendario[0]['idcalendario_saia'];
