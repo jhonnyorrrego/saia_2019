@@ -307,7 +307,7 @@ if($_SESSION["tipo_dispositivo"]=="movil"){ ?>
             <li> 
             	<i class="icon-tasks"></i>
             		<a href="pantallas/tareas_listado/principal_listados_tareas_calendarios.php?click=tareas&rol_tareas=todos" target="centro" class="enlace_indicadores_index" nombre_componente="listado_tareas_total" idcomponente="<?php echo($componente_tareas_total[0]["idbusqueda_componente"]); ?>" >
-            			Mis Tareas Advance
+            			Mis Tareas (Av)
             		</a>	
             		&nbsp;<span class="badge" id="listado_tareas_total" title="Total" data-toggle="tooltip"><?php echo($tareas_total[0]["cant"]);?></span>
             			<div class="pull-right">
