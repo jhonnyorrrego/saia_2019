@@ -158,6 +158,7 @@ if(@$_REQUEST["idbusqueda_componente"]){
 			<?php
 			    $idserie_macro=busca_filtro_tabla("idserie","serie","lower(nombre) LIKE 'macroprocesos%-%procesos'","",$conn);
 				$macros=busca_filtro_tabla("idserie,nombre","serie","cod_padre=".$idserie_macro[0]['idbusqueda_componente']." AND estado=1","nombre ASC",$conn);
+				print_r($macros);die();
 				$cadena='<select class="btn btn-mini dropdown-toggle" id="macros"> ';
 				$cadena.='<option value="0" selected>Macroprocesos...</option>';
 				for($i=0;$i<$macros['numcampos'];$i++){
