@@ -299,7 +299,8 @@ if($_SESSION["tipo_dispositivo"]=="movil"){ ?>
 
             <li> 
             	<i class="icon-calendar"></i> 
-            		<a href="calendario/fullcalendar.php?idcalendario=13&idbusqueda_componente=223" target="centro" class="enlace_indicadores_index"  >
+            	<?php $componente_planeador=busca_filtro_tabla("idbusqueda_componente","busqueda_componente","lower(nombre)='tareas_listado_paneador'","",$conn); ?>
+            		<a href="calendario/fullcalendar.php?nombre_calendario=calendario_tareas_planeador&idbusqueda_componente=<?php echo($componente_planeador[0]['idbusqueda_componente']); ?>" target="centro" class="enlace_indicadores_index"  >
             			Planeador
             		</a>	
             </li>                         
