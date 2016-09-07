@@ -19,7 +19,7 @@ if(@$_REQUEST['idtareas_listado_anexos']){
 
 
  
-	$ruta_eliminados=$ruta_db_superior."../backup/eliminados/anexos_tareas/".$anexo[0]['listado_tareas_fk']."/".$anexo[0]['idtareas_listado']."/";
+	$ruta_eliminados=$ruta_db_superior.RUTA_BACKUP_ELIMINADOS."anexos_tareas/".$anexo[0]['listado_tareas_fk']."/".$anexo[0]['idtareas_listado']."/";
 	crear_destino($ruta_eliminados);
 	chmod($ruta_eliminados,0777);
 	
