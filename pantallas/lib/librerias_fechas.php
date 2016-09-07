@@ -232,4 +232,28 @@ $vencimiento='';
   }
 return($vencimiento);
 }
+
+function conversor_segundos_hm($tiempo_en_segundos) {
+  $horas = floor($tiempo_en_segundos / 3600);
+  $minutos = floor(($tiempo_en_segundos - ($horas * 3600)) / 60);
+  $segundos=0;
+  if($mostrar_segundos){
+    $segundos = $tiempo_en_segundos - ($horas * 3600) - ($minutos * 60);
+  }
+ 
+  $hora_texto = "";
+  if ($horas > 0 ) {
+    $hora_texto .= $horas . "h &nbsp;";
+  }
+ 
+  if ($minutos > 0 ) {
+    $hora_texto .= $minutos . "m &nbsp;";
+  }
+ 
+  if ($segundos > 0 ) {
+    $hora_texto .= $segundos . "s &nbsp;";
+  }
+  return $hora_texto;
+}
+
 ?>
