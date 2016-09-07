@@ -27,13 +27,11 @@ if(@$_REQUEST['idtareas_listado_anexos']){
 	fwrite($archivo_txt, $cadena_sql_insert);
 	fclose($archivo_txt);	
 	chmod($ruta_eliminados."sql_anexos_tareas_".@$_REQUEST['idtareas_listado_anexos'].".txt",0777);
-	
-	
+
 	$nombre_anexo=basename($ruta_db_superior.$anexo[0]['ruta']);
 	copy($ruta_db_superior.$anexo[0]['ruta'], $ruta_eliminados.$nombre_anexo);
 	chmod($ruta_eliminados.$nombre_anexo,0777);
 	unlink($ruta_db_superior.$anexo[0]['ruta']);
-
 
 	$sql="DELETE FROM tareas_listado_anexos WHERE idtareas_listado_anexos=".@$_REQUEST['idtareas_listado_anexos'];
 	phpmkr_query($sql);
