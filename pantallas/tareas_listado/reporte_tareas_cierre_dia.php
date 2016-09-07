@@ -66,7 +66,10 @@ function mostrar_tiempo_total($idfuncionario,$nombre_funcionario){
 	
 	$cadena_tareas_involucradas=implode(',',extrae_campo($avances_coparticipante,'idtareas_listado'));
 	
-	$cadena='<div class="kenlace_saia" style="cursor:pointer" titulo="Avance a tareas del funcionario '.$nombre_funcionario.' en la fecha '.$fecha_avance.'" title="Avance a tareas del funcionario '.$nombre_funcionario.' en la fecha '.$fecha_avance.'" enlace="pantallas/busquedas/consulta_busqueda_reporte.php?idbusqueda_componente=226&variable_busqueda='.$idfuncionario.'|'.$fecha_avance.'|'.$cadena_tareas_involucradas.'" conector="iframe"><span style="cursor:pointer;">'.$tiempo_convertido.'</span></div>';
+	
+	$componente_reporte_filtrado=busca_filtro_tabla("idbusqueda_componente","busqueda_componente"," lower(nombre)='reporte_tareas_cierre_dia_filtrada' ","",$conn);
+	
+	$cadena='<div class="kenlace_saia" style="cursor:pointer" titulo="Avance a tareas del funcionario '.$nombre_funcionario.' en la fecha '.$fecha_avance.'" title="Avance a tareas del funcionario '.$nombre_funcionario.' en la fecha '.$fecha_avance.'" enlace="pantallas/busquedas/consulta_busqueda_reporte.php?idbusqueda_componente='.$componente_reporte_filtrado[0]['idbusqueda_componente'].'&variable_busqueda='.$idfuncionario.'|'.$fecha_avance.'|'.$cadena_tareas_involucradas.'" conector="iframe"><span style="cursor:pointer;">'.$tiempo_convertido.'</span></div>';
 	
 	
 	return($cadena);	
