@@ -22,8 +22,7 @@ if(@$_REQUEST['idtareas_listado_anexos']){
 	
 	$cadena_sql_insert="INSERT INTO tareas_listado_anexos
  (etiqueta,ruta,tipo,fk_tareas_listado) values('".$anexo[0]['etiqueta']."','".$anexo[0]['ruta']."','".$anexo[0]['tipo']."','".$anexo[0]['idtareas_listado']."')";
- 
- 
+
  	$archivo_txt = fopen($ruta_eliminados."sql_anexos_tareas_".$anexo[0]['idtareas_listado'].".txt","w");	
 	fwrite($archivo_txt, $cadena_sql_insert);
 	fclose($archivo_txt);	
