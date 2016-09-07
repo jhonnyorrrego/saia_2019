@@ -739,8 +739,12 @@ function mostrar_previa_nombre_tarea($nombre_tarea){
 function mostrar_cantidad_subtareas($idtareas_listado){
 	
 	if(!@$_REQUEST['ocultar_subtareas']){
+	    
+	    
+	    $componente_subtareas=busca_filtro_tabla("idbusqueda_componente","busqueda_componente"," lower(nombre)='subtareas_listado' ","",$conn);
+	    
 		$subtareas=busca_filtro_tabla('','tareas_listado','generica=0 AND cod_padre='.$idtareas_listado,'',$conn);
-		$cantidad='<span class="kenlace_saia contenedor_cantidad_tareas" style="cursor:pointer" data-toggle="tooltip" title="Subtareas" titulo="Subtareas" title="Subtareas" enlace="pantallas/busquedas/consulta_busqueda_subtareas_listado2.php?idtareas_listado='.$idtareas_listado.'&idbusqueda_componente=221&ocultar_subtareas=1" conector="iframe">';
+		$cantidad='<span class="kenlace_saia contenedor_cantidad_tareas" style="cursor:pointer" data-toggle="tooltip" title="Subtareas" titulo="Subtareas" title="Subtareas" enlace="pantallas/busquedas/consulta_busqueda_subtareas_listado2.php?idtareas_listado='.$idtareas_listado.'&idbusqueda_componente='.$componente_subtareas[0]['idbusqueda_componente'].'&ocultar_subtareas=1" conector="iframe">';
 		$cantidad.='<span id="cantidad_subtareas_'.$idtareas_listado.'" class="badge">'.$subtareas['numcampos'].'</span>&nbsp;';
 		$cantidad.='</span>';
 		$cadena.=''.$cantidad.'';	
