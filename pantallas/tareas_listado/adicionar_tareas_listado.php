@@ -209,7 +209,8 @@ if(@$_REQUEST['guardar']==1){
 				parent.$('#contador_tareas_<?php echo($_REQUEST['listado_tareas_fk']); ?>').html( parseInt(parent.$('#contador_tareas_<?php echo($_REQUEST['listado_tareas_fk']); ?>').html()) +1 );
 			</script>	
 			<?php
-				redirecciona($ruta_db_superior."pantallas/busquedas/consulta_busqueda_subtareas_listado2.php?idbusqueda_componente=220&ocultar_subtareas=1&idlistado_tareas=".$_REQUEST['listado_tareas_fk']);
+			    $componente_tareas=busca_filtro_tabla("idbusqueda_componente","busqueda_componente"," lower(nombre)='tareas_listado_reporte' ","",$conn);
+				redirecciona($ruta_db_superior."pantallas/busquedas/consulta_busqueda_subtareas_listado2.php?idbusqueda_componente=".$componente_tareas[0]['idbusqueda_componente']."&ocultar_subtareas=1&idlistado_tareas=".$_REQUEST['listado_tareas_fk']);
 	}
 	
 	
