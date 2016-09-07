@@ -56,6 +56,13 @@ for($i=0;$i<$cant;$i++){
 	$titulos[]="{startColumnName: '".$datos[1]."', numberOfColumns: ".$datos[2].", titleText: '<em>".$datos[0]."</em>'}";
 }
 
+
+$encabezado_pie=busca_filtro_tabla("","busqueda_encabezado a","a.fk_idbusqueda_componente=".$datos_componente,"",$conn);
+if($encabezado_pie["numcampos"]){
+	$resultado=json_decode($encabezado_pie[0]["pie"],true);
+	$cant_f=count($resultado);
+}
+
 echo(estilo_jqgrid());
 echo(estilo_redmond());
 echo(estilo_bootstrap());                           
@@ -126,6 +133,36 @@ $(document).ready(function(){
 	    page: function (obj) { $("#busqueda_pagina").val(obj.page); return(obj.page); },
 	    total: function (obj) {$("#busqueda_total_paginas").val(obj.total); return(obj.total);  }	   
 		},
+		
+			<?php if($encabezado_pie["numcampos"]){ ?>
+		footerrow:true,
+		userDataOnFooter:true,
+		gridComplete:function(){
+    	var $self = $(this);
+    	<?php 
+	    	for ($i=0; $i <$cant_f; $i++) {
+	    		if($resultado[$i]["sumar"]==1){
+	    			?>
+							var colSum = $self.jqGrid('getCol', '<?php echo($resultado[$i]["nombre_columna"]); ?>', false, 'sum');
+							$self.jqGrid('footerData', 'set', { '<?php echo($resultado[$i]["nombre_columna"]); ?>': colSum });
+	    			<?php
+	    		}else{
+						if($resultado[$i]["tipo"]=="js"){
+							?>
+							$self.jqGrid("footerData","set",{"<?php echo($resultado[$i]["nombre_columna"]); ?>":<?php echo $resultado[$i]["nombre_funcion"];?>()});
+							<?php
+						}else{
+							?>
+								$self.jqGrid("footerData","set",{"<?php echo($resultado[$i]["nombre_columna"]); ?>":"<?php echo($resultado[$i]["nombre_funcion"]()); ?>"});
+						<?php
+						}
+					} 
+				}
+			?>
+   	},
+   	<?php } ?>		
+		
+		
    	pager: '#nav_busqueda',
     caption:"<?php echo $boton_buscar;?><button class=\"btn btn-mini btn-primary exportar_reporte_saia pull-left\" title=\"Exportar reporte <?php echo($datos_busqueda[0]['etiqueta']);?>\" enlace=\"<?php echo($datos_busqueda[0]['busqueda_avanzada']);?>\">Exportar &nbsp;</button><div class=\"pull-left\" style=\"text-align:center; width:60%;\"><?php echo($datos_busqueda[0]['etiqueta']);?></div><div id=\"barra_exportar_ppal\"><iframe name='iframe_exportar_saia' height='25px' width='150px' frameborder=0 scrolling='no'></iframe></div></div>"
 });
