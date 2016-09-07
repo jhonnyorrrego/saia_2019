@@ -67,13 +67,12 @@ function mostrar_progreso($progreso){
 
 
 function mostrar_enlace_nombre_tarea($idtareas_listado,$nombre_tarea){
+	global $conn;
 	
-	
-	$url="pantallas/busquedas/consulta_busqueda_subtareas_listado2.php?idbusqueda_componente=220&ocultar_subtareas=1&rol_tareas=tarea_unica&click=tareas&idtareas_listado_unico=".$idtareas_listado;
+	$componente_tareas_listado=busca_filtro_tabla("idbusqueda_componente","busqueda_componente"," lower(nombre)='tareas_listado_reporte' ","",$conn);	
+	$url="pantallas/busquedas/consulta_busqueda_subtareas_listado2.php?idbusqueda_componente=".$componente_tareas_listado[0]['idbusqueda_componente']."&ocultar_subtareas=1&rol_tareas=tarea_unica&click=tareas&idtareas_listado_unico=".$idtareas_listado;
 	$cadena='<div class="kenlace_saia" style="cursor:pointer" titulo="Tarea '.$nombre_tarea.'" title="Tarea '.$nombre_tarea.'" enlace="'.$url.'" conector="iframe"><span style="cursor:pointer;">'.$nombre_tarea.'</span></div>';
 	return($cadena);
-	
-	
 }
 
 
