@@ -315,13 +315,15 @@ function actualizar_calificacion(){
 	  
 	  $involucrados=busca_filtro_tabla("responsable_tarea,co_participantes,seguidores,evaluador,nombre_tarea","tareas_listado","idtareas_listado=".$_REQUEST["idtareas_listado"],"",$conn);
 	  
-	  $funcod_involucrados=array();
-	  array_push($funcod_involucrados,$involucrados[0]['responsable_tarea']);
-	  array_push($funcod_involucrados,$involucrados[0]['evaluador']);
-	  $funcod_involucrados=array_merge( $funcod_involucrados, explode(',',$involucrados[0]['co_participantes']) );
-      $funcod_involucrados=array_merge( $funcod_involucrados, explode(',',$involucrados[0]['seguidores']) );
-      $funcod_involucrados=array_unique($funcod_involucrados);
-      $funcod_involucrados=array_values($funcod_involucrados);
+	  $idfun_involucrados=array();
+	  array_push($idfun_involucrados,$involucrados[0]['responsable_tarea']);
+	  array_push($idfun_involucrados,$involucrados[0]['evaluador']);
+	  $idfun_involucrados= array_merge ( $idfun_involucrados, explode(',',$involucrados[0]['co_participantes']) );
+      $idfun_involucrados=array_merge ( $idfun_involucrados, explode(',',$involucrados[0]['seguidores']) );
+      $idfun_involucrados=array_unique($idfun_involucrados);
+      $idfun_involucrados=array_values($idfun_involucrados);
+      $funcod_invo=busca_filtro_tabla("funcionario_codigo","funcionario","idfuncionario IN(".implode(',',$idfun_involucrados).")","",$conn);
+      $fun_cods=extrae_campo($funcod_invo,'funcionario_codigo','U');
 
 	  $parametro="?".base64_encode("idtareas_listado_unico=".$_REQUEST["idtareas_listado"]); 
 	  $ruta=PROTOCOLO_CONEXION.RUTA_PDF_LOCAL."/index.php";
@@ -341,7 +343,7 @@ function actualizar_calificacion(){
         <br/>
         '.$link.'
       ';
-	    enviar_mensaje("","codigo",$funcod_involucrados,"Nueva Tarea Calificada",$mensaje);
+	    enviar_mensaje("","codigo",$fun_cods,"Nueva Tarea Calificada",$mensaje);
 	  
 	  
 	  
