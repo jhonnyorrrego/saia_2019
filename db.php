@@ -4033,4 +4033,22 @@ function decodifica_encabezado($texto){
 		return($texto);
 	}
 }
+
+
+function parsear_cadena($cadena1){
+global $conn;
+$cadena1=str_replace("|+|"," AND ",$cadena1);
+$cadena1=str_replace("|=|"," = ",$cadena1);
+$cadena1=str_replace("|like|"," like ",$cadena1);
+$cadena1=str_replace("|-|"," OR ",$cadena1);
+$cadena1=str_replace("|<|"," < ",$cadena1);
+$cadena1=str_replace("|>|"," > ",$cadena1);
+$cadena1=str_replace("|>=|"," >= ",$cadena1);
+$cadena1=str_replace("|<=|"," <= ",$cadena1);
+$cadena1=str_replace("|in|"," in ",$cadena1);
+$cadena1=str_replace("||"," LIKE ",$cadena1);
+return $cadena1;
+}
+
+
 ?>
