@@ -74,11 +74,13 @@ if($_REQUEST['guardar']==1){
 	if(@$_REQUEST['cod_padre']!=0){
 		$llave=$_REQUEST['cod_padre'];
 		$titulo_mostrar='Subtarea';
-		$componente=221;
+		$componente_subtareas=busca_filtro_tabla("idbusqueda_componente","busqueda_componente"," lower(nombre)='subtareas_listado' ","",$conn);
+		$componente=$componente_subtareas[0]['idbusqueda_componente'];;
 	}else{
 		$llave=$_REQUEST["idtareas_listado"];
 		$titulo_mostrar='Tarea';
-	    $componente=220;
+	    $componente_tareas=busca_filtro_tabla("idbusqueda_componente","busqueda_componente"," lower(nombre)='tareas_listado_reporte' ","",$conn);
+	    $componente=$componente_tareas[0]['idbusqueda_componente'];
 	}
 	
 //	redirecciona($ruta_db_superior."pantallas/busquedas/consulta_busqueda_subtareas_listado.php?idtareas_listado=".$llave."&idbusqueda_componente=221");
