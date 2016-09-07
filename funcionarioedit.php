@@ -511,6 +511,19 @@ function EditData($sKey,$conn)
     { alerta("El codigo del funcionario ya se encuentra asignado");      
       redirecciona("funcionarioedit.php?key=$sKeyWrk");
     } 
+    if ($_POST["x_estado"] == "1"){
+			
+    $respuesta=validar_usuarios_activos_edit();		
+    	
+    }	
+    
+    if($respuesta=="1"){
+    	
+    	$EditData = false; // Update Error  
+    	return $EditData;
+    }
+
+    
     
 		// update
 		$sSql = "UPDATE funcionario SET ";
@@ -554,4 +567,40 @@ if(confirm("<?php echo $texto ;?>"))
 </script>
 <?php
 }
+
+function validar_usuarios_activos_edit(){	
+	global $conn;	
+	/*No se incluyen en la validacion los usuarios:
+	 * cerok 			 1
+	 * radicador_salida	 2
+	 * mensajero 		 9
+	 * radicador_web 	 111222333
+	 */		
+		
+	$funcionarios=busca_filtro_tabla("","funcionario a","a.estado=1 AND a.funcionario_codigo NOT IN ('1','2','9','111222333')","",$conn);
+	$reemplazos=busca_filtro_tabla("","reemplazo_saia b","b.estado=1","",$conn);
+	$funcionarios_activos=$funcionarios['numcampos'];
+	$reemplazos_activos=$reemplazos['numcampos'];
+	$cupos_usados=$funcionarios_activos+$reemplazos_activos;
+	
+	$funcionario_editar=busca_filtro_tabla("estado","funcionario a","a.funcionario_codigo=".$_POST["x_funcionario_codigo"]." AND a.estado=1","",$conn);
+	
+	//Consulta la cantidad de usuarios definidos en la configuracion y desencripta el valor
+	$consulta_usuarios=busca_filtro_tabla("valor","configuracion","nombre='numero_usuarios'","",$conn);
+	$numero_encript=$consulta_usuarios[0]['valor'];
+	$numero_usuarios=decrypt_blowfish($numero_encript,LLAVE_SAIA_CRYPTO);
+	print_r($numero_usuarios);
+	//Verifica si se alcanzó el número de usuarios y reemplazos activos
+	//y si el funcionario que se va a modificar se encuentra inactivo en base de datos
+	if($cupos_usados>=$numero_usuarios && !$funcionario_editar[0]['estado']){
+		
+		echo(librerias_notificaciones());
+		echo("<script>
+		notificacion_saia('<span style=\"color:white;\">No es posible activar el funcionario, actualmente se alcanzó el máximo de cupos. Se tienen ".$funcionarios_activos." Funcionarios activos y ".$reemplazos_activos." Reemplazo(s) activo(s)</span>','error','',7000);
+		</script>");
+		
+		return "1";
+	}
+}
+
 ?>

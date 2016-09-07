@@ -260,9 +260,31 @@ function permisos_modulo_menu_intermedio($iddoc, $modulo_padre,$lista,$target="_
       $datos_modulos=  modulos_menu_intermedio($modulo_padre);
   }
 
+    $documento_anulado=busca_filtro_tabla("estado","documento","iddocumento=".$iddoc,"",$conn);
+    if($documento_anulado[0]['estado']=='ANULADO'){
+        $modulos_documentos_anulados=array();
+        switch(strtolower($modulo_padre)){
+            case 'otros_menu_intermedio':
+                $modulos_documentos_anulados=array('Almacenamiento');
+                break;
+            case 'acciones_menu_intermedio':
+                $modulos_documentos_anulados=array('devolucion','transferir','expediente_menu','enviar_documento_correo');
+                break;
+            case 'rapidos_menu_intermedio':
+                $modulos_documentos_anulados=array('transferir','seguimiento','devolucion','vista_previa');
+                break;
+            default:
+                break;
+        }
+        
+        $datos_modulos=$modulos_documentos_anulados;
+    }
+    
     $permiso=new PERMISO();
     $modulo=  busca_filtro_tabla("", "modulo", "nombre IN ('".implode("','",$datos_modulos)."')", "orden", $conn);
     //$ok=1;
+
+    //print_r($modulo);die();
     for($i=0;$i<$modulo["numcampos"];$i++){
       $ok=$permiso->acceso_modulo_perfil($modulo[$i]["nombre"],1);
       if($ok || usuario_actual('login')=='cerok'){

@@ -16,7 +16,7 @@ function mostrar_valor_control($idformato,$iddoc){
 	
 	$control_riesgos=busca_filtro_tabla("B.*","ft_ft_acciones_riesgo A, ft_control_riesgos B","A.acciones_control=B.idft_control_riesgos AND A.documento_iddocumento=".$iddoc,"",$conn);
 	
-	echo(html_entity_decode($control_riesgos[0]['descripcion_control']));
+	echo(codifica_encabezado(html_entity_decode($control_riesgos[0]['descripcion_control'])));
 	
 }
 

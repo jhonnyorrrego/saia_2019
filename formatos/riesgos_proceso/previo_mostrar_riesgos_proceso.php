@@ -101,7 +101,7 @@ $datos=explode("-",$_REQUEST["llave"]);
         	<a href="GUIA_DE_RIESGOS_DAFP_2012_V2.pdf" target="_blank">GU&Iacute;A ADMINISTRACI&Oacute;N DE RIESGOS</a>
         </td>
         <td>
-        	<a title="Los riesgos en los cuales <?php echo usuario_actual('nombres').' '.usuario_actual('apellidos'); ?> aparece como responsable en la administraci&oacute;n del riesgo" href="<?php echo 'previo_mostrar_riesgos_proceso.php?llave='.$_REQUEST["llave"].'&responsable='.usuario_actual('funcionario_codigo');?>" target="_self">MIS RESPONSABILIDADES SOBRE LA ADMINISTRACI&Oacute;N DEL RIESGO</a>
+        	<a title="Los riesgos en los cuales <?php echo usuario_actual('nombres').' '.usuario_actual('apellidos'); ?> aparece como responsable en la administraci&oacute;n del riesgo" href="<?php echo 'previo_mostrar_riesgos_proceso2.php?llave='.$_REQUEST["llave"].'&responsable='.usuario_actual('funcionario_codigo');?>" target="_self">MIS RESPONSABILIDADES SOBRE LA ADMINISTRACI&Oacute;N DEL RIESGO</a>
         </td>
     </tr>
     <tr>     	
@@ -153,12 +153,12 @@ $datos=explode("-",$_REQUEST["llave"]);
         	}
         	?>
         </td> 
-        <td><a  title="" href="../../ayuda/politicas_administracion_riesgo.docx" target="_self">POLITICAS DE ADMINISTRACI&Oacute;N DEL RIESGO</a></td>
-        <td><a href="mostrar_riesgos_tipo_corrupcion.php" target="_self">MAPA DE RIESGOS DE CORRUPCI&Oacute;N INSTITUCIONAL</a></td>  
+       
+        <td><a href="mostrar_riesgos_tipo_corrupcion.php" target="_self">MAPA DE RIESGOS DE CORRUPCI&Oacute;N INSTITUCIONAL</a></td> 
+        	<td><a href="mapa_riesgos_institucional.php" target="_self">MAPA DE RIESGOS INSTITUCIONAL</a></td>
 	</tr>
 	<tr>
-		<td><a href="mapa_riesgos_institucional.php" target="_self">MAPA DE RIESGOS INSTITUCIONAL</a></td>
-		<td><a href="matriz_riesgos_institucional.php" target="_self">MATRIZ DE RIESGOS INSTITUCIONAL</a></td>
+		<td ><a href="matriz_riesgos_institucional.php" target="_self">MATRIZ DE RIESGOS INSTITUCIONAL</a></td>
 	</tr>	
   </table>
   <br /><br /><br />

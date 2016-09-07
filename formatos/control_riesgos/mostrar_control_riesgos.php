@@ -3,7 +3,7 @@
 <tbody>
 <tr>
 <td class="encabezado_list" style="width: 30%; text-align: left;">Fecha</td>
-<td><?php mostrar_valor_campo('fecha_valoracion',394,$_REQUEST['iddoc']);?></td>
+<td style="width: 70%;"><?php mostrar_valor_campo('fecha_valoracion',394,$_REQUEST['iddoc']);?></td>
 </tr>
 <tr>
 <td class="encabezado_list" style="text-align: left;">Descripci&oacute;n</td>

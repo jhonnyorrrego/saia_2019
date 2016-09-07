@@ -36,8 +36,8 @@
                       });
                       });
                      </script></td>
-                    </tr><tr><td class="encabezado">&nbsp;<select name="condicion_tipo_riesgo" id="condicion_tipo_riesgo"><option value="AND">Y</option><option value="OR">O</option></td>
-                     <td class="encabezado" width="20%" title="">TIPO DE RIESGO</td><td class="encabezado">&nbsp;<select name="compara_tipo_riesgo" id="compara_tipo_riesgo"> <option value="LIKE|%|%">Similar</option><option value="LIKE|%|@">Inicia Con</option><option value="LIKE|@|%">Finaliza Con</option></select></td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(13,2703,'',1);?></td></tr><tr><td class="encabezado">&nbsp;<select name="condicion_opciones_manejo" id="condicion_opciones_manejo"><option value="AND">Y</option><option value="OR">O</option></td>
+                    </tr><tr id="tr_tipo_riesgo"><td class="encabezado">&nbsp;<select name="condicion_tipo_riesgo" id="condicion_tipo_riesgo"><option value="AND">Y</option><option value="OR">O</option></td>
+                     <td class="encabezado" width="20%" title="">TIPO DE RIESGO</td><td class="encabezado">&nbsp;<select name="compara_tipo_riesgo" id="compara_tipo_riesgo"> <option value="LIKE|%|%">Similar</option><option value="LIKE|%|@">Inicia Con</option><option value="LIKE|@|%">Finaliza Con</option></select></td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(393,4691,'',1);?></td></tr><tr><td class="encabezado">&nbsp;<select name="condicion_opciones_manejo" id="condicion_opciones_manejo"><option value="AND">Y</option><option value="OR">O</option></td>
                      <td class="encabezado" width="20%" title="">OPCIONES DE MANEJO</td><td class="encabezado">&nbsp;<select name="compara_opciones_manejo" id="compara_opciones_manejo"> <option value="or">Alguno</option><option value="and">Todos</option></select></td>
                      <td bgcolor="#F5F5F5"><select multiple id="opciones_manejo" name="opciones_manejo"></select><script>
                      $(document).ready(function() 
@@ -95,7 +95,7 @@
                       });
                       });
                      </script></td>
-                    </tr><input type="hidden" name="campo_descripcion" value="2704"><input type="hidden" name="padre" value="<?php echo $_REQUEST["padre"]; ?>"><input type="hidden" name="anterior" value="<?php echo $_REQUEST["anterior"]; ?>"><?php submit_formato(13);?></table><?php if(@$_REQUEST["campo__retorno"]){ ?>
+                    </tr><input type="hidden" name="campo_descripcion" value="4688"><input type="hidden" name="padre" value="<?php echo $_REQUEST["padre"]; ?>"><input type="hidden" name="anterior" value="<?php echo $_REQUEST["anterior"]; ?>"><?php submit_formato(393);?></table><?php if(@$_REQUEST["campo__retorno"]){ ?>
                 <input type="hidden" name="campo__retorno" value="<?php echo($_REQUEST["campo__retorno"]); ?>">
               <?php }
                if(@$_REQUEST["formulario__retorno"]){ ?>

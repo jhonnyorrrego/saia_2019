@@ -86,41 +86,44 @@ $proceso=busca_filtro_tabla("","ft_proceso a","a.idft_proceso=".$datos[2],"",$co
   					     </a>
   				     ';*/
 		}
-  	
-  	$tabla .= '<table border="1px" style="border-collapse:collapse; width:100%;">';
+	$tam_menor='';	
+  	if(@$_REQUEST['tipo']==5){
+  	    $tam_menor='font-size:7pt;';	
+  	}
+  	$tabla .= '<table border="1px" style="border-collapse:collapse; width:100%;'.$tam_menor.'">';
 		if(!@$_REQUEST["tipo"])$tabla.='<thead class="encabezado_table">';
 									$tabla.='
 									<tr>									
-										<td class="riesgo_encabezado titulo_riesgo" colspan="12">MATRIZ DE RIESGOS DEL PROCESO</td>
+										<td style="background-color: #D2D3D5; text-align:center;" colspan="12">MATRIZ DE RIESGOS DEL PROCESO</td>
 									</tr>
 									<tr>
-										<td class="riesgo_encabezado titulo_riesgo" colspan="12">MAPA DE RIESGOS</td>
+										<td style="background-color: #D2D3D5; text-align:center;" colspan="12">MAPA DE RIESGOS</td>
 									</tr>
 									<tr>
-										<td colspan="12" class="riesgo_encabezado titulo_riesgo" text-align:left">PROCESO: '.$proceso[0]["nombre"].'</td>
+										<td colspan="12" style="background-color: #D2D3D5; text-align:center;">PROCESO: '.$proceso[0]["nombre"].'</td>
 									</tr>
 									<tr>
-										<td colspan="12" class="riesgo_encabezado titulo_riesgo" text-align:left;">
+										<td colspan="12" style="background-color: #D2D3D5; text-align:center;">
 											OBJETIVO: '.preg_replace("/(<p.*>)(.*)(<\/p>)/","$2", $proceso[0]["objetivo"]).'
 										</td>
 									</tr>
 									<tr height="80px">
-										<td class="titulo_riesgo" rowspan="2"><p>RIESGO</p></td>
-                    <td class="titulo_riesgo" colspan="2"><p>CALIFICACI&Oacute;N</p></td>
-                    <td class="titulo_riesgo" rowspan="2"><p>EVALUACION RIESGO</p></td>
-                    <td class="titulo_riesgo" rowspan="2"><p>CONTROLES</p></td>
-                    <td class="titulo_riesgo" colspan="2"><p>NUEVA<br>CALIFICACION</p></td>
-                    <td class="titulo_riesgo" rowspan="2"><p>NUEVA EVALUACION</p></td>
-                    <td class="titulo_riesgo" rowspan="2"><p>OPCIONES<br>MANEJO</p></td>
-                    <td class="titulo_riesgo" rowspan="2"><p>ACCIONES</p></td>
-                    <td class="titulo_riesgo" rowspan="2"><p>RESPONSABLE DE LA ACCI&Oacute;N</p></td>
-                    <td class="titulo_riesgo" rowspan="2"><p>INDICADOR</p></td>											
+										<td style="background-color: #D2D3D5; text-align:center;" rowspan="2"><p>RIESGO</p></td>
+                    <td style="background-color: #D2D3D5; text-align:center;" colspan="2"><p>CALIFICACI&Oacute;N</p></td>
+                    <td style="background-color: #D2D3D5; text-align:center;" rowspan="2"><p>EVALUACION RIESGO</p></td>
+                    <td style="background-color: #D2D3D5; text-align:center;" rowspan="2"><p>CONTROLES</p></td>
+                    <td style="background-color: #D2D3D5; text-align:center;" colspan="2"><p>NUEVA<br>CALIFICACION</p></td>
+                    <td style="background-color: #D2D3D5; text-align:center;" rowspan="2"><p>NUEVA EVALUACION</p></td>
+                    <td style="background-color: #D2D3D5; text-align:center;" rowspan="2"><p>OPCIONES<br>MANEJO</p></td>
+                    <td style="background-color: #D2D3D5; text-align:center;" rowspan="2"><p>ACCIONES</p></td>
+                    <td style="background-color: #D2D3D5; text-align:center;" rowspan="2"><p>RESPONSABLE DE LA ACCI&Oacute;N</p></td>
+                    <td style="background-color: #D2D3D5; text-align:center;" rowspan="2"><p>INDICADOR</p></td>											
 									</tr>
 									<tr height="80px">
-										<td class="titulo_riesgo"><p>Probabilidad</p></td>
-                    <td class="titulo_riesgo"><p>Impacto</p></td>
-                    <td class="titulo_riesgo"><p>Probabilidad</p></td>
-                    <td class="titulo_riesgo"><p>Impacto</p></td>
+										<td style="background-color: #D2D3D5; text-align:center;"><p>Probabilidad</p></td>
+                    <td style="background-color: #D2D3D5; text-align:center;"><p>Impacto</p></td>
+                    <td style="background-color: #D2D3D5; text-align:center;"><p>Probabilidad</p></td>
+                    <td style="background-color: #D2D3D5; text-align:center;"><p>Impacto</p></td>
 									</tr>';
 								if(!@$_REQUEST["tipo"])$tabla.='</thead>';
 								$tabla.='<tbody>
@@ -149,7 +152,7 @@ $proceso=busca_filtro_tabla("","ft_proceso a","a.idft_proceso=".$datos[2],"",$co
 																$tabla.='<td style="text-align: center;">No Aplica</td>';
 															}
 															else{
-																$tabla .=obtener_nueva_evaluacion_riesgo($riesgos[$i]["idft_riesgos_proceso"], $riesgos[$i]["probabilidad"], $riesgos[$i]["impacto"]).'</td>';
+																$tabla .=obtener_nueva_evaluacion_riesgo($riesgos[$i]["idft_riesgos_proceso"], $riesgos[$i]["probabilidad"], $riesgos[$i]["impacto"]).'';
 															}															
 															$tabla .='<td>'.obtener_acciones_riesgo($riesgos[$i]["idft_riesgos_proceso"]).'</td>
 															<td>'.obtener_responsables_accion_riesgo($riesgos[$i]["idft_riesgos_proceso"]).'</td>
@@ -163,17 +166,7 @@ $tabla .= '			</tbody>
 echo($tabla);											
 
 
-function obtener_evaluacion_riesgo($idft_riesgos_proceso, $probabilidad, $impacto){
-	global $conn;
-	
-	$evaluacion=tabla_evaluacion($probabilidad,$impacto);
-	$color_celda=color_evaluacion($evaluacion);
-	$valoraciones=valoraciones($idft_riesgos_proceso);				
-	
-	$td = '<td style="text-align:center;" class="'.$color_celda.'">'.texto_evaluacion($evaluacion).'</td>';
-	
-	return($td);	
-}
+
 
 function obtener_controles_riesgo($idft_riesgos_proceso){
 	global $conn;
@@ -181,11 +174,11 @@ function obtener_controles_riesgo($idft_riesgos_proceso){
 	$controles_riesgo = busca_filtro_tabla("descripcion_control, idft_control_riesgos","ft_control_riesgos a, documento b","a.documento_iddocumento=b.iddocumento and b.estado not in('ELIMINADO', 'ANULADO') and ft_riesgos_proceso=".$idft_riesgos_proceso,"idft_control_riesgos asc",$conn);
 		
 	for($i=0; $i < $controles_riesgo["numcampos"]; $i++){
-		$li .= '<li>'.preg_replace("/(<p.*>)(.*)(<\/p>)/","$2",strip_tags(utf8_encode(html_entity_decode($controles_riesgo[$i]["descripcion_control"])))).'<br /><br /></li>';
+		$li .= ($i+1).'. '.preg_replace("/(<p.*>)(.*)(<\/p>)/","$2",strip_tags(utf8_encode(html_entity_decode($controles_riesgo[$i]["descripcion_control"])))).'<br /><br />';
 	}
 
 	if($li){
-		return('<ol>'.$li.'</ol>');
+		return(''.$li.'');
 	}
 }
 
@@ -220,8 +213,22 @@ function obtener_nueva_evaluacion_riesgo($idft_riesgos_proceso, $probabilidad, $
 	$evaluacion=tabla_evaluacion($probabilidad_auto,$impacto_auto,1);				
 	$color_celda=color_evaluacion($evaluacion);
 	
-	$td = '<td style="text-align:center;" class="'.$color_celda.'">'.texto_evaluacion($evaluacion).'</td>';
+	$td = '<td style="text-align:center;background-color:'.obtener_color_celda($color_celda).';">'.texto_evaluacion($evaluacion).'</td>';
 	$td .= '<td style="text-align:center;">'.texto_evaluacion($evaluacion,2).'</td>';
+	
+	return($td);	
+}
+
+function obtener_evaluacion_riesgo($idft_riesgos_proceso, $probabilidad, $impacto){
+	global $conn;
+	
+
+	$evaluacion=tabla_evaluacion($probabilidad,$impacto);
+	$color_celda=color_evaluacion($evaluacion);
+	$valoraciones=valoraciones($idft_riesgos_proceso);				
+
+
+	$td = '<td style="text-align:center;background-color:'.obtener_color_celda($color_celda).';">'.texto_evaluacion($evaluacion).'</td>';
 	
 	return($td);	
 }
@@ -297,6 +304,8 @@ function obtener_responsables_accion_riesgo($idft_riesgos_proceso){
 	global $conn;
 	
 	$control_riesgos = busca_filtro_tabla("descripcion_control, idft_control_riesgos","ft_control_riesgos a, documento b","a.documento_iddocumento=b.iddocumento and b.estado not in('ELIMINADO', 'ANULADO') and ft_riesgos_proceso=".$idft_riesgos_proceso,"",$conn);
+
+	
 	if($control_riesgos['numcampos']){
 		//for ($i=0; $i < $control_riesgos["numcampos"]; $i++) {
 			//$acciones .= acciones($control_riesgos[$i]["idft_control_riesgos"],"reponsables"); 
@@ -330,12 +339,19 @@ function obtener_indicador_accion_riesgo($idft_riesgos_proceso){
 function acciones($id,$campo){
 	global $conn;
 	$riesgo=busca_filtro_tabla("","ft_ft_acciones_riesgo a, documento b","a.documento_iddocumento=b.iddocumento and b.estado not in('ELIMINADO', 'ANULADO') and ft_riesgos_proceso='".$id."'","",$conn);
+	
+	
+	
 	if($riesgo[0]['acciones_accion']!=''){
 			
 			if($campo=="indicador"){	
 				$acciones=busca_filtro_tabla("indicador, iddocumento,acciones_accion","ft_ft_acciones_riesgo a, documento b","a.documento_iddocumento=b.iddocumento and b.estado not in('ELIMINADO', 'ANULADO') and ft_riesgos_proceso='".$id."'","",$conn);
 
 			}
+    		if($campo=="responsables"){
+    			$acciones=busca_filtro_tabla($campo.", iddocumento","ft_ft_acciones_riesgo a, documento b","a.documento_iddocumento=b.iddocumento and b.estado not in('ELIMINADO', 'ANULADO') and ft_riesgos_proceso='".$id."'","",$conn);
+    			//echo $acciones["numcampos"];
+    		}			
 	}else	
 	$acciones=busca_filtro_tabla($campo.",ft_riesgos_proceso,iddocumento","ft_ft_acciones_riesgo a, documento b","a.documento_iddocumento=b.iddocumento and b.estado not in('ELIMINADO', 'ANULADO') and acciones_control='".$id."'","",$conn);
 			
@@ -351,7 +367,7 @@ function acciones($id,$campo){
 			$acciones=busca_filtro_tabla("indicador, iddocumento","ft_ft_acciones_riesgo a, documento b","a.documento_iddocumento=b.iddocumento and b.estado not in('ELIMINADO', 'ANULADO') and ft_riesgos_proceso='".$id."'","",$conn);
 		}
 	
-	
+	//return($acciones['sql']);
 	
 	$texto='';
 	for($i=0;$i<$acciones["numcampos"];$i++){
@@ -359,9 +375,49 @@ function acciones($id,$campo){
 			$texto.=utf8_encode(html_entity_decode($acciones[$i][$campo]));
 		}
 		else{
-			$texto.=mostrar_valor_campo($campo,174,$acciones[$i]["iddocumento"],1);
+		    $responsable=busca_filtro_tabla("","funcionario","estado=1 AND funcionario_codigo in(".$acciones[$i][$campo].")","",$conn);
+		    
+		    
+		    for($j=0;$j<$responsable['numcampos'];$j++){
+		        if($j==0){
+		            $texto.='- ';
+		        }
+		        $texto.=$responsable[$j]['nombres'].' '.$responsable[$j]['apellidos'];
+		        if(($j+1)!=$responsable['numcampos']){
+		            $texto.=', ';
+		        }else{
+		            $texto.='<br>';
+		        }
+		    }
 		}		
 	}
+	
+	
+	
 	return $texto;
+}
+
+
+
+function obtener_color_celda($valor){
+    $color='';
+    switch($valor){
+        case 'colar_A':
+            $color='#DAAAA6';
+            break;
+        case 'colar_B':
+            $color='green';
+            break;
+        case 'colar_E':
+            $color='red';
+            break;
+        case 'colar_M':
+            $color='yellow';
+            break;
+    }
+    return($color);
+    
+    
+    
 }
 ?>

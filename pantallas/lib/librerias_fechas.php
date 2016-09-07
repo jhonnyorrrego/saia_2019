@@ -1,4 +1,123 @@
 <?php
+date_default_timezone_set('America/Bogota');
+include_once('festivos_colombia.php');
+
+
+
+function esCambioAnio($fecha,$dias){
+    $fecha_fin=calculaFecha("days",$dias,$fecha);
+    
+    $ar_fechafin=date_parse($fecha_fin);
+    $aniofinal=$ar_fechafin["year"];
+    $mesfinal=$ar_fechafin["month"];
+    $diafinal=$ar_fechafin["day"];  
+    
+    $ar_fechaini=date_parse($fecha);
+    $anioini=$ar_fechaini["year"];
+    $mesini=$ar_fechaini["month"];
+    $diaini=$ar_fechaini["day"];    
+    
+    
+    $retorno=array('cambio'=>0);
+    if($aniofinal>date('Y')){
+        $retorno['cambio']=1;
+        //$retorno['fecha_part1']=$anioini.'-'.$mesini.'-'.$diaini.'|'.$anioini.'-12-31';
+        $part1_date1=date_create($anioini.'-'.$mesini.'-'.$diaini);
+        $part1_date2=date_create($anioini.'-12-31');
+        $diff=date_diff($part1_date1,$part1_date2);
+        $diferencia_parte_uno=$diff->format("%a");
+        
+        $part1_date1=$anioini.'-'.$mesini.'-'.$diaini;
+        $festivos2 = new CalendarCol(date('Y'));
+        $cantidad_festivos_part1=0;
+        for($i=1;$i<=$diferencia_parte_uno;$i++){
+           $fecha=calculaFecha("days",$i,$part1_date1);
+          
+           if($festivos2->esFestivo($fecha)){
+              $cantidad_festivos_part1++;
+           }
+        }     
+        
+        $part2_fecha_fin=calculaFecha("days",$cantidad_festivos_part1,$aniofinal.'-'.$mesfinal.'-'.$diafinal);
+        $part2_date1=date_create(($aniofinal-1).'-12-31');
+        $part2_date2=date_create($part2_fecha_fin);
+        $diff2=date_diff($part2_date1,$part2_date2);
+        $retorno['dias_validar']=$diff2->format("%a");  
+        $retorno['fecha_validar']=$aniofinal.'-01-01';
+        $retorno['anio_validar']=$aniofinal;
+        
+    }
+    
+    
+    return($retorno);
+
+}
+
+function calculaFecha($modo,$valor,$fecha_inicio=false,$formato=false){
+    
+    if(!$formato){
+        $formato="Y-m-d";
+    }
+	if($fecha_inicio!=false) {
+		$fecha_base = strtotime($fecha_inicio); 
+
+	}else {
+   		$time=time();          
+		$fecha_actual=date($formato,$time);       
+		$fecha_base=strtotime($fecha_actual);  
+	}     
+	$calculo = strtotime("$valor $modo","$fecha_base");    
+	return date($formato, $calculo);  
+}
+
+
+function dias_habiles_listado($dias,$formato=NULL,$fecha_inicial=NULL){ 
+  global $conn; 
+   if(!$formato)
+     $formato="d-m-Y"; 
+   $formato_bd= "dd-mm-YYYY"; // Formato validor para el motor y DEBE SER COMPATIBLE CON $formato
+   if(!$fecha_inicial)
+     $fecha_inicial =date($formato);
+ 
+   $ar_fechaini=date_parse($fecha_inicial);
+   $anioinicial=$ar_fechaini["year"];
+   $mesinicial=$ar_fechaini["month"];
+   $diainicial=$ar_fechaini["day"];
+
+   $cambio_anio=esCambioAnio($anioinicial.'-'.$mesinicial.'-'.$diainicial,$dias);
+
+    
+   if($cambio_anio['cambio']){
+        $festivos = new CalendarCol(intval($cambio_anio['anio_validar']));
+        $dias=$cambio_anio['dias_validar'];
+        $fecha_inicial=$cambio_anio['fecha_validar'];
+        $ar_fechaini=date_parse($fecha_inicial);
+        $anioinicial=$ar_fechaini["year"];
+        $mesinicial=$ar_fechaini["month"];
+        $diainicial=$ar_fechaini["day"];        
+   }else{
+       $festivos = new CalendarCol(date('Y')); 
+   }   
+   $cantidad_festivos=0;
+   for($i=1;$i<=$dias;$i++){
+       $fecha=calculaFecha("days",$i,$fecha_inicial,$formato);
+       if($festivos->esFestivo($fecha)){
+          
+          $cantidad_festivos++;
+       }
+   }
+   
+  if($cantidad_festivos){  
+    $no_laborales=$cantidad_festivos; 
+	  $fecha_legal= date($formato, mktime( 0, 0, 0,$mesinicial, $diainicial + $dias,$anioinicial)); 
+    return(dias_habiles_listado($no_laborales,$formato,$fecha_legal));    
+   }
+   $fecha_legal= date($formato, mktime( 0, 0, 0,$mesinicial, $diainicial + $dias  ,$anioinicial));  
+   return($fecha_legal);
+}
+
+
+/*
 function dias_habiles_listado($dias,$formato=NULL,$fecha_inicial=NULL){ 
   global $conn; 
    if(!$formato)
@@ -23,6 +142,8 @@ function dias_habiles_listado($dias,$formato=NULL,$fecha_inicial=NULL){
  $fecha_legal= date($formato, mktime( 0, 0, 0,$mesinicial, $diainicial + $dias - 1 ,$anioinicial));   
  return($fecha_legal);
 }
+*/
+
 function mostrar_fecha_saia($fecha){
 $fecha1=date_parse($fecha);
 $year=($fecha1["year"]);

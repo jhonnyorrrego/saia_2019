@@ -9,112 +9,163 @@ while($max_salida>0){
   $max_salida--;
 }
 include('db.php');
+include_once($ruta_db_superior.'pruebas_ruben/dias_habiles_nuevo/festivos_colombia.php');
+date_default_timezone_set('America/Bogota');
+
+ini_set('display_errors',true);
+$fecha="2016-12-01";
+print_r(esCambioAnio($fecha,40));
+
+
+function esCambioAnio($fecha,$dias){
+    $fecha_fin=calculaFecha("days",$dias,$fecha);
+    
+    $ar_fechafin=date_parse($fecha_fin);
+    $aniofinal=$ar_fechafin["year"];
+    $mesfinal=$ar_fechafin["month"];
+    $diafinal=$ar_fechafin["day"];  
+    
+    $ar_fechaini=date_parse($fecha);
+    $anioini=$ar_fechaini["year"];
+    $mesini=$ar_fechaini["month"];
+    $diaini=$ar_fechaini["day"];    
+    
+    
+    $retorno=array('cambio'=>0);
+    if($aniofinal>date('Y')){
+        $retorno['cambio']=1;
+        //$retorno['fecha_part1']=$anioini.'-'.$mesini.'-'.$diaini.'|'.$anioini.'-12-31';
+        $part1_date1=date_create($anioini.'-'.$mesini.'-'.$diaini);
+        $part1_date2=date_create($anioini.'-12-31');
+        $diff=date_diff($part1_date1,$part1_date2);
+        $diferencia_parte_uno=$diff->format("%a");
+        
+        $part1_date1=$anioini.'-'.$mesini.'-'.$diaini;
+        $festivos2 = new CalendarCol(date('Y'));
+        $cantidad_festivos_part1=0;
+        for($i=1;$i<=$diferencia_parte_uno;$i++){
+           $fecha=calculaFecha("days",$i,$part1_date1);
+          
+           if($festivos2->esFestivo($fecha)){
+              $cantidad_festivos_part1++;
+           }
+        }        
+        $part2_fecha_fin=calculaFecha("days",$cantidad_festivos_part1,$aniofinal.'-'.$mesfinal.'-'.$diafinal);
+        
+        $part2_date1=date_create($aniofinal.'-01-01');
+        $part2_date2=date_create($part2_fecha_fin);
+        $diff2=date_diff($part2_date1,$part2_date2);
+        $retorno['dias_validar']=$diff2->format("%a");  
+        $retorno['fecha_validar']=$aniofinal.'-01-01';
+        $retorno['anio_validar']=$aniofinal;
+        
+    }
+    
+    
+    return($retorno);
+
+}
+die();
+function calculaFecha($modo,$valor,$fecha_inicio=false,$formato=false){
+    
+    if(!$formato){
+        $formato="Y-m-d";
+    }
+	if($fecha_inicio!=false) {
+		$fecha_base = strtotime($fecha_inicio); 
+
+	}else {
+   		$time=time();          
+		$fecha_actual=date($formato,$time);       
+		$fecha_base=strtotime($fecha_actual);  
+	}     
+	$calculo = strtotime("$valor $modo","$fecha_base");    
+	return date($formato, $calculo);  
+}
+
+
+
+
+function esDiaNoHabil(){
+        global $conn;
+        
+        $dias_no_habiles=busca_filtro_tabla("valor","configuracion","tipo='festivos' AND nombre='dias_no_habiles'","",$conn);
+        $vector_dias_no_habiles=explode(',',$dias_no_habiles[0]['valor']);
+        $vector_dias_no_habiles_int=array();
+        $vector_config=array('l'=>1,'m'=>2,'x'=>3,'j'=>4,'v'=>5,'s'=>6,'d'=>7); //dias de las semana segun php  date('N', strtotime($needle)
+        for($i=0;$i<count($vector_dias_no_habiles);$i++){
+            $vector_dias_no_habiles_int[]=$vector_config[ $vector_dias_no_habiles[$i] ];
+        }
+        $vector_dias_no_habiles_int=array_map('strtolower',$vector_dias_no_habiles_int);
+        return($vector_dias_no_habiles_int);
+    }
+
+die();
+function dias_habiles_nuevo($dias,$formato=NULL,$fecha_inicial=NULL){ 
+  global $conn; 
+   if(!$formato)
+     $formato="d-m-Y"; 
+   $formato_bd= "dd-mm-YYYY"; // Formato validor para el motor y DEBE SER COMPATIBLE CON $formato
+   if(!$fecha_inicial)
+     $fecha_inicial =date($formato);
+ 
+   $ar_fechaini=date_parse($fecha_inicial);
+   $anioinicial=$ar_fechaini["year"];
+   $mesinicial=$ar_fechaini["month"];
+   $diainicial=$ar_fechaini["day"];
+   
+   $fecha_final=date($formato, mktime( 0, 0, 0,$mesinicial, $diainicial + $dias,$anioinicial));
+    $asignaciones=busca_filtro_tabla("idasignacion,".fecha_db_obtener("fecha_inicial",'Y-m-d')." as fecha_inicial,".fecha_db_obtener("fecha_final",'Y-m-d')." as fecha_final","asignacion","asignacion.documento_iddocumento='-1'  AND asignacion.fecha_inicial < ".fecha_db_almacenar($fecha_final,$formato)." AND asignacion.fecha_final > ".fecha_db_almacenar($fecha_inicial,$formato),"",$conn); 
+
+  if($asignaciones["numcampos"]){  
+    $no_laborales=$asignaciones["numcampos"]; 
+	  $fecha_legal= date($formato, mktime( 0, 0, 0,$mesinicial, $diainicial + $dias,$anioinicial)); 
+    return(dias_habiles_nuevo($no_laborales,$formato,$fecha_legal));    
+   }
+ $fecha_legal= date($formato, mktime( 0, 0, 0,$mesinicial, $diainicial + $dias - 1 ,$anioinicial));   
+ return($fecha_legal);
+}
+
+
+
+
+die();
+
+include_once("pantallas/lib/librerias_cripto.php");
+
+
+
+
+	$funcionarios=busca_filtro_tabla("","funcionario a","a.estado=1 AND a.funcionario_codigo NOT IN ('1','2','9','111222333')","",$conn);
+	$reemplazos=busca_filtro_tabla("","reemplazo_saia b","b.estado=1","",$conn);
+	$funcionarios_activos=$funcionarios['numcampos'];
+	$reemplazos_activos=$reemplazos['numcampos'];
+	$cupos_usados=$funcionarios_activos+$reemplazos_activos;
+	
+	//Consulta la cantidad de usuarios definidos en la configuracion y desencripta el valor
+	$consulta_usuarios=busca_filtro_tabla("valor","configuracion","nombre='numero_usuarios'","",$conn);
+	$numero_encript=$consulta_usuarios[0]['valor'];
+	$numero_usuarios=decrypt_blowfish($numero_encript,LLAVE_SAIA_CRYPTO);
+	
+	//Verifica si ya se alzanzó el número de usuarios activos
+	
+	echo($cupos_usados.'>='.$numero_usuarios);die();
+	if($cupos_usados>=$numero_usuarios){
+	    
+	    
+	    
+	}
+
+
+die();
+
+
+
+
+
 include_once("librerias_saia.php");
+include_once($ruta_db_superior."formatos/librerias/funciones_generales.php");
 
-
-
-die();
-include_once($ruta_db_superior."anexosdigitales/funciones_archivo.php");
-$ruta_tem=busca_filtro_tabla("","configuracion","nombre='ruta_temporal'","",$conn);
-$ruta_temporal=$ruta_tem[0]['valor'].'_'.usuario_actual('login');
-
-$archivos=array($ruta_temporal.'/img(#11839)pag-4.docx');
-$archivos_anexos=array();
-$extension_image=array('jpg','jpeg'); 
-$cant=count($archivos);
-for($i=0;$i<$cant;$i++){
-	$extension=explode('.',$archivos[$i]);
-	$extension=array_map('strtolower', $extension);
-	if( !in_array($extension[($cant-1)],$extension_image) ){
-		$archivos_anexos[]=$archivos[$i];
-		unset($archivos[$i]);
-	}	
-}
-$archivos=array_values($archivos);
-
-$iddoc=11796;
-foreach ($archivos_anexos as $archivo) {
-	$ruta_archivo=$ruta_db_superior.$archivo;
-	if(file_exists($ruta_archivo)){
-		vincular_anexo_documento($iddoc,$archivo);
-	}
-}
-
-
-
-function vincular_anexo_documento($iddoc,$ruta_origen){
-	global $conn,$ruta_db_superior;
-	$ruta_destino=selecciona_ruta_anexos("",$iddoc,'archivo');
-	$nombre_extension = basename($ruta_db_superior.$ruta_origen);
-
-	$vector_nombre_extension = explode('.',$nombre_extension);
-	$extencion=$vector_nombre_extension[(count($vector_nombre_extension)-1)];
-	$nombre_temporal=time().".".$extencion;
-	mkdir($ruta_db_superior.$ruta_destino,0777);
-	$tmpVar = 1;
-	while(file_exists($ruta_db_superior.$ruta_destino. $tmpVar . '_' . $nombre_temporal)){
-		$tmpVar++;
-	}
-	$nombre_temporal=$tmpVar . '_' . $nombre_temporal;
-	copy($ruta_db_superior.$ruta_origen,$ruta_db_superior.$ruta_destino.$nombre_temporal);
-	
-	$data_sql=array();
-	$data_sql['documento_iddocumento']=$iddoc;
-	$data_sql['ruta']=$ruta_destino.$nombre_temporal;
-	$data_sql['etiqueta']=$nombre_extension;
-	$data_sql['tipo']=$extencion;
-
-	$tabla="anexos";
-	$strsql = "INSERT INTO ".$tabla." (fecha_anexo,"; //fecha_anexo
-	$strsql .= implode(",", array_keys($data_sql));			
-	$strsql .= ") VALUES (".fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s').",'";	//fecha_anexo		
-	$strsql .= implode("','", array_values($data_sql));			
-	$strsql .= "')";
- 	phpmkr_query($strsql,$conn);
-	$idanexo=phpmkr_insert_id();
-	
-	
-	$data_sql=array();
-	$data_sql['anexos_idanexos']=$idanexo;
-	$data_sql['idpropietario']=usuario_actual('idfuncionario');
-	$data_sql['caracteristica_propio']='lem';
-	$data_sql['caracteristica_total']='1';
-	
-	$tabla="permiso_anexo";
-	$strsql = "INSERT INTO ".$tabla." ("; 
-	$strsql .= implode(",", array_keys($data_sql));			
-	$strsql .= ") VALUES ('";		
-	$strsql .= implode("','", array_values($data_sql));			
-	$strsql .= "')";
-	$sql1=$strsql;
-	phpmkr_query($sql1);	
-	
-	return($idanexo);	
-}
-
-die();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-print_r($archivos);
-echo('<br><br><br><br><br><br>');
-print_r($archivos_anexos);
-
-die();
  llena_serie(0,'modulo','');
 
 function llena_serie($serie,$tabla,$padre=''){

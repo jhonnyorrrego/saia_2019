@@ -76,6 +76,31 @@ if($mis_roles["numcampos"]){
 $tareas=busca_filtro_tabla("count(*) AS cant","tareas A","((".implode(" OR ",$concat).") OR ejecutor =".$usuario.") AND estado_tarea<>2","",$conn); 
 //print_r($tareas);
 $actualizaciones=busca_filtro_tabla("count(*) AS cant","documento_accion A,asignacion B","A.documento_iddocumento=B.documento_iddocumento AND B.tarea_idtarea<>-1 AND B.entidad_identidad=1 AND B.llave_entidad=".$usuario,"GROUP BY A.documento_iddocumento",$conn);
+
+
+
+
+
+
+$tareas_responsable=busca_filtro_tabla("count(*) AS cant","tareas_listado A","A.generica=0 AND A.estado_tarea<>'TERMINADO' AND A.listado_tareas_fk<>-1 AND A.cod_padre=0 AND  A.responsable_tarea =".usuario_actual("idfuncionario"),"",$conn); 
+$tareas_coparticipante=busca_filtro_tabla("count(*) AS cant","tareas_listado A","A.generica=0 AND A.estado_tarea<>'TERMINADO'  AND A.listado_tareas_fk<>-1 AND A.cod_padre=0 AND FIND_IN_SET('".usuario_actual('idfuncionario')."', A.co_participantes)","",$conn); 
+$tareas_seguidor=busca_filtro_tabla("count(*) AS cant","tareas_listado A","A.generica=0 AND A.estado_tarea<>'TERMINADO' AND A.listado_tareas_fk<>-1 AND A.cod_padre=0 AND FIND_IN_SET('".usuario_actual('idfuncionario')."', A.seguidores)","",$conn); 
+$tareas_evaluador=busca_filtro_tabla("count(*) AS cant","tareas_listado A","A.generica=0 AND A.estado_tarea<>'TERMINADO' AND A.listado_tareas_fk<>-1 AND A.cod_padre=0 AND  A.evaluador =".usuario_actual("idfuncionario"),"",$conn); 
+$tareas_total=busca_filtro_tabla("count(*) AS cant","tareas_listado a","generica=0 AND a.estado_tarea<>'TERMINADO' AND a.listado_tareas_fk<>-1 AND a.cod_padre=0 AND (a.responsable_tarea=".usuario_actual('idfuncionario')." OR find_in_set('".usuario_actual('idfuncionario')."', a.co_participantes) OR find_in_set('".usuario_actual('idfuncionario')."', a.seguidores) OR a.evaluador=".usuario_actual('idfuncionario').")","",$conn);
+//DESARROLLO TODAS LAS TAREAS
+$componente_tareas_responsable=busca_filtro_tabla("","busqueda_componente A","A.nombre='listado_tareas_responsable'","",$conn);
+$componente_tareas_coparticipante=busca_filtro_tabla("","busqueda_componente A","A.nombre='listado_tareas_coparticipante'","",$conn);
+$componente_tareas_seguidor=busca_filtro_tabla("","busqueda_componente A","A.nombre='listado_tareas_seguidor'","",$conn);
+$componente_tareas_evaluador=busca_filtro_tabla("","busqueda_componente A","A.nombre='listado_tareas_evaluador'","",$conn);
+$componente_tareas_total=busca_filtro_tabla("","busqueda_componente A","A.nombre='listado_tareas_total'","",$conn);
+
+
+
+
+
+
+
+
 //limpieza carpetas
 include_once("tarea_limpiar_carpeta.php");
 borrar_archivos_carpeta('temporal_'.usuario_actual("login"), 0); 
@@ -105,10 +130,17 @@ $componente_tareas=busca_filtro_tabla("","busqueda_componente A","A.nombre='list
 .modal-footer{min-height:0}
 .footer_login { font-weight: bold; background-image: url(imagenes/login/footerbkg.png); background-repeat: repeat-x; background-position: left top; height: 25px; width: 100%; padding-top: 0px; padding-bottom: 0px; text-align: right; color: #FFF; position: fixed; bottom: 0px; }
 .footer_login_text, .footer_login_text * { color:#FFF; font-size:10px; font-weight:bold; }
+#timer{margin:0px auto 0;width:130px; border: 1px solid;border-radius: 5px;}
+#timer .timer_container{padding-right:15px;padding-left:15px;}
+#timer .timer_container div{display:table-cell;}
+#timer .timer_container .divider{width:10px;}
+
+
 <?php if($_SESSION["tipo_dispositivo"]=="movil"){ ?>
 body {padding-right:0px;padding-left:0px;}
 .dropdown-submenu {
     position: relative;
+    text-align:left;
 }
 
 .dropdown-submenu>.dropdown-menu {
@@ -221,7 +253,24 @@ if($_SESSION["tipo_dispositivo"]=="movil"){ ?>
     </ul>
   </div>
   <div class="dropdown pull-right">|<b><?php echo(usuario_actual("nombres")." ".usuario_actual("apellidos"));?></b></div>
-  <div class="dropdown pull-right"><div class="icon-fullscreen" id="resize_centro"></div></div>
+  <div id="timer" class="pull-right" style="display:none">
+    <div class="timer_container pull-left" >
+        <div id="hour_crono">00</div>
+        <div class="divider">:</div>
+        <div id="minute_crono">00</div>
+        <div class="divider">:</div>
+        <div id="second_crono">00</div>
+    </div>
+    <div id="btn_iniciar_crono" class="pull-left" estado_crono=1><i id="icon_iniciar_crono" class="icon-play"></i></div>
+    <div id="btn_guardar_crono" class="pull-left" idtarea="0" fecha_inicio="00-00-00" hora_ini="00:00"><i class="icon-check"></i></div> 
+  </div>
+  <div id="tareas_pendientes_dia" class="pull-right" ></div>  
+  
+  <?php 
+  if($_SESSION["tipo_dispositivo"]=="movil"){ 
+    echo('<div class="dropdown pull-right"><div class="icon-fullscreen" id="resize_centro"></div></div>');    
+  }
+  ?>
   <!--a href="#">Opciones</a-->
 </div>
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
@@ -246,15 +295,47 @@ if($_SESSION["tipo_dispositivo"]=="movil"){ ?>
             </li>
             <li><i class="icon-tasks"></i><a href="pantallas/buscador_principal.php?nombre=listado_tareas&cmd=resetall" target="centro" class="enlace_indicadores_index" idcomponente="<?php echo($componente_tareas[0]["idbusqueda_componente"]); ?>" nombre_componente="listado_tareas_pendientes">Mis Tareas <div class="pull-right"><span class="badge" id="listado_tareas_pendientes"><?php echo($tareas[0]["cant"]);?></span></div></a>
             </li>
- 
+            
 
+            <li> 
+            	<i class="icon-calendar"></i> 
+            	<?php $componente_planeador=busca_filtro_tabla("idbusqueda_componente","busqueda_componente","lower(nombre)='tareas_listado_paneador'","",$conn); ?>
+            		<a href="calendario/fullcalendar.php?nombre_calendario=calendario_tareas_planeador&idbusqueda_componente=<?php echo($componente_planeador[0]['idbusqueda_componente']); ?>" target="centro" class="enlace_indicadores_index"  >
+            			Planeador
+            		</a>	
+            </li>                         
+            <li> 
+            	<i class="icon-tasks"></i>
+            		<a href="pantallas/tareas_listado/principal_listados_tareas_calendarios.php?click=tareas&rol_tareas=todos" target="centro" class="enlace_indicadores_index" nombre_componente="listado_tareas_total" idcomponente="<?php echo($componente_tareas_total[0]["idbusqueda_componente"]); ?>" >
+            			Mis Tareas (Av)
+            		</a>	
+            		&nbsp;<span class="badge" id="listado_tareas_total" title="Total" data-toggle="tooltip"><?php echo($tareas_total[0]["cant"]);?></span>
+            			<div class="pull-right">
+            				
+            				
+            				<a href="pantallas/tareas_listado/principal_listados_tareas_calendarios.php?click=tareas&rol_tareas=evaluador"  target="centro" class="enlace_indicadores_index" idcomponente="<?php echo($componente_tareas_evaluador[0]["idbusqueda_componente"]); ?>" nombre_componente="listado_tareas_evaluador" style="text-decoration:none;">
+            					<span class="badge" id="listado_tareas_evaluador" title="Evaluador" data-toggle="tooltip"><?php echo($tareas_evaluador[0]["cant"]);?></span>
+            				</a>
+            				
+            				            				
+            				<a href="pantallas/tareas_listado/principal_listados_tareas_calendarios.php?click=tareas&rol_tareas=seguidor"  target="centro" class="enlace_indicadores_index" idcomponente="<?php echo($componente_tareas_seguidor[0]["idbusqueda_componente"]); ?>" nombre_componente="listado_tareas_seguidor" style="text-decoration:none;">
+            					<span class="badge" id="listado_tareas_seguidor" title="Seguidor" data-toggle="tooltip"><?php echo($tareas_seguidor[0]["cant"]);?></span>
+            				</a>
+            				<a href="pantallas/tareas_listado/principal_listados_tareas_calendarios.php?click=tareas&rol_tareas=coparticipante" target="centro" class="enlace_indicadores_index" idcomponente="<?php echo($componente_tareas_coparticipante[0]["idbusqueda_componente"]); ?>" nombre_componente="listado_tareas_coparticipante" style="text-decoration:none;">
+            					<span class="badge" id="listado_tareas_coparticipante" title="Co-participante" data-toggle="tooltip"><?php echo($tareas_coparticipante[0]["cant"]);?></span>
+            				</a>	
+            				<a href="pantallas/tareas_listado/principal_listados_tareas_calendarios.php?click=tareas&rol_tareas=responsable" target="centro" class="enlace_indicadores_index" idcomponente="<?php echo($componente_tareas_responsable[0]["idbusqueda_componente"]); ?>" nombre_componente="listado_tareas_responsable" style="text-decoration:none;">
+            					<span class="badge" id="listado_tareas_responsable" title="Responsable" data-toggle="tooltip"><?php echo($tareas_responsable[0]["cant"]);?></span>
+            				</a>
+            			</div>
+            		
+            </li> 
+                        
+            
+            
             
             <li><i class="icon-tag"></i><a href="pantallas/buscador_principal.php?nombre=documentos_etiquetados&cmd=resetall" target="centro" class="enlace_indicadores_index" idcomponente="<?php echo($componente_etiquetados[0]["idbusqueda_componente"]); ?>" nombre_componente="documentos_etiquetados">Etiquetados <div class="pull-right"><span class="badge" id="documentos_etiquetados"><?php echo($etiquetados[0]["cant"]);?></span></div></a>
             </li>            
- 
- 
- 
-             
             <li><i class="icon-refresh"></i><a href="#" id="actualizar_info_index">Actualizado<div class="pull-right"><span class="badge" id="div_actualizar_info_index"></span></div></a>
             </li>
             <!--li><i class="icon-tasks"></i><a href="pantallas/buscador_principal.php?idbusqueda=3&cmd=resetall" target="centro"> Tareas Pendientes <div class="pull-right"><span class="badge" id="documentos_pendientes"><?php echo(0);?></span></div></a>
@@ -554,6 +635,74 @@ function menu_saia(){
     $("#actualizar_info_index").click(function(){
     	actualizar_datos_index();	
     });
+    
+    var tiempo = {
+        hora: 0,
+        minuto: 0,
+        segundo: 0
+    };
+    var tiempo_corriendo = null;
+    $("#btn_iniciar_crono").click(function(){
+      //Los textos se debe modificar y cambiarlos por attibutos del div y los div deben quedar con iconos
+      //en esta condicion se debe verificar que no exista otro contador activo en ese caso se debe sacar un noty con error diciendo que no es posible iniciar un contador porque ya existe otro contador iniciado con la tarea XXXX y el enlace a la tarea por si el usuario quiere ir a ella
+      //comenzar=1, detener=2
+      if(parseInt($("#btn_guardar_crono").attr("idtarea"))!==0){
+        if ( $(this).attr("estado_crono") == 1){
+            $("#icon_iniciar_crono").removeClass("icon-play");
+            $("#icon_iniciar_crono").addClass("icon-pause");
+            $(this).attr("estado_crono",2);  
+            window.clearInterval(tiempo_corriendo);
+            tiempo_corriendo = window.setInterval(function(){
+                // Segundos
+                tiempo.segundo++;
+                if(tiempo.segundo >= 60){
+                    tiempo.segundo = 0;
+                    tiempo.minuto++;
+                }      
+                // Minutos
+                if(tiempo.minuto >= 60){
+                    tiempo.minuto = 0;
+                    tiempo.hora++;
+                }
+                $("#hour_crono").text(tiempo.hora < 10 ? '0' + tiempo.hora : tiempo.hora);
+                $("#minute_crono").text(tiempo.minuto < 10 ? '0' + tiempo.minuto : tiempo.minuto);
+                $("#second_crono").text(tiempo.segundo < 10 ? '0' + tiempo.segundo : tiempo.segundo);
+            }, 1000);
+        }
+        else {
+        	
+          //Aqui detiene el contador
+            $(this).attr("estado_crono",1);
+            $("#icon_iniciar_crono").removeClass("icon-pause"); 
+            $("#icon_iniciar_crono").addClass("icon-play");
+            window.clearInterval(tiempo_corriendo);
+        }
+      }
+      else{
+        notificacion_saia("No es posible iniciar el cronometro sin una tarea","warning","",3000);
+      } 
+    });
+    $("#btn_guardar_crono").click(function(){
+      var idtarea=$(this).attr("idtarea");
+      
+      var minutos=parseInt($("#minute_crono").text());
+     
+      var horas=parseInt($("#hour_crono").text());
+      var fecha_ini=$(this).attr("fecha_inicio");
+      var hora_ini=$(this).attr("hora_ini");
+     	window.clearInterval(tiempo_corriendo);
+      delete tiempo_corriendo;
+      tiempo.segundo = 0;
+      tiempo.minuto=0;
+       tiempo.hora = 0;
+      $("#hour_crono").text('00');
+      $("#minute_crono").text('00');
+      $("#second_crono").text('00');
+      $("#timer").hide();
+      hs.htmlExpand(this, { objectType: 'iframe',width: 800, height: 300, src:"pantallas/tareas_listado/avance_higslider.php?idtareas_listado="+idtarea+"&minutos="+minutos+"&horas="+horas+"&fecha_ini="+fecha_ini+"&hora_ini="+hora_ini+"&rand=<?php echo rand(0,10000);?>",outlineType: 'rounded-white',wrapperClassName:'highslide-wrapper drag-header',preserveContent:false});
+      $(this).attr("idtarea",'0');
+    });    
+    
   });
 </script>
 <script>
@@ -564,9 +713,57 @@ $(document).ready(function(){
 	    var nuevo_alto=$(top).height()-($(".footer_login").height()+$(".user-menu-top div").height()<?php if($_SESSION["tipo_dispositivo"]!="movil") echo("+20");?>);
 	    $("#iFrameContainer").height(nuevo_alto);
 	});
-	$("#resize_centro").click();
+	// se saca el codigo porque el resize_centro existe solo para moviles
+	var nuevo_alto=$(top).height()-($(".footer_login").height()+$(".user-menu-top div").height()+20);
+	$("#iFrameContainer").height(nuevo_alto);
 	$(".enlace_final").click(function(){
 	  $(".dropdown").removeClass("open");
 	});
 });
 </script>
+<script>
+	setInterval(function(){   //tareas_pendientes_dia
+		$.ajax({
+        	type:'POST',
+            dataType: 'json',
+            url: "pantallas/tareas_listado/cantidad_tareas_planeadas_dia.php",
+            success: function(datos){
+            	if(datos.cantidad>0){
+            		$('#tareas_pendientes_dia').html(datos.mensaje);
+            	}else{
+            		$('#tareas_pendientes_dia').html('');
+            	}
+           	}
+		});     				
+  	}, 900000);  //cada 15 minutos
+  	
+	$.ajax({
+       	type:'POST',
+        dataType: 'json',
+        url: "pantallas/tareas_listado/cantidad_tareas_planeadas_dia.php",
+        success: function(datos){
+    	   	if(datos.cantidad>0){
+        		$('#tareas_pendientes_dia').html(datos.mensaje);
+            }else{
+            	$('#tareas_pendientes_dia').html('');
+            }
+		}
+	});    	
+</script>
+<?php
+if(@$_SERVER['QUERY_STRING']){
+	$parametro=$_SERVER['QUERY_STRING'];
+	$parametro_uncrypt=base64_decode($parametro);
+	$vector_parametro=explode('=',$parametro_uncrypt);
+					
+	if(strtolower(@$vector_parametro[0])=='idtareas_listado_unico' && is_numeric(@$vector_parametro[1])){
+		?>
+		<script>
+			var idtareas_listado_unico='<?php echo($vector_parametro[1]); ?>';
+			var link='pantallas/tareas_listado/principal_listados_tareas_calendarios.php?rol_tareas=tarea_unica&click=tareas&idtareas_listado_unico='+idtareas_listado_unico;
+			window.open(link,'centro');
+		</script>
+		<?php
+	}
+}			
+?>

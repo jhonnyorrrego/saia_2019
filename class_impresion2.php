@@ -261,21 +261,25 @@ class Imprime_Pdf {
       crear_destino($carpeta);
       
     }else{    						
-			if($this->documento){					
-      	$nombre_pdf = $this->documento[0]["numero"] . "_" . $this->documento[0]["fecha"] . ".pdf";
-			}else{
+			if($this->documento && @$this->documento[0]["numero"]){
+      	        $nombre_pdf = $this->documento[0]["numero"] . "_" . $this->documento[0]["fecha"] . ".pdf";
+			}elseif($this->idpaginas){
 				$nombre_pdf = $this->idpaginas . "_" . date("y-m-d") . ".pdf";
+			}else{
+			    $nombre_pdf = "pdf_" . date("y-m-d") . ".pdf";
 			}		
     }		
 		
-		if($this->tipo_salida == "FI" && !$this->documento){
+	if($this->tipo_salida == "FI" && !$this->documento){
     	$nombre_pdf = basename($nombre_pdf);
+    	
     }elseif ($this->tipo_salida == "FI" && $this->documento[0]["estado"] <> 'ACTIVO') {      
       phpmkr_query("update documento set pdf='" . $nombre_pdf . "' where iddocumento=" . $this->documento[0]["iddocumento"]);
     } elseif ($this->tipo_salida == "I") {
+        
       $nombre_pdf = basename($nombre_pdf);
-    }		
-		
+    }	
+
     $this->pdf->Output($nombre_pdf, $this->tipo_salida);
     
   }
@@ -345,18 +349,33 @@ class Imprime_Pdf {
 			$contenido = preg_replace('/(table-td-width-pdf:)(.*);/',"${1}width: $2;",$contenido);
 			$contenido = preg_replace('/(table-margin-left:)(.*);/',"${1}margin-left: $2;",$contenido);
 			$contenido = preg_replace('/(height-pdf:)(.*);/',"${1}height: $2;",$contenido);
-			$contenido = preg_replace('/<dobble-br\/>/',"<br /><br />",$contenido);			
+			$contenido = preg_replace('/<dobble-br\/>/',"<br /><br />",$contenido);		
 			
-			if($_SESSION['LOGIN'] == 'cerok'){
-  			//print_r($contenido);
-				//die();
-			}		
+			if($_SESSION['LOGIN'.LLAVE_SAIA] == 'cerok'){
+  	        	//	print_r($contenido);
+	        	//	die();
+			}			
+						
+			$config = array(
+				           'indent'         => true,
+				           'output-xhtml'   => true,
+				           'wrap'           => 200				           
+								);
+
+			// Tidy
+			$tidy = new tidy;
+			$tidy->errorBuffer;
+			$tidy->parseString($contenido, $config, 'utf8');
+			$tidy->cleanRepair();
+			// Output						
+						
+			$contenido=$tidy; 			
 			
 			if($_REQUEST["url_encabezado"]){
 				$this->pdf->writeHTMLCell(0, 0, '', 27, stripslashes($contenido), "", 1, 0, false, '', true);
 			}else{
-				$this->pdf->writeHTML(stripslashes($contenido), false, false, false, false, '');	
-			}						      
+				$this->pdf->writeHTML(stripslashes($contenido), true, false, false, false, '');	
+			}		
     }    
     curl_close($ch);
   }

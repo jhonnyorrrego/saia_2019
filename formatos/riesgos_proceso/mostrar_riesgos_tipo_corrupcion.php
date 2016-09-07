@@ -97,7 +97,7 @@ $tabla .='
 							<td>'.strip_tags(utf8_encode(html_entity_decode($riesgos[$i]['fuente_causa']))).'</td>
 							<td>'.$riesgos[$i]['consecutivo'].'</td>
 							<td>'.utf8_encode(html_entity_decode($riesgos[$i]['riesgo'])).'</td>
-							<td>'.mostrar_valor_campo('probabilidad',13,$riesgos[$i]['documento_iddocumento'],1).'</td>
+							<td>'.mostrar_valor_campo('probabilidad',393,$riesgos[$i]['documento_iddocumento'],1).'</td>
 							<td style="text-align:left;">';
 							for($j=0;$j<$valoracion['numcampos'];$j++){
 								$tabla .= ''.strip_tags(html_entity_decode($valoracion[$j]['descripcion_control'])).'';
@@ -105,15 +105,16 @@ $tabla .='
 							$tabla.='</td>
 							<td style="text-align:left;" colspan="2">';
 							for($j=0;$j<$valoracion['numcampos'];$j++){
-								$tabla.='<b>1. Posee una herramienta para ejercer el control?</b>: '.mostrar_valor_campo('herramienta_ejercer',201,$valoracion[$j]['documento_iddocumento'],1).' 
-								<b>2. Existen manuales, instructivos o procedimientos para el manejo de la herramienta?</b>: '.mostrar_valor_campo('procedimiento_herramienta',201,$valoracion[$j]['documento_iddocumento'],1).' 
-								<b>3. En el tiempo que lleva la herramienta, ha demostrado ser efectiva?</b>: '.mostrar_valor_campo('herramienta_efectiva',201,$valoracion[$j]['documento_iddocumento'],1);
+								$tabla.='<b>1. Posee una herramienta para ejercer el control?</b>: '.mostrar_valor_campo('herramienta_ejercer',394,$valoracion[$j]['documento_iddocumento'],1).' 
+								<b>2. Existen manuales, instructivos o procedimientos para el manejo de la herramienta?</b>: '.mostrar_valor_campo('procedimiento_herramienta',394,$valoracion[$j]['documento_iddocumento'],1).' 
+								<b>3. En el tiempo que lleva la herramienta, ha demostrado ser efectiva?</b>: '.mostrar_valor_campo('herramienta_efectiva',394,$valoracion[$j]['documento_iddocumento'],1);
 							}
 							$tabla.='</td>
 							<td style="text-align:left;">';
 							for($j=0;$j<$acciones['numcampos'];$j++){
 								if($acciones[$j]['opcio_admin_riesgo']!=""){
-									$tabla.=mostrar_valor_campo('opcio_admin_riesgo',174,$acciones[$j]['documento_iddocumento'],1);
+									$tabla.=mostrar_valor_campo('opcio_admin_riesgo',395,$acciones[$j]['documento_iddocumento'],1);
+									//$tabla.=$acciones[$j]['opcio_admin_riesgo'];
 								}
 							}
 							$tabla.='</td>

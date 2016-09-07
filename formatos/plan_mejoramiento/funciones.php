@@ -58,14 +58,14 @@ function elaborado_por($idformato,$iddoc){
   	$fun_login=usuario_actual("login");
   }
   $dato=busca_filtro_tabla("elaborado,nombres,apellidos,funcionario_codigo,".fecha_db_obtener("fecha_elaborado","Y-m-d H:i:s")." AS fecha_elaborado","ft_plan_mejoramiento,documento,funcionario","documento_iddocumento=$iddoc and  iddocumento=documento_iddocumento and funcionario_codigo=ejecutor","",$conn);
-
+   
   $pos=strpos($dato[0][0],"_");
   if($pos)
     $dato[0][0]=substr($dato[0][0],0,$pos);
-    
+     
 		
   if($dato[0][0]){
-    mostrar_valor_campo('elaborado',1,$iddoc);   
+    mostrar_valor_campo('elaborado',379,$iddoc);   
     if($dato[0]["fecha_elaborado"] && $dato[0]["fecha_elaborado"]>'2010-01-01 00:00:00'){
       echo("(".$dato[0]["fecha_elaborado"].")");
     }
@@ -101,7 +101,7 @@ $dato=busca_filtro_tabla("revisado,".fecha_db_obtener("fecha_elaborado","Y-m-d H
     $dato[0][0]=substr($dato[0][0],0,$pos);
   
 if($dato[0][0]){
-  mostrar_valor_campo('revisado',1,$iddoc);   
+  mostrar_valor_campo('revisado',379,$iddoc);   
   if($dato[0]["fecha_elaborado"] && $dato[0]["fecha_elaborado"]>'2010-01-01 00:00:00' && $dato[0]["fecha_revisado"] && $dato[0]["fecha_revisado"]>'2010-01-01 00:00:00'){
     echo("(".$dato[0]["fecha_revisado"].")");
   }
@@ -142,7 +142,7 @@ function aprobado_por($idformato,$iddoc){
 		$dato[0][0]=substr($dato[0][0],0,$pos);
 		if($dato[0][0]){
 		mostrar_valor_campo(
-	'aprobado',1,$iddoc);   
+	'aprobado',379,$iddoc);   
     if($dato[0]["fecha_revisado"] && $dato[0]["fecha_revisado"]>'2010-01-01 00:00:00' && $dato[0]["fecha_aprobado"] && $dato[0]["fecha_aprobado"]>'2010-01-01 00:00:00'){
       echo("(".$dato[0]["fecha_aprobado"].")");
     }
@@ -272,12 +272,13 @@ function listar_hallazgo_plan_mejoramiento($idformato,$iddoc,$condicion=""){
   }
   //print_r($formato);
   if($condicion=="" && $documento[0]["idft_plan_mejoramiento"]){
-    $condicion="A.ft_plan_mejoramiento=B.idft_plan_mejoramiento AND A.estado<>'INACTIVO' AND A.documento_iddocumento=iddocumento and C.estado<>'ELIMINADO' AND A.ft_plan_mejoramiento=".$documento[0]["idft_plan_mejoramiento"]." ";
+    $condicion="a.ft_plan_mejoramiento=b.idft_plan_mejoramiento AND a.estado<>'INACTIVO' AND a.documento_iddocumento=iddocumento and c.estado<>'ELIMINADO' AND a.ft_plan_mejoramiento=".$documento[0]["idft_plan_mejoramiento"]." ";
   }
+    
   if($condicion!=""){
     $formato_hallazgo=busca_filtro_tabla("","formato","nombre LIKE '%hallazgo%'","",$conn);
     //print_r($formato_hallazgo);
-    $hallazgos=busca_filtro_tabla("A.*,B.*,A.documento_iddocumento as hallazgo_iddoc","ft_hallazgo A, ft_plan_mejoramiento B,documento C","A.ft_plan_mejoramiento= b.idft_plan_mejoramiento and a.documento_iddocumento= c.iddocumento and A.estado<>'INACTIVO' and C.estado<>'ELIMINADO' AND ".$condicion,"idft_hallazgo asc",$conn);	
+    $hallazgos=busca_filtro_tabla("a.*,b.*,a.documento_iddocumento as hallazgo_iddoc","ft_hallazgo a, ft_plan_mejoramiento b,documento c","a.ft_plan_mejoramiento= b.idft_plan_mejoramiento and a.documento_iddocumento= c.iddocumento and a.estado<>'INACTIVO' and c.estado<>'ELIMINADO' AND ".$condicion,"idft_hallazgo asc",$conn);	
     //print_r($hallazgos);
   if($hallazgos["numcampos"]){
     $texto.="";

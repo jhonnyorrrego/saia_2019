@@ -304,7 +304,20 @@ function acciones($id,$campo){
 			$texto.=utf8_encode(html_entity_decode($acciones[$i][$campo]));
 		}
 		else{
-			$texto.=mostrar_valor_campo($campo,174,$acciones[$i]["iddocumento"],1);
+		    $responsable=busca_filtro_tabla("","funcionario","estado=1 AND funcionario_codigo in(".$acciones[$i][$campo].")","",$conn);
+		    
+		    
+		    for($j=0;$j<$responsable['numcampos'];$j++){
+		        if($j==0){
+		            $texto.='- ';
+		        }
+		        $texto.=$responsable[$j]['nombres'].' '.$responsable[$j]['apellidos'];
+		        if(($j+1)!=$responsable['numcampos']){
+		            $texto.=', ';
+		        }else{
+		            $texto.='<br>';
+		        }
+		    }
 		}		
 	}
 	return $texto;

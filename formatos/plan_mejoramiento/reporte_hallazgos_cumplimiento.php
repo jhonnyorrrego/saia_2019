@@ -66,10 +66,12 @@ function reporte(){
 	$plan_mejoramiento=busca_filtro_tabla("","ft_plan_mejoramiento a, documento b","a.documento_iddocumento=b.iddocumento AND a.documento_iddocumento=".$iddoc,"",$conn);
 	
 	$porcentaje = porcentaje_plan('','','',$plan_mejoramiento[0]["idft_plan_mejoramiento"]);
+	//print_r($porcentaje);die();
+	
 	$hallazgos=busca_filtro_tabla(fecha_db_obtener('tiempo_cumplimiento','Y-m-d')." as fecha_cumpl, a.*, b.*","ft_hallazgo a, documento b","a.ft_plan_mejoramiento=".$plan_mejoramiento[0]["idft_plan_mejoramiento"]." and a.documento_iddocumento=b.iddocumento and b.estado not in('ELIMINADO', 'ANULADO')","idft_hallazgo asc",$conn);
 	
 	if($_REQUEST["idformato"]!='' & $_REQUEST["tipo"]!=5){
-		$tabla.='<a href="'.$ruta_db_superior.'class_impresion.php?url=formatos/plan_mejoramiento/reporte_hallazgos_cumplimiento.php?tipo=5|iddoc='.$iddoc.'|idformato='.$idformato.'&horizontal=1&tipo=5&landscape=horizontal" target="_blank"><img src="http://'.RUTA_PDF.'/enlaces/imprimir.gif"></a>';
+    		$tabla.='<a href="'.$ruta_db_superior.'class_impresion.php?url=formatos/plan_mejoramiento/reporte_hallazgos_cumplimiento.php?tipo=5|iddoc='.$iddoc.'|idformato='.$idformato.'&horizontal=1&tipo=5&landscape=horizontal" target="_blank"><img src="http://'.RUTA_PDF.'/enlaces/imprimir.gif"></a>';
 	}
 	
 	$tabla.='<center>
@@ -107,8 +109,8 @@ function reporte(){
 				$tabla.='<td><a href="'.$ruta_db_superior.'formatos/hallazgo_plan_mejoramiento/mostrar_hallazgo_plan_mejoramiento.php?idformato='.$format_hallazgo[0]["idformato"].'&iddoc='.$hallazgos[$i]["documento_iddocumento"].'" target="_blank">Ver</a></td>';
 			}
 			$tabla.='<td style="text-align:center">'.$hallazgos[$i]["consecutivo_hallazgo"].'</td>';
-			$tabla.='<td>'.(utf8_encode(html_entity_decode($hallazgos[$i]["deficiencia"]))).'</td>';
-			$tabla.='<td>'.utf8_encode(html_entity_decode($hallazgos[$i]["accion_mejoramiento"])).'</td>';
+			$tabla.='<td>'.(codifica_encabezado(html_entity_decode($hallazgos[$i]["deficiencia"]))).'</td>';
+			$tabla.='<td>'.codifica_encabezado(html_entity_decode($hallazgos[$i]["accion_mejoramiento"])).'</td>';
 			$tabla.='<td>'.convertir($hallazgos[$i]["responsables"],'responsables',$hallazgos[$i]["iddocumento"], $format_hallazgo[0]["idformato"]).'</td>';
 			$tabla.='<td style="text-align:center">'.$hallazgos[$i]["fecha_cumpl"].'</td>';
 			
@@ -135,9 +137,9 @@ function reporte(){
 				}else{
 					$observacion="&nbsp";
 				}
-				$tabla.='<td>'.html_entity_decode($logros).'</td>';
+				$tabla.='<td>'.codifica_encabezado(html_entity_decode($logros)).'</td>';
 					
-				$tabla.='<td>'.html_entity_decode($observacion).'</td>';				
+				$tabla.='<td>'.codifica_encabezado(html_entity_decode($observacion)).'</td>';				
 			}else{
 				$tabla.='<td>&nbsp;</td>';					
 				$tabla.='<td>&nbsp;</td>';

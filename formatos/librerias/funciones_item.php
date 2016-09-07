@@ -111,7 +111,8 @@ function guardar_item()
              var direccion = new String(window.parent.frames[0].location);
              param=direccion.split('&');
              direccion=param[0]+'&'+param[1]+'&seleccionar=" . $padre[0]["idformato"] . "-" . $superior[0][0] . "-" . $padre[0]["nombre_tabla"] . "-" . $doc_padre[0][0] . "';
-             window.parent.frames[0].location=direccion;
+             //window.parent.frames[0].location=direccion;
+             window.location='../".$padre[0]["nombre"]."/".$padre[0]["ruta_mostrar"]."?idformato=".$padre[0]["idformato"]."&iddoc=".$doc_padre[0]["documento_iddocumento"]."';  //correccion para que los items no recargen el arbol
              </script>";
 			else
 				echo "<script>
