@@ -15,10 +15,7 @@ include_once($ruta_db_superior."pantallas/anexos/librerias_anexos.php");
 if(@$_REQUEST['idtareas_listado_anexos']){
 	
 	$anexo=busca_filtro_tabla('','tareas_listado_anexos a, tareas_listado b ','b.idtareas_listado=a.fk_tareas_listado	 AND a.idtareas_listado_anexos='.@$_REQUEST['idtareas_listado_anexos'],'',$conn);
-	
 
-
- 
 	$ruta_eliminados=$ruta_db_superior.RUTA_BACKUP_ELIMINADOS."anexos_tareas/".$anexo[0]['listado_tareas_fk']."/".$anexo[0]['idtareas_listado']."/";
 	crear_destino($ruta_eliminados);
 	chmod($ruta_eliminados,0777);
