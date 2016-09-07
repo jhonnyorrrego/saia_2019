@@ -48,7 +48,8 @@ if($datos["numcampos"]){
 			}
 		}	
 		//$url="pantallas/tareas_listado/principal_listados_tareas_calendarios.php?rol_tareas=tarea_unica&click=tareas&idtareas_listado_unico=".$datos[$i]["idtareas_listado"];
-		$url="pantallas/busquedas/consulta_busqueda_subtareas_listado.php?idbusqueda_componente=220&ocultar_subtareas=1&rol_tareas=tarea_unica&click=tareas&idtareas_listado_unico=".$datos[$i]["idtareas_listado"];
+		$componente_tareas=busca_filtro_tabla("idbusqueda_componente","busqueda_componente"," lower(nombre)='tareas_listado_reporte' ","",$conn);
+		$url="pantallas/busquedas/consulta_busqueda_subtareas_listado.php?idbusqueda_componente=".$componente_tareas[0]['idbusqueda_componente']."&ocultar_subtareas=1&rol_tareas=tarea_unica&click=tareas&idtareas_listado_unico=".$datos[$i]["idtareas_listado"];
 		array_push($arreglo["rows"],array("id"=>$datos[$i]["idtareas_listado"],"titulo"=>$datos[$i]["nombre_tarea"]."\n(".implode(",",$responsables).")","inicio"=>$datos[$i]["fecha_limite"],"fin"=>$datos[$i]["fecha_limite"],"url"=>$url,"color"=>$color,"hs"=>1));
 	}	
 }
