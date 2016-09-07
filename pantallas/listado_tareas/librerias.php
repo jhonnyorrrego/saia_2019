@@ -149,11 +149,13 @@ function enlaces_listado_tareas($idlistado_tareas,$nombre){
 	/*$permiso=new Permiso();
 	$ok1=$permiso->acceso_modulo_perfil("eliminar_expediente");
 	$ok2=$permiso->acceso_modulo_perfil("editar_expediente");*/
+	$componente_tareas=busca_filtro_tabla("idbusqueda_componente","busqueda_componente"," lower(nombre)='tareas_listado_reporte' ","",$conn);
+	
 	
 	$texto.='<div class=\'btn btn-mini eliminar_listado_tarea tooltip_saia pull-right\' idregistro=\''.$idlistado_tareas.'\' title=\'Eliminar\'titulo=\'Eliminar\' '.$nombre.'\'><i class=\'icon-trash\'></i></div>';
 	$texto.='<div class=\'btn btn-mini enlace_listado_tareas tooltip_saia pull-right\' idregistro=\''.$idlistado_tareas.'\' title=\'editar\'titulo=\'Editar\''.$nombre.'\' enlace=\'pantallas/listado_tareas/editar_listado_tareas.php?idlistado_tareas='.$idlistado_tareas.'\'><i class=\'icon-pencil\'></i></div>';
 	$texto.='<div class=\'btn btn-mini enlace_listado_tareas tooltip_saia pull-right\' title=\'Permisos\' titulo=\'Permisos\' enlace=\'pantallas/listado_tareas/asignar_listado_tareas.php?idlistado_tareas='.$idlistado_tareas.'\' conector=\'iframe\'><i class=\'icon-lock\'></i></div>';
-	$texto.='<div class=\'btn btn-mini enlace_listado_tareas tooltip_saia pull-right\' title=\'Tareas del listado\' titulo=\'Tareas del listado\' enlace=\'pantallas/busquedas/consulta_busqueda_subtareas_listado.php?idbusqueda_componente=220&ocultar_subtareas=1&idlistado_tareas='.$idlistado_tareas.'\' conector=\'iframe\'><i class=\'icon-list\'></i></div>';
+	$texto.='<div class=\'btn btn-mini enlace_listado_tareas tooltip_saia pull-right\' title=\'Tareas del listado\' titulo=\'Tareas del listado\' enlace=\'pantallas/busquedas/consulta_busqueda_subtareas_listado2.php?idbusqueda_componente='.$componente_tareas[0]['idbusqueda_componente'].'&ocultar_subtareas=1&idlistado_tareas='.$idlistado_tareas.'\' conector=\'iframe\'><i class=\'icon-list\'></i></div>';
 	return($texto);
 }
 
