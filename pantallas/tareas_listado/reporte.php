@@ -737,7 +737,8 @@ function mostrar_previa_nombre_tarea($nombre_tarea){
 }
 
 function mostrar_cantidad_subtareas($idtareas_listado){
-	
+	 global $conn;
+	 
 	if(!@$_REQUEST['ocultar_subtareas']){
 	    
 	    
