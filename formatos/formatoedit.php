@@ -384,7 +384,6 @@ echo $x_contador_idcontadorList;
       
       <input type="checkbox" name="x_paginar" id="x_paginar" value="1" <?php if($x_paginar==1) echo("checked");?> >Paginar al mostrar
       <input type="checkbox" name="x_banderas[]" id="x_banderas" value="r" <?php if(in_array("r",$x_banderas)) echo("checked");?> >Tomar el asunto del padre al responder
-       <input type="checkbox" name="x_banderas[]" id="x_banderas" value="cp" <?php if(in_array("cp",$x_banderas)) echo("checked");?> >Contar paginas del PDF
       <!--input type="checkbox" name="x_firma_digital[]" id="x_firma_digital" value="r" <?php if($x_firma_digital==1) echo "checked"; ?>>Estampar documento al aprobar-->
       </span>
     </td>
