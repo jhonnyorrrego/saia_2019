@@ -14,8 +14,26 @@ include('db.php');
 calcular_paginas_documento(208);
 
 
-
-
+function numeroPaginasPdf($archivoPDF){
+    global $conn,$ruta_db_superior;
+    
+	$stream = fopen($ruta_db_superior.$archivoPDF, "r");
+	$content = fread ($stream, filesize($ruta_db_superior.$archivoPDF));
+ 
+	if(!$stream || !$content)
+		return 0;
+ 
+	$count = 0;
+ 
+	$regex  = "/\/Count\s+(\d+)/";
+	$regex2 = "/\/Page\W*(\d+)/";
+	$regex3 = "/\/N\s+(\d+)/";
+ 
+	if(preg_match_all($regex, $content, $matches))
+		$count = max($matches);
+ 
+	return $count[0];
+}
 function calcular_paginas_documento($iddoc){
     global $conn,$ruta_db_superior;
     
@@ -25,10 +43,13 @@ function calcular_paginas_documento($iddoc){
     $paginas=busca_filtro_tabla("","pagina","id_documento=".$iddoc,"",$conn);
     $cantidad=$cantidad+$paginas['numcampos'];
     //PAGINAS DEL PDF
-    $banderas_formato=busca_filtro_tabla("a.banderas","formato a, documento b","lower(b.plantilla)=lower(a.nombre) AND b.iddocumento=".$iddoc,"",$conn);
+    $banderas_formato=busca_filtro_tabla("a.banderas,b.pdf","formato a, documento b","lower(b.plantilla)=lower(a.nombre) AND b.iddocumento=".$iddoc,"",$conn);
     $vector_banderas=explode(',',$banderas_formato[0]['banderas']);
     if(in_array('cp',$vector_banderas)){
-        echo('contar paginas pdf: '.$cantidad);
+        
+        $paginas_pdf=numeroPaginasPdf($banderas_formato[0]['pdf']);
+        
+        echo('contar paginas pdf: '.$cantidad.' - '.$paginas_pdf);
     }
 }
 
