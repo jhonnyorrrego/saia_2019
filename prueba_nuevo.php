@@ -24,21 +24,12 @@ function calcular_paginas_documento($iddoc){
     //PAGINAS digitales
     $paginas=busca_filtro_tabla("","pagina","id_documento=".$iddoc,"",$conn);
     $cantidad=$cantidad+$paginas['numcampos'];
-    
     //PAGINAS DEL PDF
     $banderas_formato=busca_filtro_tabla("a.banderas","formato a, documento b","lower(b.plantilla)=lower(a.nombre) AND b.iddocumento=".$iddoc,"",$conn);
     $vector_banderas=explode(',',$banderas_formato[0]['banderas']);
-    
     if(in_array('cp',$vector_banderas)){
-        echo('contar paginas pdf');
+        echo('contar paginas pdf: '.$cantidad);
     }
-    
-    
-   
-    
-    
-    
-    
 }
 
 
