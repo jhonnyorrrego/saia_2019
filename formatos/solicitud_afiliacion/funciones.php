@@ -11,7 +11,7 @@ while($max_salida>0){
 include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."librerias_saia.php");
 include_once($ruta_db_superior."formatos/librerias/funciones_generales.php");
-
+include_once($ruta_db_superior."pantallas/documento/librerias.php");
 //MOSTRAR
 function mostrar_datos_solicita_afiliacion($idformato,$iddoc){
 	global $conn;
@@ -43,7 +43,8 @@ function  generar_codigo_qr_afiliacion($idformato,$iddoc){
 	  alerta("Error al tratar de crear el codigo qr");
 	}
 	else{
-	  $sql_documento_qr="INSERT INTO documento_verificacion(documento_iddocumento,funcionario_idfuncionario,fecha,ruta_qr,verificacion) VALUES (".$iddoc.",".usuario_actual('idfuncionario').",".fecha_db_almacenar(date("Y-m-d H:m:s"),'Y-m-d H:i:S').",'".$imagen."','vacio')";	  	  
+	  $codigo_hash=obtener_codigo_hash_archivo($imagen,'crc32'); 
+	  $sql_documento_qr="INSERT INTO documento_verificacion(documento_iddocumento,funcionario_idfuncionario,fecha,ruta_qr,verificacion,codigo_hash) VALUES (".$iddoc.",".usuario_actual('idfuncionario').",".fecha_db_almacenar(date("Y-m-d H:m:s"),'Y-m-d H:i:S').",'".$imagen."','vacio','".$codigo_hash."')";	  	  
 	  phpmkr_query($sql_documento_qr);	  	 
 	}
 }
