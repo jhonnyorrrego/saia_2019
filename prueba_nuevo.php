@@ -28,7 +28,7 @@ function calcular_paginas_documento($iddoc){
     //PAGINAS DEL PDF
     $banderas_formato=busca_filtro_tabla("a.banderas","formato a, documento b","lower(b.plantilla)=lower(a.nombre) AND b.iddocumento=".$iddoc,"",$conn);
     
-    
+    print_r($banderas_formato);
     
     
     
