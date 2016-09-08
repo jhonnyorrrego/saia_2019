@@ -16,7 +16,24 @@ include('db.php');
 
 
 
-
+function calcular_paginas_documento($iddoc){
+    global $conn,$ruta_db_superior;
+    
+    $cantidad=0;
+    
+    //PAGINAS digitales
+    $paginas=busca_filtro_tabla("","pagina","id_documento=".$iddoc,"",$conn);
+    $cantidad=$cantidad+$paginas['numcampos'];
+    
+    //PAGINAS DEL PDF
+    $banderas_formato=busca_filtro_tabla("a.banderas","formato a, documento b","lower(b.plantilla)=lower(a.nombre) AND b.iddocumento=".$iddoc,"",$conn);
+    
+    
+    
+    
+    
+    
+}
 
 
 
