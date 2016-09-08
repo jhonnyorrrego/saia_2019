@@ -395,8 +395,7 @@ echo $x_contador_idcontadorList;
 			<input type="checkbox" name="x_banderas[]" id="x_banderas" value="e">Aprobacion Automatica
 			<input type="checkbox" name="x_mostrar" id="x_mostrar" value="1" checked>Mostrar <br>
 			<input type="checkbox" name="x_paginar" id="x_paginar" value="1" checked>Paginar al mostrar
-			<input type="checkbox" name="x_banderas[]" id="x_banderas" value="r">Tomar el asunto del padre al responder
-			<input type="checkbox" name="x_banderas[]" id="x_banderas" value="cp">Contar paginas del PDF<br>
+			<input type="checkbox" name="x_banderas[]" id="x_banderas" value="r">Tomar el asunto del padre al responder<br>
 <!--input type="checkbox" name="x_firma_digital[]" id="x_firma_digital" value="1" >Estampar documento al aprobar-->
 			</span></td>
 		</tr>
