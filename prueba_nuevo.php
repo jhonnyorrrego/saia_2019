@@ -47,6 +47,7 @@ function calcular_paginas_documento($iddoc){
     $vector_banderas=explode(',',$banderas_formato[0]['banderas']);
     if(in_array('cp',$vector_banderas)){
         
+        print_r($banderas_formato[0]['pdf']);
         $paginas_pdf=numeroPaginasPdf($banderas_formato[0]['pdf']);
         
         echo('contar paginas pdf: '.$cantidad.' - '.$paginas_pdf);
