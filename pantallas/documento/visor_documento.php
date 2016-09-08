@@ -27,7 +27,7 @@ else{
 
 if(@$_REQUEST["actualizar_pdf"]==1){
 	$sql1="UPDATE documento SET pdf=null WHERE iddocumento=".$iddoc;
-	phpmkr_query($sql1);
+//	phpmkr_query($sql1);
 	$datos[0]["pdf"]="";
 }
 
