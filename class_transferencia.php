@@ -243,7 +243,6 @@ function radicar_documento_prueba($tipo_contador,$arreglo,$archivos=NULL,$idfluj
         if($idformato['numcampos']){
             $arreglo["formato_idformato"]=$idformato[0]['idformato'];
         }
-         
     }
     if(!isset($arreglo["tipo_radicado"]))
        $arreglo["tipo_radicado"] = $contador[0]["idcontador"];
