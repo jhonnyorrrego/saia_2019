@@ -225,11 +225,11 @@ class Imprime_Pdf {
     if ($this->tipo_salida == "FI" && $this->documento[0]["estado"] <> 'ACTIVO') {
         
         $paginas_pdf=$this->pdf->lastPage();   
-      phpmkr_query("update documento set paginas='33".$paginas_pdf."',pdf='" . $nombre_pdf . "' where iddocumento=" . $this->documento[0]["iddocumento"]);
+      phpmkr_query("update documento set paginas='".$paginas_pdf."',pdf='" . $nombre_pdf . "' where iddocumento=" . $this->documento[0]["iddocumento"]);
     }
     else if($this->tipo_salida == "FI" && $this->formato[0]["mostrar_pdf"]==1){
         $paginas_pdf=$this->pdf->lastPage();   
-    	phpmkr_query("update documento set paginas='33".$paginas_pdf."',pdf='" . $nombre_pdf . "' where iddocumento=" . $this->documento[0]["iddocumento"]);
+    	phpmkr_query("update documento set paginas='".$paginas_pdf."',pdf='" . $nombre_pdf . "' where iddocumento=" . $this->documento[0]["iddocumento"]);
     }
     elseif ($this->tipo_salida == "I") {
       if($this->imprimir_vistas){
