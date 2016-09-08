@@ -9,6 +9,20 @@ while($max_salida>0){
   $max_salida--;
 }
 include('db.php');
+
+
+
+
+
+
+
+
+
+
+
+die();
+
+
 include_once($ruta_db_superior.'pruebas_ruben/dias_habiles_nuevo/festivos_colombia.php');
 date_default_timezone_set('America/Bogota');
 
