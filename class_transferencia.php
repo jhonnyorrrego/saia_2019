@@ -240,6 +240,7 @@ function radicar_documento_prueba($tipo_contador,$arreglo,$archivos=NULL,$idfluj
       $arreglo["plantilla"]="''";
     }else{
         $idformato=busca_filtro_tabla("idformato","formato","lower(nombre)='".strtolower($arreglo["plantilla"])."'","",$conn);
+        print_r($idformato);die();
         if($idformato['numcampos']){
             $arreglo["formato_idformato"]=$idformato[0]['idformato'];
         }
