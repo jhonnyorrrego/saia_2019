@@ -407,7 +407,7 @@ class Imprime_Pdf {
 
   function configurar_pagina($datos) {
       
-      print_r($datos);die();
+     
 
     if (isset($datos["imprimir_paginas"]) && $datos["imprimir_paginas"]) {
       $this->imprimir_paginas = $datos["imprimir_paginas"];
