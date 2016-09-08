@@ -11,51 +11,17 @@ while($max_salida>0){
 include('db.php');
 
 
-calcular_paginas_documento(208);
+
+$ruta_qr='../almacenamiento/INICIADO/2016-08/81/qr/qr2016_08_05_09_08_45.png';
+echo $codigo=obtener_codigo_hash_archivo($ruta_qr,'crc32');
 
 
-function numeroPaginasPdf($archivoPDF){
+function obtener_codigo_hash_archivo($ruta,$algoritmo_cifrado){
     global $conn,$ruta_db_superior;
     
-	$stream = fopen($ruta_db_superior.$archivoPDF, "r");
-	$content = fread ($stream, filesize($ruta_db_superior.$archivoPDF));
- 
-	if(!$stream || !$content)
-		return 0;
- 
-	$count = 0;
- 
-	$regex  = "/\/Count\s+(\d+)/";
-	$regex2 = "/\/Page\W*(\d+)/";
-	$regex3 = "/\/N\s+(\d+)/";
- 
-	if(preg_match_all($regex, $content, $matches))
-		$count = max($matches);
- 
-	return $count[0];
+    $codigo_hash=hash_file($algoritmo_cifrado,$ruta_db_superior.$ruta); //   'crc32'
+    return($codigo_hash);
 }
-function calcular_paginas_documento($iddoc){
-    global $conn,$ruta_db_superior;
-    
-    $cantidad=0;
-    
-    //PAGINAS digitales
-    $paginas=busca_filtro_tabla("","pagina","id_documento=".$iddoc,"",$conn);
-    $cantidad=$cantidad+$paginas['numcampos'];
-    //PAGINAS DEL PDF
-    $banderas_formato=busca_filtro_tabla("a.banderas,b.pdf","formato a, documento b","lower(b.plantilla)=lower(a.nombre) AND b.iddocumento=".$iddoc,"",$conn);
-    $vector_banderas=explode(',',$banderas_formato[0]['banderas']);
-    if(in_array('cp',$vector_banderas)){
-        
-        echo($banderas_formato[0]['pdf']);
-        $paginas_pdf=numeroPaginasPdf($banderas_formato[0]['pdf']);
-        
-        echo('contar paginas pdf: '.$cantidad.' - '.$paginas_pdf);
-    }
-}
-
-
-
 die();
 
 
