@@ -121,7 +121,9 @@ $paso=busca_filtro_tabla("","paso","idpaso=".$_REQUEST["idpaso"],"",$conn);
                 $(document).ready(function(){
                     $('#x_accion_idaccion').change(function(){
                         if( $(this).val()==7 || $(this).val()==3 ){
-                            alert('es aprobar o confirmar no more');   
+                            $('#x_llave_entidad').before('<div id="div_cargo_campo">HOLA MUNDO</div>');
+                        }else{
+                            $('#div_cargo_campo').remove();
                         }
                     });
                 });
