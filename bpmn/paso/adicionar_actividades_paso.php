@@ -258,7 +258,7 @@ $paso=busca_filtro_tabla("","paso","idpaso=".$_REQUEST["idpaso"],"",$conn);
     });
     function crear_arbol(accion){
       $.post('<?php echo($ruta_db_superior);?>bpmn/paso/arboles_accion_paso.php',{idaccion : accion,accion : 'radicar',campo : 'x_llave_accion', 'idpaso':<?php echo($_REQUEST["idpaso"]); ?>},function(data){
-        ruta_xmlx = '<?php echo($ruta_db_superior); ?>test_formatos.php';
+        ruta_xmlx = '<?php echo($ruta_db_superior); ?>test_formatos.php?flujo=1';
         $("#arbol_accion").html('');
         $("#arbol_accion").html(data);
         $("#arbol_accion").show();
