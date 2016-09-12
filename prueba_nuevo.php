@@ -10,16 +10,12 @@ while($max_salida>0){
 }
 include($ruta_db_superior.'db.php');
 include_once($ruta_db_superior."librerias_saia.php");
-include_once($ruta_db_superior."workflow/libreria_paso.php");
+include_once("pantallas/lib/librerias_cripto.php");
+//include_once($ruta_db_superior."workflow/libreria_paso.php");
+$numero_usuarios=encrypt_blowfish(60,LLAVE_SAIA_CRYPTO);
+//$numero_usuarios=decrypt_blowfish('a3171917621ac77ec05609d8207d0dfb',LLAVE_SAIA_CRYPTO);
+echo($numero_usuarios);die();
 
-$_REQUEST["idpaso_condicional"]=11;
-$idpaso_condicional=$_REQUEST["idpaso_condicional"];
-
-
-
-
-
-print_r(listado_pasos_anteriores_admin(91));
 
 
 ?>
