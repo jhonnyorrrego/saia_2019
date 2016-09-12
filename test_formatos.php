@@ -34,17 +34,23 @@ echo("</tree>\n");
 
 function llena_formato($id){
 global $conn,$sql,$seleccionados, $filtrar;
+
+$valida_item="item<>1";
+if(@$_REQUEST['flujo']){
+    $valida_item="1=1";
+}
+
 $adicionales="";
 if($filtrar){
   $adicionales=' AND idformato IN('.$filtrar.')';
 }
 if($id=="NULL")
-  $papas=busca_filtro_tabla("","formato","item<>1 AND (cod_padre=0 OR cod_padre IS NULL)".$adicionales,"etiqueta ASC",$conn);
+  $papas=busca_filtro_tabla("","formato",$valida_item." AND (cod_padre=0 OR cod_padre IS NULL)".$adicionales,"etiqueta ASC",$conn);
 else
-  $papas=busca_filtro_tabla("","formato","item<>1 AND cod_padre=".$id.$adicionales,"etiqueta ASC",$conn);
+  $papas=busca_filtro_tabla("","formato",$valida_item." AND cod_padre=".$id.$adicionales,"etiqueta ASC",$conn);
 if($papas["numcampos"]){ 
   for($i=0; $i<$papas["numcampos"]; $i++){
-    $hijos = busca_filtro_tabla("count(*)","formato","item<>1 AND cod_padre=".$papas[$i]["idformato"],"",$conn);
+    $hijos = busca_filtro_tabla("count(*)","formato",$valida_item." AND cod_padre=".$papas[$i]["idformato"],"",$conn);
     echo("<item style=\"font-family:verdana; font-size:7pt;\" ");
     if(in_array($papas[$i]["idformato"],$seleccionados)){
       echo(" checked=\"1\" ");
