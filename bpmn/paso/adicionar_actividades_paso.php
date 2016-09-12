@@ -117,6 +117,15 @@ $paso=busca_filtro_tabla("","paso","idpaso=".$_REQUEST["idpaso"],"",$conn);
               }  
               ?>
             </select>
+            <script>
+                $(document).ready(function(){
+                    $('#x_accion_idaccion').change(function(){
+                        if( $(this).val()==7 || $(this).val()==3 ){
+                            alert('es aprobar o confirmar no more');   
+                        }
+                    });
+                });
+            </script>
             <?php echo($hidden_adicionar);?>
           </div>
 					<div id="arbol_accion" style="display:none;"></div>
