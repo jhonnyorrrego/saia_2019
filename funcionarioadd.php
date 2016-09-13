@@ -468,7 +468,7 @@ function validar_usuarios_activos_add(){
 	 * radicador_web 	 111222333
 	 */		
 		
-	$funcionarios=busca_filtro_tabla("","funcionario a","a.estado=1 AND a.funcionario_codigo NOT IN ('1','2','9','111222333')","",$conn);
+	$funcionarios=busca_filtro_tabla("","funcionario a","a.estado=1 AND lower(a.login) NOT IN ('cerok','radicador_salida','mensajero','radicador_web')","",$conn);
 	$reemplazos=busca_filtro_tabla("","reemplazo_saia b","b.estado=1","",$conn);
 	$funcionarios_activos=$funcionarios['numcampos'];
 	$reemplazos_activos=$reemplazos['numcampos'];
