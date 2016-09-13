@@ -155,93 +155,93 @@ class Imprime_Pdf {
     $this->pdf->setFooterFont(Array($this->font_family, '', $this->font_size));
   }
 
-  function imprimir() {
-
-    $this->pdf = new MYPDF($this->orientacion, PDF_UNIT, $this->papel, true, 'UTF-8', false);
-    $this->pdf->SetMargins($this->margenes["izquierda"], $this->margenes["superior"], $this->margenes["derecha"], 1);
-    $this->pdf->AddFont($this->font_family);
-    $this->pdf->SetFont($this->font_family, '', $this->font_size);
-    $this->pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
-    $this->pdf->SetAutoPageBreak(TRUE, $this->margenes["inferior"]);
-
-    if ($this->mostrar_encabezado) {
-      $this->configurar_encabezado();
-    } else {
-      $this->pdf->setPrintHeader(false);
-      $this->pdf->setPrintFooter(false);
-    }
-
-    $nombre_pdf = "";
-
-    if ($this->imprimir_paginas) {
-      $this->imprimir_paginas();
-    }
-
-    if ($this->imprimir_plantilla) {
-      $this->extraer_contenido($this->documento[0]["iddocumento"]);
-    }
-
-    if ($this->vincular_anexos) {
-      $this->vincular_anexos();
-    }
-
-    if ($this->imprimir_vistas) {
-      $vector = explode(",", $this->idvistas);
-      foreach ($vector as $fila) {
-        $aux = explode("-", $fila);
-        $this->extraer_contenido($aux[1], $aux[0]);
-      }
-    }
-
-    if ($this->idhijos <> "") {
-      $this->imprimir_hijos();
-    }
-
-    $fecha = explode("-", $this->documento[0]["fecha"]);
-
-    if ($this->versionamiento) {
-
-      $nombre_pdf = "../versiones/" . $this->documento[0]["iddocumento"] . "/" . $this->version . "/doc" . $this->documento[0]["iddocumento"] . ".pdf";
-
-      crear_destino("../versiones/" . $this->documento[0]["iddocumento"] . "/" . $this->version);
-
-      $this->tipo_salida = "F";
-    } elseif ($this->formato["numcampos"]) {
-
-      $carpeta = RUTA_PDFS . $this->documento[0]["estado"] . "/" . $fecha[0] . "-" . $fecha[1] . "/" . $this->documento[0]["iddocumento"] . "/pdf";
+	function imprimir() {
+		$this->pdf = new MYPDF($this->orientacion, PDF_UNIT, $this->papel, true, 'UTF-8', false);
+		$this->pdf->SetMargins($this->margenes["izquierda"], $this->margenes["superior"], $this->margenes["derecha"], 1);
+		$this->pdf->AddFont($this->font_family);
+		$this->pdf->SetFont($this->font_family, '', $this->font_size);
+		$this->pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+		$this->pdf->SetAutoPageBreak(TRUE, $this->margenes["inferior"]);
+		
+		if($this->mostrar_encabezado) {
+			$this->configurar_encabezado();
+		} else {
+			$this->pdf->setPrintHeader(false);
+			$this->pdf->setPrintFooter(false);
+		}
+		
+		$nombre_pdf = "";
+		
+		if($this->imprimir_paginas) {
+			$this->imprimir_paginas();
+		}
+		
+		if($this->imprimir_plantilla) {
+			$this->extraer_contenido($this->documento[0]["iddocumento"]);
+		}
+		
+		if($this->vincular_anexos) {
+			$this->vincular_anexos();
+		}
+		
+		if($this->imprimir_vistas) {
+			$vector = explode(",", $this->idvistas);
+			foreach($vector as $fila) {
+				$aux = explode("-", $fila);
+				$this->extraer_contenido($aux[1], $aux[0]);
+			}
+		}
+		
+		if($this->idhijos != "") {
+			$this->imprimir_hijos();
+		}
+		
+		$fecha = explode("-", $this->documento[0]["fecha"]);
+		
+		include_once ($ruta_db_superior . "pantallas/lib/librerias_archivo.php");
+		$formato_ruta = aplicar_plantilla_ruta_documento($this->documento[0]["iddocumento"]);
+		
+		if($this->versionamiento) {
+			$ruta_versiones = ruta_almacenamiento("versiones");
+			$path_to_file = $ruta_versiones . $formato_ruta . "/" . $this->version;
+			$nombre_pdf = $path_to_file . "/doc" . $this->documento[0]["iddocumento"] . ".pdf";
 			
-			$adicional="";
-      if($this->imprimir_vistas){
-        $adicional="_vista".@$_REQUEST["vista"];
-      }
+			crear_destino($path_to_file);
+			
+			$this->tipo_salida = "F";
+		} else if($this->formato["numcampos"]) {
+			$ruta_pdfs = ruta_almacenamiento("pdf");
+			$carpeta = $ruta_pdfs . $formato_ruta . "/pdf";
+			
+			$adicional = "";
+			if($this->imprimir_vistas) {
+				$adicional = "_vista" . @$_REQUEST["vista"];
+			}
+			
+			$nombre_pdf = $carpeta . "/" . strtoupper($this->formato[0]["nombre"]) . "_" . $this->documento[0]["numero"] . "_" . str_replace("-", "_", $this->documento[0]["fecha"]) . $adicional . ".pdf";
+			
+			crear_destino($carpeta);
+		} else {
+			$nombre_pdf = $this->documento[0]["numero"] . "_" . str_replace("-", "_", $this->documento[0]["fecha"]) . ".pdf";
+		}
+		
+		if($this->tipo_salida == "FI" && $this->documento[0]["estado"] != 'ACTIVO') {
+			
+			$paginas_pdf = $this->pdf->getNumPages();
+			phpmkr_query("update documento set paginas='" . $paginas_pdf . "',pdf='" . $nombre_pdf . "' where iddocumento=" . $this->documento[0]["iddocumento"]);
+		} else if($this->tipo_salida == "FI" && $this->formato[0]["mostrar_pdf"] == 1) {
+			$paginas_pdf = $this->pdf->getNumPages();
+			phpmkr_query("update documento set paginas='" . $paginas_pdf . "',pdf='" . $nombre_pdf . "' where iddocumento=" . $this->documento[0]["iddocumento"]);
+		} else if($this->tipo_salida == "I") {
+			if($this->imprimir_vistas) {
+				$this->tipo_salida = "FI";
+			} else {
+				$nombre_pdf = basename($nombre_pdf);
+			}
+		}
+		$this->pdf->Output($nombre_pdf, $this->tipo_salida);
 
-      $nombre_pdf = $carpeta . "/" . strtoupper($this->formato[0]["nombre"]) . "_" . $this->documento[0]["numero"] . "_" . str_replace("-","_",$this->documento[0]["fecha"]) .$adicional. ".pdf";
-
-      crear_destino($carpeta);
-    } else {
-      $nombre_pdf = $this->documento[0]["numero"] . "_" . str_replace("-","_",$this->documento[0]["fecha"]) . ".pdf";
-    }
-
-    if ($this->tipo_salida == "FI" && $this->documento[0]["estado"] <> 'ACTIVO') {
-        
-        $paginas_pdf=$this->pdf->getNumPages();   
-      phpmkr_query("update documento set paginas='".$paginas_pdf."',pdf='" . $nombre_pdf . "' where iddocumento=" . $this->documento[0]["iddocumento"]);
-    }
-    else if($this->tipo_salida == "FI" && $this->formato[0]["mostrar_pdf"]==1){
-        $paginas_pdf=$this->pdf->getNumPages();   
-    	phpmkr_query("update documento set paginas='".$paginas_pdf."',pdf='" . $nombre_pdf . "' where iddocumento=" . $this->documento[0]["iddocumento"]);
-    }
-    elseif ($this->tipo_salida == "I") {
-      if($this->imprimir_vistas){
-      	$this->tipo_salida="FI";
-      }
-     	else{
-      	$nombre_pdf = basename($nombre_pdf);
-    	}
-    }
-	$this->pdf->Output($nombre_pdf, $this->tipo_salida);
-
-  }
+	}
 
   function imprimir_paginas() {
 

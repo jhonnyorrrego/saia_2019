@@ -3913,31 +3913,37 @@ if(is_dir($dir)) {
 else 
   return(FALSE);
 }
-function ruta_almacenamiento($tipo){
-$max_salida=6; // Previene algun posible ciclo infinito limitando a 10 los ../
-$ruta_db_superior=$ruta="";
-while($max_salida>0){
-  if(is_file($ruta."db.php")){
-    $ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
-  }
-  $ruta.="../";
-  $max_salida--;
-} 
-switch($tipo){
-  case 'archivos':
-    crear_destino($ruta_db_superior.RUTA_ARCHIVOS);
-    return($ruta_db_superior.RUTA_ARCHIVOS);
-  break;
-  case 'pdf':
-    crear_destino($ruta_db_superior.RUTA_PDFS);
-    return($ruta_db_superior.RUTA_PDFS);
-  break;  
-  case 'imagenes':
-    crear_destino($ruta_db_superior.RUTA_IMAGENES);
-    return($ruta_db_superior.RUTA_IMAGENES);
-  break;
+
+function ruta_almacenamiento($tipo) {
+	$max_salida=6; // Previene algun posible ciclo infinito limitando a 10 los ../
+	$ruta_db_superior=$ruta="";
+	while($max_salida>0){
+	  if(is_file($ruta."db.php")){
+	    $ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
+	  }
+	  $ruta.="../";
+	  $max_salida--;
+	} 
+	switch($tipo){
+	  case 'archivos':
+	    crear_destino($ruta_db_superior.RUTA_ARCHIVOS);
+	    return($ruta_db_superior.RUTA_ARCHIVOS);
+	  break;
+	  case 'pdf':
+	    crear_destino($ruta_db_superior.RUTA_PDFS);
+	    return($ruta_db_superior.RUTA_PDFS);
+	  break;  
+	  case 'imagenes':
+	    crear_destino($ruta_db_superior.RUTA_IMAGENES);
+	    return($ruta_db_superior.RUTA_IMAGENES);
+	  break;
+	  case 'versiones':
+	    crear_destino($ruta_db_superior.RUTA_VERSIONES);
+	    return($ruta_db_superior.RUTA_IMAGENES);
+	  break;
+	}
 }
-}
+
 function limpiar_cadena_sql($cadena){
   switch(MOTOR){
     case 'SqlServer':

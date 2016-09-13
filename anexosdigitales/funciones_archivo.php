@@ -790,52 +790,43 @@ if($campo["numcampos"]){
 return;
 }
 
-function selecciona_ruta_anexos($formato,$iddoc,$almacenamiento,$ruta=""){
-global $conn;
-global $ruta_db_superior;
-$ruta_anexos=ruta_almacenamiento("archivos");
-$datos_doc = busca_filtro_tabla("estado,iddocumento,".fecha_db_obtener('fecha','Y-m')." as fecha,plantilla","documento","iddocumento=$iddoc","",$conn);
+function selecciona_ruta_anexos($formato, $iddoc, $almacenamiento, $ruta="") {
+	global $conn;
+	global $ruta_db_superior;
+	$ruta_anexos=ruta_almacenamiento("archivos");
+	include_once($ruta_db_superior . "pantallas/lib/librerias_archivo.php");
+	$formato_ruta = aplicar_plantilla_ruta_documento($iddoc);
+	//$dir=$ruta_anexos.$datos_doc[0]["estado"]."/".$datos_doc[0]["fecha"]."/".$iddoc."/anexos";
+	$dir=$ruta_anexos . $formato_ruta . "/anexos";
+	
+	if($almacenamiento=="archivo") {
+	   if($ruta=="") {
+	        $ruta=$dir."/";
+	    }
+	} else {
+	  if($ruta=="")
+	    $ruta=RUTA_DISCO."/anexos/temporal/";
+	}
+	if(verifica_ruta($ruta)) {
+	  return($ruta);
+	}
+	return(FALSE);
+}
 
-$dir=$ruta_anexos.$datos_doc[0]["estado"]."/".$datos_doc[0]["fecha"]."/".$iddoc."/anexos";
-    	
-if($almacenamiento=="archivo"){
-   if($ruta=="")
-    { 
-        $ruta=$dir."/";
-    }	
-}
-else {
-  if($ruta=="")
-    $ruta=RUTA_DISCO."/anexos/temporal/";
-}
-if(verifica_ruta($ruta)){
-  return($ruta);
-}
-return(FALSE);
-}
 
-function verifica_ruta($ruta){
-//$ruta = RUTA_DISCO."/".$ruta;
-$directorios=explode("/",$ruta);
-$cont=count($directorios);
-$dir1="";
-for($i=0;$i<$cont;$i++){
-  $dir1.=$directorios[$i]."/";
-  if(!is_dir($dir1) && $directorios[$i]!=".." && $directorios[$i]!="."){
-    if(mkdir($dir1,0777))
-      $exito=TRUE;
-    else{
-     alerta("La carpeta ".$ruta." No se ha podido Crear.",'error',4000);
-     return(FALSE);
-    }
-  }
-}
-if(is_dir($dir1)){
-  return(TRUE);
-}
-else{
-  return(FALSE);
-}
+function verifica_ruta($ruta) {
+	//$ruta = RUTA_DISCO."/".$ruta;
+	if(!is_dir($ruta)) {
+	  if(!mkdir($ruta, 0777, true)) {
+	   alerta("La carpeta ".$ruta." No se ha podido Crear.",'error',4000);
+	   return(FALSE);
+	  }
+	}
+	if(is_dir($ruta)) {
+	  return(true);
+	} else {
+	  return(true);
+	}
 }
 
 
