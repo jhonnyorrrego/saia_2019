@@ -12,10 +12,16 @@ include($ruta_db_superior.'db.php');
 include_once($ruta_db_superior."librerias_saia.php");
 include_once("pantallas/lib/librerias_cripto.php");
 //include_once($ruta_db_superior."workflow/libreria_paso.php");
-$numero_usuarios=encrypt_blowfish(59,LLAVE_SAIA_CRYPTO);
+//$numero_usuarios=encrypt_blowfish(59,LLAVE_SAIA_CRYPTO);
 //$numero_usuarios=decrypt_blowfish('a3171917621ac77ec05609d8207d0dfb',LLAVE_SAIA_CRYPTO);
-echo($numero_usuarios);die();
-    
+//echo($numero_usuarios);die();
+  
+ 	$funcionarios=busca_filtro_tabla("","funcionario a","a.estado=1 AND a.funcionario_codigo NOT IN ('1','2','9','111222333')","",$conn);
+	$reemplazos=busca_filtro_tabla("","reemplazo_saia b","b.estado=1","",$conn);
+	$funcionarios_activos=$funcionarios['numcampos'];
+	$reemplazos_activos=$reemplazos['numcampos'];
+	$cupos_usados=$funcionarios_activos+$reemplazos_activos;   
+	echo($cupos_usados);
 
 
 ?>
