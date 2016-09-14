@@ -183,7 +183,7 @@ $paso=busca_filtro_tabla("","paso","idpaso=".$_REQUEST["idpaso"],"",$conn);
                           //tree3.enableCheckBoxes(1);
                           tree4.enableTreeImages(false);
                           tree4.enableRadioButtons(true);
-                          tree4.setOnLoadingStart(cargando_serie);
+                         // tree4.setOnLoadingStart(cargando_serie);
                           //tree4.setOnLoadingEnd(fin_cargando_serie);
                           tree4.loadXML("<?php echo($ruta_db_superior);?>test_formatos.php?filtrar=<?php echo($filtrar);?>");
                           tree4.setOnCheckHandler(onNodeSelect_llave_entidad_anteriores);
