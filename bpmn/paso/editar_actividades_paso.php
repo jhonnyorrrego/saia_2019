@@ -272,7 +272,7 @@ $paso=busca_filtro_tabla("","paso","idpaso=".$x_paso_idpaso,"",$conn);
             ?>
             </div>
         </div>
-      </div>      
+           
       
       
       
