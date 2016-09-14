@@ -505,8 +505,9 @@ function validar_ruta_documento_flujo($iddoc,$pasos_evaluar,$paso_anterior,$acci
                                         $condicion="idcargo='".$dato_paso_ruta[0]["llave_entidad"]."'";
                                         break;                                        
                                 }
+                                $funcionario=busca_filtro_tabla("","vfuncionario_dc",$condicion." AND estado_dc=1 AND estado=1","",$conn);
                             }
-                            $funcionario=busca_filtro_tabla("","vfuncionario_dc",$condicion." AND estado_dc=1 AND estado=1","",$conn);
+                            
                         }
                         
                         
