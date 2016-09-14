@@ -372,6 +372,20 @@ echo $x_formato_idformatoList;
     </td>
 	</tr>
 	<tr>
+		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">Campo Funcionario?</span></td>
+		<td bgcolor="#F5F5F5">
+      <span class="phpmaker">
+        <input type="radio" name="x_banderas[]"  <?php if(in_array("ffc",$x_banderas)){echo("CHECKED"); } ?> value="ffc">funcionario_codigo
+        <input type="radio" name="x_banderas[]"  <?php if(in_array("fdc",$x_banderas)){echo("CHECKED"); } ?> value="fdc">iddependencia_cargo
+        <input type="radio" name="x_banderas[]"  <?php if(in_array("fid",$x_banderas)){echo("CHECKED"); } ?> value="fid">idfuncionario        
+        <input type="radio" name="x_banderas[]"  <?php if(in_array("fc",$x_banderas)){echo("CHECKED"); } ?> value="fc">cargo
+        <input type="radio" name="x_banderas[]"  value="">Ninguno
+      </span>
+    </td>
+	</tr>	
+	
+	
+	<tr>
   <td class="encabezado">Caracter&iacute;sticas Adicionales</td>
   <td bgcolor="#F5F5F5" >
   <div class="textwrapper">
