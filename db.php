@@ -3923,7 +3923,7 @@ function ruta_almacenamiento($tipo) {
 	  }
 	  $ruta.="../";
 	  $max_salida--;
-	} 
+	}
 	switch($tipo){
 	  case 'archivos':
 	    crear_destino($ruta_db_superior.RUTA_ARCHIVOS);

@@ -203,17 +203,23 @@ global $conn,$campo_destino;
 }
 
 function cargar_anexos_despacho($iddoc, $idsalida, $responsable) {
-global $conn;
+global $conn, $ruta_db_superior;
+	include_once ($ruta_db_superior . "pantallas/lib/librerias_archivo.php");
 
 	if ($_FILES["anexos_" . $iddoc."_".$responsable]) {
-		$datos_documento = busca_filtro_tabla(fecha_db_obtener('A.fecha', 'Y-m-d') . " as x_fecha, A.*", "documento A", "A.iddocumento=" . $iddoc, "", $conn);
+		$formato_ruta = aplicar_plantilla_ruta_documento($iddoc);
+		$ruta_archivos = ruta_almacenamiento("archivos");
+		
+		$datos_documento = busca_filtro_tabla(fecha_db_obtener('A.fecha', 'Y-m-d') . " as fecha, A.*", "documento A", "A.iddocumento=" . $iddoc, "", $conn);
+		
 		$datos_anexo = explode(".", $_FILES["anexos_" . $iddoc]["name"]);
 		$cant = count($datos_anexo);
 		$nombre = $_FILES["anexos_" . $iddoc."_".$responsable]["name"];
 
 		$extension = end(explode(".", $_FILES["anexos_" . $iddoc."_".$responsable]["name"]));
-		$archivo_destino = RUTA_ARCHIVOS . $datos_documento[0]["estado"] . "/" . $datos_documento[0]["x_fecha"] . "/" . $datos_documento[0]["iddocumento"] . "/anexos_despacho/";
-
+		//$archivo_destino = RUTA_ARCHIVOS . $datos_documento[0]["estado"] . "/" . $datos_documento[0]["fecha"] . "/" . $datos_documento[0]["iddocumento"] . "/anexos_despacho/";
+		$archivo_destino = $ruta_archivos . $formato_ruta . "/anexos_despacho/";
+		
 		if (!is_dir($archivo_destino)) {
 			crear_destino($archivo_destino);
 		}

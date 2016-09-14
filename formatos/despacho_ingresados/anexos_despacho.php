@@ -17,18 +17,23 @@ echo(librerias_notificaciones());
 function cargar_anexos_documento_despacho($datos_documento,$anexos){
 	global $conn,$ruta_db_superior;
 	$funcionario = busca_filtro_tabla("idfuncionario","funcionario","funcionario_codigo=".$datos_documento["funcionario_codigo"],"",$conn);
+	$formato_ruta = aplicar_plantilla_ruta_documento($datos_documento["iddocumento"]);
+	$ruta_archivos = ruta_almacenamiento("archivos");
+	
 	foreach ($anexos as $key => $value) {
-		$ruta = RUTA_ARCHIVOS.$datos_documento["estado"]."/".$datos_documento["fecha"]."/".$datos_documento["iddocumento"]."/anexos";
-		crear_destino($ruta_db_superior.$ruta);		
+		$ruta = $ruta_archivos . $formato_ruta ."/anexos";
+		crear_destino($ruta);		
 		$extencion = pathinfo($value['filename']);
 		$ruta .= "/".rand().".".$extencion["extension"];		
-		$archivo = fopen($ruta_db_superior.$ruta, "w+");	 //crea el archivo jpg
+		$archivo = fopen($ruta, "w+");	 //crea el archivo jpg
 		fclose($archivo);
 		$contenido = base64_decode($value['content']);
-		file_put_contents($ruta_db_superior.$ruta, $contenido); 
+		file_put_contents($ruta, $contenido); 
 		
-		if(file_exists($ruta_db_superior.$ruta)){
-			$insert_anexo = "insert into anexos(documento_iddocumento, ruta, etiqueta, tipo, formato,fecha_anexo) VALUES (".$datos_documento["iddocumento"].",'".$ruta."','".$value['filename']."','".$extencion["extension"]."',".$datos_documento["idformato"].",".fecha_db_almacenar(date("Y-m-d H:i:s"),'Y-m-d H:i:s').")";
+		if(file_exists($ruta)){
+			//Quitar el prefijo de ruta_db_superior para guardar en bdd
+			$ruta_alm = substr($ruta, strlen($ruta_db_superior));
+			$insert_anexo = "insert into anexos(documento_iddocumento, ruta, etiqueta, tipo, formato,fecha_anexo) VALUES (".$datos_documento["iddocumento"].",'".$ruta_alm."','".$value['filename']."','".$extencion["extension"]."',".$datos_documento["idformato"].",".fecha_db_almacenar(date("Y-m-d H:i:s"),'Y-m-d H:i:s').")";
 			phpmkr_query($insert_anexo,$conn,$datos_documento["funcionario_codigo"]);
 			$idnexo = phpmkr_insert_id();
 			$insert_permiso = "insert into permiso_anexo (anexos_idanexos, idpropietario, caracteristica_propio, caracteristica_dependencia, caracteristica_cargo, caracteristica_total) VALUES (".$idnexo.",".$funcionario[0]["idfuncionario"].",'lem', '', '', 'l')";

@@ -593,7 +593,7 @@ function incluir_librerias_busqueda($elemento,$indice){
   include_once($ruta_db_superior.$elemento); 
 }
 
-function parsear_cadena($cadena1){
+function parsear_cadena_kk($cadena1){
 global $conn;
 $cadena1=str_replace("|+|"," AND ",$cadena1);
 $cadena1=str_replace("|=|"," = ",$cadena1);
