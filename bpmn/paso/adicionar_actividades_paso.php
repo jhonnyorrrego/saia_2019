@@ -347,7 +347,7 @@ $paso=busca_filtro_tabla("","paso","idpaso=".$_REQUEST["idpaso"],"",$conn);
       });
     }  
     
-  });
+
   var browserType;
   if (document.layers) {browserType = "nn4"}
   if (document.all) {browserType = "ie"}
@@ -409,6 +409,8 @@ $paso=busca_filtro_tabla("","paso","idpaso=".$_REQUEST["idpaso"],"",$conn);
        document.poppedLayer =eval('document.layers["esperando_serie"]');
     document.poppedLayer.style.visibility = "visible";
   }
+  
+  }); 
 </script>
 <?php
 /*
