@@ -15,6 +15,10 @@ $x_plazo = 24;
 $x_tipo_plazo= Null;
 $x_modulo = Null;
 $x_llave_accion = Null;
+$x_formato_anterior=Null;
+$x_fk_campos_formato=Null;
+
+
 $max_salida=6; // Previene algun posible ciclo infinito limitando a 10 los ../
 $ruta_db_superior=$ruta="";
 while($max_salida>0){
@@ -58,6 +62,7 @@ else{
   $x_tipo_plazo = @$_POST["x_tipo_plazo"];
   $x_modulo = @$_POST["x_modulo"];
   $x_llave_accion = @$_POST["x_llave_accion"];
+  
 }
 LoadData($_REQUEST["idpaso_actividad"], $conn);
 switch ($sAction){
@@ -148,6 +153,129 @@ $paso=busca_filtro_tabla("","paso","idpaso=".$x_paso_idpaso,"",$conn);
             <div id="treeboxbox_tree3" style="height:auto;"></div>
         </div>
       </div>
+      
+        <div class="control-group" id="contenedor_formatos_anteriores" style="display:none;">
+             <label class="control-label" for="x_llave_entidad">Formatos Asociados*:</label>
+             <div class="controls">
+                <input type="hidden" id="formato_anterior" name="formato_anterior" value="<?php echo($x_formato_anterior); ?>"> 
+              <div id="treeboxbox_tree_formatos_anteriores" style="height:auto;"></div><br/>
+              
+              <div id="listado_campos_formato_anterior"></div>
+            <?php
+            
+                $pasos_anteriores=listado_pasos_anteriores_admin($x_paso_idpaso);
+                
+                $error="No se encuentran formatos vinculados para realizar validaciones";
+                if(count($pasos_anteriores)){
+                  
+                  $formatos_anteriores=busca_filtro_tabla("","paso_actividad A","A.paso_idpaso IN(".implode(",",$pasos_anteriores).") AND A.formato_idformato IS NOT NULL AND A.formato_idformato<>'' AND A.estado=1","",$conn);
+                  if($formatos_anteriores["numcampos"]){
+                    $campos=extrae_campo($formatos_anteriores,"formato_idformato");
+                    $filtrar=implode(",",$campos);
+                     $error=0;
+                  }
+                  else{
+                   $error="No se encuentran formatos vinculados para realizar validaciones";
+                  } 
+                }
+               
+                if($error){
+                    echo('<div class="alert alert-error">'.$error.'</div>');
+                }else{
+                    ?>
+                    <script>
+                        $(document).ready(function(){
+                            
+                            <?php 
+                            
+                                if($x_formato_anterior && $x_fk_campos_formato && $x_llave_entidad==-2){
+                                    ?>
+                                     
+                                     
+                                      
+                                      $.ajax({
+                                        type:'POST',
+                                        url: "../condicional/campos_formato_condicional.php",
+                                        data: "idformato=<?php echo($x_formato_anterior); ?>",
+                                        success: function(html){   
+                                          if(html){
+                                            var objeto=jQuery.parseJSON(html);
+                                            if(objeto.campos!==''){
+                                              $("#listado_campos_formato_anterior").html(objeto.campos);            
+                                            }  
+                                            else{
+                                              noty({text: 'No es posible encontrar campos para el formato seleccionado',type: 'error',layout: "topCenter",timeout:300});
+                                            }                         
+                                          }
+                                          
+                                          $('[name="fk_campos_formato"] option[value="<?php echo($x_fk_campos_formato); ?>"]').attr('selected','selected');
+                                          $('#contenedor_formatos_anteriores').show();
+                                        }
+                                      });                                    
+                                        
+                                    <?php
+                                }
+                            
+                            ?>
+                            
+                            
+                          var browserType;
+                          if (document.layers) {browserType = "nn4"}
+                          if (document.all) {browserType = "ie"}
+                          if (window.navigator.userAgent.toLowerCase().match("gecko")) {
+                             browserType= "gecko"
+                          }
+                          //TODO: Verificar el dato de los arboles para el radio 
+                          tree4=new dhtmlXTreeObject("treeboxbox_tree_formatos_anteriores","100%","auto",0);
+                          tree4.setImagePath("<?php echo($ruta_db_superior);?>imgs/");
+                          tree4.enableIEImageFix(true);
+                          //tree3.enableCheckBoxes(1);
+                          tree4.enableTreeImages(false);
+                          tree4.enableRadioButtons(true);
+                          tree4.loadXML("<?php echo($ruta_db_superior);?>test_formatos.php?filtrar=<?php echo($filtrar);?>");
+                          tree4.setOnCheckHandler(onNodeSelect_llave_entidad_anteriores);
+                          function onNodeSelect_llave_entidad_anteriores(nodeId){
+                            if(tree4.isItemChecked(nodeId)){
+                              var nodo=nodeId.split("#");
+                              $('#formato_anterior').val(nodo[0]);
+                              
+                              
+                              $.ajax({
+                                type:'POST',
+                                url: "../condicional/campos_formato_condicional.php",
+                                data: "idformato="+nodo[0],
+                                success: function(html){   
+                                  if(html){
+                                    var objeto=jQuery.parseJSON(html);
+                                    if(objeto.campos!==''){
+                                      $("#listado_campos_formato_anterior").html(objeto.campos);            
+                                    }  
+                                    else{
+                                      noty({text: 'No es posible encontrar campos para el formato seleccionado',type: 'error',layout: "topCenter",timeout:300});
+                                    }                         
+                                  }
+                                }
+                              });
+                            }
+                            else{
+                              $("#listado_campos_formato_anterior").html('');
+                              $('#formato_anterior').val('');
+                            }
+                          }    
+                          
+
+                        });
+                    </script>
+                    <?php
+                }
+                
+            ?>
+            </div>
+        </div>
+      </div>      
+      
+      
+      
       <div class="control-group">
         <label class="control-label" for="x_orden">Orden*:</label>
         <div class="controls">
@@ -244,6 +372,16 @@ $paso=busca_filtro_tabla("","paso","idpaso=".$x_paso_idpaso,"",$conn);
   tree3.setOnCheckHandler(onNodeSelect_llave_entidad);
   function onNodeSelect_llave_entidad(nodeId){
     var valor_llave=document.getElementById("x_llave_entidad");
+    
+    var tipo_actividad=$('[name="x_tipo"]').val();
+    var tipo_accion=$('[name="x_accion_idaccion"]').val();
+    
+    if(tipo_actividad==1 && ( tipo_accion==3 || tipo_accion==7 ) && nodeId==-2){
+        $('#contenedor_formatos_anteriores').show();
+    }else{
+        $('#contenedor_formatos_anteriores').hide();
+    }    
+    
     if(tree3.isItemChecked(nodeId)){
         if(valor_llave.value!=="")
             tree3.setCheck(valor_llave.value,false);
@@ -288,7 +426,7 @@ $paso=busca_filtro_tabla("","paso","idpaso=".$x_paso_idpaso,"",$conn);
 */
 function LoadData($sKey,$conn){
 global $x_idactividad_paso,$x_descripcion, $x_accion_idaccion, $x_paso_idpaso, $x_restrictivo, 
-$x_estado ,$x_orden , $x_tipo, $x_tipo_entidad, $x_llave_entidad, $x_plazo, $x_tipo_plazo,$x_modulo,$x_llave_accion, $x_paso_anterior; 
+$x_estado ,$x_orden , $x_tipo, $x_tipo_entidad, $x_llave_entidad, $x_plazo, $x_tipo_plazo,$x_modulo,$x_llave_accion, $x_paso_anterior,$x_formato_anterior,$x_fk_campos_formato; 
 $datos=busca_filtro_tabla("","paso_actividad","idpaso_actividad=".$sKey,"",$conn);
 if($datos["numcampos"]){
   $LoadData=true;
@@ -306,6 +444,8 @@ if($datos["numcampos"]){
   $x_plazo = $datos[0]["plazo"];
   $x_tipo_plazo = $datos[0]["tipo_plazo"];
   $x_llave_accion = $datos[0]["formato_idformato"];
+  $x_formato_anterior=$datos[0]["formato_anterior"];
+  $x_fk_campos_formato=$datos[0]["fk_campos_formato"];
   //$x_modulo =$datos[0]["modulo_idmodulo"]; 
 }
 else{
