@@ -146,10 +146,9 @@ $paso=busca_filtro_tabla("","paso","idpaso=".$_REQUEST["idpaso"],"",$conn);
             <?php
             
                 $pasos_anteriores=listado_pasos_anteriores_admin($_REQUEST["idpaso"]);
-                
-                $error=0;
+                $error="No se encuentran formatos vinculados para realizar validaciones";
                 if(count($pasos_anteriores)){
-                    print_r('entro');
+                   $error=0;
                   $formatos_anteriores=busca_filtro_tabla("","paso_actividad A","A.paso_idpaso IN(".implode(",",$pasos_anteriores).") AND A.formato_idformato IS NOT NULL AND A.formato_idformato<>'' AND A.estado=1","",$conn);
                   if($formatos_anteriores["numcampos"]){
                     $campos=extrae_campo($formatos_anteriores,"formato_idformato");
