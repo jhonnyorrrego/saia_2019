@@ -144,7 +144,7 @@ $paso=busca_filtro_tabla("","paso","idpaso=".$_REQUEST["idpaso"],"",$conn);
         <div class="control-group" id="contenedor_formatos_anteriores" style="display:none;">
              <label class="control-label" for="x_llave_entidad">Formatos Asociados*:</label>
              <div class="controls">
-                <input type="hidden" id="tomado_formato_anterior" name="tomado_formato_anterior"> 
+                <input type="hidden" id="formato_anterior" name="formato_anterior"> 
               <div id="treeboxbox_tree_formatos_anteriores" style="height:auto;"></div><br/>
               <div id="listado_campos_formato_anterior"></div>
             <?php
@@ -189,7 +189,7 @@ $paso=busca_filtro_tabla("","paso","idpaso=".$_REQUEST["idpaso"],"",$conn);
                           function onNodeSelect_llave_entidad_anteriores(nodeId){
                             if(tree4.isItemChecked(nodeId)){
                               var nodo=nodeId.split("#");
-                              $('#tomado_formato_anterior').val(nodo[0]);
+                              $('#formato_anterior').val(nodo[0]);
                               
                               
                               $.ajax({
@@ -211,7 +211,7 @@ $paso=busca_filtro_tabla("","paso","idpaso=".$_REQUEST["idpaso"],"",$conn);
                             }
                             else{
                               $("#listado_campos_formato_anterior").html('');
-                              $('#tomado_formato_anterior').val('');
+                              $('#formato_anterior').val('');
                             }
                           }    
                           
