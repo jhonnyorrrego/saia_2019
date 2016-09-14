@@ -144,8 +144,9 @@ $paso=busca_filtro_tabla("","paso","idpaso=".$_REQUEST["idpaso"],"",$conn);
         <div class="control-group" id="contenedor_formatos_anteriores" style="display:none;">
              <label class="control-label" for="x_llave_entidad">Formatos Asociados*:</label>
              <div class="controls">
+                <input type="hidden" id="tomado_formato_anterior" name="tomado_formato_anterior"> 
               <div id="treeboxbox_tree_formatos_anteriores" style="height:auto;"></div><br/>
-              <div id="listado_campos_formato"></div>
+              <div id="listado_campos_formato_anterior"></div>
             <?php
             
                 $pasos_anteriores=listado_pasos_anteriores_admin($_REQUEST["idpaso"]);
@@ -186,10 +187,11 @@ $paso=busca_filtro_tabla("","paso","idpaso=".$_REQUEST["idpaso"],"",$conn);
                           tree4.loadXML("<?php echo($ruta_db_superior);?>test_formatos.php?filtrar=<?php echo($filtrar);?>");
                           tree4.setOnCheckHandler(onNodeSelect_llave_entidad_anteriores);
                           function onNodeSelect_llave_entidad_anteriores(nodeId){
-                            $("#valor_llenado").html('');
-                            $("#etiqueta_html").html(''); 
                             if(tree4.isItemChecked(nodeId)){
                               var nodo=nodeId.split("#");
+                              $('#tomado_formato_anterior').val(nodo[0]);
+                              
+                              
                               $.ajax({
                                 type:'POST',
                                 url: "../condicional/campos_formato_condicional.php",
@@ -198,7 +200,7 @@ $paso=busca_filtro_tabla("","paso","idpaso=".$_REQUEST["idpaso"],"",$conn);
                                   if(html){
                                     var objeto=jQuery.parseJSON(html);
                                     if(objeto.campos!==''){
-                                      $("#listado_campos_formato").html(objeto.campos);            
+                                      $("#listado_campos_formato_anterior").html(objeto.campos);            
                                     }  
                                     else{
                                       noty({text: 'No es posible encontrar campos para el formato seleccionado',type: 'error',layout: "topCenter",timeout:300});
@@ -208,7 +210,7 @@ $paso=busca_filtro_tabla("","paso","idpaso=".$_REQUEST["idpaso"],"",$conn);
                               });
                             }
                             else{
-                              $("#listado_campos_formato").html('');
+                              $("#listado_campos_formato_anterior").html('');
                             }
                           }    
                           
