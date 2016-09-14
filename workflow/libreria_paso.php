@@ -490,8 +490,8 @@ function validar_ruta_documento_flujo($iddoc,$pasos_evaluar,$paso_anterior,$acci
                                 }
                             }
                             
-                            if($fun_validar!=''){
-                                switch($fun_validar){
+                            if($bandera_validar!=''){
+                                switch($bandera_validar){
                                     case 'ffc': //funcionario_codigo
                                         
                                         break;
