@@ -473,7 +473,50 @@ function validar_ruta_documento_flujo($iddoc,$pasos_evaluar,$paso_anterior,$acci
               //Se debe actualizar la ruta para que tome el dato del paso y haga las actualizaciones necesarias
               if($ruta2["numcampos"]){
                   //error("EXISTE RUTA 2 Y EL FUNCIONARIO ESTA ACTIVO");
-                  $funcionario=busca_filtro_tabla("","vfuncionario_dc","idcargo=".$dato_paso_ruta[0]["llave_entidad"]." AND estado_dc=1 AND estado=1","",$conn);
+                  
+                  if($dato_paso_ruta[0]["llave_entidad"]==-2){
+                    $datos_formato_ruta=busca_filtro_tabla("b.nombre,b.banderas","formato a,campos_formato b","b.idcampos_formato=".$dato_paso_ruta[0]["fk_campos_formato"]."  AND a.idformato=b.formato_idformato AND a.idformato=".$dato_paso_ruta[0]["formato_anterior"],"",$conn);  
+                    
+                    if($datos_formato_ruta['numcampos']){
+                        $valor_campo_ruta=mostrar_valor_campo($datos_formato_ruta[0]['nombre'],$dato_paso_ruta[0]["formato_anterior"],$iddoc,1); 
+                        if($valor_campo_ruta){
+                            $vector_banderas=explode(',',$datos_formato_ruta[0]['banderas']);
+                            $vector_banderas_validar=array('ffc','fdc','fid','fc');//funcionario_codigo,iddependencia_cargo,idfuncionario,idcargo
+                            $bandera_validar='';
+                            for($i=0;$i<count($vector_banderas_validar);$i++){
+                                if(in_array($vector_banderas_validar[$i],$vector_banderas)){
+                                    $bandera_validar=$vector_banderas_validar[$i];
+                                    $i=count($vector_banderas_validar); //corto el ciclo
+                                }
+                            }
+                            
+                            if($bandera_validar!=''){
+                                switch($bandera_validar){
+                                    case 'ffc': //funcionario_codigo
+                                        $condicion="funcionario_codigo='".$dato_paso_ruta[0]["llave_entidad"]."'";
+                                        break;
+                                    case 'fdc': //iddependencia_cargo
+                                        $condicion="iddependencia_cargo='".$dato_paso_ruta[0]["llave_entidad"]."'";
+                                        break;
+                                    case 'fid': //idfuncionario
+                                        $condicion="idfuncionario='".$dato_paso_ruta[0]["llave_entidad"]."'";
+                                        break;
+                                    case 'cargo': //idcargo
+                                        $condicion="idcargo='".$dato_paso_ruta[0]["llave_entidad"]."'";
+                                        break;                                        
+                                }
+                                $funcionario=busca_filtro_tabla("","vfuncionario_dc",$condicion." AND estado_dc=1 AND estado=1","",$conn);
+                            }
+                            
+                        }
+                        
+                        
+                    } //fin $datos_formato_ruta['numcampos']
+                  }else{
+                      $funcionario=busca_filtro_tabla("","vfuncionario_dc","idcargo=".$dato_paso_ruta[0]["llave_entidad"]." AND estado_dc=1 AND estado=1","",$conn);
+                  } //fin llave_entidad -2
+                  
+                  
                   //Verificar que pasa cuando se tienen varios funcionarios con el mismo cargo 
                   //Se actualiza la ruta se modifica el destino por el funcionario asignado en la actividad por medio del cargo y el origen en la ruta siguiente
                   //error("ACTUALIZA RUTA ");

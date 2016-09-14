@@ -384,6 +384,8 @@ $paso=busca_filtro_tabla("","paso","idpaso=".$_REQUEST["idpaso"],"",$conn);
         $('#contenedor_formatos_anteriores').show();
     }else{
         $('#contenedor_formatos_anteriores').hide();
+        $("#listado_campos_formato_anterior").html('');
+        $('#formato_anterior').val('');          
     }
     
     

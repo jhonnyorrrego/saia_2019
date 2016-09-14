@@ -234,7 +234,9 @@ $paso=busca_filtro_tabla("","paso","idpaso=".$x_paso_idpaso,"",$conn);
                           tree4.enableRadioButtons(true);
                           tree4.loadXML("<?php echo($ruta_db_superior);?>test_formatos.php?filtrar=<?php echo($filtrar);?>");
                           tree4.setOnCheckHandler(onNodeSelect_llave_entidad_anteriores);
+                          tree4.setOnLoadingEnd(fin_cargando_serie_anteriores);
                           function onNodeSelect_llave_entidad_anteriores(nodeId){
+                              
                             if(tree4.isItemChecked(nodeId)){
                               var nodo=nodeId.split("#");
                               $('#formato_anterior').val(nodo[0]);
@@ -262,7 +264,22 @@ $paso=busca_filtro_tabla("","paso","idpaso=".$x_paso_idpaso,"",$conn);
                               $('#formato_anterior').val('');
                             }
                           }    
-                          
+                          function fin_cargando_serie_anteriores(){
+                              <?php
+                                if($x_llave_entidad==-2){
+                                    
+                                    $formato=busca_filtro_tabla("nombre","formato","idformato=".$x_formato_anterior,"",$conn);
+                                    $cadena_seleccionar='';
+                                    if($formato['numcampos']){
+                                        $cadena_seleccionar=$x_formato_anterior.'#2#'.$formato[0]['nombre'];
+                                    }
+                                    ?>
+                                    tree4.openItem( '<?php echo($cadena_seleccionar); ?>' ); //ARBOL: expande nodo hasta el item indicado
+		                            tree4.setCheck( '<?php echo($cadena_seleccionar); ?>',1 ); //ARBOL: check item indicado
+                                    <?php
+                                }
+                              ?>
+                          }
 
                         });
                     </script>
@@ -271,8 +288,10 @@ $paso=busca_filtro_tabla("","paso","idpaso=".$x_paso_idpaso,"",$conn);
                 
             ?>
             </div>
+            <br>
+           
         </div>
-      </div>      
+           
       
       
       
@@ -380,6 +399,8 @@ $paso=busca_filtro_tabla("","paso","idpaso=".$x_paso_idpaso,"",$conn);
         $('#contenedor_formatos_anteriores').show();
     }else{
         $('#contenedor_formatos_anteriores').hide();
+        $("#listado_campos_formato_anterior").html('');
+        $('#formato_anterior').val('');        
     }    
     
     if(tree3.isItemChecked(nodeId)){
@@ -401,6 +422,25 @@ $paso=busca_filtro_tabla("","paso","idpaso=".$x_paso_idpaso,"",$conn);
     else
        document.poppedLayer =eval('document.layers["esperando_serie"]');
     document.poppedLayer.style.visibility = "hidden";
+    
+    
+    <?php 
+        if($x_llave_entidad==-1){
+            ?>
+            tree3.openItem( <?php echo($x_llave_entidad); ?> ); //ARBOL: expande nodo hasta el item indicado
+		    tree3.setCheck( <?php echo($x_llave_entidad); ?>,1 ); //ARBOL: check item indicado
+            <?php
+        } 
+        if($x_llave_entidad==-2){
+            ?>
+            tree3.openItem( <?php echo($x_llave_entidad); ?> ); //ARBOL: expande nodo hasta el item indicado
+		    tree3.setCheck( <?php echo($x_llave_entidad); ?>,1 ); //ARBOL: check item indicado
+            <?php            
+        }        
+    
+    
+    ?>
+    
   }
   function cargando_serie() {
     if (browserType == "gecko" )
@@ -470,7 +510,7 @@ else{
 */
 function EditData($conn){
 global $x_idactividad_paso,$x_descripcion, $x_accion_idaccion, $x_paso_idpaso, $x_restrictivo, 
-$x_estado ,$x_orden , $x_tipo, $x_tipo_entidad, $x_llave_entidad, $x_plazo, $x_tipo_plazo, $x_modulo,$x_llave_accion,$x_paso_anterior; 
+$x_estado ,$x_orden , $x_tipo, $x_tipo_entidad, $x_llave_entidad, $x_plazo, $x_tipo_plazo, $x_modulo,$x_llave_accion,$x_paso_anterior,$x_formato_anterior,$x_fk_campos_formato; 
 
   $theValue = (!get_magic_quotes_gpc()) ? addslashes($x_descripcion) : $x_descripcion; 
   $theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
@@ -523,6 +563,12 @@ $x_estado ,$x_orden , $x_tipo, $x_tipo_entidad, $x_llave_entidad, $x_plazo, $x_t
   if($fieldList["accion_idaccion"]==1){
     $fieldList["orden"]=0;
   }
+  
+  $theValue = ($x_formato_anterior!= "") ? $x_formato_anterior : 0;
+  $fieldList["formato_anterior"]=$theValue;
+  $theValue = ($x_fk_campos_formato!= "") ? $x_fk_campos_formato : 0;
+  $fieldList["fk_campos_formato"]=$theValue;  
+  
   $strsql='UPDATE paso_actividad SET ';
   $arreglo=array();
   foreach ($fieldList as $key => $value) {
