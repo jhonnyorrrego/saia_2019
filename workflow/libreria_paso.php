@@ -490,11 +490,28 @@ function validar_ruta_documento_flujo($iddoc,$pasos_evaluar,$paso_anterior,$acci
                                 }
                             }
                             
+                            if($fun_validar!=''){
+                                switch($fun_validar){
+                                    case 'ffc': //funcionario_codigo
+                                        
+                                        break;
+                                    case 'fdc': //iddependencia_cargo
+                                        
+                                        break;
+                                    case 'fid': //idfuncionario
+                                        
+                                        break;
+                                    case 'cargo':
+                                           
+                                        break;                                        
+                                }
+                            }
+                            
                         }
                         
                         
-                    }
-                  }
+                    } //fin $datos_formato_ruta['numcampos']
+                  } //fin llave_entidad -2
                   
                   $funcionario=busca_filtro_tabla("","vfuncionario_dc","idcargo=".$dato_paso_ruta[0]["llave_entidad"]." AND estado_dc=1 AND estado=1","",$conn);
                   //Verificar que pasa cuando se tienen varios funcionarios con el mismo cargo 
