@@ -372,7 +372,13 @@ $paso=busca_filtro_tabla("","paso","idpaso=".$_REQUEST["idpaso"],"",$conn);
   function onNodeSelect_llave_entidad(nodeId){
     var valor_llave=document.getElementById("x_llave_entidad");
     
-  
+    var tipo_actividad=$('[name="x_tipo"]').val();
+    var tipo_accion=$('[name="x_accion_idaccion"]').val();
+    
+    if(tipo_actividad==1 && ( tipo_accion==3 || tipo_accion==7 )){
+        
+    }
+    
     
     if(tree3.isItemChecked(nodeId)){
 
