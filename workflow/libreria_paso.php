@@ -486,7 +486,7 @@ function validar_ruta_documento_flujo($iddoc,$pasos_evaluar,$paso_anterior,$acci
                             for($i=0;$i<count($banderas_validar);$i++){
                                 if(in_array($banderas_validar[$i],$vector_banderas)){
                                     $fun_validar=$banderas_validar[$i];
-                                    $i=count($banderas_validar);
+                                    $i=count($banderas_validar); //corto el ciclo
                                 }
                             }
                             
