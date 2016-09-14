@@ -207,7 +207,7 @@ function generar_pdf($documento) {
 	
 	$datos_documento = busca_filtro_tabla(fecha_db_obtener('A.fecha', 'Y-m-d') . " as x_fecha, A.*", "documento A", "A.iddocumento=" . $iddoc, "", $conn);
 	
-	$ruta_pdfs = ruta_almacenamiento("versiones");
+	$ruta_pdfs = ruta_almacenamiento("pdf");
 	//$fecha = explode("-", $datos_documento[0]["x_fecha"]);
 	//$ruta = RUTA_PDFS . $datos_documento[0]["estado"] . "/" . $fecha[0] . "-" . $fecha[1] . "/" . $datos_documento[0]["iddocumento"] . "/pdf/";
 	$ruta = $ruta_pdfs . $formato_ruta . "/pdf/";
@@ -246,7 +246,7 @@ function generar_pdf_vista($documento,$vista){
 	
 	$datos_documento = busca_filtro_tabla(fecha_db_obtener('A.fecha', 'Y-m-d') . " as x_fecha, A.*", "documento A", "A.iddocumento=" . $iddoc, "", $conn);
 	
-	$ruta_pdfs = ruta_almacenamiento("versiones");
+	$ruta_pdfs = ruta_almacenamiento("pdf");
 	//$fecha = explode("-", $datos_documento[0]["x_fecha"]);
 	//$ruta = RUTA_PDFS . $datos_documento[0]["estado"] . "/" . $fecha[0] . "-" . $fecha[1] . "/" . $datos_documento[0]["iddocumento"] . "/pdf/";
 	$ruta = $ruta_pdfs . $formato_ruta . "/pdf/";
