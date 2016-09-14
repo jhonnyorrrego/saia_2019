@@ -267,6 +267,13 @@ $paso=busca_filtro_tabla("","paso","idpaso=".$x_paso_idpaso,"",$conn);
                           function fin_cargando_serie_anteriores(){
                               <?php
                                 if($x_llave_entidad==-2){
+                                    
+                                    $formato=busca_filtro_tabla("nombre","formato","idformato=".$x_formato_anterior,"",$conn);
+                                    $cadena_seleccionar='';
+                                    if($formato['numcampos']){
+                                        $cadena_seleccionar=$x_formato_anterior.'#2#'.$formato[0]['nombre'];
+                                    }
+                                    
                                     ?>
                                     
                                     tree4.openItem( <?php echo($x_formato_anterior); ?> ); //ARBOL: expande nodo hasta el item indicado
