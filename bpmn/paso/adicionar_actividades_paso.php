@@ -210,26 +210,12 @@ $paso=busca_filtro_tabla("","paso","idpaso=".$_REQUEST["idpaso"],"",$conn);
                                       noty({text: 'No es posible encontrar campos para el formato seleccionado',type: 'error',layout: "topCenter",timeout:300});
                                     }                         
                                   }
-                                },
-                                error:function(){
-                                  alert("ERROR");
                                 }
                               });
                             }
                             else{
                               valor_llave.val("");
                               $("#listado_campos_formato").html('');
-                              //Forma mas rapida de vaciar un arreglo en javascript
-                              while(habilitar_si.length > 0) {
-                                habilitar_si.pop();
-                              } 
-                              while(habilitar_no.length > 0) {
-                                habilitar_no.pop();
-                              }  
-                              $("#habilitar_si").val("");
-                              $(".habilitar_no").val("");
-                              $(".habilitar_si").removeClass("btn-primary");
-                              $(".habilitar_no").removeClass("btn-primary");
                             }
                           }                            
                         });
