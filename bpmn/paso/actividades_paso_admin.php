@@ -204,7 +204,7 @@ function listado_funcionarios($entidad,$llave_entidad){
     $(".detalle_cargo").click(function(){
     var este=$(this);
     alert( este.val() );
-    if(este.attr("idregistro")>=0){
+    if(este.attr("idcargo")>=0){
         
     
         $.ajax({
@@ -228,7 +228,7 @@ function listado_funcionarios($entidad,$llave_entidad){
           }
         });
     }else{
-        alert(este.attr("idregistro"));
+        alert(este.attr("idcargo"));
         if(este.attr("idregistro")==-1){ //cualquier usuario
              $("#detalles_actividad").html('<div class="alert alert-info">Cualquier Usuario</div>');
         }else{ //tomado de un campo
