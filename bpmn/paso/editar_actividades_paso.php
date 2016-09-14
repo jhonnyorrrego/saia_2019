@@ -234,6 +234,7 @@ $paso=busca_filtro_tabla("","paso","idpaso=".$x_paso_idpaso,"",$conn);
                           tree4.enableRadioButtons(true);
                           tree4.loadXML("<?php echo($ruta_db_superior);?>test_formatos.php?filtrar=<?php echo($filtrar);?>");
                           tree4.setOnCheckHandler(onNodeSelect_llave_entidad_anteriores);
+                          tree4.setOnLoadingEnd(fin_cargando_serie_anteriores);
                           function onNodeSelect_llave_entidad_anteriores(nodeId){
                             if(tree4.isItemChecked(nodeId)){
                               var nodo=nodeId.split("#");
@@ -262,7 +263,16 @@ $paso=busca_filtro_tabla("","paso","idpaso=".$x_paso_idpaso,"",$conn);
                               $('#formato_anterior').val('');
                             }
                           }    
-                          
+                          function fin_cargando_serie_anteriores(){
+                              <?php
+                                if($x_llave_entidad==-2 || $x_llave_entidad==-1){
+                                    ?>
+                                    tree_id_cargo.openItem( <?php echo($x_llave_entidad); ?> ); //ARBOL: expande nodo hasta el item indicado
+		                            tree_id_cargo.setCheck( <?php echo($x_llave_entidad); ?>,1 ); //ARBOL: check item indicado
+                                    <?php
+                                }
+                              ?>
+                          }
 
                         });
                     </script>
