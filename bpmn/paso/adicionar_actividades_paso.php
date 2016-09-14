@@ -138,10 +138,11 @@ $paso=busca_filtro_tabla("","paso","idpaso=".$_REQUEST["idpaso"],"",$conn);
             <br /><div id="esperando_serie">
             <img src="<?php echo($ruta_db_superior);?>imagenes/cargando.gif"></div>
             <div id="treeboxbox_tree3" style="height:auto;"></div>
+            
         </div>
         <div class="controls">
               <div id="treeboxbox_tree_formatos_anteriores" style="height:auto;"></div><br/>
-              
+              <div id="listado_campos_formato"></div>
             <?php
             
                 $pasos_anteriores=listado_pasos_anteriores_admin($_REQUEST["idpaso"]);
@@ -159,6 +160,75 @@ $paso=busca_filtro_tabla("","paso","idpaso=".$_REQUEST["idpaso"],"",$conn);
                 
                 if($error){
                     echo('<div class="alert alert-error">'.$error.'</div>');
+                }else{
+                    ?>
+                    <script>
+                        $(document).ready(function(){
+                          var browserType;
+                          if (document.layers) {browserType = "nn4"}
+                          if (document.all) {browserType = "ie"}
+                          if (window.navigator.userAgent.toLowerCase().match("gecko")) {
+                             browserType= "gecko"
+                          }
+                          //TODO: Verificar el dato de los arboles para el radio 
+                          tree4=new dhtmlXTreeObject("treeboxbox_tree_formatos_anteriores","100%","auto",0);
+                          tree4.setImagePath("<?php echo($ruta_db_superior);?>imgs/");
+                          tree4.enableIEImageFix(true);
+                          //tree3.enableCheckBoxes(1);
+                          tree4.enableTreeImages(false);
+                          tree4.enableRadioButtons(true);
+                          tree4.setOnLoadingStart(cargando_serie);
+                          tree4.setOnLoadingEnd(fin_cargando_serie);
+                          tree4.loadXML("<?php echo($ruta_db_superior);?>test_formatos.php?filtrar=<?php echo($filtrar);?>");
+                          tree4.setOnCheckHandler(onNodeSelect_llave_entidad);
+                          function onNodeSelect_llave_entidad(nodeId){
+                            var valor_llave=$("#formato_campo"); 
+                            $("#valor_llenado").html('');
+                            $("#etiqueta_html").html(''); 
+                            if(tree4.isItemChecked(nodeId)){
+                              if(valor_llave.val()!=="")
+                                  tree4.setCheck(valor_llave.val(),false);
+                              valor_llave.val(nodeId);
+                              var nodo=nodeId.split("#");
+                              $.ajax({
+                                type:'POST',
+                                url: "campos_formato_condicional.php",
+                                data: "idformato="+nodo[0],
+                                success: function(html){   
+                                  if(html){
+                                    var objeto=jQuery.parseJSON(html);
+                                    if(objeto.campos!==''){
+                                      $("#listado_campos_formato").html(objeto.campos);            
+                                    }  
+                                    else{
+                                      noty({text: 'No es posible encontrar campos para el formato seleccionado',type: 'error',layout: "topCenter",timeout:300});
+                                    }                         
+                                  }
+                                },
+                                error:function(){
+                                  alert("ERROR");
+                                }
+                              });
+                            }
+                            else{
+                              valor_llave.val("");
+                              $("#listado_campos_formato").html('');
+                              //Forma mas rapida de vaciar un arreglo en javascript
+                              while(habilitar_si.length > 0) {
+                                habilitar_si.pop();
+                              } 
+                              while(habilitar_no.length > 0) {
+                                habilitar_no.pop();
+                              }  
+                              $("#habilitar_si").val("");
+                              $(".habilitar_no").val("");
+                              $(".habilitar_si").removeClass("btn-primary");
+                              $(".habilitar_no").removeClass("btn-primary");
+                            }
+                          }                            
+                        });
+                    </script>
+                    <?php
                 }
                 
             ?>
