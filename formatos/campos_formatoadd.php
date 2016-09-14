@@ -336,6 +336,17 @@ $datos_formato=busca_filtro_tabla("item","formato","idformato=$x_formato_idforma
       </span>
     </td>
 	</tr>
+
+	<tr>
+		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">Campo Funcionario?</span></td>
+		<td bgcolor="#F5F5F5">
+      <span class="phpmaker">
+        <input type="checkbox" name="x_banderas[]"  <?php if(in_array("u",$x_banderas)){echo("CHECKED"); } ?> value="u">&Uacute;inco
+        <input type="checkbox" name="x_banderas[]"  <?php if(in_array("i",$x_banderas)){echo("CHECKED"); } ?> value="i"> Indice
+      </span>
+    </td>
+	</tr>	
+	
 	<tr>
 		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">Acciones o Formularios</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
