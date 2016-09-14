@@ -203,7 +203,7 @@ function listado_funcionarios($entidad,$llave_entidad){
     $(".detalle_cargo").click(function(){
     var este=$(this);
     
-    if(este.value>=0){
+    if(este.val()>=0){
         
     
         $.ajax({
@@ -228,7 +228,7 @@ function listado_funcionarios($entidad,$llave_entidad){
         });
     }else{
         alert(este.value);
-        if(este.value==-1){ //cualquier usuario
+        if(este.val()==-1){ //cualquier usuario
              $("#detalles_actividad").html('<div class="alert alert-info">Cualquier Usuario</div>');
         }else{ //tomado de un campo
             $("#detalles_actividad").html('<div class="alert alert-info">Tomado de un Campo</div>');
