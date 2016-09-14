@@ -202,7 +202,7 @@ function listado_funcionarios($entidad,$llave_entidad){
     $(".tooltip_saia").tooltip();
     $(".detalle_cargo").click(function(){
     var este=$(this);
-    
+    alert( este.val() );
     if(este.val()>=0){
         
     
