@@ -227,6 +227,7 @@ function listado_funcionarios($entidad,$llave_entidad){
           }
         });
     }else{
+        alert(este);
         if(este==-1){ //cualquier usuario
              $("#detalles_actividad").html('<div class="alert alert-info">Cualquier Usuario</div>');
         }else{ //tomado de un campo
