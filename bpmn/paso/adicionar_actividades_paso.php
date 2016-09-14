@@ -217,7 +217,7 @@ $paso=busca_filtro_tabla("","paso","idpaso=".$_REQUEST["idpaso"],"",$conn);
                           function fin_cargando_serie_anteriores(){
                              // tree4.lockItem(-2); // id of the item as the input parameter
                                 //tree4.enableRadioButtons(false,-2);
-                                tree4.disableCheckbox(-2,true);
+                                tree4.disableCheckbox(-2,false);
                           }
                         });
                     </script>
