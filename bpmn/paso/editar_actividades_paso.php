@@ -401,6 +401,19 @@ $paso=busca_filtro_tabla("","paso","idpaso=".$x_paso_idpaso,"",$conn);
     else
        document.poppedLayer =eval('document.layers["esperando_serie"]');
     document.poppedLayer.style.visibility = "hidden";
+    
+    
+    <?php 
+        if($x_llave_entidad==-1){
+            
+        } 
+        if($x_llave_entidad==-2){
+            
+        }        
+    
+    
+    ?>
+    
   }
   function cargando_serie() {
     if (browserType == "gecko" )
