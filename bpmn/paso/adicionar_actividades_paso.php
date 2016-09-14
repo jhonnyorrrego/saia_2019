@@ -285,7 +285,7 @@ $paso=busca_filtro_tabla("","paso","idpaso=".$_REQUEST["idpaso"],"",$conn);
   function onNodeSelect_llave_entidad(nodeId){
     var valor_llave=document.getElementById("x_llave_entidad");
     
-    alert(valor_llave);
+    alert(valor_llave.value);
     
     if(tree3.isItemChecked(nodeId)){
 
