@@ -493,27 +493,29 @@ function validar_ruta_documento_flujo($iddoc,$pasos_evaluar,$paso_anterior,$acci
                             if($bandera_validar!=''){
                                 switch($bandera_validar){
                                     case 'ffc': //funcionario_codigo
-                                        
+                                        $condicion="funcionario_codigo='".$dato_paso_ruta[0]["llave_entidad"]."'";
                                         break;
                                     case 'fdc': //iddependencia_cargo
-                                        
+                                        $condicion="iddependencia_cargo='".$dato_paso_ruta[0]["llave_entidad"]."'";
                                         break;
                                     case 'fid': //idfuncionario
-                                        
+                                        $condicion="idfuncionario='".$dato_paso_ruta[0]["llave_entidad"]."'";
                                         break;
                                     case 'cargo': //idcargo
-                                           
+                                        $condicion="idcargo='".$dato_paso_ruta[0]["llave_entidad"]."'";
                                         break;                                        
                                 }
                             }
-                            
+                            $funcionario=busca_filtro_tabla("","vfuncionario_dc",$condicion." AND estado_dc=1 AND estado=1","",$conn);
                         }
                         
                         
                     } //fin $datos_formato_ruta['numcampos']
+                  }else{
+                      $funcionario=busca_filtro_tabla("","vfuncionario_dc","idcargo=".$dato_paso_ruta[0]["llave_entidad"]." AND estado_dc=1 AND estado=1","",$conn);
                   } //fin llave_entidad -2
                   
-                  $funcionario=busca_filtro_tabla("","vfuncionario_dc","idcargo=".$dato_paso_ruta[0]["llave_entidad"]." AND estado_dc=1 AND estado=1","",$conn);
+                  
                   //Verificar que pasa cuando se tienen varios funcionarios con el mismo cargo 
                   //Se actualiza la ruta se modifica el destino por el funcionario asignado en la actividad por medio del cargo y el origen en la ruta siguiente
                   //error("ACTUALIZA RUTA ");
