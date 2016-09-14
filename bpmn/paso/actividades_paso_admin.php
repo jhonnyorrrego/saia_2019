@@ -79,6 +79,13 @@ if($paso["numcampos"]){
 	 
 	  
     }
+    elseif($paso[$i]["llave_entidad"]==-2){
+      $usuarios["numcampos"]=1;
+      $usuarios[0]["nombres"]='Tomado de un Campo ';
+      $usuarios[0]["apellidos"]='';
+      $usuarios[0]["cargo"]='Tomado de un Campo ';
+      $cargo["numcampos"]=0;        
+    }
     else{
     	
 		
