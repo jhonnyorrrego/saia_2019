@@ -341,8 +341,10 @@ $datos_formato=busca_filtro_tabla("item","formato","idformato=$x_formato_idforma
 		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">Campo Funcionario?</span></td>
 		<td bgcolor="#F5F5F5">
       <span class="phpmaker">
-        <input type="checkbox" name="x_banderas[]"  <?php if(in_array("u",$x_banderas)){echo("CHECKED"); } ?> value="u">&Uacute;inco
-        <input type="checkbox" name="x_banderas[]"  <?php if(in_array("i",$x_banderas)){echo("CHECKED"); } ?> value="i"> Indice
+        <input type="radio" name="x_banderas[]"  <?php if(in_array("u",$x_banderas)){echo("CHECKED"); } ?> value="ffc">funcionario_codigo
+        <input type="radio" name="x_banderas[]"  <?php if(in_array("u",$x_banderas)){echo("CHECKED"); } ?> value="fdc">iddependencia_cargo
+        <input type="radio" name="x_banderas[]"  <?php if(in_array("u",$x_banderas)){echo("CHECKED"); } ?> value="fid">idfuncionario        
+        <input type="radio" name="x_banderas[]"  <?php if(in_array("u",$x_banderas)){echo("CHECKED"); } ?> value="fc">cargo
       </span>
     </td>
 	</tr>	
