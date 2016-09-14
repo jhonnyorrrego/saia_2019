@@ -211,6 +211,7 @@ $paso=busca_filtro_tabla("","paso","idpaso=".$_REQUEST["idpaso"],"",$conn);
                             }
                             else{
                               $("#listado_campos_formato_anterior").html('');
+                              $('#tomado_formato_anterior').val('');
                             }
                           }    
                           
