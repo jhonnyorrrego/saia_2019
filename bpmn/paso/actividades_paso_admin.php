@@ -76,7 +76,7 @@ if($paso["numcampos"]){
       $usuarios[0]["apellidos"]='';
       $usuarios[0]["cargo"]='Cualquier Usuario';
       $cargo["numcampos"]=0;
-	  $usuarios[$j]["idcargo"]=-1;
+	  $usuarios[0]["idcargo"]=-1;
 	  
     }
     elseif($paso[$i]["llave_entidad"]==-2){
@@ -85,7 +85,7 @@ if($paso["numcampos"]){
       $usuarios[0]["apellidos"]='';
       $usuarios[0]["cargo"]='Tomado de un Campo ';
       $cargo["numcampos"]=0; 
-      $usuarios[$j]["idcargo"]=-2;
+      $usuarios[0]["idcargo"]=-2;
     }
     else{
     	
