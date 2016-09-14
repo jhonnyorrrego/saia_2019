@@ -228,7 +228,7 @@ function listado_funcionarios($entidad,$llave_entidad){
           }
         });
     }else{
-        alert(este.value);
+        alert(este.attr("idregistro"));
         if(este.attr("idregistro")==-1){ //cualquier usuario
              $("#detalles_actividad").html('<div class="alert alert-info">Cualquier Usuario</div>');
         }else{ //tomado de un campo
