@@ -203,7 +203,7 @@ function listado_funcionarios($entidad,$llave_entidad){
     $(".tooltip_saia").tooltip();
     $(".detalle_cargo").click(function(){
     var este=$(this);
-    alert( este.val() );
+   
     if(este.attr("idcargo")>=0){
         
     
@@ -228,8 +228,8 @@ function listado_funcionarios($entidad,$llave_entidad){
           }
         });
     }else{
-        alert(este.attr("idcargo"));
-        if(este.attr("idregistro")==-1){ //cualquier usuario
+        
+        if(este.attr("idcargo")==-1){ //cualquier usuario
              $("#detalles_actividad").html('<div class="alert alert-info">Cualquier Usuario</div>');
         }else{ //tomado de un campo
             $("#detalles_actividad").html('<div class="alert alert-info">Tomado de un Campo</div>');
