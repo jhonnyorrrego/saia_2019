@@ -256,7 +256,7 @@ class Imprime_Pdf {
 		
 		if(@$this->versionamiento) {
 			$ruta_versiones = ruta_almacenamiento("versiones");
-			$path_to_file = $ruta_versiones . $formato_ruta . "/" . $this->version;
+			$path_to_file = $ruta_versiones . $formato_ruta . "/version" . $this->version;
 			$nombre_pdf = $path_to_file . "/doc" . $this->documento[0]["iddocumento"] . ".pdf";
 			
 			crear_destino($path_to_file);
