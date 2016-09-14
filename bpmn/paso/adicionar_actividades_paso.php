@@ -198,7 +198,7 @@ $paso=busca_filtro_tabla("","paso","idpaso=".$_REQUEST["idpaso"],"",$conn);
                               var nodo=nodeId.split("#");
                               $.ajax({
                                 type:'POST',
-                                url: "campos_formato_condicional.php",
+                                url: "../condicional/campos_formato_condicional.php",
                                 data: "idformato="+nodo[0],
                                 success: function(html){   
                                   if(html){
