@@ -204,7 +204,7 @@ function listado_funcionarios($entidad,$llave_entidad){
     $(".detalle_cargo").click(function(){
     var este=$(this);
     alert( este.val() );
-    if(este.val()>=0){
+    if(este.attr("idregistro")>=0){
         
     
         $.ajax({
