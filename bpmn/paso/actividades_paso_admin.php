@@ -202,26 +202,39 @@ function listado_funcionarios($entidad,$llave_entidad){
     $(".tooltip_saia").tooltip();
     $(".detalle_cargo").click(function(){
     var este=$(this);
-    $.ajax({
-      type:'POST',
-      url: "<?php echo($ruta_db_superior);?>bpmn/paso/actividades_paso_detalle.php",
-      data:"idcargo="+este.attr("idcargo")+"&tipo_accion="+este.attr("tipo_actividad"),
-      success: function(html){
-        if(html){
-          var objeto=jQuery.parseJSON(html);
-          if(objeto.exito){
-              //exito al cargar la informacion
-            $("#detalles_actividad").html(objeto.html);
-          } 
-          else{
-            //No es exitosa la carga de la informaion
-          }   
+    
+    if(este>=0){
+        
+    
+        $.ajax({
+          type:'POST',
+          url: "<?php echo($ruta_db_superior);?>bpmn/paso/actividades_paso_detalle.php",
+          data:"idcargo="+este.attr("idcargo")+"&tipo_accion="+este.attr("tipo_actividad"),
+          success: function(html){
+            if(html){
+              var objeto=jQuery.parseJSON(html);
+              if(objeto.exito){
+                  //exito al cargar la informacion
+                $("#detalles_actividad").html(objeto.html);
+              } 
+              else{
+                //No es exitosa la carga de la informaion
+              }   
+            }
+            else{
+                //No se envia el registro html error 
+            }
+          }
+        });
+    }else{
+        if(este==-1){ //cualquier usuario
+             $("#detalles_actividad").html('<div class="alert alert-info">Cualquier Usuario</div>');
+        }else{ //tomado de un campo
+            $("#detalles_actividad").html('<div class="alert alert-info">Tomado de un Campo</div>');
         }
-        else{
-            //No se envia el registro html error 
-        }
-      }
-    });
+    }
+    
+    
   });
   });  
   
