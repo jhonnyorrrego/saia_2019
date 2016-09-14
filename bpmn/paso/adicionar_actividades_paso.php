@@ -376,7 +376,7 @@ $paso=busca_filtro_tabla("","paso","idpaso=".$_REQUEST["idpaso"],"",$conn);
     var tipo_accion=$('[name="x_accion_idaccion"]').val();
     
     if(tipo_actividad==1 && ( tipo_accion==3 || tipo_accion==7 )){
-        
+        $('#contenedor_formatos_anteriores').show();
     }
     
     
