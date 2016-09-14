@@ -42,6 +42,10 @@ else{
   echo("<item style=\"font-family:verdana; font-size:7pt;\" ");
   echo("text=\"Cualquier usuario\" id=\"-1\" >\n");
   echo("</item>\n");
+  echo("</item>\n");
+  echo("<item style=\"font-family:verdana; font-size:7pt;\" ");
+  echo("text=\"Tomado de un campo\" id=\"-2\" >\n");
+  echo("</item>\n");  
 }  
 echo("</tree>\n");
 function llena_cargo($llave,$condicion=""){
