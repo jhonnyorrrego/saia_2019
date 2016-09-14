@@ -267,8 +267,8 @@ $paso=busca_filtro_tabla("","paso","idpaso=".$x_paso_idpaso,"",$conn);
                               <?php
                                 if($x_llave_entidad==-2){
                                     ?>
-                                    alert('entro: <?php echo($x_formato_anterior); ?>');
-                                    tree4.openItem( <?php echo($x_formato_anterior); ?> ); //ARBOL: expande nodo hasta el item indicado
+                                    
+                                    //tree4.openItem( <?php echo($x_formato_anterior); ?> ); //ARBOL: expande nodo hasta el item indicado
 		                            tree4.setCheck( <?php echo($x_formato_anterior); ?>,1 ); //ARBOL: check item indicado
                                     <?php
                                 }
