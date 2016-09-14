@@ -51,8 +51,10 @@ echo(librerias_acciones_kaiten());
 
 function contadores(&$procesos_rojo, &$procesos_amarillo, &$procesos_verde){
 	global $conn;
-	$formulas=busca_filtro_tabla("b.nombre, b.idft_formula_indicador AS id, b.unidad,b.rango_colores, b.tipo_rango,a.ft_proceso","ft_indicadores_calidad a,  ft_formula_indicador b,documento d,ft_proceso e, documento f","b.ft_indicadores_calidad=a.idft_indicadores_calidad AND b.documento_iddocumento =d.iddocumento AND d.estado<>'ELIMINADO' AND e.idft_proceso=b.ft_proceso AND e.documento_iddocumento=f.iddocumento AND lower(f.estado)='aprobado'  ","",$conn);
-	print_r($formulas);
+	
+	
+	$formulas=busca_filtro_tabla("b.nombre, b.idft_formula_indicador AS id, b.unidad,b.rango_colores, b.tipo_rango,a.ft_proceso","ft_indicadores_calidad a,  ft_formula_indicador b,documento d,ft_proceso e, documento f","b.ft_indicadores_calidad=a.idft_indicadores_calidad AND b.documento_iddocumento =d.iddocumento AND d.estado<>'ELIMINADO' AND e.idft_proceso=a.ft_proceso AND e.documento_iddocumento=f.iddocumento AND lower(f.estado)='aprobado'  ","",$conn);
+	
 	$rojo=0;
 	$amarillo=0;
 	$verde=0;
