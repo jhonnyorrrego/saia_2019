@@ -481,6 +481,15 @@ function validar_ruta_documento_flujo($iddoc,$pasos_evaluar,$paso_anterior,$acci
                         $valor_campo_ruta=mostrar_valor_campo($datos_formato_ruta[0]['nombre'],$dato_paso_ruta[0]["formato_anterior"],$iddoc,1); 
                         if($valor_campo_ruta){
                             $vector_banderas=explode(',',$datos_formato_ruta[0]['banderas']);
+                            $banderas_validar=array('ffc','fdc','fid','fc');//funcionario_codigo,iddependencia_cargo,idfuncionario,cargo
+                            $fun_validar='';
+                            for($i=0;$i<count($banderas_validar);$i++){
+                                if(in_array($banderas_validar[$i],$vector_banderas)){
+                                    $fun_validar=$banderas_validar[$i];
+                                    $i=count($banderas_validar);
+                                }
+                            }
+                            
                         }
                         
                         
