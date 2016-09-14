@@ -141,8 +141,9 @@ $paso=busca_filtro_tabla("","paso","idpaso=".$_REQUEST["idpaso"],"",$conn);
             
         </div>
        
-        <div class="controls">
-             <hr>
+        <div class="control-group">
+             <label class="control-label" for="x_llave_entidad">Formatos Asociados*:</label>
+             <div class="controls">
               <div id="treeboxbox_tree_formatos_anteriores" style="height:auto;"></div><br/>
               <div id="listado_campos_formato"></div>
             <?php
@@ -237,7 +238,7 @@ $paso=busca_filtro_tabla("","paso","idpaso=".$_REQUEST["idpaso"],"",$conn);
                 }
                 
             ?>
-              
+            </div>
         </div>
       </div>
       <div class="control-group">
