@@ -188,7 +188,7 @@ $paso=busca_filtro_tabla("","paso","idpaso=".$x_paso_idpaso,"",$conn);
                             
                             <?php 
                             
-                                if($x_formato_anterior && $x_fk_campos_formato){
+                                if($x_formato_anterior && $x_fk_campos_formato && $x_llave_entidad==-2){
                                     ?>
                                      
                                      
@@ -372,6 +372,16 @@ $paso=busca_filtro_tabla("","paso","idpaso=".$x_paso_idpaso,"",$conn);
   tree3.setOnCheckHandler(onNodeSelect_llave_entidad);
   function onNodeSelect_llave_entidad(nodeId){
     var valor_llave=document.getElementById("x_llave_entidad");
+    
+    var tipo_actividad=$('[name="x_tipo"]').val();
+    var tipo_accion=$('[name="x_accion_idaccion"]').val();
+    
+    if(tipo_actividad==1 && ( tipo_accion==3 || tipo_accion==7 ) && nodeId==-2){
+        $('#contenedor_formatos_anteriores').show();
+    }else{
+        $('#contenedor_formatos_anteriores').hide();
+    }    
+    
     if(tree3.isItemChecked(nodeId)){
         if(valor_llave.value!=="")
             tree3.setCheck(valor_llave.value,false);
