@@ -140,6 +140,7 @@ $paso=busca_filtro_tabla("","paso","idpaso=".$_REQUEST["idpaso"],"",$conn);
             <div id="treeboxbox_tree3" style="height:auto;"></div>
             
         </div>
+        <hr>
         <div class="controls">
               <div id="treeboxbox_tree_formatos_anteriores" style="height:auto;"></div><br/>
               <div id="listado_campos_formato"></div>
