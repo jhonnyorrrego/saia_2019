@@ -3262,19 +3262,24 @@ function suma_fechasphp($fecha,$dias){
 }
 function cargar_anexos_documento_web($datos_documento,$anexos){
 	global $conn,$ruta_db_superior;
+	include_once ($ruta_db_superior . "pantallas/lib/librerias_archivo.php");
+	$formato_ruta = aplicar_plantilla_ruta_documento($datos_documento["iddocumento"]);
+	$ruta_archivos = ruta_almacenamiento("archivos");
 	$funcionario = busca_filtro_tabla("idfuncionario","funcionario","funcionario_codigo=".$datos_documento["funcionario_codigo"],"",$conn);
 	foreach ($anexos as $key => $value) {
-		$ruta = RUTA_ARCHIVOS.$datos_documento["estado"]."/".$datos_documento["fecha"]."/".$datos_documento["iddocumento"]."/anexos";
-		crear_destino($ruta_db_superior.$ruta);		
+		//$ruta = RUTA_ARCHIVOS.$datos_documento["estado"]."/".$datos_documento["fecha"]."/".$datos_documento["iddocumento"]."/anexos";
+		$ruta = $ruta_archivos . $formato_ruta . "/anexos";
+		crear_destino($ruta);		
 		$extencion = pathinfo($value['filename']);
 		$ruta .= "/".rand().".".$extencion["extension"];		
-		$archivo = fopen($ruta_db_superior.$ruta, "w+");	 //crea el archivo jpg
+		$archivo = fopen($ruta, "w+");	 //crea el archivo jpg
 		fclose($archivo);
 		$contenido = base64_decode($value['content']);
-		file_put_contents($ruta_db_superior.$ruta, $contenido); 
+		file_put_contents($ruta, $contenido); 
 		
-		if(file_exists($ruta_db_superior.$ruta)){
-			$insert_anexo = "insert into anexos(documento_iddocumento, ruta, etiqueta, tipo, formato) VALUES (".$datos_documento["iddocumento"].",'".$ruta."','".$value['filename']."','".$extencion["extension"]."',".$datos_documento["idformato"].")";
+		if(file_exists($ruta)){
+			$ruta_alm = substr($ruta, strlen($ruta_db_superior));
+			$insert_anexo = "insert into anexos(documento_iddocumento, ruta, etiqueta, tipo, formato) VALUES (".$datos_documento["iddocumento"].",'".$ruta_alm."','".$value['filename']."','".$extencion["extension"]."',".$datos_documento["idformato"].")";
 			phpmkr_query($insert_anexo,$conn,$datos_documento["funcionario_codigo"]);
 			$idnexo = phpmkr_insert_id();
 			$insert_permiso = "insert into permiso_anexo (anexos_idanexos, idpropietario, caracteristica_propio, caracteristica_dependencia, caracteristica_cargo, caracteristica_total) VALUES (".$idnexo.",".$funcionario[0]["idfuncionario"].",'lem', '', '', 'l')";
@@ -3355,58 +3360,61 @@ function obtener_anexos_paginas_documento($datos_documento){
 	
 	return($documentos);
 }
-function crear_pdf_documento_tcpdf($datos_documento, $datos_ejecutor=null){	
+function crear_pdf_documento_tcpdf($datos_documento, $datos_ejecutor=null){
 	global $conn, $ruta_db_superior;
+	include_once ($ruta_db_superior . "pantallas/lib/librerias_archivo.php");
+
+	$pdf = busca_filtro_tabla("pdf,iddocumento,estado,plantilla," . fecha_db_obtener('fecha', 'Y-m-d') . " as fecha," . fecha_db_obtener('fecha', 'Y-m') . " as fecha2, numero", "documento", "iddocumento=" . $datos_documento['iddocumento'], "", $conn);
 	
-	$pdf = busca_filtro_tabla("pdf,iddocumento,estado,plantilla,".fecha_db_obtener('fecha','Y-m-d')." as fecha,".fecha_db_obtener('fecha','Y-m')." as fecha2, numero","documento","iddocumento=".$datos_documento['iddocumento'],"",$conn);	
-		
-		//print_r($datos_documento);die('<--- datos documento');	
+	// print_r($datos_documento);die('<--- datos documento');
 	$ruta = "";
 	
-	if($pdf[0]["pdf"]){
-		$ruta_pdf = $ruta_db_superior.$pdf[0]["pdf"];
-	}else{
+	if($pdf[0]["pdf"]) {
+		$ruta_pdf = $ruta_db_superior . $pdf[0]["pdf"];
+	} else {
 		$ruta_pdf = "";
-	}	
+	}
 	
-	if(!file_exists($ruta_pdf)){
-						
-		//inicializa el curl
+	if(!file_exists($ruta_pdf)) {
+		
+		// inicializa el curl
 		$ch = curl_init();
-	
-		// Establecer URL y otras opciones apropiadas	
-		$url = "http://".RUTA_PDF_LOCAL."/class_impresion.php?iddoc=".$datos_documento['iddocumento'];
-		$datos_session="&LOGIN=".$_SESSION["LOGIN".LLAVE_SAIA]."&usuario_actual=".$_SESSION["usuario_actual"]."&LLAVE_SAIA=".LLAVE_SAIA;
-		$url=$url.$datos_session;
+		
+		// Establecer URL y otras opciones apropiadas
+		$url = "http://" . RUTA_PDF_LOCAL . "/class_impresion.php?iddoc=" . $datos_documento['iddocumento'];
+		$datos_session = "&LOGIN=" . $_SESSION["LOGIN" . LLAVE_SAIA] . "&usuario_actual=" . $_SESSION["usuario_actual"] . "&LLAVE_SAIA=" . LLAVE_SAIA;
+		$url = $url . $datos_session;
 		curl_setopt($ch, CURLOPT_URL, $url);
 		
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-	
+		
 		// Capturar la URL y pasarla al navegador
 		$responce = curl_exec($ch);
 		// Cerrar el recurso cURL y liberar recursos del sistema
-		curl_close($ch);	
+		curl_close($ch);
 		
-		$fecha = explode("-", $datos_documento["fecha"]);	
-		$fecha_guion_bajo=$fecha[0].'_'.$fecha[1].'_'.$fecha[2];
-		$ruta = RUTA_PDFS.$datos_documento["estado"]."/".$fecha[0]."-".$fecha[1]."/".$datos_documento["iddocumento"]."/pdf/";			
-		$ruta .= strtoupper($datos_documento["plantilla"]."_".$datos_documento["numero"]."_".$fecha_guion_bajo).".pdf";
-		
-	}else{
-		$ruta = $pdf[0]["pdf"];		
+		$ruta_pdfs = ruta_almacenamiento("pdf");
+		$formato_ruta = aplicar_plantilla_ruta_documento($datos_documento["iddocumento"]);
+		$fecha = explode("-", $datos_documento["fecha"]);
+		$fecha_guion_bajo = $fecha[0] . '_' . $fecha[1] . '_' . $fecha[2];
+		//$ruta = RUTA_PDFS . $datos_documento["estado"] . "/" . $fecha[0] . "-" . $fecha[1] . "/" . $datos_documento["iddocumento"] . "/pdf/";
+		$ruta = $ruta_pdfs . $formato_ruta . "/pdf/";
+		$ruta .= strtoupper($datos_documento["plantilla"] . "_" . $datos_documento["numero"] . "_" . $fecha_guion_bajo) . ".pdf";
+	} else {
+		$ruta = $pdf[0]["pdf"];
 	}
 	
-	//print_r($ruta);die('<--- ruta pdf');
-
-	if($ruta){	
-		if(file_exists($ruta_db_superior.$ruta)){						
+	// print_r($ruta);die('<--- ruta pdf');
+	
+	if($ruta) {
+		if(file_exists($ruta_db_superior . $ruta)) {
 			return ($ruta);
-		}else{						
-			return(false);
-		}	
-	}else{			
-		return(false);
-	} 
+		} else {
+			return (false);
+		}
+	} else {
+		return (false);
+	}
 } 
 
 function obtener_funciones_anexo($idanexo, $tipo, $ruta,$etiqueta){

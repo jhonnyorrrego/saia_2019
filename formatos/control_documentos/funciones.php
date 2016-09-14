@@ -523,6 +523,7 @@ function almacenar_version_documento($idformato, $iddoc){
 function aprobar_control_documentos($idformato, $iddoc){
 	global $conn,$ruta_db_superior;	
 	include_once($ruta_db_superior."class_transferencia.php");
+	include_once ($ruta_db_superior . "pantallas/lib/librerias_archivo.php");
 	if($_REQUEST["activar_accion"]){
 							
 		$control_documento = busca_filtro_tabla("a.revisado,a.aprobado,a.tipo_solicitud,a.listado_procesos,a.documento_calidad,a.nombre_documento,a.origen_documento,a.version,a.vigencia,b.ejecutor,a.secretaria","ft_control_documentos a, documento b ","a.documento_iddocumento=b.iddocumento and a.documento_iddocumento=".$iddoc,"",$conn);		
@@ -582,16 +583,20 @@ function aprobar_control_documentos($idformato, $iddoc){
 					$iddocumento = radicar_plantilla3();								
 					
 					if($iddocumento){
-																												
+										
 						$update_documento_creado = "UPDATE ft_control_documentos SET iddocumento_calidad=".$iddocumento.", iddocumento_creado=".$iddocumento." WHERE documento_iddocumento=".$iddoc;				
 						phpmkr_query($update_documento_creado);						
 						$datos_documento_nuevo = obtener_datos_documento($iddocumento);						
+
+						$formato_ruta = aplicar_plantilla_ruta_documento($datos_documento_nuevo["iddocumento"]);
+						$ruta_archivos = ruta_almacenamiento("archivos");
 						
-						$fecha_ruta = date("Y-m", strtotime($datos_documento_nuevo["fecha"]));						
-						$ruta_anexos = RUTA_ARCHIVOS.$datos_documento_nuevo["estado"]."/".$fecha_ruta."/".$datos_documento_nuevo["iddocumento"]."/anexos";
+						//$fecha_ruta = date("Y-m", strtotime($datos_documento_nuevo["fecha"]));						
+						//$ruta_anexos = RUTA_ARCHIVOS.$datos_documento_nuevo["estado"]."/".$fecha_ruta."/".$datos_documento_nuevo["iddocumento"]."/anexos";
+						$ruta_anexos = $ruta_archivos . $formato_ruta . "/anexos";
 						
-						if(!is_dir($ruta_db_superior.$ruta_anexos)){				
-							if(!crear_destino($ruta_db_superior.$ruta_anexos)){
+						if(!is_dir($ruta_anexos)){				
+							if(!crear_destino($ruta_anexos)){
 								notificaciones("<b>Error al crear la carpeta del anexo.</b>","warning",8500);
 								return(false);			
 							}
@@ -608,10 +613,11 @@ function aprobar_control_documentos($idformato, $iddoc){
 							$ruta_origen  = $ruta_db_superior.$anexos[$i]['ruta'];
 							$ruta_destino = $ruta_anexos."/".$nombre_anexo; 					
 																
-							if(!copy($ruta_origen, $ruta_db_superior.$ruta_destino)){
+							if(!copy($ruta_origen, $ruta_destino)){
 								notificaciones("<b>Error al pasar el anexo ".$anexos[$i]["etiqueta"]." a la carpeta del documento.</b>","warning",8500);											
 							}else{								
-								$sql_anexo = "INSERT INTO anexos(documento_iddocumento, ruta, tipo, etiqueta, formato, fecha_anexo) VALUES(".$iddocumento.",'".$ruta_destino."','".$anexos[$i]['tipo']."','".$anexos[$i]['etiqueta']."',".$datos_formato['idformato'].",".fecha_db_almacenar(date("Y-m-d"),"Y-m-d").")";							
+								$ruta_alm = substr($ruta_destino, strlen($ruta_db_superior));
+								$sql_anexo = "INSERT INTO anexos(documento_iddocumento, ruta, tipo, etiqueta, formato, fecha_anexo) VALUES(".$iddocumento.",'".$ruta_alm."','".$anexos[$i]['tipo']."','".$anexos[$i]['etiqueta']."',".$datos_formato['idformato'].",".fecha_db_almacenar(date("Y-m-d"),"Y-m-d").")";							
 													
 								phpmkr_query($sql_anexo);								
 								$idanexo = phpmkr_insert_id();							 

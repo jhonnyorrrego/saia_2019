@@ -58,8 +58,8 @@ function version_documento($documento){
 	}
 	$origen = $ruta;
 	
-	$ruta_pdfs = ruta_almacenamiento("pdf");
-	$destino = $ruta_pdfs . $formato_ruta . "/versiones/version" . $consecutivo . "/pdf/";
+	$ruta_pdfs = ruta_almacenamiento("versiones");
+	$destino = $ruta_pdfs . $formato_ruta . "/version" . $consecutivo . "/pdf/";
 	//$destino = RUTA_PDFS . $documento[0]["estado"] . "/" . $arreglo_fecha[0] . "-" . $arreglo_fecha[1] . "/" . $documento[0]["iddocumento"] . "/versiones/version" . $consecutivo . "/pdf/";
 	crear_destino($destino);
 	generar_version_json($documento[0]["iddocumento"]);
@@ -83,9 +83,9 @@ function version_vista($documento,$id){
 	//$arreglo_fecha = explode("-", $documento[0]["x_fecha"]);
 	$consecutivo = $busqueda[0]["maximo"];
 	
-	$ruta_pdfs = ruta_almacenamiento("pdf");
+	$ruta_pdfs = ruta_almacenamiento("versiones");
 	//$destino = RUTA_PDFS . $documento[0]["estado"] . "/" . $arreglo_fecha[0] . "-" . $arreglo_fecha[1] . "/" . $documento[0]["iddocumento"] . "/versiones/version" . $consecutivo . "/vistas/";
-	$destino = $ruta_pdfs . $formato_ruta . "/versiones/version" . $consecutivo . "/vistas/";
+	$destino = $ruta_pdfs . $formato_ruta . "/version" . $consecutivo . "/vistas/";
 	
 	$vistas = busca_filtro_tabla("", "vista_formato a", "a.formato_padre=" . $formato[0]["idformato"], "", $conn);
 	if($vistas["numcampos"]) {
@@ -113,9 +113,9 @@ function version_anexos($documento,$id){
 	
 	$arreglo_fecha = explode("-", $documento[0]["x_fecha"]);
 	$consecutivo = $busqueda[0]["maximo"];
-	$ruta_pdfs = ruta_almacenamiento("pdf");
+	$ruta_pdfs = ruta_almacenamiento("versiones");
 	//$destino = RUTA_PDFS . $documento[0]["estado"] . "/" . $arreglo_fecha[0] . "-" . $arreglo_fecha[1] . "/" . $documento[0]["iddocumento"] . "/versiones/version" . $consecutivo . "/anexos/";
-	$destino = $ruta_pdfs . $formato_ruta . "/versiones/version" . $consecutivo . "/anexos/";
+	$destino = $ruta_pdfs . $formato_ruta . "/version" . $consecutivo . "/anexos/";
 	
 	$anexos = busca_filtro_tabla("", "anexos a", "a.documento_iddocumento=" . $documento[0]["iddocumento"], "", $conn);
 	if($anexos["numcampos"]) {
@@ -141,11 +141,11 @@ function version_pagina($documento,$id){
 	
 	//$arreglo_fecha = explode("-", $documento[0]["x_fecha"]);
 	$consecutivo = $busqueda[0]["maximo"];
-	$ruta_pdfs = ruta_almacenamiento("pdf");
+	$ruta_pdfs = ruta_almacenamiento("versiones");
 	// $destino1=RUTA_PDFS.$documento[0]["estado"]."/".$arreglo_fecha[0]."-".$arreglo_fecha[1]."/".$documento[0]["iddocumento"]."/versiones/version".$consecutivo."/documentos/";
 	// $destino2=RUTA_PDFS.$documento[0]["estado"]."/".$arreglo_fecha[0]."-".$arreglo_fecha[1]."/".$documento[0]["iddocumento"]."/versiones/version".$consecutivo."/miniaturas/";
-	$destino1 = $ruta_pdfs . $formato_ruta . "/versiones/version" . $consecutivo . "/documentos/";
-	$destino2 = $ruta_pdfs . $formato_ruta . "/versiones/version" . $consecutivo . "/miniaturas/";
+	$destino1 = $ruta_pdfs . $formato_ruta . "/version" . $consecutivo . "/documentos/";
+	$destino2 = $ruta_pdfs . $formato_ruta . "/version" . $consecutivo . "/miniaturas/";
 	
 	$pagina = busca_filtro_tabla("", "pagina a", "a.id_documento=" . $documento[0]["iddocumento"], "", $conn);
 	if($pagina["numcampos"]) {

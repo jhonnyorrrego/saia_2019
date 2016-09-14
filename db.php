@@ -3939,7 +3939,7 @@ function ruta_almacenamiento($tipo) {
 	  break;
 	  case 'versiones':
 	    crear_destino($ruta_db_superior.RUTA_VERSIONES);
-	    return($ruta_db_superior.RUTA_IMAGENES);
+	    return($ruta_db_superior.RUTA_VERSIONES);
 	  break;
 	}
 }
