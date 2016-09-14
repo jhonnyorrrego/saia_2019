@@ -139,6 +139,9 @@ $paso=busca_filtro_tabla("","paso","idpaso=".$_REQUEST["idpaso"],"",$conn);
             <img src="<?php echo($ruta_db_superior);?>imagenes/cargando.gif"></div>
             <div id="treeboxbox_tree3" style="height:auto;"></div>
         </div>
+        <div class="controls">
+              <div id="treeboxbox_tree_formatos_anteriores" style="height:auto;"></div><br/>
+        </div>
       </div>
       <div class="control-group">
 				<label class="control-label" for="x_orden">Orden*:</label>
@@ -285,7 +288,7 @@ $paso=busca_filtro_tabla("","paso","idpaso=".$_REQUEST["idpaso"],"",$conn);
   function onNodeSelect_llave_entidad(nodeId){
     var valor_llave=document.getElementById("x_llave_entidad");
     
-    alert(nodeId);
+  
     
     if(tree3.isItemChecked(nodeId)){
 
