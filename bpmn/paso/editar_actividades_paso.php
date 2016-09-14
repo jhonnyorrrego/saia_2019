@@ -414,6 +414,7 @@ $paso=busca_filtro_tabla("","paso","idpaso=".$x_paso_idpaso,"",$conn);
             ?>
             tree3.openItem( <?php echo($x_llave_entidad); ?> ); //ARBOL: expande nodo hasta el item indicado
 		    tree3.setCheck( <?php echo($x_llave_entidad); ?>,1 ); //ARBOL: check item indicado
+            <?php            
         }        
     
     
