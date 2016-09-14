@@ -188,13 +188,9 @@ $paso=busca_filtro_tabla("","paso","idpaso=".$_REQUEST["idpaso"],"",$conn);
                           tree4.loadXML("<?php echo($ruta_db_superior);?>test_formatos.php?filtrar=<?php echo($filtrar);?>");
                           tree4.setOnCheckHandler(onNodeSelect_llave_entidad_anteriores);
                           function onNodeSelect_llave_entidad_anteriores(nodeId){
-                            var valor_llave=$("#formato_campo"); 
                             $("#valor_llenado").html('');
                             $("#etiqueta_html").html(''); 
                             if(tree4.isItemChecked(nodeId)){
-                              if(valor_llave.val()!=="")
-                                  tree4.setCheck(valor_llave.val(),false);
-                              valor_llave.val(nodeId);
                               var nodo=nodeId.split("#");
                               $.ajax({
                                 type:'POST',
@@ -214,7 +210,6 @@ $paso=busca_filtro_tabla("","paso","idpaso=".$_REQUEST["idpaso"],"",$conn);
                               });
                             }
                             else{
-                              valor_llave.val("");
                               $("#listado_campos_formato").html('');
                             }
                           }                            
