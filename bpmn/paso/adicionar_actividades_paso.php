@@ -146,6 +146,7 @@ $paso=busca_filtro_tabla("","paso","idpaso=".$_REQUEST["idpaso"],"",$conn);
             <?php
             
                 $pasos_anteriores=listado_pasos_anteriores_admin($_REQUEST["idpaso"]);
+                print_r($pasos_anteriores);
                 $error="No se encuentran formatos vinculados para realizar validaciones";
                 if(count($pasos_anteriores)){
                    $error=0;
