@@ -184,7 +184,7 @@ $paso=busca_filtro_tabla("","paso","idpaso=".$_REQUEST["idpaso"],"",$conn);
                           tree4.enableTreeImages(false);
                           tree4.enableRadioButtons(true);
                          // tree4.setOnLoadingStart(cargando_serie);
-                          //tree4.setOnLoadingEnd(fin_cargando_serie);
+                          tree4.setOnLoadingEnd(fin_cargando_serie_anteriores);
                           tree4.loadXML("<?php echo($ruta_db_superior);?>test_formatos.php?filtrar=<?php echo($filtrar);?>");
                           tree4.setOnCheckHandler(onNodeSelect_llave_entidad_anteriores);
                           function onNodeSelect_llave_entidad_anteriores(nodeId){
@@ -212,7 +212,11 @@ $paso=busca_filtro_tabla("","paso","idpaso=".$_REQUEST["idpaso"],"",$conn);
                             else{
                               $("#listado_campos_formato").html('');
                             }
-                          }                            
+                          }    
+                          
+                          function fin_cargando_serie_anteriores(){
+                              tree4.lockItem(-2); // id of the item as the input parameter
+                          }
                         });
                     </script>
                     <?php
@@ -391,7 +395,7 @@ $paso=busca_filtro_tabla("","paso","idpaso=".$_REQUEST["idpaso"],"",$conn);
     }
   }
   function fin_cargando_serie() {
-     tree4.lockItem(-2); // id of the item as the input parameter
+     
     if (browserType == "gecko" )
        document.poppedLayer =eval('document.getElementById("esperando_serie")');
     else if (browserType == "ie")
