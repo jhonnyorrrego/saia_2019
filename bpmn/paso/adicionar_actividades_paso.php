@@ -396,6 +396,7 @@ $paso=busca_filtro_tabla("","paso","idpaso=".$_REQUEST["idpaso"],"",$conn);
     }
   }
   function fin_cargando_serie() {
+      alert('termino de cargar');
     if (browserType == "gecko" )
        document.poppedLayer =eval('document.getElementById("esperando_serie")');
     else if (browserType == "ie")
