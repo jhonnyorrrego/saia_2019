@@ -146,6 +146,7 @@ $paso=busca_filtro_tabla("","paso","idpaso=".$_REQUEST["idpaso"],"",$conn);
             <?php
             
                 $pasos_anteriores=listado_pasos_anteriores_admin($_REQUEST["idpaso"]);
+                print_r($pasos_anteriores);
                 $error=0;
                 if(count($pasos_anteriores)){
                   $formatos_anteriores=busca_filtro_tabla("","paso_actividad A","A.paso_idpaso IN(".implode(",",$pasos_anteriores).") AND A.formato_idformato IS NOT NULL AND A.formato_idformato<>'' AND A.estado=1","",$conn);
