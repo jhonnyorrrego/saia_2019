@@ -236,7 +236,7 @@ $paso=busca_filtro_tabla("","paso","idpaso=".$x_paso_idpaso,"",$conn);
                           tree4.setOnCheckHandler(onNodeSelect_llave_entidad_anteriores);
                           tree4.setOnLoadingEnd(fin_cargando_serie_anteriores);
                           function onNodeSelect_llave_entidad_anteriores(nodeId){
-                              alert(nodeId);
+                              
                             if(tree4.isItemChecked(nodeId)){
                               var nodo=nodeId.split("#");
                               $('#formato_anterior').val(nodo[0]);
