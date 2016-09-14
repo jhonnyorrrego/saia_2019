@@ -593,18 +593,4 @@ function incluir_librerias_busqueda($elemento,$indice){
   include_once($ruta_db_superior.$elemento); 
 }
 
-function parsear_cadena_kk($cadena1){
-global $conn;
-$cadena1=str_replace("|+|"," AND ",$cadena1);
-$cadena1=str_replace("|=|"," = ",$cadena1);
-$cadena1=str_replace("|like|"," like ",$cadena1);
-$cadena1=str_replace("|-|"," OR ",$cadena1);
-$cadena1=str_replace("|<|"," < ",$cadena1);
-$cadena1=str_replace("|>|"," > ",$cadena1);
-$cadena1=str_replace("|>=|"," >= ",$cadena1);
-$cadena1=str_replace("|<=|"," <= ",$cadena1);
-$cadena1=str_replace("|in|"," in ",$cadena1);
-$cadena1=str_replace("||"," LIKE ",$cadena1);
-return $cadena1;
-}
 ?>
