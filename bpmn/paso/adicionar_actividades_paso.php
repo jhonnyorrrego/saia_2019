@@ -141,6 +141,28 @@ $paso=busca_filtro_tabla("","paso","idpaso=".$_REQUEST["idpaso"],"",$conn);
         </div>
         <div class="controls">
               <div id="treeboxbox_tree_formatos_anteriores" style="height:auto;"></div><br/>
+              
+            <?php
+            
+                $pasos_anteriores=listado_pasos_anteriores_admin($_REQUEST["idpaso"]);
+                $error=0;
+                if(count($pasos_anteriores)){
+                  $formatos_anteriores=busca_filtro_tabla("","paso_actividad A","A.paso_idpaso IN(".implode(",",$pasos_anteriores).") AND A.formato_idformato IS NOT NULL AND A.formato_idformato<>'' AND A.estado=1","",$conn);
+                  if($formatos_anteriores["numcampos"]){
+                    $campos=extrae_campo($formatos_anteriores,"formato_idformato");
+                    $filtrar=implode(",",$campos);
+                  }
+                  else{
+                   $error="No se encuentran formatos vinculados para realizar validaciones";
+                  } 
+                }
+                
+                if($error){
+                    echo('<div class="alert alert-error">'.$error.'</div>');
+                }
+                
+            ?>
+              
         </div>
       </div>
       <div class="control-group">
