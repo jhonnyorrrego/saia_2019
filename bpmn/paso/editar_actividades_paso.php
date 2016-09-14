@@ -273,9 +273,7 @@ $paso=busca_filtro_tabla("","paso","idpaso=".$x_paso_idpaso,"",$conn);
                                     if($formato['numcampos']){
                                         $cadena_seleccionar=$x_formato_anterior.'#2#'.$formato[0]['nombre'];
                                     }
-                                    
                                     ?>
-                                  
                                     tree4.openItem( '<?php echo($cadena_seleccionar); ?>' ); //ARBOL: expande nodo hasta el item indicado
 		                            tree4.setCheck( '<?php echo($cadena_seleccionar); ?>',1 ); //ARBOL: check item indicado
                                     <?php
