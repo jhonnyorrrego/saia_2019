@@ -399,6 +399,8 @@ $paso=busca_filtro_tabla("","paso","idpaso=".$x_paso_idpaso,"",$conn);
         $('#contenedor_formatos_anteriores').show();
     }else{
         $('#contenedor_formatos_anteriores').hide();
+        $("#listado_campos_formato_anterior").html('');
+        $('#formato_anterior').val('');        
     }    
     
     if(tree3.isItemChecked(nodeId)){
