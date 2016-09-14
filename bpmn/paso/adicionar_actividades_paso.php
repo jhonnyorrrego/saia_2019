@@ -11,10 +11,13 @@ $x_orden = Null;
 $x_tipo = Null;
 $x_tipo_entidad = Null;
 $x_llave_entidad = Null;
+
 $x_plazo = 24;
 $x_tipo_plazo= Null;
 $x_modulo = Null;
 $x_llave_accion = Null;
+$x_formato_anterior=Null;
+$x_fk_campos_formato=Null;
 $max_salida=6; // Previene algun posible ciclo infinito limitando a 10 los ../
 $ruta_db_superior=$ruta="";
 while($max_salida>0){
@@ -59,6 +62,10 @@ else{
   $x_modulo = @$_POST["x_modulo"];
   $x_llave_accion = @$_POST["x_llave_accion"];
   $x_paso_anterior = @$_POST["x_paso_anterior"];
+  $x_formato_anterior= @$_POST["formato_anterior"];
+  $x_fk_campos_formato= @$_POST["fk_campos_formato"];
+  
+  
 }
 switch ($sAction){
 	case "A": // Add
@@ -471,7 +478,11 @@ else{
 */
 function AddData($conn){
 global $x_idactividad_paso,$x_descripcion, $x_accion_idaccion, $x_paso_idpaso, $x_restrictivo, 
-$x_estado ,$x_orden , $x_tipo, $x_tipo_entidad, $x_llave_entidad, $x_plazo, $x_tipo_plazo, $x_modulo,$x_llave_accion, $x_paso_anterior; 
+$x_estado ,$x_orden , $x_tipo, $x_tipo_entidad, $x_llave_entidad, $x_plazo, $x_tipo_plazo, $x_modulo,$x_llave_accion, $x_paso_anterior,$x_formato_anterior,$x_fk_campos_formato; 
+
+
+
+
 
 	// Field nombre
 	$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_descripcion) : $x_descripcion; 
@@ -520,7 +531,12 @@ $x_estado ,$x_orden , $x_tipo, $x_tipo_entidad, $x_llave_entidad, $x_plazo, $x_t
   //TODO: Accion de adicionar se debe realizar la busqueda en la base de datos y verificar que el orden este bien
   if($fieldList["accion_idaccion"]==1){
     $fieldList["orden"]=0;
-  }  
+  }
+  $theValue = ($x_formato_anterior!= "") ? $x_formato_anterior : 0;
+  $fieldList["formato_anterior"]=$theValue;
+  $theValue = ($x_fk_campos_formato!= "") ? $x_fk_campos_formato : 0;
+  $fieldList["fk_campos_formato"]=$theValue;
+  
 	// insert into database
 	$strsql = "INSERT INTO paso_actividad(";
 	$strsql .= implode(",", array_keys($fieldList));
