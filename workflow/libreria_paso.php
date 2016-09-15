@@ -477,7 +477,7 @@ function validar_ruta_documento_flujo($iddoc,$pasos_evaluar,$paso_anterior,$acci
                   //error("EXISTE RUTA 2 Y EL FUNCIONARIO ESTA ACTIVO");
                   
                   if($dato_paso_ruta[0]["llave_entidad"]==-2){
-                    $datos_formato_ruta=busca_filtro_tabla("b.nombre,b.banderas,b.nombre","formato a,campos_formato b","b.idcampos_formato=".$dato_paso_ruta[0]["fk_campos_formato"]."  AND a.idformato=b.formato_idformato AND a.idformato=".$dato_paso_ruta[0]["formato_anterior"],"",$conn);  
+                    $datos_formato_ruta=busca_filtro_tabla("b.nombre,b.banderas","formato a,campos_formato b","b.idcampos_formato=".$dato_paso_ruta[0]["fk_campos_formato"]."  AND a.idformato=b.formato_idformato AND a.idformato=".$dato_paso_ruta[0]["formato_anterior"],"",$conn);  
                     print_r($datos_formato_ruta);die();
                     if($datos_formato_ruta['numcampos']){
                         $valor_campo_ruta=mostrar_valor_campo($datos_formato_ruta[0]['nombre'],$dato_paso_ruta[0]["formato_anterior"],$iddoc,1); 
