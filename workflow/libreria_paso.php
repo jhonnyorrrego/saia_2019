@@ -1123,7 +1123,7 @@ function cancelar_paso($idpaso_documento,$idpaso){
 function formulario_devolver($iddoc){
   global $conn,$ruta_db_superior;
   $pasos_relacionados = busca_filtro_tabla("b.descripcion as nom_activi,a.*,c.*,b.*","paso_instancia_terminada a,paso_actividad b, paso c","documento_iddocumento=".$iddoc." AND estado_actividad=1 AND actividad_idpaso_actividad=idpaso_actividad AND paso_idpaso=idpaso","idpaso_instancia asc",$conn);
-  $pasos = busca_filtro_tabla("distinct(idpaso)","paso_instancia_terminada a,paso_actividad b, paso c","documento_iddocumento=".$iddoc." AND estado_actividad=1 AND actividad_idpaso_actividad=idpaso_actividad AND paso_idpaso=idpaso","idpaso_instancia asc",$conn);
+  $pasos = busca_filtro_tabla("distinct(idpaso)","paso_instancia_terminada a,paso_actividad b, paso c","documento_iddocumento=".$iddoc." AND estado_actividad=1 AND actividad_idpaso_actividad=idpaso_actividad AND paso_idpaso=idpaso AND b.estado=1","idpaso_instancia asc",$conn);
   $retorno .= '
   <script src="'.$ruta_db_superior.'/js/jquery.js"></script>
   <script>
