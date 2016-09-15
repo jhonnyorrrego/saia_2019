@@ -222,7 +222,7 @@ for($i=0;$i<@$listado_acciones_paso["numcampos"];$i++){
                    
                     if($datos_formato_ruta['numcampos']){
                         $consulta_valor_campo=busca_filtro_tabla($datos_formato_ruta[0]['nombre'],$datos_formato_ruta[0]['nombre_tabla'],"documento_iddocumento=".$iddocumento,"",$conn);
-                         print_r($consulta_valor_campo);die();
+                         
                         $valor_campo_ruta=$consulta_valor_campo[0][$datos_formato_ruta[0]['nombre']];
                       
                         if($valor_campo_ruta){
@@ -260,7 +260,7 @@ for($i=0;$i<@$listado_acciones_paso["numcampos"];$i++){
                         
                     } //fin $datos_formato_ruta['numcampos']	    
 	    
-	   
+	   	print_r($funcionario);die();
 	    $verifica_funcionario=1;
 	}
 	$cadena='accion: '.$accion.' , entidad: '.$listado_acciones_paso[$i]['llave_entidad'];
