@@ -480,7 +480,7 @@ function validar_ruta_documento_flujo($iddoc,$pasos_evaluar,$paso_anterior,$acci
                     $datos_formato_ruta=busca_filtro_tabla("b.nombre,b.banderas,a.nombre_tabla","formato a,campos_formato b","b.idcampos_formato=".$dato_paso_ruta[0]["fk_campos_formato"]."  AND a.idformato=b.formato_idformato AND a.idformato=".$dato_paso_ruta[0]["formato_anterior"],"",$conn);  
                     
                     if($datos_formato_ruta['numcampos']){
-                        $consulta_valor_campo=busca_filtro_tabla("",$datos_formato_ruta[0]['nombre_tabla'],"documento_iddocumento=".$iddoc,"",$conn);
+                        $consulta_valor_campo=busca_filtro_tabla($datos_formato_ruta[0]['nombre'],$datos_formato_ruta[0]['nombre_tabla'],"documento_iddocumento=".$iddoc,"",$conn);
                         $valor_campo_ruta=mostrar_valor_campo($datos_formato_ruta[0]['nombre'],$dato_paso_ruta[0]["formato_anterior"],$iddoc,1);
                         print_r($consulta_valor_campo);die();
                         if($valor_campo_ruta){
