@@ -120,7 +120,7 @@ function get_estado_bpmni(){
   return(0);
 }
 public function listado_pasos_ruta(){
-  $this->pasos_ruta=busca_filtro_tabla("","paso A, paso_actividad B, accion C","A.idpaso=B.paso_idpaso AND B.accion_idaccion=C.idaccion AND (C.nombre LIKE 'confirmar%' OR C.nombre LIKE 'aprobar%') AND A.diagram_iddiagram=".$this->bpmn[0]["id"],"",$conn);
+  $this->pasos_ruta=busca_filtro_tabla("","paso A, paso_actividad B, accion C","B.estado=1 AND A.idpaso=B.paso_idpaso AND B.accion_idaccion=C.idaccion AND (C.nombre LIKE 'confirmar%' OR C.nombre LIKE 'aprobar%') AND A.diagram_iddiagram=".$this->bpmn[0]["id"],"",$conn);
 }
 public function crear_posible_ruta($iddoc){
   $this->listado_pasos_ruta();
