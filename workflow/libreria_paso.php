@@ -260,7 +260,7 @@ for($i=0;$i<@$listado_acciones_paso["numcampos"];$i++){
                         
                     } //fin $datos_formato_ruta['numcampos']	    
 	    
-	   	print_r($funcionario);die();
+	   
 	   	
 	   	if($funcionario[0]['login']==usuario_actual('login')){
 	   	     $verifica_funcionario=1;
@@ -269,7 +269,7 @@ for($i=0;$i<@$listado_acciones_paso["numcampos"];$i++){
 	   
 	}
 	$cadena='accion: '.$accion.' , entidad: '.$listado_acciones_paso[$i]['llave_entidad'];
-	print_r($listado_acciones_paso);die();
+	print_r($verifica_funcionario);die();
 	
     if($verifica_funcionario){
       $terminada_actual=verificar_instancia_terminada($listado_acciones_paso[$i]["idpaso_actividad"],$iddocumento,$_SESSION["usuario_actual"],$tipo_terminacion);
