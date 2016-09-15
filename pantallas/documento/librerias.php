@@ -276,7 +276,7 @@ $flujo=estado_flujo_instancia($idpaso_documento[0]["idpaso_documento"]);
 $pasoo = busca_filtro_tabla("","paso_documento","diagram_iddiagram_instance=".$flujo[0]["iddiagram_instance"]." and paso_idpaso=".$flujo[0]["paso_idpaso"],"idpaso_documento desc",$conn);
 
 $terminados = 0;
-$actividades = busca_filtro_tabla("","paso_actividad","paso_idpaso=".$pasoo[0]["paso_idpaso"],"",$conn);
+$actividades = busca_filtro_tabla("","paso_actividad","estado=1 AND paso_idpaso=".$pasoo[0]["paso_idpaso"],"",$conn);
 for($i=0;$i<$actividades["numcampos"];$i++){
 	$terminada = busca_filtro_tabla("","paso_instancia_terminada","actividad_idpaso_actividad=".$actividades[$i]["idpaso_actividad"]." and documento_iddocumento=".$pasoo[0]["documento_iddocumento"],"",$conn);
 	if($terminada["numcampos"] > 0){
