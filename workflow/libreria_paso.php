@@ -140,7 +140,7 @@ if($accion!="" && $tipo_terminacion==1){
     //error("LISATDO ACCIONES 1");
     $listado_acciones_paso=busca_filtro_tabla("B.idpaso_actividad, A.idaccion, C.idpaso_documento, B.entidad_identidad, B.llave_entidad, C.diagram_iddiagram_instance, B.paso_idpaso,C.documento_iddocumento, B.formato_idformato", "accion A, paso_actividad B, paso_documento C","A.idaccion=B.accion_idaccion AND B.paso_idpaso=C.paso_idpaso AND C.documento_iddocumento=".$iddocumento." AND A.nombre='".$accion."' AND C.estado_paso_documento>3 AND B.estado=1","B.orden",$conn);
     
-     print_r($listado_acciones_paso);die();
+    
   }               
 }
 else if($paso_documento && $idactividad){
@@ -189,6 +189,10 @@ for($i=0;$i<@$listado_acciones_paso["numcampos"];$i++){
 	  
 	  
     }
+    
+    
+    
+    
 	
     if($accion=='aprobar'){
         //error("ACCION APROBAR");
@@ -207,6 +211,12 @@ for($i=0;$i<@$listado_acciones_paso["numcampos"];$i++){
         phpmkr_query($sql4);
         
     }		
+	
+	
+	
+	if(($accion=='confirmar' || $accion=='aprobar') && $listado_acciones_paso[$i]['llave_entidad']==-2){
+	    $verifica_funcionario=1;
+	}
 	
     if($verifica_funcionario){
       $terminada_actual=verificar_instancia_terminada($listado_acciones_paso[$i]["idpaso_actividad"],$iddocumento,$_SESSION["usuario_actual"],$tipo_terminacion);
