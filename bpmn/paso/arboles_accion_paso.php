@@ -146,7 +146,7 @@ function accion_responder(){
  * Encargado de parsear una cadena con los formatos ya seleccionados. Para que en el arbol ya salgan chequeados.
  */
 function seleccionados($idpaso_actividad,$accion){
-  $sel = busca_filtro_tabla("","paso_actividad","idpaso_actividad=".$idpaso_actividad." and accion_idaccion=".$accion,"",$conn);
+  $sel = busca_filtro_tabla("","paso_actividad","estado=1 AND idpaso_actividad=".$idpaso_actividad." and accion_idaccion=".$accion,"",$conn);
   
   $seleccionado = explode(",",$sel[0]["formato_idformato"]);
   $cantidad = count($seleccionado);
