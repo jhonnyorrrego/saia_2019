@@ -46,7 +46,7 @@ if($documento["numcampos"] && !$documento[0]["numero"]){
     //Buscar el paso siguiente al paso actual si el paso actual esta en 0 y validar el condicional para los pasos siguientes 
     //$bpmn->tarea_siguiente($paso_actual[][]);
     //Se deben volver a calcular los pasos posterior a que se inactivan por el condicional
-    $paso_actual=busca_filtro_tabla("","paso_documento A, paso_actividad B, accion C","A.paso_idpaso=B.paso_idpaso AND B.accion_idaccion=C.idaccion AND A.documento_iddocumento=".$iddoc." AND A.estado_paso_documento IN(4,5,6,7) AND (C.nombre LIKE 'confirmar' OR C.nombre LIKE 'aprobar')","",$conn);
+    $paso_actual=busca_filtro_tabla("","paso_documento A, paso_actividad B, accion C","B.estado=1 AND A.paso_idpaso=B.paso_idpaso AND B.accion_idaccion=C.idaccion AND A.documento_iddocumento=".$iddoc." AND A.estado_paso_documento IN(4,5,6,7) AND (C.nombre LIKE 'confirmar' OR C.nombre LIKE 'aprobar')","",$conn);
     if(@$debug==1){
       echo("<hr> PASO ACTUAL--2--<hr>");
       print_r($paso_actual);
@@ -151,14 +151,14 @@ function actualizar_ruta_documento($idruta,$iddoc,$idformato){
       echo("<hr>SQL------->");
     } 
     if($ruta_modificar2["numcampos"] && $ruta_modificar2[0]["origen"]==-1 && $ruta_modificar2[0]["idenlace_nodo"]){
-      $paso_actual=busca_filtro_tabla("","paso_documento A, paso_actividad B, accion C","A.paso_idpaso=B.paso_idpaso AND A.documento_iddocumento=".$iddoc." AND estado_paso_documento IN (4,5,6,7) AND B.accion_idaccion=C.idaccion AND (C.nombre LIKE 'confirmar%' || C.nombre LIKE 'aprobar%')","",$conn);
+      $paso_actual=busca_filtro_tabla("","paso_documento A, paso_actividad B, accion C","B.estado=1 AND A.paso_idpaso=B.paso_idpaso AND A.documento_iddocumento=".$iddoc." AND estado_paso_documento IN (4,5,6,7) AND B.accion_idaccion=C.idaccion AND (C.nombre LIKE 'confirmar%' || C.nombre LIKE 'aprobar%')","",$conn);
       if($debug==1){
         echo("PASO ACTUAL---->");
         print_r($paso_actual);
         echo("<hr>");
       }  
       //se debe garantizar que en el paso_actividad siempre va un cargo
-      $funcionario_ruta_siguiente=busca_filtro_tabla("","vfuncionario_dc A, paso_actividad B","A.idcargo=B.llave_entidad AND B.idpaso_actividad=".$ruta_modificar2[0]["idenlace_nodo"],"",$conn);
+      $funcionario_ruta_siguiente=busca_filtro_tabla("","vfuncionario_dc A, paso_actividad B","B.estado=1 AND A.idcargo=B.llave_entidad AND B.idpaso_actividad=".$ruta_modificar2[0]["idenlace_nodo"],"",$conn);
       if($debug==1){
         echo("FUNCIONARIO ---->");
         print_r($funcionario_ruta_siguiente);
