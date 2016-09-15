@@ -508,6 +508,7 @@ function validar_ruta_documento_flujo($iddoc,$pasos_evaluar,$paso_anterior,$acci
                                         break;                                        
                                 }
                                 $funcionario=busca_filtro_tabla("","vfuncionario_dc",$condicion." AND estado_dc=1 AND estado=1","",$conn);
+                                print_r($funcionario);die();
                             }
                             
                         }
