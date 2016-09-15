@@ -111,7 +111,7 @@ if($accion=="adicionar"){
           $paso_doc_temp=busca_filtro_tabla("","paso_documento A, respuesta B","A.documento_iddocumento=B.origen AND B.destino=".$iddocumento." AND A.paso_idpaso=".$formato[$i]["paso_anterior"],"B.idrespuesta DESC",$conn);
           if($paso_doc_temp["numcampos"]){
             //error("PASO DOC TERMINADO 1-->");
-            $paso_doc_terminado=busca_filtro_tabla("","paso_documento A, paso_actividad B","A.paso_idpaso=B.paso_idpaso AND A.diagram_iddiagram_instance=".$paso_doc_temp[0]["diagram_iddiagram_instance"]." AND B.formato_idformato=".$formato[$i]["formato_idformato"]." AND A.estado_paso_documento>3","",$conn);
+            $paso_doc_terminado=busca_filtro_tabla("","paso_documento A, paso_actividad B","B.estado=1 AND A.paso_idpaso=B.paso_idpaso AND A.diagram_iddiagram_instance=".$paso_doc_temp[0]["diagram_iddiagram_instance"]." AND B.formato_idformato=".$formato[$i]["formato_idformato"]." AND A.estado_paso_documento>3","",$conn);
             $sql2="UPDATE paso_documento SET documento_iddocumento=".$iddocumento." WHERE idpaso_documento=".$paso_doc_terminado[0]["idpaso_documento"];
           }
         }
