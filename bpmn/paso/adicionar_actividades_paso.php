@@ -439,7 +439,7 @@ $paso=busca_filtro_tabla("","paso","idpaso=".$_REQUEST["idpaso"],"",$conn);
 function LoadData($sKey,$conn){
 global $x_idactividad_paso,$x_descripcion, $x_accion_idaccion, $x_paso_idpaso, $x_restrictivo, 
 $x_estado ,$x_orden , $x_tipo, $x_tipo_entidad, $x_llave_entidad, $x_palzo, $x_tipo_plazo,$x_modulo,$x_llave_accion, $x_paso_anterior; 
-$datos=busca_filtro_tabla("","paso_actividad","idpaso_actividad=".$sKey,"",$conn);
+$datos=busca_filtro_tabla("","paso_actividad","estado=1 AND idpaso_actividad=".$sKey,"",$conn);
 if($datos["numcampos"]){
   $LoadData=true;
   $x_idactividad_paso = $datos[0]["idpaso_actividad"];
