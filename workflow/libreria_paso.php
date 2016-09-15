@@ -995,7 +995,7 @@ function rehacer_actividad_paso($idpaso_instancia,$observaciones,$idpaso_documen
  * 
  */
 function validar_estado_paso($idpaso_instancia,$idpaso_documento){   
-$paso_documento=busca_filtro_tabla("","paso_documento A,paso_actividad B,paso_instancia_terminada C","A.paso_idpaso=B.paso_idpaso AND A.documento_iddocumento=C.documento_iddocumento AND idpaso_documento=".$idpaso_documento."","",$conn);
+$paso_documento=busca_filtro_tabla("","paso_documento A,paso_actividad B,paso_instancia_terminada C","B.estado=1 AND A.paso_idpaso=B.paso_idpaso AND A.documento_iddocumento=C.documento_iddocumento AND idpaso_documento=".$idpaso_documento."","",$conn);
 ///se adiciona validacion para que no haga nada si el paso esta excluido
 if($paso_documento["numcampos"] && $paso_documento[0]["estado_paso_documento"]){
   return;
