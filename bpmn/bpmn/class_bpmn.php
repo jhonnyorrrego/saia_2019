@@ -297,7 +297,7 @@ public function validar_estado_condicional($condicional){
       if($condicional_admin["numcampos"] && $this->bpmni->idbpmni){
         //Buscar todos los documentos que se han ejecutado y no estan devueltos o cancelados, para validar los campos y formatos e identificar si se deben habilitar las tareaas o no de los pasos siguientes
         for($i=0;$i<$condicional_admin["numcampos"];$i++){
-          $tareas=busca_filtro_tabla("A.*,B.*,C.*,D.nombre_tabla","paso_documento A, paso_actividad B, campos_formato C, formato D","C.formato_idformato=D.idformato AND A.paso_idpaso=B.paso_idpaso AND A.diagram_iddiagram_instance=".$this->bpmni->idbpmni." AND A.estado_paso_documento NOT IN(3,7,0) AND B.formato_idformato=C.formato_idformato AND C.idcampos_formato=".$condicional_admin[$i]["fk_campos_formato"],"",$conn);
+          $tareas=busca_filtro_tabla("A.*,B.*,C.*,D.nombre_tabla","paso_documento A, paso_actividad B, campos_formato C, formato D","B.estado=1 AND C.formato_idformato=D.idformato AND A.paso_idpaso=B.paso_idpaso AND A.diagram_iddiagram_instance=".$this->bpmni->idbpmni." AND A.estado_paso_documento NOT IN(3,7,0) AND B.formato_idformato=C.formato_idformato AND C.idcampos_formato=".$condicional_admin[$i]["fk_campos_formato"],"",$conn);
           if($tareas["numcampos"]){
             $tabla=busca_filtro_tabla($tareas[0]["nombre"],$tareas[0]["nombre_tabla"],"documento_iddocumento=".$tareas[0]["documento_iddocumento"],"",$conn);
             if($tabla["numcampos"]){
