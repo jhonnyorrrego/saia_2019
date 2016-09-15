@@ -75,7 +75,7 @@ for($i=0;$i<$paso_anterior["numcampos"];$i++){
   }
 }
 if(count($pasos_anteriores)){
-  $formatos_anteriores=busca_filtro_tabla("","paso_actividad A","A.paso_idpaso IN(".implode(",",$pasos_anteriores).") AND A.formato_idformato IS NOT NULL AND A.formato_idformato<>''","",$conn);
+  $formatos_anteriores=busca_filtro_tabla("","paso_actividad A","A.estado=1 AND A.paso_idpaso IN(".implode(",",$pasos_anteriores).") AND A.formato_idformato IS NOT NULL AND A.formato_idformato<>''","",$conn);
   if($formatos_anteriores["numcampos"]){
     $campos=extrae_campo($formatos_anteriores,"formato_idformato");
     $filtrar=implode(",",$campos);
