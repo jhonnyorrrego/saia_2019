@@ -556,145 +556,142 @@ function phpmkr_db_close($conn)
 <Post-condiciones>
 */
 function phpmkr_query($strsql){ 
-global $conn;
-	if(!get_magic_quotes_gpc()) // SI NO ESTAN ACTIVADAS LAS MAGIC QUOTES DE PHP ESCAPA LA SECUENCIA SQL
-		$strsql = stripslashes($strsql);
-	$rs = Null;
-	if($conn) {
-		$sqleve = "";
-		$sql = trim($strsql);
-		$sql = str_replace(" =", "=", $sql);
-		$sql = str_replace("= ", "=", $sql);
-		$accion = strtoupper(substr($sql, 0, strpos($sql, ' ')));
-		$llave = 0;
-		$tabla = "";
-		$string_detalle = "";
-		if($accion != "SELECT") {
-			$func = usuario_actual("funcionario_codigo");
-		} else {
-			$rs = $conn->Ejecutar_Sql($strsql);
-		}
-		
-		$sqleve = "";
-		switch($accion) {
-			case ("SELECT"):
-				$strsql = htmlspecialchars_decode(htmlentities(utf8_decode($strsql)));
-				break;
-			case ("INSERT"):
-				$values = substr($strsql, strpos("VALUES", strtoupper($strsql) + 6));
-				$rs = $conn->Ejecutar_Sql(htmlspecialchars_decode(htmlentities(decodifica_encabezado($strsql))));
-				$llave = $conn->Ultimo_Insert();
-				preg_match("/insert into (\w*\.)*(\w+)/", strtolower($strsql), $resultados);
-				if(isset($resultados[2])) {
-					$tabla = $resultados[2];
-				} else {
-					preg_match("/insert all into (\w*\.)*(\w+)/", strtolower($strsql), $resultados);
-					if(isset($resultados[2])) {
-						$tabla = $resultados[2];
-					} else {
-						break;
-					}
-				}
-				guardar_evento($strsql, $llave, $tabla, $func, "ADICIONAR");
-				break;
-			case ('UPDATE'):
-				preg_match("/update (\w*\.)*(\w+)/", strtolower($strsql), $resultados);
-				$tabla = $resultados[2];
-				preg_match("/where (.+)=(.*)/", strtolower($strsql), $resultados);
-				$llave = trim($resultados[2]);
-				$campo_llave = $resultados[1];
-				$detalle = busca_filtro_tabla("", $tabla, $campo_llave . "=" . $llave, "", $conn);
-				$rs = $conn->Ejecutar_Sql(htmlspecialchars_decode(htmlentities(decodifica_encabezado($strsql))));
-				$detalle2 = busca_filtro_tabla("", $tabla, $campo_llave . "=" . $llave, "", $conn);
-				// ************ miro cuales campos cambiaron en la tabla ****************
-				$nombres_campos = array();
-				if($detalle["numcampos"])
-					$nombres_campos = array_keys($detalle[0]);
-				$cambios = array();
-				if($detalle2["numcampos"] && $detalle["numcampos"]) {
-					for($i = 0; $i < (count($detalle[0]) / 2); $i++) {
-						if($detalle[0][$i] != $detalle2[0][$i])
-							$cambios[] = $nombres_campos[($i * 2) + 1] . "='" . utf8_encode(html_entity_decode(htmlspecialchars_decode($detalle[0][$i]))) . "'";
-					}
-				}
-				$diferencias = "update $tabla set " . implode(", ", $cambios) . " where " . $campo_llave . "=" . $llave;
-				// guardo el evento
-				if(count($cambios)) {
-					if(!is_numeric($llave)) {
-						$llave = $detalle[0]["id" . $tabla];
-					}
-					guardar_evento($strsql, intval($llave), $tabla, $func, "MODIFICAR", $diferencias);						
-				}
-				break;
-			case ('DELETE'):
-				preg_match("/delete from (\w*\.)*(\w+)/", strtolower($strsql), $resultados);
-				$tabla = $resultados[2];
-				preg_match("/where (.+)=(.*)/", strtolower($strsql), $resultados);
-				$llave = trim($resultados[2]);
-				$campo_llave = $resultados[1];
-				$detalle = busca_filtro_tabla("", $tabla, $campo_llave . "=" . $llave, "", $conn);
-				$rs = $conn->Ejecutar_Sql(htmlspecialchars_decode(htmlentities(utf8_decode($strsql))));
-				if($detalle["numcampos"] > 0) {
-					$nombres_campos = array_keys($detalle[0]);
-					$datos1 = array();
-					$datos2 = array();
-					for($i = 0; $i < (count($detalle[0]) / 2); $i++) {
-						if($detalle[0][$i] != $detalle2[0][$i]) {
-							$datos1[] = $nombres_campos[($i * 2) + 1];
-							$datos2[] = "'" . utf8_encode(html_entity_decode(htmlspecialchars_decode($detalle[0][$i]))) . "'";
-						}
-					}
-					$string_detalle = "insert into $tabla(" . implode(",", $datos1) . ") values(" . implode(",", $datos2) . ")";
+global $conn; 
+if(!get_magic_quotes_gpc()) // SI NO ESTAN ACTIVADAS LAS MAGIC QUOTES DE PHP ESCAPA LA SECUENCIA SQL
+  $strsql=stripslashes($strsql);
+$rs=Null;
+if($conn){ 
+  $sqleve="";
+  $sql = trim($strsql);
+  $sql = str_replace(" =","=",$sql);
+  $sql = str_replace("= ","=",$sql);
+  $accion = strtoupper(substr($sql,0,strpos($sql,' '))); 
+  $llave=0;  
+  $tabla = ""; 
+  $string_detalle="";
+  if ($accion<>"SELECT"){  
+      $func = usuario_actual("funcionario_codigo");
+  }else{
+      $rs=$conn->Ejecutar_Sql($strsql);
+  }
+    
+  $sqleve="";   
+  switch($accion){
+    case("SELECT"):
+      $strsql=htmlspecialchars_decode(htmlentities(utf8_decode($strsql)));
+    break;
+    case("INSERT"):
+      $values=substr($strsql,strpos("VALUES",strtoupper($strsql)+6));
+      $rs=$conn->Ejecutar_Sql(htmlspecialchars_decode(htmlentities(decodifica_encabezado($strsql))));     
+      $llave = $conn->Ultimo_Insert();
+      preg_match("/insert into (\w*\.)*(\w+)/", strtolower($strsql), $resultados);
+      if(isset($resultados[2]))
+        $tabla=$resultados[2];
+      else{
+        preg_match("/insert all into (\w*\.)*(\w+)/", strtolower($strsql), $resultados);
+        if(isset($resultados[2]))
+          $tabla=$resultados[2];
+        else
+          break;  
+      }       
+      //guardo el evento
+      
+      $sqleve="INSERT INTO evento(funcionario_codigo, fecha, evento, tabla_e, registro_id, estado,codigo_sql,detalle) VALUES('".$func."',".fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s').",'ADICIONAR', '$tabla', $llave, '0','','')";
+     
+      $conn->Ejecutar_Sql($sqleve);
+    	$registro=$conn->Ultimo_Insert();
+      if($registro){
+        guardar_lob('codigo_sql','evento',"idevento=".$registro,$strsql,'texto',$conn,0);
+        $archivo="$registro|||$func|||".date('Y-m-d H:i:s')."|||ADICIONAR|||$tabla|||0|||NULL|||$llave|||$strsql";
+        evento_archivo($archivo);
+      }
+    break; 
+    case('UPDATE'):
+      preg_match("/update (\w*\.)*(\w+)/", strtolower($strsql), $resultados);
+      $tabla=$resultados[2];
+      preg_match("/where (.+)=(.*)/", strtolower($strsql), $resultados);
+      $llave=trim($resultados[2]);
+      $campo_llave=$resultados[1];
+      $detalle=busca_filtro_tabla("",$tabla,$campo_llave."=".$llave,"",$conn);                  
+      $rs=$conn->Ejecutar_Sql(htmlspecialchars_decode(htmlentities(decodifica_encabezado($strsql)))); 
+      $detalle2=busca_filtro_tabla("",$tabla,$campo_llave."=".$llave,"",$conn);
+      //************ miro cuales campos cambiaron en la tabla  ****************
+      $nombres_campos=array();
+      if($detalle["numcampos"])
+        $nombres_campos=array_keys($detalle[0]);
+      $cambios=array();
+      if($detalle2["numcampos"]&&$detalle["numcampos"]){
+        for($i=0;$i<(count($detalle[0])/2);$i++){
+          if($detalle[0][$i]<>$detalle2[0][$i])
+            $cambios[]=$nombres_campos[($i*2)+1]."='".utf8_encode(html_entity_decode(htmlspecialchars_decode($detalle[0][$i])))."'";          
+        }
+      }    
+      $diferencias="update $tabla set ".implode(", ",$cambios)." where ".$campo_llave."=".$llave;    
+      //guardo el evento
+      if(count($cambios)){
+        if(!is_numeric($llave))
+          $llave=$detalle[0]["id".$tabla];
+		  $sqleve="INSERT INTO evento(funcionario_codigo, fecha, evento, tabla_e, registro_id, estado,codigo_sql,detalle) VALUES('".$func."',".fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s').",'MODIFICAR', '$tabla', ".intval($llave).", '0','','')"; 
 
-					guardar_evento($strsql, $llave, $tabla, $func, "ELIMINAR", $string_detalle);						
-				}
-				break;
-			default:
-				$rs = $conn->Ejecutar_Sql($strsql);
-				break;
-		}
+				
+        $conn->Ejecutar_Sql($sqleve);
+        $registro=$conn->Ultimo_Insert();
+        //die("registro:$registro");
+        if($registro){
+          guardar_lob('codigo_sql','evento',"idevento=".$registro,$strsql,'texto',$conn,0);
+          guardar_lob('detalle','evento',"idevento=".$registro,$diferencias,'texto',$conn,0);
+          $archivo="$registro|||$func|||".date('Y-m-d H:i:s')."|||MODIFICAR|||$tabla|||0|||$diferencias|||$llave|||$strsql";
+          evento_archivo($archivo);
+        }
+      }            
+    break;  
+    case('DELETE'):
+      preg_match("/delete from (\w*\.)*(\w+)/", strtolower($strsql), $resultados);
+      $tabla=$resultados[2];
+      preg_match("/where (.+)=(.*)/", strtolower($strsql), $resultados);
+      $llave=trim($resultados[2]);
+      $campo_llave=$resultados[1];
+      $detalle=busca_filtro_tabla("",$tabla,$campo_llave."=".$llave,"",$conn);
+      $rs=$conn->Ejecutar_Sql(htmlspecialchars_decode(htmlentities(utf8_decode($strsql))));        
+      if($detalle["numcampos"]>0){
+        $nombres_campos=array_keys($detalle[0]);
+        $datos1=array();
+        $datos2=array();
+        for($i=0;$i<(count($detalle[0])/2);$i++){
+          if($detalle[0][$i]<>$detalle2[0][$i]){
+            $datos1[]=$nombres_campos[($i*2)+1];
+            $datos2[]="'".utf8_encode(html_entity_decode(htmlspecialchars_decode($detalle[0][$i])))."'";     
+          }     
+        }         
+        $string_detalle="insert into $tabla(".implode(",",$datos1).") values(".implode(",",$datos2).")";
+		$sqleve="INSERT INTO evento(funcionario_codigo, fecha, evento, tabla_e, registro_id, estado,codigo_sql,detalle) VALUES('".$func."',".fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s').",'ELIMINAR', '$tabla', $llave, '0','','')";
+        $conn->Ejecutar_Sql($sqleve);
+        $registro=$conn->Ultimo_Insert();
+        if($registro){
+          guardar_lob('codigo_sql','evento',"idevento=".$registro,$strsql,'texto',$conn,0);
+          guardar_lob('detalle','evento',"idevento=".$registro,$string_detalle,'texto',$conn,0);
+          $archivo="$registro|||$func|||".date('Y-m-d H:i:s')."|||ELIMINAR|||$tabla|||0|||$string_detalle|||$llave|||$strsql";
+          evento_archivo($archivo);
+        } 
+      }    
+    break; 
+    default:
+      $rs=$conn->Ejecutar_Sql($strsql);
+    break;   
+  }
+  
+  
+  if ($accion<>"SELECT"){ 
+    phpmkr_free_result($rs);
+    if(DEBUGEAR_FLUJOS){
+      error($strsql);
+    }  
+  }
 
-		if($accion != "SELECT") {
-			phpmkr_free_result($rs);
-			if(DEBUGEAR_FLUJOS) {
-				error($strsql);
-			}
-		}
-		
-		return $rs;
-	}
+  return $rs; 
+  
 }
-
-
-/**
- * @param strsql
- * @param llave
- * @param tabla
- * @param func
- * @param archivo
- */
-
-function guardar_evento($strsql, $llave, $tabla, $func, $accion, $diferencias=null) {
-	// guardo el evento
-	
-	$sqleve = "INSERT INTO evento(funcionario_codigo, fecha, evento, tabla_e, registro_id, estado,codigo_sql,detalle) VALUES('" . $func . "'," . fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s') . ",'$accion', '$tabla', $llave, '0','','')";
-	
-	$conn->Ejecutar_Sql($sqleve);
-	$registro = $conn->Ultimo_Insert();
-	if($registro) {
-		guardar_lob('codigo_sql', 'evento', "idevento=" . $registro, $strsql, 'texto', $conn, 0);
-		if($accion == "MODIFICAR" || $accion == "ELIMINAR") {
-			guardar_lob('detalle', 'evento', "idevento=" . $registro, $diferencias, 'texto', $conn, 0);
-		}
-		if(empty($diferencias)) {
-			$diferencias = "NULL";
-		}
-		$archivo = "$registro|||$func|||" . date('Y-m-d H:i:s') . "|||$accion|||$tabla|||0|||$diferencias|||$llave|||$strsql";
-		evento_archivo($archivo);
-	}	
-	
 }
-
 /*
 <Clase>
 <Nombre>phpmkr_num_fields
@@ -3926,7 +3923,7 @@ function ruta_almacenamiento($tipo) {
 	  }
 	  $ruta.="../";
 	  $max_salida--;
-	}
+	} 
 	switch($tipo){
 	  case 'archivos':
 	    crear_destino($ruta_db_superior.RUTA_ARCHIVOS);
@@ -3942,7 +3939,7 @@ function ruta_almacenamiento($tipo) {
 	  break;
 	  case 'versiones':
 	    crear_destino($ruta_db_superior.RUTA_VERSIONES);
-	    return($ruta_db_superior.RUTA_VERSIONES);
+	    return($ruta_db_superior.RUTA_IMAGENES);
 	  break;
 	}
 }
