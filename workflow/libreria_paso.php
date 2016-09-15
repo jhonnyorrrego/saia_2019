@@ -219,22 +219,12 @@ for($i=0;$i<@$listado_acciones_paso["numcampos"];$i++){
 	                
 	   $condicion=generar_condicion_funcionario_tomado_campo($datos_apaso_actividad[0]["fk_campos_formato"],$datos_apaso_actividad[0]["formato_anterior"],$iddocumento);
 	   $funcionario=busca_filtro_tabla("","vfuncionario_dc",$condicion." AND estado_dc=1 AND estado=1","",$conn);
-                               
-	   
-	                print_r($funcionario);die();
-	                
-                    $datos_formato_ruta=busca_filtro_tabla("b.nombre,b.banderas,a.nombre_tabla","formato a,campos_formato b","b.idcampos_formato=".$datos_apaso_actividad[0]["fk_campos_formato"]."  AND a.idformato=b.formato_idformato AND a.idformato=".$datos_apaso_actividad[0]["formato_anterior"],"",$conn);  
-            
-	    
-	   
-	   	
+
 	   	if($funcionario[0]['login']==usuario_actual('login')){
 	   	     $verifica_funcionario=1;
 	   	}else{
 	   	    $verifica_funcionario=0;
 	   	}
-	   	
-	   
 	}
 	
     if($verifica_funcionario){
