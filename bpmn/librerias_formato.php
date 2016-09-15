@@ -14,7 +14,7 @@ $debug=1;
 function validar_ruta_documento_flujo_eliminar($iddoc,$idformato){
   //ELIMINAR FUNCION
 //Debe definir el valor de la ruta siguiente a traves de las actividades de los pasos en el flujo  
-$paso_actual=busca_filtro_tabla("","paso_documento A, paso_actividad B, accion C","A.paso_idpaso=B.paso_idpaso AND B.accion_idaccion=C.idaccion AND A.documento_iddocumento=".$iddoc." AND A.estado_paso_documento IN(4,5,6,7) AND (C.nombre LIKE 'confirmar' OR C.nombre LIKE 'aprobar')","",$conn);
+$paso_actual=busca_filtro_tabla("","paso_documento A, paso_actividad B, accion C","B.estado=1 AND A.paso_idpaso=B.paso_idpaso AND B.accion_idaccion=C.idaccion AND A.documento_iddocumento=".$iddoc." AND A.estado_paso_documento IN(4,5,6,7) AND (C.nombre LIKE 'confirmar' OR C.nombre LIKE 'aprobar')","",$conn);
 //print_r($paso_siguiente);  
 }
 
