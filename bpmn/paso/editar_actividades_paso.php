@@ -563,7 +563,7 @@ $x_estado ,$x_orden , $x_tipo, $x_tipo_entidad, $x_llave_entidad, $x_plazo, $x_t
   if($fieldList["accion_idaccion"]==1){
     $fieldList["orden"]=0;
   }
-  
+  print_r($x_formato_anterior.'   --   '.$x_fk_campos_formato);die();
   $theValue = ($x_formato_anterior!= "") ? $x_formato_anterior : 0;
   $fieldList["formato_anterior"]=$theValue;
   $theValue = ($x_fk_campos_formato!= "") ? $x_fk_campos_formato : 0;
