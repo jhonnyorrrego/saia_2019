@@ -25,7 +25,7 @@ if($condicional["numcampos"]){
   for($i=0;$i<$condicional["numcampos"];$i++){
     $texto_pasos_no='';
     $texto_pasos_si='';
-    $tareas=busca_filtro_tabla("A.*,B.*,C.*,D.nombre_tabla, D.etiqueta AS formato, C.etiqueta AS campo","paso_documento A, paso_actividad B, campos_formato C, formato D","C.formato_idformato=D.idformato AND A.paso_idpaso=B.paso_idpaso AND A.diagram_iddiagram_instance=".$_REQUEST["bpmni"]." AND A.estado_paso_documento NOT IN(3,7) AND B.formato_idformato=C.formato_idformato AND C.idcampos_formato=".$condicional[$i]["fk_campos_formato"],"",$conn);
+    $tareas=busca_filtro_tabla("A.*,B.*,C.*,D.nombre_tabla, D.etiqueta AS formato, C.etiqueta AS campo","paso_documento A, paso_actividad B, campos_formato C, formato D","B.estado=1 AND C.formato_idformato=D.idformato AND A.paso_idpaso=B.paso_idpaso AND A.diagram_iddiagram_instance=".$_REQUEST["bpmni"]." AND A.estado_paso_documento NOT IN(3,7) AND B.formato_idformato=C.formato_idformato AND C.idcampos_formato=".$condicional[$i]["fk_campos_formato"],"",$conn);
     if($tareas["numcampos"]){
       $tabla=busca_filtro_tabla($tareas[0]["nombre"],$tareas[0]["nombre_tabla"],"documento_iddocumento=".$tareas[0]["documento_iddocumento"],"",$conn);
       if($tabla["numcampos"]){
