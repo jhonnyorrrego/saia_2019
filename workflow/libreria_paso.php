@@ -1000,7 +1000,7 @@ $paso_documento=busca_filtro_tabla("","paso_documento A,paso_actividad B,paso_in
 if($paso_documento["numcampos"] && $paso_documento[0]["estado_paso_documento"]){
   return;
 }
-$actividades_paso=busca_filtro_tabla("","paso_actividad B,paso A","A.idpaso=B.paso_idpaso AND B.paso_idpaso=".$paso_documento[0]["paso_idpaso"],"",$conn);
+$actividades_paso=busca_filtro_tabla("","paso_actividad B,paso A","B.estado=1 AND A.idpaso=B.paso_idpaso AND B.paso_idpaso=".$paso_documento[0]["paso_idpaso"],"",$conn);
 
 $devuelto=0;
 $restrictivo=0;
