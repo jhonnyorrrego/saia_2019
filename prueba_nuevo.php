@@ -11,10 +11,9 @@ while($max_salida>0){
 include($ruta_db_superior.'db.php');
 include_once($ruta_db_superior."workflow/libreria_paso.php");
 
-$idpaso=91;
 
-print_r(listado_pasos_anteriores_admin($idpaso));
-
+$valor_campo_ruta=mostrar_valor_campo('arbol_funs',218,232,1);
+print_r($datos_formato_ruta);die();
 
 
 
