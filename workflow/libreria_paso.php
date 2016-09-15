@@ -212,9 +212,7 @@ for($i=0;$i<@$listado_acciones_paso["numcampos"];$i++){
 	
 	
 	
-	if(($accion=='confirmar' || $accion=='aprobar') && $listado_acciones_paso[$i]['llave_entidad']==-2){
-	    
-	                
+	if(($accion=='confirmar' || $accion=='aprobar') && $listado_acciones_paso[$i]['llave_entidad']==-2){ //funcionario tomado de un campo  
 	    $datos_apaso_actividad=busca_filtro_tabla("","paso_actividad","idpaso_actividad=".$listado_acciones_paso[$i]['idpaso_actividad'],"",$conn);
 	                
 	   $condicion=generar_condicion_funcionario_tomado_campo($datos_apaso_actividad[0]["fk_campos_formato"],$datos_apaso_actividad[0]["formato_anterior"],$iddocumento);
@@ -503,47 +501,8 @@ function validar_ruta_documento_flujo($iddoc,$pasos_evaluar,$paso_anterior,$acci
                   //error("EXISTE RUTA 2 Y EL FUNCIONARIO ESTA ACTIVO");
                  // print_r($dato_paso_ruta);die();
                   if($dato_paso_ruta[0]["llave_entidad"]==-2){
-                    $datos_formato_ruta=busca_filtro_tabla("b.nombre,b.banderas,a.nombre_tabla","formato a,campos_formato b","b.idcampos_formato=".$dato_paso_ruta[0]["fk_campos_formato"]."  AND a.idformato=b.formato_idformato AND a.idformato=".$dato_paso_ruta[0]["formato_anterior"],"",$conn);  
-                   // print_r($datos_formato_ruta);die();
-                    if($datos_formato_ruta['numcampos']){
-                        $consulta_valor_campo=busca_filtro_tabla($datos_formato_ruta[0]['nombre'],$datos_formato_ruta[0]['nombre_tabla'],"documento_iddocumento=".$iddoc,"",$conn);
-                        
-                        $valor_campo_ruta=$consulta_valor_campo[0][$datos_formato_ruta[0]['nombre']];
-                      
-                        if($valor_campo_ruta){
-                            $vector_banderas=explode(',',$datos_formato_ruta[0]['banderas']);
-                            $vector_banderas_validar=array('ffc','fdc','fid','fc');//funcionario_codigo,iddependencia_cargo,idfuncionario,idcargo
-                            $bandera_validar='';
-                            for($i=0;$i<count($vector_banderas_validar);$i++){
-                                if(in_array($vector_banderas_validar[$i],$vector_banderas)){
-                                    $bandera_validar=$vector_banderas_validar[$i];
-                                    $i=count($vector_banderas_validar); //corto el ciclo
-                                }
-                            }
-                            
-                            if($bandera_validar!=''){
-                                switch($bandera_validar){
-                                    case 'ffc': //funcionario_codigo
-                                        $condicion="funcionario_codigo='".$valor_campo_ruta."'";
-                                        break;
-                                    case 'fdc': //iddependencia_cargo
-                                        $condicion="iddependencia_cargo='".$valor_campo_ruta."'";
-                                        break;
-                                    case 'fid': //idfuncionario
-                                        $condicion="idfuncionario='".$valor_campo_ruta."'";
-                                        break;
-                                    case 'cargo': //idcargo
-                                        $condicion="idcargo='".$valor_campo_ruta."'";
-                                        break;                                        
-                                }
-                                $funcionario=busca_filtro_tabla("","vfuncionario_dc",$condicion." AND estado_dc=1 AND estado=1","",$conn);
-                               
-                            }
-                            
-                        }
-                        
-                        
-                    } //fin $datos_formato_ruta['numcampos']
+                    $condicion=generar_condicion_funcionario_tomado_campo($dato_paso_ruta[0]["fk_campos_formato"],$dato_paso_ruta[0]["formato_anterior"],$iddoc);
+                    $funcionario=busca_filtro_tabla("","vfuncionario_dc",$condicion." AND estado_dc=1 AND estado=1","",$conn);
                   }else{
                       $funcionario=busca_filtro_tabla("","vfuncionario_dc","idcargo=".$dato_paso_ruta[0]["llave_entidad"]." AND estado_dc=1 AND estado=1","",$conn);
                   } //fin llave_entidad -2
