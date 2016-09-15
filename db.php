@@ -608,8 +608,9 @@ global $conn;
 				$detalle2 = busca_filtro_tabla("", $tabla, $campo_llave . "=" . $llave, "", $conn);
 				// ************ miro cuales campos cambiaron en la tabla ****************
 				$nombres_campos = array();
-				if($detalle["numcampos"])
+				if($detalle["numcampos"]) {
 					$nombres_campos = array_keys($detalle[0]);
+				}
 				$cambios = array();
 				if($detalle2["numcampos"] && $detalle["numcampos"]) {
 					for($i = 0; $i < (count($detalle[0]) / 2); $i++) {
@@ -692,7 +693,29 @@ function guardar_evento($strsql, $llave, $tabla, $func, $accion, $diferencias=nu
 		$archivo = "$registro|||$func|||" . date('Y-m-d H:i:s') . "|||$accion|||$tabla|||0|||$diferencias|||$llave|||$strsql";
 		evento_archivo($archivo);
 	}	
-	
+	//20160915. Actualizar el estado del documento en el ft
+	if($tabla == "documento" && $accion == "MODIFICAR") {
+		actualizar_estado_formato($tabla, $llave);
+	}
+}
+
+function actualizar_estado_formato($iddoc) {
+	global $conn;
+	$datos_doc = busca_filtro_tabla("", "documento d", "iddocumento=$iddoc", "", $conn);
+	if($datos_doc["numcampos"]) {
+		$formato = lower($datos_doc[0]["pantilla"]);
+		$idestado = obtener_estado_documento($iddoc);
+		if($idestado) {
+			$campos_formato = busca_filtro_tabla("f.idformato, cf.nombre", "formato f join campos_formato cf on f.idformato = cf.formato_idformato", "f.nombre='" . $formato . "' and cf.nombre='estado_documento'", "", $conn);
+			//El formato si tiene el campo estado_documento
+			if($campos_formato["numcampos"]) {
+				$sql1 = "update ft_$formato set estado_documento=$idestado where documento_iddocumento=$iddoc";
+				phpmkr_query($sql1) or die($sql1);
+			} else {
+				print_r($campos_formato);
+			}
+		}
+	}
 }
 
 /*
@@ -4043,6 +4066,17 @@ function decodifica_encabezado($texto){
 	}
 }
 
+function obtener_estado_documento($iddoc) {
+	global $conn;
+	if(empty($iddoc)) {
+		return false;
+	}
+	$estado_doc = busca_filtro_tabla("ed.*", "documento d join estado_documento ed on d.estado = ed.estado", "d.iddocumento=$iddoc and en_uso=1", "", $conn);
+	if($estado_doc["numcampos"]) {
+		return $estado_doc[0]["estado"];
+	}
+	return false;
+}
 
 function parsear_cadena($cadena1){
 global $conn;
