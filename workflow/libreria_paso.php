@@ -264,6 +264,8 @@ for($i=0;$i<@$listado_acciones_paso["numcampos"];$i++){
 	   	
 	   	if($funcionario[0]['login']==usuario_actual('login')){
 	   	     $verifica_funcionario=1;
+	   	}else{
+	   	    $verifica_funcionario=0;
 	   	}
 	   	
 	   
