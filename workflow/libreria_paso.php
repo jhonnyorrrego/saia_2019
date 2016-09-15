@@ -330,7 +330,7 @@ function verificar_terminacion_paso($idpaso,$iddocumento){
   $pasos_flujo=busca_filtro_tabla("","paso_documento","diagram_iddiagram_instance=".$paso_documento[0]["idpaso_documento"],"",$conn);
   //Sacamos el paso del documento para conocer el estado 
   if($paso_documento["numcampos"] && $paso_documento[0]["estado_paso_documento"]>3){
-    $actividad_terminada=busca_filtro_tabla("","paso_instancia_terminada A,paso_actividad B","A.actividad_idpaso_actividad=B.idpaso_actividad AND B.paso_idpaso=".$idpaso." AND documento_iddocumento=".$iddocumento,"",$conn);
+    $actividad_terminada=busca_filtro_tabla("","paso_instancia_terminada A,paso_actividad B","B.estado=1 AND A.actividad_idpaso_actividad=B.idpaso_actividad AND B.paso_idpaso=".$idpaso." AND documento_iddocumento=".$iddocumento,"",$conn);
     $lactividades=extrae_campo($actividad_terminada,"actividad_idpaso_actividad");
     $condicion_actividad="";
     if($actividad_terminada["numcampos"]){
@@ -369,7 +369,7 @@ global $conn;
   if(!$idflujo){
     $documento=busca_filtro_tabla("","documento A, formato B","lower(A.plantilla)=lower(B.nombre) AND A.iddocumento=".$iddocumento,"",$conn);
     //TODO: se debe cambiar en toda parte para que valide el radicar en lugar del adicionar para adicionar los formatos, debido a que primero hace transferencias antes de adicionar y los procesos no quedan funcionalmente correctos  
-    $flujo=busca_filtro_tabla("B.diagram_iddiagram","paso B, paso_actividad C, accion D, paso_enlace E, vfuncionario_dc F","B.idpaso=C.paso_idpaso AND C.accion_idaccion=D.idaccion AND D.nombre='adicionar' AND C.formato_idformato=".$documento[0]["idformato"]." AND E.destino=B.idpaso AND E.origen=-1 AND ((C.llave_entidad=F.idcargo OR C.llave_entidad=-1) AND F.funcionario_codigo=".usuario_actual("funcionario_codigo").")","",$conn);
+    $flujo=busca_filtro_tabla("B.diagram_iddiagram","paso B, paso_actividad C, accion D, paso_enlace E, vfuncionario_dc F","C.estado=1 AND B.idpaso=C.paso_idpaso AND C.accion_idaccion=D.idaccion AND D.nombre='adicionar' AND C.formato_idformato=".$documento[0]["idformato"]." AND E.destino=B.idpaso AND E.origen=-1 AND ((C.llave_entidad=F.idcargo OR C.llave_entidad=-1) AND F.funcionario_codigo=".usuario_actual("funcionario_codigo").")","",$conn);
     //TODO: Aqui se debe validar que el idflujo llegue como un arreglo en caso de que existan varios formatos vinculados a varios flujos.  Se debe validar que el usuario que inicia el flujo sea el encargado de adicionar el formato y que una de las acciones del paso inicial sea adicionar el formato actual
     if($flujo["numcampos"]){
        $idflujo=$flujo[0]["diagram_iddiagram"];
@@ -456,7 +456,7 @@ return(false);
  */
 function validar_ruta_documento_flujo($iddoc,$pasos_evaluar,$paso_anterior,$accion){
     //error("VALIDAR RUTA DOCUMENTO PASO RUTA");
-    $dato_paso_ruta=busca_filtro_tabla("","paso_documento C, paso_actividad A, accion B","A.accion_idaccion=B.idaccion AND A.paso_idpaso=C.paso_idpaso AND C.idpaso_documento IN(".implode(",",$pasos_evaluar).") AND (B.nombre='aprobar' OR nombre='confirmar')","",$conn);
+    $dato_paso_ruta=busca_filtro_tabla("","paso_documento C, paso_actividad A, accion B","A.estado=1 AND A.accion_idaccion=B.idaccion AND A.paso_idpaso=C.paso_idpaso AND C.idpaso_documento IN(".implode(",",$pasos_evaluar).") AND (B.nombre='aprobar' OR nombre='confirmar')","",$conn);
     if($dato_paso_ruta["numcampos"]){
         //error("RUTA 1");
         $ruta1=busca_filtro_tabla("","buzon_entrada A, ruta B","A.ruta_idruta=B.idruta AND A.archivo_idarchivo=".$iddoc." AND A.nombre='POR_APROBAR' AND A.origen=-1 AND A.destino=".usuario_actual("funcionario_codigo"),"B.orden ASC",$conn);
@@ -583,7 +583,7 @@ function validar_condicional_paso_siguiente($condicional,$paso_siguiente,$idpaso
   if($condicional_admin["numcampos"]){
     //Buscar todos los documentos que se han ejecutado y no estan devueltos o cancelados, para validar los campos y formatos e identificar si se deben habilitar las tareaas o no de los pasos siguientes
     for($i=0;$i<$condicional_admin["numcampos"];$i++){
-      $tareas=busca_filtro_tabla("A.*,B.*,C.*,D.nombre_tabla","paso_documento A, paso_actividad B, campos_formato C, formato D","C.formato_idformato=D.idformato AND A.paso_idpaso=B.paso_idpaso AND A.diagram_iddiagram_instance=".$diagram_instance." AND A.estado_paso_documento NOT IN(3,7,0) AND B.formato_idformato=C.formato_idformato AND C.idcampos_formato=".$condicional_admin[$i]["fk_campos_formato"],"",$conn);
+      $tareas=busca_filtro_tabla("A.*,B.*,C.*,D.nombre_tabla","paso_documento A, paso_actividad B, campos_formato C, formato D","C.formato_idformato=D.idformato AND A.paso_idpaso=B.paso_idpaso AND A.diagram_iddiagram_instance=".$diagram_instance." AND A.estado_paso_documento NOT IN(3,7,0) AND B.formato_idformato=C.formato_idformato AND B.estado=1 AND C.idcampos_formato=".$condicional_admin[$i]["fk_campos_formato"],"",$conn);
       if($tareas["numcampos"]){
         $tabla=busca_filtro_tabla($tareas[0]["nombre"],$tareas[0]["nombre_tabla"],"documento_iddocumento=".$tareas[0]["documento_iddocumento"],"",$conn);
         if($tabla["numcampos"]){
@@ -664,7 +664,7 @@ if($devueltos){
   $texto.=("Documento devuelto.");
 }
 
-$actividad=busca_filtro_tabla("","paso_actividad A"," A.idpaso_actividad=".$idactividad,"",$conn);
+$actividad=busca_filtro_tabla("","paso_actividad A","A.estado=1 AND A.idpaso_actividad=".$idactividad,"",$conn);
 if($actividad["numcampos"]){
   //Si llave de entidad tiene el valor de -1 cualquiera lo puede ejecutar, se modifica la funcion en class.funcionario
   $puede_ejecutar=verificar_existencia_funcionario($actividad[0]["entidad_identidad"],$actividad[0]["llave_entidad"],$_SESSION["usuario_actual"]);
@@ -948,7 +948,7 @@ function devolver_paso_documento($paso_origen,$paso_final,$observaciones,$diagra
  * Funcion utilizadas para realizar la revolucion de una actividad. Estas no funcionan de manera correcta
  */
 function devolver_actividades_paso($idpaso_documento,$idpaso,$documento,$observaciones){
-  $actividades=busca_filtro_tabla("","paso_instancia_terminada A, paso_actividad B","A.actividad_idpaso_actividad=B.idpaso_actividad AND A.documento_documento=".$documento." AND B.paso_idpaso=".$idpaso ,"",$conn);
+  $actividades=busca_filtro_tabla("","paso_instancia_terminada A, paso_actividad B","B.estado=1 AND A.actividad_idpaso_actividad=B.idpaso_actividad AND A.documento_documento=".$documento." AND B.paso_idpaso=".$idpaso ,"",$conn);
   for ($i=0; $i < $actividades["numcampos"] ; $i++) {
     devolver_actividad_paso($actividades[$i]["idpaso_instancia_terminada"], $actividades[$i]["estado_actividad"], $observaciones,0);
   }
@@ -1122,7 +1122,7 @@ function cancelar_paso($idpaso_documento,$idpaso){
  */
 function formulario_devolver($iddoc){
   global $conn,$ruta_db_superior;
-  $pasos_relacionados = busca_filtro_tabla("b.descripcion as nom_activi,a.*,c.*,b.*","paso_instancia_terminada a,paso_actividad b, paso c","documento_iddocumento=".$iddoc." AND estado_actividad=1 AND actividad_idpaso_actividad=idpaso_actividad AND paso_idpaso=idpaso","idpaso_instancia asc",$conn);
+  $pasos_relacionados = busca_filtro_tabla("b.descripcion as nom_activi,a.*,c.*,b.*","paso_instancia_terminada a,paso_actividad b, paso c","documento_iddocumento=".$iddoc." AND estado_actividad=1 AND b.estado=1 AND actividad_idpaso_actividad=idpaso_actividad AND paso_idpaso=idpaso","idpaso_instancia asc",$conn);
   $pasos = busca_filtro_tabla("distinct(idpaso)","paso_instancia_terminada a,paso_actividad b, paso c","documento_iddocumento=".$iddoc." AND estado_actividad=1 AND actividad_idpaso_actividad=idpaso_actividad AND paso_idpaso=idpaso AND b.estado=1","idpaso_instancia asc",$conn);
   $retorno .= '
   <script src="'.$ruta_db_superior.'/js/jquery.js"></script>
