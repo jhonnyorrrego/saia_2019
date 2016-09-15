@@ -53,7 +53,7 @@ function terminar_actividad_despacho($idactividad,$iddocumento,$idpaso_documento
 	
 	for( $i=0; $i<count($iddocs); $i++ ){
 		$paso_documento=busca_filtro_tabla("diagram_iddiagram","paso_documento a, diagram_instance b","a.diagram_iddiagram_instance=b.iddiagram_instance AND a.documento_iddocumento=".$iddocs[$i],"",$conn);
-		$paso_actividad=busca_filtro_tabla("","paso a,paso_actividad b","a.idpaso=b.paso_idpaso AND b.descripcion like'Confirmacion de recibido' AND a.diagram_iddiagram=".$paso_documento[0]['diagram_iddiagram'],"",$conn);
+		$paso_actividad=busca_filtro_tabla("","paso a,paso_actividad b","b.estado=1 AND a.idpaso=b.paso_idpaso AND b.descripcion like'Confirmacion de recibido' AND a.diagram_iddiagram=".$paso_documento[0]['diagram_iddiagram'],"",$conn);
 		
 		if($paso_actividad['numcampos']){
 			$paso_anterior=paso_anterior($paso_actividad[0]['paso_idpaso'],$paso_actividad[0]['diagram_iddiagram'],$iddocs[$i]);
