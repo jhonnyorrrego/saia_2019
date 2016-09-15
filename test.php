@@ -65,7 +65,7 @@ if(@$_REQUEST["expediente"] && @$_REQUEST["accion"])
    $seleccionados=extrae_campo($asignados,"funcionario","U");
   }
 if(@$_REQUEST["key"])
-  $flujos=busca_filtro_tabla("","paso_documento A,paso_actividad B","A.paso_idpaso=B.paso_idpaso AND A.documento_iddocumento=".@$_REQUEST["key"],"",$conn);
+  $flujos=busca_filtro_tabla("","paso_documento A,paso_actividad B","B.estado=1 AND A.paso_idpaso=B.paso_idpaso AND A.documento_iddocumento=".@$_REQUEST["key"],"",$conn);
 else{
   $flujos["numcampos"]=0;
 }  
