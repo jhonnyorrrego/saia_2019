@@ -2845,7 +2845,7 @@ function generar_ruta_documento($idformato,$iddoc){
   global $conn;
 
   $diagram_instance=busca_filtro_tabla('','paso_documento A, diagram_instance B','A.diagram_iddiagram_instance=B.iddiagram_instance AND A.documento_iddocumento='.$iddoc,'',conn);
-  $listado_pasos=busca_filtro_tabla("","paso A, paso_actividad B, accion C","A.idpaso=B.paso_idpaso AND B.accion_idaccion=C.idaccion AND (C.nombre LIKE 'confirmar%' OR C.nombre LIKE 'aprobar%') AND A.diagram_iddiagram=".$diagram_instance[0]["diagram_iddiagram"]." AND B.paso_anterior=".$diagram_instance[0]["paso_idpaso"],"",$conn);
+  $listado_pasos=busca_filtro_tabla("","paso A, paso_actividad B, accion C","A.estado=1 AND A.idpaso=B.paso_idpaso AND B.accion_idaccion=C.idaccion AND (C.nombre LIKE 'confirmar%' OR C.nombre LIKE 'aprobar%') AND A.diagram_iddiagram=".$diagram_instance[0]["diagram_iddiagram"]." AND B.paso_anterior=".$diagram_instance[0]["paso_idpaso"],"",$conn);
   
   //print_r($listado_pasos);
   /*print_r($diagram_instance);
