@@ -186,7 +186,7 @@ if($paso_doc["numcampos"] && $paso["numcampos"]){
           array_push($dato_usuarios,'<div class="detalle_cargo" tipo_actividad="4" idcargo="'.$usuarios[$j]["idcargo"].'"><legend>'.$usuarios[$j]["cargo"].'</legend></div>');
         //}        
       }
-			$actividad_no=busca_filtro_tabla("","paso_documento B, paso_actividad C","B.idpaso_documento=".$paso_doc[0]["idpaso_documento"]." AND C.idpaso_actividad=".$paso[$i]["idpaso_actividad"],"",$conn);
+			$actividad_no=busca_filtro_tabla("","paso_documento B, paso_actividad C","C.estado=1 AND B.idpaso_documento=".$paso_doc[0]["idpaso_documento"]." AND C.idpaso_actividad=".$paso[$i]["idpaso_actividad"],"",$conn);
 			//$icono_actividad='<i class="icon-uncheck actividad" tipo_actividad="2" idactividad="'.$paso[$i]["idpaso_actividad"].'"  idpaso_documento="'.$paso_doc[0]["idpaso_documento"].'" id="actividad_'.$paso[$i]["idpaso_actividad"].'"></i>';
 			if($actividad_no["numcampos"]){
 				//Si no esta asignada ninguna fecha limite toma la fecha de la asignacion y calcula basado en cada 
@@ -264,7 +264,7 @@ if($paso_doc["numcampos"] && $paso["numcampos"]){
       }
       else{
       		//CUANDO LA ACTIVIDAD ES PARA CUALQUIER USUARIO HABILITA ENLACE PARA TERMINARLA
-      		$cualquier_usuario=busca_filtro_tabla("","paso_actividad","idpaso_actividad=".$paso[$i]["idpaso_actividad"],"",$conn);
+      		$cualquier_usuario=busca_filtro_tabla("","paso_actividad","estado=1 AND idpaso_actividad=".$paso[$i]["idpaso_actividad"],"",$conn);
 			
 			if($cualquier_usuario[0]['llave_entidad']==-1 && !$actividad["numcampos"]){
 				$icono_tipo_actividad.='<div class="actividad tooltip_saia" style="cursor:hand;" title="actividad manual" tipo_actividad="2" idactividad="'.$paso[$i]["idpaso_actividad"].'" id="actividad_'.$paso[$i]["idpaso_actividad"].'" idpaso_documento="'.$paso_doc[0]["idpaso_documento"].'"><i class="icon-user"></i></div>';        
