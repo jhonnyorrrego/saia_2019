@@ -1414,6 +1414,9 @@ if($datos["numcampos"])
   else
    $campos=busca_filtro_tabla($campo,$datos[0]["nombre_tabla"],$llave."=".$iddoc,"",$conn);
 
+
+    print_r($campos);
+
    if($campos["numcampos"])
    { if($datos[0]["etiqueta_html"]=="arbol")
         {$tipo_arbol=explode(";",$datos[0]["valor"]);
@@ -1531,7 +1534,7 @@ if($datos["numcampos"])
 		}
 	}
 	
-	 print_r($retorno);
+	 
     if($tipo==NULL){
       echo(stripslashes($retorno));
       return;
