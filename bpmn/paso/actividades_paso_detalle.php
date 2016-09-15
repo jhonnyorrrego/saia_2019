@@ -11,7 +11,7 @@ $retorno["html"]='';
 switch($_REQUEST["tipo_accion"]){
 	case 0://formulario para cancelar la tarea
 		if($_REQUEST["idactividad_instancia"] && $_REQUEST["idpaso_documento"]){
-			$actividad=busca_filtro_tabla("","paso_instancia_terminada A, paso_documento B, paso_actividad C","A.documento_iddocumento=B.documento_iddocumento AND A.actividad_idpaso_actividad=C.idpaso_actividad AND  B.idpaso_documento=".$_REQUEST["idpaso_documento"]." AND A.idpaso_instancia=".$_REQUEST["idactividad_instancia"],"",$conn);
+			$actividad=busca_filtro_tabla("","paso_instancia_terminada A, paso_documento B, paso_actividad C","C.estado=1 AND A.documento_iddocumento=B.documento_iddocumento AND A.actividad_idpaso_actividad=C.idpaso_actividad AND  B.idpaso_documento=".$_REQUEST["idpaso_documento"]." AND A.idpaso_instancia=".$_REQUEST["idactividad_instancia"],"",$conn);
 			if($actividad["numcampos"]){
 				//array 1,2 son los estados validos para cambiar los valores de los id
 				if(in_array($actividad[0]["estado_paso_documento"],array(1,2))){
@@ -27,7 +27,7 @@ switch($_REQUEST["tipo_accion"]){
 	break;
 	case 1://Informacion de la actividad instanciada
 		if($_REQUEST["idactividad_instancia"] && $_REQUEST["idpaso_documento"]){
-			$actividad=busca_filtro_tabla("","paso_instancia_terminada A, paso_documento B, paso_actividad C","A.documento_iddocumento=B.documento_iddocumento AND A.actividad_idpaso_actividad=C.idpaso_actividad AND  B.idpaso_documento=".$_REQUEST["idpaso_documento"]." AND A.idpaso_instancia=".$_REQUEST["idactividad_instancia"],"",$conn);
+			$actividad=busca_filtro_tabla("","paso_instancia_terminada A, paso_documento B, paso_actividad C","C.estado=1 AND A.documento_iddocumento=B.documento_iddocumento AND A.actividad_idpaso_actividad=C.idpaso_actividad AND  B.idpaso_documento=".$_REQUEST["idpaso_documento"]." AND A.idpaso_instancia=".$_REQUEST["idactividad_instancia"],"",$conn);
 			if($actividad["numcampos"]){
 				$retorno["exito"]=1;
 				$retorno["responsable"]=$actividad[0]["responsable"];
@@ -66,7 +66,7 @@ switch($_REQUEST["tipo_accion"]){
 	break;
 	case 2: //formulario para ejecutar la actividad de forma manual.
 		if($_REQUEST["idactividad"] && $_REQUEST["idpaso_documento"]){
-			$actividad=busca_filtro_tabla("","paso_documento B, paso_actividad C","B.idpaso_documento=".$_REQUEST["idpaso_documento"]." AND C.idpaso_actividad=".$_REQUEST["idactividad"],"",$conn);
+			$actividad=busca_filtro_tabla("","paso_documento B, paso_actividad C","C.estado=1 AND B.idpaso_documento=".$_REQUEST["idpaso_documento"]." AND C.idpaso_actividad=".$_REQUEST["idactividad"],"",$conn);
 			if($actividad["numcampos"]){
 				//array 1,2 son los estados validos para cambiar los valores de los id
 				if(!in_array($actividad[0]["estado_paso_documento"],array(1,2))){
@@ -83,7 +83,7 @@ switch($_REQUEST["tipo_accion"]){
 	break;
 	case 3: //Informacion de la actividad no ejecutada
 		if($_REQUEST["idactividad"] && $_REQUEST["idpaso_documento"]){
-			$actividad=busca_filtro_tabla("","paso_documento B, paso_actividad C","B.idpaso_documento=".$_REQUEST["idpaso_documento"]." AND C.idpaso_actividad=".$_REQUEST["idactividad"],"",$conn);
+			$actividad=busca_filtro_tabla("","paso_documento B, paso_actividad C","C.estado=1 AND B.idpaso_documento=".$_REQUEST["idpaso_documento"]." AND C.idpaso_actividad=".$_REQUEST["idactividad"],"",$conn);
 			if($actividad["numcampos"]){
 				$retorno["exito"]=1;
 				$retorno["responsable"]=$actividad[0]["responsable"];
@@ -150,7 +150,7 @@ switch($_REQUEST["tipo_accion"]){
 			
 	  	//CANCELO ACTIVIDADES
 	  	
-	  		$actividades=busca_filtro_tabla("idpaso_actividad","paso_actividad","paso_idpaso=".$_REQUEST['idpaso'],"",$conn);
+	  		$actividades=busca_filtro_tabla("idpaso_actividad","paso_actividad","estado=1 AND paso_idpaso=".$_REQUEST['idpaso'],"",$conn);
 			
 			$actividades_cancelar=implode(',',extrae_campo($actividades,'idpaso_actividad'));
 		
