@@ -458,7 +458,7 @@ function validar_ruta_documento_flujo($iddoc,$pasos_evaluar,$paso_anterior,$acci
     //error("VALIDAR RUTA DOCUMENTO PASO RUTA");
     $dato_paso_ruta=busca_filtro_tabla("","paso_documento C, paso_actividad A, accion B","A.estado=1 AND A.accion_idaccion=B.idaccion AND A.paso_idpaso=C.paso_idpaso AND C.idpaso_documento IN(".implode(",",$pasos_evaluar).") AND (B.nombre='aprobar' OR nombre='confirmar')","",$conn);
     
-    print_r($dato_paso_ruta);
+    print_r($dato_paso_ruta);die();
     if($dato_paso_ruta["numcampos"]){
         //error("RUTA 1");
         $ruta1=busca_filtro_tabla("","buzon_entrada A, ruta B","A.ruta_idruta=B.idruta AND A.archivo_idarchivo=".$iddoc." AND A.nombre='POR_APROBAR' AND A.origen=-1 AND A.destino=".usuario_actual("funcionario_codigo"),"B.orden ASC",$conn);
