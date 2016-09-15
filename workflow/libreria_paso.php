@@ -468,6 +468,7 @@ function validar_ruta_documento_flujo($iddoc,$pasos_evaluar,$paso_anterior,$acci
             $funcionario_ultima_ruta=busca_filtro_tabla("","buzon_entrada","archivo_idarchivo=".$iddoc." AND nombre='POR_APROBAR'  AND destino<>-1 AND origen=-1","idtransferencia DESC",$conn);
             $ruta1=busca_filtro_tabla("","buzon_entrada A, ruta B","A.ruta_idruta=B.idruta AND A.archivo_idarchivo=".$iddoc." AND A.nombre='POR_APROBAR' AND A.origen=-1 AND A.destino=".$funcionario_ultima_ruta[0]["destino"],"B.orden ASC",$conn);
         }
+        
         if($ruta1["numcampos"]){
           for($i=0;$i<$ruta1["numcampos"];$i++){
               //error("RUTA 2");
@@ -475,7 +476,7 @@ function validar_ruta_documento_flujo($iddoc,$pasos_evaluar,$paso_anterior,$acci
               //Se debe actualizar la ruta para que tome el dato del paso y haga las actualizaciones necesarias
               if($ruta2["numcampos"]){
                   //error("EXISTE RUTA 2 Y EL FUNCIONARIO ESTA ACTIVO");
-                  /*
+                  
                   if($dato_paso_ruta[0]["llave_entidad"]==-2){
                     $datos_formato_ruta=busca_filtro_tabla("b.nombre,b.banderas,a.nombre_tabla","formato a,campos_formato b","b.idcampos_formato=".$dato_paso_ruta[0]["fk_campos_formato"]."  AND a.idformato=b.formato_idformato AND a.idformato=".$dato_paso_ruta[0]["formato_anterior"],"",$conn);  
                     
@@ -523,9 +524,9 @@ function validar_ruta_documento_flujo($iddoc,$pasos_evaluar,$paso_anterior,$acci
                   } //fin llave_entidad -2
                   
                   
-                  */
+                 
                   
-                  $funcionario=busca_filtro_tabla("","vfuncionario_dc","idcargo=".$dato_paso_ruta[0]["llave_entidad"]." AND estado_dc=1 AND estado=1","",$conn);
+                 // $funcionario=busca_filtro_tabla("","vfuncionario_dc","idcargo=".$dato_paso_ruta[0]["llave_entidad"]." AND estado_dc=1 AND estado=1","",$conn);
                  // print_r($funcionario);
                   //Verificar que pasa cuando se tienen varios funcionarios con el mismo cargo 
                   //Se actualiza la ruta se modifica el destino por el funcionario asignado en la actividad por medio del cargo y el origen en la ruta siguiente
@@ -555,6 +556,8 @@ function validar_ruta_documento_flujo($iddoc,$pasos_evaluar,$paso_anterior,$acci
           phpmkr_query($sql2);
           //echo(" SQL ASIGNACION: <br>".$sql2."<hr>");
         }
+        
+        
     }
     else if($accion=='aprobar'){
         //error("ACCION APROBAR");
