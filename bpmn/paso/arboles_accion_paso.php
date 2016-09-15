@@ -23,7 +23,7 @@ function accion_responder(){
 	
 	$paso_anterior=False;
 	if(isset($_REQUEST["idpaso_actividad"])){
-		$actividad_info=busca_filtro_tabla("paso_anterior","paso_actividad a","a.idpaso_actividad=".$_REQUEST["idpaso_actividad"],"",$conn);
+		$actividad_info=busca_filtro_tabla("paso_anterior","paso_actividad a","a.estado=1 AND a.idpaso_actividad=".$_REQUEST["idpaso_actividad"],"",$conn);
 		$paso_anterior=$actividad_info[0]["paso_anterior"];
 	}
 	
