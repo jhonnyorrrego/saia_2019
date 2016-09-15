@@ -1100,7 +1100,7 @@ function cancelar_flujo($idpaso_documento){
     $sql = "INSERT INTO paso_rastro (documento_idpaso_documento,funcionario_codigo,estado_original,estado_final,fecha_cambio) values('".$datos[$i]["idpaso_documento"]."','".usuario_actual("funcionario_codigo")."','".$datos[$i]["estado_paso_documento"]."','3',".$fecha_cambio.")";
     phpmkr_query($sql,$conn);
     
-    $actividad = busca_filtro_tabla("","paso_actividad","paso_idpaso=".$datos[$i]["paso_idpaso"],"",$conn);
+    $actividad = busca_filtro_tabla("","paso_actividad","estado=1 AND paso_idpaso=".$datos[$i]["paso_idpaso"],"",$conn);
     for($j=0;$j<$actividad["numcampos"];$j++){
       $verificando = busca_filtro_tabla("","paso_instancia_terminada","actividad_idpaso_actividad=".$actividad[$j]["idpaso_actividad"]." and documento_iddocumento=".$datos[$i]["documento_iddocumento"],"",$conn);
       if($verificando["numcampos"] > 0){
