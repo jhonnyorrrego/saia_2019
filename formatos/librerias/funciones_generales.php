@@ -1372,7 +1372,7 @@ function mostrar_valor_campo($campo,$idformato,$iddoc,$tipo=NULL)
 { 
   global $conn,$ruta_db_superior;
   $datos=busca_filtro_tabla("nombre_tabla,detalle,etiqueta_html,valor,item,tipo_dato,autoguardado,A.nombre as formato,ruta_adicionar,ruta_editar,ruta_mostrar,tipo_edicion","formato A,campos_formato B","B.formato_idformato=A.idformato AND A.idformato=".$idformato." AND B.nombre LIKE '".$campo."'","",$conn);
- 
+  //print_r($datos);
   if($datos[0]["item"])
     {$llave="id".$datos[0]["nombre_tabla"]; 
      if(@$_REQUEST["item"])
@@ -1413,9 +1413,6 @@ if($datos["numcampos"])
    }
   else
    $campos=busca_filtro_tabla($campo,$datos[0]["nombre_tabla"],$llave."=".$iddoc,"",$conn);
-
-
-    print_r($campos);
 
    if($campos["numcampos"])
    { if($datos[0]["etiqueta_html"]=="arbol")
@@ -1533,8 +1530,6 @@ if($datos["numcampos"])
 			$retorno=str_replace("<!-- pagebreak -->",'<pagebreak/>',$retorno);
 		}
 	}
-	
-	 
     if($tipo==NULL){
       echo(stripslashes($retorno));
       return;
