@@ -576,6 +576,8 @@ $x_estado ,$x_orden , $x_tipo, $x_tipo_entidad, $x_llave_entidad, $x_plazo, $x_t
   }
   $strsql.=implode(",",$arreglo);
   $strsql.=' WHERE idpaso_actividad='.$x_idactividad_paso;
+  print_r($strsql);die();
+  
   phpmkr_query($strsql, $conn) or die("Fall&oacute; la b&uacute;squeda" . phpmkr_error() . ' SQL:' . $strsql);
   return true;
 }
