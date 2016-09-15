@@ -539,7 +539,8 @@ global $conn;
 //llave_entidad =-1 es la llave generica es decir cualquiera lo puede hacer
 if($llave_entidad==-1)
   return(true);
-
+if($llave_entidad==-2)
+  return(true);
 $condicion='';
 switch($entidad){
     case 1://funcionario
