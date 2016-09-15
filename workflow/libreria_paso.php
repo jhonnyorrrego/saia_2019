@@ -476,7 +476,7 @@ function validar_ruta_documento_flujo($iddoc,$pasos_evaluar,$paso_anterior,$acci
               //Se debe actualizar la ruta para que tome el dato del paso y haga las actualizaciones necesarias
               if($ruta2["numcampos"]){
                   //error("EXISTE RUTA 2 Y EL FUNCIONARIO ESTA ACTIVO");
-                  //print_r($dato_paso_ruta);die();
+                  print_r($dato_paso_ruta);die();
                   if($dato_paso_ruta[0]["llave_entidad"]==-2){
                     $datos_formato_ruta=busca_filtro_tabla("b.nombre,b.banderas,a.nombre_tabla","formato a,campos_formato b","b.idcampos_formato=".$dato_paso_ruta[0]["fk_campos_formato"]."  AND a.idformato=b.formato_idformato AND a.idformato=".$dato_paso_ruta[0]["formato_anterior"],"",$conn);  
                     
@@ -524,7 +524,7 @@ function validar_ruta_documento_flujo($iddoc,$pasos_evaluar,$paso_anterior,$acci
                   } //fin llave_entidad -2
                   
                   
-                   print_r($funcionario);print_r('<---- FIN');die();
+                  // print_r($funcionario);print_r('<---- FIN');die();
                   
                  // $funcionario=busca_filtro_tabla("","vfuncionario_dc","idcargo=".$dato_paso_ruta[0]["llave_entidad"]." AND estado_dc=1 AND estado=1","",$conn);
                  // print_r($funcionario);
