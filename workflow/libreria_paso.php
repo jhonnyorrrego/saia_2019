@@ -217,6 +217,8 @@ for($i=0;$i<@$listado_acciones_paso["numcampos"];$i++){
 	if(($accion=='confirmar' || $accion=='aprobar') && $listado_acciones_paso[$i]['llave_entidad']==-2){
 	    $verifica_funcionario=1;
 	}
+	$cadena='accion: '.$accion.' , entidad: '.$listado_acciones_paso[$i]['llave_entidad'];
+	print_r($cadena);die();
 	
     if($verifica_funcionario){
       $terminada_actual=verificar_instancia_terminada($listado_acciones_paso[$i]["idpaso_actividad"],$iddocumento,$_SESSION["usuario_actual"],$tipo_terminacion);
