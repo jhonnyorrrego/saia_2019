@@ -493,16 +493,16 @@ function validar_ruta_documento_flujo($iddoc,$pasos_evaluar,$paso_anterior,$acci
                             if($bandera_validar!=''){
                                 switch($bandera_validar){
                                     case 'ffc': //funcionario_codigo
-                                        $condicion="funcionario_codigo='".$dato_paso_ruta[0]["llave_entidad"]."'";
+                                        $condicion="funcionario_codigo='".$valor_campo_ruta."'";
                                         break;
                                     case 'fdc': //iddependencia_cargo
-                                        $condicion="iddependencia_cargo='".$dato_paso_ruta[0]["llave_entidad"]."'";
+                                        $condicion="iddependencia_cargo='".$valor_campo_ruta."'";
                                         break;
                                     case 'fid': //idfuncionario
-                                        $condicion="idfuncionario='".$dato_paso_ruta[0]["llave_entidad"]."'";
+                                        $condicion="idfuncionario='".$valor_campo_ruta."'";
                                         break;
                                     case 'cargo': //idcargo
-                                        $condicion="idcargo='".$dato_paso_ruta[0]["llave_entidad"]."'";
+                                        $condicion="idcargo='".$valor_campo_ruta."'";
                                         break;                                        
                                 }
                                 $funcionario=busca_filtro_tabla("","vfuncionario_dc",$condicion." AND estado_dc=1 AND estado=1","",$conn);
