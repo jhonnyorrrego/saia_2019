@@ -203,7 +203,7 @@ function terminar_actividad_paso($iddocumento,$accion,$tipo_terminacion=1,$paso_
 if($accion!="" && $tipo_terminacion==1){ 
 //La condicion c.estado_paso_documento>4 es para verificar que el paso no este terminado o cerrado
   if($iddocumento){
-  $listado_acciones_paso=busca_filtro_tabla("B.idpaso_actividad,A.idaccion,C.idpaso_documento,B.entidad_identidad,B.llave_entidad,C.diagram_iddiagram_instance, B.paso_idpaso,C.documento_iddocumento","accion A, paso_actividad B, paso_documento C","A.idaccion=B.accion_idaccion AND B.paso_idpaso=C.paso_idpaso AND C.documento_iddocumento=".$iddocumento." AND A.nombre='".$accion."' AND C.estado_paso_documento>3","",$conn);
+  $listado_acciones_paso=busca_filtro_tabla("B.idpaso_actividad,A.idaccion,C.idpaso_documento,B.entidad_identidad,B.llave_entidad,C.diagram_iddiagram_instance, B.paso_idpaso,C.documento_iddocumento","accion A, paso_actividad B, paso_documento C","B.estado=1 AND A.idaccion=B.accion_idaccion AND B.paso_idpaso=C.paso_idpaso AND C.documento_iddocumento=".$iddocumento." AND A.nombre='".$accion."' AND C.estado_paso_documento>3","",$conn);
   }               
 }
 else if($paso_documento && $tipo_terminacion==2 && $idactividad){
