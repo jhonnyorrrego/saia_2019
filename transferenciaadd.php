@@ -11,7 +11,7 @@ if(@$_REQUEST["idpaso_actividad"] != ''){
 	$accion_flujo = '&accion=1';
 	$paso = busca_filtro_tabla("B.destino,A.documento_iddocumento","paso_documento A, paso_enlace B","idpaso_documento=".$_REQUEST["idpaso_documento"]." and paso_idpaso=origen","",$conn);
 
-	$actividad = busca_filtro_tabla("","paso_actividad","orden=0 and paso_idpaso=".$paso[0]["destino"],"",$conn);
+	$actividad = busca_filtro_tabla("","paso_actividad","estado=1 AND orden=0 and paso_idpaso=".$paso[0]["destino"],"",$conn);
 	if(!strpos($actividad[0]["llave_entidad"],",")){
 		if($actividad[0]["entidad_identidad"] == 1){
 			include_once("formatos/librerias/funciones_generales.php");
