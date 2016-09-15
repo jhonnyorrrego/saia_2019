@@ -92,7 +92,7 @@ function terminar_actividad_paso($iddocumento,$accion,$tipo_terminacion=1,$paso_
   //error("INICIA TERMINAR ACTIVIDAD PASO--->");
  //Se adiciona para validar que el paso actual sea una respuesta del paso anterior para que el paso actual actualice el iddocumento
  
- print_r($accion);
+ print_r($accion);die();
  
 if($accion=="adicionar"){
 
