@@ -91,6 +91,9 @@ function terminar_actividad_paso($iddocumento,$accion,$tipo_terminacion=1,$paso_
   
   //error("INICIA TERMINAR ACTIVIDAD PASO--->");
  //Se adiciona para validar que el paso actual sea una respuesta del paso anterior para que el paso actual actualice el iddocumento
+ 
+ 
+ 
 if($accion=="adicionar"){
 
   //Se consulta la informacion del documento actual para sacar los pasos y las actividades vinculadas
@@ -524,7 +527,7 @@ function validar_ruta_documento_flujo($iddoc,$pasos_evaluar,$paso_anterior,$acci
                   } //fin llave_entidad -2
                   
                   
-                   print_r($funcionario);print_r('<---- FIN');die();
+                   //print_r($funcionario);print_r('<---- FIN');die();
                   
                  // $funcionario=busca_filtro_tabla("","vfuncionario_dc","idcargo=".$dato_paso_ruta[0]["llave_entidad"]." AND estado_dc=1 AND estado=1","",$conn);
                  // print_r($funcionario);
