@@ -503,9 +503,7 @@ function validar_ruta_documento_flujo($iddoc,$pasos_evaluar,$paso_anterior,$acci
                   if($dato_paso_ruta[0]["llave_entidad"]==-2){
                     $condicion=generar_condicion_funcionario_tomado_campo($dato_paso_ruta[0]["fk_campos_formato"],$dato_paso_ruta[0]["formato_anterior"],$iddoc);
                     $funcionario=busca_filtro_tabla("","vfuncionario_dc",$condicion." AND estado_dc=1 AND estado=1","",$conn);
-                    
-                    
-                   
+
                   }else{
                       $funcionario=busca_filtro_tabla("","vfuncionario_dc","idcargo=".$dato_paso_ruta[0]["llave_entidad"]." AND estado_dc=1 AND estado=1","",$conn);
                   } //fin llave_entidad -2
