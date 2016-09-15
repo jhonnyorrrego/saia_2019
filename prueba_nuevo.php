@@ -13,7 +13,7 @@ include($ruta_db_superior.'db.php');
 
 
 $valor_campo_ruta=mostrar_valor_campo('arbol_funs',218,232,1);
-print_r($datos_formato_ruta);die();
+echo($datos_formato_ruta.'<--- FIN');die();
 
 
 
