@@ -482,8 +482,8 @@ function validar_ruta_documento_flujo($iddoc,$pasos_evaluar,$paso_anterior,$acci
                     if($datos_formato_ruta['numcampos']){
                         $consulta_valor_campo=busca_filtro_tabla($datos_formato_ruta[0]['nombre'],$datos_formato_ruta[0]['nombre_tabla'],"documento_iddocumento=".$iddoc,"",$conn);
                         
-                        $valor_campo_ruta=mostrar_valor_campo($datos_formato_ruta[0]['nombre'],$dato_paso_ruta[0]["formato_anterior"],$iddoc,1);
-                        print_r($consulta_valor_campo);die();
+                        $valor_campo_ruta=$consulta_valor_campo[0][$datos_formato_ruta[0]['nombre']];
+                       print_r($valor_campo_ruta);
                         if($valor_campo_ruta){
                             $vector_banderas=explode(',',$datos_formato_ruta[0]['banderas']);
                             $vector_banderas_validar=array('ffc','fdc','fid','fc');//funcionario_codigo,iddependencia_cargo,idfuncionario,idcargo
