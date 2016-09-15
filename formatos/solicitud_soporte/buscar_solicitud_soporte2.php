@@ -1,4 +1,93 @@
-<?php include_once("../../formatos/librerias/funciones_generales.php"); ?><?php include_once("../../formatos/librerias/funciones_generales.php"); ?><div class="control-group"><div class="controls"><b>Tipo de solicitud<input type="hidden" name="bksaiacondicion_tipo_solitud" id="bksaiacondicion_tipo_solitud" value="like_total"></b><div id="esperando_tipo_solitud"><img src="../../imagenes/cargando.gif"></div><div id="seleccionados"></div><input type="text" id="stext_tipo_solitud" placeholder="Buscar" width="200px" size="25">
+<?php include_once("../librerias/funciones_generales.php"); ?><?php include_once("../../calendario/calendario.php"); ?><?php include_once("../librerias/header_formato.php"); ?><legend id="label_formato" class="legend">B&uacute;squeda en formato Solicitud de soporte</legend><br /><br /><?php include_once("../librerias/funciones_generales.php"); ?><div class="control-group"><div class="controls"><b>Arbol de funcionarios<input type="hidden" name="bksaiacondicion_arbol_funs" id="bksaiacondicion_arbol_funs" value="="></b><div id="esperando_arbol_funs"><img src="../../imagenes/cargando.gif"></div><div id="seleccionados"></div><input type="text" id="stext_arbol_funs" placeholder="Buscar" width="200px" size="25">
+                   <a href="javascript:void(0)" onclick="tree_arbol_funs.findItem(htmlentities(document.getElementById('stext_arbol_funs').value),1)"><img src="../../botones/general/anterior.png"border="0px"></a>
+                   <a href="javascript:void(0)" onclick="tree_arbol_funs.findItem(htmlentities(document.getElementById('stext_arbol_funs').value),0,1)"><img src="../../botones/general/buscar.png"border="0px"></a>
+                          <a href="javascript:void(0)" onclick="tree_arbol_funs.findItem(htmlentities(document.getElementById('stext_arbol_funs').value))"><img src="../../botones/general/siguiente.png"border="0px"></a>
+                          <br /><br /><div id="treeboxbox_arbol_funs" height=""></div><input type="hidden" maxlength="11"  name="g@arbol_funs" id="arbol_funs"   value="" ><label style="display:none" class="error" for="arbol_funs">Campo obligatorio.</b></label><script type="text/javascript">
+                  <!--
+                      var browserType;
+                      if (document.layers) {browserType = "nn4"}
+                      if (document.all) {browserType = "ie"}
+                      if (window.navigator.userAgent.toLowerCase().match("gecko")) {
+                         browserType= "gecko"
+                      }
+                			tree_arbol_funs=new dhtmlXTreeObject("treeboxbox_arbol_funs","","",0);
+                			tree_arbol_funs.setImagePath("../../imgs/");
+                			tree_arbol_funs.enableIEImageFix(true);tree_arbol_funs.enableCheckBoxes(1);
+                    tree_arbol_funs.enableRadioButtons(true);tree_arbol_funs.setOnLoadingStart(cargando_arbol_funs);
+                      tree_arbol_funs.setOnLoadingEnd(fin_cargando_arbol_funs);tree_arbol_funs.enableSmartXMLParsing(true);tree_arbol_funs.loadXML("../../test.php?rol=1&sin_padre=1");
+                      tree_arbol_funs.setOnCheckHandler(onNodeSelect_arbol_funs);
+                      function onNodeSelect_arbol_funs(nodeId)
+                      {valor_destino=document.getElementById("arbol_funs");
+                       destinos=tree_arbol_funs.getAllChecked();
+                       var nuevos_valores=destinos.split(",");
+						var cantidad=nuevos_valores.length;
+						var funcionarios=new Array();
+						var indice=0;
+						for(var i=0;i<cantidad;i++){
+							//if(nuevos_valores[i].indexOf("#")=="-1"){
+								if(nuevos_valores[i]!=""){
+									funcionarios[indice]=nuevos_valores[i];
+									indice++;
+								}
+							//}
+						}
+						valor_destino.value=funcionarios.join(",");
+                      }
+                      function fin_cargando_arbol_funs() {
+                        if (browserType == "gecko" )
+                           document.poppedLayer =
+                               eval('document.getElementById("esperando_arbol_funs")');
+                        else if (browserType == "ie")
+                           document.poppedLayer =
+                              eval('document.getElementById("esperando_arbol_funs")');
+                        else
+                           document.poppedLayer =
+                              eval('document.layers["esperando_arbol_funs"]');
+                        document.poppedLayer.style.visibility = "hidden";
+                      }
+                      function cargando_arbol_funs() {
+                        if (browserType == "gecko" )
+                           document.poppedLayer =
+                               eval('document.getElementById("esperando_arbol_funs")');
+                        else if (browserType == "ie")
+                           document.poppedLayer =
+                              eval('document.getElementById("esperando_arbol_funs")');
+                        else
+                           document.poppedLayer =
+                               eval('document.layers["esperando_arbol_funs"]');
+                        document.poppedLayer.style.visibility = "visible";
+                      }
+                	--></script><div class="btn-group" data-toggle="buttons-radio" >
+		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_arbol_funs',this.id)">
+		    Y
+		  </button>
+		  <button type="button" class="btn btn-mini" data-toggle="button" id="o" onclick="llenar_valor('bqsaiaenlace_arbol_funs',this.id)">
+		    O
+		  </button-->
+		  <input type="hidden" name="bqsaiaenlace_arbol_funs" id="bqsaiaenlace_arbol_funs" value="y" />
+		</div></div></div><div class="control-group">
+                  <label class="string control-label" for="fecha_soporte"><b>Fecha solicitud</b></label>
+                  <input type="hidden" name="bksaiacondicion_g@fecha_soporte_x" id="bksaiacondicion_g@fecha_soporte_x" value=">=">
+                  <div class="controls">
+                  Entre <input type="text"  name="bqsaia_g@fecha_soporte_x" id="fecha_soporte_x" tipo="fecha" value="" style="width:100px" placeholder="Inicio"><?php selector_fecha("fecha_soporte_x","kformulario_saia","Y-m-d",date("m"),date("Y"),"default.css","../../","AD:VALOR"); ?> y 
+                  <input type="hidden" name="bksaiacondicion_g@fecha_soporte_y" id="bksaiacondicion_g@fecha_soporte_y" value="<=">
+                  <input type="text"  name="bqsaia_g@fecha_soporte_y" id="fecha_soporte_y" tipo="fecha" value="" style="width:100px" placeholder="Fin"><?php selector_fecha("fecha_soporte_y","kformulario_saia","Y-m-d",date("m"),date("Y"),"default.css","../../","AD:VALOR"); ?><div class="btn-group" data-toggle="buttons-radio" >
+		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_fecha_soporte',this.id)">
+		    Y
+		  </button>
+		  <button type="button" class="btn btn-mini" data-toggle="button" id="o" onclick="llenar_valor('bqsaiaenlace_fecha_soporte',this.id)">
+		    O
+		  </button-->
+		  <input type="hidden" name="bqsaiaenlace_fecha_soporte" id="bqsaiaenlace_fecha_soporte" value="y" />
+		</div></div></div><div class="btn-group" data-toggle="buttons-radio" >
+		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_hora_solicitud',this.id)">
+		    Y
+		  </button>
+		  <button type="button" class="btn btn-mini" data-toggle="button" id="o" onclick="llenar_valor('bqsaiaenlace_hora_solicitud',this.id)">
+		    O
+		  </button-->
+		  <input type="hidden" name="bqsaiaenlace_hora_solicitud" id="bqsaiaenlace_hora_solicitud" value="y" />
+		</div></div></div><div class="control-group"><div class="controls"><b>Tipo de solicitud<input type="hidden" name="bksaiacondicion_tipo_solitud" id="bksaiacondicion_tipo_solitud" value="like_total"></b><div id="esperando_tipo_solitud"><img src="../../imagenes/cargando.gif"></div><div id="seleccionados"></div><input type="text" id="stext_tipo_solitud" placeholder="Buscar" width="200px" size="25">
                    <a href="javascript:void(0)" onclick="tree_tipo_solitud.findItem(htmlentities(document.getElementById('stext_tipo_solitud').value),1)"><img src="../../botones/general/anterior.png"border="0px"></a>
                    <a href="javascript:void(0)" onclick="tree_tipo_solitud.findItem(htmlentities(document.getElementById('stext_tipo_solitud').value),0,1)"><img src="../../botones/general/buscar.png"border="0px"></a>
                           <a href="javascript:void(0)" onclick="tree_tipo_solitud.findItem(htmlentities(document.getElementById('stext_tipo_solitud').value))"><img src="../../botones/general/siguiente.png"border="0px"></a>
@@ -73,4 +162,4 @@
 		    O
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_g@prioridad" id="bqsaiaenlace_g@prioridad" value="y" />
-		</div></div></div><div class="control-group"><b>Descripci&oacute;n<input type="hidden" name="bksaiacondicion_g@descripcion" id="bksaiacondicion_g@descripcion" value="like_total"></b><div class="controls"><textarea  maxlength="255"   id="descripcion" name="bqsaia_g@descripcion"  style="width:500px;height:100px"></textarea></div></div><input type="hidden" name="campos_especiales" value="tipo_solitud@arbol"><input type="hidden" name="filtro_adicional" id="filtro_adicional" value=" ft_solicitud_soporte g @ AND  g.documento_iddocumento=iddocumento "></body><input type="hidden" name="idbusqueda_componente" value="0">
+		</div></div></div><div class="control-group"><b>Descripci&oacute;n<input type="hidden" name="bksaiacondicion_g@descripcion" id="bksaiacondicion_g@descripcion" value="like_total"></b><div class="controls"><textarea  maxlength="255"   id="descripcion" name="bqsaia_g@descripcion"  style="width:500px;height:100px"></textarea></div></div><input type="hidden" name="campos_especiales" value="arbol_funs@arbol,tipo_solitud@arbol"><input type="hidden" name="filtro_adicional" id="filtro_adicional" value=" ft_solicitud_soporte g @ AND  g.documento_iddocumento=iddocumento "></body><input type="hidden" name="bqtipodato_plantilla" id="bqtipodato_plantilla" value="date|g@fecha_soporte_x,g@fecha_soporte_y">
