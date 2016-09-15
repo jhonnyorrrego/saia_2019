@@ -94,7 +94,7 @@ if(isset($_REQUEST["idpaso_actividad"])){
 else {
 	if(@$paso_documento[0]["paso_idpaso"]){
 		$actividad = busca_filtro_tabla("distinct(diagram_iddiagram)","paso","idpaso=".@$paso_documento[0]["paso_idpaso"],"",$conn);
-		$pasos = busca_filtro_tabla("","paso,paso_actividad","diagram_iddiagram=".$actividad[0]["diagram_iddiagram"]." and paso_idpaso=idpaso and accion_idaccion=6","",$conn);
+		$pasos = busca_filtro_tabla("","paso,paso_actividad","estado=1 AND diagram_iddiagram=".$actividad[0]["diagram_iddiagram"]." and paso_idpaso=idpaso and accion_idaccion=6","",$conn);
 		if($pasos["numcampos"] > 0){
 			$complemento .= '&idpaso_actividad='.$pasos[0]["idpaso_actividad"];
 			$propios = buscar_formatos_paso($pasos[0]["idpaso_actividad"]);
@@ -116,7 +116,7 @@ for ($j = 0; $j < $categorias["numcampos"]; $j++) {
 <?php
 function buscar_formatos_paso($idactividad){
 	global $complemento,$conn;
-	$activi = busca_filtro_tabla("","paso_actividad","idpaso_actividad=".$idactividad,"",$conn);
+	$activi = busca_filtro_tabla("","paso_actividad","estado=1 AND idpaso_actividad=".$idactividad,"",$conn);
 	if($activi[0]["formato_idformato"] != NULL){
 		$formatos = explode(",",$activi[0]["formato_idformato"]);
 		$cantidad = count($formatos);
