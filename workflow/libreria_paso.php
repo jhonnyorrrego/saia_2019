@@ -526,7 +526,7 @@ function validar_ruta_documento_flujo($iddoc,$pasos_evaluar,$paso_anterior,$acci
                   */
                   
                   $funcionario=busca_filtro_tabla("","vfuncionario_dc","idcargo=".$dato_paso_ruta[0]["llave_entidad"]." AND estado_dc=1 AND estado=1","",$conn);
-                  print_r($funcionario);
+                 // print_r($funcionario);
                   //Verificar que pasa cuando se tienen varios funcionarios con el mismo cargo 
                   //Se actualiza la ruta se modifica el destino por el funcionario asignado en la actividad por medio del cargo y el origen en la ruta siguiente
                   //error("ACTUALIZA RUTA ");
