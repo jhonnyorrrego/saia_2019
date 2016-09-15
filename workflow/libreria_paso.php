@@ -505,7 +505,7 @@ function validar_ruta_documento_flujo($iddoc,$pasos_evaluar,$paso_anterior,$acci
                     $funcionario=busca_filtro_tabla("","vfuncionario_dc",$condicion." AND estado_dc=1 AND estado=1","",$conn);
                     
                     
-                    print_r($funcionario);die();
+                   
                   }else{
                       $funcionario=busca_filtro_tabla("","vfuncionario_dc","idcargo=".$dato_paso_ruta[0]["llave_entidad"]." AND estado_dc=1 AND estado=1","",$conn);
                   } //fin llave_entidad -2
