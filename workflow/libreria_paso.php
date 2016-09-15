@@ -261,7 +261,12 @@ for($i=0;$i<@$listado_acciones_paso["numcampos"];$i++){
                     } //fin $datos_formato_ruta['numcampos']	    
 	    
 	   	print_r($funcionario);die();
-	    $verifica_funcionario=1;
+	   	
+	   	if($funcionario[0]['login']==usuario_actual('login')){
+	   	     $verifica_funcionario=1;
+	   	}
+	   	
+	   
 	}
 	$cadena='accion: '.$accion.' , entidad: '.$listado_acciones_paso[$i]['llave_entidad'];
 	print_r($listado_acciones_paso);die();
