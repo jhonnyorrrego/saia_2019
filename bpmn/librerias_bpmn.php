@@ -207,7 +207,7 @@ if($accion!="" && $tipo_terminacion==1){
   }               
 }
 else if($paso_documento && $tipo_terminacion==2 && $idactividad){
-  $listado_acciones_paso=busca_filtro_tabla("B.idpaso_actividad,B.accion_idaccion AS idaccion,C.idpaso_documento,B.entidad_identidad,B.llave_entidad,C.diagram_iddiagram_instance,B.paso_idpaso,C.documento_iddocumento"," paso_actividad B, paso_documento C"," B.paso_idpaso=C.paso_idpaso AND C.idpaso_documento=".$paso_documento." AND B.idpaso_actividad=".$idactividad." AND C.estado_paso_documento>3","",$conn);
+  $listado_acciones_paso=busca_filtro_tabla("B.idpaso_actividad,B.accion_idaccion AS idaccion,C.idpaso_documento,B.entidad_identidad,B.llave_entidad,C.diagram_iddiagram_instance,B.paso_idpaso,C.documento_iddocumento"," paso_actividad B, paso_documento C","B.estado=1 AND  B.paso_idpaso=C.paso_idpaso AND C.idpaso_documento=".$paso_documento." AND B.idpaso_actividad=".$idactividad." AND C.estado_paso_documento>3","",$conn);
   //print_r($listado_acciones_paso);
 }
 else{
@@ -282,18 +282,18 @@ function verificar_terminacion_paso($idpaso,$iddocumento){
 
   //Sacamos el paso del documento para conocer el estado 
   if($paso_documento["numcampos"] && $paso_documento[0]["estado_paso_documento"]>3){
-    $actividad_terminada=busca_filtro_tabla("","paso_instancia_terminada A,paso_actividad B","A.actividad_idpaso_actividad=B.idpaso_actividad AND B.paso_idpaso=".$idpaso." AND documento_iddocumento=".$iddocumento,"",$conn);
+    $actividad_terminada=busca_filtro_tabla("","paso_instancia_terminada A,paso_actividad B","B.estado=1 AND A.actividad_idpaso_actividad=B.idpaso_actividad AND B.paso_idpaso=".$idpaso." AND documento_iddocumento=".$iddocumento,"",$conn);
     $lactividades=extrae_campo($actividad_terminada,"actividad_idpaso_actividad");
     $condicion_actividad="";
     if($actividad_terminada["numcampos"]){
       $condicion_actividades=" AND idpaso_actividad NOT IN(".implode(",",$lactividades).")";
     }
-    $pasos_restrictivos=busca_filtro_tabla("","paso_actividad","paso_idpaso=".$idpaso." AND restrictivo=1".$condicion_actividades,"",$conn);
+    $pasos_restrictivos=busca_filtro_tabla("","paso_actividad","estado=1 AND paso_idpaso=".$idpaso." AND restrictivo=1".$condicion_actividades,"",$conn);
     if($pasos_restrictivos["numcampos"]){
       return(false);
     }
     else{      
-      $pasos_no_restrictivos=busca_filtro_tabla("","paso_actividad","paso_idpaso=".$idpaso." AND restrictivo=1".$condicion_actividades,"",$conn);
+      $pasos_no_restrictivos=busca_filtro_tabla("","paso_actividad","estado=1 AND paso_idpaso=".$idpaso." AND restrictivo=1".$condicion_actividades,"",$conn);
       if($pasos_no_restrictivos["numcampos"]){
         $sql_terminacion_ejecutado="UPDATE paso_documento SET estado_paso_documento=1 WHERE idpaso_documento=".$paso_documento[0]["idpaso_documento"];
         phpmkr_query($sql_terminacion_ejecutado);
@@ -319,7 +319,7 @@ function iniciar_flujo($iddocumento,$idflujo){
 global $conn;
   if(!$idflujo){
     $documento=busca_filtro_tabla("","documento A, formato B","lower(A.plantilla)=lower(B.nombre) AND A.iddocumento=".$iddocumento,"",$conn);
-    $flujo=busca_filtro_tabla("B.diagram_iddiagram","paso B, paso_actividad C, accion D, paso_enlace E, vfuncionario_dc F","B.idpaso=C.paso_idpaso AND C.accion_idaccion=D.idaccion AND D.nombre='adicionar' AND C.formato_idformato=".$documento[0]["idformato"]." AND E.destino=B.idpaso AND E.origen=-1 AND D.nombre = 'adicionar' AND ((C.llave_entidad=F.idcargo OR C.llave_entidad=-1) AND F.funcionario_codigo=".usuario_actual("funcionario_codigo").")","",$conn);
+    $flujo=busca_filtro_tabla("B.diagram_iddiagram","paso B, paso_actividad C, accion D, paso_enlace E, vfuncionario_dc F","C.estado=1 AND B.idpaso=C.paso_idpaso AND C.accion_idaccion=D.idaccion AND D.nombre='adicionar' AND C.formato_idformato=".$documento[0]["idformato"]." AND E.destino=B.idpaso AND E.origen=-1 AND D.nombre = 'adicionar' AND ((C.llave_entidad=F.idcargo OR C.llave_entidad=-1) AND F.funcionario_codigo=".usuario_actual("funcionario_codigo").")","",$conn);
     //print_r($flujo);
     //TODO: Aqui se debe validar que el idflujo llegue como un arreglo en caso de que existan varios formatos vinculados a varios flujos.  Se debe validar que el usuario que inicia el flujo sea el encargado de adicionar el formato y que una de las acciones del paso inicial sea adicionar el formato actual
     if($flujo["numcampos"]){
@@ -442,7 +442,7 @@ if($devueltos){
   $texto.=("Documento devuelto.");
 }
 
-$actividad=busca_filtro_tabla("","paso_actividad A"," A.idpaso_actividad=".$idactividad,"",$conn);
+$actividad=busca_filtro_tabla("","paso_actividad A","A.estado=1 AND A.idpaso_actividad=".$idactividad,"",$conn);
 if($actividad["numcampos"]){
   //Si llave de entidad tiene el valor de -1 cualquiera lo puede ejecutar, se modifica la funcion en class.funcionario
   $puede_ejecutar=verificar_existencia_funcionario($actividad[0]["entidad_identidad"],$actividad[0]["llave_entidad"],$_SESSION["usuario_actual"]);
@@ -501,7 +501,7 @@ if($devuelto){
   $texto.="<a href='rehacer_actividad_paso.php?idpaso_documento=".$idpaso_documento."&idpaso_instancia_terminada=".$idpaso_instancia_terminada."'><img src='".$ruta_db_superior."images/panel_inferior_pasos/rehacer_flujo.png' title='Restaurar actividad del paso' alt='Restaurar actividad del paso'></a>";
   return $texto;
 }
-$actividad=busca_filtro_tabla("","paso_actividad A","A.idpaso_actividad=".$idactividad,"",$conn);
+$actividad=busca_filtro_tabla("","paso_actividad A","A.estado=1 AND A.idpaso_actividad=".$idactividad,"",$conn);
 if($actividad["numcampos"]){
     if($actividad[0]["tipo"]==1){
         $accion=busca_filtro_tabla("","accion A,modulo B","A.modulo_idmodulo=B.idmodulo AND A.idaccion=".$actividad[0]["accion_idaccion"],"",$conn);
@@ -733,7 +733,7 @@ function devolver_paso_documento($paso_origen,$paso_final,$observaciones,$diagra
  * Funcion utilizadas para realizar la revolucion de una actividad. Estas no funcionan de manera correcta
  */
 function devolver_actividades_paso($idpaso_documento,$idpaso,$documento,$observaciones){
-  $actividades=busca_filtro_tabla("","paso_instancia_terminada A, paso_actividad B","A.actividad_idpaso_actividad=B.idpaso_actividad AND A.documento_documento=".$documento." AND B.paso_idpaso=".$idpaso ,"",$conn);
+  $actividades=busca_filtro_tabla("","paso_instancia_terminada A, paso_actividad B","B.estado=1 AND A.actividad_idpaso_actividad=B.idpaso_actividad AND A.documento_documento=".$documento." AND B.paso_idpaso=".$idpaso ,"",$conn);
   for ($i=0; $i < $actividades["numcampos"] ; $i++) {
     devolver_actividad_paso($actividades[$i]["idpaso_instancia_terminada"], $actividades[$i]["estado_actividad"], $observaciones,0);
   }
@@ -787,8 +787,8 @@ function rehacer_actividad_paso($idpaso_instancia,$observaciones,$idpaso_documen
  * 
  */
 function validar_estado_paso($idpaso_instancia,$idpaso_documento){   
-$paso_documento=busca_filtro_tabla("","paso_documento A,paso_actividad B,paso_instancia_terminada C","A.paso_idpaso=B.paso_idpaso AND A.documento_iddocumento=C.documento_iddocumento AND idpaso_documento=".$idpaso_documento."","",$conn);
-$actividades_paso=busca_filtro_tabla("","paso_actividad B,paso A","A.idpaso=B.paso_idpaso AND B.paso_idpaso=".$paso_documento[0]["paso_idpaso"],"",$conn);
+$paso_documento=busca_filtro_tabla("","paso_documento A,paso_actividad B,paso_instancia_terminada C","B.estado=1 A.paso_idpaso=B.paso_idpaso AND A.documento_iddocumento=C.documento_iddocumento AND idpaso_documento=".$idpaso_documento."","",$conn);
+$actividades_paso=busca_filtro_tabla("","paso_actividad B,paso A","B.estado=1 AND A.idpaso=B.paso_idpaso AND B.paso_idpaso=".$paso_documento[0]["paso_idpaso"],"",$conn);
 
 $devuelto=0;
 $restrictivo=0;
@@ -894,7 +894,7 @@ function cancelar_flujo($idpaso_documento){
     $sql = "INSERT INTO paso_rastro (documento_idpaso_documento,funcionario_codigo,estado_original,estado_final,fecha_cambio) values('".$datos[$i]["idpaso_documento"]."','".usuario_actual("funcionario_codigo")."','".$datos[$i]["estado_paso_documento"]."','3',".$fecha_cambio.")";
     phpmkr_query($sql,$conn);
     
-    $actividad = busca_filtro_tabla("","paso_actividad","paso_idpaso=".$datos[$i]["paso_idpaso"],"",$conn);
+    $actividad = busca_filtro_tabla("","paso_actividad","estado=1 AND paso_idpaso=".$datos[$i]["paso_idpaso"],"",$conn);
     for($j=0;$j<$actividad["numcampos"];$j++){
       $verificando = busca_filtro_tabla("","paso_instancia_terminada","actividad_idpaso_actividad=".$actividad[$j]["idpaso_actividad"]." and documento_iddocumento=".$datos[$i]["documento_iddocumento"],"",$conn);
       if($verificando["numcampos"] > 0){
@@ -911,9 +911,9 @@ function cancelar_flujo($idpaso_documento){
  */
 function formulario_devolver($iddoc){
   global $conn,$ruta_db_superior;
-  $pasos_relacionados = busca_filtro_tabla("b.descripcion as nom_activi,a.*,c.*,b.*","paso_instancia_terminada a,paso_actividad b, paso c","documento_iddocumento=".$iddoc." AND estado_actividad=1 AND actividad_idpaso_actividad=idpaso_actividad AND paso_idpaso=idpaso","idpaso_instancia asc",$conn);
+  $pasos_relacionados = busca_filtro_tabla("b.descripcion as nom_activi,a.*,c.*,b.*","paso_instancia_terminada a,paso_actividad b, paso c","documento_iddocumento=".$iddoc." AND estado_actividad=1 AND b.estado=1 AND  actividad_idpaso_actividad=idpaso_actividad AND paso_idpaso=idpaso","idpaso_instancia asc",$conn);
   //print_r($pasos_relacionados);
-  $pasos = busca_filtro_tabla("distinct(idpaso)","paso_instancia_terminada a,paso_actividad b, paso c","documento_iddocumento=".$iddoc." AND estado_actividad=1 AND actividad_idpaso_actividad=idpaso_actividad AND paso_idpaso=idpaso","idpaso_instancia asc",$conn);
+  $pasos = busca_filtro_tabla("distinct(idpaso)","paso_instancia_terminada a,paso_actividad b, paso c","documento_iddocumento=".$iddoc." AND estado_actividad=1 AND actividad_idpaso_actividad=idpaso_actividad AND b.estado=1 AND paso_idpaso=idpaso","idpaso_instancia asc",$conn);
   //print_r($pasos);
   
   $retorno .= '
