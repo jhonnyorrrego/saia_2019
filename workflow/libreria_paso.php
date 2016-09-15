@@ -458,23 +458,23 @@ function validar_ruta_documento_flujo($iddoc,$pasos_evaluar,$paso_anterior,$acci
     //error("VALIDAR RUTA DOCUMENTO PASO RUTA");
     $dato_paso_ruta=busca_filtro_tabla("","paso_documento C, paso_actividad A, accion B","A.estado=1 AND A.accion_idaccion=B.idaccion AND A.paso_idpaso=C.paso_idpaso AND C.idpaso_documento IN(".implode(",",$pasos_evaluar).") AND (B.nombre='aprobar' OR nombre='confirmar')","",$conn);
     
-    print_r($dato_paso_ruta);die();
+   
     if($dato_paso_ruta["numcampos"]){
-        //error("RUTA 1");
+        error("RUTA 1");
         $ruta1=busca_filtro_tabla("","buzon_entrada A, ruta B","A.ruta_idruta=B.idruta AND A.archivo_idarchivo=".$iddoc." AND A.nombre='POR_APROBAR' AND A.origen=-1 AND A.destino=".usuario_actual("funcionario_codigo"),"B.orden ASC",$conn);
         if(!$ruta1["numcampos"]){
             //verifica el ultimo funcionario de la ruta pendiente por asignar si no encuentra el usuario actual
-            //error("RUTA 1 NO EXISTE ");
+            error("RUTA 1 NO EXISTE ");
             $funcionario_ultima_ruta=busca_filtro_tabla("","buzon_entrada","archivo_idarchivo=".$iddoc." AND nombre='POR_APROBAR'  AND destino<>-1 AND origen=-1","idtransferencia DESC",$conn);
             $ruta1=busca_filtro_tabla("","buzon_entrada A, ruta B","A.ruta_idruta=B.idruta AND A.archivo_idarchivo=".$iddoc." AND A.nombre='POR_APROBAR' AND A.origen=-1 AND A.destino=".$funcionario_ultima_ruta[0]["destino"],"B.orden ASC",$conn);
         }
         if($ruta1["numcampos"]){
           for($i=0;$i<$ruta1["numcampos"];$i++){
-              //error("RUTA 2");
+              error("RUTA 2");
               $ruta2=busca_filtro_tabla("","ruta A","A.idruta>".$ruta1[$i]["idruta"]." AND A.orden=".($ruta1[$i]["orden"]+1)." AND A.documento_iddocumento=".$iddoc." AND A.tipo='ACTIVO'","",$conn);
               //Se debe actualizar la ruta para que tome el dato del paso y haga las actualizaciones necesarias
               if($ruta2["numcampos"]){
-                  //error("EXISTE RUTA 2 Y EL FUNCIONARIO ESTA ACTIVO");
+                  error("EXISTE RUTA 2 Y EL FUNCIONARIO ESTA ACTIVO");
                   
                   if($dato_paso_ruta[0]["llave_entidad"]==-2){
                     $datos_formato_ruta=busca_filtro_tabla("b.nombre,b.banderas","formato a,campos_formato b","b.idcampos_formato=".$dato_paso_ruta[0]["fk_campos_formato"]."  AND a.idformato=b.formato_idformato AND a.idformato=".$dato_paso_ruta[0]["formato_anterior"],"",$conn);  
