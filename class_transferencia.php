@@ -638,15 +638,18 @@ function aprobar($iddoc=0,$url="")
                 }
             }
             
-            print_r($_SESSION["usuario_actual"]);
-            print_r('<----->');
-            print_r($terminado);die();
+
             
           if(($terminado["numcampos"]==$registro_actual["numcampos"]) || ($terminado["numcampos"]==1 && $terminado[0]["destino"]==$_SESSION["usuario_actual"]))
               {llama_funcion_accion($iddoc,$tipo_radicado[0]["idformato"],"aprobar","ANTERIOR");
                $tipo_radicado=busca_filtro_tabla("documento.*,contador.nombre,plantilla,idformato","documento,contador,formato C","idcontador=tipo_radicado and iddocumento=$iddoc AND lower(plantilla)=lower(C.nombre)","",$conn);
 
 			   $dias_entrega=busca_filtro_tabla("dias_entrega","serie","idserie=".$tipo_radicado[0]["serie"],"",$conn);
+
+            print_r($tipo_radicado);
+            print_r('<----->');
+            print_r($dias_entrega);die();
+
 
                if($tipo_radicado[0]["numero"]==0)
                   {$numero=contador($iddoc,$tipo_radicado[0]["nombre"]);
