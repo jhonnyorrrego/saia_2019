@@ -98,7 +98,7 @@ $flujo=estado_flujo_instancia($idpaso_documento);
 $paso = busca_filtro_tabla("","paso_documento","diagram_iddiagram_instance=".$flujo[0]["iddiagram_instance"]." and paso_idpaso=".$flujo[0]["paso_idpaso"],"idpaso_documento desc",$conn);
 $restringido = false;
 $terminados = 0;
-$actividades = busca_filtro_tabla("","paso_actividad","paso_idpaso=".$paso[0]["paso_idpaso"],"",$conn);
+$actividades = busca_filtro_tabla("","paso_actividad","estado=1 AND paso_idpaso=".$paso[0]["paso_idpaso"],"",$conn);
 for($i=0;$i<$actividades["numcampos"];$i++){
   $terminada = busca_filtro_tabla("","paso_instancia_terminada","actividad_idpaso_actividad=".$actividades[$i]["idpaso_actividad"]." and documento_iddocumento=".$paso[0]["documento_iddocumento"],"",$conn);
 	if($terminada["numcampos"] > 0){
@@ -107,7 +107,7 @@ for($i=0;$i<$actividades["numcampos"];$i++){
 }  
 $porcentaje = round((($terminados*100)/$actividades["numcampos"]),2);
 $pocentaje_tarea = '('.$terminados.'/'.$actividades["numcampos"].'):'.$porcentaje.'%';	
-$tareas = busca_filtro_tabla("","paso_actividad","paso_idpaso=".$flujo[0]["paso_idpaso"],"idpaso_actividad asc",$conn);
+$tareas = busca_filtro_tabla("","paso_actividad","estado=1 AND paso_idpaso=".$flujo[0]["paso_idpaso"],"idpaso_actividad asc",$conn);
 for($i=0;$i<$tareas["numcampos"];$i++){
 	$tarea .= ($i+1).". ".$tareas[$i]["descripcion"]."<br>";
 }
