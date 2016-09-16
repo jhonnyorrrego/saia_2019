@@ -4097,5 +4097,4 @@ $cadena1=str_replace("||"," LIKE ",$cadena1);
 return $cadena1;
 }
 
-
 ?>
