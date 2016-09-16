@@ -4073,7 +4073,7 @@ function obtener_estado_documento($iddoc) {
 	}
 	$estado_doc = busca_filtro_tabla("ed.*", "documento d join estado_documento ed on d.estado = ed.estado", "d.iddocumento=$iddoc and en_uso=1", "", $conn);
 	if($estado_doc["numcampos"]) {
-		return $estado_doc[0]["estado"];
+		return $estado_doc[0]["idestado_documento"];
 	}
 	return false;
 }
