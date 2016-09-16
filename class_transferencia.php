@@ -537,7 +537,7 @@ function aprobar($iddoc=0,$url="")
    if($registro_actual["numcampos"]>0)
       {$registro_anterior=busca_filtro_tabla("A.*","buzon_entrada A","A.nombre='POR_APROBAR' and A.activo=1 and A.idtransferencia<".$registro_actual[0]["idtransferencia"]." and A.archivo_idarchivo=".$iddoc." and origen=".$_SESSION["usuario_actual"],"A.idtransferencia desc",$conn);
       
-      print_r($registro_anterior);die();
+      
        $terminado=busca_filtro_tabla("A.*","buzon_entrada A","A.archivo_idarchivo=".$iddoc." and A.nombre='POR_APROBAR' and A.activo=1","A.idtransferencia",$conn);
      //realizar la transferencia
       if($registro_actual["numcampos"]>0 && $registro_anterior["numcampos"]==0)
@@ -551,6 +551,9 @@ function aprobar($iddoc=0,$url="")
               $estado="REVISADO";
           $campos="archivo_idarchivo,nombre,origen,fecha,destino,tipo,tipo_origen,tipo_destino,ruta_idruta";
           //buzon de salida
+          
+          
+          print_r($estado);die();
          for($i=0;$i<$registro_actual["numcampos"];$i++)
             {
               //--------------Actualizacion para cuando se cree una ruta se le pueda mandar a una misma persona-----------
