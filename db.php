@@ -703,7 +703,7 @@ function actualizar_estado_formato($iddoc) {
 	global $conn;
 	$datos_doc = busca_filtro_tabla("", "documento d", "iddocumento=$iddoc", "", $conn);
 	if($datos_doc["numcampos"]) {
-		$formato = lower($datos_doc[0]["pantilla"]);
+		$formato = strtolower($datos_doc[0]["pantilla"]);
 		$idestado = obtener_estado_documento($iddoc);
 		if($idestado) {
 			$campos_formato = busca_filtro_tabla("f.idformato, cf.nombre", "formato f join campos_formato cf on f.idformato = cf.formato_idformato", "f.nombre='" . $formato . "' and cf.nombre='estado_documento'", "", $conn);
