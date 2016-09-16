@@ -17,6 +17,8 @@ function mostrar_informacion_paso($idpaso){
     $dato_usuarios=array();
     if($actividades_paso[$i]["llave_entidad"]==-1){
       array_push($dato_usuarios,"Cualquier usuario");
+    }else if($actividades_paso[$i]["llave_entidad"]==-2){
+         array_push($dato_usuarios,"Tomado de un campo");
     }
     else{
       $usuarios=listado_funcionarios(4,$actividades_paso[$i]["llave_entidad"]);
@@ -178,6 +180,8 @@ if($paso_doc["numcampos"] && $paso["numcampos"]){
 		else{
 		  if($paso[$i]["llave_entidad"]==-1){
 		    array_push($dato_usuarios,"Cualquier usuario");
+		  }else if($paso[$i]["llave_entidad"]==-2){
+		    array_push($dato_usuarios,"Tomado de un campo");
 		  }
       else{
         $usuarios=listado_funcionarios(4,$paso[$i]["llave_entidad"]);
