@@ -702,6 +702,7 @@ function guardar_evento($strsql, $llave, $tabla, $func, $accion, $diferencias=nu
 function actualizar_estado_formato($iddoc) {
 	global $conn;
 	$datos_doc = busca_filtro_tabla("", "documento d", "iddocumento=$iddoc", "", $conn);
+	print_r($datos_doc);die();
 	if($datos_doc["numcampos"]) {
 		$formato = strtolower($datos_doc[0]["pantilla"]);
 		$idestado = obtener_estado_documento($iddoc);
