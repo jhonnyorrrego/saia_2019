@@ -652,7 +652,7 @@ function aprobar($iddoc=0,$url="")
                if($tipo_radicado[0]["numero"]==0)
                   {$numero=contador($iddoc,$tipo_radicado[0]["nombre"]);
                    $update="UPDATE documento SET estado='APROBADO', fecha=".fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s').", dias='".$dias_entrega[0]["dias_entrega"]."' WHERE iddocumento=".$iddoc;
-                   print_r($update);die();
+          
                    phpmkr_query($update,$conn);
                   }
                else
