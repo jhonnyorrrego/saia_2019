@@ -576,10 +576,10 @@ function aprobar($iddoc=0,$url="")
             $valores.="''";
           //reviso si la ruta es restrictiva
           
-           
+           print_r($registro_actual);die();
           if($registro_actual[0]["ruta_idruta"]>0)
            {$restrictiva=busca_filtro_tabla("restrictivo","ruta","idruta=".$registro_actual[0]["ruta_idruta"],"",$conn);
-           print_r($restrictiva);die();
+           
             if($restrictiva["numcampos"] && $restrictiva[0]["restrictivo"]==1)
               {//busco cuantos faltan por aprobar si es restrictiva
                $cuantos_faltan=busca_filtro_tabla("count(idtransferencia) as cuantos","buzon_entrada","nombre='POR_APROBAR' and activo=1 and ruta_idruta=".$registro_actual[0]["ruta_idruta"]." and archivo_idarchivo=".$_REQUEST["iddoc"],"",$conn);
