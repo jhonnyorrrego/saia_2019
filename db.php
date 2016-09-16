@@ -624,7 +624,7 @@ global $conn;
 					if(!is_numeric($llave)) {
 						$llave = $detalle[0]["id" . $tabla];
 					}
-					//guardar_evento($strsql, intval($llave), $tabla, $func, "MODIFICAR", $diferencias);						
+					guardar_evento($strsql, intval($llave), $tabla, $func, "MODIFICAR", $diferencias);						
 				}
 				break;
 			case ('DELETE'):
@@ -695,7 +695,7 @@ function guardar_evento($strsql, $llave, $tabla, $func, $accion, $diferencias=nu
 	}	
 	//20160915. Actualizar el estado del documento en el ft
 	if($tabla == "documento" && $accion == "MODIFICAR") {
-		actualizar_estado_formato($tabla, $llave);
+		actualizar_estado_formato($llave);
 	}
 }
 
