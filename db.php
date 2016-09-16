@@ -717,6 +717,8 @@ function actualizar_estado_formato($iddoc) {
 		} else {
 		    die("No se encontro el estado para el documento $iddoc");
 		}
+	} else {
+	    print_r($datos_doc);
 	}
 }
 
