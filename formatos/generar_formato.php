@@ -177,6 +177,15 @@ function generar_tabla($idformato) {
 			guardar_traza($sqldoc, $formato[0]["nombre_tabla"]);
 			phpmkr_query($sqldoc, $conn) or die($sqldoc);
 		}
+		//20160916 Agregar el campo estado_documento si no existe
+		$pos = busca_filtro_tabla("nombre", "campos_formato", "formato_idformato=$idformato and nombre='estado_documento'", "", $conn);
+		if (!$pos["numcampos"] && !$formato[0]["item"]) {
+			$sqldoc = "INSERT INTO campos_formato(formato_idformato,nombre,etiqueta,tipo_dato,longitud,obligatoriedad,banderas,acciones,etiqueta_html,predeterminado) VALUES('" . $idformato . "','estado_documento','ESTADO DEL DOCUMENTO','INT','11','1','','a,e','hidden',1)";
+			guardar_traza($sqldoc, $formato[0]["nombre_tabla"]);
+			phpmkr_query($sqldoc, $conn) or die($sqldoc);
+		}
+		//20160916 FIN Agregar el campo estado_documento si no existe
+		
 		$campos = busca_filtro_tabla("*", "campos_formato A", "A.formato_idformato=" . $idformato, "", $conn);
 		if (!$tabla_esta) {
 			$sql_tabla = "CREATE TABLE " . strtolower($formato[0]["nombre_tabla"]) . "(";
