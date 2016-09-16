@@ -118,11 +118,15 @@ function validar_digitalizacion_factura_1($idformato,$iddoc)
 //alerta($_REQUEST["digitalizacion"]);
   if($_REQUEST["digitalizacion"]==1){
     redirecciona($ruta_db_superior."paginaadd.php?&key=".$iddoc."&enlace=formatos/factura_proveedor/adicionar_factura_proveedor.php");
+	  //mostrar colilla
+	  
+	  
   }
 } 
 function digitalizacion_factura_1()
 {//echo "<tr><td class='encabezado'>DESEA DIGITALIZAR</td><td><input name='digitalizacion' id='digitalizacion1' type='radio' value='1' checked>Si  <input name='digitalizacion' id='digitalizacion0' type='radio' value='0'>No</td></tr>";
 echo "<input name='digitalizacion' id='digitalizacion1' type='hidden' value='1'>";
+
 }
 
 ?>
