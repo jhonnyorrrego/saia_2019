@@ -624,7 +624,7 @@ global $conn;
 					if(!is_numeric($llave)) {
 						$llave = $detalle[0]["id" . $tabla];
 					}
-					guardar_evento($strsql, intval($llave), $tabla, $func, "MODIFICAR", $diferencias);						
+					//guardar_evento($strsql, intval($llave), $tabla, $func, "MODIFICAR", $diferencias);						
 				}
 				break;
 			case ('DELETE'):
