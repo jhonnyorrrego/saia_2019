@@ -712,7 +712,7 @@ function actualizar_estado_formato($iddoc) {
 				$sql1 = "update ft_$formato set estado_documento=$idestado where documento_iddocumento=$iddoc";
 				phpmkr_query($sql1) or die($sql1);
 			} else {
-				print_r($campos_formato);
+				//print_r($campos_formato);
 			}
 		} else {
 		    die("No se encontro el estado para el documento $iddoc");
