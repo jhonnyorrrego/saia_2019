@@ -646,9 +646,7 @@ function aprobar($iddoc=0,$url="")
 
 			   $dias_entrega=busca_filtro_tabla("dias_entrega","serie","idserie=".$tipo_radicado[0]["serie"],"",$conn);
 
-            print_r($tipo_radicado);
-            print_r('<----->');
-            print_r($dias_entrega);die();
+ 
 
 
                if($tipo_radicado[0]["numero"]==0)
