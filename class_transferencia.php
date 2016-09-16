@@ -576,7 +576,7 @@ function aprobar($iddoc=0,$url="")
             $valores.="''";
           //reviso si la ruta es restrictiva
           
-           print_r($registro_actual);die();
+          
           if($registro_actual[0]["ruta_idruta"]>0)
            {$restrictiva=busca_filtro_tabla("restrictivo","ruta","idruta=".$registro_actual[0]["ruta_idruta"],"",$conn);
            
@@ -608,6 +608,8 @@ function aprobar($iddoc=0,$url="")
                   }
               }
            }
+           
+           
          if($transferir==1)
             {
              for($i=0;$i<$registro_actual["numcampos"];$i++)
@@ -633,6 +635,10 @@ function aprobar($iddoc=0,$url="")
                  }
                 }
             }
+            
+            
+             print_r($terminado);die();
+            
           if(($terminado["numcampos"]==$registro_actual["numcampos"]) || ($terminado["numcampos"]==1 && $terminado[0]["destino"]==$_SESSION["usuario_actual"]))
               {llama_funcion_accion($iddoc,$tipo_radicado[0]["idformato"],"aprobar","ANTERIOR");
                $tipo_radicado=busca_filtro_tabla("documento.*,contador.nombre,plantilla,idformato","documento,contador,formato C","idcontador=tipo_radicado and iddocumento=$iddoc AND lower(plantilla)=lower(C.nombre)","",$conn);
