@@ -526,7 +526,7 @@ function aprobar($iddoc=0,$url="")
       $iddoc=$_REQUEST["iddoc"];
 
    $tipo_radicado=busca_filtro_tabla("documento.*,contador.nombre,idformato","documento,contador,formato","idcontador=tipo_radicado and iddocumento=$iddoc and lower(plantilla)=lower(formato.nombre)","",$conn);
-
+    print_r($tipo_radicado);die();
 	 $datos_formato=busca_filtro_tabla("mostrar_pdf","formato a","a.idformato='".$tipo_radicado[0]["idformato"]."'","",$conn);
 
    $formato=strtolower($tipo_radicado[0]["plantilla"]);
