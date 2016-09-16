@@ -553,7 +553,7 @@ function aprobar($iddoc=0,$url="")
           //buzon de salida
           
           
-          print_r($estado);die();
+         
          for($i=0;$i<$registro_actual["numcampos"];$i++)
             {
               //--------------Actualizacion para cuando se cree una ruta se le pueda mandar a una misma persona-----------
@@ -575,6 +575,8 @@ function aprobar($iddoc=0,$url="")
           else
             $valores.="''";
           //reviso si la ruta es restrictiva
+          
+           print_r($registro_actual);die();
           if($registro_actual[0]["ruta_idruta"]>0)
            {$restrictiva=busca_filtro_tabla("restrictivo","ruta","idruta=".$registro_actual[0]["ruta_idruta"],"",$conn);
             if($restrictiva["numcampos"] && $restrictiva[0]["restrictivo"]==1)
