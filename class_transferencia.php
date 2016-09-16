@@ -638,7 +638,8 @@ function aprobar($iddoc=0,$url="")
                 }
             }
             
-            
+            print_r($_SESSION["usuario_actual"]);
+            print_r('<----->');
             print_r($terminado);die();
             
           if(($terminado["numcampos"]==$registro_actual["numcampos"]) || ($terminado["numcampos"]==1 && $terminado[0]["destino"]==$_SESSION["usuario_actual"]))
