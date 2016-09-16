@@ -526,14 +526,14 @@ function aprobar($iddoc=0,$url="")
       $iddoc=$_REQUEST["iddoc"];
 
    $tipo_radicado=busca_filtro_tabla("documento.*,contador.nombre,idformato","documento,contador,formato","idcontador=tipo_radicado and iddocumento=$iddoc and lower(plantilla)=lower(formato.nombre)","",$conn);
-    print_r($tipo_radicado);die();
+  
 	 $datos_formato=busca_filtro_tabla("mostrar_pdf","formato a","a.idformato='".$tipo_radicado[0]["idformato"]."'","",$conn);
 
    $formato=strtolower($tipo_radicado[0]["plantilla"]);
     /*Se adiciona esta linea para las ejecutar las acciones sobre los formatos*/
    llama_funcion_accion($iddoc,$tipo_radicado[0]["idformato"],"confirmar","ANTERIOR");
    $registro_actual=busca_filtro_tabla("A.*","buzon_entrada A","A.archivo_idarchivo=".$iddoc." and A.activo=1 and (A.nombre='POR_APROBAR') and A.destino=".$_SESSION["usuario_actual"],"A.idtransferencia",$conn);
-
+  print_r($registro_actual);die();
    if($registro_actual["numcampos"]>0)
       {$registro_anterior=busca_filtro_tabla("A.*","buzon_entrada A","A.nombre='POR_APROBAR' and A.activo=1 and A.idtransferencia<".$registro_actual[0]["idtransferencia"]." and A.archivo_idarchivo=".$iddoc." and origen=".$_SESSION["usuario_actual"],"A.idtransferencia desc",$conn);
        $terminado=busca_filtro_tabla("A.*","buzon_entrada A","A.archivo_idarchivo=".$iddoc." and A.nombre='POR_APROBAR' and A.activo=1","A.idtransferencia",$conn);
