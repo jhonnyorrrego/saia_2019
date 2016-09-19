@@ -98,7 +98,7 @@ function expedientes_vinculados_funcion($idformato,$iddoc){
 		<p>&nbsp;</p>
         <table style="width:100%;border-collapse:collapse" border="1px">
           <tr>
-            <th rowspan="2">NUMERO DE ORDEN</th>
+            <th rowspan="2" style="text-align:center;font-weight:bold;">NUMERO DE ORDEN</th>
             <th rowspan="2">CODIGO</th>
             <th rowspan="2">NOMBRE</th>
             <th colspan="2">FECHAS EXTREMAS</th>
