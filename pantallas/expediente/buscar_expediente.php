@@ -84,13 +84,14 @@ echo(librerias_validar_formulario());
 			<input type="hidden" name="bksaiacondicion_prox_estado_archivo" id="bksaiacondicion_prox_estado_archivo" value="=">
           </label>
           <div class="controls">
-            
             <?php if($mostrar==1){ ?>  
-                <input id="bqsaia_prox_estado_archivo1" name="bqsaia_prox_estado_archivo"  type="radio" value="2">Central
+                <input id="bqsaia_prox_estado_archivo1" name="bqsaia_prox_estado_archivo"  type="radio" value="2">Si
+                 <input id="bqsaia_prox_estado_archivo1" name="bqsaia_prox_estado_archivo"  type="radio" >No
             <?php } ?>
             
             <?php if($mostrar==2){ ?>  
-                 <input id="bqsaia_prox_estado_archivo2" name="bqsaia_prox_estado_archivo"  type="radio" value="3">Historico
+                 <input id="bqsaia_prox_estado_archivo2" name="bqsaia_prox_estado_archivo"  type="radio" value="3">Si
+                 <input id="bqsaia_prox_estado_archivo1" name="bqsaia_prox_estado_archivo"  type="radio" >No
             <?php } ?>            
           </div>
         </div>
