@@ -60,8 +60,6 @@ echo(librerias_validar_formulario());
             $etiqueta_reporte=busca_filtro_tabla($campo_validar,"busqueda_componente","lower(".$campo_validar.") IN('".implode("','",$etiquetas_permitidas)."')AND idbusqueda_componente=".@$_REQUEST["idbusqueda_componente"],"",$conn);
             $mostrar=0;
             if($etiqueta_reporte['numcampos']){
-               
-                
                 switch(strtolower($etiqueta_reporte[0][$campo_validar])){
                     case 'expediente': //GESTION A CENTRAL
                          $mostrar=1;
@@ -72,7 +70,6 @@ echo(librerias_validar_formulario());
                          $etiqueta='Historico';
                         break;
                 }
-                
             }
             
             if($mostrar){
