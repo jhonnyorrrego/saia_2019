@@ -118,12 +118,15 @@ function expedientes_vinculados_funcion($idformato,$iddoc){
 		';
 		$texto.="";
 		for($i=0;$i<$expedientes["numcampos"];$i++){
+		    
+		    $serie_expediente=busca_filtro_tabla('codigo','serie','idserie='.$expedientes[$i]["serie_idserie"],'',conn);
+		    
 			if(is_object($expedientes[$i]["fecha_extrema_i"]))$expedientes[$i]["fecha_extrema_i"]=$expedientes[$i]["fecha_extrema_i"]->format('Y-m-d');
 			if(is_object($expedientes[$i]["fecha_extrema_f"]))$expedientes[$i]["fecha_extrema_f"]=$expedientes[$i]["fecha_extrema_f"]->format('Y-m-d');
 			
 			$texto.='<tr id="tr_'.$expedientes[$i]["idexpediente"].'">
 			<td style="text-align:center">'.($i+1).'</td>
-			<td>'.$expedientes[$i]["codigo"].'</td>
+			<td>'$serie_expediente[0]['codigo'].'</td>
 			<td>'.$expedientes[$i]["nombre"].'</td>
 			<td>'.$expedientes[$i]["fecha_extrema_i"].'</td>
 			<td>'.$expedientes[$i]["fecha_extrema_f"].'</td>
