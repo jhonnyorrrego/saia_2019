@@ -277,9 +277,17 @@ function abrir_cerrar_expediente(){
 	
 	$idexpediente=@$_REQUEST["idexpediente"];
 	$accion=@$_REQUEST["accion"];
+    $update_adicional='';
+	if(intval($accion)==1){ //si abren expedidiente se retira de proxima transferencia documental
+	    $update_adicional="prox_estado_archivo=0, ";
+	   
+	}
 	
-	$sql1="update expediente set estado_cierre='".$accion."', fecha_cierre=".fecha_db_almacenar(date('Y-m-d'),'Y-m-d').", funcionario_cierre='".usuario_actual('idfuncionario')."' where idexpediente=".$idexpediente;
+	$sql1="update expediente set ".$update_adicional."estado_cierre='".$accion."', fecha_cierre=".fecha_db_almacenar(date('Y-m-d'),'Y-m-d').", funcionario_cierre='".usuario_actual('idfuncionario')."' where idexpediente=".$idexpediente;
 	phpmkr_query($sql1);
+	
+	
+
 	
 	$retorno->idexpediente=$idexpediente;
   $retorno->exito=1;
