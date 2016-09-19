@@ -60,7 +60,7 @@ echo(librerias_validar_formulario());
 			<input type="hidden" name="bksaiacondicion_prox_estado_archivo" id="bksaiacondicion_prox_estado_archivo" value="=">
           </label>
           <div class="controls">
-            <input id="bqsaia_prox_estado_archivo1" name="bqsaia_prox_estado_archivo"  type="radio" value="2">Pasar a Central
+            <input id="bqsaia_prox_estado_archivo1" name="bqsaia_prox_estado_archivo"  type="radio" value="2">Pasar a Central </br>
             <input id="bqsaia_prox_estado_archivo2" name="bqsaia_prox_estado_archivo"  type="radio" value="3">Pasar a Historico
           </div>
         </div>
