@@ -137,7 +137,7 @@ function expedientes_vinculados_funcion($idformato,$iddoc){
 			<td style="text-align:center">'.$expedientes[$i]["no_folios"].'</td>
 			<td>'.$expedientes[$i]['soporte'].'</td>
 			<td>'.$expedientes[$i]['frecuencia'].'</td>
-			<td>'.$expedientes[$i]['descripcion'].'</td>
+			<td>'.$expedientes[$i]['notas_transf'].'</td>
 			';
 			
 			if($datos[0]["estado"]=='ACTIVO' && @$_REQUEST["tipo"]!=5){
