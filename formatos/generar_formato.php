@@ -1364,7 +1364,7 @@ function crear_formato_ae($idformato, $accion) {
 				switch ($campos[$h]["etiqueta_html"]) {
 					case "etiqueta" :
 						$texto .= '<tr>
-                     <td class="encabezado" width="20%" title="' . $campos[$h]["ayuda"] . '" colspan="2">' . $campos[$h]["valor"] . '</td>
+                     <td class="encabezado" width="20%" title="' . $campos[$h]["ayuda"] . '" colspan="2" id="'.$campos[$h]["nombre"].'">' . $campos[$h]["valor"] . '</td>
                     </tr>';
 						break;
 					case "password" :
