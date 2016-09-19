@@ -809,10 +809,12 @@ function crear_pdf($idformato,$iddoc)
 function mostrar_formato($idformato,$iddoc)
 {global $conn;
  $datos_formato=busca_filtro_tabla("ruta_mostrar,nombre,mostrar_pdf","formato","idformato=$idformato","",$conn);
- if($datos_formato[0]["mostrar_pdf"]){
+ if($datos_formato[0]["mostrar_pdf"] == 1) {
  	$url=$ruta_db_superior."pantallas/documento/visor_documento.php?iddoc=".$iddoc."&idformato=$idformato&actualizar_pdf=1";
- }
- else{
+ } else if($datos_formato[0]["mostrar_pdf"]==2) {
+ 	$url=$ruta_db_superior."pantallas/documento/visor_documento.php?iddoc=".$iddoc."&pdf_word=1";	
+ 	 
+ } else {
  	$url="formatos/".$datos_formato[0]["nombre"]."/".$datos_formato[0]["ruta_mostrar"]."?iddoc=".$iddoc."&idformato=$idformato";
  }
  redirecciona($url);

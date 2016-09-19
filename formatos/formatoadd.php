@@ -1,13 +1,14 @@
 <?php session_start(); ?>
 <?php ob_start(); ?>
 <?php
-$max_salida=6; // Previene algun posible ciclo infinito limitando a 10 los ../
-$ruta_db_superior=$ruta="";
-while($max_salida>0) {
-	if(is_file($ruta."db.php")) {
-		$ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
+
+$max_salida = 6; // Previene algun posible ciclo infinito limitando a 10 los ../
+$ruta_db_superior = $ruta = "";
+while($max_salida > 0) {
+	if(is_file($ruta . "db.php")) {
+		$ruta_db_superior = $ruta; // Preserva la ruta superior encontrada
 	}
-	$ruta.="../";
+	$ruta .= "../";
 	$max_salida--;
 }
 
@@ -43,25 +44,26 @@ $x_fk_categoria_formato = Null;
 $x_funcion_predeterminada = Null;
 $x_pertenece_nucleo = Null;
 
-if (isset($_REQUEST["consultar_contador"])) {
+if(isset($_REQUEST["consultar_contador"])) {
 	consultar_contador();
 	die();
 }
 ?>
 <?php
-include_once($ruta_db_superior . "db.php");
-include_once($ruta_db_superior . "formatos/librerias/header_formato.php");
-include_once($ruta_db_superior . "formatos/librerias/funciones.php");
-include_once($ruta_db_superior . "phpmkrfn.php");
-include_once($ruta_db_superior . "librerias_saia.php");
-include_once($ruta_db_superior . "librerias/funciones.php");
+
+include_once ($ruta_db_superior . "db.php");
+include_once ($ruta_db_superior . "formatos/librerias/header_formato.php");
+include_once ($ruta_db_superior . "formatos/librerias/funciones.php");
+include_once ($ruta_db_superior . "phpmkrfn.php");
+include_once ($ruta_db_superior . "librerias_saia.php");
+include_once ($ruta_db_superior . "librerias/funciones.php");
 
 // Get action
 $sAction = @$_POST["a_add"];
-if (($sAction == "") || ((is_null($sAction)))) {
+if(($sAction == "") || ((is_null($sAction)))) {
 	$sKey = @$_GET["key"];
 	$sKey = (get_magic_quotes_gpc()) ? stripslashes($sKey) : $sKey;
-	if ($sKey != "") {
+	if($sKey != "") {
 		$sAction = "C"; // Copy record
 	} else {
 		$sAction = "I"; // Display blank record
@@ -100,8 +102,8 @@ if (($sAction == "") || ((is_null($sAction)))) {
 	$x_fk_categoria_formato = @$_POST["x_fk_categoria_formato"];
 	$x_flujo_idflujo = @$_POST["x_flujo_idflujo"];
 	$x_funcion_predeterminada = @$_POST["x_funcion_predeterminada"];
-  $x_pertenece_nucleo = @$_POST["x_pertenece_nucleo"];
-	if (isset($_POST["x_item"]))
+	$x_pertenece_nucleo = @$_POST["x_pertenece_nucleo"];
+	if(isset($_POST["x_item"]))
 		$x_item = @$_POST["x_item"];
 	else
 		$x_item = 0;
@@ -109,9 +111,9 @@ if (($sAction == "") || ((is_null($sAction)))) {
 $x_cod_padre = @$_REQUEST["x_cod_padre"];
 
 // $conn = phpmkr_db_connect(HOST, USER, PASS,DB);
-switch ($sAction) {
-	case "C" : // Get a record to display
-		if (!LoadData($sKey, $conn)) { // Load Record based on key
+switch($sAction) {
+	case "C": // Get a record to display
+		if(!LoadData($sKey, $conn)) { // Load Record based on key
 			$_SESSION["ewmsg"] = "No Record Found for Key = " . $sKey;
 			// //phpmkr_db_close($conn);
 			ob_end_clean();
@@ -119,12 +121,12 @@ switch ($sAction) {
 			exit();
 		}
 		break;
-	case "A" : // Add
-		if ($llave = AddData($conn)) { // Add New Record
+	case "A": // Add
+		if($llave = AddData($conn)) { // Add New Record
 			$_SESSION["ewmsg"] = "Add New Record Successful";
 			// //phpmkr_db_close($conn);
 			ob_end_clean();
-			if ($x_cod_padre) {
+			if($x_cod_padre) {
 				?>
 <script type="text/javascript">
 					window.parent.location.reload();
@@ -139,6 +141,7 @@ switch ($sAction) {
 }
 ?>
 <?php
+
 include ("header.php");
 ?>
 <script type="text/javascript" src="../js/jquery.js"></script>
@@ -238,30 +241,28 @@ function actualizar_contador(valor)
 			<td bgcolor="#F5F5F5">
 				<!--span class="phpmaker">
         <?php
-	$formatos = busca_filtro_tabla("idformato,nombre,etiqueta", "formato A", "idformato<>" . $x_idformato, "nombre DESC", $conn);
-	if ($formatos["numcampos"]) {
-		$inicio = '<SELECT name="x_cod_padre"><OPTION value="0">---Pertenece a la ra&iacute;z---</OPTION>';
-		$fin = '</SELECT>';
-	}
-	for($i = 0; $i < $formatos["numcampos"]; $i++) {
-		$check = "";
-		if ($formatos[$i]["idformato"] == $x_cod_padre) {
-			$check = "SELECTED";
-		}
-		$inicio .= '<OPTION value="' . $formatos[$i]["idformato"] . '" ' . $check . ' >' . $formatos[$i]["etiqueta"] . '</OPTION>';
-	}
-	echo($inicio . $fin);
-	?>
+								$formatos = busca_filtro_tabla("idformato,nombre,etiqueta", "formato A", "idformato<>" . $x_idformato, "nombre DESC", $conn);
+								if($formatos["numcampos"]) {
+									$inicio = '<SELECT name="x_cod_padre"><OPTION value="0">---Pertenece a la ra&iacute;z---</OPTION>';
+									$fin = '</SELECT>';
+								}
+								for($i = 0; $i < $formatos["numcampos"]; $i++) {
+									$check = "";
+									if($formatos[$i]["idformato"] == $x_cod_padre) {
+										$check = "SELECTED";
+									}
+									$inicio .= '<OPTION value="' . $formatos[$i]["idformato"] . '" ' . $check . ' >' . $formatos[$i]["etiqueta"] . '</OPTION>';
+								}
+								echo ($inicio . $fin);
+								?>
       </span-->
 				<div id="esperando_formato">
-					<img
-						src="<?php echo($ruta_db_superior);?>imagenes/cargando.gif"
+					<img src="<?php echo($ruta_db_superior);?>imagenes/cargando.gif"
 						alt="">
 				</div>
 				<div id="treeboxbox_tree3" class="arbol_saia"></div> <input
-				type="hidden" name="x_cod_padre"
-				value="<?php echo($x_cod_padre);?>" id="x_cod_padre"> <script
-					type="text/javascript">
+				type="hidden" name="x_cod_padre" value="<?php echo($x_cod_padre);?>"
+				id="x_cod_padre"> <script type="text/javascript">
       var browserType;
       if (document.layers) {browserType = "nn4"}
       if (document.all) {browserType = "ie"}
@@ -277,10 +278,10 @@ function actualizar_contador(valor)
       tree3.setOnLoadingEnd(fin_cargando_serie);
       tree3.setOnCheckHandler(onNodeSelect_tree3);
       <?php
-	if ($x_cod_padre) {
-		echo("tree3.setCheck('" . $x_cod_padre . "',true);\n");
-	}
-	?>
+						if($x_cod_padre) {
+							echo ("tree3.setCheck('" . $x_cod_padre . "',true);\n");
+						}
+						?>
       tree3.loadXML("<?php echo($ruta_db_superior);?>test_serie.php?tabla=formato&seleccionado=<?php echo($x_cod_padre); ?>");
       function onNodeSelect_tree3(nodeId){
         if(nodeId=="<?php echo($x_idformato);?>"){
@@ -333,15 +334,16 @@ function actualizar_contador(valor)
 			<td bgcolor="#F5F5F5"><span class="phpmaker">
 <?php if (!(!is_null($x_contador_idcontador)) || ($x_contador_idcontador == "")) { $x_contador_idcontador = 0;} // Set default value ?>
 <?php
+
 $x_contador_idcontadorList = "<select name=\"x_contador_idcontador\" id=\"x_contador_idcontador\" onchange=\"actualizar_contador(this.value)\">";
 $x_contador_idcontadorList .= "<option value='0'>Crear Contador</option>";
 $sSqlWrk = "SELECT DISTINCT idcontador, nombre FROM contador" . " ORDER BY nombre Asc";
 $rswrk = phpmkr_query($sSqlWrk, $conn) or die("Failed to execute query" . phpmkr_error() . ' SQL:' . $sSqlWrk);
-if ($rswrk) {
+if($rswrk) {
 	$rowcntwrk = 0;
-	while ($datawrk = phpmkr_fetch_array($rswrk)) {
+	while($datawrk = phpmkr_fetch_array($rswrk)) {
 		$x_contador_idcontadorList .= "<option value=\"" . htmlspecialchars($datawrk[0]) . "\"";
-		if ($datawrk["idcontador"] == @$x_contador_idcontador) {
+		if($datawrk["idcontador"] == @$x_contador_idcontador) {
 			$x_contador_idcontadorList .= "' selected";
 		}
 		$x_contador_idcontadorList .= ">" . $datawrk["nombre"] . "</option>";
@@ -362,16 +364,16 @@ echo $x_contador_idcontadorList;
 					Documental</span></td>
 			<td bgcolor="#F5F5F5"><span class="phpmaker">
         <?php
-	$formatos = busca_filtro_tabla("", "serie A", "1=1", "nombre DESC", $conn);
-	if($formatos["numcampos"]) {
-		$inicio = '<SELECT name="x_serie_idserie"><OPTION value="0">Sin Serie Documental</OPTION><OPTION value="" selected>Crear Serie Documental</OPTION>';
-		$fin = '</SELECT>';
-	}
-	for($i = 0; $i < $formatos["numcampos"]; $i++) {
-		$inicio .= '<OPTION value="' . $formatos[$i]["idserie"] . '">' . $formatos[$i]["nombre"] . "-e" . $formatos[$i]["codigo"] . '</OPTION>';
-	}
-	echo($inicio . $fin);
-	?>
+								$formatos = busca_filtro_tabla("", "serie A", "1=1", "nombre DESC", $conn);
+								if($formatos["numcampos"]) {
+									$inicio = '<SELECT name="x_serie_idserie"><OPTION value="0">Sin Serie Documental</OPTION><OPTION value="" selected>Crear Serie Documental</OPTION>';
+									$fin = '</SELECT>';
+								}
+								for($i = 0; $i < $formatos["numcampos"]; $i++) {
+									$inicio .= '<OPTION value="' . $formatos[$i]["idserie"] . '">' . $formatos[$i]["nombre"] . "-e" . $formatos[$i]["codigo"] . '</OPTION>';
+								}
+								echo ($inicio . $fin);
+								?>
       </span></td>
 		</tr>
 		<!--tr>
@@ -389,14 +391,17 @@ echo $x_contador_idcontadorList;
 		</tr>
 		<tr>
 			<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">Tipo</span></td>
-			<td bgcolor="#F5F5F5"><span class="phpmaker"> <input type="checkbox" name="x_item" id="x_item" value="1">Item
-			<input type="checkbox" name="x_detalle" id="x_detalle" value="1">Detalle
-			<input type="checkbox" name="x_tipo_edicion" id="x_tipo_edicion" value="1">Edicion Continua
-			<input type="checkbox" name="x_banderas[]" id="x_banderas" value="e">Aprobacion Automatica
-			<input type="checkbox" name="x_mostrar" id="x_mostrar" value="1" checked>Mostrar <br>
-			<input type="checkbox" name="x_paginar" id="x_paginar" value="1" checked>Paginar al mostrar
-			<input type="checkbox" name="x_banderas[]" id="x_banderas" value="r">Tomar el asunto del padre al responder<br>
-<!--input type="checkbox" name="x_firma_digital[]" id="x_firma_digital" value="1" >Estampar documento al aprobar-->
+			<td bgcolor="#F5F5F5"><span class="phpmaker"> <input type="checkbox"
+					name="x_item" id="x_item" value="1">Item <input type="checkbox"
+					name="x_detalle" id="x_detalle" value="1">Detalle <input
+					type="checkbox" name="x_tipo_edicion" id="x_tipo_edicion" value="1">Edicion
+					Continua <input type="checkbox" name="x_banderas[]" id="x_banderas"
+					value="e">Aprobacion Automatica <input type="checkbox"
+					name="x_mostrar" id="x_mostrar" value="1" checked>Mostrar <br> <input
+					type="checkbox" name="x_paginar" id="x_paginar" value="1" checked>Paginar
+					al mostrar <input type="checkbox" name="x_banderas[]"
+					id="x_banderas" value="r">Tomar el asunto del padre al responder<br>
+					<!--input type="checkbox" name="x_firma_digital[]" id="x_firma_digital" value="1" >Estampar documento al aprobar-->
 			</span></td>
 		</tr>
 		<tr></tr>
@@ -406,14 +411,14 @@ echo $x_contador_idcontadorList;
 			<td bgcolor="#F5F5F5"><span class="phpmaker"> <select
 					name="x_font_size" id="x_font_size">
 				<?php
-				if (!$x_font_size)
+				if(!$x_font_size)
 					$x_font_size = 9;
 				for($i = 7; $i < 31; $i++) {
-					echo('<option value="' . $i . '"');
+					echo ('<option value="' . $i . '"');
 					if($x_font_size == $i) {
-						echo(' selected="selected" ');
+						echo (' selected="selected" ');
 					}
-					echo('>' . $i . '</option>');
+					echo ('>' . $i . '</option>');
 				}
 				?>
 			</select>
@@ -426,7 +431,19 @@ echo $x_contador_idcontadorList;
 		<?php
 
 		function combo($seleccionado) {
-			$combo_margenes = array('0', '5', '10', '15', '20', '25', '30', '35', '40', '45', '50');
+			$combo_margenes = array(
+					'0',
+					'5',
+					'10',
+					'15',
+					'20',
+					'25',
+					'30',
+					'35',
+					'40',
+					'45',
+					'50'
+			);
 			for($i = 0; $i < count($combo_margenes); $i++) {
 				echo "<option value='" . $combo_margenes[$i] . "'";
 				if($combo_margenes[$i] == $seleccionado)
@@ -479,10 +496,11 @@ echo $x_contador_idcontadorList;
 			</span></td>
 		</tr>
 		<tr>
-			<td class="encabezado">Mostrar Pdf cuando exista</td>
+			<td class="encabezado">Mostrar</td>
 			<td bgcolor="#F5F5F5"><input type="radio" name="x_mostrar_pdf"
-				value="1" checked> Si <input type="radio" name="x_mostrar_pdf"
-				value="0"> No</td>
+				value="1" checked> PDF <input type="radio" name="x_mostrar_pdf"
+				value="0"> Html <input type="radio" name="x_mostrar_pdf" value="2">
+				PDF Word</td>
 		</tr>
 		<tr>
 			<td class="encabezado">Tiempo Autoguardado (ms)*</td>
@@ -499,8 +517,8 @@ echo $x_contador_idcontadorList;
 $ar_x_exportar = explode(",", @$x_exportar);
 $x_exportarChk = "";
 $x_exportarChk .= "<input type=\"checkbox\" name=\"x_exportar[]\" value=\"" . htmlspecialchars("pdf") . "\"";
-foreach ($ar_x_exportar as $cnt_x_exportar) {
-	if (trim($cnt_x_exportar) == "pdf") {
+foreach($ar_x_exportar as $cnt_x_exportar) {
+	if(trim($cnt_x_exportar) == "pdf") {
 		$x_exportarChk .= " checked";
 		break;
 	}
@@ -529,13 +547,15 @@ echo $x_exportarChk;
 </span></td>
 		</tr>
 		<tr>
-      <td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">El formato pertenece al n&uacute;cleo</span></td>
-      <td bgcolor="#F5F5F5"><span class="phpmaker">
-              <input type="radio" name="x_pertenece_nucleo" value=0 <?php if(!$x_pertenece_nucleo) echo "checked";?>>No&nbsp;&nbsp;
-              <input type="radio" name="x_pertenece_nucleo" value=1 <?php if($x_pertenece_nucleo) echo "checked";?>>Si
-              </span>
-          </td>
-    </tr>
+			<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">El
+					formato pertenece al n&uacute;cleo</span></td>
+			<td bgcolor="#F5F5F5"><span class="phpmaker"> <input type="radio"
+					name="x_pertenece_nucleo" value=0
+					<?php if(!$x_pertenece_nucleo) echo "checked";?>>No&nbsp;&nbsp; <input
+					type="radio" name="x_pertenece_nucleo" value=1
+					<?php if($x_pertenece_nucleo) echo "checked";?>>Si
+			</span></td>
+		</tr>
 		<tr>
 			<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">Categor&iacute;a</span></td>
 			<td bgcolor="#F5F5F5"><span class="phpmaker"><?php echo arbol_categorias('x_fk_categoria_formato'); ?></span></td>
@@ -589,30 +609,29 @@ echo $x_exportarChk;
 // - Load Data based on Key Value sKey
 // - Variables setup: field variables
 function LoadData($sKey, $conn) {
-  global $enter2tab, $x_autoguardado, $x_mostrar_pdf, $x_item, $x_idformato, $x_nombre, $x_etiqueta, $x_contador_idcontador, $x_ruta_mostrar, $x_ruta_editar, $x_ruta_adicionar, $x_librerias, $x_encabezado, $x_cuerpo, $x_pie_pagina, $x_margenes, $x_orientacion, $x_papel, $x_exportar, $x_tabla, $x_detalle, $x_cod_padre, $x_tipo_edicion, $x_serie_idserie, $x_banderas, $x_font_size, $x_firma_digital, $x_fk_categoria_formato, $x_flujo_idflujo, $x_funcion_predeterminada, $x_pertenece_nucleo;
+	global $enter2tab, $x_autoguardado, $x_mostrar_pdf, $x_item, $x_idformato, $x_nombre, $x_etiqueta, $x_contador_idcontador, $x_ruta_mostrar, $x_ruta_editar, $x_ruta_adicionar, $x_librerias, $x_encabezado, $x_cuerpo, $x_pie_pagina, $x_margenes, $x_orientacion, $x_papel, $x_exportar, $x_tabla, $x_detalle, $x_cod_padre, $x_tipo_edicion, $x_serie_idserie, $x_banderas, $x_font_size, $x_firma_digital, $x_fk_categoria_formato, $x_flujo_idflujo, $x_funcion_predeterminada, $x_pertenece_nucleo;
 	$sKeyWrk = "" . addslashes($sKey) . "";
 	$sSql = "SELECT * FROM formato";
 	$sSql .= " WHERE idformato = " . $sKeyWrk;
 	$sGroupBy = "";
 	$sHaving = "";
 	$sOrderBy = "";
-	if ($sGroupBy != "") {
+	if($sGroupBy != "") {
 		$sSql .= " GROUP BY " . $sGroupBy;
 	}
-	if ($sHaving != "") {
+	if($sHaving != "") {
 		$sSql .= " HAVING " . $sHaving;
 	}
-	if ($sOrderBy != "") {
+	if($sOrderBy != "") {
 		$sSql .= " ORDER BY " . $sOrderBy;
 	}
 	$rs = phpmkr_query($sSql, $conn) or die("Failed to execute query" . phpmkr_error() . ' SQL:' . $sSql);
-	if (phpmkr_num_rows($rs) == 0) {
+	if(phpmkr_num_rows($rs) == 0) {
 		$LoadData = false;
 	} else {
 		$LoadData = true;
 		$row = phpmkr_fetch_array($rs);
 		
-
 		// Get the field contents
 		$x_idformato = $row["idformato"];
 		$x_nombre = $row["nombre"];
@@ -642,7 +661,7 @@ function LoadData($sKey, $conn) {
 		$x_fk_categoria_formato = $row["fk_categoria_formato"];
 		$x_flujo_idflujo = $row["flujo_idflujo"];
 		$x_funcion_predeterminada = $row["funcion_predeterminada"];
-    $x_pertenece_nucleo =$row["pertenece_nucleo"];
+		$x_pertenece_nucleo = $row["pertenece_nucleo"];
 	}
 	phpmkr_free_result($rs);
 	return $LoadData;
@@ -655,14 +674,14 @@ function LoadData($sKey, $conn) {
 // - Add Data
 // - Variables used: field variables
 function AddData($conn) {
-	global $enter2tab, $x_autoguardado, $x_mostrar_pdf, $x_item, $x_idformato, $x_nombre, $x_etiqueta, $x_contador_idcontador, $x_ruta_mostrar, $x_ruta_editar, $x_ruta_adicionar, $x_librerias, $x_encabezado, $x_cuerpo, $x_pie_pagina, $x_margenes, $x_orientacion, $x_papel, $x_exportar, $x_tabla, $x_detalle, $x_cod_padre, $x_serie_idserie, $x_banderas, $x_font_size, $x_mostrar, $x_tipo_edicion, $x_firma_digital, $x_fk_categoria_formato, $x_flujo_idflujo, $x_funcion_predeterminada, $x_paginar,$x_pertenece_nucleo;
-
-  // Field Banderas
+	global $enter2tab, $x_autoguardado, $x_mostrar_pdf, $x_item, $x_idformato, $x_nombre, $x_etiqueta, $x_contador_idcontador, $x_ruta_mostrar, $x_ruta_editar, $x_ruta_adicionar, $x_librerias, $x_encabezado, $x_cuerpo, $x_pie_pagina, $x_margenes, $x_orientacion, $x_papel, $x_exportar, $x_tabla, $x_detalle, $x_cod_padre, $x_serie_idserie, $x_banderas, $x_font_size, $x_mostrar, $x_tipo_edicion, $x_firma_digital, $x_fk_categoria_formato, $x_flujo_idflujo, $x_funcion_predeterminada, $x_paginar, $x_pertenece_nucleo;
+	
+	// Field Banderas
 	if(is_array($x_banderas))
 		$fieldList["banderas"] = "'" . implode(",", $x_banderas) . "'";
-
+	
 	$fieldList["mostrar_pdf"] = $x_mostrar_pdf;
-
+	
 	// Field nombre
 	$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_nombre) : $x_nombre;
 	$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
@@ -671,7 +690,7 @@ function AddData($conn) {
 	// Field firma_digital
 	$theValue = ($x_firma_digital != "") ? intval($x_firma_digital) : 0;
 	$fieldList["firma_digital"] = $theValue;
-
+	
 	// Field etiqueta
 	$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_etiqueta) : $x_etiqueta;
 	$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
@@ -690,7 +709,7 @@ function AddData($conn) {
 		guardar_traza($sql, "ft_" . $x_nombre);
 		phpmkr_query($sql, $conn);
 	}
-
+	
 	// Field Serie_idserie
 	if($x_serie_idserie == "") { // crear la serie con el nombre del formato
 		$sql = "insert into serie(nombre,categoria) values('" . $x_etiqueta . "',3)";
@@ -702,15 +721,15 @@ function AddData($conn) {
 		$fieldList["serie_idserie"] = $theValue;
 	}
 	$fieldList["tiempo_autoguardado"] = $x_autoguardado;
-
+	
 	$x_tabla = "ft_" . $x_nombre;
 	$fieldList["nombre_tabla"] = "'" . $x_tabla . "'";
-
+	
 	// Field librerias
 	$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_librerias) : $x_librerias;
 	$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
 	$fieldList["librerias"] = $theValue;
-
+	
 	// Field margenes
 	$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_margenes) : $x_margenes;
 	$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
@@ -718,17 +737,17 @@ function AddData($conn) {
 	// font_size
 	$fieldList["font_size"] = $x_font_size;
 	$fieldList["enter2tab"] = $enter2tab;
-
+	
 	// Field orientacion
 	$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_orientacion) : $x_orientacion;
 	$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
 	$fieldList["orientacion"] = $theValue;
-
+	
 	// Field papel
 	$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_papel) : $x_papel;
 	$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
 	$fieldList["papel"] = $theValue;
-
+	
 	// Field exportar
 	$theValue = implode(",", $x_exportar);
 	$theValue = (!get_magic_quotes_gpc()) ? addslashes($theValue) : $theValue;
@@ -736,46 +755,46 @@ function AddData($conn) {
 	$fieldList["exportar"] = $theValue;
 	if(!is_dir($x_nombre)) {
 		mkdir($x_nombre, 0777);
-    $data=' ';
-    if(intval($x_pertenece_nucleo) == 0){
-      $data='*';
-    }
-    if(!file_put_contents($x_nombre."/.gitignore", $data)){
-      alerta("No se crea el archivo .gitignore para versionamiento");  
-    }
+		$data = ' ';
+		if(intval($x_pertenece_nucleo) == 0) {
+			$data = '*';
+		}
+		if(!file_put_contents($x_nombre . "/.gitignore", $data)) {
+			alerta("No se crea el archivo .gitignore para versionamiento");
+		}
 	}
-
+	
 	// Field cod_padre
 	$theValue = ($x_cod_padre != 0) ? intval($x_cod_padre) : 0;
 	$fieldList["cod_padre"] = $theValue;
-
+	
 	// Field Tipo Edicion continua
 	$theValue = ($x_tipo_edicion != 0) ? intval($x_tipo_edicion) : 0;
 	$fieldList["tipo_edicion"] = $theValue;
-
+	
 	$theValue = ($x_mostrar != 0) ? intval($x_mostrar) : 0;
 	$fieldList["mostrar"] = $theValue;
-
-	//paginar en el mostrar
+	
+	// paginar en el mostrar
 	$theValue = ($x_paginar != 0) ? intval($x_paginar) : 0;
 	$fieldList["paginar"] = $theValue;
-
+	
 	// tipo detalle
 	$theValue = ($x_detalle != "") ? intval($x_detalle) : 0;
 	$fieldList["detalle"] = $theValue;
 	// tipo item
 	$fieldList["item"] = $x_item;
-
+	
 	$fieldList["fk_categoria_formato"] = "'" . $x_fk_categoria_formato . "'";
 	$fieldList["flujo_idflujo"] = $x_flujo_idflujo;
 	$fieldList["funcion_predeterminada"] = "'" . implode(",", $x_funcion_predeterminada) . "'";
-
+	
 	$fieldList["ruta_mostrar"] = "'" . "mostrar_" . $x_nombre . ".php'";
 	$fieldList["ruta_editar"] = "'" . "editar_" . $x_nombre . ".php'";
 	$fieldList["ruta_adicionar"] = "'" . "adicionar_" . $x_nombre . ".php'";
 	$fieldList["funcionario_idfuncionario"] = usuario_actual("funcionario_codigo");
-  $fieldList["pertenece_nucleo"] = intval($x_pertenece_nucleo);
-  print_r($fieldList);
+	$fieldList["pertenece_nucleo"] = intval($x_pertenece_nucleo);
+	print_r($fieldList);
 	// insert into database
 	$strsql = "INSERT INTO formato (";
 	$strsql .= implode(",", array_keys($fieldList));
@@ -784,7 +803,7 @@ function AddData($conn) {
 	$strsql .= ")";
 	guardar_traza($strsql, "ft_" . $x_nombre);
 	phpmkr_query($strsql, $conn) or die("Falla al ejecutar la busqueda " . phpmkr_error() . ' SQL:' . $strsql);
-
+	
 	$idformato = phpmkr_insert_id();
 	if($idformato != '') {
 		if($x_flujo_idflujo != 0) {
@@ -810,20 +829,20 @@ function AddData($conn) {
 		phpmkr_query($strsql, $conn) or die("Falla al Ejecutar la busqueda " . phpmkr_error() . ' SQL:' . $strsql);
 	}
 	if($idformato && !$fieldList["item"]) {
-    	$sqlcd="INSERT INTO campos_formato (formato_idformato, nombre, etiqueta, tipo_dato, longitud, obligatoriedad, predeterminado, acciones, ayuda, banderas, etiqueta_html) VALUES (" . $idformato . ",'estado_documento', 'ESTADO DEL DOCUMENTO', 'VARCHAR', 255, 0,'', 'a','', '', 'hidden')";
-	   	phpmkr_query($sqlcd, $conn) or die("Falla al Ejecutar la busqueda " . phpmkr_error() . ' SQL:' . $strsql);
-	    
+		$sqlcd = "INSERT INTO campos_formato (formato_idformato, nombre, etiqueta, tipo_dato, longitud, obligatoriedad, predeterminado, acciones, ayuda, banderas, etiqueta_html) VALUES (" . $idformato . ",'estado_documento', 'ESTADO DEL DOCUMENTO', 'VARCHAR', 255, 0,'', 'a','', '', 'hidden')";
+		phpmkr_query($sqlcd, $conn) or die("Falla al Ejecutar la busqueda " . phpmkr_error() . ' SQL:' . $strsql);
+		
 		$strsql = "INSERT INTO campos_formato (formato_idformato, nombre, etiqueta, tipo_dato, longitud, obligatoriedad, predeterminado, acciones, ayuda, banderas, etiqueta_html) VALUES (" . $idformato . ",'serie_idserie', 'SERIE DOCUMENTAL', 'INT', 11, 1," . $fieldList["serie_idserie"] . ", 'a'," . $fieldList["etiqueta"] . ", 'fk', 'hidden')";
 		guardar_traza($strsql, "ft_" . $x_nombre);
 		phpmkr_query($strsql, $conn) or die("Falla al Ejecutar la busqueda " . phpmkr_error() . ' SQL:' . $strsql);
 	}
-
+	
 	return $idformato;
 }
 
 function crear_contador($contador) {
 	global $conn;
-
+	
 	$cont = busca_filtro_tabla("*", "contador", "nombre LIKE '" . $contador . "'", "", $conn);
 	if(!$cont["numcampos"]) {
 		$sql = "INSERT INTO contador(consecutivo, nombre) VALUES(1,'" . $contador . "')";
@@ -846,19 +865,30 @@ function arbol_categorias($campo) {
 <div><?php //echo $seleccionados; ?></div>
 <br>
 Buscar:
-<input type="text" id="stext<?php echo $entidad; ?>" width="200px" size="25">
+<input type="text" id="stext<?php echo $entidad; ?>" width="200px"
+	size="25">
 <a href="javascript:void(0)"
 	onclick="stext<?php echo $entidad; ?>.findItem(htmlentities(document.getElementById('stext<?php echo $entidad; ?>').value),1)">
-	<img src="../botones/general/anterior.png" alt="Buscar Anterior" border="0px"> </a>
-<a href="javascript:void(0)" onclick="tree<?php echo $entidad; ?>.findItem(htmlentities(document.getElementById('stext<?php echo $entidad; ?>').value),0,1)">
-	<img src="../botones/general/buscar.png" alt="Buscar" border="0px"> </a>
-<a href="javascript:void(0)" onclick="tree<?php echo $entidad; ?>.findItem(htmlentities(document.getElementById('stext<?php echo $entidad; ?>').value))">
-	<img src="../botones/general/siguiente.png" alt="Buscar Siguiente" border="0px"> </a>
+	<img src="../botones/general/anterior.png" alt="Buscar Anterior"
+	border="0px">
+</a>
+<a href="javascript:void(0)"
+	onclick="tree<?php echo $entidad; ?>.findItem(htmlentities(document.getElementById('stext<?php echo $entidad; ?>').value),0,1)">
+	<img src="../botones/general/buscar.png" alt="Buscar" border="0px">
+</a>
+<a href="javascript:void(0)"
+	onclick="tree<?php echo $entidad; ?>.findItem(htmlentities(document.getElementById('stext<?php echo $entidad; ?>').value))">
+	<img src="../botones/general/siguiente.png" alt="Buscar Siguiente"
+	border="0px">
+</a>
 <span></span>
-<div id="esperando<?php echo $entidad; ?>"><img src="../imagenes/cargando.gif" alt=""></div>
+<div id="esperando<?php echo $entidad; ?>">
+	<img src="../imagenes/cargando.gif" alt="">
+</div>
 <div id="treeboxbox<?php echo $entidad; ?>" width="100px" height="100px"></div>
-	<input type="hidden" class="required" name="<?php echo $campo; ?>" id="<?php echo $campo; ?>">
-	<script type="text/javascript">
+<input type="hidden" class="required" name="<?php echo $campo; ?>"
+	id="<?php echo $campo; ?>">
+<script type="text/javascript">
 		var browserType;
 		if (document.layers) {browserType = "nn4"}
 		if (document.all) {browserType = "ie"}
@@ -905,15 +935,15 @@ Buscar:
 		}
                     
                     --></script>
-                    
-                    
+
+
 
 <?php
 }
 
 function generar_campo_flujo($idformato, $idflujo) {
 	$buscar_campo = busca_filtro_tabla("", "campos_formato A", "formato_idformato=" . $idformato . " AND nombre='idflujo'", "", $conn);
-
+	
 	if($buscar_campo["numcampos"] == 0) {
 		$campo = "INSERT INTO campos_formato(formato_idformato, nombre, etiqueta, tipo_dato, longitud, obligatoriedad, acciones, predeterminado, etiqueta_html, orden, valor) VALUES(" . $idformato . ",'idflujo', 'idflujo', 'VARCHAR', '255', 0, 'a,e,b', '" . $idflujo . "', 'select', 0, 'Select id,title as nombre from diagram order by nombre')";
 		// Se deja el comentario para la modificacion de los flujos
@@ -962,18 +992,18 @@ function vincular_funcion_digitalizacion($idformato) {
 	
 	// ---Vinculando funcion de validacion al digitalizar
 	$buscar_funcion = busca_filtro_tabla("", "funciones_formato A", "nombre_funcion='validar_digitalizacion_formato'", "", $conn);
-	if ($buscar_funcion["numcampos"] == 0) {
+	if($buscar_funcion["numcampos"] == 0) {
 		$nueva_funcion = "INSERT INTO funciones_formato (nombre,nombre_funcion,etiqueta,descripcion, ruta, formato, acciones) VALUES ('{*validar_digitalizacion_formato*}', 'validar_digitalizacion_formato', 'validar_digitalizacion_formato', 'validar_digitalizacion_formato', '../librerias/funciones_formatos_generales.php', '" . $idformato . "','')";
 		guardar_traza($nueva_funcion, $formato[0]["nombre_tabla"]);
 		phpmkr_query($nueva_funcion, $conn);
 	}
 	$buscar_funcion = busca_filtro_tabla("", "funciones_formato A", "nombre_funcion='validar_digitalizacion_formato'", "", $conn);
-	if (!in_array($idformato, explode(",", $buscar_funcion[0]["formato"]))) {
+	if(!in_array($idformato, explode(",", $buscar_funcion[0]["formato"]))) {
 		$sql = "UPDATE funciones_formato SET formato='" . $buscar_funcion[0]["formato"] . "," . $idformato . "' WHERE idfunciones_formato=" . $buscar_funcion[0]["idfunciones_formato"];
 		guardar_traza($sql, $formato[0]["nombre_tabla"]);
 		phpmkr_query($sql, $conn);
 	}
-
+	
 	// Vinculando la accion de validar la digitalizar posterior a la accion correspondiente.
 	if(in_array("e", $x_banderas)) {
 		$accion = busca_filtro_tabla("", "accion", "nombre='aprobar'", "", $conn);

@@ -19,7 +19,9 @@ if($datos_formato[0]["mostrar_pdf"]==1){
 	$sql1="update documento set pdf='' where iddocumento=".$_REQUEST["iddoc"];
 	phpmkr_query($sql1);
 	redirecciona($ruta_db_superior."pantallas/documento/visor_documento.php?iddoc=".$_REQUEST["iddoc"]);
-}
+}else if($datos_formato[0]["mostrar_pdf"]==2){
+		redirecciona("../../pantallas/documento/visor_documento.php?pdf_word=1&iddoc=".$_REQUEST["iddoc"]);
+	}
  // Recibe el parametro para editar una ruta 
 if(@$_REQUEST["adruta"]){
   echo "<script>window.location='rutaadd.php?x_plantilla=".@$_REQUEST["x_plantilla"]."&obligatorio=".$_REQUEST["obligatorio"]."&doc=".$_REQUEST["iddoc"]."&origen=".usuario_actual("funcionario_codigo")."&reset_ruta=1';</script>";

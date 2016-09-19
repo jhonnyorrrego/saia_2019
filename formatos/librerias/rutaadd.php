@@ -427,10 +427,16 @@ function eliminarespacio(elemento)
   {
    cancelar_ruta($_GET["doc"],strtolower($_GET["plantilla"]));
    $formato=busca_filtro_tabla("lower(plantilla) as formato,b.mostrar_pdf","documento a, formato b","iddocumento=".$_GET["doc"]." and lower(plantilla)=lower(b.nombre)","",$conn);
-   if($formato[0]["mostrar_pdf"]){
+   if($formato[0]["mostrar_pdf"] == 1){
    	redirecciona($ruta_db_superior."pantallas/documento/visor_documento.php?iddoc=".$_GET["doc"]."&actualizar_pdf=1");
-	 }
-	 else{
+	 }else if($formato[0]["mostrar_pdf"]==2){		
+	  	$iddoc=$_GET["doc"];
+		$from_externo=1;		
+	  	$ruta_db_superior='../../';	
+		$_REQUEST['from_externo']=1;
+	  	include($ruta_db_superior.'pantallas/lib/PhpWord/exportar_word.php');  			
+	  	redirecciona($ruta_db_superior."pantallas/documento/visor_documento.php?iddoc=".$_GET["doc"]."&pdf_word=1");	 			
+	 }else{
 	 	redirecciona($ruta_db_superior."formatos/".$formato[0][0]."/mostrar_".$formato[0][0].".php?iddoc=".$_GET["doc"]);
 	 }
   }   
@@ -949,6 +955,13 @@ function AddData($conn)
 		}
   }
   
+  if(@$_REQUEST['exportar_pdf_word'] && $plantilla[0]["mostrar_pdf"]==2){		
+  	$iddoc=$fieldList["documento_iddocumento"];		
+  	$ruta_db_superior='../../';		
+	$_REQUEST['from_externo']=1;
+  	include_once($ruta_db_superior.'pantallas/lib/PhpWord/exportar_word.php');		
+  }		
+
   if(@$_REQUEST['cargar']){
   	abrir_url("../../formatos/".$plantilla[0]["plantilla"]."/mostrar_".$plantilla[0]["plantilla"].".php?iddoc=".$fieldList["documento_iddocumento"]."&idformato=".$plantilla[0]["idformato"],"_self");
       	

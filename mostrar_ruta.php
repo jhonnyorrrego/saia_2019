@@ -89,6 +89,14 @@ if(isset($_POST["editar_firma"])){
   $datos_formato=busca_filtro_tabla("","formato a","a.nombre='".$_POST["plantilla"]."'","",$conn);
   if($datos_formato[0]["mostrar_pdf"]==1){
   	redirecciona("pantallas/documento/visor_documento.php?iddoc=".$_POST["editar_firma"]."&actualizar_pdf=1");
+  	die();
+  }
+  if($datos_formato[0]["mostrar_pdf"]==2){		
+  	$iddoc=$_POST["editar_firma"];		
+  	$ruta_db_superior='';		
+	$_REQUEST['from_externo']=1;
+  	include_once($ruta_db_superior.'pantallas/lib/PhpWord/exportar_word.php');  			
+  	redirecciona("pantallas/documento/visor_documento.php?iddoc=".$_POST["editar_firma"]."&pdf_word=1");		
 		die();
   }
  redirecciona("formatos/".$_POST["plantilla"]."/mostrar_".$_POST["plantilla"].".php?iddoc=".$_POST["editar_firma"]); 

@@ -488,10 +488,11 @@ echo $x_contador_idcontadorList;
   <input type="text" name="x_autoguardado" id="x_autoguardado" value="<?php echo $x_autoguardado; ?>" > 
 	</td></tr>
 <tr>
-	<td class="encabezado">Mostrar Pdf cuando exista</td><td bgcolor="#F5F5F5">
-  <input type="radio" name="x_mostrar_pdf"  value="1" <?php if($x_mostrar_pdf) echo "checked"; ?>> Si
-  <input type="radio" name="x_mostrar_pdf"  value="0" <?php if(!$x_mostrar_pdf) echo "checked"; ?>> No
-	</td></tr>
+	<td class="encabezado">Mostrar</td><td bgcolor="#F5F5F5">
+  <input type="radio" name="x_mostrar_pdf" value="1" <?php if($x_mostrar_pdf==1) echo "checked"; ?>> PDF
+  <input type="radio" name="x_mostrar_pdf" value="0" <?php if(!$x_mostrar_pdf) echo "checked"; ?>> Html 
+  <input type="radio" name="x_mostrar_pdf" value="2" <?php if($x_mostrar_pdf==2) echo "checked"; ?>> PDF Word</td>
+</tr>
 	<tr>
 		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">M&eacute;todo Exportar</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
