@@ -95,7 +95,6 @@ echo(librerias_validar_formulario());
             <?php } ?>            
           </div>
         </div>
-
         <?php } /*fin if mostrar_filtro*/ ?>
         
           <input type="hidden" name="idbusqueda_componente" id="idbusqueda_componente" value="<?php echo @$_REQUEST["idbusqueda_componente"]; ?>">
