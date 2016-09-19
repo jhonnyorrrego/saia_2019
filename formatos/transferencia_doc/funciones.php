@@ -99,14 +99,14 @@ function expedientes_vinculados_funcion($idformato,$iddoc){
         <table style="width:100%;border-collapse:collapse" border="1px">
           <tr>
             <th rowspan="2" style="text-align:center;font-weight:bold;">NUMERO DE ORDEN</th>
-            <th rowspan="2">CODIGO</th>
-            <th rowspan="2">NOMBRE</th>
-            <th colspan="2">FECHAS EXTREMAS</th>
-            <th colspan="4">UNIDAD DE CONSERVACION</th>
-            <th rowspan="2">NUMERO DE FOLIOS</th>
-            <th rowspan="2">SOPORTE</th>
-            <th rowspan="2">FRECUENCIA DE CONSULTA</th>
-            <th rowspan="2">NOTAS</th>
+            <th rowspan="2" style="text-align:center;font-weight:bold;">CODIGO</th>
+            <th rowspan="2" style="text-align:center;font-weight:bold;">NOMBRE</th>
+            <th colspan="2" style="text-align:center;font-weight:bold;">FECHAS EXTREMAS</th>
+            <th colspan="4" style="text-align:center;font-weight:bold;">UNIDAD DE CONSERVACION</th>
+            <th rowspan="2" style="text-align:center;font-weight:bold;">NUMERO DE FOLIOS</th>
+            <th rowspan="2" style="text-align:center;font-weight:bold;">SOPORTE</th>
+            <th rowspan="2" style="text-align:center;font-weight:bold;">FRECUENCIA DE CONSULTA</th>
+            <th rowspan="2" style="text-align:center;font-weight:bold;">NOTAS</th>
             ';
         if($datos[0]["estado"]=='ACTIVO' && @$_REQUEST["tipo"]!=5){
              $texto='   
@@ -117,12 +117,12 @@ function expedientes_vinculados_funcion($idformato,$iddoc){
         $texto.='    
           </tr>
           <tr>
-            <th>INICIAL</th>
-            <th>FINAL</th>
-            <th>CAJA</th>
-            <th>CARPETA</th>
-            <th>TOMO</th>
-            <th>OTRO</th>
+            <th style="text-align:center;font-weight:bold;">INICIAL</th>
+            <th style="text-align:center;font-weight:bold;">FINAL</th>
+            <th style="text-align:center;font-weight:bold;">CAJA</th>
+            <th style="text-align:center;font-weight:bold;">CARPETA</th>
+            <th style="text-align:center;font-weight:bold;">TOMO</th>
+            <th style="text-align:center;font-weight:bold;">OTRO</th>
           </tr>		
 		
 		';
