@@ -52,6 +52,20 @@ echo(librerias_validar_formulario());
             <input id="bqsaia_nombre" name="bqsaia_nombre" size="50" type="text">
           </div>
         </div>
+
+
+        <div class="control-group">
+          <label class="string required control-label" for="prox_estado_archivo">
+			Nombres
+			<input type="hidden" name="bksaiacondicion_prox_estado_archivo" id="bksaiacondicion_prox_estado_archivo" value="=">
+          </label>
+          <div class="controls">
+            <input id="bqsaia_prox_estado_archivo1" name="bqsaia_prox_estado_archivo"  type="radio" value="2">Pasar a Central
+            <input id="bqsaia_prox_estado_archivo2" name="bqsaia_prox_estado_archivo"  type="radio" value="3">Pasar a Historico
+          </div>
+        </div>
+
+
         
           <input type="hidden" name="idbusqueda_componente" id="idbusqueda_componente" value="<?php echo @$_REQUEST["idbusqueda_componente"]; ?>">
           <input type="hidden" name="adicionar_consulta" id="adicionar_consulta" value="1">
