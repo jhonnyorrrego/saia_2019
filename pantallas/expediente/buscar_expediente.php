@@ -56,12 +56,12 @@ echo(librerias_validar_formulario());
 
         <div class="control-group">
           <label class="string required control-label" for="prox_estado_archivo">
-			Nombres
+		Pendientes por pasar a:
 			<input type="hidden" name="bksaiacondicion_prox_estado_archivo" id="bksaiacondicion_prox_estado_archivo" value="=">
           </label>
           <div class="controls">
-            <input id="bqsaia_prox_estado_archivo1" name="bqsaia_prox_estado_archivo"  type="radio" value="2">Pasar a Central </br>
-            <input id="bqsaia_prox_estado_archivo2" name="bqsaia_prox_estado_archivo"  type="radio" value="3">Pasar a Historico
+            <input id="bqsaia_prox_estado_archivo1" name="bqsaia_prox_estado_archivo"  type="radio" value="2">Central </br>
+            <input id="bqsaia_prox_estado_archivo2" name="bqsaia_prox_estado_archivo"  type="radio" value="3">Historico
           </div>
         </div>
 
