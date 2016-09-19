@@ -93,18 +93,28 @@ function expedientes_vinculados_funcion($idformato,$iddoc){
 	$expedientes=busca_filtro_tabla("","expediente A","A.idexpediente in(".$datos[0]["expediente_vinculado"].")","",$conn);
 	if($expedientes["numcampos"]){
 		$texto.='<p>&nbsp;</p>
-		<table style="width:100%;border-collapse:collapse" border="1px">';
-		$texto.='<tr><td rowspan="2" style="width:10%;text-align:center"><b>N&Uacute;MERO DE ORDEN</b></td>
-		<td rowspan="2" style="width:10%;text-align:center"><b>C&Oacute;DIGO</b></td>
-		<td rowspan="2" style="width:30%;text-align:center"><b>NOMBRE</b></td>
-		<td colspan="2" style="width:20%;text-align:center"><b>FECHAS EXTREMAS</b></td>
-		<td rowspan="2" style="width:15%;text-align:center"><b>UNIDAD DE CONSERVACI&Oacute;N</b></td>
-		<td rowspan="2" style="width:15%;text-align:center"><b>N&Uacute;MERO DE FOLIOS</b></td>
-		</tr>
-		<tr>
-		<td style="text-align:center"><b>INICIAL</b></td>
-		<td style="text-align:center"><b>FINAL</b></td>
-		</tr>';
+
+          <tr>
+            <th rowspan="2">NUMERO DE ORDEN</th>
+            <th rowspan="2">CODIGO</th>
+            <th rowspan="2">NOMBRE</th>
+            <th colspan="2">FECHAS EXTREMAS</th>
+            <th colspan="4">UNIDAD DE CONSERVACION</th>
+            <th rowspan="2">NUMERO DE FOLIOS</th>
+            <th rowspan="2">SOPORTE</th>
+            <th rowspan="2">FRECUENCIA DE CONSULTA</th>
+            <th rowspan="2">NOTAS</th>
+          </tr>
+          <tr>
+            <td>INICIAL</td>
+            <td>FINAL</td>
+            <td>CAJA</td>
+            <td>CARPETA</td>
+            <td>TOMO</td>
+            <td>OTRO</td>
+          </tr>		
+		
+		';
 		$texto.="";
 		for($i=0;$i<$expedientes["numcampos"];$i++){
 			if(is_object($expedientes[$i]["fecha_extrema_i"]))$expedientes[$i]["fecha_extrema_i"]=$expedientes[$i]["fecha_extrema_i"]->format('Y-m-d');
