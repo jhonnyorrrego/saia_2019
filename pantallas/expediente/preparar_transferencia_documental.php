@@ -8,6 +8,17 @@ while ($max_salida > 0) {
   $ruta.="../";
   $max_salida--;
 }
+include_once($ruta_db_superior."define.php");
+
+
+if(!@$_SESSION["LOGIN".LLAVE_SAIA]){
+  @session_start();
+  $_SESSION["LOGIN"]="radicador_web";
+  $_SESSION["usuario_actual"]="111222333";
+  $_SESSION["conexion_remota"]=1; 
+}
+
+
 include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."pantallas/lib/librerias_fechas.php");
 if(@$_REQUEST['ejecutar']){
