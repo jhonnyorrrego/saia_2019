@@ -274,6 +274,14 @@ if($dato_padre["numcampos"]){
 	  	</select>
 	  </div>
 	</div>
+	
+	<div class="control-group element">
+	  <label class="control-label" for="notas_transf">Notas de Transferencia
+	  </label>
+	  <div class="controls"> 
+	      <textarea name="notas_transf" id="notas_transf"><?php echo($datos[0]["notas_transf"]); ?></textarea>
+	  </div>
+	</div>	
 </div>
 <br />
 <input type="hidden" name="key_formulario_saia" value="<?php echo(generar_llave_md5_saia());?>">
