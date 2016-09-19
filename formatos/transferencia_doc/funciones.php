@@ -107,12 +107,12 @@ function expedientes_vinculados_funcion($idformato,$iddoc){
             <th rowspan="2">NOTAS</th>
           </tr>
           <tr>
-            <td>INICIAL</td>
-            <td>FINAL</td>
-            <td>CAJA</td>
-            <td>CARPETA</td>
-            <td>TOMO</td>
-            <td>OTRO</td>
+            <th>INICIAL</th>
+            <th>FINAL</th>
+            <th>CAJA</th>
+            <th>CARPETA</th>
+            <th>TOMO</th>
+            <th>OTRO</th>
           </tr>		
 		
 		';
