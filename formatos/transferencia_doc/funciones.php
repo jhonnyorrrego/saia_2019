@@ -133,8 +133,13 @@ function expedientes_vinculados_funcion($idformato,$iddoc){
 			<td>'.$caja_expediente[0]['no_consecutivo'].'</td>
 			<td>'.$expedientes[$i]['no_carpeta'].'</td>
 			<td>'.$expedientes[$i]['no_tomo'].'</td>
-			<td>'.$expedientes[$i]['no_tomo'].'</td>
-			<td style="text-align:center">'.$expedientes[$i]["no_folios"].'</td>';
+			<td>'.$expedientes[$i]['otro'].'</td>
+			<td style="text-align:center">'.$expedientes[$i]["no_folios"].'</td>
+			<td>'.$expedientes[$i]['soporte'].'</td>
+			<td>'.$expedientes[$i]['frecuencia'].'</td>
+			<td>'.$expedientes[$i]['notas'].'</td>
+			';
+			
 			if($datos[0]["estado"]=='ACTIVO' && @$_REQUEST["tipo"]!=5){
 				$texto.='<td><i class="icon-remove expulsar_expediente" idexpediente="'.$expedientes[$i]["idexpediente"].'" style="cursor:pointer"></i></td>';
 			}
