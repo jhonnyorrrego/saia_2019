@@ -126,7 +126,7 @@ function expedientes_vinculados_funcion($idformato,$iddoc){
 			
 			$texto.='<tr id="tr_'.$expedientes[$i]["idexpediente"].'">
 			<td style="text-align:center">'.($i+1).'</td>
-			<td>'$serie_expediente[0]['codigo'].'</td>
+			<td>'.$serie_expediente[0]['codigo'].'</td>
 			<td>'.$expedientes[$i]["nombre"].'</td>
 			<td>'.$expedientes[$i]["fecha_extrema_i"].'</td>
 			<td>'.$expedientes[$i]["fecha_extrema_f"].'</td>
