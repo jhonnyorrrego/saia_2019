@@ -120,7 +120,7 @@ function expedientes_vinculados_funcion($idformato,$iddoc){
 		for($i=0;$i<$expedientes["numcampos"];$i++){
 		    
 		    $serie_expediente=busca_filtro_tabla('codigo','serie','idserie='.$expedientes[$i]["serie_idserie"],'',conn);
-		   
+		    $caja_expediente=busca_filtro_tabla('no_consecutivo','caja','idcaja='.$expedientes[$i]["fk_idcaja"],'',conn);
 			if(is_object($expedientes[$i]["fecha_extrema_i"]))$expedientes[$i]["fecha_extrema_i"]=$expedientes[$i]["fecha_extrema_i"]->format('Y-m-d');
 			if(is_object($expedientes[$i]["fecha_extrema_f"]))$expedientes[$i]["fecha_extrema_f"]=$expedientes[$i]["fecha_extrema_f"]->format('Y-m-d');
 			
@@ -130,7 +130,7 @@ function expedientes_vinculados_funcion($idformato,$iddoc){
 			<td>'.$expedientes[$i]["nombre"].'</td>
 			<td>'.$expedientes[$i]["fecha_extrema_i"].'</td>
 			<td>'.$expedientes[$i]["fecha_extrema_f"].'</td>
-			<td>'.$expedientes[$i]["no_unidad_conservacion"].'</td>
+			<td>'.$caja_expediente[0]['no_consecutivo'].'</td>
 			<td style="text-align:center">'.$expedientes[$i]["no_folios"].'</td>';
 			if($datos[0]["estado"]=='ACTIVO' && @$_REQUEST["tipo"]!=5){
 				$texto.='<td><i class="icon-remove expulsar_expediente" idexpediente="'.$expedientes[$i]["idexpediente"].'" style="cursor:pointer"></i></td>';
