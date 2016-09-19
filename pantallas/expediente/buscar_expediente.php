@@ -92,10 +92,6 @@ echo(librerias_validar_formulario());
             <?php if($mostrar==2){ ?>  
                  <input id="bqsaia_prox_estado_archivo2" name="bqsaia_prox_estado_archivo"  type="radio" value="3">Historico
             <?php } ?>            
-            
-           
-            
-            
           </div>
         </div>
 
