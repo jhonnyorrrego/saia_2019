@@ -88,7 +88,7 @@ function expedientes_vinculados_funcion($idformato,$iddoc){
 	
 	//CAMBIO DEL MOSTRAR
 	
-	
+	$texto='';
 	$datos=busca_filtro_tabla("","ft_transferencia_doc A, documento B","A.documento_iddocumento=".$iddoc." and A.documento_iddocumento=B.iddocumento","",$conn);
 	$expedientes=busca_filtro_tabla("","expediente A","A.idexpediente in(".$datos[0]["expediente_vinculado"].")","",$conn);
 	if($expedientes["numcampos"]){
