@@ -58,6 +58,7 @@ echo(librerias_validar_formulario());
             $campo_validar='nombre';
             $etiquetas_permitidas=array('documento_central','expediente');
             $etiqueta_reporte=busca_filtro_tabla($campo_validar,"busqueda_componente","lower(".$campo_validar.") IN(".implode(',',$etiquetas_permitidas).")AND idbusqueda_componente=".@$_REQUEST["idbusqueda_componente"],"",$conn);
+            print_r($etiqueta_reporte);
             $mostrar=0;
             if($etiqueta_reporte['numcampos']){
                
