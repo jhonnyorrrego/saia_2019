@@ -84,6 +84,64 @@ function expedientes_vinculados_funcion($idformato,$iddoc){
 		}
 	}
 	echo($texto);
+	
+	
+	//CAMBIO DEL MOSTRAR
+	
+	
+	$datos=busca_filtro_tabla("","ft_transferencia_doc A, documento B","A.documento_iddocumento=".$iddoc." and A.documento_iddocumento=B.iddocumento","",$conn);
+	$expedientes=busca_filtro_tabla("","expediente A","A.idexpediente in(".$datos[0]["expediente_vinculado"].")","",$conn);
+	if($expedientes["numcampos"]){
+		$texto.='<p>&nbsp;</p>
+		<table style="width:100%;border-collapse:collapse" border="1px">';
+		$texto.='<tr><td rowspan="2" style="width:10%;text-align:center"><b>N&Uacute;MERO DE ORDEN</b></td>
+		<td rowspan="2" style="width:10%;text-align:center"><b>C&Oacute;DIGO</b></td>
+		<td rowspan="2" style="width:30%;text-align:center"><b>NOMBRE</b></td>
+		<td colspan="2" style="width:20%;text-align:center"><b>FECHAS EXTREMAS</b></td>
+		<td rowspan="2" style="width:15%;text-align:center"><b>UNIDAD DE CONSERVACI&Oacute;N</b></td>
+		<td rowspan="2" style="width:15%;text-align:center"><b>N&Uacute;MERO DE FOLIOS</b></td>
+		</tr>
+		<tr>
+		<td style="text-align:center"><b>INICIAL</b></td>
+		<td style="text-align:center"><b>FINAL</b></td>
+		</tr>';
+		$texto.="";
+		for($i=0;$i<$expedientes["numcampos"];$i++){
+			if(is_object($expedientes[$i]["fecha_extrema_i"]))$expedientes[$i]["fecha_extrema_i"]=$expedientes[$i]["fecha_extrema_i"]->format('Y-m-d');
+			if(is_object($expedientes[$i]["fecha_extrema_f"]))$expedientes[$i]["fecha_extrema_f"]=$expedientes[$i]["fecha_extrema_f"]->format('Y-m-d');
+			
+			$texto.='<tr id="tr_'.$expedientes[$i]["idexpediente"].'">
+			<td style="text-align:center">'.($i+1).'</td>
+			<td>'.$expedientes[$i]["codigo"].'</td>
+			<td>'.$expedientes[$i]["nombre"].'</td>
+			<td>'.$expedientes[$i]["fecha_extrema_i"].'</td>
+			<td>'.$expedientes[$i]["fecha_extrema_f"].'</td>
+			<td>'.$expedientes[$i]["no_unidad_conservacion"].'</td>
+			<td style="text-align:center">'.$expedientes[$i]["no_folios"].'</td>';
+			if($datos[0]["estado"]=='ACTIVO' && @$_REQUEST["tipo"]!=5){
+				$texto.='<td><i class="icon-remove expulsar_expediente" idexpediente="'.$expedientes[$i]["idexpediente"].'" style="cursor:pointer"></i></td>';
+			}
+			$texto.="</tr>";
+		}
+		$texto.="</table>";
+		if($datos[0]["estado"]=='ACTIVO' && @$_REQUEST["tipo"]!=5){
+			$texto.='<script>
+			$(document).ready(function(){
+				$(".expulsar_expediente").click(function(){
+					var expediente=$(this).attr("idexpediente");
+					window.open("desvincular_expediente.php?idexpediente="+expediente+"&iddoc='.$iddoc.'&idformato='.$idformato.'","_self");
+				});
+			});
+			</script>';
+		}
+	}
+	echo($texto);	
+	
+	
+	
+	
+	
+	
 }
 function cambiar_estado_expedientes($idformato,$iddoc){
 	global $conn;
