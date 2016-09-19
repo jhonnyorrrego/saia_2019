@@ -18,7 +18,7 @@ $retorno=new stdClass;
 $retorno->exito=0;
 $retorno->mensaje="Error al guardar Prueba";
 $exito=0;
-$campos=array("nombre","descripcion","cod_padre","codigo","fecha", "serie_idserie", "no_tomo", "codigo_numero", "fondo", "proceso", "fecha_extrema_i", "fecha_extrema_f", "no_unidad_conservacion", "no_folios", "no_carpeta", "soporte", "frecuencia_consulta", "ubicacion", "unidad_admin", "estado_archivo", "estado_cierre","fk_idcaja");
+$campos=array("nombre","descripcion","cod_padre","codigo","fecha", "serie_idserie", "no_tomo", "codigo_numero", "fondo", "proceso", "fecha_extrema_i", "fecha_extrema_f", "no_unidad_conservacion", "no_folios", "no_carpeta", "soporte", "frecuencia_consulta", "ubicacion", "unidad_admin", "estado_archivo", "estado_cierre","fk_idcaja","notas_transferencia");
 $valores=array();
 foreach($campos AS $key=>$campo){
   if(@$_REQUEST[$campo]){
@@ -94,7 +94,7 @@ $retorno=new stdClass;
 $retorno->exito=0;
 $retorno->mensaje="Error al guardar";
 $exito=0;
-$campos=array("nombre","descripcion","fecha","fk_idcaja","cod_padre", "no_tomo", "codigo_numero", "fondo", "proceso", "fecha_extrema_i", "fecha_extrema_f", "no_unidad_conservacion", "no_folios", "no_carpeta", "soporte", "frecuencia_consulta", "ubicacion", "serie_idserie", "unidad_admin");
+$campos=array("nombre","descripcion","fecha","fk_idcaja","cod_padre", "no_tomo", "codigo_numero", "fondo", "proceso", "fecha_extrema_i", "fecha_extrema_f", "no_unidad_conservacion", "no_folios", "no_carpeta", "soporte", "frecuencia_consulta", "ubicacion", "serie_idserie", "unidad_admin","notas_transf");
 $valores=array();
 $update=array();
 foreach($campos AS $key=>$campo){
