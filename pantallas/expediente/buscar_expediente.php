@@ -56,13 +56,11 @@ echo(librerias_validar_formulario());
 
         <?php
             $campo_validar='etiqueta';
-            $etiqueta_reporte=busca_filtro_tabla($campo_validar,"busqueda_componente","idbusqueda_componente=".@$_REQUEST["idbusqueda_componente"],"",$conn);
+            $etiquetas_permitidas=array('central','historico');
+            $etiqueta_reporte=busca_filtro_tabla($campo_validar,"busqueda_componente","lower(".$campo_validar.") IN(".implode(',',$etiquetas_permitidas).")AND idbusqueda_componente=".@$_REQUEST["idbusqueda_componente"],"",$conn);
             $mostrar=0;
             if($etiqueta_reporte['numcampos']){
-                $etiquetas_permitidas=array('central','historico');
-                if(in_array(strtolower($etiqueta_reporte[0][$campo_validar]),$etiquetas_permitidas)){
-                    $mostrar=1;  
-                } 
+                $mostrar=1;
             }
             
             if($mostrar){
