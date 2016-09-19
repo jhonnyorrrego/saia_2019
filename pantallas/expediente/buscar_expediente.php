@@ -55,12 +55,24 @@ echo(librerias_validar_formulario());
 
 
         <?php
-            $campo_validar='etiqueta';
-            $etiquetas_permitidas=array('central','historico');
+            $campo_validar='nombre';
+            $etiquetas_permitidas=array('documento_central','expediente');
             $etiqueta_reporte=busca_filtro_tabla($campo_validar,"busqueda_componente","lower(".$campo_validar.") IN(".implode(',',$etiquetas_permitidas).")AND idbusqueda_componente=".@$_REQUEST["idbusqueda_componente"],"",$conn);
             $mostrar=0;
             if($etiqueta_reporte['numcampos']){
-                $mostrar=1;
+               
+                
+                switch(strtolower($etiqueta_reporte[0][$campo_validar])){
+                    case 'expediente': //GESTION A CENTRAL
+                         $mostrar=1;
+                         $etiqueta='Central';
+                        break;
+                    case 'documento_central': //CENTRAL A HISTORICO
+                         $mostrar=2;
+                         $etiqueta='Historico';
+                        break;
+                }
+                
             }
             
             if($mostrar){
@@ -68,12 +80,22 @@ echo(librerias_validar_formulario());
 
         <div class="control-group">
           <label class="string required control-label" for="prox_estado_archivo">
-		Pendientes por pasar &aacute;:
+		   Pendientes por pasar &aacute; <?php echo($etiqueta); ?>:
 			<input type="hidden" name="bksaiacondicion_prox_estado_archivo" id="bksaiacondicion_prox_estado_archivo" value="=">
           </label>
           <div class="controls">
-            <input id="bqsaia_prox_estado_archivo1" name="bqsaia_prox_estado_archivo"  type="radio" value="2">Central </br>
-            <input id="bqsaia_prox_estado_archivo2" name="bqsaia_prox_estado_archivo"  type="radio" value="3">Historico
+            
+            <?php if($mostrar==1){ ?>  
+                <input id="bqsaia_prox_estado_archivo1" name="bqsaia_prox_estado_archivo"  type="radio" value="2">Central
+            <?php } ?>
+            
+            <?php if($mostrar==2){ ?>  
+                 <input id="bqsaia_prox_estado_archivo2" name="bqsaia_prox_estado_archivo"  type="radio" value="3">Historico
+            <?php } ?>            
+            
+           
+            
+            
           </div>
         </div>
 
