@@ -54,6 +54,20 @@ echo(librerias_validar_formulario());
         </div>
 
 
+        <?php
+            $campo_validar='etiqueta';
+            $etiqueta_reporte=busca_filtro_tabla($campo_validar,"busqueda_componente","idbusqueda_componente=".@$_REQUEST["idbusqueda_componente"],"",$conn);
+            $mostrar=0;
+            if($etiqueta_reporte['numcampos']){
+                $etiquetas_permitidas=array('central','historico');
+                if(in_array(strtolower($etiqueta_reporte[0][$campo_validar]),$etiquetas_permitidas)){
+                    $mostrar=1;  
+                } 
+            }
+            
+            if($mostrar){
+        ?>
+
         <div class="control-group">
           <label class="string required control-label" for="prox_estado_archivo">
 		Pendientes por pasar &aacute;:
@@ -65,7 +79,7 @@ echo(librerias_validar_formulario());
           </div>
         </div>
 
-
+        <?php } /*fin if mostrar_filtro*/ ?>
         
           <input type="hidden" name="idbusqueda_componente" id="idbusqueda_componente" value="<?php echo @$_REQUEST["idbusqueda_componente"]; ?>">
           <input type="hidden" name="adicionar_consulta" id="adicionar_consulta" value="1">
