@@ -117,6 +117,7 @@ function expedientes_vinculados_funcion($idformato,$iddoc){
 		
 		';
 		$texto.="";
+		$vector_soportes=array(1=>'CD-ROM',2=>'DISKETE',3=>'DVD',4=>'DOCUMENTO',5=>'FAX',6=>'REVISTA O LIBRO',7=>'VIDEO',8=>'OTROS ANEXOS');
 		for($i=0;$i<$expedientes["numcampos"];$i++){
 		    
 		    $serie_expediente=busca_filtro_tabla('codigo','serie','idserie='.$expedientes[$i]["serie_idserie"],'',conn);
@@ -135,7 +136,7 @@ function expedientes_vinculados_funcion($idformato,$iddoc){
 			<td>'.$expedientes[$i]['no_tomo'].'</td>
 			<td>'.$expedientes[$i]['otro'].'</td>
 			<td style="text-align:center">'.$expedientes[$i]["no_folios"].'</td>
-			<td>'.$expedientes[$i]['soporte'].'</td>
+			<td>'.$vector_soportes[$expedientes[$i]['soporte']].'</td>
 			<td>'.$expedientes[$i]['frecuencia'].'</td>
 			<td>'.$expedientes[$i]['notas_transf'].'</td>
 			';
