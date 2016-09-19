@@ -94,19 +94,20 @@ function expedientes_vinculados_funcion($idformato,$iddoc){
 	$datos=busca_filtro_tabla("","ft_transferencia_doc A, documento B","A.documento_iddocumento=".$iddoc." and A.documento_iddocumento=B.iddocumento","",$conn);
 	$expedientes=busca_filtro_tabla("","expediente A","A.idexpediente in(".$datos[0]["expediente_vinculado"].")","",$conn);
 	if($expedientes["numcampos"]){
+	    $estilo_general=' style="text-align:center;font-weight:bold;"';
 		$texto.='
 		<p>&nbsp;</p>
         <table style="width:100%;border-collapse:collapse" border="1px">
           <tr>
-            <th rowspan="2" style="text-align:center;font-weight:bold;">NUMERO DE ORDEN</th>
-            <th rowspan="2" style="text-align:center;font-weight:bold;">CODIGO</th>
-            <th rowspan="2" style="text-align:center;font-weight:bold;">NOMBRE</th>
-            <th colspan="2" style="text-align:center;font-weight:bold;">FECHAS EXTREMAS</th>
-            <th colspan="4" style="text-align:center;font-weight:bold;">UNIDAD DE CONSERVACION</th>
-            <th rowspan="2" style="text-align:center;font-weight:bold;">NUMERO DE FOLIOS</th>
-            <th rowspan="2" style="text-align:center;font-weight:bold;">SOPORTE</th>
-            <th rowspan="2" style="text-align:center;font-weight:bold;">FRECUENCIA DE CONSULTA</th>
-            <th rowspan="2" style="text-align:center;font-weight:bold;">NOTAS</th>
+            <th rowspan="2" '.$estilo_general.'>NUMERO DE ORDEN</th>
+            <th rowspan="2" '.$estilo_general.'>CODIGO</th>
+            <th rowspan="2" '.$estilo_general.'>NOMBRE</th>
+            <th colspan="2" '.$estilo_general.'>FECHAS EXTREMAS</th>
+            <th colspan="4" '.$estilo_general.'>UNIDAD DE CONSERVACION</th>
+            <th rowspan="2" '.$estilo_general.'>NUMERO DE FOLIOS</th>
+            <th rowspan="2" '.$estilo_general.'>SOPORTE</th>
+            <th rowspan="2" '.$estilo_general.'>FRECUENCIA DE CONSULTA</th>
+            <th rowspan="2" '.$estilo_general.'>NOTAS</th>
             ';
         if($datos[0]["estado"]=='ACTIVO' && @$_REQUEST["tipo"]!=5){
              $texto='   
@@ -117,12 +118,12 @@ function expedientes_vinculados_funcion($idformato,$iddoc){
         $texto.='    
           </tr>
           <tr>
-            <th style="text-align:center;font-weight:bold;">INICIAL</th>
-            <th style="text-align:center;font-weight:bold;">FINAL</th>
-            <th style="text-align:center;font-weight:bold;">CAJA</th>
-            <th style="text-align:center;font-weight:bold;">CARPETA</th>
-            <th style="text-align:center;font-weight:bold;">TOMO</th>
-            <th style="text-align:center;font-weight:bold;">OTRO</th>
+            <th '.$estilo_general.'>INICIAL</th>
+            <th '.$estilo_general.'>FINAL</th>
+            <th '.$estilo_general.'>CAJA</th>
+            <th '.$estilo_general.'>CARPETA</th>
+            <th '.$estilo_general.'>TOMO</th>
+            <th '.$estilo_general.'>OTRO</th>
           </tr>		
 		
 		';
