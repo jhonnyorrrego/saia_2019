@@ -210,6 +210,17 @@ $dato_padre=busca_filtro_tabla("","expediente a","a.idexpediente=".$_REQUEST["co
 	  	</select>
 	  </div>
 	</div>
+	
+	<div class="control-group element">
+	  <label class="control-label" for="notas_transf">Notas de Transferencia
+	  </label>
+	  <div class="controls"> 
+	      <textarea name="notas_transf" id="notas_transf"><?php echo($datos[0]["notas_transf"]); ?></textarea>
+	  </div>
+	</div>
+	
+	
+	
 </div>
 <br />
 <input type="hidden" name="fk_idcaja" value="<?php echo(@$_REQUEST["fk_idcaja"]);?>">
