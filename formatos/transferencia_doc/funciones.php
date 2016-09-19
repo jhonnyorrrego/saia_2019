@@ -93,7 +93,7 @@ function expedientes_vinculados_funcion($idformato,$iddoc){
 	$expedientes=busca_filtro_tabla("","expediente A","A.idexpediente in(".$datos[0]["expediente_vinculado"].")","",$conn);
 	if($expedientes["numcampos"]){
 		$texto.='<p>&nbsp;</p>
-
+        <table style="width:100%;border-collapse:collapse" border="1px">
           <tr>
             <th rowspan="2">NUMERO DE ORDEN</th>
             <th rowspan="2">CODIGO</th>
