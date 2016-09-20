@@ -46,7 +46,7 @@ $(document).ready(function(){
 
   $(".crear_tomo_expediente").live("click",function(){
   	var idregistro=$(this).attr("idregistro");
-  	var confirmacion=confirm("Esta seguro de crear un folio a este expediente?");
+  	var confirmacion=confirm("Esta seguro de crear un tomo a este expediente?");
   	if(confirmacion){
 	  	$.ajax({
 	      type:'GET',
