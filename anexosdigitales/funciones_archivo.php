@@ -626,6 +626,7 @@ function cargar_archivo($iddoc, $permisos_anexos, $formato = NULL, $campo = NULL
 
 			if (is_file($_FILES['anexos']['tmp_name'][$j]) && is_dir($dir_anexos)) {
 				$resultado = rename($_FILES['anexos']['tmp_name'][$j], $dir_anexos . $temp_filename);
+				chmod($dir_anexos.$temp_filename,PERMISOS_ARCHIVOS);
 			}
 			if ($resultado) {
 				if ($tipo_almacenamiento == "archivo") {
