@@ -55,7 +55,7 @@ function generar_codigo_qr($idformato, $iddoc, $idfunc = 0) {
 	
 	$formato_ruta = aplicar_plantilla_ruta_documento($iddoc);
 	$ruta = RUTA_QR . $formato_ruta . '/qr/';
-	$imagen = generar_qr($ruta, $datos_qr);
+	$imagen = generar_qr($ruta, $datos_qr, 3);
 	
 	if($imagen == false) {
 		alerta("Error al tratar de crear el codigo qr");

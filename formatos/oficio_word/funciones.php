@@ -150,20 +150,4 @@ function enviar_correo_pqr_oficio($idformato, $iddoc) {
 	}
 }
 
-//TODO: Eliminar esta funcion
-function generar_qr_oficio_word($idformato, $iddoc) {
-	global $conn, $ruta_db_superior;
-	$codigo_qr = busca_filtro_tabla("", "documento_verificacion", "documento_iddocumento=" . $iddoc, "", $conn);
-	if(!$codigo_qr['numcampos']) {
-		include_once ($ruta_db_superior . "pantallas/qr/librerias.php");
-		generar_codigo_qr($idformato, $iddoc);
-		
-		$codigo_qr = busca_filtro_tabla("", "documento_verificacion", "documento_iddocumento=" . $iddoc, "", $conn);
-		if($codigo_qr['numcampos']) {
-			include_once ($ruta_db_superior . 'pantallas/lib/PhpWord/qr_word.php');
-		}
-	}
-	echo $qr;
-}
-
 ?>
