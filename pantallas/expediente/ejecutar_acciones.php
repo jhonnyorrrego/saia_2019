@@ -174,9 +174,9 @@ function crear_folio_expediente(){
     $folio_padre=$idexpediente;
     if($expediente_actual[0]['folio_padre']){
         $folio_padre=$expediente_actual[0]['folio_padre'];
-        $up="UPDATE expediente SET folio_no=1 WHERE idexpediente=".$folio_padre;
-        print_r($up);die();
     }
+    $up="UPDATE expediente SET folio_no=1 WHERE idexpediente=".$folio_padre;
+    print_r($up);die();
     
     $ccantidad_folios=busca_filtro_tabla("idexpediente","expediente","folio_padre=".$folio_padre,"",$conn);
     $cantidad_folios=$ccantidad_folios['numcampos']+1; //folios + el padre
