@@ -398,7 +398,7 @@ function enlaces_adicionales_expediente($idexpediente,$nombr,$estado_cierre){
 	
 	$disabled_seleccionar="";
 	if($estado_cierre==1){
-	    $disabled_seleccionar='style="pointer-events:none;"';
+	    $disabled_seleccionar='style="pointer-events:none;" title="No es posible seleccionar hasta que no este cerrado el expediente"';
 	}
 	
 	$texto.='<div id="seleccionados_expediente_'.$idexpediente.'" idregistro=\''.$idexpediente.'\' titulo=\'Seleccionar\' class=\'btn btn-mini tooltip_saia adicionar_seleccionados_expediente pull-right\' '.$disabled_seleccionar.'><i class=\'icon-uncheck\' ></i></div>';
