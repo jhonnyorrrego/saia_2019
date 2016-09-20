@@ -42,7 +42,8 @@ function permiso_funcionario_expediente($expediente,$entidad,$llave){
 function enlace_expediente($idexpediente,$nombre){
 	global $conn;    
 
-    $expediente_actual=busca_filtro_tabla("tomo_padre,tomo_no","expediente","idexpediente=".$idexpediente,"",$conn);
+    $expediente_actual=busca_filtro_tabla("tomo_padre,tomo_no,serie_idserie","expediente","idexpediente=".$idexpediente,"",$conn);
+    $serie=busca_filtro_tabla("nombre","serie","idserie=".$expediente_actual[0]['serie_idserie'],"",$conn);
     $tomo_padre=$idexpediente;
     if($expediente_actual[0]['tomo_padre']){
         $tomo_padre=$expediente_actual[0]['tomo_padre'];
