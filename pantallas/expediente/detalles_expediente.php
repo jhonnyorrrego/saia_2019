@@ -42,7 +42,7 @@ $expediente=busca_filtro_tabla("a.*,".fecha_db_obtener("a.fecha","Y-m-d")." AS f
 </style>
 <body>
 <div class="container"> 
-<div data-toggle="collapse" data-target="#div_info_expediente">
+<div data-toggle="collapse" data-target="#div_info_expediente" style="cursor:pointer;">
   <i class="icon-minus-sign"></i>  <b>Informaci&oacute;n del expediente</b>
 </div><br />
 <div id="div_info_expediente"  class="collapse in opcion_informacion"> 
@@ -347,6 +347,8 @@ $(document).ready(function(){
     $(this).prev().children("i").removeClass();
     $(this).prev().children("i").addClass("icon-minus-sign");
   });
+ 
+  
   $(".documento_actual",parent.document).removeClass("alert-info");
   $(".documento_actual",parent.document).removeClass("documento_actual");
   $("#resultado_pantalla_<?php echo($idexpediente);?>",parent.document).addClass("documento_actual").addClass("alert-info");    
