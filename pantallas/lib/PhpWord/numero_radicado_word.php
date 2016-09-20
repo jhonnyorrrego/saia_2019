@@ -72,13 +72,13 @@ if(file_exists($ruta_docx . 'documento_word.docx')) {
 			$src = $ruta_db_superior . obtener_codigo_qr($_REQUEST["iddoc"]);
 			
 			$img2 = array(
-			    
+			    array(
 							'img' => htmlspecialchars($src),
 							'size' => array(
 									100,
 									100
 							)
-					
+				)
 			);
 			$templateProcessor->setImg($campo_qr_word, $img2);
 		}
