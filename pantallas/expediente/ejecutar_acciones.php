@@ -181,9 +181,9 @@ function crear_folio_expediente(){
     $folio_siguiente=$cantidad_folios+1; //folio siguiente
     
     
-    $datos_padre=busca_filtro_tabla("","expediente","idexpediente=".$folio_padre,"",$conn);
+    $datos_padre=busca_filtro_tabla("nombre","expediente","idexpediente=".$folio_padre,"",$conn);
     
-    
+    $sql="INSERT INTO expediente (nombre,fecha,propietario,ver_todos,editar_todos,folio_padre,folio_no) VALUES ('".$datos_padre[0]['nombre']."',".fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s').",".usuario_actual('funcionario_codigo').",0,0,".$folio_padre.",".$folio_siguiente.")";
     
     
     print_r($cantidad_folios);die();
