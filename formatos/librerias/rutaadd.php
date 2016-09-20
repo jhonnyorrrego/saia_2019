@@ -753,6 +753,25 @@ mostrar_ruta($_GET['doc']);
   		<input type="hidden" name="cargar" value="1"/>
   		<?php
   	}
+  	
+  	if(@$_REQUEST['doc']){		
+  		$datos_pdf_word=busca_filtro_tabla("b.mostrar_pdf","documento a, formato b","lower(a.plantilla)=b.nombre AND a.iddocumento=".@$_REQUEST['doc'],"",$conn);		
+				
+		if($datos_pdf_word['numcampos']){		
+			if($datos_pdf_word[0]['mostrar_pdf']==2){		
+						
+				echo('<input type="hidden" name="exportar_pdf_word" id="exportar_pdf_word" value="1">');		
+						
+				if(@$_REQUEST['from_mostrar']){		
+					$_SESSION['abrir_centro']=1;		
+				}		
+						
+						
+						
+			} //fin if mostra_pdf ==2		
+		} //fin if datos pdf word numcampos		
+  	}//fin if request doc		
+  	
   ?>
   
   <input type="hidden" name="x_condicion_transferencia" value="POR_APROBAR">
@@ -961,6 +980,12 @@ function AddData($conn)
 	$_REQUEST['from_externo']=1;
   	include_once($ruta_db_superior.'pantallas/lib/PhpWord/exportar_word.php');		
   }		
+  $target="_self";		
+  if(@$_SESSION['abrir_centro']){		
+  	$ruta="../ordenar.php?key=".$fieldList["documento_iddocumento"]."&accion=mostrar&mostrar_formato=1";		
+    $target="centro";		
+  	unset($_SESSION['abrir_centro']);		
+  }  
 
   if(@$_REQUEST['cargar']){
   	abrir_url("../../formatos/".$plantilla[0]["plantilla"]."/mostrar_".$plantilla[0]["plantilla"].".php?iddoc=".$fieldList["documento_iddocumento"]."&idformato=".$plantilla[0]["idformato"],"_self");
