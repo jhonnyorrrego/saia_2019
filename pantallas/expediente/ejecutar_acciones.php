@@ -181,6 +181,9 @@ function crear_folio_expediente(){
     $folio_siguiente=$cantidad_folios+1; //folio siguiente
     
     
+    $datos_padre=busca_filtro_tabla("","expediente","idexpediente=".$folio_padre,"",$conn);
+    
+    
     
     
     print_r($cantidad_folios);die();
