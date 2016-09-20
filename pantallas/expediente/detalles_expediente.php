@@ -44,7 +44,7 @@ $expediente=busca_filtro_tabla("a.*,".fecha_db_obtener("a.fecha","Y-m-d")." AS f
 <div class="container"> 
 <div data-toggle="collapse" data-target="#div_info_expediente" style="cursor:pointer;">
   <i class="icon-minus-sign"></i>  <b>Informaci&oacute;n del expediente</b>
-</div><br />
+</div>
 <div id="div_info_expediente"  class="collapse in opcion_informacion"> 
 <table class="table table-bordered">
   <tr>
@@ -214,9 +214,9 @@ $almacenamiento["numcampos"]=0;
 if($almacenamiento["numcampos"]){
 ?>
 <div class="container"> 
-<div data-toggle="collapse" data-target="#div_info_almacenamiento">
+<div data-toggle="collapse" data-target="#div_info_almacenamiento" style="cursor:pointer;">
   <i class="icon-minus-sign"></i>  <b>Informaci&oacute;n almacenamiento</b>
-</div><br />
+</div>
 <div id="div_info_almacenamiento"  class="collapse in opcion_informacion"> 
 <table class="table table-bordered">
   <tr>
