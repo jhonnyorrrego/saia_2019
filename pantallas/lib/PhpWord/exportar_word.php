@@ -91,7 +91,6 @@ if($ruta_procesar!=''){
 	 $ejecutar=0;	
 	$templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor($ruta_procesar);
 	$campos_word=$templateProcessor->getVariables();	
-	print_r($campos_word);die();
 	if(@$_REQUEST["iddoc"] && count($campos_word)){		
 	 // include_once($ruta_db_superior."formatos/librerias/funciones_generales.php");
 
