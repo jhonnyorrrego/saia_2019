@@ -267,9 +267,9 @@ $contenido["numcampos"]=1;
 if($contenido["numcampos"]){
 ?>
 <div class="container"> 
-<div data-toggle="collapse" data-target="#div_info_contenido">
+<div data-toggle="collapse" data-target="#div_info_contenido" style="cursor:pointer;">
   <i class="icon-minus-sign"></i>  <b>Informaci&oacute;n contenido</b>
-</div><br />
+</div>
 <div id="div_info_contenido"  class="collapse in opcion_informacion"> 
 <table class="table table-bordered">
   <tr>
