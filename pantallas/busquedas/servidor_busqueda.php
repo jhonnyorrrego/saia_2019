@@ -325,6 +325,12 @@ if ($page >= $total_pages){
 if(@$start!==0&&$aux_limit!="todos"&&@$_REQUEST["reporte"]){  
   $start = $limit*$page - $limit; // do not put $limit*($page - 1)
 }
+
+if(@$_REQUEST['llave_unica']){
+    $condicion.=" AND ".$datos_busqueda[0]["llave"]."='".$_REQUEST['llave_unica']."'";
+}
+
+
 if ($start < 0)
     $start = 0;
 if(MOTOR=='SqlServer'){
