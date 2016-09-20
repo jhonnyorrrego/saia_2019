@@ -178,7 +178,7 @@ function crear_tomo_expediente(){
 
     $ccantidad_tomos=busca_filtro_tabla("idexpediente","expediente","tomo_padre=".$tomo_padre,"",$conn);
     $cantidad_tomos=$ccantidad_tomos['numcampos']+1; //tomos + el padre
-    $tomo_siguiente=$cantidad_tomos+1; //folio siguiente
+    $tomo_siguiente=$cantidad_tomos+1; //tomo siguiente
     
     $datos_padre=busca_filtro_tabla("nombre,serie_idserie,tomo_no,estado_archivo,descripcion","expediente","idexpediente=".$tomo_padre,"",$conn);
     
