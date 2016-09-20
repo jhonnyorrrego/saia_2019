@@ -161,6 +161,7 @@ if($exito){
 }
 return($retorno);
 }
+
 function crear_tomoo_expediente(){
     global $conn,$ruta_db_superior;
     
@@ -169,27 +170,27 @@ function crear_tomoo_expediente(){
     $retorno->mensaje="Error al crear tomo";
     
     $idexpediente=$_REQUEST["idexpediente"];
-    $expediente_actual=busca_filtro_tabla("folio_padre","expediente","idexpediente=".$idexpediente,"",$conn);
-    $folio_padre=$idexpediente;
-    if($expediente_actual[0]['folio_padre']){
-        $folio_padre=$expediente_actual[0]['folio_padre'];
+    $expediente_actual=busca_filtro_tabla("tomo_padre","expediente","idexpediente=".$idexpediente,"",$conn);
+    $tomo_padre=$idexpediente;
+    if($expediente_actual[0]['tomo_padre']){
+        $tomo_padre=$expediente_actual[0]['tomo_padre'];
     }
 
-    $ccantidad_folios=busca_filtro_tabla("idexpediente","expediente","folio_padre=".$folio_padre,"",$conn);
-    $cantidad_folios=$ccantidad_folios['numcampos']+1; //folios + el padre
-    $folio_siguiente=$cantidad_folios+1; //folio siguiente
+    $ccantidad_tomos=busca_filtro_tabla("idexpediente","expediente","tomo_padre=".$tomo_padre,"",$conn);
+    $cantidad_tomos=$ccantidad_tomos['numcampos']+1; //tomos + el padre
+    $tomo_siguiente=$cantidad_tomos+1; //folio siguiente
     
-    $datos_padre=busca_filtro_tabla("nombre,serie_idserie,folio_no","expediente","idexpediente=".$folio_padre,"",$conn);
+    $datos_padre=busca_filtro_tabla("nombre,serie_idserie,folio_no","expediente","idexpediente=".$tomo_padre,"",$conn);
     
-    if(!$datos_padre[0]['folio_no']){
-        $up="UPDATE expediente SET folio_no=1 WHERE idexpediente=".$folio_padre;
+    if(!$datos_padre[0]['tomo_no']){
+        $up="UPDATE expediente SET tomo_no=1 WHERE idexpediente=".$tomo_padre;
         phpmkr_query($up);        
     }
     
     $sql="INSERT INTO expediente 
-        (serie_idserie,nombre,fecha,propietario,ver_todos,editar_todos,folio_padre,folio_no) 
+        (serie_idserie,nombre,fecha,propietario,ver_todos,editar_todos,tomo_padre,tomo_no) 
             VALUES 
-                (".$datos_padre[0]['serie_idserie'].",'".$datos_padre[0]['nombre']."',".fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s').",".usuario_actual('funcionario_codigo').",0,0,".$folio_padre.",".$folio_siguiente.")";
+                (".$datos_padre[0]['serie_idserie'].",'".$datos_padre[0]['nombre']."',".fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s').",".usuario_actual('funcionario_codigo').",0,0,".$tomo_padre.",".$tomo_siguiente.")";
                 
     phpmkr_query($sql);
     $id_insertado=phpmkr_insert_id();
