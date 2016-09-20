@@ -181,10 +181,13 @@ function crear_folio_expediente(){
     $cantidad_folios=$ccantidad_folios['numcampos']+1; //folios + el padre
     $folio_siguiente=$cantidad_folios+1; //folio siguiente
     
-    
     $datos_padre=busca_filtro_tabla("nombre,serie_idserie","expediente","idexpediente=".$folio_padre,"",$conn);
     
-    $sql="INSERT INTO expediente (serie_idserie,nombre,fecha,propietario,ver_todos,editar_todos,folio_padre,folio_no) VALUES (".$datos_padre[0]['serie_idserie'].",'".$datos_padre[0]['nombre']."',".fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s').",".usuario_actual('funcionario_codigo').",0,0,".$folio_padre.",".$folio_siguiente.")";
+    $sql="INSERT INTO expediente 
+        (serie_idserie,nombre,fecha,propietario,ver_todos,editar_todos,folio_padre,folio_no) 
+            VALUES 
+                (".$datos_padre[0]['serie_idserie'].",'".$datos_padre[0]['nombre']."',".fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s').",".usuario_actual('funcionario_codigo').",0,0,".$folio_padre.",".$folio_siguiente.")";
+                
     phpmkr_query($sql);
     $id_insertado=phpmkr_insert_id();
     if($id_insertado){
