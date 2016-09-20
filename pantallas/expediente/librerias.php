@@ -40,7 +40,7 @@ function permiso_funcionario_expediente($expediente,$entidad,$llave){
 	return("");
 }
 function enlace_expediente($idexpediente,$nombre){
-return("<div style='' class='link kenlace_saia' enlace='pantallas/busquedas/consulta_busqueda_expediente.php?idbusqueda_componente=".$_REQUEST["idbusqueda_componente"]."&idexpediente=".$idexpediente."&variable_busqueda=".@$_REQUEST['variable_busqueda']."' conector='iframe' titulo='".$nombre."'><table><tr><td> <i class=' icon-folder-open pull-left'></i><b>".$nombre."</b></td></tr></table></div>");
+return("<div style='' class='link kenlace_saia' enlace='pantallas/busquedas/consulta_busqueda_expediente.php?idbusqueda_componente=".$_REQUEST["idbusqueda_componente"]."&idexpediente=".$idexpediente."&variable_busqueda=".@$_REQUEST['variable_busqueda']."' conector='iframe' titulo='".$nombre."'><table><tr><td style='font-size:12px;'> <i class=' icon-folder-open pull-left'></i><b>".$nombre."</b></td></tr></table></div>");
 }
 function request_expediente_padre(){
 $texto='';
