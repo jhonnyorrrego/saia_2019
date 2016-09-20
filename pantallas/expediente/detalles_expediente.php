@@ -337,12 +337,9 @@ if($contenido["numcampos"]){
             if($expediente_actual[0]['tomo_padre']){
                 $tomo_padre=$expediente_actual[0]['tomo_padre'];
             }
-        
             $ccantidad_tomos=busca_filtro_tabla("idexpediente","expediente","tomo_padre=".$tomo_padre,"",$conn);
             $cantidad_tomos=$ccantidad_tomos['numcampos']+1; //tomos + el padre  
-            
             echo($expediente_actual[0]['tomo_no'].' de '.$cantidad_tomos);
-       
        ?>
     </td>    
   </tr>
