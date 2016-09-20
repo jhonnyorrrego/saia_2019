@@ -183,7 +183,7 @@ function crear_folio_expediente(){
     
     
     
-    print_r($expediente_actual);
+    print_r($cantidad_folios);
     
 }
 
