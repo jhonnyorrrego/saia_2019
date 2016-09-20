@@ -192,8 +192,6 @@ function crear_folio_expediente(){
         $retorno->mensaje="Folio creado con exito";   
         $retorno->insertado=$id_insertado;   
     }
-        
-    print_r($sql);die();
     return($retorno);
 }
 
