@@ -175,7 +175,6 @@ function crear_folio_expediente(){
         $folio_padre=$expediente_actual[0]['folio_padre'];
     }
 
-    
     $ccantidad_folios=busca_filtro_tabla("idexpediente","expediente","folio_padre=".$folio_padre,"",$conn);
     $cantidad_folios=$ccantidad_folios['numcampos']+1; //folios + el padre
     $folio_siguiente=$cantidad_folios+1; //folio siguiente
