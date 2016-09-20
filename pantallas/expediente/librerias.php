@@ -49,7 +49,7 @@ function enlace_expediente($idexpediente,$nombre){
     }
     $ccantidad_tomos=busca_filtro_tabla("idexpediente","expediente","tomo_padre=".$tomo_padre,"",$conn);
     $cantidad_tomos=$ccantidad_tomos['numcampos']+1; //tomos + el padre  
-    $cadena_tomos=("<i style='font-size:10px;'>".$expediente_actual[0]['tomo_no']." de ".$cantidad_tomos."</i>");
+    $cadena_tomos=("<b>Tomo: </b>&nbsp;&nbsp;&nbsp;<i style='font-size:10px;'>".$expediente_actual[0]['tomo_no']." de ".$cantidad_tomos."</i>");
 
     
 return("<div style='' class='link kenlace_saia' enlace='pantallas/busquedas/consulta_busqueda_expediente.php?idbusqueda_componente=".$_REQUEST["idbusqueda_componente"]."&idexpediente=".$idexpediente."&variable_busqueda=".@$_REQUEST['variable_busqueda']."' conector='iframe' titulo='".$nombre."'><table><tr><td style='font-size:12px;'> <i class=' icon-folder-open pull-left'></i>&nbsp;<b>".$nombre."</b>&nbsp;".$cadena_tomos."</td></tr></table></div>");
