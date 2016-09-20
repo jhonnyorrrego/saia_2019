@@ -40,6 +40,18 @@ function permiso_funcionario_expediente($expediente,$entidad,$llave){
 	return("");
 }
 function enlace_expediente($idexpediente,$nombre){
+	global $conn;    
+
+    $expediente_actual=busca_filtro_tabla("tomo_padre,tomo_no","expediente","idexpediente=".$idexpediente,"",$conn);
+    $tomo_padre=$idexpediente;
+    if($expediente_actual[0]['tomo_padre']){
+        $tomo_padre=$expediente_actual[0]['tomo_padre'];
+    }
+    $ccantidad_tomos=busca_filtro_tabla("idexpediente","expediente","tomo_padre=".$tomo_padre,"",$conn);
+    $cantidad_tomos=$ccantidad_tomos['numcampos']+1; //tomos + el padre  
+    $cadena_tomos=('<i>'.$expediente_actual[0]['tomo_no'].' de '.$cantidad_tomos.'</i>');
+
+    
 return("<div style='' class='link kenlace_saia' enlace='pantallas/busquedas/consulta_busqueda_expediente.php?idbusqueda_componente=".$_REQUEST["idbusqueda_componente"]."&idexpediente=".$idexpediente."&variable_busqueda=".@$_REQUEST['variable_busqueda']."' conector='iframe' titulo='".$nombre."'><table><tr><td style='font-size:12px;'> <i class=' icon-folder-open pull-left'></i>&nbsp;<b>".$nombre."</b></td></tr></table></div>");
 }
 function request_expediente_padre(){
