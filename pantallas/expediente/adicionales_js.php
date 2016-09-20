@@ -44,7 +44,7 @@ $(document).ready(function(){
   });
 
 
-  $(".crear_folio_expediente").live("click",function(){
+  $(".crear_tomo_expediente").live("click",function(){
   	var idregistro=$(this).attr("idregistro");
   	var confirmacion=confirm("Esta seguro de crear un folio a este expediente?");
   	if(confirmacion){
@@ -52,7 +52,7 @@ $(document).ready(function(){
 	      type:'GET',
 	      async:false,
 	      url: "<?php echo($ruta_db_superior);?>pantallas/expediente/ejecutar_acciones.php",
-	      data: "ejecutar_expediente=crear_folio_expediente&tipo_retorno=1&idexpediente="+idregistro,
+	      data: "ejecutar_expediente=crear_tomo_expediente&tipo_retorno=1&idexpediente="+idregistro,
 	      success: function(html2){
 	        if(html2){
 	          var objeto2=jQuery.parseJSON(html2);
