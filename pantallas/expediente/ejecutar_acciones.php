@@ -161,12 +161,12 @@ if($exito){
 }
 return($retorno);
 }
-function crear_folio_expediente(){
+function crear_tomoo_expediente(){
     global $conn,$ruta_db_superior;
     
     $retorno=new stdClass;
     $retorno->exito=0;
-    $retorno->mensaje="Error al crear folio";
+    $retorno->mensaje="Error al crear tomo";
     
     $idexpediente=$_REQUEST["idexpediente"];
     $expediente_actual=busca_filtro_tabla("folio_padre","expediente","idexpediente=".$idexpediente,"",$conn);
@@ -195,7 +195,7 @@ function crear_folio_expediente(){
     $id_insertado=phpmkr_insert_id();
     if($id_insertado){
         $retorno->exito=1;
-        $retorno->mensaje="Folio creado con exito";   
+        $retorno->mensaje="Tomo creado con exito";   
         $retorno->insertado=$id_insertado;   
     }
     return($retorno);
