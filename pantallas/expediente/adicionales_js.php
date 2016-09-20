@@ -72,15 +72,10 @@ $(document).ready(function(){
                         var objeto=jQuery.parseJSON(html);
                         $.each(objeto.rows,function(i,item){
                           $("#resultado_pantalla_"+idregistro).after(item.info);
-                         // $panel.find("iframe").contents().find("#resultado_pantalla_"+idregistro).html(item.info);
                         });
                       }
                     }
-                  });
-
-
-
-
+                  }); //fin ajax
 
 	          } //fin if objeto2.exito
 	        }
