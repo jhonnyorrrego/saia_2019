@@ -173,9 +173,6 @@ function crear_folio_expediente(){
     $expediente_actual=busca_filtro_tabla("","expediente","idexpediente=".$idexpediente,"",$conn);
     print_r($expediente_actual);
     
-    
-    
-    
 }
 
 
