@@ -167,7 +167,6 @@ function crear_folio_expediente(){
     $retorno=new stdClass;
     $retorno->exito=0;
     $retorno->mensaje="Error al crear folio";
-    $exito=0;    
     
     $idexpediente=$_REQUEST["idexpediente"];
     $expediente_actual=busca_filtro_tabla("folio_padre","expediente","idexpediente=".$idexpediente,"",$conn);
@@ -176,7 +175,7 @@ function crear_folio_expediente(){
         $folio_padre=$expediente_actual[0]['folio_padre'];
     }
     $up="UPDATE expediente SET folio_no=1 WHERE idexpediente=".$folio_padre;
-    print_r($up);die();
+    phpmkr_query($up);
     
     $ccantidad_folios=busca_filtro_tabla("idexpediente","expediente","folio_padre=".$folio_padre,"",$conn);
     $cantidad_folios=$ccantidad_folios['numcampos']+1; //folios + el padre
@@ -186,10 +185,16 @@ function crear_folio_expediente(){
     $datos_padre=busca_filtro_tabla("nombre","expediente","idexpediente=".$folio_padre,"",$conn);
     
     $sql="INSERT INTO expediente (nombre,fecha,propietario,ver_todos,editar_todos,folio_padre,folio_no) VALUES ('".$datos_padre[0]['nombre']."',".fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s').",".usuario_actual('funcionario_codigo').",0,0,".$folio_padre.",".$folio_siguiente.")";
-    
-    
+    phpmkr_query($sql);
+    $id_insertado=phpmkr_insert_id();
+    if($id_insertado){
+        $retorno->exito=1;
+        $retorno->mensaje="Folio creado con exito";   
+        $retorno->insertado=$id_insertado;   
+    }
+        
     print_r($sql);die();
-    //return($retorno);
+    return($retorno);
 }
 
 
