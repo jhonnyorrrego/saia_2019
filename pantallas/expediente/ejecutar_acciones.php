@@ -161,6 +161,26 @@ if($exito){
 }
 return($retorno);
 }
+function crear_folio_expediente(){
+    global $conn,$ruta_db_superior;
+    
+    $retorno=new stdClass;
+    $retorno->exito=0;
+    $retorno->mensaje="Error al crear folio";
+    $exito=0;    
+    
+    $idexpediente=$_REQUEST["idexpediente"];
+    $expediente_actual=busca_filtro_tabla("","expediente","idexpediente=".$idexpediente,"",$conn);
+    print_r($expediente_actual);
+    
+    
+    
+    
+}
+
+
+
+
 function vincular_expediente_documento(){
 $retorno=new stdClass;
 $retorno->exito=0;
