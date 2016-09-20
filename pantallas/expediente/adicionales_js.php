@@ -58,8 +58,31 @@ $(document).ready(function(){
 	          var objeto2=jQuery.parseJSON(html2);
 	          if(objeto2.exito){
 	          	notificacion_saia(objeto2.mensaje,"success","",2500);
-	          	$("#resultado_pantalla_"+idregistro).remove();
-	          }
+
+
+                var idbusqueda_componente=<?php echo($_REQUEST["idbusqueda_componente"]);?>;
+                var data="idbusqueda_componente="+idbusqueda_componente+"&llave_unica="+objeto2.insertado;  
+                
+                  $.ajax({
+                    type:'GET',
+                    url: "../busquedas/servidor_busqueda.php",
+                    data:data,
+                    success: function(html){
+                      if(html){
+                        var objeto=jQuery.parseJSON(html);
+                        $.each(objeto.rows,function(i,item){
+                          $("#resultado_pantalla_"+idregistro).after(item.info);
+                         // $panel.find("iframe").contents().find("#resultado_pantalla_"+idregistro).html(item.info);
+                        });
+                      }
+                    }
+                  });
+
+
+
+
+
+	          } //fin if objeto2.exito
 	        }
 	      }
 	    });
