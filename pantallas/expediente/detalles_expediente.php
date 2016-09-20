@@ -328,7 +328,7 @@ if($contenido["numcampos"]){
   
   <tr>
     <td class="prettyprint">
-         <b>Tomos:</b>
+         <b>Tomo:</b>
     </td>
     <td colspan="3">
        <?php 
