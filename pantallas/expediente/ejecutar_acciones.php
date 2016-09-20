@@ -183,7 +183,7 @@ function crear_folio_expediente(){
     
     
     
-    print_r($cantidad_folios);
+    print_r($cantidad_folios);die();
     //return($retorno);
 }
 
