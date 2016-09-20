@@ -162,7 +162,7 @@ if($exito){
 return($retorno);
 }
 
-function crear_tomoo_expediente(){
+function crear_tomo_expediente(){
     global $conn,$ruta_db_superior;
     
     $retorno=new stdClass;
