@@ -371,7 +371,7 @@ if($ruta_procesar!=''){
 						$vector_fecha=explode('-',$fecha_radicado[0]['fecha']);
 						$vector_fecha=array_map('intval', $vector_fecha);
 						$cadena_fecha=$vector_fecha[2].' de '.$meses[$vector_fecha[1]].' de '.$vector_fecha[0];						
-						$cadena=ucwords(strtolower(html_entity_decode($ciudad[0]['nombre']))).', '.$cadena_fecha;
+						$cadena=strtolower(html_entity_decode($ciudad[0]['nombre'])).', '.$cadena_fecha;
 						$templateProcessor->setValue('ciudad_fecha',$cadena);  	
 						break;	
 					case 'nombre_formato':
