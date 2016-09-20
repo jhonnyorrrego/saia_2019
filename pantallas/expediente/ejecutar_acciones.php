@@ -180,7 +180,7 @@ function crear_tomo_expediente(){
     $cantidad_tomos=$ccantidad_tomos['numcampos']+1; //tomos + el padre
     $tomo_siguiente=$cantidad_tomos+1; //folio siguiente
     
-    $datos_padre=busca_filtro_tabla("nombre,serie_idserie,folio_no,estado_archivo,descripcion","expediente","idexpediente=".$tomo_padre,"",$conn);
+    $datos_padre=busca_filtro_tabla("nombre,serie_idserie,tomo_no,estado_archivo,descripcion","expediente","idexpediente=".$tomo_padre,"",$conn);
     
     if(!$datos_padre[0]['tomo_no']){
         $up="UPDATE expediente SET tomo_no=1 WHERE idexpediente=".$tomo_padre;
