@@ -186,7 +186,7 @@ function crear_folio_expediente(){
     $sql="INSERT INTO expediente (nombre,fecha,propietario,ver_todos,editar_todos,folio_padre,folio_no) VALUES ('".$datos_padre[0]['nombre']."',".fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s').",".usuario_actual('funcionario_codigo').",0,0,".$folio_padre.",".$folio_siguiente.")";
     
     
-    print_r$sql);die();
+    print_r($sql);die();
     //return($retorno);
 }
 
