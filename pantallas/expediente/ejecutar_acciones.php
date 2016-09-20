@@ -170,7 +170,19 @@ function crear_folio_expediente(){
     $exito=0;    
     
     $idexpediente=$_REQUEST["idexpediente"];
-    $expediente_actual=busca_filtro_tabla("","expediente","idexpediente=".$idexpediente,"",$conn);
+    $expediente_actual=busca_filtro_tabla("folio_padre","expediente","idexpediente=".$idexpediente,"",$conn);
+    $folio_padre=$idexpediente;
+    if($expediente_actual[0]['folio_padre']){
+        $folio_padre=$expediente_actual[0]['folio_padre'];
+    }
+    
+    $ccantidad_folios=busca_filtro_tabla("","expediente","folio_padre=".$folio_padre,"",$conn);
+    $cantidad_folios=$ccantidad_folios['numcampos']+1; //folios + el padre
+    $folio_siguiente=$cantidad_folios+1; //folio siguiente
+    
+    
+    
+    
     print_r($expediente_actual);
     
 }
