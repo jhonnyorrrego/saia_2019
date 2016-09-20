@@ -396,7 +396,7 @@ function enlaces_adicionales_expediente($idexpediente,$nombr,$estado_cierre){
 	}
 	
 	
-	$texto.='<div class=\'btn btn-mini crear_folio_expediente tooltip_saia pull-right\' idregistro=\''.$idexpediente.'\' title=\'Crear Folio '.$nombre.'\'><i class=\'icon-folder-open\'></i></div>';
+	$texto.='<div class=\'btn btn-mini crear_tomo_expediente tooltip_saia pull-right\' idregistro=\''.$idexpediente.'\' title=\'Crear Tomo '.$nombre.'\'><i class=\'icon-folder-open\'></i></div>';
 	
 	return($texto);
 }
