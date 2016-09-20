@@ -9,4 +9,4 @@
 </table>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
-<p><?php mostrar_valor_campo('mostrar_mensaje_error_pdf',400,$_REQUEST['iddoc']);?></p></td></tr><?php include_once("../librerias/footer_nuevo.php"); ?>
+<p><?php mostrar_mensaje_error_pdf(400,$_REQUEST['iddoc']);?></p></td></tr><?php include_once("../librerias/footer_nuevo.php"); ?>
