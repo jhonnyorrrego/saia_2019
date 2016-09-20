@@ -42,6 +42,33 @@ $(document).ready(function(){
 	    });
 		}
   });
+
+
+  $(".crear_folio_expediente").live("click",function(){
+  	var idregistro=$(this).attr("idregistro");
+  	var confirmacion=confirm("Esta seguro de crear un folio a este expediente?");
+  	if(confirmacion){
+	  	$.ajax({
+	      type:'GET',
+	      async:false,
+	      url: "<?php echo($ruta_db_superior);?>pantallas/expediente/ejecutar_acciones.php",
+	      data: "ejecutar_expediente=crear_folio_expediente&tipo_retorno=1&idexpediente="+idregistro,
+	      success: function(html2){
+	        if(html2){
+	          var objeto2=jQuery.parseJSON(html2);
+	          if(objeto2.exito){
+	          	notificacion_saia(objeto2.mensaje,"success","",2500);
+	          	$("#resultado_pantalla_"+idregistro).remove();
+	          }
+	        }
+	      }
+	    });
+		}
+  });
+  
+  
+  
+  
   
   $("#adicionar_expediente").live("click",function(){    
     window.open("<?php echo($ruta_db_superior);?>"+$(this).attr("enlace"),"iframe_detalle");
