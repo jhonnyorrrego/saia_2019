@@ -82,13 +82,12 @@ echo(librerias_validar_formulario());
           </label>
           <div class="controls">
             <?php if($mostrar==1){ ?>  
-                <input id="bqsaia_prox_estado_archivo1" name="bqsaia_prox_estado_archivo"  type="radio" value="2">Si
-                 <input id="bqsaia_prox_estado_archivo2" name="bqsaia_prox_estado_archivo"  type="radio" value="">No filtrar
+                <input id="bqsaia_prox_estado_archivo1" name="bqsaia_prox_estado_archivo"  type="checkbox" value="2">Si
             <?php } ?>
             
             <?php if($mostrar==2){ ?>  
-                 <input id="bqsaia_prox_estado_archivo1" name="bqsaia_prox_estado_archivo"  type="radio" value="3">Si
-                 <input id="bqsaia_prox_estado_archivo2" name="bqsaia_prox_estado_archivo"  type="radio" value="">No filtrar
+                 <input id="bqsaia_prox_estado_archivo1" name="bqsaia_prox_estado_archivo"  type="checkbox" value="3">Si
+                
             <?php } ?>            
           </div>
         </div>
