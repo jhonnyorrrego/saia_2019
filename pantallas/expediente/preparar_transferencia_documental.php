@@ -51,6 +51,6 @@ if($expedientes['numcampos']){
         } //fin if $datos_serie numcampos
     } //fin for expedientes
 } //fin if expedientes numcampos
-echo($exito);
+echo('fin: '.$exito);
 } //fin if ejecutar
 ?>
