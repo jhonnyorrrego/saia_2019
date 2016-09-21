@@ -77,7 +77,7 @@ echo(librerias_validar_formulario());
 
         <div class="control-group">
           <label class="string required control-label" for="prox_estado_archivo">
-		   Pendientes por pasar a <?php echo($etiqueta); ?>:
+		  	<b> Pendientes por pasar a <?php echo($etiqueta); ?>:	</b>
 			<input type="hidden" name="bksaiacondicion_prox_estado_archivo" id="bksaiacondicion_prox_estado_archivo" value="=">
           </label>
           <div class="controls">
