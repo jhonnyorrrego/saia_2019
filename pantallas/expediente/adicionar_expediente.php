@@ -272,6 +272,9 @@ $dato_padre=busca_filtro_tabla("","expediente a","a.idexpediente=".$_REQUEST["co
       else{
       	valor_destino.value="";
       }
+      
+      var text = tree3.getItemText(nodeId);
+      alert(text);
     }
     function fin_cargando_serie() {
       if (browserType == "gecko" )
