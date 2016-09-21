@@ -45,7 +45,7 @@ echo(librerias_validar_formulario());
         
         <div class="control-group">
           <label class="string required control-label" for="nombre">
-			Nombres
+			<b>Nombres</b>
 			<input type="hidden" name="bksaiacondicion_nombre" id="bksaiacondicion_nombre" value="like_total">
           </label>
           <div class="controls">
