@@ -69,5 +69,5 @@
                   for(m=0;m<vector2.length;m++)
                     {tree_funcionario_ausente.setCheck(vector2[m],true);
                     }}
---></script></td></tr><tr>
+--></script></td></tr><tr id="tr_justificada" >
                      <td class="encabezado" width="20%" title="">AUSENCIA JUSTIFICADA*</td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(310,3652,$_REQUEST['iddoc']);?></td></tr><input type="hidden" name="formato" value="310"><input type="hidden" name="padre" value="<?php echo $_REQUEST["padre"]; ?>"><input type="hidden" name="formato" value="ausentes_acta"><input type="hidden" name="accion" value="editar" ><input type="hidden" name="item" value="<?php echo $_REQUEST["item"]; ?>" ><input type="hidden" name="anterior" value="<?php echo $_REQUEST["campo"]; ?>" ><tr><td colspan='2'><?php submit_formato(310,$_REQUEST['iddoc']);?></td></tr></table></form></body></html><?php include_once("../librerias/footer_plantilla.php");?>

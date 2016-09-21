@@ -1,5 +1,5 @@
-<?php include_once("../../formatos/librerias/funciones_generales.php"); ?><?php include_once("../../calendario/calendario.php"); ?><?php include_once("../librerias/header_formato.php"); ?><legend id="label_formato" class="legend" style="font-size:9pt;">B&uacute;squeda en formato SOLICITUD DE MANTENIMIENTO LOCATIVO</legend><br /><br /><?php include_once("../../formatos/librerias/funciones_generales.php"); ?><div class="control-group">
-                  <label class="string control-label" for="fecha_elaboracion"><b>Fecha De Elaboraci&oacute;n</b></label>
+<?php include_once("../librerias/funciones_generales.php"); ?><?php include_once("../../calendario/calendario.php"); ?><?php include_once("../librerias/header_formato.php"); ?><legend id="label_formato" class="legend">B&uacute;squeda en formato SOLICITUD DE MANTENIMIENTO LOCATIVO</legend><br /><br /><?php include_once("../librerias/funciones_generales.php"); ?><div class="control-group">
+                  <label class="string control-label" for="fecha_elaboracion"><b>Fecha de elaboraci&oacute;n</b></label>
                   <input type="hidden" name="bksaiacondicion_g@fecha_elaboracion_x" id="bksaiacondicion_g@fecha_elaboracion_x" value=">=">
                   <div class="controls">
                   Entre <input type="text"  name="bqsaia_g@fecha_elaboracion_x" id="fecha_elaboracion_x" tipo="fecha" value="" style="width:100px" placeholder="Inicio"><?php selector_fecha("fecha_elaboracion_x","kformulario_saia","Y-m-d",date("m"),date("Y"),"default.css","../../","AD:VALOR"); ?> y 
@@ -12,7 +12,7 @@
 		    O
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_fecha_elaboracion" id="bqsaiaenlace_fecha_elaboracion" value="y" />
-		</div></div></div><div class="control-group"><b>Descripci&oacute;n Detallada Del Requerimiento<input type="hidden" name="bksaiacondicion_g@describe_requerimiento" id="bksaiacondicion_g@describe_requerimiento" value="like_total"></b><div class="controls"><textarea    id="describe_requerimiento" name="bqsaia_g@describe_requerimiento"  style="width:500px;height:100px"></textarea><div class="btn-group" data-toggle="buttons-radio" >
+		</div></div></div><div class="control-group"><b>Descripci&oacute;n detallada del requerimiento<input type="hidden" name="bksaiacondicion_g@describe_requerimiento" id="bksaiacondicion_g@describe_requerimiento" value="like_total"></b><div class="controls"><textarea    id="describe_requerimiento" name="bqsaia_g@describe_requerimiento"  style="width:500px;height:100px"></textarea><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_g@describe_requerimiento',this.id)">
 		    Y
 		  </button>
@@ -21,7 +21,7 @@
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_g@describe_requerimiento" id="bqsaiaenlace_g@describe_requerimiento" value="y" />
 		</div></div></div><div class="control-group">
-                  <label class="string control-label" for="fecha_solucion"><b>Fecha Esperada De Soluci&oacute;n</b></label>
+                  <label class="string control-label" for="fecha_solucion"><b>Fecha esperada de soluci&oacute;n</b></label>
                   <input type="hidden" name="bksaiacondicion_g@fecha_solucion_x" id="bksaiacondicion_g@fecha_solucion_x" value=">=">
                   <div class="controls">
                   Entre <input type="text"  name="bqsaia_g@fecha_solucion_x" id="fecha_solucion_x" tipo="fecha" value="" style="width:100px" placeholder="Inicio"><?php selector_fecha("fecha_solucion_x","kformulario_saia","Y-m-d",date("m"),date("Y"),"default.css","../../","AD:VALOR"); ?> y 
@@ -42,7 +42,7 @@
 		    O
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_g@prioridad" id="bqsaiaenlace_g@prioridad" value="y" />
-		</div></div></div><div class="control-group"><label class="string control-label" style="font-size:9pt" for="soportes_anexos"><b>Soportes Anexos<input type="hidden" name="bksaiacondicion_g@soportes_anexos" id="bksaiacondicion_g@soportes_anexos" value="="></b></label><div class="controls"><?php genera_campo_listados_editar(287,3307,'',1,'buscar');?><div class="btn-group" data-toggle="buttons-radio" >
+		</div></div></div><div class="control-group"><label class="string control-label" style="font-size:9pt" for="soportes_anexos"><b>Soportes anexos<input type="hidden" name="bksaiacondicion_g@soportes_anexos" id="bksaiacondicion_g@soportes_anexos" value="="></b></label><div class="controls"><?php genera_campo_listados_editar(287,3307,'',1,'buscar');?><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_g@soportes_anexos',this.id)">
 		    Y
 		  </button>
@@ -50,7 +50,7 @@
 		    O
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_g@soportes_anexos" id="bqsaiaenlace_g@soportes_anexos" value="y" />
-		</div></div></div><div class="control-group"><div class="controls"><b>Jefe Del &aacute;rea<input type="hidden" name="bksaiacondicion_jefe_area" id="bksaiacondicion_jefe_area" value="like_total"></b><div id="esperando_jefe_area"><img src="../../imagenes/cargando.gif"></div><div id="seleccionados"></div><input type="text" id="stext_jefe_area" placeholder="Buscar" width="200px" size="25">
+		</div></div></div><div class="control-group"><div class="controls"><b>Jefe del &aacute;rea<input type="hidden" name="bksaiacondicion_jefe_area" id="bksaiacondicion_jefe_area" value="like_total"></b><div id="esperando_jefe_area"><img src="../../imagenes/cargando.gif"></div><div id="seleccionados"></div><input type="text" id="stext_jefe_area" placeholder="Buscar" width="200px" size="25">
                    <a href="javascript:void(0)" onclick="tree_jefe_area.findItem(htmlentities(document.getElementById('stext_jefe_area').value),1)"><img src="../../botones/general/anterior.png"border="0px"></a>
                    <a href="javascript:void(0)" onclick="tree_jefe_area.findItem(htmlentities(document.getElementById('stext_jefe_area').value),0,1)"><img src="../../botones/general/buscar.png"border="0px"></a>
                           <a href="javascript:void(0)" onclick="tree_jefe_area.findItem(htmlentities(document.getElementById('stext_jefe_area').value))"><img src="../../botones/general/siguiente.png"border="0px"></a>
@@ -117,7 +117,7 @@
 		    O
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_jefe_area" id="bqsaiaenlace_jefe_area" value="y" />
-		</div></div></div><div class="control-group"><div class="controls"><b>Aprobaci&oacute;n Log&iacute;stica<input type="hidden" name="bksaiacondicion_aprovacion_logistica" id="bksaiacondicion_aprovacion_logistica" value="like_total"></b><div id="esperando_aprovacion_logistica"><img src="../../imagenes/cargando.gif"></div><div id="seleccionados"></div><input type="text" id="stext_aprovacion_logistica" placeholder="Buscar" width="200px" size="25">
+		</div></div></div><div class="control-group"><div class="controls"><b>Aprobaci&oacute;n log&iacute;stica<input type="hidden" name="bksaiacondicion_aprovacion_logistica" id="bksaiacondicion_aprovacion_logistica" value="like_total"></b><div id="esperando_aprovacion_logistica"><img src="../../imagenes/cargando.gif"></div><div id="seleccionados"></div><input type="text" id="stext_aprovacion_logistica" placeholder="Buscar" width="200px" size="25">
                    <a href="javascript:void(0)" onclick="tree_aprovacion_logistica.findItem(htmlentities(document.getElementById('stext_aprovacion_logistica').value),1)"><img src="../../botones/general/anterior.png"border="0px"></a>
                    <a href="javascript:void(0)" onclick="tree_aprovacion_logistica.findItem(htmlentities(document.getElementById('stext_aprovacion_logistica').value),0,1)"><img src="../../botones/general/buscar.png"border="0px"></a>
                           <a href="javascript:void(0)" onclick="tree_aprovacion_logistica.findItem(htmlentities(document.getElementById('stext_aprovacion_logistica').value))"><img src="../../botones/general/siguiente.png"border="0px"></a>
@@ -184,7 +184,7 @@
 		    O
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_aprovacion_logistica" id="bqsaiaenlace_aprovacion_logistica" value="y" />
-		</div></div></div><div class="control-group"><b>Usuario Que Solicita<input type="hidden" name="bksaiacondicion_g@usuario_que_solita" id="bksaiacondicion_g@usuario_que_solita" value="like_total"></b><div class="controls"><input type="text" id="usuario_que_solita" name="bqsaia_g@usuario_que_solita"><div class="btn-group" data-toggle="buttons-radio" >
+		</div></div></div><div class="control-group"><b>Usuario que solicita<input type="hidden" name="bksaiacondicion_g@usuario_que_solita" id="bksaiacondicion_g@usuario_que_solita" value="like_total"></b><div class="controls"><input type="text" id="usuario_que_solita" name="bqsaia_g@usuario_que_solita"><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_g@usuario_que_solita',this.id)">
 		    Y
 		  </button>
@@ -192,4 +192,4 @@
 		    O
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_g@usuario_que_solita" id="bqsaiaenlace_g@usuario_que_solita" value="y" />
-		</div></div></div><div class="control-group"><b>&aacute;rea Del Elaborador Del Formato<input type="hidden" name="bksaiacondicion_g@area" id="bksaiacondicion_g@area" value="like_total"></b><div class="controls"><input type="text" id="area" name="bqsaia_g@area"></div></div><input type="hidden" name="campos_especiales" value="jefe_area@arbol,aprovacion_logistica@arbol"><input type="hidden" name="filtro_adicional" id="filtro_adicional" value=" ft_mantenimiento_locativo g @ AND  g.documento_iddocumento=iddocumento "></body><input type="hidden" name="bqtipodato_plantilla" id="bqtipodato_plantilla" value="date|g@fecha_elaboracion_x,g@fecha_elaboracion_y,g@fecha_solucion_x,g@fecha_solucion_y"><input type="hidden" name="idbusqueda_componente" value="175">
+		</div></div></div><div class="control-group"><b>&Aacute;rea del elaborador del formato<input type="hidden" name="bksaiacondicion_g@area" id="bksaiacondicion_g@area" value="like_total"></b><div class="controls"><input type="text" id="area" name="bqsaia_g@area"></div></div><input type="hidden" name="campos_especiales" value="jefe_area@arbol,aprovacion_logistica@arbol"><input type="hidden" name="filtro_adicional" id="filtro_adicional" value=" ft_mantenimiento_locativo g @ AND  g.documento_iddocumento=iddocumento "></body><input type="hidden" name="bqtipodato_plantilla" id="bqtipodato_plantilla" value="date|g@fecha_elaboracion_x,g@fecha_elaboracion_y,g@fecha_solucion_x,g@fecha_solucion_y">

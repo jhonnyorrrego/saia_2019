@@ -1,4 +1,4 @@
-<html><title>.:ADICIONAR HISTORIA CLINICA:.</title><head><script type="text/javascript" src="../librerias/funciones_formatos.js"></script><script type="text/javascript" src="../../js/cmxforms.js"></script><?php include_once("../carta/funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("../librerias/funciones_generales.php"); ?><?php include_once("../librerias/funciones_acciones.php"); ?><?php include_once("../librerias/estilo_formulario.php"); ?><?php include_once("../../calendario/calendario.php"); ?><script type="text/javascript" src="../../js/jquery.js"></script><script type="text/javascript" src="../../js/jquery.validate.js"></script><script type="text/javascript" src="../../js/title2note.js"></script><script type="text/javascript" src="../librerias/dependientes.js"></script><script type='text/javascript'>
+<html><title>.:ADICIONAR HISTORIA CLINICA:.</title><head><script type="text/javascript" src="../librerias/funciones_formatos.js"></script><script type="text/javascript" src="../../js/cmxforms.js"></script><?php include_once("funciones.php"); ?><?php include_once("../librerias/funciones_generales.php"); ?><?php include_once("../librerias/funciones_acciones.php"); ?><?php include_once("../librerias/estilo_formulario.php"); ?><?php include_once("../../calendario/calendario.php"); ?><script type="text/javascript" src="../../js/jquery.js"></script><script type="text/javascript" src="../../js/jquery.validate.js"></script><script type="text/javascript" src="../../js/title2note.js"></script><script type="text/javascript" src="../librerias/dependientes.js"></script><script type='text/javascript'>
   $().ready(function() {
 	// validar los campos del formato
 	$('#formulario_formatos').validate();
@@ -16,7 +16,7 @@
                     </tr><tr>
                      <td class="encabezado" width="20%" title="">APELLIDO*</td>
                      <td bgcolor="#F5F5F5"><input  maxlength="255"  class="required"   tabindex='2'  type="text" size="100" id="apellido_usuario" name="apellido_usuario"  value="<?php echo(validar_valor_campo(3166)); ?>"></td>
-                    </tr><tr>
+                    </tr><tr id="tr_cedula_ciudadania" >
                      <td class="encabezado" width="20%" title="">DOC. IDENTIDAD*</td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(282,3224,$_REQUEST['iddoc']);?></td></tr><tr>
                      <td class="encabezado" width="20%" title="">N&Uacute;MERO*</td>
                      <td bgcolor="#F5F5F5"><input  maxlength="11"  class="required"   tabindex='3'  type="text" size="100" id="numero_doc" name="numero_doc"  value="<?php echo(validar_valor_campo(3171)); ?>"></td>
@@ -25,7 +25,7 @@
                      <td class="encabezado" width="20%" title="">DEPARTAMENTO*</td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(282,3176,$_REQUEST['iddoc']);?></td></tr><tr>
                      <td class="encabezado" width="20%" title="">EDAD</td>
                      <td bgcolor="#F5F5F5"><input  maxlength="11"   tabindex='5'  type="text" size="100" id="edad" name="edad"  value="<?php echo(validar_valor_campo(3178)); ?>"></td>
-                    </tr><tr>
+                    </tr><tr id="tr_sexo" >
                      <td class="encabezado" width="20%" title="">SEXO*</td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(282,3180,$_REQUEST['iddoc']);?></td></tr><tr>
                      <td class="encabezado" width="20%" title="">OCUPACION*</td>
                      <td bgcolor="#F5F5F5"><input  maxlength="255"  class="required"   tabindex='6'  type="text" size="100" id="ocupacion" name="ocupacion"  value="<?php echo(validar_valor_campo(3182)); ?>"></td>
@@ -41,7 +41,7 @@
                     </tr><tr>
                      <td class="encabezado" width="20%" title="">CELULAR*</td>
                      <td bgcolor="#F5F5F5"><input  maxlength="255"  class="required"   tabindex='10'  type="text" size="100" id="cel" name="cel"  value="<?php echo(validar_valor_campo(3186)); ?>"></td>
-                    </tr><tr>
+                    </tr><tr id="tr_estado_civil" >
                      <td class="encabezado" width="20%" title="">ESTADO CIVIL*</td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(282,3188,$_REQUEST['iddoc']);?></td></tr><tr>
                      <td class="encabezado" width="20%" title="" colspan="2"><center>INFORMACI&Oacute;N CONYUGUE</center></td>
                     </tr><tr>
@@ -89,9 +89,9 @@
                      <td bgcolor="#F5F5F5"><input    tabindex='23'  type="text" size="100" id="donde_padre" name="donde_padre"  value="<?php echo(validar_valor_campo(3230)); ?>"></td>
                     </tr><tr>
                      <td class="encabezado" width="20%" title="" colspan="2"><center>TRATAMIENTOS PREVIOS</center></td>
-                    </tr><tr>
+                    </tr><tr id="tr_tratamientos_previos" >
                      <td class="encabezado" width="20%" title="">&iquest;HA TENIDO TRATAMIENTO PREVIO DE ORTODONCIA?*</td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(282,3203,$_REQUEST['iddoc']);?></td></tr><tr>
                      <td class="encabezado" width="20%" title="">&iquest;CUANTO TIEMPO?</td>
                      <td bgcolor="#F5F5F5"><input  maxlength="255"   tabindex='24'  type="text" size="100" id="cuanto_tiempo" name="cuanto_tiempo"  value="<?php echo(validar_valor_campo(3208)); ?>"></td>
-                    </tr><tr>
+                    </tr><tr id="tr_como_se_entero" >
                      <td class="encabezado" width="20%" title="">&iquest;COMO SE ENTER&Oacute; DE NUESTRO SERVICIO?*</td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(282,3209,$_REQUEST['iddoc']);?></td></tr><input type="hidden" name="idft_clinica_ortodoncia" value="<?php echo(validar_valor_campo(3240)); ?>"><input type="hidden" name="documento_iddocumento" value="<?php echo(validar_valor_campo(3241)); ?>"><input type="hidden" name="serie_idserie" value="<?php echo(validar_valor_campo(3162)); ?>"><input type="hidden" name="firma" value="<?php echo(validar_valor_campo(3244)); ?>"><?php activar_campo_tiempo(282,NULL);?><input type="hidden" name="campo_descripcion" value="3165"><tr><td colspan='2'><?php submit_formato(282);?></td></tr></table></form></body></html>

@@ -1,4 +1,4 @@
-<?php include_once("../../formatos/librerias/funciones_generales.php"); ?><?php include_once("../librerias/header_formato.php"); ?><legend id="label_formato" class="legend" style="font-size:9pt;">B&uacute;squeda en formato Antecedentes m&eacute;dicos</legend><br /><br /><?php include_once("../../formatos/librerias/funciones_generales.php"); ?><div class="control-group"><label class="string control-label" style="font-size:9pt" for="padece_enfermedad"><b>Padece De Alguna Enfermedad Actualmente<input type="hidden" name="bksaiacondicion_g@padece_enfermedad" id="bksaiacondicion_g@padece_enfermedad" value="="></b></label><div class="controls"><?php genera_campo_listados_editar(281,3158,'',1,'buscar');?><div class="btn-group" data-toggle="buttons-radio" >
+<?php include_once("../librerias/funciones_generales.php"); ?><?php include_once("../librerias/header_formato.php"); ?><legend id="label_formato" class="legend">B&uacute;squeda en formato Antecedentes m&eacute;dicos</legend><br /><br /><?php include_once("../librerias/funciones_generales.php"); ?><div class="control-group"><label class="string control-label" style="font-size:9pt" for="padece_enfermedad"><b>padece de alguna enfermedad actualmente<input type="hidden" name="bksaiacondicion_g@padece_enfermedad" id="bksaiacondicion_g@padece_enfermedad" value="="></b></label><div class="controls"><?php genera_campo_listados_editar(281,3158,'',1,'buscar');?><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_g@padece_enfermedad',this.id)">
 		    Y
 		  </button>
@@ -6,7 +6,7 @@
 		    O
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_g@padece_enfermedad" id="bqsaiaenlace_g@padece_enfermedad" value="y" />
-		</div></div></div><div class="control-group"><b>&iquest;cu&aacute;l Enfermedad?<input type="hidden" name="bksaiacondicion_g@cual_enfermedad" id="bksaiacondicion_g@cual_enfermedad" value="like_total"></b><div class="controls"><input type="text" id="cual_enfermedad" name="bqsaia_g@cual_enfermedad"><div class="btn-group" data-toggle="buttons-radio" >
+		</div></div></div><div class="control-group"><b>&iquest;Cu&aacute;l enfermedad?<input type="hidden" name="bksaiacondicion_g@cual_enfermedad" id="bksaiacondicion_g@cual_enfermedad" value="like_total"></b><div class="controls"><input type="text" id="cual_enfermedad" name="bqsaia_g@cual_enfermedad"><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_g@cual_enfermedad',this.id)">
 		    Y
 		  </button>
@@ -14,7 +14,7 @@
 		    O
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_g@cual_enfermedad" id="bqsaiaenlace_g@cual_enfermedad" value="y" />
-		</div></div></div><div class="control-group"><label class="string control-label" style="font-size:9pt" for="recibe_medicamento"><b>Recibe Alg&uacute;n Medicamento<input type="hidden" name="bksaiacondicion_g@recibe_medicamento" id="bksaiacondicion_g@recibe_medicamento" value="="></b></label><div class="controls"><?php genera_campo_listados_editar(281,3160,'',1,'buscar');?><div class="btn-group" data-toggle="buttons-radio" >
+		</div></div></div><div class="control-group"><label class="string control-label" style="font-size:9pt" for="recibe_medicamento"><b>Recibe alg&uacute;n medicamento<input type="hidden" name="bksaiacondicion_g@recibe_medicamento" id="bksaiacondicion_g@recibe_medicamento" value="="></b></label><div class="controls"><?php genera_campo_listados_editar(281,3160,'',1,'buscar');?><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_g@recibe_medicamento',this.id)">
 		    Y
 		  </button>
@@ -22,7 +22,7 @@
 		    O
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_g@recibe_medicamento" id="bqsaiaenlace_g@recibe_medicamento" value="y" />
-		</div></div></div><div class="control-group"><b>&iquest;cu&aacute;l Medicamento?<input type="hidden" name="bksaiacondicion_g@cual_medicamento" id="bksaiacondicion_g@cual_medicamento" value="like_total"></b><div class="controls"><input type="text" id="cual_medicamento" name="bqsaia_g@cual_medicamento"><div class="btn-group" data-toggle="buttons-radio" >
+		</div></div></div><div class="control-group"><b>&iquest;Cu&aacute;l Medicamento?<input type="hidden" name="bksaiacondicion_g@cual_medicamento" id="bksaiacondicion_g@cual_medicamento" value="like_total"></b><div class="controls"><input type="text" id="cual_medicamento" name="bqsaia_g@cual_medicamento"><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_g@cual_medicamento',this.id)">
 		    Y
 		  </button>
@@ -86,7 +86,7 @@
 		    O
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_g@trastorno_sanguineo" id="bqsaiaenlace_g@trastorno_sanguineo" value="y" />
-		</div></div></div><div class="control-group"><label class="string control-label" style="font-size:9pt" for="fiebre_reumatica"><b>Fiebre Reumatica<input type="hidden" name="bksaiacondicion_g@fiebre_reumatica" id="bksaiacondicion_g@fiebre_reumatica" value="="></b></label><div class="controls"><?php genera_campo_listados_editar(281,3279,'',1,'buscar');?><div class="btn-group" data-toggle="buttons-radio" >
+		</div></div></div><div class="control-group"><label class="string control-label" style="font-size:9pt" for="fiebre_reumatica"><b>Fiebre reumatica<input type="hidden" name="bksaiacondicion_g@fiebre_reumatica" id="bksaiacondicion_g@fiebre_reumatica" value="="></b></label><div class="controls"><?php genera_campo_listados_editar(281,3279,'',1,'buscar');?><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_g@fiebre_reumatica',this.id)">
 		    Y
 		  </button>
@@ -102,7 +102,7 @@
 		    O
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_g@alergias" id="bqsaiaenlace_g@alergias" value="y" />
-		</div></div></div><div class="control-group"><label class="string control-label" style="font-size:9pt" for="obstruccion_nasal"><b>Obstrucci&oacute;n_nasal<input type="hidden" name="bksaiacondicion_g@obstruccion_nasal" id="bksaiacondicion_g@obstruccion_nasal" value="="></b></label><div class="controls"><?php genera_campo_listados_editar(281,3179,'',1,'buscar');?><div class="btn-group" data-toggle="buttons-radio" >
+		</div></div></div><div class="control-group"><label class="string control-label" style="font-size:9pt" for="obstruccion_nasal"><b>Obstrucci&oacute;n_Nasal<input type="hidden" name="bksaiacondicion_g@obstruccion_nasal" id="bksaiacondicion_g@obstruccion_nasal" value="="></b></label><div class="controls"><?php genera_campo_listados_editar(281,3179,'',1,'buscar');?><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_g@obstruccion_nasal',this.id)">
 		    Y
 		  </button>
@@ -134,7 +134,7 @@
 		    O
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_g@amigdalas" id="bqsaiaenlace_g@amigdalas" value="y" />
-		</div></div></div><div class="control-group"><b>Otro &iquest;cu&aacute;l?<input type="hidden" name="bksaiacondicion_g@otro_antecedente" id="bksaiacondicion_g@otro_antecedente" value="like_total"></b><div class="controls"><input type="text" id="otro_antecedente" name="bqsaia_g@otro_antecedente"><div class="btn-group" data-toggle="buttons-radio" >
+		</div></div></div><div class="control-group"><b>Otro &iquest;Cu&aacute;l?<input type="hidden" name="bksaiacondicion_g@otro_antecedente" id="bksaiacondicion_g@otro_antecedente" value="like_total"></b><div class="controls"><input type="text" id="otro_antecedente" name="bqsaia_g@otro_antecedente"><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_g@otro_antecedente',this.id)">
 		    Y
 		  </button>
@@ -142,7 +142,7 @@
 		    O
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_g@otro_antecedente" id="bqsaiaenlace_g@otro_antecedente" value="y" />
-		</div></div></div><div class="control-group"><b>Edad De La Primera Menstruaci&oacute;n<input type="hidden" name="bksaiacondicion_g@edad_menstruacion" id="bksaiacondicion_g@edad_menstruacion" value="like_total"></b><div class="controls"><input type="text" id="edad_menstruacion" name="bqsaia_g@edad_menstruacion"><div class="btn-group" data-toggle="buttons-radio" >
+		</div></div></div><div class="control-group"><b>Edad de la primera menstruaci&oacute;n<input type="hidden" name="bksaiacondicion_g@edad_menstruacion" id="bksaiacondicion_g@edad_menstruacion" value="like_total"></b><div class="controls"><input type="text" id="edad_menstruacion" name="bqsaia_g@edad_menstruacion"><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_g@edad_menstruacion',this.id)">
 		    Y
 		  </button>
@@ -150,4 +150,4 @@
 		    O
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_g@edad_menstruacion" id="bqsaiaenlace_g@edad_menstruacion" value="y" />
-		</div></div></div><div class="control-group"><b>Observaciones<input type="hidden" name="bksaiacondicion_g@observacion_ante" id="bksaiacondicion_g@observacion_ante" value="like_total"></b><div class="controls"><textarea    id="observacion_ante" name="bqsaia_g@observacion_ante"  style="width:500px;height:100px"></textarea></div></div><input type="hidden" name="filtro_adicional" id="filtro_adicional" value=" ft_antecedentes_medicos g @ AND  g.documento_iddocumento=iddocumento "></body><input type="hidden" name="idbusqueda_componente" value="169">
+		</div></div></div><div class="control-group"><b>Observaciones<input type="hidden" name="bksaiacondicion_g@observacion_ante" id="bksaiacondicion_g@observacion_ante" value="like_total"></b><div class="controls"><textarea    id="observacion_ante" name="bqsaia_g@observacion_ante"  style="width:500px;height:100px"></textarea></div></div><input type="hidden" name="filtro_adicional" id="filtro_adicional" value=" ft_antecedentes_medicos g @ AND  g.documento_iddocumento=iddocumento "></body>

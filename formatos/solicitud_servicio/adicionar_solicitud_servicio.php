@@ -1,4 +1,4 @@
-<html><title>.:ADICIONAR SOLICITUD DE SERVICIO:.</title><head><script type="text/javascript" src="../librerias/funciones_formatos.js"></script><script type="text/javascript" src="../../js/cmxforms.js"></script><?php include_once("../carta/funciones.php"); ?><?php include_once("../radicacion_entrada/funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("../librerias/funciones_generales.php"); ?><?php include_once("../librerias/funciones_acciones.php"); ?><?php include_once("../librerias/estilo_formulario.php"); ?><?php include_once("../librerias/header_formato.php"); ?><?php include_once("../../calendario/calendario.php"); ?><script type="text/javascript" src="../../js/jquery.js"></script><script type="text/javascript" src="../../js/jquery.validate.js"></script><script type="text/javascript" src="../../js/title2note.js"></script><script type="text/javascript" src="../../js/dhtmlXCommon.js"></script><script type="text/javascript" src="../../js/dhtmlXTree.js"></script><link rel="STYLESHEET" type="text/css" href="../../css/dhtmlXTree.css"><script type="text/javascript" src="../librerias/dependientes.js"></script><script type="text/javascript" src="../../anexosdigitales/multiple-file-upload/jquery.MultiFile.js"></script><?php include_once("../../anexosdigitales/funciones_archivo.php"); ?><script type="text/javascript" src="../../anexosdigitales/highslide-4.0.10/highslide/highslide-with-html.js"></script><link rel="stylesheet" type="text/css" href="../../anexosdigitales/highslide-4.0.10/highslide/highslide.css" />
+<html><title>.:ADICIONAR SOLICITUD DE SERVICIO:.</title><head><script type="text/javascript" src="../librerias/funciones_formatos.js"></script><script type="text/javascript" src="../../js/cmxforms.js"></script><?php include_once("../radicacion_entrada/funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("../librerias/funciones_generales.php"); ?><?php include_once("../librerias/funciones_acciones.php"); ?><?php include_once("../librerias/estilo_formulario.php"); ?><?php include_once("../librerias/header_formato.php"); ?><?php include_once("../../calendario/calendario.php"); ?><script type="text/javascript" src="../../js/jquery.js"></script><script type="text/javascript" src="../../js/jquery.validate.js"></script><script type="text/javascript" src="../../js/title2note.js"></script><script type="text/javascript" src="../../js/dhtmlXCommon.js"></script><script type="text/javascript" src="../../js/dhtmlXTree.js"></script><link rel="STYLESHEET" type="text/css" href="../../css/dhtmlXTree.css"><script type="text/javascript" src="../librerias/dependientes.js"></script><script type="text/javascript" src="../../anexosdigitales/multiple-file-upload/jquery.MultiFile.js"></script><?php include_once("../../anexosdigitales/funciones_archivo.php"); ?><script type="text/javascript" src="../../anexosdigitales/highslide-4.0.10/highslide/highslide-with-html.js"></script><link rel="stylesheet" type="text/css" href="../../anexosdigitales/highslide-4.0.10/highslide/highslide.css" />
     </style><script type='text/javascript'>
     hs.graphicsDir = '../../anexosdigitales/highslide-4.0.10/highslide/graphics/';
     hs.outlineType = 'rounded-white';
@@ -76,14 +76,14 @@
                       }
                 	--></script></td></tr><tr>
                      <td class="encabezado" width="20%" title="">SELECCIONE EL DOCUMENTO*</td>
-                     <?php fk_idsolicitud_afiliacion_funcion(267,3116);?></tr><tr>
+                     <?php fk_idsolicitud_afiliacion_funcion(267,3116);?></tr><tr id="tr_tipo_solicitud_servi" >
                      <td class="encabezado" width="20%" title="">TIPO DE SOLICITUD*</td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(267,3035,$_REQUEST['iddoc']);?></td></tr><tr>
                   <td class="encabezado" width="20%" title="">TIPO DE MERCANCIA*</td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(267,3036,$_REQUEST['iddoc']);?></td></tr><tr>
                      <td class="encabezado" width="20%" title="">REFERENCIA DE CAJA</td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(267,3105,$_REQUEST['iddoc']);?></td></tr><tr>
                      <td class="encabezado" width="20%" title="">CANTIDAD (UNIDADES)</td>
                      <td bgcolor="#F5F5F5"><input  maxlength="11"  class="digits"   tabindex='3'  type="text" size="100" id="cantidad_mercancia" name="cantidad_mercancia"  value="<?php echo(validar_valor_campo(3104)); ?>"></td>
-                    </tr><tr>
-                     <td class="encabezado" width="20%" title="">TIPO DE PRIVILEGIOS*</td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(267,3037,$_REQUEST['iddoc']);?></td></tr><tr>
+                    </tr><tr id="tr_tipo_privilegios" >
+                     <td class="encabezado" width="20%" title="">TIPO DE PRIVILEGIOS*</td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(267,3037,$_REQUEST['iddoc']);?></td></tr><tr id="tr_tipo_envio_solicitud" >
                      <td class="encabezado" width="20%" title="">TIPO DE ENV&Iacute;O*</td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(267,3038,$_REQUEST['iddoc']);?></td></tr><tr>
                      <td class="encabezado" width="20%" title="">VALOR DECLARADO</td>
                      <td bgcolor="#F5F5F5"><input  maxlength="15"   tabindex='4'  type="text" size="100" id="valor_declarado" name="valor_declarado"  value="<?php echo(validar_valor_campo(3039)); ?>"></td>
@@ -93,7 +93,7 @@
                     </tr><tr>
                      <td class="encabezado" width="20%" title="">TAMA&Ntilde;O APROXIMADO</td>
                      <td bgcolor="#F5F5F5"><input  maxlength="255"   tabindex='6'  type="text" size="100" id="tamanio_aproximado" name="tamanio_aproximado"  value="<?php echo(validar_valor_campo(3041)); ?>"></td>
-                    </tr><tr>
+                    </tr><tr id="tr_requiere_recoleccion" >
                      <td class="encabezado" width="20%" title="">REQUIERE RECOLECCI&Oacute;N*</td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(267,3042,$_REQUEST['iddoc']);?></td></tr><tr>
                      <td class="encabezado" width="20%" title="">DIRECCI&Oacute;N DE RECOLECCI&Oacute;N</td>
                      <td bgcolor="#F5F5F5"><input  maxlength="255"   tabindex='7'  type="text" size="100" id="direccion_recoleccion" name="direccion_recoleccion"  value="<?php echo(validar_valor_campo(3043)); ?>"></td>

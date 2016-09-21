@@ -8,8 +8,8 @@
                     <td class="encabezado" width="20%" title="">FECHA DE LA SOLICITUD*</td><td colspan="2" bgcolor="#F5F5F5"><font size="1,5" face="Verdana, Arial, Helvetica, sans-serif"><span ><input  tabindex='1'  type="text" readonly="true" name="fecha_solicitud"  class="required dateISO"  id="fecha_solicitud" value="<?php echo(date("0000-00-00 00:00")); ?>"><?php selector_fecha("fecha_solicitud","formulario_formatos","Y-m-d H:i",date("m"),date("Y"),"default.css","../../","AD:VALOR"); ?></span></font></td><tr>
                      <td class="encabezado" width="20%" title="">DESCRIPCI&Oacute;N*</td>
                      <td class="celda_transparente"><textarea  tabindex='2'  name="descripcion" id="descripcion" cols="53" rows="3" class="tiny_basico required"><?php echo(validar_valor_campo(2582)); ?></textarea></td>
-                    </tr><tr>
-                     <td class="encabezado" width="20%" title="">CATEGOR&Iacute;A*</td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(232,2606,$_REQUEST['iddoc']);?></td></tr><tr>
+                    </tr><tr id="tr_categoria" >
+                     <td class="encabezado" width="20%" title="">CATEGOR&Iacute;A*</td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(232,2606,$_REQUEST['iddoc']);?></td></tr><tr id="tr_prioridad" >
                      <td class="encabezado" width="20%" title="">PRIORIDAD*</td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(232,2583,$_REQUEST['iddoc']);?></td></tr><tr>
                      <td class="encabezado" width="20%" title="">SOLICITANTE*</td>
                      <td bgcolor="#F5F5F5"><input  maxlength="255"  class="required"   tabindex='3'  type="text" size="100" id="solicitante" name="solicitante"  value="<?php echo(validar_valor_campo(2584)); ?>"></td>

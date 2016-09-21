@@ -1,4 +1,4 @@
-<?php include_once("../carta/funciones.php"); ?><?php include_once("../estructura_hoja_vida/funciones.php"); ?><?php include_once("../referencias_comerciales/funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("recibe_factura"); ?><?php include_once("Nit_funcionario"); ?><?php include_once("../librerias/funciones_generales.php"); ?><script type="text/javascript" src="../../js/jquery.js"></script><?php include_once("../librerias/header_nuevo.php"); ?><?php include_once("../../class_transferencia.php"); ?><tr><td><p><?php ver_factura(237,$_REQUEST['iddoc']);?></p>
+<?php include_once("../carta/funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("recibe_factura"); ?><?php include_once("Nit_funcionario"); ?><?php include_once("../correo_saia/funciones.php"); ?><?php include_once("../librerias/funciones_generales.php"); ?><script type="text/javascript" src="../../js/jquery.js"></script><?php include_once("../librerias/header_nuevo.php"); ?><?php include_once("../../class_transferencia.php"); ?><tr><td><p><?php ver_factura(237,$_REQUEST['iddoc']);?></p>
 <table style="width: 100%; border-collapse: collapse; font-family: arial;" border="1">
 <tbody>
 <tr>
@@ -50,4 +50,6 @@
 </tbody>
 </table>
 <p><span style="font-size: small;"><?php datos_factura(237,$_REQUEST['iddoc']);?></span></p>
+<p><span style="font-size: small;"><?php enlace_item_causacion(237,$_REQUEST['iddoc']);?></span></p>
+<p><span style="font-size: small;"><?php mostrar_datos_item_causacion(237,$_REQUEST['iddoc']);?></span></p>
 <p><span><span style="font-size: small;"><?php mostrar_estado_proceso(237,$_REQUEST['iddoc']);?></span><br /></span></p></td></tr><?php include_once("../librerias/footer_nuevo.php"); ?>

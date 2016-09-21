@@ -1,4 +1,18 @@
-<?php include_once("../../formatos/librerias/funciones_generales.php"); ?><?php include_once("../../formatos/librerias/funciones_generales.php"); ?><div class="control-group"><div class="controls"><b>Responsable<input type="hidden" name="bksaiacondicion_responsable" id="bksaiacondicion_responsable" value="like_total"></b><div id="esperando_responsable"><img src="../../imagenes/cargando.gif"></div><div id="seleccionados"></div><input type="text" id="stext_responsable" placeholder="Buscar" width="200px" size="25">
+<?php include_once("../librerias/funciones_generales.php"); ?><?php include_once("../../calendario/calendario.php"); ?><?php include_once("../librerias/header_formato.php"); ?><legend id="label_formato" class="legend">B&uacute;squeda en formato Solicitud soporte activo</legend><br /><br /><?php include_once("../librerias/funciones_generales.php"); ?><div class="control-group">
+                  <label class="string control-label" for="fecha_soporte"><b>Fecha del soporte</b></label>
+                  <input type="hidden" name="bksaiacondicion_g@fecha_soporte_x" id="bksaiacondicion_g@fecha_soporte_x" value=">=">
+                  <div class="controls">
+                  Entre <input type="text"  name="bqsaia_g@fecha_soporte_x" id="fecha_soporte_x" tipo="fecha" value="" style="width:100px" placeholder="Inicio"><?php selector_fecha("fecha_soporte_x","kformulario_saia","Y-m-d",date("m"),date("Y"),"default.css","../../","AD:VALOR"); ?> y 
+                  <input type="hidden" name="bksaiacondicion_g@fecha_soporte_y" id="bksaiacondicion_g@fecha_soporte_y" value="<=">
+                  <input type="text"  name="bqsaia_g@fecha_soporte_y" id="fecha_soporte_y" tipo="fecha" value="" style="width:100px" placeholder="Fin"><?php selector_fecha("fecha_soporte_y","kformulario_saia","Y-m-d",date("m"),date("Y"),"default.css","../../","AD:VALOR"); ?><div class="btn-group" data-toggle="buttons-radio" >
+		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_fecha_soporte',this.id)">
+		    Y
+		  </button>
+		  <button type="button" class="btn btn-mini" data-toggle="button" id="o" onclick="llenar_valor('bqsaiaenlace_fecha_soporte',this.id)">
+		    O
+		  </button-->
+		  <input type="hidden" name="bqsaiaenlace_fecha_soporte" id="bqsaiaenlace_fecha_soporte" value="y" />
+		</div></div></div><div class="control-group"><div class="controls"><b>Responsable<input type="hidden" name="bksaiacondicion_responsable" id="bksaiacondicion_responsable" value="like_total"></b><div id="esperando_responsable"><img src="../../imagenes/cargando.gif"></div><div id="seleccionados"></div><input type="text" id="stext_responsable" placeholder="Buscar" width="200px" size="25">
                    <a href="javascript:void(0)" onclick="tree_responsable.findItem(htmlentities(document.getElementById('stext_responsable').value),1)"><img src="../../botones/general/anterior.png"border="0px"></a>
                    <a href="javascript:void(0)" onclick="tree_responsable.findItem(htmlentities(document.getElementById('stext_responsable').value),0,1)"><img src="../../botones/general/buscar.png"border="0px"></a>
                           <a href="javascript:void(0)" onclick="tree_responsable.findItem(htmlentities(document.getElementById('stext_responsable').value))"><img src="../../botones/general/siguiente.png"border="0px"></a>
@@ -89,4 +103,4 @@
 		    O
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_g@categoria" id="bqsaiaenlace_g@categoria" value="y" />
-		</div></div></div><div class="control-group"><b>Descrpci&oacute;n<input type="hidden" name="bksaiacondicion_g@descripcion" id="bksaiacondicion_g@descripcion" value="like_total"></b><div class="controls"><textarea  maxlength="255"   id="descripcion" name="bqsaia_g@descripcion"  style="width:500px;height:100px"></textarea></div></div><input type="hidden" name="campos_especiales" value="responsable@arbol"><input type="hidden" name="filtro_adicional" id="filtro_adicional" value=" ft_soporte g @ AND  g.documento_iddocumento=iddocumento "></body><input type="hidden" name="idbusqueda_componente" value="0">
+		</div></div></div><div class="control-group"><b>Descrpci&oacute;n<input type="hidden" name="bksaiacondicion_g@descripcion" id="bksaiacondicion_g@descripcion" value="like_total"></b><div class="controls"><textarea  maxlength="255"   id="descripcion" name="bqsaia_g@descripcion"  style="width:500px;height:100px"></textarea></div></div><input type="hidden" name="campos_especiales" value="responsable@arbol"><input type="hidden" name="filtro_adicional" id="filtro_adicional" value=" ft_soporte g @ AND  g.documento_iddocumento=iddocumento "></body><input type="hidden" name="bqtipodato_plantilla" id="bqtipodato_plantilla" value="date|g@fecha_soporte_x,g@fecha_soporte_y">

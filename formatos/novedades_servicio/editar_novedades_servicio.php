@@ -108,8 +108,8 @@
 --></script></td></tr><tr>
                      <td class="encabezado" width="20%" title="">ANEXO FISICOS</td>
                      <td bgcolor="#F5F5F5"><input  maxlength="3000"   tabindex='3'  type="text" size="100" id="anexos_fisicos" name="anexos_fisicos"  value="<?php echo(mostrar_valor_campo('anexos_fisicos',270,$_REQUEST['iddoc'])); ?>"></td>
-                    </tr><tr>
-                     <td class="encabezado" width="20%" title="">TIPO DE MENSAJERIA*</td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(270,3097,$_REQUEST['iddoc']);?></td></tr><tr>
+                    </tr><tr id="tr_tipo_mensajeria" >
+                     <td class="encabezado" width="20%" title="">TIPO DE MENSAJERIA*</td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(270,3097,$_REQUEST['iddoc']);?></td></tr><tr id="tr_vercopiainterna" >
                      <td class="encabezado" width="20%" title="">VISIBLE LA COPIA INTERNA*</td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(270,3096,$_REQUEST['iddoc']);?></td></tr><tr>
                      <td class="encabezado" width="20%" title="">TRANSCRIPTOR*</td>
                      <?php iniciales(270,3093,$_REQUEST['iddoc']);?></tr><tr>
@@ -118,6 +118,6 @@
 			<a href="../../anexosdigitales/anexos_documento_edit.php?key='.$_REQUEST["iddoc"].'&idformato=270&idcampo=3082" id="anexo_admin" class="highslide" onclick="return hs.htmlExpand( this, {
 			objectType: \'iframe\', outlineType: \'rounded-white\', wrapperClassName: \'highslide-wrapper drag-header\',
 			outlineWhileAnimating: true, preserveContent: false, width: 400 } )">Administrar Anexos</a>
-			</div>'; ?><tr>
-                     <td class="encabezado" width="20%" title="">CREAR UN RADICADO DIFERENTE PARA CADA DESTINO*</td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(270,3095,$_REQUEST['iddoc']);?></td></tr><tr>
+			</div>'; ?><tr id="tr_varios_radicados" >
+                     <td class="encabezado" width="20%" title="">CREAR UN RADICADO DIFERENTE PARA CADA DESTINO*</td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(270,3095,$_REQUEST['iddoc']);?></td></tr><tr id="tr_firma" >
                      <td class="encabezado" width="20%" title="">MOSTRAR FIRMAS DIGITALIZADA*</td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(270,3092,$_REQUEST['iddoc']);?></td></tr><input type="hidden" name="saludo" value="<?php echo(mostrar_valor_campo('saludo',270,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="codigo" value="<?php echo(mostrar_valor_campo('codigo',270,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="campo_descripcion" value="<?php echo('3084'); ?>"><input type="hidden" name="formato" value="270"><input type="hidden" name="padre" value="<?php echo $_REQUEST["padre"]; ?>"><input type="hidden" name="anterior" value="<?php echo $_REQUEST["anterior"]; ?>"><input type="hidden" name="accion" value="editar" ><input type="hidden" name="item" value="<?php echo $_REQUEST["item"]; ?>" ><input type="hidden" name="anterior" value="<?php echo $_REQUEST["campo"]; ?>" ><tr><td colspan='2'><?php submit_formato(270,$_REQUEST['iddoc']);?></td></tr></table><input type='hidden' name='permisos_anexos' id='permisos_anexos' value=''></form></body></html><?php include_once("../librerias/footer_plantilla.php");?>

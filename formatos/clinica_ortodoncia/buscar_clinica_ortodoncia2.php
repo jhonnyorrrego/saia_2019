@@ -1,5 +1,5 @@
-<?php include_once("../../formatos/librerias/funciones_generales.php"); ?><?php include_once("../../calendario/calendario.php"); ?><script type="text/javascript" src="../librerias/dependientes.js"></script><legend id="label_formato" class="legend" style="font-size:9pt;">B&uacute;squeda en formato Historia Clinica</legend><br /><br /><?php include_once("../../formatos/librerias/funciones_generales.php"); ?><div class="control-group"><label class="string control-label" style="font-size:9pt" for="datos_paciente"><b>Informaci&oacute;n Del Paciente<input type="hidden" name="bksaiacondicion_datos_paciente" id="bksaiacondicion_datos_paciente" value="like_total"></b></label></div><div class="control-group">
-                  <label class="string control-label" for="creacion_historia"><b>Fecha Creacion</b></label>
+<?php include_once("../librerias/funciones_generales.php"); ?><?php include_once("../../calendario/calendario.php"); ?><script type="text/javascript" src="../librerias/dependientes.js"></script><legend id="label_formato" class="legend">B&uacute;squeda en formato Historia Clinica</legend><br /><br /><?php include_once("../librerias/funciones_generales.php"); ?><div class="control-group"><label class="string control-label" style="font-size:9pt" for="datos_paciente"><b>Informaci&oacute;n Del Paciente<input type="hidden" name="bksaiacondicion_datos_paciente" id="bksaiacondicion_datos_paciente" value="like_total"></b></label></div><div class="control-group">
+                  <label class="string control-label" for="creacion_historia"><b>fecha creacion</b></label>
                   <input type="hidden" name="bksaiacondicion_g@creacion_historia_x" id="bksaiacondicion_g@creacion_historia_x" value=">=">
                   <div class="controls">
                   Entre <input type="text"  name="bqsaia_g@creacion_historia_x" id="creacion_historia_x" tipo="fecha" value="" style="width:100px" placeholder="Inicio"><?php selector_fecha("creacion_historia_x","kformulario_saia","Y-m-d",date("m"),date("Y"),"default.css","../../","AD:VALOR"); ?> y 
@@ -90,7 +90,7 @@
 		    O
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_g@ocupacion" id="bqsaiaenlace_g@ocupacion" value="y" />
-		</div></div></div><div class="control-group"><b>&iquest;donde?<input type="hidden" name="bksaiacondicion_g@donde_usuario" id="bksaiacondicion_g@donde_usuario" value="like_total"></b><div class="controls"><input type="text" id="donde_usuario" name="bqsaia_g@donde_usuario"><div class="btn-group" data-toggle="buttons-radio" >
+		</div></div></div><div class="control-group"><b>&iquest;Donde?<input type="hidden" name="bksaiacondicion_g@donde_usuario" id="bksaiacondicion_g@donde_usuario" value="like_total"></b><div class="controls"><input type="text" id="donde_usuario" name="bqsaia_g@donde_usuario"><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_g@donde_usuario',this.id)">
 		    Y
 		  </button>
@@ -162,7 +162,7 @@
 		    O
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_g@grado_escolar" id="bqsaiaenlace_g@grado_escolar" value="y" />
-		</div></div></div><div class="control-group"><b>&iquest;que Actividades Realiza En Su Tiempo Libre?<input type="hidden" name="bksaiacondicion_g@actividades_tiempo_libre" id="bksaiacondicion_g@actividades_tiempo_libre" value="like_total"></b><div class="controls"><input type="text" id="actividades_tiempo_libre" name="bqsaia_g@actividades_tiempo_libre"><div class="btn-group" data-toggle="buttons-radio" >
+		</div></div></div><div class="control-group"><b>&iquest;Que Actividades Realiza En Su Tiempo Libre?<input type="hidden" name="bksaiacondicion_g@actividades_tiempo_libre" id="bksaiacondicion_g@actividades_tiempo_libre" value="like_total"></b><div class="controls"><input type="text" id="actividades_tiempo_libre" name="bqsaia_g@actividades_tiempo_libre"><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_g@actividades_tiempo_libre',this.id)">
 		    Y
 		  </button>
@@ -194,7 +194,7 @@
 		    O
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_g@ocupacion_madre" id="bqsaiaenlace_g@ocupacion_madre" value="y" />
-		</div></div></div><div class="control-group"><b>&iquest;donde?<input type="hidden" name="bksaiacondicion_g@donde_madre" id="bksaiacondicion_g@donde_madre" value="like_total"></b><div class="controls"><input type="text" id="donde_madre" name="bqsaia_g@donde_madre"><div class="btn-group" data-toggle="buttons-radio" >
+		</div></div></div><div class="control-group"><b>&iquest;Donde?<input type="hidden" name="bksaiacondicion_g@donde_madre" id="bksaiacondicion_g@donde_madre" value="like_total"></b><div class="controls"><input type="text" id="donde_madre" name="bqsaia_g@donde_madre"><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_g@donde_madre',this.id)">
 		    Y
 		  </button>
@@ -226,7 +226,7 @@
 		    O
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_g@ocupacion_padre" id="bqsaiaenlace_g@ocupacion_padre" value="y" />
-		</div></div></div><div class="control-group"><b>&iquest;donde?<input type="hidden" name="bksaiacondicion_g@donde_padre" id="bksaiacondicion_g@donde_padre" value="like_total"></b><div class="controls"><input type="text" id="donde_padre" name="bqsaia_g@donde_padre"><div class="btn-group" data-toggle="buttons-radio" >
+		</div></div></div><div class="control-group"><b>&iquest;Donde?<input type="hidden" name="bksaiacondicion_g@donde_padre" id="bksaiacondicion_g@donde_padre" value="like_total"></b><div class="controls"><input type="text" id="donde_padre" name="bqsaia_g@donde_padre"><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_g@donde_padre',this.id)">
 		    Y
 		  </button>
@@ -234,7 +234,7 @@
 		    O
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_g@donde_padre" id="bqsaiaenlace_g@donde_padre" value="y" />
-		</div></div></div><div class="control-group"><label class="string control-label" style="font-size:9pt" for="tratamiento_previo"><b>Tratamientos_previos<input type="hidden" name="bksaiacondicion_tratamiento_previo" id="bksaiacondicion_tratamiento_previo" value="like_total"></b></label></div><div class="control-group"><label class="string control-label" style="font-size:9pt" for="tratamientos_previos"><b>&iquest;ha Tenido Tratamiento Previo De Ortodoncia?<input type="hidden" name="bksaiacondicion_g@tratamientos_previos" id="bksaiacondicion_g@tratamientos_previos" value="="></b></label><div class="controls"><?php genera_campo_listados_editar(282,3203,'',1,'buscar');?><div class="btn-group" data-toggle="buttons-radio" >
+		</div></div></div><div class="control-group"><label class="string control-label" style="font-size:9pt" for="tratamiento_previo"><b>tratamientos_previos<input type="hidden" name="bksaiacondicion_tratamiento_previo" id="bksaiacondicion_tratamiento_previo" value="like_total"></b></label></div><div class="control-group"><label class="string control-label" style="font-size:9pt" for="tratamientos_previos"><b>&iquest;Ha Tenido Tratamiento Previo De Ortodoncia?<input type="hidden" name="bksaiacondicion_g@tratamientos_previos" id="bksaiacondicion_g@tratamientos_previos" value="="></b></label><div class="controls"><?php genera_campo_listados_editar(282,3203,'',1,'buscar');?><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_g@tratamientos_previos',this.id)">
 		    Y
 		  </button>
@@ -242,7 +242,7 @@
 		    O
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_g@tratamientos_previos" id="bqsaiaenlace_g@tratamientos_previos" value="y" />
-		</div></div></div><div class="control-group"><b>&iquest;cuanto Tiempo?<input type="hidden" name="bksaiacondicion_g@cuanto_tiempo" id="bksaiacondicion_g@cuanto_tiempo" value="like_total"></b><div class="controls"><input type="text" id="cuanto_tiempo" name="bqsaia_g@cuanto_tiempo"><div class="btn-group" data-toggle="buttons-radio" >
+		</div></div></div><div class="control-group"><b>&iquest;Cuanto Tiempo?<input type="hidden" name="bksaiacondicion_g@cuanto_tiempo" id="bksaiacondicion_g@cuanto_tiempo" value="like_total"></b><div class="controls"><input type="text" id="cuanto_tiempo" name="bqsaia_g@cuanto_tiempo"><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_g@cuanto_tiempo',this.id)">
 		    Y
 		  </button>
@@ -250,4 +250,4 @@
 		    O
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_g@cuanto_tiempo" id="bqsaiaenlace_g@cuanto_tiempo" value="y" />
-		</div></div></div><div class="control-group"><label class="string control-label" style="font-size:9pt" for="como_se_entero"><b>&iquest;como Se Enter&oacute; De Nuestro Servicio?<input type="hidden" name="bksaiacondicion_g@como_se_entero" id="bksaiacondicion_g@como_se_entero" value="="></b></label><div class="controls"><?php genera_campo_listados_editar(282,3209,'',1,'buscar');?></div></div><input type="hidden" name="filtro_adicional" id="filtro_adicional" value=" ft_clinica_ortodoncia g @ AND  g.documento_iddocumento=iddocumento "></body><input type="hidden" name="bqtipodato_plantilla" id="bqtipodato_plantilla" value="date|g@creacion_historia_x,g@creacion_historia_y,g@fecha_nacimiento_x,g@fecha_nacimiento_y"><input type="hidden" name="idbusqueda_componente" value="170">
+		</div></div></div><div class="control-group"><label class="string control-label" style="font-size:9pt" for="como_se_entero"><b>&iquest;Como Se Enter&oacute; De Nuestro Servicio?<input type="hidden" name="bksaiacondicion_g@como_se_entero" id="bksaiacondicion_g@como_se_entero" value="="></b></label><div class="controls"><?php genera_campo_listados_editar(282,3209,'',1,'buscar');?></div></div><input type="hidden" name="filtro_adicional" id="filtro_adicional" value=" ft_clinica_ortodoncia g @ AND  g.documento_iddocumento=iddocumento "></body><input type="hidden" name="bqtipodato_plantilla" id="bqtipodato_plantilla" value="date|g@creacion_historia_x,g@creacion_historia_y,g@fecha_nacimiento_x,g@fecha_nacimiento_y">

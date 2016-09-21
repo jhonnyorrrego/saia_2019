@@ -1,4 +1,4 @@
-<?php include_once("../carta/funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("../referencias_comerciales/funciones.php"); ?><?php include_once("../librerias/header_nuevo.php"); ?><?php include_once("../../class_transferencia.php"); ?><tr><td><table style="border-collapse: collapse; width: 100%;" border="1" cellspacing="0" cellpadding="0">
+<?php include_once("../carta/funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("../hoja_vida/funciones.php"); ?><?php include_once("../librerias/funciones_generales.php"); ?><script type="text/javascript" src="../../js/jquery.js"></script><?php include_once("../librerias/header_nuevo.php"); ?><?php include_once("../../class_transferencia.php"); ?><tr><td><table style="border-collapse: collapse; width: 100%;" border="1" cellspacing="0" cellpadding="0">
 <tbody>
 <tr>
 <td class="normal" style="width: 25%;">

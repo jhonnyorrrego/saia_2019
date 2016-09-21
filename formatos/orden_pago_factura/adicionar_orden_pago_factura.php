@@ -64,8 +64,8 @@
                                eval('document.layers["esperando_tipo_gasto"]');
                         document.poppedLayer.style.display = "";
                       }
-                	--></script></td></tr><tr>
-                     <td class="encabezado" width="20%" title="">CALIFICACON SERVICIO*</td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(303,3539,$_REQUEST['iddoc']);?></td></tr><tr>
+                	--></script></td></tr><tr id="tr_calificacion" >
+                     <td class="encabezado" width="20%" title="">CALIFICACON SERVICIO*</td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(303,3539,$_REQUEST['iddoc']);?></td></tr><tr id="tr_urgencia_pago" >
                      <td class="encabezado" width="20%" title="">URGENCIA PAGO*</td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(303,3544,$_REQUEST['iddoc']);?></td></tr><tr>
                      <td class="encabezado" width="20%" title="">OBSERVACIONES</td>
                      <td class="celda_transparente"><textarea  tabindex='2'  name="observaciones" id="observaciones" cols="53" rows="3" class="tiny_basico"><?php echo(validar_valor_campo(3542)); ?></textarea></td>

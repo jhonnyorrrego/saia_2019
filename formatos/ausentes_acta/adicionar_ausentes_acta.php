@@ -62,5 +62,5 @@
                                eval('document.layers["esperando_funcionario_ausente"]');
                         document.poppedLayer.style.display = "";
                       }
-                	--></script></td></tr><tr>
+                	--></script></td></tr><tr id="tr_justificada" >
                      <td class="encabezado" width="20%" title="">AUSENCIA JUSTIFICADA*</td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(310,3652,$_REQUEST['iddoc']);?></td></tr><?php if($_REQUEST["padre"]) {?><input type="hidden"  name="ft_acta"  value="<?php echo $_REQUEST["padre"]; ?>"><input type="hidden"  name="idpadre"  value="<?php echo $_REQUEST["idpadre"]; ?>"><?php } ?><tr><td class="encabezado">ACCION A SEGUIR LUEGO DE GUARDAR</td><td ><input type="radio" name="opcion_item" value="adicionar">Adicionar otro&nbsp;&nbsp;<input type="radio" name="opcion_item" value="terminar">Terminar</td></tr><input type="hidden" name="padre" value="<?php echo $_REQUEST["padre"]; ?>"><input type="hidden" name="formato" value="ausentes_acta"><input type="hidden" name="accion" value="guardar_item" ><tr><td colspan='2'><?php submit_formato(310);?></td></tr></table></form></body></html>

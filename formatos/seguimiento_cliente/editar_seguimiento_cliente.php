@@ -12,18 +12,18 @@
                      <td class="encabezado" width="20%" title="">DEPENDENCIA DEL CREADOR DEL DOCUMENTO*</td>
                      <?php buscar_dependencia(249,2854,$_REQUEST['iddoc']);?></tr><input type="hidden" name="encabezado" value="<?php echo(mostrar_valor_campo('encabezado',249,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="firma" value="<?php echo(mostrar_valor_campo('firma',249,$_REQUEST['iddoc'])); ?>"><tr>
                      <td class="encabezado" width="20%" title="">FECHA*</td>
-                     <?php fecha_actual_editable(249,2846,$_REQUEST['iddoc']);?></tr><tr>
+                     <?php fecha_actual_editable(249,2846,$_REQUEST['iddoc']);?></tr><tr id="tr_forma_contacto" >
                      <td class="encabezado" width="20%" title="">FORMA DE CONTACTO*</td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(249,2848,$_REQUEST['iddoc']);?></td></tr><tr>
                      <td class="encabezado" width="20%" title="">RESULTADO DEL SEGUIMIENTO*</td>
                      <td bgcolor="#F5F5F5"><input  maxlength="255"  class="required"   tabindex='1'  type="text" size="100" id="resultado_seguimiento" name="resultado_seguimiento"  value="<?php echo(mostrar_valor_campo('resultado_seguimiento',249,$_REQUEST['iddoc'])); ?>"></td>
                     </tr><tr>
                        <td class="encabezado" width="20%" title="">PR&Oacute;XIMA FECHA DE SEGUIMIENTO*</td><td colspan="2" bgcolor="#F5F5F5"><span class="phpmaker"><input  tabindex='2'  type="text" readonly="true"  class="required dateISO"  name="fecha_seguimiento" id="fecha_seguimiento" tipo="fecha" value="<?php mostrar_valor_campo('fecha_seguimiento',249,$_REQUEST['iddoc']); ?>"><?php selector_fecha("fecha_seguimiento","formulario_formatos","Y-m-d",date("m"),date("Y"),"default.css","../../","AD:VALOR","VENTANA",FALSE,FALSE); ?></span></font></td><tr>
                      <td class="encabezado" width="20%" title="">ESTADO DEL CLIENTE*</td>
-                     <?php estado_cliente(249,2845,$_REQUEST['iddoc']);?></tr><tr>
+                     <?php estado_cliente(249,2845,$_REQUEST['iddoc']);?></tr><tr id="tr_envio_propuesta" >
                      <td class="encabezado" width="20%" title="">SE ENVI&Oacute; PROPUESTA</td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(249,2844,$_REQUEST['iddoc']);?></td></tr><tr>
                      <td class="encabezado" width="20%" title="">NOMBRE DE LA PROPUESTA*</td>
                      <td bgcolor="#F5F5F5"><input  maxlength="255"  class="required"   tabindex='3'  type="text" size="100" id="nombre_propuesta" name="nombre_propuesta"  value="<?php echo(mostrar_valor_campo('nombre_propuesta',249,$_REQUEST['iddoc'])); ?>"></td>
-                    </tr><tr>
+                    </tr><tr id="tr_estado_propuesta" >
                      <td class="encabezado" width="20%" title="">ESTADO DE LA PROPUESTA*</td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(249,2857,$_REQUEST['iddoc']);?></td></tr><tr>
                      <td class="encabezado" width="20%" title="">NOMBRE DEL PRODUCTO O SERVICIO*</td>
                      <td bgcolor="#F5F5F5"><input  maxlength="255"  class="required"   tabindex='4'  type="text" size="100" id="nombre_producto_servicio" name="nombre_producto_servicio"  value="<?php echo(mostrar_valor_campo('nombre_producto_servicio',249,$_REQUEST['iddoc'])); ?>"></td>

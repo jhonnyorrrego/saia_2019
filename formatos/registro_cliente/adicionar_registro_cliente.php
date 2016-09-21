@@ -20,7 +20,7 @@
                     </tr><tr>
                      <td class="encabezado" width="20%" title="">PAGINA WEB</td>
                      <td bgcolor="#F5F5F5"><input    tabindex='2'  type="text" size="100" id="pagina_web" name="pagina_web"  value="<?php echo(validar_valor_campo(2785)); ?>"></td>
-                    </tr><tr>
+                    </tr><tr id="tr_estado_cliente" >
                      <td class="encabezado" width="20%" title="">ESTADO DEL CLIENTE*</td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(245,2786,$_REQUEST['iddoc']);?></td></tr><tr>
                    <td class="encabezado" width="20%" title="">SECTOR*</td><td bgcolor="#F5F5F5"><div id="seleccionados"><?php mostrar_seleccionados(245,2787,'1',$_REQUEST['iddoc']);?></div>
                           <br />  Buscar: <input  tabindex='3'  type="text" id="stext_sector" width="200px" size="25"><a href="javascript:void(0)" onclick="tree_sector.findItem(htmlentities(document.getElementById('stext_sector').value),1)"> <img src="../../botones/general/anterior.png"border="0px"></a>
@@ -168,5 +168,5 @@
                         document.poppedLayer.style.display = "";
                       }
                 	--></script></td></tr><tr>
-                     <td class="encabezado" width="20%" title="">LOGO EMPRESA</td>
+                     <td class="encabezado" width="20%" title="">ANEXOS DIGITALES</td>
                      <td class="celda_transparente"><input  tabindex='15'  type="file" maxlength="255"  class='multi'  name="anexo_formato[]" accept="<?php echo $extensiones;?>"><input type="hidden" name="campo_descripcion" value="2783"><tr><td colspan='2'><?php submit_formato(245);?></td></tr></table><input type='hidden' name='permisos_anexos' id='permisos_anexos' value=''></form></body></html>

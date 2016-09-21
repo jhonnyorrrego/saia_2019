@@ -1,4 +1,4 @@
-<?php include_once("../carta/funciones.php"); ?><?php include_once("../estructura_hoja_vida/funciones.php"); ?><?php include_once("../referencias_comerciales/funciones.php"); ?><?php include_once("../informe_recibo/funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("../librerias/funciones_generales.php"); ?><script type="text/javascript" src="../../js/jquery.js"></script><?php include_once("../librerias/header_nuevo.php"); ?><?php include_once("../../class_transferencia.php"); ?><tr><td><p><?php  ver_papa1(238,$_REQUEST['iddoc']);?></p>
+<?php include_once("../carta/funciones.php"); ?><?php include_once("../informe_recibo/funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("../correo_saia/funciones.php"); ?><?php include_once("../librerias/funciones_generales.php"); ?><script type="text/javascript" src="../../js/jquery.js"></script><?php include_once("../librerias/header_nuevo.php"); ?><?php include_once("../../class_transferencia.php"); ?><tr><td><p><?php  ver_papa1(238,$_REQUEST['iddoc']);?></p>
 <table style="width: 100%; font-family: arial; border-collapse: collapse;" border="1">
 <tbody>
 <tr>

@@ -12,18 +12,18 @@
                      <td class="encabezado" width="20%" title="">DEPENDENCIA DEL CREADOR DEL DOCUMENTO*</td>
                      <?php buscar_dependencia(249,2854);?></tr><input type="hidden" name="encabezado" value="<?php echo(validar_valor_campo(2855)); ?>"><input type="hidden" name="firma" value="<?php echo(validar_valor_campo(2856)); ?>"><input type="hidden" name="serie_idserie" value="<?php echo(validar_valor_campo(2842)); ?>"><tr>
                      <td class="encabezado" width="20%" title="">FECHA*</td>
-                     <?php fecha_actual_editable(249,2846);?></tr><tr>
+                     <?php fecha_actual_editable(249,2846);?></tr><tr id="tr_forma_contacto" >
                      <td class="encabezado" width="20%" title="">FORMA DE CONTACTO*</td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(249,2848,$_REQUEST['iddoc']);?></td></tr><tr>
                      <td class="encabezado" width="20%" title="">RESULTADO DEL SEGUIMIENTO*</td>
                      <td bgcolor="#F5F5F5"><input  maxlength="255"  class="required"   tabindex='1'  type="text" size="100" id="resultado_seguimiento" name="resultado_seguimiento"  value="<?php echo(validar_valor_campo(2851)); ?>"></td>
                     </tr><tr>
                        <td class="encabezado" width="20%" title="">PR&Oacute;XIMA FECHA DE SEGUIMIENTO*</td><td colspan="2" bgcolor="#F5F5F5"><span class="phpmaker"><input  tabindex='2'  type="text" readonly="true"  class="required dateISO"  name="fecha_seguimiento" id="fecha_seguimiento" tipo="fecha" value="<?php echo(date("0000-00-00")); ?>"><?php selector_fecha("fecha_seguimiento","formulario_formatos","Y-m-d",date("m"),date("Y"),"default.css","../../","AD:VALOR","VENTANA",FALSE,FALSE); ?></span></font></td><tr>
                      <td class="encabezado" width="20%" title="">ESTADO DEL CLIENTE*</td>
-                     <?php estado_cliente(249,2845);?></tr><tr>
+                     <?php estado_cliente(249,2845);?></tr><tr id="tr_envio_propuesta" >
                      <td class="encabezado" width="20%" title="">SE ENVI&Oacute; PROPUESTA</td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(249,2844,$_REQUEST['iddoc']);?></td></tr><tr>
                      <td class="encabezado" width="20%" title="">NOMBRE DE LA PROPUESTA*</td>
                      <td bgcolor="#F5F5F5"><input  maxlength="255"  class="required"   tabindex='3'  type="text" size="100" id="nombre_propuesta" name="nombre_propuesta"  value="<?php echo(validar_valor_campo(2850)); ?>"></td>
-                    </tr><tr>
+                    </tr><tr id="tr_estado_propuesta" >
                      <td class="encabezado" width="20%" title="">ESTADO DE LA PROPUESTA*</td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(249,2857,$_REQUEST['iddoc']);?></td></tr><tr>
                      <td class="encabezado" width="20%" title="">NOMBRE DEL PRODUCTO O SERVICIO*</td>
                      <td bgcolor="#F5F5F5"><input  maxlength="255"  class="required"   tabindex='4'  type="text" size="100" id="nombre_producto_servicio" name="nombre_producto_servicio"  value="<?php echo(validar_valor_campo(2849)); ?>"></td>

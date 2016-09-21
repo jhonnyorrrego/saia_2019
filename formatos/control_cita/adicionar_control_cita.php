@@ -9,7 +9,7 @@
                      <?php buscar_dependencia(292,3369);?></tr><?php if($_REQUEST["padre"]) {?><input type="hidden"  name="ft_solicitud_cita"  value="<?php echo $_REQUEST["padre"]; ?>"><?php } ?><?php if($_REQUEST["anterior"]) {?><input type="hidden"  name="ft_solicitud_cita"  value="<?php echo $_REQUEST["anterior"]; ?>"><?php }  else {listar_select_padres(ft_solicitud_cita);} ?><input type="hidden" name="serie_idserie" value="<?php echo(validar_valor_campo(3363)); ?>"><tr>
                      <td class="encabezado" width="20%" title="">NOMBRE DEL PACIENTE*</td>
                      <td bgcolor="#F5F5F5"><input   class="required"   tabindex='1'  type="text" size="100" id="nombre_paciente_control" name="nombre_paciente_control"  value="<?php echo(validar_valor_campo(3366)); ?>"></td>
-                    </tr><tr>
+                    </tr><tr id="tr_estado_control_cita" >
                      <td class="encabezado" width="20%" title="">ESTADO DE LA CITA</td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(292,3365,$_REQUEST['iddoc']);?></td></tr><input type="hidden" name="idft_control_cita" value="<?php echo(validar_valor_campo(3367)); ?>"><tr>
                      <td class="encabezado" width="20%" title="">DESCRIPCI&Oacute;N</td>
                      <td class="celda_transparente"><textarea  tabindex='2'  name="descripcion_control_cita" id="descripcion_control_cita" cols="53" rows="3" class="tiny_basico"><?php echo(validar_valor_campo(3364)); ?></textarea></td>

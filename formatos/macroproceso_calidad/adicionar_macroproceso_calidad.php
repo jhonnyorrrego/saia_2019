@@ -8,7 +8,7 @@
 	$('#formulario_formatos').validate();
 	
 });
-</script> </head><body bgcolor="#F5F5F5"><?php llama_funcion_accion(@$_REQUEST["iddoc"],@$_REQUEST["idformato"],"ingresar","ANTERIOR");?><form name="formulario_formatos" id="formulario_formatos" method="post" action="../../class_transferencia.php" enctype="multipart/form-data"><table width="100%" cellspacing="1" cellpadding="4"><tr><td colspan="2" class="encabezado_list">MACROPROCESO</td></tr><tr>
+</script> </head><body bgcolor="#F5F5F5"><?php llama_funcion_accion(@$_REQUEST["iddoc"],@$_REQUEST["idformato"],"ingresar","ANTERIOR");?><form name="formulario_formatos" id="formulario_formatos" method="post" action="../../class_transferencia.php" enctype="multipart/form-data"><table width="100%" cellspacing="1" cellpadding="4"><tr><td colspan="2" class="encabezado_list">MACROPROCESO</td></tr><input type="hidden" name="estado_documento" value="<?php echo(validar_valor_campo(5141)); ?>"><tr>
                      <td class="encabezado" width="20%" title="">DEPENDENCIA DEL CREADOR DEL DOCUMENTO*</td>
                      <?php buscar_dependencia(359,4132);?></tr><tr>
                      <td class="encabezado" width="20%" title="nombre">NOMBRE*</td>

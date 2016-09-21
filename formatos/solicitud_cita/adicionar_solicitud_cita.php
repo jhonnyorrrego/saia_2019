@@ -9,7 +9,7 @@
                      <?php buscar_dependencia(291,3359);?></tr><?php if($_REQUEST["padre"]) {?><input type="hidden"  name="ft_clinica_ortodoncia"  value="<?php echo $_REQUEST["padre"]; ?>"><?php } ?><?php if($_REQUEST["anterior"]) {?><input type="hidden"  name="ft_clinica_ortodoncia"  value="<?php echo $_REQUEST["anterior"]; ?>"><?php }  else {listar_select_padres(ft_clinica_ortodoncia);} ?><input type="hidden" name="serie_idserie" value="<?php echo(validar_valor_campo(3352)); ?>"><tr>
                      <td class="encabezado" width="20%" title="">NOMBRE DEL PACIENTE*</td>
                      <td bgcolor="#F5F5F5"><input  maxlength="255"  class="required"   tabindex='1'  type="text" size="100" id="nombre_paciente" name="nombre_paciente"  value="<?php echo(validar_valor_campo(3353)); ?>"></td>
-                    </tr><tr>
+                    </tr><tr id="tr_motivo_consulta" >
                      <td class="encabezado" width="20%" title="">MOTIVO DE CONSULTA*</td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(291,3354,$_REQUEST['iddoc']);?></td></tr><tr>
                      <td class="encabezado" width="20%" title="">DESCRIPCI&Oacute;N</td>
                      <td class="celda_transparente"><textarea  tabindex='2'  name="descripcion_cita" id="descripcion_cita" cols="53" rows="3" class="tiny_basico"><?php echo(validar_valor_campo(3355)); ?></textarea></td>

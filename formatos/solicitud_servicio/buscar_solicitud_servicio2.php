@@ -1,4 +1,4 @@
-<?php include_once("../../formatos/librerias/funciones_generales.php"); ?><?php include_once("../../formatos/librerias/funciones_generales.php"); ?><div class="control-group"><b>Fecha y Hora de Solicitud<input type="hidden" name="bksaiacondicion_g@fecha_hora_solicitud" id="bksaiacondicion_g@fecha_hora_solicitud" value="like_total"></b><div class="controls"><input type="text" id="fecha_hora_solicitud" name="bqsaia_g@fecha_hora_solicitud"><div class="btn-group" data-toggle="buttons-radio" >
+<?php include_once("../librerias/funciones_generales.php"); ?><?php include_once("../../calendario/calendario.php"); ?><?php include_once("../librerias/header_formato.php"); ?><script type="text/javascript" src="../librerias/dependientes.js"></script><legend id="label_formato" class="legend">B&uacute;squeda en formato Solicitud de Servicio</legend><br /><br /><?php include_once("../librerias/funciones_generales.php"); ?><div class="control-group"><b>Fecha y Hora de Solicitud<input type="hidden" name="bksaiacondicion_g@fecha_hora_solicitud" id="bksaiacondicion_g@fecha_hora_solicitud" value="like_total"></b><div class="controls"><input type="text" id="fecha_hora_solicitud" name="bqsaia_g@fecha_hora_solicitud"><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_g@fecha_hora_solicitud',this.id)">
 		    Y
 		  </button>
@@ -118,4 +118,18 @@
 		    O
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_g@direccion_recoleccion" id="bqsaiaenlace_g@direccion_recoleccion" value="y" />
-		</div></div></div><div class="control-group"><b>Observaciones<input type="hidden" name="bksaiacondicion_g@observacion_solicitud" id="bksaiacondicion_g@observacion_solicitud" value="like_total"></b><div class="controls"><textarea    id="observacion_solicitud" name="bqsaia_g@observacion_solicitud"  style="width:500px;height:100px"></textarea></div></div><input type="hidden" name="filtro_adicional" id="filtro_adicional" value=" ft_solicitud_servicio g @ AND  g.documento_iddocumento=iddocumento "></body><input type="hidden" name="idbusqueda_componente" value="142">
+		</div></div></div><div class="control-group">
+                  <label class="string control-label" for="fecha_recoleccion"><b>Fecha de Recolecci&oacute;n</b></label>
+                  <input type="hidden" name="bksaiacondicion_g@fecha_recoleccion_x" id="bksaiacondicion_g@fecha_recoleccion_x" value=">=">
+                  <div class="controls">
+                  Entre <input type="text"  name="bqsaia_g@fecha_recoleccion_x" id="fecha_recoleccion_x" tipo="fecha" value="" style="width:100px" placeholder="Inicio"><?php selector_fecha("fecha_recoleccion_x","kformulario_saia","Y-m-d",date("m"),date("Y"),"default.css","../../","AD:VALOR"); ?> y 
+                  <input type="hidden" name="bksaiacondicion_g@fecha_recoleccion_y" id="bksaiacondicion_g@fecha_recoleccion_y" value="<=">
+                  <input type="text"  name="bqsaia_g@fecha_recoleccion_y" id="fecha_recoleccion_y" tipo="fecha" value="" style="width:100px" placeholder="Fin"><?php selector_fecha("fecha_recoleccion_y","kformulario_saia","Y-m-d",date("m"),date("Y"),"default.css","../../","AD:VALOR"); ?><div class="btn-group" data-toggle="buttons-radio" >
+		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_fecha_recoleccion',this.id)">
+		    Y
+		  </button>
+		  <button type="button" class="btn btn-mini" data-toggle="button" id="o" onclick="llenar_valor('bqsaiaenlace_fecha_recoleccion',this.id)">
+		    O
+		  </button-->
+		  <input type="hidden" name="bqsaiaenlace_fecha_recoleccion" id="bqsaiaenlace_fecha_recoleccion" value="y" />
+		</div></div></div><div class="control-group"><b>Observaciones<input type="hidden" name="bksaiacondicion_g@observacion_solicitud" id="bksaiacondicion_g@observacion_solicitud" value="like_total"></b><div class="controls"><textarea    id="observacion_solicitud" name="bqsaia_g@observacion_solicitud"  style="width:500px;height:100px"></textarea></div></div><input type="hidden" name="filtro_adicional" id="filtro_adicional" value=" ft_solicitud_servicio g @ AND  g.documento_iddocumento=iddocumento "></body><input type="hidden" name="bqtipodato_plantilla" id="bqtipodato_plantilla" value="date|g@fecha_recoleccion_x,g@fecha_recoleccion_y">

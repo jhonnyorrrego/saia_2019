@@ -32,7 +32,7 @@
                         newel: true
                       });
                       });
-                     </script><tr><td class="encabezado">&nbsp;<select name="condicion_forma_envio" id="condicion_forma_envio"><option value="AND">Y</option><option value="OR">O</option></td>
+                     </script><tr id="tr_forma_envio"><td class="encabezado">&nbsp;<select name="condicion_forma_envio" id="condicion_forma_envio"><option value="AND">Y</option><option value="OR">O</option></td>
                      <td class="encabezado" width="20%" title="">FORMA DE ENVIO</td><td class="encabezado">&nbsp;<select name="compara_forma_envio" id="compara_forma_envio"> <option value="=|@|@">Igual</option><option value="-|@|@">Menor</option><option value="+|@|@">Mayor</option><option value="!|@|@">Diferente</option></select></td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(243,2757,'',1);?></td></tr><tr><td class="encabezado">&nbsp;<select name="condicion_adjuntar" id="condicion_adjuntar"><option value="AND">Y</option><option value="OR">O</option></td>
                      <td class="encabezado" width="20%" title="">ADJUNTAR</td><td class="encabezado">&nbsp;<select name="compara_adjuntar" id="compara_adjuntar"> <option value="or">Alguno</option><option value="and">Todos</option></select></td>
                      <td bgcolor="#F5F5F5"><select multiple id="adjuntar" name="adjuntar"></select><script>

@@ -1,4 +1,13 @@
-<?php include_once("../../formatos/librerias/funciones_generales.php"); ?><?php include_once("../../formatos/librerias/funciones_generales.php"); ?><div class="control-group"><b>Destinos<input type="hidden" name="bksaiacondicion_g@destinos" id="bksaiacondicion_g@destinos" value="like_total"></b><div class="controls"><input type="text" id="destinos" name="bqsaia_g@destinos"><div class="btn-group" data-toggle="buttons-radio" >
+<?php include_once("../librerias/funciones_generales.php"); ?><?php include_once("../../calendario/calendario.php"); ?><?php include_once("../librerias/header_formato.php"); ?><legend id="label_formato" class="legend">B&uacute;squeda en formato Carta de respuesta a la PQR</legend><br /><br /><?php include_once("../librerias/funciones_generales.php"); ?><div class="control-group"><label class="string control-label" style="font-size:9pt" for="fecha_carta_respuesta"><b>Fecha<input type="hidden" name="bksaiacondicion_fecha_carta_respuesta" id="bksaiacondicion_fecha_carta_respuesta" value="like_total"></b></label><div class="controls">
+                    ENTRE &nbsp;<input type="text" readonly="true" name="fecha_carta_respuesta_1"  id="fecha_carta_respuesta_1" value=""><?php selector_fecha("fecha_carta_respuesta_1","kformulario_saia","Y-m-d H:i",date("m"),date("Y"),"default.css","../../","AD:VALOR"); ?>&nbsp;&nbsp; Y &nbsp;&nbsp;<input type="text" readonly="true" name="fecha_carta_respuesta_2"  id="fecha_carta_respuesta_2" value=""><?php selector_fecha("fecha_carta_respuesta_2","kformulario_saia","Y-m-d H:i",date("m"),date("Y"),"default.css","../../","AD:VALOR"); ?><div class="btn-group" data-toggle="buttons-radio" >
+		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_fecha_carta_respuesta',this.id)">
+		    Y
+		  </button>
+		  <button type="button" class="btn btn-mini" data-toggle="button" id="o" onclick="llenar_valor('bqsaiaenlace_fecha_carta_respuesta',this.id)">
+		    O
+		  </button-->
+		  <input type="hidden" name="bqsaiaenlace_fecha_carta_respuesta" id="bqsaiaenlace_fecha_carta_respuesta" value="y" />
+		</div></div></div><div class="control-group"><b>Destinos<input type="hidden" name="bksaiacondicion_g@destinos" id="bksaiacondicion_g@destinos" value="like_total"></b><div class="controls"><input type="text" id="destinos" name="bqsaia_g@destinos"><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_g@destinos',this.id)">
 		    Y
 		  </button>
@@ -10,7 +19,7 @@
                 <fieldset>
                 <legend style="font-size:10pt;line-height:15px"><b>Con Copia A</b></legend>
                 <div class="control-group;" style="background-color:#F5F5F5">
-                <b>Nombre<input type="hidden" name="bksaiacondicion_f@nombre__1" id="bksaiacondicion_f@nombre__1" value="like_total"></b><div class="controls"><input type="text"  maxlength="2000"   id="copia-nombre" name="g@copia-nombre" ></div><b>Identificacion</b><div class="controls"><input type="text"  maxlength="2000"   id="copia-identificacion" name="g@copia-identificacion" ></div><b>Empresa</b><div class="controls"><input type="text"  maxlength="2000"   id="copia-empresa" name="g@copia-empresa" ></div></div></fieldset><br><div class="control-group"><b>Asunto<input type="hidden" name="bksaiacondicion_g@asunto" id="bksaiacondicion_g@asunto" value="like_total"></b><div class="controls"><input type="text" id="asunto" name="bqsaia_g@asunto"><div class="btn-group" data-toggle="buttons-radio" >
+                <b>Nombre<input type="hidden" name="bksaiacondicion_f@nombre__2" id="bksaiacondicion_f@nombre__2" value="like_total"></b><div class="controls"><input type="text"  maxlength="2000"   id="copia-nombre" name="g@copia-nombre" ></div><b>Identificacion</b><div class="controls"><input type="text"  maxlength="2000"   id="copia-identificacion" name="g@copia-identificacion" ></div><b>Empresa</b><div class="controls"><input type="text"  maxlength="2000"   id="copia-empresa" name="g@copia-empresa" ></div></div></fieldset><br><div class="control-group"><b>Asunto<input type="hidden" name="bksaiacondicion_g@asunto" id="bksaiacondicion_g@asunto" value="like_total"></b><div class="controls"><input type="text" id="asunto" name="bqsaia_g@asunto"><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_g@asunto',this.id)">
 		    Y
 		  </button>
@@ -101,4 +110,4 @@
                                eval('document.layers["esperando_copia_interna"]');
                         document.poppedLayer.style.visibility = "visible";
                       }
-                	--></script></div></div><input type="hidden" name="campos_especiales" value="copia@ejecutor,copia_interna@arbol"><input type="hidden" name="filtro_adicional" id="filtro_adicional" value=" ft_carta_responde_pqr g @ AND  g.documento_iddocumento=iddocumento "><input type="hidden" name="padre" value="<?php echo $_REQUEST["padre"]; ?>"><input type="hidden" name="anterior" value="<?php echo $_REQUEST["anterior"]; ?>"></body><input type="hidden" name="idbusqueda_componente" value="0">
+                	--></script></div></div><input type="hidden" name="campos_especiales" value="copia@ejecutor,copia_interna@arbol"><input type="hidden" name="filtro_adicional" id="filtro_adicional" value=" ft_carta_responde_pqr g @ AND  g.documento_iddocumento=iddocumento "><input type="hidden" name="padre" value="<?php echo $_REQUEST["padre"]; ?>"><input type="hidden" name="anterior" value="<?php echo $_REQUEST["anterior"]; ?>"></body><input type="hidden" name="bqtipodato_plantilla" id="bqtipodato_plantilla" value="date|">

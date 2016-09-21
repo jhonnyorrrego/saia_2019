@@ -1,4 +1,4 @@
-<?php include_once("../../formatos/librerias/funciones_generales.php"); ?><?php include_once("../../formatos/librerias/funciones_generales.php"); ?><div class="control-group"><b>Nombre<input type="hidden" name="bksaiacondicion_g@nombre" id="bksaiacondicion_g@nombre" value="like_total"></b><div class="controls"><input type="text" id="nombre" name="bqsaia_g@nombre"><div class="btn-group" data-toggle="buttons-radio" >
+<?php include_once("../librerias/funciones_generales.php"); ?><?php include_once("../../calendario/calendario.php"); ?><script type="text/javascript" src="../librerias/dependientes.js"></script><legend id="label_formato" class="legend">B&uacute;squeda en formato Historia laboral</legend><br /><br /><?php include_once("../librerias/funciones_generales.php"); ?><div class="control-group"><b>Nombre<input type="hidden" name="bksaiacondicion_g@nombre" id="bksaiacondicion_g@nombre" value="like_total"></b><div class="controls"><input type="text" id="nombre" name="bqsaia_g@nombre"><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_g@nombre',this.id)">
 		    Y
 		  </button>
@@ -70,6 +70,20 @@
 		    O
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_lugar_nacimiento" id="bqsaiaenlace_lugar_nacimiento" value="y" />
+		</div></div></div><div class="control-group">
+                  <label class="string control-label" for="fecha_nacimiento"><b>Fecha de nacimiento</b></label>
+                  <input type="hidden" name="bksaiacondicion_g@fecha_nacimiento_x" id="bksaiacondicion_g@fecha_nacimiento_x" value=">=">
+                  <div class="controls">
+                  Entre <input type="text"  name="bqsaia_g@fecha_nacimiento_x" id="fecha_nacimiento_x" tipo="fecha" value="" style="width:100px" placeholder="Inicio"><?php selector_fecha("fecha_nacimiento_x","kformulario_saia","Y-m-d",date("m"),date("Y"),"default.css","../../","AD:VALOR"); ?> y 
+                  <input type="hidden" name="bksaiacondicion_g@fecha_nacimiento_y" id="bksaiacondicion_g@fecha_nacimiento_y" value="<=">
+                  <input type="text"  name="bqsaia_g@fecha_nacimiento_y" id="fecha_nacimiento_y" tipo="fecha" value="" style="width:100px" placeholder="Fin"><?php selector_fecha("fecha_nacimiento_y","kformulario_saia","Y-m-d",date("m"),date("Y"),"default.css","../../","AD:VALOR"); ?><div class="btn-group" data-toggle="buttons-radio" >
+		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_fecha_nacimiento',this.id)">
+		    Y
+		  </button>
+		  <button type="button" class="btn btn-mini" data-toggle="button" id="o" onclick="llenar_valor('bqsaiaenlace_fecha_nacimiento',this.id)">
+		    O
+		  </button-->
+		  <input type="hidden" name="bqsaiaenlace_fecha_nacimiento" id="bqsaiaenlace_fecha_nacimiento" value="y" />
 		</div></div></div><div class="control-group"><b>EPS en la que se encuentra afiliado<input type="hidden" name="bksaiacondicion_g@eps" id="bksaiacondicion_g@eps" value="like_total"></b><div class="controls"><input type="text" id="eps" name="bqsaia_g@eps"><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_g@eps',this.id)">
 		    Y
@@ -126,4 +140,4 @@
 		    O
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_g@pantalon" id="bqsaiaenlace_g@pantalon" value="y" />
-		</div></div></div><div class="control-group"><b>Calzado<input type="hidden" name="bksaiacondicion_g@calzado" id="bksaiacondicion_g@calzado" value="like_total"></b><div class="controls"><input type="text" id="calzado" name="bqsaia_g@calzado"></div></div><input type="hidden" name="filtro_adicional" id="filtro_adicional" value=" ft_hoja_vida g @ AND  g.documento_iddocumento=iddocumento "></body><input type="hidden" name="idbusqueda_componente" value="61">
+		</div></div></div><div class="control-group"><b>Calzado<input type="hidden" name="bksaiacondicion_g@calzado" id="bksaiacondicion_g@calzado" value="like_total"></b><div class="controls"><input type="text" id="calzado" name="bqsaia_g@calzado"></div></div><input type="hidden" name="filtro_adicional" id="filtro_adicional" value=" ft_hoja_vida g @ AND  g.documento_iddocumento=iddocumento "></body><input type="hidden" name="bqtipodato_plantilla" id="bqtipodato_plantilla" value="date|g@fecha_nacimiento_x,g@fecha_nacimiento_y">

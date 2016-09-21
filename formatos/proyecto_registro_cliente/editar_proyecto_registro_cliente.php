@@ -81,7 +81,7 @@
                   for(m=0;m<vector2.length;m++)
                     {tree_empresa_asociada.setCheck(vector2[m],true);
                     }}
---></script></td></tr><tr>
+--></script></td></tr><tr id="tr_moneda" >
                      <td class="encabezado" width="20%" title="">MONEDA DEL PROYECTO</td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(250,2864,$_REQUEST['iddoc']);?></td></tr><tr>
                      <td class="encabezado" width="20%" title="">VALOR DEL PROYECTO</td>
                      <td bgcolor="#F5F5F5"><input  maxlength="255"   tabindex='4'  type="text" size="100" id="valor" name="valor"  value="<?php echo(mostrar_valor_campo('valor',250,$_REQUEST['iddoc'])); ?>"></td>

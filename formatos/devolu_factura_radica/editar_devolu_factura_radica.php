@@ -14,7 +14,7 @@
                    <td class="encabezado" width="20%" title="">PROVEEDOR*</td>
                    <td bgcolor="#F5F5F5">
                    <input type="hidden"  class="required"  name="proveedor_devolucion" id="proveedor_devolucion" value="<?php echo(mostrar_valor_campo('proveedor_devolucion',304,$_REQUEST['iddoc'])); ?>"><?php componente_ejecutor("3556",@$_REQUEST["iddoc"]); ?></td>
-                  </tr><tr>
+                  </tr><tr id="tr_forma_envio" >
                      <td class="encabezado" width="20%" title="">FORMA ENVIO*</td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(304,3554,$_REQUEST['iddoc']);?></td></tr><tr>
                      <td class="encabezado" width="20%" title="">OBSERVACIONES*</td>
                      <td class="celda_transparente"><textarea  tabindex='1'  name="observaciones" id="observaciones" cols="53" rows="3" class="tiny_basico required"><?php echo(mostrar_valor_campo('observaciones',304,$_REQUEST['iddoc'])); ?></textarea></td>

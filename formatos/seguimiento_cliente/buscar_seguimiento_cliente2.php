@@ -1,4 +1,18 @@
-<?php include_once("../../formatos/librerias/funciones_generales.php"); ?><?php include_once("../../formatos/librerias/funciones_generales.php"); ?><div class="control-group"><label class="string control-label" style="font-size:9pt" for="forma_contacto"><b>Forma de Contacto<input type="hidden" name="bksaiacondicion_g@forma_contacto" id="bksaiacondicion_g@forma_contacto" value="="></b></label><div class="controls"><?php genera_campo_listados_editar(249,2848,'',1,'buscar');?><div class="btn-group" data-toggle="buttons-radio" >
+<?php include_once("../librerias/funciones_generales.php"); ?><?php include_once("../../calendario/calendario.php"); ?><legend id="label_formato" class="legend">B&uacute;squeda en formato 1. Seguimiento</legend><br /><br /><?php include_once("../librerias/funciones_generales.php"); ?><div class="control-group">
+                  <label class="string control-label" for="fecha"><b>Fecha</b></label>
+                  <input type="hidden" name="bksaiacondicion_g@fecha_x" id="bksaiacondicion_g@fecha_x" value=">=">
+                  <div class="controls">
+                  Entre <input type="text"  name="bqsaia_g@fecha_x" id="fecha_x" tipo="fecha" value="" style="width:100px" placeholder="Inicio"><?php selector_fecha("fecha_x","kformulario_saia","Y-m-d",date("m"),date("Y"),"default.css","../../","AD:VALOR"); ?> y 
+                  <input type="hidden" name="bksaiacondicion_g@fecha_y" id="bksaiacondicion_g@fecha_y" value="<=">
+                  <input type="text"  name="bqsaia_g@fecha_y" id="fecha_y" tipo="fecha" value="" style="width:100px" placeholder="Fin"><?php selector_fecha("fecha_y","kformulario_saia","Y-m-d",date("m"),date("Y"),"default.css","../../","AD:VALOR"); ?><div class="btn-group" data-toggle="buttons-radio" >
+		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_fecha',this.id)">
+		    Y
+		  </button>
+		  <button type="button" class="btn btn-mini" data-toggle="button" id="o" onclick="llenar_valor('bqsaiaenlace_fecha',this.id)">
+		    O
+		  </button-->
+		  <input type="hidden" name="bqsaiaenlace_fecha" id="bqsaiaenlace_fecha" value="y" />
+		</div></div></div><div class="control-group"><label class="string control-label" style="font-size:9pt" for="forma_contacto"><b>Forma de Contacto<input type="hidden" name="bksaiacondicion_g@forma_contacto" id="bksaiacondicion_g@forma_contacto" value="="></b></label><div class="controls"><?php genera_campo_listados_editar(249,2848,'',1,'buscar');?><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_g@forma_contacto',this.id)">
 		    Y
 		  </button>
@@ -14,6 +28,20 @@
 		    O
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_g@resultado_seguimiento" id="bqsaiaenlace_g@resultado_seguimiento" value="y" />
+		</div></div></div><div class="control-group">
+                  <label class="string control-label" for="fecha_seguimiento"><b>Pr&oacute;xima Fecha de Seguimiento</b></label>
+                  <input type="hidden" name="bksaiacondicion_g@fecha_seguimiento_x" id="bksaiacondicion_g@fecha_seguimiento_x" value=">=">
+                  <div class="controls">
+                  Entre <input type="text"  name="bqsaia_g@fecha_seguimiento_x" id="fecha_seguimiento_x" tipo="fecha" value="" style="width:100px" placeholder="Inicio"><?php selector_fecha("fecha_seguimiento_x","kformulario_saia","Y-m-d",date("m"),date("Y"),"default.css","../../","AD:VALOR"); ?> y 
+                  <input type="hidden" name="bksaiacondicion_g@fecha_seguimiento_y" id="bksaiacondicion_g@fecha_seguimiento_y" value="<=">
+                  <input type="text"  name="bqsaia_g@fecha_seguimiento_y" id="fecha_seguimiento_y" tipo="fecha" value="" style="width:100px" placeholder="Fin"><?php selector_fecha("fecha_seguimiento_y","kformulario_saia","Y-m-d",date("m"),date("Y"),"default.css","../../","AD:VALOR"); ?><div class="btn-group" data-toggle="buttons-radio" >
+		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_fecha_seguimiento',this.id)">
+		    Y
+		  </button>
+		  <button type="button" class="btn btn-mini" data-toggle="button" id="o" onclick="llenar_valor('bqsaiaenlace_fecha_seguimiento',this.id)">
+		    O
+		  </button-->
+		  <input type="hidden" name="bqsaiaenlace_fecha_seguimiento" id="bqsaiaenlace_fecha_seguimiento" value="y" />
 		</div></div></div><div class="control-group"><b>Estado del Cliente<input type="hidden" name="bksaiacondicion_g@estado_cliente" id="bksaiacondicion_g@estado_cliente" value="like_total"></b><div class="controls"><input type="text" id="estado_cliente" name="bqsaia_g@estado_cliente"><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_g@estado_cliente',this.id)">
 		    Y
@@ -113,4 +141,4 @@
                                eval('document.layers["esperando_empresa_asociada"]');
                         document.poppedLayer.style.visibility = "visible";
                       }
-                	--></script></div></div><input type="hidden" name="campos_especiales" value="empresa_asociada@arbol"><input type="hidden" name="filtro_adicional" id="filtro_adicional" value=" ft_seguimiento_cliente g @ AND  g.documento_iddocumento=iddocumento "></body><input type="hidden" name="idbusqueda_componente" value="114">
+                	--></script></div></div><input type="hidden" name="campos_especiales" value="empresa_asociada@arbol"><input type="hidden" name="filtro_adicional" id="filtro_adicional" value=" ft_seguimiento_cliente g @ AND  g.documento_iddocumento=iddocumento "></body><input type="hidden" name="bqtipodato_plantilla" id="bqtipodato_plantilla" value="date|g@fecha_x,g@fecha_y,g@fecha_seguimiento_x,g@fecha_seguimiento_y">

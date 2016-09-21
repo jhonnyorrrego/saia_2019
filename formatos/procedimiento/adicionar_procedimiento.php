@@ -31,7 +31,7 @@ ELABORACION,REVISION,APROBACION,DISTRIBUCION,INACTIVO ">ESTADO*</td><td bgcolor=
                     </tr><tr>
                      <td class="encabezado" width="20%" title="Definicion del procedimiento">DEFINICION*</td>
                      <td class="celda_transparente"><textarea  tabindex='7'  name="definicion" id="definicion" cols="53" rows="3" class="tiny_basico required"><?php echo(validar_valor_campo(4266)); ?></textarea></td>
-                    </tr><tr>
+                    </tr><?php if($_REQUEST["padre"]) {?><input type="hidden"  name="ft_proceso"  value="<?php echo $_REQUEST["padre"]; ?>"><?php } ?><?php if($_REQUEST["anterior"]) {?><input type="hidden"  name="ft_proceso"  value="<?php echo $_REQUEST["anterior"]; ?>"><?php }  else {listar_select_padres(ft_proceso);} ?><tr>
                      <td class="encabezado" width="20%" title="Disposiciones Generales">DISPOSICIONES GENERALES</td>
                      <td class="celda_transparente"><textarea  tabindex='8'  name="dispocisiones_generales" id="dispocisiones_generales" cols="53" rows="3" class="tiny_basico"><?php echo(validar_valor_campo(4268)); ?></textarea></td>
                     </tr><tr>

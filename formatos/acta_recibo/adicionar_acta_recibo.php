@@ -8,7 +8,9 @@
 	$('#formulario_formatos').validate();
 	
 });
-</script> </head><body bgcolor="#F5F5F5"><?php llama_funcion_accion(@$_REQUEST["iddoc"],@$_REQUEST["idformato"],"ingresar","ANTERIOR");?><form name="formulario_formatos" id="formulario_formatos" method="post" action="../../class_transferencia.php" enctype="multipart/form-data"><table width="100%" cellspacing="1" cellpadding="4"><tr><td colspan="2" class="encabezado_list">ACTA DE RECIBO</td></tr><tr>
+</script> </head><body bgcolor="#F5F5F5"><?php llama_funcion_accion(@$_REQUEST["iddoc"],@$_REQUEST["idformato"],"ingresar","ANTERIOR");?><form name="formulario_formatos" id="formulario_formatos" method="post" action="../../class_transferencia.php" enctype="multipart/form-data"><table width="100%" cellspacing="1" cellpadding="4"><tr><td colspan="2" class="encabezado_list">ACTA DE RECIBO</td></tr><input type="hidden" name="idft_acta_recibo" value="<?php echo(validar_valor_campo(3975)); ?>"><input type="hidden" name="documento_iddocumento" value="<?php echo(validar_valor_campo(3976)); ?>"><tr>
+                     <td class="encabezado" width="20%" title="">DEPENDENCIA DEL CREADOR DEL DOCUMENTO*</td>
+                     <?php buscar_dependencia(341,3977);?></tr><input type="hidden" name="encabezado" value="<?php echo(validar_valor_campo(3978)); ?>"><input type="hidden" name="firma" value="<?php echo(validar_valor_campo(3979)); ?>"><tr>
                        <td class="encabezado" width="20%" title="">FECHA*</td><td colspan="2" bgcolor="#F5F5F5"><span class="phpmaker"><input  tabindex='1'  type="text" readonly="true"  class="required dateISO"  name="fecha_cta" id="fecha_cta" tipo="fecha" value="<?php echo(date("Y-m-d")); ?>"><?php selector_fecha("fecha_cta","formulario_formatos","Y-m-d",date("m"),date("Y"),"default.css","../../","AD:VALOR","VENTANA",FALSE,FALSE); ?></span></font></td><tr>
                      <td class="encabezado" width="20%" title="">ENTREGA*</td>
                      <td class="celda_transparente"><textarea  tabindex='2'  name="entrega" id="entrega" cols="53" rows="3" class="tiny_basico required"><?php echo(validar_valor_campo(3974)); ?></textarea></td>

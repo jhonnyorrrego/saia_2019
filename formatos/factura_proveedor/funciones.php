@@ -20,47 +20,7 @@ $provee=busca_filtro_tabla("A.nombre","ejecutor A,datos_ejecutor B,ft_factura_pr
 echo $provee[0]['nombre'];
 
 }
-function crear_ruta_factura($idformato,$iddoc){
-	global $conn;
-  $documento=busca_filtro_tabla("","ft_factura_proveedor","documento_iddocumento=".$iddoc,"",$conn);
- 	$ruta=array();
- 	$usuario=usuario_actual("funcionario_codigo");   
-   
-	//Funcionario actual
-	 $usuario_logeado=busca_filtro_tabla("B.cod_padre,C.dependencia_iddependencia","funcionario A,cargo B,dependencia_cargo C"," A.idfuncionario=C.funcionario_idfuncionario  AND C.cargo_idcargo=B.idcargo AND A.funcionario_codigo=".$usuario,"",$conn);
-     //print_r($usuario);
-   $contabilidad=busca_filtro_tabla("A.funcionario_codigo","vfuncionario_dc A","A.idcargo=42","",$conn);
-   $finanzas=busca_filtro_tabla("","vfuncionario_dc A","A.idcargo=49","",$conn);
-  //print_r($finanzas);
-		    
-//Ultimo parametro      
-//0->Ninguna
-//1->Firma visible
-//2->Revisado
-array_push($ruta,array("funcionario"=>$usuario,"tipo_firma"=>0));
-
-if($usuario<>$contabilidad[0]["funcionario_codigo"]){
-	array_push($ruta,array("funcionario"=>$contabilidad[0]['funcionario_codigo'],"tipo_firma"=>2));//primera posicion
-	} 
-   
-   if($usuario<>$finanzas[0]["funcionario_codigo"]){
-	array_push($ruta,array("funcionario"=>$finanzas[0]['funcionario_codigo'],"tipo_firma"=>2));//primera posicion
-	} 
-   
- /*if($usuario<>$gestionH[0]['funcionario_codigo']){
-   array_push($ruta,array("funcionario"=>$gestionH[0]['funcionario_codigo'],"tipo_firma"=>2));
-    }*/
-   
  
-if(count($ruta)>1){
-    //$radicador_salida=busca_filtro_tabla("origen","buzon_entrada","archivo_idarchivo=$iddoc","idtransferencia desc",$conn);
-//array_push($ruta,array("funcionario"=>$radicador_salida[0][0],"tipo_firma"=>0));
-//print_r($ruta);die();
-phpmkr_query("update buzon_entrada set activo=0,nombre='ELIMINA_POR_APROBAR' where archivo_idarchivo='$iddoc' and nombre='POR_APROBAR'");
-  insertar_ruta($ruta,$iddoc,0);
- }
- 
-}  
 
 function formatear_valor_numero($idformato,$iddoc){
 global $conn;
@@ -113,20 +73,101 @@ echo "<a href=../../".$anexos[$i]["ruta"].">".html_entity_decode($anexos[$i]["et
 }
 } 
 }
+
 function validar_digitalizacion_factura_1($idformato,$iddoc)
 {global $conn;
 //alerta($_REQUEST["digitalizacion"]);
   if($_REQUEST["digitalizacion"]==1){
-    redirecciona($ruta_db_superior."paginaadd.php?&key=".$iddoc."&enlace=formatos/factura_proveedor/adicionar_factura_proveedor.php");
-	  //mostrar colilla
-	  
-	  
+  	if(@$_REQUEST["iddoc"]){
+  		$enlace="pantallas/buscador_principal.php?idbusqueda=9";
+  		abrir_url($ruta_db_superior."paginaadd.php?key=".$_REQUEST["iddoc"]."&enlace=".$enlace,'centro');
+  	}
+	else{
+		$enlace="busqueda_categoria.php?idcategoria_formato=1&defecto=factura_proveedor";
+		abrir_url($ruta_db_superior."colilla.php?key=".$iddoc."&enlace=paginaadd.php?key=".$iddoc."&enlace2=".$enlace,'centro');
+	}
+  }elseif($_REQUEST["digitalizacion"]==2 && $_REQUEST['no_sticker'] == 1){
+  	abrir_url($ruta_db_superior."formatos/factura_proveedor/mostrar_factura_proveedor.php?iddoc=".$iddoc."&idformato=".$idformato,'_self');
+  }else if($_REQUEST["digitalizacion"]==2){
+  	if(@$_REQUEST["iddoc"]){
+  		$iddoc=$_REQUEST["iddoc"];
+  		$enlace="pantallas/buscador_principal.php?idbusqueda=9";
+  	}
+	else{
+		$enlace="busqueda_categoria.php?idcategoria_formato=1&defecto=factura_proveedor";
+	}
+  		abrir_url($ruta_db_superior."colilla.php?key=".$iddoc."&enlace=".$enlace,'centro');
   }
 } 
-function digitalizacion_factura_1()
-{//echo "<tr><td class='encabezado'>DESEA DIGITALIZAR</td><td><input name='digitalizacion' id='digitalizacion1' type='radio' value='1' checked>Si  <input name='digitalizacion' id='digitalizacion0' type='radio' value='0'>No</td></tr>";
-echo "<input name='digitalizacion' id='digitalizacion1' type='hidden' value='1'>";
 
+function enviar_adicionar_facturas($idformato,$iddoc){
+	global $conn;
+	if(@$_REQUEST["iddoc"]){
+			$enlace="paginaadd.php?key=".$_REQUEST["iddoc"]."&enlace2=formatos/factura_proveedor/mostrar_factura_proveedor.php?iddoc=".$_REQUEST["iddoc"];
+
+		}
+		else{
+			$enlace="busqueda_categoria.php?idcategoria_formato=1&defecto=factura_proveedor";
+		}
+		abrir_url($ruta_db_superior."colilla.php?key=".$iddoc."&enlace=".$enlace,"_self");
 }
 
+function enlace_item_validacion_factura($idformato,$iddoc){
+	global $conn,$ruta_db_superior;
+		$dato=busca_filtro_tabla("","ft_factura_proveedor A, documento B ","A.documento_iddocumento=B.iddocumento AND B.estado<>'ELIMINADO' AND B.iddocumento=".$iddoc,"",$conn);  //nombre tabla padre
+		$item=busca_filtro_tabla("","ft_validacion_factura","ft_factura_proveedor=".$dato[0]['idft_factura_proveedor'],"",$conn);	
+		if($_REQUEST['tipo']!=5 && $item['numcampos']==0){
+						
+				echo '<a href="../validacion_factura/adicionar_validacion_factura.php?pantalla=padre&amp;idpadre='.$iddoc.'&amp;idformato='.$idformato.'&amp;padre='.$dato[0]['idft_factura_proveedor'].'" target="_self">Validacion Factura</a>'; 
+		}
+}
+
+function mostrar_datos_item_validacion_factura($idformato,$iddoc){
+	global $conn,$ruta_db_superior;
+	global $conn, $ruta_db_superior;
+		
+		$tabla='';
+		
+		$dato=busca_filtro_tabla("","ft_factura_proveedor A, documento B ","A.documento_iddocumento=B.iddocumento AND B.estado<>'ELIMINADO' AND B.iddocumento=".$iddoc,"",$conn);  //nombre tabla padre
+
+		
+		if($dato['numcampos']!=0){
+								
+			$tabla.='
+						<table style="width:100%; border-collapse: collapse;" border="1">
+						<tbody>
+						<tr class="encabezado_list">
+							<td>Fecha</td>
+							<td>Usuario</td>
+							<td>Observaciones</td>
+							<td>Correcta</td>
+						</tr>
+			';
+				
+				$item=busca_filtro_tabla("","ft_validacion_factura A, ft_factura_proveedor B","idft_factura_proveedor=ft_factura_proveedor and A.ft_factura_proveedor=".$dato[0]['idft_factura_proveedor'],"",$conn);					
+			
+
+			if($item['numcampos']!=0){
+				
+			$correcta=array(1=>"Si",2=>"No");			
+
+			for($j=$item['numcampos']-1;$j>=0;$j--){
+
+	
+							$tabla.='		
+									<tr>
+										<td>'.$item[$j]['fecha_validacion'].'</td>
+										<td>'.$item[$j]['usuario_validacion'].'</td>
+										<td>'.$item[$j]['observacion_validaci'].'</td>
+										<td>'.$correcta[$item[$j]['factura_correcta']].'</td>
+									</tr>
+									</tbody>
+									</table>
+							';				
+			}	
+				echo($tabla);	
+			}
+		} 
+
+}
 ?>

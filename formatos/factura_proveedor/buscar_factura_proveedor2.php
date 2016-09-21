@@ -1,4 +1,4 @@
-<?php include_once("../../formatos/librerias/funciones_generales.php"); ?><?php include_once("../../calendario/calendario.php"); ?><?php include_once("../librerias/header_formato.php"); ?><legend id="label_formato" class="legend" style="font-size:9pt;">B&uacute;squeda en formato Factura Proveedores</legend><br /><br /><?php include_once("../../formatos/librerias/funciones_generales.php"); ?><div class="control-group"><b>C&oacute;digo De La Compa&ntilde;ia<input type="hidden" name="bksaiacondicion_g@cia" id="bksaiacondicion_g@cia" value="like_total"></b><div class="controls"><input type="text" id="cia" name="bqsaia_g@cia"><div class="btn-group" data-toggle="buttons-radio" >
+<?php include_once("../librerias/funciones_generales.php"); ?><?php include_once("../../calendario/calendario.php"); ?><?php include_once("../librerias/header_formato.php"); ?><legend id="label_formato" class="legend">B&uacute;squeda en formato Radicacion Facturas</legend><br /><br /><?php include_once("../librerias/funciones_generales.php"); ?><div class="control-group"><b>C&oacute;digo de la compa&ntilde;ia<input type="hidden" name="bksaiacondicion_g@cia" id="bksaiacondicion_g@cia" value="like_total"></b><div class="controls"><input type="text" id="cia" name="bqsaia_g@cia"><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_g@cia',this.id)">
 		    Y
 		  </button>
@@ -6,7 +6,7 @@
 		    O
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_g@cia" id="bqsaiaenlace_g@cia" value="y" />
-		</div></div></div><div class="control-group"><label class="string control-label" style="font-size:9pt" for="tipo_doc"><b>Tipo Documento<input type="hidden" name="bksaiacondicion_g@tipo_doc" id="bksaiacondicion_g@tipo_doc" value="like_total"></b></label><div class="controls"><?php genera_campo_listados_editar(236,2631,'',1,'buscar');?><div class="btn-group" data-toggle="buttons-radio" >
+		</div></div></div><div class="control-group"><label class="string control-label" style="font-size:9pt" for="tipo_doc"><b>Tipo documento<input type="hidden" name="bksaiacondicion_g@tipo_doc" id="bksaiacondicion_g@tipo_doc" value="like_total"></b></label><div class="controls"><?php genera_campo_listados_editar(236,2631,'',1,'buscar');?><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_g@tipo_doc',this.id)">
 		    Y
 		  </button>
@@ -15,7 +15,7 @@
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_g@tipo_doc" id="bqsaiaenlace_g@tipo_doc" value="y" />
 		</div></div></div><div class="control-group">
-                  <label class="string control-label" for="fecha_exp"><b>Fecha De Expedicion</b></label>
+                  <label class="string control-label" for="fecha_exp"><b>Fecha de expedicion</b></label>
                   <input type="hidden" name="bksaiacondicion_g@fecha_exp_x" id="bksaiacondicion_g@fecha_exp_x" value=">=">
                   <div class="controls">
                   Entre <input type="text"  name="bqsaia_g@fecha_exp_x" id="fecha_exp_x" tipo="fecha" value="" style="width:100px" placeholder="Inicio"><?php selector_fecha("fecha_exp_x","kformulario_saia","Y-m-d",date("m"),date("Y"),"default.css","../../","AD:VALOR"); ?> y 
@@ -29,7 +29,7 @@
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_fecha_exp" id="bqsaiaenlace_fecha_exp" value="y" />
 		</div></div></div><div class="control-group">
-                  <label class="string control-label" for="fecha_venc"><b>Fecha De Vencimiento</b></label>
+                  <label class="string control-label" for="fecha_venc"><b>Fecha de vencimiento</b></label>
                   <input type="hidden" name="bksaiacondicion_g@fecha_venc_x" id="bksaiacondicion_g@fecha_venc_x" value=">=">
                   <div class="controls">
                   Entre <input type="text"  name="bqsaia_g@fecha_venc_x" id="fecha_venc_x" tipo="fecha" value="" style="width:100px" placeholder="Inicio"><?php selector_fecha("fecha_venc_x","kformulario_saia","Y-m-d",date("m"),date("Y"),"default.css","../../","AD:VALOR"); ?> y 
@@ -42,7 +42,7 @@
 		    O
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_fecha_venc" id="bqsaiaenlace_fecha_venc" value="y" />
-		</div></div></div><div class="control-group"><b>N&uacute;mero De Factura<input type="hidden" name="bksaiacondicion_g@num_factura" id="bksaiacondicion_g@num_factura" value="like_total"></b><div class="controls"><input type="text" id="num_factura" name="bqsaia_g@num_factura"><div class="btn-group" data-toggle="buttons-radio" >
+		</div></div></div><div class="control-group"><b>N&uacute;mero de factura<input type="hidden" name="bksaiacondicion_g@num_factura" id="bksaiacondicion_g@num_factura" value="like_total"></b><div class="controls"><input type="text" id="num_factura" name="bqsaia_g@num_factura"><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_g@num_factura',this.id)">
 		    Y
 		  </button>
@@ -52,9 +52,9 @@
 		  <input type="hidden" name="bqsaiaenlace_g@num_factura" id="bqsaiaenlace_g@num_factura" value="y" />
 		</div></div></div>
                 <fieldset>
-                <legend style="line-height:15px;font-size:9pt;"><b>Proveedor</b></legend>
+                <legend style="font-size:10pt;line-height:15px"><b>Proveedor</b></legend>
                 <div class="control-group;" style="background-color:#F5F5F5">
-                <b>Nombre<input type="hidden" name="bksaiacondicion_f@nombre__5" id="bksaiacondicion_f@nombre__5" value="like_total"></b><div class="controls"><input type="text"  maxlength="255"   id="prooveedor-nombre" name="g@prooveedor-nombre" ></div><b>Identificacion</b><div class="controls"><input type="text"  maxlength="255"   id="prooveedor-identificacion" name="g@prooveedor-identificacion" ></div><b>Empresa</b><div class="controls"><input type="text"  maxlength="255"   id="prooveedor-empresa" name="g@prooveedor-empresa" ></div></div></fieldset><br><div class="control-group"><label class="string control-label" style="font-size:9pt" for="tipo_moneda"><b>Tipo Moneda<input type="hidden" name="bksaiacondicion_g@tipo_moneda" id="bksaiacondicion_g@tipo_moneda" value="="></b></label><div class="controls"><?php genera_campo_listados_editar(236,2636,'',1,'buscar');?><div class="btn-group" data-toggle="buttons-radio" >
+                <b>Nombre<input type="hidden" name="bksaiacondicion_f@nombre__5" id="bksaiacondicion_f@nombre__5" value="like_total"></b><div class="controls"><input type="text"  maxlength="255"   id="prooveedor-nombre" name="g@prooveedor-nombre" ></div><b>Identificacion</b><div class="controls"><input type="text"  maxlength="255"   id="prooveedor-identificacion" name="g@prooveedor-identificacion" ></div><b>Empresa</b><div class="controls"><input type="text"  maxlength="255"   id="prooveedor-empresa" name="g@prooveedor-empresa" ></div></div></fieldset><br><div class="control-group"><label class="string control-label" style="font-size:9pt" for="tipo_moneda"><b>Tipo moneda<input type="hidden" name="bksaiacondicion_g@tipo_moneda" id="bksaiacondicion_g@tipo_moneda" value="="></b></label><div class="controls"><?php genera_campo_listados_editar(236,2636,'',1,'buscar');?><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_tipo_moneda',this.id)">
 		    Y
 		  </button>
@@ -62,7 +62,7 @@
 		    O
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_tipo_moneda" id="bqsaiaenlace_tipo_moneda" value="y" />
-		</div></div></div><div class="control-group"><div class="controls"><b>Enviar A<input type="hidden" name="bksaiacondicion_enviar" id="bksaiacondicion_enviar" value="like_total"></b><div id="esperando_enviar"><img src="../../imagenes/cargando.gif"></div><div id="seleccionados"></div><input type="text" id="stext_enviar" placeholder="Buscar" width="200px" size="25">
+		</div></div></div><div class="control-group"><div class="controls"><b>Enviar a<input type="hidden" name="bksaiacondicion_enviar" id="bksaiacondicion_enviar" value="like_total"></b><div id="esperando_enviar"><img src="../../imagenes/cargando.gif"></div><div id="seleccionados"></div><input type="text" id="stext_enviar" placeholder="Buscar" width="200px" size="25">
                    <a href="javascript:void(0)" onclick="tree_enviar.findItem(htmlentities(document.getElementById('stext_enviar').value),1)"><img src="../../botones/general/anterior.png"border="0px"></a>
                    <a href="javascript:void(0)" onclick="tree_enviar.findItem(htmlentities(document.getElementById('stext_enviar').value),0,1)"><img src="../../botones/general/buscar.png"border="0px"></a>
                           <a href="javascript:void(0)" onclick="tree_enviar.findItem(htmlentities(document.getElementById('stext_enviar').value))"><img src="../../botones/general/siguiente.png"border="0px"></a>
@@ -130,7 +130,7 @@
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_enviar" id="bqsaiaenlace_enviar" value="y" />
 		</div></div></div><div class="control-group">
-                  <label class="string control-label" for="fecha_factura"><b>Fecha De La Guia</b></label>
+                  <label class="string control-label" for="fecha_factura"><b>Fecha de la guia</b></label>
                   <input type="hidden" name="bksaiacondicion_g@fecha_factura_x" id="bksaiacondicion_g@fecha_factura_x" value=">=">
                   <div class="controls">
                   Entre <input type="text"  name="bqsaia_g@fecha_factura_x" id="fecha_factura_x" tipo="fecha" value="" style="width:100px" placeholder="Inicio"><?php selector_fecha("fecha_factura_x","kformulario_saia","Y-m-d",date("m"),date("Y"),"default.css","../../","AD:VALOR"); ?> y 
@@ -159,7 +159,7 @@
 		    O
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_g@caja" id="bqsaiaenlace_g@caja" value="y" />
-		</div></div></div><div class="control-group"><b>Unidad Documental<input type="hidden" name="bksaiacondicion_g@unidad_documenta" id="bksaiacondicion_g@unidad_documenta" value="like_total"></b><div class="controls"><input type="text" id="unidad_documenta" name="bqsaia_g@unidad_documenta"><div class="btn-group" data-toggle="buttons-radio" >
+		</div></div></div><div class="control-group"><b>Unidad documental<input type="hidden" name="bksaiacondicion_g@unidad_documenta" id="bksaiacondicion_g@unidad_documenta" value="like_total"></b><div class="controls"><input type="text" id="unidad_documenta" name="bqsaia_g@unidad_documenta"><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_g@unidad_documenta',this.id)">
 		    Y
 		  </button>
@@ -167,7 +167,7 @@
 		    O
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_g@unidad_documenta" id="bqsaiaenlace_g@unidad_documenta" value="y" />
-		</div></div></div><div class="control-group"><label class="string control-label" style="font-size:9pt" for="requiere_irecibo"><b>Requiere Ir?<input type="hidden" name="bksaiacondicion_g@requiere_irecibo" id="bksaiacondicion_g@requiere_irecibo" value="="></b></label><div class="controls"><?php genera_campo_listados_editar(236,2642,'',1,'buscar');?><div class="btn-group" data-toggle="buttons-radio" >
+		</div></div></div><div class="control-group"><label class="string control-label" style="font-size:9pt" for="requiere_irecibo"><b>Requiere ir?<input type="hidden" name="bksaiacondicion_g@requiere_irecibo" id="bksaiacondicion_g@requiere_irecibo" value="="></b></label><div class="controls"><?php genera_campo_listados_editar(236,2642,'',1,'buscar');?><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_g@requiere_irecibo',this.id)">
 		    Y
 		  </button>
@@ -183,7 +183,7 @@
 		    O
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_g@numero_guia" id="bqsaiaenlace_g@numero_guia" value="y" />
-		</div></div></div><div class="control-group"><b>Empresa Guia<input type="hidden" name="bksaiacondicion_g@empresa_guia" id="bksaiacondicion_g@empresa_guia" value="like_total"></b><div class="controls"><input type="text" id="empresa_guia" name="bqsaia_g@empresa_guia"><div class="btn-group" data-toggle="buttons-radio" >
+		</div></div></div><div class="control-group"><b>Empresa guia<input type="hidden" name="bksaiacondicion_g@empresa_guia" id="bksaiacondicion_g@empresa_guia" value="like_total"></b><div class="controls"><input type="text" id="empresa_guia" name="bqsaia_g@empresa_guia"><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_g@empresa_guia',this.id)">
 		    Y
 		  </button>
@@ -191,7 +191,7 @@
 		    O
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_g@empresa_guia" id="bqsaiaenlace_g@empresa_guia" value="y" />
-		</div></div></div><div class="control-group"><b>Orden Compra<input type="hidden" name="bksaiacondicion_g@orden_compra" id="bksaiacondicion_g@orden_compra" value="like_total"></b><div class="controls"><input type="text" id="orden_compra" name="bqsaia_g@orden_compra"><div class="btn-group" data-toggle="buttons-radio" >
+		</div></div></div><div class="control-group"><b>Orden compra<input type="hidden" name="bksaiacondicion_g@orden_compra" id="bksaiacondicion_g@orden_compra" value="like_total"></b><div class="controls"><input type="text" id="orden_compra" name="bqsaia_g@orden_compra"><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_g@orden_compra',this.id)">
 		    Y
 		  </button>
@@ -199,7 +199,7 @@
 		    O
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_g@orden_compra" id="bqsaiaenlace_g@orden_compra" value="y" />
-		</div></div></div><div class="control-group"><b>Archivo Ubicaci&oacute;n Caja<input type="hidden" name="bksaiacondicion_g@archivo_ubicacion" id="bksaiacondicion_g@archivo_ubicacion" value="like_total"></b><div class="controls"><input type="text" id="archivo_ubicacion" name="bqsaia_g@archivo_ubicacion"><div class="btn-group" data-toggle="buttons-radio" >
+		</div></div></div><div class="control-group"><b>Archivo ubicaci&oacute;n caja<input type="hidden" name="bksaiacondicion_g@archivo_ubicacion" id="bksaiacondicion_g@archivo_ubicacion" value="like_total"></b><div class="controls"><input type="text" id="archivo_ubicacion" name="bqsaia_g@archivo_ubicacion"><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_g@archivo_ubicacion',this.id)">
 		    Y
 		  </button>
@@ -207,4 +207,4 @@
 		    O
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_g@archivo_ubicacion" id="bqsaiaenlace_g@archivo_ubicacion" value="y" />
-		</div></div></div><div class="control-group"><b>Valor De La Factura<input type="hidden" name="bksaiacondicion_g@valor_factura" id="bksaiacondicion_g@valor_factura" value="like_total"></b><div class="controls"><input type="text" id="valor_factura" name="bqsaia_g@valor_factura"></div></div><input type="hidden" name="campos_especiales" value="prooveedor@ejecutor,enviar@arbol"><input type="hidden" name="filtro_adicional" id="filtro_adicional" value=" ft_factura_proveedor g @ AND  g.documento_iddocumento=iddocumento "></body><input type="hidden" name="bqtipodato_plantilla" id="bqtipodato_plantilla" value="date|g@fecha_exp_x,g@fecha_exp_y,g@fecha_venc_x,g@fecha_venc_y,g@fecha_factura_x,g@fecha_factura_y"><input type="hidden" name="idbusqueda_componente" value="155">
+		</div></div></div><div class="control-group"><b>Valor de la factura<input type="hidden" name="bksaiacondicion_g@valor_factura" id="bksaiacondicion_g@valor_factura" value="like_total"></b><div class="controls"><input type="text" id="valor_factura" name="bqsaia_g@valor_factura"></div></div><input type="hidden" name="campos_especiales" value="prooveedor@ejecutor,enviar@arbol"><input type="hidden" name="filtro_adicional" id="filtro_adicional" value=" ft_factura_proveedor g @ AND  g.documento_iddocumento=iddocumento "></body><input type="hidden" name="bqtipodato_plantilla" id="bqtipodato_plantilla" value="date|g@fecha_exp_x,g@fecha_exp_y,g@fecha_venc_x,g@fecha_venc_y,g@fecha_factura_x,g@fecha_factura_y">

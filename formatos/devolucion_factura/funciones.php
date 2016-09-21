@@ -13,6 +13,12 @@ $max_salida--;
 include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."formatos/librerias/funciones_formatos_generales.php");
 include_once($ruta_db_superior."formatos/librerias/funciones_generales.php");
+include_once($ruta_db_superior."librerias_saia.php");
+echo(librerias_bootstrap());
+echo(estilo_bootstrap());	
+
+
+
 function eliminar_pendientes($idformato,$iddoc)
 {global $conn;
  $factura=buscar_papa_formato($idformato,$iddoc,'ft_factura_proveedor');
@@ -169,4 +175,25 @@ if(count($ruta)>0){
  }
  
 }
+
+
+function validar_aceptacion_factura($idformato,$iddoc){
+	global $conn,$ruta_db_superior;
+	$item=busca_filtro_tabla("","ft_validacion_factura","ft_factura_proveedor=".$_REQUEST['padre'],"",$conn);
+	if ($item['numcampos']==0) {
+		?>
+			<script>
+				$('#div_contenido').css('pointer-events','none');  
+			</script>
+		<?php
+		echo '<div class="alert alert-warning"><h2>Aun no se ha definido si esta factura es correcta</h2></div>';
+	}elseif($item[0]['factura_correcta']==1) {
+			?>
+				<script>
+					$('#div_contenido').css('pointer-events','none');  
+				</script>
+			<?php
+			echo '<div class="alert alert-warning"><h2>Esta factura es correcta</h2></div>';
+		}
+	}
 ?>

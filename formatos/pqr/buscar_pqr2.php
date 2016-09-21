@@ -1,4 +1,13 @@
-<?php include_once("../../formatos/librerias/funciones_generales.php"); ?><?php include_once("../../formatos/librerias/funciones_generales.php"); ?><div class="control-group"><b>Nombres y apellidos<input type="hidden" name="bksaiacondicion_g@nombres_apellidos" id="bksaiacondicion_g@nombres_apellidos" value="like_total"></b><div class="controls"><input type="text" id="nombres_apellidos" name="bqsaia_g@nombres_apellidos"><div class="btn-group" data-toggle="buttons-radio" >
+<?php include_once("../librerias/funciones_generales.php"); ?><?php include_once("../../calendario/calendario.php"); ?><?php include_once("../librerias/header_formato.php"); ?><legend id="label_formato" class="legend">B&uacute;squeda en formato PQR</legend><br /><br /><?php include_once("../librerias/funciones_generales.php"); ?><div class="control-group"><label class="string control-label" style="font-size:9pt" for="fecha_pqr"><b>Fecha<input type="hidden" name="bksaiacondicion_fecha_pqr" id="bksaiacondicion_fecha_pqr" value="like_total"></b></label><div class="controls">
+                    ENTRE &nbsp;<input type="text" readonly="true" name="fecha_pqr_1" maxlength="255"  id="fecha_pqr_1" value=""><?php selector_fecha("fecha_pqr_1","kformulario_saia","Y-m-d H:i",date("m"),date("Y"),"default.css","../../","AD:VALOR"); ?>&nbsp;&nbsp; Y &nbsp;&nbsp;<input type="text" readonly="true" name="fecha_pqr_2" maxlength="255"  id="fecha_pqr_2" value=""><?php selector_fecha("fecha_pqr_2","kformulario_saia","Y-m-d H:i",date("m"),date("Y"),"default.css","../../","AD:VALOR"); ?><div class="btn-group" data-toggle="buttons-radio" >
+		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_fecha_pqr',this.id)">
+		    Y
+		  </button>
+		  <button type="button" class="btn btn-mini" data-toggle="button" id="o" onclick="llenar_valor('bqsaiaenlace_fecha_pqr',this.id)">
+		    O
+		  </button-->
+		  <input type="hidden" name="bqsaiaenlace_fecha_pqr" id="bqsaiaenlace_fecha_pqr" value="y" />
+		</div></div></div><div class="control-group"><b>Nombres y apellidos<input type="hidden" name="bksaiacondicion_g@nombres_apellidos" id="bksaiacondicion_g@nombres_apellidos" value="like_total"></b><div class="controls"><input type="text" id="nombres_apellidos" name="bqsaia_g@nombres_apellidos"><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_g@nombres_apellidos',this.id)">
 		    Y
 		  </button>
@@ -78,4 +87,4 @@
 		    O
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_g@forma_envio" id="bqsaiaenlace_g@forma_envio" value="y" />
-		</div></div></div><div class="control-group"><b>Describa su solicitud<input type="hidden" name="bksaiacondicion_g@descripcion" id="bksaiacondicion_g@descripcion" value="like_total"></b><div class="controls"><textarea  maxlength="1000"   id="descripcion" name="bqsaia_g@descripcion"  style="width:500px;height:100px"></textarea></div></div><input type="hidden" name="filtro_adicional" id="filtro_adicional" value=" ft_pqr g @ AND  g.documento_iddocumento=iddocumento "></body><input type="hidden" name="idbusqueda_componente" value="0">
+		</div></div></div><div class="control-group"><b>Describa su solicitud<input type="hidden" name="bksaiacondicion_g@descripcion" id="bksaiacondicion_g@descripcion" value="like_total"></b><div class="controls"><textarea  maxlength="1000"   id="descripcion" name="bqsaia_g@descripcion"  style="width:500px;height:100px"></textarea></div></div><input type="hidden" name="filtro_adicional" id="filtro_adicional" value=" ft_pqr g @ AND  g.documento_iddocumento=iddocumento "></body><input type="hidden" name="bqtipodato_plantilla" id="bqtipodato_plantilla" value="date|">

@@ -1,4 +1,4 @@
-<?php include_once("../../formatos/librerias/funciones_generales.php"); ?><?php include_once("../../calendario/calendario.php"); ?><?php include_once("../librerias/header_formato.php"); ?><legend id="label_formato" class="legend" style="font-size:9pt;">B&uacute;squeda en formato Diagnostico y plan de tratamiento</legend><br /><br /><?php include_once("../../formatos/librerias/funciones_generales.php"); ?><div class="control-group"><b>Item<input type="hidden" name="bksaiacondicion_g@item_evolucion" id="bksaiacondicion_g@item_evolucion" value="like_total"></b><div class="controls"><input type="text" id="item_evolucion" name="bqsaia_g@item_evolucion"><div class="btn-group" data-toggle="buttons-radio" >
+<?php include_once("../librerias/funciones_generales.php"); ?><?php include_once("../../calendario/calendario.php"); ?><?php include_once("../librerias/header_formato.php"); ?><legend id="label_formato" class="legend">B&uacute;squeda en formato Diagnostico y plan de tratamiento</legend><br /><br /><?php include_once("../librerias/funciones_generales.php"); ?><div class="control-group"><b>Item<input type="hidden" name="bksaiacondicion_g@item_evolucion" id="bksaiacondicion_g@item_evolucion" value="like_total"></b><div class="controls"><input type="text" id="item_evolucion" name="bqsaia_g@item_evolucion"><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_g@item_evolucion',this.id)">
 		    Y
 		  </button>
@@ -7,7 +7,7 @@
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_g@item_evolucion" id="bqsaiaenlace_g@item_evolucion" value="y" />
 		</div></div></div><div class="control-group"><label class="string control-label" style="font-size:9pt" for="fecha_diagnostico"><b>Fecha<input type="hidden" name="bksaiacondicion_fecha_diagnostico" id="bksaiacondicion_fecha_diagnostico" value="like_total"></b></label><div class="controls">
-                    Entre &nbsp;<input type="text" readonly="true" name="fecha_diagnostico_1"  id="fecha_diagnostico_1" value=""><?php selector_fecha("fecha_diagnostico_1","kformulario_saia","Y-m-d H:i",date("m"),date("Y"),"default.css","../../","AD:VALOR"); ?> y <input type="text" readonly="true" name="fecha_diagnostico_2"  id="fecha_diagnostico_2" value=""><?php selector_fecha("fecha_diagnostico_2","kformulario_saia","Y-m-d H:i",date("m"),date("Y"),"default.css","../../","AD:VALOR"); ?><div class="btn-group" data-toggle="buttons-radio" >
+                    ENTRE &nbsp;<input type="text" readonly="true" name="fecha_diagnostico_1"  id="fecha_diagnostico_1" value=""><?php selector_fecha("fecha_diagnostico_1","kformulario_saia","Y-m-d H:i",date("m"),date("Y"),"default.css","../../","AD:VALOR"); ?>&nbsp;&nbsp; Y &nbsp;&nbsp;<input type="text" readonly="true" name="fecha_diagnostico_2"  id="fecha_diagnostico_2" value=""><?php selector_fecha("fecha_diagnostico_2","kformulario_saia","Y-m-d H:i",date("m"),date("Y"),"default.css","../../","AD:VALOR"); ?><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_fecha_diagnostico',this.id)">
 		    Y
 		  </button>
@@ -15,7 +15,7 @@
 		    O
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_fecha_diagnostico" id="bqsaiaenlace_fecha_diagnostico" value="y" />
-		</div></div></div><div class="control-group"><b>Nombre Del Paciente<input type="hidden" name="bksaiacondicion_g@nombre_diagnosticado" id="bksaiacondicion_g@nombre_diagnosticado" value="like_total"></b><div class="controls"><input type="text" id="nombre_diagnosticado" name="bqsaia_g@nombre_diagnosticado"><div class="btn-group" data-toggle="buttons-radio" >
+		</div></div></div><div class="control-group"><b>Nombre del paciente<input type="hidden" name="bksaiacondicion_g@nombre_diagnosticado" id="bksaiacondicion_g@nombre_diagnosticado" value="like_total"></b><div class="controls"><input type="text" id="nombre_diagnosticado" name="bqsaia_g@nombre_diagnosticado"><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_g@nombre_diagnosticado',this.id)">
 		    Y
 		  </button>
@@ -23,7 +23,7 @@
 		    O
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_g@nombre_diagnosticado" id="bqsaiaenlace_g@nombre_diagnosticado" value="y" />
-		</div></div></div><div class="control-group"><label class="string control-label" style="font-size:9pt" for="etiqueta_esqueletico"><b>Esqueletico<input type="hidden" name="bksaiacondicion_etiqueta_esqueletico" id="bksaiacondicion_etiqueta_esqueletico" value="like_total"></b></label></div><div class="control-group"><label class="string control-label" style="font-size:9pt" for="sna"><b>Sna<input type="hidden" name="bksaiacondicion_sna" id="bksaiacondicion_sna" value="like_total"></b></label><div class="controls"><?php genera_campo_listados_editar(293,3382,'',1,'buscar');?><div class="btn-group" data-toggle="buttons-radio" >
+		</div></div></div><div class="control-group"><label class="string control-label" style="font-size:9pt" for="etiqueta_esqueletico"><b>Esqueletico<input type="hidden" name="bksaiacondicion_etiqueta_esqueletico" id="bksaiacondicion_etiqueta_esqueletico" value="like_total"></b></label></div><div class="control-group"><label class="string control-label" style="font-size:9pt" for="sna"><b>SNA<input type="hidden" name="bksaiacondicion_sna" id="bksaiacondicion_sna" value="like_total"></b></label><div class="controls"><?php genera_campo_listados_editar(293,3382,'',1,'buscar');?><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_sna',this.id)">
 		    Y
 		  </button>
@@ -31,7 +31,7 @@
 		    O
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_sna" id="bqsaiaenlace_sna" value="y" />
-		</div></div></div><div class="control-group"><label class="string control-label" style="font-size:9pt" for="snb"><b>Snb<input type="hidden" name="bksaiacondicion_snb" id="bksaiacondicion_snb" value="="></b></label><div class="controls"><?php genera_campo_listados_editar(293,3383,'',1,'buscar');?><div class="btn-group" data-toggle="buttons-radio" >
+		</div></div></div><div class="control-group"><label class="string control-label" style="font-size:9pt" for="snb"><b>SNB<input type="hidden" name="bksaiacondicion_snb" id="bksaiacondicion_snb" value="="></b></label><div class="controls"><?php genera_campo_listados_editar(293,3383,'',1,'buscar');?><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_snb',this.id)">
 		    Y
 		  </button>
@@ -39,7 +39,7 @@
 		    O
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_snb" id="bqsaiaenlace_snb" value="y" />
-		</div></div></div><div class="control-group"><label class="string control-label" style="font-size:9pt" for="anb"><b>Anb<input type="hidden" name="bksaiacondicion_anb" id="bksaiacondicion_anb" value="="></b></label><div class="controls"><?php genera_campo_listados_editar(293,3384,'',1,'buscar');?><div class="btn-group" data-toggle="buttons-radio" >
+		</div></div></div><div class="control-group"><label class="string control-label" style="font-size:9pt" for="anb"><b>ANB<input type="hidden" name="bksaiacondicion_anb" id="bksaiacondicion_anb" value="="></b></label><div class="controls"><?php genera_campo_listados_editar(293,3384,'',1,'buscar');?><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_anb',this.id)">
 		    Y
 		  </button>
@@ -47,7 +47,7 @@
 		    O
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_anb" id="bqsaiaenlace_anb" value="y" />
-		</div></div></div><div class="control-group"><label class="string control-label" style="font-size:9pt" for="mx_md"><b>Mx-md<input type="hidden" name="bksaiacondicion_mx_md" id="bksaiacondicion_mx_md" value="="></b></label><div class="controls"><?php genera_campo_listados_editar(293,3385,'',1,'buscar');?><div class="btn-group" data-toggle="buttons-radio" >
+		</div></div></div><div class="control-group"><label class="string control-label" style="font-size:9pt" for="mx_md"><b>Mx-Md<input type="hidden" name="bksaiacondicion_mx_md" id="bksaiacondicion_mx_md" value="="></b></label><div class="controls"><?php genera_campo_listados_editar(293,3385,'',1,'buscar');?><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_mx_md',this.id)">
 		    Y
 		  </button>
@@ -55,7 +55,7 @@
 		    O
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_mx_md" id="bqsaiaenlace_mx_md" value="y" />
-		</div></div></div><div class="control-group"><label class="string control-label" style="font-size:9pt" for="snmd"><b>Snmd<input type="hidden" name="bksaiacondicion_snmd" id="bksaiacondicion_snmd" value="="></b></label><div class="controls"><?php genera_campo_listados_editar(293,3386,'',1,'buscar');?><div class="btn-group" data-toggle="buttons-radio" >
+		</div></div></div><div class="control-group"><label class="string control-label" style="font-size:9pt" for="snmd"><b>SnMd<input type="hidden" name="bksaiacondicion_snmd" id="bksaiacondicion_snmd" value="="></b></label><div class="controls"><?php genera_campo_listados_editar(293,3386,'',1,'buscar');?><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_snmd',this.id)">
 		    Y
 		  </button>
@@ -63,7 +63,7 @@
 		    O
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_snmd" id="bqsaiaenlace_snmd" value="y" />
-		</div></div></div><div class="control-group"><label class="string control-label" style="font-size:9pt" for="wits"><b>Wits<input type="hidden" name="bksaiacondicion_wits" id="bksaiacondicion_wits" value="="></b></label><div class="controls"><?php genera_campo_listados_editar(293,3387,'',1,'buscar');?><div class="btn-group" data-toggle="buttons-radio" >
+		</div></div></div><div class="control-group"><label class="string control-label" style="font-size:9pt" for="wits"><b>WITS<input type="hidden" name="bksaiacondicion_wits" id="bksaiacondicion_wits" value="="></b></label><div class="controls"><?php genera_campo_listados_editar(293,3387,'',1,'buscar');?><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_wits',this.id)">
 		    Y
 		  </button>
@@ -95,7 +95,7 @@
 		    O
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_uno_md" id="bqsaiaenlace_uno_md" value="y" />
-		</div></div></div><div class="control-group"><label class="string control-label" style="font-size:9pt" for="etiqueta_meaw"><b>M.e.a.w<input type="hidden" name="bksaiacondicion_etiqueta_meaw" id="bksaiacondicion_etiqueta_meaw" value="like_total"></b></label></div><div class="control-group"><label class="string control-label" style="font-size:9pt" for="odi"><b>Odi<input type="hidden" name="bksaiacondicion_odi" id="bksaiacondicion_odi" value="like_total"></b></label><div class="controls"><?php genera_campo_listados_editar(293,3393,'',1,'buscar');?><div class="btn-group" data-toggle="buttons-radio" >
+		</div></div></div><div class="control-group"><label class="string control-label" style="font-size:9pt" for="etiqueta_meaw"><b>M.E.A.W<input type="hidden" name="bksaiacondicion_etiqueta_meaw" id="bksaiacondicion_etiqueta_meaw" value="like_total"></b></label></div><div class="control-group"><label class="string control-label" style="font-size:9pt" for="odi"><b>ODI<input type="hidden" name="bksaiacondicion_odi" id="bksaiacondicion_odi" value="like_total"></b></label><div class="controls"><?php genera_campo_listados_editar(293,3393,'',1,'buscar');?><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_odi',this.id)">
 		    Y
 		  </button>
@@ -103,7 +103,7 @@
 		    O
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_odi" id="bqsaiaenlace_odi" value="y" />
-		</div></div></div><div class="control-group"><label class="string control-label" style="font-size:9pt" for="apdi"><b>Apdi<input type="hidden" name="bksaiacondicion_apdi" id="bksaiacondicion_apdi" value="="></b></label><div class="controls"><?php genera_campo_listados_editar(293,3394,'',1,'buscar');?><div class="btn-group" data-toggle="buttons-radio" >
+		</div></div></div><div class="control-group"><label class="string control-label" style="font-size:9pt" for="apdi"><b>APDI<input type="hidden" name="bksaiacondicion_apdi" id="bksaiacondicion_apdi" value="="></b></label><div class="controls"><?php genera_campo_listados_editar(293,3394,'',1,'buscar');?><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_apdi',this.id)">
 		    Y
 		  </button>
@@ -111,7 +111,7 @@
 		    O
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_apdi" id="bqsaiaenlace_apdi" value="y" />
-		</div></div></div><div class="control-group"><label class="string control-label" style="font-size:9pt" for="cf"><b>Cf<input type="hidden" name="bksaiacondicion_cf" id="bksaiacondicion_cf" value="="></b></label><div class="controls"><?php genera_campo_listados_editar(293,3395,'',1,'buscar');?><div class="btn-group" data-toggle="buttons-radio" >
+		</div></div></div><div class="control-group"><label class="string control-label" style="font-size:9pt" for="cf"><b>CF<input type="hidden" name="bksaiacondicion_cf" id="bksaiacondicion_cf" value="="></b></label><div class="controls"><?php genera_campo_listados_editar(293,3395,'',1,'buscar');?><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_cf',this.id)">
 		    Y
 		  </button>
@@ -127,7 +127,7 @@
 		    O
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_linea_e_superior" id="bqsaiaenlace_linea_e_superior" value="y" />
-		</div></div></div><div class="control-group"><label class="string control-label" style="font-size:9pt" for="linea_e_inferior"><b>Linea E Inf<input type="hidden" name="bksaiacondicion_linea_e_inferior" id="bksaiacondicion_linea_e_inferior" value="="></b></label><div class="controls"><?php genera_campo_listados_editar(293,3398,'',1,'buscar');?><div class="btn-group" data-toggle="buttons-radio" >
+		</div></div></div><div class="control-group"><label class="string control-label" style="font-size:9pt" for="linea_e_inferior"><b>Linea E INF<input type="hidden" name="bksaiacondicion_linea_e_inferior" id="bksaiacondicion_linea_e_inferior" value="="></b></label><div class="controls"><?php genera_campo_listados_editar(293,3398,'',1,'buscar');?><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_linea_e_inferior',this.id)">
 		    Y
 		  </button>
@@ -135,7 +135,7 @@
 		    O
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_linea_e_inferior" id="bqsaiaenlace_linea_e_inferior" value="y" />
-		</div></div></div><div class="control-group"><label class="string control-label" style="font-size:9pt" for="fhi_ls"><b>Fhi - Ls<input type="hidden" name="bksaiacondicion_fhi_ls" id="bksaiacondicion_fhi_ls" value="="></b></label><div class="controls"><?php genera_campo_listados_editar(293,3399,'',1,'buscar');?><div class="btn-group" data-toggle="buttons-radio" >
+		</div></div></div><div class="control-group"><label class="string control-label" style="font-size:9pt" for="fhi_ls"><b>FHI - LS<input type="hidden" name="bksaiacondicion_fhi_ls" id="bksaiacondicion_fhi_ls" value="="></b></label><div class="controls"><?php genera_campo_listados_editar(293,3399,'',1,'buscar');?><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_fhi_ls',this.id)">
 		    Y
 		  </button>
@@ -143,7 +143,7 @@
 		    O
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_fhi_ls" id="bqsaiaenlace_fhi_ls" value="y" />
-		</div></div></div><div class="control-group"><label class="string control-label" style="font-size:9pt" for="menor_nl"><b>< - Nl<input type="hidden" name="bksaiacondicion_menor_nl" id="bksaiacondicion_menor_nl" value="="></b></label><div class="controls"><?php genera_campo_listados_editar(293,3400,'',1,'buscar');?><div class="btn-group" data-toggle="buttons-radio" >
+		</div></div></div><div class="control-group"><label class="string control-label" style="font-size:9pt" for="menor_nl"><b>< - NL<input type="hidden" name="bksaiacondicion_menor_nl" id="bksaiacondicion_menor_nl" value="="></b></label><div class="controls"><?php genera_campo_listados_editar(293,3400,'',1,'buscar');?><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_menor_nl',this.id)">
 		    Y
 		  </button>
@@ -317,7 +317,7 @@
 		    O
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_g@tejido_blando" id="bqsaiaenlace_g@tejido_blando" value="y" />
-		</div></div></div><div class="control-group"><b>Funcional<input type="hidden" name="bksaiacondicion_g@funcional" id="bksaiacondicion_g@funcional" value="like_total"></b><div class="controls"><textarea    id="funcional" name="bqsaia_g@funcional"  style="width:500px;height:100px"></textarea><div class="btn-group" data-toggle="buttons-radio" >
+		</div></div></div><div class="control-group"><b>funcional<input type="hidden" name="bksaiacondicion_g@funcional" id="bksaiacondicion_g@funcional" value="like_total"></b><div class="controls"><textarea    id="funcional" name="bqsaia_g@funcional"  style="width:500px;height:100px"></textarea><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_g@funcional',this.id)">
 		    Y
 		  </button>
@@ -325,7 +325,7 @@
 		    O
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_g@funcional" id="bqsaiaenlace_g@funcional" value="y" />
-		</div></div></div><div class="control-group"><b>Plan De Tratamiento<input type="hidden" name="bksaiacondicion_g@plan_tratamiento" id="bksaiacondicion_g@plan_tratamiento" value="like_total"></b><div class="controls"><textarea    id="plan_tratamiento" name="bqsaia_g@plan_tratamiento"  style="width:500px;height:100px"></textarea><div class="btn-group" data-toggle="buttons-radio" >
+		</div></div></div><div class="control-group"><b>Plan de tratamiento<input type="hidden" name="bksaiacondicion_g@plan_tratamiento" id="bksaiacondicion_g@plan_tratamiento" value="like_total"></b><div class="controls"><textarea    id="plan_tratamiento" name="bqsaia_g@plan_tratamiento"  style="width:500px;height:100px"></textarea><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_g@plan_tratamiento',this.id)">
 		    Y
 		  </button>
@@ -333,7 +333,7 @@
 		    O
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_g@plan_tratamiento" id="bqsaiaenlace_g@plan_tratamiento" value="y" />
-		</div></div></div><div class="control-group"><b>Re-evaluaciones<input type="hidden" name="bksaiacondicion_g@re_evaluaciones" id="bksaiacondicion_g@re_evaluaciones" value="like_total"></b><div class="controls"><textarea    id="re_evaluaciones" name="bqsaia_g@re_evaluaciones"  style="width:500px;height:100px"></textarea><div class="btn-group" data-toggle="buttons-radio" >
+		</div></div></div><div class="control-group"><b>Re-Evaluaciones<input type="hidden" name="bksaiacondicion_g@re_evaluaciones" id="bksaiacondicion_g@re_evaluaciones" value="like_total"></b><div class="controls"><textarea    id="re_evaluaciones" name="bqsaia_g@re_evaluaciones"  style="width:500px;height:100px"></textarea><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_g@re_evaluaciones',this.id)">
 		    Y
 		  </button>
@@ -373,7 +373,7 @@
 		    O
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_ortopedia" id="bqsaiaenlace_ortopedia" value="y" />
-		</div></div></div><div class="control-group"><label class="string control-label" style="font-size:9pt" for="ortopedia_ortodoncia"><b>Ortopedia Y Ortodoncia<input type="hidden" name="bksaiacondicion_ortopedia_ortodoncia" id="bksaiacondicion_ortopedia_ortodoncia" value="like_total"></b></label><div class="controls"><?php genera_campo_listados_editar(293,3439,'',1,'buscar');?><div class="btn-group" data-toggle="buttons-radio" >
+		</div></div></div><div class="control-group"><label class="string control-label" style="font-size:9pt" for="ortopedia_ortodoncia"><b>Ortopedia y Ortodoncia<input type="hidden" name="bksaiacondicion_ortopedia_ortodoncia" id="bksaiacondicion_ortopedia_ortodoncia" value="like_total"></b></label><div class="controls"><?php genera_campo_listados_editar(293,3439,'',1,'buscar');?><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_ortopedia_ortodoncia',this.id)">
 		    Y
 		  </button>
@@ -389,7 +389,7 @@
 		    O
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_otro_tratamiento" id="bqsaiaenlace_otro_tratamiento" value="y" />
-		</div></div></div><div class="control-group"><label class="string control-label" style="font-size:9pt" for="ortodoncia_caso"><b>Ortodoncia 1/2 Caso<input type="hidden" name="bksaiacondicion_ortodoncia_caso" id="bksaiacondicion_ortodoncia_caso" value="like_total"></b></label><div class="controls"><?php genera_campo_listados_editar(293,3441,'',1,'buscar');?><div class="btn-group" data-toggle="buttons-radio" >
+		</div></div></div><div class="control-group"><label class="string control-label" style="font-size:9pt" for="ortodoncia_caso"><b>Ortodoncia 1/2 caso<input type="hidden" name="bksaiacondicion_ortodoncia_caso" id="bksaiacondicion_ortodoncia_caso" value="like_total"></b></label><div class="controls"><?php genera_campo_listados_editar(293,3441,'',1,'buscar');?><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_ortodoncia_caso',this.id)">
 		    Y
 		  </button>
@@ -397,7 +397,7 @@
 		    O
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_ortodoncia_caso" id="bqsaiaenlace_ortodoncia_caso" value="y" />
-		</div></div></div><div class="control-group"><label class="string control-label" style="font-size:9pt" for="ortodoncia_no_complicada"><b>Ortodoncia No Complicada<input type="hidden" name="bksaiacondicion_ortodoncia_no_complicada" id="bksaiacondicion_ortodoncia_no_complicada" value="like_total"></b></label><div class="controls"><?php genera_campo_listados_editar(293,3442,'',1,'buscar');?><div class="btn-group" data-toggle="buttons-radio" >
+		</div></div></div><div class="control-group"><label class="string control-label" style="font-size:9pt" for="ortodoncia_no_complicada"><b>Ortodoncia no complicada<input type="hidden" name="bksaiacondicion_ortodoncia_no_complicada" id="bksaiacondicion_ortodoncia_no_complicada" value="like_total"></b></label><div class="controls"><?php genera_campo_listados_editar(293,3442,'',1,'buscar');?><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_ortodoncia_no_complicada',this.id)">
 		    Y
 		  </button>
@@ -413,7 +413,7 @@
 		    O
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_ortodoncia" id="bqsaiaenlace_ortodoncia" value="y" />
-		</div></div></div><div class="control-group"><label class="string control-label" style="font-size:9pt" for="ortodoncia_cirugia"><b>Ortodoncia Y Cirugia<input type="hidden" name="bksaiacondicion_ortodoncia_cirugia" id="bksaiacondicion_ortodoncia_cirugia" value="like_total"></b></label><div class="controls"><?php genera_campo_listados_editar(293,3444,'',1,'buscar');?><div class="btn-group" data-toggle="buttons-radio" >
+		</div></div></div><div class="control-group"><label class="string control-label" style="font-size:9pt" for="ortodoncia_cirugia"><b>Ortodoncia y Cirugia<input type="hidden" name="bksaiacondicion_ortodoncia_cirugia" id="bksaiacondicion_ortodoncia_cirugia" value="like_total"></b></label><div class="controls"><?php genera_campo_listados_editar(293,3444,'',1,'buscar');?><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_ortodoncia_cirugia',this.id)">
 		    Y
 		  </button>
@@ -429,4 +429,4 @@
 		    O
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_otro_evaluaciones" id="bqsaiaenlace_otro_evaluaciones" value="y" />
-		</div></div></div><div class="control-group"><b>Remisiones Para Procedimientos Especializados<input type="hidden" name="bksaiacondicion_g@remision_procedimiento" id="bksaiacondicion_g@remision_procedimiento" value="like_total"></b><div class="controls"><textarea    id="remision_procedimiento" name="bqsaia_g@remision_procedimiento"  style="width:500px;height:100px"></textarea></div></div><input type="hidden" name="campos_especiales" value="ortodoncista@arbol,auxiliar@arbol"><input type="hidden" name="filtro_adicional" id="filtro_adicional" value=" ft_diagnostico_tratamiento g @ AND  g.documento_iddocumento=iddocumento "></body><input type="hidden" name="bqtipodato_plantilla" id="bqtipodato_plantilla" value="date|"><input type="hidden" name="idbusqueda_componente" value="180">
+		</div></div></div><div class="control-group"><b>Remisiones para procedimientos especializados<input type="hidden" name="bksaiacondicion_g@remision_procedimiento" id="bksaiacondicion_g@remision_procedimiento" value="like_total"></b><div class="controls"><textarea    id="remision_procedimiento" name="bqsaia_g@remision_procedimiento"  style="width:500px;height:100px"></textarea></div></div><input type="hidden" name="campos_especiales" value="ortodoncista@arbol,auxiliar@arbol"><input type="hidden" name="filtro_adicional" id="filtro_adicional" value=" ft_diagnostico_tratamiento g @ AND  g.documento_iddocumento=iddocumento "></body><input type="hidden" name="bqtipodato_plantilla" id="bqtipodato_plantilla" value="date|">

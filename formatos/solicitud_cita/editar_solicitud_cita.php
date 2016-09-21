@@ -9,7 +9,7 @@
                      <?php buscar_dependencia(291,3359,$_REQUEST['iddoc']);?></tr><tr>
                      <td class="encabezado" width="20%" title="">NOMBRE DEL PACIENTE*</td>
                      <td bgcolor="#F5F5F5"><input  maxlength="255"  class="required"   tabindex='1'  type="text" size="100" id="nombre_paciente" name="nombre_paciente"  value="<?php echo(mostrar_valor_campo('nombre_paciente',291,$_REQUEST['iddoc'])); ?>"></td>
-                    </tr><tr>
+                    </tr><tr id="tr_motivo_consulta" >
                      <td class="encabezado" width="20%" title="">MOTIVO DE CONSULTA*</td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(291,3354,$_REQUEST['iddoc']);?></td></tr><tr>
                      <td class="encabezado" width="20%" title="">DESCRIPCI&Oacute;N</td>
                      <td class="celda_transparente"><textarea  tabindex='2'  name="descripcion_cita" id="descripcion_cita" cols="53" rows="3" class="tiny_basico"><?php echo(mostrar_valor_campo('descripcion_cita',291,$_REQUEST['iddoc'])); ?></textarea></td>

@@ -1,4 +1,4 @@
-<?php include_once("../../formatos/librerias/funciones_generales.php"); ?><?php include_once("../../calendario/calendario.php"); ?><?php include_once("../librerias/header_formato.php"); ?><legend id="label_formato" class="legend">B&uacute;squeda en formato Acta de recibo</legend><br /><br /><?php include_once("../../formatos/librerias/funciones_generales.php"); ?><div class="control-group">
+<?php include_once("../librerias/funciones_generales.php"); ?><?php include_once("../../calendario/calendario.php"); ?><?php include_once("../librerias/header_formato.php"); ?><legend id="label_formato" class="legend">B&uacute;squeda en formato Acta de recibo</legend><br /><br /><?php include_once("../librerias/funciones_generales.php"); ?><div class="control-group">
                   <label class="string control-label" for="fecha_cta"><b>fecha</b></label>
                   <input type="hidden" name="bksaiacondicion_g@fecha_cta_x" id="bksaiacondicion_g@fecha_cta_x" value=">=">
                   <div class="controls">

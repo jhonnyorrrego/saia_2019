@@ -1,4 +1,4 @@
-<?php include_once("../../formatos/librerias/funciones_generales.php"); ?><?php include_once("../../formatos/librerias/funciones_generales.php"); ?>
+<?php include_once("../librerias/funciones_generales.php"); ?><?php include_once("../librerias/header_formato.php"); ?><legend id="label_formato" class="legend">B&uacute;squeda en formato Registro de Cliente</legend><br /><br /><?php include_once("../librerias/funciones_generales.php"); ?>
                 <fieldset>
                 <legend style="font-size:10pt;line-height:15px"><b>Nombre del Cliente</b></legend>
                 <div class="control-group;" style="background-color:#F5F5F5">
@@ -232,4 +232,4 @@
                                eval('document.layers["esperando_responsable"]');
                         document.poppedLayer.style.visibility = "visible";
                       }
-                	--></script></div></div><input type="hidden" name="campos_especiales" value="nombre_cliente@ejecutor,sector@arbol,responsable@arbol"><input type="hidden" name="filtro_adicional" id="filtro_adicional" value=" ft_registro_cliente g @ AND  g.documento_iddocumento=iddocumento "></body><input type="hidden" name="idbusqueda_componente" value="113">
+                	--></script></div></div><input type="hidden" name="campos_especiales" value="nombre_cliente@ejecutor,sector@arbol,responsable@arbol"><input type="hidden" name="filtro_adicional" id="filtro_adicional" value=" ft_registro_cliente g @ AND  g.documento_iddocumento=iddocumento "></body>

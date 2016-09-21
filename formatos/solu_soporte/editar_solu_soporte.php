@@ -21,4 +21,4 @@
 			<a href="../../anexosdigitales/anexos_documento_edit.php?key='.$_REQUEST["iddoc"].'&idformato=340&idcampo=3959" id="anexo_admin" class="highslide" onclick="return hs.htmlExpand( this, {
 			objectType: \'iframe\', outlineType: \'rounded-white\', wrapperClassName: \'highslide-wrapper drag-header\',
 			outlineWhileAnimating: true, preserveContent: false, width: 400 } )">Administrar Anexos</a>
-			</div>'; ?><input type="hidden" name="formato" value="340"><tr><td colspan='2'><?php submit_formato(340,$_REQUEST['iddoc']);?></td></tr></table><input type='hidden' name='permisos_anexos' id='permisos_anexos' value=''></form></body></html><?php include_once("../librerias/footer_plantilla.php");?>
+			</div>'; ?><input type="hidden" name="campo_descripcion" value="<?php echo('3963'); ?>"><input type="hidden" name="formato" value="340"><tr><td colspan='2'><?php submit_formato(340,$_REQUEST['iddoc']);?></td></tr></table><input type='hidden' name='permisos_anexos' id='permisos_anexos' value=''></form></body></html><?php include_once("../librerias/footer_plantilla.php");?>

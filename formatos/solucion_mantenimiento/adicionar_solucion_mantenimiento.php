@@ -23,7 +23,7 @@
                     </tr><tr>
                      <td class="encabezado" width="20%" title="">OBSERVACIONES</td>
                      <td class="celda_transparente"><textarea  tabindex='4'  name="observaciones" id="observaciones" cols="53" rows="3" class="tiny_basico"><?php echo(validar_valor_campo(3329)); ?></textarea></td>
-                    </tr><tr>
+                    </tr><tr id="tr_anexos_solucion" >
                      <td class="encabezado" width="20%" title="">ANEXOS SOLUCI&Oacute;N</td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(288,3330,$_REQUEST['iddoc']);?></td></tr><tr>
                      <td class="encabezado" width="20%" title="">ANEXOS DIGITALES</td>
                      <td class="celda_transparente"><input  tabindex='5'  type="file"  class='multi'  name="solucion_digital[]" accept="<?php echo $extensiones;?>"><input type="hidden" name="idft_solucion_mantenimiento" value="<?php echo(validar_valor_campo(3334)); ?>"><input type="hidden" name="documento_iddocumento" value="<?php echo(validar_valor_campo(3335)); ?>"><input type="hidden" name="firma" value="<?php echo(validar_valor_campo(3338)); ?>"><?php if($_REQUEST["padre"]) {?><input type="hidden"  name="ft_mantenimiento_locativo"  value="<?php echo $_REQUEST["padre"]; ?>"><?php } ?><?php if($_REQUEST["anterior"]) {?><input type="hidden"  name="ft_mantenimiento_locativo"  value="<?php echo $_REQUEST["anterior"]; ?>"><?php }  else {listar_select_padres(ft_mantenimiento_locativo);} ?><tr>

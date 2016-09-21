@@ -1,4 +1,4 @@
-<?php include_once("../carta/funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("../librerias/funciones_generales.php"); ?><script type="text/javascript" src="../../js/jquery.js"></script><?php include_once("../librerias/header_nuevo.php"); ?><?php include_once("../../class_transferencia.php"); ?><tr><td><table style="width: 100%; border-collapse: collapse; font-size: 9pt; font-family: arial;" border="1">
+<?php include_once("../carta/funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("../correo_saia/funciones.php"); ?><?php include_once("../librerias/funciones_generales.php"); ?><script type="text/javascript" src="../../js/jquery.js"></script><?php include_once("../librerias/header_nuevo.php"); ?><?php include_once("../../class_transferencia.php"); ?><tr><td><table style="width: 100%; border-collapse: collapse; font-size: 9pt; font-family: arial;" border="1">
 <tbody>
 <tr>
 <td style="width: 20%;"><strong>C&oacute;digo de compa&ntilde;ia</strong></td>
@@ -67,6 +67,8 @@
 <p>&nbsp;</p>
 <p><?php mostrar_estado_proceso(236,$_REQUEST['iddoc']);?></p>
 <p>&nbsp;</p>
+<p><?php enlace_item_validacion_factura(236,$_REQUEST['iddoc']);?>&nbsp;</p>
+<p><?php mostrar_datos_item_validacion_factura(236,$_REQUEST['iddoc']);?></p>
 <table style="; width: 100%;" border="0">
 <tbody>
 <tr>

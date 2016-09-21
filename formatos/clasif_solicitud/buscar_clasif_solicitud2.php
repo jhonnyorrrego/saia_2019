@@ -1,4 +1,4 @@
-<?php include_once("../../formatos/librerias/funciones_generales.php"); ?><?php include_once("../../calendario/calendario.php"); ?><legend id="label_formato" class="legend">B&uacute;squeda en formato Clasificacion de la solicitud</legend><br /><br /><?php include_once("../../formatos/librerias/funciones_generales.php"); ?><div class="control-group">
+<?php include_once("../librerias/funciones_generales.php"); ?><?php include_once("../../calendario/calendario.php"); ?><legend id="label_formato" class="legend">B&uacute;squeda en formato Clasificacion de la solicitud</legend><br /><br /><?php include_once("../librerias/funciones_generales.php"); ?><div class="control-group">
                   <label class="string control-label" for="fecha_clas"><b>Fecha</b></label>
                   <input type="hidden" name="bksaiacondicion_g@fecha_clas_x" id="bksaiacondicion_g@fecha_clas_x" value=">=">
                   <div class="controls">

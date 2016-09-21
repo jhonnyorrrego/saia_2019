@@ -1,4 +1,4 @@
-<?php include_once("../carta/funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("../librerias/funciones_generales.php"); ?><script type="text/javascript" src="../../js/jquery.js"></script><?php include_once("../librerias/header_nuevo.php"); ?><?php include_once("../../class_transferencia.php"); ?><tr><td><table style="border-collapse: collapse; background-color: #b3b3b3; width: 100%; font-size: 10pt;" border="1">
+<?php include_once("../carta/funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("../correo_saia/funciones.php"); ?><?php include_once("../librerias/funciones_generales.php"); ?><script type="text/javascript" src="../../js/jquery.js"></script><?php include_once("../librerias/header_nuevo.php"); ?><?php include_once("../../class_transferencia.php"); ?><tr><td><table style="border-collapse: collapse; background-color: #b3b3b3; width: 100%; font-size: 10pt;" border="1">
 <tbody>
 <tr>
 <td style="width: 100%;" colspan="2"><span><strong>Soluci&oacute;n</strong>&nbsp;<?php mostrar_valor_campo('tipo',288,$_REQUEST['iddoc']);?></span>&nbsp;&nbsp;</td>

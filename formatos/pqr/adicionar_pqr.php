@@ -31,8 +31,8 @@
                      <td class="encabezado" width="20%" title="">SOLICITUD*</td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(210,2220,$_REQUEST['iddoc']);?></td></tr><tr>
                      <td class="encabezado" width="20%" title="">OTRO TIPO</td>
                      <td bgcolor="#F5F5F5"><input  maxlength="255"   tabindex='7'  type="text" size="100" id="otro" name="otro"  value="<?php echo(validar_valor_campo(2219)); ?>"></td>
-                    </tr><tr>
-                     <td class="encabezado" width="20%" title="">TIPO SOLICITUD*</td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(210,2237,$_REQUEST['iddoc']);?></td></tr><input type="hidden" name="serie_idserie" value="<?php echo(validar_valor_campo(2235)); ?>"><tr>
+                    </tr><tr id="tr_tipo" >
+                     <td class="encabezado" width="20%" title="">TIPO SOLICITUD*</td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(210,2237,$_REQUEST['iddoc']);?></td></tr><input type="hidden" name="serie_idserie" value="<?php echo(validar_valor_campo(2235)); ?>"><tr id="tr_forma_envio" >
                      <td class="encabezado" width="20%" title="">FORMA DE ENV&Iacute;O*</td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(210,2236,$_REQUEST['iddoc']);?></td></tr><input type="hidden" name="datos_persona" value="<?php echo(validar_valor_campo(2227)); ?>"><input type="hidden" name="idft_pqr" value="<?php echo(validar_valor_campo(2232)); ?>"><input type="hidden" name="documento_iddocumento" value="<?php echo(validar_valor_campo(2233)); ?>"><input type="hidden" name="encabezado" value="<?php echo(validar_valor_campo(2231)); ?>"><input type="hidden" name="firma" value="<?php echo(validar_valor_campo(2230)); ?>"><input type="hidden" name="responsable" value="<?php echo(validar_valor_campo(2226)); ?>"><tr>
                      <td class="encabezado" width="20%" title="">DESCRIBA SU SOLICITUD*</td>
                      <td class="celda_transparente"><textarea  tabindex='8'  name="descripcion" id="descripcion" cols="53" rows="3" class="tiny_basico required"><?php echo(validar_valor_campo(2229)); ?></textarea></td>

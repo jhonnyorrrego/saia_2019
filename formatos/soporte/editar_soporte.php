@@ -75,8 +75,8 @@
                     {tree_responsable.setCheck(vector2[m],true);
                     }}
 --></script></td></tr><tr>
-                     <td class="encabezado" width="20%" title="">ACTIVOS*</td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(233,2596,$_REQUEST['iddoc']);?></td></tr><tr>
-                     <td class="encabezado" width="20%" title="">PRIORIDAD*</td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(233,2597,$_REQUEST['iddoc']);?></td></tr><tr>
+                     <td class="encabezado" width="20%" title="">ACTIVOS*</td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(233,2596,$_REQUEST['iddoc']);?></td></tr><tr id="tr_prioridad" >
+                     <td class="encabezado" width="20%" title="">PRIORIDAD*</td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(233,2597,$_REQUEST['iddoc']);?></td></tr><tr id="tr_categoria" >
                      <td class="encabezado" width="20%" title="">CATEGORIA*</td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(233,2598,$_REQUEST['iddoc']);?></td></tr><tr>
                      <td class="encabezado" width="20%" title="">DESCRPCI&Oacute;N*</td>
                      <td class="celda_transparente"><textarea  tabindex='3'  name="descripcion" id="descripcion" cols="53" rows="3" class="tiny_basico required"><?php echo(mostrar_valor_campo('descripcion',233,$_REQUEST['iddoc'])); ?></textarea></td>

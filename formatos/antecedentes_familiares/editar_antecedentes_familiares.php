@@ -4,27 +4,27 @@
 	$('#formulario_formatos').validate();
 	
 });
-</script> </head><body bgcolor="#F5F5F5"><?php llama_funcion_accion(@$_REQUEST["iddoc"],@$_REQUEST["idformato"],"ingresar","ANTERIOR");?><form name="formulario_formatos" id="formulario_formatos" method="post" action="../../class_transferencia.php" enctype="multipart/form-data"><table width="100%" cellspacing="1" cellpadding="4"><tr><td colspan="2" class="encabezado_list">ANTECEDENTES FAMILIARES</td></tr><input type="hidden" name="encabezado" value="<?php echo(mostrar_valor_campo('encabezado',283,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="idft_antecedentes_familiares" value="<?php echo(mostrar_valor_campo('idft_antecedentes_familiares',283,$_REQUEST['iddoc'])); ?>"><tr>
+</script> </head><body bgcolor="#F5F5F5"><?php llama_funcion_accion(@$_REQUEST["iddoc"],@$_REQUEST["idformato"],"ingresar","ANTERIOR");?><form name="formulario_formatos" id="formulario_formatos" method="post" action="../../class_transferencia.php" enctype="multipart/form-data"><table width="100%" cellspacing="1" cellpadding="4"><tr><td colspan="2" class="encabezado_list">ANTECEDENTES FAMILIARES</td></tr><input type="hidden" name="encabezado" value="<?php echo(mostrar_valor_campo('encabezado',283,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="idft_antecedentes_familiares" value="<?php echo(mostrar_valor_campo('idft_antecedentes_familiares',283,$_REQUEST['iddoc'])); ?>"><tr id="tr_cardiaca_familia" >
                      <td class="encabezado" width="20%" title="">ENFERMEDAD CARD&Iacute;ACA EN LA FAMILIA*</td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(283,3281,$_REQUEST['iddoc']);?></td></tr><tr>
                      <td class="encabezado" width="20%" title="">ENFERMEDAD CARDIACA &iquest;QUI&Eacute;N?</td>
                      <td bgcolor="#F5F5F5"><input  maxlength="255"   tabindex='1'  type="text" size="100" id="cardiaca_quien" name="cardiaca_quien"  value="<?php echo(mostrar_valor_campo('cardiaca_quien',283,$_REQUEST['iddoc'])); ?>"></td>
-                    </tr><tr>
+                    </tr><tr id="tr_hipertension_familia" >
                      <td class="encabezado" width="20%" title="">HIPERTENSION EN LA FAMILIA*</td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(283,3283,$_REQUEST['iddoc']);?></td></tr><tr>
                      <td class="encabezado" width="20%" title="">HIPERTENSION &iquest;QUI&Eacute;N?</td>
                      <td bgcolor="#F5F5F5"><input  maxlength="255"   tabindex='2'  type="text" size="100" id="hipertension_quien" name="hipertension_quien"  value="<?php echo(mostrar_valor_campo('hipertension_quien',283,$_REQUEST['iddoc'])); ?>"></td>
-                    </tr><tr>
+                    </tr><tr id="tr_cancer_familia" >
                      <td class="encabezado" width="20%" title="">CANCER EN LA FAMILIA*</td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(283,3222,$_REQUEST['iddoc']);?></td></tr><tr>
                      <td class="encabezado" width="20%" title="">CANCER &iquest;QUI&Eacute;N?</td>
                      <td bgcolor="#F5F5F5"><input  maxlength="255"   tabindex='3'  type="text" size="100" id="cancer_quien" name="cancer_quien"  value="<?php echo(mostrar_valor_campo('cancer_quien',283,$_REQUEST['iddoc'])); ?>"></td>
-                    </tr><tr>
+                    </tr><tr id="tr_respiratoria_familia" >
                      <td class="encabezado" width="20%" title="">ENFERMEDAD RESPIRATORIA EN LA FAMILIA *</td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(283,3282,$_REQUEST['iddoc']);?></td></tr><tr>
                      <td class="encabezado" width="20%" title="">ENFERMEDAD RESPIRATORIA &iquest;QUI&Eacute;N?</td>
                      <td bgcolor="#F5F5F5"><input  maxlength="255"   tabindex='4'  type="text" size="100" id="respiratorio_quien" name="respiratorio_quien"  value="<?php echo(mostrar_valor_campo('respiratorio_quien',283,$_REQUEST['iddoc'])); ?>"></td>
-                    </tr><tr>
+                    </tr><tr id="tr_diabetes_mellitus" >
                      <td class="encabezado" width="20%" title="">DIABETES_MELLITUS EN LA FAMILIA*</td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(283,3228,$_REQUEST['iddoc']);?></td></tr><tr>
                      <td class="encabezado" width="20%" title="">DIABETES &iquest;QUI&Eacute;N?</td>
                      <td bgcolor="#F5F5F5"><input  maxlength="255"   tabindex='5'  type="text" size="100" id="diabetes_quien" name="diabetes_quien"  value="<?php echo(mostrar_valor_campo('diabetes_quien',283,$_REQUEST['iddoc'])); ?>"></td>
-                    </tr><tr>
+                    </tr><tr id="tr_asma_familia" >
                      <td class="encabezado" width="20%" title="">ASMA EN LA FAMILIA*</td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(283,3232,$_REQUEST['iddoc']);?></td></tr><tr>
                      <td class="encabezado" width="20%" title="">ASMA &iquest;QUI&Eacute;N?</td>
                      <td bgcolor="#F5F5F5"><input  maxlength="255"   tabindex='6'  type="text" size="100" id="asma_quien" name="asma_quien"  value="<?php echo(mostrar_valor_campo('asma_quien',283,$_REQUEST['iddoc'])); ?>"></td>

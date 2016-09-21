@@ -1,4 +1,15 @@
-<html><title>.:BUSCAR FACTURA PROVEEDORES:.</title><head><link rel="stylesheet" type="text/css" href="../../css/dhtmlXTree.css"/><script type="text/javascript" src="../../js/jquery.fcbkcomplete.js"></script><link rel="stylesheet" type="text/css" href="../../css/style_fcbkcomplete.css"/></head><body bgcolor="#F5F5F5"><form name="formulario_formatos" id="formulario_formatos" method="post" action="../librerias/funciones_buscador.php" enctype="multipart/form-data"><table width="100%" cellspacing="1" cellpadding="4" border="0"><tr><td colspan="4" class="encabezado_list">B&Uacute;SQUEDA FACTURA PROVEEDORES</td></tr><tr><td class="encabezado">&nbsp;<select name="condicion_cia" id="condicion_cia"><option value="AND">Y</option><option value="OR">O</option></td>
+<html><title>.:BUSCAR RADICACION FACTURAS:.</title><head><link rel="stylesheet" type="text/css" href="../../css/dhtmlXTree.css"/><script type="text/javascript" src="../../js/jquery.fcbkcomplete.js"></script><link rel="stylesheet" type="text/css" href="../../css/style_fcbkcomplete.css"/></head><body bgcolor="#F5F5F5"><form name="formulario_formatos" id="formulario_formatos" method="post" action="../librerias/funciones_buscador.php" enctype="multipart/form-data"><table width="100%" cellspacing="1" cellpadding="4" border="0"><tr><td colspan="4" class="encabezado_list">B&Uacute;SQUEDA RADICACION FACTURAS</td></tr><tr><td class="encabezado">&nbsp;<select name="condicion_factura_correcta" id="condicion_factura_correcta"><option value="AND">Y</option><option value="OR">O</option></td>
+                     <td class="encabezado" width="20%" title="">FACTURA_CORRECTA</td><td class="encabezado">&nbsp;<select name="compara_factura_correcta" id="compara_factura_correcta"> <option value="or">Alguno</option><option value="and">Todos</option></select></td>
+                     <td bgcolor="#F5F5F5"><select multiple id="factura_correcta" name="factura_correcta"></select><script>
+                     $(document).ready(function() 
+                      {
+                      $("#factura_correcta").fcbkcomplete({
+                        complete_text:"Presione enter para agregar una palabra.",
+                        newel: true
+                      });
+                      });
+                     </script></td>
+                    </tr><tr><td class="encabezado">&nbsp;<select name="condicion_cia" id="condicion_cia"><option value="AND">Y</option><option value="OR">O</option></td>
                      <td class="encabezado" width="20%" title="">C&Oacute;DIGO DE LA COMPA&Ntilde;IA</td><td class="encabezado">&nbsp;<select name="compara_cia" id="compara_cia"> <option value="or">Alguno</option><option value="and">Todos</option></select></td>
                      <td bgcolor="#F5F5F5"><select multiple id="cia" name="cia"></select><script>
                      $(document).ready(function() 
@@ -9,7 +20,7 @@
                       });
                       });
                      </script></td>
-                    </tr><tr><td class="encabezado">&nbsp;<select name="condicion_tipo_doc" id="condicion_tipo_doc"><option value="AND">Y</option><option value="OR">O</option></td>
+                    </tr><tr id="tr_tipo_doc"><td class="encabezado">&nbsp;<select name="condicion_tipo_doc" id="condicion_tipo_doc"><option value="AND">Y</option><option value="OR">O</option></td>
                      <td class="encabezado" width="20%" title="">TIPO DOCUMENTO</td><td class="encabezado">&nbsp;<select name="compara_tipo_doc" id="compara_tipo_doc"> <option value="LIKE|%|%">Similar</option><option value="LIKE|%|@">Inicia Con</option><option value="LIKE|@|%">Finaliza Con</option></select></td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(236,2631,'',1);?></td></tr><tr><td class="encabezado">&nbsp;<select name="condicion_fecha_exp" id="condicion_fecha_exp"><option value="AND">Y</option><option value="OR">O</option></td>
                        <td class="encabezado" width="20%" title="">FECHA DE EXPEDICION</td><td class="encabezado">ENTRE &nbsp;</td><td colspan="2" bgcolor="#F5F5F5"><span class="phpmaker"><input type="text" readonly="true"  name="fecha_exp_1" id="fecha_exp_1" tipo="fecha" value=""><?php selector_fecha("fecha_exp_1","formulario_formatos","Y-m-d",date("m"),date("Y"),"default.css","../../","AD:VALOR"); ?>&nbsp;&nbsp; Y &nbsp;&nbsp;<input type="text" readonly="true"  name="fecha_exp_2" id="fecha_exp_2" tipo="fecha" value=""><?php selector_fecha("fecha_exp_2","formulario_formatos","Y-m-d",date("m"),date("Y"),"default.css","../../","AD:VALOR"); ?></span></font></td></tr><tr><td class="encabezado">&nbsp;<select name="condicion_fecha_venc" id="condicion_fecha_venc"><option value="AND">Y</option><option value="OR">O</option></td>
                        <td class="encabezado" width="20%" title="">FECHA DE VENCIMIENTO</td><td class="encabezado">ENTRE &nbsp;</td><td colspan="2" bgcolor="#F5F5F5"><span class="phpmaker"><input type="text" readonly="true"  name="fecha_venc_1" id="fecha_venc_1" tipo="fecha" value=""><?php selector_fecha("fecha_venc_1","formulario_formatos","Y-m-d",date("m"),date("Y"),"default.css","../../","AD:VALOR"); ?>&nbsp;&nbsp; Y &nbsp;&nbsp;<input type="text" readonly="true"  name="fecha_venc_2" id="fecha_venc_2" tipo="fecha" value=""><?php selector_fecha("fecha_venc_2","formulario_formatos","Y-m-d",date("m"),date("Y"),"default.css","../../","AD:VALOR"); ?></span></font></td></tr><tr><td class="encabezado">&nbsp;<select name="condicion_num_factura" id="condicion_num_factura"><option value="AND">Y</option><option value="OR">O</option></td>
@@ -37,7 +48,7 @@
                       });
                      </script><tr><td class="encabezado">&nbsp;<select name="condicion_tipo_moneda" id="condicion_tipo_moneda"><option value="AND">Y</option><option value="OR">O</option></td>
                      <td class="encabezado" width="20%" title="">TIPO MONEDA</td><td class="encabezado">&nbsp;<select name="compara_tipo_moneda" id="compara_tipo_moneda"> <option value="=|@|@">Igual</option><option value="-|@|@">Menor</option><option value="+|@|@">Mayor</option><option value="!|@|@">Diferente</option></select></td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(236,2636,'',1);?></td></tr><tr><td class="encabezado">&nbsp;<select name="condicion_enviar" id="condicion_enviar"><option value="AND">Y</option><option value="OR">O</option></td>
-                   <td class="encabezado" width="20%" title="">ENVIAR A</td><td class="encabezado">&nbsp;<select name="compara_enviar" id="compara_enviar"> <option value="or">Alguno</option><option value="and">Todos</option></select></td><td bgcolor="#F5F5F5"><div id="esperando_enviar"><img src="../../imagenes/cargando.gif"></div><div id="seleccionados"><?php mostrar_seleccionados(236,2637,'5',$_REQUEST['iddoc']);?></div>
+                   <td class="encabezado" width="20%" title="">ENVIAR A</td><td class="encabezado">&nbsp;<select name="compara_enviar" id="compara_enviar"> <option value="or">Alguno</option><option value="and">Todos</option></select></td><td bgcolor="#F5F5F5"><div id="esperando_enviar"><img src="../../imagenes/cargando.gif"></div><div id="seleccionados"><?php mostrar_seleccionados(236,5068,'5',$_REQUEST['iddoc']);?></div>
                           <br />  Buscar: <input type="text" id="stext_enviar" width="200px" size="25">
                    <a href="javascript:void(0)" onclick="tree_enviar.findItem(htmlentities(document.getElementById('stext_enviar').value),1)"><img src="../../botones/general/anterior.png"border="0px"></a>
                    <a href="javascript:void(0)" onclick="tree_enviar.findItem(htmlentities(document.getElementById('stext_enviar').value),0,1)"><img src="../../botones/general/buscar.png"border="0px"></a>
@@ -133,7 +144,7 @@
                       });
                       });
                      </script></td>
-                    </tr><tr><td class="encabezado">&nbsp;<select name="condicion_requiere_irecibo" id="condicion_requiere_irecibo"><option value="AND">Y</option><option value="OR">O</option></td>
+                    </tr><tr id="tr_requiere_irecibo"><td class="encabezado">&nbsp;<select name="condicion_requiere_irecibo" id="condicion_requiere_irecibo"><option value="AND">Y</option><option value="OR">O</option></td>
                      <td class="encabezado" width="20%" title="">REQUIERE IR?</td><td class="encabezado">&nbsp;<select name="compara_requiere_irecibo" id="compara_requiere_irecibo"> <option value="=|@|@">Igual</option><option value="-|@|@">Menor</option><option value="+|@|@">Mayor</option><option value="!|@|@">Diferente</option></select></td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(236,2642,'',1);?></td></tr><tr><td class="encabezado">&nbsp;<select name="condicion_numero_guia" id="condicion_numero_guia"><option value="AND">Y</option><option value="OR">O</option></td>
                      <td class="encabezado" width="20%" title="">GUIA</td><td class="encabezado">&nbsp;<select name="compara_numero_guia" id="compara_numero_guia"> <option value="or">Alguno</option><option value="and">Todos</option></select></td>
                      <td bgcolor="#F5F5F5"><select multiple id="numero_guia" name="numero_guia"></select><script>
@@ -200,7 +211,7 @@
                       });
                       });
                      </script></td>
-                    </tr><input type="hidden" name="campo_descripcion" value="2634,2635,2636,2637,2638,2640,2641,2644,2646"><?php submit_formato(236);?></table><?php if(@$_REQUEST["campo__retorno"]){ ?>
+                    </tr><input type="hidden" name="campo_descripcion" value="2634,2635,2636,2638,2640,2641,2644,2646"><?php submit_formato(236);?></table><?php if(@$_REQUEST["campo__retorno"]){ ?>
                 <input type="hidden" name="campo__retorno" value="<?php echo($_REQUEST["campo__retorno"]); ?>">
               <?php }
                if(@$_REQUEST["formulario__retorno"]){ ?>

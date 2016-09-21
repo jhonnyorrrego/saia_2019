@@ -71,8 +71,8 @@
                   for(m=0;m<vector2.length;m++)
                     {tree_tipo_gasto.setCheck(vector2[m],true);
                     }}
---></script></td></tr><tr>
-                     <td class="encabezado" width="20%" title="">CALIFICACON SERVICIO*</td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(303,3539,$_REQUEST['iddoc']);?></td></tr><tr>
+--></script></td></tr><tr id="tr_calificacion" >
+                     <td class="encabezado" width="20%" title="">CALIFICACON SERVICIO*</td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(303,3539,$_REQUEST['iddoc']);?></td></tr><tr id="tr_urgencia_pago" >
                      <td class="encabezado" width="20%" title="">URGENCIA PAGO*</td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(303,3544,$_REQUEST['iddoc']);?></td></tr><tr>
                      <td class="encabezado" width="20%" title="">OBSERVACIONES</td>
                      <td class="celda_transparente"><textarea  tabindex='2'  name="observaciones" id="observaciones" cols="53" rows="3" class="tiny_basico"><?php echo(mostrar_valor_campo('observaciones',303,$_REQUEST['iddoc'])); ?></textarea></td>
