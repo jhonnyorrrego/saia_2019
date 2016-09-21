@@ -151,13 +151,6 @@ if($dato_padre["numcampos"]){
 	  </div>
 	</div>
 	
-	<div class="control-group element">
-	  <label class="control-label" for="no_tomo">No de tomo
-	  </label>
-	  <div class="controls"> 
-	    <input name="no_tomo" id="no_tomo" value="<?php echo($datos[0]["no_tomo"]); ?>">
-	  </div>
-	</div>
 	
 	<div class="control-group element">
 	  <label class="control-label" for="codigo_numero">Codigo numero
