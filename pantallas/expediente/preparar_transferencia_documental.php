@@ -23,7 +23,7 @@ include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."pantallas/lib/librerias_fechas.php");
 if(@$_REQUEST['ejecutar']){
 $expedientes=busca_filtro_tabla("a.idexpediente,a.estado_archivo,a.serie_idserie,".fecha_db_obtener('a.fecha_cierre','Y-m-d')." AS fecha_inicial","expediente a","a.fecha_cierre IS NOT NULL AND a.estado_archivo IN(1,2) AND  (a.prox_estado_archivo=0 OR a.prox_estado_archivo IS NULL )","",$conn);
-
+$exito=0;
 if($expedientes['numcampos']){
     for($i=0;$i<$expedientes['numcampos'];$i++){
         $campo_dias='';
@@ -41,6 +41,7 @@ if($expedientes['numcampos']){
         
         $datos_serie=busca_filtro_tabla($campo_dias,"serie","idserie=".$expedientes[$i]['serie_idserie'],"",$conn);
         if($datos_serie['numcampos']){
+            $exito=1;
             $fecha_habil=dias_habiles_listado($datos_serie[0][$campo_dias],'Y-m-d',$expedientes[$i]['fecha_inicial']);
             if($fecha_habil==date('Y-m-d')){
                 $sql="UPDATE expediente SET prox_estado_archivo=".$prox_estado_archivo." WHERE idexpediente=".$expedientes[$i]['idexpediente'];
