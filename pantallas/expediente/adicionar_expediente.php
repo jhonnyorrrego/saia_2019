@@ -276,8 +276,10 @@ $dato_padre=busca_filtro_tabla("","expediente a","a.idexpediente=".$_REQUEST["co
       var text = tree3.getItemText(nodeId);
       var vector_text=text.split('(');
       var codigo_serie=vector_text[vector_text.length-1].substring(0,vector_text[vector_text.length-1].length-2);
-      	if(tree3.isItemChecked(nodeId)){
-      	    alert('chequeado: '+codigo_serie);
+      	if(tree3.isItemChecked(nodeId)){ //checkqueado
+      	    
+      	}else{ //unchecked
+      	    
       	}
     }
     function fin_cargando_serie() {
