@@ -274,7 +274,8 @@ $dato_padre=busca_filtro_tabla("","expediente a","a.idexpediente=".$_REQUEST["co
       }
       
       var text = tree3.getItemText(nodeId);
-      alert(text);
+      var vector_text=text.split('(');
+      alert(vector_text[vector_text-length-1]);
     }
     function fin_cargando_serie() {
       if (browserType == "gecko" )
