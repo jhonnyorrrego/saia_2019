@@ -1,7 +1,0 @@
-<?php include_once("../librerias/funciones_generales.php"); ?><?php include_once("../../calendario/calendario.php"); ?><legend id="label_formato" class="legend">B&uacute;squeda en formato Solicitud cotizacion </legend><br /><br /><?php include_once("../librerias/funciones_generales.php"); ?><div class="control-group">
-                  <label class="string control-label" for="fecha_inicio"><b>Fecha de inicio</b></label>
-                  <input type="hidden" name="bksaiacondicion_g@fecha_inicio_x" id="bksaiacondicion_g@fecha_inicio_x" value=">=">
-                  <div class="controls">
-                  Entre <input type="text"  name="bqsaia_g@fecha_inicio_x" id="fecha_inicio_x" tipo="fecha" value="" style="width:100px" placeholder="Inicio"><?php selector_fecha("fecha_inicio_x","kformulario_saia","Y-m-d",date("m"),date("Y"),"default.css","../../","AD:VALOR"); ?> y 
-                  <input type="hidden" name="bksaiacondicion_g@fecha_inicio_y" id="bksaiacondicion_g@fecha_inicio_y" value="<=">
-                  <input type="text"  name="bqsaia_g@fecha_inicio_y" id="fecha_inicio_y" tipo="fecha" value="" style="width:100px" placeholder="Fin"><?php selector_fecha("fecha_inicio_y","kformulario_saia","Y-m-d",date("m"),date("Y"),"default.css","../../","AD:VALOR"); ?></div></div><input type="hidden" name="filtro_adicional" id="filtro_adicional" value=" ft_solicitud_cotiza_pav g @ AND  g.documento_iddocumento=iddocumento "></body><input type="hidden" name="bqtipodato_plantilla" id="bqtipodato_plantilla" value="date|g@fecha_inicio_x,g@fecha_inicio_y">
