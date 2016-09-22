@@ -152,7 +152,7 @@ function combinar_documento($templateProcessor, $ruta_csv, $directorio_out, $rut
 				
 				if(file_exists($directorio_out . $archivo_out . $extension_doc)) {
 					unlink($directorio_out . $archivo_out . $extension_doc);
-					unlink($directorio_out . $archivo_out . '.pdf');
+					//unlink($directorio_out . $archivo_out . '.pdf');
 				}
 				$marca_agua = mostrar_estado_documento($_REQUEST['iddoc']);
 				$templateProcessor->setTextWatermark($marca_agua);
