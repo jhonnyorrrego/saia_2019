@@ -72,7 +72,7 @@ if(file_exists($ruta_docx . 'documento_word.docx')) {
 	
 	$campos_word = $templateProcessor->getVariables();
 	
-	if(@$_REQUEST["iddoc"] && count($campos_word)) {
+	if(@$_REQUEST["iddoc"] && count($campos_word) && !$combinar) {
 		
 		$numero_radicado = busca_filtro_tabla("", "documento", "iddocumento=" . $_REQUEST["iddoc"], "", $conn);
 		$templateProcessor->setValue('formato_numero', $numero_radicado[0]['numero']);
@@ -94,15 +94,7 @@ if(file_exists($ruta_docx . 'documento_word.docx')) {
 		}
 		
 		$directorio_out = $ruta_docx;
-		
-		if($combinar) {
-		   	crear_destino($ruta_combinar);	
-        	chmod($ruta_combinar, 0777);
 
-			combinar_documento($templateProcessor, $ruta_csv, $ruta_combinar, $directorio_out);
-			return;
-		}
-		
 		$archivo_out = 'documento_word';
 		
 		$extension_doc = '.docx';
@@ -119,7 +111,13 @@ if(file_exists($ruta_docx . 'documento_word.docx')) {
 			$comando = 'export HOME=/tmp && libreoffice5.1 --headless --convert-to pdf:writer_pdf_Export --outdir ' . $directorio_out . ' ' . $directorio_out . $archivo_out . $extension_doc;
 			$var = shell_exec($comando);
 		}
-	} // fin si existe iddoc y el word tiene campos del formato
+	}// fin si existe iddoc y el word tiene campos del formato
+	if($combinar) {
+	   	crear_destino($ruta_combinar);	
+    	chmod($ruta_combinar, 0777);
+		combinar_documento($ruta_csv, $ruta_combinar, $ruta_docx, $idformato);
+		return;
+	}
 }
 // fin si existe word
 function obtener_codigo_qr($idformato, $iddoc) {
@@ -136,16 +134,37 @@ function obtener_codigo_qr($idformato, $iddoc) {
 	return $codigo_qr[0]['ruta_qr'];
 }
 
-function combinar_documento($originalProcessor, $ruta_csv, $directorio_out, $ruta_pdf) {
+function combinar_documento($ruta_csv, $directorio_out, $ruta_pdf, $idformato) {
 	global $conn, $ruta_db_superior;
+
+	$numero_radicado = busca_filtro_tabla("", "documento", "iddocumento=" . $_REQUEST["iddoc"], "", $conn);
 	
-	$campos_word = $originalProcessor->getVariables();
 	$datos = cargar_csv($ruta_csv);
 	for($i = 0; $i < count($datos); $i++) {
-    	$templateProcessor = $originalProcessor;
 		// Cada elemento es un array campo => valor
 		$archivo_out = "documento_word_$i";
 		$extension_doc = '.docx';
+		
+	    $templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor($ruta_pdf . 'documento_word.docx');
+    	$campos_word = $templateProcessor->getVariables();
+
+    	$templateProcessor->setValue('formato_numero', $numero_radicado[0]['numero']);
+		$campo_qr_word = "codigo_qr";
+		if(in_array($campo_qr_word, $campos_word)) {
+			$src = $ruta_db_superior . obtener_codigo_qr($idformato, $_REQUEST["iddoc"]);
+			
+			$img2 = array(
+				array(
+					'img' => htmlspecialchars($src),
+					'size' => array(
+						100,
+						100
+					)
+				)
+			);
+			$templateProcessor->setImg($campo_qr_word, $img2);
+		}
+
 		foreach($datos[$i] as $campo => $valor) {
 			if(in_array($campo, $campos_word)) {
 				$templateProcessor->setValue($campo, $valor);
