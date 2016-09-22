@@ -13,87 +13,48 @@ if(@$_REQUEST["ejecutar_expediente"]){
     $_REQUEST["ejecutar_expediente"]();
   }
 }
-/*
-function set_expediente(){
-$retorno=new stdClass;
-$retorno->exito=0;
-$retorno->mensaje="Error al guardar Prueba";
-$exito=0;
-$campos=array("nombre","descripcion","cod_padre","codigo","fecha", "serie_idserie", "no_tomo", "codigo_numero", "fondo", "proceso", "fecha_extrema_i", "fecha_extrema_f", "no_unidad_conservacion", "no_folios", "no_carpeta", "soporte", "frecuencia_consulta", "ubicacion", "unidad_admin", "estado_archivo", "estado_cierre","fk_idcaja","notas_transferencia");
-$valores=array();
-foreach($campos AS $key=>$campo){
-  if(@$_REQUEST[$campo]){
-    array_push($valores,$_REQUEST[$campo]);
-  }
-  else{
-    array_push($valores,"");
-  }
-}
-$sql2="INSERT INTO expediente(".implode(",",$campos).",propietario) VALUES('".implode("','",$valores)."',".usuario_actual("funcionario_codigo").")";
-phpmkr_query($sql2);
-$idexpediente=phpmkr_insert_id();
-$cod_padre=busca_filtro_tabla("cod_arbol","expediente A","A.idexpediente=".$_REQUEST["cod_padre"],"",$conn);
-if($cod_padre["numcampos"]){
-	$codigo_arbol=$cod_padre[0]["cod_arbol"].".".$idexpediente;
-}
-else{
-	$codigo_arbol=$idexpediente;
-}
-$sql3="UPDATE expediente SET cod_arbol='".$codigo_arbol."' where idexpediente=".$idexpediente;
-phpmkr_query($sql3);
-$retorno->sql=$sql2;
-if($idexpediente){
-  if(asignar_expediente($idexpediente,1,usuario_actual("idfuncionario"))){      
-    $exito=1; 
-  }  
-}
-if($exito){
-  $retorno->idexpediente=$idexpediente;
-  $retorno->exito=1;
-  $retorno->mensaje="Expediente guardado con &eacute;xito;"; 
-}
-return($retorno);
-}
-*/
 
-function set_expediente() {
-	$retorno = new stdClass;
-	$retorno -> exito = 0;
-	$retorno -> mensaje = "Error al guardar";
-	$exito = 0;
-	$campos = array("nombre", "descripcion", "cod_padre", "codigo", "fecha", "serie_idserie", "no_tomo", "codigo_numero", "fondo", "proceso", "fecha_extrema_i", "fecha_extrema_f", "no_unidad_conservacion", "no_folios", "no_carpeta", "soporte", "frecuencia_consulta", "ubicacion", "unidad_admin");
-	$valores = array();
-	foreach ($campos AS $key => $campo) {
-		if (@$_REQUEST[$campo]) {
-			array_push($valores, $_REQUEST[$campo]);
-		} else {
-			array_push($valores, "");
-		}
-	}
-	$sql2 = "INSERT INTO expediente(" . implode(",", $campos) . ",propietario) VALUES('" . implode("','", $valores) . "'," . usuario_actual("funcionario_codigo") . ")";
-	phpmkr_query($sql2);
-	$idexpediente = phpmkr_insert_id();
-	$cod_padre = busca_filtro_tabla("cod_arbol", "expediente A", "A.idexpediente=" . $_REQUEST["cod_padre"], "", $conn);
-	if ($cod_padre["numcampos"]) {
-		$codigo_arbol = $cod_padre[0]["cod_arbol"] . "." . $idexpediente;
-	} else {
-		$codigo_arbol = $idexpediente;
-	}
-	$sql3 = "UPDATE expediente SET cod_arbol='" . $codigo_arbol . "' where idexpediente=" . $idexpediente;
-	phpmkr_query($sql3);
-	$retorno -> sql = $sql2;
-	if ($idexpediente) {
+function set_expediente(){
+    $retorno=new stdClass;
+    $retorno->exito=0;
+    $retorno->mensaje="Error al guardar Prueba";
+    $exito=0;
+    $campos=array("nombre","descripcion","cod_padre","codigo","fecha", "serie_idserie", "no_tomo", "codigo_numero", "fondo", "proceso", "fecha_extrema_i", "fecha_extrema_f", "no_unidad_conservacion", "no_folios", "no_carpeta", "soporte", "frecuencia_consulta", "ubicacion", "unidad_admin", "estado_archivo", "estado_cierre","fk_idcaja","notas_transferencia");
+    $valores=array();
+    foreach($campos AS $key=>$campo){
+      if(@$_REQUEST[$campo]){
+        array_push($valores,$_REQUEST[$campo]);
+      }
+      else{
+        array_push($valores,"");
+      }
+    }
+    $sql2="INSERT INTO expediente(".implode(",",$campos).",propietario) VALUES('".implode("','",$valores)."',".usuario_actual("funcionario_codigo").")";
+    phpmkr_query($sql2);
+    $idexpediente=phpmkr_insert_id();
+    $cod_padre=busca_filtro_tabla("cod_arbol","expediente A","A.idexpediente=".$_REQUEST["cod_padre"],"",$conn);
+    if($cod_padre["numcampos"]){
+    	$codigo_arbol=$cod_padre[0]["cod_arbol"].".".$idexpediente;
+    }
+    else{
+    	$codigo_arbol=$idexpediente;
+    }
+    $sql3="UPDATE expediente SET cod_arbol='".$codigo_arbol."' where idexpediente=".$idexpediente;
+    phpmkr_query($sql3);
+    $retorno->sql=$sql2;
+    if($idexpediente){
 		if (asignar_expediente($idexpediente, 1, usuario_actual("idfuncionario"), "m,e,p")) {
 			$exito = 1;
 		}
-	}
-	if ($exito) {
-		$retorno -> idexpediente = $idexpediente;
-		$retorno -> exito = 1;
-		$retorno -> mensaje = "Expediente guardado con &eacute;xito;";
-	}
-	return ($retorno);
+    }
+    if($exito){
+      $retorno->idexpediente=$idexpediente;
+      $retorno->exito=1;
+      $retorno->mensaje="Expediente guardado con &eacute;xito;"; 
+    }
+    return($retorno);
 }
+
 
 function set_expediente_documento(){
 $retorno=new stdClass;
@@ -181,7 +142,7 @@ if($exito){
 }
 return($retorno);
 }
-/*
+
 function delete_expediente(){
 $retorno=new stdClass;
 $retorno->exito=0;
@@ -192,6 +153,8 @@ $sql2="DELETE FROM expediente WHERE idexpediente=".$_REQUEST["idexpediente"];
 phpmkr_query($sql2);
 $sql3="DELETE FROM expediente_doc WHERE expediente_idexpediente=".$_REQUEST["idexpediente"];
 phpmkr_query($sql3);
+$sql4 = "DELETE FROM entidad_expediente WHERE expediente_idexpediente=" . $_REQUEST["idexpediente"];
+phpmkr_query($sql4);
 $idexpediente=$_REQUEST["idexpediente"];
 $retorno->sql=$sql2;
 if($idexpediente){
@@ -204,31 +167,8 @@ if($exito){
 }
 return($retorno);
 }
-*/
-function delete_expediente() {
-	$retorno = new stdClass;
-	$retorno -> exito = 0;
-	$retorno -> mensaje = "Error al eliminar";
-	$exito = 0;
 
-	$sql2 = "DELETE FROM expediente WHERE idexpediente=" . $_REQUEST["idexpediente"];
-	phpmkr_query($sql2);
-	$sql3 = "DELETE FROM expediente_doc WHERE expediente_idexpediente=" . $_REQUEST["idexpediente"];
-	phpmkr_query($sql3);
-	$sql4 = "DELETE FROM entidad_expediente WHERE expediente_idexpediente=" . $_REQUEST["idexpediente"];
-	phpmkr_query($sql4);
-	$idexpediente = $_REQUEST["idexpediente"];
-	$retorno -> sql = $sql2;
-	if ($idexpediente) {
-		$exito = 1;
-	}
-	if ($exito) {
-		$retorno -> idexpediente = $idexpediente;
-		$retorno -> exito = 1;
-		$retorno -> mensaje = "Expediente eliminado con &eacute;xito";
-	}
-	return ($retorno);
-}
+
 function crear_tomo_expediente(){
     global $conn,$ruta_db_superior;
     
