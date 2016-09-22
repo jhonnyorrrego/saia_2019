@@ -136,16 +136,16 @@ function obtener_codigo_qr($idformato, $iddoc) {
 	return $codigo_qr[0]['ruta_qr'];
 }
 
-function combinar_documento($templateProcessor, $ruta_csv, $directorio_out, $ruta_pdf) {
+function combinar_documento($originalProcessor, $ruta_csv, $directorio_out, $ruta_pdf) {
 	global $conn, $ruta_db_superior;
 	
-	$campos_word = $templateProcessor->getVariables();
-	
+	$campos_word = $originalProcessor->getVariables();
 	$datos = cargar_csv($ruta_csv);
 	for($i = 0; $i < count($datos); $i++) {
 		// Cada elemento es un array campo => valor
 		$archivo_out = "documento_word_$i";
 		$extension_doc = '.docx';
+    	$templateProcessor = $originalProcessor;
 		foreach($datos[$i] as $campo => $valor) {
 			if(in_array($campo, $campos_word)) {
 				$templateProcessor->setValue($campo, $valor);
