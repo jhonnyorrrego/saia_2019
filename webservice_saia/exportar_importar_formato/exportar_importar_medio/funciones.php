@@ -27,7 +27,7 @@ include_once($ruta_db_superior."db.php");
 function conexion_exportar_importar($datos){
 	global $conn; 
 	
-	include_once('define_remoto.php');
+	include_once('./define_remoto.php');
 	
 	$datos = json_decode($datos);
 	$importar=json_encode($datos);
