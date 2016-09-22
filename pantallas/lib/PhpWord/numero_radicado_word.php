@@ -46,14 +46,22 @@ if(@$iddoc) {
 $ruta_procesar = '';
 if(@$_REQUEST["iddoc"]) {
 	$anexo = busca_filtro_tabla("d.ruta", "documento a, formato b, campos_formato c, anexos d", "lower(a.plantilla)=b.nombre AND b.idformato=c.formato_idformato AND c.nombre='anexo_word' AND c.idcampos_formato=d.campos_formato AND a.iddocumento=" . $_REQUEST["iddoc"] . " AND d.documento_iddocumento=" . $_REQUEST["iddoc"], "", $conn);
+	$anexo_csv = busca_filtro_tabla("d.ruta", "documento a, formato b, campos_formato c, anexos d", "lower(a.plantilla)=b.nombre AND b.idformato=c.formato_idformato AND c.nombre='anexo_csv' AND c.idcampos_formato=d.campos_formato AND a.iddocumento=" . $_REQUEST["iddoc"] . " AND d.documento_iddocumento=" . $_REQUEST["iddoc"], "", $conn);
 }
 
 $ruta_docx = '';
+$ruta_csv = "";
+$combiar = false;
 
 if(@$anexo['numcampos']) {
 	$ruta_anexo = explode('anexos', $anexo[0]["ruta"]);
-	$ruta_imagen = $ruta_db_superior . $ruta_anexo[0] . 'firma_temp/';
+	$ruta_combinar = $ruta_db_superior . $ruta_anexo[0] . 'pdf_temp/';
 	$ruta_docx = $ruta_db_superior . $ruta_anexo[0] . 'docx/';
+}
+
+if(@$anexo_csv['numcampos']) {
+	$ruta_csv = $ruta_db_superior . $anexo_csv[0]["ruta"];
+	$combiar = true;
 }
 
 if(file_exists($ruta_docx . 'documento_word.docx')) {
@@ -72,17 +80,24 @@ if(file_exists($ruta_docx . 'documento_word.docx')) {
 			$src = $ruta_db_superior . obtener_codigo_qr($_REQUEST["iddoc"]);
 			
 			$img2 = array(
-			    array(
-							'img' => htmlspecialchars($src),
-							'size' => array(
-									100,
-									100
-							)
+				array(
+					'img' => htmlspecialchars($src),
+					'size' => array(
+						100,
+						100
+					)
 				)
 			);
 			$templateProcessor->setImg($campo_qr_word, $img2);
 		}
+		
 		$directorio_out = $ruta_docx;
+		
+		if($combinar) {
+			combinar_documento($templateProcessor, $ruta_csv, $ruta_combinar, $directorio_out);
+			return;
+		}
+		
 		$archivo_out = 'documento_word';
 		
 		$extension_doc = '.docx';
@@ -101,7 +116,7 @@ if(file_exists($ruta_docx . 'documento_word.docx')) {
 		}
 	} // fin si existe iddoc y el word tiene campos del formato
 }
- // fin si existe word
+// fin si existe word
 function obtener_codigo_qr($iddoc, $campos_word) {
 	global $conn, $ruta_db_superior;
 	$codigo_qr = busca_filtro_tabla("", "documento_verificacion", "documento_iddocumento=" . $iddoc, "", $conn);
@@ -116,4 +131,70 @@ function obtener_codigo_qr($iddoc, $campos_word) {
 	return $codigo_qr[0]['ruta_qr'];
 }
 
+function combinar_documento($templateProcessor, $ruta_csv, $directorio_out, $ruta_pdf) {
+	global $conn, $ruta_db_superior;
+	
+	$campos_word = $templateProcessor->getVariables();
+	
+	$datos = cargar_csv($ruta_csv);
+	for($i = 0; $i < count($datos); $i++) {
+		// Cada elemento es un array campo => valor
+		$archivo_out = "documento_word_$i";
+		$extension_doc = '.docx';
+		foreach($datos[$i] as $campo => $valor) {
+			if(in_array($campo, $campos_word)) {
+				$templateProcessor->setValue($campo, $valor);
+				
+				if(file_exists($directorio_out . $archivo_out . $extension_doc)) {
+					unlink($directorio_out . $archivo_out . $extension_doc);
+					unlink($directorio_out . $archivo_out . '.pdf');
+				}
+				$marca_agua = mostrar_estado_documento($_REQUEST['iddoc']);
+				$templateProcessor->setTextWatermark($marca_agua);
+				$templateProcessor->saveAs($directorio_out . $archivo_out . $extension_doc);
+			} else {
+				die("No se encontr&oacute; el campo $campo en la plantilla");
+			}
+		}
+	}
+	
+	if(is_dir($directorio_out)) {
+		$comando1 = 'export HOME=/tmp && libreoffice5.1 --headless -print-to-file --outdir ' . $directorio_out . ' ' . $directorio_out . "*" . $extension_doc;
+		$var = shell_exec($comando1);
+		$comando1 = "gs -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -dSAFER -sOutputFile=" . $ruta_pdf . "documento_word.pdf *.ps";
+		$var = shell_exec($comando2);
+		//$comando2 = 'export HOME=/tmp && libreoffice5.1 --headless --convert-to pdf:writer_pdf_Export --outdir ' . $directorio_out . ' ' . $directorio_out . "*" . $extension_doc;
+	}
+}
+
+function cargar_csv($inputFileName) {
+	$resp = array();
+	$fila = 1;
+	$header = array();
+	$head_size = -1;
+	if(($gestor = fopen($inputFileName, "r")) !== FALSE) {
+		while(($datos = fgetcsv($gestor, 1000, ",")) !== FALSE) {
+			if($fila == 1) {
+				$header = $datos;
+				$head_size = count($datos);
+				$fila++;
+				continue;
+			}
+			$numero = count($datos);
+			if($numero > $head_size) {
+				$mensaje = "Cantidad de datos excede el número de campos ($numero > $head_size) en la línea $fila";
+				die($mensaje);
+			}
+			$fila++;
+			$campos_fila = array();
+			for($c = 0; $c < $numero; $c++) {
+				$campos_fila[$header[$c]] = $datos[$c];
+				// echo "{$header[$c]} = {$datos[$c]}<br />\n";
+			}
+			$resp[] = $campos_fila;
+		}
+		fclose($gestor);
+	}
+	return $resp;
+}
 ?>
