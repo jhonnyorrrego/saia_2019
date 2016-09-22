@@ -137,6 +137,7 @@ function combinar_documento($templateProcessor, $ruta_csv, $directorio_out, $rut
 	$campos_word = $templateProcessor->getVariables();
 	
 	$datos = cargar_csv($ruta_csv);
+	print_r($datos);die("KAPUT");
 	for($i = 0; $i < count($datos); $i++) {
 		// Cada elemento es un array campo => valor
 		$archivo_out = "documento_word_$i";
