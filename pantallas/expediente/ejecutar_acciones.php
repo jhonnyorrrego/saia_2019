@@ -198,7 +198,7 @@ function crear_tomo_expediente(){
         (serie_idserie,nombre,fecha,propietario,ver_todos,editar_todos,tomo_padre,tomo_no,estado_archivo,descripcion) 
             VALUES 
                 (".$datos_padre[0]['serie_idserie'].",'".$datos_padre[0]['nombre']."',".fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s').",".usuario_actual('funcionario_codigo').",0,0,".$tomo_padre.",".$tomo_siguiente.",".$datos_padre[0]['estado_archivo'].",'".$datos_padre[0]['descripcion']."')";
-   // print_r($sql);die();            
+    print_r($sql);die();            
     phpmkr_query($sql);
     $id_insertado=phpmkr_insert_id();
     if($id_insertado){
@@ -206,7 +206,7 @@ function crear_tomo_expediente(){
         $retorno->mensaje="Tomo creado con exito";   
         $retorno->insertado=$id_insertado;   
     }
-    return($sql);
+    return($retorno);
 }
 
 
