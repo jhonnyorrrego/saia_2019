@@ -194,7 +194,7 @@ function crear_tomo_expediente(){
         phpmkr_query($up);        
     }
     
-    
+    print_r( $datos_padre[0]['serie_idserie']);die('<---- aqui');
     if( is_null($datos_padre[0]['serie_idserie']) || $datos_padre[0]['serie_idserie']==''){
         $datos_padre[0]['serie_idserie']=NULL;
     }
