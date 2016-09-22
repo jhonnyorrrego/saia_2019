@@ -23,11 +23,11 @@ if(!@$_SESSION["LOGIN".LLAVE_SAIA]){
 }
  
 include_once($ruta_db_superior."db.php");
-
+include_once('define_remoto_medio.php');
 function conexion_exportar_importar($datos){
 	global $conn; 
 	
-	include_once('define_remoto_medio.php');
+	
 	return(json_encode(array('mensaje'=>SERVIDOR_IMPORTAR.' <--- aqui')));
 	
 	$datos = json_decode($datos);
