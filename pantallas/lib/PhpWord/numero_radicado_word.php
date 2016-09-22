@@ -45,18 +45,20 @@ if(@$iddoc) {
 
 $ruta_procesar = '';
 if(@$_REQUEST["iddoc"]) {
-	$anexo = busca_filtro_tabla("d.ruta", "documento a, formato b, campos_formato c, anexos d", "lower(a.plantilla)=b.nombre AND b.idformato=c.formato_idformato AND c.nombre='anexo_word' AND c.idcampos_formato=d.campos_formato AND a.iddocumento=" . $_REQUEST["iddoc"] . " AND d.documento_iddocumento=" . $_REQUEST["iddoc"], "", $conn);
+	$anexo = busca_filtro_tabla("d.ruta, b.idformato", "documento a, formato b, campos_formato c, anexos d", "lower(a.plantilla)=b.nombre AND b.idformato=c.formato_idformato AND c.nombre='anexo_word' AND c.idcampos_formato=d.campos_formato AND a.iddocumento=" . $_REQUEST["iddoc"] . " AND d.documento_iddocumento=" . $_REQUEST["iddoc"], "", $conn);
 	$anexo_csv = busca_filtro_tabla("d.ruta", "documento a, formato b, campos_formato c, anexos d", "lower(a.plantilla)=b.nombre AND b.idformato=c.formato_idformato AND c.nombre='anexo_csv' AND c.idcampos_formato=d.campos_formato AND a.iddocumento=" . $_REQUEST["iddoc"] . " AND d.documento_iddocumento=" . $_REQUEST["iddoc"], "", $conn);
 }
 
 $ruta_docx = '';
 $ruta_csv = "";
 $combinar = false;
+$idformato = null;
 
 if(@$anexo['numcampos']) {
 	$ruta_anexo = explode('anexos', $anexo[0]["ruta"]);
 	$ruta_combinar = $ruta_db_superior . $ruta_anexo[0] . 'pdf_temp/';
 	$ruta_docx = $ruta_db_superior . $ruta_anexo[0] . 'docx/';
+	$idformato = $anexo[0]["idformato"];
 }
 
 if(@$anexo_csv['numcampos']) {
@@ -94,6 +96,9 @@ if(file_exists($ruta_docx . 'documento_word.docx')) {
 		$directorio_out = $ruta_docx;
 		
 		if($combinar) {
+		   	crear_destino($ruta_combinar);	
+        	chmod($ruta_imagen, 0777);
+
 			combinar_documento($templateProcessor, $ruta_csv, $ruta_combinar, $directorio_out);
 			return;
 		}
