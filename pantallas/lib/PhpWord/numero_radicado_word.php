@@ -97,7 +97,7 @@ if(file_exists($ruta_docx . 'documento_word.docx')) {
 		
 		if($combinar) {
 		   	crear_destino($ruta_combinar);	
-        	chmod($ruta_imagen, 0777);
+        	chmod($ruta_combinar, 0777);
 
 			combinar_documento($templateProcessor, $ruta_csv, $ruta_combinar, $directorio_out);
 			return;
