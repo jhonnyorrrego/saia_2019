@@ -181,6 +181,7 @@ if($exito){
 }
 return($retorno);
 }
+/*
 function delete_expediente(){
 $retorno=new stdClass;
 $retorno->exito=0;
@@ -203,7 +204,31 @@ if($exito){
 }
 return($retorno);
 }
+*/
+function delete_expediente() {
+	$retorno = new stdClass;
+	$retorno -> exito = 0;
+	$retorno -> mensaje = "Error al eliminar";
+	$exito = 0;
 
+	$sql2 = "DELETE FROM expediente WHERE idexpediente=" . $_REQUEST["idexpediente"];
+	phpmkr_query($sql2);
+	$sql3 = "DELETE FROM expediente_doc WHERE expediente_idexpediente=" . $_REQUEST["idexpediente"];
+	phpmkr_query($sql3);
+	$sql4 = "DELETE FROM entidad_expediente WHERE expediente_idexpediente=" . $_REQUEST["idexpediente"];
+	phpmkr_query($sql4);
+	$idexpediente = $_REQUEST["idexpediente"];
+	$retorno -> sql = $sql2;
+	if ($idexpediente) {
+		$exito = 1;
+	}
+	if ($exito) {
+		$retorno -> idexpediente = $idexpediente;
+		$retorno -> exito = 1;
+		$retorno -> mensaje = "Expediente eliminado con &eacute;xito";
+	}
+	return ($retorno);
+}
 function crear_tomo_expediente(){
     global $conn,$ruta_db_superior;
     
