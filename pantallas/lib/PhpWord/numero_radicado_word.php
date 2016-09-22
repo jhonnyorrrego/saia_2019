@@ -171,7 +171,6 @@ function combinar_documento($ruta_csv, $directorio_out, $ruta_pdf, $idformato) {
 				
 				if(file_exists($directorio_out . $archivo_out . $extension_doc)) {
 					unlink($directorio_out . $archivo_out . $extension_doc);
-					//unlink($directorio_out . $archivo_out . '.pdf');
 				}
 			} else {
 				die("No se encontr&oacute; el campo $campo en la plantilla");
@@ -186,7 +185,8 @@ function combinar_documento($ruta_csv, $directorio_out, $ruta_pdf, $idformato) {
 	if(is_dir($directorio_out)) {
 		$comando1 = 'export HOME=/tmp && libreoffice5.1 --headless -print-to-file --outdir ' . $directorio_out . ' ' . $directorio_out . "*" . $extension_doc;
 		$var = shell_exec($comando1);
-		$comando1 = "gs -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -dSAFER -sOutputFile=" . $ruta_pdf . "documento_word.pdf " . $directorio_out . "*.ps";
+		unlink($ruta_pdf . "documento_word.pdf");
+        $comando1 = "gs -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -dSAFER -sOutputFile=" . $ruta_pdf . "documento_word.pdf " . $directorio_out . "*.ps";
 		$var = shell_exec($comando2);
 		//$comando2 = 'export HOME=/tmp && libreoffice5.1 --headless --convert-to pdf:writer_pdf_Export --outdir ' . $directorio_out . ' ' . $directorio_out . "*" . $extension_doc;
 	}
