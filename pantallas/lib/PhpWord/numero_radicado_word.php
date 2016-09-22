@@ -115,7 +115,7 @@ if(file_exists($ruta_docx . 'documento_word.docx')) {
 	if($combinar) {
 	   	crear_destino($ruta_combinar);	
     	chmod($ruta_combinar, 0777);
-		combinar_documento($ruta_csv, $ruta_combinar, $ruta_docx, $idformato);
+		combinar_documento($ruta_csv, $ruta_combinar, $ruta_docx, $idformato, $_REQUEST["iddoc"]);
 	}
 }
 // fin si existe word
@@ -133,10 +133,11 @@ function obtener_codigo_qr($idformato, $iddoc) {
 	return $codigo_qr[0]['ruta_qr'];
 }
 
-function combinar_documento($ruta_csv, $directorio_out, $ruta_pdf, $idformato) {
+function combinar_documento($ruta_csv, $directorio_out, $ruta_pdf, $idformato, $iddoc) {
 	global $conn, $ruta_db_superior;
 
 	$numero_radicado = busca_filtro_tabla("", "documento", "iddocumento=" . $_REQUEST["iddoc"], "", $conn);
+	$campo_qr_word = "codigo_qr";
 	
 	$datos = cargar_csv($ruta_csv);
 	for($i = 0; $i < count($datos); $i++) {
@@ -148,9 +149,8 @@ function combinar_documento($ruta_csv, $directorio_out, $ruta_pdf, $idformato) {
     	$campos_word = $templateProcessor->getVariables();
 
     	$templateProcessor->setValue('formato_numero', $numero_radicado[0]['numero']);
-		$campo_qr_word = "codigo_qr";
 		if(in_array($campo_qr_word, $campos_word)) {
-			$src = $ruta_db_superior . obtener_codigo_qr($idformato, $_REQUEST["iddoc"]);
+			$src = $ruta_db_superior . obtener_codigo_qr($idformato, $iddoc);
 			
 			$img2 = array(
 				array(
@@ -175,7 +175,7 @@ function combinar_documento($ruta_csv, $directorio_out, $ruta_pdf, $idformato) {
 				die("No se encontr&oacute; el campo $campo en la plantilla");
 			}
 		}
-		$marca_agua = mostrar_estado_documento($_REQUEST['iddoc']);
+		$marca_agua = mostrar_estado_documento($iddoc);
 		$templateProcessor->setTextWatermark($marca_agua);
 		$templateProcessor->saveAs($directorio_out . $archivo_out . $extension_doc);
 		$templateProcessor = null;
