@@ -206,7 +206,7 @@ function crear_tomo_expediente(){
         $retorno->mensaje="Tomo creado con exito";   
         $retorno->insertado=$id_insertado;   
     }
-    return($retorno);
+    return($sql);
 }
 
 
