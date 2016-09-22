@@ -1,4 +1,4 @@
-<?php include_once("../carta/funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("../librerias/funciones_generales.php"); ?><script type="text/javascript" src="../../js/jquery.js"></script><?php include_once("../librerias/header_nuevo.php"); ?><?php include_once("../../class_transferencia.php"); ?><tr><td><p><span style="font-size: small;"><?php logo_secretaria(379,$_REQUEST['iddoc']);?></span></p>
+<?php include_once("../librerias/header_nuevo.php"); ?><?php include_once("../../class_transferencia.php"); ?><tr><td><p>&nbsp;</p>
 <table style="border-collapse: collapse; font-size: 10pt; width: 100%;" border="1" cellspacing="0">
 <tbody>
 <tr>
