@@ -161,7 +161,7 @@ function combinar_documento($templateProcessor, $ruta_csv, $directorio_out, $rut
 	if(is_dir($directorio_out)) {
 		$comando1 = 'export HOME=/tmp && libreoffice5.1 --headless -print-to-file --outdir ' . $directorio_out . ' ' . $directorio_out . "*" . $extension_doc;
 		$var = shell_exec($comando1);
-		$comando1 = "gs -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -dSAFER -sOutputFile=" . $ruta_pdf . "documento_word.pdf *.ps";
+		$comando1 = "gs -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -dSAFER -sOutputFile=" . $ruta_pdf . "documento_word.pdf " . $directorio_out . "*.ps";
 		$var = shell_exec($comando2);
 		//$comando2 = 'export HOME=/tmp && libreoffice5.1 --headless --convert-to pdf:writer_pdf_Export --outdir ' . $directorio_out . ' ' . $directorio_out . "*" . $extension_doc;
 	}
