@@ -79,7 +79,7 @@ if(file_exists($ruta_docx . 'documento_word.docx')) {
 		
 		$campo_qr_word = "codigo_qr";
 		if(in_array($campo_qr_word, $campos_word)) {
-			$src = $ruta_db_superior . obtener_codigo_qr($_REQUEST["iddoc"]);
+			$src = $ruta_db_superior . obtener_codigo_qr($idformato, $_REQUEST["iddoc"]);
 			
 			$img2 = array(
 				array(
