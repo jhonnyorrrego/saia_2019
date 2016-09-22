@@ -11,7 +11,7 @@ while($max_salida>0){
 	$max_salida--;
 }
 
-include_once($ruta_db_superior."webservice_saia/exportar_importar_formato/exportar_importar_medio/define_remoto_medio.php");
+//include_once($ruta_db_superior."webservice_saia/exportar_importar_formato/exportar_importar_medio/define_remoto_medio.php");
 /*
 if(!defined("SERVIDOR_IMPORTAR")){
 	define("SERVIDOR_IMPORTAR",'http://75.101.166.85/saia_demos/saia_nucleo/saia/webservice_saia/exportar_importar_formato/importar_formato/receptor_importar.php');
