@@ -180,6 +180,7 @@ function combinar_documento($ruta_csv, $directorio_out, $ruta_pdf, $idformato) {
 		$marca_agua = mostrar_estado_documento($_REQUEST['iddoc']);
 		$templateProcessor->setTextWatermark($marca_agua);
 		$templateProcessor->saveAs($directorio_out . $archivo_out . $extension_doc);
+		$templateProcessor = null;
 	}
 	
 	if(is_dir($directorio_out)) {
