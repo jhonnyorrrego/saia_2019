@@ -227,6 +227,7 @@ else $nodoinicial=$iddoc;
             <input type="radio" name="seleccionar" value="1">Todos
             <input type="radio" name="seleccionar" value="0">Ninguno
             <br />
+            <br />
       				<div id="treeboxbox_tree2"></div>
       	<script type="text/javascript">
         <!--
