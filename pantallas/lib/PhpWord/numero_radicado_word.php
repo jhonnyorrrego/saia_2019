@@ -191,6 +191,9 @@ function combinar_documento($ruta_csv, $directorio_out, $ruta_pdf, $idformato) {
 		$salida_ps = $ruta_pdf . "documento_word.pdf";
         $comando2 = "gs -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -dSAFER -sOutputFile=" . $salida_ps . " " . $entrada_ps;
 		$var2 = shell_exec($comando2);
+		print_r($entrada_ps);echo "<br>";
+		print_r($salida_ps);echo "<br>";
+		print_r($var2);echo "<br>";
 		//$comando2 = 'export HOME=/tmp && libreoffice5.1 --headless --convert-to pdf:writer_pdf_Export --outdir ' . $directorio_out . ' ' . $directorio_out . "*" . $extension_doc;
 	}
 	die("KAPUT");
