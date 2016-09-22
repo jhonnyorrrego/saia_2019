@@ -90,7 +90,7 @@ $expediente=busca_filtro_tabla("a.*,".fecha_db_obtener("a.fecha","Y-m-d")." AS f
     </td>
   </tr>
   <tr>
-  	<td class="prettyprint"><b>Creador del expediente:</b></td>
+  	<td class="prettyprint"><b>Responsable del expediente:</b></td>
   	<td colspan="3">
   	<?php if($expediente[0]["propietario"]){
   		$nombres=busca_filtro_tabla("","funcionario A","A.funcionario_codigo=".$expediente[0]["propietario"],"",$conn);
