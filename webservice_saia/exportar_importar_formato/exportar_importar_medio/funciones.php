@@ -28,7 +28,7 @@ function conexion_exportar_importar($datos){
 	global $conn; 
 	
 	require_once('define_remoto.php');
-	return(json_encode(array('mensaje'=>SERVIDOR_IMPORTAR)));
+	return(json_encode(array('mensaje'=>SERVIDOR_IMPORTAR.' <--- aqui')));
 	
 	$datos = json_decode($datos);
 	$importar=json_encode($datos);
