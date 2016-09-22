@@ -415,7 +415,7 @@ function enlaces_adicionales_expediente($idexpediente,$nombr,$estado_cierre){
 	
 	return($texto);
 }*/
-function enlaces_adicionales_expediente($idexpediente, $nombre, $propietario) {
+function enlaces_adicionales_expediente($idexpediente, $nombre,$estado_cierre,$propietario) {
 	global $conn;
 	$m = 0;
 	$e = 0;
@@ -441,15 +441,23 @@ function enlaces_adicionales_expediente($idexpediente, $nombre, $propietario) {
 
 	$texto = "";
 	if ($e) {
-		$texto .= '<div class=\'btn btn-mini eliminar_expediente tooltip_saia pull-right\' idregistro=\'' . $idexpediente . '\' title=\'Eliminar ' . $nombre . '\'><i class=\'icon-remove\'></i></div>';
+		$texto.='<div class=\'btn btn-mini eliminar_expediente tooltip_saia pull-right\' idregistro=\''.$idexpediente.'\' title=\'Eliminar '.$nombre.'\'><i class=\'icon-remove\'></i></div>';
 	}
 	if ($m) {
-		$texto .= '<div class=\'btn btn-mini enlace_expediente tooltip_saia pull-right\' idregistro=\'' . $idexpediente . '\' title=\'Editar ' . $nombre . '\' enlace=\'pantallas/expediente/editar_expediente.php?idexpediente=' . $idexpediente . '\'><i class=\'icon-pencil\'></i></div>';
+		$texto.='<div class=\'btn btn-mini enlace_expediente tooltip_saia pull-right\' idregistro=\''.$idexpediente.'\' title=\'Editar '.$nombre.'\' enlace=\'pantallas/expediente/editar_expediente.php?idexpediente='.$idexpediente.'\'><i class=\'icon-pencil\'></i></div>';
 	}
 	$texto .= '<div class=\'btn btn-mini link kenlace_saia tooltip_saia pull-right\' title=\'Imprimir rotulo\' titulo=\'Imprimir rotulo\' enlace=\'pantallas/caja/rotulo.php?idexpediente=' . $idexpediente . '\' conector=\'iframe\'><i class=\'icon-print\'></i></div>';
 	if ($p) {
-		$texto .= '<div class="btn btn-mini enlace_expediente tooltip_saia pull-right" idregistro="' . $idexpediente . '" title="Asignar ' . $nombre . '" enlace="pantallas/expediente/asignar_expediente.php?idexpediente=' . $idexpediente . '"><i class="icon-lock"></i></div>';
+		$texto.='<div class=\'btn btn-mini enlace_expediente tooltip_saia pull-right\' idregistro=\''.$idexpediente.'\' title=\'Asignar '.$nombre.'\' enlace=\'pantallas/expediente/asignar_expediente.php?idexpediente='.$idexpediente.'\'><i class=\'icon-lock\'></i></div>';
 	}
+	
+	$disabled_seleccionar="";
+	$titulo='Seleccionar';
+	if($estado_cierre==1){
+	    $disabled_seleccionar='style="pointer-events:none;"';
+	    $titulo='No es posible seleccionar hasta que no este cerrado el expediente';
+	}	
+	$texto.='<div id="seleccionados_expediente_'.$idexpediente.'" idregistro=\''.$idexpediente.'\' titulo=\''.$titulo.'\' class=\'btn btn-mini tooltip_saia adicionar_seleccionados_expediente pull-right\' '.$disabled_seleccionar.'><i class=\'icon-uncheck\' ></i></div>';	
 	
 	$texto.='<div class=\'btn btn-mini crear_tomo_expediente tooltip_saia pull-right\' idregistro=\''.$idexpediente.'\' title=\'Crear Tomo '.$nombre.'\'><i class=\'icon-folder-open\'></i></div>';
 	return ($texto);
