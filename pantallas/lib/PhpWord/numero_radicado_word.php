@@ -122,7 +122,7 @@ if(file_exists($ruta_docx . 'documento_word.docx')) {
 	} // fin si existe iddoc y el word tiene campos del formato
 }
 // fin si existe word
-function obtener_codigo_qr($ruta_combinar, $iddoc) {
+function obtener_codigo_qr($idformato, $iddoc) {
 	global $conn, $ruta_db_superior;
 	$codigo_qr = busca_filtro_tabla("", "documento_verificacion", "documento_iddocumento=" . $iddoc, "", $conn);
 	
