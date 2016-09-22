@@ -23,7 +23,7 @@ if(!@$_SESSION["LOGIN".LLAVE_SAIA]){
 }
  
 include_once($ruta_db_superior."db.php");
-include_once('define_remoto.php');
+include_once($ruta_db_superior.'webservice_saia/exportar_importar_formato/exportar_importar_medio/define_remoto.php');
 function conexion_exportar_importar($datos){
 	global $conn; 
 	$datos = json_decode($datos);
