@@ -223,7 +223,7 @@ else $nodoinicial=$iddoc;
       	});
       </script>      
       <?php           
-            $texto.='
+            $texto.='&nbsp;&nbsp;
             <input type="radio" name="seleccionar" value="1">Todos
             <input type="radio" name="seleccionar" value="0">Ninguno
             <br />
