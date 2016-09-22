@@ -10,6 +10,7 @@ while($max_salida>0){
 }
 
   require_once($ruta_db_superior.'webservice_saia/exportar_importar_formato/exportar_importar_medio/lib/nusoap.php');
+  include_once($ruta_db_superior."webservice_saia/exportar_importar_formato/exportar_importar_medio/define_remoto_medio.php");
   include_once('funciones.php');
  
   $URL = "www.test.com";
