@@ -51,7 +51,7 @@ if(@$_REQUEST["iddoc"]) {
 
 $ruta_docx = '';
 $ruta_csv = "";
-$combiar = false;
+$combinar = false;
 
 if(@$anexo['numcampos']) {
 	$ruta_anexo = explode('anexos', $anexo[0]["ruta"]);
@@ -61,7 +61,7 @@ if(@$anexo['numcampos']) {
 
 if(@$anexo_csv['numcampos']) {
 	$ruta_csv = $ruta_db_superior . $anexo_csv[0]["ruta"];
-	$combiar = true;
+	$combinar = true;
 }
 
 if(file_exists($ruta_docx . 'documento_word.docx')) {
