@@ -207,6 +207,13 @@ function crear_tomo_expediente(){
     phpmkr_query($sql);
     $id_insertado=phpmkr_insert_id();
     if($id_insertado){
+        
+        if($id_insertado){
+    		if (asignar_expediente($id_insertado, 1, usuario_actual("idfuncionario"), "m,e,p")) {
+    			$exito = 1;
+    		}
+        }        
+        
         $retorno->exito=1;
         $retorno->mensaje="Tomo creado con exito";   
         $retorno->insertado=$id_insertado;   
