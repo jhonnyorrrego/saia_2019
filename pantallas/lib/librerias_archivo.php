@@ -61,6 +61,7 @@ function buscar_archivos($dir, $palabra, $buscar_contenido = 0, $buscar_archivo 
  * @param unknown $iddoc
  */
 function aplicar_plantilla_ruta_documento($iddoc) {
+    global $conn;
 	$formato_ruta = "{estado}/{fecha}/{iddocumento}";
 	$datos_formato_ruta = busca_filtro_tabla("valor","configuracion","nombre='formato_ruta_documentos'","",$conn);
 	if($datos_formato_ruta["numcampos"]) {
