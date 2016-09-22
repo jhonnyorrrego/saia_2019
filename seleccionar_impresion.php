@@ -201,8 +201,32 @@ else $nodoinicial=$iddoc;
       <img src="botones/general/buscar.png"border="0px"></a>
       <a href="javascript:void(0)" onclick="tree2.findItem(document.getElementById('stext').value)">
       <img src="botones/general/siguiente.png"border="0px"></a>
+      <script>
+      	$(document).ready(function (){
+      		$("input[name=seleccionar]").click(function(){ 
+      				if($(this).val()==1){
+	 							var list_seleccionados = tree2.getAllUnchecked();
+	 							//alert(list_seleccionados); 
+	      				vector=list_seleccionados.split(",");
+						    for(i=0;i<vector.length;i++){
+						     		tree2.setCheck(vector[i],$(this).val());
+	      				}	
+      				}else{
+      					var list_seleccionados = tree2.getAllChecked(); 
+      					//alert(list_seleccionados);
+	      				vector=list_seleccionados.split(",");
+						    for(i=0;i<vector.length;i++){
+						     		tree2.setCheck(vector[i],$(this).val());
+	      				}	
+      				}
+      		});
+      	});
+      </script>      
       <?php           
-            $texto.='<br />
+            $texto.='
+            <input type="radio" name="seleccionar" value="1">Todos
+            <input type="radio" name="seleccionar" value="0">Ninguno
+            <br />
       				<div id="treeboxbox_tree2"></div>
       	<script type="text/javascript">
         <!--
