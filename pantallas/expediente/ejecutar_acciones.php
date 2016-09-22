@@ -29,7 +29,7 @@ function set_expediente(){
         array_push($valores,"");
       }
     }
-    $sql2="INSERT INTO expediente(".implode(",",$campos).",propietario) VALUES('".implode("','",$valores)."',".usuario_actual("funcionario_codigo").")";
+    $sql2="INSERT INTO expediente(".implode(",",$campos).",propietario,tomo_no) VALUES('".implode("','",$valores)."',".usuario_actual("funcionario_codigo").",1)";
     phpmkr_query($sql2);
     $idexpediente=phpmkr_insert_id();
     $cod_padre=busca_filtro_tabla("cod_arbol","expediente A","A.idexpediente=".$_REQUEST["cod_padre"],"",$conn);
