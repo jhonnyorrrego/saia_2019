@@ -196,7 +196,7 @@ function crear_tomo_expediente(){
     
     
     if( is_null($datos_padre[0]['serie_idserie']) || $datos_padre[0]['serie_idserie']==''){
-        $datos_padre[0]['serie_idserie']=0;
+        $datos_padre[0]['serie_idserie']=NUll;
     }
     
     $sql="INSERT INTO expediente 
