@@ -116,7 +116,6 @@ if(file_exists($ruta_docx . 'documento_word.docx')) {
 	   	crear_destino($ruta_combinar);	
     	chmod($ruta_combinar, 0777);
 		combinar_documento($ruta_csv, $ruta_combinar, $ruta_docx, $idformato);
-		return;
 	}
 }
 // fin si existe word
