@@ -12,6 +12,8 @@
                      <td class="encabezado" width="20%" title="" colspan="2" id="enlace_plantilla"></td>
                     </tr><input type="hidden" name="estado_documento" value="<?php echo(validar_valor_campo(4795)); ?>"><input type="hidden" name="serie_idserie" value="<?php echo(validar_valor_campo(4796)); ?>"><tr>
                      <td class="encabezado" width="20%" title="">ANEXO WORD*</td>
-                     <td class="celda_transparente"><input  tabindex='1'  type="file" maxlength="255"  class="required multi"  name="anexo_word[]" accept="docx|DOCX"><input type="hidden" name="idft_oficio_word" value="<?php echo(validar_valor_campo(4800)); ?>"><input type="hidden" name="documento_iddocumento" value="<?php echo(validar_valor_campo(4801)); ?>"><tr>
+                     <td class="celda_transparente"><input  tabindex='1'  type="file" maxlength="255"  class="required multi"  name="anexo_word[]" accept="docx|DOCX"><tr>
+                     <td class="encabezado" width="20%" title="">ANEXO CSV</td>
+                     <td class="celda_transparente"><input  tabindex='2'  type="file" maxlength="255"  class='multi'  name="anexo_csv[]" accept="csv|CSV"><input type="hidden" name="idft_oficio_word" value="<?php echo(validar_valor_campo(4800)); ?>"><input type="hidden" name="documento_iddocumento" value="<?php echo(validar_valor_campo(4801)); ?>"><tr>
                      <td class="encabezado" width="20%" title="">DEPENDENCIA DEL CREADOR DEL DOCUMENTO*</td>
                      <?php buscar_dependencia(400,4802);?></tr><input type="hidden" name="encabezado" value="<?php echo(validar_valor_campo(4803)); ?>"><input type="hidden" name="firma" value="<?php echo(validar_valor_campo(4804)); ?>"><?php asignar_responsables(400,NULL);?><?php mostrar_enlace_plantilla(400,NULL);?><tr><td colspan='2'><?php submit_formato(400);?></td></tr></table><input type='hidden' name='permisos_anexos' id='permisos_anexos' value=''></form></body></html>

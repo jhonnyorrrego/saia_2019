@@ -14,6 +14,12 @@
 			<a href="../../anexosdigitales/anexos_documento_edit.php?key='.$_REQUEST["iddoc"].'&idformato=400&idcampo=4797" id="anexo_admin" class="highslide" onclick="return hs.htmlExpand( this, {
 			objectType: \'iframe\', outlineType: \'rounded-white\', wrapperClassName: \'highslide-wrapper drag-header\',
 			outlineWhileAnimating: true, preserveContent: false, width: 400 } )">Administrar Anexos</a>
+			</div>'; ?><tr>
+                     <td class="encabezado" width="20%" title="">ANEXO CSV</td>
+                     <td class="celda_transparente"><?php echo '<div class="textwrapper">
+			<a href="../../anexosdigitales/anexos_documento_edit.php?key='.$_REQUEST["iddoc"].'&idformato=400&idcampo=4944" id="anexo_admin" class="highslide" onclick="return hs.htmlExpand( this, {
+			objectType: \'iframe\', outlineType: \'rounded-white\', wrapperClassName: \'highslide-wrapper drag-header\',
+			outlineWhileAnimating: true, preserveContent: false, width: 400 } )">Administrar Anexos</a>
 			</div>'; ?><input type="hidden" name="idft_oficio_word" value="<?php echo(mostrar_valor_campo('idft_oficio_word',400,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="documento_iddocumento" value="<?php echo(mostrar_valor_campo('documento_iddocumento',400,$_REQUEST['iddoc'])); ?>"><tr>
                      <td class="encabezado" width="20%" title="">DEPENDENCIA DEL CREADOR DEL DOCUMENTO*</td>
                      <?php buscar_dependencia(400,4802,$_REQUEST['iddoc']);?></tr><input type="hidden" name="encabezado" value="<?php echo(mostrar_valor_campo('encabezado',400,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="firma" value="<?php echo(mostrar_valor_campo('firma',400,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="formato" value="400"><tr><td colspan='2'><?php submit_formato(400,$_REQUEST['iddoc']);?></td></tr></table><input type='hidden' name='permisos_anexos' id='permisos_anexos' value=''></form></body></html><?php include_once("../librerias/footer_plantilla.php");?>
