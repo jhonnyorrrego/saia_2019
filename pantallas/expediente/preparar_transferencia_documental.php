@@ -22,7 +22,7 @@ if(!@$_SESSION["LOGIN".LLAVE_SAIA]){
 include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."pantallas/lib/librerias_fechas.php");
 if(@$_REQUEST['ejecutar']){
-$expedientes=busca_filtro_tabla("a.idexpediente,a.estado_archivo,a.serie_idserie,".fecha_db_obtener('a.fecha_cierre','Y-m-d')." AS fecha_inicial","expediente a","a.fecha_cierre IS NOT NULL AND a.estado_archivo IN(1,2)","",$conn);
+$expedientes=busca_filtro_tabla("a.idexpediente,a.estado_archivo,a.serie_idserie,".fecha_db_obtener('a.fecha_cierre','Y-m-d')." AS fecha_inicial","expediente a","a.fecha_cierre IS NOT NULL AND a.estado_archivo IN(1,2) AND a.serie_idserie IS NOT NULL","",$conn);
 $exito=0;
 if($expedientes['numcampos']){
     for($i=0;$i<$expedientes['numcampos'];$i++){
