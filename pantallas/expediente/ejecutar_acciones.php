@@ -194,11 +194,11 @@ function crear_tomo_expediente(){
         phpmkr_query($up);        
     }
     
-    print_r( $datos_padre[0]['serie_idserie']);die('<---- aqui');
+   
     if( is_null($datos_padre[0]['serie_idserie']) || $datos_padre[0]['serie_idserie']==''){
         $datos_padre[0]['serie_idserie']=NULL;
     }
-    
+     print_r( $datos_padre[0]['serie_idserie']);die('<--- aqui');
     $sql="INSERT INTO expediente 
         (serie_idserie,nombre,fecha,propietario,ver_todos,editar_todos,tomo_padre,tomo_no,estado_archivo,descripcion) 
             VALUES 
