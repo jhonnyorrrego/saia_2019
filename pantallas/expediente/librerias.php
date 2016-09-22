@@ -378,6 +378,7 @@ function negar_expediente($idexp, $tipo_entidad, $llave_entidad, $permiso="", $i
 	}
 	phpmkr_query($sql1);
 }
+/*
 function enlaces_adicionales_expediente($idexpediente,$nombr,$estado_cierre){
 	global $conn;
 	$texto="";
@@ -413,7 +414,47 @@ function enlaces_adicionales_expediente($idexpediente,$nombr,$estado_cierre){
 	$texto.='<div class=\'btn btn-mini crear_tomo_expediente tooltip_saia pull-right\' idregistro=\''.$idexpediente.'\' title=\'Crear Tomo '.$nombre.'\'><i class=\'icon-folder-open\'></i></div>';
 	
 	return($texto);
+}*/
+function enlaces_adicionales_expediente($idexpediente, $nombre, $propietario) {
+	global $conn;
+	$m = 0;
+	$e = 0;
+	$p = 0;
+	if ($propietario == $_SESSION["usuario_actual"]) {
+		$m = 1;
+		$e = 1;
+		$p = 1;
+	} else {
+		$permiso = busca_filtro_tabla("permiso", "entidad_expediente", "entidad_identidad=1 and estado=1 and llave_entidad=" . usuario_actual("idfuncionario"), "", $conn);
+		if ($permiso["numcampos"] && $permiso[0]["permiso"] != "") {
+			if (strpos($permiso[0]["permiso"], "m") !== false) {
+				$m = 1;
+			}
+			if (strpos($permiso[0]["permiso"], "e") !== false) {
+				$e = 1;
+			}
+			if (strpos($permiso[0]["permiso"], "p") !== false) {
+				$p = 1;
+			}
+		}
+	}
+
+	$texto = "";
+	if ($e) {
+		$texto .= '<div class=\'btn btn-mini eliminar_expediente tooltip_saia pull-right\' idregistro=\'' . $idexpediente . '\' title=\'Eliminar ' . $nombre . '\'><i class=\'icon-remove\'></i></div>';
+	}
+	if ($m) {
+		$texto .= '<div class=\'btn btn-mini enlace_expediente tooltip_saia pull-right\' idregistro=\'' . $idexpediente . '\' title=\'Editar ' . $nombre . '\' enlace=\'pantallas/expediente/editar_expediente.php?idexpediente=' . $idexpediente . '\'><i class=\'icon-pencil\'></i></div>';
+	}
+	$texto .= '<div class=\'btn btn-mini link kenlace_saia tooltip_saia pull-right\' title=\'Imprimir rotulo\' titulo=\'Imprimir rotulo\' enlace=\'pantallas/caja/rotulo.php?idexpediente=' . $idexpediente . '\' conector=\'iframe\'><i class=\'icon-print\'></i></div>';
+	if ($p) {
+		$texto .= '<div class="btn btn-mini enlace_expediente tooltip_saia pull-right" idregistro="' . $idexpediente . '" title="Asignar ' . $nombre . '" enlace="pantallas/expediente/asignar_expediente.php?idexpediente=' . $idexpediente . '"><i class="icon-lock"></i></div>';
+	}
+	
+	$texto.='<div class=\'btn btn-mini crear_tomo_expediente tooltip_saia pull-right\' idregistro=\''.$idexpediente.'\' title=\'Crear Tomo '.$nombre.'\'><i class=\'icon-folder-open\'></i></div>';
+	return ($texto);
 }
+
 function expedientes_asignados(){
 	global $conn;
 	
