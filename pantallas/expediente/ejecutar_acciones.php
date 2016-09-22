@@ -13,6 +13,7 @@ if(@$_REQUEST["ejecutar_expediente"]){
     $_REQUEST["ejecutar_expediente"]();
   }
 }
+/*
 function set_expediente(){
 $retorno=new stdClass;
 $retorno->exito=0;
@@ -53,6 +54,47 @@ if($exito){
 }
 return($retorno);
 }
+*/
+
+function set_expediente() {
+	$retorno = new stdClass;
+	$retorno -> exito = 0;
+	$retorno -> mensaje = "Error al guardar";
+	$exito = 0;
+	$campos = array("nombre", "descripcion", "cod_padre", "codigo", "fecha", "serie_idserie", "no_tomo", "codigo_numero", "fondo", "proceso", "fecha_extrema_i", "fecha_extrema_f", "no_unidad_conservacion", "no_folios", "no_carpeta", "soporte", "frecuencia_consulta", "ubicacion", "unidad_admin");
+	$valores = array();
+	foreach ($campos AS $key => $campo) {
+		if (@$_REQUEST[$campo]) {
+			array_push($valores, $_REQUEST[$campo]);
+		} else {
+			array_push($valores, "");
+		}
+	}
+	$sql2 = "INSERT INTO expediente(" . implode(",", $campos) . ",propietario) VALUES('" . implode("','", $valores) . "'," . usuario_actual("funcionario_codigo") . ")";
+	phpmkr_query($sql2);
+	$idexpediente = phpmkr_insert_id();
+	$cod_padre = busca_filtro_tabla("cod_arbol", "expediente A", "A.idexpediente=" . $_REQUEST["cod_padre"], "", $conn);
+	if ($cod_padre["numcampos"]) {
+		$codigo_arbol = $cod_padre[0]["cod_arbol"] . "." . $idexpediente;
+	} else {
+		$codigo_arbol = $idexpediente;
+	}
+	$sql3 = "UPDATE expediente SET cod_arbol='" . $codigo_arbol . "' where idexpediente=" . $idexpediente;
+	phpmkr_query($sql3);
+	$retorno -> sql = $sql2;
+	if ($idexpediente) {
+		if (asignar_expediente($idexpediente, 1, usuario_actual("idfuncionario"), "m,e,p")) {
+			$exito = 1;
+		}
+	}
+	if ($exito) {
+		$retorno -> idexpediente = $idexpediente;
+		$retorno -> exito = 1;
+		$retorno -> mensaje = "Expediente guardado con &eacute;xito;";
+	}
+	return ($retorno);
+}
+
 function set_expediente_documento(){
 $retorno=new stdClass;
 $retorno->exito=0;
@@ -242,6 +284,7 @@ else{
 }
 return($retorno);
 }
+/*
 function asignar_permiso_expediente(){
 $retorno=new stdClass;
 $retorno->exito=0;
@@ -291,7 +334,42 @@ if(@$_REQUEST["idexpediente"] && @$_REQUEST["tipo_entidad"]){
   }
 }
 return($retorno);
+}*/
+function asignar_permiso_expediente() {
+	$retorno = new stdClass;
+	$retorno -> exito = 0;
+	$retorno -> mensaje = "Error al asignar el expediente";
+	if (@$_REQUEST["idexpediente"] && @$_REQUEST["tipo_entidad"] && $_REQUEST["idfuncionario"] && $_REQUEST["propietario"] != "") {
+		if ($_REQUEST["tipo_entidad"] == 5) {
+			$_REQUEST["tipo_entidad"] = 1;
+		}
+		$sql1 = "DELETE FROM entidad_expediente WHERE expediente_idexpediente=" . $_REQUEST["idexpediente"] . " AND entidad_identidad=1 AND llave_entidad NOT IN(" . implode(",", $_REQUEST["idfuncionario"]) . "," . $_REQUEST["propietario"] . ")";
+		phpmkr_query($sql1) or die($retorno);
+		foreach ($_REQUEST["idfuncionario"] as $idfunc) {
+			$permiso = "";
+			if (isset($_REQUEST["permisos_" . $idfunc])) {
+				$permiso = implode(",", $_REQUEST["permisos_" . $idfunc]);
+			}
+			asignar_expediente($_REQUEST["idexpediente"], $_REQUEST["tipo_entidad"], $idfunc, $permiso);
+		}
+		$exito = 1;
+		if ($exito) {
+			$retorno -> exito = 1;
+			$retorno -> mensaje = "Asignaciones al expediente realizadas con &eacute;xito";
+		} else if ($exito == 0) {
+			$retorno -> exito = 0;
+			$retorno -> mensaje = "No se realizan asignaciones al expediente";
+		} else {
+			$retorno -> exito = 0;
+			$retorno -> mensaje = "Se realizan algunas asignaciones al expediente se presentan errores";
+		}
+	} else if (!$_REQUEST["idfuncionario"]) {
+		$retorno -> exito = 2;
+		$retorno -> mensaje = "Por favor ingrese los funcionarios";
+	}
+	return ($retorno);
 }
+
 function delete_documento_expediente(){
 $retorno=new stdClass;
 $retorno->exito=0;
