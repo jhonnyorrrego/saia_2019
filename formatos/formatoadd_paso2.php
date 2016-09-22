@@ -118,7 +118,7 @@ function ventanaSecundaria (URL){
     <input type="hidden" name="x_pie_pagina" id="x_pie_pagina" value="<?php echo @$x_pie_pagina; ?>">
     <label id="x_pie_pagina_mostrar"><?php echo @$x_nombre_pie; ?></label>&nbsp;&nbsp;
 <a href="javascript:formatoadd.casilla.value='x_pie_pagina';ventanaSecundaria('encabezadoadd.php?listar=1')">ELEGIR</a> 
-&nbsp;&nbsp;<label onclick="formatoadd.x_pie_pagina='';document.getElementById('x_pie_pagina_mostrar').innerHTML='Ninguno'" style="color:blue; text-decoration:underline; cursor:pointer">SIN PIE DE PAGINA</label>
+&nbsp;&nbsp;<label onclick="document.getElementById('x_pie_pagina').value='';document.getElementById('x_pie_pagina_mostrar').innerHTML='Ninguno'" style="color:blue; text-decoration:underline; cursor:pointer">SIN PIE DE PAGINA</label>
 </span></td>
 	</tr>  
 	</table>
