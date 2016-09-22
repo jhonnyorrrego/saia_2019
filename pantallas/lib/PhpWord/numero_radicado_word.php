@@ -139,13 +139,13 @@ function obtener_codigo_qr($idformato, $iddoc) {
 function combinar_documento($originalProcessor, $ruta_csv, $directorio_out, $ruta_pdf) {
 	global $conn, $ruta_db_superior;
 	
-	$campos_word = $originalProcessor->getVariables();
+	$campos_word = $templateProcessor->getVariables();
+	$templateProcessor = $originalProcessor;
 	$datos = cargar_csv($ruta_csv);
 	for($i = 0; $i < count($datos); $i++) {
 		// Cada elemento es un array campo => valor
 		$archivo_out = "documento_word_$i";
 		$extension_doc = '.docx';
-    	$templateProcessor = $originalProcessor;
 		foreach($datos[$i] as $campo => $valor) {
 			if(in_array($campo, $campos_word)) {
 				$templateProcessor->setValue($campo, $valor);
@@ -154,13 +154,13 @@ function combinar_documento($originalProcessor, $ruta_csv, $directorio_out, $rut
 					unlink($directorio_out . $archivo_out . $extension_doc);
 					//unlink($directorio_out . $archivo_out . '.pdf');
 				}
-				$marca_agua = mostrar_estado_documento($_REQUEST['iddoc']);
-				$templateProcessor->setTextWatermark($marca_agua);
-				$templateProcessor->saveAs($directorio_out . $archivo_out . $extension_doc);
 			} else {
 				die("No se encontr&oacute; el campo $campo en la plantilla");
 			}
 		}
+		$marca_agua = mostrar_estado_documento($_REQUEST['iddoc']);
+		$templateProcessor->setTextWatermark($marca_agua);
+		$templateProcessor->saveAs($directorio_out . $archivo_out . $extension_doc);
 	}
 	
 	if(is_dir($directorio_out)) {
