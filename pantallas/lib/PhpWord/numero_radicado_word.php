@@ -139,10 +139,10 @@ function obtener_codigo_qr($idformato, $iddoc) {
 function combinar_documento($originalProcessor, $ruta_csv, $directorio_out, $ruta_pdf) {
 	global $conn, $ruta_db_superior;
 	
-	$campos_word = $templateProcessor->getVariables();
-	$templateProcessor = $originalProcessor;
+	$campos_word = $originalProcessor->getVariables();
 	$datos = cargar_csv($ruta_csv);
 	for($i = 0; $i < count($datos); $i++) {
+    	$templateProcessor = $originalProcessor;
 		// Cada elemento es un array campo => valor
 		$archivo_out = "documento_word_$i";
 		$extension_doc = '.docx';
