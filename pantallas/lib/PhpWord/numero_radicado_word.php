@@ -138,12 +138,13 @@ function combinar_documento($ruta_csv, $directorio_out, $ruta_pdf, $idformato, $
 
 	$numero_radicado = busca_filtro_tabla("", "documento", "iddocumento=" . $_REQUEST["iddoc"], "", $conn);
 	$campo_qr_word = "codigo_qr";
+    $marca_agua = mostrar_estado_documento($iddoc);
+	$extension_doc = '.docx';
 	
 	$datos = cargar_csv($ruta_csv);
 	for($i = 0; $i < count($datos); $i++) {
 		// Cada elemento es un array campo => valor
 		$archivo_out = "documento_word_$i";
-		$extension_doc = '.docx';
 		
 	    $templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor($ruta_pdf . 'documento_word.docx');
     	$campos_word = $templateProcessor->getVariables();
@@ -175,7 +176,6 @@ function combinar_documento($ruta_csv, $directorio_out, $ruta_pdf, $idformato, $
 				die("No se encontr&oacute; el campo $campo en la plantilla");
 			}
 		}
-		$marca_agua = mostrar_estado_documento($iddoc);
 		$templateProcessor->setTextWatermark($marca_agua);
 		$templateProcessor->saveAs($directorio_out . $archivo_out . $extension_doc);
 		$templateProcessor = null;
