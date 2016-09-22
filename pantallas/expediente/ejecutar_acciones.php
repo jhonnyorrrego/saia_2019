@@ -198,7 +198,6 @@ function crear_tomo_expediente(){
     if( !is_numeric($datos_padre[0]['serie_idserie'])){
         $datos_padre[0]['serie_idserie']=0;
     }
-     //print_r( $datos_padre[0]['serie_idserie']);die('<--- aqui');
     $sql="INSERT INTO expediente 
         (serie_idserie,nombre,fecha,propietario,ver_todos,editar_todos,tomo_padre,tomo_no,estado_archivo,descripcion) 
             VALUES 
