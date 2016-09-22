@@ -71,7 +71,7 @@ $(document).ready(function(){
                         var objeto=jQuery.parseJSON(html);
                         $.each(objeto.rows,function(i,item){
                            
-                          $("#resultado_pantalla_"+idregistro).after(item.info);
+                          $("#resultado_pantalla_"+idregistro).before(item.info);
                         });  
                       }
                     }  //fin success
