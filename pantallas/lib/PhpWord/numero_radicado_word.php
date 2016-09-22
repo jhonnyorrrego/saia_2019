@@ -190,7 +190,7 @@ function combinar_documento($ruta_csv, $directorio_out, $ruta_pdf, $idformato) {
 		$var = shell_exec($comando2);
 		//$comando2 = 'export HOME=/tmp && libreoffice5.1 --headless --convert-to pdf:writer_pdf_Export --outdir ' . $directorio_out . ' ' . $directorio_out . "*" . $extension_doc;
 	}
-	die("KAPUT");
+	//die("KAPUT");
 }
 
 function cargar_csv($inputFileName) {
