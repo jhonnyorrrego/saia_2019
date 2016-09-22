@@ -117,7 +117,7 @@ if(file_exists($ruta_docx . 'documento_word.docx')) {
 	} // fin si existe iddoc y el word tiene campos del formato
 }
 // fin si existe word
-function obtener_codigo_qr($iddoc, $campos_word) {
+function obtener_codigo_qr($iddoc) {
 	global $conn, $ruta_db_superior;
 	$codigo_qr = busca_filtro_tabla("", "documento_verificacion", "documento_iddocumento=" . $iddoc, "", $conn);
 	
@@ -137,7 +137,6 @@ function combinar_documento($templateProcessor, $ruta_csv, $directorio_out, $rut
 	$campos_word = $templateProcessor->getVariables();
 	
 	$datos = cargar_csv($ruta_csv);
-	print_r($datos);die("KAPUT");
 	for($i = 0; $i < count($datos); $i++) {
 		// Cada elemento es un array campo => valor
 		$archivo_out = "documento_word_$i";
@@ -166,6 +165,7 @@ function combinar_documento($templateProcessor, $ruta_csv, $directorio_out, $rut
 		$var = shell_exec($comando2);
 		//$comando2 = 'export HOME=/tmp && libreoffice5.1 --headless --convert-to pdf:writer_pdf_Export --outdir ' . $directorio_out . ' ' . $directorio_out . "*" . $extension_doc;
 	}
+	die("KAPUT");
 }
 
 function cargar_csv($inputFileName) {
