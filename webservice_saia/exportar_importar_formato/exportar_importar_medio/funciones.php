@@ -23,7 +23,7 @@ if(!@$_SESSION["LOGIN".LLAVE_SAIA]){
 }
  
 include_once($ruta_db_superior."db.php");
-include_once(__DIR__. 'define_remoto_medio.php');
+include_once(__DIR__ . '/define_remoto_medio.php');
 function conexion_exportar_importar($datos){
 	global $conn; 
 	
