@@ -12,14 +12,42 @@ $_REQUEST["tipo_entidad"]=5;
 <link rel="stylesheet" type="text/css" href="<?php echo($ruta_db_superior);?>css/bootstrap-datetimepicker.min.css"/>
 <?php include_once($ruta_db_superior."db.php"); ?>
 <script type="text/javascript" src="<?php echo($ruta_db_superior);?>js/jquery-1.7.min.js"></script>
-<?php include_once($ruta_db_superior."librerias_saia.php"); ?>
-<?php
-$seleccionados=busca_filtro_tabla("B.iddependencia_cargo, C.nombres, C.apellidos","entidad_expediente A, dependencia_cargo B, funcionario C","A.expediente_idexpediente=".@$_REQUEST["idexpediente"]." AND (A.entidad_identidad=1 AND A.llave_entidad=B.funcionario_idfuncionario) AND B.funcionario_idfuncionario=C.idfuncionario","",$conn);
-$seleccionados_array=extrae_campo($seleccionados,"iddependencia_cargo");
+<?php 
+include_once($ruta_db_superior."librerias_saia.php");
+$propietario=busca_filtro_tabla("idfuncionario","expediente e,funcionario f","f.funcionario_codigo=e.propietario and idexpediente=".$_REQUEST["idexpediente"],"",$conn);
+
+$seleccionados=busca_filtro_tabla("identidad_expediente,idfuncionario,nombres,apellidos,permiso","entidad_expediente e,funcionario f","e.llave_entidad=f.idfuncionario and e.expediente_idexpediente=".@$_REQUEST["idexpediente"]." AND e.entidad_identidad=1 and f.idfuncionario<>".$propietario[0]["idfuncionario"],"",$conn);
+$table='<table class="table" border="1" id="funcionarios_seleccionados">
+<thead>
+<tr>
+  <th style="text-align:center; vertical-align:middle" rowspan="2">Funcionario</th>
+  <th style="text-align:center" colspan="4">Permisos</th>
+</tr>
+<tr><th style="text-align:center">Ver</th> <th style="text-align:center">Editar</th> <th style="text-align:center">Eliminar</th> <th style="text-align:center">Asignar Permisos</th></tr>
+</thead>';
+$idfuncionarios=array();
 for($i=0;$i<$seleccionados["numcampos"];$i++){
-	$nombres[]=ucwords(strtolower($seleccionados[$i]["nombres"]." ".$seleccionados[$i]["apellidos"]));
+	$idfuncionarios[]=$seleccionados[$i]["idfuncionario"];
+	$m=""; $e="";
+	if(strpos($seleccionados[$i]["permiso"],"m")!==false){
+		$m="checked=true";
+	}
+	if(strpos($seleccionados[$i]["permiso"],"e")!==false){
+		$e="checked=true";
+	}
+	if(strpos($seleccionados[$i]["permiso"],"p")!==false){
+		$p="checked=true";
+	}
+	$table.='<tr id="fila_'.$seleccionados[$i]["idfuncionario"].'">
+		<td><input type="hidden" name="idfuncionario[]" value="'.$seleccionados[$i]["idfuncionario"].'">'.ucwords(strtolower($seleccionados[$i]["nombres"].' '.$seleccionados[$i]["apellidos"])).' <img style="cursor:pointer" src="'.$ruta_db_superior.'imagenes/eliminar_nota.gif" onclick="eliminar_asociado('.$seleccionados[$i]["idfuncionario"].')"/></td>
+		<td style="text-align:center"><input type="checkbox" name="permisos_'.$seleccionados[$i]["idfuncionario"].'[]" value="l" disabled checked=true></td>
+		<td style="text-align:center"><input type="checkbox" name="permisos_'.$seleccionados[$i]["idfuncionario"].'[]" value="m" '.$m.'></td>
+		<td style="text-align:center"><input type="checkbox" name="permisos_'.$seleccionados[$i]["idfuncionario"].'[]" value="e" '.$e.'></td>
+		<td style="text-align:center"><input type="checkbox" name="permisos_'.$seleccionados[$i]["idfuncionario"].'[]" value="p" '.$p.'></td>
+	</tr>';
 }
-$nombres=array_unique($nombres);
+$table.="</table>";
+	
 ?>
 <form name="formulario_asignar_expediente" id="formulario_asignar_expediente">
 <input type="hidden" name="idexpediente" id="idexpediente" value="<?php echo($_REQUEST["idexpediente"]);?>">
@@ -29,55 +57,34 @@ $nombres=array_unique($nombres);
   <label class="control-label" for="nombre"><?php if(@$_REQUEST["tipo_entidad"]){
       echo"<input type='hidden' value='".$_REQUEST["tipo_entidad"]."' name='tipo_entidad' >";
       $entidad = busca_filtro_tabla("*","entidad","identidad=".$_REQUEST["tipo_entidad"],"nombre",$conn);
-			if($_REQUEST["tipo_entidad"]==5){
-				echo("Funcionario");
+			if($_REQUEST["tipo_entidad"]!=5){
+				echo($entidad[0]["nombre"]);
 			}
-			else echo($entidad[0]["nombre"]);
     }
     else{
       echo("Entidad");
-    }?>*
+    }?>
   </label>
-  <?php
-	echo("<b>Seleccionados:</b> ".implode(", ",$nombres));
-  ?>
   <div class="controls"> 
     <?php
     if(@$_REQUEST["llave_entidad"]){
       echo "<input type='hidden' value='".$_REQUEST["llave_entidad"]."' name='  llave_entidad' >";
     }    
     if(@$_REQUEST["filtrar_expediente"])
-      echo "<input type='hidden' value='".$_REQUEST["filtrar_expediente"]."' name='filtrar_expediente' >";     
-      
-    /*$entidad = busca_filtro_tabla("*","entidad","","nombre",$conn);
-    $select_entidad = "<select class='required' name='tipo_entidad' onchange='valores_entidad(this.value);'><option value=''>Seleccionar..</option>";
-    if($entidad["numcampos"]>0)
-      for($i=0; $i<$entidad["numcampos"]; $i++){ 
-        if($entidad[$i]["identidad"]!=3 && $entidad[$i]["identidad"]!=5) {
-          $select_entidad.="<option value=".$entidad[$i]["identidad"];
-          if(@$_REQUEST["tipo_entidad"] && $entidad[$i]["identidad"]==@$_REQUEST["tipo_entidad"])
-            $select_entidad.=" selected ";
-          $select_entidad.=">".ucfirst($entidad[$i]["nombre"])."</option>";
-        } 
-      } */
-      if(@$_REQUEST["tipo_entidad"])
-        echo '<script>$(document).ready(function(){valores_entidad("'.$_REQUEST["tipo_entidad"].'");});</script>';
-      $select_entidad.="</select>";
-      echo $select_entidad;
+      echo "<input type='hidden' value='".$_REQUEST["filtrar_expediente"]."' name='filtrar_expediente' >";  
     ?>
     <div id="sub_entidad" class="arbol_saia">
     </div>
-    <label>Para quitar el permiso del expediente sobre un usuario, tener en cuenta quitar la seleccion de dicho usuario en todas las partes que se encuentra sobre el arbol de funcionarios.</label>
+		Nombre del Funcionario:* <input type="hidden" name="propietario" value="<?php echo $propietario[0]["idfuncionario"];?>"> <input type='hidden' id='idfuncionario' size='50' name='idfuncionario' value="<?php echo implode(",", $idfuncionarios);?>"> <input type='text' id='buscar_radicado' size='50' name='buscar_radicado'> <div id='ul_completar' class='ac_results'></div>
+		<hr/>
+		<?php
+			echo $table;
+		?>
+
+    <label>Para quitar el permiso del expediente sobre un usuario, se debe eliminar el registro de la tabla.</label>
   </div>
 </div>
-<!--div class="control-group element">
-  <label class="control-label" for="nombre"> Acci&oacute;n*
-  </label>
-  <div class="controls"> 
-    <input type='radio' name='opcion' value='1' checked >Adicionar&nbsp;&nbsp;
-    <input type='radio' name='opcion' value='0'>Quitar
-  </div>
-</div-->
+
 <?php if($_REQUEST["mostrar_arbol_expediente"]){?>
 <div class="control-group element">
   <label class="control-label" for="nombre">Elegir expediente *
@@ -103,6 +110,7 @@ $nombres=array_unique($nombres);
 <div id="cargando_enviar" class="pull-right"></div>
 </div>
 </form>
+
 <script type="text/javascript" src="<?php echo($ruta_db_superior);?>js/bootstrap.js"></script>
 <script type="text/javascript" src="<?php echo($ruta_db_superior);?>js/jquery.validate_v1.js"></script>
 <script type="text/javascript" src="<?php echo($ruta_db_superior);?>js/idiomas/jquery.validates.es.js"></script>
@@ -112,6 +120,38 @@ $nombres=array_unique($nombres);
 <script type="text/javascript" src="<?php echo($ruta_db_superior);?>pantallas/lib/librerias_notificaciones.js"></script>
 <script type="text/javascript" src="<?php echo($ruta_db_superior);?>pantallas/lib/librerias_codificacion.js"></script>
 <script type="text/javascript" src="<?php echo($ruta_db_superior);?>js/bootstrap-datetimepicker.js"></script>
+<style >
+.ac_results {
+	padding: 0px;
+	border: 0px solid black;
+	background-color: white;
+	overflow: hidden;
+	z-index: 99999;
+}
+
+.ac_results ul {
+	width: 100%;
+	list-style-position: outside;
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+.ac_results li:hover {
+background-color: A9E2F3;
+}
+
+.ac_results li {
+	margin: 0px;
+	padding: 2px 5px;
+	cursor: default;
+	display: block;
+	font: menu;
+	font-size: 10px;
+	line-height:10px;
+	overflow: hidden;
+}
+</style>
+
 <?php
 echo(librerias_arboles());
 if(@$_REQUEST["mostrar_arbol_expediente"]){  
@@ -180,7 +220,96 @@ if(@$_REQUEST["mostrar_arbol_expediente"]){
   <?php
 }
 ?>
+
+
 <script type="text/javascript">
+$(document).ready(function(){
+$("#submit_formulario_asignar_expediente").click(function(){  
+	var formulario_asignar_expediente=$("#formulario_asignar_expediente");
+  $('#cargando_enviar').html("<div id='icon-cargando'></div>Procesando");
+	$(this).attr('disabled', 'disabled');  
+  $.ajax({
+    type:'GET',
+    async:false,
+    url: "<?php echo($ruta_db_superior);?>pantallas/expediente/ejecutar_acciones.php",
+    data: "ejecutar_expediente=asignar_permiso_expediente&tipo_retorno=1&rand="+Math.round(Math.random()*100000)+"&"+formulario_asignar_expediente.serialize(),
+    success: function(html){               
+      if(html){                   
+        var objeto=jQuery.parseJSON(html);                  
+        if(objeto.exito==1){              
+          $('#cargando_enviar').html("Terminado ...");  
+          if($("#cerrar_higslide").val()){            
+            $("#arbol_padre_actualizado", parent.document).val($("#cod_padre").val());
+            parent.window.hs.getExpander().close();                  
+          }
+          notificacion_saia(objeto.mensaje,"success","",2500);
+          window.open("detalles_expediente.php?idexpediente=<?php echo(@$_REQUEST["idexpediente"]); ?>&idbusqueda_componente=<?php echo($_REQUEST['idbusqueda_componente']);?>&rand="+Math.round(Math.random()*100000),"_self");
+        }else{
+        	if(objeto.exito==2){
+        		$("#submit_formulario_asignar_expediente").attr("disabled",false);
+        	}
+          $('#cargando_enviar').html("Terminado ...");
+          notificacion_saia(objeto.mensaje,"error","",8500);
+        }                
+      }          
+    }
+	});
+}); 	
+	
+	
+var delay = (function(){
+  var timer = 0;
+  return function(callback, ms){
+    clearTimeout (timer);
+    timer = setTimeout(callback, ms);
+  };
+})();
+
+	$("#buscar_radicado").keyup(function (){
+	  delay(function(){
+      var valor=$("#buscar_radicado").val();
+      var seleccionados=$("#idfuncionario").val();
+      if(valor==0 || valor==""){
+        alert("Ingrese nombre o apellido");
+      }else{
+        $("#ul_completar").empty().load( "autocompletar.php", { valor:valor,seleccionados:seleccionados,propietario:'<?php echo $propietario[0]["idfuncionario"];?>',opt:1});
+      }
+    }, 500 );
+	});
+
+});
+	
+function cargar_datos(idfunc,nombre){
+	$("#ul_completar").empty();
+	$("#buscar_radicado").val("");
+	if(idfunc!=0){
+		$("#funcionarios_seleccionados").append("<tr id='fila_"+idfunc+"'><td><input type='hidden' name='idfuncionario[]' value='"+idfunc+"'>"+nombre+" <img style='cursor:pointer' src='<?php echo($ruta_db_superior); ?>imagenes/eliminar_nota.gif' onclick='eliminar_asociado("+idfunc+");'></td> <td style='text-align:center'><input type='checkbox' name='permisos_"+idfunc+"[]' value='l' disabled checked=true></td><td style='text-align:center'><input type='checkbox' name='permisos_"+idfunc+"[]' value='m'></td><td style='text-align:center'><input type='checkbox' name='permisos_"+idfunc+"[]' value='e'></td> <td style='text-align:center'><input type='checkbox' name='permisos_"+idfunc+"[]' value='p'></td> </tr>");
+		var sel=$("#idfuncionario").val();
+		if(sel!=""){
+			$("#idfuncionario").val(sel+","+idfunc);
+		}else{
+			$("#idfuncionario").val(idfunc);
+		}
+	}    
+}
+
+function eliminar_asociado(idfunc){
+	$("#fila_"+idfunc).remove();
+	var datos=$("#idfuncionario").val().split(",");
+	var cantidad=datos.length;
+	var nuevos_datos=new Array();
+	var a=0;
+	for(var i=0;i<cantidad;i++){
+		if(idfunc!=datos[i]){
+			nuevos_datos[a]=datos[i];
+			a++;
+		}
+	}
+	var datos_guardar=nuevos_datos.join(",");
+	$("#idfuncionario").val(datos_guardar)
+}
+</script>
+<!--script type="text/javascript">
 $(document).ready(function(){  
   var formulario_asignar_expediente=$("#formulario_asignar_expediente");
   formulario_asignar_expediente.validate({  
@@ -229,6 +358,7 @@ $(document).ready(function(){
     }
   });  
 });
+
 //funcion para cargar los elementos de la entidad seleccionada
 function valores_entidad(identidad){
   if(identidad!=""){
@@ -240,7 +370,7 @@ function valores_entidad(identidad){
       }
     });        
   }       
-}
+} 
 function todos_check(elemento,campo){
   seleccionados=elemento.getAllLeafs();
   nodos=seleccionados.split(",");
@@ -254,5 +384,5 @@ function ninguno_check(elemento,campo){
   for(i=0;i<nodos.length;i++)
     elemento.setCheck(nodos[i],false);
   document.getElementById(campo).value="";
-} 
-</script>
+}
+</script-->
