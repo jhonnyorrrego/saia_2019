@@ -195,7 +195,7 @@ function crear_tomo_expediente(){
     }
     
    
-    if( is_null($datos_padre[0]['serie_idserie']) || $datos_padre[0]['serie_idserie']==''){
+    if( !is_numeric($datos_padre[0]['serie_idserie'])){
         $datos_padre[0]['serie_idserie']=NULL;
     }
      print_r( $datos_padre[0]['serie_idserie']);die('<--- aqui');
