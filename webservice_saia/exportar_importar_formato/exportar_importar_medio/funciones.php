@@ -27,7 +27,7 @@ include_once($ruta_db_superior."db.php");
 function conexion_exportar_importar($datos){
 	global $conn; 
 	
-	include_once($ruta_db_superior.'webservice_saia/exportar_importar_formato/exportar_importar_medio/define_remoto.php');
+	include_once(__DIR__ .'define_remoto.php');
 	return(json_encode(array('mensaje'=>SERVIDOR_IMPORTAR.' <--- aqui')));
 	
 	$datos = json_decode($datos);
