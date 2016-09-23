@@ -12,6 +12,8 @@ boton.addEventListener('click', function(event) {
   var email = document.querySelector('.email');
   var range = document.createRange();
   range.selectNode(email);
+  
+  alert(email);
   window.getSelection().addRange(range);
  
   try {
