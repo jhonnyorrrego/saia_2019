@@ -24,7 +24,7 @@ include_once($ruta_db_superior."db.php");
 function crear_modulo_formato_importar($idformato) {
 	global $conn;
 	$datos_formato = busca_filtro_tabla("nombre,etiqueta,cod_padre,nombre_tabla,ruta_mostrar,ruta_adicionar", "formato", "idformato=" . $idformato, "", $conn);
-	$modulo_formato = busca_filtro_tabla("", "modulo", "nombre = 'ver_formatos'", "", $conn);
+	$modulo_formato = busca_filtro_tabla("", "modulo", "nombre = 'modulo_formatos'", "", $conn);
 	if(!$modulo_formato['numcampos']){
 		$modulo_formato = busca_filtro_tabla("", "modulo", "nombre = 'creacion_formatos'", "", $conn);
 	}
