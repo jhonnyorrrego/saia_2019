@@ -73,6 +73,7 @@ if(file_exists($ruta_docx . 'documento_word.docx')) {
 	$campos_word = $templateProcessor->getVariables();
 	
 	if(@$_REQUEST["iddoc"] && count($campos_word)) {
+	    print_r($ruta_docx); echo "<br>";
 		if(!$combinar) {
 			$numero_radicado = busca_filtro_tabla("", "documento", "iddocumento=" . $_REQUEST["iddoc"], "", $conn);
 			$templateProcessor->setValue('formato_numero', $numero_radicado[0]['numero']);
@@ -150,6 +151,7 @@ function combinar_documento($archivo_csv, $directorio_out, $ruta_docx, $idformat
     $marca_agua = mostrar_estado_documento($iddoc);
 	$extension_doc = '.docx';
 	
+	    print_r($ruta_docx); echo "<br>";die();
 	$datos = cargar_csv($archivo_csv);
 	for($i = 0; $i < count($datos); $i++) {
 		// Cada elemento es un array campo => valor
