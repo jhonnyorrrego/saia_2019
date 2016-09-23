@@ -355,18 +355,18 @@ $ingresa=0;
         $texto.='<td class="transparente" >'.mostrar_valor_campo("causas",$formato_hallazgo[0]["idformato"],$hallazgos[$i]["hallazgo_iddoc"],1).'</td>'; 
         $texto.='<td class="transparente" >'.mostrar_valor_campo("clase_observacion",$formato_hallazgo[0]["idformato"],$hallazgos[$i]["hallazgo_iddoc"],1).'</td>'; 
 						
-        $texto.='<td class="transparente" ><b>Areas:</b> '.ucfirst(strtolower(strip_tags(mostrar_seleccionados(2,64,2,$hallazgos[$i]["hallazgo_iddoc"],1)))).'<br /><b>Procesos:</b> '.ucfirst(strtolower(strip_tags(procesos_vinculados_funcion2($formato_hallazgo[0]["idformato"],$hallazgos[$i]["hallazgo_iddoc"])))).'</td>';
+        $texto.='<td class="transparente" ><b>Areas:</b> '.ucfirst(strtolower(strip_tags(mostrar_seleccionados($formato_hallazgo[0]["idformato"],64,2,$hallazgos[$i]["hallazgo_iddoc"],1)))).'<br /><b>Procesos:</b> '.ucfirst(strtolower(strip_tags(procesos_vinculados_funcion2($formato_hallazgo[0]["idformato"],$hallazgos[$i]["hallazgo_iddoc"])))).'</td>';
         //condicion de encabezado 
 if(isset($_REQUEST["tipo_impresion"])&&$_REQUEST["tipo_impresion"]==1)
         {$texto.='<td class="transparente" >'.strip_tags(mostrar_valor_campo("causas",$formato_hallazgo[0]["idformato"],$hallazgos[$i]["hallazgo_iddoc"],1)).'</td>';
         }
         //fin condicion encabezado  
         $texto.='<td class="transparente" >'.strip_tags(str_replace("&nbsp;"," ",mostrar_valor_campo("accion_mejoramiento",$formato_hallazgo[0]["idformato"],$hallazgos[$i]["hallazgo_iddoc"],1))).'</td>'; 
-        $texto.='<td class="transparente" >'.ucfirst(strtolower(mostrar_seleccionados(2,63,0,$hallazgos[$i]["hallazgo_iddoc"],1))).'</td>'; 
+        $texto.='<td class="transparente" >'.ucfirst(strtolower(mostrar_seleccionados($formato_hallazgo[0]["idformato"],63,0,$hallazgos[$i]["hallazgo_iddoc"],1))).'</td>'; 
         $texto.='<td class="transparente" align="center">'.mostrar_valor_campo("tiempo_cumplimiento",$formato_hallazgo[0]["idformato"],$hallazgos[$i]["hallazgo_iddoc"],1).'</td>'; 
         $texto.='<td class="transparente" >'.strip_tags(mostrar_valor_campo('mecanismo_interno',$formato_hallazgo[0]["idformato"],$hallazgos[$i]["hallazgo_iddoc"],1)).'</td>'; 
         $texto.='<td class="transparente"  align="center">'.mostrar_valor_campo("tiempo_seguimiento",$formato_hallazgo[0]["idformato"],$hallazgos[$i]["hallazgo_iddoc"],1).'</td>'; 
-        $texto.='<td class="transparente" >'.ucfirst(strtolower(mostrar_seleccionados(2,62,0,$hallazgos[$i]["hallazgo_iddoc"],1))).'</td>'; 
+        $texto.='<td class="transparente" >'.ucfirst(strtolower(mostrar_seleccionados($formato_hallazgo[0]["idformato"],62,0,$hallazgos[$i]["hallazgo_iddoc"],1))).'</td>'; 
         $texto.='<td class="transparente" >'.strip_tags(mostrar_valor_campo("indicador_cumplimiento",$formato_hallazgo[0]["idformato"],$hallazgos[$i]["hallazgo_iddoc"],1)).'</td>'; 
         $texto.='<td class="transparente" >'.strip_tags(mostrar_valor_campo("observaciones",$formato_hallazgo[0]["idformato"],$hallazgos[$i]["hallazgo_iddoc"],1)).'</td>';
         //condicion de encabezado
