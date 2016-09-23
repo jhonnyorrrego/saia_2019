@@ -65,7 +65,8 @@ function elaborado_por($idformato,$iddoc){
      
 		
   if($dato[0][0]){
-    mostrar_valor_campo('elaborado',379,$iddoc);   
+    $idformato_plan_mejoramiento=busca_filtro_tabla("idformato","nombre='plan_mejoramiento'","","",$conn);
+    mostrar_valor_campo('elaborado',$idformato_plan_mejoramiento[0]['idformato'],$iddoc);   
     if($dato[0]["fecha_elaborado"] && $dato[0]["fecha_elaborado"]>'2010-01-01 00:00:00'){
       echo("(".$dato[0]["fecha_elaborado"].")");
     }
@@ -101,7 +102,8 @@ $dato=busca_filtro_tabla("revisado,".fecha_db_obtener("fecha_elaborado","Y-m-d H
     $dato[0][0]=substr($dato[0][0],0,$pos);
   
 if($dato[0][0]){
-  mostrar_valor_campo('revisado',379,$iddoc);   
+    $idformato_plan_mejoramiento=busca_filtro_tabla("idformato","nombre='plan_mejoramiento'","","",$conn);
+  mostrar_valor_campo('revisado',$idformato_plan_mejoramiento[0]['idformato'],$iddoc);   
   if($dato[0]["fecha_elaborado"] && $dato[0]["fecha_elaborado"]>'2010-01-01 00:00:00' && $dato[0]["fecha_revisado"] && $dato[0]["fecha_revisado"]>'2010-01-01 00:00:00'){
     echo("(".$dato[0]["fecha_revisado"].")");
   }
@@ -141,8 +143,9 @@ function aprobado_por($idformato,$iddoc){
 		if($pos)
 		$dato[0][0]=substr($dato[0][0],0,$pos);
 		if($dato[0][0]){
+		$idformato_plan_mejoramiento=busca_filtro_tabla("idformato","nombre='plan_mejoramiento'","","",$conn);   
 		mostrar_valor_campo(
-	'aprobado',379,$iddoc);   
+	'aprobado',$idformato_plan_mejoramiento[0]['idformato'],$iddoc);   
     if($dato[0]["fecha_revisado"] && $dato[0]["fecha_revisado"]>'2010-01-01 00:00:00' && $dato[0]["fecha_aprobado"] && $dato[0]["fecha_aprobado"]>'2010-01-01 00:00:00'){
       echo("(".$dato[0]["fecha_aprobado"].")");
     }
@@ -368,7 +371,8 @@ if(isset($_REQUEST["tipo_impresion"])&&$_REQUEST["tipo_impresion"]==1)
         $texto.='<td class="transparente" >'.strip_tags(mostrar_valor_campo("observaciones",$formato_hallazgo[0]["idformato"],$hallazgos[$i]["hallazgo_iddoc"],1)).'</td>';
         //condicion de encabezado
         if($seguimiento["numcampos"] && isset($_REQUEST["tipo_impresion"])&&$_REQUEST["tipo_impresion"]==3){
-           $texto.='<td class="transparente">'.mostrar_valor_campo('logros_alcanzados',5,$seguimiento[$a]["documento_iddocumento"],1).'</td><td class="transparente" align="center" ><a href="../plan_mejoramiento/seguimiento_list.php?idhallazgo='.$hallazgos[$i]["idft_hallazgo"].'" class="highslide" onclick="return hs.htmlExpand(this, { objectType: '."'".'iframe'."'".',width: 400, height:250 } )">'.$seguimiento[$a]["total_porcentaje"].'%</a></td>';
+            $idformato_seguimiento=busca_filtro_tabla("idformato","formato"," nombre='seguimiento_plan_mejoramiento' ","",$conn);
+           $texto.='<td class="transparente">'.mostrar_valor_campo('logros_alcanzados',$idformato_seguimiento[0]['idformato'],$seguimiento[$a]["documento_iddocumento"],1).'</td><td class="transparente" align="center" ><a href="../plan_mejoramiento/seguimiento_list.php?idhallazgo='.$hallazgos[$i]["idft_hallazgo"].'" class="highslide" onclick="return hs.htmlExpand(this, { objectType: '."'".'iframe'."'".',width: 400, height:250 } )">'.$seguimiento[$a]["total_porcentaje"].'%</a></td>';
         }
         $texto.='</tr>';
         $j++;
