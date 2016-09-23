@@ -121,7 +121,7 @@ if(file_exists($ruta_docx . 'documento_word.docx')) {
 			}
 	    	$comando = 'export HOME=/tmp && libreoffice5.1 --headless --convert-to pdf:writer_pdf_Export --outdir ' . $ruta_docx . ' ' . $ruta_docx . "documento_word.docx";
 			$var = shell_exec($comando);
-	    	rename($ruta_docx . $archivo_out . ".pdf", $archivo_out . "0.pdf");
+	    	rename($ruta_docx . $archivo_out . ".pdf", $ruta_docx . $archivo_out . "0.pdf");
 	    	//TODO: Eliminar. Fin
 			combinar_documento($archivo_csv, $ruta_combinar, $ruta_docx, $idformato, $_REQUEST["iddoc"]);
 		}
