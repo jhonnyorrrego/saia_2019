@@ -13,7 +13,7 @@ boton.addEventListener('click', function(event) {
   var range = document.createRange();
   range.selectNode(email);
   
-  alert(email);
+  alert(range);
   window.getSelection().addRange(range);
  
   try {
