@@ -150,8 +150,6 @@ function combinar_documento($archivo_csv, $directorio_out, $ruta_docx, $idformat
     $marca_agua = mostrar_estado_documento($iddoc);
 	$extension_doc = '.docx';
 	
-	$var = shell_exec($comando);
-	
 	$datos = cargar_csv($archivo_csv);
 	for($i = 0; $i < count($datos); $i++) {
 		// Cada elemento es un array campo => valor
