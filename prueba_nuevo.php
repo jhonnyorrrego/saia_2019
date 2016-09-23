@@ -1,20 +1,31 @@
-<?php
-$max_salida=6; // Previene algun posible ciclo infinito limitando a 10 los ../
-$ruta_db_superior=$ruta="";
-while($max_salida>0){
-  if(is_file($ruta."db.php")){
-    $ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
+
+<p>
+    Envíame un mensaje a
+    <a class="email" href="mailto:aaa@ejemplo.com">aaa@ejemplo.com</a>
+</p>
+<button class="botonCopiar">Copiar</button>
+
+<script>
+var boton = document.querySelector('.botonCopiar');
+ 
+boton.addEventListener('click', function(event) {
+  // seleccionar el texto de la dirección de email
+  var email = document.querySelector('.email');
+  var range = document.createRange();
+  range.selectNode(email);
+  window.getSelection().addRange(range);
+ 
+  try {
+    // intentar copiar el contenido seleccionado
+    var resultado = document.execCommand('copy');
+    console.log(resultado ? 'Email copiado' : 'No se pudo copiar el email');
+  } catch(err) {
+    console.log('ERROR al intentar copiar el email');
   }
-  $ruta.="../";
-  $max_salida--;
-}
-include($ruta_db_superior.'db.php');
-include($ruta_db_superior.'formatos/librerias/funciones_generales.php');
-
-
-$valor_campo_ruta=mostrar_valor_campo('arbol_funs',218,232,1);
-echo($datos_formato_ruta.'<--- FIN'); die();
-
-
-
-?>
+ 
+  // eliminar el texto seleccionado
+  window.getSelection().removeAllRanges();
+  // cuando los navegadores lo soporten, habría
+  // que utilizar: removeRange(range)
+});
+</script>
