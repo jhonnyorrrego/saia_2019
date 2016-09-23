@@ -10,7 +10,7 @@ var boton = document.querySelector('.botonCopiar');
 boton.addEventListener('click', function(event) {
   // seleccionar el texto de la dirección de email
   var email = document.querySelector('.email');
-  console.log(email);
+  console.log(email.value);
   var range = document.createRange();
   range.selectNode(email);
   
