@@ -1,6 +1,6 @@
 
 <p>
-   <input type="hidden" class="email" value="hola mundo x">
+   <input type="text" class="email" value="hola mundo x" style="display:none;">
 </p>
 <button class="botonCopiar">Copiar</button>
 
@@ -28,3 +28,5 @@ boton.addEventListener('click', function(event) {
   // que utilizar: removeRange(range)
 });
 </script>
+
+
