@@ -1,6 +1,6 @@
 <?php
 @session_start();
-
+ini_set('display_errors',true);
 $max_salida=10; // Previene algun posible ciclo infinito limitando a 10 los ../
 $ruta_db_superior=$ruta="";
 while($max_salida>0){
