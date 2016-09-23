@@ -1,7 +1,6 @@
 
 <p>
-    Envíame un mensaje a
-    <a class="email" href="mailto:aaa@ejemplo.com">aaa@ejemplo.com</a>
+   <textarea class="email"></textarea>
 </p>
 <button class="botonCopiar">Copiar</button>
 
