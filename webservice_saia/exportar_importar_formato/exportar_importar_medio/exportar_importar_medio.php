@@ -11,7 +11,7 @@ while($max_salida>0){
 
   require_once($ruta_db_superior.'webservice_saia/exportar_importar_formato/exportar_importar_medio/lib/nusoap.php');
  // require_once("define_remoto_medio.php");
-  include_once('define_remoto.php');
+  //include_once('define_remoto.php');
   return(json_encode(array('mensaje'=>SERVIDOR_IMPORTAR.'<---aqui')));
   include_once('funciones.php');
   
