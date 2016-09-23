@@ -30,7 +30,7 @@ if(!@$_SESSION["LOGIN".LLAVE_SAIA]){
 function conexion_exportar_importar($datos){
 	global $conn; 
     
-	return(json_encode(array('mensaje'=>SERVIDOR_IMPORTAR)));
+	return(json_encode(array('mensaje'=>SERVIDOR_IMPORTAR.'<---aqui')));
 	
 	$datos = json_decode($datos);
 	$importar=json_encode($datos);
