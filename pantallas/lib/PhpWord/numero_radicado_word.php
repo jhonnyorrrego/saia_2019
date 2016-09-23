@@ -50,7 +50,7 @@ if(@$_REQUEST["iddoc"]) {
 }
 
 $ruta_docx = '';
-$ruta_csv = "";
+$archivo_csv = "";
 $combinar = false;
 $idformato = null;
 
@@ -62,7 +62,7 @@ if(@$anexo['numcampos']) {
 }
 
 if(@$anexo_csv['numcampos']) {
-	$ruta_csv = $ruta_db_superior . $anexo_csv[0]["ruta"];
+	$archivo_csv = $ruta_db_superior . $anexo_csv[0]["ruta"];
 	$combinar = true;
 }
 
@@ -72,53 +72,62 @@ if(file_exists($ruta_docx . 'documento_word.docx')) {
 	
 	$campos_word = $templateProcessor->getVariables();
 	
-	if(@$_REQUEST["iddoc"] && count($campos_word) && !$combinar) {
-		
-		$numero_radicado = busca_filtro_tabla("", "documento", "iddocumento=" . $_REQUEST["iddoc"], "", $conn);
-		$templateProcessor->setValue('formato_numero', $numero_radicado[0]['numero']);
-		
-		$campo_qr_word = "codigo_qr";
-		if(in_array($campo_qr_word, $campos_word)) {
-			$src = $ruta_db_superior . obtener_codigo_qr($idformato, $_REQUEST["iddoc"]);
+	if(@$_REQUEST["iddoc"] && count($campos_word)) {
+		if(!$combinar) {
+			$numero_radicado = busca_filtro_tabla("", "documento", "iddocumento=" . $_REQUEST["iddoc"], "", $conn);
+			$templateProcessor->setValue('formato_numero', $numero_radicado[0]['numero']);
 			
-			$img2 = array(
-				array(
-					'img' => htmlspecialchars($src),
-					'size' => array(
-						100,
-						100
+			$campo_qr_word = "codigo_qr";
+			if(in_array($campo_qr_word, $campos_word)) {
+				$src = $ruta_db_superior . obtener_codigo_qr($idformato, $_REQUEST["iddoc"]);
+				
+				$img2 = array(
+					array(
+						'img' => htmlspecialchars($src),
+						'size' => array(
+							100,
+							100
+						)
 					)
-				)
-			);
-			$templateProcessor->setImg($campo_qr_word, $img2);
-		}
-		
-		$directorio_out = $ruta_docx;
-
-		$archivo_out = 'documento_word';
-		
-		$extension_doc = '.docx';
-		
-		if(file_exists($directorio_out . $archivo_out . $extension_doc)) {
-			unlink($directorio_out . $archivo_out . $extension_doc);
-			unlink($directorio_out . $archivo_out . '.pdf');
-		}
-		$marca_agua = mostrar_estado_documento($_REQUEST['iddoc']);
-		$templateProcessor->setTextWatermark($marca_agua);
-		$templateProcessor->saveAs($directorio_out . $archivo_out . $extension_doc);
-		
-		if(file_exists($directorio_out . $archivo_out . $extension_doc)) {
-			$comando = 'export HOME=/tmp && libreoffice5.1 --headless --convert-to pdf:writer_pdf_Export --outdir ' . $directorio_out . ' ' . $directorio_out . $archivo_out . $extension_doc;
+				);
+				$templateProcessor->setImg($campo_qr_word, $img2);
+			}
+			
+			$directorio_out = $ruta_docx;
+	
+			$archivo_out = 'documento_word';
+			
+			$extension_doc = '.docx';
+			
+			if(file_exists($directorio_out . $archivo_out . $extension_doc)) {
+				unlink($directorio_out . $archivo_out . $extension_doc);
+				unlink($directorio_out . $archivo_out . '.pdf');
+			}
+			$marca_agua = mostrar_estado_documento($_REQUEST['iddoc']);
+			$templateProcessor->setTextWatermark($marca_agua);
+			$templateProcessor->saveAs($directorio_out . $archivo_out . $extension_doc);
+			
+			if(file_exists($directorio_out . $archivo_out . $extension_doc)) {
+				$comando = 'export HOME=/tmp && libreoffice5.1 --headless --convert-to pdf:writer_pdf_Export --outdir ' . $directorio_out . ' ' . $directorio_out . $archivo_out . $extension_doc;
+				$var = shell_exec($comando);
+			}
+		} else {
+			crear_destino($ruta_combinar);	
+	    	chmod($ruta_combinar, 0777);
+	    	//TODO: Eliminar. Se genera pdf antes de procesar para ver porque no salen las firmas
+			$archivo_out = 'documento_word';
+	    	if(file_exists($ruta_docx . $archivo_out . ".pdf")) {
+				unlink($ruta_docx . $archivo_out . '.pdf');
+			}
+	    	$comando = 'export HOME=/tmp && libreoffice5.1 --headless --convert-to pdf:writer_pdf_Export --outdir ' . $ruta_docx . ' ' . $ruta_docx . "documento_word.docx";
 			$var = shell_exec($comando);
+	    	rename($ruta_docx . $archivo_out . ".pdf", $archivo_out . "0.pdf");
+	    	//TODO: Eliminar. Fin
+			combinar_documento($archivo_csv, $ruta_combinar, $ruta_docx, $idformato, $_REQUEST["iddoc"]);
 		}
 	}// fin si existe iddoc y el word tiene campos del formato
-	if($combinar) {
-	   	crear_destino($ruta_combinar);	
-    	chmod($ruta_combinar, 0777);
-		combinar_documento($ruta_csv, $ruta_combinar, $ruta_docx, $idformato, $_REQUEST["iddoc"]);
-	}
-}
-// fin si existe word
+} // fin si existe word
+
 function obtener_codigo_qr($idformato, $iddoc) {
 	global $conn, $ruta_db_superior;
 	$codigo_qr = busca_filtro_tabla("", "documento_verificacion", "documento_iddocumento=" . $iddoc, "", $conn);
@@ -133,7 +142,7 @@ function obtener_codigo_qr($idformato, $iddoc) {
 	return $codigo_qr[0]['ruta_qr'];
 }
 
-function combinar_documento($ruta_csv, $directorio_out, $ruta_pdf, $idformato, $iddoc) {
+function combinar_documento($archivo_csv, $directorio_out, $ruta_docx, $idformato, $iddoc) {
 	global $conn, $ruta_db_superior;
 
 	$numero_radicado = busca_filtro_tabla("", "documento", "iddocumento=" . $_REQUEST["iddoc"], "", $conn);
@@ -141,12 +150,14 @@ function combinar_documento($ruta_csv, $directorio_out, $ruta_pdf, $idformato, $
     $marca_agua = mostrar_estado_documento($iddoc);
 	$extension_doc = '.docx';
 	
-	$datos = cargar_csv($ruta_csv);
+	$var = shell_exec($comando);
+	
+	$datos = cargar_csv($archivo_csv);
 	for($i = 0; $i < count($datos); $i++) {
 		// Cada elemento es un array campo => valor
 		$archivo_out = "documento_word_$i";
 		
-	    $templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor($ruta_pdf . 'documento_word.docx');
+	    $templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor($ruta_docx . 'documento_word.docx');
     	$campos_word = $templateProcessor->getVariables();
 
     	$templateProcessor->setValue('formato_numero', $numero_radicado[0]['numero']);
@@ -184,11 +195,11 @@ function combinar_documento($ruta_csv, $directorio_out, $ruta_pdf, $idformato, $
 	if(is_dir($directorio_out)) {
 		$comando1 = 'export HOME=/tmp && libreoffice5.1 --headless -print-to-file --outdir ' . $directorio_out . ' ' . $directorio_out . "*" . $extension_doc;
 		$var1 = shell_exec($comando1);
-		if(file_exists($ruta_pdf . "documento_word.pdf")) {
-		    unlink($ruta_pdf . "documento_word.pdf");
+		if(file_exists($ruta_docx . "documento_word.pdf")) {
+		    unlink($ruta_docx . "documento_word.pdf");
 		}
 		$entrada_ps = $directorio_out . "*.ps";
-		$salida_ps = $ruta_pdf . "documento_word.pdf";
+		$salida_ps = $ruta_docx . "documento_word.pdf";
         $comando2 = "gs -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -dSAFER -sOutputFile=" . $salida_ps . " " . $entrada_ps;
 		$var2 = shell_exec($comando2);
 		//print_r($entrada_ps);echo "<br>";
