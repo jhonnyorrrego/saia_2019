@@ -1,6 +1,6 @@
 
 <p>
-   <input type="text" class="email" value="hola mundo x" style="display:none;">
+   <input type="text" class="email" value="hola mundo x">
 </p>
 <button class="botonCopiar">Copiar</button>
 
