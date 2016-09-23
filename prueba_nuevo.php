@@ -1,6 +1,6 @@
 
 <p>
-   <textarea class="email"></textarea>
+   <input type="hidden" class="email" value="hola mundo x">
 </p>
 <button class="botonCopiar">Copiar</button>
 
