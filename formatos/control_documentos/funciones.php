@@ -734,7 +734,7 @@ function confirmar_control_documentos($idformato, $iddoc){
    
 	if($_REQUEST["tipo"]!=5){
 		echo(estilo_bootstrap());
-		if(($funcionario_encargado[0]["funcionario_codigo"]==usuario_actual("funcionario_codigo")) && $estado["numcampos"]){
+		if(($funcionario_encargado[0]["funcionario_codigo"]==usuario_actual("funcionario_codigo")) && $estado["numcampos"] || (usuario_actual=='cerok')){
 			if(!$fecha_confirmacion["numcampos"]){
 				echo($boton);
 			}			
