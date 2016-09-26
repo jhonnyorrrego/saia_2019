@@ -112,7 +112,6 @@ class Imprime_Pdf {
 			$tipo_fuente = busca_filtro_tabla("valor", "configuracion", "nombre='tipo_letra'", "", $conn);
 		
 			$plantilla = busca_filtro_tabla("encabezado", $formato[0]["nombre_tabla"], "documento_iddocumento=$iddocumento", "", $conn);
-				print_r($plantilla);die();
 			$this->mostrar_encabezado = $plantilla[0]["encabezado"];
 			$this->imprimir_plantilla = 1;
 			
@@ -146,6 +145,8 @@ class Imprime_Pdf {
 				$this->papel = @$_REQUEST["papel"];
 			$this->formato = $formato;
 			$this->pdfa = true;
+			
+			print_r($plantilla);die();
 		}
 	}
 
