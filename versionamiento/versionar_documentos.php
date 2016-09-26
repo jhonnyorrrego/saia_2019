@@ -38,6 +38,9 @@ if(!$datos_documento) {
 	volver(1);
 	die();
 } else {
+    
+    print_r('<--- entra');
+    
 	switch($_REQUEST['tipo_versionamiento']) {
 		/**
 		 * Crea la version del documento (Crea el pdf nuevo del documento y toma los anexos y
