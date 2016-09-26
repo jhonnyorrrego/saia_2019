@@ -822,7 +822,6 @@ function mostrar_formato($idformato,$iddoc)
     redirecciona($url);
  }
  
- 
 }
 /*<Clase>
 <Nombre>aprobar_reemplazo</Nombre>
