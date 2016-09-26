@@ -457,11 +457,11 @@ class Imprime_Pdf {
 		if(isset($datos["imprimir_paginas"]) && $datos["imprimir_paginas"]) {
 			$this->imprimir_paginas = $datos["imprimir_paginas"];
 		}
-		print_r($datos);die();
+		
 		if(isset($datos["vincular_anexos"]) && $datos["vincular_anexos"]) {
 			$this->vincular_anexos = $datos["vincular_anexos"];
 		}
-		
+		print_r($datos);die();
 		if(isset($datos["tipo_salida"]) && $datos["tipo_salida"]) {
 			$this->tipo_salida = $datos["tipo_salida"];
 		}
