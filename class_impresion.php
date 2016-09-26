@@ -81,7 +81,7 @@ class Imprime_Pdf {
 	
 		
 		$formato = busca_filtro_tabla("", "formato", "lower(nombre) like '" . strtolower($this->documento[0]["plantilla"]) . "'", "", $conn);
-			print_r($formato);die();
+		
 		if(!$this->documento["numcampos"]) {
 			die("documento no encontrado.");
 		}
@@ -99,6 +99,8 @@ class Imprime_Pdf {
 					$this->tipo_salida = "FI"; // para generarlo de nuevo y guardar la ruta
 				}
 			}
+			
+				print_r($formato);die();
 			// si el documento ya no esta activo, pero nunca le guardaron el pdf, se guarda
 			if($this->documento[0]["pdf"] == "" && $this->documento[0]["estado"] != "ACTIVO") {
 				$this->tipo_salida = "FI";
