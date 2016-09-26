@@ -272,13 +272,14 @@ class Imprime_Pdf {
 	}
 
 	function imprimir_paginas() {
+	    global $conn;
 		if($this->idpaginas != "") {
 			$paginas = busca_filtro_tabla("", "pagina", "consecutivo in(" . $this->idpaginas . ")", "", $conn);
 		} else {
 			$paginas = busca_filtro_tabla("", "pagina", "id_documento=" . $this->documento[0]["iddocumento"], "", $conn);
 		}
 		
-		print_r($paginas);die();
+	
 		
 		if($paginas["numcampos"]) {
 			
