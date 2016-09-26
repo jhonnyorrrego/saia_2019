@@ -3544,7 +3544,7 @@ function crear_pdf_documento_tcpdf($datos_documento, $datos_ejecutor = null) {
 			
 		$ruta .= strtoupper($datos_documento["plantilla"] . "_" . $datos_documento["numero"] . "_" . $fecha_guion_bajo) . ".pdf";
 		
-		$ruta=$ruta_db_superior.$ruta;
+		
 		
 	} else {
 		$ruta = $pdf[0]["pdf"];
