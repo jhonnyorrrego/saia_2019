@@ -469,7 +469,7 @@ class Imprime_Pdf {
 		if(isset($datos["seleccion"])) {
 			$this->configurar_seleccion_impresion($datos["seleccion"]);
 		}
-		print_r('hello world');die();
+		
 		if(isset($datos["versionamiento"])) {
 			$this->versionamiento = 1;
 			$this->version = $datos["version"];
@@ -535,6 +535,8 @@ class Imprime_Pdf {
 		if(isset($datos["margen_izquierda"]) && $datos["margen_izquierda"]) {
 			$this->margenes["izquierda"] = $datos["margen_izquierda"];
 		}
+		
+		print_r('hello world');die();
 	}
 
 	function renombrar_pdf_actual() {
