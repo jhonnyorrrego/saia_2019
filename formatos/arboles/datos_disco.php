@@ -69,7 +69,7 @@ $nombre_tabla="";
 if($texto["numcampos"]){
   switch($arreglo[0]){
     case "F":
-      $nombre_tabla="ft_formatos";
+      $nombre_tabla="ft_formato";
     break;
     case "G":
       $nombre_tabla="ft_guia";
