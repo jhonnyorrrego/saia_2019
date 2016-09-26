@@ -370,11 +370,11 @@ if(isset($_REQUEST["tipo_impresion"])&&$_REQUEST["tipo_impresion"]==1)
         }
         //fin condicion encabezado  
         $texto.='<td class="transparente" >'.strip_tags(str_replace("&nbsp;"," ",mostrar_valor_campo("accion_mejoramiento",$formato_hallazgo[0]["idformato"],$hallazgos[$i]["hallazgo_iddoc"],1))).'</td>'; 
-        $texto.='<td class="transparente" >'.ucfirst(strtolower(mostrar_seleccionados($formato_hallazgo[0]["idformato"],63,0,$hallazgos[$i]["hallazgo_iddoc"],1))).'</td>'; 
+        $texto.='<td class="transparente" >'.ucfirst(strtolower(mostrar_seleccionados($formato_hallazgo[0]["idformato"],$vector_campos_id['responsables'],0,$hallazgos[$i]["hallazgo_iddoc"],1))).'</td>'; 
         $texto.='<td class="transparente" align="center">'.mostrar_valor_campo("tiempo_cumplimiento",$formato_hallazgo[0]["idformato"],$hallazgos[$i]["hallazgo_iddoc"],1).'</td>'; 
         $texto.='<td class="transparente" >'.strip_tags(mostrar_valor_campo('mecanismo_interno',$formato_hallazgo[0]["idformato"],$hallazgos[$i]["hallazgo_iddoc"],1)).'</td>'; 
         $texto.='<td class="transparente"  align="center">'.mostrar_valor_campo("tiempo_seguimiento",$formato_hallazgo[0]["idformato"],$hallazgos[$i]["hallazgo_iddoc"],1).'</td>'; 
-        $texto.='<td class="transparente" >'.ucfirst(strtolower(mostrar_seleccionados($formato_hallazgo[0]["idformato"],62,0,$hallazgos[$i]["hallazgo_iddoc"],1))).'</td>'; 
+        $texto.='<td class="transparente" >'.ucfirst(strtolower(mostrar_seleccionados($formato_hallazgo[0]["idformato"],$vector_campos_id['responsable_seguimiento'],0,$hallazgos[$i]["hallazgo_iddoc"],1))).'</td>'; 
         $texto.='<td class="transparente" >'.strip_tags(mostrar_valor_campo("indicador_cumplimiento",$formato_hallazgo[0]["idformato"],$hallazgos[$i]["hallazgo_iddoc"],1)).'</td>'; 
         $texto.='<td class="transparente" >'.strip_tags(mostrar_valor_campo("observaciones",$formato_hallazgo[0]["idformato"],$hallazgos[$i]["hallazgo_iddoc"],1)).'</td>';
         //condicion de encabezado
