@@ -112,7 +112,7 @@ if(@$_REQUEST["id"]) {
 								die();
 							} else {
 								alerta("No hay anexos relacionados.");
-								$ruta = "../../vacio.php";
+								$ruta = "../../vacio.php?1=1";
 							}
 						} else {
 							alerta("Problemas al encontrar el Documento");
