@@ -119,7 +119,6 @@ if($configuracion_temporal['numcampos']){
     if(!is_dir($configuracion_temporal[0]['valor'].'_'.usuario_actual("login"))){
         mkdir($configuracion_temporal[0]['valor'].'_'.usuario_actual("login"),0777,true);
     }
-    
     borrar_archivos_carpeta($configuracion_temporal[0]['valor'].'_'.usuario_actual("login"), 0); 
 }else{
     borrar_archivos_carpeta('temporal_'.usuario_actual("login"), 0); 
