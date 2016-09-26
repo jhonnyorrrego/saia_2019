@@ -10,7 +10,6 @@ if(!@$_SESSION["LOGIN" . $_REQUEST["llave_saia"]] && $_REQUEST["conexion_remota"
 	@session_start();
 	$_SESSION["LOGIN" . $_REQUEST["llave_saia"]] = $_REQUEST["conexion_usuario"];
 	$_SESSION["usuario_actual"] = $_REQUEST["conexion_actual"];
-	;
 	$_SESSION["conexion_remota"] = 1;
 } else if(!@$_REQUEST["LOGIN"] && @$_REQUEST["usuario_actual"]) {
 	@session_start();
