@@ -112,11 +112,10 @@ if($configuracion_temporal['numcampos']){
     if(count($vector_rutas_crear)>1){
         $cont_ruta='';
         for($i=0;$i<count($vector_rutas_crear);$i++){
-            if(!is_dir($vector_rutas_crear[$i])){
+            if(!is_dir($cont_ruta.$vector_rutas_crear[$i])){
                 mkdir($cont_ruta.$vector_rutas_crear[$i]);
                 chmod($cont_ruta.$vector_rutas_crear[$i],0777);
             }
-            print_r($cont_ruta.=$vector_rutas_crear[$i].'/'.'<br>');
             $cont_ruta.=$vector_rutas_crear[$i].'/';
              
         }
