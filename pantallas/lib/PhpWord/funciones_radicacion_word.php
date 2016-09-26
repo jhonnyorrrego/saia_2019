@@ -128,7 +128,7 @@ class RadicadoWord {
 						// unlink($this->ruta_docx . $archivo_out . '.pdf');
 						rename($this->ruta_docx . $archivo_out . ".pdf", $this->ruta_docx . $archivo_out . "_orig.pdf");
 					}
-					$comando = 'export HOME=/tmp && libreoffice --headless --convert-to pdf:writer_pdf_Export --outdir ' . $this->ruta_docx . ' ' . $this->ruta_docx . "documento_word.docx";
+					$comando = 'export HOME=/tmp && libreoffice --headless --convert-to pdf:writer_pdf_Export --outdir ' . $this->ruta_docx . ' ' . $this->ruta_docx . $archivo_out . ".docx";
 					$var = shell_exec($comando);
 					rename($this->ruta_docx . $archivo_out . ".pdf", $this->ruta_docx . $archivo_out . "0.pdf");
 					// TODO: Eliminar. Fin
