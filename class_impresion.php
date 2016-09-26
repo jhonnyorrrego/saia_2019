@@ -465,11 +465,11 @@ class Imprime_Pdf {
 		if(isset($datos["tipo_salida"]) && $datos["tipo_salida"]) {
 			$this->tipo_salida = $datos["tipo_salida"];
 		}
-			print_r('hello world');die();
+			
 		if(isset($datos["seleccion"])) {
 			$this->configurar_seleccion_impresion($datos["seleccion"]);
 		}
-		
+		print_r('hello world');die();
 		if(isset($datos["versionamiento"])) {
 			$this->versionamiento = 1;
 			$this->version = $datos["version"];
