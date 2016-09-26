@@ -258,7 +258,7 @@ class Imprime_Pdf {
 		}
 		
 	
-		
+		chmod($nombre_pdf,0777);
 		if($this->tipo_salida == "FI" && $this->documento[0]["estado"] != 'ACTIVO') {
 			
 			$paginas_pdf = $this->pdf->getNumPages();
@@ -273,7 +273,7 @@ class Imprime_Pdf {
 				$nombre_pdf = basename($nombre_pdf);
 			}
 		}
-		chmod($nombre_pdf,0777);
+		
 		$this->pdf->Output($nombre_pdf, $this->tipo_salida);
 	}
 
