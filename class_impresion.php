@@ -213,7 +213,7 @@ class Imprime_Pdf {
 		if($this->imprimir_plantilla) {
 			$this->extraer_contenido($this->documento[0]["iddocumento"]);
 		}
-		print_r('hello world5');die();
+		
 		if($this->vincular_anexos) {
 			$this->vincular_anexos();
 		}
@@ -310,6 +310,8 @@ class Imprime_Pdf {
 		$mh = curl_multi_init();
 		$ch = curl_init();
 		$direccion = array();
+		
+		print_r('hello world6');die();
 		
 		$datos_formato = busca_filtro_tabla("nombre,nombre_tabla,ruta_mostrar", "formato,documento", "lower(plantilla)=nombre and iddocumento=$iddocumento", "", $conn);
 		
