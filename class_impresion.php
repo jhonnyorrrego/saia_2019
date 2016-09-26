@@ -536,7 +536,7 @@ class Imprime_Pdf {
 			$this->margenes["izquierda"] = $datos["margen_izquierda"];
 		}
 		
-		print_r('hello world');die();
+		
 	}
 
 	function renombrar_pdf_actual() {
@@ -660,6 +660,7 @@ if(@$_REQUEST["iddoc"]) {
     
 	$pdf = new Imprime_Pdf($_REQUEST["iddoc"]);
 	$pdf->configurar_pagina($_REQUEST);
+	print_r('hello world');die();
 	$pdf->imprimir();
 }
 ?>
