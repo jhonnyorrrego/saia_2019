@@ -14,8 +14,8 @@ $formato_hallazgo=busca_filtro_tabla("idformato","formato a","a.nombre LIKE '%ha
 $campos_formato_hallazgo=busca_filtro_tabla("","campos_formato a","a.formato_idformato=".$formato_hallazgo[0]['idformato'],"",$conn);
 $vector_campos_id=array();
 for($i=0;$i<$campos_formato_hallazgo['numcampos'];$i++){
-    
+    $vector_campos_id[$campos_formato_hallazgo[$i]['nombre']]=$campos_formato_hallazgo[$i]['idcampos_formato'];
 }
 
-print_r($campos_formato_hallazgo);
+print_r($vector_campos_id);
 ?>
