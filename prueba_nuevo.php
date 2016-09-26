@@ -10,8 +10,8 @@ while($max_salida>0){
 }
 include_once($ruta_db_superior."db.php");
 
-$formato_hallazgo=busca_filtro_tabla("","formato a","a.nombre LIKE '%hallazgo%plan%mejoramiento'","",$conn);
+$formato_hallazgo=busca_filtro_tabla("idformato","formato a","a.nombre LIKE '%hallazgo%plan%mejoramiento'","",$conn);
+$campos_formato_hallazgo=busca_filtro_tabla("","campos_formato a","a.idformato=".$formato_hallazgo[0]['idformato'],"",$conn);
 
-
-print_r($formato_hallazgo);
+print_r($campos_formato_hallazgo);
 ?>
