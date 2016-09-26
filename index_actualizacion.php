@@ -108,7 +108,7 @@ $configuracion_temporal=busca_filtro_tabla("valor","configuracion","nombre='ruta
 
 if($configuracion_temporal['numcampos']){
     $vector_rutas_crear=explode('/',$configuracion_temporal[0]['valor']);
-    print_r($vector_rutas_crear); die();
+   
     if(count($vector_rutas_crear)>1){
         $cont_ruta='';
         for($i=0;$i<count($vector_rutas_crear);$i++){
@@ -117,6 +117,7 @@ if($configuracion_temporal['numcampos']){
                 chmod($cont_ruta.$vector_rutas_crear[$i],0777);
             }
             $cont_ruta.=$vector_rutas_crear[$i].'/';
+             print_r($cont_ruta.=$vector_rutas_crear[$i].'/'); die();
         }
     }
     if(!is_dir($configuracion_temporal[0]['valor'].'_'.usuario_actual("login"))){
