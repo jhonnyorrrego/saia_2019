@@ -56,7 +56,9 @@ function generar_firma_word($idformato, $iddoc) { // POSTERIOR AL CONFIRMAR
 function generar_radicado_word($idformato, $iddoc) { // POSTERIOR AL APROBAR
 	global $ruta_db_superior, $conn;
 	
-	include_once ($ruta_db_superior . 'pantallas/lib/PhpWord/numero_radicado_word.php');
+	include_once ($ruta_db_superior . 'pantallas/lib/PhpWord/funciones_radicacion_word.php');
+	$radicar_word = new RadicadoWord($iddoc);
+	$radicar_word->asignar_radicado();
 }
 
 function mostrar_mensaje_error_pdf($idformato, $iddoc) { // mostrar
