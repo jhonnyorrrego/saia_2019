@@ -48,7 +48,7 @@ class RadicadoWord {
 			$anexo = busca_filtro_tabla("d.ruta, b.idformato", "documento a, formato b, campos_formato c, anexos d", "lower(a.plantilla)=b.nombre AND b.idformato=c.formato_idformato AND c.nombre='anexo_word' AND c.idcampos_formato=d.campos_formato AND a.iddocumento=" . $this->iddocumento . " AND d.documento_iddocumento=" . $this->iddocumento, "", $conn);
 			$anexo_csv = busca_filtro_tabla("d.ruta", "documento a, formato b, campos_formato c, anexos d", "lower(a.plantilla)=b.nombre AND b.idformato=c.formato_idformato AND c.nombre='anexo_csv' AND c.idcampos_formato=d.campos_formato AND a.iddocumento=" . $this->iddocumento . " AND d.documento_iddocumento=" . $this->iddocumento, "", $conn);
 			if(@$anexo['numcampos']) {
-				$this->ruta_anexo = explode('anexos', $anexo[0]["ruta"]);
+				$ruta_anexo = explode('anexos', $anexo[0]["ruta"]);
 				$this->ruta_combinar = $ruta_db_superior . $ruta_anexo[0] . 'pdf_temp/';
 				$this->ruta_docx = $ruta_db_superior . $ruta_anexo[0] . 'docx/';
 				$this->idformato = $anexo[0]["idformato"];
