@@ -112,7 +112,7 @@ if(@$_REQUEST["id"]) {
 								die();
 							} else {
 								alerta("No hay anexos relacionados.");
-								$ruta = "../../vacio.php?1=1";
+								$ruta = "../../vacio.php";
 							}
 						} else {
 							alerta("Problemas al encontrar el Documento");
@@ -435,6 +435,8 @@ if(@$_REQUEST["id"]) {
 			else
 				$ruta .= "?no_menu=1";
 		}
+		
+		print_r($ruta);die();
 	} else {
 		switch($datos[0]) {
 			case "pm":
