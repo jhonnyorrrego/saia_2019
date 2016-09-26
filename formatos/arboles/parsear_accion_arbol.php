@@ -13,7 +13,7 @@ $formato["numcampos"] = 0;
 if(@$_REQUEST["id"]) {
 	$datos = parsea_idformato($_REQUEST["id"]);
 	$formato = busca_filtro_tabla("", "formato", "idformato=" . $datos[0], "", $conn);
-	// print_r($datos);
+	 print_r($datos);die();
 	if(!$datos[2] && $datos[3] == "mostrar") {
 		$datos[3] = "detalle_mostrar";
 	}
@@ -437,7 +437,7 @@ if(@$_REQUEST["id"]) {
 				$ruta .= "?no_menu=1";
 		}
 		
-	//	print_r($datos[3]);die();
+
 	} else {
 		switch($datos[0]) {
 			case "pm":
