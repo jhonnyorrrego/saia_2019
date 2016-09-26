@@ -24,7 +24,7 @@ $datos_documento = obtener_datos_documento(365);
 
 crear_pdf_documento_tcpdf($datos_documento);
 
-print_r($datos_documento);
+
 
 
 
