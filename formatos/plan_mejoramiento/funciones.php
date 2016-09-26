@@ -279,8 +279,12 @@ function listar_hallazgo_plan_mejoramiento($idformato,$iddoc,$condicion=""){
   }
     
   if($condicion!=""){
-    $formato_hallazgo=busca_filtro_tabla("","formato a, campos_formato b","a.idformato=b.formato_idformato AND a.nombre LIKE '%hallazgo%plan%mejoramiento'","",$conn);
-    //print_r($formato_hallazgo);
+    $formato_hallazgo=busca_filtro_tabla("","formato a","a.nombre LIKE '%hallazgo%plan%mejoramiento'","",$conn);
+    $campos_formato_hallazgo=busca_filtro_tabla("nombre,idcampos_formato","campos_formato a","a.formato_idformato=".$formato_hallazgo[0]['idformato'],"",$conn);
+    $vector_campos_id=array();
+    for($i=0;$i<$campos_formato_hallazgo['numcampos'];$i++){
+        $vector_campos_id[$campos_formato_hallazgo[$i]['nombre']]=$campos_formato_hallazgo[$i]['idcampos_formato'];
+    }
     $hallazgos=busca_filtro_tabla("a.*,b.*,a.documento_iddocumento as hallazgo_iddoc","ft_hallazgo a, ft_plan_mejoramiento b,documento c","a.ft_plan_mejoramiento= b.idft_plan_mejoramiento and a.documento_iddocumento= c.iddocumento and a.estado<>'INACTIVO' and c.estado<>'ELIMINADO' AND ".$condicion,"idft_hallazgo asc",$conn);	
     //print_r($hallazgos);
   if($hallazgos["numcampos"]){
@@ -359,7 +363,7 @@ $ingresa=0;
         $texto.='<td class="transparente" >'.mostrar_valor_campo("clase_observacion",$formato_hallazgo[0]["idformato"],$hallazgos[$i]["hallazgo_iddoc"],1).'</td>'; 
 		
 						
-        $texto.='<td class="transparente" ><b>Areas:</b> '.ucfirst(strtolower(strip_tags(mostrar_seleccionados($formato_hallazgo[0]["idformato"],64,2,$hallazgos[$i]["hallazgo_iddoc"],1)))).'<br /><b>Procesos:</b> '.ucfirst(strtolower(strip_tags(procesos_vinculados_funcion2($formato_hallazgo[0]["idformato"],$hallazgos[$i]["hallazgo_iddoc"])))).'</td>';
+        $texto.='<td class="transparente" ><b>Areas:</b> '.ucfirst(strtolower(strip_tags(mostrar_seleccionados($formato_hallazgo[0]["idformato"],$vector_campos_id['secretarias'],2,$hallazgos[$i]["hallazgo_iddoc"],1)))).'<br /><b>Procesos:</b> '.ucfirst(strtolower(strip_tags(procesos_vinculados_funcion2($formato_hallazgo[0]["idformato"],$hallazgos[$i]["hallazgo_iddoc"])))).'</td>';
         //condicion de encabezado 
 if(isset($_REQUEST["tipo_impresion"])&&$_REQUEST["tipo_impresion"]==1)
         {$texto.='<td class="transparente" >'.strip_tags(mostrar_valor_campo("causas",$formato_hallazgo[0]["idformato"],$hallazgos[$i]["hallazgo_iddoc"],1)).'</td>';
