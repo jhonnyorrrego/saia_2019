@@ -772,7 +772,7 @@ function confirmar_control_documentos($idformato, $iddoc){
 
 function radicar_plantilla3(){ 
    global $conn,$sql,$ruta_db_superior;
-
+    $_REQUEST['aprobacion_externa']=1;
 	$valores=array();
 	$plantilla="";
 	$idformato=0;
