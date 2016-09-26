@@ -16,7 +16,7 @@ include_once($ruta_db_superior."formatos/librerias/funciones_generales.php");
 $datos_documento = obtener_datos_documento(365);
 
 
-
+print_r($datos_documento);
 
 
 
