@@ -436,7 +436,7 @@ if(@$_REQUEST["id"]) {
 				$ruta .= "?no_menu=1";
 		}
 		
-		print_r($ruta);die();
+		print_r($datos[3]);die();
 	} else {
 		switch($datos[0]) {
 			case "pm":
