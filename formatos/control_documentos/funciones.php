@@ -186,7 +186,7 @@ function ruta_aprobacion_control_documentos($idformato, $iddoc){
 		$radicador_salida=busca_filtro_tabla("origen","buzon_entrada","archivo_idarchivo=".$iddoc,"idtransferencia desc",$conn);
 	    array_push($ruta,array("funcionario"=>$radicador_salida[0][0],"tipo_firma"=>0)); 
 	    phpmkr_query("update buzon_entrada set activo=0 where archivo_idarchivo=".$iddoc." and nombre='POR_APROBAR'");
-	    insertar_ruta_aprobacion_control_documentos($ruta,$iddoc);	    
+	   // insertar_ruta_aprobacion_control_documentos($ruta,$iddoc);	    
 	}
 }
 
