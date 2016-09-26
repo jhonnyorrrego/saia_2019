@@ -152,6 +152,7 @@ if(@$_REQUEST["id"]) {
 				}
 				break;
 			case "detalle_mostrar":
+			    print_r("../" . $formato[0]["nombre"] . "/" . "previo_" . $formato[0]["ruta_mostrar"]);die();
 				if(is_file("../" . $formato[0]["nombre"] . "/" . "previo_" . $formato[0]["ruta_mostrar"])) {
 					$datos_padre = parsea_idformato($_REQUEST["llave"]);
 					$formato2 = busca_filtro_tabla("", "formato", "idformato=" . $datos_padre[0], "", $conn);
@@ -436,7 +437,7 @@ if(@$_REQUEST["id"]) {
 				$ruta .= "?no_menu=1";
 		}
 		
-		print_r($datos[3]);die();
+	//	print_r($datos[3]);die();
 	} else {
 		switch($datos[0]) {
 			case "pm":
