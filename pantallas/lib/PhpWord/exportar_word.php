@@ -394,10 +394,11 @@ if($ruta_procesar!=''){
 		$archivo_out='documento_word';
 		$extension_doc='.docx';
 		$templateProcessor->saveAs($directorio_out.$archivo_out.$extension_doc);
+		chmod($directorio_out.$archivo_out.$extension_doc, 0777); 
+
 		if(file_exists($directorio_out.$archivo_out.$extension_doc)){
 		  $comando='export HOME=/tmp && libreoffice5.1 --headless --convert-to pdf:writer_pdf_Export --outdir '.$directorio_out.' '.$directorio_out.$archivo_out.$extension_doc;
 		  $var=shell_exec($comando); 
-		print_r($comando);die("KAPUT");
 		} 
 		if(@$anexo['numcampos']){ //elimina las imagenes de la carpeta
 			
