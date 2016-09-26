@@ -116,7 +116,7 @@ if($configuracion_temporal['numcampos']){
                 mkdir($cont_ruta.$vector_rutas_crear[$i]);
                 chmod($cont_ruta.$vector_rutas_crear[$i],0777);
             }
-            print_r($cont_ruta.=$vector_rutas_crear[$i].'/');
+            print_r($cont_ruta.=$vector_rutas_crear[$i].'/'.'<br>');
             $cont_ruta.=$vector_rutas_crear[$i].'/';
              
         }
