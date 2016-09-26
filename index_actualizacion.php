@@ -116,9 +116,7 @@ if($configuracion_temporal['numcampos']){
                 mkdir($cont_ruta.$vector_rutas_crear[$i]);
                 chmod($cont_ruta.$vector_rutas_crear[$i],0777);
             }
-            echo($cont_ruta.$vector_rutas_crear[$i].'<br>');
             $cont_ruta.=$vector_rutas_crear[$i].'/';
-             
         }
     }
     if(!is_dir($configuracion_temporal[0]['valor'].'_'.usuario_actual("login"))){
