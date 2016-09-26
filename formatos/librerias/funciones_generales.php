@@ -3530,6 +3530,8 @@ function crear_pdf_documento_tcpdf($datos_documento, $datos_ejecutor = null) {
 		curl_close($ch);
 		
 		$ruta_pdfs = ruta_almacenamiento("pdf");
+		
+		print_r($ruta_pdfs);die();
 		$formato_ruta = aplicar_plantilla_ruta_documento($datos_documento["iddocumento"]);
 		$fecha = explode("-", $datos_documento["fecha"]);
 		$fecha_guion_bajo = $fecha[0] . '_' . $fecha[1] . '_' . $fecha[2];
