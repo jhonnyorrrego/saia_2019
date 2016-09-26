@@ -12,6 +12,10 @@ include_once($ruta_db_superior."db.php");
 
 $formato_hallazgo=busca_filtro_tabla("idformato","formato a","a.nombre LIKE '%hallazgo%plan%mejoramiento'","",$conn);
 $campos_formato_hallazgo=busca_filtro_tabla("","campos_formato a","a.formato_idformato=".$formato_hallazgo[0]['idformato'],"",$conn);
+$vector_campos_id=array();
+for($i=0;$i<$campos_formato_hallazgo['numcampos'];$i++){
+    
+}
 
 print_r($campos_formato_hallazgo);
 ?>
