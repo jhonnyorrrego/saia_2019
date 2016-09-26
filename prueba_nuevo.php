@@ -1,32 +1,17 @@
-
-<p>
-   <input type="text" class="email" value="hola mundo x">
-</p>
-<button class="botonCopiar">Copiar</button>
-
-<script>
-var boton = document.querySelector('.botonCopiar');
- 
-boton.addEventListener('click', function(event) {
-  // seleccionar el texto de la dirección de email
-  var email = document.querySelector('.email');
-  var range = document.createRange();
-  range.selectNode(email);
-  window.getSelection().addRange(range);
- 
-  try {
-    // intentar copiar el contenido seleccionado
-    var resultado = document.execCommand('copy');
-    console.log(resultado ? 'Email copiado' : 'No se pudo copiar el email');
-  } catch(err) {
-    console.log('ERROR al intentar copiar el email');
+<?php
+$max_salida=6; // Previene algun posible ciclo infinito limitando a 10 los ../
+$ruta_db_superior=$ruta="";
+while($max_salida>0){
+  if(is_file($ruta."db.php")) {
+    $ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
   }
- 
-  // eliminar el texto seleccionado
-  window.getSelection().removeAllRanges();
-  // cuando los navegadores lo soporten, habría
-  // que utilizar: removeRange(range)
-});
-</script>
+  $ruta.="../";
+  $max_salida--;
+}
+include_once($ruta_db_superior."db.php");
+
+$formato_hallazgo=busca_filtro_tabla("","formato a, campos_formato b","a.idformato=b.formato_idformato AND a.nombre LIKE '%hallazgo%plan%mejoramiento'","",$conn);
 
 
+print_r($formato_hallazgo);
+?>
