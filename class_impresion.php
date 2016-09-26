@@ -334,7 +334,7 @@ class Imprime_Pdf {
 			$direccion[] = "http://" . RUTA_PDF_LOCAL . "/formatos/" . $datos_formato[0]["nombre"] . "/" . $datos_formato[0]["ruta_mostrar"] . "?tipo=5&iddoc=" . $datos_plantilla[0]["documento_iddocumento"] . "&formato=" . $datos_formato[0]["idformato"] . "&idfunc=" . @$_SESSION["usuario_actual"];
 			
 			//$_SESSION["usuario_actual"]
-		
+		print_r($direccion);die();
 		}
 		
 		foreach($direccion as $fila) {
