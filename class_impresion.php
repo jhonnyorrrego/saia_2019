@@ -78,6 +78,8 @@ class Imprime_Pdf {
 		
 		$this->documento = busca_filtro_tabla("documento.*," . fecha_db_obtener("fecha", "Y-m-d") . " as fecha", "documento", "iddocumento=$iddocumento", "", $conn);
 		
+		print_r($this->documento);die();
+		
 		$formato = busca_filtro_tabla("", "formato", "lower(nombre) like '" . strtolower($this->documento[0]["plantilla"]) . "'", "", $conn);
 		
 		if(!$this->documento["numcampos"]) {
@@ -647,7 +649,7 @@ class MYPDF extends TCPDF {
 
 if(@$_REQUEST["iddoc"]) {
     
-    print_r('entra aqui');
+    
     
 	$pdf = new Imprime_Pdf($_REQUEST["iddoc"]);
 	$pdf->configurar_pagina($_REQUEST);
