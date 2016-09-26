@@ -3499,10 +3499,10 @@ function crear_pdf_documento_tcpdf($datos_documento, $datos_ejecutor = null) {
 	include_once ($ruta_db_superior . "pantallas/lib/librerias_archivo.php");
 	
 	
-	print_r($datos_documento);die();
+
 	
 	$pdf = busca_filtro_tabla("pdf,iddocumento,estado,plantilla," . fecha_db_obtener('fecha', 'Y-m-d') . " as fecha," . fecha_db_obtener('fecha', 'Y-m') . " as fecha2, numero", "documento", "iddocumento=" . $datos_documento['iddocumento'], "", $conn);
-	
+		print_r($pdf);die();
 	 
 	$ruta = "";
 	
