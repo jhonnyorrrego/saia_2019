@@ -205,7 +205,7 @@ class Imprime_Pdf {
 		}
 		
 		$nombre_pdf = "";
-		
+		print_r('hello world3');die();
 		if($this->imprimir_paginas) {
 			$this->imprimir_paginas();
 		}
