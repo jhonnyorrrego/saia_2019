@@ -108,7 +108,6 @@ $configuracion_temporal=busca_filtro_tabla("valor","configuracion","nombre='ruta
 
 if($configuracion_temporal['numcampos']){
     $vector_rutas_crear=explode('/',$configuracion_temporal[0]['valor']);
-   
     if(count($vector_rutas_crear)>1){
         $cont_ruta='';
         for($i=0;$i<count($vector_rutas_crear);$i++){
