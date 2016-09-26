@@ -1067,7 +1067,7 @@ return $rs;
 function ejecuta_sql($sql){
 global $conn;
 
-print_r($sql);die();
+
 phpmkr_query($sql,$conn);
 $id=phpmkr_insert_id();
 if($id>0){ 
