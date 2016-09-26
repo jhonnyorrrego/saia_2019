@@ -1,4 +1,4 @@
-<?php include_once("../librerias/funciones_generales.php"); ?><?php include_once("../../calendario/calendario.php"); ?><?php include_once("../librerias/header_formato.php"); ?><legend id="label_formato" class="legend">B&uacute;squeda en formato Plan de Mejoramiento</legend><br /><br /><?php include_once("../librerias/funciones_generales.php"); ?><div class="control-group"><label class="string control-label" style="font-size:9pt" for="tipo_plan"><b>Tipo de Plan<input type="hidden" name="bksaiacondicion_g@tipo_plan" id="bksaiacondicion_g@tipo_plan" value="like_total"></b></label><div class="controls"><?php genera_campo_listados_editar(379,4459,'',1,'buscar');?><div class="btn-group" data-toggle="buttons-radio" >
+<?php include_once("../librerias/funciones_generales.php"); ?><?php include_once("../../calendario/calendario.php"); ?><?php include_once("../librerias/header_formato.php"); ?><legend id="label_formato" class="legend">B&uacute;squeda en formato Plan de Mejoramiento</legend><br /><br /><?php include_once("../librerias/funciones_generales.php"); ?><div class="control-group"><label class="string control-label" style="font-size:9pt" for="tipo_plan"><b>Tipo de Plan<input type="hidden" name="bksaiacondicion_g@tipo_plan" id="bksaiacondicion_g@tipo_plan" value="like_total"></b></label><div class="controls"><?php genera_campo_listados_editar(428,5274,'',1,'buscar');?><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_g@tipo_plan',this.id)">
 		    Y
 		  </button>
@@ -15,7 +15,7 @@
 		    O
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_g@fecha_suscripcion" id="bqsaiaenlace_g@fecha_suscripcion" value="y" />
-		</div></div></div><div class="control-group"><label class="string control-label" style="font-size:9pt" for="tipo_auditoria"><b>Tipo de Auditoria<input type="hidden" name="bksaiacondicion_g@tipo_auditoria" id="bksaiacondicion_g@tipo_auditoria" value="like_total"></b></label><div class="controls"><?php genera_campo_listados_editar(379,4465,'',1,'buscar');?><div class="btn-group" data-toggle="buttons-radio" >
+		</div></div></div><div class="control-group"><label class="string control-label" style="font-size:9pt" for="tipo_auditoria"><b>Tipo de Auditoria<input type="hidden" name="bksaiacondicion_g@tipo_auditoria" id="bksaiacondicion_g@tipo_auditoria" value="like_total"></b></label><div class="controls"><?php genera_campo_listados_editar(428,5280,'',1,'buscar');?><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_tipo_auditoria',this.id)">
 		    Y
 		  </button>
@@ -23,7 +23,7 @@
 		    O
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_tipo_auditoria" id="bqsaiaenlace_tipo_auditoria" value="y" />
-		</div></div></div><div class="control-group"><label class="string control-label" style="font-size:9pt" for="auditor"><b>Auditor<input type="hidden" name="bksaiacondicion_g@auditor" id="bksaiacondicion_g@auditor" value="like_total"></b></label><div class="controls"><?php genera_campo_listados_editar(379,4466,'',1,'buscar');?><div class="btn-group" data-toggle="buttons-radio" >
+		</div></div></div><div class="control-group"><label class="string control-label" style="font-size:9pt" for="auditor"><b>Auditor<input type="hidden" name="bksaiacondicion_g@auditor" id="bksaiacondicion_g@auditor" value="like_total"></b></label><div class="controls"><?php genera_campo_listados_editar(428,5281,'',1,'buscar');?><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_auditor',this.id)">
 		    Y
 		  </button>
@@ -47,7 +47,7 @@
 		    O
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_g@descripcion_plan" id="bqsaiaenlace_g@descripcion_plan" value="y" />
-		</div></div></div><div class="control-group"><label class="string control-label" style="font-size:9pt" for="estado"><b>Estado<input type="hidden" name="bksaiacondicion_g@estado" id="bksaiacondicion_g@estado" value="like_total"></b></label><div class="controls"><?php genera_campo_listados_editar(379,4470,'',1,'buscar');?><div class="btn-group" data-toggle="buttons-radio" >
+		</div></div></div><div class="control-group"><label class="string control-label" style="font-size:9pt" for="estado"><b>Estado<input type="hidden" name="bksaiacondicion_g@estado" id="bksaiacondicion_g@estado" value="like_total"></b></label><div class="controls"><?php genera_campo_listados_editar(428,5285,'',1,'buscar');?><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_g@estado',this.id)">
 		    Y
 		  </button>
