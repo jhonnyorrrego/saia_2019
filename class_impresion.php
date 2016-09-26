@@ -660,7 +660,7 @@ if(@$_REQUEST["iddoc"]) {
     
 	$pdf = new Imprime_Pdf($_REQUEST["iddoc"]);
 	$pdf->configurar_pagina($_REQUEST);
-	print_r('hello world2');die();
+	
 	$pdf->imprimir();
 }
 ?>
