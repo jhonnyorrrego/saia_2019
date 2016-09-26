@@ -9,9 +9,16 @@ while($max_salida>0){
   $max_salida--;
 }
 include_once($ruta_db_superior."db.php");
+include_once($ruta_db_superior."formatos/librerias/funciones_generales.php");
+
+$datos_documento=array();
+$datos_documento['iddocumento']=365;
+/*$datos_documento["plantilla"]=;
+$datos_documento["numero"]=;
+$datos_documento["fecha"]=;*/
+crear_pdf_documento_tcpdf($datos_documento, $datos_ejecutor = null);
 
 
 
-include_once($ruta_db_superior."versionamiento/versionar_documentos.php");
 
 ?>
