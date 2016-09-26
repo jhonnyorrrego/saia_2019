@@ -61,7 +61,7 @@ global $conn,$texto;
 function llena_datos_formato($formato,$estado=0){
 global $conn,$texto,$imagenes;
 $arreglo=explode("-",$formato);
-$formato=busca_filtro_tabla("","formato","idformato='".$arreglo[0]."' AND nombre_tabla IN ('ft_proceso','ft_procedimiento','ft_instructivo','ft_manual','ft_guia','ft_plan_calidad','ft_otros_calidad','ft_formatos')","",$conn);
+$formato=busca_filtro_tabla("","formato","idformato='".$arreglo[0]."' AND nombre_tabla IN ('ft_proceso','ft_procedimiento','ft_instructivo','ft_manual','ft_guia','ft_plan_calidad','ft_otros_calidad','ft_formato')","",$conn);
 //print_r($formato);
 if($formato["numcampos"]){
   $descripcion=busca_filtro_tabla("","campos_formato","formato_idformato=".$formato[0]["idformato"]." AND acciones LIKE '%d%' AND tipo_dato!='TEXT'","",$conn);
