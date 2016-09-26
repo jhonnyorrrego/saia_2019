@@ -18,6 +18,9 @@ if(!@$_SESSION["LOGIN" . $_REQUEST["llave_saia"]] && $_REQUEST["conexion_remota"
 	$_SESSION["usuario_actual"] = $_REQUEST["usuario_actual"];
 	$_SESSION["conexion_remota"] = 1;
 }
+
+print_r($_SESSION);
+
 $max_salida = 10; // Previene algun posible ciclo infinito limitando a 10 los ../
 $ruta_db_superior = $ruta = "";
 while($max_salida > 0) {
