@@ -732,7 +732,7 @@ function confirmar_control_documentos($idformato, $iddoc){
 	
 	if($_REQUEST["tipo"]!=5){
 		echo(estilo_bootstrap());
-		if($estado["numcampos"){
+		if($estado["numcampos"]){
 			if(!$fecha_confirmacion["numcampos"]){
 				echo($boton);
 			}			
