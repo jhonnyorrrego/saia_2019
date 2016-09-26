@@ -100,7 +100,7 @@ class Imprime_Pdf {
 				}
 			}
 			
-				print_r($formato);die();
+				
 			// si el documento ya no esta activo, pero nunca le guardaron el pdf, se guarda
 			if($this->documento[0]["pdf"] == "" && $this->documento[0]["estado"] != "ACTIVO") {
 				$this->tipo_salida = "FI";
@@ -110,7 +110,7 @@ class Imprime_Pdf {
 			}
 			
 			$tipo_fuente = busca_filtro_tabla("valor", "configuracion", "nombre='tipo_letra'", "", $conn);
-			
+			print_r($tipo_fuente);die();
 			$plantilla = busca_filtro_tabla("encabezado", $formato[0]["nombre_tabla"], "documento_iddocumento=$iddocumento", "", $conn);
 			
 			$this->mostrar_encabezado = $plantilla[0]["encabezado"];
