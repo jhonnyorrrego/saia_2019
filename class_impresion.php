@@ -209,11 +209,11 @@ class Imprime_Pdf {
 		if($this->imprimir_paginas) {
 			$this->imprimir_paginas();
 		}
-		print_r('hello world4');die();
+		
 		if($this->imprimir_plantilla) {
 			$this->extraer_contenido($this->documento[0]["iddocumento"]);
 		}
-		
+		print_r('hello world5');die();
 		if($this->vincular_anexos) {
 			$this->vincular_anexos();
 		}
