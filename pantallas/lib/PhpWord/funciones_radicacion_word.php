@@ -43,6 +43,8 @@ class RadicadoWord {
 	private $ruta_combinar;
 
 	public function __construct($iddoc) {
+	    global $ruta_db_superior;
+	    $this->ruta_db_superior = $ruta_db_superior;
 		$this->iddocumento = $iddoc;
 		$this->ruta_docx = '';
 		$this->archivo_csv = "";
@@ -53,26 +55,26 @@ class RadicadoWord {
 	}
 
 	protected function prepare() {
-		global $conn, $ruta_db_superior;
+		global $conn;
 		if(@$this->iddocumento) {
 			$anexo = busca_filtro_tabla("d.ruta, b.idformato", "documento a, formato b, campos_formato c, anexos d", "lower(a.plantilla)=b.nombre AND b.idformato=c.formato_idformato AND c.nombre='anexo_word' AND c.idcampos_formato=d.campos_formato AND a.iddocumento=" . $this->iddocumento . " AND d.documento_iddocumento=" . $this->iddocumento, "", $conn);
 			$anexo_csv = busca_filtro_tabla("d.ruta", "documento a, formato b, campos_formato c, anexos d", "lower(a.plantilla)=b.nombre AND b.idformato=c.formato_idformato AND c.nombre='anexo_csv' AND c.idcampos_formato=d.campos_formato AND a.iddocumento=" . $this->iddocumento . " AND d.documento_iddocumento=" . $this->iddocumento, "", $conn);
-			print_r($ruta_db_superior);die("KAPUT");
+			print_r($this->ruta_db_superior);die("KAPUT");
 			if(@$anexo['numcampos']) {
 				$ruta_anexo = explode('anexos', $anexo[0]["ruta"]);
-				$this->ruta_combinar = $ruta_db_superior . $ruta_anexo[0] . 'pdf_temp/';
-				$this->ruta_docx = $ruta_db_superior . $ruta_anexo[0] . 'docx/';
+				$this->ruta_combinar = $this->ruta_db_superior . $ruta_anexo[0] . 'pdf_temp/';
+				$this->ruta_docx = $this->ruta_db_superior . $ruta_anexo[0] . 'docx/';
 				$this->idformato = $anexo[0]["idformato"];
 			}
 			if(@$anexo_csv['numcampos']) {
-				$this->archivo_csv = $ruta_db_superior . $anexo_csv[0]["ruta"];
+				$this->archivo_csv = $this->ruta_db_superior . $anexo_csv[0]["ruta"];
 				$this->combinar = true;
 			}
 		}
 	}
 
 	public function asignar_radicado() {
-		global $conn, $ruta_db_superior;
+		global $conn;
 		if(file_exists($this->ruta_docx . 'documento_word.docx')) {
 			
 			$templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor($this->ruta_docx . 'documento_word.docx');
@@ -87,7 +89,7 @@ class RadicadoWord {
 					$templateProcessor->setValue('formato_numero', $radicado);
 					
 					if(in_array($this->campo_qr_word, $campos_word)) {
-						$src = $ruta_db_superior . $this->obtener_codigo_qr();
+						$src = $this->ruta_db_superior . $this->obtener_codigo_qr();
 						
 						$img2 = array(
 							array(
@@ -153,7 +155,7 @@ class RadicadoWord {
 				
 			$templateProcessor->setValue('formato_numero', $numero_radicado);
 			if(in_array($this->campo_qr_word, $campos_word)) {
-				$src = $ruta_db_superior . $this->obtener_codigo_qr();
+				$src = $this->ruta_db_superior . $this->obtener_codigo_qr();
 	
 				$img2 = array(
 					array(
@@ -206,7 +208,7 @@ class RadicadoWord {
 		$codigo_qr = busca_filtro_tabla("", "documento_verificacion", "documento_iddocumento=" . $this->iddocumento, "", $conn);
 		
 		if(!$codigo_qr['numcampos']) {
-			include_once ($ruta_db_superior . "pantallas/qr/librerias.php");
+			include_once ($this->ruta_db_superior . "pantallas/qr/librerias.php");
 			generar_codigo_qr($this->idformato, $this->iddocumento);
 			
 			$codigo_qr = busca_filtro_tabla("", "documento_verificacion", "documento_iddocumento=" . $this->iddocumento, "", $conn);
