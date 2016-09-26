@@ -1106,7 +1106,7 @@ function aprobar3($iddoc=0,$url=""){
                $tipo_radicado=busca_filtro_tabla("documento.*,contador.nombre,plantilla,idformato","documento,contador,formato C","idcontador=tipo_radicado and iddocumento=$iddoc AND lower(plantilla)=lower(C.nombre)","",$conn);
             
                if($tipo_radicado[0]["numero"]==0)
-                  {$numero=contador_($iddoc,$tipo_radicado[0]["nombre"]); //$iddocumento,$cad
+                  {$numero=contador_($tipo_radicado[0]["nombre"]); //$iddocumento,$cad
                   print_r($numero);die('<------fuck');
                    phpmkr_query("UPDATE documento SET estado='APROBADO',numero=".$numero[0]["consecutivo"].", fecha=".fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s')." WHERE iddocumento=".$iddoc,$conn);
                   }
