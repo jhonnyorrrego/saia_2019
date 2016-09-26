@@ -311,10 +311,10 @@ class Imprime_Pdf {
 		$ch = curl_init();
 		$direccion = array();
 		
-		print_r('hello world6');die();
+	
 		
 		$datos_formato = busca_filtro_tabla("nombre,nombre_tabla,ruta_mostrar", "formato,documento", "lower(plantilla)=nombre and iddocumento=$iddocumento", "", $conn);
-		
+			print_r($datos_formato);die();
 		$datos_plantilla = busca_filtro_tabla("", $datos_formato[0]["nombre_tabla"], "documento_iddocumento=$iddocumento", "", $conn);
 		
 		if($vista > 0) {
