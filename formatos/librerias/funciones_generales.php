@@ -3548,7 +3548,7 @@ function crear_pdf_documento_tcpdf($datos_documento, $datos_ejecutor = null) {
 		$ruta = $pdf[0]["pdf"];
 	}
 	
-	print_r($ruta);die();
+	
 	
 	if($ruta) {
 	    return($ruta);
