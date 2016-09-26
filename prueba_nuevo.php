@@ -19,7 +19,7 @@ $_REQUEST['version_numero']=0;
 $_REQUEST['iddocumento_anexo']=369;
 $_REQUEST['funcionario_codigo']=1;
 
-$datos_documento = obtener_datos_documento(365);
+$datos_documento = obtener_datos_documento(370);
 
 
 crear_pdf_documento_tcpdf($datos_documento);
