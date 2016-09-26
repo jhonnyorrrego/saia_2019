@@ -397,7 +397,7 @@ if($ruta_procesar!=''){
 		chmod($directorio_out.$archivo_out.$extension_doc, 0777); 
 
 		if(file_exists($directorio_out.$archivo_out.$extension_doc)){
-		  $comando='export HOME=/tmp && libreoffice5.1 --headless --convert-to pdf:writer_pdf_Export --outdir '.$directorio_out.' '.$directorio_out.$archivo_out.$extension_doc;
+		  $comando='export HOME=/tmp && libreoffice5.1 --headless --norestore --invisible --convert-to pdf:writer_pdf_Export --outdir '.$directorio_out.' '.$directorio_out.$archivo_out.$extension_doc;
 		  $var=shell_exec($comando); 
 		} 
 		if(@$anexo['numcampos']){ //elimina las imagenes de la carpeta
