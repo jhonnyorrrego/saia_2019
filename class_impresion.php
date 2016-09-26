@@ -461,11 +461,11 @@ class Imprime_Pdf {
 		if(isset($datos["vincular_anexos"]) && $datos["vincular_anexos"]) {
 			$this->vincular_anexos = $datos["vincular_anexos"];
 		}
-		print_r('hello world');die();
+	
 		if(isset($datos["tipo_salida"]) && $datos["tipo_salida"]) {
 			$this->tipo_salida = $datos["tipo_salida"];
 		}
-		
+			print_r('hello world');die();
 		if(isset($datos["seleccion"])) {
 			$this->configurar_seleccion_impresion($datos["seleccion"]);
 		}
