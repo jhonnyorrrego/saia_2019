@@ -3526,7 +3526,6 @@ function crear_pdf_documento_tcpdf($datos_documento, $datos_ejecutor = null) {
 		// Capturar la URL y pasarla al navegador
 		$responce = curl_exec($ch);
 	
-		
 		// Cerrar el recurso cURL y liberar recursos del sistema
 		curl_close($ch);
 		
