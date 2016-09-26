@@ -47,6 +47,9 @@ class RadicadoWord {
 		if(@$this->iddocumento) {
 			$anexo = busca_filtro_tabla("d.ruta, b.idformato", "documento a, formato b, campos_formato c, anexos d", "lower(a.plantilla)=b.nombre AND b.idformato=c.formato_idformato AND c.nombre='anexo_word' AND c.idcampos_formato=d.campos_formato AND a.iddocumento=" . $this->iddocumento . " AND d.documento_iddocumento=" . $this->iddocumento, "", $conn);
 			$anexo_csv = busca_filtro_tabla("d.ruta", "documento a, formato b, campos_formato c, anexos d", "lower(a.plantilla)=b.nombre AND b.idformato=c.formato_idformato AND c.nombre='anexo_csv' AND c.idcampos_formato=d.campos_formato AND a.iddocumento=" . $this->iddocumento . " AND d.documento_iddocumento=" . $this->iddocumento, "", $conn);
+			print_r($anexo);
+			echo "<br>";
+			print_r($anexo_csv);die();
 			if(@$anexo['numcampos']) {
 				$ruta_anexo = explode('anexos', $anexo[0]["ruta"]);
 				$this->ruta_combinar = $ruta_db_superior . $ruta_anexo[0] . 'pdf_temp/';
@@ -72,6 +75,7 @@ class RadicadoWord {
 				$numero_radicado = busca_filtro_tabla("", "documento", "iddocumento=" . $this->iddocumento, "", $conn);
 				$radicado = $numero_radicado[0]['numero'];
 				if(!$this->combinar) {
+				    echo "NO COMBINAR<br>";
 					$templateProcessor->setValue('formato_numero', $radicado);
 					
 					if(in_array($this->campo_qr_word, $campos_word)) {
@@ -106,6 +110,7 @@ class RadicadoWord {
 						$var = shell_exec($comando);
 					}
 				} else {
+				    echo "COMBINAR<br>";
 					crear_destino($this->ruta_combinar);
 					chmod($this->ruta_combinar, 0777);
 					// TODO: Eliminar. Se genera pdf antes de procesar para ver porque no salen las firmas
