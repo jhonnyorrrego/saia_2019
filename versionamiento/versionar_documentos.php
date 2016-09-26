@@ -35,7 +35,7 @@ if(array_key_exists('version_numero', $_REQUEST)) {
 
 if(!$datos_documento) {
 	notificaciones("<b>No se creo la versi&oacute;n del documento<br />comuniquese con el administrador del sistema</b>", "warning", 11500);
-	volver(1);
+//	volver(1);
 	die();
 } else {
     
