@@ -316,7 +316,7 @@ class Imprime_Pdf {
 		$datos_formato = busca_filtro_tabla("nombre,nombre_tabla,ruta_mostrar", "formato,documento", "lower(plantilla)=nombre and iddocumento=$iddocumento", "", $conn);
 			
 		$datos_plantilla = busca_filtro_tabla("", $datos_formato[0]["nombre_tabla"], "documento_iddocumento=$iddocumento", "", $conn);
-		print_r($datos_formato);die();
+		
 		if($vista > 0) {
 			
 			$datos_vista = busca_filtro_tabla("", "vista_formato", "idvista_formato=$vista", "", $conn);
@@ -330,6 +330,7 @@ class Imprime_Pdf {
 				$direccion[] = "http://" . RUTA_PDF_LOCAL . "/formatos/" . $datos_formato[0]["nombre"] . "/" . $datos_formato[0]["ruta_mostrar"] . "?tipo=5&iddoc=" . $datos_plantilla[0]["documento_iddocumento"] . "&formato=" . $datos_formato[0]["idformato"] . "&idfunc=" . usuario_actual("id") . "&destino=$fila";
 			}
 		} else {
+		    print_r('fuck 3');die();
 			$direccion[] = "http://" . RUTA_PDF_LOCAL . "/formatos/" . $datos_formato[0]["nombre"] . "/" . $datos_formato[0]["ruta_mostrar"] . "?tipo=5&iddoc=" . $datos_plantilla[0]["documento_iddocumento"] . "&formato=" . $datos_formato[0]["idformato"] . "&idfunc=" . usuario_actual("id");
 		}
 		
