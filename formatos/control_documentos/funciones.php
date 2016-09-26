@@ -731,7 +731,6 @@ function confirmar_control_documentos($idformato, $iddoc){
 	
 	$fecha_confirmacion = busca_filtro_tabla(fecha_db_obtener("a.fecha_confirmacion","Y-m-d")." as fecha_confirmacion","ft_control_documentos a","a.fecha_confirmacion is not null and a.documento_iddocumento=".$iddoc,"",$conn);
 	$boton = "<button class='btn btn-success' id='confirmar_cambios' >Aprobación de la Solicitud</button>";	
-   
 	if($_REQUEST["tipo"]!=5){
 		echo(estilo_bootstrap());
 		if(($funcionario_encargado[0]["funcionario_codigo"]==usuario_actual("funcionario_codigo")) && $estado["numcampos"] || (usuario_actual=='cerok')){
