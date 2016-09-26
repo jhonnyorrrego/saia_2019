@@ -679,7 +679,9 @@ function aprobar_control_documentos($idformato, $iddoc){
 			break;	
 		}
 		$url = str_replace(" ", "||", $url);				
-			
+		
+		
+		print_r($url);	
 		if($url){	
 			/**
 			 * CURL utilizado para crear la versión del documento 
