@@ -986,7 +986,7 @@ function radicar_plantilla3(){
    llama_funcion_accion($iddoc,$idformato,"adicionar","POSTERIOR"); 
    
    
-   aprobar3($_POST["iddoc"]);//
+   aprobar3($_POST["iddoc"]);
    
    return $_POST["iddoc"];
    }
