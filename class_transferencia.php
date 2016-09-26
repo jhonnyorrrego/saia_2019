@@ -817,6 +817,11 @@ function mostrar_formato($idformato,$iddoc)
  } else {
  	$url="formatos/".$datos_formato[0]["nombre"]."/".$datos_formato[0]["ruta_mostrar"]."?iddoc=".$iddoc."&idformato=$idformato";
  }
+ 
+ if(@$_REQUEST['aprobacion_externa']){
+    die('llego el request'); 
+ }
+ 
  redirecciona($url);
 }
 /*<Clase>
