@@ -19,7 +19,7 @@ if(!@$_SESSION["LOGIN" . $_REQUEST["llave_saia"]] && $_REQUEST["conexion_remota"
 	$_SESSION["conexion_remota"] = 1;
 }
 
-echo(json_encode($_SESSION));die();
+
 
 $max_salida = 10; // Previene algun posible ciclo infinito limitando a 10 los ../
 $ruta_db_superior = $ruta = "";
