@@ -28,7 +28,7 @@ if(!@$_SESSION["LOGIN" . LLAVE_SAIA]) {
 $_REQUEST['nombre_documento'] = str_replace("||", " ", $_REQUEST['nombre_documento']);
 
 $datos_documento = obtener_datos_documento($_REQUEST["iddocumento"]);
-print_r($datos_documento);
+print_r($datos_documento); die();
 if(array_key_exists('version_numero', $_REQUEST)) {
 	$datos_documento["version"] = $_REQUEST["version_numero"];
 }
