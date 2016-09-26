@@ -3508,7 +3508,7 @@ function crear_pdf_documento_tcpdf($datos_documento, $datos_ejecutor = null) {
 	} else {
 		$ruta_pdf = "";
 	}
-	print_r($ruta_pdf);die();
+	print_r($ruta_pdf.'<---');die();
 	if(!file_exists($ruta_pdf)) {
 		
 		// inicializa el curl
