@@ -986,7 +986,7 @@ function radicar_plantilla3(){
    llama_funcion_accion($iddoc,$idformato,"adicionar","POSTERIOR"); 
    
    
-   aprobar3($_POST["iddoc"]);
+   aprobar3($_POST["iddoc"]); //apruebo los formatos si o si
    
    return $_POST["iddoc"];
    }
@@ -1152,7 +1152,7 @@ function aprobar3($iddoc=0,$url=""){
                $datos["nombre"]="APROBADO";
                $datos["tipo"]="";
                  $destino=array();               
-                 llama_funcion_accion($iddoc,$tipo_radicado[0]["idformato"],"aprobar","POSTERIOR");                
+                // llama_funcion_accion($iddoc,$tipo_radicado[0]["idformato"],"aprobar","POSTERIOR");                
                }
               $array_banderas=explode(",",$nombre_tabla[0]["banderas"]);
             } 
