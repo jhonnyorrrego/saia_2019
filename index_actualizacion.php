@@ -103,7 +103,27 @@ $componente_tareas_total=busca_filtro_tabla("","busqueda_componente A","A.nombre
 
 //limpieza carpetas
 include_once("tarea_limpiar_carpeta.php");
-borrar_archivos_carpeta('temporal_'.usuario_actual("login"), 0); 
+$configuracion_temporal=busca_filtro_tabla("valor","configuracion","nombre='ruta_temporal' AND tipo='ruta'","",$conn);
+if($configuracion_temporal['numcampos']){
+    $vector_rutas_crear=explode('/',$configuracion_temporal[0]['valor']);
+    if(count($vector_rutas_crear)>1){
+        $cont_ruta='';
+        for($i=0;$i<count($vector_rutas_crear);$i++){
+            if(!is_dir($cont_ruta.$vector_rutas_crear[$i])){
+                mkdir($cont_ruta.$vector_rutas_crear[$i]);
+                chmod($cont_ruta.$vector_rutas_crear[$i],0777);
+            }
+            $cont_ruta.=$vector_rutas_crear[$i].'/';
+        }
+    }
+    if(!is_dir($configuracion_temporal[0]['valor'].'_'.usuario_actual("login"))){
+        mkdir($configuracion_temporal[0]['valor'].'_'.usuario_actual("login"),0777,true);
+    }
+    borrar_archivos_carpeta($configuracion_temporal[0]['valor'].'_'.usuario_actual("login"), 0); 
+}else{
+    borrar_archivos_carpeta('temporal_'.usuario_actual("login"), 0); 
+}
+
 /*************actualizacion de fin de año ********/
 /*include_once("class_transferencia.php");
 include_once("paso_buzones.php");

@@ -3543,17 +3543,17 @@ function crear_pdf_documento_tcpdf($datos_documento, $datos_ejecutor = null) {
 		$ruta = $ruta_pdfs . $formato_ruta . "/pdf/";
 			
 		$ruta .= strtoupper($datos_documento["plantilla"] . "_" . $datos_documento["numero"] . "_" . $fecha_guion_bajo) . ".pdf";
-		
+	
 	} else {
 		$ruta = $pdf[0]["pdf"];
 	}
-	
-	// print_r($ruta);die('<--- ruta pdf');
-	
 	if($ruta) {
-		if(file_exists($ruta_db_superior . $ruta)) {
+	    return($ruta);
+	    
+		if(file_exists($ruta_db_superior.$ruta)) {
 			return ($ruta);
 		} else {
+		    
 			return (false);
 		}
 	} else {

@@ -13,7 +13,7 @@ $formato["numcampos"] = 0;
 if(@$_REQUEST["id"]) {
 	$datos = parsea_idformato($_REQUEST["id"]);
 	$formato = busca_filtro_tabla("", "formato", "idformato=" . $datos[0], "", $conn);
-	// print_r($datos);
+	// print_r($datos);die();
 	if(!$datos[2] && $datos[3] == "mostrar") {
 		$datos[3] = "detalle_mostrar";
 	}
@@ -152,6 +152,7 @@ if(@$_REQUEST["id"]) {
 				}
 				break;
 			case "detalle_mostrar":
+			    print_r("../" . $formato[0]["nombre"] . "/" . "previo_" . $formato[0]["ruta_mostrar"]);die();
 				if(is_file("../" . $formato[0]["nombre"] . "/" . "previo_" . $formato[0]["ruta_mostrar"])) {
 					$datos_padre = parsea_idformato($_REQUEST["llave"]);
 					$formato2 = busca_filtro_tabla("", "formato", "idformato=" . $datos_padre[0], "", $conn);
@@ -435,6 +436,8 @@ if(@$_REQUEST["id"]) {
 			else
 				$ruta .= "?no_menu=1";
 		}
+		
+
 	} else {
 		switch($datos[0]) {
 			case "pm":
