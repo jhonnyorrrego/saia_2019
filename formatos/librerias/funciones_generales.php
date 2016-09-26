@@ -3522,7 +3522,7 @@ function crear_pdf_documento_tcpdf($datos_documento, $datos_ejecutor = null) {
 		curl_setopt($ch, CURLOPT_URL, $url);
 		
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-		print_r($url);die();
+	
 		// Capturar la URL y pasarla al navegador
 		$responce = curl_exec($ch);
 		
