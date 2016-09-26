@@ -146,7 +146,7 @@ class Imprime_Pdf {
 			$this->formato = $formato;
 			$this->pdfa = true;
 			
-			print_r($plantilla);die();
+			print_r('fuck');die();
 		}
 	}
 
