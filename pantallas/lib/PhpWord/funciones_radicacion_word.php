@@ -39,7 +39,7 @@ class RadicadoWord {
 		$this->combinar = false;
 		$this->ruta_procesar = '';
 		$this->idformato = null;
-		prepare();
+		$this->prepare();
 	}
 
 	protected function prepare() {
@@ -118,7 +118,7 @@ class RadicadoWord {
 					$var = shell_exec($comando);
 					rename($this->ruta_docx . $archivo_out . ".pdf", $this->ruta_docx . $archivo_out . "0.pdf");
 					// TODO: Eliminar. Fin
-					combinar_documento($radicado);
+					$this->combinar_documento($radicado);
 				}
 			} // fin si existe iddoc y el word tiene campos del formato
 		} // fin si existe word
@@ -130,7 +130,7 @@ class RadicadoWord {
 		$marca_agua = mostrar_estado_documento($this->iddocumento);
 		$extension_doc = '.docx';
 	
-		$datos = cargar_csv($this->archivo_csv);
+		$datos = $this->cargar_csv($this->archivo_csv);
 		for($i = 0; $i < count($datos); $i++) {
 			// Cada elemento es un array campo => valor
 			$archivo_out = "documento_word_" . ($i + 1);
