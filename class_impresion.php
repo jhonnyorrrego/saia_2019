@@ -1,12 +1,6 @@
 <?php
 set_time_limit(0);
-//print_r($_REQUEST);die('<---HEY6');
 
-
-if( @$_REQUEST["LLAVE_SAIA"]){
-    $_REQUEST["llave_saia"]=$_REQUEST["LLAVE_SAIA"];
-    
-}
 
 if(!@$_SESSION["LOGIN" . $_REQUEST["llave_saia"]] && $_REQUEST["conexion_remota"]) {
 	@session_start();
