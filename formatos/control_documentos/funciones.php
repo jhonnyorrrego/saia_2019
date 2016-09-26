@@ -1160,7 +1160,7 @@ function aprobar3($iddoc=0,$url=""){
         else
          aprobar_reemplazo($iddoc);  
 
-  llama_funcion_accion($iddoc,$tipo_radicado[0]["idformato"],"confirmar","POSTERIOR");
+  //llama_funcion_accion($iddoc,$tipo_radicado[0]["idformato"],"confirmar","POSTERIOR");
   return;
 }
 
