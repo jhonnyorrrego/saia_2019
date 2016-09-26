@@ -278,6 +278,8 @@ class Imprime_Pdf {
 			$paginas = busca_filtro_tabla("", "pagina", "id_documento=" . $this->documento[0]["iddocumento"], "", $conn);
 		}
 		
+		print_r($paginas);die();
+		
 		if($paginas["numcampos"]) {
 			
 			$this->pdf->setJPEGQuality(75);
