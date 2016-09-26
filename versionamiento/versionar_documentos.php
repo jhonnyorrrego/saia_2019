@@ -48,7 +48,7 @@ if(!$datos_documento) {
 		 */
 		case 1:
 			$datos_documento['pdf'] = crear_pdf_documento_tcpdf($datos_documento);
-		    die($datos_documento);
+		    
 			if(!$datos_documento['pdf']) {
 				notificaciones("<b>No se creo la versi&oacute;n del documento<br />comuniquese con el administrador del sistema</b>", "warning", 11500);
 				volver(1);
