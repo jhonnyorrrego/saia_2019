@@ -3547,7 +3547,7 @@ function crear_pdf_documento_tcpdf($datos_documento, $datos_ejecutor = null) {
 	} else {
 		$ruta = $pdf[0]["pdf"];
 	}
-	chmod($ruta_db_superior.$ruta,0777);
+	
 	
 	if($ruta) {
 	    return($ruta);
