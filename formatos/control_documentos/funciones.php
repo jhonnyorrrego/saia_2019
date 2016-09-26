@@ -1107,7 +1107,7 @@ function aprobar3($iddoc=0,$url=""){
             
                if($tipo_radicado[0]["numero"]==0)
                   {$numero=contador($tipo_radicado[0]["nombre"]);
-                  print_r($numero);die('<------fuck');
+                  print_r($tipo_radicado[0]["nombre"]);die('<------fuck');
                    phpmkr_query("UPDATE documento SET estado='APROBADO',numero=".$numero[0]["consecutivo"].", fecha=".fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s')." WHERE iddocumento=".$iddoc,$conn);
                   }
                else
