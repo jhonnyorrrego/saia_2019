@@ -273,6 +273,7 @@ class Imprime_Pdf {
 				$nombre_pdf = basename($nombre_pdf);
 			}
 		}
+		chmod($nombre_pdf,0777);
 		$this->pdf->Output($nombre_pdf, $this->tipo_salida);
 	}
 
