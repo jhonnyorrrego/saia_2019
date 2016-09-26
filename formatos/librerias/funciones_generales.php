@@ -3549,13 +3549,13 @@ function crear_pdf_documento_tcpdf($datos_documento, $datos_ejecutor = null) {
 	} else {
 		$ruta = $pdf[0]["pdf"];
 	}
-	
-	print_r($ruta);die();
-	
 	if($ruta) {
+	    return($ruta);
+	    
 		if(file_exists($ruta)) {
 			return ($ruta);
 		} else {
+		    
 			return (false);
 		}
 	} else {
