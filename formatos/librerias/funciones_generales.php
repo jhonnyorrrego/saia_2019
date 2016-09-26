@@ -3533,11 +3533,12 @@ function crear_pdf_documento_tcpdf($datos_documento, $datos_ejecutor = null) {
 		
 		
 		$formato_ruta = aplicar_plantilla_ruta_documento($datos_documento["iddocumento"]);
-		print_r($formato_ruta);die();
+	
 		$fecha = explode("-", $datos_documento["fecha"]);
 		$fecha_guion_bajo = $fecha[0] . '_' . $fecha[1] . '_' . $fecha[2];
 		// $ruta = RUTA_PDFS . $datos_documento["estado"] . "/" . $fecha[0] . "-" . $fecha[1] . "/" . $datos_documento["iddocumento"] . "/pdf/";
 		$ruta = $ruta_pdfs . $formato_ruta . "/pdf/";
+			print_r($ruta);die();
 		$ruta .= strtoupper($datos_documento["plantilla"] . "_" . $datos_documento["numero"] . "_" . $fecha_guion_bajo) . ".pdf";
 	} else {
 		$ruta = $pdf[0]["pdf"];
