@@ -1,5 +1,11 @@
 <?php
 set_time_limit(0);
+
+if( @$_REQUEST["LLAVE_SAIA"]){
+    $_REQUEST["llave_saia"]=$_REQUEST["LLAVE_SAIA"];
+    
+}
+
 if(!@$_SESSION["LOGIN" . $_REQUEST["llave_saia"]] && $_REQUEST["conexion_remota"]) {
 	@session_start();
 	$_SESSION["LOGIN" . $_REQUEST["llave_saia"]] = $_REQUEST["conexion_usuario"];
