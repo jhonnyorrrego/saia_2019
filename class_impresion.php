@@ -331,8 +331,10 @@ class Imprime_Pdf {
 			}
 		} else {
 		    
-			$direccion[] = "http://" . RUTA_PDF_LOCAL . "/formatos/" . $datos_formato[0]["nombre"] . "/" . $datos_formato[0]["ruta_mostrar"] . "?tipo=5&iddoc=" . $datos_plantilla[0]["documento_iddocumento"] . "&formato=" . $datos_formato[0]["idformato"] . "&idfunc=" . usuario_actual("id");
-			print_r('fuck 4');die();
+			$direccion[] = "http://" . RUTA_PDF_LOCAL . "/formatos/" . $datos_formato[0]["nombre"] . "/" . $datos_formato[0]["ruta_mostrar"] . "?tipo=5&iddoc=" . $datos_plantilla[0]["documento_iddocumento"] . "&formato=" . $datos_formato[0]["idformato"] . "&idfunc=" . @$_SESSION["usuario_actual"];
+			
+			//$_SESSION["usuario_actual"]
+			print_r('fuck 5');die();
 		}
 		
 		foreach($direccion as $fila) {
