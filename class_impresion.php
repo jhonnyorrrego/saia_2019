@@ -256,6 +256,8 @@ class Imprime_Pdf {
 			$nombre_pdf = $this->documento[0]["numero"] . "_" . str_replace("-", "_", $this->documento[0]["fecha"]) . ".pdf";
 		}
 		
+		print_r($carpeta);die();
+		
 		if($this->tipo_salida == "FI" && $this->documento[0]["estado"] != 'ACTIVO') {
 			
 			$paginas_pdf = $this->pdf->getNumPages();
