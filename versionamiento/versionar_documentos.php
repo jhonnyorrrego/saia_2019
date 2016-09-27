@@ -264,15 +264,15 @@ function copiar_anexos_paginas_documento($datos_documento, $documentos, $iddocum
 		//$ruta = RUTA_VERSIONES . $datos_documento['iddocumento'] . "/" . $datos_documento['version'] . "/pdf";
 		$ruta = $ruta_versiones . $formato_ruta . "/version" . $datos_documento['version'] . "/pdf";
 		
-		if(!is_dir($ruta)) {
-			if(!crear_destino($ruta)) {
+		if(!is_dir($ruta_db_superior.$ruta)) {
+			if(!crear_destino($ruta_db_superior.$ruta)) {
 				notificaciones("<b>Error al crear la carpeta del pdf.</b>", "warning", 7500);
 				return (false);
 			}
 		}
 		
-		if(!is_dir($ruta)) {
-			die("no entro ..");
+		if(!is_dir($ruta_db_superior.$ruta)) {
+			//die("no entro ..");
 			notificaciones("<b>Error al crear la carpeta del pdf.</b>", "warning", 7500);
 			return (false);
 		} else {
