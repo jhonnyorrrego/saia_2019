@@ -190,21 +190,21 @@ function copiar_anexos_paginas_documento($datos_documento, $documentos, $iddocum
 		//$ruta = RUTA_VERSIONES . $datos_documento['iddocumento'] . "/" . $datos_documento['version'] . "/anexos";
 		$ruta = $ruta_versiones . $formato_ruta . "/version" . $datos_documento['version'] . "/anexos";
 		
-		if(!is_dir($ruta)) {
-			if(!crear_destino($ruta)) {
+		if(!is_dir($ruta_db_superior.$ruta)) {
+			if(!crear_destino($ruta_db_superior.$ruta)) {
 				notificaciones("<b>Error al crear la carpeta de los anexos.</b>", "warning", 7500);
 				return (false);
 			}
 		}
 		
-		if(!is_dir($ruta)) {
+		if(!is_dir($ruta_db_superior.$ruta)) {
 			notificaciones("<b>Error al crear la carpeta de los anexos.</b>", "warning", 7500);
 			return (false);
 		} else {
 			
 			foreach($documentos["anexos"] as $anexo) {
 				$ruta_origen = $ruta_db_superior . $anexo["ruta"];
-				$ruta_destino = $ruta . "/" . rand() . '.' . $anexo["tipo"];
+				$ruta_destino = $ruta_db_superior.$ruta . "/" . rand() . '.' . $anexo["tipo"];
 				if(!copy($ruta_origen, $ruta_destino)) {
 					notificaciones("<b>Error al pasar el anexo " . $anexo["etiqueta"] . " a la carpeta de los anexos.</b>", "warning", 7500);
 					return (false);
@@ -227,20 +227,20 @@ function copiar_anexos_paginas_documento($datos_documento, $documentos, $iddocum
 		//$ruta = RUTA_VERSIONES . $datos_documento['iddocumento'] . "/" . $datos_documento['version'] . "/paginas";
 		$ruta = $ruta_versiones . $formato_ruta . "/version" . $datos_documento['version'] . "/paginas";
 		
-		if(!is_dir($ruta)) {
-			if(!crear_destino($ruta)) {
+		if(!is_dir($ruta_db_superior.$ruta)) {
+			if(!crear_destino($ruta_db_superior.$ruta)) {
 				notificaciones("<b>Error al crear la carpeta de las paginas digitalizadas.</b>", "warning", 7500);
 				return (false);
 			}
 		}
 		
-		if(!is_dir($ruta)) {
+		if(!is_dir($ruta_db_superior.$ruta)) {
 			notificaciones("<b>Error al crear la carpeta de las paginas digitalizadas.</b>", "warning", 7500);
 			return (false);
 		} else {
 			foreach($documentos["paginas"] as $pagina) {
 				$ruta_origen = $ruta_db_superior . $pagina["ruta"];
-				$ruta_destino = $ruta . "/" . $pagina["pagina"] . ".jpg";
+				$ruta_destino = $ruta_db_superior.$ruta . "/" . $pagina["pagina"] . ".jpg";
 				
 				if(!copy($ruta_origen, $ruta_destino)) {
 					notificaciones("<b>Error al pasar la pagina " . $pagina["pagina"] . " a la carpeta de las paginas digitalizadas.</b>", "warning", 7500);
