@@ -148,7 +148,7 @@ class RadicadoWord {
 		$extension_doc = '.docx';
 
 		$datos = $this->cargar_csv($this->archivo_csv);
-		print_r($datos);die();
+		print_r($datos);die("KAPUT");
 		for($i = 0; $i < count($datos); $i++) {
 			// Cada elemento es un array campo => valor
 			$archivo_out = "documento_word_" . ($i + 1);
