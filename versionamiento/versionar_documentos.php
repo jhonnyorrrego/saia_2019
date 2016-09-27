@@ -330,15 +330,17 @@ function registrar_version_documento($datos_documento) {
 function reemplazar_anexo_antiguo($anexo_antiguo, $anexos, $datos_documento) {
 	global $conn, $ruta_db_superior;
 	include_once ($ruta_db_superior . "pantallas/lib/librerias_archivo.php");
-	$formato_ruta = aplicar_plantilla_ruta_documento($datos_documento["iddocumento"]);
-	$ruta_archivos = ruta_almacenamiento("archivos");
 	
+	$raiz=$ruta_db_superior;
+	$formato_ruta = aplicar_plantilla_ruta_documento($datos_documento["iddocumento"]);
+	$ruta_archivos = ruta_almacenamiento("archivos",0);
+	$ruta_db_superior=$raiz;
 	//$fecha_ruta = date("Y-m", strtotime($datos_documento["fecha"]));
 	//$ruta_anexos = RUTA_ARCHIVOS . $datos_documento["estado"] . "/" . $fecha_ruta . "/" . $datos_documento["iddocumento"] . "/anexos";
 	$ruta_anexos = $ruta_archivos . $formato_ruta . "/anexos";
 	
-	if(!is_dir($ruta_anexos)) {
-		if(!crear_destino($ruta_anexos)) {
+	if(!is_dir($ruta_db_superior.$ruta_anexos)) {
+		if(!crear_destino($ruta_db_superior.$ruta_anexos)) {
 			notificaciones("<b>Error al crear la carpeta del anexo.</b>", "warning", 8500);
 			return (false);
 		}
@@ -397,14 +399,15 @@ function reemplazar_anexo_antiguo($anexo_antiguo, $anexos, $datos_documento) {
 function adicionar_registro_nuevo_anexo($datos_documento, $anexo) {
 	global $conn, $ruta_db_superior;
 	include_once ($ruta_db_superior . "pantallas/lib/librerias_archivo.php");
+	$raiz=$ruta_db_superior;
 	$formato_ruta = aplicar_plantilla_ruta_documento($datos_documento["iddocumento"]);
-	$ruta_archivos = ruta_almacenamiento("archivos");
-	
+	$ruta_archivos = ruta_almacenamiento("archivos",0);
+	$ruta_db_superior=$raiz;
 	//$ruta_anexo = RUTA_ARCHIVOS . $datos_documento["estado"] . "/" . date("Y-m") . "/" . $datos_documento["iddocumento"] . "/anexos";
 	$ruta_anexo = $ruta_archivos . $formato_ruta . "/anexos";
 	
-	if(!is_dir($ruta_anexo)) {
-		if(!crear_destino( $ruta_anexo)) {
+	if(!is_dir($ruta_db_superior.$ruta_anexo)) {
+		if(!crear_destino( $ruta_db_superior.$ruta_anexo)) {
 			notificaciones("<b>Error al crear la carpeta del anexo.</b>", "warning", 7500);
 			return (false);
 		}
@@ -415,7 +418,7 @@ function adicionar_registro_nuevo_anexo($datos_documento, $anexo) {
 	$ruta_origen = $ruta_db_superior . $anexo[0]['ruta'];
 	$ruta_destino = $ruta_anexo;
 	
-	if(!copy($ruta_origen, $ruta_destino)) {
+	if(!copy($ruta_origen,$ruta_db_superior.$ruta_destino)) {
 		notificaciones("<b>Error al pasar el pdf del documento a la carpeta.</b>", "warning", 7500);
 		return (false);
 	}
