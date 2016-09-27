@@ -223,7 +223,7 @@ function copiar_anexos_paginas_documento($datos_documento, $documentos, $iddocum
 	
 	if(sizeof($documentos["paginas"])) {
 		
-		//$ruta = RUTA_VERSIONES . $datos_documento['iddocumento'] . "/" . $datos_documento['version'] . "/paginas";
+		
 		$ruta = $ruta_versiones . $formato_ruta . "/version" . $datos_documento['version'] . "/paginas";
 		
 		if(!is_dir($ruta_db_superior.$ruta)) {
