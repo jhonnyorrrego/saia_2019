@@ -246,13 +246,13 @@ function copiar_anexos_paginas_documento($datos_documento, $documentos, $iddocum
 		} else {
 			foreach($documentos["paginas"] as $pagina) {
 				$ruta_origen = $ruta_db_superior . $pagina["ruta"];
-				$ruta_destino = $ruta_db_superior.$ruta . "/" . $pagina["pagina"] . ".jpg";
+				$ruta_destino = $ruta . "/" . $pagina["pagina"] . ".jpg";
 				
-				if(!copy($ruta_origen, $ruta_destino)) {
+				if(!copy($ruta_origen, $ruta_db_superior.$ruta_destino)) {
 					notificaciones("<b>Error al pasar la pagina " . $pagina["pagina"] . " a la carpeta de las paginas digitalizadas.</b>", "warning", 7500);
 					return (false);
 				} else {
-					$ruta_alm = substr($ruta_destino, strlen($ruta_db_superior));
+					$ruta_alm = $ruta_destino;
 					$insert_pagina = "INSERT INTO anexos_version(documento_iddocumento,version_numero,ruta,etiqueta,tipo) VALUES(" . $datos_documento["iddocumento"] . "," . $datos_documento["version"] . ",'" . $ruta_alm . "','" . $pagina["pagina"] . "','jpg')";
 					
 					phpmkr_query($insert_pagina, "", $datos_documento["funcionario_codigo"]);
