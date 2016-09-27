@@ -3946,7 +3946,7 @@ else
   return(FALSE);
 }
 
-function ruta_almacenamiento($tipo) {
+function ruta_almacenamiento($tipo,$raiz=1) {
 	$max_salida=6; // Previene algun posible ciclo infinito limitando a 10 los ../
 	$ruta_db_superior=$ruta="";
 	while($max_salida>0){
@@ -3956,6 +3956,11 @@ function ruta_almacenamiento($tipo) {
 	  $ruta.="../";
 	  $max_salida--;
 	}
+	
+	if(!$raiz){
+	    $ruta_db_superior='';
+	}
+	
 	switch($tipo){
 	  case 'archivos':
 	    crear_destino($ruta_db_superior.RUTA_ARCHIVOS);
