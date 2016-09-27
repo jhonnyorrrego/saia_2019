@@ -207,15 +207,16 @@ function copiar_anexos_paginas_documento($datos_documento, $documentos, $iddocum
 			
 			foreach($documentos["anexos"] as $anexo) {
 				$ruta_origen = $ruta_db_superior.$anexo["ruta"];
-				$ruta_destino = $ruta_db_superior.$ruta . "/" . rand() . '.' . $anexo["tipo"];
+				$ruta_destino = $ruta . "/" . rand() . '.' . $anexo["tipo"];
 				
 				print_r($ruta_origen);print_r('<----ORIGEN--------DESTINO----->');print_r($ruta_destino);
 				
-				if(!copy($ruta_origen, $ruta_destino)) {
+				if(!copy($ruta_origen, $ruta_db_superior.$ruta_destino)) {
 					notificaciones("<b>Error al pasar el anexo " . $anexo["etiqueta"] . " a la carpeta de los anexos.</b>", "warning", 7500);
 					return (false);
 				} else {
-					$ruta_alm = substr($ruta_destino, strlen($ruta_db_superior));
+					//$ruta_alm = substr($ruta_destino, strlen($ruta_db_superior));
+					$ruta_alm=$ruta_destino;
 					$insert_anexo = "INSERT INTO anexos_version(documento_iddocumento,version_numero,ruta,etiqueta,tipo) VALUES(" . $datos_documento["iddocumento"] . "," . $datos_documento["version"] . ",'" . $ruta_alm . "','" . $anexo["etiqueta"] . "','" . $anexo["tipo"] . "')";
 					
 					phpmkr_query($insert_anexo, "", $datos_documento["funcionario_codigo"]);
