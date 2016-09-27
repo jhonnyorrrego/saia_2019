@@ -161,13 +161,15 @@ if(!$datos_documento) {
 function crear_destino_version($datos_documento) {
 	global $ruta_db_superior;
 	include_once ($ruta_db_superior . "pantallas/lib/librerias_archivo.php");
-	$formato_ruta = aplicar_plantilla_ruta_documento($datos_documento['iddocumento']);
-	$ruta_versiones = ruta_almacenamiento("versiones");
 	
+	$raiz=$ruta_db_superior;
+	$formato_ruta = aplicar_plantilla_ruta_documento($datos_documento['iddocumento']);
+	$ruta_versiones = ruta_almacenamiento("versiones",0);
+	$ruta_db_superior=$raiz;
 	//$ruta = $ruta_db_superior . RUTA_VERSIONES . $datos_documento['iddocumento'] . "/" . $datos_documento['version'];
 	$ruta = $ruta_versiones . $formato_ruta . "/version" . $datos_documento['version'];
-	if(!is_dir($ruta)) {
-		if(!crear_destino($ruta)) {
+	if(!is_dir($ruta_db_superior.$ruta)) {
+		if(!crear_destino($ruta_db_superior.$ruta)) {
 			notificaciones("<b>Error al crear la carpeta de destino.</b>", "warning", 7500);
 			return (false);
 		}
