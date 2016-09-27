@@ -84,7 +84,7 @@ switch ($sAction)
 	<tr>
 		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">Etiqueta</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
-<?php echo $x_etiqueta; ?>
+<?php echo(codifica_encabezado(html_entity_decode($x_etiqueta))); ?>
 </span></td>
 	</tr>
 	<tr>
