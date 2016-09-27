@@ -281,7 +281,7 @@ function copiar_anexos_paginas_documento($datos_documento, $documentos, $iddocum
 			$ruta_destino = $ruta . "/" . $nombre_pdf;
 			
 			print_r($ruta_origen); print_r('<------------>'); print_r($ruta_destino);
-			die();
+		
 			
 			if(!copy($ruta_db_superior . $ruta_origen, $ruta_db_superior . $ruta_destino)) {
 				notificaciones("<b>Error al pasar el pdf del documento a la carpeta.</b>", "warning", 7500);
