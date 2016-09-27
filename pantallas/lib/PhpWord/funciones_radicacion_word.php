@@ -152,8 +152,9 @@ class RadicadoWord {
 		for($i = 0; $i < count($datos); $i++) {
 			// Cada elemento es un array campo => valor
 			$archivo_out = "documento_word_" . ($i + 1);
-			copy($archivo_riginal, $this->ruta_docx . $archivo_out . ".docx");
-			$templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor($this->ruta_docx . 'documento_word.docx');
+			$archivo_copia = $this->ruta_combinar . $archivo_out . $extension_doc;
+			copy($archivo_riginal, $archivo_copia);
+			$templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor($archivo_copia);
 			$campos_word = $templateProcessor->getVariables();
 			$templateProcessor->setValue('formato_numero', $numero_radicado);
 			if(in_array($this->campo_qr_word, $campos_word)) {
@@ -174,16 +175,17 @@ class RadicadoWord {
 			foreach($datos[$i] as $campo => $valor) {
 				if(in_array($campo, $campos_word)) {
 					$templateProcessor->setValue($campo, $valor);
-						
-					if(file_exists($this->ruta_combinar . $archivo_out . $extension_doc)) {
-						unlink($this->ruta_combinar . $archivo_out . $extension_doc);
-					}
 				} else {
 					die("No se encontr&oacute; el campo $campo en la plantilla");
 				}
 			}
+
+			if(file_exists($archivo_copia)) {
+				unlink($archivo_copia);
+			}
+			
 			$templateProcessor->setTextWatermark($marca_agua);
-			$templateProcessor->saveAs($this->ruta_combinar . $archivo_out . $extension_doc);
+			$templateProcessor->saveAs($archivo_copia);
 			$templateProcessor = null;
 		}
 	
