@@ -284,7 +284,7 @@ function copiar_anexos_paginas_documento($datos_documento, $documentos, $iddocum
 			
 			chmod($ruta_db_superior.$ruta_origen,0777);
 			chmod($ruta_db_superior.$ruta_destino,0777);
-			print_r($ruta_origen); print_r('<------------>'); print_r($ruta_destino); print_r('<------------>'); print_r($ruta_db_superior);
+			//print_r($ruta_origen); print_r('<------------>'); print_r($ruta_destino); print_r('<------------>'); print_r($ruta_db_superior);
 		
 			
 			if(!copy($ruta_db_superior . $ruta_origen, $ruta_db_superior . $ruta_destino)) {
