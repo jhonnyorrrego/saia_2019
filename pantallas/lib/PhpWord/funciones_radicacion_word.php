@@ -148,14 +148,13 @@ class RadicadoWord {
 		$extension_doc = '.docx';
 
 		$datos = $this->cargar_csv($this->archivo_csv);
-		print_r($datos);die("KAPUT");
 		for($i = 0; $i < count($datos); $i++) {
 			// Cada elemento es un array campo => valor
 			$archivo_out = "documento_word_" . ($i + 1);
 
 			$templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor($this->ruta_docx . 'documento_word.docx');
 			$campos_word = $templateProcessor->getVariables();
-
+			print_r($campos_word);die("KAPUT");
 			$templateProcessor->setValue('formato_numero', $numero_radicado);
 			if(in_array($this->campo_qr_word, $campos_word)) {
 				$src = $this->ruta_db_superior . $this->obtener_codigo_qr();
