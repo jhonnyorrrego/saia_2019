@@ -3946,7 +3946,8 @@ else
   return(FALSE);
 }
 
-function ruta_almacenamiento($tipo) {
+function ruta_almacenamiento($tipo,$raiz=1) {
+    
 	$max_salida=6; // Previene algun posible ciclo infinito limitando a 10 los ../
 	$ruta_db_superior=$ruta="";
 	while($max_salida>0){
@@ -3956,22 +3957,30 @@ function ruta_almacenamiento($tipo) {
 	  $ruta.="../";
 	  $max_salida--;
 	}
+	
+	if($raiz){
+	    $ruta_raiz=$ruta_db_superior;
+	}else{
+	    $ruta_raiz='';
+	}
+	
+	
 	switch($tipo){
 	  case 'archivos':
 	    crear_destino($ruta_db_superior.RUTA_ARCHIVOS);
-	    return($ruta_db_superior.RUTA_ARCHIVOS);
+	    return($ruta_raiz.RUTA_ARCHIVOS);
 	  break;
 	  case 'pdf':
 	    crear_destino($ruta_db_superior.RUTA_PDFS);
-	    return($ruta_db_superior.RUTA_PDFS);
+	    return($ruta_raiz.RUTA_PDFS);
 	  break;  
 	  case 'imagenes':
 	    crear_destino($ruta_db_superior.RUTA_IMAGENES);
-	    return($ruta_db_superior.RUTA_IMAGENES);
+	    return($ruta_raiz.RUTA_IMAGENES);
 	  break;
 	  case 'versiones':
 	    crear_destino($ruta_db_superior.RUTA_VERSIONES);
-	    return($ruta_db_superior.RUTA_VERSIONES);
+	    return($ruta_raiz.RUTA_VERSIONES);
 	  break;
 	}
 }

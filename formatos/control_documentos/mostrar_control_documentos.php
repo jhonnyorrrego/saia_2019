@@ -1,4 +1,4 @@
-<?php include_once("../carta/funciones.php"); ?><?php include_once("../correo_saia/funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("../librerias/funciones_generales.php"); ?><script type="text/javascript" src="../../js/jquery.js"></script><?php include_once("../librerias/header_nuevo.php"); ?><?php include_once("../../class_transferencia.php"); ?><tr><td><table style="border-collapse: collapse; width: 100%;" border="1">
+<?php include_once("../carta/funciones.php"); ?><?php include_once("../memorando/funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("../librerias/funciones_generales.php"); ?><script type="text/javascript" src="../../js/jquery.js"></script><?php include_once("../librerias/header_nuevo.php"); ?><?php include_once("../../class_transferencia.php"); ?><tr><td><table style="border-collapse: collapse; width: 100%;" border="1">
 <tbody>
 <tr>
 <td style="text-align: center;" colspan="2"><span style="font-size: small;"><strong>Solicitud No. <?php obtener_numero_solicitud(388,$_REQUEST['iddoc']);?>&nbsp;</strong></span></td>
@@ -43,7 +43,7 @@
 </tr>
 <tr>
 <td>&nbsp;<strong>Anexos:</strong></td>
-<td>&nbsp;{*mostrar_anexos_memo*}</td>
+<td>&nbsp;<?php mostrar_anexos_memo(388,$_REQUEST['iddoc']);?></td>
 </tr>
 <tr>
 <td colspan="2">&nbsp;<br /><?php mostrar_estado_proceso(388,$_REQUEST['iddoc']);?>&nbsp;</td>

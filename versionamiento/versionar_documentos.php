@@ -117,7 +117,7 @@ if(!$datos_documento) {
 					}
 				}
 				
-				$datos_documento['pdf'] = crear_pdf_documento_tcpdf($datos_documento);
+				$datos_documento['pdf'] = crear_pdf_documento_tcpdf($datos_documento);  
 				
 				if(!$datos_documento['pdf']) {
 					// print_r($datos_documento);print_r('<-------- MUERE AQUI');
@@ -161,13 +161,15 @@ if(!$datos_documento) {
 function crear_destino_version($datos_documento) {
 	global $ruta_db_superior;
 	include_once ($ruta_db_superior . "pantallas/lib/librerias_archivo.php");
-	$formato_ruta = aplicar_plantilla_ruta_documento($datos_documento['iddocumento']);
-	$ruta_versiones = ruta_almacenamiento("versiones");
 	
+	$raiz=$ruta_db_superior;
+	$formato_ruta = aplicar_plantilla_ruta_documento($datos_documento['iddocumento']);
+	$ruta_versiones = ruta_almacenamiento("versiones",0);
+	$ruta_db_superior=$raiz;
 	//$ruta = $ruta_db_superior . RUTA_VERSIONES . $datos_documento['iddocumento'] . "/" . $datos_documento['version'];
 	$ruta = $ruta_versiones . $formato_ruta . "/version" . $datos_documento['version'];
-	if(!is_dir($ruta)) {
-		if(!crear_destino($ruta)) {
+	if(!is_dir($ruta_db_superior.$ruta)) {
+		if(!crear_destino($ruta_db_superior.$ruta)) {
 			notificaciones("<b>Error al crear la carpeta de destino.</b>", "warning", 7500);
 			return (false);
 		}
@@ -180,33 +182,41 @@ function copiar_anexos_paginas_documento($datos_documento, $documentos, $iddocum
 	global $ruta_db_superior;
 	include_once ($ruta_db_superior . "pantallas/lib/librerias_archivo.php");
 	
+	$raiz=$ruta_db_superior;
 	$formato_ruta = aplicar_plantilla_ruta_documento($datos_documento['iddocumento']);
-	$ruta_versiones = ruta_almacenamiento("versiones");
+    $ruta_versiones=ruta_almacenamiento("versiones",0);
+    $ruta_db_superior=$raiz;
 	if(sizeof($documentos["anexos"])) {
 
 		//$ruta = RUTA_VERSIONES . $datos_documento['iddocumento'] . "/" . $datos_documento['version'] . "/anexos";
 		$ruta = $ruta_versiones . $formato_ruta . "/version" . $datos_documento['version'] . "/anexos";
 		
-		if(!is_dir($ruta)) {
-			if(!crear_destino($ruta)) {
+		if(!is_dir($ruta_db_superior.$ruta)) {
+			if(!crear_destino($ruta_db_superior.$ruta)) {
 				notificaciones("<b>Error al crear la carpeta de los anexos.</b>", "warning", 7500);
 				return (false);
 			}
 		}
 		
-		if(!is_dir($ruta)) {
+		if(!is_dir($ruta_db_superior.$ruta)) {
 			notificaciones("<b>Error al crear la carpeta de los anexos.</b>", "warning", 7500);
 			return (false);
 		} else {
 			
+			
+			
 			foreach($documentos["anexos"] as $anexo) {
-				$ruta_origen = $ruta_db_superior . $anexo["ruta"];
+				$ruta_origen = $ruta_db_superior.$anexo["ruta"];
 				$ruta_destino = $ruta . "/" . rand() . '.' . $anexo["tipo"];
-				if(!copy($ruta_origen, $ruta_destino)) {
+				
+				//print_r($ruta_origen);print_r('<----ORIGEN--------DESTINO----->');print_r($ruta_db_superior.$ruta_destino);
+				
+				if(!copy($ruta_origen, $ruta_db_superior.$ruta_destino)) {
 					notificaciones("<b>Error al pasar el anexo " . $anexo["etiqueta"] . " a la carpeta de los anexos.</b>", "warning", 7500);
 					return (false);
 				} else {
-					$ruta_alm = substr($ruta_destino, strlen($ruta_db_superior));
+					//$ruta_alm = substr($ruta_destino, strlen($ruta_db_superior));
+					$ruta_alm=$ruta_destino;
 					$insert_anexo = "INSERT INTO anexos_version(documento_iddocumento,version_numero,ruta,etiqueta,tipo) VALUES(" . $datos_documento["iddocumento"] . "," . $datos_documento["version"] . ",'" . $ruta_alm . "','" . $anexo["etiqueta"] . "','" . $anexo["tipo"] . "')";
 					
 					phpmkr_query($insert_anexo, "", $datos_documento["funcionario_codigo"]);
@@ -221,17 +231,16 @@ function copiar_anexos_paginas_documento($datos_documento, $documentos, $iddocum
 	
 	if(sizeof($documentos["paginas"])) {
 		
-		//$ruta = RUTA_VERSIONES . $datos_documento['iddocumento'] . "/" . $datos_documento['version'] . "/paginas";
 		$ruta = $ruta_versiones . $formato_ruta . "/version" . $datos_documento['version'] . "/paginas";
 		
-		if(!is_dir($ruta)) {
-			if(!crear_destino($ruta)) {
+		if(!is_dir($ruta_db_superior.$ruta)) {
+			if(!crear_destino($ruta_db_superior.$ruta)) {
 				notificaciones("<b>Error al crear la carpeta de las paginas digitalizadas.</b>", "warning", 7500);
 				return (false);
 			}
 		}
 		
-		if(!is_dir($ruta)) {
+		if(!is_dir($ruta_db_superior.$ruta)) {
 			notificaciones("<b>Error al crear la carpeta de las paginas digitalizadas.</b>", "warning", 7500);
 			return (false);
 		} else {
@@ -239,11 +248,11 @@ function copiar_anexos_paginas_documento($datos_documento, $documentos, $iddocum
 				$ruta_origen = $ruta_db_superior . $pagina["ruta"];
 				$ruta_destino = $ruta . "/" . $pagina["pagina"] . ".jpg";
 				
-				if(!copy($ruta_origen, $ruta_destino)) {
+				if(!copy($ruta_origen, $ruta_db_superior.$ruta_destino)) {
 					notificaciones("<b>Error al pasar la pagina " . $pagina["pagina"] . " a la carpeta de las paginas digitalizadas.</b>", "warning", 7500);
 					return (false);
 				} else {
-					$ruta_alm = substr($ruta_destino, strlen($ruta_db_superior));
+					$ruta_alm = $ruta_destino;
 					$insert_pagina = "INSERT INTO anexos_version(documento_iddocumento,version_numero,ruta,etiqueta,tipo) VALUES(" . $datos_documento["iddocumento"] . "," . $datos_documento["version"] . ",'" . $ruta_alm . "','" . $pagina["pagina"] . "','jpg')";
 					
 					phpmkr_query($insert_pagina, "", $datos_documento["funcionario_codigo"]);
@@ -261,15 +270,15 @@ function copiar_anexos_paginas_documento($datos_documento, $documentos, $iddocum
 		//$ruta = RUTA_VERSIONES . $datos_documento['iddocumento'] . "/" . $datos_documento['version'] . "/pdf";
 		$ruta = $ruta_versiones . $formato_ruta . "/version" . $datos_documento['version'] . "/pdf";
 		
-		if(!is_dir($ruta)) {
-			if(!crear_destino($ruta)) {
+		if(!is_dir($ruta_db_superior.$ruta)) {
+			if(!crear_destino($ruta_db_superior.$ruta)) {
 				notificaciones("<b>Error al crear la carpeta del pdf.</b>", "warning", 7500);
 				return (false);
 			}
 		}
 		
-		if(!is_dir($ruta)) {
-			die("no entro ..");
+		if(!is_dir($ruta_db_superior.$ruta)) {
+			//die("no entro ..");
 			notificaciones("<b>Error al crear la carpeta del pdf.</b>", "warning", 7500);
 			return (false);
 		} else {
@@ -280,11 +289,17 @@ function copiar_anexos_paginas_documento($datos_documento, $documentos, $iddocum
 			$ruta_origen = $datos_documento["pdf"];
 			$ruta_destino = $ruta . "/" . $nombre_pdf;
 			
+			
+			chmod($ruta_db_superior.$ruta_origen,0777);
+			chmod($ruta_db_superior.$ruta_destino,0777);
+			//print_r($ruta_origen); print_r('<------------>'); print_r($ruta_destino); print_r('<------------>'); print_r($ruta_db_superior);
+		
+			
 			if(!copy($ruta_db_superior . $ruta_origen, $ruta_db_superior . $ruta_destino)) {
 				notificaciones("<b>Error al pasar el pdf del documento a la carpeta.</b>", "warning", 7500);
 				return (false);
 			} else {
-				$ruta_alm = substr($ruta_destino, strlen($ruta_db_superior));
+				$ruta_alm = $ruta_destino;
 				$insert_pdf = "INSERT INTO anexos_version(documento_iddocumento,version_numero,ruta,etiqueta,tipo) VALUES(" . $datos_documento["iddocumento"] . "," . $datos_documento["version"] . ",'" . $ruta_alm . "','pdf','pdf')";
 				
 				phpmkr_query($insert_pdf, "", $datos_documento["funcionario_codigo"]);
@@ -323,15 +338,17 @@ function registrar_version_documento($datos_documento) {
 function reemplazar_anexo_antiguo($anexo_antiguo, $anexos, $datos_documento) {
 	global $conn, $ruta_db_superior;
 	include_once ($ruta_db_superior . "pantallas/lib/librerias_archivo.php");
-	$formato_ruta = aplicar_plantilla_ruta_documento($datos_documento["iddocumento"]);
-	$ruta_archivos = ruta_almacenamiento("archivos");
 	
+	$raiz=$ruta_db_superior;
+	$formato_ruta = aplicar_plantilla_ruta_documento($datos_documento["iddocumento"]);
+	$ruta_archivos = ruta_almacenamiento("archivos",0);
+	$ruta_db_superior=$raiz;
 	//$fecha_ruta = date("Y-m", strtotime($datos_documento["fecha"]));
 	//$ruta_anexos = RUTA_ARCHIVOS . $datos_documento["estado"] . "/" . $fecha_ruta . "/" . $datos_documento["iddocumento"] . "/anexos";
 	$ruta_anexos = $ruta_archivos . $formato_ruta . "/anexos";
 	
-	if(!is_dir($ruta_anexos)) {
-		if(!crear_destino($ruta_anexos)) {
+	if(!is_dir($ruta_db_superior.$ruta_anexos)) {
+		if(!crear_destino($ruta_db_superior.$ruta_anexos)) {
 			notificaciones("<b>Error al crear la carpeta del anexo.</b>", "warning", 8500);
 			return (false);
 		}
@@ -359,7 +376,7 @@ function reemplazar_anexo_antiguo($anexo_antiguo, $anexos, $datos_documento) {
 		if(!copy($ruta_origen, $ruta_db_superior . $ruta_destino)) {
 			notificaciones("<b>Error al pasar el anexo " . $anexos[0]["etiqueta"] . " a la carpeta del documento.</b>", "warning", 8500);
 		} else {
-			$ruta_alm = substr($ruta_destino, strlen($ruta_db_superior));
+			$ruta_alm = $ruta_destino;
 			$sql_anexo = "INSERT INTO anexos(documento_iddocumento, ruta, tipo, etiqueta, formato, fecha_anexo) VALUES(" . $datos_documento["iddocumento"] . ",'" . $ruta_alm . "','" . $anexos[$i]["tipo"] . "','" . $anexos[$i]['etiqueta'] . "'," . $datos_documento['idformato'] . "," . fecha_db_almacenar(date("Y-m-d"), "Y-m-d") . ")";
 			
 			phpmkr_query($sql_anexo, "", $datos_documento["funcionario_codigo"]);
@@ -390,14 +407,15 @@ function reemplazar_anexo_antiguo($anexo_antiguo, $anexos, $datos_documento) {
 function adicionar_registro_nuevo_anexo($datos_documento, $anexo) {
 	global $conn, $ruta_db_superior;
 	include_once ($ruta_db_superior . "pantallas/lib/librerias_archivo.php");
+	$raiz=$ruta_db_superior;
 	$formato_ruta = aplicar_plantilla_ruta_documento($datos_documento["iddocumento"]);
-	$ruta_archivos = ruta_almacenamiento("archivos");
-	
+	$ruta_archivos = ruta_almacenamiento("archivos",0);
+	$ruta_db_superior=$raiz;
 	//$ruta_anexo = RUTA_ARCHIVOS . $datos_documento["estado"] . "/" . date("Y-m") . "/" . $datos_documento["iddocumento"] . "/anexos";
 	$ruta_anexo = $ruta_archivos . $formato_ruta . "/anexos";
 	
-	if(!is_dir($ruta_anexo)) {
-		if(!crear_destino( $ruta_anexo)) {
+	if(!is_dir($ruta_db_superior.$ruta_anexo)) {
+		if(!crear_destino( $ruta_db_superior.$ruta_anexo)) {
 			notificaciones("<b>Error al crear la carpeta del anexo.</b>", "warning", 7500);
 			return (false);
 		}
@@ -408,12 +426,12 @@ function adicionar_registro_nuevo_anexo($datos_documento, $anexo) {
 	$ruta_origen = $ruta_db_superior . $anexo[0]['ruta'];
 	$ruta_destino = $ruta_anexo;
 	
-	if(!copy($ruta_origen, $ruta_destino)) {
+	if(!copy($ruta_origen,$ruta_db_superior.$ruta_destino)) {
 		notificaciones("<b>Error al pasar el pdf del documento a la carpeta.</b>", "warning", 7500);
 		return (false);
 	}
 	
-	$ruta_alm = substr($ruta_anexo, strlen($ruta_db_superior));
+	$ruta_alm = $ruta_destino;
 	$sql_anexo = "INSERT INTO anexos(documento_iddocumento, ruta, tipo, etiqueta, formato, fecha_anexo) VALUES(" . $datos_documento["iddocumento"] . ",'" . $ruta_alm . "','" . $anexo[0]['tipo'] . "','" . $anexo[0]['etiqueta'] . "'," . $datos_documento['idformato'] . "," . fecha_db_almacenar(date("Y-m-d"), "Y-m-d") . ")";
 	
 	phpmkr_query($sql_anexo, "", $datos_documento["funcionario_codigo"]);
