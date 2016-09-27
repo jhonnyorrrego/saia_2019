@@ -3532,7 +3532,7 @@ function crear_pdf_documento_tcpdf($datos_documento, $datos_ejecutor = null) {
 		// Cerrar el recurso cURL y liberar recursos del sistema
 		curl_close($ch);
 		
-		$ruta_pdfs = ruta_almacenamiento("pdf");
+		$ruta_pdfs = ruta_almacenamiento("pdf",0);
 		
 		
 		$formato_ruta = aplicar_plantilla_ruta_documento($datos_documento["iddocumento"]);
@@ -3550,7 +3550,7 @@ function crear_pdf_documento_tcpdf($datos_documento, $datos_ejecutor = null) {
 	
 	
 	if($ruta) {
-	    return($ruta);
+	    
 	    
 		if(file_exists($ruta_db_superior.$ruta)) {
 			return ($ruta);
