@@ -142,12 +142,13 @@ class RadicadoWord {
 	}
 
 	protected function combinar_documento($numero_radicado) {
-		global $conn, $ruta_db_superior;
+		global $conn;
 
 		$marca_agua = mostrar_estado_documento($this->iddocumento);
 		$extension_doc = '.docx';
 
 		$datos = $this->cargar_csv($this->archivo_csv);
+		print_r($datos);die();
 		for($i = 0; $i < count($datos); $i++) {
 			// Cada elemento es un array campo => valor
 			$archivo_out = "documento_word_" . ($i + 1);
@@ -197,12 +198,12 @@ class RadicadoWord {
 			$salida_ps = $this->ruta_docx . "documento_word.pdf";
 			$comando2 = "gs -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -dSAFER -sOutputFile=" . $salida_ps . " " . $entrada_ps;
 			$var2 = shell_exec($comando2);
-			// print_r($entrada_ps);echo "<br>";
-			// print_r($salida_ps);echo "<br>";
-			// print_r($var2);echo "<br>";
+			print_r($entrada_ps);echo "<br>";
+			print_r($salida_ps);echo "<br>";
+			print_r($var2);echo "<br>";
 			// $comando2 = 'export HOME=/tmp && libreoffice --headless --convert-to pdf:writer_pdf_Export --outdir ' . $directorio_out . ' ' . $directorio_out . "*" . $extension_doc;
 		}
-		// die();
+		die("KAPUT");
 	}
 	
 	private function obtener_codigo_qr() {
