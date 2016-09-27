@@ -3947,20 +3947,18 @@ else
 }
 
 function ruta_almacenamiento($tipo,$raiz=1) {
-	$max_salida=6; // Previene algun posible ciclo infinito limitando a 10 los ../
-	$ruta_db_superior=$ruta="";
-	while($max_salida>0){
-	  if(is_file($ruta."db.php")){
-	    $ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
-	  }
-	  $ruta.="../";
-	  $max_salida--;
-	}
-	
-	if(!$raiz){
-	    $ruta_db_superior='';
-	}
-	
+    $ruta_db_superior='';
+	if($raiz){
+    	$max_salida=6; // Previene algun posible ciclo infinito limitando a 10 los ../
+    	$ruta_db_superior=$ruta="";
+    	while($max_salida>0){
+    	  if(is_file($ruta."db.php")){
+    	    $ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
+    	  }
+    	  $ruta.="../";
+    	  $max_salida--;
+    	}
+	}  
 	switch($tipo){
 	  case 'archivos':
 	    crear_destino($ruta_db_superior.RUTA_ARCHIVOS);
