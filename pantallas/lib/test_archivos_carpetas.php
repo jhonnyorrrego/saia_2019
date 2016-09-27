@@ -128,7 +128,7 @@ if (@$_REQUEST["extensiones_permitidas"]) {
 	);
 
 $iniciales = explode(",", $inicio);
-$nombres = explode(",", $_REQUEST["carpeta_inicial"]);
+$nombres = explode(",", @$_REQUEST["carpeta_inicial"]);
 $cant = count($iniciales);
 $texto = "";
 $texto .= "<tree id=\"0\">\n";
