@@ -3550,8 +3550,6 @@ function crear_pdf_documento_tcpdf($datos_documento, $datos_ejecutor = null) {
 	
 	
 	if($ruta) {
-	    
-	    
 		if(file_exists($ruta_db_superior.$ruta)) {
 			return ($ruta);
 		} else {
