@@ -143,7 +143,8 @@ class RadicadoWord {
 
 	protected function combinar_documento($numero_radicado) {
 		global $conn;
-
+		
+		$archivo_riginal = $this->ruta_docx . 'documento_word.docx';
 		$marca_agua = mostrar_estado_documento($this->iddocumento);
 		$extension_doc = '.docx';
 
@@ -151,10 +152,9 @@ class RadicadoWord {
 		for($i = 0; $i < count($datos); $i++) {
 			// Cada elemento es un array campo => valor
 			$archivo_out = "documento_word_" . ($i + 1);
-
+			copy($archivo_riginal, $this->ruta_docx . $archivo_out . ".docx");
 			$templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor($this->ruta_docx . 'documento_word.docx');
 			$campos_word = $templateProcessor->getVariables();
-			print_r($campos_word);die("KAPUT");
 			$templateProcessor->setValue('formato_numero', $numero_radicado);
 			if(in_array($this->campo_qr_word, $campos_word)) {
 				$src = $this->ruta_db_superior . $this->obtener_codigo_qr();
