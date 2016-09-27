@@ -201,6 +201,8 @@ function copiar_anexos_paginas_documento($datos_documento, $documentos, $iddocum
 			return (false);
 		} else {
 			
+			print_r($ruta);print_r('<------------AQUI');
+			
 			foreach($documentos["anexos"] as $anexo) {
 				$ruta_origen = $ruta_db_superior . $anexo["ruta"];
 				$ruta_destino = $ruta_db_superior.$ruta . "/" . rand() . '.' . $anexo["tipo"];
