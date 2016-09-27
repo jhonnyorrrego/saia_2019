@@ -299,7 +299,7 @@ function copiar_anexos_paginas_documento($datos_documento, $documentos, $iddocum
 				notificaciones("<b>Error al pasar el pdf del documento a la carpeta.</b>", "warning", 7500);
 				return (false);
 			} else {
-				$ruta_alm = substr($ruta_destino, strlen($ruta_db_superior));
+				$ruta_alm = $ruta_destino;
 				$insert_pdf = "INSERT INTO anexos_version(documento_iddocumento,version_numero,ruta,etiqueta,tipo) VALUES(" . $datos_documento["iddocumento"] . "," . $datos_documento["version"] . ",'" . $ruta_alm . "','pdf','pdf')";
 				
 				phpmkr_query($insert_pdf, "", $datos_documento["funcionario_codigo"]);
@@ -376,7 +376,7 @@ function reemplazar_anexo_antiguo($anexo_antiguo, $anexos, $datos_documento) {
 		if(!copy($ruta_origen, $ruta_db_superior . $ruta_destino)) {
 			notificaciones("<b>Error al pasar el anexo " . $anexos[0]["etiqueta"] . " a la carpeta del documento.</b>", "warning", 8500);
 		} else {
-			$ruta_alm = substr($ruta_destino, strlen($ruta_db_superior));
+			$ruta_alm = $ruta_destino;
 			$sql_anexo = "INSERT INTO anexos(documento_iddocumento, ruta, tipo, etiqueta, formato, fecha_anexo) VALUES(" . $datos_documento["iddocumento"] . ",'" . $ruta_alm . "','" . $anexos[$i]["tipo"] . "','" . $anexos[$i]['etiqueta'] . "'," . $datos_documento['idformato'] . "," . fecha_db_almacenar(date("Y-m-d"), "Y-m-d") . ")";
 			
 			phpmkr_query($sql_anexo, "", $datos_documento["funcionario_codigo"]);
