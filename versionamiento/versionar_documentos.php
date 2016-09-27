@@ -283,7 +283,7 @@ function copiar_anexos_paginas_documento($datos_documento, $documentos, $iddocum
 			$ruta_origen = $datos_documento["pdf"];
 			$ruta_destino = $ruta . "/" . $nombre_pdf;
 			
-			print_r($ruta_origen); print_r('<------------>'); print_r($ruta_destino);
+			print_r($ruta_origen); print_r('<------------>'); print_r($ruta_destino); print_r('<------------>'); print_r($ruta_db_superior);
 		
 			
 			if(!copy($ruta_db_superior . $ruta_origen, $ruta_db_superior . $ruta_destino)) {
