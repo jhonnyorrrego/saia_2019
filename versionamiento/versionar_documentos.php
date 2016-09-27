@@ -180,10 +180,11 @@ function copiar_anexos_paginas_documento($datos_documento, $documentos, $iddocum
 	global $ruta_db_superior;
 	include_once ($ruta_db_superior . "pantallas/lib/librerias_archivo.php");
 	
+	$raiz=$ruta_db_superior;
 	$formato_ruta = aplicar_plantilla_ruta_documento($datos_documento['iddocumento']);
 	//$ruta_versiones = ruta_almacenamiento("versiones");
     $ruta_versiones=ruta_almacenamiento("pdf",0);
-
+    $ruta_db_superior=$raiz;
 	if(sizeof($documentos["anexos"])) {
 
 		//$ruta = RUTA_VERSIONES . $datos_documento['iddocumento'] . "/" . $datos_documento['version'] . "/anexos";
