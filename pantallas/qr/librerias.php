@@ -49,9 +49,9 @@ function generar_codigo_qr($idformato, $iddoc, $idfunc = 0) {
 	// $datos_qr.="Fecha: ".$fecha["day"]." de ".mes($fecha["month"])." del ".$fecha["year"]." a las ".$fecha["hour"].":".$fecha["minute"]."\n";
 	// $firmas = busca_filtro_tabla("CONCAT(B.nombres,CONCAT(' ',B.apellidos)) AS nombre","buzon_salida A, funcionario B","A.origen=B.funcionario_codigo AND (A.nombre LIKE 'APROBADO' OR A.nombre LIKE 'REVISADO')AND A.archivo_idarchivo=".$iddoc,"", $conn);
 	// $datos_qr.="Firman: \n";
-	for($i = 0; $i < $firmas['numcampos']; $i++) {
+	//for($i = 0; $i < $firmas['numcampos']; $i++) {
 		// $datos_qr .= utf8_encode(html_entity_decode($firmas[$i]['nombre']))." \n";
-	}
+	//}
 	
 	$formato_ruta = aplicar_plantilla_ruta_documento($iddoc);
 	$ruta = RUTA_QR . $formato_ruta . '/qr/';
