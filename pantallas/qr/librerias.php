@@ -27,7 +27,7 @@ function generar_codigo_qr($idformato, $iddoc, $idfunc = 0) {
 	$codigo_qr = busca_filtro_tabla("ruta_qr, iddocumento_verificacion", "documento_verificacion", "documento_iddocumento=" . $iddoc, "", $conn);
 	$datos = busca_filtro_tabla("A.fecha,A.estado,A.numero", "documento A", "A.iddocumento=" . $iddoc, "", $conn);
 	$idfun = "";
-	if($_REQUEST['tipo'] == 5) {
+	if(@$_REQUEST['tipo'] == 5) {
 		$idfun = $_REQUEST['idfunc'];
 	} else {
 		$idfun = usuario_actual('idfuncionario');
