@@ -117,7 +117,7 @@ if(!$datos_documento) {
 					}
 				}
 				
-				$datos_documento['pdf'] = crear_pdf_documento_tcpdf($datos_documento);
+				$datos_documento['pdf'] = crear_pdf_documento_tcpdf($datos_documento);  
 				
 				if(!$datos_documento['pdf']) {
 					// print_r($datos_documento);print_r('<-------- MUERE AQUI');
@@ -182,7 +182,7 @@ function copiar_anexos_paginas_documento($datos_documento, $documentos, $iddocum
 	
 	$formato_ruta = aplicar_plantilla_ruta_documento($datos_documento['iddocumento']);
 	//$ruta_versiones = ruta_almacenamiento("versiones");
-    $ruta_versiones=RUTA_VERSIONES;	
+    $ruta_versiones=ruta_almacenamiento("pdf",0);
 
 	if(sizeof($documentos["anexos"])) {
 
