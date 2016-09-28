@@ -8,14 +8,14 @@ switch($_REQUEST["tipo"]){
     if($_REQUEST["proceso"]){
       $dato=$_REQUEST["proceso"];
       $condicion="(A.procesos_vinculados LIKE '".$dato.",%' OR A.procesos_vinculados LIKE '%,".$dato.",%' OR A.procesos_vinculados LIKE '%,".$dato."' OR A.procesos_vinculados LIKE '".$dato."') AND (B.tipo_plan LIKE '%2%' OR B.tipo_plan LIKE'%3%')";
-      listar_hallazgo_plan_mejoramiento(1,"",$condicion);
+      listar_hallazgo_plan_mejoramiento(379,"",$condicion);
     }
   break;
   case "3":
     if($_REQUEST["usuario"]){
       $dato=$_REQUEST["usuario"];
       $condicion="(A.responsables LIKE '".$dato.",%' OR A.responsables LIKE '%,".$dato.",%' OR A.responsables LIKE '%,".$dato."' OR A.responsables LIKE '".$dato."') ";
-      listar_hallazgo_plan_mejoramiento(1,"",$condicion);
+      listar_hallazgo_plan_mejoramiento(379,"",$condicion);
     }
     case "4":
       if($_REQUEST["proceso"]){
