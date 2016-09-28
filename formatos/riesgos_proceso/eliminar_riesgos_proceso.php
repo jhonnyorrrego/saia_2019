@@ -11,7 +11,7 @@ while($max_salida>0){
 include_once($ruta_db_superior."db.php");
 
 
-$idformato_riesgos_proceso=busca_filtro_tabla("idformato","formato","nombre='riesgos_proces'","",$conn);
+$idformato_riesgos_proceso=busca_filtro_tabla("idformato","formato","nombre='riesgos_proceso'","",$conn);
 $campo_area_responsable=busca_filtro_tabla("idcampos_formato","campos_formato","nombre='area_responsable' AND formato_idformato=".$idformato_riesgos_proceso[0]['idformato'],"",$conn);
 $campo_responsables=busca_filtro_tabla("idcampos_formato","campos_formato","nombre='responsables' AND formato_idformato=".$idformato_riesgos_proceso[0]['idformato'],"",$conn);
 ?>
