@@ -147,7 +147,9 @@ global $conn;
 function tipo_plan_plan_mejoramiento($idformato,$iddoc){
   global $conn;
   if($papa["numcampos"]){
-    echo('<td><input type="hidden" value="'.$papa[0]["tipo_plan"].'" name="tipo_plan">'.mostrar_valor_campo("tipo_plan",22,$_REQUEST["anterior"],1).'</td>');  
+    
+    $idformato_formato=busca_filtro_tabla("idformato","formato","nombre='formato'","",$conn);  
+    echo('<td><input type="hidden" value="'.$papa[0]["tipo_plan"].'" name="tipo_plan">'.mostrar_valor_campo("tipo_plan",$idformato_formato[0]['idformato'],$_REQUEST["anterior"],1).'</td>');  
   }
 }
 function radicado_plan_padre($idformato,$idcampo,$iddoc=NULL){
