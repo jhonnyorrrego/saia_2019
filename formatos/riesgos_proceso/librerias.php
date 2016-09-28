@@ -154,7 +154,8 @@ function acciones($id,$campo){
 			$texto.=ucfirst(strtolower($acciones[$i][$campo]));
 		}
 		else{
-			$texto.=mostrar_valor_campo($campo,174,$acciones[$i]["iddocumento"],1);
+		    $idformato_acciones_riesgo=busca_filtro_tabla("idformato","formato","nombre='acciones_riesgo'","",$conn);
+			$texto.=mostrar_valor_campo($campo,$idformato_acciones_riesgo[0]['idformato'],$acciones[$i]["iddocumento"],1);
 		}
 		if(($i+1)<$acciones["numcampos"])$texto.='<br><br>';
 	}
