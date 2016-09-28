@@ -22,8 +22,7 @@ function editar_documento_responsable_direccion_control_interno($idformato,$iddo
 	
 		$enlace = '<a href="'.$ruta_db_superior.'formatos/monitoreo_revision/editar_monitoreo_revision.php?iddoc='.$iddoc.'&idformato='.$idformato.'" >Editar monitoreo y revision</a>';					
 					
-		/*if(usuario_actual("funcionario_codigo") == $direccion_control_interno[0]["funcionario_codigo"]){								echo($enlace);					
-		}*/
+
 		$ejecutor=busca_filtro_tabla("ejecutor","documento","iddocumento=".$iddoc,"",$conn);
 	
 	$area=busca_filtro_tabla("b.area_responsable","ft_monitoreo_revision a, ft_riesgos_proceso b","a.ft_riesgos_proceso=b.idft_riesgos_proceso and a.documento_iddocumento=".$iddoc,"",$conn);  
