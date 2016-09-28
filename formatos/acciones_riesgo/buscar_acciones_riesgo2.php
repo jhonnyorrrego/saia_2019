@@ -1,4 +1,4 @@
-<?php include_once("../librerias/funciones_generales.php"); ?><?php include_once("../../calendario/calendario.php"); ?><?php include_once("../librerias/header_formato.php"); ?><legend id="label_formato" class="legend">B&uacute;squeda en formato 2. Acciones</legend><br /><br /><?php include_once("../librerias/funciones_generales.php"); ?><div class="control-group"><label class="string control-label" style="font-size:9pt" for="acciones_control"><b>Control<input type="hidden" name="bksaiacondicion_g@acciones_control" id="bksaiacondicion_g@acciones_control" value="like_total"></b></label><div class="controls"><?php genera_campo_listados_editar(395,4727,'',1,'buscar');?><div class="btn-group" data-toggle="buttons-radio" >
+<?php include_once("../librerias/funciones_generales.php"); ?><?php include_once("../../calendario/calendario.php"); ?><?php include_once("../librerias/header_formato.php"); ?><legend id="label_formato" class="legend">B&uacute;squeda en formato 2. Acciones</legend><br /><br /><?php include_once("../librerias/funciones_generales.php"); ?><div class="control-group"><label class="string control-label" style="font-size:9pt" for="acciones_control"><b>Control<input type="hidden" name="bksaiacondicion_g@acciones_control" id="bksaiacondicion_g@acciones_control" value="like_total"></b></label><div class="controls"><?php genera_campo_listados_editar(433,5385,'',1,'buscar');?><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_acciones_control',this.id)">
 		    Y
 		  </button>
@@ -14,7 +14,7 @@
 		    O
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_g@acciones_accion" id="bqsaiaenlace_g@acciones_accion" value="y" />
-		</div></div></div><div class="control-group"><label class="string control-label" style="font-size:9pt" for="opcio_admin_riesgo"><b>Opciones Administraci&oacute;n del Riesgo<input type="hidden" name="bksaiacondicion_g@opcio_admin_riesgo" id="bksaiacondicion_g@opcio_admin_riesgo" value="like_total"></b></label><div class="controls"><?php genera_campo_listados_editar(395,4730,'',1,'buscar');?><div class="btn-group" data-toggle="buttons-radio" >
+		</div></div></div><div class="control-group"><label class="string control-label" style="font-size:9pt" for="opcio_admin_riesgo"><b>Opciones Administraci&oacute;n del Riesgo<input type="hidden" name="bksaiacondicion_g@opcio_admin_riesgo" id="bksaiacondicion_g@opcio_admin_riesgo" value="like_total"></b></label><div class="controls"><?php genera_campo_listados_editar(433,5388,'',1,'buscar');?><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_g@opcio_admin_riesgo',this.id)">
 		    Y
 		  </button>

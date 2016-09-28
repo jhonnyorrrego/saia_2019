@@ -28,7 +28,7 @@
 		    O
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_g@nombre_riesgo" id="bqsaiaenlace_g@nombre_riesgo" value="y" />
-		</div></div></div><div class="control-group"><label class="string control-label" style="font-size:9pt" for="cambio_identificacion"><b>Se realizaron cambios en la identificacion del riesgo?<input type="hidden" name="bksaiacondicion_g@cambio_identificacion" id="bksaiacondicion_g@cambio_identificacion" value="="></b></label><div class="controls"><?php genera_campo_listados_editar(396,4745,'',1,'buscar');?><div class="btn-group" data-toggle="buttons-radio" >
+		</div></div></div><div class="control-group"><label class="string control-label" style="font-size:9pt" for="cambio_identificacion"><b>Se realizaron cambios en la identificacion del riesgo?<input type="hidden" name="bksaiacondicion_g@cambio_identificacion" id="bksaiacondicion_g@cambio_identificacion" value="="></b></label><div class="controls"><?php genera_campo_listados_editar(435,5425,'',1,'buscar');?><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_g@cambio_identificacion',this.id)">
 		    Y
 		  </button>
@@ -44,7 +44,7 @@
 		    O
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_g@descripcion_cambio" id="bqsaiaenlace_g@descripcion_cambio" value="y" />
-		</div></div></div><div class="control-group"><label class="string control-label" style="font-size:9pt" for="cambios_analisis"><b>Se realizaron cambios en el an&aacute;lisis del riesgo?<input type="hidden" name="bksaiacondicion_g@cambios_analisis" id="bksaiacondicion_g@cambios_analisis" value="="></b></label><div class="controls"><?php genera_campo_listados_editar(396,4747,'',1,'buscar');?><div class="btn-group" data-toggle="buttons-radio" >
+		</div></div></div><div class="control-group"><label class="string control-label" style="font-size:9pt" for="cambios_analisis"><b>Se realizaron cambios en el an&aacute;lisis del riesgo?<input type="hidden" name="bksaiacondicion_g@cambios_analisis" id="bksaiacondicion_g@cambios_analisis" value="="></b></label><div class="controls"><?php genera_campo_listados_editar(435,5427,'',1,'buscar');?><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_g@cambios_analisis',this.id)">
 		    Y
 		  </button>
@@ -92,7 +92,7 @@
 		    O
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_g@logros_alcanzados" id="bqsaiaenlace_g@logros_alcanzados" value="y" />
-		</div></div></div><div class="control-group"><label class="string control-label" style="font-size:9pt" for="controles_nuevos"><b>Se implementaron nuevos controles?<input type="hidden" name="bksaiacondicion_g@controles_nuevos" id="bksaiacondicion_g@controles_nuevos" value="="></b></label><div class="controls"><?php genera_campo_listados_editar(396,4753,'',1,'buscar');?><div class="btn-group" data-toggle="buttons-radio" >
+		</div></div></div><div class="control-group"><label class="string control-label" style="font-size:9pt" for="controles_nuevos"><b>Se implementaron nuevos controles?<input type="hidden" name="bksaiacondicion_g@controles_nuevos" id="bksaiacondicion_g@controles_nuevos" value="="></b></label><div class="controls"><?php genera_campo_listados_editar(435,5433,'',1,'buscar');?><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_g@controles_nuevos',this.id)">
 		    Y
 		  </button>
