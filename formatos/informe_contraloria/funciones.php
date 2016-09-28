@@ -364,8 +364,9 @@ function auditoria_hallazgos($idformato, $iddoc) {
 
 	$hallazgos = busca_filtro_tabla("", "ft_hallazgo a, documento b", "a.documento_iddocumento=b.iddocumento and b.estado not in ('ELIMINADO','ANULADO') and ft_plan_mejoramiento=" . $plan[0]["idft_plan_mejoramiento"], "", $conn);
 	$auditado = array();
+	$idformato_hallazgo_plan_mejoramiento=busca_filtro_tabla("idformato","formato","nombre='hallazgo_plan_mejoramiento'","",$conn);
 	for ($i = 0; $i < $hallazgos["numcampos"]; $i++) {
-		$auditado[] = procesos_vinculados_funcion(2, $hallazgos[$i]["documento_iddocumento"], 1);
+		$auditado[] = procesos_vinculados_funcion($idformato_hallazgo_plan_mejoramiento[0]['idformato'], $hallazgos[$i]["documento_iddocumento"], 1);
 	}
 
 	$datos = array_unique($auditado);
