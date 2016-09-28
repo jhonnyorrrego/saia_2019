@@ -22,22 +22,15 @@ function editar_documento_responsable_direccion_control_interno($idformato,$iddo
 	
 		$enlace = '<a href="'.$ruta_db_superior.'formatos/monitoreo_revision/editar_monitoreo_revision.php?iddoc='.$iddoc.'&idformato='.$idformato.'" >Editar monitoreo y revision</a>';					
 					
-		/*if(usuario_actual("funcionario_codigo") == $direccion_control_interno[0]["funcionario_codigo"]){								echo($enlace);					
-		}*/
+
 		$ejecutor=busca_filtro_tabla("ejecutor","documento","iddocumento=".$iddoc,"",$conn);
 	
 	$area=busca_filtro_tabla("b.area_responsable","ft_monitoreo_revision a, ft_riesgos_proceso b","a.ft_riesgos_proceso=b.idft_riesgos_proceso and a.documento_iddocumento=".$iddoc,"",$conn);  
   $funcionario=busca_filtro_tabla("funcionario_codigo","vfuncionario_dc","iddependencia in (".$area[0]["area_responsable"].")","group by funcionario_codigo",$conn);
 	
-	if(usuario_actual("login")=="ximena"){
+
 	  	echo($enlace);
-  	}/*else{
-		for ($i=0; $i <$funcionario["numcampos"] ; $i++) {
-			if(usuario_actual("funcionario_codigo")==$funcionario[$i]["funcionario_codigo"]){
-				echo($enlace);
-			}		
-	  	}
-	 }*/
+
 	}	
 }
 
@@ -53,10 +46,7 @@ function obtener_numero_riesgo($idformato, $iddoc){
 		
 		$direccion_control_interno = busca_filtro_tabla("nombres, apellidos, funcionario_codigo","vfuncionario_dc","lower(cargo) like'profesional%universitario%grado%22' and lower(dependencia) like'direccion%control%interno' and estado=1 and estado_dep=1 and estado_dc=1","",$conn);			
 		
-		/*if(usuario_actual("funcionario_codigo") != $direccion_control_interno[0]["funcionario_codigo"] && $datos_documento["estado"] == "APROBADO"){		
-			alerta("El formato 'Monitoreo y Revisión' solo puede ser editado por ".$direccion_control_interno[0]["nombres"]." ".$direccion_control_interno[0]["apellidos"]);
-			volver(1);			
-		}*/		
+	
 	}	
 	
 	echo("<td><input type='text' name='numero_riesgo' id='numero_riesgo' value='".$riesgo[0]["consecutivo"]."' readonly></td>");	

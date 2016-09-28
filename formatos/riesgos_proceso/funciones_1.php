@@ -44,6 +44,7 @@ function probabilidad_nueva($idformato,$iddoc){
 }
 function ultimas_politicas($idformato,$iddoc){
   global $conn;
+  $idformato_riesgos_proceso=busca_filtro_tabla("idformato","formato","nombre='riesgos_proceso'","",$conn);
   $riesgo=busca_filtro_tabla("","ft_riesgos_proceso","documento_iddocumento=$iddoc","",$conn); 
   /* $seguimiento=busca_filtro_tabla("b.*","ft_seguimiento_riesgo b,documento c","b.ft_riesgos_proceso=".$riesgo[0]["idft_riesgos_proceso"]." AND b.documento_iddocumento=c.iddocumento and c.estado<>'ELIMINADO'","iddocumento desc",$conn);
   if($seguimiento["numcampos"])
@@ -53,7 +54,7 @@ function ultimas_politicas($idformato,$iddoc){
      $cronograma=$seguimiento[0]["cronograma"];
     }  
   else */
-    {$manejo=mostrar_valor_campo('opciones_manejo',13,$iddoc,1);
+    {$manejo=mostrar_valor_campo('opciones_manejo',$idformato_riesgos_proceso[0]['idformato'],$iddoc,1);
      $acciones=$riesgo[0]["acciones"];
      $indicador=$riesgo[0]["indicador"];
      $cronograma=$riesgo[0]["cronograma"];
@@ -63,10 +64,15 @@ function ultimas_politicas($idformato,$iddoc){
        <td>$manejo</td></tr>
        <tr><td class=encabezado>Acciones</td><td>$acciones</td></tr>
        <tr><td class=encabezado>Responsables</td><td>");
-  if($seguimiento["numcampos"])
-     listar_funcionarios(14,"responsables",$seguimiento[0]["documento_iddocumento"]);
-  else
-     listar_funcionarios(13,"responsables",$iddoc);   
+  if($seguimiento["numcampos"]){
+     $idformato_seguimiento_riesgo=busca_filtro_tabla("idformato","formato","nombre='seguimiento_riesgo'","",$conn);
+     listar_funcionarios($idformato_seguimiento_riesgo[0]['idformato'],"responsables",$seguimiento[0]["documento_iddocumento"]);      
+  }else{
+      listar_funcionarios($idformato_riesgos_proceso[0]['idformato'],"responsables",$iddoc);   
+  }
+
+
+       
   echo htmlspecialchars_decode("</td></tr>
        <tr><td class=encabezado>Indicador</td><td>$indicador</td></tr>
        <tr><td class=encabezado>Cronograma</td><td>$cronograma</td></tr>

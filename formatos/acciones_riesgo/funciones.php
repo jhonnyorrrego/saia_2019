@@ -198,7 +198,10 @@ function botones_acciones_riesgos($idformato, $iddoc){
           iddocumento: '<?php echo($iddoc); ?>'      
         },
         success: function(){
-         window.open("<?php echo($ruta_db_superior);?>/formatos/riesgos_proceso/mostrar_riesgos_proceso.php?iddoc=<?php echo($riesgo[0]["documento_iddocumento"]); ?>&idformato=13","_self");
+            
+            <?php $idformato_riesgos_proceso=busca_filtro_tabla("idformato","formato","nombre='riesgos_proceso'","",$conn);  ?>
+            
+         window.open("<?php echo($ruta_db_superior);?>/formatos/riesgos_proceso/mostrar_riesgos_proceso.php?iddoc=<?php echo($riesgo[0]["documento_iddocumento"]); ?>&idformato=<?php echo($idformato_riesgos_proceso[0]['idformato']); ?>","_self");
          
           //redireccion: /formatos/riesgos_proceso/mostrar_riesgos_proceso.php?iddoc=116877&idformato=13
         }

@@ -42,7 +42,10 @@ function actualizar_estado(tipo,documento_estado){
             $("#estado_aprobado").empty();
             $("#estado_aprobado").append(datos);
           }
-          window.open("mostrar_plan_mejoramiento.php?idformato=1&iddoc="+documento_estado,"_self");
+          
+          <?php $idformato_plan_mejoramiento=busca_filtro_tabla("idformato","formato","nombre='plan_mejoramiento'","",$conn); ?>
+          
+          window.open("mostrar_plan_mejoramiento.php?idformato=<?php echo($idformato_plan_mejoramiento[0]['idformato']); ?>&iddoc="+documento_estado,"_self");
       }
     });
 }
@@ -212,7 +215,7 @@ function editar_plan($idformato,$iddoc){
     <script>
     $().ready(function() {
    	$('#link_editar').click(function(){
-       window.location="<?php echo $formato[0]['ruta_editar'].'?idformato=$idformato&iddoc='.$iddoc; ?>";
+       window.location="<?php echo $formato[0]['ruta_editar'].'?idformato='.$idformato.'&iddoc='.$iddoc; ?>";
      })
     });
     </script>
@@ -306,7 +309,9 @@ function listar_hallazgo_plan_mejoramiento($idformato,$iddoc,$condicion=""){
       <td align="center" valign="middle"><a href="archivo_plano_contraloria.php?iddoc='.$iddoc.'" target="_blank">Archivo Contralor&iacute;a</a></td>';
 	  
       if(strpos($_SERVER["PHP_SELF"],"informe_contraloria")){
-        $texto_enlaces.='<td align="center"><a href="../../html2ps/public_html/demo/html2ps.php?plantilla=informe_contraloria&papel=Legal&orientacion=1&font_size=5&iddoc='.$_REQUEST["iddoc"].'&tipo_impresion=3&tipo=2&idformato=8" target="_blank">Seguimiento 23A</a></td>';
+          
+          $idformato_informe_contraloria=busca_filtro_tabla("idformato","formato","nombre='informe_contraloria'","",$conn);
+        $texto_enlaces.='<td align="center"><a href="../../html2ps/public_html/demo/html2ps.php?plantilla=informe_contraloria&papel=Legal&orientacion=1&font_size=5&iddoc='.$_REQUEST["iddoc"].'&tipo_impresion=3&tipo=2&idformato='.$idformato_informe_contraloria[0]['idformato'].'" target="_blank">Seguimiento 23A</a></td>';
       }
       $texto_enlaces.='</tr></table>';
     }

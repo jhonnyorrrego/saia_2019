@@ -20,8 +20,8 @@ function obtener_enlace_mejoramiento($iddocumento,$numero){
 
 
 function mostrar_estado_plan($estado,$iddocumento){
-	
-	$estado=mostrar_valor_campo('estado_plan_mejoramiento',1,$iddocumento,1);
+	$idformato_plan_mejoramiento=busca_filtro_tabla("idformato","formato","nombre='plan_mejoramiento'","",$conn);
+	$estado=mostrar_valor_campo('estado_plan_mejoramiento',$idformato_plan_mejoramiento[0]['idformato'],$iddocumento,1);
  	if($estado==''){
  		$estado='Pendiente por Aprobar';
  	}
