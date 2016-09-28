@@ -108,7 +108,7 @@ $tabla .='
 							$tabla.='</td>
 							<td style="text-align:left;" colspan="2">';
 							for($j=0;$j<$valoracion['numcampos'];$j++){
-								$tabla.='<b>1. Posee una herramienta para ejercer el control?</b>: '.mostrar_valor_campo('herramienta_ejercer',394,$valoracion[$j]['documento_iddocumento'],1).' 
+								$tabla.='<b>1. Posee una herramienta para ejercer el control?</b>: '.mostrar_valor_campo('herramienta_ejercer',$idformato_control_riesgos[0]['idformato'],$valoracion[$j]['documento_iddocumento'],1).' 
 								<b>2. Existen manuales, instructivos o procedimientos para el manejo de la herramienta?</b>: '.mostrar_valor_campo('procedimiento_herramienta',$idformato_control_riesgos[0]['idformato'],$valoracion[$j]['documento_iddocumento'],1).' 
 								<b>3. En el tiempo que lleva la herramienta, ha demostrado ser efectiva?</b>: '.mostrar_valor_campo('herramienta_efectiva',$idformato_control_riesgos[0]['idformato'],$valoracion[$j]['documento_iddocumento'],1);
 							}
