@@ -49,6 +49,9 @@ if(@$_REQUEST["tipo"] != 5 && !@$proceso[0]['idft_proceso'] && !@$_REQUEST["exce
     <img src="'.$ruta_db_superior.'enlaces/imprimir.gif" height="30" width="30" border="0">
    </a>';
 }
+$idformato_riesgos_proceso=busca_filtro_tabla("idformato","formato","nombre='riesgos_proceso'","",$conn);
+$idformato_control_riesgos=busca_filtro_tabla("idformato","formato","nombre='control_riesgos'","",$conn);
+$idformato_acciones_riesgo=busca_filtro_tabla("idformato","formato","nombre='acciones_riesgo'","",$conn);
 
 $tabla .='
 			<table style="border-collapse: collapse; width:150%; max-width:150%" border="1" cellspacing="15">				
@@ -97,7 +100,7 @@ $tabla .='
 							<td>'.strip_tags(utf8_encode(html_entity_decode($riesgos[$i]['fuente_causa']))).'</td>
 							<td>'.$riesgos[$i]['consecutivo'].'</td>
 							<td>'.utf8_encode(html_entity_decode($riesgos[$i]['riesgo'])).'</td>
-							<td>'.mostrar_valor_campo('probabilidad',393,$riesgos[$i]['documento_iddocumento'],1).'</td>
+							<td>'.mostrar_valor_campo('probabilidad',$idformato_riesgos_proceso[0]['idformato'],$riesgos[$i]['documento_iddocumento'],1).'</td>
 							<td style="text-align:left;">';
 							for($j=0;$j<$valoracion['numcampos'];$j++){
 								$tabla .= ''.strip_tags(html_entity_decode($valoracion[$j]['descripcion_control'])).'';
@@ -106,14 +109,14 @@ $tabla .='
 							<td style="text-align:left;" colspan="2">';
 							for($j=0;$j<$valoracion['numcampos'];$j++){
 								$tabla.='<b>1. Posee una herramienta para ejercer el control?</b>: '.mostrar_valor_campo('herramienta_ejercer',394,$valoracion[$j]['documento_iddocumento'],1).' 
-								<b>2. Existen manuales, instructivos o procedimientos para el manejo de la herramienta?</b>: '.mostrar_valor_campo('procedimiento_herramienta',394,$valoracion[$j]['documento_iddocumento'],1).' 
-								<b>3. En el tiempo que lleva la herramienta, ha demostrado ser efectiva?</b>: '.mostrar_valor_campo('herramienta_efectiva',394,$valoracion[$j]['documento_iddocumento'],1);
+								<b>2. Existen manuales, instructivos o procedimientos para el manejo de la herramienta?</b>: '.mostrar_valor_campo('procedimiento_herramienta',$idformato_control_riesgos[0]['idformato'],$valoracion[$j]['documento_iddocumento'],1).' 
+								<b>3. En el tiempo que lleva la herramienta, ha demostrado ser efectiva?</b>: '.mostrar_valor_campo('herramienta_efectiva',$idformato_control_riesgos[0]['idformato'],$valoracion[$j]['documento_iddocumento'],1);
 							}
 							$tabla.='</td>
 							<td style="text-align:left;">';
 							for($j=0;$j<$acciones['numcampos'];$j++){
 								if($acciones[$j]['opcio_admin_riesgo']!=""){
-									$tabla.=mostrar_valor_campo('opcio_admin_riesgo',395,$acciones[$j]['documento_iddocumento'],1);
+									$tabla.=mostrar_valor_campo('opcio_admin_riesgo',$idformato_acciones_riesgo[0]['idformato'],$acciones[$j]['documento_iddocumento'],1);
 									//$tabla.=$acciones[$j]['opcio_admin_riesgo'];
 								}
 							}
