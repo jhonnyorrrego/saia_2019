@@ -47,10 +47,7 @@ function obtener_numero_riesgo($idformato, $iddoc){
 		
 		$direccion_control_interno = busca_filtro_tabla("nombres, apellidos, funcionario_codigo","vfuncionario_dc","lower(cargo) like'profesional%universitario%grado%22' and lower(dependencia) like'direccion%control%interno' and estado=1 and estado_dep=1 and estado_dc=1","",$conn);			
 		
-		/*if(usuario_actual("funcionario_codigo") != $direccion_control_interno[0]["funcionario_codigo"] && $datos_documento["estado"] == "APROBADO"){		
-			alerta("El formato 'Monitoreo y Revisión' solo puede ser editado por ".$direccion_control_interno[0]["nombres"]." ".$direccion_control_interno[0]["apellidos"]);
-			volver(1);			
-		}*/		
+	
 	}	
 	
 	echo("<td><input type='text' name='numero_riesgo' id='numero_riesgo' value='".$riesgo[0]["consecutivo"]."' readonly></td>");	
