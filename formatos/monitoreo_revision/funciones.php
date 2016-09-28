@@ -29,15 +29,9 @@ function editar_documento_responsable_direccion_control_interno($idformato,$iddo
 	$area=busca_filtro_tabla("b.area_responsable","ft_monitoreo_revision a, ft_riesgos_proceso b","a.ft_riesgos_proceso=b.idft_riesgos_proceso and a.documento_iddocumento=".$iddoc,"",$conn);  
   $funcionario=busca_filtro_tabla("funcionario_codigo","vfuncionario_dc","iddependencia in (".$area[0]["area_responsable"].")","group by funcionario_codigo",$conn);
 	
-	if(usuario_actual("login")=="ximena"){
+
 	  	echo($enlace);
-  	}/*else{
-		for ($i=0; $i <$funcionario["numcampos"] ; $i++) {
-			if(usuario_actual("funcionario_codigo")==$funcionario[$i]["funcionario_codigo"]){
-				echo($enlace);
-			}		
-	  	}
-	 }*/
+
 	}	
 }
 
