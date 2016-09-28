@@ -260,7 +260,7 @@ function editar_hallazgo($idformato, $iddoc) {
 	    <script>
 	    $(document).ready(function() {
 		   	$('#link_editar').click(function(){
-		       window.location="<?php echo $formato[0]['ruta_editar'].'?idformato=$idformato&iddoc='.$iddoc; ?>";
+		       window.location="<?php echo $formato[0]['ruta_editar'].'?idformato='.$idformato.'&iddoc='.$iddoc; ?>";
 		     })
 		    $('#link_eliminar').click(function(){
 		       window.location="../../documento_borrar.php?iddoc=<?php echo $iddoc;?>";
