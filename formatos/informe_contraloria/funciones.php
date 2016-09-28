@@ -24,16 +24,16 @@ global $conn,$ruta_db_superior;
 	if($_REQUEST["iddoc"]){
 		$opt=1;
 		if(!$funcionario['numcampos'] && $_SESSION["LOGIN"]!="0k"){
-			notificaciones("<b>El formato solo se puede editar por los funcionario de la<br />dependencia de Direcci&oacute;n de Control Interno</b>","warning",11500);
-			volver(1);
-			die();
+			//notificaciones("<b>El formato solo se puede editar por los funcionario de la<br />dependencia de Direcci&oacute;n de Control Interno</b>","warning",11500);
+			//volver(1);
+			//die();
 		}
 	}else{
 		$opt=0;
 		if(!$funcionario['numcampos']){
-			notificaciones("<b>El formato solo se puede diligenciar por los funcionario de la<br />dependencia de Direcci&oacute;n de Control Interno</b>","warning",11500);
-			volver(1);
-			die();
+		//	notificaciones("<b>El formato solo se puede diligenciar por los funcionario de la<br />dependencia de Direcci&oacute;n de Control Interno</b>","warning",11500);
+		//	volver(1);
+		//	die();
 		}
 		$datos=auditoria_hallazgos($idformato, $iddoc);
 	}
@@ -182,7 +182,9 @@ function listar_hallazgo_informe($idformato, $iddoc, $condicion = "") {
 
 					//fin condicion encabezado
 					$texto .= '<td style="font-size: 8pt;" class="transparente" >' . strip_tags(str_replace("&nbsp;", " ", mostrar_valor_campo("accion_mejoramiento", $formato_hallazgo[0]["idformato"], $hallazgos[$i]["hallazgo_iddoc"], 1))) . '</td>';
-					$texto .= '<td style="font-size: 8pt;" class="transparente" >' . strip_tags(mostrar_seleccionados(2, 63, 0, $hallazgos[$i]["hallazgo_iddoc"], 1)) . '</td>';
+					$idformato_hallazgo_plan_mejoramiento = busca_filtro_tabla("idformato","formatos","nombre='hallazgo_plan_mejoramiento'","",$conn);
+					$campo_responsables=busca_filtro_tabla("idcampos_formato","campos_formato","nombre='responsables' AND formato_idformato=".$idformato_hallazgo_plan_mejoramiento[0]['idformato'],"",$conn);
+					$texto .= '<td style="font-size: 8pt;" class="transparente" >' . strip_tags(mostrar_seleccionados($idformato_hallazgo_plan_mejoramiento[0]['idformato'], $campo_responsables[0]['idcampos_formato'], 0, $hallazgos[$i]["hallazgo_iddoc"], 1)) . '</td>';
 					$texto .= '<td  style="font-size: 8pt;" class="transparente" align="center">' . strip_tags(mostrar_valor_campo("tiempo_cumplimiento", $formato_hallazgo[0]["idformato"], $hallazgos[$i]["hallazgo_iddoc"], 1)) . '</td>';
 
 					$texto .= '<td style="font-size: 8pt;" class="transparente">' . strip_tags(mostrar_valor_campo("indicador_cumplimiento", $formato_hallazgo[0]["idformato"], $hallazgos[$i]["hallazgo_iddoc"], 1)) . '</td>';
