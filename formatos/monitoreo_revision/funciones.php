@@ -138,12 +138,12 @@ function obtener_acciones_propuestas_riesgo($idformato, $iddoc){
 	global $conn;
 	
 	if($_REQUEST["anterior"]){
-		$acciones_riesgos = busca_filtro_tabla("c.idft_ft_acciones_riesgo, c.acciones_accion","ft_riesgos_proceso a, documento b, ft_ft_acciones_riesgo c, documento d","a.idft_riesgos_proceso=c.ft_riesgos_proceso and a.documento_iddocumento=b.iddocumento and c.documento_iddocumento=d.iddocumento and lower(d.estado) not in('eliminado','anulado') and a.documento_iddocumento=".$_REQUEST["anterior"],"c.acciones_accion desc",$conn);
+		$acciones_riesgos = busca_filtro_tabla("c.idft_acciones_riesgo, c.acciones_accion","ft_riesgos_proceso a, documento b, ft_acciones_riesgo c, documento d","a.idft_riesgos_proceso=c.ft_riesgos_proceso and a.documento_iddocumento=b.iddocumento and c.documento_iddocumento=d.iddocumento and lower(d.estado) not in('eliminado','anulado') and a.documento_iddocumento=".$_REQUEST["anterior"],"c.acciones_accion desc",$conn);
 	}elseif($_REQUEST["iddoc"]){
 		$cumplimiento_acciones = busca_filtro_tabla("acciones_propuestas","ft_monitoreo_revision","documento_iddocumento=".$_REQUEST["iddoc"],"",$conn);	
 		$cumplimiento_acciones = (array) json_decode(html_entity_decode($cumplimiento_acciones[0]["acciones_propuestas"]));	
 		
-		$acciones_riesgos = busca_filtro_tabla("d.idft_ft_acciones_riesgo, d.acciones_accion","ft_riesgos_proceso a, documento b, ft_monitoreo_revision c, ft_ft_acciones_riesgo d, documento e","a.documento_iddocumento=b.iddocumento and a.idft_riesgos_proceso=c.ft_riesgos_proceso and a.idft_riesgos_proceso=d.ft_riesgos_proceso and d.documento_iddocumento=e.iddocumento and lower(e.estado) not in('eliminado','anulado') and c.documento_iddocumento=".$_REQUEST["iddoc"],"d.acciones_accion desc",$conn);
+		$acciones_riesgos = busca_filtro_tabla("d.idft_acciones_riesgo, d.acciones_accion","ft_riesgos_proceso a, documento b, ft_monitoreo_revision c, ft_acciones_riesgo d, documento e","a.documento_iddocumento=b.iddocumento and a.idft_riesgos_proceso=c.ft_riesgos_proceso and a.idft_riesgos_proceso=d.ft_riesgos_proceso and d.documento_iddocumento=e.iddocumento and lower(e.estado) not in('eliminado','anulado') and c.documento_iddocumento=".$_REQUEST["iddoc"],"d.acciones_accion desc",$conn);
 	}
 
 	$div ="<table class='acciones_propuestas' border='0' style='border-collapse:collapse;'>";
@@ -152,8 +152,8 @@ function obtener_acciones_propuestas_riesgo($idformato, $iddoc){
 					<tr id='".$acciones_riesgos[$i]["idft_control_riesgos"]."'>
 						<td>".strip_tags(utf8_encode(html_entity_decode($acciones_riesgos[$i]["acciones_accion"])))."</td>
 						<td>
-							&nbsp;&nbsp;Si <input type='radio' id='".$acciones_riesgos[$i]["idft_ft_acciones_riesgo"]."' name='".$acciones_riesgos[$i]["idft_ft_acciones_riesgo"]."' value='1'>
-							No <input type='radio' id='".$acciones_riesgos[$i]["idft_ft_acciones_riesgo"]."' name='".$acciones_riesgos[$i]["idft_ft_acciones_riesgo"]."' value='0'>
+							&nbsp;&nbsp;Si <input type='radio' id='".$acciones_riesgos[$i]["idft_acciones_riesgo"]."' name='".$acciones_riesgos[$i]["idft_acciones_riesgo"]."' value='1'>
+							No <input type='radio' id='".$acciones_riesgos[$i]["idft_acciones_riesgo"]."' name='".$acciones_riesgos[$i]["idft_acciones_riesgo"]."' value='0'>
 						</td>
 					</tr>
 			   "; 
@@ -241,7 +241,7 @@ function mostrar_acciones_propuestas_riesgo($idformato, $iddoc){
 	
 	$cumplimiento_acciones = json_decode(html_entity_decode($cumplimiento_acciones[0]["acciones_propuestas"]));	
 	
-	$acciones_riesgos = busca_filtro_tabla("d.idft_ft_acciones_riesgo, d.acciones_accion","ft_riesgos_proceso a, documento b, ft_monitoreo_revision c, ft_ft_acciones_riesgo d, documento e","a.documento_iddocumento=b.iddocumento and a.idft_riesgos_proceso=c.ft_riesgos_proceso and a.idft_riesgos_proceso=d.ft_riesgos_proceso and d.documento_iddocumento=e.iddocumento and lower(e.estado) not in('eliminado','anulado') and c.documento_iddocumento=".$iddoc,"",$conn);	
+	$acciones_riesgos = busca_filtro_tabla("d.idft_acciones_riesgo, d.acciones_accion","ft_riesgos_proceso a, documento b, ft_monitoreo_revision c, ft_acciones_riesgo d, documento e","a.documento_iddocumento=b.iddocumento and a.idft_riesgos_proceso=c.ft_riesgos_proceso and a.idft_riesgos_proceso=d.ft_riesgos_proceso and d.documento_iddocumento=e.iddocumento and lower(e.estado) not in('eliminado','anulado') and c.documento_iddocumento=".$iddoc,"",$conn);	
 	
 	$tabla ="<table border='1' style='border-collapse:collapse; width:100%;'>";
 	for ($i=0; $i < $acciones_riesgos["numcampos"]; $i++) { 
@@ -250,7 +250,7 @@ function mostrar_acciones_propuestas_riesgo($idformato, $iddoc){
 						<td style='width: 305px;'>".strip_tags(utf8_encode(html_entity_decode($acciones_riesgos[$i]["acciones_accion"])))."</td>
 						<td>
 				  ";
-				switch ($cumplimiento_acciones->$acciones_riesgos[$i]["idft_ft_acciones_riesgo"]) {
+				switch ($cumplimiento_acciones->$acciones_riesgos[$i]["idft_acciones_riesgo"]) {
 				  case 1:
 					 $tabla .= "Si"; 
 				  break;
