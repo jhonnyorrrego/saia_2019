@@ -51,7 +51,7 @@ echo(librerias_arboles());
 		 	$("#formulario_formatos").submit(function(){		 		
 
 		 		$.ajax({
-		 			url: '<?php echo($ruta_db_superior); ?>formatos/hallazgo_plan_mejoramiento/modificar_funcionario.php',
+		 			url: '<?php echo($ruta_db_superior); ?>formatos/hallazgo/modificar_funcionario.php',
 					type: 'POST',
 					dataType: 'html',
 					data: $(this).serialize(),
