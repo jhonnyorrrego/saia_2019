@@ -384,7 +384,7 @@ if(isset($_REQUEST["tipo_impresion"])&&$_REQUEST["tipo_impresion"]==1)
         $texto.='<td class="transparente" >'.strip_tags(mostrar_valor_campo("observaciones",$formato_hallazgo[0]["idformato"],$hallazgos[$i]["hallazgo_iddoc"],1)).'</td>';
         //condicion de encabezado
         if($seguimiento["numcampos"] && isset($_REQUEST["tipo_impresion"])&&$_REQUEST["tipo_impresion"]==3){
-            $idformato_seguimiento=busca_filtro_tabla("idformato","formato"," nombre='seguimiento_plan_mejoramiento' ","",$conn);
+            $idformato_seguimiento=busca_filtro_tabla("idformato","formato"," nombre='seguimiento' ","",$conn);
            $texto.='<td class="transparente">'.mostrar_valor_campo('logros_alcanzados',$idformato_seguimiento[0]['idformato'],$seguimiento[$a]["documento_iddocumento"],1).'</td><td class="transparente" align="center" ><a href="../plan_mejoramiento/seguimiento_list.php?idhallazgo='.$hallazgos[$i]["idft_hallazgo"].'" class="highslide" onclick="return hs.htmlExpand(this, { objectType: '."'".'iframe'."'".',width: 400, height:250 } )">'.$seguimiento[$a]["total_porcentaje"].'%</a></td>';
         }
         $texto.='</tr>';
