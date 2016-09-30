@@ -44,7 +44,7 @@ echo(estilo_bootstrap());
 				<option value="">Seleccione..</option>
 				<option value="ft_riesgos_proceso">Riesgos</option>
 					<option value="ft_control_riesgos">Valoracion Controles Riesgos</option>
-					<option value="ft_ft_acciones_riesgo">Acciones</option>
+					<option value="ft_acciones_riesgo">Acciones</option>
 					<option value="ft_monitoreo_revision">Monitoreo y Revision</option>
 				
 			</select>
