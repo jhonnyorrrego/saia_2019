@@ -2317,6 +2317,7 @@ if($temp["numcampos"]==0)
 else {
 $dorig=$temp[0]['idfuncionario'];
 $datorig=busca_filtro_tabla("d.*,c.*,f.*,f.estado AS estado_f,d.estado AS estado_d","dependencia_cargo d, cargo c, funcionario f","d.funcionario_idfuncionario=f.idfuncionario AND c.idcargo=d.cargo_idcargo AND f.idfuncionario='".$dorig."'","f.estado ASC",$conn);
+print_r($datorig);
 }
 }
 else if($tipo=="cargo" || $tipo==4){
