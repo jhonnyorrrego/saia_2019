@@ -13,7 +13,7 @@ $max_salida--;
 }
 include_once($ruta_db_superior."db.php");
 
-	$acciones=busca_filtro_tabla(fecha_db_obtener('d.fecha','Y-m-d')."as fecha, TO_DATE(TO_CHAR(a.fecha_cumplimiento,'YYYY-MM-DD'),'YYYY-MM-DD')-TO_DATE('".date('Y-m-d')."','YYYY-MM-DD') as resta, a.reponsables, d.numero, a.ft_riesgos_proceso,a.acciones_accion","ft_ft_acciones_riesgo a, documento d","a.documento_iddocumento=d.iddocumento and d.estado not in ('ANULADO','ELIMINADO','ACTIVO')","",$conn);
+	$acciones=busca_filtro_tabla(fecha_db_obtener('d.fecha','Y-m-d')."as fecha, TO_DATE(TO_CHAR(a.fecha_cumplimiento,'YYYY-MM-DD'),'YYYY-MM-DD')-TO_DATE('".date('Y-m-d')."','YYYY-MM-DD') as resta, a.reponsables, d.numero, a.ft_riesgos_proceso,a.acciones_accion","ft_acciones_riesgo a, documento d","a.documento_iddocumento=d.iddocumento and d.estado not in ('ANULADO','ELIMINADO','ACTIVO')","",$conn);
 
 	if($acciones['numcampos']){
 		
