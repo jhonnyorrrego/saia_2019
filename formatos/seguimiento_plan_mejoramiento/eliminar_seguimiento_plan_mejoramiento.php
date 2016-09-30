@@ -1,4 +1,4 @@
-<link type="text/css" rel="stylesheet" media="screen" href="../librerias/estilo.css"><?php $idformato=24 ?><?php include_once("../hallazgo_plan_mejoramiento/funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("../librerias/funciones_generales.php"); ?><?php include_once("../librerias/funciones_eliminar.php"); ?><?php include_once("../librerias/header.php"); ?><?php include_once("../../class_transferencia.php"); ?><tr><td><p>&nbsp;</p>
+<link type="text/css" rel="stylesheet" media="screen" href="../librerias/estilo.css"><?php $idformato=24 ?><?php include_once("../hallazgo/funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("../librerias/funciones_generales.php"); ?><?php include_once("../librerias/funciones_eliminar.php"); ?><?php include_once("../librerias/header.php"); ?><?php include_once("../../class_transferencia.php"); ?><tr><td><p>&nbsp;</p>
 <table border="1" width="100%" cellspacing="0" class="tabla_borde">
 <tbody>
 <tr>
