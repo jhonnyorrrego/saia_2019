@@ -15,7 +15,7 @@ else
 $imagenes="";
 $texto="<?xml version=\"1.0\" encoding=\"UTF-8\"?".">";
 include_once("../librerias/funciones_generales.php");
-$formatos_calidad=array('ft_proceso','ft_riesgos_proceso','ft_seguimiento_riesgo','ft_control_riesgos', 'ft_ft_acciones_riesgo','ft_contexto_extrategico','ft_monitoreo_revision');
+$formatos_calidad=array('ft_proceso','ft_riesgos_proceso','ft_seguimiento_riesgo','ft_control_riesgos', 'ft_acciones_riesgo','ft_contexto_extrategico','ft_monitoreo_revision');
 
 $id = @$_GET["id"];
 //print_r($id);
