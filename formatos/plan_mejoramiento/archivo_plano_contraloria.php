@@ -24,7 +24,7 @@ if($_REQUEST["iddoc"]){
     $texto.='(N) Numero,(C) Clase De Observacion,(C) Descripcion Observacion Formulada Por La Cgr,(C) Areas Ciclos O Procesos Involucrados,(C) Acciones De Mejoramiento,(C) Responsable Del Mejoramiento,(F) Tiempo Programado Para El Cumplimiento De Las Acciones De Mejoramiento,(C) Mecanismo De Seguimiento Interno Adoptado Por La Entidad (Actividad),(C) Mecanismo De Seguimiento Interno Adoptado Por La Entidad (Tiempo),(C) Responsable Del Seguimiento Por La Entidad,(C) Indicador De Accion De Cumplimiento,(C) Observaciones'."\n";
     $numcols=count($nom_col);
     
-    $idformato_hallazgo_plan_mejoramiento=busca_filtro_tabla("idformato","formato","nombre='hallazgo_plan_mejoramiento'","",$conn);
+    $idformato_hallazgo_plan_mejoramiento=busca_filtro_tabla("idformato","formato","nombre='hallazgo'","",$conn);
     
     for($i=0;$i<$datos["numcampos"];$i++){
       for($j=1;$j<($numcols-1);$j+=2){
