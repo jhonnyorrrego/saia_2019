@@ -186,7 +186,11 @@ function ruta_aprobacion_control_documentos($idformato, $iddoc){
 	if(count($ruta)>1){		
 		$radicador_salida=busca_filtro_tabla("origen","buzon_entrada","archivo_idarchivo=".$iddoc,"idtransferencia desc",$conn);
 	    array_push($ruta,array("funcionario"=>$radicador_salida[0][0],"tipo_firma"=>0)); 
-	    insertar_ruta_cierre_solicitud_calidad($ruta,$iddoc);	    
+	    insertar_ruta_cierre_solicitud_calidad($ruta,$iddoc);	 
+	    
+	    $ruta=busca_filtro_tabla("idruta","ruta","documento_iddocumento=".$iddoc,"idruta ASC",$conn);
+	    $sql="DELETE FROM ruta WHERE idruta=".$ruta[0]['idruta'];
+	    phpmkr_query($sql);
 	}
 }
 
