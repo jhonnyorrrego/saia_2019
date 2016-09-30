@@ -163,12 +163,12 @@ function radicado_plan_padre($idformato,$idcampo,$iddoc=NULL){
 	if($_REQUEST["iddoc"]){
 		if($doc[0]["ejecutor"]!=usuario_actual("funcionario_codigo")){
 		alerta("El hallazgo solo puede ser editado por su creador");
-		redirecciona("mostrar_hallazgo_plan_mejoramiento.php?iddoc=".$iddoc."&idformato=".$idformato);
+		redirecciona("mostrar_hallazgo.php?iddoc=".$iddoc."&idformato=".$idformato);
 		die();
 	}	
 	if($padre[0]["estado_plan_mejoramiento"]==2){
 		alerta("El plan de mejoramiento se encuentra en estado APROBADO");
-		redirecciona("mostrar_hallazgo_plan_mejoramiento.php?iddoc=".$iddoc."&idformato=".$idformato);
+		redirecciona("mostrar_hallazgo.php?iddoc=".$iddoc."&idformato=".$idformato);
 		die();
 	}	
 				
@@ -437,7 +437,7 @@ function modificar_responsable_mejoramiento($idformato, $iddoc){
 <script type="text/javascript">
 	$(document).ready(function(){
 		$("#cambiar_responsable_mejoramiento").click(function(){
-			var enlaces='<?php echo($ruta_db_superior)?>formatos/hallazgo_plan_mejoramiento/editar_funcionario_responsable.php?idformato=<?php echo($idformato); ?>&iddocumento=<?php echo($iddoc); ?>&campo=responsables';
+			var enlaces='<?php echo($ruta_db_superior)?>formatos/hallazgo/editar_funcionario_responsable.php?idformato=<?php echo($idformato); ?>&iddocumento=<?php echo($iddoc); ?>&campo=responsables';
 			hs.graphicsDir = '<?php echo($ruta_db_superior); ?>anexosdigitales/highslide-4.0.10/highslide/graphics/';
 			hs.outlineType = 'rounded-white';
 			hs.htmlExpand( this, {
@@ -450,7 +450,7 @@ function modificar_responsable_mejoramiento($idformato, $iddoc){
 				height: 300
 			});
 			hs.Expander.prototype.onAfterClose = function() {
-				window.location = "<?php echo($ruta_db_superior); ?>formatos/hallazgo_plan_mejoramiento/mostrar_hallazgo_plan_mejoramiento.php?iddoc=<?php echo($iddoc); ?>&idformato=<?php echo($idformato); ?>";
+				window.location = "<?php echo($ruta_db_superior); ?>formatos/hallazgo/mostrar_hallazgo.php?iddoc=<?php echo($iddoc); ?>&idformato=<?php echo($idformato); ?>";
 			}
 		});
 	});
@@ -475,7 +475,7 @@ global $conn,$ruta_db_superior;
 <script type="text/javascript">
 	$(document).ready(function(){
 		$("#cambiar_responsable_seguimiento").click(function(){
-			var enlaces='<?php echo($ruta_db_superior)?>formatos/hallazgo_plan_mejoramiento/editar_funcionario_responsable.php?idformato=<?php echo($idformato); ?>&iddocumento=<?php echo($iddoc); ?>&campo=responsable_seguimiento';
+			var enlaces='<?php echo($ruta_db_superior)?>formatos/hallazgo/editar_funcionario_responsable.php?idformato=<?php echo($idformato); ?>&iddocumento=<?php echo($iddoc); ?>&campo=responsable_seguimiento';
 			hs.graphicsDir = '<?php echo($ruta_db_superior); ?>anexosdigitales/highslide-4.0.10/highslide/graphics/';
 			hs.outlineType = 'rounded-white';
 			hs.htmlExpand( this, {
@@ -488,7 +488,7 @@ global $conn,$ruta_db_superior;
 				height: 300
 			});
 			hs.Expander.prototype.onAfterClose = function() {
-				window.location = "<?php echo($ruta_db_superior); ?>formatos/hallazgo_plan_mejoramiento/mostrar_hallazgo_plan_mejoramiento.php?iddoc=<?php echo($iddoc); ?>&idformato=<?php echo($idformato); ?>";
+				window.location = "<?php echo($ruta_db_superior); ?>formatos/hallazgo/mostrar_hallazgo.php?iddoc=<?php echo($iddoc); ?>&idformato=<?php echo($idformato); ?>";
 			}
 		});
 	});
