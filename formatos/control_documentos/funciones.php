@@ -191,6 +191,20 @@ function ruta_aprobacion_control_documentos($idformato, $iddoc){
 	}
 }
 
+
+function insertar_ruta_cierre($ruta,$iddoc)
+{global $conn;
+for($i=0;$i<count($ruta)-1;$i++)
+{if(!isset($ruta[$i]["tipo_firma"]))
+$ruta[$i]["tipo_firma"]=1;
+$sql="insert into ruta(destino,origen,documento_iddocumento,condicion_transferencia,tipo_origen,tipo_destino,orden,obligatorio) values('".$ruta[$i+1]["funcionario"]."','".$ruta[$i]["funcionario"]."','$iddoc','POR_APROBAR',1,1,$i,".$ruta[$i]["tipo_firma"].")" ;
+phpmkr_query($sql);
+$idruta=phpmkr_insert_id();
+$sql="insert into buzon_entrada(origen,destino,archivo_idarchivo,activo,tipo_origen,tipo_destino,ruta_idruta,nombre) values('".$ruta[$i+1]["funcionario"]."','".$ruta[$i]["funcionario"]."','$iddoc',1,1,1,$idruta,'POR_APROBAR')" ;
+phpmkr_query($sql);
+}
+}
+
 function insertar_ruta_aprobacion_control_documentos($ruta,$iddoc){
 	global $conn;	
  	for($i=0;$i<count($ruta)-1;$i++){
