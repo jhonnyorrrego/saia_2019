@@ -252,7 +252,7 @@ function obtener_responsables_accion_riesgo($idft_riesgos_proceso){
 
 function obtener_indicador_accion_riesgo($idft_riesgos_proceso){
 	global $conn;
-	$riesgo=busca_filtro_tabla("","ft_ft_acciones_riesgo a, documento b","a.documento_iddocumento=b.iddocumento and b.estado not in('ELIMINADO', 'ANULADO') and ft_riesgos_proceso=".$idft_riesgos_proceso,"",$conn);
+	$riesgo=busca_filtro_tabla("","ft_acciones_riesgo a, documento b","a.documento_iddocumento=b.iddocumento and b.estado not in('ELIMINADO', 'ANULADO') and ft_riesgos_proceso=".$idft_riesgos_proceso,"",$conn);
 	if($riesgo[0]['acciones_accion']!=''){
 	$control_riesgos = busca_filtro_tabla("descripcion_control, idft_control_riesgos","ft_control_riesgos a, documento b","a.documento_iddocumento=b.iddocumento and b.estado not in('ELIMINADO', 'ANULADO') and ft_riesgos_proceso=".$idft_riesgos_proceso,"",$conn);
 	if($control_riesgos['numcampos']){
@@ -270,27 +270,27 @@ function obtener_indicador_accion_riesgo($idft_riesgos_proceso){
 
 function acciones($id,$campo){
 	global $conn;
-	$riesgo=busca_filtro_tabla("","ft_ft_acciones_riesgo a, documento b","a.documento_iddocumento=b.iddocumento and b.estado not in('ELIMINADO', 'ANULADO') and ft_riesgos_proceso='".$id."'","",$conn);
+	$riesgo=busca_filtro_tabla("","ft_acciones_riesgo a, documento b","a.documento_iddocumento=b.iddocumento and b.estado not in('ELIMINADO', 'ANULADO') and ft_riesgos_proceso='".$id."'","",$conn);
 	if($riesgo[0]['acciones_accion']!=''){
 			
 			if($campo=="indicador"){	
-				$acciones=busca_filtro_tabla("indicador, iddocumento,acciones_accion","ft_ft_acciones_riesgo a, documento b","a.documento_iddocumento=b.iddocumento and b.estado not in('ELIMINADO', 'ANULADO') and ft_riesgos_proceso='".$id."'","",$conn);
+				$acciones=busca_filtro_tabla("indicador, iddocumento,acciones_accion","ft_acciones_riesgo a, documento b","a.documento_iddocumento=b.iddocumento and b.estado not in('ELIMINADO', 'ANULADO') and ft_riesgos_proceso='".$id."'","",$conn);
 				//if(usuario_actual('login')=='0k')
 				//print_r($acciones);
 			}
 	}else	
-	$acciones=busca_filtro_tabla($campo.",ft_riesgos_proceso,iddocumento","ft_ft_acciones_riesgo a, documento b","a.documento_iddocumento=b.iddocumento and b.estado not in('ELIMINADO', 'ANULADO') and acciones_control='".$id."'","",$conn);
+	$acciones=busca_filtro_tabla($campo.",ft_riesgos_proceso,iddocumento","ft_acciones_riesgo a, documento b","a.documento_iddocumento=b.iddocumento and b.estado not in('ELIMINADO', 'ANULADO') and acciones_control='".$id."'","",$conn);
 	//if(usuario_actual('login')=='0k'){
 			
 		if($campo=="acciones_accion"){
-			$acciones=busca_filtro_tabla($campo.", iddocumento","ft_ft_acciones_riesgo a, documento b","a.documento_iddocumento=b.iddocumento and b.estado not in('ELIMINADO', 'ANULADO') and ft_riesgos_proceso='".$id."'","",$conn);
+			$acciones=busca_filtro_tabla($campo.", iddocumento","ft_acciones_riesgo a, documento b","a.documento_iddocumento=b.iddocumento and b.estado not in('ELIMINADO', 'ANULADO') and ft_riesgos_proceso='".$id."'","",$conn);
 		}
 		if($campo=="responsables"){
 			$campo="reponsables";
-			$acciones=busca_filtro_tabla("reponsables, iddocumento","ft_ft_acciones_riesgo a, documento b","a.documento_iddocumento=b.iddocumento and b.estado not in('ELIMINADO', 'ANULADO') and ft_riesgos_proceso='".$id."'","",$conn);
+			$acciones=busca_filtro_tabla("reponsables, iddocumento","ft_acciones_riesgo a, documento b","a.documento_iddocumento=b.iddocumento and b.estado not in('ELIMINADO', 'ANULADO') and ft_riesgos_proceso='".$id."'","",$conn);
 		}
 		if($campo=="indicador"){
-			$acciones=busca_filtro_tabla("indicador, iddocumento","ft_ft_acciones_riesgo a, documento b","a.documento_iddocumento=b.iddocumento and b.estado not in('ELIMINADO', 'ANULADO') and ft_riesgos_proceso='".$id."'","",$conn);
+			$acciones=busca_filtro_tabla("indicador, iddocumento","ft_acciones_riesgo a, documento b","a.documento_iddocumento=b.iddocumento and b.estado not in('ELIMINADO', 'ANULADO') and ft_riesgos_proceso='".$id."'","",$conn);
 			if(usuario_actual('login')=='0k'){
 				//print_r($acciones);
 			}
