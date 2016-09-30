@@ -21,7 +21,7 @@ include_once ($ruta_db_superior . "class_transferencia.php");
 
 $hoy=date("Y-m-d");
 $nuevafecha = date ('Y-m-d',strtotime ('+5 day',strtotime(date('Y-m-d'))) );
-$formato=busca_filtro_tabla("idformato","formato","nombre='hallazgo_plan_mejoramiento'","",$conn);
+$formato=busca_filtro_tabla("idformato","formato","nombre='hallazgo'","",$conn);
 
 $datos_seguimiento = busca_filtro_tabla("responsable_seguimiento,documento_iddocumento", "ft_hallazgo h,documento d","d.iddocumento=h.documento_iddocumento and d.estado not in ('ELIMINADO','ANULADO','ACTIVO') and (notifica_seg is null or notifica_seg=0) and '".$hoy."'<=TO_CHAR(tiempo_seguimiento,'YYYY-MM-DD') AND '".$nuevafecha."'>=TO_CHAR(tiempo_seguimiento,'YYYY-MM-DD')", "", $conn);
 if ($datos_seguimiento["numcampos"]) {
