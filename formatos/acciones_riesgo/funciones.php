@@ -14,7 +14,7 @@ include_once($ruta_db_superior."librerias_saia.php");
 function mostrar_valor_control($idformato,$iddoc){
 	global $conn;	
 	
-	$control_riesgos=busca_filtro_tabla("B.*","ft_ft_acciones_riesgo A, ft_control_riesgos B","A.acciones_control=B.idft_control_riesgos AND A.documento_iddocumento=".$iddoc,"",$conn);
+	$control_riesgos=busca_filtro_tabla("B.*","ft_acciones_riesgo A, ft_control_riesgos B","A.acciones_control=B.idft_control_riesgos AND A.documento_iddocumento=".$iddoc,"",$conn);
 	
 	echo(codifica_encabezado(html_entity_decode($control_riesgos[0]['descripcion_control'])));
 	
@@ -26,11 +26,11 @@ function fecha_acciones_riesgo($idformato,$iddoc){
 }
 
 function fecha_subscripcion_accion($idformato,$iddoc){
-	$fecha=busca_filtro_tabla(fecha_db_obtener("fecha_accion","Y-m-d")." as fechax","ft_ft_acciones_riesgo a","a.documento_iddocumento=".$iddoc,"",$conn);
+	$fecha=busca_filtro_tabla(fecha_db_obtener("fecha_accion","Y-m-d")." as fechax","ft_acciones_riesgo a","a.documento_iddocumento=".$iddoc,"",$conn);
 	echo $fecha[0]["fechax"];
 }
 function fecha_accion_cumplimiento($idformato,$iddoc){
-	$fecha=busca_filtro_tabla(fecha_db_obtener("fecha_cumplimiento","Y-m-d")." as fechax","ft_ft_acciones_riesgo a","a.documento_iddocumento=".$iddoc,"",$conn);
+	$fecha=busca_filtro_tabla(fecha_db_obtener("fecha_cumplimiento","Y-m-d")." as fechax","ft_acciones_riesgo a","a.documento_iddocumento=".$iddoc,"",$conn);
 	echo $fecha[0]["fechax"];
 }
 
@@ -40,7 +40,7 @@ function control_funcion($idformato,$iddoc){
 		$padre=$_REQUEST["padre"];
 	}
 	else{
-		$accion=busca_filtro_tabla("","ft_ft_acciones_riesgo a","a.documento_iddocumento=".$_REQUEST["iddoc"],"",$conn);
+		$accion=busca_filtro_tabla("","ft_acciones_riesgo a","a.documento_iddocumento=".$_REQUEST["iddoc"],"",$conn);
 		$padre=$accion[0]["ft_riesgos_proceso"];
 	}
 	
@@ -57,7 +57,7 @@ function control_funcion($idformato,$iddoc){
 	echo "<td>".$select."</td>";
 }
 function valor_control($idformato,$iddoc){
-	$dato=busca_filtro_tabla("acciones_control","ft_ft_acciones_riesgo a","documento_iddocumento=".$iddoc,"",$conn);
+	$dato=busca_filtro_tabla("acciones_control","ft_acciones_riesgo a","documento_iddocumento=".$iddoc,"",$conn);
 	
 	$valor=busca_filtro_tabla("descripcion_control","ft_control_riesgos a","idft_control_riesgos=".$dato[0]["acciones_control"],"",$conn);
 	
@@ -94,7 +94,7 @@ function validar_opciones_administrativas($idformato,$iddoc){
 	if($_REQUEST['anterior']){
 		$riesgo = busca_filtro_tabla("idft_riesgos_proceso,probabilidad,impacto,tipo_riesgo","ft_riesgos_proceso","documento_iddocumento=".$_REQUEST['anterior'],"",$conn);
 	}else{
-		$riesgo = busca_filtro_tabla("b.idft_riesgos_proceso,b.probabilidad,b.impacto,tipo_riesgo","ft_ft_acciones_riesgo a, ft_riesgos_proceso b","a.ft_riesgos_proceso=b.idft_riesgos_proceso AND a.documento_iddocumento=".$_REQUEST['iddoc'],"",$conn);
+		$riesgo = busca_filtro_tabla("b.idft_riesgos_proceso,b.probabilidad,b.impacto,tipo_riesgo","ft_acciones_riesgo a, ft_riesgos_proceso b","a.ft_riesgos_proceso=b.idft_riesgos_proceso AND a.documento_iddocumento=".$_REQUEST['iddoc'],"",$conn);
 	}
 	
 	$probabilidad = calificacion_probabilidad($riesgo[0]['idft_riesgos_proceso'],$riesgo[0]['probabilidad'],1);	
@@ -166,7 +166,7 @@ function botones_acciones_riesgos($idformato, $iddoc){
   $riesgo = busca_filtro_tabla("a.documento_iddocumento","ft_riesgo_proceso a, ft_acciones_riesgo b","a.idft_riesgos_proceso=b.ft_riesgos_proceso AND b.documento_iddocumento=".$iddoc,"",$conn);  
   
   $ejecutor=busca_filtro_tabla("ejecutor","documento","iddocumento=".$iddoc,"",$conn);
-  $area=busca_filtro_tabla("b.area_responsable","ft_ft_acciones_riesgo a, ft_riesgos_proceso b","a.ft_riesgos_proceso=b.idft_riesgos_proceso and a.documento_iddocumento=".$iddoc,"",$conn);  
+  $area=busca_filtro_tabla("b.area_responsable","ft_acciones_riesgo a, ft_riesgos_proceso b","a.ft_riesgos_proceso=b.idft_riesgos_proceso and a.documento_iddocumento=".$iddoc,"",$conn);  
   $funcionario=busca_filtro_tabla("funcionario_codigo","vfuncionario_dc","iddependencia in (".$area[0]["area_responsable"].")","group by funcionario_codigo",$conn);
 	
 	if($_REQUEST["tipo"]!=5){
