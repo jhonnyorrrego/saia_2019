@@ -3173,7 +3173,8 @@ function validar_usuario_radicador_salida(){
           $fun_rad_salida=busca_filtro_tabla("idfuncionario","funcionario","login='radicador_salida'","",$conn);
           $rol_rad_salida=busca_filtro_tabla("","dependencia_cargo","funcionario_idfuncionario=".$fun_rad_salida[0]['idfuncionario']." AND dependencia_iddependencia=".$dep_rad_salida[0]['iddependencia']." AND cargo_idcargo=".$cargo_rad_salida[0]['idcargo'],"",$conn);
           if(!$rol_rad_salida['numcampos']){
-              $sql3="INSERT INTO dependencia_cargo () VALUES ()";
+              $sql3="INSERT INTO dependencia_cargo (funcionario_idfuncionario,dependencia_iddependencia,cargo_idcargo,estado,fecha_inicial,fecha_final,fecha_ingreso,tipo) VALUES (".$fun_rad_salida[0]['idfuncionario'].",".$dep_rad_salida[0]['iddependencia'].",".$cargo_rad_salida[0]['idcargo'].",0,".fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s').",".fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s').",".fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s').",1)";
+              phpmkr_query($sql3);
           }
           
           
