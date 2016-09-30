@@ -360,7 +360,7 @@ $ingresa=0;
       if((@$_REQUEST["estado"]=="pendientes" && $seguimiento[$a]["total_porcentaje"]<100) || (@$_REQUEST["estado"]=="terminados" && $seguimiento[$a]["total_porcentaje"]>=100) || (!@$_REQUEST["estado"])){
         $ingresa=1;
         if(!isset($_REQUEST["export"]))
-           $texto.='<tr><td class="transparente" ><a href="../hallazgo_plan_mejoramiento/mostrar_hallazgo_plan_mejoramiento.php?iddoc='.$hallazgos[$i]["hallazgo_iddoc"].'&idformato='.$formato_hallazgo[0]["idformato"].'">&nbsp;'.$hallazgos[$i]["consecutivo_hallazgo"].'&nbsp;</a></td>'; 
+           $texto.='<tr><td class="transparente" ><a href="../hallazgo/mostrar_hallazgo.php?iddoc='.$hallazgos[$i]["hallazgo_iddoc"].'&idformato='.$formato_hallazgo[0]["idformato"].'">&nbsp;'.$hallazgos[$i]["consecutivo_hallazgo"].'&nbsp;</a></td>'; 
         else
           $texto.='<tr><td class="transparente">'.$j.'</td>'; 
         $texto.='<td class="transparente" >'.mostrar_mensaje_accion($hallazgos[$i]["clase_accion"],$formato_hallazgo[0]["idformato"], $hallazgos[$i]["hallazgo_iddoc"]).'</td>';
