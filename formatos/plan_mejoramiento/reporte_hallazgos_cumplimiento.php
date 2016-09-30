@@ -62,7 +62,7 @@ function reporte(){
 	global $conn, $ruta_db_superior;
 	$iddoc=$_REQUEST["iddoc"];
 	$idformato=$_REQUEST["idformato"];
-	$format_hallazgo=busca_filtro_tabla("","formato a","a.nombre='hallazgo_plan_mejoramiento'","",$conn);
+	$format_hallazgo=busca_filtro_tabla("","formato a","a.nombre='hallazgo'","",$conn);
 	$plan_mejoramiento=busca_filtro_tabla("","ft_plan_mejoramiento a, documento b","a.documento_iddocumento=b.iddocumento AND a.documento_iddocumento=".$iddoc,"",$conn);
 	
 	$porcentaje = porcentaje_plan('','','',$plan_mejoramiento[0]["idft_plan_mejoramiento"]);
@@ -106,7 +106,7 @@ function reporte(){
 		for($i=0;$i<$hallazgos["numcampos"];$i++){
 			$tabla.='<tr>';
 			if($_REQUEST["idformato"]!=''){
-				$tabla.='<td><a href="'.$ruta_db_superior.'formatos/hallazgo_plan_mejoramiento/mostrar_hallazgo_plan_mejoramiento.php?idformato='.$format_hallazgo[0]["idformato"].'&iddoc='.$hallazgos[$i]["documento_iddocumento"].'" target="_blank">Ver</a></td>';
+				$tabla.='<td><a href="'.$ruta_db_superior.'formatos/hallazgo/mostrar_hallazgo.php?idformato='.$format_hallazgo[0]["idformato"].'&iddoc='.$hallazgos[$i]["documento_iddocumento"].'" target="_blank">Ver</a></td>';
 			}
 			$tabla.='<td style="text-align:center">'.$hallazgos[$i]["consecutivo_hallazgo"].'</td>';
 			$tabla.='<td>'.(codifica_encabezado(html_entity_decode($hallazgos[$i]["deficiencia"]))).'</td>';
