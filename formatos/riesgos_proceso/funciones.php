@@ -444,7 +444,7 @@ function validar_edicion_adicion_formatos_riesgo_aprobados($idformato, $iddoc){
 			$proceso = busca_filtro_tabla("a.lider_proceso,a.responsable,a.nombre","ft_proceso a, ft_riesgos_proceso b, ft_control_riesgos c","a.idft_proceso=b.ft_proceso and b.idft_riesgos_proceso=c.ft_riesgos_proceso and a.fecha_aprobacion_riesgo is not null and c.documento_iddocumento=".$datos_documento["iddocumento"],"",$conn);
 		break;
 		case 'acciones_riesgo':
-			$proceso = busca_filtro_tabla("a.lider_proceso,a.responsable,a.nombre","ft_proceso a, ft_riesgos_proceso b, ft_ft_acciones_riesgo c","a.idft_proceso=b.ft_proceso and b.idft_riesgos_proceso=c.ft_riesgos_proceso and a.fecha_aprobacion_riesgo is not null and c.documento_iddocumento=".$datos_documento["iddocumento"],"",$conn);
+			$proceso = busca_filtro_tabla("a.lider_proceso,a.responsable,a.nombre","ft_proceso a, ft_riesgos_proceso b, ft_acciones_riesgo c","a.idft_proceso=b.ft_proceso and b.idft_riesgos_proceso=c.ft_riesgos_proceso and a.fecha_aprobacion_riesgo is not null and c.documento_iddocumento=".$datos_documento["iddocumento"],"",$conn);
 		break;
 	}
 
