@@ -212,7 +212,7 @@ global $texto,$conn;
 $texto.='<item style="font-family:verdana; font-size:7pt;" ';
 $texto.=strip_tags(decodifica('text="Planes de mejoramiento Funcionales" id="pm-funcional">'."\n"));
 $listado="";
-$lprocesos_vinculados=busca_filtro_tabla("A.procesos_vinculados","ft_hallazgo_plan_mejoramiento A","A.tipo_plan LIKE '%2%' AND A.estado<> 'INACTIVO'","",$conn);
+$lprocesos_vinculados=busca_filtro_tabla("A.procesos_vinculados","ft_hallazgo A","A.tipo_plan LIKE '%2%' AND A.estado<> 'INACTIVO'","",$conn);
 //print_r($lprocesos_vinculados);
 if($lprocesos_vinculados["numcampos"]){
   $listado=implode(",",extrae_campo($lprocesos_vinculados,"procesos_vinculados","U"));
