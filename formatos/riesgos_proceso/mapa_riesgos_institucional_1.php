@@ -257,7 +257,7 @@ function obtener_indicador_accion_riesgo($idft_riesgos_proceso){
 function acciones($id,$campo){
 	global $conn;
 	
-	$acciones=busca_filtro_tabla($campo.", iddocumento","ft_ft_acciones_riesgo a, documento b","a.documento_iddocumento=b.iddocumento and b.estado not in('ELIMINADO', 'ANULADO') and acciones_control='".$id."'","",$conn);
+	$acciones=busca_filtro_tabla($campo.", iddocumento","ft_acciones_riesgo a, documento b","a.documento_iddocumento=b.iddocumento and b.estado not in('ELIMINADO', 'ANULADO') and acciones_control='".$id."'","",$conn);
 	
 	$texto='';
 	for($i=0;$i<$acciones["numcampos"];$i++){
