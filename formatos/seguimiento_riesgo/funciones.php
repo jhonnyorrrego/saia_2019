@@ -175,14 +175,14 @@ function accion_funcion($idformato,$iddoc){
 		$padre=$accion[0]["ft_riesgos_proceso"];
 	}
 	
-	$valoracion=busca_filtro_tabla("acciones_accion, idft_ft_acciones_riesgo","ft_ft_acciones_riesgo a, documento b","a.documento_iddocumento=b.iddocumento and b.estado not in('ELIMINADO', 'ANULADO') and ft_riesgos_proceso=".$padre,"idft_ft_acciones_riesgo asc",$conn);
+	$valoracion=busca_filtro_tabla("acciones_accion, idft_acciones_riesgo","ft_acciones_riesgo a, documento b","a.documento_iddocumento=b.iddocumento and b.estado not in('ELIMINADO', 'ANULADO') and ft_riesgos_proceso=".$padre,"idft_acciones_riesgo asc",$conn);
 	
 	$select='';
 	$select.='<select name="accion_vinculacion" id="accion_vinculacion" class="required"><option value="">Por favor seleccione...</option>';
 	for($i=0;$i<$valoracion["numcampos"];$i++){
 		$selected='';
-		if($accion[0]["accion_vinculacion"]==$valoracion[$i]["idft_ft_acciones_riesgo"])$selected='selected';
-		$select.='<option value="'.$valoracion[$i]["idft_ft_acciones_riesgo"].'" '.$selected.'>'.ucfirst(strip_tags(utf8_decode(html_entity_decode($valoracion[$i]["acciones_accion"])))).'</option>';
+		if($accion[0]["accion_vinculacion"]==$valoracion[$i]["idft_acciones_riesgo"])$selected='selected';
+		$select.='<option value="'.$valoracion[$i]["idft_acciones_riesgo"].'" '.$selected.'>'.ucfirst(strip_tags(utf8_decode(html_entity_decode($valoracion[$i]["acciones_accion"])))).'</option>';
 	}
 	$select.='</select>';
 	echo "<td>".$select."</td>";
@@ -190,7 +190,7 @@ function accion_funcion($idformato,$iddoc){
 function traer_nombre_accion($idformato,$iddoc){
 	global $conn;
 	$valor=busca_filtro_tabla("accion_vinculacion","ft_seguimiento_riesgo a","documento_iddocumento=".$iddoc,"",$conn);
-	$descripcion=busca_filtro_tabla("acciones_accion","ft_ft_acciones_riesgo a","a.idft_ft_acciones_riesgo=".$valor[0]["accion_vinculacion"],"",$conn);
+	$descripcion=busca_filtro_tabla("acciones_accion","ft_acciones_riesgo a","a.idft_acciones_riesgo=".$valor[0]["accion_vinculacion"],"",$conn);
 	echo ucfirst(strip_tags(utf8_decode(html_entity_decode($descripcion[0]["acciones_accion"]))));
 }
 
@@ -198,16 +198,16 @@ function listar_acciones_riesgo($idformato, $iddoc){
 	global $conn;	
 	
 	if($_REQUEST['anterior']){
-		$contrato = busca_filtro_tabla("B.idft_ft_acciones_riesgo, B.acciones_accion","ft_riesgos_proceso A, ft_ft_acciones_riesgo B","A.idft_riesgos_proceso=B.ft_riesgos_proceso AND A.documento_iddocumento=".$_REQUEST['anterior'],"",$conn);
+		$contrato = busca_filtro_tabla("B.idft_acciones_riesgo, B.acciones_accion","ft_riesgos_proceso A, ft_acciones_riesgo B","A.idft_riesgos_proceso=B.ft_riesgos_proceso AND A.documento_iddocumento=".$_REQUEST['anterior'],"",$conn);
 	}else{
-			$contrato = busca_filtro_tabla("B.idft_ft_acciones_riesgo, B.acciones_accion","ft_riesgos_proceso A, ft_ft_acciones_riesgo B, ft_seguimiento_riesgo C","A.idft_riesgos_proceso=B.ft_riesgos_proceso AND A.idft_riesgos_proceso=C.ft_riesgos_proceso AND C.documento_iddocumento=".$_REQUEST['iddoc'],"",$conn);		
+			$contrato = busca_filtro_tabla("B.idft_acciones_riesgo, B.acciones_accion","ft_riesgos_proceso A, ft_acciones_riesgo B, ft_seguimiento_riesgo C","A.idft_riesgos_proceso=B.ft_riesgos_proceso AND A.idft_riesgos_proceso=C.ft_riesgos_proceso AND C.documento_iddocumento=".$_REQUEST['iddoc'],"",$conn);		
 	}	
 		
 	$select ="<select name='accion_vinculacion' id='accion_vinculacion'>
 				<option>Seleccione...</option>
 			 ";
 		for ($i=0; $i < $contrato['numcampos']; $i++) { 
-			$select .="<option value='".$contrato[$i]['idft_ft_acciones_riesgo']."'>".delimita($contrato[$i]['acciones_accion'],150)."</option>";
+			$select .="<option value='".$contrato[$i]['idft_acciones_riesgo']."'>".delimita($contrato[$i]['acciones_accion'],150)."</option>";
 			
 		}
 	$select .="</select>";
