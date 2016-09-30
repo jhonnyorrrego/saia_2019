@@ -11,7 +11,7 @@ while ($max_salida > 0) {
 
 include_once ($ruta_db_superior . "db.php");
 include_once ($ruta_db_superior . "formatos/plan_mejoramiento/funciones.php");
-include_once ($ruta_db_superior . "formatos/hallazgo_plan_mejoramiento/funciones.php");
+include_once ($ruta_db_superior . "formatos/hallazgo/funciones.php");
 include_once ($ruta_db_superior . "formatos/librerias/funciones_generales.php");
 include_once ($ruta_db_superior . "librerias_saia.php");
 include_once ($ruta_db_superior . "pantallas/lib/librerias_notificaciones.php");
@@ -176,13 +176,13 @@ function listar_hallazgo_informe($idformato, $iddoc, $condicion = "") {
 
 					$consecutivo = busca_filtro_tabla("A.consecutivo_hallazgo", "ft_hallazgo A", "A.documento_iddocumento=" . $hallazgos[$i]["hallazgo_iddoc"], "", $conn);
 
-					$texto .= '<tr><td style="font-size: 8pt; " class="transparente" ><a class="abrir_higslide" ruta="formatos/hallazgo_plan_mejoramiento/mostrar_hallazgo_plan_mejoramiento.php?iddoc=' . $hallazgos[$i]["hallazgo_iddoc"] . '&idformato=' . $formato_hallazgo[0]["idformato"] . '" style="color: -webkit-link; text-decoration: underline;">&nbsp;' . $consecutivo[0]['consecutivo_hallazgo'] . ($i + 1) . '&nbsp;</a></td>';
+					$texto .= '<tr><td style="font-size: 8pt; " class="transparente" ><a class="abrir_higslide" ruta="formatos/hallazgo/mostrar_hallazgo.php?iddoc=' . $hallazgos[$i]["hallazgo_iddoc"] . '&idformato=' . $formato_hallazgo[0]["idformato"] . '" style="color: -webkit-link; text-decoration: underline;">&nbsp;' . $consecutivo[0]['consecutivo_hallazgo'] . ($i + 1) . '&nbsp;</a></td>';
 
 					$texto .= '<td style="font-size: 8pt;" class="transparente" >' . mostrar_valor_campo("deficiencia", $formato_hallazgo[0]["idformato"], $hallazgos[$i]["hallazgo_iddoc"], 1) . '</td>';
 
 					//fin condicion encabezado
 					$texto .= '<td style="font-size: 8pt;" class="transparente" >' . strip_tags(str_replace("&nbsp;", " ", mostrar_valor_campo("accion_mejoramiento", $formato_hallazgo[0]["idformato"], $hallazgos[$i]["hallazgo_iddoc"], 1))) . '</td>';
-					$idformato_hallazgo_plan_mejoramiento = busca_filtro_tabla("idformato","formatos","nombre='hallazgo_plan_mejoramiento'","",$conn);
+					$idformato_hallazgo_plan_mejoramiento = busca_filtro_tabla("idformato","formatos","nombre='hallazgo'","",$conn);
 					$campo_responsables=busca_filtro_tabla("idcampos_formato","campos_formato","nombre='responsables' AND formato_idformato=".$idformato_hallazgo_plan_mejoramiento[0]['idformato'],"",$conn);
 					$texto .= '<td style="font-size: 8pt;" class="transparente" >' . strip_tags(mostrar_seleccionados($idformato_hallazgo_plan_mejoramiento[0]['idformato'], $campo_responsables[0]['idcampos_formato'], 0, $hallazgos[$i]["hallazgo_iddoc"], 1)) . '</td>';
 					$texto .= '<td  style="font-size: 8pt;" class="transparente" align="center">' . strip_tags(mostrar_valor_campo("tiempo_cumplimiento", $formato_hallazgo[0]["idformato"], $hallazgos[$i]["hallazgo_iddoc"], 1)) . '</td>';
@@ -364,7 +364,7 @@ function auditoria_hallazgos($idformato, $iddoc) {
 
 	$hallazgos = busca_filtro_tabla("", "ft_hallazgo a, documento b", "a.documento_iddocumento=b.iddocumento and b.estado not in ('ELIMINADO','ANULADO') and ft_plan_mejoramiento=" . $plan[0]["idft_plan_mejoramiento"], "", $conn);
 	$auditado = array();
-	$idformato_hallazgo_plan_mejoramiento=busca_filtro_tabla("idformato","formato","nombre='hallazgo_plan_mejoramiento'","",$conn);
+	$idformato_hallazgo_plan_mejoramiento=busca_filtro_tabla("idformato","formato","nombre='hallazgo'","",$conn);
 	for ($i = 0; $i < $hallazgos["numcampos"]; $i++) {
 		$auditado[] = procesos_vinculados_funcion($idformato_hallazgo_plan_mejoramiento[0]['idformato'], $hallazgos[$i]["documento_iddocumento"], 1);
 	}
