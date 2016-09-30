@@ -173,7 +173,7 @@ function obtener_valoracion_riesgo($idft_riesgos_proceso){
 
 function obtener_acciones_riesgo($idft_riesgos_proceso){
 	global $conn;		
-	$datos = busca_filtro_tabla("","ft_riesgos_proceso A, ft_ft_acciones_riesgo B, documento C","A.idft_riesgos_proceso=B.ft_riesgos_proceso AND B.documento_iddocumento=C.iddocumento AND C.estado NOT IN ('ELIMINADO, ANULADO') AND A.idft_riesgos_proceso=".$idft_riesgos_proceso,"",$conn);
+	$datos = busca_filtro_tabla("","ft_riesgos_proceso A, ft_acciones_riesgo B, documento C","A.idft_riesgos_proceso=B.ft_riesgos_proceso AND B.documento_iddocumento=C.iddocumento AND C.estado NOT IN ('ELIMINADO, ANULADO') AND A.idft_riesgos_proceso=".$idft_riesgos_proceso,"",$conn);
 	return($datos);	
 }
 
