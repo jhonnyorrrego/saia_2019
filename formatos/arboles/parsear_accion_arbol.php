@@ -99,7 +99,7 @@ if(@$_REQUEST["id"]) {
 							"manual",
 							"plan_calidad",
 							"otros_calidad",
-							"programas_calidad"
+							"prog_calidad"
 					);
 					leido(usuario_actual("funcionario_codigo"), $datos_formato[0]["iddocumento"]);
 					if(in_array($formato[0]["nombre"], $descargable) && @$_REQUEST['pantalla'] == 'calidad') {
@@ -391,7 +391,7 @@ if(@$_REQUEST["id"]) {
 						"manual",
 						"plan_calidad",
 						"otros_calidad",
-						"programas_calidad"
+						"prog_calidad"
 				);
 				if(in_array($formato[0]["nombre"], $descargable)) {
 					if($datos_formato["numcampos"]) {
