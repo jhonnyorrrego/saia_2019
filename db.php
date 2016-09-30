@@ -3148,6 +3148,39 @@ function fecha_db_obtener($campo, $formato = NULL)
     return $fsql;	        
 } // Fin Funcion fecha_db_obtener
 
+
+function validar_usuario_radicador_salida(){
+    global $conn,$ruta_db_superior;
+    
+    
+          //VALIDO Cargo
+          $cargo_rad_salida=busca_filtro_tabla("idcargo","cargo","lower(nombre)='cargo_radicador_salida'","",$conn);
+          if(!$cargo_rad_salida['numcampos']){
+              $sql1="INSERT INTO cargo (nombre,estado,tipo,tipo_cargo) VALUES ('cargo_radicador_salida',0,1,2)";
+              phpmkr_query($sql1);
+              $update_rol=1;
+              $cargo_rad_salida=busca_filtro_tabla("idcargo","cargo","lower(nombre)='cargo_radicador_salida'","",$conn);
+          }
+          //VALIDO DEPENDENCIA 
+          $dep_rad_salida=busca_filtro_tabla("iddependencia","dependencia","lower(nombre)='dependencia_radicador_salida'","",$conn);
+          if(!$dep_rad_salida['numcampos']){
+              $sql2="INSERT INTO dependencia (nombre,fecha_ingreso,estado,tipo) VALUES ('dependencia_radicador_salida',".fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s').",0,1)";
+              phpmkr_query($sql2);
+              
+              $dep_rad_salida=busca_filtro_tabla("iddependencia","dependencia","lower(nombre)='dependencia_radicador_salida'","",$conn);
+          }          
+          //VALIDO rol
+          $fun_rad_salida=busca_filtro_tabla("idfuncionario","funcionario","login='radicador_salida'","",$conn);
+          $rol_rad_salida=busca_filtro_tabla("","dependencia_cargo","funcionario_idfuncionario=".$fun_rad_salida[0]['idfuncionario']." AND dependencia_iddependencia=".$dep_rad_salida[0]['iddependencia']." AND cargo_idcargo=".$cargo_rad_salida[0]['idcargo'],"",$conn);
+          if(!$rol_rad_salida['numcampos']){
+              $sql3="INSERT INTO dependencia_cargo () VALUES ()";
+          }
+          
+          
+}
+
+
+
 /*
 <Clase>
 <Nombre>fecha_db_almacenar
