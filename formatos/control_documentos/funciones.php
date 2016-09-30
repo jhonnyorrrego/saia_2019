@@ -165,7 +165,7 @@ function validar_tipo_documento($idformato, $iddoc){
 
 function ruta_aprobacion_control_documentos($idformato, $iddoc){
 	global $conn;
-	/*
+	
 	$funcionarios_responsables = busca_filtro_tabla("revisado,aprobado","ft_control_documentos","documento_iddocumento=".$iddoc,"",$conn);
 	
 	
@@ -179,15 +179,16 @@ function ruta_aprobacion_control_documentos($idformato, $iddoc){
 	//Funcionario que aprueba 
 	array_push($ruta,array("funcionario"=>$funcionarios_responsables[0]['aprobado'],"tipo_firma"=>1));
 	
-	//lina alzate
-	array_push($ruta,array("funcionario"=>"18532820","tipo_firma"=>2)); //camilo.cardona TEMPORALEMENTE 
+	//CARGO_FUNCIONAL (versionador_calidad)
+	$cf_versionador_calidad=busca_filtro_tabla("funcionario_codigo","vfuncionario_dc","estado=1 AND tipo_cargo=2 AND lower(cargo)='versionador_calidad'","",$conn);
+	array_push($ruta,array("funcionario"=>$cf_versionador_calidad[0]['funcionario_codigo'],"tipo_firma"=>2)); 
 	
 	if(count($ruta)>1){		
 		$radicador_salida=busca_filtro_tabla("origen","buzon_entrada","archivo_idarchivo=".$iddoc,"idtransferencia desc",$conn);
 	    array_push($ruta,array("funcionario"=>$radicador_salida[0][0],"tipo_firma"=>0)); 
 	    phpmkr_query("update buzon_entrada set activo=0 where archivo_idarchivo=".$iddoc." and nombre='POR_APROBAR'");
 	    insertar_ruta_aprobacion_control_documentos($ruta,$iddoc);	    
-	}*/
+	}
 }
 
 function insertar_ruta_aprobacion_control_documentos($ruta,$iddoc){
@@ -736,7 +737,13 @@ function confirmar_control_documentos($idformato, $iddoc){
 		echo(estilo_bootstrap());
 		if($estado["numcampos"]){
 			if(!$fecha_confirmacion["numcampos"]){
-				echo($boton);
+			    
+			    //CARGO_FUNCIONAL (versionador_calidad)
+	            $cf_versionador_calidad=busca_filtro_tabla("login","vfuncionario_dc","estado=1 AND tipo_cargo=2 AND lower(cargo)='versionador_calidad'","",$conn);
+			    if(usuario_actual('login')==$cf_versionador_calidad[0]['login']){
+			         echo($boton);
+			    }
+			
 			}			
 		}
 	
