@@ -11,7 +11,7 @@ while ($max_salida > 0) {
 
 include_once ($ruta_db_superior . "db.php");
 
-$idformato_hallazgo_plan_mejoramiento= busca_filtro_tabla("idformato","formato","nombre='hallazgo_plan_mejoramiento'","",$conn);
+$idformato_hallazgo_plan_mejoramiento= busca_filtro_tabla("idformato","formato","nombre='hallazgo'","",$conn);
 
 
 ?>
