@@ -944,7 +944,7 @@ function AddData($conn)
       $func=busca_cargo_funcionario(3,$rs[0]["valor"],"",$conn);
       
       if(!$func["numcampos"]){
-        validar_usuario_radicador_salida();
+       // validar_usuario_radicador_salida();
       }
       $func=busca_cargo_funcionario(3,$rs[0]["valor"],"",$conn);
       
