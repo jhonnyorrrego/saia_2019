@@ -266,7 +266,7 @@ function editar_hallazgo($idformato, $iddoc) {
 		       window.location="../../documento_borrar.php?iddoc=<?php echo $iddoc;?>";
 		     }) 
 		    $('#link_adicionar_seg').click(function(){
-		       window.location="../seguimiento_plan_mejoramiento/adicionar_seguimiento_plan_mejoramiento.php?anterior=<?php echo $iddoc;?>";
+		       window.location="../seguimiento/adicionar_seguimiento.php?anterior=<?php echo $iddoc;?>";
 		     }) 
 	    });
 	    </script>
