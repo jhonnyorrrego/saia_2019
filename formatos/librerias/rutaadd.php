@@ -941,14 +941,9 @@ function AddData($conn)
   if($_POST["add"]=="T"){
     $rs=busca_filtro_tabla("A.*,valor","configuracion A","nombre like 'radicador_salida'","",$conn);
     if($rs["numcampos"]>0){
-      $func=busca_cargo_funcionario(6,$rs[0]["valor"],"",$conn);
+      //$func=busca_cargo_funcionario(6,$rs[0]["valor"],"",$conn);
+      $func=busca_filtro_tabla("estado,funcionario_codigo","funcionario","login='".$rs[0]['valor']."'","",$conn);
       print_r($func);die();
-      /*
-      if(!$func["numcampos"]){
-       //validar_usuario_radicador_salida();
-       //$func=busca_cargo_funcionario(3,$rs[0]["valor"],"",$conn);
-      }*/
-      
       
       if($func["numcampos"]>0&&$func[0]["estado"]){
         $destino=agregar_destino_ruta($destino,1,$func[0]["funcionario_codigo"],1,"APROBADO",$obligatorio);  
