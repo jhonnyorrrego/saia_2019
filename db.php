@@ -2329,9 +2329,13 @@ else alerta(utf8_encode("No existe nadie en ésta dependencia con el cargo espec
 else if($tipo=='iddependencia_cargo' || $tipo==5){
   $datorig=busca_filtro_tabla("*,f.estado as estado_f,d.estado as estado_d","dependencia_cargo d,funcionario f,cargo c","dependencia_cargo d,funcionario f,cargo","c.idcargo=d.cargo_idcargo AND f.idfuncionario=d.funcionario_idfuncionario AND d.iddependencia_cargo=".$dato,"f.estado",$conn);
 }
-else $datorig[0]['iddependencia_cargo']=$dato;
-    if($temp["numcampos"])
+else{
+    $datorig[0]['iddependencia_cargo']=$dato;
+} 
+    if($temp["numcampos"]){
         $datorig[0]=array_merge((array)$datorig[0],(array)$temp[0]);
+    }
+        
 return($datorig);
 }
 
