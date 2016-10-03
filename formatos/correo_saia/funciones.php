@@ -100,10 +100,12 @@ function guardar_anexos($idformato, $iddoc){
                 $tmpVar++;
             }
           $nombre_temporal=$tmpVar . '_' . $nombre_temporal;    
-                  
+        
+         print_r($ruta_real[1]."<------->".$dir_anexos.$nombre_temporal);
+        die();          
         //copy($ruta_db_superior.$ruta_real[1],$ruta_db_superior.$dir_anexos.$nombre_temporal);
 		rename($ruta_db_superior.$ruta_real[1], $ruta_db_superior.$dir_anexos.$nombre_temporal);
-		// print_r($ruta_real[1]."-------");
+		
 // 		
 		// print_r($dir_anexos);
         
