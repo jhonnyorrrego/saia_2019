@@ -79,8 +79,7 @@ function guardar_anexos($idformato, $iddoc){
     $datos=busca_filtro_tabla('','ft_correo_saia','documento_iddocumento='.$iddoc,'',$conn);
     $vector=explode(',',$datos[0]['anexos']);
     //$vector=$datos[0]['anexos'];
-	print_r($datos);
-    die();
+	
     for($i=0;$i<count($vector);$i++){
         $dir_anexos=selecciona_ruta_anexos("",$iddoc,'archivo');
 		//print_r($dir_anexos."-----");
@@ -101,8 +100,8 @@ function guardar_anexos($idformato, $iddoc){
             }
           $nombre_temporal=$tmpVar . '_' . $nombre_temporal;    
         
-         print_r($ruta_real[1]."<------->".$dir_anexos.$nombre_temporal);
-        die();          
+        // print_r($ruta_real[1]."<------->".$dir_anexos.$nombre_temporal);
+    //    die();          
         //copy($ruta_db_superior.$ruta_real[1],$ruta_db_superior.$dir_anexos.$nombre_temporal);
 		rename($ruta_db_superior.$ruta_real[1], $ruta_db_superior.$dir_anexos.$nombre_temporal);
 		
