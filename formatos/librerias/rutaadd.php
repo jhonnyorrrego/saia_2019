@@ -942,6 +942,7 @@ function AddData($conn)
     $rs=busca_filtro_tabla("A.*,valor","configuracion A","nombre like 'radicador_salida'","",$conn);
     if($rs["numcampos"]>0){
       $func=busca_cargo_funcionario(6,$rs[0]["valor"],"",$conn);
+      print_r($func);die();
       /*
       if(!$func["numcampos"]){
        //validar_usuario_radicador_salida();
