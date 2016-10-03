@@ -943,7 +943,7 @@ function AddData($conn)
     if($rs["numcampos"]>0){
       //$func=busca_cargo_funcionario(6,$rs[0]["valor"],"",$conn);
       $func=busca_filtro_tabla("estado,funcionario_codigo","funcionario","login='".$rs[0]['valor']."'","",$conn);
-      print_r($func);die();
+      //print_r($func);die();
       
       if($func["numcampos"]>0&&$func[0]["estado"]){
         $destino=agregar_destino_ruta($destino,1,$func[0]["funcionario_codigo"],1,"APROBADO",$obligatorio);  
