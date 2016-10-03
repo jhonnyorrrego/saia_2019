@@ -79,7 +79,7 @@ function guardar_anexos($idformato, $iddoc){
     $datos=busca_filtro_tabla('','ft_correo_saia','documento_iddocumento='.$iddoc,'',$conn);
     $vector=explode(',',$datos[0]['anexos']);
     //$vector=$datos[0]['anexos'];
-	print_r($vector);
+	print_r($datos);
     die();
     for($i=0;$i<count($vector);$i++){
         $dir_anexos=selecciona_ruta_anexos("",$iddoc,'archivo');
