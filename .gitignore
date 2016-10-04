@@ -8,8 +8,6 @@ roundcubemail/logs/**
 errores.txt
 .project
 .settings/
-bk_bpmn_201603231438/**
-workflow/bk_libreria_paso_201603231449.php
 pruebas_ruben
 define.php
 prueba_nuevo.php
