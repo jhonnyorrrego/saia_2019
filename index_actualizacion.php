@@ -417,7 +417,7 @@ if($_SESSION["tipo_dispositivo"]=="movil"){ ?>
 ?>
         <div class="ui-corner-all">
           <iframe name="centro" src="<?php echo $pagina_inicio; ?>" id="iFrameContainer" allowtransparency="1" frameborder="0" framespacing="5px" scrolling="auto" width="100%" src=""  hspace="0" vspace="0"></iframe>
-        </div>
+        </div> 
       </div>
     </td>
   </tr>
