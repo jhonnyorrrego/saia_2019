@@ -2399,7 +2399,7 @@ while($max_salida>0){
 	$ruta.="../";
 	$max_salida--;
 }	
-	include('librerias_saia.php');
+	include_once('librerias_saia.php');
 	global $raiz_saia;
 	$raiz_saia=$ruta_superior_temporal;
 	echo(librerias_notificaciones());	 
