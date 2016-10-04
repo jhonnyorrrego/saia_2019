@@ -11740,7 +11740,7 @@ class TCPDF {
 		$this->set_mqr(false);
 		
 
-    	file_put_contents($ruta_db_superior."tcpdf/aaa_velocidad.txt",  "INICIO (codigo velocidad)-------".date("Y-m-d H:i:s")."-----------\n",FILE_APPEND);							
+    							
 		
 		foreach ($this->FontFiles as $file => $info) {
 			// search and get font file to embedd
@@ -11830,8 +11830,7 @@ class TCPDF {
 			}
 		}
 
-    	file_put_contents($ruta_db_superior."tcpdf/aaa_velocidad.txt",  "FIN (codigo velocidad)-------".date("Y-m-d H:i:s")."-----------\n",FILE_APPEND);						
-					
+    				
 
 		$this->set_mqr($mqr);
 		foreach ($this->fontkeys as $k) {
