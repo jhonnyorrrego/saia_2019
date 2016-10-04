@@ -600,7 +600,8 @@ global $conn;
 			case ('UPDATE'):
 				preg_match("/update (\w*\.)*(\w+)/", strtolower($strsql), $resultados);
 				$tabla = $resultados[2];
-				preg_match("/where (.+)=(.*)/", strtolower($strsql), $resultados);
+				//preg_match("/where (.+)=(.*)/", strtolower($strsql), $resultados);
+				preg_match("/where (.+)=([\w]+|'[\w]+')/", strtolower($strsql), $resultados);
 				$llave = trim($resultados[2]);
 				$campo_llave = $resultados[1];
 				$detalle = busca_filtro_tabla("", $tabla, $campo_llave . "=" . $llave, "", $conn);
@@ -609,7 +610,7 @@ global $conn;
 				// ************ miro cuales campos cambiaron en la tabla ****************
 				$nombres_campos = array();
 				if($detalle["numcampos"]) {
-					$nombres_campos = array_keys($detalle[0]);
+					$nombres_campos = array_keys($detalle[0]); 
 				}
 				$cambios = array();
 				if($detalle2["numcampos"] && $detalle["numcampos"]) {
@@ -630,7 +631,8 @@ global $conn;
 			case ('DELETE'):
 				preg_match("/delete from (\w*\.)*(\w+)/", strtolower($strsql), $resultados);
 				$tabla = $resultados[2];
-				preg_match("/where (.+)=(.*)/", strtolower($strsql), $resultados);
+				//preg_match("/where (.+)=(.*)/", strtolower($strsql), $resultados);
+				preg_match("/where (.+)=([\w]+|'[\w]+')/", strtolower($strsql), $resultados);
 				$llave = trim($resultados[2]);
 				$campo_llave = $resultados[1];
 				$detalle = busca_filtro_tabla("", $tabla, $campo_llave . "=" . $llave, "", $conn);
