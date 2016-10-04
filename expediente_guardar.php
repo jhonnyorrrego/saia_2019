@@ -52,8 +52,8 @@ if($_REQUEST["iddoc"])  //si estoy llenando desde la pantalla del menu intermedi
  		$cantidad_adicionar=count($adicionales);
  		
  		
- 		//$cantidad_adicionar=explode(",",$_REQUEST["expedientes"]);
- 		//$cantidad_eliminar=1;
+ 		$cantidad_adicionar=explode(",",$_REQUEST["expedientes"]);
+ 		$cantidad_eliminar=1;
  		if($cantidad_eliminar){
  			$expedientes_asignados=arreglo_expedientes_asignados();
  			$nuevos_quitar=array_intersect($quitar, $expedientes_asignados);
