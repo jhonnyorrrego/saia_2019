@@ -684,7 +684,7 @@ function guardar_evento($strsql, $llave, $tabla, $func, $accion, $diferencias=nu
 	
 	$sqleve = "INSERT INTO evento(funcionario_codigo, fecha, evento, tabla_e, registro_id, estado,codigo_sql,detalle) VALUES('" . $func . "'," . fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s') . ",'$accion', '$tabla', $llave, '0','','')";
 	
-	$conn->Ejecutar_Sql($sqleve) or die($sqleve);
+	$conn->Ejecutar_Sql($sqleve);
 	$registro = $conn->Ultimo_Insert();
 	if($registro) {
 		guardar_lob('codigo_sql', 'evento', "idevento=" . $registro, $strsql, 'texto', $conn, 0);
