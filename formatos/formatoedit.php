@@ -782,7 +782,7 @@ detalles_mostrar_".$x_nombre.".php";
       $data='*';
     }
     
-	$fp = fopen($x_nombre . "/.gitignore", 'W');
+	$fp = fopen($x_nombre . "/.gitignore", 'w+');
     fwrite($fp,$data);
     fclose($fp);
 	chmod($x_nombre . "/.gitignore",PERMISOS_ARCHIVOS);		
