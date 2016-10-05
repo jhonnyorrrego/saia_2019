@@ -2783,15 +2783,15 @@ function generar_formato($idformato) {
 	
 	$data = "
 	    adicionar_".$formato[0]['nombre'].".php
-	    \r\n
+	    \r
 	    editar_".$formato[0]['nombre'].".php
-	    \r\n
+	    \r
 	    buscar_".$formato[0]['nombre'].".php
-	    \r\n
+	    \r
 	    buscar_".$formato[0]['nombre']."2.php
-	    \r\n
+	    \r
 	    mostrar_".$formato[0]['nombre'].".php
-	    \r\n
+	    \r
 	    detalles_mostrar_".$formato[0]['nombre'].".php
 	";
 	if (intval($formato[0]["pertenece_nucleo"]) == 0) {
