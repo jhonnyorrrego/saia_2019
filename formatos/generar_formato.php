@@ -2785,7 +2785,7 @@ editar_".$formato[0]['nombre'].".php
 buscar_".$formato[0]['nombre'].".php
 buscar_".$formato[0]['nombre']."2.php
 mostrar_".$formato[0]['nombre'].".php
-detalles_mostrar_".$formato[0]['nombre'].".php";
+detalles_mostrar_".$formato[0]['nombre'].".php\0";
 	if (intval($formato[0]["pertenece_nucleo"]) == 0) {
 		//Ignorar todo el contenido de la carpeta
 		$data = "*";
