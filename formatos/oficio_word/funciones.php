@@ -26,10 +26,12 @@ function mostrar_enlace_plantilla($idformato, $iddoc) { // ADICIONAR
 <script>
 		$(document).ready(function(){
 			$html='<div style="text-align:center; font-size:11pt;">';
-			$html+='<b>ATENCION!</b> <BR>Por favor ';
-			$html+=' <a href="<?php echo($ruta_plantilla); ?>" target="_blank">DESCARGUE</a> ';
-			$html+=' la siguiente plantilla para crear un nuevo oficio, &oacute; hacer caso omiso si ya dispone de ella. ';
-			$html+='</div>';
+			$html+='<b>ATENCION!</b> <BR>Por favor descargue ';
+			$html+=' <a href="<?php echo($ruta_plantilla); ?>plantilla_nuevo_oficio.docx" target="_blank">ESTA PLANTILLA</a> ';
+			$html+=' para crear un nuevo oficio, &oacute; hacer caso omiso si ya dispone de ella. ';
+			$html+='<br>Si desea ';
+			$html+='<a href="<?php echo($ruta_plantilla); ?>plantilla_nuevo_oficio_combinar.docx" target="_blank">COMBINAR</a>';
+			$html+=' correspondencia descargue la siguiente plantilla</div>';
 			$('#enlace_plantilla').html($html);
 		});
 	</script>
