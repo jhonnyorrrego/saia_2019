@@ -2779,7 +2779,21 @@ function generar_formato($idformato) {
 	global $sql, $conn, $ruta_db_superior;
 	$formato = busca_filtro_tabla("*", "formato A", "A.idformato=" . $idformato, "", $conn);
 	$encabezado = busca_filtro_tabla("contenido", "encabezado_formato", "idencabezado_formato='" . $formato[0]["encabezado"] . "'", "", $conn);
-	$data = ' ';
+	
+	
+	$data = "
+	    adicionar_".$formato[0]['nombre'].".php
+	    \n
+	    editar_".$formato[0]['nombre'].".php
+	    \n
+	    buscar_".$formato[0]['nombre'].".php
+	    \n
+	    buscar_".$formato[0]['nombre']."2.php
+	    \n
+	    mostrar_".$formato[0]['nombre'].".php
+	    \n
+	    detalles_mostrar_".$formato[0]['nombre'].".php
+	";
 	if (intval($formato[0]["pertenece_nucleo"]) == 0) {
 		//Ignorar todo el contenido de la carpeta
 		$data = "*";
