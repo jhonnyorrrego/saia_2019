@@ -1275,7 +1275,7 @@ function generar_condicion_funcionario_tomado_campo($fk_campos_formato,$formato_
     $datos_formato_ruta=busca_filtro_tabla("b.nombre,b.banderas,a.nombre_tabla","formato a,campos_formato b","b.idcampos_formato=".$fk_campos_formato."  AND a.idformato=b.formato_idformato AND a.idformato=".$vector_idformato_idpaso_actividad[0],"",$conn);  
      
     if($datos_formato_ruta['numcampos']){
-        $paso_actividad_documento=busca_filtro_tabla("b.documento_iddocumento","paso_actividad a,paso_documento b","a.paso_idpaso=b.paso_idpaso AND a.formato_idformato=".$vector_idformato_idpaso_actividad[0]." AND a.idpaso_actividad=".$vector_idformato_idpaso_actividad[1],"idpaso_documento DESC",$conn);
+        $paso_actividad_documento=busca_filtro_tabla("b.documento_iddocumento","paso_actividad a,paso_documento b","a.estado=1 AND b.estado_paso_documento IN(1,2) AND a.paso_idpaso=b.paso_idpaso AND a.formato_idformato=".$vector_idformato_idpaso_actividad[0]." AND a.idpaso_actividad=".$vector_idformato_idpaso_actividad[1],"idpaso_documento DESC",$conn);
         
         
 		$consulta_valor_campo=busca_filtro_tabla($datos_formato_ruta[0]['nombre'],$datos_formato_ruta[0]['nombre_tabla'],"documento_iddocumento=".$paso_actividad_documento[0]['documento_iddocumento'],"",$conn);
