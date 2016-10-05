@@ -2780,7 +2780,6 @@ function generar_formato($idformato) {
 	$formato = busca_filtro_tabla("*", "formato A", "A.idformato=" . $idformato, "", $conn);
 	$encabezado = busca_filtro_tabla("contenido", "encabezado_formato", "idencabezado_formato='" . $formato[0]["encabezado"] . "'", "", $conn);
 	
-	
 	$data = "
 	    adicionar_".$formato[0]['nombre'].".php
 	    \r
