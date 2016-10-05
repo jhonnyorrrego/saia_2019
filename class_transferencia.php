@@ -522,6 +522,7 @@ function aprobar($iddoc=0,$url="")
    //$buscar=new SQL($con->Obtener_Conexion(), "Oracle");
    global $conn;
    $transferir=1;
+   $aprobar_posterior=0;
     if(isset($_REQUEST["iddoc"])&&$_REQUEST["iddoc"])
       $iddoc=$_REQUEST["iddoc"];
 
@@ -749,7 +750,7 @@ function aprobar($iddoc=0,$url="")
                   $l_destino[] = $list_destino;
                  // enviar_mensaje("origen",$l_destino,$mensaje,'msg');
                  }  */
-                 llama_funcion_accion($iddoc,$tipo_radicado[0]["idformato"],"aprobar","POSTERIOR");
+                 $aprobar_posterior=1;
 								 if($datos_formato[0]["mostrar_pdf"]==1){
 								 	$sql1="UPDATE documento SET pdf=null WHERE iddocumento=".$iddoc;
 									phpmkr_query($sql1);
@@ -766,6 +767,9 @@ function aprobar($iddoc=0,$url="")
 		phpmkr_query($sql1);
 	}
   llama_funcion_accion($iddoc,$tipo_radicado[0]["idformato"],"confirmar","POSTERIOR");
+  if($aprobar_posterior){
+      llama_funcion_accion($iddoc,$tipo_radicado[0]["idformato"],"aprobar","POSTERIOR");
+  }
 /*if(strpos($_SERVER["PHP_SELF"],"meses")<=0)
    {
     if($url=="")
