@@ -215,7 +215,7 @@ for($i=0;$i<@$listado_acciones_paso["numcampos"];$i++){
 	if(($accion=='confirmar' || $accion=='aprobar') && $listado_acciones_paso[$i]['llave_entidad']==-2){ //funcionario tomado de un campo  
 	    $datos_apaso_actividad=busca_filtro_tabla("","paso_actividad","idpaso_actividad=".$listado_acciones_paso[$i]['idpaso_actividad'],"",$conn);
 	                
-	   $condicion=generar_condicion_funcionario_tomado_campo($datos_apaso_actividad[0]["fk_campos_formato"],$datos_apaso_actividad[0]["formato_anterior"],$iddocumento);
+	   $condicion=generar_condicion_funcionario_tomado_campo($datos_apaso_actividad[0]["fk_campos_formato"],$datos_apaso_actividad[0]["formato_anterior"]);
 	   $funcionario=busca_filtro_tabla("","vfuncionario_dc",$condicion." AND estado_dc=1 AND estado=1","",$conn);
 
 	   	if($funcionario[0]['login']==usuario_actual('login')){
@@ -501,7 +501,7 @@ function validar_ruta_documento_flujo($iddoc,$pasos_evaluar,$paso_anterior,$acci
                   //error("EXISTE RUTA 2 Y EL FUNCIONARIO ESTA ACTIVO");
                  // print_r($dato_paso_ruta);die();
                   if($dato_paso_ruta[0]["llave_entidad"]==-2){
-                    $condicion=generar_condicion_funcionario_tomado_campo($dato_paso_ruta[0]["fk_campos_formato"],$dato_paso_ruta[0]["formato_anterior"],$iddoc);
+                    $condicion=generar_condicion_funcionario_tomado_campo($dato_paso_ruta[0]["fk_campos_formato"],$dato_paso_ruta[0]["formato_anterior"]);
                     $funcionario=busca_filtro_tabla("","vfuncionario_dc",$condicion." AND estado_dc=1 AND estado=1","",$conn);
 
                   }else{
@@ -1265,13 +1265,18 @@ function paso_anterior($idpaso,$iddiagram,$iddoc=0){
 
 
 
-function generar_condicion_funcionario_tomado_campo($fk_campos_formato,$formato_anterior,$iddoc){
+function generar_condicion_funcionario_tomado_campo($fk_campos_formato,$formato_anterior){
 	global $conn;
-
+	
+	
+	$vector_idformato_idpaso_actividad=explode('|',$formato_anterior);
+    $vector_idformato_idpaso_actividad=array_map('intval',$vector_idformato_idpaso_actividad);
 	$condicion=0;
-    $datos_formato_ruta=busca_filtro_tabla("b.nombre,b.banderas,a.nombre_tabla","formato a,campos_formato b","b.idcampos_formato=".$fk_campos_formato."  AND a.idformato=b.formato_idformato AND a.idformato=".$formato_anterior,"",$conn);  
+    $datos_formato_ruta=busca_filtro_tabla("b.nombre,b.banderas,a.nombre_tabla","formato a,campos_formato b","b.idcampos_formato=".$fk_campos_formato."  AND a.idformato=b.formato_idformato AND a.idformato=".$vector_idformato_idpaso_actividad[0],"",$conn);  
      
     if($datos_formato_ruta['numcampos']){
+        
+        
 		$consulta_valor_campo=busca_filtro_tabla($datos_formato_ruta[0]['nombre'],$datos_formato_ruta[0]['nombre_tabla'],"documento_iddocumento=".$iddoc,"",$conn);
                          
         $valor_campo_ruta=$consulta_valor_campo[0][$datos_formato_ruta[0]['nombre']];
