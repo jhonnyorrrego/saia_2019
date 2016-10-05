@@ -2780,21 +2780,7 @@ function generar_formato($idformato) {
 	$formato = busca_filtro_tabla("*", "formato A", "A.idformato=" . $idformato, "", $conn);
 	$encabezado = busca_filtro_tabla("contenido", "encabezado_formato", "idencabezado_formato='" . $formato[0]["encabezado"] . "'", "", $conn);
 	
-	$data = "
-	    .gitignore
-	   \r
-	    adicionar_".$formato[0]['nombre'].".php
-	    \r
-	    editar_".$formato[0]['nombre'].".php
-	    \r
-	    buscar_".$formato[0]['nombre'].".php
-	    \r
-	    buscar_".$formato[0]['nombre']."2.php
-	    \r
-	    mostrar_".$formato[0]['nombre'].".php
-	    \r
-	    detalles_mostrar_".$formato[0]['nombre'].".php
-	";
+	$data = "adicionar_".$formato[0]['nombre'].".php\reditar_".$formato[0]['nombre'].".php\rbuscar_".$formato[0]['nombre'].".php\rbuscar_".$formato[0]['nombre']."2.php\rmostrar_".$formato[0]['nombre'].".php\r  detalles_mostrar_".$formato[0]['nombre'].".php";
 	if (intval($formato[0]["pertenece_nucleo"]) == 0) {
 		//Ignorar todo el contenido de la carpeta
 		$data = "*";
