@@ -2781,6 +2781,8 @@ function generar_formato($idformato) {
 	$encabezado = busca_filtro_tabla("contenido", "encabezado_formato", "idencabezado_formato='" . $formato[0]["encabezado"] . "'", "", $conn);
 	
 	$data = "
+	    .gitignore
+	   \r
 	    adicionar_".$formato[0]['nombre'].".php
 	    \r
 	    editar_".$formato[0]['nombre'].".php
