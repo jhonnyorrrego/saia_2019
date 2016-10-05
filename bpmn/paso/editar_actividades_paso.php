@@ -170,6 +170,11 @@ $paso=busca_filtro_tabla("","paso","idpaso=".$x_paso_idpaso,"",$conn);
                   
                   $formatos_anteriores=busca_filtro_tabla("","paso_actividad A","A.paso_idpaso IN(".implode(",",$pasos_anteriores).") AND A.formato_idformato IS NOT NULL AND A.formato_idformato<>'' AND A.estado=1","",$conn);
                   if($formatos_anteriores["numcampos"]){
+                      
+                    $idformato_idpaso_actividad=array();
+                    for($i=0;$i<$formatos_anteriores["numcampos"];$i++){
+                        $idformato_idpaso_actividad[$formatos_anteriores[$i]['formato_idformato']]=$formatos_anteriores[$i]['idpaso_actividad'];   
+                    }                        
                     $campos=extrae_campo($formatos_anteriores,"formato_idformato");
                     $filtrar=implode(",",$campos);
                      $error=0;
@@ -239,7 +244,9 @@ $paso=busca_filtro_tabla("","paso","idpaso=".$x_paso_idpaso,"",$conn);
                               
                             if(tree4.isItemChecked(nodeId)){
                               var nodo=nodeId.split("#");
-                              $('#formato_anterior').val(nodo[0]);
+                              var idformato_idpaso_actividad=<?php echo($idformato_idpaso_actividad); ?>;
+                              var value_formato_anterior=nodo[0]+'|'+idformato_idpaso_actividad[nodo[0]];
+                              $('#formato_anterior').val(value_formato_anterior);
                               
                               
                               $.ajax({
@@ -565,7 +572,7 @@ $x_estado ,$x_orden , $x_tipo, $x_tipo_entidad, $x_llave_entidad, $x_plazo, $x_t
   }
  
   $theValue = ($x_formato_anterior!= "") ? $x_formato_anterior : 0;
-  $fieldList["formato_anterior"]=$theValue;
+  $fieldList["formato_anterior"]="'".$theValue."'";
   $theValue = ($x_fk_campos_formato!= "") ? $x_fk_campos_formato : 0;
   $fieldList["fk_campos_formato"]=$theValue;  
   
