@@ -14,5 +14,5 @@ include_once($ruta_db_superior."db.php");
     var vector={"1":"127"};
     
     
-    alert(vector.1);
+    alert(vector."1");
 </script>
