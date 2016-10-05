@@ -9,26 +9,10 @@ while($max_salida>0){
   $max_salida--;
 }
 include_once($ruta_db_superior."db.php");
-include_once($ruta_db_superior."formatos/librerias/funciones_generales.php");
-
-
-$_REQUEST['no_redirecciona']=1;
-$_REQUEST['iddocumento']=370;
-$_REQUEST['tipo_versionamiento']=1;
-$_REQUEST['version_numero']=0;
-$_REQUEST['iddocumento_anexo']=369;
-$_REQUEST['funcionario_codigo']=1;
-
-$datos_documento = obtener_datos_documento(370);
-
-
-crear_pdf_documento_tcpdf($datos_documento);
-
-
-
-
-
-
-
-
 ?>
+<script>
+    var vector='{"1":"127"}';
+    
+    
+    alert(vector);
+</script>
