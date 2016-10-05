@@ -204,7 +204,7 @@ $paso=busca_filtro_tabla("","paso","idpaso=".$_REQUEST["idpaso"],"",$conn);
                             if(tree4.isItemChecked(nodeId)){
                               var nodo=nodeId.split("#");
                               $('#formato_anterior').val(nodo[0]);
-                              var idformato_idpaso_actividad='<?php echo($idformato_idpaso_actividad); ?>';
+                              var idformato_idpaso_actividad=<?php echo($idformato_idpaso_actividad); ?>;
                               
                               $.ajax({
                                 type:'POST',
