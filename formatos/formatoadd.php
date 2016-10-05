@@ -755,13 +755,25 @@ function AddData($conn) {
 	$fieldList["exportar"] = $theValue;
 	if(!is_dir($x_nombre)) {
 		mkdir($x_nombre, 0777);
-		$data = ' ';
+		$data ="adicionar_".$x_nombre.".php
+editar_".$x_nombre.".php
+buscar_".$x_nombre.".php
+buscar_".$x_nombre."2.php
+mostrar_".$x_nombre.".php
+detalles_mostrar_".$x_nombre.".php";
 		if(intval($x_pertenece_nucleo) == 0) {
 			$data = '*';
 		}
+    		
+		
+	$fp = fopen($x_nombre . "/.gitignore", 'W');
+    fwrite($fp,$data);
+    fclose($fp);
+	chmod($x_nombre . "/.gitignore",PERMISOS_ARCHIVOS);		
+		/*
 		if(!file_put_contents($x_nombre . "/.gitignore", $data)) {
 			alerta("No se crea el archivo .gitignore para versionamiento");
-		}
+		}*/
 	}
 	
 	// Field cod_padre
