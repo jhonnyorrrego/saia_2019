@@ -545,7 +545,7 @@ $x_estado ,$x_orden , $x_tipo, $x_tipo_entidad, $x_llave_entidad, $x_plazo, $x_t
     $fieldList["orden"]=0;
   }
   $theValue = ($x_formato_anterior!= "") ? $x_formato_anterior : 0;
-  $fieldList["formato_anterior"]=$theValue;
+  $fieldList["formato_anterior"]="'".$theValue."'";
   $theValue = ($x_fk_campos_formato!= "") ? $x_fk_campos_formato : 0;
   $fieldList["fk_campos_formato"]=$theValue;
   
