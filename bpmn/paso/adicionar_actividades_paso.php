@@ -163,6 +163,12 @@ $paso=busca_filtro_tabla("","paso","idpaso=".$_REQUEST["idpaso"],"",$conn);
                   
                   $formatos_anteriores=busca_filtro_tabla("","paso_actividad A","A.paso_idpaso IN(".implode(",",$pasos_anteriores).") AND A.formato_idformato IS NOT NULL AND A.formato_idformato<>'' AND A.estado=1","",$conn);
                   if($formatos_anteriores["numcampos"]){
+                    
+                    $idformato_idpaso_actividad=array();
+                    for($i=0;$i<$formatos_anteriores["numcampos"];$i++){
+                        $idformato_idpaso_actividad[$formatos_anteriores[$i]['formato_idformato']]=$formatos_anteriores[$i]['idpaso_actividad'];   
+                    }  
+                      
                     $campos=extrae_campo($formatos_anteriores,"formato_idformato");
                     $filtrar=implode(",",$campos);
                      $error=0;
@@ -175,6 +181,7 @@ $paso=busca_filtro_tabla("","paso","idpaso=".$_REQUEST["idpaso"],"",$conn);
                 if($error){
                     echo('<div class="alert alert-error">'.$error.'</div>');
                 }else{
+                    $idformato_idpaso_actividad=json_encode($idformato_idpaso_actividad);
                     ?>
                     <script>
                         $(document).ready(function(){
@@ -197,7 +204,7 @@ $paso=busca_filtro_tabla("","paso","idpaso=".$_REQUEST["idpaso"],"",$conn);
                             if(tree4.isItemChecked(nodeId)){
                               var nodo=nodeId.split("#");
                               $('#formato_anterior').val(nodo[0]);
-                              
+                              var idformato_idpaso_actividad='<?php echo($idformato_idpaso_actividad); ?>';
                               
                               $.ajax({
                                 type:'POST',
