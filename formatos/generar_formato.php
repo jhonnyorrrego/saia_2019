@@ -2799,6 +2799,7 @@ function generar_formato($idformato) {
 		$data = "*";
 	}
 	file_put_contents($ruta_db_superior . "formatos/" . $formato[0]["nombre"] . "/.gitignore", $data);
+	chmod($ruta_db_superior . "formatos/" . $formato[0]["nombre"] . "/.gitignore",PERMISOS_ARCHIVOS);
 	$pie = busca_filtro_tabla("contenido", "encabezado_formato", "idencabezado_formato='" . $formato[0]["pie_pagina"] . "'", "", $conn);
 	$lcampos = "";
 	$regs = array();
