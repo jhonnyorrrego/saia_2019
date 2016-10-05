@@ -11,8 +11,8 @@ while($max_salida>0){
 include_once($ruta_db_superior."db.php");
 ?>
 <script>
-    var vector=JSON.parse({"1":"127"});
+    var vector={"1":"127"};
     
     
-    alert(vector.1);
+    alert(vector[0]);
 </script>
