@@ -2790,7 +2790,11 @@ detalles_mostrar_".$formato[0]['nombre'].".php";
 		//Ignorar todo el contenido de la carpeta
 		$data = "*";
 	}
-	file_put_contents($ruta_db_superior . "formatos/" . $formato[0]["nombre"] . "/.gitignore", $data);
+	//file_put_contents($ruta_db_superior . "formatos/" . $formato[0]["nombre"] . "/.gitignore", $data);
+	    $fp = fopen($ruta_db_superior . "formatos/" . $formato[0]["nombre"] . "/.gitignore", 'W');
+        fwrite($fp,$data);
+        fclose($fp);
+	
 	chmod($ruta_db_superior . "formatos/" . $formato[0]["nombre"] . "/.gitignore",PERMISOS_ARCHIVOS);
 	$pie = busca_filtro_tabla("contenido", "encabezado_formato", "idencabezado_formato='" . $formato[0]["pie_pagina"] . "'", "", $conn);
 	$lcampos = "";
