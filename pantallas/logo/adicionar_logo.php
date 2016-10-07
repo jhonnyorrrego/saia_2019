@@ -157,5 +157,5 @@ function guardar_anexo(){
 	}
 	return true;
 }
-
+echo(estilo_file_upload());
 ?>
