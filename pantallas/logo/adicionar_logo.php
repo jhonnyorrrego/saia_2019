@@ -125,14 +125,21 @@ function guardar_anexo(){
         
         crear_destino($ruta_db_superior.RUTA_LOGO_SAIA);
         
-		cambia_tam($_FILES["anexo"]["tmp_name"],$ruta_db_superior.$ruta_imagen2,145,90,"");
-		chmod($ruta_db_superior.$ruta_imagen2,PERMISOS_ARCHIVOS);
-		$sql="UPDATE configuracion SET valor='".$ruta_imagen2."' WHERE nombre='logo'";
+		//cambia_tam($_FILES["anexo"]["tmp_name"],$ruta_db_superior.$ruta_imagen2,145,90,"");
+		
+		if( cambia_tam($_FILES["anexo"]["tmp_name"],$ruta_db_superior.$ruta_imagen2,145,90,"") ){
+    		chmod($ruta_db_superior.$ruta_imagen2,PERMISOS_ARCHIVOS);
+    		$sql="UPDATE configuracion SET valor='".$ruta_imagen2."' WHERE nombre='logo'";
+    		phpmkr_query($sql);		    
+		}else{
+		    alerta("No fue posible subir el logo... favor intentarlo nuevamente!",'error');
+		    return false;
+		}
+		
 
-		phpmkr_query($sql);
 	}
 	else{
-		alerta("El archivo anexo no es jpg");
+		alerta("El archivo anexo no es jpg... favor intentarlo con un logo correcto!",'warning');
 		return false;
 	}
 	return true;
