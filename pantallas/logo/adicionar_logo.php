@@ -124,7 +124,7 @@ function guardar_anexo(){
 		$ruta_imagen2=RUTA_LOGO_SAIA."logo_".$aleatorio.".".$extension;
 		
 		define("RUTA_LOGO_SAIA",'');
-		if(!RUTA_LOGO_SAIA || RUTA_LOGO_SAIA==''){
+		if(!define('RUTA_LOGO_SAIA') || RUTA_LOGO_SAIA==''){
 		    alerta("No existe configuracion para el almacenado del logo... favor verificar e intentarlo nuevamente!",'error');
 		    return false;		    
 		}
