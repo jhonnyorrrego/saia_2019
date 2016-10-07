@@ -123,13 +123,16 @@ function guardar_anexo(){
 		$aleatorio=rand(1,999)."_".date("Y-m-d");
 		$ruta_imagen2=RUTA_LOGO_SAIA."logo_".$aleatorio.".".$extension;
 		
-		define("RUTA_LOGO_SAIA",'');
+		
 		if(!define('RUTA_LOGO_SAIA') || RUTA_LOGO_SAIA==''){
 		    alerta("<span style='color:white;'>No existe configuracion para el almacenado del logo... favor verificar e intentarlo nuevamente!</span>",'error',5000);
 		    return false;		    
 		}
         
-        crear_destino($ruta_db_superior.RUTA_LOGO_SAIA);
+        if(!crear_destino($ruta_db_superior.RUTA_LOGO_SAIA)){
+		    alerta("<span style='color:white;'>No Fue posible crear la ruta para almacenar el logo... favor verificar la configuracion e intentarlo nuevamente!</span>",'error',5000);
+		    return false;	            
+        }
         
 		//cambia_tam($_FILES["anexo"]["tmp_name"],$ruta_db_superior.$ruta_imagen2,145,90,"");
 		
@@ -138,7 +141,7 @@ function guardar_anexo(){
     		$sql="UPDATE configuracion SET valor='".$ruta_imagen2."' WHERE nombre='logo'";
     		phpmkr_query($sql);		    
 		}else{
-		    alerta("No fue posible subir el logo... favor intentarlo nuevamente!",'error');
+		    alerta("No fue posible subir el logo... favor intentarlo nuevamente!",'error',5000);
 		    return false;
 		}
 		
