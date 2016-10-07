@@ -32,8 +32,9 @@ function formulario(){
 	}
 	?>
 	<br/>
-<div class="well">
+
 	<div class="container">
+	    <div class="well">
 	<form class="form-horizontal" name="formulario_formatos" id="formulario_formatos" method="post" enctype="multipart/form-data">
 	<fieldset id="content_form_name">
     <legend>Cargar logo</legend>
