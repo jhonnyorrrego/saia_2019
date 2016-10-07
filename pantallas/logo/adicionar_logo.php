@@ -125,7 +125,7 @@ function guardar_anexo(){
 		
 		define("RUTA_LOGO_SAIA",'');
 		if(!define('RUTA_LOGO_SAIA') || RUTA_LOGO_SAIA==''){
-		    alerta("No existe configuracion para el almacenado del logo... favor verificar e intentarlo nuevamente!",'error');
+		    alerta("<span style='color:white;'>No existe configuracion para el almacenado del logo... favor verificar e intentarlo nuevamente!</span>",'error',5000);
 		    return false;		    
 		}
         
