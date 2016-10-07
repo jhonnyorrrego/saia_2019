@@ -13,6 +13,10 @@ include_once($ruta_db_superior."librerias_saia.php");
 echo(estilo_bootstrap());
 $ruta_logo=busca_filtro_tabla("","configuracion a","a.nombre='logo'","",$conn);
 $ruta_imagen=$ruta_logo[0]["valor"];
+
+
+print_r(RUTA_LOGO_SAIA.'<--- aqui');
+
 if(@$_REQUEST["accion"]=="guardar"){
 	guardar_imagen();
 }
