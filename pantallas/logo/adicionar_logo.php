@@ -69,7 +69,7 @@ function formulario(){
 		<td colspan="2"><input type="submit" value="Guardar" name="enviar" class="btn btn-primary btn-mini"></td>
 		<input type="hidden" name="accion" value="guardar">
 	</form>
-
+</div>
 	
 
 <style>
