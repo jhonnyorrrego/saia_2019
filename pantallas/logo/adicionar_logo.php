@@ -40,7 +40,7 @@ function formulario(){
   </fieldset>
 
 	<div class="control-group">
-		<label class="control-label" for="imagen"><b>Logo actual</b></label>
+		<label class="control-label encabezado_list" for="imagen"><b>Logo actual</b></label>
 		<div class="controls">
 			<?php echo($imagen); ?>
 		</div>
