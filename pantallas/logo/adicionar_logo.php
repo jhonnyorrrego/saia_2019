@@ -48,7 +48,7 @@ function formulario(){
 	<div class="control-group">
 		<label class="control-label" for="logo"><b>Ingresar logo(Formato .jpg, tama&ntilde;o 100px x 90px)</b></label>
 		<div class="controls">
-			<input type="file" name="anexo" id="anexo" >
+			<input type="file" name="anexo" id="anexo" class="btn btn-mini btn-success fileinput-button">
 		</div>
 	</div>
 
