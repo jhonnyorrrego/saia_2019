@@ -144,5 +144,5 @@ function guardar_anexo(){
 	}
 	return true;
 }
-echo(librerias_jquery('1.7'));
+
 ?>
