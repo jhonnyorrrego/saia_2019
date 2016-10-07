@@ -137,5 +137,5 @@ function guardar_anexo(){
 	}
 	return true;
 }
-echo(librerias_bootstrap());
+//echo(librerias_bootstrap());
 ?>
