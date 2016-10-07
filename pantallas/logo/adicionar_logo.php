@@ -65,7 +65,7 @@ function formulario(){
 
 		<td colspan="2">
 		    <input type="submit" value="Guardar" name="enviar" class="btn btn-primary btn-mini"> 
-		            <span class="btn btn-mini btn-default fileinput-button" ng-class="{disabled: disabled}" style="margin-left:40px;" id="contenedor_anexos">
+		   <span class="btn btn-mini btn-default fileinput-button" ng-class="{disabled: disabled}" style="margin-left:40px;" id="contenedor_anexos">
                 <i class="icon-upload"></i>
                 <span>Examinar</span>
                 <input type="file" multiple ng-disabled="disabled" name="anexo" id="anexo">
