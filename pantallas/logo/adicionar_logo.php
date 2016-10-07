@@ -51,11 +51,7 @@ function formulario(){
 		<label class="control-label" for="logo"><b>Ingresar logo </b><span style="font-size:7pt;"><i>(Formato .jpg, tama&ntilde;o 100px x 90px)</i></span></label>
 		<div class="controls">
 			<!-- input type="file" name="anexo" id="anexo" -->
-            <span class="btn btn-mini btn-default fileinput-button" ng-class="{disabled: disabled}" style="margin-left:40px;" id="contenedor_anexos">
-                <i class="icon-upload"></i>
-                <span>Examinar</span>
-                <input type="file" multiple ng-disabled="disabled" name="anexo" id="anexo">
-            </span>			
+		
 			
 		</div>
 	</div>
@@ -67,7 +63,14 @@ function formulario(){
 		</div>
 	</div>	
 
-		<td colspan="2"><input type="submit" value="Guardar" name="enviar" class="btn btn-primary btn-mini"></td>
+		<td colspan="2">
+		    <input type="submit" value="Guardar" name="enviar" class="btn btn-primary btn-mini"> 
+		            <span class="btn btn-mini btn-default fileinput-button" ng-class="{disabled: disabled}" style="margin-left:40px;" id="contenedor_anexos">
+                <i class="icon-upload"></i>
+                <span>Examinar</span>
+                <input type="file" multiple ng-disabled="disabled" name="anexo" id="anexo">
+            </span>	
+		</td>
 		<input type="hidden" name="accion" value="guardar">
 	</form>
 </div>
