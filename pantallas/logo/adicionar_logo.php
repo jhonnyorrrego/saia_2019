@@ -123,7 +123,7 @@ function guardar_anexo(){
 		$aleatorio=rand(1,999)."_".date("Y-m-d");
 		$ruta_imagen2=RUTA_LOGO_SAIA."logo_".$aleatorio.".".$extension;
 		
-		RUTA_LOGO_SAIA='';
+		define("RUTA_LOGO_SAIA",'');
 		if(!RUTA_LOGO_SAIA || RUTA_LOGO_SAIA==''){
 		    alerta("No existe configuracion para el almacenado del logo... favor verificar e intentarlo nuevamente!",'error');
 		    return false;		    
