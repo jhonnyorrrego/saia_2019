@@ -48,7 +48,7 @@ function formulario(){
 	</div>
 	<br>  
 	<div class="control-group">
-		<label class="control-label" for="logo"><b>Ingresar logo <span style="font-size:9pt;">(Formato .jpg, tama&ntilde;o 100px x 90px)</span></b></label>
+		<label class="control-label" for="logo"><b>Ingresar logo <span style="font-size:9pt;"><i>(Formato .jpg, tama&ntilde;o 100px x 90px)</i></span></b></label>
 		<div class="controls">
 			<!-- input type="file" name="anexo" id="anexo" -->
             <span class="btn btn-default fileinput-button" ng-class="{disabled: disabled}" style="margin-left:40px;" id="contenedor_anexos">
