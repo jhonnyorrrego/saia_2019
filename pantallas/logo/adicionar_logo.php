@@ -122,6 +122,11 @@ function guardar_anexo(){
 		//rename($_FILES["file"]["tmp_name"],$ruta_db_superior."imagenes/logo_demo.jpg");
 		$aleatorio=rand(1,999)."_".date("Y-m-d");
 		$ruta_imagen2=RUTA_LOGO_SAIA."logo_".$aleatorio.".".$extension;
+		
+		if(!RUTA_LOGO_SAIA || RUTA_LOGO_SAIA==''){
+		    alerta("No existe configuracion para el almacenado del logo... favor verificar e intentarlo nuevamente!",'error');
+		    return false;		    
+		}
         
         crear_destino($ruta_db_superior.RUTA_LOGO_SAIA);
         
