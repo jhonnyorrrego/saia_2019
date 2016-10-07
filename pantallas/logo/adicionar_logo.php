@@ -32,7 +32,7 @@ function formulario(){
 	}
 	?>
 	<br/>
-
+<div class="well">
 	<div class="container">
 	<form class="form-horizontal" name="formulario_formatos" id="formulario_formatos" method="post" enctype="multipart/form-data">
 	<fieldset id="content_form_name">
@@ -70,7 +70,7 @@ function formulario(){
 		<input type="hidden" name="accion" value="guardar">
 	</form>
 </div>
-	
+	</div>
 
 <style>
 #imagen_previa{
