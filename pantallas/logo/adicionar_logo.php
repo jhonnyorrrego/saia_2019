@@ -48,7 +48,13 @@ function formulario(){
 	<div class="control-group">
 		<label class="control-label" for="logo"><b>Ingresar logo(Formato .jpg, tama&ntilde;o 100px x 90px)</b></label>
 		<div class="controls">
-			<input type="file" name="anexo" id="anexo" class="btn btn-mini btn-success fileinput-button">
+			<!-- input type="file" name="anexo" id="anexo" -->
+            <span class="btn btn-mini btn-success fileinput-button" ng-class="{disabled: disabled}" style="margin-left:40px;" id="contenedor_anexos">
+                <i class="glyphicon-plus"></i>
+                <span>Examinar</span>
+                <input type="file" multiple ng-disabled="disabled" name="anexo" id="anexo">
+            </span>			
+			
 		</div>
 	</div>
 
