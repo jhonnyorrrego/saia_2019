@@ -606,7 +606,7 @@ function fecha_creacion_documento_expediente($fecha0,$plantilla=Null,$doc=Null){
 function validar_relacion_documento_expediente($doc,$funcionario_codigo){
     global $conn;
     
-    $estados_validar=array("'borrador'","'transferido'");
+    $estados_validar=array("'borrador'","'transferido'","'revisado'","'aprobado'");
     
     $consulta=busca_filtro_tabla("archivo_idarchivo","buzon_salida","archivo_idarchivo=".$doc." AND tipo_destino=1 AND lower(nombre) IN(".implode(',',$estados_validar).") AND destino=".$funcionario_codigo,"",$conn);
     return($consulta);
