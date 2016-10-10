@@ -334,7 +334,11 @@ $(document).ready(function(){
   });
   var formulario_expediente=$("#formulario_expediente");
   formulario_expediente.validate({
-  "rules":{"nombre":{"required":true}},
+  "rules":{
+      "nombre":{"required":true},
+      "serie_idserie":{"required":true}
+      
+  },
   submitHandler: function(form) {
   }
   });
