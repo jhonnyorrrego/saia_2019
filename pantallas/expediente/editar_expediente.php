@@ -105,7 +105,7 @@ if($dato_padre["numcampos"]){
 </div>
 
 <div class="control-group element">
-  <label class="control-label" for="nombre">Serie asociada
+  <label class="control-label" for="serie_idserie">Serie asociada *
   </label>
   <div class="controls">
   	<b><?php echo(mostrar_seleccionados_exp($datos[0]["serie_idserie"],"nombre","serie")); ?></b>
@@ -120,8 +120,8 @@ if($dato_padre["numcampos"]){
       <img src="<?php echo $ruta_db_superior; ?>botones/general/siguiente.png"border="0px"></a>      
       <div id="esperando_serie"><img src="<?php echo $ruta_db_superior; ?>imagenes/cargando.gif"></div>
 			<div id="treeboxbox_tree3" class="arbol_saia"></div>
-      <input type="hidden" name="serie_idserie" id="serie_idserie" value="<?php echo($datos[0]["serie_idserie"]); ?>">
     </span>
+     <input type="text" style="display:none;" name="serie_idserie" id="serie_idserie" value="<?php echo($datos[0]["serie_idserie"]); ?>">
   </div>
 </div>
 
@@ -485,7 +485,12 @@ $(document).ready(function(){
   });
   var formulario_expediente=$("#formulario_expediente");
   formulario_expediente.validate({
-  "rules":{"nombre":{"required":true}},
+  ignore: [],
+  "rules":{
+      "nombre":{"required":true},
+      "serie_idserie":{"required":true}
+      
+  },
   submitHandler: function(form) {
   }
   });
