@@ -80,7 +80,7 @@ $dato_padre=busca_filtro_tabla("","expediente a","a.idexpediente=".$_REQUEST["co
 			<div id="treeboxbox_tree3" class="arbol_saia"></div>
      
     </span>
-     <input style="display:none;" type="text" name="serie_idserie" id="serie_idserie" value="<?php if($datos[0]["serie_idserie"]){ echo($datos[0]["serie_idserie"]); }  ?>">
+     <input style="display:none;" type="text" name="serie_idserie" id="serie_idserie" >
   </div>
 </div>
 
