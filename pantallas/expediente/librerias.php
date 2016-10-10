@@ -590,5 +590,8 @@ function origen_documento_expediente($doc,$numero,$origen="",$tipo_radicado="",$
     }        
     return ($enlace);
 }
-
+function fecha_creacion_documento_expediente($fecha0,$plantilla=Null,$doc=Null){
+    $enlace=fecha_creacion_documento($fecha0,$plantilla,$doc);
+    return($enlace);
+}
 ?>
