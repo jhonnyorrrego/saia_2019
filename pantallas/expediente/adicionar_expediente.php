@@ -65,7 +65,7 @@ $dato_padre=busca_filtro_tabla("","expediente a","a.idexpediente=".$_REQUEST["co
 </div>
 
 <div class="control-group element">
-  <label class="control-label" for="nombre">Serie asociada
+  <label class="control-label" for="serie_idserie">Serie asociada
   </label>
   <div class="controls">
     <span class="phpmaker">
