@@ -598,10 +598,11 @@ function fecha_creacion_documento_expediente($fecha0,$plantilla=Null,$doc=Null){
     if(!$involucrado['numcampos']){
         $enlace=str_replace("kenlace_saia","",$enlace);
     }         
-    return($enlace);
+    return($involucrado['sql']);
 }
 function validar_relacion_documento_expediente($funcionario_codigo){
     global $conn;
+    
     $consulta=busca_filtro_tabla("archivo_idarchivo","buzon_salida","archivo_idarchivo=".$doc." AND tipo_destino=1 AND lower(nombre)='transferido' AND destino=".$funcionario_codigo,"",$conn);
     return($consulta);
 }
