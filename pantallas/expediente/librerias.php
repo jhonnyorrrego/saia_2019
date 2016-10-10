@@ -584,7 +584,7 @@ function origen_documento_expediente($doc,$numero,$origen="",$tipo_radicado="",$
     $enlace=origen_documento($doc,$numero,$origen,$tipo_radicado,$estado,$serie,$tipo_ejecutor);
     
     //SE VALIDA SI EL USUARIO ESTA INVOLUCRADO CON EL DOCUMENTO (TRANSFERENCIA) 
-    $involucrado=validar_relacion_documento_expediente(usuario_actual('funcionario_codigo'));
+    $involucrado=validar_relacion_documento_expediente($doc,usuario_actual('funcionario_codigo'));
     if(!$involucrado['numcampos']){
         $enlace=str_replace("kenlace_saia","",$enlace);
     }        
