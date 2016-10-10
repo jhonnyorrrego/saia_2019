@@ -598,7 +598,7 @@ function fecha_creacion_documento_expediente($fecha0,$plantilla=Null,$doc=Null){
     if(!$involucrado['numcampos']){
         $enlace=str_replace("kenlace_saia","",$enlace);
     }         
-    return($involucrado['sql']);
+    return($enlace);
 }
 function validar_relacion_documento_expediente($doc,$funcionario_codigo){
     global $conn;
