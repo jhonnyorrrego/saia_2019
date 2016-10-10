@@ -582,7 +582,9 @@ return($texto);
 
 function origen_documento_expediente($doc,$numero,$origen="",$tipo_radicado="",$estado="",$serie="",$tipo_ejecutor=""){
     $enlace=origen_documento($doc,$numero,$origen,$tipo_radicado,$estado,$serie,$tipo_ejecutor);
-    $enlace=str_replace("kenlace_saia","",$enlace);
+    
+    
+    //$enlace=str_replace("kenlace_saia","",$enlace);
     
     return ($enlace);
    
