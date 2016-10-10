@@ -146,8 +146,13 @@ function radicar_documento_remoto($datos){
 		$datos_documento=busca_filtro_tabla(fecha_db_obtener('A.fecha','Y-m-d')." as x_fecha, A.*","documento A","A.iddocumento=".$iddoc,"",$conn);
 		
 		$fecha=explode("-", $datos_documento[0]["x_fecha"]);
-		$ruta=RUTA_PDFS.$datos_documento[0]["estado"]."/".$fecha[0]."-".$fecha[1]."/".$datos_documento[0]["iddocumento"]."/pdf/";
-		$ruta.=($datos_documento[0]["plantilla"])."_".$datos_documento[0]["numero"]."_".str_replace("-","_",$datos_documento[0]["x_fecha"]).".pdf";
+		//$ruta=RUTA_PDFS.$datos_documento[0]["estado"]."/".$fecha[0]."-".$fecha[1]."/".$datos_documento[0]["iddocumento"]."/pdf/";
+		  $raiz=$ruta_db_superior;
+		  $ruta=ruta_almacenamiento('pdf',0);
+		  $formato_ruta = aplicar_plantilla_ruta_documento($iddoc);
+		  $ruta_db_superior=$raiz;
+		  $ruta.=$formato_ruta."/pdf/";
+		  $ruta.=($datos_documento[0]["plantilla"])."_".$datos_documento[0]["numero"]."_".str_replace("-","_",$datos_documento[0]["x_fecha"]).".pdf";
 		
 		if(file_exists($ruta_db_superior.$ruta)){
 			$retorno['pdf']="http://".RUTA_PDF."/".$ruta;
