@@ -583,6 +583,12 @@ return($texto);
 function origen_documento_expediente($doc,$numero,$origen="",$tipo_radicado="",$estado="",$serie="",$tipo_ejecutor=""){
     $enlace=origen_documento($doc,$numero,$origen,$tipo_radicado,$estado,$serie,$tipo_ejecutor);
     
+    //SE VALIDA SI EL USUARIO ESTA INVOLUCRADO CON EL DOCUMENTO (TRANSFERENCIA)
+    $involucrado=busca_filtro_tabla("archivo_idarchivo","buzon_salida"," tipo_destino=1 AND lower(nombre)='transferido' AND destino=".usuario_actual('funcionario_codigo'),"",$conn);
+    
+    if(!$involucrado['numcampos']){
+        $enlace=str_replace("kenlace_saia","",$enlace);
+    }
     //$enlace=str_replace("kenlace_saia","",$enlace);
     return ($enlace);
    
