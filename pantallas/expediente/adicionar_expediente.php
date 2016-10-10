@@ -335,6 +335,7 @@ $(document).ready(function(){
   });
   var formulario_expediente=$("#formulario_expediente");
   formulario_expediente.validate({
+    ignore: [],  
   "rules":{
       "nombre":{"required":true},
       "serie_idserie":{"required":true}
