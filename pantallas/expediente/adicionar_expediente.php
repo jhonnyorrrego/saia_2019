@@ -78,8 +78,9 @@ $dato_padre=busca_filtro_tabla("","expediente a","a.idexpediente=".$_REQUEST["co
       <img src="<?php echo $ruta_db_superior; ?>botones/general/siguiente.png"border="0px"></a>      
       <div id="esperando_serie"><img src="<?php echo $ruta_db_superior; ?>imagenes/cargando.gif"></div>
 			<div id="treeboxbox_tree3" class="arbol_saia"></div>
-      <input type="hidden" name="serie_idserie" id="serie_idserie" value="<?php if($datos[0]["serie_idserie"]){ echo($datos[0]["serie_idserie"]); }  ?>">
+     
     </span>
+     <input type="hidden" name="serie_idserie" id="serie_idserie" value="<?php if($datos[0]["serie_idserie"]){ echo($datos[0]["serie_idserie"]); }  ?>">
   </div>
 </div>
 
