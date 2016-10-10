@@ -587,7 +587,7 @@ function origen_documento_expediente($doc,$numero,$origen="",$tipo_radicado="",$
     $enlace=origen_documento($doc,$numero,$origen,$tipo_radicado,$estado,$serie,$tipo_ejecutor);
     
     //SE VALIDA SI EL USUARIO ESTA INVOLUCRADO CON EL DOCUMENTO (TRANSFERENCIA) 
-    $involucrado=validar_relacion_documento_expediente($doc,usuario_actual('funcionario_codigo'));
+    $involucrado=validar_relacion_documento_expediente($doc);
     if(!$involucrado['numcampos']){
         $enlace=str_replace("kenlace_saia","",$enlace);
     }        
@@ -597,15 +597,15 @@ function fecha_creacion_documento_expediente($fecha0,$plantilla=Null,$doc=Null){
     $enlace=fecha_creacion_documento($fecha0,$plantilla,$doc);
 
     //SE VALIDA SI EL USUARIO ESTA INVOLUCRADO CON EL DOCUMENTO (TRANSFERENCIA) 
-    $involucrado=validar_relacion_documento_expediente($doc,usuario_actual('funcionario_codigo'));  
+    $involucrado=validar_relacion_documento_expediente($doc);  
     if(!$involucrado['numcampos']){
         $enlace=str_replace("kenlace_saia","",$enlace);
     }         
     return($enlace);
 }
-function validar_relacion_documento_expediente($doc,$funcionario_codigo){
+function validar_relacion_documento_expediente($doc){
     global $conn;
-    
+    $funcionario_codigo=usuario_actual('funcionario_codigo');
     $estados_validar=array("'borrador'","'transferido'","'revisado'","'aprobado'");
     
     $consulta=busca_filtro_tabla("archivo_idarchivo","buzon_salida","archivo_idarchivo=".$doc." AND tipo_destino=1 AND lower(nombre) IN(".implode(',',$estados_validar).") AND destino=".$funcionario_codigo,"",$conn);
