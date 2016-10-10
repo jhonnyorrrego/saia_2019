@@ -586,7 +586,7 @@ function origen_documento_expediente($doc,$numero,$origen="",$tipo_radicado="",$
     //SE VALIDA SI EL USUARIO ESTA INVOLUCRADO CON EL DOCUMENTO (TRANSFERENCIA) 
     //if($origen!=usuario_actual('funcionario_codigo')){
         $involucrado=busca_filtro_tabla("archivo_idarchivo","buzon_salida"," tipo_destino=1 AND lower(nombre)='transferido' AND destino=".usuario_actual('funcionario_codigo'),"",$conn);
-        return($involucrado['sql']);
+       // return($involucrado['sql']);
         if(!$involucrado['numcampos']){
             $enlace=str_replace("kenlace_saia","",$enlace);
         }        
