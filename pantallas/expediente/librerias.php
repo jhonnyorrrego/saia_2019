@@ -579,4 +579,10 @@ $texto.='</div>';
 //$texto.=barra_estandar_documento($iddoc,$funcionario);
 return($texto);
 }
+
+function origen_documento_expediente($doc,$numero,$origen="",$tipo_radicado="",$estado="",$serie="",$tipo_ejecutor=""){
+    $enlace=origen_documento($doc,$numero,$origen,$tipo_radicado,$estado,$serie,$tipo_ejecutor);
+    return ($enlace);
+}
+
 ?>
