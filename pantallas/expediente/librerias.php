@@ -589,7 +589,7 @@ function origen_documento_expediente($doc,$numero,$origen="",$tipo_radicado="",$
     //SE VALIDA SI EL USUARIO ESTA INVOLUCRADO CON EL DOCUMENTO (TRANSFERENCIA) 
     $involucrado=validar_relacion_documento_expediente($doc);
     if(!$involucrado['numcampos']){
-        $enlace=str_replace("class=[\"\'][^\"\']+[\"\']","enlace_prohibido",$enlace);
+        $enlace=str_replace("class=[\"\'][^\"\']+[\"\']","",$enlace);
     }        
     return ($enlace);
 }
@@ -599,7 +599,7 @@ function fecha_creacion_documento_expediente($fecha0,$plantilla=Null,$doc=Null){
     //SE VALIDA SI EL USUARIO ESTA INVOLUCRADO CON EL DOCUMENTO (TRANSFERENCIA) 
     $involucrado=validar_relacion_documento_expediente($doc);  
     if(!$involucrado['numcampos']){
-        $enlace=preg_match("class=[\"\'][^\"\']+[\"\']","enlace_prohibido",$enlace);
+        $enlace=preg_match("class=[\"\'][^\"\']+[\"\']","",$enlace);
     } 
     
     return($enlace);
