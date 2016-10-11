@@ -22,6 +22,6 @@ $cadena=preg_replace("class=[\"\'][^\"\']+[\"\']","",$cadena);
 
 
 print_r($cadena);
-echo('qui');
+echo('<---- qui');
 
 ?>
