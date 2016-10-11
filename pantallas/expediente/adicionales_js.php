@@ -122,7 +122,6 @@ $(document).ready(function(){
   
    //usted no tiene autorizacion para acceder, favor solicitar 
    $('.enlace_documento_bloqueado').live('click',function(){
-      
        
        var iddoc=$(this).attr('iddoc');
         $.ajax({
@@ -134,7 +133,8 @@ $(document).ready(function(){
                 ejecutar_expediente:'obtener_rastro_documento_expediente'
             },
             success: function(datos){
-                alert(datos.msn);
+                var alerta="ATENCI&Oacute;N!<br>Usted no tiene autorizaci&oacute;n para acceder, favor solicitar el permiso a: "+datos.msn;
+                notificacion_saia(alerta,"success","",2500);
             }
         });       
        
