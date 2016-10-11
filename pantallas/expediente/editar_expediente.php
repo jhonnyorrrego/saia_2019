@@ -108,6 +108,11 @@ if($dato_padre["numcampos"]){
   <label class="control-label" for="serie_idserie">Serie asociada *
   </label>
   <div class="controls">
+      
+    <?php
+    if(!$dato_padre['numcampos']){
+    
+    ?>         
   	<b><?php echo(mostrar_seleccionados_exp($datos[0]["serie_idserie"],"nombre","serie")); ?></b>
   	<br />
     <span class="phpmaker">
@@ -122,6 +127,16 @@ if($dato_padre["numcampos"]){
 			<div id="treeboxbox_tree3" class="arbol_saia"></div>
     </span>
      <input type="text" style="display:none;" name="serie_idserie" id="serie_idserie" value="<?php echo($datos[0]["serie_idserie"]); ?>">
+    <?php
+    }else{
+        $datos_serie_padre=busca_filtro_tabla("nombre","serie","idserie=".$dato_padre[0]['serie_idserie'],"",$conn);
+        echo('<ul><li><b>'.$datos_serie_padre[0]['nombre'].'</b></li></ul>');
+    ?>
+    <input style="display:none;" type="text" name="serie_idserie" id="serie_idserie" value="<?php echo($dato_padre[0]['serie_idserie']); ?>">
+    <?php
+    }
+    ?> 
+     
   </div>
 </div>
 
