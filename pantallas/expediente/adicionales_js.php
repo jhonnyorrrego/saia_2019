@@ -133,7 +133,7 @@ $(document).ready(function(){
                 ejecutar_expediente:'obtener_rastro_documento_expediente'
             },
             success: function(datos){
-                var alerta="ATENCI&Oacute;N!<br>Usted no tiene autorizaci&oacute;n para acceder, favor solicitar el permiso a: "+datos.msn;
+                var alerta="<b>ATENCI&Oacute;N!<b><br><br>Usted no tiene autorizaci&oacute;n para acceder, favor solicitar el permiso a: "+datos.msn;
                 notificacion_saia(alerta,"success","",2500);
             }
         });       
