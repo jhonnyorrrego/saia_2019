@@ -25,7 +25,8 @@ echo(estilo_bootstrap());
   	</td>
   </tr>
 </table>  
-  
+<button class="btn btn-primary btn-mini" id="submit_formulario_expediente">Aceptar</button>
+<button class="btn btn-mini" id="cancel_formulario_expediente">Cancelar</button> 
 <?php
 function autocompletar_funcionario_responsable_expediente($idexpediente) {
 	global $ruta_db_superior;
