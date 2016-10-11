@@ -131,7 +131,7 @@ $(document).ready(function(){
             url: "<?php echo($ruta_db_superior);?>pantallas/expediente/ejecutar_acciones.php",
             data: {
                 iddoc:iddoc,
-                ejecutar_expediente:'obtener_rastro_documento'
+                ejecutar_expediente:'obtener_rastro_documento_expediente'
             },
             success: function(datos){
                 alert(datos.msn);
