@@ -421,11 +421,15 @@ function cambiar_responsable_expediente(){
 	global $conn;
 	
 	$retorno=new stdClass;	
-	$retorno->folios=0;
+	
 	$idexpediente=$_REQUEST['idexpediente'];
 	$funcionario_codigo=$_REQUEST['funcionario_codigo'];
 	
+	
+	
+	//VALIDA FOLIOS
 	$cantidad_folios=busca_filtro_tabla("","expediente","tomo_padre=".$idexpediente,"",$conn);
+	$retorno->folios=0;
 	if($cantidad_folios['numcampos']){ //tiene folios
     	$retorno->folios=$cantidad_folios['numcampos'];
 	    $propietario_todos=1;
@@ -436,6 +440,8 @@ function cambiar_responsable_expediente(){
 	    }
 	}
 	$retorno->propietario_folios=$propietario_todos;
+
+	
 	$retorno->exito=1;
 	$retorno->msn='llego: '.$idexpediente;
 	return($retorno);	
