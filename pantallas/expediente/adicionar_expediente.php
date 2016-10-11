@@ -258,6 +258,12 @@ $dato_padre=busca_filtro_tabla("","expediente a","a.idexpediente=".$_REQUEST["co
   ?>
   <script>
   $(document).ready(function(){
+      
+      
+    <?php
+    if(!$dato_padre['numcampos']){
+    
+    ?>       
     var browserType;
     if (document.layers) {browserType = "nn4"}
     if (document.all) {browserType = "ie"}
@@ -316,6 +322,12 @@ $dato_padre=busca_filtro_tabla("","expediente a","a.idexpediente=".$_REQUEST["co
         document.poppedLayer = eval('document.layers["esperando_serie"]');
       document.poppedLayer.style.display = "";
     }
+    
+    <?php
+    }
+    
+    ?>      
+    
     
     $(".opcion_informacion").on("hide",function(){
 		  $(this).prev().children("i").removeClass();
