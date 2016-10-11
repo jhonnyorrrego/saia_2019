@@ -13,7 +13,7 @@ include_once($ruta_db_superior."librerias_saia.php");
 echo(librerias_jquery("1.7"));
 echo(estilo_bootstrap());
 
-echo('hello world');
+
 
   		                /*
   		                var idexpediente='<?php echo($idexpediente); ?>';
@@ -32,3 +32,15 @@ echo('hello world');
                         
                         */
 ?>
+
+
+<table class="table table-bordered">
+  <tr>
+    <td width="40%" class="prettyprint">
+      <b>Nombre del expediente:</b>
+    </td>
+    <td>
+       <?php echo($expediente[0]["nombre"]);?>
+    </td>    
+  </tr>
+ </table> 
