@@ -22,7 +22,7 @@ if(isset($_REQUEST['num_radicado'])){
 			$html.="<li onclick=\"cargar_datos(".$datos[$i]['funcionario_codigo'].",'".$descripcion."')\">".$descripcion."</li>";
 		}
 	}else{
-		$html.="<li onclick=\"cargar_datos(0)\">NO hay Radicados con el Numero solicitado</li>";
+		$html.="<li onclick=\"cargar_datos(0)\">NO hay funcionarios con el nombre ingresado</li>";
 	}
 	$html.="</ul>";
 	echo $html;
