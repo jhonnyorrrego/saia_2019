@@ -25,7 +25,7 @@ echo(estilo_bootstrap());
   	</td>
   </tr>
 </table>  
-<button class="btn btn-primary btn-mini" id="submit_formulario_expediente">Aceptar</button>
+<button class="btn btn-primary btn-mini" id="">Aceptar</button>
 <button class="btn btn-mini" onclick="window.parent.hs.close();">Cancelar</button> 
 <?php
 function autocompletar_funcionario_responsable_expediente($idexpediente) {
