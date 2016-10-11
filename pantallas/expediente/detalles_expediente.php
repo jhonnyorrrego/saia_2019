@@ -466,7 +466,7 @@ function cargar_datos(iddoc,descripcion){
   if(iddoc!=0){
     $("#nuevo_funcionario_responsable").val(iddoc);
         if(confirm('Esta seguro de cambiar el responsable de este expediente?')){
-	                    var funcionario_codigo=$("#nuevo_funcionario_responsable").val();
+	                   
   		                var idexpediente='<?php echo($idexpediente); ?>';
                         $.ajax({
                             type:'POST',
