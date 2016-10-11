@@ -151,4 +151,7 @@ $(document).ready(function(){
     .enlace_documento_bloqueado{
         opacity: 0.2;
     }
+    .enlace_documento_bloqueado:hover{
+        background-color:red;
+    }    
 </style>
