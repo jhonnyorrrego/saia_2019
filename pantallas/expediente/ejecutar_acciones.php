@@ -393,4 +393,27 @@ function abrir_cerrar_expediente(){
   
   return($retorno);
 }
+
+
+function obtener_rastro_documento_expediente(){
+	global $conn;
+	
+	$estados_validar=array("'borrador'","'transferido'","'revisado'","'aprobado'");
+	$consulta=busca_filtro_tabla("destino","buzon_salida","archivo_idarchivo=".@$_REQUEST['iddoc']." AND tipo_destino=1 AND lower(nombre) IN(".implode(',',$estados_validar).")","",$conn);
+	
+	$funs=busca_filtro_tabla("CONCAT(nombres,' ', apellidos)as nombre_funcionario","funcionario","funcionario_codigo IN(".implode(',',extrae_campo($consulta,'destino')).")","",$conn);
+	
+	$cadena_nombres=implode(',',extrae_campo($funs,'nombre_funcionario'));
+	
+	
+	$retorno=new stdClass;
+	$retorno->exito=1;
+	$retorno->msn=$cadena_nombres;
+	return($retorno);
+	
+}
+
+
+
+
 ?>
