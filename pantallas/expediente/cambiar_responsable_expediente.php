@@ -18,6 +18,7 @@ if(isset($_REQUEST['num_radicado'])){
 	if($datos['numcampos']){
 		for($i=0;$i<$datos['numcampos'];$i++){
 			$descripcion=$datos[$i]['nombre_funcionario']." (".$datos[$i]['cargo'].")";
+			$descripcion=ucwords(strtolower($descripcion));
 			$html.="<li onclick=\"cargar_datos(".$datos[$i]['funcionario_codigo'].",'".$descripcion."')\">".$descripcion."</li>";
 		}
 	}else{
