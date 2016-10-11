@@ -11,21 +11,115 @@ $ruta.="../";
 $max_salida--;
 }
 include_once($ruta_db_superior."db.php");
+?>
 
-if(isset($_REQUEST['num_radicado'])){
-	$datos=busca_filtro_tabla("funcionario_codigo,concat(nombres,' ',apellidos) as nombre_funcionario,cargo","vfuncionario_dc","estado_dc=1 AND (nombres LIKE '%".$_REQUEST['num_radicado']."%' OR apellidos LIKE '%".$_REQUEST['num_radicado']."%')","nombres,apellidos",$conn);		
-	$html="<ul>";
-	if($datos['numcampos']){
-		for($i=0;$i<$datos['numcampos'];$i++){
-			$descripcion=$datos[$i]['nombre_funcionario']." (".$datos[$i]['cargo'].")";
-			$descripcion=ucwords(strtolower($descripcion));
-			$html.="<li onclick=\"cargar_datos(".$datos[$i]['funcionario_codigo'].",'".$descripcion."')\">".$descripcion."</li>";
-		}
-	}else{
-		$html.="<li onclick=\"cargar_datos(0)\">NO hay funcionarios con el nombre ingresado</li>";
-	}
-	$html.="</ul>";
-	echo $html;
+<table class="table table-bordered">
+  <tr class="contenedor_autocompletar_responsable_expediente">
+  	<td class="prettyprint"><b>Seleccionar Nuevo responsable:</b></td>
+  	<td colspan="3">
+  	    <input type="text" id="nuevo_funcionario_responsable">
+        <?php autocompletar_funcionario_responsable_expediente($idexpediente); ?>
+  	</td>
+  </tr>
+</table>  
+  
+<?php
+function autocompletar_funcionario_responsable_expediente($idexpediente) {
+	global $ruta_db_superior;
+	include_once ($ruta_db_superior . "librerias_saia.php");
+	global $raiz_saia;
+	$raiz_saia = $ruta_db_superior;
+	echo (librerias_notificaciones ());
+	?>
+<style>
+.ac_results {
+	padding: 0px;
+	border: 0px solid black;
+	background-color: white;
+	overflow: hidden;
+	z-index: 99999;
 }
 
+.ac_results ul {
+	width: 100%;
+	list-style-position: outside;
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+
+.ac_results li:hover {
+	background-color: A9E2F3;
+}
+
+.ac_results li {
+	margin: 0px;
+	padding: 2px 5px;
+	cursor: default;
+	display: block;
+	font: menu;
+	font-size: 10px;
+	line-height: 10px;
+	overflow: hidden;
+}
+</style>
+<script>
+$(document).ready(function(){
+	
+  var delay = (function(){
+          var timer = 0;
+          return function(callback, ms){
+                  clearTimeout (timer);
+                  timer = setTimeout(callback, ms);
+          };
+  })();
+  
+  $("#nuevo_funcionario_responsable").hide();
+  $("#nuevo_funcionario_responsable").parent().append("<input type='text' id='buscar_radicado' size='50' name='buscar_radicado'><div id='ul_completar' class='ac_results'></div>");
+  $("#buscar_radicado").keyup(function (){
+          if($(this).val()==0 || $(this).val()==""){
+                  //alert("Ingrese Numero de Radicado");
+          }else{
+                  var x_valor=$(this).val();
+                  delay(function(){
+                          $("#ul_completar").load( "cambiar_responsable_expediente.php", { num_radicado: x_valor });
+                  },500);
+          }
+  });
+  
+});
+function cargar_datos(iddoc,descripcion){
+  $("#ul_completar").empty();
+  if(iddoc!=0){
+    $("#nuevo_funcionario_responsable").val(iddoc);
+        if(confirm('Esta seguro de cambiar el responsable de este expediente?')){
+	                    var funcionario_codigo= $("#nuevo_funcionario_responsable").val();
+  		                var idexpediente='<?php echo($idexpediente); ?>';
+                        $.ajax({
+                            type:'POST',
+                            dataType: 'json',
+                            url: "ejecutar_acciones.php",
+                            data: {
+                                idexpediente:idexpediente,
+                                funcionario_codigo:funcionario_codigo,
+                                ejecutar_expediente:'cambiar_responsable_expediente'
+                            },
+                            success: function(datos){
+
+                            }
+                        }); 
+        } 
+  }else{
+          $("#buscar_radicado").val("");
+          $("#nuevo_funcionario_responsable").val(0);
+  }
+};
+function eliminar_asociado(iddoc){
+  $("#fila_"+iddoc).remove();
+  $("#nuevo_funcionario_responsable").val('');
+  $("#buscar_radicado").attr('readonly',false);
+}
+</script>
+<?php
+}
 ?>
