@@ -424,7 +424,7 @@ function cambiar_responsable_expediente(){
 	$idexpediente=$_REQUEST['idexpediente'];
 	
 	
-	$cantidad_folios=busca_filtro_tabla("","expediente","idexpediente=".$idexpediente,"",$conn);
+	$cantidad_folios=busca_filtro_tabla("","expediente","tomo_padre=".$idexpediente,"",$conn);
 	$retorno->sql=$cantidad_folios['sql'];
 	
 	$retorno=new stdClass;
