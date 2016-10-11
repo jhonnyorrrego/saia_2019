@@ -1,8 +1,5 @@
 <?php
 
-phpinfo();
-
-die();
 $max_salida=6; // Previene algun posible ciclo infinito limitando a 10 los ../
 $ruta_db_superior=$ruta="";
 while($max_salida>0){
@@ -13,10 +10,17 @@ while($max_salida>0){
   $max_salida--;
 }
 include_once($ruta_db_superior."db.php");
+ini_set("display_errors",true);
+
+$cadena='
+
+<div class="link kenlace_saia pull-left" enlace="ordenar.php?key=492&amp;accion=mostrar&amp;mostrar_formato=1" conector="iframe" titulo="Documento No.44" onclick=" "><b>44-Cero K LTDA-Comunicaciones Oficiales</b></div>
+';
+
+
+$cadena=preg_match("class=[\"\'][^\"\']+[\"\']","",$cadena);
+
+
+echo($cadena);
+
 ?>
-<script>
-    var vector={"1":"127"};
-    
-    
-    alert(vector[1]);
-</script>
