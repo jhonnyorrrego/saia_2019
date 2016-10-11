@@ -106,26 +106,9 @@ $expediente=busca_filtro_tabla("a.*,".fecha_db_obtener("a.fecha","Y-m-d")." AS f
   		    <script>
   		        $(document).ready(function(){
   		            $('.cambiar_responsable_expediente').live('click',function(){
-  		                
-  		                var enlace='cambiar_responsable_expediente.php';
+  		                var enlace='cambiar_responsable_expediente.php?idexpediente=<?php echo($idexpediente); ?>';
                         top.hs.htmlExpand(this, { objectType: 'iframe',width: 500, height: 200,contentId:'cuerpo_paso',preserveContent:false, src:enlace,outlineType: 'rounded-white',wrapperClassName:'highslide-wrapper drag-header'});
   		                
-  		                /*
-  		                var idexpediente='<?php echo($idexpediente); ?>';
-                        $.ajax({
-                            type:'POST',
-                            dataType: 'json',
-                            url: "ejecutar_acciones.php",
-                            data: {
-                                idexpediente:idexpediente,
-                                ejecutar_expediente:'cambiar_responsable_expediente'
-                            },
-                            success: function(datos){
-
-                            }
-                        }); 
-                        
-                        */
   		            });
   		        });
   		    </script>
