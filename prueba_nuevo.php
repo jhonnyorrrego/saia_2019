@@ -18,10 +18,10 @@ $cadena='
 ';
 
 
-$cadena=preg_replace('class=[\"\'][^\"\']+[\"\']',"",$cadena);
+$cadena2=preg_replace('class=[\"\'][^\"\']+[\"\']',"",$cadena);
 
 
-print_r($cadena);
+print_r($cadena2);
 echo('<---- qui');
 
 ?>
