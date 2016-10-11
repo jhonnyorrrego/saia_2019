@@ -112,7 +112,7 @@ function cargar_datos(iddoc,descripcion){
 };
 function eliminar_asociado(iddoc){
   $("#fila_"+iddoc).remove();
-  $("informacion_buscar_radicado").remove();
+  $("#informacion_buscar_radicado").remove();
   $("#nuevo_funcionario_responsable").val('');
   $("#buscar_radicado").attr('readonly',false);
   
