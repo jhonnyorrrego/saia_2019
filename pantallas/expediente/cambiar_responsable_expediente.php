@@ -18,7 +18,7 @@ include_once($ruta_db_superior."db.php");
   	<td class="prettyprint"><b>Seleccionar Nuevo responsable:</b></td>
   	<td colspan="3">
   	    <input type="text" id="nuevo_funcionario_responsable">
-        <?php autocompletar_funcionario_responsable_expediente($idexpediente); ?>
+        <?php autocompletar_funcionario_responsable_expediente($_REQUEST['idexpediente']); ?>
   	</td>
   </tr>
 </table>  
