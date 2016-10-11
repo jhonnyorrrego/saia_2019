@@ -139,7 +139,7 @@ $(document).ready(function(){
         });       
        
    });
-  $('.enlace_documento_bloqueado').parent().css({"opacity":"0.2","color":"red"});
+  $('.enlace_documento_bloqueado').parent().css("opacity","0.2");
   
   
   
