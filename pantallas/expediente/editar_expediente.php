@@ -110,6 +110,7 @@ if($dato_padre["numcampos"]){
   <div class="controls">
 
     <?php
+    die();
     if(!$dato_padre['numcampos']){
     
     ?>       
