@@ -128,7 +128,7 @@ $(document).ready(function(){
         $.ajax({
             type:'POST',
             dataType: 'json',
-            url: "ejecutar_acciones.php",
+            url: "<?php echo($ruta_db_superior);?>pantallas/expediente/ejecutar_acciones.php",
             data: {
                 iddoc:iddoc,
                 ejecutar_expediente:'obtener_rastro_documento'
