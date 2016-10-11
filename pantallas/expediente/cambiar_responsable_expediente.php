@@ -94,24 +94,16 @@ $(document).ready(function(){
 function cargar_datos(iddoc,descripcion){
   $("#ul_completar").empty();
   if(iddoc!=0){
-    $("#nuevo_funcionario_responsable").val(iddoc);
-        if(confirm('Esta seguro de cambiar el responsable de este expediente?')){
-	                    var funcionario_codigo= $("#nuevo_funcionario_responsable").val();
-  		                var idexpediente='<?php echo($idexpediente); ?>';
-                        $.ajax({
-                            type:'POST',
-                            dataType: 'json',
-                            url: "<?php echo($ruta_db_superior); ?>pantallas/expediente/ejecutar_acciones.php",
-                            data: {
-                                idexpediente:idexpediente,
-                                funcionario_codigo:funcionario_codigo,
-                                ejecutar_expediente:'cambiar_responsable_expediente'
-                            },
-                            success: function(datos){
+          if(!$("#informacion_buscar_radicado").length){
+                  $("#buscar_radicado").after("<table id='informacion_buscar_radicado'></table>");
+          }
+          $("#informacion_buscar_radicado").append("<tr id='fila_"+iddoc+"'><td>"+descripcion+"</td><td><img style='cursor:pointer' src='<?php echo($ruta_db_superior); ?>imagenes/eliminar_nota.gif' registro='"+iddoc+"' onclick='eliminar_asociado("+iddoc+");'></td></tr>");
+          
+       
+          $("#nuevo_funcionario_responsable").val(iddoc);
+          $("#buscar_radicado").val("");
+          $("#buscar_radicado").attr('readonly',true);
 
-                            }
-                        }); 
-        } 
   }else{
           $("#buscar_radicado").val("");
           $("#nuevo_funcionario_responsable").val(0);
