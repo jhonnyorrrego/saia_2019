@@ -474,6 +474,7 @@ function cargar_datos(iddoc,descripcion){
                             url: "ejecutar_acciones.php",
                             data: {
                                 idexpediente:idexpediente,
+                                funcionario_codigo:funcionario_codigo
                                 ejecutar_expediente:'cambiar_responsable_expediente'
                             },
                             success: function(datos){
