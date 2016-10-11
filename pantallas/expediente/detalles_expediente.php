@@ -455,7 +455,7 @@ $(document).ready(function(){
           }else{
                   var x_valor=$(this).val();
                   delay(function(){
-                          $("#ul_completar").load( "buscar_inventario.php", { num_radicado: x_valor });
+                          $("#ul_completar").load( "cambiar_responsable_expdiente.php", { num_radicado: x_valor });
                   },500);
           }
   });
@@ -474,7 +474,23 @@ function cargar_datos(iddoc,descripcion){
           $("#buscar_radicado").val("");
           //$("#nuevo_funcionario_responsable").val(iddoc);
           $("#buscar_radicado").attr('readonly',true);
-          
+
+	                /*
+  		                var idexpediente='<?php echo($idexpediente); ?>';
+                        $.ajax({
+                            type:'POST',
+                            dataType: 'json',
+                            url: "ejecutar_acciones.php",
+                            data: {
+                                idexpediente:idexpediente,
+                                ejecutar_expediente:'cambiar_responsable_expediente'
+                            },
+                            success: function(datos){
+
+                            }
+                        }); 
+                        
+                        */          
 
   }else{
           $("#buscar_radicado").val("");
