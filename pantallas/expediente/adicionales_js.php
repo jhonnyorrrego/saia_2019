@@ -125,7 +125,18 @@ $(document).ready(function(){
        alert('click');
        
        var iddoc=$(this).attr('iddoc');
-       
+        $.ajax({
+            type:'POST',
+            dataType: 'json',
+            url: "ejecutar_acciones.php",
+            data: {
+                iddoc:iddoc,
+                ejecutar_expediente:'obtener_rastro_documento'
+            },
+            success: function(datos){
+                alert(datos.msn);
+            }
+        });       
        
    });
   
