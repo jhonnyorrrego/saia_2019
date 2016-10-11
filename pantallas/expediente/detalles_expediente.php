@@ -106,7 +106,19 @@ $expediente=busca_filtro_tabla("a.*,".fecha_db_obtener("a.fecha","Y-m-d")." AS f
   		    <script>
   		        $(document).ready(function(){
   		            $('.cambiar_responsable_expediente').live('click',function(){
-  		                alert('entro');
+  		                var idexpediente='<?php echo($idexpediente); ?>';
+                        $.ajax({
+                            type:'POST',
+                            dataType: 'json',
+                            url: "ejecutar_acciones.php",
+                            data: {
+                                idexpediente:idexpediente,
+                                ejecutar_expediente:'cambiar_responsable_expediente'
+                            },
+                            success: function(datos){
+
+                            }
+                        }); 
   		            });
   		        });
   		    </script>
