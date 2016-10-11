@@ -95,10 +95,10 @@ $expediente=busca_filtro_tabla("a.*,".fecha_db_obtener("a.fecha","Y-m-d")." AS f
   	<?php if($expediente[0]["propietario"]){
   		$nombres=busca_filtro_tabla("","funcionario A","A.funcionario_codigo=".$expediente[0]["propietario"],"",$conn);
   		echo(ucwords(strtolower($nombres[0]["nombres"]." ".$nombres[0]["apellidos"])));
-  	}
-		else{
+  		$cadena_cambiar_propietario="&nbsp; &nbsp; &nbsp; <button><i class='icon-transfer'></i></button>";
+  	}else{
 			echo("<span style='color:red'>Expediente creado por el sistema</span>");
-		}
+	}
   	?>
   	</td>
   </tr>
