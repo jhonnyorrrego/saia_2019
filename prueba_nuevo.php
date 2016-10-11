@@ -21,6 +21,6 @@ $cadena='
 $cadena=preg_match("class=[\"\'][^\"\']+[\"\']","",$cadena);
 
 
-echo($cadena);
+echo($cadena.'--->aqui');
 
 ?>
