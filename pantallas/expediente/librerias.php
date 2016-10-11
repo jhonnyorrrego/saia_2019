@@ -586,7 +586,7 @@ return($texto);
 function origen_documento_expediente($doc,$numero,$origen="",$tipo_radicado="",$estado="",$serie="",$tipo_ejecutor=""){
     $enlace=origen_documento($doc,$numero,$origen,$tipo_radicado,$estado,$serie,$tipo_ejecutor);
     
-    //SE VALIDA SI EL USUARIO ESTA INVOLUCRADO CON EL DOCUMENTO (TRANSFERENCIA) 
+    //SE VALIDA SI EL USUARIO ESTA INVOLUCRADO CON EL DOCUMENTO (TRANSFERENCIA,RUTA) 
     $involucrado=validar_relacion_documento_expediente($doc);
     if(!$involucrado['numcampos']){
         $enlace=preg_replace("/class=[\"\'][^\'\"]*kenlace_saia[^\'\"]*[\"\']/","class='link pull-left enlace_documento_bloqueado' iddoc=".$doc,$enlace,1);
@@ -596,7 +596,7 @@ function origen_documento_expediente($doc,$numero,$origen="",$tipo_radicado="",$
 function fecha_creacion_documento_expediente($fecha0,$plantilla=Null,$doc=Null){
     $enlace=fecha_creacion_documento($fecha0,$plantilla,$doc);
 
-    //SE VALIDA SI EL USUARIO ESTA INVOLUCRADO CON EL DOCUMENTO (TRANSFERENCIA) 
+    //SE VALIDA SI EL USUARIO ESTA INVOLUCRADO CON EL DOCUMENTO (TRANSFERENCIA,RUTA) 
     $involucrado=validar_relacion_documento_expediente($doc);  
     if(!$involucrado['numcampos']){
        $enlace=preg_replace("/class=[\"\'][^\'\"]*kenlace_saia[^\'\"]*[\"\']/","class='link enlace_documento_bloqueado' iddoc=".$doc,$enlace,1);
