@@ -106,6 +106,7 @@ $expediente=busca_filtro_tabla("a.*,".fecha_db_obtener("a.fecha","Y-m-d")." AS f
   		    <script>
   		        $(document).ready(function({
   		            $('#contenedor_autocompletar_responsable_expediente').hide();
+  		            
   		            $('.cambiar_responsable_expediente').click(function(){
   		                
   		                if( $('#contenedor_autocompletar_responsable_expediente').is(":visible") ){
