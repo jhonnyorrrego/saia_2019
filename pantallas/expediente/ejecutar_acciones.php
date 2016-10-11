@@ -417,7 +417,18 @@ function obtener_rastro_documento_expediente(){
 	return($retorno);
 	
 }
-
+function cambiar_responsable_expediente(){
+	global $conn;
+	
+	
+	$idexpediente=$_REQUEST['idexpediente'];
+	
+	$retorno=new stdClass;
+	$retorno->exito=1;
+	$retorno->msn='llego';
+	return($retorno);	
+	
+}
 
 
 
