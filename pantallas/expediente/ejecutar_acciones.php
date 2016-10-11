@@ -403,7 +403,9 @@ function obtener_rastro_documento_expediente(){
 	
 	$funs=busca_filtro_tabla("CONCAT(nombres,' ', apellidos)as nombre_funcionario","funcionario","funcionario_codigo IN(".implode(',',extrae_campo($consulta,'destino')).")","",$conn);
 	
-	$cadena_nombres=implode(',',extrae_campo($funs,'nombre_funcionario'));
+	$vector_nombres=extrae_campo($funs,'nombre_funcionario');
+	$vector_nombres=array_map('ucwords',$vector_nombres);
+	$cadena_nombres=implode(',',);
 	
 	
 	$retorno=new stdClass;
