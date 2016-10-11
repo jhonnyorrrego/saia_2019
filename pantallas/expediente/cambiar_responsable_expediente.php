@@ -99,7 +99,6 @@ function cargar_datos(iddoc,descripcion){
           }
           $("#informacion_buscar_radicado").append("<tr id='fila_"+iddoc+"'><td>"+descripcion+"</td><td><img style='cursor:pointer' src='<?php echo($ruta_db_superior); ?>imagenes/eliminar_nota.gif' registro='"+iddoc+"' onclick='eliminar_asociado("+iddoc+");'></td></tr>");
           
-       
           $("#nuevo_funcionario_responsable").val(iddoc);
           $("#buscar_radicado").val("");
           $("#buscar_radicado").attr('readonly',true);
