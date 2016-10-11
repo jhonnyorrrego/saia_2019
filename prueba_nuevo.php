@@ -18,7 +18,7 @@ $cadena='
 ';
 
 
-$cadena2=preg_replace("class=[\"\'][^\"\']+[\"\']","",$cadena);
+$cadena2=preg_replace("/class=[\"\'][^\"\']+[\"\']/","",$cadena);
         //preg_replace("([0-9]+)", "2000", $copy_date);
 
 print_r($cadena2);
