@@ -366,7 +366,10 @@ if($dato_padre["numcampos"]){
         document.poppedLayer = eval('document.layers["esperando_expediente"]');
       document.poppedLayer.style.display = "";
     }
+    <?php
+    if(!$dato_padre['numcampos']){
     
+    ?>    
     
     tree3=new dhtmlXTreeObject("treeboxbox_tree3","","",0);
   	tree3.setImagePath("<?php echo($ruta_db_superior);?>imgs/");
@@ -421,7 +424,10 @@ if($dato_padre["numcampos"]){
         document.poppedLayer = eval('document.layers["esperando_serie"]');
       document.poppedLayer.style.display = "";
     }
+    <?php
+    }
     
+    ?>     
     
     tree4=new dhtmlXTreeObject("treeboxbox_tree4","","",0);
   	tree4.setImagePath("<?php echo($ruta_db_superior);?>imgs/");
