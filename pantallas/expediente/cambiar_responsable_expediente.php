@@ -13,6 +13,8 @@ include_once($ruta_db_superior."librerias_saia.php");
 echo(librerias_jquery("1.7"));
 echo(estilo_bootstrap());
 
+echo('hello world');
+
   		                /*
   		                var idexpediente='<?php echo($idexpediente); ?>';
                         $.ajax({
