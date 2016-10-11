@@ -103,6 +103,22 @@ $expediente=busca_filtro_tabla("a.*,".fecha_db_obtener("a.fecha","Y-m-d")." AS f
   		    <button class='btn btn-mini btn-default cambiar_responsable_expediente'>
   		        <i class='icon-user' title='Cambiar Responsable'></i>
   		    </button>
+  		    <script>
+  		        $(document).ready(function({
+  		            $('.contenedor_autocompletar_responsable_expediente').hide();
+  		            $('.cambiar_responsable_expediente').click(function(){
+  		                
+  		                if( $('.contenedor_autocompletar_responsable_expediente').is(":visible") ){
+  		                    $('.contenedor_autocompletar_responsable_expediente').hide();
+  		                }else{
+  		                    $('.contenedor_autocompletar_responsable_expediente').show();
+  		                }
+  		                
+  		                 
+  		            });
+  		        }));
+  		    </script>
+  		    
  		<!--script type="text/javascript" src="<?php echo $ruta_db_superior;?>anexosdigitales/highslide-4.0.10/highslide/highslide-with-html.js"></script>
 		 <link rel="stylesheet" type="text/css" href="<?php echo $ruta_db_superior;?>anexosdigitales/highslide-4.0.10/highslide/highslide.css" />
 		 <script type='text/javascript'>
@@ -121,6 +137,10 @@ $expediente=busca_filtro_tabla("a.*,".fecha_db_obtener("a.fecha","Y-m-d")." AS f
   	
   	</td>
   </tr>
+  <tr class="contenedor_autocompletar_responsable_expediente">
+  	<td class="prettyprint"><b>Responsable del expediente:</b></td>
+  	<td colspan="3"></td>
+  </tr>	
   <tr>
   	<td class="prettyprint">    	
       <b>Vinculado a la caja:</b>
