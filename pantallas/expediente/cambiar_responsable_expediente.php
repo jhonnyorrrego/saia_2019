@@ -108,15 +108,12 @@ function cargar_datos(iddoc,descripcion){
           $("#nuevo_funcionario_responsable").val(0);
   }
   
-  alert($("#nuevo_funcionario_responsable").val());
 };
 function eliminar_asociado(iddoc){
   $("#fila_"+iddoc).remove();
   $("#informacion_buscar_radicado").remove();
   $("#nuevo_funcionario_responsable").val('');
   $("#buscar_radicado").attr('readonly',false);
-  
-   alert($("#nuevo_funcionario_responsable").val());
 }
 </script>
 <?php
