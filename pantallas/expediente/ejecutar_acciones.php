@@ -436,10 +436,6 @@ function cambiar_responsable_expediente(){
 	    }
 	}
 	$retorno->propietario_folios=$propietario_todos;
-	
-	$retorno->=$cantidad_folios['sql'];
-	
-
 	$retorno->exito=1;
 	$retorno->msn='llego: '.$idexpediente;
 	return($retorno);	
