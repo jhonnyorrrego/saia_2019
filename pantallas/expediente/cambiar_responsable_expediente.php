@@ -37,7 +37,7 @@ echo(estilo_bootstrap());
 <table class="table table-bordered">
   <tr>
     <td width="40%" class="prettyprint">
-      <b>Nombre del expediente:</b>
+      <b>Funcionario:</b>
     </td>
     <td>
        <?php echo($expediente[0]["nombre"]);?>
