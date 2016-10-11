@@ -108,6 +108,11 @@ if($dato_padre["numcampos"]){
   <label class="control-label" for="serie_idserie">Serie asociada *
   </label>
   <div class="controls">
+
+    <?php
+    if(!$dato_padre['numcampos']){
+    
+    ?>       
   	<b><?php echo(mostrar_seleccionados_exp($datos[0]["serie_idserie"],"nombre","serie")); ?></b>
   	<br />
     <span class="phpmaker">
@@ -122,6 +127,16 @@ if($dato_padre["numcampos"]){
 			<div id="treeboxbox_tree3" class="arbol_saia"></div>
     </span>
      <input type="text" style="display:none;" name="serie_idserie" id="serie_idserie" value="<?php echo($datos[0]["serie_idserie"]); ?>">
+    <?php
+    }else{
+        $datos_serie_padre=busca_filtro_tabla("nombre","serie","idserie=".$dato_padre[0]['serie_idserie'],"",$conn);
+        echo('<ul><li><b>'.$datos_serie_padre[0]['nombre'].'</b></li></ul>');
+    ?>
+    <input style="display:none;" type="text" name="serie_idserie" id="serie_idserie" value="<?php echo($dato_padre[0]['serie_idserie']); ?>">
+    <?php
+    }
+    ?>      
+     
   </div>
 </div>
 
@@ -301,6 +316,8 @@ if($dato_padre["numcampos"]){
   ?>
   <script>
   $(document).ready(function(){
+
+      
     var browserType;
     if (document.layers) {browserType = "nn4"}
     if (document.all) {browserType = "ie"}
@@ -352,6 +369,11 @@ if($dato_padre["numcampos"]){
       document.poppedLayer.style.display = "";
     }
     
+
+    <?php
+    if(!$dato_padre['numcampos']){
+    
+    ?> 
     
     tree3=new dhtmlXTreeObject("treeboxbox_tree3","","",0);
   	tree3.setImagePath("<?php echo($ruta_db_superior);?>imgs/");
@@ -407,6 +429,10 @@ if($dato_padre["numcampos"]){
       document.poppedLayer.style.display = "";
     }
     
+    <?php
+    if(!$dato_padre['numcampos']){
+    
+    ?> 
     
     tree4=new dhtmlXTreeObject("treeboxbox_tree4","","",0);
   	tree4.setImagePath("<?php echo($ruta_db_superior);?>imgs/");
