@@ -149,6 +149,6 @@ $(document).ready(function(){
 </script>
 <style>
     .enlace_documento_bloqueado{
-        opacity: 0.5;
+        opacity: 0.2;
     }
 </style>
