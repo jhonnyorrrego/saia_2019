@@ -95,12 +95,20 @@ $expediente=busca_filtro_tabla("a.*,".fecha_db_obtener("a.fecha","Y-m-d")." AS f
   	<?php if($expediente[0]["propietario"]){
   		$nombres=busca_filtro_tabla("","funcionario A","A.funcionario_codigo=".$expediente[0]["propietario"],"",$conn);
   		echo(ucwords(strtolower($nombres[0]["nombres"]." ".$nombres[0]["apellidos"])));
-  		$cadena_cambiar_propietario="&nbsp; &nbsp; &nbsp; <button class='btn btn-mini btn-default'><i class='icon-user'  title='Cambiar Responsable'></i></button>";
-  		echo($cadena_cambiar_propietario);
   	}else{
 			echo("<span style='color:red'>Expediente creado por el sistema</span>");
 	}
   	?>
+          	&nbsp; &nbsp; &nbsp; 
+  		    <button class='btn btn-mini btn-default cambiar_responsable_expediente'>
+  		        <i class='icon-user' title='Cambiar Responsable'></i>
+  		    </button>
+  		    <script>
+  		        $('.cambiar_responsable_expediente').ready(function(){
+  		            alert('click');
+  		        });
+  		    </script>
+  	
   	</td>
   </tr>
   <tr>
