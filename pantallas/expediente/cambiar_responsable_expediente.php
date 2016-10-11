@@ -11,6 +11,9 @@ $ruta.="../";
 $max_salida--;
 }
 include_once($ruta_db_superior."db.php");
+include_once($ruta_db_superior."librerias_saia.php");
+echo(librerias_jquery("1.7"));
+echo(estilo_bootstrap());
 ?>
 
 <table class="table table-bordered">
