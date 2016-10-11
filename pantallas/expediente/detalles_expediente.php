@@ -138,7 +138,7 @@ $expediente=busca_filtro_tabla("a.*,".fecha_db_obtener("a.fecha","Y-m-d")." AS f
   	</td>
   </tr>
   <tr id="contenedor_autocompletar_responsable_expediente">
-  	<td class="prettyprint"><b>Responsable del expediente:</b></td>
+  	<td class="prettyprint"><b>Seleccionar Nuevo responsable:</b></td>
   	<td colspan="3"></td>
   </tr>	
   <tr>
