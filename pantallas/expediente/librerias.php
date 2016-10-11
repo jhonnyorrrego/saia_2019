@@ -589,7 +589,7 @@ function origen_documento_expediente($doc,$numero,$origen="",$tipo_radicado="",$
     //SE VALIDA SI EL USUARIO ESTA INVOLUCRADO CON EL DOCUMENTO (TRANSFERENCIA) 
     $involucrado=validar_relacion_documento_expediente($doc);
     if(!$involucrado['numcampos']){
-        $enlace=str_replace("kenlace_saia","",$enlace);
+        $enlace=str_replace("kenlace_saia","enlace_prohibido",$enlace);
     }        
     return ($enlace);
 }
@@ -599,8 +599,10 @@ function fecha_creacion_documento_expediente($fecha0,$plantilla=Null,$doc=Null){
     //SE VALIDA SI EL USUARIO ESTA INVOLUCRADO CON EL DOCUMENTO (TRANSFERENCIA) 
     $involucrado=validar_relacion_documento_expediente($doc);  
     if(!$involucrado['numcampos']){
-        $enlace=str_replace("kenlace_saia","",$enlace);
-    }         
+        $enlace=str_replace("kenlace_saia","enlace_prohibido",$enlace);
+        $enlace.='<script>$(".enlace_prohibido").click(function(){alert("No tiene Permiso");});</script>';  //usted no tiene autorizacion para acceder, favor solicitar 
+    } 
+    
     return($enlace);
 }
 function validar_relacion_documento_expediente($doc){
