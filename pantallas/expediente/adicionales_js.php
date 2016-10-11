@@ -134,7 +134,7 @@ $(document).ready(function(){
             },
             success: function(datos){
                 var alerta="<b>ATENCI&Oacute;N!<b><br><br>Usted no tiene autorizaci&oacute;n para acceder, favor solicitar el permiso a: "+datos.msn;
-                notificacion_saia(alerta,"success","",2500);
+                notificacion_saia(alerta,"warning","",6000);
             }
         });       
        
