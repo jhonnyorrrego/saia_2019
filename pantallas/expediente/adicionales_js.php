@@ -139,7 +139,7 @@ $(document).ready(function(){
         });       
        
    });
-  
+  $('.enlace_documento_bloqueado').parent().css('opacity','0.2');
   
   
   
@@ -147,11 +147,3 @@ $(document).ready(function(){
   
 });
 </script>
-<style>
-    .enlace_documento_bloqueado:parent{
-        opacity: 0.2;
-    }
-    .enlace_documento_bloqueado:parent:hover{
-        background-color:red;
-    }    
-</style>
