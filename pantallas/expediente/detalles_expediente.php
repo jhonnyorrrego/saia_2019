@@ -466,7 +466,7 @@ function cargar_datos(iddoc,descripcion){
   if(iddoc!=0){
     $("#nuevo_funcionario_responsable").val(iddoc);
         if(confirm('Esta seguro de cambiar el responsable de este expediente?')){
-	                   
+	                
   		                var idexpediente='<?php echo($idexpediente); ?>';
                         $.ajax({
                             type:'POST',
@@ -474,7 +474,6 @@ function cargar_datos(iddoc,descripcion){
                             url: "ejecutar_acciones.php",
                             data: {
                                 idexpediente:idexpediente,
-                                funcionario_codigo:funcionario_codigo
                                 ejecutar_expediente:'cambiar_responsable_expediente'
                             },
                             success: function(datos){
@@ -482,6 +481,7 @@ function cargar_datos(iddoc,descripcion){
                             }
                         }); 
                         
+                                 
         } 
   }else{
           $("#buscar_radicado").val("");
