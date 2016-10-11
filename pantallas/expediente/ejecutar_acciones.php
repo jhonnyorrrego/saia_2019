@@ -420,14 +420,14 @@ function obtener_rastro_documento_expediente(){
 function cambiar_responsable_expediente(){
 	global $conn;
 	
-	
+	$retorno=new stdClass;	
 	$idexpediente=$_REQUEST['idexpediente'];
 	
 	
 	$cantidad_folios=busca_filtro_tabla("","expediente","tomo_padre=".$idexpediente,"",$conn);
 	$retorno->sql=$cantidad_folios['sql'];
 	
-	$retorno=new stdClass;
+
 	$retorno->exito=1;
 	$retorno->msn='llego: '.$idexpediente;
 	return($retorno);	
