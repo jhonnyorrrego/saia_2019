@@ -63,24 +63,39 @@ $dato_padre=busca_filtro_tabla("","expediente a","a.idexpediente=".$_REQUEST["co
     <textarea name="descripcion" id="descripcion"></textarea>
   </div>
 </div>
-
 <div class="control-group element">
   <label class="control-label" for="serie_idserie">Serie asociada *
   </label>
   <div class="controls">
-    <span class="phpmaker">
-			<input type="text" id="stext_serie" width="200px" size="20">          
-      <a href="javascript:void(0)" onclick="tree3.findItem(htmlentities(document.getElementById('stext_serie').value),1)">
-      <img src="<?php echo $ruta_db_superior; ?>botones/general/anterior.png"border="0px"></a>
-      <a href="javascript:void(0)" onclick="tree3.findItem(htmlentities(document.getElementById('stext_serie').value),0,1)">
-      <img src="<?php echo $ruta_db_superior; ?>botones/general/buscar.png"border="0px"></a>
-      <a href="javascript:void(0)" onclick="tree3.findItem(htmlentities(document.getElementById('stext_serie').value))">
-      <img src="<?php echo $ruta_db_superior; ?>botones/general/siguiente.png"border="0px"></a>      
-      <div id="esperando_serie"><img src="<?php echo $ruta_db_superior; ?>imagenes/cargando.gif"></div>
-			<div id="treeboxbox_tree3" class="arbol_saia"></div>
+      
+    <?php
+    if(!$dato_padre['numcampos']){
+    
+    ?>      
+        <span class="phpmaker">
+    			<input type="text" id="stext_serie" width="200px" size="20">          
+          <a href="javascript:void(0)" onclick="tree3.findItem(htmlentities(document.getElementById('stext_serie').value),1)">
+          <img src="<?php echo $ruta_db_superior; ?>botones/general/anterior.png"border="0px"></a>
+          <a href="javascript:void(0)" onclick="tree3.findItem(htmlentities(document.getElementById('stext_serie').value),0,1)">
+          <img src="<?php echo $ruta_db_superior; ?>botones/general/buscar.png"border="0px"></a>
+          <a href="javascript:void(0)" onclick="tree3.findItem(htmlentities(document.getElementById('stext_serie').value))">
+          <img src="<?php echo $ruta_db_superior; ?>botones/general/siguiente.png"border="0px"></a>      
+          <div id="esperando_serie"><img src="<?php echo $ruta_db_superior; ?>imagenes/cargando.gif"></div>
+    			<div id="treeboxbox_tree3" class="arbol_saia"></div>
+         
+        </span>
+         <input style="display:none;" type="text" name="serie_idserie" id="serie_idserie">
      
-    </span>
-     <input style="display:none;" type="text" name="serie_idserie" id="serie_idserie">
+    <?php
+    }else{
+        $datos_serie_padre=busca_filtro_tabla("nombre","serie","idserie=".$dato_padre[0]['serie_idserie'],"",$conn);
+        echo($datos_serie_padre[0]['nombre']);
+    ?>
+    <input style="display:none;" type="text" name="serie_idserie" id="serie_idserie" value="<?php echo($dato_padre[0]['serie_idserie']); ?>">
+    <?php
+    }
+    ?>     
+     
   </div>
 </div>
 
