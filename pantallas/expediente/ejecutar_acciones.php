@@ -428,8 +428,8 @@ function cambiar_responsable_expediente(){
 	if($cantidad_folios['numcampos']){ //tiene folios
 	    $propietario_todos=1;
 	    for($i=0;$i<$cantidad_folios['numcampos'];$i++){
-	        if($cantidad_folios[0]['propietario']==''){
-	            
+	        if($cantidad_folios[0]['propietario']!=$funcionario_codigo){
+	            $propietario_todos=0;
 	        }
 	    }
 	}
