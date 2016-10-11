@@ -1,5 +1,6 @@
 <?php
 $max_salida=6; $ruta_db_superior=$ruta=""; while($max_salida>0){ if(is_file($ruta."db.php")){ $ruta_db_superior=$ruta;} $ruta.="../"; $max_salida--; } 
+ini_set('display_errors',true);
 ?>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <?php include_once($ruta_db_superior."pantallas/lib/librerias_componentes.php"); ?>
@@ -110,7 +111,7 @@ if($dato_padre["numcampos"]){
   <div class="controls">
 
     <?php
-    ini_set('display_errors',true);
+    
     if(!$dato_padre['numcampos']){
     
     ?>       
