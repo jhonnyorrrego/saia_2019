@@ -425,6 +425,15 @@ function cambiar_responsable_expediente(){
 	
 	
 	$cantidad_folios=busca_filtro_tabla("","expediente","tomo_padre=".$idexpediente,"",$conn);
+	if($cantidad_folios['numcampos']){ //tiene folios
+	    $propietario_todos=1;
+	    for($i=0;$i<$cantidad_folios['numcampos'];$i++){
+	        if($cantidad_folios[0]['propietario']==''){
+	            
+	        }
+	    }
+	}
+	
 	$retorno->sql=$cantidad_folios['sql'];
 	
 
