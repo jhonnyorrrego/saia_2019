@@ -422,7 +422,7 @@ function cambiar_responsable_expediente(){
 	
 	$retorno=new stdClass;	
 	$idexpediente=$_REQUEST['idexpediente'];
-	
+	$funcionario_codigo=$_REQUEST['funcionario_codigo'];
 	
 	$cantidad_folios=busca_filtro_tabla("","expediente","tomo_padre=".$idexpediente,"",$conn);
 	if($cantidad_folios['numcampos']){ //tiene folios
