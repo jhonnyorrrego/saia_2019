@@ -148,7 +148,7 @@ $(document).ready(function(){
 });
 </script>
 <style>
-    .enlace_documento_bloqueado{
+    .enlace_documento_bloqueado:parent{
         opacity: 0.2;
     }
     .enlace_documento_bloqueado:hover{
