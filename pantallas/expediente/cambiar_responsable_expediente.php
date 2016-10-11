@@ -82,7 +82,7 @@ $(document).ready(function(){
           }else{
                   var x_valor=$(this).val();
                   delay(function(){
-                          $("#ul_completar").load( "cambiar_responsable_expediente.php", { num_radicado: x_valor });
+                          $("#ul_completar").load( "<?php echo($ruta_db_superior); ?>pantallas/expediente/autocompletar_funcionario_responsable_expediente.php", { num_radicado: x_valor });
                   },500);
           }
   });
