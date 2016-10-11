@@ -89,7 +89,7 @@ $dato_padre=busca_filtro_tabla("","expediente a","a.idexpediente=".$_REQUEST["co
     <?php
     }else{
         $datos_serie_padre=busca_filtro_tabla("nombre","serie","idserie=".$dato_padre[0]['serie_idserie'],"",$conn);
-        echo('<ul><li><b>'$datos_serie_padre[0]['nombre'].'</b></li></ul>');
+        echo('<ul><li><b>'.$datos_serie_padre[0]['nombre'].'</b></li></ul>');
     ?>
     <input style="display:none;" type="text" name="serie_idserie" id="serie_idserie" value="<?php echo($dato_padre[0]['serie_idserie']); ?>">
     <?php
