@@ -107,7 +107,7 @@ $expediente=busca_filtro_tabla("a.*,".fecha_db_obtener("a.fecha","Y-m-d")." AS f
   		        $(document).ready(function(){
   		            $('.cambiar_responsable_expediente').live('click',function(){
   		                var enlace='pantallas/expediente/cambiar_responsable_expediente.php?idexpediente=<?php echo($idexpediente); ?>';
-                        top.hs.htmlExpand(this, { objectType: 'iframe',width: 500, height: 200,contentId:'cuerpo_paso',preserveContent:false, src:enlace,outlineType: 'rounded-white',wrapperClassName:'highslide-wrapper drag-header'});
+                        hs.htmlExpand(this, { objectType: 'iframe',width: 500, height: 200,contentId:'cuerpo_paso',preserveContent:false, src:enlace,outlineType: 'rounded-white',wrapperClassName:'highslide-wrapper drag-header'});
   		                
   		            });
   		        });
