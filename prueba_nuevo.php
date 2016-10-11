@@ -18,7 +18,7 @@ $cadena='
 ';
 
 
-$cadena=preg_replace("class=[\"\'][^\"\']+[\"\']","",$cadena);
+$cadena=preg_replace('class=[\"\'][^\"\']+[\"\']',"",$cadena);
 
 
 print_r($cadena);
