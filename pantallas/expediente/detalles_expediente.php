@@ -26,7 +26,6 @@ include_once($ruta_db_superior."pantallas/tareas/librerias.php");
 include_once($ruta_db_superior."pantallas/workflow/librerias.php");
 echo(librerias_jquery("1.7"));
 echo(librerias_notificaciones());
-echo(librerias_tooltips());
 if(@$_REQUEST["idexpediente"]){
 	$idexpediente=$_REQUEST["idexpediente"];	
 } 
@@ -96,7 +95,7 @@ $expediente=busca_filtro_tabla("a.*,".fecha_db_obtener("a.fecha","Y-m-d")." AS f
   	<?php if($expediente[0]["propietario"]){
   		$nombres=busca_filtro_tabla("","funcionario A","A.funcionario_codigo=".$expediente[0]["propietario"],"",$conn);
   		echo(ucwords(strtolower($nombres[0]["nombres"]." ".$nombres[0]["apellidos"])));
-  		$cadena_cambiar_propietario="&nbsp; &nbsp; &nbsp; <button class='btn btn-mini btn-default'><i class='icon-user' data-toggle='tooltip' title='Recurrencia'></i></button>";
+  		$cadena_cambiar_propietario="&nbsp; &nbsp; &nbsp; <button class='btn btn-mini btn-default'><i class='icon-user'  title='Recurrencia'></i></button>";
   		echo($cadena_cambiar_propietario);
   	}else{
 			echo("<span style='color:red'>Expediente creado por el sistema</span>");
@@ -373,11 +372,6 @@ $(document).ready(function(){
   $(".documento_actual",parent.document).removeClass("alert-info");
   $(".documento_actual",parent.document).removeClass("documento_actual");
   $("#resultado_pantalla_<?php echo($idexpediente);?>",parent.document).addClass("documento_actual").addClass("alert-info");    
-});
-</script>
-<script>
-$(document).ready(function(){
-    $("[data-toggle='tooltip']"    ).tooltip(); 
 });
 </script>
 </body>
