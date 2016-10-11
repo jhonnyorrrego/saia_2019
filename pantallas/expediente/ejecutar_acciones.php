@@ -409,7 +409,6 @@ function obtener_rastro_documento_expediente(){
 	$vector_nombres=array_map('ucwords',$vector_nombres);
 	$cadena_nombres=implode(', ',$vector_nombres);
 	
-	
 	$retorno=new stdClass;
 	$retorno->exito=1;
 	$retorno->msn=$cadena_nombres;
