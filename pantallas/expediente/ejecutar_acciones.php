@@ -405,6 +405,7 @@ function obtener_rastro_documento_expediente(){
 	
 	$vector_nombres=extrae_campo($funs,'nombre_funcionario');
 	$vector_nombres=array_map('strtolower',$vector_nombres);
+	$vector_nombres=array_map('html_entity_decode',$vector_nombres);
 	$vector_nombres=array_map('ucwords',$vector_nombres);
 	$cadena_nombres=implode(',',$vector_nombres);
 	
