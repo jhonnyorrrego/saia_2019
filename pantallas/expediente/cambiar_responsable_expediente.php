@@ -98,7 +98,7 @@ function cargar_datos(iddoc,descripcion){
                         $.ajax({
                             type:'POST',
                             dataType: 'json',
-                            url: "ejecutar_acciones.php",
+                            url: "<?php echo($ruta_db_superior); ?>pantallas/expediente/ejecutar_acciones.php",
                             data: {
                                 idexpediente:idexpediente,
                                 funcionario_codigo:funcionario_codigo,
