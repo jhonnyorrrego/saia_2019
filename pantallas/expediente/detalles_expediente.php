@@ -121,7 +121,7 @@ $expediente=busca_filtro_tabla("a.*,".fecha_db_obtener("a.fecha","Y-m-d")." AS f
   	<td class="prettyprint"><b>Seleccionar Nuevo responsable:</b></td>
   	<td colspan="3">
   	    <input type="text" id="nuevo_funcionario_responsable">
-        <?php autocompletar_funcionario_responsable_expediente(); ?>
+        <?php autocompletar_funcionario_responsable_expediente($idexpediente); ?>
   	</td>
   </tr>	
   <tr>
@@ -397,7 +397,7 @@ $(document).ready(function(){
 </script>
 </body>
 <?php
-function autocompletar_funcionario_responsable_expediente($idformato, $iddoc) {
+function autocompletar_funcionario_responsable_expediente($idexpediente) {
 	global $ruta_db_superior;
 	include_once ($ruta_db_superior . "librerias_saia.php");
 	global $raiz_saia;
