@@ -600,7 +600,6 @@ function fecha_creacion_documento_expediente($fecha0,$plantilla=Null,$doc=Null){
     $involucrado=validar_relacion_documento_expediente($doc);  
     if(!$involucrado['numcampos']){
         $enlace=str_replace("kenlace_saia","enlace_prohibido",$enlace);
-        $enlace.='<script>$(".enlace_prohibido").click(function(){alert("No tiene Permiso");});</script>';  //usted no tiene autorizacion para acceder, favor solicitar 
     } 
     
     return($enlace);
