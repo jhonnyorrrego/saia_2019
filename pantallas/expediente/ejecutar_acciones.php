@@ -425,7 +425,7 @@ function cambiar_responsable_expediente(){
 	
 	$retorno=new stdClass;
 	$retorno->exito=1;
-	$retorno->msn='llego';
+	$retorno->msn='llego: '.$idexpediente;
 	return($retorno);	
 	
 }
