@@ -147,3 +147,8 @@ $(document).ready(function(){
   
 });
 </script>
+<style>
+    .enlace_documento_bloqueado{
+        pointer-events:none;
+    }
+</style>
