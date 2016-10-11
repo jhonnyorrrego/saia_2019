@@ -124,6 +124,9 @@ $(document).ready(function(){
    $('.enlace_documento_bloqueado').live('click',function(){
        alert('click');
        
+       var iddoc=$(this).attr('iddoc');
+       
+       
    });
   
   
