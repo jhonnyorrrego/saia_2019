@@ -116,7 +116,7 @@ $expediente=busca_filtro_tabla("a.*,".fecha_db_obtener("a.fecha","Y-m-d")." AS f
   		                
   		                 
   		            });
-  		        }));
+  		        });
   		    </script>
   		    
  		<!--script type="text/javascript" src="<?php echo $ruta_db_superior;?>anexosdigitales/highslide-4.0.10/highslide/highslide-with-html.js"></script>
