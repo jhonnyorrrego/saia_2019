@@ -95,7 +95,7 @@ function cargar_datos(iddoc,descripcion){
   $("#ul_completar").empty();
   if(iddoc!=0){
           if(!$("#informacion_buscar_radicado").length){
-                  $("#buscar_radicado").after("<table id='informacion_buscar_radicado'></table>");
+                  $("#buscar_radicado").after("<table class='table table-bordered' id='informacion_buscar_radicado'></table>");
           }
           $("#informacion_buscar_radicado").append("<tr id='fila_"+iddoc+"'><td>"+descripcion+"</td><td><img style='cursor:pointer' src='<?php echo($ruta_db_superior); ?>imagenes/eliminar_nota.gif' registro='"+iddoc+"' onclick='eliminar_asociado("+iddoc+");'></td></tr>");
           
