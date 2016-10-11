@@ -96,7 +96,7 @@ $expediente=busca_filtro_tabla("a.*,".fecha_db_obtener("a.fecha","Y-m-d")." AS f
   	<?php if($expediente[0]["propietario"]){
   		$nombres=busca_filtro_tabla("","funcionario A","A.funcionario_codigo=".$expediente[0]["propietario"],"",$conn);
   		echo(ucwords(strtolower($nombres[0]["nombres"]." ".$nombres[0]["apellidos"])));
-  		$cadena_cambiar_propietario="&nbsp; &nbsp; &nbsp; <button class='btn btn-mini btn-default' data-toggle='tooltip' title='Recurrencia'><i class='icon-user'></i></button>";
+  		$cadena_cambiar_propietario="&nbsp; &nbsp; &nbsp; <button class='btn btn-mini btn-default'><i class='icon-user' data-toggle='tooltip' title='Recurrencia'></i></button>";
   		echo($cadena_cambiar_propietario);
   	}else{
 			echo("<span style='color:red'>Expediente creado por el sistema</span>");
@@ -377,7 +377,7 @@ $(document).ready(function(){
 </script>
 <script>
 $(document).ready(function(){
-    $("[data-toggle='tooltip']").tooltip(); 
+    $("[data-toggle='tooltip']"    ).tooltip(); 
 });
 </script>
 </body>
