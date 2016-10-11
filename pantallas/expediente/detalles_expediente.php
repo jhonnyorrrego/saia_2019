@@ -104,8 +104,10 @@ $expediente=busca_filtro_tabla("a.*,".fecha_db_obtener("a.fecha","Y-m-d")." AS f
   		        <i class='icon-user' title='Cambiar Responsable'></i>
   		    </button>
   		    <script>
-  		        $('.cambiar_responsable_expediente').ready(function(){
-  		            alert('click');
+  		        $(document).ready(function(){
+  		            $('.cambiar_responsable_expediente').live('click',function(){
+  		                alert('entro');
+  		            });
   		        });
   		    </script>
   	
