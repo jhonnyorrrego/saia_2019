@@ -278,10 +278,12 @@ $(document).ready(function(){
     e.stopPropagation();
   });    
   $(".well").live("mouseenter",function(){
-      $(this).addClass("alert-success");
+      //$(this).addClass("alert-success");
+       $(this).addClass("muted");
   });
   $(".well").live("mouseleave",function(){
-      $(this).removeClass("alert-success");
+      //$(this).removeClass("alert-success");
+      $(this).removeClass("muted");
   });
 </script>
 <?php echo(librerias_bootstrap());
