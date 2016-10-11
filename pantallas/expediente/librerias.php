@@ -599,7 +599,7 @@ function fecha_creacion_documento_expediente($fecha0,$plantilla=Null,$doc=Null){
     //SE VALIDA SI EL USUARIO ESTA INVOLUCRADO CON EL DOCUMENTO (TRANSFERENCIA) 
     $involucrado=validar_relacion_documento_expediente($doc);  
     if(!$involucrado['numcampos']){
-       $enlace=preg_replace("/class=[\"\'][^\'\"]*kenlace_saia[^\'\"]*[\"\']/","class='link' llave=".$doc,$enlace,1);
+       $enlace=preg_replace("/class=[\"\'][^\'\"]*kenlace_saia[^\'\"]*[\"\']/","class='link pull-left' llave=".$doc,$enlace,1);
     } 
     
     return($enlace);
