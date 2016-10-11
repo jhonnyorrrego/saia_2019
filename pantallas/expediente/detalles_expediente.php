@@ -26,6 +26,7 @@ include_once($ruta_db_superior."pantallas/tareas/librerias.php");
 include_once($ruta_db_superior."pantallas/workflow/librerias.php");
 echo(librerias_jquery("1.7"));
 echo(librerias_notificaciones());
+echo(librerias_tooltips());
 if(@$_REQUEST["idexpediente"]){
 	$idexpediente=$_REQUEST["idexpediente"];	
 } 
@@ -95,7 +96,7 @@ $expediente=busca_filtro_tabla("a.*,".fecha_db_obtener("a.fecha","Y-m-d")." AS f
   	<?php if($expediente[0]["propietario"]){
   		$nombres=busca_filtro_tabla("","funcionario A","A.funcionario_codigo=".$expediente[0]["propietario"],"",$conn);
   		echo(ucwords(strtolower($nombres[0]["nombres"]." ".$nombres[0]["apellidos"])));
-  		$cadena_cambiar_propietario="&nbsp; &nbsp; &nbsp; <button class='btn btn-mini btn-default'><i class='icon-user'></i></button>";
+  		$cadena_cambiar_propietario="&nbsp; &nbsp; &nbsp; <button class='btn btn-mini btn-default' ><i class='icon-user'></i></button>";
   		echo($cadena_cambiar_propietario);
   	}else{
 			echo("<span style='color:red'>Expediente creado por el sistema</span>");
