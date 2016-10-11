@@ -122,7 +122,7 @@ $(document).ready(function(){
   
    //usted no tiene autorizacion para acceder, favor solicitar 
    $('.enlace_documento_bloqueado').live('click',function(){
-       alert('click');
+      
        
        var iddoc=$(this).attr('iddoc');
         $.ajax({
