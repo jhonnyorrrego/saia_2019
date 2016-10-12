@@ -103,6 +103,19 @@ function cargar_datos(iddoc,descripcion){
           $("#nuevo_funcionario_responsable").val(iddoc);
           $("#buscar_radicado").val("");
           $("#buscar_radicado").attr('readonly',true);
+          
+        $.ajax({
+            type:'POST',
+            dataType: 'json',
+            url: "<?php echo($ruta_db_superior); ?>pantallas/expediente/autocompletar_funcionario_responsable_expediente.php",
+            data: {
+                funcionario_codigo_responsable:iddoc
+            },
+            success: function(datos){
+
+            }
+        });          
+          
 
   }else{
           $("#buscar_radicado").val("");
