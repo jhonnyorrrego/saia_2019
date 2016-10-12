@@ -35,6 +35,10 @@ echo(estilo_bootstrap());
                 notificacion_saia("<b>ATENCI&Oacute;N</b><br>Debe seleccionar un nuevo responsable valido!","warning","",2500);
                 return(false);
             }
+            if($('#tomos_asociados').val()){
+                var cambiar_tomos=confirm('Este expediente tiene tomos asociados con el mismo propietario, desea incluir estos tomos?');
+                alert(cambiar_tomos);
+            }
         });
     });
 </script>
