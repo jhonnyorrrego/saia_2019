@@ -34,6 +34,16 @@ function autocompletar_funcionario_responsable_expediente($idexpediente) {
 	global $raiz_saia;
 	$raiz_saia = $ruta_db_superior;
 	echo (librerias_notificaciones ());
+	
+	
+	$responsable_actual_expediente=busca_filtro_tabla("propietario","expediente","idexpediente=".$idexpediente,"",$conn);
+	$busca_tomos=busca_filtro_tabla("","expediente","propietario=".$responsable_actual_expediente[0]['propietario']." AND tomo_padre=".$idexpediente,"",$conn);
+	
+	if($busca_tomos['numcampos']){
+	    
+	}
+	
+	
 	?>
 <style>
 .ac_results {
@@ -103,21 +113,6 @@ function cargar_datos(iddoc,descripcion){
           $("#nuevo_funcionario_responsable").val(iddoc);
           $("#buscar_radicado").val("");
           $("#buscar_radicado").attr('readonly',true);
-          
-        $.ajax({
-            type:'POST',
-            dataType: 'json',
-            url: "<?php echo($ruta_db_superior); ?>pantallas/expediente/autocompletar_funcionario_responsable_expediente.php",
-            data: {
-                funcionario_codigo_responsable:iddoc,
-                idexpediente:'<?php echo($idexpediente); ?>'
-            },
-            success: function(datos){
-
-            }
-        });          
-          
-
   }else{
           $("#buscar_radicado").val("");
           $("#nuevo_funcionario_responsable").val(0);
