@@ -39,8 +39,19 @@ echo(estilo_bootstrap());
             if($('#tomos_asociados').val()){
                 var cambiar_tomos=confirm('Este expediente tiene el/los tomos '+$('#no_tomos').val()+' con el mismo propietario, desea incluir estos tomos?');
             }
-            
-            
+            /*
+            $.ajax({
+                type:'POST',
+                dataType: 'json',
+                url: "<?php echo($ruta_db_superior); ?>pantallas/expediente/ejecutar_acciones.php",
+                data: {
+                    idexpediente:seleccionado,
+                    
+                },
+                success: function(datos){
+
+                }
+            }); */            
             
         });
     });
