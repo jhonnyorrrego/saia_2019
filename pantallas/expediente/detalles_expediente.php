@@ -99,6 +99,10 @@ $expediente=busca_filtro_tabla("a.*,".fecha_db_obtener("a.fecha","Y-m-d")." AS f
 			echo("<span style='color:red'>Expediente creado por el sistema</span>");
 	}
   	?>
+  	
+  	<?php
+  	if(usuario_actual('login')=='cerok'){
+  	?>
           	&nbsp; &nbsp; &nbsp; 
   		    <button class='btn btn-mini btn-default cambiar_responsable_expediente'>
   		        <i class='icon-user' title='Cambiar Responsable'></i>
@@ -117,6 +121,11 @@ $expediente=busca_filtro_tabla("a.*,".fecha_db_obtener("a.fecha","Y-m-d")." AS f
   		            });
   		        });
   		    </script>
+  	<?php
+  	}
+  	?>  		    
+  		    
+  		    
   	</td>
   </tr>
   <tr>
