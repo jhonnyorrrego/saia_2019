@@ -101,7 +101,7 @@ $(document).ready(function(){
     
     
     $('#tomos_asociados').val('<?php echo($cadena_idtomos); ?>');
-	
+	 $('#no_tomos').val('<?php echo($cadena_no_tomos); ?>');
   var delay = (function(){
           var timer = 0;
           return function(callback, ms){
