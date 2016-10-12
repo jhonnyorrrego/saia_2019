@@ -34,7 +34,7 @@ function formulario(){
 	<br/>
 
 	<div class="container">
-	    <div class="well">
+	    
 	<form class="form-horizontal" name="formulario_formatos" id="formulario_formatos" method="post" enctype="multipart/form-data">
 	<fieldset id="content_form_name">
     <legend>Cargar logo</legend>
@@ -52,7 +52,7 @@ function formulario(){
 		<div class="controls">
 			<!-- input type="file" name="anexo" id="anexo" -->
 		   <span class="btn btn-mini btn-default fileinput-button" ng-class="{disabled: disabled}" style="margin-left:40px;" id="contenedor_anexos">
-                <i class="icon-upload"></i>
+               
                 <span>Examinar</span>
                 <input type="file" multiple ng-disabled="disabled" name="anexo" id="anexo">
             </span>		
@@ -72,7 +72,7 @@ function formulario(){
 		</td>
 		<input type="hidden" name="accion" value="guardar">
 	</form>
-</div>
+
 	</div>
 
 <style>
