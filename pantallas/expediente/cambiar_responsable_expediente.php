@@ -26,6 +26,7 @@ echo(estilo_bootstrap());
   </tr>
 </table>
 <input type="hidden" id="tomos_asociados">
+<input type="hidden" id="no_tomos">
 <button class="btn btn-primary btn-mini" id="cambiar_responsable">Aceptar</button>
 <button class="btn btn-mini" onclick="window.parent.hs.close();">Cancelar</button> 
 <script>
@@ -36,7 +37,9 @@ echo(estilo_bootstrap());
                 return(false);
             }
             if($('#tomos_asociados').val()){
-                var cambiar_tomos=confirm('Este expediente tiene tomos asociados con el mismo propietario, desea incluir estos tomos?');
+                var cambiar_tomos=confirm('Este expediente tiene tomos '+$('#no_tomos').val()+' con el mismo propietario, desea incluir estos tomos?');
+                
+                
             }
         });
     });
