@@ -109,7 +109,8 @@ function cargar_datos(iddoc,descripcion){
             dataType: 'json',
             url: "<?php echo($ruta_db_superior); ?>pantallas/expediente/autocompletar_funcionario_responsable_expediente.php",
             data: {
-                funcionario_codigo_responsable:iddoc
+                funcionario_codigo_responsable:iddoc,
+                idexpediente:'<?php echo($idexpediente); ?>'
             },
             success: function(datos){
 
