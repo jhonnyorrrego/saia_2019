@@ -18,7 +18,7 @@ echo(estilo_bootstrap());
 
 <table class="table table-bordered">
   <tr class="contenedor_autocompletar_responsable_expediente">
-  	<td class="prettyprint"><b>Seleccionar Nuevo responsable:</b></td>
+  	<td class="prettyprint"><b>Nuevo responsable:</b></td>
   	<td colspan="3">
   	    <input type="text" id="nuevo_funcionario_responsable">
         <?php autocompletar_funcionario_responsable_expediente($_REQUEST['idexpediente']); ?>
