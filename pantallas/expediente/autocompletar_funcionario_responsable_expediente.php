@@ -29,13 +29,7 @@ if(isset($_REQUEST['num_radicado'])){
 }
 
 
-if(@$_REQUEST['funcionario_codigo_responsable']){
-    
-    print_r('entro: '.$_REQUEST['funcionario_codigo_responsable']);
-    
-    
-    
-}
+
 
 
 ?>
