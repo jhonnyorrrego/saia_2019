@@ -37,7 +37,7 @@ echo(estilo_bootstrap());
                 return(false);
             }
             if($('#tomos_asociados').val()){
-                var cambiar_tomos=confirm('Este expediente tiene tomos '+$('#no_tomos').val()+' con el mismo propietario, desea incluir estos tomos?');
+                var cambiar_tomos=confirm('Este expediente tiene el/los tomos '+$('#no_tomos').val()+' con el mismo propietario, desea incluir estos tomos?');
                 
                 
             }
