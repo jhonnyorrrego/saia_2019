@@ -26,8 +26,19 @@ echo(estilo_bootstrap());
   </tr>
 </table>
 <input type="hidden" id="tomos_asociados">
-<button class="btn btn-primary btn-mini" id="">Aceptar</button>
+<button class="btn btn-primary btn-mini" id="cambiar_responsable">Aceptar</button>
 <button class="btn btn-mini" onclick="window.parent.hs.close();">Cancelar</button> 
+<script>
+    $(document).ready(function(){
+        $('#cambiar_responsable').click(function(){
+            if(!$('#nuevo_funcionario_responsable').val()){
+                notificacion_saia("<b>ATENCI&Oacute;N</b><br>Debe seleccionar un nuevo responsable valido!","warning","",2500);
+                return(false);
+            }
+        });
+    });
+</script>
+
 <?php
 function autocompletar_funcionario_responsable_expediente($idexpediente) {
 	global $ruta_db_superior;
