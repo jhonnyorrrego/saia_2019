@@ -24,7 +24,8 @@ echo(estilo_bootstrap());
         <?php autocompletar_funcionario_responsable_expediente($_REQUEST['idexpediente']); ?>
   	</td>
   </tr>
-</table>  
+</table>
+<input type="hidden" id="tomos_asociados">
 <button class="btn btn-primary btn-mini" id="">Aceptar</button>
 <button class="btn btn-mini" onclick="window.parent.hs.close();">Cancelar</button> 
 <?php
@@ -40,7 +41,8 @@ function autocompletar_funcionario_responsable_expediente($idexpediente) {
 	$busca_tomos=busca_filtro_tabla("","expediente","propietario=".$responsable_actual_expediente[0]['propietario']." AND tomo_padre=".$idexpediente,"",$conn);
 	
 	if($busca_tomos['numcampos']){
-	    
+	    $cadena_idtomos=implode(',',extrae_campo($busca_tomos,'idexpediente'));
+	    $cadena_no_tomos=implode(',',extrae_campo($busca_tomos,'tomo_no'));
 	}
 	
 	
@@ -79,6 +81,9 @@ function autocompletar_funcionario_responsable_expediente($idexpediente) {
 </style>
 <script>
 $(document).ready(function(){
+    
+    
+    $('#tomos_asociados').val('<?php echo($cadena_idtomos); ?>');
 	
   var delay = (function(){
           var timer = 0;
