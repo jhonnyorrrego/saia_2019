@@ -31,10 +31,10 @@ function mostrar_radicado_entrada($idformato,$iddoc){
 	global $conn;
 	if($_REQUEST["iddoc"]){
 		$doc=busca_filtro_tabla("","documento a","iddocumento=".$_REQUEST["iddoc"],"",$conn);
-		echo '<td><b>'.$doc[0]["numero"].'</b></td>'; 
+		echo '<td><b id="numero_radicado">'.$doc[0]["numero"].'</b></td>'; 
 	}
 	else
-		echo '<td><b>'.muestra_contador("radicacion_entrada").'</b></td>';
+		echo '<td><b id="numero_radicado">'.muestra_contador("radicacion_entrada").'</b></td>';
 }
 function enviar_adicionar($idformato,$iddoc){
 	$max_salida=6; // Previene algun posible ciclo infinito limitando a 10 los ../
@@ -301,6 +301,11 @@ function tipo_radicado_radicacion($idformato,$iddoc){
             $(document).ready(function(){
                 $('[name="tipo_origen"]').click(function(){
                     var tipo=$(this).val();
+                    if(tipo==1){
+                        $('[name="tipo_radicado"]').val('radicacion_entrada');
+                    }else{
+                        $('[name="tipo_radicado"]').val('radicacion_entrada');
+                    }
                     $.ajax({
                         type:'POST',
                         dataType: 'json',
@@ -310,6 +315,7 @@ function tipo_radicado_radicacion($idformato,$iddoc){
                         },
                         success: function(datos){
                             alert(datos);
+                            
                         }
                     });
                 });
