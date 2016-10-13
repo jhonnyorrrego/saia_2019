@@ -222,13 +222,13 @@ function mostrar_qr_interna($idformato,$iddoc){
 	global $conn,$ruta_db_superior;
 	$estado_doc=busca_filtro_tabla("","documento","iddocumento=".$iddoc,"", $conn);
 	if($estado_doc[0]['estado']=='APROBADO'){	
-		$codigo_qr=busca_filtro_tabla("","documento_verificacion","documento_iddocumento=".$iddoc,"", $conn);
+		$codigo_qr=busca_filtro_tabla("","documento_verificacion","documento_iddocumento=".$iddoc,"iddocumento_verificacion DESC", $conn);
 		if($codigo_qr['numcampos']){
 			$extension=explode(".",$codigo_qr[0]['ruta_qr']);
 			$img='&nbsp;<img src="http://'.RUTA_PDF.'/'.$codigo_qr[0]['ruta_qr'].'" />';
 		}else{
 			generar_codigo_qr_interna($idformato,$iddoc);
-			$codigo_qr=busca_filtro_tabla("","documento_verificacion","documento_iddocumento=".$iddoc,"", $conn);
+			$codigo_qr=busca_filtro_tabla("","documento_verificacion","documento_iddocumento=".$iddoc,"iddocumento_verificacion DESC", $conn);
 			$extension=explode(".",$codigo_qr[0]['ruta_qr']);
 			$img='&nbsp;<img src="http://'.RUTA_PDF.'/'.$codigo_qr[0]['ruta_qr'].'" />';	
 		}
