@@ -22,6 +22,6 @@ if($_REQUEST['tipo_radicacion']==1){
 $idcontador=array($contador[0]['idcontador']);
 $idcontador=json_encode($idcontador);
 echo ($idcontador);
-//return $idcontador;
+
 
 ?> 
