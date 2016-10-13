@@ -301,17 +301,7 @@ function tipo_radicado_radicacion($idformato,$iddoc){
             $(document).ready(function(){
                 $('[name="tipo_origen"]').click(function(){
                     val tipo=$(this).val();
-                    $.ajax({
-                        type:'POST',
-                        dataType: 'json',
-                        url: "tipo_contador.php",
-                        data: {
-                                        tipo_radicacion:tipo
-                        },
-                        success: function(datos){
-                            
-                        }
-                    });
+                    alert(paso);
                 });
             });
         </script>
