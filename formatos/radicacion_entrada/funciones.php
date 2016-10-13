@@ -299,7 +299,7 @@ function tipo_radicado_radicacion($idformato,$iddoc){
     ?>
         <script type="text/javascript">
             $(document).ready(function(){
-                $('#tipo_origen').click(function(){
+                $('[name="tipo_origen"]').click(function(){
                     val tipo=$(this).val();
                     $.ajax({
                         type:'POST',
