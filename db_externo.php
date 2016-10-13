@@ -188,7 +188,7 @@ END";
  if(MOTOR=="MySql")
     {if($tipo=="archivo")
        {$sql="update $tabla set $campo='".addslashes($contenido)."' where $condicion";
-        mysql_query($sql,$conn2->Conn->conn);
+        mysqli_query($conn2->Conn->conn, $sql);
         // TODO verificar resultado de la insecion $resultado=FALSE; 
        }
      elseif($tipo=="texto")
@@ -209,7 +209,7 @@ END";
                 evento_archivo($archivo);
                }
             }         
-         mysql_query($sql,$conn2->Conn->conn) or die(mysql_error());
+         mysqli_query($conn2->Conn->conn, $sql) or die(mysqli_error($conn2->Conn->conn));
         }
     }
  return($resultado);   
@@ -552,7 +552,7 @@ function phpmkr_fetch_row_externo($rs,$conn2){
 */
 function phpmkr_free_result_externo($rs,$conn2){
  if($conn2->motor=="MySql")
-      @mysql_free_result($conn2->res);
+      @mysqli_free_result($conn2->res);
  else if($conn2->motor=="Oracle")
     @OCIFreeStatement($conn2->res);   
 }

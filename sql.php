@@ -77,7 +77,7 @@ la matriz es del tipo: resultado[0]['campo']='valor'
         //se le asignan a $resultado los valores obtenidos
         if($this->Numero_Filas()>0)
           {for($i=0;$i<$this->Numero_Filas();$i++)
-              $resultado[]=mysqli_fetch_array($this->res,MYSQL_ASSOC);
+              $resultado[]=mysqli_fetch_array($this->res,MYSQLI_ASSOC);
            return $resultado;
         	}
        //se retorna la matriz
@@ -404,7 +404,7 @@ function Ejecutar_Sql_MSSql($sql)
     switch($this->motor)
     {
       case "MySql":
-        if($arreglo=@mysqli_fetch_array($this->res,MYSQL_BOTH)){
+        if($arreglo=@mysqli_fetch_array($this->res,MYSQLI_BOTH)){
            $this->filas++;
           return($arreglo);
         }
@@ -818,7 +818,7 @@ valores-los valores a insertar
      $resultado["numcampos"]=$this->Numero_Filas();
        if($this->Numero_Filas()>0)
           {for($i=0;$i<$this->Numero_Filas();$i++)
-              {$resultado[$i]=mysqli_fetch_array($this->res,MYSQL_ASSOC);
+              {$resultado[$i]=mysqli_fetch_array($this->res,MYSQLI_ASSOC);
                $j=0;
                foreach($resultado[$i] as $key=>$valor)
                   {$resultado[$i][$j]=$resultado[$i][$key];
@@ -962,7 +962,7 @@ valores-los valores a insertar
 
   function Lista_Tabla($db){
     if($this->motor=="MySql"){
-       $this->res=mysqli_query($this->Conn->conn,"SHOW TABLES") or die("Error en la Ejecucución del Proceso SQL: ".mysql_error());
+       $this->res=mysqli_query($this->Conn->conn,"SHOW TABLES") or die("Error en la Ejecucución del Proceso SQL: " . mysqli_error($this->Conn->conn));
        while($row=mysqli_fetch_row($this->res))
        $resultado[]=$row[0];
     }

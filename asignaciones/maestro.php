@@ -36,7 +36,7 @@ if( $count >0 ) {
 if ($page > $total_pages) $page=$total_pages;
 $start = $limit*$page - $limit; // do not put $limit*($page - 1)
 $SQL = "SELECT * FROM asignacion WHERE 1=1 ORDER BY $sidx $sord LIMIT $start , $limit";
-$result = phpmkr_query( $SQL,$conn) or die("Couldn t execute query.".mysql_error());
+$result = phpmkr_query( $SQL,$conn) or die("Couldn t execute query.".((is_object($GLOBALS["___mysqli_ston"])) ? mysqli_error($GLOBALS["___mysqli_ston"]) : (($___mysqli_res = mysqli_connect_error()) ? $___mysqli_res : false)));
 $responce->page = $page;
 $responce->total = $total_pages;
 $responce->records = $count;

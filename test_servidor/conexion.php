@@ -81,8 +81,8 @@ class Conexion
 */
    function  Conectar_Mysql()
     {
-     $this->conn = mysql_connect($this->Host.":" . $this->Puerto, $this->Usuario,$this->Pass)or die("NO SE PUEDE CONECTAR A LA BASE DE DATOS"); ;
-     mysql_select_db($this->Db);
+     $this->conn = mysqli_connect($this->Host.":" . $this->Puerto, $this->Usuario,$this->Pass) or die("NO SE PUEDE CONECTAR A LA BASE DE DATOS");
+     ((bool)mysqli_query($this->conn, "USE " . $this->Db));
     }
     function  Conectar_SqlServer(){
       if($this->Puerto)
@@ -114,7 +114,7 @@ class Conexion
         { 
            case "MySql":
                if ($this->conn)
-            	  mysql_close($this->conn);     
+            	  mysqli_close($this->conn);     
            break;
            case "Oracle":
                if ($this->conn)
@@ -146,7 +146,7 @@ class Conexion
         $this->Nombredb="framework";  
      */   
      $this->Nombredb=DB;   
-     mysql_select_db($this->Nombredb,$this->conn) or die("error al conectarse a la bd: ".$nueva_db);
+     ((bool)mysqli_query($this->conn, "USE " . $this->Nombredb)) or die("error al conectarse a la bd: ".$nueva_db);
     }
 /*
 <Clase>Conexion
