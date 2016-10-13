@@ -12,7 +12,8 @@ $max_salida--;
 }
 include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."formatos/librerias/funciones_generales.php");
-
+include_once($ruta_db_superior."librerias_saia.php");
+echo(librerias_jquery('1.7'));
 //ADICIONAR - EDITAR
 //******************
 function cargar_fecha_limite_respuesta($idformato,$iddoc){
