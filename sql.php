@@ -311,9 +311,7 @@ la matriz con los valores del resultado se obtiene por medio de la función Resu
           //$accion=substr($this->consulta,0,$fin); 
         }
         
-        if($this->res===false){
-            print_r($sql."<-----Errormessage:  ". mysqli_error($this->Conn->conn).'<--fin--->');
-        }
+       
         return($this->res);
       }
     }
