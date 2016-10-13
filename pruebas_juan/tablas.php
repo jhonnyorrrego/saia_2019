@@ -10,15 +10,15 @@ while ($max_salida > 0) {
 }
 include_once($ruta_db_superior . "db.php");
 
-mysql_connect('saia-aguas.ct00qljbq3lp.us-east-1.rds.amazonaws.com', 'saia', 'cerok_saia421_5');
+$conn = mysqli_connect('saia-aguas.ct00qljbq3lp.us-east-1.rds.amazonaws.com', 'saia', 'cerok_saia421_5');
 
 $sql = "SHOW TABLES FROM saia_nucleo";
 
 
 
-$datos = mysql_query($sql);
+$datos = mysqli_query($conn, $sql);
 
-while ($fila = mysql_fetch_row($datos)) {
+while ($fila = mysqli_fetch_row($datos)) {
     echo "Tabla: {".$fila[0]}."\n";
 }
 

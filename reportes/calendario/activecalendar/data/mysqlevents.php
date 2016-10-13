@@ -54,9 +54,9 @@ Please uncomment the following SQL Statement if the Date Field saves the date as
 Connect to Database and send the query
 ********************************************************************************
 */
-$conID=@mysql_connect($dbhost,$dbuser,$dbpass);
-@mysql_select_db($dbname, $conID);
-$sqlID=@mysql_query($SQL);
+$conID=@mysqli_connect($dbhost, $dbuser, $dbpass));
+@((bool)mysqli_query( $conID, "USE " . $dbname));
+$sqlID=@mysqli_query($conID, $SQL);
 /*
 ********************************************************************************
 Calendar Navigation variables
@@ -80,7 +80,7 @@ Gets all dates from your database and set the calendar events html classes (for 
 ********************************************************************************
 */
 $eventID="event"; // sets the name of the generated HTML class on the event day (css layout)
-while ($data=@mysql_fetch_array($sqlID, MYSQL_BOTH)){
+while ($data=@mysqli_fetch_array($sqlID,  MYSQLI_BOTH)){
 $mysqlDay=date("j",$data[$tblDateName]); // makes a day out of the database date
 $mysqlMonth=date("n",$data[$tblDateName]); // makes a month out of the database date
 $mysqlYear=date("Y",$data[$tblDateName]); // makes a year out of the database date

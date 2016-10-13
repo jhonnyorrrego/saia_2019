@@ -304,7 +304,7 @@ class FusionCharts{
 	 # Function addCategoryFromDatabase adding Category from dataset
 	 function addCategoryFromDatabase($query_result, $categoryColumn){
 			 # fetching recordset till eof
-			 while($row = mysql_fetch_array($query_result)){
+			 while($row = mysqli_fetch_array($query_result)){
 				# adding category
 				$this->addCategory($row[$categoryColumn],"","" );
 			 } 
@@ -488,7 +488,7 @@ class FusionCharts{
 			 $i=1;
 			 $tempParam="";
 			 # fetching recordset till eof
-			 while($row = mysql_fetch_array($query_result)){
+			 while($row = mysqli_fetch_array($query_result)){
                    # Creating Control break depending on ctrlField
 				   # if ctrlField value change then dataset will be Generate
 				   if ($tempContrl!=$row[$ctrlField]){
@@ -520,7 +520,7 @@ class FusionCharts{
 	   	      	   
 		$paramset="";		   
 	   # fetching recordset till eof
-	   while($row = mysql_fetch_array($query_result)){
+	   while($row = mysqli_fetch_array($query_result)){
 		
 		 if($LinkPlaceHolder==""){
 				      $paramset="";

@@ -302,11 +302,11 @@ function tipo_radicado_radicacion($idformato,$iddoc){
                 $('[name="tipo_origen"]').click(function(){
                     var tipo=$(this).val();
                     if(tipo==1){
-                        $('[name="tipo_radicado"]').attr(val,'radicacion_entrada');
-                    }else{
                         $('[name="tipo_radicado"]').val('radicacion_entrada');
+                    }else{
+                        $('[name="tipo_radicado"]').val('radicacion_salida');
                     }
-                    $.ajax({
+                    $.ajax({ 
                         type:'POST',
                         dataType: 'json',
                         url: "tipo_contador.php",
@@ -314,7 +314,8 @@ function tipo_radicado_radicacion($idformato,$iddoc){
                                         tipo_radicacion:tipo
                         },
                         success: function(datos){
-                            $('#numero_radicado').html(datos);
+                            
+                            $('#numero_radicado').html(datos[0]);
                             
                         }
                     });

@@ -73,11 +73,11 @@ la matriz es del tipo: resultado[0]['campo']='valor'
         if ($order_by != "" && $order_by != null)
             $this->consulta.=" ORDER BY ".$order_by;        
          // ejecucion de la consulta, a $this->res se le asigna el resource
-        $this->res=mysql_query($this->consulta,$this->Conn);
+        $this->res=mysqli_query($this->Conn, $this->consulta);
         //se le asignan a $resultado los valores obtenidos 
         if($this->Numero_Filas()>0)
           {for($i=0;$i<$this->Numero_Filas();$i++)
-              $resultado[]=mysql_fetch_array($this->res,MYSQL_ASSOC);              
+              $resultado[]=mysqli_fetch_array($this->res, MYSQLI_ASSOC);              
            return $resultado;   
         	} 
        //se retorna la matriz 	
@@ -191,7 +191,7 @@ function liberar_resultado($rs){
     liberar_resultado_sqlserver($rs);	
 } 
 function liberar_resuldato_mysql($rs){
-  @mysql_free_result($rs);
+  @mysqli_free_result($rs);
 }   
 function liberar_resuldato_oracle($rs){
   @OCIFreeStatement($conn->res);
@@ -242,13 +242,13 @@ la matriz con los valores del resultado se obtiene por medio de la función Resu
   function Ejecutar_Sql_MySql($sql)
     {$this->filas=0;
      if($sql && $sql<>""){
-        $this->res=mysql_query($sql,$this->Conn->conn);// or error("Error al Ejecutar:  $sql --- ".mysql_error());
+        $this->res=mysqli_query($this->Conn->conn, $sql);// or error("Error al Ejecutar:  $sql --- ".mysqli_error($this->Conn->conn));
         if($this->res)
         {if(strpos(strtolower($sql),"insert")!==false) 
             $this->ultimo_insert=$this->Ultimo_Insert_Mysql();
          else if(strpos(strtolower($sql),"select")!==false)
             {$this->ultimo_insert=0;  
-             $this->filas=mysql_num_rows($this->res);
+             $this->filas=mysqli_num_rows($this->res);
             }
          else
             {$this->ultimo_insert=0;  
@@ -415,7 +415,7 @@ valores-los valores a insertar
          $insert = "INSERT INTO " . $tabla . " VALUES (" . $valores . ")";
     else
          $insert = "INSERT INTO " . $tabla . "(" . $campos . ") VALUES (" . $valores . ")";
-    $this->res=mysql_query($insert,$this->Conn);    
+    $this->res=mysqli_query($this->Conn, $insert);    
     $this->Guardar_log($insert);
   }
 /*
@@ -485,7 +485,7 @@ valores-los valores a insertar
            $update = "UPDATE " . $tabla . " SET " . $actualizaciones;
        // ejecucion de la consulta      
        $this->Guardar_log($update);
-       $this->res=mysql_query($update,$this->Conn);        
+       $this->res=mysqli_query($this->Conn, $update);        
         // 
     }
 /*
@@ -549,9 +549,9 @@ valores-los valores a insertar
 */
   function Ejecutar_Sql_Tipo_MySql($sql)
     {$this->consulta=$sql;
-     $this->res=mysql_query($this->consulta,$this->Conn);
+     $this->res=mysqli_query($this->Conn, $this->consulta);
       $this->Guardar_log($sql);
-     while($fila=mysql_fetch_row($this->res))
+     while($fila=mysqli_fetch_row($this->res))
         {foreach($fila as $valor)  
             $resultado[]=$valor;
         }  
@@ -620,7 +620,7 @@ valores-los valores a insertar
             $delete = "DELETE FROM " . $tabla;
        // ejecucion de la consulta
        $this->Guardar_log($delete);
-       $this->res=mysql_query($delete,$this->Conn);
+       $this->res=mysqli_query($this->Conn, $delete);
        //
     }
 /*
@@ -662,7 +662,7 @@ valores-los valores a insertar
      $resultado["numcampos"]=$this->Numero_Filas();
        if($this->Numero_Filas()>0)
           {for($i=0;$i<$this->Numero_Filas();$i++)
-              {$resultado[$i]=mysql_fetch_array($this->res,MYSQL_ASSOC);
+              {$resultado[$i]=mysqli_fetch_array($this->res, MYSQLI_ASSOC);
                $j=0;
                foreach($resultado[$i] as $key=>$valor)
                   {$resultado[$i][$j]=$resultado[$i][$key];
@@ -704,7 +704,7 @@ valores-los valores a insertar
 <Post-condiciones>
 */
   function Rows_Count()
-    {mysql_affected_rows ($this->res);
+    {mysqli_affected_rows($this->res);
     }
 /*
 <Clase>SQL
@@ -737,7 +737,7 @@ valores-los valores a insertar
      if($this->motor=="Oracle")
        return(oci_field_type($rs,$pos+1));
      elseif($this->motor=="MySql")
-       return(mysql_field_type($rs,$pos));
+       return(((is_object($___mysqli_tmp = mysqli_fetch_field_direct($rs, 0)) && !is_null($___mysqli_tmp = $___mysqli_tmp->type)) ? ((($___mysqli_tmp = (string)(substr(( (($___mysqli_tmp == MYSQLI_TYPE_STRING) || ($___mysqli_tmp == MYSQLI_TYPE_VAR_STRING) ) ? "string " : "" ) . ( (in_array($___mysqli_tmp, array(MYSQLI_TYPE_TINY, MYSQLI_TYPE_SHORT, MYSQLI_TYPE_LONG, MYSQLI_TYPE_LONGLONG, MYSQLI_TYPE_INT24))) ? "int " : "" ) . ( (in_array($___mysqli_tmp, array(MYSQLI_TYPE_FLOAT, MYSQLI_TYPE_DOUBLE, MYSQLI_TYPE_DECIMAL, ((defined("MYSQLI_TYPE_NEWDECIMAL")) ? constant("MYSQLI_TYPE_NEWDECIMAL") : -1)))) ? "real " : "" ) . ( ($___mysqli_tmp == MYSQLI_TYPE_TIMESTAMP) ? "timestamp " : "" ) . ( ($___mysqli_tmp == MYSQLI_TYPE_YEAR) ? "year " : "" ) . ( (($___mysqli_tmp == MYSQLI_TYPE_DATE) || ($___mysqli_tmp == MYSQLI_TYPE_NEWDATE) ) ? "date " : "" ) . ( ($___mysqli_tmp == MYSQLI_TYPE_TIME) ? "time " : "" ) . ( ($___mysqli_tmp == MYSQLI_TYPE_SET) ? "set " : "" ) . ( ($___mysqli_tmp == MYSQLI_TYPE_ENUM) ? "enum " : "" ) . ( ($___mysqli_tmp == MYSQLI_TYPE_GEOMETRY) ? "geometry " : "" ) . ( ($___mysqli_tmp == MYSQLI_TYPE_DATETIME) ? "datetime " : "" ) . ( (in_array($___mysqli_tmp, array(MYSQLI_TYPE_TINY_BLOB, MYSQLI_TYPE_BLOB, MYSQLI_TYPE_MEDIUM_BLOB, MYSQLI_TYPE_LONG_BLOB))) ? "blob " : "" ) . ( ($___mysqli_tmp == MYSQLI_TYPE_NULL) ? "null " : "" ), 0, -1))) == "") ? "unknown" : $___mysqli_tmp) : false));
      elseif($this->motor=="SqlServer") ;
        //return(mssql_field_type($rs,$pos));        //PENDIENTE POR DEFINIR EL COMO SE HACE ESTO Y PARA QUE FUNCIONA DONDE
     }
@@ -758,7 +758,7 @@ valores-los valores a insertar
     {if($this->motor=="Oracle")
        return(strtolower(oci_field_name($rs,$pos+1)));
      elseif($this->motor=="MySql")
-       return(mysql_field_name($rs,$pos));
+       return(((($___mysqli_tmp = mysqli_fetch_field_direct($rs, $pos)->name) && (!is_null($___mysqli_tmp))) ? $___mysqli_tmp : false));
      elseif($this->motor=="SqlServer") ;
        //return(mssql_field_name($rs,$pos));     //PENDIENTE POR DEFINIR 
     }
@@ -775,8 +775,8 @@ valores-los valores a insertar
 <Post-condiciones>
 */  
   function Lista_Tabla($db)
-    {$this->res=mysql_list_tables($db) or die("Error en la Ejecucuión del Proceso SQL: ".mysql_error());
-     while($row=mysql_fetch_row($this->res))
+    {$this->res=mysqli_query($GLOBALS["___mysqli_ston"], "SHOW TABLES FROM $db") or die("Error en la Ejecucuión del Proceso SQL: ".((is_object($GLOBALS["___mysqli_ston"])) ? mysqli_error($GLOBALS["___mysqli_ston"]) : (($___mysqli_res = mysqli_connect_error()) ? $___mysqli_res : false)));
+     while($row=mysqli_fetch_row($this->res))
           $resultado[]=$row[0]; 
      return($resultado);
     }
@@ -792,8 +792,8 @@ valores-los valores a insertar
 <Post-condiciones>
 */
   function Lista_Bd()
-    {$this->res=mysql_list_dbs($this->Conn) or die("Error ".mysql_error());
-     while($row=mysql_fetch_row($this->res))
+    {$this->res=(($___mysqli_tmp = mysqli_query($this->Conn, "SHOW DATABASES")) ? $___mysqli_tmp : false) or die("Error ".((is_object($GLOBALS["___mysqli_ston"])) ? mysqli_error($GLOBALS["___mysqli_ston"]) : (($___mysqli_res = mysqli_connect_error()) ? $___mysqli_res : false)));
+     while($row=mysqli_fetch_row($this->res))
           $resultado[]=$row[0]; 
      asort($resultado);
      return($resultado);
@@ -837,8 +837,8 @@ valores-los valores a insertar
 */    
   function Busca_tabla_MySql($tabla)
     {$this->consulta="show columns from ".$tabla;
-     $this->res=mysql_query($this->consulta,$this->Conn);
-     while($row=mysql_fetch_row($this->res))
+     $this->res=mysqli_query($this->Conn, $this->consulta);
+     while($row=mysqli_fetch_row($this->res))
           $resultado[]=$row[0]; 
      asort($resultado);      
      return($resultado);
@@ -917,7 +917,7 @@ $conn-objeto de tipo sql
      $consulta = "$sql LIMIT $inicio,$cuantos";     
 	 $consulta=str_replace("key","'key'",$consulta);
    //echo $consulta;
-     $res=mysql_query($consulta,$conn->Conn->conn) or die("consulta fallida ".mysql_error());
+     $res=mysqli_query($conn->Conn->conn, $consulta) or die("consulta fallida ".((is_object($GLOBALS["___mysqli_ston"])) ? mysqli_error($GLOBALS["___mysqli_ston"]) : (($___mysqli_res = mysqli_connect_error()) ? $___mysqli_res : false)));
      return($res);
     }
 /*
@@ -1010,8 +1010,8 @@ $conn-objeto de tipo sql
 */    
   function Total_Registros_Tabla_MySql($tabla)
     {$this->consulta="SELECT COUNT( * ) AS TOTAL FROM ".$tabla;
-     $this->res=mysql_query($this->consulta,$this->Conn) ;
-     $total=mysql_fetch_row($this->res);
+     $this->res=mysqli_query($this->Conn, $this->consulta) ;
+     $total=mysqli_fetch_row($this->res);
      return($total[0]);
     }
 /*
@@ -1047,7 +1047,7 @@ $conn-objeto de tipo sql
     {if($this->motor=="Oracle")
        return(OCINumCols($rs));
      elseif($this->motor=="MySql")
-       return(mysql_num_fields($rs));
+       return((($___mysqli_tmp = mysqli_num_fields($rs)) ? $___mysqli_tmp : false));
      elseif($this->motor=="SqlServer")
        return(sqlsrv_num_fields($rs));  
     } // Fin Funcion General Ultimo Insert 
@@ -1094,7 +1094,7 @@ $conn-objeto de tipo sql
 */  
   function Ultimo_Insert_Mysql() 
     {// alerta(@mysql_insert_id());
-    	return @mysql_insert_id();
+    	return @((is_null($___mysqli_res = mysqli_insert_id($GLOBALS["___mysqli_ston"]))) ? false : $___mysqli_res);
     }  
     
 /*

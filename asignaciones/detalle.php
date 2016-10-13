@@ -31,7 +31,7 @@ $start = $limit*$page - $limit; // do not put $limit*($page - 1)
 if ($start<0)
   $start = 0;
 $SQL = "SELECT * FROM control_asignacion WHERE asignacion_idasignacion=".$id." ORDER BY $sidx $sord LIMIT $start , $limit";
-$result = phpmkr_query($SQL,$conn) or die("Error en la consulta.".mysql_error());
+$result = phpmkr_query($SQL,$conn) or die("Error en la consulta.".((is_object($GLOBALS["___mysqli_ston"])) ? mysqli_error($GLOBALS["___mysqli_ston"]) : (($___mysqli_res = mysqli_connect_error()) ? $___mysqli_res : false)));
 $responce->page = $page;
 $responce->total = $total_pages;
 $responce->records = $count;
