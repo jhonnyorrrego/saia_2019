@@ -11,6 +11,7 @@ $ruta.="../";
 $max_salida--;
 }
 include_once($ruta_db_superior."db.php");
+include_once($ruta_db_superior."formatos/librerias_funciones_generales.php");
 include_once($ruta_db_superior."pantallas/documento/librerias.php");
 
 function lista_destinos($idformato,$iddoc=NULL){
