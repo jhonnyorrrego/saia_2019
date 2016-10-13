@@ -256,7 +256,7 @@ function generar_codigo_qr_interna($idformato,$iddoc){
 
 	$imagen=generar_qr_interna($ruta,$datos_qr);
 	
-print_r('aqui: '.$conn);die();
+print_r('aqui: '.$conn);
 	if($imagen==false){
 	  alerta("Error al tratar de crear el codigo qr");
 	}else{
