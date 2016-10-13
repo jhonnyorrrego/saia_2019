@@ -301,7 +301,11 @@ function tipo_radicado_radicacion($idformato,$iddoc){
             $(document).ready(function(){
                 $('[name="tipo_origen"]').click(function(){
                     var tipo=$(this).val();
-                    
+                    if(tipo==1){
+                        $('[name="tipo_radicado"]').val('radicacion_entrada');
+                    }else{
+                        $('[name="tipo_radicado"]').val('radicacion_entrada');
+                    }
                     $.ajax({
                         type:'POST',
                         dataType: 'json',
@@ -310,7 +314,7 @@ function tipo_radicado_radicacion($idformato,$iddoc){
                                         tipo_radicacion:tipo
                         },
                         success: function(datos){
-                            ]$('#numero_radicado').html(datos);
+                            $('#numero_radicado').html(datos);
                             
                         }
                     });
