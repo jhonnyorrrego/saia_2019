@@ -12,6 +12,7 @@ include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."formatos/librerias/funciones_generales.php"); 
 include_once("../clasificacion_pqrsf/funciones.php");
 include_once($ruta_db_superior."pantallas/documento/librerias.php");
+	include_once ($ruta_db_superior . "pantallas/lib/librerias_archivo.php");
 
 function validar_digitalizacion_formato_pqr($idformato,$iddoc){
 	global $conn,$ruta_db_superior;
