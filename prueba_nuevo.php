@@ -10,18 +10,10 @@ while($max_salida>0){
   $max_salida--;
 }
 include_once($ruta_db_superior."db.php");
-ini_set("display_errors",true);
-
-$cadena='
-
-<div class="link kenlace_saia pull-left" enlace="ordenar.php?key=492&amp;accion=mostrar&amp;mostrar_formato=1" conector="iframe" titulo="Documento No.44" onclick=" "><b>44-Cero K LTDA-Comunicaciones Oficiales</b></div>
-';
 
 
-$cadena2=preg_replace("/class=[\"\'][^\"\']+[\"\']/","",$cadena);
-        //preg_replace("([0-9]+)", "2000", $copy_date);
 
-print_r($cadena2);
-echo('<---- qui');
+$sql="INSERT INTO documento_verificacion(documento_iddocumento,funcionario_idfuncionario,fecha,ruta_qr,verificacion,codigo_hash) VALUES (555,1,'2016-10-13 15:43:18','../almacenamiento/APROBADO/2016-10-13/555/qr/qr2016_10_13_15_10_18.jpg','vacio','d83d5459')";
 
+phpmkr_query($sql);
 ?>
