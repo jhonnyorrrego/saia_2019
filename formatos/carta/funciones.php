@@ -13,6 +13,7 @@ $max_salida--;
 include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."formatos/librerias_funciones_generales.php");
 include_once($ruta_db_superior."librerias_saia.php");
+include_once ($ruta_db_superior . "pantallas/lib/librerias_archivo.php");
 include_once($ruta_db_superior."pantallas/documento/librerias.php");
 
 //***************
@@ -47,8 +48,7 @@ function generar_codigo_qr_carta($idformato,$iddoc){
 	for($i=0; $i<$firmas['numcampos']; $i++){
 	  $datos_qr .= $firmas[$i]['nombre']." \n";
 	}
-	$formato_ruta = aplicar_plantilla_ruta_documento($iddoc);
-	$ruta=RUTA_QR.$formato_ruta . '/qr/';
+	$ruta=RUTA_QR.$datos[0]['estado'].'/'.date('Y-m').'/'.$iddoc.'/qr/';
 
 	$imagen=generar_qr_carta($ruta,$datos_qr);
 
