@@ -11,7 +11,7 @@ $ruta.="../";
 $max_salida--;
 }
 
-if($_REQUEST['tipo']==1){
+if($_REQUEST['tipo_radicacion']==1){
     $contador=busca_filtro_tabla('','contador','nombre="radicacion_entrada"','',conn);
 }else {
     $contador=busca_filtro_tabla('','contador','nombre="radicacion_salida"','',conn);
