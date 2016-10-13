@@ -295,7 +295,7 @@ la matriz con los valores del resultado se obtiene por medio de la función Resu
          
          
          if (!$this->res=mysqli_query($this->Conn->conn, $sql)) {
-                printf("Errormessage: %s\n", mysqli_error($link));
+                printf("Errormessage: %s\n", mysqli_error($this->Conn->conn));
             }
          
         // $this->res=mysqli_query($this->Conn->conn,$sql);// or die("ERROR mysqli:    ERROR SQL  en ".$_SERVER["PHP_SELF"]." ->".$sql);// or error//("Error al Ejecutar:  $sql --- ".mysql_error());
