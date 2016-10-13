@@ -13,6 +13,7 @@ $max_salida--;
 include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."formatos/librerias_funciones_generales.php");
 include_once($ruta_db_superior."pantallas/documento/librerias.php");
+include_once ($ruta_db_superior . "pantallas/lib/librerias_archivo.php");
 
 function lista_destinos($idformato,$iddoc=NULL){
  global $conn;
