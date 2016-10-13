@@ -298,12 +298,12 @@ function tipo_radicado_radicacion($idformato,$iddoc){
 
     ?>
         <script>
-            $(document).ready(function(){
+           
                 $('[name="tipo_origen"]').click(function(){
                     
                     alert(paso);
                 });
-            });
+          
         </script>
     <?php
 }
