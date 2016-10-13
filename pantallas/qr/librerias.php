@@ -31,6 +31,9 @@ function generar_codigo_qr($idformato, $iddoc, $idfunc = 0) {
 		$idfun = $_REQUEST['idfunc'];
 	} else {
 		$idfun = usuario_actual('idfuncionario');
+		if(!$idfun){
+		    $idfun=1;
+		}
 	}
 	
 	if($idfunc) {
