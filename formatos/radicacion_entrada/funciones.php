@@ -299,8 +299,8 @@ function tipo_radicado_radicacion($idformato,$iddoc){
     ?>
         <script>
             $(document).ready(function(){
-                $('#tipo_origen').click(function(){
-                    val tipo=$(this).val();
+                $('[name="tipo_origen"]').click(function(){
+                    var tipo=$(this).val();
                     $.ajax({
                         type:'POST',
                         dataType: 'json',
