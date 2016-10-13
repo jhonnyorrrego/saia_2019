@@ -250,7 +250,10 @@ function generar_codigo_qr_interna($idformato,$iddoc){
 	}
 	$ruta=RUTA_QR.$datos[0]['estado'].'/'.date('Y-m').'/'.$iddoc.'/qr/';	
 	
+	
+	print_r($ruta,$datos_qr);
 	$imagen=generar_qr_interna($ruta,$datos_qr);
+	print_r($imagen);
 	
 	if($imagen==false){
 	  alerta("Error al tratar de crear el codigo qr");
