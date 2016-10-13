@@ -302,7 +302,7 @@ function tipo_radicado_radicacion($idformato,$iddoc){
                 $('[name="tipo_origen"]').click(function(){
                     var tipo=$(this).val();
                     if(tipo==1){
-                        $('[name="tipo_radicado"]').val('radicacion_entrada');
+                        $('[name="tipo_radicado"]').attr(val,'radicacion_entrada');
                     }else{
                         $('[name="tipo_radicado"]').val('radicacion_entrada');
                     }
