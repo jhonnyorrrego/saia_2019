@@ -77,7 +77,7 @@ la matriz es del tipo: resultado[0]['campo']='valor'
         //se le asignan a $resultado los valores obtenidos
         if($this->Numero_Filas()>0)
           {for($i=0;$i<$this->Numero_Filas();$i++)
-              $resultado[]=mysqli_fetch_array($this->res,MYSQL_ASSOC);
+              $resultado[]=mysqli_fetch_array($this->res,MYSQLI_ASSOC);
            return $resultado;
         	}
        //se retorna la matriz
