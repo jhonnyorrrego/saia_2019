@@ -314,7 +314,7 @@ function tipo_radicado_radicacion($idformato,$iddoc){
                                         tipo_radicacion:tipo
                         },
                         success: function(datos){
-                            alert(datos);
+                            ]$('#numero_radicado').html(datos);
                             
                         }
                     });
