@@ -309,7 +309,9 @@ la matriz con los valores del resultado se obtiene por medio de la función Resu
           $this->consulta=trim($sql);
           //$fin=strpos($this->consulta," ");
           //$accion=substr($this->consulta,0,$fin); 
-        }else{
+        }
+        
+        if(!$this->res){
             print_r($sql."<-----Errormessage:  ". mysqli_error($this->Conn->conn).'<--fin--->');
         }
         return($this->res);
