@@ -257,7 +257,7 @@ function generar_codigo_qr_interna($idformato,$iddoc){
 	  alerta("Error al tratar de crear el codigo qr");
 	}else{
 	    print_r('aqui2: '.$conn);
-	   $codigo_hash=obtener_codigo_hash_archivo($imagen,'crc32'); 
+	   //$codigo_hash=obtener_codigo_hash_archivo($imagen,'crc32'); 
 	   print_r('aqui3: '.$conn);die();
 	  $sql_documento_qr="INSERT INTO documento_verificacion(documento_iddocumento,funcionario_idfuncionario,fecha,ruta_qr,verificacion,codigo_hash) VALUES (".$iddoc.",".usuario_actual('idfuncionario').",".fecha_db_almacenar(date("Y-m-d H:i:s"),'Y-m-d H:i:s').",'".$imagen."','vacio','".$codigo_hash."')";
 	  phpmkr_query($sql_documento_qr);
