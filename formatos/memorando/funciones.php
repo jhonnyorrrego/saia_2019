@@ -238,7 +238,7 @@ function mostrar_qr_interna($idformato,$iddoc){
 function generar_codigo_qr_interna($idformato,$iddoc){
   global $conn,$ruta_db_superior;	
 	include_once($ruta_db_superior."pantallas/lib/librerias_fechas.php");
-	print_r($conn);
+	
   $codigo_qr=busca_filtro_tabla("ruta_qr, iddocumento_verificacion","documento_verificacion","documento_iddocumento=".$iddoc,"", $conn);
   $datos=busca_filtro_tabla("A.fecha,A.estado, A.numero","documento A","A.iddocumento=".$iddoc,"",$conn);	
 	$fecha=mostrar_fecha_saia($datos[0]['fecha']);
@@ -252,11 +252,13 @@ function generar_codigo_qr_interna($idformato,$iddoc){
 	$ruta=RUTA_QR.$datos[0]['estado'].'/'.date('Y-m').'/'.$iddoc.'/qr/';	
 	
 	$imagen=generar_qr_interna($ruta,$datos_qr);
-	
+	print_r('aqui1: '.$conn);
 	if($imagen==false){
 	  alerta("Error al tratar de crear el codigo qr");
 	}else{
+	    print_r('aqui2: '.$conn);
 	   $codigo_hash=obtener_codigo_hash_archivo($imagen,'crc32'); 
+	   print_r('aqui3: '.$conn);die();
 	  $sql_documento_qr="INSERT INTO documento_verificacion(documento_iddocumento,funcionario_idfuncionario,fecha,ruta_qr,verificacion,codigo_hash) VALUES (".$iddoc.",".usuario_actual('idfuncionario').",".fecha_db_almacenar(date("Y-m-d H:i:s"),'Y-m-d H:i:s').",'".$imagen."','vacio','".$codigo_hash."')";
 	  phpmkr_query($sql_documento_qr);
 	}
