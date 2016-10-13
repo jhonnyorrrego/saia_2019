@@ -259,6 +259,7 @@ function liberar_resultado_MSSql($rs){
         switch ($this->motor)
         {
             case "MySql":
+                print_r('entra aqui: '.$sql);
                 return($this->Ejecutar_Sql_MySql($sql));
             break;
             case "Oracle":
