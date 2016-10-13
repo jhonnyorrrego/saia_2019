@@ -310,7 +310,7 @@ la matriz con los valores del resultado se obtiene por medio de la función Resu
           //$fin=strpos($this->consulta," ");
           //$accion=substr($this->consulta,0,$fin); 
         }else{
-            print_r($sql."<-----Errormessage:  ". mysqli_error($this->Conn->conn));
+            print_r($sql."<-----Errormessage:  ". mysqli_error($this->Conn->conn).'<--fin--->');
         }
         return($this->res);
       }
