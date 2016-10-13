@@ -299,6 +299,9 @@ function tipo_radicado_radicacion($idformato,$iddoc){
     ?>
         <script>
             $(document).ready(function(){
+                $('#fecha_oficio_entrada').addClass('required');
+                
+                
                 $('[name="tipo_origen"]').click(function(){
                     var tipo=$(this).val();
                     if(tipo==1){
