@@ -226,6 +226,7 @@ function mostrar_qr_interna($idformato,$iddoc){
 			$extension=explode(".",$codigo_qr[0]['ruta_qr']);
 			$img='&nbsp;<img src="http://'.RUTA_PDF.'/'.$codigo_qr[0]['ruta_qr'].'" />';
 		}else{
+		    print_r('aqui1: '.$conn);
 			generar_codigo_qr_interna($idformato,$iddoc);
 			
 			$codigo_qr=busca_filtro_tabla("","documento_verificacion","documento_iddocumento=".$iddoc,"", $conn);
@@ -261,7 +262,7 @@ function generar_codigo_qr_interna($idformato,$iddoc){
 	if($imagen==false){
 	  alerta("Error al tratar de crear el codigo qr");
 	}else{
-	   print_r('aqui1: '.$conn);
+	   
 	   $codigo_hash=obtener_codigo_hash_archivo($imagen,'crc32'); 
 	   	
 	  $sql_documento_qr="INSERT INTO documento_verificacion(documento_iddocumento,funcionario_idfuncionario,fecha,ruta_qr,verificacion,codigo_hash) VALUES (".$iddoc.",".usuario_actual('idfuncionario').",".fecha_db_almacenar(date("Y-m-d H:i:s"),'Y-m-d H:i:s').",'".$imagen."','vacio','".$codigo_hash."')";
