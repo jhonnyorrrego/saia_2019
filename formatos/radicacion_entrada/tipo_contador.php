@@ -11,7 +11,15 @@ $ruta.="../";
 $max_salida--;
 }
 
-$contador=busca_filtro_tabla('','','','',conn);
+if($_REQUEST['tipo']==1){
+    $contador=busca_filtro_tabla('','contador','nombre="radicacion_entrada"','',conn);
+}else {
+    $contador=busca_filtro_tabla('','contador','nombre="radicacion_salida"','',conn);
+}
+
+$idcontador=array($contador[0]['idcontador']);
+$idcontador=json_encode($idcontador);
+
 
 
 ?> 
