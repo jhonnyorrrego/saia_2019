@@ -13,7 +13,7 @@ $max_salida--;
 
 //ADICIONAR - EDITAR
 //******************
-function cargar_fecha_limite_respuesta($idformato,$iddoc){
+/**function cargar_fecha_limite_respuesta($idformato,$iddoc){
 	global $conn;
 	$fecha_ochodias=date("Y-m-d",strtotime ('+8 day',strtotime(date("Y-m-d"))));
 	echo($fecha." ".$fecha2);
@@ -25,7 +25,7 @@ function cargar_fecha_limite_respuesta($idformato,$iddoc){
 		});
 	</script>
 <?php
-}
+}**/
 
 function mostrar_radicado_entrada($idformato,$iddoc){
 	global $conn;
