@@ -292,4 +292,29 @@ function transferir_con_copia($idformato,$iddoc){
 	include_once($ruta_db_superior."formatos/librerias/funciones_generales.php");
 	transferencia_automatica($idformato,$iddoc,"copia_a",2,'','COPIA');
 }
+
+function tipo_radicado_radicacion($idformato,$iddoc){
+	global $conn,$ruta_db_superior;
+
+    ?>
+        <script>
+            $(document).ready(function(){
+                $('#tipo_origen').click(function(){
+                    val tipo=$(this).val();
+                    $.ajax({
+                        type:'POST',
+                        dataType: 'json',
+                        url: "tipo_contador.php",
+                        data: {
+                                        tipo_radicacion:tipo
+                        },
+                        success: function(datos){
+                            
+                        }
+                    });
+                });
+            });
+        </script>
+    <?php
+}
 ?>
