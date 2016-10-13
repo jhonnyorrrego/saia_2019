@@ -295,7 +295,8 @@ function transferir_con_copia($idformato,$iddoc){
 
 function tipo_radicado_radicacion($idformato,$iddoc){
 	global $conn,$ruta_db_superior;
-
+    $funcionario_codigo=usuario_actual('funcionario_codigo');
+    $cargo=busca_filtro_tabla("","vfuncionario_dc a","estado_dc=1 AND a.funcionario_codigo=".$funcionario_codigo,"",$conn);
     ?>
         <script>
             $(document).ready(function(){
@@ -328,7 +329,8 @@ function tipo_radicado_radicacion($idformato,$iddoc){
                 });
             });
             function chekeararbol(){
-                tree_area_responsable.setCheck('243',true);
+                tree_area_responsable.setCheck('<? echo $cargo[0]["iddependencia_cargo"]',true);
+                $('#area_responsable').val();
             }
         </script>
     <?php
