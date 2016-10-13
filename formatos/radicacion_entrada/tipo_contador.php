@@ -11,10 +11,13 @@ $ruta.="../";
 $max_salida--;
 }
 
+include_once($ruta_db_superior."db.php");
+
+
 if($_REQUEST['tipo_radicacion']==1){
-    $contador=busca_filtro_tabla('','contador','nombre="radicacion_entrada"','',conn);
+    $contador=busca_filtro_tabla('','contador','nombre="radicacion_entrada"','',$conn);
 }else {
-    $contador=busca_filtro_tabla('','contador','nombre="radicacion_salida"','',conn);
+    $contador=busca_filtro_tabla('','contador','nombre="radicacion_salida"','',$conn);
 }
 print_r($contador);die();
 $idcontador=array($contador[0]['idcontador']);
