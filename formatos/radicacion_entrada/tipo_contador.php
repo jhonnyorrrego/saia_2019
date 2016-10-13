@@ -19,7 +19,7 @@ if($_REQUEST['tipo_radicacion']==1){
 }else {
     $contador=busca_filtro_tabla('','contador','nombre="radicacion_salida"','',$conn);
 }
-$idcontador=array($contador[0]['idcontador']);
+$idcontador=array($contador[0]['consecutivo']);
 $idcontador=json_encode($idcontador);
 echo ($idcontador);
 
