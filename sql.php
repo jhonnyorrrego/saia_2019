@@ -259,7 +259,7 @@ function liberar_resultado_MSSql($rs){
         switch ($this->motor)
         {
             case "MySql":
-                print_r('entra aqui: '.$sql);
+               
                 return($this->Ejecutar_Sql_MySql($sql));
             break;
             case "Oracle":
@@ -289,7 +289,7 @@ la matriz con los valores del resultado se obtiene por medio de la función Resu
   function Ejecutar_Sql_MySql($sql)
     {$this->filas=0;
      if($sql && $sql<>"" && $this->Conn->conn){
-         $this->res=mysqli_query($this->Conn->conn,$sql);// or die("ERROR SQL ".mysqli_error($this->Conn->conn)." en ".$_SERVER["PHP_SELF"]." ->".$sql);// or error("Error al Ejecutar:  $sql --- ".mysql_error());
+         $this->res=mysqli_query($this->Conn->conn,$sql); or die("ERROR SQL ".mysqli_error($this->Conn->conn)." en ".$_SERVER["PHP_SELF"]." ->".$sql);// or error("Error al Ejecutar:  $sql --- ".mysql_error());
         if($this->res){
          if(strpos(strtolower($sql),"insert")!==false)
             $this->ultimo_insert=$this->Ultimo_Insert_Mysql();
