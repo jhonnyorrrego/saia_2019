@@ -412,7 +412,7 @@ function Ejecutar_Sql_MSSql($sql)
     switch($this->motor)
     {
       case "MySql":
-        if($arreglo=@mysqli_fetch_array($this->res,MYSQL_BOTH)){
+        if($arreglo=@mysqli_fetch_array($this->res,MYSQLI_BOTH)){
            $this->filas++;
           return($arreglo);
         }
@@ -826,7 +826,7 @@ valores-los valores a insertar
      $resultado["numcampos"]=$this->Numero_Filas();
        if($this->Numero_Filas()>0)
           {for($i=0;$i<$this->Numero_Filas();$i++)
-              {$resultado[$i]=mysqli_fetch_array($this->res,MYSQL_ASSOC);
+              {$resultado[$i]=mysqli_fetch_array($this->res,MYSQLI_ASSOC);
                $j=0;
                foreach($resultado[$i] as $key=>$valor)
                   {$resultado[$i][$j]=$resultado[$i][$key];
