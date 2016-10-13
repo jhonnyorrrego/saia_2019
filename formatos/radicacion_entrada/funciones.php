@@ -297,7 +297,7 @@ function tipo_radicado_radicacion($idformato,$iddoc){
 	global $conn,$ruta_db_superior;
 
     ?>
-        <script>
+        <script type="text/javascript">
             $(document).ready(function(){
                 $('#tipo_origen').click(function(){
                     val tipo=$(this).val();
