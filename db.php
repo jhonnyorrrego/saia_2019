@@ -557,6 +557,9 @@ function phpmkr_db_close($conn)
 */
 function phpmkr_query($strsql){ 
 global $conn;
+
+    print_r('DESDE PHPMKQ_QUERY: '.$strsql);die();
+
 	if(!get_magic_quotes_gpc()) // SI NO ESTAN ACTIVADAS LAS MAGIC QUOTES DE PHP ESCAPA LA SECUENCIA SQL
 		$strsql = stripslashes($strsql);
 	$rs = Null;
