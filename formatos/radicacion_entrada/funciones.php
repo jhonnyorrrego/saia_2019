@@ -302,7 +302,8 @@ function tipo_radicado_radicacion($idformato,$iddoc){
                 $('#fecha_oficio_entrada').addClass('required');
                 $('#destino').addClass('required');
                 $('#persona_natural').addClass('required');
-                tree_area_responsable.setCheck('243',true);
+                tree_area_responsable.setOnLoadingEnd(chekeararbol);
+                
                 $('[name="tipo_origen"]').click(function(){
                 
                     var tipo=$(this).val();
@@ -326,6 +327,9 @@ function tipo_radicado_radicacion($idformato,$iddoc){
                     });
                 });
             });
+            function chekeararbol(){
+                tree_area_responsable.setCheck('243',true);
+            }
         </script>
     <?php
 }
