@@ -19,10 +19,9 @@ if($_REQUEST['tipo_radicacion']==1){
 }else {
     $contador=busca_filtro_tabla('','contador','nombre="radicacion_salida"','',$conn);
 }
-print_r($contador);die();
 $idcontador=array($contador[0]['idcontador']);
 $idcontador=json_encode($idcontador);
 
-
+return $idcontador;
 
 ?> 
