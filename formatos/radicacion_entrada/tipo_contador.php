@@ -11,6 +11,7 @@ $ruta.="../";
 $max_salida--;
 }
 
-print_r($_REQUEST);die();
+$contador=busca_filtro_tabla('','','','',conn);
+
 
 ?> 
