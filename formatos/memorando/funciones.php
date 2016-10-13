@@ -238,6 +238,7 @@ function mostrar_qr_interna($idformato,$iddoc){
 function generar_codigo_qr_interna($idformato,$iddoc){
   global $conn,$ruta_db_superior;	
 	include_once($ruta_db_superior."pantallas/lib/librerias_fechas.php");
+	print_r($conn);
   $codigo_qr=busca_filtro_tabla("ruta_qr, iddocumento_verificacion","documento_verificacion","documento_iddocumento=".$iddoc,"", $conn);
   $datos=busca_filtro_tabla("A.fecha,A.estado, A.numero","documento A","A.iddocumento=".$iddoc,"",$conn);	
 	$fecha=mostrar_fecha_saia($datos[0]['fecha']);
