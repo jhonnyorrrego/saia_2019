@@ -252,7 +252,7 @@ if($momento=="ANTERIOR" && $accion!='adicionar' && $accion!='responder' && $acci
 if($momento=='POSTERIOR' && ($accion=='adicionar' || $accion=='responder' || $accion=='transferir')){
   terminar_actividad_paso($iddoc,$accion); 
 }
-error($iddoc."-->".$idformato."-->".$accion."-->".$momento);
+//error($iddoc."-->".$idformato."-->".$accion."-->".$momento);
 $listado_acciones=listar_acciones_formato($idformato,$accion,$momento);
 if($listado_acciones != ""){
   ejecutar_acciones_formato($iddoc,$idformato,$listado_acciones);
