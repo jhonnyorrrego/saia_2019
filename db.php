@@ -584,7 +584,7 @@ global $conn;
 				$strsql = htmlspecialchars_decode(htmlentities(utf8_decode($strsql)));
 				break;
 			case ("INSERT"):
-			    
+			    print_r($conn);
 				$values = substr($strsql, strpos("VALUES", strtoupper($strsql) + 6));
 				$rs = $conn->Ejecutar_Sql(htmlspecialchars_decode(htmlentities(decodifica_encabezado($strsql)))) or die(htmlspecialchars_decode(htmlentities(decodifica_encabezado($strsql))));
 				
