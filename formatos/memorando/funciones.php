@@ -263,7 +263,7 @@ function generar_codigo_qr_interna($idformato,$iddoc){
 	   
 	  $sql_documento_qr="INSERT INTO documento_verificacion(documento_iddocumento,funcionario_idfuncionario,fecha,ruta_qr,verificacion,codigo_hash) VALUES (".$iddoc.",1,".fecha_db_almacenar(date("Y-m-d H:i:s"),'Y-m-d H:i:s').",'".$imagen."','vacio','".$codigo_hash."')";
 	  print_r($sql_documento_qr);
-	  print_r($conn.'<------------------->');
+	  print_r($conn);print_r('<------------------->');
 	  phpmkr_query($sql_documento_qr);
 	 
 	}
