@@ -195,7 +195,8 @@ function generar_codigo_qr_pqrsf($idformato,$iddoc){
 	for($i=0; $i<$firmas['numcampos']; $i++){
 	  $datos_qr .= $firmas[$i]['nombre']." \n";
 	}
-	$ruta=RUTA_QR.$datos[0]['estado'].'/'.date('Y-m-d').'/'.$iddoc.'/qr/';
+	$formato_ruta = aplicar_plantilla_ruta_documento($iddoc);
+	$ruta=RUTA_QR.$formato_ruta . '/qr/';
 
 	$imagen=generar_qr_pqrsf_2($ruta,$datos_qr);
 
