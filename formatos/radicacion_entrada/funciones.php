@@ -330,7 +330,7 @@ function tipo_radicado_radicacion($idformato,$iddoc){
             });
             function chekeararbol(){
                 tree_area_responsable.setCheck('<? echo $cargo[0]["iddependencia_cargo"];?>',true);
-                $('#area_responsable').val();
+                $('#area_responsable').val(<? echo $cargo[0]["iddependencia_cargo"];?>);
             }
         </script>
     <?php
