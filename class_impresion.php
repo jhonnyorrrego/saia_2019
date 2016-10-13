@@ -356,7 +356,7 @@ class Imprime_Pdf {
 			
 		/*	if(usuario_actual('login') == 'cerok') {
 				 print_r($contenido);die();
-			}*¿
+			}*/
 			
 			$this->pdf->writeHTML(stripslashes($contenido), true, false, false, false, '');
 		}
