@@ -970,7 +970,7 @@ valores-los valores a insertar
 
   function Lista_Tabla($db){
     if($this->motor=="MySql"){
-       $this->res=mysqli_query($this->Conn->conn,"SHOW TABLES") or die("Error en la Ejecucución del Proceso SQL: ".mysql_error());
+       $this->res=mysqli_query($this->Conn->conn,"SHOW TABLES"); //or die("Error en la Ejecucución del Proceso SQL: ".mysql_error());
        while($row=mysqli_fetch_row($this->res))
        $resultado[]=$row[0];
     }
