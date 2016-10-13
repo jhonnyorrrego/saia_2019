@@ -301,6 +301,7 @@ function tipo_radicado_radicacion($idformato,$iddoc){
             $(document).ready(function(){
                 $('#fecha_oficio_entrada').addClass('required');
                 $('#destino').addClass('required');
+                $('#persona_natural').addClass('required');
                 
                 $('[name="tipo_origen"]').click(function(){
                 
