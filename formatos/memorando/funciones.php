@@ -239,7 +239,7 @@ function mostrar_qr_interna($idformato,$iddoc){
 function generar_codigo_qr_interna($idformato,$iddoc){
   global $conn,$ruta_db_superior;	
 	include_once($ruta_db_superior."pantallas/lib/librerias_fechas.php");
-	print_r($conn);die();
+
   $codigo_qr=busca_filtro_tabla("ruta_qr, iddocumento_verificacion","documento_verificacion","documento_iddocumento=".$iddoc,"", $conn);
   $datos=busca_filtro_tabla("A.fecha,A.estado, A.numero","documento A","A.iddocumento=".$iddoc,"",$conn);	
 	$fecha=mostrar_fecha_saia($datos[0]['fecha']);
@@ -253,8 +253,9 @@ function generar_codigo_qr_interna($idformato,$iddoc){
 	$ruta=RUTA_QR.$datos[0]['estado'].'/'.date('Y-m').'/'.$iddoc.'/qr/';	
 	
 	
-	print_r($ruta,$datos_qr);
+	
 	$imagen=generar_qr_interna($ruta,$datos_qr);
+	print_r($conn);die();
 	print_r($imagen);
 	die();
 	if($imagen==false){
