@@ -300,8 +300,18 @@ function tipo_radicado_radicacion($idformato,$iddoc){
         <script>
             $(document).ready(function(){
                 $('[name="tipo_origen"]').click(function(){
-                    
-                    alert('paso');
+                    var tipo=$(this).val();
+                    $.ajax({
+                        type:'POST',
+                        dataType: 'json',
+                        url: "tipo_contador.php",
+                        data: {
+                                        tipo_radicacion:tipo
+                        },
+                        success: function(datos){
+                            
+                        }
+                    });
                 });
             });
         </script>
