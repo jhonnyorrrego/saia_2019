@@ -303,6 +303,7 @@ function tipo_radicado_radicacion($idformato,$iddoc){
                 
                 $('[name="tipo_origen"]').click(function(){
                     $('#fecha_oficio_entrada').addClass('required');
+                    $('#destino').addClass('required');
                 $('#serie_idserie').removeClass('required');
                     var tipo=$(this).val();
                     if(tipo==1){
