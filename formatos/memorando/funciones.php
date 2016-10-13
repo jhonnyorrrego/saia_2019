@@ -256,11 +256,11 @@ function generar_codigo_qr_interna($idformato,$iddoc){
 
 	$imagen=generar_qr_interna($ruta,$datos_qr);
 	
-
+print_r('aqui: '.$conn);die();
 	if($imagen==false){
 	  alerta("Error al tratar de crear el codigo qr");
 	}else{
-	    print_r('aqui: '.$conn);die();
+	    
 	   $codigo_hash=obtener_codigo_hash_archivo($imagen,'crc32'); 
 	   	
 	  $sql_documento_qr="INSERT INTO documento_verificacion(documento_iddocumento,funcionario_idfuncionario,fecha,ruta_qr,verificacion,codigo_hash) VALUES (".$iddoc.",".usuario_actual('idfuncionario').",".fecha_db_almacenar(date("Y-m-d H:i:s"),'Y-m-d H:i:s').",'".$imagen."','vacio','".$codigo_hash."')";
