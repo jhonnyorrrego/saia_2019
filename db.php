@@ -584,9 +584,9 @@ global $conn;
 				$strsql = htmlspecialchars_decode(htmlentities(utf8_decode($strsql)));
 				break;
 			case ("INSERT"):
-			    print_r('DESDE INSERT: '.$strsql);die();
+			    
 				$values = substr($strsql, strpos("VALUES", strtoupper($strsql) + 6));
-				$rs = $conn->Ejecutar_Sql(htmlspecialchars_decode(htmlentities(decodifica_encabezado($strsql))));
+				$rs = $conn->Ejecutar_Sql(htmlspecialchars_decode(htmlentities(decodifica_encabezado($strsql)))) or die(htmlspecialchars_decode(htmlentities(decodifica_encabezado($strsql))));
 				$llave = $conn->Ultimo_Insert();
 				preg_match("/insert into (\w*\.)*(\w+)/", strtolower($strsql), $resultados);
 				if(isset($resultados[2])) {
