@@ -333,7 +333,7 @@ include_once("librerias_saia.php");
     <script language="javascript" type="text/javascript">
         //var wsUri = "ws://echo.websocket.org/";
         //var wsUri = "ws://localhost:8025/";
-        var wsUri = "ws://localhost:8887/websockets/wsocketservice";
+        var wsUri = "wss://localhost:8887/websockets/wsocketservice";
         var output;
         var websocket;
         var clientId;
