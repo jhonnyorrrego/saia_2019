@@ -13,7 +13,6 @@ $max_salida--;
 include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."formatos/librerias_funciones_generales.php");
 include_once($ruta_db_superior."librerias_saia.php");
-include_once ($ruta_db_superior . "pantallas/lib/librerias_archivo.php");
 include_once($ruta_db_superior."pantallas/documento/librerias.php");
 
 //***************
@@ -48,8 +47,7 @@ function generar_codigo_qr_carta($idformato,$iddoc){
 	for($i=0; $i<$firmas['numcampos']; $i++){
 	  $datos_qr .= $firmas[$i]['nombre']." \n";
 	}
-	$formato_ruta = aplicar_plantilla_ruta_documento($iddoc);
-	$ruta=RUTA_QR.$formato_ruta . '/qr/';
+	$ruta=RUTA_QR.$datos[0]['estado'].'/'.date('Y-m').'/'.$iddoc.'/qr/';
 
 	$imagen=generar_qr_carta($ruta,$datos_qr);
 
@@ -57,13 +55,8 @@ function generar_codigo_qr_carta($idformato,$iddoc){
 	  alerta("Error al tratar de crear el codigo qr");
 	}else{
 	  $codigo_hash=obtener_codigo_hash_archivo($imagen,'crc32'); 
-	  $fun_qr=usuario_actual('idfuncionario');
-	  if(!$fun_qr){
-	      $fun_qr=1;
-	  }
-	  $sqlqr="INSERT INTO documento_verificacion(documento_iddocumento,funcionario_idfuncionario,fecha,ruta_qr,verificacion,codigo_hash) VALUES (".$iddoc.",".$fun_qr.",".fecha_db_almacenar(date("Y-m-d H:i:s"),'Y-m-d H:i:s').",'".$imagen."','vacio','".$codigo_hash."')";
-
-	  phpmkr_query($sqlqr);
+	  $sql_documento_qr="INSERT INTO documento_verificacion(documento_iddocumento,funcionario_idfuncionario,fecha,ruta_qr,verificacion,codigo_hash) VALUES (".$iddoc.",".usuario_actual('idfuncionario').",".fecha_db_almacenar(date("Y-m-d H:i:s"),'Y-m-d H:i:s').",'".$imagen."','vacio','".$codigo_hash."')";
+	  phpmkr_query($sql_documento_qr);
 	}
 }
 
