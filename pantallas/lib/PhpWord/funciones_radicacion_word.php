@@ -84,7 +84,7 @@ class RadicadoWord {
 				$numero_radicado = busca_filtro_tabla("", "documento", "iddocumento=" . $this->iddocumento, "", $conn);
 				$radicado = $numero_radicado[0]['numero'];
 				if(!$this->combinar) {
-				    echo "NO COMBINAR<br>";
+				    //echo "NO COMBINAR<br>";
 					$templateProcessor->setValue('formato_numero', $radicado);
 					
 					if(in_array($this->campo_qr_word, $campos_word)) {
@@ -115,11 +115,11 @@ class RadicadoWord {
 					$templateProcessor->saveAs($this->ruta_docx . $archivo_out . $extension_doc);
 					
 					if(file_exists($this->ruta_docx . $archivo_out . $extension_doc)) {
-						$comando = 'export HOME=/tmp && libreoffice --headless --convert-to pdf:writer_pdf_Export --outdir ' . $directorio_out . ' ' . $directorio_out . $archivo_out . $extension_doc;
+						$comando = 'export HOME=/tmp && libreoffice5.1 --headless --convert-to pdf:writer_pdf_Export --outdir ' . $directorio_out . ' ' . $directorio_out . $archivo_out . $extension_doc;
 						$var = shell_exec($comando);
 					}
 				} else {
-				    echo "COMBINAR<br>";
+				    //echo "COMBINAR<br>";
 					crear_destino($this->ruta_combinar);
 					chmod($this->ruta_combinar, 0777);
 					// TODO: Eliminar. Se genera pdf antes de procesar para ver porque no salen las firmas
@@ -128,7 +128,7 @@ class RadicadoWord {
 						// unlink($this->ruta_docx . $archivo_out . '.pdf');
 						rename($this->ruta_docx . $archivo_out . ".pdf", $this->ruta_docx . $archivo_out . "_orig.pdf");
 					}
-					$comando = 'export HOME=/tmp && libreoffice --headless --convert-to pdf:writer_pdf_Export --outdir ' . $this->ruta_docx . ' ' . $this->ruta_docx . $archivo_out . ".docx";
+					$comando = 'export HOME=/tmp && libreoffice5.1 --headless --convert-to pdf:writer_pdf_Export --outdir ' . $this->ruta_docx . ' ' . $this->ruta_docx . $archivo_out . ".docx";
 					$var = shell_exec($comando);
 					rename($this->ruta_docx . $archivo_out . ".pdf", $this->ruta_docx . $archivo_out . "0.pdf");
 					// TODO: Eliminar. Fin
@@ -190,7 +190,7 @@ class RadicadoWord {
 		}
 	
 		if(is_dir($this->ruta_combinar)) {
-			$comando1 = 'export HOME=/tmp && libreoffice --headless -print-to-file --outdir ' . $this->ruta_combinar . ' ' . $this->ruta_combinar . "*" . $extension_doc;
+			$comando1 = 'export HOME=/tmp && libreoffice5.1 --headless -print-to-file --outdir ' . $this->ruta_combinar . ' ' . $this->ruta_combinar . "*" . $extension_doc;
 			$var1 = shell_exec($comando1);
 			if(file_exists($this->ruta_docx . "documento_word.pdf")) {
 				unlink($this->ruta_docx . "documento_word.pdf");
@@ -202,7 +202,7 @@ class RadicadoWord {
 			//print_r($entrada_ps);echo "<br>";
 			//print_r($salida_ps);echo "<br>";
 			//print_r($var2);echo "<br>";
-			// $comando2 = 'export HOME=/tmp && libreoffice --headless --convert-to pdf:writer_pdf_Export --outdir ' . $directorio_out . ' ' . $directorio_out . "*" . $extension_doc;
+			// $comando2 = 'export HOME=/tmp && libreoffice5.1 --headless --convert-to pdf:writer_pdf_Export --outdir ' . $directorio_out . ' ' . $directorio_out . "*" . $extension_doc;
 		}
 		//die();
 	}
