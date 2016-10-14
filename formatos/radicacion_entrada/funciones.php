@@ -475,7 +475,7 @@ function mostrar_item_destino_radicacion($idformato,$iddoc){
     	       </form>
     	";
 	}else{
-	    $tabla='<table class="table-bordered adicionar_campo" style="width: 95%; font-size:10px; text-align:center;" border="1">
+	    $tabla='<table class="table-bordered" style="width: 95%; font-size:10px; text-align:center;" border="1">
     	<tr class="encabezado_list">
         	<th>NOMBRE ORIGEN</th>
         	<th>NOMBRE DESTINO</th>
@@ -534,7 +534,7 @@ function campos_adicionales_radicacion($idformato,$iddoc){
 	global $conn,$ruta_db_superior;
     
     $datos=busca_filtro_tabla("","ft_radicacion_entrada","documento_iddocumento=".$iddoc,"",$conn);
-    $tabla='<table class="table-bordered adicionar_campo" style="width: 100%; font-size:10px; text-align:center;" border="1">';
+    $tabla='<table class="table-bordered" style="width: 100%; font-size:10px; text-align:center;" border="1">';
     if($datos[0]['tipo_origen']==1){
         $tabla.="<tr><td><strong>NUMERO DE DOCUMENTO:</strong></td><td>".$datos[0]['numero_oficio']."</td></tr>";
     	        
