@@ -309,7 +309,7 @@ function tipo_radicado_radicacion($idformato,$iddoc){
                 tree_area_responsable.setOnLoadingEnd(chekeararbol);
                 $('#area_responsable').parent().parent().hide();
                 $('#persona_natural_dest').parent().parent().hide();
-                $('#tipo_mensajeria').parent().parent().hide();
+                $('#tr_tipo_mensajeria').hide();
                 
                 $('[name="tipo_origen"]').click(function(){
                 
