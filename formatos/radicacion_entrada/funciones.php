@@ -405,6 +405,7 @@ function ingresar_item_destino_radicacion($idformato,$iddoc){//posterior al adic
 		    $destino=explode(",",$padre[0]['persona_natural_dest']);
 		    for($i=0; $i < (count($destino))-1; $i++){
 		        $ejecutor=busca_filtro_tabla("","datos_ejecutor a, ejecutor b","b.idejecutor=a.ejecutor_idejecutor AND a.iddatos_ejecutor=".$destino[$i],"",$conn);
+		            print_r($ejecutor);die();
 		    }
 		    
 		}
