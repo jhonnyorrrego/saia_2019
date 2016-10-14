@@ -296,7 +296,7 @@ la matriz con los valores del resultado se obtiene por medio de la función Resu
          
          if(strpos($sql,'INSERT INTO')){
              
-            echo mysqli_connect_error(); 
+            echo ('aqui: '.mysqli_connect_error()); 
          }
          
         if($this->res){
