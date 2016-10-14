@@ -451,42 +451,7 @@ function mostrar_item_destino_radicacion($idformato,$iddoc){
 	}
 	
 	
-	$titulo=$datos[0]['componente'];
-	for ($i=0; $i < $datos['numcampos']; $i++) {
-		
-		if ($titulo!=$datos[$i]['componente']) {
-			$titulo=$datos[$i]['componente'];
-			$tabla.='
-				<tr class="encabezado_list">
-  					<th colspan="8" style="text-align:center;">'.$componente[$datos[$i]['componente']].'</th>
-  				</tr>
-			';
-		}
-		$nombre=busca_filtro_tabla("","funcionario a","a.funcionario_codigo=".$datos[$i]['responsable'],"",$conn);
-		$seleccionar=array(1=>"",2=>"",3=>"");
-		$seleccionar[$datos[$i]['cumple']]='selected';
-		
-		$tabla.='
-			<tr style="text-align:left;">
-	<td>'.$datos[$i]['verificacion'].'</td>
-	<td>'.$requerido[$datos[$i]['requerido']].'</td>
-    <td>
-    	<SELECT id="cumple'.$i.'" name="cumple[]"SIZE="1"  style="width: 100px;"> 
-  			<OPTION VALUE="1" '.$seleccionar[1].'>NO</OPTION> 
-   			<OPTION VALUE="2" '.$seleccionar[2].'>SI</OPTION> 
-   			<OPTION VALUE="3" '.$seleccionar[3].'>NO APLICA</OPTION> 
-		</SELECT>
-    </td>
-    <td><input style="width: 135px;" type="text" name="resultado_produccion[]" id="resultado_produccion'.$i.'" value="'.$datos[$i]['resultado_produccion'].'"></td>
-    <td><input style="width: 120px;" type="text" name="resultado_pruebas[]" id="resultado_pruebas'.$i.'" value="'.$datos[$i]['resultado_pruebas'].'"></td>
-    <td>'.$nombre[0]['nombres'].' '.$nombre[0]['apellidos'].'</td>
-    <td>'.$datos[$i]['fecha'].'</td>
-    <td><input style="width: 90px;" type="text" name="observaciones[]" id="observaciones'.$i.'" value="'.$datos[$i]['observaciones'].'"></td>
-    <input type="hidden" id="id_'.$datos[$i]['idft_prerequisitos'].'" value="'.$datos[$i]['idft_prerequisitos'].'" name="id[]"/>
-   			</tr>
-  		';
-	}
-	$tabla.='</table>';
+	
 	echo $tabla;
 	
 }
