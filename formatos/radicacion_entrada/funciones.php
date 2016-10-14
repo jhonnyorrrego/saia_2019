@@ -403,15 +403,13 @@ function ingresar_item_destino_radicacion($idformato,$iddoc){//posterior al adic
 	if ($item['numcampos']==0) {
 		if($padre[0]['tipo_destino']==1){
 		    $campo="persona_natural_dest";
-		    $tipo_destino=1;
 		}else{
 		    $campo="destino";
-		    $tipo_destino=2;
 		}
 		    $destino=explode(",",$padre[0]["$campo"]);
 		    $origen=busca_filtro_tabla("destino","buzon_salida","nombre=APROBADO AND archivo_idarchivo=".$iddoc,"",$conn);
 		    for($i=0; $i < (count($destino)); $i++){
-		        $cadena='INSERT INTO ft_destino_radicacion (nombre_destino, nombre_origen, tipo_origen, tipo_destino) VALUES ('.$destino[$i].', '.$origen[0]["destino"].')';
+		        $cadena='INSERT INTO ft_destino_radicacion (nombre_destino, nombre_origen, tipo_origen, tipo_destino) VALUES ('.$destino[$i].', '.$origen[0]["destino"].', '.$padre[0]['tipo_origen'].', )';
 		        print_r($cadena.'<br/>');
 		    }
 		    die();
