@@ -432,7 +432,10 @@ function mostrar_item_destino_radicacion($idformato,$iddoc){
         	<th>UBICACION</th>
         	<th>OBSERVACIONES</th>
       	</tr>
-    	';    
+    	';
+    	for ($i=0; $i < $datos['numcampos']; $i++) {
+    	    
+    	}
 	}
 	
 	
