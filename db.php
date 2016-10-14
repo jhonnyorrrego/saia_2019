@@ -573,8 +573,8 @@ global $conn;
 		$tabla = "";
 		$string_detalle = "";
 		if($accion != "SELECT") {
-			//$func = usuario_actual("funcionario_codigo");
-			$func=1;
+			$func = usuario_actual("funcionario_codigo");
+			//$func=1;
 		} else {
 			$rs = $conn->Ejecutar_Sql($strsql);
 		}
