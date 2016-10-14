@@ -409,9 +409,8 @@ function ingresar_item_destino_radicacion($idformato,$iddoc){//posterior al adic
 		    $destino=explode(",",$padre[0]["$campo"]);
 		    for($i=0; $i < (count($destino)); $i++){
 		        $cadena='INSERT INTO ft_destino_radicacion (nombre_destino, nombre_origen, tipo_origen, tipo_destino) VALUES ('.$destino[$i].', '.$padre[0]['ejecutor'].', '.$padre[0]['tipo_origen'].', '.$padre[0]['tipo_destino'].')';
-		        print_r($cadena.'<br/>');
+		        phpmkr_query($cadena.'<br/>');
 		    }
-		    die();
 	}
 }
 
