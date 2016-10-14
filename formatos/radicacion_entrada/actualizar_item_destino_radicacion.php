@@ -13,3 +13,4 @@ $max_salida--;
 
 include_once($ruta_db_superior."db.php");
 
+print_r($_REQUEST);
