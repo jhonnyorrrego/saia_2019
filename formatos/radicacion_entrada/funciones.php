@@ -427,7 +427,8 @@ function mostrar_item_destino_radicacion($idformato,$iddoc){
 	if($padre[0]['despachado']==0){
     	$tabla='<form id="item_prerequisitos" action="actualizar_item_destino_radicacion.php"><table class="table-bordered adicionar_campo" style="width: 95%; font-size:10px; text-align:center;" border="1">
     	<tr>
-        	<th>NOMBRE</th>
+        	<th>NOMBRE ORIGEN</th>
+        	<th>NOMBRE DESTINO</th>
        		<th>CARGO</th>
         	<th>UBICACION</th>
         	<th>OBSERVACIONES</th>
