@@ -364,9 +364,11 @@ function tipo_radicado_radicacion($idformato,$iddoc){
                     var tipo=$(this).val();
                     if(tipo==1){
                         $('#destino').removeClass('required');
+                        $('#area_responsable').parent().parent().hide();
                         
                     }else{
                         $('#destino').addClass('required');
+                        $('#area_responsable').parent().parent().show();
                     }
                 });
             });
