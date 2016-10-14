@@ -418,4 +418,7 @@ function ingresar_item_destino_radicacion($idformato,$iddoc){//posterior al adic
 		}
 	}
 }
+
+
+
 ?>
