@@ -581,6 +581,12 @@ global $conn;
 			}else{
 			    $func = usuario_actual("funcionario_codigo");
 			}
+
+         
+         if(strpos($strsql,'INSERT INTO documento_verificacion')!==false){
+            print_r($func);die(); 
+         }			
+			
 			
 		} else {
 			$rs = $conn->Ejecutar_Sql($strsql);
