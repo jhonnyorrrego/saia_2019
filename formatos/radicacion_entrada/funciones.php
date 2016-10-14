@@ -260,7 +260,11 @@ function imagenes_digitalizadas_funcion($idformato,$iddoc){
 }
 function obtener_informacion_proveedor($idformato,$iddoc){
 	global $conn,$ruta_db_superior;
-	$datos=busca_filtro_tabla("","ft_radicacion_entrada A, datos_ejecutor B, ejecutor C","A.persona_natural=B.iddatos_ejecutor AND B.ejecutor_idejecutor=C.idejecutor AND A.documento_iddocumento=".$iddoc,"",$conn);
+	
+	$tipo_origen=busca_filtro_tabla("","ft_radicacion_entrada","documento_iddocumento=".$iddoc,"",$conn);
+	
+	if($tipo_origen[0]['tipo_origen']==1){
+	    $datos=busca_filtro_tabla("","ft_radicacion_entrada A, datos_ejecutor B, ejecutor C","A.persona_natural=B.iddatos_ejecutor AND B.ejecutor_idejecutor=C.idejecutor AND A.documento_iddocumento=".$iddoc,"",$conn);
 	
 	$texto=array();
 	$texto[]="<b>Nombre:</b> ".$datos[0]["nombre"];
@@ -275,6 +279,11 @@ function obtener_informacion_proveedor($idformato,$iddoc){
 	$texto[]="<b>Ciudad:</b> ".$ciudad[0]["nombre"];
 	
 	echo(implode("<br />",$texto));
+	}else{
+	    
+	}
+	
+	
 }
 function transferir_con_copia($idformato,$iddoc){
 	global $conn;
