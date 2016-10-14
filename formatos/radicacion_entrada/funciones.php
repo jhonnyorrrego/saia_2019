@@ -451,7 +451,7 @@ function mostrar_item_destino_radicacion($idformato,$iddoc){
     	            <td><textarea name='observaciones[]'></textarea></td>
     	        </tr>
     	    </table>
-    	    </form>
+    	    </form><br/><br/>
     	    <input type='submit' value='Aplicar Despacho Físico'/>
     	    ";
     	    
