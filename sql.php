@@ -293,12 +293,12 @@ la matriz con los valores del resultado se obtiene por medio de la función Resu
         $this->filas=0;
      if($sql && $sql<>"" && $this->Conn->conn){
          $this->res=mysqli_query($this->Conn->conn,$sql); // or die("ERROR SQL ".mysqli_error($this->Conn->conn)." en ".$_SERVER["PHP_SELF"]." ->".$sql);// or error//("Error al Ejecutar:  $sql --- ".mysql_error());
-         /*
+         
          if(strpos($sql,'INSERT INTO')!==false){
              print_r ($sql);
              print_r ('<------------------->');
             print_r ($this->Conn); 
-         }*/
+         }
          
         if($this->res){
          if(strpos(strtolower($sql),"insert")!==false)
