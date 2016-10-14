@@ -327,7 +327,7 @@ function tipo_radicado_radicacion($idformato,$iddoc){
                         $('#persona_natural_dest').parent().parent().hide();
                         $('#persona_natural_dest').removeClass('required');
                         $('#tr_tipo_mensajeria').hide();
-                        $('#tipo_mensajeria').removeClass('required');
+                        $('[name="tipo_mensajeria"]').removeClass('required');
                         
                         $('#fecha_oficio_entrada').addClass('required');
                         $('#fecha_oficio_entrada').parent().parent().parent().show();
@@ -350,7 +350,7 @@ function tipo_radicado_radicacion($idformato,$iddoc){
                         $('#persona_natural').parent().parent().hide();
                         $('#anexos_digitales').parent().parent().hide();
                         $('#tr_tipo_mensajeria').show();
-                        $('#tipo_mensajeria').addClass('required');
+                        $('[name="tipo_mensajeria"]').addClass('required');
                         
                     }
                     $.ajax({ 
