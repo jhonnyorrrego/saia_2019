@@ -342,7 +342,7 @@ function tipo_radicado_radicacion($idformato,$iddoc){
                         $('#persona_natural').removeClass('required');
                         $('#persona_natural').parent().parent().hide();
                         $('#anexos_digitales').parent().parent().hide();
-                        $('#destino').removeClass('required');
+                        
                         
                     }
                     $.ajax({ 
