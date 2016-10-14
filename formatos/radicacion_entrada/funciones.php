@@ -309,6 +309,7 @@ function tipo_radicado_radicacion($idformato,$iddoc){
                 tree_area_responsable.setOnLoadingEnd(chekeararbol);
                 $('#area_responsable').parent().parent().hide();
                 $('#persona_natural_dest').parent().parent().hide();
+                $('#tipo_mensajeria').parent().parent().hide();
                 
                 $('[name="tipo_origen"]').click(function(){
                 
@@ -325,6 +326,7 @@ function tipo_radicado_radicacion($idformato,$iddoc){
                         $('#copia_a').parent().parent().show();
                         $('#persona_natural_dest').parent().parent().hide();
                         $('#persona_natural_dest').removeClass('required');
+                        $('#tipo_mensajeria').parent().parent().hide();
                         
                         $('#fecha_oficio_entrada').addClass('required');
                         $('#fecha_oficio_entrada').parent().parent().parent().show();
@@ -346,7 +348,7 @@ function tipo_radicado_radicacion($idformato,$iddoc){
                         $('#persona_natural').removeClass('required');
                         $('#persona_natural').parent().parent().hide();
                         $('#anexos_digitales').parent().parent().hide();
-                        
+                        $('#tipo_mensajeria').parent().parent().show();
                         
                     }
                     $.ajax({ 
