@@ -448,7 +448,7 @@ function mostrar_item_destino_radicacion($idformato,$iddoc){
     	            <td>".$destino[0]['nombre']."</td>
     	            <td>".$destino[0]['cargo']."</td>
     	            <td>".$ubicacion."</td>
-    	            <td></td>
+    	            <td><textarea></textarea></td>
     	        </tr>
     	    
     	    ";
