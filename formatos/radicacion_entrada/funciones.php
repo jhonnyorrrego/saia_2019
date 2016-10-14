@@ -439,6 +439,7 @@ function mostrar_item_destino_radicacion($idformato,$iddoc){
     	        $ubicacion=$ciudad[0]['nombre'].' '.$destino[0]['direccion'];
     	    }else{
     	        $destino=busca_filtro_tabla("concat(nombres,' ',apellidos) AS nombre, cargo, dependencia","vfuncionario_dc","iddependencia_cargo=".$datos[$i]['nombre_destino'],"",$conn);
+    	        $ubicacion=$destino[0]['dependencia'];
     	    }
     	    
     	    $tabla.="
