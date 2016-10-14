@@ -573,21 +573,9 @@ global $conn;
 		$tabla = "";
 		$string_detalle = "";
 		if($accion != "SELECT") {
-			//$func = usuario_actual("funcionario_codigo");
-			//$func=1;
-			
-			if(isset($_SESSION["usuario_actual"])){
-			   $func= $_SESSION["usuario_actual"];
-			}else{
-			    $func = usuario_actual("funcionario_codigo");
-			}
 
-         
-         if(strpos($strsql,'INSERT INTO documento_verificacion')!==false){
-            print_r('aqui IDFUNC: '.$_REQUEST['idfunc']);
-         }			
-			
-			
+	        $func = usuario_actual("funcionario_codigo");
+	
 		} else {
 			$rs = $conn->Ejecutar_Sql($strsql);
 		}
