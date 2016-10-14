@@ -441,7 +441,7 @@ function mostrar_item_destino_radicacion($idformato,$iddoc){
         	<th>NOMBRE ORIGEN</th>
         	<th>NOMBRE DESTINO</th>
        		<th>CARGO</th>
-        	<th>UBICACION</th>
+        	<th>UBICACIÓN</th>
         	<th>OBSERVACIONES</th>
       	</tr>
     	';
@@ -480,7 +480,7 @@ function mostrar_item_destino_radicacion($idformato,$iddoc){
         	<th>NOMBRE ORIGEN</th>
         	<th>NOMBRE DESTINO</th>
        		<th>CARGO</th>
-        	<th>UBICACION</th>
+        	<th>UBICACIÓN</th>
         	<th>OBSERVACIONES</th>
       	</tr>
     	';
