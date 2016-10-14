@@ -310,8 +310,10 @@ function tipo_radicado_radicacion($idformato,$iddoc){
                     var tipo=$(this).val();
                     if(tipo==1){
                         $('[name="tipo_radicado"]').val('radicacion_entrada');
+                        $('#area_responsable').parent().parent().hide();
                     }else{
                         $('[name="tipo_radicado"]').val('radicacion_salida');
+                        $('#area_responsable').parent().parent().show();
                     }
                     $.ajax({ 
                         type:'POST',
