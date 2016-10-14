@@ -436,6 +436,17 @@ function mostrar_item_destino_radicacion($idformato,$iddoc){
     	    }else{
     	        $destino=busca_filtro_tabla("","vfuncionario_dc","iddependencia_cargo=".$datos[$i]['nombre_destino'],"",$conn);
     	    }
+    	    
+    	    $tabla.="
+    	        <tr>
+    	            <td></td>
+    	            <td></td>
+    	            <td></td>
+    	            <td></td>
+    	            <td></td>
+    	        </tr>
+    	    
+    	    ";
     	}
 	}
 	
