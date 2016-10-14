@@ -425,24 +425,24 @@ function mostrar_item_destino_radicacion($idformato,$iddoc){
 	$padre=busca_filtro_tabla("","ft_radicacion_entrada A, documento B ","A.documento_iddocumento=B.iddocumento AND B.estado<>'ELIMINADO' AND B.iddocumento=".$iddoc,"",$conn);  //nombre tabla padre
 		$datos=busca_filtro_tabla("","ft_destino_radicacion","ft_radicacion_entrada=".$padre[0]["idft_radicacion_entrada"],"",$conn);
 	if($padre[0]['despachado']==0){
-	    
+    	$tabla='<form id="item_prerequisitos" action="actualizar_item_destino_radicacion.php"><table class="table-bordered adicionar_campo" style="width: 95%; font-size:10px; text-align:center;" border="1">
+    	<tr>
+        	<th>VERIFICACIÓN</th>
+       		<th>REQUERIDO</th>
+        	<th>CUMPLE</th>
+        	<th>RESULTADO SERV. PRODUCCION</th>
+        	<th>RESULTADO SERV. PRUEBAS</th>
+        	<th>RESPONSABLE</th>
+        	<th>FECHA</th>
+        	<th>OBSERVACIONES</th>
+      	</tr>
+      	<tr class="encabezado_list">
+      		<th colspan="8" style="text-align:center;">'.$componente[$datos[0]['componente']].'</th>
+      	</tr>
+    	';    
 	}
 	
-	$tabla='<form id="item_prerequisitos" action="actualizar_item_destino_radicacion.php"><table class="table-bordered adicionar_campo" style="width: 95%; font-size:10px; text-align:center;" border="1">
-	<tr>
-    	<th>VERIFICACIÓN</th>
-   		<th>REQUERIDO</th>
-    	<th>CUMPLE</th>
-    	<th>RESULTADO SERV. PRODUCCION</th>
-    	<th>RESULTADO SERV. PRUEBAS</th>
-    	<th>RESPONSABLE</th>
-    	<th>FECHA</th>
-    	<th>OBSERVACIONES</th>
-  	</tr>
-  	<tr class="encabezado_list">
-  		<th colspan="8" style="text-align:center;">'.$componente[$datos[0]['componente']].'</th>
-  	</tr>
-	';
+	
 	$titulo=$datos[0]['componente'];
 	for ($i=0; $i < $datos['numcampos']; $i++) {
 		
