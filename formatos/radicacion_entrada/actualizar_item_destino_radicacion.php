@@ -23,3 +23,4 @@ for ($i=0; $i < count($id) ; $i++) {
 	$sql1="UPDATE ft_radicacion_entrada SET despachado=1 WHERE documento_iddocumento=$iddoc";
 	phpmkr_query($sql1);
 }
+echo('<script>window.history.back();</script>');
