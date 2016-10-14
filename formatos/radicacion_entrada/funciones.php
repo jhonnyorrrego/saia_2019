@@ -540,9 +540,10 @@ function campos_adicionales_radicacion($idformato,$iddoc){
     	        
     }
     if($datos[0]['tipo_destino']==2){
-        $copia=busca_filtro_tabla("concat(nombres,' ',apellidos) AS nombre","vfuncionario_dc","iddependencia_cargo IN(".$datos[0]['area_responsable'].")","",$conn);
-        $tabla.="<tr><td><strong>COPIA A:</strong></td><td>".$datos[0]['numero_oficio']."</td></tr>";
-    	        
+        $copia=busca_filtro_tabla("concat(nombres,' ',apellidos) AS nombre","vfuncionario_dc","iddependencia_cargo IN(".$datos[0]['copia_a'].")","",$conn);
+        for($i=0; $i < $copia['numcampos']; $i++) {
+            $tabla.="<tr><td><strong>COPIA A:</strong></td><td>".$copia[0]['numero_oficio']."</td></tr>";
+        }        
     }
 }
 
