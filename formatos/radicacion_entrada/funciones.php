@@ -405,15 +405,16 @@ function ingresar_item_destino_radicacion($idformato,$iddoc){//posterior al adic
 		    $destino=explode(",",$padre[0]['persona_natural_dest']);
 		    for($i=0; $i < (count($destino))-1; $i++){
 		        $cadena='INSERT INTO ft_destino_radicacion(nombre_destino) VALUES ('.$destino[$i].')';
-		        print_r($cadena.'<br/>');die();
+		        print_r($cadena.'<br/>');
 		    }
-		    
+		    die();
 		}else{
 		    $destino=explode(",",$padre[0]['destino']);
 		    for($i=0; $i < (count($destino))-1; $i++){
 		        $cadena='INSERT INTO ft_destino_radicacion(nombre_destino) VALUES ('.$destino[$i].')';
-		        print_r($cadena.'<br/>');die();
+		        print_r($cadena.'<br/>');
 		    }
+		    die();
 		}
 	}
 }
