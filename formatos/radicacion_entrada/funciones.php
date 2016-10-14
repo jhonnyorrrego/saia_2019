@@ -363,10 +363,10 @@ function tipo_radicado_radicacion($idformato,$iddoc){
                 $('[name="tipo_destino"]').click(function(){
                     var tipo=$(this).val();
                     if(tipo==1){
-                        
+                        $('#destino').removeClass('required');
                         
                     }else{
-                        
+                        $('#destino').addClass('required');
                     }
                 });
             });
