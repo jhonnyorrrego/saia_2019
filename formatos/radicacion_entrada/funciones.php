@@ -312,7 +312,7 @@ function tipo_radicado_radicacion($idformato,$iddoc){
                         $('[name="tipo_radicado"]').val('radicacion_entrada');
                         $('#area_responsable').parent().parent().hide();
                         $('#fecha_oficio_entrada').addClass('required');
-                        $('#fecha_oficio_entrada').parent().parent().hide();
+                        $('#fecha_oficio_entrada').parent().parent().show();
                     }else{
                         $('[name="tipo_radicado"]').val('radicacion_salida');
                         $('#area_responsable').parent().parent().show();
