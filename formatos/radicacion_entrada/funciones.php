@@ -449,6 +449,7 @@ function mostrar_item_destino_radicacion($idformato,$iddoc){
     	            <td>".$destino[0]['cargo']."</td>
     	            <td>".$ubicacion."</td>
     	            <td><textarea name='observaciones[]'></textarea></td>
+    	            <input type='hidden' id='id_".$datos[$i]['idft_prerequisitos']."' value='".$datos[$i]['idft_prerequisitos']."' name='id[]'/>
     	        </tr>
     	    ";
     	    
