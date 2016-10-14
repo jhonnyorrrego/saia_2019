@@ -206,10 +206,6 @@ function generar_codigo_qr_pqrsf($idformato,$iddoc){
 	}else{
 	  $codigo_hash=obtener_codigo_hash_archivo($imagen,'crc32'); 
 	  $fun_qr=usuario_actual('idfuncionario');
-	  if(!$fun_qr){
-	      $fun_qr=1;
-	  }		  
-	  
 	  $sql_documento_qr="INSERT INTO documento_verificacion(documento_iddocumento,funcionario_idfuncionario,fecha,ruta_qr,verificacion,codigo_hash) VALUES (".$iddoc.",".$fun_qr.",".fecha_db_almacenar(date("Y-m-d H:i:s"),'Y-m-d H:i:s').",'".$imagen."','vacio','".$codigo_hash."')";
 	  phpmkr_query($sql_documento_qr);
 	}
