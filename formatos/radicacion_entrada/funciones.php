@@ -404,9 +404,9 @@ function ingresar_item_destino_radicacion($idformato,$iddoc){//posterior al adic
 		if($padre[0]['tipo_destino']==1){
 		    $destino=explode(",",$padre[0]['persona_natural_dest']);
 		    for($i=0; $i < (count($destino))-1; $i++){
-		        
+		        $ejecutor=busca_filtro_tabla("","datos_ejecutor a, ejecutor b","b.idejecutor=a.ejecutor_idejecutor AND a.iddatos_ejecutor=".$destino[$i],"",$conn);
 		    }
-		    $ejecutor=busca_filtro_tabla("b.nombre","datos_ejecutor a, ejecutor b","b.idejecutor=a.ejecutor_idejecutor AND a.iddatos_ejecutor=".$padre[0]['nombre_empresa'],"",$conn);
+		    
 		}
     	for ($i=0; $i < $datos['numcampos']; $i++) { 
     		$cadena='INSERT INTO ft_prerequisitos (idft_prerequisitos,ft_cliente, componente, verificacion, requerido, cumple, resultado_produccion, resultado_pruebas, responsable, fecha, observaciones) VALUES ("","'.$padre[0]["idft_cliente"].'","'.$datos[$i]["categoria"].'","'.$datos[$i]["nombre"].'","'.$datos[$i]["obligatoriedad"].'","","","","'.$responsable.'","'.$fecha.'","");';
