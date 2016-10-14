@@ -289,7 +289,7 @@ la matriz con los valores del resultado se obtiene por medio de la función Resu
   function Ejecutar_Sql_MySql($sql)
     {
         
-        if(strpos($sql,'INSERT INTO')===false ){
+        if(strpos($sql,'INSERT INTO')!==false ){
             print_r($this->Conn);
         }
         
