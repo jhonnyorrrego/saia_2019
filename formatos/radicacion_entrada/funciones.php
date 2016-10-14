@@ -359,6 +359,10 @@ function tipo_radicado_radicacion($idformato,$iddoc){
                         }
                     });
                 });
+                
+                $('[name="tipo_destino"]').click(function(){
+                    
+                });
             });
             function chekeararbol(){
                 tree_area_responsable.setCheck('<?php echo $cargo[0]["iddependencia_cargo"];?>',true);
