@@ -324,6 +324,7 @@ function tipo_radicado_radicacion($idformato,$iddoc){
                         $('#persona_natural').addClass('required');
                         $('#persona_natural').parent().parent().show();
                         $('#anexos_digitales').parent().parent().show();
+                        $('#tipo_destino').parent().parent().hide();
                     }else{
                         $('[name="tipo_radicado"]').val('radicacion_salida');
                         
