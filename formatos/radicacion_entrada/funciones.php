@@ -10,7 +10,7 @@ $ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
 $ruta.="../";
 $max_salida--;
 }
-
+ini_set("display_errors",true);
 //ADICIONAR - EDITAR
 //******************
 /*function cargar_fecha_limite_respuesta($idformato,$iddoc){
@@ -501,7 +501,7 @@ function mostrar_item_destino_radicacion($idformato,$iddoc){
 	
 }
 
-function mostrar_destino(){
+function mostrar_destino_radicacion(){
     
 }
 
