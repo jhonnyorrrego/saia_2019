@@ -500,4 +500,9 @@ function mostrar_item_destino_radicacion($idformato,$iddoc){
 	echo $tabla;
 	
 }
+
+function mostrar_destino(){
+    
+}
+
 ?>
