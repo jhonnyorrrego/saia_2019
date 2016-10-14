@@ -310,12 +310,16 @@ function tipo_radicado_radicacion($idformato,$iddoc){
                     var tipo=$(this).val();
                     if(tipo==1){
                         $('[name="tipo_radicado"]').val('radicacion_entrada');
+                        
                         $('#area_responsable').parent().parent().hide();
+                        
                         $('#fecha_oficio_entrada').addClass('required');
                         $('#fecha_oficio_entrada').parent().parent().show();
                     }else{
                         $('[name="tipo_radicado"]').val('radicacion_salida');
+                        
                         $('#area_responsable').parent().parent().show();
+                        
                         $('#fecha_oficio_entrada').removeClass('required');
                         $('#fecha_oficio_entrada').parent().parent().hide();
                         
