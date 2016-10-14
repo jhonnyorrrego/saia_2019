@@ -672,7 +672,11 @@ return $lista;
 }
 function generar_correo_confirmacion($idformato,$iddoc){
 	global $conn,$ruta_db_superior;
-	$formato_carta=busca_filtro_tabla("","ft_carta,documento","documento_iddocumento=iddocumento and documento_iddocumento=".$iddoc,"",$conn);
+	
+	
+	$formato=busca_filtro_tabla("nombre_tabla, nombre","formato","idformato=".$idformato,"",$conn);
+	
+	$formato_carta=busca_filtro_tabla("",$formato[0]['nombre_tabla'].",documento","documento_iddocumento=iddocumento and documento_iddocumento=".$iddoc,"",$conn);
 	$usuario_confirma=busca_filtro_tabla("destino","buzon_entrada","nombre='POR_APROBAR' and activo=1 and archivo_idarchivo=".$iddoc,"idtransferencia asc",$conn);
 	if($formato_carta[0]['email_aprobar']==1 && $formato_carta[0]['estado']=='ACTIVO'){
 		$resultado=busca_filtro_tabla("","ruta","documento_iddocumento=".$iddoc,"idruta",$conn);
@@ -689,7 +693,7 @@ function generar_correo_confirmacion($idformato,$iddoc){
 				//$nombre_archivo="temporal_".$_SESSION["LOGIN"]."/".$iddoc;
 				$ch = curl_init();
 		    //$fila = "http://".RUTA_PDF_LOCAL."/class_impresion.php?iddoc=".$iddoc."&LOGIN=".$_SESSION["LOGIN".LLAVE_SAIA]."&conexion_remota=1&usuario_actual=".$_SESSION["usuario_actual"]."&LLAVE_SAIA=".LLAVE_SAIA;
-		    $fila = "http://".RUTA_PDF_LOCAL."/class_impresion.php?plantilla=carta&iddoc=".$iddoc."&conexion_remota=1&conexio_usuario=".$_SESSION["LOGIN".LLAVE_SAIA]."&usuario_actual=".$_SESSION["usuario_actual"]."&LOGIN=".$_SESSION["LOGIN".LLAVE_SAIA]."&LLAVE_SAIA=".LLAVE_SAIA;
+		    $fila = "http://".RUTA_PDF_LOCAL."/class_impresion.php?plantilla=".$formato[0]['nombre']."&iddoc=".$iddoc."&conexion_remota=1&conexio_usuario=".$_SESSION["LOGIN".LLAVE_SAIA]."&usuario_actual=".$_SESSION["usuario_actual"]."&LOGIN=".$_SESSION["LOGIN".LLAVE_SAIA]."&LLAVE_SAIA=".LLAVE_SAIA;
 		    curl_setopt($ch, CURLOPT_URL,$fila);
 		    curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
 		    $contenido=curl_exec($ch);
