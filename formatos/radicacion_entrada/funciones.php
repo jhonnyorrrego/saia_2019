@@ -455,6 +455,7 @@ function mostrar_item_destino_radicacion($idformato,$iddoc){
     	    
     	}
     	$tabla.="</table><br/>
+    	       <input type='hidden' name='iddoc' value='$iddoc'/>
     	       <input style='float:right;' type='submit' value='Aplicar Despacho Físico'/>
     	       </form>
     	";
