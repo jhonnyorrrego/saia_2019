@@ -402,11 +402,10 @@ function ingresar_item_destino_radicacion($idformato,$iddoc){//posterior al adic
 	$item=busca_filtro_tabla("","ft_destino_radicacion","ft_radicacion_entrada=".$padre[0]["idft_radicacion_entrada"],"",$conn);
 	if ($item['numcampos']==0) {
 		
-	
-	for ($i=0; $i < $datos['numcampos']; $i++) { 
-		$cadena='INSERT INTO ft_prerequisitos (idft_prerequisitos,ft_cliente, componente, verificacion, requerido, cumple, resultado_produccion, resultado_pruebas, responsable, fecha, observaciones) VALUES ("","'.$padre[0]["idft_cliente"].'","'.$datos[$i]["categoria"].'","'.$datos[$i]["nombre"].'","'.$datos[$i]["obligatoriedad"].'","","","","'.$responsable.'","'.$fecha.'","");';
-		phpmkr_query($cadena);
-	}
+    	for ($i=0; $i < $datos['numcampos']; $i++) { 
+    		$cadena='INSERT INTO ft_prerequisitos (idft_prerequisitos,ft_cliente, componente, verificacion, requerido, cumple, resultado_produccion, resultado_pruebas, responsable, fecha, observaciones) VALUES ("","'.$padre[0]["idft_cliente"].'","'.$datos[$i]["categoria"].'","'.$datos[$i]["nombre"].'","'.$datos[$i]["obligatoriedad"].'","","","","'.$responsable.'","'.$fecha.'","");';
+    		phpmkr_query($cadena);
+    	}
 	
 	}
 }
