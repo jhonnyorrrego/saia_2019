@@ -457,8 +457,6 @@ function mostrar_item_destino_radicacion($idformato,$iddoc){
     	       <input style='float:right;' type='submit' value='Aplicar Despacho Físico'/>
     	       </form>
     	";
-    	    
-    	    
 	}
 	
 	
