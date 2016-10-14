@@ -533,6 +533,7 @@ function mostrar_destino_radicacion($idformato,$iddoc){
 function campos_adicionales_radicacion($idformato,$iddoc){
 	global $conn,$ruta_db_superior;
     
+    $datos=busca_filtro_tabla("","ft_radicacion_entrada","documento_iddocumento=".$iddoc,"",$conn);
     
 }
 
