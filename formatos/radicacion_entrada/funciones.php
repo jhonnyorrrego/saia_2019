@@ -540,6 +540,7 @@ function campos_adicionales_radicacion($idformato,$iddoc){
     	        
     }
     if($datos[0]['tipo_destino']==2){
+        $copia=busca_filtro_tabla("concat(nombres,' ',apellidos) AS nombre","vfuncionario_dc","iddependencia_cargo IN(".$datos[0]['destino'].")","",$conn);
         $tabla.="<tr><td><strong>COPIA A:</strong></td><td>".$datos[0]['numero_oficio']."</td></tr>";
     	        
     }
