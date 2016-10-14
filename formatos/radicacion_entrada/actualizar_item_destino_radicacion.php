@@ -12,11 +12,11 @@ $max_salida--;
 }
 
 include_once($ruta_db_superior."db.php");
-
+print_r($_REQUEST);
 $id=$_REQUEST['id'];
 $observacion=$_REQUEST['observaciones'];
 
 for ($i=0; $i < count($id) ; $i++) { 
 	$sql="UPDATE ft_destino_radicacion SET observaciones={$observacion[$i]} WHERE idft_destino_radicacion={$id[$i]}";
-	phpmkr_query($sql);
+	//phpmkr_query($sql);
 }
