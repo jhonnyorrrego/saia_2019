@@ -545,6 +545,7 @@ function campos_adicionales_radicacion($idformato,$iddoc){
             $tabla.="<tr><td><strong>COPIA A:</strong></td><td>".$copia[0]['nombre']."</td></tr>";
         }        
     }
+    $tabla.='</table>';
 }
 
 ?>
