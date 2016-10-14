@@ -238,7 +238,7 @@ function mostrar_qr_interna($idformato,$iddoc){
 function generar_codigo_qr_interna($idformato,$iddoc){
   global $conn,$ruta_db_superior;	
   
-  
+  /*
      if(@$_REQUEST['idfunc']){
         $fun=busca_filtro_tabla("login,funcionario_codigo","funcionario","idfuncionario=".$_REQUEST['idfunc'],"",$conn); 
 	    $_SESSION["LOGIN" . LLAVE_SAIA] = $fun[0]['login'];
@@ -246,7 +246,7 @@ function generar_codigo_qr_interna($idformato,$iddoc){
 	
 	    global $usuactual;
     	$usuactual = $fun[0]['login']; 
-     }
+     }*/
   
 	include_once($ruta_db_superior."pantallas/lib/librerias_fechas.php");
 	ini_set('display_errors',true);
