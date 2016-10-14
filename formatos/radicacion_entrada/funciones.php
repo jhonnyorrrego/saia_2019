@@ -321,6 +321,8 @@ function tipo_radicado_radicacion($idformato,$iddoc){
                         $('#destino').addClass('required');
                         $('#tr_tipo_destino').hide();
                         $('input:radio[name="tipo_destino"]').filter('[value="2"]').attr('checked', true);
+                        $('#destino').parent().parent().show();
+                        $('#copia_a').parent().parent().show();
                         
                         $('#fecha_oficio_entrada').addClass('required');
                         $('#fecha_oficio_entrada').parent().parent().parent().show();
