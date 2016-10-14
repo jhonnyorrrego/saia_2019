@@ -404,7 +404,7 @@ function ingresar_item_destino_radicacion($idformato,$iddoc){//posterior al adic
 		if($padre[0]['tipo_destino']==1){
 		    $destino=explode(",",$padre[0]['persona_natural_dest']);
 		    for($i=0; $i < (count($destino))-1; $i++){
-		        $cadena='INSERT INTO ft_destino_radicacion(nombre_destino) VALUES ';
+		        $cadena='INSERT INTO ft_destino_radicacion(nombre_destino) VALUES ()';
 		    }
 		    
 		}
