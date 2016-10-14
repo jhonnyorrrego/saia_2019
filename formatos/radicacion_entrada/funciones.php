@@ -547,5 +547,5 @@ function campos_adicionales_radicacion($idformato,$iddoc){
     }
     $tabla.='</table>';
 }
-
+    echo($tabla);
 ?>
