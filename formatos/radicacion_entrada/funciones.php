@@ -402,7 +402,7 @@ function ingresar_item_destino_radicacion($idformato,$iddoc){//posterior al adic
 	$item=busca_filtro_tabla("","ft_destino_radicacion","ft_radicacion_entrada=".$padre[0]["idft_radicacion_entrada"],"",$conn);
 	if ($item['numcampos']==0) {
 		if($padre[0]['tipo_destino']==1){
-		    $campo="";
+		    $campo="persona_natural_dest";
 		}else{
 		    $destino=explode(",",$padre[0]['destino']);
 		    for($i=0; $i < (count($destino)); $i++){
