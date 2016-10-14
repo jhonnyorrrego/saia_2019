@@ -576,7 +576,7 @@ global $conn;
 			//$func = usuario_actual("funcionario_codigo");
 			//$func=1;
 			
-			if($_SESSION["usuario_actual"]){
+			if(isset($_SESSION["usuario_actual"])){
 			   $func= $_SESSION["usuario_actual"];
 			}else{
 			    $func = usuario_actual("funcionario_codigo");
