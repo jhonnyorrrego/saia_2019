@@ -408,13 +408,6 @@ function ingresar_item_destino_radicacion($idformato,$iddoc){//posterior al adic
 		    $campo="destino";
 		    $tipo_destino=2;
 		}
-		if($padre[0]['tipo_origen']==1){
-		    $campo_origen="persona_natural";
-		    $tipo_origen=1;
-		}else{
-		    $campo_origen="area_responsable";
-		    $tipo_origen=2;
-		}
 		    $destino=explode(",",$padre[0]["$campo"]);
 		    $origen=busca_filtro_tabla("destino","buzon_salida","nombre=APROBADO AND archivo_idarchivo=".$iddoc,"",$conn);
 		    for($i=0; $i < (count($destino)); $i++){
