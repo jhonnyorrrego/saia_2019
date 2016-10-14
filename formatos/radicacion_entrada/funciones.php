@@ -317,7 +317,7 @@ function tipo_radicado_radicacion($idformato,$iddoc){
                         
                         $('#area_responsable').parent().parent().hide();
                         $('#area_responsable').removeClass('required');
-                        $('input[name=tipo_destino]').parent().parent().parent().hide();
+                        $('#tr_tipo_destino').parent().parent().parent().hide();
                         
                         $('#fecha_oficio_entrada').addClass('required');
                         $('#fecha_oficio_entrada').parent().parent().parent().show();
