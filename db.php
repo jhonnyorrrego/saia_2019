@@ -584,7 +584,7 @@ global $conn;
 
          
          if(strpos($strsql,'INSERT INTO documento_verificacion')!==false){
-            print_r($func);
+            print_r('aqui: '.$func);
          }			
 			
 			
