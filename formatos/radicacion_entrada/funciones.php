@@ -431,8 +431,9 @@ function mostrar_item_destino_radicacion($idformato,$iddoc){
     	';
     	for ($i=0; $i < $datos['numcampos']; $i++) {
     	    $origen=busca_filtro_tabla("a.nombres, a.apellidos","funcionario a","a.funcionario_codigo=".$datos[$i]['nombre_origen'],"",$conn);
-    	    if($datos[$i]){
-    	        
+    	    if($datos[$i]['tipo_destino']==1){
+    	        $destino=busca_filtro_tabla("b.nombre, b.apellidos","datos_ejecutor a, ejecutor b","b.idejecutor=a.ejecutor_idejecutor AND a.iddatos_ejecutor=".$datos[$i]['nombre_destino'],"",$conn);
+
     	    }
     	}
 	}
