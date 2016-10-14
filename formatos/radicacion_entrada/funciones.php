@@ -460,7 +460,7 @@ function mostrar_item_destino_radicacion($idformato,$iddoc){
     	       </form>
     	";
 	}else{
-	    $tabla='<form id="item_prerequisitos" action="actualizar_item_destino_radicacion.php"><table class="table-bordered adicionar_campo" style="width: 95%; font-size:10px; text-align:center;" border="1">
+	    $tabla='<table class="table-bordered adicionar_campo" style="width: 95%; font-size:10px; text-align:center;" border="1">
     	<tr class="encabezado_list">
         	<th>NOMBRE ORIGEN</th>
         	<th>NOMBRE DESTINO</th>
@@ -486,8 +486,7 @@ function mostrar_item_destino_radicacion($idformato,$iddoc){
     	            <td>".$destino[0]['nombre']."</td>
     	            <td>".$destino[0]['cargo']."</td>
     	            <td>".$ubicacion."</td>
-    	            <td><textarea name='observaciones[]'></textarea></td>
-    	            <input type='hidden' id='id_".$datos[$i]['idft_destino_radicacion']."' value='".$datos[$i]['idft_destino_radicacion']."' name='id[]'/>
+    	            <td></td>
     	        </tr>
     	    ";
     	    
