@@ -539,8 +539,8 @@ function campos_adicionales_radicacion($idformato,$iddoc){
         $tabla.="<tr><td><strong>NUMERO DE DOCUMENTO:</strong></td><td>".$datos[0]['numero_oficio']."</td></tr>";
     	        
     }
-    if($datos[0]['tipo_destino']==1){
-        $tabla.="<tr><td><strong>NUMERO DE DOCUMENTO:</strong></td><td>".$datos[0]['numero_oficio']."</td></tr>";
+    if($datos[0]['tipo_destino']==2){
+        $tabla.="<tr><td><strong>COPIA A:</strong></td><td>".$datos[0]['numero_oficio']."</td></tr>";
     	        
     }
 }
