@@ -315,7 +315,7 @@ function tipo_radicado_radicacion($idformato,$iddoc){
                         $('#area_responsable').removeClass('required');
                         
                         $('#fecha_oficio_entrada').addClass('required');
-                        $('#fecha_oficio_entrada').parent().parent().show();
+                        $('#fecha_oficio_entrada').parent().parent().parent().show();
                     }else{
                         $('[name="tipo_radicado"]').val('radicacion_salida');
                         
@@ -323,7 +323,7 @@ function tipo_radicado_radicacion($idformato,$iddoc){
                         $('#area_responsable').addClass('required');
                         
                         $('#fecha_oficio_entrada').removeClass('required');
-                        $('#fecha_oficio_entrada').parent().parent().hide();
+                        $('#fecha_oficio_entrada').parent().parent().parent().hide();
                         
                     }
                     $.ajax({ 
