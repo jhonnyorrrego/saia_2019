@@ -410,8 +410,10 @@ function ingresar_item_destino_radicacion($idformato,$iddoc){//posterior al adic
 		}
 		if($padre[0]['tipo_origen']==1){
 		    $campo="persona_natural";
+		    $tipo_origen=1;
 		}else{
 		    $campo="area_responsable";
+		    $tipo_origen=2;
 		}
 		$destino=explode(",",$padre[0]["$campo"]);
 		    for($i=0; $i < (count($destino)); $i++){
