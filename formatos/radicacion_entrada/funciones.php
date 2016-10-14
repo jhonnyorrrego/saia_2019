@@ -430,7 +430,10 @@ function mostrar_item_destino_radicacion($idformato,$iddoc){
       	</tr>
     	';
     	for ($i=0; $i < $datos['numcampos']; $i++) {
-    	    $origen=busca_filtro_tabla("a.nombres, a.apellidos","funcionario a","a.funcionario_codigo=".$datos[0]['nombre_origen'],"",$conn);
+    	    $origen=busca_filtro_tabla("a.nombres, a.apellidos","funcionario a","a.funcionario_codigo=".$datos[$i]['nombre_origen'],"",$conn);
+    	    if($datos[$i]){
+    	        
+    	    }
     	}
 	}
 	
