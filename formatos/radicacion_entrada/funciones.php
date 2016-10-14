@@ -399,7 +399,7 @@ function tipo_radicado_radicacion($idformato,$iddoc){
 function ingresar_item_destino_radicacion($idformato,$iddoc){
 	global $conn,$ruta_db_superior;
 	$padre=busca_filtro_tabla("","ft_radicacion_entrada A, documento B ","A.documento_iddocumento=B.iddocumento AND B.estado<>'ELIMINADO' AND B.iddocumento=".$iddoc,"",$conn);  //nombre tabla padre
-	$item=busca_filtro_tabla("","ft_destino_radicacion","ft_cliente=".$padre[0]["idft_cliente"],"",$conn);
+	$item=busca_filtro_tabla("","ft_destino_radicacion","ft_radicacion_entrada=".$padre[0]["idft_cliente"],"",$conn);
 	if ($item['numcampos']==0) {
 		
 	
