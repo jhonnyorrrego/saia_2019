@@ -249,7 +249,6 @@ function generar_codigo_qr_interna($idformato,$iddoc){
      }
   
 	include_once($ruta_db_superior."pantallas/lib/librerias_fechas.php");
-	ini_set('display_errors',true);
 	
   $codigo_qr=busca_filtro_tabla("ruta_qr, iddocumento_verificacion","documento_verificacion","documento_iddocumento=".$iddoc,"", $conn);
   $datos=busca_filtro_tabla("A.fecha,A.estado, A.numero","documento A","A.iddocumento=".$iddoc,"",$conn);	
