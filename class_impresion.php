@@ -337,7 +337,7 @@ class Imprime_Pdf {
 	
 		}
 		
-		
+		print_r($direccion);die();
 		
 		foreach($direccion as $fila) {
 			
