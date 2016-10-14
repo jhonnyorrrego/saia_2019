@@ -303,6 +303,7 @@ function tipo_radicado_radicacion($idformato,$iddoc){
                 $('#fecha_oficio_entrada').addClass('required');
                 $('#destino').addClass('required');
                 $('#persona_natural').addClass('required');
+                $('#destino').addClass('required');
                 $('#tr_tipo_destino').hide(); 
                 
                 tree_area_responsable.setOnLoadingEnd(chekeararbol);
