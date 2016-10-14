@@ -365,10 +365,11 @@ function tipo_radicado_radicacion($idformato,$iddoc){
                     if(tipo==1){
                         $('#destino').removeClass('required');
                         $('#destino').parent().parent().hide();
-                        
+                        $('#copia_a').parent().parent().hide();
                     }else{
                         $('#destino').addClass('required');
                         $('#destino').parent().parent().show();
+                        $('#copia_a').parent().parent().show();
                     }
                 });
             });
