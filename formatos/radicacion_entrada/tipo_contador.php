@@ -21,7 +21,7 @@ if($_REQUEST['tipo_radicacion']==1){
 }
 $idcontador=array($contador[0]['consecutivo']);
 $idcontador=json_encode($idcontador);
-echo ($idcontador);
+echo ($idcontador); 
 
 
 ?> 
