@@ -295,7 +295,8 @@ la matriz con los valores del resultado se obtiene por medio de la función Resu
          $this->res=mysqli_query($this->Conn->conn,$sql); // or die("ERROR SQL ".mysqli_error($this->Conn->conn)." en ".$_SERVER["PHP_SELF"]." ->".$sql);// or error//("Error al Ejecutar:  $sql --- ".mysql_error());
          
          if(strpos($sql,'INSERT INTO')){
-            mysqli_connect_error(); 
+             
+            echo mysqli_connect_error(); 
          }
          
         if($this->res){
