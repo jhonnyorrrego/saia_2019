@@ -416,9 +416,9 @@ function ingresar_item_destino_radicacion($idformato,$iddoc){//posterior al adic
 		    $tipo_origen=2;
 		}
 		    $destino=explode(",",$padre[0]["$campo"]);
-		    $origen=explode(",",$padre[0]["$campo_origen"]);
+		    $origen=busca_filtro_tabla("destino","buzon_salida","nombre=APROBADO AND archivo_idarchivo=".$iddoc);
 		    for($i=0; $i < (count($destino)); $i++){
-		        $cadena='INSERT INTO ft_destino_radicacion (nombre_destino, nombre_origen, tipo_origen, tipo_destino) VALUES ('.$destino[$i].')';
+		        $cadena='INSERT INTO ft_destino_radicacion (nombre_destino, nombre_origen, tipo_origen, tipo_destino) VALUES ('.$destino[$i].', '.$origen.')';
 		        print_r($cadena.'<br/>');
 		    }
 		    die();
