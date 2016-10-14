@@ -401,7 +401,7 @@ function ingresar_item_destino_radicacion($idformato,$iddoc){//posterior al adic
 	$padre=busca_filtro_tabla("","ft_radicacion_entrada A, documento B ","A.documento_iddocumento=B.iddocumento AND B.estado<>'ELIMINADO' AND B.iddocumento=".$iddoc,"",$conn);  //nombre tabla padre
 	$item=busca_filtro_tabla("","ft_destino_radicacion","ft_radicacion_entrada=".$padre[0]["idft_radicacion_entrada"],"",$conn);
 	if ($item['numcampos']==0) {
-		if($padre[0]['tipo_destino']){
+		if($padre[0]['tipo_destino']==1){
 		    
 		}
     	for ($i=0; $i < $datos['numcampos']; $i++) { 
