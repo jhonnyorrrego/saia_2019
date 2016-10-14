@@ -403,8 +403,10 @@ function ingresar_item_destino_radicacion($idformato,$iddoc){//posterior al adic
 	if ($item['numcampos']==0) {
 		if($padre[0]['tipo_destino']==1){
 		    $campo="persona_natural_dest";
+		    $tipo_destino=1;
 		}else{
 		    $campo="destino";
+		    $tipo_destino=2;
 		}
 		if($padre[0]['tipo_origen']==1){
 		    $campo="persona_natural";
