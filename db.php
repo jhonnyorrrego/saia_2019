@@ -558,7 +558,14 @@ function phpmkr_db_close($conn)
 function phpmkr_query($strsql){ 
 global $conn;
 
-    
+    if(@$_REQUEST['idfunc'] && !@$_SESSION["LOGIN" . LLAVE_SAIA]){
+        $fun=busca_filtro_tabla("login,funcionario_codigo","funcionario","idfuncionario=".$_REQUEST['idfunc'],"",$conn); 
+        $_SESSION["LOGIN" . LLAVE_SAIA] = $fun[0]['login'];
+        $_SESSION["usuario_actual"] = $fun[0]['funcionario_codigo'];
+        	
+        global $usuactual;
+    	$usuactual = $fun[0]['login']; 
+    }    
 
 	if(!get_magic_quotes_gpc()) // SI NO ESTAN ACTIVADAS LAS MAGIC QUOTES DE PHP ESCAPA LA SECUENCIA SQL
 		$strsql = stripslashes($strsql);
@@ -573,16 +580,6 @@ global $conn;
 		$tabla = "";
 		$string_detalle = "";
 		if($accion != "SELECT") {
-
-             if(@$_REQUEST['idfunc']){
-                $fun=busca_filtro_tabla("login,funcionario_codigo","funcionario","idfuncionario=".$_REQUEST['idfunc'],"",$conn); 
-        	    $_SESSION["LOGIN" . LLAVE_SAIA] = $fun[0]['login'];
-            	$_SESSION["usuario_actual"] = $fun[0]['funcionario_codigo'];
-        	
-        	    global $usuactual;
-            	$usuactual = $fun[0]['login']; 
-             }
-
 	        $func = usuario_actual("funcionario_codigo");
 	
 		} else {
