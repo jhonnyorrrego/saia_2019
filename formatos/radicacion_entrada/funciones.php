@@ -422,8 +422,7 @@ function ingresar_item_destino_radicacion($idformato,$iddoc){//posterior al adic
 
 function mostrar_item_destino_radicacion($idformato,$iddoc){
 	global $conn,$ruta_db_superior;
-	$padre=busca_filtro_tabla("","ft_cliente A, documento B ","A.documento_iddocumento=B.iddocumento AND B.estado<>'ELIMINADO' AND B.iddocumento=".$iddoc,"",$conn);  //nombre tabla padre
-	$componente=array(1=>"SERVIDOR APLICACIONES",2=>"SISTEMA OPERATIVO",3=>"PHP",4=>"FTP",5=>"BASE DE DATOS",6=>"ACCESO A OTROS SERVIDORES",7=>"DIRECTORIO ACTIVO (LDAP)",8=>"SINCRONIZACION CON LDAP",9=>"SAIA");
+	$padre=busca_filtro_tabla("","ft_radicacion_entrada A, documento B ","A.documento_iddocumento=B.iddocumento AND B.estado<>'ELIMINADO' AND B.iddocumento=".$iddoc,"",$conn);  //nombre tabla padre
 	$requerido=array(0=>"NO",1=>"SI");
 	$datos=busca_filtro_tabla("","ft_prerequisitos","ft_cliente=".$padre[0]['idft_cliente'],"",$conn);	
 	$tabla='<form id="item_prerequisitos" action="actualizar_item_prerequisitos.php"><table class="table-bordered adicionar_campo" style="width: 95%; font-size:10px; text-align:center;" border="1">
