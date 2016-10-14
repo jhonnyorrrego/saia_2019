@@ -459,6 +459,40 @@ function mostrar_item_destino_radicacion($idformato,$iddoc){
     	       <input style='float:right;' type='submit' value='Aplicar Despacho Físico'/>
     	       </form>
     	";
+	}else{
+	    $tabla='<form id="item_prerequisitos" action="actualizar_item_destino_radicacion.php"><table class="table-bordered adicionar_campo" style="width: 95%; font-size:10px; text-align:center;" border="1">
+    	<tr class="encabezado_list">
+        	<th>NOMBRE ORIGEN</th>
+        	<th>NOMBRE DESTINO</th>
+       		<th>CARGO</th>
+        	<th>UBICACION</th>
+        	<th>OBSERVACIONES</th>
+      	</tr>
+    	';
+    	for ($i=0; $i < $datos['numcampos']; $i++) {
+    	    $origen=busca_filtro_tabla("a.nombres, a.apellidos","funcionario a","a.funcionario_codigo=".$datos[$i]['nombre_origen'],"",$conn);
+    	    if($datos[$i]['tipo_destino']==1){
+    	        $destino=busca_filtro_tabla("b.nombre, a.cargo","datos_ejecutor a, ejecutor b","b.idejecutor=a.ejecutor_idejecutor AND a.iddatos_ejecutor=".$datos[$i]['nombre_destino'],"",$conn);
+    	        $ciudad=busca_filtro_tabla("nombre","municipio","idmunicipio=".$destino[0]['ciudad'],"",$conn);
+    	        $ubicacion=$ciudad[0]['nombre'].' '.$destino[0]['direccion'];
+    	    }else{
+    	        $destino=busca_filtro_tabla("concat(nombres,' ',apellidos) AS nombre, cargo, dependencia","vfuncionario_dc","iddependencia_cargo=".$datos[$i]['nombre_destino'],"",$conn);
+    	        $ubicacion=$destino[0]['dependencia'];
+    	    }
+    	    
+    	    $tabla.="
+    	        <tr>
+    	            <td>".$origen[0]['nombres']." ".$origen[0]['apellidos']."</td>
+    	            <td>".$destino[0]['nombre']."</td>
+    	            <td>".$destino[0]['cargo']."</td>
+    	            <td>".$ubicacion."</td>
+    	            <td><textarea name='observaciones[]'></textarea></td>
+    	            <input type='hidden' id='id_".$datos[$i]['idft_destino_radicacion']."' value='".$datos[$i]['idft_destino_radicacion']."' name='id[]'/>
+    	        </tr>
+    	    ";
+    	    
+    	}
+    	$tabla.="</table><br/>";
 	}
 	
 	
