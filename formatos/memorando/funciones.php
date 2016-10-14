@@ -12,7 +12,7 @@ $max_salida--;
 }
 include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."pantallas/documento/librerias.php");
-
+include_once ($ruta_db_superior . "pantallas/lib/librerias_archivo.php");
 function lista_destinos($idformato,$iddoc=NULL){
  global $conn;
  $datos=busca_filtro_tabla("nombre,nombre_tabla","formato","idformato=$idformato","",$conn);
@@ -250,7 +250,8 @@ function generar_codigo_qr_interna($idformato,$iddoc){
 	for($i=0; $i<$firmas['numcampos']; $i++){
 	  $datos_qr .= $firmas[$i]['nombre']." \n";
 	}
-	$ruta=RUTA_QR.$datos[0]['estado'].'/'.date('Y-m').'/'.$iddoc.'/qr/';	
+	$formato_ruta = aplicar_plantilla_ruta_documento($iddoc);
+	$ruta=RUTA_QR.$formato_ruta . '/qr/';	
 	
 	$imagen=generar_qr_interna($ruta,$datos_qr);
 	
