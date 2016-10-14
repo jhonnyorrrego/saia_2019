@@ -503,7 +503,10 @@ function mostrar_item_destino_radicacion($idformato,$iddoc){
 
 function mostrar_destino_radicacion($idformato,$iddoc){
 	global $conn,$ruta_db_superior;
-	
+	$datos=busca_filtro_tabla("","ft_radicacion_entrada","documento_iddocumento=".$iddoc,"",$conn);
+	if($datos[0]['tipo_destino']==1){
+	    echo($datos[0]['']);
+	}
 }
 
 ?>
