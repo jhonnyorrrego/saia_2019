@@ -332,7 +332,7 @@ class Imprime_Pdf {
 			}
 		} else {
 		    ///REVISAR AQUI MUERE POR USUARIO ACTUAL
-			$direccion[] = "http://" . RUTA_PDF_LOCAL . "/formatos/" . $datos_formato[0]["nombre"] . "/" . $datos_formato[0]["ruta_mostrar"] . "?tipo=5&iddoc=" . $datos_plantilla[0]["documento_iddocumento"] . "&formato=" . $datos_formato[0]["idformato"] . "&idfunc=" . usuario_actual("id");
+			$direccion[] = "http://" . RUTA_PDF_LOCAL . "/formatos/" . $datos_formato[0]["nombre"] . "/" . $datos_formato[0]["ruta_mostrar"] . "?tipo=5&iddoc=" . $datos_plantilla[0]["documento_iddocumento"] . "&formato=" . $datos_formato[0]["idformato"] . "&usuario_actual=".usuario_actual("id")."&idfunc=" . usuario_actual("id");
 			
 	
 		}
