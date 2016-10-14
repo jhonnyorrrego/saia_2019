@@ -534,7 +534,7 @@ function campos_adicionales_radicacion($idformato,$iddoc){
 	global $conn,$ruta_db_superior;
     
     $datos=busca_filtro_tabla("","ft_radicacion_entrada","documento_iddocumento=".$iddoc,"",$conn);
-    $tabla='<table style="width: 100%; border-collapse: collapse; font-size: 10pt;" border="1">';
+    $tabla='<table style="width: 100%; border-collapse: collapse; font-size: 9pt;" border="1">';
     if($datos[0]['tipo_origen']==1){
         $tabla.="<tr><td style='width:20%;'><strong>NUMERO DE DOCUMENTO:</strong></td><td style='width:80%;'>".$datos[0]['numero_oficio']."</td></tr>";
     }
