@@ -280,7 +280,12 @@ function obtener_informacion_proveedor($idformato,$iddoc){
 	
 	echo(implode("<br />",$texto));
 	}else{
-	    
+	    $origen=busca_filtro_tabla("concat(nombres,' ',apellidos) AS nombre, dependencia, cargo","vfuncionario_dc","iddependencia_cargo IN(".$tipo_origen[0]['area_responsable'].")","",$conn);
+	    $texto=array();
+	$texto[]="<b>Nombre:</b> ".$origen[0]["nombre"];
+	$texto[]="<b>Dependencia:</b> ".$origen[0]["dependencia"];
+	$texto[]="<b>Cargo:</b> ".$origen[0]["cargo"];
+	echo(implode("<br />",$texto));
 	}
 	
 	
