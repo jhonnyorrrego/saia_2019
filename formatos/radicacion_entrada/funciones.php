@@ -504,9 +504,15 @@ function mostrar_item_destino_radicacion($idformato,$iddoc){
 function mostrar_destino_radicacion($idformato,$iddoc){
 	global $conn,$ruta_db_superior;
 	$datos=busca_filtro_tabla("","ft_radicacion_entrada","documento_iddocumento=".$iddoc,"",$conn);
-	if($datos[0]['tipo_destino']==1){
-	    echo($datos[0]['']);
-	}
+	if($datos[$i]['tipo_destino']==1){
+    	        $destino=busca_filtro_tabla("b.nombre, a.cargo , a.ciudad, a.direccion","datos_ejecutor a, ejecutor b","b.idejecutor=a.ejecutor_idejecutor AND a.iddatos_ejecutor=".$datos[$i]['nombre_destino'],"",$conn);
+    	        $ciudad=busca_filtro_tabla("nombre","municipio","idmunicipio=".$destino[0]['ciudad'],"",$conn);
+    	        $ubicacion=$ciudad[0]['nombre'].' '.$destino[0]['direccion'];
+    	        
+    	    }else{
+    	        $destino=busca_filtro_tabla("concat(nombres,' ',apellidos) AS nombre, cargo, dependencia","vfuncionario_dc","iddependencia_cargo=".$datos[$i]['nombre_destino'],"",$conn);
+    	        $ubicacion=$destino[0]['dependencia'];
+    	    }
 }
 
 ?>
