@@ -573,8 +573,15 @@ global $conn;
 		$tabla = "";
 		$string_detalle = "";
 		if($accion != "SELECT") {
-			$func = usuario_actual("funcionario_codigo");
+			//$func = usuario_actual("funcionario_codigo");
 			//$func=1;
+			
+			if($_SESSION["usuario_actual"]){
+			   $func= $_SESSION["usuario_actual"];
+			}else{
+			    $func = usuario_actual("funcionario_codigo");
+			}
+			
 		} else {
 			$rs = $conn->Ejecutar_Sql($strsql);
 		}
@@ -2078,8 +2085,10 @@ return(0);
 function usuario_actual($campo){
 global $usuactual,$sql,$conn;
 
-if(!isset($_SESSION["LOGIN".LLAVE_SAIA]))
-   salir(utf8_decode("Su sesi&oacute;n ha expirado, por favor ingrese de nuevo."));
+if(!isset($_SESSION["LOGIN".LLAVE_SAIA])){
+  salir(utf8_decode("Su sesi&oacute;n ha expirado, por favor ingrese de nuevo."));  
+}
+   
 
 if($usuactual<>""){
 $dato=busca_filtro_tabla("A.*,A.idfuncionario AS id","funcionario A","A.login='".$usuactual."'","",$conn);
