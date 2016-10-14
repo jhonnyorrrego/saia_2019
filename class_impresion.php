@@ -332,7 +332,7 @@ class Imprime_Pdf {
 			}
 		} else {
 		    ///REVISAR AQUI MUERE POR USUARIO ACTUAL
-			$direccion[] = "http://" . RUTA_PDF_LOCAL . "/formatos/" . $datos_formato[0]["nombre"] . "/" . $datos_formato[0]["ruta_mostrar"] . "?tipo=5&iddoc=" . $datos_plantilla[0]["documento_iddocumento"] . "&formato=" . $datos_formato[0]["idformato"] . "&usuario_actual=".usuario_actual("id")."&idfunc=" . usuario_actual("id");
+			$direccion[] = "http://" . RUTA_PDF_LOCAL . "/formatos/" . $datos_formato[0]["nombre"] . "/" . $datos_formato[0]["ruta_mostrar"] . "?tipo=5&iddoc=" . $datos_plantilla[0]["documento_iddocumento"] . "&formato=" . $datos_formato[0]["idformato"] . "&idfunc=" . usuario_actual("id");
 			
 	
 		}
@@ -356,9 +356,9 @@ class Imprime_Pdf {
 			$contenido = preg_replace('#<script(.*?)>(.*?)</script>#is', '', $contenido);
 			$contenido = preg_replace('#onclick="(.*?)"#is', '', $contenido);
 			
-		if(usuario_actual('login') == 'cerok') {
+		/*if(usuario_actual('login') == 'cerok') {
 				 print_r($contenido);die();
-		}
+		}*/
 			
 			$this->pdf->writeHTML(stripslashes($contenido), true, false, false, false, '');
 		}
