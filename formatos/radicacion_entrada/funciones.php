@@ -511,7 +511,7 @@ function mostrar_destino_radicacion($idformato,$iddoc){
     	        $destino=busca_filtro_tabla("concat(nombres,' ',apellidos) AS nombre","vfuncionario_dc","iddependencia_cargo IN(".$datos[0]['destino'].")","",$conn);
     	        
     	    }
-    	    print_r($destino);
+    	    
     	    for($i=0; $i < $destino['numcampos']; $i++) {
     	            echo $destino[$i]['nombre'];
     	        }
