@@ -443,7 +443,7 @@ function mostrar_item_destino_radicacion($idformato,$iddoc){
     	        <tr>
     	            <td>".$origen[0]['nombres']." ".$origen[0]['apellidos']."</td>
     	            <td>".$destino[0]['nombre']."</td>
-    	            <td></td>
+    	            <td>".$destino[0]['cargo']."</td>
     	            <td></td>
     	            <td></td>
     	        </tr>
