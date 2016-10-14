@@ -310,6 +310,7 @@ function tipo_radicado_radicacion($idformato,$iddoc){
                 $('#area_responsable').parent().parent().hide();
                 $('#persona_natural_dest').parent().parent().hide();
                 $('#tr_tipo_mensajeria').hide();
+                $('#tipo_mensajeria0').parent().hide();
                 
                 $('[name="tipo_origen"]').click(function(){
                 
