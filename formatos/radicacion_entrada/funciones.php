@@ -323,6 +323,8 @@ function tipo_radicado_radicacion($idformato,$iddoc){
                         $('input:radio[name="tipo_destino"]').filter('[value="2"]').attr('checked', true);
                         $('#destino').parent().parent().show();
                         $('#copia_a').parent().parent().show();
+                        $('#persona_natural_dest').parent().parent().hide();
+                        $('#persona_natural_dest').removeClass('required');
                         
                         $('#fecha_oficio_entrada').addClass('required');
                         $('#fecha_oficio_entrada').parent().parent().parent().show();
@@ -368,10 +370,15 @@ function tipo_radicado_radicacion($idformato,$iddoc){
                         $('#destino').removeClass('required');
                         $('#destino').parent().parent().hide();
                         $('#copia_a').parent().parent().hide();
+                        $('#persona_natural_dest').parent().parent().show();
+                        $('#persona_natural_dest').addClass('required');
+                        
                     }else{
                         $('#destino').addClass('required');
                         $('#destino').parent().parent().show();
                         $('#copia_a').parent().parent().show();
+                        $('#persona_natural_dest').parent().parent().hide();
+                        $('#persona_natural_dest').removeClass('required');
                     }
                 });
             });
