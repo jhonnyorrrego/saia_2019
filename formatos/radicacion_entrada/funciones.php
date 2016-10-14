@@ -403,7 +403,7 @@ function ingresar_item_destino_radicacion($idformato,$iddoc){//posterior al adic
 	if ($item['numcampos']==0) {
 		if($padre[0]['tipo_destino']==1){
 		    $destino=explode(",",$padre[0]['persona_natural_dest']);
-		    print_r($padre);die();
+		    print_r($destino);die();
 		    $ejecutor=busca_filtro_tabla("b.nombre","datos_ejecutor a, ejecutor b","b.idejecutor=a.ejecutor_idejecutor AND a.iddatos_ejecutor=".$padre[0]['nombre_empresa'],"",$conn);
 		}
     	for ($i=0; $i < $datos['numcampos']; $i++) { 
