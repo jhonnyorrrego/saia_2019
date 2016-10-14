@@ -501,8 +501,9 @@ function mostrar_item_destino_radicacion($idformato,$iddoc){
 	
 }
 
-function mostrar_destino_radicacion(){
-    
+function mostrar_destino_radicacion($idformato,$iddoc){
+	global $conn,$ruta_db_superior;
+	
 }
 
 ?>
