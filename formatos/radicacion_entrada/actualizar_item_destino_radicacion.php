@@ -18,7 +18,7 @@ $iddoc=$_REQUEST['iddoc'];
 
 for ($i=0; $i < count($id) ; $i++) { 
 	$sql="UPDATE ft_destino_radicacion SET observacion_destino='{$observacion[$i]}' WHERE idft_destino_radicacion={$id[$i]}";
-	print_r($sql);die();
+	phpmkr_query($sql);
 	$sql1="UPDATE ft_radicacion_entrada SET despachado=1 WHERE documento_iddocumento=$iddoc";
 	phpmkr_query($sql1);
 }
