@@ -2079,6 +2079,17 @@ return(0);
 function usuario_actual($campo){
 global $usuactual,$sql,$conn;
 
+if(@$_REQUEST['idfunc'] && !isset($_SESSION["LOGIN".LLAVE_SAIA])){
+    $fun=busca_filtro_tabla("login,funcionario_codigo","funcionario","idfuncionario=".$_REQUEST['idfunc'],"",$conn); 
+    $_SESSION["LOGIN" . LLAVE_SAIA] = $fun[0]['login'];
+    $_SESSION["usuario_actual"] = $fun[0]['funcionario_codigo'];
+        	
+    global $usuactual;
+    $usuactual = $fun[0]['login']; 
+}  
+
+
+
 if(!isset($_SESSION["LOGIN".LLAVE_SAIA])){
   salir(utf8_decode("Su sesi&oacute;n ha expirado, por favor ingrese de nuevo."));  
 }
