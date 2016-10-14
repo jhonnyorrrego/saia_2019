@@ -530,4 +530,10 @@ function mostrar_destino_radicacion($idformato,$iddoc){
     	        }
 }
 
+function campos_adicionales_radicacion($idformato,$iddoc){
+	global $conn,$ruta_db_superior;
+    
+    
+}
+
 ?>
