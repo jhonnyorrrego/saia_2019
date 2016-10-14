@@ -291,7 +291,7 @@ la matriz con los valores del resultado se obtiene por medio de la función Resu
         
        // $sql=addslashes($sql);
 
-         if(strpos($sql,'INSERT INTO')!==false){
+         if(strpos($sql,'INSERT INTO documento_verificacion')!==false){
              
             
             print_r ($this->Conn); 
@@ -302,7 +302,7 @@ la matriz con los valores del resultado se obtiene por medio de la función Resu
      if($sql && $sql<>"" && $this->Conn->conn){
          $this->res=mysqli_query($this->Conn->conn,$sql); // or die("ERROR SQL ".mysqli_error($this->Conn->conn)." en ".$_SERVER["PHP_SELF"]." ->".$sql);// or error//("Error al Ejecutar:  $sql --- ".mysql_error());
          
-         if(strpos($sql,'INSERT INTO')!==false){
+         if(strpos($sql,'INSERT INTO documento_verificacion')!==false){
              print_r ($sql);
              print_r ('<------------------->');
             print_r ($this->Conn); 
