@@ -455,7 +455,7 @@ function mostrar_item_destino_radicacion($idformato,$iddoc){
     	}
     	$tabla.="</table>
     	    </form><br/>
-    	    <input style='text-align:right;' type='submit' value='Aplicar Despacho Físico'/>";
+    	    <input style='float:right;' type='submit' value='Aplicar Despacho Físico'/>";
 	}
 	
 	
