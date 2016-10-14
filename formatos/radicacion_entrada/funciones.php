@@ -417,7 +417,7 @@ function ingresar_item_destino_radicacion($idformato,$iddoc){//posterior al adic
 		}
 		    $destino=explode(",",$padre[0]["$campo"]);
 		    for($i=0; $i < (count($destino)); $i++){
-		        $cadena='INSERT INTO ft_destino_radicacion(nombre_destino, nombre_origen, tipo_origen, tipo_destino) VALUES ('.$destino[$i].')';
+		        $cadena='INSERT INTO ft_destino_radicacion (nombre_destino, nombre_origen, tipo_origen, tipo_destino) VALUES ('.$destino[$i].')';
 		        print_r($cadena.'<br/>');
 		    }
 		    die();
