@@ -395,4 +395,20 @@ function tipo_radicado_radicacion($idformato,$iddoc){
         </script>
     <?php
 }
+
+function ingresar_item_destino_radicacion($idformato,$iddoc){
+	global $conn,$ruta_db_superior;
+	$datos=busca_filtro_tabla("","radicacion_entrada a","documento_iddocumento=".$iddoc,"",$conn);
+	$padre=busca_filtro_tabla("","ft_cliente A, documento B ","A.documento_iddocumento=B.iddocumento AND B.estado<>'ELIMINADO' AND B.iddocumento=".$iddoc,"",$conn);  //nombre tabla padre
+	$prerequisitos=busca_filtro_tabla("","ft_destino_radicacion","ft_cliente=".$padre[0]["idft_cliente"],"",$conn);
+	if ($prerequisitos['numcampos']==0) {
+		
+	
+	for ($i=0; $i < $datos['numcampos']; $i++) { 
+		$cadena='INSERT INTO ft_prerequisitos (idft_prerequisitos,ft_cliente, componente, verificacion, requerido, cumple, resultado_produccion, resultado_pruebas, responsable, fecha, observaciones) VALUES ("","'.$padre[0]["idft_cliente"].'","'.$datos[$i]["categoria"].'","'.$datos[$i]["nombre"].'","'.$datos[$i]["obligatoriedad"].'","","","","'.$responsable.'","'.$fecha.'","");';
+		phpmkr_query($cadena);
+	}
+	
+	}
+}
 ?>
