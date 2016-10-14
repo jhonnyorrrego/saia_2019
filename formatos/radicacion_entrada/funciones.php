@@ -307,6 +307,8 @@ function tipo_radicado_radicacion($idformato,$iddoc){
                 
                 tree_area_responsable.setOnLoadingEnd(chekeararbol);
                 $('#area_responsable').parent().parent().hide();
+                
+                
                 $('[name="tipo_origen"]').click(function(){
                 
                     var tipo=$(this).val();
