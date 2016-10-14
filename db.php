@@ -7,14 +7,7 @@ if(!isset($_SESSION["LOGIN".LLAVE_SAIA])){
   @ob_start();
 }   
 
-if(@$_REQUEST['idfunc'] && !@$_SESSION["LOGIN" . LLAVE_SAIA]){
-    $fun=busca_filtro_tabla("login,funcionario_codigo","funcionario","idfuncionario=".$_REQUEST['idfunc'],"",$conn); 
-    $_SESSION["LOGIN" . LLAVE_SAIA] = $fun[0]['login'];
-    $_SESSION["usuario_actual"] = $fun[0]['funcionario_codigo'];
-        	
-    global $usuactual;
-    $usuactual = $fun[0]['login']; 
-}   
+ 
 
 
 //print_r(session_id());
