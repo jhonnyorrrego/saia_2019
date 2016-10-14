@@ -506,14 +506,15 @@ function mostrar_destino_radicacion($idformato,$iddoc){
 	$datos=busca_filtro_tabla("","ft_radicacion_entrada","documento_iddocumento=".$iddoc,"",$conn);
 	if($datos[$i]['tipo_destino']==1){
     	        $destino=busca_filtro_tabla("b.nombre","datos_ejecutor a, ejecutor b","b.idejecutor=a.ejecutor_idejecutor AND a.iddatos_ejecutor IN(".$datos[0]['nombre_destino'].")","",$conn);
-    	        for($i=0; $i < $destino['numcampos']; $i++) {
-    	            echo $destino[$i]['nombre'];
-    	        }
     	        
     	    }else{
     	        $destino=busca_filtro_tabla("concat(nombres,' ',apellidos) AS nombre","vfuncionario_dc","iddependencia_cargo IN(".$datos[0]['nombre_destino'].")","",$conn);
-    	        $ubicacion=$destino[0]['dependencia'];
+    	        
     	    }
+    	    
+    	    for($i=0; $i < $destino['numcampos']; $i++) {
+    	            echo $destino[$i]['nombre'];
+    	        }
 }
 
 ?>
