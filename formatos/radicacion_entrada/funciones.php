@@ -376,13 +376,14 @@ function tipo_radicado_radicacion($idformato,$iddoc){
                         $('#copia_a').parent().parent().hide();
                         $('#persona_natural_dest').parent().parent().show();
                         $('#persona_natural_dest').addClass('required');
-                        
+                        $('#tipo_mensajeria0').show();
                     }else{
                         $('#destino').addClass('required');
                         $('#destino').parent().parent().show();
                         $('#copia_a').parent().parent().show();
                         $('#persona_natural_dest').parent().parent().hide();
                         $('#persona_natural_dest').removeClass('required');
+                        $('#tipo_mensajeria0').hide();
                     }
                 });
             });
