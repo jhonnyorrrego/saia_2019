@@ -434,7 +434,7 @@ function mostrar_item_destino_radicacion($idformato,$iddoc){
       	</tr>
     	';
     	for ($i=0; $i < $datos['numcampos']; $i++) {
-    	    
+    	    $ejecutor=busca_filtro_tabla("b.nombre","datos_ejecutor a, ejecutor b","b.idejecutor=a.ejecutor_idejecutor AND a.iddatos_ejecutor=".$datos[0]['nombre_destino'],"",$conn);
     	}
 	}
 	
