@@ -242,7 +242,7 @@ function imprime(atras){
   <tr> 
 	<td><?php echo "<br/><center>".($qr)."</center>"; ?></td>
 	<td border="1px" colspan="2" align="left" height="2px" cellspacing="0" cellpadding="0">
-		<strong><?php echo"<br/>".($nombre_empresa);?>
+		<strong><?php echo($nombre_empresa);?>
 		</strong><br/><br/>
 		<b>Radicaci&oacute;n No: <?php echo($codigo_empresa."-".$datos[0]["numero"]."-".$fecha["year"]);?></b>
   <br/>
