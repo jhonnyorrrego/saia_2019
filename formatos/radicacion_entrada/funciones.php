@@ -533,7 +533,7 @@ function mostrar_destino_radicacion($idformato,$iddoc){
     	        
     	    }
     	    for($i=0; $i < $destino['numcampos']; $i++) {
-    	            echo $destino[$i]['nombre'].'</br>';
+    	            return $destino[$i]['nombre'].'</br>';
     	        }
 }
 
