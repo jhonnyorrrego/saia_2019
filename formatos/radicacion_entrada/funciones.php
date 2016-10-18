@@ -652,7 +652,7 @@ function mostrar_informacion_general_radicacion($idformato,$iddoc){
                     <td><strong>Número de documento:</strong></td>
                     <td>".$datos[0]['numero_oficio']."</td>
                     <td><strong>Fecha oficio entrante:</strong></td>
-                    <td style='width:80%;'>".$datos[0]['numero_oficio']."</td>
+                    <td>".$datos[0]['fecha_oficio_entrada']."</td>
                  </tr>";
     }
     $tabla.='</table>';
