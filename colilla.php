@@ -177,8 +177,8 @@ if($datos[0]["numero"]){
 <!--
 td {
 	font-family: VERDANA;
-	font-size:9px;
-	height:15px;
+	font-size:7px;
+	height:0px;
 	border:0px solid;
 	vertical-align:top;
 	padding-left:5px;
