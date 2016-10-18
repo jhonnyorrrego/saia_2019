@@ -659,6 +659,11 @@ function mostrar_informacion_general_radicacion($idformato,$iddoc){
     echo $tabla;
     
 }
+
+function mostrar_informacion_destino_radicacion($idformato,$iddoc){
+	global $conn,$ruta_db_superior;
     
+    
+}
     
 ?>
