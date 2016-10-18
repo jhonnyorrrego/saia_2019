@@ -605,9 +605,9 @@ function mostrar_informacion_general_radicacion($idformato,$iddoc){
     $tabla='
         <table class="table table-bordered" style="width: 100%; font-size:10px; text-align:left;" border="1">
   <tr>
-    <th>Fecha de radicación:</th>
-    <th></th>
-    <th colspan="2" rowspan="3"></th>
+    <td>Fecha de radicación:</td>
+    <td></td>
+    <td colspan="2" rowspan="3"></td>
   </tr>
   <tr>
     <td>Número de radicado:</td>
