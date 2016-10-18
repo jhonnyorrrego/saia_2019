@@ -603,7 +603,35 @@ $("#"+input).val(num);
 function mostrar_informacion_general_radicacion($idformato,$iddoc){
 	global $conn,$ruta_db_superior;
     $tabla='
-        
+        <table>
+  <tr>
+    <th>Fecha de radicación:</th>
+    <th></th>
+    <th colspan="2" rowspan="3"></th>
+  </tr>
+  <tr>
+    <td>Número de radicado:</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>Tipo de documento:</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>Descripción o asunto:</td>
+    <td colspan="3"></td>
+  </tr>
+  <tr>
+    <td>Descripción de anexos físicos:</td>
+    <td colspan="3"></td>
+  </tr>
+  <tr>
+    <td>Anexos digitales:</td>
+    <td></td>
+    <td>No. Folios:</td>
+    <td></td>
+  </tr>
+</table>
     ';
     
 }
