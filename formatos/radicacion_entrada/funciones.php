@@ -319,6 +319,7 @@ function tipo_radicado_radicacion($idformato,$iddoc){//en el adicionar
                 $('#persona_natural').addClass('required');
                 $('#destino').addClass('required');
                 $('#tr_tipo_destino').hide(); 
+                $('#numero_folios').parent().parent().show();
                 
                 tree_area_responsable.setOnLoadingEnd(chekeararbol);
                 $('#area_responsable').parent().parent().hide();
