@@ -99,7 +99,7 @@ function validar_digitalizacion_formato_radicacion($idformato,$iddoc){
   		$enlace="pantallas/buscador_principal.php?idbusqueda=9";
   	}
 	else{
-		$enlace="formatos/radicacion_entrada/detalle_mostrar_radicacion_entrada.php?iddoc=".$iddoc."&idformato=".$idformato;
+		$enlace=$ruta_db_superior."formatos/radicacion_entrada/detalle_mostrar_radicacion_entrada.php?iddoc=".$iddoc."&idformato=".$idformato;
 	}
   		abrir_url($ruta_db_superior."colilla.php?key=".$iddoc."&enlace=".$enlace,'centro');
   		//abrir_url($ruta_db_superior."colilla.php?key=".$iddoc,"_self");
