@@ -639,6 +639,7 @@ function mostrar_informacion_general_radicacion($idformato,$iddoc){
   </tr>
 </table>
     ';
+    echo $tabla;
     
 }
     
