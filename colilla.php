@@ -263,7 +263,7 @@ function imprime(atras){
 	</td>
 </tr>
 <tr>
-	<td colspan="2"> <center><b>El radicado no implica su aceptaci&oacute;n</b></center></td>
+	<td colspan="2"> <center><b>El radicado no implica su aceptaci&oacute;n.....</b></center></td>
 </tr>
 </table>
 <table height="94px" width="189px" align="right" border="0px" cellspacing="0" cellpadding="0" style="border-collapse:collapse;">
