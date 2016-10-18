@@ -579,7 +579,7 @@ Moneda_r($("#numero_folios").attr('id'));
 });
 /**/
 
-$('#formulario_formatos').
+$('#form1').
 validate({
 submitHandler: function(form){
 var valor_ =new String($("#numero_folios").val());
