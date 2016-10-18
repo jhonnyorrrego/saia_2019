@@ -157,7 +157,7 @@ if($datos[0]["numero"]){
 	if($codigo_qr['numcampos']){
 	    
 	    if(file_exists(PROTOCOLO_CONEXION.RUTA_PDF_LOCAL."/".$codigo_qr[0]['ruta_qr'])){
-	        $qr="<img src='".PROTOCOLO_CONEXION.RUTA_PDF_LOCAL."/".$codigo_qr[0]['ruta_qr']."'>";	
+	        $qr="<img src='".PROTOCOLO_CONEXION.RUTA_PDF_LOCAL."/".$codigo_qr[0]['ruta_qr'].'" width="50px" height="50px">';	
 	    }else{
     		include_once($ruta_db_superior."pantallas/qr/librerias.php");
     		generar_codigo_qr('',$doc);
@@ -169,7 +169,7 @@ if($datos[0]["numero"]){
 		include_once($ruta_db_superior."pantallas/qr/librerias.php");
 		generar_codigo_qr('',$doc);
 		$codigo_qr=busca_filtro_tabla("","documento_verificacion","documento_iddocumento=".$doc,"", $conn);	
-		$qr="<img src='".PROTOCOLO_CONEXION.RUTA_PDF_LOCAL."/".$codigo_qr[0]['ruta_qr']."'>";	
+		$qr="<img src='".PROTOCOLO_CONEXION.RUTA_PDF_LOCAL."/".$codigo_qr[0]['ruta_qr'].'" width="50px" height="50px">';	
 	}
 }
 ?>
