@@ -697,7 +697,7 @@ function mostrar_informacion_destino_radicacion($idformato,$iddoc){
         }
         $tabla.='
             <tr>
-                <td style="width: 20%;"><b>Copia a:</b></td>
+                <td><b>Copia a:</b></td>
                 <td>'.$datos_copia.'</td>
             </tr>
         ';
