@@ -18,7 +18,7 @@ body, INPUT, SELECT{
   }
   table{
     border:1px solid;
-    border-color: transparent;
+    
   }
   input{
   width:200px;
