@@ -569,7 +569,7 @@ function validar_confirmacion(){
 	else
 		return;
 }
-function validar_confirmacion_salida($consecutivo){
+/*function validar_confirmacion_salida($consecutivo){
 	global $conn;
 	if($consecutivo=='radicacion_salida'){
 		?>
@@ -584,5 +584,5 @@ function validar_confirmacion_salida($consecutivo){
 		<?php
 		die();
 	}
-}
+}*/
 ?>
