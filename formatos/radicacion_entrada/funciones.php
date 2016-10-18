@@ -476,7 +476,7 @@ function mostrar_item_destino_radicacion($idformato,$iddoc){
     	";
 	}else{
 	    $tabla='<table class="table-bordered" style="width: 100%; font-size:10px; text-align:left;" border="1">
-    	<tr class="encabezado_list">
+    	<tr>
         	<th>NOMBRE ORIGEN</th>
         	<th>NOMBRE DESTINO</th>
        		<th>CARGO</th>
