@@ -672,29 +672,7 @@ function mostrar_informacion_destino_radicacion($idformato,$iddoc){
     <td style="width: 20%;"><b>Tipo de Destino:</b></td>
     <td>'.$tipo_destino[$datos[0]['tipo_destino']].'</td>
   </tr>
-  <tr>
-    <td><b>Número de radicado:</b></td>
-    <td>'.$numero_radicado.'</td>
-  </tr>
-  <tr>
-    <td><b>Tipo de documento:</b></td>
-    <td>'.$tipo_documento[0]["nombre"].'</td>
-  </tr>
-  <tr>
-    <td><b>Descripción o asunto:</b></td>
-    <td colspan="3">'.$datos[0]["descripcion"].'</td>
-  </tr>
-  <tr>
-    <td><b>Descripción de anexos físicos:</b></td>
-    <td colspan="3">'.$datos[0]["descripcion_anexos"].'</td>
-  </tr>
-  <tr>
-    <td><b>Anexos digitales:</b></td>
-    <td>'.$nombre_anexos.'</td>
-    <td style="width: 20%;"><b>No. Folios:</b></td>
-    <td>'.$datos[0]["numero_folios"].'</td>
-  </tr>
-
+  
     ';
     if($datos[0]['tipo_origen']==1){
         $tabla.="<tr>
