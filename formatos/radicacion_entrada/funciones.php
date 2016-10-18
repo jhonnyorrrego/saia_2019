@@ -678,7 +678,7 @@ function mostrar_informacion_destino_radicacion($idformato,$iddoc){
         $copia=busca_filtro_tabla("concat(nombres,' ',apellidos) AS nombre","vfuncionario_dc","iddependencia_cargo IN(".$datos[0]['copia_a'].")","",$conn);
         
         for($i=0; $i < $copia['numcampos']; $i++) {
-            $datos_copia.="<tr><td style='width:20%;'><strong>COPIA A:</strong></td><td>".$copia[0]['nombre']."</td></tr>";
+            $datos_copia.=$copia[$i]['nombre']."</br>";
         }        
     }
     $tabla.='</table>';
