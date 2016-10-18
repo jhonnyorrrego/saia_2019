@@ -55,7 +55,7 @@ function enviar_adicionar($idformato,$iddoc){
 	$datos=busca_filtro_tabla("","ft_radicacion_entrada A","documento_iddocumento=".$iddoc,"",$conn);
 	if($datos[0]["estado_radicado"]==1){
 		if(@$_REQUEST["iddoc"]){
-			$enlace="paginaadd.php?key=".$_REQUEST["iddoc"]."&enlace2=formatos/radicacion_entrada/mostrar_radicacion_entrada.php?iddoc=".$_REQUEST["iddoc"];
+			$enlace="paginaadd.php?key=".$_REQUEST["iddoc"]."&enlace2=formatos/radicacion_entrada/detalles_mostrar_radicacion_entrada.php?iddoc=".$_REQUEST["iddoc"];
 
 		}
 		else{
