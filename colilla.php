@@ -221,7 +221,8 @@ function comando_documento(sComando){
 */
 function imprime(atras){
   window.focus();
-  var url = "<?php echo $enlace; ?>";   
+  var url = "<?php echo $enlace; ?>"; 
+  alert(url);
   window.print();
   //comando_documento('ClearAuthenticationCache');
   if(url!="")
@@ -257,7 +258,7 @@ function imprime(atras){
 		
 		if($validar_impresion[0]['valor'] == 1){
 			$imprimir_colilla = 'onLoad="imprime('.$atras.')"';	
-			abrir_url($enlace,'_self');		
+			//abrir_url($enlace,'_self');		
 		}else{
 		    
 			abrir_url($enlace,'_self');			
