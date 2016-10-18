@@ -619,7 +619,7 @@ function mostrar_informacion_general_radicacion($idformato,$iddoc){
   </tr>
   <tr>
     <td>Número de radicado:</td>
-    <td></td>
+    <td>'.$numero_radicado.'</td>
   </tr>
   <tr>
     <td>Tipo de documento:</td>
