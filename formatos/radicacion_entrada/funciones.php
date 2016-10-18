@@ -545,13 +545,7 @@ function campos_adicionales_radicacion($idformato,$iddoc){
     $datos=busca_filtro_tabla("","ft_radicacion_entrada","documento_iddocumento=".$iddoc,"",$conn);
     $tabla='<table class="table-bordered" style="width: 100%; border-collapse: collapse; font-size: 7pt;" border="1">';
     
-    if($datos[0]['tipo_destino']==2){
-        $copia=busca_filtro_tabla("concat(nombres,' ',apellidos) AS nombre","vfuncionario_dc","iddependencia_cargo IN(".$datos[0]['copia_a'].")","",$conn);
-        
-        for($i=0; $i < $copia['numcampos']; $i++) {
-            $tabla.="<tr><td style='width:20%;'><strong>COPIA A:</strong></td><td>".$copia[0]['nombre']."</td></tr>";
-        }        
-    }
+    
     $tabla.='</table>';
     echo $tabla;
 }
@@ -679,7 +673,14 @@ function mostrar_informacion_destino_radicacion($idformato,$iddoc){
     <td>'.$destino.'</td>
   </tr>
     ';
-    
+    if($datos[0]['tipo_destino']==2){
+        $datos_copia="";
+        $copia=busca_filtro_tabla("concat(nombres,' ',apellidos) AS nombre","vfuncionario_dc","iddependencia_cargo IN(".$datos[0]['copia_a'].")","",$conn);
+        
+        for($i=0; $i < $copia['numcampos']; $i++) {
+            $datos_copia.="<tr><td style='width:20%;'><strong>COPIA A:</strong></td><td>".$copia[0]['nombre']."</td></tr>";
+        }        
+    }
     $tabla.='</table>';
     echo $tabla;
     
