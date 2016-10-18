@@ -626,7 +626,7 @@ function mostrar_informacion_general_radicacion($idformato,$iddoc){
   </tr>
   <tr>
     <td>Tipo de documento:</td>
-    <td>'.$datos[0]["serie_idserie"].'</td>
+    <td>'.$tipo_documento[0]["nombre"].'</td>
   </tr>
   <tr>
     <td>Descripción o asunto:</td>
