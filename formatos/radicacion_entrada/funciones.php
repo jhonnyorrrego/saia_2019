@@ -638,13 +638,13 @@ function mostrar_informacion_general_radicacion($idformato,$iddoc){
     <td colspan="3">'.$datos[0]["descripcion"].'</td>
   </tr>
   <tr>
-    <td>Descripción de anexos físicos:</td>
+    <td><b>Descripción de anexos físicos:</b></td>
     <td colspan="3">'.$datos[0]["descripcion_anexos"].'</td>
   </tr>
   <tr>
-    <td>Anexos digitales:</td>
+    <td><b>Anexos digitales:</b></td>
     <td>'.$nombre_anexos.'</td>
-    <td style="width: 20%;">No. Folios:</td>
+    <td style="width: 20%;"><b>No. Folios:</b></td>
     <td>'.$datos[0]["numero_folios"].'</td>
   </tr>
 </table>
