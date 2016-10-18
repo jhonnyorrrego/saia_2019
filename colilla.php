@@ -88,6 +88,7 @@ if($doc<>FALSE){
       $usu="RADICACION";
   if($datos[0]["tipo_radicado"]==1){
     $numero_folios=busca_filtro_tabla("","ft_radicacion_entrada","documento_iddocumento=".$iddoc,"",$conn);
+    print_r($numero_folios);
     if($ejecutor["numcampos"]) 
       $origen=ucwords(strtolower($responsable[0]["nombres"]." ".$responsable[0]["apellidos"]));
     else 
