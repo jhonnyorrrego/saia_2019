@@ -525,6 +525,7 @@ function mostrar_item_destino_radicacion($idformato,$iddoc){
 function mostrar_destino_radicacion($idformato,$iddoc){
 	global $conn,$ruta_db_superior;
 	$datos=busca_filtro_tabla("","ft_radicacion_entrada","documento_iddocumento=".$iddoc,"",$conn);
+	$nombres="";
 	if($datos[0]['tipo_destino']==1){
     	        $destino=busca_filtro_tabla("b.nombre","datos_ejecutor a, ejecutor b","b.idejecutor=a.ejecutor_idejecutor AND a.iddatos_ejecutor IN(".$datos[0]['persona_natural_dest'].")","",$conn);
     	        
@@ -533,7 +534,7 @@ function mostrar_destino_radicacion($idformato,$iddoc){
     	        
     	    }
     	    for($i=0; $i < $destino['numcampos']; $i++) {
-    	            return $destino[$i]['nombre'].'</br>';
+    	            $nombres.=$destino[$i]['nombre'].'</br>';
     	        }
 }
 
