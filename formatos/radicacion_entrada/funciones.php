@@ -674,14 +674,7 @@ function mostrar_informacion_destino_radicacion($idformato,$iddoc){
   </tr>
   
     ';
-    if($datos[0]['tipo_origen']==1){
-        $tabla.="<tr>
-                    <td><strong>Número de documento:</strong></td>
-                    <td>".$datos[0]['numero_oficio']."</td>
-                    <td><strong>Fecha oficio entrante:</strong></td>
-                    <td>".$datos[0]['fecha_oficio_entrada']."</td>
-                 </tr>";
-    }
+    
     $tabla.='</table>';
     echo $tabla;
     
