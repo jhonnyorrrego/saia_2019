@@ -258,6 +258,7 @@ function imprime(atras){
 		if($validar_impresion[0]['valor'] == 1){
 			$imprimir_colilla = 'onLoad="imprime('.$atras.')"';											
 		}else{
+		    print_r($enlace);die();
 			abrir_url($enlace,'_self');			
 		}	 	
   ?>
