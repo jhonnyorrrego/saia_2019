@@ -612,6 +612,11 @@ function mostrar_informacion_general_radicacion($idformato,$iddoc){
 	$numero_radicado=formato_numero($idformato,$iddoc,$tipo=1);
 	$datos=busca_filtro_tabla("","ft_radicacion_entrada","documento_iddocumento=".$iddoc,"",$conn);
 	$tipo_documento=busca_filtro_tabla("nombre","serie","idserie=".$datos[0]["serie_idserie"],"",$conn);
+	$anexos=busca_filtro_tabla("etiqueta","anexos","documento_iddocumento=".$iddoc,"",$conn);
+	$nombre_anexos='';
+	for ($i=0; $i < $anexos['numcampos']; $i++) {
+	    $nombre_anexos.=$anexos[$i]['etiqueta'].'</br>';
+	}
 	
     $tabla='
         <table class="table table-bordered" style="width: 100%; font-size:10px; text-align:left;" border="1">
