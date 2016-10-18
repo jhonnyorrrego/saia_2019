@@ -10,7 +10,11 @@ $ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
 $ruta.="../";
 $max_salida--;
 }
-ini_set("display_errors",true);
+
+include_once($ruta_db_superior."db.php");
+include_once($ruta_db_superior."formatos/librerias_funciones_generales.php");
+
+//ini_set("display_errors",true);
 //ADICIONAR - EDITAR
 //******************
 function cargar_fecha_limite_respuesta($idformato,$iddoc){
