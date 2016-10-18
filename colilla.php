@@ -564,7 +564,7 @@ function validar_confirmacion(){
 		}
 		</script>
 		<?php
-		die();
+		//die();
 	}
 	else
 		return;
