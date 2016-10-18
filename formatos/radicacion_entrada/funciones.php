@@ -670,7 +670,7 @@ function mostrar_informacion_destino_radicacion($idformato,$iddoc){
         <table class="table table-bordered" style="width: 100%; font-size:10px; text-align:left;" border="1">
   <tr>
     <td style="width: 20%;"><b>Tipo de Destino:</b></td>
-    <td>'.$tipo.'</td>
+    <td>'.$tipo_destino[$datos[0]['tipo_destino']].'</td>
     <td colspan="2" rowspan="3"></td>
   </tr>
   <tr>
