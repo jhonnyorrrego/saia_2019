@@ -654,7 +654,7 @@ function mostrar_informacion_general_radicacion($idformato,$iddoc){
     <td><b>Anexos digitales:</b></td>
     <td>'.$nombre_anexos.'</td>
     <td><b>No. Folios:</b></td>
-    <td>'.$datos[0]["numero_folios"].'</td>
+    <td  style="width: 15%;">'.$datos[0]["numero_folios"].'</td>
   </tr>
 
     ';
