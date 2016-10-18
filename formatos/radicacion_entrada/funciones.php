@@ -626,15 +626,15 @@ function mostrar_informacion_general_radicacion($idformato,$iddoc){
     <td colspan="2" rowspan="3"></td>
   </tr>
   <tr>
-    <td>Número de radicado:</td>
+    <td><b>Número de radicado:</b></td>
     <td>'.$numero_radicado.'</td>
   </tr>
   <tr>
-    <td>Tipo de documento:</td>
+    <td><b>Tipo de documento:</b></td>
     <td>'.$tipo_documento[0]["nombre"].'</td>
   </tr>
   <tr>
-    <td>Descripción o asunto:</td>
+    <td><b>Descripción o asunto:</b></td>
     <td colspan="3">'.$datos[0]["descripcion"].'</td>
   </tr>
   <tr>
