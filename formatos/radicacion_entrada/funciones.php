@@ -679,8 +679,15 @@ function mostrar_informacion_destino_radicacion($idformato,$iddoc){
         
         for($i=0; $i < $copia['numcampos']; $i++) {
             $datos_copia.=$copia[$i]['nombre']."</br>";
-        }        
+        }
+        $tabla.='
+            <tr>
+                <td style="width: 20%;"><b>Copia a:</b></td>
+                <td>'.$datos_copia.'</td>
+            </tr>
+        ';
     }
+    
     $tabla.='</table>';
     echo $tabla;
     
