@@ -13,6 +13,7 @@ $max_salida--;
 
 include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."formatos/librerias_funciones_generales.php");
+include_once($ruta_db_superior."formatos/librerias/encabezado_pie_pagina.php");
 
 //ini_set("display_errors",true);
 //ADICIONAR - EDITAR
