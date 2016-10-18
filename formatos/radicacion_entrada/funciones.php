@@ -542,9 +542,7 @@ function campos_adicionales_radicacion($idformato,$iddoc){
     
     $datos=busca_filtro_tabla("","ft_radicacion_entrada","documento_iddocumento=".$iddoc,"",$conn);
     $tabla='<table class="table-bordered" style="width: 100%; border-collapse: collapse; font-size: 7pt;" border="1">';
-    if($datos[0]['tipo_origen']==1 && $datos[0]['numero_oficio']!=''){
-        $tabla.="<tr><td style='width:20%; font-size: 7pt;'><strong>NUMERO DE DOCUMENTO:</strong></td><td style='width:80%;'>".$datos[0]['numero_oficio']."</td></tr>";
-    }
+    
     if($datos[0]['tipo_destino']==2){
         $copia=busca_filtro_tabla("concat(nombres,' ',apellidos) AS nombre","vfuncionario_dc","iddependencia_cargo IN(".$datos[0]['copia_a'].")","",$conn);
         
@@ -649,7 +647,9 @@ function mostrar_informacion_general_radicacion($idformato,$iddoc){
   </tr>
 
     ';
-    
+    if($datos[0]['tipo_origen']==1){
+        $tabla.="<tr><td style='width:20%; font-size: 7pt;'><strong>Número de documento:</strong></td><td style='width:80%;'>".$datos[0]['numero_oficio']."</td></tr>";
+    }
     $tabla.='</table>';
     echo $tabla;
     
