@@ -553,7 +553,7 @@ function campos_numericos_radicacion_correspondencia($idformato,$iddoc){
 	global $conn,$ruta_db_superior;
     	?>
 <script>
-$('#valor_causacion').keyup(function(){
+$('#numero_folios').keyup(function(){
     var valor=$(this).val();
     valor=valor.replace(/[^0-9]/g, '');
     $(this).val(valor);
@@ -561,25 +561,25 @@ $('#valor_causacion').keyup(function(){
 });
 
 function cargar_puntos(){
-Moneda_r($("#valor_causacion").attr('id'));
+Moneda_r($("#numero_folios").attr('id'));
 
 }
 
 cargar_puntos();
-$("#valor_causacion").keyup(function(){
-Moneda_r($("#valor_causacion").attr('id'));
+$("#numero_folios").keyup(function(){
+Moneda_r($("#numero_folios").attr('id'));
 });
-$("#valor_causacion").blur(function(){
-Moneda_r($("#valor_causacion").attr('id'));
+$("#numero_folios").blur(function(){
+Moneda_r($("#numero_folios").attr('id'));
 });
 /**/
 
 $('#formulario_formatos').
 validate({
 submitHandler: function(form){
-var valor_ =new String($("#valor_factura").val());
+var valor_ =new String($("#numero_folios").val());
 var nuevo_valor = valor_.replace(/\./g,"");
-$("#valor_causacion").val(nuevo_valor);
+$("#numero_folios").val(nuevo_valor);
 
 
 form.submit(); 
