@@ -463,7 +463,7 @@ function mostrar_item_destino_radicacion($idformato,$iddoc){
     	            <td>".$destino[0]['nombre']."</td>
     	            <td style='text-align:center;'>".$destino[0]['cargo']."</td>
     	            <td style='text-align:center;'>".$ubicacion."</td>
-    	            <td><textarea name='observaciones[]'>".$padre[0]['observaciones']."</textarea></td>
+    	            <td><textarea name='observaciones[]'>".$padre[0]['descripcion_anexos']."</textarea></td>
     	            <input type='hidden' id='id_".$datos[$i]['idft_destino_radicacion']."' value='".$datos[$i]['idft_destino_radicacion']."' name='id[]'/>
     	        </tr>
     	    ";
