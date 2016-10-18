@@ -236,7 +236,7 @@ function imprime(atras){
 <script src="js/jquery-1.8.2.js"></script>    
 <script src="js/jquery-ui-1.8rc3.custom.min.js"></script> 
 </head>
-<br/><br/><br/><br/><br/><br/>
+<br/><br/>
 <table height="94px" width="189px" align="right" border="0px" cellspacing="0" cellpadding="0" style="border-collapse:collapse;">
   <tr> 
 	<td><?php echo "<br/><center>".($qr)."</center>"; ?></td>
