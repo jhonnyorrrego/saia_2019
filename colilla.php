@@ -256,7 +256,7 @@ function imprime(atras){
   	$validar_impresion = busca_filtro_tabla("valor","configuracion","lower(nombre) LIKE'imprimir_colilla_automatico'","",$conn);
 		
 		if($validar_impresion[0]['valor'] == 1){
-		    print_r($atras);die();
+		    $atras=1;
 			$imprimir_colilla = 'onLoad="imprime('.$atras.')"';											
 		}else{
 		    
