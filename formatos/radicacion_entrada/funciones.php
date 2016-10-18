@@ -437,12 +437,12 @@ function mostrar_item_destino_radicacion($idformato,$iddoc){
 
 	if($padre[0]['despachado']==0){
     	$tabla='<form id="item_prerequisitos" action="actualizar_item_destino_radicacion.php"><table class="table table-bordered adicionar_campo" style="width: 100%; font-size:10px; text-align:left;" border="1">
-    	<tr style="text-align:right;">
-        	<th>NOMBRE ORIGEN</th>
-        	<th>NOMBRE DESTINO</th>
-       		<th>CARGO</th>
-        	<th>UBICACIÓN</th>
-        	<th>OBSERVACIONES</th>
+    	<tr>
+        	<th style="text-align:center;">Nombre origen</th>
+        	<th style="text-align:center;">Nombre destino</th>
+       		<th style="text-align:center;">Cargo</th>
+        	<th style="text-align:center;">Ubicación</th>
+        	<th style="text-align:center;">Observaciones</th>
       	</tr>
     	';
     	for ($i=0; $i < $datos['numcampos']; $i++) {
@@ -477,11 +477,11 @@ function mostrar_item_destino_radicacion($idformato,$iddoc){
 	}else{
 	    $tabla='<table class="table table-bordered" style="width: 100%; font-size:10px; text-align:left;" border="1">
     	<tr>
-        	<th style="text-align:center;">NOMBRE ORIGEN</th>
-        	<th style="text-align:center;">NOMBRE DESTINO</th>
-       		<th style="text-align:center;">CARGO</th>
-        	<th style="text-align:center;">UBICACIÓN</th>
-        	<th style="text-align:center;">OBSERVACIONES</th>
+        	<th style="text-align:center;">Nombre origen</th>
+        	<th style="text-align:center;">Nombre destino</th>
+       		<th style="text-align:center;">Cargo</th>
+        	<th style="text-align:center;">Ubicación</th>
+        	<th style="text-align:center;">Observaciones</th>
       	</tr>
     	';
     	for ($i=0; $i < $datos['numcampos']; $i++) {
