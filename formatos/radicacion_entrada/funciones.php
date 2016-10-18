@@ -602,7 +602,9 @@ $("#"+input).val(num);
 
 function mostrar_informacion_general_radicacion($idformato,$iddoc){
 	global $conn,$ruta_db_superior;
-    
+    $tabla='
+        
+    ';
     
 }
     
