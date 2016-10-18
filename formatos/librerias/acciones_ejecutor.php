@@ -17,7 +17,7 @@ body, INPUT, SELECT{
    FONT-SIZE:X-SMALL
   }
   table{
-    border:1px solid;
+    border:0px solid;
   }
   input{
   width:200px;
