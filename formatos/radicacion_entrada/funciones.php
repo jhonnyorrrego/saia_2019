@@ -609,6 +609,7 @@ function mostrar_informacion_general_radicacion($idformato,$iddoc){
 	global $conn,$ruta_db_superior;
 	
 	$fecha_radicacion=mostrar_fecha($idformato,$iddoc,$tipo=1);
+	$numero_radicado=formato_numero($idformato,$iddoc,$tipo=1);
     $tabla='
         <table class="table table-bordered" style="width: 100%; font-size:10px; text-align:left;" border="1">
   <tr>
