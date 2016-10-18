@@ -671,7 +671,6 @@ function mostrar_informacion_destino_radicacion($idformato,$iddoc){
   <tr>
     <td style="width: 20%;"><b>Tipo de Destino:</b></td>
     <td>'.$tipo_destino[$datos[0]['tipo_destino']].'</td>
-    <td colspan="2" rowspan="3"></td>
   </tr>
   <tr>
     <td><b>Número de radicado:</b></td>
