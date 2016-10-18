@@ -665,7 +665,7 @@ function mostrar_informacion_destino_radicacion($idformato,$iddoc){
     
     $tipo_destino=array(1=>"EXTERNO",2=>"INTERNO");
 	$datos=busca_filtro_tabla("","ft_radicacion_entrada","documento_iddocumento=".$iddoc,"",$conn);
-	
+	$destino=mostrar_destino_radicacion($idformato,$iddoc);
     $tabla='
         <table class="table table-bordered" style="width: 100%; font-size:10px; text-align:left;" border="1">
   <tr>
