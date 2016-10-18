@@ -476,10 +476,10 @@ function mostrar_item_destino_radicacion($idformato,$iddoc){
     	";
 	}else{
 	    $tabla='<table class="table table-bordered" style="width: 100%; font-size:10px; text-align:left;" border="1">
-    	<tr>
-        	<th style="text-align:center;">NOMBRE ORIGEN</th>
+    	<tr style="text-align:center;">
+        	<th>NOMBRE ORIGEN</th>
         	<th>NOMBRE DESTINO</th>
-       		<th style="text-align:center;">CARGO</th>
+       		<th>CARGO</th>
         	<th>UBICACIÓN</th>
         	<th>OBSERVACIONES</th>
       	</tr>
