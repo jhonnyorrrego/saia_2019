@@ -500,7 +500,7 @@ function mostrar_item_destino_radicacion($idformato,$iddoc){
     	            <td>".$origen[0]['nombres']." ".$origen[0]['apellidos']."</td>
     	            <td>".$destino[0]['nombre']."</td>
     	            <td style='text-align:center;'>".$destino[0]['cargo']."</td>
-    	            <td>".$ubicacion."</td>
+    	            <td style='text-align:center;'>".$ubicacion."</td>
     	            <td>".$datos[$i]['observacion_destino']."</td>
     	        </tr>
     	    ";
