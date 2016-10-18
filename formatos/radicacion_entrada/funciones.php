@@ -663,6 +663,49 @@ function mostrar_informacion_general_radicacion($idformato,$iddoc){
 function mostrar_informacion_destino_radicacion($idformato,$iddoc){
 	global $conn,$ruta_db_superior;
     
+    $tipo_destino=array(1=>"",2=>"");
+    
+    $tabla='
+        <table class="table table-bordered" style="width: 100%; font-size:10px; text-align:left;" border="1">
+  <tr>
+    <td style="width: 20%;"><b>Tipo de Destino:</b></td>
+    <td>'.$tipo.'</td>
+    <td colspan="2" rowspan="3"></td>
+  </tr>
+  <tr>
+    <td><b>Número de radicado:</b></td>
+    <td>'.$numero_radicado.'</td>
+  </tr>
+  <tr>
+    <td><b>Tipo de documento:</b></td>
+    <td>'.$tipo_documento[0]["nombre"].'</td>
+  </tr>
+  <tr>
+    <td><b>Descripción o asunto:</b></td>
+    <td colspan="3">'.$datos[0]["descripcion"].'</td>
+  </tr>
+  <tr>
+    <td><b>Descripción de anexos físicos:</b></td>
+    <td colspan="3">'.$datos[0]["descripcion_anexos"].'</td>
+  </tr>
+  <tr>
+    <td><b>Anexos digitales:</b></td>
+    <td>'.$nombre_anexos.'</td>
+    <td style="width: 20%;"><b>No. Folios:</b></td>
+    <td>'.$datos[0]["numero_folios"].'</td>
+  </tr>
+
+    ';
+    if($datos[0]['tipo_origen']==1){
+        $tabla.="<tr>
+                    <td><strong>Número de documento:</strong></td>
+                    <td>".$datos[0]['numero_oficio']."</td>
+                    <td><strong>Fecha oficio entrante:</strong></td>
+                    <td>".$datos[0]['fecha_oficio_entrada']."</td>
+                 </tr>";
+    }
+    $tabla.='</table>';
+    echo $tabla;
     
 }
     
