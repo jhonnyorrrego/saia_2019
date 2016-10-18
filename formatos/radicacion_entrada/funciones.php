@@ -672,7 +672,10 @@ function mostrar_informacion_destino_radicacion($idformato,$iddoc){
     <td style="width: 20%;"><b>Tipo de Destino:</b></td>
     <td>'.$tipo_destino[$datos[0]['tipo_destino']].'</td>
   </tr>
-  
+  <tr>
+    <td style="width: 20%;"><b>Destino:</b></td>
+    <td>'.$tipo_destino[$datos[0]['tipo_destino']].'</td>
+  </tr>
     ';
     
     $tabla.='</table>';
