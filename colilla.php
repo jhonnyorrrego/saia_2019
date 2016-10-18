@@ -226,7 +226,6 @@ function imprime(atras){
   window.print();
   //comando_documento('ClearAuthenticationCache');
   if(url!=""){
-      alert(url);
       window.open("<?php echo $enlace; ?>","<?php echo $target; ?>");
   }else{
       window.history.go(-atras);
