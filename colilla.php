@@ -237,10 +237,7 @@ function imprime(atras){
 <script src="js/jquery-ui-1.8rc3.custom.min.js"></script> 
 </head>
 <br/><br/>
-<div style="position: absolute;top: 7px;right: -10px;">
-<table height="auto" align="right" border="0px" cellspacing="0" cellpadding="0" style="border-collapse:collapse;"> 
-<tr>
-<td>
+
 <table height="94px" width="189px" align="right" border="0px" cellspacing="0" cellpadding="0" style="border-collapse:collapse;">
   <tr> 
 	<td><?php echo "<br/><center>".($qr)."</center>"; ?></td>
@@ -271,45 +268,6 @@ function imprime(atras){
 </tr>
 </table>
 
-</td>
-<td width="22px">
-	&nbsp;&nbsp;
-</td>
-<td>
-<table height="94px" width="189px" align="right" border="0px" cellspacing="0" cellpadding="0" style="border-collapse:collapse;">
-  <tr> 
-	<td><?php echo "<br/><center>".($qr)."</center>"; ?></td>
-	<td border="1px" colspan="2" align="left" height="2px" cellspacing="0" cellpadding="0">
-		<strong><?php echo"<br/>".($nombre_empresa);?>
-		</strong><br/><br/>
-		<b>Radicaci&oacute;n No: <?php echo($codigo_empresa."-".$datos[0]["numero"]."-".$fecha["year"]);?></b>
-  <br/>
-  <b>Fecha: <?php echo $datos_fecha; ?></b><br/>
- <b>Origen: <?php echo($origen);?></b><br/>
-  
-  <?php if($datos[0]["tipo_radicado"]==1){?>
-  <b>Destino: <?php echo substr(($destino),0,22)."..."; ?></b>
-  
-  <?php }   	
-  	$validar_impresion = busca_filtro_tabla("valor","configuracion","lower(nombre) LIKE'imprimir_colilla_automatico'","",$conn);
-		
-		if($validar_impresion[0]['valor'] == 1){
-			$imprimir_colilla = 'onLoad="imprime('.$atras.')"';											
-		}else{
-			abrir_url($enlace,'_self');			
-		}	 	
-  ?>
-	</td>
-</tr>
-<tr>
-	<td colspan="2"> <center><b>El radicado no implica su aceptaci&oacute;n</b></center></td>
-</tr>
-</table>
-</td>
-</tr>
-
-</table>
-</div>
 <body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0" <?php echo(@$imprimir_colilla);?> >
 </body>
 </html>
