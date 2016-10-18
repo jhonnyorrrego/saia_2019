@@ -18,7 +18,6 @@ body, INPUT, SELECT{
   }
   table{
     border:1px groove;
-    
   }
   input{
   width:200px;
