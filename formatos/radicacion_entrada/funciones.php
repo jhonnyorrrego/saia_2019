@@ -606,6 +606,8 @@ $("#"+input).val(num);
 
 function mostrar_informacion_general_radicacion($idformato,$iddoc){
 	global $conn,$ruta_db_superior;
+	
+	$fecha_radicacion=mostrar_fecha($idformato,$iddoc);
     $tabla='
         <table class="table table-bordered" style="width: 100%; font-size:10px; text-align:left;" border="1">
   <tr>
