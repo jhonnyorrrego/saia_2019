@@ -252,6 +252,7 @@ function imprime(atras){
 		<b>Radicaci&oacute;n No: <?php echo($codigo_empresa."-".$datos[0]["numero"]."-".$fecha["year"]);?></b>
   <br/>
   <b>Fecha: <?php echo $datos_fecha; ?></b><br/>
+  <b>Numero de Folios: <?php echo $numero_folios[0]['']; ?></b><br/>
  <b>Origen: <?php echo($origen);?></b><br/>
   
   <?php if($datos[0]["tipo_radicado"]==1){?>
