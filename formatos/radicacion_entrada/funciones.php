@@ -49,13 +49,13 @@ function enviar_adicionar($idformato,$iddoc){
 	}
 	$datos=busca_filtro_tabla("","ft_radicacion_entrada A","documento_iddocumento=".$iddoc,"",$conn);
 	if($datos[0]["estado_radicado"]==1){
-		if(@$_REQUEST["iddoc"]){
+		/*if(@$_REQUEST["iddoc"]){
 			$enlace="paginaadd.php?key=".$_REQUEST["iddoc"]."&enlace2=formatos/radicacion_entrada/mostrar_radicacion_entrada.php?iddoc=".$_REQUEST["iddoc"];
 
 		}
 		else{
 			$enlace="busqueda_categoria.php?idcategoria_formato=1&defecto=radicacion_entrada";
-		}
+		}*/
 		abrir_url($ruta_db_superior."colilla.php?key=".$iddoc."&enlace=".$enlace,"_self");
 	}
 	else{
