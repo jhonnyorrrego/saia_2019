@@ -650,7 +650,7 @@ function mostrar_informacion_general_radicacion($idformato,$iddoc){
     if($datos[0]['tipo_origen']==1){
         $tabla.="<tr>
                     <td><strong>Número de documento:</strong></td>
-                    <td style='width:80%;'>".$datos[0]['numero_oficio']."</td>
+                    <td>".$datos[0]['numero_oficio']."</td>
                     <td><strong>Fecha oficio entrante:</strong></td>
                     <td style='width:80%;'>".$datos[0]['numero_oficio']."</td>
                  </tr>";
