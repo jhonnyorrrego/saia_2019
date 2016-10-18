@@ -99,10 +99,10 @@ function validar_digitalizacion_formato_radicacion($idformato,$iddoc){
   		$enlace="pantallas/buscador_principal.php?idbusqueda=9";
   	}
 	else{
-		$enlace="busqueda_categoria.php?idcategoria_formato=1&defecto=radicacion_entrada";
+		$enlace="formatos/radicacion_entrada/detalle_mostrar_radicacion_entrada.php?iddoc=".$iddoc."&idformato=".$idformato;
 	}
-  		//abrir_url($ruta_db_superior."colilla.php?key=".$iddoc."&enlace=".$enlace,'centro');
-  		abrir_url($ruta_db_superior."colilla.php?key=".$iddoc,"_self");
+  		abrir_url($ruta_db_superior."colilla.php?key=".$iddoc."&enlace=".$enlace,'centro');
+  		//abrir_url($ruta_db_superior."colilla.php?key=".$iddoc,"_self");
   }
 }
 function digitalizar_formato_radicacion($idformato,$iddoc){
