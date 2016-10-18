@@ -222,13 +222,15 @@ function comando_documento(sComando){
 function imprime(atras){
   window.focus();
   var url = "<?php echo $enlace; ?>"; 
-  alert(url);
+  
   window.print();
   //comando_documento('ClearAuthenticationCache');
-  if(url!="")
-     window.open("<?php echo $enlace; ?>","<?php echo $target; ?>");
-  else       
-     window.history.go(-atras);
+  if(url!=""){
+      window.open("<?php echo $enlace; ?>","<?php echo $target; ?>");
+  }else{
+      window.history.go(-atras);
+  }       
+     
 }	
 -->
 </script>
