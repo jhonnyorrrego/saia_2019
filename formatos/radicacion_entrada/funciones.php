@@ -548,5 +548,55 @@ function campos_adicionales_radicacion($idformato,$iddoc){
     $tabla.='</table>';
     echo $tabla;
 }
+
+function campos_numericos_radicacion_correspondencia($idformato,$iddoc){
+	global $conn,$ruta_db_superior;
+    	?>
+<script>
+$('#valor_causacion').keyup(function(){
+    var valor=$(this).val();
+    valor=valor.replace(/[^0-9]/g, '');
+    $(this).val(valor);
+
+});
+
+function cargar_puntos(){
+Moneda_r($("#valor_causacion").attr('id'));
+
+}
+
+cargar_puntos();
+$("#valor_causacion").keyup(function(){
+Moneda_r($("#valor_causacion").attr('id'));
+});
+$("#valor_causacion").blur(function(){
+Moneda_r($("#valor_causacion").attr('id'));
+});
+/**/
+
+$('#formulario_formatos').
+validate({
+submitHandler: function(form){
+var valor_ =new String($("#valor_factura").val());
+var nuevo_valor = valor_.replace(/\./g,"");
+$("#valor_causacion").val(nuevo_valor);
+
+
+form.submit(); 
+} 
+});
+
+function Moneda_r(input){
+var num = $("#"+input).val().replace(/\./g,'');
+if(!isNaN(num)){
+num = num.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1.');
+num = num.split('').reverse().join('').replace(/^[\.]/,'');
+$("#"+input).val(num);
+}
+}
+</script>
+<?php
+}
+    
     
 ?>
