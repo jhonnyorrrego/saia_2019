@@ -157,19 +157,19 @@ if($datos[0]["numero"]){
 	if($codigo_qr['numcampos']){
 	    
 	    if(file_exists(PROTOCOLO_CONEXION.RUTA_PDF_LOCAL."/".$codigo_qr[0]['ruta_qr'])){
-	        $qr="<img src='".PROTOCOLO_CONEXION.RUTA_PDF_LOCAL."/".$codigo_qr[0]['ruta_qr']."'>";	
+            $qr='<img src="'.PROTOCOLO_CONEXION.RUTA_PDF_LOCAL.'/'.$codigo_qr[0]['ruta_qr'].'" width="50px" height="50px">';		        
 	    }else{
     		include_once($ruta_db_superior."pantallas/qr/librerias.php");
     		generar_codigo_qr('',$doc);
     		$codigo_qr=busca_filtro_tabla("","documento_verificacion","documento_iddocumento=".$doc,"", $conn);	
-    		$qr="<img src='".PROTOCOLO_CONEXION.RUTA_PDF_LOCAL."/".$codigo_qr[0]['ruta_qr']."'>";		        
+    		$qr='<img src="'.PROTOCOLO_CONEXION.RUTA_PDF_LOCAL.'/'.$codigo_qr[0]['ruta_qr'].'" width="50px" height="50px">';		        
 	    }
 	}
 	else{
 		include_once($ruta_db_superior."pantallas/qr/librerias.php");
 		generar_codigo_qr('',$doc);
 		$codigo_qr=busca_filtro_tabla("","documento_verificacion","documento_iddocumento=".$doc,"", $conn);	
-		$qr="<img src='".PROTOCOLO_CONEXION.RUTA_PDF_LOCAL."/".$codigo_qr[0]['ruta_qr']."'>";	
+		$qr='<img src="'.PROTOCOLO_CONEXION.RUTA_PDF_LOCAL.'/'.$codigo_qr[0]['ruta_qr'].'" width="50px" height="50px">';		        
 	}
 }
 ?>
@@ -177,8 +177,8 @@ if($datos[0]["numero"]){
 <!--
 td {
 	font-family: VERDANA;
-	font-size:9px;
-	height:15px;
+	font-size:7px;
+	height:0px;
 	border:0px solid;
 	vertical-align:top;
 	padding-left:5px;
@@ -236,43 +236,23 @@ function imprime(atras){
 <script src="js/jquery-1.8.2.js"></script>    
 <script src="js/jquery-ui-1.8rc3.custom.min.js"></script> 
 </head>
-<br />
-<br />
-<br />
-<br />
-<table height="auto" id="table_alineacion" align="right" border="0px" cellspacing="0" cellpadding="0" style="border-collapse:collapse; padding-right:5px;padding:5px">
-  <tr> <!-- Ancho maximo 80px Alto maximo 100px para la imagen -->
-  <td style="text-align:right" <?php if($datos[0]["tipo_radicado"]==1){echo('rowspan="6"'); }else{ echo('rowspan="5"'); }?> ><img src="<?php echo($ruta_db_superior.$logo_empresa); ?>"></td>
-	<td <?php if($datos[0]["tipo_radicado"]==1){echo('rowspan="6"'); }else{ echo('rowspan="5"'); }?> ><br /><?php echo($qr); ?></td>
-	
-	</tr>
-	<tr>
-	
-	<td align="left"><strong><?php echo($nombre_empresa);?><br /><?php echo($tipo_r[0]["etiqueta_contador"]);?><br /></strong></td>
-  </tr>
-  <!--<tr> 
-    <td align="right"><b>Asunto:</b><?php //echo $datos[0]["descripcion"]; ?>&nbsp;&nbsp;</td>
-  </tr>-->
+<br/><br/>
+
+<table height="94px" width="189px" align="right" border="0px" cellspacing="0" cellpadding="0" style="border-collapse:collapse;">
   <tr> 
-    <td align="left" class="resaltar"><b>Radicaci&oacute;n No:</b><?php echo($codigo_empresa."-".$datos[0]["numero"]."-".$fecha["year"]);?></td>
-  </tr>
-  <tr> 
-    <td align="left"><b>Fecha:</b><?php echo $datos_fecha; ?></td>
-  </tr> 
-  <tr> 
-    <td align="left"><b>Origen:</b><?php echo($origen);?></td>
-  </tr>
-  <!--<tr> 
-    <td align="right"><?php //echo($ejecutor[0]["empresa"]);?>&nbsp;&nbsp;</td>
-  </tr>-->
+	<td><?php echo "<br/><center>".($qr)."</center>"; ?></td>
+	<td border="1px" colspan="2" align="left" height="2px" cellspacing="0" cellpadding="0">
+		<strong><?php echo"<br/>".($nombre_empresa);?>
+		</strong><br/><br/>
+		<b>Radicaci&oacute;n No: <?php echo($codigo_empresa."-".$datos[0]["numero"]."-".$fecha["year"]);?></b>
+  <br/>
+  <b>Fecha: <?php echo $datos_fecha; ?></b><br/>
+ <b>Origen: <?php echo($origen);?></b><br/>
+  
   <?php if($datos[0]["tipo_radicado"]==1){?>
-  <tr> 
-    <td align="left"><b>Destino:</b> <?php echo($destino); ?></td>    
-  </tr>
-  <?php } ?>
-  <tr>
-  <td colspan='2' align='left'><?php echo $web_empresa; ?></td>
-  <?php   	
+  <b>Destino: <?php echo substr(($destino),0,22)."..."; ?></b>
+  
+  <?php }   	
   	$validar_impresion = busca_filtro_tabla("valor","configuracion","lower(nombre) LIKE'imprimir_colilla_automatico'","",$conn);
 		
 		if($validar_impresion[0]['valor'] == 1){
@@ -281,7 +261,11 @@ function imprime(atras){
 			abrir_url($enlace,'_self');			
 		}	 	
   ?>
-  </tr>
+	</td>
+</tr>
+<tr>
+	<td colspan="2"> <center><b>El radicado no implica su aceptaci&oacute;n</b></center></td>
+</tr>
 </table>
 <body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0" <?php echo(@$imprimir_colilla);?> >
 </body>
@@ -598,7 +582,7 @@ function validar_confirmacion_salida($consecutivo){
 		}
 		</script>
 		<?php
-		die();
+		//die();
 	}
 }
 ?>
