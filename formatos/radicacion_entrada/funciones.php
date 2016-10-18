@@ -647,8 +647,10 @@ function mostrar_informacion_general_radicacion($idformato,$iddoc){
     <td style="width: 20%;"><b>No. Folios:</b></td>
     <td>'.$datos[0]["numero_folios"].'</td>
   </tr>
-</table>
+
     ';
+    
+    $tabla.='</table>';
     echo $tabla;
     
 }
