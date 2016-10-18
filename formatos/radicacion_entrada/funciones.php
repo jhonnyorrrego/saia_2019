@@ -607,12 +607,12 @@ $("#"+input).val(num);
 function mostrar_informacion_general_radicacion($idformato,$iddoc){
 	global $conn,$ruta_db_superior;
 	
-	$fecha_radicacion=mostrar_fecha($idformato,$iddoc);
+	
     $tabla='
         <table class="table table-bordered" style="width: 100%; font-size:10px; text-align:left;" border="1">
   <tr>
     <td>Fecha de radicación:</td>
-    <td>'.$fecha_radicacion.'</td>
+    <td>'.mostrar_fecha($idformato,$iddoc).'</td>
     <td colspan="2" rowspan="3"></td>
   </tr>
   <tr>
