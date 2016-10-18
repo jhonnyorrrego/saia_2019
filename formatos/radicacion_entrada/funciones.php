@@ -599,6 +599,12 @@ $("#"+input).val(num);
 </script>
 <?php
 }
+
+function mostrar_informacion_general_radicacion($idformato,$iddoc){
+	global $conn,$ruta_db_superior;
+    
+    
+}
     
     
 ?>
