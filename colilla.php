@@ -564,7 +564,7 @@ function validar_confirmacion(){
 		}
 		</script>
 		<?php
-		//die();
+		die();
 	}
 	else
 		return;
@@ -582,7 +582,7 @@ function validar_confirmacion_salida($consecutivo){
 		}
 		</script>
 		<?php
-		//die();
+		die();
 	}
 }
 ?>
