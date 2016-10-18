@@ -56,7 +56,7 @@ function enviar_adicionar($idformato,$iddoc){
 		else{
 			$enlace="busqueda_categoria.php?idcategoria_formato=1&defecto=radicacion_entrada";
 		}*/
-		abrir_url($ruta_db_superior."colilla.php?key=".$iddoc."&enlace=".$enlace,"_self");
+		abrir_url($ruta_db_superior."colilla.php?key=".$iddoc,"_self");
 	}
 	else{
 		$sql1="UPDATE documento SET estado='INICIADO' WHERE iddocumento=".$iddoc;
