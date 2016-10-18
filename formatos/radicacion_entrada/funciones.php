@@ -648,7 +648,11 @@ function mostrar_informacion_general_radicacion($idformato,$iddoc){
 
     ';
     if($datos[0]['tipo_origen']==1){
-        $tabla.="<tr><td style='width:20%; font-size: 7pt;'><strong>Número de documento:</strong></td><td style='width:80%;'>".$datos[0]['numero_oficio']."</td></tr>";
+        $tabla.="<tr>
+                    <td><strong>Número de documento:</strong></td>
+                    <td style='width:80%;'>".$datos[0]['numero_oficio']."</td>
+                    
+                 </tr>";
     }
     $tabla.='</table>';
     echo $tabla;
