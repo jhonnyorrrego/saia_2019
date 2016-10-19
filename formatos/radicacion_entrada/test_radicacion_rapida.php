@@ -63,6 +63,7 @@ if($id=="NULL")
   $papas=busca_filtro_tabla("*","categoria_formato","(cod_padre=0 OR cod_padre is null)".$where,"",$conn);
 else if($cod_padre!=''){
 	$papas=busca_filtro_tabla("*","categoria_formato","cod_padre='".$cod_padre."'".$where,"",$conn);
+	print_r($papas);die();
 }
 else
   $papas=busca_filtro_tabla("*","categoria_formato","idcategoria_formato=".$id.$where,"",$conn);
@@ -72,7 +73,7 @@ if($papas["numcampos"])
   for($i=0; $i<$papas["numcampos"]; $i++)
   {
     $hijos = busca_filtro_tabla("count(*)","categoria_formato","cod_padre=".$papas[$i]["idcategoria_formato"],"",$conn);
-	print_r($hijos);die();
+	
     echo("<item style=\"font-family:verdana; font-size:7pt;\" ");
 	if($tipo!=1){
     	echo("text=\"".htmlspecialchars($papas[$i]["nombre"])." \" id=\"-1\" >");
