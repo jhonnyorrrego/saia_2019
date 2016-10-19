@@ -1,4 +1,18 @@
 <?php
+
+$max_salida=6; // Previene algun posible ciclo infinito limitando a 10 los ../
+$ruta_db_superior=$ruta="";
+while($max_salida>0)
+{
+if(is_file($ruta."db.php"))
+{
+$ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
+}
+$ruta.="../";
+$max_salida--;
+}
+
+
 include_once("db.php");
 include_once("formatos/librerias/estilo_formulario.php");
 $adicional=Null;
@@ -6,11 +20,11 @@ if(@$_REQUEST["idcategoria_formato"]){
 	$adicional="?idcategoria_formato=".$_REQUEST["idcategoria_formato"];
 }
 ?><link rel="STYLESHEET" type="text/css" href="css/dhtmlXTree.css">
-	<script type="text/javascript" src="js/dhtmlXCommon.js"></script>
-	<script type="text/javascript" src="js/dhtmlXTree.js"></script>
-	<script type="text/javascript" src="js/dhtmlXTree_xw.js"></script> 
-	<script type="text/javascript" src="asset/js/jquery.min.js"></script>
-	<script type="text/javascript" src="asset/js/main.js"></script>
+	<script type="text/javascript" src="../../js/dhtmlXCommon.js"></script>
+	<script type="text/javascript" src="../../js/dhtmlXTree.js"></script>
+	<script type="text/javascript" src="../../js/dhtmlXTree_xw.js"></script> 
+	<script type="text/javascript" src="../../asset/js/jquery.min.js"></script>
+	<script type="text/javascript" src="../../asset/js/main.js"></script>
   Buscar :<br />
   <input type="text" id="stext_3" width="200px" size="20">      
       <a href="javascript:void(0)" onclick="tree_equipos.findItem(document.getElementById('stext_3').value,1)">
