@@ -30,7 +30,7 @@ if($idcategoria and $idcategoria<>"")
   echo("<tree id=\"0\">\n"); 
 else
   echo("<tree id=\"0\">\n");
-include_once("db.php");
+include_once("../../db.php");
 if($idcategoria and $idcategoria<>"")
   llena_formato($idcategoria,'',$seleccionados);
 else
