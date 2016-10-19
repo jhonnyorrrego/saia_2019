@@ -20,22 +20,22 @@ $adicional=Null;
 if(@$_REQUEST["idcategoria_formato"]){
 	$adicional="?idcategoria_formato=".$_REQUEST["idcategoria_formato"];
 }
-?><link rel="STYLESHEET" type="text/css" href="../../css/dhtmlXTree.css">
-	<script type="text/javascript" src="../../js/dhtmlXCommon.js"></script>
-	<script type="text/javascript" src="../../js/dhtmlXTree.js"></script>
-	<script type="text/javascript" src="../../js/dhtmlXTree_xw.js"></script> 
-	<script type="text/javascript" src="../../asset/js/jquery.min.js"></script>
-	<script type="text/javascript" src="../../asset/js/main.js"></script>
+?><link rel="STYLESHEET" type="text/css" href="<?php echo($ruta_db_superior); ?>css/dhtmlXTree.css">
+	<script type="text/javascript" src="<?php echo($ruta_db_superior); ?>js/dhtmlXCommon.js"></script>
+	<script type="text/javascript" src="<?php echo($ruta_db_superior); ?>js/dhtmlXTree.js"></script>
+	<script type="text/javascript" src="<?php echo($ruta_db_superior); ?>js/dhtmlXTree_xw.js"></script> 
+	<script type="text/javascript" src="<?php echo($ruta_db_superior); ?>asset/js/jquery.min.js"></script>
+	<script type="text/javascript" src="<?php echo($ruta_db_superior); ?>asset/js/main.js"></script>
   Buscar :<br />
   <input type="text" id="stext_3" width="200px" size="20">      
       <a href="javascript:void(0)" onclick="tree_equipos.findItem(document.getElementById('stext_3').value,1)">
-      <img src="../../botones/general/anterior.png" border="0px" alt="Anterior"></a>
+      <img src="<?php echo($ruta_db_superior); ?>botones/general/anterior.png" border="0px" alt="Anterior"></a>
       <a href="javascript:void(0)" onclick="tree_equipos.findItem(document.getElementById('stext_3').value,0,1)">
-      <img src="../../botones/general/buscar.png" border="0px" alt="Buscar"></a>
+      <img src="<?php echo($ruta_db_superior); ?>botones/general/buscar.png" border="0px" alt="Buscar"></a>
       <a href="javascript:void(0)" onclick="tree_equipos.findItem(document.getElementById('stext_3').value)">
-      <img src="../../botones/general/siguiente.png" border="0px" alt="Siguiente"></a>  
+      <img src="<?php echo($ruta_db_superior); ?>botones/general/siguiente.png" border="0px" alt="Siguiente"></a>  
 	<br><div id="esperando_serie">
-    <img src="../../imagenes/cargando.gif"></div>
+    <img src="<?php echo($ruta_db_superior); ?>imagenes/cargando.gif"></div>
 	<div id="treeboxbox_tree_equipos" style="height:89%;width:95%" ></div>
 	<script type="text/javascript">
   <!--		
@@ -61,7 +61,7 @@ if(@$_REQUEST["idcategoria_formato"]){
 			tree_equipos.loadXML("<?php echo($ruta_db_superior); ?>test_categoria.php<?php echo $adicional; ?>");
 	    function onNodeSelect(nodeId){
 	     if(nodeId.indexOf('#',0)==-1){
-            window.parent.previsualizar.location='../../parsear_categoria.php?id='+nodeId;
+            window.parent.previsualizar.location='<?php echo($ruta_db_superior); ?>parsear_categoria.php?id='+nodeId;
 	     }
       }
       function fin_cargando_serie() {
