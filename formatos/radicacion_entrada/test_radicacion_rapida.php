@@ -1,19 +1,4 @@
 <?php 
-$max_salida=6; // Previene algun posible ciclo infinito limitando a 10 los ../
-$ruta_db_superior=$ruta="";
-while($max_salida>0)
-{
-if(is_file($ruta."db.php"))
-{
-$ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
-}
-$ruta.="../";
-$max_salida--;
-}
-
-
-
-
 header("Expires: Mon, 26 Jul 1997 05:00:00 GMT"); // date in the past
 header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT"); // always modified
 header("Cache-Control: no-store, no-cache, must-revalidate"); // HTTP/1.1 
@@ -45,7 +30,7 @@ if($idcategoria and $idcategoria<>"")
   echo("<tree id=\"0\">\n"); 
 else
   echo("<tree id=\"0\">\n");
-include_once($ruta_db_superior."db.php");
+include_once("db.php");
 if($idcategoria and $idcategoria<>"")
   llena_formato($idcategoria,'',$seleccionados);
 else
@@ -63,16 +48,16 @@ if($id=="NULL")
   $papas=busca_filtro_tabla("*","categoria_formato","(cod_padre=0 OR cod_padre is null)".$where,"",$conn);
 else if($cod_padre!=''){
 	$papas=busca_filtro_tabla("*","categoria_formato","cod_padre='".$cod_padre."'".$where,"",$conn);
-	
 }
 else
   $papas=busca_filtro_tabla("*","categoria_formato","idcategoria_formato=".$id.$where,"",$conn);
+
 if($papas["numcampos"])
 { 
   for($i=0; $i<$papas["numcampos"]; $i++)
   {
     $hijos = busca_filtro_tabla("count(*)","categoria_formato","cod_padre=".$papas[$i]["idcategoria_formato"],"",$conn);
-	//print_r($hijos);die();
+	
     echo("<item style=\"font-family:verdana; font-size:7pt;\" ");
 	if($tipo!=1){
     	echo("text=\"".htmlspecialchars($papas[$i]["nombre"])." \" id=\"-1\" >");
@@ -101,8 +86,8 @@ if($papas["numcampos"])
     if($hijos[0][0]){
     	llena_formato('',$papas[$i]["idcategoria_formato"],$seleccionados);
     }
-	/*if($tipo!=1)
-		adicionar_formato($papas[$i]["idcategoria_formato"]);*/
+	if($tipo!=1)
+		adicionar_formato($papas[$i]["idcategoria_formato"]);
     echo("</item>\n");
   }     
 }
