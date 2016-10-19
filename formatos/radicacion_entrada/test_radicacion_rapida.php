@@ -72,7 +72,7 @@ if($papas["numcampos"])
   for($i=0; $i<$papas["numcampos"]; $i++)
   {
     $hijos = busca_filtro_tabla("count(*)","categoria_formato","cod_padre=".$papas[$i]["idcategoria_formato"],"",$conn);
-	//print_r($hijos);
+	print_r($hijos);
     echo("<item style=\"font-family:verdana; font-size:7pt;\" ");
 	if($tipo!=1){
     	echo("text=\"".htmlspecialchars($papas[$i]["nombre"])." \" id=\"-1\" >");
