@@ -83,9 +83,9 @@ if($papas["numcampos"])
 		if($papas[$i]["estado"]==1){
 			$estado=' (Activo)';
 		}
-		else if($papas[$i]["estado"]==2){
+	/*	else if($papas[$i]["estado"]==2){
 			$estado=' (Inactivo)';
-		}
+		}*/
 		
 		$concatenar_padre='';
 		if($papas[$i]["cod_padre"]!=0 &&  $papas[$i]["cod_padre"]!=NULL){
