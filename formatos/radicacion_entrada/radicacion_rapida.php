@@ -148,7 +148,7 @@ echo(estilo_bootstrap());
                         <td style="font-size:8pt;" class="encabezado_list" colspan="2" align="center">Seleccione el formato a radicar</td>
                     </tr>
                     <tr>
-                        <td colspan="2">include_once("db.php");<?php
+                        <td colspan="2"><?php
 include_once("formatos/librerias/estilo_formulario.php");
 $adicional=Null;
 if(@$_REQUEST["idcategoria_formato"]){
