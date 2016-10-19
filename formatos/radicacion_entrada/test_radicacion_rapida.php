@@ -11,7 +11,7 @@ $ruta.="../";
 $max_salida--;
 }
 
-include_once($ruta_db_superior."db.php");
+
 
 
 header("Expires: Mon, 26 Jul 1997 05:00:00 GMT"); // date in the past
@@ -45,7 +45,7 @@ if($idcategoria and $idcategoria<>"")
   echo("<tree id=\"0\">\n"); 
 else
   echo("<tree id=\"0\">\n");
-//include_once("db.php");
+include_once($ruta_db_superior."db.php");
 if($idcategoria and $idcategoria<>"")
   llena_formato($idcategoria,'',$seleccionados);
 else
