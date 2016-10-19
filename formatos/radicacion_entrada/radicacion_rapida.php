@@ -117,7 +117,12 @@
 			    background-color: #0B7BB6;
 			}
 			</style><form method="POST" action="../../colilla.php"><br /><br />
-<table style="font-size:10pt;border-collapse:collapse; width:40%;" border="1" align="center"><tr><td style="font-size:8pt;" class="encabezado_list" colspan="2" align="center">Seleccione el formato a radicar</td></tr><tr><td colspan="2"><input type="radio" name="generar_consecutivo" id="generar_consecutivo0" value="radicacion_entrada" checked="checked"> RADICACION DE ENTRADA<br/><input type="radio" name="generar_consecutivo" id="generar_consecutivo1" value="registro_pqrsd"> RADICACION DE PQRSD<br/><input type="hidden" name="enlace" id="enlace" value="pantallas/buscador_principal.php?idbusqueda=7"></td></tr><tr><td colspan="2" align="center"><input type="submit" value="Radicar" id="enviar" name="enviar"/></td></tr></table></form><script>
+            
+            
+            
+            
+            
+            </form><script>
 	$(document).ready(function(){
 		$("#enviar").click(function(){
 			var ingreso=confirm("Esta seguro de generar un nuevo radicado?");
