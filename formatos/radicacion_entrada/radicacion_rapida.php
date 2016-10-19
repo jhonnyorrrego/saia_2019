@@ -14,7 +14,7 @@ $max_salida--;
 
 
 include_once($ruta_db_superior."db.php");
-include_once($ruta_db_superior."formatos/librerias/estilo_formulario.php");
+
 
 $adicional=Null;
 if(@$_REQUEST["idcategoria_formato"]){
