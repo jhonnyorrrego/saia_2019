@@ -47,7 +47,7 @@ else
   echo("<tree id=\"0\">\n");
 //include_once("db.php");
 if($idcategoria and $idcategoria<>"")
-  llena_formato($idcategoria,'',$seleccionados);
+  llena_formato($idcategoria,'1',$seleccionados);
 else
   llena_formato("NULL",'',$seleccionados);
 echo("</tree>\n");
