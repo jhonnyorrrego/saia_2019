@@ -1,4 +1,14 @@
 <?php 
+$max_salida=10; // Previene algun posible ciclo infinito limitando a 10 los ../
+$ruta_db_superior=$ruta="";
+while($max_salida>0){
+	if(is_file($ruta."db.php")){
+		$ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
+	}
+	$ruta.="../";
+	$max_salida--;
+}
+
 header("Expires: Mon, 26 Jul 1997 05:00:00 GMT"); // date in the past
 header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT"); // always modified
 header("Cache-Control: no-store, no-cache, must-revalidate"); // HTTP/1.1 
@@ -30,7 +40,7 @@ if($idcategoria and $idcategoria<>"")
   echo("<tree id=\"0\">\n"); 
 else
   echo("<tree id=\"0\">\n");
-include_once("../../db.php");
+include_once($ruta_db_superior."db.php");
 if($idcategoria and $idcategoria<>"")
   llena_formato($idcategoria,'',$seleccionados);
 else
