@@ -117,11 +117,9 @@
 			    background-color: #0B7BB6;
 			}
 			</style><form method="POST" action="../../colilla.php"><br /><br />
-            
-            
-            
-            
-            
+
+                
+                <input type="submit" value="Radicar" id="enviar" name="enviar"/>
             </form><script>
 	$(document).ready(function(){
 		$("#enviar").click(function(){
