@@ -171,7 +171,10 @@ if(@$_REQUEST["idcategoria_formato"]){
 	<script type="text/javascript" src="<?php echo($ruta_db_superior); ?>js/dhtmlXTree_xw.js"></script> 
 	<script type="text/javascript" src="<?php echo($ruta_db_superior); ?>asset/js/jquery.min.js"></script>
 	<script type="text/javascript" src="<?php echo($ruta_db_superior); ?>asset/js/main.js"></script>
-  
+    
+	<br><div id="esperando_serie">
+    <img src="<?php echo($ruta_db_superior); ?>imagenes/cargando.gif"></div>
+	<div id="treeboxbox_tree_equipos" style="height:89%;width:95%" ></div>
 	<script type="text/javascript">
   <!--		
   	$(document).ready(function  () {
