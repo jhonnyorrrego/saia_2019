@@ -17,162 +17,85 @@ echo(librerias_arboles());
 echo(estilo_bootstrap()); 
 
 
-function arbol($campo,$nombre_arbol,$url,$cargar_todos=0,$padresehijos=false,$quitar_padres=false,$adicionales=false,$tipo_etiqueta='check',$agreg_depen=false,$tipo_funcionario='rol'){
-	global $ruta_db_superior;
-	$entidad=$nombre_arbol;
-	?>
-	<input type="text" id="stext<?php echo $entidad; ?>" width="200px" size="25" placeholder="Buscar">
-<a href="javascript:void(0)" onclick="stext<?php echo $entidad; ?>.findItem(htmlentities(document.getElementById('stext<?php echo $entidad; ?>').value),1)">
-<img src="<?php echo $ruta_db_superior; ?>botones/general/anterior.png" alt="Buscar Anterior" border="0px"></a>
-<a href="javascript:void(0)" onclick="tree<?php echo $entidad; ?>.findItem(htmlentities(document.getElementById('stext<?php echo $entidad; ?>').value),0,1)">
-<img src="<?php echo $ruta_db_superior; ?>botones/general/buscar.png" alt="Buscar" border="0px"></a>
-<a href="javascript:void(0)" onclick="tree<?php echo $entidad; ?>.findItem(htmlentities(document.getElementById('stext<?php echo $entidad; ?>').value))">
-<img src="<?php echo $ruta_db_superior; ?>botones/general/siguiente.png" alt="Buscar Siguiente" border="0px"></a>
-</span>
-
-<!--a href="javascript:seleccionar_todos<?php echo $entidad; ?>(1)"><img src="<?php echo $ruta_db_superior; ?>imgs/iconCheckAll.gif" alt="Seleccionar todos" title="Seleccionar todos"></a>
-	<a href="javascript:seleccionar_todos<?php echo $entidad; ?>(0)"><img src="<?php echo $ruta_db_superior; ?>imgs/iconUncheckAll.gif" alt="Quitar todos" title="Quitar todos"></a><br-->
-<div id="esperando<?php echo $entidad; ?>"><img src="<?php echo $ruta_db_superior; ?>imagenes/cargando.gif"></div>
-<div id="treeboxbox<?php echo $entidad; ?>"></div>
-<input type="hidden" class="required" name="<?php echo $campo; ?>" id="<?php echo $entidad; ?>">
-<script type="text/javascript">
-	$("document").ready(function(){
+function arbol(){
+include_once("db.php");
+include_once("formatos/librerias/estilo_formulario.php");
+$adicional=Null;
+if(@$_REQUEST["idcategoria_formato"]){
+	$adicional="?idcategoria_formato=".$_REQUEST["idcategoria_formato"];
+}
+?><link rel="STYLESHEET" type="text/css" href="css/dhtmlXTree.css">
+	<script type="text/javascript" src="js/dhtmlXCommon.js"></script>
+	<script type="text/javascript" src="js/dhtmlXTree.js"></script>
+	<script type="text/javascript" src="js/dhtmlXTree_xw.js"></script> 
+	<script type="text/javascript" src="asset/js/jquery.min.js"></script>
+	<script type="text/javascript" src="asset/js/main.js"></script>
+  Buscar :<br />
+  <input type="text" id="stext_3" width="200px" size="20">      
+      <a href="javascript:void(0)" onclick="tree_equipos.findItem(document.getElementById('stext_3').value,1)">
+      <img src="botones/general/anterior.png" border="0px" alt="Anterior"></a>
+      <a href="javascript:void(0)" onclick="tree_equipos.findItem(document.getElementById('stext_3').value,0,1)">
+      <img src="botones/general/buscar.png" border="0px" alt="Buscar"></a>
+      <a href="javascript:void(0)" onclick="tree_equipos.findItem(document.getElementById('stext_3').value)">
+      <img src="botones/general/siguiente.png" border="0px" alt="Siguiente"></a>  
+	<br><div id="esperando_serie">
+    <img src="imagenes/cargando.gif"></div>
+	<div id="treeboxbox_tree_equipos" style="height:89%;width:95%" ></div>
+	<script type="text/javascript">
+  <!--		
+  	$(document).ready(function  () {
+			top.setTitulo("Ingreso de documentos");  
+	});	
+  	
       var browserType;
+      
       if (document.layers) {browserType = "nn4"}
       if (document.all) {browserType = "ie"}
       if (window.navigator.userAgent.toLowerCase().match("gecko")) {
          browserType= "gecko"
       }
-			tree<?php echo $entidad; ?>=new dhtmlXTreeObject("treeboxbox<?php echo $entidad; ?>","","",0);
-			tree<?php echo $entidad; ?>.setImagePath("<?php echo $ruta_db_superior; ?>imgs/");
-		  tree<?php echo $entidad; ?>.enableIEImageFix(true);
-			tree<?php echo $entidad; ?>.setOnLoadingStart(cargando<?php echo $entidad; ?>);
-      tree<?php echo $entidad; ?>.setOnLoadingEnd(fin_cargando<?php echo $entidad; ?>);
-      <?php if($tipo_etiqueta=='check'){?>
-      tree<?php echo $entidad; ?>.enableCheckBoxes(1);
-      <?php }else if($tipo_etiqueta=='radio'){?>
-      tree<?php echo $entidad; ?>.enableRadioButtons(true);
-      tree<?php echo $entidad; ?>.enableCheckBoxes(1);
-      <?php }
-      if($entidad!='plantilla'&&$entidad!='serie'){ ?>
-      tree<?php echo $entidad; ?>.enableSmartXMLParsing(true);
-      <?php } 
-      if($padresehijos){?>
-      tree<?php echo $entidad; ?>.enableThreeStateCheckboxes(true);
-      <?php }?>
-      
-			tree<?php echo $entidad; ?>.loadXML("<?php echo $ruta_db_superior.$url; ?>");
-      tree<?php echo $entidad; ?>.setOnCheckHandler(onNodeSelect<?php echo $entidad; ?>);
-    
-			function onNodeSelect<?php echo $entidad; ?>(nodeId){
-				var adicional_dep="";
-				var valores=tree<?php echo $entidad; ?>.getAllChecked();
-				<?php if($quitar_padres){?>
-					var nuevos_valores=valores.split(",");
-					var cantidad=nuevos_valores.length;
-					var funcionarios=new Array();
-					var indice=0;
-					for(var i=0;i<cantidad;i++){
-						if(nuevos_valores[i].indexOf("#")=='-1'){
-							if(nuevos_valores[i]!=""){
-								funcionarios[indice]=nuevos_valores[i];
-								indice++;
-							}
-						}
-					}
-					var valores=funcionarios.join(",");
-				<?php }
-				if(is_array($adicionales)){?>
-					if(valores!=''){
-						if($("#bksaiacondicion_<?php echo $adicionales[0];?>").val()=="" && $("#bqsaia_<?php echo $adicionales[0];?>").val()==""){
-							$("#bksaiacondicion_<?php echo $adicionales[0];?>").val("<?php echo $adicionales[1];?>");
-							$("#bqsaia_<?php echo $adicionales[0];?>").val("<?php echo $adicionales[2];?>");
-						}
-					}
-					else{
-						$("#bksaiacondicion_<?php echo $adicionales[0];?>").val("");
-						$("#bqsaia_<?php echo $adicionales[0];?>").val("");
-					}
-				<?php } 
-				if($tipo_etiqueta=='radio'){ ?>
-					valor_destino=document.getElementById("<?php echo $entidad; ?>");
-					if(tree<?php echo $entidad; ?>.isItemChecked(nodeId)){
-						if(valor_destino.value!==""){
-							tree<?php echo $entidad; ?>.setCheck(valor_destino.value,false);
-						}
-						if(nodeId.indexOf("_")!=-1){
-							nodeId=nodeId.substr(0,nodeId.length);
-						}
-						valor_destino.value=nodeId;
-					}else{
-						valor_destino.value="";
-					}               
-				<?php } 				
-				if($agreg_depen){
-					?>
-					$.ajax({
-						type:'POST',
-						url: "dependencias_padres.php",
-						async: false,
-						data: {funcionario:valores,tipo_funcionario:'<?php echo $tipo_funcionario;?>'} ,
-						success: function(retorno){
-							if(retorno!=""){
-								adicional_dep=","+retorno;
-							}
-						}  
-					});
-					<?php
-				}
-				if($tipo_etiqueta!='radio' || $quitar_padres){
-				?>
-					document.getElementById("<?php echo $entidad; ?>").value=valores+adicional_dep;
-				<?php	
-				}
-				?>
+			tree_equipos=new dhtmlXTreeObject("treeboxbox_tree_equipos","100%","100%",0);
+			tree_equipos.setImagePath("imgs/");
+			tree_equipos.enableIEImageFix(true);
+			tree_equipos.setOnClickHandler(onNodeSelect);  
+			tree_equipos.setOnLoadingStart(cargando_serie);
+      tree_equipos.setOnLoadingEnd(fin_cargando_serie);
+      tree_equipos.setXMLAutoLoading("test_categoria.php<?php echo $adicional; ?>");
+      //tree_equipos.enableSmartXMLParsing(true);
+			tree_equipos.loadXML("test_categoria.php<?php echo $adicional; ?>");
+	    function onNodeSelect(nodeId){
+	     if(nodeId.indexOf('#',0)==-1){
+            window.parent.previsualizar.location='parsear_categoria.php?id='+nodeId;
+	     }
       }
-      function fin_cargando<?php echo $entidad; ?>() {
-      if (browserType == "gecko" )
-         document.poppedLayer =
-         eval('document.getElementById("esperando<?php echo $entidad; ?>")');
-      else if (browserType == "ie")
-         document.poppedLayer =
-            eval('document.getElementById("esperando<?php echo $entidad; ?>")');
-      else
-         document.poppedLayer =
-            eval('document.layers["esperando<?php echo $entidad; ?>"]');
-      document.poppedLayer.style.display = "none";
-      document.getElementById('<?php echo $entidad; ?>').value=tree<?php echo $entidad; ?>.getAllChecked();
-      <?php
-      if($cargar_todos==1){
-      	echo "seleccionar_todos".$entidad."(1);";
+      function fin_cargando_serie() {
+        if (browserType == "gecko" )
+           document.poppedLayer =
+               eval('document.getElementById("esperando_serie")');
+        else if (browserType == "ie")
+           document.poppedLayer =
+              eval('document.getElementById("esperando_serie")');
+        else
+           document.poppedLayer =
+              eval('document.layers["esperando_serie"]');
+        document.poppedLayer.style.visibility = "hidden";
+        tree_equipos.openAllItems(0);
       }
-      ?>
-    }
-    function cargando<?php echo $entidad; ?>() {
-      if (browserType == "gecko" )
-         document.poppedLayer =
-             eval('document.getElementById("esperando<?php echo $entidad; ?>")');
-      else if (browserType == "ie")
-         document.poppedLayer =
-            eval('document.getElementById("esperando<?php echo $entidad; ?>")');
-      else
-         document.poppedLayer =
-             eval('document.layers["esperando<?php echo $entidad; ?>"]');
-      document.poppedLayer.style.display = "";
-    }
-    
-   });
-   function seleccionar_todos<?php echo $entidad; ?>(tipo)
-    {lista=tree<?php echo $entidad; ?>.getAllChildless();
-     vector=lista.split(",");
-     for(i=0;i<vector.length;i++)
-      {tree<?php echo $entidad; ?>.setCheck(vector[i],tipo);
-      }
-     document.getElementById("<?php echo $entidad; ?>").value=tree<?php echo $entidad; ?>.getAllChecked(); 
-    }
---></script><br>
-<script type="text/javascript" src="<?php echo $ruta_db_superior; ?>pantallas/lib/codificacion_funciones.js"></script>
-	<?php
+
+      function cargando_serie() {
+        if (browserType == "gecko" )
+           document.poppedLayer =
+               eval('document.getElementById("esperando_serie")');
+        else if (browserType == "ie")
+           document.poppedLayer =
+              eval('document.getElementById("esperando_serie")');
+        else
+           document.poppedLayer =
+               eval('document.layers["esperando_serie"]');
+        document.poppedLayer.style.visibility = "visible";
+      }                            	
+	--> 		
+	</script>
 	}
 
 
