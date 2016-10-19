@@ -67,7 +67,6 @@ else if($cod_padre!=''){
 }
 else
   $papas=busca_filtro_tabla("*","categoria_formato","idcategoria_formato=".$id.$where,"",$conn);
-    print_r($papas);die();
 if($papas["numcampos"])
 { 
   for($i=0; $i<$papas["numcampos"]; $i++)
