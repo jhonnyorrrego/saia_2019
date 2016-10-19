@@ -124,7 +124,7 @@
                     </tr>
                     <tr>
                         <td colspan="2"><?php 
-	        echo arbol("radicacion","tipo_radicacion","formatos/radicacion_entrada/test_radicacion_rapida.php?idcategoria_formato=1","","","","","check"); 
+	        echo arbol("radicacion","tipo_radicacion","formatos/radicacion_entrada/text_radicacion_rapida.php?idcategoria_formato=1","","","","","check"); 
 	        ?></td>
                     </tr>
                     <tr>
