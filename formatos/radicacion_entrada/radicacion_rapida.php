@@ -210,7 +210,7 @@ if(@$_REQUEST["idcategoria_formato"]){
       }                            	
 	--> 		
 	</script>
-	        ?></td>
+	        </td>
                     </tr>
                     <tr>
                         <td colspan="2" align="center"><input type="submit" value="Radicar" id="enviar" name="enviar"/></td>
