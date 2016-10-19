@@ -27,14 +27,14 @@ if(@$_REQUEST["idcategoria_formato"]){
 	<script type="text/javascript" src="../../asset/js/main.js"></script>
   Buscar :<br />
   <input type="text" id="stext_3" width="200px" size="20">      
-      <a href="javascript:void(0)" onclick="tree_equipos.findItem(document.getElementById('stext_3').value,1)">
+      <a href="../../javascript:void(0)" onclick="tree_equipos.findItem(document.getElementById('stext_3').value,1)">
       <img src="botones/general/anterior.png" border="0px" alt="Anterior"></a>
-      <a href="javascript:void(0)" onclick="tree_equipos.findItem(document.getElementById('stext_3').value,0,1)">
+      <a href="../../javascript:void(0)" onclick="tree_equipos.findItem(document.getElementById('stext_3').value,0,1)">
       <img src="botones/general/buscar.png" border="0px" alt="Buscar"></a>
-      <a href="javascript:void(0)" onclick="tree_equipos.findItem(document.getElementById('stext_3').value)">
-      <img src="botones/general/siguiente.png" border="0px" alt="Siguiente"></a>  
+      <a href="../../javascript:void(0)" onclick="tree_equipos.findItem(document.getElementById('stext_3').value)">
+      <img src="../../botones/general/siguiente.png" border="0px" alt="Siguiente"></a>  
 	<br><div id="esperando_serie">
-    <img src="imagenes/cargando.gif"></div>
+    <img src="../../imagenes/cargando.gif"></div>
 	<div id="treeboxbox_tree_equipos" style="height:89%;width:95%" ></div>
 	<script type="text/javascript">
   <!--		
