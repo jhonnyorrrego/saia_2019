@@ -45,7 +45,7 @@ if($idcategoria and $idcategoria<>"")
   echo("<tree id=\"0\">\n"); 
 else
   echo("<tree id=\"0\">\n");
-include_once("db.php");
+//include_once("db.php");
 if($idcategoria and $idcategoria<>"")
   llena_formato($idcategoria,'',$seleccionados);
 else
@@ -63,11 +63,11 @@ if($id=="NULL")
   $papas=busca_filtro_tabla("*","categoria_formato","(cod_padre=0 OR cod_padre is null)".$where,"",$conn);
 else if($cod_padre!=''){
 	$papas=busca_filtro_tabla("*","categoria_formato","cod_padre='".$cod_padre."'".$where,"",$conn);
-	print_r($papas);die();
+	
 }
 else
   $papas=busca_filtro_tabla("*","categoria_formato","idcategoria_formato=".$id.$where,"",$conn);
-
+    print_r($papas);die();
 if($papas["numcampos"])
 { 
   for($i=0; $i<$papas["numcampos"]; $i++)
