@@ -11,7 +11,7 @@ $ruta.="../";
 $max_salida--;
 }
 
-include_once($ruta_db_superior."db.php");
+//include_once($ruta_db_superior."db.php");
 
 
 header("Expires: Mon, 26 Jul 1997 05:00:00 GMT"); // date in the past
@@ -72,7 +72,7 @@ if($papas["numcampos"])
   for($i=0; $i<$papas["numcampos"]; $i++)
   {
     $hijos = busca_filtro_tabla("count(*)","categoria_formato","cod_padre=".$papas[$i]["idcategoria_formato"],"",$conn);
-	print_r($hijos);die();
+	//print_r($hijos);die();
     echo("<item style=\"font-family:verdana; font-size:7pt;\" ");
 	if($tipo!=1){
     	echo("text=\"".htmlspecialchars($papas[$i]["nombre"])." \" id=\"-1\" >");
