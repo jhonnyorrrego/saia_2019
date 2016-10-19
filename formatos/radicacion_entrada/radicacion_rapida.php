@@ -20,7 +20,7 @@ $adicional=Null;
 if(@$_REQUEST["idcategoria_formato"]){
 	$adicional="?idcategoria_formato=".$_REQUEST["idcategoria_formato"];
 }
-?><link rel="STYLESHEET" type="text/css" href="css/dhtmlXTree.css">
+?><link rel="STYLESHEET" type="text/css" href="../../css/dhtmlXTree.css">
 	<script type="text/javascript" src="../../js/dhtmlXCommon.js"></script>
 	<script type="text/javascript" src="../../js/dhtmlXTree.js"></script>
 	<script type="text/javascript" src="../../js/dhtmlXTree_xw.js"></script> 
