@@ -12,7 +12,7 @@ $max_salida--;
 }
 
 include_once($ruta_db_superior."db.php");
-include_once($ruta_db_superior."formatos/librerias/estilo_formulario.php");
+
 
 header("Expires: Mon, 26 Jul 1997 05:00:00 GMT"); // date in the past
 header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT"); // always modified
