@@ -116,8 +116,23 @@
 			.label-info, .badge-info {
 			    background-color: #0B7BB6;
 			}
-			</style><form method="POST" action="../../colilla.php"><br /><br />
-<table style="font-size:10pt;border-collapse:collapse; width:40%;" border="1" align="center"><tr><td style="font-size:8pt;" class="encabezado_list" colspan="2" align="center">Seleccione el formato a radicar</td></tr><tr><td colspan="2"><tr><td colspan="2" align="center"><input type="submit" value="Radicar" id="enviar" name="enviar"/></td></tr></table></form><script>
+			</style>
+			<form method="POST" action="../../colilla.php"><br/><br />
+                <table style="font-size:10pt;border-collapse:collapse; width:40%;" border="1" align="center">
+                    <tr>
+                        <td style="font-size:8pt;" class="encabezado_list" colspan="2" align="center">Seleccione el formato a radicar</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2"><?php 
+	        echo arbol("radicacion","tipo_radicacion","formatos/radicacion_entrada/test_radicacion_rapida.php?idcategoria_formato=1","","","","","check"); 
+	        ?></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" align="center"><input type="submit" value="Radicar" id="enviar" name="enviar"/></td>
+                    </tr>
+                </table>
+            </form>
+    <script>
 	$(document).ready(function(){
 		$("#enviar").click(function(){
 			var ingreso=confirm("Esta seguro de generar un nuevo radicado?");
