@@ -163,7 +163,7 @@ include_once($ruta_db_superior."formatos/librerias/estilo_formulario.php");
 
 $adicional=Null;
 if(@$_REQUEST["idcategoria_formato"]){
-	$adicional="?idcategoria_formato=".$_REQUEST["idcategoria_formato"];
+	$adicional="&idcategoria_formato=".$_REQUEST["idcategoria_formato"];
 }
 ?><link rel="STYLESHEET" type="text/css" href="<?php echo($ruta_db_superior); ?>css/dhtmlXTree.css">
 	<script type="text/javascript" src="<?php echo($ruta_db_superior); ?>js/dhtmlXCommon.js"></script>
@@ -194,9 +194,9 @@ if(@$_REQUEST["idcategoria_formato"]){
 			tree_equipos.setOnClickHandler(onNodeSelect);  
 			tree_equipos.setOnLoadingStart(cargando_serie);
       tree_equipos.setOnLoadingEnd(fin_cargando_serie);
-      tree_equipos.setXMLAutoLoading("<?php echo($ruta_db_superior); ?>test_categoria.php<?php echo $adicional; ?>");
+      tree_equipos.setXMLAutoLoading("<?php echo($ruta_db_superior); ?>test_categoria.php?tipo_radicado=radicacion_entrada<?php echo $adicional; ?>");
       //tree_equipos.enableSmartXMLParsing(true);
-			tree_equipos.loadXML("<?php echo($ruta_db_superior); ?>test_categoria.php<?php echo $adicional; ?>");
+			tree_equipos.loadXML("<?php echo($ruta_db_superior); ?>test_categoria.php?tipo_radicado=radicacion_entrada<?php echo $adicional; ?>");
 	    function onNodeSelect(nodeId){
 	     if(nodeId.indexOf('#',0)==-1){
             window.parent.previsualizar.location='<?php echo($ruta_db_superior); ?>parsear_categoria.php?id='+nodeId;
