@@ -194,9 +194,9 @@ if(@$_REQUEST["idcategoria_formato"]){
 			tree_equipos.setOnClickHandler(onNodeSelect);  
 			tree_equipos.setOnLoadingStart(cargando_serie);
       tree_equipos.setOnLoadingEnd(fin_cargando_serie);
-      tree_equipos.setXMLAutoLoading("<?php echo($ruta_db_superior); ?>prueba_nuevo.php<?php echo $adicional; ?>");
+      tree_equipos.setXMLAutoLoading("<?php echo($ruta_db_superior); ?>formatos/radicacion_entrada/test_radicacion_rapida.php<?php echo $adicional; ?>");
       //tree_equipos.enableSmartXMLParsing(true);
-			tree_equipos.loadXML("<?php echo($ruta_db_superior); ?>prueba_nuevo.php<?php echo $adicional; ?>");
+			tree_equipos.loadXML("<?php echo($ruta_db_superior); ?>formatos/radicacion_entrada/test_radicacion_rapida.php<?php echo $adicional; ?>");
 	    function onNodeSelect(nodeId){
 	     if(nodeId.indexOf('#',0)==-1){
             window.parent.previsualizar.location='<?php echo($ruta_db_superior); ?>parsear_categoria.php?id='+nodeId;
