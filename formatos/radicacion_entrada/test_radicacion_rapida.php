@@ -101,8 +101,8 @@ if($papas["numcampos"])
     if($hijos[0][0]){
     	llena_formato('',$papas[$i]["idcategoria_formato"],$seleccionados);
     }
-	if($tipo!=1)
-		adicionar_formato($papas[$i]["idcategoria_formato"]);
+	/*if($tipo!=1)
+		adicionar_formato($papas[$i]["idcategoria_formato"]);*/
     echo("</item>\n");
   }     
 }
