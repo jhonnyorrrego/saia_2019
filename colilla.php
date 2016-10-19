@@ -255,7 +255,7 @@ function imprime(atras){
   <b>Fecha: <?php echo $datos_fecha; ?></b><br/>
   
  <?php if($datos[0]["tipo_radicado"]==1 || $datos[0]["tipo_radicado"]==2){?>
-      <b>Numero de Folios: <?php echo $numero_folios[0]['numero_folios']; ?></b><br/>
+      <b>No. Folios: <?php echo $numero_folios[0]['numero_folios']; ?></b><br/>
  <?php }?>
  <b>Origen: <?php echo($origen);?></b><br/>
   
