@@ -13,8 +13,8 @@ $max_salida--;
 }
 
 
-include_once("db.php");
-include_once("formatos/librerias/estilo_formulario.php");
+include_once($ruta_db_superior."db.php");
+include_once($ruta_db_superior."formatos/librerias/estilo_formulario.php");
 $adicional=Null;
 if(@$_REQUEST["idcategoria_formato"]){
 	$adicional="?idcategoria_formato=".$_REQUEST["idcategoria_formato"];
