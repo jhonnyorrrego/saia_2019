@@ -55,9 +55,9 @@ if(@$_REQUEST["idcategoria_formato"]){
 			tree_equipos.setOnClickHandler(onNodeSelect);  
 			tree_equipos.setOnLoadingStart(cargando_serie);
       tree_equipos.setOnLoadingEnd(fin_cargando_serie);
-      tree_equipos.setXMLAutoLoading("test_categoria.php<?php echo $adicional; ?>");
+      tree_equipos.setXMLAutoLoading("<?php echo($ruta_db_superior); ?>test_categoria.php<?php echo $adicional; ?>");
       //tree_equipos.enableSmartXMLParsing(true);
-			tree_equipos.loadXML("test_categoria.php<?php echo $adicional; ?>");
+			tree_equipos.loadXML("<?php echo($ruta_db_superior); ?>test_categoria.php<?php echo $adicional; ?>");
 	    function onNodeSelect(nodeId){
 	     if(nodeId.indexOf('#',0)==-1){
             window.parent.previsualizar.location='parsear_categoria.php?id='+nodeId;
