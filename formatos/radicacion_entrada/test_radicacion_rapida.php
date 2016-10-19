@@ -49,7 +49,7 @@ else
 if($idcategoria and $idcategoria<>"")
   llena_formato($idcategoria,'',$seleccionados);
 else
-  llena_formato("NULL",'1',$seleccionados);
+  llena_formato("NULL",'',$seleccionados);
 echo("</tree>\n");
 ?>
 <?php
