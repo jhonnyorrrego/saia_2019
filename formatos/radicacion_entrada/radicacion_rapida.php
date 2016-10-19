@@ -119,7 +119,7 @@
 			</style><form method="POST" action="../../colilla.php"><br /><br />
 
                 
-                <input type="submit" value="Radicar" id="enviar" name="enviar"/>
+                <input type="submit" value="Continuar" id="enviar" name="enviar"/>
             </form><script>
 	$(document).ready(function(){
 		$("#enviar").click(function(){
