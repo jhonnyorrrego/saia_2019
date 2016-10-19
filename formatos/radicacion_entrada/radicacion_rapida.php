@@ -309,7 +309,7 @@ function arbol($campo,$nombre_arbol,$url,$cargar_todos=0,$padresehijos=false,$qu
                     </tr>
                     <tr>
                         <td colspan="2"><?php 
-	        echo arbol("radicacion","tipo_radicacion","text_radicacion_rapida.php?idcategoria_formato=1","","","","","check"); 
+	        echo arbol("radicacion","tipo_radicacion","formatos/radicacion_entrada/text_radicacion_rapida.php?idcategoria_formato=1","","","","","check"); 
 	        ?></td>
                     </tr>
                     <tr>
