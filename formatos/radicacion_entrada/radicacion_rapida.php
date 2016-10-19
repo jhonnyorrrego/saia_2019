@@ -149,7 +149,7 @@ echo(estilo_bootstrap());
                     </tr>
                     <tr>
                         <td colspan="2">include_once("db.php");<?php
-//include_once("formatos/librerias/estilo_formulario.php");
+include_once("formatos/librerias/estilo_formulario.php");
 $adicional=Null;
 if(@$_REQUEST["idcategoria_formato"]){
 	$adicional="?idcategoria_formato=".$_REQUEST["idcategoria_formato"];
