@@ -61,7 +61,7 @@ if($papas["numcampos"])
     echo("<item style=\"font-family:verdana; font-size:7pt;\" ");
 	if($tipo!=1){
 	    
-    	//echo("text=\"".htmlspecialchars($papas[$i]["nombre"])." \" id=\"-1\" >");
+    	echo("text=\"".htmlspecialchars($papas[$i]["nombre"])." \" id=\"-1\" >");
 	}
 	else{
 		$estado='';
