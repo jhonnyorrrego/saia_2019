@@ -714,7 +714,21 @@ function datos_editar_radicacion($idformato,$iddoc){
 	global $conn,$ruta_db_superior;
 	$datos=busca_filtro_tabla("","ft_radicacion_entrada","documento_iddocumento=".$iddoc,"",$conn);
     if($datos[0]['tipo_origen']==1){
-        
+        ?>
+            <script>        
+                $('#fecha_oficio_entrada').addClass('required');
+                $('#destino').addClass('required');
+                $('#persona_natural').addClass('required');
+                $('#destino').addClass('required');
+                $('#tr_tipo_destino').hide(); 
+                
+                tree_area_responsable.setOnLoadingEnd(chekeararbol);
+                $('#area_responsable').parent().parent().hide();
+                $('#persona_natural_dest').parent().parent().hide();
+                $('#tr_tipo_mensajeria').hide();
+                $('#tipo_mensajeria0').parent().hide();
+            </script>
+        <?php
     }else{
         
     }
