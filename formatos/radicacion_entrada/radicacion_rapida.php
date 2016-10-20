@@ -189,7 +189,7 @@ if(@$_REQUEST["idcategoria_formato"]){
 	     if(nodeId.indexOf('#',0)==-1){
             $('#generar_consecutivo').val(nodeId);
             if(nodeId=='radicacion_salida'){
-                alert('salida');
+                $('#enlace').val("pantallas/buscador_principal.php?idbusqueda=10");
             }
 	     }
       }
