@@ -741,7 +741,7 @@ function datos_editar_radicacion($idformato,$iddoc){
     }else{
         ?>
                     <script>        
-                        $('[name="tipo_radicado"]').val('radicacion_salida');
+                        $('#tipo_origen0').hide();
                         
                         $('#area_responsable').parent().parent().show();
                         $('#area_responsable').addClass('required');
