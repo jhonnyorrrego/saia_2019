@@ -112,10 +112,10 @@ function adicionar_formato($idcategoria){
     		        echo("text=\"".ucwords(strtolower(htmlspecialchars($formatos[$i]["etiqueta"])))." Origen Externo\" id=\"radicacion_entrada\" ></item>");
     		        echo("<item style=\"font-family:verdana; font-size:7pt;\" ");
     		        echo("text=\"".ucwords(strtolower(htmlspecialchars($formatos[$i]["etiqueta"])))." Origen Interno\" id=\"radicacion_salida\" ></item>");
-		        }else{
+		        }/*else{
 		            echo("<item style=\"font-family:verdana; font-size:7pt;\" ");
     		        echo("text=\"".ucwords(strtolower(htmlspecialchars($formatos[$i]["etiqueta"])))." \" id=\"".$formatos[$i]["nombre"]."\" ></item>");
-		        }
+		        }*/
 		    }else{
 			    echo("<item style=\"font-family:verdana; font-size:7pt;\" ");
     		    echo("text=\"".ucwords(strtolower(htmlspecialchars($formatos[$i]["etiqueta"])))." \" id=\"".$formatos[$i]["idformato"]."\" ></item>");
