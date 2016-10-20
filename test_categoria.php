@@ -108,7 +108,8 @@ function adicionar_formato($idcategoria){
 		if(in_array($idcategoria,$categorias_formato) && is_file("formatos/".$formatos[$i]["nombre"]."/".$formatos[$i]["ruta_adicionar"])){
 		    if(@$_REQUEST['tipo_radicado']){
 		        if($_REQUEST['tipo_radicado']==$formatos[$i]["nombre"]){
-		            
+		            echo("<item style=\"font-family:verdana; font-size:7pt;\" ");
+    		        echo("text=\"".ucwords(strtolower(htmlspecialchars($formatos[$i]["etiqueta"])))." \" id=\"".$formatos[$i]["idformato"]."\" ></item>");
 		        }
 		    }
 			echo("<item style=\"font-family:verdana; font-size:7pt;\" ");
