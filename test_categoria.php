@@ -75,6 +75,9 @@ if($papas["numcampos"])
 		if($papas[$i]["cod_padre"]!=0 &&  $papas[$i]["cod_padre"]!=NULL){
 			$concatenar_padre=','.$papas[$i]["cod_padre"];
 		}
+		if(@$_REQUEST['tipo_radicado']=='radicacion_entrada'){
+		    echo("text=\"".htmlspecialchars($papas[$i]["nombre"]).$estado." \" id=\"".$papas[$i]["idcategoria_formato"]."\"");
+		}
 		echo("text=\"".htmlspecialchars($papas[$i]["nombre"]).$estado." \" id=\"".$papas[$i]["idcategoria_formato"]."\"");
 		if(in_array($papas[$i]["idcategoria_formato"],$seleccionados)){
 			echo (" checked=\"1\" >");
