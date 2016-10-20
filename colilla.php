@@ -36,7 +36,7 @@ if(@$_REQUEST["doc"] || @$_REQUEST["key"]){
   //registrar_accion_digitalizacion($doc,'IMPRIME COLILLA');
 }else{
 	if(@$_REQUEST["generar_consecutivo"]){	
-		validar_confirmacion_salida($_REQUEST["generar_consecutivo"]);
+		validar_confirmacion_salida($_REQUEST["generar_consecutivo"],$_REQUEST["enlace"]);
 	}else if(@$_REQUEST["consecutivo"] && @$_REQUEST["salidas"]){
 		$formato=$_REQUEST["consecutivo"];
 		$_REQUEST["enlace"]="pantallas/buscador_principal.php?idbusqueda=10";
