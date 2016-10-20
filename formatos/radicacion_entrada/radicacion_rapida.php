@@ -188,6 +188,9 @@ if(@$_REQUEST["idcategoria_formato"]){
 	    function onNodeSelect(nodeId){
 	     if(nodeId.indexOf('#',0)==-1){
             $('#generar_consecutivo').val(nodeId);
+            if(nodeId=='radicacion_salida'){
+                alert('salida');
+            }
 	     }
       }
       function fin_cargando_serie() {
