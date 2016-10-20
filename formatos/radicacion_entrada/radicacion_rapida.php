@@ -134,7 +134,7 @@ echo(librerias_jquery("1.7"));
 			    background-color: #0B7BB6;
 			}
 			</style>
-			<form method="POST" action="../../colilla.php"><br/><br />
+			<form method="POST" action="<?php echo($ruta_db_superior); ?>colilla.php"><br/><br />
                 <table style="font-size:10pt;border-collapse:collapse; width:40%;" border="1" align="center">
                     <tr>
                         <td style="font-size:8pt;" class="encabezado_list" colspan="2" align="center">Seleccione el formato a radicar</td>
