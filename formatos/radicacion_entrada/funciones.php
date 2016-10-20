@@ -715,22 +715,47 @@ function datos_editar_radicacion($idformato,$iddoc){
 	$datos=busca_filtro_tabla("","ft_radicacion_entrada","documento_iddocumento=".$iddoc,"",$conn);
     if($datos[0]['tipo_origen']==1){
         ?>
-            <script>        
-                $('#fecha_oficio_entrada').addClass('required');
-                $('#destino').addClass('required');
-                $('#persona_natural').addClass('required');
-                $('#destino').addClass('required');
-                $('#tr_tipo_destino').hide(); 
-                
-                tree_area_responsable.setOnLoadingEnd(chekeararbol);
-                $('#area_responsable').parent().parent().hide();
-                $('#persona_natural_dest').parent().parent().hide();
-                $('#tr_tipo_mensajeria').hide();
-                $('#tipo_mensajeria0').parent().hide();
-            </script>
+                    <script>        
+                        $('[name="tipo_radicado"]').val('radicacion_entrada');
+                        
+                        $('#area_responsable').parent().parent().hide();
+                        $('#area_responsable').removeClass('required');
+                        $('#destino').addClass('required');
+                        $('#tr_tipo_destino').hide();
+                        $('input:radio[name="tipo_destino"]').filter('[value="2"]').attr('checked', true);
+                        $('#destino').parent().parent().show();
+                        $('#copia_a').parent().parent().show();
+                        $('#persona_natural_dest').parent().parent().hide();
+                        $('#persona_natural_dest').removeClass('required');
+                        $('#tr_tipo_mensajeria').hide();
+                        $('[name="tipo_mensajeria"]').removeClass('required');
+                        
+                        $('#fecha_oficio_entrada').addClass('required');
+                        $('#fecha_oficio_entrada').parent().parent().parent().show();
+                        $('#numero_oficio').parent().parent().show();
+                        $('#persona_natural').addClass('required');
+                        $('#persona_natural').parent().parent().show();
+                    </script>
         <?php
     }else{
-        
+        ?>
+                    <script>        
+                        $('[name="tipo_radicado"]').val('radicacion_salida');
+                        
+                        $('#area_responsable').parent().parent().show();
+                        $('#area_responsable').addClass('required');
+                        $('#tr_tipo_destino').show();
+                        
+                        $('#fecha_oficio_entrada').removeClass('required');
+                        $('#fecha_oficio_entrada').parent().parent().parent().hide();
+                        $('#numero_oficio').parent().parent().hide();
+                        $('#persona_natural').removeClass('required');
+                        $('#persona_natural').parent().parent().hide();
+                        //$('#anexos_digitales').parent().parent().hide();
+                        $('#tr_tipo_mensajeria').show();
+                        $('[name="tipo_mensajeria"]').addClass('required');
+                    </script>
+        <?php
     }
 }
     
