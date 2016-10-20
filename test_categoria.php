@@ -109,12 +109,12 @@ function adicionar_formato($idcategoria){
 		    if(@$_REQUEST['tipo_radicado']){
 		        if($_REQUEST['tipo_radicado']==$formatos[$i]["nombre"]){
 		            echo("<item style=\"font-family:verdana; font-size:7pt;\" ");
-    		        echo("text=\"".ucwords(strtolower(htmlspecialchars($formatos[$i]["etiqueta"])))." Origen Externo\" id=\"".$formatos[$i]["idformato"]."\" ></item>");
+    		        echo("text=\"".ucwords(strtolower(htmlspecialchars($formatos[$i]["etiqueta"])))." Origen Externo\" id=\"radicacion_entrada\" ></item>");
     		        echo("<item style=\"font-family:verdana; font-size:7pt;\" ");
-    		        echo("text=\"".ucwords(strtolower(htmlspecialchars($formatos[$i]["etiqueta"])))." Origen Interno\" id=\"".$formatos[$i]["idformato"]."\" ></item>");
+    		        echo("text=\"".ucwords(strtolower(htmlspecialchars($formatos[$i]["etiqueta"])))." Origen Interno\" id=\"radicacion_salida\" ></item>");
 		        }else{
 		            echo("<item style=\"font-family:verdana; font-size:7pt;\" ");
-    		        echo("text=\"".ucwords(strtolower(htmlspecialchars($formatos[$i]["etiqueta"])))." \" id=\"".$formatos[$i]["idformato"]."\" ></item>");
+    		        echo("text=\"".ucwords(strtolower(htmlspecialchars($formatos[$i]["etiqueta"])))." \" id=\"".$formatos[$i]["nombre"]."\" ></item>");
 		        }
 		    }else{
 			    echo("<item style=\"font-family:verdana; font-size:7pt;\" ");
