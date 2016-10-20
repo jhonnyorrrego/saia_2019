@@ -325,7 +325,7 @@ function generar_ingreso_formato($nombre_formato){
 	//$_REQUEST["padre"] = $id;
 	
 	$_REQUEST["accion"] = "guardar_detalle";
-	$_REQUEST["tipo_radicado"] = $nombre_formato; //se envia el nombre del radicado del formato;
+	$_REQUEST["tipo_radicado"] = $nombre_radicado; //se envia el nombre del radicado del formato;
 	$_REQUEST["funcion"] = "radicar_plantilla";// esto siempre va
 	$_REQUEST["tabla"] = $formato[0]["nombre_tabla"]; //nombre de la tabla del formato en la base de datos.
 	$_REQUEST["formato"] = $nombre_formato;  //nombre del formato
