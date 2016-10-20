@@ -717,7 +717,7 @@ function datos_editar_radicacion($idformato,$iddoc){
         ?>
                 <script>
                     $(document).ready(function(){
-                        $('#tipo_origen1').hide();
+                        $('#tipo_origen1').parent().hide();
                         $('#area_responsable').parent().parent().hide();
                         $('#area_responsable').removeClass('required');
                         $('#destino').addClass('required');
