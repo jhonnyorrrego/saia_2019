@@ -186,7 +186,7 @@ if(@$_REQUEST["idcategoria_formato"]){
 			tree_equipos.loadXML("<?php echo($ruta_db_superior); ?>test_categoria.php?tipo_radicado=radicacion_entrada<?php echo $adicional; ?>");
 	    function onNodeSelect(nodeId){
 	     if(nodeId.indexOf('#',0)==-1){
-            window.parent.previsualizar.location='<?php echo($ruta_db_superior); ?>parsear_categoria.php?id='+nodeId;
+            alert('Seleccionado');
 	     }
       }
       function fin_cargando_serie() {
