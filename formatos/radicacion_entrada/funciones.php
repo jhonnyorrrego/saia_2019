@@ -715,9 +715,8 @@ function datos_editar_radicacion($idformato,$iddoc){
 	$datos=busca_filtro_tabla("","ft_radicacion_entrada","documento_iddocumento=".$iddoc,"",$conn);
     if($datos[0]['tipo_origen']==1){
         ?>
-                    <script>        
-                        $('[name="tipo_radicado"]').val('radicacion_entrada');
-                        
+                <script>
+                    $(document).ready(function(){
                         $('#area_responsable').parent().parent().hide();
                         $('#area_responsable').removeClass('required');
                         $('#destino').addClass('required');
@@ -735,7 +734,8 @@ function datos_editar_radicacion($idformato,$iddoc){
                         $('#numero_oficio').parent().parent().show();
                         $('#persona_natural').addClass('required');
                         $('#persona_natural').parent().parent().show();
-                    </script>
+                    });
+                </script>
         <?php
     }else{
         ?>
