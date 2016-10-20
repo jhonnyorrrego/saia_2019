@@ -710,6 +710,14 @@ function mostrar_informacion_destino_radicacion($idformato,$iddoc){
     
 }
 
-
+function datos_editar_radicacion($idformato,$iddoc){
+	global $conn,$ruta_db_superior;
+	$datos=busca_filtro_tabla("","ft_radicacion_entrada","documento_iddocumento=".$iddoc,"",$conn);
+    if($datos[0]['tipo_origen']==1){
+        
+    }else{
+        
+    }
+}
     
 ?>
