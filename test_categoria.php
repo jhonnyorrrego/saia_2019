@@ -109,9 +109,9 @@ function adicionar_formato($idcategoria){
 		    if(@$_REQUEST['tipo_radicado']){
 		        if($_REQUEST['tipo_radicado']==$formatos[$i]["nombre"]){
 		            echo("<item style=\"font-family:verdana; font-size:7pt;\" ");
-    		        echo("text=\"".ucwords(strtolower(htmlspecialchars($formatos[$i]["etiqueta"])))." \" id=\"".$formatos[$i]["idformato"]."\" ></item>");
+    		        echo("text=\"".ucwords(strtolower(htmlspecialchars($formatos[$i]["etiqueta"])))." ORIGEN EXTERNO\" id=\"".$formatos[$i]["idformato"]."\" ></item>");
     		        echo("<item style=\"font-family:verdana; font-size:7pt;\" ");
-    		        echo("text=\"".ucwords(strtolower(htmlspecialchars($formatos[$i]["etiqueta"])))." \" id=\"".$formatos[$i]["idformato"]."\" ></item>");
+    		        echo("text=\"".ucwords(strtolower(htmlspecialchars($formatos[$i]["etiqueta"])))." ORIGEN INTERNO\" id=\"".$formatos[$i]["idformato"]."\" ></item>");
 		        }else{
 		            echo("<item style=\"font-family:verdana; font-size:7pt;\" ");
     		        echo("text=\"".ucwords(strtolower(htmlspecialchars($formatos[$i]["etiqueta"])))." \" id=\"".$formatos[$i]["idformato"]."\" ></item>");
