@@ -287,6 +287,10 @@ function imprime(atras){
 }
 
 function generar_ingreso_formato($nombre_formato){
+    $nombre_radicado=$nombre_formato;
+    if($nombre_formato=='radicacion_salida'){
+        $nombre_formato='radicacion_entrada';
+    }
 	$formato=busca_filtro_tabla("A.*,B.nombre as nombre_campo, B.*","formato A, campos_formato B","A.nombre='".$nombre_formato."' AND idformato=formato_idformato AND obligatoriedad=1","",$conn);
 	$dependencia=busca_filtro_tabla("","dependencia_cargo","funcionario_idfuncionario=".usuario_actual("idfuncionario")." AND estado=1","",$conn);
 	
