@@ -713,7 +713,7 @@ function mostrar_informacion_destino_radicacion($idformato,$iddoc){
 function datos_editar_radicacion($idformato,$iddoc){
 	global $conn,$ruta_db_superior;
 	$datos=busca_filtro_tabla("","ft_radicacion_entrada","documento_iddocumento=".$iddoc,"",$conn);
-	print_r($datos);
+	print_r($_REQUEST);
     if($datos[0]['tipo_origen']==1){
         ?>
                 <script>
