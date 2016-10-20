@@ -590,7 +590,7 @@ function validar_confirmacion_salida($consecutivo, $enlace){
 		if(ingreso){
 			window.open("colilla.php?consecutivo=radicacion_salida&salidas=1","_self");
 		}else{
-			window.open("pantallas/buscador_principal.php?idbusqueda=10","_self");
+			window.open("<?php echo $enlace;?>");
 		}
 		</script>
 		<?php
