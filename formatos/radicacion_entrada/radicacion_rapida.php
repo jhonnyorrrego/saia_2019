@@ -141,7 +141,8 @@ echo(librerias_jquery("1.7"));
                     </tr>
                     <tr>
                         <td colspan="2">
-                            
+                            <input type="hidden" id="generar_consecutivo" name="generar_consecutivo"/>
+                            <input type="hidden" name="enlace" id="enlace" value="pantallas/buscador_principal.php?idbusqueda=7">
                             
                             <?php
 
