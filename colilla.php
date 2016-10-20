@@ -588,7 +588,7 @@ function validar_confirmacion_salida($consecutivo, $enlace){
 		<script>
 		var ingreso=confirm("Esta seguro de generar un nuevo radicado?");
 		if(ingreso){
-			window.open("colilla.php?consecutivo=radicacion_salida&salidas=1","_self");
+			window.open("colilla.php?consecutivo=radicacion_salida&salidas=1&enlace=<?php echo $enlace;?>","_self");
 		}else{
 			window.open("<?php echo $enlace;?>");
 		}
