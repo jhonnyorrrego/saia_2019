@@ -153,6 +153,7 @@ function llenar_datos_funcion($idformato,$iddoc){
 	global $conn;
 	$dato=busca_filtro_tabla("","documento","iddocumento=".$iddoc,"",$conn);
 	if($dato[0]["estado"]=='INICIADO'){
+	    $sql="UPDATE ft_radicacion_entrada SET tipo_origen=".$dato[0]['tipo_radicado']." WHERE documento_iddocumento=".$iddoc;
 		$texto='';
 		$texto.='<a href="editar_radicacion_entrada.php?no_sticker=1&iddoc='.$iddoc.'&idformato='.$idformato.'">Llenar datos</a>';
 		echo $texto;
@@ -707,5 +708,7 @@ function mostrar_informacion_destino_radicacion($idformato,$iddoc){
     echo $tabla;
     
 }
+
+
     
 ?>
