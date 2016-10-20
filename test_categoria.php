@@ -7,10 +7,6 @@ header("Pragma: no-cache"); // HTTP/1.0
 $id = @$_GET["id"];
 $idcategoria=Null;
 
-if(@$_REQUEST["tipo_radicado"]){
-	$tipo_radicado=$_REQUEST["tipo_radicado"];
-}
-
 if(@$_REQUEST["idcategoria_formato"]){
 	$idcategoria=$_REQUEST["idcategoria_formato"];
 }
