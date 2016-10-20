@@ -581,9 +581,9 @@ function validar_confirmacion(){
 	else
 		return;
 }
-function validar_confirmacion_salida($consecutivo){
+function validar_confirmacion_salida($consecutivo, $enlace){
 	global $conn;
-	if($consecutivo=='radicacion_salida'){
+	//if($consecutivo=='radicacion_salida'){
 		?>
 		<script>
 		var ingreso=confirm("Esta seguro de generar un nuevo radicado?");
@@ -595,6 +595,6 @@ function validar_confirmacion_salida($consecutivo){
 		</script>
 		<?php
 		die();
-	}
+	//}
 }
 ?>
