@@ -230,7 +230,7 @@ if(@$_REQUEST["idcategoria_formato"]){
                     </tr>
                 </table>
             </form>
-    <script>
+    <!--script>
 	$(document).ready(function(){
 		$("#enviar").click(function(){
 			var ingreso=confirm("Esta seguro de generar un nuevo radicado?");
@@ -241,4 +241,4 @@ if(@$_REQUEST["idcategoria_formato"]){
 			}
 		});
 	});
-</script>
+</script-->
