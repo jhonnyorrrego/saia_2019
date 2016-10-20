@@ -39,7 +39,7 @@ if(@$_REQUEST["doc"] || @$_REQUEST["key"]){
 		validar_confirmacion_salida($_REQUEST["generar_consecutivo"],$_REQUEST["enlace"]);
 	}else if(@$_REQUEST["consecutivo"] && @$_REQUEST["salidas"]){
 		$formato=$_REQUEST["consecutivo"];
-		$_REQUEST["enlace"]="pantallas/buscador_principal.php?idbusqueda=10";
+		//$_REQUEST["enlace"]="pantallas/buscador_principal.php?idbusqueda=10";
 	}else{
 		$formato='radicacion_entrada';
 	}
