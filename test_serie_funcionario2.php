@@ -59,7 +59,7 @@ else
   echo("<tree id=\"0\">\n");
 
 llena_serie("NULL");
-echo("<item style=\"font-family:verdana; font-size:7pt;\" text=\"Series sin asignar\" id=\"-1\" child=\"1\">");
+/*echo("<item style=\"font-family:verdana; font-size:7pt;\" text=\"Series sin asignar\" id=\"-1\" child=\"1\">");
 //series_sin_asignar();
 echo("</item>");
 
