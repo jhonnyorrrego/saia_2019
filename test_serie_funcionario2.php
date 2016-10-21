@@ -90,9 +90,10 @@ if(isset($_REQUEST["orden"]))
   $orden=$_REQUEST["orden"];
 else
   $orden="nombre";
-if($serie=="NULL")
+if($serie=="NULL"){
   $papas=busca_filtro_tabla("*",$tabla,"(cod_padre IS NULL OR cod_padre=0) $activo $condicion","$orden ASC",$conn);
-else
+  print_r($papas);die();
+}else
   $papas=busca_filtro_tabla("*",$tabla,"cod_padre=".$serie.$activo.$condicion,"$orden ASC",$conn); 
 
 if($papas["numcampos"]){
