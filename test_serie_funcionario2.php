@@ -64,13 +64,13 @@ echo("<item style=\"font-family:verdana; font-size:7pt;\" text=\"Series sin asig
 echo("</item>");
 
 
-/*
+
 $tabla_otra = 'serie';
 echo  "<item style=\"font-family:verdana; font-size:7pt;\" text=\"Otras categorias\" id=\"3-categoria-Otras categorias\" >\n"; 
        llena_serie_otras("NULL"," and categoria=3 ");
 echo "</item>\n";	
 
-echo("</tree>\n");*/
+echo("</tree>\n");
 $activo = "";
 ?>
 <?php
