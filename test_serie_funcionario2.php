@@ -120,9 +120,9 @@ if($papas["numcampos"]){
       echo(" child=\"1\">\n");
     else
       echo(" child=\"0\">\n");
-    if(!$_REQUEST["id"] && $tabla!='dependencia')
+    if(!$_REQUEST["id"] && $tabla!='dependencia'){
     	llena_serie($papas[$i]["id$tabla"]);
-		else{
+		}else{
 			if(!$_REQUEST["admin"]){
 				llena_series_asignadas($papas[$i]["id$tabla"]);
 			}
