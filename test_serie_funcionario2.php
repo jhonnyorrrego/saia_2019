@@ -62,7 +62,7 @@ else
 
 
 if($_REQUEST['dependencia']){
-    $condicion="OR iddependencia=".$_REQUEST['dependencia'];
+    $condicion="O iddependencia=".$_REQUEST['dependencia'];
     llena_serie("NULL",$condicion);
 }else{
     
@@ -99,6 +99,7 @@ if($serie=="NULL"){
 if($papas["numcampos"]){
   for($i=0; $i<$papas["numcampos"]; $i++){
     $hijos = busca_filtro_tabla("count(*) AS cant",$tabla,"cod_padre=".$papas[$i]["id$tabla"].$activo.$condicion,"",$conn);
+    print_r($hijos);
     echo("<item style=\"font-family:verdana; font-size:7pt;color:blue\" ");
     $cadena_codigo='';
     if(@$papas[$i]["codigo"]){
