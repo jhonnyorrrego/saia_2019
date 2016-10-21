@@ -92,7 +92,7 @@ else
   $orden="nombre";
 if($serie=="NULL"){
   $papas=busca_filtro_tabla("*",$tabla,"(cod_padre IS NULL OR cod_padre=0) $activo $condicion","$orden ASC",$conn);
-  print_r($papas);die();
+  //print_r($papas);die();
 }else
   $papas=busca_filtro_tabla("*",$tabla,"cod_padre=".$serie.$activo.$condicion,"$orden ASC",$conn); 
 
