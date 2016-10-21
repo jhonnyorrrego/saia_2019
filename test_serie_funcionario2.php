@@ -62,8 +62,8 @@ else
 
 
 if($_REQUEST['dependencia']){
-    $condicion="O iddependencia=".$_REQUEST['dependencia'];
-    llena_serie("NULL",$condicion);
+    //$condicion="O iddependencia=".$_REQUEST['dependencia'];
+    llena_serie("NULL");
 }else{
     
 llena_serie("NULL");
