@@ -92,13 +92,14 @@ else
   $orden="nombre";
 if($serie=="NULL"){
   $papas=busca_filtro_tabla("*",$tabla,"(cod_padre IS NULL OR cod_padre=0) $activo $condicion","$orden ASC",$conn);
-  //print_r($papas);die();
+  
 }else
   $papas=busca_filtro_tabla("*",$tabla,"cod_padre=".$serie.$activo.$condicion,"$orden ASC",$conn); 
 
 if($papas["numcampos"]){
   for($i=0; $i<$papas["numcampos"]; $i++){
     $hijos = busca_filtro_tabla("count(*) AS cant",$tabla,"cod_padre=".$papas[$i]["id$tabla"].$activo.$condicion,"",$conn);
+    print_r($papas);die();
     echo("<item style=\"font-family:verdana; font-size:7pt;color:blue\" ");
     $cadena_codigo='';
     if(@$papas[$i]["codigo"]){
