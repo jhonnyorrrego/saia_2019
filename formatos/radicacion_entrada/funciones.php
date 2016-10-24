@@ -323,7 +323,7 @@ function tipo_radicado_radicacion($idformato,$iddoc){//en el adicionar
     ?>
         <script>
             $(document).ready(function(){
-                val dependencia='hola';
+                var dependencia=$('#dependencia').val();
                 alert(dependencia);
                 //tree_digital_files.deleteChildItems(0);
                 //tree_digital_files.loadXML("consultar_digitalizaciones.php");
