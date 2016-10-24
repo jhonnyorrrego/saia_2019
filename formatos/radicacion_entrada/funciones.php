@@ -327,7 +327,22 @@ function tipo_radicado_radicacion($idformato,$iddoc){//en el adicionar
                 alert(dependencia);
                 
                 function obtener_dependencia(rol){
-                    
+                    $.ajax({
+                        type:'POST',
+                        dataType: 'json',
+                        url: "obtener_dependencia.php",
+                        data: {
+                                        idft_solicitud:seleccionado
+                        },
+                        success: function(datos){
+                            //alert("El mensaje recibido es: "+datos.identificacion);
+                            $("#identifica_afiliado").val(datos.identificacion);
+                            $("#fecha_inicial_verifi").val(datos.fecha_solicitud);
+                            $("#numero_folios_verifi").val(datos.numero_folios);
+                            $("#numero_folios_recibi").val(datos.numero_folios)/**/
+                            folios=datos.numero_folios;
+                        }
+                    });  
                 }
                 
                 //tree_digital_files.deleteChildItems(0);
