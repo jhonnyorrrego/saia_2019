@@ -77,7 +77,7 @@ else
 
 
 if($_REQUEST['dependencia']){
-    llena_serie("NULL");
+    llena_serie("0",$condicion);
 }else{
     
 llena_serie("NULL");
