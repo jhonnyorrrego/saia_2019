@@ -10,8 +10,10 @@ $ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
 $ruta.="../";
 $max_salida--;
 }
-print_r($_REQUEST);die();
+
 include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."formatos/librerias_funciones_generales.php");
 
 $datos=busca_filtro_tabla('iddependencia','vfuncionario_dc','iddependencia_cargo='.$_REQUEST['iddependencia_cargo'],'',conn);
+
+$datos=json_encode($datos);
