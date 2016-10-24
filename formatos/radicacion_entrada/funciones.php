@@ -788,7 +788,6 @@ function datos_editar_radicacion($idformato,$iddoc){
 
 function serie_documental_radicacion($idformato,$iddoc){
 	global $conn,$ruta_db_superior;
-	echo 'hola';
 	?>
 	<script>
         tree_destino.setOnClickHandler(onNodeSelect); 
