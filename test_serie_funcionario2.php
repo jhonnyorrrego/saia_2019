@@ -64,6 +64,7 @@ else
 if($_REQUEST['dependencia']){
     if($id and $id<>"" && @$_REQUEST["uid"] && $id!=-1){
         $serie=str_replace("d","",$id);
+        llena_serie($id);
     }
     llena_serie("NULL");
 }else{
