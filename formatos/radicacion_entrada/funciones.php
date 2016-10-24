@@ -792,5 +792,10 @@ function datos_editar_radicacion($idformato,$iddoc){
         </script>
     <?php
 }
+
+function serie_documental_radicacion($idformato,$iddoc){
+	global $conn,$ruta_db_superior;
+    
+}
     
 ?>
