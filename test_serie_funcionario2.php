@@ -72,7 +72,7 @@ else
 
 if($_REQUEST['dependencia']){
     
-    //llena_serie("NULL");
+    llena_serie("NULL");
 }else{
     
 llena_serie("NULL");
