@@ -803,6 +803,7 @@ function serie_documental_radicacion($idformato,$iddoc){
 	            padre=padre.replace("#","");
 	        }
 	        tree_serie_idserie.deleteChildItems(0);
+	        tree_serie_idserie.loadXML("../../test_serie_funcionario2.php?tabla=dependencia&admin=1&dependencia="+padre+"&sin_padre=1");
         }
 	});
         
