@@ -36,10 +36,7 @@ include_once($ruta_db_superior."db.php");
 echo("<?xml version=\"1.0\" encoding=\"UTF-8\"?".">");
 
 if($id and $id<>"" && @$_REQUEST["uid"] && $id=="d38"){
-        
-        //llena_series_asignadas($dependencia);
         //print_r($_REQUEST);
-        echo("valida");
         /*$dependencia=str_replace("d","",$id);
         echo("<tree id=\"".$id."\">\n");
         llena_serie($dependencia);
