@@ -798,6 +798,9 @@ function serie_documental_radicacion($idformato,$iddoc){
 	?>
 	<script>
         tree_destino.setOnClickHandler(onNodeSelect); 
+        function onNodeSelect(nodeId){
+	        alert(nodeId);
+        }
     </script>
     <?php
 }
