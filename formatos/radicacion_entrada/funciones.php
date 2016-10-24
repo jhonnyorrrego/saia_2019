@@ -343,7 +343,7 @@ function tipo_radicado_radicacion($idformato,$iddoc){//en el adicionar
                         success: function(datos){
                             //alert(datos);
                             tree_serie_idserie.deleteChildItems(0);
-                            tree_serie_idserie.loadXML("../../test_serie_funcionario2.php?tabla=dependencia&admin=1&dependencia="+datos+"&sin_padre=1");
+                            alert("../../test_serie_funcionario2.php?tabla=dependencia&admin=1&dependencia="+datos+"&sin_padre=1");
                         }
                     });  
                 }
