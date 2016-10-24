@@ -59,7 +59,7 @@ if($id and $id<>"" && @$_REQUEST["uid"] && $id!=-1){
 else
   echo("<tree id=\"0\">\n");
   
-print_r($_REQUEST);die();
+
 
 if($id and $id<>"" && @$_REQUEST["uid"] && $id=="d38"){
         print_r($_REQUEST);
