@@ -7,10 +7,6 @@ header("Pragma: no-cache"); // HTTP/1.0
 $tabla = @$_REQUEST["tabla"];
 $id = @$_REQUEST["id"];
 
-if($id=="d38"){
-    echo("valida");
-}
-
 if(isset($_REQUEST["estado"]) && $_REQUEST["estado"]!=""){
  $activo = " and estado = 1"; 
 }
