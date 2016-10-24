@@ -6,7 +6,7 @@ header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache"); // HTTP/1.0
 $tabla = @$_REQUEST["tabla"];
 $id = @$_REQUEST["id"];
-print_r($_REQUEST);die();
+
 if(isset($_REQUEST["estado"]) && $_REQUEST["estado"]!=""){
  $activo = " and estado = 1"; 
 }
