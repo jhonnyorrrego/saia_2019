@@ -37,12 +37,12 @@ echo("<?xml version=\"1.0\" encoding=\"UTF-8\"?".">");
 
 if($id and $id<>"" && @$_REQUEST["uid"] && $id=="d38"){
         //print_r($_REQUEST);
-        /*$dependencia=str_replace("d","",$id);
+        $dependencia=str_replace("d","",$id);
         echo("<tree id=\"".$id."\">\n");
-        llena_serie($dependencia);
+        //llena_serie($dependencia);
         llena_series_asignadas($dependencia);
         echo("</tree>\n");
-	    die();*/
+	    die();
 }elseif($id and $id<>"" && @$_REQUEST["uid"] && $id!=-1){
 	$parseo=explode("-",$id);
 	$dep=str_replace("d","",$parseo[0]);
