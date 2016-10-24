@@ -9,7 +9,7 @@ $id = @$_REQUEST["id"];
 
 $condicion="";
 if($_REQUEST['dependencia']){
-    $condicion=" AND iddependencia=".$_REQUEST['dependencia'];
+    $condicion=" OR iddependencia=".$_REQUEST['dependencia'];
 }
 
 if(isset($_REQUEST["estado"]) && $_REQUEST["estado"]!=""){
@@ -76,7 +76,7 @@ else
 
 
 if($_REQUEST['dependencia']){
-    llena_serie("NULL",$condicion);
+    llena_serie("",$condicion);
 }else{
     
 llena_serie("NULL");
