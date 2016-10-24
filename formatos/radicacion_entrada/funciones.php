@@ -332,7 +332,7 @@ function tipo_radicado_radicacion($idformato,$iddoc){//en el adicionar
                         dataType: 'json',
                         url: "obtener_dependencia.php",
                         data: {
-                                        iddependencia_cargo:seleccionado
+                                        iddependencia_cargo:rol
                         },
                         success: function(datos){
                             
