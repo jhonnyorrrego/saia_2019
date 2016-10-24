@@ -132,7 +132,7 @@ if($papas["numcampos"]){
       echo(" child=\"1\">\n");
     else
       echo(" child=\"0\">\n");
-    if(!$_REQUEST["id"] && $tabla!='dependencia'){
+    if(!$_REQUEST["id"] && $tabla!='serie'){
     	llena_serie($papas[$i]["id$tabla"]);
 		}else{
 			if(!$_REQUEST["admin"]){
