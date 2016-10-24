@@ -324,7 +324,7 @@ function tipo_radicado_radicacion($idformato,$iddoc){//en el adicionar
         <script>
             $(document).ready(function(){
                 var dependencia=$('#dependencia').val();
-                tree_serie_idserie.setOnLoadingEnd(obtener_dependencia());
+                tree_serie_idserie.setOnLoadingEnd(obtener_dependencia(dependencia));
                 
                 $('#dependencia').change(function(){
                     var dependencia=this.val();
