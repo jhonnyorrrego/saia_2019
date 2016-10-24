@@ -8,7 +8,7 @@ $tabla = @$_REQUEST["tabla"];
 $id = @$_REQUEST["id"];
 
 if($id=="d38"){
-    alerta("valida");
+    echo("valida");
 }
 
 if(isset($_REQUEST["estado"]) && $_REQUEST["estado"]!=""){
