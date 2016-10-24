@@ -16,6 +16,6 @@ include_once($ruta_db_superior."formatos/librerias_funciones_generales.php");
 
 $datos=busca_filtro_tabla('iddependencia','vfuncionario_dc','iddependencia_cargo='.$_REQUEST['iddependencia_cargo'],'',conn);
 
-$datos=json_encode($datos);
+$datos=json_encode($datos[0]['iddependencia']);
 
 echo($datos);
