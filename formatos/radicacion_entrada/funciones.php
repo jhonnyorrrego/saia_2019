@@ -340,13 +340,13 @@ function tipo_radicado_radicacion($idformato,$iddoc){//en el adicionar
                                         iddependencia_cargo:rol
                         },
                         success: function(datos){
-                            alert(datos);
+                            tree_digital_files.deleteChildItems(0);
+                            tree_digital_files.loadXML("consultar_digitalizaciones.php");
                         }
                     });  
                 }
                 
-                //tree_digital_files.deleteChildItems(0);
-                //tree_digital_files.loadXML("consultar_digitalizaciones.php");
+                
                 
                 $('#fecha_oficio_entrada').addClass('required');
                 $('#destino').addClass('required');
