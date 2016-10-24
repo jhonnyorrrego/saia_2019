@@ -134,8 +134,11 @@ if($papas["numcampos"]){
       echo(" child=\"0\">\n");
     if(!$_REQUEST["id"] && $tabla!='dependencia'){
     	llena_serie($papas[$i]["id$tabla"]);
+		}else{
+			if(!$_REQUEST["admin"]){
+				llena_series_asignadas($papas[$i]["id$tabla"]);
+			}
 		}
-	llena_series_asignadas($papas[$i]["id$tabla"]);
     echo("</item>\n");
   }     
 }
