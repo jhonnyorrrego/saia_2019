@@ -802,7 +802,7 @@ function serie_documental_radicacion($idformato,$iddoc){
 	            var padre=tree_destino.getParentId(nodeId);
 	            padre=padre.replace("#","");
 	        }
-	        alert(padre);
+	        tree_serie_idserie.deleteChildItems(0);
         }
 	});
         
