@@ -791,7 +791,6 @@ function serie_documental_radicacion($idformato,$iddoc){
 	?>
 	<script>
 	$(document).ready(function(){
-	    alert('entra');
 	    tree_destino.setOnClickHandler(onNodeSelect); 
         function onNodeSelect(nodeId){
 	        alert(nodeId);
