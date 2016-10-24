@@ -9,7 +9,7 @@ $id = @$_REQUEST["id"];
 
 $condicion="";
 if($_REQUEST['dependencia']){
-    $condicion=" OR iddependencia=".$_REQUEST['dependencia'];
+    $condicion=$_REQUEST['dependencia'];
 }
 
 if(isset($_REQUEST["estado"]) && $_REQUEST["estado"]!=""){
