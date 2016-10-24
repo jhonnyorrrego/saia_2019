@@ -798,6 +798,7 @@ function serie_documental_radicacion($idformato,$iddoc){
 	            var padre=nodeId.replace("#","");
 	        }else{
 	            var padre=tree_destino.getParentId(nodeId);
+	            padre=padre.replace("#","");
 	        }
 	        alert(padre);
         }
