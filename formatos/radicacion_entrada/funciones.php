@@ -332,6 +332,7 @@ function tipo_radicado_radicacion($idformato,$iddoc){//en el adicionar
                 
                 function obtener_dependencia(rol){
                     $.ajax({
+                        async:false,
                         type:'POST',
                         dataType: 'json',
                         url: "obtener_dependencia.php",
