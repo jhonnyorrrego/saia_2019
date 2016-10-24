@@ -323,30 +323,7 @@ function tipo_radicado_radicacion($idformato,$iddoc){//en el adicionar
     ?>
         <script>
             $(document).ready(function(){
-                var dependencia=$('#dependencia').val();
-                tree_serie_idserie.setOnLoadingEnd(obtener_dependencia(dependencia));
                 
-                $('#dependencia').change(function(){
-                    var dependencia=this.val();
-                    obtener_dependencia(dependencia);
-                });
-                
-                function obtener_dependencia(rol){
-                    $.ajax({
-                        async:false,
-                        type:'POST',
-                        dataType: 'json',
-                        url: "obtener_dependencia.php",
-                        data: {
-                                        iddependencia_cargo:rol
-                        },
-                        success: function(datos){
-                            //alert(datos);
-                            tree_serie_idserie.deleteChildItems(45);
-                            alert("../../test_serie_funcionario2.php?tabla=dependencia&admin=1&dependencia="+datos+"&sin_padre=1");
-                        }
-                    });  
-                }
                 
                 
                 
