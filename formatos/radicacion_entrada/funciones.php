@@ -790,10 +790,14 @@ function serie_documental_radicacion($idformato,$iddoc){
 	global $conn,$ruta_db_superior;
 	?>
 	<script>
-        tree_destino.setOnClickHandler(onNodeSelect); 
+	$(document).ready(function(){
+	    alert('entra');
+	    tree_destino.setOnClickHandler(onNodeSelect); 
         function onNodeSelect(nodeId){
 	        alert(nodeId);
         }
+	});
+        
     </script>
     <?php
 }
