@@ -61,11 +61,11 @@ else
   
 
 
-if($id && $id=="d38"){
+if($id and $id<>"" && @$_REQUEST["uid"] && $id=="d38"){
         //print_r($_REQUEST);
         echo("valida");
         $dependencia=str_replace("d","",$id);
-        //echo("<tree id=\"".$id."\">\n");
+        echo("<tree id=\"".$id."\">\n");
         llena_serie($dependencia);
         echo("</tree>\n");
 	    die();
@@ -132,7 +132,7 @@ if($papas["numcampos"]){
       echo(" child=\"1\">\n");
     else
       echo(" child=\"0\">\n");
-    if(!$_REQUEST["id"] && $tabla!='serie'){
+    if(!$_REQUEST["id"] && $tabla!='dependencia'){
     	llena_serie($papas[$i]["id$tabla"]);
 		}else{
 			if(!$_REQUEST["admin"]){
