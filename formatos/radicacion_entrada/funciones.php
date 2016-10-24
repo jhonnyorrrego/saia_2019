@@ -324,7 +324,7 @@ function tipo_radicado_radicacion($idformato,$iddoc){//en el adicionar
         <script>
             $(document).ready(function(){
                 
-                var dependencia=$('#dependencia').val();
+               /* var dependencia=$('#dependencia').val();
                 tree_serie_idserie.setOnLoadingEnd(obtener_dependencia(dependencia));
                 
                 $('#dependencia').change(function(){
@@ -347,7 +347,7 @@ function tipo_radicado_radicacion($idformato,$iddoc){//en el adicionar
                             tree_serie_idserie.loadXML("../../test_serie_funcionario2.php?tabla=dependencia&admin=1&dependencia="+datos+"&sin_padre=1");
                         }
                     });  
-                }
+                }*/
                 
                 
                 $('#fecha_oficio_entrada').addClass('required');
