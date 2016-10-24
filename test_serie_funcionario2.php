@@ -59,6 +59,7 @@ else
   echo("<tree id=\"0\">\n");
 
 if($id and $id<>"" && @$_REQUEST["uid"] && $id=="d38"){
+        print_r($_REQUEST);
         $serie=str_replace("d","",$id);
         echo("<tree id=\"".$id."\">\n");
         llena_serie($id);
