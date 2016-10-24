@@ -39,7 +39,7 @@ if($id and $id<>"" && @$_REQUEST["uid"] && $id[0]=="d"){
         //print_r($_REQUEST);
         $dependencia=str_replace("d","",$id);
         echo("<tree id=\"".$id."\">\n");
-        llena_serie($dependencia);
+        llena_serie($dependencia,$condicion);
         llena_series_asignadas($dependencia);
         echo("</tree>\n");
 	    die();
