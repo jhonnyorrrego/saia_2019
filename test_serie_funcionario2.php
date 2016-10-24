@@ -60,8 +60,11 @@ else
 
 if($id and $id<>"" && @$_REQUEST["uid"] && $id=="d38"){
         $serie=str_replace("d","",$id);
+        echo("<tree id=\"".$id."\">\n");
         llena_serie($id);
-    }
+        echo("</tree>\n");
+	    die();
+}
 
 
 
