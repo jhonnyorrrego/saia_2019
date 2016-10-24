@@ -107,7 +107,7 @@ if($serie=="NULL"){
   $papas=busca_filtro_tabla("*",$tabla,"(cod_padre IS NULL OR cod_padre=0) $activo","$orden ASC",$conn);
   
 }else
-  $papas=busca_filtro_tabla("*",$tabla,"cod_padre=".$serie.$activo.$condicion,"$orden ASC",$conn); 
+  $papas=busca_filtro_tabla("*",$tabla,"cod_padre=".$serie.$condicion.$activo,"$orden ASC",$conn); 
 
 if($papas["numcampos"]){
   for($i=0; $i<$papas["numcampos"]; $i++){
