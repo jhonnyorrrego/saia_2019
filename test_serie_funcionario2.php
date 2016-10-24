@@ -61,7 +61,7 @@ else
   
 
 
-if($id and $id<>"" && @$_REQUEST["uid"] && $id=="d38"){
+if($id && $id=="d38"){
         //print_r($_REQUEST);
         echo("valida");
         $dependencia=str_replace("d","",$id);
