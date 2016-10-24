@@ -794,7 +794,10 @@ function serie_documental_radicacion($idformato,$iddoc){
 	   tree_destino.setOnCheckHandler(onNodeSelect);
         function onNodeSelect(nodeId){
 	        var numeral=nodeId.indexOf("#");
-	        alert(numeral);
+	        if(numeral>=0){
+	            var padre=nodeId.replace("#","");
+	        }
+	        alert(padre);
         }
 	});
         
