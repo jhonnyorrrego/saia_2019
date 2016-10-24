@@ -797,7 +797,7 @@ function serie_documental_radicacion($idformato,$iddoc){
 	        if(numeral>=0){
 	            var padre=nodeId.replace("#","");
 	        }else{
-	            var padre = tree.getParentId(nodeId);
+	            //var padre = tree.getParentId(nodeId);
 	        }
 	        alert(padre);
         }
