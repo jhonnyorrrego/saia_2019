@@ -335,7 +335,7 @@ function tipo_radicado_radicacion($idformato,$iddoc){//en el adicionar
                                         iddependencia_cargo:rol
                         },
                         success: function(datos){
-                            alert(datos);
+                            alert(datos->1);
                         }
                     });  
                 }
