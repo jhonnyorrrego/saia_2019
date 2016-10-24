@@ -323,14 +323,7 @@ function tipo_radicado_radicacion($idformato,$iddoc){//en el adicionar
     ?>
         <script>
             $(document).ready(function(){
-                $('#tipo_origen1').click(function(){
-                    tree_serie_idserie.deleteChildItems(0);
-                    tree_serie_idserie.loadXML("../../test_serie_funcionario2.php");
-                });
-                $('#tipo_origen0').click(function(){
-                    tree_serie_idserie.deleteChildItems(0);
-                    //tree_serie_idserie.loadXML("test_serie_funcionario.php");
-                });
+                
                 
                 $('#fecha_oficio_entrada').addClass('required');
                 $('#destino').addClass('required');
