@@ -326,6 +326,11 @@ function tipo_radicado_radicacion($idformato,$iddoc){//en el adicionar
                 var dependencia=$('#dependencia').val();
                 obtener_dependencia(dependencia);
                 
+                $('#dependencia').change(function(){
+                    var dependencia=this.val();
+                    obtener_dependencia(dependencia);
+                });
+                
                 function obtener_dependencia(rol){
                     $.ajax({
                         type:'POST',
