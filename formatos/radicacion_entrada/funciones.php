@@ -324,7 +324,7 @@ function tipo_radicado_radicacion($idformato,$iddoc){//en el adicionar
         <script>
             $(document).ready(function(){
                 var dependencia=$('#dependencia').val();
-                alert(dependencia);
+                obtener_dependencia(dependencia);
                 
                 function obtener_dependencia(rol){
                     $.ajax({
