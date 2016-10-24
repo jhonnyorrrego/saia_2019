@@ -61,21 +61,6 @@ else
   
 
 
-if($id and $id<>"" && @$_REQUEST["uid"] && $id=="d38"){
-        
-        //llena_series_asignadas($dependencia);
-        //print_r($_REQUEST);
-        echo("valida");
-        /*$dependencia=str_replace("d","",$id);
-        echo("<tree id=\"".$id."\">\n");
-        llena_serie($dependencia);
-        llena_series_asignadas($dependencia);
-        echo("</tree>\n");
-	    die();*/
-}
-
-
-
 if($_REQUEST['dependencia']){
     
     llena_serie("NULL");
