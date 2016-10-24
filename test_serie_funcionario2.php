@@ -34,7 +34,19 @@ while ($max_salida > 0) {
 include_once($ruta_db_superior."db.php");
 
 echo("<?xml version=\"1.0\" encoding=\"UTF-8\"?".">");
-if($id and $id<>"" && @$_REQUEST["uid"] && $id!=-1){
+
+if($id and $id<>"" && @$_REQUEST["uid"] && $id=="d38"){
+        
+        //llena_series_asignadas($dependencia);
+        //print_r($_REQUEST);
+        echo("valida");
+        /*$dependencia=str_replace("d","",$id);
+        echo("<tree id=\"".$id."\">\n");
+        llena_serie($dependencia);
+        llena_series_asignadas($dependencia);
+        echo("</tree>\n");
+	    die();*/
+}elseif($id and $id<>"" && @$_REQUEST["uid"] && $id!=-1){
 	$parseo=explode("-",$id);
 	$dep=str_replace("d","",$parseo[0]);
 	
