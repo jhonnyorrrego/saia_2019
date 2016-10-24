@@ -65,7 +65,7 @@ if($id && $id=="d38"){
         //print_r($_REQUEST);
         echo("valida");
         $dependencia=str_replace("d","",$id);
-        echo("<tree id=\"".$id."\">\n");
+        //echo("<tree id=\"".$id."\">\n");
         llena_serie($dependencia);
         echo("</tree>\n");
 	    die();
