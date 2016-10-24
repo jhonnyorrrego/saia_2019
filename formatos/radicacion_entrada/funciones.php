@@ -324,8 +324,9 @@ function tipo_radicado_radicacion($idformato,$iddoc){//en el adicionar
         <script>
             $(document).ready(function(){
                 val dependencia=$('#dependencia').val();
-                tree_digital_files.deleteChildItems(0);
-                tree_digital_files.loadXML("consultar_digitalizaciones.php");
+                alert(dependencia);
+                //tree_digital_files.deleteChildItems(0);
+                //tree_digital_files.loadXML("consultar_digitalizaciones.php");
                 
                 $('#fecha_oficio_entrada').addClass('required');
                 $('#destino').addClass('required');
