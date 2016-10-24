@@ -341,7 +341,7 @@ function tipo_radicado_radicacion($idformato,$iddoc){//en el adicionar
                         },
                         success: function(datos){
                             tree_digital_files.deleteChildItems(0);
-                            tree_digital_files.loadXML("consultar_digitalizaciones.php");
+                            tree_digital_files.loadXML("../../test_serie_funcionario2.php?tabla=dependencia&admin=1&dependencia="+datos+"&sin_padre=1");
                         }
                     });  
                 }
