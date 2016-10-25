@@ -68,7 +68,7 @@ $table.="</table>";
          <script>
              $(document).ready(function(){
                 $('[name="todos_ninguno"]').click(function(){
-                    var valor=$(this).val();
+                    var valor=$(this).attr('value');
                     alert(valor);
                     if(valor=='todos'){
                         tree3.openAllItems();
