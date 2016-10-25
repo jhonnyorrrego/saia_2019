@@ -324,12 +324,14 @@ function tipo_radicado_radicacion($idformato,$iddoc){//en el adicionar
         <script>
             $(document).ready(function(){
                 
+                 tree_serie_idserie.setOnLoadingEnd(cargar_arbol());
+                function cargar_arbol(){
                 setTimeout(function(){ 
                     tree_serie_idserie.deleteChildItems(0); 
                     tree_serie_idserie.loadXML("../../test_serie_funcionario2.php?tabla=dependencia&admin=1&dependencia=38&sin_padre=1");
                     tree_serie_idserie.loadXML("../../test_serie_funcionario2.php?tabla=dependencia&admin=1&sin_padre=1&uid=1477409126024&id=d38");
                 }, 1000);
-                
+                }
                 
                 
                 $('#fecha_oficio_entrada').addClass('required');
