@@ -140,7 +140,7 @@ $table.="</table>";
                          	elemento.setCheck(nodos_padre[i],true);   
                          }
                          
-                         alert( elemento.getAllChecked();    );
+                         alert( elemento.getAllChecked()   );
                        
                     }else if(valor=='ninguno'){
                         
