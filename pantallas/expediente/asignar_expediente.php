@@ -139,6 +139,8 @@ $table.="</table>";
                          for(i=0;i<nodos_padre.length;i++){
                          	elemento.setCheck(nodos_padre[i],true);   
                          }
+                         
+                         alert( elemento.getAllChecked();    );
                        
                     }else if(valor=='ninguno'){
                         
