@@ -127,7 +127,7 @@ $table.="</table>";
                     
                     if(valor=='todos'){
                         var elemento=tree3;
-                         seleccionados=elemento.getAllLeafs(); 
+                         seleccionados=tree3.getAllLeafs(); 
                          nodos=seleccionados.split(",");
                         
                          for(i=0;i<nodos.length;i++){
@@ -140,7 +140,9 @@ $table.="</table>";
                          	elemento.setCheck(nodos_padre[i],true);   
                          }
                          
-                         alert( elemento.getAllChecked()   );
+                         
+                         var expedientes_lista=elemento.getAllChecked()+',<?php echo($_REQUEST["idexpediente"]); ?>';
+                         alert( expedientes_lista  );
                        
                     }else if(valor=='ninguno'){
                         
@@ -155,6 +157,8 @@ $table.="</table>";
                          for(i=0;i<nodos_padre.length;i++){
                          	elemento.setCheck(nodos_padre[i],false);   
                          }
+                         
+                         var expedientes_lista='<?php echo($_REQUEST["idexpediente"]); ?>';
                     }
                 }); 
              });
