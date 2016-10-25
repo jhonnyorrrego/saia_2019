@@ -19,7 +19,7 @@ include_once($ruta_db_superior."librerias_saia.php");
 $propietario=busca_filtro_tabla("idfuncionario","expediente e,funcionario f","f.funcionario_codigo=e.propietario and idexpediente=".$_REQUEST["idexpediente"],"",$conn);
 
 $seleccionados=busca_filtro_tabla("identidad_expediente,idfuncionario,nombres,apellidos,permiso","entidad_expediente e,funcionario f","e.llave_entidad=f.idfuncionario and e.expediente_idexpediente=".@$_REQUEST["idexpediente"]." AND e.entidad_identidad=1 and f.idfuncionario<>".$propietario[0]["idfuncionario"],"",$conn);
-$table='<table class="table" id="funcionarios_seleccionados">
+$table='<table class="table table-bordered" id="funcionarios_seleccionados">
 <thead>
 <tr>
   <th style="text-align:center; vertical-align:middle" rowspan="2">Funcionario</th>
