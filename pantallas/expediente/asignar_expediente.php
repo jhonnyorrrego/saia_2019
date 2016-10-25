@@ -88,7 +88,7 @@ $table.="</table>";
     ?>
     <div id="sub_entidad" class="arbol_saia">
     </div>
-		Asignar Permiso A <i>(Escriba el nombre del funcionario)</i>:* <input type="hidden" name="propietario" value="<?php echo $propietario[0]["idfuncionario"];?>"> <input type='hidden' id='idfuncionario' size='50' name='idfuncionario' value="<?php echo implode(",", $idfuncionarios);?>"> <input type='text' id='buscar_radicado' size='50' name='buscar_radicado'> <div id='ul_completar' class='ac_results'></div>
+		Asignar Permiso a:* <input type="hidden" name="propietario" value="<?php echo $propietario[0]["idfuncionario"];?>"> <input type='hidden' id='idfuncionario' size='50' name='idfuncionario' value="<?php echo implode(",", $idfuncionarios);?>"> <input type='text' id='buscar_radicado' size='50' name='buscar_radicado'> <div id='ul_completar' class='ac_results'></div>
 		<hr/>
 		<?php
 			echo $table;
