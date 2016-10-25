@@ -53,6 +53,18 @@ $table.="</table>";
 <input type="hidden" name="idexpediente" id="idexpediente" value="<?php echo($_REQUEST["idexpediente"]);?>">
 <input type="hidden" id="cerrar_higslide" value="<?php echo(@$_REQUEST["cerrar_higslide"]);?>">
 <legend>Asignar acceso expediente <?php $expediente=busca_filtro_tabla("","expediente","idexpediente=".$_REQUEST["idexpediente"]); echo($expediente[0]["nombre"]);?></legend>
+
+<div class="control-group element">
+    <label class="control-label" for="nombre">Incluir
+    </label>
+    <div class="controls">
+    </div>
+</div>    
+    
+
+
+
+
 <div class="control-group element">
   <label class="control-label" for="nombre"><?php if(@$_REQUEST["tipo_entidad"]){
       echo"<input type='hidden' value='".$_REQUEST["tipo_entidad"]."' name='tipo_entidad' >";
