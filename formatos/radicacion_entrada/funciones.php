@@ -346,6 +346,7 @@ function tipo_radicado_radicacion($idformato,$iddoc){//en el adicionar
                             setTimeout(function(){ 
                                 tree_serie_idserie.deleteChildItems(0); 
                                 tree_serie_idserie.loadXML("../../test_serie_funcionario2.php?tabla=dependencia&admin=1&dependencia="+datos+"&sin_padre=1");
+                                tree_serie_idserie.loadXML("../../test_serie_funcionario2.php?tabla=dependencia&admin=1&sin_padre=1&uid=1477409126024&id=d38");
                             }, 500);
                             
                             
