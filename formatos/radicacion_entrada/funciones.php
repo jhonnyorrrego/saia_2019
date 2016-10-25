@@ -324,35 +324,12 @@ function tipo_radicado_radicacion($idformato,$iddoc){//en el adicionar
         <script>
             $(document).ready(function(){
                 
-                var dependencia=$('#dependencia').val();
-                tree_serie_idserie.setOnLoadingEnd(obtener_dependencia(dependencia));
+                setTimeout(function(){ 
+                    tree_serie_idserie.deleteChildItems(0); 
+                    tree_serie_idserie.loadXML("../../test_serie_funcionario2.php?tabla=dependencia&admin=1&dependencia=38&sin_padre=1");
+                    tree_serie_idserie.loadXML("../../test_serie_funcionario2.php?tabla=dependencia&admin=1&sin_padre=1&uid=1477409126024&id=d38");
+                }, 500);
                 
-                $('#dependencia').change(function(){
-                    var dependencia=this.val();
-                    obtener_dependencia(dependencia);
-                });
-                
-                function obtener_dependencia(rol){
-                    $.ajax({
-                        async:false,
-                        type:'POST',
-                        dataType: 'json',
-                        url: "obtener_dependencia.php",
-                        data: {
-                                        iddependencia_cargo:rol
-                        },
-                        success: function(datos){
-                            //alert(datos);
-                            setTimeout(function(){ 
-                                tree_serie_idserie.deleteChildItems(0); 
-                                tree_serie_idserie.loadXML("../../test_serie_funcionario2.php?tabla=dependencia&admin=1&dependencia="+datos+"&sin_padre=1");
-                                tree_serie_idserie.loadXML("../../test_serie_funcionario2.php?tabla=dependencia&admin=1&sin_padre=1&uid=1477409126024&id=d38");
-                            }, 500);
-                            
-                            
-                        }
-                    });  
-                }
                 
                 
                 $('#fecha_oficio_entrada').addClass('required');
