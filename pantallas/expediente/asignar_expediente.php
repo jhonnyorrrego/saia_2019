@@ -139,9 +139,9 @@ $table.="</table>";
                          for(i=0;i<nodos_padre.length;i++){
                          	elemento.setCheck(nodos_padre[i],true);   
                          }
-                        tree3.openAllItems();
+                       
                     }else if(valor=='ninguno'){
-                        tree3.closeAllItems();
+                        
                         var elemento=tree3;
                         seleccionados=elemento.getAllLeafs();
                          nodos=seleccionados.split(",");
