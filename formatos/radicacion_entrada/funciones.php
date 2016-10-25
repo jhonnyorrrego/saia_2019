@@ -800,7 +800,7 @@ function serie_documental_radicacion($idformato,$iddoc){
 	?>
 	<script>
 	$(document).ready(function(){
-	    var cargado=array();
+	    var cargado[]=38;
 	   tree_destino.setOnCheckHandler(onNodeSelect);
         function onNodeSelect(nodeId){
 	        var numeral=nodeId.indexOf("#");
