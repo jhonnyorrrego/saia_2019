@@ -139,10 +139,20 @@ $table.="</table>";
                          for(i=0;i<nodos_padre.length;i++){
                          	elemento.setCheck(nodos_padre[i],true);   
                          }
-                       tree3.openAllItems();
+                        tree3.openAllItems();
                     }else if(valor=='ninguno'){
                         tree3.closeAllItems();
-                        alert('entro a ninguno');
+                        var elemento=tree3;
+                        seleccionados=elemento.getAllLeafs();
+                         nodos=seleccionados.split(",");
+                         for(i=0;i<nodos.length;i++)
+                           elemento.setCheck(nodos[i],false);
+                           
+                         seleccionados_padres=elemento.getAllFatItems();	 
+                         nodos_padre=seleccionados_padres.split(",");
+                         for(i=0;i<nodos_padre.length;i++){
+                         	elemento.setCheck(nodos_padre[i],false);   
+                         }
                     }
                 }); 
              });
