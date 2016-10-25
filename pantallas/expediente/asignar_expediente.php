@@ -94,18 +94,14 @@ $table.="</table>";
                 }
                 var expedientes_lista=elemento.getAllChecked()+coma+'<?php echo($_REQUEST["idexpediente"]); ?>';
                 $('[name="idexpediente"]').val(expedientes_lista);
-                alert( $('[name="idexpediente"]').val() );
              }
              function cargar_seleccionados_hijos(NodeId){
-                 
                  var coma='';
                  if(tree3.getAllChecked()){
                     coma=',';
                  }
-                 
                  var expedientes_lista=tree3.getAllChecked()+coma+'<?php echo($_REQUEST["idexpediente"]); ?>';
                  $('[name="idexpediente"]').val(expedientes_lista);
-                  alert( $('[name="idexpediente"]').val() );
              }
          </script>
 
