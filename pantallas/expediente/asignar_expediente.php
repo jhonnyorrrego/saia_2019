@@ -63,7 +63,7 @@ $table.="</table>";
         
      <div id="esperando_expediente"><img src="<?php echo($ruta_db_superior);?>imagenes/cargando.gif"></div>
     <img src="<?php echo($ruta_db_superior);?>imgs/iconCheckAll.gif">&nbsp;<?php echo($expediente[0]["nombre"]);?>
-	  <div id="treeboxbox_tree2"></div>
+	  <div id="treeboxbox_tree3"></div>
 	</div>
 </div>
 				<script type="text/javascript">
@@ -75,16 +75,16 @@ $table.="</table>";
          browserType= "gecko"
       }
   		
-			tree2=new dhtmlXTreeObject("treeboxbox_tree2","100%","",0);
-			tree2.setImagePath("<?php echo($ruta_db_superior);?>imgs/");
-			tree2.enableIEImageFix(true);
-      tree2.enableCheckBoxes(1);
-      //tree2.enableSmartXMLParsing(true);
-      tree2.setOnLoadingStart(cargando_expediente);
-      tree2.setOnLoadingEnd(fin_cargando_expediente);
+			tree3=new dhtmlXTreeObject("treeboxbox_tree3","100%","",0);
+			tree3.setImagePath("<?php echo($ruta_db_superior);?>imgs/");
+			tree3.enableIEImageFix(true);
+      tree3.enableCheckBoxes(1);
+      //tree3.enableSmartXMLParsing(true);
+      tree3.setOnLoadingStart(cargando_expediente);
+      tree3.setOnLoadingEnd(fin_cargando_expediente);
       
-			tree2.setXMLAutoLoading("<?php echo($ruta_db_superior);?>test_expediente.php?doc=617&accion=1&permiso_editar=1");
-			tree2.loadXML("<?php echo($ruta_db_superior);?>test_expediente.php?accion=1&permiso_editar=1&inicia=<?php echo($_REQUEST["idexpediente"]); ?>");
+		//	tree3.setXMLAutoLoading("<?php echo($ruta_db_superior);?>test_expediente.php?doc=617&accion=1&permiso_editar=1");
+			tree3.loadXML("<?php echo($ruta_db_superior);?>test_expediente.php?accion=1&permiso_editar=1&inicia=<?php echo($_REQUEST["idexpediente"]); ?>");
 			
 			function fin_cargando_expediente() {
         if (browserType == "gecko" )
