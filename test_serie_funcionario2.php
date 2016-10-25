@@ -107,7 +107,8 @@ if($serie=="NULL"){
   $papas=busca_filtro_tabla("*",$tabla,"(cod_padre IS NULL OR cod_padre=0) $activo $condicion","$orden ASC",$conn);
 }else
   $papas=busca_filtro_tabla("*",$tabla,"cod_padre=".$serie.$activo.$condicion.$condicion_dependencia,"$orden ASC",$conn); 
-
+print_r($papas);
+die();
 if($papas["numcampos"]){
   for($i=0; $i<$papas["numcampos"]; $i++){
     $hijos = busca_filtro_tabla("count(*) AS cant",$tabla,"cod_padre=".$papas[$i]["id$tabla"].$activo.$condicion,"",$conn);
