@@ -126,43 +126,40 @@ $table.="</table>";
                     var valor=$(this).attr('value');
                     
                     if(valor=='todos'){
-                        var elemento=tree3;
-                         seleccionados=tree3.getAllLeafs(); 
-                         nodos=seleccionados.split(",");
+                        seleccionar_todos_ninguno(tree3,true);
+                         
+                         
+                         
                         
-                         for(i=0;i<nodos.length;i++){
-                         	elemento.setCheck(nodos[i],true);
-                         }
-                           
-                         seleccionados_padres=elemento.getAllFatItems();	 
-                         nodos_padre=seleccionados_padres.split(",");
-                         for(i=0;i<nodos_padre.length;i++){
-                         	elemento.setCheck(nodos_padre[i],true);   
-                         }
-                         
-                         
-                         var expedientes_lista=elemento.getAllChecked()+',<?php echo($_REQUEST["idexpediente"]); ?>';
-                         alert( expedientes_lista  );
                        
                     }else if(valor=='ninguno'){
                         
-                        var elemento=tree3;
+                        seleccionar_todos_ninguno(tree3,false);
+                         
+                         var expedientes_lista='<?php echo($_REQUEST["idexpediente"]); ?>';
+                         
+                    }
+                    
+                    
+                    
+                }); 
+             });
+             
+             function seleccionar_todos_ninguno(elemento,bol){
                         seleccionados=elemento.getAllLeafs();
                          nodos=seleccionados.split(",");
-                         for(i=0;i<nodos.length;i++)
-                           elemento.setCheck(nodos[i],false);
-                           
+                         for(i=0;i<nodos.length;i++){
+                         	elemento.setCheck(nodos[i],bol);
+                         }
                          seleccionados_padres=elemento.getAllFatItems();	 
                          nodos_padre=seleccionados_padres.split(",");
                          for(i=0;i<nodos_padre.length;i++){
-                         	elemento.setCheck(nodos_padre[i],false);   
-                         }
+                         	elemento.setCheck(nodos_padre[i],bol);   
+                         }    
                          
-                         var expedientes_lista='<?php echo($_REQUEST["idexpediente"]); ?>';
-                         alert( expedientes_lista  );
-                    }
-                }); 
-             });
+                         var expedientes_lista=elemento.getAllChecked()+',<?php echo($_REQUEST["idexpediente"]); ?>';
+                         alert(expedientes_lista);
+             }
          </script>
         
     </div>
