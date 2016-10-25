@@ -96,6 +96,11 @@ $table.="</table>";
                 $('[name="idexpediente"]').val(expedientes_lista);
                 alert( $('[name="idexpediente"]').val() );
              }
+             function cargar_seleccionados_hijos(NodeId){
+                 
+                 alert(NodeId);
+                 
+             }
          </script>
 
      </div>    
@@ -118,6 +123,7 @@ $table.="</table>";
 			tree3.setImagePath("<?php echo($ruta_db_superior);?>imgs/");
 			tree3.enableIEImageFix(true);
       tree3.enableCheckBoxes(1);
+       tree3.setOnCheckHandler(cargar_seleccionados_hijos);
       //tree3.enableSmartXMLParsing(true);
       tree3.setOnLoadingStart(cargando_expediente);
       tree3.setOnLoadingEnd(fin_cargando_expediente);
