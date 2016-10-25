@@ -61,7 +61,7 @@ $table.="</table>";
     </label>
     <div class="controls">
 
-     <div id="esperando_expediente"><img src="imagenes/cargando.gif"></div>
+     <div id="esperando_expediente"><img src="<?php echo($ruta_db_superior);?>imagenes/cargando.gif"></div>
 	  <div id="treeboxbox_tree2"></div>
 	</div>
 </div>
