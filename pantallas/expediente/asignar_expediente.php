@@ -124,24 +124,11 @@ $table.="</table>";
              $(document).ready(function(){
                 $('[name="todos_ninguno"]').click(function(){
                     var valor=$(this).attr('value');
-                    
                     if(valor=='todos'){
                         seleccionar_todos_ninguno(tree3,true);
-                         
-                         
-                         
-                        
-                       
                     }else if(valor=='ninguno'){
-                        
                         seleccionar_todos_ninguno(tree3,false);
-                         
-                         var expedientes_lista='<?php echo($_REQUEST["idexpediente"]); ?>';
-                         
-                    }
-                    
-                    
-                    
+                    }  
                 }); 
              });
              
@@ -155,8 +142,7 @@ $table.="</table>";
                          nodos_padre=seleccionados_padres.split(",");
                          for(i=0;i<nodos_padre.length;i++){
                          	elemento.setCheck(nodos_padre[i],bol);   
-                         }    
-                         
+                         }  
                          var expedientes_lista=elemento.getAllChecked()+',<?php echo($_REQUEST["idexpediente"]); ?>';
                          alert(expedientes_lista);
              }
