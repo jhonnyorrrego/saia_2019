@@ -25,7 +25,7 @@ $table='<table class="table" border="1" id="funcionarios_seleccionados">
   <th style="text-align:center; vertical-align:middle" rowspan="2">Funcionario</th>
   <th style="text-align:center" colspan="4">Permisos</th>
 </tr>
-<tr><th style="text-align:center">Ver</th> <th style="text-align:center">Editar</th> <th style="text-align:center">Eliminar</th> <th style="text-align:center">Asignar Permisos</th></tr>
+<tr><th style="text-align:center">Ver</th> <th style="text-align:center">Editar</th> <th style="text-align:center">Eliminar</th> <th style="text-align:center">Compartir</th></tr>
 </thead>';
 $idfuncionarios=array();
 for($i=0;$i<$seleccionados["numcampos"];$i++){
