@@ -74,7 +74,7 @@ $table.="</table>";
                         tree3.openAllItems();
                         
                     }else if(valor=='ninguno'){
-                        
+                        tree3.closeAllItems();
                     }
                 }); 
              });
