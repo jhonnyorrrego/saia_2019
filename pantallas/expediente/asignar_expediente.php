@@ -60,7 +60,12 @@ $table.="</table>";
     <label class="control-label" for="nombre"><b>Seleccionar Expediente(s):</b>
     </label>
     <div class="controls">
-     <div id="botones_todos_ninguno" style="cursor:pointer;"><a>Todos</a>&nbsp&nbsp-&nbsp&nbsp<a>Ninguno</a></div>    
+     <div id="botones_todos_ninguno" style="cursor:pointer;">
+         
+         <a name="todos_ninguno" value="todos">Todos</a>
+         &nbsp;&nbsp; - &nbsp;&nbsp;
+         <a name="todos_ninguno" value="ninguno">Ninguno</a>
+     </div>    
      <div id="esperando_expediente"><img src="<?php echo($ruta_db_superior);?>imagenes/cargando.gif"></div>
     <img src="<?php echo($ruta_db_superior);?>imgs/iconCheckAll.gif">&nbsp;<?php echo($expediente[0]["nombre"]);?>
 	  <div id="treeboxbox_tree3"></div>
@@ -114,7 +119,18 @@ $table.="</table>";
       }
 			-->
       </script>
-
+         <script>
+             $(document).ready(function(){
+                $('[name="todos_ninguno"]').click(function(){
+                    var valor=$(this).val();
+                    if(valor=='todos'){
+                        tree3.openAllItems();
+                    }else if(valor=='ninguno'){
+                        
+                    }
+                }); 
+             });
+         </script>
         
     </div>
 </div>    
