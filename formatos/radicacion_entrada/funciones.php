@@ -818,6 +818,7 @@ function serie_documental_radicacion($idformato,$iddoc){
 	        var x = Math.floor((Math.random() * 100000) + 1);
 	        
 	        //tree_serie_idserie.deleteChildItems(0);+
+	        console.log(cargado.indexOf(dependencia));
 	        if(cargado.indexOf(dependencia)>=0){// devuleve -1
 	        tree_serie_idserie.loadXML("../../test_serie_funcionario2.php?tabla=dependencia&admin=1&dependencia="+dependencia+"&sin_padre=1&uid="+x+"&id=d"+padre);
 	        cargado.push(dependencia);
