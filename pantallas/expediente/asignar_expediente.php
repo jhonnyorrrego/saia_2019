@@ -55,9 +55,10 @@ $table.="</table>";
 <legend>Asignar acceso expediente <?php $expediente=busca_filtro_tabla("","expediente","idexpediente=".$_REQUEST["idexpediente"]); echo($expediente[0]["nombre"]);?></legend>
 
 <div class="control-group element">
-    <label class="control-label" for="nombre">Incluir
+    <label class="control-label" for="nombre">Incluir:
     </label>
     <div class="controls">
+        
     </div>
 </div>    
     
@@ -87,7 +88,7 @@ $table.="</table>";
     ?>
     <div id="sub_entidad" class="arbol_saia">
     </div>
-		Nombre del Funcionario:* <input type="hidden" name="propietario" value="<?php echo $propietario[0]["idfuncionario"];?>"> <input type='hidden' id='idfuncionario' size='50' name='idfuncionario' value="<?php echo implode(",", $idfuncionarios);?>"> <input type='text' id='buscar_radicado' size='50' name='buscar_radicado'> <div id='ul_completar' class='ac_results'></div>
+		Asignar Permiso A <i>(Escriba el nombre del funcionario)</i>:* <input type="hidden" name="propietario" value="<?php echo $propietario[0]["idfuncionario"];?>"> <input type='hidden' id='idfuncionario' size='50' name='idfuncionario' value="<?php echo implode(",", $idfuncionarios);?>"> <input type='text' id='buscar_radicado' size='50' name='buscar_radicado'> <div id='ul_completar' class='ac_results'></div>
 		<hr/>
 		<?php
 			echo $table;
