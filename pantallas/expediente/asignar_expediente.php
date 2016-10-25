@@ -71,10 +71,12 @@ $table.="</table>";
                     var valor=$(this).attr('value');
                     
                     if(valor=='todos'){
+                        alert('entro a todos');
                         tree3.openAllItems();
                         
                     }else if(valor=='ninguno'){
                         tree3.closeAllItems();
+                        alert('entro a ninguno');
                     }
                 }); 
              });
