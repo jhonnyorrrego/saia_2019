@@ -63,7 +63,7 @@ $table.="</table>";
      <div id="botones_todos_ninguno" style="cursor:pointer;">
          
          <a name="todos_ninguno" value="todos">Todos</a>
-         &nbsp;&nbsp; - &nbsp;&nbsp;
+         &nbsp; - &nbsp;
          <a name="todos_ninguno" value="ninguno">Ninguno</a>
          <script>
              $(document).ready(function(){
