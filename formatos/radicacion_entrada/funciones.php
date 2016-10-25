@@ -835,8 +835,7 @@ function serie_documental_radicacion($idformato,$iddoc){
                                         iddependencia_cargo:rol
                         },
                         success: function(datos){
-                            //alert(datos);
-                            
+                            alert(datos);
                             
                             
                         }
