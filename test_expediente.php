@@ -97,9 +97,9 @@ if($papas["numcampos"]){
 			}
 			echo(" child=\"1\" ");
     	echo(">");
-			//if(@$_REQUEST["uid"]){
+			if(@$_REQUEST["uid"] || @$_REQUEST["carga_total"]){
     		llena_expediente($papas[$i]["idexpediente"]);
-			//}
+			}
     	echo("</item>\n");
    	} 
   }     
