@@ -60,8 +60,9 @@ $table.="</table>";
     <label class="control-label" for="nombre">Incluir:
     </label>
     <div class="controls">
-
+        
      <div id="esperando_expediente"><img src="<?php echo($ruta_db_superior);?>imagenes/cargando.gif"></div>
+    <img src="<?php echo($ruta_db_superior);?>imgs/iconCheckAll.gif">&nbsp;<?php echo($expediente[0]["nombre"]);?>
 	  <div id="treeboxbox_tree2"></div>
 	</div>
 </div>
