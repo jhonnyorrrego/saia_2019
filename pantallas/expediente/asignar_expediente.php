@@ -93,7 +93,8 @@ $table.="</table>";
                     coma=',';
                 }
                 var expedientes_lista=elemento.getAllChecked()+coma+'<?php echo($_REQUEST["idexpediente"]); ?>';
-                alert(expedientes_lista);
+                $('[name="idexpediente"]').val(expedientes_lista);
+                alert( $('[name="idexpediente"]').val(expedientes_lista) );
              }
          </script>
 
