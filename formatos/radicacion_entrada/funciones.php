@@ -801,7 +801,7 @@ function serie_documental_radicacion($idformato,$iddoc){
 	<script>
 	$(document).ready(function(){
 	    var cargado=[];
-	    cargado[]=38;
+	    cargado.push(38);
 	   tree_destino.setOnCheckHandler(onNodeSelect);
         function onNodeSelect(nodeId){
 	        var numeral=nodeId.indexOf("#");
@@ -820,7 +820,7 @@ function serie_documental_radicacion($idformato,$iddoc){
 	        //tree_serie_idserie.deleteChildItems(0);
 	        console.log(cargado.indexOf(cargado));// devuleve -1
 	        tree_serie_idserie.loadXML("../../test_serie_funcionario2.php?tabla=dependencia&admin=1&dependencia="+dependencia+"&sin_padre=1&uid="+x+"&id=d"+padre);
-	        cargado[]=dependencia;
+	        cargado.push(dependencia);
         }
         
         $('#tipo_origen1').click(function(){
