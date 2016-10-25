@@ -57,7 +57,7 @@ $table.="</table>";
 <legend>Asignar acceso expediente <?php $expediente=busca_filtro_tabla("","expediente","idexpediente=".$_REQUEST["idexpediente"]); echo($expediente[0]["nombre"]);?></legend>
 
 <div class="control-group element">
-    <label class="control-label" for="nombre">Incluir:
+    <label class="control-label" for="nombre">Seleccionar Expediente(s):
     </label>
     <div class="controls">
         
