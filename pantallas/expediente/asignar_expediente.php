@@ -65,6 +65,37 @@ $table.="</table>";
          <a name="todos_ninguno" value="todos">Todos</a>
          &nbsp;&nbsp; - &nbsp;&nbsp;
          <a name="todos_ninguno" value="ninguno">Ninguno</a>
+         <script>
+             $(document).ready(function(){
+                $('[name="todos_ninguno"]').click(function(){
+                    var valor=$(this).attr('value');
+                    if(valor=='todos'){
+                        seleccionar_todos_ninguno(tree3,true);
+                    }else if(valor=='ninguno'){
+                        seleccionar_todos_ninguno(tree3,false);
+                    }  
+                }); 
+             });
+             
+             function seleccionar_todos_ninguno(elemento,bol){
+                seleccionados=elemento.getAllLeafs();
+                nodos=seleccionados.split(",");
+                for(i=0;i<nodos.length;i++){
+                	elemento.setCheck(nodos[i],bol);
+                }
+                seleccionados_padres=elemento.getAllFatItems();	 
+                nodos_padre=seleccionados_padres.split(",");
+                for(i=0;i<nodos_padre.length;i++){
+                	elemento.setCheck(nodos_padre[i],bol);   
+                }  
+                var coma='';
+                if(bol){
+                    coma=',';
+                }
+                var expedientes_lista=elemento.getAllChecked()+coma+'<?php echo($_REQUEST["idexpediente"]); ?>';
+                alert(expedientes_lista);
+             }
+         </script>
 
      </div>    
      <div id="esperando_expediente"><img src="<?php echo($ruta_db_superior);?>imagenes/cargando.gif"></div>
@@ -120,38 +151,6 @@ $table.="</table>";
       }
 			-->
       </script>
-         <script>
-             $(document).ready(function(){
-                $('[name="todos_ninguno"]').click(function(){
-                    var valor=$(this).attr('value');
-                    if(valor=='todos'){
-                        seleccionar_todos_ninguno(tree3,true);
-                    }else if(valor=='ninguno'){
-                        seleccionar_todos_ninguno(tree3,false);
-                    }  
-                }); 
-             });
-             
-             function seleccionar_todos_ninguno(elemento,bol){
-                seleccionados=elemento.getAllLeafs();
-                nodos=seleccionados.split(",");
-                for(i=0;i<nodos.length;i++){
-                	elemento.setCheck(nodos[i],bol);
-                }
-                seleccionados_padres=elemento.getAllFatItems();	 
-                nodos_padre=seleccionados_padres.split(",");
-                for(i=0;i<nodos_padre.length;i++){
-                	elemento.setCheck(nodos_padre[i],bol);   
-                }  
-                var coma='';
-                if(bol){
-                    coma=',';
-                }
-                var expedientes_lista=elemento.getAllChecked()+coma+'<?php echo($_REQUEST["idexpediente"]); ?>';
-                alert(expedientes_lista);
-             }
-         </script>
-        
     </div>
 </div>    
     
