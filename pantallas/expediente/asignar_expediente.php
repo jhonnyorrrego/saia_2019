@@ -60,10 +60,9 @@ $table.="</table>";
     <label class="control-label" for="nombre"><b>Seleccionar Expediente(s):</b>
     </label>
     <div class="controls">
-        
+     <div id="botones_todos_ninguno" style="cursor:pointer;"><a>Todos</a>&nbsp&nbsp-&nbsp&nbsp<a>Ninguno</a></div>    
      <div id="esperando_expediente"><img src="<?php echo($ruta_db_superior);?>imagenes/cargando.gif"></div>
     <img src="<?php echo($ruta_db_superior);?>imgs/iconCheckAll.gif">&nbsp;<?php echo($expediente[0]["nombre"]);?>
-     <div id="botones_todos_ninguno" style="cursor:pointer;"><a>Todos</a>&nbsp&nbsp-&nbsp&nbsp<a>Ninguno</a></div>
 	  <div id="treeboxbox_tree3"></div>
 	 
 	</div>
