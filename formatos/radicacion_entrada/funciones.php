@@ -825,7 +825,7 @@ function serie_documental_radicacion($idformato,$iddoc){
                     tree_serie_idserie.loadXML("../../test_serie_funcionario2.php?tabla=dependencia&admin=1&sin_padre=1&uid=1477409126024&id=d38");
                     
                     var dependencia=$('#dependencia').val();
-                //tree_serie_idserie.setOnLoadingEnd(obtener_dependencia(dependencia));
+                tree_serie_idserie.setOnLoadingEnd(obtener_dependencia(dependencia));
                 
                 function obtener_dependencia(rol){
                     $.ajax({
