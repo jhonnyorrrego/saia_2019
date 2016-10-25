@@ -58,6 +58,59 @@ $table.="</table>";
     <label class="control-label" for="nombre">Incluir:
     </label>
     <div class="controls">
+
+     <div id="esperando_expediente"><img src="imagenes/cargando.gif"></div>
+	  <div id="treeboxbox_tree2"></div>
+	</div>
+</div>
+				<script type="text/javascript">
+  <!--
+  		var browserType;
+      if (document.layers) {browserType = "nn4"}
+      if (document.all) {browserType = "ie"}
+      if (window.navigator.userAgent.toLowerCase().match("gecko")) {
+         browserType= "gecko"
+      }
+  		
+			tree2=new dhtmlXTreeObject("treeboxbox_tree2","100%","",0);
+			tree2.setImagePath("imgs/");
+			tree2.enableIEImageFix(true);
+      tree2.enableCheckBoxes(1);
+      //tree2.enableSmartXMLParsing(true);
+      tree2.setOnLoadingStart(cargando_expediente);
+      tree2.setOnLoadingEnd(fin_cargando_expediente);
+      
+			tree2.setXMLAutoLoading("test_expediente.php?doc=<?php echo($iddoc); ?>&accion=1&permiso_editar=1");
+			tree2.loadXML("test_expediente.php?doc=<?php echo($iddoc); ?>&accion=1&permiso_editar=1");
+			
+			function fin_cargando_expediente() {
+        if (browserType == "gecko" )
+           document.poppedLayer =
+               eval('document.getElementById("esperando_expediente")');
+        else if (browserType == "ie")
+           document.poppedLayer =
+              eval('document.getElementById("esperando_expediente")');
+        else
+           document.poppedLayer =
+              eval('document.layers["esperando_expediente"]');
+        document.poppedLayer.style.display = "none";
+      }
+
+      function cargando_expediente() {
+        if (browserType == "gecko" )
+           document.poppedLayer =
+               eval('document.getElementById("esperando_expediente")');
+        else if (browserType == "ie")
+           document.poppedLayer =
+              eval('document.getElementById("esperando_expediente")');
+        else
+           document.poppedLayer =
+               eval('document.layers["esperando_expediente"]');
+        document.poppedLayer.style.display = "";
+      }
+			-->
+      </script>
+
         
     </div>
 </div>    
