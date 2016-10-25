@@ -825,8 +825,9 @@ function serie_documental_radicacion($idformato,$iddoc){
 	            var padre=tree_destino.getParentId(nodeId);
 	            padre=padre.replace("#","");
 	        }
+	        var x = Math.floor((Math.random() * 100000) + 1);
 	        tree_serie_idserie.deleteChildItems(0);
-	        tree_serie_idserie.loadXML("../../test_serie_funcionario2.php?tabla=dependencia&admin=1&dependencia="+padre+"&sin_padre=1");
+	        tree_serie_idserie.loadXML("../../test_serie_funcionario2.php?tabla=dependencia&admin=1&dependencia="+padre+"&sin_padre=1&uid="+x+"&id=d"+padre);
         }
 	});
         
