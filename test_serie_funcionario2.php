@@ -44,7 +44,7 @@ if($id and $id<>"" && @$_REQUEST["uid"] && $id[0]=="d"){
         //print_r($_REQUEST);
         $dependencia=str_replace("d","",$id);
         echo("<tree id=\"".$id."\">\n");
-        llena_serie($dependencia);
+        llena_serie($dependencia,$condicion);
         llena_series_asignadas($dependencia);
         echo("</tree>\n");
 	    die();
@@ -97,7 +97,7 @@ $activo = "";
 ?>
 <?php
 
-function llena_serie($serie,$condicion=""){
+function llena_serie($serie,$condicion_dependencia="",$condicion=""){
 global $conn,$tabla,$seleccionado,$activo;
 if(isset($_REQUEST["orden"]))
   $orden=$_REQUEST["orden"];
@@ -106,7 +106,7 @@ else
 if($serie=="NULL"){
   $papas=busca_filtro_tabla("*",$tabla,"(cod_padre IS NULL OR cod_padre=0) $activo $condicion","$orden ASC",$conn);
 }else
-  $papas=busca_filtro_tabla("*",$tabla,"cod_padre=".$serie.$activo.$condicion,"$orden ASC",$conn); 
+  $papas=busca_filtro_tabla("*",$tabla,"cod_padre=".$serie.$activo.$condicion.$condicion_dependencia,"$orden ASC",$conn); 
 
 if($papas["numcampos"]){
   for($i=0; $i<$papas["numcampos"]; $i++){
