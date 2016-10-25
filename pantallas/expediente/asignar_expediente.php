@@ -85,7 +85,7 @@ $table.="</table>";
   </div>
 </div>
 
-<?php if($_REQUEST["mostrar_arbol_expediente"]){?>
+<?php if($_REQUEST["mostrar_arbol_expediente"]){?> 
 <div class="control-group element">
   <label class="control-label" for="nombre">Elegir expediente *
   </label>
