@@ -133,23 +133,22 @@ $table.="</table>";
              });
              
              function seleccionar_todos_ninguno(elemento,bol){
-                        seleccionados=elemento.getAllLeafs();
-                         nodos=seleccionados.split(",");
-                         for(i=0;i<nodos.length;i++){
-                         	elemento.setCheck(nodos[i],bol);
-                         }
-                         seleccionados_padres=elemento.getAllFatItems();	 
-                         nodos_padre=seleccionados_padres.split(",");
-                         for(i=0;i<nodos_padre.length;i++){
-                         	elemento.setCheck(nodos_padre[i],bol);   
-                         }  
-                         
-                         var coma='';
-                         if(bol){
-                            coma=',';
-                         }
-                         var expedientes_lista=elemento.getAllChecked()+coma+'<?php echo($_REQUEST["idexpediente"]); ?>';
-                         alert(expedientes_lista);
+                seleccionados=elemento.getAllLeafs();
+                nodos=seleccionados.split(",");
+                for(i=0;i<nodos.length;i++){
+                	elemento.setCheck(nodos[i],bol);
+                }
+                seleccionados_padres=elemento.getAllFatItems();	 
+                nodos_padre=seleccionados_padres.split(",");
+                for(i=0;i<nodos_padre.length;i++){
+                	elemento.setCheck(nodos_padre[i],bol);   
+                }  
+                var coma='';
+                if(bol){
+                    coma=',';
+                }
+                var expedientes_lista=elemento.getAllChecked()+coma+'<?php echo($_REQUEST["idexpediente"]); ?>';
+                alert(expedientes_lista);
              }
          </script>
         
