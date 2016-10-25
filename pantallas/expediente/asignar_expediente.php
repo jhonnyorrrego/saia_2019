@@ -12,6 +12,8 @@ $_REQUEST["tipo_entidad"]=5;
 <link rel="stylesheet" type="text/css" href="<?php echo($ruta_db_superior);?>css/bootstrap-datetimepicker.min.css"/>
 <?php include_once($ruta_db_superior."db.php"); ?>
 <script type="text/javascript" src="<?php echo($ruta_db_superior);?>js/jquery-1.7.min.js"></script>
+<script type="text/javascript" src="<?php echo($ruta_db_superior);?>js/dhtmlXCommon.js"></script>
+<script type="text/javascript" src="<?php echo($ruta_db_superior);?>js/dhtmlXTree.js"></script>
 <?php 
 include_once($ruta_db_superior."librerias_saia.php");
 $propietario=busca_filtro_tabla("idfuncionario","expediente e,funcionario f","f.funcionario_codigo=e.propietario and idexpediente=".$_REQUEST["idexpediente"],"",$conn);
