@@ -159,6 +159,7 @@ $table.="</table>";
                          }
                          
                          var expedientes_lista='<?php echo($_REQUEST["idexpediente"]); ?>';
+                         alert( expedientes_lista  );
                     }
                 }); 
              });
