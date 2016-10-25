@@ -839,6 +839,8 @@ function serie_documental_radicacion($idformato,$iddoc){
 	        //tree_serie_idserie.deleteChildItems(0);
 	        tree_serie_idserie.loadXML("../../test_serie_funcionario2.php?tabla=dependencia&admin=1&dependencia="+dependencia+"&sin_padre=1&uid="+x+"&id=d"+padre);
         }
+        
+        
 	});
         
     </script>
