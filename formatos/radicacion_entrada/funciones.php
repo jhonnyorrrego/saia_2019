@@ -830,6 +830,8 @@ function serie_documental_radicacion($idformato,$iddoc){
 	            var dependencia=nodeId.replace("#","");
 	        }else{
 	            var dependencia=tree_destino.getParentId(nodeId);
+	            var padre=tree_destino.getParentId(dependencia);
+	            padre=padre.replace("#","");
 	            dependencia=dependencia.replace("#","");
 	        }
 	        var x = Math.floor((Math.random() * 100000) + 1);
