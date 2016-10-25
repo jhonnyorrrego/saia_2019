@@ -83,7 +83,7 @@ $table.="</table>";
       tree2.setOnLoadingEnd(fin_cargando_expediente);
       
 			tree2.setXMLAutoLoading("<?php echo($ruta_db_superior);?>test_expediente.php?doc=617&accion=1&permiso_editar=1");
-			tree2.loadXML("<?php echo($ruta_db_superior);?>test_expediente.php?doc=<?php echo($iddoc); ?>&accion=1&permiso_editar=1");
+			tree2.loadXML("<?php echo($ruta_db_superior);?>test_expediente.php?accion=1&permiso_editar=1");
 			
 			function fin_cargando_expediente() {
         if (browserType == "gecko" )
