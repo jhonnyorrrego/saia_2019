@@ -99,7 +99,7 @@ $table.="</table>";
              function cargar_seleccionados_hijos(NodeId){
                  
                  
-                 var expedientes_lista=elemento.getAllChecked()+',<?php echo($_REQUEST["idexpediente"]); ?>';
+                 var expedientes_lista=tree3.getAllChecked()+',<?php echo($_REQUEST["idexpediente"]); ?>';
                  $('[name="idexpediente"]').val(expedientes_lista);
                   alert( $('[name="idexpediente"]').val() );
              }
