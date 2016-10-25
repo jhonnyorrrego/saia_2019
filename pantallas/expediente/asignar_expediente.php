@@ -84,7 +84,7 @@ $table.="</table>";
       tree3.setOnLoadingEnd(fin_cargando_expediente);
       
 		//	tree3.setXMLAutoLoading("<?php echo($ruta_db_superior);?>test_expediente.php?doc=617&accion=1&permiso_editar=1");
-			tree3.loadXML("<?php echo($ruta_db_superior);?>test_expediente.php?accion=1&permiso_editar=1&inicia=<?php echo($_REQUEST["idexpediente"]); ?>");
+			tree3.loadXML("<?php echo($ruta_db_superior);?>test_expediente.php?carga_total=1&accion=1&permiso_editar=1&inicia=<?php echo($_REQUEST["idexpediente"]); ?>");
 			
 			function fin_cargando_expediente() {
         if (browserType == "gecko" )
