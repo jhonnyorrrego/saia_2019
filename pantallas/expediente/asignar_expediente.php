@@ -143,7 +143,12 @@ $table.="</table>";
                          for(i=0;i<nodos_padre.length;i++){
                          	elemento.setCheck(nodos_padre[i],bol);   
                          }  
-                         var expedientes_lista=elemento.getAllChecked()+',<?php echo($_REQUEST["idexpediente"]); ?>';
+                         
+                         var coma='';
+                         if(bol){
+                            coma=',';
+                         }
+                         var expedientes_lista=elemento.getAllChecked()+coma+'<?php echo($_REQUEST["idexpediente"]); ?>';
                          alert(expedientes_lista);
              }
          </script>
