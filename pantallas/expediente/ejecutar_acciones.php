@@ -319,14 +319,18 @@ function asignar_permiso_expediente() {
 		if ($_REQUEST["tipo_entidad"] == 5) {
 			$_REQUEST["tipo_entidad"] = 1;
 		}
-		$sql1 = "DELETE FROM entidad_expediente WHERE expediente_idexpediente=" . $_REQUEST["idexpediente"] . " AND entidad_identidad=1 AND llave_entidad NOT IN(" . implode(",", $_REQUEST["idfuncionario"]) . "," . $_REQUEST["propietario"] . ")";
+		$sql1 = "DELETE FROM entidad_expediente WHERE expediente_idexpediente IN(" . $_REQUEST["idexpediente"] . ") AND entidad_identidad=1 AND llave_entidad NOT IN(" . implode(",", $_REQUEST["idfuncionario"]) . "," . $_REQUEST["propietario"] . ")";
 		phpmkr_query($sql1) or die($retorno);
 		foreach ($_REQUEST["idfuncionario"] as $idfunc) {
 			$permiso = "";
 			if (isset($_REQUEST["permisos_" . $idfunc])) {
 				$permiso = implode(",", $_REQUEST["permisos_" . $idfunc]);
 			}
-			asignar_expediente($_REQUEST["idexpediente"], $_REQUEST["tipo_entidad"], $idfunc, $permiso);
+			
+			$vector_expedientes=explode(',',$_REQUEST["idexpediente"]);
+			for($j=0;$j<count($vector_expedientes);$j++){
+			    asignar_expediente($vector_expedientes[$j], $_REQUEST["tipo_entidad"], $idfunc, $permiso);
+			}
 		}
 		$exito = 1;
 		if ($exito) {
