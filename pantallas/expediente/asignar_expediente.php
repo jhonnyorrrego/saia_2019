@@ -75,7 +75,7 @@ $table.="</table>";
       }
   		
 			tree2=new dhtmlXTreeObject("treeboxbox_tree2","100%","",0);
-			tree2.setImagePath("imgs/");
+			tree2.setImagePath("<?php echo($ruta_db_superior);?>imgs/");
 			tree2.enableIEImageFix(true);
       tree2.enableCheckBoxes(1);
       //tree2.enableSmartXMLParsing(true);
