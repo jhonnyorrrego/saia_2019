@@ -82,7 +82,7 @@ $table.="</table>";
       tree2.setOnLoadingStart(cargando_expediente);
       tree2.setOnLoadingEnd(fin_cargando_expediente);
       
-			tree2.setXMLAutoLoading("test_expediente.php?doc=<?php echo($iddoc); ?>&accion=1&permiso_editar=1");
+			tree2.setXMLAutoLoading("test_expediente.php?doc=617&accion=1&permiso_editar=1");
 			tree2.loadXML("test_expediente.php?doc=<?php echo($iddoc); ?>&accion=1&permiso_editar=1");
 			
 			function fin_cargando_expediente() {
