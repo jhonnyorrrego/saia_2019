@@ -65,22 +65,7 @@ $table.="</table>";
          <a name="todos_ninguno" value="todos">Todos</a>
          &nbsp;&nbsp; - &nbsp;&nbsp;
          <a name="todos_ninguno" value="ninguno">Ninguno</a>
-         <script>
-             $(document).ready(function(){
-                $('[name="todos_ninguno"]').click(function(){
-                    var valor=$(this).attr('value');
-                    
-                    if(valor=='todos'){
-                        alert('entro a todos');
-                        tree3.openAllItems();
-                        
-                    }else if(valor=='ninguno'){
-                        tree3.closeAllItems();
-                        alert('entro a ninguno');
-                    }
-                }); 
-             });
-         </script>
+
      </div>    
      <div id="esperando_expediente"><img src="<?php echo($ruta_db_superior);?>imagenes/cargando.gif"></div>
     <img src="<?php echo($ruta_db_superior);?>imgs/iconCheckAll.gif">&nbsp;<?php echo($expediente[0]["nombre"]);?>
@@ -135,7 +120,22 @@ $table.="</table>";
       }
 			-->
       </script>
-
+         <script>
+             $(document).ready(function(){
+                $('[name="todos_ninguno"]').click(function(){
+                    var valor=$(this).attr('value');
+                    
+                    if(valor=='todos'){
+                        alert('entro a todos');
+                        tree3.openAllItems();
+                        
+                    }else if(valor=='ninguno'){
+                        tree3.closeAllItems();
+                        alert('entro a ninguno');
+                    }
+                }); 
+             });
+         </script>
         
     </div>
 </div>    
