@@ -18,4 +18,5 @@ $datos=busca_filtro_tabla('iddependencia','vfuncionario_dc','iddependencia_cargo
 
 $datos[1]=$datos[0]['iddependencia'];
 $datos[2]=$datos[0]['iddependencia'];
+$datos=json_encode($datos);
 echo($datos);
