@@ -34,3 +34,17 @@ function mostrar_origen_reporte($idft_radicacion_entrada){
     }
     return ($origen[0]['nombre']);
 }
+
+function mostrar_destino_reporte($idft_radicacion_entrada){
+    global $ruta_db_superior, $conn;
+    
+    $datos=busca_filtro_tabla('','ft_radicacion_entrada','idft_radicacion_entrada='.$idft_radicacion_entrada,'',conn);
+    
+    if($datos[0]['tipo_destino']==1){
+        $destino=busca_filtro_tabla("b.nombre","datos_ejecutor a, ejecutor b","b.idejecutor=a.ejecutor_idejecutor AND a.iddatos_ejecutor=".$datos[0]['persona_natural_dest'],"",$conn);
+
+    }else{
+        $destino=busca_filtro_tabla("concat(nombres,' ',apellidos) AS nombre","vfuncionario_dc","iddependencia_cargo=".$datos[0]['destino'],"",$conn);
+    }
+    return ($destino[0]['nombre']);
+}
