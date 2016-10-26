@@ -18,8 +18,8 @@ if($_REQUEST['iddependencia']){
     buscar_dependencias_principal($_REQUEST['iddependencia']);
     $retorno=array_filter($retorno);
     echo(json_encode(array_reverse($retorno)));
-}elseif ($_REQUEST['papa']) {
-    busca_primeros_hijos($_REQUEST['papa']);
+}elseif ($_REQUEST['rol']) {
+    busca_primeros_hijos($_REQUEST['rol']);
     echo(json_encode($retorno));
 }
 function buscar_dependencias_principal($iddependencia){
@@ -34,9 +34,9 @@ function buscar_dependencias_principal($iddependencia){
 		return($dep);
 	}
 }
-function busca_primeros_hijos($papa){
+function busca_primeros_hijos($rol){
     global $retorno;
-    $busca_hijos=busca_filtro_tabla("iddependencia","dependencia","cod_padre=".$papa,"",$conn);
+    $busca_hijos=busca_filtro_tabla("iddependencia","vfuncionario_dc","iddependencia_cargo=".$rol,"",$conn);
     for ($i = 0; $i < $busca_hijos['numcampos']; $i++) {
          $retorno[]=$busca_hijos[$i]['iddependencia'];
     }
