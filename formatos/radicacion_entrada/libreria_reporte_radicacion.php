@@ -134,16 +134,6 @@ function filtrar_mensajero(){
     return $select;
 }
 
-function mensajeros_filtrados(){
-    global $ruta_db_superior, $conn;
-    
-    if($_REQUEST['prueba']){
-        return ' AND B.mensajero_encargado=1';
-    }else{
-        return '';
-    }
-    
-}
 
 
 
