@@ -112,8 +112,6 @@ function condicion_adicional(){
     if($cargo[0]['cargo']=="mensajero"){
         $condicion="AND B.mensajero_encargado=".$cargo[0]['iddependencia_cargo'];
     }  
-    
-    return $cargo[0]['iddependencia_cargo'];
-    //return $condicion;
+    return $condicion;
 }
 
