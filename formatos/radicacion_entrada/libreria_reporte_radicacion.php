@@ -92,5 +92,7 @@ function ver_items($iddocumento, $numero) {
 }
 
 
-
+function condicion_adicional(){
+    
+}
 
