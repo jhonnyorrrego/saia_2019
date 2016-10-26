@@ -35,7 +35,7 @@ echo(librerias_jquery('1.7'));
         });
         
         $("#filtro_mensajeros").live("change",function(){
-            parent.window.location.href = "<?php echo $ruta_db_superior;?>pantallas/busquedas/servidor_busqueda.php?idbusqueda_componente=269&cmd=resetall&variable_adicional=1";
+            parent.window.location.href = "<?php echo $ruta_db_superior;?>pantallas/busquedas/servidor_busqueda.php?idbusqueda_componente=269&variable_adicional=1";
             
         });
         
