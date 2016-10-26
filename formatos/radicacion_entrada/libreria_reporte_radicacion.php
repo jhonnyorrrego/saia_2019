@@ -89,7 +89,7 @@ function mostrar_mensajeros_dependencia($idft_destino_radicacion){
 
 function ver_items($iddocumento, $numero) {
   return('<div class="link kenlace_saia" enlace="ordenar.php?key='.$iddocumento.'&amp;accion=mostrar&amp;mostrar_formato=1" conector="iframe" titulo="No Radicado '.$numero.'"><center><span class="badge">'.$numero.'</span></center></div>');
-}
+} 
 
 
 function condicion_adicional(){
