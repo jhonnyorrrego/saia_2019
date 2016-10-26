@@ -827,12 +827,7 @@ function serie_documental_radicacion($idformato,$iddoc){
                  success: function(datos){
                      for (var i=1; i<datos.length; i++){
                          x = Math.floor((Math.random() * 100000) + 1);
-                         if(cargado.indexOf(datos[i])<=0){// devuleve -1
-                             tree_serie_idserie.loadXML("../../test_serie_funcionario2.php?tabla=dependencia&admin=1&dependencia="+datos[i]+"&sin_padre=1&uid="+x+"&id=d"+datos[i]);
-                             cargado.push(datos[i]);
-                         }/*else{
-                             cargado.splice(cargado.indexOf(dependencia),1);
-                         }*/
+                         console.log(1);
                      }
                     console.log(cargado);
                  }
