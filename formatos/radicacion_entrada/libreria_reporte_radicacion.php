@@ -25,5 +25,12 @@ function mostrar_origen_reporte($idft_radicacion_entrada){
     global $ruta_db_superior, $conn;
     
     $datos=busca_filtro_tabla('','ft_radicacion_entrada','idft_radicacion_entrada='.$idft_radicacion_entrada,'',conn);
-    return ($datos[0]['tipo_origen']);
+    
+    if($datos[0]['tipo_origen']==1){
+        $origen=busca_filtro_tabla("b.nombre","datos_ejecutor a, ejecutor b","b.idejecutor=a.ejecutor_idejecutor AND a.iddatos_ejecutor=".$datos[0]['persona_natural'],"",$conn);
+
+    }else{
+        
+    }
+    return ($origen[0]['nombre']);
 }
