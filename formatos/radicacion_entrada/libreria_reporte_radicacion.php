@@ -95,6 +95,8 @@ function ver_items($iddocumento, $numero) {
 function condicion_adicional(){
     global $ruta_db_superior, $conn;
     
+    $funcionario_codigo=usuario_actual('funcionario_codigo');
+    $cargo=busca_filtro_tabla("","vfuncionario_dc a","a.funcionario_codigo=".$funcionario_codigo,"",$conn);
     
 }
 
