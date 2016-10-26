@@ -804,17 +804,18 @@ function serie_documental_radicacion($idformato,$iddoc){
 	    var cargado=[];
 	    cargado.push("38");
 	    tree_destino.setOnCheckHandler(onNodeSelect);
-	    
 	    $.ajax({
 	        type:'POST',
-	        dataType: 'json',
-            url: "obtener_dependencia.php",
-            data: {iddependencia_cargo:$('#dependencia').val()},
+            dataType: 'json',
+            url: "ajax_serie.php",
+            data:{papa:$('#dependencia').val()},
             async: false,
             success: function(datos){
-                cargado.push(datos[1]);
+                for (var i=1; i<datos.length; i++){
+                    cargado.push(datos[i]);
+                 }
             }
-        });
+        }); 
         function onNodeSelect(nodeId){
 	        var numeral=nodeId.indexOf("#");
 	        if(numeral>=0){
