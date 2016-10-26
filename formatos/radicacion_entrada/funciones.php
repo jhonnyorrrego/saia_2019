@@ -819,7 +819,7 @@ function serie_documental_radicacion($idformato,$iddoc){
 	    var cargado=[];
 	    var dependencia_principal='<?php echo($dependencia_principal); ?>';
 	    cargado.push(dependencia_principal);
-	    console.log(cargado);
+	    
 	    //Busca las dependencias del rol actual para que no carguen duplicados en la recursion del abrol de series
 	    $.ajax({
 	        type:'POST',
@@ -857,6 +857,7 @@ function serie_documental_radicacion($idformato,$iddoc){
                  data:{iddependencia:dependencia},
                  async: false,
                  success: function(datos){
+                     console.log(cargado);
                      for (var i=1; i<datos.length; i++){
                          x = Math.floor((Math.random() * 100000) + 1);
                          if(cargado.indexOf(datos[i])<=0){// devuleve -1
