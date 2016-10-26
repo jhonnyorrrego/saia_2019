@@ -18,7 +18,7 @@ echo(librerias_jquery('1.7'));
     $(document).ready(function(){
         alert('funciono');
         $(".mensajeros").live("change",function(){
-            alert('seleccionado');
+            alert($(this).attr("data-idreg"););
         });
         
     });
