@@ -116,10 +116,8 @@ if($serie=="NULL")
 else
   $papas=busca_filtro_tabla("*",$tabla,"cod_padre=".$serie.$activo.$condicion.$excluidos,"$orden ASC",$conn); 
 
-if($papas["numcampos"])
-{ 
-  for($i=0; $i<$papas["numcampos"]; $i++)
-  {
+if($papas["numcampos"]){ 
+  for($i=0; $i<$papas["numcampos"]; $i++){
     $hijos = busca_filtro_tabla("count(*) AS cant",$tabla,"cod_padre=".$papas[$i]["id$tabla"].$activo.$condicion,"",$conn);
     echo("<item style=\"font-family:verdana; font-size:7pt;\" ");
     $cadena_codigo='';
@@ -142,19 +140,24 @@ if($papas["numcampos"])
 	else if($hijos[0]["cant"]!=0 && ($tabla=="serie" || @$_REQUEST["sin_padre"])){		
       echo(" nocheckbox=\"1\" ");		
 	}
-    if(in_array($papas[$i]["id$tabla"],$seleccionado)!==false)
-      echo " checked=\"1\" ";  
-    if($hijos[0][0])
-      echo(" child=\"1\">\n");
-    else
-      echo(" child=\"0\">\n");
-		if(!$_REQUEST["id"] && $tabla!='serie')
-    	llena_serie($papas[$i]["id$tabla"]);
-		else{
-			if(!$_REQUEST["admin"]){
-				llena_serie($papas[$i]["id$tabla"]);
-			}
+    if(in_array($papas[$i]["id$tabla"],$seleccionado)!==false){
+        echo " checked=\"1\" ";  
+    }
+      
+    if($hijos[0][0]){
+        echo(" child=\"1\">\n");
+    }
+    else{
+        echo(" child=\"0\">\n");
+    }
+      
+	if(!$_REQUEST["id"] && $tabla!='serie'){
+	    llena_serie($papas[$i]["id$tabla"]);
+	}else{
+		if(!$_REQUEST["admin"]){
+			llena_serie($papas[$i]["id$tabla"]);
 		}
+	}
     echo("</item>\n");
   }     
 }
