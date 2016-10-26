@@ -38,7 +38,6 @@ function busca_primeros_hijos($rol){
     global $retorno;
     $busca_hijos=busca_filtro_tabla("a.iddependencia","vfuncionario_dc a","a.iddependencia_cargo=".$rol,"",$conn);
     
-    print_r($busca_hijos);
     for ($i = 0; $i < $busca_hijos['numcampos']; $i++) {
          $retorno[]=$busca_hijos[$i]['iddependencia'];
     }
