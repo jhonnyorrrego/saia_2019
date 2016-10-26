@@ -813,9 +813,11 @@ function serie_documental_radicacion($idformato,$iddoc){
             success: function(datos){
                 for (var i=1; i<datos.length; i++){
                     cargado.push(datos[i]);
+                    console.log(datos[i]);
                  }
             }
-        }); 
+        });
+        console.log("1");
         function onNodeSelect(nodeId){
 	        var numeral=nodeId.indexOf("#");
 	        if(numeral>=0){
