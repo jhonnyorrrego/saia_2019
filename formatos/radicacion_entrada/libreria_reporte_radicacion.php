@@ -133,6 +133,11 @@ function filtrar_mensajero(){
     return $select;
 }
 
+function mensajeros_filtrados(){
+    global $ruta_db_superior, $conn;
+    
+    return 'and 1=1';
+}
 
 
 
