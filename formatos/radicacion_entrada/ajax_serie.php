@@ -14,7 +14,7 @@ $max_salida--;
 include_once($ruta_db_superior."db.php");
 $retorno[]= $_REQUEST['iddependencia'];
 buscar_dependencias_principal($_REQUEST['iddependencia']);
-print_r($retorno);
+echo(json_encode($retorno));
 function buscar_dependencias_principal($iddependencia){
     global $retorno;
 	$cod_dep=busca_filtro_tabla("cod_padre","dependencia","iddependencia=".$iddependencia,"",$conn);
