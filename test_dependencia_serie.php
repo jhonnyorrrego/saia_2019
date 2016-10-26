@@ -97,8 +97,10 @@ if($id and $id<>""){
     echo("</item>\n");
   } 
 }
-else
-  llena_serie("NULL");
+else{
+    llena_serie("NULL");
+}
+  
 }  
 echo("</tree>\n");
 $activo = "";
