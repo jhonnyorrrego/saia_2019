@@ -42,7 +42,7 @@ function mostrar_destino_reporte($idft_destino_radicacion){
     
     if($datos[0]['tipo_destino']==1){
         $destino=busca_filtro_tabla("b.nombre","datos_ejecutor a, ejecutor b","b.idejecutor=a.ejecutor_idejecutor AND a.iddatos_ejecutor]=".$datos[0]['nombre_destino'],"",$conn);
-        return ($datos[0]['tipo_destino']);
+        return ($datos[0]['nombre_destino']);
     }else{
         $destino=busca_filtro_tabla("concat(nombres,' ',apellidos) AS nombre","vfuncionario_dc","iddependencia_cargo=".$datos[0]['destino'],"",$conn);
         return ($datos[0]['tipo_destino']);
