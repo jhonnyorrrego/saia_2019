@@ -48,34 +48,7 @@ global $conn;
         </div>
 
         <input type="hidden" name="bqsaiaenlace_fecha_radicacion_entrada_y" id="bqsaiaenlace_fecha_radicacion_entrada_y" value="y" />
-        
-       
-        <br>
-		
 
-		
-		<div class="control-group">
-        	<strong>Funcionario Evaluado</strong><br/>
-        	<?php 
-	      
-			
-			if($_SESSION['LOGIN'.LLAVE_SAIA]=='cerok'){
-			
-				echo arbol("bqsaia_funcionario_evaluado","funcionario_evaluado","test.php?sin_padre=1","","","","","check","","",1); 
-				
-				//arbol($campo,$nombre_arbol,$url,$cargar_todos=0,$padresehijos=false,$quitar_padres=false,$adicionales=false,$tipo_etiqueta='check',$agreg_depen=false,$tipo_funcionario='rol',$check_hijos=0)
-			}else{
-				//echo arbol("bqsaia_r@cliente_proceso","cliente_proceso","formatos/requerimientos/test_cliente_proyecto.php?sin_padre=1","","","","","check"); 
-				echo arbol("bqsaia_funcionario_evaluado","funcionario_evaluado","test.php?sin_padre=1","","","","","check","","",1); 
-			}
-			
-	        ?>
-	        <input type="hidden" name="bksaiacondicion_funcionario_evaluado" id="bksaiacondicion_funcionario_evaluado" value="in">
-	         	<input type="hidden" name="bqsaiaenlace_funcionario_evaluado" id="bqsaiaenlace_funcionario_evaluado" value="y" />
-        </div>	
-        
-        
-        
 		<br>
 
 
