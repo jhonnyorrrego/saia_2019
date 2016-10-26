@@ -108,7 +108,7 @@ function condicion_adicional(){
     global $ruta_db_superior, $conn;
     
     if(@$_REQUEST['variable_busqueda']){
-        $condicion="AND B.mensajero_encargado="$_REQUEST['variable_busqueda'];
+        $condicion="AND B.mensajero_encargado=".$_REQUEST['variable_busqueda'];
     }else{
         $funcionario_codigo=usuario_actual('funcionario_codigo');
         $cargo=busca_filtro_tabla("lower(cargo) AS cargo, iddependencia_cargo","vfuncionario_dc a","a.funcionario_codigo=".$funcionario_codigo,"",$conn);
