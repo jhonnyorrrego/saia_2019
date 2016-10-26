@@ -797,12 +797,24 @@ function datos_editar_radicacion($idformato,$iddoc){
 
 function serie_documental_radicacion($idformato,$iddoc){
 	global $conn,$ruta_db_superior;
+	
 	?>
 	<script>
 	$(document).ready(function(){
 	    var cargado=[];
 	    cargado.push("38");
-	   tree_destino.setOnCheckHandler(onNodeSelect);
+	    tree_destino.setOnCheckHandler(onNodeSelect);
+	    
+	    $.ajax({
+	        type:'POST',
+	        dataType: 'json',
+            url: "obtener_dependencia.php",
+            data: {iddependencia_cargo:$('#dependencia').val()},
+            async: false,
+            success: function(datos){
+                cargado.push(datos[1]);
+            }
+        });
         function onNodeSelect(nodeId){
 	        var numeral=nodeId.indexOf("#");
 	        if(numeral>=0){
