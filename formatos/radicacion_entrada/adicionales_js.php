@@ -18,7 +18,7 @@ echo(librerias_jquery('1.7'));
     $(document).ready(function(){
         
         $('.mensajeros').change(function(){
-            
+            alert('seleccionado');
         });
         
     });
