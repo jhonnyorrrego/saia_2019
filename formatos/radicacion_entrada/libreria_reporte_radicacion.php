@@ -30,7 +30,7 @@ function mostrar_origen_reporte($idft_radicacion_entrada){
         $origen=busca_filtro_tabla("b.nombre","datos_ejecutor a, ejecutor b","b.idejecutor=a.ejecutor_idejecutor AND a.iddatos_ejecutor=".$datos[0]['persona_natural'],"",$conn);
 
     }else{
-        
+        $origen=busca_filtro_tabla("concat(nombres,' ',apellidos) AS nombre","vfuncionario_dc","iddependencia_cargo=".$datos[0]['area_responsable'],"",$conn);
     }
     return ($origen[0]['nombre']);
 }
