@@ -90,7 +90,7 @@ function mostrar_mensajeros_dependencia($idft_destino_radicacion){
         if($responsable[$i]['mensajero_ruta']==$datos[0]['mensajero_encargado']){
             $select.="<option value='{$responsable[$i]['mensajero_ruta']}' data-idft='$idft_destino_radicacion' selected>".$mensajero[0]['nombre']."</option>";
         }else{
-            $select.="<option value='{$responsable[$i]['mensajero_ruta']}'>".$mensajero[0]['nombre']."</option>";
+            $select.="<option value='{$responsable[$i]['mensajero_ruta']}' data-idft='$idft_destino_radicacion'>".$mensajero[0]['nombre']."</option>";
         }
         
     }
