@@ -34,5 +34,10 @@ echo(librerias_jquery('1.7'));
                     });   
         });
         
+        $(".mensajeros").live("change",function(){
+            
+            
+        });
+        
     });
 </script>
