@@ -865,6 +865,7 @@ function serie_documental_radicacion($idformato,$iddoc){
                      
                      for (var i=1; i<datos.length; i++){
                          x = Math.floor((Math.random() * 100000) + 1);
+                         console.log(cargado);
                          console.log(datos[i]);
                          console.log(cargado.indexOf(datos[i]));
                          if(cargado.indexOf(datos[i])<=0){// devuleve -1
