@@ -36,7 +36,7 @@ function buscar_dependencias_principal($iddependencia){
 }
 function busca_primeros_hijos($rol){
     global $retorno;
-    $busca_hijos=busca_filtro_tabla("b.iddependencia","vfuncionario_dc a, dependencia b","b.cod_padre=a.iddependencia AND a.iddependencia_cargo=".$rol,"",$conn);
+    $busca_hijos=busca_filtro_tabla("a.iddependencia","vfuncionario_dc a","a.iddependencia_cargo=".$rol,"",$conn);
     
     print_r($busca_hijos);
     for ($i = 0; $i < $busca_hijos['numcampos']; $i++) {
