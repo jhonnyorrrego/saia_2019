@@ -43,7 +43,7 @@ function enlace_expediente($idexpediente,$nombre){
 	global $conn;    
 
     $expediente_actual=busca_filtro_tabla("tomo_padre,tomo_no,serie_idserie,propietario","expediente","idexpediente=".$idexpediente,"",$conn);
-    $dependencia_propietario=busca_filtro_tabla("dependencia","vfuncionario_dc","estado_dc=1 AND funcionario_codigo=".$expediente_actual[0]['propietario'],"",$conn);
+    (($dependencia_propietario=busca_filtro_tabla("dependencia","vfuncionario_dc","estado_dc=1 AND funcionario_codigo=".$expediente_actual[0]['propietario'],"",$conn);
     //$nombre_dependencia_propietario=$dependencia_propietario[0]['dependencia'];
     
     $tomo_padre=$idexpediente;
@@ -55,7 +55,7 @@ function enlace_expediente($idexpediente,$nombre){
     $cadena_tomos=("&nbsp;&nbsp;&nbsp;<i><b style='font-size:10px;'>Tomo: </b></i><i style='font-size:10px;'>".$expediente_actual[0]['tomo_no']." de ".$cantidad_tomos."</i>");
 
     
-    return("<div style='' class='link kenlace_saia' enlace='pantallas/busquedas/consulta_busqueda_expediente.php?idbusqueda_componente=".$_REQUEST["idbusqueda_componente"]."&idexpediente=".$idexpediente."&variable_busqueda=".@$_REQUEST['variable_busqueda']."' conector='iframe' titulo='".$nombre."'><table><tr><td style='font-size:12px;'> <i class=' icon-folder-open pull-left'></i>&nbsp;<b>".$nombre." - ".$nombre_dependencia_propietario."</b>&nbsp;".$cadena_tomos."</td></tr></table></div>");
+    return("<div style='' class='link kenlace_saia' enlace='pantallas/busquedas/consulta_busqueda_expediente.php?idbusqueda_componente=".$_REQUEST["idbusqueda_componente"]."&idexpediente=".$idexpediente."&variable_busqueda=".@$_REQUEST['variable_busqueda']."' conector='iframe' titulo='".$nombre."'><table><tr><td style='font-size:12px;'> <i class=' icon-folder-open pull-left'></i>&nbsp;<b>".$nombre."</b>&nbsp;".$cadena_tomos."</td></tr></table></div>");
 }
 function request_expediente_padre(){
 $texto='';
