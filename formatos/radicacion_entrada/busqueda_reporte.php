@@ -53,26 +53,26 @@ global $conn;
 
 
         <div class="control-group">
-          <label class="string required control-label" for="area_seguimiento">
-			<b>Area</b>
+          <label class="string required control-label" for="tipo_origen">
+			<b>Tipo Origen</b>
           </label>
           <div class="controls">
-            <input type="checkbox" name="area_seguimiento" id="area_seguimiento1" value="1">Desarrollo
-            <input type="checkbox" name="area_seguimiento" id="area_seguimiento2" value="2">Soporte
+            <input type="checkbox" name="tipo_origen" id="tipo_origen1" value="1">Externo
+            <input type="checkbox" name="tipo_origen" id="tipo_origen2" value="2">Interno
           </div>
-		<input type="hidden" name="bksaiacondicion_area_seguimiento" id="bksaiacondicion_area_seguimiento" value="in">
-		<input type="hidden" name="bqsaiaenlace_area_seguimiento" id="bqsaiaenlace_area_seguimiento" value="y" />    		<input id="bqsaia_area_seguimiento" name="bqsaia_area_seguimiento" size="50" type="hidden">
+		<input type="hidden" name="bksaiacondicion_tipo_origen" id="bksaiacondicion_tipo_origen" value="in">
+		<input type="hidden" name="bqsaiaenlace_tipo_origen" id="bqsaiaenlace_tipo_origen" value="y" />    		<input id="bqsaia_tipo_origen" name="bqsaia_tipo_origen" size="50" type="hidden">
 			<script>
 				$(document).ready(function(){
-					$('input[name="area_seguimiento"]').click(function(){
-						document.getElementById('bqsaia_area_seguimiento').value='';
+					$('input[name="tipo_origen"]').click(function(){
+						document.getElementById('bqsaia_tipo_origen').value='';
 						var cadena='';
 						for(i=1;i<=2;i++){
-							if(document.getElementById('area_seguimiento'+i).checked){
-								cadena+=document.getElementById('area_seguimiento'+i).value+',';
+							if(document.getElementById('tipo_origen'+i).checked){
+								cadena+=document.getElementById('tipo_origen'+i).value+',';
 							}
 						}
-						document.getElementById('bqsaia_area_seguimiento').value=cadena;						
+						document.getElementById('bqsaia_tipo_origen').value=cadena;						
 					});		
 				});
 			</script>
