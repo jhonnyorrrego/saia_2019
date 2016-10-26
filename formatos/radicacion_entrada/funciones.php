@@ -805,10 +805,10 @@ function buscar_dependencias_principal($iddependencia){
 	
 	if($cod_dep['numcampos']){
 		buscar_dependencias_principal($cod_dep[0]["cod_padre"]);
+		return($iddependencia);
 	}else{
 		return($iddependencia);
 	}
-	return($iddependencia);
 }
 function serie_documental_radicacion($idformato,$iddoc){
 	global $conn,$ruta_db_superior;
