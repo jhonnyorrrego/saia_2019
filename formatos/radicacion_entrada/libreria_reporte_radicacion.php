@@ -93,6 +93,8 @@ function ver_items($iddocumento, $numero) {
 
 
 function condicion_adicional(){
+    global $ruta_db_superior, $conn;
+    
     
 }
 
