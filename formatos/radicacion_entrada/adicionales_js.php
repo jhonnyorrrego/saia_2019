@@ -23,7 +23,7 @@ echo(librerias_jquery('1.7'));
             $.ajax({
                         type:'POST',
                         dataType: 'json',
-                        url: "actualizar_mensajero.php",
+                        url: "<?php echo $ruta_db_superior;?>formatos/radicacion_entrada/actualizar_mensajero.php",
                         data: {
                                         idft_destino_radicacion:idft,
                                         mensajero_encargado:mensajero
