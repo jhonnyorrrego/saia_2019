@@ -16,6 +16,21 @@ echo(librerias_jquery("1.7"));
 echo(librerias_arboles());
 echo(estilo_bootstrap()); 
 global $conn;
+
+
+$funcionario_codigo=usuario_actual('funcionario_codigo');
+    $cargo=busca_filtro_tabla("lower(cargo) AS cargo, iddependencia_cargo","vfuncionario_dc a","a.funcionario_codigo=".$funcionario_codigo,"",$conn);
+    if($cargo[0]['cargo']!="mensajero"){
+    
+    $select="<select class='pull-left btn btn-mini dropdown-toggle' style='height:22px;' name='filtro_mensajeros' id='filtro_mensajeros'>";
+    $datos=busca_filtro_tabla("iddependencia_cargo, concat(nombres,' ',apellidos) AS nombre","vfuncionario_dc","lower(cargo)='mensajero' AND estado_dc=1","",$conn);
+    //print_r($datos);die();
+    for($i=0;$i<$datos['numcampos'];$i++){
+        $select.="<option value='{$datos[$i]['iddependencia_cargo']}'>{$datos[$i]['nombre']}</option>";
+    }
+    $select.="</select>";
+    }
+
 ?>
 <!DOCTYPE html>     
 <html>
