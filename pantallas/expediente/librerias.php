@@ -39,6 +39,16 @@ function permiso_funcionario_expediente($expediente,$entidad,$llave){
 	}
 	return("");
 }
+
+function mostrar_informacion_adicional_expediente($idexpediente){
+    global $conn; 
+    
+    $expediente_actual=busca_filtro_tabla("tomo_padre,tomo_no,serie_idserie,propietario","expediente","idexpediente=".$idexpediente,"",$conn);
+    $dependencia_propietario=busca_filtro_tabla("dependencia","vfuncionario_dc","estado_dc=1 AND funcionario_codigo=".$expediente_actual[0]['propietario'],"",$conn);
+    $nombre_dependencia_propietario=$dependencia_propietario[0]['dependencia'];  
+    return($nombre_dependencia_propietario);
+}
+
 function enlace_expediente($idexpediente,$nombre){
 	global $conn;    
 
