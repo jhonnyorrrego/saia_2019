@@ -16,7 +16,7 @@ echo(librerias_jquery('1.7'));
 ?>
 <script>
     $(document).ready(function(){
-        
+        alert('funciono');
         $('.mensajeros').change(function(){
             alert('seleccionado');
         });
