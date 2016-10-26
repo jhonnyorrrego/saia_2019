@@ -820,7 +820,7 @@ function serie_documental_radicacion($idformato,$iddoc){
 	    var dependencia_principal='<?php echo($dependencia_principal); ?>';
 	    cargado.push(dependencia_principal);
 	    //Busca las dependencias del rol actual para que no carguen duplicados en la recursion del abrol de series
-	    $.ajax({
+	    /*$.ajax({
 	        type:'POST',
             dataType: 'json',
             url: "ajax_serie.php",
@@ -831,7 +831,7 @@ function serie_documental_radicacion($idformato,$iddoc){
                     cargado.push(datos[i]);
                  }
             }
-        });
+        });*/
 	    tree_destino.setOnCheckHandler(onNodeSelect);
 	    
         function onNodeSelect(nodeId){
