@@ -812,14 +812,19 @@ function serie_documental_radicacion($idformato,$iddoc){
 	global $conn,$ruta_db_superior;
 	$dependencia_actual=busca_filtro_tabla("iddependencia","vfuncionario_dc","estado_dep=1 AND estado_dc=1 AND funcionario_codigo=".usuario_actual("funcionario_codigo"),"",$conn);
 	$dependencia_principal=buscar_dependencias_principal($dependencia_actual[0]["iddependencia"]);
-
+	$primeros_hijos=busca_filtro_tabla("iddependencia","dependencia","cod_padre=".$dependencia_principal,"",$conn);
+	
+	for($i=0;$i<$primeros_hijos['numcampos'];$i++){
+	    $arreglo[]=$primeros_hijos[$i]['iddependencia'];
+	}
+	$cargo='"'.implode('","',$arreglo).'"';
 	?>
 	<script>
 	$(document).ready(function(){
-	    var cargado=[];
 	    var dependencia_principal='<?php echo($dependencia_principal); ?>';
+	    var cargado=[<?php echo($cargo); ?>;
 	    cargado.push(dependencia_principal);
-	    
+	    console.log(cargado);
 	    //Busca las dependencias del rol actual para que no carguen duplicados en la recursion del abrol de series
 	    $.ajax({
 	        type:'POST',
