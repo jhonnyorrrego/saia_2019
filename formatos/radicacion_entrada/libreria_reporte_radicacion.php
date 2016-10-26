@@ -74,7 +74,7 @@ function seleccionar_destino($idft_destino_radicacion){
 
 function mostrar_mensajeros_dependencia($idft_destino_radicacion){
     global $ruta_db_superior, $conn;
-    
+    return $_REQUEST['id'];
     $funcionario_codigo=usuario_actual('funcionario_codigo');
     $cargo=busca_filtro_tabla("lower(cargo) AS cargo, concat(nombres,' ',apellidos) AS nombre","vfuncionario_dc a","a.funcionario_codigo=".$funcionario_codigo,"",$conn);
     if($cargo[0]['cargo']=="mensajero"){
