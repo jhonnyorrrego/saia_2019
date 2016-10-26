@@ -320,8 +320,10 @@ function tipo_radicado_radicacion($idformato,$iddoc){//en el adicionar
 	global $conn,$ruta_db_superior;
     $funcionario_codigo=usuario_actual('funcionario_codigo');
     $cargo=busca_filtro_tabla("iddependencia,iddependencia_cargo","vfuncionario_dc a","estado_dc=1 AND a.funcionario_codigo=".$funcionario_codigo,"",$conn);
+    print_r($cargo[0]["iddependencia"]);
+    echo("<hr>");
 	$dependencia_principal=buscar_dependencias_principal($cargo[0]["iddependencia"]);
-print_r($dependencia_principal);
+
 die("-------------------------**");
 	?>
         <script>
