@@ -118,7 +118,7 @@ function condicion_adicional(){
 function filtrar_mensajero(){
     global $ruta_db_superior, $conn;
     
-    $select="<select class='pull-left btn' name='filtro_mensajeros'>";
+    $select="<select class='pull-left btn btn-mini' name='filtro_mensajeros'>";
     $datos=busca_filtro_tabla("iddependencia_cargo, concat(nombres,' ',apellidos) AS nombre","vfuncionario_dc","lower(cargo)='mensajero' AND estado_dc=1","",$conn);
     //print_r($datos);die();
     for($i=0;$i<$datos['numcampos'];$i++){
