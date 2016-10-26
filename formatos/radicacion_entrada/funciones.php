@@ -326,6 +326,8 @@ function tipo_radicado_radicacion($idformato,$iddoc){//en el adicionar
         <script>
             $(document).ready(function(){
                 var dependencia_principal='<?php echo($dependencia_principal); ?>';
+                console.log(dependencia_principal);
+                console.log("primero");
                  tree_serie_idserie.setOnLoadingEnd(cargar_arbol());
                 function cargar_arbol(){
                 setTimeout(function(){  
