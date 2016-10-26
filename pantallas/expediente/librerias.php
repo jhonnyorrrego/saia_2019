@@ -44,7 +44,7 @@ function enlace_expediente($idexpediente,$nombre){
 
     $expediente_actual=busca_filtro_tabla("tomo_padre,tomo_no,serie_idserie,propietario","expediente","idexpediente=".$idexpediente,"",$conn);
     $dependencia_propietario=busca_filtro_tabla("dependencia","vfuncionario_dc","estado_dc=1 AND funcionario_codigo=".$expediente_actual[0]['propietario'],"",$conn);
-    $nombre_dependencia_propietario=$dependencia_propietario[0]['dependencia'];
+    //$nombre_dependencia_propietario=$dependencia_propietario[0]['dependencia'];
     
     $tomo_padre=$idexpediente;
     if($expediente_actual[0]['tomo_padre']){
