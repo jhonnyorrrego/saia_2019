@@ -54,7 +54,7 @@ function enlace_expediente($idexpediente,$nombre){
     $cadena_tomos=("&nbsp;&nbsp;&nbsp;<i><b style='font-size:10px;'>Tomo: </b></i><i style='font-size:10px;'>".$expediente_actual[0]['tomo_no']." de ".$cantidad_tomos."</i>");
 
     
-    return("<div style='' class='link kenlace_saia' enlace='pantallas/busquedas/consulta_busqueda_expediente.php?idbusqueda_componente=".$_REQUEST["idbusqueda_componente"]."&idexpediente=".$idexpediente."&variable_busqueda=".@$_REQUEST['variable_busqueda']."' conector='iframe' titulo='".$nombre."'><table><tr><td style='font-size:12px;'> <i class=' icon-folder-open pull-left'></i>&nbsp;<b>".$nombre." - ".$dependencia_propietario[0]['nombre']."</b>&nbsp;".$cadena_tomos."</td></tr></table></div>");
+    return("<div style='' class='link kenlace_saia' enlace='pantallas/busquedas/consulta_busqueda_expediente.php?idbusqueda_componente=".$_REQUEST["idbusqueda_componente"]."&idexpediente=".$idexpediente."&variable_busqueda=".@$_REQUEST['variable_busqueda']."' conector='iframe' titulo='".$nombre."'><table><tr><td style='font-size:12px;'> <i class=' icon-folder-open pull-left'></i>&nbsp;<b>".$nombre." - ".$dependencia_propietario[0]['dependencia']."</b>&nbsp;".$cadena_tomos."</td></tr></table></div>");
 }
 function request_expediente_padre(){
 $texto='';
