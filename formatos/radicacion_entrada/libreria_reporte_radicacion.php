@@ -35,21 +35,14 @@ function mostrar_origen_reporte($idft_radicacion_entrada){
     return ($origen[0]['nombre']);
 }
 
-function mostrar_destino_reporte($idft_radicacion_entrada){
+function mostrar_destino_reporte($idft_destino_radicacion){
     global $ruta_db_superior, $conn;
     
-    $datos=busca_filtro_tabla('','ft_radicacion_entrada','idft_radicacion_entrada='.$idft_radicacion_entrada,'',conn);
+    $datos=busca_filtro_tabla('','ft_destino_radicacion','idft_destino_radicacion='.$idft_destino_radicacion,'',conn);
     
     if($datos[0]['tipo_destino']==1){
-        $destino=busca_filtro_tabla("b.nombre","datos_ejecutor a, ejecutor b","b.idejecutor=a.ejecutor_idejecutor AND a.iddatos_ejecutor IN(".$datos[0]['persona_natural_dest'].")","",$conn);
-        $nombres="";
-        for($i=0;$i<$destino['numcampos'];$i++){
-            $nombres.=$destino[$i]['nombre'];
-            if($i+1<$destino['numcampos']){
-                $nombres.="<br>";
-            }
-        }
-        return ($nombres);
+        $destino=busca_filtro_tabla("b.nombre","datos_ejecutor a, ejecutor b","b.idejecutor=a.ejecutor_idejecutor AND a.iddatos_ejecutor]=".$datos[0]['nombre_destino'],"",$conn);
+        return ($destino[0]['nombre']);
 
     }else{
         $destino=busca_filtro_tabla("concat(nombres,' ',apellidos) AS nombre","vfuncionario_dc","iddependencia_cargo=".$datos[0]['destino'],"",$conn);
