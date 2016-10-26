@@ -64,3 +64,15 @@ function mostrar_ruta_reporte($idft_destino_radicacion){
     }
     return ($ubicacion);
 }
+
+function seleccionar_destino($idft_destino_radicacion){
+    global $ruta_db_superior, $conn;
+    
+    $input="<input type='checkbox' name='$idft_destino_radicacion'>";
+    return $input;
+}
+
+
+
+
+
