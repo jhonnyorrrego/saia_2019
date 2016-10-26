@@ -106,16 +106,10 @@ global $conn;
           </div>
 			<script>
 				$(document).ready(function(){
-					$('input[name="evaluador"]').click(function(){
-						document.getElementById('bqsaia_evaluador').value='';
-						var cadena='';
-						for(i=0;i<<?php echo $evaluador['numcampos'];?>;i++){
-							if(document.getElementById('evaluador'+i).checked){
-								cadena+=document.getElementById('evaluador'+i).value+',';
-							}
-						}
-						document.getElementById('bqsaia_evaluador').value=cadena;						
-					});		
+					$("#filtro_mensajeros").live("change",function(){
+                        var mensajero_filtro=$(this).val();
+                        $('[name="variable_busqueda"]').val(mensajero_filtro);
+                    });	
 				});
 			</script>
         </div>
