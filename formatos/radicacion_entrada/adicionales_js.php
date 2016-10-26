@@ -19,7 +19,8 @@ echo(librerias_jquery('1.7'));
         
         $(".mensajeros").live("change",function(){
             var idft=$(this).attr("data-idft");
-            alert(idft);
+            var mensajero=$(this).val();
+            alert(mensajero);
         });
         
     });
