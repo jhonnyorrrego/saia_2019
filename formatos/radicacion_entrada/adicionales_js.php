@@ -35,7 +35,7 @@ echo(librerias_jquery('1.7'));
         });
         
         $("#filtro_mensajeros").live("change",function(){
-            
+            alert('funciono');
             
         });
         
