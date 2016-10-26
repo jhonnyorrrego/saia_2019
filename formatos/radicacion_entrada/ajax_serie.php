@@ -14,7 +14,7 @@ $max_salida--;
 include_once($ruta_db_superior."db.php");
 $retorno[]= $_REQUEST['iddependencia'];
 buscar_dependencias_principal($_REQUEST['iddependencia']);
-array_filter($retorno);
+$retorno=array_filter($retorno);
 print_r(($retorno));
 echo("<br>");
 print_r((array_reverse($retorno)));
