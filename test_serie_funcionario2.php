@@ -109,6 +109,7 @@ if($serie=="NULL"){
   $papas=busca_filtro_tabla("*",$tabla,"cod_padre=".$serie.$activo.$condicion.$condicion_dependencia,"$orden ASC",$conn); 
 
 if($papas["numcampos"]){
+    print_r($papas);
     echo($papas["numcampos"]);
     die("---");
   for($i=0; $i<$papas["numcampos"]; $i++){
