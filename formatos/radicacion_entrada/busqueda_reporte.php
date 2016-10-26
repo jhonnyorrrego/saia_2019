@@ -108,7 +108,7 @@ global $conn;
 				$(document).ready(function(){
 					$("#filtro_mensajeros").live("change",function(){
                         var mensajero_filtro=$(this).val();
-                        $('[name="variable_busqueda"]').attr("value",mensajero_filtro);
+                        $('#variable_busqueda').attr("value",mensajero_filtro);
                     });	
 				});
 			</script>
