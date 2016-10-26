@@ -51,8 +51,8 @@ function mostrar_informacion_adicional_expediente($idexpediente){
     
     
     $serie=busca_filtro_tabla("nombre","serie","idserie=".$expediente_actual[0]['serie_idserie'],"",$conn);
-     $cadena.='<br>';
-      $cadena.=$serie[0]['nombre'];
+    $cadena.='<br>';
+    $cadena.=$serie[0]['nombre'];
     return($cadena);
 }
 
