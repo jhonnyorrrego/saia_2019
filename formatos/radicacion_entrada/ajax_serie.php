@@ -12,10 +12,16 @@ $max_salida--;
 }
 
 include_once($ruta_db_superior."db.php");
-$retorno[]= $_REQUEST['iddependencia'];
-buscar_dependencias_principal($_REQUEST['iddependencia']);
-$retorno=array_filter($retorno);
-echo(json_encode(array_reverse($retorno)));
+$retorno[]=array();
+if($_REQUEST['iddependencia']){
+    $retorno[]= $_REQUEST['iddependencia'];
+    buscar_dependencias_principal($_REQUEST['iddependencia']);
+    $retorno=array_filter($retorno);
+    echo(json_encode(array_reverse($retorno)));
+}elseif ($_REQUEST['papa']) {
+    busca_primeros_hijos($_REQUEST['papa']);
+    echo(json_encode($retorno));
+}
 function buscar_dependencias_principal($iddependencia){
     global $retorno;
 	$cod_dep=busca_filtro_tabla("cod_padre","dependencia","iddependencia=".$iddependencia,"",$conn);
@@ -27,5 +33,12 @@ function buscar_dependencias_principal($iddependencia){
 		$dep=buscar_dependencias_principal($cod_dep[0]["cod_padre"]);
 		return($dep);
 	}
+}
+function busca_primeros_hijos($papa){
+    global $retorno;
+    $busca_hijos=busca_filtro_tabla("iddependencia","dependencia","cod_padre=".$papa,"",$conn);
+    for ($i = 0; $i < $busca_hijos['numcampos']; $i++) {
+         $retorno[]=$busca_hijos[$i]['iddependencia'];
+    }
 }
 ?>
