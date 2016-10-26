@@ -33,22 +33,21 @@ global $conn;
           <div class="controls">
             <input id="bqsaia_numero" name="bqsaia_numero" size="50" type="text">
             <input type="hidden" name="bqsaiaenlace_numero" id="bqsaiaenlace_numero" value="y">
-            
           </div>
         </div> 
          <strong>Entre las fechas</strong>
-            <input type="hidden" name="bksaiacondicion_fecha_seguimiento_x" id="bksaiacondicion_fecha_seguimiento_x" value=">=">
+            <input type="hidden" name="bksaiacondicion_fecha_radicacion_entrada_x" id="bksaiacondicion_fecha_radicacion_entrada_x" value=">=">
         <div class="controls">
-            <input id="bqsaia_fecha_seguimiento_x" name="bqsaia_fecha_seguimiento_x" style="width:100px" type="text" value="" placeholder="Inicio">
-            <?php selector_fecha("bqsaia_fecha_seguimiento_x","kformulario_saia","Y-m-d",date("m"),date("Y"),"default.css","../../",""); ?>
-            <input type="hidden" name="bqsaiaenlace_fecha_seguimiento_x" id="bqsaiaenlace_fecha_seguimiento_x" value="y" />
+            <input id="bqsaia_fecha_radicacion_entrada_x" name="bqsaia_fecha_radicacion_entrada_x" style="width:100px" type="text" value="" placeholder="Inicio">
+            <?php selector_fecha("bqsaia_fecha_radicacion_entrada_x","kformulario_saia","Y-m-d",date("m"),date("Y"),"default.css","../../",""); ?>
+            <input type="hidden" name="bqsaiaenlace_fecha_radicacion_entrada_x" id="bqsaiaenlace_fecha_seguimiento_x" value="y" />
             &nbsp;&nbsp;y&nbsp;&nbsp;
-            <input type="hidden" name="bksaiacondicion_fecha_seguimiento_y" id="bksaiacondicion_fecha_seguimiento_y" value="<=">
-            <input id="bqsaia_fecha_seguimiento_y" name="bqsaia_fecha_seguimiento_y" style="width:100px" type="text" value="" placeholder="Fin">
-            <?php selector_fecha("bqsaia_fecha_seguimiento_y","kformulario_saia","Y-m-d",date("m"),date("Y"),"default.css","../../",""); ?>
+            <input type="hidden" name="bksaiacondicion_fecha_radicacion_entrada_y" id="bksaiacondicion_fecha_radicacion_entrada_y" value="<=">
+            <input id="bqsaia_fecha_radicacion_entrada_y" name="bqsaia_fecha_radicacion_entrada_y" style="width:100px" type="text" value="" placeholder="Fin">
+            <?php selector_fecha("bqsaia_fecha_radicacion_entrada_y","kformulario_saia","Y-m-d",date("m"),date("Y"),"default.css","../../",""); ?>
         </div>
 
-        <input type="hidden" name="bqsaiaenlace_fecha_seguimiento_y" id="bqsaiaenlace_fecha_seguimiento_y" value="y" />
+        <input type="hidden" name="bqsaiaenlace_fecha_radicacion_entrada_y" id="bqsaiaenlace_fecha_radicacion_entrada_y" value="y" />
         
        
         <br>
