@@ -176,7 +176,7 @@ $(document).ready(function(){
 		
 		
    	pager: '#nav_busqueda',
-    caption:"<?php echo $boton_buscar;?><button class=\"btn btn-mini btn-primary exportar_reporte_saia pull-left\" title=\"Exportar reporte <?php echo($datos_busqueda[0]['etiqueta']);?>\" enlace=\"<?php echo($datos_busqueda[0]['busqueda_avanzada']);?>\">Exportar &nbsp;</button><div class=\"pull-left\" style=\"text-align:center; width:60%;\"><?php echo($datos_busqueda[0]['etiqueta']);?></div><div id=\"barra_exportar_ppal\"><iframe name='iframe_exportar_saia' height='25px' width='150px' frameborder=0 scrolling='no'></iframe></div></div>"
+    caption:"<?php echo $boton_buscar;?><button class=\"btn btn-mini btn-primary exportar_reporte_saia pull-left\" title=\"Exportar reporte <?php echo($datos_busqueda[0]['etiqueta']);?>\" enlace=\"<?php echo($datos_busqueda[0]['busqueda_avanzada']);?>\">Exportar &nbsp;</button><?php echo $acciones_selecionados;?><div class=\"pull-left\" style=\"text-align:center; width:60%;\"><?php echo($datos_busqueda[0]['etiqueta']);?></div><div id=\"barra_exportar_ppal\"><iframe name='iframe_exportar_saia' height='25px' width='150px' frameborder=0 scrolling='no'></iframe></div></div>"
 });
 jQuery("#datos_busqueda").jqGrid('navGrid','#nav_busqueda',{edit:false,add:false,del:false,search:false});
 
