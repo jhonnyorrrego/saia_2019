@@ -81,36 +81,6 @@ global $conn;
         </div>
 
 
-		<br>
-
-
-        <div class="control-group">
-          <label class="string required control-label" for="estado_seguimiento">
-			<b>Estado</b>
-          </label>
-          <div class="controls">
-            <input type="checkbox" name="estado_seguimiento" id="estado_seguimiento1" value="1">Aprobado
-            <input type="checkbox" name="estado_seguimiento" id="estado_seguimiento2" value="2">Rechazado
-          </div>
-		<input type="hidden" name="bksaiacondicion_estado_seguimiento" id="bksaiacondicion_estado_seguimiento" value="in">
-		<input type="hidden" name="bqsaiaenlace_estado_seguimiento" id="bqsaiaenlace_estado_seguimiento" value="y" />    		<input id="bqsaia_estado_seguimiento" name="bqsaia_estado_seguimiento" size="50" type="hidden">
-			<script>
-				$(document).ready(function(){
-					$('input[name="estado_seguimiento"]').click(function(){
-						document.getElementById('bqsaia_estado_seguimiento').value='';
-						var cadena='';
-						for(i=1;i<=2;i++){
-							if(document.getElementById('estado_seguimiento'+i).checked){
-								cadena+=document.getElementById('estado_seguimiento'+i).value+',';
-							}
-						}
-						document.getElementById('bqsaia_estado_seguimiento').value=cadena;						
-					});		
-				});
-			</script>
-        </div>
-
-
 	<br>
 	
         <div class="control-group">
