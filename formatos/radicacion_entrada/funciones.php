@@ -824,7 +824,7 @@ function serie_documental_radicacion($idformato,$iddoc){
 	        type:'POST',
             dataType: 'json',
             url: "ajax_serie.php",
-            data:{papa:$('#dependencia').val()},
+            data:{rol:$('#dependencia').val()},
             async: false,
             success: function(datos){
                 for (var i=1; i<datos.length; i++){
