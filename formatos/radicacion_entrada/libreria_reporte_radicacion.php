@@ -100,5 +100,6 @@ function condicion_adicional(){
     if($cargo[0]['cargo']=="mensajero"){
         $condicion="AND B.mensajero_encargado=".$funcionario_codigo;
     }
+    return $condicion;
 }
 
