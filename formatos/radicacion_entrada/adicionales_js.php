@@ -18,7 +18,8 @@ echo(librerias_jquery('1.7'));
     $(document).ready(function(){
         alert('funciono');
         $(".mensajeros").live("change",function(){
-            alert($(this).val());
+            var idft=$(this).attr("data-idft");
+            alert(idft);
         });
         
     });
