@@ -10,3 +10,13 @@ while($max_salida>0){
 }
 
 include_once($ruta_db_superior."db.php");
+
+function mostrar_tipo_origen_reporte($tipo_origen){
+    global $ruta_db_superior, $conn;
+    
+    if($tipo_origen==1){
+        return "E";
+    }else{
+        return "I";
+    }
+}
