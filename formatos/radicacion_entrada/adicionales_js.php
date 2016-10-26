@@ -28,9 +28,7 @@ echo(librerias_jquery('1.7'));
                                         idft_destino_radicacion:idft,
                                         mensajero_encargado:mensajero
                         },
-                        success: function(datos){
-                           
-                        }
+                        
                     });   
         });
         
