@@ -72,6 +72,12 @@ function seleccionar_destino($idft_destino_radicacion){
     return $input;
 }
 
+function mostrar_mensajeros_dependencia(){
+    global $ruta_db_superior, $conn;
+    
+    
+}
+
 
 
 
