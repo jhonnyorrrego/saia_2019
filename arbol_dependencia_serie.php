@@ -1,113 +1,163 @@
-<?php include_once("formatos/librerias/header_formato.php"); ?>
-<?php		
-$max_salida=6; // Previene algun posible ciclo infinito limitando a 10 los ../		
-$ruta_db_superior=$ruta="";		
-while($max_salida>0){		
-  if(is_file($ruta."db.php")){		
-    $ruta_db_superior=$ruta; //Preserva la ruta superior encontrada		
-  }		
-  $ruta.="../";		
-  $max_salida--;		
-}    		
-include_once($ruta_db_superior."db.php");		
-include_once($ruta_db_superior."librerias_saia.php");		
-include_once("formatos/librerias/header_formato.php");		
-echo(librerias_jquery());
-echo(librerias_notificaciones());
-?>
-<html>
-<body>
-<head>
-</head>
-  <meta http-equiv="Content-Type" content="text/html; charset= UTF-8 ">
-<script type="text/javascript" src="js/dhtmlXCommon.js"></script>
-<script type="text/javascript" src="js/dhtmlXTree.js"></script>
-    <link rel="STYLESHEET" type="text/css" href="css/dhtmlXTree.css">
-			  <span style="font-family: Verdana; font-size: 9px;">CLASIFICACI&Oacute;N DEL DOCUMENTO<br><br></span>
-			  <span style="font-family: Verdana; font-size: 9px;">
-        <a href='serieadd.php' target='serielist'>Adicionar&nbsp;</a>
-        <a href='asignarserie_entidad.php' target='serielist'>Asignar o quitar serie/categoria</a>
-        <br><br>
-			  <br />  Buscar: <input type="text" id="stext_serie_idserie" width="200px" size="25"><a href="javascript:void(0)" onclick="tree2.findItem(htmlentities(document.getElementById('stext_serie_idserie').value),1)"> <img src="botones/general/anterior.png" alt="Buscar Anterior" border="0px"></a><a href="javascript:void(0)" onclick="tree2.findItem(htmlentities(document.getElementById('stext_serie_idserie').value),0,1)"> <img src="botones/general/buscar.png" alt="Buscar" border="0px"></a>
-                          <a href="javascript:void(0)" onclick="tree2.findItem(htmlentities(document.getElementById('stext_serie_idserie').value))"><img src="botones/general/siguiente.png" alt="Buscar Siguiente" border="0px"></a>
-                          </span>
-			  <div id="esperando_serie"><img src="imagenes/cargando.gif"></div>
-				<div id="treeboxbox_tree2" width="100px" height="100px"></div>
-	<script type="text/javascript">
-  <!--
-      var browserType;
-      if (document.layers) {browserType = "nn4"}
-      if (document.all) {browserType = "ie"}
-      if (window.navigator.userAgent.toLowerCase().match("gecko")) {
-         browserType= "gecko"
-      }
-			tree2=new dhtmlXTreeObject("treeboxbox_tree2","100%","85%",0);
-			tree2.setImagePath("imgs/");
-			tree2.enableTreeImages(false);
-			tree2.enableIEImageFix(true);
-			tree2.setXMLAutoLoadingBehaviour("id");
-			tree2.setOnClickHandler(onNodeSelect);
-			tree2.setOnLoadingStart(cargando_serie);
-            tree2.setOnLoadingEnd(fin_cargando_serie);
-            tree2.setXMLAutoLoading("test_dependencia_serie.php?tabla=dependencia&admin=1");
-			tree2.loadXML("test_dependencia_serie.php?tabla=dependencia&admin=1");
-			
-			function onNodeSelect(nodeId){
-        var datos=nodeId.split("-");
-        if(datos[1])
-        	parent.serielist.location = "serieview.php?key=" + datos[1];
-        else
-        	notificacion_saia("Esto es una dependencia","error","",2500);
-      }
-      function fin_cargando_serie() {
-        if (browserType == "gecko" )
-           document.poppedLayer =
-               eval('document.getElementById("esperando_serie")');
-        else if (browserType == "ie")
-           document.poppedLayer =
-              eval('document.getElementById("esperando_serie")');
-        else
-           document.poppedLayer =
-              eval('document.layers["esperando_serie"]');
-        document.poppedLayer.style.display = "none";
-      }
+<?php 
+header("Expires: Mon, 26 Jul 1997 05:00:00 GMT"); // date in the past
+header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT"); // always modified
+header("Cache-Control: no-store, no-cache, must-revalidate"); // HTTP/1.1 
+header("Cache-Control: post-check=0, pre-check=0", false); 
+header("Pragma: no-cache"); // HTTP/1.0
+$max_salida = 6; // Previene algun posible ciclo infinito limitando a 10 los ../
+$ruta_db_superior = $ruta = "";
+while ($max_salida > 0) {
+    if (is_file($ruta . "db.php")) {
+        $ruta_db_superior = $ruta; //Preserva la ruta superior encontrada
+    }
+    $ruta.="../";
+    $max_salida--;
+}
+include_once($ruta_db_superior . "db.php");
+$tabla = @$_REQUEST["tabla"];
+$id = @$_REQUEST["id"];
+if(isset($_REQUEST["estado"]) && $_REQUEST["estado"]!="")
+{
+ $activo = " and estado = 1"; 
+}
+if(isset($_REQUEST["seleccionado"]))
+  $seleccionado=explode(",",$_REQUEST["seleccionado"]);
+else
+  $seleccionado=array();
+if(@$_REQUEST["excluidos"]){
+	$excluidos=" and id".$tabla." not in(".$_REQUEST["excluidos"].") ";
+}
+if ( stristr($_SERVER["HTTP_ACCEPT"],"application/xhtml+xml") ) 
+{ 
+  header("Content-type: application/xhtml+xml"); 
+} 
+else 
+{ 
+  header("Content-type: text/xml"); 
+}
+echo("<?xml version=\"1.0\" encoding=\"UTF-8\"?".">");
+if($id and $id<>"" && @$_REQUEST["uid"]){
+  echo("<tree id=\"".$id."\">\n");
+	llena_serie($id);
+	echo("</tree>\n");
+	die();
+  $dato_papa=busca_filtro_tabla("",$tabla,"id".$tabla."=".$id,"",$conn);
 
-      function cargando_serie() {
-        if (browserType == "gecko" )
-           document.poppedLayer =
-               eval('document.getElementById("esperando_serie")');
-        else if (browserType == "ie")
-           document.poppedLayer =
-              eval('document.getElementById("esperando_serie")');
-        else
-           document.poppedLayer =
-               eval('document.layers["esperando_serie"]');
-        document.poppedLayer.style.display = "";
+  if(@$_REQUEST["cargar_dato_padre"]){
+    if($dato_papa["numcampos"]){
+       echo("<item style=\"font-family:verdana; font-size:7pt;\" ");
+      $cadena_codigo='';
+      if(@$dato_papa[0]["codigo"]){
+        $cadena_codigo="(".$dato_papa[0]["codigo"].")";
       }
-        function buscar_nodo(){
-       	$.ajax({
-       		type:'POST',
-       		url: "buscar_test_serie.php",
-       		dataType:"json",
-       		data: {
-       			nombre: $('#stext_serie_idserie').val(),
-       			 tabla: "serie"
-       		},
-       		success: function(data){
-       			$.each(data, function(i, item) {
-       				$.each(item, function(j, value) {
-       					tree2.openItem(value);
-       					if(j==item.length-1){
-       						tree2.selectItem(value);
-       						tree2.focusItem(value);
-       					}
-       				});
-       			});
-					}
-				});
-				tree2.findItem(htmlentities(document.getElementById('stext_serie_idserie').value));
-       }
-	--> 		
-	</script>
-	</body>
-</html>
+      echo("text=\"".htmlspecialchars($dato_papa[0]["nombre"]).$cadena_codigo." \" id=\"".$dato_papa[0]["id".$tabla]."\">");
+    }
+  }
+} 
+else
+  echo("<tree id=\"0\">\n");  
+if($tabla=="serie" && !$id)
+  {if(isset($_REQUEST["categoria"])&&$_REQUEST["categoria"])
+   {switch($_REQUEST["categoria"])
+      {case 1:echo  "<item style=\"font-family:verdana; font-size:7pt;\" text=\"Comunicaciones Oficiales\" id=\"1-categoria-Comunicaciones Oficiales\"   >\n"; 
+       llena_serie("NULL"," and categoria=1 ");
+   echo "</item>\n";
+              break;
+       case 2:echo  "<item style=\"font-family:verdana; font-size:7pt;\" text=\"Produccion Documental\" id=\"2-categoria-Produccion Documental\" >\n"; 
+       llena_serie("NULL"," and categoria=2 ");
+   echo "</item>\n";
+              break;
+       case 3: echo  "<item style=\"font-family:verdana; font-size:7pt;\" text=\"Otras categorias\" id=\"3-categoria-Otras categorias\" >\n"; 
+       llena_serie("NULL"," and categoria=3 ");
+   echo "</item>\n";
+              break;       
+      }
+   }
+   elseif($id){
+   	llena_serie($id);
+   }
+   else
+   {
+   echo  "<item style=\"font-family:verdana; font-size:7pt;\" text=\"Comunicaciones Oficiales\" id=\"1-categoria-Comunicaciones Oficiales\"  nocheckbox=\"1\">\n"; 
+       llena_serie("NULL"," and categoria=1 ");
+   echo "</item>\n";
+   echo  "<item style=\"font-family:verdana; font-size:7pt;\" text=\"Produccion Documental\" id=\"2-categoria-Produccion Documental\" nocheckbox=\"1\" >\n"; 
+       llena_serie("NULL"," and categoria=2 ");
+   echo "</item>\n";
+   echo  "<item style=\"font-family:verdana; font-size:7pt;\" text=\"Otras categorias\" id=\"3-categoria-Otras categorias\" nocheckbox=\"1\">\n"; 
+       llena_serie("NULL"," and categoria=3 ");
+   echo "</item>\n";
+   }
+  }
+else
+{  
+if($id and $id<>""){ 
+  llena_serie($id); 
+  if(@$_REQUEST["cargar_dato_padre"] && $dato_papa["numcampos"]){
+    echo("</item>\n");
+  } 
+}
+else
+  llena_serie("NULL");
+}  
+echo("</tree>\n");
+$activo = "";
+?>
+<?php
+
+function llena_serie($serie,$condicion=""){
+global $conn,$tabla,$seleccionado,$activo,$excluidos;
+if(isset($_REQUEST["orden"]))
+  $orden=$_REQUEST["orden"];
+else
+  $orden="nombre";
+if($serie=="NULL")
+  $papas=busca_filtro_tabla("*",$tabla,"(cod_padre IS NULL OR cod_padre=0) $activo $condicion $excluidos","$orden ASC",$conn);
+else
+  $papas=busca_filtro_tabla("*",$tabla,"cod_padre=".$serie.$activo.$condicion.$excluidos,"$orden ASC",$conn); 
+
+if($papas["numcampos"])
+{ 
+  for($i=0; $i<$papas["numcampos"]; $i++)
+  {
+    $hijos = busca_filtro_tabla("count(*) AS cant",$tabla,"cod_padre=".$papas[$i]["id$tabla"].$activo.$condicion,"",$conn);
+    echo("<item style=\"font-family:verdana; font-size:7pt;\" ");
+    $cadena_codigo='';
+    if(@$papas[$i]["codigo"]){
+      $cadena_codigo="(".$papas[$i]["codigo"].")";
+    }
+	
+		if($tabla=="serie"){
+			if(@$papas[$i]["estado"]==1){
+				$estado_serie=' - ACTIVA';	
+			}else{
+				$estado_serie=' - INACTIVA';				
+			}
+		}	
+	
+    echo("text=\"".htmlspecialchars(($papas[$i]["nombre"])).$cadena_codigo." \" id=\"".$papas[$i]["id$tabla"]."\"");
+		if(@$_REQUEST["arbol_series"]){		
+				
+	}		
+	else if($hijos[0]["cant"]!=0 && ($tabla=="serie" || @$_REQUEST["sin_padre"])){		
+      echo(" nocheckbox=\"1\" ");		
+	}
+    if(in_array($papas[$i]["id$tabla"],$seleccionado)!==false)
+      echo " checked=\"1\" ";  
+    if($hijos[0][0])
+      echo(" child=\"1\">\n");
+    else
+      echo(" child=\"0\">\n");
+		if(!$_REQUEST["id"] && $tabla!='serie')
+    	llena_serie($papas[$i]["id$tabla"]);
+		else{
+			if(!$_REQUEST["admin"]){
+				llena_serie($papas[$i]["id$tabla"]);
+			}
+		}
+    echo("</item>\n");
+  }     
+}
+return;
+}
+?>
