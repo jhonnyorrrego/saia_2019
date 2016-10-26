@@ -25,5 +25,5 @@ function mostrar_origen_reporte($idft_radicacion_entrada){
     global $ruta_db_superior, $conn;
     
     $datos=busca_filtro_tabla('','ft_radicacion_entrada','idft_radicacion_entrada='.$idft_radicacion_entrada,'',conn);
-    return $datos;
+    print_r ($datos);
 }
