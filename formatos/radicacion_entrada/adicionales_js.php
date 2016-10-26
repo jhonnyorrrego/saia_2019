@@ -20,7 +20,18 @@ echo(librerias_jquery('1.7'));
         $(".mensajeros").live("change",function(){
             var idft=$(this).attr("data-idft");
             var mensajero=$(this).val();
-            alert(mensajero);
+            $.ajax({
+                        type:'POST',
+                        dataType: 'json',
+                        url: "actualizar_mensajero.php",
+                        data: {
+                                        idft_destino_radicacion:idft,
+                                        mensajero_encargado:mensajero
+                        },
+                        success: function(datos){
+                           
+                        }
+                    });   
         });
         
     });
