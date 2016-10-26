@@ -146,11 +146,11 @@ function llena_entidad_serie($series){
     
     $series=busca_filtro_tabla("nombre,idserie","serie","idserie IN(".$series.")","",$conn);
     for($i=0;$i<$series['numcampos'];$i++){
-         echo("<item style=\"font-family:verdana; font-size:7pt;\" ");
-          echo("text=\"".htmlspecialchars(($series[$i]["nombre"])).' (SERIE) '." \" id=\"".$series[$i]['idserie']."\"");
-           echo(" nocheckbox=\"1\" ");	
-            echo(" child=\"0\">\n");
-             echo("</item>\n");
+        echo("<item style=\"font-family:verdana; font-size:7pt;\" ");
+        echo("text=\"".htmlspecialchars(($series[$i]["nombre"])).' (SERIE) '." \" id=\"".$series[$i]['idserie']."\"");
+        echo(" nocheckbox=\"1\" ");	
+        echo(" child=\"0\">\n");
+        echo("</item>\n");
     }
 }
 ?>
