@@ -42,6 +42,7 @@ crear_archivo("test_procesos.xml",$texto);
 function llena_proceso($idproceso="NULL"){
 global $conn,$seleccionados,$parciales,$texto;
 $papas=busca_filtro_tabla("*","ft_proceso","estado<>'INACTIVO'","nombre ASC",$conn);
+print_r($papas);
 if($papas["numcampos"]){
   for($i=0; $i<$papas["numcampos"]; $i++){
     $texto.="<item style=\"font-family:verdana; font-size:7pt;\" ";
