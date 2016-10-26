@@ -811,7 +811,7 @@ function serie_documental_radicacion($idformato,$iddoc){
 	<script>
 	$(document).ready(function(){
 	    var cargado=[];
-	    var dependencia_principal=<?php echo($dependencia_principal); ?>;
+	    var dependencia_principal='<?php echo($dependencia_principal); ?>';
 	    cargado.push("38");
 	    //Busca las dependencias del rol actual para que no carguen duplicados en la recursion del abrol de series
 	    $.ajax({
