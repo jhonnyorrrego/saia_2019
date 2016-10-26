@@ -119,7 +119,7 @@ global $conn;
 
 
         <div class="form-actions">    
-          <input type="hidden" name="idbusqueda_componente" id="idbusqueda_componente" value="<?php echo@$_REQUEST["idbusqueda_componente"]; ?>">
+          <input type="hidden" name="idbusqueda_componente" id="idbusqueda_componente" value="<?php echo @$_REQUEST["idbusqueda_componente"]; ?>">
           <input type="hidden" name="bqtipodato" value="date|fecha_radicacion_entrada_x,fecha_radicacion_entrada_y,fecha_radicacion_entrada_x,fecha_radicacion_entrada_y">
            <input type="hidden" name="campos_especiales" id="campos_especiales" value="funcionario_evaluado@arbol">          
           <input type="hidden" name="adicionar_consulta" id="adicionar_consulta" value="1">
