@@ -327,14 +327,7 @@ function tipo_radicado_radicacion($idformato,$iddoc){//en el adicionar
         <script>
             $(document).ready(function(){
                 var dependencia_principal='<?php echo($dependencia_principal); ?>';
-                 tree_serie_idserie.setOnLoadingEnd(cargar_arbol());
-                function cargar_arbol(){
-                setTimeout(function(){  
-                    tree_serie_idserie.deleteChildItems(0); 
-                    tree_serie_idserie.loadXML("<?php echo($ruta_db_superior); ?>test_serie_funcionario2.php?tabla=dependencia&admin=1&dependencia=38&sin_padre=1");
-                    tree_serie_idserie.loadXML("<?php echo($ruta_db_superior); ?>test_serie_funcionario2.php?tabla=dependencia&admin=1&sin_padre=1&uid=1477409126024&id=d"+dependencia_principal);
-                }, 1000);
-                }
+                 
                 
                 
                 $('#fecha_oficio_entrada').addClass('required');
@@ -820,6 +813,14 @@ function serie_documental_radicacion($idformato,$iddoc){
 	<script>
 	$(document).ready(function(){
 	    var dependencia_principal='<?php echo($dependencia_principal); ?>';
+	    tree_serie_idserie.setOnLoadingEnd(cargar_arbol());
+                function cargar_arbol(){
+                setTimeout(function(){  
+                    tree_serie_idserie.deleteChildItems(0); 
+                    tree_serie_idserie.loadXML("<?php echo($ruta_db_superior); ?>test_serie_funcionario2.php?tabla=dependencia&admin=1&dependencia=38&sin_padre=1");
+                    tree_serie_idserie.loadXML("<?php echo($ruta_db_superior); ?>test_serie_funcionario2.php?tabla=dependencia&admin=1&sin_padre=1&uid=1477409126024&id=d"+dependencia_principal);
+                }, 1000);
+                }
 	    var cargado=[<?php echo($cargo); ?>];
 	    cargado.push(dependencia_principal);
 
