@@ -16,7 +16,10 @@ echo(librerias_jquery('1.7'));
 ?>
 <script>
     $(document).ready(function(){
-           alert('sirve'); 
+        
+        $('.mensajeros').change(function(){
+            
+        });
         
     });
 </script>
