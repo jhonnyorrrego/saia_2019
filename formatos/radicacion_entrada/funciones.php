@@ -805,7 +805,6 @@ function buscar_dependencias_principal($iddependencia){
 	
 	if($cod_dep['numcampos']){
 		buscar_dependencias_principal($cod_dep[0]["cod_padre"]);
-		return($iddependencia);
 	}else{
 		return($iddependencia);
 	}
