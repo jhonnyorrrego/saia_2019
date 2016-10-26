@@ -46,5 +46,5 @@ function mostrar_destino_reporte($idft_radicacion_entrada){
     }else{
         $destino=busca_filtro_tabla("concat(nombres,' ',apellidos) AS nombre","vfuncionario_dc","iddependencia_cargo=".$datos[0]['destino'],"",$conn);
     }
-    return ($destino[0]['nombre']);
+    return ($datos[0]['tipo_destino']);
 }
