@@ -321,7 +321,7 @@ function tipo_radicado_radicacion($idformato,$iddoc){//en el adicionar
     $funcionario_codigo=usuario_actual('funcionario_codigo');
     $cargo=busca_filtro_tabla("","vfuncionario_dc a","estado_dc=1 AND a.funcionario_codigo=".$funcionario_codigo,"",$conn);
 	$dependencia_principal=buscar_dependencias_principal($cargo[0]["iddependencia"]);
-echo($cargo[0]["iddependencia"]);
+echo($cargo);
 die("-------------------------**");
 	?>
         <script>
@@ -799,7 +799,6 @@ function datos_editar_radicacion($idformato,$iddoc){
 }
 function buscar_dependencias_principal($iddependencia){
 	$cod_dep=busca_filtro_tabla("cod_padre","dependencia","iddependencia=".$iddependencia,"",$conn);
-	print_r($cod_dep);
 	if(!$cod_dep['numcampos']){
 		return($iddependencia);
 	}else{
