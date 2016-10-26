@@ -88,6 +88,7 @@ else
 if($papas["numcampos"]){ 
   for($i=0; $i<$papas["numcampos"]; $i++){
     $hijos = busca_filtro_tabla("count(*) AS cant",$tabla,"cod_padre=".$papas[$i]["id$tabla"].$activo.$condicion,"",$conn);
+    $hijos_entidad_serie = busca_filtro_tabla("serie_idserie","entidad_serie","estado=1 AND entidad_identidad='2' AND llave_entidad=".$papas[$i]["id$tabla"],"",$conn);
     echo("<item style=\"font-family:verdana; font-size:7pt;\" ");
     $cadena_codigo='';
     if(@$papas[$i]["codigo"]){
@@ -115,10 +116,16 @@ if($papas["numcampos"]){
       
     if($hijos[0][0]){
         echo(" child=\"1\">\n");
-    }
-    else{
+    }elseif($hijos_entidad_serie['numcampos']){
+        echo(" child=\"1\">\n");
+    }else{
         echo(" child=\"0\">\n");
     }
+    
+    if($hijos_entidad_serie['numcampos']){
+        llena_entidad_serie(implode(',',extrae_campo($hijos_entidad_serie,'serie_idserie')));
+    }
+    
       
 	if(!$_REQUEST["id"] && $tabla!='serie'){
 	    llena_serie($papas[$i]["id$tabla"]);
@@ -131,5 +138,19 @@ if($papas["numcampos"]){
   }     
 }
 return;
+}
+
+
+function llena_entidad_serie($series){
+    global $conn;
+    
+    $series=busca_filtro_tabla("nombre,idserie","serie","idserie IN(".$series.")","",$conn);
+    for($i=0;$i<$series['numcampos'];$i++){
+         echo("<item style=\"font-family:verdana; font-size:7pt;\" ");
+          echo("text=\"".htmlspecialchars(($series[$i]["nombre"]))." \" id=\"".$series[$i]['idserie']."\"");
+           echo(" nocheckbox=\"1\" ");	
+            echo(" child=\"0\">\n");
+             echo("</item>\n");
+    }
 }
 ?>
