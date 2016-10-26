@@ -109,7 +109,7 @@ global $conn;
 					$("#filtro_mensajeros").live("change",function(){
                         var mensajero_filtro=$(this).val();
                         alert(mensajero_filtro);
-                        $('#variable_busqueda').attr("value",'mensajero_filtro');
+                        $('#variable_busqueda').attr("value",mensajero_filtro);
                         
                     });	
 				});
