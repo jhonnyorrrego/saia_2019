@@ -115,3 +115,17 @@ function condicion_adicional(){
     return $condicion;
 }
 
+function filtrar_mensajero(){
+    global $ruta_db_superior, $conn;
+    
+    $select="<select name='filtro_mensajeros'>";
+    $datos=busca_filtro_tabla("","vfuncionario_dc","lower(cargo)='mensajero AND estado_dc=1'","",$conn);
+    
+}
+
+
+
+
+
+
+
