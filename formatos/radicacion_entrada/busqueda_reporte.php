@@ -27,7 +27,7 @@ global $conn;
        <form accept-charset="UTF-8" id="kformulario_saia"  method="post" >  
         <div class="control-group">
           <label class="string required control-label" for="numero">
-			<b>N&uacute;mero requerimiento:</b>
+			<b>N&uacute;mero radicación:</b>
 			<input type="hidden" name="bksaiacondicion_numero_requerimiento" id="bksaiacondicion_numero_requerimiento" value="=">
           </label>
           <div class="controls">
