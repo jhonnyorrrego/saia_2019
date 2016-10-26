@@ -120,7 +120,9 @@ function filtrar_mensajero(){
     
     $select="<select name='filtro_mensajeros'>";
     $datos=busca_filtro_tabla("","vfuncionario_dc","lower(cargo)='mensajero AND estado_dc=1'","",$conn);
-    
+    for($i=0;$i<$datos['numcampos']){
+        
+    }
 }
 
 
