@@ -78,7 +78,7 @@ function mostrar_mensajeros_dependencia($idft_destino_radicacion){
     $datos=busca_filtro_tabla('','ft_destino_radicacion','idft_destino_radicacion='.$idft_destino_radicacion,'',conn);
     $destino=busca_filtro_tabla("","vfuncionario_dc","iddependencia_cargo=".$datos[0]['nombre_destino'],"",$conn);
     $ubicacion=$destino[0]['dependencia'];
-    
+    $responsable=busca_filtro_tabla("","ft_ruta_distribucion a, ft_dependencia_ruta b, ft_funcionarios_ruta c","","",$conn);
 }
 
 
