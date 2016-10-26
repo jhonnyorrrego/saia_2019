@@ -860,7 +860,7 @@ function serie_documental_radicacion($idformato,$iddoc){
                             //alert(datos[1]);
                             var x = Math.floor((Math.random() * 100000) + 1);
                             tree_serie_idserie.loadXML("../../test_serie_funcionario2.php?tabla=dependencia&admin=1&dependencia="+datos[1]+"&sin_padre=1&uid="+x+"&id=d"+datos[2]);
-                             
+                            cargado.push(datos[1]);
                         }
                     });  
                 }
