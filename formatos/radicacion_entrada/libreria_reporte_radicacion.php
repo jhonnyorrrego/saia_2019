@@ -72,10 +72,10 @@ function seleccionar_destino($idft_destino_radicacion){
     return $input;
 }
 
-function mostrar_mensajeros_dependencia(){
+function mostrar_mensajeros_dependencia($idft_destino_radicacion){
     global $ruta_db_superior, $conn;
     
-    
+    $datos=busca_filtro_tabla('','ft_destino_radicacion','idft_destino_radicacion='.$idft_destino_radicacion,'',conn);
 }
 
 
