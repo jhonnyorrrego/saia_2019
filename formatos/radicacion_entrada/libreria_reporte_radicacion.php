@@ -136,7 +136,12 @@ function filtrar_mensajero(){
 function mensajeros_filtrados(){
     global $ruta_db_superior, $conn;
     
-    return 'and 1=1';
+    if($_REQUEST['prueba']){
+        return 'and 1=1';
+    }else{
+        return '';
+    }
+    
 }
 
 
