@@ -35,7 +35,8 @@ echo(librerias_jquery('1.7'));
         });
         
         $("#filtro_mensajeros").live("change",function(){
-            parent.window.location.href = "<?php echo $ruta_db_superior;?>pantallas/busquedas/procesa_filtro_busqueda.php?idbusqueda=97&variable_busqueda=1";
+            var mensajero_filtro=$(this).val();
+            parent.window.location.href = "<?php echo $ruta_db_superior;?>pantallas/busquedas/consulta_busqueda_reporte.php?idbusqueda=97&variable_busqueda="+mensajero_filtro;
             
         });
         
