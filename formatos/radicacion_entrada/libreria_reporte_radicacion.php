@@ -87,9 +87,8 @@ function mostrar_mensajeros_dependencia($idft_destino_radicacion){
     return $select;
 }
 
-function ver_items($iddocumento, $radicado) {
-  $enlace = "<div class='link kenlace_saia' enlace='pantallas/busquedas/consulta_busqueda_reporte.php?idbusqueda_componente=269&amp;amp; conector='iframe' titulo='Items Solicitud No " . $radicado . "'><span class='badge'>" . $radicado . "</span></div>";
-  return ($enlace);
+function ver_items($iddocumento, $numero) {
+  return('<div class="link kenlace_saia" enlace="ordenar.php?key='.$iddocumento.'&amp;accion=mostrar&amp;mostrar_formato=1" conector="iframe" titulo="No Radicado '.$numero.'"><center><span class="badge">'.$numero.'</span></center></div>');
 }
 
 
