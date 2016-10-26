@@ -806,7 +806,7 @@ function buscar_dependencias_principal($iddependencia){
 }
 function serie_documental_radicacion($idformato,$iddoc){
 	global $conn,$ruta_db_superior;
-	$dependencia_actual=busca_filtro_tabla("iddependencia","vfuncionario_d","estado_dep=1 AND estado_dc=1 AND funcionario_codigo=".usuario_actual("funcionario_codigo"),"",$conn);
+	$dependencia_actual=busca_filtro_tabla("iddependencia","vfuncionario_dc","estado_dep=1 AND estado_dc=1 AND funcionario_codigo=".usuario_actual("funcionario_codigo"),"",$conn);
 	$dependencia_principal=buscar_dependencias_principal($dependencia_actual[0]["iddependencia"]);
 	print_r($dependencia_principal);
 	die("--------------------*");
