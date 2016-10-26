@@ -329,7 +329,7 @@ function tipo_radicado_radicacion($idformato,$iddoc){//en el adicionar
                 setTimeout(function(){  
                     tree_serie_idserie.deleteChildItems(0); 
                     tree_serie_idserie.loadXML("../../test_serie_funcionario2.php?tabla=dependencia&admin=1&dependencia=38&sin_padre=1");
-                    tree_serie_idserie.loadXML("../../test_serie_funcionario2.php?tabla=dependencia&admin=1&sin_padre=1&uid=1477409126024&id=d38");
+                    tree_serie_idserie.loadXML("../../test_serie_funcionario2.php?tabla=dependencia&admin=1&sin_padre=1&uid=1477409126024&id=d"+dependencia_principal);
                 }, 1000);
                 }
                 
@@ -812,7 +812,7 @@ function serie_documental_radicacion($idformato,$iddoc){
 	$(document).ready(function(){
 	    var cargado=[];
 	    var dependencia_principal='<?php echo($dependencia_principal); ?>';
-	    cargado.push("38");
+	    cargado.push(dependencia_principal);
 	    //Busca las dependencias del rol actual para que no carguen duplicados en la recursion del abrol de series
 	    $.ajax({
 	        type:'POST',
@@ -867,7 +867,7 @@ function serie_documental_radicacion($idformato,$iddoc){
         $('#tipo_origen1').click(function(){
                     tree_serie_idserie.deleteChildItems(0); 
                     tree_serie_idserie.loadXML("../../test_serie_funcionario2.php?tabla=dependencia&admin=1&dependencia=38&sin_padre=1");
-                    tree_serie_idserie.loadXML("../../test_serie_funcionario2.php?tabla=dependencia&admin=1&sin_padre=1&uid=1477409126024&id=d38");
+                    tree_serie_idserie.loadXML("../../test_serie_funcionario2.php?tabla=dependencia&admin=1&sin_padre=1&uid=1477409126024&id=d"+dependencia_principal);
                     
                     var dependencia=$('#dependencia').val();
                 tree_serie_idserie.setOnLoadingEnd(obtener_dependencia(dependencia));
@@ -894,7 +894,7 @@ function serie_documental_radicacion($idformato,$iddoc){
         $('#tipo_origen0').click(function(){
             tree_serie_idserie.deleteChildItems(0); 
             tree_serie_idserie.loadXML("../../test_serie_funcionario2.php?tabla=dependencia&admin=1&dependencia=38&sin_padre=1");
-            tree_serie_idserie.loadXML("../../test_serie_funcionario2.php?tabla=dependencia&admin=1&sin_padre=1&uid=1477409126024&id=d38");
+            tree_serie_idserie.loadXML("../../test_serie_funcionario2.php?tabla=dependencia&admin=1&sin_padre=1&uid=1477409126024&id=d"+dependencia_principal);
         });
         
 	});
