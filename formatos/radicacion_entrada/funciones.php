@@ -321,7 +321,7 @@ function tipo_radicado_radicacion($idformato,$iddoc){//en el adicionar
     $funcionario_codigo=usuario_actual('funcionario_codigo');
     $cargo=busca_filtro_tabla("","vfuncionario_dc a","estado_dc=1 AND a.funcionario_codigo=".$funcionario_codigo,"",$conn);
 	$dependencia_principal=buscar_dependencias_principal($cargo[0]["iddependencia"]);
-echo($cargo);
+print_r($cargo);
 die("-------------------------**");
 	?>
         <script>
