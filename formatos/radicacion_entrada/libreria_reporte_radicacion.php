@@ -125,7 +125,7 @@ function filtrar_mensajero(){
         $select.="<option value='{$datos[$i]['iddependencia_cargo']}'>{$datos[$i]['nombre']}</option>";
     }
     $select.="</select>";
-    return "<button class='btn btn-mini' title='Seleccionar' id='boton_seleccionar_registros'>Seleccionar</button>";
+    return $select;
 }
 
 
