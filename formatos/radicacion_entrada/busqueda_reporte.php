@@ -28,11 +28,11 @@ global $conn;
         <div class="control-group">
           <label class="string required control-label" for="numero">
 			<b>N&uacute;mero radicación:</b>
-			<input type="hidden" name="bksaiacondicion_numero_requerimiento" id="bksaiacondicion_numero_requerimiento" value="=">
+			<input type="hidden" name="bksaiacondicion_numero" id="bksaiacondicion_numero" value="=">
           </label>
           <div class="controls">
-            <input id="bqsaia_numero_requerimiento" name="bqsaia_numero_requerimiento" size="50" type="text">
-            <input type="hidden" name="bqsaiaenlace_numero_requerimiento" id="bqsaiaenlace_numero_requerimiento" value="y">
+            <input id="bqsaia_numero" name="bqsaia_numero" size="50" type="text">
+            <input type="hidden" name="bqsaiaenlace_numero" id="bqsaiaenlace_numero" value="y">
             
           </div>
         </div> 
