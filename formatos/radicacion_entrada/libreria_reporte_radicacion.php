@@ -83,6 +83,8 @@ function mostrar_mensajeros_dependencia($idft_destino_radicacion){
         $mensajero=busca_filtro_tabla("concat(nombres,' ',apellidos) AS nombre","vfuncionario_dc","iddependencia_cargo={$responsable[$i]['mensajero_ruta']}");
         $select.="<option value='{$responsable[$i]['mensajero_ruta']}'>".$mensajero[0]['nombre']."</option> ";
     }
+    $select.="</select>";
+    return $select;
 }
 
 
