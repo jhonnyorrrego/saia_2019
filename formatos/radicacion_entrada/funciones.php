@@ -802,12 +802,8 @@ function datos_editar_radicacion($idformato,$iddoc){
 }
 function buscar_dependencias_principal($iddependencia){
 	$cod_dep=busca_filtro_tabla("cod_padre","dependencia","cod_padre is not null and iddependencia=".$iddependencia,"",$conn);
-	print_r($cod_dep);
-	echo("<br>");
-	echo($iddependencia);
+	
 	if(!$cod_dep['numcampos']){
-	    echo("ya");
-	    echo($iddependencia);
 		return($iddependencia);
 	}else{
 		buscar_dependencias_principal($cod_dep[0]["cod_padre"]);
