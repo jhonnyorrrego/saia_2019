@@ -98,7 +98,7 @@ function condicion_adicional(){
     $funcionario_codigo=usuario_actual('funcionario_codigo');
     $cargo=busca_filtro_tabla("lower(cargo)","vfuncionario_dc a","a.funcionario_codigo=".$funcionario_codigo,"",$conn);
     if($cargo[0]['cargo']=="mensajero"){
-        $condicion="AND B.mensajero_encargado=".$funcionario_codigo;
+        $condicion="AND B.mensajero_encargado=".$cargo[0]['iddependencia_cargo'];
     }
     return $condicion;
 }
