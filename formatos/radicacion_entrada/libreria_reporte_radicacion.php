@@ -119,8 +119,8 @@ function filtrar_mensajero(){
     global $ruta_db_superior, $conn;
     
     $select="<select name='filtro_mensajeros'>";
-    $datos=busca_filtro_tabla("iddependencia_cargo, concat(nombres,' ',apellidos) AS nombre","vfuncionario_dc","lower(cargo)='mensajero AND estado_dc=1'","",$conn);
-    print_r($datos);die();
+    $datos=busca_filtro_tabla("iddependencia_cargo, concat(nombres,' ',apellidos) AS nombre","vfuncionario_dc","lower(cargo)='mensajero' AND estado_dc=1","",$conn);
+    //print_r($datos);die();
     for($i=0;$i<$datos['numcampos'];$i++){
         $select.="<option value='{$datos[$i]['iddependencia_cargo']}>{$datos[$i]['nombre']}</option>'";
     }
