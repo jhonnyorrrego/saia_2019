@@ -110,7 +110,6 @@ global $conn;
                         var mensajero_filtro=$(this).val();
                         alert(mensajero_filtro);
                         $('#busqueda_registros').attr("value",mensajero_filtro);
-                        
                     });	
 				});
 			</script>
