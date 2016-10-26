@@ -12,3 +12,5 @@ while($max_salida>0){
 include_once($ruta_db_superior."db.php");
 
 print_r($_REQUEST);die();
+
+$sql="UPDATE ft_destino_radicacion SET mensajero_encargado={$_REQUEST['mensajero_encargado']} WHERE idft_destino_radicacion={$_REQUEST['idft_destino_radicacion']}";
