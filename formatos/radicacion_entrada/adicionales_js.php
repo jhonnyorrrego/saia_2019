@@ -17,6 +17,8 @@ echo(librerias_jquery('1.7'));
 <script>
     $(document).ready(function(){
         
+        $("#nav_busqueda").after("<div style='margin:5px' class='ui-state-default ui-jqgrid-pager ui-corner-bottom'><button class='btn btn-mini' title='Realizar despacho' id='boton_seleccionar_registros'>Realizar despacho</button></div>");
+        
         $(".mensajeros").live("change",function(){
             var idft=$(this).attr("data-idft");
             var mensajero=$(this).val();
