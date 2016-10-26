@@ -62,5 +62,5 @@ function mostrar_ruta_reporte($idft_destino_radicacion){
         $destino=busca_filtro_tabla("","vfuncionario_dc","iddependencia_cargo=".$datos[0]['nombre_destino'],"",$conn);
         $ubicacion=$destino[0]['dependencia'];
     }
-    return ($destino[0]['nombre']);
+    return ($ubicacion);
 }
