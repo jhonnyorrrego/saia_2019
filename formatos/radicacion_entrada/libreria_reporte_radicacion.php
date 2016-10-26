@@ -120,7 +120,7 @@ function filtrar_mensajero(){
     
     $funcionario_codigo=usuario_actual('funcionario_codigo');
     $cargo=busca_filtro_tabla("lower(cargo) AS cargo, iddependencia_cargo","vfuncionario_dc a","a.funcionario_codigo=".$funcionario_codigo,"",$conn);
-    if($cargo[0]['cargo']=="mensajero"){
+    if($cargo[0]['cargo']!="mensajero"){
     
     $select="<select class='pull-left btn btn-mini dropdown-toggle' style='height:22px;' name='filtro_mensajeros' id='filtro_mensajeros'>";
     $datos=busca_filtro_tabla("iddependencia_cargo, concat(nombres,' ',apellidos) AS nombre","vfuncionario_dc","lower(cargo)='mensajero' AND estado_dc=1","",$conn);
@@ -131,7 +131,6 @@ function filtrar_mensajero(){
     $select.="</select>";
     }
     return $select;
-    
 }
 
 
