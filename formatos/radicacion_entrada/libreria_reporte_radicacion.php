@@ -76,6 +76,9 @@ function mostrar_mensajeros_dependencia($idft_destino_radicacion){
     global $ruta_db_superior, $conn;
     
     $datos=busca_filtro_tabla('','ft_destino_radicacion','idft_destino_radicacion='.$idft_destino_radicacion,'',conn);
+    $destino=busca_filtro_tabla("","vfuncionario_dc","iddependencia_cargo=".$datos[0]['nombre_destino'],"",$conn);
+    $ubicacion=$destino[0]['dependencia'];
+    
 }
 
 
