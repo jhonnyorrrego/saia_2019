@@ -804,20 +804,7 @@ function serie_documental_radicacion($idformato,$iddoc){
 	    var cargado=[];
 	    cargado.push("38");
 	    tree_destino.setOnCheckHandler(onNodeSelect);
-	    $.ajax({
-	        type:'POST',
-            dataType: 'json',
-            url: "ajax_serie.php",
-            data:{papa:$('#dependencia').val()},
-            async: false,
-            success: function(datos){
-                for (var i=1; i<datos.length; i++){
-                    cargado.push(datos[i]);
-                    console.log(datos[i]);
-                 }
-            }
-        });
-        console.log("1");
+	    
         function onNodeSelect(nodeId){
 	        var numeral=nodeId.indexOf("#");
 	        if(numeral>=0){
@@ -833,6 +820,19 @@ function serie_documental_radicacion($idformato,$iddoc){
 	        var x = Math.floor((Math.random() * 100000) + 1);
 	        
 	        //tree_serie_idserie.deleteChildItems(0);+
+	        $.ajax({
+	        type:'POST',
+            dataType: 'json',
+            url: "ajax_serie.php",
+            data:{papa:$('#dependencia').val()},
+            async: false,
+            success: function(datos){
+                for (var i=1; i<datos.length; i++){
+                    cargado.push(datos[i]);
+                    console.log(datos[i]);
+                 }
+            }
+        });
 	         $.ajax({
 	             type:'POST',
                  dataType: 'json',
