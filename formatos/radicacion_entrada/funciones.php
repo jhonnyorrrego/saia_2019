@@ -807,7 +807,7 @@ function buscar_dependencias_principal($iddependencia){
 		return($iddependencia);
 	}else{
 		buscar_dependencias_principal($cod_dep[0]["cod_padre"]);
-		return($iddependencia);
+		return("");
 	}
 }
 function serie_documental_radicacion($idformato,$iddoc){
