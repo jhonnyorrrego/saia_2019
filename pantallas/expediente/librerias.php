@@ -44,12 +44,16 @@ function mostrar_informacion_adicional_expediente($idexpediente){
     global $conn; 
     
     $cadena='';
+    
+    //EXPEDIENTE
     $expediente_actual=busca_filtro_tabla("serie_idserie,propietario","expediente","idexpediente=".$idexpediente,"",$conn);
+    
+    //NOMBRE DE LA DEPENDENCIA
     $dependencia_propietario=busca_filtro_tabla("dependencia","vfuncionario_dc","estado_dc=1 AND funcionario_codigo=".$expediente_actual[0]['propietario'],"",$conn);
     $nombre_dependencia_propietario=$dependencia_propietario[0]['dependencia'];  
     $cadena.=$nombre_dependencia_propietario;
     
-    
+    //NOMBRE DE LA SERIE
     $serie=busca_filtro_tabla("nombre","serie","idserie=".$expediente_actual[0]['serie_idserie'],"",$conn);
     $cadena.='<br>';
     $cadena.=$serie[0]['nombre'];
