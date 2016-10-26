@@ -15,8 +15,8 @@ function mostrar_tipo_origen_reporte($tipo_origen){
     global $ruta_db_superior, $conn;
     
     if($tipo_origen==1){
-        return "E";
+        return "Externo";
     }else{
-        return "I";
+        return "Interno";
     }
 }
