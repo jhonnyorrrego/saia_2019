@@ -155,7 +155,7 @@ function llena_series_asignadas($id){
 	    else
 	      echo(" child=\"0\">\n");
 			if($hijos[0][0]){
-				//llenar_hijos_series($series[$i]["idserie"],$id,$series_dispon);
+				llenar_hijos_series($series[$i]["idserie"],$id,$series_dispon);
 			}
 			echo("</item>\n");
 		}
