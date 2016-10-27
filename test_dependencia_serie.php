@@ -197,8 +197,6 @@ if(@$_REQUEST['uid'] || @$_REQUEST['id']){
     if($hijos_entidad_serie['numcampos']){
         $lista_entidad_series_filtrar=implode(',',extrae_campo($hijos_entidad_serie,'serie_idserie'));
     }
-    
-    
     $almenos_una_serie=1;
     if( $lista_series_funcionario!='' && $hijos_entidad_serie['numcampos'] ){
         $almenos_una_serie=0;
