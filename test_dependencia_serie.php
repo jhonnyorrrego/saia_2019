@@ -209,9 +209,9 @@ if(@$_REQUEST['uid'] || @$_REQUEST['id']){
         $vector_lista_series_funcionario=array_map('intval',$vector_lista_series_funcionario);
         $series_para_filtrar=array();
         for($h=0;$h<count($idserie_hijos_entidad_serie);$h++){
-            if( in_array($idserie_hijos_entidad_serie[$i],$vector_lista_series_funcionario) ){
+            if( in_array($idserie_hijos_entidad_serie[$h],$vector_lista_series_funcionario) ){
                $almenos_una_serie=1; 
-               $series_para_filtrar[]=$idserie_hijos_entidad_serie[$i];
+               $series_para_filtrar[]=$idserie_hijos_entidad_serie[$h];
             }
         }
         if(count($series_para_filtrar) && $almenos_una_serie){
