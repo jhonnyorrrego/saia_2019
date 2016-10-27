@@ -24,7 +24,7 @@ global $texto;
 function crear_dato_formato($nombre){
 global $texto,$conn,$imagenes,$formatos_calidad;
 $formato=busca_filtro_tabla("A.idformato,A.nombre,A.nombre_tabla,A.etiqueta","formato A","A.nombre_tabla LIKE '".$nombre."'","idformato DESC",$conn);
-print_r($formato);die("-");
+
   if($formato["numcampos"]){
     $imagenes=' im0="'.strtolower($formato[0]["nombre"]).'.gif" im1="'.strtolower($formato[0]["nombre"]).'.gif" im2="'.strtolower($formato[0]["nombre"]).'.gif" ';
     $iddoc=$formato[0]["idformato"]."-".$formato[0]["nombre"]."-".$formato[0]["nombre_tabla"];
@@ -41,6 +41,7 @@ function crear_macroprocesos($formato){
 global $texto,$conn,$imagenes,$formatos_calidad,$validar_macro;
 if($formato["numcampos"]){
   $macros=busca_filtro_tabla("","ft_macroproceso_calidad B","","",$conn);
+  print_r($macros);die("-");
   for($i=0;$i<$macros["numcampos"];$i++){
     $validar_macro=1;
       $documentos=busca_filtro_tabla("","ft_proceso A","A.macroproceso=".$macros[$i]["idft_macroproceso_calidad"],"",$conn);
