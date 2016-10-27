@@ -60,6 +60,8 @@ if(@$_REQUEST['mostrar_nodos']){
     }
 }
 
+
+//$_REQUEST['funcionario']=1   //muestra las series segun funcionario logueado
 $condicion_series_funcionario='';
 if(@$_REQUEST['funcionario']){
     $idfuncionario=usuario_actual("idfuncionario"); 
