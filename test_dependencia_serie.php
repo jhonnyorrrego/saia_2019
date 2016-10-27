@@ -53,10 +53,10 @@ if(@$_REQUEST['mostrar_nodo']){
 if($id and $id<>"" && @$_REQUEST["uid"]){
     echo("<tree id=\"".$id."\">\n");
   
-    if($id[0]=='d'){
+    if($id[0]=='d' && $mostrar_nodos['dsa']){
         $ids=explode('d',$id);
         llena_dependencia($ids[1]);
-    }else{
+    }else if($mostrar_nodos['ocs']){
         $ids=explode('-',$id);
         llena_serie_otras($ids[0]," and categoria=3 ");
     }
@@ -67,23 +67,25 @@ else
   echo("<tree id=\"0\">\n");  
 
  
-if($id and $id<>""){ 
+if($id and $id<>"" && $mostrar_nodos['dsa']){ 
     llena_dependencia($id); 
 }
-else{
+elseif($mostrar_nodos['dsa']){
     llena_dependencia("NULL");
 }
 
 
-
+if($mostrar_nodos['ssa']){
     echo("<item style=\"font-family:verdana; font-size:7pt;\" text=\"Series sin asignar\" id=\"-1\" child=\"1\">");
     series_sin_asignar();
-    echo("</item>");
-    
+    echo("</item>");    
+}
+
+if($mostrar_nodos['ocs']){    
     echo  "<item style=\"font-family:verdana; font-size:7pt;\" text=\"Otras categorias\" id=\"3-categoria-Otras categorias\" >\n"; 
     llena_serie_otras("NULL"," and categoria=3 ");
     echo "</item>\n";	  
-
+}
 
 echo("</tree>\n");
 $activo = "";
