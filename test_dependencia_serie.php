@@ -38,13 +38,24 @@ else
 echo("<?xml version=\"1.0\" encoding=\"UTF-8\"?".">");
 
 
+$mostrar_nodos=array('dsa'=>1,'ssa'=>1,'ocs'=>1); //dsa: dependencia serie asignadas - ssa: series sin asignar   - ocs: otras categorias series 
+if(@$_REQUEST['mostrar_nodo']){
+    $mostrar_nodos=array('dsa'=>0,'ssa'=>0,'ocs'=>0); 
+    $request_nodos=explode(',',$_REQUEST['mostrar_nodo']);    
+    
+    for($i=0;$i<count($request_nodos);$i++){
+        $mostrar_nodos[ $request_nodos[$i] ] = 1;
+    }
+}
+
+
 
 if($id and $id<>"" && @$_REQUEST["uid"]){
     echo("<tree id=\"".$id."\">\n");
   
     if($id[0]=='d'){
         $ids=explode('d',$id);
-        llena_serie($ids[1]);
+        llena_dependencia($ids[1]);
     }else{
         $ids=explode('-',$id);
         llena_serie_otras($ids[0]," and categoria=3 ");
@@ -57,10 +68,10 @@ else
 
  
 if($id and $id<>""){ 
-    llena_serie($id); 
+    llena_dependencia($id); 
 }
 else{
-    llena_serie("NULL");
+    llena_dependencia("NULL");
 }
 
 
@@ -88,8 +99,10 @@ function series_sin_asignar(){
 	}
 } 
 
-function llena_serie($serie,$condicion=""){
+function llena_dependencia($serie,$condicion=""){
 global $conn,$tabla,$seleccionado,$activo,$excluidos;
+
+
 if(isset($_REQUEST["orden"]))
   $orden=$_REQUEST["orden"];
 else
@@ -140,10 +153,10 @@ if($papas["numcampos"]){
     
     if(@$_REQUEST['uid']){
     	if(!$_REQUEST["id"]){
-    	    llena_serie($papas[$i]["id$tabla"]);
+    	    llena_dependencia($papas[$i]["id$tabla"]);
     	}else{
     		if(!$_REQUEST["admin"]){
-    			llena_serie($papas[$i]["id$tabla"]);
+    			llena_dependencia($papas[$i]["id$tabla"]);
     		}
     	}        
     }
