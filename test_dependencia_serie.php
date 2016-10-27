@@ -222,9 +222,7 @@ if(@$_REQUEST['uid'] || @$_REQUEST['id']){
         $hijos_entidad_serie['numcampos']=0;
     }
     
-    if($serie==38){
-       print_r($hijos_entidad_serie);die();
-    }    
+  
     
     if($hijos_entidad_serie['numcampos']){
         
