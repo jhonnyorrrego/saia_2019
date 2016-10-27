@@ -203,6 +203,11 @@ if(@$_REQUEST['uid'] || @$_REQUEST['id']){
     if( $lista_series_funcionario!='' && $hijos_entidad_serie['numcampos'] ){
         $almenos_una_serie=0;
         $idserie_hijos_entidad_serie=extrae_campo($hijos_entidad_serie,'serie_idserie');
+        
+        if($serie==38){
+            print_r($idserie_hijos_entidad_serie);die();
+        }
+        
         $vector_lista_series_funcionario=explode(',',$lista_series_funcionario);
         
         $series_para_filtrar=array();
