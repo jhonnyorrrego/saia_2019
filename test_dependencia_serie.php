@@ -80,6 +80,14 @@ else{
     llena_serie("NULL");
 }
 
+
+
+echo("<item style=\"font-family:verdana; font-size:7pt;\" text=\"Series sin asignar\" id=\"-1\" child=\"1\">");
+series_sin_asignar();
+echo("</item>");
+
+
+
 echo  "<item style=\"font-family:verdana; font-size:7pt;\" text=\"Otras categorias\" id=\"3-categoria-Otras categorias\" >\n"; 
        llena_serie_otras("NULL"," and categoria=3 ");
 echo "</item>\n";	  
@@ -88,6 +96,15 @@ echo("</tree>\n");
 $activo = "";
 ?>
 <?php
+
+function series_sin_asignar(){
+	global $conn;
+	$series=busca_filtro_tabla("","serie a left join entidad_serie b ON a.idserie=b.serie_idserie AND b.entidad_identidad =2","b.serie_idserie IS NULL AND a.categoria<>3","nombre asc",$conn);
+	for($i=0;$i<$series["numcampos"];$i++){
+		echo("<item style=\"font-family:verdana; font-size:7pt;\" text=\"".htmlspecialchars($series[$i]["nombre"])."(".$series[$i]["codigo"].")\" id=\"d"."-".$series[$i]["idserie"]."\" child=\"0\">\n");
+		echo("</item>\n");
+	}
+} 
 
 function llena_serie($serie,$condicion=""){
 global $conn,$tabla,$seleccionado,$activo,$excluidos;
