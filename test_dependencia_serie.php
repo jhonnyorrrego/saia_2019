@@ -21,19 +21,19 @@ if(isset($_REQUEST["estado"]) && $_REQUEST["estado"]!="")
 {
  $activo = " and estado = 1"; 
 }
-if(isset($_REQUEST["seleccionado"]))
-  $seleccionado=explode(",",$_REQUEST["seleccionado"]);
-else
-  $seleccionado=array();
+if(isset($_REQUEST["seleccionado"])){
+    $seleccionado=explode(",",$_REQUEST["seleccionado"]);
+}else{
+    $seleccionado=array();
+}
+  
 if(@$_REQUEST["excluidos"]){
 	$excluidos=" and id".$tabla." not in(".$_REQUEST["excluidos"].") ";
 }
-if ( stristr($_SERVER["HTTP_ACCEPT"],"application/xhtml+xml") ) 
-{ 
+if ( stristr($_SERVER["HTTP_ACCEPT"],"application/xhtml+xml") ) { 
   header("Content-type: application/xhtml+xml"); 
 } 
-else 
-{ 
+else{ 
   header("Content-type: text/xml"); 
 }
 echo("<?xml version=\"1.0\" encoding=\"UTF-8\"?".">");
