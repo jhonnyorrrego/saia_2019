@@ -137,12 +137,11 @@ if($papas["numcampos"]){
   for($i=0; $i<$papas["numcampos"]; $i++){
     $hijos = busca_filtro_tabla("count(*) AS cant",$tabla,"cod_padre=".$papas[$i]["id$tabla"].$activo.$condicion,"",$conn);
     
-    $condicion_series_funcionario='';
-    if($lista_series_funcionario!=''){
-        $condicion_series_funcionario=" AND llave_entidad NOT IN(".$lista_series_funcionario.")";
-    }
+    $hijos_entidad_serie = busca_filtro_tabla("serie_idserie","entidad_serie","estado=1 AND entidad_identidad='2' AND llave_entidad=".$papas[$i]["id$tabla"],"",$conn);
     
-    $hijos_entidad_serie = busca_filtro_tabla("serie_idserie","entidad_serie","estado=1 AND entidad_identidad='2' AND llave_entidad=".$papas[$i]["id$tabla"].$condicion_series_funcionario,"",$conn);
+    if( $lista_series_funcionario!='' && $hijos_entidad_serie['numcampos'] ){
+        $idserie_hijos_entidad_serie='';
+    }
     
     echo("<item style=\"font-family:verdana; font-size:7pt;color:blue;\" ");
     $cadena_codigo='';
