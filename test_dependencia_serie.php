@@ -139,7 +139,7 @@ if($papas["numcampos"]){
     
     $condicion_series_funcionario='';
     if($lista_series_funcionario!=''){
-        $condicion_series_funcionario=" AND serie_idserie NOT IN(".$lista_series_funcionario.")";
+        $condicion_series_funcionario=" AND llave_entidad NOT IN(".$lista_series_funcionario.")";
     }
     
     $hijos_entidad_serie = busca_filtro_tabla("serie_idserie","entidad_serie","estado=1 AND entidad_identidad='2' AND llave_entidad=".$papas[$i]["id$tabla"].$condicion_series_funcionario,"",$conn);
