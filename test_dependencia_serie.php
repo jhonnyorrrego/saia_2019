@@ -119,28 +119,18 @@ if($papas["numcampos"]){
       $cadena_codigo="(".$papas[$i]["codigo"].")";
     }
 	
-		if($tabla=="serie"){
-			if(@$papas[$i]["estado"]==1){
-				$estado_serie=' - ACTIVA';	
-			}else{
-				$estado_serie=' - INACTIVA';				
-			}
-		}	
-	
     echo("text=\"".htmlspecialchars(($papas[$i]["nombre"])).$cadena_codigo." \" id=\"d".$papas[$i]["id$tabla"]."\"");
-		if(@$_REQUEST["arbol_series"]){		
+	if(@$_REQUEST["arbol_series"]){		
 				
 	}		
-	else if($hijos[0]["cant"]!=0 && ($tabla=="serie" || @$_REQUEST["sin_padre"])){		
+	else if($hijos[0]["cant"]!=0 && (@$_REQUEST["sin_padre"]) ){		
       echo(" nocheckbox=\"1\" ");		
 	}
     if(in_array($papas[$i]["id$tabla"],$seleccionado)!==false){
         echo " checked=\"1\" ";  
     }
       
-    if($hijos[0][0]){
-        echo(" child=\"1\">\n");
-    }elseif($hijos_entidad_serie['numcampos']){
+    if($hijos[0][0] || $hijos_entidad_serie['numcampos']){
         echo(" child=\"1\">\n");
     }else{
         echo(" child=\"0\">\n");
