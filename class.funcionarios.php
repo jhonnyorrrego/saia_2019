@@ -8,27 +8,51 @@ global $conn,$sql;
 $serie_f=array();
 $serie_c=array();
 $serie_d=array();
+
+
 if(!$funcionario){
   $funcionario=usuario_actual("idfuncionario"); 
 }
+
+//consulta dependencia
 $dependencia = busca_filtro_tabla("B.*","dependencia_cargo A, dependencia B","A.dependencia_iddependencia=B.iddependencia AND A.funcionario_idfuncionario=$funcionario AND B.estado=1 AND A.estado=1","",$conn);
+
+
+//consulta cargo
 $cargo = busca_filtro_tabla("B.*","dependencia_cargo A, cargo B","A.cargo_idcargo=B.idcargo AND A.funcionario_idfuncionario=$funcionario AND A.estado=1","",$conn);
+
+//consulta modulos
 $modulo = busca_filtro_tabla("A.idpermiso,B.*","permiso A, modulo B","A.modulo_idmodulo=B.idmodulo AND A.funcionario_idfuncionario=$funcionario","",$conn);  
+
+//consulta rol
 $rol = busca_filtro_tabla("A.*","dependencia_cargo A","A.funcionario_idfuncionario=$funcionario AND A.estado=1","",$conn);
+
+
+//extraccion
 $cargos=extrae_campo($cargo,"idcargo","U");
 $dependencias=extrae_campo($dependencia,"iddependencia","U");
 $modulos=extrae_campo($modulo,"idpermiso","U");
 $roles = extrae_campo($rol,"iddependencia_cargo","U");
+
+
+//series asignadas funcionario
 $serie_func = busca_filtro_tabla("A.identidad_serie, B.*","entidad_serie A, serie B,entidad C"," A.estado=1 AND B.estado=1 AND C.nombre like 'funcionario' AND A.llave_entidad=$funcionario AND A.entidad_identidad=C.identidad AND A.serie_idserie=B.idserie ","B.nombre",$conn);
 
-if(@$cargos)
-  $serie_cargo = busca_filtro_tabla("A.identidad_serie, B.*","entidad_serie A, serie B,entidad C","A.estado=1 AND B.estado=1 AND C.nombre like 'cargo' AND A.llave_entidad IN(".implode(",",$cargos).") AND A.entidad_identidad=C.identidad AND A.serie_idserie=B.idserie ","B.nombre",$conn);
-else 
-  $serie_cargo["numcampos"]=0;  
-if(@$dependencias)
-  $serie_dependencia = busca_filtro_tabla("A.identidad_serie, B.*","entidad_serie A, serie B,entidad C","A.estado=1 AND B.estado=1 AND C.nombre like 'dependencia' AND A.llave_entidad IN(".implode(",",$dependencias).") AND A.entidad_identidad=C.identidad AND A.serie_idserie=B.idserie ","B.nombre",$conn);
-else 
-  $serie_dependencia["numcampos"]=0;  
+
+//series asignadas al cargo
+if(@$cargos){
+    $serie_cargo = busca_filtro_tabla("A.identidad_serie, B.*","entidad_serie A, serie B,entidad C","A.estado=1 AND B.estado=1 AND C.nombre like 'cargo' AND A.llave_entidad IN(".implode(",",$cargos).") AND A.entidad_identidad=C.identidad AND A.serie_idserie=B.idserie ","B.nombre",$conn);   
+}else{
+    $serie_cargo["numcampos"]=0;     
+} 
+   
+//series asignadas al la dependencia
+if(@$dependencias){
+    $serie_dependencia = busca_filtro_tabla("A.identidad_serie, B.*","entidad_serie A, serie B,entidad C","A.estado=1 AND B.estado=1 AND C.nombre like 'dependencia' AND A.llave_entidad IN(".implode(",",$dependencias).") AND A.entidad_identidad=C.identidad AND A.serie_idserie=B.idserie ","B.nombre",$conn);    
+}else{
+    $serie_dependencia["numcampos"]=0;   
+} 
+   
 
 $serie_f=extrae_campo($serie_func,"idserie","U");
 $serie_c=extrae_campo($serie_cargo,"idserie","U");
