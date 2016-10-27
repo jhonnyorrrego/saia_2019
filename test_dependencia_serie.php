@@ -79,6 +79,7 @@ if($id && $id=='-1'){
     series_sin_asignar();
     echo("</item>");    
      echo("</tree>\n");
+     die();
 }
 
 //si llega el request para cargar por partes
