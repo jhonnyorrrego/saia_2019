@@ -210,7 +210,6 @@ if(@$_REQUEST['uid'] || @$_REQUEST['id']){
                $series_para_filtrar[]=$idserie_hijos_entidad_serie[$i];
             }
         }
-        
         if(count($series_para_filtrar) && $almenos_una_serie){
             $lista_entidad_series_filtrar=implode(',',$series_para_filtrar);
         }
