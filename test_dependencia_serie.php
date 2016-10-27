@@ -74,12 +74,7 @@ $id = @$_REQUEST["id"];
 
 //si llega carga de series sin asignar
 if($id && $id=='-1'){
-    
-    echo("<item style=\"font-family:verdana; font-size:7pt;\" text=\"Series sin asignar\" id=\"-1\" child=\"1\">");
     series_sin_asignar();
-    echo("</item>");    
-     
-     die();
 }
 
 //si llega el request para cargar por partes
