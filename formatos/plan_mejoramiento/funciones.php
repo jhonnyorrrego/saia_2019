@@ -101,14 +101,14 @@ $dato=busca_filtro_tabla("revisado,".fecha_db_obtener("fecha_elaborado","Y-m-d H
  $pos=strpos($dato[0][0],"_");
   if($pos)
     $dato[0][0]=substr($dato[0][0],0,$pos);
-  
+  print_r($dato);
 if($dato[0][0]){
     $idformato_plan_mejoramiento=busca_filtro_tabla("idformato","nombre='plan_mejoramiento'","","",$conn);
   mostrar_valor_campo('revisado',$idformato_plan_mejoramiento[0]['idformato'],$iddoc);   
   if($dato[0]["fecha_elaborado"] && $dato[0]["fecha_elaborado"]>'2010-01-01 00:00:00' && $dato[0]["fecha_revisado"] && $dato[0]["fecha_revisado"]>'2010-01-01 00:00:00'){
     echo("(".$dato[0]["fecha_revisado"].")");
   }
-  elseif(($dato[0]["fecha_elaborado"] && $dato[0]["fecha_elaborado"]>'2010-01-01 00:00:00') && ($dato[0][0]==$fun_cod || $fun_login=="0k")){
+  elseif(($dato[0]["fecha_elaborado"] && $dato[0]["fecha_elaborado"]>'2010-01-01 00:00:00') && ($dato[0][0]==$fun_cod || $fun_login=="cerok")){
 	  echo('<div id="estado_revisado" align="center"><a style="color:blue;cursor:pointer" onClick="actualizar_estado(2,\''.$iddoc.'\');">Confirmar</a></div>');
   } 
   else{
@@ -150,7 +150,7 @@ function aprobado_por($idformato,$iddoc){
     if($dato[0]["fecha_revisado"] && $dato[0]["fecha_revisado"]>'2010-01-01 00:00:00' && $dato[0]["fecha_aprobado"] && $dato[0]["fecha_aprobado"]>'2010-01-01 00:00:00'){
       echo("(".$dato[0]["fecha_aprobado"].")");
     }
-    elseif(($dato[0]["fecha_revisado"] && $dato[0]["fecha_revisado"]>'2010-01-01 00:00:00') && ($dato[0][0]==$fun_cod || $fun_login=="0k")){
+    elseif(($dato[0]["fecha_revisado"] && $dato[0]["fecha_revisado"]>'2010-01-01 00:00:00') && ($dato[0][0]==$fun_cod || $fun_login=="cerok")){
 	  echo('<div id="estado_aprobado" align="center"><a style="color:blue;cursor:pointer" onClick="actualizar_estado(3,\''.$iddoc.'\');">Confirmar</a></div>');
     } 
     else{
@@ -173,7 +173,7 @@ function mostrar_adjuntos($idformato,$iddoc){
 	global $conn, $ruta_db_superior;
  	if(!isset($_REQUEST["tipo_impresion"])){
  		//mostrar_valor_campo('adjuntos',1,$iddoc);
- 		//if(usuario_actual('login')=='0k'){
+ 		//if(usuario_actual('login')=='cerok'){
 		$campos=busca_filtro_tabla("idcampos_formato","campos_formato a","a.nombre='adjuntos' and formato_idformato=".$idformato,"",$conn);
  		$anexos=busca_filtro_tabla("","anexos a","a.documento_iddocumento=".$iddoc." and campos_formato='".$campos[0]["idcampos_formato"]."'","",$conn);
 		$texto=array();
