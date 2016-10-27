@@ -363,6 +363,7 @@ function procesos_vinculados_funcion($idformato,$iddoc,$informe){
 	$cant=count($procesos);
 	$nombres=array();
 	for($i=0;$i<$cant;$i++){
+	    print_r($procesos[$i][0]);
 		if($procesos[$i]!=''){
 			if($procesos[$i][0]!='m'){
 				$proceso=busca_filtro_tabla("nombre","ft_proceso a","a.idft_proceso='".trim($procesos[$i])."'","",$conn);
