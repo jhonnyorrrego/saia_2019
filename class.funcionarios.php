@@ -53,7 +53,7 @@ if(@$dependencias){
     $serie_dependencia["numcampos"]=0;   
 }
 
-
+//procesando datos
 $serie_f=extrae_campo($serie_func,"idserie","U");
 $serie_c=extrae_campo($serie_cargo,"idserie","U");
 $serie_d=extrae_campo($serie_dependencia,"idserie","U");
