@@ -14,6 +14,10 @@ while ($max_salida > 0) {
     $max_salida--;
 }
 include_once($ruta_db_superior . "db.php");
+
+$idfuncionario=usuario_actual("idfuncionario"); 
+$datos_admin_funcionario = busca_datos_administrativos_funcionario($idfuncionario);
+
 $tabla = @$_REQUEST["tabla"];
 $id = @$_REQUEST["id"];
 if(isset($_REQUEST["estado"]) && $_REQUEST["estado"]!="")
