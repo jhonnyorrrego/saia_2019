@@ -15,17 +15,6 @@ while ($max_salida > 0) {
 }
 include_once($ruta_db_superior . "db.php");
 
-
-$lista_series_funcionario='';
-if(@$_REQUEST['funcionario']){
-    $idfuncionario=usuario_actual("idfuncionario"); 
-    $datos_admin_funcionario = busca_datos_administrativos_funcionario($idfuncionario);
-    $lista_series_funcionario= "'".implode("','",$datos_admin_funcionario["series"])."'";    
-}
-
-
-
-
 $tabla = @$_REQUEST["tabla"];
 $id = @$_REQUEST["id"];
 if(isset($_REQUEST["estado"]) && $_REQUEST["estado"]!="")
@@ -58,6 +47,13 @@ if(@$_REQUEST['mostrar_nodos']){
     for($i=0;$i<count($request_nodos);$i++){
         $mostrar_nodos[ $request_nodos[$i] ] = 1;
     }
+}
+
+$lista_series_funcionario='';
+if(@$_REQUEST['funcionario']){
+    $idfuncionario=usuario_actual("idfuncionario"); 
+    $datos_admin_funcionario = busca_datos_administrativos_funcionario($idfuncionario);
+    $lista_series_funcionario= "'".implode("','",$datos_admin_funcionario["series"])."'";    
 }
 
 
@@ -107,9 +103,9 @@ $activo = "";
  
 //arbol de dependencias (dsa)
 function llena_dependencia($serie,$condicion=""){
-global $conn,$tabla,$seleccionado,$activo,$excluidos;
+global $conn,$seleccionado,$activo,$excluidos;
 
-
+$tabla="dependencia";
 if(isset($_REQUEST["orden"]))
   $orden=$_REQUEST["orden"];
 else
