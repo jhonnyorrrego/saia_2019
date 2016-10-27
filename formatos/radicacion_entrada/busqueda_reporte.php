@@ -71,7 +71,7 @@ global $conn;
 						var cadena='';
 						for(i=1;i<=2;i++){
 							if(document.getElementById('tipo_origen'+i).checked){
-								cadena+=document.getElementById('tipo_origen'+i).value+'';
+								cadena+=document.getElementById('tipo_origen'+i).value+',';
 							}
 						}
 						document.getElementById('bqsaia_tipo_origen').value=cadena;						
