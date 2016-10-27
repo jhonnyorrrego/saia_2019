@@ -68,7 +68,7 @@ function mostrar_ruta_reporte($idft_destino_radicacion){
 function seleccionar_destino($idft_destino_radicacion){
     global $ruta_db_superior, $conn;
     
-    $input="<input type='checkbox' name='$idft_destino_radicacion'>";
+    $input="<input type='checkbox' name='seleccionar' value='$idft_destino_radicacion'>";
     return $input;
 }
 
@@ -146,9 +146,9 @@ function aceptar_recepcion($idft_destino_radicacion){
     $cargo=busca_filtro_tabla("lower(cargo) AS cargo, iddependencia_cargo","vfuncionario_dc a","a.funcionario_codigo=".$funcionario_codigo,"",$conn);
     
     if($datos[0]['recepcion']!=0){
-        $input="<input type='checkbox' id='recepcion' name='recepcion' idft='$idft_destino_radicacion' value='".$cargo[0]['iddependencia_cargo']."' checked>";
+        $input="<input type='checkbox' id='recepcion' name='recepcion' data-idftidft='$idft_destino_radicacion' value='".$cargo[0]['iddependencia_cargo']."' checked>";
     }else{
-        $input="<input type='checkbox'id='recepcion' name='recepcion' idft='$idft_destino_radicacion' value='".$cargo[0]['iddependencia_cargo']."'>";
+        $input="<input type='checkbox'id='recepcion' name='recepcion' data-idft='$idft_destino_radicacion' value='".$cargo[0]['iddependencia_cargo']."'>";
     }
     return $input;
 }
