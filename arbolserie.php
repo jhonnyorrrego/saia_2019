@@ -49,9 +49,10 @@ echo(librerias_notificaciones());
 			tree2.setOnClickHandler(onNodeSelect);
 			tree2.setOnLoadingStart(cargando_serie);
             tree2.setOnLoadingEnd(fin_cargando_serie);
-            tree2.setXMLAutoLoading("test_serie_funcionario2.php?tabla=dependencia&admin=1");
-			tree2.loadXML("test_serie_funcionario2.php?tabla=dependencia&admin=1");
-			
+           //tree2.setXMLAutoLoading("test_serie_funcionario2.php?tabla=dependencia&admin=1");
+			//tree2.loadXML("test_serie_funcionario2.php?tabla=dependencia&admin=1");
+			tree2.setXMLAutoLoading("test_dependencia_serie.php?tabla=dependencia&admin=1");
+			tree2.loadXML("test_dependencia_serie.php?tabla=dependencia&admin=1");
 			function onNodeSelect(nodeId){
         var datos=nodeId.split("-");
         if(datos[1])
