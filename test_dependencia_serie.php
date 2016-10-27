@@ -92,15 +92,8 @@ $activo = "";
 ?>
 <?php
 
-function series_sin_asignar(){
-	global $conn;
-	$series=busca_filtro_tabla("","serie a left join entidad_serie b ON a.idserie=b.serie_idserie AND b.entidad_identidad =2","b.serie_idserie IS NULL AND a.categoria<>3","nombre asc",$conn);
-	for($i=0;$i<$series["numcampos"];$i++){
-		echo("<item style=\"font-family:verdana; font-size:7pt;\" text=\"".htmlspecialchars($series[$i]["nombre"])."(".$series[$i]["codigo"].")\" id=\"d"."-".$series[$i]["idserie"]."\" child=\"0\">\n");
-		echo("</item>\n");
-	}
-} 
-
+ 
+//arbol de dependencias (dsa)
 function llena_dependencia($serie,$condicion=""){
 global $conn,$tabla,$seleccionado,$activo,$excluidos;
 
@@ -178,7 +171,7 @@ if(@$_REQUEST['uid'] || @$_REQUEST['id']){
 return;
 }
 
-
+//llena series asignadas segun dependencia  (dsa)
 function llena_entidad_serie($iddependencia,$series){
     global $conn;
     
@@ -193,6 +186,19 @@ function llena_entidad_serie($iddependencia,$series){
 }
 
 
+//SERIES SIN ASIGNAR (ssa)
+function series_sin_asignar(){
+	global $conn;
+	$series=busca_filtro_tabla("","serie a left join entidad_serie b ON a.idserie=b.serie_idserie AND b.entidad_identidad =2","b.serie_idserie IS NULL AND a.categoria<>3","nombre asc",$conn);
+	for($i=0;$i<$series["numcampos"];$i++){
+		echo("<item style=\"font-family:verdana; font-size:7pt;\" text=\"".htmlspecialchars($series[$i]["nombre"])."(".$series[$i]["codigo"].")\" id=\"d"."-".$series[$i]["idserie"]."\" child=\"0\">\n");
+		echo("</item>\n");
+	}
+}
+
+
+
+//SERIES OTRAS CATEGORIAS (soc)
 function llena_serie_otras($serie,$condicion=""){
 global $conn,$seleccionado,$activo,$excluidos;
 
