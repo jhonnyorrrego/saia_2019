@@ -4,7 +4,14 @@ header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT"); // always modifie
 header("Cache-Control: no-store, no-cache, must-revalidate"); // HTTP/1.1
 header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache"); // HTTP/1.0 ISO-8859-1*/
-
+if ( stristr($_SERVER["HTTP_ACCEPT"],"application/xhtml+xml") )
+{
+  header("Content-type: application/xhtml+xml");
+}
+else
+{
+  header("Content-type: text/xml");
+}
 $imagenes="";
 $texto="<?xml version=\"1.0\" encoding=\"UTF-8\"?".">";
 include_once("../librerias/funciones_generales.php");
@@ -41,7 +48,6 @@ function crear_macroprocesos($formato){
 global $texto,$conn,$imagenes,$formatos_calidad,$validar_macro;
 if($formato["numcampos"]){
   $macros=busca_filtro_tabla("","ft_macroproceso_calidad B","","",$conn);
-  print_r($macros);die("-");
   for($i=0;$i<$macros["numcampos"];$i++){
     $validar_macro=1;
       $documentos=busca_filtro_tabla("","ft_proceso A","A.macroproceso=".$macros[$i]["idft_macroproceso_calidad"],"",$conn);
