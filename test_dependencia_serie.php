@@ -104,7 +104,7 @@ else
 
 $hijos_entidad_serie = busca_filtro_tabla("serie_idserie","entidad_serie","estado=1 AND entidad_identidad='2' AND llave_entidad=".$serie,"",$conn);
 if($hijos_entidad_serie['numcampos']){
-    llena_entidad_serie$serie,implode(',',extrae_campo($hijos_entidad_serie,'serie_idserie')));
+    llena_entidad_serie($serie,implode(',',extrae_campo($hijos_entidad_serie,'serie_idserie')));
 }
 if($papas["numcampos"]){ 
   for($i=0; $i<$papas["numcampos"]; $i++){
