@@ -43,6 +43,7 @@ if($id and $id<>"" && @$_REQUEST["uid"]){
       llena_serie($id);
   }else{
           //print_r($id);die('<-----here');
+          
        $ids=explode('-',$id);
        llena_serie_otras($ids[0]," and categoria=3 ");
   }
@@ -78,7 +79,7 @@ if($id and $id<>""){
 else{
     llena_serie("NULL");
 }
-$tabla_otra = 'serie';
+
 echo  "<item style=\"font-family:verdana; font-size:7pt;\" text=\"Otras categorias\" id=\"3-categoria-Otras categorias\" >\n"; 
        llena_serie_otras("NULL"," and categoria=3 ");
 echo "</item>\n";	  
@@ -170,7 +171,9 @@ function llena_entidad_serie($iddependencia,$series){
 
 
 function llena_serie_otras($serie,$condicion=""){
-global $conn,$tabla_otra,$seleccionado,$activo,$excluidos;
+global $conn,$seleccionado,$activo,$excluidos;
+
+$tabla_otra = 'serie';
 if(isset($_REQUEST["orden"]))
   $orden=$_REQUEST["orden"];
 else
@@ -182,7 +185,7 @@ else
 
 
 
-print_r($papas);
+
 if($papas["numcampos"])
 { 
   for($i=0; $i<$papas["numcampos"]; $i++)
