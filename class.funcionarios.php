@@ -51,8 +51,8 @@ if(@$dependencias){
     $serie_dependencia = busca_filtro_tabla("A.identidad_serie, B.*","entidad_serie A, serie B,entidad C","A.estado=1 AND B.estado=1 AND C.nombre like 'dependencia' AND A.llave_entidad IN(".implode(",",$dependencias).") AND A.entidad_identidad=C.identidad AND A.serie_idserie=B.idserie ","B.nombre",$conn);    
 }else{
     $serie_dependencia["numcampos"]=0;   
-} 
-   
+}
+
 
 $serie_f=extrae_campo($serie_func,"idserie","U");
 $serie_c=extrae_campo($serie_cargo,"idserie","U");
