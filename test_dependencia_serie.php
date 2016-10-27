@@ -218,9 +218,6 @@ if(@$_REQUEST['uid'] || @$_REQUEST['id']){
     if(!$almenos_una_serie){
         $hijos_entidad_serie['numcampos']=0;
     }
-
-
-    
     if($hijos_entidad_serie['numcampos']){
         llena_entidad_serie($serie,$lista_entidad_series_filtrar);
     }
