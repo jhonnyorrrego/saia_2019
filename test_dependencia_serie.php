@@ -42,9 +42,9 @@ if($id and $id<>"" && @$_REQUEST["uid"]){
   if($id[0]=='d'){
       llena_serie($id);
   }else{
-          print_r($id);die('<-----here');
-      
-       llena_serie_otras($id," and categoria=3 ");
+          //print_r($id);die('<-----here');
+       $ids=explode('-',$id);
+       llena_serie_otras($ids[0]," and categoria=3 ");
   }
 	
 	
