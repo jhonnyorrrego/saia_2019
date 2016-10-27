@@ -62,6 +62,16 @@ if($formato["numcampos"]){
     }
     $texto.="</item>\n";
   }
+  $procesos_sin_macro=busca_filtro_tabla("","ft_proceso","macroproceso=0","",$conn);
+  for($i=0;$i<$procesos_sin_macro["numcampos"];$i++){
+      $validar_macro=0;
+      $imagenes=' im0="proceso.gif" im1="proceso.gif" im2="proceso.gif" '; 
+      $texto.='<item style="font-family:verdana; font-size:7pt;" '.$imagenes;
+      $texto.=strip_tags('text="'.decodifica($procesos_sin_macro[$i]["nombre"]).'" id="m'.$procesos_sin_macro[$i]["idft_proceso"].'" >'."\n");
+      $iddoc=$formato[0]["idformato"]."-".$formato[0]["nombre"]."-".$formato[0]["nombre_tabla"]."-".$procesos_sin_macro[$i]["documento_iddocumento"];                
+      llenar_documentos($iddoc);
+      $texto.="</item>\n";
+  }
 } 
 }
 function llenar_documentos($iddoc){
