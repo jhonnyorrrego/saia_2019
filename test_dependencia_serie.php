@@ -36,6 +36,9 @@ else
   header("Content-type: text/xml"); 
 }
 echo("<?xml version=\"1.0\" encoding=\"UTF-8\"?".">");
+
+
+
 if($id and $id<>"" && @$_REQUEST["uid"]){
     echo("<tree id=\"".$id."\">\n");
   
@@ -54,10 +57,7 @@ else
 
  
 if($id and $id<>""){ 
-  llena_serie($id); 
-  if(@$_REQUEST["cargar_dato_padre"] && $dato_papa["numcampos"]){
-    echo("</item>\n");
-  } 
+    llena_serie($id); 
 }
 else{
     llena_serie("NULL");
