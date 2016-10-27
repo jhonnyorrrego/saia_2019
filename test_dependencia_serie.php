@@ -38,9 +38,9 @@ else
 echo("<?xml version=\"1.0\" encoding=\"UTF-8\"?".">");
 
 
-$mostrar_nodos=array('dsa'=>1,'ssa'=>1,'ocs'=>1); //dsa: dependencia serie asignadas - ssa: series sin asignar   - ocs: otras categorias series 
+$mostrar_nodos=array('dsa'=>1,'ssa'=>1,'soc'=>1); //dsa: dependencia serie asignadas - ssa: series sin asignar   - soc: series otras categorias  
 if(@$_REQUEST['mostrar_nodo']){
-    $mostrar_nodos=array('dsa'=>0,'ssa'=>0,'ocs'=>0); 
+    $mostrar_nodos=array('dsa'=>0,'ssa'=>0,'soc'=>0); 
     $request_nodos=explode(',',$_REQUEST['mostrar_nodo']);    
     
     for($i=0;$i<count($request_nodos);$i++){
@@ -56,7 +56,7 @@ if($id and $id<>"" && @$_REQUEST["uid"]){
     if($id[0]=='d' && $mostrar_nodos['dsa']){
         $ids=explode('d',$id);
         llena_dependencia($ids[1]);
-    }else if($mostrar_nodos['ocs']){
+    }else if($mostrar_nodos['soc']){
         $ids=explode('-',$id);
         llena_serie_otras($ids[0]," and categoria=3 ");
     }
@@ -81,7 +81,7 @@ if($mostrar_nodos['ssa']){
     echo("</item>");    
 }
 
-if($mostrar_nodos['ocs']){    
+if($mostrar_nodos['soc']){    
     echo  "<item style=\"font-family:verdana; font-size:7pt;\" text=\"Otras categorias\" id=\"3-categoria-Otras categorias\" >\n"; 
     llena_serie_otras("NULL"," and categoria=3 ");
     echo "</item>\n";	  
