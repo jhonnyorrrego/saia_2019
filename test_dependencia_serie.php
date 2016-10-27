@@ -71,8 +71,6 @@ if(@$_REQUEST['funcionario']){
 
 $id = @$_REQUEST["id"];
 
-
-
 //si llega el request para cargar por partes
 if($id and $id<>"" && @$_REQUEST["uid"]){
     echo("<tree id=\"".$id."\">\n");
