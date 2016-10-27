@@ -104,7 +104,7 @@ if($papas["numcampos"]){
   for($i=0; $i<$papas["numcampos"]; $i++){
     $hijos = busca_filtro_tabla("count(*) AS cant",$tabla,"cod_padre=".$papas[$i]["id$tabla"].$activo.$condicion,"",$conn);
     $hijos_entidad_serie = busca_filtro_tabla("serie_idserie","entidad_serie","estado=1 AND entidad_identidad='2' AND llave_entidad=".$papas[$i]["id$tabla"],"",$conn);
-    //print_r($hijos_entidad_serie);die();
+    print_r($hijos_entidad_serie);die();
     echo("<item style=\"font-family:verdana; font-size:7pt;color:blue;\" ");
     $cadena_codigo='';
     if(@$papas[$i]["codigo"]){
