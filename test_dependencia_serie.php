@@ -203,13 +203,9 @@ if(@$_REQUEST['uid'] || @$_REQUEST['id']){
     if( $lista_series_funcionario!='' && $hijos_entidad_serie['numcampos'] ){
         $almenos_una_serie=0;
         $idserie_hijos_entidad_serie=extrae_campo($hijos_entidad_serie,'serie_idserie');
-        
-        if($serie==38){
-            print_r($idserie_hijos_entidad_serie);die('<---');
-        }
-        
+        $idserie_hijos_entidad_serie=array_map('intval',$idserie_hijos_entidad_serie);
         $vector_lista_series_funcionario=explode(',',$lista_series_funcionario);
-        
+        $vector_lista_series_funcionario=array_map('intval',$vector_lista_series_funcionario);
         $series_para_filtrar=array();
         for($h=0;$h<count($idserie_hijos_entidad_serie);$h++){
             if( in_array($idserie_hijos_entidad_serie[$i],$vector_lista_series_funcionario) ){
