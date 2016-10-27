@@ -15,7 +15,7 @@ while ($max_salida > 0) {
 }
 include_once($ruta_db_superior . "db.php");
 
-$tabla = @$_REQUEST["tabla"];
+$tabla ="dependencia";
 $id = @$_REQUEST["id"];
 if(isset($_REQUEST["estado"]) && $_REQUEST["estado"]!="")
 {
