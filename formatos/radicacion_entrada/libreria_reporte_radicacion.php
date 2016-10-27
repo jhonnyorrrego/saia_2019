@@ -141,7 +141,7 @@ function filtrar_mensajero(){
 function aceptar_recepcion($idft_destino_radicacion){
     global $ruta_db_superior, $conn;
     
-    $datos=busca_filtro_tabla("","","","",$conn);
+    $datos=busca_filtro_tabla("","ft_destino_radicacion","idft_destino_radicacion=".$idft_destino_radicacion,"",$conn);
     
     $input="<input type='checkbox' name='$idft_destino_radicacion'>";
     return $input;
