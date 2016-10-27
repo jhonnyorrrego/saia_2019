@@ -41,7 +41,18 @@ echo(librerias_jquery('1.7'));
         });
         
         $("#recepcion").live("change",function(){
-            
+            var idft=$(this).attr("data-idft");
+            var funcionario=$(this).val();
+            $.ajax({
+                        type:'POST',
+                        dataType: 'json',
+                        url: "<?php echo $ruta_db_superior;?>formatos/radicacion_entrada/actualizar_recepcion.php",
+                        data: {
+                                        idft_destino_radicacion:idft,
+                                        mensajero_encargado:mensajero
+                        },
+                        
+            }); 
             
         });
         
