@@ -146,7 +146,7 @@ function aceptar_recepcion($idft_destino_radicacion){
     $cargo=busca_filtro_tabla("lower(cargo) AS cargo, iddependencia_cargo","vfuncionario_dc a","a.funcionario_codigo=".$funcionario_codigo,"",$conn);
     
     if($datos[0]['recepcion']!=0){
-        $input="<input type='checkbox' id='recepcion' name='recepcion' data-idftidft='$idft_destino_radicacion' value='".$cargo[0]['iddependencia_cargo']."' checked>";
+        $input="<input type='checkbox' id='recepcion' name='recepcion' data-idftidft='$idft_destino_radicacion' value='".$cargo[0]['iddependencia_cargo']."' checked readonly>";
     }else{
         $input="<input type='checkbox'id='recepcion' name='recepcion' data-idft='$idft_destino_radicacion' value='".$cargo[0]['iddependencia_cargo']."'>";
     }
