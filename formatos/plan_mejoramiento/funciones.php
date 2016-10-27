@@ -101,9 +101,10 @@ $dato=busca_filtro_tabla("revisado,".fecha_db_obtener("fecha_elaborado","Y-m-d H
  $pos=strpos($dato[0][0],"_");
   if($pos)
     $dato[0][0]=substr($dato[0][0],0,$pos);
-  print_r($dato);
+  
 if($dato[0][0]){
     $idformato_plan_mejoramiento=busca_filtro_tabla("idformato","nombre='plan_mejoramiento'","","",$conn);
+    print_r($idformato_plan_mejoramiento);
   mostrar_valor_campo('revisado',$idformato_plan_mejoramiento[0]['idformato'],$iddoc);   
   if($dato[0]["fecha_elaborado"] && $dato[0]["fecha_elaborado"]>'2010-01-01 00:00:00' && $dato[0]["fecha_revisado"] && $dato[0]["fecha_revisado"]>'2010-01-01 00:00:00'){
     echo("(".$dato[0]["fecha_revisado"].")");
