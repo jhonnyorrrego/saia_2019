@@ -69,7 +69,9 @@ function mostrar_anexos_seguimientop($idformato, $iddoc) {
     echo('<a href="' . $ruta_db_superior . 'anexosdigitales/parsea_accion_archivo.php?idanexo=' . $anexos[$i]["idanexos"] . '&accion=descargar" >' . $anexos[$i]["etiqueta"] . '</a><br/>');
   }
 }
-
+function mostrar_fecha_seguimiento_plan_mejoramiento($idformato,$iddoc){
+    echo("falta");
+}
 /*POSTERIOR APROBAR*/
 function notificar_seguimiento($idformato, $iddoc) {
   global $conn;
