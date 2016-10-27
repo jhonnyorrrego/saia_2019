@@ -76,6 +76,7 @@ if($id and $id<>"" && @$_REQUEST["uid"]){
   
     if($id[0]=='d' && $mostrar_nodos['dsa']){ //si es dependencia
         $ids=explode('d',$id);
+        
         llena_dependencia($ids[1]);
     }else if($mostrar_nodos['soc']){ //si es serie otras categorias
         $ids=explode('-',$id);
@@ -194,7 +195,7 @@ if($papas["numcampos"]){
 if(@$_REQUEST['uid'] || @$_REQUEST['id']){
     
     $hijos_entidad_serie = busca_filtro_tabla("serie_idserie","entidad_serie","estado=1 AND entidad_identidad='2' AND llave_entidad=".$serie,"",$conn);
-    print_r($hijos_entidad_serie);die();
+    
     if($hijos_entidad_serie['numcampos']){
         $lista_entidad_series_filtrar=implode(',',extrae_campo($hijos_entidad_serie,'serie_idserie'));
     }
