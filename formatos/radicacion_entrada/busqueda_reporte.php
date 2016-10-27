@@ -54,31 +54,21 @@ global $conn;
 		<br>
 
 
-        <div class="control-group">
-          <label class="string required control-label" for="tipo_origen">
-			<b>Tipo Origen</b>
-          </label>
-          <div class="controls">
-            <input type="checkbox" name="tipo_origen" id="tipo_origen1" value="1">Externo
-            <input type="checkbox" name="tipo_origen" id="tipo_origen2" value="2">Interno
-          </div>
-		<input type="hidden" name="bksaiacondicion_tipo_origen" id="bksaiacondicion_tipo_origen" value="in">
-		<input type="hidden" name="bqsaiaenlace_tipo_origen" id="bqsaiaenlace_tipo_origen" value="y" />    		<input id="bqsaia_tipo_origen" name="bqsaia_tipo_origen" size="50" type="hidden">
-			<script>
-				$(document).ready(function(){
-					$('input[name="tipo_origen"]').click(function(){
-						document.getElementById('bqsaia_tipo_origen').value='';
-						var cadena='';
-						for(i=1;i<=2;i++){
-							if(document.getElementById('tipo_origen'+i).checked){
-								cadena+=document.getElementById('tipo_origen'+i).value+',';
-							}
-						}
-						document.getElementById('bqsaia_tipo_origen').value=cadena;						
-					});		
-				});
-			</script>
-        </div>
+        <div class="row">
+          <div class="control-group radio_buttons span4">
+            <label class="radio_buttons optional control-label"><b>Tipo</b>
+            <input type="hidden" name="bksaiacondicion_ft@tipo" id="bksaiacondicion_tipo_origen" value="=">
+            </label>
+            <div class="controls">
+              <label class="radio inline">
+                <input class="radio_buttons optional" id="bqsaia_tipo_origen" name="bqsaia_ft@tipo" type="radio" value="1">Externo
+              </label>
+              <label class="radio inline">
+                <input class="radio_buttons optional" id="bqsaia_tipo_origen2" name="bqsaia_ft@tipo" type="radio" value="2">Interno
+              </label>
+            </div>          
+          </div> 
+      </div><br>
 
 
 	<br>
