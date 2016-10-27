@@ -65,7 +65,7 @@ $lista_series_funcionario='';
 if(@$_REQUEST['funcionario']){
     $idfuncionario=usuario_actual("idfuncionario"); 
     $datos_admin_funcionario = busca_datos_administrativos_funcionario($idfuncionario);
-    $lista_series_funcionario= "'".implode("','",$datos_admin_funcionario["series"])."'"; 
+    $lista_series_funcionario= implode("','",$datos_admin_funcionario["series"]); 
     global $lista_series_funcionario;
 }
 
@@ -225,6 +225,7 @@ if(@$_REQUEST['uid'] || @$_REQUEST['id']){
     }    
     
     if($hijos_entidad_serie['numcampos']){
+        
         llena_entidad_serie($serie,$lista_entidad_series_filtrar);
     }
 }
