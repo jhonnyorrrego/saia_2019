@@ -143,10 +143,11 @@ function aceptar_recepcion($idft_destino_radicacion){
     
     $datos=busca_filtro_tabla("","ft_destino_radicacion","idft_destino_radicacion=".$idft_destino_radicacion,"",$conn);
     
-    if($datos[0]){
-        
+    if($datos[0]['recepcion']!=0){
+        $input="<input type='checkbox' name='$idft_destino_radicacion' >";
+    }else{
+        $input="<input type='checkbox' name='$idft_destino_radicacion'>";
     }
-    $input="<input type='checkbox' name='$idft_destino_radicacion'>";
     return $input;
 }
 
