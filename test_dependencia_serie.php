@@ -60,12 +60,13 @@ if(@$_REQUEST['mostrar_nodos']){
     }
 }
 
-$lista_series_funcionario='';
+$condicion_series_funcionario='';
 if(@$_REQUEST['funcionario']){
     $idfuncionario=usuario_actual("idfuncionario"); 
     $datos_admin_funcionario = busca_datos_administrativos_funcionario($idfuncionario);
     $lista_series_funcionario= "'".implode("','",$datos_admin_funcionario["series"])."'"; 
-    global $lista_series_funcionario;
+    $condicion_series_funcionario=" AND idserie IN(".$lista_series_funcionario.")";
+    global $condicion_series_funcionario;
 }
 
 
