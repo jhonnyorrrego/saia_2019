@@ -38,7 +38,7 @@ $.ajax({url: "arbol_serie_entidad.php" ,
        type: "POST",
        success: function(msg){
        $("#divserie").html(msg);
-       tree2.openItem( <?php echo(@$_REQUEST['llave_entidad']); ?> );
+       
       }});
 function todos_check(elemento,campo)
 {seleccionados=elemento.getAllUnchecked();
