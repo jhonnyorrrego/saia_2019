@@ -240,7 +240,13 @@ function llena_entidad_serie($iddependencia,$series){
     for($i=0;$i<$series['numcampos'];$i++){
         echo("<item style=\"font-family:verdana; font-size:7pt;\" ");
         echo("text=\"".htmlspecialchars(($series[$i]["nombre"])).' ('.$series[$i]['codigo'].') '." \" id=\"d".$iddependencia."-".$series[$i]['idserie']."\"");
-        echo(" nocheckbox=\"1\" ");	
+        
+        if(!@$_REQUEST['funcionario']){
+            echo(" nocheckbox=\"1\" ");	
+        }
+            
+        
+        
         echo(" child=\"0\">\n");
         echo("</item>\n");
     }
