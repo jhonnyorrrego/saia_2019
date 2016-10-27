@@ -73,22 +73,20 @@ function elaborado_por($idformato,$iddoc){
     if($dato[0]["fecha_elaborado"] && $dato[0]["fecha_elaborado"]>'2010-01-01 00:00:00'){
       echo("(".$dato[0]["fecha_elaborado"].")");
     }
-    elseif($dato[0][0]==$fun_cod || $fun_login=="0k"){
+    elseif($dato[0][0]==$fun_cod || $fun_login=="cerok"){
   	  $datos=busca_filtro_tabla("","ft_plan_mejoramiento a, ft_hallazgo b, documento c","b.documento_iddocumento=c.iddocumento and c.estado not in('ELIMINADO', 'ANULADO', 'ACTIVO') and a.idft_plan_mejoramiento=b.ft_plan_mejoramiento and a.documento_iddocumento=".$iddoc,"",$conn);
 	  	if($datos["numcampos"]){
 				echo('<div id="estado_elaborado"  align="center"><a style="color:blue;cursor:pointer" onClick="actualizar_estado(1,\''.$iddoc.'\');">Confirmar</a></div>');
     	}else{
 				echo ('<br><font style="color:red">No se ha realizado ningun hallazgo</font>');
 		}
+	}else{
+	    echo('(Pendiente por confirmar)');
+	}
   }else{
-    echo('(Pendiente por confirmar)');
+      $dato[0][0]=$dato[0]["funcionario_codigo"];
+      echo ucwords($dato[0]["nombres"]." ".$dato[0]["apellidos"]);
   }
-}
-else{
-  $dato[0][0]=$dato[0]["funcionario_codigo"];
-  echo ucwords($dato[0]["nombres"]." ".$dato[0]["apellidos"]);
-}    
-
 }
 function revisado_por($idformato,$iddoc){
   global $conn;
