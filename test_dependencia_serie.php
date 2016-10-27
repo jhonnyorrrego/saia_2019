@@ -42,6 +42,8 @@ if($id and $id<>"" && @$_REQUEST["uid"]){
   if($id[0]=='d'){
       llena_serie($id);
   }else{
+          print_r($id);die('<-----here');
+      
        llena_serie_otras($id," and categoria=3 ");
   }
 	
