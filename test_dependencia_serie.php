@@ -196,6 +196,12 @@ if(@$_REQUEST['uid'] || @$_REQUEST['id']){
     
     $hijos_entidad_serie = busca_filtro_tabla("serie_idserie","entidad_serie","estado=1 AND entidad_identidad='2' AND llave_entidad=".$serie,"",$conn);
     
+    if(@$_REQUEST['id']=='d38'){
+        print_r($hijos_entidad_serie);die();
+    }
+    
+    
+    
     if($hijos_entidad_serie['numcampos']){
         $lista_entidad_series_filtrar=implode(',',extrae_campo($hijos_entidad_serie,'serie_idserie'));
     }
