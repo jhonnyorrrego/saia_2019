@@ -67,7 +67,10 @@ if($id and $id<>""){
 else{
     llena_serie("NULL");
 }
-  
+$tabla_otra = 'serie';
+echo  "<item style=\"font-family:verdana; font-size:7pt;\" text=\"Otras categorias\" id=\"3-categoria-Otras categorias\" >\n"; 
+       llena_serie_otras("NULL"," and categoria=3 ");
+echo "</item>\n";	  
 
 echo("</tree>\n");
 $activo = "";
@@ -153,4 +156,62 @@ function llena_entidad_serie($iddependencia,$series){
         echo("</item>\n");
     }
 }
+
+
+function llena_serie_otras($serie,$condicion=""){
+global $conn,$tabla_otra,$seleccionado,$activo,$excluidos;
+if(isset($_REQUEST["orden"]))
+  $orden=$_REQUEST["orden"];
+else
+  $orden="nombre";
+if($serie=="NULL")
+  $papas=busca_filtro_tabla("*",$tabla_otra,"(cod_padre IS NULL OR cod_padre=0) $activo $condicion $excluidos","$orden ASC",$conn);
+else
+  $papas=busca_filtro_tabla("*",$tabla_otra,"cod_padre=".$serie.$activo.$condicion.$excluidos,"$orden ASC",$conn); 
+
+if($papas["numcampos"])
+{ 
+  for($i=0; $i<$papas["numcampos"]; $i++)
+  {
+    $hijos = busca_filtro_tabla("count(*) AS cant",$tabla_otra,"cod_padre=".$papas[$i]["id$tabla_otra"].$activo.$condicion,"",$conn);
+    echo("<item style=\"font-family:verdana; font-size:7pt;\" ");
+    $cadena_codigo='';
+    if(@$papas[$i]["codigo"]){
+      $cadena_codigo="(".$papas[$i]["codigo"].")";
+    }
+	
+		if($tabla=="serie"){
+			if(@$papas[$i]["estado"]==1){
+				$estado_serie=' - ACTIVA';	
+			}else{
+				$estado_serie=' - INACTIVA';				
+			}
+		}	
+	
+    echo("text=\"".htmlspecialchars(($papas[$i]["nombre"])).$cadena_codigo." \" id=\"".$papas[$i]["id$tabla_otra"]."-".$papas[$i]["id$tabla_otra"]."\"");
+		if(@$_REQUEST["arbol_series"]){		
+				
+	}		
+	else if($hijos[0]["cant"]!=0 && ($tabla_otra=="serie" || @$_REQUEST["sin_padre"])){		
+      echo(" nocheckbox=\"1\" ");		
+	}
+    if(in_array($papas[$i]["id$tabla"],$seleccionado)!==false)
+      echo " checked=\"1\" ";  
+    if($hijos[0][0])
+      echo(" child=\"1\">\n");
+    else
+      echo(" child=\"0\">\n");
+		if(!$_REQUEST["id_otra"] && $tabla_otra!='serie')
+    	llena_serie_otras($papas[$i]["id$tabla_otra"]);
+		else{
+			if(!$_REQUEST["admin"]){
+				llena_serie_otras($papas[$i]["id$tabla_otra"]);
+			}
+		}
+    echo("</item>\n");
+  }     
+}
+return;
+}
+
 ?>
