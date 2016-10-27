@@ -55,10 +55,13 @@ echo(librerias_notificaciones());
 			tree2.loadXML("test_dependencia_serie.php?tabla=dependencia&admin=1");
 			function onNodeSelect(nodeId){
         var datos=nodeId.split("-");
-        if(datos[1])
-        	parent.serielist.location = "serieview.php?key=" + datos[1];
-        else
-            parent.serielist.location = "asignarserie_entidad.php?tipo_entidad=2&llave_entidad=" + datos[0];
+        if(datos[1]){
+           parent.serielist.location = "serieview.php?key=" + datos[1]; 
+        }else{
+            var datos=nodeId.split("d");
+            parent.serielist.location = "asignarserie_entidad.php?tipo_entidad=2&llave_entidad=" + datos[1];
+        }
+            
             //asignarserie_entidad.php
             
         	//notificacion_saia("Esto es una dependencia","error","",2500);
