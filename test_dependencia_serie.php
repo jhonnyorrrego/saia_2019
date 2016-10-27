@@ -221,7 +221,7 @@ if(@$_REQUEST['uid'] || @$_REQUEST['id']){
     }
     
     if($serie==38){
-       // print_r($lista_series_funcionario);die();
+       print_r($lista_entidad_series_filtrar);die();
     }    
     
     if($hijos_entidad_serie['numcampos']){
