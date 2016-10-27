@@ -200,7 +200,7 @@ function llena_entidad_serie($iddependencia,$series){
     
     $condicion_final="idserie IN(".$series.")";
     if($lista_series_funcionario!=''){
-        $condicion_final=" AND idserie NOT IN(".$lista_series_funcionario.")";
+        $condicion_final=" AND idserie IN(".$lista_series_funcionario.")";
     }
     
     $series=busca_filtro_tabla("nombre,idserie,codigo","serie",$condicion_final,"",$conn);
