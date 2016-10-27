@@ -18,7 +18,6 @@ include_once($ruta_db_superior . "class.funcionarios.php");
 
 //captura request
 $tabla ="dependencia";
-$id = @$_REQUEST["id"];
 
 
 //estado
@@ -70,7 +69,7 @@ if(@$_REQUEST['funcionario']){
     global $lista_series_funcionario;
 }
 
-
+$id = @$_REQUEST["id"];
 //si llega el request para cargar por partes
 if($id and $id<>"" && @$_REQUEST["uid"]){
     echo("<tree id=\"".$id."\">\n");
