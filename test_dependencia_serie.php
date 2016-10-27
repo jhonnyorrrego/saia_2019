@@ -41,6 +41,7 @@ if($id and $id<>"" && @$_REQUEST["uid"]){
   
     if($id[0]=='d'){
         $ids=explode('d',$id);
+        print_r($ids);die('fuck');
         llena_serie($ids[0]);
     }else{
         $ids=explode('-',$id);
