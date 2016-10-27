@@ -58,7 +58,10 @@ echo(librerias_notificaciones());
         if(datos[1])
         	parent.serielist.location = "serieview.php?key=" + datos[1];
         else
-        	notificacion_saia("Esto es una dependencia","error","",2500);
+            parent.serielist.location = "asignarserie_entidad.php?iddependencia=" + datos[0];
+            //asignarserie_entidad.php
+            
+        	//notificacion_saia("Esto es una dependencia","error","",2500);
       }
       function fin_cargando_serie() {
         if (browserType == "gecko" )
