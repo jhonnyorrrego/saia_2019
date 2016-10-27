@@ -40,7 +40,8 @@ if($id and $id<>"" && @$_REQUEST["uid"]){
     echo("<tree id=\"".$id."\">\n");
   
     if($id[0]=='d'){
-        llena_serie($id);
+        $ids=explode('d',$id);
+        llena_serie($ids[0]);
     }else{
         $ids=explode('-',$id);
         llena_serie_otras($ids[0]," and categoria=3 ");
