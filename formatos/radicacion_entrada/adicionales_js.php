@@ -31,12 +31,17 @@ echo(librerias_jquery('1.7'));
                                         mensajero_encargado:mensajero
                         },
                         
-                    });   
+            });   
         });
         
         $("#filtro_mensajeros").live("change",function(){
             var mensajero_filtro=$(this).val();
             window.location.href = "<?php echo $ruta_db_superior;?>pantallas/busquedas/consulta_busqueda_reporte.php?idbusqueda_componente=269&variable_busqueda="+mensajero_filtro;
+            
+        });
+        
+        $("#recepcion").live("change",function(){
+            
             
         });
         
