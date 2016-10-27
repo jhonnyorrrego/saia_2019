@@ -76,7 +76,7 @@ Buscar: <input type="text" id="stext<?php echo $entidad; ?>" width="200px" size=
       document.getElementById('<?php echo $campo; ?>').value=tree<?php echo $entidad; ?>.getAllChecked();
       
       
-     <?php if(@$_REQUEST['llave_entidad'] && @$_REQUEST['tabla']=='dependencia'){ ?>
+     <?php if(@$_REQUEST['llave_entidad'] && @$_REQUEST['entidad']==2){ ?>
           tree<?php echo $entidad; ?>.openItem( <?php echo(@$_REQUEST['llave_entidad']); ?> );
      <?php } ?>
       
