@@ -17,6 +17,9 @@ include_once($ruta_db_superior . "db.php");
 
 $idfuncionario=usuario_actual("idfuncionario"); 
 $datos_admin_funcionario = busca_datos_administrativos_funcionario($idfuncionario);
+$lista_series_funcionario= "'".implode("','",$datos["series"])."'";
+
+
 
 $tabla = @$_REQUEST["tabla"];
 $id = @$_REQUEST["id"];
