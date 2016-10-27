@@ -9,6 +9,7 @@ while ($max_salida > 0) {
   $max_salida--;
 }
 include_once($ruta_db_superior."db.php");
+ini_get('display_errors',true);
 include_once($ruta_db_superior."formatos/librerias/funciones_generales.php");
 
 /*ADICIONAR*/
