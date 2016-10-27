@@ -306,12 +306,7 @@ function listar_hallazgo_plan_mejoramiento($idformato,$iddoc,$condicion=""){
       <td align="center" valign="middle"><a href="'.genera_enlace_plan_mejoramiento().'&estado=terminados" >Hallazgos Terminados</a></td>
       <td align="center" valign="middle"><a href="'.$ruta_db_superior.'class_impresion.php?iddoc='.$iddoc.'" target="_blank">Generar Plan de Mejoramiento (PDF)</a></td>
       <td align="center" valign="middle"><a href="archivo_plano_contraloria.php?iddoc='.$iddoc.'" target="_blank">Archivo Contralor&iacute;a</a></td>';
-	  
-      if(strpos($_SERVER["PHP_SELF"],"informe_contraloria")){
-          
-          $idformato_informe_contraloria=busca_filtro_tabla("idformato","formato","nombre='informe_contraloria'","",$conn);
-        $texto_enlaces.='<td align="center"><a href="../../html2ps/public_html/demo/html2ps.php?plantilla=informe_contraloria&papel=Legal&orientacion=1&font_size=5&iddoc='.$_REQUEST["iddoc"].'&tipo_impresion=3&tipo=2&idformato='.$idformato_informe_contraloria[0]['idformato'].'" target="_blank">Seguimiento 23A</a></td>';
-      }
+
       $texto_enlaces.='</tr></table>';
     }
     $texto.='
