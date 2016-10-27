@@ -67,7 +67,7 @@ if($formato["numcampos"]){
       $validar_macro=0;
       $imagenes=' im0="proceso.gif" im1="proceso.gif" im2="proceso.gif" '; 
       $texto.='<item style="font-family:verdana; font-size:7pt;" '.$imagenes;
-      $texto.=strip_tags('text="'.decodifica($procesos_sin_macro[$i]["nombre"]).'" id="m'.$procesos_sin_macro[$i]["idft_proceso"].'" >'."\n");
+      $texto.=strip_tags('text="'.decodifica($procesos_sin_macro[$i]["nombre"]).'" id="'.$procesos_sin_macro[$i]["idft_proceso"].'" >'."\n");
       $iddoc=$formato[0]["idformato"]."-".$formato[0]["nombre"]."-".$formato[0]["nombre_tabla"]."-".$procesos_sin_macro[$i]["documento_iddocumento"];                
       llenar_documentos($iddoc);
       $texto.="</item>\n";
