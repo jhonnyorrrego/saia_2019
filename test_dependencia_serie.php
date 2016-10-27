@@ -15,9 +15,14 @@ while ($max_salida > 0) {
 }
 include_once($ruta_db_superior . "db.php");
 
-$idfuncionario=usuario_actual("idfuncionario"); 
-$datos_admin_funcionario = busca_datos_administrativos_funcionario($idfuncionario);
-$lista_series_funcionario= "'".implode("','",$datos_admin_funcionario["series"])."'";
+
+
+if(@$_REQUEST['funcionario']){
+    $idfuncionario=usuario_actual("idfuncionario"); 
+    $datos_admin_funcionario = busca_datos_administrativos_funcionario($idfuncionario);
+    $lista_series_funcionario= "'".implode("','",$datos_admin_funcionario["series"])."'";    
+}
+
 
 
 
