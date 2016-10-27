@@ -103,7 +103,7 @@ if($papas["numcampos"]){
 			}
 		}	
 	
-    echo("text=\"".htmlspecialchars(($papas[$i]["nombre"])).$cadena_codigo." \" id=\"".$papas[$i]["id$tabla"]."\"");
+    echo("text=\"".htmlspecialchars(($papas[$i]["nombre"])).$cadena_codigo." \" id=\"d".$papas[$i]["id$tabla"]."\"");
 		if(@$_REQUEST["arbol_series"]){		
 				
 	}		
