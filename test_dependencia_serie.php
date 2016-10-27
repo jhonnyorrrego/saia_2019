@@ -120,7 +120,7 @@ $activo = "";
  
 //arbol de dependencias (dsa)
 function llena_dependencia($serie,$condicion=""){
-global $conn,$seleccionado,$activo,$excluidos,$condicion_series_funcionario;
+global $conn,$seleccionado,$activo,$excluidos,$lista_series_funcionario;
 
 $tabla="dependencia";
 if(isset($_REQUEST["orden"]))
@@ -136,7 +136,13 @@ else
 if($papas["numcampos"]){ 
   for($i=0; $i<$papas["numcampos"]; $i++){
     $hijos = busca_filtro_tabla("count(*) AS cant",$tabla,"cod_padre=".$papas[$i]["id$tabla"].$activo.$condicion,"",$conn);
-    $hijos_entidad_serie = busca_filtro_tabla("serie_idserie","entidad_serie","estado=1 AND entidad_identidad='2' AND llave_entidad=".$papas[$i]["id$tabla"],"",$conn);
+    
+    $condicion_series_funcionario='';
+    if($lista_series_funcionario!=''){
+        $condicion_series_funcionario=" AND serie_idserie NOT IN(".$lista_series_funcionario.")";
+    }
+    
+    $hijos_entidad_serie = busca_filtro_tabla("serie_idserie","entidad_serie","estado=1 AND entidad_identidad='2' AND llave_entidad=".$papas[$i]["id$tabla"].$condicion_series_funcionario,"",$conn);
     
     echo("<item style=\"font-family:verdana; font-size:7pt;color:blue;\" ");
     $cadena_codigo='';
