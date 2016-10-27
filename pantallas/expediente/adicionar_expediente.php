@@ -280,8 +280,8 @@ $dato_padre=busca_filtro_tabla("","expediente a","a.idexpediente=".$_REQUEST["co
     tree3.enableSmartXMLParsing(true);
     //tree3.setXMLAutoLoading("<?php echo($ruta_db_superior);?>test_serie_funcionario.php?con_padres=1&pantalla=expediente");	
   	//tree3.loadXML("<?php echo($ruta_db_superior);?>test_serie_funcionario.php?con_padres=1&pantalla=expediente");
-  	tree3.setXMLAutoLoading("<?php echo($ruta_db_superior);?>test_dependencia_serie.php?con_padres=1&pantalla=expediente");	
-  	tree3.loadXML("<?php echo($ruta_db_superior);?>test_dependencia_serie.php?con_padres=1&pantalla=expediente");
+  	tree3.setXMLAutoLoading("<?php echo($ruta_db_superior);?>test_dependencia_serie.php?mostrar_nodos=dsa");	
+  	tree3.loadXML("<?php echo($ruta_db_superior);?>test_dependencia_serie.php?mostrar_nodos=dsa");
     tree3.setOnCheckHandler(onNodeSelect_serie);
       
   	function onNodeSelect_serie(nodeId){
