@@ -144,9 +144,11 @@ if($papas["numcampos"]){
     if( $lista_series_funcionario!='' && $hijos_entidad_serie['numcampos'] ){
         $almenos_una_serie=0;
         $idserie_hijos_entidad_serie=extrae_campo($hijos_entidad_serie,'serie_idserie');
+        $idserie_hijos_entidad_serie=array_map('intval',$idserie_hijos_entidad_serie);
         $vector_lista_series_funcionario=explode(',',$lista_series_funcionario);
+        $vector_lista_series_funcionario=array_map('intval',$vector_lista_series_funcionario);
         for($h=0;$h<count($idserie_hijos_entidad_serie);$h++){
-            if( in_array($idserie_hijos_entidad_serie[$i],$vector_lista_series_funcionario) ){
+            if( in_array($idserie_hijos_entidad_serie[$h],$vector_lista_series_funcionario) ){
                $almenos_una_serie=1; 
             }
         }
