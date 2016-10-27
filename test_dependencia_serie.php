@@ -101,13 +101,6 @@ else
   $papas=busca_filtro_tabla("*",$tabla,"cod_padre=".$serie.$activo.$condicion.$excluidos,"$orden ASC",$conn); 
 
 
-if(@$_REQUEST['uid']){
-$hijos_entidad_serie = busca_filtro_tabla("serie_idserie","entidad_serie","estado=1 AND entidad_identidad='2' AND llave_entidad=".$serie,"",$conn);
-if($hijos_entidad_serie['numcampos']){
-    llena_entidad_serie($serie,implode(',',extrae_campo($hijos_entidad_serie,'serie_idserie')));
-}
-}
-
 if($papas["numcampos"]){ 
   for($i=0; $i<$papas["numcampos"]; $i++){
     $hijos = busca_filtro_tabla("count(*) AS cant",$tabla,"cod_padre=".$papas[$i]["id$tabla"].$activo.$condicion,"",$conn);
@@ -159,6 +152,15 @@ if($papas["numcampos"]){
     echo("</item>\n");
   }     
 }
+if(@$_REQUEST['uid']){
+$hijos_entidad_serie = busca_filtro_tabla("serie_idserie","entidad_serie","estado=1 AND entidad_identidad='2' AND llave_entidad=".$serie,"",$conn);
+if($hijos_entidad_serie['numcampos']){
+    llena_entidad_serie($serie,implode(',',extrae_campo($hijos_entidad_serie,'serie_idserie')));
+}
+}
+
+
+
 return;
 }
 
