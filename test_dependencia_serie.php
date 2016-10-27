@@ -62,13 +62,12 @@ if(@$_REQUEST['mostrar_nodos']){
 
 
 //$_REQUEST['funcionario']=1   //muestra las series segun funcionario logueado
-$condicion_series_funcionario='';
+$lista_series_funcionario='';
 if(@$_REQUEST['funcionario']){
     $idfuncionario=usuario_actual("idfuncionario"); 
     $datos_admin_funcionario = busca_datos_administrativos_funcionario($idfuncionario);
     $lista_series_funcionario= "'".implode("','",$datos_admin_funcionario["series"])."'"; 
-    $condicion_series_funcionario=" AND idserie NOT IN(".$lista_series_funcionario.")";
-    global $condicion_series_funcionario;
+    global $lista_series_funcionario;
 }
 
 
@@ -121,7 +120,7 @@ $activo = "";
  
 //arbol de dependencias (dsa)
 function llena_dependencia($serie,$condicion=""){
-global $conn,$seleccionado,$activo,$excluidos;
+global $conn,$seleccionado,$activo,$excluidos,$condicion_series_funcionario;
 
 $tabla="dependencia";
 if(isset($_REQUEST["orden"]))
