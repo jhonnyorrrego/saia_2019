@@ -151,7 +151,6 @@ if($papas["numcampos"]){
             }
         }
     }
-    
     if(!$almenos_una_serie){
         $hijos_entidad_serie['numcampos']=0;
     }
@@ -199,10 +198,9 @@ if(@$_REQUEST['uid'] || @$_REQUEST['id']){
     }
 }
 
-
-
 return;
-}
+
+}  //fin llena_dependencia()
 
 //llena series asignadas segun dependencia  (dsa)
 function llena_entidad_serie($iddependencia,$series){
