@@ -47,24 +47,8 @@ if($id and $id<>"" && @$_REQUEST["uid"]){
        $ids=explode('-',$id);
        llena_serie_otras($ids[0]," and categoria=3 ");
   }
-	
-	
-	
-	
 	echo("</tree>\n");
 	die();
-  $dato_papa=busca_filtro_tabla("",$tabla,"id".$tabla."=".$id,"",$conn);
-
-  if(@$_REQUEST["cargar_dato_padre"]){
-    if($dato_papa["numcampos"]){
-       echo("<item style=\"font-family:verdana; font-size:7pt;\" ");
-      $cadena_codigo='';
-      if(@$dato_papa[0]["codigo"]){
-        $cadena_codigo="(".$dato_papa[0]["codigo"].")";
-      }
-      echo("text=\"".htmlspecialchars($dato_papa[0]["nombre"]).$cadena_codigo." \" id=\"".$dato_papa[0]["id".$tabla]."\">");
-    }
-  }
 } 
 else
   echo("<tree id=\"0\">\n");  
