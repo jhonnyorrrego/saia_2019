@@ -15,21 +15,32 @@ while ($max_salida > 0) {
 }
 include_once($ruta_db_superior . "db.php");
 
+
+//captura request
 $tabla ="dependencia";
 $id = @$_REQUEST["id"];
+
+
+//estado
 if(isset($_REQUEST["estado"]) && $_REQUEST["estado"]!="")
 {
  $activo = " and estado = 1"; 
 }
+
+//seleccionado
 if(isset($_REQUEST["seleccionado"])){
     $seleccionado=explode(",",$_REQUEST["seleccionado"]);
 }else{
     $seleccionado=array();
 }
-  
+
+//excluidos  
 if(@$_REQUEST["excluidos"]){
 	$excluidos=" and id".$tabla." not in(".$_REQUEST["excluidos"].") ";
 }
+
+
+//codificacion arbol
 if ( stristr($_SERVER["HTTP_ACCEPT"],"application/xhtml+xml") ) { 
   header("Content-type: application/xhtml+xml"); 
 } 
