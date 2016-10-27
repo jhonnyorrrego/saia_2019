@@ -74,6 +74,8 @@ Buscar: <input type="text" id="stext<?php echo $entidad; ?>" width="200px" size=
             eval('document.layers["esperando<?php echo $entidad; ?>"]');
       document.poppedLayer.style.display = "none";
       document.getElementById('<?php echo $campo; ?>').value=tree<?php echo $entidad; ?>.getAllChecked();
+      
+      tree<?php echo $entidad; ?>.openItem( <?php echo(@$_REQUEST['llave_entidad']); ?> );
     }
     function cargando<?php echo $entidad; ?>() {
       if (browserType == "gecko" )
