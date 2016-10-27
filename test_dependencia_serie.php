@@ -187,9 +187,9 @@ return;
 
 //llena series asignadas segun dependencia  (dsa)
 function llena_entidad_serie($iddependencia,$series){
-    global $conn;
+    global $conn,$condicion_series_funcionario;
     
-    $series=busca_filtro_tabla("nombre,idserie,codigo","serie","idserie IN(".$series.")","",$conn);
+    $series=busca_filtro_tabla("nombre,idserie,codigo","serie","idserie IN(".$series.")".$condicion_series_funcionario,"",$conn);
     for($i=0;$i<$series['numcampos'];$i++){
         echo("<item style=\"font-family:verdana; font-size:7pt;\" ");
         echo("text=\"".htmlspecialchars(($series[$i]["nombre"])).' ('.$series[$i]['codigo'].') '." \" id=\"d".$iddependencia."-".$series[$i]['idserie']."\"");
