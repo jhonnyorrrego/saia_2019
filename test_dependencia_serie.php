@@ -144,10 +144,10 @@ return;
 function llena_entidad_serie($iddependencia,$series){
     global $conn;
     
-    $series=busca_filtro_tabla("nombre,idserie","serie","idserie IN(".$series.")","",$conn);
+    $series=busca_filtro_tabla("nombre,idserie,codigo","serie","idserie IN(".$series.")","",$conn);
     for($i=0;$i<$series['numcampos'];$i++){
         echo("<item style=\"font-family:verdana; font-size:7pt;\" ");
-        echo("text=\"".htmlspecialchars(($series[$i]["nombre"])).' (SERIE) '." \" id=\"d".$iddependencia."-".$series[$i]['idserie']."\"");
+        echo("text=\"".htmlspecialchars(($series[$i]["nombre"])).' ('.$series[$i]['codigo'].') '." \" id=\"d".$iddependencia."-".$series[$i]['idserie']."\"");
         echo(" nocheckbox=\"1\" ");	
         echo(" child=\"0\">\n");
         echo("</item>\n");
