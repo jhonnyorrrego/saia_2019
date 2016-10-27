@@ -182,7 +182,7 @@ else
 
 
 
-print_r($papas);
+//print_r($papas);
 if($papas["numcampos"])
 { 
   for($i=0; $i<$papas["numcampos"]; $i++)
