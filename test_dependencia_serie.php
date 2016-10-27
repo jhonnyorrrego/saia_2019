@@ -16,7 +16,7 @@ while ($max_salida > 0) {
 include_once($ruta_db_superior . "db.php");
 
 
-
+$lista_series_funcionario='';
 if(@$_REQUEST['funcionario']){
     $idfuncionario=usuario_actual("idfuncionario"); 
     $datos_admin_funcionario = busca_datos_administrativos_funcionario($idfuncionario);
