@@ -3,7 +3,7 @@ include_once("db.php");
 /*Busca todos los datos relacionados con un funcionario particular 
 como los cargos, las dependencias, las series, los permisos a modulos */
 /* Esat Funcion esta casi lista*/
-function busca_datos_administrativos_funcionario($funcionario){
+function busca_datos_administrativos_funcionario($funcionario,$filtrar=array()){
 global $conn,$sql;
 $serie_f=array();
 $serie_c=array();
