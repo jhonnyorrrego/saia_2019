@@ -37,18 +37,16 @@ else
 }
 echo("<?xml version=\"1.0\" encoding=\"UTF-8\"?".">");
 if($id and $id<>"" && @$_REQUEST["uid"]){
-  echo("<tree id=\"".$id."\">\n");
+    echo("<tree id=\"".$id."\">\n");
   
-  if($id[0]=='d'){
-      llena_serie($id);
-  }else{
-          //print_r($id);die('<-----here');
-          
-       $ids=explode('-',$id);
-       llena_serie_otras($ids[0]," and categoria=3 ");
-  }
-  echo("</tree>\n");
-  die();
+    if($id[0]=='d'){
+        llena_serie($id);
+    }else{
+        $ids=explode('-',$id);
+        llena_serie_otras($ids[0]," and categoria=3 ");
+    }
+    echo("</tree>\n");
+    die();
 } 
 else
   echo("<tree id=\"0\">\n");  
