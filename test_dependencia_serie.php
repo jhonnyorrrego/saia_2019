@@ -204,6 +204,7 @@ if(@$_REQUEST['uid'] || @$_REQUEST['id']){
         $almenos_una_serie=0;
         $idserie_hijos_entidad_serie=extrae_campo($hijos_entidad_serie,'serie_idserie');
         $idserie_hijos_entidad_serie=array_map('intval',$idserie_hijos_entidad_serie);
+        
         $vector_lista_series_funcionario=explode(',',$lista_series_funcionario);
         $vector_lista_series_funcionario=array_map('intval',$vector_lista_series_funcionario);
         $series_para_filtrar=array();
