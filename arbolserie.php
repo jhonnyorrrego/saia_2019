@@ -58,7 +58,7 @@ echo(librerias_notificaciones());
         if(datos[1])
         	parent.serielist.location = "serieview.php?key=" + datos[1];
         else
-            parent.serielist.location = "asignarserie_entidad.php?iddependencia=" + datos[0];
+            parent.serielist.location = "asignarserie_entidad.php?tipo_entidad=2?llave_entidad=" + datos[0];
             //asignarserie_entidad.php
             
         	//notificacion_saia("Esto es una dependencia","error","",2500);
