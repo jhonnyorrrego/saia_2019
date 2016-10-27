@@ -221,9 +221,6 @@ if(@$_REQUEST['uid'] || @$_REQUEST['id']){
     if(!$almenos_una_serie){
         $hijos_entidad_serie['numcampos']=0;
     }
-    
-  
-    
     if($hijos_entidad_serie['numcampos']){
         
         llena_entidad_serie($serie,$lista_entidad_series_filtrar);
@@ -240,11 +237,6 @@ function llena_entidad_serie($iddependencia,$series){
     
     $condicion_final="idserie IN(".$series.")";
     $series=busca_filtro_tabla("nombre,idserie,codigo","serie",$condicion_final,"",$conn);
-    
-    if($iddependencia==38){
-        print_r($series);    
-    }
-    
     for($i=0;$i<$series['numcampos'];$i++){
         echo("<item style=\"font-family:verdana; font-size:7pt;\" ");
         echo("text=\"".htmlspecialchars(($series[$i]["nombre"])).' ('.$series[$i]['codigo'].') '." \" id=\"d".$iddependencia."-".$series[$i]['idserie']."\"");
