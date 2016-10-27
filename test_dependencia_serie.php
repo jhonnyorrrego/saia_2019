@@ -136,18 +136,19 @@ if($papas["numcampos"]){
         echo(" child=\"0\">\n");
     }
     
-    if($hijos_entidad_serie['numcampos']){
-        llena_entidad_serie($papas[$i]["id$tabla"],implode(',',extrae_campo($hijos_entidad_serie,'serie_idserie')));
+    if(@$_REQUEST['uid']){
+        if($hijos_entidad_serie['numcampos']){
+            llena_entidad_serie($papas[$i]["id$tabla"],implode(',',extrae_campo($hijos_entidad_serie,'serie_idserie')));
+        }
+    	if(!$_REQUEST["id"]){
+    	    llena_serie($papas[$i]["id$tabla"]);
+    	}else{
+    		if(!$_REQUEST["admin"]){
+    			llena_serie($papas[$i]["id$tabla"]);
+    		}
+    	}        
     }
     
-      
-	if(!$_REQUEST["id"] && $tabla!='serie'){
-	    llena_serie($papas[$i]["id$tabla"]);
-	}else{
-		if(!$_REQUEST["admin"]){
-			llena_serie($papas[$i]["id$tabla"]);
-		}
-	}
     echo("</item>\n");
   }     
 }
