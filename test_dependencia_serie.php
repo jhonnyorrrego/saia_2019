@@ -180,6 +180,9 @@ if($serie=="NULL")
 else
   $papas=busca_filtro_tabla("*",$tabla_otra,"cod_padre=".$serie.$activo.$condicion.$excluidos,"$orden ASC",$conn); 
 
+
+
+print_r($papas);
 if($papas["numcampos"])
 { 
   for($i=0; $i<$papas["numcampos"]; $i++)
