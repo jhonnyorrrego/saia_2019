@@ -39,9 +39,9 @@ echo("<?xml version=\"1.0\" encoding=\"UTF-8\"?".">");
 
 
 $mostrar_nodos=array('dsa'=>1,'ssa'=>1,'soc'=>1); //dsa: dependencia serie asignadas - ssa: series sin asignar   - soc: series otras categorias  
-if(@$_REQUEST['mostrar_nodo']){
+if(@$_REQUEST['mostrar_nodos']){
     $mostrar_nodos=array('dsa'=>0,'ssa'=>0,'soc'=>0); 
-    $request_nodos=explode(',',$_REQUEST['mostrar_nodo']);    
+    $request_nodos=explode(',',$_REQUEST['mostrar_nodos']);    
     
     for($i=0;$i<count($request_nodos);$i++){
         $mostrar_nodos[ $request_nodos[$i] ] = 1;
