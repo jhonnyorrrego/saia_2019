@@ -57,38 +57,40 @@ if(@$_REQUEST['funcionario']){
 }
 
 
-
+//si llega el request para cargar por partes
 if($id and $id<>"" && @$_REQUEST["uid"]){
     echo("<tree id=\"".$id."\">\n");
   
-    if($id[0]=='d' && $mostrar_nodos['dsa']){
+    if($id[0]=='d' && $mostrar_nodos['dsa']){ //si es dependencia
         $ids=explode('d',$id);
         llena_dependencia($ids[1]);
-    }else if($mostrar_nodos['soc']){
+    }else if($mostrar_nodos['soc']){ //si es serie otras categorias
         $ids=explode('-',$id);
         llena_serie_otras($ids[0]," and categoria=3 ");
     }
     echo("</tree>\n");
     die();
 } 
-else
-  echo("<tree id=\"0\">\n");  
 
- 
-if($id and $id<>"" && $mostrar_nodos['dsa']){ 
+
+
+//carga inicial arbol
+echo("<tree id=\"0\">\n");  
+if($id and $id<>"" && $mostrar_nodos['dsa']){ //si se va a filtrar una dependencia especifica
     llena_dependencia($id); 
 }
-elseif($mostrar_nodos['dsa']){
+elseif($mostrar_nodos['dsa']){ //si se va a cargar todo el arbol dependencia/serie
     llena_dependencia("NULL");
 }
 
-
+//NODO:  ssa: series sin asignar 
 if($mostrar_nodos['ssa']){
     echo("<item style=\"font-family:verdana; font-size:7pt;\" text=\"Series sin asignar\" id=\"-1\" child=\"1\">");
     series_sin_asignar();
     echo("</item>");    
 }
 
+//NODO:   soc: series otras categorias 
 if($mostrar_nodos['soc']){    
     echo  "<item style=\"font-family:verdana; font-size:7pt;\" text=\"Otras categorias\" id=\"3-categoria-Otras categorias\" >\n"; 
     llena_serie_otras("NULL"," and categoria=3 ");
@@ -96,9 +98,10 @@ if($mostrar_nodos['soc']){
 }
 
 echo("</tree>\n");
+//FIN ARBOL
+
+
 $activo = "";
-?>
-<?php
 
  
 //arbol de dependencias (dsa)
