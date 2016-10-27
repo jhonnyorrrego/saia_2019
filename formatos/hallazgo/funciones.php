@@ -363,7 +363,6 @@ function procesos_vinculados_funcion($idformato,$iddoc,$informe){
 	$cant=count($procesos);
 	$nombres=array();
 	for($i=0;$i<$cant;$i++){
-	    
 		if($procesos[$i]!=''){
 			if($procesos[$i][0]!='m'){
 				$proceso=busca_filtro_tabla("nombre","ft_proceso a","a.idft_proceso='".trim($procesos[$i])."'","",$conn);
@@ -371,7 +370,6 @@ function procesos_vinculados_funcion($idformato,$iddoc,$informe){
 			}else{
 				$proceso=busca_filtro_tabla("nombre","ft_macroproceso_calidad a","a.idft_macroproceso_calidad='".str_replace("m","",trim($procesos[$i]))."'","",$conn);
 				$nombres[]=$proceso[0]["nombre"];
-				print_r($proceso);
 			}
 		}
 	}
