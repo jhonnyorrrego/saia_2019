@@ -165,9 +165,10 @@ if($papas["numcampos"]){
 	if(@$_REQUEST["arbol_series"]){		
 				
 	}		
-	else if($hijos[0]["cant"]!=0 && (@$_REQUEST["sin_padre"]) ){		
+	else if(@$_REQUEST["sin_padre"]){		
       echo(" nocheckbox=\"1\" ");		
 	}
+	
     if(in_array($papas[$i]["id$tabla"],$seleccionado)!==false){
         echo " checked=\"1\" ";  
     }
