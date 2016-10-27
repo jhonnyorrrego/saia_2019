@@ -72,11 +72,6 @@ if(@$_REQUEST['funcionario']){
 $id = @$_REQUEST["id"];
 
 
-//si llega carga de series sin asignar
-if($id && $id=='-1'){
-    series_sin_asignar();
-    die();
-}
 
 //si llega el request para cargar por partes
 if($id and $id<>"" && @$_REQUEST["uid"]){
