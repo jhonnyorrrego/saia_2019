@@ -246,9 +246,6 @@ function llena_entidad_serie($iddependencia,$series){
         if(!@$_REQUEST['funcionario']){
             echo(" nocheckbox=\"1\" ");	
         }
-            
-        
-        
         echo(" child=\"0\">\n");
         echo("</item>\n");
     }
