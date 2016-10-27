@@ -138,7 +138,7 @@ if($papas["numcampos"]){
         echo(" child=\"0\">\n");
     }
     
-    //if(@$_REQUEST['uid']){
+    if(@$_REQUEST['uid']){
         if($hijos_entidad_serie['numcampos']){
             llena_entidad_serie($papas[$i]["id$tabla"],implode(',',extrae_campo($hijos_entidad_serie,'serie_idserie')));
         }
@@ -149,7 +149,7 @@ if($papas["numcampos"]){
     			llena_serie($papas[$i]["id$tabla"]);
     		}
     	}        
-    //}
+    }
     
     echo("</item>\n");
   }     
