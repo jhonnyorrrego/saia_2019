@@ -373,6 +373,8 @@ if(isset($_REQUEST["tipo_impresion"])&&$_REQUEST["tipo_impresion"]==1)
         {$texto.='<td class="transparente" >'.strip_tags(mostrar_valor_campo("causas",$formato_hallazgo[0]["idformato"],$hallazgos[$i]["hallazgo_iddoc"],1)).'</td>';
         }
         //fin condicion encabezado  
+        print_r($formato_hallazgo);
+        die("-");
         $texto.='<td class="transparente" >'.strip_tags(str_replace("&nbsp;"," ",mostrar_valor_campo("accion_mejoramiento",$formato_hallazgo[0]["idformato"],$hallazgos[$i]["hallazgo_iddoc"],1))).'</td>'; 
         $texto.='<td class="transparente" >'.ucfirst(strtolower(mostrar_seleccionados($formato_hallazgo[0]["idformato"],$vector_campos_id['responsables'],0,$hallazgos[$i]["hallazgo_iddoc"],1))).'</td>'; 
         $texto.='<td class="transparente" align="center">'.mostrar_valor_campo("tiempo_cumplimiento",$formato_hallazgo[0]["idformato"],$hallazgos[$i]["hallazgo_iddoc"],1).'</td>'; 
