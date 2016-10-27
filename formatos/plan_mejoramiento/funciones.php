@@ -281,7 +281,7 @@ function listar_hallazgo_plan_mejoramiento($idformato,$iddoc,$condicion=""){
   }
     
   if($condicion!=""){
-    $formato_hallazgo=busca_filtro_tabla("","formato a","a.nombre LIKE '%hallazgo%plan%mejoramiento'","",$conn);
+    $formato_hallazgo=busca_filtro_tabla("","formato a","a.nombre LIKE 'hallazgo'","",$conn);
     $campos_formato_hallazgo=busca_filtro_tabla("nombre,idcampos_formato","campos_formato a","a.formato_idformato=".$formato_hallazgo[0]['idformato'],"",$conn);
     $vector_campos_id=array();
     for($i=0;$i<$campos_formato_hallazgo['numcampos'];$i++){
