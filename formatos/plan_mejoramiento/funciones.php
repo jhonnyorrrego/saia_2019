@@ -68,7 +68,7 @@ function elaborado_por($idformato,$iddoc){
      
 		
   if($dato[0][0]){
-    $idformato_plan_mejoramiento=busca_filtro_tabla("idformato","nombre='plan_mejoramiento'","","",$conn);
+    $idformato_plan_mejoramiento=busca_filtro_tabla("idformato","formato","nombre='plan_mejoramiento'","",$conn);
     mostrar_valor_campo('elaborado',$idformato_plan_mejoramiento[0]['idformato'],$iddoc);   
     if($dato[0]["fecha_elaborado"] && $dato[0]["fecha_elaborado"]>'2010-01-01 00:00:00'){
       echo("(".$dato[0]["fecha_elaborado"].")");
@@ -145,7 +145,7 @@ function aprobado_por($idformato,$iddoc){
 		if($pos)
 		$dato[0][0]=substr($dato[0][0],0,$pos);
 		if($dato[0][0]){
-		$idformato_plan_mejoramiento=busca_filtro_tabla("idformato","nombre='plan_mejoramiento'","","",$conn);   
+		$idformato_plan_mejoramiento=busca_filtro_tabla("idformato","formato","nombre='plan_mejoramiento'","",$conn);
 		mostrar_valor_campo(
 	'aprobado',$idformato_plan_mejoramiento[0]['idformato'],$iddoc);   
     if($dato[0]["fecha_revisado"] && $dato[0]["fecha_revisado"]>'2010-01-01 00:00:00' && $dato[0]["fecha_aprobado"] && $dato[0]["fecha_aprobado"]>'2010-01-01 00:00:00'){
