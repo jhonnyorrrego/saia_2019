@@ -241,16 +241,76 @@ function llena_entidad_serie($iddependencia,$series){
     global $conn;
     
     $condicion_final="idserie IN(".$series.")";
-    $series=busca_filtro_tabla("nombre,idserie,codigo","serie",$condicion_final,"",$conn);
+    $series=busca_filtro_tabla("nombre,idserie,codigo","categoria=2 AND tipo=1 AND serie",$condicion_final,"",$conn);
     for($i=0;$i<$series['numcampos'];$i++){
         echo("<item style=\"font-family:verdana; font-size:7pt;\" ");
         echo("text=\"".htmlspecialchars(($series[$i]["nombre"])).' ('.$series[$i]['codigo'].') '." \" id=\"d".$iddependencia."-".$series[$i]['idserie']."\"");
         if(!@$_REQUEST['funcionario']){
             echo(" nocheckbox=\"1\" ");	
         }
-        echo(" child=\"0\">\n");
+        
+        $subseries_tipo_documental=busca_filtro_tabla("idserie","serie","estado=1 AND categoria=1 AND tipo IN(2,3) AND cod_padre=".$series[$i]['idserie'],"",$conn);
+        if($subseries_tipo_documental['numcampos']){
+            echo(" child=\"1\">\n");
+        }else{
+            echo(" child=\"0\">\n");
+        }
+        
+        
+        llena_subseries_tipo_documental($series[$i]['idserie']);
         echo("</item>\n");
     }
+}
+
+function llena_subseries_tipo_documental($idserie){
+    global $conn,$seleccionado,$activo,$excluidos;
+
+    $tabla_otra = 'serie';
+    $orden="nombre";
+
+    $papas=busca_filtro_tabla("*",$tabla_otra,"cod_padre=".$serie.$activo,"$orden ASC",$conn); 
+
+    if($papas["numcampos"]){ 
+        for($i=0; $i<$papas["numcampos"]; $i++){
+            $hijos = busca_filtro_tabla("count(*) AS cant",$tabla_otra,"cod_padre=".$papas[$i]["id$tabla_otra"].$activo.$condicion,"",$conn);
+            echo("<item style=\"font-family:verdana; font-size:7pt;\" ");
+            $cadena_codigo='';
+            if(@$papas[$i]["codigo"]){
+              $cadena_codigo="(".$papas[$i]["codigo"].")";
+            }
+	
+		    if($tabla=="serie"){
+			    if(@$papas[$i]["estado"]==1){
+			    	$estado_serie=' - ACTIVA';	
+		    	}else{
+			    	$estado_serie=' - INACTIVA';				
+			    }
+		    }	
+	
+            echo("text=\"".htmlspecialchars(($papas[$i]["nombre"])).$cadena_codigo." \" id=\"".$papas[$i]["id$tabla_otra"]."-".$papas[$i]["id$tabla_otra"]."\"");
+		    if(@$_REQUEST["arbol_series"]){		
+				
+	        }		
+	        else if($hijos[0]["cant"]!=0 && ($tabla_otra=="serie" || @$_REQUEST["sin_padre"])){		
+              echo(" nocheckbox=\"1\" ");		
+	        }
+            if(in_array($papas[$i]["id$tabla"],$seleccionado)!==false)
+              echo " checked=\"1\" ";  
+            if($hijos[0][0])
+                 echo(" child=\"1\">\n");
+            else
+              echo(" child=\"0\">\n");
+		    if(!$_REQUEST["id_otra"] && $tabla_otra!='serie')
+    	        llena_subseries_tipo_documental($papas[$i]["id$tabla_otra"]);
+		    else{
+			    if(!$_REQUEST["admin"]){
+				    llena_subseries_tipo_documental($papas[$i]["id$tabla_otra"]);
+			    }
+		    }
+            echo("</item>\n");
+        }     
+    }
+    return;
 }
 
 
