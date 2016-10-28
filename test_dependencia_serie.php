@@ -240,8 +240,8 @@ return;
 function llena_entidad_serie($iddependencia,$series){
     global $conn;
     
-    $condicion_final="idserie IN(".$series.")";
-    $series=busca_filtro_tabla("nombre,idserie,codigo","categoria=2 AND tipo=1 AND serie",$condicion_final,"",$conn);
+    $condicion_final="categoria=2 AND tipo=1 AND idserie IN(".$series.")";
+    $series=busca_filtro_tabla("nombre,idserie,codigo","serie",$condicion_final,"",$conn);
     print_r($series);
     for($i=0;$i<$series['numcampos'];$i++){
         echo("<item style=\"font-family:verdana; font-size:7pt;\" ");
