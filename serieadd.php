@@ -229,7 +229,7 @@ $(document).ready(function(){
 		});
 		$("#cat3").click(function(){
 		    $('1-categoria-Comunicaciones Oficiales').hide();//
-		    $('2-categoria-Produccion Documental').hide(;
+		    $('2-categoria-Produccion Documental').hide();
 			$(".ocultar").each(function(){
 				$(this).hide();
 			});
