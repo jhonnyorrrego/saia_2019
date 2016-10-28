@@ -221,14 +221,14 @@ $(document).ready(function(){
     </td>
 	</tr>
 	<script>
-	$(document).ready(function(){
-		$("#cat2").click(function(){
+	
+	function filtrar_arbol_series(){
 		    tree2.deleteItem('3-categoria-Otras categorias');
 		    tree2.deleteItem('1-categoria-Comunicaciones Oficiales');
 		    tree2.deleteItem('2-categoria-Produccion Documental');	
 		    $('[name="x_cod_padre"]').val('');
 		    var tipo=$('input:radio[name=x_tipo]:checked').val();
-		    var filtrar_arbol='';
+		    var filtrar_arbol='';		    
 		    switch(parseInt(tipo)){
 		        case 1:
 		            
@@ -241,7 +241,17 @@ $(document).ready(function(){
 		            filtrar_arbol="";
 		            tree2.loadXML("test_serie.php?tabla=serie&admin=1&arbol_series=1&categoria=2"+filtrar_arbol);
 		            break;
-		    }
+		    }	    
+	}
+	
+	$(document).ready(function(){
+	    $('[name="x_tipo"]').click(function(){
+		    filtrar_arbol_series();
+	    });
+	    
+	    
+		$("#cat2").click(function(){
+		    filtrar_arbol_series();
 			$(".ocultar").each(function(){
 				$(this).show();
 			});
