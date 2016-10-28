@@ -238,7 +238,7 @@ $(document).ready(function(){
 		            tree2.loadXML("test_serie.php?tabla=serie&admin=1&arbol_series=1&categoria=2"+filtrar_arbol);
 		            break;
 		        case 3:
-		            filtrar_arbol="documental";
+		            filtrar_arbol="&filtrar_arbol=documental";
 		            tree2.loadXML("test_serie.php?tabla=serie&admin=1&sin_padre=1&categoria=2"+filtrar_arbol);
 		            break;
 		    }	    
