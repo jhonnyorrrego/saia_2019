@@ -444,7 +444,7 @@ $(document).ready(function(){
 		                    tree2.deleteItem('2-categoria-Produccion Documental');
                             $('#x_tipo1').attr('disabled','disabled');
         		            $('#x_tipo2').attr('disabled','disabled');
-        		             $('#x_tipo3').click(); 
+        		            $('#x_tipo3').click(); 
         		            break;
         		        case 3:
         		            
