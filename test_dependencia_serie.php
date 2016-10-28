@@ -275,7 +275,7 @@ function llena_subseries_tipo_documental($idserie){
     $tabla_otra = 'serie';
     $orden="nombre";
 
-    $papas=busca_filtro_tabla("*",$tabla_otra,"cod_padre=".$serie.$activo,"$orden ASC",$conn); 
+    $papas=busca_filtro_tabla("*",$tabla_otra,"cod_padre=".$idserie.$activo,"$orden ASC",$conn); 
     print_r($papas);die('<---aqui');
     if($papas["numcampos"]){ 
         for($i=0; $i<$papas["numcampos"]; $i++){
