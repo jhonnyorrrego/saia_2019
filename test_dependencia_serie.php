@@ -80,7 +80,7 @@ if($id and $id<>"" && @$_REQUEST["uid"]){
         llena_dependencia($ids[1]);
     }else if($id[0].$id[1].$id[2]=='sub' && $mostrar_nodos['dsa']){
         $ids=explode('sub',$id);
-        llena_dependencia($ids[1]);
+        llena_subseries_tipo_documental($ids[1]);
     }else if($mostrar_nodos['soc']){ //si es serie otras categorias
         $ids=explode('-',$id);
         llena_serie_otras($ids[0]," and categoria=3 ");
