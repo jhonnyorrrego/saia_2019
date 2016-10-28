@@ -113,7 +113,7 @@ $dato_padre=busca_filtro_tabla("","expediente a","a.idexpediente=".$_REQUEST["co
 	        $dep_fun=busca_filtro_tabla("a.codigo","dependencia a,vfuncionario_dc b","a.estado=1 AND b.iddependencia=a.iddependencia AND b.estado_dc=1 AND b.estado_dep=1 AND b.login='".usuario_actual('login')."'","",$conn); 
 	    ?>
 	    <input name="codigo_numero_dependencia" id="codigo_numero_dependencia" value="<?php echo($dep_fun[0]['codigo']); ?>"  style="width:12%;" readonly> - 
-	    <input name="codigo_numero_serie" id="codigo_numero_serie" value="<?php echo($datos[0]["codigo_numero"]); ?>" style="width:12%;" readonly> - 
+	    <input name="codigo_numero_serie" id="codigo_numero_serie" style="width:12%;" readonly> - 
 	    <input name="codigo_numero_consecutivo" id="codigo_numero_consecutivo" style="width:10%;">
 	    <input name="codigo_numero" id="codigo_numero" type="hidden">
 	  </div>
