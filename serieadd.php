@@ -288,6 +288,31 @@ $(document).ready(function(){
 
 		if(@$_REQUEST['key_padre']){
 			echo('<div id="nombre_padre_muestra"><b>Padre: </b>'.$x_nombre_padre.'<br/></div>');
+			
+			?>
+			<script>
+			    $(document).ready(function(){
+			        tree2.deleteItem('3-categoria-Otras categorias');
+		            tree2.deleteItem('1-categoria-Comunicaciones Oficiales');
+		            tree2.deleteItem('2-categoria-Produccion Documental');
+        		    switch(parseInt('<?php echo($x_tipo); ?>')){
+        		        case 1:
+        		            alert('es serie');
+        		            break;
+        		        case 2:
+                            
+        		      
+        		            break;
+        		        case 3:
+        		            
+        		            break;
+        		    }		            
+		            
+			    });
+			</script>
+			
+			<?php
+			
 		}	
 		?>	
 			
