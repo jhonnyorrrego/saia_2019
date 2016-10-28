@@ -112,7 +112,18 @@ global $conn,$tabla,$seleccionado,$activo,$excluidos;
 
 if(@$_REQUEST['filtrar_arbol']){
     
-    $vector_filtro_arbol=explode(',',$_REQUEST['filtrar_arbol']);
+    $filtro_arbol=explode(',',$_REQUEST['filtrar_arbol']);
+    
+
+    switch($filtro_arbol){
+        case 'series':
+            break;
+        case 'subseries':
+            break;
+        case 'documental':
+            break;
+    }
+
     
     
 }
