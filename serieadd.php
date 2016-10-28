@@ -253,6 +253,8 @@ $(document).ready(function(){
 	    
 	    
 		$("#cat2").click(function(){
+            $('#x_tipo1').attr('disabled',false);
+        	$('#x_tipo2').attr('disabled',false);		    
 		    $('#nombre_padre_muestra').remove();
 		    $('#x_cod_padre').val('');
 		    filtrar_arbol_series();
