@@ -67,7 +67,7 @@ switch ($sAction)
 }
 ?>
 <?php include ("header.php") ?>
-<p><span class="internos">&nbsp;&nbsp;VER TIPOS/SERIES DOCUMENTALES<br><br>&nbsp;&nbsp;
+<p><span class="internos"><br>&nbsp;&nbsp;VER TIPOS/SERIES DOCUMENTALES<br><br>&nbsp;&nbsp;
 
 <?php 
     if($x_categoria==2 && $x_tipo!=3){
