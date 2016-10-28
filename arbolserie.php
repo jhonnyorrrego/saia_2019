@@ -56,6 +56,8 @@ echo(librerias_notificaciones());
 			function onNodeSelect(nodeId){
         var datos=nodeId.split("-");
         var datos2=nodeId.split("sub");
+        console.log(datos2);
+        
         if(datos[1]){
            parent.serielist.location = "serieview.php?key=" + datos[1]; 
         }
