@@ -229,6 +229,7 @@ $(document).ready(function(){
 		    
 		    var tipo=$('[name="x_tipo"]').val();
 		    var filtrar_arbol='';
+		    alert(tipo);
 		    switch(tipo){
 		        case 1:
 		            
