@@ -247,7 +247,6 @@ $(document).ready(function(){
 	$(document).ready(function(){
 	    $('[name="x_tipo"]').click(function(){
 	        $('#nombre_padre_muestra').remove();
-	        
 		    filtrar_arbol_series();
 	    });
 	    
@@ -314,7 +313,6 @@ $(document).ready(function(){
 
                             $('#x_tipo1').attr('disabled','disabled');
         		            $('#x_tipo2').attr('disabled','disabled');
-        		      
         		            break;
         		        case 3:
         		            
@@ -354,6 +352,14 @@ $(document).ready(function(){
     //tree2.setOnClickHandler(onNodeSelect);
       tree2.setOnLoadingStart(cargando_serie);
       tree2.setOnLoadingEnd(fin_cargando_serie);
+      
+      //tree2.loadXML("test_serie.php?tabla=serie&admin=1&sin_padre=1&categoria=2"+filtrar_arbol);
+      //tree2.loadXML("test_serie.php?tabla=serie&admin=1&arbol_series=1&categoria=2"+filtrar_arbol); documental
+      //tree2.loadXML("test_serie.php?tabla=serie&admin=1&arbol_series=1&categoria=3");  3
+      
+      
+      
+      
       tree2.setXMLAutoLoading("test_serie.php?tabla=serie&admin=1&sin_padre=1&categoria=2&solo_series=1&filtrar_arbol=documental");
       tree2.loadXML("test_serie.php?tabla=serie&admin=1&sin_padre=1&categoria=2&filtrar_arbol=documental");
       
