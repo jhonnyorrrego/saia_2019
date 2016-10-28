@@ -239,7 +239,7 @@ $(document).ready(function(){
 		            break;
 		        case 3:
 		            filtrar_arbol="";
-		            tree2.loadXML("test_serie.php?tabla=serie&admin=1&sin_padre=1&arbol_series=1&categoria=2"+filtrar_arbol);
+		            tree2.loadXML("test_serie.php?tabla=serie&admin=1&sin_padre=1&categoria=2"+filtrar_arbol);
 		            break;
 		    }	    
 	}
