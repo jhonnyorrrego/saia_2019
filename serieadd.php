@@ -229,6 +229,7 @@ $(document).ready(function(){
 		});
 		$("#cat3").click(function(){
 			$(".ocultar").each(function(){
+			    tree2.refreshItem();
 				$(this).hide();
 			});
 		});
