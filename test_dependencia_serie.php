@@ -308,6 +308,8 @@ function llena_subseries_tipo_documental($idserie){
 				    llena_subseries_tipo_documental($papas[$i]["id$tabla_otra"]);
 			    }
 		    }
+		    
+		    llena_subseries_tipo_documental($papas[$i]["id$tabla_otra"]);
             echo("</item>\n");
         }     
     }
