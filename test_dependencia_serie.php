@@ -242,6 +242,7 @@ function llena_entidad_serie($iddependencia,$series){
     
     $condicion_final="idserie IN(".$series.")";
     $series=busca_filtro_tabla("nombre,idserie,codigo","categoria=2 AND tipo=1 AND serie",$condicion_final,"",$conn);
+    print_r($series);
     for($i=0;$i<$series['numcampos'];$i++){
         echo("<item style=\"font-family:verdana; font-size:7pt;\" ");
         echo("text=\"".htmlspecialchars(($series[$i]["nombre"])).' ('.$series[$i]['codigo'].') '." \" id=\"d".$iddependencia."-".$series[$i]['idserie']."\"");
