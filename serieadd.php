@@ -228,8 +228,8 @@ $(document).ready(function(){
 			});
 		});
 		$("#cat3").click(function(){
-		    tree2.deleteItem('1-categoria-Comunicaciones Oficiales');//
-		    tree2.deleteItem('2-categoria-Produccion Documental');
+		    $('1-categoria-Comunicaciones Oficiales').hide();//
+		    $('2-categoria-Produccion Documental').hide(;
 			$(".ocultar").each(function(){
 				$(this).hide();
 			});
