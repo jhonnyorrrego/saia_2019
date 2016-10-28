@@ -301,13 +301,6 @@ function llena_subseries_tipo_documental($idserie){
                  echo(" child=\"1\">\n");
             else
               echo(" child=\"0\">\n");
-		    if(!$_REQUEST["id_otra"] && $tabla_otra!='serie')
-    	        llena_subseries_tipo_documental($papas[$i]["id$tabla_otra"]);
-		    else{
-			    if(!$_REQUEST["admin"]){
-				    llena_subseries_tipo_documental($papas[$i]["id$tabla_otra"]);
-			    }
-		    }
 		    
 		    llena_subseries_tipo_documental($papas[$i]["id$tabla_otra"]);
             echo("</item>\n");
