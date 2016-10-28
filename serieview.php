@@ -68,7 +68,15 @@ switch ($sAction)
 ?>
 <?php include ("header.php") ?>
 <p><span class="internos"><img class="imagen_internos" src="botones/configuracion/serie.png" border="0">&nbsp;&nbsp;VER TIPOS/SERIES DOCUMENTALES<br><br>
-<a href="serieadd.php?key_padre=<?php echo(urlencode($sKey)); ?>">Adicionar</a>&nbsp;
+
+<?php 
+    if($x_categoria==2 && $x_tipo!=3){
+        <a href="serieadd.php?key_padre=<?php echo(urlencode($sKey)); ?>">Adicionar</a>&nbsp;
+    }
+?>
+
+
+
 <a href="<?php echo "serieedit.php?key=" . urlencode($sKey); ?>">Editar</a>&nbsp;
 <a href="<?php echo "seriedelete.php?key=" . urlencode($sKey); ?>">Desactivar</a>&nbsp;
 
