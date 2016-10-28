@@ -362,12 +362,40 @@ $(document).ready(function(){
       //tree2.loadXML("test_serie.php?tabla=serie&admin=1&sin_padre=1&categoria=2"+filtrar_arbol);
       //tree2.loadXML("test_serie.php?tabla=serie&admin=1&arbol_series=1&categoria=2"+filtrar_arbol); documental
       //tree2.loadXML("test_serie.php?tabla=serie&admin=1&arbol_series=1&categoria=3");  3
+      var filtrar_arbol='';
       
+		<?php 
+
+		if(@$_REQUEST['key_padre']){
+		
+			
+			?>
+			
+			  
+
+        		    switch(parseInt('<?php echo($x_tipo); ?>')){
+        		        case 1:
+        		            $('#x_tipo1').attr('disabled','disabled');
+        		            filtrar_arbol='&filtrar_arbol=series';
+        		            break;
+        		        case 2:
+                            $('#x_tipo1').attr('disabled','disabled');
+        		            $('#x_tipo2').attr('disabled','disabled');
+        		            filtrar_arbol='&filtrar_arbol=documental';
+        		            break;
+        		        case 3:
+        		            
+        		            break;
+        		    }		            
+		
+			
+			<?php
+			
+		}	
+		?>	      
       
-      
-      
-      tree2.setXMLAutoLoading("test_serie.php?tabla=serie&admin=1&arbol_series=1&categoria=2&solo_series=1&filtrar_arbol=documental");
-      tree2.loadXML("test_serie.php?tabla=serie&admin=1&arbol_series=1&categoria=2&filtrar_arbol=documental");
+      tree2.setXMLAutoLoading("test_serie.php?tabla=serie&admin=1&arbol_series=1&categoria=2&solo_series=1"+filtrar_arbol);
+      tree2.loadXML("test_serie.php?tabla=serie&admin=1&arbol_series=1&categoria=2"+filtrar_arbol);
       
 	  tree2.setOnCheckHandler(onNodeSelect_tree2);
       function onNodeSelect_tree2(nodeId){
