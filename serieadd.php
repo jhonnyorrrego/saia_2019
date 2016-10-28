@@ -254,7 +254,8 @@ $(document).ready(function(){
 	    
 		$("#cat2").click(function(){
             $('#x_tipo1').attr('disabled',false);
-        	$('#x_tipo2').attr('disabled',false);		    
+        	$('#x_tipo2').attr('disabled',false);	
+        	$('#x_tipo3').attr('disabled',false);
 		    $('#nombre_padre_muestra').remove();
 		    $('#x_cod_padre').val('');
 		    filtrar_arbol_series();
@@ -265,6 +266,9 @@ $(document).ready(function(){
 		$("#cat3").click(function(){
 		    $('#x_cod_padre').val('');
 		    $('#nombre_padre_muestra').remove();
+            $('#x_tipo1').attr('disabled',false);
+        	$('#x_tipo2').attr('disabled',false);	
+        	$('#x_tipo3').attr('disabled',false);		    
 		    tree2.deleteItem('3-categoria-Otras categorias');
 		    tree2.deleteItem('1-categoria-Comunicaciones Oficiales');
 		    tree2.deleteItem('2-categoria-Produccion Documental');	
