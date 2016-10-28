@@ -229,7 +229,6 @@ $(document).ready(function(){
 		    
 		    var tipo=$('input:radio[name=x_tipo]:checked').val();
 		    var filtrar_arbol='';
-		    alert(tipo);
 		    switch(parseInt(tipo)){
 		        case 1:
 		            
