@@ -268,6 +268,8 @@ function llena_entidad_serie($iddependencia,$series){
 function llena_subseries_tipo_documental($idserie){
     global $conn,$seleccionado,$activo,$excluidos;
 
+
+    print_r($idserie);die('<---aqwui');
     $tabla_otra = 'serie';
     $orden="nombre";
 
