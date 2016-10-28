@@ -240,10 +240,10 @@ return;
 
 //llena series asignadas segun dependencia  (dsa)
 function llena_entidad_serie($iddependencia,$series){
-    global $conn;
+    global $conn,$activo;
     
     $condicion_final="categoria=2 AND tipo=1 AND idserie IN(".$series.")";
-    $series=busca_filtro_tabla("nombre,idserie,codigo","serie",$condicion_final,"",$conn);
+    $series=busca_filtro_tabla("nombre,idserie,codigo","serie",$condicion_final.$activo,"",$conn);
     for($i=0;$i<$series['numcampos'];$i++){
         echo("<item style=\"font-family:verdana; font-size:7pt;\" ");
         echo("text=\"".htmlspecialchars(($series[$i]["nombre"])).' ('.$series[$i]['codigo'].') '." \" id=\"sub".$series[$i]['idserie']."\"");
@@ -251,7 +251,7 @@ function llena_entidad_serie($iddependencia,$series){
             echo(" nocheckbox=\"1\" ");	
         }
         
-        $subseries_tipo_documental=busca_filtro_tabla("idserie","serie","estado=1 AND categoria=2 AND tipo IN(2,3) AND cod_padre=".$series[$i]['idserie'],"",$conn);
+        $subseries_tipo_documental=busca_filtro_tabla("idserie","serie","categoria=2 AND tipo IN(2,3) AND cod_padre=".$series[$i]['idserie'].$activo,"",$conn);
         //print_r($subseries_tipo_documental);
         if($subseries_tipo_documental['numcampos']){
             echo(" child=\"1\">\n");
@@ -278,7 +278,7 @@ function llena_subseries_tipo_documental($idserie){
     $papas=busca_filtro_tabla("*",$tabla_otra,"cod_padre=".$idserie.$activo,"$orden ASC",$conn); 
     if($papas["numcampos"]){ 
         for($i=0; $i<$papas["numcampos"]; $i++){
-            $hijos = busca_filtro_tabla("count(*) AS cant",$tabla_otra,"cod_padre=".$papas[$i]["id$tabla_otra"],"",$conn);
+            $hijos = busca_filtro_tabla("count(*) AS cant",$tabla_otra,"cod_padre=".$papas[$i]["id$tabla_otra"].$activo,"",$conn);
             echo("<item style=\"font-family:verdana; font-size:7pt;\" ");
 		    if($tabla=="serie"){
 			    if(@$papas[$i]["estado"]==1){
