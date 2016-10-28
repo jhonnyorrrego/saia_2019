@@ -367,12 +367,7 @@ $(document).ready(function(){
 		<?php 
 
 		if(@$_REQUEST['key_padre']){
-		
-			
 			?>
-			
-			  
-
         		    switch(parseInt('<?php echo($x_tipo); ?>')){
         		        case 1:
         		            $('#x_tipo1').attr('disabled','disabled');
@@ -383,12 +378,7 @@ $(document).ready(function(){
         		            $('#x_tipo2').attr('disabled','disabled');
         		            filtrar_arbol='&filtrar_arbol=documental';
         		            break;
-        		        case 3:
-        		            
-        		            break;
         		    }		            
-		
-			
 			<?php
 			
 		}	
