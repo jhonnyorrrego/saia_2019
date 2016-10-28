@@ -112,9 +112,11 @@ global $conn,$tabla,$seleccionado,$activo,$excluidos;
 
 if(@$_REQUEST['filtrar_arbol']){
     $filtro_arbol=explode(',',$_REQUEST['filtrar_arbol']);
+    
+    $solo_papas=0;
     switch($filtro_arbol){
         case 'series':
-            
+            $solo_papas=1;
             break;
         case 'subseries':
             
@@ -166,10 +168,10 @@ if($papas["numcampos"])
       echo(" child=\"1\">\n");
     else
       echo(" child=\"0\">\n");
-		if(!$_REQUEST["id"] && $tabla!='serie')
+		if(!$_REQUEST["id"] && $tabla!='serie' && !$solo_papas)
     	llena_serie($papas[$i]["id$tabla"]);
 		else{
-			if(!$_REQUEST["admin"]){
+			if(!$_REQUEST["admin"] && !$solo_papas){
 				llena_serie($papas[$i]["id$tabla"]);
 			}
 		}
