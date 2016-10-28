@@ -114,12 +114,15 @@ if(@$_REQUEST['filtrar_arbol']){
     $filtro_arbol=$_REQUEST['filtrar_arbol'];
     
     $solo_papas=0;
+    $tipo_subserie='';
     switch($filtro_arbol){
         case 'series':
             $solo_papas=1;
             break;
         case 'subseries':
-            
+            if($serie!="NULL"){
+                $tipo_subserie='AND tipo=2';
+            }
             break;
         case 'documental':
             
@@ -134,7 +137,7 @@ else
 if($serie=="NULL")
   $papas=busca_filtro_tabla("*",$tabla,"(cod_padre IS NULL OR cod_padre=0) $activo $condicion $excluidos","$orden ASC",$conn);
 else
-  $papas=busca_filtro_tabla("*",$tabla,"cod_padre=".$serie.$activo.$condicion.$excluidos,"$orden ASC",$conn); 
+  $papas=busca_filtro_tabla("*",$tabla,"cod_padre=".$serie.$activo.$condicion.$excluidos.$tipo_subserie,"$orden ASC",$conn); 
 
 if($papas["numcampos"])
 { 
