@@ -310,7 +310,7 @@ $(document).ready(function(){
         		            tree2.deleteItem('3-categoria-Otras categorias');
 		                    tree2.deleteItem('1-categoria-Comunicaciones Oficiales');
 		                    tree2.deleteItem('2-categoria-Produccion Documental');
-        		             $('#x_tipo2').click(); 
+        		            
         		            break;
         		        case 2:
                             tree2.deleteItem('3-categoria-Otras categorias');
@@ -318,7 +318,7 @@ $(document).ready(function(){
 		                    tree2.deleteItem('2-categoria-Produccion Documental');
                             $('#x_tipo1').attr('disabled','disabled');
         		            $('#x_tipo2').attr('disabled','disabled');
-        		             $('#x_tipo3').click(); 
+        		            
         		            break;
         		        case 3:
         		            
@@ -425,35 +425,9 @@ $(document).ready(function(){
 		});
 		tree2.findItem(htmlentities(document.getElementById('stext_serie_idserie').value));
        }
- 		
+--> 		
 	</script>
-			<script>
-			    $(document).ready(function(){
 
-        		    switch(parseInt('<?php echo($x_tipo); ?>')){
-        		        case 1:
-        		            
-        		            tree2.deleteItem('3-categoria-Otras categorias');
-		                    tree2.deleteItem('1-categoria-Comunicaciones Oficiales');
-		                    tree2.deleteItem('2-categoria-Produccion Documental');
-		                     $('#x_tipo1').attr('disabled','disabled');
-        		             //$('#x_tipo2').click(); 
-        		            break;
-        		        case 2:
-                            tree2.deleteItem('3-categoria-Otras categorias');
-		                    tree2.deleteItem('1-categoria-Comunicaciones Oficiales');
-		                    tree2.deleteItem('2-categoria-Produccion Documental');
-                            $('#x_tipo1').attr('disabled','disabled');
-        		            $('#x_tipo2').attr('disabled','disabled');
-        		            //$('#x_tipo3').click(); 
-        		            break;
-        		        case 3:
-        		            
-        		            break;
-        		    }		            
-		          
-			    });
-			</script>
 
 </span></td>
 	</tr>
