@@ -244,7 +244,7 @@ function llena_entidad_serie($iddependencia,$series){
     $series=busca_filtro_tabla("nombre,idserie,codigo","serie",$condicion_final,"",$conn);
     for($i=0;$i<$series['numcampos'];$i++){
         echo("<item style=\"font-family:verdana; font-size:7pt;\" ");
-        echo("text=\"".htmlspecialchars(($series[$i]["nombre"])).' ('.$series[$i]['codigo'].') '." \" id=\"d".$iddependencia."-".$series[$i]['idserie']."\"");
+        echo("text=\"".htmlspecialchars(($series[$i]["nombre"])).' ('.$series[$i]['codigo'].') '." \" id=\"sub".$iddependencia."-".$series[$i]['idserie']."\"");
         if(!@$_REQUEST['funcionario']){
             echo(" nocheckbox=\"1\" ");	
         }
