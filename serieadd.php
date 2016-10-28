@@ -225,7 +225,22 @@ $(document).ready(function(){
 		$("#cat2").click(function(){
 		    tree2.deleteItem('3-categoria-Otras categorias');
 		    tree2.deleteItem('1-categoria-Comunicaciones Oficiales');
-		    tree2.deleteItem('2-categoria-Produccion Documental');		    
+		    tree2.deleteItem('2-categoria-Produccion Documental');	
+		    
+		    var tipo=$('[name="x_tipo"]').val();
+		    var filtrar_arbol='';
+		    switch(tipo){
+		        case 1:
+		            
+		            break;
+		        case 2:
+		            
+		            break;
+		        case 3:
+		            
+		            break;
+		    }
+		    
 		    tree2.loadXML("test_serie.php?tabla=serie&admin=1&arbol_series=1&categoria=2");
 			$(".ocultar").each(function(){
 				$(this).show();
