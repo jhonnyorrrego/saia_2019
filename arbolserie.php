@@ -55,9 +55,14 @@ echo(librerias_notificaciones());
 			tree2.loadXML("test_dependencia_serie.php?tabla=dependencia&admin=1&estado=1");
 			function onNodeSelect(nodeId){
         var datos=nodeId.split("-");
+        var datos2=nodeId.split("sub");
         if(datos[1]){
            parent.serielist.location = "serieview.php?key=" + datos[1]; 
-        }else{
+        }
+        else if(datos2[1]){
+            var datos=nodeId.split("sub");
+            parent.serielist.location = "asignarserie_entidad.php?tipo_entidad=2&llave_entidad=" + datos[1];            
+        }else{    
             var datos=nodeId.split("d");
             parent.serielist.location = "asignarserie_entidad.php?tipo_entidad=2&llave_entidad=" + datos[1];
         }
