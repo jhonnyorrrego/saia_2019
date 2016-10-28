@@ -122,8 +122,17 @@ $dato_padre=busca_filtro_tabla("","expediente a","a.idexpediente=".$_REQUEST["co
 	      $(document).ready(function(){
 	          $('#codigo_numero_dependencia,#codigo_numero_serie,#codigo_numero_consecutivo').keyup(function(){
 	              var codigo_numero_dependencia=$('#codigo_numero_dependencia').val();
+	              if(codigo_numero_dependencia==''){
+	                  codigo_numero_dependencia=0;
+	              }
 	              var codigo_numero_serie=$('#codigo_numero_serie').val();
+	              if(codigo_numero_serie==''){
+	                  codigo_numero_serie=0;
+	              }	              
 	              var codigo_numero_consecutivo=$('#codigo_numero_consecutivo').val();
+	              if(codigo_numero_consecutivo==''){
+	                  codigo_numero_consecutivo=0;
+	              }	  
 	              var cadena_parseo=codigo_numero_dependencia+'-'+codigo_numero_serie+'-'+codigo_numero_consecutivo;
 	              $('#codigo_numero').val(cadena_parseo);
 	              alert( $('#codigo_numero').val() );
