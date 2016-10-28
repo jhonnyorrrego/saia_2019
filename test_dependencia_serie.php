@@ -288,7 +288,7 @@ function llena_subseries_tipo_documental($idserie){
 			    }
 		    }	
 	
-            echo("text=\"".htmlspecialchars(($papas[$i]["nombre"])).' ('.$papas[$i]['codigo'].') '." \" id=\"sub".$series[$i]['idserie']."\"");
+            echo("text=\"".htmlspecialchars(($papas[$i]["nombre"])).' ('.$papas[$i]['codigo'].') '." \" id=\"sub".$papas[$i]['idserie']."\"");
 		    if(@$_REQUEST["arbol_series"]){		
 				
 	        }		
