@@ -124,7 +124,7 @@ if(@$_REQUEST['filtrar_arbol']){
                 $tipo_subserie=' AND tipo=2';
             }
             break;
-        case 'documental': //MUESTRA TODO NO EXISTE FILTRO
+        case 'documental': //MUESTRA 
             $tipo_subserie=' AND tipo IN(1,2)';
             break;
     }
@@ -164,8 +164,6 @@ if($papas["numcampos"])
 	}		
 	else if($hijos[0]["cant"]!=0 && ($tabla=="serie" || @$_REQUEST["sin_padre"])){		
       echo(" nocheckbox=\"1\" ");		
-	}else if( ($tabla=="serie" || @$_REQUEST["sin_padre"]) && $filtro_arbol=='documental' && $papas[$i]['tipo']<>2){
-	    echo(" nocheckbox=\"1\" ");
 	}
 	
     if(in_array($papas[$i]["id$tabla"],$seleccionado)!==false)
