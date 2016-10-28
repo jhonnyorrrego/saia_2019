@@ -435,8 +435,10 @@ if($dato_padre["numcampos"]){
       var codigo_serie=vector_text[vector_text.length-1].substring(0,vector_text[vector_text.length-1].length-2);
       	if(tree3.isItemChecked(nodeId)){ //checkqueado
       	    $('[name="codigo_numero_serie"]').val(codigo_serie);
+      	    $('[name="codigo_numero_serie"]').trigger('keyup');
       	}else{ //unchecked
       	    $('[name="codigo_numero_serie"]').val('');
+      	    $('[name="codigo_numero_serie"]').trigger('keyup');
       	}      
       
     }
