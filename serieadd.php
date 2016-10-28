@@ -297,13 +297,13 @@ $(document).ready(function(){
 		            tree2.deleteItem('2-categoria-Produccion Documental');
         		    switch(parseInt('<?php echo($x_tipo); ?>')){
         		        case 1:
-        		            alert('es serie');
+        		            
         		            $('#x_tipo1').attr('disabled','disabled');
         		            $('#x_tipo3').attr('disabled','disabled');
         		            break;
         		        case 2:
                             
-        		      
+        		      alert('es subserie');
         		            break;
         		        case 3:
         		            
