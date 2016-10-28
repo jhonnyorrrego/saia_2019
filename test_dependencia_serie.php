@@ -242,7 +242,6 @@ function llena_entidad_serie($iddependencia,$series){
     
     $condicion_final="categoria=2 AND tipo=1 AND idserie IN(".$series.")";
     $series=busca_filtro_tabla("nombre,idserie,codigo","serie",$condicion_final,"",$conn);
-    print_r($series);
     for($i=0;$i<$series['numcampos'];$i++){
         echo("<item style=\"font-family:verdana; font-size:7pt;\" ");
         echo("text=\"".htmlspecialchars(($series[$i]["nombre"])).' ('.$series[$i]['codigo'].') '." \" id=\"d".$iddependencia."-".$series[$i]['idserie']."\"");
@@ -251,6 +250,7 @@ function llena_entidad_serie($iddependencia,$series){
         }
         
         $subseries_tipo_documental=busca_filtro_tabla("idserie","serie","estado=1 AND categoria=1 AND tipo IN(2,3) AND cod_padre=".$series[$i]['idserie'],"",$conn);
+        print_r($subseries_tipo_documental);
         if($subseries_tipo_documental['numcampos']){
             echo(" child=\"1\">\n");
         }else{
