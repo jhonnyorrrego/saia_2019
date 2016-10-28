@@ -228,7 +228,7 @@ $(document).ready(function(){
 			});
 		});
 		$("#cat3").click(function(){
-		    tree2.loadXML("test_serie.php?tabla=serie&admin=1&arbol_series=1&categoria=3");
+		    
 			$(".ocultar").each(function(){
 				$(this).hide();
 			});
