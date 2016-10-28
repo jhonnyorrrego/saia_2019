@@ -78,7 +78,7 @@ if($id and $id<>"" && @$_REQUEST["uid"]){
     if($id[0]=='d' && $mostrar_nodos['dsa']){ //si es dependencia
         $ids=explode('d',$id);
         llena_dependencia($ids[1]);
-    }else if($id[0].$id[1].$id[2]=='sub' && $mostrar_nodos['dsa']){
+    }else if(strpos($id,'sub')!==false && $mostrar_nodos['dsa']){
         $ids=explode('sub',$id);
         llena_subseries_tipo_documental($ids[1]);
     }else if($mostrar_nodos['soc']){ //si es serie otras categorias
