@@ -165,8 +165,6 @@ if($papas["numcampos"])
 	else if($hijos[0]["cant"]!=0 && ($tabla=="serie" || @$_REQUEST["sin_padre"])){		
       echo(" nocheckbox=\"1\" ");		
 	}else if( ($tabla=="serie" || @$_REQUEST["sin_padre"]) && $filtro_arbol=='documental'){
-	    
-
 	    echo(" nocheckbox=\"1\" ");
 	}
 	
