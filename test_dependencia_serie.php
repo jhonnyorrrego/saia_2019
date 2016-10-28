@@ -259,8 +259,10 @@ function llena_entidad_serie($iddependencia,$series){
             echo(" child=\"0\">\n");
         }
         
+        if($subseries_tipo_documental['numcampos']){
+            llena_subseries_tipo_documental($series[$i]['idserie']);
+        }
         
-        llena_subseries_tipo_documental($series[$i]['idserie']);
         echo("</item>\n");
     }
 }
@@ -274,7 +276,7 @@ function llena_subseries_tipo_documental($idserie){
     $orden="nombre";
 
     $papas=busca_filtro_tabla("*",$tabla_otra,"cod_padre=".$serie.$activo,"$orden ASC",$conn); 
-print_r($papas);die('<---aqui');
+    print_r($papas);die('<---aqui');
     if($papas["numcampos"]){ 
         for($i=0; $i<$papas["numcampos"]; $i++){
             $hijos = busca_filtro_tabla("count(*) AS cant",$tabla_otra,"cod_padre=".$papas[$i]["id$tabla_otra"],"",$conn);
