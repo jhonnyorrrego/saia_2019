@@ -229,8 +229,7 @@ $(document).ready(function(){
 		});
 		$("#cat3").click(function(){
 			$(".ocultar").each(function(){
-			    tree2.loadXML("test_serie.php?tabla=serie&admin=1&arbol_series=1&categoria=3");
-			    //tree2.setXMLAutoLoading("test_serie.php?tabla=serie&admin=1&arbol_series=1&categoria=3");
+			    
 				$(this).hide();
 			});
 		});
