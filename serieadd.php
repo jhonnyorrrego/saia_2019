@@ -331,7 +331,7 @@ $(document).ready(function(){
       //tree2.loadXML("test_serie.php?tabla=serie&admin=1&sin_padre=1&categoria=2"+filtrar_arbol);
       //tree2.loadXML("test_serie.php?tabla=serie&admin=1&arbol_series=1&categoria=2"+filtrar_arbol); documental
       //tree2.loadXML("test_serie.php?tabla=serie&admin=1&arbol_series=1&categoria=3");  3
-      var filtrar_arbol='';
+      var filtrar_arbol='&filtrar_arbol=documental';
       
 		<?php 
 
