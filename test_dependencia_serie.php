@@ -280,11 +280,6 @@ function llena_subseries_tipo_documental($idserie){
         for($i=0; $i<$papas["numcampos"]; $i++){
             $hijos = busca_filtro_tabla("count(*) AS cant",$tabla_otra,"cod_padre=".$papas[$i]["id$tabla_otra"],"",$conn);
             echo("<item style=\"font-family:verdana; font-size:7pt;\" ");
-            $cadena_codigo='';
-            if(@$papas[$i]["codigo"]){
-              $cadena_codigo="(".$papas[$i]["codigo"].")";
-            }
-	
 		    if($tabla=="serie"){
 			    if(@$papas[$i]["estado"]==1){
 			    	$estado_serie=' - ACTIVA';	
@@ -293,7 +288,7 @@ function llena_subseries_tipo_documental($idserie){
 			    }
 		    }	
 	
-            echo("text=\"".htmlspecialchars(($papas[$i]["nombre"])).$cadena_codigo." \" id=\"sub".$papas[$i]["id$tabla_otra"]."\"");
+            echo("text=\"".htmlspecialchars(($papas[$i]["nombre"])).' ('.$papas[$i]['codigo'].') '." \" id=\"sub".$series[$i]['idserie']."\"");
 		    if(@$_REQUEST["arbol_series"]){		
 				
 	        }		
