@@ -164,7 +164,10 @@ if($papas["numcampos"])
 	}		
 	else if($hijos[0]["cant"]!=0 && ($tabla=="serie" || @$_REQUEST["sin_padre"])){		
       echo(" nocheckbox=\"1\" ");		
+	}else if( ($tabla=="serie" || @$_REQUEST["sin_padre"]) ){
+	    echo(" nocheckbox=\"1\" ");		 
 	}
+	
     if(in_array($papas[$i]["id$tabla"],$seleccionado)!==false)
       echo " checked=\"1\" ";  
     if($hijos[0][0] && !$solo_papas)
