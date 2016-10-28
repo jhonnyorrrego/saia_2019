@@ -143,7 +143,7 @@ if($papas["numcampos"])
 { 
   for($i=0; $i<$papas["numcampos"]; $i++)
   {
-    $hijos = busca_filtro_tabla("count(*) AS cant",$tabla,"cod_padre=".$papas[$i]["id$tabla"].$activo.$condicion,"",$conn);
+    $hijos = busca_filtro_tabla("count(*) AS cant",$tabla,"cod_padre=".$papas[$i]["id$tabla"].$activo.$condicion.$tipo_subserie,"",$conn);
     echo("<item style=\"font-family:verdana; font-size:7pt;\" ");
     $cadena_codigo='';
     if(@$papas[$i]["codigo"]){
