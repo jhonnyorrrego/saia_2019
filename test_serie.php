@@ -164,7 +164,7 @@ if($papas["numcampos"])
 	}
     if(in_array($papas[$i]["id$tabla"],$seleccionado)!==false)
       echo " checked=\"1\" ";  
-    if($hijos[0][0])
+    if($hijos[0][0] && !$solo_papas)
       echo(" child=\"1\">\n");
     else
       echo(" child=\"0\">\n");
