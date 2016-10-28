@@ -289,8 +289,8 @@ $(document).ready(function(){
     //tree2.setOnClickHandler(onNodeSelect);
       tree2.setOnLoadingStart(cargando_serie);
       tree2.setOnLoadingEnd(fin_cargando_serie);
-      tree2.setXMLAutoLoading("test_serie.php?tabla=serie&admin=1&arbol_series=1&categoria=2&solo_series=1&filtrar_arbol=series,subseries");
-      tree2.loadXML("test_serie.php?tabla=serie&admin=1&arbol_series=1&categoria=2&filtrar_arbol=series,subseries");
+      tree2.setXMLAutoLoading("test_serie.php?tabla=serie&admin=1&arbol_series=1&categoria=2&solo_series=1&filtrar_arbol=series");
+      tree2.loadXML("test_serie.php?tabla=serie&admin=1&arbol_series=1&categoria=2&filtrar_arbol=series");
       
 	  tree2.setOnCheckHandler(onNodeSelect_tree2);
       function onNodeSelect_tree2(nodeId){
