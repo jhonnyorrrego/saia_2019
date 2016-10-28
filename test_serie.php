@@ -59,15 +59,15 @@ else
 if($tabla=="serie" && !$id)
   {if(isset($_REQUEST["categoria"])&&$_REQUEST["categoria"])
    {switch($_REQUEST["categoria"])
-      {case 1:echo  "<item style=\"font-family:verdana; font-size:7pt;\" text=\"Comunicaciones Oficiales\" id=\"1-categoria-Comunicaciones Oficiales\"   >\n"; 
+      {case 1:echo  "<item style=\"font-family:verdana; font-size:7pt;\" text=\"Comunicaciones Oficiales\" id=\"1-categoria-Comunicaciones Oficiales\" nocheckbox=\"1\"   >\n"; 
        llena_serie("NULL"," and categoria=1 ");
    echo "</item>\n";
               break;
-       case 2:echo  "<item style=\"font-family:verdana; font-size:7pt;\" text=\"Produccion Documental\" id=\"2-categoria-Produccion Documental\" >\n"; 
+       case 2:echo  "<item style=\"font-family:verdana; font-size:7pt;\" text=\"Produccion Documental\" id=\"2-categoria-Produccion Documental\" nocheckbox=\"1\" >\n"; 
        llena_serie("NULL"," and categoria=2 ");
    echo "</item>\n";
               break;
-       case 3: echo  "<item style=\"font-family:verdana; font-size:7pt;\" text=\"Otras categorias\" id=\"3-categoria-Otras categorias\" >\n"; 
+       case 3: echo  "<item style=\"font-family:verdana; font-size:7pt;\" text=\"Otras categorias\" id=\"3-categoria-Otras categorias\" nocheckbox=\"1\" >\n"; 
        llena_serie("NULL"," and categoria=3 ");
    echo "</item>\n";
               break;       
