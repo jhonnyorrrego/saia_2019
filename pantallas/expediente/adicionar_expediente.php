@@ -335,6 +335,7 @@ $dato_padre=busca_filtro_tabla("","expediente a","a.idexpediente=".$_REQUEST["co
       	    $('[name="codigo_numero_serie"]').trigger('keyup');
       	}else{ //unchecked
       	    $('[name="codigo_numero_serie"]').val('');
+      	    $('[name="codigo_numero_serie"]').trigger('keyup');
       	}
     }
     function fin_cargando_serie() {
