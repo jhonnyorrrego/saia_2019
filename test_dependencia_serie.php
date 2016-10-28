@@ -276,7 +276,6 @@ function llena_subseries_tipo_documental($idserie){
     $orden="nombre";
 
     $papas=busca_filtro_tabla("*",$tabla_otra,"cod_padre=".$idserie.$activo,"$orden ASC",$conn); 
-    print_r($papas);die('<---aqui');
     if($papas["numcampos"]){ 
         for($i=0; $i<$papas["numcampos"]; $i++){
             $hijos = busca_filtro_tabla("count(*) AS cant",$tabla_otra,"cod_padre=".$papas[$i]["id$tabla_otra"],"",$conn);
