@@ -1,4 +1,26 @@
 <?php
+
+
+
+$cadena='sub740';
+
+$mystring = 'abc';
+$findme   = 'sub';
+$pos = strpos($cadena, $findme);
+
+// El operador !== también puede ser usado. Puesto que != no funcionará como se espera
+// porque la posición de 'a' es 0. La declaración (0 != false) se evalúa a 
+// false.
+if ($pos !== false) {
+     echo "La cadena '$findme' fue encontrada en la cadena '$mystring'";
+         echo " y existe en la posición $pos";
+} else {
+     echo "La cadena '$findme' no fue encontrada en la cadena '$mystring'";
+}
+
+
+die();
+
 header("Expires: Mon, 26 Jul 1997 05:00:00 GMT"); // date in the past
 header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT"); // always modified
 header("Cache-Control: no-store, no-cache, must-revalidate"); // HTTP/1.1 
