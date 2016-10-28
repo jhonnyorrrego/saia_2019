@@ -318,7 +318,7 @@ $(document).ready(function(){
         		            
         		            break;
         		    }		            
-		            
+		           $('[name="x_tipo"]').click(); 
 			    });
 			</script>
 			
