@@ -117,6 +117,15 @@ $dato_padre=busca_filtro_tabla("","expediente a","a.idexpediente=".$_REQUEST["co
 	    <input name="codigo_numero_consecutivo" id="codigo_numero_consecutivo" style="width:10%;">
 	    <input name="codigo_numero" id="codigo_numero" type="hidden">
 	  </div>
+	  
+	  <script>
+	      $(document).ready(function(){
+	          $('#codigo_numero_dependencia,#codigo_numero_serie,#codigo_numero_consecutivo').change.keyup(function(){
+	              alert('fuck my fucking dick');
+	          });
+	      });
+	  </script>
+	  
 	</div>
 	
 	<div class="control-group element">
