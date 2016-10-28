@@ -302,7 +302,8 @@ $(document).ready(function(){
         		            $('#x_tipo3').attr('disabled','disabled');
         		            break;
         		        case 2:
-                            
+                            $('#x_tipo1').attr('disabled','disabled');
+        		            $('#x_tipo2').attr('disabled','disabled');
         		      alert('es subserie');
         		            break;
         		        case 3:
