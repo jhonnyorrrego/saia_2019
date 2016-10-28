@@ -108,8 +108,8 @@ $dato_padre=busca_filtro_tabla("","expediente a","a.idexpediente=".$_REQUEST["co
 	  <label class="control-label" for="codigo_numero">Codigo numero
 	  </label>
 	  <div class="controls">
-	     <input name="codigo_numero_dependencia" id="codigo_numero_dependencia"  style="width:10%;" readonly> - 
-	    <input name="codigo_numero_serie" id="codigo_numero_serie" value="<?php echo($datos[0]["codigo_numero"]); ?>" style="width:10%;" readonly> - 
+	     <input name="codigo_numero_dependencia" id="codigo_numero_dependencia"  style="width:12%;" readonly> - 
+	    <input name="codigo_numero_serie" id="codigo_numero_serie" value="<?php echo($datos[0]["codigo_numero"]); ?>" style="width:12%;" readonly> - 
 	    <input name="codigo_numero" id="codigo_numero" type="hidden">
 	  </div>
 	</div>
