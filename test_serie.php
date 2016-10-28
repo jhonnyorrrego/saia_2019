@@ -159,7 +159,7 @@ if($papas["numcampos"])
 		}	
 	
     echo("text=\"".htmlspecialchars(($papas[$i]["nombre"])).$cadena_codigo." \" id=\"".$papas[$i]["id$tabla"]."\"");
-		if(@$_REQUEST["arbol_series"]){		
+	if(@$_REQUEST["arbol_series"]){		
 				
 	}		
 	else if($hijos[0]["cant"]!=0 && ($tabla=="serie" || @$_REQUEST["sin_padre"])){		
