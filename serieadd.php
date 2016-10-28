@@ -425,7 +425,7 @@ $(document).ready(function(){
 		});
 		tree2.findItem(htmlentities(document.getElementById('stext_serie_idserie').value));
        }
---> 		
+ 		
 	</script>
 			<script>
 			    $(document).ready(function(){
