@@ -67,7 +67,7 @@ switch ($sAction)
 }
 ?>
 <?php include ("header.php") ?>
-<p><span class="internos"><img class="imagen_internos" src="botones/configuracion/serie.png" border="0">&nbsp;&nbsp;VER TIPOS/SERIES DOCUMENTALES<br><br>
+<p><span class="internos">&nbsp;&nbsp;VER TIPOS/SERIES DOCUMENTALES<br><br>&nbsp;&nbsp;
 
 <?php 
     if($x_categoria==2 && $x_tipo!=3){
