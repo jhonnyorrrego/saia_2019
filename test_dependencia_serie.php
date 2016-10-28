@@ -269,7 +269,7 @@ function llena_subseries_tipo_documental($idserie){
     global $conn,$seleccionado,$activo,$excluidos;
 
 
-    print_r($idserie);die('<---aqwui');
+    print_r($idserie);die('<---aqui');
     $tabla_otra = 'serie';
     $orden="nombre";
 
