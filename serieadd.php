@@ -264,6 +264,7 @@ $(document).ready(function(){
 		});
 		$("#cat3").click(function(){
 		    $('#x_cod_padre').val('');
+		    $('#nombre_padre_muestra').remove();
 		    tree2.deleteItem('3-categoria-Otras categorias');
 		    tree2.deleteItem('1-categoria-Comunicaciones Oficiales');
 		    tree2.deleteItem('2-categoria-Produccion Documental');	
