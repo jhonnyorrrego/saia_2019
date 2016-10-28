@@ -235,13 +235,13 @@ $(document).ready(function(){
 		            break;
 		        case 2:
 		            filtrar_arbol="series";
+		            tree2.loadXML("test_serie.php?tabla=serie&admin=1&arbol_series=1&categoria=2"+filtrar_arbol);
 		            break;
 		        case 3:
 		            filtrar_arbol="";
+		            tree2.loadXML("test_serie.php?tabla=serie&admin=1&arbol_series=1&categoria=2"+filtrar_arbol);
 		            break;
 		    }
-		    
-		    tree2.loadXML("test_serie.php?tabla=serie&admin=1&arbol_series=1&categoria=2"+filtrar_arbol);
 			$(".ocultar").each(function(){
 				$(this).show();
 			});
