@@ -290,7 +290,7 @@ function llena_subseries_tipo_documental($idserie){
 			    }
 		    }	
 	
-            echo("text=\"".htmlspecialchars(($papas[$i]["nombre"])).$cadena_codigo." \" id=\"sub".$papas[$i]["id$tabla_otra"]."-".$papas[$i]["id$tabla_otra"]."\"");
+            echo("text=\"".htmlspecialchars(($papas[$i]["nombre"])).$cadena_codigo." \" id=\"sub".$papas[$i]["id$tabla_otra"]."\"");
 		    if(@$_REQUEST["arbol_series"]){		
 				
 	        }		
