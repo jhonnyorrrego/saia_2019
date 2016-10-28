@@ -72,7 +72,6 @@ if($tabla=="serie" && !$id)
    echo "</item>\n";
               break;       
       }
-      die();
    }
    elseif($id){
    	llena_serie($id);
