@@ -107,6 +107,16 @@ $activo = "";
 
 function llena_serie($serie,$condicion=""){
 global $conn,$tabla,$seleccionado,$activo,$excluidos;
+
+
+
+if(@$_REQUEST['filtrar_arbol']){
+    
+    $vector_filtro_arbol=explode(',',$_REQUEST['filtrar_arbol']);
+    
+    
+}
+
 if(isset($_REQUEST["orden"]))
   $orden=$_REQUEST["orden"];
 else
