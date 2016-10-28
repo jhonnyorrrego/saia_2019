@@ -71,7 +71,9 @@ switch ($sAction)
 
 <?php 
     if($x_categoria==2 && $x_tipo!=3){
+        ?>
         <a href="serieadd.php?key_padre=<?php echo(urlencode($sKey)); ?>">Adicionar</a>&nbsp;
+        <?php
     }
 ?>
 
