@@ -224,6 +224,8 @@ $(document).ready(function(){
 	$(document).ready(function(){
 		$("#cat2").click(function(){
 		    tree2.deleteItem('3-categoria-Otras categorias');//
+		    tree2.deleteItem('1-categoria-Comunicaciones Oficiales');//
+		    tree2.deleteItem('2-categoria-Produccion Documental');		    
 		    tree2.loadXML("test_serie.php?tabla=serie&admin=1&arbol_series=1");
 			$(".ocultar").each(function(){
 				$(this).show();
