@@ -247,18 +247,21 @@ $(document).ready(function(){
 	$(document).ready(function(){
 	    $('[name="x_tipo"]').click(function(){
 	        $('#nombre_padre_muestra').remove();
+	        
 		    filtrar_arbol_series();
 	    });
 	    
 	    
 		$("#cat2").click(function(){
-		    
+		    $('#nombre_padre_muestra').remove();
+		    $('#x_cod_padre').val('');
 		    filtrar_arbol_series();
 			$(".ocultar").each(function(){
 				$(this).show();
 			});
 		});
 		$("#cat3").click(function(){
+		    $('#x_cod_padre').val('');
 		    tree2.deleteItem('3-categoria-Otras categorias');
 		    tree2.deleteItem('1-categoria-Comunicaciones Oficiales');
 		    tree2.deleteItem('2-categoria-Produccion Documental');	
