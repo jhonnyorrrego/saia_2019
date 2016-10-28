@@ -125,7 +125,7 @@ if(@$_REQUEST['filtrar_arbol']){
             }
             break;
         case 'documental': //MUESTRA TODO NO EXISTE FILTRO
-            
+            $tipo_subserie=' AND tipo IN(1,2)';
             break;
     }
 }
