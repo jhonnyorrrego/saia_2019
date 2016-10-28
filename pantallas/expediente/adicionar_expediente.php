@@ -121,7 +121,7 @@ $dato_padre=busca_filtro_tabla("","expediente a","a.idexpediente=".$_REQUEST["co
 	  <script>
 	      $(document).ready(function(){
 	          $('#codigo_numero_dependencia,#codigo_numero_serie,#codigo_numero_consecutivo').keyup(function(){
-	              alert('fuck my fucking dick');
+	              
 	          });
 	      });
 	  </script>
