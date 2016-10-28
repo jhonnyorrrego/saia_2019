@@ -246,11 +246,13 @@ $(document).ready(function(){
 	
 	$(document).ready(function(){
 	    $('[name="x_tipo"]').click(function(){
+	        $('#nombre_padre_muestra').remove();
 		    filtrar_arbol_series();
 	    });
 	    
 	    
 		$("#cat2").click(function(){
+		    
 		    filtrar_arbol_series();
 			$(".ocultar").each(function(){
 				$(this).show();
