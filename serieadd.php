@@ -228,7 +228,7 @@ $(document).ready(function(){
 			});
 		});
 		$("#cat3").click(function(){
-		    
+		    tree2.remove('1-categoria-Comunicaciones Oficiales');
 			$(".ocultar").each(function(){
 				$(this).hide();
 			});
