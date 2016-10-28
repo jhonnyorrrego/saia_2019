@@ -145,28 +145,7 @@ if($dato_padre["numcampos"]){
 </div>
 
 <div id="datos_adicionales" class="datos_adicionales collapse opcion_informacion clase_sin_capas">
-	<div class="control-group element">
-	  <label class="control-label" for="nombre">Unidad administrativa / seccion <br />Subseccion I<br />Subseccion II
-	  </label>
-	  <div class="controls">
-	  	<b><?php echo(mostrar_seleccionados_exp($datos[0]["unidad_admin"],"nombre","dependencia")); ?></b>
-	  	<br />
-	    <span class="phpmaker">
-				<input type="text" id="stext_dependencia" width="200px" size="20">          
-	      <a href="javascript:void(0)" onclick="tree4.findItem(htmlentities(document.getElementById('stext_unidad_admin').value),1)">
-	      <img src="<?php echo $ruta_db_superior; ?>botones/general/anterior.png"border="0px"></a>
-	      <a href="javascript:void(0)" onclick="tree4.findItem(htmlentities(document.getElementById('stext_unidad_admin').value),0,1)">
-	      <img src="<?php echo $ruta_db_superior; ?>botones/general/buscar.png"border="0px"></a>
-	      <a href="javascript:void(0)" onclick="tree4.findItem(htmlentities(document.getElementById('stext_unidad_admin').value))">
-	      <img src="<?php echo $ruta_db_superior; ?>botones/general/siguiente.png"border="0px"></a>      
-	      <div id="esperando_unidad_admin"><img src="<?php echo $ruta_db_superior; ?>imagenes/cargando.gif"></div>
-				<div id="treeboxbox_tree4" class="arbol_saia"></div>
-	      <input type="hidden" name="unidad_admin" id="unidad_admin" value="<?php echo($datos[0]["unidad_admin"]); ?>">
-	    </span>
-	  </div>
-	</div>
-	
-	
+
 	<div class="control-group element">
 	  <label class="control-label" for="codigo_numero">Codigo numero
 	  </label>
@@ -203,6 +182,31 @@ if($dato_padre["numcampos"]){
 	      });
 	  </script>	  
 	  </div>
+    
+    
+	<div class="control-group element">
+	  <label class="control-label" for="nombre">Unidad administrativa / seccion <br />Subseccion I<br />Subseccion II
+	  </label>
+	  <div class="controls">
+	  	<b><?php echo(mostrar_seleccionados_exp($datos[0]["unidad_admin"],"nombre","dependencia")); ?></b>
+	  	<br />
+	    <span class="phpmaker">
+				<input type="text" id="stext_dependencia" width="200px" size="20">          
+	      <a href="javascript:void(0)" onclick="tree4.findItem(htmlentities(document.getElementById('stext_unidad_admin').value),1)">
+	      <img src="<?php echo $ruta_db_superior; ?>botones/general/anterior.png"border="0px"></a>
+	      <a href="javascript:void(0)" onclick="tree4.findItem(htmlentities(document.getElementById('stext_unidad_admin').value),0,1)">
+	      <img src="<?php echo $ruta_db_superior; ?>botones/general/buscar.png"border="0px"></a>
+	      <a href="javascript:void(0)" onclick="tree4.findItem(htmlentities(document.getElementById('stext_unidad_admin').value))">
+	      <img src="<?php echo $ruta_db_superior; ?>botones/general/siguiente.png"border="0px"></a>      
+	      <div id="esperando_unidad_admin"><img src="<?php echo $ruta_db_superior; ?>imagenes/cargando.gif"></div>
+				<div id="treeboxbox_tree4" class="arbol_saia"></div>
+	      <input type="hidden" name="unidad_admin" id="unidad_admin" value="<?php echo($datos[0]["unidad_admin"]); ?>">
+	    </span>
+	  </div>
+	</div>
+	
+	
+
 	</div>
 	
 	<div class="control-group element">
