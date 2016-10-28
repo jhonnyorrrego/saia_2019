@@ -57,7 +57,11 @@ echo(librerias_notificaciones());
         var datos=nodeId.split("-");
         var datos2=nodeId.split("sub");
         if(datos[1] || datos2[1]){
-           parent.serielist.location = "serieview.php?key=" + datos[1]; 
+            var dato=datos[1];
+            if(datos2[1]){
+                dato=datos2[1];
+            }
+           parent.serielist.location = "serieview.php?key=" + dato; 
         }else{    
             var datos=nodeId.split("d");
             parent.serielist.location = "asignarserie_entidad.php?tipo_entidad=2&llave_entidad=" + datos[1];
