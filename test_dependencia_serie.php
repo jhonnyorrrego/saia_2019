@@ -249,7 +249,7 @@ function llena_entidad_serie($iddependencia,$series){
             echo(" nocheckbox=\"1\" ");	
         }
         
-        $subseries_tipo_documental=busca_filtro_tabla("idserie","serie","estado=1 AND categoria=1 AND tipo IN(2,3) AND cod_padre=".$series[$i]['idserie'],"",$conn);
+        $subseries_tipo_documental=busca_filtro_tabla("idserie","serie","estado=1 AND categoria=2 AND tipo IN(2,3) AND cod_padre=".$series[$i]['idserie'],"",$conn);
         print_r($subseries_tipo_documental);
         if($subseries_tipo_documental['numcampos']){
             echo(" child=\"1\">\n");
