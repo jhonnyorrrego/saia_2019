@@ -226,7 +226,7 @@ $(document).ready(function(){
 		    tree2.deleteItem('3-categoria-Otras categorias');
 		    tree2.deleteItem('1-categoria-Comunicaciones Oficiales');
 		    tree2.deleteItem('2-categoria-Produccion Documental');	
-		    
+		    $('[name="x_cod_padre"]').val('');
 		    var tipo=$('input:radio[name=x_tipo]:checked').val();
 		    var filtrar_arbol='';
 		    switch(parseInt(tipo)){
