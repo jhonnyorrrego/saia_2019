@@ -171,7 +171,36 @@ if($dato_padre["numcampos"]){
 	  <label class="control-label" for="codigo_numero">Codigo numero
 	  </label>
 	  <div class="controls"> 
-	    <input name="codigo_numero" id="codigo_numero" value="<?php echo($datos[0]["codigo_numero"]); ?>">
+	    <?php  
+	        $vector_codigo_numero=explode('-',$datos[0]["codigo_numero"]);
+	    ?>
+	    <input name="codigo_numero_dependencia" id="codigo_numero_dependencia" value="<?php echo($vector_codigo_numero[0]); ?>"  style="width:12%;" readonly> - 
+	    <input name="codigo_numero_serie" id="codigo_numero_serie" value="<?php echo($vector_codigo_numero[1]); ?>" style="width:12%;" readonly> - 
+	    <input name="codigo_numero_consecutivo" id="codigo_numero_consecutivo" style="width:10%;" value="<?php echo($vector_codigo_numero[2]); ?>">
+	    <input name="codigo_numero" id="codigo_numero" type="hidden" value="<?php echo($datos[0]["codigo_numero"]); ?>">
+	  </div>
+	  
+	  <script>
+	      $(document).ready(function(){
+	          $('#codigo_numero_dependencia,#codigo_numero_serie,#codigo_numero_consecutivo').keyup(function(){
+	              var codigo_numero_dependencia=$('#codigo_numero_dependencia').val();
+	              if(codigo_numero_dependencia==''){
+	                  codigo_numero_dependencia=0;
+	              }
+	              var codigo_numero_serie=$('#codigo_numero_serie').val();
+	              if(codigo_numero_serie==''){
+	                  codigo_numero_serie=0;
+	              }	              
+	              var codigo_numero_consecutivo=$('#codigo_numero_consecutivo').val();
+	              if(codigo_numero_consecutivo==''){
+	                  codigo_numero_consecutivo=0;
+	              }	  
+	              var cadena_parseo=codigo_numero_dependencia+'-'+codigo_numero_serie+'-'+codigo_numero_consecutivo;
+	              $('#codigo_numero').val(cadena_parseo);
+	             
+	          });
+	      });
+	  </script>	  
 	  </div>
 	</div>
 	
