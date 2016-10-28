@@ -111,7 +111,7 @@ global $conn,$tabla,$seleccionado,$activo,$excluidos;
 
 
 if(@$_REQUEST['filtrar_arbol']){
-    $filtro_arbol=explode(',',$_REQUEST['filtrar_arbol']);
+    $filtro_arbol=$_REQUEST['filtrar_arbol'];
     
     $solo_papas=0;
     switch($filtro_arbol){
