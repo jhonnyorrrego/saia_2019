@@ -307,7 +307,7 @@ $(document).ready(function(){
         		    switch(parseInt('<?php echo($x_tipo); ?>')){
         		        case 1:
         		            $('#x_tipo1').attr('disabled','disabled');
-        		            $('#x_tipo3').attr('disabled','disabled');
+        		            
         		            break;
         		        case 2:
 
