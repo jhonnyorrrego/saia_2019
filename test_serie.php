@@ -124,7 +124,7 @@ if(@$_REQUEST['filtrar_arbol']){
                 $tipo_subserie=' AND tipo=2';
             }
             break;
-        case 'documental': //MUESTRA 
+        case 'documental': //MUESTRA SERIES Y SUBSERIES
             $tipo_subserie=' AND tipo IN(1,2)';
             break;
     }
