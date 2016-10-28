@@ -317,7 +317,7 @@ function llena_subseries_tipo_documental($idserie){
 //SERIES SIN ASIGNAR (ssa)
 function series_sin_asignar(){
 	global $conn;
-	$series=busca_filtro_tabla("","serie a left join entidad_serie b ON a.idserie=b.serie_idserie AND b.entidad_identidad =2","b.serie_idserie IS NULL AND a.categoria<>3 AND a.estado=1","nombre asc",$conn);
+	$series=busca_filtro_tabla("","serie a left join entidad_serie b ON a.idserie=b.serie_idserie AND b.entidad_identidad =2","b.serie_idserie IS NULL AND a.categoria=2 AND a.estado=1 AND a.tipo=1","nombre asc",$conn);
 
 	for($i=0;$i<$series["numcampos"];$i++){
 		echo("<item style=\"font-family:verdana; font-size:7pt;\" text=\"".htmlspecialchars($series[$i]["nombre"])."(".$series[$i]["codigo"].")\" id=\"d"."-".$series[$i]["idserie"]."\" child=\"0\">\n");
