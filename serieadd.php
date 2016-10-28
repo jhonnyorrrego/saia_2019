@@ -298,6 +298,8 @@ $(document).ready(function(){
         		    switch(parseInt('<?php echo($x_tipo); ?>')){
         		        case 1:
         		            alert('es serie');
+        		            $('#x_tipo1').hide();
+        		            $('#x_tipo3').hide();
         		            break;
         		        case 2:
                             
