@@ -121,7 +121,7 @@ if(@$_REQUEST['filtrar_arbol']){
             break;
         case 'subseries':
             if($serie!="NULL"){
-                $tipo_subserie='AND tipo=2';
+                $tipo_subserie=' AND tipo=2';
             }
             break;
         case 'documental':
