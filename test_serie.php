@@ -138,7 +138,7 @@ if($serie=="NULL")
   $papas=busca_filtro_tabla("*",$tabla,"(cod_padre IS NULL OR cod_padre=0) $activo $condicion $excluidos","$orden ASC",$conn);
 else
   $papas=busca_filtro_tabla("*",$tabla,"cod_padre=".$serie.$activo.$condicion.$excluidos.$tipo_subserie,"$orden ASC",$conn); 
-    print_r($papas);
+   
 if($papas["numcampos"])
 { 
   for($i=0; $i<$papas["numcampos"]; $i++)
