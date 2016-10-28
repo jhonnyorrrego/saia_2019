@@ -12,10 +12,10 @@ $pos = strpos($cadena, $findme);
 // porque la posición de 'a' es 0. La declaración (0 != false) se evalúa a 
 // false.
 if ($pos !== false) {
-     echo "La cadena '$findme' fue encontrada en la cadena '$mystring'";
+     echo "La cadena '$findme' fue encontrada en la cadena '$cadena'";
          echo " y existe en la posición $pos";
 } else {
-     echo "La cadena '$findme' no fue encontrada en la cadena '$mystring'";
+     echo "La cadena '$findme' no fue encontrada en la cadena '$cadena'";
 }
 
 
