@@ -144,14 +144,14 @@ if($papas["numcampos"])
 	}
     if(in_array($papas[$i]["id$tabla"],$seleccionado)!==false)
       echo " checked=\"1\" ";  
-    if($hijos[0][0] && !@$_REQUEST['solo_series'])
+    if($hijos[0][0])
       echo(" child=\"1\">\n");
     else
       echo(" child=\"0\">\n");
-		if(!$_REQUEST["id"] && $tabla!='serie' && !@$_REQUEST['solo_series'])
+		if(!$_REQUEST["id"] && $tabla!='serie')
     	llena_serie($papas[$i]["id$tabla"]);
 		else{
-			if(!$_REQUEST["admin"] && !@$_REQUEST['solo_series']){
+			if(!$_REQUEST["admin"]){
 				llena_serie($papas[$i]["id$tabla"]);
 			}
 		}
