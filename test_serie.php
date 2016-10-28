@@ -116,15 +116,15 @@ if(@$_REQUEST['filtrar_arbol']){
     $solo_papas=0;
     $tipo_subserie='';
     switch($filtro_arbol){
-        case 'series':
+        case 'series':  //SOLO MUESTRA PADRES
             $solo_papas=1;
             break;
-        case 'subseries':
+        case 'subseries': //SOLO MUESTRA HASTA SUBSERIE
             if($serie!="NULL"){
                 $tipo_subserie=' AND tipo=2';
             }
             break;
-        case 'documental':
+        case 'documental': //MUESTRA TODO NO EXISTE FILTRO
             
             break;
     }
