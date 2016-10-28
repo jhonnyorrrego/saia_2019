@@ -432,10 +432,11 @@ $(document).ready(function(){
 
         		    switch(parseInt('<?php echo($x_tipo); ?>')){
         		        case 1:
-        		            $('#x_tipo1').attr('disabled','disabled');
+        		            
         		            tree2.deleteItem('3-categoria-Otras categorias');
 		                    tree2.deleteItem('1-categoria-Comunicaciones Oficiales');
 		                    tree2.deleteItem('2-categoria-Produccion Documental');
+		                     $('#x_tipo1').attr('disabled','disabled');
         		             $('#x_tipo2').click(); 
         		            break;
         		        case 2:
