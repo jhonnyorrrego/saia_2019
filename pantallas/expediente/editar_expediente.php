@@ -197,6 +197,7 @@ if($dato_padre["numcampos"]){
 	              }	  
 	              var cadena_parseo=codigo_numero_dependencia+'-'+codigo_numero_serie+'-'+codigo_numero_consecutivo;
 	              $('#codigo_numero').val(cadena_parseo);
+	              alert( $('#codigo_numero').val() );
 	             
 	          });
 	      });
