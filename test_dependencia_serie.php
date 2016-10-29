@@ -142,23 +142,25 @@ if($papas["numcampos"]){
     
     $hijos_entidad_serie = busca_filtro_tabla("serie_idserie","entidad_serie","estado=1 AND entidad_identidad='2' AND llave_entidad=".$papas[$i]["id$tabla"],"",$conn);
     
-    
-    $almenos_una_serie=1;
-    if( $lista_series_funcionario!='' && $hijos_entidad_serie['numcampos'] ){
-        $almenos_una_serie=0;
-        $idserie_hijos_entidad_serie=extrae_campo($hijos_entidad_serie,'serie_idserie');
-        $idserie_hijos_entidad_serie=array_map('intval',$idserie_hijos_entidad_serie);
-        $vector_lista_series_funcionario=explode(',',$lista_series_funcionario);
-        $vector_lista_series_funcionario=array_map('intval',$vector_lista_series_funcionario);
-        for($h=0;$h<count($idserie_hijos_entidad_serie);$h++){
-            if( in_array($idserie_hijos_entidad_serie[$h],$vector_lista_series_funcionario) ){
-               $almenos_una_serie=1; 
+    if($_REQUEST['funionario']){
+        $almenos_una_serie=1;
+        if( $lista_series_funcionario!='' && $hijos_entidad_serie['numcampos'] ){
+            $almenos_una_serie=0;
+            $idserie_hijos_entidad_serie=extrae_campo($hijos_entidad_serie,'serie_idserie');
+            $idserie_hijos_entidad_serie=array_map('intval',$idserie_hijos_entidad_serie);
+            $vector_lista_series_funcionario=explode(',',$lista_series_funcionario);
+            $vector_lista_series_funcionario=array_map('intval',$vector_lista_series_funcionario);
+            for($h=0;$h<count($idserie_hijos_entidad_serie);$h++){
+                if( in_array($idserie_hijos_entidad_serie[$h],$vector_lista_series_funcionario) ){
+                   $almenos_una_serie=1; 
+                }
             }
         }
-    }
-    if(!$almenos_una_serie){
-        $hijos_entidad_serie['numcampos']=0;
-    }
+        if(!$almenos_una_serie){
+            $hijos_entidad_serie['numcampos']=0;
+        }  
+    }    
+
     
     echo("<item style=\"font-family:verdana; font-size:7pt;color:blue;\" ");
     $cadena_codigo='';
