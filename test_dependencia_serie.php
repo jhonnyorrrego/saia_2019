@@ -172,7 +172,7 @@ if($papas["numcampos"]){
 	if(@$_REQUEST["arbol_series"]){		
 				
 	}		
-	else if(@$_REQUEST["sin_padre_dep"]){		
+	else if(@$_REQUEST["sin_padre_dependencia"]){		
       echo(" nocheckbox=\"1\" ");		
 	}
 	
