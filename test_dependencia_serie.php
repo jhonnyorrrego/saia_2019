@@ -298,7 +298,7 @@ function llena_subseries_tipo_documental($idserie){
 		    if(@$_REQUEST["arbol_series"]){		
 				
 	        }		
-	        else if($hijos[0]["cant"]!=0 && ($tabla_otra=="serie" || @$_REQUEST["sin_padre"])){		
+	        else if($hijos[0]["cant"]!=0 && (@$_REQUEST["sin_padre"])){		
               echo(" nocheckbox=\"1\" ");		
 	        }
             if(in_array($papas[$i]["id$tabla"],$seleccionado)!==false)
