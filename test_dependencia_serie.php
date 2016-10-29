@@ -250,7 +250,7 @@ function llena_entidad_serie($iddependencia,$series){
     for($i=0;$i<$series['numcampos'];$i++){
         echo("<item style=\"font-family:verdana; font-size:7pt;\" ");
         echo("text=\"".htmlspecialchars(($series[$i]["nombre"])).' ('.$series[$i]['codigo'].') '." \" id=\"sub".$series[$i]['idserie']."\"");
-        if(!@$_REQUEST['funcionario']){
+        if(@$_REQUEST['sin_padre']){
             echo(" nocheckbox=\"1\" ");	
         }
         
