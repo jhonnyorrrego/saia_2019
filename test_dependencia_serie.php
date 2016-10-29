@@ -169,10 +169,7 @@ if($papas["numcampos"]){
     }
 	
     echo("text=\"".htmlspecialchars(($papas[$i]["nombre"])).$cadena_codigo." \" id=\"d".$papas[$i]["id$tabla"]."\"");
-	if(@$_REQUEST["arbol_series"]){		
-				
-	}		
-	else if(@$_REQUEST["sin_padre_dependencia"]){		
+    if(@$_REQUEST["sin_padre_dependencia"]){		
       echo(" nocheckbox=\"1\" ");		
 	}
 	
