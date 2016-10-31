@@ -83,17 +83,40 @@ function mostrar_mensajeros_dependencia($idft_destino_radicacion){
     $destino=busca_filtro_tabla("","vfuncionario_dc","iddependencia_cargo=".$datos[0]['nombre_destino'],"",$conn);
     $responsable=busca_filtro_tabla("","ft_ruta_distribucion a, ft_dependencias_ruta b, ft_funcionarios_ruta c","b.estado_dependencia=1 AND c.estado_mensajero=1 AND a.idft_ruta_distribucion=b.ft_ruta_distribucion AND a.idft_ruta_distribucion=c.ft_ruta_distribucion AND b.dependencia_asignada=".$destino[0]['iddependencia'],"",$conn);
     $select="<select class='mensajeros' data-idft='$idft_destino_radicacion' name='responsable_{$idft_destino_radicacion}' style='width:150px;'>";
-    $select.="<option value=''>Seleccione</option>";
-    for($i=0;$i<$responsable['numcampos'];$i++){
-        $mensajero=busca_filtro_tabla("concat(nombres,' ',apellidos) AS nombre","vfuncionario_dc","iddependencia_cargo={$responsable[$i]['mensajero_ruta']}");
-        if($responsable[$i]['mensajero_ruta']==$datos[0]['mensajero_encargado']){
-            $select.="<option value='{$responsable[$i]['mensajero_ruta']}' selected>".$mensajero[0]['nombre']."</option>";
-        }else{
-            $select.="<option value='{$responsable[$i]['mensajero_ruta']}'>".$mensajero[0]['nombre']."</option>";
-        }
+    if($responsable['numcampos']==1){
+            if($responsable[0]['mensajero_ruta']==$datos[0]['mensajero_encargado']){
+                $select.="<option value='{$responsable[0]['mensajero_ruta']}' selected>".$mensajero[0]['nombre']."</option>";
+            }else{
+                $select.="<option value='{$responsable[0]['mensajero_ruta']}'>".$mensajero[0]['nombre']."</option>";
+                ?>
+                    <script>
+                        $.ajax({
+                            type:'POST',
+                            dataType: 'json',
+                            url: "<?php echo $ruta_db_superior;?>formatos/radicacion_entrada/actualizar_mensajero.php",
+                            data: {
+                                            idft_destino_radicacion:<?php echo $idft_destino_radicacion;?>,
+                                            mensajero_encargado:<?php echo $responsable[0]['mensajero_ruta'];?>
+                            },
+                            
+                        });
+                    </script>
+                <?php
+            }
+    }else{
         
+        $select.="<option value=''>Seleccione</option>";
+        for($i=0;$i<$responsable['numcampos'];$i++){
+            $mensajero=busca_filtro_tabla("concat(nombres,' ',apellidos) AS nombre","vfuncionario_dc","iddependencia_cargo={$responsable[$i]['mensajero_ruta']}");
+            if($responsable[$i]['mensajero_ruta']==$datos[0]['mensajero_encargado']){
+                $select.="<option value='{$responsable[$i]['mensajero_ruta']}' selected>".$mensajero[0]['nombre']."</option>";
+            }else{
+                $select.="<option value='{$responsable[$i]['mensajero_ruta']}'>".$mensajero[0]['nombre']."</option>";
+            }
+            
+        }
+        $select.="</select>";
     }
-    $select.="</select>";
     }
     return $select;
 }
