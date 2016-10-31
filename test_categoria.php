@@ -84,7 +84,7 @@ if($papas["numcampos"])
 		else{
 			echo (" >");
 		}
-		if(@$_REQUEST["sin_padre"])
+		//if(@$_REQUEST["sin_padre"])
           echo(" nocheckbox=\"1\" "); 
 	}
     if($hijos[0][0]){
