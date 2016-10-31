@@ -84,6 +84,8 @@ if($papas["numcampos"])
 		else{
 			echo (" >");
 		}
+		if(@$_REQUEST["sin_padre"])
+          echo(" nocheckbox=\"1\" "); 
 	}
     if($hijos[0][0]){
     	llena_formato('',$papas[$i]["idcategoria_formato"],$seleccionados);
