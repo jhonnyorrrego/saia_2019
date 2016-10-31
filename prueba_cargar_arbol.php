@@ -60,7 +60,7 @@ echo(librerias_notificaciones());
             //tree2.setXMLAutoLoading("test_serie_funcionario2.php?tabla=dependencia&admin=1");
 			//tree2.loadXML("test_serie_funcionario2.php?tabla=dependencia&admin=1");
 			
-			tree2.setXMLAutoLoading("prueba_test_hernando.php?seleccionados="+tree2.getAllChecked());
+			tree2.setXMLAutoLoading("prueba_test_hernando.php");
 			tree2.loadXML("prueba_test_hernando.php");
 	  function onNodeSelect(nodeId){
         var valor=tree2.getAllChecked();
