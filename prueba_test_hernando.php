@@ -42,7 +42,7 @@ function crear_rama_padre_hijo($nodeid){
     $vector_ids=explode('.',$ids_cadena);
     $arbol="";
     $consecutivo="";
-    for($i=0;$i<count($vector_ids)+1;$i++){
+    for($i=0;$i<count($vector_ids);$i++){
         if($i!=0){
             $consecutivo.=".";
         }        
@@ -54,9 +54,9 @@ function crear_rama_padre_hijo($nodeid){
         $arbol.="<".$llave." style=\"font-family:verdana; font-size:7pt;\" text=\"Nodo ".$consecutivo."\" id=\"n".$consecutivo."\" child=\"1\">\n";
         
     }
-    for($i=0;$i<count($vector_ids)+1;$i++){
+    for($i=0;$i<count($vector_ids);$i++){
         $llave="item";
-        if( ($i+1)==count($vector_ids)+1 ){
+        if( ($i+1)==count($vector_ids) ){
             $llave="tree";
         }
         $arbol.="</".$llave.">\n";
