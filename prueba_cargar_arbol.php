@@ -59,7 +59,13 @@ echo(librerias_notificaciones());
 			tree2.setXMLAutoLoading("prueba_test_hernando.php");
 			tree2.loadXML("prueba_test_hernando.php");
 	  function onNodeSelect(nodeId){
-	      
+        valor_destino=tree2.getAllChecked();
+
+        if(tree_serie_idserie.isItemChecked(nodeId)){
+            if(valor_destino.value!==""){
+                tree_serie_idserie.setCheck(valor_destino.value,false);
+            }
+        }
       }
       function fin_cargando_serie() {
         if (browserType == "gecko" )
