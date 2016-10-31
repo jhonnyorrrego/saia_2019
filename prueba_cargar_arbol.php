@@ -36,7 +36,7 @@ echo(librerias_notificaciones());
             //tree2.loadXML("prueba_test_hernando.php?seleccionado="+seleccionado);
             //tree2.setXMLAutoLoadingBehaviour("prueba_test_hernando.php?seleccionado="+seleccionado);
           
-           // tree2.refreshItem(seleccionado);
+            tree2.refreshItem(seleccionado);
         });
     });
 
