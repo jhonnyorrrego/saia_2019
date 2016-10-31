@@ -65,10 +65,10 @@ function mostrar_ruta_reporte($idft_destino_radicacion){
     return ($ubicacion);
 }
 
-function seleccionar_destino($idft_destino_radicacion,$mensajero_encargado){
+function planilla_mensajero($idft_destino_radicacion,$mensajero_encargado){
     global $ruta_db_superior, $conn;
     
-    $input="<input type='checkbox' name='seleccionar' mensajero='".$mensajero_encargado."' value='$idft_destino_radicacion'>";
+    $input="<input type='checkbox' class='planilla_mensajero' mensajero='".$mensajero_encargado."' value='$idft_destino_radicacion'>";
     return $input;
 }
 
