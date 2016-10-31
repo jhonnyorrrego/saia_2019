@@ -40,6 +40,18 @@ function crear_rama_padre_hijo($nodeid){
     
     $ids_cadena=substr($nodeid,1, ( strlen( $nodeid )-1 ) );
     $vector_ids=explode('.',$ids_cadena);
+    $arbol="";
+    $consecutivo="";
+    for($i=0;$i<count($vector_ids);$i++){
+        if($i!=0){
+            $consecutivo.="."
+        }        
+        $consecutivo.=$vector_ids[$i];
+
+        $arbol.="<item style=\"font-family:verdana; font-size:7pt;\" text=\"Nodo ".$vector_ids[$i]."\" id=\"n".$consecutivo."\" child=\"1\">\n";
+        $arbol.="</item>\n";
+    }
+    
     print_r($vector_ids);
 }
 
