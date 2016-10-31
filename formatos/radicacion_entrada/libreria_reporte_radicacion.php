@@ -85,7 +85,6 @@ function mostrar_mensajeros_dependencia($idft_destino_radicacion){
     $select="<select class='mensajeros' data-idft='$idft_destino_radicacion' name='responsable_{$idft_destino_radicacion}' style='width:150px;'>";
     
     if($responsable['numcampos']==1){
-            return $responsable['numcampos'];die();
             if($responsable[0]['mensajero_ruta']==$datos[0]['mensajero_encargado']){
                 $select.="<option value='".$responsable[0]['mensajero_ruta']."' selected>".$mensajero[0]['nombre']."</option>";
             }else{
