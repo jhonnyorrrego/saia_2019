@@ -244,7 +244,7 @@ function imprime(atras){
 </head>
 <br/><br/>
 
-<table height="94px" width="300px" align="right" border="0px" cellspacing="0" cellpadding="0" style="border-collapse:collapse;">
+<table height="94px" width="250px" align="right" border="0px" cellspacing="0" cellpadding="0" style="border-collapse:collapse;">
   <tr> 
 	<td><?php echo "<br/><center>".($qr)."</center>"; ?></td>
 	<td border="1px" colspan="2" align="left" height="2px" cellspacing="0" cellpadding="0">
