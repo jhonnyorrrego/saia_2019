@@ -1,4 +1,13 @@
 <?php  
+//codificacion arbol
+if ( stristr($_SERVER["HTTP_ACCEPT"],"application/xhtml+xml") ) { 
+  header("Content-type: application/xhtml+xml"); 
+} 
+else{ 
+  header("Content-type: text/xml"); 
+}
+echo("<?xml version=\"1.0\" encoding=\"UTF-8\"?".">");
+
 $cantidad_padres=3;
 $cantidad_hijos=3;
 
