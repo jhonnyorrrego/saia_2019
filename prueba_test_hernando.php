@@ -24,7 +24,7 @@ function llena_padres(){
     $arbol_padres="";
     for($i=0;$i<$cantidad_padres;$i++){
         $arbol_padres.="<item style=\"font-family:verdana; font-size:7pt;\" text=\"Padre ".($i+1)."\" id=\"padre_".($i+1)."\" child=\"1\">\n";
-        $arbol_padres.=llena_hijos($i);
+        
         $arbol_padres.="</item>\n";
     }
     return($arbol_padres);
