@@ -68,10 +68,13 @@ function mostrar_seleccionados_entrega($idformato,$iddoc){
 //------------------------------Posterior aprobar------------------------------------//
 function generar_pdf_entrega($idformato,$iddoc){
 	global $conn,$ruta_db_superior;
-	$seleccionado=busca_filtro_tabla("","ft_despacho_ingresados,documento","documento_iddocumento=iddocumento and documento_iddocumento=".$iddoc,"",$conn);	
-	if($seleccionado[0]['mensajero']==0 || $seleccionado[0]['mensajero']==''){
-		$sql1_mensajero="UPDATE ft_despacho_ingresados SET mensajero='".usuario_actual('idfuncionario')."' where idft_despacho_ingresados=".$seleccionado[0]['idft_despacho_ingresados'];
-		phpmkr_query($sql1_mensajero);
+	$seleccionado=busca_filtro_tabla("iddestino_radicacion,idft_despacho_ingresados","ft_despacho_ingresados","documento_iddocumento=".$iddoc,"",$conn);
+	$iddestino_radicacion=explode($seleccionado[0]['iddestino_radicacion']);
+	$cont=count($iddestino_radicacion);
+	for($i=0;$i<$cont;$i++){
+	    $insert="INSERT INTO ft_item_despacho_ingres(idft_item_despacho_ingres,ft_destino_radicacio,ft_despacho_ingresados) VALUES (NULL, '".$iddestino_radicacion[$i]."', '".$seleccionado[0]['idft_despacho_ingresados']."')";
+	    echo($insert);
+	    phpmkr_query($insert);
 	}
 	abrir_url($ruta_db_superior."class_impresion.php?iddoc=".$iddoc,"_self");
 	die();
