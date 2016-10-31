@@ -13,7 +13,6 @@ global $cantidad_padres;
 
 
 if(@$_REQUEST['padre']){
-    die();
     $arbol="<tree id=\"".$_REQUEST['padre']."\">\n";   
     $arbol.=llena_hijos($_REQUEST['padre']);
     $arbol.="</tree>\n";   
