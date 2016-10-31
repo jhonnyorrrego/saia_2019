@@ -22,7 +22,7 @@ if($_REQUEST['tipo_radicacion']==1){
     $tipo="I";
 }
 $fecha=date('Y-m-d');
-$idcontador=array(0=>$fecha."-".$contador[0]['consecutivo']."-".$tipo);
+$idcontador=array(0=>$fecha."-<b>".$contador[0]['consecutivo']."</b>-".$tipo);
 $idcontador=json_encode($idcontador);
 echo ($idcontador); 
  
