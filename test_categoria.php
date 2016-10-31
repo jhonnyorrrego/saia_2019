@@ -79,10 +79,10 @@ if($papas["numcampos"])
 		
 		echo("text=\"".htmlspecialchars($papas[$i]["nombre"]).$estado." \" id=\"".$papas[$i]["idcategoria_formato"]."\"");
 		if(in_array($papas[$i]["idcategoria_formato"],$seleccionados)){
-			echo (" checked=\"1\" nocheckbox=\"0\" >");
+			echo (" checked=\"1\" >");
 		}
 		else{
-			echo (" nocheckbox=\"0\" >");
+			echo (" >");
 		}
 	}
     if($hijos[0][0]){
@@ -109,7 +109,7 @@ function adicionar_formato($idcategoria){
 		    if(@$_REQUEST['tipo_radicado']){
 		        if($_REQUEST['tipo_radicado']==$formatos[$i]["nombre"]){
 		            echo("<item style=\"font-family:verdana; font-size:7pt;\" ");
-    		        echo("text=\"".ucwords(strtolower(htmlspecialchars($formatos[$i]["etiqueta"])))." Origen Externo\" id=\"radicacion_entrada\"  ></item>");
+    		        echo("text=\"".ucwords(strtolower(htmlspecialchars($formatos[$i]["etiqueta"])))." Origen Externo\" id=\"radicacion_entrada\" ></item>");
     		        echo("<item style=\"font-family:verdana; font-size:7pt;\" ");
     		        echo("text=\"".ucwords(strtolower(htmlspecialchars($formatos[$i]["etiqueta"])))." Origen Interno\" id=\"radicacion_salida\" ></item>");
 		        }/*else{
