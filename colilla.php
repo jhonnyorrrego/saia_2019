@@ -88,7 +88,7 @@ if($doc<>FALSE){
       $usu="RADICACION";
   if($datos[0]["tipo_radicado"]==1){
     $numero_folios=busca_filtro_tabla("","ft_radicacion_entrada","documento_iddocumento=".$doc,"",$conn);
-    
+    $tipo_radicacion='E';
     if($ejecutor["numcampos"]) 
       $origen=ucwords(strtolower($responsable[0]["nombres"]." ".$responsable[0]["apellidos"]));
     else 
@@ -98,6 +98,7 @@ if($doc<>FALSE){
   }
   else if($datos[0]["tipo_radicado"]==2){
     $numero_folios=busca_filtro_tabla("","ft_radicacion_entrada","documento_iddocumento=".$doc,"",$conn);
+    $tipo_radicacion='E';
     $origen=ucwords(strtolower($responsable[0]["nombres"]." ".$responsable[0]["apellidos"])); 
     $destino=$ejecutor[0]["nombre"];
   }
