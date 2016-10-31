@@ -619,7 +619,10 @@ function mostrar_informacion_general_radicacion($idformato,$iddoc){
 	$anexos=busca_filtro_tabla("etiqueta","anexos","documento_iddocumento=".$iddoc,"",$conn);
 	$nombre_anexos='';
 	for ($i=0; $i < $anexos['numcampos']; $i++) {
-	    $nombre_anexos.=$anexos[$i]['etiqueta'].'</br>';
+	    $nombre_anexos.=$anexos[$i]['etiqueta'];
+		if($i < $anexos['numcampos']-1){
+			$nombre_anexos.=', ';
+		}
 	}
 	
 	$estado_doc=busca_filtro_tabla("","documento","iddocumento=".$iddoc,"", $conn);
