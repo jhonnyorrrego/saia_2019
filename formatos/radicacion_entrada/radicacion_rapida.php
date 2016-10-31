@@ -230,7 +230,7 @@ if(@$_REQUEST["idcategoria_formato"]){
 	</script>
 	        </td>
                     </tr>
-                    <tr><td style="font-size:8pt;" align="center">Numero de folios</td>
+                    <tr><td style="font-size:8pt;" min="0" align="center">Numero de folios</td>
                         <td align="center"><input type="number" value="" id="numero_folios" name="numero_folios"/></td>
                     </tr>
                     <tr>
