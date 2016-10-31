@@ -35,7 +35,7 @@ function llena_hijos($padre){
     $arbol_hijos="";
     for($j=0;$j<$cantidad_hijos;$j++){
         $arbol_hijos.="<item style=\"font-family:verdana; font-size:7pt;\" text=\"Hijo ".($padre+1).".".($j+1)."\" id=\"".($padre+1)."_hijo_".($j+1)."\" child=\"1\">\n";
-        $arbol_padres.=llena_subhijos($j);
+        $arbol_hijos.=llena_subhijos($j);
         $arbol_hijos.="</item>\n";
     }    
     return($arbol_hijos);
