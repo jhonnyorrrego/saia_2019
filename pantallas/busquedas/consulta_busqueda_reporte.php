@@ -44,8 +44,8 @@ for($i=0;$i<$cant;$i++){
   if($datos[3]){
     $width=',"width":'.$datos[3];
   }
-	//array_push($columnas["modelo"],'{"encabezado":"'.$datos[0].'","name":"'.$datos2[0].'","align":"'.$datos[2].'"'.$width.'}');
-	array_push($columnas["modelo"],'{"frozen":"1",encabezado":"'.$datos[0].'","name":"'.$datos2[0].'","align":"'.$datos[2].'"'.$width.'}');
+	array_push($columnas["modelo"],'{"encabezado":"'.$datos[0].'","name":"'.$datos2[0].'","align":"'.$datos[2].'"'.$width.'}');
+	
 }
 
 $encabezado=stripslashes($datos_busqueda[0]["encabezado_grillas"]);
