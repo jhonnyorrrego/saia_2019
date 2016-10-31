@@ -22,13 +22,12 @@ echo(librerias_notificaciones());
   <meta http-equiv="Content-Type" content="text/html; charset= UTF-8 ">
 <script type="text/javascript" src="js/dhtmlXCommon.js"></script>
 <script type="text/javascript" src="js/dhtmlXTree.js"></script>
-    <link rel="STYLESHEET" type="text/css" href="css/dhtmlXTree.css">
+<link rel="STYLESHEET" type="text/css" href="css/dhtmlXTree.css">
 
-	
-			  <div id="esperando_serie"><img src="imagenes/cargando.gif"></div>
-				<div id="treeboxbox_tree2" width="100px" height="100px"></div>
-	<script type="text/javascript">
-  <!--
+<br>	
+<div id="esperando_serie"><img src="imagenes/cargando.gif"></div>
+<div id="treeboxbox_tree2" width="100px" height="100px"></div>
+<script type="text/javascript">
       var browserType;
       if (document.layers) {browserType = "nn4"}
       if (document.all) {browserType = "ie"}
