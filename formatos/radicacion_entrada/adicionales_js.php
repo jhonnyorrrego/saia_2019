@@ -18,7 +18,7 @@ echo(librerias_notificaciones());
 <script>
     $(document).ready(function(){
         
-        $("#nav_busqueda").after("<div style='margin:5px' class='ui-state-default ui-jqgrid-pager ui-corner-bottom'><button class='btn btn-mini' title='Realizar despacho' id='boton_seleccionar_registros'>Generar Planilla de Entrega</button></div>");
+        $("#nav_busqueda").after("<div style='margin:5px' class='ui-state-default ui-jqgrid-pager ui-corner-bottom'><button class='btn btn-mini pull-right' title='Realizar despacho' id='boton_seleccionar_registros'>Generar Planilla de Entrega</button></div>");
         
         $(".mensajeros").live("change",function(){
             var idft=$(this).attr("data-idft");
