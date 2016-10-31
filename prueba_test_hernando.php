@@ -21,9 +21,6 @@ echo($arbol);
 
 function llena_padres(){
     global $cantidad_padres;
-    
-    
-    print_r($cantidad_padres);die();
     $arbol_padres="";
     for($i=0;$i<$cantidad_padres;$i++){
         $arbol_padres.="<item style=\"font-family:verdana; font-size:7pt;\" text=\"Padre ".($i+1)."\" id=\"padre_".($i+1)."\" child=\"1\">\n";
