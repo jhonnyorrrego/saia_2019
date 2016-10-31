@@ -9,9 +9,19 @@ else{
 echo("<?xml version=\"1.0\" encoding=\"UTF-8\"?".">");
 
 $cantidad_padres=3;
-$cantidad_hijos=3;
-$cantidad_subhijos=3;
-global $cantidad_padres,$cantidad_hijos,$cantidad_subhijos;
+global $cantidad_padres;
+
+
+
+
+
+if(@$_REQUEST['id'] && @$_REQUEST['uid']){
+    
+    echo(llena_hijos(@$_REQUEST['id']));
+    die();
+}
+
+
 
 $arbol="<tree id=\"0\">\n";
 $arbol.=llena_padres();
@@ -23,12 +33,17 @@ function llena_padres(){
     global $cantidad_padres;
     $arbol_padres="";
     for($i=0;$i<$cantidad_padres;$i++){
-        $arbol_padres.="<item style=\"font-family:verdana; font-size:7pt;\" text=\"Padre ".($i+1)."\" id=\"padre_".($i+1)."\" child=\"1\">\n";
+        $arbol_padres.="<item style=\"font-family:verdana; font-size:7pt;\" text=\"Nodo ".($i+1)."\" id=\"p_".($i+1)."\" child=\"1\">\n";
         
         $arbol_padres.="</item>\n";
     }
     return($arbol_padres);
 }
+function llena_hijos($idpadre){
+    
+}
+
+/*
 function llena_hijos($padre){
     global $cantidad_hijos;
     
@@ -50,4 +65,5 @@ function llena_subhijos($padre){
     }    
     return($arbol_hijos);
 }
+*/
 ?>
