@@ -68,6 +68,9 @@ echo(librerias_notificaciones());
                 tree2.setCheck(vector_valor[i],false);
             }
         }
+        
+        alert( tree2.getAllChecked() );
+        
       }
       function fin_cargando_serie() {
         if (browserType == "gecko" )
