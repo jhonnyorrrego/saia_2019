@@ -42,6 +42,8 @@ echo(librerias_notificaciones());
 			tree2.setOnClickHandler(onNodeSelect);
 			tree2.setOnLoadingStart(cargando_serie);
             tree2.setOnLoadingEnd(fin_cargando_serie);
+            tree2.enableCheckBoxes(1);
+            tree2.enableRadioButtons(true);            
             //tree2.setXMLAutoLoading("test_serie_funcionario2.php?tabla=dependencia&admin=1");
 			//tree2.loadXML("test_serie_funcionario2.php?tabla=dependencia&admin=1");
 			tree2.setXMLAutoLoading("prueba_test_hernando.php");
