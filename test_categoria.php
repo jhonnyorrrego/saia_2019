@@ -82,7 +82,7 @@ if($papas["numcampos"])
 			echo (" checked=\"1\" nocheckbox=\"1\" >");
 		}
 		else{
-			echo (" >");
+			echo ("nocheckbox=\"1\" >");
 		}
 	}
     if($hijos[0][0]){
