@@ -13,7 +13,13 @@ global $cantidad_padres;
 
 
 if(@$_REQUEST['seleccionado']){
-    
+    echo('<tree style="font-family:verdana; font-size:7pt;" text="Nodo 1" id="n1" child="1">
+<item style="font-family:verdana; font-size:7pt;" text="Nodo 1.1" id="n1.1" child="1">
+</item>
+<item style="font-family:verdana; font-size:7pt;" text="Nodo 1.openssl_pkcs12_read" id="n1.12" child="1">
+</item>
+</tree>');
+    die();
     $arbol=crear_rama_padre_hijo($_REQUEST['seleccionado']);
     echo($arbol);
     die();    
