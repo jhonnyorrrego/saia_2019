@@ -153,6 +153,7 @@ $expediente=busca_filtro_tabla("a.*,".fecha_db_obtener("a.fecha","Y-m-d")." AS f
 	$estado_cierre="";
 	$enlace_abrir='<a style="cursor:pointer" class="accion_abrir_cierre" accion="1">Abrir</a>';
 	$enlace_cerrar='<a style="cursor:pointer" class="accion_abrir_cierre" accion="2">Cerrar</a>';
+	$observaciones_abrir_cerrar='';
 	if($expediente[0]["estado_cierre"]==1){
 		$estado_cierre="Abierto";
 		$enlace_abrir='';
@@ -178,6 +179,7 @@ $expediente=busca_filtro_tabla("a.*,".fecha_db_obtener("a.fecha","Y-m-d")." AS f
     		<tr>
     			<td style="text-align:center"><?php echo($enlace_cerrar); ?></td>
     		</tr>
+    		<?php echo($observaciones_abrir_cerrar); ?>
     	</table>
     </td>
   </tr>
