@@ -32,8 +32,6 @@ echo(librerias_notificaciones());
 			        registros_seleccionados+=$(this).val()+",";
 			        
 			        if(mensajero_temp){
-			            console.log(mensajero+mensajero_temp);
-			        console.log(mensajero+mensajero_temp);
 			            if(mensajero_temp!=mensajero){
 			                error=1;
 			            }
@@ -48,7 +46,7 @@ echo(librerias_notificaciones());
 				}else if(error==1){
 				    top.noty({text: 'No puede seleccionar diferentes mensajeros',type: 'error',layout: "topCenter",timeout:3500});
 				}else{
-					$("#boton_seleccionar_registros").after("<div id='ir_adicionar_documento' class='link kenlace_saia' enlace='formatos/despacho_ingresados/idft="+registros_seleccionados+"&mensajero="+mensajero+"' conector='iframe' titulo='Generar Planilla Mensajeros'>---</div>");
+					$("#boton_seleccionar_registros").after("<div id='ir_adicionar_documento' class='link kenlace_saia' enlace='formatos/despacho_ingresados/adicionar_despacho_ingresados.php?idft="+registros_seleccionados+"&mensajero="+mensajero+"' conector='iframe' titulo='Generar Planilla Mensajeros'>---</div>");
 					$("#ir_adicionar_documento").trigger("click");
 					$("#ir_adicionar_documento").remove();
 				}
