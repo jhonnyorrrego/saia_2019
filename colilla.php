@@ -332,13 +332,14 @@ function generar_ingreso_formato($nombre_formato){
 	$_REQUEST["continuar"] = "Solicitar Radicado";  //Siempre va esto
 	$_REQUEST["ejecutor"] = usuario_actual("funcionario_codigo");
 	$_REQUEST["estado_radicado"]='2';
-	
+	$_REQUEST["numero_folios"]=$_REQUEST["folios"];
 	//Adicionales
 	if($nombre_formato=="radicacion_entrada"){
 		$_REQUEST["idflujo"] = 1;
 	}
 	
 	$_POST=$_REQUEST;
+	
 	return radicar_plantilla2();
 }
 function radicar_plantilla2()
