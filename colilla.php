@@ -253,7 +253,7 @@ function imprime(atras){
 		</strong><br/><br/>
 		<?php if($datos[0]["tipo_radicado"]==1 || $datos[0]["tipo_radicado"]==2){?>
       	
-      	<b>Radicaci&oacute;n No: <?php echo($dependencia_creador[0]['codigo']."-".$datos[0]["numero"]."-".$tipo_radicacion);?></b>
+      	<b>Radicaci&oacute;n No: <?php echo($codigo_empresa."-".$datos[0]["numero"]."-".$tipo_radicacion);?></b>
  <?php }else{?>
 		<b>Radicaci&oacute;n No: <?php echo($codigo_empresa."-".$datos[0]["numero"]."-".$fecha["year"]);?></b>
 		<?php }?>
