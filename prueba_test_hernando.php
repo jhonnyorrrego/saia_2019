@@ -39,7 +39,8 @@ function llena_padres(){
     return($arbol_padres);
 }
 function llena_hijos($idpadre){
-        $arbol_padres="<item style=\"font-family:verdana; font-size:7pt;\" text=\"Nodo ".($i+1)."\" id=\"n".($i+1)."\" child=\"1\">\n";
+        $numero_nodo_padre=explode('n',$idpadre);
+        $arbol_padres="<item style=\"font-family:verdana; font-size:7pt;\" text=\"Nodo ".$numero_nodo_padre[1].".".($i+1)."\" id=\"".$idpadre.".".($i+1)."\" child=\"1\">\n";
         $arbol_padres.="</item>\n"; 
         return($arbol_padres);
 }
