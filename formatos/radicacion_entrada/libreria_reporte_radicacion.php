@@ -67,9 +67,12 @@ function mostrar_ruta_reporte($idft_destino_radicacion){
 
 function planilla_mensajero($idft_destino_radicacion,$mensajero_encargado){
     global $ruta_db_superior, $conn;
-    
-    $input="<input type='checkbox' class='planilla_mensajero' mensajero='".$mensajero_encargado."' value='$idft_destino_radicacion'>";
-    return $input;
+    if($mensajero_encargado=='mensajero_encargado'){
+        $html="Sin Mensajero Asignado";
+    }else{
+        $html="<input type='checkbox' class='planilla_mensajero' mensajero='".$mensajero_encargado."' value='$idft_destino_radicacion'>";
+    }
+    return $html;
 }
 
 function mostrar_mensajeros_dependencia($idft_destino_radicacion){
