@@ -183,9 +183,9 @@ if(@$_REQUEST["idcategoria_formato"]){
 			tree_equipos.setOnClickHandler(onNodeSelect);  
 			tree_equipos.setOnLoadingStart(cargando_serie);
       tree_equipos.setOnLoadingEnd(fin_cargando_serie);
-      tree_equipos.setXMLAutoLoading("<?php echo($ruta_db_superior); ?>test_categoria.php?tipo_radicado=radicacion_entrada<?php echo $adicional; ?>;2;1;0;1;1;0;0");
+      tree_equipos.setXMLAutoLoading("<?php echo($ruta_db_superior); ?>test_categoria.php?tipo_radicado=radicacion_entrada<?php echo $adicional; ?>");
       //tree_equipos.enableSmartXMLParsing(true);
-			tree_equipos.loadXML("<?php echo($ruta_db_superior); ?>test_categoria.php?tipo_radicado=radicacion_entrada<?php echo $adicional; ?>;2;1;0;1;1;0;0");
+			tree_equipos.loadXML("<?php echo($ruta_db_superior); ?>test_categoria.php?tipo_radicado=radicacion_entrada<?php echo $adicional; ?>");
 	    function onNodeSelect(nodeId){
 	     if(nodeId.indexOf('#',0)==-1){
             $('#generar_consecutivo').val(nodeId);
