@@ -230,11 +230,11 @@ if(@$_REQUEST["idcategoria_formato"]){
 	</script>
 	        </td>
                     </tr>
-                    <tr>
-                        <td colspan="2" align="center"><input type="number" value="" id="numero_folios" name="numero_folios"/></td>
+                    <tr><td style="font-size:8pt;" align="center">Numero de folios</td>
+                        <td align="center"><input type="number" value="" id="numero_folios" name="numero_folios"/></td>
                     </tr>
-                    <tr><td style="font-size:8pt;" class="encabezado_list" colspan="2" align="center">Seleccione Tipo de Radicación</td>
-                        <td align="center"><input class="btn btn-primary btn-mini" type="submit" value="Radicar" id="enviar" name="enviar"/></td>
+                    <tr>
+                        <td colspan="2" align="center"><input class="btn btn-primary btn-mini" type="submit" value="Radicar" id="enviar" name="enviar"/></td>
                     </tr>
                 </table>
             </form>
