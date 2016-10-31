@@ -34,7 +34,8 @@ echo(librerias_notificaciones());
         $('#crear_nodo').click(function(){
             var seleccionado = tree2.getAllChecked();
             var subItems = tree2.getAllSubItems(seleccionado);
-            tree2.loadXML("prueba_test_hernando.php?padre="+seleccionado+"&cantidad_hijos="+subItems.length);
+            var vector_subItems=subItems.split(",");
+            tree2.loadXML("prueba_test_hernando.php?padre="+seleccionado+"&cantidad_hijos="+vector_subItems.length);
         });
     });
 
