@@ -30,6 +30,8 @@ echo(librerias_notificaciones());
 			    if(checkbox.is(':checked')===true){
 			        mensajero=$(this).attr('mensajero');
 			        registros_seleccionados+=$(this).val()+",";
+			        console.log(mensajero);
+			        console.log(mensajero_temp);
 			        if(mensajero_temp){
 			            if(mensajero_temp!=mensajero){
 			                error=1;
