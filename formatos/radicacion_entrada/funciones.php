@@ -37,10 +37,10 @@ function mostrar_radicado_entrada($idformato,$iddoc){
 	$fecha=date('Y-m-d');
 	if($_REQUEST["iddoc"]){
 		$doc=busca_filtro_tabla("","documento a","iddocumento=".$_REQUEST["iddoc"],"",$conn);
-		echo '<td><b id="numero_radicado">'.$doc[0]["numero"].'</b></td>'; 
+		echo '<td id="numero_radicado"><b>'.$doc[0]["numero"].'</b></td>'; 
 	}
 	else
-		echo '<td><b id="numero_radicado">'.$fecha."-".muestra_contador("radicacion_entrada").'-E</b></td>';
+		echo '<td id="numero_radicado">'.$fecha."-<b>".muestra_contador("radicacion_entrada").'</b>-E</td>';
 }
 function enviar_adicionar($idformato,$iddoc){
 	$max_salida=6; // Previene algun posible ciclo infinito limitando a 10 los ../
