@@ -33,7 +33,7 @@ function llena_padres(){
     global $cantidad_padres;
     $arbol_padres="";
     for($i=0;$i<$cantidad_padres;$i++){
-        $arbol_padres.="<item style=\"font-family:verdana; font-size:7pt;\" text=\"Nodo ".($i+1)."\" id=\"n".($i+1)."\" child=\"1\">\n";
+        $arbol_padres.="<item style=\"font-family:verdana; font-size:7pt;\" text=\"Nodo ".($i+1)."(<button>Click Me</button>)\" id=\"n".($i+1)."\" child=\"1\">\n";
         $arbol_padres.="</item>\n";
     }
     return($arbol_padres);
