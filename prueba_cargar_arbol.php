@@ -34,6 +34,8 @@ echo(librerias_notificaciones());
         $('#crear_nodo').click(function(){
             var seleccionado = tree2.getAllChecked();
             alert(seleccionado);
+            
+            tree2.loadXML("prueba_test_hernando.php&padre="+seleccionado);
         });
     });
 
