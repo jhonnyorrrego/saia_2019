@@ -196,25 +196,38 @@ $expediente=busca_filtro_tabla("a.*,".fecha_db_obtener("a.fecha","Y-m-d")." AS f
   	$(".accion_abrir_cierre").click(function(){
   		if(confirm('Esta seguro de realizar esta accion?')){
   			var x_accion=$(this).attr("accion");
-  			$.ajax({
-  				url:"<?php echo($ruta_db_superior);?>pantallas/expediente/ejecutar_acciones.php",
-  				data:{ejecutar_expediente: 'abrir_cerrar_expediente', tipo_retorno: 1, accion: x_accion, idexpediente: '<?php echo($expediente[0]["idexpediente"]); ?>'},
-  				type:"POST",
-  				success: function(html){
-  					if(html){
-  						var objeto=jQuery.parseJSON(html);
-  						if(objeto.exito){
-  							notificacion_saia(objeto.mensaje,"success","",2500);
-  							if(x_accion==1){
-  							    window.parent.$('#seleccionados_expediente_<?php echo(@$_REQUEST["idexpediente"]); ?>').attr('style','display:none;');
-  							}else{
-  							    window.parent.$('#seleccionados_expediente_<?php echo(@$_REQUEST["idexpediente"]); ?>').attr('style','display:block;');
-  							}
-  							window.open("detalles_expediente.php?idexpediente=<?php echo(@$_REQUEST["idexpediente"]); ?>&idbusqueda_componente=<?php echo(@$_REQUEST["idbusqueda_componente"]); ?>","_self");
-  						}
-  					}
-  				}
-  			});
+  			
+  			
+  			var ejecutar_ajax=1;
+  			if(x_accion==1){
+  			    var observaciones=$('#observaciones_abrir_cerrar').val();
+  			    if(observaciones==''){
+  			        ejecutar_ajax=0;
+  			    }
+  			    
+  			}
+  			
+  			if(ejecutar_ajax){
+      			$.ajax({
+      				url:"<?php echo($ruta_db_superior);?>pantallas/expediente/ejecutar_acciones.php",
+      				data:{ejecutar_expediente: 'abrir_cerrar_expediente', tipo_retorno: 1, accion: x_accion, idexpediente: '<?php echo($expediente[0]["idexpediente"]); ?>'},
+      				type:"POST",
+      				success: function(html){
+      					if(html){
+      						var objeto=jQuery.parseJSON(html);
+      						if(objeto.exito){
+      							notificacion_saia(objeto.mensaje,"success","",2500);
+      							if(x_accion==1){
+      							    window.parent.$('#seleccionados_expediente_<?php echo(@$_REQUEST["idexpediente"]); ?>').attr('style','display:none;');
+      							}else{
+      							    window.parent.$('#seleccionados_expediente_<?php echo(@$_REQUEST["idexpediente"]); ?>').attr('style','display:block;');
+      							}
+      							window.open("detalles_expediente.php?idexpediente=<?php echo(@$_REQUEST["idexpediente"]); ?>&idbusqueda_componente=<?php echo(@$_REQUEST["idbusqueda_componente"]); ?>","_self");
+      						}
+      					}
+      				}
+      			});
+  			}	
   		}
   	});
   });
