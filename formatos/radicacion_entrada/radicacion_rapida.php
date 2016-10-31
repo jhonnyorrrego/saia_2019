@@ -157,7 +157,7 @@ if(@$_REQUEST["idcategoria_formato"]){
 ?><link rel="STYLESHEET" type="text/css" href="<?php echo($ruta_db_superior); ?>css/dhtmlXTree.css">
 	<script type="text/javascript" src="<?php echo($ruta_db_superior); ?>js/dhtmlXCommon.js"></script>
 	<script type="text/javascript" src="<?php echo($ruta_db_superior); ?>js/dhtmlXTree.js"></script>
-	<script type="text/javascript" src="<?php echo($ruta_db_superior); ?>js/dhtmlXTree_xw.js"></script> 
+	<script type="text/javascript" src="<?php echo($ruta_db_superior); ?>js/dhtmlxtree_xw.js"></script> 
 	<script type="text/javascript" src="<?php echo($ruta_db_superior); ?>asset/js/jquery.min.js"></script>
 	<script type="text/javascript" src="<?php echo($ruta_db_superior); ?>asset/js/main.js"></script>
     
