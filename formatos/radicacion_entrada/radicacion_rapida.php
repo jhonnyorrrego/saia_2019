@@ -11,6 +11,7 @@ while($max_salida>0){
 include_once($ruta_db_superior."librerias_saia.php");
 echo(librerias_html5());
 echo(librerias_jquery("1.7"));
+echo(estilo_bootstrap());
 
 ?>    
 
@@ -137,7 +138,7 @@ echo(librerias_jquery("1.7"));
 			<form method="POST" action="<?php echo($ruta_db_superior); ?>colilla.php"><br/><br />
                 <table style="font-size:10pt;border-collapse:collapse; width:40%;" border="1" align="center">
                     <tr>
-                        <td style="font-size:8pt;" class="encabezado_list" colspan="2" align="center">Seleccione el formato a radicar</td>
+                        <td style="font-size:8pt;" class="encabezado_list" colspan="2" align="center">Seleccione Tipo de Radicación</td>
                     </tr>
                     <tr>
                         <td colspan="2">
