@@ -69,7 +69,7 @@ echo(librerias_notificaciones());
             }
         }
         
-        alert( tree2.getAllChecked() );
+       // alert( tree2.getAllChecked() );
         
       }
       function fin_cargando_serie() {
