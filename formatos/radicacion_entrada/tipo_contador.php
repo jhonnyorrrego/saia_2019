@@ -25,6 +25,6 @@ $fecha=date('Y-m-d');
 $idcontador=array(1=>$fecha."-".$contador[0]['consecutivo']."-".$tipo);
 $idcontador=json_encode($idcontador);
 echo ($idcontador); 
-
+ 
 
 ?> 
