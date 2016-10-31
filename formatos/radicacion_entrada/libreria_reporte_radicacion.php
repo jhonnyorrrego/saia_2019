@@ -87,9 +87,10 @@ function mostrar_mensajeros_dependencia($idft_destino_radicacion){
     if($responsable['numcampos']==1){
             
             $mensajero=busca_filtro_tabla("concat(nombres,' ',apellidos) AS nombre","vfuncionario_dc","iddependencia_cargo=".$responsable[0]['mensajero_ruta'],"",$conn);
-            return $responsable[0]['mensajero_ruta'];die();
+            
             if($responsable[0]['mensajero_ruta']==$datos[0]['mensajero_encargado']){
                 $select.="<option value='".$responsable[0]['mensajero_ruta']."' selected>".$mensajero[0]['nombre']."</option>";
+                return $responsable[0]['mensajero_ruta'];die();
             }else{
                 $select.="<option value='".$responsable[0]['mensajero_ruta']."'>".$mensajero[0]['nombre']."</option>";
                 ?>
