@@ -151,10 +151,14 @@ $expediente=busca_filtro_tabla("a.*,".fecha_db_obtener("a.fecha","Y-m-d")." AS f
   if(is_object($expediente[0]["fecha_cierre"]))$expediente[0]["fecha_cierre"]=$expediente[0]["fecha_cierre"]->format('Y-m-d');
 	$usuario_cierre=busca_filtro_tabla("","vfuncionario_dc a","a.idfuncionario=".$expediente[0]["funcionario_cierre"],"",$conn);
 	$estado_cierre="";
+	$enlace_abrir='<a style="cursor:pointer" class="accion_abrir_cierre" accion="1">Abrir</a>';
+	$enlace_cerrar='<a style="cursor:pointer" class="accion_abrir_cierre" accion="2">Cerrar</a>';
 	if($expediente[0]["estado_cierre"]==1){
 		$estado_cierre="Abierto";
+		$enlace_abrir='';
 	}else if($expediente[0]["estado_cierre"]==2){
 		$estado_cierre="Cerrado";
+		$enlace_cerrar='';
 	}
 	
 	$cadena_cierre[]="<b>Estado:</b> ".$estado_cierre;
@@ -168,11 +172,11 @@ $expediente=busca_filtro_tabla("a.*,".fecha_db_obtener("a.fecha","Y-m-d")." AS f
     <td>
     	<table class="table table-bordered">
     		<tr>
-    			<td style="text-align:center"><a style="cursor:pointer" class="accion_abrir_cierre" accion="1">Abrir</a></td>
+    			<td style="text-align:center"><?php echo($enlace_abrir); ?></td>
     			<td rowspan="2" style="text-align:center" class="prettyprint"><?php echo(implode("<br/>",$cadena_cierre)); ?></td>
     		</tr>
     		<tr>
-    			<td style="text-align:center"><a style="cursor:pointer" class="accion_abrir_cierre" accion="2">Cerrar</a></td>
+    			<td style="text-align:center"><?php echo($enlace_cerrar); ?></td>
     		</tr>
     	</table>
     </td>
