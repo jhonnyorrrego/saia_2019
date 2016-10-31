@@ -12,7 +12,9 @@ $cantidad_padres=3;
 global $cantidad_padres;
 
 
-
+if(@$_REQUEST['seleccionado']){
+    
+}
 
 
 if(@$_REQUEST['id'] && @$_REQUEST['uid']){
