@@ -317,13 +317,10 @@ function mostrar_contador_expediente($idexpediente,$cod_arbol){
 	obtener_expedientes_padre($idexpediente,$expedientes);
 	$arreglo=array_merge($arreglo,array($idexpediente));
 	//return(implode(",",$arreglo));
-	$documentos=busca_filtro_tabla("count(*) as cantidad","expediente_doc A, documento B","A.expediente_idexpediente in(".implode(",",$arreglo).") AND A.documento_iddocumento=B.iddocumento AND B.estado not in('ELIMINADO')","",$conn);
+	$documentos=busca_filtro_tabla("count(*) as cantidad","expediente_doc A, documento B","A.expediente_idexpediente in(".implode(",",$arreglo).") AND A.documento_iddocumento=B.iddocumento AND B.estado not in('ELIMINADO','ANULADO')","",$conn);
 	//return($cantidad["sql"]);
 	
 	if(!$documentos["numcampos"])$documentos[0]["cantidad"]=0;
-	
-	
-	
 	
 	return("<span class='pull-right badge' style='margin-top:3px' id='contador_docs_".$idexpediente."'>".$documentos[0]["cantidad"]."</span>");
 }
