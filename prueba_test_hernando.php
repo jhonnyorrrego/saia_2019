@@ -16,8 +16,10 @@ global $cantidad_padres;
 
 
 if(@$_REQUEST['id'] && @$_REQUEST['uid']){
-    
-    echo(llena_hijos(@$_REQUEST['id']));
+    $arbol="<tree id=\"0\">\n";   
+    $arbol.=llena_hijos(@$_REQUEST['id']);
+    $arbol.="</tree>\n";   
+    echo($arbol);
     die();
 }
 
