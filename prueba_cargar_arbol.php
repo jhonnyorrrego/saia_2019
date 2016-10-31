@@ -23,14 +23,8 @@ echo(librerias_notificaciones());
 <script type="text/javascript" src="js/dhtmlXCommon.js"></script>
 <script type="text/javascript" src="js/dhtmlXTree.js"></script>
     <link rel="STYLESHEET" type="text/css" href="css/dhtmlXTree.css">
-			  <span style="font-family: Verdana; font-size: 9px;">CLASIFICACI&Oacute;N DEL DOCUMENTO<br><br></span>
-			  <span style="font-family: Verdana; font-size: 9px;">
-        <a href='serieadd.php' target='serielist'>Adicionar&nbsp;</a>
-        <a href='asignarserie_entidad.php' target='serielist'>Asignar o quitar serie/categoria</a>
-        <br><br>
-			  <br />  Buscar: <input type="text" id="stext_serie_idserie" width="200px" size="25"><a href="javascript:void(0)" onclick="tree2.findItem(htmlentities(document.getElementById('stext_serie_idserie').value),1)"> <img src="botones/general/anterior.png" alt="Buscar Anterior" border="0px"></a><a href="javascript:void(0)" onclick="tree2.findItem(htmlentities(document.getElementById('stext_serie_idserie').value),0,1)"> <img src="botones/general/buscar.png" alt="Buscar" border="0px"></a>
-                          <a href="javascript:void(0)" onclick="tree2.findItem(htmlentities(document.getElementById('stext_serie_idserie').value))"><img src="botones/general/siguiente.png" alt="Buscar Siguiente" border="0px"></a>
-                          </span>
+
+	
 			  <div id="esperando_serie"><img src="imagenes/cargando.gif"></div>
 				<div id="treeboxbox_tree2" width="100px" height="100px"></div>
 	<script type="text/javascript">
