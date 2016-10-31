@@ -180,9 +180,9 @@ if(@$_REQUEST["idcategoria_formato"]){
 			tree_equipos=new dhtmlXTreeObject("treeboxbox_tree_equipos","100%","100%",0);
 			tree_equipos.setImagePath("<?php echo $ruta_db_superior;?>imgs/");
 			tree_equipos.enableIEImageFix(true);
+			tree_equipos.setOnClickHandler(onNodeSelect);
 			tree_equipos.enableCheckBoxes(1);
-            tree_equipos.enableRadioButtons(true); 
-			tree_equipos.setOnClickHandler(onNodeSelect);  
+            tree_equipos.enableRadioButtons(true);
 			tree_equipos.setOnLoadingStart(cargando_serie);
             tree_equipos.setOnLoadingEnd(fin_cargando_serie);
             
