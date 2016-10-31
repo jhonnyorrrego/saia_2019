@@ -30,7 +30,7 @@ function campos_ocultos_entrega($idformato,$iddoc){
 				alerta("Por favor seleccione documentos y mensajero");
 			}else{
 				$("input[name=iddestino_radicacion]").val('<?php echo $valores;?>');
-				$("input[name=mensajero]").val('<?php echo $valores;?>');
+				$("input[name=mensajero]").val('<?php echo $mensajero;?>');
 				$("input[name=fecha_entrega]").val('<?php echo $hoy;?>');
 			}
 		});
