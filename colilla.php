@@ -255,9 +255,8 @@ function imprime(atras){
       	
       	<b>Radicaci&oacute;n No: <?php echo($dependencia_creador[0]['codigo']."-".$datos[0]["numero"]."-".$tipo_radicacion);?></b>
  <?php }else{?>
-		<b>Radicaci&oacute;n No: <?php echo($dependencia_creador[0]['codigo']."-".$datos[0]["numero"]."-".$fecha["year"]);?></b>
-		<?php }?>
 		<b>Radicaci&oacute;n No: <?php echo($codigo_empresa."-".$datos[0]["numero"]."-".$fecha["year"]);?></b>
+		<?php }?>
   <br/>
   <b>Fecha: <?php echo $datos_fecha; ?></b><br/>
   
