@@ -14,6 +14,12 @@ global $cantidad_padres;
 
 if(@$_REQUEST['seleccionado']){
     die();
+    $arbol="<tree id=\"".$_REQUEST['id']."\">\n";   
+    $arbol.=llena_hijos($_REQUEST['id']);
+    $arbol.="</tree>\n";   
+    echo($arbol);
+    die();    
+    die();
 }
 
 
