@@ -76,7 +76,6 @@ if($papas["numcampos"])
 		if($papas[$i]["cod_padre"]!=0 &&  $papas[$i]["cod_padre"]!=NULL){
 			$concatenar_padre=','.$papas[$i]["cod_padre"];
 		}
-		echo(" nocheckbox=\"1\" ");
 		
 		echo("text=\"".htmlspecialchars($papas[$i]["nombre"]).$estado." \" id=\"".$papas[$i]["idcategoria_formato"]."\"");
 		if(in_array($papas[$i]["idcategoria_formato"],$seleccionados)){
@@ -85,8 +84,6 @@ if($papas["numcampos"])
 		else{
 			echo (" >");
 		}
-		//if(@$_REQUEST["sin_padre"])
-          
 	}
     if($hijos[0][0]){
     	llena_formato('',$papas[$i]["idcategoria_formato"],$seleccionados);
