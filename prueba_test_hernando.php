@@ -49,14 +49,14 @@ function crear_rama_padre_hijo($nodeid){
         $consecutivo.=$vector_ids[$i];
         $llave="item";
         if($i==0){
-            $llave="item";
+            $llave="tree";
         }
         $arbol.="<".$llave." style=\"font-family:verdana; font-size:7pt;\" text=\"Nodo ".$consecutivo."\" id=\"n".$consecutivo."\" child=\"1\">\n";
         
     }
     for($i=0;$i<count($vector_ids);$i++){
         if( ($i+1)==count($vector_ids) ){
-            $llave="item";
+            $llave="tree";
         }
         $arbol.="</".$llave.">\n";
     }
