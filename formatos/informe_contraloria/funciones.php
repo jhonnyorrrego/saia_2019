@@ -58,6 +58,7 @@ function porcentaje_plan($idformato, $idcampo, $iddoc = NULL, $informe = null) {
 			$iddoc = $informe;
 		}
 		$hallazgos = busca_filtro_tabla("idft_hallazgo, A.documento_iddocumento as hallazgo_iddoc", "ft_hallazgo A, ft_plan_mejoramiento B,documento C", " A.ft_plan_mejoramiento= b.idft_plan_mejoramiento and A.documento_iddocumento= c.iddocumento AND A.ft_plan_mejoramiento=B.idft_plan_mejoramiento AND  A.documento_iddocumento=iddocumento and c.estado not in('ELIMINADO') and A.ft_plan_mejoramiento=" . $iddoc, "idft_hallazgo asc", $conn);
+		print_r($hallazgos);
 		for ($i = 0; $i < $hallazgos["numcampos"]; $i++) {
 			$seguimientos = busca_filtro_tabla_limit("a.idft_seguimiento,a.porcentaje", "ft_seguimiento a, ft_hallazgo b, documento c", "a.documento_iddocumento=c.iddocumento and lower(c.estado) not in('eliminado','anulado') and b.idft_hallazgo =a.ft_hallazgo and b.idft_hallazgo=" . $hallazgos[$i]["idft_hallazgo"], " order by a.idft_seguimiento desc", intval(0), intval(1), $conn);
 			$porcentage[] = $seguimientos[0]["porcentaje"];
