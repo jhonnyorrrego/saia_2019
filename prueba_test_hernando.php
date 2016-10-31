@@ -13,9 +13,9 @@ function llena_padres(){
     
     $arbol_padres="";
     for($i=0;$i<count($cantidad_padres);$i++){
-        $arbol_padres.="<item style=\"font-family:verdana; font-size:7pt;\" text=\"Padre ".($i+1)."\" id=\"padre_".($i+1)."\" child=\"1\">";
+        $arbol_padres.="<item style=\"font-family:verdana; font-size:7pt;\" text=\"Padre ".($i+1)."\" id=\"padre_".($i+1)."\" child=\"1\">\n";
         $arbol_padres.=llena_hijos($i);
-        $arbol_padres.="</item>";
+        $arbol_padres.="</item>\n";
     }
     return($arbol_padres);
 }
@@ -24,8 +24,8 @@ function llena_hijos($padre){
     
     $arbol_hijos="";
     for($i=0;$i<count($cantidad_hijos);$i++){
-        $arbol_hijos.="<item style=\"font-family:verdana; font-size:7pt;\" text=\"Hijo ".$padre.".".($i+1)."\" id=\"".$padre."_hijo_".($i+1)."\" child=\"0\">";
-        $arbol_hijos.="</item>";
+        $arbol_hijos.="<item style=\"font-family:verdana; font-size:7pt;\" text=\"Hijo ".$padre.".".($i+1)."\" id=\"".$padre."_hijo_".($i+1)."\" child=\"0\">\n";
+        $arbol_hijos.="</item>\n";
     }    
     return($arbol_hijos);
 }
