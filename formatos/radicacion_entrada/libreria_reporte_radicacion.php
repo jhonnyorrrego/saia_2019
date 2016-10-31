@@ -143,6 +143,7 @@ function filtrar_mensajero(){
     if($cargo[0]['cargo']!="mensajero"){
     
     $select="<select class='pull-left btn btn-mini dropdown-toggle' style='height:22px;' name='filtro_mensajeros' id='filtro_mensajeros'>";
+    $select.="<option value=''>Por favor seleccione</option>";
     $datos=busca_filtro_tabla("iddependencia_cargo, concat(nombres,' ',apellidos) AS nombre","vfuncionario_dc","lower(cargo)='mensajero' AND estado_dc=1","",$conn);
     //print_r($datos);die();
     for($i=0;$i<$datos['numcampos'];$i++){
