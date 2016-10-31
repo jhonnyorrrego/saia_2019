@@ -23,7 +23,7 @@ echo(librerias_notificaciones());
 <script type="text/javascript" src="js/dhtmlXCommon.js"></script>
 <script type="text/javascript" src="js/dhtmlXTree.js"></script>
 <link rel="STYLESHEET" type="text/css" href="css/dhtmlXTree.css">
-
+<button id="crear_nodo">Crear Nodo</button>
 <br>	
 <div id="esperando_serie"><img src="imagenes/cargando.gif"></div>
 <div id="treeboxbox_tree2" width="100px" height="100px"></div>
