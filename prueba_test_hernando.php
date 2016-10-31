@@ -55,7 +55,7 @@ function crear_rama_padre_hijo($nodeid){
         
     }
     for($i=0;$i<count($vector_ids);$i++){
-        if($i==0){
+        if( ($i+1)==count($vector_ids) ){
             $llave="tree";
         }
         $arbol.="</".$llave.">\n";
