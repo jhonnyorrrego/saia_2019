@@ -91,8 +91,8 @@ function mostrar_mensajeros_dependencia($idft_destino_radicacion){
             if($responsable[0]['mensajero_ruta']==$datos[0]['mensajero_encargado']){
                 $select.="<option value='".$responsable[0]['mensajero_ruta']."' selected>".$mensajero[0]['nombre']."</option>";
             }else{
-                return $responsable[0]['mensajero_ruta'];die();
                 $select.="<option value='".$responsable[0]['mensajero_ruta']."'>".$mensajero[0]['nombre']."</option>";
+                return $responsable[0]['mensajero_ruta'];die();
                 ?>
                     <script>
                         $.ajax({
