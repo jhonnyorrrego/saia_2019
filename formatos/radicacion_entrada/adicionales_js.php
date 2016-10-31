@@ -33,7 +33,7 @@ echo(librerias_notificaciones());
 			        
 			        if(mensajero_temp){
 			            console.log(mensajero+mensajero_temp);
-			        console.log(mensajero_temp);
+			        console.log(mensajero+mensajero_temp);
 			            if(mensajero_temp!=mensajero){
 			                error=1;
 			            }
