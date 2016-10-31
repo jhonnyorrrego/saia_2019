@@ -231,6 +231,9 @@ if(@$_REQUEST["idcategoria_formato"]){
 	        </td>
                     </tr>
                     <tr>
+                        <td colspan="2" align="center"><input type="number" value="" id="numero_folios" name="numero_folios"/></td>
+                    </tr>
+                    <tr>
                         <td colspan="2" align="center"><input class="btn btn-primary btn-mini" type="submit" value="Radicar" id="enviar" name="enviar"/></td>
                     </tr>
                 </table>
