@@ -574,7 +574,7 @@ function validar_confirmacion(){
 		<script>
 		var ingreso=confirm("Esta seguro de generar un nuevo radicado?");
 		if(ingreso){
-			window.open("colilla.php?<?php echo $cadena; ?>","_self");
+			window.open("colilla.php?<?php echo $cadena; ?>&folios=".$_REQUEST['folios'],"_self");
 		}
 		else{
 			window.open("pantallas/buscador_principal.php?idbusqueda=7","_self");
