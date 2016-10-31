@@ -13,7 +13,7 @@ global $cantidad_padres;
 
 
 if(@$_REQUEST['seleccionado']){
-    
+    die();
 }
 
 
