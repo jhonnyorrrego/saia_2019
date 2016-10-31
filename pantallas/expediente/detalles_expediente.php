@@ -199,8 +199,9 @@ $expediente=busca_filtro_tabla("a.*,".fecha_db_obtener("a.fecha","Y-m-d")." AS f
   			
   			
   			var ejecutar_ajax=1;
+  			var observaciones='';
   			if(x_accion==1){
-  			    var observaciones=$('#observaciones_abrir_cerrar').val();
+  			    observaciones=$('#observaciones_abrir_cerrar').val();
   			    if(observaciones==''){
   			        ejecutar_ajax=0;
   			        notificacion_saia("<b>ATENCI&Oacute;N</b><br>Debe ingresar la observaci&oacute;n","warning","",2500);
@@ -211,7 +212,7 @@ $expediente=busca_filtro_tabla("a.*,".fecha_db_obtener("a.fecha","Y-m-d")." AS f
   			if(ejecutar_ajax){
       			$.ajax({
       				url:"<?php echo($ruta_db_superior);?>pantallas/expediente/ejecutar_acciones.php",
-      				data:{ejecutar_expediente: 'abrir_cerrar_expediente', tipo_retorno: 1, accion: x_accion, idexpediente: '<?php echo($expediente[0]["idexpediente"]); ?>'},
+      				data:{ejecutar_expediente: 'abrir_cerrar_expediente', tipo_retorno: 1, accion: x_accion, idexpediente: '<?php echo($expediente[0]["idexpediente"]); ?>',observaciones:observaciones},
       				type:"POST",
       				success: function(html){
       					if(html){
