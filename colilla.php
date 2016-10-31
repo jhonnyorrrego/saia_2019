@@ -251,7 +251,12 @@ function imprime(atras){
 	<td border="1px" colspan="2" align="left" height="2px" cellspacing="0" cellpadding="0">
 		<strong><?php echo($nombre_empresa);?>
 		</strong><br/><br/>
-		<b>Radicaci&oacute;n No: <?php echo($codigo_empresa."-".$datos[0]["numero"]."-".$fecha["year"]);?></b>
+		<?php if($datos[0]["tipo_radicado"]==1 || $datos[0]["tipo_radicado"]==2){?>
+      	
+      	<b>Radicaci&oacute;n No: <?php echo($dependencia_creador[0]['codigo']."-".$datos[0]["numero"]."-".$tipo_radicacion);?></b>
+ <?php }else{?>
+		<b>Radicaci&oacute;n No: <?php echo($dependencia_creador[0]['codigo']."-".$datos[0]["numero"]."-".$fecha["year"]);?></b>
+		<?php }?>
   <br/>
   <b>Fecha: <?php echo $datos_fecha; ?></b><br/>
   
