@@ -574,7 +574,7 @@ function validar_confirmacion(){
 		<script>
 		var ingreso=confirm("Esta seguro de generar un nuevo radicado?");
 		if(ingreso){
-			window.open("colilla.php?<?php echo $cadena; ?>&folios=<?php echo $_REQUEST['folios'];?>","_self");
+			window.open("colilla.php?<?php echo $cadena; ?>","_self");
 		}
 		else{
 			window.open("pantallas/buscador_principal.php?idbusqueda=7","_self");
@@ -593,7 +593,7 @@ function validar_confirmacion_salida($consecutivo, $enlace){
 		<script>
 		var ingreso=confirm("Esta seguro de generar un nuevo radicado?");
 		if(ingreso){
-			window.open("colilla.php?consecutivo=<?php echo $consecutivo;?>&salidas=1&enlace=<?php echo $enlace;?>","_self");
+			window.open("colilla.php?consecutivo=<?php echo $consecutivo;?>&salidas=1&enlace=<?php echo $enlace;?>&folios=<?php echo $_REQUEST['folios'];?>","_self");
 		}else{
 			window.open("<?php echo $enlace;?>");
 		}
