@@ -644,16 +644,14 @@ function mostrar_informacion_general_radicacion($idformato,$iddoc){
         <table class="table table-bordered" style="width: 100%; font-size:10px; text-align:left;" border="1">
   <tr>
     <td style="width: 25%;"><b>Fecha de radicación:</b></td>
-    <td style="width: 50%;">'.$fecha_radicacion.'</td>
+    <td style="width: 20%;">'.$fecha_radicacion.'</td>
+    <td style="width: 20%;"><b>Número de radicado:</b></td>
+    <td style="width: 20%;">'.$numero_radicado.'</td>
     <td style="text-align:center; " colspan="2" rowspan="3">'.$img.'</td>
   </tr>
   <tr>
-    <td><b>Número de radicado:</b></td>
-    <td>'.$numero_radicado.'</td>
-  </tr>
-  <tr>
     <td><b>Tipo de documento:</b></td>
-    <td>'.$tipo_documento[0]["nombre"].'</td>
+    <td colspan="3">'.$tipo_documento[0]["nombre"].'</td> 
   </tr>
   <tr>
     <td><b>Descripción o asunto:</b></td>
@@ -661,22 +659,22 @@ function mostrar_informacion_general_radicacion($idformato,$iddoc){
   </tr>
   <tr>
     <td><b>Descripción de anexos físicos:</b></td>
-    <td colspan="3">'.$datos[0]["descripcion_anexos"].'</td>
+    <td colspan="5">'.$datos[0]["descripcion_anexos"].'</td>
   </tr>
   <tr>
     <td><b>Anexos digitales:</b></td>
-    <td>'.$nombre_anexos.'</td>
+    <td colspan="2">'.$nombre_anexos.'</td>
     <td><b>No. Folios:</b></td>
-    <td  style="width: 10%;">'.$datos[0]["numero_folios"].'</td>
+    <td colspan="2">'.$datos[0]["numero_folios"].'</td>
   </tr>
 
     ';
     if($datos[0]['tipo_origen']==1){
         $tabla.="<tr>
                     <td><strong>Número de documento:</strong></td>
-                    <td>".$datos[0]['numero_oficio']."</td>
+                    <td colspan='2'>".$datos[0]['numero_oficio']."</td>
                     <td><strong>Fecha oficio entrante:</strong></td>
-                    <td>".$datos[0]['fecha_oficio_entrada']."</td>
+                    <td colspan='2'>".$datos[0]['fecha_oficio_entrada']."</td>
                  </tr>";
     }
     $tabla.='</table>';
