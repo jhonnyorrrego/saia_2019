@@ -19,7 +19,6 @@ if(@$_REQUEST['padre']){
     $arbol.="</tree>\n";   
     echo($arbol);
     die();    
-    die();
 }
 
 
