@@ -28,6 +28,14 @@ echo(librerias_notificaciones());
 <div id="esperando_serie"><img src="imagenes/cargando.gif"></div>
 <div id="treeboxbox_tree2" width="100px" height="100px"></div>
 <script type="text/javascript">
+
+    $(document).ready(function(){
+        $('#crear_nodo').click(function(){
+            alert('me fucking clickearon');
+        });
+    });
+
+
       var browserType;
       if (document.layers) {browserType = "nn4"}
       if (document.all) {browserType = "ie"}
