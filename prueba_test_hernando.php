@@ -11,6 +11,8 @@ echo("<?xml version=\"1.0\" encoding=\"UTF-8\"?".">");
 $cantidad_padres=3;
 $cantidad_hijos=3;
 
+global $cantidad_padres,$cantidad_hijos;
+
 $arbol="<tree id=\"0\">\n";
 $arbol.=llena_padres();
 $arbol.="</tree>\n";
