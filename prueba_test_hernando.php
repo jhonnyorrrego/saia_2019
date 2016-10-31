@@ -34,8 +34,8 @@ function llena_hijos($padre){
     global $cantidad_hijos;
     
     $arbol_hijos="";
-    for($i=0;$i<count($cantidad_hijos);$i++){
-        $arbol_hijos.="<item style=\"font-family:verdana; font-size:7pt;\" text=\"Hijo ".($padre+1).".".($i+1)."\" id=\"".($padre+1)."_hijo_".($i+1)."\" child=\"0\">\n";
+    for($j=0;$j<count($cantidad_hijos);$j++){
+        $arbol_hijos.="<item style=\"font-family:verdana; font-size:7pt;\" text=\"Hijo ".($padre+1).".".($j+1)."\" id=\"".($padre+1)."_hijo_".($j+1)."\" child=\"0\">\n";
         $arbol_hijos.="</item>\n";
     }    
     return($arbol_hijos);
