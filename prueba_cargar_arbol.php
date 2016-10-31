@@ -25,6 +25,7 @@ echo(librerias_notificaciones());
 <link rel="STYLESHEET" type="text/css" href="css/dhtmlXTree.css">
 <button id="crear_nodo">Crear Nodo</button>
 <br>	
+<br>	
 <div id="esperando_serie"><img src="imagenes/cargando.gif"></div>
 <div id="treeboxbox_tree2" width="100px" height="100px"></div>
 <script type="text/javascript">
