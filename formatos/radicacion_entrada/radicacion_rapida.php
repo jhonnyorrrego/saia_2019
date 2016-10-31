@@ -227,7 +227,7 @@ if(@$_REQUEST["idcategoria_formato"]){
 	        </td>
                     </tr>
                     <tr>
-                        <td colspan="2" align="center"><input class="btn-primary" type="submit" value="Radicar" id="enviar" name="enviar"/></td>
+                        <td colspan="2" align="center"><input class="btn btn-primary" type="submit" value="Radicar" id="enviar" name="enviar"/></td>
                     </tr>
                 </table>
             </form>
