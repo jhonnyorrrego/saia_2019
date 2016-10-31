@@ -389,7 +389,7 @@ function abrir_cerrar_expediente(){
 	phpmkr_query($sql1);
 	
 	$sql2="INSER INTO expediente_abce (estado_cierre,fecha_cierre,funcionario_cierre) VALUES (".$accion.",".fecha_db_almacenar(date('Y-m-d'),'Y-m-d').",".usuario_actual('idfuncionario').")";
-	$retorno->$sql2=$sql2;
+	$retorno->sql2=$sql2;
 	phpmkr_query($sql2);
 	
 	$retorno->idexpediente=$idexpediente;
