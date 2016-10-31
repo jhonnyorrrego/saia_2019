@@ -203,6 +203,7 @@ $expediente=busca_filtro_tabla("a.*,".fecha_db_obtener("a.fecha","Y-m-d")." AS f
   			    var observaciones=$('#observaciones_abrir_cerrar').val();
   			    if(observaciones==''){
   			        ejecutar_ajax=0;
+  			        notificacion_saia("<b>ATENCI&Oacute;N</b><br>Debe ingresar la observaci&oacute;n","success","",2500);
   			    }
   			    
   			}
