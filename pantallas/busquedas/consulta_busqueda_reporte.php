@@ -209,6 +209,8 @@ $(".exportar_reporte_saia").click(function(){
 $(window).bind('resize', function() {
     jQuery("#datos_busqueda").setGridWidth(($("#contenedor").width()-20), false);
 }).trigger('resize');
+
+jQuery("#datos_busqueda").jqGrid('setFrozenColumns');
 }); 
 function exportar_funcion_excel_reporte(){
 	var busqueda_total=$("#busqueda_total_paginas").val(); 
