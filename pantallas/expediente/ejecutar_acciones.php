@@ -388,7 +388,7 @@ function abrir_cerrar_expediente(){
 	$sql1="update expediente set ".$update_adicional."estado_cierre='".$accion."', fecha_cierre=".fecha_db_almacenar(date('Y-m-d'),'Y-m-d').", funcionario_cierre='".usuario_actual('idfuncionario')."' where idexpediente=".$idexpediente;
 	phpmkr_query($sql1);
 	
-	$sql2="INSERT INTO expediente_abce (estado_cierre,fecha_cierre,funcionario_cierre) VALUES (".$accion.",".fecha_db_almacenar(date('Y-m-d'),'Y-m-d').",".usuario_actual('idfuncionario').")";
+	$sql2="INSERT INTO expediente_abce (estado_cierre,fecha_cierre,funcionario_cierre,observaciones) VALUES (".$accion.",".fecha_db_almacenar(date('Y-m-d'),'Y-m-d').",".usuario_actual('idfuncionario').",'".@$_REQUEST['observaciones']."')";
 	//$retorno->sql2=$sql2;
 	phpmkr_query($sql2);
 	
