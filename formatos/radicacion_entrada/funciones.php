@@ -281,14 +281,14 @@ function obtener_informacion_proveedor($idformato,$iddoc){
 	$texto[]="<b>Identificaci&oacute;n:</b> ".$datos[0]["identificacion"];
 	$texto[]="<b>Cargo:</b> ".$datos[0]["cargo"];
 	$texto[]="<b>Empresa:</b> ".$datos[0]["empresa"];
-	$texto[]="<b>Direcci&oacute;n:</b> ".$datos[0]["direccion"];
-	$texto[]="<b>Tel&eacute;fono:</b> ".$datos[0]["telefono"];
-	$texto[]="<b>Email:</b> ".$datos[0]["email"];
-	$texto[]="<b>Titulo:</b> ".$datos[0]["titulo"];
-	$ciudad=busca_filtro_tabla("A.nombre","municipio A","A.idmunicipio=".$datos[0]["ciudad"],"",$conn);
-	$texto[]="<b>Ciudad:</b> ".$ciudad[0]["nombre"];
+	//$texto[]="<b>Direcci&oacute;n:</b> ".$datos[0]["direccion"];
+	//$texto[]="<b>Tel&eacute;fono:</b> ".$datos[0]["telefono"];
+	//$texto[]="<b>Email:</b> ".$datos[0]["email"];
+	//$texto[]="<b>Titulo:</b> ".$datos[0]["titulo"];
+	//$ciudad=busca_filtro_tabla("A.nombre","municipio A","A.idmunicipio=".$datos[0]["ciudad"],"",$conn);
+	//$texto[]="<b>Ciudad:</b> ".$ciudad[0]["nombre"];
 	
-	echo(implode("<br />",$texto));
+	echo(implode(", &nbsp;",$texto));
 	}else{
 	    $origen=busca_filtro_tabla("concat(nombres,' ',apellidos) AS nombre, dependencia, cargo","vfuncionario_dc","iddependencia_cargo IN(".$tipo_origen[0]['area_responsable'].")","",$conn);
 	    $texto=array();
