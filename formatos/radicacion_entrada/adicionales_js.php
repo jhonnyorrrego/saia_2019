@@ -19,7 +19,42 @@ echo(librerias_notificaciones());
     $(document).ready(function(){
         
         $("#nav_busqueda").after("<div style='margin:5px' class='ui-state-default ui-jqgrid-pager ui-corner-bottom'><button class='btn btn-mini' title='Realizar despacho' id='boton_seleccionar_registros'>Generar Planilla de Entrega</button></div>");
-
+        /*Genera Planilla de Mensajeros*/
+        $("#boton_seleccionar_registros").live("click",function(){
+            var mensajero_temp="";
+            var registros_seleccionados="";
+			var mensajero="";
+			var error="";
+			$('.planilla_mensajero').each(function(){
+			    var checkbox = $(this);
+			    if(checkbox.is(':checked')===true){
+			        mensajero=$(this).attr('mensajero');
+			        registros_seleccionados+=$(this).val()+",";
+			        if(mensajero_temp){
+			            if(mensajero_temp!=mensajero){
+			                error=1;
+			            }
+			        }
+			        mensajero_temp=$(this).attr('mensajero');
+					
+				}
+			});
+				registros_seleccionados = registros_seleccionados.substring(0, registros_seleccionados.length-1);
+				
+				if(registros_seleccionados==""){
+					top.noty({text: 'No ha seleccionado ningun campo',type: 'error',layout: "topCenter",timeout:3500});
+				}else if(error=1){
+				    top.noty({text: 'No puede seleccionar diferentes mensajeros',type: 'error',layout: "topCenter",timeout:3500});
+				}else{
+					$("#boton_seleccionar_registros").after("<div id='ir_adicionar_documento' class='link kenlace_saia' enlace='formatos/despacho_ingresados/idft="+registros_seleccionados+"&mensajero="+mensajero+"' conector='iframe' titulo='Generar Planilla Mensajeros'>---</div>");
+					$("#ir_adicionar_documento").trigger("click");
+					$("#ir_adicionar_documento").remove();
+				}
+            
+        });
+        
+        
+        
         $(".mensajeros").live("change",function(){
             var idft=$(this).attr("data-idft");
             var mensajero=$(this).val();
