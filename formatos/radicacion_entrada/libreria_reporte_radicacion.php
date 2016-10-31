@@ -92,21 +92,9 @@ function mostrar_mensajeros_dependencia($idft_destino_radicacion){
                 $select.="<option value='".$responsable[0]['mensajero_ruta']."' selected>".$mensajero[0]['nombre']."</option>";
             }else{
                 $select.="<option value='".$responsable[0]['mensajero_ruta']."'>".$mensajero[0]['nombre']."</option>";
-                /*return $responsable[0]['mensajero_ruta'];die();
-                ?>
-                    <script>
-                        $.ajax({
-                            type:'POST',
-                            dataType: 'json',
-                            url: "<?php echo $ruta_db_superior;?>formatos/radicacion_entrada/actualizar_mensajero.php",
-                            data: {
-                                            idft_destino_radicacion:<?php echo $idft_destino_radicacion;?>,
-                                            mensajero_encargado:<?php echo $responsable[0]['mensajero_ruta'];?>
-                            },
-                            
-                        });
-                    </script>
-                <?php*/
+                $sql="UPDATE ft_destino_radicacion SET mensajero_encargado=".$responsable[0]['mensajero_ruta']." WHERE idft_destino_radicacion=$idft_destino_radicacion";
+
+                phpmkr_query($sql);
             }
     }else{
         
