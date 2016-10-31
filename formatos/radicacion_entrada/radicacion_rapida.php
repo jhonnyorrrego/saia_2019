@@ -182,8 +182,10 @@ if(@$_REQUEST["idcategoria_formato"]){
 			tree_equipos.enableIEImageFix(true);
 			tree_equipos.setOnClickHandler(onNodeSelect);  
 			tree_equipos.setOnLoadingStart(cargando_serie);
-      tree_equipos.setOnLoadingEnd(fin_cargando_serie);
-      tree_equipos.setXMLAutoLoading("<?php echo($ruta_db_superior); ?>test_categoria.php?tipo_radicado=radicacion_entrada<?php echo $adicional; ?>");
+            tree_equipos.setOnLoadingEnd(fin_cargando_serie);
+            tree_equipos.enableCheckBoxes(1);
+            tree_equipos.enableRadioButtons(true); 
+            tree_equipos.setXMLAutoLoading("<?php echo($ruta_db_superior); ?>test_categoria.php?tipo_radicado=radicacion_entrada<?php echo $adicional; ?>");
       //tree_equipos.enableSmartXMLParsing(true);
 			tree_equipos.loadXML("<?php echo($ruta_db_superior); ?>test_categoria.php?tipo_radicado=radicacion_entrada<?php echo $adicional; ?>");
 	    function onNodeSelect(nodeId){
