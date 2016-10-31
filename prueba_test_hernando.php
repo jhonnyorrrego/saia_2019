@@ -12,11 +12,9 @@ $cantidad_padres=3;
 global $cantidad_padres;
 
 
-if(@$_REQUEST['padre']){
-    die();
-    $arbol="<tree id=\"".$_REQUEST['padre']."\">\n";   
-    $arbol.=llena_hijos($_REQUEST['padre']);
-    $arbol.="</tree>\n";   
+if(@$_REQUEST['seleccionado']){
+    
+    $arbol=crear_rama_padre_hijo($_REQUEST['seleccionado']);
     echo($arbol);
     die();    
 }
@@ -35,6 +33,15 @@ $arbol.=llena_padres();
 $arbol.="</tree>\n";
 
 echo($arbol);
+
+
+
+function crear_rama_padre_hijo($nodeid){
+    
+    $ids_cadena=substr($nodeid,1, ( strlen( $nodeid )-1 ) );
+    $vector_ids=explode('.',$ids_cadena);
+    print_r($vector_ids);
+}
 
 function llena_padres(){
     global $cantidad_padres;
