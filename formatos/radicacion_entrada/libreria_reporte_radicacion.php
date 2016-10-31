@@ -115,9 +115,10 @@ function mostrar_mensajeros_dependencia($idft_destino_radicacion){
             }
             
         }
-        $select.="</select>";
+        
     }
     }
+    $select.="</select>";
     return $select;
 }
 
