@@ -136,7 +136,7 @@ echo(estilo_bootstrap());
 			}
 			</style>
 			<form method="POST" action="<?php echo($ruta_db_superior); ?>colilla.php"><br/><br />
-                <table class="table" style="font-size:10pt;border-collapse:collapse; width:40%; height: auto;" border="1" align="center">
+                <table class="table-bordered" style="font-size:10pt;border-collapse:collapse; width:40%; height: auto;" border="1" align="center">
                     <tr>
                         <td style="font-size:8pt;" class="encabezado_list" colspan="2" align="center">Seleccione Tipo de Radicación</td>
                     </tr>
