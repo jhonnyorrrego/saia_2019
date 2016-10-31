@@ -6,7 +6,7 @@ $arbol="<tree id=\"0\">\n";
 $arbol.=llena_padres();
 $arbol.="</tree>\n";
 
-
+echo($arbol);
 
 function llena_padres(){
     global $cantidad_padres;
