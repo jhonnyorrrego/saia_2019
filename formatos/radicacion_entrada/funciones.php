@@ -451,7 +451,7 @@ function mostrar_item_destino_radicacion($idformato,$iddoc){
 	global $conn,$ruta_db_superior;
 	$padre=busca_filtro_tabla("","ft_radicacion_entrada A, documento B ","A.documento_iddocumento=B.iddocumento AND B.estado<>'ELIMINADO' AND B.iddocumento=".$iddoc,"",$conn);  //nombre tabla padre
 	$datos=busca_filtro_tabla("","ft_destino_radicacion","ft_radicacion_entrada=".$padre[0]["idft_radicacion_entrada"],"",$conn);
-    if($_REQUEST['tipo']!=5 && $padre[0]['estado']!='APROBADO' && $padre[0]['despachado']!=1){
+    if($_REQUEST['tipo']!=5 && $padre[0]['despachado']!=1){
 						
 				echo '<a href="../destino_radicacion/adicionar_destino_radicacion.php?pantalla=padre&amp;idpadre='.$iddoc.'&amp;idformato='.$idformato.'&amp;padre='.$padre[0]['idft_radicacion_entrada'].'" target="_self">Adicionar destino</a>'; //
 		}
