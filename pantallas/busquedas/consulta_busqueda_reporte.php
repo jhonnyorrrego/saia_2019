@@ -44,8 +44,7 @@ for($i=0;$i<$cant;$i++){
   if($datos[3]){
     $width=',"width":'.$datos[3];
   }
-	array_push($columnas["modelo"],'{frozen: true,"encabezado":"'.$datos[0].'","name":"'.$datos2[0].'","align":"'.$datos[2].'"'.$width.'}');
-	
+	array_push($columnas["modelo"],'{"encabezado":"'.$datos[0].'","name":"'.$datos2[0].'","align":"'.$datos[2].'"'.$width.'}');
 }
 
 $encabezado=stripslashes($datos_busqueda[0]["encabezado_grillas"]);
@@ -209,8 +208,6 @@ $(".exportar_reporte_saia").click(function(){
 $(window).bind('resize', function() {
     jQuery("#datos_busqueda").setGridWidth(($("#contenedor").width()-20), false);
 }).trigger('resize');
-
-jQuery("#datos_busqueda").jqGrid('setFrozenColumns');
 }); 
 function exportar_funcion_excel_reporte(){
 	var busqueda_total=$("#busqueda_total_paginas").val(); 
