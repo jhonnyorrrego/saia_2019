@@ -61,10 +61,11 @@ echo(librerias_notificaciones());
 			tree2.loadXML("prueba_test_hernando.php");
 	  function onNodeSelect(nodeId){
         var valor=tree2.getAllChecked();
-        alert(valor);
-        if(tree2.isItemChecked(nodeId)){
-            if(valor!==""){
-                tree_serie_idserie.setCheck(valor,false);
+        var vector_valor=valor.split(",");
+        
+        for(i=0;i<vector_valor.length;i++){
+            if(vector_valor[i]!=nodeId){
+                tree2.setCheck(vector_valor[i],false);
             }
         }
       }
