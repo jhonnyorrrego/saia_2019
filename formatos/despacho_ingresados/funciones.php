@@ -69,7 +69,7 @@ function mostrar_seleccionados_entrega($idformato,$iddoc){
 function generar_pdf_entrega($idformato,$iddoc){
 	global $conn,$ruta_db_superior;
 	$seleccionado=busca_filtro_tabla("iddestino_radicacion,idft_despacho_ingresados","ft_despacho_ingresados","documento_iddocumento=".$iddoc,"",$conn);
-	$iddestino_radicacion=explode($seleccionado[0]['iddestino_radicacion']);
+	$iddestino_radicacion=explode(",",$seleccionado[0]['iddestino_radicacion']);
 	$cont=count($iddestino_radicacion);
 	for($i=0;$i<$cont;$i++){
 	    $insert="INSERT INTO ft_item_despacho_ingres(idft_item_despacho_ingres,ft_destino_radicacio,ft_despacho_ingresados) VALUES (NULL, '".$iddestino_radicacion[$i]."', '".$seleccionado[0]['idft_despacho_ingresados']."')";
