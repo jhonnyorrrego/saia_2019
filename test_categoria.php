@@ -79,10 +79,10 @@ if($papas["numcampos"])
 		
 		echo("text=\"".htmlspecialchars($papas[$i]["nombre"]).$estado." \" id=\"".$papas[$i]["idcategoria_formato"]."\"");
 		if(in_array($papas[$i]["idcategoria_formato"],$seleccionados)){
-			echo (" checked=\"1\" nocheckbox=\"1\" >");
+			echo (" checked=\"1\" >");
 		}
 		else{
-			echo ("nocheckbox=\"1\" >");
+			echo (" >");
 		}
 	}
     if($hijos[0][0]){
