@@ -24,7 +24,7 @@ echo(librerias_notificaciones());
             var mensajero_temp="";
             var registros_seleccionados="";
 			var mensajero="";
-			var error="";
+			var error=0;
 			$('.planilla_mensajero').each(function(){
 			    var checkbox = $(this);
 			    if(checkbox.is(':checked')===true){
@@ -36,7 +36,6 @@ echo(librerias_notificaciones());
 			            }
 			        }
 			        mensajero_temp=$(this).attr('mensajero');
-					
 				}
 			});
 				registros_seleccionados = registros_seleccionados.substring(0, registros_seleccionados.length-1);
