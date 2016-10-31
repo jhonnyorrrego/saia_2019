@@ -178,7 +178,7 @@ if(@$_REQUEST["idcategoria_formato"]){
          browserType= "gecko"
       }
 			tree_equipos=new dhtmlXTreeObject("treeboxbox_tree_equipos","100%","100%",0);
-			tree_equipos.setImagePath("imgs/");
+			tree_equipos.setImagePath("<?php echo $ruta_db_superior;?>imgs/");
 			tree_equipos.enableIEImageFix(true);
 			tree_equipos.enableCheckBoxes(1);
             tree_equipos.enableRadioButtons(true); 
