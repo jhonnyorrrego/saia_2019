@@ -32,7 +32,8 @@ echo(librerias_notificaciones());
 
     $(document).ready(function(){
         $('#crear_nodo').click(function(){
-            alert('me fucking clickearon');
+            var seleccionado = tree2.getAllChecked();
+            alert(seleccionado);
         });
     });
 
