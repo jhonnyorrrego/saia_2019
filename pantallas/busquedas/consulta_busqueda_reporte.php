@@ -138,7 +138,6 @@ $(document).ready(function(){
       ?>   	            
    	],
    	rowNum:20,
-   	multiSort:false,
     rownumbers: true,
 	  rownumWidth: 40,
     rowList : [20,30,50],
