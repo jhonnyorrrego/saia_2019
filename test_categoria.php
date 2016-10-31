@@ -109,7 +109,7 @@ function adicionar_formato($idcategoria){
 		    if(@$_REQUEST['tipo_radicado']){
 		        if($_REQUEST['tipo_radicado']==$formatos[$i]["nombre"]){
 		            echo("<item style=\"font-family:verdana; font-size:7pt;\" ");
-    		        echo("text=\"".ucwords(strtolower(htmlspecialchars($formatos[$i]["etiqueta"])))." Origen Externo\" id=\"radicacion_entrada\" nocheckbox=\"1\" ></item>");
+    		        echo("text=\"".ucwords(strtolower(htmlspecialchars($formatos[$i]["etiqueta"])))." Origen Externo\" id=\"radicacion_entrada\"  ></item>");
     		        echo("<item style=\"font-family:verdana; font-size:7pt;\" ");
     		        echo("text=\"".ucwords(strtolower(htmlspecialchars($formatos[$i]["etiqueta"])))." Origen Interno\" id=\"radicacion_salida\" ></item>");
 		        }/*else{
