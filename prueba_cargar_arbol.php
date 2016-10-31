@@ -49,7 +49,7 @@ echo(librerias_notificaciones());
 			tree2.enableTreeImages(false);
 			tree2.enableIEImageFix(true);
 			tree2.setXMLAutoLoadingBehaviour("id");
-			tree2.setOnClickHandler(onNodeSelect);
+			//tree2.setOnClickHandler(onNodeSelect);
 			tree2.setOnCheckHandler(onNodeSelect);
 			tree2.setOnLoadingStart(cargando_serie);
             tree2.setOnLoadingEnd(fin_cargando_serie);
