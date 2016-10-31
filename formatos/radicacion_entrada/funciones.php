@@ -40,7 +40,7 @@ function mostrar_radicado_entrada($idformato,$iddoc){
 		echo '<td><b id="numero_radicado">'.$doc[0]["numero"].'</b></td>'; 
 	}
 	else
-		echo '<td><b id="numero_radicado">'.$fecha.muestra_contador("radicacion_entrada").'</b></td>';
+		echo '<td><b id="numero_radicado">'.$fecha.muestra_contador("radicacion_entrada").'-E</b></td>';
 }
 function enviar_adicionar($idformato,$iddoc){
 	$max_salida=6; // Previene algun posible ciclo infinito limitando a 10 los ../
