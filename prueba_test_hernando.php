@@ -14,8 +14,8 @@ global $cantidad_padres;
 
 if(@$_REQUEST['padre']){
     die();
-    $arbol="<tree id=\"".$_REQUEST['id']."\">\n";   
-    $arbol.=llena_hijos($_REQUEST['padre'],);
+    $arbol="<tree id=\"".$_REQUEST['padre']."\">\n";   
+    $arbol.=llena_hijos($_REQUEST['padre']);
     $arbol.="</tree>\n";   
     echo($arbol);
     die();    
@@ -48,7 +48,13 @@ function llena_padres(){
 }
 function llena_hijos($idpadre){
     $numero_nodo_padre=explode('n',$idpadre);
-    $arbol_padres="<item style=\"font-family:verdana; font-size:7pt;\" text=\"Nodo ".$numero_nodo_padre[1].".".($i+1)."\" id=\"".$idpadre.".".($i+1)."\" child=\"1\">\n";
+    
+    $consecutivo=1;
+    if(@$_REQUEST['cantidad_hijos']){
+        $consecutivo=$consecutivo+$_REQUEST['cantidad_hijos'];
+    }
+    
+    $arbol_padres="<item style=\"font-family:verdana; font-size:7pt;\" text=\"Nodo ".$numero_nodo_padre[1].".".$consecutivo."\" id=\"".$idpadre.".".$consecutivo."\" child=\"1\">\n";
     $arbol_padres.="</item>\n"; 
     return($arbol_padres);
 }
