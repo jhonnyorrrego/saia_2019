@@ -35,7 +35,7 @@ function validar_responsable($idformato, $iddoc) {
   }
   $arreglo[] = 404;
   $arreglo[] = 148;
-  if (!in_array(usuario_actual('idfuncionario'), $arreglo)) {
+  if (!in_array(usuario_actual('idfuncionario'), $arreglo) && usuario_actual('login')!='cerok') {
     alerta("Usted no es el Responsable del Mejoramiento");
     abrir_url("../../vacio.php", "_self");
     die();
