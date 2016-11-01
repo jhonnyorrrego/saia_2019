@@ -856,16 +856,12 @@ function serie_documental_radicacion($idformato,$iddoc){
 	            
 	            var dependencia=tree_destino.getParentId(nodeId);
 	            var padre=tree_destino.getParentId(dependencia);
-	            
-	            if(padre==0){
-	                padre=dependencia;
-	            }
-	            
+
 	            padre=padre.replace("#","");
 	            dependencia=dependencia.replace("#","");
 	        }
 	        
-	       if(dependencia==38){ //SU ORGANIZACION
+	       if(dependencia==38){ //SU ORGANIZACION HAY ERROR CON ESTA NO DETECTADO AUN LA RAZON
 	           
 	       }else{
 	           tree_serie_idserie.setXMLAutoLoading("<?php echo($ruta_db_superior); ?>test_dependencia_serie.php?tabla=dependencia&mostrar_nodos=dsa&sin_padre_dependencia=1&cargar_series=1&carga_partes_serie=1&iddependencia="+dependencia);
