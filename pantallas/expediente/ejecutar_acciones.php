@@ -426,29 +426,16 @@ function cambiar_responsable_expediente(){
 	global $conn;
 	
 	
-	print_r($_REQUEST);
-	die();
-	$retorno=new stdClass;	
-	
-	$idexpediente=$_REQUEST['idexpediente'];
-	$funcionario_codigo=$_REQUEST['funcionario_codigo'];
-	
-	
-	
-	//VALIDA FOLIOS
-	$cantidad_folios=busca_filtro_tabla("","expediente","tomo_padre=".$idexpediente,"",$conn);
-	$retorno->folios=0;
-	if($cantidad_folios['numcampos']){ //tiene folios
-    	$retorno->folios=$cantidad_folios['numcampos'];
-	    $propietario_todos=1;
-	    for($i=0;$i<$cantidad_folios['numcampos'];$i++){
-	        if($cantidad_folios[0]['propietario']!=$funcionario_codigo){
-	            $propietario_todos=0;
-	        }
-	    }
-	}
-	$retorno->propietario_folios=$propietario_todos;
 
+	$retorno=new stdClass;	
+	$funcionario_codigo=$_REQUEST['funcionario_codigo'];
+	$idexpediente=$_REQUEST['idexpediente'];
+	if(@$_REQUEST['tomos_asociados']!=''){
+	    $idexpediente.=','.$_REQUEST['tomos_asociados'];
+	}
+	print_r($idexpediente);
+	die();	
+	$sql="UPDATE expediente SET propietario='".$funcionario_codigo."' WHERE idexpediente IN()";
 	
 	$retorno->exito=1;
 	$retorno->msn='llego: '.$idexpediente;
