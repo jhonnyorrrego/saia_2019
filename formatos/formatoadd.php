@@ -378,7 +378,7 @@ echo $x_contador_idcontadorList;
 								*/
 							?>
 					<input type="hidden" name="x_serie_idserie" id="x_serie_idserie">
-					<div id="tree_serie_idserie" class="arbol_saia"></div> 
+					<div id="tree_serie_idserie" ></div> 
                     <script>
                         var browserType;
                         if (document.layers) {browserType = "nn4"}
@@ -397,20 +397,9 @@ echo $x_contador_idcontadorList;
 		            	tree2.setXMLAutoLoading("<?php echo($ruta_db_superior);?>test_dependencia_serie.php?tabla=dependencia&admin=1&estado=1&carga_partes_dependencia=1&carga_partes_serie=1");
 			            tree2.loadXML("<?php echo($ruta_db_superior);?>test_dependencia_serie.php?tabla=dependencia&admin=1&estado=1&carga_partes_dependencia=1&carga_partes_serie=1");
             			function onNodeSelect_serie_idserie(nodeId){
-                            var datos=nodeId.split("-");
-                            var datos2=nodeId.split("sub");
-                            if(datos[1] || datos2[1]){
-                                var dato=datos[1];
-                                if(datos2[1]){
-                                    dato=datos2[1];
-                                }
-                               parent.serielist.location = "serieview.php?key=" + dato; 
-                            }else{    
-                                var datos=nodeId.split("d");
-                                parent.serielist.location = "asignarserie_entidad.php?tipo_entidad=2&llave_entidad=" + datos[1];
-                            }
-                  }
-                  function fin_cargando_serie_idserie() {
+
+                        }
+                        function fin_cargando_serie_idserie() {
                         if (browserType == "gecko" )
                            document.poppedLayer =
                                eval('document.getElementById("esperando_serie")');
@@ -421,9 +410,9 @@ echo $x_contador_idcontadorList;
                            document.poppedLayer =
                               eval('document.layers["esperando_serie"]');
                         document.poppedLayer.style.display = "none";
-                  }
+                        }
             
-                  function cargando_serie_idserie() {
+                        function cargando_serie_idserie() {
                         if (browserType == "gecko" )
                            document.poppedLayer =
                                eval('document.getElementById("esperando_serie")');
@@ -434,7 +423,7 @@ echo $x_contador_idcontadorList;
                            document.poppedLayer =
                                eval('document.layers["esperando_serie"]');
                         document.poppedLayer.style.display = "";
-                  }                        
+                        }                        
                     </script>							
 							
       </span></td>
