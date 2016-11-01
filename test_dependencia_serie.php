@@ -71,7 +71,7 @@ if(@$_REQUEST['funcionario']){
 
 $id = @$_REQUEST["id"];
 
-//si llega el request para cargar por partes
+//si llega el request para cargar por partes series,dependencias,etc
 if(@$_REQUEST['carga_partes_dependencia']){
     if($id and $id<>"" && @$_REQUEST["uid"]){
         echo("<tree id=\"".$id."\">\n");
@@ -91,7 +91,10 @@ if(@$_REQUEST['carga_partes_dependencia']){
     }     
 }
 
-
+//si llega el request para cargar por partes subseries & tipo documental
+if(@$_REQUEST['carga_partes_serie']){
+    
+}
 
 //cargar series de una dependencia
 if(@$_REQUEST['cargar_series']){
