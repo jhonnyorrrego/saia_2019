@@ -656,8 +656,6 @@ function AddData($conn)
 	phpmkr_query($strsql, $conn);
 	$id=phpmkr_insert_id();
 	insertar_expediente_automatico($id);
-	
-	
 	return $id;
 	
 }
