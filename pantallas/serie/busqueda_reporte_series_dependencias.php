@@ -74,8 +74,24 @@ global $conn;
             <input type="hidden" name="bqsaiaenlace_s@nombre" id="bqsaiaenlace_s-nombre" value="y">
           </div>
         </div> 
+        
+    <br>
        
-
+        <div class="container master-container">
+       <form accept-charset="UTF-8" id="kformulario_saia"  method="post" >  
+        <div class="control-group">
+          <label class="string required control-label" for="codigo">
+			<b>C&oacute;digo:</b>
+			<input type="hidden" name="bksaiacondicion_s@codigo" id="bksaiacondicion_s-codigo" value="=">
+          </label>
+          <div class="controls">
+            <input id="bqsaia_codigo" name="bqsaia_s@codigo" size="50" type="text">
+            <input type="hidden" name="bqsaiaenlace_s@codigo" id="bqsaiaenlace_s-codigo" value="y">
+          </div>
+        </div> 
+        
+    <br>
+    
 
         <div class="row">
           <div class="control-group radio_buttons span4">
