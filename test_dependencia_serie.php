@@ -186,17 +186,15 @@ if(@$_REQUEST["arbol_series"]){
         echo(" child=\"0\">\n");
     }
     if(@$_REQUEST['carga_partes']){
-        
-    
-    if(@$_REQUEST['uid']){
-    	if(!$_REQUEST["id"]){
-    	    llena_dependencia($papas[$i]["id$tabla"]);
-    	}else{
-    		if(!$_REQUEST["admin"]){
-    			llena_dependencia($papas[$i]["id$tabla"]);
-    		}
-    	}        
-    }
+        if(@$_REQUEST['uid']){
+        	if(!$_REQUEST["id"]){
+        	    llena_dependencia($papas[$i]["id$tabla"]);
+        	}else{
+        		if(!$_REQUEST["admin"]){
+        			llena_dependencia($papas[$i]["id$tabla"]);
+        		}
+        	}        
+        }
     }else{
         llena_dependencia($papas[$i]["id$tabla"]);
     }
