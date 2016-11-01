@@ -428,7 +428,7 @@ echo $x_contador_idcontadorList;
                                  $('#x_serie_idserie').val('');
                             }
                             
-                            alert( $('#x_serie_idserie').val() );
+                            
                         }
                         function fin_cargando_serie_idserie() {
                         if (browserType == "gecko" )
