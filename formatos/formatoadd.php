@@ -398,11 +398,11 @@ echo $x_contador_idcontadorList;
             			function onNodeSelect_serie_idserie(nodeId){
                             valor_destino=document.getElementById("x_serie_idserie");
                             alert(nodeId);
-                            if(tree_serie_idserie.isItemChecked(nodeId)){
+                            if(tree2.isItemChecked(nodeId)){
                                 
                                 
                                 if(valor_destino.value!==""){
-                                    tree_serie_idserie.setCheck(valor_destino.value,false);
+                                    tree2.setCheck(valor_destino.value,false);
                                 }
                                   
                                 if(nodeId.indexOf("_")!=-1){
