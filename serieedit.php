@@ -306,7 +306,9 @@ return true;
       
        var filtrar_arbol='&categoria=2&filtrar_arbol=documental';
       <?php if($x_categoria==3){
+          ?>
           filtrar_arbol='&categoria=3';
+          <?php
       } ?>
       
      
