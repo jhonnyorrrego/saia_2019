@@ -53,7 +53,11 @@ function generar_codigo_arbol($tabla,$campo_codpadre,$campo_id,$dato_padre,$camp
 			elseif($datos[$i]['tipo']==2){
 				$padre=busca_filtro_tabla("",$tabla." a",$campo_id."=".$datos[$i][$campo_codpadre],"",$conn);
 				
-				$sql1="update ".$tabla." set ".$campo_actualizar."='".(($padre[0][$campo_actualizar]*10000)+($datos[$i][$campo_id])."' where ".$campo_id."=".$datos[$i][$campo_id];
+				$sql1="update ".$tabla." set ".$campo_actualizar."='".($padre[0][$campo_actualizar]+($datos[$i][$campo_id]*1000))."' where ".$campo_id."=".$datos[$i][$campo_id];
+			}else{
+			    $padre=busca_filtro_tabla("",$tabla." a",$campo_id."=".$datos[$i][$campo_codpadre],"",$conn);
+				
+				$sql1="update ".$tabla." set ".$campo_actualizar."='".($padre[0][$campo_actualizar]+($datos[$i][$campo_id]*100))."' where ".$campo_id."=".$datos[$i][$campo_id];
 			}
 			phpmkr_query($sql1);
 			$hijos=busca_filtro_tabla("",$tabla,$campo_codpadre."='".$datos[$i][$campo_id]."'","",$conn);
