@@ -864,7 +864,7 @@ function serie_documental_radicacion($idformato,$iddoc){
 	        var x = Math.floor((Math.random() * 100000) + 1);
 	        
 	        //tree_serie_idserie.deleteChildItems(0);+
-	         $.ajax({
+	        /* $.ajax({
 	             type:'POST',
                  dataType: 'json',
                  url: "ajax_serie.php",
@@ -877,12 +877,10 @@ function serie_documental_radicacion($idformato,$iddoc){
                          if(cargado.indexOf(datos[i])<0){// devuleve -1
                              tree_serie_idserie.loadXML("<?php echo($ruta_db_superior); ?>test_dependencia_serie.php?tabla=dependencia&admin=1&dependencia="+datos[i]+"&mostrar_nodos=dsa&sin_padre_dependencia=1&cargar_series="+datos[i]+"&uid="+x+"&id=d"+datos[i-1]);
                              cargado.push(datos[i]);
-                         }/*else{
-                             cargado.splice(cargado.indexOf(dependencia),1);
-                         }*/
+                         }
                      }
                  }
-            });  
+            });  */
         }
         
         $('#tipo_origen1').click(function(){
