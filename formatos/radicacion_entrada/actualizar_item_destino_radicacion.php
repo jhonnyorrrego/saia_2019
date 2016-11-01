@@ -23,12 +23,11 @@ for ($i=0; $i < count($id) ; $i++) {
 $sql1="UPDATE ft_radicacion_entrada SET despachado=1 WHERE documento_iddocumento=$iddoc";
 phpmkr_query($sql1);
 
-$radicado=busca_filtro_tabla('b.numero, c.idft_destino_radicacion','ft_radicacion_entrada a,documento b,ft_destino_radicacion c','WHERE a.documento_iddocumento = b.iddocumento AND a.idft_radicacion_entrada = c.ft_radicacion_entrada AND a.documento_iddocumento='.$_REQUEST['iddoc'],'',conn);
-print_r($radicado);
+$radicado=busca_filtro_tabla('b.numero, c.idft_destino_radicacion','ft_radicacion_entrada a,documento b,ft_destino_radicacion c','a.documento_iddocumento = b.iddocumento AND a.idft_radicacion_entrada = c.ft_radicacion_entrada AND a.documento_iddocumento='.$_REQUEST['iddoc'],'',conn);
+
 for($i=0;$i<$radicado['numcampos'];$i++){
     $sql="UPDATE ft_destino_radicacion SET numero_item='".$radicado[$i]['numero'].".".$i."' WHERE idft_destino_radicacion=".$radicado[$i]['idft_destino_radicacion'];
-    echo($sql);
-    echo("<br>");
+
     phpmkr_query($sql);
 }
 echo('<script>window.history.back();</script>');
