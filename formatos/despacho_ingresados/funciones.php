@@ -87,7 +87,7 @@ function reporte_entradas2($idformato,$iddoc){
 		$codigo_qr=busca_filtro_tabla("","documento_verificacion","documento_iddocumento=".$iddoc,"", $conn);	
 		$qr='<img src="http://'.RUTA_PDF.'/'.$codigo_qr[0]['ruta_qr'].'" width="80px" height="80px">';	
 	}
-	$documentos2=busca_filtro_tabla("","documento A,ft_despacho_ingresados","documento_iddocumento=iddocumento and A.iddocumento =".$iddoc,"",$conn);
+	$documentos2=busca_filtro_tabla("","ft_despacho_ingresados","documento_iddocumento=".$iddoc,"",$conn);
 	$funcionario=busca_filtro_tabla("","vfuncionario_dc","dependencia_cargo=".$documentos2[0]['mensajero'],"",$conn);
 	$logo=busca_filtro_tabla("valor","configuracion","nombre='logo'","",$conn);
 	$texto='<table style="border-collapse:collapse;width:100%" border="1px">';
