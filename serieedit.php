@@ -215,7 +215,7 @@ return true;
 	        $('#nombre_padre_muestra').remove();
 		    filtrar_arbol_series();
 	    });
-	    
+	    setTimeout(function(){ filtrar_arbol_series(); }, 1000);
 	    
 		$("#cat2").click(function(){
             $('#x_tipo1').attr('disabled',false);
