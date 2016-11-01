@@ -344,7 +344,7 @@ return true;
           */
         ?>
         
-					<input type="hidden" name="x_serie_idserie" id="x_serie_idserie">
+					<input type="hidden" name="x_serie_idserie" id="x_serie_idserie" value="<?php echo($x_serie_idserie); ?>">
 					<input type="hidden" name="x_serie_idserie_uncheck" id="x_serie_idserie_uncheck">
 					 <div id="esperando_serie"><img src="<?php echo($ruta_db_superior);?>imagenes/cargando.gif"></div>
 					<div id="tree_serie_idserie" ></div> 
