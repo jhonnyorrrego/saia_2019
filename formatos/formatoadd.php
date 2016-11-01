@@ -378,6 +378,7 @@ echo $x_contador_idcontadorList;
 								*/
 							?>
 					<input type="hidden" name="x_serie_idserie" id="x_serie_idserie">
+					<div id="tree_serie_idserie" class="arbol_saia"></div> 
                     <script>
                         var browserType;
                         if (document.layers) {browserType = "nn4"}
@@ -385,7 +386,7 @@ echo $x_contador_idcontadorList;
                         if (window.navigator.userAgent.toLowerCase().match("gecko")) {
                             browserType= "gecko"
                         }
-			            tree2=new dhtmlXTreeObject("x_serie_idserie","100%","85%",0);
+			            tree2=new dhtmlXTreeObject("tree_serie_idserie","100%","85%",0);
 			            tree2.setImagePath("imgs/");
 			            tree2.enableTreeImages(false);
 			            tree2.enableIEImageFix(true);
