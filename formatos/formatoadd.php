@@ -926,7 +926,7 @@ function consultar_contador() {
 function arbol_categorias($campo) {
 	$entidad = $campo;
 	?>
-<div><?php //echo $seleccionados; ?></div>
+<div><?php /* echo $seleccionados; */ ?></div>
 <br>
 Buscar:
 <input type="text" id="stext<?php echo $entidad; ?>" width="200px"
