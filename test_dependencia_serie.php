@@ -91,6 +91,20 @@ if(@$_REQUEST['carga_partes_dependencia']){
     }     
 }
 
+//si llega el request para cargar por partes subseries & tipo documental
+if(@$_REQUEST['carga_partes_serie']){
+    if($id and $id<>"" && @$_REQUEST["uid"]){
+        
+        if(strpos($id,'sub')!==false && $mostrar_nodos['dsa']){
+            echo("<tree id=\"".$id."\">\n");
+                $ids=explode('sub',$id);
+                llena_subseries_tipo_documental($ids[1]);            
+            echo("</tree>\n");
+            die();            
+        }
+
+    }   
+}
 
 
 //cargar series de una dependencia
@@ -109,20 +123,6 @@ if(@$_REQUEST['cargar_series'] && @$_REQUEST['iddependencia']){
     die();
 }
 
-//si llega el request para cargar por partes subseries & tipo documental
-if(@$_REQUEST['carga_partes_serie']){
-    if($id and $id<>"" && @$_REQUEST["uid"]){
-        
-        if(strpos($id,'sub')!==false && $mostrar_nodos['dsa']){
-            echo("<tree id=\"".$id."\">\n");
-                $ids=explode('sub',$id);
-                llena_subseries_tipo_documental($ids[1]);            
-            echo("</tree>\n");
-            die();            
-        }
-
-    }   
-}
 
 
 //carga inicial arbol
