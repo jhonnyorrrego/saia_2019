@@ -378,7 +378,7 @@ echo $x_contador_idcontadorList;
 								*/
 							?>
 					<input type="hidden" name="x_serie_idserie" id="x_serie_idserie">
-					 <div id="esperando_serie"><img src="imagenes/cargando.gif"></div>
+					 <div id="esperando_serie"><img src="<?php echo($ruta_db_superior);?>imagenes/cargando.gif"></div>
 					<div id="tree_serie_idserie" ></div> 
                     <script>
                         
