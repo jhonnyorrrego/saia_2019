@@ -103,7 +103,7 @@ if(@$_REQUEST['cargar_series']){
     }   
     if($hijos_entidad_serie['numcampos']){
             
-        llena_entidad_serie($serie,$lista_entidad_series_filtrar);
+        llena_entidad_serie($iddependencia,$lista_entidad_series_filtrar);
     }    
     die();
 }
