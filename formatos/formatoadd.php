@@ -393,8 +393,8 @@ echo $x_contador_idcontadorList;
 			            tree2.setOnCheckHandler(onNodeSelect_serie_idserie);
 			            tree2.setOnLoadingStart(cargando_serie_idserie);
                         tree2.setOnLoadingEnd(fin_cargando_serie_idserie);
-		            	tree2.setXMLAutoLoading("<?php echo($ruta_db_superior);?>test_dependencia_serie.php?tabla=dependencia&sin_padre_dependencia=1&estado=1&carga_partes_dependencia=1&carga_partes_serie=1&mostrar_nodos=dsa,soc");
-			            tree2.loadXML("<?php echo($ruta_db_superior);?>test_dependencia_serie.php?tabla=dependencia&sin_padre_dependencia=1&estado=1&carga_partes_dependencia=1&carga_partes_serie=1&mostrar_nodos=dsa,soc");
+		            	tree2.setXMLAutoLoading("<?php echo($ruta_db_superior);?>test_dependencia_serie.php?tabla=dependencia&sin_padre_dependencia=1&sin_padre_serie=1&estado=1&carga_partes_dependencia=1&carga_partes_serie=1&mostrar_nodos=dsa,soc");
+			            tree2.loadXML("<?php echo($ruta_db_superior);?>test_dependencia_serie.php?tabla=dependencia&sin_padre_dependencia=1&estado=1&carga_partes_dependencia=1&carga_partes_serie=1&mostrar_nodos=dsa,soc&sin_padre_serie=1");
             			function onNodeSelect_serie_idserie(nodeId){
                             valor_destino=document.getElementById("x_serie_idserie");
                             alert(nodeId);
