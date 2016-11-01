@@ -56,7 +56,7 @@ function mostrar_seleccionados_entrega($idformato,$iddoc){
 	$documentos=explode(",",$seleccionado[0]['iddestino_radicacion']);
 	$docs=array_filter($documentos);
 	$texto='';
-	$registros=busca_filtro_tabla("d.iddocumento, d.plantilla, b.numero_item, b.observacion_destino, b.nombre_destino, b.nombre_origen, b.destino_externo, b.origen_externo, b.tipo_origen, b.tipo_destino","ft_radicacion_entrada a,ft_destino_radicacion b,ft_item_despacho_ingres c, documento d,ft_despacho_ingresados e","b.ft_radicacion_entrada=a.idft_radicacion_entrada AND c.ft_destino_radicacio=b.idft_destino_radicacion AND d.iddocumento=a.documento_iddocumento AND c.ft_despacho_ingresados=e.idft_despacho_ingresados AND e.documento_iddocumento=".$iddoc,"d.iddocumento,d.plantilla",$conn);
+	$registros=busca_filtro_tabla("d.iddocumento, d.plantilla, b.numero_item, b.observacion_destino, b.nombre_destino, b.nombre_origen, b.destino_externo, b.origen_externo, b.tipo_origen, b.tipo_destino","ft_radicacion_entrada a,ft_destino_radicacion b,ft_item_despacho_ingres c, documento d,ft_despacho_ingresados e","b.ft_radicacion_entrada=a.idft_radicacion_entrada AND c.ft_destino_radicacio=b.idft_destino_radicacion AND d.iddocumento=a.documento_iddocumento AND c.ft_despacho_ingresados=e.idft_despacho_ingresados AND e.documento_iddocumento=".$iddoc,"",$conn);
 	
 	$texto.=reporte_entradas2($idformato,$iddoc);
 	echo($texto);
