@@ -51,37 +51,20 @@ global $conn;
             <input type="hidden" name="bqsaiaenlace_nombre" id="bqsaiaenlace_nombre" value="y">
           </div>
         </div> 
-        
-        
-        
-         <strong>Entre las fechas</strong>
-            <input type="hidden" name="bksaiacondicion_fecha_radicacion_entrada_x" id="bksaiacondicion_fecha_radicacion_entrada_x" value=">=">
-        <div class="controls">
-            <input id="bqsaia_fecha_radicacion_entrada_x" name="bqsaia_fecha_radicacion_entrada_x" style="width:100px" type="text" value="" placeholder="Inicio">
-            <?php selector_fecha("bqsaia_fecha_radicacion_entrada_x","kformulario_saia","Y-m-d",date("m"),date("Y"),"default.css","../../",""); ?>
-            <input type="hidden" name="bqsaiaenlace_fecha_radicacion_entrada_x" id="bqsaiaenlace_fecha_radicacion_entrada_x" value="y" />
-            &nbsp;&nbsp;y&nbsp;&nbsp;
-            <input type="hidden" name="bksaiacondicion_fecha_radicacion_entrada_y" id="bksaiacondicion_fecha_radicacion_entrada_y" value="<=">
-            <input id="bqsaia_fecha_radicacion_entrada_y" name="bqsaia_fecha_radicacion_entrada_y" style="width:100px" type="text" value="" placeholder="Fin">
-            <?php selector_fecha("bqsaia_fecha_radicacion_entrada_y","kformulario_saia","Y-m-d",date("m"),date("Y"),"default.css","../../",""); ?>
-        </div>
-
-        <input type="hidden" name="bqsaiaenlace_fecha_radicacion_entrada_y" id="bqsaiaenlace_fecha_radicacion_entrada_y" value="y" />
-
-		<br>
+       
 
 
         <div class="row">
           <div class="control-group radio_buttons span4">
-            <label class="radio_buttons optional control-label"><b>Tipo</b>
-            <input type="hidden" name="bksaiacondicion_A@tipo_origen" id="bksaiacondicion_A-tipo_origen" value="=">
+            <label class="radio_buttons optional control-label"><b>Estado</b>
+            <input type="hidden" name="bksaiacondicion_d@tipo_origen" id="bksaiacondicion_d-tipo_origen" value="=">
             </label>
             <div class="controls">
               <label class="radio inline">
-                <input class="radio_buttons optional" id="bqsaia_A-tipo_origen" name="bqsaia_A@tipo_origen" type="radio" value="1">Externo
+                <input class="radio_buttons optional" id="bqsaia_d-tipo_origen" name="bqsaia_d@tipo_origen" type="radio" value="1">Externo
               </label>
               <label class="radio inline">
-                <input class="radio_buttons optional" id="bqsaia_A-tipo_origen2" name="bqsaia_A@tipo_origen" type="radio" value="2">Interno
+                <input class="radio_buttons optional" id="bqsaia_d-tipo_origen2" name="bqsaia_d@tipo_origen" type="radio" value="2">Interno
               </label>
             </div>          
           </div> 
