@@ -428,12 +428,6 @@ echo $x_contador_idcontadorList;
 							
       </span></td>
 		</tr>
-		<!--tr>
-		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">Tabla en la Base de Datos</span></td>
-		<td bgcolor="#F5F5F5"><span class="phpmaker">
-<input type="text" name="x_tabla" id="x_tabla" value="<?php echo htmlspecialchars(@$x_tabla) ?>">
-</span></td>
-	</tr-->
 		<tr>
 			<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">librer&iacute;as</span></td>
 			<td bgcolor="#F5F5F5"><span class="phpmaker"> <input type="text"
