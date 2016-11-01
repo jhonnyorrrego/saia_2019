@@ -121,7 +121,7 @@ function reporte_entradas2($idformato,$iddoc){
 	
 	for($i=0;$i<$registros["numcampos"];$i++){
 	    
-		$origen=busca_filtro_tabla("concat(nombres,' ',apellidos) AS nombre","vfuncionario_dc","iddependencia_cargo=".$registros[$i]['nombre_origen'],"",$conn);
+		$origen=busca_filtro_tabla("concat(nombres,' ',apellidos) AS nombre","vfuncionario_dc","funcionario_codigo=".$registros[$i]['nombre_origen'],"",$conn);
 
 		if($registros[$i]["tipo_destino"]==2){
 		    $destino=busca_filtro_tabla("b.nombre","datos_ejecutor a, ejecutor b","b.idejecutor=a.ejecutor_idejecutor AND a.iddatos_ejecutor=".$registros[$i]['nombre_destino'],"",$conn);
