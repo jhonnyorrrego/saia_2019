@@ -499,6 +499,7 @@ function mostrar_item_destino_radicacion($idformato,$iddoc){
 	}else{
 	    $tabla='<table class="table table-bordered" style="width: 100%; font-size:10px; text-align:left;" border="1">
     	<tr>
+        	<th style="text-align:center;">No. Item</th>
         	<th style="text-align:center;">Nombre origen</th>
         	<th style="text-align:center;">Nombre destino</th>
        		<th style="text-align:center;">Cargo</th>
@@ -519,6 +520,7 @@ function mostrar_item_destino_radicacion($idformato,$iddoc){
     	    
     	    $tabla.="
     	        <tr>
+    	            <td style='text-align:center;'>".$datos[$i]['numero_item']."</td>
     	            <td>".$origen[0]['nombres']." ".$origen[0]['apellidos']."</td>
     	            <td>".$destino[0]['nombre']."</td>
     	            <td style='text-align:center;'>".$destino[0]['cargo']."</td>
