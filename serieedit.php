@@ -179,6 +179,8 @@ return true;
 		<?php if($x_categoria==3){ ?>
 			$("#cat3").click();
 		<?php } ?>
+		
+		$('[name="x_tipo"]').click();
 	});
 	</script>
 	<script>
