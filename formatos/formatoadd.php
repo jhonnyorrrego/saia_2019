@@ -390,12 +390,12 @@ echo $x_contador_idcontadorList;
 			            tree2.enableTreeImages(false);
 			            tree2.enableIEImageFix(true);
 			            tree2.setXMLAutoLoadingBehaviour("id");
-			            tree2.setOnClickHandler(onNodeSelect);
-			            tree2.setOnLoadingStart(cargando_serie);
-                        tree2.setOnLoadingEnd(fin_cargando_serie);
+			            tree2.setOnClickHandler(onNodeSelect_serie_idserie);
+			            tree2.setOnLoadingStart(cargando_serie_idserie);
+                        tree2.setOnLoadingEnd(fin_cargando_serie_idserie);
 		            	tree2.setXMLAutoLoading("test_dependencia_serie.php?tabla=dependencia&admin=1&estado=1&carga_partes_dependencia=1&carga_partes_serie=1");
 			            tree2.loadXML("test_dependencia_serie.php?tabla=dependencia&admin=1&estado=1&carga_partes_dependencia=1&carga_partes_serie=1");
-            			function onNodeSelect(nodeId){
+            			function onNodeSelect_serie_idserie(nodeId){
                             var datos=nodeId.split("-");
                             var datos2=nodeId.split("sub");
                             if(datos[1] || datos2[1]){
@@ -409,7 +409,7 @@ echo $x_contador_idcontadorList;
                                 parent.serielist.location = "asignarserie_entidad.php?tipo_entidad=2&llave_entidad=" + datos[1];
                             }
                   }
-                  function fin_cargando_serie() {
+                  function fin_cargando_serie_idserie() {
                         if (browserType == "gecko" )
                            document.poppedLayer =
                                eval('document.getElementById("esperando_serie")');
@@ -422,7 +422,7 @@ echo $x_contador_idcontadorList;
                         document.poppedLayer.style.display = "none";
                   }
             
-                  function cargando_serie() {
+                  function cargando_serie_idserie() {
                         if (browserType == "gecko" )
                            document.poppedLayer =
                                eval('document.getElementById("esperando_serie")');
