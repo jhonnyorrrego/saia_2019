@@ -209,7 +209,7 @@ return true;
 	
 	$(document).ready(function(){
 	    
-	    $('[name="x_tipo"]').children('option[value="<?php echo($x_tipo); ?>"]').trigger('click');
+	    filtrar_arbol_series();
 	    
 	    $('[name="x_tipo"]').click(function(){
 	        $('#nombre_padre_muestra').remove();
