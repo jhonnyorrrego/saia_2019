@@ -856,6 +856,10 @@ function serie_documental_radicacion($idformato,$iddoc){
 	            padre=padre.replace("#","");
 	            dependencia=dependencia.replace("#","");
 	        }
+	        
+	        tree_serie_idserie.loadXML("<?php echo($ruta_db_superior); ?>test_dependencia_serie.php?tabla=dependencia&mostrar_nodos=dsa&sin_padre_dependencia=1&cargar_series="+dependencia);
+	        
+	        
 	        var x = Math.floor((Math.random() * 100000) + 1);
 	        
 	        //tree_serie_idserie.deleteChildItems(0);+
