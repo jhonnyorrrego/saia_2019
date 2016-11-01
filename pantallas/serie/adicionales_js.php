@@ -21,7 +21,7 @@ echo(librerias_notificaciones());
         
         $("#filtro_dependencias").live("change",function(){
             var filtro_dependencias=$(this).val();
-            window.location.href = "<?php echo $ruta_db_superior;?>pantallas/busquedas/consulta_busqueda_reporte.php?idbusqueda_componente=269&variable_busqueda="+filtro_dependencias;
+            window.location.href = "<?php echo $ruta_db_superior;?>pantallas/busquedas/consulta_busqueda_reporte.php?idbusqueda_componente=272&variable_busqueda="+filtro_dependencias;
             
         });
         
