@@ -180,7 +180,7 @@ return true;
 			$("#cat3").click();
 		<?php } ?>
 		
-		$('[name="x_tipo"]').click();
+		
 	});
 	</script>
 	<script>
