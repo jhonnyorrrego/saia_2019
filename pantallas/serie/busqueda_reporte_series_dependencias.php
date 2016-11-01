@@ -42,15 +42,18 @@ global $conn;
     
         <div class="row">
           <div class="control-group radio_buttons span4">
-            <label class="radio_buttons optional control-label"><b>Estado</b>
-            <input type="hidden" name="bksaiacondicion_s@estado" id="bksaiacondicion_s-estado" value="=">
+            <label class="radio_buttons optional control-label"><b>Tipo</b>
+            <input type="hidden" name="bksaiacondicion_s@tipo" id="bksaiacondicion_s-tipo" value="=">
             </label>
             <div class="controls">
               <label class="radio inline">
-                <input class="radio_buttons optional" id="bqsaia_s-estado1" name="bqsaia_s@estado" type="radio" value="1">Activo
+                <input class="radio_buttons optional" id="bqsaia_s-tipo1" name="bqsaia_s@tipo" type="radio" value="1">Serie
               </label>
               <label class="radio inline">
-                <input class="radio_buttons optional" id="bqsaia_s-estado2" name="bqsaia_s@estado" type="radio" value="0">Inactivo
+                <input class="radio_buttons optional" id="bqsaia_s-tipo2" name="bqsaia_s@tipo" type="radio" value="2">Subserie
+              </label>
+              <label class="radio inline">
+                <input class="radio_buttons optional" id="bqsaia_s-tipo3" name="bqsaia_s@tipo" type="radio" value="3">Tipo Documental
               </label>
             </div>          
           </div> 
