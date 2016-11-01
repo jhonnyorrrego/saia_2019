@@ -72,7 +72,7 @@ if(@$_REQUEST['funcionario']){
 $id = @$_REQUEST["id"];
 
 //si llega el request para cargar por partes series,dependencias,etc
-if(@$_REQUEST['carga_partes_dependencia']){
+
     if($id and $id<>"" && @$_REQUEST["uid"]){
         echo("<tree id=\"".$id."\">\n");
       
@@ -82,6 +82,17 @@ if(@$_REQUEST['carga_partes_dependencia']){
         }else if(strpos($id,'sub')!==false && $mostrar_nodos['dsa']){   //si es subserie o tipo documental
             $ids=explode('sub',$id);
             llena_subseries_tipo_documental($ids[0],$ids[1]);
+        }else if(strpos($id,'serie')!==false && $mostrar_nodos['dsa']){
+            $iddependencia=$_REQUEST['iddependencia'];
+            $hijos_entidad_serie = busca_filtro_tabla("serie_idserie","entidad_serie","estado=1 AND entidad_identidad='2' AND llave_entidad=".$iddependencia,"",$conn);
+            if($hijos_entidad_serie['numcampos']){
+                $lista_entidad_series_filtrar=implode(',',extrae_campo($hijos_entidad_serie,'serie_idserie'));
+            }  
+            echo("<tree id=\"d".$iddependencia."\">\n"); 
+            if($hijos_entidad_serie['numcampos']){
+                    
+                llena_entidad_serie($iddependencia,$lista_entidad_series_filtrar);
+            }              
         }else if($mostrar_nodos['soc']){ //si es serie otras categorias
             $ids=explode('-',$id);
             llena_serie_otras($ids[0]," and categoria=3 ");
@@ -89,23 +100,7 @@ if(@$_REQUEST['carga_partes_dependencia']){
         echo("</tree>\n");
         die();
     }     
-}
 
-//si llega el request para cargar por partes subseries & tipo documental
-if(@$_REQUEST['carga_partes_serie']){
-    if($id and $id<>"" && @$_REQUEST["uid"]){
-        
-        if(strpos($id,'sub')!==false && $mostrar_nodos['dsa']){
-            echo("<tree id=\"".$id."\">\n");
-                $ids=explode('sub',$id);
-                print_r($ids);
-                llena_subseries_tipo_documental($ids[0],$ids[1]);            
-            echo("</tree>\n");
-            die();            
-        }
-
-    }   
-}
 
 
 //cargar series de una dependencia
@@ -298,7 +293,7 @@ function llena_entidad_serie($iddependencia,$series){
     $series=busca_filtro_tabla("nombre,idserie,codigo","serie",$condicion_final.$activo,"",$conn);
     for($i=0;$i<$series['numcampos'];$i++){
         echo("<item style=\"font-family:verdana; font-size:7pt;\" ");
-        echo("text=\"".htmlspecialchars(($series[$i]["nombre"])).' ('.$series[$i]['codigo'].') '." \" id=\"".$iddependencia."sub".$series[$i]['idserie']."\"");
+        echo("text=\"".htmlspecialchars(($series[$i]["nombre"])).' ('.$series[$i]['codigo'].') '." \" id=\"".$iddependencia."serie".$series[$i]['idserie']."\"");
         if(@$_REQUEST['sin_padre']){
             echo(" nocheckbox=\"1\" ");	
         }
