@@ -789,10 +789,10 @@ function AddData($conn) {
 	
 	// Field Serie_idserie
 	if($x_serie_idserie == "") { // crear la serie con el nombre del formato
-		$sql = "insert into serie(nombre,categoria) values('" . $x_etiqueta . "',3)";
-		guardar_traza($sql, $x_nombre);
-		phpmkr_query($sql, $conn);
-		$fieldList["serie_idserie"] = phpmkr_insert_id();
+		//$sql = "insert into serie(nombre,categoria) values('" . $x_etiqueta . "',3)";
+		//guardar_traza($sql, $x_nombre);
+		//phpmkr_query($sql, $conn);
+		//$fieldList["serie_idserie"] = phpmkr_insert_id();
 	} else { // otra serie elegida o sin serie
 		$theValue = ($x_serie_idserie != 0) ? intval($x_serie_idserie) : 0;
 		$fieldList["serie_idserie"] = $theValue;
