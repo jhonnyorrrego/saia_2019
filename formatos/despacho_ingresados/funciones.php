@@ -88,8 +88,8 @@ function reporte_entradas2($idformato,$iddoc){
 		$qr='<img src="http://'.RUTA_PDF.'/'.$codigo_qr[0]['ruta_qr'].'" width="80px" height="80px">';	
 	}
 	$documentos2=busca_filtro_tabla("","ft_despacho_ingresados","documento_iddocumento=".$iddoc,"",$conn);
-	$funcionario=busca_filtro_tabla("","vfuncionario_dc","dependencia_cargo=".$documentos2[0]['mensajero'],"",$conn);
-	print_r($funcionario);
+	$funcionario=busca_filtro_tabla("","vfuncionario_dc","iddependencia_cargo=".$documentos2[0]['mensajero'],"",$conn);
+	
 	$logo=busca_filtro_tabla("valor","configuracion","nombre='logo'","",$conn);
 	$texto='<table style="border-collapse:collapse;width:100%" border="1px">';
 	$texto.='<tr>';
