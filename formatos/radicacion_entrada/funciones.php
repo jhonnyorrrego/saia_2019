@@ -847,14 +847,20 @@ function serie_documental_radicacion($idformato,$iddoc){
         function onNodeSelect(nodeId){
 	        var numeral=nodeId.indexOf("#");
 	        
-	        alert(numeral);
+	        
 	        if(numeral>=0){
 	            var padre=tree_destino.getParentId(nodeId);
 	            padre=padre.replace("#","");
 	            var dependencia=nodeId.replace("#","");
 	        }else{
+	            
+	            
 	            var dependencia=tree_destino.getParentId(nodeId);
 	            var padre=tree_destino.getParentId(dependencia);
+	            if(!padre){
+	                padre=dependencia;
+	            }
+	            
 	            padre=padre.replace("#","");
 	            dependencia=dependencia.replace("#","");
 	        }
