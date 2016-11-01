@@ -388,8 +388,8 @@ echo $x_contador_idcontadorList;
 			            tree2.enableIEImageFix(true);
 			            tree2.setXMLAutoLoadingBehaviour("id");
 			            tree2.setOnClickHandler(onNodeSelect_serie_idserie);
-			            tree2.setOnLoadingStart(cargando_serie_idserie);
-                        tree2.setOnLoadingEnd(fin_cargando_serie_idserie);
+			           // tree2.setOnLoadingStart(cargando_serie_idserie);
+                    //    tree2.setOnLoadingEnd(fin_cargando_serie_idserie);
 		            	tree2.setXMLAutoLoading("<?php echo($ruta_db_superior);?>test_dependencia_serie.php?tabla=dependencia&admin=1&estado=1&carga_partes_dependencia=1&carga_partes_serie=1");
 			            tree2.loadXML("<?php echo($ruta_db_superior);?>test_dependencia_serie.php?tabla=dependencia&admin=1&estado=1&carga_partes_dependencia=1&carga_partes_serie=1");
             			function onNodeSelect_serie_idserie(nodeId){
