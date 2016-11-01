@@ -217,7 +217,9 @@ return true;
 	    });
 	    
 	    <?php if($x_categoria==2){
+	        ?>
 	        setTimeout(function(){ filtrar_arbol_series(); }, 500);
+	        <?php
 	    } ?>
 	    
 	    
