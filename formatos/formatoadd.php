@@ -399,10 +399,14 @@ echo $x_contador_idcontadorList;
                             valor_destino=document.getElementById("serie_idserie");
 
                             if(tree_serie_idserie.isItemChecked(nodeId)){
-                                if(valor_destino.value!=="")
-                                  tree_serie_idserie.setCheck(valor_destino.value,false);
-                                if(nodeId.indexOf("_")!=-1)
+                                if(valor_destino.value!==""){
+                                    tree_serie_idserie.setCheck(valor_destino.value,false);
+                                }
+                                  
+                                if(nodeId.indexOf("_")!=-1){
                                     nodeId=nodeId.substr(0,nodeId.indexOf("_"));
+                                }
+                                    
                               
                                 valor_destino.value=nodeId;
                             }else{
