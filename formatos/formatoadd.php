@@ -398,6 +398,18 @@ echo $x_contador_idcontadorList;
             			function onNodeSelect_serie_idserie(nodeId){
                             valor_destino=document.getElementById("x_serie_idserie");
                             alert(nodeId);
+                            
+                            //es tipo_documental?
+                            var datos=nodeId.split("-");
+                            var datos2=nodeId.split("sub");
+                            if(datos[1] || datos2[1]){
+                                var dato=datos[1];
+                                if(datos2[1]){
+                                    dato=datos2[1];
+                                }
+                                
+                            }                           
+                            
                             if(tree2.isItemChecked(nodeId)){
                                 
                                 
@@ -405,15 +417,15 @@ echo $x_contador_idcontadorList;
                                     tree2.setCheck(valor_destino.value,false);
                                 }
                                   
-                                if(nodeId.indexOf("_")!=-1){
-                                    nodeId=nodeId.substr(0,nodeId.indexOf("_"));
-                                }
+
                                     
                               
                                 valor_destino.value=nodeId;
                             }else{
                                 valor_destino.value="";
                             }
+                            
+                            alert(valor_destino.value);
                         }
                         function fin_cargando_serie_idserie() {
                         if (browserType == "gecko" )
