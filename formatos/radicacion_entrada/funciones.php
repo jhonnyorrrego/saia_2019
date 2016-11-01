@@ -858,7 +858,7 @@ function serie_documental_radicacion($idformato,$iddoc){
 	            var dependencia=tree_destino.getParentId(nodeId);
 	            var padre=tree_destino.getParentId(dependencia);
 	            alert(padre);
-	            if(padre==){
+	            if(padre==0){
 	                padre=dependencia;
 	            }
 	            
