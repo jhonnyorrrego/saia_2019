@@ -822,8 +822,8 @@ function serie_documental_radicacion($idformato,$iddoc){
                 function cargar_arbol(){
                 setTimeout(function(){  
                     tree_serie_idserie.deleteChildItems(0); 
-                    tree_serie_idserie.loadXML("<?php echo($ruta_db_superior); ?>test_dependencia_serie.php?tabla=dependencia&admin=1&dependencia=38&mostrar_nodos=dsa&sin_padre_dependencia=1&solo_dependencias=1");
-                    tree_serie_idserie.loadXML("<?php echo($ruta_db_superior); ?>test_dependencia_serie.php?tabla=dependencia&sin_padre_dependencia=1&admin=1&mostrar_nodos=dsa&uid=1477409126024&id=d"+dependencia_principal+"&solo_dependencias=1");
+                    tree_serie_idserie.loadXML("<?php echo($ruta_db_superior); ?>test_dependencia_serie.php?tabla=dependencia&admin=1&dependencia=38&mostrar_nodos=dsa&sin_padre_dependencia=1&solo_dependencias=1&carga_partes_serie=1");
+                    tree_serie_idserie.loadXML("<?php echo($ruta_db_superior); ?>test_dependencia_serie.php?tabla=dependencia&sin_padre_dependencia=1&admin=1&mostrar_nodos=dsa&uid=1477409126024&id=d"+dependencia_principal+"&solo_dependencias=1&carga_partes_serie=1");
                 }, 1000);
                 }
 	    var cargado=[<?php echo($cargo); ?>];
@@ -858,7 +858,7 @@ function serie_documental_radicacion($idformato,$iddoc){
 	        }
 	        
 	       // tree_serie_idserie.loadXML("<?php echo($ruta_db_superior); ?>test_dependencia_serie.php?tabla=dependencia&mostrar_nodos=dsa&sin_padre_dependencia=1&cargar_series="+dependencia);
-	        tree_serie_idserie.setXMLAutoLoading("<?php echo($ruta_db_superior); ?>test_dependencia_serie.php?tabla=dependencia&mostrar_nodos=dsa&sin_padre_dependencia=1&cargar_series=1&iddependencia="+dependencia);
+	        tree_serie_idserie.setXMLAutoLoading("<?php echo($ruta_db_superior); ?>test_dependencia_serie.php?tabla=dependencia&mostrar_nodos=dsa&sin_padre_dependencia=1&cargar_series=1&carga_partes_serie=1&iddependencia="+dependencia);
 	        tree_serie_idserie.smartRefreshItem("d"+padre);
 	        
 
