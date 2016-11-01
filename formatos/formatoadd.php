@@ -375,11 +375,65 @@ echo $x_contador_idcontadorList;
 								}
 								echo ($inicio . $fin);
 								*/
-								
-								
-								
-								
 							?>
+                    <script>
+                        var browserType;
+                        if (document.layers) {browserType = "nn4"}
+                        if (document.all) {browserType = "ie"}
+                        if (window.navigator.userAgent.toLowerCase().match("gecko")) {
+                            browserType= "gecko"
+                        }
+			            tree2=new dhtmlXTreeObject("treeboxbox_tree2","100%","85%",0);
+			            tree2.setImagePath("imgs/");
+			            tree2.enableTreeImages(false);
+			            tree2.enableIEImageFix(true);
+			            tree2.setXMLAutoLoadingBehaviour("id");
+			            tree2.setOnClickHandler(onNodeSelect);
+			            tree2.setOnLoadingStart(cargando_serie);
+                        tree2.setOnLoadingEnd(fin_cargando_serie);
+		            	tree2.setXMLAutoLoading("test_dependencia_serie.php?tabla=dependencia&admin=1&estado=1&carga_partes_dependencia=1&carga_partes_serie=1");
+			            tree2.loadXML("test_dependencia_serie.php?tabla=dependencia&admin=1&estado=1&carga_partes_dependencia=1&carga_partes_serie=1");
+            			function onNodeSelect(nodeId){
+                            var datos=nodeId.split("-");
+                            var datos2=nodeId.split("sub");
+                            if(datos[1] || datos2[1]){
+                                var dato=datos[1];
+                                if(datos2[1]){
+                                    dato=datos2[1];
+                                }
+                               parent.serielist.location = "serieview.php?key=" + dato; 
+                            }else{    
+                                var datos=nodeId.split("d");
+                                parent.serielist.location = "asignarserie_entidad.php?tipo_entidad=2&llave_entidad=" + datos[1];
+                            }
+                  }
+                  function fin_cargando_serie() {
+                        if (browserType == "gecko" )
+                           document.poppedLayer =
+                               eval('document.getElementById("esperando_serie")');
+                        else if (browserType == "ie")
+                           document.poppedLayer =
+                              eval('document.getElementById("esperando_serie")');
+                        else
+                           document.poppedLayer =
+                              eval('document.layers["esperando_serie"]');
+                        document.poppedLayer.style.display = "none";
+                  }
+            
+                  function cargando_serie() {
+                        if (browserType == "gecko" )
+                           document.poppedLayer =
+                               eval('document.getElementById("esperando_serie")');
+                        else if (browserType == "ie")
+                           document.poppedLayer =
+                              eval('document.getElementById("esperando_serie")');
+                        else
+                           document.poppedLayer =
+                               eval('document.layers["esperando_serie"]');
+                        document.poppedLayer.style.display = "";
+                  }                        
+                    </script>							
+							
       </span></td>
 		</tr>
 		<!--tr>
