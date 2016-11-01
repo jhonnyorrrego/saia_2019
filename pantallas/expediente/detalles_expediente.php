@@ -101,7 +101,7 @@ $expediente=busca_filtro_tabla("a.*,".fecha_db_obtener("a.fecha","Y-m-d")." AS f
   	?>
   	
   	<?php
-  	if(usuario_actual('login')=='cerok'){
+  	if(usuario_actual('login')=='cerok'){  //esta pendiente por terminar
   	?>
           	&nbsp; &nbsp; &nbsp; 
   		    <button class='btn btn-mini btn-default cambiar_responsable_expediente'>
@@ -152,6 +152,12 @@ $expediente=busca_filtro_tabla("a.*,".fecha_db_obtener("a.fecha","Y-m-d")." AS f
 	$usuario_cierre=busca_filtro_tabla("","vfuncionario_dc a","a.idfuncionario=".$expediente[0]["funcionario_cierre"],"",$conn);
 	$estado_cierre="";
 	$enlace_abrir='<a style="cursor:pointer" class="accion_abrir_cierre" accion="1">Abrir</a>';
+	$permiso_abrir_expediente=new Permiso();
+	$ok=$permiso_abrir_expediente->acceso_modulo_perfil("permiso_abrir_expediente");
+	if(!$ok){
+	    $enlace_abrir='';
+	}
+	
 	$enlace_cerrar='<a style="cursor:pointer" class="accion_abrir_cierre" accion="2">Cerrar</a>';
 	$observaciones_abrir_cerrar='';
 	if($expediente[0]["estado_cierre"]==1){
