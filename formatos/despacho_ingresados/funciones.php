@@ -53,17 +53,13 @@ function campos_ocultos_entrega($idformato,$iddoc){
 function mostrar_seleccionados_entrega($idformato,$iddoc){
 	global $conn,$ruta_db_superior,$registros;
 	$seleccionado=busca_filtro_tabla("","ft_despacho_ingresados","documento_iddocumento=".$iddoc,"",$conn);
-	$documentos=explode(",",$seleccionado[0]['docs_seleccionados']);
+	$documentos=explode(",",$seleccionado[0]['iddestino_radicacion']);
 	$docs=array_filter($documentos);
 	$texto='';
-	$registros=busca_filtro_tabla("","documento A"," A.iddocumento in(".implode(",",$docs).")","",$conn);
-	if($registros[0]["tipo_radicado"]==1){
-		$texto.=reporte_entradas2($idformato,$iddoc);
-		echo($texto);
-	}else if($registros[0]["tipo_radicado"]==2){
-		$texto.=reporte_salidas2($idformato,$iddoc);
-		echo($texto);
-	}
+	$registros=busca_filtro_tabla("d.iddocumento,d.planilla","ft_radicacion_entrada a,ft_destino_radicacion b,ft_item_despacho_ingres c, documento d","b.ft_radicacion_entrada=a.idft_radicacion_entrada AND c.ft_destino_radicacion=b.idft_destino_radicacion AND d.iddocumento=a.documento_iddocumento AND b.documento_iddocumento=".$iddoc,"",$conn);
+	
+	$texto.=reporte_entradas2($idformato,$iddoc);
+	echo($texto);
 }
 //------------------------------Posterior aprobar------------------------------------//
 function generar_pdf_entrega($idformato,$iddoc){
@@ -92,7 +88,7 @@ function reporte_entradas2($idformato,$iddoc){
 		$qr='<img src="http://'.RUTA_PDF.'/'.$codigo_qr[0]['ruta_qr'].'" width="80px" height="80px">';	
 	}
 	$documentos2=busca_filtro_tabla("","documento A,ft_despacho_ingresados","documento_iddocumento=iddocumento and A.iddocumento =".$iddoc,"",$conn);
-	$funcionario=busca_filtro_tabla("","vfuncionario_dc","idfuncionario=".$documentos2[0]['mensajero'],"",$conn);
+	$funcionario=busca_filtro_tabla("","vfuncionario_dc","dependencia_cargo=".$documentos2[0]['mensajero'],"",$conn);
 	$logo=busca_filtro_tabla("valor","configuracion","nombre='logo'","",$conn);
 	$texto='<table style="border-collapse:collapse;width:100%" border="1px">';
 	$texto.='<tr>';
