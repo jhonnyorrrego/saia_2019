@@ -142,7 +142,7 @@ function reporte_entradas2($idformato,$iddoc){
 			$fecha='';
 		}
 		$texto.='<tr>';
-		$texto.='<td style="text-align:center">'.$documentos[0]["numero"].'</td>';
+		$texto.='<td style="text-align:center">'.$registros[$i]["numero_item"].'</td>';
 		$texto.='<td style="text-align:center;">'.date('d-m-Y', strtotime($documentos[0]["fecha"])).'</td>';
 		
 		if($registros[$i]['plantilla']=='RADICACION_ENTRADA'){
