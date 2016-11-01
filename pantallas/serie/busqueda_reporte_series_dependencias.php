@@ -123,6 +123,18 @@ global $conn;
           </div> 
       </div><br>
 
+        <div class="container master-container">
+       <form accept-charset="UTF-8" id="kformulario_saia"  method="post" >  
+        <div class="control-group">
+          <label class="string required control-label" for="procedimiento">
+			<b>Procedimiento:</b>
+			<input type="hidden" name="bksaiacondicion_s@procedimiento" id="bksaiacondicion_s-procedimiento" value="like">
+          </label>
+          <div class="controls">
+            <input id="bqsaia_nombre" name="bqsaia_s@procedimiento" size="50" type="text">
+            <input type="hidden" name="bqsaiaenlace_s@procedimiento" id="bqsaiaenlace_s-procedimiento" value="y">
+          </div>
+        </div> 
 
 	<br>
 	
