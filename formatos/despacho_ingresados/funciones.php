@@ -56,7 +56,7 @@ function mostrar_seleccionados_entrega($idformato,$iddoc){
 	$documentos=explode(",",$seleccionado[0]['iddestino_radicacion']);
 	$docs=array_filter($documentos);
 	$texto='';
-	$registros=busca_filtro_tabla("d.iddocumento,d.planilla","ft_radicacion_entrada a,ft_destino_radicacion b,ft_item_despacho_ingres c, documento d","b.ft_radicacion_entrada=a.idft_radicacion_entrada AND c.ft_destino_radicacion=b.idft_destino_radicacion AND d.iddocumento=a.documento_iddocumento AND b.documento_iddocumento=".$iddoc,"",$conn);
+	$registros=busca_filtro_tabla("d.iddocumento,d.plantilla","ft_radicacion_entrada a,ft_destino_radicacion b,ft_item_despacho_ingres c, documento d","b.ft_radicacion_entrada=a.idft_radicacion_entrada AND c.ft_destino_radicacion=b.idft_destino_radicacion AND d.iddocumento=a.documento_iddocumento AND b.documento_iddocumento=".$iddoc,"",$conn);
 	
 	$texto.=reporte_entradas2($idformato,$iddoc);
 	echo($texto);
