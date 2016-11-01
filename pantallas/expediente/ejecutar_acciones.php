@@ -425,6 +425,9 @@ function obtener_rastro_documento_expediente(){
 function cambiar_responsable_expediente(){
 	global $conn;
 	
+	
+	print_r($_REQUEST);
+	die();
 	$retorno=new stdClass;	
 	
 	$idexpediente=$_REQUEST['idexpediente'];
