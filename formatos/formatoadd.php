@@ -858,7 +858,7 @@ detalles_mostrar_".$x_nombre.".php";
 	$fieldList["ruta_adicionar"] = "'" . "adicionar_" . $x_nombre . ".php'";
 	$fieldList["funcionario_idfuncionario"] = usuario_actual("funcionario_codigo");
 	$fieldList["pertenece_nucleo"] = intval($x_pertenece_nucleo);
-	print_r($fieldList);
+	//print_r($fieldList);
 	// insert into database
 	$strsql = "INSERT INTO formato (";
 	$strsql .= implode(",", array_keys($fieldList));
