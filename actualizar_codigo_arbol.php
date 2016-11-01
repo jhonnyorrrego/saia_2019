@@ -105,7 +105,7 @@ $indice=Utilizado para prevenir un ciclo infinito sobre la funcion
 </Notas>
 </Clase>
  */
-function generar_codigo_arbol($tabla,$campo_codpadre,$campo_id,$dato_padre,$campo_actualizar,$indice=1){
+/*function generar_codigo_arbol($tabla,$campo_codpadre,$campo_id,$dato_padre,$campo_actualizar,$indice=1){
 	global $conn;
 	if($indice>200)return false;
 	
