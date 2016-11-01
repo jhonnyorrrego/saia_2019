@@ -397,7 +397,7 @@ echo $x_contador_idcontadorList;
 			            tree2.loadXML("<?php echo($ruta_db_superior);?>test_dependencia_serie.php?tabla=dependencia&sin_padre_dependencia=1&estado=1&carga_partes_dependencia=1&carga_partes_serie=1&mostrar_nodos=dsa,soc&sin_padre=1");
             			function onNodeSelect_serie_idserie(nodeId){
                             valor_destino=document.getElementById("x_serie_idserie");
-                            alert(nodeId);
+                            
                             
                             //es tipo_documental?
                             var datos=nodeId.split("-");
