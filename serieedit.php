@@ -215,6 +215,10 @@ return true;
 	        $('#nombre_padre_muestra').remove();
 		    filtrar_arbol_series();
 	    });
+	    
+	    <?php if($x_categoria==2){
+	        
+	    } ?>
 	    setTimeout(function(){ filtrar_arbol_series(); }, 500);
 	    
 		$("#cat2").click(function(){
