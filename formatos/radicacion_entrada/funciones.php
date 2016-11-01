@@ -833,7 +833,7 @@ function serie_documental_radicacion($idformato,$iddoc){
 	    cargado.push(dependencia_principal);
 
 	    //Busca las dependencias del rol actual para que no carguen duplicados en la recursion del abrol de series
-	    $.ajax({
+	   /* $.ajax({
 	        type:'POST',
             dataType: 'json',
             url: "ajax_serie.php",
@@ -844,7 +844,7 @@ function serie_documental_radicacion($idformato,$iddoc){
                     cargado.push(datos[i]);
                  }
             }
-        });
+        });*/
 	    tree_destino.setOnCheckHandler(onNodeSelect);
 	    
         function onNodeSelect(nodeId){
@@ -874,6 +874,7 @@ function serie_documental_radicacion($idformato,$iddoc){
 	       }else{
 	           tree_serie_idserie.setXMLAutoLoading("<?php echo($ruta_db_superior); ?>test_dependencia_serie.php?tabla=dependencia&mostrar_nodos=dsa&sin_padre_dependencia=1&cargar_series=1&carga_partes_serie=1&iddependencia="+dependencia);
 	           tree_serie_idserie.smartRefreshItem("d"+padre);  
+	           tree_serie_idserie.openItem( "d"+padre ); //ARBOL: expande nodo hasta el item indicado
 	       }
 	        
 	        
