@@ -396,9 +396,11 @@ echo $x_contador_idcontadorList;
 		            	tree2.setXMLAutoLoading("<?php echo($ruta_db_superior);?>test_dependencia_serie.php?tabla=dependencia&sin_padre_dependencia=1&estado=1&carga_partes_dependencia=1&carga_partes_serie=1&mostrar_nodos=dsa,soc");
 			            tree2.loadXML("<?php echo($ruta_db_superior);?>test_dependencia_serie.php?tabla=dependencia&sin_padre_dependencia=1&estado=1&carga_partes_dependencia=1&carga_partes_serie=1&mostrar_nodos=dsa,soc");
             			function onNodeSelect_serie_idserie(nodeId){
-                            valor_destino=document.getElementById("serie_idserie");
-
+                            valor_destino=document.getElementById("x_serie_idserie");
+                            alert(nodeId);
                             if(tree_serie_idserie.isItemChecked(nodeId)){
+                                
+                                
                                 if(valor_destino.value!==""){
                                     tree_serie_idserie.setCheck(valor_destino.value,false);
                                 }
