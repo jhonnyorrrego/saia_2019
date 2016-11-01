@@ -75,7 +75,7 @@ function planilla_mensajero($idft_destino_radicacion,$mensajero_encargado){
         if($planillas['numcampos']){
             for($i=0;$i<$planillas['numcampos'];$i++){
                 //$html.='<div class="link kenlace_saia" enlace="ordenar.php?key='.$planillas[$i]['iddocumento'].'&amp;accion=mostrar&amp;mostrar_formato=1" conector="iframe" titulo="No Radicado '.$planillas[$i]['numero'].'"><center><span class="badge">'.$planillas[$i]['numero'].'</span></center></div>';
-                $html.="algo \n";
+                $html.=$planillas[$i]['numero']."algo \n";
             }
         }
         $html.="<input type='checkbox' class='planilla_mensajero' mensajero='".$mensajero_encargado."' value='$idft_destino_radicacion'>";
