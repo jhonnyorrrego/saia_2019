@@ -180,7 +180,7 @@ function aceptar_recepcion($idft_destino_radicacion){
     }else{
         $input="<input type='checkbox'id='recepcion' name='recepcion' data-idft='$idft_destino_radicacion' value='".$cargo[0]['iddependencia_cargo']."'>";
     }
-    return $input.$datos[0]['recepcion'];
+    return $datos[0]['recepcion'];
 }
 
 
