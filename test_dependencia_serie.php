@@ -72,7 +72,7 @@ if(@$_REQUEST['funcionario']){
 $id = @$_REQUEST["id"];
 
 //si llega el request para cargar por partes
-if($id and $id<>"" && @$_REQUEST["uid"]){
+if($id and $id<>"" && @$_REQUEST["uid"] && @$_REQUEST['carga_partes']){
     echo("<tree id=\"".$id."\">\n");
   
     if($id[0]=='d' && $mostrar_nodos['dsa']){ //si es dependencia
@@ -186,7 +186,7 @@ if(@$_REQUEST["arbol_series"]){
         echo(" child=\"0\">\n");
     }
     
-    if(@$_REQUEST['uid']){
+    if(@$_REQUEST['uid'] && @$_REQUEST['carga_partes']){
     	if(!$_REQUEST["id"]){
     	    llena_dependencia($papas[$i]["id$tabla"]);
     	}else{
@@ -194,6 +194,8 @@ if(@$_REQUEST["arbol_series"]){
     			llena_dependencia($papas[$i]["id$tabla"]);
     		}
     	}        
+    }else{
+        llena_dependencia($papas[$i]["id$tabla"]);
     }
     
     echo("</item>\n");
