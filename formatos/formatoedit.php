@@ -777,7 +777,7 @@ function EditData($sKey,$conn)
     }
     //crear la serie con el nombre del formato
   	if($x_serie_idserie==""){
-  	  $sql="insert into serie(nombre,categoria) values('".$x_etiqueta."',3)";
+  	 /* $sql="insert into serie(nombre,categoria) values('".$x_etiqueta."',3)";
   	  $sql_export=array("sql"=>$sql);
 	  guardar_traza($sql,$x_tabla,$sql_export);
 	  phpmkr_query($sql);
@@ -785,7 +785,7 @@ function EditData($sKey,$conn)
 	  $sql="update campos_formato set predeterminado=".$fieldList["serie_idserie"]."  where lower(nombre)='serie_idserie' and formato_idformato=".$sKeyWrk;
 	  $sql_export=array("sql"=>"update campos_formato set predeterminado=|-idserie-|  where lower(nombre)='serie_idserie' and formato_idformato=|-idformato-|","variables"=>array("idserie"=>"select idserie FROM serie WHERE nombre='".$x_etiqueta."' AND categoria=3","idformato"=>"select idformato FROM formato WHERE nombre='".$x_nombre."'"));
 	  guardar_traza($sql,$x_tabla,$sql_export);
-	  phpmkr_query($sql);
+	  phpmkr_query($sql);*/
    }
 	else{  //otra serie elegida o sin serie
 	$theValue = ($x_serie_idserie != 0) ? intval($x_serie_idserie) : 0;
