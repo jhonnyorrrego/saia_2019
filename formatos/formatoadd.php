@@ -378,6 +378,7 @@ echo $x_contador_idcontadorList;
 								*/
 							?>
 					<input type="hidden" name="x_serie_idserie" id="x_serie_idserie">
+					<input type="hidden" name="x_serie_idserie_uncheck" id="x_serie_idserie_uncheck">
 					 <div id="esperando_serie"><img src="<?php echo($ruta_db_superior);?>imagenes/cargando.gif"></div>
 					<div id="tree_serie_idserie" ></div> 
                     <script>
@@ -396,7 +397,7 @@ echo $x_contador_idcontadorList;
 		            	tree2.setXMLAutoLoading("<?php echo($ruta_db_superior);?>test_dependencia_serie.php?tabla=dependencia&sin_padre_dependencia=1&sin_padre=1&estado=1&carga_partes_dependencia=1&carga_partes_serie=1&mostrar_nodos=dsa,soc");
 			            tree2.loadXML("<?php echo($ruta_db_superior);?>test_dependencia_serie.php?tabla=dependencia&sin_padre_dependencia=1&estado=1&carga_partes_dependencia=1&carga_partes_serie=1&mostrar_nodos=dsa,soc&sin_padre=1");
             			function onNodeSelect_serie_idserie(nodeId){
-                            valor_destino=document.getElementById("x_serie_idserie");
+                            valor_destino=document.getElementById("x_serie_idserie_uncheck");
                             
                             
                             //es tipo_documental?
