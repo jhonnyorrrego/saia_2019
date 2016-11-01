@@ -386,7 +386,7 @@ echo $x_contador_idcontadorList;
                         if (window.navigator.userAgent.toLowerCase().match("gecko")) {
                             browserType= "gecko"
                         }
-			            tree2=new dhtmlXTreeObject("tree_serie_idserie","100%","85%",0);
+			            tree2=new dhtmlXTreeObject("tree_serie_idserie","100%","100%",0);
 			            tree2.setImagePath("<?php echo($ruta_db_superior);?>imgs/");
 			            tree2.enableTreeImages(false);
 			            tree2.enableIEImageFix(true);
