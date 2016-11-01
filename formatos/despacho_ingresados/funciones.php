@@ -147,7 +147,7 @@ function reporte_entradas2($idformato,$iddoc){
 		$texto.='<td style="text-align:center;">'.$fecha_radicacion[0]["fecha"].'</td>';
 		
 		if($registros[$i]['plantilla']=='RADICACION_ENTRADA'){
-			$texto.='<td style="text-align:center;">'.$registros[$i]["descripcion"].'</td>';
+			$texto.='<td style="text-align:center;">'.$registros[$i]["observacion_destino"].'</td>';
 			$texto.='<td style="text-align:left;">'.$origen[0]['nombre'].'</td>';
 			$texto.='<td style="text-align:left;">'.$destino[0]["nombre"].'</td>';
 			$texto.='<td style="text-align:center;">'.$datos_destino[0]['nombres']." ".$datos_destino[0]['apellidos'].'</td>';
