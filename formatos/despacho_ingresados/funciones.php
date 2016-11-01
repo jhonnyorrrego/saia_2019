@@ -107,17 +107,16 @@ function reporte_entradas2($idformato,$iddoc){
 	$texto.='<br />';
 	$texto.='<table style="border-collapse:collapse;width:100%" border="1px">';
 	$texto.='<tr style="height:70px">';
-	$texto.='<td style="text-align:center"><b>N° RADICADO</b></td>';
-	$texto.='<td style="text-align:center"><b>FECHA DE RECIBO(DD/MM/AAAA)</b></td>';
-	$texto.='<td style="text-align:center"><b>FOLIOS</b></td>';
-	$texto.='<td style="text-align:center"><b>REMITENTE</b></td>';
+	$texto.='<td style="text-align:center"><b>No. Item</b></td>';
+	$texto.='<td style="text-align:center"><b>FECHA DE RECIBO</b></td>';
 	$texto.='<td style="text-align:center"><b>ASUNTO</b></td>';
+	$texto.='<td style="text-align:center"><b>REMITENTE</b></td>';
+	$texto.='<td style="text-align:center"><b>DESTINO</b></td>';
 	
-	$texto.='<td style="text-align:center"><b>ASIGNADA A (NOMBRE Y FIRMA)</b></td>';
-	$texto.='<td style="text-align:center"><b>FECHA DE ASIGNACIÓN</b></td>';
+	$texto.='<td style="text-align:center"><b>UBICACI&Oacute;N</b></td>';
+	$texto.='<td style="text-align:center"><b>FECHA/HORA RECIBIDO</b></td>';
 	
-	$texto.='<td style="text-align:center"><b>FIRMA DE QUIEN RECIBE</b></td>';	
-	$texto.='<td style="text-align:center"><b>FECHA DE RESPUESTA</b></td>';
+	$texto.='<td style="text-align:center"><b>FIRMA DE QUIEN RECIBE</b></td>';
 	$texto.='</tr>';
 	
 	for($i=0;$i<$registros["numcampos"];$i++){
