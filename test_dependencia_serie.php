@@ -183,7 +183,12 @@ if(@$_REQUEST["arbol_series"]){
         echo " checked=\"1\" ";  
     }
       
-    if(($hijos[0][0] || $hijos_entidad_serie['numcampos']) && !@$_REQUEST['solo_dependencias']){
+      
+    if(@$_REQUEST['solo_dependencias']){
+        $hijos_entidad_serie['numcampos']=0;
+    }  
+      
+    if(($hijos[0][0] || $hijos_entidad_serie['numcampos'])){
         echo(" child=\"1\">\n");
     }else{
         echo(" child=\"0\">\n");
