@@ -24,7 +24,7 @@ global $conn;
   <body>
  
     <div class="container master-container">
-        <legend>Filtrar despachos</legend>  
+         
 		<div class="container master-container">
        <form accept-charset="UTF-8" id="kformulario_saia"  method="post" >  
         <div class="control-group">
