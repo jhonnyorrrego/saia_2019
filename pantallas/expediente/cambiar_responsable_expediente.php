@@ -54,7 +54,7 @@ echo(estilo_bootstrap());
                 data: {
                     idexpediente:idexpediente,
                     ejecutar_expediente:'cambiar_responsable_expediente',
-                    tomos_asociados:tomos_asociados
+                    tomos_asociados:tomos_asociados,
                     funcionario_codigo:$('#nuevo_funcionario_responsable').val()
                 },
                 success: function(datos){
