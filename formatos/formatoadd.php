@@ -363,6 +363,7 @@ echo $x_contador_idcontadorList;
 			<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">Serie
 					Documental</span></td>
 			<td bgcolor="#F5F5F5"><span class="phpmaker">
+			                
                             <?php
                             /*
 								$formatos = busca_filtro_tabla("", "serie A", "1=1", "nombre DESC", $conn);
@@ -376,6 +377,7 @@ echo $x_contador_idcontadorList;
 								echo ($inicio . $fin);
 								*/
 							?>
+					<input type="hidden" name="x_serie_idserie" id="x_serie_idserie">
                     <script>
                         var browserType;
                         if (document.layers) {browserType = "nn4"}
@@ -383,7 +385,7 @@ echo $x_contador_idcontadorList;
                         if (window.navigator.userAgent.toLowerCase().match("gecko")) {
                             browserType= "gecko"
                         }
-			            tree2=new dhtmlXTreeObject("treeboxbox_tree2","100%","85%",0);
+			            tree2=new dhtmlXTreeObject("x_serie_idserie","100%","85%",0);
 			            tree2.setImagePath("imgs/");
 			            tree2.enableTreeImages(false);
 			            tree2.enableIEImageFix(true);
