@@ -144,7 +144,7 @@ if($mostrar_nodos['ssa']){
 
 //NODO:   soc: series otras categorias 
 if($mostrar_nodos['soc']){    
-    echo  "<item style=\"font-family:verdana; font-size:7pt;\" text=\"Otras categorias\" id=\"3-categoria-Otras categorias\" >\n"; 
+    echo  "<item style=\"font-family:verdana; font-size:7pt;\" text=\"Otras categorias\" id=\"3-categoria-Otras categorias\" nocheckbox="1" >\n"; 
     llena_serie_otras("NULL"," and categoria=3 ");
     echo "</item>\n";	  
 }
