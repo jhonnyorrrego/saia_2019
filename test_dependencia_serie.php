@@ -101,7 +101,7 @@ if(@$_REQUEST['cargar_series']){
     if($hijos_entidad_serie['numcampos']){
         $lista_entidad_series_filtrar=implode(',',extrae_campo($hijos_entidad_serie,'serie_idserie'));
     }  
-    echo("<tree id=\"d".@$_REQUEST['padre']."\">\n"); 
+    echo("<tree id=\"d".$iddependencia."\">\n"); 
     if($hijos_entidad_serie['numcampos']){
             
         llena_entidad_serie($iddependencia,$lista_entidad_series_filtrar);
