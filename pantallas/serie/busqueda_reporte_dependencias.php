@@ -37,6 +37,12 @@ global $conn;
             <input type="hidden" name="bqsaiaenlace_codigo" id="bqsaiaenlace_codigo" value="y">
           </div>
         </div> 
+        
+        
+        
+        
+        
+        
          <strong>Entre las fechas</strong>
             <input type="hidden" name="bksaiacondicion_fecha_radicacion_entrada_x" id="bksaiacondicion_fecha_radicacion_entrada_x" value=">=">
         <div class="controls">
