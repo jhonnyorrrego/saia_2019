@@ -72,22 +72,25 @@ if(@$_REQUEST['funcionario']){
 $id = @$_REQUEST["id"];
 
 //si llega el request para cargar por partes
-if($id and $id<>"" && @$_REQUEST["uid"] && @$_REQUEST['carga_partes']){
-    echo("<tree id=\"".$id."\">\n");
-  
-    if($id[0]=='d' && $mostrar_nodos['dsa']){ //si es dependencia
-        $ids=explode('d',$id);
-        llena_dependencia($ids[1]);
-    }else if(strpos($id,'sub')!==false && $mostrar_nodos['dsa']){   //si es subserie o tipo documental
-        $ids=explode('sub',$id);
-        llena_subseries_tipo_documental($ids[1]);
-    }else if($mostrar_nodos['soc']){ //si es serie otras categorias
-        $ids=explode('-',$id);
-        llena_serie_otras($ids[0]," and categoria=3 ");
-    }
-    echo("</tree>\n");
-    die();
-} 
+if(@$_REQUEST['carga_partes']){
+    if($id and $id<>"" && @$_REQUEST["uid"]){
+        echo("<tree id=\"".$id."\">\n");
+      
+        if($id[0]=='d' && $mostrar_nodos['dsa']){ //si es dependencia
+            $ids=explode('d',$id);
+            llena_dependencia($ids[1]);
+        }else if(strpos($id,'sub')!==false && $mostrar_nodos['dsa']){   //si es subserie o tipo documental
+            $ids=explode('sub',$id);
+            llena_subseries_tipo_documental($ids[1]);
+        }else if($mostrar_nodos['soc']){ //si es serie otras categorias
+            $ids=explode('-',$id);
+            llena_serie_otras($ids[0]," and categoria=3 ");
+        }
+        echo("</tree>\n");
+        die();
+    }     
+}
+
 
 
 
