@@ -93,6 +93,21 @@ if(@$_REQUEST['carga_partes']){
 
 
 
+//cargar series de una dependencia
+if(@$_REQUEST['cargar_series']){
+    $iddependencia=$_REQUEST['cargar_series'];
+    $hijos_entidad_serie = busca_filtro_tabla("serie_idserie","entidad_serie","estado=1 AND entidad_identidad='2' AND llave_entidad=".$iddependencia,"",$conn);
+        
+    if($hijos_entidad_serie['numcampos']){
+        $lista_entidad_series_filtrar=implode(',',extrae_campo($hijos_entidad_serie,'serie_idserie'));
+    }   
+    if($hijos_entidad_serie['numcampos']){
+            
+        llena_entidad_serie($serie,$lista_entidad_series_filtrar);
+    }    
+    die();
+}
+
 
 //carga inicial arbol
 echo("<tree id=\"0\">\n");  
@@ -254,6 +269,9 @@ if(@$_REQUEST['uid'] || @$_REQUEST['id'] ){
 return;
 
 }  //fin llena_dependencia()
+
+
+
 
 //llena series asignadas segun dependencia  (dsa)
 function llena_entidad_serie($iddependencia,$series){
