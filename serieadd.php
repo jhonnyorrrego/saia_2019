@@ -661,11 +661,11 @@ function AddData($conn)
 				$actualizar_orden="UPDATE serie SET orden=".($insertar_serie[0]['idserie']*10000)." WHERE idserie=".$insertar_serie[0]['idserie'];
 			}
 			elseif($datos[$i]['tipo']==2){
-				$padre=busca_filtro_tabla("","serie","where idserie="$insertar_serie[0]['cod_padre'],"",$conn);
+				$padre=busca_filtro_tabla("","serie","where idserie=".$insertar_serie[0]['cod_padre'],"",$conn);
 				
 				$actualizar_orden="UPDATE serie SET orden=".($padre[0]['orden']+($insertar_serie[0]['idserie']*1000))." WHERE idserie=".$insertar_serie[0]['idserie'];
 			}else{
-			    $padre=busca_filtro_tabla("","serie","where idserie="$insertar_serie[0]['cod_padre'],"",$conn);
+			    $padre=busca_filtro_tabla("","serie","where idserie=".$insertar_serie[0]['cod_padre'],"",$conn);
 				
 				$actualizar_orden="UPDATE serie SET orden=".($padre[0]['orden']+($insertar_serie[0]['idserie']*100))." WHERE idserie=".$insertar_serie[0]['idserie'];
 			}
