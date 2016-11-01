@@ -47,10 +47,10 @@ function generar_codigo_arbol($tabla,$campo_codpadre,$campo_id,$dato_padre,$camp
 	
 	if($datos["numcampos"]){
 		for($i=0;$i<$datos["numcampos"];$i++){
-			if($datos[$i][$campo_codpadre]==0){
+			if($datos[$i]['tipo']==1){
 				$sql1="update ".$tabla." set ".$campo_actualizar."='".($datos[$i][$campo_id]*10000)."' where ".$campo_id."=".$datos[$i][$campo_id];
 			}
-			else{
+			elseif($datos[$i]['tipo']==2){
 				$padre=busca_filtro_tabla("",$tabla." a",$campo_id."=".$datos[$i][$campo_codpadre],"",$conn);
 				
 				$sql1="update ".$tabla." set ".$campo_actualizar."='".(($padre[0][$campo_actualizar]*10000)+($datos[$i][$campo_id])."' where ".$campo_id."=".$datos[$i][$campo_id];
