@@ -106,7 +106,7 @@ if(@$_REQUEST['carga_partes_serie']){
 if(@$_REQUEST['cargar_series']){
     $iddependencia=$_REQUEST['iddependencia'];
     $hijos_entidad_serie = busca_filtro_tabla("serie_idserie","entidad_serie","estado=1 AND entidad_identidad='2' AND llave_entidad=".$iddependencia,"",$conn);
-        
+       print_r($hijos_entidad_serie); 
     if($hijos_entidad_serie['numcampos']){
         $lista_entidad_series_filtrar=implode(',',extrae_campo($hijos_entidad_serie,'serie_idserie'));
     }  
@@ -306,7 +306,7 @@ function llena_entidad_serie($iddependencia,$series){
         }
         
         if($subseries_tipo_documental['numcampos']){
-            if(!@$_REQUEST['carga_partes_serie']){
+            if(!@$_REQUEST['carga_partes_serie']){ 
                 llena_subseries_tipo_documental($iddependencia,$series[$i]['idserie']);
             }
             
