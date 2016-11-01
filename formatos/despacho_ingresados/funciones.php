@@ -119,9 +119,9 @@ function reporte_entradas2($idformato,$iddoc){
 	$texto.='<td style="text-align:center"><b>FIRMA DE QUIEN RECIBE</b></td>';	
 	$texto.='<td style="text-align:center"><b>FECHA DE RESPUESTA</b></td>';
 	$texto.='</tr>';
-	
+	echo($registros[$i]['plantilla']);
 	for($i=0;$i<$registros["numcampos"];$i++){
-	    echo($registros[$i]['plantilla']);
+	    
 		if($registros[$i]['plantilla']=='RADICACION_ENTRADA'){
 			$documentos=busca_filtro_tabla("r.*,numero,iddocumento,fecha,paginas","ft_radicacion_entrada r,documento A","documento_iddocumento=iddocumento and A.iddocumento=".$registros[$i]['iddocumento'],"",$conn);
 			$datos_remitente=busca_filtro_tabla("B.nombre,A.*","datos_ejecutor A, ejecutor B","A.ejecutor_idejecutor=B.idejecutor AND A.iddatos_ejecutor=".$documentos[0]['persona_natural'],"",$conn);
