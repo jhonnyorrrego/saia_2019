@@ -109,10 +109,9 @@ function reporte_entradas2($idformato,$iddoc){
 	$texto.='<tr style="height:70px">';
 	$texto.='<td style="text-align:center"><b>No. Item</b></td>';
 	$texto.='<td style="text-align:center"><b>FECHA DE RECIBO</b></td>';
-	$texto.='<td style="text-align:center"><b>OBSERVACIONES</b></td>';
 	$texto.='<td style="text-align:center"><b>REMITENTE</b></td>';
 	$texto.='<td style="text-align:center"><b>DESTINO</b></td>';
-	
+	$texto.='<td style="text-align:center"><b>OBSERVACIONES</b></td>';
 	
 	$texto.='<td style="text-align:center"><b>FECHA/HORA RECIBIDO</b></td>';
 	$texto.='<td style="text-align:center"><b>FIRMA DE QUIEN RECIBE</b></td>';
@@ -133,12 +132,11 @@ function reporte_entradas2($idformato,$iddoc){
 		$fecha_radicacion=busca_filtro_tabla(fecha_db_obtener("fecha","Y-m-d")." as fecha","documento","iddocumento=".$registros[$i]["documento_iddocumento"],"",$conn);
 		$texto.='<td style="text-align:center">'.$registros[$i]["numero_item"].'</td>';
 		$texto.='<td style="text-align:center;">'.$fecha_radicacion[0]["fecha"].'</td>';
-		
-
-		$texto.='<td style="text-align:center;">'.$registros[$i]["observacion_destino"].'</td>';
 		$texto.='<td style="text-align:left;">'.$origen[0]['nombre'].'</td>';
 		$texto.='<td style="text-align:left;">'.$destino[0]["nombre"].'</td>';
-		$texto.='<td style="text-align:center;">'.$datos_destino[0]['nombres']." ".$datos_destino[0]['apellidos'].'</td>';
+		
+		$texto.='<td style="text-align:center;">'.$registros[$i]["observacion_destino"].'</td>';
+		$texto.='<td style="text-align:center;"></td>';
 		$texto.='<td style="text-align:left;"></td>';
 
 		$texto.='</tr>';
