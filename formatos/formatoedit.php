@@ -386,7 +386,7 @@ return true;
                                 $('#x_serie_idserie').val(dato);
                             }else{
                                 valor_destino.value="";
-                                 $('#x_serie_idserie').val('');
+                                 $('#x_serie_idserie').val('-1');
                             }
                             
                             
