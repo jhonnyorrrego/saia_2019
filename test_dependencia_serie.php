@@ -82,7 +82,7 @@ $id = @$_REQUEST["id"];
         }else if(strpos($id,'sub')!==false && $mostrar_nodos['dsa']){   //si es subserie o tipo documental
             $ids=explode('sub',$id);
             llena_subseries_tipo_documental($ids[0],$ids[1]);
-        }else if(strpos($id,'serie')!==false && $mostrar_nodos['dsa']){
+        }else if(strpos($id,'serie')!==false && $mostrar_nodos['dsa']){   //si es serie
             $iddependencia=$_REQUEST['iddependencia'];
             $hijos_entidad_serie = busca_filtro_tabla("serie_idserie","entidad_serie","estado=1 AND entidad_identidad='2' AND llave_entidad=".$iddependencia,"",$conn);
             if($hijos_entidad_serie['numcampos']){
