@@ -209,7 +209,7 @@ return true;
 	
 	$(document).ready(function(){
 	    
-	    filtrar_arbol_series();
+	    
 	    
 	    $('[name="x_tipo"]').click(function(){
 	        $('#nombre_padre_muestra').remove();
@@ -331,7 +331,7 @@ return true;
       	document.poppedLayer.style.display = "none";
       	
       	tree2.setCheck('<?php echo $x_cod_padre; ?>',true); //chequea el cod_padre
-      	
+      	filtrar_arbol_series();
       }
       
       function cargando_serie() {
