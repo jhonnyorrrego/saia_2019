@@ -615,6 +615,20 @@ function EditData($sKey,$conn)
 			$sSql = substr($sSql, 0, strlen($sSql)-2);
 		}
 		$sSql .= " WHERE idserie =". $sKeyWrk;
+		$insertar_serie=busca_filtro_tabla("","serie","idserie =". $sKeyWrk,"",$conn);
+	        if($insertar_serie[0]['tipo']==1){
+				$actualizar_orden="UPDATE serie SET orden=".($insertar_serie[0]['idserie']*10000)." WHERE idserie=".$insertar_serie[0]['idserie'];
+			}
+			elseif($datos[$i]['tipo']==2){
+				$padre=busca_filtro_tabla("","serie","where idserie="$insertar_serie[0]['cod_padre'],"",$conn);
+				
+				$actualizar_orden="UPDATE serie SET orden=".($padre[0]['orden']+($insertar_serie[0]['idserie']*1000))." WHERE idserie=".$insertar_serie[0]['idserie'];
+			}else{
+			    $padre=busca_filtro_tabla("","serie","where idserie="$insertar_serie[0]['cod_padre'],"",$conn);
+				
+				$actualizar_orden="UPDATE serie SET orden=".($padre[0]['orden']+($insertar_serie[0]['idserie']*100))." WHERE idserie=".$insertar_serie[0]['idserie'];
+			}
+	phpmkr_query($actualizar_orden);
     //die($sSql);		
 		phpmkr_query($sSql,$conn) or error("Failed to execute query" . phpmkr_error() . ' SQL:' . $sSql);
 		insertar_expediente_automatico($sKeyWrk);
