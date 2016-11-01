@@ -72,7 +72,7 @@ if(@$_REQUEST['funcionario']){
 $id = @$_REQUEST["id"];
 
 //si llega el request para cargar por partes
-if(@$_REQUEST['carga_partes']){
+if(@$_REQUEST['carga_partes_dependencia']){
     if($id and $id<>"" && @$_REQUEST["uid"]){
         echo("<tree id=\"".$id."\">\n");
       
@@ -210,7 +210,7 @@ if(@$_REQUEST["arbol_series"]){
     }else{
         echo(" child=\"0\">\n");
     }
-    if(@$_REQUEST['carga_partes']){
+    if(@$_REQUEST['carga_partes_dependencia']){
         if(@$_REQUEST['uid']){
         	if(!$_REQUEST["id"]){
         	    llena_dependencia($papas[$i]["id$tabla"]);
