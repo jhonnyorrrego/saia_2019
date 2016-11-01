@@ -856,7 +856,11 @@ function serie_documental_radicacion($idformato,$iddoc){
 	            
 	            var dependencia=tree_destino.getParentId(nodeId);
 	            var padre=tree_destino.getParentId(dependencia);
-
+	            
+	            /*if(padre==0){  //SOLO PARA SU ORGANIZACION
+	                padre=dependencia;
+	            }*/
+	            
 	            padre=padre.replace("#","");
 	            dependencia=dependencia.replace("#","");
 	        }
