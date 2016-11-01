@@ -81,7 +81,7 @@ if(@$_REQUEST['carga_partes_dependencia']){
             llena_dependencia($ids[1]);
         }else if(strpos($id,'sub')!==false && $mostrar_nodos['dsa']){   //si es subserie o tipo documental
             $ids=explode('sub',$id);
-            llena_subseries_tipo_documental($ids[1]);
+            llena_subseries_tipo_documental($ids[0],$ids[1]);
         }else if($mostrar_nodos['soc']){ //si es serie otras categorias
             $ids=explode('-',$id);
             llena_serie_otras($ids[0]," and categoria=3 ");
@@ -99,7 +99,7 @@ if(@$_REQUEST['carga_partes_serie']){
             echo("<tree id=\"".$id."\">\n");
                 $ids=explode('sub',$id);
                 print_r($ids);
-                llena_subseries_tipo_documental($ids[1]);            
+                llena_subseries_tipo_documental($ids[0],$ids[1]);            
             echo("</tree>\n");
             die();            
         }
