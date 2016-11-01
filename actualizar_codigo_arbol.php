@@ -6,11 +6,11 @@ $campo_id=@$_REQUEST["campo_id"];
 $dato_padre=@$_REQUEST["dato_padre"];
 $campo_actualizar=@$_REQUEST["campo_actualizar"];
 
-if(!$tabla)$tabla='expediente';
+if(!$tabla)$tabla='bkserie';
 if(!$campo_codpadre)$campo_codpadre='cod_padre';
-if(!$campo_id)$campo_id='idexpediente';
+if(!$campo_id)$campo_id='idserie';
 if(!$dato_padre)$dato_padre="null";
-if(!$campo_actualizar)$campo_actualizar='cod_arbol';
+if(!$campo_actualizar)$campo_actualizar='orden';
 
 generar_codigo_arbol($tabla,$campo_codpadre,$campo_id,$dato_padre,$campo_actualizar);
 /*
@@ -48,12 +48,12 @@ function generar_codigo_arbol($tabla,$campo_codpadre,$campo_id,$dato_padre,$camp
 	if($datos["numcampos"]){
 		for($i=0;$i<$datos["numcampos"];$i++){
 			if($datos[$i][$campo_codpadre]==0){
-				$sql1="update ".$tabla." set ".$campo_actualizar."='".$datos[$i][$campo_id]."' where ".$campo_id."=".$datos[$i][$campo_id];
+				$sql1="update ".$tabla." set ".$campo_actualizar."='".($datos[$i][$campo_id]*10000)."' where ".$campo_id."=".$datos[$i][$campo_id];
 			}
 			else{
 				$padre=busca_filtro_tabla("",$tabla." a",$campo_id."=".$datos[$i][$campo_codpadre],"",$conn);
 				
-				$sql1="update ".$tabla." set ".$campo_actualizar."='".$padre[0][$campo_actualizar].".".$datos[$i][$campo_id]."' where ".$campo_id."=".$datos[$i][$campo_id];
+				$sql1="update ".$tabla." set ".$campo_actualizar."='".(($padre[0][$campo_actualizar]*10000)+($datos[$i][$campo_id])."' where ".$campo_id."=".$datos[$i][$campo_id];
 			}
 			phpmkr_query($sql1);
 			$hijos=busca_filtro_tabla("",$tabla,$campo_codpadre."='".$datos[$i][$campo_id]."'","",$conn);
