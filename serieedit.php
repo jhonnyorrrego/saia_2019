@@ -290,8 +290,16 @@ return true;
     //tree2.setOnClickHandler(onNodeSelect);
       tree2.setOnLoadingStart(cargando_serie);
       tree2.setOnLoadingEnd(fin_cargando_serie);
-      tree2.setXMLAutoLoading("test_serie.php?tabla=serie&admin=1&arbol_series=1");
-      tree2.loadXML("test_serie.php?tabla=serie&admin=1&arbol_series=1");
+     
+     
+     /* tree2.setXMLAutoLoading("test_serie.php?tabla=serie&admin=1&arbol_series=1");
+      tree2.loadXML("test_serie.php?tabla=serie&admin=1&arbol_series=1");*/
+      
+      
+      var filtrar_arbol='&filtrar_arbol=documental';
+      tree2.setXMLAutoLoading("test_serie.php?tabla=serie&admin=1&arbol_series=1&categoria=2&solo_series=1"+filtrar_arbol);
+      tree2.loadXML("test_serie.php?tabla=serie&admin=1&arbol_series=1&categoria=2"+filtrar_arbol);
+      
       
 	  tree2.setOnCheckHandler(onNodeSelect_tree2);
 	  
