@@ -36,22 +36,30 @@ echo(estilo_bootstrap());
                 notificacion_saia("<b>ATENCI&Oacute;N</b><br>Debe seleccionar un nuevo responsable valido!","warning","",2500);
                 return(false);
             }
+            
+            var tomos_asociados='';
             if($('#tomos_asociados').val()){
-                var cambiar_tomos=confirm('Este expediente tiene el/los tomos '+$('#no_tomos').val()+' con el mismo propietario, desea incluir estos tomos?');
+                var cambiar_tomos=confirm('Este expediente tiene los tomos ('+$('#no_tomos').val()+') con el mismo propietario, desea incluir estos tomos?');
+                if(cambiar_tomos){
+                    tomos_asociados=$('#tomos_asociados').val();
+                }
             }
-            /*
+            
+            var idexpediente='<?php echo(@$_REQUEST['idexpediente']); ?>';
+            
             $.ajax({
                 type:'POST',
                 dataType: 'json',
                 url: "<?php echo($ruta_db_superior); ?>pantallas/expediente/ejecutar_acciones.php",
                 data: {
                     idexpediente:seleccionado,
-                    
+                    ejecutar_expediente:'cambiar_responsable_expediente',
+                    tomos_asociados:tomos_asociados
                 },
                 success: function(datos){
 
                 }
-            }); */            
+            });             
             
         });
     });
