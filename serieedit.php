@@ -165,7 +165,7 @@ return true;
 	</tr>
 	<script>
 	$(document).ready(function(){
-		$("#cat2").click(function(){
+		/*$("#cat2").click(function(){
 			$(".ocultar").each(function(){
 				$(this).show();
 			});
@@ -174,13 +174,72 @@ return true;
 			$(".ocultar").each(function(){
 				$(this).hide();
 			});
-		});
+		});*/
 		
 		<?php if($x_categoria==3){ ?>
 			$("#cat3").click();
 		<?php } ?>
 	});
 	</script>
+	<script>
+	
+	function filtrar_arbol_series(){
+		    tree2.deleteItem('3-categoria-Otras categorias');
+		    tree2.deleteItem('1-categoria-Comunicaciones Oficiales');
+		    tree2.deleteItem('2-categoria-Produccion Documental');	
+		    $('[name="x_cod_padre"]').val('');
+		    var tipo=$('input:radio[name=x_tipo]:checked').val();
+		    var filtrar_arbol='';		    
+		    switch(parseInt(tipo)){
+		        case 1:
+		            
+		            break;
+		        case 2:
+		            filtrar_arbol="&filtrar_arbol=series";
+		            tree2.loadXML("test_serie.php?tabla=serie&admin=1&arbol_series=1&categoria=2"+filtrar_arbol);
+		            break;
+		        case 3:
+		            filtrar_arbol="&filtrar_arbol=documental";
+		            tree2.loadXML("test_serie.php?tabla=serie&admin=1&arbol_series=1&categoria=2"+filtrar_arbol);
+		            break;
+		    }	    
+	}
+	
+	$(document).ready(function(){
+	    $('[name="x_tipo"]').click(function(){
+	        $('#nombre_padre_muestra').remove();
+		    filtrar_arbol_series();
+	    });
+	    
+	    
+		$("#cat2").click(function(){
+            $('#x_tipo1').attr('disabled',false);
+        	$('#x_tipo2').attr('disabled',false);	
+        	$('#x_tipo3').attr('disabled',false);
+		    $('#nombre_padre_muestra').remove();
+		    $('#x_cod_padre').val('');
+		    filtrar_arbol_series();
+			$(".ocultar").each(function(){
+				$(this).show();
+			});
+		});
+		$("#cat3").click(function(){
+		    $('#x_cod_padre').val('');
+		    $('#nombre_padre_muestra').remove();
+            $('#x_tipo1').attr('disabled',false);
+        	$('#x_tipo2').attr('disabled',false);	
+        	$('#x_tipo3').attr('disabled',false);		    
+		    tree2.deleteItem('3-categoria-Otras categorias');
+		    tree2.deleteItem('1-categoria-Comunicaciones Oficiales');
+		    tree2.deleteItem('2-categoria-Produccion Documental');	
+		    tree2.loadXML("test_serie.php?tabla=serie&admin=1&arbol_series=1&categoria=3");
+			$(".ocultar").each(function(){
+				$(this).hide();
+			});
+		});
+	});
+	</script>	
+	
 	<tr class="ocultar">
 		<td class="encabezado"  title="Definir el tipo de serie que se esta creando" style="text-align: left; background-color:#57B0DE; color: #ffffff;">TIPO *</td>
 		<td bgcolor="#F5F5F5">
