@@ -95,9 +95,9 @@ if(@$_REQUEST['carga_partes_dependencia']){
 if(@$_REQUEST['carga_partes_serie']){
     if($id and $id<>"" && @$_REQUEST["uid"]){
         
-        if(strpos($id,'serie')!==false && $mostrar_nodos['dsa']){
+        if(strpos($id,'sub')!==false && $mostrar_nodos['dsa']){
             echo("<tree id=\"".$id."\">\n");
-                $ids=explode('serie',$id);
+                $ids=explode('sub',$id);
                 print_r($ids);
                 llena_subseries_tipo_documental($ids[0],$ids[1]);            
             echo("</tree>\n");
