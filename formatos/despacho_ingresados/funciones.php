@@ -119,7 +119,7 @@ function reporte_entradas2($idformato,$iddoc){
 	$texto.='<td style="text-align:center"><b>FIRMA DE QUIEN RECIBE</b></td>';	
 	$texto.='<td style="text-align:center"><b>FECHA DE RESPUESTA</b></td>';
 	$texto.='</tr>';
-	print_r($registros);
+	
 	for($i=0;$i<$registros["numcampos"];$i++){
 	    
 		if($registros[$i]['plantilla']=='RADICACION_ENTRADA'){
