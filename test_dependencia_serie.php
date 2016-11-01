@@ -185,8 +185,10 @@ if(@$_REQUEST["arbol_series"]){
     }else{
         echo(" child=\"0\">\n");
     }
+    if(@$_REQUEST['carga_partes']){
+        
     
-    if(@$_REQUEST['uid'] || @$_REQUEST['carga_partes']){
+    if(@$_REQUEST['uid']){
     	if(!$_REQUEST["id"]){
     	    llena_dependencia($papas[$i]["id$tabla"]);
     	}else{
@@ -194,6 +196,7 @@ if(@$_REQUEST["arbol_series"]){
     			llena_dependencia($papas[$i]["id$tabla"]);
     		}
     	}        
+    }
     }else{
         llena_dependencia($papas[$i]["id$tabla"]);
     }
