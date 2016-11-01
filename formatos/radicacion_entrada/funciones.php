@@ -846,6 +846,8 @@ function serie_documental_radicacion($idformato,$iddoc){
 	    
         function onNodeSelect(nodeId){
 	        var numeral=nodeId.indexOf("#");
+	        
+	        alert(numeral);
 	        if(numeral>=0){
 	            var padre=tree_destino.getParentId(nodeId);
 	            padre=padre.replace("#","");
