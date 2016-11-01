@@ -388,6 +388,8 @@ echo $x_contador_idcontadorList;
 			            tree2.enableTreeImages(false);
 			            tree2.enableIEImageFix(true);
 			            tree2.setXMLAutoLoadingBehaviour("id");
+			            tree2.enableCheckBoxes(1);
+			            tree2.enableRadioButtons(true);
 			            tree2.setOnClickHandler(onNodeSelect_serie_idserie);
 			            tree2.setOnLoadingStart(cargando_serie_idserie);
                         tree2.setOnLoadingEnd(fin_cargando_serie_idserie);
