@@ -858,7 +858,7 @@ function serie_documental_radicacion($idformato,$iddoc){
 	        }
 	        
 	       // tree_serie_idserie.loadXML("<?php echo($ruta_db_superior); ?>test_dependencia_serie.php?tabla=dependencia&mostrar_nodos=dsa&sin_padre_dependencia=1&cargar_series="+dependencia);
-	        tree_serie_idserie.setXMLAutoLoading("<?php echo($ruta_db_superior); ?>test_dependencia_serie.php?tabla=dependencia&mostrar_nodos=dsa&sin_padre_dependencia=1&cargar_series="+dependencia);
+	        tree_serie_idserie.setXMLAutoLoading("<?php echo($ruta_db_superior); ?>test_dependencia_serie.php?tabla=dependencia&mostrar_nodos=dsa&sin_padre_dependencia=1&cargar_series=1&iddependencia="+dependencia);
 	        tree_serie_idserie.smartRefreshItem("d"+padre);
 	        
 	        var x = Math.floor((Math.random() * 100000) + 1);
