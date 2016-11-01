@@ -95,13 +95,13 @@ global $conn;
         <div class="container master-container">
        <form accept-charset="UTF-8" id="kformulario_saia"  method="post" >  
         <div class="control-group">
-          <label class="string required control-label" for="retencion_gestion">
+          <label class="string required control-label" for="retencion_central">
 			<b>Archivo de central:</b>
-			<input type="hidden" name="bksaiacondicion_s@retencion_gestion" id="bksaiacondicion_s-retencion_gestion" value="=">
+			<input type="hidden" name="bksaiacondicion_s@retencion_central" id="bksaiacondicion_s-retencion_central" value="=">
           </label>
           <div class="controls">
-            <input id="bqsaia_codigo" name="bqsaia_s@retencion_gestion" size="50" type="text">
-            <input type="hidden" name="bqsaiaenlace_s@retencion_gestion" id="bqsaiaenlace_s-retencion_gestion" value="y">
+            <input id="bqsaia_codigo" name="bqsaia_s@retencion_central" size="50" type="text">
+            <input type="hidden" name="bqsaiaenlace_s@retencion_central" id="bqsaiaenlace_s-retencion_central" value="y">
           </div>
         </div> 
         
