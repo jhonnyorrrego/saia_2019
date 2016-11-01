@@ -139,9 +139,6 @@ function reporte_entradas2($idformato,$iddoc){
 		$texto.='<td style="text-align:left;">'.$origen[0]['nombre'].'</td>';
 		$texto.='<td style="text-align:left;">'.$destino[0]["nombre"].'</td>';
 		$texto.='<td style="text-align:center;">'.$datos_destino[0]['nombres']." ".$datos_destino[0]['apellidos'].'</td>';
-
-		$texto.='<td style="text-align:left;"></td>';
-		$texto.='<td style="text-align:center;">'.$fecha.'</td>';
 		$texto.='</tr>';
 	}
 	$texto.='</table>';
