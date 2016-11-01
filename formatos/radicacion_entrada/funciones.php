@@ -864,7 +864,7 @@ function serie_documental_radicacion($idformato,$iddoc){
 	            padre=padre.replace("#","");
 	            dependencia=dependencia.replace("#","");
 	        }
-	        
+	        alert(padre);
 	       if(padre==0){
 	           
 	       }else{
