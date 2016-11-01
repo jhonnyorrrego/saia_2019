@@ -52,7 +52,7 @@ echo(estilo_bootstrap());
                 dataType: 'json',
                 url: "<?php echo($ruta_db_superior); ?>pantallas/expediente/ejecutar_acciones.php",
                 data: {
-                    idexpediente:seleccionado,
+                    idexpediente:idexpediente,
                     ejecutar_expediente:'cambiar_responsable_expediente',
                     tomos_asociados:tomos_asociados
                 },
