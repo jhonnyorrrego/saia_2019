@@ -422,11 +422,13 @@ echo $x_contador_idcontadorList;
                                     
                               
                                 valor_destino.value=nodeId;
+                                $('#x_serie_idserie').val(dato);
                             }else{
                                 valor_destino.value="";
+                                 $('#x_serie_idserie').val('');
                             }
                             
-                            alert(dato+'  ---()--- '+valor_destino.value);
+                            alert( $('#x_serie_idserie').val() );
                         }
                         function fin_cargando_serie_idserie() {
                         if (browserType == "gecko" )
