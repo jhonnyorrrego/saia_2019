@@ -93,7 +93,13 @@ if(@$_REQUEST['carga_partes_dependencia']){
 
 //si llega el request para cargar por partes subseries & tipo documental
 if(@$_REQUEST['carga_partes_serie']){
-    
+    if($id and $id<>"" && @$_REQUEST["uid"]){
+        echo("<tree id=\"".$id."\">\n");
+            $ids=explode('sub',$id);
+            llena_subseries_tipo_documental($ids[1]);            
+        echo("</tree>\n");
+        die();
+    }   
 }
 
 //cargar series de una dependencia
@@ -300,7 +306,10 @@ function llena_entidad_serie($iddependencia,$series){
         }
         
         if($subseries_tipo_documental['numcampos']){
-            llena_subseries_tipo_documental($iddependencia,$series[$i]['idserie']);
+            if(!@$_REQUEST['carga_partes_serie']){
+                llena_subseries_tipo_documental($iddependencia,$series[$i]['idserie']);
+            }
+            
         }
         
         echo("</item>\n");
@@ -341,8 +350,9 @@ function llena_subseries_tipo_documental($iddependencia,$idserie){
                  echo(" child=\"1\">\n");
             else
               echo(" child=\"0\">\n");
-		    
-		    llena_subseries_tipo_documental($iddependencia,$papas[$i]["id$tabla_otra"]);
+		    if(!@$_REQUEST['carga_partes_serie']){
+		        llena_subseries_tipo_documental($iddependencia,$papas[$i]["id$tabla_otra"]);
+		    }
             echo("</item>\n");
         }     
     }
