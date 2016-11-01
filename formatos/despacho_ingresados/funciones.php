@@ -94,7 +94,7 @@ function reporte_entradas2($idformato,$iddoc){
 	$texto='<table style="border-collapse:collapse;width:100%" border="1px">';
 	$texto.='<tr>';
 	$texto.='<td style="text-align:center;" colspan="2" rowspan="2"><br/><br/><img src="'.PROTOCOLO_CONEXION.RUTA_PDF.'/'.$logo[0]['valor'].'" width="125px" heigth="83px"></td>';
-	$texto.='<td style="text-align:center" colspan="5" rowspan="2"><br/><br/><br/><br/><br/><b>PLANILLA DESPACHO DE MENSAJERO </b></td>';
+	$texto.='<td style="text-align:center" colspan="5" rowspan="2"><br/><br/><br/><br/><br/><b>PLANILLA DE ENTREGA </b></td>';
 	$texto.='<td style="text-align:left"><br/><br/><br/><br/><b>C&Oacute;DIGO: GDC-FT-003<br/>RADICADO: '.formato_numero($idformato,$iddoc,1).'</b></td>
 	<td style="text-align:center" rowspan="3">'.$qr.'</td>
 	</tr>';
