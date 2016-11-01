@@ -109,13 +109,12 @@ function reporte_entradas2($idformato,$iddoc){
 	$texto.='<tr style="height:70px">';
 	$texto.='<td style="text-align:center"><b>No. Item</b></td>';
 	$texto.='<td style="text-align:center"><b>FECHA DE RECIBO</b></td>';
-	$texto.='<td style="text-align:center"><b>ASUNTO</b></td>';
+	$texto.='<td style="text-align:center"><b>OBSERVACIONES</b></td>';
 	$texto.='<td style="text-align:center"><b>REMITENTE</b></td>';
 	$texto.='<td style="text-align:center"><b>DESTINO</b></td>';
 	
-	$texto.='<td style="text-align:center"><b>UBICACI&Oacute;N</b></td>';
-	$texto.='<td style="text-align:center"><b>FECHA/HORA RECIBIDO</b></td>';
 	
+	$texto.='<td style="text-align:center"><b>FECHA/HORA RECIBIDO</b></td>';
 	$texto.='<td style="text-align:center"><b>FIRMA DE QUIEN RECIBE</b></td>';
 	$texto.='</tr>';
 	
@@ -128,49 +127,19 @@ function reporte_entradas2($idformato,$iddoc){
 		}elseif($registros[$i]["tipo_destino"]==2){
 		    $destino=busca_filtro_tabla("concat(nombres,' ',apellidos) AS nombre","vfuncionario_dc","iddependencia_cargo=".$registros[$i]['nombre_destino'],"",$conn);
 		}
-		
-		$datos_remitente=busca_filtro_tabla("B.nombre,A.*","datos_ejecutor A, ejecutor B","A.ejecutor_idejecutor=B.idejecutor AND A.iddatos_ejecutor=".$documentos[0]['persona_natural'],"",$conn);
-		$datos_destino=busca_filtro_tabla("","vfuncionario_dc","iddependencia_cargo=".$documentos[0]['destino'],"",$conn);
-		
-		
-		$buzon_salida=busca_filtro_tabla("","buzon_salida A","nombre='TRANSFERIDO' and A.archivo_idarchivo=".$documentos[0]["iddocumento"],"fecha asc",$conn);
-		$fecha_respuesta=busca_filtro_tabla("","respuesta, documento","estado='APROBADO' and destino=iddocumento and origen=".$documentos[0]["iddocumento"],"",$conn);
 
-		if($fecha_respuesta['numcampos']>0){
-			$fecha=date('d-m-Y', strtotime($fecha_respuesta[0]['fecha']));
-		}else{
-			$fecha='';
-		}
+
 		$texto.='<tr>';
 		$fecha_radicacion=busca_filtro_tabla(fecha_db_obtener("fecha","Y-m-d")." as fecha","documento","iddocumento=".$registros[$i]["documento_iddocumento"],"",$conn);
 		$texto.='<td style="text-align:center">'.$registros[$i]["numero_item"].'</td>';
 		$texto.='<td style="text-align:center;">'.$fecha_radicacion[0]["fecha"].'</td>';
 		
-		if($registros[$i]['plantilla']=='RADICACION_ENTRADA'){
-			$texto.='<td style="text-align:center;">'.$registros[$i]["observacion_destino"].'</td>';
-			$texto.='<td style="text-align:left;">'.$origen[0]['nombre'].'</td>';
-			$texto.='<td style="text-align:left;">'.$destino[0]["nombre"].'</td>';
-			$texto.='<td style="text-align:center;">'.$datos_destino[0]['nombres']." ".$datos_destino[0]['apellidos'].'</td>';
-		}else{
-			$texto.='<td style="text-align:center;">'.$documentos[0]["paginas"].'</td>';
-			if($registros[$i]['plantilla']=='PQRSF'){
-				$texto.='<td style="text-align:left;">'.$documentos[0]["nombre"].'</td>';
-			}else{
-				$texto.='<td style="text-align:center;">'.$datos_remitente[0]['nombres']." ".$datos_remitente[0]['apellidos'].'</td>';
-			}
-			$texto.='<td style="text-align:left;">'.$documentos[0]["descripcion"].'</td>';
-			if($registros[$i]['plantilla']=='CORREO_SAIA'){
-				$texto.='<td style="text-align:left;">'.$documentos[0]['para'].'</td>';
-			}else{
-				$texto.='<td style="text-align:center;"></td>';
-			}			
-		}
-		
-		if($buzon_salida['numcampos']==0){
-			$texto.='<td style="text-align:center;"></td>';
-		}else{
-			$texto.='<td style="text-align:center;">'.date('d-m-Y', strtotime($buzon_salida[0]['fecha'])).'</td>';
-		}
+
+		$texto.='<td style="text-align:center;">'.$registros[$i]["observacion_destino"].'</td>';
+		$texto.='<td style="text-align:left;">'.$origen[0]['nombre'].'</td>';
+		$texto.='<td style="text-align:left;">'.$destino[0]["nombre"].'</td>';
+		$texto.='<td style="text-align:center;">'.$datos_destino[0]['nombres']." ".$datos_destino[0]['apellidos'].'</td>';
+
 		$texto.='<td style="text-align:left;"></td>';
 		$texto.='<td style="text-align:center;">'.$fecha.'</td>';
 		$texto.='</tr>';
