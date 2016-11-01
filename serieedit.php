@@ -209,7 +209,7 @@ return true;
 	
 	$(document).ready(function(){
 	    
-	    $('[name="x_tipo"]').children('option[value="<?php echo($x_tipo); ?>"]').click();
+	    $('[name="x_tipo"]').children('option[value="<?php echo($x_tipo); ?>"]').trigger('click');
 	    
 	    $('[name="x_tipo"]').click(function(){
 	        $('#nombre_padre_muestra').remove();
