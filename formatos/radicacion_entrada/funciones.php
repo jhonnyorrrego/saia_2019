@@ -823,7 +823,6 @@ function serie_documental_radicacion($idformato,$iddoc){
                 setTimeout(function(){  
                     tree_serie_idserie.deleteChildItems(0); 
                     tree_serie_idserie.loadXML("<?php echo($ruta_db_superior); ?>test_dependencia_serie.php?tabla=dependencia&admin=1&dependencia=38&mostrar_nodos=dsa&sin_padre_dependencia=1&solo_dependencias=1&carga_partes_serie=1");
-                   // tree_serie_idserie.loadXML("<?php echo($ruta_db_superior); ?>test_dependencia_serie.php?tabla=dependencia&sin_padre_dependencia=1&admin=1&mostrar_nodos=dsa&uid=1477409126024&id=d"+dependencia_principal+"&solo_dependencias=1&carga_partes_serie=1");
                 }, 1000);
                 }
 	    var cargado=[<?php echo($cargo); ?>];
@@ -857,7 +856,7 @@ function serie_documental_radicacion($idformato,$iddoc){
 	            
 	            var dependencia=tree_destino.getParentId(nodeId);
 	            var padre=tree_destino.getParentId(dependencia);
-	            alert(padre);
+	            
 	            if(padre==0){
 	                padre=dependencia;
 	            }
