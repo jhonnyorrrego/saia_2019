@@ -432,7 +432,7 @@ function cambiar_responsable_expediente(){
 	    $idexpediente.=','.$_REQUEST['tomos_asociados'];
 	}
 	$sql="UPDATE expediente SET propietario='".$funcionario_codigo."' WHERE idexpediente IN(".$idexpediente.")";
-	phpmkq_query($sql);
+	phpmkr_query($sql);
 	$retorno->exito=1;
 	return($retorno);	
 	
