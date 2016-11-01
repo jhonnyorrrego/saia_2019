@@ -425,7 +425,7 @@ echo $x_contador_idcontadorList;
                                 valor_destino.value="";
                             }
                             
-                            alert(valor_destino.value);
+                            alert(dato+'  ---()--- '+valor_destino.value);
                         }
                         function fin_cargando_serie_idserie() {
                         if (browserType == "gecko" )
