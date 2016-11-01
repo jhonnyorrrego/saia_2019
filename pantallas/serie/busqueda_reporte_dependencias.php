@@ -28,13 +28,13 @@ global $conn;
 		<div class="container master-container">
        <form accept-charset="UTF-8" id="kformulario_saia"  method="post" >  
         <div class="control-group">
-          <label class="string required control-label" for="numero">
-			<b>N&uacute;mero radicación:</b>
-			<input type="hidden" name="bksaiacondicion_numero" id="bksaiacondicion_numero" value="=">
+          <label class="string required control-label" for="codigo">
+			<b>C&oacute;digo:</b>
+			<input type="hidden" name="bksaiacondicion_codigo" id="bksaiacondicion_codigo" value="=">
           </label>
           <div class="controls">
-            <input id="bqsaia_numero" name="bqsaia_numero" size="50" type="text">
-            <input type="hidden" name="bqsaiaenlace_numero" id="bqsaiaenlace_numero" value="y">
+            <input id="bqsaia_codigo" name="bqsaia_codigo" size="50" type="text">
+            <input type="hidden" name="bqsaiaenlace_codigo" id="bqsaiaenlace_codigo" value="y">
           </div>
         </div> 
          <strong>Entre las fechas</strong>
