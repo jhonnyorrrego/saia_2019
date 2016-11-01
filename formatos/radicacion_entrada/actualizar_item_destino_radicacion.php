@@ -26,7 +26,7 @@ phpmkr_query($sql1);
 $radicado=busca_filtro_tabla('b.numero, c.idft_destino_radicacion','ft_radicacion_entrada a,documento b,ft_destino_radicacion c','a.documento_iddocumento = b.iddocumento AND a.idft_radicacion_entrada = c.ft_radicacion_entrada AND a.documento_iddocumento='.$_REQUEST['iddoc'],'',conn);
 
 for($i=0;$i<$radicado['numcampos'];$i++){
-    $sql="UPDATE ft_destino_radicacion SET numero_item='".$radicado[$i]['numero'].".".$i."' WHERE idft_destino_radicacion=".$radicado[$i]['idft_destino_radicacion'];
+    $sql="UPDATE ft_destino_radicacion SET numero_item='".$radicado[$i]['numero'].".".$i+1."' WHERE idft_destino_radicacion=".$radicado[$i]['idft_destino_radicacion'];
 
     phpmkr_query($sql);
 }
