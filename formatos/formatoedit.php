@@ -327,6 +327,7 @@ return true;
 		<td bgcolor="#F5F5F5">
       <span class="phpmaker">
         <?php
+        /*
           $serie=busca_filtro_tabla("","serie A","1=1","lower(nombre) asc",$conn);
           if($serie["numcampos"]){
             $inicio2='<SELECT name="x_serie_idserie"><OPTION value="0">Sin Serie Documental</OPTION><OPTION value="" selected>Crear Serie Documental</OPTION>';
@@ -340,7 +341,82 @@ return true;
             $inicio2.='>'.$serie[$i]["nombre"]." - ".$serie[$i]["codigo"].'</OPTION>';
           }
           echo($inicio2.$fin2);
+          */
         ?>
+        
+					<input type="hidden" name="x_serie_idserie" id="x_serie_idserie">
+					<input type="hidden" name="x_serie_idserie_uncheck" id="x_serie_idserie_uncheck">
+					 <div id="esperando_serie"><img src="<?php echo($ruta_db_superior);?>imagenes/cargando.gif"></div>
+					<div id="tree_serie_idserie" ></div> 
+                    <script>
+                        
+
+			            tree2=new dhtmlXTreeObject("tree_serie_idserie","100%","100%",0);
+			            tree2.setImagePath("<?php echo($ruta_db_superior);?>imgs/");
+			            tree2.enableTreeImages(false);
+			            tree2.enableIEImageFix(true);
+			            tree2.setXMLAutoLoadingBehaviour("id");
+			            tree2.enableCheckBoxes(1);
+			            tree2.enableRadioButtons(true);
+			            tree2.setOnCheckHandler(onNodeSelect_serie_idserie);
+			            tree2.setOnLoadingStart(cargando_serie_idserie);
+                        tree2.setOnLoadingEnd(fin_cargando_serie_idserie);
+		            	tree2.setXMLAutoLoading("<?php echo($ruta_db_superior);?>test_dependencia_serie.php?tabla=dependencia&sin_padre_dependencia=1&sin_padre=1&estado=1&carga_partes_dependencia=1&carga_partes_serie=1&mostrar_nodos=dsa,soc");
+			            tree2.loadXML("<?php echo($ruta_db_superior);?>test_dependencia_serie.php?tabla=dependencia&sin_padre_dependencia=1&estado=1&carga_partes_dependencia=1&carga_partes_serie=1&mostrar_nodos=dsa,soc&sin_padre=1");
+            			function onNodeSelect_serie_idserie(nodeId){
+                            valor_destino=document.getElementById("x_serie_idserie_uncheck");
+                            
+                            
+                            //es tipo_documental?
+                            var datos=nodeId.split("-");
+                            var datos2=nodeId.split("sub");
+                            if(datos[1] || datos2[1]){
+                                var dato=datos[1];
+                                if(datos2[1]){
+                                    dato=datos2[1];
+                                }
+                                
+                            }                           
+                            
+                            if(tree2.isItemChecked(nodeId)){
+                                if(valor_destino.value!==""){
+                                    tree2.setCheck(valor_destino.value,false);
+                                }
+                                valor_destino.value=nodeId;
+                                $('#x_serie_idserie').val(dato);
+                            }else{
+                                valor_destino.value="";
+                                 $('#x_serie_idserie').val('');
+                            }
+                            
+                            
+                        }
+                        function fin_cargando_serie_idserie() {
+                        if (browserType == "gecko" )
+                           document.poppedLayer =
+                               eval('document.getElementById("esperando_serie")');
+                        else if (browserType == "ie")
+                           document.poppedLayer =
+                              eval('document.getElementById("esperando_serie")');
+                        else
+                           document.poppedLayer =
+                              eval('document.layers["esperando_serie"]');
+                        document.poppedLayer.style.display = "none";
+                        }
+            
+                        function cargando_serie_idserie() {
+                        if (browserType == "gecko" )
+                           document.poppedLayer =
+                               eval('document.getElementById("esperando_serie")');
+                        else if (browserType == "ie")
+                           document.poppedLayer =
+                              eval('document.getElementById("esperando_serie")');
+                        else
+                           document.poppedLayer =
+                               eval('document.layers["esperando_serie"]');
+                        document.poppedLayer.style.display = "";
+                        }                        
+                    </script>							        
       </span>
     </td>
 	</tr>
