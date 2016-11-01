@@ -175,6 +175,8 @@ function aceptar_recepcion($idft_destino_radicacion){
     
     if($datos[0]['recepcion']!=0){
         $input="<input type='checkbox' id='recepcion' name='recepcion' data-idftidft='$idft_destino_radicacion' value='".$cargo[0]['iddependencia_cargo']."' checked disabled>";
+        $funcionario=busca_filtro_tabla("nombres,apellidos","vfuncionario_dc","idfuncionario=".$datos[0]['recepcion'],"",$conn);
+        $input.="</br>".$funcionario[0]['nombres']." ".$funcionario[0]['apellidos']."<br>".$datos[0]['recepcion_fecha'];
     }else{
         $input="<input type='checkbox'id='recepcion' name='recepcion' data-idft='$idft_destino_radicacion' value='".$cargo[0]['iddependencia_cargo']."'>";
     }
