@@ -387,15 +387,15 @@ echo $x_contador_idcontadorList;
                             browserType= "gecko"
                         }
 			            tree2=new dhtmlXTreeObject("tree_serie_idserie","100%","85%",0);
-			            tree2.setImagePath("imgs/");
+			            tree2.setImagePath("<?php echo($ruta_db_superior);?>imgs/");
 			            tree2.enableTreeImages(false);
 			            tree2.enableIEImageFix(true);
 			            tree2.setXMLAutoLoadingBehaviour("id");
 			            tree2.setOnClickHandler(onNodeSelect_serie_idserie);
 			            tree2.setOnLoadingStart(cargando_serie_idserie);
                         tree2.setOnLoadingEnd(fin_cargando_serie_idserie);
-		            	tree2.setXMLAutoLoading("test_dependencia_serie.php?tabla=dependencia&admin=1&estado=1&carga_partes_dependencia=1&carga_partes_serie=1");
-			            tree2.loadXML("test_dependencia_serie.php?tabla=dependencia&admin=1&estado=1&carga_partes_dependencia=1&carga_partes_serie=1");
+		            	tree2.setXMLAutoLoading("<?php echo($ruta_db_superior);?>test_dependencia_serie.php?tabla=dependencia&admin=1&estado=1&carga_partes_dependencia=1&carga_partes_serie=1");
+			            tree2.loadXML("<?php echo($ruta_db_superior);?>test_dependencia_serie.php?tabla=dependencia&admin=1&estado=1&carga_partes_dependencia=1&carga_partes_serie=1");
             			function onNodeSelect_serie_idserie(nodeId){
                             var datos=nodeId.split("-");
                             var datos2=nodeId.split("sub");
