@@ -58,7 +58,8 @@ echo(estilo_bootstrap());
                     funcionario_codigo:$('#nuevo_funcionario_responsable').val()
                 },
                 success: function(datos){
-
+                    window.parent.location.reload();
+                    window.parent.hs.close();
                 }
             });             
             
