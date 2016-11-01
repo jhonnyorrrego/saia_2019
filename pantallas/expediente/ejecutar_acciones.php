@@ -425,20 +425,15 @@ function obtener_rastro_documento_expediente(){
 function cambiar_responsable_expediente(){
 	global $conn;
 	
-	
-
 	$retorno=new stdClass;	
 	$funcionario_codigo=$_REQUEST['funcionario_codigo'];
 	$idexpediente=$_REQUEST['idexpediente'];
 	if(@$_REQUEST['tomos_asociados']!=''){
 	    $idexpediente.=','.$_REQUEST['tomos_asociados'];
 	}
-	print_r($idexpediente);
-	die();	
-	$sql="UPDATE expediente SET propietario='".$funcionario_codigo."' WHERE idexpediente IN()";
-	
+	$sql="UPDATE expediente SET propietario='".$funcionario_codigo."' WHERE idexpediente IN(".$idexpediente.")";
+	phpmkq_query($sql);
 	$retorno->exito=1;
-	$retorno->msn='llego: '.$idexpediente;
 	return($retorno);	
 	
 }
