@@ -95,7 +95,7 @@ if(@$_REQUEST['carga_partes']){
 
 //cargar series de una dependencia
 if(@$_REQUEST['cargar_series']){
-    $iddependencia=$_REQUEST['cargar_series'];
+    $iddependencia=$_REQUEST['iddependencia'];
     $hijos_entidad_serie = busca_filtro_tabla("serie_idserie","entidad_serie","estado=1 AND entidad_identidad='2' AND llave_entidad=".$iddependencia,"",$conn);
         
     if($hijos_entidad_serie['numcampos']){
