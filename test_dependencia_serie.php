@@ -186,7 +186,7 @@ if(@$_REQUEST["arbol_series"]){
         echo(" child=\"0\">\n");
     }
     
-    if(@$_REQUEST['uid'] && @$_REQUEST['carga_partes']){
+    if(@$_REQUEST['uid'] || @$_REQUEST['carga_partes']){
     	if(!$_REQUEST["id"]){
     	    llena_dependencia($papas[$i]["id$tabla"]);
     	}else{
