@@ -38,6 +38,26 @@ global $conn;
           </div>
         </div> 
         
+    <br>
+    
+        <div class="row">
+          <div class="control-group radio_buttons span4">
+            <label class="radio_buttons optional control-label"><b>Estado</b>
+            <input type="hidden" name="bksaiacondicion_s@estado" id="bksaiacondicion_s-estado" value="=">
+            </label>
+            <div class="controls">
+              <label class="radio inline">
+                <input class="radio_buttons optional" id="bqsaia_s-estado1" name="bqsaia_s@estado" type="radio" value="1">Activo
+              </label>
+              <label class="radio inline">
+                <input class="radio_buttons optional" id="bqsaia_s-estado2" name="bqsaia_s@estado" type="radio" value="0">Inactivo
+              </label>
+            </div>          
+          </div> 
+      </div><br>
+
+
+	<br>
         
         <div class="container master-container">
        <form accept-charset="UTF-8" id="kformulario_saia"  method="post" >  
