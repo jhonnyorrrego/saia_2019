@@ -201,7 +201,7 @@ if(@$_REQUEST["arbol_series"]){
     echo("</item>\n");
   }     
 }
-if(@$_REQUEST['uid'] || @$_REQUEST['id']){
+if(@$_REQUEST['uid'] || @$_REQUEST['id'] ){
     
     if($_REQUEST['id']=='d'.$serie){
         $hijos_entidad_serie = busca_filtro_tabla("serie_idserie","entidad_serie","estado=1 AND entidad_identidad='2' AND llave_entidad=".$serie,"",$conn);
