@@ -175,6 +175,7 @@ function expedientes_vinculados_funcion($idformato,$iddoc){
 		if($datos[0]["estado"]=='ACTIVO' && @$_REQUEST["tipo"]!=5){
 			$texto.='<script>
 			$(document).ready(function(){
+			    alert("es esta ome");
 				$(".expulsar_expediente").click(function(){
 					var expediente=$(this).attr("idexpediente");
 					window.open("desvincular_expediente.php?idexpediente="+expediente+"&iddoc='.$iddoc.'&idformato='.$idformato.'","_self");
