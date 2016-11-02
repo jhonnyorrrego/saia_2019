@@ -37,6 +37,21 @@ global $conn;
             <input type="hidden" name="bqsaiaenlace_funcionario_codigo" id="bqsaiaenlace_funcionario_codigo" value="y">
           </div>
         </div> 
+        
+        
+        <div class="container master-container">
+       <form accept-charset="UTF-8" id="kformulario_saia"  method="post" >  
+        <div class="control-group">
+          <label class="string required control-label" for="nombre">
+			<b>Correo:</b>
+			<input type="hidden" name="bksaiacondicion_email" id="bksaiacondicion_email" value="like">
+          </label>
+          <div class="controls">
+            <input id="bqsaia_email" name="bqsaia_email" size="50" type="text">
+            <input type="hidden" name="bqsaiaenlace_email" id="bqsaiaenlace_email" value="y">
+          </div>
+        </div> 
+       
 
 
         <div class="row">
