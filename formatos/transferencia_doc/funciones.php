@@ -193,6 +193,9 @@ function expedientes_vinculados_funcion($idformato,$iddoc){
 }
 function cambiar_estado_expedientes($idformato,$iddoc){
 	global $conn;
+	
+	print_r('paso por aqui');
+	
 	$datos=busca_filtro_tabla("a.expediente_vinculado, a.transferir_a","ft_transferencia_doc a","a.documento_iddocumento=".$iddoc,"",$conn);
 	$expedientes=explode(",",$datos[0]["expediente_vinculado"]);
 	obtener_expedientes_hijos($datos[0]["expediente_vinculado"],$expedientes,1);
