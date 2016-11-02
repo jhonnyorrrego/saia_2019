@@ -26,7 +26,7 @@ function recibir_datos($idformato, $iddoc){
 	$anexos = $datos_correo->anexos;
 	
 	$lista_anexo=array_pop(explode("/",$anexos));
-	print_r($lista_anexo);
+	
 	$tipo_radicado=$datos_correo->tipo_radicado;
 	if($tipo_radicado=="Sent"){
 		$tipo_radicado="radicacion_salida";	
@@ -39,6 +39,7 @@ function recibir_datos($idformato, $iddoc){
 	}
 
 	$cadena_anexos='';
+	print_r($anexos);
   if($anexos){
   	$cadena_anexos='<tr><td class="encabezado">Anexos</td><td>';
   	$cant_anexo=explode(",",$anexos);
