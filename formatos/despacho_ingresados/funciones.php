@@ -69,8 +69,9 @@ function generar_pdf_entrega($idformato,$iddoc){
 	$cont=count($iddestino_radicacion);
 	for($i=0;$i<$cont;$i++){
 	    $insert="INSERT INTO ft_item_despacho_ingres(idft_item_despacho_ingres,ft_destino_radicacio,ft_despacho_ingresados) VALUES (NULL, '".$iddestino_radicacion[$i]."', '".$seleccionado[0]['idft_despacho_ingresados']."')";
-	    echo($insert);
 	    phpmkr_query($insert);
+	    $update="UPDATE ft_destino_radicacion SET estado_item=2 WHERE idft_destino_radicacion={$iddestino_radicacion[$i]}";
+	    phpmkr_query($update);
 	}
 	abrir_url($ruta_db_superior."class_impresion.php?iddoc=".$iddoc,"_self");
 	die();
