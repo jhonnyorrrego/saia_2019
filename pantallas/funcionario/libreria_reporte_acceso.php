@@ -14,6 +14,6 @@ include_once($ruta_db_superior."db.php");
 function documentos_pendientes_reporte($funcionario_codigo){
     global $ruta_db_superior,$conn;
     
-    $datos=busca_filtro_tabla("","documento a,asignacion b,vpantalla_formato c","(lower(a.estado)<>'eliminado' and a.iddocumento=b.documento_iddocumento and b.tarea_idtarea<>-1 and b.entidad_identidad=1  and b.llave_entidad='1' and lower(a.plantilla)=c.nombre  )","",$conn);
+    $datos=busca_filtro_tabla("","documento a,asignacion b,vpantalla_formato c","(lower(a.estado)<>'eliminado' and a.iddocumento=b.documento_iddocumento and b.tarea_idtarea<>-1 and b.entidad_identidad=1  and b.llave_entidad='$funcionario_codigo' and lower(a.plantilla)=c.nombre  )","",$conn);
     
 }
