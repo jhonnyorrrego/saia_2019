@@ -541,7 +541,7 @@ function aprobar($iddoc=0,$url="")
       
        $terminado=busca_filtro_tabla("A.*","buzon_entrada A","A.archivo_idarchivo=".$iddoc." and A.nombre='POR_APROBAR' and A.activo=1","A.idtransferencia",$conn);
        
-      print_r($terminado);
+      print_r($terminado); die();
      //realizar la transferencia
       if($registro_actual["numcampos"]>0 && $registro_anterior["numcampos"]==0)
         {
