@@ -15,7 +15,7 @@ function cambiar_estado_expedientes($idformato,$iddoc){
 	obtener_expedientes_hijos($datos[0]["expediente_vinculado"],$expedientes,1);
 	
 	$sql1="update expediente set estado_archivo=".$datos[0]["transferir_a"]." where idexpediente in(".implode(",",$expedientes).")";
-	phpmkr_query($sql1);
+	//phpmkr_query($sql1);
 }
 
 
