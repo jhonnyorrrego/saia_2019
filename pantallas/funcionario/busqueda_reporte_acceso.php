@@ -28,13 +28,13 @@ global $conn;
 		<div class="container master-container">
        <form accept-charset="UTF-8" id="kformulario_saia"  method="post" >  
         <div class="control-group">
-          <label class="string required control-label" for="codigo">
+          <label class="string required control-label" for="documento">
 			<b>Documento:</b>
-			<input type="hidden" name="bksaiacondicion_s@codigo" id="bksaiacondicion_s-codigo" value="=">
+			<input type="hidden" name="bksaiacondicion_s@documento" id="bksaiacondicion_s-documento" value="=">
           </label>
           <div class="controls">
-            <input id="bqsaia_codigo" name="bqsaia_s@codigo" size="50" type="text">
-            <input type="hidden" name="bqsaiaenlace_s@codigo" id="bqsaiaenlace_s-codigo" value="y">
+            <input id="bqsaia_codigo" name="bqsaia_s@documento" size="50" type="text">
+            <input type="hidden" name="bqsaiaenlace_s@documento" id="bqsaiaenlace_s-documento" value="y">
           </div>
         </div> 
         
