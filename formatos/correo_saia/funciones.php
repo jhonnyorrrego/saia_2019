@@ -46,7 +46,7 @@ function recibir_datos($idformato, $iddoc){
   	for ($i=0; $i <count($cant_anexo) ; $i++) { 
 		  $cadena_anexos.="<li>".array_pop(explode("/",$cant_anexo[$i]))."</li>";
 	  }
-    print_r($cadena_anexos)
+    print_r($cadena_anexos);
     $cadena_anexos.="</td></tr>";
   }
 	    
