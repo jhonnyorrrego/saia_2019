@@ -130,7 +130,7 @@ function expedientes_vinculados_funcion($idformato,$iddoc){
             
         $texto.='    
           </tr>
-          <tr>
+          <tr border="1">
             <th '.$estilo_general.'>INICIAL</th>
             <th '.$estilo_general.'>FINAL</th>
             <th '.$estilo_general.'>CAJA</th>
