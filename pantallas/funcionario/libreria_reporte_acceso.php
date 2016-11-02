@@ -12,5 +12,7 @@ while($max_salida>0){
 include_once($ruta_db_superior."db.php");
 
 function documentos_pendientes_reporte($idfuncionario){
+    global $ruta_db_superior,$conn;
+    
     
 }
