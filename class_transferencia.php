@@ -541,7 +541,7 @@ function aprobar($iddoc=0,$url="")
       
        $terminado=busca_filtro_tabla("A.*","buzon_entrada A","A.archivo_idarchivo=".$iddoc." and A.nombre='POR_APROBAR' and A.activo=1","A.idtransferencia",$conn);
        
-      print_r($terminado); die();
+      
      //realizar la transferencia
       if($registro_actual["numcampos"]>0 && $registro_anterior["numcampos"]==0)
         {
@@ -750,6 +750,8 @@ function aprobar($iddoc=0,$url="")
                   $l_destino[] = $list_destino;
                  // enviar_mensaje("origen",$l_destino,$mensaje,'msg');
                  }  */
+                 
+                 print_r('paso por esta zona'); die();
                  $aprobar_posterior=1;
 								 if($datos_formato[0]["mostrar_pdf"]==1){
 								 	$sql1="UPDATE documento SET pdf=null WHERE iddocumento=".$iddoc;
