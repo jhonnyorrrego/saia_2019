@@ -825,7 +825,7 @@ function serie_documental_radicacion($idformato,$iddoc){
 		tree_serie_idserie.setOnCheckHandler(onNodeSelect_dependencia_serie);
 		
 		function onNodeSelect_dependencia_serie(nodeId){
-			alert(nodeId);
+			
 			
 			var ids=nodeId.split("sub");
 			var idserie=ids[1];
