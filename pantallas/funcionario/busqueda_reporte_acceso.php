@@ -28,113 +28,48 @@ global $conn;
 		<div class="container master-container">
        <form accept-charset="UTF-8" id="kformulario_saia"  method="post" >  
         <div class="control-group">
-          <label class="string required control-label" for="documento">
-			<b>Documento:</b>
-			<input type="hidden" name="bksaiacondicion_s@documento" id="bksaiacondicion_s-documento" value="=">
+          <label class="string required control-label" for="codigo">
+			<b>C&oacute;digo:</b>
+			<input type="hidden" name="bksaiacondicion_codigo" id="bksaiacondicion_codigo" value="=">
           </label>
           <div class="controls">
-            <input id="bqsaia_codigo" name="bqsaia_s@documento" size="50" type="text">
-            <input type="hidden" name="bqsaiaenlace_s@documento" id="bqsaiaenlace_s-documento" value="y">
+            <input id="bqsaia_codigo" name="bqsaia_codigo" size="50" type="text">
+            <input type="hidden" name="bqsaiaenlace_codigo" id="bqsaiaenlace_codigo" value="y">
           </div>
         </div> 
         
-    <br>
-    
-        <div class="row">
-          <div class="control-group radio_buttons span4">
-            <label class="radio_buttons optional control-label"><b>Tipo</b>
-            <input type="hidden" name="bksaiacondicion_s@tipo" id="bksaiacondicion_s-tipo" value="=">
-            </label>
-            <div class="controls">
-              <label class="radio inline">
-                <input class="radio_buttons optional" id="bqsaia_s-tipo1" name="bqsaia_s@tipo" type="radio" value="1">Serie
-              </label>
-              <label class="radio inline">
-                <input class="radio_buttons optional" id="bqsaia_s-tipo2" name="bqsaia_s@tipo" type="radio" value="2">Subserie
-              </label>
-              <label class="radio inline">
-                <input class="radio_buttons optional" id="bqsaia_s-tipo3" name="bqsaia_s@tipo" type="radio" value="3">Tipo Documental
-              </label>
-            </div>          
-          </div> 
-      </div><br>
-
-
-	<br>
         
         <div class="container master-container">
        <form accept-charset="UTF-8" id="kformulario_saia"  method="post" >  
         <div class="control-group">
           <label class="string required control-label" for="nombre">
 			<b>Nombre:</b>
-			<input type="hidden" name="bksaiacondicion_s@nombre" id="bksaiacondicion_s-nombre" value="like">
+			<input type="hidden" name="bksaiacondicion_nombre" id="bksaiacondicion_nombre" value="like">
           </label>
           <div class="controls">
-            <input id="bqsaia_nombre" name="bqsaia_s@nombre" size="50" type="text">
-            <input type="hidden" name="bqsaiaenlace_s@nombre" id="bqsaiaenlace_s-nombre" value="y">
+            <input id="bqsaia_nombre" name="bqsaia_nombre" size="50" type="text">
+            <input type="hidden" name="bqsaiaenlace_nombre" id="bqsaiaenlace_nombre" value="y">
           </div>
         </div> 
-        
-    <br>
        
-        <div class="container master-container">
-       <form accept-charset="UTF-8" id="kformulario_saia"  method="post" >  
-        <div class="control-group">
-          <label class="string required control-label" for="retencion_gestion">
-			<b>Archivo de gestion:</b>
-			<input type="hidden" name="bksaiacondicion_s@retencion_gestion" id="bksaiacondicion_s-retencion_gestion" value="=">
-          </label>
-          <div class="controls">
-            <input id="bqsaia_codigo" name="bqsaia_s@retencion_gestion" size="50" type="text">
-            <input type="hidden" name="bqsaiaenlace_s@retencion_gestion" id="bqsaiaenlace_s-retencion_gestion" value="y">
-          </div>
-        </div> 
-        
-    <br>
-    
-        <div class="container master-container">
-       <form accept-charset="UTF-8" id="kformulario_saia"  method="post" >  
-        <div class="control-group">
-          <label class="string required control-label" for="retencion_central">
-			<b>Archivo de central:</b>
-			<input type="hidden" name="bksaiacondicion_s@retencion_central" id="bksaiacondicion_s-retencion_central" value="=">
-          </label>
-          <div class="controls">
-            <input id="bqsaia_codigo" name="bqsaia_s@retencion_central" size="50" type="text">
-            <input type="hidden" name="bqsaiaenlace_s@retencion_central" id="bqsaiaenlace_s-retencion_central" value="y">
-          </div>
-        </div> 
-        
-    <br>
+
 
         <div class="row">
           <div class="control-group radio_buttons span4">
-            <label class="radio_buttons optional control-label"><b>Conservacion</b>
-            <input type="hidden" name="bksaiacondicion_s@conservacion" id="bksaiacondicion_s-conservacionconservacion" value="like">
+            <label class="radio_buttons optional control-label"><b>Estado</b>
+            <input type="hidden" name="bksaiacondicion_d@estado" id="bksaiacondicion_d-estado" value="=">
             </label>
             <div class="controls">
               <label class="radio inline">
-                <input class="radio_buttons optional" id="bqsaia_s-conservacion1" name="bqsaia_s@conservacion" type="radio" value="TOTAL">TOTAL
+                <input class="radio_buttons optional" id="bqsaia_d-estado1" name="bqsaia_d@estado" type="radio" value="1">Activo
               </label>
               <label class="radio inline">
-                <input class="radio_buttons optional" id="bqsaia_s-conservacion2" name="bqsaia_s@conservacion" type="radio" value="ELIMINACION">ELIMINACION
+                <input class="radio_buttons optional" id="bqsaia_d-estado2" name="bqsaia_d@estado" type="radio" value="0">Inactivo
               </label>
             </div>          
           </div> 
       </div><br>
 
-        <div class="container master-container">
-       <form accept-charset="UTF-8" id="kformulario_saia"  method="post" >  
-        <div class="control-group">
-          <label class="string required control-label" for="procedimiento">
-			<b>Procedimiento:</b>
-			<input type="hidden" name="bksaiacondicion_s@procedimiento" id="bksaiacondicion_s-procedimiento" value="like">
-          </label>
-          <div class="controls">
-            <input id="bqsaia_nombre" name="bqsaia_s@procedimiento" size="50" type="text">
-            <input type="hidden" name="bqsaiaenlace_s@procedimiento" id="bqsaiaenlace_s-procedimiento" value="y">
-          </div>
-        </div> 
 
 	<br>
 	
