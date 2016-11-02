@@ -770,7 +770,7 @@ function aprobar($iddoc=0,$url="")
 	}
   llama_funcion_accion($iddoc,$tipo_radicado[0]["idformato"],"confirmar","POSTERIOR");
   if($aprobar_posterior){
-      print_r('entro por estos lares'); die();
+      
       llama_funcion_accion($iddoc,$tipo_radicado[0]["idformato"],"aprobar","POSTERIOR");
   }
 /*if(strpos($_SERVER["PHP_SELF"],"meses")<=0)
