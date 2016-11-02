@@ -29,7 +29,7 @@ global $conn;
        <form accept-charset="UTF-8" id="kformulario_saia"  method="post" >  
         <div class="control-group">
           <label class="string required control-label" for="codigo">
-			<b>C&oacute;digo:</b>
+			<b>Documento:</b>
 			<input type="hidden" name="bksaiacondicion_s@codigo" id="bksaiacondicion_s-codigo" value="=">
           </label>
           <div class="controls">
