@@ -18,7 +18,22 @@ function cambiar_estado_expedientes($idformato,$iddoc){
 	$sql1="update expediente set estado_archivo=".$datos[0]["transferir_a"]." where idexpediente in(".implode(",",$expedientes).")";
 	//phpmkr_query($sql1);
 }
-
+function obtener_expedientes_hijos($idexpediente,&$expedientes,$indice){
+	global $conn;
+	if($indice>=100)return false;
+	
+	$expediente=busca_filtro_tabla("","expediente a","a.cod_padre in(".$idexpediente.")","",$conn);
+	for($i=0;$i<$expediente["numcampos"];$i++){
+		$expedientes[]=$expediente[$i]["idexpediente"];
+		
+		$hijos=busca_filtro_tabla("","expediente a","a.cod_padre=".$expediente[$i]["idexpediente"],"",$conn);
+		if($hijos["numcampos"]){
+			$indice++;
+			obtener_expedientes_hijos($expediente[$i]["idexpediente"],$expedientes,$indice);
+		}
+	}
+	return true;
+}
 
 die();
 
