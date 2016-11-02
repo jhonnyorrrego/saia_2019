@@ -150,7 +150,7 @@ function expedientes_vinculados_funcion($idformato,$iddoc){
 			if(is_object($expedientes[$i]["fecha_extrema_i"]))$expedientes[$i]["fecha_extrema_i"]=$expedientes[$i]["fecha_extrema_i"]->format('Y-m-d');
 			if(is_object($expedientes[$i]["fecha_extrema_f"]))$expedientes[$i]["fecha_extrema_f"]=$expedientes[$i]["fecha_extrema_f"]->format('Y-m-d');
 			
-			$texto.='<tr id="tr_'.$expedientes[$i]["idexpediente"].'">
+			$texto.='<tr id="tr_'.$expedientes[$i]["idexpediente"].'" border="1">
 			<td style="text-align:center">'.($i+1).'</td>
 			<td>'.$expedientes[$i]["codigo_numero"].'</td>
 			<td>'.$expedientes[$i]["nombre"].'</td>
