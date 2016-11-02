@@ -110,7 +110,7 @@ function expedientes_vinculados_funcion($idformato,$iddoc){
 	    $estilo_general=' style="text-align:center;font-weight:bold;"';
 		$texto.='
 		<p>&nbsp;</p>
-        <table style="width:100%;border-collapse:collapse" border="1px">
+        <table style="width:100%;border-collapse:collapse" border="1">
           <tr>
             <th rowspan="2" '.$estilo_general.'>NUMERO DE ORDEN</th>
             <th rowspan="2" '.$estilo_general.'>CODIGO</th>
