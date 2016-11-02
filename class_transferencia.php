@@ -751,7 +751,7 @@ function aprobar($iddoc=0,$url="")
                  // enviar_mensaje("origen",$l_destino,$mensaje,'msg');
                  }  */
                  
-                 print_r('paso por esta zona'); die();
+                 
                  $aprobar_posterior=1;
 								 if($datos_formato[0]["mostrar_pdf"]==1){
 								 	$sql1="UPDATE documento SET pdf=null WHERE iddocumento=".$iddoc;
@@ -770,6 +770,7 @@ function aprobar($iddoc=0,$url="")
 	}
   llama_funcion_accion($iddoc,$tipo_radicado[0]["idformato"],"confirmar","POSTERIOR");
   if($aprobar_posterior){
+      print_r('entro por estos lares'); die();
       llama_funcion_accion($iddoc,$tipo_radicado[0]["idformato"],"aprobar","POSTERIOR");
   }
 /*if(strpos($_SERVER["PHP_SELF"],"meses")<=0)
