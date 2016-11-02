@@ -30,11 +30,11 @@ global $conn;
         <div class="control-group">
           <label class="string required control-label" for="codigo">
 			<b>Documento:</b>
-			<input type="hidden" name="bksaiacondicion_documento" id="bksaiacondicion_documento" value="=">
+			<input type="hidden" name="bksaiacondicion_funcionario_codigo" id="bksaiacondicion_funcionario_codigo" value="=">
           </label>
           <div class="controls">
-            <input id="bqsaia_documento" name="bqsaia_documento" size="50" type="text">
-            <input type="hidden" name="bqsaiaenlace_documento" id="bqsaiaenlace_documento" value="y">
+            <input id="bqsaia_funcionario_codigo" name="bqsaia_funcionario_codigo" size="50" type="text">
+            <input type="hidden" name="bqsaiaenlace_funcionario_codigo" id="bqsaiaenlace_funcionario_codigo" value="y">
           </div>
         </div> 
         
