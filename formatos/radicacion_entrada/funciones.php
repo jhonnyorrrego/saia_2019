@@ -866,6 +866,10 @@ function serie_documental_radicacion($idformato,$iddoc){
 	    tree_destino.setOnCheckHandler(onNodeSelect);
 	    
         function onNodeSelect(nodeId){
+            
+            var seleccionados=tree_destino.getAllChecked();		
+        	$('#destino').val(seleccionados);
+            
 	        var numeral=nodeId.indexOf("#");
 	        
 	        
