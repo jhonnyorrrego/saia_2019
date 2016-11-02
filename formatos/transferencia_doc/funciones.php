@@ -14,6 +14,12 @@ include_once($ruta_db_superior."db.php");
 
 function validacion_js_transferencia($idformato,$iddoc){
 	global $conn;
+	
+	
+	if(!@$_REQUEST['iddoc']){  //solo adicionar
+	    
+	
+	
 	?>
 	<script>
 	$(document).ready(function(){
@@ -31,6 +37,8 @@ function validacion_js_transferencia($idformato,$iddoc){
 	});
 	</script>
 	<?php
+	
+	}
 }
 function guardar_expedientes_add($idformato,$iddoc){
 	global $conn;
