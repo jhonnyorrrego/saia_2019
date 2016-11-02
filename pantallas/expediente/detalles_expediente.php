@@ -237,15 +237,15 @@ $expediente=busca_filtro_tabla("a.*,".fecha_db_obtener("a.fecha","Y-m-d")." AS f
  	</script>
   <?php
   if(MOTOR=='MySql'){
-  	$transferencia_doc=busca_filtro_tabla("","ft_transferencia_doc a, documento b","a.documento_iddocumento=b.iddocumento and b.estado not in('ELIMINADO', 'ACTIVO') and (CONCAT(',',a.expediente_vinculado,',') like '%,".$expediente[0]["idexpediente"].",%')","",$conn);
+  	$transferencia_doc=busca_filtro_tabla("","ft_transferencia_doc a, documento b","a.documento_iddocumento=b.iddocumento and b.estado not in('ELIMINADO', 'ACTIVO') and (CONCAT(',',a.expediente_vinculado,',') like '%,".$expediente[0]["idexpediente"].",%')","a.idft_transferencia_doc DESC",$conn);
 	}
 	if(MOTOR=='Oracle'){
-  	$transferencia_doc=busca_filtro_tabla("","ft_transferencia_doc a, documento b","a.documento_iddocumento=b.iddocumento and b.estado not in('ELIMINADO', 'ACTIVO') and (CONCAT(',',CONCAT(a.expediente_vinculado,',')) like '%,".$expediente[0]["idexpediente"].",%')","",$conn);
+  	$transferencia_doc=busca_filtro_tabla("","ft_transferencia_doc a, documento b","a.documento_iddocumento=b.iddocumento and b.estado not in('ELIMINADO', 'ACTIVO') and (CONCAT(',',CONCAT(a.expediente_vinculado,',')) like '%,".$expediente[0]["idexpediente"].",%')","a.idft_transferencia_doc DESC",$conn);
 	}
 	if(MOTOR=='SqlServer'){
-  	$transferencia_doc=busca_filtro_tabla("","ft_transferencia_doc a, documento b","a.documento_iddocumento=b.iddocumento and b.estado not in('ELIMINADO', 'ACTIVO') and (','+a.expediente_vinculado+',' like '%,".$expediente[0]["idexpediente"].",%')","",$conn);
+  	$transferencia_doc=busca_filtro_tabla("","ft_transferencia_doc a, documento b","a.documento_iddocumento=b.iddocumento and b.estado not in('ELIMINADO', 'ACTIVO') and (','+a.expediente_vinculado+',' like '%,".$expediente[0]["idexpediente"].",%')","a.idft_transferencia_doc DESC",$conn);
 	}
-	print_r($transferencia_doc);
+	
   if($transferencia_doc["numcampos"]){
   	if(is_object($transferencia_doc[0]["fecha"]))$transferencia_doc[0]["fecha"]=$transferencia_doc[0]["fecha"]->format('Y-m-d H:i');
   ?>
