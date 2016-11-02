@@ -44,7 +44,7 @@ for($i=0;$i<$cant;$i++){
   if($datos[3]){
     $width=',"width":'.$datos[3];
   }
-	array_push($columnas["modelo"],'{"encabezado":"'.$datos[0].'","name":"'.$datos2[0].'","align":"'.$datos[2].'"'.$width.'}');
+	array_push($columnas["modelo"],'{"encabezado":"'.$datos[0].'","sortable":false,"name":"'.$datos2[0].'","align":"'.$datos[2].'"'.$width.'}');
 }
 
 $encabezado=stripslashes($datos_busqueda[0]["encabezado_grillas"]);
@@ -139,7 +139,7 @@ $(document).ready(function(){
    	],
    	rowNum:20,
     rownumbers: true,
-	  rownumWidth: 40,
+	rownumWidth: 40,
     rowList : [20,30,50],
     jsonReader: {
 	    page: function (obj) { $("#busqueda_pagina").val(obj.page); return(obj.page); },
@@ -178,7 +178,7 @@ $(document).ready(function(){
    	pager: '#nav_busqueda',
     caption:"<?php echo $boton_buscar;?><button class=\"btn btn-mini btn-primary exportar_reporte_saia pull-left\" title=\"Exportar reporte <?php echo($datos_busqueda[0]['etiqueta']);?>\" enlace=\"<?php echo($datos_busqueda[0]['busqueda_avanzada']);?>\">Exportar &nbsp;</button><?php echo $acciones_selecionados;?><div class=\"pull-left\" style=\"text-align:center; width:60%;\"><?php echo($datos_busqueda[0]['etiqueta']);?></div><div id=\"barra_exportar_ppal\"><iframe name='iframe_exportar_saia' height='25px' width='150px' frameborder=0 scrolling='no'></iframe></div></div>"
 });
-jQuery("#datos_busqueda").jqGrid('navGrid','#nav_busqueda',{edit:false,add:false,del:false,search:false,sortable:false});
+jQuery("#datos_busqueda").jqGrid('navGrid','#nav_busqueda',{edit:false,add:false,del:false,search:false});
 
 <?php
  if($datos_busqueda[0]["encabezado_grillas"]){ ?>
