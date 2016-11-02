@@ -18,3 +18,9 @@ function documentos_pendientes_reporte($funcionario_codigo){
     return $datos['numcampos'];
     
 }
+
+function calcular_ultimo_acceso($funcionario_codigo){
+    global $ruta_db_superior,$conn;
+    
+    
+}
