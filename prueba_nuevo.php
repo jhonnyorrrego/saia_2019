@@ -2,40 +2,6 @@
 
 
 
-
-include_once('db.php');
-
-cambiar_estado_expedientes(1,776);
-
-
-function cambiar_estado_expedientes($idformato,$iddoc){
-	global $conn;
-	$datos=busca_filtro_tabla("a.expediente_vinculado, a.transferir_a","ft_transferencia_doc a","a.documento_iddocumento=".$iddoc,"",$conn);
-	
-	$expedientes=explode(",",$datos[0]["expediente_vinculado"]);
-	obtener_expedientes_hijos($datos[0]["expediente_vinculado"],$expedientes,1);
-	
-	$sql1="update expediente set estado_archivo=".$datos[0]["transferir_a"]." where idexpediente in(".implode(",",$expedientes).")";
-	print_r($sql1);
-	//phpmkr_query($sql1);
-}
-function obtener_expedientes_hijos($idexpediente,&$expedientes,$indice){
-	global $conn;
-	if($indice>=100)return false;
-	
-	$expediente=busca_filtro_tabla("","expediente a","a.cod_padre in(".$idexpediente.")","",$conn);
-	for($i=0;$i<$expediente["numcampos"];$i++){
-		$expedientes[]=$expediente[$i]["idexpediente"];
-		
-		$hijos=busca_filtro_tabla("","expediente a","a.cod_padre=".$expediente[$i]["idexpediente"],"",$conn);
-		if($hijos["numcampos"]){
-			$indice++;
-			obtener_expedientes_hijos($expediente[$i]["idexpediente"],$expedientes,$indice);
-		}
-	}
-	return true;
-}
-
 die();
 
 $cadena='sub740';
