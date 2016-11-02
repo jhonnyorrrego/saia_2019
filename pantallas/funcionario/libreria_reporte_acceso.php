@@ -19,8 +19,8 @@ function documentos_pendientes_reporte($funcionario_codigo){
     
 }
 
-function calcular_ultimo_acceso($funcionario_codigo){
+function calcular_ultimo_acceso($login){
     global $ruta_db_superior,$conn;
     
-    
+    $datos=busca_filtro_tabla("max(fecha)","log_acceso","login="$login,"",$conn);
 }
