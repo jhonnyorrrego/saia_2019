@@ -2,6 +2,25 @@
 
 
 
+
+include_once('db.php');
+
+
+
+
+function cambiar_estado_expedientes($idformato,$iddoc){
+	global $conn;
+	$datos=busca_filtro_tabla("a.expediente_vinculado, a.transferir_a","ft_transferencia_doc a","a.documento_iddocumento=".$iddoc,"",$conn);
+	$expedientes=explode(",",$datos[0]["expediente_vinculado"]);
+	obtener_expedientes_hijos($datos[0]["expediente_vinculado"],$expedientes,1);
+	
+	$sql1="update expediente set estado_archivo=".$datos[0]["transferir_a"]." where idexpediente in(".implode(",",$expedientes).")";
+	phpmkr_query($sql1);
+}
+
+
+die();
+
 $cadena='sub740';
 
 $mystring = 'abc';
