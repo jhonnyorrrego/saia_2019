@@ -821,6 +821,18 @@ function serie_documental_radicacion($idformato,$iddoc){
 	?>
 	<script>
 	$(document).ready(function(){
+
+		tree_serie_idserie.setOnCheckHandler(onNodeSelect_dependencia_serie);
+		
+		function onNodeSelect_dependencia_serie(nodeId){
+			alert(nodeId);
+			
+			var ids=nodeId.split("sub");
+			var idserie=ids[1];
+			$('#serie_idserie').val(idserie);
+			
+		}
+	    
 	    var dependencia_principal='<?php echo($dependencia_principal); ?>';
 	    //tree_serie_idserie.setOnLoadingEnd(cargar_arbol());
                 function cargar_arbol(){
