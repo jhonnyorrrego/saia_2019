@@ -5,7 +5,7 @@
 
 include_once('db.php');
 
-
+cambiar_estado_expedientes(1,776);
 
 
 function cambiar_estado_expedientes($idformato,$iddoc){
