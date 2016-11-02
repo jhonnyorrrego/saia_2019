@@ -39,14 +39,13 @@ function recibir_datos($idformato, $iddoc){
 	}
 
 	$cadena_anexos='';
-	
   if($anexos){
   	$cadena_anexos='<tr><td class="encabezado">Anexos</td><td>';
   	$cant_anexo=explode(",",$anexos);
   	for ($i=0; $i <count($cant_anexo) ; $i++) { 
 		  $cadena_anexos.="<li>".array_pop(explode("/",$cant_anexo[$i]))."</li>";
 	  }
-    print_r($cadena_anexos);
+
     $cadena_anexos.="</td></tr>";
   }
 	    
@@ -72,7 +71,7 @@ function recibir_datos($idformato, $iddoc){
 <?php
 }
 function guardar_anexos($idformato, $iddoc){
-	  
+	  global $conn,$ruta_db_superior;
 	  require_once($ruta_db_superior."anexosdigitales/funciones_archivo.php");    
     //require_once($ruta_db_superior."pantallas/lib/librerias_adicionales.php");
     //require_once($ruta_db_superior."pantallas/ocr/librerias.php");
