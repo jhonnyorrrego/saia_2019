@@ -367,7 +367,7 @@ class Imprime_Pdf {
 			$contenido = preg_replace('#<script(.*?)>(.*?)</script>#is', '', $contenido);
 			$contenido = preg_replace('#onclick="(.*?)"#is', '', $contenido);
 			
-		    print_r($contenido);die();
+		    
 	
 		
 			
