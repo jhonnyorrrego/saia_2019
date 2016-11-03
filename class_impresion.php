@@ -239,7 +239,7 @@ class Imprime_Pdf {
 		$fecha = explode("-", $this->documento[0]["fecha"]);
 		
 		include_once ($ruta_db_superior . "pantallas/lib/librerias_archivo.php");
-		$formato_ruta = aplicar_plantilla_ruta_documento($this->documento[0]["iddocumento"]);
+		$formato_ruta = "";
 		
 		if($this->versionamiento) {
 			$ruta_versiones = ruta_almacenamiento("versiones");
@@ -266,7 +266,7 @@ class Imprime_Pdf {
 			$nombre_pdf = $this->documento[0]["numero"] . "_" . str_replace("-", "_", $this->documento[0]["fecha"]) . ".pdf";
 		}
 		
-	
+	print_r($nombre_pdf);die("--");
 		chmod($nombre_pdf,0777);
 		if($this->tipo_salida == "FI" && $this->documento[0]["estado"] != 'ACTIVO') {
 			
