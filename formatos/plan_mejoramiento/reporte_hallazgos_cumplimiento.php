@@ -81,7 +81,7 @@ function reporte(){
 						<td style="width:20%; text-align: center;"><b>Plan de mejoramiento No.</b><br />'.$plan_mejoramiento[0]['numero'].'</td>
 						<td style="width:20%; text-align: center;"><b>Fecha</b><br />'.date('Y-m-d').'</td>
 						<td style="width:40%; text-align: center;"><b>Descripci&oacute;n del plan</b>'.$plan_mejoramiento[0]['descripcion_plan'].'</td>						
-						<td style="width:20%; text-align: center;"><b>Cumplimiento del <br />Plan de mejoramiento</b><center><br />'.$porcentaje.'%</td>
+						<td style="width:20%; text-align: center;"><b>Cumplimiento del <br />Plan de mejoramiento</b><br />'.$porcentaje.'%</td>
 					</tr>
 					</tbody>
 				</table>
