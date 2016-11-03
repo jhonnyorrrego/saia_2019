@@ -138,8 +138,10 @@ function condicion_adicional(){
     }else{
         $funcionario_codigo=usuario_actual('funcionario_codigo');
         $cargo=busca_filtro_tabla("lower(cargo) AS cargo, iddependencia_cargo","vfuncionario_dc a","a.funcionario_codigo=".$funcionario_codigo,"",$conn);
-        if($cargo[0]['cargo']=="mensajero"){
-            $condicion="AND B.mensajero_encargado=".$cargo[0]['iddependencia_cargo'];
+        for($i=0;$i<$cargo['numcampos'];$i++){
+        if($cargo[$i]['cargo']=="mensajero"){
+            $condicion="AND B.mensajero_encargado=".$cargo[$i]['iddependencia_cargo'];
+        }
         }
     }
     return $condicion;
@@ -150,7 +152,8 @@ function filtrar_mensajero(){
     
     $funcionario_codigo=usuario_actual('funcionario_codigo');
     $cargo=busca_filtro_tabla("lower(cargo) AS cargo, iddependencia_cargo","vfuncionario_dc a","a.funcionario_codigo=".$funcionario_codigo,"",$conn);
-    if($cargo[0]['cargo']!="mensajero"){
+    for($j=0;$j<$cargo['numcampos'];$j++){
+    if($cargo[$j]['cargo']!="mensajero"){
     
     $select="<select class='pull-left btn btn-mini dropdown-toggle' style='height:22px; margin-left: 30px;' name='filtro_mensajeros' id='filtro_mensajeros'>";
     $select.="<option value=''>Por favor seleccione</option>";
@@ -160,8 +163,10 @@ function filtrar_mensajero(){
         $select.="<option value='{$datos[$i]['iddependencia_cargo']}'>{$datos[$i]['nombre']}</option>";
     }
     $select.="</select>";
+    }else{
+    	$select="";
     }
-
+	}
     return $select;
 }
 
@@ -178,11 +183,13 @@ function aceptar_recepcion($idft_destino_radicacion){
         $funcionario=busca_filtro_tabla("nombres,apellidos","vfuncionario_dc","iddependencia_cargo=".$datos[0]['recepcion'],"",$conn);
         $input.="</br>".$funcionario[0]['nombres']." ".$funcionario[0]['apellidos']."<br>".$datos[0]['recepcion_fecha'];
     }else{
-        $input="<input type='checkbox'id='recepcion' name='recepcion' data-idft='$idft_destino_radicacion' value='".$cargo[0]['iddependencia_cargo']."'>";
+        $planillas=busca_filtro_tabla("c.numero,c.iddocumento","ft_item_despacho_ingres a,ft_despacho_ingresados b, documento c","a.ft_despacho_ingresados=b.idft_despacho_ingresados AND b.documento_iddocumento=c.iddocumento AND c.estado NOT IN('ELIMINADO','ANULADO') AND a.ft_destino_radicacio=".$idft_destino_radicacion,"",$conn);
+        if($planillas['numcampos']){
+            $input="<input type='checkbox'id='recepcion' name='recepcion' data-idft='$idft_destino_radicacion' value='".$cargo[0]['iddependencia_cargo']."'>";
+        }else{
+           $input="Pendiente planilla";
+       }
+        
     }
     return $input;
 }
-
-
-
-
