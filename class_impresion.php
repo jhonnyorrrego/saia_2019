@@ -339,7 +339,7 @@ class Imprime_Pdf {
     	
     		}
 		}
-		
+		print_r($direccion);die();
 		foreach($direccion as $fila) {
 			
 			$fila .= "&font_size=" . $this->font_size;
