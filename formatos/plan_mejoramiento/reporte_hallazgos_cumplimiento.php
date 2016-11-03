@@ -90,7 +90,7 @@ function reporte(){
 	
 	$tabla.='<table style="font-size:7pt;border-collapse:collapse;" border="1">';
 	if($hallazgos["numcampos"]){
-		$tabla.='<tbody><tr>';
+		$tabla.='<tr>';
 		if($_REQUEST["idformato"]!=''){
 			$tabla.='<td style="width:3%"></td>';
 		}
@@ -102,7 +102,7 @@ function reporte(){
 		$tabla.='<td style="width:12%">Logros alcanzados</td>';
 		$tabla.='<td style="width:9%">Observaciones</td>';
 		$tabla.='<td style="width:6%">Avances</td>';
-		$tabla.='</tr></tbody>';
+		$tabla.='</tr>';
 		for($i=0;$i<$hallazgos["numcampos"];$i++){
 			$tabla.='<tr>';
 			if($_REQUEST["idformato"]!=''){
