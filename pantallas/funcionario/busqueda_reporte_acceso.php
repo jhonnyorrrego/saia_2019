@@ -51,28 +51,21 @@ global $conn;
             <input type="hidden" name="bqsaiaenlace_email" id="bqsaiaenlace_email" value="y">
           </div>
         </div> 
-       
-
-
-        <div class="row">
-          <div class="control-group radio_buttons span4">
-            <label class="radio_buttons optional control-label"><b>Estado</b>
-            <input type="hidden" name="bksaiacondicion_d@estado" id="bksaiacondicion_d-estado" value="=">
-            </label>
-            <div class="controls">
-              <label class="radio inline">
-                <input class="radio_buttons optional" id="bqsaia_d-estado1" name="bqsaia_d@estado" type="radio" value="1">Activo
-              </label>
-              <label class="radio inline">
-                <input class="radio_buttons optional" id="bqsaia_d-estado2" name="bqsaia_d@estado" type="radio" value="0">Inactivo
-              </label>
-            </div>          
-          </div> 
-      </div><br>
-
 
 	<br>
-	
+	    
+	     <div class="container master-container">
+       <form accept-charset="UTF-8" id="kformulario_saia"  method="post" >  
+        <div class="control-group">
+          <label class="string required control-label" for="nombre">
+			<b>Login:</b>
+			<input type="hidden" name="bksaiacondicion_email" id="bksaiacondicion_email" value="like">
+          </label>
+          <div class="controls">
+            <input id="bqsaia_email" name="bqsaia_email" size="50" type="text">
+            <input type="hidden" name="bqsaiaenlace_email" id="bqsaiaenlace_email" value="y">
+          </div>
+        </div> 
 
 
         <div class="form-actions">    
