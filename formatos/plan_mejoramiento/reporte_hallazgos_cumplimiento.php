@@ -56,7 +56,7 @@ $style = "
     	 
        -->
        </style>";
-echo $style;
+//echo $style;
 echo reporte();
 function reporte(){
 	global $conn, $ruta_db_superior;
