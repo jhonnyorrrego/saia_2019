@@ -603,7 +603,7 @@ class MYPDF extends TCPDF {
 			$margin_left = 0;
 		}
 		
-		$this->writeHTMLCell(216, 0, $margin_left, $margin_top, stripslashes(""), "", 1, 0, false, '', true);
+		$this->writeHTMLCell(216, 0, $margin_left, $margin_top, stripslashes($texto), "", 1, 0, false, '', true);
 		
 		// $this->writeHTMLCell(216, 0, 0, 0, stripslashes($texto), "", 1, 0, false, '', true);
 		
