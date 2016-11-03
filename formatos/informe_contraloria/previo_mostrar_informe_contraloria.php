@@ -19,5 +19,4 @@ $idformato_informe_contraloria=busca_filtro_tabla("idformato","formato","nombre=
 ?>
 
 
-informe_contraloria 
 <?php include_once('../librerias/estilo_formulario.php'); include_once('../librerias/funciones_formatos_generales.php');?><?php listado_hijos_formato($idformato_informe_contraloria[0]['idformato'],$_REQUEST["iddoc"]); ?>
