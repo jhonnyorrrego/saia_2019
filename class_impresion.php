@@ -263,9 +263,13 @@ class Imprime_Pdf {
 			crear_destino($carpeta);
 			chmod($carpeta,0777);
 		} else {
-			$nombre_pdf = $this->documento[0]["numero"] . "_" . str_replace("-", "_", $this->documento[0]["fecha"]) . ".pdf";
-			print_r(documento);
-		die("-");
+		    if($this->documento){					
+      	$nombre_pdf = $this->documento[0]["numero"] . "_" . str_replace("-", "_", $this->documento[0]["fecha"]) . ".pdf";
+			}else{
+				$nombre_pdf = $this->idpaginas . "_" . date("y-m-d") . ".pdf";
+			}
+			
+		
 		    
 		}
 		
