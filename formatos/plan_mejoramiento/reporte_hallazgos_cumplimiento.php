@@ -39,7 +39,21 @@ $style = "
        text-align: center;
        font-weight: bold;	
        }
-
+       table thead td {
+		    font-weight:bold;
+    		cursor:pointer;
+    		background-color:".$config[0]["valor"].";
+    		text-align: center;
+        font-family: arial; 
+        font-size: 9px;
+        text-transform:Uppercase;
+        vertical-align:middle;    
+    	 }
+    	 table tbody td {	
+    		font-family: arial; 
+        font-size: 9px;
+    	 }
+    
        </style>";
 echo $style;
 echo reporte();
