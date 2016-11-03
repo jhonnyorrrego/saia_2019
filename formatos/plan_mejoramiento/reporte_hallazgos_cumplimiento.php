@@ -44,7 +44,7 @@ function reporte(){
 	$hallazgos=busca_filtro_tabla(fecha_db_obtener('tiempo_cumplimiento','Y-m-d')." as fecha_cumpl, a.*, b.*","ft_hallazgo a, documento b","a.ft_plan_mejoramiento=".$plan_mejoramiento[0]["idft_plan_mejoramiento"]." and a.documento_iddocumento=b.iddocumento and b.estado not in('ELIMINADO', 'ANULADO')","idft_hallazgo asc",$conn);
 	
 	if($_REQUEST["idformato"]!='' & $_REQUEST["tipo"]!=5){
-    		$tabla.='<a href="'.$ruta_db_superior.'class_impresion.php?url=formatos/plan_mejoramiento/reporte_hallazgos_cumplimiento.php?tipo=5|iddoc='.$iddoc.'|idformato='.$idformato.'&horizontal=1&tipo=5&landscape=horizontal" target="_blank"><img src="http://'.RUTA_PDF.'/enlaces/imprimir.gif"></a>';
+    		$tabla.='<a href="'.$ruta_db_superior.'class_impresion.php?url=formatos/plan_mejoramiento/reporte_hallazgos_cumplimiento.php?tipo=5|iddoc='.$iddoc.'|idformato='.$idformato.'&horizontal=1&tipo=5&landscape=horizontal&orientacion=L" target="_blank"><img src="http://'.RUTA_PDF.'/enlaces/imprimir.gif"></a>';
 	}
 	
 	$tabla.='<center>
