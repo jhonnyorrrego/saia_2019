@@ -32,7 +32,7 @@ $style = "
        padding:10px; 
        text-align: left;	
        } 
-       .encabezado_list { 
+       .encabezado { 
        background-color:".$config[0]["valor"]."; 
        color:white ; 
        vertical-align:middle;
@@ -90,7 +90,7 @@ function reporte(){
 	
 	$tabla.='<table style="font-size:7pt;border-collapse:collapse; font-family:verdana;" border="1px">';
 	if($hallazgos["numcampos"]){
-		$tabla.='<tr class="encabezado_list">';
+		$tabla.='<tr class="encabezado">';
 		if($_REQUEST["idformato"]!=''){
 			$tabla.='<td style="width:3%"></td>';
 		}
