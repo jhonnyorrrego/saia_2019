@@ -106,7 +106,7 @@ function reporte(){
 			$tabla.='<tr>';
 			if($_REQUEST["idformato"]!=''){
 			    if($_REQUEST['tipo']==5){
-			        $tabla.='<td><a href="class_impresion.php?idformato='.$format_hallazgo[0]["idformato"].'&iddoc='.$hallazgos[$i]["documento_iddocumento"].'" target="_blank">Ver</a></td>';
+			        $tabla.='<td><a href="'.PROTOCOLO_CONEXION.RUTA_PDF.'/class_impresion.php?idformato='.$format_hallazgo[0]["idformato"].'&iddoc='.$hallazgos[$i]["documento_iddocumento"].'" target="_blank">Ver</a></td>';
 			    }else{
 			        $tabla.='<td><a href="'.$ruta_db_superior.'formatos/hallazgo/mostrar_hallazgo.php?idformato='.$format_hallazgo[0]["idformato"].'&iddoc='.$hallazgos[$i]["documento_iddocumento"].'" target="_blank">Ver</a></td>';
 			    }
