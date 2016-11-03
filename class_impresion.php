@@ -350,7 +350,7 @@ class Imprime_Pdf {
 		}
 		//print_r($direccion);die();
 		foreach($direccion as $fila) {
-			
+			print_r($fila);die();
 			$fila .= "&font_size=" . $this->font_size;
 			
 			curl_setopt($ch, CURLOPT_URL, $fila);
@@ -366,9 +366,9 @@ class Imprime_Pdf {
 			$contenido = preg_replace('#<script(.*?)>(.*?)</script>#is', '', $contenido);
 			$contenido = preg_replace('#onclick="(.*?)"#is', '', $contenido);
 			
-		if(usuario_actual('login') == 'cerok') {
-				 print_r($fila);die();
-		}
+		
+	
+		
 			
 			$this->pdf->writeHTML(stripslashes($contenido), true, false, false, false, '');
 		}
