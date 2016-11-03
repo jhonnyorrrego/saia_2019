@@ -816,11 +816,5 @@ function iddoc_no_distribuidos(){
   return($where);
 }
 
-function obtener_codigo_hash_archivo($ruta,$algoritmo_cifrado){
-    global $conn,$ruta_db_superior;
-    
-    $codigo_hash=hash_file($algoritmo_cifrado,$ruta_db_superior.$ruta); //   'crc32'
-    return($codigo_hash);
-}
 
 ?>
