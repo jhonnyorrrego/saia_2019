@@ -109,8 +109,8 @@ function reporte(){
 				$tabla.='<td><a href="'.$ruta_db_superior.'formatos/hallazgo/mostrar_hallazgo.php?idformato='.$format_hallazgo[0]["idformato"].'&iddoc='.$hallazgos[$i]["documento_iddocumento"].'" target="_blank">Ver</a></td>';
 			}
 			$tabla.='<td style="text-align:center">'.$hallazgos[$i]["consecutivo_hallazgo"].'</td>';
-			$tabla.='<td>'.(codifica_encabezado(html_entity_decode($hallazgos[$i]["deficiencia"]))).'</td>';
-			$tabla.='<td>'.codifica_encabezado(html_entity_decode($hallazgos[$i]["accion_mejoramiento"])).'</td>';
+			$tabla.='<td>'.((($hallazgos[$i]["deficiencia"]))).'</td>';
+			$tabla.='<td>'.(($hallazgos[$i]["accion_mejoramiento"])).'</td>';
 			$tabla.='<td>'.convertir($hallazgos[$i]["responsables"],'responsables',$hallazgos[$i]["iddocumento"], $format_hallazgo[0]["idformato"]).'</td>';
 			$tabla.='<td style="text-align:center">'.$hallazgos[$i]["fecha_cumpl"].'</td>';
 			
@@ -137,9 +137,9 @@ function reporte(){
 				}else{
 					$observacion="&nbsp";
 				}
-				$tabla.='<td>'.codifica_encabezado(html_entity_decode($logros)).'</td>';
+				$tabla.='<td>'.(($logros)).'</td>';
 					
-				$tabla.='<td>'.codifica_encabezado(html_entity_decode($observacion)).'</td>';				
+				$tabla.='<td>'.(($observacion)).'</td>';				
 			}else{
 				$tabla.='<td>&nbsp;</td>';					
 				$tabla.='<td>&nbsp;</td>';
