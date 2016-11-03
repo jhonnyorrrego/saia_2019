@@ -18,20 +18,7 @@ include_once($ruta_db_superior."formatos/informe_contraloria/funciones.php");
 $config = busca_filtro_tabla("valor","configuracion","nombre='color_encabezado'","",$conn); 
 $style = "
      <style type=\"text/css\">
-     <!--INPUT, TEXTAREA, SELECT, body {
-        font-family: arial; 
-        font-size: 10px; 
-       } 
-       .phpmaker {
-       font-family: arial; 
-       font-size: 9px; 
-       } 
-       .encabezado {
-       background-color:".$config[0]["valor"]."; 
-       color:white ; 
-       padding:10px; 
-       text-align: left;	
-       } 
+     
        .encabezado_list { 
        background-color:".$config[0]["valor"]."; 
        color:white ; 
@@ -40,11 +27,6 @@ $style = "
        font-weight: bold;	
        }
 
-    	 table tbody td {	
-    		font-family: arial; 
-        font-size: 9px;
-    	 }
-    	 
        -->
        </style>";
 echo $style;
