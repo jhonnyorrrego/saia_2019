@@ -355,10 +355,11 @@ class Imprime_Pdf {
 			
 			curl_setopt($ch, CURLOPT_URL, $fila);
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-			print_r($fila);die();
+			
 			$this->pdf->startPageGroup();
 			$this->pdf->AddPage();
 			$contenido = curl_exec($ch);
+			print_r($fila);die();
 			$contenido = str_replace("../../../images", "http://" . RUTA_PDF_LOCAL . "/../images", $contenido);
 			$contenido = str_replace("<pagebreak/>", "<br pagebreak=\"true\"/>", $contenido);
 			$contenido = str_replace("<p> </p>", "<p></p>", $contenido);
