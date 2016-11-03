@@ -90,7 +90,7 @@ function reporte(){
 	
 	$tabla.='<table style="font-size:7pt;border-collapse:collapse; font-family:verdana;" border="1px">';
 	if($hallazgos["numcampos"]){
-		$tabla.='<tr>';
+		$tabla.='<tr class="encabezado_list">';
 		if($_REQUEST["idformato"]!=''){
 			$tabla.='<td style="width:3%"></td>';
 		}
