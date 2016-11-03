@@ -73,77 +73,86 @@ class Imprime_Pdf {
 	function __construct($iddocumento) {
 		global $conn;
 		
-		$this->documento = busca_filtro_tabla("documento.*," . fecha_db_obtener("fecha", "Y-m-d") . " as fecha", "documento", "iddocumento=$iddocumento", "", $conn);
-		
-	
-		
-		$formato = busca_filtro_tabla("", "formato", "lower(nombre) like '" . strtolower($this->documento[0]["plantilla"]) . "'", "", $conn);
-		
-		if(!$this->documento["numcampos"]) {
-			die("documento no encontrado.");
-		}
-		
-		if($formato["numcampos"]) {
-			
-			if($this->documento[0]["pdf"] != "" && !isset($_REQUEST["seleccion"]) && !isset($_REQUEST["renombrar_pdf"])) { // si el pdf ya está guardado y el archivo si existe redirecciono
-				if(is_file($this->documento[0]["pdf"])) {
-					$this->tipo_salida = "I";
-					// redirecciona($this->documento[0]["pdf"]."?rnd".rand(0,100));die();
-				} elseif(is_file("html2ps/public_html/demo/" . $this->documento[0]["pdf"])) {
-					redirecciona("html2ps/public_html/demo/" . $this->documento[0]["pdf"]);
-					die();
-				} else { // la ruta del pdf esta guardada pero el archivo fisico no fue encontrado
-					$this->tipo_salida = "FI"; // para generarlo de nuevo y guardar la ruta
-				}
-			}
-			
-				
-			// si el documento ya no esta activo, pero nunca le guardaron el pdf, se guarda
-			if($this->documento[0]["pdf"] == "" && $this->documento[0]["estado"] != "ACTIVO") {
-				$this->tipo_salida = "FI";
-			}
-			if($formato[0]["mostrar_pdf"] == 1) {
-				$this->tipo_salida = "FI";
-			}
-			
-			$tipo_fuente = busca_filtro_tabla("valor", "configuracion", "nombre='tipo_letra'", "", $conn);
-		
-			$plantilla = busca_filtro_tabla("encabezado", $formato[0]["nombre_tabla"], "documento_iddocumento=$iddocumento", "", $conn);
-			$this->mostrar_encabezado = $plantilla[0]["encabezado"];
+		if($iddocumento != "url"){
+    		$this->documento = busca_filtro_tabla("documento.*," . fecha_db_obtener("fecha", "Y-m-d") . " as fecha", "documento", "iddocumento=$iddocumento", "", $conn);
+    		
+    	
+    		
+    		$formato = busca_filtro_tabla("", "formato", "lower(nombre) like '" . strtolower($this->documento[0]["plantilla"]) . "'", "", $conn);
+    		
+    		if(!$this->documento["numcampos"]) {
+    			die("documento no encontrado.");
+    		}
+    		
+    		if($formato["numcampos"]) {
+    			
+    			if($this->documento[0]["pdf"] != "" && !isset($_REQUEST["seleccion"]) && !isset($_REQUEST["renombrar_pdf"])) { // si el pdf ya está guardado y el archivo si existe redirecciono
+    				if(is_file($this->documento[0]["pdf"])) {
+    					$this->tipo_salida = "I";
+    					// redirecciona($this->documento[0]["pdf"]."?rnd".rand(0,100));die();
+    				} elseif(is_file("html2ps/public_html/demo/" . $this->documento[0]["pdf"])) {
+    					redirecciona("html2ps/public_html/demo/" . $this->documento[0]["pdf"]);
+    					die();
+    				} else { // la ruta del pdf esta guardada pero el archivo fisico no fue encontrado
+    					$this->tipo_salida = "FI"; // para generarlo de nuevo y guardar la ruta
+    				}
+    			}
+    			
+    				
+    			// si el documento ya no esta activo, pero nunca le guardaron el pdf, se guarda
+    			if($this->documento[0]["pdf"] == "" && $this->documento[0]["estado"] != "ACTIVO") {
+    				$this->tipo_salida = "FI";
+    			}
+    			if($formato[0]["mostrar_pdf"] == 1) {
+    				$this->tipo_salida = "FI";
+    			}
+    			
+    			$tipo_fuente = busca_filtro_tabla("valor", "configuracion", "nombre='tipo_letra'", "", $conn);
+    		
+    			$plantilla = busca_filtro_tabla("encabezado", $formato[0]["nombre_tabla"], "documento_iddocumento=$iddocumento", "", $conn);
+    			$this->mostrar_encabezado = $plantilla[0]["encabezado"];
+    			$this->imprimir_plantilla = 1;
+    			
+    			if($formato[0]["orientacion"]) {
+    				$this->orientacion = "L";
+    			}
+    			if(@$_REQUEST["orientacion"]) {
+    				$this->orientacion = "L";
+    			}
+    			
+    			$vmargen = explode(",", $formato[0]["margenes"]);
+    			if(@$_REQUEST["margenes"])
+    				$vmargen = explode(",", $_REQUEST["margenes"]);
+    			
+    			$this->margenes = array(
+    					"izquierda" => $vmargen[0],
+    					"derecha" => $vmargen[1],
+    					"superior" => $vmargen[2],
+    					"inferior" => $vmargen[3]
+    			);
+    			
+    			if($tipo_fuente["numcampos"]) {
+    				$this->font_family = $tipo_fuente[0][0];
+    			}
+    			
+    			$this->font_size = ($formato[0]["font_size"] - 2);
+    			if(@$_REQUEST["font_size"])
+    				$this->font_size = ($_REQUEST["font_size"] - 2);
+    			$this->papel = $formato[0]["papel"];
+    			if(@$_REQUEST["papel"])
+    				$this->papel = @$_REQUEST["papel"];
+    			$this->formato = $formato;
+    			$this->pdfa = true;
+    			
+    			
+    		}
+		}elseif($iddocumento == "url"){		
+			$this->tipo_salida = "FI";
 			$this->imprimir_plantilla = 1;
-			
-			if($formato[0]["orientacion"]) {
-				$this->orientacion = "L";
-			}
-			if(@$_REQUEST["orientacion"]) {
-				$this->orientacion = "L";
-			}
-			
-			$vmargen = explode(",", $formato[0]["margenes"]);
-			if(@$_REQUEST["margenes"])
-				$vmargen = explode(",", $_REQUEST["margenes"]);
-			
-			$this->margenes = array(
-					"izquierda" => $vmargen[0],
-					"derecha" => $vmargen[1],
-					"superior" => $vmargen[2],
-					"inferior" => $vmargen[3]
-			);
-			
-			if($tipo_fuente["numcampos"]) {
-				$this->font_family = $tipo_fuente[0][0];
-			}
-			
-			$this->font_size = ($formato[0]["font_size"] - 2);
-			if(@$_REQUEST["font_size"])
-				$this->font_size = ($_REQUEST["font_size"] - 2);
-			$this->papel = $formato[0]["papel"];
-			if(@$_REQUEST["papel"])
-				$this->papel = @$_REQUEST["papel"];
-			$this->formato = $formato;
-			$this->pdfa = true;
-			
-			
+			$this->documento[0]["iddocumento"]= "url";	
+	      	if($_REQUEST["encabezado_papa"]){
+	      		$this->font_size =8;
+	      	}
 		}
 	}
 
