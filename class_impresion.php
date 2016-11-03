@@ -348,7 +348,7 @@ class Imprime_Pdf {
     	
     		}
 		}
-		print_r($direccion);die();
+		print_r($_REQUEST["url"]);die();
 		foreach($direccion as $fila) {
 			
 			$fila .= "&font_size=" . $this->font_size;
