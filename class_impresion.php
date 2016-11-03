@@ -370,9 +370,9 @@ class Imprime_Pdf {
 			$contenido = preg_replace('#<script(.*?)>(.*?)</script>#is', '', $contenido);
 			$contenido = preg_replace('#onclick="(.*?)"#is', '', $contenido);
 			
-		    $contenido ='<link rel="stylesheet" type="text/css" href="http://'.RUTA_PDF_LOCAL.'/css/estilos.css"/>'.$contenido;		
+		    
 	
-		//print_r($contenido);die("");
+		print_r($contenido);die("");
 			
 			$this->pdf->writeHTML(stripslashes($contenido), true, false, false, false, '');
 		}
