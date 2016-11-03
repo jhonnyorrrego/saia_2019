@@ -1,4 +1,4 @@
-
+<html>
 
      <style type="text/css">
      <!--INPUT, TEXTAREA, SELECT, body {
@@ -56,3 +56,4 @@
 <p style="text-align: justify;">To take a trivial example, which of us ever undertakes laborious physical exercise, except to obtain some advantage from it? But who has any right to find fault with a man who chooses to enjoy a pleasure that has no annoying consequences, or one who avoids a pain that produces no resultant pleasure?</p></td><td>Sg</td><td style="text-align:center">2016-10-29</td><td><ul><li><p>LOGROS ALCANZADOS:</p>
 <p style="text-align: justify;">On the other hand, we denounce with righteous indignation and dislike men who are so beguiled and demoralized by the charms of pleasure of the moment, so blinded by desire, that they cannot foresee the pain and trouble that are bound to ensue; and equal blame belongs to those who fail in their duty through weakness of will, which is the same as saying through shrinking from toil and pain.</p></li></ul></td><td><ul><li><p>OBSERVACIONES:</p>
 <p style="text-align: justify;">These cases are perfectly simple and easy to distinguish. In a free hour, when our power of choice is untrammelled and when nothing prevents our being able to do what we like best, every pleasure is to be welcomed and every pain avoided.</p></li></ul></td><td><span style='color:red'>50%</span></td></tr>
+</html>
