@@ -264,6 +264,7 @@ class Imprime_Pdf {
 			chmod($carpeta,0777);
 		} else {
 			$nombre_pdf = $this->documento[0]["numero"] . "_" . str_replace("-", "_", $this->documento[0]["fecha"]) . ".pdf";
+			print_r(documento);
 		die("-");
 		    
 		}
