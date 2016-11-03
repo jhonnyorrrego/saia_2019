@@ -21,7 +21,6 @@ function recibir_datos($idformato, $iddoc){
 	
 	
 	$datos_correo = json_decode($_REQUEST['datos_correo']);
-	print_r($datos_correo);
 	$asunto = $datos_correo->asunto;
 	$contenido = $datos_correo->contenido;
 	$de = $datos_correo->from;
