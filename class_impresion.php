@@ -403,11 +403,7 @@ class Imprime_Pdf {
 				           'wrap'           => 200				           
 								);
 
-			$tidy = new tidy;
-			$tidy->errorBuffer;
-			$tidy->parseString($contenido, $config, 'utf8');
-			$tidy->cleanRepair();						
-			$contenido=$tidy; 					
+							
 						
 			if($_REQUEST["url_encabezado"]){
 				$this->pdf->writeHTMLCell(0, 0, '', 27, stripslashes($contenido), "", 1, 0, false, '', true);
