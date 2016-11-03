@@ -17,6 +17,9 @@ echo(librerias_notificaciones());
 
 function recibir_datos($idformato, $iddoc){
 	global $ruta_db_superior, $conn;
+	
+	print_r($_REQUEST['datos_correo']);
+	
 	$datos_correo = json_decode($_REQUEST['datos_correo']);
 	$asunto = $datos_correo->asunto;
 	$contenido = $datos_correo->contenido;
