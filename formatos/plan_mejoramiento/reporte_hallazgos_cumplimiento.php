@@ -161,7 +161,7 @@ function convertir($valor,$campo,$iddoc=null,$idformato=null){
 			if($valor==3)$retorno='Observaciones';
 		break;
 		case 'responsables':
-			$retorno=ucwords(strtolower(mostrar_valor_campo($campo,$idformato,$iddoc,1)));
+			$retorno=ucwords(strtolower("sg"));
 		break;
 	}
 	return $retorno;
