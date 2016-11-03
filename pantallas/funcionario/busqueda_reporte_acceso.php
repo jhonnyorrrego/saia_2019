@@ -59,11 +59,11 @@ global $conn;
         <div class="control-group">
           <label class="string required control-label" for="nombre">
 			<b>Login:</b>
-			<input type="hidden" name="bksaiacondicion_email" id="bksaiacondicion_email" value="like">
+			<input type="hidden" name="bksaiacondicion_login" id="bksaiacondicion_login" value="like">
           </label>
           <div class="controls">
-            <input id="bqsaia_email" name="bqsaia_email" size="50" type="text">
-            <input type="hidden" name="bqsaiaenlace_email" id="bqsaiaenlace_email" value="y">
+            <input id="bqsaia_login" name="bqsaia_login" size="50" type="text">
+            <input type="hidden" name="bqsaiaenlace_login" id="bqsaiaenlace_login" value="y">
           </div>
         </div> 
 
