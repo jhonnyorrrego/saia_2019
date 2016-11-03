@@ -671,5 +671,32 @@ if(@$_REQUEST["iddoc"]) {
 	$pdf->configurar_pagina($_REQUEST);
 	
 	$pdf->imprimir();
-}
+}elseif($_REQUEST["url"]){
+			
+	$pdf = new Imprime_Pdf("url");
+	//$margenes = array("superior" => "0", "inferior" => "10", "izquierda" => "13", "derecha" => "17");
+    $pdf->configurar_pagina($_REQUEST);
+    if(@$_REQUEST["encabezado_papa"]){
+  	
+  	$arreglo1=explode("|",$_REQUEST["url"]);
+	$arreglo2=explode("=",$arreglo1[1]);
+	$doc_papa=$arreglo2[1]; 
+  	$encabezado_papa=busca_filtro_tabla("","documento A,formato B","lower(A.plantilla)=lower(B.nombre) AND A.iddocumento=".$doc_papa,"",$conn); 
+	if(@$_REQUEST["tercero"]){
+		$encabezado_papa=busca_filtro_tabla("","documento A,formato B","lower(A.plantilla)=lower(B.nombre) AND A.iddocumento=1721872","",$conn); 	
+	}
+	if(@$_REQUEST["seguridad"]){
+		$encabezado_papa=busca_filtro_tabla("","documento A,formato B","lower(A.plantilla)=lower(B.nombre) AND A.iddocumento=1721474","",$conn); 	
+	}
+	
+	if($encabezado_papa["numcampos"]){		
+		$pdf->formato[0]["encabezado"]=$encabezado_papa[0]["encabezado"];
+		$pdf->formato[0]["idformato"]=$encabezado_papa[0]["idformato"];		 
+		$pdf->mostrar_encabezado=1;
+		
+	}
+  }
+	
+  $pdf->imprimir();
+  }
 ?>
