@@ -32,7 +32,7 @@ $style = "
        padding:10px; 
        text-align: left;	
        } 
-       .encabezado { 
+       .encabezado_list { 
        background-color:".$config[0]["valor"]."; 
        color:white ; 
        vertical-align:middle;
@@ -56,7 +56,7 @@ $style = "
     	 
        -->
        </style>";
-//echo $style;
+echo $style;
 echo reporte();
 function reporte(){
 	global $conn, $ruta_db_superior;
