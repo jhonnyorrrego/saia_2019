@@ -61,7 +61,7 @@ function reporte(){
 				</table>
 			</center><br /><br />';
 	
-	$tabla.='<table style="font-size:7pt;border-collapse:collapse; font-family:verdana;" border="1px">';
+	$tabla.='<table style="font-size:7pt;border-collapse:collapse; font-family:verdana;" border="1">';
 	if($hallazgos["numcampos"]){
 		$tabla.='<tr class="encabezado_list">';
 		if($_REQUEST["idformato"]!=''){
