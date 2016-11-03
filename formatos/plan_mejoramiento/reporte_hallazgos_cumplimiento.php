@@ -42,7 +42,7 @@
 				<b><h3 style="text-align: center;">Reporte de Avance Plan de Mejoramiento</h3></b><br />
 				<table style="border-collapse: collapse; width: 100%; attr-margin-left: -33px; font-size:7pt;" border="1">
 					<tbody>
-					<tr>
+					<tr class="encabezado_list">
 						<td style="width:20%; text-align: center;"><b>Plan de mejoramiento No.</b><br />10</td>
 						<td style="width:20%; text-align: center;"><b>Fecha</b><br />2016-11-03</td>
 						<td style="width:40%; text-align: center;"><b>Descripci&oacute;n del plan</b><p>DESCRIPCION:</p>
