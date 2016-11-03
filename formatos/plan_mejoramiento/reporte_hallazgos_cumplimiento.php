@@ -92,16 +92,16 @@ function reporte(){
 	if($hallazgos["numcampos"]){
 		$tabla.='<tr class="encabezado_list">';
 		if($_REQUEST["idformato"]!=''){
-			$tabla.='<td style="width:3%"></td>';
+			$tabla.='<td ></td>';
 		}
-		$tabla.='<td style="width:8%">Consecutivo hallazgo</td>';
-		$tabla.='<td style="width:26%">Deficiencia</td>';
-		$tabla.='<td style="width:18%">Acci&oacute;n de mejoramiento</td>';
-		$tabla.='<td style="width:10%">Responsables de mejoramiento</td>';
-		$tabla.='<td style="width:8%">Tiempo programado para cumpliemiento</td>';
-		$tabla.='<td style="width:12%">Logros alcanzados</td>';
-		$tabla.='<td style="width:9%">Observaciones</td>';
-		$tabla.='<td style="width:6%">Avances</td>';
+		$tabla.='<td >Consecutivo hallazgo</td>';
+		$tabla.='<td >Deficiencia</td>';
+		$tabla.='<td >Acci&oacute;n de mejoramiento</td>';
+		$tabla.='<td ">Responsables de mejoramiento</td>';
+		$tabla.='<td >Tiempo programado para cumpliemiento</td>';
+		$tabla.='<td >Logros alcanzados</td>';
+		$tabla.='<td >Observaciones</td>';
+		$tabla.='<td >Avances</td>';
 		$tabla.='</tr>';
 		for($i=0;$i<$hallazgos["numcampos"];$i++){
 			$tabla.='<tr>';
