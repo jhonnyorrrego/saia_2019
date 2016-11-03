@@ -372,7 +372,7 @@ class Imprime_Pdf {
 			
 		    $contenido ='<link rel="stylesheet" type="text/css" href="http://'.RUTA_PDF_LOCAL.'/css/estilos.css"/>'.$contenido;		
 	
-		
+		print_r($contenido)die("");
 			
 			$this->pdf->writeHTML(stripslashes($contenido), true, false, false, false, '');
 		}
