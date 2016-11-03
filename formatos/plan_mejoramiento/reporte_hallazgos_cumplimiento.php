@@ -11,8 +11,7 @@ $ruta.="../";
 $max_salida--;
 }
 include_once($ruta_db_superior."db.php");
-include_once($ruta_db_superior."formatos/librerias/funciones_generales.php");
-include_once($ruta_db_superior."formatos/informe_contraloria/funciones.php");
+
 
 //include_once($ruta_db_superior."formatos/librerias/estilo_formulario.php");
 $config = busca_filtro_tabla("valor","configuracion","nombre='color_encabezado'","",$conn); 
