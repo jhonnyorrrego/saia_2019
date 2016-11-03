@@ -42,7 +42,6 @@ $style = "
        table thead td {
 		    font-weight:bold;
     		cursor:pointer;
-    		background-color:".$config[0]["valor"].";
     		text-align: center;
         font-family: arial; 
         font-size: 9px;
