@@ -88,7 +88,7 @@ function reporte(){
 				</table>
 			</center><br /><br />';
 	
-	$tabla.='<table style="font-size:7pt;border-collapse:collapse; font-family:verdana;" border="1">';
+	$tabla.='<table style="font-size:7pt;border-collapse:collapse;" border="1">';
 	if($hallazgos["numcampos"]){
 		$tabla.='<tr>';
 		if($_REQUEST["idformato"]!=''){
