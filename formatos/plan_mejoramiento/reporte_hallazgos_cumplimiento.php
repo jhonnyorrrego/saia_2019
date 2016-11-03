@@ -18,7 +18,20 @@ include_once($ruta_db_superior."formatos/informe_contraloria/funciones.php");
 $config = busca_filtro_tabla("valor","configuracion","nombre='color_encabezado'","",$conn); 
 $style = "
      <style type=\"text/css\">
-     
+     <!--INPUT, TEXTAREA, SELECT, body {
+        font-family: arial; 
+        font-size: 10px; 
+       } 
+       .phpmaker {
+       font-family: arial; 
+       font-size: 9px; 
+       } 
+       .encabezado {
+       background-color:".$config[0]["valor"]."; 
+       color:white ; 
+       padding:10px; 
+       text-align: left;	
+       } 
        .encabezado_list { 
        background-color:".$config[0]["valor"]."; 
        color:white ; 
@@ -26,7 +39,21 @@ $style = "
        text-align: center;
        font-weight: bold;	
        }
-
+       table thead td {
+		    font-weight:bold;
+    		cursor:pointer;
+    		background-color:".$config[0]["valor"].";
+    		text-align: center;
+        font-family: arial; 
+        font-size: 9px;
+        text-transform:Uppercase;
+        vertical-align:middle;    
+    	 }
+    	 table tbody td {	
+    		font-family: arial; 
+        font-size: 9px;
+    	 }
+    	 
        -->
        </style>";
 echo $style;
@@ -44,7 +71,7 @@ function reporte(){
 	$hallazgos=busca_filtro_tabla(fecha_db_obtener('tiempo_cumplimiento','Y-m-d')." as fecha_cumpl, a.*, b.*","ft_hallazgo a, documento b","a.ft_plan_mejoramiento=".$plan_mejoramiento[0]["idft_plan_mejoramiento"]." and a.documento_iddocumento=b.iddocumento and b.estado not in('ELIMINADO', 'ANULADO')","idft_hallazgo asc",$conn);
 	
 	if($_REQUEST["idformato"]!='' & $_REQUEST["tipo"]!=5){
-    		$tabla.='<a href="'.$ruta_db_superior.'class_impresion.php?url=formatos/plan_mejoramiento/reporte_hallazgos_cumplimiento.php?tipo=5|iddoc='.$iddoc.'|idformato='.$idformato.'&horizontal=1&tipo=5&landscape=horizontal&orientacion=L" target="_blank"><img src="http://'.RUTA_PDF.'/enlaces/imprimir.gif"></a>';
+    		$tabla.='<a href="'.$ruta_db_superior.'class_impresion.php?url=formatos/plan_mejoramiento/reporte_hallazgos_cumplimiento.php?tipo=5|iddoc='.$iddoc.'|idformato='.$idformato.'&horizontal=1&tipo=5&landscape=horizontal&orientacion=L" target="_blank"><img src="'.PROTOCOLO_CONEXION.RUTA_PDF.'/enlaces/imprimir.gif"></a>';
 	}
 	
 	$tabla.='<center>
@@ -61,7 +88,7 @@ function reporte(){
 				</table>
 			</center><br /><br />';
 	
-	$tabla.='<table style="font-size:7pt;border-collapse:collapse; font-family:verdana;" border="1">';
+	$tabla.='<table style="font-size:7pt;border-collapse:collapse; font-family:verdana;" border="1px">';
 	if($hallazgos["numcampos"]){
 		$tabla.='<tr class="encabezado_list">';
 		if($_REQUEST["idformato"]!=''){
@@ -119,7 +146,7 @@ function reporte(){
 			}						
 			$tabla.='<td>'.avances($hallazgos[$i]["idft_hallazgo"]).'</td>';
 			$tabla.='</tr>';
-			$tabla.="</table>";
+			$tabla.='</table>';
 		}
 	}
 	else{
