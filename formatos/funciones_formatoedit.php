@@ -69,7 +69,7 @@ switch ($sAction)
 			alerta("Actualizacion exitosa");
 			////phpmkr_db_close($conn);
     if(isset($_REQUEST["pantalla"])&&$_REQUEST["pantalla"]=="tiny")
-      redirecciona("../tinymce/jscripts/tiny_mce/plugins/formatos/formatos.php?formato=".$idformato."&tipo=funciones_formato");
+      redirecciona("../tinymce34/jscripts/tiny_mce/plugins/formatos/formatos.php?formato=".$idformato."&tipo=funciones_formato");
     else if($idformato)
       redirecciona("funciones_formatolist.php?idformato=".$idformato);
     else  
