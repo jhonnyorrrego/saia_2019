@@ -74,11 +74,23 @@ function reporte(){
     		$tabla.='<a href="'.$ruta_db_superior.'class_impresion.php?url=formatos/plan_mejoramiento/reporte_hallazgos_cumplimiento.php?tipo=5|iddoc='.$iddoc.'|idformato='.$idformato.'&horizontal=1&tipo=5&landscape=horizontal" target="_blank"><img src="http://'.RUTA_PDF.'/enlaces/imprimir.gif"></a>';
 	}
 	
-
+	$tabla.='<center>
+				<b><h3 style="text-align: center;">Reporte de Avance Plan de Mejoramiento</h3></b><br />
+				<table style="border-collapse: collapse; width: 100%; attr-margin-left: -33px; font-size:7pt;" border="1">
+					<tbody>
+					<tr>
+						<td style="width:20%; text-align: center;"><b>Plan de mejoramiento No.</b><br />'.$plan_mejoramiento[0]['numero'].'</td>
+						<td style="width:20%; text-align: center;"><b>Fecha</b><br />'.date('Y-m-d').'</td>
+						<td style="width:40%; text-align: center;"><b>Descripci&oacute;n del plan</b>'.$plan_mejoramiento[0]['descripcion_plan'].'</td>						
+						<td style="width:20%; text-align: center;"><b>Cumplimiento del <br />Plan de mejoramiento</b><center><br />'.$porcentaje.'%</td>
+					</tr>
+					</tbody>
+				</table>
+			</center><br /><br />';
 	
 	$tabla.='<table style="font-size:7pt;border-collapse:collapse;" border="1">';
 	if($hallazgos["numcampos"]){
-		$tabla.='<tr>';
+		$tabla.='<tbody><tr>';
 		if($_REQUEST["idformato"]!=''){
 			$tabla.='<td style="width:3%"></td>';
 		}
@@ -90,7 +102,7 @@ function reporte(){
 		$tabla.='<td style="width:12%">Logros alcanzados</td>';
 		$tabla.='<td style="width:9%">Observaciones</td>';
 		$tabla.='<td style="width:6%">Avances</td>';
-		$tabla.='</tr>';
+		$tabla.='</tr></tbody>';
 		for($i=0;$i<$hallazgos["numcampos"];$i++){
 			$tabla.='<tr>';
 			if($_REQUEST["idformato"]!=''){
