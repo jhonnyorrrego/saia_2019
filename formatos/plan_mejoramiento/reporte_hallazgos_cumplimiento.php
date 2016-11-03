@@ -38,7 +38,7 @@
     	 }
     	 
        -->
-       </style><a href="../../class_impresion.php?url=formatos/plan_mejoramiento/reporte_hallazgos_cumplimiento.php?tipo=5|iddoc=733|idformato=379&horizontal=1&tipo=5&landscape=horizontal" target="_blank"><img src="http://52.205.58.68/saia_release1/saia/enlaces/imprimir.gif"></a><center>
+       </style>
 				<b><h3 style="text-align: center;">Reporte de Avance Plan de Mejoramiento</h3></b><br />
 				<table style="border-collapse: collapse; width: 100%; attr-margin-left: -33px; font-size:7pt;" border="1">
 					<tbody>
@@ -51,7 +51,7 @@
 					</tr>
 					</tbody>
 				</table>
-			</center><br /><br /><table style="border-collapse: collapse; width: 100%; attr-margin-left: -33px; font-size:7pt;" border="1"><tr class="encabezado_list"><td style="width:3%"></td><td style="width:8%">Consecutivo hallazgo</td><td style="width:26%">Deficiencia</td><td style="width:18%">Acci&oacute;n de mejoramiento</td><td style="width:10%">Responsables de mejoramiento</td><td style="width:8%">Tiempo programado para cumpliemiento</td><td style="width:12%">Logros alcanzados</td><td style="width:9%">Observaciones</td><td style="width:6%">Avances</td></tr><tr><td><a href="../../formatos/hallazgo/mostrar_hallazgo.php?idformato=390&iddoc=734" target="_blank">Ver</a></td><td style="text-align:center">1</td><td><p>DEFICIENCIA:</p>
+			<br /><br /><table style="border-collapse: collapse; width: 100%; attr-margin-left: -33px; font-size:7pt;" border="1"><tr class="encabezado_list"><td style="width:3%"></td><td style="width:8%">Consecutivo hallazgo</td><td style="width:26%">Deficiencia</td><td style="width:18%">Acci&oacute;n de mejoramiento</td><td style="width:10%">Responsables de mejoramiento</td><td style="width:8%">Tiempo programado para cumpliemiento</td><td style="width:12%">Logros alcanzados</td><td style="width:9%">Observaciones</td><td style="width:6%">Avances</td></tr><tr><td><a href="../../formatos/hallazgo/mostrar_hallazgo.php?idformato=390&iddoc=734" target="_blank">Ver</a></td><td style="text-align:center">1</td><td><p>DEFICIENCIA:</p>
 <p>But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give you a complete account of the system, and expound the actual teachings of the great explorer of the truth, the master-builder of human happiness.</p></td><td><p style="text-align: justify;">ACCIÓN CORRECTIVA/PREVENTIVA Y/O MEJORA:</p>
 <p style="text-align: justify;">To take a trivial example, which of us ever undertakes laborious physical exercise, except to obtain some advantage from it? But who has any right to find fault with a man who chooses to enjoy a pleasure that has no annoying consequences, or one who avoids a pain that produces no resultant pleasure?</p></td><td>Sg</td><td style="text-align:center">2016-10-29</td><td><ul><li><p>LOGROS ALCANZADOS:</p>
 <p style="text-align: justify;">On the other hand, we denounce with righteous indignation and dislike men who are so beguiled and demoralized by the charms of pleasure of the moment, so blinded by desire, that they cannot foresee the pain and trouble that are bound to ensue; and equal blame belongs to those who fail in their duty through weakness of will, which is the same as saying through shrinking from toil and pain.</p></li></ul></td><td><ul><li><p>OBSERVACIONES:</p>
