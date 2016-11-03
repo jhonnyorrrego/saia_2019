@@ -371,12 +371,7 @@ class Imprime_Pdf {
 					'wrap' => 200
 			);
 			
-			// Tidy
-			$tidy = new tidy();
-			$tidy->errorBuffer;
-			$tidy->parseString($contenido, $config, 'utf8');
-			$tidy->cleanRepair();
-			// Output
+			
 			
 			$contenido = $tidy;
 			
