@@ -97,7 +97,7 @@ function reporte(){
 		$tabla.='<td style="width:18%">Acci&oacute;n de mejoramiento</td>';
 		$tabla.='<td style="width:10%">Responsables de mejoramiento</td>';
 		$tabla.='<td style="width:8%">Tiempo programado para cumpliemiento</td>';
-		$tabla.='<td style="width:12%">Logros alcanzados</td>';
+		$tabla.='<td style="width:12%">Logrosssssssssssssssssssssssssssssssssssssssssss alcanzados</td>';
 		$tabla.='<td style="width:9%">Observaciones</td>';
 		$tabla.='<td style="width:6%">Avances</td>';
 		$tabla.='</tr>';
