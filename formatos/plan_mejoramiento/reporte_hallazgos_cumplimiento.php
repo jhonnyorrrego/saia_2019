@@ -90,11 +90,11 @@ function reporte(){
 	
 	$tabla.='<table style="font-size:7pt;border-collapse:collapse; font-family:verdana;" border="1px">';
 	if($hallazgos["numcampos"]){
-		$tabla.='<tr>';
+		$tabla.='<tr class="encabezado_list">';
 		if($_REQUEST["idformato"]!=''){
 			$tabla.='<td style="width:3%"></td>';
 		}
-		$tabla.='<td style="background-color:#57B0DE;width:8%">Consecutivo hallazgo</td>';
+		$tabla.='<td style="width:8%">Consecutivo hallazgo</td>';
 		$tabla.='<td style="width:26%">Deficiencia</td>';
 		$tabla.='<td style="width:18%">Acci&oacute;n de mejoramiento</td>';
 		$tabla.='<td style="width:10%">Responsables de mejoramiento</td>';
