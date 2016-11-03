@@ -65,7 +65,7 @@ function reporte(){
 	$format_hallazgo=busca_filtro_tabla("","formato a","a.nombre='hallazgo'","",$conn);
 	$plan_mejoramiento=busca_filtro_tabla("","ft_plan_mejoramiento a, documento b","a.documento_iddocumento=b.iddocumento AND a.documento_iddocumento=".$iddoc,"",$conn);
 	
-	$porcentaje = porcentaje_plan('','','',$plan_mejoramiento[0]["idft_plan_mejoramiento"]);
+	$porcentaje = "1";
 	//print_r($porcentaje);die();
 	
 	$hallazgos=busca_filtro_tabla(fecha_db_obtener('tiempo_cumplimiento','Y-m-d')." as fecha_cumpl, a.*, b.*","ft_hallazgo a, documento b","a.ft_plan_mejoramiento=".$plan_mejoramiento[0]["idft_plan_mejoramiento"]." and a.documento_iddocumento=b.iddocumento and b.estado not in('ELIMINADO', 'ANULADO')","idft_hallazgo asc",$conn);
