@@ -352,10 +352,10 @@ class Imprime_Pdf {
 		foreach($direccion as $fila) {
 			
 			$fila .= "&font_size=" . $this->font_size;
-			print_r($fila);die();
+			
 			curl_setopt($ch, CURLOPT_URL, $fila);
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-			
+			print_r($fila);die();
 			$this->pdf->startPageGroup();
 			$this->pdf->AddPage();
 			$contenido = curl_exec($ch);
