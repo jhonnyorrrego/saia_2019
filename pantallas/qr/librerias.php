@@ -8,7 +8,7 @@ while($max_salida > 0) {
 	$ruta .= "../";
 	$max_salida--;
 }
-include_once ($ruta_db_superior . "pantallas/documento/librerias.php");
+include_once ($ruta_db_superior . "db.php");
 
 function mostrar_codigo_qr($idformato, $iddoc) {
 	global $conn, $ruta_db_superior;
