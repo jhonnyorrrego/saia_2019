@@ -374,7 +374,7 @@ class Imprime_Pdf {
 	
 		//print_r($contenido);die("");
 			
-			$this->pdf->writeHTML(stripslashes($contenido), true, false, false, false, '');
+			$this->pdf->writeHTML(stripslashes($contenido), true, true, false, false, '');
 		}
 		
 		curl_close($ch);
