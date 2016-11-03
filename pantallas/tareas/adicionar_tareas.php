@@ -55,7 +55,7 @@ if($_REQUEST['guardar']==1){
 				<label class="control-label" for="etiqueta">Responsable*:</label>
 				<div class="controls">
 					<?php
-						echo arbol("responsable","responsable","test.php?rol=1",0,1,1,false,'radio');
+						echo arbol("responsable","responsable","test.php?rol=1&sin_padre=1",0,1,1,false,'radio');
 					?>
 				</div>
 			</div>
