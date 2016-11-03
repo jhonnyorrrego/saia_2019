@@ -1,22 +1,6 @@
-<?php
-$max_salida=6; // Previene algun posible ciclo infinito limitando a 10 los ../
-$ruta_db_superior=$ruta="";
-while($max_salida>0)
-{
-if(is_file($ruta."db.php"))
-{
-$ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
-}
-$ruta.="../";
-$max_salida--;
-}
-include_once($ruta_db_superior."db.php");
 
 
-//include_once($ruta_db_superior."formatos/librerias/estilo_formulario.php");
-$config = busca_filtro_tabla("valor","configuracion","nombre='color_encabezado'","",$conn); 
-$style = "
-     <style type=\"text/css\">
+     <style type="text/css">
      <!--INPUT, TEXTAREA, SELECT, body {
         font-family: arial; 
         font-size: 10px; 
@@ -26,13 +10,13 @@ $style = "
        font-size: 9px; 
        } 
        .encabezado {
-       background-color:".$config[0]["valor"]."; 
+       background-color:#57B0DE; 
        color:white ; 
        padding:10px; 
        text-align: left;	
        } 
        .encabezado_list { 
-       background-color:".$config[0]["valor"]."; 
+       background-color:#57B0DE; 
        color:white ; 
        vertical-align:middle;
        text-align: center;
@@ -41,7 +25,7 @@ $style = "
        table thead td {
 		    font-weight:bold;
     		cursor:pointer;
-    		background-color:".$config[0]["valor"].";
+    		background-color:#57B0DE;
     		text-align: center;
         font-family: arial; 
         font-size: 9px;
@@ -54,154 +38,21 @@ $style = "
     	 }
     	 
        -->
-       </style>";
-echo $style;
-echo reporte();
-function reporte(){
-	global $conn, $ruta_db_superior;
-	$iddoc=$_REQUEST["iddoc"];
-	$idformato=$_REQUEST["idformato"];
-	$format_hallazgo=busca_filtro_tabla("","formato a","a.nombre='hallazgo'","",$conn);
-	$plan_mejoramiento=busca_filtro_tabla("","ft_plan_mejoramiento a, documento b","a.documento_iddocumento=b.iddocumento AND a.documento_iddocumento=".$iddoc,"",$conn);
-	
-	$porcentaje = "1";
-	//print_r($porcentaje);die();
-	
-	$hallazgos=busca_filtro_tabla(fecha_db_obtener('tiempo_cumplimiento','Y-m-d')." as fecha_cumpl, a.*, b.*","ft_hallazgo a, documento b","a.ft_plan_mejoramiento=".$plan_mejoramiento[0]["idft_plan_mejoramiento"]." and a.documento_iddocumento=b.iddocumento and b.estado not in('ELIMINADO', 'ANULADO')","idft_hallazgo asc",$conn);
-	
-	if($_REQUEST["idformato"]!='' & $_REQUEST["tipo"]!=5){
-    		$tabla.='<a href="'.$ruta_db_superior.'class_impresion.php?url=formatos/plan_mejoramiento/reporte_hallazgos_cumplimiento.php?tipo=5|iddoc='.$iddoc.'|idformato='.$idformato.'&horizontal=1&tipo=5&landscape=horizontal" target="_blank"><img src="http://'.RUTA_PDF.'/enlaces/imprimir.gif"></a>';
-	}
-	
-	$tabla.='<center>
+       </style><a href="../../class_impresion.php?url=formatos/plan_mejoramiento/reporte_hallazgos_cumplimiento.php?tipo=5|iddoc=733|idformato=379&horizontal=1&tipo=5&landscape=horizontal" target="_blank"><img src="http://52.205.58.68/saia_release1/saia/enlaces/imprimir.gif"></a><center>
 				<b><h3 style="text-align: center;">Reporte de Avance Plan de Mejoramiento</h3></b><br />
 				<table style="border-collapse: collapse; width: 100%; attr-margin-left: -33px; font-size:7pt;" border="1">
 					<tbody>
 					<tr>
-						<td style="width:20%; text-align: center;"><b>Plan de mejoramiento No.</b><br />'.$plan_mejoramiento[0]['numero'].'</td>
-						<td style="width:20%; text-align: center;"><b>Fecha</b><br />'.date('Y-m-d').'</td>
-						<td style="width:40%; text-align: center;"><b>Descripci&oacute;n del plan</b>'.$plan_mejoramiento[0]['descripcion_plan'].'</td>						
-						<td style="width:20%; text-align: center;"><b>Cumplimiento del <br />Plan de mejoramiento</b><br />'.$porcentaje.'%</td>
+						<td style="width:20%; text-align: center;"><b>Plan de mejoramiento No.</b><br />10</td>
+						<td style="width:20%; text-align: center;"><b>Fecha</b><br />2016-11-03</td>
+						<td style="width:40%; text-align: center;"><b>Descripci&oacute;n del plan</b><p>DESCRIPCION:</p>
+<p style="text-align: justify;">Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p></td>						
+						<td style="width:20%; text-align: center;"><b>Cumplimiento del <br />Plan de mejoramiento</b><center><br />1%</td>
 					</tr>
 					</tbody>
 				</table>
-			</center><br /><br />';
-	
-	$tabla.='<table style="border-collapse: collapse; width: 100%; attr-margin-left: -33px; font-size:7pt;" border="1">';
-	if($hallazgos["numcampos"]){
-		$tabla.='<tr class="encabezado_list">';
-		if($_REQUEST["idformato"]!=''){
-			$tabla.='<td style="width:3%"></td>';
-		}
-		$tabla.='<td style="width:8%">Consecutivo hallazgo</td>';
-		$tabla.='<td style="width:26%">Deficiencia</td>';
-		$tabla.='<td style="width:18%">Acci&oacute;n de mejoramiento</td>';
-		$tabla.='<td style="width:10%">Responsables de mejoramiento</td>';
-		$tabla.='<td style="width:8%">Tiempo programado para cumpliemiento</td>';
-		$tabla.='<td style="width:12%">Logros alcanzados</td>';
-		$tabla.='<td style="width:9%">Observaciones</td>';
-		$tabla.='<td style="width:6%">Avances</td>';
-		$tabla.='</tr>';
-		for($i=0;$i<$hallazgos["numcampos"];$i++){
-			$tabla.='<tr>';
-			if($_REQUEST["idformato"]!=''){
-				$tabla.='<td><a href="'.$ruta_db_superior.'formatos/hallazgo/mostrar_hallazgo.php?idformato='.$format_hallazgo[0]["idformato"].'&iddoc='.$hallazgos[$i]["documento_iddocumento"].'" target="_blank">Ver</a></td>';
-			}
-			$tabla.='<td style="text-align:center">'.$hallazgos[$i]["consecutivo_hallazgo"].'</td>';
-			$tabla.='<td>'.(codifica_encabezado(html_entity_decode($hallazgos[$i]["deficiencia"]))).'</td>';
-			$tabla.='<td>'.codifica_encabezado(html_entity_decode($hallazgos[$i]["accion_mejoramiento"])).'</td>';
-			$tabla.='<td>'.convertir($hallazgos[$i]["responsables"],'responsables',$hallazgos[$i]["iddocumento"], $format_hallazgo[0]["idformato"]).'</td>';
-			$tabla.='<td style="text-align:center">'.$hallazgos[$i]["fecha_cumpl"].'</td>';
-			
-			$seguimiento_plan_mejoramiento=busca_filtro_tabla("logros_alcanzados, observaciones","ft_seguimiento","ft_hallazgo=".$hallazgos[$i]['idft_hallazgo'],"",$conn);
-			if($seguimiento_plan_mejoramiento['numcampos']){
-				$logros_alcanzados = array_filter(extrae_campo($seguimiento_plan_mejoramiento,"logros_alcanzados","z")); 
-					
-				if($logros_alcanzados){
-					$logros ="<ul>";
-						foreach($logros_alcanzados as $value){
-							$logros .="<li>".$value."</li>";
-						}
-					$logros .="</ul>";
-				}else{
-					$logros .="&nbsp;";
-				}
-				$observaciones = array_filter(extrae_campo($seguimiento_plan_mejoramiento,"observaciones","z")); 
-				if($observaciones){
-					$observacion ="<ul>";
-						foreach($observaciones as $value){
-							$observacion .="<li>".$value."</li>";
-						}
-					$observacion .="</ul>";
-				}else{
-					$observacion="&nbsp";
-				}
-				$tabla.='<td>'.codifica_encabezado(html_entity_decode($logros)).'</td>';
-					
-				$tabla.='<td>'.codifica_encabezado(html_entity_decode($observacion)).'</td>';				
-			}else{
-				$tabla.='<td>&nbsp;</td>';					
-				$tabla.='<td>&nbsp;</td>';
-			}						
-			$tabla.='<td>'.avances($hallazgos[$i]["idft_hallazgo"]).'</td>';
-			$tabla.='</tr>';
-		}
-	}
-	else{
-		
-	}
-	return $tabla;
-}
-function convertir($valor,$campo,$iddoc=null,$idformato=null){
-	global $conn;
-	switch($campo){
-		case 'clase_observacion':
-			if($valor==1)$retorno='Hallazgo Administrativo';
-			if($valor==2)$retorno='No conformidades';
-			if($valor==3)$retorno='Observaciones';
-		break;
-		case 'responsables':
-			$retorno=ucwords(strtolower("sg"));
-		break;
-	}
-	return $retorno;
-}
-
-function avances($idpapa){
-	global $conn;
-	$porcentajes = busca_filtro_tabla_limit("a.idft_seguimiento,a.porcentaje","ft_seguimiento a, ft_hallazgo b, documento c","a.documento_iddocumento=c.iddocumento and lower(c.estado) not in('eliminado','anulado') and b.idft_hallazgo =a.ft_hallazgo and b.idft_hallazgo=".$idpapa," order by a.idft_seguimiento desc",intval(0),intval(1),$conn);
-	$avance[0]=$porcentajes[0]["porcentaje"];
-	if($avance[0]>=100){
-		$texto="<span style='color:green'>".$avance[0]."%</span>";
-	}
-	else{
-		$texto="<span style='color:red'>".$avance[0]."%</span>";
-	}
-	return $texto;
-}
-/*function avances($idpapa){
-	global $conn;
-	$seguimiento=busca_filtro_tabla("max(porcentaje) as porcentaje,ejecutor","ft_seguimiento a, documento b","ft_hallazgo=".$idpapa." and a.documento_iddocumento=b.iddocumento and b.estado not in('ELIMINADO', 'ANULADO')","group by ejecutor",$conn);
-		
-	if($seguimiento["numcampos"]>1){
-		$suma=0;
-		for($j=0;$j<$seguimiento["numcampos"];$j++){
-			$suma+=$seguimiento[$j]["porcentaje"];
-		}
-		$avance[]=($suma)/($seguimiento["numcampos"]);
-	}
-	else if($seguimiento["numcampos"]==1){
-		$avance[]=$seguimiento[0]["porcentaje"];
-	}
-	else{
-		$avance[]=0;
-	}
-	if($avance[0]>=100){
-		$texto="<span style='color:green'>".$avance[0]."%</span>";
-	}
-	else{
-		$texto="<span style='color:red'>".$avance[0]."%</span>";
-	}
-	return $texto;
-}*/
-?>
+			</center><br /><br /><table style="border-collapse: collapse; width: 100%; attr-margin-left: -33px; font-size:7pt;" border="1"><tr class="encabezado_list"><td style="width:3%"></td><td style="width:8%">Consecutivo hallazgo</td><td style="width:26%">Deficiencia</td><td style="width:18%">Acci&oacute;n de mejoramiento</td><td style="width:10%">Responsables de mejoramiento</td><td style="width:8%">Tiempo programado para cumpliemiento</td><td style="width:12%">Logros alcanzados</td><td style="width:9%">Observaciones</td><td style="width:6%">Avances</td></tr><tr><td><a href="../../formatos/hallazgo/mostrar_hallazgo.php?idformato=390&iddoc=734" target="_blank">Ver</a></td><td style="text-align:center">1</td><td><p>DEFICIENCIA:</p>
+<p>But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give you a complete account of the system, and expound the actual teachings of the great explorer of the truth, the master-builder of human happiness.</p></td><td><p style="text-align: justify;">ACCIÓN CORRECTIVA/PREVENTIVA Y/O MEJORA:</p>
+<p style="text-align: justify;">To take a trivial example, which of us ever undertakes laborious physical exercise, except to obtain some advantage from it? But who has any right to find fault with a man who chooses to enjoy a pleasure that has no annoying consequences, or one who avoids a pain that produces no resultant pleasure?</p></td><td>Sg</td><td style="text-align:center">2016-10-29</td><td><ul><li><p>LOGROS ALCANZADOS:</p>
+<p style="text-align: justify;">On the other hand, we denounce with righteous indignation and dislike men who are so beguiled and demoralized by the charms of pleasure of the moment, so blinded by desire, that they cannot foresee the pain and trouble that are bound to ensue; and equal blame belongs to those who fail in their duty through weakness of will, which is the same as saying through shrinking from toil and pain.</p></li></ul></td><td><ul><li><p>OBSERVACIONES:</p>
+<p style="text-align: justify;">These cases are perfectly simple and easy to distinguish. In a free hour, when our power of choice is untrammelled and when nothing prevents our being able to do what we like best, every pleasure is to be welcomed and every pain avoided.</p></li></ul></td><td><span style='color:red'>50%</span></td></tr>
