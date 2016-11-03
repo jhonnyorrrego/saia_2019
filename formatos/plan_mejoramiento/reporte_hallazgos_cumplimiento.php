@@ -11,7 +11,6 @@ $ruta.="../";
 $max_salida--;
 }
 include_once($ruta_db_superior."db.php");
-include_once($ruta_db_superior."librerias_saia.php");
 include_once($ruta_db_superior."formatos/librerias/funciones_generales.php");
 include_once($ruta_db_superior."formatos/informe_contraloria/funciones.php");
 
@@ -19,7 +18,7 @@ include_once($ruta_db_superior."formatos/informe_contraloria/funciones.php");
 $config = busca_filtro_tabla("valor","configuracion","nombre='color_encabezado'","",$conn); 
 $style = "
      <style type=\"text/css\">
-     INPUT, TEXTAREA, SELECT, body {
+     <!--INPUT, TEXTAREA, SELECT, body {
         font-family: arial; 
         font-size: 10px; 
        } 
@@ -54,7 +53,8 @@ $style = "
     		font-family: arial; 
         font-size: 9px;
     	 }
-
+    	 
+       -->
        </style>";
 echo $style;
 echo reporte();
@@ -90,7 +90,7 @@ function reporte(){
 	
 	$tabla.='<table style="font-size:7pt;border-collapse:collapse; font-family:verdana;" border="1px">';
 	if($hallazgos["numcampos"]){
-		$tabla.='<tr class="encabezado">';
+		$tabla.='<tr class="encabezado_list">';
 		if($_REQUEST["idformato"]!=''){
 			$tabla.='<td style="width:3%"></td>';
 		}
