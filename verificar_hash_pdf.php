@@ -34,5 +34,14 @@ echo( estilo_file_upload() );
                 <input type="file" multiple ng-disabled="disabled"  name="pdf" id="pdf">
         </span>	        
       </div>
-    </div>     
+    </div>  
+	<div class="control-group element">
+	    <div class="controls">
+		    <button type="submit" class="btn btn-mini btn-primary start" >
+		        <i class="glyphicon-upload"></i>
+		        <span>Aceptar</span>
+            </button>   
+        </div>
+    </div>    
+    
 </form>    
