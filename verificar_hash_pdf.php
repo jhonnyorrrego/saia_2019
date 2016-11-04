@@ -96,8 +96,11 @@ if(@$_REQUEST['verificar_hash']){
             </br>
         ";
         if($hash_original[0]['pdf_hash']==$hash_request){
-            
+            $cadena.="<div class='badge alert-success'>El PDF es original</div>";
+        }else{
+            $cadena.="<div class='badge alert-warning'>El PDF fue modificado</div>";
         }
+        echo($cadena);
     }
     
 }
