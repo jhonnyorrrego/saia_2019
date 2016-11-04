@@ -25,7 +25,7 @@ echo( estilo_file_upload() );
       <div class="controls"> 
         <select name="plantilla" id="plantilla" class="required" >
             <?php
-            $plantillas=busca_filtro_tabla("lower(plantilla)","documento","estado NOT IN('ELIMINADO','ANULADO')","plantilla",$conn);
+            $plantillas=busca_filtro_tabla("lower(plantilla)","documento","estado NOT IN('ELIMINADO','ANULADO') GROUP BY plantilla","plantilla ASC",$conn);
             print_r($plantillas);
             ?>
             <option></option>
