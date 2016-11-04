@@ -33,6 +33,18 @@ $dato_padre=busca_filtro_tabla("","expediente a","a.idexpediente=".$_REQUEST["co
 <input type="hidden" name="iddocumento" id="iddocumento" value="<?php echo($_REQUEST["iddocumento"]);?>">
 <input type="hidden" id="cerrar_higslide" value="<?php echo(@$_REQUEST["cerrar_higslide"]);?>">
 <legend>Crear expediente</legend>
+
+
+<div class="control-group element">
+  <label class="control-label" for="agrupador">Agrupador
+  </label>
+  <div class="controls"> 
+		<input type="radio" name="agrupador" id="agrupado0"  value="0" checked>No
+		<input type="radio" name="agrupador" id="agrupado1" value="1" checked>Si
+  </div>
+</div>
+
+
 <?php 
  if($dato_padre['numcampos']){
 ?>
