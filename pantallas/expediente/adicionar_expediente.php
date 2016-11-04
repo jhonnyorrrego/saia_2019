@@ -43,7 +43,14 @@ $dato_padre=busca_filtro_tabla("","expediente a","a.idexpediente=".$_REQUEST["co
 		<input type="radio" name="agrupador" id="agrupado1" value="1">Si
   </div>
 </div>
-
+<script>
+    $(document).ready(function(){
+        $('[name="agrupador"]').click(function(){
+            var valor=$(this).val();
+            alert(valor);
+        });
+    });
+</script>
 
 <?php 
  if($dato_padre['numcampos']){
