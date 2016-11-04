@@ -59,6 +59,8 @@ if(@$_REQUEST['verificar_hash']){
     
     print_r($_REQUEST);
     echo('<br>');
+    echo('<br>');
+    echo('<br>');
     print_r($_FILES);
     
 }
