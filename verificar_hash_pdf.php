@@ -35,13 +35,14 @@ echo( estilo_file_upload() );
                 <input type="file" multiple ng-disabled="disabled"  name="pdf" id="pdf">
         </span>	        
       </div>
-    </div>  
-    <input type="hidden" name="verificar_hash" value="1">
+    </div>
+    
+    
 	<div class="control-group element">
 	    <div class="controls">
 	        <br/>
 	        <br/>
-	        
+	        <input type="hidden" name="verificar_hash" value="1">
 		    <button type="submit" class="btn btn-mini btn-primary start" >
 		        <i class="glyphicon-upload"></i>
 		        <span>Aceptar</span>
@@ -62,6 +63,13 @@ if(@$_REQUEST['verificar_hash']){
     echo('<br>');
     echo('<br>');
     print_r($_FILES);
+    
+    
+    $pdf_original=busca_filtro_tabla("pdf_hash","documento","lower(plantilla)='".$_REQUEST['plantilla']."' AND numero='".$_REQUEST['numero']."'","",$conn);
+    
+    
+    
+    $_FILES["pdf"]["tmp_name"];
     
 }
 
