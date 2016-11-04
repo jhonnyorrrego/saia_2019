@@ -18,6 +18,22 @@ echo( estilo_file_upload() );
 <form action="verificar_hash_pdf.php" method="POST" enctype="multipart/form-data">
     <legend>Crear expediente</legend>
 
+
+    <div class="control-group element">
+      <label class="control-label" for="plantilla">Numero de Radicado *
+      </label>
+      <div class="controls"> 
+        <select name="plantilla" id="plantilla" class="required" >
+            <?php
+            $plantillas=busca_filtro_tabla("lower(plantilla)","documento","estado NOT IN('ELIMINADO','ANULADO')","plantilla",$conn);
+            print_r($plantillas);
+            ?>
+            <option></option>
+        </select>
+      </div>
+    </div>  
+
+
     <div class="control-group element">
       <label class="control-label" for="numero">Numero de Radicado *
       </label>
