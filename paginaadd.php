@@ -1,5 +1,9 @@
 <?php
 include_once ("db.php");
+
+require_once('webservice_saia/vendor/autoload.php');
+use \Firebase\JWT\JWT;
+
 if (@$_REQUEST["iddoc"] || @$_REQUEST["key"]) {
   include_once ("pantallas/documento/menu_principal_documento.php");
   if (!$_REQUEST["iddoc"])
@@ -28,7 +32,7 @@ else
 if($key!=0 && $key!=""){
   $idformato=busca_filtro_tabla("idformato","formato f,documento d","lower(f.nombre)=lower(d.plantilla) and iddocumento=".$key,"",$conn);
   if($idformato["numcampos"] && $sAction==""){
-   llama_funcion_accion($key,$idformato[0][0],"digitalizar","ANTERIOR"); 
+   llama_funcion_accion($key,$idformato[0][0],"digitalizar","ANTERIOR");
   }
 }
 
@@ -82,7 +86,7 @@ if ($_REQUEST["mostrar_formato"]) {
       if (sincronizar_carpetas($tabla, $conn)) {// Add New Record
        if($key && $idformato[0][0]){
           llama_funcion_accion($key,$idformato[0][0],"digitalizar","POSTERIOR");
-       }    
+       }
       }
       if ($x_escaneo == "1") {
         $x_enlace = "paginaadd.php?key=" . $key . "&" . $x_enlace;
@@ -173,83 +177,62 @@ if ($_REQUEST["mostrar_formato"]) {
 	<input type="hidden" name="a_add" value="A">
 	<?php
   $dir = "";
-  $dir2 = "";
-  $dir3 = "";
+  $ruta_ftp = "";
+  $temporal_usuario = "";
   $usuario = "";
   $clave = "";
   $puerto_ftp = 21;
+  $params = array();
   $configuracion["numcampos"] = 0;
   $configuracion = busca_filtro_tabla("A.*", "configuracion A", "tipo='ruta' OR tipo='clave' OR tipo='usuario' or tipo='peso' OR tipo='imagen' OR tipo='ftp'", "", $conn);
   for ($i = 0; $i < $configuracion["numcampos"]; $i++) {
     switch($configuracion[$i]["nombre"]) {
       case "ruta_servidor" :
         $dir = $configuracion[$i]["valor"];
+	$params["host"]= $configuracion[$i]["valor"];
         break;
       case "ruta_ftp" :
-        $dir2 = $configuracion[$i]["valor"] . "_" . $_SESSION["LOGIN" . LLAVE_SAIA];
+        $ruta_ftp = $configuracion[$i]["valor"] . "_" . $_SESSION["LOGIN" . LLAVE_SAIA];
+	$params["dftp"]= $configuracion[$i]["valor"] . "_" . $_SESSION["LOGIN" . LLAVE_SAIA];
         break;
       case "ruta_temporal" :
-        $dir3 = $configuracion[$i]["valor"] . "_" . $_SESSION["LOGIN" . LLAVE_SAIA];
+        $temporal_usuario = $configuracion[$i]["valor"] . "_" . $_SESSION["LOGIN" . LLAVE_SAIA];
+	$params["url"]= $configuracion[$i]["valor"] . "_" . $_SESSION["LOGIN" . LLAVE_SAIA];
         break;
       case "puerto_ftp" :
         $puerto_ftp = $configuracion[$i]["valor"];
+	if(empty($configuracion[$i]["valor"])) {
+		$params["port"]= 21;
+	} else {
+		$params["port"]= $configuracion[$i]["valor"];
+	}
         break;
       case "clave_ftp" :
         $clave = $configuracion[$i]["valor"];
+	$params["clave"]= $configuracion[$i]["valor"];
         break;
       case "usuario_ftp" :
         $usuario = $configuracion[$i]["valor"];
+	$params["usuario"]= $configuracion[$i]["valor"];
         break;
       case "maximo_tamanio_upload" :
         $peso = $configuracion[$i]["valor"];
         break;
       case "ancho_imagen" :
         $ancho = $configuracion[$i]["valor"];
+	$params["ancho"]= $configuracion[$i]["valor"];
         break;
       case "alto_imagen" :
         $alto = $configuracion[$i]["valor"];
+	$params["alto"]= $configuracion[$i]["valor"];
         break;
     }
   }
-  /*function LoadData($sKey, $conn) {
-    global $_SESSION;
-    global $x_consecutivo;
-    global $x_id_documento;
-    global $x_imagen;
-    global $x_pagina;
-    $sKeyWrk = "" . addslashes($sKey) . "";
-    $sSql = "SELECT * FROM pagina";
-    $sSql .= " WHERE consecutivo = " . $sKeyWrk;
-    $sGroupBy = "";
-    $sHaving = "";
-    $sOrderBy = "";
-    if ($sGroupBy <> "") {
-      $sSql .= " GROUP BY " . $sGroupBy;
-    }
-    if ($sHaving <> "") {
-      $sSql .= " HAVING " . $sHaving;
-    }
-    if ($sOrderBy <> "") {
-      $sSql .= " ORDER BY " . $sOrderBy;
-    }
-    $rs = phpmkr_query($sSql, $conn) or error("PROBLEMAS AL EJECUTAR LA B�SQUEDA" . phpmkr_error() . ' SQL:' . $sSql);
-    if (phpmkr_num_rows($rs) == 0) {
-      $LoadData = false;
-    } else {
-      $LoadData = true;
-      $row = phpmkr_fetch_array($rs);
-      $x_consecutivo = $row["consecutivo"];
-      $x_id_documento = $row["id_documento"];
-      $x_imagen = $row["imagen"];
-      $x_pagina = $row["pagina"];
-    }
-    phpmkr_free_result($rs);
-    return $LoadData;
-  }*/
 	?>
+
 	<input type="hidden" name="EW_Max_File_Size" value="<?php echo($peso); ?>">
 	<input type="hidden" name="x_enlace" value="<?php echo($x_enlace); ?>">
-	<table style="display:none;" width="100%"  border="0" cellpadding="4" cellspacing="1" bgcolor="#CCCCCC">
+	<table width="100%"  border="0" cellpadding="4" cellspacing="1" bgcolor="#CCCCCC">
 		<tr>
 			<td width="205" class="encabezado" ><span class="phpmaker" style="color: #FFFFFF;">DOCUMENTO
 				ASOCIADO</span></td>
@@ -258,12 +241,12 @@ if ($_REQUEST["mostrar_formato"]) {
         $x_id_documento = $key;
       else
         $x_id_documento = 0;
-      if (!is_dir($dir3)) {
-        if (!mkdir($dir3, PERMISOS_CARPETAS))
+      if (!is_dir($temporal_usuario)) {
+        if (!mkdir($temporal_usuario, PERMISOS_CARPETAS))
           alerta("no es posible crear una carpeta temporal para su usuario por favor comuniquese con el administrador", 'error', 5000);
         volver("1");
       }
-      chmod($dir3, PERMISOS_CARPETAS);
+      chmod($temporal_usuario, PERMISOS_CARPETAS);
 				?>
 				<input type="hidden" name="x_id_documento" id="x_id_documento" size="30" value="<?php echo htmlspecialchars(@$x_id_documento) ?>">
 				<?php
@@ -281,7 +264,7 @@ if ($_REQUEST["mostrar_formato"]) {
 				<input type="submit" name="Action" value="CONTINUAR" />
 			</span><div align="center"></div></td>
 		</tr>
-		<tr S> 
+		<tr>
 			<td width="205" class="encabezado" ><span class="phpmaker" style="color: #FFFFFF;">ESCANEAR DE NUEVO</span></td>
 			<td width="335" bgcolor="#F5F5F5"><span class="phpmaker"> SI
 				<input type="radio" name="x_escaneo" value="1">
@@ -289,174 +272,65 @@ if ($_REQUEST["mostrar_formato"]) {
 				<input type="radio" name="x_escaneo" value="0" checked>
 			</span></td>
 		</tr>
-		
-		
-		<!--tr>
-			<td colspan="3">
-			<applet code="uk.co.mmscomputing.application.imageviewer.MainApp.class"  archive="visor.jar" width="100%" height="640" name="scaner">
-				<param name="url" value="<?php print($dir3); ?>">
-				<param name="radica" value="<?php print($key); ?>">
-				<param name="port" value="<?php print($puerto_ftp); ?>">
-				<param name="host" value="<?php print($dir); ?>">
-				<param name="usuario" value="<?php print($usuario); ?>">
-				<param name="dftp" value="<?php print($dir2); ?>">
-				<param name="clave" value="<?php print($clave); ?>">
-				<param name="verLog" value="false">
-				<param name="ancho" value="<?php print($ancho); ?>">
-				<param name="alto" value="<?php print($alto); ?>">
-				<param name="maxtabs" value="50">
-			</applet></td>
-		</tr-->
+
 	</table>
 	<div class="container" id="info_scanner"></div>
-	
-	
+
+
 </form>
 
 
 <?php
+//TODO: Descomentar si no se pueden usar json web tokens
+//$datos = json_encode($params);
+$params["radica"]= $key;
+$params["verLog"]=true;
+$params["maxtabs"]=50;
+$datos = "jwt_data=" . getToken($params);
+file_put_contents($temporal_usuario . "/filas.txt", $datos);
+//print_r($params);
 //poner notificaciones noty
-include_once("librerias_saia.php");
-	global $raiz_saia;
-	$raiz_saia='';
-    echo(librerias_notificaciones());
+
+function getToken($params) {
+global $ruta_db_superior;
+    $tokenId    =  uniqid();
+    $issuedAt   = time();
+    $notBefore  = $issuedAt;             //Adding 10 seconds
+    $expire     = $notBefore + 3600;            // Adding 3600 seconds
+    $serverName = $_SERVER['SERVER_ADDR']; // Retrieve the server name from config file
+    
+    $data = array(
+	    'sub' => 'scanner',
+        'iat'  => $issuedAt,         // Issued at: time when the token was generated
+        'jti'  => $tokenId,          // Json Token Id: an unique identifier for the token
+        'iss'  => $serverName,       // Issuer
+        'nbf'  => $notBefore,        // Not before
+        'exp'  => $expire           // Expire
+    );
+
+    $data['data'] = $params;
+
+    $secretKey = "cerok_saia421_5";
+    
+    $jwt = JWT::encode(
+        $data,      //Data to be encoded in the JWT
+        $secretKey, // The signing key
+        'HS512'     // Algorithm used to sign the token, see https://tools.ietf.org/html/draft-ietf-jose-json-web-algorithms-40#section-3
+        );
+        
+    return $jwt;
+}
 
 
-    $s_https='';
-    if(PROTOCOLO_CONEXION=='https://'){
-        $s_https='s';
-    }
 ?>
 
 
 
-          
 
-        
-            <div id="output"></div>	
 
-    <script language="javascript" type="text/javascript">
-        //var wsUri = "ws://echo.websocket.org/";
-        //var wsUri = "ws://localhost:8025/";
-        var wsUri = "ws<?php echo($s_https); ?>://localhost:8887/websockets/wsocketservice";
-        var output;
-        var websocket;
-        var clientId;
 
-        function init() {
-            output = document.getElementById("output");
-            testWebSocket();
-        }
+            <div id="output"></div>
 
-        function getUid() {
-            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-                var r = Math.random() * 16 | 0,
-                        v = c == 'x' ? r : (r & 0x3 | 0x8);
-                return v.toString(16);
-            });
-        }
 
-        function testWebSocket() {
-            try {
-                websocket = new WebSocket(wsUri);
-            } catch (ex) {
-               alert(ex.message);
-               return false;
-            }
-            clientId = getUid();
-            websocket.onopen = function (evt) {
-                onOpen(evt);
-            };
-            websocket.onclose = function (evt) {
-                onClose(evt);
-            };
-            websocket.onmessage = function (evt) {
-                onMessage(evt);
-            };
-            websocket.onerror = function (evt) {
-                
-                
-                onError(evt);
-            };
-        }
 
-        function onOpen(evt) {
-             notificacion_saia('Ejecutando Scanner...','success','',1500);
-             $('#info_scanner').html('<div class="well alert-success" style="text-align:center;"><span style="font-wight:bold;">ATENCI&Oacute;N<br/> El Scanner se encuentra en Ejecuci&oacute;n!</span></div>');
-             enviarMensaje();
-        }
 
-        function onClose(evt) {
-            clientId = null;
-        }
-
-        function onMessage(evt) {
-            var mensaje = JSON.parse(evt.data);
-            switch(mensaje.cmd) {
-                case "CMD_ERR":
-                    
-                    break;
-                case "CMD_END":
-                	$("[name='Action']").click(); //REDIRECCIONA AL CERRAR SCANNER
-                    break;
-                case "CMD_DBG": //Mensaje de depuracion
-                    console.log(evt.data);
-                    break;
-                default:
-                   // writeToScreen('<span style="color: blue;">MENSAJE DESCONOCIDO: ' + evt.data + '</span>');
-            } 
-            //websocket.close();
-        }
-
-        function onError(evt) {
-             notificacion_saia('<span style="color:white;">El Scanner No se encuentra ejecutado!</span>','error','',4000);
-        }
-
-        function doSend(message) {
-            //writeToScreen("SENT: " + message);
-            websocket.send(message);
-        }
-
-        function writeToScreen(message) {
-            var pre = document.createElement("p");
-            pre.style.wordWrap = "break-word";
-            pre.innerHTML = message;
-            output.appendChild(pre);
-        }
-
-        window.addEventListener("load", init, false);
-
-        function enviarMensaje() {
-            
-            if(!websocket || websocket.readyState == 3) {
-                testWebSocket();
-            }
-            
-                var data = {
-                    "url": "<?php print($dir3); ?>",
-                    "radica": "<?php print($key); ?>",
-                    "port": "<?php print($puerto_ftp); ?>",
-                    "host": "<?php print($dir); ?>",
-                    "usuario": "<?php print($usuario); ?>",
-                    "dftp": "<?php print($dir2); ?>",
-                    "clave": "<?php print($clave); ?>",
-                    "verLog": "false",
-                    "ancho": "<?php print($ancho); ?>",
-                    "alto": "<?php print($alto); ?>",
-                    "maxtabs": "50",
-                    "fileFilter" : "jpg,png,pdf,tiff,tif,doc,docx"
-                };
-                var msg = {
-                    clientId: clientId,
-                    cmd: "CMD_INIT",
-                    text: "Digitalizacion Saia",
-                    data: data,
-                    date: Date.now()
-                };
-                doSend(JSON.stringify(msg));
-        
-        }
-    </script>
-    
-    
- 
