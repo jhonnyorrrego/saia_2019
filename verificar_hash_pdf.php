@@ -36,12 +36,12 @@ echo( estilo_file_upload() );
         </span>	        
       </div>
     </div>  
-    
+    <input type="hidden" name="verificar_hash" value="1">
 	<div class="control-group element">
 	    <div class="controls">
 	        <br/>
 	        <br/>
-	        <input type="hidden" name="verificar_hash" value="1">
+	        
 		    <button type="submit" class="btn btn-mini btn-primary start" >
 		        <i class="glyphicon-upload"></i>
 		        <span>Aceptar</span>
