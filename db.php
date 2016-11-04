@@ -4138,9 +4138,12 @@ $cadena1=str_replace("||"," LIKE ",$cadena1);
 return $cadena1;
 }
 
-function obtener_codigo_hash_pdf($archivo,$algoritmo="crc32"){
+function obtener_codigo_hash_pdf($archivo,$algoritmo="crc32",$tmp=0){
     global $ruta_db_superior;
     
+    if($tmp){
+        $ruta_db_superior='';
+    }
     return( hash_file($algoritmo,$ruta_db_superior.$archivo) );
 }
 
