@@ -12,10 +12,17 @@ include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."librerias_saia.php");
 echo(librerias_jquery('1.7'));
 echo( estilo_bootstrap() );
-
-
-
-
-
-
 ?>
+
+<form name="formulario_expediente" id="formulario_expediente">
+    <legend>Crear expediente</legend>
+    
+    <div class="control-group element">
+      <label class="control-label" for="nombre">Numero de Radicado *
+      </label>
+      <div class="controls"> 
+        <input type="text" name="numero" id="numero" class="required" >
+      </div>
+    </div>
+    
+</form>    
