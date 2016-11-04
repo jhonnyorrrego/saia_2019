@@ -15,7 +15,7 @@ echo( estilo_bootstrap() );
 echo( estilo_file_upload() );
 ?>
 
-<form name="formulario_expediente" id="formulario_expediente">
+<form action="verificar_hash_pdf.php" method="POST">
     <legend>Crear expediente</legend>
 
     <div class="control-group element">
@@ -26,7 +26,7 @@ echo( estilo_file_upload() );
       </div>
     </div>    
     <div class="control-group element">
-      <label class="control-label" for="pdf">Numero de Radicado *
+      <label class="control-label" for="pdf">Pdf *
       </label>
       <div class="controls"> 
         <span class="btn btn-mini btn-default fileinput-button" ng-class="{disabled: disabled}" style="margin-left:40px;" id="contenedor_pdf">
