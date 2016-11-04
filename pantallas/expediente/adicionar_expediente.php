@@ -47,7 +47,17 @@ $dato_padre=busca_filtro_tabla("","expediente a","a.idexpediente=".$_REQUEST["co
     $(document).ready(function(){
         $('[name="agrupador"]').click(function(){
             var valor=$(this).val();
-            alert(valor);
+            
+            
+            if(valor){ //agrupador = 1
+                
+            }else{ // no es agrupador = 0
+                
+            }
+            
+            
+            
+            
         });
     });
 </script>
