@@ -33,9 +33,18 @@ $dato_padre=busca_filtro_tabla("","expediente a","a.idexpediente=".$_REQUEST["co
 <input type="hidden" name="iddocumento" id="iddocumento" value="<?php echo($_REQUEST["iddocumento"]);?>">
 <input type="hidden" id="cerrar_higslide" value="<?php echo(@$_REQUEST["cerrar_higslide"]);?>">
 <legend>Crear expediente</legend>
+<?php 
+ if($dato_padre['numcampos']){
+?>
 <div class="control-group element">
 	Este quedar&aacute; vinculado al expediente <b><?php echo($dato_padre[0]["nombre"]); ?></b> 
 </div>
+
+<?php
+ }
+?>
+
+
 <div class="control-group element">
   <label class="control-label" for="fecha">Fecha de creaci&oacute;n *
   </label>
