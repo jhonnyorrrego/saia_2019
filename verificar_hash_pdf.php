@@ -25,10 +25,12 @@ echo( estilo_file_upload() );
       <div class="controls"> 
         <select name="plantilla" id="plantilla" class="required" >
             <?php
-            $plantillas=busca_filtro_tabla("lower(a.plantilla),b.etiqueta","documento a, formato b","lower(a.plantilla)=b.nombre AND a.estado NOT IN('ELIMINADO','ANULADO') GROUP BY a.plantilla","b.etiqueta ASC",$conn);
-            print_r($plantillas);
+                $plantillas=busca_filtro_tabla("lower(a.plantilla),b.etiqueta","documento a, formato b","lower(a.plantilla)=b.nombre AND a.estado NOT IN('ELIMINADO','ANULADO') GROUP BY a.plantilla","b.etiqueta ASC",$conn);
+                for($i=0;$i<$plantillas['numcampos'];$i++){
+                    echo('<option value="'.$plantillas[$i]['plantilla'].'">'.$plantillas[$i]['etiqueta'].'</option>');
+                }
             ?>
-            <option></option>
+            
         </select>
       </div>
     </div>  
