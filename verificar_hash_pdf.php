@@ -39,6 +39,7 @@ echo( estilo_file_upload() );
     
 	<div class="control-group element">
 	    <div class="controls">
+	        <br/>
 		    <button type="submit" class="btn btn-mini btn-primary start" >
 		        <i class="glyphicon-upload"></i>
 		        <span>Aceptar</span>
