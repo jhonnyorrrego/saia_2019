@@ -51,3 +51,19 @@ echo( estilo_file_upload() );
     
 </form> 
 </div>
+
+
+<?php 
+
+if(@$_REQUEST['verificar_hash']){
+    
+    print_r($_REQUEST);
+    echo('<br>');
+    print_r($_FILES);
+    
+}
+
+
+?>
+
+
