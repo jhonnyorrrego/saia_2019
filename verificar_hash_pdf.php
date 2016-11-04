@@ -12,6 +12,7 @@ include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."librerias_saia.php");
 echo(librerias_jquery('1.7'));
 echo( estilo_bootstrap() );
+echo( estilo_file_upload() );
 ?>
 
 <form name="formulario_expediente" id="formulario_expediente">
