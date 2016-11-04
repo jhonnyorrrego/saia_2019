@@ -29,7 +29,10 @@ echo( estilo_file_upload() );
       <label class="control-label" for="pdf">Numero de Radicado *
       </label>
       <div class="controls"> 
-        <input type="file" name="pdf" id="pdf" class="required" >
+        <span class="btn btn-mini btn-default fileinput-button" ng-class="{disabled: disabled}" style="margin-left:40px;" id="contenedor_pdf">
+            <span>Examinar</span>
+                <input type="file" multiple ng-disabled="disabled"  name="pdf" id="pdf">
+        </span>	        
       </div>
     </div>     
 </form>    
