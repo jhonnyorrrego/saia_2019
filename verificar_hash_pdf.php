@@ -15,7 +15,7 @@ echo( estilo_bootstrap() );
 echo( estilo_file_upload() );
 ?>
 <div class="container">
-<form action="verificar_hash_pdf.php" method="POST">
+<form action="verificar_hash_pdf.php" method="POST" enctype="multipart/form-data">
     <legend>Crear expediente</legend>
 
     <div class="control-group element">
