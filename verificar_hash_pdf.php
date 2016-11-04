@@ -85,11 +85,20 @@ if(@$_REQUEST['verificar_hash']){
     print_r($_FILES);
     
     
-    $pdf_original=busca_filtro_tabla("pdf_hash","documento","lower(plantilla)='".$_REQUEST['plantilla']."' AND numero='".$_REQUEST['numero']."'","",$conn);
-    
-    
-    
-    $_FILES["pdf"]["tmp_name"];
+    $hash_original=busca_filtro_tabla("pdf_hash","documento","lower(plantilla)='".$_REQUEST['plantilla']."' AND numero='".$_REQUEST['numero']."'","",$conn);
+    $hash_request=obtener_codigo_hash_pdf($_FILES["pdf"]["tmp_name"],"crc32",1);
+    if($hash_original['numcampos']){
+        $cadena="";
+        $cadena.="
+            Hash radicado: ".$hash_original[0]['pdf_hash']."
+            </br>
+            Hash Adjunto: ".$hash_request."
+            </br>
+        ";
+        if($hash_original[0]['pdf_hash']==$hash_request){
+            
+        }
+    }
     
 }
 
