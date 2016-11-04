@@ -14,7 +14,7 @@ echo(librerias_jquery('1.7'));
 echo( estilo_bootstrap() );
 echo( estilo_file_upload() );
 ?>
-
+<div class="container">
 <form action="verificar_hash_pdf.php" method="POST">
     <legend>Crear expediente</legend>
 
@@ -47,4 +47,5 @@ echo( estilo_file_upload() );
         </div>
     </div>    
     
-</form>    
+</form> 
+</div>
