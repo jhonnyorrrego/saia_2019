@@ -272,12 +272,13 @@ class Imprime_Pdf {
 		
 		chmod($nombre_pdf,0777);
 		if($this->tipo_salida == "FI" && $this->documento[0]["estado"] != 'ACTIVO') {
-			
+			$codigo_hash=obtener_codigo_hash_pdf($nombre_pdf,'crc32'); 
 			$paginas_pdf = $this->pdf->getNumPages();
-			phpmkr_query("update documento set paginas='" . $paginas_pdf . "',pdf='" . $nombre_pdf . "' where iddocumento=" . $this->documento[0]["iddocumento"]);
+			phpmkr_query("update documento set paginas='" . $paginas_pdf . "',pdf='" . $nombre_pdf . "',pdf_hash='".$codigo_hash."' where iddocumento=" . $this->documento[0]["iddocumento"]);
 		} else if($this->tipo_salida == "FI" && $this->formato[0]["mostrar_pdf"] == 1) {
+		    $codigo_hash=obtener_codigo_hash_pdf($nombre_pdf,'crc32'); 
 			$paginas_pdf = $this->pdf->getNumPages();
-			phpmkr_query("update documento set paginas='" . $paginas_pdf . "',pdf='" . $nombre_pdf . "' where iddocumento=" . $this->documento[0]["iddocumento"]);
+			phpmkr_query("update documento set paginas='" . $paginas_pdf . "',pdf='" . $nombre_pdf . "',pdf_hash='".$codigo_hash."' where iddocumento=" . $this->documento[0]["iddocumento"]);
 		} else if($this->tipo_salida == "I") {
 			if($this->imprimir_vistas) {
 				$this->tipo_salida = "FI";
