@@ -16,13 +16,19 @@ echo( estilo_bootstrap() );
 
 <form name="formulario_expediente" id="formulario_expediente">
     <legend>Crear expediente</legend>
-    
+
     <div class="control-group element">
-      <label class="control-label" for="nombre">Numero de Radicado *
+      <label class="control-label" for="numero">Numero de Radicado *
       </label>
       <div class="controls"> 
         <input type="text" name="numero" id="numero" class="required" >
       </div>
-    </div>
-    
+    </div>    
+    <div class="control-group element">
+      <label class="control-label" for="pdf">Numero de Radicado *
+      </label>
+      <div class="controls"> 
+        <input type="file" name="pdf" id="pdf" class="required" >
+      </div>
+    </div>     
 </form>    
