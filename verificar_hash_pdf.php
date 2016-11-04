@@ -88,6 +88,7 @@ if(@$_REQUEST['verificar_hash']){
             </br>
             Hash Adjunto: ".$hash_request."
             </br>
+            </br>
         ";
         if($hash_original[0]['pdf_hash']==$hash_request){
             $cadena.="<div class='badge alert-success'>El PDF es original</div>";
