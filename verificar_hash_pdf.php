@@ -78,13 +78,6 @@ echo( estilo_file_upload() );
 
 if(@$_REQUEST['verificar_hash']){
     
-    print_r($_REQUEST);
-    echo('<br>');
-    echo('<br>');
-    echo('<br>');
-    print_r($_FILES);
-    
-    
     $hash_original=busca_filtro_tabla("pdf_hash","documento","lower(plantilla)='".$_REQUEST['plantilla']."' AND numero='".$_REQUEST['numero']."'","",$conn);
     $hash_request=obtener_codigo_hash_pdf($_FILES["pdf"]["tmp_name"],"crc32",1);
     if($hash_original['numcampos']){
