@@ -24,7 +24,8 @@ echo( estilo_file_upload() );
       <div class="controls"> 
         <input type="text" name="numero" id="numero" class="required" >
       </div>
-    </div>    
+    </div>  
+    
     <div class="control-group element">
       <label class="control-label" for="pdf">Pdf *
       </label>
@@ -35,6 +36,7 @@ echo( estilo_file_upload() );
         </span>	        
       </div>
     </div>  
+    
 	<div class="control-group element">
 	    <div class="controls">
 		    <button type="submit" class="btn btn-mini btn-primary start" >
