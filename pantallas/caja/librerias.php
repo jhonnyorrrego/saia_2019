@@ -1,12 +1,36 @@
 <?php
 function barra_superior_busqueda(){
-	return('
+    $permiso=new Permiso();
+    $ok2=$permiso->acceso_modulo_perfil('transferencia_doc');
+    
+	$cadena='
 	<li class="divider-vertical"></li>                          
 	<li>            
 	 <div class="btn-group">                    
 	    <button class="btn btn-mini" id="adicionar_caja" idbusqueda_componente="'.$_REQUEST["idbusqueda_componente"].'" title="Adicionar caja" enlace="pantallas/caja/adicionar_caja.php?div_actualiza=resultado_busqueda'.$_REQUEST["idbusqueda_componente"].'&target_actualiza=parent&idbusqueda_componente='.$_REQUEST["idbusqueda_componente"].'">Adicionar Caja</button>
 	  </div>
-	</li>');
+	</li>';
+	if($ok2){
+		$cadena.='<li class="divider-vertical"></li>                          
+		<li>
+		 <div class="btn-group">                    
+		    <button class="btn btn-mini" id="transferencia_documental" titulo="Transferencia documental">Transferencia documental</button>                                            
+		  </div>    
+		</li>
+		<script>
+		$("#transferencia_documental").click(function(){
+			var seleccionados=$("#seleccionados_expediente").val();
+			if(seleccionados){
+				enlace_katien_saia("formatos/transferencia_doc/adicionar_transferencia_doc.php?id="+seleccionados,"Transferencia documental","iframe","");
+			}
+			else{
+				alert("Seleccione por lo menos un expediente");
+			}
+		});
+		</script>';
+	}	
+	
+	return($cadena);
 }
 function asignar_caja($idcaja, $tipo_entidad, $llave_entidad, $permiso="", $indice=1){
 	global $conn;
