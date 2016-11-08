@@ -58,6 +58,13 @@ function enlaces_adicionales_caja($idcaja,$numero){
 	$texto='<div class="btn btn-mini eliminar_caja tooltip_saia pull-right" idregistro="'.$idcaja.'" title="Eliminar '.$numero.'"><i class="icon-remove"></i></div>';
 	$texto.='<div class="btn btn-mini enlace_caja tooltip_saia pull-right" idregistro="'.$idcaja.'" title="Editar '.$numero.'" enlace="pantallas/caja/editar_caja.php?idcaja='.$idcaja.'"><i class="icon-pencil"></i></div>';
 	$texto.='<div class="btn btn-mini link kenlace_saia tooltip_saia pull-right" title="Imprimir rotulo" titulo="Imprimir rotulo" enlace="pantallas/caja/rotulo.php?idcaja='.$idcaja.'" conector="iframe" onclick=" "><i class="icon-print"></i></div>';
+	
+	$mostrar_seleccionar='';
+	/*if($estado_cierre==1){
+	    $mostrar_seleccionar='style="display:none;"';
+	}*/	
+	$texto.='<div id="seleccionados_expediente_'.$idexpediente.'" idregistro=\''.$idexpediente.'\' titulo=\'Seleccionar\' class=\'btn btn-mini tooltip_saia adicionar_seleccionados_expediente pull-right\' '.$mostrar_seleccionar.'><i class=\'icon-uncheck\' ></i></div>';	
+	
 	return($texto);
 }
 function obtener_descripcion_caja($fondo,$seccion,$subseccion,$codigo){
