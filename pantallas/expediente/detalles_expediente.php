@@ -242,7 +242,8 @@ if($expediente[0]["estado_cierre"]==2){  //si esta cerrado
     $fecha_cierre=$datos_cierre[0]['fecha_cierre'];
     
     if($datos_cierre[0]['estado_cierre']==2){
-        $dias_calcular=365*$datos_serie[0]["retencion_".$vector_estado_expediente[$estado_expediente]];
+        //$dias_calcular=365*$datos_serie[0]["retencion_".$vector_estado_expediente[$estado_expediente]];
+        $dias_calcular=0;
         include_once($ruta_db_superior."pantallas/lib/librerias_fechas.php");
         $fecha_calculo=calculaFecha("days",+$dias_calcular,$fecha_cierre);
         $interval=resta_dos_fechas_saia(date('Y-m-d'),$fecha_calculo);
