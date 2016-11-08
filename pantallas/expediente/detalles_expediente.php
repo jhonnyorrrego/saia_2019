@@ -263,7 +263,7 @@ if($expediente[0]["estado_cierre"]==2){  //si esta cerrado
         
         $cadena_inicial='Faltan ';
         $color='green';
-        if($interval_mes<=2 && $interval_anio==0 && $interval_dia==0){
+        if($interval_mes<=2 && $interval_anio==0 && $interval_dia==0 && $interval_hora==0 && $interval_minuto==0 && $interval_segundo==0){
             $color='orange';
         }
         
