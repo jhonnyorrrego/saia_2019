@@ -25,7 +25,7 @@ function barra_superior_busqueda(){
 				enlace_katien_saia("formatos/transferencia_doc/adicionar_transferencia_doc.php?id_caja="+seleccionados,"Transferencia documental","iframe","");
 			}
 			else{
-				alert("Seleccione por lo menos un expediente");
+				alert("Seleccione por lo menos una caja");
 			}
 		});
 		</script>';
