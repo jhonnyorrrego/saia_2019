@@ -236,7 +236,8 @@ if($expediente[0]["estado_cierre"]==2){  //si esta cerrado
     
     $fecha_cierre=$expediente[0]["fecha_cierre"];
     $serie_idserie=$expediente[0]["serie_idserie"];
-    
+    $datos_serie=busca_filtro_tabla("","serie","idserie=".$serie_idserie,"",$conn);
+    print_r($datos_serie);die();
     ?>
         <script>
             console.log('<?php echo($fecha_cierre.'  -  '.$serie_idserie); ?>');
