@@ -213,8 +213,25 @@ function cambiar_estado_expedientes($idformato,$iddoc){
 	global $conn;
 	
 	$datos=busca_filtro_tabla("a.expediente_vinculado, a.transferir_a","ft_transferencia_doc a","a.documento_iddocumento=".$iddoc,"",$conn);
-	$expedientes=explode(",",$datos[0]["expediente_vinculado"]);
-	obtener_expedientes_hijos($datos[0]["expediente_vinculado"],$expedientes,1);
+	
+    $mystring = $datos[0]["expediente_vinculado"];
+    $findme   = 'cajas_';
+    $pos = strpos($mystring, $findme);
+    
+    if ($pos !== false) {  //son cajas
+        //fue encontrada
+        $ids_caja = trim($datos[0]["expediente_vinculado"], "cajas_");
+        $busca_expediente=busca_filtro_tabla("idexpediente","expediente","fk_idcaja IN(".$ids_caja.")","",$conn);
+        
+        
+        
+    }else{
+    	$expedientes=explode(",",$datos[0]["expediente_vinculado"]);
+    	obtener_expedientes_hijos($datos[0]["expediente_vinculado"],$expedientes,1);        
+    } 	
+	
+	
+
 	
 	$sql1="update expediente set estado_archivo=".$datos[0]["transferir_a"]." where idexpediente in(".implode(",",$expedientes).")";
 	phpmkr_query($sql1);
