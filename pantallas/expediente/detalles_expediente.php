@@ -67,7 +67,7 @@ $expediente=busca_filtro_tabla("a.*,".fecha_db_obtener("a.fecha","Y-m-d")." AS f
   <?php
       if($expediente[0]["agrupador"]){
         
-        echo('</table></div></div></body></html>');
+        echo('</table></div></div>');
         echo('
         <script>
             $(document).ready(function(){
@@ -80,7 +80,7 @@ $expediente=busca_filtro_tabla("a.*,".fecha_db_obtener("a.fecha","Y-m-d")." AS f
                     $(this).prev().children("i").addClass("icon-minus-sign");
                 });
             });    
-        </script>
+        </script></body></html>
         ');
         
         die();
