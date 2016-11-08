@@ -250,7 +250,7 @@ if($expediente[0]["estado_cierre"]==2){  //si esta cerrado
         $interval=resta_dos_fechas_saia(date('Y-m-d'),$fecha_calculo);
         
         
-        $interval_pos_neg=$interval->invert;  //1: aun no llega la fecha, else: ya se paso la fecha
+        $interval_pos_neg=$interval->invert;  //Es 1 si el intervalo representa un periodo de tiempo negativo y 0 si no
         $interval_diferencia=$interval->days; //dias de diferencia
         $interval_anio=$interval->y;
         $interval_mes=$interval->m;
@@ -265,9 +265,9 @@ if($expediente[0]["estado_cierre"]==2){  //si esta cerrado
         $horas_minutos_segundos_parseados=( conversor_segundos_hm(intval($segundos)) );
         
         
-        $cadena_final='Hace ';
+        $cadena_final='Faltan ';
         if($interval_pos_neg==1){
-            $cadena_final='Faltan ';
+            $cadena_final='Hace ';
         }
         
         $cadena_final.=$interval_anio.' años, ';
