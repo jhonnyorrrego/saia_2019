@@ -261,8 +261,10 @@ if($expediente[0]["estado_cierre"]==2){  //si esta cerrado
         $cadena_final='';
         
         $cadena_inicial='Faltan ';
+        $color='green';
         if($interval_pos_neg==1){
             $cadena_inicial='Hace ';
+            $color='red';
         }        
         if($interval_anio>0){
             $cadena_final.=$interval_anio.' años, ';
