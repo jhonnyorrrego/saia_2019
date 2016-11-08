@@ -54,7 +54,9 @@ function guardar_expedientes_add($idformato,$iddoc){
 	    $ids_caja=$_REQUEST['id_caja'];
         $caja=busca_filtro_tabla("no_consecutivo","caja","idcaja IN(".$ids_caja.")","",$conn);
 		$etiquetas=extrae_campo($caja,"no_consecutivo","");
-		$texto.="<td><ul><li>Caja: ".implode("</li><li>Caja: ",$etiquetas)."</li></ul>
+		$pre_titulo="<b>Caja:</b> ";
+		
+		$texto.="<td><ul><li>".$pre_titulo.implode("</li><li>".$pre_titulo,$etiquetas)."</li></ul>
 		<input type='hidden' name='expediente_vinculado' id='expediente_vinculado' value='cajas_".$ids."'>
 		</td>";	    
 	}
