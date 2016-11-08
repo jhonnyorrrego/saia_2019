@@ -50,9 +50,9 @@ $dato_padre=busca_filtro_tabla("","expediente a","a.idexpediente=".$_REQUEST["co
             
             
             if(valor){ //agrupador = 1
-                
+                $('#informacion_completa_expediente').hide();
             }else{ // no es agrupador = 0
-                
+                 $('#informacion_completa_expediente').show();
             }
             
             
@@ -94,6 +94,9 @@ $dato_padre=busca_filtro_tabla("","expediente a","a.idexpediente=".$_REQUEST["co
     <input type="text" name="nombre" id="nombre" >
   </div>
 </div>
+
+<div id="informacion_completa_expediente">
+    
 <div class="control-group element">
   <label class="control-label" for="nombre">Descripci&oacute;n
   </label>
@@ -296,7 +299,7 @@ $dato_padre=busca_filtro_tabla("","expediente a","a.idexpediente=".$_REQUEST["co
 	  </div>
 	</div>
 	
-	
+</div>	
 	
 </div>
 <br />
