@@ -276,7 +276,7 @@ if($expediente[0]["estado_cierre"]==2){  //si esta cerrado
         $cadena_final.=$interval_hora.' horas, ';
         $cadena_final.=$interval_minuto.' minutos, ';
         $cadena_final.=$interval_segundo.' segundos. ';
-        print_r($interval);die();
+        print_r($cadena_final);die();
     }
     
     //
