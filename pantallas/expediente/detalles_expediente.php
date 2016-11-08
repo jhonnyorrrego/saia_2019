@@ -41,15 +41,25 @@ $expediente=busca_filtro_tabla("a.*,".fecha_db_obtener("a.fecha","Y-m-d")." AS f
 .table th, .table td {line-height: 10px;text-align: left;}
 </style>
 <body>
+<?php 
+    $etiqueta_expediente="expediente";
+    if($expediente[0]["agrupador"]){
+        $etiqueta_expediente="agrupador";
+    }
+    
+?>    
+    
 <div class="container"> 
 <div data-toggle="collapse" data-target="#div_info_expediente" style="cursor:pointer;">
-  <i class="icon-minus-sign"></i>  <b>Informaci&oacute;n del expediente</b>
+  <i class="icon-minus-sign"></i>  <b>Informaci&oacute;n del <?php echo($etiqueta_expediente); ?></b>
 </div>
 <div id="div_info_expediente"  class="collapse in opcion_informacion"> 
+
+
 <table class="table table-bordered">
   <tr>
     <td width="40%" class="prettyprint">
-      <b>Nombre del expediente:</b>
+      <b>Nombre del <?php echo($etiqueta_expediente); ?>:</b>
     </td>
     <td>
        <?php echo($expediente[0]["nombre"]);?>
