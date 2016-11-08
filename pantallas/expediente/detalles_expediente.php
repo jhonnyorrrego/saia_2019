@@ -262,10 +262,17 @@ if($expediente[0]["estado_cierre"]==2){  //si esta cerrado
         
         $cadena_inicial='Faltan ';
         $color='green';
+        if($interval_mes<2 && $interval_anio==0){
+            $color='yellow';
+        }
+        
         if($interval_pos_neg==1){
             $cadena_inicial='Hace ';
             $color='red';
-        }        
+        }  
+        
+        $color='color:'.$color.';';
+        
         if($interval_anio>0){
             $cadena_final.=$interval_anio.' años, ';
         }
@@ -289,8 +296,6 @@ if($expediente[0]["estado_cierre"]==2){  //si esta cerrado
         }else{
             $cadena_final=$cadena_inicial.$cadena_final;
         }
-        
-
         //print_r($cadena_final);die();
     }
     
@@ -303,7 +308,7 @@ if($expediente[0]["estado_cierre"]==2){  //si esta cerrado
           <b>Alerta de Retenci&oacute;n:</b>
         </td>
         <td>
-              <span style=""><?php echo($cadena_final); ?></span>
+              <span style="<?php echo($color); ?>"><?php echo($cadena_final); ?></span>
         </td>
       </tr>
     <?php 
