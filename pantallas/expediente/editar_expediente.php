@@ -56,11 +56,7 @@ if($dato_padre["numcampos"]){
   </div>
 </div>
 
-<?php
-    if($datos[0]['agrupador']){
-        die();
-    }
-?>
+<div id="informacion_completa_expediente">
 
 <div class="control-group element">
   <label class="control-label" for="nombre">Descripci&oacute;n
@@ -329,6 +325,10 @@ if($dato_padre["numcampos"]){
 	      <textarea name="notas_transf" id="notas_transf"><?php echo($datos[0]["notas_transf"]); ?></textarea>
 	  </div>
 	</div>	
+	
+	
+	</div>
+	
 </div>
 <br />
 <input type="hidden" name="key_formulario_saia" value="<?php echo(generar_llave_md5_saia());?>">
@@ -355,6 +355,19 @@ if($dato_padre["numcampos"]){
   ?>
   <script>
   $(document).ready(function(){
+      
+      
+      <?php 
+          if($datos[0]['agrupador']){
+              ?>
+                  $('#informacion_completa_expediente').hide();
+              
+              <?php
+          }
+      
+      ?>
+      
+      
     var browserType;
     if (document.layers) {browserType = "nn4"}
     if (document.all) {browserType = "ie"}
