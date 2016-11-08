@@ -105,6 +105,7 @@ function incluir_librerias_busqueda($elemento,$indice){
     </ul>      
   </div>
 </div>
+<input type="hidden" id="seleccionados_expediente" value="" name="seleccionados_expediente">
 <input type="hidden" id="seleccionados" value="" name="seleccionados">
 <div class="panel_body pull-left" id="panel_body">
   <div id="resultado_busqueda_principal<?php echo($datos_componente);?>" class="panel_hidden">  
