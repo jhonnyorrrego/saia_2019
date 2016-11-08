@@ -61,7 +61,6 @@ function enlaces_adicionales_caja($idcaja,$numero){
 	
 	$mostrar_seleccionar='';
 	$busca_expedientes_abiertos=busca_filtro_tabla("estado_cierre","expediente","fk_idcaja=".$idcaja,"",$conn);
-	
 	if(!$busca_expedientes_abiertos['numcampos']){ //si la caja no tiene expedientes
 	    $mostrar_seleccionar='style="display:none;"';
 	}else{
