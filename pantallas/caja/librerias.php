@@ -60,18 +60,19 @@ function enlaces_adicionales_caja($idcaja,$numero){
 	$texto.='<div class="btn btn-mini link kenlace_saia tooltip_saia pull-right" title="Imprimir rotulo" titulo="Imprimir rotulo" enlace="pantallas/caja/rotulo.php?idcaja='.$idcaja.'" conector="iframe" onclick=" "><i class="icon-print"></i></div>';
 	
 	$mostrar_seleccionar='';
-	$busca_expedientes_abiertos=busca_filtro_tabla("estado_cierre","expediente","fk_idcaja=".$idcaja,"",$conn);
-	if(!$busca_expedientes_abiertos['numcampos']){ //si la caja no tiene expedientes
+	$busca_expedientes_caja=busca_filtro_tabla("estado_cierre,estado_archivo","expediente","fk_idcaja=".$idcaja,"",$conn);
+	if(!$busca_expedientes_caja['numcampos']){ //si la caja no tiene expedientes
 	    $mostrar_seleccionar='style="display:none;"';
 	}else{
-	    $vector_estado_cierre=extrae_campo($busca_expedientes_abiertos,'estado_cierre');
+	    $vector_estado_cierre=extrae_campo($busca_expedientes_caja,'estado_cierre');
+	    $vector_estado_archivo=extrae_campo($busca_expedientes_caja,'estado_archivo','U');
 	}
 	if(in_array(1,$vector_estado_cierre)){ //si tiene expedientes abiertos
 	    $mostrar_seleccionar='style="display:none;"';
 	}
 	
-	if(count()){
-	    
+	if(count($vector_estado_archivo)>1){  //todos los expedientes no estan en el mismo estado (archivo, gestion, o historico)
+	     $mostrar_seleccionar='style="display:none;"';
 	}
 	
     
