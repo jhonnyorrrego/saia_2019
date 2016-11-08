@@ -67,7 +67,7 @@ $expediente=busca_filtro_tabla("a.*,".fecha_db_obtener("a.fecha","Y-m-d")." AS f
   <?php
       if($expediente[0]["agrupador"]){
         
-        echo('</table></div></body></html>');
+        echo('</table></div></div></body></html>');
         die();
       }
   
