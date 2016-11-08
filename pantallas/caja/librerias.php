@@ -1,4 +1,5 @@
 <?php
+include_once(dirname(__FILE__)."/../../db.php");
 function barra_superior_busqueda(){
     $permiso=new Permiso();
     $ok2=$permiso->acceso_modulo_perfil('transferencia_doc');
