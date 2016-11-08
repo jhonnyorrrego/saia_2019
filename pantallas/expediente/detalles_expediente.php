@@ -264,7 +264,7 @@ if($expediente[0]["estado_cierre"]==2){  //si esta cerrado
         $segundos = ($h * 3600) + ($m * 60) + $s; 
         $fecha_parseada=( conversor_segundos_hm(intval($segundos)) );
         
-        print_r($segundos);die('<--- here');
+        print_r($cadena_horas);die('<--- here');
     }
     
     //
