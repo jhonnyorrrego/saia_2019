@@ -251,7 +251,7 @@ if($expediente[0]["estado_cierre"]==2){  //si esta cerrado
 
         $interval=resta_dos_fechas_saia(date('Y-m-d'),$fecha_calculo);
         
-        print_r($fecha_calculo);die();
+        print_r($fecha_cierre);die();
         
         
         $interval_pos_neg=$interval->invert;  //Es 1 si el intervalo representa un periodo de tiempo negativo y 0 si no
