@@ -301,7 +301,7 @@ if($expediente[0]["estado_cierre"]==2){  //si esta cerrado
           <b>Alerta de Retenci&oacute;n:</b>
         </td>
         <td>
-              <?php echo($cadena_final); ?>
+              <span><?php echo($cadena_final); ?></span>
         </td>
       </tr>
     <?php 
