@@ -22,7 +22,7 @@ function barra_superior_busqueda(){
 		$("#transferencia_documental").click(function(){
 			var seleccionados=$("#seleccionados_expediente").val();
 			if(seleccionados){
-				enlace_katien_saia("formatos/transferencia_doc/adicionar_transferencia_doc.php?id="+seleccionados,"Transferencia documental","iframe","");
+				enlace_katien_saia("formatos/transferencia_doc/adicionar_transferencia_doc.php?id_caja="+seleccionados,"Transferencia documental","iframe","");
 			}
 			else{
 				alert("Seleccione por lo menos un expediente");
