@@ -62,9 +62,9 @@ function enlaces_adicionales_caja($idcaja,$numero){
 	$mostrar_seleccionar='';
 	$busca_expedientes_abiertos=busca_filtro_tabla("estado_cierre","expediente","estado_cierre=1 AND fk_idcaja=".$idcaja,"",$conn);
 	
-	/*if($estado_cierre==1){
+	if($busca_expedientes_abiertos['numcampos']){
 	    $mostrar_seleccionar='style="display:none;"';
-	}*/	
+	}
 	$texto.='<div id="seleccionados_expediente_'.$idcaja.'" idregistro=\''.$idcaja.'\' titulo=\'Seleccionar\' class=\'btn btn-mini tooltip_saia adicionar_seleccionados_expediente pull-right\' '.$mostrar_seleccionar.'><i class=\'icon-uncheck\' ></i></div>';	
 	
 	return($texto);
