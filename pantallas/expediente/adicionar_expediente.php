@@ -47,26 +47,14 @@ $dato_padre=busca_filtro_tabla("","expediente a","a.idexpediente=".$_REQUEST["co
     $(document).ready(function(){
         $('[name="agrupador"]').click(function(){
             var valor=$(this).val();
-            var true_false=false;
             
             if(parseInt(valor)){ //agrupador = 1
                 $('#informacion_completa_expediente').hide();
-                
+                $('#serie_idserie').val(-1);
             }else{ // no es agrupador = 0
                 $('#informacion_completa_expediente').show();
-                true_false=true;
+                $('#serie_idserie').val('');
             }
-            
-              var formulario_expediente=$("#formulario_expediente");
-              formulario_expediente.validate({
-                ignore: [],  
-              "rules":{
-                  "nombre":{"required":true},
-                  "serie_idserie":{"required":true_false}
-                  
-              } 
-             });
-            
             
         });
     });
