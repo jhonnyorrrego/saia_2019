@@ -272,12 +272,11 @@ if($expediente[0]["estado_cierre"]==2){  //si esta cerrado
         
         $cadena_final.=$interval_anio.' años, ';
         $cadena_final.=$interval_mes.' meses, ';
-        
+        $cadena_final.=$interval_dia.' dias, ';
+        $cadena_final.=$interval_hora.' horas, ';
+        $cadena_final.=$interval_minuto.' minutos, ';
+        $cadena_final.=$interval_segundo.' segundos. ';
         print_r($interval);die();
-        
-        
-        
-        
     }
     
     //
