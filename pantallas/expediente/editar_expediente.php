@@ -55,6 +55,13 @@ if($dato_padre["numcampos"]){
     <input type="text" name="nombre" id="nombre" value="<?php echo($datos[0]["nombre"]); ?>">
   </div>
 </div>
+
+<?php
+    if($datos[0]['agrupador']){
+        die();
+    }
+?>
+
 <div class="control-group element">
   <label class="control-label" for="nombre">Descripci&oacute;n
   </label>
