@@ -285,7 +285,7 @@ if($expediente[0]["estado_cierre"]==2){  //si esta cerrado
         if($cadena_final==''){
             $cadena_final='Hoy';
         }else{
-            $cadena_final.=$cadena_inicial.$cadena_final;
+            $cadena_final=$cadena_inicial.$cadena_final;
         }
         
 
