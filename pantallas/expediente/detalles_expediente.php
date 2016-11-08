@@ -245,7 +245,7 @@ if($expediente[0]["estado_cierre"]==2){  //si esta cerrado
         
         include_once($ruta_db_superior."pantallas/lib/librerias_fechas.php");
         $fecha_habil=dias_habiles_listado($datos_serie[0]["retencion_".$vector_estado_expediente[$estado_expediente]],'Y-m-d',$datos_cierre[0]['fecha_cierre']);
-        print_r($fecha_habil);die();
+        print_r($fecha_habil);die('<--- here');
         
         
     }
