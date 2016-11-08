@@ -63,6 +63,14 @@ $expediente=busca_filtro_tabla("a.*,".fecha_db_obtener("a.fecha","Y-m-d")." AS f
        <?php echo($expediente[0]["fecha"]);?>
     </td>
   </tr>
+  
+  <?php
+      if($expediente[0]["agrupador"]){
+          
+      }
+  
+  ?>
+  
   <tr>
     <td class="prettyprint">
       <b>Descripci&oacute;n del expediente:</b>
