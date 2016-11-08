@@ -27,7 +27,7 @@ $dato_padre=busca_filtro_tabla("","expediente a","a.idexpediente=".$datos[0]["co
 <input type="hidden" name="idexpediente" id="idexpediente" value="<?php echo($datos[0]["idexpediente"]);?>">
 <input type="hidden" name="iddocumento" id="iddocumento" value="<?php echo($_REQUEST["iddocumento"]);?>">
 <input type="hidden" id="cerrar_higslide" value="<?php echo(@$_REQUEST["cerrar_higslide"]);?>">
-<legend>Crear expediente</legend>
+<legend>Editar expediente</legend>
 <?php
 if($dato_padre["numcampos"]){
 ?>
