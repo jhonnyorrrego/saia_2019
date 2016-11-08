@@ -234,9 +234,13 @@ $expediente=busca_filtro_tabla("a.*,".fecha_db_obtener("a.fecha","Y-m-d")." AS f
 <?php 
 if($expediente[0]["estado_cierre"]==2){  //si esta cerrado
     
-    
+    $fecha_cierre=$expediente[0]["fecha_cierre"];
+    $serie_idserie=$expediente[0]["serie_idserie"];
     
     ?>
+        <script>
+            console.log('<?php echo($fecha_cierre.'  -  '.$serie_idserie); ?>');
+        </script>
       <tr>
       	<td class="prettyprint">    	
           <b>Alerta de Retenci&oacute;n:</b>
