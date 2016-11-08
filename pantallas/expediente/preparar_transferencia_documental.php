@@ -45,7 +45,8 @@ if($expedientes['numcampos']){
             
             $dias_anio=365*$datos_serie[0][$campo_dias];
             
-            $fecha_habil=dias_habiles_listado($dias_anio,'Y-m-d',$expedientes[$i]['fecha_inicial']);
+            //$fecha_habil=dias_habiles_listado($dias_anio,'Y-m-d',$expedientes[$i]['fecha_inicial']);
+            $fecha_habil=calculaFecha("days",+$dias_anio,$expedientes[$i]['fecha_inicial']);
             if($fecha_habil==date('Y-m-d')){
                 $sql="UPDATE expediente SET prox_estado_archivo=".$prox_estado_archivo." WHERE idexpediente=".$expedientes[$i]['idexpediente'];
                 phpmkr_query($sql);
