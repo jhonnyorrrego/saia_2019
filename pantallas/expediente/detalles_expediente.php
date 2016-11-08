@@ -243,6 +243,10 @@ if($expediente[0]["estado_cierre"]==2){  //si esta cerrado
     
     if($datos_cierre[0]['estado_cierre']==2){
         print_r($datos_cierre[0]);die();
+        
+        
+        
+        
     }
     
     //include_once($ruta_db_superior."pantallas/lib/librerias_fechas.php");
@@ -250,9 +254,6 @@ if($expediente[0]["estado_cierre"]==2){  //si esta cerrado
     
     
     ?>
-        <script>
-            console.log('<?php echo($fecha_cierre.'  -  '.$serie_idserie); ?>');
-        </script>
       <tr>
       	<td class="prettyprint">    	
           <b>Alerta de Retenci&oacute;n:</b>
