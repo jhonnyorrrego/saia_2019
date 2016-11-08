@@ -240,7 +240,7 @@ if($expediente[0]["estado_cierre"]==2){  //si esta cerrado
     $vector_estado_expediente=array(1=>'gestion',2=>'central');
     $datos_serie=busca_filtro_tabla("retencion_".$vector_estado_expediente[$estado_expediente],"serie","idserie=".$serie_idserie,"",$conn);
     $datos_cierre=busca_filtro_tabla("fecha_cierre","expediente_abce","expediente_idexpediente=".$idexpediente,"expediente_idexpediente DESC",$conn);
-    
+    print_r($datos_cierre);
     if($datos_cierre[0]['estado_cierre']==2){
         $dias_calcular=365*$datos_serie[0]["retencion_".$vector_estado_expediente[$estado_expediente]];
         include_once($ruta_db_superior."pantallas/lib/librerias_fechas.php");
