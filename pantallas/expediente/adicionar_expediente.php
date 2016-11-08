@@ -49,7 +49,7 @@ $dato_padre=busca_filtro_tabla("","expediente a","a.idexpediente=".$_REQUEST["co
             var valor=$(this).val();
             
             
-            if(valor){ //agrupador = 1
+            if(parseInt(valor)){ //agrupador = 1
                 $('#informacion_completa_expediente').hide();
             }else{ // no es agrupador = 0
                 $('#informacion_completa_expediente').show();
