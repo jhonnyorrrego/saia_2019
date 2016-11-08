@@ -236,7 +236,9 @@ if($expediente[0]["estado_cierre"]==2){  //si esta cerrado
     
     $fecha_cierre=$expediente[0]["fecha_cierre"];
     $serie_idserie=$expediente[0]["serie_idserie"];
-    $datos_serie=busca_filtro_tabla("","serie","idserie=".$serie_idserie,"",$conn);
+    $estado_expediente=$expediente[0]["extado_expediente"];
+    $vector_estado_expediente=array(1=>'gestion',2=>'central');
+    $datos_serie=busca_filtro_tabla("tiempo_".$vector_estado_expediente[$estado_expediente],"serie","idserie=".$serie_idserie,"",$conn);
     print_r($datos_serie);die();
     ?>
         <script>
