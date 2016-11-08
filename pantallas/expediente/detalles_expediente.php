@@ -242,18 +242,10 @@ if($expediente[0]["estado_cierre"]==2){  //si esta cerrado
     $fecha_cierre=$datos_cierre[0]['fecha_cierre'];
     
     if($datos_cierre[0]['estado_cierre']==2){
-        //$dias_calcular=365*$datos_serie[0]["retencion_".$vector_estado_expediente[$estado_expediente]];
-        
-        $dias_calcular=0;
+        $dias_calcular=365*$datos_serie[0]["retencion_".$vector_estado_expediente[$estado_expediente]];
         include_once($ruta_db_superior."pantallas/lib/librerias_fechas.php");
         $fecha_calculo=calculaFecha("days",+$dias_calcular,$fecha_cierre);
-        
-
         $interval=resta_dos_fechas_saia(date('Y-m-d'),$fecha_calculo);
-        
-        //print_r($datos_cierre);die();
-        
-        
         $interval_pos_neg=$interval->invert;  //Es 1 si el intervalo representa un periodo de tiempo negativo y 0 si no
         $interval_diferencia=$interval->days; //dias de diferencia
         $interval_anio=$interval->y;
@@ -262,24 +254,34 @@ if($expediente[0]["estado_cierre"]==2){  //si esta cerrado
         $interval_hora=$interval->h;
         $interval_minuto=$interval->i;
         $interval_segundo=$interval->s;
- 
         $cadena_horas=$interval_hora.':'.$interval_minuto.':'.$interval_segundo;
         list($h, $m, $s) = explode(':', $cadena_horas); 
         $segundos = ($h * 3600) + ($m * 60) + $s; 
         $horas_minutos_segundos_parseados=( conversor_segundos_hm(intval($segundos)) );
-        
-        
         $cadena_final='Faltan ';
         if($interval_pos_neg==1){
             $cadena_final='Hace ';
         }
+        if($interval_anio>0){
+            $cadena_final.=$interval_anio.' años, ';
+        }
+        if($interval_mes>0){
+            $cadena_final.=$interval_mes.' meses, ';
+        }
+        if($interval_dia>0){
+            $cadena_final.=$interval_dia.' dias, ';
+        }
+        if($interval_hora>0){
+            $cadena_final.=$interval_hora.' horas, ';
+        }
+        if($interval_minuto>0){
+            $cadena_final.=$interval_minuto.' minutos, ';
+        }
+        if($interval_segundo>0){
+            $cadena_final.=$interval_segundo.' segundos. ';
+        }
         
-        $cadena_final.=$interval_anio.' años, ';
-        $cadena_final.=$interval_mes.' meses, ';
-        $cadena_final.=$interval_dia.' dias, ';
-        $cadena_final.=$interval_hora.' horas, ';
-        $cadena_final.=$interval_minuto.' minutos, ';
-        $cadena_final.=$interval_segundo.' segundos. ';
+        
         print_r($cadena_final);die();
     }
     
