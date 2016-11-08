@@ -63,7 +63,7 @@ function enlaces_adicionales_caja($idcaja,$numero){
 	/*if($estado_cierre==1){
 	    $mostrar_seleccionar='style="display:none;"';
 	}*/	
-	$texto.='<div id="seleccionados_expediente_'.$idexpediente.'" idregistro=\''.$idexpediente.'\' titulo=\'Seleccionar\' class=\'btn btn-mini tooltip_saia adicionar_seleccionados_expediente pull-right\' '.$mostrar_seleccionar.'><i class=\'icon-uncheck\' ></i></div>';	
+	$texto.='<div id="seleccionados_expediente_'.$idcaja.'" idregistro=\''.$idcaja.'\' titulo=\'Seleccionar\' class=\'btn btn-mini tooltip_saia adicionar_seleccionados_caja pull-right\' '.$mostrar_seleccionar.'><i class=\'icon-uncheck\' ></i></div>';	
 	
 	return($texto);
 }
