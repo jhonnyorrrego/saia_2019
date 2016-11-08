@@ -60,23 +60,17 @@ function enlaces_adicionales_caja($idcaja,$numero){
 	$texto.='<div class="btn btn-mini link kenlace_saia tooltip_saia pull-right" title="Imprimir rotulo" titulo="Imprimir rotulo" enlace="pantallas/caja/rotulo.php?idcaja='.$idcaja.'" conector="iframe" onclick=" "><i class="icon-print"></i></div>';
 	
 	$mostrar_seleccionar='';
-	$busca_expedientes_abiertos=busca_filtro_tabla("estado_cierre","expediente","estado_cierre=1 AND fk_idcaja=".$idcaja,"",$conn);
+	$busca_expedientes_abiertos=busca_filtro_tabla("estado_cierre","expediente","fk_idcaja=".$idcaja,"",$conn);
 	
-	if($busca_expedientes_abiertos['numcampos']){  //si tiene expedientes abiertos
+	if(!$busca_expedientes_abiertos['numcampos']){ //si la caja no tiene expedientes
+	    $mostrar_seleccionar='style="display:none;"';
+	}else{
+	    $vector_estado_cierre=extrae_campo($busca_expedientes_abiertos,'estado_cierre');
+	}
+	if(in_array(1,$vector_estado_cierre)){ //si tiene expedientes abiertos
 	    $mostrar_seleccionar='style="display:none;"';
 	}
-	
-	if(!$busca_expedientes_abiertos['numcampos']){
-	    $busca_expedientes_totales=busca_filtro_tabla("estado_cierre","expediente","fk_idcaja=".$idcaja,"",$conn);
-	    
-	    if(!$busca_expedientes_totales['numcampos']){  //si la caja no tiene expedientes
-	        $mostrar_seleccionar='style="display:none;"';
-	    }
-	}
-	
-	
-	
-	
+    
 	$texto.='<div id="seleccionados_expediente_'.$idcaja.'" idregistro=\''.$idcaja.'\' titulo=\'Seleccionar\' class=\'btn btn-mini tooltip_saia adicionar_seleccionados_expediente pull-right\' '.$mostrar_seleccionar.'><i class=\'icon-uncheck\' ></i></div>';	
 	
 	return($texto);
