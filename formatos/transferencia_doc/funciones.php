@@ -57,7 +57,7 @@ function guardar_expedientes_add($idformato,$iddoc){
 		$pre_titulo="<b>Caja:</b> ";
 		
 		$texto.="<td><ul><li>".$pre_titulo.implode("</li><li>".$pre_titulo,$etiquetas)."</li></ul>
-		<input type='hidden' name='expediente_vinculado' id='expediente_vinculado' value='cajas_".$ids."'>
+		<input type='hidden' name='expediente_vinculado' id='expediente_vinculado' value='cajas_".$ids_caja."'>
 		</td>";	    
 	}
 	else{
