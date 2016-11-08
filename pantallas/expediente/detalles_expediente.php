@@ -82,7 +82,7 @@ $expediente=busca_filtro_tabla("a.*,".fecha_db_obtener("a.fecha","Y-m-d")." AS f
             });    
         </script></body></html>
         ');
-        
+        echo(librerias_bootstrap());
         die();
       }
   
