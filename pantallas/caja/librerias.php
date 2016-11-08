@@ -69,6 +69,14 @@ function enlaces_adicionales_caja($idcaja,$numero){
 	if(in_array(1,$vector_estado_cierre)){ //si tiene expedientes abiertos
 	    $mostrar_seleccionar='style="display:none;"';
 	}
+	
+	if(count()){
+	    
+	}
+	
+    
+    
+    
     
 	$texto.='<div id="seleccionados_expediente_'.$idcaja.'" idregistro=\''.$idcaja.'\' titulo=\'Seleccionar\' class=\'btn btn-mini tooltip_saia adicionar_seleccionados_expediente pull-right\' '.$mostrar_seleccionar.'><i class=\'icon-uncheck\' ></i></div>';	
 	
