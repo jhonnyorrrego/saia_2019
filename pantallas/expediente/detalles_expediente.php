@@ -297,12 +297,8 @@ if($expediente[0]["estado_cierre"]==2){  //si esta cerrado
         }else{
             $cadena_final=$cadena_inicial.$cadena_final;
         }
-        //print_r($cadena_final);die();
     }
-    
-    //
-    
-    
+
     ?>
       <tr>
       	<td class="prettyprint">    	
