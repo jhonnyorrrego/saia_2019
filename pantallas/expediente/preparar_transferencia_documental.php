@@ -42,7 +42,10 @@ if($expedientes['numcampos']){
         $datos_serie=busca_filtro_tabla($campo_dias,"serie","idserie=".$expedientes[$i]['serie_idserie'],"",$conn);
         if($datos_serie['numcampos']){
             $exito=1;
-            $fecha_habil=dias_habiles_listado($datos_serie[0][$campo_dias],'Y-m-d',$expedientes[$i]['fecha_inicial']);
+            
+            $dias_anio=365*$datos_serie[0][$campo_dias];
+            
+            $fecha_habil=dias_habiles_listado($dias_anio,'Y-m-d',$expedientes[$i]['fecha_inicial']);
             if($fecha_habil==date('Y-m-d')){
                 $sql="UPDATE expediente SET prox_estado_archivo=".$prox_estado_archivo." WHERE idexpediente=".$expedientes[$i]['idexpediente'];
                 phpmkr_query($sql);
