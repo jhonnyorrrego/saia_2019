@@ -248,22 +248,23 @@ if($expediente[0]["estado_cierre"]==2){  //si esta cerrado
         
 
         $interval=resta_dos_fechas_saia(date('Y-m-d'),$fecha_calculo);
-        print_r($interval);die('<--- here');
-        if($interval->invert==1){
-          if($interval->days>5){
-            $color='#306609';   //verde
-          }else if($interval<=5){
-            $color='#CCCC21';   //amarillo
-          }
-        }else{
-          if($interval->days==0){
-            $color='#CCCC21';  //amarillo
-          }else{
-            $color='#FF0000';   //rojo
-          }
-        } 
         
         
+        $interval_pos_neg=$interval->invert;  //1: aun no llega la fecha, else: ya se paso la fecha
+        $interval_diferencia=$interval->days; //dias de diferencia
+        $interval_anio=$interval->y;
+        $interval_mes=$interval->m;
+        $interval_dia=$interval->d;
+        $interval_hora=$interval->h;
+        $interval_minuto=$interval->i;
+        $interval_segundo=$interval->s;
+ 
+        $cadena_horas=$interval_hora.':'.$interval_minuto.':'.$interval_segundo;
+        list($h, $m, $s) = explode(':', $cadena_horas); 
+        $segundos = ($h * 3600) + ($m * 60) + $s; 
+        $fecha_parseada=( conversor_segundos_hm(intval($segundos)) );
+        
+        print_r($fecha_parseada);die('<--- here');
     }
     
     //
