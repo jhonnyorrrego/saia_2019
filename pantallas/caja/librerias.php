@@ -60,6 +60,8 @@ function enlaces_adicionales_caja($idcaja,$numero){
 	$texto.='<div class="btn btn-mini link kenlace_saia tooltip_saia pull-right" title="Imprimir rotulo" titulo="Imprimir rotulo" enlace="pantallas/caja/rotulo.php?idcaja='.$idcaja.'" conector="iframe" onclick=" "><i class="icon-print"></i></div>';
 	
 	$mostrar_seleccionar='';
+	$busca_expedientes_abiertos=busca_filtro_tabla("estado_cierre","expediente","estado_cierre=1 AND fk_idcaja=".$idcaja,"",$conn);
+	
 	/*if($estado_cierre==1){
 	    $mostrar_seleccionar='style="display:none;"';
 	}*/	
