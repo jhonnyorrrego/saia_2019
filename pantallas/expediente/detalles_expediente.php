@@ -258,10 +258,12 @@ if($expediente[0]["estado_cierre"]==2){  //si esta cerrado
         list($h, $m, $s) = explode(':', $cadena_horas); 
         $segundos = ($h * 3600) + ($m * 60) + $s; 
         $horas_minutos_segundos_parseados=( conversor_segundos_hm(intval($segundos)) );
-        $cadena_final='Faltan ';
+        $cadena_final='';
+        
+        $cadena_inicial='Faltan ';
         if($interval_pos_neg==1){
-            $cadena_final='Hace ';
-        }
+            $cadena_inicial='Hace ';
+        }        
         if($interval_anio>0){
             $cadena_final.=$interval_anio.' años, ';
         }
@@ -280,8 +282,13 @@ if($expediente[0]["estado_cierre"]==2){  //si esta cerrado
         if($interval_segundo>0){
             $cadena_final.=$interval_segundo.' segundos. ';
         }
+        if($cadena_final==''){
+            $cadena_final='Hoy';
+        }else{
+            $cadena_final.=$cadena_inicial.$cadena_final;
+        }
         
-        
+
         print_r($cadena_final);die();
     }
     
