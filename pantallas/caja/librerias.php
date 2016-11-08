@@ -62,17 +62,19 @@ function enlaces_adicionales_caja($idcaja,$numero){
 	$mostrar_seleccionar='';
 	$busca_expedientes_abiertos=busca_filtro_tabla("estado_cierre","expediente","estado_cierre=1 AND fk_idcaja=".$idcaja,"",$conn);
 	
-	if($busca_expedientes_abiertos['numcampos']){
+	if($busca_expedientes_abiertos['numcampos']){  //si tiene expedientes abiertos
 	    $mostrar_seleccionar='style="display:none;"';
 	}
 	
 	if(!$busca_expedientes_abiertos['numcampos']){
 	    $busca_expedientes_totales=busca_filtro_tabla("estado_cierre","expediente","fk_idcaja=".$idcaja,"",$conn);
 	    
-	    if(!$busca_expedientes_totales['numcampos']){
+	    if(!$busca_expedientes_totales['numcampos']){  //si la caja no tiene expedientes
 	        $mostrar_seleccionar='style="display:none;"';
 	    }
 	}
+	
+	
 	
 	
 	$texto.='<div id="seleccionados_expediente_'.$idcaja.'" idregistro=\''.$idcaja.'\' titulo=\'Seleccionar\' class=\'btn btn-mini tooltip_saia adicionar_seleccionados_expediente pull-right\' '.$mostrar_seleccionar.'><i class=\'icon-uncheck\' ></i></div>';	
