@@ -280,7 +280,7 @@ if($expediente[0]["estado_cierre"]==2){  //si esta cerrado
             $cadena_final.=$interval_minuto.' minutos, ';
         }
         if($interval_segundo>0){
-            $cadena_final.=$interval_segundo.' segundos. ';
+            $cadena_final.=$interval_segundo.' segundos, ';
         }
         if($cadena_final==''){
             $cadena_final='Hoy';
