@@ -233,16 +233,19 @@ $expediente=busca_filtro_tabla("a.*,".fecha_db_obtener("a.fecha","Y-m-d")." AS f
   
 <?php 
 if($expediente[0]["estado_cierre"]==2){  //si esta cerrado
-?>
-  <tr>
-  	<td class="prettyprint">    	
-      <b>Alerta de Retenci&oacute;n:</b>
-    </td>
-    <td>
-        
-    </td>
-  </tr>
-<?php 
+    
+    
+    
+    ?>
+      <tr>
+      	<td class="prettyprint">    	
+          <b>Alerta de Retenci&oacute;n:</b>
+        </td>
+        <td>
+            Faltan...
+        </td>
+      </tr>
+    <?php 
 }
 ?>
 
