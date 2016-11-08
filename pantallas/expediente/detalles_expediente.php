@@ -243,7 +243,7 @@ if($expediente[0]["estado_cierre"]==2){  //si esta cerrado
     //include_once($ruta_db_superior."pantallas/lib/librerias_fechas.php");
    // $fecha_habil=dias_habiles_listado($datos_serie[0][$campo_dias],'Y-m-d',$expedientes[$i]['fecha_inicial']);
     
-    print_r($datos_cierre);die();
+    //print_r($datos_cierre);die();
     ?>
         <script>
             console.log('<?php echo($fecha_cierre.'  -  '.$serie_idserie); ?>');
