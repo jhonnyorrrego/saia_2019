@@ -123,11 +123,11 @@ if(count($nombres_exp)){
 
 
 <div class="control-group element">
-    <label class="control-label" for="fecha_limite">
+    <label class="control-label" for="fecha_limite"> Fecha Limite
   </label>
   <div class="controls">
-      <input id="bqsaia_a@fecha_inicio_x" name="bqsaia_a@fecha_inicio_x" style="width:100px" type="text" value="" placeholder="Inicio">
-    <?php selector_fecha("bqsaia_a@fecha_inicio_x","kformulario_saia","Y-m-d",date("m"),date("Y"),"default.css","../../",""); ?>
+      <input id="fecha_limite" name="fecha_limite" style="width:100px" type="text" value="" placeholder="Inicio">
+      <?php selector_fecha("fecha_limite","form1","Y-m-d",date("m"),date("Y"),"default.css","../../",""); ?>
   </div>
 </div>
 <div>
