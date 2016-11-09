@@ -58,14 +58,6 @@ function guardar_expedientes_add($idformato,$iddoc){
         $texto.="<td><ul><li>".implode("</li><li>",$etiquetas)."</li></ul>
 		<input type='hidden' name='expediente_vinculado' id='expediente_vinculado' value='".$idexpedientes."'>
 		</td>";
-		
-    	?>
-    	    <script>
-    	        $(document).ready(function(){
-    	            $('[name="from_caja"]').val(1);
-    	        });
-    	    </script>
-    	<?php		
 	}
 	else{
 		$texto.="<td>No hay expedientes vinculados</td>";
