@@ -162,6 +162,15 @@ function expedientes_vinculados_funcion($idformato,$iddoc){
 		       $x_caja='x';
 		   }
 		    
+            $tomo_padre=$expedientes[$i]["idexpediente"];
+            if($expedientes[$i]['tomo_padre']){
+                $tomo_padre=$expedientes[$i]['tomo_padre'];
+            }
+            $ccantidad_tomos=busca_filtro_tabla("idexpediente","expediente","tomo_padre=".$tomo_padre,"",$conn);
+            $cantidad_tomos=$ccantidad_tomos['numcampos']+1; //tomos + el padre  
+            $cadena_tomos=("<i><b style='font-size:10px;'>Tomo: </b></i><i style='font-size:10px;'>".$expediente_actual[0]['tomo_no']." de ".$cantidad_tomos."</i>");		   
+		   
+		    
 			if(is_object($expedientes[$i]["fecha_extrema_i"]))$expedientes[$i]["fecha_extrema_i"]=$expedientes[$i]["fecha_extrema_i"]->format('Y-m-d');
 			if(is_object($expedientes[$i]["fecha_extrema_f"]))$expedientes[$i]["fecha_extrema_f"]=$expedientes[$i]["fecha_extrema_f"]->format('Y-m-d');
 			
@@ -173,7 +182,7 @@ function expedientes_vinculados_funcion($idformato,$iddoc){
 			<td>'.$expedientes[$i]["fecha_extrema_f"].'</td>
 			<td style="text-align:center;">'.$x_caja.'</td>
 			<td style="text-align:center;">X</td>
-			<td>'.$expedientes[$i]['no_tomo'].'</td>
+			<td>'.$cadena_tomos.'</td>
 			<td>'.$expedientes[$i]['otro'].'</td>
 			<td style="text-align:center">'.$expedientes[$i]["no_folios"].'</td>
 			<td>'.$vector_soportes[ $expedientes[$i]['soporte'] ].'</td>
