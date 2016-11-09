@@ -63,10 +63,7 @@ function guardar_expedientes_add($idformato,$iddoc){
 		$texto.="<td>No hay expedientes vinculados</td>";
 	}
 	echo($texto);
-	
-	
-	
-	
+
 }
 function expedientes_vinculados_funcion($idformato,$iddoc){
 	global $conn, $ruta_db_superior;
