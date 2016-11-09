@@ -9,6 +9,17 @@ $iddoc=@$_REQUEST["iddoc"];
 $idformato=@$_REQUEST["idformato"];
 
 $datos=busca_filtro_tabla("expediente_vinculado","ft_transferencia_doc a","a.documento_iddocumento=".$iddoc,"",$conn);
+
+$mystring = $datos[0]["expediente_vinculado"];
+$findme   = 'cajas_';
+$pos = strpos($mystring, $findme);
+    
+if ($pos !== false) {  //son cajas //fue encontrada
+    $ids_caja = trim($datos[0]["expediente_vinculado"], "cajas_");
+    $datos[0]["expediente_vinculado"]=$ids_caja;
+}    
+
+
 $expedientes=explode(",",$datos[0]["expediente_vinculado"]);
 $cant=count($expedientes);
 
