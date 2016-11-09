@@ -151,11 +151,6 @@ function expedientes_vinculados_funcion($idformato,$iddoc){
             <th rowspan="2" '.$estilo_general.'>FRECUENCIA DE CONSULTA</th>
             <th rowspan="2" '.$estilo_general.'>NOTAS</th>
             ';
-        /*if($datos[0]["estado"]=='ACTIVO' && @$_REQUEST["tipo"]!=5){
-             $texto='   
-             <th rowspan="2"></th>
-             ';
-        }*/
             
         $texto.='    
           </tr>
