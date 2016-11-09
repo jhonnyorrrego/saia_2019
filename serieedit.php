@@ -617,7 +617,7 @@ function EditData($sKey,$conn)
 		$sSql .= " WHERE idserie =". $sKeyWrk;
 		$insertar_serie=busca_filtro_tabla("","serie","idserie =". $sKeyWrk,"",$conn);
 	        if($insertar_serie[0]['tipo']==1){
-				$actualizar_orden="UPDATE serie SET orden=".($insertar_serie[0]['idserie']*10000)." WHERE idserie=".$insertar_serie[0]['idserie'];
+				$actualizar_orden="UPDATE serie SET orden=".($insertar_serie[0]['idserie']*100000)." WHERE idserie=".$insertar_serie[0]['idserie'];
 			}
 			elseif($datos[$i]['tipo']==2){
 				$padre=busca_filtro_tabla("","serie","where idserie=".$insertar_serie[0]['cod_padre'],"",$conn);
