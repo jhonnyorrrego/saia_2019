@@ -188,6 +188,48 @@ $nombre_serie=busca_filtro_tabla("","serie a","a.idserie=".$caja[0]["serie_idser
 ?>
     </td>
   </tr>
+  <?php
+  if(MOTOR=='MySql'){
+  	$transferencia_doc=busca_filtro_tabla("","ft_transferencia_doc a, documento b","a.documento_iddocumento=b.iddocumento and b.estado not in('ELIMINADO', 'ACTIVO') and (CONCAT(',',a.expediente_vinculado,',') like '%,".$caja[0]["idcaja"].",%')","a.idft_transferencia_doc DESC",$conn);
+	}
+	if(MOTOR=='Oracle'){
+  	$transferencia_doc=busca_filtro_tabla("","ft_transferencia_doc a, documento b","a.documento_iddocumento=b.iddocumento and b.estado not in('ELIMINADO', 'ACTIVO') and (CONCAT(',',CONCAT(a.expediente_vinculado,',')) like '%,".$caja[0]["idcaja"].",%')","a.idft_transferencia_doc DESC",$conn);
+	}
+	if(MOTOR=='SqlServer'){
+  	$transferencia_doc=busca_filtro_tabla("","ft_transferencia_doc a, documento b","a.documento_iddocumento=b.iddocumento and b.estado not in('ELIMINADO', 'ACTIVO') and (','+a.expediente_vinculado+',' like '%,".$caja[0]["idcaja"].",%')","a.idft_transferencia_doc DESC",$conn);
+	}
+	
+  if($transferencia_doc["numcampos"]){
+  	
+  ?>
+  <tr>
+  	<td class="prettyprint"><b>Transferencia documental</b></td>
+  	<td colspan="3">
+  	    <?php
+  	        for($i=0;$i<$transferencia_doc['numcampos'];$i++){
+  	            if(is_object($transferencia_doc[$i]["fecha"]))$transferencia_doc[$i]["fecha"]=$transferencia_doc[$i]["fecha"]->format('Y-m-d H:i');
+  	            ?>
+  	                <a class="previo_high" enlace="<?php echo($ruta_db_superior.$transferencia_doc[$i]["pdf"]); ?>" style="cursor:pointer">Ver transferencia No <?php echo($transferencia_doc[$i]["numero"]); ?> (<?php echo($transferencia_doc[$i]["fecha"]); ?>)</a>
+  	                <br>
+  	            <?php
+  	        }
+  	    ?>
+  	    
+  	
+  	</td>
+  </tr>
+  <script>
+		$(document).ready(function(){
+			$(".previo_high").click(function(e){
+				var enlace=$(this).attr("enlace");
+				top.hs.htmlExpand(this, { objectType: 'iframe',width: 1000, height: 600,contentId:'cuerpo_paso', preserveContent:false, src:"pantallas/expediente/visor_pdf.php?ruta="+enlace,outlineType: 'rounded-white',wrapperClassName:'highslide-wrapper drag-header'});
+				
+			});
+		});
+		</script>
+  <?php } ?>  
+  
+  
 </table>
 </div>
 </div>
