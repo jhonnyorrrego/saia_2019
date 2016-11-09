@@ -189,16 +189,7 @@ $nombre_serie=busca_filtro_tabla("","serie a","a.idserie=".$caja[0]["serie_idser
     </td>
   </tr>
   <?php
-  if(MOTOR=='MySql'){
-  	$transferencia_doc=busca_filtro_tabla("","ft_transferencia_doc a, documento b","a.documento_iddocumento=b.iddocumento and b.estado not in('ELIMINADO', 'ACTIVO') and (CONCAT(',',a.expediente_vinculado,',') like '%,".$caja[0]["idcaja"].",%')","a.idft_transferencia_doc DESC",$conn);
-	}
-	if(MOTOR=='Oracle'){
-  	$transferencia_doc=busca_filtro_tabla("","ft_transferencia_doc a, documento b","a.documento_iddocumento=b.iddocumento and b.estado not in('ELIMINADO', 'ACTIVO') and (CONCAT(',',CONCAT(a.expediente_vinculado,',')) like '%,".$caja[0]["idcaja"].",%')","a.idft_transferencia_doc DESC",$conn);
-	}
-	if(MOTOR=='SqlServer'){
-  	$transferencia_doc=busca_filtro_tabla("","ft_transferencia_doc a, documento b","a.documento_iddocumento=b.iddocumento and b.estado not in('ELIMINADO', 'ACTIVO') and (','+a.expediente_vinculado+',' like '%,".$caja[0]["idcaja"].",%')","a.idft_transferencia_doc DESC",$conn);
-	}
-	
+  $transferencia_doc=busca_filtro_tabla("","ft_transferencia_doc a, documento b","a.documento_iddocumento=b.iddocumento and b.estado not in('ELIMINADO', 'ACTIVO') and ( a.expediente_vinculado like 'cajas_%')","a.idft_transferencia_doc DESC",$conn);
   if($transferencia_doc["numcampos"]){
   	
   ?>
@@ -207,11 +198,16 @@ $nombre_serie=busca_filtro_tabla("","serie a","a.idserie=".$caja[0]["serie_idser
   	<td colspan="3">
   	    <?php
   	        for($i=0;$i<$transferencia_doc['numcampos'];$i++){
-  	            if(is_object($transferencia_doc[$i]["fecha"]))$transferencia_doc[$i]["fecha"]=$transferencia_doc[$i]["fecha"]->format('Y-m-d H:i');
-  	            ?>
-  	                <a class="previo_high" enlace="<?php echo($ruta_db_superior.$transferencia_doc[$i]["pdf"]); ?>" style="cursor:pointer">Ver transferencia No <?php echo($transferencia_doc[$i]["numero"]); ?> (<?php echo($transferencia_doc[$i]["fecha"]); ?>)</a>
-  	                <br>
-  	            <?php
+                $ids_caja = trim($transferencia_doc[$i]["expediente_vinculado"], "cajas_");  
+  	            $vector_cajas=explode(',',$ids_caja);
+  	            
+  	            if(in_array($caja[0]["idcaja"],$vector_cajas)){
+      	            if(is_object($transferencia_doc[$i]["fecha"]))$transferencia_doc[$i]["fecha"]=$transferencia_doc[$i]["fecha"]->format('Y-m-d H:i');
+      	            ?>
+      	                <a class="previo_high" enlace="<?php echo($ruta_db_superior.$transferencia_doc[$i]["pdf"]); ?>" style="cursor:pointer">Ver transferencia No <?php echo($transferencia_doc[$i]["numero"]); ?> (<?php echo($transferencia_doc[$i]["fecha"]); ?>)</a>
+      	                <br>
+      	            <?php
+  	            }
   	        }
   	    ?>
   	    
