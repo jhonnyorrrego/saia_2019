@@ -283,6 +283,11 @@ if ($_REQUEST["mostrar_formato"]) {
 <?php
 //TODO: Descomentar si no se pueden usar json web tokens
 //$datos = json_encode($params);
+$info_doc = busca_filtro_tabla("numero,descripcion", "documento", "iddocumento=$key", "", $conn);
+if($info_doc['numcampos']) {
+  $params["numero"] = $info_doc["numero"];
+  $params["descripcion"] = $info_doc["descripcion"];
+}
 $params["radica"]= $key;
 $params["verLog"]=true;
 $params["maxtabs"]=50;

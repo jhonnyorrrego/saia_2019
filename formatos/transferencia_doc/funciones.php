@@ -123,6 +123,19 @@ function expedientes_vinculados_funcion($idformato,$iddoc){
 	$texto='';
 	$datos=busca_filtro_tabla("","ft_transferencia_doc A, documento B","A.documento_iddocumento=".$iddoc." and A.documento_iddocumento=B.iddocumento","",$conn);
 	$expedientes=busca_filtro_tabla("","expediente A","A.idexpediente in(".$datos[0]["expediente_vinculado"].")","",$conn);
+	
+    if(!$expedientes['numcampos']){
+        $mystring = $datos[0]["expediente_vinculado"];
+        $findme   = 'cajas_';
+        $pos = strpos($mystring, $findme);
+        
+        if ($pos !== false) {  //son cajas //fue encontrada
+            $ids_caja = trim($datos[0]["expediente_vinculado"], "cajas_");
+            $expedientes=busca_filtro_tabla("","caja","idcaja IN(".$ids_caja.")","",$conn);
+        }    
+    }	
+	
+	
 	if($expedientes["numcampos"]){
 	    $estilo_general=' style="text-align:center;font-weight:bold;"';
 		$texto.='
