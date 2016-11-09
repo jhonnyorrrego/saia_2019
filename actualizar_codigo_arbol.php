@@ -6,11 +6,11 @@ $campo_id=@$_REQUEST["campo_id"];
 $dato_padre=@$_REQUEST["dato_padre"];
 $campo_actualizar=@$_REQUEST["campo_actualizar"];
 
-if(!$tabla)$tabla='expediente';
+if(!$tabla)$tabla='bkdependencia';
 if(!$campo_codpadre)$campo_codpadre='cod_padre';
-if(!$campo_id)$campo_id='idexpediente';
+if(!$campo_id)$campo_id='iddependencia';
 if(!$dato_padre)$dato_padre="null";
-if(!$campo_actualizar)$campo_actualizar='cod_arbol';
+if(!$campo_actualizar)$campo_actualizar='orden';
 
 generar_codigo_arbol($tabla,$campo_codpadre,$campo_id,$dato_padre,$campo_actualizar);
 /*
