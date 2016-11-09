@@ -6,7 +6,7 @@ $campo_id=@$_REQUEST["campo_id"];
 $dato_padre=@$_REQUEST["dato_padre"];
 $campo_actualizar=@$_REQUEST["campo_actualizar"];
 
-if(!$tabla)$tabla='bkdependencia';
+if(!$tabla)$tabla='dependencia';
 if(!$campo_codpadre)$campo_codpadre='cod_padre';
 if(!$campo_id)$campo_id='iddependencia';
 if(!$dato_padre)$dato_padre="null";
