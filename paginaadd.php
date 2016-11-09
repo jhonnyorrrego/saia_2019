@@ -285,8 +285,8 @@ if ($_REQUEST["mostrar_formato"]) {
 //$datos = json_encode($params);
 $info_doc = busca_filtro_tabla("numero,descripcion", "documento", "iddocumento=$key", "", $conn);
 if($info_doc['numcampos']) {
-  $params["numero"] = $info_doc["numero"];
-  $params["descripcion"] = $info_doc["descripcion"];
+  $params["numero"] = $info_doc[0]["numero"];
+  $params["descripcion"] = $info_doc[0]["descripcion"];
 }
 $params["radica"]= $key;
 $params["verLog"]=true;
