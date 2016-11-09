@@ -369,11 +369,23 @@ if($expediente[0]["estado_cierre"]==2){  //si esta cerrado
 	}
 	
   if($transferencia_doc["numcampos"]){
-  	if(is_object($transferencia_doc[0]["fecha"]))$transferencia_doc[0]["fecha"]=$transferencia_doc[0]["fecha"]->format('Y-m-d H:i');
+  	
   ?>
   <tr>
   	<td class="prettyprint"><b>Transferencia documental</b></td>
-  	<td><a class="previo_high" enlace="<?php echo($ruta_db_superior.$transferencia_doc[0]["pdf"]); ?>" style="cursor:pointer">Ver transferencia No <?php echo($transferencia_doc[0]["numero"]); ?> (<?php echo($transferencia_doc[0]["fecha"]); ?>)</a></td>
+  	<td>
+  	    <?php
+  	        for($i=0;$i<$transferencia_doc['numcampos'];$i++){
+  	            if(is_object($transferencia_doc[$i]["fecha"]))$transferencia_doc[$i]["fecha"]=$transferencia_doc[$i]["fecha"]->format('Y-m-d H:i');
+  	            ?>
+  	                <a class="previo_high" enlace="<?php echo($ruta_db_superior.$transferencia_doc[$i]["pdf"]); ?>" style="cursor:pointer">Ver transferencia No <?php echo($transferencia_doc[$i]["numero"]); ?> (<?php echo($transferencia_doc[$i]["fecha"]); ?>)</a>
+  	                <br>
+  	            <?php
+  	        }
+  	    ?>
+  	    
+  	
+  	</td>
   </tr>
   <script>
 		$(document).ready(function(){
