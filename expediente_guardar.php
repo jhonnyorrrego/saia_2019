@@ -3,7 +3,7 @@ include_once("db.php");
 include_once("pantallas/expediente/librerias.php");
 
 if(@$_REQUEST['fecha_limite'] && @$_REQUEST['fecha_limite']!='0000-00-00' ){
-    print_r($_REQUEST['fecha_limite']);
+    print_r($_REQUEST['fecha_limite']); die();
 }
 
 if($_REQUEST["iddoc"])  //si estoy llenando desde la pantalla del menu intermedio del documento
