@@ -11,7 +11,7 @@ include_once("pantallas/documento/menu_principal_documento.php");
 
 $cadena.="";
 $cadena.=expedientes_asignados();
-$cadena.="AND a.idexpediente=b.expediente_idexpediente AND b.documento_iddocumento in(".$iddoc.")";
+$cadena.=" AND a.idexpediente=b.expediente_idexpediente AND b.documento_iddocumento in(".$iddoc.")";
 
 $expedientes_documento=busca_filtro_tabla("","vexpediente_serie a, expediente_doc b",$cadena,"",$conn);
 print_r($expedientes_documento);
