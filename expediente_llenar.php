@@ -4,7 +4,7 @@ $max_salida=6; $ruta_db_superior=$ruta=""; while($max_salida>0){ if(is_file($rut
 
 include_once("db.php");
 include_once("pantallas/expediente/librerias.php");
-
+include_once($ruta_db_superior."calendario/calendario.php");
 $iddoc = $_REQUEST["iddoc"];
 $doc_menu=@$_REQUEST["iddoc"];
 include_once("pantallas/documento/menu_principal_documento.php");
@@ -111,6 +111,14 @@ else{ ?>
 <div class="control-group element">
 	<label class="control-label" for="nombre"><?php echo("El documento se encuentra almacenado en:<br> <b>".ucwords(strtolower(implode("</b><br><b>",$nombres_exp)))); ?></b>
   </label>
+</div>
+<div class="control-group element">
+    <label class="control-label" for="fecha_limite">
+  </label>
+  <div class="controls">
+      <input id="bqsaia_a@fecha_inicio_x" name="bqsaia_a@fecha_inicio_x" style="width:100px" type="text" value="" placeholder="Inicio">
+    <?php selector_fecha("bqsaia_a@fecha_inicio_x","kformulario_saia","Y-m-d",date("m"),date("Y"),"default.css","../../",""); ?>
+  </div>
 </div>
 <div>
  <input type="hidden" name="expedientes" id="expedientes" value="">
