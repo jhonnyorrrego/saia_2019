@@ -126,9 +126,7 @@ if(count($nombres_exp)){
     <label class="control-label" for="fecha_limite"> Fecha Limite de Respuesta
   </label>
   <div class="controls">
-      <button class="btn btn-mini" onclick="document.getElementById('fecha_limite').value='0000-00-00'" readonly>
-          <i class="icon-erase"></i>
-      </button>
+      <input class="btn btn-mini" type="button" onclick="document.getElementById('fecha_limite').value='0000-00-00'" value="Limpiar"/ readonly>
       <input id="fecha_limite" name="fecha_limite" style="width:100px" type="text" value="0000-00-00" >
       <?php selector_fecha("fecha_limite","form1","Y-m-d",date("m"),date("Y"),"default.css","",""); ?>
   </div>
