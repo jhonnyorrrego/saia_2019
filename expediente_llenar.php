@@ -14,6 +14,7 @@ $cadena.=expedientes_asignados();
 $cadena.="AND a.idexpediente=b.expediente_idexpediente AND b.documento_iddocumento in(".$iddoc.")";
 
 $expedientes_documento=busca_filtro_tabla("","vexpediente_serie a, expediente_doc b",$cadena,"",$conn);
+print_r($expedientes_documento);
 $nombres_exp=array_unique(extrae_campo($expedientes_documento,"nombre"));
 
 ?>
