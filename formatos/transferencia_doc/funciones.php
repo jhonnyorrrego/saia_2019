@@ -131,7 +131,7 @@ function expedientes_vinculados_funcion($idformato,$iddoc){
         
         if ($pos !== false) {  //son cajas //fue encontrada
             $ids_caja = trim($datos[0]["expediente_vinculado"], "cajas_");
-            $expedientes=busca_filtro_tabla("a.*,a.codigo as codigo_numero","caja a","a.idcaja IN(".$ids_caja.")","",$conn);
+            $expedientes=busca_filtro_tabla("a.*,a.codigo as codigo_numero,a.no_consecutivo as nombre","caja a","a.idcaja IN(".$ids_caja.")","",$conn);
         }    
     }	
 	
