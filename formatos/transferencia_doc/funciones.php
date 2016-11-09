@@ -182,8 +182,8 @@ function expedientes_vinculados_funcion($idformato,$iddoc){
 			<td>'.$expedientes[$i]["fecha_extrema_f"].'</td>
 			<td style="text-align:center;">'.$x_caja.'</td>
 			<td style="text-align:center;">X</td>
-			<td>'.$cadena_tomos.'</td>
-			<td>'.$expedientes[$i]['otro'].'</td>
+			<td style="text-align:center">'.$cadena_tomos.'</td>
+			<td style="text-align:center">'.$expedientes[$i]['no_unidad_conservacion'].'</td>
 			<td style="text-align:center">'.$expedientes[$i]["no_folios"].'</td>
 			<td>'.$vector_soportes[ $expedientes[$i]['soporte'] ].'</td>
 			<td>'.$vector_frecuencias[ $expedientes[$i]['frecuencia_consulta'] ].'</td>
