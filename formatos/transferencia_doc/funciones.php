@@ -52,18 +52,21 @@ function guardar_expedientes_add($idformato,$iddoc){
 		</td>";
 	}else if(@$_REQUEST['id_caja']){
 	    $ids_caja=$_REQUEST['id_caja'];
-        $caja=busca_filtro_tabla("no_consecutivo","caja","idcaja IN(".$ids_caja.")","",$conn);
-		$etiquetas=extrae_campo($caja,"no_consecutivo","");
-		$pre_titulo="<b>Caja:</b> ";
-		
-		$texto.="<td><ul><li>".$pre_titulo.implode("</li><li>".$pre_titulo,$etiquetas)."</li></ul>
-		<input type='hidden' name='expediente_vinculado' id='expediente_vinculado' value='cajas_".$ids_caja."'>
-		</td>";	    
+        $expedientes=busca_filtro_tabla("A.nombre,A.idexpediente","expediente A","A.fk_idcaja in(".$ids_caja.")","",$conn);
+        $etiquetas=extrae_campo($expedientes,"nombre","");
+        $idexpedientes=implode(',',extrae_campo($expedientes,"idexpediente","U"));
+        $texto.="<td><ul><li>".implode("</li><li>",$etiquetas)."</li></ul>
+		<input type='hidden' name='expediente_vinculado' id='expediente_vinculado' value='".$idexpedientes."'>
+		</td>";
 	}
 	else{
 		$texto.="<td>No hay expedientes vinculados</td>";
 	}
 	echo($texto);
+	
+	
+	
+	
 }
 function expedientes_vinculados_funcion($idformato,$iddoc){
 	global $conn, $ruta_db_superior;
