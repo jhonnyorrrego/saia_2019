@@ -487,6 +487,14 @@ function enlaces_adicionales_expediente($idexpediente, $nombre,$estado_cierre,$p
 	return ($texto);
 }
 
+function valida_from_caja(){
+    
+    if(!@$_REQUEST['from_caja']){
+        return('a.estado_archivo=1 and');
+    }
+  
+}
+
 function expedientes_asignados(){
 	global $conn;
 	
