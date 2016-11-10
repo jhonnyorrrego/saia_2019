@@ -51,7 +51,7 @@ function enlace_caja($idcaja,$numero){
 	global $conn,$componente_exp;
 	if(!$componente_exp)
 	$componente_exp=busca_filtro_tabla("","busqueda_componente a","a.nombre='expediente'","",$conn);
-	return("<div style='' class='link kenlace_saia' enlace='pantallas/busquedas/consulta_busqueda_expediente.php?idbusqueda_componente=".$componente_exp[0]["idbusqueda_componente"]."&idcaja=".$idcaja."' conector='iframe' titulo='".$numero."'><b>".$numero."</b></div>");
+	return("<div style='' class='link kenlace_saia' enlace='pantallas/busquedas/consulta_busqueda_expediente.php?idbusqueda_componente=".$componente_exp[0]["idbusqueda_componente"]."&idcaja=".$idcaja."&from_caja=1' conector='iframe' titulo='".$numero."'><b>".$numero."</b></div>");
 }
 function enlaces_adicionales_caja($idcaja,$numero){
 	global $conn;
