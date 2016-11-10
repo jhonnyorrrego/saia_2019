@@ -11,10 +11,17 @@ while ($max_salida > 0) {
 include_once($ruta_db_superior."db.php");
 
 
+//MOSTRAR
+function mostrar_unidad_admin_transf(){
+    global $conn;
+}
+function mostrar_oficina_productora_transf(){
+    global $conn;
+}
 
 function validacion_js_transferencia($idformato,$iddoc){
 	global $conn;
-	
+	/*
 	
 	if(!@$_REQUEST['iddoc']){  //solo adicionar
 	    
@@ -38,7 +45,7 @@ function validacion_js_transferencia($idformato,$iddoc){
 	</script>
 	<?php
 	
-	}
+	}*/
 }
 function guardar_expedientes_add($idformato,$iddoc){
 	global $conn;
