@@ -26,6 +26,8 @@ function mostrar_unidad_admin_transf($idformato,$iddoc){
 }
 function mostrar_oficina_productora_transf($idformato,$iddoc){
     global $conn;
+    $datos=busca_filtro_tabla("b.nombre","ft_transferencia_doc a, dependencia b","a.oficina_productora=b.iddependencia AND a.documento_iddocumento=".$iddoc,"",$conn);
+     echo($datos[0]['nombre']);
 }
 
 function validacion_js_transferencia($idformato,$iddoc){
