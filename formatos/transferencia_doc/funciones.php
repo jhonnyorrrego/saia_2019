@@ -76,6 +76,14 @@ function guardar_expedientes_add($idformato,$iddoc){
         $texto.="<td><ul><li>".implode("</li><li>",$etiquetas)."</li></ul>
 		<input type='hidden' name='expediente_vinculado' id='expediente_vinculado' value='".$idexpedientes."'>
 		</td>";
+	}else if(@$_REQUEST['iddoc']){
+	    $datos=busca_filtro_tabla("expediente_vinculado","ft_transferencia_doc","documento_iddocumento=".$_REQUEST['iddoc'],"",$conn);
+	    $ids=$datos[0]['expediente_vinculado'];
+	    $expedientes=busca_filtro_tabla("nombre","expediente A","A.idexpediente in(".$ids.")","",$conn);
+		$etiquetas=extrae_campo($expedientes,"nombre","");
+		$texto.="<td><ul><li>".implode("</li><li>",$etiquetas)."</li></ul>
+		<input type='hidden' name='expediente_vinculado' id='expediente_vinculado' value='".$ids."'>
+		</td>";
 	}
 	else{
 		$texto.="<td>No hay expedientes vinculados</td>";
