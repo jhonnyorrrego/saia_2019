@@ -12,10 +12,14 @@ include_once($ruta_db_superior."db.php");
 
 
 //MOSTRAR
-function mostrar_unidad_admin_transf(){
+function mostrar_unidad_admin_transf($idformato,$iddoc){
     global $conn;
+    
+    
+    $datos=busca_filtro_tabla("","ft_transferencia_doc","documento_iddocumento=".$iddoc,"",$conn);
+    print_r($datos);
 }
-function mostrar_oficina_productora_transf(){
+function mostrar_oficina_productora_transf($idformato,$iddoc){
     global $conn;
 }
 
