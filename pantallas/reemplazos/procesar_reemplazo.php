@@ -311,13 +311,13 @@ function inactivar_reemplazo_expedientes($idreemplazo_saia){
     
     $sql3="UPDATE reemplazo_expediente SET estado=0 WHERE idreemplazo_expediente IN(".$idreemplazo_expedientes.")";
     phpmkr_query($sql3);
-    $sql4="UPDATE entidad_expediente SET llave_entidad=".$idfuncionario_antiguo[0]['idfuncionario']." WHERE estado=1 AND entidad_identidad=1 AND expediente_idexpediente IN(".$idexpedientes_reemplazo.")  AND llave_entidad=".$idfuncionario_nuevo[0]['idfuncionario'];
+    $sql4="UPDATE entidad_expediente SET ";
 }
 
 function insertar_reemplazo_expediente($idreemplazo_saia){
     global $conn,$ruta_db_superior;
     
-    $reemplazo_saia=busca_filtro_tabla("","reemplazo_saia","estado=1 AND idreemplazo_saia=".$idreemplazo_saia,"",$conn);
+    $reemplazo_saia=busca_filtro_tabla("nuevo,antiguo","reemplazo_saia","estado=1 AND idreemplazo_saia=".$idreemplazo_saia,"",$conn);
     $idfuncionario_antiguo=busca_filtro_tabla("idfuncionario","funcionario","funcionario_codigo=".$reemplazo_saia[0]['antiguo'],"",$conn);
     $idfuncionario_nuevo=busca_filtro_tabla("idfuncionario","funcionario","funcionario_codigo=".$reemplazo_saia[0]['nuevo'],"",$conn);
     
