@@ -329,7 +329,7 @@ function insertar_reemplazo_expediente($idreemplazo_saia){
     
     $sql3="INSERT INTO reemplazo_expediente (fk_idreemplazo_saia,fk_identidad_expediente,estado) VALUES (".$idreemplazo_saia.",'".$identidad_expediente."',1)";
     phpmkr_query($sql3);
-    $sql4="UPDATE entidad_expediente SET llave_entidad=".$idfuncionario_nuevo[0]['idfuncionario']." WHERE fk_identidad_expediente IN(".$identidad_expediente.")";
+    $sql4="UPDATE entidad_expediente SET llave_entidad=".$idfuncionario_nuevo[0]['idfuncionario']." WHERE identidad_expediente IN(".$identidad_expediente.")";
     phpmkr_query($sql4);
 }
 function actualiza_ruta_devolucion($idreemplazo,$iddocumento,$idruta){
