@@ -301,6 +301,32 @@ if(@$_REQUEST["fecha_fin"]){
 }
 $sql2="INSERT INTO reemplazo_saia(antiguo,nuevo,fecha_inicio,fecha_fin,observaciones,tipo_reemplazo) VALUES('".@$_REQUEST["antiguo"]."','".@$_REQUEST["nuevo"]."',".fecha_db_almacenar(@$_REQUEST["fecha_inicio"],"Y-m-d").",".$fecha_fin.",'".@$_REQUEST["observaciones"]."','".$_REQUEST['tipo_reemplazo']."')";
 phpmkr_query($sql2);
-return(phpmkr_insert_id());
+$idreemplazo_saia=phpmkr_insert_id();
+
+insertar_reemplazo_expediente($idreemplazo_saia);
+
+
+return($idreemplazo_saia);
 }
+
+function insertar_reemplazo_expediente($idreemplazo_saia){
+    global $conn,$ruta_db_superior;
+    
+    $reemplazo_saia=busca_filtro_tabla("","reemplazo_saia","estado=1 AND idreemplazo_saia=".$idreemplazo_saia,"",$conn);
+    $idfuncionario_antiguo=busca_filtro_tabla("idfuncionario","funcionario","funcionario_codigo=".$reemplazo_saia[0]['antiguo'],"",$conn);
+    $idfuncionario_nuevo=busca_filtro_tabla("idfuncionario","funcionario","funcionario_codigo=".$reemplazo_saia[0]['nuevo'],"",$conn);
+    
+    $permisos_expedientes_antiguo=busca_filtro_tabla("","entidad_expediente","entidad_identidad=1 AND llave_entidad=".$idfuncionario_antiguo[0]['idfuncionario'],"",$conn);
+    
+    for($i=0;$i<$permisos_expedientes_antiguo['numcampos'];$i++){
+        $sql3="INSERT INTO reemplazo_expediente (fk_idreemplazo_saia,expediente_idexpediente,estado) VALUES (".$idreemplazo_saia.",".$permisos_expedientes_antiguo[0]['expediente_idexpediente'].",1)";
+        phpmkr_query($sql3);
+        
+        
+        
+    }
+    
+}
+
+
 ?>
