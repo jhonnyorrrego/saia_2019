@@ -319,7 +319,7 @@ function insertar_reemplazo_expediente($idreemplazo_saia){
     $permisos_expedientes_antiguo=busca_filtro_tabla("","entidad_expediente","entidad_identidad=1 AND llave_entidad=".$idfuncionario_antiguo[0]['idfuncionario'],"",$conn);
     
     for($i=0;$i<$permisos_expedientes_antiguo['numcampos'];$i++){
-        $sql3="INSERT INTO reemplazo_expediente (fk_idreemplazo_saia,expediente_idexpediente,estado) VALUES (".$idreemplazo_saia.",".$permisos_expedientes_antiguo[0]['expediente_idexpediente'].",1)";
+        $sql3="INSERT INTO reemplazo_expediente (fk_idreemplazo_saia,expediente_idexpediente,estado) VALUES (".$idreemplazo_saia.",".$permisos_expedientes_antiguo[$i]['expediente_idexpediente'].",1)";
         phpmkr_query($sql3);
         
         
