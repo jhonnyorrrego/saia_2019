@@ -61,24 +61,7 @@ function procesar_reemplazo($idreemplazo){
   }
 	return($retorno);
 }
-function insertar_reemplazo_expediente($idreemplazo_saia){
-    global $conn,$ruta_db_superior;
-    
-    $reemplazo_saia=busca_filtro_tabla("","reemplazo_saia","estado=1 AND idreemplazo_saia=".$idreemplazo_saia,"",$conn);
-    $idfuncionario_antiguo=busca_filtro_tabla("idfuncionario","funcionario","funcionario_codigo=".$reemplazo_saia[0]['antiguo'],"",$conn);
-    $idfuncionario_nuevo=busca_filtro_tabla("idfuncionario","funcionario","funcionario_codigo=".$reemplazo_saia[0]['nuevo'],"",$conn);
-    
-    $permisos_expedientes_antiguo=busca_filtro_tabla("","entidad_expediente","estado=1 AND entidad_identidad=1 AND llave_entidad=".$idfuncionario_antiguo[0]['idfuncionario'],"",$conn);
-    
-    for($i=0;$i<$permisos_expedientes_antiguo['numcampos'];$i++){
-        $sql3="INSERT INTO reemplazo_expediente (fk_idreemplazo_saia,expediente_idexpediente,estado) VALUES (".$idreemplazo_saia.",".$permisos_expedientes_antiguo[$i]['expediente_idexpediente'].",1)";
-        phpmkr_query($sql3);
-        
-        $sql4="UPDATE entidad_expediente SET llave_entidad=".$idfuncionario_nuevo[0]['idfuncionario']." WHERE estado=1 AND entidad_identidad=1 AND llave_entidad=".$idfuncionario_antiguo[0]['idfuncionario'];
-        phpmkr_query($sql4);
-    }
-    
-}
+
 
 function validar_reemplazo($reemplazo,$fecha_ini='',$fecha_fin=''){
 $retorno=array("exito"=>1);
@@ -308,11 +291,44 @@ if($documentos_pendientes["numcampos"]){
 
 $sql_delete="DELETE B.* FROM reemplazo_saia A,reemplazo_documento B WHERE A.idreemplazo_saia=B.fk_idreemplazo_saia AND A.idreemplazo_saia=".$idreemplazo;
 phpmkr_query($sql_delete);
+
+
+inactivar_reemplazo_expedientes($idreemplazo);
+
 $sql2="UPDATE reemplazo_saia SET estado=0 WHERE idreemplazo_saia=".$idreemplazo;
 phpmkr_query($sql2);
 return(true);
 }
 
+function inactivar_reemplazo_expedientes($idreemplazo_saia){
+    global $conn,$ruta_db_superior;
+    $reemplazo_saia=busca_filtro_tabla("","reemplazo_saia","estado=1 AND idreemplazo_saia=".$idreemplazo_saia,"",$conn);
+    $idfuncionario_antiguo=busca_filtro_tabla("idfuncionario","funcionario","funcionario_codigo=".$reemplazo_saia[0]['antiguo'],"",$conn);
+    $idfuncionario_nuevo=busca_filtro_tabla("idfuncionario","funcionario","funcionario_codigo=".$reemplazo_saia[0]['nuevo'],"",$conn);    
+    $reemplazo_expedientes=busca_filtro_tabla("expediente_idexpediente,idreemplazo_expediente","reemplazo_expediente","estado=1 AND fk_idreemplazo_saia=".$idreemplazo_saia,"",$conn);
+    $idexpedientes_reemplazo=implode(',',extrae_campo($reemplazo_expedientes,'expediente_idexpediente'));
+    $idreemplazo_expedientes=implode(',',extrae_campo($reemplazo_expedientes,'idreemplazo_expediente'));
+    
+    $sql3="UPDATE reemplazo_expediente SET estado=0 WHERE idreemplazo_expediente IN(".$idreemplazo_expedientes.")";
+    phpmkr_query($sql3);
+    $sql4="UPDATE entidad_expediente SET llave_entidad=".$idfuncionario_antiguo[0]['idfuncionario']." WHERE estado=1 AND entidad_identidad=1 AND expediente_idexpediente IN(".$idexpedientes_reemplazo.")  AND llave_entidad=".$idfuncionario_nuevo[0]['idfuncionario'];
+}
+
+function insertar_reemplazo_expediente($idreemplazo_saia){
+    global $conn,$ruta_db_superior;
+    
+    $reemplazo_saia=busca_filtro_tabla("","reemplazo_saia","estado=1 AND idreemplazo_saia=".$idreemplazo_saia,"",$conn);
+    $idfuncionario_antiguo=busca_filtro_tabla("idfuncionario","funcionario","funcionario_codigo=".$reemplazo_saia[0]['antiguo'],"",$conn);
+    $idfuncionario_nuevo=busca_filtro_tabla("idfuncionario","funcionario","funcionario_codigo=".$reemplazo_saia[0]['nuevo'],"",$conn);
+    
+    $permisos_expedientes_antiguo=busca_filtro_tabla("identidad_expediente","entidad_expediente","estado=1 AND entidad_identidad=1 AND llave_entidad=".$idfuncionario_antiguo[0]['idfuncionario'],"",$conn);
+    $identidad_expediente=implode(",",extrae_campo($permisos_expedientes_antiguo,'identidad_expediente'));
+    
+    $sql3="INSERT INTO reemplazo_expediente (fk_idreemplazo_saia,fk_identidad_expediente,estado) VALUES (".$idreemplazo_saia.",'".$identidad_expediente."',1)";
+    phpmkr_query($sql3);
+    $sql4="UPDATE entidad_expediente SET llave_entidad=".$idfuncionario_nuevo[0]['idfuncionario']." WHERE fk_identidad_expediente IN(".$identidad_expediente.")";
+    phpmkr_query($sql4);
+}
 function actualiza_ruta_devolucion($idreemplazo,$iddocumento,$idruta){
 	global $conn;
 	$reemplazo=busca_filtro_tabla("idreemplazo_saia,tipo_reemplazo,".fecha_db_obtener("fecha_inicio","Y-m-d")." AS fecha_inicio,".fecha_db_obtener("fecha_fin","Y-m-d")." AS fecha_fin","reemplazo_saia","idreemplazo_saia=".$idreemplazo,"",$conn);
