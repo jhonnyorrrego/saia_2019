@@ -51,11 +51,33 @@ function procesar_reemplazo($idreemplazo){
     }
     transferencia_delegado($reemplazo[0]["antiguo"],$reemplazo[0]["nuevo"],$idreemplazo);
     actualizar_funcionarios_reemplazo($equivalencias_reemplazo);
+    insertar_reemplazo_expediente($idreemplazo);
+    
+    
+    
     $retorno['exito']=1;
   }else if($validar_reemplazo["exito"]==0){
    $retorno['error']= $validar_reemplazo["error"];
   }
 	return($retorno);
+}
+function insertar_reemplazo_expediente($idreemplazo_saia){
+    global $conn,$ruta_db_superior;
+    
+    $reemplazo_saia=busca_filtro_tabla("","reemplazo_saia","estado=1 AND idreemplazo_saia=".$idreemplazo_saia,"",$conn);
+    $idfuncionario_antiguo=busca_filtro_tabla("idfuncionario","funcionario","funcionario_codigo=".$reemplazo_saia[0]['antiguo'],"",$conn);
+    $idfuncionario_nuevo=busca_filtro_tabla("idfuncionario","funcionario","funcionario_codigo=".$reemplazo_saia[0]['nuevo'],"",$conn);
+    
+    $permisos_expedientes_antiguo=busca_filtro_tabla("","entidad_expediente","entidad_identidad=1 AND llave_entidad=".$idfuncionario_antiguo[0]['idfuncionario'],"",$conn);
+    
+    for($i=0;$i<$permisos_expedientes_antiguo['numcampos'];$i++){
+        $sql3="INSERT INTO reemplazo_expediente (fk_idreemplazo_saia,expediente_idexpediente,estado) VALUES (".$idreemplazo_saia.",".$permisos_expedientes_antiguo[$i]['expediente_idexpediente'].",1)";
+        phpmkr_query($sql3);
+        
+        
+        
+    }
+    
 }
 
 function validar_reemplazo($reemplazo,$fecha_ini='',$fecha_fin=''){
