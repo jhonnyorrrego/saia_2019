@@ -26,6 +26,9 @@ function barra_inferior_remitente($idejecutor){
 
 function activar_remitentes(){
 	global $ruta_db_superior;
+	
+	$idbusqueda_reporte_remitentes=busca_filtro_tabla("idbusqueda","busqueda","lower(nombre)='ejecutor'","",$conn);
+	
   $texto=librerias_notificaciones().'<li><a href="#" id="activar_remitente">Activar Remitente</a></li>';
 	$texto.='<script>
 	$("#activar_remitente").click(function(){
@@ -40,7 +43,7 @@ function activar_remitentes(){
 				success : function(objeto) {
 					if (objeto.exito) {
 						notificacion_saia(objeto.mensaje, "success", "", 2500);
-						window.open("'.$ruta_db_superior.'pantallas/buscador_principal.php?idbusqueda=50","_parent");
+						window.open("'.$ruta_db_superior.'pantallas/buscador_principal.php?idbusqueda='.$idbusqueda_reporte_remitentes[0]['idbusqueda'].'","_parent");
 					}else{
 						notificacion_saia(objeto.mensaje, "error", "", 2500);
 						return false;
@@ -57,6 +60,8 @@ function activar_remitentes(){
 
 function inactivar_remitentes(){
 	global $ruta_db_superior;
+	$idbusqueda_reporte_remitentes=busca_filtro_tabla("idbusqueda","busqueda","lower(nombre)='ejecutor'","",$conn);
+	
   $texto=librerias_notificaciones().'<li><a href="#" id="inactivar_remitente">Inactivar Remitente</a></li>';
 	$texto.='<script>
 	$("#inactivar_remitente").click(function(){
@@ -71,7 +76,7 @@ function inactivar_remitentes(){
 				success : function(objeto) {
 					if (objeto.exito) {
 						notificacion_saia(objeto.mensaje, "success", "", 2500);
-						window.open("'.$ruta_db_superior.'pantallas/buscador_principal.php?idbusqueda=50","_parent");
+						window.open("'.$ruta_db_superior.'pantallas/buscador_principal.php?idbusqueda='.$idbusqueda_reporte_remitentes[0]['idbusqueda'].'","_parent");
 					}else{
 						notificacion_saia(objeto.mensaje, "error", "", 2500);
 						return false;
