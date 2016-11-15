@@ -8,6 +8,11 @@ while ($max_salida > 0) {
 	$max_salida--;
 }
 include_once ($ruta_db_superior . "db.php");
+include_once($ruta_db_superior.'librerias_saia.php');
+	global $raiz_saia;
+	$raiz_saia=$ruta_db_superior;
+echo(librerias_notificaciones());
+
 
 function mostrar_nombre($nombre, $idejecutor) {
 	global $conn;
