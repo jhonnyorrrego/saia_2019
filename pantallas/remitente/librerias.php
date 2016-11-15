@@ -11,7 +11,7 @@ include_once ($ruta_db_superior . "db.php");
 include_once($ruta_db_superior.'librerias_saia.php');
 	global $raiz_saia;
 	$raiz_saia=$ruta_db_superior;
-echo(librerias_notificaciones());
+
 
 
 function mostrar_nombre($nombre, $idejecutor) {
@@ -26,7 +26,7 @@ function barra_inferior_remitente($idejecutor){
 
 function activar_remitentes(){
 	global $ruta_db_superior;
-  $texto='<li><a href="#" id="activar_remitente">Activar Remitente</a></li>';
+  $texto=librerias_notificaciones().'<li><a href="#" id="activar_remitente">Activar Remitente</a></li>';
 	$texto.='<script>
 	$("#activar_remitente").click(function(){
 		var seleccionados=$("#seleccionados").val();
@@ -57,7 +57,7 @@ function activar_remitentes(){
 
 function inactivar_remitentes(){
 	global $ruta_db_superior;
-  $texto='<li><a href="#" id="inactivar_remitente">Inactivar Remitente</a></li>';
+  $texto=librerias_notificaciones().'<li><a href="#" id="inactivar_remitente">Inactivar Remitente</a></li>';
 	$texto.='<script>
 	$("#inactivar_remitente").click(function(){
 		var seleccionados=$("#seleccionados").val();
