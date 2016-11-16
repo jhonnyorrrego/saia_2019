@@ -2,7 +2,7 @@
 
 
 
-
+include_once('db.php');
 
 
 @$_REQUEST['idfunc']=1;
