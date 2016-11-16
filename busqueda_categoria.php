@@ -27,7 +27,15 @@ if(@$_REQUEST["idcategoria_formato"]){
 }
 
 if(@$_REQUEST["defecto"]){
-  $defecto="formatos/".$_REQUEST["defecto"]."/adicionar_".$_REQUEST["defecto"].".php";
+    
+    $modulo_formato=busca_filtro_tabla('idmodulo','modulo','nombre="crear_'.$_REQUEST["defecto"].'"','',$conn);
+    $ok=0;
+    if($modulo_formato['numcampos']){
+        $ok=acceso_modulo($modulo_formato[0]['idmodulo']);	
+    }
+    if($ok){    
+        $defecto="formatos/".$_REQUEST["defecto"]."/adicionar_".$_REQUEST["defecto"].".php";
+    }
 }
 else if(!$defecto){
             $modulo_formato=busca_filtro_tabla('idmodulo','modulo','nombre="crear_radicacion_entrada"','',$conn);
