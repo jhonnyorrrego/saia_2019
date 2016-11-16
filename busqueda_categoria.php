@@ -10,7 +10,15 @@ if(@$_REQUEST["idcategoria_formato"]){
 		$cantidad=count($cat);
 		for($j=0;$j<$cantidad;$j++){
 			if($cat[$j]==$_REQUEST["idcategoria_formato"]){
-				$defecto="formatos/".$formatos[$i]["nombre"]."/adicionar_".$formatos[$i]["nombre"].".php";
+			    
+                $modulo_formato=busca_filtro_tabla('idmodulo','modulo','nombre="crear_'.$formatos[$i]["nombre"].'"','',$conn);
+                $ok=0;
+            	if($modulo_formato['numcampos']){
+            	    $ok=acceso_modulo($modulo_formato[0]['idmodulo']);	
+            	}
+            	if($ok){
+            	    $defecto="formatos/".$formatos[$i]["nombre"]."/adicionar_".$formatos[$i]["nombre"].".php"; 
+            	}
 				break;
 			}
 		}
@@ -22,7 +30,15 @@ if(@$_REQUEST["defecto"]){
   $defecto="formatos/".$_REQUEST["defecto"]."/adicionar_".$_REQUEST["defecto"].".php";
 }
 else if(!$defecto){
-  $defecto="formatos/radicacion_entrada/adicionar_radicacion_entrada.php";
+            $modulo_formato=busca_filtro_tabla('idmodulo','modulo','nombre="crear_radicacion_entrada"','',$conn);
+            $ok=0;
+        	if($modulo_formato['numcampos']){
+        	    $ok=acceso_modulo($modulo_formato[0]['idmodulo']);	
+        	}                
+            
+		    if($ok){    
+                 $defecto="formatos/radicacion_entrada/adicionar_radicacion_entrada.php";
+		    }
 }
 ?>
 <script type="text/javascript" src="js/jquery-1.4.2.js"></script>
@@ -41,3 +57,16 @@ $("document").ready(function(){
   $(".alto_frame").height(alto);
 });
 </script>  
+<?php
+	function acceso_modulo($idmodulo){
+	  if(usuario_actual("login")=="cerok"){
+	    return true;
+	  }
+	  $ok=new Permiso();
+	  $modulo=busca_filtro_tabla("","modulo","idmodulo=".$idmodulo,"");
+	  $acceso=$ok->acceso_modulo_perfil($modulo[0]["nombre"]);
+	  return $acceso;
+	}	
+	
+
+?>
