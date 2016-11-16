@@ -38,7 +38,7 @@ if(count($request)){
 					$url=$ruta_db_superior.'formatos/'.$cuantos_formatos[0]['nombre'].'/'.$cuantos_formatos[0]['ruta_adicionar']."?1=1";
 					$proceso='';
 					
-					$modulo_formato=busca_filtro_tabla('','modulo','nombre="crear_'.$cuantos_formatos[0]['nombre'].'"','',$conn);
+					$modulo_formato=busca_filtro_tabla('idmodulo','modulo','nombre="crear_'.$cuantos_formatos[0]['nombre'].'"','',$conn);
 					$ok=0;
 					if($modulo_formato['numcampos']){
 					    $ok=acceso_modulo($modulo_formato[0]['idmodulo']);
@@ -50,7 +50,7 @@ if(count($request)){
 					
 				}elseif($cuantos_formatos['numcampos']){
 					for ($j=0; $j < $cuantos_formatos['numcampos']; $j++) { 
-                        $modulo_formato=busca_filtro_tabla('','modulo','nombre="crear_'.$cuantos_formatos[$j]['nombre'].'"','',$conn);
+                        $modulo_formato=busca_filtro_tabla('idmodulo','modulo','nombre="crear_'.$cuantos_formatos[$j]['nombre'].'"','',$conn);
 						$ok=0;
 						if($modulo_formato['numcampos']){
 							$ok=acceso_modulo($modulo_formato[0]['idmodulo']);
