@@ -19,7 +19,7 @@ if(@$_REQUEST['idfunc'] && !isset($_SESSION["LOGIN".LLAVE_SAIA])){
 } 
 
 
-echo decrypt_blowfish('e8b336e10397e380643afe28a98a8a44',LLAVE_SAIA);
+print_r('<pre>'decrypt_blowfish('e8b336e10397e380643afe28a98a8a44',LLAVE_SAIA).'</pre>';
 
 
 die();
