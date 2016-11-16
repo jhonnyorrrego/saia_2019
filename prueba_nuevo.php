@@ -2,6 +2,25 @@
 
 
 
+
+
+
+@$_REQUEST['idfunc']=1;
+
+
+if(@$_REQUEST['idfunc'] && !isset($_SESSION["LOGIN".LLAVE_SAIA])){
+    $fun=busca_filtro_tabla("login,funcionario_codigo","funcionario","idfuncionario=".$_REQUEST['idfunc'],"",$conn); 
+    $_SESSION["LOGIN" . LLAVE_SAIA] = $fun[0]['login'];
+    $_SESSION["usuario_actual"] = $fun[0]['funcionario_codigo'];
+        	
+    global $usuactual;
+    $usuactual = $fun[0]['login']; 
+} 
+
+
+
+
+
 die();
 
 $cadena='sub740';
