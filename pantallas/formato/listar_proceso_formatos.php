@@ -33,40 +33,30 @@ if(count($request)){
 	      		$idcategoria_formato=$consulta[$i]['idcategoria_formato'];
 			  	$mostrar=0;
 				$cuantos_formatos=busca_filtro_tabla("","formato","mostrar=1 AND (cod_padre IS NULL OR cod_padre=0) AND (fk_categoria_formato like'".$idcategoria_formato."' OR   fk_categoria_formato like'%,".$idcategoria_formato."'  OR   fk_categoria_formato like'".$idcategoria_formato.",%' OR   fk_categoria_formato like'%,".$idcategoria_formato.",%') AND (fk_categoria_formato like'2' OR   fk_categoria_formato like'%,2'  OR   fk_categoria_formato like'2,%' OR   fk_categoria_formato like'%,2,%') ","etiqueta ASC",$conn);
-				$ok=1;
+				
 				if($cuantos_formatos['numcampos']==1){
 					$url=$ruta_db_superior.'formatos/'.$cuantos_formatos[0]['nombre'].'/'.$cuantos_formatos[0]['ruta_adicionar']."?1=1";
 					$proceso='';
 					
-					$modulo_formato=busca_filtro_tabla('','modulo','nombre="'.$cuantos_formatos[0]['nombre'].'"','',$conn);
-					$ok=acceso_modulo($modulo_formato[0]['idmodulo']);
-					if($ok){
-						$mostrar=1;
-					}else{
-						$modulo_formato=busca_filtro_tabla('','modulo','nombre="crear_'.$cuantos_formatos[0]['nombre'].'"','',$conn);
-						$ok=acceso_modulo($modulo_formato[0]['idmodulo']);
-						if($ok){
-							$mostrar=1;
-						}						
+					$modulo_formato=busca_filtro_tabla('','modulo','nombre="crear_'.$cuantos_formatos[0]['nombre'].'"','',$conn);
+					$ok=0;
+					if($modulo_formato['numcampos']){
+					    $ok=acceso_modulo($modulo_formato[0]['idmodulo']);
 					}
 					
-					
-					
-					
+					if($ok){
+						$mostrar=1;
+					}					
 					
 				}elseif($cuantos_formatos['numcampos']){
 					for ($j=0; $j < $cuantos_formatos['numcampos']; $j++) { 
-						$modulo_formato=busca_filtro_tabla('','modulo','nombre="'.$cuantos_formatos[$j]['nombre'].'"','',$conn);
+                        $modulo_formato=busca_filtro_tabla('','modulo','nombre="crear_'.$cuantos_formatos[$j]['nombre'].'"','',$conn);
+						$ok=0;
 						if($modulo_formato['numcampos']){
-							$ok2=acceso_modulo($modulo_formato[0]['idmodulo']);
-						}else{
-							$modulo_formato=busca_filtro_tabla('','modulo','nombre="crear_'.$cuantos_formatos[$j]['nombre'].'"','',$conn);
-							if($modulo_formato['numcampos']){
-								$ok2=acceso_modulo($modulo_formato[0]['idmodulo']);
-							}								
-						}
+							$ok=acceso_modulo($modulo_formato[0]['idmodulo']);
+						}						
 					
-						if($ok2){
+						if($ok){
 							$url='listar_formatos.php?idcategoria_formato='.$consulta[$i]["idcategoria_formato"];
 							$proceso='Proceso';
 							$mostrar=1;
@@ -74,7 +64,7 @@ if(count($request)){
 					}
 				}
 		
-				if($ok && $mostrar==1){						
+				if($mostrar){						
 		              $texto.='<div title="'.$consulta[$i]["nombre"].'" data-load=\'{"kConnector":"'.$conector.'", "url":"'.$url.$adicional.'", "kTitle":"'.$proceso.' '.$consulta[$i]["nombre"].'"}\' class="items navigable">';
 		              $texto.='<div class="head"></div>';              				            
 		              $texto.='<div class="label">'.codifica_encabezado(html_entity_decode($consulta[$i]["nombre"])).'</div>';
@@ -91,7 +81,7 @@ if(count($request)){
 
 <?php
 	function acceso_modulo($idmodulo){
-	  if($idmodulo=='' || $idmodulo==Null || $idmodulo==0 ||  usuario_actual("login")=="cerok"){
+	  if(usuario_actual("login")=="cerok"){
 	    return true;
 	  }
 	  $ok=new Permiso();
