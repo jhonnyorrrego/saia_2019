@@ -53,6 +53,7 @@ else if($cod_padre!=''){
 else
   $papas=busca_filtro_tabla("*","categoria_formato","idcategoria_formato=".$id.$where,"",$conn);
 
+
 if($papas["numcampos"])
 { 
   for($i=0; $i<$papas["numcampos"]; $i++)
@@ -106,21 +107,47 @@ function adicionar_formato($idcategoria){
 	for($i=0;$i<$formatos["numcampos"];$i++){
 		$categorias_formato=explode(",",$formatos[$i]["fk_categoria_formato"]);
 		if(in_array($idcategoria,$categorias_formato) && is_file("formatos/".$formatos[$i]["nombre"]."/".$formatos[$i]["ruta_adicionar"])){
-		    if(@$_REQUEST['tipo_radicado']){
-		        if($_REQUEST['tipo_radicado']==$formatos[$i]["nombre"]){
-		            echo("<item style=\"font-family:verdana; font-size:7pt;\" ");
-    		        echo("text=\"".ucwords(strtolower(htmlspecialchars($formatos[$i]["etiqueta"])))." Origen Externo\" id=\"radicacion_entrada\" ></item>");
-    		        echo("<item style=\"font-family:verdana; font-size:7pt;\" ");
-    		        echo("text=\"".ucwords(strtolower(htmlspecialchars($formatos[$i]["etiqueta"])))." Origen Interno\" id=\"radicacion_salida\" ></item>");
-		        }/*else{
-		            echo("<item style=\"font-family:verdana; font-size:7pt;\" ");
-    		        echo("text=\"".ucwords(strtolower(htmlspecialchars($formatos[$i]["etiqueta"])))." \" id=\"".$formatos[$i]["nombre"]."\" ></item>");
-		        }*/
-		    }else{
-			    echo("<item style=\"font-family:verdana; font-size:7pt;\" ");
-    		    echo("text=\"".ucwords(strtolower(htmlspecialchars($formatos[$i]["etiqueta"])))." \" id=\"".$formatos[$i]["idformato"]."\" ></item>");
-		    }
+		    
+
+            $ok=1;
+            if($idcategoria==1 || $idcategoria==3){
+                $modulo_formato=busca_filtro_tabla('idmodulo','modulo','nombre="crear_'.$formatos[$i]['nombre'].'"','',$conn);
+                $ok=0;
+        		if($modulo_formato['numcampos']){
+        		    $ok=acceso_modulo($modulo_formato[0]['idmodulo']);	
+        		}                
+            }
+		    if($ok){
+    		    if(@$_REQUEST['tipo_radicado']){
+    		        if($_REQUEST['tipo_radicado']==$formatos[$i]["nombre"]){
+    		            echo("<item style=\"font-family:verdana; font-size:7pt;\" ");
+        		        echo("text=\"".ucwords(strtolower(htmlspecialchars($formatos[$i]["etiqueta"])))." Origen Externo\" id=\"radicacion_entrada\" ></item>");
+        		        echo("<item style=\"font-family:verdana; font-size:7pt;\" ");
+        		        echo("text=\"".ucwords(strtolower(htmlspecialchars($formatos[$i]["etiqueta"])))." Origen Interno\" id=\"radicacion_salida\" ></item>");
+    		        }/*else{
+    		            echo("<item style=\"font-family:verdana; font-size:7pt;\" ");
+        		        echo("text=\"".ucwords(strtolower(htmlspecialchars($formatos[$i]["etiqueta"])))." \" id=\"".$formatos[$i]["nombre"]."\" ></item>");
+    		        }*/
+    		    }else{
+    			    echo("<item style=\"font-family:verdana; font-size:7pt;\" ");
+        		    echo("text=\"".ucwords(strtolower(htmlspecialchars($formatos[$i]["etiqueta"])))." \" id=\"".$formatos[$i]["idformato"]."\" ></item>");
+    		    }
+		    }	    
 		}
 	}
 }
+?>
+
+<?php
+	function acceso_modulo($idmodulo){
+	  if(usuario_actual("login")=="cerok"){
+	    return true;
+	  }
+	  $ok=new Permiso();
+	  $modulo=busca_filtro_tabla("","modulo","idmodulo=".$idmodulo,"");
+	  $acceso=$ok->acceso_modulo_perfil($modulo[0]["nombre"]);
+	  return $acceso;
+	}	
+	
+
 ?>
