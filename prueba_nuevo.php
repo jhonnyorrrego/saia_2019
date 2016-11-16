@@ -2,26 +2,6 @@
 
 
 
-include_once('db.php');
-include_once('pantallas/lib/librerias_cripto.php');
-
-
-@$_REQUEST['idfunc']=1;
-
-
-if(@$_REQUEST['idfunc'] && !isset($_SESSION["LOGIN".LLAVE_SAIA])){
-    $fun=busca_filtro_tabla("login,funcionario_codigo","funcionario","idfuncionario=".$_REQUEST['idfunc'],"",$conn); 
-    $_SESSION["LOGIN" . LLAVE_SAIA] = $fun[0]['login'];
-    $_SESSION["usuario_actual"] = $fun[0]['funcionario_codigo'];
-        	
-    global $usuactual;
-    $usuactual = $fun[0]['login']; 
-} 
-
-
-echo('<pre>'.decrypt_blowfish('e8b336e10397e380643afe28a98a8a44',LLAVE_SAIA_CRYPTO).'</pre>');
-
-
 die();
 
 $cadena='sub740';
