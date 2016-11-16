@@ -53,7 +53,7 @@
 	';
 	for($i=0;$i<$lista_formatos['numcampos'];$i++){
 		
-		$modulo_formato=busca_filtro_tabla('','modulo','nombre="crear_'.$lista_formatos[$i]['nombre'].'"','',$conn);
+		$modulo_formato=busca_filtro_tabla('idmodulo','modulo','nombre="crear_'.$lista_formatos[$i]['nombre'].'"','',$conn);
 		$ok=0;
 		if($modulo_formato['numcampos']){
 		    $ok=acceso_modulo($modulo_formato[0]['idmodulo']);	
