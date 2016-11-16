@@ -53,17 +53,13 @@
 	';
 	for($i=0;$i<$lista_formatos['numcampos'];$i++){
 		
-		$modulo_formato=busca_filtro_tabla('','modulo','nombre="'.$lista_formatos[$i]['nombre'].'"','',$conn);
-		
-		$ok=acceso_modulo($modulo_formato[0]['idmodulo']);
-		
-		if(!$ok){
-			$modulo_formato=busca_filtro_tabla('','modulo','nombre="crear_'.$lista_formatos[$i]['nombre'].'"','',$conn);
-			$ok=acceso_modulo($modulo_formato[0]['idmodulo']);			
+		$modulo_formato=busca_filtro_tabla('','modulo','nombre="crear_'.$lista_formatos[$i]['nombre'].'"','',$conn);
+		$ok=0;
+		if($modulo_formato['numcampos']){
+		    $ok=acceso_modulo($modulo_formato[0]['idmodulo']);	
 		}
-		
-		
-		if($ok && $modulo_formato['numcampos']){
+
+		if($ok){
 			$etiqueta=codifica_encabezado(html_entity_decode($lista_formatos[$i]['etiqueta']));
 			$etiqueta=strtolower($etiqueta);
 			$etiqueta=ucwords($etiqueta);
@@ -85,7 +81,7 @@
 
 <?php
 	function acceso_modulo($idmodulo){
-	  if($idmodulo=='' || $idmodulo==Null || $idmodulo==0 ||  usuario_actual("login")=="cerok"){
+	  if(usuario_actual("login")=="cerok"){
 	    return true;
 	  }
 	  $ok=new Permiso();
