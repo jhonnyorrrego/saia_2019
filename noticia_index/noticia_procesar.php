@@ -31,10 +31,29 @@ if(isset($_REQUEST['adicionar2'])){
 			//esta es la ruta donde copiaremos la imagen_modulo
 			//recuerden que deben crear un directorio con este mismo nombre
 			//en el mismo lugar donde se encuentra el archivo subir.php
-			$ruta = $ruta_db_superior.RUTA_NOTICIA_IMAGENES;
+			//$ruta = $ruta_db_superior.RUTA_NOTICIA_IMAGENES;
+			$ruta=$ruta_db_superior.RUTA_NOTICIA_IMAGENES;
 			crear_destino($ruta);
-			$ruta.=$_FILES['imagen_modulo']['name'];
-			//comprovamos si este archivo existe para no volverlo a copiar.
+			
+			//comprovamos si este archivo existe para cambiar el nombre.
+			
+			$nombre_extension = basename($_FILES['imagen_modulo']['name']);
+			$vector_nombre_extension = explode('.',$nombre_extension);
+			$extencion=$vector_nombre_extension[(count($vector_nombre_extension)-1)];
+			$nombre_imagen=$vector_nombre_extension[0];
+		
+			
+			
+			if(file_exists($ruta.$_FILES["imagen_modulo"]["name"])){	
+				$tmpVar = 1;
+				while(file_exists($ruta.$nombre_imagen.'_'.$tmpVar.'.'.$extencion)){
+					$tmpVar++;
+				}
+				$nombre_imagen=$nombre_imagen . '_' . $tmpVar;	
+			}
+			$ruta.=$nombre_imagen.'.'.$extencion;
+				
+			
 			
 			
 			if (!file_exists($ruta)){
