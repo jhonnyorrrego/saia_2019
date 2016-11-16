@@ -16,7 +16,7 @@ include_once($ruta_db_superior."librerias_saia.php");
 echo(librerias_jquery('1.7'));
 echo(estilo_bootstrap());
 echo(librerias_notificaciones());
-
+echo( librerias_validar_formulario('11') );
 ?>
 
 <!DOCTYPE html>
@@ -47,34 +47,34 @@ echo(librerias_notificaciones());
 
 		<!-- Text input-->
 		<div class="control-group">
-		  <label class="control-label" for="titulo">Titulo</label>
+		  <label class="control-label" for="titulo">Titulo*</label>
 		  <div class="controls">
-		    <input id="titulo" name="titulo" type="text" placeholder="Titulo" class="input-xlarge">
+		    <input id="titulo" name="titulo" type="text" placeholder="Titulo" class="input-xlarge required">
 		  </div>
 		</div>	
 
 		<!-- Text input-->
 		<div class="control-group">
-		  <label class="control-label" for="subtitulo">Subtitulo</label>
+		  <label class="control-label" for="subtitulo">Subtitulo*</label>
 		  <div class="controls">
-		    <input id="subtitulo" name="subtitulo" type="text" placeholder="Subtitulo" class="input-xlarge">
+		    <input id="subtitulo" name="subtitulo" type="text" placeholder="Subtitulo" class="input-xlarge required">
 		  </div>
 		</div>	
 				
 		
 		<!-- Textarea -->
 		<div class="control-group">
-		  <label class="control-label" for="noticia">Noticia</label>
+		  <label class="control-label" for="noticia">Noticia*</label>
 		  <div class="controls">                     
-		    <textarea id="noticia" name="noticia"></textarea>
+		    <textarea id="noticia" name="noticia" class="required"></textarea>
 		  </div>
 		</div>
 		
 		<!-- File Button --> 
 		<div class="control-group">
-		  <label class="control-label" for="filebutton">Imagen</label>
+		  <label class="control-label" for="filebutton">Imagen*</label>
 		  <div class="controls">
-		    <input id="imagen_modulo" name="imagen_modulo" class="input-file" type="file">
+		    <input id="imagen_modulo" name="imagen_modulo" class="input-file required" type="file" >
 		  </div>
 		</div>
 
@@ -96,7 +96,13 @@ echo(librerias_notificaciones());
 </html>
 <script>
 	$(document).ready(function(){
+		
+		$('#formuploadajax').validate();
+		
 		$('#adicionar').click(function(){
+			if($('#formuploadajax').valid()){
+				
+			
 			if( $('#titulo').val()=='' || $('#subtitulo').val()=='' || $('#noticia').val()=='' || $('#imagen_modulo').val()==''){
 				notificacion_saia('<b>Atenci&oacute;n</b><br>Todos los campos deben estar llenos','success','',3000);
 			}else{
@@ -115,7 +121,8 @@ echo(librerias_notificaciones());
 				        }
 				    });	
 			 }   
-    					
+    		}
+							
 		});
 	});
 </script>
