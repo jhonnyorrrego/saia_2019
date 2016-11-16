@@ -3,6 +3,7 @@
 
 
 include_once('db.php');
+include_once('pantallas/lib/librerias_cripto.php');
 
 
 @$_REQUEST['idfunc']=1;
@@ -18,7 +19,16 @@ if(@$_REQUEST['idfunc'] && !isset($_SESSION["LOGIN".LLAVE_SAIA])){
 } 
 
 
-
+function decrypt_blowfish($data,$key){
+	if(!$key && !defined("LLAVE_SAIA_CRYPTO")){
+		define("LLAVE_SAIA_CRYPTO", "cerok_saia421_5");
+		$key=LLAVE_SAIA_CRYPTO;
+	}
+	$iv=pack("H*" , substr($data,0,16));
+	$x =pack("H*" , substr($data,16));
+	$res = mcrypt_decrypt(MCRYPT_BLOWFISH, $key, $x , MCRYPT_MODE_CBC, $iv);
+	return trim($res);
+}
 
 
 die();
