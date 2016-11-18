@@ -531,7 +531,7 @@ function rastro_documento($x_doc,$filtro){
         if($_SESSION["usuario_actual"]==$recorrido[$i]["origen"] || $_SESSION["usuario_actual"]==$recorrido[$i]["destino"] || $recorrido[$i]["ver_notas"]==1){
             
             
-            if($recorrido[$i]["nombre"]=="COPIA" && !$recorrido[$i]["ver_notas"]){
+            if($recorrido[$i]["nombre"]=="COPIA" && $recorrido[$i]["ver_notas"]==0){
                 $recorrido[$i]["notas"]='';
             }
             
