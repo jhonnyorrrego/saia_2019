@@ -529,12 +529,9 @@ function rastro_documento($x_doc,$filtro){
 
         echo('<td><span class="phpmaker" >'.$recorrido[$i]["fecha_format"]."</span></td>");
         if($_SESSION["usuario_actual"]==$recorrido[$i]["origen"] || $_SESSION["usuario_actual"]==$recorrido[$i]["destino"] || $recorrido[$i]["ver_notas"]==1){
-            
-            
             if($recorrido[$i]["nombre"]=="COPIA" && $recorrido[$i]["ver_notas"]==0){
                 $recorrido[$i]["notas"]='';
             }
-            
              echo('<td><span class="phpmaker" >'.$recorrido[$i]["notas"]."</span></td>");
         }else{
              echo('<td><span class="phpmaker" >&nbsp;</span></td>');
