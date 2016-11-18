@@ -528,7 +528,7 @@ function rastro_documento($x_doc,$filtro){
           echo('<td><span class="phpmaker" >'.$leido.'<a href="#" '.$sig.'>'.utf8_encode(busca_entidad_ruta(1,$recorrido[$i]["destino"])).'</a></span></td>');
 
         echo('<td><span class="phpmaker" >'.$recorrido[$i]["fecha_format"]."</span></td>");
-        if($_SESSION["usuario_actual"]==$recorrido[$i]["origen"] || $_SESSION["usuario_actual"]==$recorrido[$i]["destino"] || $recorrido[$i]["ver_notas"]==1)
+        if( ($_SESSION["usuario_actual"]==$recorrido[$i]["origen"] || $_SESSION["usuario_actual"]==$recorrido[$i]["destino"]) && $recorrido[$i]["ver_notas"]==1)
           echo('<td><span class="phpmaker" >'.$recorrido[$i]["notas"]."</span></td>");
         else
           echo('<td><span class="phpmaker" >&nbsp;</span></td>');
