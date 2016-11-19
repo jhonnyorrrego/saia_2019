@@ -124,7 +124,7 @@ if($papas["numcampos"]){
 			if($papas[$i]["estado_cierre"]==2){
 				echo(" nocheckbox=\"1\" ");
 			}
-			echo(" child=\"1\" ");    	    
+			//echo(" child=\"1\" ");    	    
     	}
         
         if($hijos_entidad_serie['numcampos']){
