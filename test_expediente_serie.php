@@ -128,7 +128,7 @@ if($papas["numcampos"]){
     	}
         
         if($hijos_entidad_serie['numcampos']){
-            //echo(" child=\"1\" ");    	   
+            echo(" child=\"1\" ");    	   
         }
 			
     	echo(">");
