@@ -39,15 +39,6 @@ $idfunc=usuario_actual("idfuncionario");
 
 $lista2=expedientes_asignados();
 
-if(@$_REQUEST["id"] && @$_REQUEST["uid"]){
-	echo("<?xml version=\"1.0\" encoding=\"UTF-8\"?".">");
-	echo("<tree id=\"".$_REQUEST["id"]."\">\n");
-	llena_expediente($_REQUEST["id"]);
-	echo("</tree>\n");
-	die();
-}
-
-
 
 //si llega el request para cargar por partes subseries & tipo documental
 if(@$_REQUEST['carga_partes_serie']){
@@ -64,6 +55,20 @@ if(@$_REQUEST['carga_partes_serie']){
 
     }   
 }
+
+
+
+if(@$_REQUEST["id"] && @$_REQUEST["uid"]){
+	echo("<?xml version=\"1.0\" encoding=\"UTF-8\"?".">");
+	echo("<tree id=\"".$_REQUEST["id"]."\">\n");
+	llena_expediente($_REQUEST["id"]);
+	echo("</tree>\n");
+	die();
+}
+
+
+
+
 
 
 echo("<?xml version=\"1.0\" encoding=\"UTF-8\"?".">");
