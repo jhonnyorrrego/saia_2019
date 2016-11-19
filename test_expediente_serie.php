@@ -95,6 +95,10 @@ if($papas["numcampos"]){
 	for($i=0; $i<$papas["numcampos"]; $i++){
   	$permitido=0;
   	if(!in_array($papas[$i]["idexpediente"],$excluidos)){
+  	    
+  	    $hijos_entidad_serie = busca_filtro_tabla("serie_idserie","expediente","idexpediente=".$papas[$i]["idexpediente"],"",$conn);
+  	    
+  	    
   		$texto_item="";
 			$texto_item=($papas[$i]["nombre"]);
 			if($papas[$i]["estado_cierre"]==2){
@@ -115,12 +119,18 @@ if($papas["numcampos"]){
         	echo(" nocheckbox=\"1\" ");
 				}
     	}
-    	elseif(@$_REQUEST["seleccionado"]&&$_REQUEST["seleccionado"]==$papas[$i]["idexpediente"])
+    	elseif(@$_REQUEST["seleccionado"]&&$_REQUEST["seleccionado"]==$papas[$i]["idexpediente"]){
     		echo " checked=\"1\" ";
 			if($papas[$i]["estado_cierre"]==2){
 				echo(" nocheckbox=\"1\" ");
 			}
-			echo(" child=\"1\" ");
+			echo(" child=\"1\" ");    	    
+    	}
+        
+        if($hijos_entidad_serie['numcampos']){
+            echo(" child=\"1\" ");    	   
+        }
+			
     	echo(">");
 			if(@$_REQUEST["uid"] || @$_REQUEST["carga_total"]){
     		llena_expediente($papas[$i]["idexpediente"]);
