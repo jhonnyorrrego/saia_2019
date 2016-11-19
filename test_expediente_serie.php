@@ -48,7 +48,7 @@ if(@$_REQUEST['carga_partes_serie']){
         if(strpos($id,'sub')!==false){
             echo("<tree id=\"".$id."\">\n");
                 $ids=explode('sub',$id);
-                print_r($ids);
+                $ids[1]=explode('_',$ids[1]);
                 llena_subseries_tipo_documental($ids[0],$ids[1]);            
             echo("</tree>\n");
             die();            
