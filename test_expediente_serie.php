@@ -89,6 +89,7 @@ else{
 	$papas=busca_filtro_tabla("a.fecha, a
 .nombre, a.descripcion, a.cod_arbol, a.idexpediente, a.estado_cierre","vexpediente_serie a",$lista2." and (a.cod_padre=".$id.") AND a.estado_cierre=1","GROUP BY a.fecha, a
 .nombre, a.descripcion, a.cod_arbol, a.idexpediente, estado_cierre order by idexpediente desc",$conn);
+    print_r($papas);
 } 
 
 if($papas["numcampos"]){
