@@ -39,6 +39,7 @@ $idfunc=usuario_actual("idfuncionario");
 
 $lista2=expedientes_asignados();
 
+$id = @$_REQUEST["id"];
 
 //si llega el request para cargar por partes subseries & tipo documental
 if(@$_REQUEST['carga_partes_serie']){
