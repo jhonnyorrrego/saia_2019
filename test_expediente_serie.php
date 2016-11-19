@@ -108,7 +108,6 @@ if($papas["numcampos"]){
 
 if(@$_REQUEST['uid'] || @$_REQUEST['id'] ){
     
-    if($_REQUEST['id']=='d'.$serie){
         $hijos_entidad_serie = busca_filtro_tabla("serie_idserie","expediente","estado=1 idexpediente=".$_REQUEST['id'],"",$conn);
         
         if($hijos_entidad_serie['numcampos']){
@@ -119,7 +118,7 @@ if(@$_REQUEST['uid'] || @$_REQUEST['id'] ){
             
             llena_entidad_serie($_REQUEST['id'],$lista_entidad_series_filtrar);
         }
-    }    
+      
 }
 
 
