@@ -148,7 +148,7 @@ if(@$_REQUEST['uid'] || @$_REQUEST['id'] ){
         
         if($hijos_entidad_serie['numcampos']){
             $lista_entidad_series_filtrar=implode(',',extrae_campo($hijos_entidad_serie,'serie_idserie'));
-            print_r($lista_entidad_series_filtrar);
+            
         }
 
         if($hijos_entidad_serie['numcampos']){
@@ -168,6 +168,8 @@ function llena_entidad_serie($iddependencia,$series){
     
     $condicion_final="categoria=2 AND tipo=1 AND idserie IN(".$series.")";
     $series=busca_filtro_tabla("nombre,idserie,codigo","serie",$condicion_final.$activo,"",$conn);
+    
+    print_r($series);
     for($i=0;$i<$series['numcampos'];$i++){
         echo("<item style=\"font-family:verdana; font-size:7pt;\" ");
         echo("text=\"".htmlspecialchars(($series[$i]["nombre"])).' ('.$series[$i]['codigo'].') '." \" id=\"".$iddependencia."sub".$series[$i]['idserie']."\"");
