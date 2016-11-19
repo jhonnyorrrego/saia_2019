@@ -45,7 +45,7 @@ $id = @$_REQUEST["id"];
 if(@$_REQUEST['carga_partes_serie']){
     if($id and $id<>"" && @$_REQUEST["uid"]){
         
-        if(strpos($id,'sub')!==false && $mostrar_nodos['dsa']){
+        if(strpos($id,'sub')!==false){
             echo("<tree id=\"".$id."\">\n");
                 $ids=explode('sub',$id);
                 print_r($ids);
