@@ -89,7 +89,7 @@ else{
 	$papas=busca_filtro_tabla("a.fecha, a
 .nombre, a.descripcion, a.cod_arbol, a.idexpediente, a.estado_cierre","vexpediente_serie a",$lista2." and (a.cod_padre=".$id.") AND a.estado_cierre=1","GROUP BY a.fecha, a
 .nombre, a.descripcion, a.cod_arbol, a.idexpediente, estado_cierre order by idexpediente desc",$conn);
-    print_r($papas);
+   
 } 
 
 if($papas["numcampos"]){
@@ -145,7 +145,7 @@ if($papas["numcampos"]){
 if(@$_REQUEST['uid'] || @$_REQUEST['id'] ){
     if($_REQUEST['id']==$id){
         $hijos_entidad_serie = busca_filtro_tabla("serie_idserie","expediente","idexpediente=".$_REQUEST['id'],"",$conn);
-        
+        print_r($hijos_entidad_serie);
         if($hijos_entidad_serie['numcampos']){
             $lista_entidad_series_filtrar=implode(',',extrae_campo($hijos_entidad_serie,'serie_idserie'));
         }
