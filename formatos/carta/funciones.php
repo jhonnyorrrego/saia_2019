@@ -743,4 +743,13 @@ function generar_correo_confirmacion($idformato,$iddoc){
 		mostrar_formato($idformato,$iddoc);
 	}
 }
+function parsear_arbol_expediente_serie_carta(){
+    global $conn,$ruta_db_superior;
+    
+    
+    
+}
+
+
+
 ?>
