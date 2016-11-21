@@ -346,7 +346,7 @@ function click_funcion(div){
 	                var objeto=jQuery.parseJSON(html);	                              
 	                $.each(objeto.rows,function(i,item){   
                         if(parseInt('<?php echo($_SESSION["usuario_actual"]) ?>')==parseInt(item.origen) || parseInt('<?php echo($_SESSION["usuario_actual"]); ?>')==parseInt(item.destino) || parseInt(item.ver_notas)==1){
-                            if(item.nombre=="COPIA" && item.ver_notas==0){
+                            if((item.nombre=="COPIA" || item.nombre=="TRANSFERIDO") && item.ver_notas==0){
                                 item.info='';
                             }
                         }    
