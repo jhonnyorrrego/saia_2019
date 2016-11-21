@@ -127,6 +127,11 @@ if($papas["numcampos"]){
 			}
 			//echo(" child=\"1\" ");    	    
     	}
+    	
+    	
+    	if(@$_REQUEST['sin_padre_expediente']){
+    	    	echo(" nocheckbox=\"1\" ");
+    	}
         
         if($hijos_entidad_serie['numcampos']){
             echo(" child=\"1\" ");    	   
