@@ -746,6 +746,19 @@ function generar_correo_confirmacion($idformato,$iddoc){
 function parsear_arbol_expediente_serie_carta(){
     global $conn,$ruta_db_superior;
     
+    ?>
+    <script>
+        $(document).ready(function(){
+             tree_serie_idserie.setOnCheckHandler(parsear_expediente_serie);
+        });
+        
+        function parsear_expediente_serie(nodeId){
+            var idexpediente_idserie = nodeId.split('sub');
+            $('[name="serie_idserie"]').val(idexpediente_idserie[1]);
+            $('[name="expediente_serie"]').val(idexpediente_idserie[0]);
+        }
+    </script>
+    <?php
     
     
 }
