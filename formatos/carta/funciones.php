@@ -762,7 +762,7 @@ function parsear_arbol_expediente_serie_carta(){
     
     
 }
-function vincular_expediente_serie_carta($idformato,$iddoc){
+function vincular_expediente_serie_carta($idformato,$iddoc){ //POSTERIOR AL APROBAR
     global $conn,$ruta_db_superior;
     
     $datos=busca_filtro_tabla("expediente_serie,documento_iddocumento","ft_carta","documento_iddocumento=".$iddoc,"",$conn);
