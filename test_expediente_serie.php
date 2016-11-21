@@ -202,7 +202,7 @@ function llena_entidad_serie($iddependencia,$series){
 }
 
 function llena_subseries_tipo_documental($iddependencia,$idserie){
-    global $conn,$seleccionado,$activo,$excluidos;
+    global $conn,$activo,$excluidos;
 
 
     
