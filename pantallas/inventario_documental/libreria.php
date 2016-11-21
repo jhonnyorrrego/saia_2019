@@ -30,3 +30,14 @@ function mostrar_datos_descripcion($iddocumento,$plantilla){
 	
 	return $cadena;
 }
+
+function mostrar_tipo_inventario($plantilla){
+	
+	if(strtolower($plantilla)=="inventario_retirados"){
+		return('Retirados');
+	}elseif(strtolower($plantilla)=="inventario_jubilados"){
+		return('Jubilados');
+	}
+}
+
+?>
