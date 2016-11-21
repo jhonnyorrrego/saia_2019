@@ -765,8 +765,12 @@ function parsear_arbol_expediente_serie_carta(){
 function vincular_expediente_serie_carta($idformato,$iddoc){
     global $conn,$ruta_db_superior;
     
-    $datos=busca_filtro_tabla("expediente_serie","ft_carta","documento_iddocumento=".$iddoc,"",$conn);
-    $vinculado=busca_filtro_tabla("","expediente_doc","","",$conn);
+    $datos=busca_filtro_tabla("expediente_serie,documento_iddocumento","ft_carta","documento_iddocumento=".$iddoc,"",$conn);
+    $vinculado=busca_filtro_tabla("","expediente_doc","documento_iddocumento=".$datos[0]['documento_iddocumento']." AND expediente_idexpediente=".$datos[0]['expediente_serie'],"",$conn);
+    if(!$vinculado['numcampos']){
+        $sql="INSERT INTO expediente_doc (expediente_idexpediente,documento_iddocumento,fecha) VALUES (".$datos[0]['expediente_serie'].",".$datos[0]['documento_iddocumento'].",".fecha_db_almacenar(date("Y-m-d H:i:s"),'Y-m-d H:i:s').")";
+        phpmkr_query($sql);
+    }
     
     
     
