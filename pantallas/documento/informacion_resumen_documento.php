@@ -347,7 +347,7 @@ function click_funcion(div){
 	                $.each(objeto.rows,function(i,item){   
                         if(parseInt(item.ver_notas)==0){
                             
-                            if( parseInt('<?php echo($_SESSION["usuario_actual"]) ?>')!=parseInt(item.origen) && parseInt('<?php echo($_SESSION["usuario_actual"]); ?>')!=parseInt(item.destino)){
+                            if( parseInt('<?php echo($_SESSION["usuario_actual"]) ?>')!=parseInt(item.origen) || parseInt('<?php echo($_SESSION["usuario_actual"]); ?>')!=parseInt(item.destino)){
                                 item.info='';
                             }
                         }    
