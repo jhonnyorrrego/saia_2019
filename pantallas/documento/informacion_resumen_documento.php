@@ -344,7 +344,12 @@ function click_funcion(div){
             		$("#panel_notas_tranferencia").append("<li class='alert'>No hay notas de transferencia</li>");
             	}else{            		
 	                var objeto=jQuery.parseJSON(html);	                              
-	                $.each(objeto.rows,function(i,item){                          
+	                $.each(objeto.rows,function(i,item){   
+                        if(parseInt('<?php echo($_SESSION["usuario_actual"]) ?>')==item.origen || parseInt('<?php echo($_SESSION["usuario_actual"]); ?>')==item.destino || item.ver_notas==1){
+                            if(item.nombre=="COPIA" && item.ver_notas==0){
+                                item.info='';
+                            }
+                        }    
 	                	$("#panel_notas_tranferencia").append("<li>"+item.info+"</li>");
 	                });	               
                }
