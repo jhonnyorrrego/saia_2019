@@ -771,9 +771,6 @@ function vincular_expediente_serie_carta($idformato,$iddoc){
         $sql="INSERT INTO expediente_doc (expediente_idexpediente,documento_iddocumento,fecha) VALUES (".$datos[0]['expediente_serie'].",".$datos[0]['documento_iddocumento'].",".fecha_db_almacenar(date("Y-m-d H:i:s"),'Y-m-d H:i:s').")";
         phpmkr_query($sql);
     }
-    
-    
-    
 }
 
 
