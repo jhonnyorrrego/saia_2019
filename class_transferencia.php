@@ -751,7 +751,7 @@ function aprobar($iddoc=0,$url="")
                  // enviar_mensaje("origen",$l_destino,$mensaje,'msg');
                  }  */
                  $aprobar_posterior=1;
-                 llama_funcion_accion($iddoc,$tipo_radicado[0]["idformato"],"aprobar","POSTERIOR");
+                 //llama_funcion_accion($iddoc,$tipo_radicado[0]["idformato"],"aprobar","POSTERIOR");
 								 if($datos_formato[0]["mostrar_pdf"]==1){
 								 	$sql1="UPDATE documento SET pdf=null WHERE iddocumento=".$iddoc;
 									phpmkr_query($sql1);
@@ -769,8 +769,12 @@ function aprobar($iddoc=0,$url="")
 	}
   llama_funcion_accion($iddoc,$tipo_radicado[0]["idformato"],"confirmar","POSTERIOR");
   if($aprobar_posterior){
-      //llama_funcion_accion($iddoc,$tipo_radicado[0]["idformato"],"aprobar","POSTERIOR");
+      llama_funcion_accion($iddoc,$tipo_radicado[0]["idformato"],"aprobar","POSTERIOR");
   }
+  
+  //pantallas/documento/informacion_resumen_documento.php?form_info=idformato=1&iddoc=851&alto_pantalla=634
+  redirecciona(urlencode($ruta_db_superior.'informacion_resumen_documento.php?form_info=idformato='.$tipo_radicado[0]["idformato"].'&iddoc='.$iddoc));
+  
 /*if(strpos($_SERVER["PHP_SELF"],"meses")<=0)
    {
     if($url=="")
