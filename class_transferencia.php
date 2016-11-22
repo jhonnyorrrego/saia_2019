@@ -768,8 +768,9 @@ function aprobar($iddoc=0,$url="")
 		phpmkr_query($sql1);
 	}
   llama_funcion_accion($iddoc,$tipo_radicado[0]["idformato"],"confirmar","POSTERIOR");
+  print_r('por aqui entro');die();
   if($aprobar_posterior){
-      print_r('por aqui entro');die();
+      
       llama_funcion_accion($iddoc,$tipo_radicado[0]["idformato"],"aprobar","POSTERIOR");
   }
   
