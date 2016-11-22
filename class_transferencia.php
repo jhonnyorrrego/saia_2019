@@ -769,6 +769,7 @@ function aprobar($iddoc=0,$url="")
 	}
   llama_funcion_accion($iddoc,$tipo_radicado[0]["idformato"],"confirmar","POSTERIOR");
   if($aprobar_posterior){
+      print_r('por aqui entro');die();
       llama_funcion_accion($iddoc,$tipo_radicado[0]["idformato"],"aprobar","POSTERIOR");
   }
   
