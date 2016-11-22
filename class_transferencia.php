@@ -773,7 +773,7 @@ function aprobar($iddoc=0,$url="")
   }
   
   //pantallas/documento/informacion_resumen_documento.php?form_info=idformato=1&iddoc=851&alto_pantalla=634
-  redirecciona(urlencode($ruta_db_superior.'informacion_resumen_documento.php?form_info=idformato='.$tipo_radicado[0]["idformato"].'&iddoc='.$iddoc));
+  redirecciona($ruta_db_superior.'informacion_resumen_documento.php?form_info=idformato='.$tipo_radicado[0]["idformato"].'&iddoc='.$iddoc);
   
 /*if(strpos($_SERVER["PHP_SELF"],"meses")<=0)
    {
