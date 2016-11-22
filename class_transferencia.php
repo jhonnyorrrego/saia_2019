@@ -767,7 +767,7 @@ function aprobar($iddoc=0,$url="")
 		$sql1="UPDATE documento SET pdf=null WHERE iddocumento=".$iddoc;
 		phpmkr_query($sql1);
 	}
-	print_r('por aqui entro');die();
+	
   llama_funcion_accion($iddoc,$tipo_radicado[0]["idformato"],"confirmar","POSTERIOR");
   
   if($aprobar_posterior){
