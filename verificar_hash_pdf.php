@@ -79,7 +79,7 @@ echo( estilo_file_upload() );
 if(@$_REQUEST['verificar_hash']){
     
     
-    print_r($_FILES);die();
+    //print_r($_FILES);die();
     
     $hash_original=busca_filtro_tabla("pdf_hash","documento","lower(plantilla)='".$_REQUEST['plantilla']."' AND numero='".$_REQUEST['numero']."'","",$conn);
     
@@ -88,9 +88,9 @@ if(@$_REQUEST['verificar_hash']){
     
     $ruta_temporal_usuario=busca_filtro_tabla("valor","configuracion","nombre='ruta_temporal'","",$conn);
     
-    copy ( $_FILES["pdf"]["tmp_name"] , $ruta_db_superior.$ruta_temporal_usuario[0]['valor'].'_'.usuario_actual('login').'/'.$nombre );
+    copy ( $_FILES["pdf"]["tmp_name"] , $ruta_db_superior.$ruta_temporal_usuario[0]['valor'].'_'.usuario_actual('login').'/'.$_FILES["pdf"]["name"] );
     
-    print_r($ruta_db_superior.$ruta_temporal_usuario[0]['valor'].'_'.usuario_actual('login').'/'.$nombre);
+    //print_r($ruta_db_superior.$ruta_temporal_usuario[0]['valor'].'_'.usuario_actual('login').'/'.$nombre);
     
     //rename($_FILES['anexos']['tmp_name'], $dir_anexos . $temp_filename);
     
