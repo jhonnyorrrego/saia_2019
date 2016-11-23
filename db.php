@@ -4145,7 +4145,7 @@ function obtener_codigo_hash_pdf($archivo,$algoritmo="crc32",$tmp=0){
         $ruta_db_superior='';
     }
    // return( hash_file($algoritmo,$ruta_db_superior.$archivo) );
-   return(md5_file($ruta_db_superior.$archivo) );
+   return( md5_file($ruta_db_superior.$archivo) );
 }
 
 
