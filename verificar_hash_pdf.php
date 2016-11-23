@@ -85,8 +85,11 @@ if(@$_REQUEST['verificar_hash']){
     
     $ruta_temporal_usuario=busca_filtro_tabla("valor","configuracion","nombre='ruta_temporal'","",$conn);
     
-    copy ( $_FILES["pdf"]["tmp_name"] , $ruta_db_superior.$ruta_temporal_usuario.'_'.usuario_actual('login').'/'.$nombre );
+    copy ( $_FILES["pdf"]["tmp_name"] , $ruta_db_superior.$ruta_temporal_usuario[0]['valor'].'_'.usuario_actual('login').'/'.$nombre );
     
+    print_r($ruta_db_superior.$ruta_temporal_usuario[0]['valor'].'_'.usuario_actual('login').'/'.$nombre);
+    
+    //rename($_FILES['anexos']['tmp_name'], $dir_anexos . $temp_filename);
     
     
     $hash_request=obtener_codigo_hash_pdf($_FILES["pdf"]["tmp_name"],"crc32",1);
