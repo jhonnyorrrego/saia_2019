@@ -18,8 +18,12 @@ echo (librerias_jquery("1.7"));
 //------------------------------Adicionar------------------------------------//
 function campos_ocultos_entrega($idformato,$iddoc){
 	global $conn,$ruta_db_superior;
-	$valores=trim($_REQUEST['docs'],',');
-	$mensajero=trim($_REQUEST['mensajero'],',');
+	
+	$valores=trim(@$_REQUEST['idft'],',');
+	if(@$_REQUEST['docs']){
+	    $valores=trim($_REQUEST['docs'],',');
+	}
+	$mensajero=trim(@$_REQUEST['mensajero'],',');
 	$hoy=date("Y-m-d");
 	?>
 	<script>
