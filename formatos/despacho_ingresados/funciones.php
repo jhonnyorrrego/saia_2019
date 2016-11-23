@@ -18,12 +18,8 @@ echo (librerias_jquery("1.7"));
 //------------------------------Adicionar------------------------------------//
 function campos_ocultos_entrega($idformato,$iddoc){
 	global $conn,$ruta_db_superior;
-	
-	$valores=trim(@$_REQUEST['idft'],',');
-	if(@$_REQUEST['docs']){
-	    $valores=trim($_REQUEST['docs'],',');
-	}
-	$mensajero=trim(@$_REQUEST['mensajero'],',');
+	$valores=trim($_REQUEST['idft'],',');
+	$mensajero=trim($_REQUEST['mensajero'],',');
 	$hoy=date("Y-m-d");
 	?>
 	<script>
@@ -33,7 +29,6 @@ function campos_ocultos_entrega($idformato,$iddoc){
 			if(valores=='' || valores==0 || mensajero=='' || mensajero==0){
 				alerta("Por favor seleccione documentos y mensajero");
 			}else{
-			    alert($valores);
 				$("input[name=iddestino_radicacion]").val('<?php echo $valores;?>');
 				$("input[name=mensajero]").val('<?php echo $mensajero;?>');
 				$("input[name=fecha_entrega]").val('<?php echo $hoy;?>');
