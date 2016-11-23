@@ -78,6 +78,9 @@ echo( estilo_file_upload() );
 
 if(@$_REQUEST['verificar_hash']){
     
+    
+    print_r($_FILES);die();
+    
     $hash_original=busca_filtro_tabla("pdf_hash","documento","lower(plantilla)='".$_REQUEST['plantilla']."' AND numero='".$_REQUEST['numero']."'","",$conn);
     
     $nombre=basename($_FILES["pdf"]["tmp_name"]);
