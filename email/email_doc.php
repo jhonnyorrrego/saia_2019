@@ -244,6 +244,12 @@ function enviar_email($doc=0){
         { for($i=0; $i<$archivo["numcampos"]; $i++)
             $mail->AddAttachment("../".$archivo[$i]["ruta"],$archivo[$i]["etiqueta"]);
         } 
+        
+        $pdf_documento=busca_filtro_tabla("pdf,numero","documento","iddocumento=".$doc,"",$conn);
+        if($pdf_documento['numcampos']){
+            $mail->AddAttachment("../".$pdf_documento[0]["pdf"],'documento_'.$pdf_documento[0]['numero'].'.pdf');
+        }
+        
       }
       $enlace="../documentoview.php?key=$doc";
      }
