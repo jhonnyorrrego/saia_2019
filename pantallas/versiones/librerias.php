@@ -310,10 +310,10 @@ function generar_version_json($iddoc){
     $ruta_temp=$ruta_db_superior;
     $formato_ruta = aplicar_plantilla_ruta_documento($iddoc);
     $ruta_pdfs = ruta_almacenamiento("versiones");
-    $ruta_json = $ruta_pdfs . $formato_ruta . "/version" . $consecutivo . "/json/";    
+    $ruta_json = $ruta_pdfs . $formato_ruta . "/version" . $consecutivo . "/json";    
     $ruta_db_superior=$ruta_temp;    
     crear_destino($ruta_db_superior.$ruta_json);    
-    $ruta_json.='json.json';
+    $ruta_json.='/json.json';
     $archivo_json = fopen($ruta_db_superior.$ruta_json, "a");
     fwrite($archivo_json, json_encode($json_final));
     fclose($archivo_json);
