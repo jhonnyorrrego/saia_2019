@@ -314,7 +314,7 @@ function generar_version_json($iddoc){
     $ruta_db_superior=$ruta_temp;    
     crear_destino($ruta_json);    
     $ruta_json.='/json.json';
-    $archivo_json = fopen($ruta_db_superior.$ruta_json, "a");
+    $archivo_json = fopen($ruta_json, "a");
     fwrite($archivo_json, json_encode($json_final));
     fclose($archivo_json);
     
