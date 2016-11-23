@@ -312,7 +312,7 @@ function generar_version_json($iddoc){
     $ruta_pdfs = ruta_almacenamiento("versiones");
     $ruta_json = $ruta_pdfs . $formato_ruta . "/version" . $consecutivo . "/json";    
     $ruta_db_superior=$ruta_temp;    
-    crear_destino($ruta_db_superior.$ruta_json);    
+    crear_destino($ruta_json);    
     $ruta_json.='/json.json';
     $archivo_json = fopen($ruta_db_superior.$ruta_json, "a");
     fwrite($archivo_json, json_encode($json_final));
