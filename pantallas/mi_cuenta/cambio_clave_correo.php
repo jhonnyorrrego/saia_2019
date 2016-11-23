@@ -108,7 +108,7 @@ $("#passwordTxt").blur(function(){
 <!--link rel="STYLESHEET" type="text/css" href="pantallas/mi_cuenta/css/password.css"-->
 </head>
 <div class="container">
-<form class="form-vertical" method="post" action="pantallas/mi_cuenta/guardar_pass_correo.php" id="cambio_pass">  
+<form class="form-vertical" method="post" action="<?php echo($ruta_db_superior); ?>pantallas/mi_cuenta/guardar_pass_correo.php" id="cambio_pass">  
  
             <div class="control-group">
                 <label class="control-label" for="new_password"><b>Nueva Contrase&ntilde;a</b></label>
