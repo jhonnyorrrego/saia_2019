@@ -80,6 +80,15 @@ if(@$_REQUEST['verificar_hash']){
     
     $hash_original=busca_filtro_tabla("pdf_hash","documento","lower(plantilla)='".$_REQUEST['plantilla']."' AND numero='".$_REQUEST['numero']."'","",$conn);
     
+    $nombre=basename($_FILES["pdf"]["tmp_name"]);
+    
+    
+    $ruta_temporal_usuario=busca_filtro_tabla("valor","configuracion","nombre='ruta_temporal'","",$conn);
+    
+    copy ( $_FILES["pdf"]["tmp_name"] , $ruta_db_superior.$ruta_temporal_usuario.'_'.usuario_actual('login').'/'.$nombre );
+    
+    
+    
     $hash_request=obtener_codigo_hash_pdf($_FILES["pdf"]["tmp_name"],"crc32",1);
     if($hash_original['numcampos']){
         $cadena="";
