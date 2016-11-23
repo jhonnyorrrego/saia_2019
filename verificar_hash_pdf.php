@@ -91,7 +91,7 @@ if(@$_REQUEST['verificar_hash']){
     //rename($_FILES['anexos']['tmp_name'], $dir_anexos . $temp_filename);
     
     
-    $hash_request=obtener_codigo_hash_pdf($_FILES["pdf"]["tmp_name"],"crc32");
+    $hash_request=obtener_codigo_hash_pdf($ruta_temporal,"crc32");
     if($hash_original['numcampos']){
         $cadena="";
         $cadena.="
