@@ -16,6 +16,7 @@ $datos["archivo_idarchivo"] = $_REQUEST["iddocumento"];
 $datos["nombre"] = "TRANSFERIDO";
 $datos["tipo_destino"] = 1;
 $datos["tipo"] = "";
+$datos["ver_notas"]="";
 $datos_adicionales["notas"] = "";
 $fecha = date("Y-m-d H:i:s");
 switch($_REQUEST["tipo"]) {
