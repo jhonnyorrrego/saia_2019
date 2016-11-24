@@ -476,6 +476,7 @@ function transferir_archivo_prueba($datos, $destino, $adicionales) {
 				}
 				$values_in = "$idarchivo,'" . $datos["nombre"] . "'," . fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s') . ",'$origen',1," . $datos["ruta_idruta"] . ",$tipo_destino" . $otros_valores . ",'" . @$datos["ver_notas"] . "'";
 				$sql = "INSERT INTO buzon_entrada(archivo_idarchivo,nombre,fecha,destino,tipo_origen,ruta_idruta,tipo_destino" . $otras_llaves . ",ver_notas,origen) values(" . $values_in . "," . $user . ")";
+				print_r($sql);die();
 				phpmkr_query($sql, $conn);
 				procesar_estados($origen, $user, $datos["nombre"], $idarchivo);
 			}
