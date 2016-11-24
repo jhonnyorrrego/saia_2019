@@ -23,7 +23,7 @@ switch($_REQUEST["tipo"]) {
 		//Elaborado por:
 		$tipo = "elaborado";
 		$destinos = array($dato[0]["revisado"]);
-		print_r($destinos);die();
+		
 		transferir_archivo_prueba($datos, $destinos, $datos_adicionales);
 		break;
 	case 2 :
