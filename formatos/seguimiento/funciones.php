@@ -72,6 +72,7 @@ function mostrar_anexos_seguimientop($idformato, $iddoc) {
 function mostrar_fecha_seguimiento_plan_mejoramiento($idformato,$iddoc){
     global $conn;
     $fecha=busca_filtro_tabla(fecha_db_obtener("fecha","Y-m-d H:i:s")." AS fecha","documento","iddocumento","",$conn);
+    print_r($fecha);
     echo($fecha[0]['fecha']);
 }
 /*POSTERIOR APROBAR*/
