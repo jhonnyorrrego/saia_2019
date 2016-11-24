@@ -432,7 +432,7 @@ function mostrar_nombre_jefe_control($idformato, $iddoc){
     global $conn,$ruta_db_superior;
     
     $datos=busca_filtro_tabla("b.nombres,b.apellidos","ft_informe_contraloria a,funcionario b","a.jefe_control=b.funcionario_codigo AND a.documento_iddocumento=".$iddoc,"",$conn);
-    print_r($datos);
+    echo($datos[0]['nombres'].' '.$datos[0]['apellidos']);
 }
 
 ?>
