@@ -148,9 +148,9 @@ $formato=busca_filtro_tabla("A.idformato,A.nombre,A.nombre_tabla,A.etiqueta","fo
   } 
 }
 function crear_macroprocesos($formato){  
-global $texto,$conn,$imagenes,$formatos_calidad,$validar_macro,$perfil;
+global $texto,$conn,$imagenes,$formatos_calidad,$validar_macro,$perfil; 
 if($formato["numcampos"]){
-  $macros=busca_filtro_tabla("","ft_macroproceso_calidad B, documento c","B.documento_iddocumento=c.iddocumento and c.estado not in('ELIMINADO')","",$conn);
+  $macros=busca_filtro_tabla("","ft_macroproceso_calidad B, documento c","B.documento_iddocumento=c.iddocumento and lower(c.estado)='aprobado'","",$conn);
 	$formato_macro=busca_filtro_tabla("","formato","lower(nombre)='macroproceso_calidad'","",$conn);
   for($i=0;$i<$macros["numcampos"];$i++){
       $validar_macro=1;
