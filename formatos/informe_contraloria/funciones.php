@@ -427,4 +427,11 @@ function transferir_responsables($idformato, $iddoc) {
 	transferencia_automatica($idformato, $iddoc, $destinos, 3, "Se realiz&oacute; seguimiento al plan de mejoramiento, consultar reporte respectivo para su informaci&oacute;n");
 
 }
+
+function mostrar_nombre_jefe_control($idformato, $iddoc){
+    global $conn,$ruta_db_superior;
+    
+    $datos=busca_filtro_tabla("b.nombres,b.apellidos","ft_informe_contraloria a,funcionario b","a.jefe_control=b.funcionario_codigo AND a.documento_iddocumento=".$iddoc,"",$conn);
+}
+
 ?>
