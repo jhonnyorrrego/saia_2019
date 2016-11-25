@@ -92,6 +92,9 @@ function validar_tipo_documento($idformato, $iddoc){
     			}	
 			
 			
+		    }else{  //desarrollo bases de calidad
+		        $('#nombre_documento').parent().parent().hide();
+		        
 		    }
 			
 		});
