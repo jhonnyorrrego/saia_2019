@@ -96,7 +96,7 @@ function validar_tipo_documento($idformato, $iddoc){
 		        $('#nombre_documento').parent().parent().hide(); $('#nombre_documento').removeClass('required');
 		        $('#listado_procesos').parent().parent().hide(); $('#listado_procesos').removeClass('required');
 		        $('#documento_calidad').parent().parent().hide(); $('#documento_calidad').removeClass('required');
-		       
+		        $('#justificacion').parent().parent().hide(); $('#justificacion').removeClass('required');
 		        
 		    }
 			
