@@ -19,7 +19,7 @@ ini_set('display_errors',true);
 function validar_tipo_documento($idformato, $iddoc){
 	global $conn,$ruta_db_superior;
 	
-	if($_REQUEST["iddoc"]){
+	if(@$_REQUEST["iddoc"]){
 		$documento_calidad = busca_filtro_tabla("documento_calidad","ft_control_documentos","documento_iddocumento=".$_REQUEST["iddoc"],"",$conn);
 	}
 		
@@ -60,7 +60,7 @@ function validar_tipo_documento($idformato, $iddoc){
 				$("input[name='otros_documentos']").parent().parent().parent().parent().parent().parent().parent().hide();				
 				$("input[name='otros_documentos']").removeClass('required');
 				
-			}else{
+			}else if(parseInt($(this).val()) == 2){
 				$("#tr_serie_doc_control").hide();
 				$("#serie_doc_control").removeClass('required');
 				
@@ -133,7 +133,7 @@ function validar_tipo_documento($idformato, $iddoc){
 		});
 		
 		
-		var iddoc = "<?php echo($_REQUEST["iddoc"]); ?>";
+		var iddoc = "<?php echo(@$_REQUEST["iddoc"]); ?>";
 		
 		if(iddoc){
 			var documento;
@@ -392,20 +392,24 @@ function listar_macroprocesos_and_procesos($idformato,$iddoc){
 			var proceso;				
 			var tipo_solicitud = $(this).val();
 			
-			if(parseInt($("input[name='tipo_documento']:checked").val()) == 1){
-				documento = 10;
-			}else{
-				documento = $("input[name='otros_documentos']:checked").val(); 
-			}				
+			if(tipo_solicitud<>3){
+			    
+    			if(parseInt($("input[name='tipo_documento']:checked").val()) == 1){
+    				documento = 10;
+    			}else{
+    				documento = $("input[name='otros_documentos']:checked").val(); 
+    			}				
+    			
+    			if($("select[name='listado_procesos'] option:selected").val()){
+    				proceso = $("select[name='listado_procesos'] option:selected").val().split('|');
+    			}else{
+    				proceso = [0,0];
+    			}
+    			
+    			tree_documento_calidad.deleteChildItems(0);					
+    			tree_documento_calidad.loadXML("<?php echo($ruta_db_superior); ?>formatos/control_documentos/test_documentos_calidad.php?tipo_solicitud="+tipo_solicitud+"&documento="+documento+"&proceso="+proceso[1]);
 			
-			if($("select[name='listado_procesos'] option:selected").val()){
-				proceso = $("select[name='listado_procesos'] option:selected").val().split('|');
-			}else{
-				proceso = [0,0];
 			}
-			
-			tree_documento_calidad.deleteChildItems(0);					
-			tree_documento_calidad.loadXML("<?php echo($ruta_db_superior); ?>formatos/control_documentos/test_documentos_calidad.php?tipo_solicitud="+tipo_solicitud+"&documento="+documento+"&proceso="+proceso[1]);
 		})
 		
 		$("#listado_procesos").change(function(){		
