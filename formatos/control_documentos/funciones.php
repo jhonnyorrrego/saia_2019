@@ -19,7 +19,7 @@ ini_set('display_errors',true);
 function validar_tipo_documento($idformato, $iddoc){
 	global $conn,$ruta_db_superior;
 	
-	if(@$_REQUEST["iddoc"]){
+	if($_REQUEST["iddoc"]){
 		$documento_calidad = busca_filtro_tabla("documento_calidad","ft_control_documentos","documento_iddocumento=".$_REQUEST["iddoc"],"",$conn);
 	}
 		
@@ -44,63 +44,49 @@ function validar_tipo_documento($idformato, $iddoc){
 			$("input[name='otros_documentos']").removeClass('required');
 		}
 		
-		$("input[name='tipo_documento']").click(function(){	
-		    
-		    if(parseInt($(this).val()) != 3){
-		    
+		$("input[name='tipo_documento']").click(function(){		
 			
-    			if(parseInt($(this).val()) == 1){
-    				$("#serie_idserie").addClass('required');
-    				$("#serie_idserie").parent().parent().show();
-    				
-    				
-    				$("#tr_serie_doc_control").show();
-    				$("#serie_doc_control").addClass('required');
-    				
-    				$("input[name='almacenamiento[]']").addClass('required');
-    				$("input[name='almacenamiento[]']").parent().parent().parent().parent().parent().parent().parent().show();
-    				
-    				$("input[name='otros_documentos']").parent().parent().parent().parent().parent().parent().parent().hide();				
-    				$("input[name='otros_documentos']").removeClass('required');
-    				
-    			}else if(parseInt($(this).val()) == 2){
-    				$("#tr_serie_doc_control").hide();
-    				$("#serie_doc_control").removeClass('required');
-    				
-    				$("#serie_idserie").removeClass('required');
-    				$("#serie_idserie").parent().parent().hide();
-    				
-    				$("input[name='almacenamiento[]']").removeClass('required');
-    				$("input[name='almacenamiento[]']").parent().parent().parent().parent().parent().parent().parent().hide();
-    		
-    				$("input[name='otros_documentos']").parent().parent().parent().parent().parent().parent().parent().show();
-    				$("input[name='otros_documentos']").addClass('required');
-    			}
-    			
-    			
-    			
-    			if((parseInt($(this).val()) === 1 || parseInt($(this).val()) === 2)){
-    				
-    				if(parseInt($("input[name='tipo_solicitud']:checked").val()) !== 3){				
-    					$("input[name='anexo_formato[]']").addClass('required');
-    				}
-    				
-    				$("input[name='anexo_formato[]']").parent().parent().parent().parent().show();
-    			}else{
-    				$("input[name='anexo_formato[]']").removeClass('required');
-    				$("input[name='anexo_formato[]']").parent().parent().parent().parent().hide();
-    			}	
+			if(parseInt($(this).val()) == 1){
+				$("#serie_idserie").addClass('required');
+				$("#serie_idserie").parent().parent().show();
+				
+				
+				$("#tr_serie_doc_control").show();
+				$("#serie_doc_control").addClass('required');
+				
+				$("input[name='almacenamiento[]']").addClass('required');
+				$("input[name='almacenamiento[]']").parent().parent().parent().parent().parent().parent().parent().show();
+				
+				$("input[name='otros_documentos']").parent().parent().parent().parent().parent().parent().parent().hide();				
+				$("input[name='otros_documentos']").removeClass('required');
+				
+			}else{
+				$("#tr_serie_doc_control").hide();
+				$("#serie_doc_control").removeClass('required');
+				
+				$("#serie_idserie").removeClass('required');
+				$("#serie_idserie").parent().parent().hide();
+				
+				$("input[name='almacenamiento[]']").removeClass('required');
+				$("input[name='almacenamiento[]']").parent().parent().parent().parent().parent().parent().parent().hide();
+		
+				$("input[name='otros_documentos']").parent().parent().parent().parent().parent().parent().parent().show();
+				$("input[name='otros_documentos']").addClass('required');
+			}
 			
-			 
-		    }else{  //desarrollo bases de calidad
-		        $('#nombre_documento').parent().parent().hide(); $('#nombre_documento').removeClass('required');
-		        $('#listado_procesos').parent().parent().hide(); $('#listado_procesos').removeClass('required');
-		        $('#documento_calidad').parent().parent().hide(); $('#documento_calidad').removeClass('required');
-		        $('#justificacion').parent().parent().hide(); $('#justificacion').removeClass('required');
-		        $('#propuesta').parent().parent().hide(); $('#justificacion').removeClass('required');
-    			$("input[name='anexo_formato[]']").parent().parent().parent().parent().hide(); $("input[name='anexo_formato[]']").removeClass('required');
-		    }
 			
+			
+			if((parseInt($(this).val()) === 1 || parseInt($(this).val()) === 2)){
+				
+				if(parseInt($("input[name='tipo_solicitud']:checked").val()) !== 3){				
+					$("input[name='anexo_formato[]']").addClass('required');
+				}
+				
+				$("input[name='anexo_formato[]']").parent().parent().parent().parent().show();
+			}else{
+				$("input[name='anexo_formato[]']").removeClass('required');
+				$("input[name='anexo_formato[]']").parent().parent().parent().parent().hide();
+			}			
 		});
 		
 		
@@ -147,7 +133,7 @@ function validar_tipo_documento($idformato, $iddoc){
 		});
 		
 		
-		var iddoc = "<?php echo(@$_REQUEST["iddoc"]); ?>";
+		var iddoc = "<?php echo($_REQUEST["iddoc"]); ?>";
 		
 		if(iddoc){
 			var documento;
@@ -406,83 +392,72 @@ function listar_macroprocesos_and_procesos($idformato,$iddoc){
 			var proceso;				
 			var tipo_solicitud = $(this).val();
 			
-			if(parseInt($("input[name='tipo_documento']:checked").val())!=3){
-			    
-    			if(parseInt($("input[name='tipo_documento']:checked").val()) == 1){
-    				documento = 10;
-    			}else{
-    				documento = $("input[name='otros_documentos']:checked").val(); 
-    			}				
-    			
-    			if($("select[name='listado_procesos'] option:selected").val()){
-    				proceso = $("select[name='listado_procesos'] option:selected").val().split('|');
-    			}else{
-    				proceso = [0,0];
-    			}
-    			
-    			tree_documento_calidad.deleteChildItems(0);					
-    			tree_documento_calidad.loadXML("<?php echo($ruta_db_superior); ?>formatos/control_documentos/test_documentos_calidad.php?tipo_solicitud="+tipo_solicitud+"&documento="+documento+"&proceso="+proceso[1]);
+			if(parseInt($("input[name='tipo_documento']:checked").val()) == 1){
+				documento = 10;
+			}else{
+				documento = $("input[name='otros_documentos']:checked").val(); 
+			}				
 			
+			if($("select[name='listado_procesos'] option:selected").val()){
+				proceso = $("select[name='listado_procesos'] option:selected").val().split('|');
+			}else{
+				proceso = [0,0];
 			}
+			
+			tree_documento_calidad.deleteChildItems(0);					
+			tree_documento_calidad.loadXML("<?php echo($ruta_db_superior); ?>formatos/control_documentos/test_documentos_calidad.php?tipo_solicitud="+tipo_solicitud+"&documento="+documento+"&proceso="+proceso[1]);
 		})
 		
-		$("#listado_procesos").change(function(){
-		    
-		    if(parseInt($("input[name='tipo_documento']:checked").val())!=3){
-    			var documento;
-    			var proceso        = $(this).val().split('|');
-    			var tipo_solicitud = $("input[name='tipo_solicitud']:checked").val();
-    			 
-    			if(parseInt($("input[name='tipo_documento']:checked").val()) == 1){
-    				documento = 10;
-    			}else{
-    				documento = $("input[name='otros_documentos']:checked").val(); 
-    			}	
-    			
-    			tree_documento_calidad.deleteChildItems(0);					
-    			tree_documento_calidad.loadXML("<?php echo($ruta_db_superior); ?>formatos/control_documentos/test_documentos_calidad.php?tipo_solicitud="+tipo_solicitud+"&documento="+documento+"&proceso="+proceso[1]);
-		    }
+		$("#listado_procesos").change(function(){		
+			var documento;
+			var proceso        = $(this).val().split('|');
+			var tipo_solicitud = $("input[name='tipo_solicitud']:checked").val();
+			 
+			if(parseInt($("input[name='tipo_documento']:checked").val()) == 1){
+				documento = 10;
+			}else{
+				documento = $("input[name='otros_documentos']:checked").val(); 
+			}	
+			
+			tree_documento_calidad.deleteChildItems(0);					
+			tree_documento_calidad.loadXML("<?php echo($ruta_db_superior); ?>formatos/control_documentos/test_documentos_calidad.php?tipo_solicitud="+tipo_solicitud+"&documento="+documento+"&proceso="+proceso[1]);			
 		});
 		
 		
 		$("input[name='tipo_documento']").change(function(){
-		    if(parseInt($("input[name='tipo_documento']:checked").val())!=3){
-    			var documento;
-    			var proceso;				
-    			var tipo_solicitud = $("input[name='tipo_solicitud']:checked").val();
-    			
-    			if(parseInt($(this).val()) == 1){
-    				documento = 10;
-    			}else{
-    				documento = $("input[name='otros_documentos']:checked").val(); 
-    			}				
-    			
-    			if($("select[name='listado_procesos'] option:selected").val()){
-    				proceso = $("select[name='listado_procesos'] option:selected").val().split('|');
-    			}else{
-    				proceso = [0,0];
-    			}
-    			
-    			tree_documento_calidad.deleteChildItems(0);					
-    			tree_documento_calidad.loadXML("<?php echo($ruta_db_superior); ?>formatos/control_documentos/test_documentos_calidad.php?tipo_solicitud="+tipo_solicitud+"&documento="+documento+"&proceso="+proceso[1]);
-		    }
+			var documento;
+			var proceso;				
+			var tipo_solicitud = $("input[name='tipo_solicitud']:checked").val();
+			
+			if(parseInt($(this).val()) == 1){
+				documento = 10;
+			}else{
+				documento = $("input[name='otros_documentos']:checked").val(); 
+			}				
+			
+			if($("select[name='listado_procesos'] option:selected").val()){
+				proceso = $("select[name='listado_procesos'] option:selected").val().split('|');
+			}else{
+				proceso = [0,0];
+			}
+			
+			tree_documento_calidad.deleteChildItems(0);					
+			tree_documento_calidad.loadXML("<?php echo($ruta_db_superior); ?>formatos/control_documentos/test_documentos_calidad.php?tipo_solicitud="+tipo_solicitud+"&documento="+documento+"&proceso="+proceso[1]);
 		})		
 		
 		$("input[name='otros_documentos']").change(function(){
-		    if(parseInt($("input[name='tipo_documento']:checked").val())!=3){
-    			var documento      = $(this).val();
-    			var proceso;				
-    			var tipo_solicitud = $("input[name='tipo_solicitud']:checked").val();			
-    			
-    			if($("select[name='listado_procesos'] option:selected").val()){
-    				proceso = $("select[name='listado_procesos'] option:selected").val().split('|');
-    			}else{
-    				proceso = [0,0];
-    			}
-    			
-    			tree_documento_calidad.deleteChildItems(0);					
-    			tree_documento_calidad.loadXML("<?php echo($ruta_db_superior); ?>formatos/control_documentos/test_documentos_calidad.php?tipo_solicitud="+tipo_solicitud+"&documento="+documento+"&proceso="+proceso[1]);
-		    }
+			var documento      = $(this).val();
+			var proceso;				
+			var tipo_solicitud = $("input[name='tipo_solicitud']:checked").val();			
+			
+			if($("select[name='listado_procesos'] option:selected").val()){
+				proceso = $("select[name='listado_procesos'] option:selected").val().split('|');
+			}else{
+				proceso = [0,0];
+			}
+			
+			tree_documento_calidad.deleteChildItems(0);					
+			tree_documento_calidad.loadXML("<?php echo($ruta_db_superior); ?>formatos/control_documentos/test_documentos_calidad.php?tipo_solicitud="+tipo_solicitud+"&documento="+documento+"&proceso="+proceso[1]);
 		})		
 	});
 </script>
