@@ -93,8 +93,8 @@ function validar_tipo_documento($idformato, $iddoc){
 			
 			
 		    }else{  //desarrollo bases de calidad
-		        $('#nombre_documento').removeClass('required').parent().parent().hide(); 
-		        $('#listado_procesos').removeClass('required')parent().parent().hide(); 
+		        $('#nombre_documento').parent().parent().hide(); $('#nombre_documento').removeClass('required');
+		        $('#listado_procesos').parent().parent().hide();  $('#listado_procesos').removeClass('required');
 		       
 		        
 		    }
