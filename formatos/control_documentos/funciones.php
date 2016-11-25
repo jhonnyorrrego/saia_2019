@@ -44,49 +44,56 @@ function validar_tipo_documento($idformato, $iddoc){
 			$("input[name='otros_documentos']").removeClass('required');
 		}
 		
-		$("input[name='tipo_documento']").click(function(){		
+		$("input[name='tipo_documento']").click(function(){	
+		    
+		    if(parseInt($(this).val()) != 3){
+		    
 			
-			if(parseInt($(this).val()) == 1){
-				$("#serie_idserie").addClass('required');
-				$("#serie_idserie").parent().parent().show();
-				
-				
-				$("#tr_serie_doc_control").show();
-				$("#serie_doc_control").addClass('required');
-				
-				$("input[name='almacenamiento[]']").addClass('required');
-				$("input[name='almacenamiento[]']").parent().parent().parent().parent().parent().parent().parent().show();
-				
-				$("input[name='otros_documentos']").parent().parent().parent().parent().parent().parent().parent().hide();				
-				$("input[name='otros_documentos']").removeClass('required');
-				
-			}else if(parseInt($(this).val()) == 2){
-				$("#tr_serie_doc_control").hide();
-				$("#serie_doc_control").removeClass('required');
-				
-				$("#serie_idserie").removeClass('required');
-				$("#serie_idserie").parent().parent().hide();
-				
-				$("input[name='almacenamiento[]']").removeClass('required');
-				$("input[name='almacenamiento[]']").parent().parent().parent().parent().parent().parent().parent().hide();
-		
-				$("input[name='otros_documentos']").parent().parent().parent().parent().parent().parent().parent().show();
-				$("input[name='otros_documentos']").addClass('required');
-			}
+    			if(parseInt($(this).val()) == 1){
+    				$("#serie_idserie").addClass('required');
+    				$("#serie_idserie").parent().parent().show();
+    				
+    				
+    				$("#tr_serie_doc_control").show();
+    				$("#serie_doc_control").addClass('required');
+    				
+    				$("input[name='almacenamiento[]']").addClass('required');
+    				$("input[name='almacenamiento[]']").parent().parent().parent().parent().parent().parent().parent().show();
+    				
+    				$("input[name='otros_documentos']").parent().parent().parent().parent().parent().parent().parent().hide();				
+    				$("input[name='otros_documentos']").removeClass('required');
+    				
+    			}else if(parseInt($(this).val()) == 2){
+    				$("#tr_serie_doc_control").hide();
+    				$("#serie_doc_control").removeClass('required');
+    				
+    				$("#serie_idserie").removeClass('required');
+    				$("#serie_idserie").parent().parent().hide();
+    				
+    				$("input[name='almacenamiento[]']").removeClass('required');
+    				$("input[name='almacenamiento[]']").parent().parent().parent().parent().parent().parent().parent().hide();
+    		
+    				$("input[name='otros_documentos']").parent().parent().parent().parent().parent().parent().parent().show();
+    				$("input[name='otros_documentos']").addClass('required');
+    			}
+    			
+    			
+    			
+    			if((parseInt($(this).val()) === 1 || parseInt($(this).val()) === 2)){
+    				
+    				if(parseInt($("input[name='tipo_solicitud']:checked").val()) !== 3){				
+    					$("input[name='anexo_formato[]']").addClass('required');
+    				}
+    				
+    				$("input[name='anexo_formato[]']").parent().parent().parent().parent().show();
+    			}else{
+    				$("input[name='anexo_formato[]']").removeClass('required');
+    				$("input[name='anexo_formato[]']").parent().parent().parent().parent().hide();
+    			}	
 			
 			
+		    }
 			
-			if((parseInt($(this).val()) === 1 || parseInt($(this).val()) === 2)){
-				
-				if(parseInt($("input[name='tipo_solicitud']:checked").val()) !== 3){				
-					$("input[name='anexo_formato[]']").addClass('required');
-				}
-				
-				$("input[name='anexo_formato[]']").parent().parent().parent().parent().show();
-			}else{
-				$("input[name='anexo_formato[]']").removeClass('required');
-				$("input[name='anexo_formato[]']").parent().parent().parent().parent().hide();
-			}			
 		});
 		
 		
