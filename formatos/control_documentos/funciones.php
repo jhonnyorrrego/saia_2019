@@ -432,39 +432,43 @@ function listar_macroprocesos_and_procesos($idformato,$iddoc){
 		
 		
 		$("input[name='tipo_documento']").change(function(){
-			var documento;
-			var proceso;				
-			var tipo_solicitud = $("input[name='tipo_solicitud']:checked").val();
-			
-			if(parseInt($(this).val()) == 1){
-				documento = 10;
-			}else{
-				documento = $("input[name='otros_documentos']:checked").val(); 
-			}				
-			
-			if($("select[name='listado_procesos'] option:selected").val()){
-				proceso = $("select[name='listado_procesos'] option:selected").val().split('|');
-			}else{
-				proceso = [0,0];
-			}
-			
-			tree_documento_calidad.deleteChildItems(0);					
-			tree_documento_calidad.loadXML("<?php echo($ruta_db_superior); ?>formatos/control_documentos/test_documentos_calidad.php?tipo_solicitud="+tipo_solicitud+"&documento="+documento+"&proceso="+proceso[1]);
+		    if(parseInt($("input[name='tipo_documento']:checked").val())!=3){
+    			var documento;
+    			var proceso;				
+    			var tipo_solicitud = $("input[name='tipo_solicitud']:checked").val();
+    			
+    			if(parseInt($(this).val()) == 1){
+    				documento = 10;
+    			}else{
+    				documento = $("input[name='otros_documentos']:checked").val(); 
+    			}				
+    			
+    			if($("select[name='listado_procesos'] option:selected").val()){
+    				proceso = $("select[name='listado_procesos'] option:selected").val().split('|');
+    			}else{
+    				proceso = [0,0];
+    			}
+    			
+    			tree_documento_calidad.deleteChildItems(0);					
+    			tree_documento_calidad.loadXML("<?php echo($ruta_db_superior); ?>formatos/control_documentos/test_documentos_calidad.php?tipo_solicitud="+tipo_solicitud+"&documento="+documento+"&proceso="+proceso[1]);
+		    }
 		})		
 		
 		$("input[name='otros_documentos']").change(function(){
-			var documento      = $(this).val();
-			var proceso;				
-			var tipo_solicitud = $("input[name='tipo_solicitud']:checked").val();			
-			
-			if($("select[name='listado_procesos'] option:selected").val()){
-				proceso = $("select[name='listado_procesos'] option:selected").val().split('|');
-			}else{
-				proceso = [0,0];
-			}
-			
-			tree_documento_calidad.deleteChildItems(0);					
-			tree_documento_calidad.loadXML("<?php echo($ruta_db_superior); ?>formatos/control_documentos/test_documentos_calidad.php?tipo_solicitud="+tipo_solicitud+"&documento="+documento+"&proceso="+proceso[1]);
+		    if(parseInt($("input[name='tipo_documento']:checked").val())!=3){
+    			var documento      = $(this).val();
+    			var proceso;				
+    			var tipo_solicitud = $("input[name='tipo_solicitud']:checked").val();			
+    			
+    			if($("select[name='listado_procesos'] option:selected").val()){
+    				proceso = $("select[name='listado_procesos'] option:selected").val().split('|');
+    			}else{
+    				proceso = [0,0];
+    			}
+    			
+    			tree_documento_calidad.deleteChildItems(0);					
+    			tree_documento_calidad.loadXML("<?php echo($ruta_db_superior); ?>formatos/control_documentos/test_documentos_calidad.php?tipo_solicitud="+tipo_solicitud+"&documento="+documento+"&proceso="+proceso[1]);
+		    }
 		})		
 	});
 </script>
