@@ -91,7 +91,7 @@ function validar_tipo_documento($idformato, $iddoc){
     				$("input[name='anexo_formato[]']").parent().parent().parent().parent().hide();
     			}	
 			
-			
+			 
 		    }else{  //desarrollo bases de calidad
 		        $('#nombre_documento').parent().parent().hide(); $('#nombre_documento').removeClass('required');
 		        $('#listado_procesos').parent().parent().hide(); $('#listado_procesos').removeClass('required');
