@@ -392,7 +392,7 @@ function listar_macroprocesos_and_procesos($idformato,$iddoc){
 			var proceso;				
 			var tipo_solicitud = $(this).val();
 			
-			if(parseInt($("input[name='tipo_documento']:checked").val()!=3){
+			if(parseInt($("input[name='tipo_documento']:checked").val())!=3){
 			    
     			if(parseInt($("input[name='tipo_documento']:checked").val()) == 1){
     				documento = 10;
