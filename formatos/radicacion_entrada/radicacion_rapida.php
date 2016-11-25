@@ -142,7 +142,7 @@ echo(estilo_bootstrap());
                     </tr>
                     <tr>
                         <td colspan="2">
-                            <input type="hidden" id="generar_consecutivo" name="generar_consecutivo"/ required>
+                            <input type="hidden" id="generar_consecutivo" name="generar_consecutivo"/>
                             <input type="hidden" name="enlace" id="enlace" value="pantallas/buscador_principal.php?idbusqueda=7">
                             
                             <?php
@@ -194,9 +194,9 @@ if(@$_REQUEST["idcategoria_formato"]){
 	     if(nodeId.indexOf('#',0)==-1){
             $('#generar_consecutivo').val(nodeId);
             if(nodeId=='radicacion_salida'){
-                $('#enlace').val("pantallas/buscador_principal.php?idbusqueda=7|default_componente=pendiente_salida");
+                $('#enlace').val("pantallas/buscador_principal.php?idbusqueda=10");
             }else{
-                $('#enlace').val("pantallas/buscador_principal.php?idbusqueda=7|default_componente=pendientes_ingresar");
+                $('#enlace').val("pantallas/buscador_principal.php?idbusqueda=7");
             }
 	     }
       }
@@ -230,8 +230,8 @@ if(@$_REQUEST["idcategoria_formato"]){
 	</script>
 	        </td>
                     </tr>
-                    <tr><td style="font-size:8pt;"  align="center">Descripci&oacuten General</td>
-                        <td align="center"><input type="text" maxlength="15" id="descripcion_general" name="descripcion_general"/></td>
+                    <tr><td style="font-size:8pt;"  align="center">Numero de folios</td>
+                        <td align="center"><input type="number" min="0" value="" id="numero_folios" name="folios"/></td>
                     </tr>
                     <tr>
                         <td colspan="2" align="center"><input class="btn btn-primary btn-mini" type="submit" value="Radicar" id="enviar" name="enviar"/></td>
