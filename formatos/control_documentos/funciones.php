@@ -412,19 +412,22 @@ function listar_macroprocesos_and_procesos($idformato,$iddoc){
 			}
 		})
 		
-		$("#listado_procesos").change(function(){		
-			var documento;
-			var proceso        = $(this).val().split('|');
-			var tipo_solicitud = $("input[name='tipo_solicitud']:checked").val();
-			 
-			if(parseInt($("input[name='tipo_documento']:checked").val()) == 1){
-				documento = 10;
-			}else{
-				documento = $("input[name='otros_documentos']:checked").val(); 
-			}	
-			
-			tree_documento_calidad.deleteChildItems(0);					
-			tree_documento_calidad.loadXML("<?php echo($ruta_db_superior); ?>formatos/control_documentos/test_documentos_calidad.php?tipo_solicitud="+tipo_solicitud+"&documento="+documento+"&proceso="+proceso[1]);			
+		$("#listado_procesos").change(function(){
+		    
+		    if(parseInt($("input[name='tipo_documento']:checked").val())!=3){
+    			var documento;
+    			var proceso        = $(this).val().split('|');
+    			var tipo_solicitud = $("input[name='tipo_solicitud']:checked").val();
+    			 
+    			if(parseInt($("input[name='tipo_documento']:checked").val()) == 1){
+    				documento = 10;
+    			}else{
+    				documento = $("input[name='otros_documentos']:checked").val(); 
+    			}	
+    			
+    			tree_documento_calidad.deleteChildItems(0);					
+    			tree_documento_calidad.loadXML("<?php echo($ruta_db_superior); ?>formatos/control_documentos/test_documentos_calidad.php?tipo_solicitud="+tipo_solicitud+"&documento="+documento+"&proceso="+proceso[1]);
+		    }
 		});
 		
 		
