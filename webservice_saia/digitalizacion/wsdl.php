@@ -92,14 +92,6 @@ $functions[] = array(
                         "type" => "int"
                 ),
                 array(
-                        "name" => "iddoc",
-                        "type" => "int"
-                ),
-                array(
-                        "name" => "idfunc",
-                        "type" => "int"
-                ),
-                array(
                         "name" => "message",
                         "type" => "string"
                 )
@@ -209,14 +201,14 @@ function DisplayXML($xmlformat = true) {
     $str .= $t1 . 'xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" ' . "\n";
     $str .= $t1 . 'xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" ' . "\n";
     $str .= $t1 . 'xmlns:s="http://www.w3.org/2001/XMLSchema" ' . "\n";
-    $str .= $t1 . 'targetNamespace="http://www.darkerwhite.com/" ' . "\n";
-    $str .= $t1 . 'xmlns:tns="http://www.darkerwhite.com/" ' . "\n";
+    $str .= $t1 . 'targetNamespace="http://www.cerok.com/" ' . "\n";
+    $str .= $t1 . 'xmlns:tns="http://www.cerok.com/" ' . "\n";
     $str .= $t1 . 'name="' . $serviceID . '" ' . "\n";
     $str .= '>' . "\n\n";
 
     // Declare Types / Schema
     $str .= '<wsdl:types>' . "\n";
-    $str .= $t1 . '<s:schema elementFormDefault="qualified" targetNamespace="http://www.darkerwhite.com/">' . "\n";
+    $str .= $t1 . '<s:schema elementFormDefault="qualified" targetNamespace="http://www.cerok.com/">' . "\n";
     for($i = 0; $i < count($functions); $i++) {
         // Define Request Types
         if (array_key_exists("inputParams", $functions[$i])) {

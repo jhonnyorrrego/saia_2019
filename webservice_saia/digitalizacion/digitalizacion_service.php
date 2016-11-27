@@ -14,6 +14,13 @@ while ( $max_salida > 0 ) {
 
 include_once ($ruta_db_superior . "db.php");
 
+if (! @$_SESSION["LOGIN" . LLAVE_SAIA]) {
+    @session_start();
+    $_SESSION["LOGIN" . LLAVE_SAIA] = "radicador_web";
+    $_SESSION["usuario_actual"] = "20";
+    $_SESSION["conexion_remota"] = 1;
+}
+
 $protocol = "http://";
 if(!empty($_SERVER['HTTPS'])) {
     $protocol = "https://";
