@@ -14,8 +14,22 @@ while ( $max_salida > 0 ) {
 
 include_once ($ruta_db_superior . "db.php");
 
+$protocol = "http://";
+if(!empty($_SERVER['HTTPS'])) {
+    $protocol = "https://";
+}
+
+$port = "";
+if(!empty($_SERVER["SERVER_PORT"]) && $_SERVER["SERVER_PORT"] != "80") {
+    $port = ":" . $_SERVER["SERVER_PORT"];
+}
+
+//$soap_address = "http://localhost/~giovanni/saia_reborn/saia/webservice_saia/digitalizacion/digitalizacion_service.php";
+$service_address = $protocol .  $_SERVER["SERVER_NAME"] . $port . dirname($_SERVER['PHP_SELF']) . "/wsdl.php?wsdl";
+
+
 //$server = new SoapServer("http://localhost/~giovanni/saia_reborn/saia/webservice_saia/digitalizacion/wsdl.php?wsdl");	// Locate WSDL file to learn structure of functions
-$server = new SoapServer(dirname(__FILE__));
+$server = new SoapServer($service_address);
 $server->addFunction("consultar_info");	// Same func name as in our WSDL XML, and below
 $server->addFunction("actualizar_estado");	// Same func name as in our WSDL XML, and below
 $server->handle();

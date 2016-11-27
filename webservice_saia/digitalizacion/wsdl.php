@@ -27,8 +27,18 @@ $functions = array();
 
 $serviceName = "Web Service Digitalizacion SAIA";
 
-$soap_address = "http://localhost/~giovanni/saia_reborn/saia/webservice_saia/digitalizacion/digitalizacion_service.php";
+$protocol = "http://";
+if(!empty($_SERVER['HTTPS'])) {
+    $protocol = "https://";
+}
 
+$port = "";
+if(!empty($_SERVER["SERVER_PORT"]) && $_SERVER["SERVER_PORT"] != "80") {
+    $port = ":" . $_SERVER["SERVER_PORT"];
+}
+
+//$soap_address = "http://localhost/~giovanni/saia_reborn/saia/webservice_saia/digitalizacion/digitalizacion_service.php";
+$soap_address = $protocol .  $_SERVER["SERVER_NAME"] . $port . dirname($_SERVER['PHP_SELF']) . "/digitalizacion_service.php";
 $functions[] = array(
         "funcName" => "consultar_info",
         "doc" => "Consultar informacion para digitalizar para un usuario.",
@@ -122,10 +132,6 @@ if (stristr($_SERVER['QUERY_STRING'], "wsdl")) {
     echo '<body>';
     echo '<h1>' . $serviceName . '</h1>';
     echo '<p style="margin-left:20px;">To access via a SOAP client use <code>' . $cp . '?WSDL</code></p>';
-
-    print_r($_SERVER);
-    print_r(dirname($_SERVER['SCRIPT_NAME']));
-    die();
 
     // Document each function
     echo '<h2>Available Functions:</h2>';
