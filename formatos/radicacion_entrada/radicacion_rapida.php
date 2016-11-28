@@ -195,7 +195,7 @@ if(@$_REQUEST["idcategoria_formato"]){
             $('#generar_consecutivo').val(nodeId);
             
             <?php 
-                $ibusqueda_pendiente_ingresar=buscador_filtro_tabla("idbusqueda","busqueda","nombre='pendiente_ingresar'","",$conn);
+                $ibusqueda_pendiente_ingresar=busca_filtro_tabla("idbusqueda","busqueda","nombre='pendiente_ingresar'","",$conn);
                 $var_ibusqueda_pendiente_ingresar=$ibusqueda_pendiente_ingresar[0]['idbusqueda'];
             ?>
             var ibusqueda_pendiente_ingresar='<?php echo($var_ibusqueda_pendiente_ingresar); ?>';
