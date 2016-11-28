@@ -36,6 +36,16 @@ global $conn;
             <input id="bqsaia_numero" name="bqsaia_numero" size="50" type="text">
             <input type="hidden" name="bqsaiaenlace_numero" id="bqsaiaenlace_numero" value="y">
           </div>
+        </div>
+        <div class="control-group">
+          <label class="string required control-label" for="numero">
+            <b>N&uacute;mero Item:</b>
+            <input type="hidden" name="bksaiacondicion_numero_item" id="bksaiacondicion_numero_item" value="=">
+          </label>
+          <div class="controls">
+            <input id="bqsaia_numero" name="bqsaia_numero_item" size="50" type="text">
+            <input type="hidden" name="bqsaiaenlace_numero_item" id="bqsaiaenlace_numero_item" value="y">
+          </div>
         </div> 
          <strong>Entre las fechas</strong>
             <input type="hidden" name="bksaiacondicion_fecha_radicacion_entrada_x" id="bksaiacondicion_fecha_radicacion_entrada_x" value=">=">
@@ -68,46 +78,24 @@ global $conn;
               </label>
             </div>          
           </div> 
-      </div><br>
-
-
+      </div>
+      
+      <div class="row">
+          <div class="control-group radio_buttons span4">
+            <label class="radio_buttons optional control-label"><b>Con anexo?</b>
+            <input type="hidden" name="bksaiacondicion_anexos" id="bksaiacondicion_anexos" value="=">
+            </label>
+            <div class="controls">
+              <label class="radio inline">
+                <input class="radio_buttons optional" id="bqsaia_anexos" name="bqsaia_anexos" type="radio" value="0">No
+              </label>
+              <label class="radio inline">
+                <input class="radio_buttons optional" id="bqsaia_anexos2" name="bqsaia_anexos" type="radio" value="1">Si
+              </label>
+            </div>          
+          </div> 
+      </div>
 	<br>
-	
-        <!--div class="control-group">
-          <label class="string required control-label" for="mensajero">
-			<b>Mensajero</b>
-          </label>
-          <div class="controls">
-            <?php/* 
-        	$funcionario_codigo=usuario_actual('funcionario_codigo');
-            $cargo=busca_filtro_tabla("lower(cargo) AS cargo, iddependencia_cargo","vfuncionario_dc a","a.funcionario_codigo=".$funcionario_codigo,"",$conn);
-            if($cargo[0]['cargo']!="mensajero"){
-            
-            $select="<select class='pull-left btn btn-mini dropdown-toggle' style='height:22px;' name='filtro_mensajeros' id='filtro_mensajeros'>";
-            $datos=busca_filtro_tabla("iddependencia_cargo, concat(nombres,' ',apellidos) AS nombre","vfuncionario_dc","lower(cargo)='mensajero' AND estado_dc=1","",$conn);
-            //print_r($datos);die();
-            for($i=0;$i<$datos['numcampos'];$i++){
-                $select.="<option value='{$datos[$i]['iddependencia_cargo']}'>{$datos[$i]['nombre']}</option>";
-            }
-            $select.="</select>";
-            }
-            echo $select;*/
-	        ?>
-          </div>
-			<script>
-				$(document).ready(function(){
-					$("#filtro_mensajeros").live("change",function(){
-                        var mensajero_filtro=$(this).val();
-                        alert($("#variable_busqueda").val());
-                        
-                    });	
-				});
-			</script>
-        </div>
-		 
-<br-->
-
-
         <div class="form-actions">    
           <input type="hidden" name="idbusqueda_componente" id="idbusqueda_componente" value="<?php echo @$_REQUEST["idbusqueda_componente"]; ?>">
           <input type="hidden" name="bqtipodato" value="date|fecha_radicacion_entrada_x,fecha_radicacion_entrada_y,fecha_radicacion_entrada_x,fecha_radicacion_entrada_y">
