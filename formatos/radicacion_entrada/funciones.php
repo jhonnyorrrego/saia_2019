@@ -25,6 +25,8 @@ function cargar_fecha_limite_respuesta($idformato,$iddoc){
 ?>
 	<script type="text/javascript">
 		$(document).ready(function(){
+		    $("#descripcion").attr("maxlength",150);
+		    $("#descripcion_general").attr("maxlength",150);
 			var fecha_masocho_dias="<?php echo($fecha_ochodias);?>";
 			$("#tiempo_respuesta").val(fecha_masocho_dias);			
 		});
@@ -80,10 +82,13 @@ function cambiar_estado($idformato,$iddoc){
 }
 function validar_digitalizacion_formato_radicacion($idformato,$iddoc){
 	global $conn,$ruta_db_superior;
-
+	
+	 $cidbusqueda_en_proceso=busca_filtro_tabla("idbusqueda","busqueda","nombre='en_proceso'","",$conn);
+     $idbusqueda_en_proceso=$cidbusqueda_en_proceso[0]['idbusqueda'];
   if($_REQUEST["digitalizacion"]==1){
   	if(@$_REQUEST["iddoc"]){
-  		$enlace="pantallas/buscador_principal.php?idbusqueda=9";
+  	   
+  		$enlace="pantallas/buscador_principal.php?idbusqueda=".$idbusqueda_en_proceso;
   		//abrir_url($ruta_db_superior."colilla.php?key=".$_REQUEST["iddoc"]."&enlace=paginaadd.php?key=".$_REQUEST["iddoc"]."&enlace2=".$enlace,'_self');
   		abrir_url($ruta_db_superior."paginaadd.php?key=".$_REQUEST["iddoc"]."&enlace=".$enlace,'centro');
   	}
@@ -96,8 +101,14 @@ function validar_digitalizacion_formato_radicacion($idformato,$iddoc){
   	abrir_url($ruta_db_superior."formatos/radicacion_entrada/mostrar_radicacion_entrada.php?iddoc=".$iddoc."&idformato=".$idformato,'_self');
   }else if($_REQUEST["digitalizacion"]==2){
   	if(@$_REQUEST["iddoc"]){
+  	    $tipo=busca_filtro_tabla("tipo_radicado","documento","iddocumento=".$_REQUEST['iddoc'],"",$conn);
+        if($tipo[0]['tipo_radicado']==1){
+            $enlace="pantallas/buscador_principal.php?idbusqueda=".$idbusqueda_en_proceso."|default_componente=en_proceso";   
+        }elseif($tipo[0]['tipo_radicado']==2){
+            $enlace="pantallas/buscador_principal.php?idbusqueda=".$idbusqueda_en_proceso."|default_componente=tramitados";
+        }
   		$iddoc=$_REQUEST["iddoc"];
-  		$enlace="pantallas/buscador_principal.php?idbusqueda=9";
+  		//$enlace="pantallas/buscador_principal.php?idbusqueda=9";
   	}
 	else{
 		$enlace=$ruta_db_superior."formatos/radicacion_entrada/detalles_mostrar_radicacion_entrada.php?iddoc=".$iddoc."&idformato=".$idformato;
@@ -196,16 +207,31 @@ function quitar_descripcion_entrada($idformato,$iddoc){
 					$("#fecha_oficio_entrada").after("<font color='red'>La fecha es mayor a la de hoy</font>");
 					$("#fecha_oficio_entrada").focus();
 					$('#continuar').css('display','inherit');						
-					$('#continuar').next('input').hide();						
+					$('#continuar').next('input').hide();					
 					return false;
 				}
 				var destinos=$("#destino").val();
 				$.post("contar_funcionarios.php",{destino:destinos},function(respuesta){
 					if(respuesta==1){
-						var confirmacion=confirm("Esta seguro de transferir el documento a las personas seleccionadas?");
-						if(!confirmacion)return false;
+						var confirmacion=confirm("Esta seguro de transferir el documento a los destinos seleccionadas?");
+						if(!confirmacion){
+						    $('#continuar').css('display','inherit');                       
+                            $('#continuar').next('input').hide();
+                            return false;
+                        }
 					}
-					form.submit();
+					var copia=$("#copia_a").val();
+                    $.post("contar_funcionarios.php",{destino:copia},function(respuesta){
+                        if(respuesta==1){
+                            var confirmacion=confirm("Esta seguro de transferir el documento con copia a las personas seleccionadas?");
+                            if(!confirmacion){
+                                $('#continuar').css('display','inherit');                       
+                                $('#continuar').next('input').hide();
+                                return false;
+                            }
+                        }
+                        form.submit();
+                    });
 				});
             }        
         });
@@ -254,15 +280,23 @@ function imagenes_digitalizadas_funcion($idformato,$iddoc){
 		?>
 		<script>
 		$(document).ready(function(){
+		    var tipo=$(this).attr("tipo");
 			$(".previo_high").click(function(e){
 				var enlace=$(this).attr("enlace");
-				var tipo=$(this).attr("tipo");
+				tipo=$(this).attr("tipo");
 				if(tipo=='anexo'){
 					top.hs.htmlExpand(this, { objectType: 'iframe',width: 1000, height: 600,contentId:'cuerpo_paso', preserveContent:false, src:enlace,outlineType: 'rounded-white',wrapperClassName:'highslide-wrapper drag-header'});
 				}else if(tipo=='pagina'){
 					top.hs.htmlExpand(this, { objectType: 'iframe',width: 1000, height: 600,contentId:'cuerpo_paso', preserveContent:false, src:'pantallas/documento/pagina_documento.php?idpagina='+enlace,outlineType: 'rounded-white',wrapperClassName:'highslide-wrapper drag-header'});
+				}else if( tipo=='finalizacion'){
+				    top.hs.htmlExpand(this, { objectType: 'iframe',width: 300, height: 300,contentId:'cuerpo_paso', preserveContent:false, src:enlace,outlineType: 'rounded-white',wrapperClassName:'highslide-wrapper drag-header'});
 				}
 			});
+			top.hs.Expander.prototype.onAfterClose = function() {
+                if(tipo=='finalizacion'){
+                    window.location = "formatos/radicacion_entrada/mostrar_radicacion_entrada.php?idformato=<?php echo($idformato); ?>&iddoc=<?php echo($iddoc); ?>";
+                }
+            }
 		});
 		</script>
 		<?php
@@ -328,87 +362,82 @@ function tipo_radicado_radicacion($idformato,$iddoc){//en el adicionar
         <script>
             $(document).ready(function(){
                 var dependencia_principal='<?php echo($dependencia_principal); ?>';
-                 
+                tipo_origen($("input:radio[name=tipo_origen]:checked").val());
+                tipo_destino($("input:radio[name=tipo_destino]:checked").val());
                 
-                
-                $('#fecha_oficio_entrada').addClass('required');
-                $('#destino').addClass('required');
-                $('#persona_natural').addClass('required');
-                $('#destino').addClass('required');
-                $('#tr_tipo_destino').hide(); 
-                
-                tree_area_responsable.setOnLoadingEnd(chekeararbol);
-                $('#area_responsable').parent().parent().hide();
-                $('#persona_natural_dest').parent().parent().hide();
-                $('#tr_tipo_mensajeria').hide();
-                $('#tipo_mensajeria0').parent().hide();
                 
                 $('[name="tipo_origen"]').click(function(){
-                
-                    var tipo=$(this).val();
-                    if(tipo==1){
-                        $('[name="tipo_radicado"]').val('radicacion_entrada');
-                        
-                        $('#area_responsable').parent().parent().hide();
-                        $('#area_responsable').removeClass('required');
-                        $('#destino').addClass('required');
-                        $('#tr_tipo_destino').hide();
-                        $('input:radio[name="tipo_destino"]').filter('[value="2"]').attr('checked', true);
-                        $('#destino').parent().parent().show();
-                        $('#copia_a').parent().parent().show();
-                        $('#persona_natural_dest').parent().parent().hide();
-                        $('#persona_natural_dest').removeClass('required');
-                        $('#tr_tipo_mensajeria').hide();
-                        $('[name="tipo_mensajeria"]').removeClass('required');
-                        
-                        $('#fecha_oficio_entrada').addClass('required');
-                        $('#fecha_oficio_entrada').parent().parent().parent().show();
-                        $('#numero_oficio').parent().parent().show();
-                        $('#persona_natural').addClass('required');
-                        $('#persona_natural').parent().parent().show();
-                        //$('#anexos_digitales').parent().parent().show();
-                        
-                    }else{
-                        $('[name="tipo_radicado"]').val('radicacion_salida');
-                        
-                        $('#area_responsable').parent().parent().show();
-                        $('#area_responsable').addClass('required');
-                        $('#tr_tipo_destino').show();
-                        
-                        $('#fecha_oficio_entrada').removeClass('required');
-                        $('#fecha_oficio_entrada').parent().parent().parent().hide();
-                        $('#numero_oficio').parent().parent().hide();
-                        $('#persona_natural').removeClass('required');
-                        $('#persona_natural').parent().parent().hide();
-                        //$('#anexos_digitales').parent().parent().hide();
-                        $('#tr_tipo_mensajeria').show();
-                        $('[name="tipo_mensajeria"]').addClass('required');
-                        
-                    }
-                    $.ajax({ 
-                        type:'POST',
-                        dataType: 'json',
-                        url: "tipo_contador.php",
-                        data: {
-                                        tipo_radicacion:tipo
-                        },
-                        success: function(datos){
-                            
-                            $('#numero_radicado').html(datos[0]);
-                            
-                        }
-                    });
+                    tipo_origen($(this).val());
                 });
                 
                 $('[name="tipo_destino"]').click(function(){
-                    var tipo=$(this).val();
-                    if(tipo==1){
+                    tipo_destino($(this).val());
+                });
+            });
+            function tipo_origen(tipo){
+                if(tipo==1){
+                    $('[name="tipo_radicado"]').val('radicacion_entrada');
+                        
+                    $('#area_responsable').parent().parent().hide();
+                    $('#area_responsable').removeClass('required');
+                    $('#destino').addClass('required');
+                    $('#tr_tipo_destino').hide();
+                    $('input:radio[name="tipo_destino"]').filter('[value="2"]').attr('checked', true);
+                    $('#destino').parent().parent().show();
+                    $('#copia_a').parent().parent().show();
+                    $('#persona_natural_dest').parent().parent().hide();
+                    $('#persona_natural_dest').removeClass('required');
+                    $('#tr_tipo_mensajeria').hide();
+                    $('[name="tipo_mensajeria"]').removeClass('required');
+                        
+                    //$('#fecha_oficio_entrada').addClass('required');
+                    $('#fecha_oficio_entrada').removeClass('required');
+                    $('#fecha_oficio_entrada').parent().parent().parent().show();
+                    $('#numero_oficio').parent().parent().show();
+                    $('#persona_natural').addClass('required');
+                    $('#persona_natural').parent().parent().show();
+                    //$('#anexos_digitales').parent().parent().show();
+                }else{
+                    $('[name="tipo_radicado"]').val('radicacion_salida');
+                        console.log("entro");
+                    $('[name="area_responsable"]').parent().parent().show();
+                    $('#area_responsable').addClass('required');
+                    $('#tr_tipo_destino').show();
+                        
+                    $('#fecha_oficio_entrada').removeClass('required');
+                    $('#fecha_oficio_entrada').parent().parent().parent().hide();
+                    $('#numero_oficio').parent().parent().hide();
+                    $('#persona_natural').removeClass('required');
+                    $('#persona_natural').parent().parent().hide();
+                    //$('#anexos_digitales').parent().parent().hide();
+                    $('#tr_tipo_mensajeria').show();
+                    $('[name="tipo_mensajeria"]').addClass('required');
+                        
+                 }
+                 $.ajax({
+                     type:'POST',
+                     dataType: 'json',
+                     url: "tipo_contador.php",
+                     data: {
+                         tipo_radicacion:tipo
+                     },
+                     success: function(datos){
+                         $('#numero_radicado').html(datos[0]);
+                     }
+                });
+            }
+            function tipo_destino(tipo){
+                if(tipo==1){
                         $('#destino').removeClass('required');
                         $('#destino').parent().parent().hide();
                         $('#copia_a').parent().parent().hide();
                         $('#persona_natural_dest').parent().parent().show();
                         $('#persona_natural_dest').addClass('required');
                         $('#tipo_mensajeria0').parent().show();
+                        
+                        
+                        refrescar_arbol_tipo_documental_funcionario_responsable();
+                         
                     }else{
                         $('#destino').addClass('required');
                         $('#destino').parent().parent().show();
@@ -416,9 +445,46 @@ function tipo_radicado_radicacion($idformato,$iddoc){//en el adicionar
                         $('#persona_natural_dest').parent().parent().hide();
                         $('#persona_natural_dest').removeClass('required');
                         $('#tipo_mensajeria0').parent().hide();
+                        
+                        
                     }
-                });
-            });
+            }
+            
+            
+            
+            
+            tree_area_responsable.setOnCheckHandler(refrescar_arbol_tipo_documental_funcionario_responsable);
+			        	
+            function refrescar_arbol_tipo_documental_funcionario_responsable(){
+            	
+            	if($("input:radio[name=tipo_origen]:checked").val()==2 && $("input:radio[name=tipo_destino]:checked").val()==1){
+            		
+            	
+						var seleccionado=tree_area_responsable.getAllChecked();
+			        	seleccionado=parseInt(seleccionado);
+			        	if(seleccionado){
+			        		var dependencia=tree_area_responsable.getParentId(seleccionado);
+				            var padre=tree_area_responsable.getParentId(dependencia);
+				            padre=padre.replace("#","");
+				            dependencia=dependencia.replace("#","");
+				            
+				            
+				            <?php 
+				                $dependencia_principal=busca_filtro_tabla("iddependencia","dependencia","cod_padre IS NULL","",$conn);
+				                $var_iddpendencia_principal=$dependencia_principal[0]['iddependencia'];
+				            ?>
+				            var iddependencia_principal='<?php echo($var_iddpendencia_principal); ?>';
+				            if(dependencia==iddependencia_principal){ //SU ORGANIZACION HAY ERROR CON ESTA NO DETECTADO AUN LA RAZON
+				            	
+				       		}else{
+				           		tree_serie_idserie.setXMLAutoLoading("<?php echo($ruta_db_superior); ?>test_dependencia_serie.php?tabla=dependencia&mostrar_nodos=dsa&sin_padre_dependencia=1&estado=1&cargar_series=1&carga_partes_serie=1&iddependencia="+dependencia);
+				           		tree_serie_idserie.smartRefreshItem("d"+padre);  
+				           		tree_serie_idserie.openItem( "d"+padre ); 
+				       		}	
+			        	}  
+			     }  	           
+            
+            }
             function chekeararbol(){
                 tree_area_responsable.setCheck('<?php echo $cargo[0]["iddependencia_cargo"];?>',true);
                 $('#area_responsable').val(<?php echo $cargo[0]["iddependencia_cargo"];?>);
@@ -427,8 +493,9 @@ function tipo_radicado_radicacion($idformato,$iddoc){//en el adicionar
     <?php
 }
 
-function ingresar_item_destino_radicacion($idformato,$iddoc){//posterior al adicionar
+function ingresar_item_destino_radicacion($idformato,$iddoc){//posterior al adicionar - editar
 	global $conn,$ruta_db_superior;
+    
     
 	$padre=busca_filtro_tabla("","ft_radicacion_entrada A, documento B ","A.documento_iddocumento=B.iddocumento AND B.estado<>'ELIMINADO' AND B.iddocumento=".$iddoc,"",$conn);  //nombre tabla padre
 	$item=busca_filtro_tabla("","ft_destino_radicacion","ft_radicacion_entrada=".$padre[0]["idft_radicacion_entrada"],"",$conn);
@@ -471,8 +538,8 @@ function mostrar_item_destino_radicacion($idformato,$iddoc){
 						
 				echo '<a href="../destino_radicacion/adicionar_destino_radicacion.php?pantalla=padre&amp;idpadre='.$iddoc.'&amp;idformato='.$idformato.'&amp;padre='.$padre[0]['idft_radicacion_entrada'].'" target="_self">Adicionar destino</a>'; //
 		}
-	if($padre[0]['despachado']==0){
-    	$tabla='<form id="item_prerequisitos" action="actualizar_item_destino_radicacion.php"><table class="table table-bordered adicionar_campo" style="width: 100%; font-size:10px; text-align:left;" border="1">
+	if($padre[0]['despachado']==0 || $padre[0]['estado']=='ACTIVO'){
+    	$tabla='<table class="table table-bordered adicionar_campo" style="width: 100%; font-size:10px; text-align:left;" border="1">
     	<tr>
         	<th style="text-align:center;">No. Item</th>
         	<th style="text-align:center;">Nombre origen</th>
@@ -480,79 +547,146 @@ function mostrar_item_destino_radicacion($idformato,$iddoc){
        		<th style="text-align:center;">Cargo</th>
         	<th style="text-align:center;">Ubicación</th>
         	<th style="text-align:center;">Observaciones</th>
+        	<th style="text-align:center;">Acciones</th>
       	</tr>
     	';
     	for ($i=0; $i < $datos['numcampos']; $i++) {
-    	    $origen=busca_filtro_tabla("a.nombres, a.apellidos","funcionario a","a.funcionario_codigo=".$datos[$i]['nombre_origen'],"",$conn);
+    	    $origen=busca_filtro_tabla("concat(nombres,' ',apellidos) AS nombre","vfuncionario_dc a","a.funcionario_codigo=".$datos[$i]['nombre_origen'],"",$conn);
+
+            if(!$origen['numcampos']){
+                $origen=busca_filtro_tabla("nombre","vejecutor a","a.iddatos_ejecutor=".$datos[$i]['origen_externo'],"",$conn);
+            }
+            if(!$origen['numcampos']){
+                $origen=busca_filtro_tabla("concat(nombres,' ',apellidos) AS nombre","vfuncionario_dc a","a.iddependencia_cargo=".$datos[$i]['nombre_origen'],"",$conn);
+            }
     	    if($datos[$i]['tipo_destino']==1){
     	        $destino=busca_filtro_tabla("b.nombre, a.cargo , a.ciudad, a.direccion","datos_ejecutor a, ejecutor b","b.idejecutor=a.ejecutor_idejecutor AND a.iddatos_ejecutor=".$datos[$i]['nombre_destino'],"",$conn);
     	        $ciudad=busca_filtro_tabla("nombre","municipio","idmunicipio=".$destino[0]['ciudad'],"",$conn);
     	        $ubicacion=$ciudad[0]['nombre'].' '.$destino[0]['direccion'];
-    	        
+    	        if(!$destino['numcampos']){
+                    $destino=busca_filtro_tabla("nombre, cargo, empresa as dependencia","vejecutor","iddatos_ejecutor=".$datos[$i]['destino_externo'],"",$conn);
+                    $ubicacion=$destino[0]['direccion'];
+                }
     	    }else{
     	        $destino=busca_filtro_tabla("concat(nombres,' ',apellidos) AS nombre, cargo, dependencia","vfuncionario_dc","iddependencia_cargo=".$datos[$i]['nombre_destino'],"",$conn);
     	        $ubicacion=$destino[0]['dependencia'];
+    	        if(!$destino['numcampos']){
+    	            $destino=busca_filtro_tabla("nombre, cargo, empresa as dependencia","vejecutor","iddatos_ejecutor=".$datos[$i]['destino_externo'],"",$conn);
+                    $ubicacion=$destino[0]['direccion'];
+    	        }
     	    }
     	    
     	    $tabla.="
     	        <tr>
     	            <td style='text-align:center;'>".$datos[$i]['numero_item']."</td>
-    	            <td>".$origen[0]['nombres']." ".$origen[0]['apellidos']."</td>
+    	            <td>".$origen[0]['nombre']."</td>
     	            <td>".$destino[0]['nombre']."</td>
     	            <td style='text-align:center;'>".$destino[0]['cargo']."</td>
     	            <td style='text-align:center;'>".$ubicacion."</td>
-    	            <td><textarea name='observaciones[]'>".$padre[0]['descripcion_anexos']."</textarea></td>
-    	            <input type='hidden' id='id_".$datos[$i]['idft_destino_radicacion']."' value='".$datos[$i]['idft_destino_radicacion']."' name='id[]'/>
-    	        </tr>
-    	    ";
-    	    
+    	            <td><input type='text' style='width:100px;' class='observaciones' id='".$datos[$i]['idft_destino_radicacion']."' value='".$datos[$i]['observacion_destino']."'></td>";
+    	   if($_REQUEST['tipo']!=5){
+    	       $idformato_item=busca_filtro_tabla("idformato","formato","tabla='ft_destino_radicacion'","",$conn);
+    	       $tabla.='<td>                
+                    <a href="#" onclick="if(confirm(&quot;En realidad desea borrar este elemento?&quot;)) window.location=&quot;'.$ruta_db_superior.'formatos/librerias/funciones_item.php?formato='.$idformato_item[0]['idformato'].'&amp;idpadre='.$iddoc.'&amp;accion=eliminar_item&amp;tabla=ft_destino_radicacion&amp;id='.$datos[$i]['idft_destino_radicacion'].'&quot;;">
+                        <img src="'.$ruta_db_superior.'images/eliminar_pagina.png" border="0">
+                    </a>
+                </td>';
+           }
+    	   $tabla.="</tr>";
     	}
     	$tabla.="</table><br/>
-    	       <input type='hidden' name='iddoc' value='$iddoc'/>
-    	       <input style='float:right;' type='submit' value='Confirmar datos de distribución'/>
-    	       </form>
-    	";
+    	       <button style='float:right;' class='btn btn-danger' onclick='guardar_destinos();' id='confirmar_distribucion'>Confirmar datos de distribuci&oacute;n</button>";
 	}else{
 	    $tabla='<table class="table table-bordered" style="width: 100%; font-size:10px; text-align:left;" border="1">
     	<tr>
-        	<th style="text-align:center;">No. Item</th>
-        	<th style="text-align:center;">Nombre origen</th>
-        	<th style="text-align:center;">Nombre destino</th>
-       		<th style="text-align:center;">Cargo</th>
-        	<th style="text-align:center;">Ubicación</th>
-        	<th style="text-align:center;">Observaciones</th>
+        	<th style="text-align:center;">Finalizar</th>
+        	<th style="text-align:center; width:5%">No. Item</th>
+        	<th style="text-align:center; width:20%">Nombre origen</th>
+        	<th style="text-align:center; width:20%">Nombre destino</th>
+       		<th style="text-align:center; width:5%">Cargo</th>
+        	<th style="text-align:center; width:15%">Ubicación</th>
+        	<th style="text-align:center; width:20%">Observaciones</th>
       	</tr>
     	';
+    	
     	for ($i=0; $i < $datos['numcampos']; $i++) {
-    	    $origen=busca_filtro_tabla("a.nombres, a.apellidos","funcionario a","a.funcionario_codigo=".$datos[$i]['nombre_origen'],"",$conn);
+    	    $origen=busca_filtro_tabla("concat(nombres,' ',apellidos) AS nombre","funcionario a","a.funcionario_codigo=".$datos[$i]['nombre_origen'],"",$conn);
+            if(!$origen['numcampos']){
+                $origen=busca_filtro_tabla("nombre","vejecutor a","a.iddatos_ejecutor=".$datos[$i]['origen_externo'],"",$conn);
+            }
+            if(!$origen['numcampos']){
+                $origen=busca_filtro_tabla("concat(nombres,' ',apellidos) AS nombre","vfuncionario_dc a","a.iddependencia_cargo=".$datos[$i]['nombre_origen'],"",$conn);
+            }
+            $parte_tabla="";
     	    if($datos[$i]['tipo_destino']==1){
     	        $destino=busca_filtro_tabla("b.nombre, a.cargo","datos_ejecutor a, ejecutor b","b.idejecutor=a.ejecutor_idejecutor AND a.iddatos_ejecutor=".$datos[$i]['nombre_destino'],"",$conn);
     	        $ciudad=busca_filtro_tabla("nombre","municipio","idmunicipio=".$destino[0]['ciudad'],"",$conn);
     	        $ubicacion=$ciudad[0]['nombre'].' '.$destino[0]['direccion'];
     	    }else{
-    	        $destino=busca_filtro_tabla("concat(nombres,' ',apellidos) AS nombre, cargo, dependencia","vfuncionario_dc","iddependencia_cargo=".$datos[$i]['nombre_destino'],"",$conn);
+    	        $destino=busca_filtro_tabla("concat(nombres,' ',apellidos) AS nombre, cargo, dependencia,funcionario_codigo","vfuncionario_dc","iddependencia_cargo=".$datos[$i]['nombre_destino'],"",$conn);
     	        $ubicacion=$destino[0]['dependencia'];
+                $ok=new Permiso();
+                $permiso=$ok->acceso_modulo_perfil("finalizacion_item_correspondencia");
+                if(($_REQUEST['tipo']!=5 && $datos[$i]['estado_item']==2 && usuario_actual('funcionario_codigo')==$destino[0]['funcionario_codigo']) || ($_REQUEST['tipo']!=5 && $permiso && $datos[$i]['estado_item']!=3)){
+                    
+                    $parte_tabla='<a class="previo_high" tipo="finalizacion" enlace="'.PROTOCOLO_CONEXION.RUTA_PDF.'/formatos/radicacion_entrada/finalizar_items.php?idft='.$datos[$i]['idft_destino_radicacion'].'">Finalizar</a>';
+                }elseif($datos[$i]['estado_item']<=2){
+                    $parte_tabla='En Distribuci&oacute;n';
+                }elseif($datos[$i]['estado_item']==3){
+                    $parte_tabla='Finalizado';
+                }
     	    }
     	    
     	    $tabla.="
     	        <tr>
+    	            <td>".$parte_tabla."</td>
     	            <td style='text-align:center;'>".$datos[$i]['numero_item']."</td>
-    	            <td>".$origen[0]['nombres']." ".$origen[0]['apellidos']."</td>
+    	            <td>".$origen[0]['nombre']."</td>
     	            <td>".$destino[0]['nombre']."</td>
     	            <td style='text-align:center;'>".$destino[0]['cargo']."</td>
-    	            <td style='text-align:center;'>".$ubicacion."</td>
-    	            <td>".$datos[$i]['observacion_destino']."</td>
-    	        </tr>
-    	    ";
+    	            <td style='text-align:center;'>".$ubicacion."</td>";
+            if($datos[$i]['finalizacion_observa']){
+                $tabla.="<td>".$datos[$i]['observacion_destino']."</br><b>Finalizaci&oacute;n:</b> ".$datos[$i]['finalizacion_observa']."</td>";
+                
+            }else{
+                $tabla.="<td>".$datos[$i]['observacion_destino']."</td>";
+            }        
+    	    $tabla.="</tr>";
     	    
     	}
     	$tabla.="</table><br/>";
 	}
-	
-	
-	
 	echo $tabla;
-	
+    ?>
+    <script>
+        function guardar_destinos(){
+            var registros_seleccionados= Array();
+            var i=0;
+            $('.observaciones').each(function(){
+                registros_seleccionados.push([],[]);
+                registros_seleccionados[i][0]=$(this).attr('id');
+                registros_seleccionados[i][1]=$(this).val();
+                i++;
+            });
+            console.log(registros_seleccionados);
+            $.ajax({
+                type:'POST',
+                dataType: 'json',
+                url: "actualizar_item_destino_radicacion.php",
+                data:{
+                    parametros:JSON.stringify(registros_seleccionados),
+                    iddoc: '<?php echo($iddoc); ?>',
+                    idformato: '<?php echo($idformato); ?>'
+                    },
+                async: false,
+                success: function(datos){
+                    top.noty({text: 'Observaciones guardadas!',type: 'success',layout: "topCenter",timeout:3500});
+                    location.reload();
+                }
+            });
+        }
+    </script>
+    <?php
 }
 
 function mostrar_destino_radicacion($idformato,$iddoc){
@@ -560,7 +694,8 @@ function mostrar_destino_radicacion($idformato,$iddoc){
 	$datos=busca_filtro_tabla("","ft_radicacion_entrada","documento_iddocumento=".$iddoc,"",$conn);
 	$nombres="";
 	if($datos[0]['tipo_destino']==1){
-        $destino=busca_filtro_tabla("b.nombre","datos_ejecutor a, ejecutor b","b.idejecutor=a.ejecutor_idejecutor AND a.iddatos_ejecutor IN(".$datos[0]['persona_natural_dest'].")","",$conn);
+	    $destino=busca_filtro_tabla("b.nombre","datos_ejecutor a, ejecutor b","b.idejecutor=a.ejecutor_idejecutor AND a.iddatos_ejecutor IN(".$datos[0]['persona_natural_dest'].")","",$conn);
+        $nombres=$destino[0]['nombre'];
     }else{
         $destinos=explode(",", $datos[0]['destino']);
         $cont=count($destinos);
@@ -646,12 +781,22 @@ $("#"+input).val(num);
 function mostrar_informacion_general_radicacion($idformato,$iddoc){
 	global $conn,$ruta_db_superior;
 	
-	$fecha_radicacion=mostrar_fecha($idformato,$iddoc,$tipo=1);
-	$numero_radicado=formato_numero($idformato,$iddoc,$tipo=1);
-	$datos=busca_filtro_tabla("","ft_radicacion_entrada","documento_iddocumento=".$iddoc,"",$conn);
+	
+	
+	$datos=busca_filtro_tabla("serie_idserie,descripcion,descripcion_anexos,descripcion_general,tipo_origen,numero_oficio,".fecha_db_obtener("fecha_oficio_entrada","Y-m-d")." AS fecha_oficio_entrada,".fecha_db_obtener("fecha_radicacion_entrada","Y-m-d")." AS fecha_radicacion_entrada,numero_guia,empresa_transportado","ft_radicacion_entrada","documento_iddocumento=".$iddoc,"",$conn);
+    
+    $documento=busca_filtro_tabla("numero,tipo_radicado,".fecha_db_obtener("fecha","Y-m-d")." AS fecha","documento","iddocumento=".$iddoc,"",$conn);
 	$tipo_documento=busca_filtro_tabla("nombre","serie","idserie=".$datos[0]["serie_idserie"],"",$conn);
 	$anexos=busca_filtro_tabla("etiqueta","anexos","documento_iddocumento=".$iddoc,"",$conn);
 	$nombre_anexos='';
+    $fecha_radicacion=$documento[0]['fecha'];
+    if($documento[0]['tipo_radicado']==1){
+        $tipo="E";
+    }else{
+        $tipo="I";
+    }
+    $numero_radicado=$datos[0]['fecha_radicacion_entrada']."-".$documento[0]['numero']."-".$tipo;
+    
 	for ($i=0; $i < $anexos['numcampos']; $i++) {
 	    $nombre_anexos.=$anexos[$i]['etiqueta'];
 		if($i < $anexos['numcampos']-1){
@@ -677,9 +822,9 @@ function mostrar_informacion_general_radicacion($idformato,$iddoc){
     $tabla='
         <table class="table table-bordered" style="width: 100%; font-size:10px; text-align:left;" border="1">
   <tr>
-    <td style="width: 25%;"><b>Fecha de radicación:</b></td>
+    <td style="width: 25%;"><b>Fecha de radicaci&oacute;n:</b></td>
     <td style="width: 20%;">'.$fecha_radicacion.'</td>
-    <td style="width: 20%;"><b>Número de radicado:</b></td>
+    <td style="width: 20%;"><b>No. Radicado:</b></td>
     <td style="width: 20%;">'.$numero_radicado.'</td>
     <td style="text-align:center; " colspan="2" rowspan="3">'.$img.'</td>
   </tr>
@@ -688,27 +833,34 @@ function mostrar_informacion_general_radicacion($idformato,$iddoc){
     <td colspan="3">'.$tipo_documento[0]["nombre"].'</td> 
   </tr>
   <tr>
-    <td><b>Descripción o asunto:</b></td>
+    <td><b>Descripci&oacute;n o asunto:</b></td>
     <td colspan="3">'.$datos[0]["descripcion"].'</td>
   </tr>
   <tr>
-    <td><b>Descripción de anexos físicos:</b></td>
+    <td><b>Anexos F&iacute;sicos:</b></td>
     <td colspan="5">'.$datos[0]["descripcion_anexos"].'</td>
   </tr>
   <tr>
     <td><b>Anexos digitales:</b></td>
     <td colspan="2">'.$nombre_anexos.'</td>
-    <td><b>No. Folios:</b></td>
-    <td colspan="2">'.$datos[0]["numero_folios"].'</td>
-  </tr>
+    <td><b>Descripci&oacute;n General:</b></td>
+    <td colspan="2">'.$datos[0]["descripcion_general"].'</td>
+  </tr>	
 
     ';
     if($datos[0]['tipo_origen']==1){
+        $empresa_transportadora=busca_filtro_tabla("nombre","serie","idserie=".$datos[0]['empresa_transportado'],"",$conn);
         $tabla.="<tr>
-                    <td><strong>Número de documento:</strong></td>
+                    <td><strong>Número Oficio:</strong></td>
                     <td colspan='2'>".$datos[0]['numero_oficio']."</td>
-                    <td><strong>Fecha oficio entrante:</strong></td>
+                    <td><strong>Fecha Oficio:</strong></td>
                     <td colspan='2'>".$datos[0]['fecha_oficio_entrada']."</td>
+                 </tr>
+                 <tr>
+                    <td><strong>Número Gu&iacute;a:</strong></td>
+                    <td colspan='2'>".$datos[0]['numero_guia']."</td>
+                    <td><strong>Empresa Transportadora:</strong></td>
+                    <td colspan='2'>".$empresa_transportadora[0]['nombre']."</td>
                  </tr>";
     }
     $tabla.='</table>';
@@ -757,7 +909,7 @@ function mostrar_informacion_destino_radicacion($idformato,$iddoc){
 
         $tabla.='
             <tr>
-                <td><b>Copia a:</b></td>
+                <td><b>Copia Electr&oacute;nica a:</b></td>
                 <td>'.$datos_copia.'</td>
             </tr>
         ';
@@ -788,7 +940,8 @@ function datos_editar_radicacion($idformato,$iddoc){
                         $('#tr_tipo_mensajeria').hide();
                         $('[name="tipo_mensajeria"]').removeClass('required');
                         
-                        $('#fecha_oficio_entrada').addClass('required');
+                        //$('#fecha_oficio_entrada').addClass('required');
+                        $('#fecha_oficio_entrada').removeClass('required');
                         $('#fecha_oficio_entrada').parent().parent().parent().show();
                         $('#numero_oficio').parent().parent().show();
                         $('#persona_natural').addClass('required');
@@ -934,7 +1087,7 @@ function serie_documental_radicacion($idformato,$iddoc){
 	       if(dependencia==1){ //SU ORGANIZACION HAY ERROR CON ESTA NO DETECTADO AUN LA RAZON
 	           
 	       }else{
-	           tree_serie_idserie.setXMLAutoLoading("<?php echo($ruta_db_superior); ?>test_dependencia_serie.php?tabla=dependencia&mostrar_nodos=dsa&sin_padre_dependencia=1&cargar_series=1&carga_partes_serie=1&iddependencia="+dependencia);
+	           tree_serie_idserie.setXMLAutoLoading("<?php echo($ruta_db_superior); ?>test_dependencia_serie.php?tabla=dependencia&mostrar_nodos=dsa&sin_padre_dependencia=1&estado=1&cargar_series=1&carga_partes_serie=1&iddependencia="+dependencia);
 	           tree_serie_idserie.smartRefreshItem("d"+padre);  
 	           tree_serie_idserie.openItem( "d"+padre ); //ARBOL: expande nodo hasta el item indicado
 	       }
@@ -981,5 +1134,20 @@ function serie_documental_radicacion($idformato,$iddoc){
     </script>
     <?php
 }
-    
+function valida_tipo_destino_entrada($idformato,$iddoc){
+    global $conn;
+    $padre=busca_filtro_tabla("","ft_radicacion_entrada A, documento B ","A.documento_iddocumento=B.iddocumento AND B.estado<>'ELIMINADO' AND B.iddocumento=".$iddoc,"",$conn);
+    if($padre[0]['tipo_origen']==2 && $padre[0]['tipo_mensajeria']==3){
+            $update_radicacion="UPDATE ft_radicacion_entrada SET despachado=1 WHERE idft_radicacion_entrada=".$padre[0]['idft_radicacion_entrada'];
+        echo($update_radicacion);
+            phpmkr_query($update_radicacion);         
+            $radicado=busca_filtro_tabla('b.numero, c.idft_destino_radicacion,c.estado_item','ft_radicacion_entrada a,documento b,ft_destino_radicacion c','a.documento_iddocumento = b.iddocumento AND a.idft_radicacion_entrada = c.ft_radicacion_entrada AND a.documento_iddocumento='.$iddoc,'',conn);
+            for($i=0;$i<$radicado['numcampos'];$i++){
+                $numero_item=$i+1;
+                $update_item="UPDATE ft_destino_radicacion SET numero_item='".$radicado[$i]['numero'].".".$numero_item."',estado_item=3, recepcion='".usuario_actual("funcionario_codigo")."',recepcion_fecha=".fecha_db_almacenar(date("Y-m-d"),"Y-m-d")." WHERE ft_radicacion_entrada=".$padre[0]['idft_radicacion_entrada'];
+                echo($update_item);
+                phpmkr_query($update_item);
+           }
+       }
+}
 ?>
