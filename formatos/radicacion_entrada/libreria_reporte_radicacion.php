@@ -65,9 +65,13 @@ function mostrar_ruta_reporte($idft_destino_radicacion){
     return ($ubicacion);
 }
 
-function planilla_mensajero($idft_destino_radicacion,$mensajero_encargado){
+function planilla_mensajero($idft_destino_radicacion,$mensajero_encargado,$estado_item){
     global $ruta_db_superior, $conn;
     $html="";
+    $disable="";
+    if($estado_item=='finalizado'){
+        $disable="disabled";
+    }
     if($mensajero_encargado=='mensajero_encargado'){
         $html.="Sin Mensajero Asignado";
     }else{
@@ -77,22 +81,26 @@ function planilla_mensajero($idft_destino_radicacion,$mensajero_encargado){
                 $html.='<div class="link kenlace_saia" enlace="ordenar.php?key='.$planillas[$i]['iddocumento'].'&amp;accion=mostrar&amp;mostrar_formato=1" conector="iframe" titulo="No Radicado '.$planillas[$i]['numero'].'"><center><span class="badge">'.$planillas[$i]['numero']."</span></center></div>\n";
             }
         }
-        $html.="<input type='checkbox' class='planilla_mensajero' mensajero='".$mensajero_encargado."' value='$idft_destino_radicacion'>";
+        $html.="<input type='checkbox' class='planilla_mensajero' ".$disable." mensajero='".$mensajero_encargado."' value='$idft_destino_radicacion'>";
     }
     return $html;
 }
 
-function mostrar_mensajeros_dependencia($idft_destino_radicacion){
+function mostrar_mensajeros_dependencia($idft_destino_radicacion,$estado_item){
     global $ruta_db_superior, $conn;
     $funcionario_codigo=usuario_actual('funcionario_codigo');
     $cargo=busca_filtro_tabla("lower(cargo) AS cargo, concat(nombres,' ',apellidos) AS nombre","vfuncionario_dc a","a.funcionario_codigo=".$funcionario_codigo,"",$conn);
+    $disable="";
+    if($estado_item=='finalizado'){
+        $disable="disabled";
+    }
     if($cargo[0]['cargo']=="mensajero"){
         $select.="<input type='text' name='responsable_{$idft_destino_radicacion}' value='".$cargo[0]['nombre']."' readonly>";
     }else{  
     $datos=busca_filtro_tabla('','ft_destino_radicacion','idft_destino_radicacion='.$idft_destino_radicacion,'',conn);
     $destino=busca_filtro_tabla("","vfuncionario_dc","iddependencia_cargo=".$datos[0]['nombre_destino'],"",$conn);
     $responsable=busca_filtro_tabla("","ft_ruta_distribucion a, ft_dependencias_ruta b, ft_funcionarios_ruta c","b.estado_dependencia=1 AND c.estado_mensajero=1 AND a.idft_ruta_distribucion=b.ft_ruta_distribucion AND a.idft_ruta_distribucion=c.ft_ruta_distribucion AND b.dependencia_asignada=".$destino[0]['iddependencia'],"",$conn);
-    $select="<select class='mensajeros' data-idft='$idft_destino_radicacion' name='responsable_{$idft_destino_radicacion}' style='width:150px;'>";
+    $select="<select class='mensajeros' ".$disable." data-idft='$idft_destino_radicacion' name='responsable_{$idft_destino_radicacion}' style='width:150px;'>";
     
     if($responsable['numcampos']==1){
             
@@ -125,8 +133,15 @@ function mostrar_mensajeros_dependencia($idft_destino_radicacion){
     return $select;
 }
 
-function ver_items($iddocumento, $numero) {
-  return('<div class="link kenlace_saia" enlace="ordenar.php?key='.$iddocumento.'&amp;accion=mostrar&amp;mostrar_formato=1" conector="iframe" titulo="No Radicado '.$numero.'"><center><span class="badge">'.$numero.'</span></center></div>');
+function ver_items($iddocumento, $numero,$fecha_radicacion_entrada,$tipo) {
+    if($tipo==1){
+        $radic="E";
+    }elseif($tipo==2){
+        $radic="I";
+    }
+    $dateTime = strtotime($fecha_radicacion_entrada);
+
+  return('<div class="link kenlace_saia" enlace="ordenar.php?key='.$iddocumento.'&amp;accion=mostrar&amp;mostrar_formato=1" conector="iframe" titulo="No Radicado '.$numero.'"><center><span class="badge">'.date('Y-m-d', $dateTime)."-".$numero."-".$radic.'</span></center></div>');
 } 
 
 
