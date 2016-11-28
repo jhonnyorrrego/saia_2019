@@ -113,7 +113,8 @@ $functions[] = array(
 
 if (stristr($_SERVER['QUERY_STRING'], "wsdl")) {
     // WSDL request - output raw XML
-    header("Content-Type: application/soap+xml; charset=utf-8");
+    //header("Content-Type: application/soap+xml; charset=utf-8");
+    header("Content-Type: text/xml; charset=utf-8");
     echo DisplayXML();
 } else {
     // Page accessed normally - output documentation
