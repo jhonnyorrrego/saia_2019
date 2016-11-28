@@ -55,9 +55,11 @@ echo("</tree>\n");
 function llena_expediente($id){
 global $conn,$sql,$exp_doc,$funcionarios,$excluidos,$dependencias,$varios,$lista2;
 if($id==0){
-  $papas=busca_filtro_tabla("a.fecha, a
+  /*$papas=busca_filtro_tabla("a.fecha, a
 .nombre, a.descripcion, a.cod_arbol, a.idexpediente, estado_cierre","vexpediente_serie a",$lista2." and (a.cod_padre=0 OR a.cod_padre IS NULL)","GROUP BY a.fecha, a
-.nombre, a.descripcion, a.cod_arbol, a.idexpediente, estado_cierre order by idexpediente desc",$conn);
+.nombre, a.descripcion, a.cod_arbol, a.idexpediente, estado_cierre order by idexpediente desc",$conn);*/
+    print_r($lista2);
+    $papas=busca_filtro_tabla("a.fecha, a.nombre, a.descripcion, a.cod_arbol, a.idexpediente, estado_cierre","vexpediente_serie a",$lista2." and (a.cod_padre=0 OR a.cod_padre IS NULL)","GROUP BY a.fecha, a.nombre, a.descripcion, a.cod_arbol, a.idexpediente, estado_cierre order by idexpediente desc",$conn);
 	
 }
 else{
