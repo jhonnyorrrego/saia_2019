@@ -66,8 +66,8 @@ $doc=busca_filtro_tabla("","documento","iddocumento in($iddoc)","",$conn);
       tree2.setOnLoadingStart(cargando_expediente);
       tree2.setOnLoadingEnd(fin_cargando_expediente);
       
-			tree2.setXMLAutoLoading("test_expediente.php?doc=<?php echo($iddoc); ?>&accion=1&permiso_editar=1");
-			tree2.loadXML("test_expediente.php?doc=<?php echo($iddoc); ?>&accion=1&permiso_editar=1");
+			tree2.setXMLAutoLoading("test_expediente.php?doc=<?php echo($iddoc); ?>&accion=1&permiso_editar=1&estado_cierre=1&estado_archivo=1");
+			tree2.loadXML("test_expediente.php?doc=<?php echo($iddoc); ?>&accion=1&permiso_editar=1&estado_cierre=1&estado_archivo=1");
 			
 			function fin_cargando_expediente() {
         if (browserType == "gecko" )
