@@ -23,9 +23,13 @@ $excluidos=array();
 if(@$_REQUEST["excluidos"])
   $excluidos=explode(",",$_REQUEST["excluidos"]);
   
+$estado_cierre='';  
+if(@$_REQUEST['estado_cierre']){
+    $estado_cierre=" AND (a.estado_cierre IN(".$_REQUEST['estado_cierre']."))";
+}  
 $abierto_cerrado='';  
-if(@$_REQUEST['abierto_cerrado']){
-    $abierto_cerrado=" AND (a.estado_archivo IN(".$_REQUEST['abierto_cerrado']."))";
+if(@$_REQUEST['estado_cierre']){
+    $abierto_cerrado=" AND (a.estado_cierre IN(".$_REQUEST['estado_cierre']."))";
 }  
 
 if(@$_REQUEST["doc"]){
@@ -58,16 +62,16 @@ llena_expediente($id);
 echo("</tree>\n");
 
 function llena_expediente($id){
-global $conn,$sql,$exp_doc,$funcionarios,$excluidos,$dependencias,$varios,$lista2,$abierto_cerrado;
+global $conn,$sql,$exp_doc,$funcionarios,$excluidos,$dependencias,$varios,$lista2,$estado_cierre;
 if($id==0){
   $papas=busca_filtro_tabla("a.fecha, a
-.nombre, a.descripcion, a.cod_arbol, a.idexpediente, estado_cierre","vexpediente_serie a",$lista2." and (a.cod_padre=0 OR a.cod_padre IS NULL)".$abierto_cerrado,"GROUP BY a.fecha, a
+.nombre, a.descripcion, a.cod_arbol, a.idexpediente, estado_cierre","vexpediente_serie a",$lista2." and (a.cod_padre=0 OR a.cod_padre IS NULL)".$estado_cierre,"GROUP BY a.fecha, a
 .nombre, a.descripcion, a.cod_arbol, a.idexpediente, estado_cierre order by idexpediente desc",$conn);
 	
 }
 else{
 	$papas=busca_filtro_tabla("a.fecha, a
-.nombre, a.descripcion, a.cod_arbol, a.idexpediente, a.estado_cierre","vexpediente_serie a",$lista2." and (a.cod_padre=".$id.")".$abierto_cerrado,"GROUP BY a.fecha, a
+.nombre, a.descripcion, a.cod_arbol, a.idexpediente, a.estado_cierre","vexpediente_serie a",$lista2." and (a.cod_padre=".$id.")".$estado_cierre,"GROUP BY a.fecha, a
 .nombre, a.descripcion, a.cod_arbol, a.idexpediente, estado_cierre order by idexpediente desc",$conn);
 } 
 
