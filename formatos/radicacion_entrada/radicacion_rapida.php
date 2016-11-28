@@ -142,7 +142,7 @@ echo(estilo_bootstrap());
                     </tr>
                     <tr>
                         <td colspan="2">
-                            <input type="hidden" id="generar_consecutivo" name="generar_consecutivo"/>
+                            <input type="hidden" id="generar_consecutivo" name="generar_consecutivo"/ required>
                             <input type="hidden" name="enlace" id="enlace" value="pantallas/buscador_principal.php?idbusqueda=7">
                             
                             <?php
@@ -193,10 +193,17 @@ if(@$_REQUEST["idcategoria_formato"]){
 	    function onNodeSelect(nodeId){
 	     if(nodeId.indexOf('#',0)==-1){
             $('#generar_consecutivo').val(nodeId);
+            
+            <?php 
+                $ibusqueda_pendiente_ingresar=buscador_filtro_tabla("idbusqueda","busqueda","nombre='pendiente_ingresar'","",$conn);
+                $var_ibusqueda_pendiente_ingresar=$ibusqueda_pendiente_ingresar[0]['idbusqueda'];
+            ?>
+            var ibusqueda_pendiente_ingresar='<?php echo($var_ibusqueda_pendiente_ingresar); ?>';
+            
             if(nodeId=='radicacion_salida'){
-                $('#enlace').val("pantallas/buscador_principal.php?idbusqueda=10");
+                $('#enlace').val("pantallas/buscador_principal.php?idbusqueda="+ibusqueda_pendiente_ingresar+"|default_componente=pendiente_salida");
             }else{
-                $('#enlace').val("pantallas/buscador_principal.php?idbusqueda=7");
+                $('#enlace').val("pantallas/buscador_principal.php?idbusqueda="+ibusqueda_pendiente_ingresar+"|default_componente=pendientes_ingresar");
             }
 	     }
       }
@@ -230,8 +237,8 @@ if(@$_REQUEST["idcategoria_formato"]){
 	</script>
 	        </td>
                     </tr>
-                    <tr><td style="font-size:8pt;"  align="center">Numero de folios</td>
-                        <td align="center"><input type="number" min="0" value="" id="numero_folios" name="folios"/></td>
+                    <tr><td style="font-size:8pt;"  align="center">Descripci&oacuten General</td>
+                        <td align="center"><input type="text" maxlength="15" id="descripcion_general" name="descripcion_general"/></td>
                     </tr>
                     <tr>
                         <td colspan="2" align="center"><input class="btn btn-primary btn-mini" type="submit" value="Radicar" id="enviar" name="enviar"/></td>
