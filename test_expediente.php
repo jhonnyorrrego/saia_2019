@@ -28,7 +28,7 @@ if(@$_REQUEST['estado_cierre']){
     $estado_cierre=" AND (a.estado_cierre IN(".$_REQUEST['estado_cierre']."))";
 }  
 $estado_archivo='';  
-if(@$_REQUEST['estado_archivoo']){
+if(@$_REQUEST['estado_archivo']){
     $estado_archivo=" AND (a.estado_archivo IN(".$_REQUEST['estado_archivo']."))";
 }  
 
