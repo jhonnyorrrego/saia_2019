@@ -13,12 +13,17 @@ include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."librerias_saia.php");
 echo(librerias_jquery('1.7'));
 echo(librerias_notificaciones());
+$busca_componente=busca_filtro_tabla("nombre","busqueda_componente","idbusqueda_componente=".$_REQUEST['idbusqueda_componente'],"",$conn);
 
 ?>
 <script>
     $(document).ready(function(){
+        var componente='<?php echo($busca_componente[0]['nombre']); ?>';
         
-        $("#nav_busqueda").after("<div style='margin:5px' class='ui-state-default ui-jqgrid-pager ui-corner-bottom'><button class='btn btn-mini' title='Realizar despacho' id='boton_seleccionar_registros'>Generar Planilla de Entrega</button></div>");
+        if(componente!='reporte_radicacion_correspondencia_finalizado'){
+          $("#nav_busqueda").after("<div style='margin:5px' class='ui-state-default ui-jqgrid-pager ui-corner-bottom'><button class='btn btn-mini' title='Realizar despacho' id='boton_seleccionar_registros'>Generar Planilla de Entrega</button></div>");
+          } 
+        
         /*Genera Planilla de Mensajeros*/
         $("#boton_seleccionar_registros").live("click",function(){
             var mensajero_temp="";
@@ -75,7 +80,12 @@ echo(librerias_notificaciones());
         
         $("#filtro_mensajeros").live("change",function(){
             var mensajero_filtro=$(this).val();
-            window.location.href = "<?php echo $ruta_db_superior;?>pantallas/busquedas/consulta_busqueda_reporte.php?idbusqueda_componente=269&variable_busqueda="+mensajero_filtro;
+            <?php 
+                $idbusqueda_componente_reporte_radicacion_correspondencia=busca_filtro_tabla("idbusqueda_componente","busqueda_componente","nombre='reporte_radicacion_correspondencia'","",$conn);
+                $var_idbusqueda_componente_reporte_radicacion_correspondencia=$idbusqueda_componente_reporte_radicacion_correspondencia[0]['idbusqueda_componente'];
+            ?>
+            var idbusqueda_componente_reporte_radicacion_correspondencia='<?php echo($var_idbusqueda_componente_reporte_radicacion_correspondencia); ?>';
+            window.location.href = "<?php echo $ruta_db_superior;?>pantallas/busquedas/consulta_busqueda_reporte.php?idbusqueda_componente="+idbusqueda_componente_reporte_radicacion_correspondencia+"&variable_busqueda="+mensajero_filtro;
             
         });
         
@@ -83,14 +93,16 @@ echo(librerias_notificaciones());
             var idft=$(this).attr("data-idft");
             var funcionario=$(this).val();
             $.ajax({
-                        type:'POST',
-                        dataType: 'json',
-                        url: "<?php echo $ruta_db_superior;?>formatos/radicacion_entrada/actualizar_recepcion.php",
-                        data: {
-                                        idft_destino_radicacion:idft,
-                                        funcionario:funcionario
-                        },
-                        
+                type:'POST',
+                dataType: 'json',
+                url: "<?php echo $ruta_db_superior;?>formatos/radicacion_entrada/actualizar_recepcion.php",
+                data: {
+                    idft_destino_radicacion:idft,
+                    funcionario:funcionario
+                },
+                success: function(datos){
+                    top.noty({text: 'Item finalizado!',type: 'success',layout: "topCenter",timeout:3500});
+                }
             }); 
             
         });
