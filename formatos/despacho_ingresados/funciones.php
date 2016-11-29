@@ -71,7 +71,8 @@ function generar_pdf_entrega($idformato,$iddoc){
 	    $insert="INSERT INTO ft_item_despacho_ingres(idft_item_despacho_ingres,ft_destino_radicacio,ft_despacho_ingresados) VALUES (NULL, '".$iddestino_radicacion[$i]."', '".$seleccionado[0]['idft_despacho_ingresados']."')";
 	    phpmkr_query($insert);
 	    $update="UPDATE ft_destino_radicacion SET estado_item=2 WHERE idft_destino_radicacion={$iddestino_radicacion[$i]}";
-	    phpmkr_query($update);
+        phpmkr_query($update);
+	    
 	}
 	abrir_url($ruta_db_superior."class_impresion.php?iddoc=".$iddoc,"_self");
 	die();
@@ -82,11 +83,11 @@ function reporte_entradas2($idformato,$iddoc){
 	include_once($ruta_db_superior."pantallas/qr/librerias.php");
 	$codigo_qr=busca_filtro_tabla("","documento_verificacion","documento_iddocumento=".$iddoc,"", $conn);
 	if($codigo_qr['numcampos']){
-		$qr='<img src="http://'.RUTA_PDF.'/'.$codigo_qr[0]['ruta_qr'].'" width="80px" height="80px">';	
+		$qr='<img src="'.PROTOCOLO_CONEXION.RUTA_PDF.'/'.$codigo_qr[0]['ruta_qr'].'" width="80px" height="80px">';	
 	}else{
 		generar_codigo_qr($idformato,$iddoc);
 		$codigo_qr=busca_filtro_tabla("","documento_verificacion","documento_iddocumento=".$iddoc,"", $conn);	
-		$qr='<img src="http://'.RUTA_PDF.'/'.$codigo_qr[0]['ruta_qr'].'" width="80px" height="80px">';	
+		$qr='<img src="'.PROTOCOLO_CONEXION.RUTA_PDF.'/'.$codigo_qr[0]['ruta_qr'].'" width="80px" height="80px">';	
 	}
 	$documentos2=busca_filtro_tabla("","ft_despacho_ingresados","documento_iddocumento=".$iddoc,"",$conn);
 	$funcionario=busca_filtro_tabla("","vfuncionario_dc","iddependencia_cargo=".$documentos2[0]['mensajero'],"",$conn);
@@ -94,51 +95,66 @@ function reporte_entradas2($idformato,$iddoc){
 	$logo=busca_filtro_tabla("valor","configuracion","nombre='logo'","",$conn);
 	$texto='<table style="border-collapse:collapse;width:100%" border="1px">';
 	$texto.='<tr>';
-	$texto.='<td style="text-align:center;" colspan="2" rowspan="2"><br/><br/><img src="'.PROTOCOLO_CONEXION.RUTA_PDF.'/'.$logo[0]['valor'].'" width="125px" heigth="83px"></td>';
-	$texto.='<td style="text-align:center" colspan="5" rowspan="2"><br/><br/><br/><br/><br/><b>PLANILLA DE ENTREGA </b></td>';
-	$texto.='<td style="text-align:left"><br/><br/><br/><br/><b>C&Oacute;DIGO: GDC-FT-003<br/>RADICADO: '.formato_numero($idformato,$iddoc,1).'</b></td>
-	<td style="text-align:center" rowspan="3">'.$qr.'</td>
+	$texto.='<td style="text-align:center;" colspan="3"><br/><br/><img src="'.PROTOCOLO_CONEXION.RUTA_PDF.'/'.$logo[0]['valor'].'" width="125px" heigth="83px"></td>';
+	$texto.='<td style="text-align:center" colspan="4"><br/><br/><br/><br/><br/><b>PLANILLA DE ENTREGA </b></td>';
+	$texto.='<td style="text-align:left"><br/><br/><br/><br/><br/><b>RADICADO: '.formato_numero($idformato,$iddoc,1).'</b></td>
+	<td style="text-align:center">'.$qr.'</td>
 	</tr>';
-	$texto.='<tr><td style="text-align:left"><b>VERSI&Oacute;N:</b> 001</td></tr>';
 	$texto.='<tr>';
-	$texto.='<td colspan="9"><b>MENSAJERO O ENCARGADO: '.$funcionario[0]['nombres'].' '.$funcionario[0]['apellidos'].'</b></td>';
+	$texto.='<td colspan="3"><b>MENSAJERO O ENCARGADO: '.$funcionario[0]['nombres'].' '.$funcionario[0]['apellidos'].'</b></td>';
+    $texto.='<td colspan="4"><b>RECORRIDO DEL DIA: '.mostrar_valor_campo('tipo_recorrido',$idformato,$iddoc,1).'</b></td>';
+    $fecha_planilla=busca_filtro_tabla(fecha_db_obtener("fecha","Y-m-d H:i:s")." as fecha","documento","iddocumento=".$iddoc,"",$conn);
+    $texto.='<td colspan="4"><b>FECHA PLANILLA: '.$fecha_planilla[0]['fecha'].'</b></td>';
 	$texto.='</tr>';
 	$texto.='</table>';
 	
 	$texto.='<br />';
 	$texto.='<table style="border-collapse:collapse;width:100%" border="1px">';
 	$texto.='<tr style="height:70px">';
-	$texto.='<td style="text-align:center"><b>No. Item</b></td>';
-	$texto.='<td style="text-align:center"><b>FECHA DE RECIBO</b></td>';
-	$texto.='<td style="text-align:center"><b>REMITENTE</b></td>';
-	$texto.='<td style="text-align:center"><b>DESTINO</b></td>';
-	$texto.='<td style="text-align:center"><b>OBSERVACIONES</b></td>';
+    $texto.='<td style="text-align:center; width:2%"></td>';
+	$texto.='<td style="text-align:center; width:3%"><b>Rad. Item</b></td>';
+	$texto.='<td style="text-align:center; width:5%"><b>FECHA DE RECIBO</b></td>';
+	$texto.='<td style="text-align:center; width:10%"><b>ORIGEN</b></td>';
+	$texto.='<td style="text-align:center; width:15%"><b>DESTINO</b></td>';
+    $texto.='<td style="text-align:center; width:15%"><b>ASUNTO</b></td>';
+	$texto.='<td style="text-align:center; width:10%"><b>NOTAS</b></td>';
 	
-	$texto.='<td style="text-align:center"><b>FECHA/HORA RECIBIDO</b></td>';
-	$texto.='<td style="text-align:center"><b>FIRMA DE QUIEN RECIBE</b></td>';
+	$texto.='<td style="text-align:center; width:20%"><b>FIRMA DE QUIEN RECIBE</b></td>';
+    $texto.='<td style="text-align:center; width:20%"><b>OBSERVACIONES</b></td>';
 	$texto.='</tr>';
 	
 	for($i=0;$i<$registros["numcampos"];$i++){
 	    
 		$origen=busca_filtro_tabla("concat(nombres,' ',apellidos) AS nombre","vfuncionario_dc","funcionario_codigo=".$registros[$i]['nombre_origen'],"",$conn);
-
+        $ubicacion="";
 		if($registros[$i]["tipo_destino"]==1){
-		    $destino=busca_filtro_tabla("b.nombre","datos_ejecutor a, ejecutor b","b.idejecutor=a.ejecutor_idejecutor AND a.iddatos_ejecutor=".$registros[$i]['nombre_destino'],"",$conn);
+		    $destino=busca_filtro_tabla("b.nombre,a.direccion","datos_ejecutor a, ejecutor b","b.idejecutor=a.ejecutor_idejecutor AND a.iddatos_ejecutor=".$registros[$i]['nombre_destino'],"",$conn);
+            $ubicacion=$ciudad[0]['nombre'].' '.$destino[0]['direccion'];
 		}elseif($registros[$i]["tipo_destino"]==2){
-		    $destino=busca_filtro_tabla("concat(nombres,' ',apellidos) AS nombre","vfuncionario_dc","iddependencia_cargo=".$registros[$i]['nombre_destino'],"",$conn);
+		    $destino=busca_filtro_tabla("concat(nombres,' ',apellidos) AS nombre,dependencia","vfuncionario_dc","iddependencia_cargo=".$registros[$i]['nombre_destino'],"",$conn);
+		    $ubicacion=$destino[0]['dependencia'];
 		}
 
 
 		$texto.='<tr>';
-		$fecha_radicacion=busca_filtro_tabla(fecha_db_obtener("fecha","Y-m-d")." as fecha","documento","iddocumento=".$registros[$i]["documento_iddocumento"],"",$conn);
-		$texto.='<td style="text-align:center">'.$registros[$i]["numero_item"].'</td>';
-		$texto.='<td style="text-align:center;">'.$fecha_radicacion[0]["fecha"].'</td>';
-		$texto.='<td style="text-align:left;">'.$origen[0]['nombre'].'</td>';
-		$texto.='<td style="text-align:left;">'.$destino[0]["nombre"].'</td>';
-		
-		$texto.='<td style="text-align:center;">'.$registros[$i]["observacion_destino"].'</td>';
-		$texto.='<td style="text-align:center;"></td>';
-		$texto.='<td style="text-align:left;"></td>';
+		$fecha_radicacion=busca_filtro_tabla(fecha_db_obtener("fecha","Y-m-d")." as fecha,tipo_radicado","documento","iddocumento=".$registros[$i]["documento_iddocumento"],"",$conn);
+        
+        $tipo_radicado="";
+        if($fecha_radicacion[0]['tipo_radicado']==1){
+            $tipo_radicado="E";
+        }else{
+            $tipo_radicado="I";
+        }
+        
+        $texto.='<td style="text-align:center; width:2%">'.$tipo_radicado.'</td>';
+		$texto.='<td style="text-align:center; width:3%">'.$registros[$i]["numero_item"].'</td>';
+		$texto.='<td style="text-align:center; width:5%">'.$fecha_radicacion[0]["fecha"].'</td>';
+		$texto.='<td style="text-align:left; width:10%">'.$origen[0]['nombre'].'</td>';
+		$texto.='<td style="text-align:left; width:15%">'.$destino[0]["nombre"].'<br><b>Ubicacion:</b>'.$ubicacion.'</td>';
+		$texto.='<td style="text-align:left; width:15%">'.$registros[$i]["descripcion"].'</td>';
+		$texto.='<td style="text-align:center; width:10%">'.$registros[$i]["observacion_destino"].'</td>';
+		$texto.='<td style="text-align:center; width:20%"></td>';
+		$texto.='<td style="text-align:left; width:20%"></td>';
 
 		$texto.='</tr>';
 	}
@@ -212,5 +228,17 @@ function generar_qr_despacho($idformato,$iddoc){
   }
   include_once($ruta_db_superior."pantallas/qr/librerias.php");
   generar_codigo_qr($idformato,$iddoc);
+}
+/*POSTERIOR AL SUBIR ANEXO*/
+function subir_planilla_despacho_ingresados($idformato,$iddoc){
+    global $conn;
+    $busca_radicaciones=busca_filtro_tabla("c.idft_destino_radicacion","ft_item_despacho_ingres a, ft_despacho_ingresados b, ft_destino_radicacion c","a.ft_destino_radicacio=c.idft_destino_radicacion AND a.ft_despacho_ingresados=b.idft_despacho_ingresados AND b.documento_iddocumento=".$iddoc,"GROUP BY c.idft_destino_radicacion",$conn);
+    //print_r($busca_radicaciones);
+    echo("<br>");
+    for ($i=0; $i < $busca_radicaciones['numcampos']; $i++) { 
+        $sql="UPDATE ft_destino_radicacion SET anexos=1 WHERE idft_destino_radicacion=".$busca_radicaciones[$i]['idft_destino_radicacion'];
+        echo($sql);
+        phpmkr_query($sql);
+    }
 }
 ?>
