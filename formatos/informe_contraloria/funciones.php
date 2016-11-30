@@ -214,14 +214,6 @@ function mostrar_plan_mejoramiento_completo($idformato, $iddoc) {
 	listar_hallazgo_informe(1, $plan[0]["documento_iddocumento"]);
 }
 
-function representante_legal($idformato, $iddoc) {
-	global $conn;
-	$fecha = busca_filtro_tabla(fecha_db_obtener("fecha", "Y-m-d") . " fecha", "documento", "iddocumento=$iddoc", "", $conn);
-	$roles = busca_filtro_tabla("nombres,apellidos", "cargo c,dependencia_cargo,funcionario", "c.idcargo=cargo_idcargo and lower(c.nombre) like '%gobernador%' and funcionario_idfuncionario=idfuncionario and (" . fecha_db_obtener("fecha_inicial", "Y-m-d") . "<= '" . $fecha[0][0] . "' and " . fecha_db_obtener("fecha_final", "Y-m-d") . " >= '" . $fecha[0][0] . "')", "", $conn);
-
-	echo(ucwords($roles[0]["nombres"] . " " . $roles[0]["apellidos"]));
-}
-
 function suscripcion_plan($idformato, $iddoc) {
 	global $conn;
 	$resultado = busca_filtro_tabla(fecha_db_obtener("fecha_suscripcion", "Y-m-d") . " as fecha,a.descripcion_plan", "ft_plan_mejoramiento a,ft_informe_contraloria ic", "idft_plan_mejoramiento=ft_plan_mejoramiento and ic.documento_iddocumento=$iddoc", "", $conn);
