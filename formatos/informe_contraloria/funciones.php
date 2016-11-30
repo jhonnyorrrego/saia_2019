@@ -98,7 +98,7 @@ function listar_hallazgo_informe($idformato, $iddoc, $condicion = "") {
 		$formato_seguimiento = busca_filtro_tabla("", "formato", "lower(nombre)='seguimiento' ", "", $conn);
 		
 		$hallazgos = busca_filtro_tabla("A.*,B.*,A.documento_iddocumento as hallazgo_iddoc", "ft_hallazgo A, ft_plan_mejoramiento B,documento C", $condicion, "idft_hallazgo asc", $conn);
-		print_r($hallazgos);die();
+		//print_r($hallazgos);die();
 		if ($hallazgos["numcampos"]) {
 			$texto .= "";
 			$estado_actual = "Todos";
