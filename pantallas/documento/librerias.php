@@ -815,6 +815,15 @@ function iddoc_no_distribuidos(){
   $where.=")";
   return($where);
 }
-
+function mostrar_fecha_limite_documento($fecha_limite){
+	global $conn;
+	
+	if($fecha_limite=='fecha_limite'){
+		$fecha_limite='Sin definir';
+	}
+	
+	return('<div class="pull-right"><b>Vence:</b> '.$fecha_limite.'</div>');
+	
+}
 
 ?>
