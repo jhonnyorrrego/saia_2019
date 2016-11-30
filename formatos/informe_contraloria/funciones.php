@@ -91,7 +91,7 @@ function listar_hallazgo_informe($idformato, $iddoc, $condicion = "") {
 
 	
 	if ($condicion == "" && $documento[0]["idft_plan_mejoramiento"]) {
-		$condicion = " A.ft_plan_mejoramiento= b.idft_plan_mejoramiento and a.documento_iddocumento= c.iddocumento and A.estado<>'INACTIVO' and C.estado<>'ELIMINADO' AND A.ft_plan_mejoramiento=B.idft_plan_mejoramiento AND A.estado<>'INACTIVO' AND A.documento_iddocumento=iddocumento and C.estado<>'ELIMINADO' AND A.ft_plan_mejoramiento=" . $documento[0]["idft_plan_mejoramiento"];
+		$condicion = " A.ft_plan_mejoramiento= B.idft_plan_mejoramiento and A.documento_iddocumento= C.iddocumento and A.estado<>'INACTIVO' and C.estado<>'ELIMINADO' AND A.ft_plan_mejoramiento=B.idft_plan_mejoramiento AND A.estado<>'INACTIVO' AND A.documento_iddocumento=iddocumento and C.estado<>'ELIMINADO' AND A.ft_plan_mejoramiento=" . $documento[0]["idft_plan_mejoramiento"];
 	}
 	if ($condicion != "") {
 		$formato_hallazgo = busca_filtro_tabla("", "formato", "lower(nombre)='hallazgo' ", "", $conn);
