@@ -314,7 +314,7 @@ function link_agregar_campos($idformato, $iddoc) {
 		if(@$_REQUEST["tipo"] != 5 ){
 			$enlace = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="abrir_higslide"  alto="250" ancho="550" ruta="formatos/informe_contraloria/llenar_campos.php?iddoc=' . $iddoc . '&idformato=' . $idformato . '" style="font-size:8pt;color: rgb(38, 50, 187);text-decoration: underline;">Agregar campos</a>';
 			echo $enlace;
-			echo(librerias_highslide());
+			//echo(librerias_highslide());
 		}
 }
 
