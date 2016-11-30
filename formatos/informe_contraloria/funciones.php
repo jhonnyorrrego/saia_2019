@@ -212,6 +212,7 @@ function mostrar_plan_mejoramiento_completo($idformato, $iddoc) {
 	$informe = busca_filtro_tabla("", "ft_informe_contraloria", "documento_iddocumento=" . $iddoc, "", $conn);
 	$plan = busca_filtro_tabla("", "ft_plan_mejoramiento", "idft_plan_mejoramiento=" . $informe[0]["ft_plan_mejoramiento"], "", $conn);
 	$idformato_plan_mejoramiento=busca_filtro_tabla("idformato","formato","lower(nombre)='plan_mejoramiento'","",$conn);
+	print_r($idformato_plan_mejoramiento);die();
 	listar_hallazgo_informe($idformato_plan_mejoramiento[0]['idformato'], $plan[0]["documento_iddocumento"]);
 }
 
