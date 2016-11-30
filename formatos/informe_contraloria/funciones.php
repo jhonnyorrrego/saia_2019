@@ -311,8 +311,7 @@ function nombre_director_controli($idformato, $iddoc) {
 
 function link_agregar_campos($idformato, $iddoc) {
 	global $conn, $ruta_db_superior;
-		$funcionario = busca_filtro_tabla("funcionario_codigo","vfuncionario_dc","lower(dependencia) like'direcci%n%control%interno%' and estado=1 and estado_dc=1 and funcionario_codigo=".$_SESSION["usuario_actual"],"",$conn);
-		if(($funcionario['numcampos'] || $_SESSION["LOGIN"]=="0k") && $_REQUEST["tipo"] != 5 ){
+		if(@$_REQUEST["tipo"] != 5 ){
 			$enlace = '<a class="abrir_higslide"  alto="250" ancho="550" ruta="formatos/informe_contraloria/llenar_campos.php?iddoc=' . $iddoc . '&idformato=' . $idformato . '" style="font-size:8pt;color: rgb(38, 50, 187);text-decoration: underline;">Agregar campos</a>';
 			echo $enlace;
 			echo(librerias_highslide());
