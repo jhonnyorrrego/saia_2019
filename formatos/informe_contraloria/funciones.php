@@ -320,7 +320,7 @@ function link_agregar_campos($idformato, $iddoc) {
     		   hs.outlineType = 'rounded-white';
     		</script>
     		<?php		    
-			$enlace = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="abrir_higslide"  alto="250" ancho="550" ruta="formatos/informe_contraloria/llenar_campos.php?iddoc=' . $iddoc . '&idformato=' . $idformato . '" style="font-size:8pt;color: rgb(38, 50, 187);text-decoration: underline;">Agregar campos</a>';
+			$enlace = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="highslide" onclick="return hs.htmlExpand(this, { objectType: \'iframe\',width: 900, height: 500,preserveContent:false} )" alto="250" ancho="550" href="formatos/informe_contraloria/llenar_campos.php?iddoc=' . $iddoc . '&idformato=' . $idformato . '" >Agregar campos</a>';
 			echo $enlace;
 			echo(librerias_highslide());
 		}
