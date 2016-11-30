@@ -131,7 +131,7 @@ function listar_hallazgo_informe($idformato, $iddoc, $condicion = "") {
       <a href="../plan_mejoramiento/mostrar_plan_mejoramiento.php?iddoc=' . $iddoc . '&idformato=1&export=excel&tipo_impresion=2" target="_blank">Plan CGR<br />(No.20) (Excel)</a>
       </td-->';
 
-				$texto_enlaces .= '<td align="center" valign="middle"><a href="' . $ruta_db_superior . '/SAIA/saia/class_impresion.php?iddoc=' . $_REQUEST["iddoc"] . '" target="_blank">Generar<br>Informe PDF</a></td><td><a href="?iddoc=' . $_REQUEST["iddoc"] . '&idformato=1&export=excel&tipo_impresion=2" target="_blank">Generar<br>Informe (Excel)</a></td>';
+				$texto_enlaces .= '<td align="center" valign="middle"><a href="' . $ruta_db_superior . 'class_impresion.php?iddoc=' . $_REQUEST["iddoc"] . '" target="_blank">Generar<br>Informe PDF</a></td><td><a href="?iddoc=' . $_REQUEST["iddoc"] . '&idformato=1&export=excel&tipo_impresion=2" target="_blank">Generar<br>Informe (Excel)</a></td>';
 
 				$texto_enlaces .= '</tr></table ><br />';
 			}
