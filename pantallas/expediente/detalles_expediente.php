@@ -221,7 +221,12 @@ $expediente=busca_filtro_tabla("a.*,".fecha_db_obtener("a.fecha","Y-m-d")." AS f
   ?>
   <tr>
   	<td class="prettyprint">    	
-      <?php echo(implode("<br/>",$cadena_cierre)); ?>
+      <div class="pull-left"><?php echo(implode("<br/>",$cadena_cierre)); ?></div>
+      <div class="pull-right">
+          <button class='btn btn-mini btn-default '>
+  		                <i class='icon-globe' title='Ver Historial de Cambio'></i>
+  		            </button>
+      </div>
     </td>
     <td>
     	<table class="table table-bordered">
@@ -231,9 +236,6 @@ $expediente=busca_filtro_tabla("a.*,".fecha_db_obtener("a.fecha","Y-m-d")." AS f
     			     <br>
     			    <?php echo($enlace_abrir); ?><?php echo($enlace_cerrar); ?>
     			    <br>
-    			    <button class='btn btn-mini btn-default '>
-  		                <i class='icon-globe' title='Ver Historial de Cambio'></i>
-  		            </button>
     			</td>
     		</tr>	
     	</table>
