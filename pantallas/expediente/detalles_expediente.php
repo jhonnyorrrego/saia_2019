@@ -227,7 +227,13 @@ $expediente=busca_filtro_tabla("a.*,".fecha_db_obtener("a.fecha","Y-m-d")." AS f
     	<table class="table table-bordered">
     		<tr>
     		    <?php echo($observaciones_abrir_cerrar); ?>
-    			<td style="text-align:center;" ><br><?php echo($enlace_abrir); ?><?php echo($enlace_cerrar); ?></td>
+    			<td style="text-align:center;" >
+    			     <br>
+    			    <?php echo($enlace_abrir); ?><?php echo($enlace_cerrar); ?>
+    			    <button class='btn btn-mini btn-default '>
+  		                <i class='icon-globe' title='Ver Historial de Cambio'></i>
+  		            </button>
+    			</td>
     		</tr>	
     	</table>
     </td>
