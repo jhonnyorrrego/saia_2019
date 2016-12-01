@@ -231,7 +231,7 @@ $expediente=busca_filtro_tabla("a.*,".fecha_db_obtener("a.fecha","Y-m-d")." AS f
     	    <?php echo($observaciones_abrir_cerrar); ?>
     		<tr>
     		    <td style="text-align:center" class="prettyprint"><?php echo(implode("<br/>",$cadena_cierre)); ?></td>
-    			<td style="text-align:center; margin:0 auto;" valign="middle"><br><?php echo($enlace_abrir); ?><?php echo($enlace_cerrar); ?></td>
+    			<td style="text-align:center; margin:0 auto;" ><br><?php echo($enlace_abrir); ?><?php echo($enlace_cerrar); ?></td>
     		</tr>
     		
     	</table>
