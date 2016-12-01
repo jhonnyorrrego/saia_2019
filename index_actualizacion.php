@@ -551,7 +551,7 @@ function menu_saia(){
 ?>
 <script type="text/javascript">
 	$(document).ready(function(){ 
-  	$(".cambiar_pwd").click(function(event){
+  	$("#encabezado_modal").click(function(event){
    		$("#encabezado_modal").html($("#ventana_modal").attr("titulo"));     
    	});     
   	$("#ventana_modal_correo").click(function(event){
