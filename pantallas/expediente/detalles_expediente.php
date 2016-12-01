@@ -209,11 +209,11 @@ $expediente=busca_filtro_tabla("a.*,".fecha_db_obtener("a.fecha","Y-m-d")." AS f
 		$estado_cierre="Cerrado";
 		$enlace_cerrar='';
 		$observaciones_abrir_cerrar='
-		    <tr>
+		   
 		       <td style="text-align:center" colspan="2">
 		           <textarea id="observaciones_abrir_cerrar" placeholder="Observaci&oacute;n para abrir expediente..."></textarea>
 		       </td>
-		    </tr>
+		    
 		
 		';
 	}
@@ -228,8 +228,9 @@ $expediente=busca_filtro_tabla("a.*,".fecha_db_obtener("a.fecha","Y-m-d")." AS f
     </td>
     <td>
     	<table class="table table-bordered">
-    	    <?php echo($observaciones_abrir_cerrar); ?>
+    	    
     		<tr>
+    		    <?php echo($observaciones_abrir_cerrar); ?>
     			<td style="text-align:center;" ><br><?php echo($enlace_abrir); ?><?php echo($enlace_cerrar); ?></td>
     		</tr>
     		
