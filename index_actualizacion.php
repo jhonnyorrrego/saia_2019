@@ -540,7 +540,7 @@ function menu_saia(){
 <script type="text/javascript">
 	$(document).ready(function(){ 
   	$(".cambiar_pwd").click(function(event){
-   		$("#encabezado_modal").html($(".cambiar_pwd").attr("titulo"));     
+   		$("#encabezado_modal").html($(this).attr("titulo"));     
    	});                 
    	$("#ventana_modal").draggable({
    		handle: ".modal-header"
