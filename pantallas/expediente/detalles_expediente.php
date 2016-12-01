@@ -230,7 +230,6 @@ $expediente=busca_filtro_tabla("a.*,".fecha_db_obtener("a.fecha","Y-m-d")." AS f
     	<table class="table table-bordered">
     	    <?php echo($observaciones_abrir_cerrar); ?>
     		<tr>
-    		    
     			<td style="text-align:center;" ><br><?php echo($enlace_abrir); ?><?php echo($enlace_cerrar); ?></td>
     		</tr>
     		
