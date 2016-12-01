@@ -1,4 +1,4 @@
-<img src="https://www.minsalud.gov.co/salud/POS/mi-plan/infografia/construccion/en-construccion.jpg">
+<img src="http://www.sencico.gob.pe/info/sencicoweb/media/img483.jpg">
 
 <?php 
 die();
