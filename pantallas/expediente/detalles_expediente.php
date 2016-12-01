@@ -138,6 +138,10 @@ $expediente=busca_filtro_tabla("a.*,".fecha_db_obtener("a.fecha","Y-m-d")." AS f
 	}
   	?>
   	
+  	
+  	<?php 
+  	    if($expediente[0]["propietario"] == @$_SESSION['usuario_actual']){
+  	?>
           	&nbsp; &nbsp; &nbsp; 
   		    <button class='btn btn-mini btn-default cambiar_responsable_expediente'>
   		        <i class='icon-user' title='Cambiar Responsable'></i>
@@ -157,7 +161,9 @@ $expediente=busca_filtro_tabla("a.*,".fecha_db_obtener("a.fecha","Y-m-d")." AS f
   		        });
   		    </script>
 		    
-  		    
+  	<?php 
+  	    } //fin if  $expediente[0]["propietario"] == @$_SESSION['usuario_actual']
+  	?>
   		    
   	</td>
   </tr>
