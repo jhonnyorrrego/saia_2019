@@ -221,7 +221,7 @@ $expediente=busca_filtro_tabla("a.*,".fecha_db_obtener("a.fecha","Y-m-d")." AS f
   ?>
   <tr>
   	<td class="prettyprint">    	
-      <b><?php echo(implode("<br/>",$cadena_cierre)); ?></b>
+      <?php echo(implode("<br/>",$cadena_cierre)); ?>
     </td>
     <td>
     	<table class="table table-bordered">
