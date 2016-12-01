@@ -303,7 +303,7 @@ return(true);
 function inactivar_reemplazo_expedientes($idreemplazo_saia){
     global $conn,$ruta_db_superior;
     
-    $reemplazo_saia=busca_filtro_tabla("antiguo","reemplazo_saia","estado=1 AND idreemplazo_saia=".$idreemplazo_saia,"",$conn);
+    $reemplazo_saia=busca_filtro_tabla("antiguo,nuevo","reemplazo_saia","estado=1 AND idreemplazo_saia=".$idreemplazo_saia,"",$conn);
     $idfuncionario_antiguo=busca_filtro_tabla("idfuncionario","funcionario","funcionario_codigo=".$reemplazo_saia[0]['antiguo'],"",$conn);
     $reemplazo_expedientes=busca_filtro_tabla("fk_identidad_expediente,idreemplazo_expediente","reemplazo_expediente","estado=1 AND fk_idreemplazo_saia=".$idreemplazo_saia,"",$conn);
     $identidad_expediente=$reemplazo_expedientes[0]['fk_identidad_expediente'];
@@ -312,6 +312,9 @@ function inactivar_reemplazo_expedientes($idreemplazo_saia){
     phpmkr_query($sql3);
     $sql4="UPDATE entidad_expediente SET  llave_entidad=".$idfuncionario_antiguo[0]['idfuncionario']." WHERE identidad_expediente IN(".$identidad_expediente.")";
     phpmkr_query($sql4);
+    
+    cambiar_responsable_expediente_reemplazo($identidad_expediente,$reemplazo_saia[0]['nuevo'],$reemplazo_saia[0]['antiguo']);
+    
 }
 
 function insertar_reemplazo_expediente($idreemplazo_saia){
@@ -326,7 +329,18 @@ function insertar_reemplazo_expediente($idreemplazo_saia){
     phpmkr_query($sql3);
     $sql4="UPDATE entidad_expediente SET llave_entidad=".$idfuncionario_nuevo[0]['idfuncionario']." WHERE identidad_expediente IN(".$identidad_expediente.")";
     phpmkr_query($sql4);
+    
+    cambiar_responsable_expediente_reemplazo($identidad_expediente,$reemplazo_saia[0]['antiguo'],$reemplazo_saia[0]['nuevo']);
 }
+function cambiar_responsable_expediente_reemplazo($cadena_identidad_expediente,$antiguo,$nuevo){
+    global $conn;
+    
+    $expedientes_idexpedientes=busca_filtro_tabla("expediente_idexpediente","entidad_expediente a, expediente b","b.propietario=".$antiguo." AND a.expediente_idexpediente=b.idexpediente AND a.identidad_expediente IN(".$cadena_identidad_expediente.")","",$conn);
+    $expedientes_cambio_responsable=implode(',',extrae_campo($expedientes_idexpedientes),'expediente_idexpediente');
+    $sqlu=" UPDATE expediente SET propietario=".$nuevo." WHERE idexpediente IN(".$expedientes_cambio_responsable.")";
+    phpmkr_query($sqlu);
+}
+
 function actualiza_ruta_devolucion($idreemplazo,$iddocumento,$idruta){
 	global $conn;
 	$reemplazo=busca_filtro_tabla("idreemplazo_saia,tipo_reemplazo,".fecha_db_obtener("fecha_inicio","Y-m-d")." AS fecha_inicio,".fecha_db_obtener("fecha_fin","Y-m-d")." AS fecha_fin","reemplazo_saia","idreemplazo_saia=".$idreemplazo,"",$conn);
