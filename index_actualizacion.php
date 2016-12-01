@@ -245,6 +245,18 @@ $mayor_informacion=busca_filtro_tabla("valor","configuracion","nombre='mayor_inf
 <div class="modal-footer">
 </div>
 </div>
+<div id="ventana_modal_correo" class="modal hide" tabindex="-1" role="dialog">
+<div class="modal-header">
+<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+<h3 id="encabezado_modal_correo">Encabezado</h3>
+</div>
+<div class="modal-body">
+<p>Cuerpo</p>
+</div>
+<div class="modal-footer">
+</div>
+</div>
+
 <div class="user-menu-top">
 <?php 
 //Menu SAIA para movil
@@ -265,7 +277,7 @@ if($_SESSION["tipo_dispositivo"]=="movil"){ ?>
       <a href="#" class="dropdown-toggle" data-toggle="dropdown">Mi Cuenta<b class="caret"></b></a>
       <ul class="dropdown-menu" >
       <li><a href="<?php echo($ruta_db_superior);?>pantallas/mi_cuenta/cambio_clave.php" data-toggle="modal" data-target="#ventana_modal" class="cambiar_pwd" titulo="Cambiar Contrase&ntilde;a">Cambiar Contrase&ntilde;a</a></li>
-      <li><a href="<?php echo($ruta_db_superior);?>pantallas/mi_cuenta/cambio_clave_correo.php" data-toggle="modal" data-target="#ventana_modal" class="cambiar_pwd" titulo="Cambiar Contrase&ntilde;a de correo">Contrase&ntilde;a de correo</a></li>
+      <li><a href="<?php echo($ruta_db_superior);?>pantallas/mi_cuenta/cambio_clave_correo.php" data-toggle="modal" data-target="#ventana_modal_correo" class="cambiar_pwd" titulo="Cambiar Contrase&ntilde;a de correo">Contrase&ntilde;a de correo</a></li>
       <!--li><a href="#">Another action</a></li>
       <li><a href="#">Something else here</a></li>
       <li class="divider"></li>
@@ -540,11 +552,18 @@ function menu_saia(){
 <script type="text/javascript">
 	$(document).ready(function(){ 
   	$(".cambiar_pwd").click(function(event){
-   		$("#encabezado_modal").html($(this).attr("titulo"));     
-   	});                 
+   		$("#encabezado_modal").html($("#ventana_modal").attr("titulo"));     
+   	});     
+  	$("#ventana_modal_correo").click(function(event){
+   		$("#encabezado_modal_correo").html($("#ventana_modal_correo").attr("titulo"));     
+   	});      	
    	$("#ventana_modal").draggable({
    		handle: ".modal-header"
    	});
+   	$("#ventana_modal_correo").draggable({
+   		handle: ".modal-header"
+   	});   	
+   	
 	  var meses=new Array("En","Feb","Mar","Abr","May","Jun","Jul","Ag","Sep","Oct","Nov","Dic");
 	  var refreshInterval_SAIA;
 	  var today=new Date();
