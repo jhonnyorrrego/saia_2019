@@ -143,7 +143,7 @@ $expediente=busca_filtro_tabla("a.*,".fecha_db_obtener("a.fecha","Y-m-d")." AS f
   	<?php 
   	    $configuracion_administrador=busca_filtro_tabla("valor","configuracion","nombre='login_administrador'","",$conn);
   	
-  	    if( ($expediente[0]["propietario"] == @$_SESSION['usuario_actual']) ||  ($configuracion_administrador[0]["valor"] == @$_SESSION['LOGIN'.LLAVE_SAIA]) ){
+  	    if( ($expediente[0]["propietario"] == @$_SESSION['usuario_actual']) ||  (!$expediente[0]["propietario"] && $configuracion_administrador[0]["valor"] == @$_SESSION['LOGIN'.LLAVE_SAIA]) ){
   	?>
           	&nbsp; &nbsp; &nbsp; 
   		    <button class='btn btn-mini btn-default cambiar_responsable_expediente'>
