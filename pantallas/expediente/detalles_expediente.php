@@ -211,7 +211,7 @@ $expediente=busca_filtro_tabla("a.*,".fecha_db_obtener("a.fecha","Y-m-d")." AS f
 		$observaciones_abrir_cerrar='
 		    <tr>
 		       <td style="text-align:center" colspan="2">
-		           <textarea id="observaciones_abrir_cerrar"></textarea>
+		           <textarea id="observaciones_abrir_cerrar" placeholder="Observacion de Apertura de expediente..."></textarea>
 		       </td>
 		    </tr>
 		
