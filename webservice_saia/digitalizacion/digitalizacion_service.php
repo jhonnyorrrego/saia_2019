@@ -84,9 +84,19 @@ function actualizar_estado($qry_data){
 }
 
 function validar_usuario($user, $pass) {
-    global $conn;
-    $user_data = busca_filtro_tabla("idfuncionario", "funcionario", "login='$user'", "", $conn);
-    //TODO: verificar clave
+    global $conn,$ruta_db_superior;
+    
+		//$nombre_archivo="temporal_".$_SESSION["LOGIN"]."/".$iddoc;
+	$ch = curl_init();
+		    //$fila = "http://".RUTA_PDF_LOCAL."/class_impresion.php?iddoc=".$iddoc."&LOGIN=".$_SESSION["LOGIN".LLAVE_SAIA]."&conexion_remota=1&usuario_actual=".$_SESSION["usuario_actual"]."&LLAVE_SAIA=".LLAVE_SAIA;
+	$fila = PROTOCOLO_CONEXION.RUTA_PDF_LOCAL."/verificar_login.php?conexion_remota=1&conexio_usuario=".$_SESSION["LOGIN".LLAVE_SAIA]."&usuario_actual=".$_SESSION["usuario_actual"]."&LOGIN=".$_SESSION["LOGIN".LLAVE_SAIA]."&LLAVE_SAIA=".LLAVE_SAIA."&userid=".$user."&passwd=".$pass;
+	curl_setopt($ch, CURLOPT_URL,$fila);
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
+	$contenido=curl_exec($ch);
+	curl_close ($ch);    
+    
+    
+    //TODO: convertir $contenido a json y validar que la variable ingresar sea = 1 
     if($user_data['numcampos']) {
         return $user_data[0]["idfuncionario"];
     }
