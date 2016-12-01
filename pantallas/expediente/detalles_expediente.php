@@ -328,7 +328,7 @@ if($expediente[0]["estado_cierre"]==2){  //si esta cerrado
       
       
   	$(".accion_abrir_cierre").click(function(){
-  	    
+  	 $('.obligatorio_observaciones_expediente').remove();
   	    var ejecutar_ajax=1;
   	    var x_accion=$(this).attr("accion");
   	    
