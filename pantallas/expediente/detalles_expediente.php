@@ -325,7 +325,9 @@ if($expediente[0]["estado_cierre"]==2){  //si esta cerrado
   
   <script>
   $(document).ready(function(){
-      
+    $('#observaciones_abrir_cerrar').focus(function(){
+        $('.obligatorio_observaciones_expediente').remove();
+    });      
       
   	$(".accion_abrir_cierre").click(function(){
   	    $('.obligatorio_observaciones_expediente').remove();
@@ -338,10 +340,6 @@ if($expediente[0]["estado_cierre"]==2){  //si esta cerrado
       	    if(observaciones==''){
       	        ejecutar_ajax=0;
       	        $('#observaciones_abrir_cerrar').after("<span class='obligatorio_observaciones_expediente' style='color:red;'><br>Debe ingresar la observaci&oacute;n</span>");
-      	        
-      	         $('#observaciones_abrir_cerrar').focus(function(){
-      	             $('.obligatorio_observaciones_expediente').remove();
-      	         });
       	    }
   	    }
   	    
