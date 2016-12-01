@@ -475,8 +475,10 @@ function enlaces_adicionales_expediente($idexpediente, $nombre,$estado_cierre,$p
 		$texto.='<div class=\'btn btn-mini enlace_expediente tooltip_saia pull-right\' idregistro=\''.$idexpediente.'\' title=\'Asignar '.$nombre.'\' enlace=\'pantallas/expediente/asignar_expediente.php?idexpediente='.$idexpediente.'\'><i class=\'icon-lock\'></i></div>';
 	}
 	
-	$texto.='<div class=\'btn btn-mini crear_tomo_expediente tooltip_saia pull-right\' idregistro=\''.$idexpediente.'\' title=\'Crear Tomo '.$nombre.'\'><i class=\'icon-folder-open\'></i></div>';	
-	
+	if($propietario == $_SESSION["usuario_actual"]){
+	    $texto.='<div class=\'btn btn-mini crear_tomo_expediente tooltip_saia pull-right\' idregistro=\''.$idexpediente.'\' title=\'Crear Tomo '.$nombre.'\'><i class=\'icon-folder-open\'></i></div>';	
+	}
+
 	$mostrar_seleccionar='';
 	if($estado_cierre==1){
 	    $mostrar_seleccionar='style="display:none;"';
