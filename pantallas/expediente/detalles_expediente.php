@@ -130,7 +130,8 @@ $expediente=busca_filtro_tabla("a.*,".fecha_db_obtener("a.fecha","Y-m-d")." AS f
   <tr>
   	<td class="prettyprint"><b>Responsable del expediente:</b></td>
   	<td colspan="3">
-  	<?php if($expediente[0]["propietario"]){
+  	<?php 
+  	if($expediente[0]["propietario"]){
   		$nombres=busca_filtro_tabla("","funcionario A","A.funcionario_codigo=".$expediente[0]["propietario"],"",$conn);
   		echo(ucwords(strtolower($nombres[0]["nombres"]." ".$nombres[0]["apellidos"])));
   	}else{
@@ -140,7 +141,9 @@ $expediente=busca_filtro_tabla("a.*,".fecha_db_obtener("a.fecha","Y-m-d")." AS f
   	
   	
   	<?php 
-  	    if($expediente[0]["propietario"] == @$_SESSION['usuario_actual']){
+  	    $configuracion_administrador=busca_filtro_tabla("valor","configuracion","nombre='login_administrador'","",$conn);
+  	
+  	    if( ($expediente[0]["propietario"] == @$_SESSION['usuario_actual']) ||  ($configuracion_administrador[0]["valor"] == @$_SESSION['LOGIN'.LLAVE_SAIA]) ){
   	?>
           	&nbsp; &nbsp; &nbsp; 
   		    <button class='btn btn-mini btn-default cambiar_responsable_expediente'>
