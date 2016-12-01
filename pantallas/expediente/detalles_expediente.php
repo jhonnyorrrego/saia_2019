@@ -333,6 +333,7 @@ if($expediente[0]["estado_cierre"]==2){  //si esta cerrado
   	    var x_accion=$(this).attr("accion");
   	    
   	    if(x_accion==1){
+  	        alert('entro');
   	        var observaciones='';
   	        observaciones=$('#observaciones_abrir_cerrar').val();
       	    if(observaciones=''){
