@@ -88,7 +88,7 @@ if($papas["numcampos"]){
 			$cantidad_tomos=cantidad_tomos($papas[$i]["idexpediente"]);
 			$cadena_tomos='';
 			if($cantidad_tomos['cantidad']>1){
-			    $cadena_tomos='&nbsp;&nbsp;'.$cantidad_tomos['tomo_no'].' de '.$cantidad_tomos['cantidad'];
+			    $cadena_tomos='&nbsp;&nbsp;<b>('.$cantidad_tomos['tomo_no'].' de '.$cantidad_tomos['cantidad'].')</b>';
 			}
 		
 	  	echo("<item style=\"font-family:verdana; font-size:7pt;\" ");
