@@ -177,7 +177,7 @@ function crear_tomo_expediente(){
     $retorno->mensaje="Error al crear tomo";
     
     $idexpediente=$_REQUEST["idexpediente"];
-    $expediente_actual=busca_filtro_tabla("tomo_padre","expediente","idexpediente=".$idexpediente,"",$conn);
+    $expediente_actual=busca_filtro_tabla("tomo_padre,estado_archivo,serie_idserie","expediente","idexpediente=".$idexpediente,"",$conn);
     $tomo_padre=$idexpediente;
     if($expediente_actual[0]['tomo_padre']){
         $tomo_padre=$expediente_actual[0]['tomo_padre'];
@@ -195,13 +195,13 @@ function crear_tomo_expediente(){
     }
     
    
-    if( !is_numeric($datos_padre[0]['serie_idserie'])){
-        $datos_padre[0]['serie_idserie']=0;
+    if( !is_numeric($expediente_actual[0]['serie_idserie'])){
+        $expediente_actual[0]['serie_idserie']=0;
     }
     $sql="INSERT INTO expediente 
         (serie_idserie,nombre,fecha,propietario,ver_todos,editar_todos,tomo_padre,tomo_no,estado_archivo,descripcion) 
             VALUES 
-                (".$datos_padre[0]['serie_idserie'].",'".$datos_padre[0]['nombre']."',".fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s').",".usuario_actual('funcionario_codigo').",0,0,".$tomo_padre.",".$tomo_siguiente.",".$datos_padre[0]['estado_archivo'].",'".$datos_padre[0]['descripcion']."')";
+                (".$expediente_actual[0]['serie_idserie'].",'".$datos_padre[0]['nombre']."',".fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s').",".usuario_actual('funcionario_codigo').",0,0,".$tomo_padre.",".$tomo_siguiente.",".$expediente_actual[0]['estado_archivo'].",'".$datos_padre[0]['descripcion']."')";
    // print_r($sql);die();            
     phpmkr_query($sql);
     $id_insertado=phpmkr_insert_id();
