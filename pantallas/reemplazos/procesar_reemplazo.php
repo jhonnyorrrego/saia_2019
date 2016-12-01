@@ -336,7 +336,7 @@ function cambiar_responsable_expediente_reemplazo($cadena_identidad_expediente,$
     global $conn;
     
     $expedientes_idexpedientes=busca_filtro_tabla("expediente_idexpediente","entidad_expediente a, expediente b","b.propietario=".$antiguo." AND a.expediente_idexpediente=b.idexpediente AND a.identidad_expediente IN(".$cadena_identidad_expediente.")","",$conn);
-    $expedientes_cambio_responsable=implode(',',extrae_campo($expedientes_idexpedientes),'expediente_idexpediente');
+    $expedientes_cambio_responsable=implode(',',extrae_campo($expedientes_idexpedientes,'expediente_idexpediente'));
     $sqlu=" UPDATE expediente SET propietario=".$nuevo." WHERE idexpediente IN(".$expedientes_cambio_responsable.")";
     phpmkr_query($sqlu);
 }
