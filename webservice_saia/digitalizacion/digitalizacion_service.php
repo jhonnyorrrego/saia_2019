@@ -94,11 +94,11 @@ function validar_usuario($user, $pass) {
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
 	$contenido=curl_exec($ch);
 	curl_close ($ch);    
-    
+    $contenido=json_decode($contenido);
     
     //TODO: convertir $contenido a json y validar que la variable ingresar sea = 1 
-    $user_data=busca_filtro_tabla("","funcionario","login='".$user."'","",$conn);
-    if($user_data['numcampos']) {
+    $user_data=busca_filtro_tabla("idfuncionario","funcionario","login='".$user."'","",$conn);
+    if($user_data['numcampos'] && $contenido->ingresar) {
         return $user_data[0]["idfuncionario"];
     }
     return false;
