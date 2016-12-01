@@ -237,7 +237,7 @@ $mayor_informacion=busca_filtro_tabla("valor","configuracion","nombre='mayor_inf
 <div id="ventana_modal" class="modal hide" tabindex="-1" role="dialog">
 <div class="modal-header">
 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-<h3 id="encabezado_modal">Encabezado</h3>
+<h3 id="encabezado_modal">Cambiar Contrase&ntilde;a</h3>
 </div>
 <div class="modal-body">
 <p>Cuerpo</p>
@@ -248,7 +248,7 @@ $mayor_informacion=busca_filtro_tabla("valor","configuracion","nombre='mayor_inf
 <div id="ventana_modal_correo" class="modal hide" tabindex="-1" role="dialog">
 <div class="modal-header">
 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-<h3 id="encabezado_modal_correo">Encabezado</h3>
+<h3 id="encabezado_modal_correo">Cambiar Contrase&ntilde;a de correo</h3>
 </div>
 <div class="modal-body">
 <p>Cuerpo</p>
