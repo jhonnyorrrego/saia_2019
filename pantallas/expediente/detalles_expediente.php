@@ -230,6 +230,7 @@ $expediente=busca_filtro_tabla("a.*,".fecha_db_obtener("a.fecha","Y-m-d")." AS f
     			<td style="text-align:center;" >
     			     <br>
     			    <?php echo($enlace_abrir); ?><?php echo($enlace_cerrar); ?>
+    			    <br>
     			    <button class='btn btn-mini btn-default '>
   		                <i class='icon-globe' title='Ver Historial de Cambio'></i>
   		            </button>
