@@ -224,13 +224,13 @@ $expediente=busca_filtro_tabla("a.*,".fecha_db_obtener("a.fecha","Y-m-d")." AS f
   ?>
   <tr>
   	<td class="prettyprint">    	
-      <b>Acciones:</b>
+      <b><?php echo(implode("<br/>",$cadena_cierre)); ?></b>
     </td>
     <td>
     	<table class="table table-bordered">
     	    <?php echo($observaciones_abrir_cerrar); ?>
     		<tr>
-    		    <td style="text-align:center" class="prettyprint"><?php echo(implode("<br/>",$cadena_cierre)); ?></td>
+    		    
     			<td style="text-align:center;" ><br><?php echo($enlace_abrir); ?><?php echo($enlace_cerrar); ?></td>
     		</tr>
     		
