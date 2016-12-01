@@ -97,6 +97,7 @@ function validar_usuario($user, $pass) {
     
     
     //TODO: convertir $contenido a json y validar que la variable ingresar sea = 1 
+    $user_data=busca_filtro_tabla("","funcionario","login='".$user."'","",$conn);
     if($user_data['numcampos']) {
         return $user_data[0]["idfuncionario"];
     }
