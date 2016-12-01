@@ -190,7 +190,7 @@ $("#passwordTxt").blur(function(){
               </div>
             </div> 
             <div class="control-group">
-                <button type="button" class="btn btn-mini btn-primary" id="enviar_form">Cambiar contrase&ntilde;a</button>
+                <button type="button" class="btn btn-mini btn-primary" id="enviar_form">Cambiar contrase&ntilde;a de correo</button>
                 <button type="button" class="btn btn-mini " id="cancelar_form">Cancelar</button>
             </div>           
 </form>
