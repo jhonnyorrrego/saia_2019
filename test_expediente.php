@@ -84,9 +84,15 @@ if($papas["numcampos"]){
 			if($papas[$i]["estado_cierre"]==2){
 				$texto_item.=" <span style=\"color:red\">(CERRADO)</span>";
 			}
+			
+			$cantidad_tomos=cantidad_tomos($papas[$i]["idexpediente"]);
+			$cadena_tomos='';
+			if($cantidad_tomos['cantidad']>1){
+			    $cadena_tomos='&nbsp;&nbsp;'.$cantidad_tomos['tomo_no'].' de '.$cantidad_tomos['cantidad'];
+			}
 		
 	  	echo("<item style=\"font-family:verdana; font-size:7pt;\" ");
-	    echo("text=\"".htmlspecialchars($texto_item)." \" id=\"".$papas[$i]["idexpediente"]."\"");
+	    echo("text=\"".htmlspecialchars($texto_item.$cadena_tomos)." \" id=\"".$papas[$i]["idexpediente"]."\"");
 	    if(@$_REQUEST["doc"]){
       	if($_REQUEST["accion"]==1 && in_array($papas[$i]["idexpediente"],$exp_doc)){
       		if(!$varios){
@@ -115,4 +121,16 @@ if($papas["numcampos"]){
 }
 return;
 }
+
+function cantidad_tomos($idexpediente){
+    global $conn;
+    
+    $expediente_actual=busca_filtro_tabla("tomo_padre,tomo_no","expediente","idexpediente=".$idexpediente,"",$conn);
+    $ccantidad_tomos=busca_filtro_tabla("idexpediente","expediente","tomo_padre=".$expediente_actual[0]['tomo_padre'],"",$conn);
+    $cantidad_tomos=array();
+    $cantidad_tomos['cantidad']=$ccantidad_tomos['numcampos']+1; //tomos + el padre  
+    $cantidad_tomos['tomo_no']=$expediente_actual[0]['tomo_no'];
+    return($cantidad_tomos);
+}
+
 ?>
