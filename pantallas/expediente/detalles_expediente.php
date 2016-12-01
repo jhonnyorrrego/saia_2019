@@ -325,44 +325,51 @@ if($expediente[0]["estado_cierre"]==2){  //si esta cerrado
   
   <script>
   $(document).ready(function(){
+      
+      
   	$(".accion_abrir_cierre").click(function(){
-  		if(confirm('Esta seguro de realizar esta accion?')){
-  			var x_accion=$(this).attr("accion");
-  			
-  			
-  			var ejecutar_ajax=1;
-  			var observaciones='';
-  			if(x_accion==1){
-  			    observaciones=$('#observaciones_abrir_cerrar').val();
-  			    if(observaciones==''){
-  			        ejecutar_ajax=0;
-  			        notificacion_saia("<b>ATENCI&Oacute;N</b><br>Debe ingresar la observaci&oacute;n","warning","",2500);
-  			    }
-  			    
-  			}
-  			
-  			if(ejecutar_ajax){
-      			$.ajax({
-      				url:"<?php echo($ruta_db_superior);?>pantallas/expediente/ejecutar_acciones.php",
-      				data:{ejecutar_expediente: 'abrir_cerrar_expediente', tipo_retorno: 1, accion: x_accion, idexpediente: '<?php echo($expediente[0]["idexpediente"]); ?>',observaciones:observaciones},
-      				type:"POST",
-      				success: function(html){
-      					if(html){
-      						var objeto=jQuery.parseJSON(html);
-      						if(objeto.exito){
-      							notificacion_saia(objeto.mensaje,"success","",2500);
-      							if(x_accion==1){
-      							    window.parent.$('#seleccionados_expediente_<?php echo(@$_REQUEST["idexpediente"]); ?>').attr('style','display:none;');
-      							}else{
-      							    window.parent.$('#seleccionados_expediente_<?php echo(@$_REQUEST["idexpediente"]); ?>').attr('style','display:block;');
-      							}
-      							window.open("detalles_expediente.php?idexpediente=<?php echo(@$_REQUEST["idexpediente"]); ?>&idbusqueda_componente=<?php echo(@$_REQUEST["idbusqueda_componente"]); ?>","_self");
-      						}
-      					}
-      				}
-      			});
-  			}	
-  		}
+  	    
+  	    var ejecutar_ajax=1;
+  	    var x_accion=$(this).attr("accion");
+  	    
+  	    if(x_accion==1){
+  	        var observaciones='';
+  	        observaciones=$('#observaciones_abrir_cerrar').val();
+      	    if(observaciones=''){
+      	        ejecutar_ajax=0;
+      	        $('#observaciones_abrir_cerrar').after("<span class='obligatorio_observaciones_expediente'><b>ATENCI&Oacute;N</b><br>Debe ingresar la observaci&oacute;n</span>","warning","",2500);
+      	        
+      	         $('#observaciones_abrir_cerrar').focus(function(){
+      	             $('.obligatorio_observaciones_expediente').remove();
+      	         });
+      	    }
+  	    }
+  	    
+  	    if(ejecutar_ajax){
+      		if(confirm('Esta seguro de realizar esta accion?')){
+      			if(ejecutar_ajax){
+          			$.ajax({
+          				url:"<?php echo($ruta_db_superior);?>pantallas/expediente/ejecutar_acciones.php",
+          				data:{ejecutar_expediente: 'abrir_cerrar_expediente', tipo_retorno: 1, accion: x_accion, idexpediente: '<?php echo($expediente[0]["idexpediente"]); ?>',observaciones:observaciones},
+          				type:"POST",
+          				success: function(html){
+          					if(html){
+          						var objeto=jQuery.parseJSON(html);
+          						if(objeto.exito){
+          							notificacion_saia(objeto.mensaje,"success","",2500);
+          							if(x_accion==1){
+          							    window.parent.$('#seleccionados_expediente_<?php echo(@$_REQUEST["idexpediente"]); ?>').attr('style','display:none;');
+          							}else{
+          							    window.parent.$('#seleccionados_expediente_<?php echo(@$_REQUEST["idexpediente"]); ?>').attr('style','display:block;');
+          							}
+          							window.open("detalles_expediente.php?idexpediente=<?php echo(@$_REQUEST["idexpediente"]); ?>&idbusqueda_componente=<?php echo(@$_REQUEST["idbusqueda_componente"]); ?>","_self");
+          						}
+          					}
+          				}
+          			});
+      			}	//fin if ejecutar ajax
+      		} //fin esta seguro
+  	    } //fin ejecutar ajax
   	});
   });
  	</script>
