@@ -23,10 +23,6 @@ $campo="entidad_identidad";
       $xml.="&id=".$_REQUEST["filtrar_serie"];
     elseif(@$_REQUEST["filtrar_categoria"]) 
       $xml.="&categoria=".$_REQUEST["filtrar_categoria"];
-	
-	if(@$_REQUEST['solo_series']){
-		$xml.="&solo_series=".$_REQUEST["solo_series"];
-	}
  
     $campo="serie_idserie"; 
    }
@@ -36,14 +32,14 @@ if(@$_REQUEST["tipo_entidad"] && @$_REQUEST["llave_entidad"])
 if($xml && $campo)
 {   
 ?>
-<!--Buscar: <input type="text" id="stext<?php echo $entidad; ?>" width="200px" size="25">
+Buscar: <input type="text" id="stext<?php echo $entidad; ?>" width="200px" size="25">
 <a href="javascript:void(0)" onclick="stext<?php echo $entidad; ?>.findItem(htmlentities(document.getElementById('stext<?php echo $entidad; ?>').value),1)"> 
 <img src="botones/general/anterior.png" alt="Buscar Anterior" border="0px"></a>
 <a href="javascript:void(0)" onclick="tree<?php echo $entidad; ?>.findItem(htmlentities(document.getElementById('stext<?php echo $entidad; ?>').value),0,1)"> 
 <img src="botones/general/buscar.png" alt="Buscar" border="0px"></a>
 <a href="javascript:void(0)" onclick="tree<?php echo $entidad; ?>.findItem(htmlentities(document.getElementById('stext<?php echo $entidad; ?>').value))">
 <img src="botones/general/siguiente.png" alt="Buscar Siguiente" border="0px"></a>
-</span-->
+</span>
 <div id="esperando<?php echo $entidad; ?>"><img src="imagenes/cargando.gif"></div>
 <div id="treeboxbox<?php echo $entidad; ?>" width="100px" height="100px"></div>
 <input type="hidden" class="required" name="<?php echo $campo; ?>" id="<?php echo $campo; ?>">
@@ -80,10 +76,10 @@ if($xml && $campo)
       document.getElementById('<?php echo $campo; ?>').value=tree<?php echo $entidad; ?>.getAllChecked();
       
       
-	 <?php if(@$_REQUEST['llave_entidad'] && @$_REQUEST['entidad']==2){ ?>		
-          tree<?php echo $entidad; ?>.openItem( <?php echo(@$_REQUEST['llave_entidad']); ?> );		
-     <?php } ?>      
-     
+     <?php if(@$_REQUEST['llave_entidad'] && @$_REQUEST['entidad']==2){ ?>
+          tree<?php echo $entidad; ?>.openItem( <?php echo(@$_REQUEST['llave_entidad']); ?> );
+     <?php } ?>
+      
     }
     function cargando<?php echo $entidad; ?>() {
       if (browserType == "gecko" )
