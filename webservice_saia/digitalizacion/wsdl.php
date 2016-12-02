@@ -64,7 +64,8 @@ $functions[] = array(
                 ),
                 array(
                         "name" => "idfunc",
-                        "type" => "int"
+                        "type" => "int",
+                        "nillable" => "true"
                 ),
                 array(
                         "name" => "message",
