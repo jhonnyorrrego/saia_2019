@@ -35,7 +35,7 @@ echo(estilo_bootstrap());
 
             <?php 
             $idexpediente=@$_REQUEST['idexpediente'];
-            $historial=busca_filtro_tabla("","expediente_abce","expediente_idexpediente=".$idexpediente,"",$conn);
+            $historial=busca_filtro_tabla("","expediente_abce","expediente_idexpediente=".$idexpediente,"idexpediente_abce DESC",$conn);
             for($i=0;$i<$historial['numcampos'];$i++){
                 $cadena='
                     <tr>
