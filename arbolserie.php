@@ -23,13 +23,13 @@ echo(librerias_notificaciones());
 <script type="text/javascript" src="js/dhtmlXCommon.js"></script>
 <script type="text/javascript" src="js/dhtmlXTree.js"></script>
     <link rel="STYLESHEET" type="text/css" href="css/dhtmlXTree.css">
-			  <span style="font-family: Verdana; font-size: 9px;">CLASIFICACI&Oacute;N DEL DOCUMENTO<br><br></span>
+			  <!--span style="font-family: Verdana; font-size: 9px;">CLASIFICACI&Oacute;N DEL DOCUMENTO<br><br></span-->
 			  <span style="font-family: Verdana; font-size: 9px;">
-        <a href='serieadd.php' target='serielist'>Adicionar&nbsp;</a>
-        <a href='asignarserie_entidad.php' target='serielist'>Asignar o quitar serie/categoria</a>
+        
+        <!--a href='asignarserie_entidad.php' target='serielist'>Asignar o quitar serie/categoria</a-->
         <br><br>
-			  <br />  Buscar: <input type="text" id="stext_serie_idserie" width="200px" size="25"><a href="javascript:void(0)" onclick="tree2.findItem(htmlentities(document.getElementById('stext_serie_idserie').value),1)"> <img src="botones/general/anterior.png" alt="Buscar Anterior" border="0px"></a><a href="javascript:void(0)" onclick="tree2.findItem(htmlentities(document.getElementById('stext_serie_idserie').value),0,1)"> <img src="botones/general/buscar.png" alt="Buscar" border="0px"></a>
-                          <a href="javascript:void(0)" onclick="tree2.findItem(htmlentities(document.getElementById('stext_serie_idserie').value))"><img src="botones/general/siguiente.png" alt="Buscar Siguiente" border="0px"></a>
+			  <!--br />  Buscar: <input type="text" id="stext_serie_idserie" width="200px" size="25"><a href="javascript:void(0)" onclick="tree2.findItem(htmlentities(document.getElementById('stext_serie_idserie').value),1)"> <img src="botones/general/anterior.png" alt="Buscar Anterior" border="0px"></a><a href="javascript:void(0)" onclick="tree2.findItem(htmlentities(document.getElementById('stext_serie_idserie').value),0,1)"> <img src="botones/general/buscar.png" alt="Buscar" border="0px"></a>
+                          <a href="javascript:void(0)" onclick="tree2.findItem(htmlentities(document.getElementById('stext_serie_idserie').value))"><img src="botones/general/siguiente.png" alt="Buscar Siguiente" border="0px"></a-->
                           </span>
 			  <div id="esperando_serie"><img src="imagenes/cargando.gif"></div>
 				<div id="treeboxbox_tree2" width="100px" height="100px"></div>
@@ -48,25 +48,39 @@ echo(librerias_notificaciones());
 			tree2.setXMLAutoLoadingBehaviour("id");
 			tree2.setOnClickHandler(onNodeSelect);
 			tree2.setOnLoadingStart(cargando_serie);
-            tree2.setOnLoadingEnd(fin_cargando_serie);
+      			tree2.setOnLoadingEnd(fin_cargando_serie);
             //tree2.setXMLAutoLoading("test_serie_funcionario2.php?tabla=dependencia&admin=1");
 			//tree2.loadXML("test_serie_funcionario2.php?tabla=dependencia&admin=1");
-			tree2.setXMLAutoLoading("test_dependencia_serie.php?tabla=dependencia&admin=1&estado=1&carga_partes_dependencia=1&carga_partes_serie=1");
-			tree2.loadXML("test_dependencia_serie.php?tabla=dependencia&admin=1&estado=1&carga_partes_dependencia=1&carga_partes_serie=1");
+			tree2.setXMLAutoLoading("test_dependencia_serie.php?tabla=dependencia&admin=1&carga_partes_dependencia=1&carga_partes_serie=1");
+			tree2.loadXML("test_dependencia_serie.php?tabla=dependencia&admin=1&carga_partes_dependencia=1&carga_partes_serie=1");
 			function onNodeSelect(nodeId){
+				
+			if(nodeId!=-1){	
         var datos=nodeId.split("-");
         var datos2=nodeId.split("sub");
+        var dependencia_serie='';
         if(datos[1] || datos2[1]){
             var dato=datos[1];
             if(datos2[1]){
                 dato=datos2[1];
+                dependencia_serie="&dependencia_serie="+datos2[0];
             }
-           parent.serielist.location = "serieview.php?key=" + dato; 
+            
+           if(nodeId=='3-categoria-Otras categorias'){
+           	 parent.serielist.location = "serieadd.php?otras_categorias=1"; 
+           }else{
+           	parent.serielist.location = "serieview.php?key=" + dato + dependencia_serie; 
+           }
+           
         }else{    
             var datos=nodeId.split("d");
-            parent.serielist.location = "asignarserie_entidad.php?tipo_entidad=2&llave_entidad=" + datos[1];
-        }
+            parent.serielist.location = "asignarserie_entidad.php?tipo_entidad=2&llave_entidad=" + datos[1]+'&from_dependencia=1&dependencia_serie=' + datos[1];
+            //parent.serielist.location = "serieadd.php?from_dependencia=1&dependencia_serie=" + datos[1];
             
+        }
+        }else{ //fin if -1
+        	parent.serielist.location ="vacio.php";	
+        }  
             //asignarserie_entidad.php
             
         	//notificacion_saia("Esto es una dependencia","error","",2500);
@@ -120,6 +134,11 @@ echo(librerias_notificaciones());
 				tree2.findItem(htmlentities(document.getElementById('stext_serie_idserie').value));
        }
 	--> 		
+	</script>
+	<script>
+		$(document).ready(function(){
+			$('body').attr('marginheight','15');
+		});
 	</script>
 	</body>
 </html>
