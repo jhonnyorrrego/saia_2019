@@ -46,7 +46,7 @@ echo(estilo_bootstrap());
                             '.$historial[0]['fecha_cierre'].'
                         </td> 
                         <td>
-                            '.$vector_acciones[$historial[0]['estado_cierre']].'
+                            '.$vector_acciones[intval($historial[0]['estado_cierre'])].'
                         </td>
                         <td>
                             '.$nombre_funcionario.'
