@@ -213,10 +213,15 @@ $(document).ready(function(){
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
     <!--input type='radio' name='x_categoria' value='1' id='cat1'  >
     <label for='cat1'>Comunicaciones oficiales</label-->
+    <?php if(!@$_REQUEST['otras_categorias']){ ?>	
     <input type='radio' name='x_categoria' value='2' id='cat2' checked>
     <label for='cat2'>Produccion Documental</label>
+    <?php } ?>
+    
+    <?php if(!@$_REQUEST['dependencia_serie']){ ?>
     <input type='radio' name='x_categoria' value='3' id='cat3' >
     <label for='cat3'>Otras categorias</label>
+    <?php } ?>
   </span>
     </td>
 	</tr>
@@ -245,11 +250,12 @@ $(document).ready(function(){
 	}
 	
 	$(document).ready(function(){
+		<?php if(!@$_REQUEST['dependencia_serie']){ ?>
 	    $('[name="x_tipo"]').click(function(){
 	        $('#nombre_padre_muestra').remove();
 		    filtrar_arbol_series();
 	    });
-	    
+	    <?php } ?>
 	    
 		$("#cat2").click(function(){
             $('#x_tipo1').attr('disabled',false);
@@ -276,14 +282,25 @@ $(document).ready(function(){
 				$(this).hide();
 			});
 		});
+		
+		
+
 	});
 	</script>
 	<tr class="ocultar">
-		<td class="encabezado" title="Definir el tipo de serie que se esta creando" style="text-align: left; background-color:#57B0DE; color: #ffffff;">TIPO *</td>
+		<td class="encabezado" title="Definir el tipo de serie que se esta creando" >TIPO *</td>
 		<td bgcolor="#F5F5F5">
-			<input type="radio" name="x_tipo" id="x_tipo1" value="1">Serie<br>
-			<input type="radio" name="x_tipo" id="x_tipo2" value="2">Subserie<br>
-			<input type="radio" name="x_tipo" id="x_tipo3" value="3" checked>Tipo documental<br>
+			
+			<?php if(!@$_REQUEST['dependencia_serie']){ ?>
+				<input type="radio" name="x_tipo" id="x_tipo1" value="1">Serie<br>
+			<?php } ?>
+			<?php if(@$_REQUEST['from_dependencia']){ ?>
+				<input type="radio" name="x_tipo" id="x_tipo1" value="1" checked>Serie<br>
+			<?php }else{ ?>
+				<input type="radio" name="x_tipo" id="x_tipo2" value="2">Subserie<br>
+				<input type="radio" name="x_tipo" id="x_tipo3" value="3" checked>Tipo documental<br>				
+			<?php } ?>			
+
 		</td>
 	</tr>		
 	<tr>
@@ -292,14 +309,24 @@ $(document).ready(function(){
 <input type="text" name="x_nombre" id="x_nombre" value="<?php echo htmlspecialchars(@$x_nombre) ?>">
 </span></td>
 	</tr>
+	
+		<?php if(@$_REQUEST['dependencia_serie']){ ?>
+			<input type="hidden" name="dependencia_serie" id="dependencia_serie" value="<?php echo($_REQUEST['dependencia_serie']); ?>">
+		<?php } ?>		
+	<?php if(!@$_REQUEST['from_dependencia']){ ?>
 	<tr>
 		<td class="encabezado" title="Nombre de la serie a la cual pertenece"><span class="phpmaker" style="color: #FFFFFF;">NOMBRE PADRE</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
+	
+			
 		<?php 
-
+			
 		if(@$_REQUEST['key_padre']){
 			echo('<div id="nombre_padre_muestra"><b>Padre: </b>'.$x_nombre_padre.'<br/></div>');
-		}	
+			?>
+			<input type="hidden" class="required"  name="x_cod_padre" id="x_cod_padre" value="<?php echo($_REQUEST['key_padre']); ?>">
+			<?php
+		}else{	
 		?>	
 			
 			
@@ -327,7 +354,6 @@ $(document).ready(function(){
     //tree2.setOnClickHandler(onNodeSelect);
       tree2.setOnLoadingStart(cargando_serie);
       tree2.setOnLoadingEnd(fin_cargando_serie);
-      
       //tree2.loadXML("test_serie.php?tabla=serie&admin=1&sin_padre=1&categoria=2"+filtrar_arbol);
       //tree2.loadXML("test_serie.php?tabla=serie&admin=1&arbol_series=1&categoria=2"+filtrar_arbol); documental
       //tree2.loadXML("test_serie.php?tabla=serie&admin=1&arbol_series=1&categoria=3");  3
@@ -415,9 +441,10 @@ $(document).ready(function(){
 --> 		
 	</script>
 
-
+	<?php }?>
 </span></td>
 	</tr>
+	<?php }?>
 	<tr class="ocultar">
 		<td class="encabezado" title="Cantidad de d&iacute;as para dar tr&aacute;mite y respuesta al documento"><span class="phpmaker" style="color: #FFFFFF;">TIEMPO DE RESPUESTA (D&Iacute;AS)</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
@@ -655,6 +682,14 @@ function AddData($conn)
 
 	phpmkr_query($strsql, $conn);
 	$id=phpmkr_insert_id();
+	
+	if($id && @$_REQUEST['dependencia_serie']){
+		$sql_es = "INSERT INTO entidad_serie(entidad_identidad, serie_idserie, llave_entidad, estado) VALUES (2,".$id.",".$_REQUEST['dependencia_serie'].",'1')";
+		phpmkr_query($sql_es);
+	}
+	
+	
+	
 	$insertar_serie=busca_filtro_tabla("","serie","idserie=".$id,"",$conn);
 	if($insertar_serie[0]['tipo']==1){
 				$actualizar_orden="UPDATE serie SET orden=".($insertar_serie[0]['idserie']*100000)." WHERE idserie=".$insertar_serie[0]['idserie'];
@@ -671,12 +706,19 @@ function AddData($conn)
 	phpmkr_query($actualizar_orden);
 	insertar_expediente_automatico($id);
 	return $id;
-	
 }
 ?>
 <script>
 $(document).ready(function(){
+	<?php if(!@$_REQUEST['dependencia_serie']){ ?>
 	tree2.setOnCheckHandler(cargar_datos_padre);	
+	<?php } ?>
+	
+	<?php if(@$_REQUEST['otras_categorias']){ ?>
+		setTimeout(function(){ $("#cat3").click(); }, 500);
+			
+	<?php } ?>
+	
 });
 function cargar_datos_padre(){
 		<?php 
