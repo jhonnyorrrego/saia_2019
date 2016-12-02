@@ -39,7 +39,7 @@ $service_address = $protocol .  $_SERVER["SERVER_NAME"] . $port . dirname($_SERV
 $server = new SoapServer($service_address);
 $server->addFunction("consultar_info");	// Same func name as in our WSDL XML, and below
 $server->addFunction("actualizar_estado");	// Same func name as in our WSDL XML, and below
-$server->addFunction("validar_usuario");
+$server->addFunction("verificar_login");
 $server->handle();
 
 function consultar_info($qry_data) {
@@ -50,7 +50,7 @@ function consultar_info($qry_data) {
     $user = $qry_data['usuario'];
     $pass = $qry_data['clave'];
 
-    $resp = array("status" => 0, "message" => "Error de ejecucion", $iddoc=-1);
+    $resp = array("status" => 0, "message" => "Error de ejecucion");
 
     $idfunc = validar_usuario($user, $pass);
     if($idfunc) {
@@ -58,10 +58,10 @@ function consultar_info($qry_data) {
         if($datos_dig["numcampos"]) {
             $resp = array("status" => 1, "message" => "OK", "iddoc" => $datos_dig[0]["iddocumento"], "idfunc" => $idfunc);
         } else {
-            $resp = array("status" => 0, "message" => "No se encontr&oacute; informaci&oacute; para digitalizar del usuario: $user", $iddoc=-1);
+            $resp = array("status" => 0, "message" => "No se encontr&oacute; informaci&oacute; para digitalizar del usuario: $user");
         }
     } else {
-        $resp = array("status" => 0, "message" => "Login incorrecto",$iddoc=-1);
+        $resp = array("status" => 0, "message" => "Login incorrecto");
     }
 
     return $resp;
