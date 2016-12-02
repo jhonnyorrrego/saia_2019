@@ -230,7 +230,7 @@ else
   if($cadena=="" and $funcionarios=="")
     return("");
   else       
-    return $cadena.$funcionarios;
+    return $funcionarios.$cadena;
  }
  }
 } 
