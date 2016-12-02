@@ -50,7 +50,7 @@ function consultar_info($qry_data) {
     $user = $qry_data['usuario'];
     $pass = $qry_data['clave'];
 
-    $resp = array("status" => 0, "message" => "Error de ejecucion");
+    $resp = array("status" => 0, "message" => "Error de ejecucion",$iddoc=-1);
 
     $idfunc = validar_usuario($user, $pass);
     if($idfunc) {
