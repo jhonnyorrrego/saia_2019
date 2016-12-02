@@ -71,49 +71,69 @@ switch ($sAction)
 
 <?php 
     if($x_categoria==2 && $x_tipo!=3){
+    	if(@$_REQUEST['dependencia_serie']){
+    		$dependencia_serie="&dependencia_serie=".$_REQUEST['dependencia_serie'];
+    	}
+		
         ?>
-        <a href="serieadd.php?key_padre=<?php echo(urlencode($sKey)); ?>">Adicionar</a>&nbsp;
+        <a href="serieadd.php?key_padre=<?php echo(urlencode($sKey)); ?><?php echo($dependencia_serie); ?>">Adicionar</a>&nbsp;
         <?php
     }
 ?>
-
-
-
 <a href="<?php echo "serieedit.php?key=" . urlencode($sKey); ?>">Editar</a>&nbsp;
-<a href="<?php echo "seriedelete.php?key=" . urlencode($sKey); ?>">Desactivar</a>&nbsp;
-
+<!--a href="<?php echo "seriedelete.php?key=" . urlencode($sKey); ?>">Desactivar</a-->&nbsp;
 <?php 
-    if($x_categoria==2 && ($x_tipo!=2 && $x_tipo!=3)){
+    if($x_categoria==2 ){
         ?>
         <a href="<?php echo "asignarserie_entidad.php?filtrar_serie=" . urlencode($sKey); ?>">Asignar / Quitar Series</a>&nbsp;&nbsp;
         <?php
     }
 ?>
-
-
-
 </span></p>
 <p>
 <form>
 <table border="0" cellspacing="1" cellpadding="4" bgcolor="#CCCCCC">
 	<tr>
+		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">C&Oacute;DIGO</span></td>
+		<td bgcolor="#F5F5F5"><span class="phpmaker">
+<?php echo $x_codigo; ?>
+</span></td>
+	</tr>	
+	
+	<tr>
+					<td class="encabezado" >TIPO</td>
+					<td bgcolor="#F5F5F5"><span class="phpmaker">
+			<?php
+					if($x_tipo==1){
+						echo "Serie";
+					}
+					else if($x_tipo==2){
+						echo "Subserie";
+					}
+					else if($x_tipo==3){
+						echo "Tipo documental";
+					}
+					else echo "No se ha definido";
+			?>
+					</td>
+	</tr>	
+	<!--tr>
 		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">IDENTIFICACI&Oacute;N DE LA SERIE</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
 <?php echo $x_idserie; ?>
 </span></td>
-	</tr>
+	</tr-->
 	<tr>
 	<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">NOMBRE</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
 <?php echo $x_nombre; ?>
 </span></td>
 	</tr>
-	<tr>
-		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">NOMBRE PADRE</span></td>
-		<td bgcolor="#F5F5F5"><span class="phpmaker">
+
 <?php
+$nombre_tipo=array(1=>"SERIE",2=>"SUBSERIE",3=>"TIPO DOCUMENTAL");
 if ((!is_null($x_cod_padre)) && ($x_cod_padre <> "")) {
-	$sSqlWrk = "SELECT *  FROM serie";
+	$sSqlWrk = "SELECT codigo,nombre,tipo FROM serie";
 	$sTmp = $x_cod_padre;
 	$sTmp = addslashes($sTmp);
 	$sSqlWrk .= " WHERE (idserie = " . $sTmp . ")";
@@ -129,22 +149,28 @@ if ((!is_null($x_cod_padre)) && ($x_cod_padre <> "")) {
 $ox_cod_padre = $x_cod_padre; // Backup Original Value
 $x_cod_padre = $sTmp;
 ?>
+
+	<?php 
+		$titulo_padre='NOMBRE';
+		if($rowwrk["tipo"]){
+			$titulo_padre=$nombre_tipo[$rowwrk["tipo"]];
+		}
+	?>
+	<?php 
+	if($x_cod_padre!=0){
+
+	?>
+	<tr>
+	<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;"><?php echo($titulo_padre); ?> PADRE</span></td>
+	<td bgcolor="#F5F5F5"><span class="phpmaker">
 <?php echo $x_cod_padre; ?>
 <?php $x_cod_padre = $ox_cod_padre; // Restore Original Value ?>
 </span></td>
-</tr>
-	<tr>
-		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">D&Iacute;AS DE ENTREGA BASE</span></td>
-		<td bgcolor="#F5F5F5"><span class="phpmaker">
-<?php echo $x_dias_entrega; ?>
-</span></td>
 	</tr>
-	<tr>
-		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">C&Oacute;DIGO</span></td>
-		<td bgcolor="#F5F5F5"><span class="phpmaker">
-<?php echo $x_codigo; ?>
-</span></td>
-	</tr>
+	<?php 		
+	} ?>
+
+
 	<tr>
 		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">A&Ntilde;OS ARCHIVO GESTI&Oacute;N</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
@@ -233,23 +259,7 @@ $x_seleccion = $sTmp;
 </span></td>
 	</tr>	
 	
-	<tr>
-					<td class="encabezado" style="text-align: left; background-color:#57B0DE; color: #ffffff;">TIPO</td>
-					<td bgcolor="#F5F5F5"><span class="phpmaker">
-			<?php
-					if($x_tipo==1){
-						echo "Serie";
-					}
-					else if($x_tipo==2){
-						echo "Subserie";
-					}
-					else if($x_tipo==3){
-						echo "Tipo documental";
-					}
-					else echo "No se ha definido";
-			?>
-					</td>
-				</tr>
+
 	
 	<tr>
 		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">PERMITIR COPIA</span></td>
@@ -294,6 +304,12 @@ $x_copia = $sTmp;
  elseif($x_categoria==3)
   echo "Otras categorias";  
  ?> 
+</span></td>
+	</tr>	
+	<tr>
+		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">D&Iacute;AS DE ENTREGA BASE</span></td>
+		<td bgcolor="#F5F5F5"><span class="phpmaker">
+<?php echo $x_dias_entrega; ?>
 </span></td>
 	</tr>	
 </table>
