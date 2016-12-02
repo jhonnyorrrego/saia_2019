@@ -26,7 +26,7 @@ echo(estilo_bootstrap());
                   <b>Acci&oacute;n</b>
                 </th>
                 <th width="40%" class="prettyprint">
-                  <b>Uusario</b>
+                  <b>Usuario</b>
                 </th> 
                 <th width="40%" class="prettyprint">
                   <b>Observacion</b>
