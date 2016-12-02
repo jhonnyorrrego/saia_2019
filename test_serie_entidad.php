@@ -65,12 +65,7 @@ elseif($tabla=="serie")
        llena_serie($id," and categoria=1 ");
    echo "</item>\n";
               break;
-       case 2:
-		   $nocheck='';
-		   if(@$_REQUEST['solo_series']){
-		   	$nocheck="nocheckbox=\"1\"";
-		   }
-       	echo  "<item style=\"font-family:verdana; font-size:7pt;\" text=\"Produccion Documental\" id=\"2-categoria-Produccion Documental\" ".$nocheck.">\n"; 
+       case 2:echo  "<item style=\"font-family:verdana; font-size:7pt;\" text=\"Produccion Documental\" id=\"2-categoria-Produccion Documental\" >\n"; 
        llena_serie($id," and categoria=2 ");
    echo "</item>\n";
               break;
@@ -85,7 +80,6 @@ elseif($tabla=="serie")
    echo  "<item style=\"font-family:verdana; font-size:7pt;\" text=\"Comunicaciones Oficiales\" id=\"1-categoria-Comunicaciones Oficiales\"  >\n"; 
        llena_serie($id," and categoria=1 ");
    echo "</item>\n";
-   
    echo  "<item style=\"font-family:verdana; font-size:7pt;\" text=\"Produccion Documental\" id=\"2-categoria-Produccion Documental\" >\n"; 
        llena_serie($id," and categoria=2 ");
    echo "</item>\n";
@@ -117,20 +111,11 @@ if($papas["numcampos"])
     echo("text=\"".htmlspecialchars(($papas[$i]["nombre"]))."(".$papas[$i]["codigo"].") \" id=\"".$papas[$i]["id$tabla"]."\"");
     if(in_array($papas[$i]["id$tabla"],$seleccionado)!==false)
       echo " checked=\"1\" ";  
-	
-	if(!@$_REQUEST['solo_series']){
-	    if($hijos[0][0])
-	      echo(" child=\"1\">\n");
-	    else
-	      echo(" child=\"0\">\n");
-	    llena_serie($papas[$i]["id$tabla"]);		
-	}else{
-		echo(" child=\"0\">\n");
-	}
-	
-
-	
-	
+    if($hijos[0][0])
+      echo(" child=\"1\">\n");
+    else
+      echo(" child=\"0\">\n");
+    llena_serie($papas[$i]["id$tabla"]);
     echo("</item>\n");
   }     
 }
