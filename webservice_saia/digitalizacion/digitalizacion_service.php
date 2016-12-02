@@ -93,6 +93,7 @@ function verificar_login($qry_data) {
     $pass = $qry_data['clave'];
 
     $resp = array("status" => 0, "message" => "Usuario o contraseña incorrectos");
+    return $resp;
 
     $idfunc = validar_usuario($user, $pass);
     if($idfunc) {
