@@ -39,6 +39,7 @@ $service_address = $protocol .  $_SERVER["SERVER_NAME"] . $port . dirname($_SERV
 $server = new SoapServer($service_address);
 $server->addFunction("consultar_info");	// Same func name as in our WSDL XML, and below
 $server->addFunction("actualizar_estado");	// Same func name as in our WSDL XML, and below
+$server->addFunction("validar_usuario");
 $server->handle();
 
 function consultar_info($qry_data) {
