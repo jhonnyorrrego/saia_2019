@@ -32,6 +32,32 @@ echo(estilo_bootstrap());
                   <b>Observaci&oacute;n</b>
                 </th>
             </tr>
+
+            <?php 
+            $idexpediente=@$_REQUEST['idexpediente'];
+            $historial=busca_filtro_tabla("","expediente_abce","expediente_idexpediente=".$idexpediente,"",$conn);
+            for($i=0;$i<$historial['numcampos'];$i++){
+                $cadena='
+                    <tr>
+                        <td>
+                        
+                        </td> 
+                        <td>
+                          
+                        </td>
+                        <td>
+                        
+                        </td> 
+                        <th>
+                        
+                        </td>
+                    </tr>       
+                ';
+                echo($cadena);
+            }
+            
+            ?>
+
             
         </table>
     </body>
