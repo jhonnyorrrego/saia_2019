@@ -202,7 +202,7 @@ $expediente=busca_filtro_tabla("a.*,".fecha_db_obtener("a.fecha","Y-m-d")." AS f
 	    $enlace_abrir='';
 	}
 	
-	$vector_abrir_cerrar=array(1=>'abrir',2=>'cerrar');
+	$vector_abrir_cerrar=array(2=>'abrir',1=>'cerrar');
 	$enlace_cerrar='<a style="cursor:pointer" class="accion_abrir_cierre" accion="2">Cerrar</a>';
 	$observaciones_abrir_cerrar='
 	    <td style="text-align:center" colspan="2">
