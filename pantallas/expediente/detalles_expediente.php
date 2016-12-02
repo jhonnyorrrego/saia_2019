@@ -203,18 +203,17 @@ $expediente=busca_filtro_tabla("a.*,".fecha_db_obtener("a.fecha","Y-m-d")." AS f
 	}
 	
 	$enlace_cerrar='<a style="cursor:pointer" class="accion_abrir_cierre" accion="2">Cerrar</a>';
-	$observaciones_abrir_cerrar='';
+	$observaciones_abrir_cerrar='
+	    <td style="text-align:center" colspan="2">
+            <textarea id="observaciones_abrir_cerrar" placeholder="Observaci&oacute;n para abrir expediente..."></textarea>
+		</td>
+	';
 	if($expediente[0]["estado_cierre"]==1){
 		$estado_cierre="Abierto";
 		$enlace_abrir='';
 	}else if($expediente[0]["estado_cierre"]==2){
 		$estado_cierre="Cerrado";
 		$enlace_cerrar='';
-		$observaciones_abrir_cerrar='
-		       <td style="text-align:center" colspan="2">
-		           <textarea id="observaciones_abrir_cerrar" placeholder="Observaci&oacute;n para abrir expediente..."></textarea>
-		       </td>
-		';
 	}
 	
 	$cadena_cierre[]="<b>Estado:</b> ".$estado_cierre;
