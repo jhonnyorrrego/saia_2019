@@ -138,7 +138,7 @@ return true;
 
 //-->
 </script>
-<p><span class="internos"><img class="imagen_internos" src="botones/configuracion/serie.png" border="0">&nbsp;&nbsp;EDITAR SERIES DOCUMENTALES<br><br><!--a href="serielistdep.php">Regresar al listado</a--></span>
+<p><span class="internos"><br/><!--img class="imagen_internos" src="botones/configuracion/serie.png" border="0" -->&nbsp;&nbsp;EDITAR SERIES DOCUMENTALES<br><br><!--a href="serielistdep.php">Regresar al listado</a--></span>
 <form name="serieedit" id="serieedit" action="serieedit.php" method="post" onSubmit="return EW_checkMyForm(this);">
 </p>
 <input type="hidden" name="a_edit" value="U">
@@ -165,7 +165,7 @@ return true;
 	</tr>
 	<script>
 	$(document).ready(function(){
-		/*$("#cat2").click(function(){
+/*		$("#cat2").click(function(){
 			$(".ocultar").each(function(){
 				$(this).show();
 			});
@@ -179,8 +179,6 @@ return true;
 		<?php if($x_categoria==3){ ?>
 			$("#cat3").click();
 		<?php } ?>
-		
-		
 	});
 	</script>
 	<script>
@@ -250,9 +248,9 @@ return true;
 		});
 	});
 	</script>	
-	
+			
 	<tr class="ocultar">
-		<td class="encabezado"  title="Definir el tipo de serie que se esta creando" style="text-align: left; background-color:#57B0DE; color: #ffffff;">TIPO *</td>
+		<td class="encabezado"  title="Definir el tipo de serie que se esta creando" >TIPO *</td>
 		<td bgcolor="#F5F5F5">
 			<input type="radio" name="x_tipo"<?php if(@$x_tipo=="1")echo " checked"; ?> value="1">Serie<br>
 			<input type="radio" name="x_tipo"<?php if(@$x_tipo=="2")echo " checked"; ?> value="2">Subserie<br>
@@ -277,9 +275,9 @@ return true;
 	<link rel="STYLESHEET" type="text/css" href="css/dhtmlXTree.css">
 
 			
-		<br />  Buscar: <input type="text" id="stext_serie_idserie" width="200px" size="25"><a href="javascript:void(0)" onclick="tree2.findItem(htmlentities(document.getElementById('stext_serie_idserie').value),1)"> <img src="botones/general/anterior.png" alt="Buscar Anterior" border="0px"></a><a href="javascript:void(0)" onclick="buscar_nodo();"> <img src="botones/general/buscar.png" alt="Buscar" border="0px"></a>
+		<br />  <!--Buscar: <input type="text" id="stext_serie_idserie" width="200px" size="25"><a href="javascript:void(0)" onclick="tree2.findItem(htmlentities(document.getElementById('stext_serie_idserie').value),1)"> <img src="botones/general/anterior.png" alt="Buscar Anterior" border="0px"></a><a href="javascript:void(0)" onclick="buscar_nodo();"> <img src="botones/general/buscar.png" alt="Buscar" border="0px"></a>
                           <a href="javascript:void(0)" onclick="tree2.findItem(htmlentities(document.getElementById('stext_serie_idserie').value))" id="siguiente_nodo"><img src="botones/general/siguiente.png" alt="Buscar Siguiente" border="0px"></a>
-                          </span>
+                          </span-->
 			  <div id="esperando_serie"><img src="imagenes/cargando.gif"></div>
 				<div id="treeboxbox_tree2" width="100px" height="100px"></div>
 				<input type="hidden" class="required"  name="x_cod_padre" id="x_cod_padre" value="<?php echo $x_cod_padre; ?>">
@@ -301,11 +299,11 @@ return true;
     //tree2.setOnClickHandler(onNodeSelect);
       tree2.setOnLoadingStart(cargando_serie);
       tree2.setOnLoadingEnd(fin_cargando_serie);
-     
-     
-     /* tree2.setXMLAutoLoading("test_serie.php?tabla=serie&admin=1&arbol_series=1");
-      tree2.loadXML("test_serie.php?tabla=serie&admin=1&arbol_series=1");*/
       
+      
+      /*tree2.setXMLAutoLoading("test_serie.php?tabla=serie&admin=1&arbol_series=1");
+      tree2.loadXML("test_serie.php?tabla=serie&admin=1&arbol_series=1");*/
+     
        var filtrar_arbol='&categoria=2&filtrar_arbol=documental';
       <?php if($x_categoria==3){
           ?>
@@ -313,10 +311,10 @@ return true;
           <?php
       } ?>
       
-     
+    
       tree2.setXMLAutoLoading("test_serie.php?tabla=serie&admin=1&arbol_series=1&solo_series=1"+filtrar_arbol);
       tree2.loadXML("test_serie.php?tabla=serie&admin=1&arbol_series=1"+filtrar_arbol);
-      
+           
       
 	  tree2.setOnCheckHandler(onNodeSelect_tree2);
 	  
