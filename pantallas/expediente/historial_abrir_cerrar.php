@@ -18,7 +18,8 @@ echo(estilo_bootstrap());
         <title>Historial de Apertura y Cierre de Expedientes</title>
     </head>
     <body>
-        <legend>Historial</legend>
+        <legend>Historial de Apertura y Cierre de Expedientes </legend>
+        <br>
         <table class="table table-bordered">
             <tr>
                 <th class="prettyprint">
