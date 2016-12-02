@@ -33,7 +33,23 @@ echo(estilo_bootstrap());
                 <td>
                 
                 </td>
-            </tr>        
+            </tr>  
+            <tr>
+                <td width="40%" class="prettyprint">
+                  <b>Uusario:</b>
+                </td> 
+                <td>
+                
+                </td>
+            </tr>     
+            <tr>
+                <td width="40%" class="prettyprint">
+                  <b>Observacion:</b>
+                </td> 
+                <td>
+                
+                </td>
+            </tr>             
         </table>
     </body>
 </html>
