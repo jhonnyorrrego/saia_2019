@@ -87,7 +87,7 @@ function actualizar_estado($qry_data){
 function verificar_login($qry_data) {
     global $conn;
 
-    $resp = array("status" => 0, "message" => "Usuario o contraseña incorrectos");
+    $resp = array("status" => 0, "message" => "Error de ejecucion");
 
     $qry_data = get_object_vars($qry_data); // Pull parameters from SOAP connection
 
