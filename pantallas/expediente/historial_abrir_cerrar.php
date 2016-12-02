@@ -34,5 +34,10 @@ echo(estilo_bootstrap());
             </tr>
             
         </table>
+        <style>
+            tr th{
+                text-align:center;
+            }
+        </style>
     </body>
 </html>
