@@ -34,7 +34,7 @@ function valores_entidad(identidad)
      }       
   }
 $.ajax({url: "arbol_serie_entidad.php" ,
-       data:"entidad=serie<?php if(@$_REQUEST['filtrar_serie']){ echo '&filtrar_serie='.$_REQUEST['filtrar_serie']; } if(@$_REQUEST['filtrar_categoria']){ echo '&filtrar_categoria='.$_REQUEST['filtrar_categoria']; } if(@$_REQUEST['tipo_entidad']){ echo '&tipo_entidad='.$_REQUEST['tipo_entidad'] ; } if(@$_REQUEST['llave_entidad']){ echo '&llave_entidad='.$_REQUEST['llave_entidad']; } ?>&filtrar_categoria=2&solo_series=1",
+       data:"entidad=serie<?php if(@$_REQUEST['filtrar_serie']) echo '&filtrar_serie='.$_REQUEST['filtrar_serie'];  if(@$_REQUEST['filtrar_categoria']) echo '&filtrar_categoria='.$_REQUEST['filtrar_categoria']; if(@$_REQUEST['tipo_entidad']) echo '&tipo_entidad='.$_REQUEST['tipo_entidad'] ; if(@$_REQUEST['llave_entidad']) echo '&llave_entidad='.$_REQUEST['llave_entidad'];?>",
        type: "POST",
        success: function(msg){
        $("#divserie").html(msg);
@@ -55,15 +55,8 @@ function ninguno_check(elemento,campo)
 } 
 //-->
 </script>
- <p><span class="internos"><!--img class="imagen_internos" src="botones/configuracion/serie.png" border="0"-->&nbsp;&nbsp;ASIGNAR O QUITAR SERIE/CATEGORIA<br><br />
+ <p><span class="internos"><img class="imagen_internos" src="botones/configuracion/serie.png" border="0">&nbsp;&nbsp;ASIGNAR O QUITAR SERIE/CATEGORIA<br><br />
 </span></p>
-<?php 
-	$parametros_dependencia='';
-	if(@$_REQUEST['from_dependencia']){
-		$parametros_dependencia='?from_dependencia='.$_REQUEST['from_dependencia'].'&dependencia_serie='.$_REQUEST['dependencia_serie'];
-	} 
-?>
-<a href='serieadd.php<?php echo($parametros_dependencia); ?>' target='serielist'>Adicionar Nueva Serie</a>
 <form name="asignarserie_entidad" id="asignarserie_entidad" action="asignarserie.php" method="post" >
 <?php
 if(@$_REQUEST["origen"])
@@ -85,31 +78,7 @@ if(@$_REQUEST["pantalla"])
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
     <div id="divserie"></div>        
 </td>
-</tr>
-<?php 
-	if(@$_REQUEST['from_dependencia']){ 
-	 ?>
-	 <input type="hidden" name="from_dependencia" id="from_dependencia" value="1">
-	  <input type="hidden" name="dependencia_serie" id="dependencia_serie" value="<?php echo(@$_REQUEST['dependencia_serie']); ?>">
-	 	<input type="hidden" name="tipo_entidad" id="tipo_entidad" value="2">
-
-	 	<input type="hidden" class="required" name="entidad_identidad" id="entidad_identidad" value="<?php echo(@$_REQUEST['dependencia_serie']); ?>">
-	 	
-	 	
-		<tr>
-		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">ACCION*</span></td>
-		<td bgcolor="#F5F5F5"><span class="phpmaker">
-		 <input type='radio' name='opcion' value='1' checked >Adicionar&nbsp;&nbsp;
-		 <input type='radio' name='opcion' value='0'>Quitar
-		</td>
-		</tr>	 	
-	 <?php
-	}else{
-		
-
-?>
-	
-		
+</tr>	
 <tr>
 		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">TIPO DE ENTIDAD*</span></td>
 <td bgcolor="#F5F5F5"><span class="phpmaker">
@@ -146,8 +115,7 @@ echo $select_entidad;
  <input type='radio' name='opcion' value='1' checked >Adicionar&nbsp;&nbsp;
  <input type='radio' name='opcion' value='0'>Quitar
 </td>
-</tr>
-<?php } ?>		
+</tr>		
 </table>
 <p>
 <input type="submit" name="Action" value="CONTINUAR">
