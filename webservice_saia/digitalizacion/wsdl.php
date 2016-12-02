@@ -59,7 +59,8 @@ $functions[] = array(
                 ),
                 array(
                         "name" => "iddoc",
-                        "type" => "int"
+                        "type" => "int",
+                        "nillable"="true"
                 ),
                 array(
                         "name" => "idfunc",
