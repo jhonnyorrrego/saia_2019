@@ -125,7 +125,8 @@ $functions[] = array(
                 ),
                 array(
                         "name" => "idfunc",
-                        "type" => "int"
+                        "type" => "int",
+                        "nillable" => "true"
                 )
         ),
         "soapAddress" => $soap_address
