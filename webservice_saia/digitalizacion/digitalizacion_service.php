@@ -58,7 +58,7 @@ function consultar_info($qry_data) {
         if($datos_dig["numcampos"]) {
             $resp = array("status" => 1, "message" => "OK", "iddoc" => $datos_dig[0]["iddocumento"], "idfunc" => $idfunc);
         } else {
-            $resp = array("status" => 0, "message" => "No se encontr&oacute; informaci&oacute; para digitalizar del usuario: $user");
+            $resp = array("status" => 0, "message" => "No se encontr&oacute; informaci&oacute; para digitalizar del usuario: $user", $iddoc=-1);
         }
     } else {
         $resp = array("status" => 0, "message" => "Login incorrecto");
