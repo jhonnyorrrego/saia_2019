@@ -18,14 +18,22 @@ echo(estilo_bootstrap());
     </head>
     <body>
         <table class="table table-bordered">
-          <tr>
-            <td width="40%" class="prettyprint">
-              <b>Nombre del <?php echo($etiqueta_expediente); ?>:</b>
-            </td> 
-            <td>
+            <tr>
+                <td width="40%" class="prettyprint">
+                  <b>Fecha:</b>
+                </td> 
+                <td>
                 
-            </td>
-        </tr>
+                </td>
+            </tr>
+            <tr>
+                <td width="40%" class="prettyprint">
+                  <b>Acci&oacute;n:</b>
+                </td> 
+                <td>
+                
+                </td>
+            </tr>        
         </table>
     </body>
 </html>
