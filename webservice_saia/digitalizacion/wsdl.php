@@ -256,7 +256,11 @@ function DisplayXML($xmlformat = true) {
             $str .= $t2 . '<s:element name="' . $functions[$i]['funcName'] . 'Response">' . "\n";
             $str .= $t3 . '<s:complexType><s:sequence>' . "\n";
             for($j = 0; $j < count($functions[$i]['outputParams']); $j++) {
-                $str .= $t4 . '<s:element minOccurs="1" maxOccurs="1" ';
+                if(array_key_exists ( 'nillable' , $functions[$i]['outputParams'][$j] )){
+                    $str .= $t4 . '<s:element nillable="'. $functions[$i]['outputParams'][$j]['name'] . '" ';
+                } else {
+                    $str .= $t4 . '<s:element minOccurs="1" maxOccurs="1" ';
+                }
                 $str .= 'name="' . $functions[$i]['outputParams'][$j]['name'] . '" ';
                 $str .= 'type="s:' . $functions[$i]['outputParams'][$j]['type'] . '" />' . "\n";
             }
