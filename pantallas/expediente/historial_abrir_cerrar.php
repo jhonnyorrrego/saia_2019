@@ -12,6 +12,7 @@ include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."librerias_saia.php");
 echo(estilo_bootstrap()); 
 ?>
+<!DOCTYPE html>
 <html>
     <head>
         <title>Historial de Apertura y Cierre de Expedientes</title>
