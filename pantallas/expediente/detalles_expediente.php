@@ -343,10 +343,10 @@ if($expediente[0]["estado_cierre"]==2){  //si esta cerrado
   	    $('.obligatorio_observaciones_expediente').remove();
   	    var ejecutar_ajax=1;
   	    var x_accion=$(this).attr("accion");
-  	    
+  	    var observaciones='';
+  	    observaciones=$('#observaciones_abrir_cerrar').val();
   	    if(x_accion==1){
-  	        var observaciones='';
-  	        observaciones=$('#observaciones_abrir_cerrar').val();
+  	        
       	    if(observaciones==''){
       	        ejecutar_ajax=0;
       	        $('#observaciones_abrir_cerrar').after("<span class='obligatorio_observaciones_expediente' style='color:red;'><br>Debe ingresar la observaci&oacute;n</span>");
