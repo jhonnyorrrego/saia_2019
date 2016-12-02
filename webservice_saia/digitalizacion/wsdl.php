@@ -99,8 +99,35 @@ $functions[] = array(
         "soapAddress" => $soap_address
 );
 
-
-
+$functions[] = array(
+        "funcName" => "validar_usuario",
+        "doc" => "Veficar informacion del usuario.",
+        "inputParams" => array(
+                array(
+                        "name" => "usuario",
+                        "type" => "string"
+                ),
+                array(
+                        "name" => "clave",
+                        "type" => "string"
+                )
+        ),
+        "outputParams" => array(
+                array(
+                        "name" => "status",
+                        "type" => "int"
+                ),
+                array(
+                        "name" => "message",
+                        "type" => "string"
+                ),
+                array(
+                        "name" => "idfunc",
+                        "type" => "int"
+                )
+        ),
+        "soapAddress" => $soap_address
+);
 // ----------------------------------------------------------------------------
 // END OF PARAMETERS SET UP
 // ----------------------------------------------------------------------------
