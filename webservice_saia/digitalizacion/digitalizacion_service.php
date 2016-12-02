@@ -83,12 +83,28 @@ function actualizar_estado($qry_data){
     return $resp;
 }
 
+function verificar_login($qry_data) {
+    global $conn;
+    $qry_data = get_object_vars($qry_data); // Pull parameters from SOAP connection
+
+    // Sort out the parameters and grab their data
+    $user = $qry_data['usuario'];
+    $pass = $qry_data['clave'];
+
+    $resp = array("status" => 0, "message" => "Usuario o contraseña incorrectos");
+
+    $idfunc = validar_usuario($user, $pass);
+    if($idfunc) {
+        $resp = array("status" => 1, "message" => "OK", "idfunc" => $idfunc);
+    }
+
+    return $resp;
+}
+
 function validar_usuario($user, $pass) {
     global $conn,$ruta_db_superior;
     
-		//$nombre_archivo="temporal_".$_SESSION["LOGIN"]."/".$iddoc;
 	$ch = curl_init();
-		    //$fila = "http://".RUTA_PDF_LOCAL."/class_impresion.php?iddoc=".$iddoc."&LOGIN=".$_SESSION["LOGIN".LLAVE_SAIA]."&conexion_remota=1&usuario_actual=".$_SESSION["usuario_actual"]."&LLAVE_SAIA=".LLAVE_SAIA;
 	$fila = PROTOCOLO_CONEXION.RUTA_PDF_LOCAL."/verificar_login.php?conexion_remota=1&conexio_usuario=".$_SESSION["LOGIN".LLAVE_SAIA]."&usuario_actual=".$_SESSION["usuario_actual"]."&LOGIN=".$_SESSION["LOGIN".LLAVE_SAIA]."&LLAVE_SAIA=".LLAVE_SAIA."&userid=".$user."&passwd=".$pass;
 	curl_setopt($ch, CURLOPT_URL,$fila);
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
