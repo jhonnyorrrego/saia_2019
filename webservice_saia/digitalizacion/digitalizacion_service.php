@@ -61,7 +61,7 @@ function consultar_info($qry_data) {
             $resp = array("status" => 0, "message" => "No se encontr&oacute; informaci&oacute; para digitalizar del usuario: $user", $iddoc=-1);
         }
     } else {
-        $resp = array("status" => 0, "message" => "Login incorrecto");
+        $resp = array("status" => 0, "message" => "Login incorrecto",$iddoc=-1);
     }
 
     return $resp;
