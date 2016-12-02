@@ -235,7 +235,7 @@ $expediente=busca_filtro_tabla("a.*,".fecha_db_obtener("a.fecha","Y-m-d")." AS f
     			    <br>
     			    <br>
                       <button class='btn btn-mini btn-default '>
-  		                <i class='icon-globe historial_abrir_cerrar' title='Ver Historial de Cambio'></i>
+  		                <i class='icon-info historial_abrir_cerrar' title='Ver Historial de Cambio'></i>
   		              </button>    	
               		    <script>
               		        $(document).ready(function(){
