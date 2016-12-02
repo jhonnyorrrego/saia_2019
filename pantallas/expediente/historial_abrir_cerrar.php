@@ -16,13 +16,7 @@ echo(estilo_bootstrap());
     <head>
         <title>Historial de Apertura y Cierre de Expedientes</title>
     </head>
-    
     <body>
-        <style>
-            tr th{
-                text-align:center;
-            }
-        </style>
         <table class="table table-bordered">
             <tr>
                 <th class="prettyprint">
@@ -40,6 +34,5 @@ echo(estilo_bootstrap());
             </tr>
             
         </table>
-
     </body>
 </html>
