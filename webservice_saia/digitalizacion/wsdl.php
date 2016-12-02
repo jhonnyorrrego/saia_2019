@@ -102,7 +102,7 @@ $functions[] = array(
 );
 
 $functions[] = array(
-        "funcName" => "validar_usuario",
+        "funcName" => "verificar_login",
         "doc" => "Veficar informacion del usuario.",
         "inputParams" => array(
                 array(
