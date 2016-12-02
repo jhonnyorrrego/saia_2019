@@ -98,7 +98,7 @@ if(@$_REQUEST['carga_partes_serie']){
         if(strpos($id,'sub')!==false && $mostrar_nodos['dsa']){
             echo("<tree id=\"".$id."\">\n");
                 $ids=explode('sub',$id);
-                //print_r($ids);
+                
                 llena_subseries_tipo_documental($ids[0],$ids[1]);            
             echo("</tree>\n");
             die();            
@@ -197,7 +197,7 @@ if($papas["numcampos"]){
     }    
 
     
-    echo("<item style=\"font-family:verdana; font-size:7pt;font-weight: 900;\" ");
+    echo("<item style=\"font-family:verdana; font-size:7pt;color:blue;\" ");
     $cadena_codigo='';
     if(@$papas[$i]["codigo"]){
       $cadena_codigo="(".$papas[$i]["codigo"].")";
@@ -295,16 +295,15 @@ function llena_entidad_serie($iddependencia,$series){
     global $conn,$activo;
     
     $condicion_final="categoria=2 AND tipo=1 AND idserie IN(".$series.")";
-	$condicion_subseries_tipo_documental=" AND idserie IN(".$series.")";
     $series=busca_filtro_tabla("nombre,idserie,codigo","serie",$condicion_final.$activo,"",$conn);
     for($i=0;$i<$series['numcampos'];$i++){
-        echo("<item style=\"font-family:verdana; font-size:7pt;font-weight: normal;\" ");
+        echo("<item style=\"font-family:verdana; font-size:7pt;\" ");
         echo("text=\"".htmlspecialchars(($series[$i]["nombre"])).' ('.$series[$i]['codigo'].') '." \" id=\"".$iddependencia."sub".$series[$i]['idserie']."\"");
         if(@$_REQUEST['sin_padre']){
             echo(" nocheckbox=\"1\" ");	
         }
         
-        $subseries_tipo_documental=busca_filtro_tabla("idserie","serie","categoria=2 AND tipo IN(2,3) AND cod_padre=".$series[$i]['idserie'].$activo.$condicion_subseries_tipo_documental,"",$conn);
+        $subseries_tipo_documental=busca_filtro_tabla("idserie","serie","categoria=2 AND tipo IN(2,3) AND cod_padre=".$series[$i]['idserie'].$activo,"",$conn);
         //print_r($subseries_tipo_documental);
         if($subseries_tipo_documental['numcampos']){
             echo(" child=\"1\">\n");
@@ -326,20 +325,16 @@ function llena_entidad_serie($iddependencia,$series){
 function llena_subseries_tipo_documental($iddependencia,$idserie){
     global $conn,$seleccionado,$activo,$excluidos;
 
-	$hijos_entidad_serie = busca_filtro_tabla("serie_idserie","entidad_serie","estado=1 AND entidad_identidad='2' AND llave_entidad=".$iddependencia,"",$conn);
-    $lista_entidad_series_filtrar='';    
-    if($hijos_entidad_serie['numcampos']){
-        $lista_entidad_series_filtrar=" AND idserie IN(".implode(',',extrae_campo($hijos_entidad_serie,'serie_idserie')).")";
-    }
+
     
     $tabla_otra = 'serie';
     $orden="nombre";
 
-    $papas=busca_filtro_tabla("*",$tabla_otra,"cod_padre=".$idserie.$activo.$lista_entidad_series_filtrar,"$orden ASC",$conn); 
+    $papas=busca_filtro_tabla("*",$tabla_otra,"cod_padre=".$idserie.$activo,"$orden ASC",$conn); 
     //print_r($papas);
     if($papas["numcampos"]){ 
         for($i=0; $i<$papas["numcampos"]; $i++){
-            $hijos = busca_filtro_tabla("count(*) AS cant",$tabla_otra,"cod_padre=".$papas[$i]["id$tabla_otra"].$activo.$lista_entidad_series_filtrar,"",$conn);
+            $hijos = busca_filtro_tabla("count(*) AS cant",$tabla_otra,"cod_padre=".$papas[$i]["id$tabla_otra"].$activo,"",$conn);
             echo("<item style=\"font-family:verdana; font-size:7pt;\" ");
 		    if($tabla=="serie"){
 			    if(@$papas[$i]["estado"]==1){
@@ -375,8 +370,8 @@ function llena_subseries_tipo_documental($iddependencia,$idserie){
 //SERIES SIN ASIGNAR (ssa)
 function series_sin_asignar(){
 	global $conn;
-	//$series=busca_filtro_tabla("","serie a left join entidad_serie b ON a.idserie=b.serie_idserie AND b.entidad_identidad =2","b.serie_idserie IS NULL AND a.categoria=2 AND a.estado=1 AND a.tipo=1","nombre asc",$conn);
-	$series=busca_filtro_tabla("","serie a left join entidad_serie b ON a.idserie=b.serie_idserie AND b.entidad_identidad =2","b.serie_idserie IS NULL AND a.categoria=2 AND a.estado=1","nombre asc",$conn);
+	$series=busca_filtro_tabla("","serie a left join entidad_serie b ON a.idserie=b.serie_idserie AND b.entidad_identidad =2","b.serie_idserie IS NULL AND a.categoria=2 AND a.estado=1 AND a.tipo=1","nombre asc",$conn);
+
 	for($i=0;$i<$series["numcampos"];$i++){
 		echo("<item style=\"font-family:verdana; font-size:7pt;\" text=\"".htmlspecialchars($series[$i]["nombre"])."(".$series[$i]["codigo"].")\" id=\"d"."-".$series[$i]["idserie"]."\" child=\"0\">\n");
 		echo("</item>\n");
