@@ -88,7 +88,6 @@ function verificar_login($qry_data) {
     global $conn;
 
     $resp = array("status" => 0, "message" => "Usuario o contraseña incorrectos");
-    return $resp;
 
     $qry_data = get_object_vars($qry_data); // Pull parameters from SOAP connection
 
