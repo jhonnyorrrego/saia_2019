@@ -32,7 +32,6 @@ echo(estilo_bootstrap());
                   <b>Observaci&oacute;n</b>
                 </th>
             </tr>
-
             <?php 
             $idexpediente=@$_REQUEST['idexpediente'];
             $historial=busca_filtro_tabla("","expediente_abce","expediente_idexpediente=".$idexpediente,"idexpediente_abce DESC",$conn);
