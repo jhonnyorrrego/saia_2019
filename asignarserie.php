@@ -56,6 +56,7 @@ $ruta="asignarserie_entidad.php";
 ?>
 <script>
 notificacion_saia('Asignacion realizada','success','',4000);
+parent.location.reload();
 </script>
 <?php
 
@@ -65,6 +66,11 @@ if(@$_REQUEST["origen"])
   $ruta.="&origen=".$_REQUEST["origen"];
 if(@$_REQUEST["filtrar_categoria"])
   $ruta.="?filtrar_categoria=".$_REQUEST["filtrar_categoria"]; 
+if(@$_REQUEST['from_dependencia']){
+	$ruta.="&from_dependencia=".$_REQUEST["from_dependencia"]."&dependencia_serie=".$_REQUEST["dependencia_serie"]; 
+}
+
+
 if(@$_REQUEST["filtrar_serie"]){
   $ruta.="?filtrar_serie=".$_REQUEST["filtrar_serie"];
   abrir_url("arbolserie.php","arbol");
@@ -93,6 +99,13 @@ function insertar_permiso($idserie,$tipo_entidad,$entidad)
 		asignar_expediente($idexp,$tipo_entidad, $entidad);
 		
  $conn->Ejecutar_Sql($sqlInsert);  
+ 
+ $serie_actual=busca_filtro_tabla("cod_padre","serie","idserie=".$idserie,"",$conn);
+ if(!is_null($serie_actual[0]['cod_padre']) && $serie_actual[0]['cod_padre']!=''){
+ 	insertar_permiso($serie_actual[0]['cod_padre'],$tipo_entidad,$entidad);
+ }
+ 		
+ 
 }
 function obtener_idexpediente($idserie,$indice=1){
 	$indice++;
