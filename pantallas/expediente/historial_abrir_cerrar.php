@@ -52,7 +52,7 @@ echo(estilo_bootstrap());
                         <td>
                             '.$nombre_funcionario.'
                         </td> 
-                        <th>
+                        <td>
                             '.$historial[$i]['observaciones'].'
                         </td>
                     </tr>       
