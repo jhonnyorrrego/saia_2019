@@ -36,29 +36,29 @@ echo(estilo_bootstrap());
             <?php 
             $idexpediente=@$_REQUEST['idexpediente'];
             $historial=busca_filtro_tabla("","expediente_abce","expediente_idexpediente=".$idexpediente,"idexpediente_abce DESC",$conn);
+            $fun=busca_filtro_tabla("nombres,apellidos","funcionario","idfuncionario=".$historial[0]['funcionario_cierre'],"",$conn);
+            $nombre_funcionario=ucwords($fun[0]['nombres'].' '.$fun[0]['apellidos']);
+            $vector_acciones=array(1=>'Abierto',2=>'Cerrado');
             for($i=0;$i<$historial['numcampos'];$i++){
                 $cadena='
                     <tr>
                         <td>
-                        
+                            '.$historial[0]['fecha_cierre'].'
                         </td> 
                         <td>
-                          
+                            '.$vector_acciones[$historial[0]['estado_cierre']].'
                         </td>
                         <td>
-                        
+                            '.$nombre_funcionario.'
                         </td> 
                         <th>
-                        
+                            '.$historial[0]['observaciones'].'
                         </td>
                     </tr>       
                 ';
                 echo($cadena);
             }
-            
-            ?>
-
-            
+            ?>  
         </table>
     </body>
 </html>
