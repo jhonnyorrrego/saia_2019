@@ -19,16 +19,16 @@ echo(estilo_bootstrap());
     <body>
         <table class="table table-bordered">
             <tr>
-                <th  class="prettyprint">
+                <th class="prettyprint">
                   <b>Fecha</b>
                 </th> 
-                <th  class="prettyprint">
+                <th class="prettyprint">
                   <b>Acci&oacute;n</b>
                 </th>
-                <th  class="prettyprint">
+                <th class="prettyprint">
                   <b>Usuario</b>
                 </th> 
-                <th  class="prettyprint">
+                <th class="prettyprint">
                   <b>Observaci&oacute;n</b>
                 </th>
             </tr>
