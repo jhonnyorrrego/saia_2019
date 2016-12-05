@@ -150,6 +150,7 @@ function listar_hallazgo_informe($idformato, $iddoc, $condicion = "") {
 <td style="font-size: 8pt; width: 18%;" align="center" >LOGROS ALCANZADOS</td>
 <td style="font-size: 8pt; width: 7%;">PORCENTAJE DE CUMPLIMIENTO</td>
 <td style="font-size: 8pt; width: 10%;" align="center">OBSERVACIONES</td>
+</tr>
 </thead><tbody>';
 			$ingresa = 0;
 			for ($i = 0, $j = 1; $i < $hallazgos["numcampos"]; $i++) {
