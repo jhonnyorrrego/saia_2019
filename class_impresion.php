@@ -352,7 +352,7 @@ class Imprime_Pdf {
     	
     		}
 		}
-		print_r($direccion);die();
+		//print_r($direccion);die();
 		foreach($direccion as $fila) {
 			
 			$fila .= "&font_size=" . $this->font_size;
@@ -373,7 +373,7 @@ class Imprime_Pdf {
 			
 		    
 	
-		print_r('inicio---->'.$contenido);die("<----fin");
+		//print_r('inicio---->'.$contenido);die("<----fin");
 			
 			$this->pdf->writeHTML(stripslashes($contenido), true, true, false, false, '');
 		}
