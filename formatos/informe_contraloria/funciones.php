@@ -138,7 +138,7 @@ function listar_hallazgo_informe($idformato, $iddoc, $condicion = "") {
 				$texto_enlaces .= '</tr></table ><br />';
 			}
 			$texto .= '
-			
+			<br/>
             <table border="1px" cellpadding="5" style="border-collapse:collapse;font-size:6pt;width:100%" bordercolor="black">';
 			$texto .= '
                 <tr class="encabezado_list">
