@@ -158,7 +158,7 @@ function listar_hallazgo_informe($idformato, $iddoc, $condicion = "") {
             ';
             
             $texto.='</table>';
-            	echo($texto_enlaces . $texto);
+            	echo($texto_enlaces . $texto);die();
 			$ingresa = 0;
 			for ($i = 0, $j = 1; $i < $hallazgos["numcampos"]; $i++) {
 
