@@ -158,7 +158,7 @@ function listar_hallazgo_informe($idformato, $iddoc, $condicion = "") {
             ';
             
             $texto.='</table>';
-            	echo($texto_enlaces . $texto);die();
+            	echo($texto_enlaces . $texto);
 			$ingresa = 0;
 			for ($i = 0, $j = 1; $i < $hallazgos["numcampos"]; $i++) {
 
@@ -214,7 +214,7 @@ function listar_hallazgo_informe($idformato, $iddoc, $condicion = "") {
 	}
 	if (!$ingresa)
 		$texto .= "<br /><br /><b>No se han definido hallazgos " . @$_REQUEST["estado"] . " para el plan de mejoramiento mostrado</b>";
-	echo($texto_enlaces . $texto);
+	//echo($texto_enlaces . $texto);
 }
 
 function mostrar_plan_mejoramiento_completo($idformato, $iddoc) {
