@@ -72,12 +72,12 @@ global $texto;
   crear_dato_formato('ft_politicas');
   crear_dato_formato('ft_valores_calidad');*/
   crear_dato_formato('ft_proceso');
-  $texto.='<item style="font-family:verdana; font-size:7pt;" ';
-  $texto.=strip_tags('text="Planes de mejoramiento" id="pm-general" >'."\n");
-  planes_mejoramiento_institucional();
-  planes_mejoramiento_funcional();
-  planes_mejoramiento_individual();
-  $texto.="</item>\n";
+ // $texto.='<item style="font-family:verdana; font-size:7pt;" ';
+ // $texto.=strip_tags('text="Planes de mejoramiento" id="pm-general" >'."\n");
+ // planes_mejoramiento_institucional();
+ // planes_mejoramiento_funcional();
+ // planes_mejoramiento_individual();
+ // $texto.="</item>\n";
   //crear_dato_formato('ft_normograma');
   
   
