@@ -54,10 +54,6 @@ function mostrar_objetivo_calidad_indicador($idformato,$iddoc){
     $datos=busca_filtro_tabla("objetivo_calidad_indicador","ft_indicadores_calidad","documento_iddocumento=".$iddoc,"",$conn);
     echo( strip_tags(utf8_encode(html_entity_decode($datos[0]["objetivo_calidad_indicador"]))) );    
 }
-function mostrar_objetivo_indicador($idformato,$iddoc){
-    $datos=busca_filtro_tabla("objetivo_indicador","ft_indicadores_calidad","documento_iddocumento=".$iddoc,"",$conn);
-    echo( strip_tags(utf8_encode(html_entity_decode($datos[0]["objetivo_indicador"]))) );    
-}
 function documento_referencia2($idformato,$iddoc,$tipo=NULL){
   global $conn;
   $respuesta=busca_filtro_tabla("","respuesta","destino=".$iddoc,"",$conn);
