@@ -187,7 +187,6 @@ function listar_hallazgo_informe($idformato, $iddoc, $condicion = "") {
 					$texto .= '<td style="font-size: 8pt;" class="transparente" >' . strip_tags(str_replace("&nbsp;", " ", mostrar_valor_campo("accion_mejoramiento", $formato_hallazgo[0]["idformato"], $hallazgos[$i]["hallazgo_iddoc"], 1))) . '</td>';
 					$idformato_hallazgo_plan_mejoramiento = busca_filtro_tabla("idformato","formato","nombre='hallazgo'","",$conn);
 					$campo_responsables=busca_filtro_tabla("idcampos_formato","campos_formato","nombre='responsables' AND formato_idformato=".$idformato_hallazgo_plan_mejoramiento[0]['idformato'],"",$conn);
-					//print_r($campo_responsables);
 					$texto .= '<td style="font-size: 8pt;" class="transparente" >' . strip_tags(mostrar_seleccionados($idformato_hallazgo_plan_mejoramiento[0]['idformato'], $campo_responsables[0]['idcampos_formato'], 0, $hallazgos[$i]["hallazgo_iddoc"], 1)) . '</td>';
 					$texto .= '<td  style="font-size: 8pt;" class="transparente" align="center">' . strip_tags(mostrar_valor_campo("tiempo_cumplimiento", $formato_hallazgo[0]["idformato"], $hallazgos[$i]["hallazgo_iddoc"], 1)) . '</td>';
 
