@@ -772,8 +772,9 @@ function confirmar_control_documentos($idformato, $iddoc){
 		}
 		
 		$estado=busca_filtro_tabla("","documento","estado='ACTIVO' and iddocumento=".$iddoc,"",$conn);
-		
-		if(in_array(usuario_actual("funcionario_codigo"), $funcionario) && $estado["numcampos"]){
+	    //CARGO_FUNCIONAL (aprobador calidad)
+	    $cf_versionador_calidad=busca_filtro_tabla("login","vfuncionario_dc","estado=1 AND tipo_cargo=2 AND lower(cargo) LIKE 'aprobador%calidad'","",$conn);		
+		if((in_array(usuario_actual("funcionario_codigo"), $funcionario) && $estado["numcampos"]) || (usuario_actual('login')==$cf_versionador_calidad[0]['login'])){
 			echo "<button class='btn btn-info dropdown-toggle' id='btn_editar' >Editar</button>";	
 		}
 	}
