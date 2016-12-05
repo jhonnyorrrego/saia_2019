@@ -82,6 +82,8 @@ function logo_contraloria() {
 
 function listar_hallazgo_informe($idformato, $iddoc, $condicion = "") {
 	global $conn,$ruta_db_superior;
+	
+	$texto='';
 	$formato = busca_filtro_tabla("", "formato A", "A.idformato=" . $idformato, "", $conn);
 	if ($formato["numcampos"]) {
 		$documento = busca_filtro_tabla("", $formato[0]["nombre_tabla"], "documento_iddocumento=" . $iddoc, "", $conn);
