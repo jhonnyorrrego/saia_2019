@@ -206,7 +206,7 @@ function listar_hallazgo_informe($idformato, $iddoc, $condicion = "") {
 					$j++;
 				}
 			}
-			$texto .= '</tbody></table></td><td style="width: 2%;"></td></tr></table></div>';
+			$texto .= '</table>';
 		}
 	}
 	if (!$ingresa)
