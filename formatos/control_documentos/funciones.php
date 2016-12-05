@@ -179,8 +179,8 @@ function ruta_aprobacion_control_documentos($idformato, $iddoc){
 	//Funcionario que aprueba 
 	array_push($ruta,array("funcionario"=>$funcionarios_responsables[0]['aprobado'],"tipo_firma"=>1));
 	
-	//CARGO_FUNCIONAL (versionador_calidad)
-	$cf_versionador_calidad=busca_filtro_tabla("funcionario_codigo","vfuncionario_dc","estado=1 AND tipo_cargo=2 AND lower(cargo)='versionador_calidad'","",$conn);
+	//CARGO_FUNCIONAL (aprobador calidad)
+	$cf_versionador_calidad=busca_filtro_tabla("funcionario_codigo","vfuncionario_dc","estado=1 AND tipo_cargo=2 AND lower(cargo) LIKE 'aprobador%calidad'","",$conn);
 	array_push($ruta,array("funcionario"=>$cf_versionador_calidad[0]['funcionario_codigo'],"tipo_firma"=>2)); 
 	
 	if(count($ruta)>1){		
@@ -756,8 +756,8 @@ function confirmar_control_documentos($idformato, $iddoc){
 		if($estado["numcampos"]){
 			if(!$fecha_confirmacion["numcampos"]){
 			    
-			    //CARGO_FUNCIONAL (versionador_calidad)
-	            $cf_versionador_calidad=busca_filtro_tabla("login","vfuncionario_dc","estado=1 AND tipo_cargo=2 AND lower(cargo)='versionador_calidad'","",$conn);
+			    //CARGO_FUNCIONAL (aprobador calidad)
+	            $cf_versionador_calidad=busca_filtro_tabla("login","vfuncionario_dc","estado=1 AND tipo_cargo=2 AND lower(cargo) LIKE 'aprobador%calidad'","",$conn);
 			    if(usuario_actual('login')==$cf_versionador_calidad[0]['login']){
 			         echo($boton);
 			    }
