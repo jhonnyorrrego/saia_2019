@@ -170,11 +170,11 @@ function listar_hallazgo_informe($idformato, $iddoc, $condicion = "") {
 				} else {
 					for ($a = 0; $a < $seguimientos["numcampos"]; $a++) {
 						if ($seguimientos[$a]["logros_alcanzados"]) {
-							$logros[] = "<li>" . strip_tags(utf8_encode(html_entity_decode($seguimientos[$a]["logros_alcanzados"]))) . "</li>";
+							$logros[] = "<li>" . strip_tags(codifica_encabezado(html_entity_decode($seguimientos[$a]["logros_alcanzados"]))) . "</li>";
 						}
 
 						if ($seguimientos[$a]["observaciones"]) {
-							$observaciones .= utf8_encode(html_entity_decode($seguimientos[$a]["observaciones"])) . "<br />";
+							$observaciones .= codifica_encabezado(html_entity_decode($seguimientos[$a]["observaciones"])) . "<br />";
 						}
 					}
 				}
