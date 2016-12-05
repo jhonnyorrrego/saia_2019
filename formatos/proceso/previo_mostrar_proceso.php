@@ -238,7 +238,11 @@ $ok=@$_REQUEST["editar"];
                 <?php echo($iddoc_mapa_proceso[0]['descripcion_base']); ?>
             </td>
         </tr>      
-    
+        <?php 
+        $permiso_admin_calidad=new Permiso();
+		$permiso_modulo_admin_calidad=$permiso_admin_calidad->acceso_modulo_perfil("administracion_calidad");
+		if($permiso_modulo_admin_calidad){
+        ?>
         <tr>
             <td colspan="2">
                 <a class="btn btn-mini pull-left" title="Administración del arbol de calidad." href="../proceso/previo_mostrar_proceso.php?editar=1"  onclick=" ">	    
@@ -249,9 +253,9 @@ $ok=@$_REQUEST["editar"];
                 </a>                
             </td>
         </tr>
-      
-        
-        
+        <?php 
+		} //fin permiso administracion_calidad  
+        ?>
     <?php
     }
     ?>
