@@ -135,22 +135,24 @@ function listar_hallazgo_informe($idformato, $iddoc, $condicion = "") {
 
 				$texto_enlaces .= '</tr></table ><br />';
 			}
-			$texto .= '<pagebreak/>
-    <table style="width:100%"><tr><td style="width: 2%;"></td><td style="width: 96%;"><table border="2px" cellpadding="5" style="border-collapse:collapse;font-size:6pt;width:100%" bordercolor="black">';
 			$texto .= '
-<tr class="encabezado_list">
+			
+            <table style="width:100%"><tr><td style="width: 2%;"></td><td style="width: 96%;"><table border="2px" cellpadding="5" style="border-collapse:collapse;font-size:6pt;width:100%" bordercolor="black">';
+			$texto .= '
+                <tr class="encabezado_list">
 
-<td  style="font-size: 8pt; width: 5%;" align="center" valign="middle">No</td>
-<td style="font-size: 8pt; width: 16%;" align="center" valign="middle">DEFICIENCIA ADMINISTRATIVA</td>';
+                    <td  style="font-size: 8pt; width: 5%;" align="center" valign="middle">No</td>
+                    <td style="font-size: 8pt; width: 16%;" align="center" valign="middle">DEFICIENCIA ADMINISTRATIVA</td>';
 
-			$texto .= '<td style="font-size: 8pt; width: 22%;" align="center">COMPROMISOS DE<br>MEJORAMIENTO SUSCRITOS</td>
-<td style="font-size: 8pt; width: 8%;" align="center">RESPONSABLE</td>
-<td style="font-size: 8pt; width: 6%;" align="center">TERMINO</td>
-<td style="font-size: 8pt; width: 8%;" align="center">INDICADORES DE CUMPLIMIENTO</td>
-<td style="font-size: 8pt; width: 18%;" align="center" >LOGROS ALCANZADOS</td>
-<td style="font-size: 8pt; width: 7%;">PORCENTAJE DE CUMPLIMIENTO</td>
-<td style="font-size: 8pt; width: 10%;" align="center">OBSERVACIONES</td>
-';
+			$texto .= '
+                    <td style="font-size: 8pt; width: 22%;" align="center">COMPROMISOS DE<br>MEJORAMIENTO SUSCRITOS</td>
+                    <td style="font-size: 8pt; width: 8%;" align="center">RESPONSABLE</td>
+                    <td style="font-size: 8pt; width: 6%;" align="center">TERMINO</td>
+                    <td style="font-size: 8pt; width: 8%;" align="center">INDICADORES DE CUMPLIMIENTO</td>
+                    <td style="font-size: 8pt; width: 18%;" align="center" >LOGROS ALCANZADOS</td>
+                    <td style="font-size: 8pt; width: 7%;">PORCENTAJE DE CUMPLIMIENTO</td>
+                    <td style="font-size: 8pt; width: 10%;" align="center">OBSERVACIONES</td>
+            ';
 			$ingresa = 0;
 			for ($i = 0, $j = 1; $i < $hallazgos["numcampos"]; $i++) {
 
