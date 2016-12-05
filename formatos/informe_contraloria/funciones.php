@@ -139,7 +139,7 @@ function listar_hallazgo_informe($idformato, $iddoc, $condicion = "") {
 			}
 			$texto .= '
 			
-            <table style="width:100%"><tr><td style="width: 2%;"></td><td style="width: 96%;"><table border="2px" cellpadding="5" style="border-collapse:collapse;font-size:6pt;width:100%" bordercolor="black">';
+            <table border="2px" cellpadding="5" style="border-collapse:collapse;font-size:6pt;width:100%" bordercolor="black">';
 			$texto .= '
                 <tr class="encabezado_list">
 
