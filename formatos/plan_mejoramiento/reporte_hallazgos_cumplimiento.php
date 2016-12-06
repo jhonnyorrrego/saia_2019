@@ -150,8 +150,9 @@ function reporte(){
 			}						
 			$tabla.='<td>'.avances($hallazgos[$i]["idft_hallazgo"]).'</td>';
 			$tabla.='</tr>';
-			$tabla.='</table>';
+			
 		}
+		$tabla.='</table>';
 	}
 	else{
 		
