@@ -33,7 +33,7 @@ $datos[0]["codigo"]=str_replace("/*codigo_sql*/",$codigo,$datos[0]["codigo"]);
 
 $datos[0]["codigo"]=$datos[0]["codigo"]." as t";
 
-//die($datos[0]["codigo"]);
+die($datos);
 //$hallazgo=busca_filtro_tabla("","ft_hallazgo","1=1","","",$conn);
 //print_r($hallazgo);
 //die();
