@@ -38,7 +38,7 @@ $datos[0]["codigo"]=$datos[0]["codigo"]." as t";
 //$hallazgo=busca_filtro_tabla("","ft_hallazgo","1=1","","",$conn);
 //print_r($hallazgo);
 //die();
-print_r($datos);die();
+//print_r($datos);die();
 if($datos<>"")
   {  
 
