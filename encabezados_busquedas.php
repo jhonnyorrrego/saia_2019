@@ -483,7 +483,7 @@ if ($sExport == "")
       <?php 
 
         if(@$nueva_b!="")
-          //echo "<a href='../documento.buscar.php'>B&uacute;squeda Avanzada</a>";
+          echo "<a href='../documento.buscar.php'>B&uacute;squeda Avanzada</a>";
         else if(@$sin_busqueda=="")
          {  
        ?>
