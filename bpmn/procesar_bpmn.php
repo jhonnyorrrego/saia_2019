@@ -115,7 +115,7 @@ if(@$_REQUEST["idpaso_documento"]){
       diagramElement : "diagram",
       overlayHtml : '<div class="elemento_bpmn_saia"></div>'
     }).then(function (bpmn){				
-      bpmn.zoom(0.0);
+      bpmn.zoom(0.1);
       <?php $bpmn->imprimir_estados_tarea("bpmn"); ?>    
       //bpmn.getOverlay("Task_0hoaho2");
 			//$(".bpmnElement").find("[data-activity-id='Task_0hoaho2']").addClass("prueba");
