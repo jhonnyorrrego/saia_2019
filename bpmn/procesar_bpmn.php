@@ -88,7 +88,7 @@ if(@$_REQUEST["idpaso_documento"]){
 		<?php } ?>		
 	</div>
 	</div>
-	<div class="row-fluid " id="diagram" style="height:80%; position:relative; overflow: auto;">
+	<div class="row-fluid " id="diagram" style="height:100%; position:relative; overflow: auto;">
 	</div>
 	
 </div>
@@ -113,9 +113,9 @@ if(@$_REQUEST["idpaso_documento"]){
   require(["bpmn/Bpmn", "dojo/domReady!"], function(Bpmn) {
     new Bpmn().renderUrl("<?php echo($ruta_db_superior.$bpmn->archivo); ?>", {
       diagramElement : "diagram",
-      overlayHtml : '<div class="elemento_bpmn_saia" ></div>'
+      overlayHtml : '<div class="elemento_bpmn_saia"></div>'
     }).then(function (bpmn){				
-      bpmn.zoom(0.7);
+      bpmn.zoom(0.8);
       <?php $bpmn->imprimir_estados_tarea("bpmn"); ?>    
       //bpmn.getOverlay("Task_0hoaho2");
 			//$(".bpmnElement").find("[data-activity-id='Task_0hoaho2']").addClass("prueba");
