@@ -494,7 +494,7 @@ if ($sExport == "")
        {
       ?> 
       &nbsp;&nbsp;&nbsp;
-      <!-- A href="javascript:submit_btodos()">Mostrar Todos</A -->
+      < A href="javascript:submit_btodos()">Mostrar Todos</A>
       <?php
        }
      
