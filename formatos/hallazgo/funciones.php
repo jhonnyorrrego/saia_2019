@@ -347,8 +347,8 @@ function validar_entrada_hallazgo($idformato,$iddoc){
 function consecutivo_hallazgo_funcion($idformato,$iddoc){
 	global $conn;
 	if($_REQUEST["padre"]){		
-		$plan=busca_filtro_tabla("max(to_number(lower(trim(a.consecutivo_hallazgo)))) as consecutivo","ft_hallazgo a, documento b","a.documento_iddocumento=b.iddocumento and lower(a.estado) not in('eliminado', 'anulado') and ft_plan_mejoramiento=".$_REQUEST["padre"],"to_number(lower(trim(a.consecutivo_hallazgo))) desc",$conn);		
-		$consecutivo = $plan[0]["consecutivo"] +1;		
+		$plan=busca_filtro_tabla("","ft_hallazgo a, documento b","a.documento_iddocumento=b.iddocumento and lower(a.estado) not in('eliminado', 'anulado') and ft_plan_mejoramiento=".$_REQUEST["padre"],"a.idft_hallazgo DESC",$conn);		
+		$consecutivo = $plan["numcampos"] +1;		
 	}else{
 		$plan=busca_filtro_tabla("consecutivo_hallazgo","ft_hallazgo a","a.documento_iddocumento=".$_REQUEST["iddoc"],"",$conn);
 		$consecutivo = $plan[0]["consecutivo_hallazgo"];				
