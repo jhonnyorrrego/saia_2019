@@ -487,14 +487,14 @@ if ($sExport == "")
         }else if(@$sin_busqueda=="")
          {  
        ?>
-      <!-- A href="javascript:submit_bavanzada()">B&uacute;squeda Avanzada</A -->      
+      <A href="javascript:submit_bavanzada()">B&uacute;squeda Avanzada</A>      
       <?php
          }
       if($_REQUEST["num_reg"]>0  && @$sin_mostrar_todos=="")
        {
       ?> 
       &nbsp;&nbsp;&nbsp;
-      <A href="javascript:submit_btodos()">Mostrar Todos</A>
+      <!--A href="javascript:submit_btodos()">Mostrar Todos</A-->
       <?php
        }
      
