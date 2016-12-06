@@ -37,6 +37,7 @@ if($funciones<>"")
    $id_func=implode(",",$id_func);
   }
 
+print_r($datos);die();
 if($datos["numcampos"])
   {
 ?>
