@@ -238,11 +238,9 @@ function estado_del_plan($idformato, $iddoc) {
 			$estado = 'Terminado';
 		}
 		$seguimiento = busca_filtro_tabla("i.documento_iddocumento", "seguimiento_planes s,ft_seguimiento_indicador si,ft_indicadores_calidad i,ft_formula_indicador f", "plan_mejoramiento=$iddoc and s.idft_seguimiento_indicador=si.idft_seguimiento_indicador and idft_indicadores_calidad=ft_indicadores_calidad and ft_formula_indicador=idft_formula_indicador", "", $conn);
-		$terminar_planes = busca_filtro_tabla("", "configuracion", "nombre='terminar_planes'", "", $conn);
-		$permitidos = explode(",", $terminar_planes[0]["valor"]);
 
 		echo '<table style="font-size:10pt;width:40%;border-collapse:collapse" border="0px">';
-		if ($cerrado[0]["estado_plan_mejoramiento"] == 2 && in_array($fun_cod, $permitidos)) {
+		if ($cerrado[0]["estado_plan_mejoramiento"] == 2) {
 			$terminar_plan = "<tr><td><a style='cursor:pointer;color:blue' id='terminar_mejoramiento' onclick='aprobar_plan_mejora()'>Terminar plan de mejoramiento</a></td></tr>";
 			if ($_REQUEST["tipo"] != 5) {
 				echo "<script>
