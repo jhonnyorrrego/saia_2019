@@ -186,7 +186,7 @@ function listar_hallazgo_informe($idformato, $iddoc, $condicion = "") {
 
 					$consecutivo = busca_filtro_tabla("A.consecutivo_hallazgo", "ft_hallazgo A", "A.documento_iddocumento=" . $hallazgos[$i]["hallazgo_iddoc"], "", $conn);
 
-					$texto .= '<tr><td style="font-size: 8pt; " class="transparente" ><a class="abrir_higslide" ruta="formatos/hallazgo/mostrar_hallazgo.php?iddoc=' . $hallazgos[$i]["hallazgo_iddoc"] . '&idformato=' . $formato_hallazgo[0]["idformato"] . '" style="color: -webkit-link; text-decoration: underline;">&nbsp;' . $consecutivo[0]['consecutivo_hallazgo'] . ($i + 1) . '&nbsp;</a></td>';
+					$texto .= '<tr><td style="font-size: 8pt; " class="transparente" ><a class="abrir_higslide" ruta="formatos/hallazgo/mostrar_hallazgo.php?iddoc=' . $hallazgos[$i]["hallazgo_iddoc"] . '&idformato=' . $formato_hallazgo[0]["idformato"] . '" style="color: -webkit-link; text-decoration: underline;">&nbsp;' . $consecutivo[0]['consecutivo_hallazgo'] . '&nbsp;</a></td>';
 
 					$texto .= '<td style="font-size: 8pt;" class="transparente" >' . mostrar_valor_campo("deficiencia", $formato_hallazgo[0]["idformato"], $hallazgos[$i]["hallazgo_iddoc"], 1) . '</td>';
 
