@@ -456,7 +456,7 @@ if ($sExport == "")
          $adic=explode(";",str_replace("=",",",$_REQUEST["adicionales"]));
           foreach($adic as $variable)
            {$variable=explode(",",$variable);
-            echo "<input type=\"hidden\" name=\"".$variable[0]."\" value=\"$variable[1]\">"; 
+            echo "<input type=\"hidden\" name=\"".$variable[0]."\" value=\"".$variable[1]."\">"; 
            }
         }
 
