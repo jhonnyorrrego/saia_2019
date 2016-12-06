@@ -3,6 +3,7 @@
 
 include_once("db.php");
 $datos=busca_filtro_tabla("","busquedas","etiqueta like 'hallazgos'","",$conn);
+die($datos);
 $funciones=busca_filtro_tabla("idfunciones_busqueda","funciones_busqueda","busquedas_idbusqueda=".$datos[0]["idbusquedas"],"",$conn);
 if($funciones<>"")
   {for($i=0; $i<$funciones["numcampos"]; $i++)
@@ -33,7 +34,7 @@ $datos[0]["codigo"]=str_replace("/*codigo_sql*/",$codigo,$datos[0]["codigo"]);
 
 $datos[0]["codigo"]=$datos[0]["codigo"]." as t";
 
-die($datos);
+
 //$hallazgo=busca_filtro_tabla("","ft_hallazgo","1=1","","",$conn);
 //print_r($hallazgo);
 //die();
