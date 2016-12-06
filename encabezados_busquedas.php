@@ -482,9 +482,9 @@ if ($sExport == "")
       <span class="phpmaker">
       <?php 
 
-        if(@$nueva_b!="")
+        if(@$nueva_b!=""){
           //echo "<a href='../documento.buscar.php'>B&uacute;squeda Avanzada</a>";
-        else if(@$sin_busqueda=="")
+        }else if(@$sin_busqueda=="")
          {  
        ?>
       <A href="javascript:submit_bavanzada()">B&uacute;squeda Avanzada</A>      
