@@ -395,9 +395,8 @@ if ($sExport == "" && $registros>0 && @$sin_exportar=="")
       <input type="hidden" name="export" id="export" value="">  
 </form> 
 <?php
-   echo '<table align=right><tr><td><a style="cursor:pointer;" onclick="document.getElementById(\'export\').value=\'excel\';exportar.submit();"><img src="../enlaces/excel.gif" border="0" ALT="Exportar a Excel"></a>
-    &nbsp;&nbsp;</td><td><a style="cursor:pointer" onclick="document.getElementById(\'export\').value=\'word\';exportar.submit();"><img src="../enlaces/word.gif" border="0" ALT="Exportar a Word">
-    </a></td></tr></table>';
+   //echo '<table align=right><tr><td><a style="cursor:pointer;" onclick="document.getElementById(\'export\').value=\'excel\';exportar.submit();"><img src="../enlaces/excel.gif" border="0" ALT="Exportar a Excel"></a> &nbsp;&nbsp;</td><td><a style="cursor:pointer" onclick="document.getElementById(\'export\').value=\'word\';exportar.submit();"><img src="../enlaces/word.gif" border="0" ALT="Exportar a Word"> </a></td></tr></table>';
+   echo '<table align=right><tr><td><a style="cursor:pointer;" onclick="document.getElementById(\'export\').value=\'excel\';exportar.submit();"><img src="../enlaces/excel.gif" border="0" ALT="Exportar a Excel"></a> &nbsp;&nbsp;</td></tr></table>';
   }
 echo '</span></p>';
 //<input type=hidden name='func_busqueda' value='' id='funciones'>
