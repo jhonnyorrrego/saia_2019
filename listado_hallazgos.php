@@ -3,7 +3,7 @@
 
 include_once("db.php");
 $datos=busca_filtro_tabla("","busquedas","etiqueta like 'hallazgos'","",$conn);
-die($datos);
+print_r($datos);die();
 $funciones=busca_filtro_tabla("idfunciones_busqueda","funciones_busqueda","busquedas_idbusqueda=".$datos[0]["idbusquedas"],"",$conn);
 if($funciones<>"")
   {for($i=0; $i<$funciones["numcampos"]; $i++)
