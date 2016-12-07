@@ -156,7 +156,7 @@ if($formato["numcampos"]){
       $validar_macro=1;
       $documentos=busca_filtro_tabla("","ft_proceso A","A.macroproceso=".$macros[$i]["idft_macroproceso_calidad"],"",$conn);
       $imagenes=' im0="proceso.gif" im1="proceso.gif" im2="proceso.gif" '; 
-      $iddoc_macro=$formato_macro[0]["idformato"]."-".$formato_macro[0]["nombre"]."-".$formato_macro[0]["nombre_tabla"];
+      $iddoc_macro=$formato_macro[0]["idformato"]."-idft_macroproceso_calidad-".$macros[$i]["idft_macroproceso_calidad"];
      // $iddoc_macro='macros-'.$macros[$i]["idft_macroproceso_calidad"];
 
       $texto.='<item style="font-family:verdana; font-size:7pt;" '.$imagenes;
