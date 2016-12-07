@@ -20,25 +20,25 @@ function formula_calculo($idformato,$iddoc){
   $idformato_formula_indicador=busca_filtro_tabla("b.idformato","documento a, formato b","lower(a.plantilla)=lower(b.nombre) AND a.iddocumento=".$respuesta[0]["destino"],"",$conn);
   $texto='<table style="width:100%;">';
   $texto.='<tr class="encabezado_list" >
-            <td style="font-size:10pt;">Form</td>
-            <td style="font-size:10pt;">Formula del calculo</td>
-            <td style="font-size:10pt;">Unidad</td>
-            <td style="font-size:10pt;">Naturaleza</td>
-            <td style="font-size:10pt;">Periocidad</td>
-            <td style="font-size:10pt;">Descripci&oacute;n de variables</td>
-            <td style="font-size:10pt;">Observaciones</td>
+            <td style="">Form</td>
+            <td style="">Formula del calculo</td>
+            <td style="">Unidad</td>
+            <td style="">Naturaleza</td>
+            <td style="">Periocidad</td>
+            <td style="">Descripci&oacute;n de variables</td>
+            <td style="">Observaciones</td>
             </tr>';
             
             //mostrar_valor_campo($campo,$idformato,$iddoc,$tipo=NULL)
   for($i=0;$i<$respuesta["numcampos"];$i++){
     $formula=busca_filtro_tabla("","ft_formula_indicador","documento_iddocumento=".$respuesta[$i]["destino"],"",$conn); 
     $texto.='<tr>
-                <td style="font-size:10pt;">'.$formula[0]["idft_formula_indicador"].'</td>
+                <td style="">'.$formula[0]["idft_formula_indicador"].'</td>
                 <td align="center">'.$formula[0]["nombre"].'</td>
                 <td align="center">'.$formula[0]["unidad"].'</td>
-                <td align="center" style="font-size:10pt;">'.mostrar_valor_campo('naturaleza',$idformato_formula_indicador[0]['idformato'],$respuesta[$i]["destino"],1).'</td>
-                <td align="center" style="font-size:10pt;">'.mostrar_valor_campo('periocidad',$idformato_formula_indicador[0]['idformato'],$respuesta[$i]["destino"],1).'</td>
-                <td style="font-size:10pt;">'.strip_tags(utf8_encode(html_entity_decode($formula[0]["observacion"]))).'</td>
+                <td align="center" style="">'.mostrar_valor_campo('naturaleza',$idformato_formula_indicador[0]['idformato'],$respuesta[$i]["destino"],1).'</td>
+                <td align="center" style="">'.mostrar_valor_campo('periocidad',$idformato_formula_indicador[0]['idformato'],$respuesta[$i]["destino"],1).'</td>
+                <td style="">'.strip_tags(utf8_encode(html_entity_decode($formula[0]["observacion"]))).'</td>
                 <td>'.mostrar_valor_campo('observaciones',$idformato_formula_indicador[0]['idformato'],$respuesta[$i]["destino"],1).'</td>
             </tr>';
   } 
@@ -110,18 +110,18 @@ $formulas = busca_filtro_tabla("nombre,idft_formula_indicador as id,unidad,rango
 if ($formulas["numcampos"]) {
     echo '<table style="width:100%;">
 		        <tr>
-		            <td class="encabezado_list" colspan="7" style="font-size:10pt;">SEGUIMIENTOS</td>
+		            <td class="encabezado_list" colspan="7" style="">SEGUIMIENTOS</td>
 		        </tr>		        
 		        <tr>
-		            <td class="encabezado_list" colspan="7" style="font-size:10pt;">Formula del Calculo:<br />' . $formulas[$i]["nombre"] . '</td>
+		            <td class="encabezado_list" colspan="7" style="">Formula del Calculo:<br />' . $formulas[$i]["nombre"] . '</td>
 		        </tr>
 		        <tr class="encabezado_list">
-		            <td  style="font-size:10pt;">Fecha</td>
-		            <td  style="font-size:10pt;">Meta</td>
-		            <td  style="font-size:10pt;">Resultado</td>
-		            <td  style="font-size:10pt;">Cumplimiento</td>
-		            <td  style="font-size:10pt;">An&aacute;lisis de Datos</td>
-		            <td colspan="2" style="font-size:10pt;">&nbsp;</td>
+		            <td  style="">Fecha</td>
+		            <td  style="">Meta</td>
+		            <td  style="">Resultado</td>
+		            <td  style="">Cumplimiento</td>
+		            <td  style="">An&aacute;lisis de Datos</td>
+		            <td colspan="2" style="">&nbsp;</td>
 	            </tr>';
 	for ($i = 0; $i < $formulas["numcampos"]; $i++) {
 
@@ -174,17 +174,17 @@ if ($formulas["numcampos"]) {
 				//VERDE
 			}
 			echo '<tr>
-                    <td align="center" style="font-size:10pt;">' . $seg[$j]["fecha_seguimiento"] . '</td>
-                    <td align="right" style="font-size:10pt;" >' . $seg[$j]["meta_indicador_actual"] . $formulas[$i]["unidad"] . '</td>
-                    <td bgcolor="'.$color.'" align="right"  style="font-size:10pt;">' . $respuesta . $formulas[$i]["unidad"] . '</td>
-                    <td align="center" style="font-size:10pt;">' . $cumplimiento . '%</td>';
+                    <td align="center" style="">' . $seg[$j]["fecha_seguimiento"] . '</td>
+                    <td align="right" style="" >' . $seg[$j]["meta_indicador_actual"] . $formulas[$i]["unidad"] . '</td>
+                    <td bgcolor="'.$color.'" align="right"  style="">' . $respuesta . $formulas[$i]["unidad"] . '</td>
+                    <td align="center" style="">' . $cumplimiento . '%</td>';
 			
 			
 			if (!isset($_REQUEST["tipo"]) || $_REQUEST["tipo"] == 1){
-			    echo '  <td style="text-align:center;font-size:10pt;"><a class="previo_high" enlace="formatos/seguimiento_indicador/mostrar_seguimiento_indicador.php?iddoc=' . $seg[$j]["documento_iddocumento"] . '" style="color:blue;cursor:pointer">Ver</a></td>';
+			    echo '  <td style="text-align:center;"><a class="previo_high" enlace="formatos/seguimiento_indicador/mostrar_seguimiento_indicador.php?iddoc=' . $seg[$j]["documento_iddocumento"] . '" style="color:blue;cursor:pointer">Ver</a></td>';
 			    echo '
-			        <td align="center" width="200px" style="font-size:10pt;" ><a target="centro" href="../plan_mejoramiento/adicionar_plan_mejoramiento.php?seguimiento_indicador=' . $seg[$j]["idft_seguimiento_indicador"] . '">Adicionar Plan</a></td>
-                    <td align="center" style="font-size:10pt;"><a class="highslide" onclick="return hs.htmlExpand(this, { objectType: \'iframe\',width: 500, height:400,preserveContent:false } )"  href="planes_relacionados.php?tipo=indicador&seguimiento_indicador=' . $seg[$j]["idft_seguimiento_indicador"] . '">Ver Planes</a></td>';
+			        <td align="center" width="200px" style="" ><a target="centro" href="../plan_mejoramiento/adicionar_plan_mejoramiento.php?seguimiento_indicador=' . $seg[$j]["idft_seguimiento_indicador"] . '">Adicionar Plan</a></td>
+                    <td align="center" style=""><a class="highslide" onclick="return hs.htmlExpand(this, { objectType: \'iframe\',width: 500, height:400,preserveContent:false } )"  href="planes_relacionados.php?tipo=indicador&seguimiento_indicador=' . $seg[$j]["idft_seguimiento_indicador"] . '">Ver Planes</a></td>';
 			}else{
 			    echo '<td></td><td></td><td></td>';
 			}	
@@ -199,14 +199,14 @@ if ($formulas["numcampos"]) {
 			}	
 		}
 		echo '<tr>
-		        <td colspan="7"  style="font-size:10pt;">
+		        <td colspan="7"  style="">
 		            <b>Resultado:</b>
 		            <br/>
 		            <table>
         		      <tr>
-        		        <td bgcolor="#FF4000"  style="font-size:10pt;">Deficiente</td>
-        		        <td bgcolor="#EAFF00"  style="font-size:10pt;">Satisfactorio</td>
-        		        <td bgcolor="#00FF51"  style="font-size:10pt;">Sobresaliente</td>
+        		        <td bgcolor="#FF4000"  style="">Deficiente</td>
+        		        <td bgcolor="#EAFF00"  style="">Satisfactorio</td>
+        		        <td bgcolor="#00FF51"  style="">Sobresaliente</td>
         		      </tr>
 		            </table>
 		            <br/>
