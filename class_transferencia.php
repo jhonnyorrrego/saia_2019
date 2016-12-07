@@ -781,6 +781,7 @@ function aprobar($iddoc=0,$url="")
       if(!in_array('e',$vector_banderas)){
         //echo abrir_url($ruta_db_superior.'pantallas/documento/informacion_resumen_documento.php?iddoc='.$iddoc,'formato_detalles');
        // echo abrir_url($ruta_db_superior.'formatos/'.$datos_formato[0]['nombre'].'/detalles_mostrar_'.$datos_formato[0]['nombre'].'.php?iddoc='.$iddoc,'centro');
+       $_POST['iddoc']=$iddoc;
        enrutar_documento();
         //formatos/indicadores_calidad/detalles_mostrar_indicadores_calidad.php
         
