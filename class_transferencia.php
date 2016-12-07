@@ -796,11 +796,13 @@ function aprobar($iddoc=0,$url="")
               echo('
               
                   <script>
+                  window.onload = function() {
                       if( document.getElementById( "formato_detalles" ) ){
                           	window.open("'.$ruta1.'","formato_detalles");
                       }else{
                             window.open("'.$ruta2.'","arbol_formato");
                       }
+                  } 
                   </script>
               
               ');
