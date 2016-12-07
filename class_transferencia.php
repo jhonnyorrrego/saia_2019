@@ -528,7 +528,7 @@ function aprobar($iddoc=0,$url="")
 
    $tipo_radicado=busca_filtro_tabla("documento.*,contador.nombre,idformato","documento,contador,formato","idcontador=tipo_radicado and iddocumento=$iddoc and lower(plantilla)=lower(formato.nombre)","",$conn);
   
-	 $datos_formato=busca_filtro_tabla("mostrar_pdf","formato a","a.idformato='".$tipo_radicado[0]["idformato"]."'","",$conn);
+	 $datos_formato=busca_filtro_tabla("banderas,mostrar_pdf","formato a","a.idformato='".$tipo_radicado[0]["idformato"]."'","",$conn);
 
    $formato=strtolower($tipo_radicado[0]["plantilla"]);
     /*Se adiciona esta linea para las ejecutar las acciones sobre los formatos*/
@@ -777,7 +777,11 @@ function aprobar($iddoc=0,$url="")
   
   //pantallas/documento/informacion_resumen_documento.php?form_info=idformato=1&iddoc=851&alto_pantalla=634
   if(!@$_SESSION['radicacion_masiva']){  
-  echo abrir_url($ruta_db_superior.'pantallas/documento/informacion_resumen_documento.php?iddoc='.$iddoc,'formato_detalles');
+      $vector_banderas=explode($datos_formato[0]['banderas']);
+      if(!in_array('e',$vector_banderas)){
+        echo abrir_url($ruta_db_superior.'pantallas/documento/informacion_resumen_documento.php?iddoc='.$iddoc,'formato_detalles');
+      }
+      
   }
 /*if(strpos($_SERVER["PHP_SELF"],"meses")<=0)
    {
