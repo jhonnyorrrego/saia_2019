@@ -528,7 +528,7 @@ function aprobar($iddoc=0,$url="")
 
    $tipo_radicado=busca_filtro_tabla("documento.*,contador.nombre,idformato","documento,contador,formato","idcontador=tipo_radicado and iddocumento=$iddoc and lower(plantilla)=lower(formato.nombre)","",$conn);
   
-	 $datos_formato=busca_filtro_tabla("banderas,mostrar_pdf,nombre,nombre_tabla,cod_padre","formato","idformato='".$tipo_radicado[0]["idformato"]."'","",$conn);
+	 $datos_formato=busca_filtro_tabla("banderas,mostrar_pdf,nombre,nombre_tabla,cod_padre,idformato","formato","idformato='".$tipo_radicado[0]["idformato"]."'","",$conn);
 
    $formato=strtolower($tipo_radicado[0]["plantilla"]);
     /*Se adiciona esta linea para las ejecutar las acciones sobre los formatos*/
