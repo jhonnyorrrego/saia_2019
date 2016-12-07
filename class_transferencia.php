@@ -781,7 +781,6 @@ function aprobar($iddoc=0,$url="")
       if(!in_array('e',$vector_banderas)){
           
           if($datos_formato[0]["cod_padre"]){
-              
               $tabla_padre=busca_filtro_tabla("nombre_tabla","formato","idformato=".$datos_formato[0]["cod_padre"],"",$conn);
               
                         echo "<script>
@@ -790,31 +789,7 @@ function aprobar($iddoc=0,$url="")
              window.parent.frames[0].location=vector[0]+'&'+vector[1]+'&seleccionar=".$datos_formato[0]["idformato"]."-".$tabla_padre[0]["nombre_tabla"]."-".$datos_formato[0]["nombre_tabla"]."-".$iddoc."';
             </script>";
           }else{
-              /*//echo abrir_url($ruta_db_superior.'pantallas/documento/informacion_resumen_documento.php?iddoc='.$iddoc,'formato_detalles');
-              $ruta1=$ruta_db_superior.'pantallas/documento/informacion_resumen_documento.php?iddoc='.$iddoc;
-              $ruta2=$ruta_db_superior.'pantallas/documento/informacion_resumen_documento.php?iddoc='.$iddoc;
-              echo('
-              
-                  <script>
-                  document.onload = function() {
-                      if( document.getElementById( "formato_detalles" ) ){
-                          	window.open("'.$ruta1.'","formato_detalles");
-                      }else{
-                            window.open("'.$ruta2.'","arbol_formato");
-                      }
-                  }; 
-                  </script>
-              
-              ');
-              die();*/
               echo abrir_url($ruta_db_superior.'pantallas/documento/informacion_resumen_documento.php?iddoc='.$iddoc,'arbol_formato');
-              /*
-              if( document.getElementById( "formato_detalles" ) ){ //arbol_formato
-                  echo abrir_url($ruta_db_superior.'pantallas/documento/informacion_resumen_documento.php?iddoc='.$iddoc,'formato_detalles');
-              }else{
-                  echo abrir_url($ruta_db_superior.'pantallas/documento/informacion_resumen_documento.php?iddoc='.$iddoc,'arbol_formato');
-              }*/
-              
           }
       }
       
