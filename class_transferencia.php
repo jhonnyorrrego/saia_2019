@@ -791,11 +791,26 @@ function aprobar($iddoc=0,$url="")
             </script>";
           }else{
               //echo abrir_url($ruta_db_superior.'pantallas/documento/informacion_resumen_documento.php?iddoc='.$iddoc,'formato_detalles');
-              if( $("#formato_detalles").length ){ //arbol_formato
+              $ruta1=$ruta_db_superior.'pantallas/documento/informacion_resumen_documento.php?iddoc='.$iddoc;
+              $ruta2=$ruta_db_superior.'pantallas/documento/informacion_resumen_documento.php?iddoc='.$iddoc;
+              echo('
+              
+                  <script>
+                      if( document.getElementById( "formato_detalles" ) ){
+                          	window.open("'.$ruta1.'","formato_detalles");
+                      }else{
+                            window.open("'.$ruta2.'","arbol_formato");
+                      }
+                  </script>
+              
+              ');
+              
+              /*
+              if( document.getElementById( "formato_detalles" ) ){ //arbol_formato
                   echo abrir_url($ruta_db_superior.'pantallas/documento/informacion_resumen_documento.php?iddoc='.$iddoc,'formato_detalles');
               }else{
                   echo abrir_url($ruta_db_superior.'pantallas/documento/informacion_resumen_documento.php?iddoc='.$iddoc,'arbol_formato');
-              }
+              }*/
               
           }
       }
