@@ -528,7 +528,7 @@ function aprobar($iddoc=0,$url="")
 
    $tipo_radicado=busca_filtro_tabla("documento.*,contador.nombre,idformato","documento,contador,formato","idcontador=tipo_radicado and iddocumento=$iddoc and lower(plantilla)=lower(formato.nombre)","",$conn);
   
-	 $datos_formato=busca_filtro_tabla("banderas,mostrar_pdf,nombre","formato","idformato='".$tipo_radicado[0]["idformato"]."'","",$conn);
+	 $datos_formato=busca_filtro_tabla("banderas,mostrar_pdf,nombre,nombre_tabla,cod_padre","formato","idformato='".$tipo_radicado[0]["idformato"]."'","",$conn);
 
    $formato=strtolower($tipo_radicado[0]["plantilla"]);
     /*Se adiciona esta linea para las ejecutar las acciones sobre los formatos*/
@@ -779,10 +779,25 @@ function aprobar($iddoc=0,$url="")
   if(!@$_SESSION['radicacion_masiva']){  
       $vector_banderas=explode(',',$datos_formato[0]['banderas']);
       if(!in_array('e',$vector_banderas)){
-        //echo abrir_url($ruta_db_superior.'pantallas/documento/informacion_resumen_documento.php?iddoc='.$iddoc,'formato_detalles');
-       // echo abrir_url($ruta_db_superior.'formatos/'.$datos_formato[0]['nombre'].'/detalles_mostrar_'.$datos_formato[0]['nombre'].'.php?iddoc='.$iddoc,'centro');
-       $_POST['iddoc']=$iddoc;
-       enrutar_documento();
+          
+          if($datos_formato[0]["cod_padre"]){
+              
+              $tabla_padre=busca_filtro_tabla("nombre_tabla","formato","idformato=".$datos_formato[0]["cod_padre"],"",$conn);
+              
+                        echo "<script>
+             direccion=new String(window.parent.frames[0].location);
+             vector=direccion.split('&');
+             window.parent.frames[0].location=vector[0]+'&'+vector[1]+'&seleccionar=".$datos_formato[0]["idformato"]."-".$tabla_padre[0]["nombre_tabla"]."-".$datos_formato[0]["nombre_tabla"]."-".$iddoc."';
+            </script>";
+          }else{
+              echo abrir_url($ruta_db_superior.'pantallas/documento/informacion_resumen_documento.php?iddoc='.$iddoc,'formato_detalles');
+          }
+
+       // echo abrir_url($ruta_db_superior.'pantallas/documento/informacion_resumen_documento.php?iddoc='.$iddoc,'formato_detalles');
+       // echo abrir_url($ruta_db_superior.'formatos/'.$datos_formato[0]['nombre'].'/detalles_mostrar_'.$datos_formato[0]['nombre'].'.php?iddoc='.$iddoc,'centro');//http://52.205.58.68/saia_release1/saia/pantallas/documento/informacion_resumen_documento.php?form_info=idformato=194&iddoc=127&seleccionar=385-ft_proceso-ft_indicadores_calidad-940
+       //window.parent.frames[0].location=vector[0]+'&'+vector[1]+'&seleccionar=".$formato_hijo[0]["idformato"]."-".$formato_doc[0]["nombre_tabla"]."-".$formato_hijo[0]["nombre_tabla"]."-".$_POST["iddoc"]."';
+       //$_POST['iddoc']=$iddoc;
+      // enrutar_documento();
         //formatos/indicadores_calidad/detalles_mostrar_indicadores_calidad.php
         
       }
