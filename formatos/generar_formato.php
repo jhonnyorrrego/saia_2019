@@ -865,10 +865,10 @@ function crear_formato_mostrar($idformato) {
 			// $enlace='<a href="detalles_'.$formato[0]["ruta_mostrar"].'?idformato='.$idformato.'&iddoc=<?php echo($_REQUEST["iddoc"]); ?'.'>" target="centro"> Detalles</a>';
 			if (strpos($formato[0]["banderas"], "acordeon") !== false) {
 				$texto .= '<frameset cols="410,*" >';
-				$texto .= '<frame name="formato_detalles" id="formato_detalles" src="../librerias/formato_detalles.php?idformato=' . $idformato . '&iddoc=<?php echo($_REQUEST[' . "'" . "iddoc" . "'" . ']); ? >" marginwidth="0" marginheight="0" scrolling="no" >';
+				$texto .= '<frame name="arbol_formato" id="arbol_formato" src="../librerias/formato_detalles.php?idformato=' . $idformato . '&iddoc=<?php echo($_REQUEST[' . "'" . "iddoc" . "'" . ']); ? >" marginwidth="0" marginheight="0" scrolling="no" >';
 			} else {
 				$texto .= '<frameset cols="250,*" >';
-				$texto .= '<frame name="formato_detalles" id="formato_detalles" src="../arboles/arbolformato_documento.php?idformato=' . $idformato . '&iddoc=<?php echo($_REQUEST[' . "'" . "iddoc" . "'" . ']); ? >" marginwidth="0" marginheight="0" scrolling="auto" >';
+				$texto .= '<frame name="arbol_formato" id="arbol_formato" src="../arboles/arbolformato_documento.php?idformato=' . $idformato . '&iddoc=<?php echo($_REQUEST[' . "'" . "iddoc" . "'" . ']); ? >" marginwidth="0" marginheight="0" scrolling="auto" >';
 			}
 			$texto .= '
   <frame name="detalles" src="" border="0" marginwidth="20px" marginheight="10" scrolling="auto">
