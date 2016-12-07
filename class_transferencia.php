@@ -802,7 +802,7 @@ function aprobar($iddoc=0,$url="")
                       }else{
                             window.open("'.$ruta2.'","arbol_formato");
                       }
-                  } 
+                  }; 
                   </script>
               
               ');
