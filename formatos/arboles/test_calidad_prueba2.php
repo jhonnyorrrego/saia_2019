@@ -155,10 +155,12 @@ if($formato["numcampos"]){
   for($i=0;$i<$macros["numcampos"];$i++){
       $validar_macro=1;
       $documentos=busca_filtro_tabla("","ft_proceso A","A.macroproceso=".$macros[$i]["idft_macroproceso_calidad"],"",$conn);
-      $imagenes=' im0="proceso.gif" im1="proceso.gif" im2="proceso.gif" ';     
+      $imagenes=' im0="proceso.gif" im1="proceso.gif" im2="proceso.gif" '; 
+      $iddoc_macro=$formato_macro[0]["idformato"]."-".$formato_macro[0]["nombre"]."-".$formato_macro[0]["nombre_tabla"];
+     // $iddoc_macro='macros-'.$macros[$i]["idft_macroproceso_calidad"];
 
       $texto.='<item style="font-family:verdana; font-size:7pt;" '.$imagenes;
-      $texto.=strip_tags('text="'.decodifica($macros[$i]["nombre"]).'" id="macros-'.$macros[$i]["idft_macroproceso_calidad"].'">'."\n");
+      $texto.=strip_tags('text="'.decodifica($macros[$i]["nombre"]).'" id="'.$iddoc_macro.'">'."\n");
       
 	  llena_hijos($formato_macro[0]["idformato"],$macros[$i]["idft_macroproceso_calidad"],$formato_macro[0]["nombre_tabla"]);
    	  for($j=0;$j<$documentos["numcampos"];$j++){
