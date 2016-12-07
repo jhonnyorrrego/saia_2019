@@ -792,14 +792,6 @@ function aprobar($iddoc=0,$url="")
           }else{
               echo abrir_url($ruta_db_superior.'pantallas/documento/informacion_resumen_documento.php?iddoc='.$iddoc,'formato_detalles');
           }
-
-       // echo abrir_url($ruta_db_superior.'pantallas/documento/informacion_resumen_documento.php?iddoc='.$iddoc,'formato_detalles');
-       // echo abrir_url($ruta_db_superior.'formatos/'.$datos_formato[0]['nombre'].'/detalles_mostrar_'.$datos_formato[0]['nombre'].'.php?iddoc='.$iddoc,'centro');//http://52.205.58.68/saia_release1/saia/pantallas/documento/informacion_resumen_documento.php?form_info=idformato=194&iddoc=127&seleccionar=385-ft_proceso-ft_indicadores_calidad-940
-       //window.parent.frames[0].location=vector[0]+'&'+vector[1]+'&seleccionar=".$formato_hijo[0]["idformato"]."-".$formato_doc[0]["nombre_tabla"]."-".$formato_hijo[0]["nombre_tabla"]."-".$_POST["iddoc"]."';
-       //$_POST['iddoc']=$iddoc;
-      // enrutar_documento();
-        //formatos/indicadores_calidad/detalles_mostrar_indicadores_calidad.php
-        
       }
       
   }
