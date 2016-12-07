@@ -790,7 +790,8 @@ function aprobar($iddoc=0,$url="")
              window.parent.frames[0].location=vector[0]+'&'+vector[1]+'&seleccionar=".$datos_formato[0]["idformato"]."-".$tabla_padre[0]["nombre_tabla"]."-".$datos_formato[0]["nombre_tabla"]."-".$iddoc."';
             </script>";
           }else{
-              echo abrir_url($ruta_db_superior.'pantallas/documento/informacion_resumen_documento.php?iddoc='.$iddoc,'formato_detalles');
+              //echo abrir_url($ruta_db_superior.'pantallas/documento/informacion_resumen_documento.php?iddoc='.$iddoc,'formato_detalles');
+              echo abrir_url($ruta_db_superior.'pantallas/documento/informacion_resumen_documento.php?iddoc='.$iddoc,'centro');
           }
       }
       
