@@ -780,7 +780,7 @@ function aprobar($iddoc=0,$url="")
       $vector_banderas=explode(',',$datos_formato[0]['banderas']);
       if(!in_array('e',$vector_banderas)){
         //echo abrir_url($ruta_db_superior.'pantallas/documento/informacion_resumen_documento.php?iddoc='.$iddoc,'formato_detalles');
-        echo abrir_url($ruta_db_superior.'formatos/'.$datos_formato[0]['nombre'].'/detalles_mostrar_'.$datos_formato[0]['nombre'].'.php?iddoc='.$iddoc,'formato_detalles');
+        echo abrir_url($ruta_db_superior.'formatos/'.$datos_formato[0]['nombre'].'/detalles_mostrar_'.$datos_formato[0]['nombre'].'.php?iddoc='.$iddoc,'_self');
         //formatos/indicadores_calidad/detalles_mostrar_indicadores_calidad.php
         
       }
