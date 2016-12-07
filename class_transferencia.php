@@ -777,7 +777,7 @@ function aprobar($iddoc=0,$url="")
   
   //pantallas/documento/informacion_resumen_documento.php?form_info=idformato=1&iddoc=851&alto_pantalla=634
   if(!@$_SESSION['radicacion_masiva']){  
-      $vector_banderas=explode($datos_formato[0]['banderas']);
+      $vector_banderas=explode(',',$datos_formato[0]['banderas']);
       if(!in_array('e',$vector_banderas)){
         echo abrir_url($ruta_db_superior.'pantallas/documento/informacion_resumen_documento.php?iddoc='.$iddoc,'formato_detalles');
       }
