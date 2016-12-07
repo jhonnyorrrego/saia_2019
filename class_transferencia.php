@@ -806,7 +806,7 @@ function aprobar($iddoc=0,$url="")
                   </script>
               
               ');
-              
+              die();
               /*
               if( document.getElementById( "formato_detalles" ) ){ //arbol_formato
                   echo abrir_url($ruta_db_superior.'pantallas/documento/informacion_resumen_documento.php?iddoc='.$iddoc,'formato_detalles');
