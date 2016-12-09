@@ -53,32 +53,6 @@ function asignar_permisos_indicadores($idformato,$iddoc){
     }
   }
 }
-function actividades_proceso($idformato,$iddoc){
-  global $conn;
-  
-  $texto="No existen Pasos Para este Procedimiento";
-  $formato=busca_filtro_tabla("","formato B","B.idformato=".$idformato,"",$conn);
-  if($formato["numcampos"]){
-  		
-  	
-	  $proceso=busca_filtro_tabla("",$formato[0]["nombre_tabla"],"documento_iddocumento=".$iddoc,"",$conn);
-	  //print_r($proceso);
-	  if($proceso["numcampos"]){
-	    $anexo=busca_filtro_tabla("","anexos","documento_iddocumento=".$iddoc." AND campos_formato=615","",$conn);
-	    //print_r($anexo) ;
-	    if($anexo["numcampos"]){
-	    	
-	      $texto="Descripcion Completa del Proceso:<br />".mostrar_valor_campo('descripcion_proceso',$formato[0]["idformato"],$iddoc,1);
-	    }
-	    else{
-	      $campos=array("proveedor","entrada","nombre","punto_control","salida","cliente");
-	      $texto=listar_formato_hijo($campos,"ft_actividad_proceso","ft_proceso",$proceso[0]["id".$formato[0]["nombre_tabla"]],"",'left');
-	    }
-	  }
-  }
-  echo($texto);
-}
-
 /*function arbol_procedimientos($idformato,$idcampo,$iddoc=NULL)
 {global $conn;
  $valor="";
@@ -153,19 +127,7 @@ function enlace_listado_maestro_documentos($idformato,$iddoc){
     echo(listar_anexos($listadof[0]["idcampos_formato"],$listadof[0]["formato_idformato"],$listado[$i]["idft_listados_maestros"],1));
   }*/
 }
-function listar_control_proceso($idformato,$iddoc){
-  global $conn;
-  $texto="No existen Controles Para este Procedimiento";
-  $formato=busca_filtro_tabla("","formato B","B.idformato=".$idformato,"",$conn);
-  if($formato["numcampos"]){
-    $proceso=busca_filtro_tabla("",$formato[0]["nombre_tabla"],"documento_iddocumento=".$iddoc,"",$conn);
-    if($proceso["numcampos"]){
-      $campos=array("nombre","hoja_vida_indicador");
-      $texto=listar_formato_hijo($campos,"ft_control_proceso","ft_proceso",$proceso[0]["id".$formato[0]["nombre_tabla"]],"",'left'," and a.estado<>'INACTIVO'");
-    }
-  }
-  echo($texto);
-}
+
 function listar_politicas_proceso($idformato,$iddoc){
   global $conn;
   $texto="No existen Politicas Para este Proceso";
