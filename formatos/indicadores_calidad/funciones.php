@@ -48,11 +48,11 @@ function formula_calculo($idformato,$iddoc){
 
 function mostrar_fuente_datos($idformato,$iddoc){
     $datos=busca_filtro_tabla("fuente_datos","ft_indicadores_calidad","documento_iddocumento=".$iddoc,"",$conn);
-    echo( strip_tags(utf8_encode(html_entity_decode($datos[0]["fuente_datos"]))) );
+    echo( strip_tags(codifica_encabezado(html_entity_decode($datos[0]["fuente_datos"]))) );
 }
 function mostrar_objetivo_calidad_indicador($idformato,$iddoc){
     $datos=busca_filtro_tabla("objetivo_calidad_indicador","ft_indicadores_calidad","documento_iddocumento=".$iddoc,"",$conn);
-    echo( strip_tags(utf8_encode(html_entity_decode($datos[0]["objetivo_calidad_indicador"]))) );    
+    echo( strip_tags(codifica_encabezado(html_entity_decode($datos[0]["objetivo_calidad_indicador"]))) );    
 }
 function documento_referencia2($idformato,$iddoc,$tipo=NULL){
   global $conn;
