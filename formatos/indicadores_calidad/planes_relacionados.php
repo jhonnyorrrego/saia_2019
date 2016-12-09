@@ -11,7 +11,7 @@ if(isset($_REQUEST["seguimiento_indicador"])&&$_REQUEST["seguimiento_indicador"]
    echo "<br /><br />No existen planes relacionados con el seguimiento.";
  elseif($planes["numcampos"]==1)
    {echo "<script>
-          window.parent.hs.close();
+          //window.parent.hs.close();
           window.open('../../ordenar.php?accion=mostrar&mostrar_formato=1&key=".$planes[0][0]."','_blank');
           </script>";  
    }
