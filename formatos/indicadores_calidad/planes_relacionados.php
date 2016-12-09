@@ -16,7 +16,7 @@ if(isset($_REQUEST["seguimiento_indicador"])&&$_REQUEST["seguimiento_indicador"]
    echo "<script>
           
           parent.window.open('../../ordenar.php?accion=mostrar&mostrar_formato=1&key=".$planes[0][0]."','_blank');
-          window.parent.hs.close();
+         parent.hs.close();
           </script>";  
    }
  else
