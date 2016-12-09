@@ -24,7 +24,10 @@ function enlace_planes($idformato,$iddoc){
   global $conn;
   $seg=busca_filtro_tabla("idft_seguimiento_indicador","ft_seguimiento_indicador","documento_iddocumento=".$iddoc,"",$conn);  
   if(!isset($_REQUEST["tipo"])||$_REQUEST["tipo"]==1)
-    echo"<a class='highslide' onclick='return hs.htmlExpand(this, { objectType: \"iframe\",width: 500, height:400,preserveContent:false } )'  href='../indicadores_calidad/planes_relacionados.php?tipo=seguimiento&seguimiento_indicador=".$seg[0]["idft_seguimiento_indicador"]."'>Ver Planes</a>";
+    echo"<a class='highslide' onclick='return hs.htmlExpand(this, { objectType: \"iframe\",width: 500, height:300,preserveContent:false } )'  href='../indicadores_calidad/planes_relacionados.php?tipo=seguimiento&seguimiento_indicador=".$seg[0]["idft_seguimiento_indicador"]."'>Ver Planes</a>";
+    
+    
+    //<a class="highslide" onclick="return hs.htmlExpand(this, { objectType: \'iframe\',width: 500, height:400,preserveContent:false } )"  href="planes_relacionados.php?tipo=indicador&seguimiento_indicador=' . $seg[$j]["idft_seguimiento_indicador"] . '">Ver Planes</a>
 }
 function formulario_variables($idcampo,$idformato,$iddoc=NULL){
   global $conn;
