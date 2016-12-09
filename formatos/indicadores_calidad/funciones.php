@@ -38,7 +38,7 @@ function formula_calculo($idformato,$iddoc){
                 <td align="center">'.$formula[0]["unidad"].'</td>
                 <td align="center" style="">'.mostrar_valor_campo('naturaleza',$idformato_formula_indicador[0]['idformato'],$respuesta[$i]["destino"],1).'</td>
                 <td align="center" style="">'.mostrar_valor_campo('periocidad',$idformato_formula_indicador[0]['idformato'],$respuesta[$i]["destino"],1).'</td>
-                <td style="">'.strip_tags(utf8_encode(html_entity_decode($formula[0]["observacion"]))).'</td>
+                <td style="">'.strip_tags(codifica_encabezado(html_entity_decode($formula[0]["observacion"]))).'</td>
                 <td>'.mostrar_valor_campo('observaciones',$idformato_formula_indicador[0]['idformato'],$respuesta[$i]["destino"],1).'</td>
             </tr>';
   } 
