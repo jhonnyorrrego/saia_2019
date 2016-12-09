@@ -7,6 +7,7 @@ if(isset($_REQUEST["seguimiento_indicador"])&&$_REQUEST["seguimiento_indicador"]
  else*/
    $target="centro";  
  $planes=busca_filtro_tabla("iddocumento,descripcion,numero","seguimiento_planes,documento","iddocumento=plan_mejoramiento and documento.estado<>'ELIMINADO' and idft_seguimiento_indicador=".$_REQUEST["seguimiento_indicador"],"",$conn);
+ print_r($planes);
  if($planes["numcampos"]==0)
    echo "<br /><br />No existen planes relacionados con el seguimiento.";
  elseif($planes["numcampos"]==1)
