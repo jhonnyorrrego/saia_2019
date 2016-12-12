@@ -331,7 +331,7 @@ $("#ingresar").click(function(){
     });
   }
   else{                         
-    noty({text: "<b>Por favor ingrese un usuario y una clave v&aacute;lidos!</b> <br> intente de nuevo",type: 'error',layout: "topCenter",timeout:tiempo});
+    noty({text: "<span style='color:white;'><b>Por favor ingrese un usuario y una clave v&aacute;lidos!</b> <br> intente de nuevo</span>",type: 'error',layout: "topCenter",timeout:tiempo});
   }  
 });
 $(document).keypress(function(event) {
