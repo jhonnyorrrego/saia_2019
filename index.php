@@ -319,7 +319,7 @@ $("#ingresar").click(function(){
           }  
           else{
             $('#contenedor_recordar_contrasena').css('pointer-events','auto'); 
-            mensaje='<span style="color:white;">'.mensaje.'</span>';
+            mensaje='<span style="color:white;">'+mensaje+'</span>';
             noty({text: mensaje,type: 'error',layout: "topCenter",timeout:tiempo});
           }                         
         }
