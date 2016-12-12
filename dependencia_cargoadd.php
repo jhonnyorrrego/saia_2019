@@ -31,6 +31,7 @@ $x_fecha_ingreso = Null;
 ?>
 <?php include ("db.php") ?>
 <?php include ("phpmkrfn.php") ?>
+<?php include_once ("librerias_saia.php"); echo(librerias_notificaciones()); ?>
 <?php
 
 // Get action
@@ -124,7 +125,9 @@ inicio = new Date(fecha1.substring(0,4),mes,fecha1.substring(8,10));
 fin = new Date(fecha2.substring(0,4),mes2,fecha2.substring(8,10));
 dif = Math.floor((fin.getTime() - inicio.getTime())/(1000*60*60*24));
 if(dif<=0)
-{ alert("La fecha final de actividades no puede ser menor o igual que la fecha inicial, por favor verifique");
+{ 
+    //alert("La fecha final de actividades no puede ser menor o igual que la fecha inicial, por favor verifique");
+    notificacion_saia('<b>ATENCI&Oacute;</b><br>La fecha final de actividades no puede ser menor o igual que la fecha inicial, por favor verifique','warning','',4000);
   return false;
 }
 return true;
