@@ -84,7 +84,8 @@ if (EW_this.x_nombre && !EW_hasValue(EW_this.x_nombre, "TEXT" )) {
 		return false;
 }
 if (EW_this.x_tipo && !EW_hasValue(EW_this.x_tipo, "TEXT" )) {
-	if (!EW_onError(EW_this, EW_this.x_tipo, "TEXT", "<b>ATENCI&Oacute;N</b><br>Por favor ingrese los campos requeridos - Tipo"))
+	//if (!EW_onError(EW_this, EW_this.x_tipo, "TEXT", "<b>ATENCI&Oacute;N</b><br>Por favor ingrese los campos requeridos - Tipo"))
+	    notificacion_saia('<b>ATENCI&Oacute;N</b><br>Por favor ingrese los campos requeridos - Tipo','warning','',4000);
 		return false;
 }
 
