@@ -126,7 +126,6 @@ fin = new Date(fecha2.substring(0,4),mes2,fecha2.substring(8,10));
 dif = Math.floor((fin.getTime() - inicio.getTime())/(1000*60*60*24));
 if(dif<=0)
 { 
-    //alert("La fecha final de actividades no puede ser menor o igual que la fecha inicial, por favor verifique");
     notificacion_saia('<b>ATENCI&Oacute;</b><br>La fecha final de actividades no puede ser menor o igual que la fecha inicial, por favor verifique','warning','',5000);
   return false;
 }
