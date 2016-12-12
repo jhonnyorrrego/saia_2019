@@ -353,8 +353,6 @@ function listar_macroprocesos_and_procesos($idformato,$iddoc){
 	
 	$procesos=busca_filtro_tabla("","ft_proceso a, documento b","a.documento_iddocumento=b.iddocumento and b.estado not in('ELIMINADO', 'ACTIVO', 'ANULADO') and a.estado<>'INACTIVO'","nombre ASC",$conn);
 	
-	$macros=busca_filtro_tabla("","ft_macroproceso_calidad a, documento b","a.documento_iddocumento=b.iddocumento and b.estado not in ('ELIMINADO', 'ANULADO', 'ACTIVO')","nombre ASC",$conn);
-	
 	if($_REQUEST["iddoc"]){
 		$control_documentos = busca_filtro_tabla("listado_procesos","ft_control_documentos","documento_iddocumento=".$_REQUEST["iddoc"],"",$conn);
 	}
@@ -370,13 +368,6 @@ function listar_macroprocesos_and_procesos($idformato,$iddoc){
 			$texto.='<option value="1|'.$procesos[$i]["idft_proceso"].'" tipo="1" selected>'.$procesos[$i]["nombre"].' (Proceso)</option>';
 		}else{
 			$texto.='<option value="1|'.$procesos[$i]["idft_proceso"].'" tipo="1">'.$procesos[$i]["nombre"].' (Proceso)</option>';
-		}
-	}
-	for($i=0;$i<$macros["numcampos"];$i++){
-		if($control_documentos[0]["listado_procesos"] == "2|".$procesos[$i]["idft_proceso"]){
-			$texto.='<option value="2|'.$macros[$i]["idft_macroproceso_calidad"].'" tipo="2" selected>'.$macros[$i]["nombre"].' (Macroproceso)</option>';
-		}else{		
-			$texto.='<option value="2|'.$macros[$i]["idft_macroproceso_calidad"].'" tipo="2">'.$macros[$i]["nombre"].' (Macroproceso)</option>';
 		}
 	}
 	
