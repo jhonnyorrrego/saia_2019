@@ -21,7 +21,7 @@ echo(librerias_notificaciones());
 					data : 'nombre=nit&valor=' + $('#x_nit').val() + '&tabla=funcionario',
 					success : function(datos, exito) {
 						if (datos == 0) {
-							notificacion_saia('<B>ATENCI&Oacute;N!</B> <BR> El campo Identificaci&oacute;n debe Ser unico', 'success', '', 4000);
+							notificacion_saia('<B>ATENCI&Oacute;N!</B> <BR> El campo Identificaci&oacute;n debe Ser unico', 'warning', '', 4000);
 							$('#x_nit').val("");
 						}
 					}
@@ -41,7 +41,7 @@ echo(librerias_notificaciones());
 					data : 'nombre=login&valor=' + $('#x_login').val() + '&tabla=funcionario',
 					success : function(datos, exito) {
 						if (datos == 0) {
-							notificacion_saia('<B>ATENCI&Oacute;N!</B> <BR> El campo login de funcionario debe Ser unico', 'success', '', 4000);
+							notificacion_saia('<B>ATENCI&Oacute;N!</B> <BR> El campo login de funcionario debe Ser unico', 'warning', '', 4000);
 
 							$('#x_login').val("");
 						}
