@@ -30,7 +30,7 @@ function despachar_fisico_doc(){
 	  	notificacion_saia("<b>ATENCI&Oacute;N</b><br>Seleccione por lo menos un documento","warning","",4000);
 	  }
     });
-  </script>';
+  </script>'; 
   return $texto;
 }
 function planilla_control(){
