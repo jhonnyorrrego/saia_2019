@@ -31,9 +31,9 @@ function validar_formula_mostrar($idformato,$iddocumento){
   $valor=busca_filtro_tabla("nombre","ft_formula_indicador","documento_iddocumento=$iddocumento","",$conn);
 ?>
   <div id='formula'></div>
-   <script src="../../js/jquery.js"></script>
+   
    <script>
-   $().ready(function() {
+   $(document).ready(function() {
   	validar_formula("<?php echo $valor[0][0];?>",2);
   });
 </script>
