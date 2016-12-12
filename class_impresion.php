@@ -327,7 +327,7 @@ class Imprime_Pdf {
 		
 	
 		if($_REQUEST["url"]){
-		    $request_url=PROTOCOLO_CONEXION.RUTA_PDF_LOCAL."/".str_replace('.php','.php?1=1|',$_REQUEST['url']);
+		    $request_url=PROTOCOLO_CONEXION.RUTA_PDF_LOCAL."/".str_replace('.php','.php?1=1',$_REQUEST['url']);
 		    $direccion[]= PROTOCOLO_CONEXION.RUTA_PDF_LOCAL."/".str_replace('|','&',$request_url);
 		}else{
     		$datos_formato = busca_filtro_tabla("nombre,nombre_tabla,ruta_mostrar,idformato", "formato,documento", "lower(plantilla)=nombre and iddocumento=$iddocumento", "", $conn);
