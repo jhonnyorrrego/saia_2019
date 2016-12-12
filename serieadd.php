@@ -10,8 +10,6 @@ while ($max_salida > 0) {
 }
 include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."pantallas/expediente/librerias.php");
-include_once($ruta_db_superior."librerias_saia.php");
-echo(librerias_notificaciones());
 
 
 
@@ -43,6 +41,7 @@ $x_tipo = Null;
 
 	include ("librerias_saia.php");		
 echo(librerias_jquery('1.7')); 
+echo(librerias_notificaciones());
 ?>
 <?php
 
