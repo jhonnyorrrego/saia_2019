@@ -9,7 +9,6 @@ function despachar_doc(){
 	  	enlace_katien_saia("despachar.php?docs="+docus+",","Despachar documentos","iframe","");
 	  }
 	  else{
-	  	//alert("Seleccione por lo menos un documento");
 	  	notificacion_saia("<b>ATENCI&Oacute;N</b><br>Seleccione por lo menos un documento","warning","",4000);
 	  }
     });
@@ -44,7 +43,7 @@ function planilla_control(){
       enlace_katien_saia("formatos/despacho_ingresados/adicionar_despacho_ingresados.php?docs="+docus+",","Entrega Interna","iframe","");
     }
     else{
-      alert("Seleccione por lo menos un documento");
+      notificacion_saia("<b>ATENCI&Oacute;N</b><br>Seleccione por lo menos un documento","warning","",4000);
     }
     });
   </script>';
