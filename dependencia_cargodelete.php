@@ -250,7 +250,7 @@ function validar_tipo_cargo($idrol){
 	$funcionario=busca_filtro_tabla("funcionario_idfuncionario","dependencia_cargo a","a.iddependencia_cargo=".$idrol,"",$conn);
 	$roles_activos=busca_filtro_tabla("","dependencia_cargo a, cargo b","a.funcionario_idfuncionario=".$funcionario[0]["funcionario_idfuncionario"]." and a.estado=1 and a.cargo_idcargo=b.idcargo and b.estado=1 and b.tipo_cargo='1'","",$conn);
 	if(!$roles_activos["numcampos"]){
-		alerta("El funcionario debe tener por lo menos un rol con cargo administrativo, se activara este rol automaticamente");
+		alerta("<b>ATENCI&Oacute;N</b><br>El funcionario debe tener por lo menos un rol con cargo administrativo, se activara este rol automaticamente","warning");
 		$sSql = "update dependencia_cargo set estado=1,fecha_final=".fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s')." where iddependencia_cargo=$idrol";
 		phpmkr_query($sSql);
 	}
