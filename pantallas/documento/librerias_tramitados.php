@@ -26,7 +26,7 @@ function despachar_fisico_doc(){
 			enlace_katien_saia("formatos/despacho_fisico/adicionar_despacho_fisico.php?docs="+docus+",","Despachar documentos","iframe","");
 	  }
 	  else{
-	  	alert("Seleccione por lo menos un documento");
+	  	alerta("Seleccione por lo menos un documento");
 	  }
     });
   </script>';
