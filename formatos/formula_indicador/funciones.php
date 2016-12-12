@@ -31,7 +31,7 @@ function validar_formula_llenar(){
 function validar_formula_mostrar($idformato,$iddocumento){
     global $conn;
   $valor=busca_filtro_tabla("nombre","ft_formula_indicador","documento_iddocumento=$iddocumento","",$conn);
-  print_r($valor);
+  print_r($valor);die('<aqui');
 ?>
   <div id='formula'></div>
    
