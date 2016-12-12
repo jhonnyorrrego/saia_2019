@@ -318,7 +318,8 @@ $("#ingresar").click(function(){
             setTimeout(function(){window.location=ruta},(tiempo+100));
           }  
           else{
-            $('#contenedor_recordar_contrasena').css('pointer-events','auto');  
+            $('#contenedor_recordar_contrasena').css('pointer-events','auto'); 
+            mensaje='<span style="color:white;">'.mensaje.'</span>';
             noty({text: mensaje,type: 'error',layout: "topCenter",timeout:tiempo});
           }                         
         }
