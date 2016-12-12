@@ -24,9 +24,9 @@ if($_REQUEST["export"]=="excel"){
 	header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
 }
 else if($_REQUEST["export"]=="pdf"){
-  $url=PROTOCOLO_CONEXION.RUTA_PDF."/pantallas/documento/despachar_fisico.php?no_encabezado=1";
+  $url=PROTOCOLO_CONEXION.RUTA_PDF."/pantallas/documento/despachar_fisico.php|no_encabezado=1";
 	$url_encabezado=PROTOCOLO_CONEXION.RUTA_PDF."/pantallas/documento/despachar_fisico.php";				
-	$ruta=$ruta_db_superior."class_impresion2.php?orientacion=1&url=".$url."&pdf=1&url_encabezado=";		
+	$ruta=$ruta_db_superior."class_impresion.php?orientacion=1&url=".$url."&pdf=1&url_encabezado=";		
   redirecciona($ruta);
   die(); 
 }
