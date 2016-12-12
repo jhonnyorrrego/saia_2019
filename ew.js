@@ -22,7 +22,7 @@ function EW_isHTMLArea(input_object, object_type) {
 
 function EW_onError(form_object, input_object, object_type, error_message) {
 	//alert(error_message);		
-	notificacion_saia('error_message','warning','',4000);
+	notificacion_saia(error_message,'warning','',4000);
 	if (object_type == "RADIO" || object_type == "CHECKBOX") {
 		if (input_object[0])
 			input_object[0].focus();
