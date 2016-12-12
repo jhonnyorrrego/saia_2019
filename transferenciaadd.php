@@ -6,6 +6,8 @@ if(@$_REQUEST["iddoc"] || @$_REQUEST["key"]){
 }
 include_once("db.php");
 include_once("class_transferencia.php");
+include_once("librerias_saia.php");
+echo( librerias_notificaciones() );
 $accion_flujo="";
 if(@$_REQUEST["idpaso_actividad"] != ''){
 	$accion_flujo = '&accion=1';
@@ -237,7 +239,8 @@ function EW_checkMyForm(EW_this)
   document.transferenciaadd.x_funcionario_destino.value=func;
   document.transferenciaadd.x_copia.value=copia;
    if(EW_this.x_funcionario_destino && EW_this.x_funcionario_destino.value == "")
-           { alert("Por favor ingresar un funcionario o dependencia destino para transferir el documento");
+           { //alert("Por favor ingresar un funcionario o dependencia destino para transferir el documento");
+               notificacion_saia('<b>ATENCI&Oacute;N</b><br>Por favor ingresar un funcionario o dependencia destino para transferir el documento','warning','',4000);
 		        return false;
 		       }
   var list_serie = tree3.getAllChecked();
