@@ -27,7 +27,7 @@ function campos_ocultos_despacho($idformato,$iddoc){
 			var valores='<?php echo $valores;?>';
 			if(valores=='' || valores==0){
 				//alerta("Por favor seleccione documentos");
-				notificacion_saia('Por favor seleccione documentos','warning','',4000);
+				notificacion_saia('<b>ATENCI&Oacute;N</b><br>Por favor seleccione documentos','warning','',4000);
 			}else{
 				$("input[name=docs_seleccionados]").val('<?php echo $valores;?>');
 				$("input[name=fecha_despacho]").val('<?php echo $hoy;?>');
