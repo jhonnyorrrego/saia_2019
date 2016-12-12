@@ -22,6 +22,7 @@ $x_tipo = Null;
 ?>
 <?php include ("db.php") ?>
 <?php include ("phpmkrfn.php") ?>
+<?php include_once ("librerias_saia.php"); echo(librerias_notificaciones()); ?>
 <?php
 $sKey = @$_GET["key"];
 if (($sKey == "") || (is_null($sKey))) { $sKey = @$_POST["key"]; }
