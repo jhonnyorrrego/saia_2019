@@ -247,7 +247,8 @@ function EW_checkMyForm(EW_this)
   var serie = list_serie.split(",");
   if(serie.length>1)
   {
-    alert("Se debe elegir solo una serie documental");
+    //alert("Se debe elegir solo una serie documental");
+    notificacion_saia('<b>ATENCI&Oacute;N</b><br>Se debe elegir solo una serie documental','warning','',4000);
 		return false;
   }
   else
