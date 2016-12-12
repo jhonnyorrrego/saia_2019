@@ -185,6 +185,7 @@ if(@$_REQUEST["idbusqueda_filtro_temp"]){
 	//die($condicion);
   }
 }
+$condicion=str_replace(" AND  and  ", " and ", $condicion);
 foreach($campos as $valor){
 	$as=strpos(strtolower($valor)," as ");
 	if($as!==false){
