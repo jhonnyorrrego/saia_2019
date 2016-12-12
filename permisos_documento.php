@@ -240,7 +240,8 @@ function edit_permiso_documento($iddoc,$idpermiso){
 			  if(permiso===true){
 			  	$("#edit_permiso_documento").submit();
 			  }else{
-			  	alert("Ingrese al menos un permiso");
+			  	//alert("Ingrese al menos un permiso");
+			  	notificacion_saia('<b>ATENCI&Oacute;N</b><br>Ingrese al menos un permiso','warning','',4000);
 			  }
 			});
 			$("#submit_cancelar").click(function (){
