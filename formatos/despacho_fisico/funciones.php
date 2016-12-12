@@ -26,7 +26,8 @@ function campos_ocultos_despacho($idformato,$iddoc){
 		$(document).ready(function (){
 			var valores='<?php echo $valores;?>';
 			if(valores=='' || valores==0){
-				alerta("Por favor seleccione documentos");
+				//alerta("Por favor seleccione documentos");
+				notificacion_saia('Por favor seleccione documentos','warning','',4000);
 			}else{
 				$("input[name=docs_seleccionados]").val('<?php echo $valores;?>');
 				$("input[name=fecha_despacho]").val('<?php echo $hoy;?>');
@@ -109,7 +110,8 @@ function generar_pdf_despacho($idformato,$iddoc){
 		}
 	}
 	if($j==$i){
-		alerta("Despachos realizados");
+		//alerta("Despachos realizados");
+		notificacion_saia('Despachos realizados','success','',4000);
 	}
 	abrir_url($ruta_db_superior."class_impresion.php?iddoc=".$iddoc,"_self");
 	die();
