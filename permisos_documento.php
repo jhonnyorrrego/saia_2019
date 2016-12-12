@@ -13,6 +13,7 @@ include_once($ruta_db_superior."librerias_saia.php");
 $usuario_actual=usuario_actual("funcionario_codigo");
 echo (librerias_jquery("1.7"));
 echo (estilo_bootstrap());
+echo (librerias_notificaciones());
 
 if($_REQUEST["iddoc"]!="" && $_REQUEST["accion"]!=""){
 	switch ($_REQUEST["accion"]) {
@@ -165,7 +166,8 @@ function add_permiso_documento($iddoc){
 			  if(funcionario!="" && permiso===true){
 			  	$("#permiso_documento").submit();
 			  }else{
-			  	alert("Todos los campos son obligatorios");
+			  	//alert("Todos los campos son obligatorios");
+			  	notificacion_saia('<b>ATENCI&Oacute;N</b><br>Todos los campos son obligatorios','warning','',4000);
 			  }
 			});
 			$("#submit_cancelar").click(function (){
