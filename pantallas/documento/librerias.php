@@ -397,15 +397,18 @@ function vincular_documentos(){
 	  	var coma=docus.indexOf(",");
 		if(coma>0){
 			$.post("'.$ruta_db_superior.'vincular_documento.php",{docs:docus},function(){
-				alert("Vinculacion exitosa");
+				//alert("Vinculacion exitosa");
+				notificacion_saia("Vinculacion exitosa","success","",4000);
 			});
 		}
 	  	else if(coma==-1){
-	  		alert("Seleccione mas documentos para la vinculacion");
+	  		//alert("Seleccione mas documentos para la vinculacion");
+	  		notificacion_saia("<b>ATENCI&Oacute;N</b><br>Seleccione mas documentos para la vinculacion","warning","",4000);
 	  	}
 	  }
 	  else{
-	  	alert("Seleccione por lo menos dos documentos");
+	  	//alert("Seleccione por lo menos dos documentos");
+	  	notificacion_saia("<b>ATENCI&Oacute;N</b><br>Seleccione por lo menos dos documentos","warning","",4000);
 	  }
     });
   </script>';
