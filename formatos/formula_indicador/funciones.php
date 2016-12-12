@@ -8,6 +8,7 @@ while($max_salida>0){
   $ruta.="../";
   $max_salida--;
 }
+include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."librerias_saia.php");
 echo( librerias_jquery('1.7') );
 
@@ -28,13 +29,14 @@ function validar_formula_llenar(){
 <?php
 }
 function validar_formula_mostrar($idformato,$iddocumento){
+    global $conn;
   $valor=busca_filtro_tabla("nombre","ft_formula_indicador","documento_iddocumento=$iddocumento","",$conn);
 ?>
   <div id='formula'></div>
    
    <script>
    $(document).ready(function() {
-  	//validar_formula("<?php echo $valor[0][0];?>",2);
+  	validar_formula("<?php echo $valor[0][0];?>",2);
   });
 </script>
 <?php
