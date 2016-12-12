@@ -37,6 +37,7 @@ $x_tipo = Null;
 <?php include ("phpmkrfn.php");
 include ("librerias_saia.php");
 echo(librerias_jquery()); 
+echo(librerias_notificaciones());
 ?>
 <?php
 $sKey = @$_GET["key"];
@@ -105,35 +106,43 @@ EW_dateSep = "/"; // set date separator
 <!--
 function EW_checkMyForm(EW_this) {
 if (EW_this.x_nombre && !EW_hasValue(EW_this.x_nombre, "TEXT" )) {
-	if (!EW_onError(EW_this, EW_this.x_nombre, "TEXT", "Por favor llenar campo requerido - nombre"))
+	//if (!EW_onError(EW_this, EW_this.x_nombre, "TEXT", "Por favor llenar campo requerido - nombre"))
+	notificacion_saia('<b>ATENCI&Oacute;N</b><br>Por favor llenar campo requerido - nombre','warning','',4000);
 		return false;
 }
 if (EW_this.x_tipo && !EW_hasValue(EW_this.x_tipo, "RADIO" )) {
-	if (!EW_onError(EW_this, EW_this.x_tipo, "RADIO", "Por favor llenar campo requerido - tipo"))
+	//if (!EW_onError(EW_this, EW_this.x_tipo, "RADIO", "Por favor llenar campo requerido - tipo"))
+	notificacion_saia('<b>ATENCI&Oacute;N</b><br>Por favor llenar campo requerido - tipo','warning','',4000);
 		return false; 
 }
 if (EW_this.x_cod_padre && !EW_checkinteger(EW_this.x_cod_padre.value)) {
-	if (!EW_onError(EW_this, EW_this.x_cod_padre, "TEXT", "Por favor llenar campo requerido - cod padre"))
+	//if (!EW_onError(EW_this, EW_this.x_cod_padre, "TEXT", "Por favor llenar campo requerido - cod padre"))
+		notificacion_saia('<b>ATENCI&Oacute;N</b><br>Por favor llenar campo requerido - cod padre','warning','',4000);
 		return false; 
 }
 if (EW_this.x_dias_entrega && !EW_hasValue(EW_this.x_dias_entrega, "TEXT" )) {
-	if (!EW_onError(EW_this, EW_this.x_dias_entrega, "TEXT", "Por favor llenar campo requerido - dias entrega"))
+	//if (!EW_onError(EW_this, EW_this.x_dias_entrega, "TEXT", "Por favor llenar campo requerido - dias entrega"))
+	notificacion_saia('<b>ATENCI&Oacute;N</b><br>Por favor llenar campo requerido - dias entrega','warning','',4000);
 		return false;
 }
 if (EW_this.x_dias_entrega && !EW_checkinteger(EW_this.x_dias_entrega.value)) {
-	if (!EW_onError(EW_this, EW_this.x_dias_entrega, "TEXT", "Por favor llenar campo requerido - dias entrega"))
+	//if (!EW_onError(EW_this, EW_this.x_dias_entrega, "TEXT", "Por favor llenar campo requerido - dias entrega"))
+	notificacion_saia('<b>ATENCI&Oacute;N</b><br>Por favor llenar campo requerido - dias entrega','warning','',4000);
 		return false; 
 }
 if (EW_this.x_retencion_gestion && !EW_checkinteger(EW_this.x_retencion_gestion.value)) {
-	if (!EW_onError(EW_this, EW_this.x_retencion_gestion, "TEXT", "Por favor llenar campo requerido - retencion gestion"))
+	//if (!EW_onError(EW_this, EW_this.x_retencion_gestion, "TEXT", "Por favor llenar campo requerido - retencion gestion"))
+	notificacion_saia('<b>ATENCI&Oacute;N</b><br>Por favor llenar campo requerido - retencion gestion','warning','',4000);
 		return false; 
 }
 if (EW_this.x_retencion_central && !EW_checkinteger(EW_this.x_retencion_central.value)) {
-	if (!EW_onError(EW_this, EW_this.x_retencion_central, "TEXT", "Por favor llenar campo requerido - retencion central"))
+	//if (!EW_onError(EW_this, EW_this.x_retencion_central, "TEXT", "Por favor llenar campo requerido - retencion central"))
+	notificacion_saia('<b>ATENCI&Oacute;N</b><br>Por favor llenar campo requerido - retencion central','warning','',4000);
 		return false; 
 }
 if (EW_this.x_seleccion && !EW_checkinteger(EW_this.x_seleccion.value)) {
-	if (!EW_onError(EW_this, EW_this.x_seleccion, "TEXT", "Por favor llenar campo requerido - seleccion"))
+	//if (!EW_onError(EW_this, EW_this.x_seleccion, "TEXT", "Por favor llenar campo requerido - seleccion"))
+	notificacion_saia('<b>ATENCI&Oacute;N</b><br>Por favor llenar campo requerido - seleccion','warning','',4000);
 		return false; 
 }
 return true;
