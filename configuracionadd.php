@@ -22,6 +22,7 @@ $x_tipo = Null;
 ?>
 <?php include ("db.php") ?>
 <?php include ("phpmkrfn.php") ?>
+<?php include_once ("librerias_saia.php"); echo(librerias_notificaciones()); ?>
 <?php
 
 // Get action
@@ -79,6 +80,7 @@ EW_dateSep = "/"; // set date separator
 function EW_checkMyForm(EW_this) {
 if (EW_this.x_nombre && !EW_hasValue(EW_this.x_nombre, "TEXT" )) {
 	if (!EW_onError(EW_this, EW_this.x_nombre, "TEXT", "Por favor ingrese los campos requeridos - Nombre"))
+	    
 		return false;
 }
 if (EW_this.x_tipo && !EW_hasValue(EW_this.x_tipo, "TEXT" )) {
