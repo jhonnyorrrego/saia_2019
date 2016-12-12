@@ -42,7 +42,7 @@ $x_tipo = Null;
 <?php include ("phpmkrfn.php") ;
 
 	include ("librerias_saia.php");		
-echo(librerias_jquery()); 
+echo(librerias_jquery('1.7')); 
 ?>
 <?php
 
