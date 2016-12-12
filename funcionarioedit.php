@@ -132,7 +132,7 @@ label.error{
                 success: function(datos,exito){
                   if(datos==0){
                   //  alert('El campo codigo de funcionario debe Ser unico');
-                    notificacion_saia('<B>ATENCI&Oacute;N!</B> <BR> El campo Identificaci&oacute;n debe Ser unico','success','',4000);
+                    notificacion_saia('<B>ATENCI&Oacute;N!</B> <BR> El campo Identificaci&oacute;n debe Ser unico','warning','',4000);
 		   			 $('#x_nit').val(x_nits);
                   }  
                 }
