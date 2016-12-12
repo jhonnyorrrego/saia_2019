@@ -80,7 +80,7 @@ EW_dateSep = "/"; // set date separator
 function EW_checkMyForm(EW_this) {
 if (EW_this.x_nombre && !EW_hasValue(EW_this.x_nombre, "TEXT" )) {
 	//if (!EW_onError(EW_this, EW_this.x_nombre, "TEXT", "<b>ATENCI&Oacute;N</b><br>Por favor ingrese los campos requeridos - Nombre"))
-	    notificacion_saia('<b>ATENCI&Oacute;N</b><br>Por favor ingrese los campos requeridos - Nombre','success','',4000);
+	    notificacion_saia('<b>ATENCI&Oacute;N</b><br>Por favor ingrese los campos requeridos - Nombre','warning','',4000);
 		return false;
 }
 if (EW_this.x_tipo && !EW_hasValue(EW_this.x_tipo, "TEXT" )) {
