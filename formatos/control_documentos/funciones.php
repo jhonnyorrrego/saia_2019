@@ -42,6 +42,8 @@ function validar_tipo_documento($idformato, $iddoc){
 			$("input[name='otros_documentos']").parent().parent().parent().parent().parent().parent().parent().show();
 			$("input[name='otros_documentos']").addClass('required');
 		}else{
+		    $("#tr_serie_doc_control").show();
+			$("#serie_doc_control").addClass('required');
 			$("#serie_idserie").addClass('required');
 			$("#serie_idserie").parent().parent().show();
 			$("input[name='otros_documentos']").parent().parent().parent().parent().parent().parent().parent().hide();
