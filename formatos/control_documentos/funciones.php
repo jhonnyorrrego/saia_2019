@@ -25,11 +25,7 @@ function validar_tipo_documento($idformato, $iddoc){
 		
 ?>
 <script type="text/javascript">
-	$(document).ready(function(){
-	    
-		$("#tr_serie_doc_control").hide();
-		$("#serie_doc_control").removeClass('required');	    
-	    
+	$(document).ready(function(){		
 		$("#serie_idserie").removeClass('required');
 		$("#serie_idserie").parent().parent().hide();
 		
