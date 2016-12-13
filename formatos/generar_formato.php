@@ -1852,7 +1852,7 @@ function crear_formato_ae($idformato, $accion) {
 						$spinner++;
 						break;
 					default : // text
-						$texto .= '<tr>
+						$texto .= '<tr id="tr_'.$campos[$h]["nombre"].'">
                      <td class="encabezado" width="20%" title="' . $campos[$h]["ayuda"] . '">' . codifica($campos[$h]["etiqueta"]) . $obliga . '</td>
                      <td bgcolor="#F5F5F5"><input ' . " $adicionales $tabindex" . ' type="text" size="100" id="' . $campos[$h]["nombre"] . '" name="' . $campos[$h]["nombre"] . '" ' . $obligatorio . ' value="' . $valor . '"></td>
                     </tr>';
