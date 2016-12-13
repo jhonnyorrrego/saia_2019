@@ -75,7 +75,7 @@ $(document).ready(function(){
 		},
 		async: false ,
 		success: function(msg){	
-			window.location="http://intranet.risaralda.gov.co:100/Apps/SAIA/CEROK2_PRUEBAS/saia/versionamiento/crear_version.php?doc="+msg['iddoc']+"&pdf="+msg['pdf']+"&version="+msg['versionamiento']+"&no_redirecciona="+msg['no_redirecciona']+"&eliminar_anexo=<?php echo($_REQUEST['eliminar_anexo'])?>";
+			window.location="http://52.205.58.68/saia_release1/saia/versionamiento/crear_version.php?doc="+msg['iddoc']+"&pdf="+msg['pdf']+"&version="+msg['versionamiento']+"&no_redirecciona="+msg['no_redirecciona']+"&eliminar_anexo=<?php echo($_REQUEST['eliminar_anexo'])?>";
 		}
 	});
 });
