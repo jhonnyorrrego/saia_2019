@@ -740,10 +740,10 @@ function confirmar_control_documentos($idformato, $iddoc){
 	$estado= busca_filtro_tabla("estado","documento","estado = 'APROBADO' AND iddocumento=".$iddoc,"",$conn);
 	
 	$fecha_confirmacion = busca_filtro_tabla(fecha_db_obtener("a.fecha_confirmacion","Y-m-d")." as fecha_confirmacion","ft_control_documentos a","a.fecha_confirmacion is not null and a.documento_iddocumento=".$iddoc,"",$conn);
-	$boton = "<button class='btn btn-success' id='confirmar_cambios' >Aprobación de la Solicitud</button>";	
+	$boton = "<button class='btn btn-success' id='confirmar_cambios' style='color: #ffffff;text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25); background-color: #5bb75b;    background-image: linear-gradient(to bottom, #62c462, #51a351);background-repeat: repeat-x;border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);    display: inline-block;   padding: 4px 14px;    margin-bottom: 0;    font-size: 14px;    line-height: 20px;vertical-align: middle;    cursor: pointer;    border-radius: 4px;box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);'>Aprobación de la Solicitud</button>";	
 	
 	if($_REQUEST["tipo"]!=5){
-		echo(estilo_bootstrap());
+		//echo(estilo_bootstrap());
 		if($estado["numcampos"]){
 			if(!$fecha_confirmacion["numcampos"]){
 			    
@@ -766,7 +766,7 @@ function confirmar_control_documentos($idformato, $iddoc){
 	    //CARGO_FUNCIONAL (aprobador calidad)
 	    $cf_versionador_calidad=busca_filtro_tabla("login","vfuncionario_dc","estado=1 AND tipo_cargo=2 AND lower(cargo) LIKE 'aprobador%calidad'","",$conn);		
 		if((in_array(usuario_actual("funcionario_codigo"), $funcionario) && $estado["numcampos"]) || (usuario_actual('login')==$cf_versionador_calidad[0]['login'])){
-			echo "<button class='btn btn-info dropdown-toggle' id='btn_editar' >Editar</button>";	
+			echo "<button class='btn btn-info dropdown-toggle' id='btn_editar' style='color: #ffffff;    background-color: #2f96b4;	text-decoration: none;	background-position: 0 -15px;	transition: background-position 0.1s linear;	text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);	    background-image: linear-gradient(to bottom, #5bc0de, #2f96b4);		background-repeat: repeat-x;		border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);		display: inline-block;    padding: 4px 14px;    margin-bottom: 0;    font-size: 14px;    line-height: 20px;	vertical-align: middle;    cursor: pointer;	    border: 1px solid #bbbbbb;		border-radius: 4px;		box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);' >Editar</button>";	
 		}
 	}
 		
