@@ -33,8 +33,6 @@ echo(estilo_bootstrap());
 			<?php 
 					$procesos=busca_filtro_tabla("","ft_proceso a, documento b","a.documento_iddocumento=b.iddocumento and b.estado not in('ELIMINADO', 'ACTIVO', 'ANULADO') and a.estado<>'INACTIVO'","nombre ASC",$conn);
 	
-					$macros=busca_filtro_tabla("","ft_macroproceso_calidad a, documento b","a.documento_iddocumento=b.iddocumento and b.estado not in ('ELIMINADO', 'ANULADO', 'ACTIVO')","nombre ASC",$conn);
-	
 					$texto='';
 	
 					$texto.='<select id="bqsaia_listado_procesos" name="bqsaia_listado_procesos"><option value="">Por favor seleccione...</option>';
@@ -42,9 +40,6 @@ echo(estilo_bootstrap());
 					for($i=0;$i<$procesos["numcampos"];$i++){
 						$texto.='<option value="1|'.$procesos[$i]["idft_proceso"].'" tipo="1">'.$procesos[$i]["nombre"].' (Proceso)</option>';
 					}
-					for($i=0;$i<$macros["numcampos"];$i++){
-						$texto.='<option value="2|'.$macros[$i]["idft_macroproceso_calidad"].'" tipo="2">'.$macros[$i]["nombre"].' (Macroproceso)</option>';
-					}	
 					$texto.='</select>';
 	
 					echo '<td>'.$texto.'</td>';	
