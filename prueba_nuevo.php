@@ -17,6 +17,13 @@ $boton = "<button class='btn btn-success' id='confirmar_cambios' >Aprobación de
 echo($boton.'<br><br>');
 echo "<button class='btn btn-info dropdown-toggle' id='btn_editar' >Editar</button>";	
 
+
+echo('<br><br><br><br>');
+
+
+echo("<button class='btn btn-success' id='confirmar_cambios' style='color: #ffffff;text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25); background-color: #5bb75b;    background-image: linear-gradient(to bottom, #62c462, #51a351);background-repeat: repeat-x;border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);    display: inline-block;   padding: 4px 14px;    margin-bottom: 0;    font-size: 14px;    line-height: 20px;vertical-align: middle;    cursor: pointer;    border-radius: 4px;box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);'> Mi copia bootstrap </button>");
+
+
 die();
 phpinfo();
 //print_r( get_html_translation_table(HTML_ENTITIES, ENT_QUOTES | ENT_HTML5) );
