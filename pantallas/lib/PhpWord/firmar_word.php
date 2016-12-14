@@ -50,12 +50,15 @@ if(@$iddoc){
 }
 
 
-print_r($_REQUEST["iddoc"]);
+
 
 $ruta_procesar='';
 if(@$_REQUEST["iddoc"]){
 	$anexo=busca_filtro_tabla("d.ruta","documento a, formato b, campos_formato c, anexos d","lower(a.plantilla)=b.nombre AND b.idformato=c.formato_idformato AND c.nombre='anexo_word' AND c.idcampos_formato=d.campos_formato AND a.iddocumento=".$_REQUEST["iddoc"]." AND d.documento_iddocumento=".$_REQUEST["iddoc"],"",$conn) ;
 }
+
+
+print_r($anexo);
 
 $ruta_docx='';
 
