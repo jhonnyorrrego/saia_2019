@@ -642,7 +642,7 @@ if($listado["numcampos"]>0 || $tipo_pag != "PAGINA")  //Se muestarn la pagna o e
 
 if($permisos == false)
  {
-  alerta("No tiene permisos para editar los comentarios, pero puede adicionar uno nuevo");
+  alerta("<b>ATENCI&Oacute;N</b><br>No tiene permisos para editar los comentarios, pero puede adicionar uno nuevo","warning");
  }
 ?>
 </div>
