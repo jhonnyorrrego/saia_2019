@@ -20,7 +20,7 @@ if(@$_REQUEST["accion"]=="adicionar" && $_REQUEST["key"]){
 		echo(librerias_notificaciones());
 		?>
 		<script>
-		notificacion_saia('Usted no es el creador del documento','success','',4000);
+		notificacion_saia('<b>ATENCI&Oacute;N</b><br>Usted no es el creador del documento','warning','',4000);
 		window.open("formatos/<?php echo($ruta_formato[0]["nombre"]); ?>/<?php echo($ruta_formato[0]["ruta_mostrar"]); ?>?iddoc=<?php echo($_REQUEST["key"]); ?>&idformato=<?php echo($ruta_formato[0]["idformato"]); ?>","_self");
 		</script>
 		<?php
@@ -92,13 +92,13 @@ elseif(@$_REQUEST["accion"]=="guardar_adicionar")
  if($_REQUEST["idanulacion"]<>"")
   {$sql="update documento_anulacion set fecha_solicitud=".fecha_db_almacenar($_REQUEST["fecha_solicitud"],"Y-m-d H:i:s").",funcionario='".$_REQUEST["funcionario"]."',descripcion='".$_REQUEST["descripcion"]."',estado='".$_REQUEST["estado"]."' where iddocumento_anulacion=".$_REQUEST["idanulacion"];
    phpmkr_query($sql,$conn);
-   alerta("La solicitud ha sido enviada"); 
+   alerta("<b>ATENCI&Oacute;N</b><br>La solicitud ha sido enviada"); 
   }
  else
  {$sql="insert into documento_anulacion(fecha_solicitud,funcionario,descripcion,documento_iddocumento,estado) values(".fecha_db_almacenar($_REQUEST["fecha_solicitud"],"Y-m-d H:i:s").",'".$_REQUEST["funcionario"]."','".$_REQUEST["descripcion"]."','".$_REQUEST["documento_iddocumento"]."','".$_REQUEST["estado"]."')";
   phpmkr_query($sql,$conn);
   if(phpmkr_insert_id())
-   alerta("La solicitud ha sido enviada");    
+   alerta("<b>ATENCI&Oacute;N</b><br>La solicitud ha sido enviada");    
   else
    echo "Problemas al enviar la solicitud";  
  }
@@ -121,7 +121,7 @@ elseif(@$_REQUEST["accion"]=="guardar_adicionar")
 elseif(@$_REQUEST["accion"]=="rechazar")
 {$sql="UPDATE documento_anulacion SET estado='RECHAZADO' WHERE documento_iddocumento='".$_REQUEST["key"]."' and estado='SOLICITADO'";
  phpmkr_query($sql,$conn);
- alerta("La solicitud ha sido RECHAZADA"); 
+ alerta("<b>ATENCI&Oacute;N</b><br>La solicitud ha sido RECHAZADA","warning"); 
  abrir_url("pantallas/buscador_principal.php?idbusqueda=26","centro");
 }
 elseif(@$_REQUEST["accion"]=="anular"){
@@ -148,7 +148,7 @@ elseif(@$_REQUEST["accion"]=="anular"){
  for($i=0;$i<$revisores["numcampos"];$i++)
    enviar_mensaje("",'codigo',array($revisores[$i]["login"]),"Solicitud de Anulacion".$datos[0]['numero'],utf8_encode($mensaje));
   
- 	alerta("El documento ha sido ANULADO");
+ 	alerta("<b>ATENCI&Oacute;N</b><br>El documento ha sido ANULADO");
    $flujo = busca_filtro_tabla("","paso_documento","documento_iddocumento=".$_REQUEST["key"],"idpaso_documento desc",$conn);
    if($flujo["numcampos"] > 0){
    		include_once("workflow/libreria_paso.php");
