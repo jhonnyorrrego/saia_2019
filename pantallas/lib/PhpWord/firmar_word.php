@@ -58,7 +58,7 @@ if(@$_REQUEST["iddoc"]){
 }
 
 
-print_r($anexo);
+print_r($anexo);die();
 
 $ruta_docx='';
 
