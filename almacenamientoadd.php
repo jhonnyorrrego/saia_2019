@@ -187,7 +187,7 @@ else {
     $descripdoc = busca_filtro_tabla("A.numero, A.descripcion,A.serie","documento A", "A.iddocumento=".$x_documento_iddocumento, "", $conn);
     if($descripdoc["numcampos"]){
       if(!$descripdoc[0]["numero"]){
-        alerta("No es posible almacenar Documentos que no posean un numero de radicado");
+        alerta("<b>ATENCI&Oacute;N</b><br>No es posible almacenar Documentos que no posean un numero de radicado","warning");
         volver(1);
       }
       
@@ -246,15 +246,15 @@ else {
 		<?php 
     } 
     else if($idserie){
-      alerta("No existen Carpetas para la Serie del Documento favor Cree la Carpeta y asigne el Documento respectivo");
+      alerta("<b>ATENCI&Oacute;N</b><br>No existen Carpetas para la Serie del Documento favor Cree la Carpeta y asigne el Documento respectivo","warning");
       redirecciona("vacio.php");
     } 
     else if($x_documento_iddocumento){
-      alerta("su documento no ha sido Calisifaco por Favor Clasifiquelo Antes de almacenarlo");
+      alerta("<b>ATENCI&Oacute;N</b><br>su documento no ha sido Calisifaco por Favor Clasifiquelo Antes de almacenarlo","warning");
       redirecciona("clasificar.php?origen=view&iddocumento=".$x_documento_iddocumento);
     } 
     else {
-      alerta("Su documento no Existe o no se puede Almacenar por favor Verifique sus datos");
+      alerta("<b>ATENCI&Oacute;N</b><br>Su documento no Existe o no se puede Almacenar por favor Verifique sus datos","error");
       redirecciona("pendienteslist.php?cmd=resetall");
     
     }
