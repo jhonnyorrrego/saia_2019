@@ -20,7 +20,7 @@ if(@$_REQUEST["adicionar"]==1){
   if($idreemplazo){
     redirecciona($ruta_db_superior."pantallas/busquedas/consulta_busqueda.php?idbusqueda_componente=".$_REQUEST["idbusqueda_componente"]);
   }else{
-    alerta("Error al insertar el reemplazo");
+    alerta("<b>ATENCI&Oacute;N</b><br>Error al insertar el reemplazo","error");
   }
 }
 ?>
@@ -249,23 +249,23 @@ $(document).ready(function(){
   formulario_reemplazo.validate();
   $("#submit_formulario_reemplazo").click(function(){
   	if($("#antiguo").val()=="" || $("#nuevo").val()==""){
-      alert("Por Favor Ingrese los Funcionarios");
+      alert("<b>ATENCI&Oacute;N</b><br>Por Favor Ingrese los Funcionarios","warning");
       return(false);
     }
 
     if($("#antiguo").val()==$("#nuevo").val()){
-      alert("El usuario no puede reemplazarse a si mismo");
+      alert("<b>ATENCI&Oacute;N</b><br>El usuario no puede reemplazarse a si mismo","warning");
       return(false);
     }
     if($("input[name='tipo_reemplazo']").val()==1){
       var inDate = new Date($("#fecha_inicio").val()),
       eDate = new Date($("#fecha_fin").val());
       if($("#fecha_inicio").val() == $("#fecha_fin").val()) {
-        alert("Las fechas no pueden ser iguales");
+        alert("<b>ATENCI&Oacute;N</b><br>Las fechas no pueden ser iguales","warning");
         return(false);
       }
       else if(inDate>eDate){
-        alert("La fecha final no pueden ser anterior a la fecha final");
+        alert("<b>ATENCI&Oacute;N</b><br>La fecha final no pueden ser anterior a la fecha final","warning");
         return(false);
       }
     }else{
@@ -293,7 +293,7 @@ echo(librerias_arboles());
 function adicionar_reemplazo(){
 $fecha_fin="NULL";
 if(@$_REQUEST["antiguo"]==@$_REQUEST["nuevo"]){
-  alerta("El usuario no puede reemplazarse a si mismo");
+  alerta("<b>ATENCI&Oacute;N</b><br>El usuario no puede reemplazarse a si mismo","warning");
   return(0);
 }
 if(@$_REQUEST["fecha_fin"]){
