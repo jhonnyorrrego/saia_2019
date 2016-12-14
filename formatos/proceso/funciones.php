@@ -101,20 +101,24 @@ function mostrar_riesgos($idformato,$iddoc){
 }
 function enlace_riesgos($idformato,$iddoc){
 global $conn,$ruta_db_superior;
+
+$formato_proceso=busca_filtro_tabla("idformato","formato","nombre='proceso'","",$conn);
+
+
 $id=busca_filtro_tabla("idft_proceso","ft_proceso","documento_iddocumento=$iddoc","",$conn);
 $texto="<a href='../riesgos_proceso/previo_mostrar_riesgos_proceso.php?llave=$idformato-idft_proceso-".$id[0][0]."&iddoc=$iddoc&no_menu=1'>Riesgos</a>";
 
-/*$texto="No existen Riesgos Para este Proceso";
+$texto="No existen Riesgos Para este Proceso";
 $formato=busca_filtro_tabla("","formato B","B.idformato=".$idformato,"",$conn);
 if($formato["numcampos"]){
   $proceso=busca_filtro_tabla("",$formato[0]["nombre_tabla"],"documento_iddocumento=".$iddoc,"nombre ASC",$conn);
   if($proceso["numcampos"]){
-    $texto='<a href="../riesgos_proceso/previo_mostrar_riesgos_proceso.php?llave=9-idft_proceso-'.$proceso[0]["idft_proceso"].'&iddoc='.$iddoc.'&no_menu=1">Riegos del Proceso</a>';
+    $texto='<a href="../riesgos_proceso/previo_mostrar_riesgos_proceso.php?llave='.$formato_proceso[0]['idformato'].'-idft_proceso-'.$proceso[0]["idft_proceso"].'&iddoc='.$iddoc.'&no_menu=1">Riegos del Proceso</a>';
     $campos=array("consecutivo","descripcion");
     $texto=listar_formato_hijo($campos,"ft_riesgos_proceso","ft_proceso",$proceso[0]["id".$formato[0]["nombre_tabla"]],"idft_riesgos_proceso ASC",'left');
   }
-}*/
-//echo($texto);
+}
+echo($texto);
 }
 
 function enlace_listado_maestro_documentos($idformato,$iddoc){
