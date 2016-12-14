@@ -48,10 +48,10 @@ if(@$_REQUEST["documento_iddocumento"]){
       include_once($ruta_db_superior."pantallas/paginas/vincular_pagina.php");
       $paginas_insertadas=vincular_paginas($_REQUEST["documento_iddocumento"],$paginas,$_REQUEST["idfuncionario"]);
       if(count($paginas)==count($paginas_insertadas)){
-        array_push($mensaje,array("mensaje"=>"Todas las p&aacute;ginas han sido vinculadas","tipo"=>"success"));
+        array_push($mensaje,array("mensaje"=>"<b>ATENCI&Oacute;N</b><br>Todas las p&aacute;ginas han sido vinculadas","tipo"=>"success"));
       }
       else{
-        array_push($mensaje,array("mensaje"=>"Algunas p&aacute;ginas no han podido vincularse por favor verifique e intente de nuevo","tipo"=>"error"));
+        array_push($mensaje,array("mensaje"=>"<b>ATENCI&Oacute;N</b><br>Algunas p&aacute;ginas no han podido vincularse por favor verifique e intente de nuevo","tipo"=>"warning"));
         $exito=0; 
       }
     }  
@@ -59,10 +59,10 @@ if(@$_REQUEST["documento_iddocumento"]){
       include_once($ruta_db_superior."pantallas/anexos/vincular_anexos.php");
       $anexos_insertados=vincular_anexos($_REQUEST["documento_iddocumento"],$anexos,$_REQUEST["idfuncionario"]);
       if(count($anexos)==count($anexos_insertados)){
-        array_push($mensaje,array("mensaje"=>"Todos las anexos han sido vinculados","tipo"=>"success"));
+        array_push($mensaje,array("mensaje"=>"<b>ATENCI&Oacute;N</b><br>Todos las anexos han sido vinculados","tipo"=>"success"));
       }
       else{
-        array_push($mensaje,array("mensaje"=>"Algunos anexos no han podido vincularse por favor verifique e intente de nuevo","tipo"=>"error"));
+        array_push($mensaje,array("mensaje"=>"<b>ATENCI&Oacute;N</b><br>Algunos anexos no han podido vincularse por favor verifique e intente de nuevo","tipo"=>"warning"));
         $exito=0; 
       }
     }  
@@ -86,15 +86,15 @@ if(@$_REQUEST["documento_iddocumento"]){
       }
       // se le resta el documento que se adiciona del documento original
       if($insertados>=$cantidad){
-        array_push($mensaje,array("mensaje"=>"Todos los documentos han sido vinculados","tipo"=>"success"));
+        array_push($mensaje,array("mensaje"=>"<b>ATENCI&Oacute;N</b><br>Todos los documentos han sido vinculados","tipo"=>"success"));
       }
       else{
-        array_push($mensaje,array("mensaje"=>"Algunos documentos no han podido vincularse por favor verifique e intente de nuevo","tipo"=>"error"));
+        array_push($mensaje,array("mensaje"=>"<b>ATENCI&Oacute;N</b><br>Algunos documentos no han podido vincularse por favor verifique e intente de nuevo","tipo"=>"warning"));
       }      
     }      
   }
   else{
-    array_push($mensaje,array("mensaje"=>"Por favor selecione los documentos, paginas o anexos seleccionados que desea vincular","tipo"=>"error"));
+    array_push($mensaje,array("mensaje"=>"<b>ATENCI&Oacute;N</b><br>Por favor selecione los documentos, paginas o anexos seleccionados que desea vincular","tipo"=>"warning"));
     $exito=0;
   }
 if($exito&&@$_REQUEST["deseleccionar"]){
@@ -103,7 +103,7 @@ if($exito&&@$_REQUEST["deseleccionar"]){
 }
 }
 else{
-  array_push($mensaje,array("mensaje"=>"Por favor selecione un documento al que desea vincular los documentos, paginas o anexos seleccionados","tipo"=>"error"));
+  array_push($mensaje,array("mensaje"=>"<b>ATENCI&Oacute;N</b><br>Por favor selecione un documento al que desea vincular los documentos, paginas o anexos seleccionados","tipo"=>"warning"));
 }
 echo stripslashes(json_encode($mensaje));
 ?>
