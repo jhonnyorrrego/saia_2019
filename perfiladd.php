@@ -57,8 +57,15 @@ switch ($sAction)
 }
 ?>
 <?php include ("header.php") ?>
+
 <script type="text/javascript" src="ew.js"></script>
 <script type="text/javascript">
+<?php
+include_once("librerias_saia.php"); 
+echo(librerias_jquery('1.7'));
+echo(estilo_bootstrap());
+echo(librerias_notificaciones());
+?>
 <!--
 EW_dateSep = "/"; // set date separator	
 
@@ -68,7 +75,8 @@ EW_dateSep = "/"; // set date separator
 <!--
 function EW_checkMyForm(EW_this) {
 if (EW_this.x_nombre && !EW_hasValue(EW_this.x_nombre, "TEXT" )) {
-	if (!EW_onError(EW_this, EW_this.x_nombre, "TEXT", "Por favor escriba el nombre del perfil"))
+	//if (!EW_onError(EW_this, EW_this.x_nombre, "TEXT", "Por favor escriba el nombre del perfil"))
+	notificacion_saia('<b>ATENCI&Oacute;N</b><br>Por favor escriba el nombre del perfil','warning','',4000);
 		return false;
 }
 return true;
@@ -78,12 +86,7 @@ return true;
 </script>
 
 
-<?php
-include_once($ruta_db_superior."librerias_saia.php"); 
-echo(librerias_jquery('1.7'));
-echo(estilo_bootstrap());
 
-?>
 
 <div class="container">
 		<h5><span class="internos"><img class="imagen_internos" src="botones/configuracion/perfil.gif" border="0"></span>ADICIONAR PERFIL</h5>
