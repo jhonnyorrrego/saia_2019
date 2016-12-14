@@ -80,7 +80,7 @@ if(file_exists($ruta_docx.'documento_word.docx')){
 
 	if(@$_REQUEST["iddoc"] && count($campos_word)){
 	    
-	    print_r('hay campos en word');die();
+	   
 
 		$ruta=busca_filtro_tabla("","ruta","obligatorio=1 AND condicion_transferencia='POR_APROBAR' AND tipo='ACTIVO' AND documento_iddocumento=".$_REQUEST["iddoc"],"",$conn);
 		$ruta_revisado=busca_filtro_tabla("","ruta","obligatorio=2 AND condicion_transferencia='POR_APROBAR' AND tipo='ACTIVO' AND documento_iddocumento=".$_REQUEST["iddoc"],"",$conn);
@@ -91,7 +91,9 @@ if(file_exists($ruta_docx.'documento_word.docx')){
 			if(!$ninguno_firma['numcampos']){
 				$ruta=busca_filtro_tabla("destino as origen, tipo_destino as tipo_origen","buzon_entrada","nombre='POR_APROBAR' AND archivo_idarchivo=".$_REQUEST["iddoc"],"",$conn);		
 			}			
-		}		
+		}	
+		
+		 print_r($ruta);die();
 
 		for($j=0;$j<$ruta['numcampos'];$j++){
 			
