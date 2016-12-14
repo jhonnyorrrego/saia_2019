@@ -93,7 +93,7 @@ if(file_exists($ruta_docx.'documento_word.docx')){
 			}			
 		}	
 		
-		 print_r($ruta);die();
+		
 
 		for($j=0;$j<$ruta['numcampos'];$j++){
 			
