@@ -58,9 +58,20 @@ function generar_firma_word($idformato, $iddoc) { // POSTERIOR AL CONFIRMAR
 function generar_radicado_word($idformato, $iddoc) { // POSTERIOR AL APROBAR
 	global $ruta_db_superior, $conn;
 	
-	include_once ($ruta_db_superior . 'pantallas/lib/PhpWord/funciones_radicacion_word.php');
-	$radicar_word = new RadicadoWord($iddoc);
-	$radicar_word->asignar_radicado();
+	
+	
+	$busca_masivo=busca_filtro_tabla("","anexos a, campos_formato b","b.nombre='anexo_csv' AND a.campos_formato=b.idcampos_formato AND a.documento_iddocumento=".$iddoc,"",$conn);
+	
+	
+	if($busca_masivo['numcampos']){
+	    include_once ($ruta_db_superior . 'pantallas/lib/PhpWord/funciones_radicacion_word.php');
+    	$radicar_word = new RadicadoWord($iddoc);
+    	$radicar_word->asignar_radicado();	    
+	}else{
+	    include_once($ruta_db_superior.'pantallas/lib/PhpWord/numero_radicado_word.php');
+	}
+	
+
 }
 
 function mostrar_mensaje_error_pdf($idformato, $iddoc) { // mostrar
