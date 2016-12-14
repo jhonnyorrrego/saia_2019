@@ -46,7 +46,7 @@ if(@$iddoc&& !@$idformato){
   $documento=busca_filtro_tabla("numero","documento A","A.iddocumento=".$iddoc,"",$conn);
   if($documento["numcampos"]){
     if(!$documento[0]["numero"]){
-      alerta("No se puede responder el documento porque no ha terminado su proceso.",'error',4000);
+      alerta("<b>ATENCI$Oacute;N</b><br>No se puede responder el documento porque no ha terminado su proceso.",'warning',4000);
       volver(1);  
     }
     else{
