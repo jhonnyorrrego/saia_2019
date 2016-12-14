@@ -105,6 +105,13 @@ if(file_exists($ruta_docx.'documento_word.docx')){
 						
 					$funcionario=busca_filtro_tabla("firma,nombres,apellidos","funcionario","funcionario_codigo=".$funcionario_codigo,"",$conn);
 
+                    if($funcionario[0]['firma'] == "null" || $funcionario[0]['firma'] == ""){
+                        $fileHandle = fopen($ruta_db_superior.'firmas/blanco.jpg', "rb");
+                        $fileContent = fread($fileHandle, filesize($ruta_db_superior.'firmas/blanco.jpg'));
+                        fclose($fileHandle);
+                        $funcionario[0]["firma"] = $fileContent;	
+                    }					
+
 					if(MOTOR=="Oracle"){
 						$img= stripslashes($funcionario[0]["firma"]);	
 					}elseif(MOTOR=="MySql")   {
