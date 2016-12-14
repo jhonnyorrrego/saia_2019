@@ -35,7 +35,7 @@ if(@$_REQUEST["idpaso_documento"]){
   echo(librerias_highslide());
   echo(librerias_notificaciones());
 	echo(librerias_kaiten());
-	echo(librerias_acciones_kaiten());
+	//echo(librerias_acciones_kaiten());
 	echo(librerias_bootstrap());
   include_once($ruta_db_superior."pantallas/lib/svg/librerias_adicionales.php");
   if(!@$_REQUEST["iddoc"] && @$_REQUEST["key"])
