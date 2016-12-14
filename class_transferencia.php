@@ -118,7 +118,7 @@ function usuarioactual($campo)
     if($dato!="")
       return($dato[0][$campo]);
   }
-  alerta("No se encuentra el funcionario en el sistema, por favor comuniquese con el administrador",'error');
+  alerta("<b>ATENCI&Oacute;N</b><br>No se encuentra el funcionario en el sistema, por favor comuniquese con el administrador",'error');
   redirecciona("logout.php");
 }
 /*
@@ -229,7 +229,7 @@ function radicar_documento_prueba($tipo_contador,$arreglo,$archivos=NULL,$idfluj
   elseif(array_key_exists("serie",$arreglo))
       $tipo_contador=$arreglo["serie"];
   else
-      alerta("No es posible radicar el Documento. Error No existe clasificaci&oacute;n del documento",'error');
+      alerta("<b>ATENCI&Oacute;N</b><br>No es posible radicar el Documento. Error No existe clasificaci&oacute;n del documento",'warning');
       
    
       
@@ -323,7 +323,7 @@ function radicar_documento_prueba($tipo_contador,$arreglo,$archivos=NULL,$idfluj
     	      		//echo "INSERT INTO anexos(ruta,documento_iddocumento,tipo,etiqueta) VALUES ('$idbin',".$doc.",'".$datos_anexo[2]."','".$datos_anexo[1]."')";
     	      	}
     	      	else
-    	      	{ alerta("No se Pudo Almacenar el Anexo en la Base de Datos",'error');
+    	      	{ alerta("<b>ATENCI&Oacute;N</b><br>No se Pudo Almacenar el Anexo en la Base de Datos",'error');
     	      	 //DESCIDIR QUE SE HACE CON EL ARCHIVO TEMPORAL
     	      	 // POR EL MOMENTO SE MANTIENE PARA RECUPERACION DE ALGUN DOCUMENTO
     	      	}
@@ -1939,7 +1939,7 @@ function radicar_plantilla() {
 			$_POST["tipo_radicado"] = $tipo_rad[0]["nombre"];
 		}
 	} else {
-		alerta("El Documento que intenta Radicar no posee Secuencia", 'error', 5000);
+		alerta("<b>ATENCI&Oacute;N</b><br>El Documento que intenta Radicar no posee Secuencia", 'error', 5000);
 		volver(1);
 	}
 	
@@ -2050,7 +2050,7 @@ function radicar_plantilla() {
 	
 	// die();
 	if(!$idplantilla) {
-		alerta("No se ha podido Crear el Formato..", 'error', 5000);
+		alerta("<b>ATENCI&Oacute;N</b><br>No se ha podido Crear el Formato..", 'error', 5000);
 		phpmkr_query("update documento set estado='ELIMINADO' where iddocumento=" . $_POST["iddoc"], $conn);
 		redirecciona("responder.php");
 	} else {
@@ -2493,7 +2493,7 @@ function guardar_documento($iddoc, $tipo=0) {
 			$sql = "delete from autoguardado where usuario='" . usuario_actual("funcionario_codigo") . "' and formato='" . $nomformato[0]["nombre"] . "'";
 			phpmkr_query($sql, $conn);
 		} else {
-			alerta("No se ha podido Crear el Formato.", 'error', 5000);
+			alerta("<b>ATENCI&Oacute;N</b><br>No se ha podido Crear el Formato.", 'error', 5000);
 			die($sql);
 		}
 	} elseif($tipo == 1) {// cuando voy a editar
@@ -3031,11 +3031,11 @@ echo '<p><span style="font-family: Verdana; font-size: 9px; font-weight: bold;">
     if($funcionario_destino['numcampos']){
       echo ucwords($funcionario_destino[0]["nombres"]." ".$funcionario_destino[0]["apellidos"]).$info_adicional."<br><br />";
     }else{
-      alerta("El funcionario NO esta Activo, por favor transfieralo o terminelo.",'success',4000);
+      alerta("<b>ATENCI&Oacute;N</b><br>El funcionario NO esta Activo, por favor transfieralo o terminelo.",'warning',4000);
       redirecciona($ruta_db_superior."vacio.php");
     }
   }else{
-    alerta("No existe funcionarios para devolver el documento",'success',4000);
+    alerta("<b>ATENCI&Oacute;N</b><br>No existe funcionarios para devolver el documento",'warning',4000);
     redirecciona($ruta_db_superior."vacio.php");
   }
   echo '<input type="hidden" name="x_funcionario_destino" id="x_funcionario_destino" value="'.$funcionario_destino[0]["funcionario_codigo"].'"></span>
