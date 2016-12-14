@@ -48,17 +48,11 @@ if (CLI) {
 if(@$iddoc){
 	$_REQUEST["iddoc"]=$iddoc;	
 }
-
-
-
-
+ 
 $ruta_procesar='';
 if(@$_REQUEST["iddoc"]){
 	$anexo=busca_filtro_tabla("d.ruta","documento a, formato b, campos_formato c, anexos d","lower(a.plantilla)=b.nombre AND b.idformato=c.formato_idformato AND c.nombre='anexo_word' AND c.idcampos_formato=d.campos_formato AND a.iddocumento=".$_REQUEST["iddoc"]." AND d.documento_iddocumento=".$_REQUEST["iddoc"],"",$conn) ;
 }
-
-
-
 
 $ruta_docx='';
 
@@ -69,18 +63,14 @@ if(@$anexo['numcampos']){
 }
 
 
-if(file_exists($ruta_docx.'documento_word.docx')){
-    
-    
 
+if(file_exists($ruta_docx.'documento_word.docx')){
 
 	$templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor($ruta_docx.'documento_word.docx');
 	
 	$campos_word=$templateProcessor->getVariables();
 
 	if(@$_REQUEST["iddoc"] && count($campos_word)){
-	    
-	   
 
 		$ruta=busca_filtro_tabla("","ruta","obligatorio=1 AND condicion_transferencia='POR_APROBAR' AND tipo='ACTIVO' AND documento_iddocumento=".$_REQUEST["iddoc"],"",$conn);
 		$ruta_revisado=busca_filtro_tabla("","ruta","obligatorio=2 AND condicion_transferencia='POR_APROBAR' AND tipo='ACTIVO' AND documento_iddocumento=".$_REQUEST["iddoc"],"",$conn);
@@ -91,9 +81,7 @@ if(file_exists($ruta_docx.'documento_word.docx')){
 			if(!$ninguno_firma['numcampos']){
 				$ruta=busca_filtro_tabla("destino as origen, tipo_destino as tipo_origen","buzon_entrada","nombre='POR_APROBAR' AND archivo_idarchivo=".$_REQUEST["iddoc"],"",$conn);		
 			}			
-		}	
-		
-		
+		}		
 
 		for($j=0;$j<$ruta['numcampos'];$j++){
 			
