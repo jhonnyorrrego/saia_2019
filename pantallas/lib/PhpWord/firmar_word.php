@@ -68,7 +68,7 @@ if(@$anexo['numcampos']){
 	$ruta_docx=$ruta_db_superior.$ruta_anexo[0].'docx/';	
 }
 
-print_r($ruta_docx);die();
+print_r($ruta_imagen);die();
 
 if(file_exists($ruta_docx.'documento_word.docx')){
 
