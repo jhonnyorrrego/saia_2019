@@ -73,7 +73,7 @@ if(file_exists($ruta_docx . 'documento_word.docx')) {
 	$campos_word = $templateProcessor->getVariables();
 	
 	if(@$_REQUEST["iddoc"] && count($campos_word)) {
-	    print_r($ruta_docx); echo "<br>";
+	    
 		if(!$combinar) {
 			$numero_radicado = busca_filtro_tabla("", "documento", "iddocumento=" . $_REQUEST["iddoc"], "", $conn);
 			$templateProcessor->setValue('formato_numero', $numero_radicado[0]['numero']);
