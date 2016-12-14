@@ -58,8 +58,6 @@ function generar_firma_word($idformato, $iddoc) { // POSTERIOR AL CONFIRMAR
 function generar_radicado_word($idformato, $iddoc) { // POSTERIOR AL APROBAR
 	global $ruta_db_superior, $conn;
 	
-	
-	
 	$busca_masivo=busca_filtro_tabla("","anexos a, campos_formato b","b.nombre='anexo_csv' AND a.campos_formato=b.idcampos_formato AND a.documento_iddocumento=".$iddoc,"",$conn);
 	
 	
