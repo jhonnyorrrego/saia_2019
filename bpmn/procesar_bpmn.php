@@ -10,7 +10,7 @@ include_once($ruta_db_superior."pantallas/lib/svg/class_circulo.php");
 include_once($ruta_db_superior."bpmn/bpmn/class_bpmn.php");
 include_once($ruta_db_superior."pantallas/lib/librerias_fechas.php");
 echo(estilo_bootstrap());
-?> 
+?>
 <link rel="stylesheet" href="css/bpmn.css" type="text/css">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">    
 <?php
@@ -88,9 +88,9 @@ if(@$_REQUEST["idpaso_documento"]){
 		<?php } ?>		
 	</div>
 	</div>
-	<div class="row-fluid " id="diagram" style="height:100%; position:absolute; overflow: scroll;">
+	<div class="row-fluid " id="diagram" style="height:100%; position:relative; overflow: auto;">
 	</div>
-	
+	 
 </div>
 <div id="container"></div>
 
