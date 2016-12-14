@@ -72,13 +72,15 @@ if(@$anexo['numcampos']){
 if(file_exists($ruta_docx.'documento_word.docx')){
     
     
-print_r('existre');die();
+
 
 	$templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor($ruta_docx.'documento_word.docx');
 	
 	$campos_word=$templateProcessor->getVariables();
 
 	if(@$_REQUEST["iddoc"] && count($campos_word)){
+	    
+	    print_r('hay campos en word');die();
 
 		$ruta=busca_filtro_tabla("","ruta","obligatorio=1 AND condicion_transferencia='POR_APROBAR' AND tipo='ACTIVO' AND documento_iddocumento=".$_REQUEST["iddoc"],"",$conn);
 		$ruta_revisado=busca_filtro_tabla("","ruta","obligatorio=2 AND condicion_transferencia='POR_APROBAR' AND tipo='ACTIVO' AND documento_iddocumento=".$_REQUEST["iddoc"],"",$conn);
