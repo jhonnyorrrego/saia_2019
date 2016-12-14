@@ -58,7 +58,7 @@ if(@$_REQUEST["iddoc"]){
 }
 
 
-print_r($anexo);die();
+
 
 $ruta_docx='';
 
@@ -68,7 +68,7 @@ if(@$anexo['numcampos']){
 	$ruta_docx=$ruta_db_superior.$ruta_anexo[0].'docx/';	
 }
 
-
+print_r($ruta_docx);die();
 
 if(file_exists($ruta_docx.'documento_word.docx')){
 
