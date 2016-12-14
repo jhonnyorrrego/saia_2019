@@ -1885,7 +1885,7 @@ function radicar_plantilla() {
 					$dato = busca_filtro_tabla("", $formato[0]["nombre_tabla"], $campos[$l]["nombre"] . "=" . $_REQUEST[$campo[$l]["nombre"]], "", $conn);
 					// print_r($dato);
 					if($dato["numcampos"]) {
-						alerta("El campo " . $campos[$l]["nombre"] . " Debe ser Unico por Favor Vuelva a Insertar la informacion", 'error', 5000);
+						alerta("<b>ATENCI&Oacute;N</b><br>El campo " . $campos[$l]["nombre"] . " Debe ser Unico por Favor Vuelva a Insertar la informacion", 'warning', 5000);
 						volver(1);
 					}
 				}
@@ -2980,7 +2980,7 @@ if($transferencias["numcampos"]){
     $reemplazo=$retorno['funcionario_codigo'][0];
   }
 }else{
-  alerta('No es posible devolver el documento, por favor transfieralo o terminelo.','error',4000);
+  alerta('<b>ATENCI&Oacute;N</b><br>No es posible devolver el documento, por favor transfieralo o terminelo.','warning',4000);
 
   $mostar_formato_devolver=busca_filtro_tabla('','documento a, formato b','b.nombre=lower(a.plantilla) AND a.iddocumento='.$iddoc,'',$conn);
 
