@@ -79,7 +79,7 @@ if(file_exists($ruta_docx.'documento_word.docx')){
 		if(!$ruta['numcampos'] && !$ruta_revisado['numcampos']){
 			$ninguno_firma=busca_filtro_tabla("","ruta","obligatorio=0 AND condicion_transferencia='POR_APROBAR' AND tipo='ACTIVO' AND documento_iddocumento=".$_REQUEST["iddoc"],"",$conn);
 			if(!$ninguno_firma['numcampos']){
-				$ruta=busca_filtro_tabla("destino as origen, tipo_destino as tipo_origen","buzon_entrada","nombre='POR_APROBAR' AND archivo_idarchivo=".$_REQUEST["iddoc"],"",$conn);		
+				$ruta=busca_filtro_tabla("ruta_idruta as idruta,destino as origen, tipo_destino as tipo_origen","buzon_entrada","nombre='POR_APROBAR' AND archivo_idarchivo=".$_REQUEST["iddoc"],"",$conn);		
 			}			
 		}		
 
