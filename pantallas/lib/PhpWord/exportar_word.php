@@ -152,7 +152,7 @@ if($ruta_procesar!=''){
 		 $formato=busca_filtro_tabla("","formato A","A.idformato=".$idformato,"",$conn);	
 	     $funciones=busca_filtro_tabla("nombre_funcion,parametros","funciones_formato A","(A.formato LIKE '".$idformato."' OR A.formato LIKE '%,".$idformato.",%' OR A.formato LIKE '%,".$idformato."' OR A.formato LIKE '".$idformato.",%') AND A.acciones LIKE '%m%'","GROUP BY nombre_funcion",$conn);
 	
-		$funciones_ejecutar=array('mostrar_estado_proceso','logo_empresa','ciudad_fecha','nombre_formato','formato_numero');
+		$funciones_ejecutar=array('mostrar_estado_proceso','logo_empresa','ciudad_fecha','nombre_formato','formato_numero','elaborado_por');
 	
 		for($i=0;$i<count($funciones_ejecutar);$i++){
 		  	$nombre=$funciones_ejecutar[$i];
