@@ -460,4 +460,19 @@ function validar_edicion_adicion_formatos_riesgo_aprobados($idformato, $iddoc){
 		}		
 	}*/
 }
+
+
+//ADICIONAR
+function validar_from_riesgos($idformato,$iddoc){
+    global $conn,$ruta_db_superior;
+    
+    if(@$_REQUEST['from_riesgos']){
+        echo( librerias_jqury('1.7') );
+        
+    }
+}
+//POSTERIOR ADICIONAR
+function redireccionar_from_riesgos($idformato, $iddoc){
+    global $conn,$ruta_db_superior;    
+}
 ?>
