@@ -392,7 +392,7 @@ if($ruta_procesar!=''){
 		$templateProcessor->setTextWatermark($marca_agua);
 		$directorio_out=$ruta_docx;
 		$archivo_out='documento_word';
-		$extension_doc='.docx';
+		$extension_doc='.html';
 		$templateProcessor->saveAs($directorio_out.$archivo_out.$extension_doc);
 		
 		//$objWriter = PhpOfficePhpWordIOFactory::createWriter($phpWord, HTML);
