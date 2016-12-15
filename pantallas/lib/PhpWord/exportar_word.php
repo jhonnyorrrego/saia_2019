@@ -159,6 +159,13 @@ if($ruta_procesar!=''){
 			if( in_array($nombre,$campos_word) ){
 				
 				switch($nombre){
+				    case 'elaborado_por':
+				        $doc_aprobado=busca_filtro_tabla("ejecutor","documento","iddocumento=".$_REQUEST["iddoc"],"",$conn);
+				        $ejecutor=busca_filtro_tabla("nombres,apellidos","vfuncionario_dc","funcionario_codigo=".$doc_aprobado[0]['ejecutor'],"",$conn);
+				        $elaborador_por=utf8_encode(html_entity_decode($ejecutor[0]['nombres'].' '.$ejecutor[0]['apellidos']));
+					    $elaborador_por=ucwords(strtolower($elaborador_por));
+					    $templateProcessor->setValue('elaborado_por',$elaborador_por);  
+				        break;
 					case 'formato_numero':
 						$doc_aprobado=busca_filtro_tabla("estado,numero","documento","iddocumento=".$_REQUEST["iddoc"],"",$conn);
 						if($doc_aprobado[0]['estado']=='APROBADO'){
