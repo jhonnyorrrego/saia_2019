@@ -1,4 +1,4 @@
-<table border="1px" style="border-collapse:collapse; width:100%;font-size:7pt;">
+<table border="1" style="border-collapse:collapse; width:100%;font-size:7pt;">
 	<tr>									
 		<td style="background-color: #D2D3D5; text-align:center;" colspan="12">MATRIZ DE RIESGOS DEL PROCESO</td>
 	</tr>
