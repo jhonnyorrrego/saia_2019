@@ -392,13 +392,8 @@ if($ruta_procesar!=''){
 		$templateProcessor->setTextWatermark($marca_agua);
 		$directorio_out=$ruta_docx;
 		$archivo_out='documento_word';
-		$extension_doc='.html';
+		$extension_doc='.docx';
 		$templateProcessor->saveAs($directorio_out.$archivo_out.$extension_doc);
-		
-		//$objWriter = PhpOfficePhpWordIOFactory::createWriter($phpWord, HTML);
-        //$objWriter->save(helloWorld.html);
-		
-		
 		chmod($directorio_out.$archivo_out.$extension_doc, 0777); 
 
 		if(file_exists($directorio_out.$archivo_out.$extension_doc)){
