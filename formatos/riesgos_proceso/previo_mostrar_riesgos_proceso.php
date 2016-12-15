@@ -110,15 +110,17 @@ $datos=explode("-",$_REQUEST["llave"]);
 			<?php
 				$idft_papa = busca_filtro_tabla("","ft_proceso","documento_iddocumento=".$_REQUEST['iddoc'],"",$conn);
 			?>
-        	<a  title="" href="<?php echo($ruta_db_superior);?>formatos/contexto_extrategico/adicionar_contexto_extrategico.php?anterior=<?php echo($_REQUEST['iddoc']);?>&padre=<?php echo($idft_papa[0]['idft_proceso']);?>&idformato=211" target="_self">CONTEXTO EXTRAT&Eacute;GICO</a>
-        	
-		
+			
 		<script type="text/javascript" src="<?php echo $ruta_db_superior;?>anexosdigitales/highslide-4.0.10/highslide/highslide-with-html.js"></script>
 		 <link rel="stylesheet" type="text/css" href="<?php echo $ruta_db_superior;?>anexosdigitales/highslide-4.0.10/highslide/highslide.css" />
 		 <script type='text/javascript'>
 		   hs.graphicsDir = '<?php echo $ruta_db_superior;?>anexosdigitales/highslide-4.0.10/highslide/graphics/';
 		   hs.outlineType = 'rounded-white';
-		</script>
+		</script>			
+        	<a  title="" href="<?php echo($ruta_db_superior);?>formatos/contexto_extrategico/adicionar_contexto_extrategico.php?anterior=<?php echo($_REQUEST['iddoc']);?>&padre=<?php echo($idft_papa[0]['idft_proceso']);?>&idformato=211" target="_self">CONTEXTO EXTRAT&Eacute;GICO</a>
+        	
+		
+
 		       	
         	(<a class="highslide" onclick="return hs.htmlExpand(this, { objectType: \'iframe\',width: 500, height: 700,preserveContent:true} )" href="ayuda_contexto_estrategico_riesgos.php"><b>ayuda</b></a>)
         	<?php
