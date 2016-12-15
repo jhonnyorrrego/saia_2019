@@ -356,7 +356,7 @@ class Imprime_Pdf {
 		//print_r($direccion);die();
 		foreach($direccion as $fila) {
 			
-		//	$fila .= "&font_size=" . $this->font_size;
+			$fila .= "&font_size=" . $this->font_size;
 			
 			curl_setopt($ch, CURLOPT_URL, $fila);
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
