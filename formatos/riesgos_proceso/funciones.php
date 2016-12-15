@@ -489,6 +489,7 @@ function redireccionar_from_riesgos($idformato, $iddoc){
             parent.location.reload();
         </script>
         <?php
+        sleep(1);
         redirecciona($ruta_db_superior."formatos/riesgos_proceso/mostrar_riesgos_proceso.php?iddoc=".$iddoc);
         die();
     }
