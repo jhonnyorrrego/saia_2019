@@ -31,7 +31,6 @@
         <td style="background-color: #D2D3D5; text-align:center;"><p>Probabilidad</p></td>
         <td style="background-color: #D2D3D5; text-align:center;"><p>Impacto</p></td>
 	</tr>
-	<tbody>
 								
 	<tr>
 		<td>1 - <p style="text-align: justify;">Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt ex</td>
@@ -117,5 +116,5 @@
 		<td></td>
 		<td></td>
 	</tr>
-	</tbody>
+
 </table>
