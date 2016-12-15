@@ -151,6 +151,14 @@ if(file_exists($ruta_docx.'documento_word.docx')){
 					$cargo=utf8_encode(html_entity_decode($carg[0]['cargo']));
 					$cargo=ucwords(strtolower($cargo));
 					$templateProcessor->setValue($buscar_cargo,htmlspecialchars($cargo)); 	
+
+
+					$buscar_dependencia='d_'.$funcionario_codigo_encriptado;
+										
+					$dep=busca_filtro_tabla("dependencia","vfuncionario_dc","estado_dc=1 AND funcionario_codigo=".$funcionario_codigo,"",$conn);
+					$dependencia=utf8_encode(html_entity_decode($dep[0]['dependencia']));
+					$dependencia=ucwords(strtolower($dependencia));
+					$templateProcessor->setValue($buscar_dependencia,htmlspecialchars($dependencia)); 	
 					
 				}
 			}else{ //no ha firmado
