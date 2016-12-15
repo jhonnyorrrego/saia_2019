@@ -469,10 +469,24 @@ function validar_from_riesgos($idformato,$iddoc){
     if(@$_REQUEST['from_riesgos']){
         echo( librerias_jqury('1.7') );
         
+        ?>
+            <script>
+                $(document).ready(function(){
+                    $('[name="from_riesgos"]').val();
+                });
+            </script>
+        <?php 
+        
     }
 }
 //POSTERIOR ADICIONAR
 function redireccionar_from_riesgos($idformato, $iddoc){
-    global $conn,$ruta_db_superior;    
+    global $conn,$ruta_db_superior; 
+    
+    $datos=busca_filtro_tabla("from_riesgos","ft_riesgos_proceso","documento_iddocumento=".$iddoc,"",$conn);
+    if($datos[0]['from_riesgos']){
+        redirecciona($ruta_db_superior."formatos/riesgos_proceso/mostrar_riesgos_proceso.php?iddoc=".$iddoc);
+    }
+    
 }
 ?>
