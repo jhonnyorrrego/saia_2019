@@ -74,7 +74,7 @@ $proceso=busca_filtro_tabla("","ft_proceso a","a.idft_proceso=".$datos[2],"",$co
 		if($_REQUEST["tipo"] != 5){
 			$url = "formatos/riesgos_proceso/mostrar_riesgos_resumen2.php|llave=".$_REQUEST["llave"]."|tipo=5";
 			//$url_encabezado = "http://".RUTA_PDF_LOCAL."/reportes/encabezado_reporte.php";
-			$ruta = $ruta_db_superior."class_impresion2.php?tipo=5&orientacion=1&url=".$url."&pdf=1&url_encabezado=";
+			$ruta = $ruta_db_superior."class_impresion.php?tipo=5&orientacion=1&url=".$url."&pdf=1&url_encabezado=";
 
 			$tabla ='<a target="_blank" href="'.$ruta.'">
   						    <img src="'.$ruta_db_superior.'enlaces/imprimir.gif" height="30" width="30" border="0">
