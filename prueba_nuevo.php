@@ -33,7 +33,7 @@
 	</tr>
 								
 	<tr>
-		<td>1 - <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt ex</td>
+		<td>1 - <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt ex</p></td>
 		<td style="text-align: center;">(2)<br>Improbable</td>
 		<td style="text-align: center;">(1)<br>Insignificante</td>
 		<td style="text-align:center;background-color:green;">Zona de riesgo baja</td>
