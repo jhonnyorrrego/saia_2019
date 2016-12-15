@@ -485,6 +485,7 @@ function redireccionar_from_riesgos($idformato, $iddoc){
     $datos=busca_filtro_tabla("from_riesgos","ft_riesgos_proceso","documento_iddocumento=".$iddoc,"",$conn);
     if($datos[0]['from_riesgos']){
         redirecciona($ruta_db_superior."formatos/riesgos_proceso/mostrar_riesgos_proceso.php?iddoc=".$iddoc);
+        die();
     }
     
 }
