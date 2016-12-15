@@ -35,8 +35,15 @@
 								
 	<tr>
 		<td>1 - <p style="text-align: justify;">Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt ex</td>
-		<td style="text-align: center;">(2)<br>Improbable</td><td style="text-align: center;">(1)<br>Insignificante</td><td style="text-align:center;background-color:green;">Zona de riesgo baja</td><td>1. Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur<br /><br />2. But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give you a complete account of the system, and expound the actual teachings of the great explorer of the truth, the master-builder of human happiness.<br /><br /></td>
-		<td style="text-align:center;">(1)<br>Raro</td><td style="text-align:center;">(1)<br>Insignificante</td><td style="text-align:center;background-color:green;">Zona de riesgo baja</td><td style="text-align:center;">Asumir el riesgo</td><td><p>dsfsfsfds</p></td>
+		<td style="text-align: center;">(2)<br>Improbable</td>
+		<td style="text-align: center;">(1)<br>Insignificante</td>
+		<td style="text-align:center;background-color:green;">Zona de riesgo baja</td>
+		<td>1. Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur<br /><br />2. But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give you a complete account of the system, and expound the actual teachings of the great explorer of the truth, the master-builder of human happiness.<br /><br /></td>
+		<td style="text-align:center;">(1)<br>Raro</td>
+		<td style="text-align:center;">(1)<br>Insignificante</td>
+		<td style="text-align:center;background-color:green;">Zona de riesgo baja</td>
+		<td style="text-align:center;">Asumir el riesgo</td>
+		<td><p>dsfsfsfds</p></td>
 		<td>- Carlos  Angulo Santamaria<br></td>
 		<td><p>fdsfdsfds</p></td>
 	</tr>
