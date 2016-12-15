@@ -465,7 +465,6 @@ function validar_edicion_adicion_formatos_riesgo_aprobados($idformato, $iddoc){
 //ADICIONAR
 function validar_from_riesgos($idformato,$iddoc){
     global $conn,$ruta_db_superior;
-    print_r($_REQUEST);
     if(@$_REQUEST['from_riesgos']){
         echo( librerias_jquery('1.7') );
         
