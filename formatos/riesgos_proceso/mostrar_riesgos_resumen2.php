@@ -91,7 +91,7 @@ $proceso=busca_filtro_tabla("","ft_proceso a","a.idft_proceso=".$datos[2],"",$co
   	    $tam_menor='font-size:7pt;';	
   	}
   	$tabla .= '<table border="1px" style="border-collapse:collapse; width:100%;'.$tam_menor.'">';
-		if(!@$_REQUEST["tipo"])$tabla.='<thead class="encabezado_table">';
+		if(!@$_REQUEST["tipo"])$tabla.='';
 									$tabla.='
 									<tr>									
 										<td style="background-color: #D2D3D5; text-align:center;" colspan="12">MATRIZ DE RIESGOS DEL PROCESO</td>
@@ -125,9 +125,8 @@ $proceso=busca_filtro_tabla("","ft_proceso a","a.idft_proceso=".$datos[2],"",$co
                     <td style="background-color: #D2D3D5; text-align:center;"><p>Probabilidad</p></td>
                     <td style="background-color: #D2D3D5; text-align:center;"><p>Impacto</p></td>
 									</tr>';
-								if(!@$_REQUEST["tipo"])$tabla.='</thead>';
-								$tabla.='<tbody>
-								';
+								if(!@$_REQUEST["tipo"])$tabla.='';
+								$tabla.='';
 								for ($i=0;$i<$riesgos["numcampos"]; $i++){
 									if($riesgos[$i]["consecutivo"] == 1){
 									}
@@ -160,8 +159,7 @@ $proceso=busca_filtro_tabla("","ft_proceso a","a.idft_proceso=".$datos[2],"",$co
 														</tr>';
 								}
 								
-$tabla .= '			</tbody>
-							</table>';
+$tabla .= '		</table>';
 							
 echo($tabla);											
 
