@@ -52,7 +52,7 @@ function control_funcion($idformato,$iddoc){
 		if($accion[0]["acciones_control"]==$valoracion[$i]["idft_control_riesgos"])$selected='selected';
 		$cadena_descripcion=ucfirst(strip_tags(decodifica_encabezado(html_entity_decode($valoracion[$i]["descripcion_control"]))));
 		if(strlen ( $cadena_descripcion )>70){
-		    $cadena_descripcion=substr ( $cadena_descripcion , 0 , 70 ).'...';
+		    $cadena_descripcion=substr( $cadena_descripcion , 0 , 70 ).'...';
 		}
 		$select.='<option value="'.$valoracion[$i]["idft_control_riesgos"].'" '.$selected.'>'.$cadena_descripcion.'</option>';
 	}//string substr ( string $string , int $start [, int $length ] )
