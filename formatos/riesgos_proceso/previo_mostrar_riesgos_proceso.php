@@ -67,6 +67,10 @@ a:hover {
     hs.graphicsDir = '<?php echo($ruta_db_superior); ?>anexosdigitales/highslide-4.0.10/highslide/graphics/';
     hs.outlineType = 'rounded-white';
 </script>
+<script type='text/javascript'>
+    hs2.graphicsDir = '<?php echo($ruta_db_superior); ?>anexosdigitales/highslide-4.0.10/highslide/graphics/';
+    hs2.outlineType = 'rounded-white';
+</script>
 <style type="text/css">	#dhtmlgoodies_tooltip{ 		background-color:#EEE; 		border:1px solid #000; 		position:absolute; 		display:none; 		z-index:30000; 		padding:2px; 		font-size:0.9em; 		-moz-border-radius:6px;	/* Rounded edges in Firefox */ 		font-family: "Trebuchet MS", "Lucida Sans Unicode", Arial, sans-serif; 	} 	#dhtmlgoodies_tooltipShadow{ 		position:absolute; 		background-color:#555; 		display:none; 		z-index:10000; 		opacity:0.7; 		filter:alpha(opacity=70); 		-khtml-opacity: 0.7; 		-moz-opacity: 0.7; 		-moz-border-radius:6px;	/* Rounded edges in Firefox */ 	} 	a{ 		color: #000000; 		text-decoration:none;		; 	} 	a:hover{ 		border-bottom:1px dotted #317082; 		color: #000000; 	} 	
 </style>
 <p><br />
