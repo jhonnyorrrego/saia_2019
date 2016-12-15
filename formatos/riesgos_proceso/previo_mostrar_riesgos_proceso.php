@@ -112,12 +112,7 @@ $datos=explode("-",$_REQUEST["llave"]);
 			?>
 			
 			
-        	<a  title="" href="<?php echo($ruta_db_superior);?>formatos/contexto_extrategico/adicionar_contexto_extrategico.php?anterior=<?php echo($_REQUEST['iddoc']);?>&padre=<?php echo($idft_papa[0]['idft_proceso']);?>&idformato=211" target="_self">CONTEXTO EXTRAT&Eacute;GICO</a>
-        	
-		
-
-		       	
-        	(<a class="highslide" onclick="return hs.htmlExpand(this, { objectType: \'iframe\',width: 500, height: 700,preserveContent:true} )" href="ayuda_contexto_estrategico_riesgos.php"><b>ayuda</b></a>)
+        	<a  title="" href="<?php echo($ruta_db_superior);?>formatos/contexto_extrategico/adicionar_contexto_extrategico.php?anterior=<?php echo($_REQUEST['iddoc']);?>&padre=<?php echo($idft_papa[0]['idft_proceso']);?>&idformato=211" target="_self">CONTEXTO EXTRAT&Eacute;GICO</a>(<a class="highslide" onclick="return hs.htmlExpand(this, { objectType: \'iframe\',width: 500, height: 700,preserveContent:true} )" href="ayuda_contexto_estrategico_riesgos.php"><b>ayuda</b></a>)
         	<?php
 				$t=1;
 				if($t==0){
