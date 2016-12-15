@@ -50,63 +50,7 @@ $texto.="<div style='width:100%; height=100%; background-color:".$rotulo["color"
 echo($texto);
 } 
 
-function editar_riesgos_proceso($idformato,$iddoc){
-	global $conn;
- 	
- 	
-    $formato=busca_filtro_tabla("","formato A","A.idformato=".$idformato,"",$conn); 	
-	$ejecutor=busca_filtro_tabla("ejecutor","documento","iddocumento=".$iddoc,"",$conn);
-	
-	$area=busca_filtro_tabla("area_responsable","ft_riesgos_proceso","documento_iddocumento=".$iddoc,"",$conn);
-	$funcionario=busca_filtro_tabla("funcionario_codigo","vfuncionario_dc","iddependencia in (".$area[0]["area_responsable"].")","group by funcionario_codigo",$conn);
-/*
-	if(usuario_actual("login")=="ximena" || usuario_actual("login")=="0k"){
-		?>
-		<script type="text/javascript" src="../../js/jquery.js"></script>
-		<script>
-			$(document).ready(function() {
-				$('#editar_riesgo').click(function(){			
-					window.location="<?php echo $formato[0]['ruta_editar'].'?idformato='.$idformato.'&iddoc='.$iddoc; ?>";			   
-				});		
-			});		 
-		</script>
-		<a href='#' id='editar_riesgo'>Editar Riesgo</a>
-		<?php			
-	}	
-	
-	*/
-    if(@$_REQUEST['tipo']!=5){
-	if(usuario_actual("funcionario_codigo")==$ejecutor[0]["ejecutor"] || usuario_actual("login")=="0k"){		 
-?>
-<script type="text/javascript" src="../../js/jquery.js"></script>
-<script>
-	$(document).ready(function() {
-		$('#editar_riesgo').click(function(){			
-			window.location="<?php echo $formato[0]['ruta_editar'].'?idformato='.$idformato.'&iddoc='.$iddoc; ?>";			   
-		});		
-	});		 
-</script>
-<a href='#' id='editar_riesgo'>Editar Riesgo</a>
-<?php		
-	}else{	
-		for ($i=0; $i <$funcionario["numcampos"] ; $i++) { 
-			if(usuario_actual("funcionario_codigo")==$funcionario[$i]["funcionario_codigo"]){
-				?>
-				<script type="text/javascript" src="../../js/jquery.js"></script>
-				<script>
-					$(document).ready(function() {
-						$('#editar_riesgo').click(function(){			
-							window.location="<?php echo $formato[0]['ruta_editar'].'?idformato='.$idformato.'&iddoc='.$iddoc; ?>";			   
-						})
-					});		 
-				</script>
-				<a href='#' id='editar_riesgo'>Editar Riesgo</a>
-				<?php
-			}
-		}	
-	}
-	}
-}
+
 
 function impacto_nuevo($idformato,$iddoc)
 {$etiquetas=array("5"=>"Leve","10"=>"Moderado","20"=>"Catastr&oacute;fico");
@@ -350,26 +294,11 @@ function llenar_evaluaciones_particular($impacto,$probabilidad,$texto){
 	</script>
 	<?php
 }
-function adicionar_control_riesgo($idformato,$iddoc){
-	global $conn, $ruta_db_superior;
-	if(@$_REQUEST['tipo']!=5){
-	    $padre=busca_filtro_tabla("idft_riesgos_proceso, riesgo_antiguo","ft_riesgos_proceso a","documento_iddocumento=".$iddoc,"",$conn);
-	    echo '<a href="'.$ruta_db_superior.'formatos/control_riesgos/adicionar_control_riesgos.php?padre='.$padre[0]["idft_riesgos_proceso"].'&anterior='.$iddoc.'">Adicionar Valoracion Control de Riesgo</a>';	    
-	}
 
-}
 function fecha_bloqueada($idformato,$iddoc){//A.A
 	echo "<td><input type='text' name='fecha_riesgo' value='".date('Y-m-d')."' readonly='readonly'/></td>";
 }
-function adicionar_acciones_riesgo($idformato,$iddoc){
-	global $conn,$ruta_db_superior;
-	if(@$_REQUEST['tipo']!=5){
-    	$padre=busca_filtro_tabla("idft_riesgos_proceso, riesgo_antiguo","ft_riesgos_proceso a","documento_iddocumento=".$iddoc,"",$conn);
 
-		echo '<a href="'.$ruta_db_superior.'formatos/acciones_riesgo/adicionar_acciones_riesgo.php?padre='.$padre[0]["idft_riesgos_proceso"].'&anterior='.$iddoc.'">Adicionar Acciones</a>';
-	}	
-		//<a href="'.$ruta_db_superior.'formatos/seguimiento_riesgo/adicionar_seguimiento_riesgo.php?padre='.$padre[0]["idft_riesgos_proceso"].'&anterior='.$iddoc.'">Adicionar seguimiento</a>
-}
 
 function selecion_tipo_riesgo(){
 	global $conn;	
