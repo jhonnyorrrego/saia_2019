@@ -74,7 +74,8 @@ a:hover {
    if(@$_REQUEST["enlace_adicionar_formato"] && @$_REQUEST["iddoc"]){
       $formato=busca_filtro_tabla("","formato","nombre_tabla LIKE 'ft_riesgos_proceso'","",$conn);
       if($formato["numcampos"]){
-        agrega_boton("texto","../../botones/formatos/adicionar.gif","../../responder.php?idformato=".$formato[0]["idformato"]."&iddoc=".$_REQUEST["padre"],"","Adicionar ".$formato[0]["etiqueta"],$formato[0]["nombre_tabla"],"","",0);
+        //agrega_boton("texto","../../botones/formatos/adicionar.gif","../../responder.php?idformato=".$formato[0]["idformato"]."&iddoc=".$_REQUEST["padre"],"","Adicionar ".$formato[0]["etiqueta"],$formato[0]["nombre_tabla"],"","",0);
+        agrega_boton("texto","../../botones/formatos/adicionar.gif","../../formatos/riesgos_proceso/adicionar_riesgos_proceso.php?idformato=".$formato[0]["idformato"]."&padre=".$_REQUEST["padre"],"","Adicionar ".$formato[0]["etiqueta"],$formato[0]["nombre_tabla"],"","",0);
         echo("<br /><br />");
         $alto_frame="94%";
       }
