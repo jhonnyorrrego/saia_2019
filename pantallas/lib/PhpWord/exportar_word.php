@@ -395,8 +395,8 @@ if($ruta_procesar!=''){
 		$extension_doc='.docx';
 		$templateProcessor->saveAs($directorio_out.$archivo_out.$extension_doc);
 		
-		$objWriter = PhpOfficePhpWordIOFactory::createWriter($phpWord, HTML);
-        $objWriter->save(helloWorld.html);
+		//$objWriter = PhpOfficePhpWordIOFactory::createWriter($phpWord, HTML);
+        //$objWriter->save(helloWorld.html);
 		
 		
 		chmod($directorio_out.$archivo_out.$extension_doc, 0777); 
