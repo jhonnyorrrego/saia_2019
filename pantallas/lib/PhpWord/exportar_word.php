@@ -279,13 +279,13 @@ if($ruta_procesar!=''){
 									
 										$templateProcessor->setValue('nombre_funcionario#'.$izq, htmlspecialchars($nombre));
 										$templateProcessor->setValue('cargo#'.$izq, htmlspecialchars($cargo));	
-										$templateProcessor->setValue('dependencia#'.$izq, htmlspecialchars($dependencia));
+										$templateProcessor->setValue('nombre_dependencia#'.$izq, htmlspecialchars($dependencia));
 										$izq++;						
 									}else{	//columna 2
 										$templateProcessor->setValue('mostrar_estado_proceso1#'.$der, htmlspecialchars($firma));
 										$templateProcessor->setValue('nombre_funcionario1#'.$der, htmlspecialchars($nombre));
 										$templateProcessor->setValue('cargo1#'.$der, htmlspecialchars($cargo));	
-										$templateProcessor->setValue('dependencia1#'.$der, htmlspecialchars($dependencia));
+										$templateProcessor->setValue('nombre_dependencia1#'.$der, htmlspecialchars($dependencia));
 										$der++;				
 									}	
 									
@@ -302,13 +302,13 @@ if($ruta_procesar!=''){
 										$templateProcessor->setValue('mostrar_estado_proceso#'.$izq, htmlspecialchars($firma));
 										$templateProcessor->setValue('nombre_funcionario#'.$izq, htmlspecialchars($nombre));
 										$templateProcessor->setValue('cargo#'.$izq, htmlspecialchars($cargo));	
-										$templateProcessor->setValue('dependencia#'.$izq, htmlspecialchars($dependencia));	
+										$templateProcessor->setValue('nombre_dependencia#'.$izq, htmlspecialchars($dependencia));	
 										$izq++;						
 									}else{	//columna 2
 										$templateProcessor->setValue('mostrar_estado_proceso1#'.$der, htmlspecialchars($firma));
 										$templateProcessor->setValue('nombre_funcionario1#'.$der, htmlspecialchars($nombre));
 										$templateProcessor->setValue('cargo1#'.$der, htmlspecialchars($cargo));	
-										$templateProcessor->setValue('dependencia1#'.$der, htmlspecialchars($dependencia));	
+										$templateProcessor->setValue('nombre_dependencia1#'.$der, htmlspecialchars($dependencia));	
 										$der++;				
 									}									
 								}				
@@ -318,7 +318,7 @@ if($ruta_procesar!=''){
 										$templateProcessor->setValue('mostrar_estado_proceso1#'.$der,'');
 										$templateProcessor->setValue('nombre_funcionario1#'.$der,'');
 										$templateProcessor->setValue('cargo1#'.$der, '');
-										$templateProcessor->setValue('dependencia1#'.$der, '');
+										$templateProcessor->setValue('nombre_dependencia1#'.$der, '');
 										$der++;										
 									}			
 								}
@@ -371,13 +371,13 @@ if($ruta_procesar!=''){
 							$templateProcessor->setValue('mostrar_estado_proceso#'.$izq, htmlspecialchars($revisado));
 							$templateProcessor->setValue('nombre_funcionario#'.$izq, '');
 							$templateProcessor->setValue('cargo#'.$izq, '');	
-							$templateProcessor->setValue('dependencia#'.$izq, '');
+							$templateProcessor->setValue('nombre_dependencia#'.$izq, '');
 													
 								//columna 2
 							$templateProcessor->setValue('mostrar_estado_proceso1#'.$der, '');
 							$templateProcessor->setValue('nombre_funcionario1#'.$der, '');
 							$templateProcessor->setValue('cargo1#'.$der, '');	
-							$templateProcessor->setValue('dependencia1#'.$der, '');
+							$templateProcessor->setValue('nombre_dependencia1#'.$der, '');
 						}					
 					
 						break;
