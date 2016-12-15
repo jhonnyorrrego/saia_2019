@@ -472,7 +472,7 @@ function validar_from_riesgos($idformato,$iddoc){
         ?>
             <script>
                 $(document).ready(function(){
-                    $('[name="from_riesgos"]').val();
+                    $('[name="from_riesgos"]').val(1);
                 });
             </script>
         <?php 
