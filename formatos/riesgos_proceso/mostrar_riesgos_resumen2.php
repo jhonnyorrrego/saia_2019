@@ -72,7 +72,7 @@ $riesgos=busca_filtro_tabla("","ft_riesgos_proceso","ft_proceso=".$datos[2]." an
 $proceso=busca_filtro_tabla("","ft_proceso a","a.idft_proceso=".$datos[2],"",$conn);	
 
 		if($_REQUEST["tipo"] != 5){
-			$url = "formatos/riesgos_proceso/mostrar_riesgos_resumen2.php|llave=".$_REQUEST["llave"]."|tipo=5";
+			$url = "http://".RUTA_PDF_LOCAL."/formatos/riesgos_proceso/mostrar_riesgos_resumen2.php|llave=".$_REQUEST["llave"]."|tipo=5";
 			//$url_encabezado = "http://".RUTA_PDF_LOCAL."/reportes/encabezado_reporte.php";
 			$ruta = $ruta_db_superior."class_impresion2.php?tipo=5&orientacion=1&url=".$url."&pdf=1&url_encabezado=";
 
