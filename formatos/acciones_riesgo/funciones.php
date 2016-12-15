@@ -51,7 +51,9 @@ function control_funcion($idformato,$iddoc){
 		$selected='';
 		if($accion[0]["acciones_control"]==$valoracion[$i]["idft_control_riesgos"])$selected='selected';
 		$cadena_descripcion=ucfirst(strip_tags(decodifica_encabezado(html_entity_decode($valoracion[$i]["descripcion_control"]))));
-		$cadena_descripcion=substr ( $cadena_descripcion , 0 , 60 ).'...';
+		if(strlen ( $cadena_descripcion )>60){
+		    $cadena_descripcion=substr ( $cadena_descripcion , 0 , 60 ).'...';
+		}
 		$select.='<option value="'.$valoracion[$i]["idft_control_riesgos"].'" '.$selected.'>'.$cadena_descripcion.'</option>';
 	}//string substr ( string $string , int $start [, int $length ] )
 	$select.='<option value="'.$valoracion[$i]["idft_control_riesgos"].'-1" '.$selected.'>Nuevo Control</option>';
