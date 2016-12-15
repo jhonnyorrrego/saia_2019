@@ -467,7 +467,7 @@ function validar_from_riesgos($idformato,$iddoc){
     global $conn,$ruta_db_superior;
     
     if(@$_REQUEST['from_riesgos']){
-        echo( librerias_jqury('1.7') );
+        echo( librerias_jquery('1.7') );
         
         ?>
             <script>
