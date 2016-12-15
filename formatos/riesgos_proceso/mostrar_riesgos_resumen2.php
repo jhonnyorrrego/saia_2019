@@ -132,7 +132,7 @@ $proceso=busca_filtro_tabla("","ft_proceso a","a.idft_proceso=".$datos[2],"",$co
 									}
 									$tabla .='
 														<tr>
-															<td>'./*$riesgos[$i]["consecutivo"].' - '.preg_replace("/(<p\b[^>]*>)(.*?)(<\/p>)/","$2",html_entity_decode($riesgos[$i]["riesgo"]))*/strip_tags(html_entity_decode($riesgos[$i]["riesgo"]), '<p>').'</td>
+															<td>'./*$riesgos[$i]["consecutivo"].' - '.preg_replace("/(<p\b[^>]*>)(.*?)(<\/p>)/","$2",html_entity_decode($riesgos[$i]["riesgo"]))*/strip_tags(html_entity_decode($riesgos[$i]["riesgo"]), '<br>').'</td>
 															<td style="text-align: center;">'.probabilidad($riesgos[$i]["probabilidad"]).'</td>';
 															$tabla.='<td style="text-align: center;">'.impacto($riesgos[$i]["impacto"])."</td>";
 															if($riesgos[$i]["tipo_riesgo"]=="Corrupcion"){
