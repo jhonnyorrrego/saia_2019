@@ -228,7 +228,7 @@ if($ruta_procesar!=''){
 										$funcionario=busca_filtro_tabla("firma,nombres,apellidos","funcionario","funcionario_codigo=".$funcionario_codigo,"",$conn);
 					
 										if(MOTOR=="Oracle"){
-											$img= stripslashes($funcionario[0]["firma"]);	
+											$img= ($funcionario[0]["firma"]);	
 										}elseif(MOTOR=="MySql")   {
 											$img= $funcionario[0]["firma"];
 										}else{
