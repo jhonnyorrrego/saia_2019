@@ -24,6 +24,16 @@ function validar_formula_llenar(){
   	else
   	  alert("Por favor digite primero la formula.");
     });
+    
+    $("#nombre").blur(function(){	
+    	var formula=$("#nombre").val();
+	    var pattern = /[A-Za-z]/;
+		if(pattern.test(formula)==false){
+			alert("La formula debe contener como minimo una variable");
+			$("#nombre").val("");
+		}
+    });    
+    
   });
   </script>
 <?php
