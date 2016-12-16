@@ -159,7 +159,7 @@ if(file_exists($ruta_docx.'documento_word.docx')){
 										
 					$dep=busca_filtro_tabla("dependencia","vfuncionario_dc","estado_dc=1 AND ".$condicion_dep_cargo,"",$conn);
 					$dependencia=utf8_encode(html_entity_decode($dep[0]['dependencia']));
-					$dependencia=ucwords(strtolower($dependencia));
+					//$dependencia=ucwords(strtolower($dependencia));
 					$templateProcessor->setValue($buscar_dependencia,htmlspecialchars($dependencia)); 	
 					
 				}
