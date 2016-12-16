@@ -211,13 +211,15 @@ if($ruta_procesar!=''){
 								$nombre='';
 								$cargo='';
 								$funcionario_codigo=$ruta[$j]['origen'];
-								
+								$funcionario_dependencia_cargo=$ruta[$j]['origen'];	
+								$condicion_dep_cargo="funcionario_codigo=".$funcionario_codigo;
 								if($ruta[$j]['tipo_origen']!=1){
 									$fun_code=busca_filtro_tabla("funcionario_codigo","vfuncionario_dc","iddependencia_cargo=".$ruta[$j]['origen'],"",$conn);
 									$funcionario_codigo=$fun_code[0]['funcionario_codigo'];
+									$condicion_dep_cargo="iddependencia_cargo=".$funcionario_dependencia_cargo;
 						  		}
 						  		
-								$bzn_salida=busca_filtro_tabla("","buzon_salida","ruta_idruta='".$ruta[$j]['idruta']."' AND archivo_idarchivo=".$_REQUEST["iddoc"]." AND lower(nombre) NOT IN ('borrador','leido') ","",$conn);
+								$bzn_salida=busca_filtro_tabla("","buzon_salida","ruta_idruta='".$ruta[$j]['idruta']."' AND archivo_idarchivo=".$_REQUEST["iddoc"]." AND lower(nombre) NOT IN ('borrador','leido','transferido') ","",$conn);
 								
 								
 									
@@ -259,7 +261,7 @@ if($ruta_procesar!=''){
 										
 										$buscar_cargo='c_'.$funcionario_codigo_encriptado;
 										
-										$carg=busca_filtro_tabla("cargo","vfuncionario_dc","estado_dc=1 AND funcionario_codigo=".$funcionario_codigo,"",$conn);
+										$carg=busca_filtro_tabla("cargo","vfuncionario_dc","estado_dc=1 AND ".$condicion_dep_cargo,"",$conn);
 										$cargo=utf8_encode(html_entity_decode($carg[0]['cargo']));
 										$cargo=ucwords(strtolower($cargo));
 										//$templateProcessor->setValue($buscar_cargo,htmlspecialchars($cargo)); 	
@@ -267,7 +269,7 @@ if($ruta_procesar!=''){
 
 										$buscar_dependencia='d_'.$funcionario_codigo_encriptado;
 										
-										$dep=busca_filtro_tabla("dependencia","vfuncionario_dc","estado_dc=1 AND funcionario_codigo=".$funcionario_codigo,"",$conn);
+										$dep=busca_filtro_tabla("dependencia","vfuncionario_dc","estado_dc=1 AND ".$condicion_dep_cargo,"",$conn);
 										$dependencia=utf8_encode(html_entity_decode($dep[0]['dependencia']));
 										$dependencia=ucwords(strtolower($dependencia));
 										//$templateProcessor->setValue($buscar_cargo,htmlspecialchars($cargo)); 
