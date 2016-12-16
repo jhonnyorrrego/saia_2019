@@ -113,7 +113,7 @@ if(file_exists($ruta_docx.'documento_word.docx')){
                     }					
 
 					if(MOTOR=="Oracle"){
-						$img= stripslashes($funcionario[0]["firma"]);	
+						$img= ($funcionario[0]["firma"]);	
 					}elseif(MOTOR=="MySql")   {
 						$img= $funcionario[0]["firma"];
 					}else{
