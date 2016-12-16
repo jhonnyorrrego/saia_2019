@@ -17,7 +17,7 @@ $func=busca_filtro_tabla("firma","funcionario","funcionario_codigo=".$_REQUEST["
 
 header("Content-Type: image/jpeg");
 if(MOTOR=="Oracle"){
-	echo stripslashes($func[0]["firma"]);	
+	echo ($func[0]["firma"]);	
 }elseif(MOTOR=="MySql")   {
 	echo $func[0]["firma"];
 }else{
