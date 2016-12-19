@@ -196,7 +196,7 @@ class Imprime_Pdf {
 	}
 
 	function imprimir() {
-		$this->pdf = new MYPDF($this->orientacion, PDF_UNIT, $this->papel, true, 'UTF-8', false);
+		$this->pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false, true);
 		$this->pdf->SetMargins($this->margenes["izquierda"], $this->margenes["superior"], $this->margenes["derecha"], 1);
 		$this->pdf->AddFont($this->font_family);
 		$this->pdf->SetFont($this->font_family, '', $this->font_size);
