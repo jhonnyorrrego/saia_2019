@@ -12,7 +12,7 @@ while($max_salida>0){
 }
 
 if(!defined("SERVIDOR_IMPORTAR")){
-	define("SERVIDOR_IMPORTAR","http://34.192.26.3/saia/webservice_saia/exportar_importar_formato/importar_formato/receptor_importar.php");
+	define("SERVIDOR_IMPORTAR","http://34.192.26.3/saia_basic/saia/webservice_saia/exportar_importar_formato/importar_formato/receptor_importar.php");
 }
 
 include_once($ruta_db_superior."db.php");
