@@ -89,7 +89,7 @@ if(@$_REQUEST["idpaso_documento"]){
 	</div>
 	</div>
 	
-	<div  id="diagram" style="position:relative; overflow: auto;">
+	<div  id="diagram" style="height:auto; position:relative; overflow: auto;">
 	</div>
 	
 	 
