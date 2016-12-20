@@ -194,11 +194,16 @@ if(!$ruta){
 	if($tipo_ejecutor==1&&$tipo_radicado==1){
 		$datos_ejecutor=busca_filtro_tabla("A.plantilla,B.ejecutor_idejecutor","documento A,datos_ejecutor B","A.ejecutor=B.iddatos_ejecutor and A.iddocumento=".$doc,"",$conn);
 		$ejecutor=busca_filtro_tabla("nombre","ejecutor","idejecutor=".$datos_ejecutor[0]["ejecutor_idejecutor"],"",$conn);
+	}elseif($tipo_radicado==2){
+	    $datos_ejecutor=busca_filtro_tabla("A.ejecutor","documento A","A.iddocumento=".$doc,"",$conn);
+        $ejecutor=busca_filtro_tabla("CONCAT(nombres,' ',apellidos) as nombre","funcionario","funcionario_codigo=".$datos_ejecutor[0]["ejecutor"],"",$conn);
+        
 	}
+    
 	if($ejecutor["numcampos"]&&$datos_ejecutor[0]["plantilla"]==""){
 		$ruta=$ejecutor[0]["nombre"]."-".serie_documento($serie);
 	}else{
-    $ruta="Error al buscar remitente-".serie_documento($serie);
+    $ruta="Error al buscar remitente-".$datos_ejecutor['numcampos'].serie_documento($serie);
 	}
 }
 $ver_estado='';
