@@ -592,7 +592,7 @@ function validar_confirmacion(){
 			window.open("colilla.php?<?php echo $cadena; ?>&descripcion_general=<?php echo $_REQUEST['descripcion_general'];?>","_self");
 		}
 		else{
-			window.open($enlace,"_self");
+			window.open("<?php echo $enlace;?>","_self");
 		}
 		</script>
 		<?php
