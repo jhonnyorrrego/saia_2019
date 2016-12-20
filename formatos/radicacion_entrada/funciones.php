@@ -103,7 +103,7 @@ function validar_digitalizacion_formato_radicacion($idformato,$iddoc){
   	if(@$_REQUEST["iddoc"]){
   	    $tipo=busca_filtro_tabla("tipo_radicado","documento","iddocumento=".$_REQUEST['iddoc'],"",$conn);
         if($tipo[0]['tipo_radicado']==1){
-            $enlace="pantallas/buscador_principal.php?idbusqueda=".$idbusqueda_en_proceso."|default_componente=en_proceso";   
+            $enlace="pantallas/buscador_principal.php?idbusqueda=".$idbusqueda_en_proceso."|default_componente=en_proceso1";   
         }elseif($tipo[0]['tipo_radicado']==2){
             $enlace="pantallas/buscador_principal.php?idbusqueda=".$idbusqueda_en_proceso."|default_componente=tramitados";
         }
