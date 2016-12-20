@@ -110,7 +110,7 @@ if($doc<>FALSE){
     $destino=$radicador[0]["nombres"]." ".$radicador[0]["apellidos"];
   }
   
-  print_r($destino);die();
+  //print_r($destino);die();
 $anexos=busca_filtro_tabla("count(*) AS cantidad","anexos","documento_iddocumento=".$doc,"",$conn);
 $paginas=busca_filtro_tabla("count(*) AS paginas","pagina","id_documento=".$doc,"",$conn);     
   $configuracion=busca_filtro_tabla("*","configuracion A","A.tipo='impresion'","",$conn);  
