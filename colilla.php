@@ -83,6 +83,7 @@ if($doc<>FALSE){
   $radicador1=busca_filtro_tabla("nombres,apellidos","digitalizacion,funcionario","funcionario=funcionario_codigo and documento_iddocumento=$doc","",$conn); 
   $radicador = busca_filtro_tabla("destino,D.nombre,B.nombres, B.apellidos","buzon_salida A,funcionario B,dependencia_cargo C,dependencia D","A.destino=B.funcionario_codigo AND B.idfuncionario=C.funcionario_idfuncionario AND C.dependencia_iddependencia=D.iddependencia AND A.archivo_idarchivo=$doc AND A.nombre='TRANSFERIDO'","A.idtransferencia ASC",$conn);  
   $responsable=busca_filtro_tabla("B.nombres,B.apellidos","documento A,funcionario B","A.ejecutor=B.funcionario_codigo AND iddocumento=".$doc,"",$conn);
+  print_r($responsable);die();
     if($radicador["numcampos"]){
       $usu=$radicador[0]["nombre"];
     }
