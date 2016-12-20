@@ -98,9 +98,6 @@ if($doc<>FALSE){
             }else{
                  $usu="RADICACION";
             }
-            
-            
-            
         }else{
             $usu="RADICACION";
         }
