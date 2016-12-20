@@ -680,7 +680,7 @@ function mostrar_item_destino_radicacion($idformato,$iddoc){
                     },
                 async: false,
                 success: function(datos){
-                    top.noty({text: 'Observaciones guardadas!',type: 'success',layout: "topCenter",timeout:3500});
+                    top.noty({text: 'Confirmaci&oacute;n Exitosa!',type: 'success',layout: "topCenter",timeout:3500});
                     location.reload();
                 }
             });
