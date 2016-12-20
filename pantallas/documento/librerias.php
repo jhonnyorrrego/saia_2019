@@ -195,6 +195,10 @@ if(!$ruta){
 		$datos_ejecutor=busca_filtro_tabla("A.plantilla,B.ejecutor_idejecutor","documento A,datos_ejecutor B","A.ejecutor=B.iddatos_ejecutor and A.iddocumento=".$doc,"",$conn);
 		$ejecutor=busca_filtro_tabla("nombre","ejecutor","idejecutor=".$datos_ejecutor[0]["ejecutor_idejecutor"],"",$conn);
 	}
+	
+	print_r($datos_ejecutor);die();
+	
+	
 	if($ejecutor["numcampos"]&&$datos_ejecutor[0]["plantilla"]==""){
 		$ruta=$ejecutor[0]["nombre"]."-".serie_documento($serie);
 	}else{
