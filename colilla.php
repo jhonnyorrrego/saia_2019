@@ -101,9 +101,6 @@ if($doc<>FALSE){
         }else{
             $usu="RADICACION";
         }
-        
-        
-        
     } 
       
   if($datos[0]["tipo_radicado"]==1){
