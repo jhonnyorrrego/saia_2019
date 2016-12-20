@@ -88,6 +88,9 @@ if($doc<>FALSE){
       $usu=$radicador[0]["nombre"];
     }
     else{
+        
+        print_r($datos);die();
+        
         if($datos[0]["plantilla"]=='RADICACION_ENTRADA'){
             $destino_radicacion=busca_filtro_tabla("destino","ft_radicacion_entrada","documento_iddocumento=".$doc,"",$conn);
             $fun_destino=busca_filtro_tabla("nombres,apellidos","funcionario","funcionario_codigo=".$destino_radicacion[0]['destino'],"",$conn);
