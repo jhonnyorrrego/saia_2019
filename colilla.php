@@ -91,6 +91,7 @@ if($doc<>FALSE){
         
         if(strtolower($datos[0]["plantilla"])=='radicacion_entrada'){
             $destino_radicacion=busca_filtro_tabla("b.funcionario_codigo","ft_radicacion_entrada a, vfuncionario_dc b","a.destino=b.iddependencia_cargo AND a.documento_iddocumento=".$doc,"",$conn);
+            print_r($destino_radicacion);die();
             
             $fun_destino=busca_filtro_tabla("nombres,apellidos","funcionario","funcionario_codigo=".$destino_radicacion[0]['destino'],"",$conn);
             
