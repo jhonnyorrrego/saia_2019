@@ -196,7 +196,7 @@ if(!$ruta){
 		$ejecutor=busca_filtro_tabla("nombre","ejecutor","idejecutor=".$datos_ejecutor[0]["ejecutor_idejecutor"],"",$conn);
 	}
 	
-    return($datos_ejecutor);
+    return(print_r($datos_ejecutor));
 	
 	
 	if($ejecutor["numcampos"]&&$datos_ejecutor[0]["plantilla"]==""){
