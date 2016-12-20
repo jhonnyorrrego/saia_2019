@@ -350,7 +350,7 @@ function generar_ingreso_formato($nombre_formato){
 	$_REQUEST["descripcion_general"]=decodifica_encabezado(htmlentities($_REQUEST["descripcion_general"]));
 	
 	
-	print_r($_REQUEST);die();
+	
 	//Adicionales
 	if($nombre_formato=="radicacion_entrada"){
 		$_REQUEST["idflujo"] = 1;
