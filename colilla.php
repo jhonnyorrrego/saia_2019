@@ -87,8 +87,27 @@ if($doc<>FALSE){
     if($radicador["numcampos"]){
       $usu=$radicador[0]["nombre"];
     }
-    else 
-      $usu="RADICACION";
+    else{
+        if($datos[0]["plantilla"]=='RADICACION_ENTRADA'){
+            $destino_radicacion=busca_filtro_tabla("destino","ft_radicacion_entrada","documento_iddocumento=".$doc,"",$conn);
+            $fun_destino=busca_filtro_tabla("nombres,apellidos","funcionario","funcionario_codigo=".$destino_radicacion[0]['destino'],"",$conn);
+            
+            if($fun_destino['numcampos']){
+                $usu=$nombre_fun_destino=ucwords(strtolower( codifica_encabezado(html_entity_decode($fun_destino[0]["nombres"]." ".$fun_destino[0]["apellidos"])) ));
+            }else{
+                 $usu="RADICACION";
+            }
+            
+            
+            
+        }else{
+            $usu="RADICACION";
+        }
+        
+        
+        
+    } 
+      
   if($datos[0]["tipo_radicado"]==1){
     $numero_folios=busca_filtro_tabla("","ft_radicacion_entrada","documento_iddocumento=".$doc,"",$conn);
     $tipo_radicacion='E';
