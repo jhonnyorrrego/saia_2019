@@ -1617,7 +1617,7 @@ function formatea_campo($valor, $tipo, $llenado) {
 					}
 				}
 			} else {
-				$llenado = codifica_encabezado(html_entity_decode($llenado));
+				$llenado = html_entity_decode($llenado);
 				$parametros = explode("|", $llenado);
 				$select = explode(";", $parametros[count($parametros) - 1]);
 				// preg_match("/(.+) where/", strtolower($select[1]), $cuerpo);
@@ -1629,7 +1629,7 @@ function formatea_campo($valor, $tipo, $llenado) {
 				$datos = ejecuta_filtro_tabla($sql_datos, $conn);
 				$valores = array();
 				for($j = 0; $j < $datos["numcampos"]; $j++)
-					$valores[] = codifica_encabezado(html_entity_decode($datos[$j]["nombre"]));
+					$valores[] = codifica_encabezado($datos[$j]["nombre"]);
 				
 				if($datos["numcampos"])
 					return (implode(", ", $valores));
@@ -1639,7 +1639,7 @@ function formatea_campo($valor, $tipo, $llenado) {
 		} else {
 			// echo($llenado);
 			if(strpos($llenado, ";") != false) {
-				$llenado = codifica_encabezado(html_entity_decode($llenado));
+				$llenado = html_entity_decode($llenado);
 				$arreglo1 = explode(";", $llenado);
 			} else if(strpos($llenado, ",")) {
 				$arreglo1 = array(
