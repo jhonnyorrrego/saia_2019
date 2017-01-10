@@ -844,7 +844,7 @@ function mostrar_informacion_general_radicacion($idformato,$iddoc){
     <td><b>Anexos digitales:</b></td>
     <td colspan="2">'.$nombre_anexos.'</td>
     <td><b>Descripci&oacute;n General:</b></td>
-    <td colspan="2">'.$datos[0]["descripcion_general"].'</td>
+    <td colspan="2">'.codifica_encabezado(html_entity_decode($datos[0]["descripcion_general"])).'</td>
   </tr>	
 
     ';
