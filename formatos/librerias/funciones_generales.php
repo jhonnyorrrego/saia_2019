@@ -1639,7 +1639,7 @@ function formatea_campo($valor, $tipo, $llenado) {
 		} else {
 			// echo($llenado);
 			if(strpos($llenado, ";") != false) {
-				$llenado = html_entity_decode($llenado);
+				$llenado = codifica_encabezado(html_entity_decode($llenado));
 				$arreglo1 = explode(";", $llenado);
 			} else if(strpos($llenado, ",")) {
 				$arreglo1 = array(
