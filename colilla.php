@@ -281,7 +281,7 @@ function imprime(atras){
   
  <?php if(($datos[0]["tipo_radicado"]==1 || $datos[0]["tipo_radicado"]==2) && $datos[0]['plantilla']=='radicacion_entrada'){
      
-         print_r($datos);
+         //print_r($datos);
         ?>
       <b>Desc: <?php 
       
