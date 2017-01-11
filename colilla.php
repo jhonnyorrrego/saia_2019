@@ -280,11 +280,8 @@ function imprime(atras){
   <b>Fecha: <?php echo $datos_fecha; ?></b><br/>
   
  <?php if(($datos[0]["tipo_radicado"]==1 || $datos[0]["tipo_radicado"]==2) && $datos[0]['plantilla']=='radicacion_entrada'){
-         
-         print_r($datos);
-     
         ?>
-      <b>Desc: <?php echo codifica_encabezado(html_entity_decode(@$_REQUEST["descripcion_general"]));/*$numero_folios[0]['numero_folios'];*/ ?></b><br/>
+      <b>Desc: <?php echo codifica_encabezado(html_entity_decode(@$datos[0]["descripcion"])); //codifica_encabezado(html_entity_decode(@$_REQUEST["descripcion_general"]));/*$numero_folios[0]['numero_folios'];*/ ?></b><br/>
  <?php }?>
  <b>Origen: <?php echo($origen);?></b><br/>
   
