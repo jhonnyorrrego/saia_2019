@@ -3,12 +3,12 @@
 <?php
 header("Expires: Mon, 26 Jul 1997 05:00:00 GMT"); // date in the past
 header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT"); // always modified
-header("Cache-Control: no-store, no-cache, must-revalidate"); // HTTP/1.1 
-header("Cache-Control: post-check=0, pre-check=0", false); 
-header("Pragma: no-cache"); // HTTP/1.0 
+header("Cache-Control: no-store, no-cache, must-revalidate"); // HTTP/1.1
+header("Cache-Control: post-check=0, pre-check=0", false);
+header("Pragma: no-cache"); // HTTP/1.0
 ?>
 <?php
-$ewCurSec = 0; // Initialise			
+$ewCurSec = 0; // Initialise
 ?>
 <?php
 
@@ -20,7 +20,11 @@ $x_tipo_cargo = Null;
 ?>
 <?php include ("db.php") ?>
 <?php include ("phpmkrfn.php") ?>
+<?php include ("librerias_saia.php") ?>
 <?php
+include_once ("pantallas/lib/librerias_cripto.php");
+desencriptar_sqli("form_info");
+echo(librerias_jquery());
 $sKey = @$_GET["key"];
 if (($sKey == "") || (is_null($sKey))) { $sKey = @$_POST["key"]; }
 if (!empty($sKey)) $sKey = (get_magic_quotes_gpc()) ? stripslashes($sKey) : $sKey;
@@ -68,7 +72,7 @@ switch ($sAction)
 <script type="text/javascript" src="ew.js"></script>
 <script type="text/javascript">
 <!--
-EW_dateSep = "/"; // set date separator	
+EW_dateSep = "/"; // set date separator
 
 //-->
 </script>
@@ -113,11 +117,11 @@ return true;
 		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">CARGO PADRE</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
 <?php arbol_cargos("x_cod_padre",$x_cod_padre);
-?>			
-			
+?>
+
 </td>
 	</tr>
-	
+
 <tr>
 		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">ESTADO</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
@@ -215,19 +219,19 @@ global $x_tipo_cargo;
 	if (!$row) {
 		$EditData = false; // Update Failed
 	}else{
-		$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_nombre) : $x_nombre; 
+		$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_nombre) : $x_nombre;
 		$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
 		$fieldList["nombre"] = $theValue;
-    $theValue = (!get_magic_quotes_gpc()) ? addslashes($x_estado) : $x_estado; 
+    $theValue = (!get_magic_quotes_gpc()) ? addslashes($x_estado) : $x_estado;
 		$theValue = ($theValue != "") ?  $theValue  : "NULL";
 		$fieldList["estado"] = " '" .$theValue. "'";
-		$fieldList["cod_padre"] = " '" .$x_cod_padre. "'";		
+		$fieldList["cod_padre"] = " '" .$x_cod_padre. "'";
     $fieldList["tipo_cargo"]="'".$x_tipo_cargo."'";
-		
+
 		if($theValue==0)
-		{ 
+		{
      phpmkr_query("update dependencia_cargo set estado=0 where cargo_idcargo=$sKeyWrk",$conn) or error("Fallo inactivar los roles del cargo");
-    }    
+    }
 		// update
 		$sSql = "UPDATE cargo SET ";
 		foreach ($fieldList as $key=>$temp) {
@@ -238,20 +242,20 @@ global $x_tipo_cargo;
 		}
 		$sSql .= " WHERE idcargo =". $sKeyWrk;
 		phpmkr_query($sSql,$conn) or error("Fall� la b�squeda" . phpmkr_error() . ' SQL:' . $sSql);
-		$EditData = true; // Update Successful		
+		$EditData = true; // Update Successful
 	}
 	return $EditData;
 }
-
+encriptar_sqli("cargoedit");
 function arbol_cargos($campo,$seleccionados)
-  {global $conn,$ruta_db_superior; 
+  {global $conn,$ruta_db_superior;
    ?>
- Buscar: 
+ Buscar:
 <input type="text" id="stext_<?php echo $campo; ?>" width="200px" size="25">
-<a href="javascript:void(0)" onclick="tree_<?php echo $campo; ?>.findItem(htmlentities(document.getElementById('stext_<?php echo $campo; ?>').value),1)"> 
-  <img src="<?php echo $ruta_db_superior; ?>botones/general/anterior.png"border="0px"></a>                   
+<a href="javascript:void(0)" onclick="tree_<?php echo $campo; ?>.findItem(htmlentities(document.getElementById('stext_<?php echo $campo; ?>').value),1)">
+  <img src="<?php echo $ruta_db_superior; ?>botones/general/anterior.png"border="0px"></a>
 <a href="javascript:void(0)" onclick="tree_<?php echo $campo; ?>.findItem(htmlentities(document.getElementById('stext_<?php echo $campo; ?>').value),0,1)">
-  <img src="<?php echo $ruta_db_superior; ?>botones/general/buscar.png"border="0px"></a>                                              
+  <img src="<?php echo $ruta_db_superior; ?>botones/general/buscar.png"border="0px"></a>
 <a href="javascript:void(0)" onclick="tree_<?php echo $campo; ?>.findItem(htmlentities(document.getElementById('stext_<?php echo $campo; ?>').value))">
   <img src="<?php echo $ruta_db_superior; ?>botones/general/siguiente.png"border="0px"></a>                            <br />
 <div id="esperando_<?php echo $campo; ?>">
@@ -282,7 +286,7 @@ function arbol_cargos($campo,$seleccionados)
                 	    tree_<?php echo $campo; ?>.setOnCheckHandler(onNodeSelect_<?php echo $campo; ?>);
                       function onNodeSelect_<?php echo $campo; ?>(nodeId)
                       {valor_destino=document.getElementById("<?php echo $campo; ?>");
- 
+
                        if(tree_<?php echo $campo; ?>.isItemChecked(nodeId))
                          {if(valor_destino.value!=="")
                           tree_<?php echo $campo; ?>.setCheck(valor_destino.value,false);
@@ -306,7 +310,7 @@ function arbol_cargos($campo,$seleccionados)
                               eval('document.layers["esperando_<?php echo $campo; ?>"]');
                         document.poppedLayer.style.display = "none";
                       }
- 
+
                       function cargando_<?php echo $campo; ?>() {
                         if (browserType == "gecko" )
                            document.poppedLayer =
@@ -320,6 +324,6 @@ function arbol_cargos($campo,$seleccionados)
                         document.poppedLayer.style.display = "";
                       }
                 	--></script>
-   <?php                
+   <?php
 }
 ?>

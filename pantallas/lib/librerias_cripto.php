@@ -21,7 +21,7 @@ function encrypt_blowfish($data,$key){
 	$iv_size = mcrypt_get_iv_size(MCRYPT_BLOWFISH, MCRYPT_MODE_CBC);
   //die($iv_size);
 	$iv = mcrypt_create_iv($iv_size, MCRYPT_RAND);
-	$crypttext = mcrypt_encrypt(MCRYPT_BLOWFISH, $key, $data, MCRYPT_MODE_CBC, 
+	$crypttext = mcrypt_encrypt(MCRYPT_BLOWFISH, $key, $data, MCRYPT_MODE_CBC,
 $iv);
 	return trim(bin2hex($iv . $crypttext));
 }
@@ -53,5 +53,52 @@ function request_encriptado($param="key_cripto"){
 		}
 	}
 	return($parametros);
+}
+function desencriptar_sqli($campo_info){
+	if (array_key_exists($campo_info, $_POST)) {
+    $data = json_decode($_POST[$campo_info], true);
+    unset($_REQUEST);
+    unset($_POST);
+    for($i = 0; $i < count($data); $i ++) {
+        $_REQUEST[decrypt_blowfish($data[$i]["name"], LLAVE_SAIA_CRYPTO)] = decrypt_blowfish($data[$i]["value"], LLAVE_SAIA_CRYPTO);
+        $_POST[decrypt_blowfish($data[$i]["name"], LLAVE_SAIA_CRYPTO)] = decrypt_blowfish($data[$i]["value"], LLAVE_SAIA_CRYPTO);
+    }
+}
+return;
+}
+function encriptar_sqli($nombre_form,$campo_info="form_info",$ruta_superior="",$retorno=false){
+$texto='	<script type="text/javascript">
+	if(!$("#'.$campo_info.'").length){
+		$("#'.$nombre_form.'").append('."'".'<input type="hidden" id="'.$campo_info.'" name="'.$campo_info.'">'."'".');
+	}
+	$("#'.$nombre_form.'").submit(function(event){
+      var salida = false;
+      $.ajax({
+        type:"POST",
+        async: false,
+        url: "'.$ruta_superior.'formatos/librerias/encript_data.php",
+        data: {datos:JSON.stringify($("#'.$nombre_form.'").serializeArray(), null)},
+        success: function(data) {
+					//$("#'.$nombre_form.'")[0].reset();
+					$("#'.$nombre_form.'").find("input:hidden,input:text, input:password, input:file, select, textarea").val("");
+    			$("#'.$nombre_form.'").find("input:radio, input:checkbox").removeAttr("checked").removeAttr("selected");
+					//console.log(JSON.stringify($("#'.$nombre_form.'").serializeArray()));
+          $("#'.$campo_info.'").val(data);
+					//console.log(JSON.stringify($("#'.$nombre_form.'").serializeArray()));
+          //console.log($("#'.$campo_info.'").val());
+          salida = true;
+        }
+      });
+	    return salida;
+			event.preventDefault();
+	  });
+	</script>';
+	if($retorno){
+		return($texto);
+	}
+	else{
+		echo($texto);
+	}
+	return;
 }
 ?>
