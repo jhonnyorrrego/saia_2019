@@ -37,6 +37,18 @@ if (@$_REQUEST["userid"]<>"" && @$_REQUEST["passwd"]<>"") {
 	
          
   }
+  
+		$alcanzo_limite_licencias=validar_usuarios_activos_login();
+		$perfil_admin_interno=busca_filtro_tabla("idperfil","perfil"," LOWER(nombre)='admin_interno' ","",$conn);
+		$perfil_admin=busca_filtro_tabla("idperfil","perfil"," LOWER(nombre)='administrador' ","",$conn);
+		$tipo_funcionario=busca_filtro_tabla("perfil,estado","funcionario a","a.login='".$sUserId."' AND (a.perfil like '".$perfil_admin[0]['idperfil']."' OR a.perfil like '".$perfil_admin_interno[0]['idperfil']."' OR a.perfil like '%,".$perfil_admin_interno[0]['idperfil'].",%' OR a.perfil like '%,".$perfil_admin_interno[0]['idperfil']."' OR a.perfil like '".$perfil_admin_interno[0]['idperfil'].",%') AND a.estado=1","",$conn);
+	
+		 if($alcanzo_limite_licencias && !$tipo_funcionario['numcampos']){
+		  	$retorno["mensaje"]="Se ha sobrepasado el limite de licencias, por favor comuniquese con el administrador del sistema.";    
+		    $retorno["ingresar"]=0;
+			die(stripslashes(json_encode($retorno)));
+		  }  
+  
 	if (!($bValidPwd)) {			
 			$sUserId = (!get_magic_quotes_gpc()) ? addslashes($sUserId) : $sUserId;
 			$usuario = busca_filtro_tabla("A.*,".fecha_db_obtener("A.ultimo_pwd",'Y-m-d')." AS ultimo_pwd1 ,1 AS dep_estado,1 AS cargo_estado, ".resta_fechas('ultimo_pwd','')." AS dias","funcionario A","A.login = '" . $sUserId . "' AND A.estado=1","",$conn);
@@ -112,4 +124,32 @@ else{
 $retorno["ruta"]=$redirecciona;
 }
 echo(stripslashes(json_encode($retorno)));
+
+
+function validar_usuarios_activos_login(){
+	global $conn;
+	/*No se incluyen en la validacion los usuarios:
+	 * cerok, radicador_salida, mensajero, radicador_web	 	 
+	 */		
+	$funcionarios=busca_filtro_tabla("","funcionario a","a.estado=1 AND lower(a.login) NOT IN ('cerok','radicador_salida','mensajero','radicador_web')","",$conn);
+	$reemplazos=busca_filtro_tabla("","reemplazo_saia b","b.estado=1","",$conn);
+	$funcionarios_activos=$funcionarios['numcampos'];
+	$reemplazos_activos=$reemplazos['numcampos'];
+	$cupos_usados=$funcionarios_activos+$reemplazos_activos;
+	
+	//Consulta la cantidad de usuarios definidos en la configuracion y desencripta el valor
+	$consulta_usuarios=busca_filtro_tabla("valor","configuracion","nombre='numero_usuarios'","",$conn);
+	$numero_encript=$consulta_usuarios[0]['valor'];
+	$numero_usuarios=decrypt_blowfish($numero_encript,LLAVE_SAIA_CRYPTO);
+	
+	//Verifica si ya se sobrepaso el número de usuarios activos
+	
+	if($cupos_usados>$numero_usuarios){
+		return true;
+	}else{
+		return false;
+	}
+	
+	
+}
 ?>
