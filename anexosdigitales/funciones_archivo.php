@@ -295,11 +295,11 @@ function acciones_anexos_usuario($idfunc,$idanexo,$limita_accion=NULL,$num=-1){
     $arper1=str_split($permisos);
     $resultado="";
     if(html_entity_decode($anexo[0]["etiqueta"])!="")
-    	$etiqueta=html_entity_decode($anexo[0]["etiqueta"]);
+    	$etiqueta=($anexo[0]["etiqueta"]);
     else
     	$etiqueta=substr(html_entity_decode($anexo[0]["ruta"]),(strrpos(html_entity_decode($anexo[0]["ruta"]),"/")+1));
     if(in_array("ICONO",$limita_accion))
-    	$resultado.=utf8_encode($etiqueta);
+    	$resultado.=($etiqueta);
     if(in_array ("l", $arper1)&&in_array("DESCARGAR",$limita_accion)){// Simpre se muestra la opcion de descarga
    		if(in_array("ICONO",$limita_accion)){ // IMPRIME CON ICONOS
    		
@@ -600,7 +600,7 @@ function cargar_archivo($iddoc, $permisos_anexos, $formato = NULL, $campo = NULL
 
 	for ($j = 0; @$_FILES['anexos']['name'][$j]; $j++) {
 		if (is_uploaded_file($_FILES['anexos']['tmp_name'][$j]) && $_FILES['anexos']['size'][$j]) {
-			$nombre = $_FILES['anexos']['name'][$j];
+			$nombre = htmlentities(decodifica_encabezado($_FILES['anexos']['name'][$j]));
 			$datos_anexo = pathinfo($_FILES['anexos']['name'][$j]);
 			$temp_filename = time() . "." . $datos_anexo["extension"];
 			$dir_anexos = selecciona_ruta_anexos("", $iddoc, $tipo_almacenamiento);
