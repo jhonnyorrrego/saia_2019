@@ -41,7 +41,7 @@ if (@$_REQUEST["userid"]<>"" && @$_REQUEST["passwd"]<>"") {
 		$alcanzo_limite_licencias=validar_usuarios_activos_login();
 		$perfil_admin_interno=busca_filtro_tabla("idperfil","perfil"," LOWER(nombre)='admin_interno' ","",$conn);
 		$perfil_admin=busca_filtro_tabla("idperfil","perfil"," LOWER(nombre)='administrador' ","",$conn);
-		$tipo_funcionario=busca_filtro_tabla("perfil,estado","funcionario a","a.login='".$sUserId."' AND (a.perfil like '".$perfil_admin[0]['idperfil']."' OR a.perfil like '".$perfil_admin_interno[0]['idperfil']."' OR a.perfil like '%,".$perfil_admin_interno[0]['idperfil'].",%' OR a.perfil like '%,".$perfil_admin_interno[0]['idperfil']."' OR a.perfil like '".$perfil_admin_interno[0]['idperfil'].",%') AND a.estado=1","",$conn);
+		$tipo_funcionario=busca_filtro_tabla("perfil,estado","funcionario a","a.login='".$sUserId."' AND ( (a.perfil like '".$perfil_admin_interno[0]['idperfil']."' OR a.perfil like '%,".$perfil_admin_interno[0]['idperfil'].",%' OR a.perfil like '%,".$perfil_admin_interno[0]['idperfil']."' OR a.perfil like '".$perfil_admin_interno[0]['idperfil'].",%') OR (a.perfil like '".$$perfil_admin[0]['idperfil']."' OR a.perfil like '%,".$$perfil_admin[0]['idperfil'].",%' OR a.perfil like '%,".$$perfil_admin[0]['idperfil']."' OR a.perfil like '".$$perfil_admin[0]['idperfil'].",%') ) AND a.estado=1","",$conn);
 	
 		 if($alcanzo_limite_licencias && !$tipo_funcionario['numcampos']){
 		  	$retorno["mensaje"]="Se ha sobrepasado el limite de licencias, por favor comuniquese con el administrador del sistema.";    
