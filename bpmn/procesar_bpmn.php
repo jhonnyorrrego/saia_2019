@@ -9,7 +9,7 @@ include_once($ruta_db_superior."pantallas/lib/svg/class_cuadro_texto.php");
 include_once($ruta_db_superior."pantallas/lib/svg/class_circulo.php");
 include_once($ruta_db_superior."bpmn/bpmn/class_bpmn.php");
 include_once($ruta_db_superior."pantallas/lib/librerias_fechas.php");
-//echo(estilo_bootstrap());
+echo(estilo_bootstrap());
 ?>
 <link rel="stylesheet" href="css/bpmn.css" type="text/css">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">    
@@ -36,7 +36,7 @@ if(@$_REQUEST["idpaso_documento"]){
   echo(librerias_notificaciones());
 	echo(librerias_kaiten());
 	echo(librerias_acciones_kaiten());
-	//echo(librerias_bootstrap());
+	echo(librerias_bootstrap());
   include_once($ruta_db_superior."pantallas/lib/svg/librerias_adicionales.php");
   if(!@$_REQUEST["iddoc"] && @$_REQUEST["key"])
   	$_REQUEST["iddoc"]=@$_REQUEST["key"];
