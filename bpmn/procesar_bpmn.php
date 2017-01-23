@@ -116,7 +116,6 @@ if(@$_REQUEST["idpaso_documento"]){
       overlayHtml : '<div class="elemento_bpmn_saia" ></div>'
     }).then(function (bpmn){				
       bpmn.zoom(1.0);
-      bpmn.annotate("reviewInvoice", '<span class="bluebox"  style="position: relative; top:100%">New Text</span>', ["highlight"]);
       <?php $bpmn->imprimir_estados_tarea("bpmn"); ?>    
       //bpmn.getOverlay("Task_0hoaho2");
 			//$(".bpmnElement").find("[data-activity-id='Task_0hoaho2']").addClass("prueba");
