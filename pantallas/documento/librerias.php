@@ -478,7 +478,7 @@ return($texto);
 function nombre_plantilla($plantilla,$iddoc=Null){
 	$formato=busca_filtro_tabla("","formato","lower(nombre)='".strtolower($plantilla)."'","",$conn);
 	if($formato["numcampos"])
-		return (ucfirst(strtolower($formato[0]["etiqueta"])));
+		return (ucfirst(strtolower(codifica_encabezado(html_entity_decode($formato[0]["etiqueta"])))));
 	else {
 		if($iddoc){
 			$tipo=busca_filtro_tabla("","documento a","a.iddocumento=".$iddoc,"",$conn);
