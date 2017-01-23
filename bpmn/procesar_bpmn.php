@@ -113,9 +113,10 @@ if(@$_REQUEST["idpaso_documento"]){
   require(["bpmn/Bpmn", "dojo/domReady!"], function(Bpmn) {
     new Bpmn().renderUrl("<?php echo($ruta_db_superior.$bpmn->archivo); ?>", {
       diagramElement : "diagram",
-      overlayHtml : '<div class="elemento_bpmn_saia" style="height:100%; position:relative; overflow: scroll;"></div>'
+      overlayHtml : '<div class="elemento_bpmn_saia" ></div>'
     }).then(function (bpmn){				
       bpmn.zoom(1.0);
+      bpmn.annotate("reviewInvoice", '<span class="bluebox"  style="position: relative; top:100%">New Text</span>', ["highlight"]);
       <?php $bpmn->imprimir_estados_tarea("bpmn"); ?>    
       //bpmn.getOverlay("Task_0hoaho2");
 			//$(".bpmnElement").find("[data-activity-id='Task_0hoaho2']").addClass("prueba");
