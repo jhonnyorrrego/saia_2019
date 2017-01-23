@@ -75,7 +75,7 @@ $(document).ready(function(){
 		},
 		async: false ,
 		success: function(msg){	
-			window.location="http://52.205.58.68/saia_release1/saia/versionamiento/crear_version.php?doc="+msg['iddoc']+"&pdf="+msg['pdf']+"&version="+msg['versionamiento']+"&no_redirecciona="+msg['no_redirecciona']+"&eliminar_anexo=<?php echo($_REQUEST['eliminar_anexo'])?>";
+			window.location="<?php echo(PROTOCOLO_CONEXION.RUTA_PDF); ?>/versionamiento/crear_version.php?doc="+msg['iddoc']+"&pdf="+msg['pdf']+"&version="+msg['versionamiento']+"&no_redirecciona="+msg['no_redirecciona']+"&eliminar_anexo=<?php echo($_REQUEST['eliminar_anexo'])?>";
 		}
 	});
 });
