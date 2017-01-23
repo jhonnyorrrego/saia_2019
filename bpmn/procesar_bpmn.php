@@ -113,8 +113,7 @@ if(@$_REQUEST["idpaso_documento"]){
   require(["bpmn/Bpmn", "dojo/domReady!"], function(Bpmn) {
     new Bpmn().renderUrl("<?php echo($ruta_db_superior.$bpmn->archivo); ?>", {
       diagramElement : "diagram",
-      overlayHtml : '<div class="elemento_bpmn_saia"></div>',
-      height:100
+      overlayHtml : '<div class="elemento_bpmn_saia" style="position: relative; top:100%"></div>'
     }).then(function (bpmn){				
       bpmn.zoom(1.0);
       <?php $bpmn->imprimir_estados_tarea("bpmn"); ?>    
