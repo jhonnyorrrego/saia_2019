@@ -88,7 +88,7 @@ if(@$_REQUEST["idpaso_documento"]){
 		<?php } ?>		
 	</div>
 	</div>
-	<div class="row-fluid " id="diagram" style="position:relative; overflow: scroll;">
+	<div class="row-fluid " id="diagram" style="height:80%; position:relative; overflow: scroll;">
 	</div>
 	 
 </div>
