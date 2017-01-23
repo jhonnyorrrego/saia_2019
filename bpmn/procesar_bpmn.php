@@ -31,7 +31,7 @@ if(@$_REQUEST["idpaso_documento"]){
 //$bpmn->imprimir_SVG(); 
 ?>
 <?php 
-  //echo(librerias_jquery("1.7"));
+  echo(librerias_jquery("1.7"));
   echo(librerias_highslide());
   echo(librerias_notificaciones());
 	echo(librerias_kaiten());
