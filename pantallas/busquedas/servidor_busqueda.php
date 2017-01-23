@@ -612,20 +612,6 @@ function parsear_datos_plantilla_visual($cadena,$campos=array()){
   }
 return($listado_funciones);
 }
-function parsear_datos_plantilla_visual($cadena,$campos=array()){
-  $result=preg_match_all( '({\*([a-z]+[0-9]*[_]*[a-z]*[0-9]*[.]*[,]*[@]*)+\*})' ,$cadena, $resultado );
-  if($result!==FALSE){
-    $patrones=str_replace(array("{*","*}"),"",$resultado[0]);
-    if($campos){
-      $listado_campos=array_unique(explode(",",$campos));
-      $listado_funciones=array_diff($patrones,$listado_campos);
-    }
-    else{
-      $listado_funciones=$patrones;
-    }
-  }
-return($listado_funciones);
-}
 function incluir_librerias_busqueda($elemento,$indice){
   global $ruta_db_superior;
   include_once($ruta_db_superior.$elemento); 
