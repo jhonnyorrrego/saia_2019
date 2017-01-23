@@ -130,7 +130,7 @@ if(@$_REQUEST["idpaso_documento"]){
     });
   });
   
-</script> 
+</script>
 <?php
 include_once($ruta_db_superior."bpmn/bpmn/funciones.php");
 ?>
