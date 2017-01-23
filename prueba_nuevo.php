@@ -2,7 +2,7 @@
 
 
 $resultado=shell_exec("git log --stat");
-print_r($resultado);
+print_r('<pre>'.$resultado.'</pre>');
 die();
 ?>
 
