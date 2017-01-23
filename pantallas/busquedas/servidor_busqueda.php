@@ -198,6 +198,24 @@ $lcampos=$campos;
 $campos_consulta=strtolower(implode(",",array_unique($lcampos)));
 $tablas_consulta=strtolower(implode(",",array_unique($tablas)));
 
+$funciones_tablas=parsear_datos_plantilla_visual($tablas_consulta);
+foreach($funciones_tablas AS $key=>$valor){
+  unset($valor_variables);
+  $valor_variables=array();
+  $funcion=explode("@",$valor);
+  $variables=explode(",",$funcion[1]);
+  $cant_variables=count($variables);
+  for($h=0;$h<$cant_variables;$h++){
+    if(@$variables_final[$variables[$h]])
+      array_push($valor_variables,$variables_final[$variables[$h]]);
+    else
+      array_push($valor_variables,$variables[$h]);
+  }
+  $resultado=call_user_func_array($funcion[0],$valor_variables);
+  $tablas_consulta=str_replace("{*".$valor."*}",$resultado,$tablas_consulta);  
+}
+
+
 $ordenar_consulta="";
 $agrupar_consulta=$datos_busqueda[0]["agrupado_por"];
 if(MOTOR=='MySql' || MOTOR=='Oracle') {
@@ -594,7 +612,20 @@ function parsear_datos_plantilla_visual($cadena,$campos=array()){
   }
 return($listado_funciones);
 }
-
+function parsear_datos_plantilla_visual($cadena,$campos=array()){
+  $result=preg_match_all( '({\*([a-z]+[0-9]*[_]*[a-z]*[0-9]*[.]*[,]*[@]*)+\*})' ,$cadena, $resultado );
+  if($result!==FALSE){
+    $patrones=str_replace(array("{*","*}"),"",$resultado[0]);
+    if($campos){
+      $listado_campos=array_unique(explode(",",$campos));
+      $listado_funciones=array_diff($patrones,$listado_campos);
+    }
+    else{
+      $listado_funciones=$patrones;
+    }
+  }
+return($listado_funciones);
+}
 function incluir_librerias_busqueda($elemento,$indice){
   global $ruta_db_superior;
   include_once($ruta_db_superior.$elemento); 
