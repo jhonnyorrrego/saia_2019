@@ -56,7 +56,7 @@ $documento_calidad = busca_filtro_tabla("documento_calidad","ft_control_document
 				$ch = curl_init();
 
 				// Establecer URL y otras opciones apropiadas
-				curl_setopt($ch, CURLOPT_URL, "http://52.205.58.68/saia_release1/saia/versionamiento/crear_version.php?key=".$datos_documento_calidad[0]['iddocumento']."&no_menu=1&no_redirecciona=1&eliminar_anexo=".$anexo[0]['idanexos']);
+				curl_setopt($ch, CURLOPT_URL, PROTOCOLO_CONEXION.RUTA_PDF."/versionamiento/crear_version.php?key=".$datos_documento_calidad[0]['iddocumento']."&no_menu=1&no_redirecciona=1&eliminar_anexo=".$anexo[0]['idanexos']);
 				curl_setopt($ch, CURLOPT_HEADER, 0);
 
 				// Capturar la URL y pasarla al navegador
