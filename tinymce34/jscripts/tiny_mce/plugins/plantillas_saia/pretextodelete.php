@@ -121,7 +121,7 @@ foreach ($arRecKey as $sRecKey) {
 ?>
 </table>
 <p>
-<input class="btn-mini btn-info" type="submit" name="Action" value="Confirmar Borrado">
+<input class="btn-mini btn-primary" type="submit" name="Action" value="Confirmar Borrado">
 </form>
 </div>
 <?php
