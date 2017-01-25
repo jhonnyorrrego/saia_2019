@@ -169,8 +169,8 @@ if ($nDisplayRecs <= 0) { // Display All Records
  
 //SetUpStartRec(); // Set Up Start Record Position
 ?>
-<p><span class="phpmaker"><H3>PLANTILLAS DE TEXTO</H3>
-</span></p>
+<H5>PLANTILLAS DE TEXTO</H5>
+
 
 <table border="0" cellspacing="0" cellpadding="0">
 
