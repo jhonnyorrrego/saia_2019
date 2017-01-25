@@ -49,7 +49,7 @@ if($_SESSION["tipo_dispositivo"]=="movil"){
     $clase_info="kenlace_saia";
 }
 $texto.='<div class="btn-group pull" >
-	<button type="button" class="btn btn-mini kenlace_saia tooltip_saia documento_leido" onClick=" " enlace="pantallas/documento/detalles_documento.php?iddoc='.$iddoc.'&idbusqueda_componente='.$_REQUEST["idbusqueda_componente"].'" titulo="Detalle Doc No.'.$numero.'" conector="iframe" idregistro="'.$iddoc.'"ancho_columna="470" eliminar_hijos_kaiten="1">
+	<button type="button" class="btn btn-mini  tooltip_saia documento_leido" onClick=" " enlace="pantallas/documento/detalles_documento.php?iddoc='.$iddoc.'&idbusqueda_componente='.$_REQUEST["idbusqueda_componente"].'" titulo="Detalle Doc No.'.$numero.'" conector="iframe" idregistro="'.$iddoc.'"ancho_columna="470" eliminar_hijos_kaiten="1">
     <i class="'.$dato_leido[1].'"></i>
   </button>
 
@@ -105,7 +105,7 @@ if(!$cant_paginas['ordenar_pag']){
   $adicional='disabled="disabled"';
   $conector='';
 }
-$texto.='<button '.$adicional.' type="button" class="btn btn-mini tooltip_saia " titulo="P&aacute;ginas del documento" idregistro="'.$iddoc.'" '.$conector.' enlace="ordenar.php?key='.$iddoc.'"><i class="icon-file" '.$adicional.'></i> '.intval($cant_paginas['ordenar_pag']).'</button>';
+$texto.='<button '.$adicional.' type="button" class="btn btn-mini tooltip_saia kenlace_saia" titulo="P&aacute;ginas del documento" idregistro="'.$iddoc.'" '.$conector.' enlace="ordenar.php?key='.$iddoc.'"><i class="icon-file" '.$adicional.'></i> '.intval($cant_paginas['ordenar_pag']).'</button>';
 $adicional="";
 $conector='conector="iframe"';
 if(!is_array($cant_actividades)){
