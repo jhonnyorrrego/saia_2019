@@ -79,7 +79,7 @@ switch ($sAction)
 		break;
 }
 ?>
-<body bgcolor="#F0F0EE">
+<body style="background-color:#F0F0EE">
 <div class="container">
 <a href="pretextolist.php"><i class="icon-share-alt"></i>Regresar</a><h5>ELIMINAR PLANTILLAS DE TEXTO</h5>
 <form action="pretextodelete.php" method="post">
