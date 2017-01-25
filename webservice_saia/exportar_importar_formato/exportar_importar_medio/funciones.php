@@ -34,6 +34,7 @@ function conexion_exportar_importar($datos){
 	$importar=json_encode($datos);
 	
 	$destino = new nusoap_client(SERVIDOR_IMPORTAR);
+	print_r($destino);die();
 	$respuesta_destino = $destino->call('generar_importar', array($importar));	
 	$respuesta_destino = json_decode($respuesta_destino);
 	$respuesta_destino=json_encode($respuesta_destino);	
