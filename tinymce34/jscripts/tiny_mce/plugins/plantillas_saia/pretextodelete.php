@@ -30,6 +30,7 @@ $x_ayuda = Null;
 $x_imagen = Null;
 ?>
 <?php include ("../../../../../db.php") ?>
+<?php include_once("../../../../../librerias_saia.php"); echo(estilo_bootstrap()); ?>
 <?php include ("../../../../../phpmkrfn.php") ?>
 <?php
 
