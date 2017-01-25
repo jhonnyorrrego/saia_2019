@@ -86,7 +86,7 @@ switch ($sAction)
 <input type="hidden" name="a_delete" value="D">
 <?php $sKey = (get_magic_quotes_gpc()) ? stripslashes($sKey) : $sKey; ?>
 <input type="hidden" name="key_d" value="<?php echo  htmlspecialchars($sKey); ?>">
-<table border="0" cellspacing="1" cellpadding="4" bgcolor="#CCCCCC">
+<table class="table">
 	<tr bgcolor="#666666">
 		<td valign="top"><span class="phpmaker" style="color: #FFFFFF;">Asunto</span></td>
 		<td valign="top"><span class="phpmaker" style="color: #FFFFFF;">Icono</span></td>
