@@ -48,7 +48,6 @@ $clase_info="detalle_documento_saia";
 if($_SESSION["tipo_dispositivo"]=="movil"){
     $clase_info="kenlace_saia";
 }
-print_r($dato_leido);
 $texto.='<div class="btn-group pull" >
 	<button type="button" class="btn btn-mini  tooltip_saia documento_leido" onClick=" " enlace="pantallas/documento/detalles_documento.php?iddoc='.$iddoc.'&idbusqueda_componente='.$_REQUEST["idbusqueda_componente"].'" titulo="Detalle Doc No.'.$numero.'" conector="iframe" idregistro="'.$iddoc.'"ancho_columna="470" eliminar_hijos_kaiten="1">
     <i class="'.$dato_leido[1].'"></i>
