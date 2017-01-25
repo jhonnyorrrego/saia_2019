@@ -186,7 +186,7 @@ if (@$HTTP_SESSION_VARS["ewmsg"] <> "") {
 }
 ?>
 <form method="post">
-<table border="0" cellspacing="1" cellpadding="4" class="table">
+<table border="0"  class="table">
 <?php if ($nTotalRecs > 0) { ?>
 	<!-- Table header -->
 	<tr >
