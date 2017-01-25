@@ -305,7 +305,7 @@ return (array($color,$terminados,$actividades["numcampos"]));
 function documento_leido($iddoc){
 $pendiente = busca_filtro_tabla(fecha_db_obtener("fecha_inicial","Y-m-d H:i:s")." as fecha_inicial","asignacion","documento_iddocumento=".$iddoc." and llave_entidad=".$_SESSION["usuario_actual"],"fecha_inicial DESC",$conn);
 $leido["numcampos"]=0;
-$dato_leido[1]="icon-leido";
+$dato_leido[1]="icon-no_leido";
 $dato_leido[0]='Documento<br />sin leer';
 if($pendiente["numcampos"]){
   $leido = busca_filtro_tabla("nombre,idtransferencia","buzon_entrada","archivo_idarchivo=".$iddoc." and origen=".$_SESSION["usuario_actual"]." and nombre='LEIDO' AND fecha >= ".fecha_db_almacenar($pendiente[0]["fecha_inicial"],"Y-m-d H:i:s"),"",$conn);
@@ -314,7 +314,7 @@ else{
     $leido = busca_filtro_tabla("nombre,idtransferencia","buzon_entrada","archivo_idarchivo=".$iddoc." and origen=".$_SESSION["usuario_actual"]." and nombre='LEIDO'","",$conn);
 }
 if($leido["numcampos"]){
-  $dato_leido[1]="icon-no_leido";
+  $dato_leido[1]="icon-leido";
   $dato_leido[0]="Documento<br />leido";
 }
 return($dato_leido);
