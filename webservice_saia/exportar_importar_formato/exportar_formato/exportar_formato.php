@@ -32,7 +32,7 @@ if(@$_REQUEST['idformato'] || @$idformato){ //idformato a exportar
 	$vidformato = json_encode($vidformato);
 	$ridformato = $cliente->call('generar_exportar', array($vidformato));
 	$ridformato = json_decode($ridformato);
-	
+	print_r($ridformato);die();
 	if($ridformato->exito){
 		$exportar=json_encode($ridformato);
 		
