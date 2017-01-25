@@ -80,7 +80,7 @@ switch ($sAction)
 }
 ?>
 
-<p><span class="phpmaker">Borrar .:: pretexto<br><br><a href="pretextolist.php">Regresar al listado</a></span></p>
+<p><span class="phpmaker">Eliminar plantilla predise&ntilde;ada<br><br><a href="pretextolist.php">Regresar al listado</a></span></p>
 <form action="pretextodelete.php" method="post">
 <p>
 <input type="hidden" name="a_delete" value="D">
