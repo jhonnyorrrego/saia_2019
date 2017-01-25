@@ -146,7 +146,7 @@ if ($sOrderBy != "") {
 	
 </head>
 <body>
-
+<div class="container">
 
 <?php
 
@@ -356,7 +356,7 @@ if ($nTotalRecs > 0) {
 
 			<br style="clear:both" />
 </div>
-
+</div>
 </body>
 <?php
 
