@@ -190,7 +190,7 @@ if (@$HTTP_SESSION_VARS["ewmsg"] <> "") {
 <?php if ($nTotalRecs > 0) { ?>
 	<!-- Table header -->
 	<tr >
-		<td valign="top"><span class="phpmaker" style="color: #FFFFFF;">
+		<td valign="top"><span class="phpmaker" >
 	<a href="pretextolist.php?order=<?php echo urlencode("asunto"); ?>" style="color: #FFFFFF;">Asunto&nbsp;(*)<?php if (@$HTTP_SESSION_VARS["pretexto_x_asunto_Sort"] == "ASC") { ?><img src="images/sortup.gif" width="10" height="9" border="0"><?php } elseif (@$HTTP_SESSION_VARS["pretexto_x_asunto_Sort"] == "DESC") { ?><img src="images/sortdown.gif" width="10" height="9" border="0"><?php } ?></a>
 		</span></td>
 		<!--td valign="top"><span class="phpmaker" style="color: #FFFFFF;">
