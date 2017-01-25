@@ -342,7 +342,7 @@ if ($nTotalRecs > 0) {
 			<span id="tmpldesc"></span></div>
 			<fieldset>
 				<legend>{#template_dlg.preview}</legend>
-				<iframe id="plantillas_saiasrc" name="plantillas_saiasrc" src="pretextoview.php" width="600" height="280" frameborder="0"></iframe>
+				<iframe id="plantillas_saiasrc" name="plantillas_saiasrc" src="pretextoview.php" width="100%" height="280" frameborder="0"></iframe>
 			</fieldset>
 
 <div class="mceActionPanel">
