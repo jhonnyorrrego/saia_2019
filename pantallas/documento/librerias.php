@@ -49,7 +49,7 @@ if($_SESSION["tipo_dispositivo"]=="movil"){
     $clase_info="kenlace_saia";
 }
 $texto.='<div class="btn-group pull" >
-	<button type="button" class="btn btn-mini kenlace_saia tooltip_saia documento_leido" onClick=" " enlace="pantallas/documento/detalles_documento.php?iddoc='.$iddoc.'&idbusqueda_componente='.$_REQUEST["idbusqueda_componente"].'" titulo="Detalle Doc No.'.$numero.'" conector="iframe" idregistro="'.$iddoc.'"ancho_columna="470" eliminar_hijos_kaiten="1">
+	<button type="button" class="btn btn-mini  tooltip_saia documento_leido" onClick=" " enlace="pantallas/documento/detalles_documento.php?iddoc='.$iddoc.'&idbusqueda_componente='.$_REQUEST["idbusqueda_componente"].'" titulo="Detalle Doc No.'.$numero.'" conector="iframe" idregistro="'.$iddoc.'"ancho_columna="470" eliminar_hijos_kaiten="1">
     <i class="'.$dato_leido[1].'"></i>
   </button>
 
@@ -305,7 +305,7 @@ return (array($color,$terminados,$actividades["numcampos"]));
 function documento_leido($iddoc){
 $pendiente = busca_filtro_tabla(fecha_db_obtener("fecha_inicial","Y-m-d H:i:s")." as fecha_inicial","asignacion","documento_iddocumento=".$iddoc." and llave_entidad=".$_SESSION["usuario_actual"],"fecha_inicial DESC",$conn);
 $leido["numcampos"]=0;
-$dato_leido[1]="icon-leido";
+$dato_leido[1]="icon-no_leido";
 $dato_leido[0]='Documento<br />sin leer';
 if($pendiente["numcampos"]){
   $leido = busca_filtro_tabla("nombre,idtransferencia","buzon_entrada","archivo_idarchivo=".$iddoc." and origen=".$_SESSION["usuario_actual"]." and nombre='LEIDO' AND fecha >= ".fecha_db_almacenar($pendiente[0]["fecha_inicial"],"Y-m-d H:i:s"),"",$conn);
@@ -314,7 +314,7 @@ else{
     $leido = busca_filtro_tabla("nombre,idtransferencia","buzon_entrada","archivo_idarchivo=".$iddoc." and origen=".$_SESSION["usuario_actual"]." and nombre='LEIDO'","",$conn);
 }
 if($leido["numcampos"]){
-  $dato_leido[1]="icon-no_leido";
+  $dato_leido[1]="icon-leido";
   $dato_leido[0]="Documento<br />leido";
 }
 return($dato_leido);
