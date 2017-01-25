@@ -79,7 +79,7 @@ switch ($sAction)
 		break;
 }
 ?>
-
+<div class="container">
 <p><span class="phpmaker">Eliminar plantilla pre-dise&ntilde;ada<br><br><a href="pretextolist.php">Regresar al listado</a></span></p>
 <form action="pretextodelete.php" method="post">
 <p>
@@ -123,7 +123,7 @@ foreach ($arRecKey as $sRecKey) {
 <p>
 <input type="submit" name="Action" value="Confirmar Borrado">
 </form>
-
+</div>
 <?php
 phpmkr_db_close($conn);
 ?>
