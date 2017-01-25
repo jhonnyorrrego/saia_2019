@@ -563,7 +563,7 @@ function menu_saia(){
    		handle: ".modal-header"
    	});   	
    	
-	  var meses=new Array("En","Feb","Mar","Abr","May","Jun","Jul","Ag","Sep","Oct","Nov","Dic");
+	  var meses=new Array("Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic");
 	  var refreshInterval_SAIA;
 	  var today=new Date();
 		var h=today.getHours();
