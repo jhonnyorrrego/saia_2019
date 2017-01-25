@@ -191,7 +191,7 @@ if (@$HTTP_SESSION_VARS["ewmsg"] <> "") {
 	<!-- Table header -->
 	<tr >
 		<td valign="top"><span class="phpmaker" >
-	<a href="pretextolist.php?order=<?php echo urlencode("asunto"); ?>" style="color: #FFFFFF;">Asunto&nbsp;(*)<?php if (@$HTTP_SESSION_VARS["pretexto_x_asunto_Sort"] == "ASC") { ?><img src="images/sortup.gif" width="10" height="9" border="0"><?php } elseif (@$HTTP_SESSION_VARS["pretexto_x_asunto_Sort"] == "DESC") { ?><img src="images/sortdown.gif" width="10" height="9" border="0"><?php } ?></a>
+	<a href="pretextolist.php?order=<?php echo urlencode("asunto"); ?>" >Asunto&nbsp;(*)<?php if (@$HTTP_SESSION_VARS["pretexto_x_asunto_Sort"] == "ASC") { ?><img src="images/sortup.gif" width="10" height="9" border="0"><?php } elseif (@$HTTP_SESSION_VARS["pretexto_x_asunto_Sort"] == "DESC") { ?><img src="images/sortdown.gif" width="10" height="9" border="0"><?php } ?></a>
 		</span></td>
 		<!--td valign="top"><span class="phpmaker" style="color: #FFFFFF;">
 	<a href="pretextolist.php?order=<?php echo urlencode("imagen"); ?>" style="color: #FFFFFF;">Icono&nbsp;(*)<?php if (@$HTTP_SESSION_VARS["pretexto_x_imagen_Sort"] == "ASC") { ?><img src="images/sortup.gif" width="10" height="9" border="0"><?php } elseif (@$HTTP_SESSION_VARS["pretexto_x_imagen_Sort"] == "DESC") { ?><img src="images/sortdown.gif" width="10" height="9" border="0"><?php } ?></a>
