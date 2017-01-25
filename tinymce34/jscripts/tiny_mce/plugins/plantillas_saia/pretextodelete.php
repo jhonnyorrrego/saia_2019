@@ -79,6 +79,7 @@ switch ($sAction)
 		break;
 }
 ?>
+<body bgcolor="#F0F0EE">
 <div class="container">
 <a href="pretextolist.php"><i class="icon-share-alt"></i>Regresar</a><h5>ELIMINAR PLANTILLAS DE TEXTO</h5>
 <form action="pretextodelete.php" method="post">
@@ -124,6 +125,7 @@ foreach ($arRecKey as $sRecKey) {
 <input class="btn-mini btn-primary" type="submit" name="Action" value="Confirmar Borrado">
 </form>
 </div>
+</body>
 <?php
 phpmkr_db_close($conn);
 ?>
