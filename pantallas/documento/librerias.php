@@ -105,7 +105,7 @@ if(!$cant_paginas['ordenar_pag']){
   $adicional='disabled="disabled"';
   $conector='';
 }
-$texto.='<button '.$adicional.' type="button" class="btn btn-mini tooltip_saia kenlace_saia" titulo="P&aacute;ginas del documento" idregistro="'.$iddoc.'" '.$conector.' enlace="ordenar.php?key='.$iddoc.'"><i class="icon-file" '.$adicional.'></i> '.intval($cant_paginas['ordenar_pag']).'</button>';
+$texto.='<button '.$adicional.' type="button" class="btn btn-mini tooltip_saia " titulo="P&aacute;ginas del documento" idregistro="'.$iddoc.'" '.$conector.' enlace="ordenar.php?key='.$iddoc.'"><i class="icon-file" '.$adicional.'></i> '.intval($cant_paginas['ordenar_pag']).'</button>';
 $adicional="";
 $conector='conector="iframe"';
 if(!is_array($cant_actividades)){
