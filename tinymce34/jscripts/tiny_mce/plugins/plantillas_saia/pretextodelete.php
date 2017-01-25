@@ -80,7 +80,7 @@ switch ($sAction)
 }
 ?>
 <div class="container">
-<a href="pretextolist.php"><i class="icon-share-alt"></i>Regresar</a><h5>Eliminar plantilla pre-dise&ntilde;ada</h5><br><br>
+<a href="pretextolist.php"><i class="icon-share-alt"></i>Regresar</a><h5>Eliminar plantilla pre-dise&ntilde;ada</h5>
 <form action="pretextodelete.php" method="post">
 <p>
 <input type="hidden" name="a_delete" value="D">
