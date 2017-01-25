@@ -24,6 +24,7 @@ $x_ayuda = Null;
 $x_imagen = Null;
 ?>
 <?php include_once("../../../../../db.php") ?>
+<?php include_once("../../../../../librerias_saia.php"); echo(estilo_bootstrap()); ?>
 <?php include_once("../../../../../phpmkrfn.php") ?>
 
 <?php
