@@ -280,7 +280,7 @@ if(1){
 ?>
 <form action="pretextolist.php" name="ewpagerform" id="ewpagerform" onSubmit="return activa_iframe(4)"
 >
-<table bgcolor="" border="0" cellspacing="1" cellpadding="4" bgcolor="#CCCCCC">
+<table class="table" border="0" cellspacing="1" cellpadding="4" >
 	<tr>
 		<td nowrap>
 <?php
