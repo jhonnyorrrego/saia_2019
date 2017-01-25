@@ -87,9 +87,9 @@ switch ($sAction)
 <?php $sKey = (get_magic_quotes_gpc()) ? stripslashes($sKey) : $sKey; ?>
 <input type="hidden" name="key_d" value="<?php echo  htmlspecialchars($sKey); ?>">
 <table class="table">
-	<tr bgcolor="#666666">
-		<td valign="top"><span class="phpmaker" style="color: #FFFFFF;">Asunto</span></td>
-		<td valign="top"><span class="phpmaker" style="color: #FFFFFF;">Icono</span></td>
+	<tr >
+		<th valign="top"><span >Asunto</span></td>
+		<th valign="top"><span >Icono</span></td>
 	</tr>
 <?php
 $nRecCount = 0;
