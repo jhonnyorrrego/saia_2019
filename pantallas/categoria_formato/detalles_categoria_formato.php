@@ -63,7 +63,12 @@ if(@$_REQUEST['idcategoria_formato']){
             <?php
             
         }else{
-            
+            ?>
+                <div class="well alert-warning">
+                    <b>ATENCI&Oacute;N</b><br>
+                    Esta categoria no tiene actualmente ningun formato asociado.
+                </div>
+            <?php
         }
     ?>
 
