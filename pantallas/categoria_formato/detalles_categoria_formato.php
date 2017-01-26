@@ -15,6 +15,7 @@ if(@$_REQUEST['idcategoria_formato']){
     include_once($ruta_db_superior."db.php");
     include_once($ruta_db_superior."librerias_saia.php");
     echo(estilo_bootstrap()); 
+    echo(librerias_jquery('1.7'));
     $idcategoria_formato=$_REQUEST['idcategoria_formato'];
     $categoria_formato=busca_filtro_tabla("","categoria_formato","idcategoria_formato=".$idcategoria_formato,"",$conn);
     $vector_estado=array(1=>'Activo',2=>'Inactivo');
@@ -43,11 +44,19 @@ if(@$_REQUEST['idcategoria_formato']){
         </tr>          
     </table>
     </div>
+
+    <script type="text/javascript">
+    $(document).ready(function(){		
+      $(".documento_actual",parent.document).removeClass("alert-info");
+      $(".documento_actual",parent.document).removeClass("documento_actual");
+      $("#resultado_pantalla_<?php echo($idexpediente);?>",parent.document).addClass("documento_actual").addClass("alert-info");    
+    });
+    </script>  
     
     <?php
 
     
-    
+  
     
 
 
