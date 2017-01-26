@@ -66,7 +66,7 @@ if((@$_REQUEST["iddoc"] || @$_REQUEST["key"])&& !@$_REQUEST["idpaso_documento"])
 			<a class="previo_high" enlace="pantallas/tareas/adicionar_avance_tareas.php?idtareas=<?php echo($_REQUEST['idtareas']); ?>">
 				<!--img width="16px" border="0" src="<?php echo($ruta_db_superior); ?>botones/formatos/adicionar.gif"-->Adicionar Avances
 			</a>
-			<div class="table-responsive">
+			<div class="table">
 				<table class="table" style="border-collapse: collapse;width: 100%;" border="1">
 					<tbody>
 						<tr>
