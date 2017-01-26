@@ -15,7 +15,7 @@ echo(estilo_bootstrap());
 <div class="container">
     <legend>Crear Categoria Formato</legend>
     <br>
-    <form name="formulario_adicionar_categoria_formato" id="formulario_adicionar_categoria_formato">
+    <form name="formulario_adicionar_categoria_formato" id="formulario_adicionar_categoria_formato" method="POST" action="pantallas/categoria_formato/adicionar_categoria_formato.php">
         
         <div class="control-group element">
             <label class="control-label" for="nombre">Nombre *</label>
