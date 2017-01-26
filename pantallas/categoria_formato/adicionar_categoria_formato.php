@@ -21,7 +21,7 @@ echo(estilo_bootstrap());
         <div class="control-group element">
             <label class="control-label" for="nombre">Nombre *</label>
             <div class="controls"> 
-                <input type="text" name="nombre" id="nombre" >
+                <input type="text" name="nombre" id="nombre" class="required">
             </div>        
         </div>
         <button class="btn btn-primary btn-mini" id="submit_formulario_adicionar_categoria_formato">Aceptar</button>
