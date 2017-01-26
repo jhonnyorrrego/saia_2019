@@ -16,6 +16,7 @@ echo(estilo_bootstrap());
 ?>
 
 <div class="container">
+    <legend>Crear Categoria Formato</legend>
     <form name="formulario_adicionar_categoria_formato" id="formulario_adicionar_categoria_formato">
         
         <div class="control-group element">
@@ -24,6 +25,7 @@ echo(estilo_bootstrap());
                 <input type="text" name="nombre" id="nombre" class="required">
             </div>        
         </div>
+        
         <button class="btn btn-primary btn-mini" id="submit_formulario_adicionar_categoria_formato">Aceptar</button>
     </form>
 </div>
