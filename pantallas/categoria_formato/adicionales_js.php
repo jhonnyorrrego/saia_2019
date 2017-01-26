@@ -22,7 +22,12 @@ echo(librerias_jquery('1.7'));
                  'src':'<?php echo($ruta_db_superior);?>pantallas/categoria_formato/detalles_categoria_formato.php?idcategoria_formato='+idcategoria_formato,
                  'height': ($("#panel_body").height())
             });  
-        });    
+        });  
+        
+        $('.enlace_adicionar_categoria_formato').live('click',function(){
+            
+        });
+        
     });
 </script>
 
