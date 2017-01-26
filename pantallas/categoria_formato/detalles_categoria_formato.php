@@ -19,6 +19,7 @@ if(@$_REQUEST['idcategoria_formato']){
     $categoria_formato=busca_filtro_tabla("","categoria_formato","idcategoria_formato=".$idcategoria_formato,"",$conn);
     $vector_estado=array(1=>'Activo',2=>'Inactivo');
     ?>
+    <div class="container">
     <table class="table">
          <tr>
             <td class="prettyprint">Fecha de creaci&oacute;n</td>
@@ -37,7 +38,7 @@ if(@$_REQUEST['idcategoria_formato']){
             <td><?php echo($categoria_formato[0]['descripcion']); ?></td>
         </tr>          
     </table>
-    
+    </div>
     
     <?php
 
