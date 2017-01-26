@@ -50,8 +50,8 @@ if(@$_REQUEST['idcategoria_formato']){
             
             ?>
                 <table class="table">
-                    <tr style="text-align:center;">
-                        <th class="prettyprint">Formato</th>
+                    <tr >
+                        <th class="prettyprint" style="text-align:center;">Formatos asociados</th>
                     </tr>
                     <?php
                         for($i=0;$i<$formatos_asociados['numcampos'];$i++){
