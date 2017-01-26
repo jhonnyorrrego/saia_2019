@@ -70,10 +70,10 @@ if((@$_REQUEST["iddoc"] || @$_REQUEST["key"])&& !@$_REQUEST["idpaso_documento"])
 				<table class="table">
 					<tbody>
 						<tr>
-							<td class="prettyprint">Fecha y Hora</td>
-							<td class="prettyprint">Descripci&oacute;n</td>
-							<td class="prettyprint">Estado</td>
-							<td class="prettyprint">Funcionario</td>
+							<th class="prettyprint">Fecha y Hora</th>
+							<th class="prettyprint">Descripci&oacute;n</th>
+							<th class="prettyprint">Estado</th>
+							<th class="prettyprint">Funcionario</th>
 						</tr>
 						<?php
 							for($i=0;$i<$busca_avances['numcampos'];$i++){
