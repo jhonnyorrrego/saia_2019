@@ -28,5 +28,5 @@ echo(estilo_bootstrap());
 </div>
 
 <?php  
-echo(librerias_validar_formulario('11'));
+echo(librerias_validar_formulario());
 ?>
