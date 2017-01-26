@@ -18,7 +18,7 @@ $funcionario=usuario_actual("funcionario_codigo");
 **/
 function menu_principal_documento($iddoc,$tipo_visualizacion="",$modulo_adicional=""){
 global  $documento,$conn,$ruta_db_superior,$funcionario;
-$formato=busca_filtro_tabla("","formato,documento,mostrar_pdf","lower(plantilla)=lower(nombre) and iddocumento=".$iddoc,"",$conn);
+$formato=busca_filtro_tabla("mostrar_pdf","formato,documento","lower(plantilla)=lower(nombre) and iddocumento=".$iddoc,"",$conn);
 $nombre=$formato[0]["nombre"];
 $_SESSION["pagina_actual"]=$iddoc;
 
