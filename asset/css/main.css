@@ -23,7 +23,7 @@ border: 1px solid #CCC; margin: 5px; padding: 5px; }
 .modbox-saia-addon .modbox-saia-addon-title .icon-collapser { margin-top: 0px; }
 .modbox-saia-addon.modbox-saia-addon-content { padding: 10px; }
 /* Contenedores adicionales */
-.container-saia { background-color: #FFF; margin-top: auto; margin-right: 10px; margin-bottom: 0px; margin-left: 10px; padding-top: 6px; padding-right: 0px; padding-bottom: 6px; padding-left: 0px; }
+.container-saia { background-color: #FFF; margin-top: auto; margin-right: 10px; margin-bottom: 0px; margin-left: 10px; padding-top: 6px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; }
 .container-saia .container-saia-title { height: 15px; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #E3E3E3; padding-top: 13px; padding-right: 0px; padding-bottom: 0px; padding-left: 10px; font-weight: bold; font-size: 9px; text-transform: uppercase; }
 .container-saia .container-saia-title .icon-collapser, .container-saia .container-saia-title .icon-help { margin-top: -13px; }
 .container-saia .container-saia-content { margin: 0px; padding: 0px; }
