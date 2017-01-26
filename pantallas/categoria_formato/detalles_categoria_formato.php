@@ -22,6 +22,10 @@ if(@$_REQUEST['idcategoria_formato']){
     <div class="container">
     <table class="table">
          <tr>
+            <th colspan="2" class="prettyprint">Informaci&oacute;n General</th>
+            
+        </tr>        
+         <tr>
             <th class="prettyprint">Fecha de creaci&oacute;n:</th>
             <td><?php echo($categoria_formato[0]['fecha']); ?></td>
         </tr>         
