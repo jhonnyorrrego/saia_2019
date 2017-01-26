@@ -93,7 +93,7 @@ if(@$_REQUEST["idbusqueda_componente"]){
         <?php if(@$datos_busqueda[0]["enlace_adicionar"]){
         	?>
         	<li class="divider-vertical"></li><li><div class="btn-group">
-        <button class="btn btn-mini " conector="iframe" id="adicionar_pantalla" destino="_self" title="Adicionar <?php echo($datos_busqueda[0]["etiqueta"]); ?>" titulo="Adicionar <?php echo($datos_busqueda[0]["etiqueta"]); ?>" enlace="<?php echo($datos_busqueda[0]["enlace_adicionar"]); ?>">Adicionar Categoria</button></div></li>
+        <button class="btn btn-mini btn-primary enlace_adicionar_categoria_formato" enlace="<?php echo($datos_busqueda[0]["enlace_adicionar"]); ?>">Adicionar Categoria</button></div></li>
         	<?php
         }
         ?>      
