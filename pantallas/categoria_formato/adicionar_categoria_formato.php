@@ -13,7 +13,6 @@ include_once($ruta_db_superior."librerias_saia.php");
 echo(estilo_bootstrap()); 
 
 if(@$_REQUEST['adicionar']){
-    print_r($_REQUEST);
     
 	$tabla="";
 	$fieldList=array();
