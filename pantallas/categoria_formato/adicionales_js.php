@@ -26,7 +26,6 @@ echo(librerias_jquery('1.7'));
         
         $('.enlace_adicionar_categoria_formato').live('click',function(){
             var enlace=$(this).attr('enlace');
-            
             $("#iframe_detalle").attr({
                  'src':'<?php echo($ruta_db_superior);?>'+enlace,
                  'height': ($("#panel_body").height())
