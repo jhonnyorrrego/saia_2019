@@ -22,7 +22,7 @@ if(@$_REQUEST['idcategoria_formato']){
     <div class="container">
     <table class="table">
          <tr>
-            <th colspan="2" class="prettyprint">Informaci&oacute;n General</th>
+            <th colspan="2" class="prettyprint" style="text-align:center;">Informaci&oacute;n General</th>
             
         </tr>        
          <tr>
