@@ -55,7 +55,7 @@ if(@$_REQUEST['idcategoria_formato']){
                     </tr>
                     <?php
                         for($i=0;$i<$formatos_asociados['numcampos'];$i++){
-                            echo("<tr><td>".$formatos_asociados[$i]['etiqueta']."</td></tr>");
+                            echo("<tr><td>".codifica_encabezado(html_entity_decode($formatos_asociados[$i]['etiqueta']))."</td></tr>");
                         }
                     ?>
                 </table>            
