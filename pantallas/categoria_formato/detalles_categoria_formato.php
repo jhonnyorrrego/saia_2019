@@ -49,7 +49,7 @@ if(@$_REQUEST['idcategoria_formato']){
     $(document).ready(function(){		
       $(".documento_actual",parent.document).removeClass("alert-info");
       $(".documento_actual",parent.document).removeClass("documento_actual");
-      $("#resultado_pantalla_<?php echo($idexpediente);?>",parent.document).addClass("documento_actual").addClass("alert-info");    
+      $("#resultado_pantalla_<?php echo($idcategoria_formato);?>",parent.document).addClass("documento_actual").addClass("alert-info");    
     });
     </script>  
     
