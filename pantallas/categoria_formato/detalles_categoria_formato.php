@@ -8,10 +8,7 @@ while($max_salida>0){
 	$ruta.="../";
 	$max_salida--;
 }
-
-
 if(@$_REQUEST['idcategoria_formato']){
-
     include_once($ruta_db_superior."db.php");
     include_once($ruta_db_superior."librerias_saia.php");
     echo(estilo_bootstrap()); 
@@ -24,7 +21,6 @@ if(@$_REQUEST['idcategoria_formato']){
     <table class="table">
          <tr>
             <th colspan="2" class="prettyprint" style="text-align:center;">Informaci&oacute;n General</th>
-            
         </tr>        
          <tr>
             <th class="prettyprint">Fecha de creaci&oacute;n:</th>
@@ -43,11 +39,9 @@ if(@$_REQUEST['idcategoria_formato']){
             <td><?php echo($categoria_formato[0]['descripcion']); ?></td>
         </tr>          
     </table>
-    
     <?php
         $formatos_asociados=busca_filtro_tabla("etiqueta","formato"," fk_categoria_formato LIKE '%,".$idcategoria_formato.",%' OR fk_categoria_formato LIKE '%,".$idcategoria_formato."' OR fk_categoria_formato LIKE '".$idcategoria_formato.",%' OR fk_categoria_formato='".$idcategoria_formato."'","etiqueta ASC",$conn);
         if($formatos_asociados['numcampos']){
-            
             ?>
                 <table class="table">
                     <tr >
@@ -59,9 +53,7 @@ if(@$_REQUEST['idcategoria_formato']){
                         }
                     ?>
                 </table>            
-            
             <?php
-            
         }else{
             ?>
                 <div class="well alert-warning" style="text-align:center;">
@@ -71,10 +63,7 @@ if(@$_REQUEST['idcategoria_formato']){
             <?php
         }
     ?>
-
-    
     </div>
-
     <script>
     $(document).ready(function(){		
       $(".documento_actual",parent.document).removeClass("alert-info");
@@ -84,20 +73,5 @@ if(@$_REQUEST['idcategoria_formato']){
     </script>  
     
     <?php
-
-    
-  
-    
-
-
-
-    
 } //FIN IF REQUEST idcategoria_formato
-
-
-
-
-
-
-
 ?>
