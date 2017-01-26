@@ -45,7 +45,7 @@ if(@$_REQUEST['idcategoria_formato']){
     </table>
     </div>
 
-    <script type="text/javascript">
+    <script>
     $(document).ready(function(){		
       $(".documento_actual",parent.document).removeClass("alert-info");
       $(".documento_actual",parent.document).removeClass("documento_actual");
