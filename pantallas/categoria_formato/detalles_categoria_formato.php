@@ -49,7 +49,7 @@ if(@$_REQUEST['idcategoria_formato']){
         if($formatos_asociados['numcampos']){
             
             ?>
-                <table>
+                <table class="table">
                     <tr style="text-align:center;">
                         <th class="prettyprint">Formato</th>
                     </tr>
