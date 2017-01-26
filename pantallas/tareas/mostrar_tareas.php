@@ -66,14 +66,14 @@ if((@$_REQUEST["iddoc"] || @$_REQUEST["key"])&& !@$_REQUEST["idpaso_documento"])
 			<a class="previo_high" enlace="pantallas/tareas/adicionar_avance_tareas.php?idtareas=<?php echo($_REQUEST['idtareas']); ?>">
 				<!--img width="16px" border="0" src="<?php echo($ruta_db_superior); ?>botones/formatos/adicionar.gif"-->Adicionar Avances
 			</a>
-			<div class="table">
-				<table class="table" style="border-collapse: collapse;width: 100%;" border="1">
+			<div class="table-responsive">
+				<table class="table"  >
 					<tbody>
 						<tr>
-							<td class="encabezado_list">Fecha y Hora</td>
-							<td class="encabezado_list">Descripci&oacute;n</td>
-							<td class="encabezado_list">Estado</td>
-							<td class="encabezado_list">Funcionario</td>
+							<td >Fecha y Hora</td>
+							<td >Descripci&oacute;n</td>
+							<td >Estado</td>
+							<td >Funcionario</td>
 						</tr>
 						<?php
 							for($i=0;$i<$busca_avances['numcampos'];$i++){
