@@ -19,7 +19,7 @@ echo(librerias_jquery('1.7'));
             var idcategoria_formato=$(this).attr('idregistro');
             
             $("#iframe_detalle").attr({
-                 'src':'<?php echo($ruta_db_superior);?>pantallas/expediente/detalles_categoria_formato.php?idcategoria_formato='+idcategoria_formato,
+                 'src':'<?php echo($ruta_db_superior);?>pantallas/categoria_formato/detalles_categoria_formato.php?idcategoria_formato='+idcategoria_formato,
                  'height': ($("#panel_body").height())
             });  
         });    
