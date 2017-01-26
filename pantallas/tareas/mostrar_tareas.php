@@ -80,7 +80,7 @@ if((@$_REQUEST["iddoc"] || @$_REQUEST["key"])&& !@$_REQUEST["idpaso_documento"])
 								switch ($busca_avances[$i]['estado']) {
 									case 0 :
 										$estado = "Pendiente";
-										$color="yellow";
+										$color="#BDBF1C";
 										break;
 									case 1 :
 										$estado = "Proceso";
