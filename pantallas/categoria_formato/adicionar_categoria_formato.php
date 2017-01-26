@@ -11,6 +11,11 @@ while($max_salida>0){
 include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."librerias_saia.php");
 echo(estilo_bootstrap()); 
+
+if(@$_REQUEST['adicionar']){
+    print_r($_REQUEST);
+    die();
+}
 ?>
 <div class="container">
     <legend>Crear Categoria Formato</legend>
