@@ -26,6 +26,13 @@ echo(estilo_bootstrap());
                 <input type="text" name="nombre" id="nombre" class="required">
             </div>        
         </div>
+
+        <div class="control-group element">
+            <label class="control-label" for="nombre">Descripcion </label>
+            <div class="controls"> 
+                <textarea name="descripcion" id="descripcion"></textarea>
+            </div>        
+        </div>        
         
         <button class="btn btn-primary btn-mini" id="submit_formulario_adicionar_categoria_formato">Aceptar</button>
     </form>
