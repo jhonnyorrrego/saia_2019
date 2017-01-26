@@ -32,3 +32,8 @@ echo(estilo_bootstrap());
 echo(librerias_jquery('1.7'));
 echo(librerias_validar_formulario());
 ?>
+<script>
+    $(document).ready(function(){
+        $('#formulario_adicionar_categoria_formato').validate();
+    });
+</script>
