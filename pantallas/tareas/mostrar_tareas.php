@@ -67,7 +67,7 @@ if((@$_REQUEST["iddoc"] || @$_REQUEST["key"])&& !@$_REQUEST["idpaso_documento"])
 				<!--img width="16px" border="0" src="<?php echo($ruta_db_superior); ?>botones/formatos/adicionar.gif"-->Adicionar Avances
 			</a>
 			<div class="table-responsive">
-				<table class="table"  >
+				<table class="table">
 					<tbody>
 						<tr>
 							<td >Fecha y Hora</td>
