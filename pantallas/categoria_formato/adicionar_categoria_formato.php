@@ -31,6 +31,7 @@ echo(estilo_bootstrap());
             </div>        
         </div>        
         <input type="hidden" name="fecha" value="<?php echo(date('Y-m-d')); ?>">
+        <input type="hidden" name="cod_padre" value="2">
         <button class="btn btn-primary btn-mini" id="submit_formulario_adicionar_categoria_formato">Aceptar</button>
     </form>
 </div>
