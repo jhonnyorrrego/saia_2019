@@ -182,7 +182,7 @@ $(document).ready(function(){
 	          $.each(objeto.rows,function(index,item){                
 	            if(objeto.page===2 && index===0){                
 	                $("#iframe_detalle").attr({
-	                    'src':'<?php echo($ruta_db_superior);?>pantallas/expediente/detalles_expediente.php?idexpediente='+item.idexpediente+"&idbusqueda_componente=<?php echo($idbusqueda_componente);?>&rand=<?php echo(rand());?>",
+	                    'src':'<?php echo($ruta_db_superior);?>pantallas/categoria_formato/detalles_categoria_formato.php?idcategoria_formato='+item.idcategoria_formato+"&idbusqueda_componente=<?php echo($idbusqueda_componente);?>&rand=<?php echo(rand());?>",
 	                    'height': ($("#panel_body").height())
 	                });
 	            }
