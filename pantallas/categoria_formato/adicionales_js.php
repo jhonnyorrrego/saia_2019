@@ -12,7 +12,17 @@ while($max_salida>0){
 include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."librerias_saia.php");
 echo(librerias_jquery('1.7'));
-
-
-
 ?>
+<script>
+    $(document).ready(function(){
+        $('.enlace_detalles_categoria_formato').live('click',function(){
+            var idcategoria_formato=$(this).attr('idregistro');
+        });    
+        
+        
+        
+        
+    });
+</script>
+
+
