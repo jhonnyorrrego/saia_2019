@@ -30,7 +30,7 @@ echo(estilo_bootstrap());
 
 <?php  
 echo(librerias_jquery('1.7'));
-echo(librerias_validar_formulario());
+echo(librerias_validar_formulario('11'));
 ?>
 <script>
     $(document).ready(function(){
