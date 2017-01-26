@@ -22,9 +22,9 @@ if(@$_REQUEST['adicionar']){
 	
 	$strsql = "INSERT INTO ".$tabla." (fecha,";
 	$strsql .= implode(",", array_keys($fieldList));			
-	$strsql .= ") VALUES (".fecha_db_almacenar(date('Y-m-d'),'Y-m-d').",'";			
-	$strsql .= implode("','", array_values($fieldList));			
-	$strsql .= "')";
+	$strsql .= ") VALUES (".fecha_db_almacenar(date('Y-m-d'),'Y-m-d').",";			
+	$strsql .= implode(",", array_values($fieldList));			
+	$strsql .= ")";
     
     print_r($strsql);
     
