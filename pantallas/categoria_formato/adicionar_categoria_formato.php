@@ -33,7 +33,7 @@ echo(estilo_bootstrap());
                 <textarea name="descripcion" id="descripcion"></textarea>
             </div>        
         </div>        
-        
+        <input type="hidden" name="fecha" value="<?php echo(date('Y-m-d')); ?>">
         <button class="btn btn-primary btn-mini" id="submit_formulario_adicionar_categoria_formato">Aceptar</button>
     </form>
 </div>
