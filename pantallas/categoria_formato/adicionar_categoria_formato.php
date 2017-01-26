@@ -17,6 +17,7 @@ echo(estilo_bootstrap());
 
 <div class="container">
     <legend>Crear Categoria Formato</legend>
+    <br>
     <form name="formulario_adicionar_categoria_formato" id="formulario_adicionar_categoria_formato">
         
         <div class="control-group element">
