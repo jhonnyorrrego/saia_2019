@@ -45,16 +45,28 @@ if(@$_REQUEST['idcategoria_formato']){
     </table>
     
     <?php
-        $formatos_asociados=busca_filtro_tabla("etiqueta","formato"," fk_categoria_formato LIKE '%,".$idcategoria_formato.",%' OR fk_categoria_formato LIKE '%,".$idcategoria_formato."' OR fk_categoria_formato LIKE '".$idcategoria_formato.",%' OR fk_categoria_formato='".$idcategoria_formato."'","",$conn);
+        $formatos_asociados=busca_filtro_tabla("etiqueta","formato"," fk_categoria_formato LIKE '%,".$idcategoria_formato.",%' OR fk_categoria_formato LIKE '%,".$idcategoria_formato."' OR fk_categoria_formato LIKE '".$idcategoria_formato.",%' OR fk_categoria_formato='".$idcategoria_formato."'","etiqueta ASC",$conn);
+        if($formatos_asociados['numcampos']){
+            
+            ?>
+                <table>
+                    <tr style="text-align:center;">
+                        <th class="prettyprint">Formato</th>
+                    </tr>
+                    <?php
+                        for($i=0;$i<$formatos_asociados['numcampos'];$i++){
+                            echo("<tr><td>".$formatos_asociados[$i]['etiqueta']."</td></tr>");
+                        }
+                    ?>
+                </table>            
+            
+            <?php
+            
+        }else{
+            
+        }
     ?>
-    <table>
-        <tr style="text-align:center;">
-            <th class="prettyprint">Formato</th>
-        </tr>
-        <tr>
-            <td></td>
-        </tr>
-    </table>
+
     
     </div>
 
