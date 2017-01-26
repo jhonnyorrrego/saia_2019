@@ -43,6 +43,19 @@ if(@$_REQUEST['idcategoria_formato']){
             <td><?php echo($categoria_formato[0]['descripcion']); ?></td>
         </tr>          
     </table>
+    
+    <?php
+        $formatos_asociados=busca_filtro_tabla("etiqueta","formato"," fk_categoria_formato LIKE '%,".$idcategoria_formato.",%' OR fk_categoria_formato LIKE '%,".$idcategoria_formato."' OR fk_categoria_formato LIKE '".$idcategoria_formato.",%' OR fk_categoria_formato='".$idcategoria_formato."'","",$conn);
+    ?>
+    <table>
+        <tr style="text-align:center;">
+            <th class="prettyprint">Formato</th>
+        </tr>
+        <tr>
+            <td></td>
+        </tr>
+    </table>
+    
     </div>
 
     <script>
