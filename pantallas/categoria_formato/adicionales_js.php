@@ -17,11 +17,12 @@ echo(librerias_jquery('1.7'));
     $(document).ready(function(){
         $('.enlace_detalles_categoria_formato').live('click',function(){
             var idcategoria_formato=$(this).attr('idregistro');
+            
+            $("#iframe_detalle").attr({
+                 'src':'<?php echo($ruta_db_superior);?>pantallas/expediente/detalles_categoria_formato.php?idcategoria_formato='+idcategoria_formato,
+                 'height': ($("#panel_body").height())
+            });  
         });    
-        
-        
-        
-        
     });
 </script>
 
