@@ -18,10 +18,17 @@ $funcionario=usuario_actual("funcionario_codigo");
 **/
 function menu_principal_documento($iddoc,$tipo_visualizacion="",$modulo_adicional=""){
 global  $documento,$conn,$ruta_db_superior,$funcionario;
-$formato=busca_filtro_tabla("","formato,documento","lower(plantilla)=lower(nombre) and iddocumento=".$iddoc,"",$conn);
+$formato=busca_filtro_tabla("","formato,documento,mostrar_pdf","lower(plantilla)=lower(nombre) and iddocumento=".$iddoc,"",$conn);
 $nombre=$formato[0]["nombre"];
 $_SESSION["pagina_actual"]=$iddoc;
-$_SESSION["tipo_pagina"]="formatos/$nombre/mostrar_$nombre.php?iddoc=$iddoc";
+
+if($formato[0]['mostrar_pdf']==1){
+    $_SESSION["tipo_pagina"]="pantallas/documento/visor_documento.php?iddoc=".$iddoc."&rnd=".rand();
+}elseif($formato[0]['mostrar_pdf']==2){
+    $_SESSION["tipo_pagina"]="pantallas/documento/visor_documento.php?pdf_word=1&iddoc=".$iddoc;
+}else{
+    $_SESSION["tipo_pagina"]="formatos/$nombre/mostrar_$nombre.php?iddoc=$iddoc";
+}
 
 echo(librerias_jquery("1.7"));
 //if(usuario_actual('login')!='cerok' || !$tipo_visualizacion)return true;
