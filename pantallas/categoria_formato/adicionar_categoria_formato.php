@@ -14,6 +14,21 @@ echo(estilo_bootstrap());
 
 if(@$_REQUEST['adicionar']){
     print_r($_REQUEST);
+    
+	$tabla="";
+	$fieldList=array();
+	$fieldList["cod_padre"] = 2;	
+	$fieldList["nombre"] = $_REQUEST['nombre']; 
+	$fieldList["descripcion"] = $_REQUEST['descripcion'];
+	
+	$strsql = "INSERT INTO ".$tabla." (fecha,";
+	$strsql .= implode(",", array_keys($fieldList));			
+	$strsql .= ") VALUES (".fecha_db_almacenar(date('Y-m-d'),'Y-m-d').",'";			
+	$strsql .= implode("','", array_values($fieldList));			
+	$strsql .= "')";
+    
+    print_r($strsql);
+    
     die();
 }
 ?>
@@ -35,8 +50,6 @@ if(@$_REQUEST['adicionar']){
                 <textarea name="descripcion" id="descripcion"></textarea>
             </div>        
         </div>        
-        <input type="hidden" name="fecha" value="<?php echo(date('Y-m-d')); ?>">
-        <input type="hidden" name="cod_padre" value="2">
         <input type="hidden" name="adicionar" value="1">
         <button class="btn btn-primary btn-mini" id="submit_formulario_adicionar_categoria_formato">Aceptar</button>
     </form>
