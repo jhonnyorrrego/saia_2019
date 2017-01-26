@@ -8,13 +8,10 @@ while($max_salida>0){
 	$ruta.="../";
 	$max_salida--;
 }
-
 include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."librerias_saia.php");
 echo(estilo_bootstrap()); 
-
 ?>
-
 <div class="container">
     <legend>Crear Categoria Formato</legend>
     <br>
@@ -37,7 +34,6 @@ echo(estilo_bootstrap());
         <button class="btn btn-primary btn-mini" id="submit_formulario_adicionar_categoria_formato">Aceptar</button>
     </form>
 </div>
-
 <?php  
 echo(librerias_jquery('1.7'));
 echo(librerias_validar_formulario('11'));
