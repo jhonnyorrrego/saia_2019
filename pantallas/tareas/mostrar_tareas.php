@@ -80,18 +80,21 @@ if((@$_REQUEST["iddoc"] || @$_REQUEST["key"])&& !@$_REQUEST["idpaso_documento"])
 								switch ($busca_avances[$i]['estado']) {
 									case 0 :
 										$estado = "Pendiente";
+										$color="yellow";
 										break;
 									case 1 :
 										$estado = "Proceso";
+										$color="orange";
 										break;
 									case 2 :
 										$estado = "Terminada";
+										$color="green";
 									break;
 							}
 								$campo.="<tr>
 											<td>".$busca_avances[$i]['fecha']."</td>
 											<td>".$busca_avances[$i]['descripcion']."</td>
-											<td>".$estado."</td>
+											<td style='color:".$color."'>".$estado."</td>
 											<td>".$busca_avances[$i]['nombres']." ".$busca_avances[$i]['apellidos']."</td>
 										</tr>";
 							}
