@@ -66,7 +66,7 @@ if(@$_REQUEST['idcategoria_formato']){
             ?>
                 <div class="well alert-warning" style="text-align:center;">
                     <b>ATENCI&Oacute;N</b><br>
-                    Esta categoria no tiene actualmente ningun formato asociado.
+                    Esta categoria no tiene actualmente formatos asociados.
                 </div>
             <?php
         }
