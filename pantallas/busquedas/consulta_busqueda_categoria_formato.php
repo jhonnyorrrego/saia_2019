@@ -89,7 +89,14 @@ if(@$_REQUEST["idbusqueda_componente"]){
           </li>                       
         </ul>             
       </div>
-      <!-- /btn-group -->                   
+      <!-- /btn-group -->    
+        <?php if(@$datos_busqueda[0]["enlace_adicionar"]){
+        	?>
+        	<li class="divider-vertical"></li><li><div class="btn-group">
+        <button class="btn btn-mini kenlace_saia" conector="iframe" id="adicionar_pantalla" destino="_self" title="Adicionar <?php echo($datos_busqueda[0]["etiqueta"]); ?>" titulo="Adicionar <?php echo($datos_busqueda[0]["etiqueta"]); ?>" enlace="<?php echo($datos_busqueda[0]["enlace_adicionar"]); ?>">Adicionar</button></div></li>
+        	<?php
+        }
+        ?>      
       </li>
       <?php if(@$datos_busqueda[0]["menu_busqueda_superior"]){ ?>
         <?php 
