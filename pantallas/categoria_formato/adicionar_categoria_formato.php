@@ -17,8 +17,8 @@ if(@$_REQUEST['adicionar']){
 	$tabla="";
 	$fieldList=array();
 	$fieldList["cod_padre"] = 2;	
-	$fieldList["nombre"] = htmlentities($_REQUEST['nombre']); 
-	$fieldList["descripcion"] = $_REQUEST['descripcion'];
+	$fieldList["nombre"] = decodifica_encabezado(htmlentities($_REQUEST['nombre'])); 
+	$fieldList["descripcion"] = decodifica_encabezado(htmlentities($_REQUEST['descripcion']));
 	
 	$strsql = "INSERT INTO ".$tabla." (fecha,";
 	$strsql .= implode(",", array_keys($fieldList));			
