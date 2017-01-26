@@ -22,19 +22,19 @@ if(@$_REQUEST['idcategoria_formato']){
     <div class="container">
     <table class="table">
          <tr>
-            <td class="prettyprint">Fecha de creaci&oacute;n</td>
+            <th class="prettyprint">Fecha de creaci&oacute;n</th>
             <td><?php echo($categoria_formato[0]['fecha']); ?></td>
         </tr>         
         <tr>
-            <td class="prettyprint">Nombre</td>
+            <th class="prettyprint">Nombre</th>
             <td><?php echo($categoria_formato[0]['nombre']); ?></td>
         </tr>
          <tr>
-            <td class="prettyprint">Estado</td>
+            <th class="prettyprint">Estado</th>
             <td><?php echo($vector_estado[$categoria_formato[0]['estado']]); ?></td>
         </tr>       
          <tr>
-            <td class="prettyprint">Descripci&oacute;n</td>
+            <th class="prettyprint">Descripci&oacute;n</th>
             <td><?php echo($categoria_formato[0]['descripcion']); ?></td>
         </tr>          
     </table>
