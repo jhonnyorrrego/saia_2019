@@ -17,24 +17,24 @@ if(@$_REQUEST['idcategoria_formato']){
     echo(estilo_bootstrap()); 
     $idcategoria_formato=$_REQUEST['idcategoria_formato'];
     $categoria_formato=busca_filtro_tabla("","categoria_formato","idcategoria_formato=".$idcategoria_formato,"",$conn);
-    
+    $vector_estado=array(1=>'Activo',2=>'Inactivo');
     ?>
     <table class="table">
          <tr>
             <td class="prettyprint">Fecha de creaci&oacute;n</td>
-            <td></td>
+            <td><?php echo($categoria_formato[0]['fecha']); ?></td>
         </tr>         
         <tr>
             <td class="prettyprint">Nombre</td>
-            <td></td>
+            <td><?php echo($categoria_formato[0]['nombre']); ?></td>
         </tr>
          <tr>
             <td class="prettyprint">Estado</td>
-            <td></td>
+            <td><?php echo($vector_estado[$categoria_formato[0]['estado']]); ?></td>
         </tr>       
          <tr>
             <td class="prettyprint">Descripci&oacute;n</td>
-            <td></td>
+            <td><?php echo($categoria_formato[0]['descripcion']); ?></td>
         </tr>          
     </table>
     
