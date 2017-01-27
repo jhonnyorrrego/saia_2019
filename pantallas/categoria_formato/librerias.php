@@ -54,6 +54,14 @@ if(@$_REQUEST['ejecutar_funcion']){
         echo('<b>ATENCI&Oacute;N</b><br>La categoria se ha inactivado con exito!');
     }
     
+    function activate_categoria(){
+        global $conn;
+        //print_r($_REQUEST);die();
+        $sql="UPDATE categoria_formato SET estado=1 WHERE idcategoria_formato=".@$_REQUEST['idcategoria_formato'];
+        phpmkr_query($sql);
+        echo('<b>ATENCI&Oacute;N</b><br>La categoria se ha activado con exito!');
+    }
+    
     
     $_REQUEST["ejecutar_funcion"]();
 }
