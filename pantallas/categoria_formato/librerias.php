@@ -39,7 +39,10 @@ function set_categoria(){
     ?>
     <script>
     notificacion_saia('<b>ATENCI&Ocute;N</b><br>La categoria se ha creado con exito!','success','',4000);
-    parent.location.reload();
+    $(".documento_actual",parent.document).removeClass("alert-info");
+    $(".documento_actual",parent.document).removeClass("documento_actual");
+    //parent.location.reload();
+    parent.cargar_datos_scroll();
     </script>
     <?php
     
