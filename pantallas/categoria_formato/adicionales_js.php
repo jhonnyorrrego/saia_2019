@@ -39,7 +39,7 @@ echo(librerias_notificaciones());
                 $.ajax({
                     type:'POST',
                     dataType: 'html',
-                    url: "librerias.php",
+                    url: "<?php echo($ruta_db_superior); ?>pantallas/categoria_formato/librerias.php",
                     data: {
                         ejecutar_funcion:'inactivate_categoria',
                         idcategoria_formato:idcategoria_formato
