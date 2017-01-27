@@ -38,6 +38,7 @@ $datos_categoria=busca_filtro_tabla("nombre,descripcion","categoria_formato","id
         </div>        
         <input type="hidden" name="ejecutar_funcion" value="edit_categoria">
         <input type="hidden" name="idbusqueda_componente" value="<?php echo(@$_REQUEST['idbusqueda_componente']); ?>">
+        <input type="hidden" name="idcategoria_formato" value="<?php echo(@$_REQUEST['idcategoria_formato']); ?>">
         <button class="btn btn-primary btn-mini" id="submit_formulario_adicionar_categoria_formato">Aceptar</button>
     </form>
 </div>
