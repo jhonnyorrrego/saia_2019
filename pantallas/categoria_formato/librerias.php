@@ -28,7 +28,7 @@ function set_categoria(){
 	$fieldList["cod_padre"] = 2;	
 	$fieldList["nombre"] = "'".decodifica_encabezado(htmlentities($_REQUEST['nombre']))."'"; 
 	$fieldList["descripcion"] = "'".decodifica_encabezado(htmlentities($_REQUEST['descripcion']))."'";
-	
+	$fieldList["estado"] = 1;
 	$strsql = "INSERT INTO ".$tabla." (fecha,";
 	$strsql .= implode(",", array_keys($fieldList));			
 	$strsql .= ") VALUES (".fecha_db_almacenar(date('Y-m-d'),'Y-m-d').",";			
