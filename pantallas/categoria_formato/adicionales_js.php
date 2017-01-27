@@ -54,7 +54,28 @@ echo(librerias_notificaciones());
                 });                
             }           
         });        
-        
+        $('.enlace_activar_categoria_formato').live('click',function(){
+            var idcategoria_formato=$(this).attr('idregistro');
+            var title=$(this).attr('title');
+            if(confirm('Esta seguro de Activar la categoria '+title+'?')){
+                $.ajax({
+                    type:'POST',
+                    dataType: 'html',
+                    url: "<?php echo($ruta_db_superior); ?>pantallas/categoria_formato/librerias.php",
+                    data: {
+                        ejecutar_funcion:'activate_categoria',
+                        idcategoria_formato:idcategoria_formato
+                    },
+                    success: function(datos){
+                        notificacion_saia(datos,'success','',4000);
+                        $('#busqueda_pagina').val(1);
+                        $("#fila_actual").val(0);
+                        $("#resultado_busqueda<?php echo(@$_REQUEST['idbusqueda_componente']);?>").html('');
+                        cargar_datos_scroll();                        
+                    }
+                });                
+            }           
+        });          
          
         
     });
