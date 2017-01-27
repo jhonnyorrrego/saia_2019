@@ -30,7 +30,7 @@ echo(estilo_bootstrap());
                 <textarea name="descripcion" id="descripcion"></textarea>
             </div>        
         </div>        
-        <input type="hidden" name="ejecutar_funcion" value="set_expediente">
+        <input type="hidden" name="ejecutar_funcion" value="set_categoria">
         <button class="btn btn-primary btn-mini" id="submit_formulario_adicionar_categoria_formato">Aceptar</button>
     </form>
 </div>
