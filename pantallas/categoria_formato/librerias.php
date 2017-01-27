@@ -47,7 +47,7 @@ if(@$_REQUEST['ejecutar_funcion']){
     
     
     function inactivate_categoria(){
-        
+        global $conn;
     }
 }
 
