@@ -27,14 +27,14 @@ print_r($datos_categoria);
         <div class="control-group element">
             <label class="control-label" for="nombre">Nombre *</label>
             <div class="controls"> 
-                <input type="text" name="nombre" id="nombre" class="required" value="<?php codifica_encabezado(html_entity_decode($datos_categoria[0]['nombre'])); ?>">
+                <input type="text" name="nombre" id="nombre" class="required" value="<?php echo(codifica_encabezado(html_entity_decode($datos_categoria[0]['nombre']))); ?>">
             </div>        
         </div>
 
         <div class="control-group element">
             <label class="control-label" for="nombre">Descripcion </label>
             <div class="controls"> 
-                <textarea name="descripcion" id="descripcion"><?php codifica_encabezado(html_entity_decode($datos_categoria[0]['descripcion'])); ?></textarea>
+                <textarea name="descripcion" id="descripcion"><?php echo(codifica_encabezado(html_entity_decode($datos_categoria[0]['descripcion']))); ?></textarea>
             </div>        
         </div>        
         <input type="hidden" name="ejecutar_funcion" value="set_categoria">
