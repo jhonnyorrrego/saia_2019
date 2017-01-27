@@ -14,7 +14,7 @@ include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."librerias_saia.php");
 
 
-function validar_activo_inactivo_categoria_formato($estado,$idcategoria_formato){
+function validar_activo_inactivo_categoria_formato($idcategoria_formato,$estado){
     if($estado==1){
         $esconder="#enlace_activar_categoria_formato_".$idcategoria_formato;
     }else{
