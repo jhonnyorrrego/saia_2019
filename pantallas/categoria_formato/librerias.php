@@ -20,7 +20,7 @@ if(@$_REQUEST['ejecutar_funcion']){
 
 function set_categoria(){
     global $conn;
-    
+    echo(librerias_jquery('1.7'));
     echo(librerias_notificaciones());
     
 	$tabla="";
