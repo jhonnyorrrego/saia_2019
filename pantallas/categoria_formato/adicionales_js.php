@@ -32,6 +32,13 @@ echo(librerias_notificaciones());
                  'height': ($("#panel_body").height())
             });            
         });
+        $('.enlace_editar_categoria_formato').live('click',function(){
+            var enlace=$(this).attr('enlace');
+            $("#iframe_detalle").attr({
+                 'src':'<?php echo($ruta_db_superior);?>'+enlace,
+                 'height': ($("#panel_body").height())
+            });            
+        });        
         $('.enlace_inactivar_categoria_formato').live('click',function(){
             var idcategoria_formato=$(this).attr('idregistro');
             var title=$(this).attr('title');
