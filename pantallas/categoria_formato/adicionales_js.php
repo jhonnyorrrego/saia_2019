@@ -34,6 +34,8 @@ echo(librerias_notificaciones());
         });
         $('.enlace_editar_categoria_formato').live('click',function(){
             var enlace=$(this).attr('enlace');
+            var idcategoria_formato=$(this).attr('idregistro');
+            enlace=enlace+'?'+idcategoria_formato;
             $("#iframe_detalle").attr({
                  'src':'<?php echo($ruta_db_superior);?>'+enlace,
                  'height': ($("#panel_body").height())
