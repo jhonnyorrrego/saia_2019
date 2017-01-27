@@ -14,7 +14,7 @@ include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."librerias_saia.php");
 
 if(@$_REQUEST['ejecutar_funcion']){
-   $_REQUEST["ejecutar_funcion"]();
+   
 
     function set_categoria(){
         global $conn;
@@ -53,6 +53,9 @@ if(@$_REQUEST['ejecutar_funcion']){
         phpmkr_query($sql);
         echo('<b>ATENCI&Oacute;N</b><br>La categoria se ha inactivado con exito!');
     }
+    
+    
+    $_REQUEST["ejecutar_funcion"]();
 }
 
 ?>
