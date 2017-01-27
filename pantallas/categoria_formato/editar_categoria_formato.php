@@ -11,6 +11,12 @@ while($max_salida>0){
 include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."librerias_saia.php");
 echo(estilo_bootstrap()); 
+
+
+if(!@$_REQUEST['idcategoria_formato']){
+   die(); 
+}
+$datos_categoria=busca_filtro_tabla("nombre,descripcion","categoria_formato","idcategoria_formato=".@$_REQUEST['idcategoria_formato'],"",$conn);
 ?>
 <div class="container">
     <legend>Crear Categoria Formato</legend>
@@ -20,14 +26,14 @@ echo(estilo_bootstrap());
         <div class="control-group element">
             <label class="control-label" for="nombre">Nombre *</label>
             <div class="controls"> 
-                <input type="text" name="nombre" id="nombre" class="required">
+                <input type="text" name="nombre" id="nombre" class="required" value="<?php codifica_encabezado(html_entity_decode($datos_categoria[0]['nombre'])); ?>">
             </div>        
         </div>
 
         <div class="control-group element">
             <label class="control-label" for="nombre">Descripcion </label>
             <div class="controls"> 
-                <textarea name="descripcion" id="descripcion"></textarea>
+                <textarea name="descripcion" id="descripcion"><?php codifica_encabezado(html_entity_decode($datos_categoria[0]['descripcion'])); ?></textarea>
             </div>        
         </div>        
         <input type="hidden" name="ejecutar_funcion" value="set_categoria">
