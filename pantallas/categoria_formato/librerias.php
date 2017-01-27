@@ -23,7 +23,7 @@ function set_categoria(){
     echo(librerias_jquery('1.7'));
     echo(librerias_notificaciones());
     
-	$tabla="";
+	$tabla="categoria_formato";
 	$fieldList=array();
 	$fieldList["cod_padre"] = 2;	
 	$fieldList["nombre"] = "'".decodifica_encabezado(htmlentities($_REQUEST['nombre']))."'"; 
