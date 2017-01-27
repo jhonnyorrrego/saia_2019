@@ -44,7 +44,7 @@ function set_categoria(){
     //parent.location.reload();
     parent.$('#busqueda_pagina').val(1);
     parent.$("#fila_actual").val(0);
-    parent.$("#resultado_busqueda<?php echo($datos_componente);?>").prepend(item.info);
+    parent.$("#resultado_busqueda<?php echo(@$_REQUEST['idbusqueda_componente']);?>").html('');
     parent.cargar_datos_scroll();
     </script>
     <?php
