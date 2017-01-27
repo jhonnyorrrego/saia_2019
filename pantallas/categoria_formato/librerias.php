@@ -52,7 +52,7 @@ if(@$_REQUEST['ejecutar_funcion']){
         $nombre=decodifica_encabezado(htmlentities($_REQUEST['nombre']));
         $descripcion=decodifica_encabezado(htmlentities($_REQUEST['descripcion']));
         $sql="UPDATE categoria_formato SET nombre='".$nombre."',descripcion='".$descripcion."' WHERE idcategoria_formato=".@$_REQUEST['idcategoria_formato'];
-        phpmkr_query($strsql);
+        phpmkr_query($sql);
         ?>
         <script>
         notificacion_saia('<b>ATENCI&Oacute;N</b><br>La categoria se ha editado con exito!','success','',4000);
