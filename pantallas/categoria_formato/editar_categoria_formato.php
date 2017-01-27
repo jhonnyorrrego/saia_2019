@@ -17,7 +17,6 @@ if(!@$_REQUEST['idcategoria_formato']){
    die(); 
 }
 $datos_categoria=busca_filtro_tabla("nombre,descripcion","categoria_formato","idcategoria_formato=".@$_REQUEST['idcategoria_formato'],"",$conn);
-print_r($datos_categoria);
 ?>
 <div class="container">
     <legend>Crear Categoria Formato</legend>
