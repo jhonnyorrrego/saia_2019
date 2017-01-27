@@ -8,6 +8,8 @@ while($max_salida>0){
 	$ruta.="../";
 	$max_salida--;
 }
+global $raiz_saia;
+$raiz_saia=$ruta_db_superior;
 include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."librerias_saia.php");
 
@@ -19,6 +21,7 @@ if(@$_REQUEST['ejecutar_funcion']){
 function set_categoria(){
     global $conn;
     
+    echo(librerias_notificaciones());
     
 	$tabla="";
 	$fieldList=array();
