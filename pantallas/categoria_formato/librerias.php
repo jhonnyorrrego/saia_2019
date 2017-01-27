@@ -36,6 +36,12 @@ function set_categoria(){
 	$strsql .= ")";
     
     print_r($strsql);
+    ?>
+    <script>
+    notificacion_saia('<b>ATENCI&Ocute;N</b><br>La categoria se ha Creado con exito!','success','',4000);
+    parent.cargar_datos_scroll();
+    </script>
+    <?php
     
     die();    
     
