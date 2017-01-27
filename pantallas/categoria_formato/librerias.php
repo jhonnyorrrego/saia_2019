@@ -50,7 +50,7 @@ if(@$_REQUEST['ejecutar_funcion']){
         global $conn;
         
         $sql="UPDATE categoria_formato SET estado=2 WHERE idcategoria_formato=".@$_REQUEST['categoria_formato'];
-        phpmkr_query($strsql);
+        phpmkr_query($sql);
         echo('<b>ATENCI&Oacute;N</b><br>La categoria se ha inactivado con exito!');
     }
 }
