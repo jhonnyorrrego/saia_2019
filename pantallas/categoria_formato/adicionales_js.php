@@ -46,6 +46,10 @@ echo(librerias_notificaciones());
                     },
                     success: function(datos){
                         notificacion_saia(datos,'success','',4000);
+                        $('#busqueda_pagina').val(1);
+                        $("#fila_actual").val(0);
+                        $("#resultado_busqueda<?php echo(@$_REQUEST['idbusqueda_componente']);?>").html('');
+                        cargar_datos_scroll();                        
                     }
                 });                
             }           
