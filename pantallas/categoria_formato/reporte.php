@@ -14,5 +14,8 @@ include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."librerias_saia.php");
 
 
+function validar_activo_inactivo_categoria_formato($idcategoria_formato){
+    
+}
 
 ?>
