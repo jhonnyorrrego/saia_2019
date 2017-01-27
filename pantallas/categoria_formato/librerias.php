@@ -42,7 +42,7 @@ function set_categoria(){
     $(".documento_actual",parent.document).removeClass("alert-info");
     $(".documento_actual",parent.document).removeClass("documento_actual");
     //parent.location.reload();
-    parent.$('#busqueda_pagina').val(2);
+    parent.$('#busqueda_pagina').val(1);
     parent.$("#fila_actual").val(0);
     parent.cargar_datos_scroll();
     </script>
