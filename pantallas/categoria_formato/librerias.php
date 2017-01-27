@@ -48,7 +48,7 @@ if(@$_REQUEST['ejecutar_funcion']){
     
     function inactivate_categoria(){
         global $conn;
-        print_r($_REQUEST);die();
+        //print_r($_REQUEST);die();
         $sql="UPDATE categoria_formato SET estado=2 WHERE idcategoria_formato=".@$_REQUEST['categoria_formato'];
         print_r($sql);die();
         phpmkr_query($sql);
