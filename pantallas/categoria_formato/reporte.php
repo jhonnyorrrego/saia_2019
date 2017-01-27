@@ -14,11 +14,11 @@ include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."librerias_saia.php");
 
 
-function validar_activo_inactivo_categoria_formato($estado){
+function validar_activo_inactivo_categoria_formato($estado,$idcategoria_formato){
     if($estado==1){
-        $esconder=".enlace_activar_categoria_formato";
+        $esconder="#enlace_activar_categoria_formato_".$idcategoria_formato;
     }else{
-        $esconder=".enlace_inactivar_categoria_formato";
+        $esconder="#enlace_inactivar_categoria_formato_".$idcategoria_formato;
     }
 
     $cadena="
