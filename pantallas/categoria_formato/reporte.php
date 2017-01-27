@@ -23,7 +23,7 @@ function validar_activo_inactivo_categoria_formato($estado,$idcategoria_formato)
 
     $cadena="
     <style>
-        ".$esconder.":display:none;
+        ".$esconder."{display:none;}
     </style>
     ";
     return($cadena);
