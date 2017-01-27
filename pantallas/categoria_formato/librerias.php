@@ -39,7 +39,7 @@ function set_categoria(){
     ?>
     <script>
     notificacion_saia('<b>ATENCI&Ocute;N</b><br>La categoria se ha creado con exito!','success','',4000);
-    parent.reload();
+    parent.location.reload();
     </script>
     <?php
     
