@@ -27,7 +27,7 @@ function validar_activo_inactivo_categoria_formato($estado){
     </style>
     ";
     return($cadena);
-    
+  
 }
 
 ?>
