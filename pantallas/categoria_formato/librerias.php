@@ -45,6 +45,24 @@ if(@$_REQUEST['ejecutar_funcion']){
         die();    
     }
     
+    function edit_categoria(){
+        global $conn;
+        
+        $nombre=decodifica_encabezado(htmlentities($_REQUEST['nombre']));
+        $descripcion=decodifica_encabezado(htmlentities($_REQUEST['descripcion']));
+        $sql="UPDATE categoria_formato SET nombre='".$nombre."',descripcion='".$descripcion."' WHERE idcategoria_formato=".@$_REQUEST['idcategoria_formato'];
+        phpmkr_query($strsql);
+        ?>
+        <script>
+        notificacion_saia('<b>ATENCI&Oacute;N</b><br>La categoria se ha editado con exito!','success','',4000);
+        parent.$('#busqueda_pagina').val(1);
+        parent.$("#fila_actual").val(0);
+        parent.$("#resultado_busqueda<?php echo(@$_REQUEST['idbusqueda_componente']);?>").html('');
+        parent.cargar_datos_scroll();
+        </script>
+        <?php
+        die();          
+    }
     
     function inactivate_categoria(){
         global $conn;
