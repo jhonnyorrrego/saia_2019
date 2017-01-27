@@ -40,7 +40,6 @@ function set_categoria(){
     notificacion_saia('<b>ATENCI&Oacute;N</b><br>La categoria se ha creado con exito!','success','',4000);
     $(".documento_actual",parent.document).removeClass("alert-info");
     $(".documento_actual",parent.document).removeClass("documento_actual");
-    //parent.location.reload();
     parent.$('#busqueda_pagina').val(1);
     parent.$("#fila_actual").val(0);
     parent.$("#resultado_busqueda<?php echo(@$_REQUEST['idbusqueda_componente']);?>").html('');
