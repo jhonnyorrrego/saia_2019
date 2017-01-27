@@ -44,9 +44,7 @@ function set_categoria(){
     parent.cargar_datos_scroll();
     </script>
     <?php
-    
     die();    
-    
 }
 
 
