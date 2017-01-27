@@ -25,14 +25,12 @@ function validar_activo_inactivo_categoria_formato($estado){
         $esconder=".enlace_inactivar_categoria_formato";
     }
 
-
     $cadena="
     <style>
         ".$esconder.":display:none;
     </style>
-    
     ";
-    
+    return($cadena);
     
 }
 
