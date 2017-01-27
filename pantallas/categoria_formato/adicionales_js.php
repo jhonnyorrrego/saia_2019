@@ -36,7 +36,7 @@ echo(librerias_notificaciones());
             var enlace=$(this).attr('enlace');
             var idcategoria_formato=$(this).attr('idregistro');
             enlace=enlace+'?idcategoria_formato='+idcategoria_formato;
-            enlace=enlace+'&idbusqueda_componente=<?php echo(@$_REQUEST['idbusqueda_componente']);?>'
+            enlace=enlace+'&idbusqueda_componente=<?php echo(@$_REQUEST['idbusqueda_componente']);?>';
             $("#iframe_detalle").attr({
                  'src':'<?php echo($ruta_db_superior);?>'+enlace,
                  'height': ($("#panel_body").height())
