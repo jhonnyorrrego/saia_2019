@@ -35,7 +35,7 @@ function set_categoria(){
 	$strsql .= implode(",", array_values($fieldList));			
 	$strsql .= ")";
     
-    phpmkr_query($strsql);
+    //phpmkr_query($strsql);
     ?>
     <script>
     notificacion_saia('<b>ATENCI&Ocute;N</b><br>La categoria se ha creado con exito!','success','',4000);
@@ -44,6 +44,7 @@ function set_categoria(){
     //parent.location.reload();
     parent.$('#busqueda_pagina').val(1);
     parent.$("#fila_actual").val(0);
+    parent.$("#resultado_busqueda<?php echo($datos_componente);?>").prepend(item.info);
     parent.cargar_datos_scroll();
     </script>
     <?php
