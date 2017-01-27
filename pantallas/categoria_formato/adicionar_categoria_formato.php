@@ -31,6 +31,7 @@ echo(estilo_bootstrap());
             </div>        
         </div>        
         <input type="hidden" name="ejecutar_funcion" value="set_categoria">
+        <input type="hidden" name="idbusqueda_componente" value="<?php echo(@$_REQUEST['idbusqueda_componente']); ?>">
         <button class="btn btn-primary btn-mini" id="submit_formulario_adicionar_categoria_formato">Aceptar</button>
     </form>
 </div>
