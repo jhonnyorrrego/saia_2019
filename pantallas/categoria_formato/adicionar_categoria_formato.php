@@ -11,30 +11,11 @@ while($max_salida>0){
 include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."librerias_saia.php");
 echo(estilo_bootstrap()); 
-
-if(@$_REQUEST['adicionar']){
-    
-	$tabla="";
-	$fieldList=array();
-	$fieldList["cod_padre"] = 2;	
-	$fieldList["nombre"] = "'".decodifica_encabezado(htmlentities($_REQUEST['nombre']))."'"; 
-	$fieldList["descripcion"] = "'".decodifica_encabezado(htmlentities($_REQUEST['descripcion']))."'";
-	
-	$strsql = "INSERT INTO ".$tabla." (fecha,";
-	$strsql .= implode(",", array_keys($fieldList));			
-	$strsql .= ") VALUES (".fecha_db_almacenar(date('Y-m-d'),'Y-m-d').",";			
-	$strsql .= implode(",", array_values($fieldList));			
-	$strsql .= ")";
-    
-    print_r($strsql);
-    
-    die();
-}
 ?>
 <div class="container">
     <legend>Crear Categoria Formato</legend>
     <br>
-    <form name="formulario_adicionar_categoria_formato" id="formulario_adicionar_categoria_formato" method="POST" action="adicionar_categoria_formato.php">
+    <form name="formulario_adicionar_categoria_formato" id="formulario_adicionar_categoria_formato" method="POST" action="librerias.php">
         
         <div class="control-group element">
             <label class="control-label" for="nombre">Nombre *</label>
@@ -49,7 +30,7 @@ if(@$_REQUEST['adicionar']){
                 <textarea name="descripcion" id="descripcion"></textarea>
             </div>        
         </div>        
-        <input type="hidden" name="adicionar" value="1">
+        <input type="hidden" name="ejecutar_funcion" value="set_expediente">
         <button class="btn btn-primary btn-mini" id="submit_formulario_adicionar_categoria_formato">Aceptar</button>
     </form>
 </div>
