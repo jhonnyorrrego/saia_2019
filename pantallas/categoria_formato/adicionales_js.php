@@ -12,6 +12,7 @@ while($max_salida>0){
 include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."librerias_saia.php");
 echo(librerias_jquery('1.7'));
+echo(librerias_notificaciones());
 ?>
 <script>
     $(document).ready(function(){
@@ -31,6 +32,26 @@ echo(librerias_jquery('1.7'));
                  'height': ($("#panel_body").height())
             });            
         });
+        $('.enlace_inactivar_categoria_formato').live('click',function(){
+            var idcategoria_formato=$(this).attr('idregistro');
+            var title=$(this).attr('title');
+            if(confirm('Esta seguro de inactivar la categoria '+title+'?')){
+                $.ajax({
+                    type:'POST',
+                    dataType: 'html',
+                    url: "librerias.php",
+                    data: {
+                        ejecutar_funcion:'inactivate_categoria',
+                        idcategoria_formato:idcategoria_formato
+                    },
+                    success: function(datos){
+                        notificacion_saia(datos,'success','',4000);
+                    }
+                });                
+            }           
+        });        
+        
+         
         
     });
 </script>
