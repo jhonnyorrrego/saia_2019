@@ -47,7 +47,8 @@ if(@$_REQUEST['ejecutar_funcion']){
     
     function edit_categoria(){
         global $conn;
-        
+        echo(librerias_jquery('1.7'));
+        echo(librerias_notificaciones());        
         $nombre=decodifica_encabezado(htmlentities($_REQUEST['nombre']));
         $descripcion=decodifica_encabezado(htmlentities($_REQUEST['descripcion']));
         $sql="UPDATE categoria_formato SET nombre='".$nombre."',descripcion='".$descripcion."' WHERE idcategoria_formato=".@$_REQUEST['idcategoria_formato'];
