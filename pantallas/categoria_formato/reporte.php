@@ -12,3 +12,7 @@ global $raiz_saia;
 $raiz_saia=$ruta_db_superior;
 include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."librerias_saia.php");
+
+
+
+?>
