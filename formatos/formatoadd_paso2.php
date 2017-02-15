@@ -20,6 +20,11 @@ $ruta.="../";
 $max_salida--;
 }
 
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+include_once($ruta_db_superior."librerias_saia.php");
+desencriptar_sqli('form_info');
+echo(librerias_jquery());
+
 $sAction = @$_POST["a_add"];
 if (($sAction == "") || ((is_null($sAction)))) {
 	$sKey = @$_GET["key"];
@@ -124,7 +129,8 @@ function ventanaSecundaria (URL){
 	</table>
 	<input type="submit" name="Action" value="CONTINUAR">
 	</form>
-<?php	
+<?php
+encriptar_sqli("formatoadd",1,"form_info",$ruta_db_superior);	
 	function LoadData($sKey,$conn)
 {
 	$sKeyWrk = "" . addslashes($sKey) . "";

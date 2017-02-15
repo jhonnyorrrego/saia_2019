@@ -42,6 +42,10 @@ $x_banderas =array();
 include ("phpmkrfn.php");
 include_once("librerias/funciones.php");
 include_once($ruta_db_superior."librerias_saia.php");
+
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+include_once("librerias_saia.php");
+desencriptar_sqli('form_info');
 ?>
 <?php
 $idformato=@$_REQUEST["idformato"];
@@ -554,7 +558,7 @@ if(!$datos_formato[0]["item"]){
 // Function LoadData
 // - Load Data based on Key Value sKey
 // - Variables setup: field variables
-
+encriptar_sqli("campos_formatoedit",1,"form_info",$ruta_db_superior);
 function LoadData($sKey,$conn)
 {
   global $x_banderas;

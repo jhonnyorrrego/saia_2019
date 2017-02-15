@@ -21,6 +21,10 @@ $x_banderas =array();
 ?>
 <?php include ($ruta_db_superior."db.php");
 include ($ruta_db_superior."librerias_saia.php");
+
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+desencriptar_sqli('form_info');
+
 include_once("librerias/funciones.php");
 ?>
 <?php include ($ruta_db_superior."phpmkrfn.php") ?>
@@ -506,7 +510,7 @@ if(!$datos_formato[0]["item"]){
 // Function LoadData
 // - Load Data based on Key Value sKey
 // - Variables setup: field variables
-
+encriptar_sqli("campos_formatoadd",1,"form_info",$ruta_db_superior);
 function LoadData($sKey,$conn)
 {
 	$sKeyWrk = "" . addslashes($sKey) . "";

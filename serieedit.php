@@ -10,8 +10,8 @@ while ($max_salida > 0) {
 }
 include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."pantallas/expediente/librerias.php");
-include_once($ruta_db_superior."librerias_saia.php");
-echo(librerias_notificaciones());
+include_once("pantallas/lib/librerias_cripto.php");
+desencriptar_sqli('form_info');
 
 
 // Initialize common variables
@@ -648,6 +648,7 @@ function EditData($sKey,$conn)
 	}
 	return $EditData;
 }
+encriptar_sqli("serieedit",1);
 ?>
 <script>
 $(document).ready(function(){

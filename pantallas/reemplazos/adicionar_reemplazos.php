@@ -10,6 +10,10 @@ while ($max_salida > 0) {
 }
 include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."librerias_saia.php");
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+desencriptar_sqli('form_info');
+
+
 echo(estilo_bootstrap());
 echo(librerias_jquery("1.7"));
 echo (librerias_bootstrap());
@@ -246,7 +250,13 @@ $(document).ready(function(){
       document.poppedLayer.style.display = "";
   }
   var formulario_reemplazo=$("#formulario_reemplazo");
-  formulario_reemplazo.validate();
+  formulario_reemplazo.validate({
+  	submitHandler: function(form) {
+				<?php encriptar_sqli("formulario_reemplazo",0,"form_info",$ruta_db_superior);?>
+			    form.submit();
+			    
+			 } 
+  });
   $("#submit_formulario_reemplazo").click(function(){
   	if($("#antiguo").val()=="" || $("#nuevo").val()==""){
       alert("<b>ATENCI&Oacute;N</b><br>Por Favor Ingrese los Funcionarios","warning");

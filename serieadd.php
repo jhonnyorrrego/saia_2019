@@ -10,6 +10,8 @@ while ($max_salida > 0) {
 }
 include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."pantallas/expediente/librerias.php");
+include_once("pantallas/lib/librerias_cripto.php");
+desencriptar_sqli('form_info');
 
 
 
@@ -39,7 +41,7 @@ $x_tipo = Null;
 ?>
 <?php include ("phpmkrfn.php") ;
 
-	include ("librerias_saia.php");		
+include ("librerias_saia.php");		
 echo(librerias_jquery('1.7')); 
 echo(librerias_notificaciones());
 ?>
@@ -714,6 +716,7 @@ function AddData($conn)
 	insertar_expediente_automatico($id);
 	return $id;
 }
+encriptar_sqli("serieadd",1);
 ?>
 <script>
 $(document).ready(function(){

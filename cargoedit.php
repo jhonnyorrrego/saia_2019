@@ -246,7 +246,7 @@ global $x_tipo_cargo;
 	}
 	return $EditData;
 }
-encriptar_sqli("cargoedit");
+encriptar_sqli("cargoedit",1);
 function arbol_cargos($campo,$seleccionados)
   {global $conn,$ruta_db_superior;
    ?>

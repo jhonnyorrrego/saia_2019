@@ -12,6 +12,17 @@ while($max_salida > 0) {
 	$max_salida--;
 }
 
+include_once ($ruta_db_superior . "db.php");
+include_once ($ruta_db_superior . "formatos/librerias/header_formato.php");
+include_once ($ruta_db_superior . "formatos/librerias/funciones.php");
+include_once ($ruta_db_superior . "phpmkrfn.php");
+include_once ($ruta_db_superior . "librerias_saia.php");
+include_once ($ruta_db_superior . "librerias/funciones.php");
+
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+desencriptar_sqli('form_info'); 
+echo(librerias_jquery());
+
 // Initialize common variables
 $x_idformato = Null;
 $x_nombre = Null;
@@ -51,12 +62,7 @@ if(isset($_REQUEST["consultar_contador"])) {
 ?>
 <?php
 
-include_once ($ruta_db_superior . "db.php");
-include_once ($ruta_db_superior . "formatos/librerias/header_formato.php");
-include_once ($ruta_db_superior . "formatos/librerias/funciones.php");
-include_once ($ruta_db_superior . "phpmkrfn.php");
-include_once ($ruta_db_superior . "librerias_saia.php");
-include_once ($ruta_db_superior . "librerias/funciones.php");
+
 
 // Get action
 $sAction = @$_POST["a_add"];
@@ -168,7 +174,13 @@ EW_dateSep = "/"; // set date separator
  		}
  	});
 	// validar los campos del formato
-	$('#formatoadd').validate();
+	$('#formatoadd').validate({
+		submitHandler: function(form) {
+				<?php encriptar_sqli("formatoadd",0,"form_info",$ruta_db_superior);?>
+			    form.submit();
+			    
+			  }
+	});
 	 	/*Valida que el nombre del campo no este repetido*/
  	$("#x_nombre").change(function(){
  		$.ajax({

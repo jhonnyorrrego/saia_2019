@@ -1,7 +1,7 @@
 <?php
 include_once("db.php");
 include_once("pantallas/lib/librerias_cripto.php");
-
+desencriptar_sqli('form_info');
 ?>
 <script type="text/javascript" src="js/jquery.js"></script>
 <script type="text/javascript" src="js/jquery.validate.js"></script>
@@ -9,7 +9,7 @@ include_once("pantallas/lib/librerias_cripto.php");
 <?php
 include_once("librerias_saia.php");
 echo(librerias_notificaciones());
-
+echo(librerias_jquery());
 ?>
 
 <script type="text/javascript">(function($) {
@@ -555,7 +555,7 @@ function EditData($sKey,$conn)
 	}
 	return $EditData;
 }
-
+encriptar_sqli("funcionarioedit",1);
 function confirmacion($texto)
 {
 ?>
@@ -589,7 +589,7 @@ function validar_usuarios_activos_edit(){
 	$consulta_usuarios=busca_filtro_tabla("valor","configuracion","nombre='numero_usuarios'","",$conn);
 	$numero_encript=$consulta_usuarios[0]['valor'];
 	$numero_usuarios=decrypt_blowfish($numero_encript,LLAVE_SAIA_CRYPTO);
-	print_r($numero_usuarios);
+	//print_r($numero_usuarios);
 	//Verifica si se alcanzó el número de usuarios y reemplazos activos
 	//y si el funcionario que se va a modificar se encuentra inactivo en base de datos
 	if($cupos_usados>=$numero_usuarios && !$funcionario_editar[0]['estado']){

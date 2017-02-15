@@ -7,6 +7,12 @@ header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache"); // HTTP/1.0 
 include_once("header.php");
 include_once("formatos/librerias/header_formato.php");
+
+include_once("db.php");
+include_once("pantallas/lib/librerias_cripto.php");
+include_once("librerias_saia.php");
+desencriptar_sqli('form_info');
+echo(librerias_jquery());
 ?>
 <script type="text/javascript" src="js/jquery.js"></script>
 <script type="text/javascript" src="js/jquery.validate.js"></script>
@@ -18,7 +24,13 @@ include_once("formatos/librerias/header_formato.php");
 <!--
 $().ready(function() {
 	// validar los campos del formato
-	$('#asignarserie_entidad').validate();
+	$('#asignarserie_entidad').validate({
+		submitHandler: function(form) {
+				<?php encriptar_sqli("asignarserie_entidad");?>
+			    form.submit();
+			    
+			  }
+	});
 });
 //funcion para cargar los elementos de la entidad seleccionada
 function valores_entidad(identidad)

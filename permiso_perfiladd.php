@@ -1,4 +1,10 @@
-<?php include ("db.php") ?>
+<?php include ("db.php");
+include_once("pantallas/lib/librerias_cripto.php");
+include_once("librerias_saia.php");
+desencriptar_sqli('form_info');
+echo(librerias_jquery());
+
+?>
 <?php
 header("Expires: Mon, 26 Jul 1997 05:00:00 GMT"); // date in the past
 header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT"); // always modified
@@ -55,7 +61,13 @@ switch ($sAction)
 EW_dateSep = "/"; // set date separator	
 $().ready(function() {
 	// validar los campos del formato
-	$('#permiso_perfiladd').validate();
+	$('#permiso_perfiladd').validate({
+		submitHandler: function(form) {
+				<?php encriptar_sqli("permiso_perfiladd");?>
+			    form.submit();
+			    
+			  }
+	});
 
  $('#modulo_todos').click(function(){
    todos_check(tree3,'x_modulo_idmodulo')
@@ -115,7 +127,7 @@ function ninguno_check(elemento,campo)
 
 
 <?php
-include_once($ruta_db_superior."librerias_saia.php"); 
+//include_once($ruta_db_superior."librerias_saia.php"); 
 
 echo(estilo_bootstrap());
 

@@ -1,4 +1,10 @@
-<?php include ("db.php") ?>
+<?php include ("db.php"); 
+include_once("pantallas/lib/librerias_cripto.php");
+include_once("librerias_saia.php");
+desencriptar_sqli('form_info');
+echo(librerias_jquery());
+
+?>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <script type="text/javascript" src="popcalendar.js"></script>
 <?php
@@ -288,7 +294,7 @@ function EditData($sKey,$conn)
 	}
 	return $EditData;
 }
-
+encriptar_sqli("dependencia_cargoedit",1);
 /*
 <Clase>
 <Nombre>nueva_interfaz</Nombre> 

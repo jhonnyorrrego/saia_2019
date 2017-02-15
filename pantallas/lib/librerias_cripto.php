@@ -66,13 +66,23 @@ function desencriptar_sqli($campo_info){
 }
 return;
 }
-function encriptar_sqli($nombre_form,$campo_info="form_info",$ruta_superior="",$retorno=false){
-$texto='	<script type="text/javascript">
+function encriptar_sqli($nombre_form,$submit=false,$campo_info="form_info",$ruta_superior="",$retorno=false){
+	
+$texto='';
+if ($submit) {
+	$texto.='<script type="text/javascript">';
+}
+	
+$texto.='	
 	if(!$("#'.$campo_info.'").length){
 		$("#'.$nombre_form.'").append('."'".'<input type="hidden" id="'.$campo_info.'" name="'.$campo_info.'">'."'".');
-	}
-	$("#'.$nombre_form.'").submit(function(event){
-      var salida = false;
+	}';
+	
+if ($submit) {
+	$texto.='$("#'.$nombre_form.'").submit(function(event){';
+}
+
+	$texto.='var salida = false;
       $.ajax({
         type:"POST",
         async: false,
@@ -88,11 +98,14 @@ $texto='	<script type="text/javascript">
           //console.log($("#'.$campo_info.'").val());
           salida = true;
         }
-      });
-	    return salida;
+      });';
+if ($submit) {
+	$texto.='return salida;
 			event.preventDefault();
 	  });
 	</script>';
+}
+	    
 	if($retorno){
 		return($texto);
 	}

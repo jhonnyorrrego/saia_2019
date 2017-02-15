@@ -38,7 +38,9 @@ echo (librerias_jquery("1.7"));
 </form>
 <div id="tabla_identificacion"></div>
 <div id="tabla_nombre"></div>
+<?php 
 
+?>
 
 <script>
 	$(document).ready(function() {

@@ -2,6 +2,8 @@
 include_once("db.php");
 include_once("header.php");
 include_once("librerias_saia.php");
+include_once("pantallas/lib/librerias_cripto.php");
+desencriptar_sqli('form_info');
 echo(librerias_jquery("1.7"));
 ?>
 <b><?php echo strtoupper($_REQUEST["accion"]); ?> M&Oacute;DULO</b><br><br>
@@ -94,7 +96,13 @@ function formato_adicionar($idmodulo=NULL,$ver=0)
 <script type='text/javascript'>
 $().ready(function() {
 	// validar los campos del formato
-	$('#form1').validate();
+	$('#form1').validate({
+		submitHandler: function(form) {
+				<?php encriptar_sqli("form1");?>
+			    form.submit();
+			    
+			  }
+	});
 });
 </script>
 <?php

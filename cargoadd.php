@@ -264,7 +264,7 @@ global $x_tipo_cargo;
 
 	return true;
 }
-encriptar_sqli("cargoadd");
+encriptar_sqli("cargoadd",1);
 function arbol_cargos($campo)
   {global $conn,$ruta_db_superior;
    ?>

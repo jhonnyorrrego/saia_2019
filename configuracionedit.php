@@ -20,9 +20,15 @@ $x_valor = Null;
 $x_tipo = Null;
 //$x_fecha = Null;
 ?>
-<?php include ("db.php") ?>
+<?php include ("db.php");
+include_once("pantallas/lib/librerias_cripto.php");
+include_once("librerias_saia.php");
+desencriptar_sqli('form_info');
+echo(librerias_jquery());
+
+?>
 <?php include ("phpmkrfn.php") ?>
-<?php include_once ("librerias_saia.php"); echo(librerias_notificaciones()); ?>
+<?php echo(librerias_notificaciones()); ?>
 <?php
 $sKey = @$_GET["key"];
 if (($sKey == "") || (is_null($sKey))) { $sKey = @$_POST["key"]; }
@@ -128,7 +134,7 @@ return true;
 // Function LoadData
 // - Load Data based on Key Value sKey
 // - Variables setup: field variables
-
+encriptar_sqli("configuracionedit",1);
 function LoadData($sKey,$conn)
 { global $x_idconfiguracion,$x_nombre,$x_valor,$x_tipo;
 	$sKeyWrk = "" . addslashes($sKey) . "";

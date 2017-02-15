@@ -1,5 +1,8 @@
 <?php session_start(); ?>
 <?php ob_start(); ?>
+<?php include ("db.php") ?>
+<?php include ("librerias_saia.php") ?>
+<?php include ("phpmkrfn.php") ?>
 <?php
 header("Expires: Mon, 26 Jul 1997 05:00:00 GMT"); // date in the past
 header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT"); // always modified
@@ -7,11 +10,16 @@ header("Cache-Control: no-store, no-cache, must-revalidate"); // HTTP/1.1
 header("Cache-Control: post-check=0, pre-check=0", false); 
 header("Pragma: no-cache"); // HTTP/1.0 
 
+include_once ("pantallas/lib/librerias_cripto.php");
+desencriptar_sqli('form_info');
+echo(librerias_jquery());
+
+//print_r($_REQUEST);die();
 $ewCurSec = 0; // Initialise	
 
 // Initialize common variables
 $x_iddependencia = Null;
-$x_codigo = Null;
+$x_codigo = Null; 
 $x_cod_padre = Null;
 $x_nombre = Null;
 $x_fecha_ingreso = Null;
@@ -26,9 +34,7 @@ if(isset($_GET["padre"]) || isset($_GET["nombre"]))
   $x_nombre = @$_GET["nombre"];  
  }
 ?>
-<?php include ("db.php") ?>
-<?php include ("librerias_saia.php") ?>
-<?php include ("phpmkrfn.php") ?>
+
 <?php
 
 // Get action
@@ -356,11 +362,13 @@ global $x_logo,$x_iddependencia,$x_codigo,$x_cod_padre,$x_nombre,$x_fecha_ingres
 				@unlink($_FILES["x_logo"]["tmp_name"]);
 			}
 
-		
+		 
     if(isset($logo))	
       guardar_lob("logo","dependencia","iddependencia=".$id,$logo,"archivo",$conn);
    }
 	
 	return true;
 }
+
+encriptar_sqli("dependenciaadd",1);
 ?>
