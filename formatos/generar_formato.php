@@ -1868,7 +1868,7 @@ function crear_formato_ae($idformato, $accion) {
 		}
 		// ******************************************************************************************
 		if ($formato[0]["item"] && $accion == "adicionar") {
-			$texto .= '<tr><td class="encabezado">ACCION A SEGUIR LUEGO DE GUARDAR</td><td ><input type="radio" name="opcion_item" value="adicionar">Adicionar otro&nbsp;&nbsp;<input type="radio" name="opcion_item" value="terminar">Terminar</td></tr>';
+			$texto .= '<tr><td class="encabezado">ACCION A SEGUIR LUEGO DE GUARDAR</td><td ><input type="radio" name="opcion_item" id="opcion_item1" value="adicionar">Adicionar otro&nbsp;&nbsp;<input type="radio" id="opcion_item2" name="opcion_item" value="terminar">Terminar</td></tr>';
 		}
 		$wheref = "(A.formato LIKE '" . $idformato . "' OR A.formato LIKE '%," . $idformato . ",%' OR A.formato LIKE '%," . $idformato . "' OR A.formato LIKE '" . $idformato . ",%') AND A.acciones LIKE '%" . strtolower($accion[0]) . "%' ";
 		if (count($listado_campos)) {
