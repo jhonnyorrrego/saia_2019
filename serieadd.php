@@ -309,7 +309,14 @@ $(document).ready(function(){
 			<?php } ?>			
 
 		</td>
-	</tr>		
+	</tr>
+
+	<tr class="ocultar">
+		<td class="encabezado" title="C&oacute;digo de la serie o subserie"><span class="phpmaker" style="color: #FFFFFF;">C&Oacute;DIGO</span></td>
+		<td bgcolor="#F5F5F5"><span class="phpmaker">
+<input type="text" name="x_codigo" id="x_codigo" size="30" maxlength="20" value="<?php echo htmlspecialchars(@$x_codigo) ?>">
+</span></td>
+	</tr>			
 	<tr>
 		<td class="encabezado" title="Nombre de la serie o subserie"><span class="phpmaker" style="color: #FFFFFF;">NOMBRE *</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
@@ -457,12 +464,6 @@ $(document).ready(function(){
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
 <?php if (!(!is_null($x_dias_entrega)) || ($x_dias_entrega == "")) { $x_dias_entrega = 8;} // Set default value ?>
 <input type="text" name="x_dias_entrega" id="x_dias_entrega" size="30" value="<?php echo htmlspecialchars(@$x_dias_entrega) ?>">
-</span></td>
-	</tr>
-	<tr class="ocultar">
-		<td class="encabezado" title="C&oacute;digo de la serie o subserie"><span class="phpmaker" style="color: #FFFFFF;">C&Oacute;DIGO</span></td>
-		<td bgcolor="#F5F5F5"><span class="phpmaker">
-<input type="text" name="x_codigo" id="x_codigo" size="30" maxlength="20" value="<?php echo htmlspecialchars(@$x_codigo) ?>">
 </span></td>
 	</tr>
 	<tr class="ocultar">

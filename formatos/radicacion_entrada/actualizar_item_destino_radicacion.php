@@ -34,6 +34,18 @@ for ($i=0; $i < $cont; $i++) {
         if($tipo_destino[0]['tipo_destino']==2){
             transferencia_automatica($idformato,$iddoc,$tipo_destino[0]['nombre_destino'],1,"");
         }
+		
+		
+		//VINCULANDO MENSAJERO INMEDIATAMENTE
+		$datos_destino=busca_filtro_tabla('nombre_destino','ft_destino_radicacion','idft_destino_radicacion='.$parametros[$i][0],'',$conn);
+    	$destino=busca_filtro_tabla("iddependencia","vfuncionario_dc","iddependencia_cargo=".$datos_destino[0]['nombre_destino'],"",$conn);
+    	$responsable=busca_filtro_tabla("","ft_ruta_distribucion a, ft_dependencias_ruta b, ft_funcionarios_ruta c","b.estado_dependencia=1 AND c.estado_mensajero=1 AND a.idft_ruta_distribucion=b.ft_ruta_distribucion AND a.idft_ruta_distribucion=c.ft_ruta_distribucion AND b.dependencia_asignada=".$destino[0]['iddependencia'],"",$conn);
+    	if($responsable['numcampos']){
+    		$sql="UPDATE ft_destino_radicacion SET mensajero_encargado=".$responsable[0]['mensajero_ruta']." WHERE idft_destino_radicacion=".$parametros[$i][0];
+			phpmkr_query($sql);
+    	}
+    	//FIN VINCULANDO MENSAJERO INMEDIATAMENTE	
+		
         $repetidos[]=$parametros[$i][0];
     }
 }

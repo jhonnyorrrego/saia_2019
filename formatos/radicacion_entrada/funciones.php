@@ -27,8 +27,8 @@ function cargar_fecha_limite_respuesta($idformato,$iddoc){
 		$(document).ready(function(){
 		    $("#descripcion").attr("maxlength",150);
 		    $("#descripcion_general").attr("maxlength",150);
-			var fecha_masocho_dias="<?php echo($fecha_ochodias);?>";
-			$("#tiempo_respuesta").val(fecha_masocho_dias);			
+			//var fecha_masocho_dias="<?php echo($fecha_ochodias);?>";
+			//$("#tiempo_respuesta").val(fecha_masocho_dias);			
 		});
 	</script>
 <?php
@@ -64,7 +64,7 @@ function enviar_adicionar($idformato,$iddoc){
 		else{
 			$enlace=$ruta_db_superior."formatos/radicacion_entrada/detalles_mostrar_radicacion_entrada.php?iddoc=".$iddoc."&idformato=".$idformato;
 		}
-		abrir_url($ruta_db_superior."colilla.php?key=".$iddoc."&enlace=".$enlace,"_self");
+		abrir_url($ruta_db_superior."colilla.php?target=_self&key=".$iddoc."&enlace=".$enlace,"_self");
 		
 	}
 	else{
@@ -88,13 +88,14 @@ function validar_digitalizacion_formato_radicacion($idformato,$iddoc){
   if($_REQUEST["digitalizacion"]==1){
   	if(@$_REQUEST["iddoc"]){
   	   
-  		$enlace="pantallas/buscador_principal.php?idbusqueda=".$idbusqueda_en_proceso;
-  		//abrir_url($ruta_db_superior."colilla.php?key=".$_REQUEST["iddoc"]."&enlace=paginaadd.php?key=".$_REQUEST["iddoc"]."&enlace2=".$enlace,'_self');
-  		abrir_url($ruta_db_superior."paginaadd.php?key=".$_REQUEST["iddoc"]."&enlace=".$enlace,'centro');
+  		//$enlace="pantallas/buscador_principal.php?idbusqueda=".$idbusqueda_en_proceso;
+  		$enlace="ordenar.php?key=".$_REQUEST['iddoc']."&accion=mostrar&mostrar_formato=1";  		//abrir_url($ruta_db_superior."colilla.php?key=".$_REQUEST["iddoc"]."&enlace=paginaadd.php?key=".$_REQUEST["iddoc"]."&enlace2=".$enlace,'_self');
+  		abrir_url($ruta_db_superior."paginaadd.php?key=".$_REQUEST["iddoc"]."&enlace=".$enlace,'_self');
   	}
 	else{
-		$enlace="busqueda_categoria.php?idcategoria_formato=1&defecto=radicacion_entrada";
-		abrir_url($ruta_db_superior."colilla.php?key=".$iddoc."&enlace=paginaadd.php?key=".$iddoc."&enlace2=".$enlace,'centro');
+		//$enlace="busqueda_categoria.php?idcategoria_formato=1&defecto=radicacion_entrada";
+		$enlace="ordenar.php?key=".$iddoc."&accion=mostrar&mostrar_formato=1";
+		abrir_url($ruta_db_superior."colilla.php?target=_self&key=".$iddoc."&enlace=paginaadd.php?key=".$iddoc."&enlace2=".$enlace,'_self');
 	}
     //redirecciona($ruta_db_superior."paginaadd.php?&key=".$iddoc."&enlace=".$enlace);
   }elseif($_REQUEST["digitalizacion"]==2 && $_REQUEST['no_sticker'] == 1){
@@ -103,9 +104,11 @@ function validar_digitalizacion_formato_radicacion($idformato,$iddoc){
   	if(@$_REQUEST["iddoc"]){
   	    $tipo=busca_filtro_tabla("tipo_radicado","documento","iddocumento=".$_REQUEST['iddoc'],"",$conn);
         if($tipo[0]['tipo_radicado']==1){
-            $enlace="pantallas/buscador_principal.php?idbusqueda=".$idbusqueda_en_proceso."|default_componente=en_proceso1";   
+            //$enlace="pantallas/buscador_principal.php?idbusqueda=".$idbusqueda_en_proceso."|default_componente=en_proceso1"; 
+            $enlace="ordenar.php?key=".$_REQUEST['iddoc']."&accion=mostrar&mostrar_formato=1";  
         }elseif($tipo[0]['tipo_radicado']==2){
-            $enlace="pantallas/buscador_principal.php?idbusqueda=".$idbusqueda_en_proceso."|default_componente=tramitados";
+            //$enlace="pantallas/buscador_principal.php?idbusqueda=".$idbusqueda_en_proceso."|default_componente=tramitados";
+            $enlace="ordenar.php?key=".$_REQUEST['iddoc']."&accion=mostrar&mostrar_formato=1";  
         }
   		$iddoc=$_REQUEST["iddoc"];
   		//$enlace="pantallas/buscador_principal.php?idbusqueda=9";
@@ -113,7 +116,7 @@ function validar_digitalizacion_formato_radicacion($idformato,$iddoc){
 	else{
 		$enlace=$ruta_db_superior."formatos/radicacion_entrada/detalles_mostrar_radicacion_entrada.php?iddoc=".$iddoc."&idformato=".$idformato;
 	}
-  		abrir_url($ruta_db_superior."colilla.php?key=".$iddoc."&enlace=".$enlace,'centro');
+  		abrir_url($ruta_db_superior."colilla.php?target=_self&key=".$iddoc."&enlace=".$enlace,'_self');
   		//abrir_url($ruta_db_superior."colilla.php?key=".$iddoc,"_self");
   }
 }
@@ -629,7 +632,7 @@ function mostrar_item_destino_radicacion($idformato,$iddoc){
                 $permiso=$ok->acceso_modulo_perfil("finalizacion_item_correspondencia");
                 if(($_REQUEST['tipo']!=5 && $datos[$i]['estado_item']==2 && usuario_actual('funcionario_codigo')==$destino[0]['funcionario_codigo']) || ($_REQUEST['tipo']!=5 && $permiso && $datos[$i]['estado_item']!=3)){
                     
-                    $parte_tabla='<a class="previo_high" tipo="finalizacion" enlace="'.PROTOCOLO_CONEXION.RUTA_PDF.'/formatos/radicacion_entrada/finalizar_items.php?idft='.$datos[$i]['idft_destino_radicacion'].'">Finalizar</a>';
+                    $parte_tabla='<a style="cursor:pointer;" class="highslide" onclick="return hs.htmlExpand(this, { objectType: \'iframe\',width: 300, height: 300,preserveContent:false} )" tipo="finalizacion" href="'.PROTOCOLO_CONEXION.RUTA_PDF.'/formatos/radicacion_entrada/finalizar_items.php?idft='.$datos[$i]['idft_destino_radicacion'].'">Finalizar</a>';
                 }elseif($datos[$i]['estado_item']<=2){
                     $parte_tabla='En Distribuci&oacute;n';
                 }elseif($datos[$i]['estado_item']==3){
@@ -657,6 +660,14 @@ function mostrar_item_destino_radicacion($idformato,$iddoc){
     	$tabla.="</table><br/>";
 	}
 	echo $tabla;
+		?>
+		<script type="text/javascript" src="<?php echo $ruta_db_superior;?>anexosdigitales/highslide-4.0.10/highslide/highslide-with-html.js"></script>
+		 <link rel="stylesheet" type="text/css" href="<?php echo $ruta_db_superior;?>anexosdigitales/highslide-4.0.10/highslide/highslide.css" />
+		 <script type='text/javascript'>
+		   hs.graphicsDir = '<?php echo $ruta_db_superior;?>anexosdigitales/highslide-4.0.10/highslide/graphics/';
+		   hs.outlineType = 'rounded-white';
+		</script>
+		<?php	
     ?>
     <script>
         function guardar_destinos(){
@@ -836,25 +847,16 @@ function mostrar_informacion_general_radicacion($idformato,$iddoc){
     <td><b>Descripci&oacute;n o asunto:</b></td>
     <td colspan="3">'.$datos[0]["descripcion"].'</td>
   </tr>
-  <tr>
-    <td><b>Anexos F&iacute;sicos:</b></td>
-    <td colspan="5">'.$datos[0]["descripcion_anexos"].'</td>
-  </tr>
-  <tr>
-    <td><b>Anexos digitales:</b></td>
-    <td colspan="2">'.$nombre_anexos.'</td>
-    <td><b>Descripci&oacute;n General:</b></td>
-    <td colspan="2">'.codifica_encabezado(html_entity_decode($datos[0]["descripcion_general"])).'</td>
-  </tr>	
-
+  </table>
+  <table class="table table-bordered" style="width: 100%; font-size:10px; text-align:left;" border="1">
     ';
     if($datos[0]['tipo_origen']==1){
         $empresa_transportadora=busca_filtro_tabla("nombre","serie","idserie=".$datos[0]['empresa_transportado'],"",$conn);
         $tabla.="<tr>
-                    <td><strong>Número Oficio:</strong></td>
-                    <td colspan='2'>".$datos[0]['numero_oficio']."</td>
-                    <td><strong>Fecha Oficio:</strong></td>
-                    <td colspan='2'>".$datos[0]['fecha_oficio_entrada']."</td>
+                    <td style='width:25%;'><strong>Número Oficio:</strong></td>
+                    <td colspan='2' style='width:25%;'>".$datos[0]['numero_oficio']."</td>
+                    <td style='width:25%;'><strong>Fecha Oficio:</strong></td>
+                    <td colspan='2' style='width:25%;'>".$datos[0]['fecha_oficio_entrada']."</td>
                  </tr>
                  <tr>
                     <td><strong>Número Gu&iacute;a:</strong></td>
@@ -863,7 +865,16 @@ function mostrar_informacion_general_radicacion($idformato,$iddoc){
                     <td colspan='2'>".$empresa_transportadora[0]['nombre']."</td>
                  </tr>";
     }
-    $tabla.='</table>';
+    
+    $tabla.='
+	  <tr>
+	    <td><b>Anexos digitales:</b></td>
+	    <td colspan="2">'.$nombre_anexos.'</td>
+	    <td><b>Anexos F&iacute;sicos:</b></td>
+	    <td colspan="2">'.$datos[0]["descripcion_anexos"].'</td>
+	  </tr>	    
+    ';
+    $tabla.='</table><style>.table{margin-bottom: -1px;}</style>';
     echo $tabla;
     
 }

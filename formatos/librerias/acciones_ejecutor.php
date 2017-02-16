@@ -3,6 +3,10 @@
 <head>
 <?php
 include_once("../../db.php");
+include_once("../../librerias_saia.php");
+	$raiz_saia='../../';
+	echo(librerias_jquery('1.7'));
+	echo(librerias_notificaciones());	
 $campos_auto=explode(",",$_REQUEST["campos_auto"]);
 $campos=explode(",",$_REQUEST["campos"]);
 ?>
@@ -72,6 +76,9 @@ for(ind=0; ind<lista.length; ind++)
 return (vector.join(","));
 }
 $().ready(function() {
+	
+
+	
   llenar_ejecutor(0);
 	function findValueCallback(event, data, formatted) {
 		$("<li>").html( !data ? "No match!" : "Selected: " + formatted).appendTo("#result");
@@ -260,11 +267,13 @@ $().ready(function() {
             }
 
           $("#destinos_seleccionados").val(vector[0]);
-          $("#nombre_ejecutor").val("");
-          $("#identificacion_ejecutor").val("");
-          $("#codigo_ejecutor").val("");
+          //$("#nombre_ejecutor").val("");
+          //$("#identificacion_ejecutor").val("");
+          //$("#codigo_ejecutor").val("");
           llenar_llamado();
-          llenar_ejecutor(0);
+          //llenar_ejecutor(0);
+          notificacion_saia('<b>ATENCI&Oacute;N</b><br>Remitente actualizado satisfactoriamente','success','',4000);
+          
         }
       });
     }

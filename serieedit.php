@@ -12,7 +12,7 @@ include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."pantallas/expediente/librerias.php");
 include_once($ruta_db_superior."librerias_saia.php");
 echo(librerias_notificaciones());
-
+ini_set('display_errors',true);
 
 // Initialize common variables
 $x_idserie = Null;
@@ -34,8 +34,8 @@ $x_tipo = Null;
 //$x_formato =  Null;
 ?>
 
-<?php include ("phpmkrfn.php");
-include ("librerias_saia.php");
+<?php include_once ("phpmkrfn.php");
+include_once ("librerias_saia.php");
 echo(librerias_jquery()); 
 echo(librerias_notificaciones());
 ?>
@@ -94,7 +94,7 @@ switch ($sAction)
         break;
 }
 ?>
-<?php include ("header.php") ?>
+<?php include_once ("header.php") ?>
 <script type="text/javascript" src="ew.js"></script>
 <script type="text/javascript">
 <!--
@@ -269,6 +269,12 @@ return true;
 			<input type="radio" name="x_tipo"<?php if(@$x_tipo=="3")echo " checked"; ?> value="3">Tipo documental<br>
 		</td>
 	</tr>
+	<tr class="ocultar">
+		<td class="encabezado" title="C&oacute;odigo de la serie"><span class="phpmaker" style="color: #FFFFFF;">CODIGO</span></td>
+		<td bgcolor="#F5F5F5"><span class="phpmaker">
+<input type="text" name="x_codigo" id="x_codigo" size="30" maxlength="20" value="<?php echo htmlspecialchars(@$x_codigo) ?>">
+</span></td>
+	</tr>	
 	<tr>
 		<td class="encabezado" title="Nombre de la serie"><span class="phpmaker" style="color: #FFFFFF;">NOMBRE</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
@@ -407,12 +413,6 @@ return true;
 </span></td>
 	</tr>
 	<tr class="ocultar">
-		<td class="encabezado" title="C&oacute;odigo de la serie"><span class="phpmaker" style="color: #FFFFFF;">CODIGO</span></td>
-		<td bgcolor="#F5F5F5"><span class="phpmaker">
-<input type="text" name="x_codigo" id="x_codigo" size="30" maxlength="20" value="<?php echo htmlspecialchars(@$x_codigo) ?>">
-</span></td>
-	</tr>
-	<tr class="ocultar">
 		<td class="encabezado" title="Cantidad de a�os que permanece la serie en el archivo de gesti&oacute;n"><span class="phpmaker" style="color: #FFFFFF;">A&Ntilde;OS ARCHIVO GESTI&Oacute;N</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
 <input type="text" name="x_retencion_gestion" id="x_retencion_gestion" size="30" value="<?php echo htmlspecialchars(@$x_retencion_gestion) ?>">
@@ -495,7 +495,7 @@ return true;
 <p>
 <input type="submit" name="Action" value="EDITAR">
 </form>
-<?php include ("footer.php") ?>
+<?php include_once ("footer.php") ?>
 <?php
 
 //-------------------------------------------------------------------------------

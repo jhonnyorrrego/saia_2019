@@ -133,7 +133,7 @@ if(!$ciudad)
       {alert("Faltan datos por llenar");}
     }
     $("#nuevo_municipio_'.$campo.'").click(function(){
-        codigo="<table><tr><td>Pais</td><td><input type=\"text\" id=\"pais_'.$campo.'\"></td></tr><tr><td>Departamento</td><td><input type=\"text\" id=\"depto_'.$campo.'\"></td></tr><tr><td>Ciudad</td><td><input type=\"text\" id=\"municipio_'.$campo.'\"></td></tr><tr><td colspan=2><a href=\"JavaScript:boton_guardar_'.$campo.'();\" id=\"guardar_municipio_'.$campo.'\" >Guardar</a></td></tr></table>";
+        codigo="<table><tr><td>Pais</td><td><input type=\"text\" id=\"pais_'.$campo.'\"></td></tr><tr><td>Estado/Provincia</td><td><input type=\"text\" id=\"depto_'.$campo.'\"></td></tr><tr><td>Ciudad</td><td><input type=\"text\" id=\"municipio_'.$campo.'\"></td></tr><tr><td colspan=2><a href=\"JavaScript:boton_guardar_'.$campo.'();\" id=\"guardar_municipio_'.$campo.'\" >Guardar</a></td></tr></table>";
         $("#div_'.$campo.'_ejecutor").html(codigo);
     });
     $("#departamento_ejecutor_'.$campo.'").change(function(){

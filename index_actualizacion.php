@@ -643,7 +643,7 @@ function menu_saia(){
 		        if(objeto.records==0){  
 							$("#"+div_actualizar).html(0);	        	              
 		          $("#"+div_actualizar).removeClass("label-important");
-		          $("#"+div_actualizar).addClass("label-success");
+		          //$("#"+div_actualizar).addClass("label-success"); 
 		        }         
 		      }
 		      else{ 

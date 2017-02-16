@@ -11,7 +11,7 @@ else{
  include ("header.php");
  include_once("calendario/calendario.php");
  include_once("librerias_saia.php");
-echo estilo_bootstrap();
+//echo estilo_bootstrap();
 ?>
 <script type="text/javascript" src="js/tooltips_rastro.js"></script>
 <style type="text/css">
@@ -61,7 +61,7 @@ if($dias1[0]["dias_r"]<>"")
 menu_ordenar($x_doc);
 ?>
 <br /><span class="internos">SEGUIMIENTO DE RUTA DE DOCUMENTOS<br><br>
-<table border="0" cellspacing="1" cellpadding="4" bgcolor="#CCCCCC">
+<table border="0" cellspacing="1" cellpadding="4" bgcolor="#CCCCCC" style="width:90%">
  <tr>
   <td class="encabezado" width="40%"><span class="phpmaker" style="color:#ffffff;">N&Uacute;MERO DE RADICACI&Oacute;N&nbsp;</span></td>
   <td bgcolor="#F5F5F5"><span class="phpmaker"><?php echo $datos[0]["numero"];?></span></td>
@@ -159,7 +159,7 @@ menu_ordenar($x_doc);
   if($ruta["numcampos"]>0)
   {
   ?><br><br>
-  <table border="0" cellspacing="1" cellpadding="4" bgcolor="#CCCCCC">
+  <table border="0" cellspacing="1" cellpadding="4" bgcolor="#CCCCCC" style="width:90%">
    <tr class="encabezado_list">
 	  <td colspan="4"><SPAN class="phpmaker" syule="color:#ffffff">RESPONSABLES DEL DOCUMENTO
 	 </tr>
@@ -193,7 +193,7 @@ menu_ordenar($x_doc);
 <br /><br /><a class="highslide" onclick="return hs.htmlExpand(this, { objectType: 'iframe',width: 500, height:400,preserveContent:false } )" href="listado_leidos.php?iddoc=<?php echo $x_doc; ?>">Listado de fechas de lectura</a><br /><br />
 <div id="recorrido_filtro">
 <a href="#" onclick="document.getElementById('recorrido').style.display='block'">Rastro</a>&nbsp;&nbsp;
-<br><?php tabla_colores(); ?><br>
+<br><?php  tabla_colores(); ?><br>
 <?php echo(rastro_documento($x_doc,"")); ?>
 </div>
 <br />
@@ -203,12 +203,9 @@ menu_ordenar($x_doc);
 <?php
 echo $ruta_doc=mostrar_ruta_documento($x_doc);
 ?>
-<div id="digitalizacion">
 <?php
-include_once("digitalizacion.php");
 imprimir_datos_digitalizacion($x_doc);
 ?>
-</div>
 <script>
 function mostrar_mas_rastro(){
 	var ini=$("#mostrar_mas").attr("inicio");
@@ -407,7 +404,7 @@ function mostrar_ruta_documento($iddoc){
 	$tabla="";
 
 	if($ruta_actual["numcampos"]>0){
-		$tabla.='<br /><table border="0" cellspacing="1" cellpadding="4" bgcolor="#CCCCCC" style="width:70%">
+		$tabla.='<br /><table border="0" cellspacing="1" cellpadding="4" bgcolor="#CCCCCC" style="width:90%">
 		<tr class="encabezado_list">
 			<td colspan="5" style="text-align:center"><span class="phpmaker" style="color: #FFFFFF;">RUTA DEL DOCUMENTO</span></td>
 		</tr>
@@ -479,7 +476,7 @@ function rastro_documento($x_doc,$filtro){
  	$id_tabla="tabla_rastro";
  	if($filtro)$id_tabla="tabla_rastro_propio";
 ?>
-<table border="0" cellspacing="1" cellpadding="4" bgcolor="#CCCCCC" id="<?php echo($id_tabla); ?>" name="<?php echo($id_tabla); ?>" style="width:70%">
+<table border="0" cellspacing="1" cellpadding="4" bgcolor="#CCCCCC" id="<?php echo($id_tabla); ?>" name="<?php echo($id_tabla); ?>" style="width:90%">
    <tr class="encabezado_list">
 	  <td colspan="6"><span class="phpmaker" style="color:#ffffff"><?php echo($titulo); ?></span>
 	 </tr>
@@ -488,7 +485,7 @@ function rastro_documento($x_doc,$filtro){
   	<td valign="top"><span class="phpmaker" style="color: #FFFFFF;">Acci&oacute;n</span></td>
   	<td valign="top"><span class="phpmaker" style="color: #FFFFFF;">Destino</span></td>
   	<td valign="top"><span class="phpmaker" style="color: #FFFFFF;">Fecha</span></td>
-  	<td valign="top"><span class="phpmaker" style="color: #FFFFFF;">Instrucciones</span></td>
+  	<td valign="top"><span class="phpmaker" style="color: #FFFFFF;">Observaciones</span></td>
    </tr>
     <?php
       for($i=0;$i<$recorrido["numcampos"];$i++)
@@ -545,5 +542,27 @@ function rastro_documento($x_doc,$filtro){
 <?php }
 elseif($datos[0]["tipo_radicado"]==2 && ($datos[0]["plantilla"]=='' || $datos[0]["plantilla"]== "null"))
  echo "<b>El documento fue realizado por radicaci&oacute;n de salida, por lo tanto no tiene rastro.</b>";
+}
+
+function imprimir_datos_digitalizacion($iddoc)
+{global $conn;
+ $doc=busca_filtro_tabla("","documento","iddocumento='".$iddoc."'","",$conn);
+ $info=busca_filtro_tabla(fecha_db_obtener("fecha","Y-m-d H:i:s")." as fecha,".concatenar_cadena_sql(array("nombres","' '","apellidos"))." as funcionario,justificacion,accion","digitalizacion,funcionario","funcionario=funcionario_codigo and documento_iddocumento='".$iddoc."'","fecha asc",$conn);
+ if($info["numcampos"])
+ {echo '<br>
+       <table border="1" style="border-collapse:collapse;width:90%" cellpadding="4" > 
+       <tr class="encabezado_list">
+       <td colspan=4>INFORMACION ADICIONAL</td></tr>
+       <tr class="encabezado_list"><td>FECHA</td>
+       <td>FUNCIONARIO</td><td>ACCION</td><td>NOTAS</td></tr>';
+  for($i=0;$i<$info["numcampos"];$i++)
+    echo '<tr>
+          <td>'.$info[$i]["fecha"].'</td>
+          <td>'.$info[$i]["funcionario"].'</td>
+          <td>'.$info[$i]["accion"].'</td>
+          <td>'.$info[$i]["justificacion"].'</td>
+          </tr>';     
+  echo '</table>';
+ } 
 }
 ?>

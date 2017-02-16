@@ -249,7 +249,7 @@ function imprime(atras){
   window.print();
   //comando_documento('ClearAuthenticationCache');
   if(url!=""){
-      window.open("<?php echo $enlace; ?>","<?php echo $target; ?>");
+      window.open("<?php echo $enlace; ?>","<?php echo $target; ?>","scrollbars=no");
   }else{
       window.history.go(-atras);
   }       
@@ -283,12 +283,19 @@ function imprime(atras){
      
          //print_r($datos);
         ?>
-      <b>Desc: <?php 
+      <b>Asunto: <?php 
       
               if(@$_REQUEST['descripcion_general']){
-                echo  codifica_encabezado(html_entity_decode(@$_REQUEST["descripcion_general"]));
+              	$suspensivos='';		
+              	if(strlen(  codifica_encabezado(html_entity_decode(@$_REQUEST["descripcion_general"]))  ) > 30){
+              		$suspensivos='...';
+              	}	
+                echo  substr(codifica_encabezado(html_entity_decode(@$_REQUEST["descripcion_general"])),0,30).$suspensivos;
               }else{
-                echo codifica_encabezado(html_entity_decode(@$datos[0]["descripcion"])); 
+              	if(strlen(  codifica_encabezado(html_entity_decode(@$datos[0]["descripcion"]))  ) > 30){
+              		$suspensivos='...';
+              	}              	
+                echo substr(codifica_encabezado(html_entity_decode(@$datos[0]["descripcion"])),0.30).$suspensivos; 
               }
              
              ?></b><br/>
@@ -341,7 +348,7 @@ function generar_ingreso_formato($nombre_formato){
 			$_REQUEST[$formato[$i]["nombre_campo"]]='0';
 		}
 		else if(strtolower($formato[$i]["tipo_dato"])=='varchar'){
-		        if($formato[$i]["nombre_campo"]!='descripcion_general'){
+		        if($formato[$i]["nombre_campo"]!='descripcion'){
 		            $_REQUEST[$formato[$i]["nombre_campo"]]='&nbsp;';
                 }
 		}
@@ -373,7 +380,7 @@ function generar_ingreso_formato($nombre_formato){
 	$_REQUEST["continuar"] = "Solicitar Radicado";  //Siempre va esto
 	$_REQUEST["ejecutor"] = usuario_actual("funcionario_codigo");
 	$_REQUEST["estado_radicado"]='2';
-	$_REQUEST["descripcion_general"]=decodifica_encabezado(htmlentities($_REQUEST["descripcion_general"]));
+	$_REQUEST["descripcion"]=decodifica_encabezado(htmlentities($_REQUEST["descripcion_general"]));
 	
 	
 	

@@ -96,9 +96,9 @@ function reporte_entradas2($idformato,$iddoc){
 	$texto='<table style="border-collapse:collapse;width:100%" border="1px">';
 	$texto.='<tr>';
 	$texto.='<td style="text-align:center;" colspan="3"><br/><br/><img src="'.PROTOCOLO_CONEXION.RUTA_PDF.'/'.$logo[0]['valor'].'" width="125px" heigth="83px"></td>';
-	$texto.='<td style="text-align:center" colspan="4"><br/><br/><br/><br/><br/><b>PLANILLA DE ENTREGA </b></td>';
-	$texto.='<td style="text-align:left"><br/><br/><br/><br/><br/><b>RADICADO: '.formato_numero($idformato,$iddoc,1).'</b></td>
-	<td style="text-align:center">'.$qr.'</td>
+	$texto.='<td style="text-align:center" colspan="5"><br/><br/><br/><br/><br/><b>PLANILLA DE ENTREGA </b></td>';
+	$texto.='
+	<td style="text-align:center"><br><br>'.$qr.'<br>Planilla No. '.formato_numero($idformato,$iddoc,1).'</td>
 	</tr>';
 	$texto.='<tr>';
 	$texto.='<td colspan="3"><b>MENSAJERO O ENCARGADO: '.$funcionario[0]['nombres'].' '.$funcionario[0]['apellidos'].'</b></td>';

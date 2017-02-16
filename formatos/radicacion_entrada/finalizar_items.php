@@ -24,7 +24,7 @@ if($_REQUEST['guardar']==1){
     notificaciones("Item finalizado!","success",4500);
     unset($_REQUEST);
     ?>
-    <script type="text/javascript">window.parent.hs.close();</script>
+    <script type="text/javascript">window.parent.location.reload();   window.parent.hs.close();</script>
     <?php
 }else{
 ?>

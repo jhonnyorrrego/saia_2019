@@ -81,6 +81,26 @@ function planilla_mensajero($idft_destino_radicacion,$mensajero_encargado,$estad
                 $html.='<div class="link kenlace_saia" enlace="ordenar.php?key='.$planillas[$i]['iddocumento'].'&amp;accion=mostrar&amp;mostrar_formato=1" conector="iframe" titulo="No Radicado '.$planillas[$i]['numero'].'"><center><span class="badge">'.$planillas[$i]['numero']."</span></center></div>\n";
             }
         }
+        //$html.="<input type='checkbox' class='planilla_mensajero' ".$disable." mensajero='".$mensajero_encargado."' value='$idft_destino_radicacion'>";
+    }
+    return $html;
+}
+function planilla_mensajero2($idft_destino_radicacion,$mensajero_encargado,$estado_item){
+    global $ruta_db_superior, $conn;
+    $html="";
+    $disable="";
+    if($estado_item=='finalizado'){
+        $disable="disabled";
+    }
+    if($mensajero_encargado=='mensajero_encargado'){
+        $html.="Sin Mensajero Asignado";
+    }else{
+        $planillas=busca_filtro_tabla("c.numero,c.iddocumento","ft_item_despacho_ingres a,ft_despacho_ingresados b, documento c","a.ft_despacho_ingresados=b.idft_despacho_ingresados AND b.documento_iddocumento=c.iddocumento AND c.estado NOT IN('ELIMINADO','ANULADO') AND a.ft_destino_radicacio=".$idft_destino_radicacion,"",$conn);
+        if($planillas['numcampos']){
+            for($i=0;$i<$planillas['numcampos'];$i++){
+                //$html.='<div class="link kenlace_saia" enlace="ordenar.php?key='.$planillas[$i]['iddocumento'].'&amp;accion=mostrar&amp;mostrar_formato=1" conector="iframe" titulo="No Radicado '.$planillas[$i]['numero'].'"><center><span class="badge">'.$planillas[$i]['numero']."</span></center></div>\n";
+            }
+        }
         $html.="<input type='checkbox' class='planilla_mensajero' ".$disable." mensajero='".$mensajero_encargado."' value='$idft_destino_radicacion'>";
     }
     return $html;
@@ -171,11 +191,20 @@ function filtrar_mensajero(){
     if($cargo[$j]['cargo']!="mensajero"){
     
     $select="<select class='pull-left btn btn-mini dropdown-toggle' style='height:22px; margin-left: 30px;' name='filtro_mensajeros' id='filtro_mensajeros'>";
-    $select.="<option value=''>Por favor seleccione</option>";
+    $select.="<option value=''>Todos Los Mensajeros</option>";
     $datos=busca_filtro_tabla("iddependencia_cargo, concat(nombres,' ',apellidos) AS nombre","vfuncionario_dc","lower(cargo)='mensajero' AND estado_dc=1","",$conn);
     //print_r($datos);die();
+    $filtrar_mensajero=@$_REQUEST['variable_busqueda'];
     for($i=0;$i<$datos['numcampos'];$i++){
-        $select.="<option value='{$datos[$i]['iddependencia_cargo']}'>{$datos[$i]['nombre']}</option>";
+        $selected='';	
+		if($filtrar_mensajero){
+			if($filtrar_mensajero==$datos[$i]['iddependencia_cargo']){
+				$selected='selected';
+			}
+		}	
+			
+        $select.="<option value='{$datos[$i]['iddependencia_cargo']}' ".$selected.">{$datos[$i]['nombre']}</option>";
+		
     }
     $select.="</select>";
     }else{

@@ -330,7 +330,7 @@ class Imprime_Pdf {
 		    $request_url=str_replace('.php','.php?1=1',$_REQUEST['url']);
 		    $direccion[]= PROTOCOLO_CONEXION.RUTA_PDF_LOCAL."/".str_replace('|','&',$request_url);
 		}else{
-    		$datos_formato = busca_filtro_tabla("nombre,nombre_tabla,ruta_mostrar,idformato", "formato,documento", "lower(plantilla)=nombre and iddocumento=$iddocumento", "", $conn);
+    		$datos_formato = busca_filtro_tabla("orientacion,nombre,nombre_tabla,ruta_mostrar,idformato", "formato,documento", "lower(plantilla)=nombre and iddocumento=$iddocumento", "", $conn);
     			
     		$datos_plantilla = busca_filtro_tabla("", $datos_formato[0]["nombre_tabla"], "documento_iddocumento=$iddocumento", "", $conn);
     		
@@ -362,7 +362,17 @@ class Imprime_Pdf {
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 			
 			$this->pdf->startPageGroup();
-			$this->pdf->AddPage();
+			
+			$orientacion_pag='';
+			if($datos_formato['numcampos']){  // P-vertical ,L-horizontal
+				if($datos_formato[0]['orientacion']){   //HORIZONTAL
+					$orientacion_pag='L';
+				}else{  //VERTICAL
+					$orientacion_pag='P';
+				}
+			}
+			
+			$this->pdf->AddPage($orientacion_pag);
 			$contenido = curl_exec($ch);
 			
 			$contenido = str_replace("../../../images", PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . "/../images", $contenido);
