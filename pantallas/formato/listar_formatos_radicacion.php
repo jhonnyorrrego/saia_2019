@@ -37,11 +37,11 @@ if(count($request)){
 					$proceso='';
 					
 					$modulo_formato=busca_filtro_tabla('idmodulo','modulo','nombre="crear_'.$cuantos_formatos[$i]['nombre'].'"','',$conn);
+					
 					$ok=0;
 					if($modulo_formato['numcampos']){
-					    $ok=acceso_modulo($modulo_formato[$i]['idmodulo']);
+					    $ok=acceso_modulo($modulo_formato[0]['idmodulo']);
 					}
-					
 					if($ok){
 						$mostrar=1;
 					}					
@@ -67,10 +67,8 @@ if(count($request)){
 	    return true;
 	  }
 	  $ok=new Permiso();
-	  $modulo=busca_filtro_tabla("","modulo","idmodulo=".$idmodulo,"");
+	  $modulo=busca_filtro_tabla("nombre","modulo","idmodulo=".$idmodulo,"");
 	  $acceso=$ok->acceso_modulo_perfil($modulo[0]["nombre"]);
 	  return $acceso;
 	}	
-	
-
 ?>
