@@ -78,11 +78,13 @@ if(@$_REQUEST["tipo"]!==5 && !@$_REQUEST["output"] && !@$_REQUEST["imprimir"]){
             <ul class="nav">
               <li>
               	<div class="btn-group pull-left btn-under">
+              		<a href="<?php echo($ruta_db_superior.$tipo_pagina); ?>" class="kenlace_saia_propio" enlace="<?php echo($tipo_pagina); ?>" destino="_centro">
                     <button type="button" class="btn btn-mini">
-                      <a href="<?php echo($ruta_db_superior.$tipo_pagina); ?>" class="kenlace_saia_propio" enlace="<?php echo($tipo_pagina); ?>" destino="_centro">
+                      
                         <i class="icon-acciones_menu_mostrar"></i>
-                      </a>
+                      
                     </button>
+                   </a>
                 </div>
                 <div class="btn-group pull-left btn-under">
                     <button type="button" class="btn btn-mini dropdown-toggle" data-toggle="dropdown">

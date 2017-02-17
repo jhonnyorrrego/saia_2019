@@ -286,16 +286,19 @@ function imprime(atras){
       <b>Asunto: <?php 
       
               if(@$_REQUEST['descripcion_general']){
-              	$suspensivos='';		
-              	if(strlen(  codifica_encabezado(html_entity_decode(@$_REQUEST["descripcion_general"]))  ) > 30){
+              	$suspensivos='';	
+				$cadena=codifica_encabezado(html_entity_decode(@$_REQUEST["descripcion_general"]));
+              	if(strlen(  $cadena  ) > 30){
               		$suspensivos='...';
               	}	
-                echo  substr(codifica_encabezado(html_entity_decode(@$_REQUEST["descripcion_general"])),0,30).$suspensivos;
+                echo  substr($cadena,0,30).$suspensivos;
               }else{
-              	if(strlen(  codifica_encabezado(html_entity_decode(@$datos[0]["descripcion"]))  ) > 30){
+              	$suspensivos='';
+              	$cadena=codifica_encabezado(html_entity_decode(@$datos[0]["descripcion"]));
+              	if(strlen(  $cadena  ) > 30){
               		$suspensivos='...';
               	}              	
-                echo substr(codifica_encabezado(html_entity_decode(@$datos[0]["descripcion"])),0.30).$suspensivos; 
+                echo substr($cadena,0,30).$suspensivos; 
               }
              
              ?></b><br/>

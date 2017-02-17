@@ -45,7 +45,7 @@ if(@$_REQUEST["entidad"] && @$_REQUEST["llave_entidad"])
 if($id)
 {$inicio=busca_filtro_tabla("*",$tabla,"id$tabla=$id","",$conn);
  echo("<item style=\"font-family:verdana; font-size:7pt;\" ");
- echo("text=\"".htmlspecialchars(($inicio[0]["nombre"]))."(".$inicio[0]["codigo"].") \" id=\"".$inicio[0]["id$tabla"]."\" checked=\"1\" >\n");
+ echo("text=\"".($inicio[0]["nombre"])."(".$inicio[0]["codigo"].") \" id=\"".$inicio[0]["id$tabla"]."\" checked=\"1\" >\n");
  llena_serie($id);
  echo("</item>\n");
 }
@@ -59,9 +59,9 @@ function llena_serie($serie,$condicion=""){
 global $conn,$tabla,$seleccionado,$activo,$id;
 
 if($serie=="NULL")
-  $papas=busca_filtro_tabla("*",$tabla,"(cod_padre IS NULL OR cod_padre=0) $activo $condicion",limpiar_cadena_sql("etiqueta").",nombre",$conn);
+  $papas=busca_filtro_tabla("*",$tabla,"(cod_padre IS NULL OR cod_padre=0) $activo $condicion","etiqueta ASC",$conn);
 else
-  $papas=busca_filtro_tabla("*",$tabla,"cod_padre=".$serie.$activo.$condicion,"nombre ASC",$conn);
+  $papas=busca_filtro_tabla("*",$tabla,"cod_padre=".$serie.$activo.$condicion,"etiqueta ASC",$conn);
 
 if($papas["numcampos"])
 { 
@@ -69,7 +69,7 @@ if($papas["numcampos"])
   {$hijos = busca_filtro_tabla("count(*)",$tabla,"cod_padre=".$papas[$i]["id$tabla"].$activo.$condicion,"",$conn);
    $hijos_seleccionados = busca_filtro_tabla("count(*)",$tabla,"cod_padre=".$papas[$i]["id$tabla"]." and idmodulo in(".implode(',',$seleccionado).")","",$conn);
     echo("<item style=\"font-family:verdana; font-size:7pt;\" ");
-    echo "text=\"".htmlspecialchars(($papas[$i]["etiqueta"]))." (".$papas[$i]["nombre"].") \" ";
+    echo "text=\"".(htmlspecialchars($papas[$i]["etiqueta"]))." (".$papas[$i]["nombre"].") \" ";
     if(isset($_REQUEST["filtro_perfil"]))
       {
        if(in_array($papas[$i]["idmodulo"],$seleccionado)!==false)

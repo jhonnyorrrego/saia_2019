@@ -78,8 +78,22 @@ return (vector.join(","));
 $().ready(function() {
 	
 
-	
+
   llenar_ejecutor(0);
+  
+  
+	<?php 
+	  if(@$_REQUEST['funcion_javascript']){
+	 	$funcion_parametros=explode('@',$_REQUEST['funcion_javascript']);
+		  
+		if(intval(count($funcion_parametros))>1){
+			echo(''.$funcion_parametros[0].'('.$funcion_parametros[1].');');
+		}else{
+			echo(''.$_REQUEST['funcion_javascript'].'();');
+		}	 
+	 }
+	?>  
+  
 	function findValueCallback(event, data, formatted) {
 		$("<li>").html( !data ? "No match!" : "Selected: " + formatted).appendTo("#result");
 	}
@@ -471,4 +485,14 @@ $().ready(function() {
 </html>
  <?php
  }
+ 
+ if(@$_REQUEST['funcion']){
+ 	$funcion_parametros=explode('@',$_REQUEST['funcion']);
+	if(count($funcion_parametros)>1){
+		echo($funcion_parametros[0](implode(',',$funcion_parametros[1])));
+	}else{
+		echo($_REQUEST['funcion']());
+	}	 
+ }
+
  ?>

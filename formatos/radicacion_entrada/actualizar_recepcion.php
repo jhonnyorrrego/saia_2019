@@ -11,11 +11,12 @@ while($max_salida>0){
 
 include_once($ruta_db_superior."db.php");
 
-$datos=busca_filtro_tabla('','ft_destino_radicacion','idft_destino_radicacion='.$_REQUEST['idft_destino_radicacion'],'',conn);
-
-if($datos[0]['recepcion']==0){
-$sql="UPDATE ft_destino_radicacion SET recepcion='".$_REQUEST['funcionario']."', recepcion_fecha=".fecha_db_almacenar(date("Y-m-d H:i:s"),"Y-m-d H:i:s").", estado_item=3 WHERE idft_destino_radicacion={$_REQUEST['idft_destino_radicacion']}";
-
-phpmkr_query($sql);
-
+$idft_funcionario=json_decode($_REQUEST['idft_funcionario'],1);
+for($i=0;$i<count($idft_funcionario);$i++){
+	$separacion_idft_funcionario=explode('|',$idft_funcionario[$i]['value']);
+	$datos=busca_filtro_tabla('recepcion','ft_destino_radicacion','idft_destino_radicacion='.$separacion_idft_funcionario[0],'',$conn);
+	if($datos[0]['recepcion']==0){
+		$sql="UPDATE ft_destino_radicacion SET recepcion='".$separacion_idft_funcionario[1]."', recepcion_fecha=".fecha_db_almacenar(date("Y-m-d H:i:s"),"Y-m-d H:i:s").", estado_item=3 WHERE idft_destino_radicacion=".$separacion_idft_funcionario[0];
+		phpmkr_query($sql);
+	}		
 }

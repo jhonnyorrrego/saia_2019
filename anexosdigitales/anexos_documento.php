@@ -31,7 +31,7 @@ if((@$_REQUEST["iddoc"] || @$_REQUEST["key"]) && @$_REQUEST["no_menu"]!=1){
 <?php
 include_once("funciones_archivo.php");
 include_once("librerias_saia.php");
-echo(estilo_bootstrap());
+//echo(estilo_bootstrap());
 if(!isset($_REQUEST["menu"])||$_REQUEST["menu"]!="0") // Si esta en menu_ordenar omite el header el footer y el menu
 {
 include_once("../header.php");

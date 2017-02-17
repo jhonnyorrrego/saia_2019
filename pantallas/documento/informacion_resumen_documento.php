@@ -190,6 +190,8 @@ else{
     	$origen=busca_filtro_tabla("B.*","respuesta A, documento B","A.destino='".$iddocumento."' AND A.origen=B.iddocumento","",$conn);
     	if($origen["numcampos"]){
     		echo('<li><div class="row-fluid"><div class="pull-left tootltip_saia_abajo">'.$origen[0]["numero"].'-'.$origen[0]["descripcion"].'</div><div class="pull-right"><a href="#" enlace="ordenar.php?key='.$origen[0]["iddocumento"].'&mostrar_formato=1'.$adicionales_enlace.'" conector="iframe"  titulo="Documento No.'.$origen[0]["numero"].'" class="kenlace_saia pull-left" ><i class="icon-download tooltip_saia_izquierda" title="Ver documento"></i></a></div></div></li>');
+    	}else{
+    		echo("<li class='alert' style='margin-bottom:3px;'>No se encuentra asociado ningun documento</li>");
     	}
 			?>
       </ul><br />
@@ -366,7 +368,8 @@ function click_funcion(div){
             data:{idbusqueda_componente:'<?php echo($documentos_relacionados);?>',iddocumento : "<?php echo $iddocumento;?>",actual_row:"0",limpio:"1",rows:"100"},
             success:function(html){
             	$("#panel_relacionados_funcionario").html('');
-            	if(jQuery.isEmptyObject(html)){
+            	var objeto2=jQuery.parseJSON(html)
+            	if(objeto2.records=='0'){
             		$("#panel_relacionados_funcionario").append("<li class='alert' style='margin-bottom:3px;'>No hay documentos relacionados por funcionario</li>");
             	}else{
 	                var objeto=jQuery.parseJSON(html);                    
@@ -386,7 +389,8 @@ function click_funcion(div){
             data:{idbusqueda_componente:'<?php echo($documentos_respuesta);?>',iddocumento : "<?php echo $iddocumento;?>", actual_row:"0",limpio:"1",rows:"100"},
             success:function(html){
             	$("#panel_respuesta").html('');
-            	if(jQuery.isEmptyObject(html)){
+            	var objeto2=jQuery.parseJSON(html)
+            	if(objeto2.records=='0'){
             		$("#panel_respuesta").append("<li class='alert' style='margin-bottom:3px;'>No hay documentos relacionados por funcionario</li>");
             	}else{
 	                var objeto=jQuery.parseJSON(html);                    

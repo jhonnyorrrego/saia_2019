@@ -19,9 +19,12 @@ $busca_componente=busca_filtro_tabla("nombre","busqueda_componente","idbusqueda_
 <script>
     $(document).ready(function(){
         var componente='<?php echo($busca_componente[0]['nombre']); ?>';
-        
+        var enlace_finalizar="&nbsp;<button class='btn btn-mini' title='Finalizar Entrega' id='boton_finalizar_entrega'>Finalizar Entrega</button>";
         if(componente!='reporte_radicacion_correspondencia_finalizado'){
-          $("#nav_busqueda").after("<div style='margin-left:9px;margin-right:9px;' class='ui-state-default ui-jqgrid-pager ui-corner-bottom'><button class='btn btn-mini' title='Realizar despacho' id='boton_seleccionar_registros'>Generar Planilla de Entrega</button></div>");
+        	if(componente=='reporte_radicacion_correspondencia'){
+        		enlace_finalizar='';
+        	}
+          $("#nav_busqueda").after("<div style='margin-left:9px;margin-right:9px;' class='ui-state-default ui-jqgrid-pager ui-corner-bottom'><button class='btn btn-mini' title='Realizar despacho' id='boton_seleccionar_registros'>Generar Planilla de Entrega</button>"+enlace_finalizar+"</div>");
           } 
         
         /*Genera Planilla de Mensajeros*/
@@ -89,22 +92,24 @@ $busca_componente=busca_filtro_tabla("nombre","busqueda_componente","idbusqueda_
             
         });
         
-        $("#recepcion").live("change",function(){
-            var idft=$(this).attr("data-idft");
-            var funcionario=$(this).val();
-            $.ajax({
-                type:'POST',
-                dataType: 'json',
-                url: "<?php echo $ruta_db_superior;?>formatos/radicacion_entrada/actualizar_recepcion.php",
-                data: {
-                    idft_destino_radicacion:idft,
-                    funcionario:funcionario
-                },
-                success: function(datos){
-                    top.noty({text: 'Item finalizado!',type: 'success',layout: "topCenter",timeout:3500});
-                }
-            }); 
-            
+        $("#boton_finalizar_entrega").live("click",function(){
+            var idft_funcionario=JSON.stringify($('[name="recepcion[]"]').serializeArray());
+ 			if(idft_funcionario=='[]'){
+ 				top.noty({text: 'Debe seleccionar al menos un Item!',type: 'warning',layout: "topCenter",timeout:3500});
+ 			}else{
+	            $.ajax({
+	                type:'POST',
+	                dataType: 'json',
+	                url: "<?php echo $ruta_db_superior;?>formatos/radicacion_entrada/actualizar_recepcion.php",
+	                data: {
+	                    idft_funcionario:idft_funcionario
+	                },
+	                success: function(datos){
+	                    top.noty({text: 'Items finalizados satisfactoriamente!',type: 'success',layout: "topCenter",timeout:3500});
+	                    window.location.reload();
+	                }
+	            });
+ 			}
         });
         
     });
