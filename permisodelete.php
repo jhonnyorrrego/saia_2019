@@ -7,6 +7,12 @@ header("Pragma: no-cache"); // HTTP/1.0
 
 include ("db.php");
 include ("phpmkrfn.php") ;
+
+include_once("pantallas/lib/librerias_cripto.php");
+include_once("librerias_saia.php");
+desencriptar_sqli('form_info');
+echo(librerias_jquery());
+
 $ewCurSec = 0; // Initialise
 
 // Initialize common variables
@@ -62,7 +68,7 @@ switch ($sAction)
 <?php include ("header.php") ?>
 <p><span class="internos"><img class="imagen_internos" src="botones/configuracion/permiso.gif" border="0">&nbsp;&nbsp;ELIMINAR PERMISO DE ACCESO<br><br>
 <!--a href="permisolist.php">Regresar al listado</a--></span></p>
-<form action="permisodelete.php" method="post">
+<form id="permisodelete" name="permisodelete" action="permisodelete.php" method="post">
 <p>
 <input type="hidden" name="a_delete" value="D">
 <?php $sKey = (get_magic_quotes_gpc()) ? stripslashes($sKey) : $sKey; ?>
@@ -272,7 +278,7 @@ $x_caracteristica_total = $sTmp;
 // Function LoadData
 // - Load Data based on Key Value sKey
 // - Variables setup: field variables
-
+encriptar_sqli("permisodelete",1); 
 function LoadData($sKey,$conn)
 {
 	$sKeyWrk = "" . addslashes($sKey) . "";

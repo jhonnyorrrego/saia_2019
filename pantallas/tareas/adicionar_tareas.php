@@ -10,6 +10,10 @@ while($max_salida>0){
 }
 include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."librerias_saia.php");
+
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+desencriptar_sqli('form_info');
+echo(librerias_jquery("1.7"));
 include_once($ruta_db_superior."class_transferencia.php");
 include_once($ruta_db_superior."formatos/librerias/funciones_generales.php");
 echo(estilo_bootstrap());
@@ -34,7 +38,7 @@ if($_REQUEST['guardar']==1){
     echo(librerias_datepicker_bootstrap());
   }
   else{
-    echo(librerias_jquery("1.7"));
+    
     echo(librerias_arboles());
     echo(librerias_bootstrap());
     echo(librerias_datepicker_bootstrap());
@@ -44,7 +48,7 @@ if($_REQUEST['guardar']==1){
 		<div class="control-group" nombre="etiqueta">
 			<legend>Asignar tarea al documento</legend>
 		</div>
-		<form id="formulario_tareas" class="form-horizontal">
+		<form id="formulario_tareas" class="form-horizontal" method="POST">
 			<div class="control-group">
 				<label class="control-label" for="etiqueta">Fecha*:</label>
 				<div class="controls">
@@ -116,7 +120,13 @@ if($_REQUEST['guardar']==1){
 		}).on('changeDate', function(e){
 			$(this).datetimepicker('hide');
 		});
-		$("#formulario_tareas").validate();
+		$("#formulario_tareas").validate({
+			submitHandler: function(form) {
+				<?php encriptar_sqli("formulario_tareas",0,"form_info",$ruta_db_superior);?>
+			    form.submit();
+			    
+			  }
+		});
 	});
 	</script>
 <?php

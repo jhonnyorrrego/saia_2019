@@ -15,6 +15,24 @@ function recargar_centro()
 }
 </script>
 <?php 
+$max_salida=10; // Previene algun posible ciclo infinito limitando a 10 los ../
+$ruta_db_superior=$ruta="";
+
+while($max_salida>0)
+{
+if(is_file($ruta."db.php"))
+{
+$ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
+}
+$ruta.="../";
+$max_salida--;
+}
+
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+include_once($ruta_db_superior."librerias_saia.php");
+desencriptar_sqli('form_info');
+echo(librerias_jquery());
+
 include_once("funciones_archivo.php");
 
 if(isset($_REQUEST["Eliminar"])&&isset($_REQUEST["idanexo"])) // Permisos a una anexo ALMACENADO  
@@ -71,3 +89,4 @@ font-size:12px; font-family: Verdana,Tahoma,arial;
 </table>
 </form>
 </html>
+<?php //encriptar_sqli("borraranexo",1,"form_info",$ruta_db_superior); ?>

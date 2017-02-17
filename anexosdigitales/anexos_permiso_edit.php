@@ -13,6 +13,11 @@ $ruta.="../";
 $max_salida--;
 }
 
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+include_once($ruta_db_superior."librerias_saia.php");
+desencriptar_sqli('form_info');
+echo(librerias_jquery());
+//print_r($_REQUEST);die();
 if(isset($_REQUEST["editar_anexo"]))
 {
   global $conn;
@@ -51,12 +56,12 @@ elseif($_REQUEST["idanexo"])
 {
 ?>
 <b>Editar Anexo</b><br /><br />
-<form name="form1" method="POST" enctype="multipart/form-data">
+<form name="form1" id="form1" method="POST" enctype="multipart/form-data">
 <input type="file" name="anexo">
 <input type="hidden" name="idanexo" value="<?php echo $_REQUEST["idanexo"]?>">
 <input type="submit" value="Reemplazar archivo">
 <input type="hidden" value="1" name="editar_anexo">
 </form>
 <?php
-}
+}//encriptar_sqli("form1",1,"form_info",$ruta_db_superior);
 ?>

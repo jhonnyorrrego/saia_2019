@@ -1,12 +1,20 @@
 <?php
+include_once("db.php");
+include_once("class_transferencia.php");
+include_once("librerias_saia.php");
+
+
+include_once("pantallas/lib/librerias_cripto.php");
+desencriptar_sqli('form_info');
+echo(librerias_jquery());
+
+
 if(@$_REQUEST["iddoc"] || @$_REQUEST["key"]){
 	if(!@$_REQUEST["iddoc"])$_REQUEST["iddoc"]=@$_REQUEST["key"];
 	include_once("pantallas/documento/menu_principal_documento.php");
 	menu_principal_documento($_REQUEST["iddoc"]);
 }
-include_once("db.php");
-include_once("class_transferencia.php");
-include_once("librerias_saia.php");
+
 echo( librerias_notificaciones() );
 $accion_flujo="";
 if(@$_REQUEST["idpaso_actividad"] != ''){
@@ -603,7 +611,7 @@ if(!@$_REQUEST["idpaso_documento"])
 // Function LoadData
 // - Load Data based on Key Value sKey
 // - Variables setup: field variables
-
+encriptar_sqli("transferenciaadd",1);
 function LoadData($sKey,$conn)
 {
 	global $_SESSION;

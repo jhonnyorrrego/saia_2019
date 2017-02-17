@@ -1,6 +1,8 @@
 <?php
 include_once("db.php");
 include_once("pantallas/expediente/librerias.php");
+include_once("pantallas/lib/librerias_cripto.php");
+desencriptar_sqli('form_info');
 
 if(@$_REQUEST['iddoc'] && @$_REQUEST['fecha_limite'] && @$_REQUEST['fecha_limite']!='0000-00-00' ){
     $sql="UPDATE documento SET fecha_limite=".fecha_db_almacenar($_REQUEST['fecha_limite'], 'Y-m-d')." WHERE iddocumento=".$_REQUEST['iddoc'];

@@ -10,6 +10,12 @@ while($max_salida>0){
 }
 include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."librerias_saia.php");
+
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+desencriptar_sqli('form_info');
+
+//print_r($_REQUEST);die();
+
 $usuario_actual=usuario_actual("funcionario_codigo");
 echo (librerias_jquery("1.7"));
 echo (estilo_bootstrap());
@@ -51,6 +57,7 @@ function guardar_permiso_documento($iddoc,$accion){
 	abrir_url("permisos_documento.php?iddoc=".$iddoc."&accion=ver","_self");
 	die();
 }
+
 
 function funcionarios_permiso_documento($iddoc){
 	global $conn;
@@ -115,7 +122,7 @@ function add_permiso_documento($iddoc){
 	?>
 	<h6 style="text-align: center">ADICIONAR PERMISOS SOBRE EL DOCUMENTO</h6>
 	<hr />
-	<form name="permiso_documento" id="permiso_documento">
+	<form name="permiso_documento" id="permiso_documento" method="post">
 		<table class="table table-bordered" style="width:70%;margin: 20px;margin-left: auto;margin-right: auto;">
 			<tr>
 				<td style="width:30%;background-color: #57B0DE;"><b>Funcionario</b></td>
@@ -179,6 +186,7 @@ function add_permiso_documento($iddoc){
 	</script>
 <?php
 }
+//encriptar_sqli("permiso_documento",1);
 
 function edit_permiso_documento($iddoc,$idpermiso){
 	global $conn;
@@ -190,7 +198,7 @@ function edit_permiso_documento($iddoc,$idpermiso){
 	?>
 	<h6 style="text-align: center">EDITAR PERMISOS SOBRE EL DOCUMENTO</h6>
 	<hr />
-	<form name="edit_permiso_documento" id="edit_permiso_documento">
+	<form name="edit_permiso_documento" id="edit_permiso_documento" method="post">
 		<table class="table table-bordered" style="width:70%;margin: 20px;margin-left: auto;margin-right: auto;">
 			<tr>
 				<td style="width:30%;background-color: #57B0DE;"><b>Funcionario</b></td>
@@ -253,4 +261,5 @@ function edit_permiso_documento($iddoc,$idpermiso){
 	</script>
 <?php
 }
+//encriptar_sqli("edit_permiso_documento",1);
 ?>

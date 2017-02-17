@@ -1,6 +1,24 @@
 <?php
 include_once("../header.php");
 include_once("librerias/funciones_acciones.php");
+
+$max_salida=6; // Previene algun posible ciclo infinito limitando a 10 los ../
+$ruta_db_superior=$ruta="";
+while($max_salida>0)
+{
+if(is_file($ruta."db.php"))
+{
+$ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
+}
+$ruta.="../";
+$max_salida--;
+}
+
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+include_once($ruta_db_superior."librerias_saia.php");
+desencriptar_sqli('form_info');
+echo(librerias_jquery());
+
 ?>
 <!--script type="text/javascript" src="../js/jquery.js"></script-->
 <!--script type="text/javascript" src="../js/jquery.validate.js"></script-->
@@ -8,7 +26,7 @@ include_once("librerias/funciones_acciones.php");
   $().ready(function() {
 	// validar los campos del formato
 	$('#asignar_funcion_formato').validate();
-
+	
 });
 </script-->
 <?php
@@ -116,6 +134,6 @@ if($lasignadas["numcampos"]){
   $texto.='</table>';
 }
 echo($texto."</div>");
-
+encriptar_sqli("asignar_funcion_formato",1,"form_info",$ruta_db_superior);
 include_once("../footer.php");
 ?>

@@ -1,6 +1,11 @@
 <?php
 include_once ("db.php");
 
+include_once("pantallas/lib/librerias_cripto.php");
+include_once("librerias_saia.php");
+desencriptar_sqli('form_info');
+echo(librerias_jquery());
+
 require_once('webservice_saia/vendor/autoload.php');
 use \Firebase\JWT\JWT;
 
@@ -326,7 +331,7 @@ global $ruta_db_superior;
     return $jwt;
 }
 
-
+//encriptar_sqli("paginaadd",1);
 ?>
 
 

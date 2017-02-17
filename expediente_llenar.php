@@ -3,6 +3,12 @@
 $max_salida=6; $ruta_db_superior=$ruta=""; while($max_salida>0){ if(is_file($ruta."db.php")){ $ruta_db_superior=$ruta;} $ruta.="../"; $max_salida--; }
 
 include_once("db.php");
+
+include_once("pantallas/lib/librerias_cripto.php");
+include_once("librerias_saia.php");
+desencriptar_sqli('form_info');
+echo(librerias_jquery());
+
 include_once("pantallas/expediente/librerias.php");
 include_once($ruta_db_superior."calendario/calendario.php");
 $iddoc = $_REQUEST["iddoc"];
@@ -148,6 +154,7 @@ if(count($nombres_exp)){
  <script>
  $().ready(function() {
 	$('#form1').submit(function(){
+		
     seleccionados=tree2.getAllChecked();
     if(seleccionados!="")
       {$('#expedientes').val(seleccionados);

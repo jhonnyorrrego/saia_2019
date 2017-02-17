@@ -14,6 +14,11 @@ include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."formatos/librerias/estilo_formulario.php");
 include_once($ruta_db_superior."formatos/librerias/header_formato.php");
 include_once($ruta_db_superior."formatos/librerias/funciones.php"); 
+
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+include_once($ruta_db_superior."librerias_saia.php");
+desencriptar_sqli('form_info');
+echo(librerias_jquery());
 ?>
 <link rel="STYLESHEET" type="text/css" href="<?php echo $ruta_db_superior; ?>css/dhtmlXTree.css">
 <script type="text/javascript" src="<?php echo $ruta_db_superior; ?>js/dhtmlXCommon.js"></script>
@@ -436,6 +441,8 @@ function registrar_adicionar(){
 	phpmkr_query($sql);
 	redirecciona("rutas_automaticas.php?idformato=".$idformato);
 }
+
+
 function registrar_editar(){
 	global $ruta_db_superior;
 	$fun=$_REQUEST["llave"];
@@ -462,6 +469,8 @@ function eliminar(){
 	phpmkr_query($sql1);
 	redirecciona("rutas_automaticas.php?idformato=".$idformato);
 }
+
+
 function arbol($nombre,$seleccionado=Null,$entidad=Null,$archivo=Null){
 	global $ruta_db_superior;
 	if(!$archivo){

@@ -22,6 +22,12 @@ $x_modulo = Null;
 <?php include ("phpmkrfn.php") ?>
 <?php
 
+include_once("pantallas/lib/librerias_cripto.php");
+include_once("librerias_saia.php");
+desencriptar_sqli('form_info');
+echo(librerias_jquery());
+
+
 // Get action
 $sAction = @$_POST["a_add"];
 $x_funcionario_idfuncionario=@$_REQUEST["func"];
@@ -84,7 +90,13 @@ EW_dateSep = "/"; // set date separator
 <!--
 $().ready(function() {
 	// validar los campos del formato
- $('#permisoadd').validate();
+ $('#permisoadd').validate({
+ 	submitHandler: function(form) {
+				<?php encriptar_sqli("permisoadd");?>
+			    form.submit();
+			    
+			  }
+ });
  $('#modulo_todos').click(function(){
    todos_check(tree3,'x_modulo_idmodulo')
  });

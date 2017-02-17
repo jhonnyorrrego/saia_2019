@@ -1,5 +1,11 @@
 <?php
 
+include_once("pantallas/lib/librerias_cripto.php");
+include_once("librerias_saia.php");
+desencriptar_sqli('form_info');
+echo(librerias_jquery());
+
+
 if(@$_REQUEST["iddoc"] || @$_REQUEST["key"] || @$_REQUEST["doc"]){
 	$_REQUEST["iddoc"]=@$_REQUEST["doc"];
 	$doc_menu=@$_REQUEST["key"];
@@ -9,7 +15,6 @@ if(@$_REQUEST["iddoc"] || @$_REQUEST["key"] || @$_REQUEST["doc"]){
 
 include_once("header.php");
 
-include_once("librerias_saia.php");
 echo(estilo_bootstrap());
 
 if(@$_REQUEST["accion"]=="adicionar" && $_REQUEST["key"]){
@@ -48,7 +53,13 @@ menu_ordenar($_REQUEST["key"]);
 <script type="text/javascript" src="js/jquery.validate.js"></script>
 <script type='text/javascript'>
   $().ready(function() {
-	$('#form1').validate();
+	$('#form1').validate({
+		submitHandler: function(form) {
+				<?php encriptar_sqli("form1");?>
+			    form.submit();
+			    
+			  }
+	});
 });
 </script>
 <form name='form1' method='post' id='form1'>

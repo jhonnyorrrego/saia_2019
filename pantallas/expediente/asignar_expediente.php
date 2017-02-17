@@ -51,7 +51,7 @@ for($i=0;$i<$seleccionados["numcampos"];$i++){
 $table.="</table>";
 	
 ?>
-<form name="formulario_asignar_expediente" id="formulario_asignar_expediente">
+<form name="formulario_asignar_expediente" id="formulario_asignar_expediente" method="post">
 <input type="hidden" name="idexpediente" id="idexpediente" value="<?php echo($_REQUEST["idexpediente"]);?>">
 <input type="hidden" id="cerrar_higslide" value="<?php echo(@$_REQUEST["cerrar_higslide"]);?>">
 <legend>Asignar acceso expediente <?php $expediente=busca_filtro_tabla("","expediente","idexpediente=".$_REQUEST["idexpediente"]); echo($expediente[0]["nombre"]);?></legend>

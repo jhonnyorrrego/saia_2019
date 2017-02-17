@@ -36,6 +36,11 @@ $max_salida--;
 <?php
 include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."librerias_saia.php");
+
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+
+desencriptar_sqli('form_info');
+//encriptar_sqli("form1",1,"form_info",$ruta_db_superior);
 include_once($ruta_db_superior."formatos/librerias/funciones.php");
 if(isset($_REQUEST["formato"])&&$_REQUEST["formato"])
 {$formato=$_REQUEST["formato"];
@@ -192,4 +197,5 @@ else
 </table>
 <?php
 }
+
 ?>

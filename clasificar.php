@@ -1,4 +1,11 @@
 <?php
+include_once("pantallas/lib/librerias_cripto.php");
+include_once("librerias_saia.php");
+desencriptar_sqli('form_info');
+echo(librerias_jquery());
+
+
+
 if(@$_REQUEST["iddoc"] || @$_REQUEST["key"] || @$_REQUEST["iddocumento"]){
 	$_REQUEST["iddoc"]=@$_REQUEST["iddocumento"];
 	include_once("pantallas/documento/menu_principal_documento.php");
@@ -176,5 +183,5 @@ function LoadData($sKey,$conn)
 	return $LoadData;
 }
 
-
+encriptar_sqli("clasificar",1);
  

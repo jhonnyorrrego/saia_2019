@@ -2,6 +2,17 @@
 <?php ob_start(); ?>
 <?php
 
+$max_salida=10; // Previene algun posible ciclo infinito limitando a 10 los ../
+$ruta_db_superior=$ruta="";
+while($max_salida>0)
+{
+if(is_file($ruta."db.php"))
+{
+$ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
+}
+$ruta.="../";
+$max_salida--;
+}
 
 // Initialize common variables
 $x_idcampos_formato = Null;
@@ -17,7 +28,14 @@ $x_valor = Null;
 $x_predeterminado = Null;
 $x_ayuda = Null;
 ?>
-<?php include ("db.php") ?>
+<?php include ("db.php");
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+include_once($ruta_db_superior."librerias_saia.php");
+desencriptar_sqli('form_info');
+echo(librerias_jquery());
+
+
+?>
 <?php
 include ("phpmkrfn.php");
 include_once("librerias/funciones.php");
@@ -69,7 +87,7 @@ switch ($sAction)
 ?>
 
 <p><span class="phpmaker">Borrar Campos del Formato</span></p>
-<form action="campos_formatodelete.php" method="post">
+<form id="campos_formatodelete" name="campos_formatodelete" action="campos_formatodelete.php" method="post">
 <p>
 <?php include ("header.php"); 
 if(isset($_REQUEST["pantalla"])&&$_REQUEST["pantalla"]=="tiny")
@@ -295,6 +313,7 @@ $x_etiqueta_html = $sTmp;
 // - Load Data based on Key Value sKey
 // - Variables setup: field variables
 
+encriptar_sqli("campos_formatodelete",1,"form_info",$ruta_db_superior);
 function LoadData($sKey,$conn)
 {
 	$sKeyWrk = "" . addslashes($sKey) . "";

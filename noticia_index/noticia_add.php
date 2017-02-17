@@ -13,6 +13,9 @@ $max_salida--;
 include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."librerias_saia.php"); 
 
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+desencriptar_sqli('form_info');
+
 echo(librerias_jquery('1.7'));
 echo(estilo_bootstrap());
 echo(librerias_notificaciones());
@@ -97,7 +100,13 @@ echo( librerias_validar_formulario('11') );
 <script>
 	$(document).ready(function(){
 		
-		$('#formuploadajax').validate();
+		$('#formuploadajax').validate({
+			submitHandler: function(form) {
+				<?php encriptar_sqli("formuploadajax",0,"form_info",$ruta_db_superior);?>
+			    form.submit();
+			    
+			  }
+		});
 		
 		$('#adicionar').click(function(){
 			if($('#formuploadajax').valid()){

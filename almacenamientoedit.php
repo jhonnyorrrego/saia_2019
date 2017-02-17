@@ -23,7 +23,14 @@ $x_deterioro = Null;
 $x_responsable = Null;
 $x_registro_entrada = Null;
 ?>
-<?php include ("db.php") ?>
+<?php include ("db.php"); 
+
+include_once("pantallas/lib/librerias_cripto.php");
+include_once("librerias_saia.php");
+desencriptar_sqli('form_info');
+echo(librerias_jquery());
+
+?>
 <?php include ("phpmkrfn.php") ?>
 <?php
 $sKey = @$_GET["key"];
@@ -393,7 +400,7 @@ function EditData($sKey,$conn)
 	 
 	$strsql .= " WHERE idalmacenamiento=".$_POST["key"];
 
-	phpmkr_query($strsql, $conn) or error("Falló la búsqueda" . phpmkr_error() . ' SQL:' . $sSql);
+	phpmkr_query($strsql, $conn) or error("Fallï¿½ la bï¿½squeda" . phpmkr_error() . ' SQL:' . $sSql);
 	
 	return true;
 }
@@ -404,4 +411,6 @@ function buscar_serie_papa($idserie){
   }
   return($idserie);
 }
+
+encriptar_sqli("almacenamientoedit",1);
 ?>

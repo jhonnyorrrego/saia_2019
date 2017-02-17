@@ -15,6 +15,11 @@ include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."class_transferencia.php");
 include_once($ruta_db_superior."header.php");
 
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+include_once($ruta_db_superior."librerias_saia.php");
+desencriptar_sqli('form_info');
+echo(librerias_jquery());
+
 ?>
 <script> 
 /*
@@ -57,6 +62,7 @@ include_once($ruta_db_superior."header.php");
 */
 function formato_email()
 {
+	
  global $conn,$ruta_db_superior;
    $datos=busca_filtro_tabla("numero,pdf,plantilla,ejecutor,descripcion,tipo_radicado,".fecha_db_obtener("fecha","Y-m-d H:i:s")." as fecha","documento","iddocumento=".$_REQUEST["iddoc"],"",$conn);
    //si es un radicado de entrada
@@ -431,8 +437,10 @@ function enviar_email($doc=0){
   }
 }
 
-if(isset($_REQUEST["formato_enviar"]))
-  formato_email();
+if(isset($_REQUEST["formato_enviar"])){
+	formato_email();
+	encriptar_sqli("email",1,"form_info",$ruta_db_superior);
+}  
 elseif(isset($_REQUEST["enviar"]))
   enviar_email();
   

@@ -29,6 +29,10 @@ while($max_salida>0){
 }
 include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."librerias_saia.php");
+
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+desencriptar_sqli('form_info');
+
 include ($ruta_db_superior."workflow/libreria_paso.php");
 include ($ruta_db_superior."formatos/librerias/estilo_formulario.php");
 echo(estilo_bootstrap());
@@ -337,7 +341,13 @@ $paso=busca_filtro_tabla("","paso","idpaso=".$_REQUEST["idpaso"],"",$conn);
   $(document).ready(function(){
   	
   	
-  	$("#adicionar_actividad_paso").validate();
+  	$("#adicionar_actividad_paso").validate({
+  		submitHandler: function(form) {
+				<?php encriptar_sqli("adicionar_actividad_paso",0,"form_info",$ruta_db_superior);?>
+			    form.submit();
+			    
+			  }
+  	});
 	
   	
 

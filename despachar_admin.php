@@ -13,6 +13,13 @@
 $max_salida=6; $ruta_db_superior=$ruta=""; while($max_salida>0){ if(is_file($ruta."db.php")){ $ruta_db_superior=$ruta;} $ruta.="../"; $max_salida--; }
 
 include_once("db.php");
+
+include_once("pantallas/lib/librerias_cripto.php");
+include_once("librerias_saia.php");
+desencriptar_sqli('form_info');
+echo(librerias_jquery());
+
+
 $doc_menu=@$_REQUEST["doc"];
 include_once("pantallas/documento/menu_principal_documento.php");
 echo(menu_principal_documento($doc_menu,1));
@@ -181,7 +188,7 @@ function adicionar_despacho()
 { 
  global $x_doc;
  global $conn;
- echo "<form action='despachar_admin.php' method='POST' onSubmit='return validar_despacho(this);'>
+ echo "<form id='despachar_admin' name='despachar_admin' action='despachar_admin.php' method='POST' onSubmit='return validar_despacho(this);'>
        <table border='0'><tr class='encabezado_list'><td colspan='4' align='center'>
        <b>ADICI&Oacute;N DE DESPACHO</b></td></tr>       
        <input type='hidden' value='$x_doc' name='x_doc'>
@@ -317,7 +324,7 @@ function editar_despacho()
        </div><div id=\"comple1\" name=\"comple1\" style=\"position:absolute\" 
        onmouseout=\"document.getElementById('comple1').style.display='none';\"></div></td></tr>";
  }  
- echo "<form action='despachar_admin.php' method='POST'>
+ echo "<form id='despachar_admin' name='despachar_admin' action='despachar_admin.php' method='POST'>
        <table border='0'>       
        <input type='hidden' value='$x_doc' name='x_doc'>
        <input type='hidden' value='transferir' name='funcion_despacho'>
@@ -327,7 +334,7 @@ function editar_despacho()
        </table>
        </form>";
 }
-
+encriptar_sqli("despachar_admin",1);
 /*
 <Clase>
 <Nombre>transferir</Nombre> 

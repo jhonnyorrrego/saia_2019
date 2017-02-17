@@ -13,7 +13,7 @@ $max_salida=6; $ruta_db_superior=$ruta=""; while($max_salida>0){ if(is_file($rut
 <script type="text/javascript" src="<?php echo($ruta_db_superior);?>js/jquery-1.7.min.js"></script>
 <?php include_once($ruta_db_superior."librerias_saia.php");
 ?>
-<form name="formulario_caja" id="formulario_caja">
+<form name="formulario_caja" id="formulario_caja" method="post">
 <input type="hidden" name="cod_padre" id="cod_padre" value="<?php echo($_REQUEST["cod_padre"]);?>">
 <input type="hidden" name="iddocumento" id="iddocumento" value="<?php echo($_REQUEST["iddocumento"]);?>">
 <input type="hidden" id="cerrar_higslide" value="<?php echo(@$_REQUEST["cerrar_higslide"]);?>">

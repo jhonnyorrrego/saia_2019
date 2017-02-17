@@ -2,6 +2,12 @@
 include_once("header.php");
 include_once("db.php");
 include_once("librerias_saia.php");
+
+include_once("pantallas/lib/librerias_cripto.php");
+desencriptar_sqli('form_info');
+echo(librerias_jquery());
+
+
 echo(estilo_bootstrap() );
 
 if(@$_REQUEST["key"] && @$_REQUEST["accion"]=='seleccionar_etiqueta'){
@@ -81,7 +87,7 @@ elseif($_REQUEST["accion"]=="adicionar"||$_REQUEST["accion"]=="editar")
    $dato=busca_filtro_tabla("","etiqueta","idetiqueta=".$_REQUEST["key"],"",$conn); 
  echo "<br /><br /><p><span class='internos'>".strtoupper($_REQUEST["accion"]." Etiqueta")."</p></span><br /><br />";
  ?>
- <form name="form1" method="post">
+ <form name="form1" id="form1" method="post">
  <table>
  <tr>
  <td class="encabezado">NOMBRE*</td>
@@ -150,7 +156,7 @@ elseif($_REQUEST["accion"]=="seleccionar_etiqueta")
     hs.graphicsDir = 'anexosdigitales/highslide-4.0.10/highslide/graphics/';
     hs.outlineType = 'rounded-white';
 </script>
- <br /><br /><p><span class="internos">ETIQUETAR DOCUMENTO</span></p><br /><br /><form name='form1' method='post'>
+ <br /><br /><p><span class="internos">ETIQUETAR DOCUMENTO</span></p><br /><br /><form id="form1" name='form1' method='post'>
 
 		<ul class="nav nav-tabs">
 		 <li ><a href='etiqueta.php?accion=adicionar' onclick='return hs.htmlExpand(this, { objectType: "iframe",width: 400, height:200,preserveContent:false } )'>Adicionar Etiqueta</a ></li>
@@ -221,6 +227,7 @@ global $conn;
   alerta("Documento Etiquetado.");  
   abrir_url("formatos/".$formato[0]['nombre']."/".$formato[0]['ruta_mostrar']."?iddoc=".$_REQUEST["key"]."&idformato=".$formato[0]['idformato'],"_self");
 }
+
 include_once("footer.php");
 ?>
 <script>

@@ -23,7 +23,7 @@ $max_salida=6; $ruta_db_superior=$ruta=""; while($max_salida>0){ if(is_file($rut
 $datos=busca_filtro_tabla(fecha_db_obtener('a.fecha','Y-m-d')." as x_fecha, ".fecha_db_obtener('a.fecha_extrema_i','Y-m-d')." as x_fecha_extrema_i, ".fecha_db_obtener('a.fecha_extrema_f','Y-m-d')." x_fecha_extrema_f,a.*","expediente a","a.idexpediente=".$_REQUEST["idexpediente"],"",$conn);
 $dato_padre=busca_filtro_tabla("","expediente a","a.idexpediente=".$datos[0]["cod_padre"],"",$conn);
 ?>
-<form name="formulario_expediente" id="formulario_expediente">
+<form name="formulario_expediente" id="formulario_expediente" method="post">
 <input type="hidden" name="idexpediente" id="idexpediente" value="<?php echo($datos[0]["idexpediente"]);?>">
 <input type="hidden" name="iddocumento" id="iddocumento" value="<?php echo($_REQUEST["iddocumento"]);?>">
 <input type="hidden" id="cerrar_higslide" value="<?php echo(@$_REQUEST["cerrar_higslide"]);?>">
