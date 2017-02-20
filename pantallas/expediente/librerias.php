@@ -236,7 +236,11 @@ function insertar_expediente_automatico($idserie,$hijo="",$indice=1){
 	if($serie["numcampos"]){
 		$busqueda=busca_filtro_tabla("","expediente a","a.serie_idserie=".$serie[0]["idserie"],"",$conn);
 		if(!$busqueda["numcampos"]){
-			$sql1="insert into expediente(nombre, fecha, serie_idserie)values('".$serie[0]["nombre"]."', ".fecha_db_almacenar(date('Y-m-d'),'Y-m-d').", '".$serie[0]["idserie"]."')";
+			$value_agrupador="0";
+			if(intval($serie[0]['tipo_expediente'])==2){
+				$value_agrupador="1";
+			}
+			$sql1="insert into expediente(nombre, fecha, serie_idserie,agrupador)values('".$serie[0]["nombre"]."', ".fecha_db_almacenar(date('Y-m-d'),'Y-m-d').", '".$serie[0]["idserie"]."',".$value_agrupador.")";
 			phpmkr_query($sql1);
 			$id=phpmkr_insert_id();
 		}

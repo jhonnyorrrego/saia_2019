@@ -31,6 +31,7 @@ $x_digitalizacion = Null;
 $x_copia = Null;
 $x_categoria = Null;
 $x_tipo = Null;
+$x_tipo_expediente = Null;
 //$x_formato =  Null;
 
 
@@ -77,6 +78,7 @@ else
 	$x_copia = @$_POST["x_copia"];
   $x_categoria = @$_POST["x_categoria"];
 	$x_tipo = @$_POST["x_tipo"];
+	$x_tipo_expediente = @$_POST["x_tipo_expediente"];
   //$x_formato= @$_POST["x_formato"];
 }
 switch ($sAction)
@@ -120,6 +122,11 @@ if (EW_this.x_nombre && !EW_hasValue(EW_this.x_nombre, "TEXT" )) {
 if (EW_this.x_tipo && !EW_hasValue(EW_this.x_tipo, "RADIO" )) {
 	//if (!EW_onError(EW_this, EW_this.x_tipo, "RADIO", "Por favor llenar campo requerido - tipo"))
 	notificacion_saia('<b>ATENCI&Oacute;N</b><br>Por favor llenar campo requerido - tipo','warning','',4000);
+		return false; 
+}
+if (EW_this.x_tipo_expediente && !EW_hasValue(EW_this.x_tipo_expediente, "RADIO" )) {
+	//if (!EW_onError(EW_this, EW_this.x_tipo, "RADIO", "Por favor llenar campo requerido - tipo"))
+	notificacion_saia('<b>ATENCI&Oacute;N</b><br>Por favor llenar campo requerido - CREACI&Oacute;N DE EXPEDIENTE &Oacute;  AGRUPADOR','warning','',4000);
 		return false; 
 }
 if (EW_this.x_cod_padre && !EW_checkinteger(EW_this.x_cod_padre.value)) {
@@ -183,6 +190,7 @@ if(@$_REQUEST['key_padre']){
 	$x_copia = @$serie_padre[0]["copia"];
     $x_categoria = @$serie_padre[0]["categoria"];
 	$x_tipo = @$serie_padre[0]["tipo"];
+	$x_tipo_expediente = @$serie_padre[0]["tipo_expediente"];
 ?>
 <script>
 $(document).ready(function(){
@@ -536,7 +544,22 @@ $(document).ready(function(){
 <?php echo EditOptionSeparator(1); ?>
 </span></td>
 	</tr>
-	
+
+	<tr class="ocultar">
+		<td class="encabezado"  title="Permite decidir si se crea un expediente o un agrupador seg&uacute;n se requiera"><span class="phpmaker" style="color: #FFFFFF;">CREACI&Oacute;N DE EXPEDIENTE &Oacute; AGRUPADOR</span></td>
+		<td bgcolor="#F5F5F5"><span class="phpmaker">
+    <input type="radio" id="tipo_expediente1" name="tipo_expediente" value="<?php echo htmlspecialchars("1"); ?>" <?php if (@$x_tipo_expediente == "1") { ?> checked<?php } ?> >
+<?php echo "Expediente"; ?>
+<?php echo EditOptionSeparator(0); ?>
+<input type="radio" id="tipo_expediente2" name="x_tipo_expediente"  value="<?php echo htmlspecialchars("2"); ?>" <?php if (@$x_tipo_expediente == "2") { ?> checked<?php } ?>>
+<?php echo "Agrupador"; ?>
+<?php echo EditOptionSeparator(1); ?>
+<input type="radio" id="tipo_expediente0" name="x_tipo_expediente"  value="<?php echo htmlspecialchars("0"); ?>" <?php if (@$x_tipo_expediente == "0") { ?> checked<?php } ?>>
+<?php echo "Ninguno"; ?>
+<?php echo EditOptionSeparator(2); ?>
+
+</span></td>
+	</tr>	
 
 	
 
@@ -591,6 +614,7 @@ function LoadData($sKey,$conn)
 		$GLOBALS["x_procedimiento"] = $row["procedimiento"];
 		$GLOBALS["x_digitalizacion"] = $row["digitalizacion"];  
 		$GLOBALS["x_tipo"] = $row["tipo"];
+		$GLOBALS["x_tipo_expediente"] = $row["tipo_expediente"];
     //$GLOBALS["x_categoria"] = $row["categoria"];
 	}
 	phpmkr_free_result($rs);
@@ -681,6 +705,10 @@ function AddData($conn)
 	
 	// tipo
 	$fieldList["tipo"]="'".$GLOBALS["x_tipo"]."'";
+	
+	//tipo_expediente
+	$fieldList["tipo_expediente"]="'".$GLOBALS["x_tipo_expediente"]."'";
+	$tipo_expediente=$GLOBALS["x_tipo_expediente"];
 	// insert into database
 	$strsql = "INSERT INTO serie (";
 	$strsql .= implode(",", array_keys($fieldList));
@@ -712,7 +740,11 @@ function AddData($conn)
 				$actualizar_orden="UPDATE serie SET orden=".($padre[0]['orden']+($insertar_serie[0]['idserie']*100))." WHERE idserie=".$insertar_serie[0]['idserie'];
 			}
 	phpmkr_query($actualizar_orden);
-	insertar_expediente_automatico($id);
+	
+	
+	if(intval($tipo_expediente)!=0){
+		insertar_expediente_automatico($id);
+	}	
 	return $id;
 }
 ?>

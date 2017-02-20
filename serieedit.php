@@ -31,6 +31,7 @@ $x_copia = Null;
 $x_estado = Null;
 $x_categoria = Null;
 $x_tipo = Null;
+$x_tipo_expediente = Null;
 //$x_formato =  Null;
 ?>
 
@@ -67,6 +68,7 @@ if (($sAction == "") || ((is_null($sAction)))) {
 	$x_estado = @$_POST["x_estado"]; 
   $x_categoria = @$_POST["x_categoria"];
 	$x_tipo = @$_POST["x_tipo"];
+	$x_tipo_expediente =@$_POST["x_tipo_expediente"];
   //$x_formato= @$_POST["x_formato"];
  
 }
@@ -113,6 +115,11 @@ if (EW_this.x_nombre && !EW_hasValue(EW_this.x_nombre, "TEXT" )) {
 if (EW_this.x_tipo && !EW_hasValue(EW_this.x_tipo, "RADIO" )) {
 	//if (!EW_onError(EW_this, EW_this.x_tipo, "RADIO", "Por favor llenar campo requerido - tipo"))
 	notificacion_saia('<b>ATENCI&Oacute;N</b><br>Por favor llenar campo requerido - tipo','warning','',4000);
+		return false; 
+}
+if (EW_this.x_tipo_expediente && !EW_hasValue(EW_this.x_tipo_expediente, "RADIO" )) {
+	//if (!EW_onError(EW_this, EW_this.x_tipo, "RADIO", "Por favor llenar campo requerido - tipo"))
+	notificacion_saia('<b>ATENCI&Oacute;N</b><br>Por favor llenar campo requerido - CREACI&Oacute;N DE EXPEDIENTE &Oacute;  AGRUPADOR','warning','',4000);
 		return false; 
 }
 if (EW_this.x_cod_padre && !EW_checkinteger(EW_this.x_cod_padre.value)) {
@@ -480,6 +487,23 @@ return true;
 <?php echo EditOptionSeparator(1); ?>
 </span></td>
 	</tr>	
+
+	<tr class="ocultar">
+		<td class="encabezado"  title="Permite decidir si se crea un expediente o un agrupador seg&uacute;n se requiera"><span class="phpmaker" style="color: #FFFFFF;">CREACI&Oacute;N DE EXPEDIENTE &Oacute; AGRUPADOR</span></td>
+		<td bgcolor="#F5F5F5"><span class="phpmaker">
+    <input type="radio" id="tipo_expediente1" name="tipo_expediente" value="<?php echo htmlspecialchars("1"); ?>" <?php if (@$x_tipo_expediente == "1") { ?> checked<?php } ?> >
+<?php echo "Expediente"; ?>
+<?php echo EditOptionSeparator(0); ?>
+<input type="radio" id="tipo_expediente2" name="x_tipo_expediente"  value="<?php echo htmlspecialchars("2"); ?>" <?php if (@$x_tipo_expediente == "2") { ?> checked<?php } ?>>
+<?php echo "Agrupador"; ?>
+<?php echo EditOptionSeparator(1); ?>
+<input type="radio" id="tipo_expediente0" name="x_tipo_expediente"  value="<?php echo htmlspecialchars("0"); ?>" <?php if (@$x_tipo_expediente == "0") { ?> checked<?php } ?>>
+<?php echo "Ninguno"; ?>
+<?php echo EditOptionSeparator(2); ?>
+
+</span></td>
+	</tr>	
+	
 	  <tr>
 		<td class="encabezado"  title="Inactivar o activar una serie documental"><span class="phpmaker" style="color: #FFFFFF;">ESTADO</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
@@ -543,6 +567,7 @@ function LoadData($sKey,$conn)
 		$GLOBALS["x_estado"] = $row["estado"]; 
     $GLOBALS["x_categoria"] = $row["categoria"];
 		$GLOBALS["x_tipo"] = $row["tipo"];
+		$GLOBALS["x_tipo_expediente"] = $row["tipo_expediente"];
     //$GLOBALS["x_formato"] = $row["formato"];
 	}
 	phpmkr_free_result($rs);
@@ -617,6 +642,9 @@ function EditData($sKey,$conn)
 		//die("categoria ".$fieldList["categoria"]);
 		// update
 		$fieldList["tipo"]="'".$GLOBALS["x_tipo"]."'";
+		$fieldList["tipo_expediente"]="'".$GLOBALS["x_tipo_expediente"]."'";
+		$tipo_expediente=$GLOBALS["x_tipo_expediente"];
+		
 		$sSql = "UPDATE serie SET ";
 		foreach ($fieldList as $key=>$temp) {
 			$sSql .= "$key = $temp, ";
@@ -641,7 +669,12 @@ function EditData($sKey,$conn)
 	phpmkr_query($actualizar_orden);
     //die($sSql);		
 		phpmkr_query($sSql,$conn) or error("Failed to execute query" . phpmkr_error() . ' SQL:' . $sSql);
-		insertar_expediente_automatico($sKeyWrk);
+		
+		
+		if(intval($tipo_expediente)!=0){
+			insertar_expediente_automatico($sKeyWrk);
+		}
+		
 		if(!$fieldList["estado"])
 		  phpmkr_query("update serie set estado=0 where cod_padre=".$sKeyWrk);
 		$EditData = true; // Update Successful
