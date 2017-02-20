@@ -316,6 +316,7 @@ function obtener_descripcion_expediente($descripcion){
 
 function mostrar_contador_expediente($idexpediente,$cod_arbol){
 	global $conn, $dependencia,$arreglo;
+	/*
 	$expedientes=arreglo_expedientes_asignados();
 	$arreglo=array();
 	obtener_expedientes_padre($idexpediente,$expedientes);
@@ -327,6 +328,7 @@ function mostrar_contador_expediente($idexpediente,$cod_arbol){
 	if(!$documentos["numcampos"])$documentos[0]["cantidad"]=0;
 	
 	return("<span class='pull-right badge' style='margin-top:3px' id='contador_docs_".$idexpediente."'>".$documentos[0]["cantidad"]."</span>");
+	*/
 }
  
 /*
