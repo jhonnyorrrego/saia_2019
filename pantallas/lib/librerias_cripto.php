@@ -56,7 +56,7 @@ function request_encriptado($param="key_cripto"){
 }
 function desencriptar_sqli($campo_info){
 	if($_SESSION["token_csrf"]!==$_POST["token_csrf"]){
-		alerta("Error de validacion del formulario por favor intente de nuevo (Posible Error: CSRF) ")
+		alerta("Error de validacion del formulario por favor intente de nuevo (Posible Error: CSRF) ");
 	}
 
 	if (array_key_exists($campo_info, $_POST) ) {
