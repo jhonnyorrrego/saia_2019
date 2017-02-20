@@ -55,7 +55,7 @@ function request_encriptado($param="key_cripto"){
 	return($parametros);
 }
 function desencriptar_sqli($campo_info){
-	if (array_key_exists($campo_info, $_POST)) {
+	if (array_key_exists($campo_info, $_POST) && $_SESSION["token_csrf"]==$_POST["token_csrf"]) {
     $data = json_decode($_POST[$campo_info], true);
     unset($_REQUEST);
     unset($_POST);
@@ -67,21 +67,25 @@ function desencriptar_sqli($campo_info){
 return;
 }
 function encriptar_sqli($nombre_form,$submit=false,$campo_info="form_info",$ruta_superior="",$retorno=false){
-	
+
 $texto='';
 if ($submit) {
 	$texto.='<script type="text/javascript">';
 }
-	
-$texto.='	
+
+$texto.='
 	if(!$("#'.$campo_info.'").length){
 		$("#'.$nombre_form.'").append('."'".'<input type="hidden" id="'.$campo_info.'" name="'.$campo_info.'">'."'".');
+	}
+	if(!$("#token_csrf").length){
+		$("#token_csrf").append('."'".'<input type="hidden" id="token_csrf" name="token_csrf">'."'".');
 	}';
-	
+
+
 if ($submit) {
 	$texto.='$("#'.$nombre_form.'").submit(function(event){';
 }
-
+$_SESSION["token_csrf"]=cadena_aleatoria(50);
 	$texto.='var salida = false;
       $.ajax({
         type:"POST",
@@ -96,6 +100,7 @@ if ($submit) {
           $("#'.$campo_info.'").val(data);
 					//console.log(JSON.stringify($("#'.$nombre_form.'").serializeArray()));
           //console.log($("#'.$campo_info.'").val());
+					$("#token_csrf").val('.$_SESSION["token_csrf"].');
           salida = true;
         }
       });';
@@ -105,7 +110,7 @@ if ($submit) {
 	  });
 	</script>';
 }
-	    
+
 	if($retorno){
 		return($texto);
 	}
