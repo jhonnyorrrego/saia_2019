@@ -515,16 +515,21 @@ function ingresar_item_destino_radicacion($idformato,$iddoc){//posterior al adic
 		for($i=0; $i < $cont; $i++){
 		    $cadena_buscada   = '#';
             $posicion_coincidencia = strpos($destino[$i], $cadena_buscada);
-             
+				if($padre[0]['tipo_origen']==1){
+					$valor_origen=$padre[0]['persona_natural'];
+				}else{
+					$valor_origen=$padre[0]['ejecutor'];
+				}             
             if ($posicion_coincidencia === false) {
                 $funcionario=$destino[$i];
-                $cadena='INSERT INTO ft_destino_radicacion (ft_radicacion_entrada,nombre_destino, nombre_origen, tipo_origen, tipo_destino, numero_item) VALUES ('.$padre[0]['idft_radicacion_entrada'].','.$destino[$i].', '.$padre[0]['ejecutor'].', '.$padre[0]['tipo_origen'].', '.$padre[0]['tipo_destino'].',"0")';
+
+                $cadena='INSERT INTO ft_destino_radicacion (ft_radicacion_entrada,nombre_destino, nombre_origen, tipo_origen, tipo_destino, numero_item) VALUES ('.$padre[0]['idft_radicacion_entrada'].','.$destino[$i].', '.$valor_origen.', '.$padre[0]['tipo_origen'].', '.$padre[0]['tipo_destino'].',"0")';
                 phpmkr_query($cadena);
             }else {
                 $dependencia=str_replace("#", "", $destino[$i]);
                 $busca_funcionarios=busca_filtro_tabla("iddependencia_cargo","vfuncionario_dc","estado=1 AND estado_dc=1 AND estado_dep=1 AND iddependencia=".$dependencia,"",$conn);
                 for ($j=0; $j < $busca_funcionarios['numcampos']; $j++) { 
-                    $cadena='INSERT INTO ft_destino_radicacion (ft_radicacion_entrada,nombre_destino, nombre_origen, tipo_origen, tipo_destino, numero_item) VALUES ('.$padre[0]['idft_radicacion_entrada'].','.$busca_funcionarios[$j]['iddependencia_cargo'].', '.$padre[0]['ejecutor'].', '.$padre[0]['tipo_origen'].', '.$padre[0]['tipo_destino'].',"0")';
+                    $cadena='INSERT INTO ft_destino_radicacion (ft_radicacion_entrada,nombre_destino, nombre_origen, tipo_origen, tipo_destino, numero_item) VALUES ('.$padre[0]['idft_radicacion_entrada'].','.$busca_funcionarios[$j]['iddependencia_cargo'].', '.$valor_origen.', '.$padre[0]['tipo_origen'].', '.$padre[0]['tipo_destino'].',"0")';
                     phpmkr_query($cadena);
                 }
             }
@@ -562,6 +567,13 @@ function mostrar_item_destino_radicacion($idformato,$iddoc){
             if(!$origen['numcampos']){
                 $origen=busca_filtro_tabla("concat(nombres,' ',apellidos) AS nombre","vfuncionario_dc a","a.iddependencia_cargo=".$datos[$i]['nombre_origen'],"",$conn);
             }
+			if($datos[$i]['tipo_origen']==1){
+				$origen=busca_filtro_tabla("nombre","vejecutor a","a.iddatos_ejecutor=".$datos[$i]['nombre_origen'],"",$conn);
+				if(!$origen['numcampos']){
+					$origen=busca_filtro_tabla("nombre","vejecutor a","a.iddatos_ejecutor=".$datos[$i]['origen_externo'],"",$conn);
+				}
+			}
+			
     	    if($datos[$i]['tipo_destino']==1){
     	        $destino=busca_filtro_tabla("b.nombre, a.cargo , a.ciudad, a.direccion","datos_ejecutor a, ejecutor b","b.idejecutor=a.ejecutor_idejecutor AND a.iddatos_ejecutor=".$datos[$i]['nombre_destino'],"",$conn);
     	        $ciudad=busca_filtro_tabla("nombre","municipio","idmunicipio=".$destino[0]['ciudad'],"",$conn);
@@ -620,6 +632,14 @@ function mostrar_item_destino_radicacion($idformato,$iddoc){
             if(!$origen['numcampos']){
                 $origen=busca_filtro_tabla("concat(nombres,' ',apellidos) AS nombre","vfuncionario_dc a","a.iddependencia_cargo=".$datos[$i]['nombre_origen'],"",$conn);
             }
+
+			if($datos[$i]['tipo_origen']==1){
+				$origen=busca_filtro_tabla("nombre","vejecutor a","a.iddatos_ejecutor=".$datos[$i]['nombre_origen'],"",$conn);
+				if(!$origen['numcampos']){
+					$origen=busca_filtro_tabla("nombre","vejecutor a","a.iddatos_ejecutor=".$datos[$i]['origen_externo'],"",$conn);
+				}
+			}
+			
             $parte_tabla="";
     	    if($datos[$i]['tipo_destino']==1){
     	        $destino=busca_filtro_tabla("b.nombre, a.cargo","datos_ejecutor a, ejecutor b","b.idejecutor=a.ejecutor_idejecutor AND a.iddatos_ejecutor=".$datos[$i]['nombre_destino'],"",$conn);
