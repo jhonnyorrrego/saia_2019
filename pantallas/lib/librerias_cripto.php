@@ -55,7 +55,11 @@ function request_encriptado($param="key_cripto"){
 	return($parametros);
 }
 function desencriptar_sqli($campo_info){
-	if (array_key_exists($campo_info, $_POST) && $_SESSION["token_csrf"]==$_POST["token_csrf"]) {
+	if($_SESSION["token_csrf"]!==$_POST["token_csrf"]){
+		alerta("Error de validacion del formulario por favor intente de nuevo (Posible Error: CSRF) ")
+	}
+
+	if (array_key_exists($campo_info, $_POST) ) {
     $data = json_decode($_POST[$campo_info], true);
     unset($_REQUEST);
     unset($_POST);
@@ -63,7 +67,10 @@ function desencriptar_sqli($campo_info){
         $_REQUEST[decrypt_blowfish($data[$i]["name"], LLAVE_SAIA_CRYPTO)] = decrypt_blowfish($data[$i]["value"], LLAVE_SAIA_CRYPTO);
         $_POST[decrypt_blowfish($data[$i]["name"], LLAVE_SAIA_CRYPTO)] = decrypt_blowfish($data[$i]["value"], LLAVE_SAIA_CRYPTO);
     }
+
 }
+unset($_REQUEST["token_csrf"]);
+unset($_SESSION["token_csrf"]);
 return;
 }
 function encriptar_sqli($nombre_form,$submit=false,$campo_info="form_info",$ruta_superior="",$retorno=false){
@@ -78,8 +85,8 @@ $texto.='
 		$("#'.$nombre_form.'").append('."'".'<input type="hidden" id="'.$campo_info.'" name="'.$campo_info.'">'."'".');
 	}
 	if(!$("#token_csrf").length){
-		$("#token_csrf").append('."'".'<input type="hidden" id="token_csrf" name="token_csrf">'."'".');
-	}';
+		$("#'.$nombre_form.'").append('."'".'<input type="hidden" id="token_csrf" name="token_csrf">'."'".');
+}';
 
 
 if ($submit) {
@@ -100,7 +107,7 @@ $_SESSION["token_csrf"]=cadena_aleatoria(50);
           $("#'.$campo_info.'").val(data);
 					//console.log(JSON.stringify($("#'.$nombre_form.'").serializeArray()));
           //console.log($("#'.$campo_info.'").val());
-					$("#token_csrf").val('.$_SESSION["token_csrf"].');
+					$("#token_csrf").val("'.$_SESSION["token_csrf"].'");
           salida = true;
         }
       });';
