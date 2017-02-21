@@ -126,7 +126,7 @@ $(document).ready(function(){
   jQuery("#datos_busqueda").jqGrid({
     height:alto_document,
     type:'POST',
-   	url: "servidor_busqueda.php?idbusqueda_componente=<?php echo($datos_componente);?>&idbusqueda_filtro_temp=<?php echo(@$_REQUEST['idbusqueda_filtro_temp']);?>&idbusqueda_filtro=<?php echo(@$_REQUEST['idbusqueda_filtro']);?>&idbusqueda_temporal=<?php echo (@$_REQUEST['idbusqueda_temporal']);?>&actual_row="+$("#fila_actual").val()+"&variable_busqueda="+$("#variable_busqueda").val()+"&reporte=1",
+   	url: "servidor_busqueda.php?idbusqueda_componente=<?php echo($datos_componente);?>&idbusqueda_grafico=<?php echo(@$_REQUEST['idbusqueda_grafico']); ?>&idbusqueda_filtro_temp=<?php echo(@$_REQUEST['idbusqueda_filtro_temp']);?>&idbusqueda_filtro=<?php echo(@$_REQUEST['idbusqueda_filtro']);?>&idbusqueda_temporal=<?php echo (@$_REQUEST['idbusqueda_temporal']);?>&actual_row="+$("#fila_actual").val()+"&variable_busqueda="+$("#variable_busqueda").val()+"&reporte=1",
 	  datatype: "json",
    	colNames:[<?php echo('"'.implode('","',$columnas["etiquetas"]).'"');?>],
    	colModel:[

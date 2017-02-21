@@ -123,6 +123,17 @@ $(document).ready(function(){
 		if(!$("#idbusqueda_componente").length){
 			$("#kformulario_saia").append('<input type="hidden" name="idbusqueda_componente" id="idbusqueda_componente" value="'+$(this).attr("componente")+'">');
 		}		
+		var id_parent=$(this).parent().attr('id');
+		var vector_idgrafico=id_parent.split('_');
+		var idgrafico=vector_idgrafico[1];
+		if(!$('[name="idbusqueda_grafico"]').length){
+			var cadena_input='<input type="hidden" name="idbusqueda_grafico" value="'+idgrafico+'">';
+			$("#kformulario_saia").append(cadena_input);
+		}else{
+			$('[name="idbusqueda_grafico"]').remove();
+			var cadena_input='<input type="hidden" name="idbusqueda_grafico" value="'+idgrafico+'">';
+			$("#kformulario_saia").append(cadena_input);
+		}		
 		enviar_formulario_saia("<?php echo($ruta_db_superior);?>pantallas/busquedas/procesa_filtro_busqueda.php","",'',1);		
 	});
 	$(".menu_reporte").live("click",function(){

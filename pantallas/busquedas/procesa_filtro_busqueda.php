@@ -115,6 +115,9 @@ if (@$_REQUEST["idbusqueda_componente"]) {
 	if (@$_REQUEST["variable_busqueda"] != "") {
 		$url .= "&variable_busqueda=" . $_REQUEST['variable_busqueda'];
 	}
+	if (@$_REQUEST["idbusqueda_grafico"] != "") {
+		$url .= "&idbusqueda_grafico=" . $_REQUEST['idbusqueda_grafico'];
+	}	
 	// Procesar parametros adicionales
 	if (@$_REQUEST["parametros_adicionales_buscador"]) {
 		$complemento = explode("|", $_REQUEST["parametros_adicionales_buscador"]);

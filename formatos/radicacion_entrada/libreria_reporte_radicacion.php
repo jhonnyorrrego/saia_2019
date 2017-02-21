@@ -238,3 +238,58 @@ function aceptar_recepcion($idft_destino_radicacion){
     }
     return $input;
 }
+
+
+
+function condicion_adicional_indicadores(){
+	global $conn;	
+	
+	$condicion_adicional_indicadores='';
+	if(@$_REQUEST['idbusqueda_grafico']){
+		$graficos=busca_filtro_tabla("","busqueda_grafico A,busqueda_grafico_serie B","A.idbusqueda_grafico=B.busqueda_grafico_idbusqueda_grafico AND A.idbusqueda_grafico=".@$_REQUEST["idbusqueda_grafico"]." AND A.estado=1","",$conn);
+		if($graficos['numcampos']){
+			if($graficos[0]["condicion_adicional"]!=''){
+				$condicion_adicional_indicadores=$graficos[0]["condicion_adicional"];
+			}
+		}		
+	}
+	return($condicion_adicional_indicadores);
+}
+function mostrar_cantidad_origen_interno(){
+	global $conn;
+		
+	$where='';
+	if(@$_REQUEST["idbusqueda_filtro_temp"]){
+		$datos_adicional=busca_filtro_tabla("","busqueda_filtro_temp A","A.idbusqueda_filtro_temp=".$_REQUEST["idbusqueda_filtro_temp"],"",$conn);
+		$where=" AND (".parsear_cadena_condicion(stripslashes($datos_adicional[0]["detalle"])).")";
+	}
+	$consulta_interno=busca_filtro_tabla("","documento d,ft_radicacion_entrada a, ft_destino_radicacion b, vfuncionario_dc c","(lower(d.estado)='aprobado' and a.despachado=1 and a.documento_iddocumento=d.iddocumento and a.idft_radicacion_entrada=b.ft_radicacion_entrada and a.tipo_destino=2 and b.nombre_destino=c.iddependencia_cargo and b.tipo_destino=2  AND a.tipo_origen<>1  ) ".$where,"",$conn);
+	$cadena='<div style="text-align:center;font-size:25pt;font-weight:bold">&nbsp;&nbsp;&nbsp;'.$consulta_interno['numcampos'].'</div>';
+	echo($cadena);	
+}
+function mostrar_cantidad_origen_externo(){
+	global $conn;
+
+	$where='';
+	if(@$_REQUEST["idbusqueda_filtro_temp"]){
+		$datos_adicional=busca_filtro_tabla("","busqueda_filtro_temp A","A.idbusqueda_filtro_temp=".$_REQUEST["idbusqueda_filtro_temp"],"",$conn);
+		$where=" AND (".parsear_cadena_condicion(stripslashes($datos_adicional[0]["detalle"])).")";
+	}
+	$consulta_externo=busca_filtro_tabla("","documento d,ft_radicacion_entrada a, ft_destino_radicacion b, vfuncionario_dc c","(lower(d.estado)='aprobado' and a.despachado=1 and a.documento_iddocumento=d.iddocumento and a.idft_radicacion_entrada=b.ft_radicacion_entrada and a.tipo_destino=2 and b.nombre_destino=c.iddependencia_cargo and b.tipo_destino=2  AND a.tipo_origen=1  ) ".$where,"",$conn);
+	$cadena='<div style="text-align:center;font-size:25pt;font-weight:bold">&nbsp;&nbsp;&nbsp;'.$consulta_externo['numcampos'].'</div>';
+	echo($cadena);		
+}
+function parsear_cadena_condicion($cadena1){
+global $conn;
+$cadena1=str_replace("|+|"," AND ",$cadena1);
+$cadena1=str_replace("|=|"," = ",$cadena1);
+$cadena1=str_replace("|like|"," like ",$cadena1);
+$cadena1=str_replace("|-|"," OR ",$cadena1);
+$cadena1=str_replace("|<|"," < ",$cadena1);
+$cadena1=str_replace("|>|"," > ",$cadena1);
+$cadena1=str_replace("|>=|"," >= ",$cadena1);
+$cadena1=str_replace("|<=|"," <= ",$cadena1);
+$cadena1=str_replace("|in|"," in ",$cadena1);
+$cadena1=str_replace("||"," LIKE ",$cadena1);
+return $cadena1;
+}
