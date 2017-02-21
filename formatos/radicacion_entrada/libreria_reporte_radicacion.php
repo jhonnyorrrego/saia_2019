@@ -293,3 +293,14 @@ $cadena1=str_replace("|in|"," in ",$cadena1);
 $cadena1=str_replace("||"," LIKE ",$cadena1);
 return $cadena1;
 }
+function mostrar_estado_finalizado($idft_destino_radicacion,$nombre_estado){
+    global $ruta_db_superior, $conn;
+ 
+    $datos=busca_filtro_tabla("","ft_destino_radicacion","idft_destino_radicacion=".$idft_destino_radicacion,"",$conn);    
+    if($datos[0]['recepcion']!=0){
+        $input=$nombre_estado;
+        $funcionario=busca_filtro_tabla("nombres,apellidos","vfuncionario_dc","iddependencia_cargo=".$datos[0]['recepcion'],"",$conn);
+        $input.="</br>".$funcionario[0]['nombres']." ".$funcionario[0]['apellidos']."<br>".$datos[0]['recepcion_fecha'];
+    }
+    return $input;
+}
