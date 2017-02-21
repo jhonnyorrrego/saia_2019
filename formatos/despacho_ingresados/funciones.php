@@ -126,6 +126,15 @@ function reporte_entradas2($idformato,$iddoc){
 	for($i=0;$i<$registros["numcampos"];$i++){
 	    
 		$origen=busca_filtro_tabla("concat(nombres,' ',apellidos) AS nombre","vfuncionario_dc","funcionario_codigo=".$registros[$i]['nombre_origen'],"",$conn);
+
+			if($registros[$i]['tipo_origen']==1){
+				$origen=busca_filtro_tabla("nombre","vejecutor a","a.iddatos_ejecutor=".$registros[$i]['nombre_origen'],"",$conn);
+				if(!$origen['numcampos']){
+					$origen=busca_filtro_tabla("nombre","vejecutor a","a.iddatos_ejecutor=".$registros[$i]['origen_externo'],"",$conn);
+				}
+			}		
+				
+		
         $ubicacion="";
 		if($registros[$i]["tipo_destino"]==1){
 		    $destino=busca_filtro_tabla("b.nombre,a.direccion","datos_ejecutor a, ejecutor b","b.idejecutor=a.ejecutor_idejecutor AND a.iddatos_ejecutor=".$registros[$i]['nombre_destino'],"",$conn);
