@@ -69,4 +69,18 @@ function mostrar_novedad_despacho_anexo_soporte($idformato,$iddoc){
 		echo($tabla);
 	}	
 }
+function generar_select_novedad($idformato,$iddoc){
+	global $ruta_db_superior,$conn;
+	
+	$configuracion_tipo_novedad=busca_filtro_tabla("valor","configuracion","nombre='novedad_despacho' AND tipo='tipo_novedad'","",$conn);
+	$select='<td><select name="novedad" id="novedad"><option value="">Por favor seleccione...</option>';
+	if($configuracion_tipo_novedad['numcampos']){
+		$vector_novedades=explode(',',$configuracion_tipo_novedad[0]['valor']);
+		for($i=0;$i<count($vector_novedades);$i++){
+			$select.='<option value="'.codifica_encabezado(html_entity_decode($vector_novedades[$i])).'">'.codifica_encabezado(html_entity_decode($vector_novedades[$i])).'</option>';
+		}
+	}
+	$select.='</select></td>';	
+	echo($select);
+}
 ?>
