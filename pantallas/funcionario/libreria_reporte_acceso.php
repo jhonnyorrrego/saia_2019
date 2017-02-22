@@ -22,7 +22,9 @@ function documentos_pendientes_reporte($funcionario_codigo){
 function calcular_ultimo_acceso($login){
     global $ruta_db_superior,$conn;
     
-    $datos=busca_filtro_tabla("max(fecha) AS fecha","log_acceso","login='$login'","",$conn);
-    
+    $datos=busca_filtro_tabla("max(fecha) AS fecha","log_acceso","exito=1  AND (fecha!='' AND fecha IS NOT NULL) AND login='$login'","",$conn);
+	if(is_null($datos[0]['fecha']) OR $datos[0]['fecha']==''){
+		return('Sin Acceso Registrado');
+	}
     return $datos[0]['fecha'];
 }
