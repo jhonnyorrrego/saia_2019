@@ -117,11 +117,6 @@ if (EW_this.x_tipo && !EW_hasValue(EW_this.x_tipo, "RADIO" )) {
 	notificacion_saia('<b>ATENCI&Oacute;N</b><br>Por favor llenar campo requerido - tipo','warning','',4000);
 		return false; 
 }
-if (EW_this.x_tipo_expediente && !EW_hasValue(EW_this.x_tipo_expediente, "RADIO" )) {
-	//if (!EW_onError(EW_this, EW_this.x_tipo, "RADIO", "Por favor llenar campo requerido - tipo"))
-	notificacion_saia('<b>ATENCI&Oacute;N</b><br>Por favor llenar campo requerido - CREACI&Oacute;N DE EXPEDIENTE &Oacute;  AGRUPADOR','warning','',4000);
-		return false; 
-}
 if (EW_this.x_cod_padre && !EW_checkinteger(EW_this.x_cod_padre.value)) {
 	//if (!EW_onError(EW_this, EW_this.x_cod_padre, "TEXT", "Por favor llenar campo requerido - cod padre"))
 		notificacion_saia('<b>ATENCI&Oacute;N</b><br>Por favor llenar campo requerido - cod padre','warning','',4000);
