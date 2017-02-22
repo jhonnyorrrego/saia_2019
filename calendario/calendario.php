@@ -334,11 +334,11 @@ if(!isset($anio)||!isset($mes)) //Obtiene la fecha actual por defecto si no se e
    { 
     if($cuadro_texto)
      { 
-       $texto.= "<input type=\"text\" id=\"".$nombre_campo."\" name=\"".$nombre_campo."\" />&nbsp;&nbsp;&nbsp;<a href=\"javascript:showcalendar('$nombre_cuadro','$nombre_form','$formato','$param',220,225)\" ><img src=\"".$ruta_db_superior."calendario/activecalendar/data/img/calendar.gif"."\" border=\"0\" alt=\"Elija Fecha\" /></a>";
+       $texto.= "<input type=\"text\" id=\"".$nombre_campo."\" name=\"".$nombre_campo."\" />&nbsp;&nbsp;&nbsp;<a href=\"javascript:showcalendar('$nombre_cuadro','$nombre_form','$formato','$param',220,225)\" ><img id=\"icono_calendario\" src=\"".$ruta_db_superior."calendario/activecalendar/data/img/calendar.gif"."\" border=\"0\" alt=\"Elija Fecha\" style=\"vertical-align:top;\" /></a>";
    
      }
     else 
-    { $texto.= "&nbsp;&nbsp;&nbsp;<a href=\"javascript:showcalendar('$nombre_campo','$nombre_form','$formato','$param',220,225)\" ><img src=\"".$ruta_db_superior."calendario/activecalendar/data/img/calendar.gif"."\" border=\"0\" alt=\"Elija Fecha\" /></a>";
+    { $texto.= "&nbsp;<a href=\"javascript:showcalendar('$nombre_campo','$nombre_form','$formato','$param',220,225)\" ><img id=\"icono_calendario\" src=\"".$ruta_db_superior."calendario/activecalendar/data/img/calendar.gif"."\" border=\"0\" alt=\"Elija Fecha\" style=\"vertical-align:top;\" /></a>";
     }    
    $texto.= $asginar_tarea;
   //se quita el calendario de asignacion de tareas 2012-10-19 agallego
