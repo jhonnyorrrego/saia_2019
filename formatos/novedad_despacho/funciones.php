@@ -77,7 +77,7 @@ function generar_select_novedad($idformato,$iddoc){
 	if($configuracion_tipo_novedad['numcampos']){
 		$vector_novedades=explode(',',$configuracion_tipo_novedad[0]['valor']);
 		for($i=0;$i<count($vector_novedades);$i++){
-			$select.='<option value="'.codifica_encabezado(html_entity_decode($vector_novedades[$i])).'">'.codifica_encabezado(html_entity_decode($vector_novedades[$i])).'</option>';
+			$select.='<option value="'.htmlspecialchars($vector_novedades[$i]).'">'.codifica_encabezado(html_entity_decode($vector_novedades[$i])).'</option>';
 		}
 	}
 	$select.='</select></td>';	

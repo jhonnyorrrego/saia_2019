@@ -759,16 +759,45 @@ function mostrar_despacho_radicacion(){
 	$iddoc=@$_REQUEST['doc'];
 	$formato_radicacion=busca_filtro_tabla("b.nombre","documento a, formato b","lower(a.plantilla)=b.nombre AND a.iddocumento=".$iddoc,"",$conn);
 	if($formato_radicacion[0]['nombre']=='radicacion_entrada'){
-		$html.='<tr><th class="encabezado_list" style="text-align:center;" colspan="2">Despacho de Correspondencia</th></tr>';
-		$html.='<tr><th class="encabezado_list" style="text-align:center;">Fecha</th><th class="encabezado_list" style="text-align:center;">Ver</th></tr>';		
+		$html.='<tr><th class="encabezado_list" style="text-align:center;" colspan="5">Despacho de Correspondencia</th></tr>';
+		$html.='
+			<tr>
+				<th class="encabezado_list" style="text-align:center;">Numero Planilla</th>
+				<th class="encabezado_list" style="text-align:center;">Fecha de Creaci&oacute;n</th>
+				<th class="encabezado_list" style="text-align:center;">Mensajero</th>
+				<th class="encabezado_list" style="text-align:center;">Recorrido</th>
+				<th class="encabezado_list" style="text-align:center;">Novedad</th>
+			</tr>';		
 		$datos_radicacion=busca_filtro_tabla("idft_radicacion_entrada","documento a, ft_radicacion_entrada b","a.iddocumento=b.documento_iddocumento AND b.documento_iddocumento=".$iddoc,"",$conn);
 		$destino_radicacion=busca_filtro_tabla("idft_destino_radicacion","ft_destino_radicacion","ft_radicacion_entrada=".$datos_radicacion[0]['idft_radicacion_entrada'],"",$conn);
 		for($i=0;$i<$destino_radicacion['numcampos'];$i++){
 			$idft_destino_radicacion=$destino_radicacion[$i]['idft_destino_radicacion'];
-			$planillas=busca_filtro_tabla("c.numero,c.iddocumento,c.descripcion","ft_item_despacho_ingres a,ft_despacho_ingresados b, documento c","a.ft_despacho_ingresados=b.idft_despacho_ingresados AND b.documento_iddocumento=c.iddocumento AND c.estado NOT IN('ELIMINADO','ANULADO') AND a.ft_destino_radicacio=".$idft_destino_radicacion,"",$conn);
+			$planillas=busca_filtro_tabla("c.numero,c.iddocumento,c.descripcion,b.mensajero,b.idft_despacho_ingresados","ft_item_despacho_ingres a,ft_despacho_ingresados b, documento c","a.ft_despacho_ingresados=b.idft_despacho_ingresados AND b.documento_iddocumento=c.iddocumento AND c.estado NOT IN('ELIMINADO','ANULADO') AND a.ft_destino_radicacio=".$idft_destino_radicacion,"",$conn);
         	if($planillas['numcampos']){
             	for($j=0;$j<$planillas['numcampos'];$j++){
-                	$html.='<tr><td>'.codifica_encabezado(html_entity_decode($planillas[$j]['descripcion'])).'</td><td><div class="link kenlace_saia" enlace="ordenar.php?key='.$planillas[$j]['iddocumento'].'&amp;accion=mostrar&amp;mostrar_formato=1" conector="iframe" titulo="No Radicado '.$planillas[$j]['numero'].'"><center><span class="badge">'.$planillas[$j]['numero']."</span></center></div></td></tr>";
+            		$funcionario=busca_filtro_tabla("nombres,apellidos","vfuncionario_dc","iddependencia_cargo=".$planillas[$j]['mensajero'],"",$conn);
+            		$idformato_despacho_ingresados=busca_filtro_tabla("","documento a, formato b","lower(a.plantilla)=b.nombre AND a.iddocumento=".$planillas[$j]['iddocumento'],"",$conn);
+            		$tiene_novedades=busca_filtro_tabla("novedad","ft_novedad_despacho","ft_despacho_ingresados=".$planillas[$j]['idft_despacho_ingresados']." GROUP BY novedad","",$conn);
+					$cadena_novedad='Sin Novedad';
+            		if($tiene_novedades['numcampos']){
+            			$vector_novedades=extrae_campo($tiene_novedades,'novedad');
+            			$vector_novedades=array_map('strtolower', $vector_novedades);
+            			$vector_novedades=array_map('ucwords', $vector_novedades);
+						$cadena_novedad='';
+						for($x=0;$x<count($vector_novedades);$x++){
+							$cadena_novedad.='- '.codifica_encabezado(html_entity_decode($vector_novedades[$x])).'<br>';
+						}
+            		}
+            		
+                	$html.='
+                		<tr>
+                			<td><div class="link kenlace_saia" enlace="ordenar.php?key='.$planillas[$j]['iddocumento'].'&amp;accion=mostrar&amp;mostrar_formato=1" conector="iframe" titulo="No Radicado '.$planillas[$j]['numero'].'"><center><span class="badge">'.$planillas[$j]['numero'].'</span></center></div>
+                			</td>                		
+                			<td>'.codifica_encabezado(html_entity_decode($planillas[$j]['descripcion'])).'</td>
+                			<td>'.codifica_encabezado(html_entity_decode($funcionario[0]['nombres'].' '.$funcionario[0]['apellidos'])).'</td>
+                			<td>'.mostrar_valor_campo('tipo_recorrido',$idformato_despacho_ingresados[0]['idformato'],$planillas[$j]['iddocumento'],1).'</td>
+                			<td>'.$cadena_novedad.'</td>
+                		</tr>';
             	} //fin for planillas
         	} //fin if planillas numcampos			
 		} //fin for $destino_radicacion		
