@@ -58,8 +58,8 @@ $(document).ready(function(){
 	          var objeto2=jQuery.parseJSON(html2);
 	          if(objeto2.exito){
 	          	notificacion_saia(objeto2.mensaje,"success","",2500);
-
-                var idbusqueda_componente=<?php echo($_REQUEST["idbusqueda_componente"]);?>;
+				window.location.reload();
+                /*var idbusqueda_componente=<?php echo($_REQUEST["idbusqueda_componente"]);?>;
                 var data="idbusqueda_componente="+idbusqueda_componente+"&llave_unica="+objeto2.insertado;  
                 
                   $.ajax({
@@ -72,11 +72,12 @@ $(document).ready(function(){
                         $.each(objeto.rows,function(i,item){
                            
                           $("#resultado_pantalla_"+idregistro).before(item.info);
+                          
                         });  
                       }
                     }  //fin success
                   }); //fin ajax
-
+					*/
 	          } //fin if objeto2.exito
 	        }
 	      }

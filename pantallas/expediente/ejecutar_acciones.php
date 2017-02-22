@@ -187,7 +187,7 @@ function crear_tomo_expediente(){
     $cantidad_tomos=$ccantidad_tomos['numcampos']+1; //tomos + el padre
     $tomo_siguiente=$cantidad_tomos+1; //tomo siguiente
     
-    $datos_padre=busca_filtro_tabla("nombre,serie_idserie,tomo_no,estado_archivo,descripcion","expediente","idexpediente=".$tomo_padre,"",$conn);
+    $datos_padre=busca_filtro_tabla("nombre,serie_idserie,tomo_no,estado_archivo,descripcion,cod_padre","expediente","idexpediente=".$tomo_padre,"",$conn);
     
     if(!$datos_padre[0]['tomo_no']){
         $up="UPDATE expediente SET tomo_no=1 WHERE idexpediente=".$tomo_padre;
@@ -199,9 +199,9 @@ function crear_tomo_expediente(){
         $expediente_actual[0]['serie_idserie']=0;
     }
     $sql="INSERT INTO expediente 
-        (serie_idserie,nombre,fecha,propietario,ver_todos,editar_todos,tomo_padre,tomo_no,estado_archivo,descripcion) 
+        (serie_idserie,nombre,fecha,propietario,ver_todos,editar_todos,tomo_padre,tomo_no,estado_archivo,descripcion,cod_padre) 
             VALUES 
-                (".$expediente_actual[0]['serie_idserie'].",'".$datos_padre[0]['nombre']."',".fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s').",".usuario_actual('funcionario_codigo').",0,0,".$tomo_padre.",".$tomo_siguiente.",".$expediente_actual[0]['estado_archivo'].",'".$datos_padre[0]['descripcion']."')";
+                (".$expediente_actual[0]['serie_idserie'].",'".$datos_padre[0]['nombre']."',".fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s').",".usuario_actual('funcionario_codigo').",0,0,".$tomo_padre.",".$tomo_siguiente.",".$expediente_actual[0]['estado_archivo'].",'".$datos_padre[0]['descripcion']."',".$datos_padre[0]['cod_padre'].")";
    // print_r($sql);die();            
     phpmkr_query($sql);
     $id_insertado=phpmkr_insert_id();
