@@ -91,7 +91,7 @@ echo(estilo_bootstrap());
 
 $boton_buscar="";
 if($datos_busqueda[0]['busqueda_avanzada']!=""){
-	$boton_buscar='<button class=\"btn btn-mini btn-primary kenlace_saia pull-left\" titulo=\"B&uacute;squeda'.$datos_busqueda[0]["etiqueta"].'\" title=\"B&uacute;squeda'.$datos_busqueda[0]["etiqueta"].'\" conector=\"iframe\" enlace=\"'.$datos_busqueda[0]['busqueda_avanzada'].'\">B&uacute;squeda &nbsp;</button>';
+	$boton_buscar='<button class=\"btn btn-mini btn-primary kenlace_saia pull-left\" titulo=\"B&uacute;squeda '.$datos_busqueda[0]["etiqueta"].'\" title=\"B&uacute;squeda '.$datos_busqueda[0]["etiqueta"].'\" conector=\"iframe\" enlace=\"'.$datos_busqueda[0]['busqueda_avanzada'].'\">B&uacute;squeda &nbsp;</button>';
 }
 
 $acciones_selecionados='';		
