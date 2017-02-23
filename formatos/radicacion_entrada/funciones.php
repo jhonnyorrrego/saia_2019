@@ -415,8 +415,20 @@ function tipo_radicado_radicacion($idformato,$iddoc){//en el adicionar
                     //$('#anexos_digitales').parent().parent().hide();
                     $('#tr_tipo_mensajeria').show();
                     $('[name="tipo_mensajeria"]').addClass('required');
-                        
+                                          
                  }
+	                  $.ajax({
+	                      type:'POST',
+	                      dataType: 'json',
+		
+	                      url: "tipo_contador.php",
+	                      data: {
+	                          tipo_radicacion:tipo
+	                      },
+	                      success: function(datos){
+	                          $('#numero_radicado').html(datos[0]);
+	                      }
+	                 });                   
             }
             function tipo_destino(tipo){
                 if(tipo==1){
