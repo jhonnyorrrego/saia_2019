@@ -256,12 +256,13 @@ echo(librerias_acciones_kaiten());
 <script>
 $(document).ready(function(){
   $("#adicionar_anexos").live('click',function(){
-    window.open("<?php echo($ruta_db_superior); ?>anexosdigitales/anexos_documento.php?key=<?php echo($iddocumento); ?>","detalles");
+    window.open("<?php echo($ruta_db_superior); ?>anexosdigitales/anexos_documento.php?key="+documento_saia,"detalles");
   });
 });
 </script>
 <script type="text/javascript">	
 $(document).ready(function(){
+documento_saia=0;
 var item="<?php echo($nodoinicial);?>";
 open_tabs=1;
 $(".tooltip_saia").attr("class","");
@@ -303,7 +304,7 @@ function click_funcion(div){
             $.ajax({
               type: "POST",
               url: "<?php echo $ruta_db_superior ;?>"+"pantallas/busquedas/servidor_busqueda.php",		  		  
-              data:{idbusqueda_componente: $(this).attr('componente'),iddocumento : "<?php echo $iddocumento;?>",rows:"100",actual_row:"0",limpio:"1"},
+              data:{idbusqueda_componente: $(this).attr('componente'),iddocumento : documento_saia,rows:"100",actual_row:"0",limpio:"1"},
               success:function(html){
               	if(jQuery.isEmptyObject(html)){
               		$(div).html('');
@@ -330,7 +331,7 @@ function click_funcion(div){
 	                    $(div).append("<li>"+item.info+"</li>");	                           
 	                });	
               	}
-                cargar_cantidades_documento("<?php echo($iddocumento);?>");
+                cargar_cantidades_documento(documento_saia);
               }
             });
         }    
@@ -339,7 +340,7 @@ function click_funcion(div){
             $.ajax({
             type: "POST",
             url: "<?php echo $ruta_db_superior ;?>"+"pantallas/busquedas/servidor_busqueda.php",		  		  
-            data:{idbusqueda_componente:'<?php echo($buzon_salida);?>',iddocumento : "<?php echo $iddocumento;?>",actual_row:"0",limpio:"1",rows:"100"},
+            data:{idbusqueda_componente:'<?php echo($buzon_salida);?>',iddocumento : documento_saia,actual_row:"0",limpio:"1",rows:"100"},
             success:function(html){
             	$("#panel_notas_tranferencia").html('');
             	if(jQuery.isEmptyObject(html)){            		
@@ -365,7 +366,7 @@ function click_funcion(div){
           $.ajax({
             type: "POST",
             url: "<?php echo $ruta_db_superior ;?>"+"pantallas/busquedas/servidor_busqueda.php",		  		  
-            data:{idbusqueda_componente:'<?php echo($documentos_relacionados);?>',iddocumento : "<?php echo $iddocumento;?>",actual_row:"0",limpio:"1",rows:"100"},
+            data:{idbusqueda_componente:'<?php echo($documentos_relacionados);?>',iddocumento : documento_saia,actual_row:"0",limpio:"1",rows:"100"},
             success:function(html){
             	$("#panel_relacionados_funcionario").html('');
             	var objeto2=jQuery.parseJSON(html)
@@ -386,7 +387,7 @@ function click_funcion(div){
           $.ajax({
             type: "POST",
             url: "<?php echo $ruta_db_superior ;?>"+"pantallas/busquedas/servidor_busqueda.php",		  		  
-            data:{idbusqueda_componente:'<?php echo($documentos_respuesta);?>',iddocumento : "<?php echo $iddocumento;?>", actual_row:"0",limpio:"1",rows:"100"},
+            data:{idbusqueda_componente:'<?php echo($documentos_respuesta);?>',iddocumento : documento_saia, actual_row:"0",limpio:"1",rows:"100"},
             success:function(html){
             	$("#panel_respuesta").html('');
             	var objeto2=jQuery.parseJSON(html)
@@ -404,8 +405,8 @@ function click_funcion(div){
         }
         if(componente==='<?php echo($versiones_documento);?>'){
             tree5.deleteChildItems(0);
-            tree5.setXMLAutoLoading("<?php echo($ruta_db_superior); ?>pantallas/versiones/test_versiones.php?iddoc=<?php echo($iddocumento); ?>");	
-  	        tree5.loadXML("<?php echo($ruta_db_superior); ?>pantallas/versiones/test_versiones.php?iddoc=<?php echo($iddocumento); ?>");
+            tree5.setXMLAutoLoading("<?php echo($ruta_db_superior); ?>pantallas/versiones/test_versiones.php?iddoc="+documento_saia);	
+  	        tree5.loadXML("<?php echo($ruta_db_superior); ?>pantallas/versiones/test_versiones.php?iddoc="+documento_saia);
         }
       }
     }
@@ -465,6 +466,7 @@ function click_funcion(div){
     }
   }    
   function onNodeSelect(nodeId){
+  	
   	var llave=0;
     llave=tree2.getParentId(nodeId);
     var datos=nodeId.split("-");
@@ -473,6 +475,7 @@ function click_funcion(div){
     }
     else{
     	cargar_cantidades_documento(datos[3]);
+    	documento_saia=datos[3];
 	    conexion="<?php echo($ruta_db_superior); ?>formatos/arboles/parsear_accion_arbol.php?id="+nodeId+"&accion=mostrar&llave="+llave+"&enlace_adicionar_formato=1";
 	    redireccion_detalles(conexion);
     }
