@@ -30,7 +30,7 @@ global $conn;
         <div class="control-group">
           <label class="string required control-label" for="codigo">
 			<b>C&oacute;digo:</b>
-			<input type="hidden" name="bksaiacondicion_s@codigo" id="bksaiacondicion_s-codigo" value="=">
+			<input type="hidden" name="bksaiacondicion_s@codigo" id="bksaiacondicion_s-codigo" value="like">
           </label>
           <div class="controls">
             <input id="bqsaia_codigo" name="bqsaia_s@codigo" size="50" type="text">
