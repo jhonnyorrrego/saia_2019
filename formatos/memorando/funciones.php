@@ -310,7 +310,7 @@ function vincular_expediente_serie_memorando($idformato,$iddoc){ //POSTERIOR AL 
         phpmkr_query($sql);
     }    
 }
-function formato_radicado_interno($idformato,$iddoc){ //MOSTRAR
+function formato_radicado_interno($idformato,$iddoc,$retorno=0){ //MOSTRAR
 	global $conn;
 	$formato=busca_filtro_tabla("","formato A","A.idformato=".$idformato,"",$conn);
 	$datos_documento=busca_filtro_tabla(fecha_db_obtener('A.fecha','Y-m-d')." as x_fecha, A.*, B.*","documento A, ".$formato[0]["nombre_tabla"]." B","A.iddocumento=B.documento_iddocumento AND A.iddocumento=".$iddoc,"",$conn);
@@ -378,6 +378,9 @@ function formato_radicado_interno($idformato,$iddoc){ //MOSTRAR
 	}
 	
 	$cadena.="-3";
+  if($retorno==1){
+    return($cadena);
+  }
 	echo($cadena);
 }
 ?>

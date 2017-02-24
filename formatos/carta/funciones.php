@@ -774,7 +774,7 @@ function vincular_expediente_serie_carta($idformato,$iddoc){ //POSTERIOR AL APRO
         phpmkr_query($sql);
     }
 }
-function formato_radicado_enviada($idformato,$iddoc){
+function formato_radicado_enviada($idformato,$iddoc,$retorno=0){
 	global $conn;
 	$formato=busca_filtro_tabla("","formato A","A.idformato=".$idformato,"",$conn);
 	$datos_documento=busca_filtro_tabla(fecha_db_obtener('A.fecha','Y-m-d')." as x_fecha, A.*, B.*","documento A, ".$formato[0]["nombre_tabla"]." B","A.iddocumento=B.documento_iddocumento AND A.iddocumento=".$iddoc,"",$conn);
@@ -841,6 +841,9 @@ function formato_radicado_enviada($idformato,$iddoc){
 	}
 		
 	$cadena.="-1"; //antes2
+	if($retorno==1){
+	  return($cadena);
+	}
 	echo($cadena);	
 }
 

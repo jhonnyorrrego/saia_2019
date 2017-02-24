@@ -1830,7 +1830,7 @@ function submit_formato($formato, $iddoc = NULL) {
  * </Clase>
  */
 function validar_valor_campo($campo) {
-	global $conn, $sql;
+	global $conn, $sql, $ruta_db_superior;
 	$campos = busca_filtro_tabla("*", "campos_formato A", "A.idcampos_formato=" . $campo, "", $conn);
 	$padre = busca_filtro_tabla("cod_padre,banderas,nombre", "formato", "idformato=" . $campos[0]["formato_idformato"], "", $conn);
 	$acciones = explode(",", $campos[0]["acciones"]);
@@ -1841,8 +1841,22 @@ function validar_valor_campo($campo) {
 		return ($campos[0][0]);
 	} elseif(in_array('p', $acciones) && in_array('r', $banderas)) {
 		if(isset($_REQUEST["anterior"]) && $padre[0][0] == "0") {
-			$desc = busca_filtro_tabla("descripcion,numero", "documento", "iddocumento=" . $_REQUEST["anterior"], "", $conn);
-			return ("Respondiendo a: " . str_replace("<br />", " ", $desc[0]["descripcion"]) . ". Radicado No." . $desc[0]["numero"]);
+			$desc = busca_filtro_tabla("a.descripcion,a.numero,b.nombre,b.idformato", "documento a, formato b", "iddocumento=" . $_REQUEST["anterior"]." and a.formato_idformato=b.idformato", "", $conn);
+      if($desc[0]["nombre"]=='radicacion_entrada'){
+        include_once($ruta_db_superior."formatos/radicacion_entrada/funciones.php");
+        $radicado=obtener_radicado_entrada($desc[0]["idformato"],$_REQUEST["anterior"]);
+        return ("Respondiendo a: " . str_replace("<br />", " ", $desc[0]["descripcion"]) . ". Radicado No." . $radicado);
+      }else if($desc[0]["nombre"]=='memorando'){
+        include_once($ruta_db_superior."formatos/memorando/funciones.php");
+        $radicado=strip_tags(formato_radicado_interno($desc[0]["idformato"],$_REQUEST["anterior"],1));
+        return ("Respondiendo a: " . str_replace("<br />", " ", $desc[0]["descripcion"]) . ". Radicado No." . $radicado);
+      }else if($desc[0]["nombre"]=='carta'){
+        include_once($ruta_db_superior."formatos/carta/funciones.php");
+        $radicado=strip_tags(formato_radicado_enviada($desc[0]["idformato"],$_REQUEST["anterior"],1));
+        return ("Respondiendo a: " . str_replace("<br />", " ", $desc[0]["descripcion"]) . ". Radicado No." . $radicado);
+      }else{
+			 return ("Respondiendo a: " . str_replace("<br />", " ", $desc[0]["descripcion"]) . ". Radicado No." . $desc[0]["numero"]);
+			}
 		}
 	} elseif($campos["numcampos"]) {
 		if($campos[0]["predeterminado"] != "")

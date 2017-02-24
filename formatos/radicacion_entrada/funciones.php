@@ -810,6 +810,21 @@ $("#"+input).val(num);
 <?php
 }
 
+function obtener_radicado_entrada($idformato,$iddoc){
+  global $conn;
+  $datos=busca_filtro_tabla("serie_idserie,descripcion,descripcion_anexos,descripcion_general,tipo_origen,numero_oficio,".fecha_db_obtener("fecha_oficio_entrada","Y-m-d")." AS fecha_oficio_entrada,".fecha_db_obtener("fecha_radicacion_entrada","Y-m-d")." AS fecha_radicacion_entrada,numero_guia,empresa_transportado","ft_radicacion_entrada","documento_iddocumento=".$iddoc,"",$conn);
+  $documento=busca_filtro_tabla("numero,tipo_radicado,".fecha_db_obtener("fecha","Y-m-d")." AS fecha","documento","iddocumento=".$iddoc,"",$conn);
+  $tipo_documento=busca_filtro_tabla("nombre","serie","idserie=".$datos[0]["serie_idserie"],"",$conn);
+  $fecha_radicacion=$documento[0]['fecha'];
+  if($documento[0]['tipo_radicado']==1){
+      $tipo="E";
+  }else{
+      $tipo="I";
+  }
+  $numero_radicado=$datos[0]['fecha_radicacion_entrada']."-".$documento[0]['numero']."-".$tipo;
+  return($numero_radicado);
+}
+
 function mostrar_informacion_general_radicacion($idformato,$iddoc){
 	global $conn,$ruta_db_superior;
 	
