@@ -1,5 +1,25 @@
 <?php
+$max_salida=10; // Previene algun posible ciclo infinito limitando a 10 los ../
+$ruta_db_superior=$ruta="";
+while($max_salida>0)
+{
+if(is_file($ruta."db.php"))
+{
+$ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
+}
+$ruta.="../";
+$max_salida--;
+}
+
 include_once("../db.php");
+
+include_once($ruta_db_superior."librerias_saia.php");
+echo(librerias_jquery());
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+desencriptar_sqli('form_info');
+
+
+
 if(!@$_REQUEST["idgrafico"]){
   alerta("No se ha seleccionado un gráfico");
   volver(1);
@@ -55,7 +75,7 @@ $tipo=array();
     <td>
       Tipo de grafico:<input type="checkbox" name="opbusqueda" id="opbusqueda" >
       <div id="opciones_busqueda"> 
-        <form action="#" method="POST">
+        <form name="graficas" id="graficas" action="#" method="POST">
           <input type="checkbox" name="tipo_graf[]" value="Column2D" <?php if(in_array("Column2D",$tipo)) echo("checked"); ?>>Columnas 2D<br />
           <input type="checkbox" name="tipo_graf[]" value="Column3D" <?php if(in_array("Column3D",$tipo)) echo("checked"); ?>>Columnas 3D<br />
           <input type="checkbox" name="tipo_graf[]" value="Line" <?php if(in_array("Line",$tipo)) echo("checked"); ?>>Lineas<br />
@@ -190,6 +210,9 @@ for($i=0;isset($tipo[$i]);$i++){
 }
 ?>
 </table> 
-<?php include_once("../footer.php");?>
+<?php include_once("../footer.php");
+encriptar_sqli("graficas",1,"form_info",$ruta_db_superior);
+
+?>
 </BODY>
 </HTML>

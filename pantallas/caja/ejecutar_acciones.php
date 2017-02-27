@@ -2,6 +2,10 @@
   $max_salida=6; $ruta_db_superior=$ruta=""; while($max_salida>0){ if(is_file($ruta."db.php")){ $ruta_db_superior=$ruta;} $ruta.="../"; $max_salida--; } 
   include_once($ruta_db_superior."db.php");
   include_once($ruta_db_superior."pantallas/caja/librerias.php");  
+  include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+	desencriptar_sqli('form_info');
+  
+ // print_r($_REQUEST);die();
 if(@$_REQUEST["ejecutar_caja"]){  
   if(!@$_REQUEST["tipo_retorno"]){
     $_REQUEST["tipo_retorno"]=1;

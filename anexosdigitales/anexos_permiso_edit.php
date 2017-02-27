@@ -63,5 +63,5 @@ elseif($_REQUEST["idanexo"])
 <input type="hidden" value="1" name="editar_anexo">
 </form>
 <?php
-}//encriptar_sqli("form1",1,"form_info",$ruta_db_superior);
+}encriptar_sqli("form1",1,"form_info",$ruta_db_superior);
 ?>

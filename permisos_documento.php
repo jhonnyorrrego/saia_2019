@@ -42,7 +42,8 @@ if($_REQUEST["iddoc"]!="" && $_REQUEST["accion"]!=""){
 }
 
 function guardar_permiso_documento($iddoc,$accion){
-	$permisos=implode(",",@$_REQUEST["permisos"]);
+	//$permisos=implode(",",@$_REQUEST["permisos"]);
+	$permisos=(@$_REQUEST["permisos"]);
 	if($accion=="adicionar" && $permisos!=""){
 		$sql="INSERT INTO permiso_documento (funcionario,documento_iddocumento,permisos) VALUES ('".$_REQUEST["funcionario"]."','".$iddoc."','".$permisos."')";
 		phpmkr_query($sql) or die("Error al adicionar el permiso");
@@ -171,7 +172,12 @@ function add_permiso_documento($iddoc){
 					}
 				});
 			  if(funcionario!="" && permiso===true){
-			  	$("#permiso_documento").submit();
+			  	
+			  	<?php encriptar_sqli("permiso_documento"); ?>		
+				if(salida_sqli){
+					$("#permiso_documento").submit();
+				}
+			  	
 			  }else{
 			  	//alert("Todos los campos son obligatorios");
 			  	notificacion_saia('<b>ATENCI&Oacute;N</b><br>Todos los campos son obligatorios','warning','',4000);
@@ -186,7 +192,7 @@ function add_permiso_documento($iddoc){
 	</script>
 <?php
 }
-//encriptar_sqli("permiso_documento",1);
+
 
 function edit_permiso_documento($iddoc,$idpermiso){
 	global $conn;
@@ -246,7 +252,12 @@ function edit_permiso_documento($iddoc,$idpermiso){
 					}
 				});
 			  if(permiso===true){
-			  	$("#edit_permiso_documento").submit();
+			  	
+			  	<?php encriptar_sqli("edit_permiso_documento"); ?>		
+				if(salida_sqli){
+					$("#edit_permiso_documento").submit();
+				}
+			  	
 			  }else{
 			  	//alert("Ingrese al menos un permiso");
 			  	notificacion_saia('<b>ATENCI&Oacute;N</b><br>Ingrese al menos un permiso','warning','',4000);

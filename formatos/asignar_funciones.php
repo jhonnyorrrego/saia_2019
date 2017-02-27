@@ -37,13 +37,14 @@ if(@$_REQUEST["adicionar"]==1){
   else alerta("Problemas al realizar la asignacion");
 }
 else if(@$_REQUEST["editar"]==1 && @$_REQUEST["idformato"]){
-  if(modificar_funciones_accion(@$_REQUEST["acciones"],@$_REQUEST["idformato"],@$_REQUEST["funciones"],@$_REQUEST["momento"],@$_REQUEST["estado"],@$_REQUEST["accion_funcion"])){
+	//print_r($_REQUEST);die();
+  if(modificar_funciones_accion(@$_REQUEST["acciones"],@$_REQUEST["idformato"],@$_REQUEST["funciones"],@$_REQUEST["momento"],@$_REQUEST["estado"],@$_REQUEST["idaccion_funcion"])){
     alerta("Asignacion Editada Correctamente");
   }
   else alerta("Problemas al editar la asignacion");
 }
 else if(@$_REQUEST["eliminar"]==1 && @$_REQUEST["idformato"]){
-  if(eliminar_funciones_accion(@$_REQUEST["acciones"],@$_REQUEST["idformato"],@$_REQUEST["funciones"],@$_REQUEST["momento"],@$_REQUEST["estado"],@$_REQUEST["accion_funcion"])){
+  if(eliminar_funciones_accion(@$_REQUEST["acciones"],@$_REQUEST["idformato"],@$_REQUEST["funciones"],@$_REQUEST["momento"],@$_REQUEST["estado"],@$_REQUEST["idaccion_funcion"])){
     alerta("Asignacion eliminada Correctamente");
     redirecciona("asignar_funciones.php?idformato=".$_REQUEST["idformato"]);
   }
@@ -61,7 +62,7 @@ if(@$_REQUEST["idformato"]){
   else {
     $texto.="<b>ASIGNANDO<br /><br /></b>";
   }
-  $texto.='<form method="POST" name="asignar_funcion_formato"><table style="border-collapse:collapse;" border="1px" width="100%">';
+  $texto.='<form method="POST" name="asignar_funcion_formato" id="asignar_funcion_formato"><table style="border-collapse:collapse;" border="1px" width="100%">';
   $idformato=$_REQUEST["idformato"];
   $lacciones=busca_filtro_tabla("","accion","","",$conn);
 
@@ -73,7 +74,7 @@ if(@$_REQUEST["idformato"]){
   $accion_funcion=busca_filtro_tabla("","funciones_formato_accion","idfunciones_formato_accion=".$accion_formato,"",$conn);
   //print_r($lfunciones["numcampos"]."#".$lacciones["numcampos"]);die();
   if($lfunciones["numcampos"] && $lacciones["numcampos"]){
-    $texto.='<tr><td class="encabezado" title="Listado de funciones que se encuentran disponibles para el formato, si desea agregar una función debe adicionarla al formato directamente" >Funciones disponibles para el formato *: </td><td class="celda_normal"><select name="funciones" id="funciones">';
+    $texto.='<tr><td class="encabezado" title="Listado de funciones que se encuentran disponibles para el formato, si desea agregar una función debe adicionarla al formato directamente" >Funciones disponibles para el formato *: </td><td class="celda_normal"><select name="funciones" id="funciones"><option value="">Seleccione...</option>';
     for($i=0;$i<$lfunciones["numcampos"];$i++){
       $texto.='<option value="'.$lfunciones[$i]["idfunciones_formato"].'"';
       if($accion_funcion["numcampos"] && $accion_funcion[0]["idfunciones_formato"]== $lfunciones[$i]["idfunciones_formato"])
@@ -95,7 +96,7 @@ if(@$_REQUEST["idformato"]){
         $texto.=" SELECTED ";
       $texto.='>'.$lacciones[$i]["nombre"]." (".$lacciones[$i]["ruta"].')</option>';
     }
-    $texto.='<tr><td class="encabezado" title="Estado Actual de la asignacion que define si se debe realizar la accion o no">Estado: </td><td class="celda_normal"><input type="radio" name="estado" id="estado" value="1" ';
+    $texto.='</td></tr><tr><td class="encabezado" title="Estado Actual de la asignacion que define si se debe realizar la accion o no">Estado: </td><td class="celda_normal"><input type="radio" name="estado" id="estado" value="1" ';
     if($accion_funcion["numcampos"] && $accion_funcion[0]["estado"]== 1)
       $texto.=" CHECKED ";
     $texto.='> ACTIVO &nbsp;&nbsp;&nbsp;<input type="radio" name="estado" id="estado" value="0"';
@@ -110,7 +111,7 @@ if(@$_REQUEST["idformato"]){
     }
     else
       $texto.='</select><input type="hidden" name="adicionar" value="1"><input type="hidden" name="idformato" value="'.$_REQUEST["idformato"].'"></td></tr>';
-    $texto.='<tr align="center"><td class="celda_normal" colspan="2"><input type="submit" </td></tr>';
+    $texto.='<tr align="center"><td class="celda_normal" colspan="2"><input type="submit"> </td></tr>';
   }
   $texto.='</table></form><br />'."<div align='left'><a href='asignar_funciones.php?idformato=".$_REQUEST["idformato"]."'>ASIGNAR</a></div><br />";
 }

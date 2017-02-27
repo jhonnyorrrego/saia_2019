@@ -97,7 +97,7 @@ elseif($_REQUEST["accion"]=="adicionar"||$_REQUEST["accion"]=="editar")
  	<br/>
  	
  	<input type="button" class="btn btn-mini btn-danger" value="Cancelar" onclick="window.parent.hs.close();">
- <input type="button" value="Guardar"  class="btn btn-mini btn-primary" onclick="if(form1.nombre.value!='')form1.submit(); else alert('Debe llenar el campo nombre');">
+ <input type="button" value="Guardar"  class="btn btn-mini btn-primary" onclick="validar_nombre()">
  <input type="hidden" name="accion" value="guardar_<?php echo $_REQUEST["accion"]; ?>">
  <input type="hidden" name="key" value="<?php echo $_REQUEST["key"]; ?>">
  </td>
@@ -105,6 +105,15 @@ elseif($_REQUEST["accion"]=="adicionar"||$_REQUEST["accion"]=="editar")
  </table>
  </form>
  <script>
+ function validar_nombre(){
+ 	if(form1.nombre.value!=''){
+ 		<?php encriptar_sqli("form1"); ?>		
+		if(salida_sqli){
+			form1.submit();
+		} 
+ 	}else alert('Debe llenar el campo nombre');
+ }
+ 
  document.getElementById("header").style.display="none";
  document.getElementById("ocultar").style.display="none";
  </script>
@@ -200,7 +209,7 @@ elseif($_REQUEST["accion"]=="seleccionar_etiqueta")
  </td></tr>
  <tr><td colspan=2>
 	<br/>
- <input type='hidden' name='documento' value='<?php echo $_REQUEST["key"]; ?>'>
+ <input type='hidden' name='key' value='<?php echo $_REQUEST["key"]; ?>'>
  <input type='hidden' name='accion' value='etiquetar_documento'>
  </table>
      <input type="button" class="btn btn-mini btn-danger" value="Cancelar" onclick="window.history.back(-1);">
@@ -214,8 +223,12 @@ elseif($_REQUEST["accion"]=="seleccionar_etiqueta")
 // document.getElementById("ocultar").style.display="none";
  </script>
  <?php
+	encriptar_sqli("form1",1); 
 }
 elseif($_REQUEST["accion"]=="etiquetar_documento"){
+	//print_r($_REQUEST);die();
+	
+	//$_REQUEST['etiquetas']=explode(",", $_REQUEST['etiquetas']);
 global $conn;
  $sql="delete from documento_etiqueta where etiqueta_idetiqueta in(select idetiqueta from etiqueta where privada_saia=0 and funcionario='".$usuario."') and documento_iddocumento='".$_REQUEST["key"]."'";
  phpmkr_query($sql,$conn);

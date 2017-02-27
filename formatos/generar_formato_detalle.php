@@ -12,6 +12,12 @@ $max_salida--;
 }
 
 include_once($ruta_db_superior."db.php");
+
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+include_once($ruta_db_superior."librerias_saia.php");
+desencriptar_sqli('form_info');
+echo(librerias_jquery());
+
 include_once($ruta_db_superior."formatos/librerias/header_formato.php");
 if(@$_REQUEST["almacenar"]=="true" && $_REQUEST["ruta"]!="" && @$_REQUEST["formato"]){
 $enlace_adicion="";
@@ -35,7 +41,7 @@ if(@$_REQUEST["idformato"]){
     }
   }
 ?>
-<form name="crear_archivo" action="" method="post" >
+<form name="crear_archivo" id="crear_archivo" action="" method="post" >
 <!--select name="idformato">
 <?php
 $formatos=busca_filtro_tabla("","formato","1=1","",$conn);
@@ -56,4 +62,5 @@ Ruta:<input type="text" size="50"  name="ruta" value="<?php echo($ruta);?>" read
 </form>
 <?php
 }
+encriptar_sqli("crear_archivo",1,"form_info",$ruta_db_superior);
 ?>

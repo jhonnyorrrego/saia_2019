@@ -2,6 +2,8 @@
 include_once("db.php");
 include_once("pantallas/lib/librerias_cripto.php");
 desencriptar_sqli('form_info');
+
+
 ?>
 <script type="text/javascript" src="js/jquery.js"></script>
 <script type="text/javascript" src="js/jquery.validate.js"></script>
@@ -24,7 +26,7 @@ $ewCurSec = 0; // Initialise
 				
 ?>
 <?php
-
+//print_r($_REQUEST);die();
 // Initialize common variables
 $x_idfuncionario = Null;
 $x_funcionario_codigo = Null;

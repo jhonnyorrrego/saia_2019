@@ -42,9 +42,8 @@ $x_banderas =array();
 include ("phpmkrfn.php");
 include_once("librerias/funciones.php");
 include_once($ruta_db_superior."librerias_saia.php");
-
+echo(librerias_jquery());
 include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
-include_once("librerias_saia.php");
 desencriptar_sqli('form_info');
 ?>
 <?php
@@ -107,9 +106,11 @@ if(isset($_REQUEST["pantalla"])&&$_REQUEST["pantalla"]=="tiny")
 document.getElementById("header").style.display="none";
 </script>';
 }
- echo(librerias_jquery());
+ 
  ?>
 <script type="text/javascript" src="<?php echo($ruta_db_superior);?>ew.js"></script>
+<script type="text/javascript" src="<?php echo($ruta_db_superior);?>js/jquery.js"></script>
+<script type="text/javascript" src="<?php echo($ruta_db_superior);?>js/jquery.validate.js"></script>
 <script type="text/javascript">
 <!--
 EW_dateSep = "/"; // set date separator	
@@ -216,7 +217,13 @@ EW_dateSep = "/"; // set date separator
  		}
  	});
 	// validar los campos del formato
-	$('#formatoadd').validate();
+	$('#campos_formatoedit').validate({
+		submitHandler: function(form) {
+				<?php encriptar_sqli("campos_formatoedit",0,"form_info",$ruta_db_superior);?>
+			    form.submit();
+			    
+			  }
+	});
 	});
 <!--
 function EW_checkMyForm(EW_this) {
@@ -558,7 +565,7 @@ if(!$datos_formato[0]["item"]){
 // Function LoadData
 // - Load Data based on Key Value sKey
 // - Variables setup: field variables
-encriptar_sqli("campos_formatoedit",1,"form_info",$ruta_db_superior);
+
 function LoadData($sKey,$conn)
 {
   global $x_banderas;

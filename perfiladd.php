@@ -82,7 +82,12 @@ if (EW_this.x_nombre && !EW_hasValue(EW_this.x_nombre, "TEXT" )) {
 	notificacion_saia('<b>ATENCI&Oacute;N</b><br>Por favor escriba el nombre del perfil','warning','',4000);
 		return false;
 }
-return true;
+<?php encriptar_sqli("perfiladd"); ?>
+
+if(salida_sqli){
+	return true;
+}
+
 }
 
 //-->
@@ -123,7 +128,6 @@ return true;
 // Function LoadData
 // - Load Data based on Key Value sKey
 // - Variables setup: field variables
-encriptar_sqli("perfiladd",1); 
 function LoadData($sKey,$conn)
 {   global $x_idperfil;
     global $x_nombre;

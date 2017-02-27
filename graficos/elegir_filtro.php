@@ -1,7 +1,28 @@
 <?php
+
+$max_salida=10; // Previene algun posible ciclo infinito limitando a 10 los ../
+$ruta_db_superior=$ruta="";
+while($max_salida>0)
+{
+if(is_file($ruta."db.php"))
+{
+$ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
+}
+$ruta.="../";
+$max_salida--;
+}
+
 include_once("../db.php");
 include_once("../header.php");
 include_once("../calendario/calendario.php");
+
+include_once($ruta_db_superior."librerias_saia.php");
+echo(librerias_jquery());
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+desencriptar_sqli('form_info');
+
+//print_r($_REQUEST);die();
+
 ?>
 <script type="text/javascript" src="../js/jquery.js"></script>
 <script type="text/javascript" src="../js/jquery.validate.js"></script>
@@ -12,7 +33,13 @@ include_once("../calendario/calendario.php");
     hs.outlineType = 'rounded-white';
 $().ready(function() {
 	// validar los campos del formato
-	$('#form1').validate();
+	$('#form1').validate({
+		submitHandler: function(form) {
+				<?php encriptar_sqli("form1",0,"form_info",$ruta_db_superior);?>
+			    form.submit();
+			    
+			  }
+	});
 	
 });
 </script>
@@ -187,7 +214,7 @@ elseif($_REQUEST["accion"]=="adicionar")
    </td>
   </tr>
   <tr>
-   <td colspan=2 align=center><input type=submit class=submit value="Guardar"> 
+   <td colspan=2 align=center><input type="submit" class=submit value="Guardar"> 
    <input type=hidden name="accion" value="guardar_adicionar"> 
    </td>
   </tr>
@@ -248,6 +275,7 @@ if($("#reporte").attr("checked")==true)
 })
 </script>
  <?php
+ //encriptar_sqli("form1",1,"form_info",$ruta_db_superior);
 } 
 /************************************buscar codigo sql de la grafica***********************/
 elseif($_REQUEST["accion"]=="codigo_grafica")
@@ -334,7 +362,7 @@ elseif($_REQUEST["accion"]=="editar")
    </td>
   </tr>
   <tr>
-   <td colspan=2 align=center><input type=submit value="Guardar"> 
+   <td colspan=2 align=center><input type="submit" value="Guardar"> 
    <input type=hidden name="accion" value="guardar_editar">
    <input type=hidden name="tipo" value="<?php echo $_REQUEST["tipo"]; ?>">
    <input type=hidden name="idfiltro_grafica" value="<?php echo $filtro[0]["idfiltro_grafica"];?>"> 
@@ -375,7 +403,7 @@ elseif($_REQUEST["accion"]=="elegir")
    $filtros=busca_filtro_tabla("","filtro_grafica","grafica_idgrafica=".$_REQUEST["grafica"],"",$conn);
  include_once("../formatos/librerias/header_formato.php");
  if($filtros["numcampos"])
-   {echo "<form name=form1 method='post'>
+   {echo "<form name='form1' id='form1' method='post'>
           <script type='text/javascript' src='../js/dhtmlXCommon.js'></script>
 <script type='text/javascript' src='../js/dhtmlXTree.js'></script>
     <link rel='STYLESHEET' type='text/css' href='../css/dhtmlXTree.css'>
@@ -387,7 +415,7 @@ elseif($_REQUEST["accion"]=="elegir")
        echo campo($filtros[$i],$i);
        echo "</tr>";
       }
-    echo "<tr><td colspan=3 align=center><input type=submit value='Guardar'>
+    echo "<tr><td colspan=3 align=center><input type='submit' value='Guardar'>
           <input type='hidden' name='accion' value='construir_filtro'>
           <input type='hidden' name='cuantos' value='$i'> 
           <input type='hidden' name='tipo' value='".$_REQUEST["tipo"]."'>

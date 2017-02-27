@@ -16,6 +16,8 @@ $_REQUEST["tipo_entidad"]=5;
 <script type="text/javascript" src="<?php echo($ruta_db_superior);?>js/dhtmlXTree.js"></script>
 <?php 
 include_once($ruta_db_superior."librerias_saia.php");
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+
 $propietario=busca_filtro_tabla("idfuncionario","expediente e,funcionario f","f.funcionario_codigo=e.propietario and idexpediente=".$_REQUEST["idexpediente"],"",$conn);
 
 $seleccionados=busca_filtro_tabla("identidad_expediente,idfuncionario,nombres,apellidos,permiso","entidad_expediente e,funcionario f","e.llave_entidad=f.idfuncionario and e.expediente_idexpediente=".@$_REQUEST["idexpediente"]." AND e.entidad_identidad=1 and f.idfuncionario<>".$propietario[0]["idfuncionario"],"",$conn);
@@ -218,6 +220,9 @@ $table.="</table>";
 <?php 
 }?>
 <input type="hidden" name="key_formulario_saia" value="<?php echo(generar_llave_md5_saia());?>">
+
+<input type="hidden" name="ejecutar_expediente" value="asignar_permiso_expediente">
+<input type="hidden" name="tipo_retorno" value="1">
 <div class="form-actions">
 <button class="btn btn-primary" id="submit_formulario_asignar_expediente">Aceptar</button>
 <button class="btn" id="cancel_formulario_asignar_expediente">Cancelar</button>
@@ -342,11 +347,13 @@ $("#submit_formulario_asignar_expediente").click(function(){
 	var formulario_asignar_expediente=$("#formulario_asignar_expediente");
   $('#cargando_enviar').html("<div id='icon-cargando'></div>Procesando");
 	$(this).attr('disabled', 'disabled');  
+	
+	<?php encriptar_sqli("formulario_asignar_expediente",0,"form_info",$ruta_db_superior); ?>
   $.ajax({
-    type:'GET',
+    type:'POST',
     async:false,
     url: "<?php echo($ruta_db_superior);?>pantallas/expediente/ejecutar_acciones.php",
-    data: "ejecutar_expediente=asignar_permiso_expediente&tipo_retorno=1&rand="+Math.round(Math.random()*100000)+"&"+formulario_asignar_expediente.serialize(),
+    data: "rand="+Math.round(Math.random()*100000)+"&"+formulario_asignar_expediente.serialize(),
     success: function(html){               
       if(html){                   
         var objeto=jQuery.parseJSON(html);                  

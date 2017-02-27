@@ -42,7 +42,7 @@ else{ // Carga los permisos si estan definidos*/
     $p_todos=array("l");
   }
 }
-encriptar_sqli("asigpermiso",1);
+
 ?>
 <style>td{font-family:verdana;}.celda_permiso{font-size:10px;text-align:"center";}.celda_encabezado{font-size:11px;text-align:"center";}
 </style>
@@ -103,3 +103,4 @@ encriptar_sqli("asigpermiso",1);
   </table>
 </form>
 </html>
+<?php encriptar_sqli("asigpermiso",1);?>

@@ -40,7 +40,8 @@ include_once($ruta_db_superior."librerias_saia.php");
 include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
 
 desencriptar_sqli('form_info');
-//encriptar_sqli("form1",1,"form_info",$ruta_db_superior);
+
+
 include_once($ruta_db_superior."formatos/librerias/funciones.php");
 if(isset($_REQUEST["formato"])&&$_REQUEST["formato"])
 {$formato=$_REQUEST["formato"];
@@ -57,8 +58,10 @@ else
 if(isset($_REQUEST["guardar"])&&$_REQUEST["guardar"]==1&&$_REQUEST["formato"])
 {$nombre=$_REQUEST["nombre"];
     $acciones=implode(",",$_REQUEST["acciones"]);
+
  if($_REQUEST["tipo"]=="funciones_formato")
    {$sql="insert into funciones_formato(nombre,nombre_funcion,etiqueta,ruta,descripcion,acciones,formato) values('{*$nombre*}','$nombre','$nombre','".$_REQUEST["ruta"]."','".$_REQUEST["descripcion"]."','$acciones','".$_REQUEST["formato"]."')";
+
    }
 /* else
    {$sql="insert into campos_formato(nombre,etiqueta,ayuda,acciones,formato_idformato,tipo_dato,longitud) values('$nombre','".$_REQUEST["etiqueta"]."','".$_REQUEST["descripcion"]."','$acciones','".$_REQUEST["formato"]."','VARCHAR',255)";
@@ -80,7 +83,9 @@ echo(librerias_jquery());
   /* else
      echo "<b>ADICIONAR CAMPO</b>";*/
 
-   echo "<br /><br><a href='?tipo=".$_REQUEST["tipo"]."&formato=".$_REQUEST["formato"]."'>Listado</a><br><script>
+   echo "<br /><br><a href='?tipo=".$_REQUEST["tipo"]."&formato=".$_REQUEST["formato"]."'>Listado</a><br>";
+   ?>
+   <script>
    		 $().ready(function() {
    		 	//Elimina espacios y convierte el texto en minuscula
    		 	$('#nombre').keyup(function(){
@@ -90,14 +95,19 @@ echo(librerias_jquery());
 			});
 			});
          function validar(tipo)
-           {if(tipo=='campos_formato' && form1.etiqueta.value!='' &&form1.nombre.value!='')
+           {if(tipo=='campos_formato' && form1.etiqueta.value!='' &&form1.nombre.value!=''){
                form1.submit();
-            else if(tipo=='funciones_formato' && form1.nombre.value!='' && form1.ruta.value!='' )
-               form1.submit();
-            else
+            }else if(tipo=='funciones_formato' && form1.nombre.value!='' && form1.ruta.value!='' ){
+               <?php encriptar_sqli('form1',0,'form_info',$ruta_db_superior);?>
+               if(salida_sqli){
+					$('#form1').submit();
+				}
+            }else
                alert('Debe llenar los campos obligatorios');
            }
          </script>
+         <?php
+         echo "
          <form method='post' name='form1' id='form1' >
          <table style='border-collapse:collapse'><tr>
          <td>Nombre*</td>

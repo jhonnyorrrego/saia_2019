@@ -17,6 +17,7 @@ include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
 desencriptar_sqli('form_info');
 echo(librerias_jquery());
 
+//print_r($_REQUEST);die();
 if((@$_REQUEST["iddoc"] || @$_REQUEST["key"]) && @$_REQUEST["no_menu"]!=1){
 	if(!@$_REQUEST["iddoc"])$_REQUEST["iddoc"]=@$_REQUEST["key"];
 	include_once($ruta_db_superior."pantallas/documento/menu_principal_documento.php");
@@ -55,8 +56,8 @@ else
  
 if(isset($_REQUEST["Adicionar"])) // Se procesa el formulario
   {
-
     $permisos=$_REQUEST["permisos_anexos"];
+    
     //procesar_anexos($iddocumento,$permisos);
     cargar_archivo($iddocumento,$permisos);
     if(!isset($_REQUEST["menu"])||$_REQUEST["menu"]!="0") // Si esta en menu_ordenar omite el header el footer y el menu
@@ -97,7 +98,7 @@ if($extensiones =='' || $extensiones =='NULL')
 <tr>
 <td class="celda_transparente" align='center'><input type="file" name="anexos[]" class="multi" accept="<?php echo $extensiones;?>"></td>
 </tr>
-<tr><td align='center'><input type="submit" value="Adicionar" name="Adicionar"> </td></tr>
+<tr><td align='center'><input type="hidden" value="Adicionar" name="Adicionar"><input type="submit" value="Adicionar" name="Adicionar"> </td></tr>
 </table>
 </form>
 </div>
@@ -229,5 +230,5 @@ if($config["numcampos"]){
 return;
 }
 
-//encriptar_sqli("anexos_documento",1,"form_info",$ruta_db_superior);
+encriptar_sqli("anexos_documento",1,"form_info",$ruta_db_superior);
 ?>

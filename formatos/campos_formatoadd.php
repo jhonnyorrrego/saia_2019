@@ -2,6 +2,15 @@
 <?php ob_start(); ?>
 <?php
 $max_salida=6; $ruta_db_superior=$ruta=""; while($max_salida>0){ if(is_file($ruta."db.php")){ $ruta_db_superior=$ruta;} $ruta.="../"; $max_salida--; } 
+
+include ($ruta_db_superior."db.php");
+include ($ruta_db_superior."librerias_saia.php");
+
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+desencriptar_sqli('form_info');
+
+include_once("librerias/funciones.php");
+
 // Initialize common variables
 $x_idcampos_formato = Null;
 $x_formato_idformato = Null;
@@ -19,14 +28,7 @@ $x_autoguardado = Null;
 $idformato=@$_REQUEST["idformato"];
 $x_banderas =array();
 ?>
-<?php include ($ruta_db_superior."db.php");
-include ($ruta_db_superior."librerias_saia.php");
 
-include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
-desencriptar_sqli('form_info');
-
-include_once("librerias/funciones.php");
-?>
 <?php include ($ruta_db_superior."phpmkrfn.php") ?>
 <?php
 
@@ -86,6 +88,8 @@ include ($ruta_db_superior."header.php");
 
 ?>
 <script type="text/javascript" src="<?php echo($ruta_db_superior);?>ew.js"></script>
+<script type="text/javascript" src="<?php echo($ruta_db_superior);?>js/jquery.js"></script>
+<script type="text/javascript" src="<?php echo($ruta_db_superior);?>js/jquery.validate.js"></script>
 <script type="text/javascript">
 <!--
 EW_dateSep = "/"; // set date separator	
@@ -175,7 +179,13 @@ EW_dateSep = "/"; // set date separator
  		}
  	});
 	// validar los campos del formato
-	$('#formatoadd').validate();
+	$('#campos_formatoadd').validate({
+		submitHandler: function(form) {
+				<?php encriptar_sqli("campos_formatoadd",0,"form_info",$ruta_db_superior);?>
+			    form.submit();
+			    
+			  }
+	});
 	});
 <!--
 function EW_checkMyForm(EW_this) {
@@ -510,7 +520,6 @@ if(!$datos_formato[0]["item"]){
 // Function LoadData
 // - Load Data based on Key Value sKey
 // - Variables setup: field variables
-encriptar_sqli("campos_formatoadd",1,"form_info",$ruta_db_superior);
 function LoadData($sKey,$conn)
 {
 	$sKeyWrk = "" . addslashes($sKey) . "";

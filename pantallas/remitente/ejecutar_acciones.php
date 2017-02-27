@@ -8,6 +8,12 @@ while ($max_salida > 0) {
 }
 include_once ($ruta_db_superior . "db.php");
 include_once ($ruta_db_superior . "pantallas/remitente/librerias.php");
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+desencriptar_sqli('form_info');
+
+
+
+//print_r($_REQUEST);die();
 if (@$_REQUEST["ejecutar_remitente"]) {
 	if (!@$_REQUEST["tipo_retorno"]) {
 		$_REQUEST["tipo_retorno"] = 1;

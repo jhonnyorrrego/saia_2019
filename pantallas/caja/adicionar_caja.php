@@ -9,7 +9,10 @@ $max_salida=6; $ruta_db_superior=$ruta=""; while($max_salida>0){ if(is_file($rut
 <link rel="stylesheet" type="text/css" href="<?php echo($ruta_db_superior);?>css/bootstrap_reescribir.css"/>
 <link rel="stylesheet" type="text/css" href="<?php echo($ruta_db_superior);?>css/bootstrap-iconos-segundarios.css"/>
 <link rel="stylesheet" type="text/css" href="<?php echo($ruta_db_superior);?>css/bootstrap-datetimepicker.min.css"/>
-<?php include_once($ruta_db_superior."db.php"); ?>
+<?php include_once($ruta_db_superior."db.php"); 
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+
+?>
 <script type="text/javascript" src="<?php echo($ruta_db_superior);?>js/jquery-1.7.min.js"></script>
 <?php include_once($ruta_db_superior."librerias_saia.php");
 ?>
@@ -175,6 +178,8 @@ $max_salida=6; $ruta_db_superior=$ruta=""; while($max_salida>0){ if(is_file($rut
 <input type="hidden" name="funcionario_idfuncionario" id="funcionario_idfuncionario" value="<?php echo(usuario_actual('idfuncionario')); ?>">
 
 <input type="hidden" name="key_formulario_saia" value="<?php echo(generar_llave_md5_saia());?>">
+<input type="hidden"  name="ejecutar_caja" value="set_caja"/>
+<input type="hidden"  name="tipo_retorno" value="1"/>
 <div>
 <button class="btn btn-primary btn-mini" id="submit_formulario_caja">Aceptar</button>
 <button class="btn btn-mini" id="cancel_formulario_caja">Cancelar</button>
@@ -223,11 +228,12 @@ $(document).ready(function(){
     if(formulario_caja.valid()){
     	$('#cargando_enviar').html("<div id='icon-cargando'></div>Procesando");
 			$(this).attr('disabled', 'disabled');
+	<?php encriptar_sqli("formulario_caja",0,"form_info",$ruta_db_superior); ?>
       $.ajax({
-        type:'GET',
+        type:'POST',
         async:false,
         url: "<?php echo($ruta_db_superior);?>pantallas/caja/ejecutar_acciones.php",
-        data: "ejecutar_caja=set_caja&tipo_retorno=1&rand="+Math.round(Math.random()*100000)+"&"+formulario_caja.serialize(),
+        data: "rand="+Math.round(Math.random()*100000)+"&"+formulario_caja.serialize(),
         success: function(html){               
           if(html){                   
             var objeto=jQuery.parseJSON(html);                  

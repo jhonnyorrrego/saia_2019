@@ -158,12 +158,17 @@ if(count($nombres_exp)){
     seleccionados=tree2.getAllChecked();
     if(seleccionados!="")
       {$('#expedientes').val(seleccionados);
-       return(true);
+       <?php encriptar_sqli("form1",0); ?>		
+		if(salida_sqli){
+			return true;
+		}
       }
     else
       {$('#expedientes').val('');
-       //alert("Debe seleccionar al menos un expediente");
-       return(true);
+       <?php encriptar_sqli("form1",0); ?>		
+		if(salida_sqli){
+			return true;
+		}
       }
     return(false);
   });

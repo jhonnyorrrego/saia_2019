@@ -20,6 +20,8 @@ include_once($ruta_db_superior."librerias_saia.php");
 desencriptar_sqli('form_info');
 echo(librerias_jquery());
 
+
+
 ?>
 <script> 
 /*
@@ -42,7 +44,11 @@ echo(librerias_jquery());
   {  alert("Debe escribir el asunto del e-mail");
      return false;
   }   
-  return true; 
+
+  <?php encriptar_sqli("email",0,"form_info",$ruta_db_superior); ?>		
+		if(salida_sqli){
+			return true;
+		}
  }
 </script>
 <?php
@@ -103,7 +109,7 @@ function formato_email()
    else
       $ldirecciones[0]= "info@cerok.com";
 
- echo "<form  name='email' action='email_doc.php' method='post' onsubmit='return validar_campos(this)'>
+ echo "<form  name='email' id='email' action='email_doc.php' method='post' onsubmit='return validar_campos(this)'>
        <table border=0 width=80%>
        <tr>
        <td class='encabezado_list' colspan=2 height='20px' >ENVIAR DOCUMENTO POR E-MAIL</td></tr>
@@ -439,7 +445,6 @@ function enviar_email($doc=0){
 
 if(isset($_REQUEST["formato_enviar"])){
 	formato_email();
-	encriptar_sqli("email",1,"form_info",$ruta_db_superior);
 }  
 elseif(isset($_REQUEST["enviar"]))
   enviar_email();

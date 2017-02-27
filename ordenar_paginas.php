@@ -3,6 +3,11 @@
        session_start();*/
   include_once("db.php");
   include_once("librerias_saia.php");
+  
+include_once("pantallas/lib/librerias_cripto.php");
+desencriptar_sqli('form_info');
+echo(librerias_jquery());
+ 
 echo(estilo_bootstrap());   
   
 if(@$_REQUEST["iddoc"] || @$_REQUEST["key"] || @$_REQUEST["doc"]){
@@ -803,7 +808,7 @@ else
   $_SESSION["ldocs"]="";//alerta("Su sesion ha Expirado");
 return(array($siguiente,$anterior));  
 }
-
+encriptar_sqli("ordenar",1);
 ?>  
 </body>
 </html>

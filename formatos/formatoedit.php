@@ -174,10 +174,6 @@ EW_dateSep = "/"; // set date separator
  		texto=texto.replace(/[^a-zA-Z0-9_]/,'')
  		$(this).val(texto.toLowerCase());
  	});
-	// validar los campos del formato
-	$('#formatoedit').validate({
-		
-	});
 });
 <!--
 function EW_checkMyForm(EW_this) {

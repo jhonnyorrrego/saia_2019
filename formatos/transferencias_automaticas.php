@@ -35,6 +35,12 @@ include_once("librerias/funciones.php");
 <script type='text/javascript'>
   $().ready(function() {
 	$("#asignar_funcion_formato").validate({
+  		submitHandler: function(form) {
+				<?php encriptar_sqli("asignar_funcion_formato",0,"form_info",$ruta_db_superior);?>
+			    form.submit();
+			    
+			 },
+  
   rules: {
     entidad1: {
       required: "#tipo1:checked"

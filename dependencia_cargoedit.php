@@ -312,7 +312,7 @@ function nueva_interfaz($fun)
   $roles = busca_filtro_tabla("iddependencia_cargo,dependencia_cargo.estado,dependencia.nombre as nombred,dependencia.estado as estadod,cargo.nombre as nombrec,cargo.estado as estadoc,".fecha_db_obtener('fecha_inicial','Y-m-d')." as fechai, ".fecha_db_obtener('fecha_final','Y-m-d')." as fechaf","dependencia_cargo,dependencia,cargo,funcionario","idfuncionario = funcionario_idfuncionario and iddependencia=dependencia_iddependencia and idcargo=cargo_idcargo and idfuncionario=$fun","iddependencia_cargo desc",$conn);
   
  if($roles["numcampos"]>0)
- { echo '<form name="full_edit" action="dependencia_cargoedit.php"><table border=1><tr class="encabezado_list"><!--td>&nbsp;&nbsp;</td--><td>Fecha Inicial</td><td>Fecha Final</td><td>Estado</td><td>Cargo</td><td>Dependencia</td></tr>'; 
+ { echo '<form name="full_edit" id="dependencia_cargoedit" action="dependencia_cargoedit.php" method="post"><table border=1><tr class="encabezado_list"><!--td>&nbsp;&nbsp;</td--><td>Fecha Inicial</td><td>Fecha Final</td><td>Estado</td><td>Cargo</td><td>Dependencia</td></tr>'; 
   for($i=0; $i<$roles["numcampos"]; $i++)
   { 
     echo '<tr>
@@ -326,6 +326,7 @@ function nueva_interfaz($fun)
   }
   echo '<tr><td colspan="7" align="center"><input type="submit" name="Aceptar" value="Aceptar"></td></tr></table><input type="hidden" name="funcionario" value="'.$fun.'"></form>';
  }
+encriptar_sqli("dependencia_cargoedit",1);
  include_once("footer.php");  
  die();
  return true;

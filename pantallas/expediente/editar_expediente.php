@@ -17,7 +17,10 @@ $max_salida=6; $ruta_db_superior=$ruta=""; while($max_salida>0){ if(is_file($rut
   border: 0px solid #E3E3E3;
 }
 </style>
-<?php include_once($ruta_db_superior."db.php"); ?>
+<?php include_once($ruta_db_superior."db.php");
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+
+ ?>
 <script type="text/javascript" src="<?php echo($ruta_db_superior);?>js/jquery-1.7.min.js"></script>
 <?php include_once($ruta_db_superior."librerias_saia.php");
 $datos=busca_filtro_tabla(fecha_db_obtener('a.fecha','Y-m-d')." as x_fecha, ".fecha_db_obtener('a.fecha_extrema_i','Y-m-d')." as x_fecha_extrema_i, ".fecha_db_obtener('a.fecha_extrema_f','Y-m-d')." x_fecha_extrema_f,a.*","expediente a","a.idexpediente=".$_REQUEST["idexpediente"],"",$conn);
@@ -332,6 +335,8 @@ if($dato_padre["numcampos"]){
 </div>
 <br />
 <input type="hidden" name="key_formulario_saia" value="<?php echo(generar_llave_md5_saia());?>">
+<input type="hidden"  name="ejecutar_expediente" value="update_expediente"/>
+<input type="hidden"  name="tipo_retorno" value="1"/>
 <div>
 <button class="btn btn-primary btn-mini" id="submit_formulario_expediente">Aceptar</button>
 <button class="btn btn-mini" id="cancel_formulario_expediente">Cancelar</button>
@@ -573,12 +578,12 @@ $(document).ready(function(){
     if(formulario_expediente.valid()){
     	$('#cargando_enviar').html("<div id='icon-cargando'></div>Procesando");
 			$(this).attr('disabled', 'disabled');
-			
+	<?php encriptar_sqli("formulario_expediente",0,"form_info",$ruta_db_superior); ?>
       $.ajax({
-        type:'GET',
+        type:'POST',
         async:false,
         url: "<?php echo($ruta_db_superior);?>pantallas/expediente/ejecutar_acciones.php",
-        data: "ejecutar_expediente=update_expediente&tipo_retorno=1&rand="+Math.round(Math.random()*100000)+"&"+formulario_expediente.serialize(),
+        data: "rand="+Math.round(Math.random()*100000)+"&"+formulario_expediente.serialize(),
         success: function(html){               
           if(html){
             var objeto=jQuery.parseJSON(html);

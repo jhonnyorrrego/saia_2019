@@ -9,6 +9,11 @@ while ($max_salida > 0) {
     $max_salida--;
 }
 include_once($ruta_db_superior . "db.php");
+include_once($ruta_db_superior . "pantallas/lib/librerias_cripto.php");
+include_once($ruta_db_superior."librerias_saia.php");
+echo(librerias_jquery());
+desencriptar_sqli('form_info');
+
 $pass_correo=$_REQUEST["passwordPwd"];
 $sql1="UPDATE funcionario SET email_contrasena='".$pass_correo."' WHERE idfuncionario=".usuario_actual("idfuncionario");
 phpmkr_query($sql1);

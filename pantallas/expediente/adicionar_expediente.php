@@ -20,6 +20,9 @@ $max_salida=6; $ruta_db_superior=$ruta=""; while($max_salida>0){ if(is_file($rut
 <?php include_once($ruta_db_superior."db.php"); ?>
 <script type="text/javascript" src="<?php echo($ruta_db_superior);?>js/jquery-1.7.min.js"></script>
 <?php include_once($ruta_db_superior."librerias_saia.php");
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+
+
 $dato_padre=busca_filtro_tabla("","expediente a","a.idexpediente=".$_REQUEST["cod_padre"],"",$conn);
 ?>
 <form name="formulario_expediente" id="formulario_expediente">
@@ -301,6 +304,9 @@ $dato_padre=busca_filtro_tabla("","expediente a","a.idexpediente=".$_REQUEST["co
 	
 </div>
 <br />
+
+<input type="hidden"  name="ejecutar_expediente" value="set_expediente"/>
+<input type="hidden"  name="tipo_retorno" value="1"/>
 <input type="hidden" name="fk_idcaja" value="<?php echo(@$_REQUEST["fk_idcaja"]);?>">
 <input type="hidden" name="estado_archivo" value="1">
 <input type="hidden" name="key_formulario_saia" value="<?php echo(generar_llave_md5_saia());?>">
@@ -451,11 +457,13 @@ $(document).ready(function(){
     	<?php if(@$_REQUEST["volver"]&&@$_REQUEST["enlace"]){ ?>
     		window.open('<?php echo($ruta_db_superior.$_REQUEST["enlace"]); ?>?variable_busqueda=idexpediente/**/<?php echo($_REQUEST["cod_padre"]); ?>&idbusqueda_componente=<?php echo($_REQUEST["idbusqueda_componente"]); ?>','_self');
     	<?php }  ?>
+    
+    <?php encriptar_sqli("formulario_expediente",0,"form_info",$ruta_db_superior); ?>
       $.ajax({
-        type:'GET',
+        type:'POST',
         async:false,
         url: "<?php echo($ruta_db_superior);?>pantallas/expediente/ejecutar_acciones.php",
-        data: "ejecutar_expediente=set_expediente&tipo_retorno=1&rand="+Math.round(Math.random()*100000)+"&"+formulario_expediente.serialize(),
+        data: "rand="+Math.round(Math.random()*100000)+"&"+formulario_expediente.serialize(),
         success: function(html){               
           if(html){    
             var objeto=jQuery.parseJSON(html);                  

@@ -55,22 +55,35 @@ function request_encriptado($param="key_cripto"){
 	return($parametros);
 }
 function desencriptar_sqli($campo_info){
+	
 	if($_SESSION["token_csrf"]!==$_POST["token_csrf"]){
 		alerta("Error de validacion del formulario por favor intente de nuevo (Posible Error: CSRF) ");
 	}
-
+	
 	if (array_key_exists($campo_info, $_POST) ) {
     $data = json_decode($_POST[$campo_info], true);
     unset($_REQUEST);
     unset($_POST);
-    for($i = 0; $i < count($data); $i ++) {
+    $cant=count($data);
+    for($i = 0; $i < $cant; $i ++) {
+	  if(@$data[$i]["es_arreglo"]){
+        $_REQUEST[decrypt_blowfish($data[$i]["name"], LLAVE_SAIA_CRYPTO)] = explode(",",decrypt_blowfish($data[$i]["value"], LLAVE_SAIA_CRYPTO));
+      }
+      else{
         $_REQUEST[decrypt_blowfish($data[$i]["name"], LLAVE_SAIA_CRYPTO)] = decrypt_blowfish($data[$i]["value"], LLAVE_SAIA_CRYPTO);
+      }
+	  
+      if(@$data[$i]["es_arreglo"]){
+        $_POST[decrypt_blowfish($data[$i]["name"], LLAVE_SAIA_CRYPTO)] = explode(",",decrypt_blowfish($data[$i]["value"], LLAVE_SAIA_CRYPTO));
+      }
+      else{
         $_POST[decrypt_blowfish($data[$i]["name"], LLAVE_SAIA_CRYPTO)] = decrypt_blowfish($data[$i]["value"], LLAVE_SAIA_CRYPTO);
+      }
     }
-
 }
 unset($_REQUEST["token_csrf"]);
 unset($_SESSION["token_csrf"]);
+
 return;
 }
 function encriptar_sqli($nombre_form,$submit=false,$campo_info="form_info",$ruta_superior="",$retorno=false){
@@ -93,26 +106,26 @@ if ($submit) {
 	$texto.='$("#'.$nombre_form.'").submit(function(event){';
 }
 $_SESSION["token_csrf"]=cadena_aleatoria(50);
-	$texto.='var salida = false;
+	$texto.='salida_sqli = false;
       $.ajax({
         type:"POST",
         async: false,
         url: "'.$ruta_superior.'formatos/librerias/encript_data.php",
-        data: {datos:JSON.stringify($("#'.$nombre_form.'").serializeArray(), null)},
+        data: {datos:JSON.stringify($("#'.$nombre_form.'").serializeArray())},
         success: function(data) {
 					//$("#'.$nombre_form.'")[0].reset();
-					$("#'.$nombre_form.'").find("input:hidden,input:text, input:password, input:file, select, textarea").val("");
+					$("#'.$nombre_form.'").find("input:hidden,input:text, input:password, select, textarea").val("");
     			$("#'.$nombre_form.'").find("input:radio, input:checkbox").removeAttr("checked").removeAttr("selected");
 					//console.log(JSON.stringify($("#'.$nombre_form.'").serializeArray()));
           $("#'.$campo_info.'").val(data);
 					//console.log(JSON.stringify($("#'.$nombre_form.'").serializeArray()));
           //console.log($("#'.$campo_info.'").val());
 					$("#token_csrf").val("'.$_SESSION["token_csrf"].'");
-          salida = true;
+          salida_sqli = true;
         }
       });';
 if ($submit) {
-	$texto.='return salida;
+	$texto.='return salida_sqli;
 			event.preventDefault();
 	  });
 	</script>';

@@ -39,7 +39,7 @@ if($_REQUEST['iddoc']){
 		<div class="control-group" nombre="etiqueta">
 			<legend>Asignar avance a la tarea</legend>
 		</div>
-		<form id="formulario_tareas" class="form-horizontal">
+		<form id="formulario_tareas" class="form-horizontal" method="post">
 			 <tr>
   	<td class="prettyprint" colspan="3">
   		<div class="tabbable" id="secciones">
