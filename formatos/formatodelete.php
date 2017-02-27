@@ -37,6 +37,7 @@ include ("db.php");
 
 include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
 include_once($ruta_db_superior."librerias_saia.php");
+$validar_enteros=array("key");
 desencriptar_sqli('form_info');
 echo(librerias_jquery());
 

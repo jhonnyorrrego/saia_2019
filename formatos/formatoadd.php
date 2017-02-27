@@ -20,6 +20,7 @@ include_once ($ruta_db_superior . "librerias_saia.php");
 include_once ($ruta_db_superior . "librerias/funciones.php");
 
 include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+$validar_enteros=array("key");
 desencriptar_sqli('form_info'); 
 echo(librerias_jquery());
 
@@ -67,6 +68,7 @@ if(isset($_REQUEST["consultar_contador"])) {
 // Get action
 $sAction = @$_POST["a_add"];
 if(($sAction == "") || ((is_null($sAction)))) {
+  $sKey=0;
 	$sKey = @$_GET["key"];
 	$sKey = (get_magic_quotes_gpc()) ? stripslashes($sKey) : $sKey;
 	if($sKey != "") {

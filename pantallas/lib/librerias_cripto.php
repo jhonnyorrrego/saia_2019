@@ -54,12 +54,30 @@ function request_encriptado($param="key_cripto"){
 	}
 	return($parametros);
 }
+function validar_enteros(){
+global $validar_enteros;
+if(isset($validar_enteros)){
+  foreach($validar_enteros AS $key=>$valor){
+    if(isset($_REQUEST[$valor] && !is_int($_REQUEST[$valor])){
+      return($valor);
+    }
+  }
+}
+return(false);
+}
+
 function desencriptar_sqli($campo_info){
-	
+  $error=validar_enteros();
+  if($error!==false){
+    die("Se encuentra una posible infecci&oacute;n en su c&oacute;digo, en la llave: ".$_REQUEST[$error]." (debe ser un entero),por favor contacte a su administrador");
+    //volver(1);
+  }
+  if(strpos("script",$_SERVER["PHP_SELF"])!==false){
+     die("Se encuentra una posible infecci&oacute;n en su c&oacute;digo, a trav&eacute;s DOM-based cross site scripting, por favor contacte a su administrador");
+  }
 	if($_SESSION["token_csrf"]!==$_POST["token_csrf"]){
 		alerta("Error de validacion del formulario por favor intente de nuevo (Posible Error: CSRF) ");
 	}
-	
 	if (array_key_exists($campo_info, $_POST) ) {
     $data = json_decode($_POST[$campo_info], true);
     unset($_REQUEST);
@@ -72,7 +90,6 @@ function desencriptar_sqli($campo_info){
       else{
         $_REQUEST[decrypt_blowfish($data[$i]["name"], LLAVE_SAIA_CRYPTO)] = decrypt_blowfish($data[$i]["value"], LLAVE_SAIA_CRYPTO);
       }
-	  
       if(@$data[$i]["es_arreglo"]){
         $_POST[decrypt_blowfish($data[$i]["name"], LLAVE_SAIA_CRYPTO)] = explode(",",decrypt_blowfish($data[$i]["value"], LLAVE_SAIA_CRYPTO));
       }

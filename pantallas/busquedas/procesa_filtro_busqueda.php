@@ -13,6 +13,7 @@ include_once ($ruta_db_superior . "sql.php");
 usuario_actual("login");
 
 include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+$validar_enteros=array("idbusqueda_componente");
 desencriptar_sqli('form_info');
 
 $filtro = '';
