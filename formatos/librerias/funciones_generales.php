@@ -1855,7 +1855,7 @@ function validar_valor_campo($campo) {
         $radicado=strip_tags(formato_radicado_enviada($desc[0]["idformato"],$_REQUEST["anterior"],1));
         return ("Respondiendo a: " . str_replace("<br />", " ", $desc[0]["descripcion"]) . ". Radicado No." . $radicado);
       }else{
-			 return ("Respondiendo a: " . str_replace("<br />", " ", $desc[0]["descripcion"]) . ". Radicado No." . $desc[0]["numero"]);
+        return ("Respondiendo a: " . str_replace("<br />", " ", $desc[0]["descripcion"]) . ". Radicado No." . $desc[0]["numero"]);
 			}
 		}
 	} elseif($campos["numcampos"]) {
