@@ -383,4 +383,78 @@ function formato_radicado_interno($idformato,$iddoc,$retorno=0){ //MOSTRAR
   }
 	echo($cadena);
 }
+function generar_correo_confirmacion_memorando($idformato,$iddoc){
+	global $conn,$ruta_db_superior;
+	
+	
+	$formato=busca_filtro_tabla("nombre_tabla, nombre","formato","idformato=".$idformato,"",$conn);
+	
+	$formato_carta=busca_filtro_tabla("",$formato[0]['nombre_tabla'].",documento","documento_iddocumento=iddocumento and documento_iddocumento=".$iddoc,"",$conn);
+	$usuario_confirma=busca_filtro_tabla("destino","buzon_entrada","nombre='POR_APROBAR' and activo=1 and archivo_idarchivo=".$iddoc,"idtransferencia asc",$conn);
+	if($formato_carta[0]['email_aprobar']==1 && $formato_carta[0]['estado']=='ACTIVO'){
+		$resultado=busca_filtro_tabla("","ruta","documento_iddocumento=".$iddoc,"idruta",$conn);
+		if($resultado['numcampos']){
+			if(!is_dir($ruta_db_superior."temporal_".$_SESSION["LOGIN"])){
+        mkdir($ruta_db_superior."temporal_".$_SESSION["LOGIN"],0777);
+      }
+			$borrar_pdf="UPDATE documento set pdf='' where iddocumento=".$iddoc;
+			phpmkr_query($borrar_pdf);
+			$consulta=busca_filtro_tabla("","documento","iddocumento=".$iddoc,"",$conn);
+			if($consulta[0]['pdf']!=""){
+	      $anexos[]=$ruta_db_superior.$consulta[0]['pdf'];
+	    }else{
+				//$nombre_archivo="temporal_".$_SESSION["LOGIN"]."/".$iddoc;
+				$ch = curl_init();
+		    //$fila = "http://".RUTA_PDF_LOCAL."/class_impresion.php?iddoc=".$iddoc."&LOGIN=".$_SESSION["LOGIN".LLAVE_SAIA]."&conexion_remota=1&usuario_actual=".$_SESSION["usuario_actual"]."&LLAVE_SAIA=".LLAVE_SAIA;
+		    $fila = "http://".RUTA_PDF_LOCAL."/class_impresion.php?plantilla=".$formato[0]['nombre']."&iddoc=".$iddoc."&conexion_remota=1&conexio_usuario=".$_SESSION["LOGIN".LLAVE_SAIA]."&usuario_actual=".$_SESSION["usuario_actual"]."&LOGIN=".$_SESSION["LOGIN".LLAVE_SAIA]."&LLAVE_SAIA=".LLAVE_SAIA;
+		    curl_setopt($ch, CURLOPT_URL,$fila);
+		    curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
+		    $contenido=curl_exec($ch);
+		    curl_close ($ch);
+				//$anexos[]=$ruta_db_superior.$nombre_archivo.".pdf";
+	    }
+			$consulta=busca_filtro_tabla("","documento","iddocumento=".$iddoc,"",$conn);
+			if($consulta[0]['pdf']!=""){
+	      $anexos[]=$ruta_db_superior.$consulta[0]['pdf'];
+	    }
+			$funcionario=busca_filtro_tabla("","vfuncionario_dc","estado_dc=1 and estado=1 and funcionario_codigo=".$usuario_confirma[0]['destino'],"",$conn);
+			$adjuntos=busca_filtro_tabla("ruta","anexos","documento_iddocumento=".$iddoc,"",$conn);
+	    if($adjuntos["numcampos"]){
+	      for($k=0;$k<$adjuntos["numcampos"];$k++){
+	        $anexos[]=$ruta_db_superior.$adjuntos[$k]["ruta"];
+	      }
+	    }
+
+			$info='iddoc-'.$iddoc.',usuario-'.$funcionario[0]['login'];
+	    $resultado=base64_encode($info);
+			$busca_configuracion_correo=busca_filtro_tabla("valor","configuracion","nombre='email_aprobacion'","",$conn);
+			$enlaces='<a href="'.$busca_configuracion_correo[0]['valor'].'index.php?info='.$resultado.'" target="_blank">Gestionar Documento</a><br />';
+
+
+			/*$mensaje='Saludos '.$funcionario[0]['nombres'].' '.$funcionario[0]['apellidos'].',<br /><br />
+	        A continuaci&oacute;n se adjunta en formato PDF el documento de la comunicacion externa donde se encuentra usted como responsable.<br /><br />
+	        Por favor dar click en los siguiente(s) enlace(s) y Aprobar o Rechazar el documento.<br/>'.$enlaces.'<br /><br />Antes de imprimir este mensaje, asegurese que es necesario. Proteger el medio ambiente tambien esta en nuestras manos.<br /><br />
+	        ESTE ES UN MENSAJE AUTOMATICO, FAVOR NO RESPONDER.';*/
+
+			$mensaje='
+
+			Saludos '.$funcionario[0]['nombres'].' '.$funcionario[0]['apellidos'].',<br /><br />
+                        Por medio de la presente se permite solicitar su aprobación o rechazo al documento adjunto donde se encuentra usted como responsable de aprobación, para hacer esto por favor siga estos dos pasos:
+                        <br /><br />
+                        1. Haga lectura del documento adjunto.
+                        <br /><br />
+                        2. Una vez tenga conocimiento del documento, acceda al siguiente link y decida si Aprobar o Rechazar.
+                        <br /><br />
+                        '.$enlaces.'
+                        <br /><br />
+                        ';
+
+			enviar_mensaje('','codigo',array($funcionario[0]['funcionario_codigo']),'GESTION DE COMUNICACIONES EXTERNAS',$mensaje,$anexos);
+		}
+	}
+
+	if(!isset($_REQUEST['refrescar'])){
+		//mostrar_formato($idformato,$iddoc);
+	}
+}
 ?>
