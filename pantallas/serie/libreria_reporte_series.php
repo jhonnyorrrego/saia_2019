@@ -43,7 +43,7 @@ function condicion_adicional_series(){
     
     //$condicion=" AND iddependencia=-1";
     if(@$_REQUEST['variable_busqueda']){
-        $condicion="AND d.iddependencia=".$_REQUEST['variable_busqueda'];
+        $condicion="AND iddependencia=".$_REQUEST['variable_busqueda'];
     }
     
     return $condicion;
