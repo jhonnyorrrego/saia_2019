@@ -648,6 +648,7 @@ function EditData($sKey,$conn)
 			$sSql = substr($sSql, 0, strlen($sSql)-2);
 		}
 		$sSql .= " WHERE idserie =". $sKeyWrk;
+		/*
 		$insertar_serie=busca_filtro_tabla("","serie","idserie =". $sKeyWrk,"",$conn);
 	        if($insertar_serie[0]['tipo']==1){
 				$actualizar_orden="UPDATE serie SET orden=".($insertar_serie[0]['idserie']*100000)." WHERE idserie=".$insertar_serie[0]['idserie'];
@@ -662,6 +663,7 @@ function EditData($sKey,$conn)
 				$actualizar_orden="UPDATE serie SET orden=".($padre[0]['orden']+($insertar_serie[0]['idserie']*100))." WHERE idserie=".$insertar_serie[0]['idserie'];
 			}
 	phpmkr_query($actualizar_orden);
+		 */
     //die($sSql);		
 		phpmkr_query($sSql,$conn) or error("Failed to execute query" . phpmkr_error() . ' SQL:' . $sSql);
 		

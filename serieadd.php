@@ -720,7 +720,7 @@ function AddData($conn)
 	}
 	
 	
-	
+	/*
 	$insertar_serie=busca_filtro_tabla("","serie","idserie=".$id,"",$conn);
 	if($insertar_serie[0]['tipo']==1){
 				$actualizar_orden="UPDATE serie SET orden=".($insertar_serie[0]['idserie']*100000)." WHERE idserie=".$insertar_serie[0]['idserie'];
@@ -735,7 +735,7 @@ function AddData($conn)
 				$actualizar_orden="UPDATE serie SET orden=".($padre[0]['orden']+($insertar_serie[0]['idserie']*100))." WHERE idserie=".$insertar_serie[0]['idserie'];
 			}
 	phpmkr_query($actualizar_orden);
-	
+	*/
 	
 	if(intval($tipo_expediente)!=0){
 		insertar_expediente_automatico($id);
