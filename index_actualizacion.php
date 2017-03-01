@@ -147,7 +147,7 @@ $componente_tareas=busca_filtro_tabla("","busqueda_componente A","A.nombre='list
 <style type="text/css">
 .modal-body{max-height:80%}
 .modal-footer{min-height:0}
-.footer_login { font-weight: bold; background-image: url(imagenes/login/footerbkg.png); background-repeat: repeat-x; background-position: left top; height: 25px; width: 100%; padding-top: 0px; padding-bottom: 0px; text-align: right; color: #FFF; position: fixed; bottom: 0px; }
+.footer_login { font-weight: bold; background-color: #69b3e3; background-repeat: repeat-x; background-position: left top; height: 25px; width: 100%; padding-top: 0px; padding-bottom: 0px; text-align: right; color: #FFF; position: fixed; bottom: 0px; }
 .footer_login_text, .footer_login_text * { color:#FFF; font-size:10px; font-weight:bold; }
 #timer{margin:0px auto 0;width:130px; border: 1px solid;border-radius: 5px;}
 #timer .timer_container{padding-right:15px;padding-left:15px;}
@@ -311,7 +311,8 @@ if($_SESSION["tipo_dispositivo"]=="movil"){ ?>
       <div class="modbox-saia-main ui-corner-all shadow">
         <div class="modbox-saia-main-title ui-corner-top">
         </div>
-        <div class="icon-collapser ui-corner-tr"></div>
+        <div class="icon-collapser ui-corner-tr" style="text-align: center; border-bottom-left-radius: 9px; height: 22px;
+    width: 39px;"> <i class="icon-minus icon-white"></i></div>
         <div class="modbox-saia-main-content ui-corner-bottom">
           <ul id="MenuSaiaVin">
             <li><i class="icon-inbox"></i><a href="pantallas/buscador_principal.php?idbusqueda=3&cmd=resetall" target="centro" class="enlace_indicadores_index" idcomponente="<?php echo($componente_pendiente[0]["idbusqueda_componente"]); ?>" nombre_componente="documento_pendiente">Documentos Recibidos <div class="pull-right"><span class="badge" id="documento_pendiente"><?php echo($pendientes["numcampos"]);?></span></div></a>
@@ -388,7 +389,8 @@ if($_SESSION["tipo_dispositivo"]=="movil"){ ?>
       <div class="modbox-saia-addon ui-corner-all shadow">
         <div class="modbox-saia-addon-title">
           <span id="ModulosSaiaTab">M&oacute;dulos Saia</span><img src="asset/img/layout/tabline.png" width="24" height="28" align="absmiddle" /><!--span id="BusquedaRapidaTab">Busqueda Rapida</span--></div>
-        <div class="icon-collapser  ui-corner-tr"></div>
+        <div class="icon-collapser  ui-corner-tr" style="text-align: center; border-bottom-left-radius: 9px; height: 22px;
+    width: 39px;"> <i class="icon-minus icon-white"></i></div>
         <div class="modbox-saia-addon-content">
         <!--div id="busquedaRapidaForm">
           <form id="form1" name="form1" method="post" action="">

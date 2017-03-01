@@ -176,7 +176,7 @@ $mayor_informacion=busca_filtro_tabla("valor","configuracion","nombre='mayor_inf
                   	<p id="contenedor_recordar_contrasena">
                   	
                   	<a href="recordar_contrasena.php" style="cursor:pointer"  class="highslide" onclick="return hs.htmlExpand(this,{objectType:'iframe',width: 550, height: 300, preserveContent:false})">¿No puedes acceder a tu cuenta?</a>
-                  	</p>
+                  	</p> 
                 </div>
             </div>
         <?php }
@@ -184,8 +184,8 @@ $mayor_informacion=busca_filtro_tabla("valor","configuracion","nombre='mayor_inf
           ?>
         <table width="700" border="0" cellspacing="0" cellpadding="0">
           <tr>
-            <td height="30" colspan="6">&nbsp;</td>
-          </tr>
+            <td height="25" colspan="5"><img class="pull-right" style="height: 30px;" src="asset/img/layout/logosaia.png"></td>
+          </tr> 
           <tr>
             <td width="62" rowspan="2">&nbsp;</td>
             <td width="125" rowspan="2" align="left" valign="top">
