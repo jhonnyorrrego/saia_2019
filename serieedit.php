@@ -486,7 +486,7 @@ return true;
 	<tr class="ocultar">
 		<td class="encabezado"  title="Permite decidir si se crea un expediente o un agrupador seg&uacute;n se requiera"><span class="phpmaker" style="color: #FFFFFF;">CREACI&Oacute;N DE EXPEDIENTE &Oacute; AGRUPADOR</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
-    <input type="radio" id="tipo_expediente1" name="tipo_expediente" value="<?php echo htmlspecialchars("1"); ?>" <?php if (@$x_tipo_expediente == "1") { ?> checked<?php } ?> >
+    <input type="radio" id="tipo_expediente1" name="x_tipo_expediente" value="<?php echo htmlspecialchars("1"); ?>" <?php if (@$x_tipo_expediente == "1") { ?> checked<?php } ?> >
 <?php echo "Expediente"; ?>
 <?php echo EditOptionSeparator(0); ?>
 <input type="radio" id="tipo_expediente2" name="x_tipo_expediente"  value="<?php echo htmlspecialchars("2"); ?>" <?php if (@$x_tipo_expediente == "2") { ?> checked<?php } ?>>
