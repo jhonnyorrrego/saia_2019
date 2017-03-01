@@ -236,11 +236,12 @@ function insertar_expediente_automatico($idserie,$hijo="",$indice=1){
 	if($serie["numcampos"]){
 		$busqueda=busca_filtro_tabla("","expediente a","a.serie_idserie=".$serie[0]["idserie"],"",$conn);
 		if(!$busqueda["numcampos"]){
+			$super_serie_padre=obtener_super_padre_serie($serie[0]["idserie"]);
 			$value_agrupador="0";
 			if(intval($serie[0]['tipo_expediente'])==2){
 				$value_agrupador="1";
 			}
-			$sql1="insert into expediente(nombre, fecha, serie_idserie,agrupador)values('".$serie[0]["nombre"]."', ".fecha_db_almacenar(date('Y-m-d'),'Y-m-d').", '".$serie[0]["idserie"]."',".$value_agrupador.")";
+			$sql1="insert into expediente(nombre, fecha, serie_idserie,agrupador)values('".$serie[0]["nombre"]."', ".fecha_db_almacenar(date('Y-m-d'),'Y-m-d').", '".$super_serie_padre."',".$value_agrupador.")";
 			phpmkr_query($sql1);
 			$id=phpmkr_insert_id();
 		}
@@ -651,5 +652,17 @@ function validar_relacion_documento_expediente($doc){
     
     $consulta=busca_filtro_tabla("archivo_idarchivo","buzon_salida","archivo_idarchivo=".$doc." AND tipo_destino=1 AND lower(nombre) IN(".implode(',',$estados_validar).") AND destino=".$funcionario_codigo,"",$conn);
     return($consulta);
+}
+function obtener_super_padre_serie($idserie){
+	global $conn;
+	
+	$serie=busca_filtro_tabla("cod_padre","serie","idserie=".$idserie,"",$conn);
+	if($serie['numcampos']){
+		if($serie[0]['cod_padre']){
+			return(obtener_super_padre_serie($serie[0]['cod_padre']));
+		}else{
+			return($idserie);
+		}
+	}
 }
 ?>
