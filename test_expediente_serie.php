@@ -38,6 +38,8 @@ $funcionarios=array();
 $idfunc=usuario_actual("idfuncionario");
 
 $lista2=expedientes_asignados();
+$idfuncionario=usuario_actual("idfuncionario"); 
+$datos_admin_funcionario = busca_datos_administrativos_funcionario($idfuncionario);
 
 $id = @$_REQUEST["id"];
 
@@ -78,7 +80,7 @@ llena_expediente($id);
 echo("</tree>\n");
 
 function llena_expediente($id){
-global $conn,$sql,$exp_doc,$funcionarios,$excluidos,$dependencias,$varios,$lista2;
+global $conn,$sql,$exp_doc,$funcionarios,$excluidos,$dependencias,$varios,$lista2,$datos_admin_funcionario;
 if($id==0){
   $papas=busca_filtro_tabla("a.fecha, a
 .nombre, a.descripcion, a.cod_arbol, a.idexpediente, estado_cierre","vexpediente_serie a",$lista2." and (a.cod_padre=0 OR a.cod_padre IS NULL) AND a.estado_cierre=1","GROUP BY a.fecha, a
@@ -134,7 +136,11 @@ if($papas["numcampos"]){
     	}
         
         if($hijos_entidad_serie['numcampos']){
-            echo(" child=\"1\" ");    	   
+        	for($x=0;$x<$hijos_entidad_serie['numcampos'];$x++){
+        		if(in_array($hijos_entidad_serie[$x]['serie_idserie'], $datos_admin_funcionario["series"])){
+        			echo(" child=\"1\" ");    	 
+        		}
+        	}	   
         }
 			
     	echo(">");
