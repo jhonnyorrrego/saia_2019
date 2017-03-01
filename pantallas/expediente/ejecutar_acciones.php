@@ -433,9 +433,18 @@ function cambiar_responsable_expediente(){
 	}
 	$sql="UPDATE expediente SET propietario='".$funcionario_codigo."' WHERE idexpediente IN(".$idexpediente.")";
 	phpmkr_query($sql);
+	
+    $exp_res_actual=busca_filtro_tabla("propietario","expediente","idexpediente=".$_REQUEST['idexpediente'],"",$conn);
+    $idfuncionario_antiguo=busca_filtro_tabla("idfuncionario","funcionario","funcionario_codigo=".$exp_res_actual[0]['propietario'],"",$conn);
+    $idfuncionario_nuevo=busca_filtro_tabla("idfuncionario","funcionario","funcionario_codigo=".$funcionario_codigo,"",$conn);
+	
+    $permisos_expedientes_antiguo=busca_filtro_tabla("identidad_expediente","entidad_expediente","estado=1 AND entidad_identidad=1 AND llave_entidad=".$idfuncionario_antiguo[0]['idfuncionario']." AND expediente_idexpediente IN(".$idexpediente.")","",$conn);
+    $identidad_expediente=implode(",",extrae_campo($permisos_expedientes_antiguo,'identidad_expediente'));
+    $sql4="UPDATE entidad_expediente SET llave_entidad=".$idfuncionario_nuevo[0]['idfuncionario']." WHERE identidad_expediente IN(".$identidad_expediente.")";
+    phpmkr_query($sql4);	
+	
 	$retorno->exito=1;
 	return($retorno);	
-	
 }
 
 
