@@ -718,7 +718,7 @@ function mostrar_item_destino_radicacion($idformato,$iddoc){
             });
         }
     </script>
-    <?php
+    <?php 
 }
 
 function mostrar_destino_radicacion($idformato,$iddoc){
@@ -736,18 +736,20 @@ function mostrar_destino_radicacion($idformato,$iddoc){
             $posicion_coincidencia = strpos($destinos[$i], $cadena_buscada);
             if ($posicion_coincidencia === false) {
                $busca_funcionarios=busca_filtro_tabla("concat(nombres,' ',apellidos) AS nombre","vfuncionario_dc","iddependencia_cargo=".$destinos[$i],"",$conn);
+               if($busca_funcionarios['numcampos']){
+               		$nombres.=$busca_funcionarios[0]['nombre']." </br> ";
+               }
                
-               $nombres.=$busca_funcionarios[0]['nombre']."</br>";
             }else {
                 $dependencia=str_replace("#", "", $destinos[$i]);
                 $busca_funcionarios=busca_filtro_tabla("concat(nombres,' ',apellidos) AS nombre","vfuncionario_dc","estado=1 AND estado_dc=1 AND estado_dep=1 AND iddependencia=".$dependencia,"",$conn);
                 for ($k=0; $k < $busca_funcionarios['numcampos']; $k++) { 
-                    $nombres.=$busca_funcionarios[$k]['nombre']."</br>";
+                    $nombres.=$busca_funcionarios[$k]['nombre']." </br> ";
                 }
             }
         }
     }
-    return $nombres;
+    return($nombres);
 }
 
 function campos_adicionales_radicacion($idformato,$iddoc){
@@ -869,11 +871,11 @@ function mostrar_informacion_general_radicacion($idformato,$iddoc){
     $tabla='
         <table class="table table-bordered" style="width: 100%; font-size:10px; text-align:left;" border="1">
   <tr>
-    <td style="width: 25%;"><b>Fecha de radicaci&oacute;n:</b></td>
-    <td style="width: 20%;">'.$fecha_radicacion.'</td>
-    <td style="width: 20%;"><b>No. Radicado:</b></td>
-    <td style="width: 20%;">'.$numero_radicado.'</td>
-    <td style="text-align:center; " colspan="2" rowspan="3">'.$img.'</td>
+    <td style="width: 23%;"><b>Fecha de radicaci&oacute;n:</b></td>
+    <td style="width: 18%;">'.$fecha_radicacion.'</td>
+    <td style="width: 18%;"><b>No. Radicado:</b></td>
+    <td style="width: 18%;">'.$numero_radicado.'</td>
+    <td style="text-align:center; width: 23%;" colspan="2" rowspan="3">'.$img.'</td>
   </tr>
   <tr>
     <td><b>Tipo de documento:</b></td>
@@ -917,21 +919,16 @@ function mostrar_informacion_general_radicacion($idformato,$iddoc){
 
 function mostrar_informacion_destino_radicacion($idformato,$iddoc){
 	global $conn,$ruta_db_superior;
-    
+   
     $tipo_destino=array(1=>"EXTERNO",2=>"INTERNO");
 	$datos=busca_filtro_tabla("","ft_radicacion_entrada","documento_iddocumento=".$iddoc,"",$conn);
 	$destino=mostrar_destino_radicacion($idformato,$iddoc);
-    $tabla='
-        <table class="table table-bordered" style="width: 100%; font-size:10px; text-align:left;" border="1">
-  <tr>
-    <td style="width: 25%;"><b>Tipo de Destino:</b></td>
-    <td>'.$tipo_destino[$datos[0]['tipo_destino']].'</td>
-  </tr>
-  <tr>
-    <td><b>Destino:</b></td>
-    <td>'.$destino.'</td>
-  </tr>
-    ';
+    $tabla='<table class="table table-bordered" style="width: 100%; font-size:10px; text-align:left;" border="1">
+		  <tr>
+		    <td style="width:25%;"><b>Tipo de Destino:</b></td>
+		    <td style="width:75%;">'.$tipo_destino[intval($datos[0]['tipo_destino'])].'</td>
+		  </tr>
+		  <tr><td><b>Destino:</b></td><td>'.$destino.'</td></tr>';
     if($datos[0]['tipo_destino']==2){
         $datos_copia="";
         
@@ -943,13 +940,14 @@ function mostrar_informacion_destino_radicacion($idformato,$iddoc){
             $posicion_coincidencia = strpos($destinos[$i], $cadena_buscada);
             if ($posicion_coincidencia === false) {
                $busca_funcionarios=busca_filtro_tabla("concat(nombres,' ',apellidos) AS nombre","vfuncionario_dc","iddependencia_cargo=".$destinos[$i],"",$conn);
-               
-               $datos_copia.=$busca_funcionarios[0]['nombre']."</br>";
+               if($busca_funcionarios['numcampos']){
+               		$datos_copia.=codifica_encabezado(html_entity_decode($busca_funcionarios[0]['nombre']))."</br>";
+               }
             }else {
                 $dependencia=str_replace("#", "", $destinos[$i]);
                 $busca_funcionarios=busca_filtro_tabla("concat(nombres,' ',apellidos) AS nombre","vfuncionario_dc","estado=1 AND estado_dc=1 AND estado_dep=1 AND iddependencia=".$dependencia,"",$conn);
                 for ($k=0; $k < $busca_funcionarios['numcampos']; $k++) { 
-                    $datos_copia.=$busca_funcionarios[$k]['nombre']."</br>";
+                    $datos_copia.=codifica_encabezado(html_entity_decode($busca_funcionarios[$k]['nombre']))." </br>";
                 }
             }
         }

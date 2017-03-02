@@ -65,5 +65,9 @@ if((!isset($_REQUEST["tipo"]) || $_REQUEST["tipo"]==1)&&!$formato[0]["item"]){
      } 
     } 
 echo('</body>');  
+}else{
+	echo('</table>');
+	echo('</body>');  
+	echo('</html>');  
 }
 ?>
