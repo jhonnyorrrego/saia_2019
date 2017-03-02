@@ -67,10 +67,10 @@ if ($_REQUEST['enviar']) {
 	} 
 	
 	if ($_FILES['logo_saia']['name']!=''){
-		$ruta_fondo="imagenes/";
 		$ruta_logo=busca_filtro_tabla("valor","configuracion","nombre='logo'","",$conn);
-		$imagen=explode("/",$ruta_logo[0]['valor']);
-		guardar_anexo("logo_saia",$ruta_fondo,$imagen[1]);
+		$imagen=str_replace(RUTA_LOGO_SAIA, "", $ruta_logo[0]['valor']);
+		$ruta_fondo=RUTA_LOGO_SAIA;
+		guardar_anexo("logo_saia",$ruta_fondo,$imagen);
 	} 
 }
 
@@ -81,7 +81,7 @@ function guardar_anexo($nombre_anexo,$ruta_imagen,$imagen_actual){
 	$cant=count($tipo);
 	$extension=$tipo[$cant-1];
 	if($extension=="jpg"||$extension=="jpeg" || $extension=="png"){ 
-		$aleatorio=rand(1,999)."_".date("Ymd");
+		$aleatorio="_".rand(1,999)."_".date("Y-m-d");
 		$imagen_actual2=explode(".",$imagen_actual);
 		rename($ruta_db_superior.$ruta_imagen.$imagen_actual,$ruta_db_superior.$ruta_imagen.$imagen_actual2[0].$aleatorio.".".$imagen_actual2[1]);
 		
@@ -89,8 +89,10 @@ function guardar_anexo($nombre_anexo,$ruta_imagen,$imagen_actual){
 			$sql='UPDATE configuracion SET valor="'.$imagen_actual2[0].$aleatorio.".".$imagen_actual2[1].'" WHERE nombre="logo_saia_inicio_principal" AND (valor IS NULL OR valor="")';	
 		}elseif($imagen_actual=='loginbkg.png'){
 			$sql='UPDATE configuracion SET valor="'.$imagen_actual2[0].$aleatorio.".".$imagen_actual2[1].'" WHERE nombre="logo_fondo_inicio_principal" AND (valor IS NULL OR valor="")';	
-		}else{
+		}elseif($imagen_actual=='logosaia.png'){
 			$sql='UPDATE configuracion SET valor="'.$imagen_actual2[0].$aleatorio.".".$imagen_actual2[1].'" WHERE nombre="icono_saia_principal" AND (valor IS NULL OR valor="")';
+		}else{
+			$sql='UPDATE configuracion SET valor="'.$imagen_actual2[0].$aleatorio.".".$imagen_actual2[1].'" WHERE nombre="logo_saia_anterior" AND (valor IS NULL OR valor="")';
 		}
 		phpmkr_query($sql);
 		//print_r($sql);

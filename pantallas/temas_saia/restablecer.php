@@ -48,7 +48,7 @@ include_once ($ruta_db_superior . "librerias_saia.php");
 		$datos=busca_filtro_tabla("valor","configuracion","nombre='logo_saia_inicio_principal'","",$conn);
 		if($datos[0]['valor']!=""){
 		
-		$aleatorio=rand(1,999)."_".date("Ymd");
+		$aleatorio="_".rand(1,999)."_".date("Y-m-d");
 		rename($ruta_db_superior.'imagenes/login/mainbkg.png',$ruta_db_superior.'imagenes/login/mainbkg'.$aleatorio.'.png');
 		
 		rename($ruta_db_superior.'imagenes/login/'.$datos[0]['valor'],$ruta_db_superior.'imagenes/login/mainbkg.png');
@@ -57,8 +57,8 @@ include_once ($ruta_db_superior . "librerias_saia.php");
 		
 		$datos1=busca_filtro_tabla("valor","configuracion","nombre='logo_fondo_inicio_principal'","",$conn);
 		if($datos1[0]['valor']!=""){
-		$aleatorio1=rand(1,999)."_".date("Ymd");
-		rename($ruta_db_superior.'imagenes/login/loginbkg.png',$ruta_db_superior.'imagenes/login/loginbkg'.$aleatorio1.'.png');
+		$aleatorio="_".rand(1,999)."_".date("Y-m-d");
+		rename($ruta_db_superior.'imagenes/login/loginbkg.png',$ruta_db_superior.'imagenes/login/loginbkg'.$aleatorio.'.png');
 		
 		rename($ruta_db_superior.'imagenes/login/'.$datos1[0]['valor'],$ruta_db_superior.'imagenes/login/loginbkg.png');
 		phpmkr_query("UPDATE configuracion SET valor='' WHERE nombre='logo_fondo_inicio_principal'");
@@ -67,13 +67,26 @@ include_once ($ruta_db_superior . "librerias_saia.php");
 		$datos2=busca_filtro_tabla("valor","configuracion","nombre='icono_saia_principal'","",$conn);
 		
 		if($datos2[0]['valor']!=""){		
-		$aleatorio2=rand(1,999)."_".date("Ymd");
-		rename($ruta_db_superior.'asset/img/layout/logosaia.png',$ruta_db_superior.'asset/img/layout/logosaia'.$aleatorio2.'.png');
+		$aleatorio="_".rand(1,999)."_".date("Y-m-d");
+		rename($ruta_db_superior.'asset/img/layout/logosaia.png',$ruta_db_superior.'asset/img/layout/logosaia'.$aleatorio.'.png');
 		
 		rename($ruta_db_superior.'asset/img/layout/'.$datos2[0]['valor'],$ruta_db_superior.'asset/img/layout/logosaia.png');
 		phpmkr_query("UPDATE configuracion SET valor='' WHERE nombre='icono_saia_principal'");
 		}
 		
+		
+		$datos3=busca_filtro_tabla("valor","configuracion","nombre='logo_saia_anterior'","",$conn);
+		
+		if($datos3[0]['valor']!=""){		
+		$aleatorio="_".rand(1,999)."_".date("Y-m-d");
+		
+		$ruta_logo=busca_filtro_tabla("valor","configuracion","nombre='logo'","",$conn);
+		$imagen=explode(".",$datos3[0]['valor']);
+		
+		rename($ruta_db_superior.$ruta_logo[0]['valor'],$ruta_db_superior.RUTA_LOGO_SAIA."logo".$aleatorio.'.'.$imagen[1]);
+		rename($ruta_db_superior.RUTA_LOGO_SAIA.$datos3[0]['valor'],$ruta_db_superior.$ruta_logo[0]['valor']);
+		phpmkr_query("UPDATE configuracion SET valor='' WHERE nombre='logo_saia_anterior'");
+		}
 		//return json_encode($datos);
 		
 		
