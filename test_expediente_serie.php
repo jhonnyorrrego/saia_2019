@@ -108,7 +108,7 @@ if($papas["numcampos"]){
 				$texto_item.=" <span style=\"color:red\">(CERRADO)</span>";
 			}
 		
-	  	echo("<item style=\"font-family:verdana; font-size:7pt;\" ");
+	  	echo("<item style=\"font-family:verdana; font-size:7pt; font-weight: 900;\" ");
 	    echo("text=\"".htmlspecialchars($texto_item)." \" id=\"".$papas[$i]["idexpediente"]."\"");
 	    if(@$_REQUEST["doc"]){
       	if($_REQUEST["accion"]==1 && in_array($papas[$i]["idexpediente"],$exp_doc)){
@@ -177,7 +177,7 @@ return;
 function llena_entidad_serie($iddependencia,$series){
     global $conn,$activo;
     
-    $condicion_final="categoria=2 AND tipo=1 AND idserie IN(".$series.")";
+    $condicion_final="categoria=2 AND idserie IN(".$series.")";
     $series=busca_filtro_tabla("nombre,idserie,codigo","serie",$condicion_final.$activo,"",$conn);
     
    
@@ -204,7 +204,7 @@ function llena_entidad_serie($iddependencia,$series){
         }
         
         echo("</item>\n");
-    }
+    }	
 }
 
 function llena_subseries_tipo_documental($iddependencia,$idserie){

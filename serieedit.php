@@ -90,7 +90,11 @@ switch ($sAction)
 	case "U": // Update
 		if (EditData($sKey, $conn)) { // Update Record based on key
         		abrir_url("arbolserie.php","arbol");
-            abrir_url("serieview.php?key=".$sKey,"_self");
+        			$parametro_dependencia_serie='';
+        			if(@$_REQUEST['dependencia_serie']){
+        				$parametro_dependencia_serie="&dependencia_serie=".$_REQUEST['dependencia_serie'];
+        			}			
+            abrir_url("serieview.php?key=".$sKey.$parametro_dependencia_serie,"_self");
 						exit();
         }
         break;
@@ -483,7 +487,7 @@ return true;
 </span></td>
 	</tr>	
 
-	<tr class="ocultar">
+	<!-- tr class="ocultar">
 		<td class="encabezado"  title="Permite decidir si se crea un expediente o un agrupador seg&uacute;n se requiera"><span class="phpmaker" style="color: #FFFFFF;">CREACI&Oacute;N DE EXPEDIENTE &Oacute; AGRUPADOR</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
     <input type="radio" id="tipo_expediente1" name="x_tipo_expediente" value="<?php echo htmlspecialchars("1"); ?>" <?php if (@$x_tipo_expediente == "1") { ?> checked<?php } ?> >
@@ -497,7 +501,7 @@ return true;
 <?php echo EditOptionSeparator(2); ?>
 
 </span></td>
-	</tr>	
+	</tr -->	
 	
 	  <tr>
 		<td class="encabezado"  title="Inactivar o activar una serie documental"><span class="phpmaker" style="color: #FFFFFF;">ESTADO</span></td>
@@ -513,6 +517,7 @@ return true;
 </table>
 <p>
 <input type="submit" name="Action" value="EDITAR">
+<input type="hidden" id="tipo_expediente0" name="x_tipo_expediente"  value="0">
 </form>
 <?php include_once ("footer.php") ?>
 <?php

@@ -80,10 +80,28 @@ $lista= "'".implode("','",$datos["series"])."'";
 $hijos="";
 if($serie=="NULL")
 {
- $papas=busca_filtro_tabla("nombre,codigo,idserie,cod_padre","serie","idserie in($lista) and (cod_padre IS NULL OR cod_padre=0) $condicion $padre","nombre ASC",$conn);
+ $papas=busca_filtro_tabla("nombre,codigo,idserie,cod_padre","serie","idserie in($lista) and (cod_padre IS NULL OR cod_padre=0) $condicion $padre"." AND  tipo=1","nombre ASC",$conn);   //solo series
 }
 else
- {$papas=busca_filtro_tabla("nombre,codigo,idserie,cod_padre","serie","idserie in($lista) and cod_padre=$serie $condicion","nombre ASC",$conn);
+ {
+ 	$condicion_nivel='';
+	$vector_tipo_nivel=array("series"=>1,"subseries"=>2,"tipo_documental"=>3);
+ 	if(@$_REQUEST['nivel']){
+ 		$vector_nivel=explode(',',$_REQUEST['nivel']);
+		if(count($vector_nivel)){
+			$condicion_nivel=' AND tipo IN(';
+		}
+		for($i=0;$i<count($vector_nivel);$i++){
+			$condicion_nivel.=$vector_tipo_nivel[$vector_nivel[$i]];
+			if( ($i+1)!=count($vector_nivel) ){
+				$condicion_nivel.=',';
+			}
+		}
+		if(count($vector_nivel)){
+			$condicion_nivel.=')';
+		}		
+ 	}
+ 	$papas=busca_filtro_tabla("nombre,codigo,idserie,cod_padre","serie","idserie in($lista) and cod_padre=$serie $condicion"." ".$condicion_nivel."","nombre ASC",$conn);
 }
 
 if($papas["numcampos"]>0)

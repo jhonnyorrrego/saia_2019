@@ -745,22 +745,25 @@ function generar_correo_confirmacion($idformato,$iddoc){
 }
 function parsear_arbol_expediente_serie_carta(){
     global $conn,$ruta_db_superior;
-    
     ?>
     <script>
         $(document).ready(function(){
              tree_serie_idserie.setOnCheckHandler(parsear_expediente_serie);
         });
-        
         function parsear_expediente_serie(nodeId){
             var idexpediente_idserie = nodeId.split('sub');
             $('[name="serie_idserie"]').val(idexpediente_idserie[1]);
             $('[name="expediente_serie"]').val(idexpediente_idserie[0]);
+            var seleccionados=tree_serie_idserie.getAllChecked();
+            var vector_seleccionados=seleccionados.split(',');
+            for(i=0;i<vector_seleccionados.length;i++){
+            	if(vector_seleccionados[i]!=nodeId){
+            		tree_serie_idserie.setCheck(vector_seleccionados[i],0 );
+            	}
+            }
         }
     </script>
     <?php
-    
-    
 }
 function vincular_expediente_serie_carta($idformato,$iddoc){ //POSTERIOR AL APROBAR
     global $conn,$ruta_db_superior;

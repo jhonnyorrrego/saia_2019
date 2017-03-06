@@ -110,12 +110,7 @@ if($dato_padre["numcampos"]){
 <div class="control-group element">
   <label class="control-label" for="serie_idserie">Serie asociada *
   </label>
-  <div class="controls">
-      
-    <?php
-    if(!$dato_padre['numcampos']){
-    
-    ?>         
+  <div class="controls">       
   	<b><?php echo(mostrar_seleccionados_exp($datos[0]["serie_idserie"],"nombre","serie")); ?></b>
   	<br />
     <span class="phpmaker">
@@ -130,16 +125,6 @@ if($dato_padre["numcampos"]){
 			<div id="treeboxbox_tree3" class="arbol_saia"></div>
     </span>
      <input type="text" style="display:none;" name="serie_idserie" id="serie_idserie" value="<?php echo($datos[0]["serie_idserie"]); ?>">
-    <?php
-    }else{
-        $datos_serie_padre=busca_filtro_tabla("nombre","serie","idserie=".$dato_padre[0]['serie_idserie'],"",$conn);
-        echo('<ul><li><b>'.$datos_serie_padre[0]['nombre'].'</b></li></ul>');
-    ?>
-    <input style="display:none;" type="text" name="serie_idserie" id="serie_idserie" value="<?php echo($dato_padre[0]['serie_idserie']); ?>">
-    <?php
-    }
-    ?> 
-     
   </div>
 </div>
 
@@ -417,11 +402,7 @@ if($dato_padre["numcampos"]){
       else
         document.poppedLayer = eval('document.layers["esperando_expediente"]');
       document.poppedLayer.style.display = "";
-    }
-    <?php
-    if(!$dato_padre['numcampos']){
-    
-    ?>    
+    }  
     
     tree3=new dhtmlXTreeObject("treeboxbox_tree3","","",0);
   	tree3.setImagePath("<?php echo($ruta_db_superior);?>imgs/");
@@ -431,8 +412,8 @@ if($dato_padre["numcampos"]){
     tree3.setOnLoadingStart(cargando_serie);
     tree3.setOnLoadingEnd(fin_cargando_serie);
     tree3.enableSmartXMLParsing(true);
-    tree3.setXMLAutoLoading("<?php echo($ruta_db_superior);?>test_serie_funcionario.php?seleccionado=<?php echo($datos[0]["serie_idserie"]); ?>&seleecionar_padre=1&pantalla=expediente&categoria=2&solo_papas=1");	
-  	tree3.loadXML("<?php echo($ruta_db_superior);?>test_serie_funcionario.php?seleccionado=<?php echo($datos[0]["serie_idserie"]); ?>&seleecionar_padre=1&pantalla=expediente&categoria=2&solo_papas=1");
+    tree3.setXMLAutoLoading("<?php echo($ruta_db_superior);?>test_serie_funcionario.php?seleccionado=<?php echo($datos[0]["serie_idserie"]); ?>&seleecionar_padre=1&pantalla=expediente&categoria=2&nivel=series,subseries&con_padres=1");	
+  	tree3.loadXML("<?php echo($ruta_db_superior);?>test_serie_funcionario.php?seleccionado=<?php echo($datos[0]["serie_idserie"]); ?>&seleecionar_padre=1&pantalla=expediente&categoria=2&nivel=series,subseries&con_padres=1");
     tree3.setOnCheckHandler(onNodeSelect_serie);
       
   	function onNodeSelect_serie(nodeId){
@@ -477,11 +458,7 @@ if($dato_padre["numcampos"]){
       else
         document.poppedLayer = eval('document.layers["esperando_serie"]');
       document.poppedLayer.style.display = "";
-    }
-    <?php
-    }
-    
-    ?>     
+    }   
     
     tree4=new dhtmlXTreeObject("treeboxbox_tree4","","",0);
   	tree4.setImagePath("<?php echo($ruta_db_superior);?>imgs/");

@@ -106,11 +106,6 @@ $dato_padre=busca_filtro_tabla("","expediente a","a.idexpediente=".$_REQUEST["co
   <label class="control-label" for="serie_idserie">Serie asociada *
   </label>
   <div class="controls">
-      
-    <?php
-    if(!$dato_padre['numcampos']){
-    
-    ?>      
         <span class="phpmaker">
     			<input type="text" id="stext_serie" width="200px" size="20">          
           <a href="javascript:void(0)" onclick="tree3.findItem((document.getElementById('stext_serie').value),1)">
@@ -124,17 +119,6 @@ $dato_padre=busca_filtro_tabla("","expediente a","a.idexpediente=".$_REQUEST["co
          
         </span>
          <input style="display:none;" type="text" name="serie_idserie" id="serie_idserie">
-     
-    <?php
-    }else{
-        $datos_serie_padre=busca_filtro_tabla("nombre","serie","idserie=".$dato_padre[0]['serie_idserie'],"",$conn);
-        echo('<ul><li><b>'.$datos_serie_padre[0]['nombre'].'</b></li></ul>');
-    ?>
-    <input style="display:none;" type="text" name="serie_idserie" id="serie_idserie" value="<?php echo($dato_padre[0]['serie_idserie']); ?>">
-    <?php
-    }
-    ?>     
-     
   </div>
 </div>
 
@@ -327,12 +311,7 @@ $dato_padre=busca_filtro_tabla("","expediente a","a.idexpediente=".$_REQUEST["co
   ?>
   <script>
   $(document).ready(function(){
-      
-      
-    <?php
-    if(!$dato_padre['numcampos']){
-    
-    ?>       
+            
     var browserType;
     if (document.layers) {browserType = "nn4"}
     if (document.all) {browserType = "ie"}
@@ -349,8 +328,8 @@ $dato_padre=busca_filtro_tabla("","expediente a","a.idexpediente=".$_REQUEST["co
     tree3.enableSmartXMLParsing(true);
     //tree3.setXMLAutoLoading("<?php echo($ruta_db_superior);?>test_serie_funcionario.php?con_padres=1&pantalla=expediente");	
   	//tree3.loadXML("<?php echo($ruta_db_superior);?>test_serie_funcionario.php?con_padres=1&pantalla=expediente");
-  	tree3.setXMLAutoLoading("<?php echo($ruta_db_superior);?>test_serie_funcionario.php?categoria=2&solo_papas=1");	
-  	tree3.loadXML("<?php echo($ruta_db_superior);?>test_serie_funcionario.php?categoria=2&solo_papas=1");
+  	tree3.setXMLAutoLoading("<?php echo($ruta_db_superior);?>test_serie_funcionario.php?categoria=2&nivel=series,subseries&con_padres=1");	
+  	tree3.loadXML("<?php echo($ruta_db_superior);?>test_serie_funcionario.php?categoria=2&nivel=series,subseries&con_padres=1");
     tree3.setOnCheckHandler(onNodeSelect_serie);
       
   	function onNodeSelect_serie(nodeId){
@@ -394,12 +373,7 @@ $dato_padre=busca_filtro_tabla("","expediente a","a.idexpediente=".$_REQUEST["co
       else
         document.poppedLayer = eval('document.layers["esperando_serie"]');
       document.poppedLayer.style.display = "";
-    }
-    
-    <?php
-    }
-    
-    ?>      
+    }   
     
     
     $(".opcion_informacion").on("hide",function(){
