@@ -2,7 +2,7 @@
 
 if(isset($_POST["ciudad"]))
 {
- $pais=busca_filtro_tabla("idpais,nombre","pais","lower(nombre) LIKE '%".strtolower(htmlentities(html_entity_decode(utf8_decode($_POST["pais"]))))."%'","",$conn);
+ $pais=busca_filtro_tabla("idpais,nombre","pais","lower(nombre) LIKE '%".strtolower((html_entity_decode(($_POST["pais"]))))."%'","",$conn);
 // print_r($pais);
  if($pais["numcampos"]>0)
    $idpais = $pais[0]["idpais"];

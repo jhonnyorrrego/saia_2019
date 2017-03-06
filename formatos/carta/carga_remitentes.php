@@ -108,12 +108,12 @@ function datos_proveedor($nombre,$identificacion,$cargo,$empresa,$direccion,$tel
 	$email=str_replace($search, $replace, $email);
 	$titulo=html_entity_decode(str_replace($search, $replace, $titulo));
 	
-	$nombre=htmlentities($nombre);
-	$cargo=htmlentities($cargo);
-	$empresa=htmlentities($empresa);
-	$direccion=htmlentities($direccion);
-	$email=htmlentities($email);
-	$titulo=htmlentities($titulo);
+	$nombre=($nombre);
+	$cargo=($cargo);
+	$empresa=($empresa);
+	$direccion=($direccion);
+	$email=($email);
+	$titulo=($titulo);
   
   $campos_ejecutor=array();
   if($cargo){

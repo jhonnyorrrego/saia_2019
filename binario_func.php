@@ -37,7 +37,7 @@
       // Now save a value to the LOB
       if($tipo=="texto")//para campos clob como en los formatos
         {$contenido=limpia_tabla($contenido);
-         if ( !$row[strtoupper($campo)]->save(trim(htmlentities(utf8_decode($contenido))))) 
+         if ( !$row[strtoupper($campo)]->save(trim((($contenido))))) 
           {  oci_rollback($conn->Conn->conn);
              $resultado=FALSE;
           }
@@ -62,7 +62,7 @@
         // TODO verificar resultado de la insecion $resultado=FALSE; 
        }
      elseif($tipo=="texto")
-        {$contenido=utf8_encode(limpia_tabla($contenido));
+        {$contenido=codifica_encabezado(limpia_tabla($contenido));
          $sql="update $tabla set $campo='".$contenido."' where $condicion";
          mysql_query($sql,$conn->Conn->conn);
         }

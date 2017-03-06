@@ -19,7 +19,7 @@ $iddocumento=$_REQUEST["iddoc"];
     $numero=$formato[0]["numero"];
     $texto.='<b>'.strtoupper($formato[0]["nombre"]).':</b><br>';
     $texto.="Numero Radicado: ".$formato[0]["numero"]."<br>";
-    $texto.=strip_tags(html_entity_decode("Descripcion:".htmlentities(stripslashes($formato[0]["etiqueta"]))),"<br>");
+    $texto.=strip_tags(html_entity_decode("Descripcion:".(stripslashes($formato[0]["etiqueta"]))),"<br>");
     $descripcion=busca_filtro_tabla("","campos_formato","formato_idformato=".$formato[0]["idformato"]." AND acciones LIKE '%d%'","",$conn);
     if($descripcion["numcampos"]){
       $campo_descripcion=$descripcion[0]["nombre"];
@@ -372,14 +372,14 @@ $formato=busca_filtro_tabla("","formato","idformato=".$_REQUEST["idformato"],"",
 if($notas_trans["numcampos"]){
 echo "<b>Notas Transferencias:</b><br />" ;
 for($i=0;$i<$notas_trans["numcampos"] && $i<2;$i++ )
-  echo ($i+1).". <label title='Autor: ".$notas_trans[$i]["nombres1"]." ".$notas_trans[$i]["apellidos1"]."\nDestino: ".$notas_trans[$i]["nombres2"]." ".$notas_trans[$i]["apellidos2"]."\nFecha: ".$notas_trans[$i]["fecha"]."\nNota: ".$notas_trans[$i]["notas"]."'>".delimita(utf8_encode(html_entity_decode($notas_trans[$i]["notas"])),30)."</label><br />";
+  echo ($i+1).". <label title='Autor: ".$notas_trans[$i]["nombres1"]." ".$notas_trans[$i]["apellidos1"]."\nDestino: ".$notas_trans[$i]["nombres2"]." ".$notas_trans[$i]["apellidos2"]."\nFecha: ".$notas_trans[$i]["fecha"]."\nNota: ".$notas_trans[$i]["notas"]."'>".delimita(codifica_encabezado(html_entity_decode($notas_trans[$i]["notas"])),30)."</label><br />";
  
 echo "<a href='../../doctransflist.php?doc=".$_REQUEST["iddoc"]."' target='detalles'>Ver mas</a><br />"; 
  }
 if($notas_postit["numcampos"]){
 echo "<br /><b>Notas Post-it:</b><br />" ;
 for($i=0;$i<$notas_postit["numcampos"] && $i<2;$i++ )
-  echo ($i+1).". <label title='Autor: ".$notas_postit[$i]["nombres"]." ".$notas_postit[$i]["apellidos"]."\nFecha: ".$notas_postit[$i]["fecha"]."\nNota: ".$notas_postit[$i]["comentario"]."'>".delimita(strip_tags(utf8_encode(html_entity_decode($notas_postit[$i]["comentario"]))),30)."</label><br />"; 
+  echo ($i+1).". <label title='Autor: ".$notas_postit[$i]["nombres"]." ".$notas_postit[$i]["apellidos"]."\nFecha: ".$notas_postit[$i]["fecha"]."\nNota: ".$notas_postit[$i]["comentario"]."'>".delimita(strip_tags(codifica_encabezado(html_entity_decode($notas_postit[$i]["comentario"]))),30)."</label><br />"; 
 echo "<a href='../".$formato[0]["nombre"]."/".$formato[0]["ruta_mostrar"]."?iddoc=".$_REQUEST["iddoc"]."&ver_notas=1' target='detalles'>Ver mas</a>";  
  }      
  ?>

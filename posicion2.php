@@ -163,21 +163,21 @@ elseif(isset($_POST["entidad"])&&($_POST["entidad"]!=""))
           <label for='x_entidad_identidad[]' class='error'>Campo obligatorio</label></td>
           </tr><tr>";
     echo "<td><span class='phpmaker'>";
-    echo "<input class='checkbox required' type='checkbox' id='entidad0' name='x_entidad_identidad[]' value='".$entidad[0]["id$tabla"]."'>".utf8_encode($entidad[0][$orden])."</span></td>";
+    echo "<input class='checkbox required' type='checkbox' id='entidad0' name='x_entidad_identidad[]' value='".$entidad[0]["id$tabla"]."'>".codifica_encabezado($entidad[0][$orden])."</span></td>";
 
     for($i=1; $i<$entidad["numcampos"]; $i++)
      {$todos .= $entidad[$i]["identidad"].",";
       if($i % 2 ==0 )
        echo "</tr><tr>";
       echo "<td><span class='phpmaker'>";
-      echo "<input class='checkbox' type='checkbox' id='entidad$i' name='x_entidad_identidad[]' value='".$entidad[$i]["id$tabla"]."'>".utf8_encode($entidad[$i][$orden])."</span></td>";
+      echo "<input class='checkbox' type='checkbox' id='entidad$i' name='x_entidad_identidad[]' value='".$entidad[$i]["id$tabla"]."'>".codifica_encabezado($entidad[$i][$orden])."</span></td>";
       }
    /*}
    else
    {
     echo "<select name='x_entidad_identidad'>";
     for($i=0; $i<$entidad["numcampos"]; $i++)
-     echo "<option value='".$entidad[$i]["id$tabla"]."'>".utf8_encode($entidad[$i][$orden])."</option>";
+     echo "<option value='".$entidad[$i]["id$tabla"]."'>".codifica_encabezado($entidad[$i][$orden])."</option>";
     echo "</select>";
    }  */
   }

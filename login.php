@@ -91,7 +91,7 @@ if (@$_REQUEST["boton_ui"] <> "") {
 			}
 			else
 			{
-          alerta(utf8_encode("El funcionario esta inactivo o no pertenece al sistema."));
+          alerta(codifica_encabezado("El funcionario esta inactivo o no pertenece al sistema."));
 			   	@session_unset();
           @session_destroy();
           almacenar_sesion(0,$sUserId);
@@ -128,7 +128,7 @@ if (@$_REQUEST["boton_ui"] <> "") {
      abrir_url($redirecciona_exito,"_top");    
 	} 
   else {	  
-		alerta(utf8_encode("CLAVE DE ACCESO O NOMBRE DE USUARIO NO VALIDO."));
+		alerta(codifica_encabezado("CLAVE DE ACCESO O NOMBRE DE USUARIO NO VALIDO."));
 		@session_unset();
     @session_destroy();
     almacenar_sesion(0,$sUserId);

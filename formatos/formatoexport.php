@@ -78,7 +78,7 @@ for($j=0;$j<$campos["numcampos"];$j++){
  	
     if($lista_campos[$i]=="cod_padre" && $campos[$j][$lista_campos[$i]]){
       $padre=busca_filtro_tabla("etiqueta","formato","idformato=".$campos[$j][$lista_campos[$i]]);
-      alerta(utf8_encode("Este formato es hijo del formato ".$padre[0][0].". Recuerde exportarlo individualmente y configurar de nuevo el padre a este formato cuando termine la importaci�n."));
+      alerta(codifica_encabezado("Este formato es hijo del formato ".$padre[0][0].". Recuerde exportarlo individualmente y configurar de nuevo el padre a este formato cuando termine la importaci�n."));
       array_push($campos_finales,$lista_campos[$i]);
       array_push($valores,0);
     }

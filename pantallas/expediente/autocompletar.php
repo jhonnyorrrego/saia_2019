@@ -16,7 +16,7 @@ if (isset($_REQUEST['valor']) && $_REQUEST['opt'] == 1) {
 		$parte=" and idfuncionario not in (".$_REQUEST["seleccionados"].")";
 	}
 	
-	$_REQUEST['valor']=(htmlentities($_REQUEST['valor'], ENT_QUOTES, "UTF-8"));
+	$_REQUEST['valor']=$_REQUEST['valor'];
 
 	$datos = busca_filtro_tabla("idfuncionario as id," . concatenar_cadena_sql(array("nombres", "' -'", "apellidos")) . " as descripcion", "funcionario f", "f.estado=1 and f.idfuncionario<>".$_REQUEST["propietario"].$parte." and (f.nombres like '%" . $_REQUEST["valor"] . "%' OR f.apellidos like '%" . $_REQUEST["valor"] . "%')", "", $conn);
 	$html = "<ul>";

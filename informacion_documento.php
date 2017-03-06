@@ -28,7 +28,7 @@ $datos_fecha=date_parse($documento[0]["fecha"]);
 $firmas=busca_filtro_tabla("CONCAT(B.nombres,CONCAT(' ',B.apellidos)) AS nombre","buzon_salida A, funcionario B","A.origen=B.funcionario_codigo AND (A.nombre LIKE 'APROBADO' OR A.nombre LIKE 'REVISADO')AND A.archivo_idarchivo=".$iddoc,"", $conn);
 $nombres=array();
 for($i=0; $i<$firmas['numcampos']; $i++){
-	$nombres[]=utf8_encode(html_entity_decode($firmas[$i]['nombre']));    
+	$nombres[]=codifica_encabezado(html_entity_decode($firmas[$i]['nombre']));    
 }
 
 $elaboro=busca_filtro_tabla("","funcionario A","A.funcionario_codigo=".$documento[0]["ejecutor"],"",$conn);

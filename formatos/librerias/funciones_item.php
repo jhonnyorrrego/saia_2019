@@ -18,7 +18,7 @@ function editar()
       {
         if(in_array(strtolower($key),$lista_campos))
           {
-			$update[] = $key . "='" . htmlentities(utf8_decode($valor)) . "'";
+			$update[] = $key . "='" . (($valor)) . "'";
 			$campos[] = $key;
 		}
 	}
@@ -70,13 +70,13 @@ function guardar_item()
 			$tipo = busca_filtro_tabla("tipo_dato,etiqueta_html", "campos_formato A", "lower(A.nombre)='" . strtolower($key) . "' and formato_idformato='" . $formato[0]["idformato"] . "'", "", $conn);
 			if (strtolower($tipo[0]["tipo_dato"]) == 'date') {
 				if ($valor != '0000-00-00 00:00')
-					$valores[] = htmlentities(utf8_decode(fecha_db_almacenar($valor, 'Y-m-d')));
+					$valores[] = ((fecha_db_almacenar($valor, 'Y-m-d')));
 				else
 					$valores[] = "''";
            }           
 					 else if(strtolower($tipo[0]["tipo_dato"])=='datetime'){
 				if ($valor != '0000-00-00 00:00')
-           				$valores[]=htmlentities(utf8_decode(fecha_db_almacenar($valor,'Y-m-d H:i:s')));//Y-m-d H:i:s
+           				$valores[]=((fecha_db_almacenar($valor,'Y-m-d H:i:s')));//Y-m-d H:i:s
 				else
 					$valores[] = "''";
            }
@@ -84,7 +84,7 @@ function guardar_item()
 				$valores[] = "'" . implode(",", $valor) . "'";
            }
            else {
-				$valores[] = "'" . htmlentities(utf8_decode(str_replace("'", "&#39;", $valor))) . "'";
+				$valores[] = "'" . ((str_replace("'", "&#39;", $valor))) . "'";
 			}
 		}
 	}

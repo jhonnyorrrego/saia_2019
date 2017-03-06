@@ -97,9 +97,9 @@ $tabla .='
 						
 				$tabla .='<tr style="text-align: center;">
 							<td>'.$riesgos[$i]['nombre_proceso'].'</td>
-							<td>'.strip_tags(utf8_encode(html_entity_decode($riesgos[$i]['fuente_causa']))).'</td>
+							<td>'.strip_tags(codifica_encabezado(html_entity_decode($riesgos[$i]['fuente_causa']))).'</td>
 							<td>'.$riesgos[$i]['consecutivo'].'</td>
-							<td>'.utf8_encode(html_entity_decode($riesgos[$i]['riesgo'])).'</td>
+							<td>'.codifica_encabezado(html_entity_decode($riesgos[$i]['riesgo'])).'</td>
 							<td>'.mostrar_valor_campo('probabilidad',$idformato_riesgos_proceso[0]['idformato'],$riesgos[$i]['documento_iddocumento'],1).'</td>
 							<td style="text-align:left;">';
 							for($j=0;$j<$valoracion['numcampos'];$j++){
@@ -124,21 +124,21 @@ $tabla .='
 							<td style="text-align:left;">';
 							for($j=0;$j<$acciones['numcampos'];$j++){
 								if($acciones[$j]['acciones_accion']!=""){
-									$tabla.=strip_tags(utf8_encode(html_entity_decode($acciones[$j]['acciones_accion'])));
+									$tabla.=strip_tags(codifica_encabezado(html_entity_decode($acciones[$j]['acciones_accion'])));
 								}
 							}
 							$tabla.='</td>
 							<td style="text-align:left;">';
 							for($j=0;$j<$acciones['numcampos'];$j++){
 								if($acciones[$j]['reponsables']!=""){
-									$tabla.=strip_tags(utf8_encode(html_entity_decode($responsables)));
+									$tabla.=strip_tags(codifica_encabezado(html_entity_decode($responsables)));
 								}								
 							}
 							$tabla.='</td>
 							<td style="text-align:left;">';
 							for($j=0;$j<$acciones['numcampos'];$j++){
 								if($acciones[$j]['indicador']!=""){
-									$tabla.=strip_tags(utf8_encode(html_entity_decode($acciones[$j]['indicador'])));
+									$tabla.=strip_tags(codifica_encabezado(html_entity_decode($acciones[$j]['indicador'])));
 								}
 								
 							}

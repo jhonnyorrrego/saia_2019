@@ -85,7 +85,7 @@ if($formato["numcampos"]){
 return;
 }
 function decodifica($cadena){
-return(utf8_encode(html_entity_decode($cadena)));
+return(codifica_encabezado(html_entity_decode($cadena)));
 }
 function llena_datos($idformato,$tabla,$campo){
 global $conn,$texto,$imagenes,$idsecretaria;

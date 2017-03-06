@@ -14,7 +14,7 @@ $permiso=$radicador->acceso_modulo_perfil("lsalidas");
 if (!$sortname) $sortname = 'nombres';
 if (!$sortorder) $sortorder = 'desc';
 		if($_POST['query']!=''){
-			$where = "and ".$_POST['qtype']." LIKE '%".htmlentities(utf8_decode($_POST['query']))."%' ";
+			$where = "and ".$_POST['qtype']." LIKE '%".(($_POST['query']))."%' ";
 		} else {
 			$where ='';
 		}

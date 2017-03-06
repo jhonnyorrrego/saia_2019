@@ -141,7 +141,7 @@ if(file_exists($ruta_docx.'documento_word.docx')){
 					imagedestroy($im);	
 					
 					$buscar_nombre='n_'.$funcionario_codigo_encriptado;
-					$nombre=utf8_encode(html_entity_decode($funcionario[0]['nombres'].' '.$funcionario[0]['apellidos']));
+					$nombre=codifica_encabezado(html_entity_decode($funcionario[0]['nombres'].' '.$funcionario[0]['apellidos']));
 					//$nombre=ucwords(strtolower($nombre));
 					$nombre=strtoupper(strtolower($nombre));
 					$templateProcessor->setValue($buscar_nombre,htmlspecialchars($nombre)); 	
@@ -150,7 +150,7 @@ if(file_exists($ruta_docx.'documento_word.docx')){
 					$buscar_cargo='c_'.$funcionario_codigo_encriptado;
 					
 					$carg=busca_filtro_tabla("cargo","vfuncionario_dc","estado_dc=1 AND ".$condicion_dep_cargo,"",$conn);
-					$cargo=utf8_encode(html_entity_decode($carg[0]['cargo']));
+					$cargo=codifica_encabezado(html_entity_decode($carg[0]['cargo']));
 					$cargo=ucwords(strtolower($cargo));
 					$templateProcessor->setValue($buscar_cargo,htmlspecialchars($cargo)); 	
 
@@ -158,7 +158,7 @@ if(file_exists($ruta_docx.'documento_word.docx')){
 					$buscar_dependencia='d_'.$funcionario_codigo_encriptado;
 										
 					$dep=busca_filtro_tabla("dependencia","vfuncionario_dc","estado_dc=1 AND ".$condicion_dep_cargo,"",$conn);
-					$dependencia=utf8_encode(html_entity_decode($dep[0]['dependencia']));
+					$dependencia=codifica_encabezado(html_entity_decode($dep[0]['dependencia']));
 					//$dependencia=ucwords(strtolower($dependencia));
 					$templateProcessor->setValue($buscar_dependencia,htmlspecialchars($dependencia)); 	
 					
@@ -187,7 +187,7 @@ if(file_exists($ruta_docx.'documento_word.docx')){
 				$buscar_revisado='r_'.$funcionario_codigo_encriptado;
 				if(in_array($buscar_revisado,$campos_word)){				
 					$funcionario=busca_filtro_tabla("nombres,apellidos","funcionario","funcionario_codigo=".$funcionario_codigo,"",$conn);
-					$nombre=utf8_encode(html_entity_decode($funcionario[0]['nombres'].' '.$funcionario[0]['apellidos']));
+					$nombre=codifica_encabezado(html_entity_decode($funcionario[0]['nombres'].' '.$funcionario[0]['apellidos']));
 					$nombre=ucwords(strtolower($nombre));
 					$templateProcessor->setValue($buscar_revisado,htmlspecialchars($nombre)); 	
 				}

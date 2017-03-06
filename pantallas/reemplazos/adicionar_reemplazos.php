@@ -20,7 +20,7 @@ if(@$_REQUEST["adicionar"]==1){
   if($idreemplazo){
     redirecciona($ruta_db_superior."pantallas/busquedas/consulta_busqueda.php?idbusqueda_componente=".$_REQUEST["idbusqueda_componente"]);
   }else{
-    alerta("<b>ATENCI&Oacute;N</b><br>Error al insertar el reemplazo","error");
+    alerta("<b>ATENCI&Oacute;N</b><br>Error al insertar el reemplazo");
   }
 }
 ?>
@@ -45,7 +45,7 @@ if(@$_REQUEST["adicionar"]==1){
             <td>
                 Buscar:
                 <input type="text" id="stext_antiguo">
-                <a href="javascript:void(0)" onclick="tree_antiguo.openAllItems(0);find_item_tree(htmlentities(document.getElementById('stext_antiguo').value),'antiguo');">
+                <a href="javascript:void(0)" onclick="tree_antiguo.openAllItems(0);find_item_tree((document.getElementById('stext_antiguo').value),'antiguo');">
                     <img src="<?php echo($ruta_db_superior);?>botones/general/buscar.png"></a><br />
                 <div id="esperando_antiguo">
                     <img src="<?php echo($ruta_db_superior);?>imagenes/cargando.gif">
@@ -60,7 +60,7 @@ if(@$_REQUEST["adicionar"]==1){
             <td>
                Buscar:
                 <input type="text" id="stext_nuevo">
-                <a href="javascript:void(0)" onclick="tree_nuevo.openAllItems(0);find_item_tree(htmlentities(document.getElementById('stext_nuevo').value),'nuevo');">
+                <a href="javascript:void(0)" onclick="tree_nuevo.openAllItems(0);find_item_tree((document.getElementById('stext_nuevo').value),'nuevo');">
                     <img src="<?php echo($ruta_db_superior);?>botones/general/buscar.png"></a>
                 <div id="esperando_nuevo">
                     <img src="<?php echo($ruta_db_superior);?>imagenes/cargando.gif">
@@ -249,23 +249,23 @@ $(document).ready(function(){
   formulario_reemplazo.validate();
   $("#submit_formulario_reemplazo").click(function(){
   	if($("#antiguo").val()=="" || $("#nuevo").val()==""){
-      alert("<b>ATENCI&Oacute;N</b><br>Por Favor Ingrese los Funcionarios","warning");
+      alert("Por Favor Ingrese los Funcionarios");
       return(false);
     }
 
     if($("#antiguo").val()==$("#nuevo").val()){
-      alert("<b>ATENCI&Oacute;N</b><br>El usuario no puede reemplazarse a si mismo","warning");
+      alert("El usuario no puede reemplazarse a si mismo");
       return(false);
     }
     if($("input[name='tipo_reemplazo']").val()==1){
       var inDate = new Date($("#fecha_inicio").val()),
       eDate = new Date($("#fecha_fin").val());
       if($("#fecha_inicio").val() == $("#fecha_fin").val()) {
-        alert("<b>ATENCI&Oacute;N</b><br>Las fechas no pueden ser iguales","warning");
+        alert("Las fechas no pueden ser iguales");
         return(false);
       }
       else if(inDate>eDate){
-        alert("<b>ATENCI&Oacute;N</b><br>La fecha final no pueden ser anterior a la fecha final","warning");
+        alert("La fecha final no pueden ser anterior a la fecha final");
         return(false);
       }
     }else{
@@ -293,7 +293,7 @@ echo(librerias_arboles());
 function adicionar_reemplazo(){
 $fecha_fin="NULL";
 if(@$_REQUEST["antiguo"]==@$_REQUEST["nuevo"]){
-  alerta("<b>ATENCI&Oacute;N</b><br>El usuario no puede reemplazarse a si mismo","warning");
+  alerta("<b>ATENCI&Oacute;N</b><br>El usuario no puede reemplazarse a si mismo");
   return(0);
 }
 if(@$_REQUEST["fecha_fin"]){
@@ -304,8 +304,4 @@ phpmkr_query($sql2);
 $idreemplazo_saia=phpmkr_insert_id();
 return($idreemplazo_saia);
 }
-
-
-
-
 ?>

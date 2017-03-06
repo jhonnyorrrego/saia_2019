@@ -26,7 +26,7 @@ function transferir_clasificacion_pqrsf($idformato,$iddoc){
 /*MOSTRAR*/
 function ver_responsable($idformato,$iddoc,$tipo=NULL){
   $respon=busca_filtro_tabla("F.nombres, F.apellidos","funcionario F, dependencia_cargo DC, ft_clasificacion_pqrsf D","D.responsable=DC.iddependencia_cargo AND DC.funcionario_idfuncionario=F.idfuncionario AND D.documento_iddocumento=".$iddoc,"",$conn);
-	$funcionario=utf8_encode(html_entity_decode($respon[0]['nombres']." ".$respon[0]['apellidos']));
+	$funcionario=codifica_encabezado(html_entity_decode($respon[0]['nombres']." ".$respon[0]['apellidos']));
 	if($tipo==1){
 		return($funcionario);
 	}else{

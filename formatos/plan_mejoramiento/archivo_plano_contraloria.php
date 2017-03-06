@@ -74,5 +74,5 @@ if($_REQUEST["iddoc"]){
     }
   }
 }
-echo(trim(utf8_encode($texto)));
+echo(trim(codifica_encabezado($texto)));
 ?>

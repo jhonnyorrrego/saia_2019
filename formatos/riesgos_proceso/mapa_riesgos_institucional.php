@@ -174,7 +174,7 @@ function obtener_controles_riesgo($idft_riesgos_proceso){
 	$controles_riesgo = busca_filtro_tabla("descripcion_control, idft_control_riesgos","ft_control_riesgos a, documento b","a.documento_iddocumento=b.iddocumento and b.estado not in('ELIMINADO', 'ANULADO') and ft_riesgos_proceso=".$idft_riesgos_proceso,"idft_control_riesgos asc",$conn);
 		
 	for($i=0; $i < $controles_riesgo["numcampos"]; $i++){
-		$li .= '<li>'.preg_replace("/(<p.*>)(.*)(<\/p>)/","$2",strip_tags(utf8_encode(html_entity_decode($controles_riesgo[$i]["descripcion_control"])))).'</li><br />';
+		$li .= '<li>'.preg_replace("/(<p.*>)(.*)(<\/p>)/","$2",strip_tags(codifica_encabezado(html_entity_decode($controles_riesgo[$i]["descripcion_control"])))).'</li><br />';
 	}
 
 	if($li){
@@ -301,7 +301,7 @@ function acciones($id,$campo){
 	$texto='';
 	for($i=0;$i<$acciones["numcampos"];$i++){
 		if($campo!='reponsables'){
-			$texto.=utf8_encode(html_entity_decode($acciones[$i][$campo]));
+			$texto.=codifica_encabezado(html_entity_decode($acciones[$i][$campo]));
 		}
 		else{
 		    $responsable=busca_filtro_tabla("","funcionario","estado=1 AND funcionario_codigo in(".$acciones[$i][$campo].")","",$conn);

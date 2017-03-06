@@ -64,7 +64,7 @@ $texto='';
 if($campos["numcampos"]){
 $texto.='<br /><br /><ul id="listacampos">';
 for($i=0;$i<$campos["numcampos"];$i++){
-  $texto.='<li class="lcampo" id="'.$campos[$i]["idruta"].'">'.$campos[$i]["orden"]."-".utf8_encode(strtoupper(html_entity_decode($campos[$i]["nombres"]." ".$campos[$i]["apellidos"]))).'</li>';
+  $texto.='<li class="lcampo" id="'.$campos[$i]["idruta"].'">'.$campos[$i]["orden"]."-".codifica_encabezado(strtoupper(html_entity_decode($campos[$i]["nombres"]." ".$campos[$i]["apellidos"]))).'</li>';
 }
 $texto.='</ul>';
 if(isset($_REQUEST["pantalla"])&&$_REQUEST["pantalla"]=="tiny")

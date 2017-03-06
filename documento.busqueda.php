@@ -220,9 +220,9 @@ foreach($_REQUEST AS $llave=>$valor){
             if($cad!=''){
               $cad.=' OR ';
             }
-            $cad.="(iddocumento IN (SELECT documento_iddocumento FROM anexos WHERE lower(etiqueta) LIKE '%".strtolower(htmlentities(utf8_decode($val)))."%'";
+            $cad.="(iddocumento IN (SELECT documento_iddocumento FROM anexos WHERE lower(etiqueta) LIKE '%".strtolower((($val)))."%'";
           }  
-          else $cad.= " OR lower(etiqueta) LIKE '%".strtolower(htmlentities(utf8_decode($val)))."%'";  
+          else $cad.= " OR lower(etiqueta) LIKE '%".strtolower((($val)))."%'";  
           $x++;
         }
         $cad.='))';
@@ -242,9 +242,9 @@ foreach($_REQUEST AS $llave=>$valor){
             if($cad!=''){
               $cad.=' OR ';
             }
-            $cad.="( lower(descripcion) LIKE '%".strtolower(htmlentities(utf8_decode($val)))."%'";
+            $cad.="( lower(descripcion) LIKE '%".strtolower((($val)))."%'";
           }
-          else $cad.= " OR lower(descripcion) LIKE '%".strtolower(htmlentities(utf8_decode($val)))."%'";
+          else $cad.= " OR lower(descripcion) LIKE '%".strtolower((($val)))."%'";
           $x++;  
         }
         $cad.=')';
@@ -276,10 +276,10 @@ foreach($_REQUEST AS $llave=>$valor){
           if($cad!=''){
             $cad.=' OR ';
           }
-          $cad.=" (lower(e.nombre)  LIKE '%".strtolower(htmlentities(utf8_decode($val)))."%'";
+          $cad.=" (lower(e.nombre)  LIKE '%".strtolower((($val)))."%'";
         }  
         else 
-          $cad.= " OR lower(e.nombre) LIKE '%".strtolower(htmlentities(utf8_decode($val)))."%'";
+          $cad.= " OR lower(e.nombre) LIKE '%".strtolower((($val)))."%'";
         $x++;    
       }     
       $cad.=')'; 

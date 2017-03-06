@@ -158,8 +158,8 @@ if($tabla=="funcionario")
   echo ("<select class='combo' id='".$id1."' name='".$id1."'>");
   while($registro=phpmkr_fetch_array($res))
 	{
-		// Paso a HTML acentors y ñ para su correcta visualizacion
-		//$registro[1]=htmlentities($registro[1]);
+		// Paso a HTML acentors y ï¿½ para su correcta visualizacion
+		//$registro[1]=($registro[1]);
 		// Imprimo las opciones del select
 		//se evalua perfil del funcionario y dependiendo de este se listan los funcionario que esten por debajo de el
 		$perfil = $_GET["perfil"];    	   
@@ -198,7 +198,7 @@ else
 	$select= ("<select class='combo' id='".$id1."' name='".$id1."'>");  
 	while($registro=phpmkr_fetch_array($consulta))
   	{ $aux=1;	
-		// Paso a HTML acentors y ñ para su correcta visualizacion
+		// Paso a HTML acentors y ï¿½ para su correcta visualizacion
 		$registro[1]=$registro[1];
 		// Imprimo las opciones del select
 		$select.= "<option value='".$registro[0]."'";

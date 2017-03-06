@@ -131,7 +131,7 @@ if(@$_REQUEST['guardar']==1){
 			$ruta=PROTOCOLO_CONEXION.RUTA_PDF_LOCAL."/index.php";
 			$link="<a href='".$ruta.$parametro."' target='_blank'>Ver Tarea</a>";	
 			
-			$descripcion_tarea=htmlentities($_REQUEST["descripcion_tarea"], ENT_QUOTES, "UTF-8");
+			$descripcion_tarea=$_REQUEST["descripcion_tarea"];
 			
 			$mensaje="Saludos,<br/><br/>Usted esta vinculado a una nueva tarea<br/><br/>
 			Nombre de la Tarea: <strong>".html_entity_decode($_REQUEST["nombre_tarea"])."</strong><br/>

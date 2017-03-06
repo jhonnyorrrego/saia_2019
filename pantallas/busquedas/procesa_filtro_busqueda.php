@@ -218,7 +218,7 @@ function valor_dato($campo, $valor) {
 	}
 	
 	if ($retorno_ != '')
-		return htmlentities(utf8_decode($retorno));
+		return (($retorno));
 	else {
 		return false;
 	}
@@ -507,7 +507,7 @@ function parsear_consulta($key, $valor, $req_condicion_llave) {
 		case '=' :
 			$condicion = '|' . $req_condicion_llave . '|';
 			$valor_ = $valor;
-			$escaped_val = htmlentities(utf8_decode($valor));
+			$escaped_val = (($valor));
 			if (MOTOR == "MySql") {
 				$str_quote1 = "'";
 				$str_quote2 = "'";
@@ -530,7 +530,7 @@ function parsear_consulta($key, $valor, $req_condicion_llave) {
 				$str_quote2 = "%'";
 				if (strpos($valor, ",") === false) {
 					$valor_ = $valor;
-					$escaped_val = htmlentities(utf8_decode(strtolower(trim($valor))));
+					$escaped_val = ((strtolower(trim($valor))));
 					$valor = get_valor_condicion($key, $valor_, $escaped_val, $str_quote1, $str_quote2);
 					// $key se puede calcular fuera del switch
 					$cadena = addslashes("lower(" . $key . ")" . $condicion . $valor);
@@ -539,7 +539,7 @@ function parsear_consulta($key, $valor, $req_condicion_llave) {
 					$cant = count($valores);
 					for($j = 0; $j < $cant; $j++) {
 						$valor_ = $valores[$j];
-						$escaped_val = htmlentities(utf8_decode(strtolower(trim($valor_))));
+						$escaped_val = ((strtolower(trim($valor_))));
 						$valor = get_valor_condicion($key, $valor_, $escaped_val, $str_quote1, $str_quote2);
 						// $key se puede calcular fuera del switch
 						$cadena .= addslashes("lower(" . $key . ")" . $condicion . $valor);
@@ -553,7 +553,7 @@ function parsear_consulta($key, $valor, $req_condicion_llave) {
 				$str_quote1 = "''%";
 				$str_quote2 = "%''";
 				$valor_ = $valor;
-				$escaped_val = htmlentities(utf8_decode(strtolower($valor)));
+				$escaped_val = ((strtolower($valor)));
 				$valor = get_valor_condicion($key, $valor_, $escaped_val, $str_quote1, $str_quote2);
 				// $key se puede calcular fuera del switch
 				$cadena = ("lower(" . $key . ")" . $condicion . $valor);
@@ -561,7 +561,7 @@ function parsear_consulta($key, $valor, $req_condicion_llave) {
 				$str_quote1 = "''%";
 				$str_quote2 = "%''";
 				$valor_ = $valor;
-				$escaped_val = htmlentities(utf8_decode(strtolower($valor)));
+				$escaped_val = ((strtolower($valor)));
 				$valor = get_valor_condicion($key, $valor_, $escaped_val, $str_quote1, $str_quote2);
 				// $key se puede calcular fuera del switch
 				$cadena = ("lower(cast(" . $key . " as varchar(max)))" . $condicion . $valor);
@@ -569,7 +569,7 @@ function parsear_consulta($key, $valor, $req_condicion_llave) {
 				$str_quote1 = "''%";
 				$str_quote2 = "%''";
 				$valor_ = $valor;
-				$escaped_val = htmlentities(utf8_decode(strtolower($valor)));
+				$escaped_val = ((strtolower($valor)));
 				$valor = get_valor_condicion($key, $valor_, $escaped_val, $str_quote1, $str_quote2);
 				// $key se puede calcular fuera del switch
 				$cadena = ("lower(" . $key . ")" . $condicion . $valor);
@@ -583,7 +583,7 @@ function parsear_consulta($key, $valor, $req_condicion_llave) {
 				$str_quote2 = ",%'";
 				if (strpos($valor, ",") === false) {
 					$valor_ = $valor;
-					$escaped_val = htmlentities(utf8_decode(strtolower(trim($valor))));
+					$escaped_val = ((strtolower(trim($valor))));
 					$valor = get_valor_condicion($key, $valor_, $escaped_val, $str_quote1, $str_quote2);
 					// $key se puede calcular fuera del switch
 					$cadena = addslashes("lower(" . concatenar_cadena_sql(array(
@@ -596,7 +596,7 @@ function parsear_consulta($key, $valor, $req_condicion_llave) {
 					$cant = count($valores);
 					for($j = 0; $j < $cant; $j++) {
 						$valor_ = $valores[$j];
-						$escaped_val = htmlentities(utf8_decode(strtolower(trim($valor_))));
+						$escaped_val = ((strtolower(trim($valor_))));
 						$valor = get_valor_condicion($key, $valor_, $escaped_val, $str_quote1, $str_quote2);
 						// $key se puede calcular fuera del switch
 						$cadena .= addslashes("lower(" . concatenar_cadena_sql(array(
@@ -616,7 +616,7 @@ function parsear_consulta($key, $valor, $req_condicion_llave) {
 				if (MOTOR == "Oracle") {
 					if (strpos($valor, ",") === false) {
 						$valor_ = $valor;
-						$escaped_val = htmlentities(utf8_decode(strtolower($valor)));
+						$escaped_val = ((strtolower($valor)));
 						$valor = get_valor_condicion($key, $valor_, $escaped_val, $str_quote1, $str_quote2);
 						// $key se puede calcular fuera del switch
 						$cadena = ("lower(" . concatenar_cadena_sql(array(
@@ -629,7 +629,7 @@ function parsear_consulta($key, $valor, $req_condicion_llave) {
 						$cant = count($valores);
 						for($j = 0; $j < $cant; $j++) {
 							$valor_ = $valores[$j];
-							$escaped_val = htmlentities(utf8_decode(strtolower(trim($valor_))));
+							$escaped_val = ((strtolower(trim($valor_))));
 							$valor = get_valor_condicion($key, $valor_, $escaped_val, $str_quote1, $str_quote2);
 							// $key se puede calcular fuera del switch
 							$cadena .= ("lower(" . concatenar_cadena_sql(array(
@@ -646,7 +646,7 @@ function parsear_consulta($key, $valor, $req_condicion_llave) {
 				} else if (MOTOR == "MSSql" || MOTOR == "SqlServer") {
 					if (strpos($valor, ",") === false) {
 						$valor_ = $valor;
-						$escaped_val = htmlentities(utf8_decode(strtolower($valor)));
+						$escaped_val = ((strtolower($valor)));
 						$valor = get_valor_condicion($key, $valor_, $escaped_val, $str_quote1, $str_quote2);
 						// $key se puede calcular fuera del switch
 						$cadena = ("lower(cast(" . concatenar_cadena_sql(array(
@@ -659,7 +659,7 @@ function parsear_consulta($key, $valor, $req_condicion_llave) {
 						$cant = count($valores);
 						for($j = 0; $j < $cant; $j++) {
 							$valor_ = $valores[$j];
-							$escaped_val = htmlentities(utf8_decode(strtolower(trim($valor_))));
+							$escaped_val = ((strtolower(trim($valor_))));
 							$valor = get_valor_condicion($key, $valor_, $escaped_val, $str_quote1, $str_quote2);
 							// $key se puede calcular fuera del switch
 							$cadena = ("lower(cast(" . concatenar_cadena_sql(array(
@@ -687,7 +687,7 @@ function parsear_consulta($key, $valor, $req_condicion_llave) {
 				$str_quote2 = "%'";
 				if (strpos($valor, ",") === false) {
 					$valor_ = $valor;
-					$escaped_val = htmlentities(utf8_decode(strtolower(trim($valor))));
+					$escaped_val = ((strtolower(trim($valor))));
 					$valor = get_valor_condicion($key, $valor_, $escaped_val, $str_quote1, $str_quote2);
 					// $key se puede calcular fuera del switch
 					$cadena = addslashes("lower(" . $key . ")" . $condicion . str_replace(" ", "%", $valor));
@@ -696,7 +696,7 @@ function parsear_consulta($key, $valor, $req_condicion_llave) {
 					$cant = count($valores);
 					for($j = 0; $j < $cant; $j++) {
 						$valor_ = $valores[$j];
-						$escaped_val = htmlentities(utf8_decode(strtolower(trim($valor_))));
+						$escaped_val = ((strtolower(trim($valor_))));
 						$valor = get_valor_condicion($key, $valor_, $escaped_val, $str_quote1, $str_quote2);
 						// $key se puede calcular fuera del switch
 						$cadena .= addslashes("lower(" . $key . ")" . $condicion . str_replace(" ", "%", $valor));
@@ -711,7 +711,7 @@ function parsear_consulta($key, $valor, $req_condicion_llave) {
 				$str_quote2 = "%''";
 				if (strpos($valor, ",") === false) {
 					$valor_ = $valor;
-					$escaped_val = htmlentities(utf8_decode(strtolower($valor)));
+					$escaped_val = ((strtolower($valor)));
 					$valor = get_valor_condicion($key, $valor_, $escaped_val, $str_quote1, $str_quote2);
 					// $key se puede calcular fuera del switch
 					$cadena = ("lower(cast(" . $key . " as varchar(max)))" . $condicion . str_replace(" ", "%", $valor));
@@ -720,7 +720,7 @@ function parsear_consulta($key, $valor, $req_condicion_llave) {
 					$cant = count($valores);
 					for($j = 0; $j < $cant; $j++) {
 						$valor_ = $valores[$j];
-						$escaped_val = htmlentities(utf8_decode(strtolower(trim($valor_))));
+						$escaped_val = ((strtolower(trim($valor_))));
 						$valor = get_valor_condicion($key, $valor_, $escaped_val, $str_quote1, $str_quote2);
 						// $key se puede calcular fuera del switch
 						$cadena = ("lower(cast(" . $key . " as varchar(max)))" . $condicion . str_replace(" ", "%", $valor));
@@ -749,7 +749,7 @@ function parsear_consulta($key, $valor, $req_condicion_llave) {
 			if (MOTOR == "MySql") {
 				$valor = ajustar_lista_valores($valor);
 				$valor_ = $valor;
-				$escaped_val = htmlentities(utf8_decode(strtolower($valor)));
+				$escaped_val = ((strtolower($valor)));
 				$valor = get_valor_condicion($key, $valor_, $escaped_val, $str_quote1, $str_quote2);
 				// $key se puede calcular fuera del switch
 				$cadena = addslashes("lower(" . $key . ")" . $condicion . $valor);
@@ -758,7 +758,7 @@ function parsear_consulta($key, $valor, $req_condicion_llave) {
 				$valor = ajustar_lista_valores($valor);
 				if (!valor_dato($key, $valor)) {
 					$valor = str_replace("'", "''", $valor);
-					$valor = $str_quote1 . htmlentities(utf8_decode(strtolower($valor))) . $str_quote2;
+					$valor = $str_quote1 . ((strtolower($valor))) . $str_quote2;
 				} else {
 					$valor = valor_dato($key, $valor);
 				}
@@ -768,7 +768,7 @@ function parsear_consulta($key, $valor, $req_condicion_llave) {
 				$valor = ajustar_lista_valores($valor);
 				if (!valor_dato($key, $valor)) {
 					$valor = str_replace("'", "''", $valor);
-					$valor = $str_quote1 . htmlentities(utf8_decode(strtolower($valor))) . $str_quote2;
+					$valor = $str_quote1 . ((strtolower($valor))) . $str_quote2;
 				} else {
 					$valor = valor_dato($key, $valor);
 				}
@@ -784,7 +784,7 @@ function parsear_consulta($key, $valor, $req_condicion_llave) {
 				}
 				if (!valor_dato($key, $valor)) {
 					$valor = str_replace("'", "''", $valor);
-					$valor = htmlentities(utf8_decode(strtolower($valor)));
+					$valor = ((strtolower($valor)));
 				} else {
 					$valor = valor_dato($key, $valor);
 				}
@@ -796,7 +796,7 @@ function parsear_consulta($key, $valor, $req_condicion_llave) {
 				}
 				if (!valor_dato($key, $valor)) {
 					$valor = str_replace("'", "''", $valor);
-					$valor = htmlentities(utf8_decode(strtolower($valor)));
+					$valor = ((strtolower($valor)));
 				} else {
 					$valor = valor_dato($key, $valor);
 				}
@@ -808,7 +808,7 @@ function parsear_consulta($key, $valor, $req_condicion_llave) {
 				}
 				if (!valor_dato($key, $valor)) {
 					$valor = str_replace("'", "''", $valor);
-					$valor = htmlentities(utf8_decode(strtolower($valor)));
+					$valor = ((strtolower($valor)));
 				} else {
 					$valor = valor_dato($key, $valor);
 				}
@@ -820,7 +820,7 @@ function parsear_consulta($key, $valor, $req_condicion_llave) {
 				}
 				if (!valor_dato($key, $valor)) {
 					$valor = str_replace("'", "''", $valor);
-					$valor = htmlentities(utf8_decode(strtolower($valor)));
+					$valor = ((strtolower($valor)));
 				} else {
 					$valor = valor_dato($key, $valor);
 				}
@@ -836,7 +836,7 @@ function parsear_consulta($key, $valor, $req_condicion_llave) {
 				$str_quote1 = "'%";
 				$str_quote2 = "%'";
 				$valor_ = $valor;
-				$escaped_val = htmlentities(utf8_decode(strtolower($valor)));
+				$escaped_val = ((strtolower($valor)));
 				if (!valor_dato($key, $valor_)) {
 					$valor = $str_quote1 . $escaped_val . $str_quote2;
 				} else {
@@ -854,7 +854,7 @@ function parsear_consulta($key, $valor, $req_condicion_llave) {
 				$str_quote1 = "''%";
 				$str_quote2 = "%''";
 				$valor_ = $valor;
-				$escaped_val = htmlentities(utf8_decode(strtolower($valor)));
+				$escaped_val = ((strtolower($valor)));
 				if (!valor_dato($key, $valor_)) {
 					$valor = $str_quote1 . $escaped_val . $str_quote2;
 				} else {
@@ -917,7 +917,7 @@ function get_valor_condicion($key, $valor_, $escaped_val, $str_quote1, $str_quot
 function procesar_filtro_like_general($key, $valor, $condicion) {
 	if (strpos($valor, ",") === false) {
 		if (!valor_dato($key, $valor)) {
-			$valor = "''%" . htmlentities(utf8_decode(strtolower($valor))) . "%''";
+			$valor = "''%" . ((strtolower($valor))) . "%''";
 		} else {
 			$valor = valor_dato($key, $valor);
 		}
@@ -929,7 +929,7 @@ function procesar_filtro_like_general($key, $valor, $condicion) {
 		for($j = 0; $j < $cant; $j++) {
 			$valor_ = $valores[$j];
 			if (!valor_dato($key, $valor_)) {
-				$valor = "''%" . htmlentities(utf8_decode(strtolower(trim($valor_)))) . "%''";
+				$valor = "''%" . ((strtolower(trim($valor_)))) . "%''";
 			} else {
 				$valor = valor_dato($key, $valor_);
 			}

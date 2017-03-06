@@ -638,7 +638,7 @@ array_push($listado0,html_entity_decode($datos_llenado[$i][0].",".trim(strip_tag
           <input type='hidden' name='campo$indice' value='".$datos["campo"]."'>";
           
           for($j=0;$j<$cont3;$j++)
-             {$texto.="<input onclick='valoretiqueta$indice.value=this.title' type='radio' name='valor$indice' value='".$listado3[$j][0]."' title='".utf8_encode($listado3[$j][1])."'>".utf8_encode($listado3[$j][1])."<br />";
+             {$texto.="<input onclick='valoretiqueta$indice.value=this.title' type='radio' name='valor$indice' value='".$listado3[$j][0]."' title='".codifica_encabezado($listado3[$j][1])."'>".codifica_encabezado($listado3[$j][1])."<br />";
              }
           $texto.="";
          break; 
@@ -648,7 +648,7 @@ array_push($listado0,html_entity_decode($datos_llenado[$i][0].",".trim(strip_tag
           <select onchange='valoretiqueta$indice.value=this.options[this.selectedIndex].text' name='valor$indice' ><option value=''>Seleccionar...</option>";
           
           for($j=0;$j<$cont3;$j++)
-             {$texto.="<option value='".$listado3[$j][0]."'>".utf8_encode($listado3[$j][1])."</option>";
+             {$texto.="<option value='".$listado3[$j][0]."'>".codifica_encabezado($listado3[$j][1])."</option>";
              }
           $texto.="</select>";
          break;  
@@ -657,7 +657,7 @@ array_push($listado0,html_entity_decode($datos_llenado[$i][0].",".trim(strip_tag
           <input type='hidden' name='campo$indice' value='".$datos["campo"]."'>";
           
           for($j=0;$j<$cont3;$j++)
-             {$texto.="<input type='checkbox' onclick='guardar_etiquetas_checkbox($indice,".$j.")' id='valor$indice".$j."' name='valor".$indice."[]' title='".utf8_encode($listado3[$j][1])."' value='".$listado3[$j][0]."'>".utf8_encode($listado3[$j][1])."<br />";
+             {$texto.="<input type='checkbox' onclick='guardar_etiquetas_checkbox($indice,".$j.")' id='valor$indice".$j."' name='valor".$indice."[]' title='".codifica_encabezado($listado3[$j][1])."' value='".$listado3[$j][0]."'>".codifica_encabezado($listado3[$j][1])."<br />";
              }
           $texto.="";
          break;
@@ -687,9 +687,9 @@ array_push($listado0,html_entity_decode($datos_llenado[$i][0].",".trim(strip_tag
             <input type="hidden" name="valor'.$indice.'" id="valor'.$indice.'">';
                  
             if($arreglo[4]){
-                   $texto.='Buscar: <input type="text" id="stext_campo'.$indice.'" width="200px" size="25"><a href="javascript:void(0)" onclick="tree_campo'.$indice.'.findItem(htmlentities(document.getElementById(\'stext_campo'.$indice.'\').value),1)"> <img src="../botones/general/anterior.png"border="0px"></a>
-                   <a href="javascript:void(0)" onclick="tree_campo'.$indice.'.findItem(htmlentities(document.getElementById(\'stext_campo'.$indice.'\').value),0,1)"><img src="../botones/general/buscar.png"border="0px"></a>                          
-                   <a href="javascript:void(0)" onclick="tree_campo'.$indice.'.findItem(htmlentities(document.getElementById(\'stext_campo'.$indice.'\').value))"><img src="../botones/general/siguiente.png"border="0px"></a> 
+                   $texto.='Buscar: <input type="text" id="stext_campo'.$indice.'" width="200px" size="25"><a href="javascript:void(0)" onclick="tree_campo'.$indice.'.findItem((document.getElementById(\'stext_campo'.$indice.'\').value),1)"> <img src="../botones/general/anterior.png"border="0px"></a>
+                   <a href="javascript:void(0)" onclick="tree_campo'.$indice.'.findItem((document.getElementById(\'stext_campo'.$indice.'\').value),0,1)"><img src="../botones/general/buscar.png"border="0px"></a>                          
+                   <a href="javascript:void(0)" onclick="tree_campo'.$indice.'.findItem((document.getElementById(\'stext_campo'.$indice.'\').value))"><img src="../botones/general/siguiente.png"border="0px"></a> 
                           <br />';
                 }
                 $texto.='<div id="esperando_campo'.$indice.'"><img src="../imagenes/cargando.gif"></div><div id="treeboxbox_campo'.$indice.'" height="90%"></div>';

@@ -111,7 +111,7 @@ function guardar_lob_externa($campo,$tabla,$condicion,$contenido,$tipo,$conn2,$l
                 }
             else    
                {$contenido=limpia_tabla($contenido);
-                if ( !$row[strtoupper($campo)]->save(trim(htmlentities(utf8_decode($contenido))))) 
+                if ( !$row[strtoupper($campo)]->save(trim((utf8_decode($contenido))))) 
                   {  oci_rollback($conn2->Conn->conn);
                      $resultado=FALSE;
                   }
@@ -299,12 +299,12 @@ if(!get_magic_quotes_gpc()) // SI NO ESTAN ACTIVADAS LAS MAGIC QUOTES DE PHP ESC
  switch($accion)
   {
     case("SELECT"):
-      $strsql=htmlspecialchars_decode(htmlentities(utf8_decode($strsql)));
+      $strsql=htmlspecialchars_decode((utf8_decode($strsql)));
     break;
     /*case("INSERT"):
        $values=substr($strsql,strpos("VALUES",strtoupper($strsql)+6));
        
-       $rs=$conn->Ejecutar_Sql(htmlspecialchars_decode(htmlentities(utf8_decode($strsql))));
+       $rs=$conn->Ejecutar_Sql(htmlspecialchars_decode((utf8_decode($strsql))));
        
        $llave = $conn->Ultimo_Insert();
       // die("<br />$strsql<br />llave:".$llave);
@@ -340,7 +340,7 @@ if(!get_magic_quotes_gpc()) // SI NO ESTAN ACTIVADAS LAS MAGIC QUOTES DE PHP ESC
        $campo_llave=$resultados[1];
        $detalle=busca_filtro_tabla("",$tabla,$campo_llave."=".$llave,"",$conn);
                   
-       $rs=$conn->Ejecutar_Sql(htmlspecialchars_decode(htmlentities(utf8_decode($strsql)))); 
+       $rs=$conn->Ejecutar_Sql(htmlspecialchars_decode((utf8_decode($strsql)))); 
        $detalle2=busca_filtro_tabla("",$tabla,$campo_llave."=".$llave,"",$conn);
        //************ miro cuales campos cambiaron en la tabla  ****************
        $nombres_campos=array();
@@ -383,7 +383,7 @@ if(!get_magic_quotes_gpc()) // SI NO ESTAN ACTIVADAS LAS MAGIC QUOTES DE PHP ESC
        $llave=trim($resultados[2]);
        $campo_llave=$resultados[1];
        $detalle=busca_filtro_tabla("",$tabla,$campo_llave."=".$llave,"",$conn);
-       $rs=$conn->Ejecutar_Sql(htmlspecialchars_decode(htmlentities(utf8_decode($strsql)))); 
+       $rs=$conn->Ejecutar_Sql(htmlspecialchars_decode((utf8_decode($strsql)))); 
        
        if($detalle["numcampos"]>0)
          {$nombres_campos=array_keys($detalle[0]);
@@ -639,7 +639,7 @@ function busca_filtro_tabla_externo($campos,$tabla,$filtro,$orden,$conn2){
     else  
       $sql.=" ORDER BY ".$orden;
   }
-  $sql=htmlspecialchars_decode(htmlentities(utf8_decode($sql)));
+  $sql=htmlspecialchars_decode((utf8_decode($sql)));
   $rs=$conn2->Ejecutar_Sql($sql);
   $temp=phpmkr_fetch_array_externo($rs,$conn2);
   $retorno["sql"]=$sql;
@@ -682,7 +682,7 @@ function busca_filtro_tabla_limit_externo($campos,$tabla,$filtro,$orden,$inicio,
   if($orden){ 
       $sql.=$orden;
   }
-  $sql=htmlspecialchars_decode(htmlentities(utf8_decode($sql)));
+  $sql=htmlspecialchars_decode((utf8_decode($sql)));
   $rs=$conn2->Ejecutar_Limit($sql,$inicio,($inicio+$registros),$conn2);  
   $temp=phpmkr_fetch_array_externo($rs,$conn2);
 
@@ -734,7 +734,7 @@ function ejecuta_filtro_tabla_externo($sql2,$conn2){
   if ($accion<>"SELECT")
    $func = usuario_actual("funcionario_codigo");
    //echo $strsql;   
-  $strsql=htmlspecialchars_decode(htmlentities(utf8_decode($strsql)));
+  $strsql=htmlspecialchars_decode((utf8_decode($strsql)));
   //echo "<br />".$strsql;    
   $rs = $conn->Ejecutar_Sql_Noresult($strsql);
 	return $rs;

@@ -155,6 +155,6 @@ function notificar_riesgo($idformato,$iddoc){
 function controles_funcion($idformato,$iddoc){
 	global $conn;
 	$controles=busca_filtro_tabla("controles","ft_riesgos_proceso a","a.documento_iddocumento=".$iddoc,"",$conn);
-	echo utf8_encode(html_entity_decode($controles[0]["controles"]));
+	echo codifica_encabezado(html_entity_decode($controles[0]["controles"]));
 }
 ?>

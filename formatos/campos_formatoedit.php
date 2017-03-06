@@ -305,7 +305,7 @@ echo $x_formato_idformatoList;
 	<tr>
 		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">Etiqueta</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
-<input type="text" name="x_etiqueta" id="x_etiqueta" value="<?php echo htmlentities(utf8_decode(@$x_etiqueta)); ?>">
+<input type="text" name="x_etiqueta" id="x_etiqueta" value="<?php echo ((@$x_etiqueta)); ?>">
 </span></td>
 	</tr>
 	<tr>

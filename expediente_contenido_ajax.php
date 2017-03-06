@@ -24,7 +24,7 @@ union select iddocumento as id,d.descripcion as nombre,d.fecha,'documento' as ti
 if (!$sortname) $sortname = 'orden,nombre';
 if (!$sortorder) $sortorder = 'asc';
 		if($_POST['query']!=''){
-			$where = "and ".$_POST['qtype']." LIKE '%".htmlentities(utf8_decode($_POST['query']))."%' ";
+			$where = "and ".$_POST['qtype']." LIKE '%".(($_POST['query']))."%' ";
 		} else {
 			$where ='';
 		}

@@ -35,7 +35,7 @@ function formulario_terminar(){
 		$pendiente=busca_filtro_tabla("idasignacion","asignacion","documento_iddocumento=".$documentos[$i]["iddocumento"]." and entidad_identidad=1 and llave_entidad=".$usuario,"",$conn);
 		$tabla.='<tr>';
 		$tabla.='<td style="text-align:center"><div class="btn btn-mini kenlace_saia" conector="iframe" enlace="ordenar.php?key='.$documentos[$i]["iddocumento"].'&accion=mostrar&mostrar_formato=1" title="Radicado No '.$documentos[$i]["numero"].'" titulo="Radicado No '.$documentos[$i]["numero"].'" onclick=" ">'.$documentos[$i]["numero"].'</div></td>';
-		$tabla.='<td style="text-align:left">'.strip_tags(utf8_encode(html_entity_decode($documentos[$i]["descripcion"]))).'&nbsp;</td>';
+		$tabla.='<td style="text-align:left">'.strip_tags(codifica_encabezado(html_entity_decode($documentos[$i]["descripcion"]))).'&nbsp;</td>';
 		if($pendiente["numcampos"]){
 			$tabla.='<td style="text-align:center"><input class="documentos" type="checkbox" name="docs[]" id="documento_'.$documentos[$i]["iddocumento"].'" value="'.$documentos[$i]["iddocumento"].'" checked="true"></td>';
 		}

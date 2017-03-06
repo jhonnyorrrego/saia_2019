@@ -123,7 +123,7 @@ if($formato["numcampos"]){
   $imagenes='im0="'.strtolower($formato[0]["nombre"]).'.gif" im1="'.strtolower($formato[0]["nombre"]).'.gif" im2="'.strtolower($formato[0]["nombre"]).'.gif" ';
   if($estado){
     $texto.='<item style="font-family:verdana; font-size:7pt;" '.$imagenes;
-    $texto.=strip_tags('text="'.decodifica(utf8_encode(html_entity_decode(htmlspecialchars_decode($formato[0]["etiqueta"])))).'" id="'.$formato[0]["idformato"]."-".$arreglo[2]."-r".rand().'" >'."\n");
+    $texto.=strip_tags('text="'.decodifica(codifica_encabezado(html_entity_decode(htmlspecialchars_decode($formato[0]["etiqueta"])))).'" id="'.$formato[0]["idformato"]."-".$arreglo[2]."-r".rand().'" >'."\n");
   }
   llena_datos($idformato,$formato[0]["nombre_tabla"],$campo_descripcion);
   if($estado)
@@ -163,7 +163,7 @@ for($i=0;$i<$dato["numcampos"];$i++){
   $llave=$tabla."-".$dato[$i]["id".$tabla];
  if(!isset($dato[$i]["ft_proceso"]))
     $texto.=' ';
- $texto.=strip_tags('text="'.decodifica(utf8_encode(html_entity_decode(htmlspecialchars_decode(mostrar_valor_campo($campo,$arreglo[0],$dato[$i]["documento_iddocumento"],1))))).'" id="'.$dato[$i]["id".$tabla].'">'); 
+ $texto.=strip_tags('text="'.decodifica(codifica_encabezado(html_entity_decode(htmlspecialchars_decode(mostrar_valor_campo($campo,$arreglo[0],$dato[$i]["documento_iddocumento"],1))))).'" id="'.$dato[$i]["id".$tabla].'">'); 
 
   llena_hijos($arreglo[0],$dato[$i]["id".$tabla],$tabla);
   $texto.="</item>\n";

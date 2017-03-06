@@ -15,7 +15,7 @@ class SQL
 /*
 <Clase>SQL
 <Nombre>SQL.
-<Parametros>conn Recibe el objeto que tiene la conexion; motorBd Es el motor de base de datos que se está utilizando.
+<Parametros>conn Recibe el objeto que tiene la conexion; motorBd Es el motor de base de datos que se estï¿½ utilizando.
 <Responsabilidades>Constructor de la clase SQL.
 <Notas> Asocia las variables de la clase conexion que llegan como parametros con los de la clase SQL.
 <Excepciones> 
@@ -31,9 +31,9 @@ class SQL
 /*
 <Clase>SQL
 <Nombre>Buscar.
-<Parametros>campos-las columnas a buscar; tablas-las tablas en las que se hará la búsqueda;
-where-el filtro de la búsqueda; order_by-parametro para el orden.
-<Responsabilidades>Enmascarar una búsqueda de tipo select para cualquier motor, 
+<Parametros>campos-las columnas a buscar; tablas-las tablas en las que se harï¿½ la bï¿½squeda;
+where-el filtro de la bï¿½squeda; order_by-parametro para el orden.
+<Responsabilidades>Enmascarar una bï¿½squeda de tipo select para cualquier motor, 
 dependiendo del motor llama a la funcion que corresponda.
 <Notas>
 <Excepciones> las generadas por errores en la consulta, o permisos sobre las bd
@@ -53,11 +53,11 @@ dependiendo del motor llama a la funcion que corresponda.
 /*
 <Clase>SQL
 <Nombre>Buscar_MySql.
-<Parametros>campos-las columnas a buscar; tablas-las tablas en las que se hará la búsqueda;
-where-el filtro de la búsqueda; order_by-parametro para el orden.
-<Responsabilidades>ejecutar consulta de selección para mysql
+<Parametros>campos-las columnas a buscar; tablas-las tablas en las que se harï¿½ la bï¿½squeda;
+where-el filtro de la bï¿½squeda; order_by-parametro para el orden.
+<Responsabilidades>ejecutar consulta de selecciï¿½n para mysql
 <Notas>
-<Excepciones>Cualquier problema que ocurra con la busqueda en la base de datos generará una excepcion
+<Excepciones>Cualquier problema que ocurra con la busqueda en la base de datos generarï¿½ una excepcion
 <Salida>una matriz con los resultados de la consulta
 la matriz es del tipo: resultado[0]['campo']='valor'
 <Pre-condiciones>
@@ -87,11 +87,11 @@ la matriz es del tipo: resultado[0]['campo']='valor'
 /*
 <Clase>SQL
 <Nombre>Buscar_Oracle.
-<Parametros>campos-las columnas a buscar; tablas-las tablas en las que se hará la búsqueda;
-where-el filtro de la búsqueda; order_by-parametro para el orden.
-<Responsabilidades>ejecutar consulta de selección para mysql
+<Parametros>campos-las columnas a buscar; tablas-las tablas en las que se harï¿½ la bï¿½squeda;
+where-el filtro de la bï¿½squeda; order_by-parametro para el orden.
+<Responsabilidades>ejecutar consulta de selecciï¿½n para mysql
 <Notas>
-<Excepciones>Cualquier problema que ocurra con la busqueda en la base de datos generará una excepcion
+<Excepciones>Cualquier problema que ocurra con la busqueda en la base de datos generarï¿½ una excepcion
 <Salida>una matriz con los resultados de la consulta
 la matriz es del tipo: resultado[0]['campo']='valor'
 <Pre-condiciones>
@@ -126,15 +126,15 @@ la matriz es del tipo: resultado[0]['campo']='valor'
 <Clase>SQL
 <Nombre>ejecutar_sql.
 <Parametros>sql-cadena con el codigo a ejecutar
-<Responsabilidades>dependiendo del motor llama la función que ejecutar el comando recibido en la cadena sql
-<Notas>Se utiliza generalmente para busquedas cuyos comandos se optienen de referencias que están en la base de datos,
-<Excepciones>Cualquier problema que ocurra con la busqueda en la base de datos generará una excepcion
+<Responsabilidades>dependiendo del motor llama la funciï¿½n que ejecutar el comando recibido en la cadena sql
+<Notas>Se utiliza generalmente para busquedas cuyos comandos se optienen de referencias que estï¿½n en la base de datos,
+<Excepciones>Cualquier problema que ocurra con la busqueda en la base de datos generarï¿½ una excepcion
 <Salida>el objeto de conexion
 <Pre-condiciones>
-<Post-condiciones>la matriz con los valores del resultado se obtiene por medio de la función Resultado
+<Post-condiciones>la matriz con los valores del resultado se obtiene por medio de la funciï¿½n Resultado
 */ 
   function  Ejecutar_Sql_Noresult($sql)
-    { $sql = html_entity_decode(htmlentities(utf8_decode($sql)));
+    { $sql = html_entity_decode((utf8_decode($sql)));
       switch ($this->motor)
         {
            case "MySql":
@@ -149,12 +149,12 @@ la matriz es del tipo: resultado[0]['campo']='valor'
 <Clase>SQL
 <Nombre>ejecutar_sql.
 <Parametros>sql-cadena con el codigo a ejecutar
-<Responsabilidades>dependiendo del motor llama la función que ejecutar el comando recibido en la cadena sql
-<Notas>Se utiliza generalmente para busquedas cuyos comandos se optienen de referencias que están en la base de datos,
-<Excepciones>Cualquier problema que ocurra con la busqueda en la base de datos generará una excepcion
+<Responsabilidades>dependiendo del motor llama la funciï¿½n que ejecutar el comando recibido en la cadena sql
+<Notas>Se utiliza generalmente para busquedas cuyos comandos se optienen de referencias que estï¿½n en la base de datos,
+<Excepciones>Cualquier problema que ocurra con la busqueda en la base de datos generarï¿½ una excepcion
 <Salida>una matriz con los resultados de la consulta, indices numericos y asociativos
 <Pre-condiciones>
-<Post-condiciones>la matriz con los valores del resultado se obtiene por medio de la función Resultado
+<Post-condiciones>la matriz con los valores del resultado se obtiene por medio de la funciï¿½n Resultado
 */ 
  function  Ejecutar_Sql($sql)
     {
@@ -175,12 +175,12 @@ la matriz es del tipo: resultado[0]['campo']='valor'
 <Nombre>ejecutar_sql_MySql
 <Parametros>sql-cadena con el codigo a ejecutar
 <Responsabilidades>ejecutar el comando recibido en la cadena sql
-<Notas>Se utiliza generalmente para busquedas cuyos comandos se optienen de referencias que están en la base de datos,
-la matriz con los valores del resultado se obtiene por medio de la función Resultado
-<Excepciones>Cualquier problema que ocurra con la busqueda en la base de datos generará una excepcion
+<Notas>Se utiliza generalmente para busquedas cuyos comandos se optienen de referencias que estï¿½n en la base de datos,
+la matriz con los valores del resultado se obtiene por medio de la funciï¿½n Resultado
+<Excepciones>Cualquier problema que ocurra con la busqueda en la base de datos generarï¿½ una excepcion
 <Salida>
 <Pre-condiciones>
-<Post-condiciones>la matriz con los valores del resultado se obtiene por medio de la función Resultado
+<Post-condiciones>la matriz con los valores del resultado se obtiene por medio de la funciï¿½n Resultado
 */      
   function Ejecutar_Sql_MySql($sql)
     {$this->filas=0;
@@ -299,9 +299,9 @@ function sacar_fila_vector($rs=Null)
 /*
 <Clase>SQL
 <Nombre>Insertar.
-<Parametros>campos-los campos a insertar; tabla-nombre de la tabla donde se hará la inserción;
+<Parametros>campos-los campos a insertar; tabla-nombre de la tabla donde se harï¿½ la inserciï¿½n;
 valores-los valores a insertar
-<Responsabilidades>Llamar a la funcion que corresponda al motor de base de datos para realizar la inserción
+<Responsabilidades>Llamar a la funcion que corresponda al motor de base de datos para realizar la inserciï¿½n
 <Notas>Enmascarada para agregar otros motores de bases de datos
 <Excepciones>
 <Salida>
@@ -309,7 +309,7 @@ valores-los valores a insertar
 <Post-condiciones>
 */   
   function  Insertar($campos, $tabla, $valores)
-    { $valores = html_entity_decode(htmlentities(utf8_decode($valores)));
+    { $valores = html_entity_decode((utf8_decode($valores)));
         switch ($this->motor)
         {
             case "MySql":
@@ -320,11 +320,11 @@ valores-los valores a insertar
 /*
 <Clase>SQL
 <Nombre>Insertar_MySql.
-<Parametros>campos-los campos a insertar; tabla-nombre de la tabla donde se hará la inserción;
+<Parametros>campos-los campos a insertar; tabla-nombre de la tabla donde se harï¿½ la inserciï¿½n;
 valores-los valores a insertar
 <Responsabilidades>Ejecutar una consulta del tipo insert en una base de datos mysql
 <Notas>
-<Excepciones>Cualquier problema con la ejecucion del INSERT generará una excepcion
+<Excepciones>Cualquier problema con la ejecucion del INSERT generarï¿½ una excepcion
 <Salida>
 <Pre-condiciones>
 <Post-condiciones>
@@ -350,9 +350,9 @@ valores-los valores a insertar
 /*
 <Clase>SQL
 <Nombre>Modificar.
-<Parametros>tabla-nombre de la tabla donde se hará la modificacion;
- actualizaciones-Aquellos registros que serán modificados y sus nuevos valores;
- where-filtro de los registros que serán modificados
+<Parametros>tabla-nombre de la tabla donde se harï¿½ la modificacion;
+ actualizaciones-Aquellos registros que serï¿½n modificados y sus nuevos valores;
+ where-filtro de los registros que serï¿½n modificados
 <Responsabilidades>Llamar a la funcion que corresponda al motor de base de datos para realizar la modificacion
 <Notas>Enmascarada para agregar otros motores de bases de datos
 <Excepciones>
@@ -361,7 +361,7 @@ valores-los valores a insertar
 <Post-condiciones>
 */      
   function Modificar($tabla, $actualizaciones, $where)
-    { $actualizaciones = html_entity_decode(htmlentities(utf8_decode($actualizaciones)));
+    { $actualizaciones = html_entity_decode((utf8_decode($actualizaciones)));
         switch ($this->motor)
         {
             case "MySql":
@@ -372,17 +372,17 @@ valores-los valores a insertar
 /*
 <Clase>SQL
 <Nombre>Modificar_MySql.
-<Parametros>tabla-nombre de la tabla donde se hará la modificacion;
- actualizaciones-Aquellos registros que serán modificados y sus nuevos valores;
- where-filtro de los registros que serán modificados
+<Parametros>tabla-nombre de la tabla donde se harï¿½ la modificacion;
+ actualizaciones-Aquellos registros que serï¿½n modificados y sus nuevos valores;
+ where-filtro de los registros que serï¿½n modificados
 <Responsabilidades>Ejecutar una sentencia de tipo UPDATE en una base de datos MySql
 <Notas>
-<Excepciones>Cualquier problema con la ejecucion del UPDATE generará una excepcion
+<Excepciones>Cualquier problema con la ejecucion del UPDATE generarï¿½ una excepcion
 <Salida>
 <Pre-condiciones>
 <Post-condiciones>
 */
-  //función update para mysql
+  //funciï¿½n update para mysql
   function Modificar_MySql($tabla, $actualizaciones, $where)
     {
        if ($where != null && $where != "")
@@ -398,7 +398,7 @@ valores-los valores a insertar
 <Clase>SQL
 <Nombre>ejecutar_sql_tipo.
 <Parametros>sql-cadena con el codigo a ejecutar
-<Responsabilidades>según el motor llamar a la función que ejecutará la cadena sql
+<Responsabilidades>segï¿½n el motor llamar a la funciï¿½n que ejecutarï¿½ la cadena sql
 <Notas>el vector retornado es del tipo. resultado[0]='campo',resultado[1]='valor_campo'...
 <Excepciones>Cualquier problema que ocurra con la busqueda en la base de datos
 <Salida>
@@ -407,7 +407,7 @@ valores-los valores a insertar
 */
   //ejecuta un sql que debe devuelve un solo registro
   function Ejecutar_Sql_Tipo($sql)
-    { $sql = html_entity_decode(htmlentities(utf8_decode($sql)));
+    { $sql = html_entity_decode((utf8_decode($sql)));
       switch ($this->motor)
           {
               case "MySql":
@@ -440,7 +440,7 @@ valores-los valores a insertar
 /*
 <Clase>SQL
 <Nombre>Eliminar.
-<Parametros>tabla-nombre de la tabla donde se hará la eliminacion; where-cuales son los registros a eliminar
+<Parametros>tabla-nombre de la tabla donde se harï¿½ la eliminacion; where-cuales son los registros a eliminar
 <Responsabilidades>Llamar a la funcion que corresponda al motor de base de datos para realizar la eliminacion
 <Notas>Enmascarada para agregar otros motores de bases de datos
 <Excepciones>
@@ -460,10 +460,10 @@ valores-los valores a insertar
 /*
 <Clase>SQL
 <Nombre>Eliminar_MySql.
-<Parametros>tabla-nombre de la tabla donde se hará la eliminacion; where-cuales son los registros a eliminar
+<Parametros>tabla-nombre de la tabla donde se harï¿½ la eliminacion; where-cuales son los registros a eliminar
 <Responsabilidades>Ejecutar una sentencia DELETE en una base de datos MySql
 <Notas>
-<Excepciones>Cualquier problema con la ejecucion del DELETE generará una excepcion
+<Excepciones>Cualquier problema con la ejecucion del DELETE generarï¿½ una excepcion
 <Salida>
 <Pre-condiciones>
 <Post-condiciones>
@@ -483,11 +483,11 @@ valores-los valores a insertar
 <Clase>SQL
 <Nombre>Resultado.
 <Parametros>
-<Responsabilidades>Retornar en una matriz el resultado de la última consulta
-<Notas>se utiliza para obtener los resultados de la función Ejecutar_Sql
+<Responsabilidades>Retornar en una matriz el resultado de la ï¿½ltima consulta
+<Notas>se utiliza para obtener los resultados de la funciï¿½n Ejecutar_Sql
 <Excepciones>
-<Salida>devuelve una matriz asociativa con los valores de la última consulta
-<Pre-condiciones>$this->res debe apuntar al objeto de consulta utilizado la última vez
+<Salida>devuelve una matriz asociativa con los valores de la ï¿½ltima consulta
+<Pre-condiciones>$this->res debe apuntar al objeto de consulta utilizado la ï¿½ltima vez
 <Post-condiciones>
 */    
   function Resultado_MySql()
@@ -514,11 +514,11 @@ valores-los valores a insertar
 <Clase>SQL
 <Nombre>Rows_Count
 <Parametros>
-<Responsabilidades>Retornar el número de filas afectadas en la última consulta
-<Notas>se utiliza después de la función Insertar
+<Responsabilidades>Retornar el nï¿½mero de filas afectadas en la ï¿½ltima consulta
+<Notas>se utiliza despuï¿½s de la funciï¿½n Insertar
 <Excepciones>
-<Salida>número de filas devueltas en la última consulta
-<Pre-condiciones>$this->res debe apuntar al objeto de consulta utilizado la última vez
+<Salida>nï¿½mero de filas devueltas en la ï¿½ltima consulta
+<Pre-condiciones>$this->res debe apuntar al objeto de consulta utilizado la ï¿½ltima vez
 <Post-condiciones>
 */
   function Rows_Count()
@@ -528,11 +528,11 @@ valores-los valores a insertar
 <Clase>SQL
 <Nombre>Numero_Filas
 <Parametros>
-<Responsabilidades>Retornar el número de filas devueltas en la última consulta
-<Notas>se utiliza después de la función ejecutar_sql
+<Responsabilidades>Retornar el nï¿½mero de filas devueltas en la ï¿½ltima consulta
+<Notas>se utiliza despuï¿½s de la funciï¿½n ejecutar_sql
 <Excepciones>
-<Salida>número de filas devueltas en la última consulta
-<Pre-condiciones>$this->res debe apuntar al objeto de consulta utilizado la última vez
+<Salida>nï¿½mero de filas devueltas en la ï¿½ltima consulta
+<Pre-condiciones>$this->res debe apuntar al objeto de consulta utilizado la ï¿½ltima vez
 <Post-condiciones>
 */    
   function Numero_Filas($rs=Null)
@@ -542,12 +542,12 @@ valores-los valores a insertar
 /*
 <Clase>SQL
 <Nombre>Tipo_Campo
-<Parametros>pos-posición del campo en el array resultado
+<Parametros>pos-posiciï¿½n del campo en el array resultado
 <Responsabilidades>llama a la funcion requerida dependiendo del motor de bd
-<Notas>se utiliza después de la función ejecutar_sql
+<Notas>se utiliza despuï¿½s de la funciï¿½n ejecutar_sql
 <Excepciones>
 <Salida>tipo del campos especificado
-<Pre-condiciones>$this->res debe apuntar al objeto de consulta utilizado la última vez
+<Pre-condiciones>$this->res debe apuntar al objeto de consulta utilizado la ï¿½ltima vez
 <Post-condiciones>
 */     
   function Tipo_Campo($rs,$pos)
@@ -561,12 +561,12 @@ valores-los valores a insertar
 /*
 <Clase>SQL
 <Nombre>Nombre_Campo
-<Parametros>pos-posición del campo en el array resultado
+<Parametros>pos-posiciï¿½n del campo en el array resultado
 <Responsabilidades>llama a la funcion requerida dependiendo del motor de bd
-<Notas>se utiliza después de la función ejecutar_sql
+<Notas>se utiliza despuï¿½s de la funciï¿½n ejecutar_sql
 <Excepciones>
 <Salida>nombre del campos especificado
-<Pre-condiciones>$this->res debe apuntar al objeto de consulta utilizado la última vez
+<Pre-condiciones>$this->res debe apuntar al objeto de consulta utilizado la ï¿½ltima vez
 <Post-condiciones>
 */     
 
@@ -583,13 +583,13 @@ valores-los valores a insertar
 <Parametros>db-nombre de la base de datos a listar
 <Responsabilidades>Retornar en una matriz las tablas de la base de datos especificada
 <Notas>
-<Excepciones>Cualquier problema que ocurra con la busqueda en la base de datos generará una excepcion
+<Excepciones>Cualquier problema que ocurra con la busqueda en la base de datos generarï¿½ una excepcion
 <Salida>
 <Pre-condiciones>
 <Post-condiciones>
 */  
   function Lista_Tabla($db)
-    {$this->res=mysqli_query($GLOBALS["___mysqli_ston"], "SHOW TABLES FROM $db") or die("Error en la Ejecucuión del Proceso SQL: ".((is_object($GLOBALS["___mysqli_ston"])) ? mysqli_error($GLOBALS["___mysqli_ston"]) : (($___mysqli_res = mysqli_connect_error()) ? $___mysqli_res : false)));
+    {$this->res=mysqli_query($GLOBALS["___mysqli_ston"], "SHOW TABLES FROM $db") or die("Error en la Ejecucuiï¿½n del Proceso SQL: ".((is_object($GLOBALS["___mysqli_ston"])) ? mysqli_error($GLOBALS["___mysqli_ston"]) : (($___mysqli_res = mysqli_connect_error()) ? $___mysqli_res : false)));
      while($row=mysqli_fetch_row($this->res))
           $resultado[]=$row[0]; 
      return($resultado);
@@ -616,7 +616,7 @@ valores-los valores a insertar
 <Clase>SQL
 <Nombre>Busca_Tabla
 <Parametros>tabla-nombre de la tabla a examinar
-<Responsabilidades>segun el motor llama la función correspondiente
+<Responsabilidades>segun el motor llama la funciï¿½n correspondiente
 <Notas>
 <Excepciones>
 <Salida>matriz con la lista de los campos de una tabla
@@ -653,11 +653,11 @@ valores-los valores a insertar
 /*
 <Clase>SQL
 <Nombre>Buscar_Limit
-<Parametros>campos-los campos a buscar; tablas-tablas donde se realizará la busqueda;
- where-filtro de la búsqueda; order_by-columna para el orden; limit-numero de registros a recuperar
-<Responsabilidades>segun el motor llama la función correspondiente
+<Parametros>campos-los campos a buscar; tablas-tablas donde se realizarï¿½ la busqueda;
+ where-filtro de la bï¿½squeda; order_by-columna para el orden; limit-numero de registros a recuperar
+<Responsabilidades>segun el motor llama la funciï¿½n correspondiente
 <Notas>Funciona igual que Buscar_MySql pero con el parametro limit, fue necesaria su creacion al no tener en cuenta este parametro con anterioridad
-<Excepciones>Cualquier problema con la ejecucion del SELECT generará una excepcion
+<Excepciones>Cualquier problema con la ejecucion del SELECT generarï¿½ una excepcion
 <Salida>una matriz con los "limit" resultados de la busqueda
 <Pre-condiciones>
 <Post-condiciones>
@@ -681,7 +681,7 @@ valores-los valores a insertar
 $conn-objeto de tipo sql
 <Responsabilidades>Realizar la busqueda de cierta cantidad de filas de una tabla
 <Notas>Funciona igual que Buscar_MySql pero con el parametro limit, fue necesaria su creacion al no tener en cuenta este parametro con anterioridad
-<Excepciones>Cualquier problema con la ejecucion del SELECT generará una excepcion
+<Excepciones>Cualquier problema con la ejecucion del SELECT generarï¿½ una excepcion
 <Salida>una matriz con los "limit" resultados de la busqueda
 <Pre-condiciones>
 <Post-condiciones>
@@ -706,7 +706,7 @@ $conn-objeto de tipo sql
 $conn-objeto de tipo sql
 <Responsabilidades>Realizar la busqueda de cierta cantidad de filas de una tabla
 <Notas>Funciona igual que Buscar_MySql pero con el parametro limit, fue necesaria su creacion al no tener en cuenta este parametro con anterioridad
-<Excepciones>Cualquier problema con la ejecucion del SELECT generará una excepcion
+<Excepciones>Cualquier problema con la ejecucion del SELECT generarï¿½ una excepcion
 <Salida>una matriz con los "limit" resultados de la busqueda
 <Pre-condiciones>
 <Post-condiciones>
@@ -731,9 +731,9 @@ $conn-objeto de tipo sql
 <Clase>SQL
 <Nombre>total_registros_tabla.
 <Parametros>tabla-nombre de la tabla a consultar
-<Responsabilidades>llama a la función deseada
+<Responsabilidades>llama a la funciï¿½n deseada
 <Notas>
-<Excepciones>Cualquier problema con la ejecucion del comando generará una excepcion
+<Excepciones>Cualquier problema con la ejecucion del comando generarï¿½ una excepcion
 <Salida>devuelve un entero con el numero de filas de la tabla
 <Pre-condiciones>
 <Post-condiciones>
@@ -750,9 +750,9 @@ $conn-objeto de tipo sql
 <Clase>SQL
 <Nombre>total_registros_tabla.
 <Parametros>tabla-nombre de la tabla a consultar
-<Responsabilidades>consultar el número total de registros de una tabla para mysql
+<Responsabilidades>consultar el nï¿½mero total de registros de una tabla para mysql
 <Notas>
-<Excepciones>Cualquier problema con la ejecucion del comando generará una excepcion
+<Excepciones>Cualquier problema con la ejecucion del comando generarï¿½ una excepcion
 <Salida>devuelve un entero con el numero de filas de la tabla
 <Pre-condiciones>
 <Post-condiciones>
@@ -767,8 +767,8 @@ $conn-objeto de tipo sql
 <Clase>SQL
 <Nombre>Numero_Campos
 <Parametros>
-<Responsabilidades>segun el motor llama la función deseada
-<Notas>se utiliza después de la hacer una consulta de seleccion (select)
+<Responsabilidades>segun el motor llama la funciï¿½n deseada
+<Notas>se utiliza despuï¿½s de la hacer una consulta de seleccion (select)
 <Excepciones>
 <Salida>
 <Pre-condiciones>
@@ -786,8 +786,8 @@ $conn-objeto de tipo sql
 <Clase>SQL
 <Nombre>Ultimo_Insert
 <Parametros>
-<Responsabilidades>segun el motor llama la función deseada
-<Notas>se utiliza después de la función insert
+<Responsabilidades>segun el motor llama la funciï¿½n deseada
+<Notas>se utiliza despuï¿½s de la funciï¿½n insert
 <Excepciones>
 <Salida>
 <Pre-condiciones>
@@ -812,7 +812,7 @@ $conn-objeto de tipo sql
 <Nombre>Ultimo_Insert_Mysql
 <Parametros>
 <Responsabilidades>Retornar el identificador del ultimo registro insertado
-<Notas>se utiliza después de la función insert
+<Notas>se utiliza despuï¿½s de la funciï¿½n insert
 <Excepciones>
 <Salida>identificador del ultimo registro insertado
 <Pre-condiciones>
@@ -827,7 +827,7 @@ $conn-objeto de tipo sql
 <Nombre>Ultimo_Insert_Oracle
 <Parametros>
 <Responsabilidades>Retornar el identificador del ultimo registro insertado
-<Notas>se utiliza después de la función insert
+<Notas>se utiliza despuï¿½s de la funciï¿½n insert
 <Excepciones>
 <Salida>identificador del ultimo registro insertado
 <Pre-condiciones>

@@ -21,7 +21,7 @@ for($i=0;$i<$recorrido["numcampos"];$i++){
   		$sItemRowClass = " bgcolor=\"#F5F5F5\"";
     if($recorrido[$i]["nombre"]!='BORRADOR')         
       $leidos=recorrido($x_doc,$recorrido[$i]["origen"],$recorrido[$i]["fecha_format"],"leido");               	        	
-    $mostrar.=('<tr'.$sItemRowClass.'><td><span class="phpmaker" ><a href="#" '.$leidos.'>'.utf8_encode(busca_entidad_ruta(1,$recorrido[$i]["origen"]))."</a></span></td>");
+    $mostrar.=('<tr'.$sItemRowClass.'><td><span class="phpmaker" ><a href="#" '.$leidos.'>'.codifica_encabezado(busca_entidad_ruta(1,$recorrido[$i]["origen"]))."</a></span></td>");
 		
 		$accion=str_replace("COPIA","Transferido con copia a",str_replace('TRANSFERIDO','Transferido a Destino Responsable',$recorrido[$i]["nombre"]));            
     $mostrar.=('<td><span class="phpmaker" >'.$accion."</span></td>");
@@ -32,23 +32,23 @@ for($i=0;$i<$recorrido["numcampos"];$i++){
     $leido = mostrar_leido($x_doc,$recorrido[$i]["destino"],$recorrido[$i]["fecha_format"]);                   
     if($recorrido[$i]["nombre"]=="DISTRIBUCION" && strpos($recorrido[$i]["notas"],"enviado por e-mail")===false)
       {if($documento[0]["plantilla"]=="")
-         $mostrar.=('<td><span class="phpmaker" ><a href="#" '.$sig.'>'.utf8_encode(busca_entidad_ruta(2,$recorrido[$i]["destino"])).'</a></span></td>');          
+         $mostrar.=('<td><span class="phpmaker" ><a href="#" '.$sig.'>'.codifica_encabezado(busca_entidad_ruta(2,$recorrido[$i]["destino"])).'</a></span></td>');          
        elseif($documento[0]["plantilla"]=="CARTA")
          {$destinos=busca_filtro_tabla("destinos","ft_carta","documento_iddocumento=$x_doc","",$conn);
           $codigos=explode(",",$destinos[0]["destinos"]);
           $mostrar.=('<td><span class="phpmaker" >');
           foreach($codigos as $filacod)
-            $mostrar.= utf8_encode(busca_entidad_ruta(2,$filacod))."<br />";
+            $mostrar.= codifica_encabezado(busca_entidad_ruta(2,$filacod))."<br />";
           $mostrar.= ('</span></td>');
          }
        else
          {$mostrar.=('<td><span class="phpmaker" >');
-          $mostrar.= utf8_encode(busca_entidad_ruta(1,$recorrido[$i]["destino"]))."<br />";
+          $mostrar.= codifica_encabezado(busca_entidad_ruta(1,$recorrido[$i]["destino"]))."<br />";
           $mostrar.= ('</span></td>');
          }  
       }
     else  
-      $mostrar.=('<td><span class="phpmaker" >'.$leido.'<a href="#" '.$sig.'>'.utf8_encode(busca_entidad_ruta(1,$recorrido[$i]["destino"])).'</a></span></td>');
+      $mostrar.=('<td><span class="phpmaker" >'.$leido.'<a href="#" '.$sig.'>'.codifica_encabezado(busca_entidad_ruta(1,$recorrido[$i]["destino"])).'</a></span></td>');
 		
     $mostrar.=('<td><span class="phpmaker" >'.$recorrido[$i]["fecha_format"]."</span></td>");
     if($_SESSION["usuario_actual"]==$recorrido[$i]["origen"] || $_SESSION["usuario_actual"]==$recorrido[$i]["destino"] || $recorrido[$i]["ver_notas"]==1)          
@@ -92,7 +92,7 @@ function recorrido($x_doc,$fun,$fecha,$tipo)
      if($buzon_sig[$j]["nombre"]=='LEIDO')            
       $texto.= "<tr><td colspan = 4>".$buzon_sig[$j]["nombre"]." ".$buzon_sig[$j]["fecha"]."</td></tr>";         
      else
-      $texto.= "<tr><td>".$buzon_sig[$j]["nombre"]." </td><td> ".utf8_encode(busca_entidad_ruta(1,$buzon_sig[$j]["destino"]))." ".$buzon_sig[$j]["fecha"]."</td></tr>";             
+      $texto.= "<tr><td>".$buzon_sig[$j]["nombre"]." </td><td> ".codifica_encabezado(busca_entidad_ruta(1,$buzon_sig[$j]["destino"]))." ".$buzon_sig[$j]["fecha"]."</td></tr>";             
     }
     $texto .= "</table>"; 
    }
@@ -104,9 +104,9 @@ function recorrido($x_doc,$fun,$fecha,$tipo)
      for($i=0; $i<$transferencias["numcampos"]; $i++)
      { $buzon_sig = busca_filtro_tabla("destino,nombre,".fecha_db_obtener("fecha","Y-m-d H:i:s")." as fecha","buzon_salida","archivo_idarchivo=$x_doc and nombre='LEIDO' AND origen=".$transferencias[$i]["destino"]." and ".fecha_db_obtener("fecha","Y-m-d H:i:s")." > '".$transferencias[$i]["fecha"]."'","",$conn);       
        if($buzon_sig["numcampos"]>0)        
-         $texto .= "<tr><td> ".utf8_encode(busca_entidad_ruta(1,$buzon_sig[0]["destino"]))."</td><td>&nbsp;".$buzon_sig[0]["fecha"]."</tr>";       
+         $texto .= "<tr><td> ".codifica_encabezado(busca_entidad_ruta(1,$buzon_sig[0]["destino"]))."</td><td>&nbsp;".$buzon_sig[0]["fecha"]."</tr>";       
        else
-         $texto .= "<tr><td>".utf8_encode(busca_entidad_ruta(1,$transferencias[$i]["destino"]))."</td><td>No se ha leido</tr>";         
+         $texto .= "<tr><td>".codifica_encabezado(busca_entidad_ruta(1,$transferencias[$i]["destino"]))."</td><td>No se ha leido</tr>";         
      }
    } */  
   break;

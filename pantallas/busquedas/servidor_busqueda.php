@@ -87,7 +87,7 @@ if(@$_REQUEST["exportar_saia"]=='excel'){
 			$nombre_campo_funcion=explode("@",$datos2[1]);
 			array_push($columnas_excel,$nombre_campo_funcion[0]);
 			if($page==1)
-				$array_export[-1][$datos2[1]]=utf8_encode(html_entity_decode(strip_tags($datos2[0])));
+				$array_export[-1][$datos2[1]]=codifica_encabezado(html_entity_decode(strip_tags($datos2[0])));
 		}
 		$cant_columnas_excel=count($columnas_excel);
 	} else if($datos_busqueda[0]["tipo_busqueda"]==2) {
@@ -100,7 +100,7 @@ if(@$_REQUEST["exportar_saia"]=='excel'){
 			$datos2=explode("@",$datos[1]);
 			array_push($columnas_excel,$datos2[0]);
 			if($page==1)
-				$array_export[-1][$datos2[0]]=utf8_encode(html_entity_decode(strip_tags($datos[0])));
+				$array_export[-1][$datos2[0]]=codifica_encabezado(html_entity_decode(strip_tags($datos[0])));
 		}
 		$cant_columnas_excel=count($columnas_excel);
 	}
@@ -509,7 +509,7 @@ if($result["numcampos"]){
 
 			if(@$_REQUEST["exportar_saia"]=='excel' || @$_REQUEST["exportar_saia"]=='csv'){
 				for($k=0;$k<$cant_columnas_excel;$k++){
-					$array_export[$i][$columnas_excel[$k]] = utf8_encode(html_entity_decode(strip_tags($response->rows[$i]->$columnas_excel[$k])));
+					$array_export[$i][$columnas_excel[$k]] = codifica_encabezado(html_entity_decode(strip_tags($response->rows[$i]->$columnas_excel[$k])));
 				}
 				
 			}
@@ -518,7 +518,7 @@ if($result["numcampos"]){
 				if(@$_REQUEST["exportar_saia"]=='excel' || @$_REQUEST["exportar_saia"]=='csv') {
 					$array_export[$i][$columnas_excel[$k]]=(html_entity_decode(strip_tags($response->rows[$i]->$columnas_excel[$k])));
 				} else {
-					$array_export[$i][$columnas_excel[$k]]=utf8_encode(html_entity_decode(strip_tags($response->rows[$i]->$columnas_excel[$k])));
+					$array_export[$i][$columnas_excel[$k]]=codifica_encabezado(html_entity_decode(strip_tags($response->rows[$i]->$columnas_excel[$k])));
 				}
 			}
 		}
@@ -612,6 +612,7 @@ function parsear_datos_plantilla_visual($cadena,$campos=array()){
   }
 return($listado_funciones);
 }
+
 function incluir_librerias_busqueda($elemento,$indice){
   global $ruta_db_superior;
   include_once($ruta_db_superior.$elemento); 

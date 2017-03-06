@@ -79,7 +79,7 @@ switch ($sAction)
 		break;
 	case "A": // Add
 		if (AddData($conn)) { // Add New Record
-			alerta("Edición exitosa del registro");
+			alerta("Ediciï¿½n exitosa del registro");
 			redirecciona("elegir_filtro.php?accion=listar");
 			exit();
 		}
@@ -188,7 +188,7 @@ Debe poseer una mascara valor y un llamada dato en cada uno de los campos qeu se
     </td>
 	</tr>
 	<tr>
-		<td class="encabezado" title="Mascaras que se adaptan a tomar valores por defecto reemplazados en los valores del grafico asi: nombre_campo(resultado_sql_grafico)|valor_a_buscar@valor_a_reemplazar ejemplo: sql grafico->SELECT sexo FROM funcionario WHERE 1=1 el filtro queda: sexo|1@masculino!2@femenino asi cuando encuentre un 1 en el resultado de sexo lo cambiará por un masculino y cuando encuentre un 2 lo cambiara por femenino."><span class="phpmaker" style="color: #FFFFFF;">MASCARAS</span></td>
+		<td class="encabezado" title="Mascaras que se adaptan a tomar valores por defecto reemplazados en los valores del grafico asi: nombre_campo(resultado_sql_grafico)|valor_a_buscar@valor_a_reemplazar ejemplo: sql grafico->SELECT sexo FROM funcionario WHERE 1=1 el filtro queda: sexo|1@masculino!2@femenino asi cuando encuentre un 1 en el resultado de sexo lo cambiarï¿½ por un masculino y cuando encuentre un 2 lo cambiara por femenino."><span class="phpmaker" style="color: #FFFFFF;">MASCARAS</span></td>
 		<td bgcolor="#F5F5F5">
       <span class="phpmaker">
         <textarea id="x_mascaras" name="x_mascaras" cols="35" rows="10"><?php echo $x_mascaras; ?></textarea>
@@ -256,9 +256,9 @@ global $x_nombre ,$x_etiqueta ,$x_etiquetax ,$x_etiquetay ,$x_sql_grafico ,$x_ti
 $fila=busca_filtro_tabla("","grafico","idgrafico=".$sKey,"",$conn);
 if($fila["numcampos"]){
   $x_nombre = $fila[0]["nombre"];
-  $x_etiqueta= utf8_encode(html_entity_decode($fila[0]["etiqueta"]));
-  $x_etiquetax = utf8_encode(html_entity_decode($fila[0]["etiquetax"]));
-  $x_etiquetay = utf8_encode(html_entity_decode($fila[0]["etiquetay"]));
+  $x_etiqueta= codifica_encabezado(html_entity_decode($fila[0]["etiqueta"]));
+  $x_etiquetax = codifica_encabezado(html_entity_decode($fila[0]["etiquetax"]));
+  $x_etiquetay = codifica_encabezado(html_entity_decode($fila[0]["etiquetay"]));
   $x_sql_grafico = stripslashes($fila[0]["sql_grafico"]);
   $x_tipo_grafico = $fila[0]["tipo_grafico"];
   $x_ancho = $fila[0]["ancho"];
@@ -340,7 +340,7 @@ global $x_nombre ,$x_etiqueta ,$x_etiquetax ,$x_etiquetay ,$x_sql_grafico ,$x_ti
 	$strsql .= implode(",", array_values($fieldList));
   $strsql .=" WHERE idgrafico=".$_REQUEST["idgrafico"];
 
-	phpmkr_query($strsql, $conn) or die("Falló la búsqueda" . phpmkr_error() . ' SQL:' . $strsql);
+	phpmkr_query($strsql, $conn) or die("Fallï¿½ la bï¿½squeda" . phpmkr_error() . ' SQL:' . $strsql);
 //	die($strsql);
 	return true;
 }

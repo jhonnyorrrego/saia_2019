@@ -29,7 +29,7 @@ if (isset($_REQUEST['id']) && $_REQUEST['opt'] == 2) {
   $html = "---";
   $datos=busca_filtro_tabla("idfuncionario,nombres,apellidos","funcionario","idfuncionario=".$_REQUEST["id"],"",$conn);
   if ($datos["numcampos"]) {
-  	$html=utf8_encode(html_entity_decode(trim($datos[0]["nombres"])." ".trim($datos[0]["apellidos"])));
+  	$html=codifica_encabezado(html_entity_decode(trim($datos[0]["nombres"])." ".trim($datos[0]["apellidos"])));
   }
   echo $html;
 }

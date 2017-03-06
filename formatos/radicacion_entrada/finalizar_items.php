@@ -18,7 +18,7 @@ echo(librerias_jquery("1.7"));
 echo(estilo_bootstrap());
 echo(librerias_bootstrap());
 if($_REQUEST['guardar']==1){
-    $sql="UPDATE ft_destino_radicacion SET recepcion='".$_REQUEST['funcionario']."', recepcion_fecha=".fecha_db_almacenar(date("Y-m-d H:i:s"),"Y-m-d H:i:s").",estado_item=3,finalizacion_observa='".htmlentities($_REQUEST['descripcion'])."' WHERE idft_destino_radicacion={$_REQUEST['idft']}";
+    $sql="UPDATE ft_destino_radicacion SET recepcion='".$_REQUEST['funcionario']."', recepcion_fecha=".fecha_db_almacenar(date("Y-m-d H:i:s"),"Y-m-d H:i:s").",estado_item=3,finalizacion_observa='".($_REQUEST['descripcion'])."' WHERE idft_destino_radicacion={$_REQUEST['idft']}";
     phpmkr_query($sql);
     
     notificaciones("Item finalizado!","success",4500);

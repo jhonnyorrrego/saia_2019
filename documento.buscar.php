@@ -114,7 +114,7 @@ function codificar_repetidos(lista)
               url: 'documento.busqueda_guardada.php?etiqueta='+$("#etiqueta_busqueda").val(),
               success: function(data) {
                if(data==-1)
-                 {alert('<?php echo utf8_encode("El m�ximo de busquedas guardadas es 15, por favor borre alguna si desea crear una nueva."); ?>');
+                 {alert('<?php echo codifica_encabezado("El m�ximo de busquedas guardadas es 15, por favor borre alguna si desea crear una nueva."); ?>');
                   $("#etiqueta_busqueda").val("");
                  }
                else if(data>0)  

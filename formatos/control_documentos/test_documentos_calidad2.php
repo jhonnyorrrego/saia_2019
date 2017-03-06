@@ -196,7 +196,7 @@ function llena_datos_formato($formato,$estado=0){
 			$texto.='<item style="font-family:verdana; font-size:7pt;" '.$imagenes;
 			$identificador = $formato[0]["idformato"]."-".$formato[0]['nombre_tabla']."-r".rand().'-r'.rand();	
 			$identificador = str_replace("_","##",$identificador);
-			$texto.=strip_tags('text="'.decodifica(utf8_encode(html_entity_decode(htmlspecialchars_decode($formato[0]["etiqueta"])))).'" id="'.$identificador.'">\n');
+			$texto.=strip_tags('text="'.decodifica(codifica_encabezado(html_entity_decode(htmlspecialchars_decode($formato[0]["etiqueta"])))).'" id="'.$identificador.'">\n');
 		}
 		
 		llena_datos($idformato,$formato[0]["nombre_tabla"],$campo_descripcion);
@@ -256,7 +256,7 @@ function llena_datos($idformato,$tabla,$campo){
 		$identificador = $llave.'-r'.rand();	
 		$identificador = str_replace("_","##",$identificador);
 		
-		$texto.=strip_tags('text="'.decodifica(utf8_encode(html_entity_decode(htmlspecialchars_decode(mostrar_valor_campo($campo,$arreglo[0],$dato[$i]["documento_iddocumento"],1))))).'" id="'.$identificador.'">\n');
+		$texto.=strip_tags('text="'.decodifica(codifica_encabezado(html_entity_decode(htmlspecialchars_decode(mostrar_valor_campo($campo,$arreglo[0],$dato[$i]["documento_iddocumento"],1))))).'" id="'.$identificador.'">\n');
 		
 		if(@$dato[$i]["nombre"]=="EVALUACION INDEPENDIENTE" && $tabla=="ft_proceso"){
 			crear_dato_formato('ft_elemento_subproceso');

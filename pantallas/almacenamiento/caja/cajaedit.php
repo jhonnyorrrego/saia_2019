@@ -443,9 +443,9 @@ function generar_arbol($campo,$seleccionado){
 	<?php
 $serie=busca_filtro_tabla("","serie","idserie=".$seleccionado,"",$conn);
  echo ucfirst(strtolower($serie[0]["nombre"])); ?>
-    <br />  Buscar: <input type="text" id="stext_serie" width="200px" size="25"><br><a href="javascript:void(0)" onclick="tree2.findItem(htmlentities(document.getElementById('stext_serie').value),0,1)"> Buscar</a>  |
-    <a href="javascript:void(0)" onclick="tree2.findItem(htmlentities(document.getElementById('stext_serie').value))"> Siguiente</a>  |
-    <a href="javascript:void(0)" onclick="tree2.findItem(htmlentities(document.getElementById('stext_serie').value),1)"> Anterior</a><br /><div id="esperando_serie"><img src="<?php echo $ruta_db_superior; ?>imagenes/cargando.gif"></div>
+    <br />  Buscar: <input type="text" id="stext_serie" width="200px" size="25"><br><a href="javascript:void(0)" onclick="tree2.findItem((document.getElementById('stext_serie').value),0,1)"> Buscar</a>  |
+    <a href="javascript:void(0)" onclick="tree2.findItem((document.getElementById('stext_serie').value))"> Siguiente</a>  |
+    <a href="javascript:void(0)" onclick="tree2.findItem((document.getElementById('stext_serie').value),1)"> Anterior</a><br /><div id="esperando_serie"><img src="<?php echo $ruta_db_superior; ?>imagenes/cargando.gif"></div>
     <div id="treeboxbox_tree2"></div>
 	<script type="text/javascript">
   <!--

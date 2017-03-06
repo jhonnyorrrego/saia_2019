@@ -57,7 +57,7 @@ if(@$_REQUEST['idtareas_listado_unico']){
 		  $texto='';
 		  $texto.='<div id="listados" title="Listados" data-load=\'{"kConnector":"iframe", "url":"'.$url.'", "kTitle":"Listados"}\' class="items navigable">';
 		  $texto.='<div class="head"></div>';              				            
-		  $texto.='<div class="label"> '.utf8_encode(html_entity_decode('Listados')).' &nbsp; <span class="badge">'.$listados['numcampos'].'</span> </div>';
+		  $texto.='<div class="label"> '.codifica_encabezado(html_entity_decode('Listados')).' &nbsp; <span class="badge">'.$listados['numcampos'].'</span> </div>';
 		  $texto.='<div class="info"></div>'; 		
 		  $texto.='<div class="tail"></div>';
 		  $texto.='</div>'; 
@@ -69,7 +69,7 @@ if(@$_REQUEST['idtareas_listado_unico']){
 		  $texto='';
 		  $texto.='<div id="tareas" title="Tareas" data-load=\'{"kConnector":"iframe", "url":"'.$url.'", "kTitle":"Tareas"}\' class="items navigable">';
 		  $texto.='<div class="head"></div>';              				            
-		  $texto.='<div class="label">'.utf8_encode(html_entity_decode('Tareas')).'</div>';
+		  $texto.='<div class="label">'.codifica_encabezado(html_entity_decode('Tareas')).'</div>';
 		  $texto.='<div class="info"></div>'; 		
 		  $texto.='<div class="tail"></div>';
 		  $texto.='</div>'; 
@@ -80,7 +80,7 @@ if(@$_REQUEST['idtareas_listado_unico']){
 		  $texto='';
 		  $texto.='<div id="calendarios" title="Calendarios" data-load=\'{"kConnector":"iframe", "url":"'.$url.'", "kTitle":"Calendarios"}\' class="items navigable">';
 		  $texto.='<div class="head"></div>';              				            
-		  $texto.='<div class="label">'.utf8_encode(html_entity_decode('Calendarios')).'</div>';
+		  $texto.='<div class="label">'.codifica_encabezado(html_entity_decode('Calendarios')).'</div>';
 		  $texto.='<div class="info"></div>'; 		
 		  $texto.='<div class="tail"></div>';
 		  $texto.='</div>'; 
@@ -91,7 +91,7 @@ if(@$_REQUEST['idtareas_listado_unico']){
 		  $texto='';
 		  $texto.='<div id="tareas" title="Tareas rapidas" data-load=\'{"kConnector":"iframe", "url":"'.$url.'", "kTitle":"Tareas rapidas"}\' class="items navigable">';
 		  $texto.='<div class="head"></div>';              				            
-		  $texto.='<div class="label">'.utf8_encode(html_entity_decode('Tareas rapidas')).'&nbsp; <span class="badge">'.$tareas_rapidas['numcampos'].'</span> </div>';
+		  $texto.='<div class="label">'.codifica_encabezado(html_entity_decode('Tareas rapidas')).'&nbsp; <span class="badge">'.$tareas_rapidas['numcampos'].'</span> </div>';
 		  $texto.='<div class="info"></div>'; 		
 		  $texto.='<div class="tail"></div>';
 		  $texto.='</div>'; 
@@ -102,7 +102,7 @@ if(@$_REQUEST['idtareas_listado_unico']){
 		  $texto='';
 		  $texto.='<div id="tareas" title="Tareas vencidas" data-load=\'{"kConnector":"iframe", "url":"'.$url.'", "kTitle":"Tareas vencidas"}\' class="items navigable">';
 		  $texto.='<div class="head"></div>';              				            
-		  $texto.='<div class="label">'.utf8_encode(html_entity_decode('Tareas vencidas')).'&nbsp; <span class="badge">'.$tareas_vencidas['numcampos'].'</span> </div>';
+		  $texto.='<div class="label">'.codifica_encabezado(html_entity_decode('Tareas vencidas')).'&nbsp; <span class="badge">'.$tareas_vencidas['numcampos'].'</span> </div>';
 		  $texto.='<div class="info"></div>'; 		
 		  $texto.='<div class="tail"></div>';
 		  $texto.='</div>'; 
@@ -113,7 +113,7 @@ if(@$_REQUEST['idtareas_listado_unico']){
 		  $texto='';
 		  $texto.='<div id="tareas" title="Tareas terminadas" data-load=\'{"kConnector":"iframe", "url":"'.$url.'", "kTitle":"Tareas terminadas"}\' class="items navigable">';
 		  $texto.='<div class="head"></div>';              				            
-		  $texto.='<div class="label">'.utf8_encode(html_entity_decode('Tareas terminadas')).'&nbsp; <span class="badge">'.$tareas_terminadas['numcampos'].'</span> </div>';
+		  $texto.='<div class="label">'.codifica_encabezado(html_entity_decode('Tareas terminadas')).'&nbsp; <span class="badge">'.$tareas_terminadas['numcampos'].'</span> </div>';
 		  $texto.='<div class="info"></div>'; 		
 		  $texto.='<div class="tail"></div>';
 		  $texto.='</div>'; 
@@ -132,7 +132,7 @@ if(@$_REQUEST['idtareas_listado_unico']){
 		  $texto='';
 		  $texto.='<div id="tareas" title="Tareas genericas" data-load=\'{"kConnector":"iframe", "url":"'.$url.'", "kTitle":"Tareas genericas"}\' class="items navigable">';
 		  $texto.='<div class="head"></div>';              				            
-		  $texto.='<div class="label">'.utf8_encode(html_entity_decode('Tareas genericas')).'&nbsp; <span class="badge">'.$tareas_genericas['numcampos'].'</span> </div>';
+		  $texto.='<div class="label">'.codifica_encabezado(html_entity_decode('Tareas genericas')).'&nbsp; <span class="badge">'.$tareas_genericas['numcampos'].'</span> </div>';
 		  $texto.='<div class="info"></div>'; 		
 		  $texto.='<div class="tail"></div>';
 		  $texto.='</div>'; 

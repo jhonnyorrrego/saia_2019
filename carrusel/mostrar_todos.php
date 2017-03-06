@@ -15,7 +15,7 @@ if(isset($_REQUEST["idcontenido"])&&$_REQUEST["idcontenido"])
   {$contenidos=busca_filtro_tabla("","contenidos_carrusel","idcontenidos_carrusel=".$_REQUEST["idcontenido"],"",$conn);
    if($contenidos[0]["imagen"]<>"")
      echo '<img src="'.RUTA_DISCO."/".$ruta_db_superior.$contenidos[0]["imagen"].'" align="'.$contenidos[0]["align"].'" />';
-   echo stripslashes(utf8_encode(html_entity_decode($contenidos[0]["contenido"])));
+   echo stripslashes(codifica_encabezado(html_entity_decode($contenidos[0]["contenido"])));
    exit();
   } /********* para ver un solo carrusel ***************/
 elseif(isset($_REQUEST["idcarrusel"])&&$_REQUEST["idcarrusel"])
@@ -106,9 +106,9 @@ if($contenidos["numcampos"])
               if($contenidos[$i]["imagen"]<>"")
                  echo '<img src="'.RUTA_DISCO."/".$ruta_db_superior.$contenidos[$i]["imagen"].'" align="'.$contenidos[$i]["align"].'" />';
               if($contenidos[$i]["preview"]<>"")
-                 echo stripslashes(utf8_encode(html_entity_decode($contenidos[$i]["preview"]))).'<div id="textSlide" style="width:80%" align="right"><a id="uno" href="#" style="font-size:x-small" onclick="parent.$.fn.colorbox({href:\'mostrar_todos.php?idcontenido='.$contenidos[$i]["idcontenidos_carrusel"].'\',width:\'700px\', height:\'400px\', iframe:true}); return false;" >Ver mas...</a></div>';
+                 echo stripslashes(codifica_encabezado(html_entity_decode($contenidos[$i]["preview"]))).'<div id="textSlide" style="width:80%" align="right"><a id="uno" href="#" style="font-size:x-small" onclick="parent.$.fn.colorbox({href:\'mostrar_todos.php?idcontenido='.$contenidos[$i]["idcontenidos_carrusel"].'\',width:\'700px\', height:\'400px\', iframe:true}); return false;" >Ver mas...</a></div>';
               else
-                 echo stripslashes(utf8_encode(html_entity_decode($contenidos[$i]["contenido"])));
+                 echo stripslashes(codifica_encabezado(html_entity_decode($contenidos[$i]["contenido"])));
               echo "</div></div></li>";
               }
             ?>   

@@ -49,7 +49,7 @@ if($codigo == 0)
   $prof=busca_filtro_tabla("","dependencia","cod_padre is null AND estado=1","",$conn);
   if($prof["numcampos"]){
     $cadena.=("<item style=\"font-family:verdana; font-size:7pt;\" ");
-    $cadena.=("text=\"".ucwords(htmlentities($prof[0]["nombre"]))."\" id=\"".$prof[0]["iddependencia"]."#\" >\n");
+    $cadena.=("text=\"".ucwords(($prof[0]["nombre"]))."\" id=\"".$prof[0]["iddependencia"]."#\" >\n");
     $cadena.=llena_dependencia($prof[0]["iddependencia"], 0);
     $cadena.=("</item>\n");
     return $cadena;
@@ -70,7 +70,7 @@ else
      $codigo_hijos=llena_dependencia($hijos[$i]["iddependencia"], 0);     
      if($codigo_hijos<>"")
      {$cadena.=("<item style=\"font-family:verdana; font-size:7pt;\" $adicional ");
-      $cadena.=("text=\"".ucwords(htmlentities(formato_cargo($hijos[$i]["nombre"])))."\" nocheckbox=\"1\" id=\"".$hijos[$i]["iddependencia"]."#\" >\n");
+      $cadena.=("text=\"".ucwords((formato_cargo($hijos[$i]["nombre"])))."\" nocheckbox=\"1\" id=\"".$hijos[$i]["iddependencia"]."#\" >\n");
       $cadena.=$codigo_hijos."</item>\n";
      } 
     }       
@@ -109,9 +109,9 @@ for($j=0;$j<$usuarios["numcampos"];$j++)
       $adicional=" checked=\"1\" "; 
    $func.=("<item style=\"font-family:verdana; font-size:7pt;\" $adicional ");
   if($usuarios[$j]["nombres_ord"])
-    $func.=("text=\"".ucwords(htmlentities($usuarios[$j]["nombres_ord"]." ".$usuarios[$j]["apellidos"]))."-".htmlentities(formato_cargo($usuarios[$j]["cargo"]))."  $sistema\" id=\"".$usuarios[$j]["iddependencia_cargo"]."$ruta\" ruta=\"$ruta\" >");
+    $func.=("text=\"".ucwords(($usuarios[$j]["nombres_ord"]." ".$usuarios[$j]["apellidos"]))."-".(formato_cargo($usuarios[$j]["cargo"]))."  $sistema\" id=\"".$usuarios[$j]["iddependencia_cargo"]."$ruta\" ruta=\"$ruta\" >");
    else  
-    $func.=("text=\"".htmlentities($usuarios[$j]["login"])."\" id=\"".$usuarios[$j]["iddependencia_cargo"]."$ruta\" ruta=\"$ruta\" >");
+    $func.=("text=\"".($usuarios[$j]["login"])."\" id=\"".$usuarios[$j]["iddependencia_cargo"]."$ruta\" ruta=\"$ruta\" >");
    $func.=("</item>\n"); 
 }
 if($usuarios["numcampos"])

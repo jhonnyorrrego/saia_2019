@@ -264,9 +264,9 @@ function crear_formato_buscar($idformato,$accion){
                 $texto.='<div id="seleccionados"></div>';
                 if($arreglo[4]){
                   $texto.='<input type="text" id="stext_'.$campos[$h]["nombre"].'" placeholder="Buscar" width="200px" size="25">
-                   <a href="javascript:void(0)" onclick="tree_'.$campos[$h]["nombre"].'.findItem(htmlentities(document.getElementById(\'stext_'.$campos[$h]["nombre"].'\').value),1)"><img src="../../botones/general/anterior.png"border="0px"></a>
-                   <a href="javascript:void(0)" onclick="tree_'.$campos[$h]["nombre"].'.findItem(htmlentities(document.getElementById(\'stext_'.$campos[$h]["nombre"].'\').value),0,1)"><img src="../../botones/general/buscar.png"border="0px"></a>
-                          <a href="javascript:void(0)" onclick="tree_'.$campos[$h]["nombre"].'.findItem(htmlentities(document.getElementById(\'stext_'.$campos[$h]["nombre"].'\').value))"><img src="../../botones/general/siguiente.png"border="0px"></a>
+                   <a href="javascript:void(0)" onclick="tree_'.$campos[$h]["nombre"].'.findItem((document.getElementById(\'stext_'.$campos[$h]["nombre"].'\').value),1)"><img src="../../botones/general/anterior.png"border="0px"></a>
+                   <a href="javascript:void(0)" onclick="tree_'.$campos[$h]["nombre"].'.findItem((document.getElementById(\'stext_'.$campos[$h]["nombre"].'\').value),0,1)"><img src="../../botones/general/buscar.png"border="0px"></a>
+                          <a href="javascript:void(0)" onclick="tree_'.$campos[$h]["nombre"].'.findItem((document.getElementById(\'stext_'.$campos[$h]["nombre"].'\').value))"><img src="../../botones/general/siguiente.png"border="0px"></a>
                           <br /><br />';
                 }
                 $texto.='<div id="treeboxbox_'.$campos[$h]["nombre"].'" height=""></div>';
@@ -745,7 +745,7 @@ return($texto);
 <Post-condiciones><Post-condiciones>
 </Clase>  */
 function codifica($texto)
-{//strtoupper(utf8_encode(html_entity_decode($campos[$h]["etiqueta"].generar_comparacion($campos[$h]["tipo_dato"],$campos[$h]["nombre"]))))
+{//strtoupper(codifica_encabezado(html_entity_decode($campos[$h]["etiqueta"].generar_comparacion($campos[$h]["tipo_dato"],$campos[$h]["nombre"]))))
  return mayusculas($texto);
 }   
 ?>

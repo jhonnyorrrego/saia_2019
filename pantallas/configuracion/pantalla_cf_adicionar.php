@@ -2,70 +2,127 @@
 $max_salida=10; // Previene algun posible ciclo infinito limitando a 10 los ../
 $ruta_db_superior=$ruta="";
 while($max_salida>0){
-  if(is_file($ruta."db.php")){
-    $ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
-  }
-  $ruta.="../";
-  $max_salida--;
+	if(is_file($ruta."db.php")){
+		$ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
+	}
+	$ruta.="../";
+	$max_salida--;
 }
 include_once($ruta_db_superior."db.php");
-include_once($ruta_db_superior."calendario/calendario.php"); 
-$componente=33;
-if(@$_REQUEST["idbusqueda_componente"]){
-	$componente=$_REQUEST["idbusqueda_componente"];
-}
-$idbusqueda_componente=busca_filtro_tabla("","busqueda_componente","idbusqueda_componente='".$componente."'","",$conn);
-global $ruta_db_superior;
-
-?>  
-<style>
-.busqueda_general{
+include_once($ruta_db_superior."librerias_saia.php");
+include_once($ruta_db_superior."class_transferencia.php");
+include_once($ruta_db_superior."formatos/librerias/funciones_generales.php");
+echo(estilo_bootstrap());
+if($_REQUEST['guardar']==1){
+	print_r($_REQUEST);die();
+	$sql="INSERT INTO tareas (fecha,tarea,responsable,descripcion,prioridad,fecha_tarea,ejecutor,documento_iddocumento) VALUES(".fecha_db_almacenar($_REQUEST['fecha'],"Y-m-d H:i:s").",'".($_REQUEST['tarea'])."','".$_REQUEST['responsable']."','".($_REQUEST[descripcion])."','".$_REQUEST[prioridad]."',".fecha_db_almacenar($_REQUEST['fecha_tarea'],"Y-m-d").",'".usuario_actual("funcionario_codigo")."','".$_REQUEST['iddoc']."')";
+	phpmkr_query($sql);
+	$formato=busca_filtro_tabla("b.idformato","documento a, formato b","lower(a.plantilla)=b.nombre AND a.iddocumento=".$_REQUEST['iddoc'],"",$conn);
+	$responsable=str_replace(",", "@", $_REQUEST['responsable']);
 	
-}
-.control-group{
-	font-size:9pt;
-}
-.clase_capas{
-	margin-bottom: 3px;
-  min-height: 11px;
-  padding: 10px;
-  border: 1px solid #E3E3E3;
-}
-.clase_sin_capas{
-	margin-bottom: 0px;
-  min-height: 0px;
-  padding: 0px;
-  border: 0px solid #E3E3E3;
-}
-</style>
-        
-        
-        <div data-toggle="collapse" data-target="#contenido_formato">
-				  <i class="icon-minus-sign"></i><b>B&uacute;squeda por contenido del documento</b>
+	transferencia_automatica($formato[0]["idformato"],$_REQUEST["iddoc"],$responsable,1);
+	alerta("Tarea asignada!");
+	redirecciona("adicionar_tareas.php?iddoc=".$_REQUEST['iddoc']);
+}else{
+  if(@$_REQUEST["fecha"]){
+    $fecha_tarea=date("Y-m-d",$_REQUEST["fecha"]);
+  }
+  if($_REQUEST["iddoc"]){
+    include_once($ruta_db_superior."pantallas/documento/menu_principal_documento.php");
+    menu_principal_documento($_REQUEST["iddoc"]);
+    echo(librerias_arboles());
+    //echo(librerias_bootstrap());
+    echo(librerias_datepicker_bootstrap());
+  }
+  else{
+    echo(librerias_jquery("1.7"));
+    echo(librerias_arboles());
+    echo(librerias_bootstrap());
+    echo(librerias_datepicker_bootstrap());
+  }
+	?>
+	<div class="container">
+		<div class="control-group" nombre="etiqueta">
+			<legend>Asignar tarea al documento</legend>
+		</div>
+		<form id="formulario_tareas" class="form-horizontal">
+			<div class="control-group">
+				<label class="control-label" for="etiqueta">Fecha*:</label>
+				<div class="controls">
+					<input type="text" name="fecha" id="fecha" class="required" readonly="" value="<?php echo(date("Y-m-d H:i:s"));?>">
 				</div>
-        <div id="contenido_formato" class="collapse in opcion_informacion well">
-        <?php 
-        $nombre_arbol[1]="plantilla";
-        echo arbol("bqsaia_A@plantilla",$nombre_arbol[1],"pantallas/inventario_documental/test_inventario.php","","","","","radio",1); ?>
-        <input type="hidden" name="bksaiacondicion_A@plantilla" id="bksaiacondicion_A@plantilla" value="in">
-        <input type="hidden" name="bqsaiaenlace_A@plantilla" value="y" />
-        </div>
-        
-        <div id="muestra_plantilla" style="font-size:9pt;" class="well clase_sin_capas">
-        </div>
-        <!--hr width="75%" color="black" style="text-align:left"/-->
-        
-        
-	<!--div class="form-actions">
-	  <button type="button" class="btn btn-primary" id="ksubmit_saia" enlace="pantallas/busquedas/procesa_filtro_busqueda.php" titulo="Resultado">Buscar</button>    
-	  <input class="btn btn-danger" name="commit" type="reset" value="Cancelar">  
-	</div-->
-        <input type="hidden" name="bqcondicion_adicional">
-        <input type="hidden" name="bqtipodato" value="date|A@fecha_x,A@fecha_y">
-        <input type="hidden" name="idbusqueda_componente" id="idbusqueda_componente" value="<?php echo $idbusqueda_componente[0]["idbusqueda_componente"]; ?>">
-    
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="etiqueta">Responsable*:</label>
+				<div class="controls">
+					<?php
+						echo arbol("responsable","responsable","test.php?rol=1&sin_padre=1",0,1,1,false,'radio');
+					?>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="etiqueta">Tarea a realizar*:</label>
+				<div class="controls">
+					<input type="text" class="required" name="tarea" id="etiqueta" placeholder="Tarea a realizar">
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="etiqueta">Descripci&oacute;n:</label>
+				<div class="controls">
+					<textarea id="descripcion" name="descripcion" placeholder="Descripcion"></textarea>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="etiqueta">Prioridad*:</label>
+				<div class="controls">
+					<input type="radio" class="required" name="prioridad" id="prioridad0" value="0">Baja
+					<input type="radio" name="prioridad" id="prioridad0" value="1">Media
+					<input type="radio" name="prioridad" id="prioridad0" value="2">Alta
+					<label class="error" for="prioridad"></label>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="etiqueta">Fecha tarea*:</label>
+				<div class="controls">
+					<div class="input-append date" id="datepicker">
+						<input class="required" id="fecha_tarea" name="fecha_tarea" data-format="yyyy-MM-dd" value="<?php echo($fecha_tarea);?>">
+						<span class="add-on"><i class="icon-th"></i></span>
+						<label class="error" for="fecha_tarea"></label>
+					</div>
+				</div>
+			</div>
+			<div class="control-group">
+				<div class="controls">
+					<input type='submit' class="btn btn-primary btn-mini" name="submit" id="submit" value="continuar">
+					<input type="hidden" name="iddoc" value="<?php echo($_REQUEST['iddoc'])?>">
+					<input type="hidden" name="guardar" value="1">
+				</div>
+			</div>
+		</form>
+	</div>
+	<script type="text/javascript" src="<?php echo($ruta_db_superior); ?>js/jquery.validate.1.13.1.js"></script>
+	<style>
+	label.error {
+		font-weight: bold;
+		color: red;
+	}
+	</style>
+	<script>
+		
+	$(document).ready(function(){
+		$('#datepicker').datetimepicker({
+			language: 'es',
+			pick12HourFormat: true,
+			pickTime: false
+		}).on('changeDate', function(e){
+			$(this).datetimepicker('hide');
+		});
+		$("#formulario_tareas").validate();
+	});
+	</script>
 <?php
-function arbol($campo,$nombre_arbol,$url,$cargar_todos=0,$padresehijos=false,$quitar_padres=false,$adicionales=false,$tipo_etiqueta='check',$abrir_arbol=0){
+}
+function arbol($campo,$nombre_arbol,$url,$cargar_todos=0,$padresehijos=false,$quitar_padres=false,$adicionales=false,$tipo_etiqueta='check'){
 	global $ruta_db_superior;
 	$entidad=$nombre_arbol;
 	?>
@@ -205,9 +262,6 @@ function arbol($campo,$nombre_arbol,$url,$cargar_todos=0,$padresehijos=false,$qu
       if($cargar_todos==1){
       	echo "seleccionar_todos".$entidad."(1);";
       }
-			if($abrir_arbol==1){
-				echo "tree".$entidad.".openAllItems(0);";
-			}
       ?>
     }
     function cargando<?php echo $entidad; ?>() {
@@ -233,114 +287,8 @@ function arbol($campo,$nombre_arbol,$url,$cargar_todos=0,$padresehijos=false,$qu
      document.getElementById("<?php echo $entidad; ?>").value=tree<?php echo $entidad; ?>.getAllChecked(); 
     }
                   --></script><br>
+<script type="text/javascript" src="<?php echo $ruta_db_superior; ?>pantallas/lib/codificacion_funciones.js"></script>
 	<?php
+	}
 	
-}
 ?>
-<script>
-$(".reset").live('click',function(){
-	<?php
-	$cantidad=count($nombre_arbol);
-	for($i=0;$i<$cantidad;$i++){
-		echo 'seleccionar_todos'.$nombre_arbol[$i]."(0); ";
-	}
-	?>
-});
-$("#ksubmit_saia").click(function(){
-	<?php if($idbusqueda_componente[0]["nombre"]=="documentos_serie"){ ?>
-	var series=$("#serie").val();
-	if(!series){
-		notificacion_saia('Debe seleccionar una serie','success','',3500);
-		return false;
-	}
-	<?php } ?>
-	if(typeof(tree<?php echo $nombre_arbol[2]; ?>) != 'undefined'){
-		$("#<?php echo $nombre_arbol[2]; ?>").val(codificar_repetidos(tree<?php echo $nombre_arbol[2]; ?>.getAllChecked()));
-	}
-	if(typeof(tree<?php echo $nombre_arbol[3]; ?>) != 'undefined'){
-		$("#<?php echo $nombre_arbol[3]; ?>").val(codificar_repetidos(tree<?php echo $nombre_arbol[3]; ?>.getAllChecked()));
-	}
-	if(typeof(tree<?php echo $nombre_arbol[4]; ?>) != 'undefined'){
-		$("#<?php echo $nombre_arbol[4]; ?>").val(codificar_repetidos(tree<?php echo $nombre_arbol[4]; ?>.getAllChecked()));
-	}
-	if(typeof(tree<?php echo $nombre_arbol[5]; ?>) != 'undefined'){
-		$("#<?php echo $nombre_arbol[5]; ?>").val(codificar_repetidos(tree<?php echo $nombre_arbol[5]; ?>.getAllChecked()));
-	}
-	//return false;
-	var filtro_actual=$("#filtro_adicional").val();
-	var tablas=filtro_actual.split("@");
-	var fin=strpos(tablas[0], ', (');
-	if(fin){
-		tablas[0]=tablas[0].substr(0,fin);
-	}
-	var fin_camp=strpos(tablas[1], ' and (');
-	if(fin_camp){
-		tablas[1]=tablas[1].substr(0,fin_camp);
-	}
-	var nuevas_tablas=tablas[0];
-	var nuevos_campos=tablas[1];
-	
-	var valor1=$("#<?php echo $nombre_arbol[2]; ?>").val();
-	var valor2=$("#<?php echo $nombre_arbol[3]; ?>").val();
-	var valor3=$("#<?php echo $nombre_arbol[4]; ?>").val();
-	var valor4=$("#<?php echo $nombre_arbol[5]; ?>").val();
-	
-	if((valor1!=''&&valor1!=undefined)||(valor2!=''&&valor2!=undefined)||(valor3!=''&&valor3!=undefined)){
-		if(!strpos(nuevas_tablas,'uzon_salida z')){
-			nuevas_tablas+=',buzon_salida z';
-			nuevos_campos+=' AND iddocumento=z.archivo_idarchivo';
-		}
-	}
-	else{
-		//nuevas_tablas=nuevas_tablas.replace('buzon_salida z','');
-		//nuevos_campos=nuevos_campos.replace(' AND iddocumento=z.archivo_idarchivo','');
-	}
-	if((valor4!=''&&valor4!=undefined)){
-		if(!strpos(nuevas_tablas,'uzon_entrada w')){
-			nuevas_tablas+=',buzon_entrada w';
-			nuevos_campos+=' AND iddocumento=w.archivo_idarchivo';
-		}
-	}
-	else{
-		nuevas_tablas=nuevas_tablas.replace(',buzon_entrada w','');
-		nuevos_campos=nuevos_campos.replace(' AND iddocumento=w.archivo_idarchivo','');
-	}
-	$("#filtro_adicional").val(nuevas_tablas+' @ '+nuevos_campos);
-	//return false;
-});
-
-function strpos (haystack, needle, offset) {
-  var i = (haystack + '').indexOf(needle, (offset || 0));
-  return i === -1 ? false : i;
-
-}
-function codificar_repetidos(lista){
-	vector=lista.split(",");
-	var a=0;
-	var vector2=new Array();
-	for(i=0;i<vector.length;i++){
-		if(vector[i].indexOf("_")!=-1){
-    		vector2[a]=vector[i].substr(0,vector[i].indexOf("_"));
-    		a++;
-	    }
-	    else if(vector[i]!=''){
-	    	vector2[a]=vector[i];
-	    	a++;
-	    }
-	}
- 	return(vector2.join(','));      
-}
-$(".opcion_informacion").on("hide",function(){
-  $(this).prev().children("i").removeClass();
-  $(this).prev().children("i").addClass("icon-plus-sign");
-  $(this).removeClass('clase_capas');
-  $(this).addClass('clase_sin_capas');
-});
-$(".opcion_informacion").on("show",function(){
-  $(this).prev().children("i").removeClass();
-  $(this).prev().children("i").addClass("icon-minus-sign");
-  $(this).removeClass('clase_sin_capas');
-  $(this).addClass('clase_capas');
-});
-</script>
-</div>

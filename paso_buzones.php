@@ -132,7 +132,7 @@ function guardar_evento_archivo()
    Antes de imprimir este mensaje, aseg&uacute;rese que es necesario.
    Proteger el medio ambiente tambi&eacute;n est&aacute; en nuestras manos.";
    
-   //$jab->message($login[0]["login"]."@".JABBER_SERVER,"chat",NULL,utf8_encode(html_entity_decode($texto2)));
+   //$jab->message($login[0]["login"]."@".JABBER_SERVER,"chat",NULL,codifica_encabezado(html_entity_decode($texto2)));
    
    $texto = "Tiene un nuevo documento para su revision<br />
    Numero de Radicado:".$doc[0]["numero"]." ".$doc[0]["plantilla"]."<br />

@@ -39,7 +39,7 @@ AND a.funcionario_codigo=".$usuarios[$i]["funcionario_codigo"],"d.iddependencia_
 			
 			echo("<item style=\"font-family:verdana; font-size:7pt;\" ");
 			
-			echo("text=\"".ucwords(htmlentities(codifica_caracteres($usuarios[$i]["nombres"]." ".$usuarios[$i]["apellidos"])))." (".$cargo[0]["nombre"].") \" id=\"".$cargo[0]["iddependencia_cargo"]."\">");
+			echo("text=\"".ucwords((codifica_caracteres($usuarios[$i]["nombres"]." ".$usuarios[$i]["apellidos"])))." (".$cargo[0]["nombre"].") \" id=\"".$cargo[0]["iddependencia_cargo"]."\">");
 			echo("</item>\n");
 		} 
 	    

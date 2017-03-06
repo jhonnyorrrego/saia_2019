@@ -104,7 +104,7 @@ menu_ordenar($x_iddocumento,0,1);
     $x_serie = $sTmp;
     if($x_serie=='0')
     	$x_serie='---';
-    echo utf8_encode($x_serie); 
+    echo codifica_encabezado($x_serie); 
     $x_serie = $ox_serie; // Restore Original Value 
   ?>
   </span></td>

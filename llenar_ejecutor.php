@@ -15,7 +15,7 @@ include_once("db.php")?>
 <?php
 
 function codifica($texto)
-{return(utf8_encode(html_entity_decode($texto)));
+{return(codifica_encabezado(html_entity_decode($texto)));
 }
 
 $datos_e = busca_filtro_tabla("","ejecutor,datos_ejecutor","idejecutor='".$_REQUEST["idejecutor"]."' and ejecutor_idejecutor=idejecutor","iddatos_ejecutor desc",$conn);
@@ -29,7 +29,7 @@ if($_POST["opcion"]=="nombre")
 {
   if($_POST["nombre"]<>"")
    $datos_e = busca_filtro_tabla("A.idejecutor,A.nombre,identificacion,iddatos_ejecutor","ejecutor A,datos_ejecutor d","idejecutor=ejecutor_idejecutor and iddatos_ejecutor=".$_POST["nombre"],"iddatos_ejecutor desc",$conn);
-   //$datos_e = busca_filtro_tabla("A.idejecutor,identificacion","ejecutor A","lower(A.nombre)='".strtolower(htmlentities(html_entity_decode(utf8_decode($_POST["nombre"]))))."'","",$conn);  
+   //$datos_e = busca_filtro_tabla("A.idejecutor,identificacion","ejecutor A","lower(A.nombre)='".strtolower((html_entity_decode(($_POST["nombre"]))))."'","",$conn);  
 }
 else
 {
