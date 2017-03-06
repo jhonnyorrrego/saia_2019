@@ -140,8 +140,7 @@ if($paginas["numcampos"])
  //si el documento es un formato se envio el pdf como adjunto
  if(strtolower($datos[0]["plantilla"])<>"" && $datos[0]["numero"]<>'0')
     {
-     //if($datos[0]["pdf"]=="" && is_file($ruta_db_superior.$datos[0]["pdf"])) 
-     if(1==1)
+     if($datos[0]["pdf"]=="" && is_file($ruta_db_superior.$datos[0]["pdf"]))
      {  //se llama el pdf para crearlo y colocarlo como adjunto
         ?>
         <script type="text/javascript" src="../js/jquery.js"> </script>
