@@ -14,6 +14,7 @@ $max_salida--;
 include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."class_transferencia.php");
 include_once($ruta_db_superior."header.php");
+include_once($ruta_db_superior."pantallas/lib/librerias_archivo.php");
 
 ?>
 <script> 
@@ -139,23 +140,30 @@ if($paginas["numcampos"])
  //si el documento es un formato se envio el pdf como adjunto
  if(strtolower($datos[0]["plantilla"])<>"" && $datos[0]["numero"]<>'0')
     {
-     if($datos[0]["pdf"]=="") 
+     //if($datos[0]["pdf"]=="" && is_file($ruta_db_superior.$datos[0]["pdf"])) 
+     if(1==1)
      {  //se llama el pdf para crearlo y colocarlo como adjunto
         ?>
         <script type="text/javascript" src="../js/jquery.js"> </script>
         <script>
         $.ajax({
            type: "POST",
-           url: "../html2ps/public_html/demo/html2ps.php",
-           data: 'plantilla=<?php echo strtolower($datos[0]["plantilla"]); ?>&iddoc=<?php echo $_REQUEST["iddoc"]; ?>&nombre_archivo=temporal_<?php echo usuario_actual("login"); ?>/pdf_formato_<?php echo $_REQUEST["iddoc"]; ?>',
+           url:"../class_impresion.php",
+           data:'iddoc=<?php echo $_REQUEST["iddoc"]; ?>&rand=<?php echo(rand(1,999)); ?>'
            async: false
          });    
         </script>
       <?php 
-        $texto_pdf.='<input name="pdf" value="'."../temporal_".usuario_actual("login")."/pdf_formato_".$_REQUEST["iddoc"].".pdf".'" type="checkbox" checked><a href="'."../temporal_".usuario_actual("login")."/pdf_formato_".$_REQUEST["iddoc"].".pdf".'" target="_blank">'."documento_".$datos[0]['numero'].".pdf".'</a><input type="hidden" name="nombre_pdf" value="'."documento_".$datos[0]['numero'].".pdf".'"><br />';
+      $datos_documento = busca_filtro_tabla(fecha_db_obtener('A.fecha', 'Y-m-d') . " as x_fecha, A.*", "documento A", "A.iddocumento=" . $_REQUEST["iddoc"], "", $conn);
+      $ruta_pdfs = ruta_almacenamiento("pdf");
+      $formato_ruta = aplicar_plantilla_ruta_documento($_REQUEST["iddoc"]);
+      $ruta = $ruta_pdfs . $formato_ruta . "/pdf/";
+      $ruta .= ($datos_documento[0]["plantilla"]) . "_" . $datos_documento[0]["numero"] . "_" . str_replace("-", "_", $datos_documento[0]["x_fecha"]) .".pdf";
+      
+      $texto_pdf.='<input name="pdf" value="'.$ruta.'" type="checkbox" checked><a href="'.$ruta.'" target="_blank">'."documento_".$datos[0]['numero'].".pdf".'</a><input type="hidden" name="nombre_pdf" value="'."documento_".$datos[0]['numero'].".pdf".'"><br />';
      }
      else
-       $texto_pdf.='<input name="pdf" value="'."../".$datos[0]['pdf'].'" type="checkbox" checked><a href="'."../".$datos[0]['pdf'].'" target="_blank">'."documento_".$datos[0]['numero'].".pdf".'</a><input type="hidden" name="nombre_pdf" value="'."documento_".$datos[0]['numero'].".pdf".'"><br />';        
+       $texto_pdf.='<input name="pdf" value="'.$ruta_db_superior.$datos[0]['pdf'].'" type="checkbox" checked><a href="'.$ruta_db_superior.$datos[0]['pdf'].'" target="_blank">'."documento_".$datos[0]['numero'].".pdf".'</a><input type="hidden" name="nombre_pdf" value="'."documento_".$datos[0]['numero'].".pdf".'"><br />';        
     }   
    echo "<tr><td class='encabezado'>ARCHIVOS ADJUNTOS</td><td bgcolor='#F5F5F5'><br />".$texto_anexo.$texto_pagina.$texto_pdf; 
    echo "<input type='hidden' name='archivo_idarchivo' value='".$_REQUEST["iddoc"]."' >";
