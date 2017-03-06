@@ -29,11 +29,11 @@ $doc=busca_filtro_tabla("","documento","iddocumento=$iddoc","",$conn);
 	<script type="text/javascript" src="js/dhtmlXTree.js"></script>
 <span class="phpmaker">
 			      Buscar:<br><input type="text" id="stext" width="200px" size="20">      
-      <a href="javascript:void(0)" onclick="tree2.findItem(htmlentities(document.getElementById('stext').value),1)">
+      <a href="javascript:void(0)" onclick="tree2.findItem((document.getElementById('stext').value),1)">
       <img src="botones/general/anterior.png"border="0px"></a>
-      <a href="javascript:void(0)" onclick="tree2.findItem(htmlentities(document.getElementById('stext').value),0,1)">
+      <a href="javascript:void(0)" onclick="tree2.findItem((document.getElementById('stext').value),0,1)">
       <img src="botones/general/buscar.png"border="0px"></a>
-      <a href="javascript:void(0)" onclick="tree2.findItem(htmlentities(document.getElementById('stext').value))">
+      <a href="javascript:void(0)" onclick="tree2.findItem((document.getElementById('stext').value))">
       <img src="botones/general/siguiente.png"border="0px"></a>
 <br /><br />
 				<div id="treeboxbox_tree2"></div></span>

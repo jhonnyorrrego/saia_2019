@@ -150,7 +150,7 @@ $(document).ready(function(){
 				
 				comprimir("version".$_REQUEST["version"],$ruta);
 				
-				alerta(utf8_encode("Creada versi&oacute;n ".$_REQUEST["version"]));				
+				alerta(codifica_encabezado("Creada versi&oacute;n ".$_REQUEST["version"]));				
 				
 				
 				

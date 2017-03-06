@@ -117,7 +117,7 @@ function transferir()
   $destinos=explode(",",$_REQUEST["lista_despachos"]);
   $empresa=@$_REQUEST["x_empresa0"];
   $guia=@$_REQUEST["guia"];
-  $responsable=htmlentities(htmlspecialchars_decode(html_entity_decode(utf8_decode(trim($_REQUEST["x_responsable0"])))));
+  $responsable=(htmlspecialchars_decode(html_entity_decode((trim($_REQUEST["x_responsable0"])))));
   $lresponsable=busca_filtro_tabla("A.*","ejecutor A","A.nombre LIKE '".$responsable."'","",$conn); 
   if($lresponsable["numcampos"] ){
     $idresponsable=$lresponsable[0]["idejecutor"];

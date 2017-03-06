@@ -249,7 +249,7 @@ function enviar_email($doc=0){
         if($pdf_documento['numcampos']){
             $mail->AddAttachment("../".$pdf_documento[0]["pdf"],'documento_'.$pdf_documento[0]['numero'].'.pdf');
         }
-        
+                
       }
       $enlace="../documentoview.php?key=$doc";
      }
@@ -258,11 +258,11 @@ function enviar_email($doc=0){
       if(isset($_REQUEST["de"]))
         $from = $_REQUEST["de"];
       if(isset($_REQUEST["asunto"]))
-        $asunto = utf8_decode($_REQUEST["asunto"]);
+        $asunto = ($_REQUEST["asunto"]);
        if(isset($_REQUEST["para"]))
         $destinos = $_REQUEST["para"];        
        if(isset($_REQUEST["contenido"]))
-         $contenido = utf8_decode($_REQUEST["contenido"]);
+         $contenido = ($_REQUEST["contenido"]);
        $enlace="../documentoview.php?key=$doc";
      } 
 

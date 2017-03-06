@@ -45,7 +45,7 @@ function ubicacion_documento($iddoc){
 function decodificar_html($valor){
 	$result=str_replace("</p>", "", $valor);
 	$result=str_replace("<p>", "", $result);
-	return(utf8_decode($result));
+	return(($result));
 }
 function ver_documento($iddocumento,$radicado,$html){
 	$enlace = "<div class='link kenlace_saia' enlace='ordenar.php?accion=mostrar&amp;amp;mostrar_formato=1&amp;amp;key=".$iddocumento."' conector='iframe' titulo='Documento No - ".$radicado."'>".$html."</div>";
@@ -102,7 +102,7 @@ function ver_documento_solicitado($iddoc){
 		$info.="Folios: ".$datos[0]['numero_folios']."<br />";
 	}
 	
-	$observaciones=htmlentities(strip_tags("<br />".$datos[0]['observaciones']));
+	$observaciones=(strip_tags("<br />".$datos[0]['observaciones']));
 	$info.= "<br />".$observaciones;
 	return($info);
 }

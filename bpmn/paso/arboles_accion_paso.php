@@ -36,11 +36,11 @@ function accion_responder(){
     <div ><?php echo $seleccionados; ?></div>
     <br>
     Buscar: <input type="text" id="stext<?php echo $entidad; ?>" width="200px" size="25">
-  <a href="javascript:void(0)" onclick="stext<?php echo $entidad; ?>.findItem(htmlentities(document.getElementById('stext<?php echo $entidad; ?>').value),1)"> 
+  <a href="javascript:void(0)" onclick="stext<?php echo $entidad; ?>.findItem((document.getElementById('stext<?php echo $entidad; ?>').value),1)"> 
   <img src="<?php echo($ruta_db_superior);?>botones/general/anterior.png" alt="Buscar Anterior" border="0px"></a>
-  <a href="javascript:void(0)" onclick="tree<?php echo $entidad; ?>.findItem(htmlentities(document.getElementById('stext<?php echo $entidad; ?>').value),0,1)">
+  <a href="javascript:void(0)" onclick="tree<?php echo $entidad; ?>.findItem((document.getElementById('stext<?php echo $entidad; ?>').value),0,1)">
   <img src="<?php echo($ruta_db_superior);?>botones/general/buscar.png" alt="Buscar" border="0px"></a>
-  <a href="javascript:void(0)" onclick="tree<?php echo $entidad; ?>.findItem(htmlentities(document.getElementById('stext<?php echo $entidad; ?>').value))">
+  <a href="javascript:void(0)" onclick="tree<?php echo $entidad; ?>.findItem((document.getElementById('stext<?php echo $entidad; ?>').value))">
   <img src="<?php echo($ruta_db_superior);?>botones/general/siguiente.png" alt="Buscar Siguiente" border="0px"></a>
   
   <div id="esperando<?php echo $entidad; ?>"><img src="<?php echo($ruta_db_superior);?>imagenes/cargando.gif"></div>

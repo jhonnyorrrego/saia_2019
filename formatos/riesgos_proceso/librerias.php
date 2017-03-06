@@ -57,7 +57,7 @@ function controles_reporte($idft_riesgos_proceso){
 	$texto.='<table style="width:100%;border-collapse:collapse">';
 	for($i=0;$i<$datos["numcampos"];$i++){
 		$texto.="<tr>";
-		$texto.="<td>".ucfirst(strtolower(strip_tags(utf8_encode(html_entity_decode($datos[$i]["descripcion_control"])))))."</td>";
+		$texto.="<td>".ucfirst(strtolower(strip_tags(codifica_encabezado(html_entity_decode($datos[$i]["descripcion_control"])))))."</td>";
 		$texto.="</tr>";
 	}
 	$texto.="</table>";
@@ -127,7 +127,7 @@ function respuesta_reporte($idft_riesgos_proceso){
 	$texto.='<table style="width:100%;border-collapse:collapse">';
 	for($i=0;$i<$datos["numcampos"];$i++){
 		$texto.="<tr>";
-		$texto.="<td>".strip_tags(utf8_encode(html_entity_decode(acciones($datos[$i]["idft_control_riesgos"],"reponsables"))))."</td>";
+		$texto.="<td>".strip_tags(codifica_encabezado(html_entity_decode(acciones($datos[$i]["idft_control_riesgos"],"reponsables"))))."</td>";
 		$texto.="</tr>";
 	}
 	$texto.="</table>";
@@ -176,7 +176,7 @@ function seguimiento($id,$campo){
 	$seguimiento=busca_filtro_tabla($campo,"ft_seguimiento_riesgo a, documento b","a.documento_iddocumento=b.iddocumento and b.estado not in('ELIMINADO', 'ANULADO') and ft_riesgos_proceso=".$id,"",$conn);
 	$texto='';
 	for($i=0;$i<$seguimiento["numcampos"];$i++){
-		$texto.=ucfirst(strtolower(strip_tags(utf8_encode(html_entity_decode($seguimiento[$i][$campo])))));
+		$texto.=ucfirst(strtolower(strip_tags(codifica_encabezado(html_entity_decode($seguimiento[$i][$campo])))));
 		if(($i+1)<$seguimiento["numcampos"])$texto.=' ';
 	}
 	return($texto);

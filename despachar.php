@@ -144,7 +144,7 @@ global $conn,$campo_destino;
 		if ($lresponsable["numcampos"]) {
 			$idresponsable = $lresponsable[0]["idejecutor"];
 		} else if ($responsable <> "") {
-			$responsable = htmlentities(htmlspecialchars_decode(html_entity_decode(utf8_decode(trim($_REQUEST["x_responsable0_".$key])))));
+			$responsable = (htmlspecialchars_decode(html_entity_decode((trim($_REQUEST["x_responsable0_".$key])))));
 			$sql = "INSERT INTO ejecutor(nombre) VALUES('" . $responsable . "')";
 			phpmkr_query($sql, $conn);
 			$idresponsable = phpmkr_insert_id();

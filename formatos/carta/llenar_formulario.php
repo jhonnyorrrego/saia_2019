@@ -6,7 +6,7 @@ usado en el formato carta para el autocompletar.
 busca el valor del campo $_POST["nombre"] en la tabla ejecutor, donde el nombre del 
 ejecutor sea $_POST["nombre"], crea un cuadro de texto con el valor encontrado
 --------------------------------------------------------------------------------------*/
-$_POST["nombre"]=htmlentities(utf8_decode(trim($_POST["nombre"])));
+$_POST["nombre"]=((trim($_POST["nombre"])));
 
 if($_POST["op"]=="verificar")
   {$resultado=busca_filtro_tabla("idejecutor","ejecutor","lower(nombre)='".strtolower($_POST["nombre"])."'","",$conn);
@@ -43,7 +43,7 @@ else
               {
                $valor[0]=$resultado[0][$_POST["op"]];   
                $ciudad=busca_filtro_tabla("nombre","municipio","idmunicipio=".$resultado[0][$_POST["op"]],"",$conn);
-               $valor[1]=utf8_encode($ciudad[0]["nombre"]); 
+               $valor[1]=codifica_encabezado($ciudad[0]["nombre"]); 
               }
            echo '<select name="ciudad_destino" id="obligatorio">
                 <option value="'.$valor[0].'" selected>'.$valor[1].'</option>
@@ -64,8 +64,8 @@ else
                else
                   echo "<option value='".$fila."'>".$fila."</option>";
               }
-           if($encontrado==0 && utf8_encode($resultado[0][$_POST["op"]])<>"")
-              echo "<option value='".utf8_encode($resultado[0][$_POST["op"]])."' selected>".utf8_encode($resultado[0][$_POST["op"]])."</option>";
+           if($encontrado==0 && codifica_encabezado($resultado[0][$_POST["op"]])<>"")
+              echo "<option value='".codifica_encabezado($resultado[0][$_POST["op"]])."' selected>".codifica_encabezado($resultado[0][$_POST["op"]])."</option>";
            elseif($encontrado==0)
               echo "<option value='Se&ntilde;or' selected>Se&ntilde;or</option>";     
   
@@ -75,7 +75,7 @@ else
             </label>';
           }        
        else         
-          echo "<input name='".$_POST["op"]."' type='text' id='".$_POST["op"]."' size='100' value='".utf8_encode($resultado[0][$_POST["op"]])."'>";
+          echo "<input name='".$_POST["op"]."' type='text' id='".$_POST["op"]."' size='100' value='".codifica_encabezado($resultado[0][$_POST["op"]])."'>";
       }
     else
       {if($_POST["op"]=="ciudad")

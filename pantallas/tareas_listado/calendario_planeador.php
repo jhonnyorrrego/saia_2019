@@ -45,7 +45,7 @@ if($datos["numcampos"]){
     //$url="pantallas/tareas_listado/principal_listados_tareas_calendarios.php?rol_tareas=tarea_unica&click=tareas&idtareas_listado_unico=".$datos[$i]["idtareas_listado"];
     $componente_tareas=busca_filtro_tabla("idbusqueda_componente","busqueda_componente"," lower(nombre)='tareas_listado_reporte' ","",$conn);
   $url="pantallas/busquedas/consulta_busqueda_subtareas_listado.php?idbusqueda_componente=".$componente_tareas[0]['idbusqueda_componente']."&ocultar_subtareas=1&rol_tareas=tarea_unica&click=tareas&idtareas_listado_unico=".$datos[$i]["idtareas_listado"];
-    array_push($arreglo["rows"],array("id"=>$datos[$i]["idtareas_listado"],"titulo"=>utf8_encode(html_entity_decode($datos[$i]["nombre_tarea"]))."\n(".$datos[$i]["fecha_limite"].")","inicio"=>$datos[$i]["fecha_planeada"],"fin"=>$datos[$i]["fecha_planeada_fin"],"url"=>$url,"color"=>$color,"hs"=>1));
+    array_push($arreglo["rows"],array("id"=>$datos[$i]["idtareas_listado"],"titulo"=>codifica_encabezado(html_entity_decode($datos[$i]["nombre_tarea"]))."\n(".$datos[$i]["fecha_limite"].")","inicio"=>$datos[$i]["fecha_planeada"],"fin"=>$datos[$i]["fecha_planeada_fin"],"url"=>$url,"color"=>$color,"hs"=>1));
   } 
 }
 echo(json_encode($arreglo));

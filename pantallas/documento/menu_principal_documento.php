@@ -358,7 +358,7 @@ function permisos_modulo_clase($iddoc, $modulo_padre,$lista,$target="_self"){
                     $dir=str_replace('@nombreformato@',strtolower($documento->documento[0]["plantilla"]),$dir);
             }
             if($lista==1){
-               $texto.='<li><a href="'.$ruta_db_superior.$dir.'" class="enlace '.$clase.'" enlace="'.$dir.'" destino="'.$target.'"><i class="icon-'.$modulo[$i]["nombre"].'"></i>'.htmlentities($modulo[$i]["etiqueta"]).'</a></li>';
+               $texto.='<li><a href="'.$ruta_db_superior.$dir.'" class="enlace '.$clase.'" enlace="'.$dir.'" destino="'.$target.'"><i class="icon-'.$modulo[$i]["nombre"].'"></i>'.($modulo[$i]["etiqueta"]).'</a></li>';
             }
             elseif($lista==2){
                 $texto.='<a class="tooltip_saia_abajo pull-left '.$modulo[$i]["nombre"].' abrir_highslide enlace" title="'.  html_entity_decode($modulo[$i]["etiqueta"]).'" enlace="'.$dir.'" destino="'.$target.'" style="height: 19px;" id="'.$modulo_padre.'">

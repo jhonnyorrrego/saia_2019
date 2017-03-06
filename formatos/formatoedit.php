@@ -327,7 +327,6 @@ return true;
 		<td bgcolor="#F5F5F5">
       <span class="phpmaker">
         <?php
-        /*
           $serie=busca_filtro_tabla("","serie A","1=1","lower(nombre) asc",$conn);
           if($serie["numcampos"]){
             $inicio2='<SELECT name="x_serie_idserie"><OPTION value="0">Sin Serie Documental</OPTION><OPTION value="" selected>Crear Serie Documental</OPTION>';
@@ -341,82 +340,7 @@ return true;
             $inicio2.='>'.$serie[$i]["nombre"]." - ".$serie[$i]["codigo"].'</OPTION>';
           }
           echo($inicio2.$fin2);
-          */
         ?>
-        
-					<input type="hidden" name="x_serie_idserie" id="x_serie_idserie" value="<?php echo($x_serie_idserie); ?>">
-					<input type="hidden" name="x_serie_idserie_uncheck" id="x_serie_idserie_uncheck">
-					 <div id="esperando_serie"><img src="<?php echo($ruta_db_superior);?>imagenes/cargando.gif"></div>
-					<div id="tree_serie_idserie" ></div> 
-                    <script>
-                        
-
-			            tree2=new dhtmlXTreeObject("tree_serie_idserie","100%","100%",0);
-			            tree2.setImagePath("<?php echo($ruta_db_superior);?>imgs/");
-			            tree2.enableTreeImages(false);
-			            tree2.enableIEImageFix(true);
-			            tree2.setXMLAutoLoadingBehaviour("id");
-			            tree2.enableCheckBoxes(1);
-			            tree2.enableRadioButtons(true);
-			            tree2.setOnCheckHandler(onNodeSelect_serie_idserie);
-			            tree2.setOnLoadingStart(cargando_serie_idserie);
-                        tree2.setOnLoadingEnd(fin_cargando_serie_idserie);
-		            	tree2.setXMLAutoLoading("<?php echo($ruta_db_superior);?>test_dependencia_serie.php?tabla=dependencia&sin_padre_dependencia=1&sin_padre=1&estado=1&carga_partes_dependencia=1&carga_partes_serie=1&mostrar_nodos=dsa,soc");
-			            tree2.loadXML("<?php echo($ruta_db_superior);?>test_dependencia_serie.php?tabla=dependencia&sin_padre_dependencia=1&estado=1&carga_partes_dependencia=1&carga_partes_serie=1&mostrar_nodos=dsa,soc&sin_padre=1");
-            			function onNodeSelect_serie_idserie(nodeId){
-                            valor_destino=document.getElementById("x_serie_idserie_uncheck");
-                            
-                            
-                            //es tipo_documental?
-                            var datos=nodeId.split("-");
-                            var datos2=nodeId.split("sub");
-                            if(datos[1] || datos2[1]){
-                                var dato=datos[1];
-                                if(datos2[1]){
-                                    dato=datos2[1];
-                                }
-                                
-                            }                           
-                            
-                            if(tree2.isItemChecked(nodeId)){
-                                if(valor_destino.value!==""){
-                                    tree2.setCheck(valor_destino.value,false);
-                                }
-                                valor_destino.value=nodeId;
-                                $('#x_serie_idserie').val(dato);
-                            }else{
-                                valor_destino.value="";
-                                 $('#x_serie_idserie').val('');
-                            }
-                            
-                            
-                        }
-                        function fin_cargando_serie_idserie() {
-                        if (browserType == "gecko" )
-                           document.poppedLayer =
-                               eval('document.getElementById("esperando_serie")');
-                        else if (browserType == "ie")
-                           document.poppedLayer =
-                              eval('document.getElementById("esperando_serie")');
-                        else
-                           document.poppedLayer =
-                              eval('document.layers["esperando_serie"]');
-                        document.poppedLayer.style.display = "none";
-                        }
-            
-                        function cargando_serie_idserie() {
-                        if (browserType == "gecko" )
-                           document.poppedLayer =
-                               eval('document.getElementById("esperando_serie")');
-                        else if (browserType == "ie")
-                           document.poppedLayer =
-                              eval('document.getElementById("esperando_serie")');
-                        else
-                           document.poppedLayer =
-                               eval('document.layers["esperando_serie"]');
-                        document.poppedLayer.style.display = "";
-                        }                        
-                    </script>							        
       </span>
     </td>
 	</tr>
@@ -761,7 +685,7 @@ function EditData($sKey,$conn)
     elseif(is_array($x_banderas))
 	   $fieldList["banderas"] = "'".implode(",",$x_banderas)."'";
 	  $fieldList["tiempo_autoguardado"] = $x_autoguardado; 
-		$fieldList["etiqueta"] = htmlentities($theValue);
+		$fieldList["etiqueta"] = ($theValue);
 		$theValue = ($x_contador_idcontador != "") ? intval($x_contador_idcontador) : crear_contador($x_nombre,$x_tabla);
 		$fieldList["contador_idcontador"] = $theValue;
 		
@@ -777,7 +701,7 @@ function EditData($sKey,$conn)
     }
     //crear la serie con el nombre del formato
   	if($x_serie_idserie==""){
-  	 /* $sql="insert into serie(nombre,categoria) values('".$x_etiqueta."',3)";
+  	  $sql="insert into serie(nombre,categoria) values('".$x_etiqueta."',3)";
   	  $sql_export=array("sql"=>$sql);
 	  guardar_traza($sql,$x_tabla,$sql_export);
 	  phpmkr_query($sql);
@@ -785,7 +709,7 @@ function EditData($sKey,$conn)
 	  $sql="update campos_formato set predeterminado=".$fieldList["serie_idserie"]."  where lower(nombre)='serie_idserie' and formato_idformato=".$sKeyWrk;
 	  $sql_export=array("sql"=>"update campos_formato set predeterminado=|-idserie-|  where lower(nombre)='serie_idserie' and formato_idformato=|-idformato-|","variables"=>array("idserie"=>"select idserie FROM serie WHERE nombre='".$x_etiqueta."' AND categoria=3","idformato"=>"select idformato FROM formato WHERE nombre='".$x_nombre."'"));
 	  guardar_traza($sql,$x_tabla,$sql_export);
-	  phpmkr_query($sql);*/
+	  phpmkr_query($sql);
    }
 	else{  //otra serie elegida o sin serie
 	$theValue = ($x_serie_idserie != 0) ? intval($x_serie_idserie) : 0;
@@ -997,11 +921,11 @@ function arbol_categorias($campo,$seleccionados){
 	<div ><?php echo $seleccionado; ?></div>
 	<br>
 	Buscar: <input type="text" id="stext<?php echo $entidad; ?>" width="200px" size="25">
-<a href="javascript:void(0)" onclick="stext<?php echo $entidad; ?>.findItem(htmlentities(document.getElementById('stext<?php echo $entidad; ?>').value),1)"> 
+<a href="javascript:void(0)" onclick="stext<?php echo $entidad; ?>.findItem((document.getElementById('stext<?php echo $entidad; ?>').value),1)"> 
 <img src="../botones/general/anterior.png" alt="Buscar Anterior" border="0px"></a>
-<a href="javascript:void(0)" onclick="tree<?php echo $entidad; ?>.findItem(htmlentities(document.getElementById('stext<?php echo $entidad; ?>').value),0,1)">
+<a href="javascript:void(0)" onclick="tree<?php echo $entidad; ?>.findItem((document.getElementById('stext<?php echo $entidad; ?>').value),0,1)">
 <img src="../botones/general/buscar.png" alt="Buscar" border="0px"></a>
-<a href="javascript:void(0)" onclick="tree<?php echo $entidad; ?>.findItem(htmlentities(document.getElementById('stext<?php echo $entidad; ?>').value))">
+<a href="javascript:void(0)" onclick="tree<?php echo $entidad; ?>.findItem((document.getElementById('stext<?php echo $entidad; ?>').value))">
 <img src="../botones/general/siguiente.png" alt="Buscar Siguiente" border="0px"></a>
 </span>
 <div id="esperando<?php echo $entidad; ?>"><img src="../imagenes/cargando.gif"></div>

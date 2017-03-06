@@ -278,7 +278,7 @@ function guardar_lob($campo,$tabla,$condicion,$contenido,$tipo,$conn,$log=1){
                 }
             else    
                {$contenido=limpia_tabla($contenido);
-                if ( !$row[strtoupper($campo)]->save(trim(htmlentities(utf8_decode($contenido))))) 
+                if ( !$row[strtoupper($campo)]->save(trim((($contenido))))) 
                   {  oci_rollback($conn->Conn->conn);
                      $resultado=FALSE;
                   }
@@ -360,7 +360,7 @@ END";
         // TODO verificar resultado de la insecion $resultado=FALSE; 
        }
      elseif($tipo=="texto")
-        {$contenido=utf8_encode(limpia_tabla($contenido));
+        {$contenido=codifica_encabezado(limpia_tabla($contenido));
          $sql="update $tabla set $campo='".addslashes(stripslashes($contenido))."' where $condicion";
         if($log)
             {preg_match("/.*=(.*)/", strtolower($condicion), $resultados);
@@ -396,7 +396,7 @@ END";
       $conn->ejecutar_sql($sql); 
     }
     elseif($tipo=="texto"){
-      $contenido=utf8_encode(limpia_tabla($contenido));
+      $contenido=codifica_encabezado(limpia_tabla($contenido));
       $sql="update $tabla set $campo='".str_replace("'",'"',stripslashes($contenido))."' where $condicion";
       if($log){
         preg_match("/.*=(.*)/", strtolower($condicion), $resultados);
@@ -590,12 +590,12 @@ global $conn;
 		$sqleve = "";
 		switch($accion) {
 			case ("SELECT"):
-				$strsql = htmlspecialchars_decode(htmlentities(utf8_decode($strsql)));
+				$strsql = htmlspecialchars_decode((($strsql)));
 				break;
 			case ("INSERT"):
 			    
 				$values = substr($strsql, strpos("VALUES", strtoupper($strsql) + 6));
-				//$rs = $conn->Ejecutar_Sql(htmlspecialchars_decode(htmlentities(decodifica_encabezado($strsql))));
+				//$rs = $conn->Ejecutar_Sql(htmlspecialchars_decode((($strsql))));
 				$rs = $conn->Ejecutar_Sql($strsql);
 				
 				$llave = $conn->Ultimo_Insert();
@@ -620,8 +620,8 @@ global $conn;
 				$llave = trim($resultados[2]);
 				$llave = str_replace("'","",$llave);
 				$campo_llave = $resultados[1];
-				$detalle = busca_filtro_tabla("", $tabla, $campo_llave . "=" . $llave, "", $conn);
-				$rs = $conn->Ejecutar_Sql(htmlspecialchars_decode(htmlentities(decodifica_encabezado($strsql))));
+				$detalle = busca_filtro_tabla("", $tabla, $campo_llave . "=" . $llave, "", $conn); 
+				$rs = $conn->Ejecutar_Sql(((($strsql))));
 				$detalle2 = busca_filtro_tabla("", $tabla, $campo_llave . "=" . $llave, "", $conn);
 				// ************ miro cuales campos cambiaron en la tabla ****************
 				$nombres_campos = array();
@@ -632,7 +632,7 @@ global $conn;
 				if($detalle2["numcampos"] && $detalle["numcampos"]) {
 					for($i = 0; $i < (count($detalle[0]) / 2); $i++) {
 						if($detalle[0][$i] != $detalle2[0][$i])
-							$cambios[] = $nombres_campos[($i * 2) + 1] . "='" . utf8_encode(html_entity_decode(htmlspecialchars_decode($detalle[0][$i]))) . "'";
+							$cambios[] = $nombres_campos[($i * 2) + 1] . "='" . codifica_encabezado(html_entity_decode(htmlspecialchars_decode($detalle[0][$i]))) . "'";
 					}
 				}
 				$diferencias = "update $tabla set " . implode(", ", $cambios) . " where " . $campo_llave . "=" . $llave;
@@ -653,7 +653,7 @@ global $conn;
 				$llave = str_replace("'","",$llave);
 				$campo_llave = $resultados[1];
 				$detalle = busca_filtro_tabla("", $tabla, $campo_llave . "=" . $llave, "", $conn);
-				$rs = $conn->Ejecutar_Sql(htmlspecialchars_decode(htmlentities(utf8_decode($strsql))));
+				$rs = $conn->Ejecutar_Sql(htmlspecialchars_decode((($strsql))));
 				if($detalle["numcampos"] > 0) {
 					$nombres_campos = array_keys($detalle[0]);
 					$datos1 = array();
@@ -661,7 +661,7 @@ global $conn;
 					for($i = 0; $i < (count($detalle[0]) / 2); $i++) {
 						if($detalle[0][$i] != $detalle2[0][$i]) {
 							$datos1[] = $nombres_campos[($i * 2) + 1];
-							$datos2[] = "'" . utf8_encode(html_entity_decode(htmlspecialchars_decode($detalle[0][$i]))) . "'";
+							$datos2[] = "'" . codifica_encabezado(html_entity_decode(htmlspecialchars_decode($detalle[0][$i]))) . "'";
 						}
 					}
 					$string_detalle = "insert into $tabla(" . implode(",", $datos1) . ") values(" . implode(",", $datos2) . ")";
@@ -981,7 +981,7 @@ if($orden){
   else  
     $sql.=" ORDER BY ".$orden;
 }
-$sql=htmlspecialchars_decode(htmlentities(utf8_decode($sql)));
+$sql=htmlspecialchars_decode((($sql)));
 $rs=$conn->Ejecutar_Sql($sql);
 $temp=phpmkr_fetch_array($rs);
 $retorno["sql"]=$sql;
@@ -1030,7 +1030,7 @@ function busca_filtro_tabla_limit($campos,$tabla,$filtro,$orden,$inicio,$registr
   if($orden){ 
       $sql.=$orden;
   }
-  $sql=htmlspecialchars_decode(htmlentities(utf8_decode($sql)));
+  $sql=htmlspecialchars_decode((($sql)));
   $rs=$conn->Ejecutar_Limit($sql,$inicio,($inicio+$registros),$conn);
   $temp=phpmkr_fetch_array($rs);
 
@@ -1068,7 +1068,7 @@ $tabla = "";
 $llave=0; $string_detalle="";
 if ($accion<>"SELECT")
  $func = usuario_actual("funcionario_codigo");   
-$strsql=htmlspecialchars_decode(htmlentities(utf8_decode($strsql)));
+$strsql=htmlspecialchars_decode((($strsql)));
 $rs = $conn->Ejecutar_Sql_Noresult($strsql);
 return $rs;
 }
@@ -2349,7 +2349,7 @@ else if($tipo=="cargo" || $tipo==4){
 $datorig=busca_filtro_tabla("A.iddependencia_cargo","dependencia_cargo A","A.cargo_idcargo=$dato AND A.dependencia_iddependencia=".$dependencia,"A.estado",$conn);
 if($datorig["numcampos"])
   $datorig=busca_cargo_funcionario(5,$datorig[0]["iddependencia_cargo"],"");
-else alerta(utf8_encode("No existe nadie en ésta dependencia con el cargo especificado"));
+else alerta(codifica_encabezado("No existe nadie en ésta dependencia con el cargo especificado"));
 }
 else if($tipo=='iddependencia_cargo' || $tipo==5){
   $datorig=busca_filtro_tabla("*,f.estado as estado_f,d.estado as estado_d","dependencia_cargo d,funcionario f,cargo c","dependencia_cargo d,funcionario f,cargo","c.idcargo=d.cargo_idcargo AND f.idfuncionario=d.funcionario_idfuncionario AND d.iddependencia_cargo=".$dato,"f.estado",$conn);
@@ -2813,9 +2813,9 @@ if($ok){
   else
     $ayuda[0]["imagen"] ="../../".$ayuda[0]["imagen"];  
   if(@$ayuda[0]["etiqueta"]=="")
-    $alt =strip_tags(utf8_encode($texto));
+    $alt =strip_tags(codifica_encabezado($texto));
   else
-    $alt=strip_tags(utf8_encode($ayuda[0]["etiqueta"]));
+    $alt=strip_tags(codifica_encabezado($ayuda[0]["etiqueta"]));
     
   if(strpos($dir,".php")!==false && $destino=="detalles")
     {if(strpos($dir,"?")!==false)

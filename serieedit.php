@@ -295,8 +295,8 @@ return true;
 	<link rel="STYLESHEET" type="text/css" href="css/dhtmlXTree.css">
 
 			
-		<br />  <!--Buscar: <input type="text" id="stext_serie_idserie" width="200px" size="25"><a href="javascript:void(0)" onclick="tree2.findItem(htmlentities(document.getElementById('stext_serie_idserie').value),1)"> <img src="botones/general/anterior.png" alt="Buscar Anterior" border="0px"></a><a href="javascript:void(0)" onclick="buscar_nodo();"> <img src="botones/general/buscar.png" alt="Buscar" border="0px"></a>
-                          <a href="javascript:void(0)" onclick="tree2.findItem(htmlentities(document.getElementById('stext_serie_idserie').value))" id="siguiente_nodo"><img src="botones/general/siguiente.png" alt="Buscar Siguiente" border="0px"></a>
+		<br />  <!--Buscar: <input type="text" id="stext_serie_idserie" width="200px" size="25"><a href="javascript:void(0)" onclick="tree2.findItem((document.getElementById('stext_serie_idserie').value),1)"> <img src="botones/general/anterior.png" alt="Buscar Anterior" border="0px"></a><a href="javascript:void(0)" onclick="buscar_nodo();"> <img src="botones/general/buscar.png" alt="Buscar" border="0px"></a>
+                          <a href="javascript:void(0)" onclick="tree2.findItem((document.getElementById('stext_serie_idserie').value))" id="siguiente_nodo"><img src="botones/general/siguiente.png" alt="Buscar Siguiente" border="0px"></a>
                           </span-->
 			  <div id="esperando_serie"><img src="imagenes/cargando.gif"></div>
 				<div id="treeboxbox_tree2" width="100px" height="100px"></div>
@@ -394,7 +394,7 @@ return true;
        			});
 			}
 		});
-		tree2.findItem(htmlentities(document.getElementById('stext_serie_idserie').value));
+		tree2.findItem((document.getElementById('stext_serie_idserie').value));
        }
 --> 		
 	</script>

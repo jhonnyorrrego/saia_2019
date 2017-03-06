@@ -248,11 +248,11 @@ function arbol_cargos($campo,$seleccionados)
    ?>
  Buscar: 
 <input type="text" id="stext_<?php echo $campo; ?>" width="200px" size="25">
-<a href="javascript:void(0)" onclick="tree_<?php echo $campo; ?>.findItem(htmlentities(document.getElementById('stext_<?php echo $campo; ?>').value),1)"> 
+<a href="javascript:void(0)" onclick="tree_<?php echo $campo; ?>.findItem((document.getElementById('stext_<?php echo $campo; ?>').value),1)"> 
   <img src="<?php echo $ruta_db_superior; ?>botones/general/anterior.png"border="0px"></a>                   
-<a href="javascript:void(0)" onclick="tree_<?php echo $campo; ?>.findItem(htmlentities(document.getElementById('stext_<?php echo $campo; ?>').value),0,1)">
+<a href="javascript:void(0)" onclick="tree_<?php echo $campo; ?>.findItem((document.getElementById('stext_<?php echo $campo; ?>').value),0,1)">
   <img src="<?php echo $ruta_db_superior; ?>botones/general/buscar.png"border="0px"></a>                                              
-<a href="javascript:void(0)" onclick="tree_<?php echo $campo; ?>.findItem(htmlentities(document.getElementById('stext_<?php echo $campo; ?>').value))">
+<a href="javascript:void(0)" onclick="tree_<?php echo $campo; ?>.findItem((document.getElementById('stext_<?php echo $campo; ?>').value))">
   <img src="<?php echo $ruta_db_superior; ?>botones/general/siguiente.png"border="0px"></a>                            <br />
 <div id="esperando_<?php echo $campo; ?>">
   <img src="<?php echo $ruta_db_superior; ?>imagenes/cargando.gif">

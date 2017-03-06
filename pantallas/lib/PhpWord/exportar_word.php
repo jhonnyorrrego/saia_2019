@@ -162,7 +162,7 @@ if($ruta_procesar!=''){
 				    case 'elaborado_por':
 				        $doc_aprobado=busca_filtro_tabla("ejecutor","documento","iddocumento=".$_REQUEST["iddoc"],"",$conn);
 				        $ejecutor=busca_filtro_tabla("nombres,apellidos","vfuncionario_dc","funcionario_codigo=".$doc_aprobado[0]['ejecutor'],"",$conn);
-				        $elaborador_por=utf8_encode(html_entity_decode($ejecutor[0]['nombres'].' '.$ejecutor[0]['apellidos']));
+				        $elaborador_por=codifica_encabezado(html_entity_decode($ejecutor[0]['nombres'].' '.$ejecutor[0]['apellidos']));
 					    $elaborador_por=ucwords(strtolower($elaborador_por));
 					    $templateProcessor->setValue('elaborado_por',$elaborador_por);  
 				        break;
@@ -254,7 +254,7 @@ if($ruta_procesar!=''){
 										//$templateProcessor->setImg($buscar_firma,$img2);	
 					
 										$buscar_nombre='n_'.$funcionario_codigo_encriptado;
-										$nombre=utf8_encode(html_entity_decode($funcionario[0]['nombres'].' '.$funcionario[0]['apellidos']));
+										$nombre=codifica_encabezado(html_entity_decode($funcionario[0]['nombres'].' '.$funcionario[0]['apellidos']));
 										$nombre=ucwords(strtolower($nombre));
 										//$templateProcessor->setValue($buscar_nombre,htmlspecialchars($nombre)); 	
 										
@@ -262,7 +262,7 @@ if($ruta_procesar!=''){
 										$buscar_cargo='c_'.$funcionario_codigo_encriptado;
 										
 										$carg=busca_filtro_tabla("cargo","vfuncionario_dc","estado_dc=1 AND ".$condicion_dep_cargo,"",$conn);
-										$cargo=utf8_encode(html_entity_decode($carg[0]['cargo']));
+										$cargo=codifica_encabezado(html_entity_decode($carg[0]['cargo']));
 										$cargo=ucwords(strtolower($cargo));
 										//$templateProcessor->setValue($buscar_cargo,htmlspecialchars($cargo)); 	
 
@@ -270,7 +270,7 @@ if($ruta_procesar!=''){
 										$buscar_dependencia='d_'.$funcionario_codigo_encriptado;
 										
 										$dep=busca_filtro_tabla("dependencia","vfuncionario_dc","estado_dc=1 AND ".$condicion_dep_cargo,"",$conn);
-										$dependencia=utf8_encode(html_entity_decode($dep[0]['dependencia']));
+										$dependencia=codifica_encabezado(html_entity_decode($dep[0]['dependencia']));
 										//$dependencia=ucwords(strtolower($dependencia));
 										//$templateProcessor->setValue($buscar_cargo,htmlspecialchars($cargo)); 
 
@@ -354,7 +354,7 @@ if($ruta_procesar!=''){
 							}else{
 								
 								$funcionario=busca_filtro_tabla("nombres,apellidos","funcionario","funcionario_codigo=".$funcionario_codigo,"",$conn);
-								$nombre=utf8_encode(html_entity_decode($funcionario[0]['nombres'].' '.$funcionario[0]['apellidos']));
+								$nombre=codifica_encabezado(html_entity_decode($funcionario[0]['nombres'].' '.$funcionario[0]['apellidos']));
 								$nombre=ucwords(strtolower($nombre));
 																
 								if( ( $j+1 )== $ruta_revisado['numcampos']){

@@ -94,11 +94,11 @@ if($dato_padre["numcampos"]){
   	<br />
     <span class="phpmaker">
 			<input type="text" id="stext" width="200px" size="20">          
-      <a href="javascript:void(0)" onclick="tree2.findItem(htmlentities(document.getElementById('stext').value),1)">
+      <a href="javascript:void(0)" onclick="tree2.findItem((document.getElementById('stext').value),1)">
       <img src="<?php echo $ruta_db_superior; ?>botones/general/anterior.png"border="0px"></a>
-      <a href="javascript:void(0)" onclick="tree2.findItem(htmlentities(document.getElementById('stext').value),0,1)">
+      <a href="javascript:void(0)" onclick="tree2.findItem((document.getElementById('stext').value),0,1)">
       <img src="<?php echo $ruta_db_superior; ?>botones/general/buscar.png"border="0px"></a>
-      <a href="javascript:void(0)" onclick="tree2.findItem(htmlentities(document.getElementById('stext').value))">
+      <a href="javascript:void(0)" onclick="tree2.findItem((document.getElementById('stext').value))">
       <img src="<?php echo $ruta_db_superior; ?>botones/general/siguiente.png"border="0px"></a>      
       <div id="esperando_expediente"><img src="<?php echo $ruta_db_superior; ?>imagenes/cargando.gif"></div>
 			<div id="treeboxbox_tree2" class="arbol_saia"></div>
@@ -120,11 +120,11 @@ if($dato_padre["numcampos"]){
   	<br />
     <span class="phpmaker">
 			<input type="text" id="stext_serie" width="200px" size="20">          
-      <a href="javascript:void(0)" onclick="tree3.findItem(htmlentities(document.getElementById('stext_serie').value),1)">
+      <a href="javascript:void(0)" onclick="tree3.findItem((document.getElementById('stext_serie').value),1)">
       <img src="<?php echo $ruta_db_superior; ?>botones/general/anterior.png"border="0px"></a>
-      <a href="javascript:void(0)" onclick="tree3.findItem(htmlentities(document.getElementById('stext_serie').value),0,1)">
+      <a href="javascript:void(0)" onclick="tree3.findItem((document.getElementById('stext_serie').value),0,1)">
       <img src="<?php echo $ruta_db_superior; ?>botones/general/buscar.png"border="0px"></a>
-      <a href="javascript:void(0)" onclick="tree3.findItem(htmlentities(document.getElementById('stext_serie').value))">
+      <a href="javascript:void(0)" onclick="tree3.findItem((document.getElementById('stext_serie').value))">
       <img src="<?php echo $ruta_db_superior; ?>botones/general/siguiente.png"border="0px"></a>      
       <div id="esperando_serie"><img src="<?php echo $ruta_db_superior; ?>imagenes/cargando.gif"></div>
 			<div id="treeboxbox_tree3" class="arbol_saia"></div>
@@ -193,11 +193,11 @@ if($dato_padre["numcampos"]){
 	  	<br />
 	    <span class="phpmaker">
 				<input type="text" id="stext_dependencia" width="200px" size="20">          
-	      <a href="javascript:void(0)" onclick="tree4.findItem(htmlentities(document.getElementById('stext_unidad_admin').value),1)">
+	      <a href="javascript:void(0)" onclick="tree4.findItem((document.getElementById('stext_unidad_admin').value),1)">
 	      <img src="<?php echo $ruta_db_superior; ?>botones/general/anterior.png"border="0px"></a>
-	      <a href="javascript:void(0)" onclick="tree4.findItem(htmlentities(document.getElementById('stext_unidad_admin').value),0,1)">
+	      <a href="javascript:void(0)" onclick="tree4.findItem((document.getElementById('stext_unidad_admin').value),0,1)">
 	      <img src="<?php echo $ruta_db_superior; ?>botones/general/buscar.png"border="0px"></a>
-	      <a href="javascript:void(0)" onclick="tree4.findItem(htmlentities(document.getElementById('stext_unidad_admin').value))">
+	      <a href="javascript:void(0)" onclick="tree4.findItem((document.getElementById('stext_unidad_admin').value))">
 	      <img src="<?php echo $ruta_db_superior; ?>botones/general/siguiente.png"border="0px"></a>      
 	      <div id="esperando_unidad_admin"><img src="<?php echo $ruta_db_superior; ?>imagenes/cargando.gif"></div>
 				<div id="treeboxbox_tree4" class="arbol_saia"></div>

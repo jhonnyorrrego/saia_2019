@@ -282,13 +282,13 @@ $despacho=false;
   $where .= "ejecutor IN (".implode(',',$ids).") AND plantilla ='' AND ";
  } 
  if($descripcion<>"" )  
-  $where .= "lower(descripcion) LIKE '%".strtolower(htmlentities(utf8_decode($descripcion)))."%' AND ";
+  $where .= "lower(descripcion) LIKE '%".strtolower((($descripcion)))."%' AND ";
  if($plantilla<>"")
   { $where .= "plantilla LIKE '$plantilla' AND ";
   if($contenido<>"")
    {
     $tablas .= ",ft_".strtolower($plantilla);
-    $where .= "documento_iddocumento=iddocumento AND lower(contenido) LIKE '%".strtolower(htmlentities(htmlentities(utf8_decode(($contenido)))))."%' AND ";
+    $where .= "documento_iddocumento=iddocumento AND lower(contenido) LIKE '%".strtolower((((($contenido)))))."%' AND ";
    } 
   }
  if($funcionario<>"")

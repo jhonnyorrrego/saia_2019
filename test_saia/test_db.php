@@ -79,7 +79,7 @@ if($orden){
   else  
     $sql.=" ORDER BY ".$orden;
 }
-$sql=htmlspecialchars_decode(htmlentities(utf8_decode($sql)));
+$sql=htmlspecialchars_decode((utf8_decode($sql)));
 $rs=$conn->Ejecutar_Sql($sql);
 $temp=phpmkr_fetch_array($rs);
 $retorno["sql"]=$sql;
@@ -125,7 +125,7 @@ function busca_filtro_tabla_limit($campos,$tabla,$filtro,$orden,$inicio,$registr
   if($orden){ 
       $sql.=$orden;
   }
-  $sql=htmlspecialchars_decode(htmlentities(utf8_decode($sql)));
+  $sql=htmlspecialchars_decode((utf8_decode($sql)));
   $rs=$conn->Ejecutar_Limit($sql,$inicio,($inicio+$registros),$conn);
   $temp=phpmkr_fetch_array($rs);
 

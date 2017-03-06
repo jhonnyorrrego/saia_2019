@@ -93,14 +93,14 @@ $x_id_documento=$llave;
 $paginas = busca_filtro_tabla("A.*","pagina A","id_documento=$llave","",$conn);  //Validar si el documento tiene paginas
 if(!($paginas["numcampos"]))
 {
-  echo utf8_encode("<script type='text/javascript'>alert('El documento no tiene paginas'); parent.centro.location='ordenar.php?key=".$llave."&accion=mostrar';</script>");  
+  echo codifica_encabezado("<script type='text/javascript'>alert('El documento no tiene paginas'); parent.centro.location='ordenar.php?key=".$llave."&accion=mostrar';</script>");  
 }
 $sDbWhere = "";
 $arRecKey = split(",",$sKey);
 
 if (($sKey == "") || (($sKey == NULL))) 
 {
-  alerta(utf8_encode("Debe seleccionar una pagina"));
+  alerta(codifica_encabezado("Debe seleccionar una pagina"));
   redirecciona("ordenar.php?key=".$x_id_documento."&accion=mostrar");
   exit(); 
 }
@@ -183,7 +183,7 @@ foreach ($arRecKey as $sRecKey)
     <?php
 		}
 		else
-		utf8_encode("<script type='text/javascript'>alert('Por favor seleccione la pagina del documento que desea eliminar'); parent.centro.location='ordenar.php?key=".$llave."&accion=mostrar';</script>");
+		codifica_encabezado("<script type='text/javascript'>alert('Por favor seleccione la pagina del documento que desea eliminar'); parent.centro.location='ordenar.php?key=".$llave."&accion=mostrar';</script>");
 		}
 		include ("footer.php");
 		
@@ -295,7 +295,7 @@ function DeleteData($sqlKey, $llave, $conn) {
 		$sql_estampado = "DELETE FROM pagina_estampado WHERE pagina_idpagina=" . $pag;
 		phpmkr_query($sql_estampado, $conn);
 
-		$x_detalle = "Identificador: $pag ,Nombre: " . basename($inf_eliminado[0]["ruta"]) . " ,Justificaci&oacute;n: " . htmlentities($x_detalle) . " <a href=\"$nombre\" target=\"_blank\" >Imagen</a>";
+		$x_detalle = "Identificador: $pag ,Nombre: " . basename($inf_eliminado[0]["ruta"]) . " ,Justificaci&oacute;n: " . ($x_detalle) . " <a href=\"$nombre\" target=\"_blank\" >Imagen</a>";
 		registrar_accion_digitalizacion($rutaD, 'ELIMINACION PAGINA', $x_detalle);
 		//se eliminanan los comentarios de la pagina eliminada
 		$sql_eliminar_nota = "DELETE FROM comentario_img WHERE pagina=" . $pag;

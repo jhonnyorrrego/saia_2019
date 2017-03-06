@@ -144,7 +144,7 @@ function upload()
             {
               if($tipo_almacenamiento=="archivo") // Los anexos estan guardados en archivos 	
 		          { 	
-                    phpmkr_query(htmlentities("insert into anexos(documento_iddocumento,ruta,tipo,etiqueta) values(".$_REQUEST["iddoc"].",'".$dir_anexos.$temp_filename."','".$_REQUEST["tipo_anexo"]."','".$nombre."'".")"),$conn);
+                    phpmkr_query(("insert into anexos(documento_iddocumento,ruta,tipo,etiqueta) values(".$_REQUEST["iddoc"].",'".$dir_anexos.$temp_filename."','".$_REQUEST["tipo_anexo"]."','".$nombre."'".")"),$conn);
                     $versionado=busca_filtro_tabla("*","documento_version","documento_iddocumento=".$_REQUEST["iddoc"],"",$conn);
 		          }
 		       elseif($tipo_almacenamiento=="db") 

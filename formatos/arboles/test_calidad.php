@@ -134,7 +134,7 @@ return;
 }
 
 function decodifica($cadena){
-return(str_replace('"','',utf8_encode(html_entity_decode($cadena))));
+return(str_replace('"','',codifica_encabezado(html_entity_decode($cadena))));
 }
 function llena_datos($idformato,$tabla,$campo){
 global $conn,$texto,$imagenes;

@@ -88,14 +88,14 @@ function obtener_hijos_arbol(&$arbol,$papa,$tabla,$hijo = 0){
 	}	
 	$funcionarios = busca_filtro_tabla("A.nombres,A.apellidos,A.idfuncionario, A.funcionario_codigo,B.iddependencia_cargo, C.nombre AS nombre_dependencia, D.nombre AS cargo","funcionario A, dependencia_cargo B, dependencia C, cargo D","A.idfuncionario=B.funcionario_idfuncionario AND C.iddependencia=B.dependencia_iddependencia AND D.idcargo=B.cargo_idcargo AND B.".$tabla."_id".$tabla."=".$papa." AND A.estado=1 AND B.estado=1 AND C.estado=1 AND D.estado=1","GROUP BY A.nombres,A.apellidos,A.idfuncionario, A.funcionario_codigo,B.iddependencia_cargo,C.nombre,D.nombre ORDER BY A.idfuncionario",$conn);				
 	
-	$arbol .= "<item style='font-family:verdana; font-size:7pt;' text='".htmlentities($etiqueta)."' id='".$id."' nocheckbox='1'>\n"; 	
+	$arbol .= "<item style='font-family:verdana; font-size:7pt;' text='".($etiqueta)."' id='".$id."' nocheckbox='1'>\n"; 	
 	
 	for($fn=0; $fn< $funcionarios['numcampos']; $fn++){
 		
 		if($_REQUEST['etiqueta'] == 1){//nombre de la dependencia
-			$etiqueta_funcionario = htmlentities(codifica_caracteres(strtoupper($funcionarios[$fn]['nombre_dependencia'])));			
+			$etiqueta_funcionario = (codifica_caracteres(strtoupper($funcionarios[$fn]['nombre_dependencia'])));			
 		}else{//nombre del funcionario-cargo
-			$etiqueta_funcionario = htmlentities(codifica_caracteres(strtoupper($funcionarios[$fn]['nombres'])))." ".htmlentities(codifica_caracteres(strtoupper($funcionarios[$fn]['apellidos']))).' - '.ucwords(htmlentities(codifica_caracteres($funcionarios[$fn]['cargo'])));
+			$etiqueta_funcionario = (codifica_caracteres(strtoupper($funcionarios[$fn]['nombres'])))." ".(codifica_caracteres(strtoupper($funcionarios[$fn]['apellidos']))).' - '.ucwords((codifica_caracteres($funcionarios[$fn]['cargo'])));
 		}
 	
 		$arbol .= "<item style='font-family:verdana; font-size:7pt;' text='".$etiqueta_funcionario."' id='".$funcionarios[$fn]['iddependencia_cargo']."' >\n"; 

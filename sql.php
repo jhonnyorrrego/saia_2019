@@ -253,9 +253,17 @@ function liberar_resultado_MSSql($rs){
 <Pre-condiciones>
 <Post-condiciones>la matriz con los valores del resultado se obtiene por medio de la función Resultado
 */
- function  Ejecutar_Sql($sql)
+ function Ejecutar_Sql($sql)
     {
-      //alerta($_SERVER['SCRIPT_NAME']."--".$sql);
+		$strsql = trim($sql);
+		$strsql = str_replace(" =", "=", $strsql);
+		$strsql = str_replace("= ", "=", $strsql);
+		$accion = strtoupper(substr($strsql, 0, strpos($strsql, ' ')));    
+		if($accion=="INSERT" || $accion=="UPDATE"){
+			$sql=htmlentities($sql, ENT_NOQUOTES, "UTF-8",false);
+			$sql=htmlspecialchars_decode($sql,ENT_NOQUOTES);
+		}  
+      	
         switch ($this->motor)
         {
             case "MySql":

@@ -29,13 +29,13 @@ if($_REQUEST["iddoc"]){
 <br />
 Buscar:
 <input  tabindex='6'  type="text" id="stext_secretarias" width="200px" size="25">
-<a href="javascript:void(0)" onclick="tree_secretarias.findItem(htmlentities(document.getElementById('stext_secretarias').value),1)"> 
+<a href="javascript:void(0)" onclick="tree_secretarias.findItem((document.getElementById('stext_secretarias').value),1)"> 
 	<img src="<?php echo $ruta_db_superior;?>botones/general/anterior.png"border="0px">
 </a>
-<a href="javascript:void(0)" onclick="tree_secretarias.findItem(htmlentities(document.getElementById('stext_secretarias').value),0,1)">
+<a href="javascript:void(0)" onclick="tree_secretarias.findItem((document.getElementById('stext_secretarias').value),0,1)">
 	<img src="<?php echo $ruta_db_superior;?>botones/general/buscar.png"border="0px">
 </a>
-<a href="javascript:void(0)" onclick="tree_secretarias.findItem(htmlentities(document.getElementById('stext_secretarias').value))"> 
+<a href="javascript:void(0)" onclick="tree_secretarias.findItem((document.getElementById('stext_secretarias').value))"> 
 	<img src="<?php echo $ruta_db_superior;?>botones/general/siguiente.png"border="0px">
 </a>
 <br />

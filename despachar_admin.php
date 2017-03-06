@@ -355,7 +355,7 @@ function transferir()
   $x_mensajero = @$_REQUEST["x_mensajero"];       
   $empresa=@$_REQUEST["x_empresa0"];  
   $guia=@$_REQUEST["guia"];  
-  $responsable=htmlentities(htmlspecialchars_decode(html_entity_decode(utf8_decode(trim($_REQUEST["x_responsable0"])))));
+  $responsable=(htmlspecialchars_decode(html_entity_decode((trim($_REQUEST["x_responsable0"])))));
   if($responsable!="")
   {$lresponsable=busca_filtro_tabla("A.*","ejecutor A","A.nombre LIKE '".$responsable."'","",$conn); 
   if($lresponsable["numcampos"] ){

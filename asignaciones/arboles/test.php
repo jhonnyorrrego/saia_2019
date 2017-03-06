@@ -55,7 +55,7 @@ else
     $hijos=busca_filtro_tabla("*","dependencia A","A.cod_padre=".$prof[0]["iddependencia"],"A.nombre ASC",$conn);
     if($hijos["numcampos"])
    	{   
-	      $rxml.="text=\"".htmlentities(formato_cargo($prof[0]["nombre"]))."\" id=\"".$prof[0]["iddependencia"]."#\" child=\"1\">\n";
+	      $rxml.="text=\"".(formato_cargo($prof[0]["nombre"]))."\" id=\"".$prof[0]["iddependencia"]."#\" child=\"1\">\n";
 	     
 	      for($i=0;$i<$hijos["numcampos"];$i++)
 	    	{ 
@@ -71,18 +71,18 @@ else
      //$tmp=llena_funcionarios($codigo,$ruta);
      
      if($tmp!="")
-      { $rxml.="text=\"".htmlentities(formato_cargo($prof[0]["nombre"]))."\" id=\"".$prof[0]["iddependencia"]."#\" child=\"1\">\n";
+      { $rxml.="text=\"".(formato_cargo($prof[0]["nombre"]))."\" id=\"".$prof[0]["iddependencia"]."#\" child=\"1\">\n";
         $rxml.=$tmp;
       }  
      else
      { 
-        $rxml.="text=\"".htmlentities(formato_cargo($prof[0]["nombre"]))."\" id=\"".$prof[0]["iddependencia"]."#\" child=\"0\" />\n";
+        $rxml.="text=\"".(formato_cargo($prof[0]["nombre"]))."\" id=\"".$prof[0]["iddependencia"]."#\" child=\"0\" />\n";
      }       
    }       
   }
  else 
  {  //$rxml.="<item style=\"font-family:verdana; font-size:7pt;\" ";
-    //$rxml.="text=\"".htmlentities(formato_cargo($prof[0]["nombre"]))."\" id=\"".$prof[0]["iddependencia"]."#\" child=\"1\">\n";
+    //$rxml.="text=\"".(formato_cargo($prof[0]["nombre"]))."\" id=\"".$prof[0]["iddependencia"]."#\" child=\"1\">\n";
     //$rxml.="</item>\n";
     
  } 
@@ -103,7 +103,7 @@ else
 for($j=0;$j<$usuarios["numcampos"];$j++){
    $rxml.="<item style=\"font-family:verdana; font-size:7pt;\" ";
    if($usuarios[$j]["nombres_ord"])
-    $rxml.="text=\"".ucwords(($usuarios[$j]["nombres_ord"]." ".$usuarios[$j]["apellidos"]))." (".($usuarios[$j]["login"])."-".htmlentities(formato_cargo($usuarios[$j]["cargo"])).")\" id=\"".$usuarios[$j]["funcionario_codigo"]."$ruta\" ruta=\"$ruta\" child=\"0\">";
+    $rxml.="text=\"".ucwords(($usuarios[$j]["nombres_ord"]." ".$usuarios[$j]["apellidos"]))." (".($usuarios[$j]["login"])."-".(formato_cargo($usuarios[$j]["cargo"])).")\" id=\"".$usuarios[$j]["funcionario_codigo"]."$ruta\" ruta=\"$ruta\" child=\"0\">";
    else  
     $rxml.="text=\"".($usuarios[$j]["login"])."\" id=\"".$usuarios[$j]["funcionario_codigo"]."$ruta\" ruta=\"$ruta\" child=\"0\">";
    $rxml.="</item>\n"; 

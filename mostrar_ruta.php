@@ -145,10 +145,10 @@ $origen = @$ruta_actual[0]["origen1"];
         	if ($i % 2 <> 0) {
         		$sItemRowClass = " bgcolor=\"#F5F5F5\"";
         	}        	
-          echo('<tr'.$sItemRowClass.'><td><span class="phpmaker" >'.utf8_encode(busca_entidad_ruta($ruta_actual[$i]["tipo_origen"],$ruta_actual[$i]["origen1"]))."</span></td>");
-          echo('<td><span class="phpmaker" >'.utf8_encode(busca_entidad_ruta($ruta_actual[$i]["tipo_destino"],$ruta_actual[$i]["destino1"]))."</span></td>");
+          echo('<tr'.$sItemRowClass.'><td><span class="phpmaker" >'.codifica_encabezado(busca_entidad_ruta($ruta_actual[$i]["tipo_origen"],$ruta_actual[$i]["origen1"]))."</span></td>");
+          echo('<td><span class="phpmaker" >'.codifica_encabezado(busca_entidad_ruta($ruta_actual[$i]["tipo_destino"],$ruta_actual[$i]["destino1"]))."</span></td>");
           
-          echo('<td><span class="phpmaker" >'.utf8_encode(busca_entidad_ruta($ruta_actual[$i]["tipo_origen"],$ruta_actual[$i]["origen1"]))."</span></td>");
+          echo('<td><span class="phpmaker" >'.codifica_encabezado(busca_entidad_ruta($ruta_actual[$i]["tipo_origen"],$ruta_actual[$i]["origen1"]))."</span></td>");
           echo '<td bgcolor="#F5F5F5">
               <table border="0"><tr>
       <td >

@@ -268,7 +268,7 @@ if(isset($_REQUEST["busqueda"]))
        if($_REQUEST["sql"]<>"")
           {
              $resultado=stripslashes(rawurldecode($_REQUEST["sql"]));
-             $resultado=htmlspecialchars_decode(htmlentities($resultado, ENT_NOQUOTES, 'UTF-8'), ENT_NOQUOTES);             
+             $resultado=htmlspecialchars_decode(($resultado, ENT_NOQUOTES, 'UTF-8'), ENT_NOQUOTES);             
 
                if(strpos($resultado, '/*para_idfunci*/') >0) 
                 { if(isset($_REQUEST["fun_permiso"]) && $_REQUEST["fun_permiso"]!="")
@@ -779,12 +779,12 @@ if(isset($_REQUEST["busqueda"]))
               echo ">";
               if($indice!=="")
                 {if($i<>$indice )
-                    $imprime=stripslashes(htmlentities(($row[phpmkr_field_name($rs, $i)]))).'<br/>';
+                    $imprime=stripslashes((($row[phpmkr_field_name($rs, $i)]))).'<br/>';
                 }
               else 
                  $imprime=stripslashes(htmlspecialchars_decode(($row[(phpmkr_field_name($rs, $i))])));
               /*if(isset($_REQUEST["export"]) && $_REQUEST["export"])  
-                 echo htmlentities($imprime); 
+                 echo ($imprime); 
               else    */
                  echo $imprime;   
               echo "</td>"; 
@@ -1299,7 +1299,7 @@ function imprimirCampos()
         echo "></td>
               <td><select name='conector_".$campos[$i]["idcampos"]."'>
               <option value='and' selected>Y</option><option value='or'>O</option></select></td>
-              <td>".utf8_encode(strtoupper($campos[$i]["alias"]))."</td>";
+              <td>".codifica_encabezado(strtoupper($campos[$i]["alias"]))."</td>";
         echo "<td><select name='op_".$campos[$i]["idcampos"]."'>
               ".operadores()."
               </select></td>";
@@ -1796,13 +1796,13 @@ function recorrerCampos($tabla, &$columnas, &$where,$alias_tabla, &$sobrenombres
              $where.=" ".$alias_tabla.".".$campos[$ind]["nombre"]." ";
              
           if($_REQUEST["op_".$campos[$ind]["idcampos"]]=="like1") 
-             $where.="like '%".htmlentities(strtolower(utf8_decode($_REQUEST[$campos[$ind]["idcampos"]])))."%' ";
+             $where.="like '%".(strtolower(($_REQUEST[$campos[$ind]["idcampos"]])))."%' ";
           elseif($_REQUEST["op_".$campos[$ind]["idcampos"]]=="like2") 
-             $where.="like '".htmlentities(strtolower(utf8_decode($_REQUEST[$campos[$ind]["idcampos"]])))."%' ";
+             $where.="like '".(strtolower(($_REQUEST[$campos[$ind]["idcampos"]])))."%' ";
           elseif($_REQUEST["op_".$campos[$ind]["idcampos"]]=="like3") 
-             $where.="like '%".htmlentities(strtolower(utf8_decode($_REQUEST[$campos[$ind]["idcampos"]])))."' "; 
+             $where.="like '%".(strtolower(($_REQUEST[$campos[$ind]["idcampos"]])))."' "; 
           elseif(!is_numeric($_REQUEST[$campos[$ind]["idcampos"]]))
-             $where.=$_REQUEST["op_".$campos[$ind]["idcampos"]]."'".htmlentities(strtolower(utf8_decode($_REQUEST[$campos[$ind]["idcampos"]])))."' ";                
+             $where.=$_REQUEST["op_".$campos[$ind]["idcampos"]]."'".(strtolower(($_REQUEST[$campos[$ind]["idcampos"]])))."' ";                
           else
              $where.=$_REQUEST["op_".$campos[$ind]["idcampos"]].$_REQUEST[$campos[$ind]["idcampos"]];     
 

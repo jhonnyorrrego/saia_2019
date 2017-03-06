@@ -363,9 +363,7 @@ echo $x_contador_idcontadorList;
 			<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">Serie
 					Documental</span></td>
 			<td bgcolor="#F5F5F5"><span class="phpmaker">
-			                
-                            <?php
-                            /*
+        <?php
 								$formatos = busca_filtro_tabla("", "serie A", "1=1", "nombre DESC", $conn);
 								if($formatos["numcampos"]) {
 									$inicio = '<SELECT name="x_serie_idserie"><OPTION value="0">Sin Serie Documental</OPTION><OPTION value="" selected>Crear Serie Documental</OPTION>';
@@ -375,90 +373,15 @@ echo $x_contador_idcontadorList;
 									$inicio .= '<OPTION value="' . $formatos[$i]["idserie"] . '">' . $formatos[$i]["nombre"] . "-e" . $formatos[$i]["codigo"] . '</OPTION>';
 								}
 								echo ($inicio . $fin);
-								*/
-							?>
-					<input type="hidden" name="x_serie_idserie" id="x_serie_idserie">
-					<input type="hidden" name="x_serie_idserie_uncheck" id="x_serie_idserie_uncheck">
-					 <div id="esperando_serie"><img src="<?php echo($ruta_db_superior);?>imagenes/cargando.gif"></div>
-					<div id="tree_serie_idserie" ></div> 
-                    <script>
-                        
-
-			            tree2=new dhtmlXTreeObject("tree_serie_idserie","100%","100%",0);
-			            tree2.setImagePath("<?php echo($ruta_db_superior);?>imgs/");
-			            tree2.enableTreeImages(false);
-			            tree2.enableIEImageFix(true);
-			            tree2.setXMLAutoLoadingBehaviour("id");
-			            tree2.enableCheckBoxes(1);
-			            tree2.enableRadioButtons(true);
-			            tree2.setOnCheckHandler(onNodeSelect_serie_idserie);
-			            tree2.setOnLoadingStart(cargando_serie_idserie);
-                        tree2.setOnLoadingEnd(fin_cargando_serie_idserie);
-		            	tree2.setXMLAutoLoading("<?php echo($ruta_db_superior);?>test_dependencia_serie.php?tabla=dependencia&sin_padre_dependencia=1&sin_padre=1&estado=1&carga_partes_dependencia=1&carga_partes_serie=1&mostrar_nodos=dsa,soc");
-			            tree2.loadXML("<?php echo($ruta_db_superior);?>test_dependencia_serie.php?tabla=dependencia&sin_padre_dependencia=1&estado=1&carga_partes_dependencia=1&carga_partes_serie=1&mostrar_nodos=dsa,soc&sin_padre=1");
-            			function onNodeSelect_serie_idserie(nodeId){
-                            valor_destino=document.getElementById("x_serie_idserie_uncheck");
-                            
-                            
-                            //es tipo_documental?
-                            var datos=nodeId.split("-");
-                            var datos2=nodeId.split("sub");
-                            if(datos[1] || datos2[1]){
-                                var dato=datos[1];
-                                if(datos2[1]){
-                                    dato=datos2[1];
-                                }
-                                
-                            }                           
-                            
-                            if(tree2.isItemChecked(nodeId)){
-                                
-                                
-                                if(valor_destino.value!==""){
-                                    tree2.setCheck(valor_destino.value,false);
-                                }
-                                  
-
-                                    
-                              
-                                valor_destino.value=nodeId;
-                                $('#x_serie_idserie').val(dato);
-                            }else{
-                                valor_destino.value="";
-                                 $('#x_serie_idserie').val('');
-                            }
-                            
-                            
-                        }
-                        function fin_cargando_serie_idserie() {
-                        if (browserType == "gecko" )
-                           document.poppedLayer =
-                               eval('document.getElementById("esperando_serie")');
-                        else if (browserType == "ie")
-                           document.poppedLayer =
-                              eval('document.getElementById("esperando_serie")');
-                        else
-                           document.poppedLayer =
-                              eval('document.layers["esperando_serie"]');
-                        document.poppedLayer.style.display = "none";
-                        }
-            
-                        function cargando_serie_idserie() {
-                        if (browserType == "gecko" )
-                           document.poppedLayer =
-                               eval('document.getElementById("esperando_serie")');
-                        else if (browserType == "ie")
-                           document.poppedLayer =
-                              eval('document.getElementById("esperando_serie")');
-                        else
-                           document.poppedLayer =
-                               eval('document.layers["esperando_serie"]');
-                        document.poppedLayer.style.display = "";
-                        }                        
-                    </script>							
-							
+								?>
       </span></td>
 		</tr>
+		<!--tr>
+		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">Tabla en la Base de Datos</span></td>
+		<td bgcolor="#F5F5F5"><span class="phpmaker">
+<input type="text" name="x_tabla" id="x_tabla" value="<?php echo htmlspecialchars(@$x_tabla) ?>">
+</span></td>
+	</tr-->
 		<tr>
 			<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">librer&iacute;as</span></td>
 			<td bgcolor="#F5F5F5"><span class="phpmaker"> <input type="text"
@@ -771,7 +694,7 @@ function AddData($conn) {
 	// Field etiqueta
 	$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_etiqueta) : $x_etiqueta;
 	$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
-	$fieldList["etiqueta"] = htmlentities($theValue);
+	$fieldList["etiqueta"] = ($theValue);
 	
 	// Field contador_idcontador
 	$theValue = ($x_contador_idcontador != 0) ? intval($x_contador_idcontador) : crear_contador($x_nombre);
@@ -789,10 +712,10 @@ function AddData($conn) {
 	
 	// Field Serie_idserie
 	if($x_serie_idserie == "") { // crear la serie con el nombre del formato
-		//$sql = "insert into serie(nombre,categoria) values('" . $x_etiqueta . "',3)";
-		//guardar_traza($sql, $x_nombre);
-		//phpmkr_query($sql, $conn);
-		//$fieldList["serie_idserie"] = phpmkr_insert_id();
+		$sql = "insert into serie(nombre,categoria) values('" . $x_etiqueta . "',3)";
+		guardar_traza($sql, $x_nombre);
+		phpmkr_query($sql, $conn);
+		$fieldList["serie_idserie"] = phpmkr_insert_id();
 	} else { // otra serie elegida o sin serie
 		$theValue = ($x_serie_idserie != 0) ? intval($x_serie_idserie) : 0;
 		$fieldList["serie_idserie"] = $theValue;
@@ -883,7 +806,7 @@ detalles_mostrar_".$x_nombre.".php";
 	$fieldList["ruta_adicionar"] = "'" . "adicionar_" . $x_nombre . ".php'";
 	$fieldList["funcionario_idfuncionario"] = usuario_actual("funcionario_codigo");
 	$fieldList["pertenece_nucleo"] = intval($x_pertenece_nucleo);
-	//print_r($fieldList);
+	print_r($fieldList);
 	// insert into database
 	$strsql = "INSERT INTO formato (";
 	$strsql .= implode(",", array_keys($fieldList));
@@ -951,22 +874,22 @@ function consultar_contador() {
 function arbol_categorias($campo) {
 	$entidad = $campo;
 	?>
-<div><?php /* echo $seleccionados; */ ?></div>
+<div><?php //echo $seleccionados; ?></div>
 <br>
 Buscar:
 <input type="text" id="stext<?php echo $entidad; ?>" width="200px"
 	size="25">
 <a href="javascript:void(0)"
-	onclick="stext<?php echo $entidad; ?>.findItem(htmlentities(document.getElementById('stext<?php echo $entidad; ?>').value),1)">
+	onclick="stext<?php echo $entidad; ?>.findItem((document.getElementById('stext<?php echo $entidad; ?>').value),1)">
 	<img src="../botones/general/anterior.png" alt="Buscar Anterior"
 	border="0px">
 </a>
 <a href="javascript:void(0)"
-	onclick="tree<?php echo $entidad; ?>.findItem(htmlentities(document.getElementById('stext<?php echo $entidad; ?>').value),0,1)">
+	onclick="tree<?php echo $entidad; ?>.findItem((document.getElementById('stext<?php echo $entidad; ?>').value),0,1)">
 	<img src="../botones/general/buscar.png" alt="Buscar" border="0px">
 </a>
 <a href="javascript:void(0)"
-	onclick="tree<?php echo $entidad; ?>.findItem(htmlentities(document.getElementById('stext<?php echo $entidad; ?>').value))">
+	onclick="tree<?php echo $entidad; ?>.findItem((document.getElementById('stext<?php echo $entidad; ?>').value))">
 	<img src="../botones/general/siguiente.png" alt="Buscar Siguiente"
 	border="0px">
 </a>

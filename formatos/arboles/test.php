@@ -43,7 +43,7 @@ if($codigo == 0)
       $texto.=(" nocheckbox=\"1\" ");
     /*else if(in_array($prof[$i]["iddependencia"]."d",$parciales))
       $texto.=(" nocheckbox=\"1\" ");*/
-    $texto.="text=\"".ucwords(htmlentities($prof[$i]["nombre"]))."\" id=\"".$prof[$i]["iddependencia"]."d\" child=\"1\">\n";
+    $texto.="text=\"".ucwords(($prof[$i]["nombre"]))."\" id=\"".$prof[$i]["iddependencia"]."d\" child=\"1\">\n";
     llena_dependencia($prof[$i]["iddependencia"],$ruta);
     $texto.=("</item>\n");
   }
@@ -57,7 +57,7 @@ else
       //if(in_array($prof[$i]["iddependencia"]."d",$seleccionados) || in_array($prof[$i]["iddependencia"]."d",$parciales)){
         $texto.=(" nocheckbox=\"1\" ");
       //}
-      $texto.=" text=\"".htmlentities(formato_cargo($hijos[$i]["nombre"]))."\" id=\"".$hijos[$i]["iddependencia"]."d\" child=\"1\">\n";
+      $texto.=" text=\"".(formato_cargo($hijos[$i]["nombre"]))."\" id=\"".$hijos[$i]["iddependencia"]."d\" child=\"1\">\n";
       llena_dependencia($hijos[$i]["iddependencia"],$ruta);
       llena_funcionarios($hijos[$i]["iddependencia"],$ruta);
       $texto.="</item>\n";
@@ -82,7 +82,7 @@ for($j=0;$j<$usuarios["numcampos"];$j++){
    if($valor!="" && $valor!=Null)
        $texto.= " checked=\"1\" ";
    if($usuarios[$j]["nombres_ord"])
-    $texto.= utf8_encode(html_entity_decode("text=\"".ucwords(($usuarios[$j]["nombres_ord"]." ".$usuarios[$j]["apellidos"]))." (".($usuarios[$j]["login"])."-".formato_cargo($usuarios[$j]["cargo"]).")\" id=\"".$usuarios[$j]["funcionario_codigo"]."$ruta\" ruta=\"$ruta\" child=\"0\">"));
+    $texto.= codifica_encabezado(html_entity_decode("text=\"".ucwords(($usuarios[$j]["nombres_ord"]." ".$usuarios[$j]["apellidos"]))." (".($usuarios[$j]["login"])."-".formato_cargo($usuarios[$j]["cargo"]).")\" id=\"".$usuarios[$j]["funcionario_codigo"]."$ruta\" ruta=\"$ruta\" child=\"0\">"));
    else  
     $texto.= htmlspecialchars_decode("text=\"".($usuarios[$j]["login"])."\" id=\"".$usuarios[$j]["funcionario_codigo"]."$ruta\" ruta=\"$ruta\" child=\"0\">");
    $texto.="</item>\n";

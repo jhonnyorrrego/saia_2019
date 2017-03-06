@@ -71,9 +71,9 @@
 	<script type="text/javascript" src="<?php echo $ruta_db_superior; ?>js/dhtmlXTree.js"></script>			
 	<div id="seleccionados"></div>
                           <div id='categoria'></div>                        
-                          <br />  Buscar: <input  tabindex='5'  type="text" id="stext_padre" width="200px" size="25"><a href="javascript:void(0)" onclick="tree_padre.findItem(htmlentities(document.getElementById('stext_padre').value),1)"> <img src="botones/general/anterior.png"border="0px"></a>
-                   <a href="javascript:void(0)" onclick="tree_padre.findItem(htmlentities(document.getElementById('stext_padre').value),0,1)"><img src="botones/general/buscar.png"border="0px"></a>                          
-                   <a href="javascript:void(0)" onclick="tree_padre.findItem(htmlentities(document.getElementById('stext_padre').value))"><img src="botones/general/siguiente.png"border="0px"></a> 
+                          <br />  Buscar: <input  tabindex='5'  type="text" id="stext_padre" width="200px" size="25"><a href="javascript:void(0)" onclick="tree_padre.findItem((document.getElementById('stext_padre').value),1)"> <img src="botones/general/anterior.png"border="0px"></a>
+                   <a href="javascript:void(0)" onclick="tree_padre.findItem((document.getElementById('stext_padre').value),0,1)"><img src="botones/general/buscar.png"border="0px"></a>                          
+                   <a href="javascript:void(0)" onclick="tree_padre.findItem((document.getElementById('stext_padre').value))"><img src="botones/general/siguiente.png"border="0px"></a> 
                           <br /><div id="esperando_padre"><img src="imagenes/cargando.gif"></div><div id="treeboxbox_padre" height="90%"></div><input type="hidden"  class="required" name="padre" id="padre"  value="" ><label style="display:none" class="error" for="padre">Campo obligatorio.</label><script type="text/javascript">
                   <!--
                       var browserType;

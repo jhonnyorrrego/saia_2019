@@ -186,7 +186,7 @@ if(isset($_REQUEST['idtarea']) && $_REQUEST["opt"]==2){
 	$info=busca_filtro_tabla(implode(",", $campos),"tareas_listado","idtareas_listado=".$_REQUEST["idtarea"],"",$conn);
 	if($info["numcampos"]){
 		foreach ($campos as $nombre) {
-			$retorno[$nombre]=utf8_encode(html_entity_decode($info[0][$nombre]));
+			$retorno[$nombre]=codifica_encabezado(html_entity_decode($info[0][$nombre]));
 		}
 		$info_recurrencia=busca_filtro_tabla("idtareas_listado_recur","tareas_listado_recur","fk_tareas_listado=".$_REQUEST["idtarea"],"",$conn);
 		

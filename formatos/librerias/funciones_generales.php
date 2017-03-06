@@ -1088,11 +1088,11 @@ function genera_campo_listados_editar($idformato, $idcampo, $iddoc = NULL, $busc
 				if($j == 0)
 					$texto .= $obligatorio;
 				if($buscar) {
-					$texto .= ' name="bqsaia_g@' . $nombre . '" id="' . $nombre . $j . '" value="' . htmlentities($listado3[$j][0]) . '" class="radio"';
+					$texto .= ' name="bqsaia_g@' . $nombre . '" id="' . $nombre . $j . '" value="' . ($listado3[$j][0]) . '" class="radio"';
 				} else {
-					$texto .= ' name="' . $nombre . '" id="' . $nombre . $j . '" value="' . htmlentities($listado3[$j][0]) . '"';
+					$texto .= ' name="' . $nombre . '" id="' . $nombre . $j . '" value="' . ($listado3[$j][0]) . '"';
 				}
-				if(htmlentities($listado3[$j][0]) == $default)
+				if(($listado3[$j][0]) == $default)
 					$texto .= ' checked ';
 				$texto .= '>' . codifica_encabezado($listado3[$j][1]) . "</label></td>";
 				if($fila == ($columnas - 1)) {
@@ -1113,9 +1113,9 @@ function genera_campo_listados_editar($idformato, $idcampo, $iddoc = NULL, $busc
 				
 				if($j == 0)
 					$texto .= $obligatorio;
-				$texto .= ' name="' . $nombre . '[]" id="' . $nombre . $j . '" value="' . htmlentities($listado3[$j][0]) . '"';
+				$texto .= ' name="' . $nombre . '[]" id="' . $nombre . $j . '" value="' . ($listado3[$j][0]) . '"';
 				
-				if(in_array(htmlentities($listado3[$j][0]), $lista_default))
+				if(in_array(($listado3[$j][0]), $lista_default))
 					$texto .= ' checked ';
 				$texto .= '>' . codifica_encabezado(strip_tags($listado3[$j][1])) . "</label></td>";
 				if($fila == ($columnas - 1)) {
@@ -1134,8 +1134,8 @@ function genera_campo_listados_editar($idformato, $idcampo, $iddoc = NULL, $busc
               <option value="" selected >Por favor seleccione...</option>';
 			}
 			for($j = 0; $j < $cont3; $j++) {
-				$texto .= '<option value="' . htmlentities($listado3[$j][0]) . '"';
-				if(htmlentities($listado3[$j][0]) == $default)
+				$texto .= '<option value="' . ($listado3[$j][0]) . '"';
+				if(($listado3[$j][0]) == $default)
 					$texto .= ' selected ';
 				$texto .= '>' . codifica_encabezado($listado3[$j][1]) . '</option>';
 			}
@@ -1652,7 +1652,7 @@ function formatea_campo($valor, $tipo, $llenado) {
 				
 				foreach($valores as $fila) {
 					if($arreglo2[0] == $fila) {
-						$resultado[] = htmlentities($arreglo2[1]);
+						$resultado[] = ($arreglo2[1]);
 					}
 				}
 			}
@@ -1841,7 +1841,7 @@ function validar_valor_campo($campo) {
 		return ($campos[0][0]);
 	} elseif(in_array('p', $acciones) && in_array('r', $banderas)) {
 		if(isset($_REQUEST["anterior"]) && $padre[0][0] == "0") {
-			$desc = busca_filtro_tabla("a.descripcion,a.numero,b.nombre,b.idformato", "documento a, formato b", "iddocumento=" . $_REQUEST["anterior"]." and a.formato_idformato=b.idformato", "", $conn);
+      $desc = busca_filtro_tabla("a.descripcion,a.numero,b.nombre,b.idformato", "documento a, formato b", "iddocumento=" . $_REQUEST["anterior"]." and a.formato_idformato=b.idformato", "", $conn);
       if($desc[0]["nombre"]=='radicacion_entrada'){
         include_once($ruta_db_superior."formatos/radicacion_entrada/funciones.php");
         $radicado=obtener_radicado_entrada($desc[0]["idformato"],$_REQUEST["anterior"]);
@@ -1856,8 +1856,8 @@ function validar_valor_campo($campo) {
         return ("Respondiendo a: " . str_replace("<br />", " ", $desc[0]["descripcion"]) . ". Radicado No." . $radicado);
       }else{
         return ("Respondiendo a: " . str_replace("<br />", " ", $desc[0]["descripcion"]) . ". Radicado No." . $desc[0]["numero"]);
-			}
-		}
+      }
+    }
 	} elseif($campos["numcampos"]) {
 		if($campos[0]["predeterminado"] != "")
 			return ($campos[0]["predeterminado"]);
@@ -3206,13 +3206,13 @@ function fk_idexpediente_funcion($idformato, $iddoc) {
 	<div id="seleccionados"></div> <br /> Buscar: <input tabindex='2'
 	type="text" id="stext_fk_idexpediente" width="200px" size="25"><a
 	href="javascript:void(0)"
-	onclick="tree_fk_idexpediente.findItem(htmlentities(document.getElementById('stext_fk_idexpediente').value),1)">
+	onclick="tree_fk_idexpediente.findItem((document.getElementById('stext_fk_idexpediente').value),1)">
 		<img src="../../botones/general/anterior.png" border="0px">
 </a> <a href="javascript:void(0)"
-	onclick="tree_fk_idexpediente.findItem(htmlentities(document.getElementById('stext_fk_idexpediente').value),0,1)"><img
+	onclick="tree_fk_idexpediente.findItem((document.getElementById('stext_fk_idexpediente').value),0,1)"><img
 		src="../../botones/general/buscar.png" border="0px"></a> <a
 	href="javascript:void(0)"
-	onclick="tree_fk_idexpediente.findItem(htmlentities(document.getElementById('stext_fk_idexpediente').value))"><img
+	onclick="tree_fk_idexpediente.findItem((document.getElementById('stext_fk_idexpediente').value))"><img
 		src="../../botones/general/siguiente.png" border="0px"></a> <br />
 <div id="esperando_fk_idexpediente">
 		<img src="../../imagenes/cargando.gif">

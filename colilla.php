@@ -382,7 +382,7 @@ function generar_ingreso_formato($nombre_formato){
 	$_REQUEST["continuar"] = "Solicitar Radicado";  //Siempre va esto
 	$_REQUEST["ejecutor"] = usuario_actual("funcionario_codigo");
 	$_REQUEST["estado_radicado"]='2';
-	$_REQUEST["descripcion"]=decodifica_encabezado(htmlentities($_REQUEST["descripcion_general"]));
+	$_REQUEST["descripcion"]=(($_REQUEST["descripcion_general"]));
 	
 	
 	

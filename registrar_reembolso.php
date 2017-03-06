@@ -19,7 +19,7 @@ if($_REQUEST["docs"])
 
  $sql="update ft_recibo_caja_menor set fecha_reembolso=".fecha_db_almacenar("","Y-m-d H:i:s").",usuario_reembolso='".usuario_actual("nombres")." ".usuario_actual("apellidos")."' where documento_iddocumento in($valores)";
  phpmkr_query($sql);
- //alerta(utf8_encode("Se ha registrado la causaci�n."));
+ //alerta(codifica_encabezado("Se ha registrado la causaci�n."));
  //--------------Terminar flujo------------------------
  if(strpos($_REQUEST["docs"],",")){
  	$documentos = explode(",",$_REQUEST["docs"]);

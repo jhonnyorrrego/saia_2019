@@ -241,7 +241,7 @@ function generar_linea_calificacion($idtareas_listado,$calificacion,$progreso){
 					}
 					$retorno_calif.='<td>'.$calificaciones_tarea[$i]['fecha_hora'].'</td>';
 					$retorno_calif.='<td>'.$stars[$calificaciones_tarea[$i]['calificacion']].'</td>';
-					$retorno_calif.='<td>'.utf8_encode(html_entity_decode($calificaciones_tarea[$i]['observaciones'])).'</td>';
+					$retorno_calif.='<td>'.codifica_encabezado(html_entity_decode($calificaciones_tarea[$i]['observaciones'])).'</td>';
 					$retorno_calif.='</tr>';
 				}
 				

@@ -53,7 +53,7 @@ function generar_codigo_qr($idformato, $iddoc, $idfunc = 0) {
 	// $firmas = busca_filtro_tabla("CONCAT(B.nombres,CONCAT(' ',B.apellidos)) AS nombre","buzon_salida A, funcionario B","A.origen=B.funcionario_codigo AND (A.nombre LIKE 'APROBADO' OR A.nombre LIKE 'REVISADO')AND A.archivo_idarchivo=".$iddoc,"", $conn);
 	// $datos_qr.="Firman: \n";
 	//for($i = 0; $i < $firmas['numcampos']; $i++) {
-		// $datos_qr .= utf8_encode(html_entity_decode($firmas[$i]['nombre']))." \n";
+		// $datos_qr .= codifica_encabezado(html_entity_decode($firmas[$i]['nombre']))." \n";
 	//}
 	
 	$formato_ruta = aplicar_plantilla_ruta_documento($iddoc);

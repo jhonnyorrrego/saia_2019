@@ -39,7 +39,7 @@ if(@$_REQUEST["iddocumento"]){
 $funcionario=usuario_actual("idfuncionario");
 $documentos=busca_filtro_tabla("","documento_por_vincular A, documento B","A.documento_iddocumento=B.iddocumento AND A.funcionario_idfuncionario=".$funcionario.$where_doc,"",$conn);
 for($i=0;$i<$documentos["numcampos"];$i++){
-  echo("<item style=\"font-family:verdana; font-size:7pt;\" text=\"No.".$documentos[$i]["numero"]." - ".delimita(utf8_encode(html_entity_decode(strip_tags($documentos[$i]["descripcion"]))),500)."\" id=\"documento_".$documentos[$i]["documento_iddocumento"]."\">");
+  echo("<item style=\"font-family:verdana; font-size:7pt;\" text=\"No.".$documentos[$i]["numero"]." - ".delimita(codifica_encabezado(html_entity_decode(strip_tags($documentos[$i]["descripcion"]))),500)."\" id=\"documento_".$documentos[$i]["documento_iddocumento"]."\">");
   llenado_paginas_documento($documentos[$i]["documento_iddocumento"]);  
   llenado_anexos_documento($documentos[$i]["documento_iddocumento"]);
   echo("</item>\n"); 
@@ -61,7 +61,7 @@ function llenado_anexos_documento($iddoc){
   if($anexos["numcampos"]){
     echo("<item style=\"font-family:verdana; font-size:7pt;\" text=\"Anexos\" id=\"lanexos_".$iddoc."_".$anexos["numcampos"]."\">");
     for($i=0;$i<$anexos["numcampos"];$i++){
-      echo("<item style=\"font-family:verdana; font-size:7pt;\" text=\"".utf8_encode(html_entity_decode($anexos[$i]["etiqueta"]))."\" id=\"anexo_".$anexos[$i]["idanexos"]."_".$iddoc."\">");
+      echo("<item style=\"font-family:verdana; font-size:7pt;\" text=\"".codifica_encabezado(html_entity_decode($anexos[$i]["etiqueta"]))."\" id=\"anexo_".$anexos[$i]["idanexos"]."_".$iddoc."\">");
       echo("</item>\n");
     }
     echo("</item>\n");

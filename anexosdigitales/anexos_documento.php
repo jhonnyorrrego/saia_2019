@@ -173,7 +173,7 @@ if($config["numcampos"]){
         $dato_formato=array("","");
         if($tipo_almacenamiento=="archivo"){ // Los anexos estan guardados en archivos
             $sql="INSERT INTO anexos(documento_iddocumento,ruta,tipo,etiqueta".$dato_formato[0].") values(".$iddoc.",'".$dir_anexos_tmp.$temp_filename."','".$datos_anexo["extension"]."','".$nombre."'".$dato_formato[1].")";
-     	    phpmkr_query(htmlentities($sql),$conn) or alerta("No se puede Adicionar el Anexo ".$_FILES['anexos']['name'][$j],'error',4000);
+     	    phpmkr_query(($sql),$conn) or alerta("No se puede Adicionar el Anexo ".$_FILES['anexos']['name'][$j],'error',4000);
             $idanexo=phpmkr_insert_id();
           }
           elseif($tipo_almacenamiento=="db"){

@@ -112,12 +112,12 @@ elseif(isset($_REQUEST["rotar"]))
       $pag=$_SESSION["pagina_actual"];
       $valida_pag = busca_filtro_tabla("*","pagina","id_documento=$llave AND consecutivo='$pag'","",$conn);
       if(!($valida_pag["numcampos"]))
-        echo utf8_encode("<script type='text/javascript'>alert('Debe seleccionar una p�gina del documento'); parent.$frame.location='ordenar.php?key=".$llave."&accion=mostrar';</script>");
+        echo codifica_encabezado("<script type='text/javascript'>alert('Debe seleccionar una p�gina del documento'); parent.$frame.location='ordenar.php?key=".$llave."&accion=mostrar';</script>");
     }
 elseif(isset($_REQUEST["pagina"]))
   $pag=$_SESSION["pagina_actual"];    
 else 
-    echo utf8_encode("<script type='text/javascript'>alert('Debe seleccionar una p�gina del documento'); parent.$frame.location='ordenar.php?key=".$llave."&accion=mostrar';</script>");
+    echo codifica_encabezado("<script type='text/javascript'>alert('Debe seleccionar una p�gina del documento'); parent.$frame.location='ordenar.php?key=".$llave."&accion=mostrar';</script>");
 $paginas_doc=busca_filtro_tabla("DISTINCT pagina, consecutivo","pagina","id_documento=".$llave,"pagina",$conn);
 if($paginas_doc["numcampos"]>0 || $tipo_pag!="PAGINA" || $tipo_pag!="REGISTRO" )
 { 
@@ -373,7 +373,7 @@ $aux_formato=strtolower($detalle_doc[0]["plantilla"]);
 }
 else
 {
-  echo utf8_encode("<script type='text/javascript'>alert('El documento no tiene p�ginas');</script>");
+  echo codifica_encabezado("<script type='text/javascript'>alert('El documento no tiene p�ginas');</script>");
   redirecciona("ordenar.php?key=".$llave."&accion=mostrar");
 }
 include("footer.php");  

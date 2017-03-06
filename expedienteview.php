@@ -73,7 +73,7 @@ document.getElementById("ocultar").style.display="none";
 	<tr>
 		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">NOMBRE DEL EXPEDIENTE</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
-<?php echo utf8_decode($x_nombre); ?>
+<?php echo ($x_nombre); ?>
 </span></td>
 	</tr>
 	<tr>
@@ -175,13 +175,13 @@ echo ucwords($propietario[0]["nombres"]." ".$propietario[0]["apellidos"]);
 		<tr>
 		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">DESCRIPCI&Oacute;N</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
-<?php echo utf8_decode($x_descripcion); ?>
+<?php echo ($x_descripcion); ?>
 </span></td>
 	</tr>
 	<tr>
 		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">C&Oacute;DIGO DEL EXPEDIENTE</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
-<?php echo utf8_decode($x_codigo); ?>
+<?php echo ($x_codigo); ?>
 </span></td>
 	</tr>
 </table>

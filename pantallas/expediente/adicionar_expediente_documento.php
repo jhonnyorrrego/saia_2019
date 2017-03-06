@@ -24,11 +24,11 @@ $dato_padre=busca_filtro_tabla("","expediente a","a.idexpediente=".$_REQUEST["co
   <div class="controls"> 
     <span class="phpmaker">
 			<input type="text" id="stext" width="200px" size="20">          
-      <a href="javascript:void(0)" onclick="tree2.findItem(htmlentities(document.getElementById('stext').value),1)">
+      <a href="javascript:void(0)" onclick="tree2.findItem((document.getElementById('stext').value),1)">
       <img src="<?php echo $ruta_db_superior; ?>botones/general/anterior.png"border="0px"></a>
-      <a href="javascript:void(0)" onclick="tree2.findItem(htmlentities(document.getElementById('stext').value),0,1)">
+      <a href="javascript:void(0)" onclick="tree2.findItem((document.getElementById('stext').value),0,1)">
       <img src="<?php echo $ruta_db_superior; ?>botones/general/buscar.png"border="0px"></a>
-      <a href="javascript:void(0)" onclick="tree2.findItem(htmlentities(document.getElementById('stext').value))">
+      <a href="javascript:void(0)" onclick="tree2.findItem((document.getElementById('stext').value))">
       <img src="<?php echo $ruta_db_superior; ?>botones/general/siguiente.png"border="0px"></a>      
       <div id="esperando_expediente"><img src="<?php echo $ruta_db_superior; ?>imagenes/cargando.gif"></div>
 			<div id="treeboxbox_tree2" class="arbol_saia"></div>

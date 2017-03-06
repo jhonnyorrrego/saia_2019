@@ -29,7 +29,7 @@ if($datos["numcampos"]){
 				$nombre_fun=strtolower($nombre_fun);
 				$nombre_fun=ucwords($nombre_fun);
 				$nombre_fun=html_entity_decode($nombre_fun);
-				$nombre_fun=utf8_encode($nombre_fun);
+				$nombre_fun=codifica_encabezado($nombre_fun);
 				array_push($responsables,$nombre_fun);
 			}
 		}

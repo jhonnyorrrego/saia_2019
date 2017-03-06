@@ -76,7 +76,7 @@ $dep = busca_filtro_tabla("*","dependencia","estado=1","nombre",$conn);
      if($hijo["numcampos"]>0)
        for($j=0;$j<$hijo["numcampos"];$j++)
           {
-           $texto.=  'c_hijos.forValue("'.$dep[$i]["iddependencia"].'").addOptionsTextValue("'.utf8_encode(html_entity_decode($hijo[$j]["nombres"]." ".$hijo[$j]["apellidos"])).'","'.$hijo[$j]["codigo"].'");'; 
+           $texto.=  'c_hijos.forValue("'.$dep[$i]["iddependencia"].'").addOptionsTextValue("'.codifica_encabezado(html_entity_decode($hijo[$j]["nombres"]." ".$hijo[$j]["apellidos"])).'","'.$hijo[$j]["codigo"].'");'; 
           }
       else
         $texto.='c_hijos.forValue("'.$dep[$i]["iddependencia"].'").addOptionsTextValue("No hay registros...","");';   
@@ -126,7 +126,7 @@ function permisos_funcionario($fun)
          $cont_dep++;
         $dep = $datos[$i]["dependencia_iddependencia"]; 
        }   
-       $selectf.=  'c_hijos.forValue("'.$datos[$i]["dependencia_iddependencia"].'").addOptionsTextValue("'.utf8_encode(html_entity_decode($datos[$i]["nombres"]." ".$datos[$i]["apellidos"])).'","'.$datos[$i]["cod"].'");'; ;    
+       $selectf.=  'c_hijos.forValue("'.$datos[$i]["dependencia_iddependencia"].'").addOptionsTextValue("'.codifica_encabezado(html_entity_decode($datos[$i]["nombres"]." ".$datos[$i]["apellidos"])).'","'.$datos[$i]["cod"].'");'; ;    
     }  
    echo $selectd.'</select>'.$selectf.'</script><select name="permiso" id="permiso" >                            
        <option value="">Seleccionar...</option>                            

@@ -120,7 +120,7 @@ function funcionario_actual(){
 	return(usuario_actual('funcionario_codigo'));
 }
 function mostrar_etiqueta($etiqueta, $tipo=null){
-	$etiqueta2=str_replace(".".$tipo,"",utf8_encode(html_entity_decode($etiqueta)));	
+	$etiqueta2=str_replace(".".$tipo,"",codifica_encabezado(html_entity_decode($etiqueta)));	
 	return(delimita($etiqueta2,14));
 }                           
 function obtener_descripcion_informacion($descripcion){

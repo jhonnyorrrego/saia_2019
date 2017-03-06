@@ -20,7 +20,7 @@ $texto.= "</tree>\n";
 echo $texto;
 
 function decodifica($cadena){
-return(utf8_encode(html_entity_decode($cadena)));
+return(codifica_encabezado(html_entity_decode($cadena)));
 }
 
 function llenar_datos($id)

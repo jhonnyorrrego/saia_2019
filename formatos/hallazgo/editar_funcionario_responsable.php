@@ -67,9 +67,9 @@ echo(librerias_arboles());
 function generar_arbol($campo,$ruta_xml='test_serie_funcionario.php'){
 	global $ruta_db_superior;
 	?>
-   <br />  Buscar: <input type="text" id="stext_<?php echo $campo; ?>" width="200px" size="25"><br><a href="javascript:void(0)" onclick="tree_<?php echo $campo; ?>.findItem(htmlentities(document.getElementById('stext_<?php echo $campo; ?>').value),0,1)"> Buscar</a>  |
-    <a href="javascript:void(0)" onclick="tree_<?php echo $campo; ?>.findItem(htmlentities(document.getElementById('stext_<?php echo $campo; ?>').value))"> Siguiente</a>  |
-    <a href="javascript:void(0)" onclick="tree_<?php echo $campo; ?>.findItem(htmlentities(document.getElementById('stext_<?php echo $campo; ?>').value),1)"> Anterior</a><br /><div id="esperando_<?php echo $campo; ?>"><img src="<?php echo $ruta_db_superior; ?>imagenes/cargando.gif"></div>
+   <br />  Buscar: <input type="text" id="stext_<?php echo $campo; ?>" width="200px" size="25"><br><a href="javascript:void(0)" onclick="tree_<?php echo $campo; ?>.findItem((document.getElementById('stext_<?php echo $campo; ?>').value),0,1)"> Buscar</a>  |
+    <a href="javascript:void(0)" onclick="tree_<?php echo $campo; ?>.findItem((document.getElementById('stext_<?php echo $campo; ?>').value))"> Siguiente</a>  |
+    <a href="javascript:void(0)" onclick="tree_<?php echo $campo; ?>.findItem((document.getElementById('stext_<?php echo $campo; ?>').value),1)"> Anterior</a><br /><div id="esperando_<?php echo $campo; ?>"><img src="<?php echo $ruta_db_superior; ?>imagenes/cargando.gif"></div>
    <div class="quitar_borde_arbol"><div id="treeboxbox_tree_<?php echo $campo; ?>"></div></div>
 	<script type="text/javascript">
   <!--

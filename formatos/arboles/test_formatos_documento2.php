@@ -96,8 +96,8 @@ $permiso=new PERMISO();
 return($texto);
 }
 function decodifica($cadena){
-//$cadena=htmlspecialchars(utf8_encode(html_entity_decode(strip_tags(htmlspecialchars_decode($cadena)))));
-$cadena=htmlspecialchars(strip_tags($cadena)); 
+$cadena=htmlspecialchars(codifica_encabezado(html_entity_decode(strip_tags(htmlspecialchars_decode($cadena)))));
+//$cadena=htmlspecialchars(strip_tags($cadena)); 
 $cadena=str_replace('"','',$cadena);
 return($cadena);
 }
@@ -126,16 +126,16 @@ for($i=0;$i<$dato["numcampos"];$i++){
  if($estado[0][0]<>"ELIMINADO") 
   {$tips="";
    for($j=0;$j<$num_campo;$j++){
-    $tips.=strip_tags(str_replace('"','',$campo[$j]["etiqueta"].": ")).(codifica_encabezado(html_entity_decode(mostrar_valor_campo($campo[$j]["nombre"],$arreglo[0],$dato[$i]["documento_iddocumento"],1))))."\n";
+    $tips.=strip_tags(str_replace('"','',decodifica($campo[$j]["etiqueta"]).": ")).((mostrar_valor_campo($campo[$j]["nombre"],$arreglo[0],$dato[$i]["documento_iddocumento"],1)))."\n";
     }
 	
 	$version=busca_filtro_tabla("max(version) as max_version","version_documento a","a.documento_iddocumento=".$dato[$i]["documento_iddocumento"],"",$conn);
   if(!$version["numcampos"])$cadena_version=1;
   else $cadena_version=$version[0]["max_version"]+1;
-	
+
   $texto.='<item style="font-family:verdana; font-size:7pt;" '.$imagenes;
   $llave=$arreglo[0]."-".$arreglo[2]."-".$dato[$i]["id".$tabla]."-".$dato[$i]["documento_iddocumento"];
-  $texto.=strip_tags('text="V'.$cadena_version.'. '. str_replace('"','',decodifica(mostrar_valor_campo($campo[0]["nombre"],$arreglo[0],$dato[$i]["documento_iddocumento"],1))).'" id="'.$llave.'" tooltip="'.decodifica($tips)).'">';
+  $texto.=strip_tags('text="V'.$cadena_version.'. '. str_replace('"','',(mostrar_valor_campo($campo[0]["nombre"],$arreglo[0],$dato[$i]["documento_iddocumento"],1))).'" id="'.$llave.'" tooltip="'.($tips)).'">';
   $items=llena_items($arreglo[0],$dato[$i]["id".$tabla],$tabla);
   /*if($items<>""){
   $texto.='<item style="font-family:verdana; font-size:7pt;" '.$imagenes.' text="Formatos tipo item" id="item" >';

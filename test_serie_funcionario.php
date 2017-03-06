@@ -93,7 +93,7 @@ if($papas["numcampos"]>0)
     if(!@$_REQUEST["solo_papas"])
       $hijos=llena_serie($papas[$i]["idserie"]);
     $texto.=("\n<item style=\"font-family:verdana; font-size:7pt;\" ");
-    $texto.= "text=\"".ucwords(htmlentities($papas[$i]["nombre"]))."(".strtoupper($papas[$i]["codigo"]).") \" ";
+    $texto.= "text=\"".ucwords(($papas[$i]["nombre"]))."(".strtoupper($papas[$i]["codigo"]).") \" ";
     if($hijos<>""){
     	if(!@$_REQUEST["con_padres"])
       	$texto.=" nocheckbox=\"1\"";
@@ -110,7 +110,7 @@ return $texto;
 }
 
 function codifica_caracteres($original){
-$codificada=utf8_decode(html_entity_decode(htmlentities($original)));
+$codificada=codifica_encabezado(html_entity_decode(($original)));
 return($codificada);
 }
 ?>

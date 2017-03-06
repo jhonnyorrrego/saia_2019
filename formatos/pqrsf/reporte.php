@@ -46,7 +46,7 @@ global $conn;
 function decodificar_html($valor){
 	$result=strip_tags($valor);
 	$result=str_replace('"', "'", $result);
-	return(decodifica_encabezado($result));
+	return(($result));
 }
 function ver_documento($iddocumento,$radicado,$html=""){
 	if($html==""){

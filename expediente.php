@@ -133,7 +133,7 @@ for($i=$nStartRec-1; ($i<$doc["numcampos"] AND $nRecCount<$nStopRec); $i++)
         <td >
     		<div class="product_container" >
 				<div id=<?php echo "slidingProduct".$doc[$i]["iddocumento"]?> class="sliding_product" width="100%">
-						<?php echo $doc[$i]["numero"]."-".delimita(utf8_encode($doc[$i]["descripcion"]),50);?><br>         
+						<?php echo $doc[$i]["numero"]."-".delimita(codifica_encabezado($doc[$i]["descripcion"]),50);?><br>         
 				</div></td><td align="center">
 				<a href="#" onclick="addToBasket(<?php echo $doc[$i]["iddocumento"]?>);return false;"><img src="botones/general/adicionar.png" ></a>
 				<br>

@@ -29,7 +29,7 @@ if($tipo == 'codigo'){
 $busqueda=busca_filtro_tabla("".$select,"ejecutor".$tabla,"lower(".$tipo.") LIKE lower('".$q."%')".$where,"",$conn);
 
 for($i=0;$i<$busqueda["numcampos"];$i++){
-  echo $busqueda[$i]["idejecutor"]."|".utf8_decode(html_entity_decode(htmlentities($busqueda[$i]["nombre"])))."|".$busqueda[$i]["identificacion"]."|".$q."|".utf8_encode(html_entity_decode($busqueda[$i]["nombre"]));
+  echo $busqueda[$i]["idejecutor"]."|".(html_entity_decode(($busqueda[$i]["nombre"])))."|".$busqueda[$i]["identificacion"]."|".$q."|".codifica_encabezado(html_entity_decode($busqueda[$i]["nombre"]));
   //if($tipo == 'codigo')
   	echo "|".$busqueda[$i]["codigo"];
   echo "\n";
