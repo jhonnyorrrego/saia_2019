@@ -17,6 +17,8 @@ include_once($ruta_db_superior."formatos/librerias/funciones_generales.php");
 $parametros=json_decode($_REQUEST['parametros']);
 $parametros=array_filter($parametros); //Elimina campos vacios
 $iddoc=$_REQUEST['iddoc'];
+$tipo_mensajeria_radicacion=busca_filtro_tabla("tipo_mensajeria,area_responsable","ft_radicacion_entrada","documento_iddocumento=".$iddoc,"",$conn);
+
 $idformato=$_REQUEST['idformato'];
 $cont=count($parametros);
 
@@ -36,10 +38,15 @@ for ($i=0; $i < $cont; $i++) {
         }
 		
 		
+		
 		//VINCULANDO MENSAJERO INMEDIATAMENTE
-		$datos_destino=busca_filtro_tabla('nombre_destino','ft_destino_radicacion','idft_destino_radicacion='.$parametros[$i][0],'',$conn);
+		if($tipo_mensajeria_radicacion[0]['tipo_mensajeria']==2){
+			$datos_destino[0]['nombre_destino']=$tipo_mensajeria_radicacion[0]['area_responsable'];
+		}else{
+			$datos_destino=busca_filtro_tabla('nombre_destino','ft_destino_radicacion','idft_destino_radicacion='.$parametros[$i][0],'',$conn);
+		}
     	$destino=busca_filtro_tabla("iddependencia","vfuncionario_dc","iddependencia_cargo=".$datos_destino[0]['nombre_destino'],"",$conn);
-    	$responsable=busca_filtro_tabla("","documento d,ft_ruta_distribucion a, ft_dependencias_ruta b, ft_funcionarios_ruta c","d.iddocumento=a.documento_iddocumento AND lower(d.estado)='aprobado' AND b.estado_dependencia=1 AND c.estado_mensajero=1 AND a.idft_ruta_distribucion=b.ft_ruta_distribucion AND a.idft_ruta_distribucion=c.ft_ruta_distribucion AND b.dependencia_asignada=".$destino[0]['iddependencia'],"",$conn);
+    	$responsable=busca_filtro_tabla("mensajero_ruta","documento d,ft_ruta_distribucion a, ft_dependencias_ruta b, ft_funcionarios_ruta c","d.iddocumento=a.documento_iddocumento AND lower(d.estado)='aprobado' AND b.estado_dependencia=1 AND c.estado_mensajero=1 AND a.idft_ruta_distribucion=b.ft_ruta_distribucion AND a.idft_ruta_distribucion=c.ft_ruta_distribucion AND b.dependencia_asignada=".$destino[0]['iddependencia'],"",$conn);
     	if($responsable['numcampos']){
     		$sql="UPDATE ft_destino_radicacion SET mensajero_encargado=".$responsable[0]['mensajero_ruta']." WHERE idft_destino_radicacion=".$parametros[$i][0];
 			phpmkr_query($sql);
