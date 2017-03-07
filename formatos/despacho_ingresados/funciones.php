@@ -56,7 +56,7 @@ function mostrar_seleccionados_entrega($idformato,$iddoc){
 	$documentos=explode(",",$seleccionado[0]['iddestino_radicacion']);
 	$docs=array_filter($documentos);
 	$texto='';
-	$registros=busca_filtro_tabla("d.iddocumento,d.plantilla,b.numero_item,b.observacion_destino,b.nombre_destino,b.destino_externo,b.origen_externo,b.tipo_origen,b.tipo_destino,b.nombre_origen,a.documento_iddocumento,a.descripcion","ft_radicacion_entrada a,ft_destino_radicacion b,ft_item_despacho_ingres c, documento d,ft_despacho_ingresados e","b.ft_radicacion_entrada=a.idft_radicacion_entrada AND c.ft_destino_radicacio=b.idft_destino_radicacion AND d.iddocumento=a.documento_iddocumento AND c.ft_despacho_ingresados=e.idft_despacho_ingresados AND e.documento_iddocumento=".$iddoc,"",$conn);
+	$registros=busca_filtro_tabla("d.iddocumento,d.plantilla,b.numero_item,b.observacion_destino,b.nombre_destino,b.destino_externo,b.origen_externo,b.tipo_origen,b.tipo_destino,b.nombre_origen,a.documento_iddocumento,a.descripcion,a.tipo_mensajeria","ft_radicacion_entrada a,ft_destino_radicacion b,ft_item_despacho_ingres c, documento d,ft_despacho_ingresados e","b.ft_radicacion_entrada=a.idft_radicacion_entrada AND c.ft_destino_radicacio=b.idft_destino_radicacion AND d.iddocumento=a.documento_iddocumento AND c.ft_despacho_ingresados=e.idft_despacho_ingresados AND e.documento_iddocumento=".$iddoc,"",$conn);
 	
 	$texto.=reporte_entradas2($idformato,$iddoc);
 	echo($texto);
@@ -131,6 +131,10 @@ function reporte_entradas2($idformato,$iddoc){
 				$origen=busca_filtro_tabla("nombre","vejecutor a","a.iddatos_ejecutor=".$registros[$i]['nombre_origen'],"",$conn);
 				if(!$origen['numcampos']){
 					$origen=busca_filtro_tabla("nombre","vejecutor a","a.iddatos_ejecutor=".$registros[$i]['origen_externo'],"",$conn);
+				}
+			}else{
+				if($registros[$i]['tipo_origen']==2 && $registros[$i]['tipo_mensajeria']==2){
+					$origen=busca_filtro_tabla("concat(nombres,' ',apellidos) AS nombre","vfuncionario_dc a","a.iddependencia_cargo=".$registros[$i]['nombre_origen'],"",$conn);
 				}
 			}		
 				
