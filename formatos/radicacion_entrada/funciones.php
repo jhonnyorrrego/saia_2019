@@ -1182,15 +1182,13 @@ function serie_documental_radicacion($idformato,$iddoc){
 function valida_tipo_destino_entrada($idformato,$iddoc){
     global $conn;
     $padre=busca_filtro_tabla("","ft_radicacion_entrada A, documento B ","A.documento_iddocumento=B.iddocumento AND B.estado<>'ELIMINADO' AND B.iddocumento=".$iddoc,"",$conn);
-    if($padre[0]['tipo_origen']==2 && $padre[0]['tipo_mensajeria']==3){
+    if($padre[0]['tipo_mensajeria']==3){
             $update_radicacion="UPDATE ft_radicacion_entrada SET despachado=1 WHERE idft_radicacion_entrada=".$padre[0]['idft_radicacion_entrada'];
-        echo($update_radicacion);
             phpmkr_query($update_radicacion);         
             $radicado=busca_filtro_tabla('b.numero, c.idft_destino_radicacion,c.estado_item','ft_radicacion_entrada a,documento b,ft_destino_radicacion c','a.documento_iddocumento = b.iddocumento AND a.idft_radicacion_entrada = c.ft_radicacion_entrada AND a.documento_iddocumento='.$iddoc,'',conn);
             for($i=0;$i<$radicado['numcampos'];$i++){
                 $numero_item=$i+1;
                 $update_item="UPDATE ft_destino_radicacion SET numero_item='".$radicado[$i]['numero'].".".$numero_item."',estado_item=3, recepcion='".usuario_actual("funcionario_codigo")."',recepcion_fecha=".fecha_db_almacenar(date("Y-m-d"),"Y-m-d")." WHERE ft_radicacion_entrada=".$padre[0]['idft_radicacion_entrada'];
-                echo($update_item);
                 phpmkr_query($update_item);
            }
        }
