@@ -83,9 +83,8 @@ $busca_componente=busca_filtro_tabla("nombre","busqueda_componente","idbusqueda_
         
         $("#filtro_mensajeros").live("change",function(){
             var mensajero_filtro=$(this).val();
-            <?php 
-                $idbusqueda_componente_reporte_radicacion_correspondencia=busca_filtro_tabla("idbusqueda_componente","busqueda_componente","nombre='reporte_radicacion_correspondencia'","",$conn);
-                $var_idbusqueda_componente_reporte_radicacion_correspondencia=$idbusqueda_componente_reporte_radicacion_correspondencia[0]['idbusqueda_componente'];
+            <?php                 
+            $var_idbusqueda_componente_reporte_radicacion_correspondencia=$_REQUEST['idbusqueda_componente'];
             ?>
             var idbusqueda_componente_reporte_radicacion_correspondencia='<?php echo($var_idbusqueda_componente_reporte_radicacion_correspondencia); ?>';
             window.location.href = "<?php echo $ruta_db_superior;?>pantallas/busquedas/consulta_busqueda_reporte.php?idbusqueda_componente="+idbusqueda_componente_reporte_radicacion_correspondencia+"&variable_busqueda="+mensajero_filtro;
