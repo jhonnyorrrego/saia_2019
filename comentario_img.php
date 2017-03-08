@@ -390,12 +390,12 @@ if(isset($_SESSION["pagina_actual"]))       //identificador de la pagina
      $pag=$_SESSION["pagina_actual"];
      $valida_pag = busca_filtro_tabla("*","pagina","id_documento=$llave AND consecutivo=$pag","",$conn);
      if(!($valida_pag["numcampos"]) && !(isset($_POST["adicion"])))
-       echo utf8_encode("<script type='text/javascript'>alert('Debe seleccionar una p�gina del documento'); window.open('ordenar.php?key=".$llave."&accion=mostrar','_self');</script>");
+       echo codifica_encabezado("<script type='text/javascript'>alert('Debe seleccionar una p�gina del documento'); window.open('ordenar.php?key=".$llave."&accion=mostrar','_self');</script>");
    }
  }
 else
  {
-  echo utf8_encode("<script type='text/javascript'>alert('Debe seleccionar una p�gina del documento'); window.open('ordenar.php?key=".$llave."&accion=mostrar','_self');</script>");
+  echo codifica_encabezado("<script type='text/javascript'>alert('Debe seleccionar una p�gina del documento'); window.open('ordenar.php?key=".$llave."&accion=mostrar','_self');</script>");
  }
 
 // Se inserta un nuevo comentario a la imagen en la base de datos
@@ -598,7 +598,7 @@ if($listado["numcampos"]>0 || $tipo_pag != "PAGINA")  //Se muestarn la pagna o e
            <input type="hidden" name="key" value=<?php echo $llave; ?>>
            <tr><td style="background-color:#ffff99;" align="right">
            <input type="image" name="editar" src="images/editar_nota.gif" alt="Guardar cambios" onclick="enlace(<?php echo $id.",".$llave;?>)">
-           <input type="image" name="eliminar" src="images/eliminar_nota.gif" alt="Eliminar comentario" onclick="<?php echo utf8_encode("javascript:if(confirm('Esta seguro de eliminar el comentario?'))parent.$frame.location ='comentario_img.php?eliminar=e&id=$id&key=$llave&plantilla=$plantilla';return false;");?>"></td></tr>
+           <input type="image" name="eliminar" src="images/eliminar_nota.gif" alt="Eliminar comentario" onclick="<?php echo codifica_encabezado("javascript:if(confirm('Esta seguro de eliminar el comentario?'))parent.$frame.location ='comentario_img.php?eliminar=e&id=$id&key=$llave&plantilla=$plantilla';return false;");?>"></td></tr>
            </table>
            </div>
 

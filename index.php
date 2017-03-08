@@ -297,7 +297,7 @@ $mayor_informacion=busca_filtro_tabla("valor","configuracion","nombre='mayor_inf
   echo(librerias_notificaciones());
 ?>
 <script>
-var mensaje="El nombre de usuario o contrase&ntilde;a introducidos no son correctos!  <br> intente de nuevo";
+var mensaje="<b>El nombre de usuario o contrase&ntilde;a introducidos no son correctos! </b> <br> intente de nuevo";
 var tiempo=3500;
 $("#tabla_principal").height($(window).height()-56);
 $("#ingresar").click(function(){	
