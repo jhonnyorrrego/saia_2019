@@ -225,9 +225,9 @@ echo $x_perfil_idperfilList;
             }
           function onNodeSelect2(nodeId)
             {
-            	$.post("ayuda_modulo.php",{idmodulo:nodeId},function(datos){
-            		top.noty({text: datos,type: 'alert',layout: "topCenter",timeout:false});
-            	});
+            	/*$.post("ayuda_modulo.php",{idmodulo:nodeId},function(datos){
+            		top.noty({text: datos,type: 'success',layout: "topCenter",timeout:1000});
+            	});*/
             }
           function cargando_serie() {
             if (browserType == "gecko" )
