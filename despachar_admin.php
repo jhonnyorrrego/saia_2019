@@ -777,16 +777,14 @@ function mostrar_despacho_radicacion(){
             	for($j=0;$j<$planillas['numcampos'];$j++){
             		$funcionario=busca_filtro_tabla("nombres,apellidos","vfuncionario_dc","iddependencia_cargo=".$planillas[$j]['mensajero'],"",$conn);
             		$idformato_despacho_ingresados=busca_filtro_tabla("","documento a, formato b","lower(a.plantilla)=b.nombre AND a.iddocumento=".$planillas[$j]['iddocumento'],"",$conn);
-            		$tiene_novedades=busca_filtro_tabla("novedad","ft_novedad_despacho","ft_despacho_ingresados=".$planillas[$j]['idft_despacho_ingresados']." GROUP BY novedad","",$conn);
+            		$tiene_novedades=busca_filtro_tabla("novedad,documento_iddocumento","ft_novedad_despacho","ft_despacho_ingresados=".$planillas[$j]['idft_despacho_ingresados'],"",$conn);
 					$cadena_novedad='Sin Novedad';
             		if($tiene_novedades['numcampos']){
-            			$vector_novedades=extrae_campo($tiene_novedades,'novedad');
-            			$vector_novedades=array_map('strtolower', $vector_novedades);
-            			$vector_novedades=array_map('ucwords', $vector_novedades);
-						$cadena_novedad='';
-						for($x=0;$x<count($vector_novedades);$x++){
-							$cadena_novedad.='- '.codifica_encabezado(html_entity_decode($vector_novedades[$x])).'<br>';
-						}
+            			$cadena_novedad='';
+            			for($x=0;$x<$tiene_novedades['numcampos'];$x++){
+            				$titulo_novedad=ucwords(strtolower(codifica_encabezado(html_entity_decode($tiene_novedades[$x]['novedad']))));
+            				$cadena_novedad='<div class="link kenlace_saia" enlace="ordenar.php?key='.$tiene_novedades[$x]['documento_iddocumento'].'&amp;accion=mostrar&amp;mostrar_formato=1" conector="iframe" titulo="Novedad '.$titulo_novedad.'"><span class="badge">'.$titulo_novedad.'</span></div><br>';
+            			}			
             		}
             		
                 	$html.='
