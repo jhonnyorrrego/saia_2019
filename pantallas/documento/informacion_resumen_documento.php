@@ -371,7 +371,7 @@ function click_funcion(div){
             	$("#panel_relacionados_funcionario").html('');
             	var objeto2=jQuery.parseJSON(html)
             	if(objeto2.records=='0'){
-            		$("#panel_relacionados_funcionario").append("<li class='alert' style='margin-bottom:3px;'>No hay documentos relacionados por funcionario</li>");
+            		$("#panel_relacionados_funcionario").append("<li class='alert' style='margin-bottom:3px;'>No hay documentos vinculados por funcionario</li>");
             	}else{
 	                var objeto=jQuery.parseJSON(html);                    
 	                $.each(objeto.rows,function(i,item){                          
@@ -392,7 +392,7 @@ function click_funcion(div){
             	$("#panel_respuesta").html('');
             	var objeto2=jQuery.parseJSON(html)
             	if(objeto2.records=='0'){
-            		$("#panel_respuesta").append("<li class='alert' style='margin-bottom:3px;'>No hay documentos relacionados por funcionario</li>");
+            		$("#panel_respuesta").append("<li class='alert' style='margin-bottom:3px;'>No hay documentos vinculados como respuesta</li>");
             	}else{
 	                var objeto=jQuery.parseJSON(html);                    
 	                $.each(objeto.rows,function(i,item){                          
