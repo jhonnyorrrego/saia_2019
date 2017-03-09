@@ -245,7 +245,7 @@ if($codigo == 0){
   $prof=busca_filtro_tabla("","cargo","cod_padre is null AND estado=1","",$conn);
   for($i=0;$i<$prof["numcampos"];$i++){
     $cadena.=("<item style=\"font-family:verdana; font-size:7pt;\" ");
-    $cadena.=("text=\"".ucwords(codifica_encabezado(html_entity_decode($prof[$i]["nombre"])))."\" id=\"".$prof[$i]["idcargo"]."*\" ");
+    $cadena.=("text=\"".ucwords(codifica_encabezado(html_entity_decode(strtolower($prof[$i]["nombre"]))))."\" id=\"".$prof[$i]["idcargo"]."*\" ");
     $cadena .= " >\n";
     $cadena2=llena_cargos($prof[$i]["idcargo"], 0,$tipo_llenado);
     if($cadena2==""){
@@ -275,7 +275,7 @@ else
      $codigo_hijos=llena_cargos($hijos[$i]["idcargo"], 0,$tipo_llenado);     
      if($codigo_hijos<>"")
      {$cadena.=("<item style=\"font-family:verdana; font-size:7pt;\" $adicional ");
-      $cadena.=("text=\"".codifica_encabezado(html_entity_decode(formato_cargo($hijos[$i]["nombre"])))."\" id=\"".$hijos[$i]["idcargo"]."*\"");
+      $cadena.=("text=\"".codifica_encabezado(html_entity_decode(formato_cargo(strtolower($hijos[$i]["nombre"]))))."\" id=\"".$hijos[$i]["idcargo"]."*\"");
       if($no_padre)
         $cadena .= " nocheckbox=\"1\" ";
       $cadena .= " >\n";
@@ -347,7 +347,7 @@ for($j=0;$j<$usuarios["numcampos"];$j++)
       $adicional=" checked=\"1\" "; 
    $func.=("<item style=\"font-family:verdana; font-size:7pt;\" $adicional ");
   if($usuarios[$j]["nombres_ord"])
-    $func.=("text=\"".ucwords(codifica_encabezado(html_entity_decode(codifica_caracteres($usuarios[$j]["nombres_ord"]." ".$usuarios[$j]["apellidos"]))))."-".codifica_encabezado(html_entity_decode(formato_cargo($usuarios[$j]["cargo"])))."  $sistema\" id=\"".$usuarios[$j][$tipo_id]."$ruta\" ruta=\"$ruta\" >");
+    $func.=("text=\"".ucwords(codifica_encabezado(html_entity_decode(strtolower($usuarios[$j]["nombres_ord"]." ".$usuarios[$j]["apellidos"]))))."-".codifica_encabezado(html_entity_decode(formato_cargo(strtolower($usuarios[$j]["cargo"]))))."  $sistema\" id=\"".$usuarios[$j][$tipo_id]."$ruta\" ruta=\"$ruta\" >");
    else  
     $func.=("text=\"".codifica_encabezado(html_entity_decode($usuarios[$j]["login"]))."\" id=\"".$usuarios[$j]["funcionario_codigo"]."$ruta\" ruta=\"$ruta\" >");
    $func.=("</item>\n"); 
@@ -369,7 +369,7 @@ if($usuarios["numcampos"]){
     $sistema = "Sin SAIA";
   echo("<item style=\"font-family:verdana; font-size:7pt;\" ");
   if($usuarios[0]["nombres_ord"])
-    echo("text=\"".ucwords(codifica_encabezado(html_entity_decode(codifica_caracteres($usuarios[0]["nombres_ord"]." ".$usuarios[0]["apellidos"]))))." (".$usuarios[0]["funcionario_codigo"].") $sistema\" id=\"".$usuarios[0]["funcionario_codigo"]."%$ruta\" ruta=\"$ruta\">");
+    echo("text=\"".ucwords(codifica_encabezado(html_entity_decode(strtolower($usuarios[0]["nombres_ord"]." ".$usuarios[0]["apellidos"]))))." (".$usuarios[0]["funcionario_codigo"].") $sistema\" id=\"".$usuarios[0]["funcionario_codigo"]."%$ruta\" ruta=\"$ruta\">");
   else  
     echo("text=\"".codifica_encabezado(html_entity_decode($usuarios[0]["login"]."\" id=\"".$usuarios[0]["funcionario_codigo"]))."\" ruta=\"$ruta\">");
   echo("</item>\n");
@@ -388,9 +388,9 @@ if($verifica_flujo==-1){
  for($j=0;$j<$usuarios["numcampos"];$j++)
 { $func.=("<item style=\"font-family:verdana; font-size:7pt;\" ");
   if($usuarios[$j]["nombres_ord"])
-    $func.=("text=\"".ucwords(codifica_encabezado(html_entity_decode($usuarios[$j]["nombres_ord"]." ".$usuarios[$j]["apellidos"])))."\" id=\"".$usuarios[$j]["funcionario_codigo"]."\" >");
+    $func.=("text=\"".ucwords(codifica_encabezado(html_entity_decode(strtolower($usuarios[$j]["nombres_ord"]." ".$usuarios[$j]["apellidos"]))))."\" id=\"".$usuarios[$j]["funcionario_codigo"]."\" >");
    else  
-    $func.=("text=\"".ucwords(codifica_encabezado(html_entity_decode(codifica_caracteres($usuarios[$j]["login"]))))."\" id=\"".$usuarios[$j]["funcionario_codigo"]."\" >");
+    $func.=("text=\"".ucwords(codifica_encabezado(html_entity_decode($usuarios[$j]["login"])))."\" id=\"".$usuarios[$j]["funcionario_codigo"]."\" >");
    $func.=("</item>\n"); 
 }
 if($usuarios["numcampos"])
@@ -408,9 +408,9 @@ if($verifica_flujo==-1){
  for($j=0;$j<$usuarios["numcampos"];$j++)
 { $func.=("<item style=\"font-family:verdana; font-size:7pt;\" ");
   if($usuarios[$j]["nombres_ord"])
-    $func.=("text=\"".ucwords(codifica_encabezado(html_entity_decode($usuarios[$j]["nombres_ord"]." ".$usuarios[$j]["apellidos"])))."\" id=\"".$usuarios[$j]["funcionario_codigo"]."\" ");
+    $func.=("text=\"".ucwords(codifica_encabezado(html_entity_decode(strtolower($usuarios[$j]["nombres_ord"]." ".$usuarios[$j]["apellidos"]))))."\" id=\"".$usuarios[$j]["funcionario_codigo"]."\" ");
    else  
-    $func.=("text=\"".ucwords(codifica_encabezado(html_entity_decode(codifica_caracteres($usuarios[$j]["login"]))))."\" id=\"".$usuarios[$j]["funcionario_codigo"]."\" ");
+    $func.=("text=\"".ucwords(codifica_encabezado(html_entity_decode($usuarios[$j]["login"])))."\" id=\"".$usuarios[$j]["funcionario_codigo"]."\" ");
    if(in_array($usuarios[$j]["funcionario_codigo"],$seleccionados))
       $func.=" checked=\"true\" ";
    $func.=("></item>\n"); 
