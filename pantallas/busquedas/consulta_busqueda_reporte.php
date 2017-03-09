@@ -142,7 +142,7 @@ $(document).ready(function(){
 	rownumWidth: 40,
     rowList : [20,30,50],
     jsonReader: {
-	    page: function (obj) { $("#busqueda_pagina").val(obj.page); return(obj.page); },
+	    page: function (obj) { if(obj.exito){$("#busqueda_pagina").val(obj.page); return(obj.page);}else{ $("#busqueda_pagina").val(0); return(0); } },
 	    total: function (obj) {$("#busqueda_total_paginas").val(obj.total); return(obj.total);  }	   
 		},
 		
@@ -190,7 +190,7 @@ jQuery("#datos_busqueda").jqGrid('setGroupHeaders', {useColSpanStyle: false, gro
 });
 <?php } ?>
 
-$(".exportar_reporte_saia").click(function(){	
+$(".exportar_reporte_saia").click(function(obj){	
 	isOpera = !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;
     // Opera 8.0+ (UA detection to detect Blink/v8-powered Opera)
 	isFirefox = typeof InstallTrigger !== 'undefined';   // Firefox 1.0+
@@ -199,8 +199,10 @@ $(".exportar_reporte_saia").click(function(){
 	isChrome = !!window.chrome && !isOpera;              // Chrome 1+
 	isIE = /*@cc_on!@*/false || !!document.documentMode;   // At least IE6
 	if(isChrome||isIE){
-		
-		notificacion_saia('Espere un momento por favor, hasta que se habilite el enlace de descarga','success','',9500);
+		var busqueda_total=$("#busqueda_total_paginas").val(); 
+		if(parseInt(busqueda_total)!=0){
+			notificacion_saia('Espere un momento por favor, hasta que se habilite el enlace de descarga','success','',9500);
+		}
 	}
   exportar_funcion_excel_reporte();
 });
@@ -211,9 +213,15 @@ $(window).bind('resize', function() {
 }); 
 function exportar_funcion_excel_reporte(){
 	var busqueda_total=$("#busqueda_total_paginas").val(); 
+	if(parseInt(busqueda_total)!=0){
+		
+
 	var ruta_file="temporal_<?php echo(usuario_actual('login'));?>/reporte_<?php echo($datos_busqueda[0]["nombre"].'_'.date('Ymd').'.xls'); ?>";
 	var url="exportar_saia.php?tipo_reporte=1&idbusqueda_componente=<?php echo $datos_busqueda[0]["idbusqueda_componente"]; ?>&page=1&exportar_saia=excel&ruta_exportar_saia="+ruta_file+"&rows="+$("#busqueda_registros").val()*4+"&actual_row=0&variable_busqueda="+$("#variable_busqueda").val()+"&idbusqueda_filtro_temp=<?php echo(@$_REQUEST['idbusqueda_filtro_temp']);?>&idbusqueda_filtro=<?php echo(@$_REQUEST['idbusqueda_filtro']);?>&idbusqueda_temporal=<?php echo (@$_REQUEST['idbusqueda_temporal']);?>";
 	window.open(url,"iframe_exportar_saia");
+	}else{
+		notificacion_saia('<b>ATENCI&Oacute;N</b><br>No hay registros para exportar','warning','',2000);
+	}
 }
 
 
