@@ -27,7 +27,9 @@ $campo="entidad_identidad";
 	if(@$_REQUEST['solo_series']){
 		$xml.="&solo_series=".$_REQUEST["solo_series"];
 	}
- 
+   	if(@$_REQUEST['tvd']){
+   		$xml.="&tvd=1";
+   	} 
     $campo="serie_idserie"; 
    }
 if(@$_REQUEST["tipo_entidad"] && @$_REQUEST["llave_entidad"]) 

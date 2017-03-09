@@ -63,18 +63,32 @@ echo(librerias_notificaciones());
             var dato=datos[1];
             if(datos2[1]){
                 dato=datos2[1];
+	            var datos3=dato.split("_tv");
+				var es_tvd = dato.indexOf("_tv");
+				var tvd='&tvd=1';
+	            if(es_tvd==-1){
+	            	tvd='';
+	            }                
+                
+                
                 dependencia_serie="&dependencia_serie="+datos2[0];
             }
             
            if(nodeId=='3-categoria-Otras categorias'){
            	 parent.serielist.location = "serieadd.php?otras_categorias=1"; 
            }else{
-           	parent.serielist.location = "serieview.php?key=" + dato + dependencia_serie; 
+           	parent.serielist.location = "serieview.php?key=" + datos3[0] + dependencia_serie+tvd; 
            }
            
         }else{    
             var datos=nodeId.split("d");
-            parent.serielist.location = "asignarserie_entidad.php?tipo_entidad=2&llave_entidad=" + datos[1]+'&from_dependencia=1&dependencia_serie=' + datos[1];
+            var datos2=datos[1].split("_tv");
+			var es_tvd = datos[1].indexOf("_tv");
+			var tvd='&tvd=1';
+            if(es_tvd==-1){
+            	tvd='';
+            }
+            parent.serielist.location = "asignarserie_entidad.php?tipo_entidad=2&llave_entidad=" + datos2[0]+'&from_dependencia=1&dependencia_serie=' + datos2[0] + tvd;
             //parent.serielist.location = "serieadd.php?from_dependencia=1&dependencia_serie=" + datos[1];
             
         }

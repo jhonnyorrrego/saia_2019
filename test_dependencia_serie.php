@@ -49,9 +49,9 @@ else{
 echo("<?xml version=\"1.0\" encoding=\"UTF-8\"?".">");
 
 
-$mostrar_nodos=array('dsa'=>1,'ssa'=>1,'soc'=>1); //dsa: dependencia serie asignadas - ssa: series sin asignar   - soc: series otras categorias  
+$mostrar_nodos=array('dsa'=>1,'dsatvd'=>1,'ssa'=>1,'soc'=>1); //dsa: dependencia serie asignadas - dsatvd: ependencia serie asignadas TVD  - ssa: series sin asignar   - soc: series otras categorias  
 if(@$_REQUEST['mostrar_nodos']){
-    $mostrar_nodos=array('dsa'=>0,'ssa'=>0,'soc'=>0); 
+    $mostrar_nodos=array('dsa'=>0,'dsatvd'=>0,'ssa'=>0,'soc'=>0); 
     $request_nodos=explode(',',$_REQUEST['mostrar_nodos']);    
     
     for($i=0;$i<count($request_nodos);$i++){
@@ -78,10 +78,27 @@ if(@$_REQUEST['carga_partes_dependencia']){
       
         if($id[0]=='d' && $mostrar_nodos['dsa']){ //si es dependencia
             $ids=explode('d',$id);
-            llena_dependencia($ids[1]);
+			$mystring = $ids[1];
+			$findme   = '_tv';
+			$pos = strpos($mystring, $findme);
+			if ($pos !== false) {
+				$ids[1]=str_replace("_tv", "",$ids[1]);
+     			llena_dependencia($ids[1],'',1);
+			}else{
+				llena_dependencia($ids[1]);	
+			}	
         }else if(strpos($id,'sub')!==false && $mostrar_nodos['dsa']){   //si es subserie o tipo documental
             $ids=explode('sub',$id);
-            llena_subseries_tipo_documental($ids[0],$ids[1]);
+			$mystring = $ids[1];
+			$findme   = '_tv';
+			$pos = strpos($mystring, $findme);
+			if ($pos !== false) {
+				$ids[1]=str_replace("_tv", "",$ids[1]);
+				llena_subseries_tipo_documental($ids[0],$ids[1],1);
+			}else{
+				llena_subseries_tipo_documental($ids[0],$ids[1]);
+			}			
+            
         }else if($mostrar_nodos['soc']){ //si es serie otras categorias
             $ids=explode('-',$id);
             llena_serie_otras($ids[0]," and categoria=3 ");
@@ -98,8 +115,15 @@ if(@$_REQUEST['carga_partes_serie']){
         if(strpos($id,'sub')!==false && $mostrar_nodos['dsa']){
             echo("<tree id=\"".$id."\">\n");
                 $ids=explode('sub',$id);
-                //print_r($ids);
-                llena_subseries_tipo_documental($ids[0],$ids[1]);            
+				$mystring = $ids[1];
+				$findme   = '_tv';
+				$pos = strpos($mystring, $findme);
+				if ($pos !== false) {
+					$ids[1]=str_replace("_tv", "",$ids[1]);
+					llena_subseries_tipo_documental($ids[0],$ids[1],1);
+				}else{
+					llena_subseries_tipo_documental($ids[0],$ids[1]);     
+				}				     
             echo("</tree>\n");
             die();            
         }
@@ -117,8 +141,11 @@ if(@$_REQUEST['cargar_series'] && @$_REQUEST['iddependencia']){
     }  
     echo("<tree id=\"d".$iddependencia."\">\n"); 
     if($hijos_entidad_serie['numcampos']){
-            
-        llena_entidad_serie($iddependencia,$lista_entidad_series_filtrar);
+        $tvd=0;
+		if(@$_REQUEST['tvd']){
+			$tvd=1;
+		}    
+        llena_entidad_serie($iddependencia,$lista_entidad_series_filtrar,$tvd);
     }  
     echo("</tree>\n");
     die();
@@ -134,6 +161,16 @@ if($id and $id<>"" && $mostrar_nodos['dsa']){ //si se va a filtrar una dependenc
 elseif($mostrar_nodos['dsa']){ //si se va a cargar todo el arbol dependencia/serie
     llena_dependencia("NULL");
 }
+
+
+//NODO:  dsatvd: ependencia serie asignadas TVD
+if($id and $id<>"" && $mostrar_nodos['dsa']){ //si se va a filtrar una dependencia especifica
+    llena_dependencia($id,'',1); 
+}
+elseif($mostrar_nodos['dsa']){ //si se va a cargar todo el arbol dependencia/serie
+    llena_dependencia("NULL",'',1);
+}
+
 
 //NODO:  ssa: series sin asignar 
 if($mostrar_nodos['ssa']){
@@ -157,14 +194,24 @@ $activo = "";
 
  
 //arbol de dependencias (dsa)
-function llena_dependencia($serie,$condicion=""){
+function llena_dependencia($serie,$condicion="",$tvd=0){
 global $conn,$seleccionado,$activo,$excluidos,$lista_series_funcionario;
+
+$prefijo_tvd='';
+$condicion_tvd=' AND b.tvd=0';
+if($tvd){
+	$activo='';
+	$prefijo_tvd='_tv';
+	$condicion_tvd=" AND b.tvd=1";
+}
 
 $tabla="dependencia";
 if(isset($_REQUEST["orden"]))
   $orden=$_REQUEST["orden"];
 else
   $orden="nombre";
+
+$texto_trd_tvd='';
 if($serie=="NULL")
   $papas=busca_filtro_tabla("*",$tabla,"(cod_padre IS NULL OR cod_padre=0) $activo $condicion $excluidos","$orden ASC",$conn);
 else
@@ -175,7 +222,7 @@ if($papas["numcampos"]){
   for($i=0; $i<$papas["numcampos"]; $i++){
     $hijos = busca_filtro_tabla("count(*) AS cant",$tabla,"cod_padre=".$papas[$i]["id$tabla"].$activo.$condicion,"",$conn);
     
-    $hijos_entidad_serie = busca_filtro_tabla("serie_idserie","entidad_serie","estado=1 AND entidad_identidad='2' AND llave_entidad=".$papas[$i]["id$tabla"],"",$conn);
+    $hijos_entidad_serie = busca_filtro_tabla("a.serie_idserie","entidad_serie a, serie b","a.serie_idserie=b.idserie AND a.estado=1 AND a.entidad_identidad='2' AND a.llave_entidad=".$papas[$i]["id$tabla"].$condicion_tvd,"",$conn);
     
     if(@$_REQUEST['funionario']){
         $almenos_una_serie=1;
@@ -202,8 +249,15 @@ if($papas["numcampos"]){
     if(@$papas[$i]["codigo"]){
       $cadena_codigo="(".$papas[$i]["codigo"].")";
     }
-	
-    echo("text=\"".htmlspecialchars(($papas[$i]["nombre"])).$cadena_codigo." \" id=\"d".$papas[$i]["id$tabla"]."\"");
+	if($serie=='NULL' && $i==0){
+		if($tvd==1){
+			$texto_trd_tvd=' - TVD';
+		}else{
+			$texto_trd_tvd=' - TRD';
+		}
+		 
+	}
+    echo("text=\"".htmlspecialchars(($papas[$i]["nombre"])).$cadena_codigo.$texto_trd_tvd." \" id=\"d".$papas[$i]["id$tabla"].$prefijo_tvd."\"");
 if(@$_REQUEST["arbol_series"]){		
 				
 	}		
@@ -228,25 +282,23 @@ if(@$_REQUEST["arbol_series"]){
     if(@$_REQUEST['carga_partes_dependencia']){
         if(@$_REQUEST['uid']){
         	if(!$_REQUEST["id"]){
-        	    llena_dependencia($papas[$i]["id$tabla"]);
+        	    llena_dependencia($papas[$i]["id$tabla"],'',$tvd);
         	}else{
         		if(!$_REQUEST["admin"]){
-        			llena_dependencia($papas[$i]["id$tabla"]);
+        			llena_dependencia($papas[$i]["id$tabla"],'',$tvd);
         		}
         	}        
         }
     }else{
-        llena_dependencia($papas[$i]["id$tabla"]);
+        llena_dependencia($papas[$i]["id$tabla"],'',$tvd);
     }
     
     echo("</item>\n");
   }     
 }
 if(@$_REQUEST['uid'] || @$_REQUEST['id'] ){
-    
-    if($_REQUEST['id']=='d'.$serie){
-        $hijos_entidad_serie = busca_filtro_tabla("serie_idserie","entidad_serie","estado=1 AND entidad_identidad='2' AND llave_entidad=".$serie,"",$conn);
-        
+    if($_REQUEST['id']=='d'.$serie.$prefijo_tvd){
+        $hijos_entidad_serie = busca_filtro_tabla("a.serie_idserie","entidad_serie a, serie b","a.serie_idserie=b.idserie AND a.estado=1 AND a.entidad_identidad='2' AND a.llave_entidad=".$serie.$condicion_tvd,"",$conn);
         if($hijos_entidad_serie['numcampos']){
             $lista_entidad_series_filtrar=implode(',',extrae_campo($hijos_entidad_serie,'serie_idserie'));
         }
@@ -278,7 +330,7 @@ if(@$_REQUEST['uid'] || @$_REQUEST['id'] ){
 
         if($hijos_entidad_serie['numcampos']){
             
-            llena_entidad_serie($serie,$lista_entidad_series_filtrar);
+            llena_entidad_serie($serie,$lista_entidad_series_filtrar,$tvd);
         }
     }    
 }
@@ -291,20 +343,28 @@ return;
 
 
 //llena series asignadas segun dependencia  (dsa)
-function llena_entidad_serie($iddependencia,$series){
+function llena_entidad_serie($iddependencia,$series,$tvd=0){
     global $conn,$activo;
+	
+	$prefijo_tvd='';
+	$condicion_tvd=' AND tvd=0';
+	if($tvd){
+		$activo='';
+		$prefijo_tvd='_tv';
+		$condicion_tvd=" AND tvd=1";
+	}
     
     $condicion_final="categoria=2 AND tipo=1 AND idserie IN(".$series.")";
 	$condicion_subseries_tipo_documental=" AND idserie IN(".$series.")";
-    $series=busca_filtro_tabla("nombre,idserie,codigo","serie",$condicion_final.$activo,"",$conn);
+    $series=busca_filtro_tabla("nombre,idserie,codigo","serie",$condicion_final.$activo.$condicion_tvd,"",$conn);
     for($i=0;$i<$series['numcampos'];$i++){
         echo("<item style=\"font-family:verdana; font-size:7pt;font-weight: normal;\" ");
-        echo("text=\"".htmlspecialchars(($series[$i]["nombre"])).' ('.$series[$i]['codigo'].') '." \" id=\"".$iddependencia."sub".$series[$i]['idserie']."\"");
+        echo("text=\"".htmlspecialchars(($series[$i]["nombre"])).' ('.$series[$i]['codigo'].') '." \" id=\"".$iddependencia."sub".$series[$i]['idserie'].$prefijo_tvd."\"");
         if(@$_REQUEST['sin_padre']){
             echo(" nocheckbox=\"1\" ");	
         }
         
-        $subseries_tipo_documental=busca_filtro_tabla("idserie","serie","categoria=2 AND tipo IN(2,3) AND cod_padre=".$series[$i]['idserie'].$activo.$condicion_subseries_tipo_documental,"",$conn);
+        $subseries_tipo_documental=busca_filtro_tabla("idserie","serie","categoria=2 AND tipo IN(2,3) AND cod_padre=".$series[$i]['idserie'].$activo.$condicion_subseries_tipo_documental.$condicion_tvd,"",$conn);
         //print_r($subseries_tipo_documental);
         if($subseries_tipo_documental['numcampos']){
             echo(" child=\"1\">\n");
@@ -314,7 +374,7 @@ function llena_entidad_serie($iddependencia,$series){
         
         if($subseries_tipo_documental['numcampos']){
             if(!@$_REQUEST['carga_partes_serie']){ 
-                llena_subseries_tipo_documental($iddependencia,$series[$i]['idserie']);
+                llena_subseries_tipo_documental($iddependencia,$series[$i]['idserie'],$tvd);
             }
             
         }
@@ -323,8 +383,16 @@ function llena_entidad_serie($iddependencia,$series){
     }
 }
 
-function llena_subseries_tipo_documental($iddependencia,$idserie){
+function llena_subseries_tipo_documental($iddependencia,$idserie,$tvd=0){
     global $conn,$seleccionado,$activo,$excluidos;
+	
+	$prefijo_tvd='';
+	$condicion_tvd=' AND tvd=0';
+	if($tvd){
+		$activo='';
+		$prefijo_tvd='_tv';
+		$condicion_tvd=" AND tvd=1";
+	}	
 
 	$hijos_entidad_serie = busca_filtro_tabla("serie_idserie","entidad_serie","estado=1 AND entidad_identidad='2' AND llave_entidad=".$iddependencia,"",$conn);
     $lista_entidad_series_filtrar='';    
@@ -335,11 +403,11 @@ function llena_subseries_tipo_documental($iddependencia,$idserie){
     $tabla_otra = 'serie';
     $orden="nombre";
 
-    $papas=busca_filtro_tabla("*",$tabla_otra,"cod_padre=".$idserie.$activo.$lista_entidad_series_filtrar,"$orden ASC",$conn); 
+    $papas=busca_filtro_tabla("*",$tabla_otra,"cod_padre=".$idserie.$activo.$lista_entidad_series_filtrar.$condicion_tvd,"$orden ASC",$conn); 
     //print_r($papas);
     if($papas["numcampos"]){ 
         for($i=0; $i<$papas["numcampos"]; $i++){
-            $hijos = busca_filtro_tabla("count(*) AS cant",$tabla_otra,"cod_padre=".$papas[$i]["id$tabla_otra"].$activo.$lista_entidad_series_filtrar,"",$conn);
+            $hijos = busca_filtro_tabla("count(*) AS cant",$tabla_otra,"cod_padre=".$papas[$i]["id$tabla_otra"].$activo.$lista_entidad_series_filtrar.$condicion_tvd,"",$conn);
             echo("<item style=\"font-family:verdana; font-size:7pt;\" ");
 		    if($tabla=="serie"){
 			    if(@$papas[$i]["estado"]==1){
@@ -349,7 +417,7 @@ function llena_subseries_tipo_documental($iddependencia,$idserie){
 			    }
 		    }	
 	
-            echo("text=\"".htmlspecialchars(($papas[$i]["nombre"])).' ('.$papas[$i]['codigo'].') '." \" id=\"".$iddependencia."sub".$papas[$i]['idserie']."\"");
+            echo("text=\"".htmlspecialchars(($papas[$i]["nombre"])).' ('.$papas[$i]['codigo'].') '." \" id=\"".$iddependencia."sub".$papas[$i]['idserie'].$prefijo_tvd."\"");
 		    if(@$_REQUEST["arbol_series"]){		
 				
 	        }		
@@ -363,7 +431,7 @@ function llena_subseries_tipo_documental($iddependencia,$idserie){
             else
               echo(" child=\"0\">\n");
 		    if(!@$_REQUEST['carga_partes_serie']){
-		        llena_subseries_tipo_documental($iddependencia,$papas[$i]["id$tabla_otra"]);
+		        llena_subseries_tipo_documental($iddependencia,$papas[$i]["id$tabla_otra"],$tvd);
 		    }
             echo("</item>\n");
         }     
