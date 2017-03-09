@@ -71,12 +71,16 @@ switch ($sAction)
 
 <?php 
     if($x_categoria==2 && $x_tipo!=3){
+    	$dependencia_serie='';
     	if(@$_REQUEST['dependencia_serie']){
     		$dependencia_serie="&dependencia_serie=".$_REQUEST['dependencia_serie'];
     	}
-		
+    	$tvd='';
+    	if(@$_REQUEST['tvd']){
+    		$tvd="&tvd=1";
+    	}		
         ?>
-        <a href="serieadd.php?key_padre=<?php echo(urlencode($sKey)); ?><?php echo($dependencia_serie); ?>">Adicionar</a>&nbsp;
+        <a href="serieadd.php?key_padre=<?php echo(urlencode($sKey)); ?><?php echo($dependencia_serie); ?><?php echo($tvd); ?>">Adicionar</a>&nbsp;
         <?php
     }
 ?>

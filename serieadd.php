@@ -334,6 +334,9 @@ $(document).ready(function(){
 		<?php if(@$_REQUEST['dependencia_serie']){ ?>
 			<input type="hidden" name="dependencia_serie" id="dependencia_serie" value="<?php echo($_REQUEST['dependencia_serie']); ?>">
 		<?php } ?>		
+		<?php if(@$_REQUEST['tvd']){ ?>
+			<input type="hidden" name="tvd" id="tvd" value="<?php echo($_REQUEST['tvd']); ?>">
+		<?php } ?>			
 	<?php if(!@$_REQUEST['from_dependencia']){ ?>
 	<tr>
 		<td class="encabezado" title="Nombre de la serie a la cual pertenece"><span class="phpmaker" style="color: #FFFFFF;">NOMBRE PADRE</span></td>
@@ -709,6 +712,10 @@ function AddData($conn)
 	//tipo_expediente
 	$fieldList["tipo_expediente"]="'".$GLOBALS["x_tipo_expediente"]."'";
 	$tipo_expediente=$GLOBALS["x_tipo_expediente"];
+	
+	if(@$_REQUEST['tvd']){
+		$fieldList["tvd"]=1;
+	}
 	// insert into database
 	$strsql = "INSERT INTO serie (";
 	$strsql .= implode(",", array_keys($fieldList));
