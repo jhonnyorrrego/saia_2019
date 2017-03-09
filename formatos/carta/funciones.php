@@ -116,8 +116,13 @@ function cargar_destinos_carta($idformato,$idcampo,$iddoc)
 function mostrar_anexos($idformato,$iddoc){
 	global $conn,$ruta_db_superior;
 		$html="Anexos: ";
-		$anexos_fis=busca_filtro_tabla("anexos_fisicos","ft_comunicacion_interna","documento_iddocumento=".$iddoc,"",conn);
-	  $html.=$anexos_fis[0]['anexos_fisicos']."&nbsp;";
+		$nombre_tabla=busca_filtro_tabla("b.nombre_tabla","documento a, formato b","lower(a.plantilla)=b.nombre AND a.iddocumento=".$iddoc,"",$conn);
+		$anexos_fis=busca_filtro_tabla("anexos_fisicos",$nombre_tabla[0]['nombre_tabla'],"documento_iddocumento=".$iddoc,"",$conn);
+		if($anexos_fis['numcampos']){
+			if($anexos_fis[0]['anexos_fisicos']!=''){
+				$html.=$anexos_fis[0]['anexos_fisicos'].", ";
+			}
+		}
 	  $anex=busca_filtro_tabla("","anexos","documento_iddocumento=".$iddoc,"",$conn);
 		for($i=0;$i<$anex['numcampos'];$i++){
 			if($_REQUEST["tipo"]==5)
@@ -128,7 +133,6 @@ function mostrar_anexos($idformato,$iddoc){
 		if($anexos_fis[0]['anexos_fisicos']!='' || $anex['numcampos']>0){
 			echo $html."<br/><br/>";
 		}
-
 }
 
 function asunto_carta($idformato,$idcampo,$iddoc){
