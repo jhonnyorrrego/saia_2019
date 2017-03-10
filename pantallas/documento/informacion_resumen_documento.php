@@ -191,7 +191,7 @@ else{
     	if($origen["numcampos"]){
     		echo('<li><div class="row-fluid"><div class="pull-left tootltip_saia_abajo">'.$origen[0]["numero"].'-'.$origen[0]["descripcion"].'</div><div class="pull-right"><a href="#" enlace="ordenar.php?key='.$origen[0]["iddocumento"].'&mostrar_formato=1'.$adicionales_enlace.'" conector="iframe"  titulo="Documento No.'.$origen[0]["numero"].'" class="kenlace_saia pull-left" ><i class="icon-download tooltip_saia_izquierda" title="Ver documento"></i></a></div></div></li>');
     	}else{
-    		echo("<li class='alert' style='margin-bottom:3px;'>No se encuentra asociado ningun documento</li>");
+    		echo("<li class='alert' style='margin-bottom:3px;'>No se encuentra asociado ning&uacute;n documento</li>");
     	}
 			?>
       </ul><br />
