@@ -78,9 +78,15 @@ $lista_papas = array();
 $texto="";
 $lista= "'".implode("','",$datos["series"])."'";
 $hijos="";
+
+$tvd=" AND tvd=0";
+if(@$_REQUEST['tvd']){
+	$tvd=" AND tvd=1";	
+}
+
 if($serie=="NULL")
 {
- $papas=busca_filtro_tabla("nombre,codigo,idserie,cod_padre","serie","idserie in($lista) and (cod_padre IS NULL OR cod_padre=0) $condicion $padre"." AND  tipo=1","nombre ASC",$conn);   //solo series
+ $papas=busca_filtro_tabla("nombre,codigo,idserie,cod_padre","serie","idserie in($lista) and (cod_padre IS NULL OR cod_padre=0) $condicion $padre"." AND  tipo=1".$tvd,"nombre ASC",$conn);   //solo series
 }
 else
  {
@@ -101,7 +107,7 @@ else
 			$condicion_nivel.=')';
 		}		
  	}
- 	$papas=busca_filtro_tabla("nombre,codigo,idserie,cod_padre","serie","idserie in($lista) and cod_padre=$serie $condicion"." ".$condicion_nivel."","nombre ASC",$conn);
+ 	$papas=busca_filtro_tabla("nombre,codigo,idserie,cod_padre","serie","idserie in($lista) and cod_padre=$serie $condicion"." ".$condicion_nivel."".$tvd,"nombre ASC",$conn);
 }
 
 if($papas["numcampos"]>0)
