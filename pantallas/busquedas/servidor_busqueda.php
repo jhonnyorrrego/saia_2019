@@ -220,7 +220,7 @@ $ordenar_consulta="";
 $agrupar_consulta=$datos_busqueda[0]["agrupado_por"];
 if(MOTOR=='MySql' || MOTOR=='Oracle') {
 	if($agrupar_consulta!=""){
-	  $ordenar_consulta.=" GROUP BY ".implode(",",$agrupacion);
+	  $ordenar_consulta.=" GROUP BY ".$agrupar_consulta;
 	  $ordenar_consulta_aux=" GROUP BY ".implode(",",$agrupacion);
 	}
 	if($sidx && $sord){
