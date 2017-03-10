@@ -425,13 +425,15 @@ function enviar_email($doc=0){
           $datos["nombre"]="DISTRIBUCION";
           if(transferir_archivo_prueba($datos,$ejecutores,$otros)){
             alerta("Mensaje enviado");
-          }
-          else alerta("Por favor confirme su transferencia es posible que existan problemas");
+	  } else {
+		  alerta("Por favor confirme su transferencia es posible que existan problemas");
+	  }
+	  volver(2);
+	  die();
         }
 
         abrir_url("email_doc.php?formato_enviar=true&no_menu=1&iddoc=".$_REQUEST["archivo_idarchivo"],"_self");
-   }  
-  else{
+   } else {
     alerta("No se ha definido un servidor de Correo en la configuracion del sistema, por favor comuniquese con su administrador");
     abrir_url("email_doc.php?formato_enviar=true&no_menu=1&iddoc=".$_REQUEST["archivo_idarchivo"],"_self");
   }
