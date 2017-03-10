@@ -21,4 +21,9 @@ UPDATE  busqueda_condicion SET  codigo_where =  'tipo<>3 and tipo<>0 AND tvd=0' 
 
 /* ------------------------------------- */
 
+UPDATE busqueda_componente SET  info =  '<div>{*origen_documento@iddocumento,numero,ejecutor,tipo_radicado,estado,serie,tipo_ejecutor*} {*fecha_creacion_documento@fecha,plantilla,iddocumento*} <br><br><div>{*descripcion*}</div><br><div><b>Etiqueta:</b> {*mostrar_nombre_etiquetas@iddocumento*}</div><br>
+{*mostrar_fecha_limite_documento@fecha_limite*}{*barra_inferior_documento@iddocumento,numero*}</div>' WHERE  idbusqueda_componente =229;
+
+/* ------------------------------------- */
+
 
