@@ -58,7 +58,7 @@ if(@$_REQUEST['iddoc']){
 	<br>
 <form id="form1" name="form1" method="post" action="<?php echo($ruta_db_superior); ?>pantallas/documento/fecha_limite_documento.php">
 
-	<legend>Adicionar Fecha Limite al documento</legend>
+	<legend>Adicionar fecha limite al documento</legend>
 
 <div class="control-group element">
     <label class="control-label" for="fecha_limite"> Este documento requiere una respuesta?
@@ -69,7 +69,7 @@ if(@$_REQUEST['iddoc']){
   </div>
 </div> 	
 <div class="control-group element contenedor_fecha_limite">
-    <label class="control-label" for="fecha_limite"> Fecha Limite de Respuesta
+    <label class="control-label" for="fecha_limite"> Fecha limite de respuesta
   </label>
   <div class="controls">
   	
@@ -126,7 +126,7 @@ if(@$_REQUEST['iddoc']){
 		$tabla_historial='
 		<table class="table">
 			<tr>
-				<th>Historial de Vencimientos</th>
+				<th colspan="5" style="text-align:center;">Historial de Vencimientos</th>
 			</tr>
 			<tr>
 				<th>Fecha de Cambio</th>
