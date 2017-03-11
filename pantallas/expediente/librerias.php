@@ -229,6 +229,7 @@ function asignar_expediente($idexp, $tipo_entidad, $llave_entidad, $permiso="", 
 	else return true;
 }
 function insertar_expediente_automatico($idserie,$hijo="",$indice=1){
+	/*
 	$indice++;
 	if($indice>100)return false;
 	$serie=busca_filtro_tabla("","serie a","a.idserie=".$idserie,"",$conn);
@@ -263,6 +264,8 @@ function insertar_expediente_automatico($idserie,$hijo="",$indice=1){
 		insertar_expediente_automatico($serie[0]["cod_padre"],"",$indice);
 	}
 	else return true;
+	 */
+	 return true;
 }
 function actualizar_codigo_arbol($idserie){
 	$idexpediente=busca_filtro_tabla("","expediente A","A.serie_idserie=".$idserie,"",$conn);
