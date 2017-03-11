@@ -93,4 +93,14 @@ function exportar_funcion_excel(idfiltro){
 	var url="exportar_saia.php?idbusqueda_componente=<?php echo $datos_busqueda[0]["idbusqueda_componente"]; ?>&page=1&exportar_saia=excel&ruta_exportar_saia="+ruta_file+"&rows="+$("#busqueda_registros").val()+"&actual_row=0&variable_busqueda="+$("#variable_busqueda").val()+"&idbusqueda_filtro_temp="+idfiltro+"&idbusqueda_filtro=<?php echo(@$_REQUEST['idbusqueda_filtro']);?>&idbusqueda_temporal=<?php echo (@$_REQUEST['idbusqueda_temporal']);?>";
 	window.open(url,"iframe_exportar_saia");
 }
+
+$(document).ready(function(){
+  /*$('.boton_fecha_limite').live('click',function(){    	
+        var enlace=$(this).attr('enlace');      
+        var iddoc='?iddoc='+$(this).attr('iddoc');
+        var idbusqueda_componente='&idbusqueda_componente='+$(this).attr('idbusqueda_componente');
+        enlace+=iddoc+idbusqueda_componente;
+        top.hs.htmlExpand(this, { objectType: 'iframe',width: 500, height: 250,contentId:'cuerpo_paso', 		preserveContent:false, src:enlace,outlineType: 'rounded-white',wrapperClassName:'highslide-wrapper drag-header'});	
+  });	*/
+});
 </script>

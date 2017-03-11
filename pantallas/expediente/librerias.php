@@ -571,6 +571,7 @@ function arreglo_expedientes_asignados(){
 	return($lista);
 }
 function barra_inferior_documento_expediente($iddoc,$numero,$idexpediente){
+	global $conn,$ruta_db_superior;
 $dato_prioridad=busca_filtro_tabla("","prioridad_documento","documento_iddocumento=".$iddoc,"fecha_asignacion DESC",$conn);
 
 $prioridad="icon-flag";
@@ -596,7 +597,7 @@ if($dato_prioridad["numcampos"]){
     break;
   }
 }
-$texto.='<div class="btn-group pull" >
+$texto.='<div class="pull"><div class="btn-group pull-left" >
   <button type="button" class="btn btn-mini detalle_documento_saia tooltip_saia" enlace="ordenar.php?accion=mostrar&mostrar_formato=1&key='.$iddoc.'" title="No.'.$numero.'" idregistro="'.$iddoc.'" id="expediente_'.$iddoc.'"><i class="icon-info-sign"></i></button>
   <button type="button" class="btn btn-mini dropdown-toggle tooltip_saia" data-toggle="dropdown" title="Prioridad">
     <i class="'.$prioridad.'" id="prioridad_'.$iddoc.'" prioridad="'.$prioridad.'"></i><span class="caret"></span>
@@ -616,7 +617,7 @@ $texto.='<div class="btn-group pull" >
     <i class="icon-remove"></i>
     </button>';
     }
-$texto.='</div>';
+$texto.='</div>'.mostrar_fecha_limite_documento($iddoc).'</div><br><br>';
 //$texto.=barra_estandar_documento($iddoc,$funcionario);
 return($texto);
 }

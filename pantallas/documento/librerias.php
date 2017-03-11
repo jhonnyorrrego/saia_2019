@@ -48,7 +48,7 @@ $clase_info="detalle_documento_saia";
 if($_SESSION["tipo_dispositivo"]=="movil"){
     $clase_info="kenlace_saia";
 }
-$texto.='<div class="btn-group pull" >
+$texto.='<div class="pull"><div class="btn-group pull-left" >
 	<button type="button" class="btn btn-mini  tooltip_saia documento_leido" onClick=" " enlace="pantallas/documento/detalles_documento.php?iddoc='.$iddoc.'&idbusqueda_componente='.$_REQUEST["idbusqueda_componente"].'" titulo="Detalle Doc No.'.$numero.'" conector="iframe" idregistro="'.$iddoc.'"ancho_columna="470" eliminar_hijos_kaiten="1">
     <i class="'.$dato_leido[1].'"></i>
   </button>
@@ -68,7 +68,7 @@ $texto.='<div class="btn-group pull" >
       <li><a href="#" idregistro="'.$iddoc.'" class="documento_prioridad" prioridad="5"><i class="icon-flag-verde"></i> Verde</a></li>
       <li><a href="#" idregistro="'.$iddoc.'" class="documento_prioridad" prioridad="0"><i class="icon-flag"></i>Sin indicador</a></li>
     </ul>
-    </div>';
+    </div>'.mostrar_fecha_limite_documento($iddoc).'</div><br><br>';
 //$texto.=barra_estandar_documento($iddoc,$funcionario);
 return($texto);
 }
@@ -823,15 +823,36 @@ function iddoc_no_distribuidos(){
   $where.=")";
   return($where);
 }
-function mostrar_fecha_limite_documento($fecha_limite){
-	global $conn;
-	
-	if($fecha_limite=='fecha_limite'){
-		$fecha_limite='Sin definir';
+function mostrar_fecha_limite_documento($iddoc){
+	global $conn,$ruta_db_superior;
+	$enlace_fecha_limite='pantallas/documento/fecha_limite_documento.php?iddoc='.$iddoc.'&idbusqueda_componente='.@$_REQUEST['idbusqueda_componente'];
+	$consulta_fecha_limite=busca_filtro_tabla("fecha_limite","documento","iddocumento=".$iddoc,"",$conn);
+	$fecha_limite=$consulta_fecha_limite[0]['fecha_limite'];
+	$color='';
+	$title='';
+	if($fecha_limite=='0000-00-00' || is_null($fecha_limite)){
+		$fecha_limite='<button type="button" conector="iframe" class="btn btn-mini boton_fecha_limite" enlace="'.$enlace_fecha_limite.'" iddoc="'.$iddoc.'" idbusqueda_componente="'.@$_REQUEST['idbusqueda_componente'].'">Sin definir</button>';
+	}else{
+		include_once($ruta_db_superior."pantallas/lib/librerias_fechas.php");
+		$hoy=date('Y-m-d');
+		$limite=$fecha_limite;
+		$interval=resta_dos_fechas_saia($hoy,$limite);
+	    $interval_pos_neg=$interval->invert;  //Es 1 si el intervalo representa un periodo de tiempo negativo y 0 si no
+	    $interval_diferencia=$interval->days; //dias de diferencia
+	    $title='Faltan '.$interval_diferencia.' dias';
+	    $color='btn-success';  //si la diferencia es de mas de 8 dias (verde)
+	    if($interval_diferencia<=8 && $interval_diferencia>=5){  //si la diferencia esta entre 5 & 8 dias
+	    	$color='btn-warning'; //naranja
+	    }elseif($interval_diferencia<5){  //si la diferencia es menor a 5 dias
+	    	$color='btn-danger';  //rojo
+	    }    
+	    if($interval_pos_neg==1){  //si ya se vencio
+	        $color='btn-danger';  //rojo
+			$title='Hace '.$interval_diferencia.' dias';
+	    }      	
+		$fecha_limite='<button type="button" iddoc="'.$iddoc.'" conector="iframe" class="kenlace_saia tooltip_saia btn btn-mini '.$color.' boton_fecha_limite" titulo="'.$title.'" enlace="'.$enlace_fecha_limite.'" idbusqueda_componente="'.@$_REQUEST['idbusqueda_componente'].'">'.$fecha_limite.'&nbsp;<i class="icon-time" style="margin-top: -1;"></i></button>';
 	}
-	
-	return('<div class="pull-right"><b>Vence:</b> '.$fecha_limite.'</div>');
-	
+	return('<div class="pull-right"><b>Vence:&nbsp;</b>'.$fecha_limite.'</div>');
 }
 function filtro_funcionario_etiquetados(){ 
 	$condicional_etiquetados="AND d.funcionario='".usuario_actual('idfuncionario')."'";

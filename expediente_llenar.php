@@ -4,7 +4,6 @@ $max_salida=6; $ruta_db_superior=$ruta=""; while($max_salida>0){ if(is_file($rut
 
 include_once("db.php");
 include_once("pantallas/expediente/librerias.php");
-include_once($ruta_db_superior."calendario/calendario.php");
 $iddoc = $_REQUEST["iddoc"];
 $doc_menu=@$_REQUEST["iddoc"];
 include_once("pantallas/documento/menu_principal_documento.php");
@@ -120,31 +119,6 @@ if(count($nombres_exp)){
 <?php    
 }
 ?>
-
-<div class="control-group element">
-    <label class="control-label" for="fecha_limite"> Este documento requiere una respuesta?
-  </label>
-  <div class="controls">
-  	Si&nbsp;<input type="radio" name="necesita_respuesta" id="necesita_respuesta1" value="1">
-  	No&nbsp;<input type="radio" name="necesita_respuesta" id="necesita_respuesta2" value="0">
-  </div>
-</div> 	
-<div class="control-group element contenedor_fecha_limite">
-    <label class="control-label" for="fecha_limite"> Fecha Limite de Respuesta
-  </label>
-  <div class="controls">
-  	
-      <?php 
-          $fecha_limite='0000-00-00';
-          if($doc[0]['fecha_limite']){
-            $fecha_limite=$doc[0]['fecha_limite'];
-          }
-      ?>
-      
-      <input id="fecha_limite" name="fecha_limite" style="width:100px" type="text" value="<?php echo($fecha_limite); ?>" readonly />
-      <?php selector_fecha("fecha_limite","form1","Y-m-d",date("m"),date("Y"),"default.css","",""); ?>
-  </div>
-</div>
 <div>
  <input type="hidden" name="expedientes" id="expedientes" value="">
  <input type="hidden" name="iddoc" value="<?php echo $iddoc; ?>">
@@ -152,21 +126,6 @@ if(count($nombres_exp)){
  <button class="btn btn-mini" id="" onclick="window.open('<?php echo($ruta_db_superior); ?>pantallas/expediente/adicionar_expediente_documento.php?iddoc=<?php echo(@$_REQUEST["iddoc"]); ?>','_self'); return false;">Adicionar a un nuevo expediente</button>
 </div>
  </form>
-<script>
-	$(document).ready(function(){
-		$('#icono_calendario').attr('width',28);
-		$('.contenedor_fecha_limite').hide();
-		$('[name="necesita_respuesta"]').click(function(){
-			$('#fecha_limite').val('0000-00-00');
-			var valor=parseInt($(this).val());
-			if(valor==1){  //si
-				$('.contenedor_fecha_limite').show();
-			}else{  //no
-				$('.contenedor_fecha_limite').hide();
-			}
-		});
-	});
-</script> 
  <script>
  $().ready(function() {
 	$('#form1').submit(function(){
