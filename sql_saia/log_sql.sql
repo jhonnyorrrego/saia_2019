@@ -84,5 +84,15 @@ UPDATE  busqueda_componente SET  info =  '<div>{*origen_documento@iddocumento,nu
 UPDATE  busqueda_componente SET  info =  '<div>{*origen_documento@iddocumento,numero,ejecutor,tipo_radicado,estado,serie,tipo_ejecutor*} {*fecha_creacion_documento@fecha,plantilla,iddocumento*}<br><br><div>{*descripcion*}</div><br><br>
 {*barra_inferior_documento@iddocumento,numero*}</div>' WHERE  idbusqueda_componente =280;
 
+CREATE TABLE documento_limite (
+	iddocumento_limite INT(10) NOT NULL auto_increment,
+	fecha_cambio datetime NOT NULL,
+	fecha_limite date NOT NULL,
+	funcionario_idfuncionario INT(11) NOT NULL,
+	documento_iddocumento INT(11) NOT NULL,
+	observaciones TEXT NOT NULL,
+	PRIMARY KEY( iddocumento_limite )
+);	
+
 /* ------------------------------------- */
 
