@@ -135,14 +135,23 @@ if($papas["numcampos"]){
     	    	echo(" nocheckbox=\"1\" ");
     	}
         
+		
+		$child=0;
         if($hijos_entidad_serie['numcampos']){
         	for($x=0;$x<$hijos_entidad_serie['numcampos'];$x++){
         		if(in_array($hijos_entidad_serie[$x]['serie_idserie'], $datos_admin_funcionario["series"])){
-        			echo(" child=\"1\" ");    	 
+        			$child=1;	 
         		}
         	}	   
         }
-			
+		$hijos_expediente=busca_filtro_tabla("a.fecha, a
+.nombre, a.descripcion, a.cod_arbol, a.idexpediente, a.estado_cierre","vexpediente_serie a",$lista2." and (a.cod_padre=".$papas[$i]["idexpediente"].") AND a.estado_cierre=1","GROUP BY a.fecha, a
+.nombre, a.descripcion, a.cod_arbol, a.idexpediente, estado_cierre order by idexpediente desc",$conn);
+		if($hijos_expediente['numcampos']){
+			$child=1;
+		}
+		echo(" child=\"".$child."\" ");    
+		
     	echo(">");
 			if(@$_REQUEST["uid"] || @$_REQUEST["carga_total"]){
     		llena_expediente($papas[$i]["idexpediente"]);
