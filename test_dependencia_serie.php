@@ -164,10 +164,10 @@ elseif($mostrar_nodos['dsa']){ //si se va a cargar todo el arbol dependencia/ser
 
 
 //NODO:  dsatvd: ependencia serie asignadas TVD
-if($id and $id<>"" && $mostrar_nodos['dsa']){ //si se va a filtrar una dependencia especifica
+if($id and $id<>"" && $mostrar_nodos['dsatvd']){ //si se va a filtrar una dependencia especifica
     llena_dependencia($id,'',1); 
 }
-elseif($mostrar_nodos['dsa']){ //si se va a cargar todo el arbol dependencia/serie
+elseif($mostrar_nodos['dsatvd']){ //si se va a cargar todo el arbol dependencia/serie
     llena_dependencia("NULL",'',1);
 }
 
