@@ -831,7 +831,7 @@ function mostrar_fecha_limite_documento($iddoc){
 	$color='';
 	$title='';
 	if($fecha_limite=='0000-00-00' || is_null($fecha_limite)){
-		$fecha_limite='<button type="button" conector="iframe" class="btn btn-mini boton_fecha_limite" enlace="'.$enlace_fecha_limite.'" iddoc="'.$iddoc.'" idbusqueda_componente="'.@$_REQUEST['idbusqueda_componente'].'">Sin definir</button>';
+		$fecha_limite='<button type="button" titulo="Sin definir" conector="iframe" class="kenlace_saia btn btn-mini boton_fecha_limite" enlace="'.$enlace_fecha_limite.'" iddoc="'.$iddoc.'" idbusqueda_componente="'.@$_REQUEST['idbusqueda_componente'].'">Sin definir</button>';
 	}else{
 		include_once($ruta_db_superior."pantallas/lib/librerias_fechas.php");
 		$hoy=date('Y-m-d');
