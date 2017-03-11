@@ -129,10 +129,14 @@ if(@$_REQUEST['filtrar_arbol']){
             break;
     }
 }
-$tvd=" AND tvd=0";
-if(@$_REQUEST['tvd']){
-	$tvd=" AND tvd=1";	
+$tvd='';
+if($tabla=='serie'){
+	$tvd=" AND tvd=0";
+	if(@$_REQUEST['tvd']){
+		$tvd=" AND tvd=1";	
+	}	
 }
+
 
 
 if(isset($_REQUEST["orden"]))
