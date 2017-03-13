@@ -825,7 +825,12 @@ function iddoc_no_distribuidos(){
 }
 function mostrar_fecha_limite_documento($iddoc){
 	global $conn,$ruta_db_superior;
-	$enlace_fecha_limite='pantallas/documento/fecha_limite_documento.php?iddoc='.$iddoc.'&idbusqueda_componente='.@$_REQUEST['idbusqueda_componente'];
+	
+	$parametro_expediente='';
+	if(@$_REQUEST['idexpediente']){
+		$parametro_expediente='&idexpediente='.$_REQUEST['idexpediente'];
+	}	
+	$enlace_fecha_limite='pantallas/documento/fecha_limite_documento.php?iddoc='.$iddoc.'&idbusqueda_componente='.@$_REQUEST['idbusqueda_componente'].$parametro_expediente;
 	$consulta_fecha_limite=busca_filtro_tabla("fecha_limite","documento","iddocumento=".$iddoc,"",$conn);
 	$fecha_limite=$consulta_fecha_limite[0]['fecha_limite'];
 	$color='';

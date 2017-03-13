@@ -32,10 +32,17 @@ if(@$_REQUEST['guardar']){
 		$strsql .= ")";
 		phpmkr_query($strsql);
 		
+		$llave=@$_REQUEST['iddoc'];
+		$add_componente='';
+		if(@$_REQUEST['idexpediente']){
+			$llave=@$_REQUEST['idexpediente'];
+			$add_componente='&idexpediente='.@$_REQUEST['idexpediente'];
+		}
+		
 		echo('
 		<script>
 				notificacion_saia("<b>ATENC&Oacute;N</b><br>La fecha limite se ha actualizado satisfactoriamente!","success","",3000);
-					var json={"idbusqueda_componente":'.@$_REQUEST['idbusqueda_componente'].',"llave":'.@$_REQUEST['iddoc'].'};
+					var json={"idbusqueda_componente":"'.@$_REQUEST['idbusqueda_componente'].$add_componente.'","llave":'.$llave.'};
 				   parent.postMessage(json,"*");       //actualiza contenedor del listado
 				   parent.eliminar_panel_kaiten(0);    //cierra kaiten actual
 				   
@@ -93,6 +100,13 @@ if(@$_REQUEST['iddoc']){
 </div>
  <input type="hidden" name="iddoc" value="<?php echo(@$_REQUEST['iddoc']) ?>">
   <input type="hidden" name="idbusqueda_componente" value="<?php echo(@$_REQUEST['idbusqueda_componente']) ?>">
+  <?php
+  	if(@$_REQUEST['idexpediente']){
+  		?>
+  		  <input type="hidden" name="idexpediente" value="<?php echo(@$_REQUEST['idexpediente']) ?>">
+  		<?php
+  	} 
+  ?>
   <input type="hidden" name="guardar" value="1">
  <input type="submit" value="Continuar" class="btn btn-primary btn-mini">
 </form>
