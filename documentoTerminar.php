@@ -114,13 +114,12 @@ menu_ordenar($x_id_documento);
      abrir_url($ruta_db_superior."formatos/".$formato[0]["nombre"]."/".$formato[0]["ruta_mostrar"]."?iddoc=".$x_id_documento."&idformato=".$formato[0]["idformato"]."&random=".rand(),'_self');
     }    
     ?>
-<span class="internos"><!--img class="imagen_internos" src="botones/documentacion/documento.gif" border="0"-->&nbsp;&nbsp;TERMINAR EL DOCUMENTO</span>
-
     <form action="documentoTerminar.php" method="post" onSubmit="return EW_checkMyForm(this);">
     <?php if(isset($_REQUEST["ejecutor"]) && $_REQUEST["ejecutor"]!="") 
       echo "<input type='hidden' name='ejecutor' value='".$_REQUEST["ejecutor"]."'>";
     ?>
     <p>
+    <legend>SACAR DE MIS PENDIENTES</legend><br>
     <input type="hidden" name="a_delete" value="D">
     <input type="hidden" name="llave_d" value="<?php echo  ($llave); ?>">
     <table  border="0" style="WIDTH:100%;" bgcolor="#CCCCCC" cellpadding="4" cellspacing="4">
@@ -193,7 +192,7 @@ menu_ordenar($x_id_documento);
     </span--><br>
     
      <input type="button" class="btn btn-mini btn-danger" value="Cancelar" onclick="window.history.back(-1);">
-  	<input type="submit" name="Action" value="Terminar Documento" class="btn btn-mini btn-primary">
+  	<input type="submit" name="Action" value="Aceptar" class="btn btn-mini btn-primary">
     
     
    </td></tr>

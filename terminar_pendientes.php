@@ -25,7 +25,7 @@ function formulario_terminar(){
 	</style>';
 	$tabla.='<body>';
 	$tabla.='<form method="post" name="formulario_formatos"  id="formulario_formatos" action="terminar_pendientes.php">';
-	$tabla.='<legend>Terminar Documentos</legend><br>';
+	$tabla.='<legend>Sacar de mis pendientes</legend><br>';
 	$tabla.='<table style="width:100%;" class="table table-bordered">';
 	$tabla.='<tr>';
 	$tabla.='<td style="text-align:center" class="encabezado_list"><b>Radicado</b></td>';
@@ -51,11 +51,19 @@ function formulario_terminar(){
 		}
 		$tabla.='</tr>';
 	}
-	$tabla.='<tr><td colspan="3" style="text-align:center">
-	<input type="radio" name="detalle" onclick=\'document.getElementById("notas").value=this.value;\' value="Ya fue le&iacute;do">Ya fue le&iacute;do &nbsp;&nbsp;  <input type="radio" name="detalle" onclick=\'document.getElementById("notas").value=this.value;\' value="Recibido en medio f&iacute;sico">Recibido en medio f&iacute;sico &nbsp;&nbsp;<input type="radio" name="detalle" onclick=\'document.getElementById("notas").value=this.value;\' value="Documento Informativo">Documento Informativo<br>
-	<textarea style="width:100%;" name="notas" id="notas"></textarea></td></tr>';
+
+   	$justificaciones_configuracion=busca_filtro_tabla('','configuracion','nombre="justificacion_terminar"','',$conn);
+	$justificaciones=explode(',',$justificaciones_configuracion[0]['valor']);
+	$cadena_justificaciones='';
+	for($i=0;$i<count($justificaciones);$i++){
+		$cadena_justificaciones.='<input type="radio" name="detalle" onclick=\'document.getElementById("notas").value=this.value;\' value="'.codifica_encabezado(html_entity_decode($justificaciones[$i])).'">'.codifica_encabezado(html_entity_decode($justificaciones[$i])).' &nbsp;&nbsp;';		
+	}
+	$tabla.='<tr><td colspan="3" style="text-align:left;">
+	'.$cadena_justificaciones.'
+	<br><br>
+	<textarea style="width:50%;" name="notas" id="notas"></textarea></td></tr>';
 	$tabla.='</table>';
-	$tabla.='<input class="btn btn-mini btn-primary" type="submit" value="Terminar documentos">';
+	$tabla.='<input class="btn btn-mini btn-primary" type="submit" value="Aceptar">';
 	$tabla.='<input type="hidden" name="accion" value="1">';
 	$tabla.='<input type="hidden" name="docus_preseleccionados" value="'.$docs.'">';
 	$tabla.='</form>';
