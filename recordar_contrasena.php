@@ -63,7 +63,7 @@ if($_REQUEST['login']){
 			?>
 			<script>
 				//noty({text: "Solicitud enviada con exito",type: 'success',layout: "topCenter",timeout:5000});
-				notificacion_saia('<b>Solicitud enviada con exito!</b> <br> el administrador se pondra en contacto','success','',5000);
+				notificacion_saia('<b>Solicitud enviada con &eacute;xito!</b> <br> el administrador se pondr&aacute; en contacto','success','',5000);
 				window.parent.hs.close();
 			</script>
 <?php
