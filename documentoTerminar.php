@@ -209,7 +209,7 @@ menu_ordenar($x_id_documento);
 				notificacion_saia('El documento no se puede terminar, por favor clasificarlo o cumunicarle al responsable.','warning','',3500);
 		 </script>
 		 <?php
-    redirecciona("clasificar.php?origen=view&iddocumento=".$llave);
+    redirecciona("expediente_llenar.php?iddoc=".$llave);
     /*
     volver(2);*/
   }
