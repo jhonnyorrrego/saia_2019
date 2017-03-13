@@ -96,3 +96,11 @@ CREATE TABLE documento_limite (
 
 /* ------------------------------------- */
 
+UPDATE  busqueda_condicion SET  codigo_where = 'lower(d.estado)=''aprobado'' AND a.despachado=1 AND a.documento_iddocumento=d.iddocumento AND a.idft_radicacion_entrada=b.ft_radicacion_entrada AND a.tipo_destino IN(1,2) AND estado_item=1 {*condicion_adicional*}' WHERE  idbusqueda_condicion =213;
+
+UPDATE  busqueda_condicion SET  codigo_where = 'lower(d.estado)=''aprobado'' AND a.despachado=1 AND a.documento_iddocumento=d.iddocumento AND a.idft_radicacion_entrada=b.ft_radicacion_entrada AND a.tipo_destino IN(1,2) AND estado_item=2 {*condicion_adicional*}' WHERE  idbusqueda_condicion =223;
+
+UPDATE  busqueda_condicion SET  codigo_where = 'lower(d.estado)=''aprobado'' AND a.despachado=1 AND a.documento_iddocumento=d.iddocumento AND a.idft_radicacion_entrada=b.ft_radicacion_entrada AND a.tipo_destino IN(1,2) AND estado_item=3 {*condicion_adicional*}' WHERE  idbusqueda_condicion =224;
+
+/* ------------------------------------- */
+
