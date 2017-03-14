@@ -199,6 +199,10 @@ $config = busca_filtro_tabla("valor", "configuracion", "nombre='color_encabezado
 				$puerto_ftp = $configuracion[$i]["valor"];
 				break;
 			case "clave_ftp" :
+				if($configuracion[$i]['encrypt']){
+					include_once('pantallas/lib/librerias_cripto.php');
+					$configuracion[$i]['valor']=decrypt_blowfish($configuracion[$i]['valor'],LLAVE_SAIA_CRYPTO);					
+				}				
 				$clave = $configuracion[$i]["valor"];
 				break;
 			case "usuario_ftp" :

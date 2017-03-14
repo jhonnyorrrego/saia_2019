@@ -208,6 +208,10 @@ if ($_REQUEST["mostrar_formato"]) {
 	}
         break;
       case "clave_ftp" :
+		if($configuracion[$i]['encrypt']){
+			include_once('pantallas/lib/librerias_cripto.php');
+			$configuracion[$i]['valor']=decrypt_blowfish($configuracion[$i]['valor'],LLAVE_SAIA_CRYPTO);					
+		}			  
         $clave = $configuracion[$i]["valor"];
 	$params["clave"]= $configuracion[$i]["valor"];
         break;

@@ -12,4 +12,15 @@ $texto='<div class="btn-group barra_superior">
 </div>';
 return(($texto));
 }
+function mostrar_valor_configuracion_encrypt($valor,$encrypt){
+	
+	if($encrypt=='encrypt'){
+		$encrypt=0;
+	}
+	if($encrypt){
+		return('Valor encriptado!');
+	}else{
+		return($valor);
+	}
+}
 ?>

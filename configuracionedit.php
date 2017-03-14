@@ -18,11 +18,12 @@ $x_idconfiguracion = Null;
 $x_nombre = Null;
 $x_valor = Null;
 $x_tipo = Null;
+$x_encrypt = Null;
 //$x_fecha = Null;
 ?>
 <?php include ("db.php") ?>
 <?php include ("phpmkrfn.php") ?>
-<?php include_once ("librerias_saia.php"); echo(librerias_notificaciones()); ?>
+<?php include_once ("librerias_saia.php"); echo(librerias_jquery('1.7')); echo(librerias_notificaciones()); ?>
 <?php
 $sKey = @$_GET["key"];
 if (($sKey == "") || (is_null($sKey))) { $sKey = @$_POST["key"]; }
@@ -39,6 +40,7 @@ if (($sAction == "") || ((is_null($sAction)))) {
 	$x_nombre = @$_POST["x_nombre"];
 	$x_valor = @$_POST["x_valor"];
 	$x_tipo = @$_POST["x_tipo"];
+	$x_encrypt = @$_POST["x_encrypt"];
 }
 if (($sKey == "") || ((is_null($sKey)))) {
 	ob_end_clean();
@@ -58,6 +60,7 @@ switch ($sAction)
 	case "U":
 		$llave=EditData($sKey,$conn);
 		if($llave){ // Update Record based on key
+		alerta('<b>ATENCI&Oacute;N</b><br>Configuraci&oacute;n modificada satisfactoriamente!');
 		abrir_url("configuracionedit.php?key=".$llave."&accion=editar","_self");
 		}
 		break;
@@ -83,6 +86,17 @@ if (EW_this.x_tipo && !EW_hasValue(EW_this.x_tipo, "TEXT" )) {
 	//if (!EW_onError(EW_this, EW_this.x_tipo, "TEXT", "Por favor ingrese los campos requeridos - Tipo"))
 	notificacion_saia('<b>ATENCI&Oacute;N</b><br>Por favor ingrese los campos requeridos - Tipo','warning','',4000);
 		return false;
+}
+if (EW_this.x_valor && !EW_hasValue(EW_this.x_valor, "TEXT" )) {
+	//if (!EW_onError(EW_this, EW_this.x_tipo, "TEXT", "Por favor ingrese los campos requeridos - Tipo"))
+	notificacion_saia('<b>ATENCI&Oacute;N</b><br>Por favor ingrese los campos requeridos - Valor','warning','',4000);
+		return false;
+}
+if( parseInt(document.getElementById('x_encrypt').value)==1 ){
+	var encriptar_valor=confirm('el valor ingresado será encriptado, ¿Esta seguro de realizar esta acción?');
+	if(!encriptar_valor){
+		return false;
+	}
 }
 return true;
 }
@@ -119,6 +133,7 @@ return true;
 	</tr>	
 </table>
 <p>
+<input type="hidden" name="x_encrypt" id="x_encrypt" value="<?php echo(@$x_encrypt); ?>">
 <input type="submit" name="Action" value="Editar">
 </form>
 <?php include ("footer.php") ?>
@@ -130,7 +145,7 @@ return true;
 // - Variables setup: field variables
 
 function LoadData($sKey,$conn)
-{ global $x_idconfiguracion,$x_nombre,$x_valor,$x_tipo;
+{ global $x_idconfiguracion,$x_nombre,$x_valor,$x_tipo,$x_encrypt;
 	$sKeyWrk = "" . addslashes($sKey) . "";
 	$sSql = "SELECT A.* FROM configuracion A";
 	$sSql .= " WHERE A.idconfiguracion = " . $sKeyWrk;
@@ -156,7 +171,11 @@ function LoadData($sKey,$conn)
 		// Get the field contents
 		$x_idconfiguracion = $row["idconfiguracion"];
 		$x_nombre = $row["nombre"];
-		$x_valor = $row["valor"];
+		$x_encrypt = $row["encrypt"];
+		$x_valor = '';
+		if(!$x_encrypt){
+			$x_valor = $row["valor"];
+		}
 		$x_tipo = $row["tipo"];	
 	}
 	phpmkr_free_result($rs);
@@ -175,6 +194,7 @@ function EditData($sKey,$conn)
 global $x_nombre;
 global $x_valor;
 global $x_tipo;
+global $x_encrypt;
 
 	// Open record
 	$sKeyWrk = "" . addslashes($sKey) . "";
@@ -206,7 +226,14 @@ global $x_tipo;
 		$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_tipo) : $x_tipo; 
 		$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
 		$fieldList["tipo"] = $theValue;
-
+		$fieldList["encrypt"]=$x_encrypt;
+		if(intval($fieldList["encrypt"])){
+			$fieldList["valor"]=trim($fieldList["valor"]," ");
+			$fieldList["valor"]=trim($fieldList["valor"],"'");
+			include_once('pantallas/lib/librerias_cripto.php');
+			$fieldList["valor"]="'".encrypt_blowfish($fieldList["valor"],LLAVE_SAIA_CRYPTO)."'";
+		}
+		
 		// update
 		$sSql = "UPDATE configuracion SET ";
 		foreach ($fieldList as $key=>$temp) {
@@ -215,7 +242,7 @@ global $x_tipo;
 		if (substr($sSql, -2) == ", ") {
 			$sSql = substr($sSql, 0, strlen($sSql)-2);
 		}
-		$sSql .= " WHERE idconfiguracion =". $sKeyWrk;		
+		$sSql .= " WHERE idconfiguracion =". $sKeyWrk;	
 		phpmkr_query($sSql,$conn) or error("Fall� la b�squeda" . phpmkr_error() . ' SQL:' . $sSql);
 		$EditData = true; // Update Successful
 	}

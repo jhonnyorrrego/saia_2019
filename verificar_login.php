@@ -18,7 +18,13 @@ if (@$_REQUEST["userid"]<>"" && @$_REQUEST["passwd"]<>"") {
 	$sUserId = @$_REQUEST["userid"];
 	$sPassWd = @$_REQUEST["passwd"];  	
 	$configuracion=busca_filtro_tabla("A.valor","configuracion A","A.tipo='usuario' AND A.nombre='login_administrador'","",$conn);
-	$clave_admin=busca_filtro_tabla("A.valor","configuracion A","A.tipo='clave' AND A.nombre='clave_administrador'","",$conn); 
+	$clave_admin=busca_filtro_tabla("A.valor,A.encrypt","configuracion A","A.tipo='clave' AND A.nombre='clave_administrador'","",$conn); 
+	if($clave_admin['numcampos']){
+		if($clave_admin[0]["encrypt"]){
+			include_once('pantallas/lib/librerias_cripto.php');
+			$clave_admin[0]["valor"]=decrypt_blowfish($clave_admin[0]["valor"],LLAVE_SAIA_CRYPTO);	
+		}	
+	}
 	if($configuracion["numcampos"]&&$clave_admin["numcampos"] && $configuracion[0]["valor"]==$sUserId && $clave_admin[0]["valor"]==$sPassWd){
 	$estado_admin=busca_filtro_tabla("estado","funcionario","lower(login)='".strtolower($sUserId)."'","",$conn);
 	if($estado_admin[0]['estado']){

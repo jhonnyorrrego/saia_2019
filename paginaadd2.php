@@ -190,7 +190,12 @@ for($i=0;$i<$configuracion["numcampos"];$i++){
    break;
 	 case "puerto_ftp": $puerto_ftp=$configuracion[$i]["valor"];
 	 break;
-   case "clave_ftp": $clave=$configuracion[$i]["valor"];
+   case "clave_ftp": 
+	if($configuracion[$i]['encrypt']){
+		include_once('pantallas/lib/librerias_cripto.php');
+		$configuracion[$i]['valor']=decrypt_blowfish($configuracion[$i]['valor'],LLAVE_SAIA_CRYPTO);					
+	}	   
+   $clave=$configuracion[$i]["valor"];
    break;
    case "usuario_ftp": $usuario=$configuracion[$i]["valor"];
    break;
