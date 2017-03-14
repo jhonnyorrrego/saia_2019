@@ -149,8 +149,8 @@ function version_pagina($documento,$id){
 	
 	$pagina = busca_filtro_tabla("", "pagina a", "a.id_documento=" . $documento[0]["iddocumento"], "", $conn);
 	if($pagina["numcampos"]) {
-		crear_destino($ruta_db_superior . $destino1);
-		crear_destino($ruta_db_superior . $destino2);
+		crear_destino($destino1);
+		crear_destino($destino2);
 	}
 	
 	for($i = 0; $i < $pagina["numcampos"]; $i++) {
