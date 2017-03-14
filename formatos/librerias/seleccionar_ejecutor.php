@@ -25,8 +25,8 @@ if($tipo == 'codigo'){
 	$where = ' and ejecutor_idejecutor=idejecutor';
 	$select = 'distinct(idejecutor),nombre,identificacion';
 }
-
-$busqueda=busca_filtro_tabla("".$select,"ejecutor".$tabla,"lower(".$tipo.") LIKE lower('".$q."%')".$where,"",$conn);
+$where_estado=' and estado=1';
+$busqueda=busca_filtro_tabla("".$select,"ejecutor".$tabla,"lower(".$tipo.") LIKE lower('".$q."%')".$where.$where_estado,"",$conn);
 
 for($i=0;$i<$busqueda["numcampos"];$i++){
   echo $busqueda[$i]["idejecutor"]."|".(html_entity_decode(($busqueda[$i]["nombre"])))."|".$busqueda[$i]["identificacion"]."|".$q."|".codifica_encabezado(html_entity_decode($busqueda[$i]["nombre"]));
