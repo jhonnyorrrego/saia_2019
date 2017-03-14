@@ -104,3 +104,22 @@ UPDATE  busqueda_condicion SET  codigo_where = 'lower(d.estado)=''aprobado'' AND
 
 /* ------------------------------------- */
 
+ALTER TABLE  configuracion ADD  encrypt INT NULL DEFAULT  '0'
+
+UPDATE  busqueda_componente SET  info =  '<div>{*barra_superior_configuracion@idconfiguracion*}<br>
+<b>Nombre: </b>{*nombre*}<br>
+<b>Valor: </b>{*mostrar_valor_configuracion_encrypt@valor,encrypt*}<br>
+<b>Tipo: </b>{*tipo*}<br>
+<b>Fecha: </b>{*fecha*}
+</div>' WHERE  idbusqueda_componente =84;
+
+UPDATE  busqueda SET  campos =  'A.nombre,A.valor,A.tipo,A.fecha,A.encrypt' WHERE  idbusqueda =19;
+
+UPDATE  configuracion SET  encrypt =  '1' WHERE  idconfiguracion =15;
+
+UPDATE  configuracion SET  encrypt =  '1' WHERE  idconfiguracion =85;
+
+UPDATE  configuracion SET  encrypt =  '1' WHERE  idconfiguracion =11;
+
+/* ------------------------------------- */
+
