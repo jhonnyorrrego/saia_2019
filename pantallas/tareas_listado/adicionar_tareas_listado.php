@@ -12,6 +12,7 @@ include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."librerias_saia.php");
 
 include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+$validar_enteros=array("listado_tareas_fk","responsable_tarea","evaluador","idlistado_tareas");
 desencriptar_sqli('form_info');
 
 include_once($ruta_db_superior."class_transferencia.php");

@@ -28,6 +28,7 @@ include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."formatos/librerias/estilo_formulario.php");
 
 include_once("pantallas/lib/librerias_cripto.php");
+$validar_enteros=array("x_idalmacenamiento","x_documento_iddocumento");
 include_once("librerias_saia.php");
 desencriptar_sqli('form_info');
 echo(librerias_jquery());

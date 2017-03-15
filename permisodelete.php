@@ -9,6 +9,7 @@ include ("db.php");
 include ("phpmkrfn.php") ;
 
 include_once("pantallas/lib/librerias_cripto.php");
+$validar_enteros=array("x_funcionario_idfuncionario","x_idpermiso","x_modulo_idmodulo");
 include_once("librerias_saia.php");
 desencriptar_sqli('form_info');
 echo(librerias_jquery());

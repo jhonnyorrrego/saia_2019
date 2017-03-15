@@ -5,6 +5,7 @@
   include_once("librerias_saia.php");
   
 include_once("pantallas/lib/librerias_cripto.php");
+$validar_enteros=array("iddoc","key","doc");
 desencriptar_sqli('form_info');
 echo(librerias_jquery());
  
@@ -45,7 +46,7 @@ $config = busca_filtro_tabla("valor","configuracion","nombre='color_encabezado'"
        }      
        -->
        </style>";
-  echo $style;
+  echo $style; 
   }
 ?>
 <style type="text/css">

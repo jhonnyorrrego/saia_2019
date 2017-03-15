@@ -23,6 +23,7 @@ $x_tipo_cargo = Null;
 <?php include ("librerias_saia.php") ?>
 <?php
 include_once ("pantallas/lib/librerias_cripto.php");
+$validar_enteros=array("x_idcargo");
 desencriptar_sqli("form_info");
 echo(librerias_jquery());
 $sKey = @$_GET["key"];

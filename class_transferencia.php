@@ -18,7 +18,13 @@ include_once($ruta_db_superior."sql.php");
 include_once($ruta_db_superior."asignacion.php");
 include_once($ruta_db_superior."formatos/librerias/funciones_acciones.php");
 include_once($ruta_db_superior."bpmn/librerias_formato.php");
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
 
+
+if (isset($_REQUEST["form_info"]) && $_REQUEST["form_info"]!="") {
+	$validar_enteros=array("idflujo","iddoc","formato","idformato");
+	desencriptar_sqli('form_info');
+}
 /*<Clase>
 <Nombre>buscar_funcionarios</Nombre>
 <Parametros>$dependencia:id de las dependencias a revisar;$arreglo:variable donde se va a guardar el resultado</Parametros>
@@ -1864,7 +1870,8 @@ function transferencias_pendientes($serie)
 function radicar_plantilla() {
 	global $conn, $sql;
 	global $ruta_db_superior;
-	// print_r($_REQUEST); die("aquiii");
+	
+	//print_r($_REQUEST); die("aquiii");
 	$valores = array();
 	$plantilla = "";
 	$idformato = 0;

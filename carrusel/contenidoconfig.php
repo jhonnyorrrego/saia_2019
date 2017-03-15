@@ -17,6 +17,7 @@ include_once("../header.php");
 include_once($ruta_db_superior . "librerias_saia.php");
 
 include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+$validar_enteros=array("id","carrusel_idcarrusel");
 desencriptar_sqli('form_info');
 echo(librerias_jquery());
 

@@ -9,8 +9,8 @@ while($max_salida>0){
   $max_salida--;
 }
 include_once($ruta_db_superior."db.php");
-include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
-desencriptar_sqli('form_info');
+
+$validar_enteros=array("idbusqueda_componente","idbusqueda_filtro_temp","idbusqueda_temporal","llave_unica");
 
 
 usuario_actual("login");

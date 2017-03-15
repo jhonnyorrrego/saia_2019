@@ -13,6 +13,7 @@ include_once($ruta_db_superior . "librerias_saia.php");
 
 echo(librerias_jquery('1.7'));	
 include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+$validar_enteros=array("iddocumento","paginas");
 desencriptar_sqli('form_info');
 
 include_once($ruta_db_superior."pantallas/pagina/librerias.php");

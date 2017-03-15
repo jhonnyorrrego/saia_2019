@@ -19,6 +19,7 @@ include_once("../calendario/calendario.php");
 include_once($ruta_db_superior."librerias_saia.php");
 echo(librerias_jquery());
 include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+$validar_enteros=array("grafica_idgrafica","idfiltro_grafica","idfiltro","reporte","grafica","id");
 desencriptar_sqli('form_info');
 
 //print_r($_REQUEST);die();

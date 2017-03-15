@@ -14,7 +14,7 @@ usuario_actual("login");
 
 include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
 desencriptar_sqli('form_info');
-
+//print_r($_REQUEST);die();
 $filtro = '';
 $idbusqueda_temp = '';
 $retorno = array();

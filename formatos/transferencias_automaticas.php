@@ -15,6 +15,7 @@ $max_salida--;
 include_once("../db.php");
 
 include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+$validar_enteros=array("idformato");
 include_once($ruta_db_superior."librerias_saia.php");
 desencriptar_sqli('form_info');
 echo(librerias_jquery());

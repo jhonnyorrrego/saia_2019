@@ -1,6 +1,7 @@
 <?php
 include_once("db.php");
 include_once("pantallas/lib/librerias_cripto.php");
+$validar_enteros=array("x_idfuncionario");
 desencriptar_sqli('form_info');
 
 

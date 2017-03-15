@@ -9,12 +9,14 @@ $max_salida=6; $ruta_db_superior=$ruta=""; while($max_salida>0){ if(is_file($rut
 <link rel="stylesheet" type="text/css" href="<?php echo($ruta_db_superior);?>css/bootstrap_reescribir.css"/>
 <link rel="stylesheet" type="text/css" href="<?php echo($ruta_db_superior);?>css/bootstrap-iconos-segundarios.css"/>
 <link rel="stylesheet" type="text/css" href="<?php echo($ruta_db_superior);?>css/bootstrap-datetimepicker.min.css"/>
-<?php include_once($ruta_db_superior."db.php"); ?>
+<?php include_once($ruta_db_superior."db.php"); 
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+?>
 <script type="text/javascript" src="<?php echo($ruta_db_superior);?>js/jquery-1.7.min.js"></script>
 <?php include_once($ruta_db_superior."librerias_saia.php");
 $dato_padre=busca_filtro_tabla("","expediente a","a.idexpediente=".$_REQUEST["cod_padre"],"",$conn);
 ?>
-<form name="formulario_expediente" id="formulario_expediente">
+<form name="formulario_expediente" id="formulario_expediente" method="post">
 <input type="hidden" name="iddoc" id="iddoc" value="<?php echo($_REQUEST["iddoc"]);?>">
 <input type="hidden" id="cerrar_higslide" value="<?php echo(@$_REQUEST["cerrar_higslide"]);?>">
 <legend>Crear expediente</legend>
@@ -33,6 +35,8 @@ $dato_padre=busca_filtro_tabla("","expediente a","a.idexpediente=".$_REQUEST["co
       <div id="esperando_expediente"><img src="<?php echo $ruta_db_superior; ?>imagenes/cargando.gif"></div>
 			<div id="treeboxbox_tree2" class="arbol_saia"></div>
       <input type="hidden" name="cod_padre" id="cod_padre" value="<?php echo($datos[0]["cod_padre"]); ?>">
+      <input type="hidden" name="ejecutar_expediente" value="set_expediente_documento">
+      <input type="hidden" name="tipo_retorno" value="1">
     </span>
   </div>
 </div>
@@ -160,11 +164,12 @@ $(document).ready(function(){
     	<?php if(@$_REQUEST["volver"]&&@$_REQUEST["enlace"]){ ?>
     		window.open('<?php echo($ruta_db_superior.$_REQUEST["enlace"]); ?>?variable_busqueda=idexpediente/**/<?php echo($_REQUEST["cod_padre"]); ?>&idbusqueda_componente=<?php echo($_REQUEST["idbusqueda_componente"]); ?>','_self');
     	<?php } ?>
+    <?php encriptar_sqli("formulario_expediente",0,"form_info",$ruta_db_superior); ?>
       $.ajax({
-        type:'GET',
+        type:'POST',
         async:false,
         url: "<?php echo($ruta_db_superior);?>pantallas/expediente/ejecutar_acciones.php",
-        data: "ejecutar_expediente=set_expediente_documento&tipo_retorno=1&rand="+Math.round(Math.random()*100000)+"&"+formulario_expediente.serialize(),
+        data: "rand="+Math.round(Math.random()*100000)+"&"+formulario_expediente.serialize(),
         success: function(html){               
           if(html){                   
             var objeto=jQuery.parseJSON(html);                  

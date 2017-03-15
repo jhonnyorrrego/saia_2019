@@ -11,6 +11,7 @@ while ($max_salida > 0) {
 include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."pantallas/expediente/librerias.php");
 include_once("pantallas/lib/librerias_cripto.php");
+$validar_enteros=array("x_idserie");
 desencriptar_sqli('form_info');
 
 

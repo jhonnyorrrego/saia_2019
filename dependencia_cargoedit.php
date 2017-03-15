@@ -1,5 +1,6 @@
 <?php include ("db.php"); 
 include_once("pantallas/lib/librerias_cripto.php");
+$validar_enteros=array("x_iddependencia_cargo","x_funcionario_idfuncionario","x_dependencia_iddependencia","x_cargo_idcargo");
 include_once("librerias_saia.php");
 desencriptar_sqli('form_info');
 echo(librerias_jquery());

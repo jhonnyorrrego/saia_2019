@@ -5,6 +5,7 @@ $max_salida=6; $ruta_db_superior=$ruta=""; while($max_salida>0){ if(is_file($rut
 include_once("db.php");
 
 include_once("pantallas/lib/librerias_cripto.php");
+$validar_enteros=array("iddoc");
 include_once("librerias_saia.php");
 desencriptar_sqli('form_info');
 echo(librerias_jquery());

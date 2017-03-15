@@ -3,6 +3,7 @@
   include_once($ruta_db_superior."db.php");
   include_once($ruta_db_superior."pantallas/caja/librerias.php");  
   include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+  $validar_enteros=array("idcaja","entidad_identidad");
 	desencriptar_sqli('form_info');
   
  // print_r($_REQUEST);die();

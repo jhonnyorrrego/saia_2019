@@ -34,6 +34,7 @@ $x_fecha_ingreso = Null;
 <?php include_once ("librerias_saia.php"); echo(librerias_notificaciones()); ?>
 <?php
 include_once ("pantallas/lib/librerias_cripto.php");
+$validar_enteros=array("x_iddependencia_cargo","x_funcionario_idfuncionario","x_dependencia_iddependencia","x_cargo_idcargo");
 desencriptar_sqli('form_info');
 echo(librerias_jquery());
 // Get action

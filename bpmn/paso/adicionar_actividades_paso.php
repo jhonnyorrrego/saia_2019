@@ -31,6 +31,7 @@ include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."librerias_saia.php");
 
 include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+$validar_enteros=array("x_idactividad_paso","paso_idpaso","x_accion_idaccion","x_llave_entidad","fk_campos_formato");
 desencriptar_sqli('form_info');
 
 include ($ruta_db_superior."workflow/libreria_paso.php");

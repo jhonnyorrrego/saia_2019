@@ -15,6 +15,7 @@ include_once($ruta_db_superior."phpmkrfn.php");
 include_once($ruta_db_superior."librerias_saia.php");
 
 include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+$validar_enteros=array("idcontador","x_idformato","x_contador_idcontador","x_serie_idserie","x_fk_categoria_formato","x_flujo_idflujo");
 desencriptar_sqli('form_info'); 
 
 

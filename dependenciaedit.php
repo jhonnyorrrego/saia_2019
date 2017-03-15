@@ -2,6 +2,7 @@
 include ("db.php");
 include ("librerias_saia.php");
 include_once ("pantallas/lib/librerias_cripto.php");
+$validar_enteros=array("x_iddependencia");
 desencriptar_sqli('form_info');
 echo(librerias_jquery());
 ?>

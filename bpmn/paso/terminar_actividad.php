@@ -4,6 +4,7 @@ include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."librerias_saia.php");
 
 include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+$validar_enteros=array("idpaso_documento","idactividad","idpaso","documento");
 desencriptar_sqli('form_info');
 
 $paso_documento=busca_filtro_tabla("","paso_documento","idpaso_documento=".@$_REQUEST["idpaso_documento"],"",$conn);

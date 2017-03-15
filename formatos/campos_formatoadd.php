@@ -7,6 +7,7 @@ include ($ruta_db_superior."db.php");
 include ($ruta_db_superior."librerias_saia.php");
 
 include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+$validar_enteros=array("x_idcampos_formato","x_formato_idformato","idformato");
 desencriptar_sqli('form_info');
 
 include_once("librerias/funciones.php");

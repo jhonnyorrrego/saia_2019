@@ -35,6 +35,7 @@ $x_direccion_titulo= Null;
 
 include ($ruta_db_superior."db.php");
 include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+$validar_enteros=array("x_idreporte","x_modulo_idmodulo","x_plantilla_idplantilla");
 include_once($ruta_db_superior."librerias_saia.php");
 desencriptar_sqli('form_info');
 echo(librerias_jquery());

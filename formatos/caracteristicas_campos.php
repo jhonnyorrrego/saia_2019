@@ -19,6 +19,7 @@ include_once("librerias/funciones.php");
 include_once($ruta_db_superior."librerias_saia.php");
 echo(librerias_jquery());
 include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+$validar_enteros=array("idcampo","idformato");
 desencriptar_sqli('form_info');
 
 if(!isset($_REQUEST["enviado"]))

@@ -2,6 +2,7 @@
 include_once("db.php");
 include_once("pantallas/expediente/librerias.php");
 include_once("pantallas/lib/librerias_cripto.php");
+$validar_enteros=array("iddoc","expediente_actual");
 desencriptar_sqli('form_info');
 
 if(@$_REQUEST['iddoc'] && @$_REQUEST['fecha_limite'] && @$_REQUEST['fecha_limite']!='0000-00-00' ){

@@ -11,6 +11,7 @@ header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache"); // HTTP/1.0 
 
 include_once ("pantallas/lib/librerias_cripto.php");
+$validar_enteros=array("x_iddependencia");
 desencriptar_sqli('form_info');
 echo(librerias_jquery());
 

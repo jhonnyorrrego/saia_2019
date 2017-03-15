@@ -23,6 +23,7 @@ $x_tipo = Null;
 include_once("pantallas/lib/librerias_cripto.php");
 include_once("librerias_saia.php");
 desencriptar_sqli('form_info');
+$validar_enteros=array("key_d");
 echo(librerias_jquery());
 
 ?>

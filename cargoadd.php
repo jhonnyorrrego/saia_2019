@@ -24,6 +24,7 @@ $x_tipo_cargo = Null;
 <?php include ("phpmkrfn.php") ?>
 <?php
 include_once ("pantallas/lib/librerias_cripto.php");
+$validar_enteros=array("x_idcargo");
 desencriptar_sqli("form_info");
 echo(librerias_jquery());
 include ("formatos/librerias/estilo_formulario.php");

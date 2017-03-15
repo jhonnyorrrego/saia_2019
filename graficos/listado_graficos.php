@@ -17,6 +17,7 @@ include_once("../header.php");
 include_once($ruta_db_superior."librerias_saia.php");
 echo(librerias_jquery());
 include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+$validar_enteros=array("lgraficos","lreportes");
 desencriptar_sqli('form_info');
 ?>
 <script type="text/javascript" src="../anexosdigitales/highslide-4.0.10/highslide/highslide-with-html.js"></script>

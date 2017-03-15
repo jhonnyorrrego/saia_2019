@@ -16,6 +16,7 @@ include_once($ruta_db_superior."class_transferencia.php");
 include_once($ruta_db_superior."header.php");
 
 include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+$validar_enteros=array("iddoc","archivo_idarchivo");
 include_once($ruta_db_superior."librerias_saia.php");
 desencriptar_sqli('form_info');
 echo(librerias_jquery());

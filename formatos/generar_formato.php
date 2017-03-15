@@ -1967,11 +1967,13 @@ function crear_formato_ae($idformato, $accion) {
 		$texto .= '</form></body>';
 		if ($textareas) {
 			$includes .= incluir_libreria("header_formato.php", "librerias");
+			
 		}
+		$includes .= incluir("../../pantallas/lib/librerias_cripto.php", "librerias");
 		if ($fecha) {
 			$includes .= incluir("../../calendario/calendario.php", "librerias");
 		}
-		
+		 
 		$includes .= incluir("../../js/jquery.js", "javascript");
 		$includes .= incluir("../../js/jquery.validate.js", "javascript");
 		
@@ -2075,7 +2077,12 @@ $.ajax({url: '../librerias/validar_unico.php',
 		$contenido = "<html><title>.:" . codifica($accion . " " . $formato[0]["etiqueta"]) . ":.</title><head>" . $includes . "<script type='text/javascript'>
   $().ready(function() {
 	// validar los campos del formato
-	$('#formulario_formatos').validate();
+	$('#formulario_formatos').validate({
+		submitHandler: function(form) {
+				<?php encriptar_sqli('formulario_formatos',0,'form_info','../../');?>
+			    form.submit();
+			  }
+	});
 	
 });
 </script>" . $enmascarar . " $codigo_enter2tab</head>" . $texto . "</html>";
