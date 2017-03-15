@@ -47,7 +47,7 @@ if(@$_REQUEST["tipo"]!==5 && !@$_REQUEST["output"] && !@$_REQUEST["imprimir"]){
         }
     }
     $documento=busca_filtro_tabla("","documento A","A.iddocumento=".$iddoc,"",$conn);
-		$formato=busca_filtro_tabla("","documento A, formato B","lower(A.plantilla)=lower(B.nombre) AND A.iddocumento=".$iddoc,"",$conn);
+	$formato=busca_filtro_tabla("","documento A, formato B","lower(A.plantilla)=lower(B.nombre) AND A.iddocumento=".$iddoc,"",$conn);
     $mostrar_menu_acciones_rapidas=0;
     if($_SESSION["tipo_dispositivo"]!="movil"){
       $mostrar_menu_acciones_rapidas=1;
@@ -78,13 +78,43 @@ if(@$_REQUEST["tipo"]!==5 && !@$_REQUEST["output"] && !@$_REQUEST["imprimir"]){
             <ul class="nav">
               <li>
               	<div class="btn-group pull-left btn-under">
-              		<a href="<?php echo($ruta_db_superior.$tipo_pagina); ?>" class="kenlace_saia_propio" enlace="<?php echo($tipo_pagina); ?>" destino="_centro">
+              		<!-- a href="<?php echo($ruta_db_superior.$tipo_pagina); ?>" class="kenlace_saia_propio" enlace="<?php echo($tipo_pagina); ?>" destino="_centro">
                     <button type="button" class="btn btn-mini">
                       
                         <i class="icon-acciones_menu_mostrar"></i>
                       
                     </button>
-                   </a>
+                   </a -->
+              		<a class="kenlace_saia_propio enlace_home_documento"  destino="_centro">
+                    <button type="button" class="btn btn-mini">
+                      
+                        <i class="icon-acciones_menu_mostrar"></i>
+                      
+                    </button>
+                   </a>   
+                   <script>
+                   		$(document).ready(function(){
+ 							$('.enlace_home_documento').live('click',function(){
+ 								var iddoc='<?php echo($iddoc); ?>';
+ 								var cod_padre='<?php echo($formato[0]['cod_padre']); ?>';
+ 								redirecciona_home_documento(iddoc,cod_padre);
+ 							});			
+                   		});
+                   		function redirecciona_home_documento(iddoc,cod_padre){
+                   			if(cod_padre!=''){
+	                   			direccion=new String(window.parent.frames[0].location);
+	             				vector=direccion.split('&');
+	             				vector_iddoc=vector[1].split('=');
+	             				if(window.parent.parent.frames[0].frameElement.name=='centro'){
+	             					window.parent.parent.frames[0].location="<?php echo($ruta_db_superior);?>ordenar.php?accion=mostrar&mostrar_formato=1&key="+vector_iddoc[1];
+	             				}else{
+	             					window.parent.parent.frames[2].location="<?php echo($ruta_db_superior);?>ordenar.php?accion=mostrar&mostrar_formato=1&key="+vector_iddoc[1];
+	             				}					  
+                   			}else{
+                   				window.open("<?php echo($ruta_db_superior);?>ordenar.php?accion=mostrar&mostrar_formato=1&key="+iddoc,"arbol_formato");				
+                   			}              			
+                   		}
+                   </script>               
                 </div>
                 <div class="btn-group pull-left btn-under">
                     <button type="button" class="btn btn-mini dropdown-toggle" data-toggle="dropdown">
