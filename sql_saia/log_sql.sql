@@ -123,3 +123,9 @@ UPDATE  configuracion SET  encrypt =  '1' WHERE  idconfiguracion =11;
 
 /* ------------------------------------- */
 
+UPDATE  busqueda_componente SET  acciones_seleccionados =  'vincular_documentos,carga_soporte_ingresados,transferir_docs' WHERE  idbusqueda_componente =18;
+UPDATE  busqueda_componente SET  acciones_seleccionados =  'despachar_doc,despachar_fisico_doc,vincular_documentos,transferir_docs' WHERE  idbusqueda_componente =23;
+UPDATE  busqueda_componente SET  acciones_seleccionados =  'vincular_documentos,transferir_docs' WHERE  idbusqueda_componente =239;
+UPDATE  busqueda_componente SET  acciones_seleccionados =  'vincular_documentos,transferir_docs' WHERE  idbusqueda_componente =105;
+
+/* ------------------------------------- */
