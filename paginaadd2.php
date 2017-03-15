@@ -269,6 +269,7 @@ for($i=0;$i<$configuracion["numcampos"];$i++){
       <param name="ancho" value="<?php print($ancho);?>">
       <param name="alto" value="<?php print($alto);?>">
       <param name="maxtabs" value="50">
+      <param name="descripcion" value="<?php print(stripslashes($documento[0]["descripcion"]));	?>">
     </applet>
     	</td>
     </tr>

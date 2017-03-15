@@ -419,7 +419,8 @@ if (PROTOCOLO_CONEXION == 'https://') {
                     "alto": "<?php print($alto); ?>",
                     "numero": "<?php print($documento[0]["numero"]); ?>",
                     "maxtabs": "50",
-                    "fileFilter" : "jpg,png,pdf,tiff,tif,doc,docx"
+                    "fileFilter" : "jpg,png,pdf,tiff,tif,doc,docx",
+                    "descripcion":"<?php print(stripslashes($documento[0]["descripcion"])); ?>"
                 };
                 var msg = {
                     clientId: clientId,
