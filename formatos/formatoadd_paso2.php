@@ -23,6 +23,7 @@ $max_salida--;
 include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
 $validar_enteros=array("formato","key");
 include_once($ruta_db_superior."librerias_saia.php");
+$validar_enteros=array("key");
 desencriptar_sqli('form_info');
 echo(librerias_jquery());
 

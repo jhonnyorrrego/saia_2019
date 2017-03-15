@@ -14,14 +14,18 @@ while($max_salida>0){
 	$max_salida--;
 }
 include_once($ruta_db_superior."db.php");
+$version=@$_REQUEST["idversion_documento"];
+$iddoc=@$_REQUEST["iddoc"];
+if((isset($_REQUEST["iddoc"]) && !is_int($_REQUEST["iddoc"])) || (isset($_REQUEST["idversion_documento"]) && !is_int($_REQUEST["idversion_documento"]))){
+  die("Se encuentra una posible infecci&oacute;n en su c&oacute;digo, en la llave: iddoc o idversion_documento (debe ser un entero),por favor contacte a su administrador");
+}
 if ( stristr($_SERVER["HTTP_ACCEPT"],"application/xhtml+xml")){
     header("Content-type: application/xhtml+xml"); 
 }
 else{
     header("Content-type: text/xml"); 
 }
-$version=@$_REQUEST["idversion_documento"];
-$iddoc=@$_REQUEST["iddoc"];
+
 $documento=busca_filtro_tabla("","documento a","a.iddocumento=".$iddoc,"",$conn);
 if($version){
     $datos_version=busca_filtro_tabla(fecha_db_obtener('a.fecha','Y-m-d H:i')." as x_fecha, a.*","version_documento a","a.idversion_documento=".$version,"",$conn);

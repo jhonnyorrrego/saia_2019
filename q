@@ -54,53 +54,16 @@ function request_encriptado($param="key_cripto"){
 	}
 	return($parametros);
 }
-function validar_enteros(){
-global $validar_enteros;
-if(isset($validar_enteros)){
-  foreach($validar_enteros AS $key=>$valor){
-    if(isset($_REQUEST[$valor] && !is_int($_REQUEST[$valor])){
-      return($valor);
-    }
-  }
-}
-return(false);
-}
-
 function desencriptar_sqli($campo_info){
-  $error=validar_enteros();
-  if($error!==false){
-    die("Se encuentra una posible infecci&oacute;n en su c&oacute;digo, en la llave: ".$_REQUEST[$error]." (debe ser un entero),por favor contacte a su administrador");
-    //volver(1);
-  }
-  if(strpos("script",$_SERVER["PHP_SELF"])!==false){
-     die("Se encuentra una posible infecci&oacute;n en su c&oacute;digo, a trav&eacute;s DOM-based cross site scripting, por favor contacte a su administrador");
-  }
-	if($_SESSION["token_csrf"]!==$_POST["token_csrf"]){
-		alerta("Error de validacion del formulario por favor intente de nuevo (Posible Error: CSRF) ");
-	}
-	if (array_key_exists($campo_info, $_POST) ) {
+	if (array_key_exists($campo_info, $_POST) && $_SESSION["token_csrf"]==$_POST["token_csrf"]) {
     $data = json_decode($_POST[$campo_info], true);
     unset($_REQUEST);
     unset($_POST);
-    $cant=count($data);
-    for($i = 0; $i < $cant; $i ++) {
-	  if(@$data[$i]["es_arreglo"]){
-        $_REQUEST[decrypt_blowfish($data[$i]["name"], LLAVE_SAIA_CRYPTO)] = explode(",",decrypt_blowfish($data[$i]["value"], LLAVE_SAIA_CRYPTO));
-      }
-      else{
+    for($i = 0; $i < count($data); $i ++) {
         $_REQUEST[decrypt_blowfish($data[$i]["name"], LLAVE_SAIA_CRYPTO)] = decrypt_blowfish($data[$i]["value"], LLAVE_SAIA_CRYPTO);
-      }
-      if(@$data[$i]["es_arreglo"]){
-        $_POST[decrypt_blowfish($data[$i]["name"], LLAVE_SAIA_CRYPTO)] = explode(",",decrypt_blowfish($data[$i]["value"], LLAVE_SAIA_CRYPTO));
-      }
-      else{
         $_POST[decrypt_blowfish($data[$i]["name"], LLAVE_SAIA_CRYPTO)] = decrypt_blowfish($data[$i]["value"], LLAVE_SAIA_CRYPTO);
-      }
     }
 }
-unset($_REQUEST["token_csrf"]);
-unset($_SESSION["token_csrf"]);
-
 return;
 }
 function encriptar_sqli($nombre_form,$submit=false,$campo_info="form_info",$ruta_superior="",$retorno=false){
@@ -115,34 +78,34 @@ $texto.='
 		$("#'.$nombre_form.'").append('."'".'<input type="hidden" id="'.$campo_info.'" name="'.$campo_info.'">'."'".');
 	}
 	if(!$("#token_csrf").length){
-		$("#'.$nombre_form.'").append('."'".'<input type="hidden" id="token_csrf" name="token_csrf">'."'".');
-}';
+		$("#token_csrf").append('."'".'<input type="hidden" id="token_csrf" name="token_csrf">'."'".');
+	}';
 
 
 if ($submit) {
 	$texto.='$("#'.$nombre_form.'").submit(function(event){';
 }
 $_SESSION["token_csrf"]=cadena_aleatoria(50);
-	$texto.='salida_sqli = false;
+	$texto.='var salida = false;
       $.ajax({
         type:"POST",
         async: false,
         url: "'.$ruta_superior.'formatos/librerias/encript_data.php",
-        data: {datos:JSON.stringify($("#'.$nombre_form.'").serializeArray())},
+        data: {datos:JSON.stringify($("#'.$nombre_form.'").serializeArray(), null)},
         success: function(data) {
 					//$("#'.$nombre_form.'")[0].reset();
-					$("#'.$nombre_form.'").find("input:hidden,input:text, input:password, select, textarea").val("");
+					$("#'.$nombre_form.'").find("input:hidden,input:text, input:password, input:file, select, textarea").val("");
     			$("#'.$nombre_form.'").find("input:radio, input:checkbox").removeAttr("checked").removeAttr("selected");
 					//console.log(JSON.stringify($("#'.$nombre_form.'").serializeArray()));
           $("#'.$campo_info.'").val(data);
 					//console.log(JSON.stringify($("#'.$nombre_form.'").serializeArray()));
           //console.log($("#'.$campo_info.'").val());
-					$("#token_csrf").val("'.$_SESSION["token_csrf"].'");
-          salida_sqli = true;
+					$("#token_csrf").val('.$_SESSION["token_csrf"].');
+          salida = true;
         }
       });';
 if ($submit) {
-	$texto.='return salida_sqli;
+	$texto.='return salida;
 			event.preventDefault();
 	  });
 	</script>';

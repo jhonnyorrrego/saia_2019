@@ -68,6 +68,7 @@ if(isset($_REQUEST["consultar_contador"])) {
 // Get action
 $sAction = @$_POST["a_add"];
 if(($sAction == "") || ((is_null($sAction)))) {
+  $sKey=0;
 	$sKey = @$_GET["key"];
 	$sKey = (get_magic_quotes_gpc()) ? stripslashes($sKey) : $sKey;
 	if($sKey != "") {
