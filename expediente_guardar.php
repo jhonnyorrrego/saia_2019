@@ -5,11 +5,6 @@ include_once("pantallas/lib/librerias_cripto.php");
 $validar_enteros=array("iddoc","expediente_actual");
 desencriptar_sqli('form_info');
 
-if(@$_REQUEST['iddoc'] && @$_REQUEST['fecha_limite'] && @$_REQUEST['fecha_limite']!='0000-00-00' ){
-    $sql="UPDATE documento SET fecha_limite=".fecha_db_almacenar($_REQUEST['fecha_limite'], 'Y-m-d')." WHERE iddocumento=".$_REQUEST['iddoc'];
-    phpmkr_query($sql);
-}
-
 if($_REQUEST["iddoc"])  //si estoy llenando desde la pantalla del menu intermedio del documento
 {$expedientes=explode(",",$_REQUEST["expedientes"]);
  if(is_array($expedientes)&&$_REQUEST["iddoc"]&&@$_REQUEST["accion"]!=4)

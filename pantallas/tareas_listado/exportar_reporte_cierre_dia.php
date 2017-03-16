@@ -99,8 +99,8 @@ if(@$_REQUEST['exportar']){
 		$total_tiempo_estimado=$total_tiempo_estimado+$hora_en_segundos;	
 		$html.='
 		<tr>
-			<td  style="text-align:left; width:25%;">'.utf8_encode(html_entity_decode($datos_tarea[$i]['nombre_tarea'])).'</td>
-			<td  style="text-align:left; width:25%;">'.utf8_encode(html_entity_decode($datos_tarea[$i]['descripcion_tarea'])).'</td>
+			<td  style="text-align:left; width:25%;">'.codifica_encabezado(html_entity_decode($datos_tarea[$i]['nombre_tarea'])).'</td>
+			<td  style="text-align:left; width:25%;">'.codifica_encabezado(html_entity_decode($datos_tarea[$i]['descripcion_tarea'])).'</td>
 			<td  style="text-align:center; width:25%;">'.$tiempo_convertido.'</td>
 			<td  style="text-align:center; width:25%;">'.$hora_en_segundos.'</td>	
 		</tr>
@@ -121,7 +121,7 @@ if(@$_REQUEST['exportar']){
 		<td colspan="4" class="encabezado_list" style="color:white;text-align:center; font-weight:bold;width:100%;background-color:'.$color_celdas.';">OBSERVACIONES</td>
 	</tr>
 	<tr>
-		<td colspan="4" style="text-align:justify;width:100%;">'.utf8_encode(html_entity_decode(@$_REQUEST['observaciones'])).'</td>
+		<td colspan="4" style="text-align:justify;width:100%;">'.codifica_encabezado(html_entity_decode(@$_REQUEST['observaciones'])).'</td>
 	</tr>		
 </table>';
 

@@ -4,7 +4,7 @@ include_once("pantallas/lib/librerias_cripto.php");
 $salida=0;
 $bValidPwd = false;	
 $dias_sesion=busca_filtro_tabla("","configuracion","tipo='empresa' AND nombre='tiempo_cookie_login'","",$conn);
-$retorno["mensaje"]="El nombre de usuario o contrase&ntilde;a introducidos no son correctos! <br> intente de nuevo";
+$retorno["mensaje"]="<b>El nombre de usuario o contrase&ntilde;a introducidos no son correctos!</b> <br> intente de nuevo";
 $retorno["ingresar"]=0;
 if($dias_sesion["numcampos"]){
   $dias_sess=$dias_sesion[0]["valor"];
@@ -18,7 +18,13 @@ if (@$_REQUEST["userid"]<>"" && @$_REQUEST["passwd"]<>"") {
 	$sUserId = @$_REQUEST["userid"];
 	$sPassWd = @$_REQUEST["passwd"];  	
 	$configuracion=busca_filtro_tabla("A.valor","configuracion A","A.tipo='usuario' AND A.nombre='login_administrador'","",$conn);
-	$clave_admin=busca_filtro_tabla("A.valor","configuracion A","A.tipo='clave' AND A.nombre='clave_administrador'","",$conn); 
+	$clave_admin=busca_filtro_tabla("A.valor,A.encrypt","configuracion A","A.tipo='clave' AND A.nombre='clave_administrador'","",$conn); 
+	if($clave_admin['numcampos']){
+		if($clave_admin[0]["encrypt"]){
+			include_once('pantallas/lib/librerias_cripto.php');
+			$clave_admin[0]["valor"]=decrypt_blowfish($clave_admin[0]["valor"],LLAVE_SAIA_CRYPTO);	
+		}	
+	}
 	if($configuracion["numcampos"]&&$clave_admin["numcampos"] && $configuracion[0]["valor"]==$sUserId && $clave_admin[0]["valor"]==$sPassWd){
 	$estado_admin=busca_filtro_tabla("estado","funcionario","lower(login)='".strtolower($sUserId)."'","",$conn);
 	if($estado_admin[0]['estado']){
@@ -31,7 +37,7 @@ if (@$_REQUEST["userid"]<>"" && @$_REQUEST["passwd"]<>"") {
         die(stripslashes(json_encode($retorno)));  	    
 	}else{
 	     $retorno["ingresar"]=0;
-	      $retorno["mensaje"]="El funcionario esta inactivo o no pertenece al sistema! <br> por favor comuniquese con el administrador del sistema.";
+	      $retorno["mensaje"]="<span style='color:white;'><b>El funcionario esta inactivo o no pertenece al sistema!<b> <br> por favor comuniquese con el administrador del sistema.</span>";
 	      die(stripslashes(json_encode($retorno)));  	  
 	}
 	
@@ -56,17 +62,17 @@ if (@$_REQUEST["userid"]<>"" && @$_REQUEST["passwd"]<>"") {
               cerrar_sesiones_activas($row["login"]);
     				}
     				else{           
-              $retorno["mensaje"]="Error en la clave de acceso! <br> intente de nuevo";
+              $retorno["mensaje"]="<b>Error en la clave de acceso!</b> <br> intente de nuevo";
               $retorno["ingresar"]=0;
             }
     			}
   				else{
-            $retorno["mensaje"]="El Cargo al que pertenece se encuentra inactivo!<br> por favor comuniquese con el administrador del sistema.";
+            $retorno["mensaje"]="<b>El Cargo al que pertenece se encuentra inactivo!</b><br> por favor comuniquese con el administrador del sistema.";
             $retorno["ingresar"]=0;
           }
         }
   			else{
-          $retorno["mensaje"]="La dependencia a la que pertenece se encuentra inactiva!<br> por favor comuniquese con el administrador del sistema.";
+          $retorno["mensaje"]="<b>La dependencia a la que pertenece se encuentra inactiva!</b><br> por favor comuniquese con el administrador del sistema.";
           $retorno["ingresar"]=0;
         }
         if(@$retorno["ingresar"]==0){
@@ -76,7 +82,7 @@ if (@$_REQUEST["userid"]<>"" && @$_REQUEST["passwd"]<>"") {
         }
 			}
 			else{
-          $retorno["mensaje"]="El funcionario esta inactivo o no pertenece al sistema! <br> por favor comuniquese con el administrador del sistema.";
+          $retorno["mensaje"]="<b>El funcionario esta inactivo o no pertenece al sistema!<b> <br> por favor comuniquese con el administrador del sistema.";
 			   	/*@session_unset();
           @session_destroy();*/
           //almacenar_sesion(0,$sUserId);

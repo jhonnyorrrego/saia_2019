@@ -87,6 +87,50 @@ switch($_REQUEST["tipo_accion"]){
 			if($actividad["numcampos"]){
 				$retorno["exito"]=1;
 				$retorno["responsable"]=$actividad[0]["responsable"];
+				
+				if($actividad[0]["llave_entidad"]==-2){
+					$campo_formato=busca_filtro_tabla("a.nombre,a.etiqueta,b.nombre_tabla,a.banderas,b.etiqueta as etiqueta_formato","campos_formato a,formato b","a.formato_idformato=b.idformato AND a.idcampos_formato=".$actividad[0]["fk_campos_formato"],"",$conn);
+					$tomado_campo=busca_filtro_tabla($campo_formato[0]['nombre'],$campo_formato[0]['nombre_tabla'],"documento_iddocumento=".$actividad[0]["documento_iddocumento"],"",$conn);
+
+					$vector_banderas=explode(',',$campo_formato[0]['banderas']);
+					$vector_banderas_validar=array('ffc','fdc','fid','fc');//funcionario_codigo,iddependencia_cargo,idfuncionario,idcargo
+					$definicion_bandera=
+            		$bandera_validar='';
+            		for($i=0;$i<count($vector_banderas_validar);$i++){
+						if(in_array($vector_banderas_validar[$i],$vector_banderas)){
+                    		$bandera_validar=$vector_banderas_validar[$i];
+                    		$i=count($vector_banderas_validar); //corto el ciclo
+                		}
+            		}
+					$condicion_tomado_campo='';
+		            if($bandera_validar!=''){
+						switch($bandera_validar){
+		                                    case 'ffc': //funcionario_codigo
+		                                        $condicion_tomado_campo="funcionario_codigo='".$tomado_campo[0][$campo_formato[0]['nombre']]."'";
+		                                        break;
+		                                    case 'fdc': //iddependencia_cargo
+		                                        $condicion_tomado_campo="iddependencia_cargo='".$tomado_campo[0][$campo_formato[0]['nombre']]."'";
+		                                        break;
+		                                    case 'fid': //idfuncionario
+		                                        $condicion_tomado_campo="idfuncionario='".$tomado_campo[0][$campo_formato[0]['nombre']]."'";
+		                                        break;
+		                                    case 'cargo': //idcargo
+		                                        $condicion_tomado_campo="idcargo='".$tomado_campo[0][$campo_formato[0]['nombre']]."'";
+		                                        break;                                        
+		                }
+		                
+		                               
+		            }
+		            if($condicion_tomado_campo!=''){
+		            						$busca_tomado_fc=busca_filtro_tabla("funcionario_codigo","vfuncionario_dc",$condicion_tomado_campo,"",$conn);
+						if($busca_tomado_fc['numcampos']){
+							$actividad[0]["responsable"]=$busca_tomado_fc[0]['funcionario_codigo'];
+						}
+		            	//print_r($busca_tomado_fc);
+		            }										
+					
+				}
+				
 				$responsable=busca_filtro_tabla("","vfuncionario_dc","funcionario_codigo=".$actividad[0]["responsable"],"",$conn);
 				$retorno["dato_responsable"]=$responsable[0]["nombres"]." ".$responsable[0]["apellidos"];
 				$retorno["fecha"]=$actividad[0]["fecha"];
@@ -124,6 +168,14 @@ switch($_REQUEST["tipo_accion"]){
 				$retorno["html"]='<div class="'.$class_div.'" id="'.$actividad[0]["idactividad"].'">';
 				$retorno["html"].=$encabezado;
 				$retorno["html"].='<div class="pull-left"><b>'.$actividad[0]["descripcion"].'</b></div><div class="pull-right">'.$actividad[0]["fecha_asignacion"].'</div><br>';
+				if($retorno["dato_responsable"]!=''){
+					$retorno["html"].='<div ><b>Responsable:</b> '.$retorno["dato_responsable"].'</div>';
+					if($actividad[0]["llave_entidad"]==-2){
+						$retorno["html"].='<div ><b>Formato:</b> '.$campo_formato[0]["etiqueta_formato"].'</div>';
+						$retorno["html"].='<div ><b>Campo:</b> '.$campo_formato[0]["etiqueta"].'</div>';
+					}
+					
+				}
 				$retorno["html"].='<div class="pull-left"><b>Fecha L&iacute;mite:</b> '.$obj_fecha_limite->format("Y-m-d H:i:s").'</div>';
 				$retorno["html"].='<div class="pull-right">'.$vencimiento.'</div>';
 				$retorno["html"].='</div>';

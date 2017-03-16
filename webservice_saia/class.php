@@ -1863,11 +1863,11 @@ function ejecutoradd($sKey)
  
  $condicion=($x_identificacion != "") ?  "identificacion='".$x_identificacion."'"  :  'identificacion is NULL';
      
-  $campo = busca_filtro_tabla("iddatos_ejecutor,idejecutor","ejecutor,datos_ejecutor","ejecutor_idejecutor=idejecutor and iddatos_ejecutor='$sKey' and nombre ='".htmlentities(utf8_decode($x_nombre))."' and $condicion","iddatos_ejecutor desc",$conn);
+  $campo = busca_filtro_tabla("iddatos_ejecutor,idejecutor","ejecutor,datos_ejecutor","ejecutor_idejecutor=idejecutor and iddatos_ejecutor='$sKey' and nombre ='".(utf8_decode($x_nombre))."' and $condicion","iddatos_ejecutor desc",$conn);
 
   if($campo["numcampos"]>0)
   {
-  $repetido = busca_filtro_tabla("iddatos_ejecutor","ejecutor,datos_ejecutor","idejecutor=ejecutor_idejecutor and iddatos_ejecutor=".$campo[0]["iddatos_ejecutor"]." and direccion='".htmlentities(utf8_decode($x_direccion))."' and telefono='".htmlentities(utf8_decode($x_telefono))."' and pais_idpais='$x_nacionalidad'   and email='".htmlentities(utf8_decode($x_email))."' and celular='".htmlentities(utf8_decode($x_celular))."'","",$conn);
+  $repetido = busca_filtro_tabla("iddatos_ejecutor","ejecutor,datos_ejecutor","idejecutor=ejecutor_idejecutor and iddatos_ejecutor=".$campo[0]["iddatos_ejecutor"]." and direccion='".(utf8_decode($x_direccion))."' and telefono='".(utf8_decode($x_telefono))."' and pais_idpais='$x_nacionalidad'   and email='".(utf8_decode($x_email))."' and celular='".(utf8_decode($x_celular))."'","",$conn);
 
   if($repetido["numcampos"]>0)
      return ($sKey);
@@ -1876,11 +1876,11 @@ function ejecutoradd($sKey)
     $pais=busca_filtro_tabla("idpais","pais","idpais='".$x_nacionalidad."'","",$conn);
    
     if(!$pais["numcampos"])    
-      {phpmkr_query("insert into pais(nombre) values('".htmlentities(utf8_decode($x_nacionalidad))."')",$conn);
+      {phpmkr_query("insert into pais(nombre) values('".(utf8_decode($x_nacionalidad))."')",$conn);
        $x_nacionalidad=phpmkr_insert_id();
       }
     //--------------------------------------------
-    phpmkr_query("INSERT INTO datos_ejecutor(ejecutor_idejecutor,telefono,fecha,celular,direccion,titulo,email,pais_idpais) VALUES(".$campo[0]["idejecutor"].",'".htmlentities(utf8_decode($x_telefono))."',".fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s').",'".htmlentities(utf8_decode($x_celular))."','".htmlentities(utf8_decode($x_direccion))."','".htmlentities(utf8_decode($x_titulo))."','".htmlentities(utf8_decode($x_email))."','$x_nacionalidad')",$conn) or error("NO SE INSERTO REMITENTE");         
+    phpmkr_query("INSERT INTO datos_ejecutor(ejecutor_idejecutor,telefono,fecha,celular,direccion,titulo,email,pais_idpais) VALUES(".$campo[0]["idejecutor"].",'".(utf8_decode($x_telefono))."',".fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s').",'".(utf8_decode($x_celular))."','".(utf8_decode($x_direccion))."','".(utf8_decode($x_titulo))."','".(utf8_decode($x_email))."','$x_nacionalidad')",$conn) or error("NO SE INSERTO REMITENTE");         
    return(phpmkr_insert_id());
    }
   }
@@ -1888,16 +1888,16 @@ function ejecutoradd($sKey)
   {  //comprobar si existe la nacionalidad   -----
     $pais=busca_filtro_tabla("idpais","pais","idpais='".$x_nacionalidad."'","",$conn);
     if(!$pais["numcampos"])    
-      {phpmkr_query("insert into pais(nombre) values('".htmlentities(utf8_decode($x_nacionalidad))."')",$conn);
+      {phpmkr_query("insert into pais(nombre) values('".(utf8_decode($x_nacionalidad))."')",$conn);
        $x_nacionalidad=phpmkr_insert_id();
       }
     //-------------------------------------------- 
-    phpmkr_query("INSERT INTO ejecutor(nombre,identificacion,fecha_ingreso) VALUES('".htmlentities(utf8_decode($x_nombre))."','".$x_identificacion."',".fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s').")",$conn) or error("NO SE INSERTO REMITENTE");
+    phpmkr_query("INSERT INTO ejecutor(nombre,identificacion,fecha_ingreso) VALUES('".(utf8_decode($x_nombre))."','".$x_identificacion."',".fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s').")",$conn) or error("NO SE INSERTO REMITENTE");
     $idejecutor=phpmkr_insert_id();
 
     if($idejecutor) 
       {
-       phpmkr_query("INSERT INTO datos_ejecutor(ejecutor_idejecutor,telefono,fecha,celular,direccion,titulo,email,pais_idpais) VALUES(".$idejecutor.",'".htmlentities(utf8_decode($x_telefono))."',".fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s').",'".htmlentities(utf8_decode($x_celular))."','".htmlentities(utf8_decode($x_direccion))."','".htmlentities(utf8_decode($x_titulo))."','".htmlentities(utf8_decode($x_email))."','$x_nacionalidad')",$conn) or error("NO SE INSERTO REMITENTE"); 
+       phpmkr_query("INSERT INTO datos_ejecutor(ejecutor_idejecutor,telefono,fecha,celular,direccion,titulo,email,pais_idpais) VALUES(".$idejecutor.",'".(utf8_decode($x_telefono))."',".fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s').",'".(utf8_decode($x_celular))."','".(utf8_decode($x_direccion))."','".(utf8_decode($x_titulo))."','".(utf8_decode($x_email))."','$x_nacionalidad')",$conn) or error("NO SE INSERTO REMITENTE"); 
       return(phpmkr_insert_id());    
       }
      } 
@@ -2057,7 +2057,7 @@ function guardar_documento($iddoc,$tipo=0)
          if(is_array($_REQUEST[$lcampos[$j]["nombre"]]))
             array_push($valores,"'".implode(',',@$_REQUEST[$lcampos[$j]["nombre"]])."'");
          elseif(@$_REQUEST[$lcampos[$j]["nombre"]]<>'')
-            array_push($valores,"'".htmlentities(utf8_decode(@$_REQUEST[$lcampos[$j]["nombre"]]))."'");
+            array_push($valores,"'".(utf8_decode(@$_REQUEST[$lcampos[$j]["nombre"]]))."'");
          else 
           {  array_push($valores,"''");  
              
@@ -2802,7 +2802,7 @@ function arbol_serie()
 	<script type="text/javascript" src="js/dhtmlXCommon.js"></script>
 	<script type="text/javascript" src="js/dhtmlXTree.js"></script>
 	<input type="hidden" name="serie" id="serie" obligatorio="obligatorio"  value="" >
-    <br />  Buscar: <input type="text" id="stext_serie" width="200px" size="25"><a href="javascript:void(0)" onclick="tree2.findItem(htmlentities(document.getElementById(\'stext_serie\').value),1)"><img src="botones/general/anterior.png" alt="Buscar Anterior" border="0px"></a><a href="javascript:void(0)" onclick="tree2.findItem(htmlentities(document.getElementById(\'stext_serie\').value),0,1)"><img src="botones/general/buscar.png" alt="Buscar" border="0px"></a><a href="javascript:void(0)" onclick="tree2.findItem(htmlentities(document.getElementById(\'stext_serie\').value))"><img src="botones/general/siguiente.png" alt="Buscar Siguiente" border="0px"></a>
+    <br />  Buscar: <input type="text" id="stext_serie" width="200px" size="25"><a href="javascript:void(0)" onclick="tree2.findItem((document.getElementById(\'stext_serie\').value),1)"><img src="botones/general/anterior.png" alt="Buscar Anterior" border="0px"></a><a href="javascript:void(0)" onclick="tree2.findItem((document.getElementById(\'stext_serie\').value),0,1)"><img src="botones/general/buscar.png" alt="Buscar" border="0px"></a><a href="javascript:void(0)" onclick="tree2.findItem((document.getElementById(\'stext_serie\').value))"><img src="botones/general/siguiente.png" alt="Buscar Siguiente" border="0px"></a>
     <div id="esperando_serie"><img src="imagenes/cargando.gif"></div>
 				<div id="treeboxbox_tree2"></div>
 	<script type="text/javascript">

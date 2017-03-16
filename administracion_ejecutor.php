@@ -30,16 +30,16 @@
           
             // $conn->Ejecutar_Sql("UPDATE ejecutor set nombre='".$datos[1]."' WHERE idejecutor=".$existe[0]['idejecutor']);
             // $conn->Ejecutar_Sql("UPDATE datos_ejecutor set direccion='".$datos[2]."', telefono='".$datos[4]."', ciudad='".$datos[3]."' WHERE ejecutor_idejecutor=".$existe[0]['idejecutor']);
-            $conn->Ejecutar_Sql("UPDATE ejecutor set nombre='".htmlentities($datos[1])."' WHERE idejecutor=".$existe[0]['idejecutor']);
-            $conn->Ejecutar_Sql("UPDATE datos_ejecutor set direccion='".htmlentities($datos[2])."', telefono='".$datos[4]."', ciudad='".$datos[3]."' WHERE ejecutor_idejecutor=".$existe[0]['idejecutor']);
+            $conn->Ejecutar_Sql("UPDATE ejecutor set nombre='".($datos[1])."' WHERE idejecutor=".$existe[0]['idejecutor']);
+            $conn->Ejecutar_Sql("UPDATE datos_ejecutor set direccion='".($datos[2])."', telefono='".$datos[4]."', ciudad='".$datos[3]."' WHERE ejecutor_idejecutor=".$existe[0]['idejecutor']);
           }
           else
           {
-            $conn->Ejecutar_Sql("INSERT INTO ejecutor(identificacion,nombre,fecha_ingreso) values('".$datos[0]."','".htmlentities($datos[1])."','".$actual."')");
+            $conn->Ejecutar_Sql("INSERT INTO ejecutor(identificacion,nombre,fecha_ingreso) values('".$datos[0]."','".($datos[1])."','".$actual."')");
             
             $idejecutor = $conn->ultimo_insert();
             
-            $conn->Ejecutar_Sql("INSERT INTO datos_ejecutor(ejecutor_idejecutor,direccion,telefono,ciudad) values('".$idejecutor."','".htmlentities($datos[2])."','".$datos[4]."','".$datos[3]."')");
+            $conn->Ejecutar_Sql("INSERT INTO datos_ejecutor(ejecutor_idejecutor,direccion,telefono,ciudad) values('".$idejecutor."','".($datos[2])."','".$datos[4]."','".$datos[3]."')");
           } 
         }  
         fclose($archivo);

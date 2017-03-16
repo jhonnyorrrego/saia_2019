@@ -39,7 +39,7 @@ function valores_entidad(identidad)
      alert("Por favor seleccione una serie primero.");    
    else if(identidad!=""){
       $.ajax({url: "arbol_serie_entidad.php" ,
-             data:"entidad="+identidad+"&series="+$("#serie_idserie").val()+"<?php if(@$_REQUEST['tipo_entidad']) echo '&tipo_entidad='.$_REQUEST['tipo_entidad'] ; if(@$_REQUEST['llave_entidad']) echo '&llave_entidad='.$_REQUEST['llave_entidad']; ?>",
+             data:"entidad="+identidad+"&series="+$("#serie_idserie").val()+"<?php if(@$_REQUEST['tipo_entidad']) echo '&tipo_entidad='.$_REQUEST['tipo_entidad'] ; if(@$_REQUEST['llave_entidad']) echo '&llave_entidad='.$_REQUEST['llave_entidad']; ?><?php if(@$_REQUEST['tvd']){echo('&tvd=1');} ?>",
              type: "POST",
              success: function(msg){
              $("#sub_entidad").html(msg);
@@ -47,7 +47,7 @@ function valores_entidad(identidad)
      }       
   }
 $.ajax({url: "arbol_serie_entidad.php" ,
-       data:"entidad=serie<?php if(@$_REQUEST['filtrar_serie']){ echo '&filtrar_serie='.$_REQUEST['filtrar_serie']; } if(@$_REQUEST['filtrar_categoria']){ echo '&filtrar_categoria='.$_REQUEST['filtrar_categoria']; } if(@$_REQUEST['tipo_entidad']){ echo '&tipo_entidad='.$_REQUEST['tipo_entidad'] ; } if(@$_REQUEST['llave_entidad']){ echo '&llave_entidad='.$_REQUEST['llave_entidad']; } ?>&filtrar_categoria=2&solo_series=1",
+       data:"entidad=serie<?php if(@$_REQUEST['filtrar_serie']){ echo '&filtrar_serie='.$_REQUEST['filtrar_serie']; } if(@$_REQUEST['filtrar_categoria']){ echo '&filtrar_categoria='.$_REQUEST['filtrar_categoria']; } if(@$_REQUEST['tipo_entidad']){ echo '&tipo_entidad='.$_REQUEST['tipo_entidad'] ; } if(@$_REQUEST['llave_entidad']){ echo '&llave_entidad='.$_REQUEST['llave_entidad']; } ?>&filtrar_categoria=2&solo_series=1<?php if(@$_REQUEST['tvd']){echo('&tvd=1');} ?>",
        type: "POST",
        success: function(msg){
        $("#divserie").html(msg);
@@ -73,7 +73,11 @@ function ninguno_check(elemento,campo)
 <?php 
 	$parametros_dependencia='';
 	if(@$_REQUEST['from_dependencia']){
-		$parametros_dependencia='?from_dependencia='.$_REQUEST['from_dependencia'].'&dependencia_serie='.$_REQUEST['dependencia_serie'];
+		$tvd='';
+		if($_REQUEST['tvd']){
+			$tvd='&tvd=1';
+		}
+		$parametros_dependencia='?from_dependencia='.$_REQUEST['from_dependencia'].'&dependencia_serie='.$_REQUEST['dependencia_serie'].$tvd;
 	} 
 ?>
 <a href='serieadd.php<?php echo($parametros_dependencia); ?>' target='serielist'>Adicionar Nueva Serie</a>
@@ -100,7 +104,12 @@ if(@$_REQUEST["pantalla"])
 </td>
 </tr>
 <?php 
-	if(@$_REQUEST['from_dependencia']){ 
+	if(@$_REQUEST['from_dependencia']){
+		$tvd='';
+		if($_REQUEST['tvd']){
+			$tvd='<input type="hidden" name="tvd" id="tvd" value="1">';
+		}
+		echo($tvd);		 
 	 ?>
 	 <input type="hidden" name="from_dependencia" id="from_dependencia" value="1">
 	  <input type="hidden" name="dependencia_serie" id="dependencia_serie" value="<?php echo(@$_REQUEST['dependencia_serie']); ?>">

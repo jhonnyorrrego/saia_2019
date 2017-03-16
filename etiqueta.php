@@ -172,6 +172,9 @@ elseif($_REQUEST["accion"]=="seleccionar_etiqueta")
 		 <li ><a href='etiqueta.php?accion=adicionar' onclick='return hs.htmlExpand(this, { objectType: "iframe",width: 400, height:200,preserveContent:false } )'>Adicionar Etiqueta</a ></li>
 		</ul>
  <br />
+ <?php 
+ if($etiquetas['numcampos']){
+ ?>
  <table border="0" cellspacing="1" cellpadding="4" bgcolor="#CCCCCC"  width="100%"><tr><td  class="encabezado">Etiquetas: 
  </td><td bgcolor="#F5F5F5">
 
@@ -213,8 +216,18 @@ elseif($_REQUEST["accion"]=="seleccionar_etiqueta")
  <input type='hidden' name='key' value='<?php echo $_REQUEST["key"]; ?>'>
  <input type='hidden' name='accion' value='etiquetar_documento'>
  </table>
+ <?php 
+  }
+ ?>
+ 
      <input type="button" class="btn btn-mini btn-danger" value="Cancelar" onclick="window.history.back(-1);">
+ <?php 
+ if($etiquetas['numcampos']){
+ ?>     
     <input type="submit"  class="btn btn-mini btn-primary"value="Guardar">
+  <?php 
+  }
+ ?>   
  </form>
  <script>
  $(document).ready(function() {

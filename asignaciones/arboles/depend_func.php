@@ -158,7 +158,7 @@ function llena_dependencia($codigo, $ruta,$dom=NULL)
 	  if($prof["numcampos"]){	  	
 	  	$dependencia = $tree->appendChild($dom->createElement('item'));
 	  	$dependencia->setAttribute("style", "font-family:verdana; font-size:7pt;");
-	    $dependencia->setAttribute("text",  ucwords(htmlentities($prof[0]["nombre"])) );
+	    $dependencia->setAttribute("text",  ucwords(($prof[0]["nombre"])) );
 	    $dependencia->setAttribute("id",  $prof[0]["iddependencia"]."#" );
 	    $dependencia->setAttribute("child",  "1" );
 	  }
@@ -178,7 +178,7 @@ function llena_dependencia($codigo, $ruta,$dom=NULL)
 	        {
 	        	$dependencia = $tree->appendChild($dom->createElement('item'));
 			  	$dependencia->setAttribute("style", "font-family:verdana; font-size:7pt;");
-			    $dependencia->setAttribute("text",  htmlentities(formato_cargo($hijos[$i]["nombre"])) );
+			    $dependencia->setAttribute("text",  (formato_cargo($hijos[$i]["nombre"])) );
 			    $dependencia->setAttribute("id",  $hijos[$i]["iddependencia"]."#" );
 			    $dependencia->setAttribute("child",  "1" );	
 	        } 
@@ -207,16 +207,16 @@ function llena_funcionarios($codigo,$ruta,&$dom)
 	   
 	   if($usuarios[$j]["nombres_ord"])
 	   	{
-	     $func->setAttribute("text",ucwords($usuarios[$j]["nombres_ord"]." ".$usuarios[$j]["apellidos"])." (".($usuarios[$j]["login"])."-".htmlentities(formato_cargo($usuarios[$j]["cargo"])).")"); 
+	     $func->setAttribute("text",ucwords($usuarios[$j]["nombres_ord"]." ".$usuarios[$j]["apellidos"])." (".($usuarios[$j]["login"])."-".(formato_cargo($usuarios[$j]["cargo"])).")"); 
 	     $func->setAttribute("id",  $usuarios[$j]["funcionario_codigo"].$ruta);
 	     $func->setAttribute("ruta",$ruta);
 	     $func->setAttribute("child", "0");
 	     
-		//  echo("text=\"".ucwords(($usuarios[$j]["nombres_ord"]." ".$usuarios[$j]["apellidos"]))." (".($usuarios[$j]["login"])."-".htmlentities(formato_cargo($usuarios[$j]["cargo"])).")\" id=\"".$usuarios[$j]["funcionario_codigo"]."$ruta\" ruta=\"$ruta\" child=\"0\">");
+		//  echo("text=\"".ucwords(($usuarios[$j]["nombres_ord"]." ".$usuarios[$j]["apellidos"]))." (".($usuarios[$j]["login"])."-".(formato_cargo($usuarios[$j]["cargo"])).")\" id=\"".$usuarios[$j]["funcionario_codigo"]."$ruta\" ruta=\"$ruta\" child=\"0\">");
 	   	}
 	   else  
 	    {
-	   	  $func->setAttribute("text",ucwords($usuarios[$j]["nombres_ord"]." ".$usuarios[$j]["apellidos"])." (".($usuarios[$j]["login"])."-".htmlentities(formato_cargo($usuarios[$j]["cargo"])).")"); 
+	   	  $func->setAttribute("text",ucwords($usuarios[$j]["nombres_ord"]." ".$usuarios[$j]["apellidos"])." (".($usuarios[$j]["login"])."-".(formato_cargo($usuarios[$j]["cargo"])).")"); 
 	      $func->setAttribute("id",  $usuarios[$j]["funcionario_codigo"].$ruta);
 	      $func->setAttribute("ruta",$ruta);
 	      $func->setAttribute("child", "0");

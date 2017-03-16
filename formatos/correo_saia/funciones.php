@@ -71,7 +71,7 @@ function recibir_datos($idformato, $iddoc){
 <?php
 }
 function guardar_anexos($idformato, $iddoc){
-	  global $conn,$ruta_db_superior;
+	  global $conn,$ruta_db_superior;	  
 	  require_once($ruta_db_superior."anexosdigitales/funciones_archivo.php");    
     //require_once($ruta_db_superior."pantallas/lib/librerias_adicionales.php");
     //require_once($ruta_db_superior."pantallas/ocr/librerias.php");
@@ -157,7 +157,7 @@ function despachar_documento($iddoc){
   $destinos=explode(",",$_REQUEST["lista_despachos"]);
   $empresa=@$_REQUEST["x_empresa0"];
   $guia=@$_REQUEST["guia"];
-  $responsable=htmlentities(htmlspecialchars_decode(html_entity_decode(utf8_decode(trim($_REQUEST["x_responsable0"])))));
+  $responsable=(htmlspecialchars_decode(html_entity_decode((trim($_REQUEST["x_responsable0"])))));
   $lresponsable=busca_filtro_tabla("A.*","ejecutor A","A.nombre LIKE '".$responsable."'","",$conn); 
   if($lresponsable["numcampos"] ){
     $idresponsable=$lresponsable[0]["idejecutor"];

@@ -112,7 +112,7 @@ function mostrar_datos_dependencias_ruta($idformato,$iddoc){
 				$tabla.='	
 					</tbody>
 					</table><br>
-					<input style="float:right;" type="submit" value="Guardar"/>
+					<input class="btn btn-mini btn-primary" style="float:right;" type="submit" value="Guardar Cambios"/>
 					</form>
 				';	
 				

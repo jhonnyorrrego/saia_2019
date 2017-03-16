@@ -88,7 +88,7 @@ for($i=0;$i<$documentos["numcampos"];$i++)
  $dependencia=busca_filtro_tabla("lower(dependencia.nombre) as nombre","dependencia_cargo,dependencia","dependencia_iddependencia=iddependencia and dependencia_cargo.estado=1 and dependencia.estado=1 and funcionario_idfuncionario=".$entregado[0]["idfuncionario"],"iddependencia_cargo desc",$conn);
  if($entregado["numcampos"])
    {echo '<tr>
-    <td >'.htmlentities($documentos[$i]["fecha"]).'</td>
+    <td >'.($documentos[$i]["fecha"]).'</td>
     <td >'.strip_tags($documentos[$i]["numero"]." - ".$documentos[$i]["descripcion"]).'</td>
     <td valign="top">'.$documentos[$i]["descripcion_anexo"].'<br/><br/></td> 
     <td >'.ucwords($documentos[$i]["nombre"]).'</td>

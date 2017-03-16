@@ -45,7 +45,7 @@ global $conn,$iddoc,$sql;
           $fdestino=busca_filtro_tabla("nombres,apellidos","funcionario A","A.funcionario_codigo=".$papas[$i]["origen"],"",$conn);
         }
         echo("<item style=\"font-family:verdana; font-size:7pt;\" ");
-        echo("text=\"".htmlentities(ucwords($forigen[0]["nombres"]." ".$forigen[0]["apellidos"])." PARA ".ucwords($fdestino[0]["nombres"]." ".$fdestino[0]["apellidos"]))." (".$papas[$i]["nombre"]."-".$papas[$i]["fecha"].") \" id=\"".$papas[$i]["idtransferencia"]);
+        echo("text=\"".(ucwords($forigen[0]["nombres"]." ".$forigen[0]["apellidos"])." PARA ".ucwords($fdestino[0]["nombres"]." ".$fdestino[0]["apellidos"]))." (".$papas[$i]["nombre"]."-".$papas[$i]["fecha"].") \" id=\"".$papas[$i]["idtransferencia"]);
         if($papas[$i]["origen"]<>$papas[$i]["destino"])
           {$tiene_hijos=busca_filtro_tabla("count(idtransferencia) as cuantos","buzon_entrada","archivo_idarchivo=$iddoc and destino=".$papas[$i]["origen"],"",$conn);
           if(isset($tiene_hijos[0]["cuantos"]) && $tiene_hijos[0]["cuantos"])
@@ -75,7 +75,7 @@ global $conn,$iddoc,$sql;
             $fdestino=busca_filtro_tabla("nombres,apellidos","funcionario A","A.funcionario_codigo=".$papas[$i]["origen"],"",$conn);
           }
           echo("<item style=\"font-family:verdana; font-size:7pt;\" ");
-          echo("text=\"".htmlentities(ucwords($forigen[0]["nombres"]." ".$forigen[0]["apellidos"])." PARA ".ucwords($fdestino[0]["nombres"]." ".$fdestino[0]["apellidos"]))."(".$papas[$i]["nombre"]."-".$papas[$i]["fecha2"].") \" id=\"".$papas[$i]["idtransferencia"]);
+          echo("text=\"".(ucwords($forigen[0]["nombres"]." ".$forigen[0]["apellidos"])." PARA ".ucwords($fdestino[0]["nombres"]." ".$fdestino[0]["apellidos"]))."(".$papas[$i]["nombre"]."-".$papas[$i]["fecha2"].") \" id=\"".$papas[$i]["idtransferencia"]);
           if($papas[$i]["origen"]<>$papas[$i]["destino"])
             {$tiene_hijos=$papas=busca_filtro_tabla("count(A.idtransferencia) as cuantos","buzon_entrada A","archivo_idarchivo=".$iddoc." AND A.destino='".$papas[$i]["origen"]."' and A.fecha>=TO_DATE('".$papas[$i]['fecha']."','yyyy-mm-dd HH24:MI:SS')","A.idtransferencia ASC",$conn);
              if(isset($tiene_hijos[0]["cuantos"]) && $tiene_hijos[0]["cuantos"]>0)

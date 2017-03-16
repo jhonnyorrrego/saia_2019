@@ -10,23 +10,18 @@ $ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
 $ruta.="../";
 $max_salida--;
 }
-
-
 include_once("../db.php");
-
 include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
 $validar_enteros=array("idformato");
 include_once($ruta_db_superior."librerias_saia.php");
 $validar_enteros=array("idformato");
 desencriptar_sqli('form_info');
 echo(librerias_jquery());
-
 include_once("../header.php");
 include_once("librerias/header_formato.php");
 include_once("librerias/funciones_acciones.php");
 include_once("librerias/funciones.php"); 
 ?>
-<script type="text/javascript" src="../js/jquery.js"></script>
 <script type="text/javascript" src="../js/jquery.validate.js"></script>
 <script type="text/javascript" src="../anexosdigitales/highslide-4.0.10/highslide/highslide-with-html.js"></script>
 <link rel="stylesheet" type="text/css" href="../anexosdigitales/highslide-4.0.10/highslide/highslide.css" />
@@ -37,12 +32,11 @@ include_once("librerias/funciones.php");
 <script type='text/javascript'>
   $().ready(function() {
 	$("#asignar_funcion_formato").validate({
-  		submitHandler: function(form) {
-				<?php encriptar_sqli("asignar_funcion_formato",0,"form_info",$ruta_db_superior);?>
-			    form.submit();
+		submitHandler: function(form) {
+			<?php encriptar_sqli("asignar_funcion_formato",0,"form_info",$ruta_db_superior);?>
+			form.submit();
 			    
-			 },
-  
+		},		
   rules: {
     entidad1: {
       required: "#tipo1:checked"
@@ -196,11 +190,11 @@ if(@$_REQUEST["idformato"]){
 	<script type="text/javascript" src="../js/dhtmlXCommon.js"></script>
 	<script type="text/javascript" src="../js/dhtmlXTree.js"></script>';
   $texto.=$nombres_seleccionados.'Buscar:<br><input type="text" id="stext_3" width="200px" size="20" >      
-      <a href="javascript:void(0)" onclick="tree3.findItem(htmlentities(document.getElementById(\'stext_3\').value),1)">
+      <a href="javascript:void(0)" onclick="tree3.findItem((document.getElementById(\'stext_3\').value),1)">
       <img src="../botones/general/anterior.png" border="0px" alt="Anterior"></a>
-      <a href="javascript:void(0)" onclick="tree3.findItem(htmlentities(document.getElementById(\'stext_3\').value),0,1)">
+      <a href="javascript:void(0)" onclick="tree3.findItem((document.getElementById(\'stext_3\').value),0,1)">
       <img src="../botones/general/buscar.png" border="0px" alt="Buscar"></a>
-      <a href="javascript:void(0)" onclick="tree3.findItem(htmlentities(document.getElementById(\'stext_3\').value))">
+      <a href="javascript:void(0)" onclick="tree3.findItem((document.getElementById(\'stext_3\').value))">
       <img src="../botones/general/siguiente.png" border="0px" alt="Siguiente"></a>  
     <br /><div id="esperando_serie">
     <img src="../imagenes/cargando.gif"></div>

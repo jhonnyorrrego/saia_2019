@@ -236,7 +236,7 @@ function DeleteData($llave,$conn)
   global $conn;
   global $x_descripcion;  
   global $x_detalle;
-  terminar(utf8_encode($x_detalle),$x_descripcion,$llave);  
+  terminar(codifica_encabezado($x_detalle),$x_descripcion,$llave);  
   return $llave;
 }
 ?>

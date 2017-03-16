@@ -107,11 +107,8 @@ if(isset($_REQUEST["pantalla"])&&$_REQUEST["pantalla"]=="tiny")
 document.getElementById("header").style.display="none";
 </script>';
 }
- 
  ?>
 <script type="text/javascript" src="<?php echo($ruta_db_superior);?>ew.js"></script>
-<script type="text/javascript" src="<?php echo($ruta_db_superior);?>js/jquery.js"></script>
-<script type="text/javascript" src="<?php echo($ruta_db_superior);?>js/jquery.validate.js"></script>
 <script type="text/javascript">
 <!--
 EW_dateSep = "/"; // set date separator	
@@ -223,7 +220,7 @@ EW_dateSep = "/"; // set date separator
 				<?php encriptar_sqli("campos_formatoedit",0,"form_info",$ruta_db_superior);?>
 			    form.submit();
 			    
-			  }
+		}
 	});
 	});
 <!--
@@ -317,7 +314,7 @@ echo $x_formato_idformatoList;
 	<tr>
 		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">Etiqueta</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
-<input type="text" name="x_etiqueta" id="x_etiqueta" value="<?php echo htmlentities(utf8_decode(@$x_etiqueta)); ?>">
+<input type="text" name="x_etiqueta" id="x_etiqueta" value="<?php echo ((@$x_etiqueta)); ?>">
 </span></td>
 	</tr>
 	<tr>

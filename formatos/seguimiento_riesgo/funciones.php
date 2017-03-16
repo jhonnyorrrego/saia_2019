@@ -182,7 +182,7 @@ function accion_funcion($idformato,$iddoc){
 	for($i=0;$i<$valoracion["numcampos"];$i++){
 		$selected='';
 		if($accion[0]["accion_vinculacion"]==$valoracion[$i]["idft_acciones_riesgo"])$selected='selected';
-		$select.='<option value="'.$valoracion[$i]["idft_acciones_riesgo"].'" '.$selected.'>'.ucfirst(strip_tags(utf8_decode(html_entity_decode($valoracion[$i]["acciones_accion"])))).'</option>';
+		$select.='<option value="'.$valoracion[$i]["idft_acciones_riesgo"].'" '.$selected.'>'.ucfirst(strip_tags((html_entity_decode($valoracion[$i]["acciones_accion"])))).'</option>';
 	}
 	$select.='</select>';
 	echo "<td>".$select."</td>";
@@ -191,7 +191,7 @@ function traer_nombre_accion($idformato,$iddoc){
 	global $conn;
 	$valor=busca_filtro_tabla("accion_vinculacion","ft_seguimiento_riesgo a","documento_iddocumento=".$iddoc,"",$conn);
 	$descripcion=busca_filtro_tabla("acciones_accion","ft_acciones_riesgo a","a.idft_acciones_riesgo=".$valor[0]["accion_vinculacion"],"",$conn);
-	echo ucfirst(strip_tags(utf8_decode(html_entity_decode($descripcion[0]["acciones_accion"]))));
+	echo ucfirst(strip_tags((html_entity_decode($descripcion[0]["acciones_accion"]))));
 }
 
 function listar_acciones_riesgo($idformato, $iddoc){

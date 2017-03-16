@@ -172,6 +172,16 @@ if( !isset($_REQUEST["tipo"]) || $_REQUEST["tipo"]==1){
 		}
 	});
 </script>');
+  }else{
+	echo('
+<style type="text/css">
+.page_border { border: 1px solid #CACACA; margin-bottom: 8px; box-shadow: 0 0 4px rgba(0, 0, 0, 0.1); -moz-box-shadow: 0 0 4px rgba(0, 0, 0, 0.1); -webkit-box-shadow: 0 0 4px rgba(0, 0, 0, 0.1); }
+.paginador_docs { width: '.$ancho_paginador.'px;  margin: auto; padding-left: 0px; margin-bottom:10px; background-color:#FFF; overflow:hidden; box-shadow: 5px 5px 5px #888888;}
+.page_content {   overflow:hidden; font-family:Verdana, Geneva, sans-serif; font-size:12px; margin-right: '.$tam_pagina["margen_derecha"].'px; margin-left: '.$tam_pagina["margen_izquierda"].'px; }
+.page_margin_top {  overflow: hidden; }
+.page_margin_bottom {  padding-top:30px; page-break-after:always; }
+</style>	
+	');  	
   }
 echo ('
 <body bgcolor="#f5f5f5">  

@@ -10,10 +10,12 @@ while ($max_salida > 0) {
 }
 include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."pantallas/expediente/librerias.php");
-include_once("pantallas/lib/librerias_cripto.php");
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
 $validar_enteros=array("x_idserie");
 desencriptar_sqli('form_info');
-
+include_once($ruta_db_superior."librerias_saia.php");
+echo(librerias_jquery()); 
+echo(librerias_notificaciones());
 
 // Initialize common variables
 $x_idserie = Null;
@@ -32,13 +34,11 @@ $x_copia = Null;
 $x_estado = Null;
 $x_categoria = Null;
 $x_tipo = Null;
+$x_tipo_expediente = Null;
 //$x_formato =  Null;
 ?>
 
-<?php include ("phpmkrfn.php");
-include ("librerias_saia.php");
-echo(librerias_jquery()); 
-echo(librerias_notificaciones());
+<?php include_once ("phpmkrfn.php");
 ?>
 <?php
 $sKey = @$_GET["key"];
@@ -68,6 +68,7 @@ if (($sAction == "") || ((is_null($sAction)))) {
 	$x_estado = @$_POST["x_estado"]; 
   $x_categoria = @$_POST["x_categoria"];
 	$x_tipo = @$_POST["x_tipo"];
+	$x_tipo_expediente =@$_POST["x_tipo_expediente"];
   //$x_formato= @$_POST["x_formato"];
  
 }
@@ -89,13 +90,17 @@ switch ($sAction)
 	case "U": // Update
 		if (EditData($sKey, $conn)) { // Update Record based on key
         		abrir_url("arbolserie.php","arbol");
-            abrir_url("serieview.php?key=".$sKey,"_self");
+        			$parametro_dependencia_serie='';
+        			if(@$_REQUEST['dependencia_serie']){
+        				$parametro_dependencia_serie="&dependencia_serie=".$_REQUEST['dependencia_serie'];
+        			}			
+            abrir_url("serieview.php?key=".$sKey.$parametro_dependencia_serie,"_self");
 						exit();
         }
         break;
 }
 ?>
-<?php include ("header.php") ?>
+<?php include_once ("header.php") ?>
 <script type="text/javascript" src="ew.js"></script>
 <script type="text/javascript">
 <!--
@@ -270,6 +275,12 @@ return true;
 			<input type="radio" name="x_tipo"<?php if(@$x_tipo=="3")echo " checked"; ?> value="3">Tipo documental<br>
 		</td>
 	</tr>
+	<tr class="ocultar">
+		<td class="encabezado" title="C&oacute;odigo de la serie"><span class="phpmaker" style="color: #FFFFFF;">CODIGO</span></td>
+		<td bgcolor="#F5F5F5"><span class="phpmaker">
+<input type="text" name="x_codigo" id="x_codigo" size="30" maxlength="20" value="<?php echo htmlspecialchars(@$x_codigo) ?>">
+</span></td>
+	</tr>	
 	<tr>
 		<td class="encabezado" title="Nombre de la serie"><span class="phpmaker" style="color: #FFFFFF;">NOMBRE</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
@@ -288,8 +299,8 @@ return true;
 	<link rel="STYLESHEET" type="text/css" href="css/dhtmlXTree.css">
 
 			
-		<br />  <!--Buscar: <input type="text" id="stext_serie_idserie" width="200px" size="25"><a href="javascript:void(0)" onclick="tree2.findItem(htmlentities(document.getElementById('stext_serie_idserie').value),1)"> <img src="botones/general/anterior.png" alt="Buscar Anterior" border="0px"></a><a href="javascript:void(0)" onclick="buscar_nodo();"> <img src="botones/general/buscar.png" alt="Buscar" border="0px"></a>
-                          <a href="javascript:void(0)" onclick="tree2.findItem(htmlentities(document.getElementById('stext_serie_idserie').value))" id="siguiente_nodo"><img src="botones/general/siguiente.png" alt="Buscar Siguiente" border="0px"></a>
+		<br />  <!--Buscar: <input type="text" id="stext_serie_idserie" width="200px" size="25"><a href="javascript:void(0)" onclick="tree2.findItem((document.getElementById('stext_serie_idserie').value),1)"> <img src="botones/general/anterior.png" alt="Buscar Anterior" border="0px"></a><a href="javascript:void(0)" onclick="buscar_nodo();"> <img src="botones/general/buscar.png" alt="Buscar" border="0px"></a>
+                          <a href="javascript:void(0)" onclick="tree2.findItem((document.getElementById('stext_serie_idserie').value))" id="siguiente_nodo"><img src="botones/general/siguiente.png" alt="Buscar Siguiente" border="0px"></a>
                           </span-->
 			  <div id="esperando_serie"><img src="imagenes/cargando.gif"></div>
 				<div id="treeboxbox_tree2" width="100px" height="100px"></div>
@@ -387,7 +398,7 @@ return true;
        			});
 			}
 		});
-		tree2.findItem(htmlentities(document.getElementById('stext_serie_idserie').value));
+		tree2.findItem((document.getElementById('stext_serie_idserie').value));
        }
 --> 		
 	</script>
@@ -405,12 +416,6 @@ return true;
 		<td class="encabezado" title="Cantidad de d&iacute;as para dar tr&aacute;mite y respuesta al documento"><span class="phpmaker" style="color: #FFFFFF;">TIEMPO DE RESPUESTA (D&Iacute;AS)</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
 <input type="text" name="x_dias_entrega" id="x_dias_entrega" size="30" value="<?php echo htmlspecialchars(@$x_dias_entrega) ?>">
-</span></td>
-	</tr>
-	<tr class="ocultar">
-		<td class="encabezado" title="C&oacute;odigo de la serie"><span class="phpmaker" style="color: #FFFFFF;">CODIGO</span></td>
-		<td bgcolor="#F5F5F5"><span class="phpmaker">
-<input type="text" name="x_codigo" id="x_codigo" size="30" maxlength="20" value="<?php echo htmlspecialchars(@$x_codigo) ?>">
 </span></td>
 	</tr>
 	<tr class="ocultar">
@@ -481,6 +486,23 @@ return true;
 <?php echo EditOptionSeparator(1); ?>
 </span></td>
 	</tr>	
+
+	<!-- tr class="ocultar">
+		<td class="encabezado"  title="Permite decidir si se crea un expediente o un agrupador seg&uacute;n se requiera"><span class="phpmaker" style="color: #FFFFFF;">CREACI&Oacute;N DE EXPEDIENTE &Oacute; AGRUPADOR</span></td>
+		<td bgcolor="#F5F5F5"><span class="phpmaker">
+    <input type="radio" id="tipo_expediente1" name="x_tipo_expediente" value="<?php echo htmlspecialchars("1"); ?>" <?php if (@$x_tipo_expediente == "1") { ?> checked<?php } ?> >
+<?php echo "Expediente"; ?>
+<?php echo EditOptionSeparator(0); ?>
+<input type="radio" id="tipo_expediente2" name="x_tipo_expediente"  value="<?php echo htmlspecialchars("2"); ?>" <?php if (@$x_tipo_expediente == "2") { ?> checked<?php } ?>>
+<?php echo "Agrupador"; ?>
+<?php echo EditOptionSeparator(1); ?>
+<input type="radio" id="tipo_expediente0" name="x_tipo_expediente"  value="<?php echo htmlspecialchars("0"); ?>" <?php if (@$x_tipo_expediente == "0") { ?> checked<?php } ?>>
+<?php echo "Ninguno"; ?>
+<?php echo EditOptionSeparator(2); ?>
+
+</span></td>
+	</tr -->	
+	
 	  <tr>
 		<td class="encabezado"  title="Inactivar o activar una serie documental"><span class="phpmaker" style="color: #FFFFFF;">ESTADO</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
@@ -495,8 +517,9 @@ return true;
 </table>
 <p>
 <input type="submit" name="Action" value="EDITAR">
+<input type="hidden" id="tipo_expediente0" name="x_tipo_expediente"  value="0">
 </form>
-<?php include ("footer.php") ?>
+<?php include_once ("footer.php") ?>
 <?php
 
 //-------------------------------------------------------------------------------
@@ -544,6 +567,7 @@ function LoadData($sKey,$conn)
 		$GLOBALS["x_estado"] = $row["estado"]; 
     $GLOBALS["x_categoria"] = $row["categoria"];
 		$GLOBALS["x_tipo"] = $row["tipo"];
+		$GLOBALS["x_tipo_expediente"] = $row["tipo_expediente"];
     //$GLOBALS["x_formato"] = $row["formato"];
 	}
 	phpmkr_free_result($rs);
@@ -618,6 +642,9 @@ function EditData($sKey,$conn)
 		//die("categoria ".$fieldList["categoria"]);
 		// update
 		$fieldList["tipo"]="'".$GLOBALS["x_tipo"]."'";
+		$fieldList["tipo_expediente"]="'".$GLOBALS["x_tipo_expediente"]."'";
+		$tipo_expediente=$GLOBALS["x_tipo_expediente"];
+		
 		$sSql = "UPDATE serie SET ";
 		foreach ($fieldList as $key=>$temp) {
 			$sSql .= "$key = $temp, ";
@@ -626,6 +653,7 @@ function EditData($sKey,$conn)
 			$sSql = substr($sSql, 0, strlen($sSql)-2);
 		}
 		$sSql .= " WHERE idserie =". $sKeyWrk;
+		/*
 		$insertar_serie=busca_filtro_tabla("","serie","idserie =". $sKeyWrk,"",$conn);
 	        if($insertar_serie[0]['tipo']==1){
 				$actualizar_orden="UPDATE serie SET orden=".($insertar_serie[0]['idserie']*100000)." WHERE idserie=".$insertar_serie[0]['idserie'];
@@ -640,9 +668,15 @@ function EditData($sKey,$conn)
 				$actualizar_orden="UPDATE serie SET orden=".($padre[0]['orden']+($insertar_serie[0]['idserie']*100))." WHERE idserie=".$insertar_serie[0]['idserie'];
 			}
 	phpmkr_query($actualizar_orden);
+		 */
     //die($sSql);		
 		phpmkr_query($sSql,$conn) or error("Failed to execute query" . phpmkr_error() . ' SQL:' . $sSql);
-		insertar_expediente_automatico($sKeyWrk);
+		
+		
+		if(intval($tipo_expediente)!=0){
+			insertar_expediente_automatico($sKeyWrk);
+		}
+		
 		if(!$fieldList["estado"])
 		  phpmkr_query("update serie set estado=0 where cod_padre=".$sKeyWrk);
 		$EditData = true; // Update Successful

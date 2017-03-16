@@ -129,21 +129,30 @@ if(@$_REQUEST['filtrar_arbol']){
             break;
     }
 }
+$tvd='';
+if($tabla=='serie'){
+	$tvd=" AND tvd=0";
+	if(@$_REQUEST['tvd']){
+		$tvd=" AND tvd=1";	
+	}	
+}
+
+
 
 if(isset($_REQUEST["orden"]))
   $orden=$_REQUEST["orden"];
 else
   $orden="nombre";
 if($serie=="NULL")
-  $papas=busca_filtro_tabla("*",$tabla,"(cod_padre IS NULL OR cod_padre=0) $activo $condicion $excluidos","$orden ASC",$conn);
+  $papas=busca_filtro_tabla("*",$tabla,"(cod_padre IS NULL OR cod_padre=0) $activo $condicion $excluidos".$tvd,"$orden ASC",$conn);
 else
-  $papas=busca_filtro_tabla("*",$tabla,"cod_padre=".$serie.$activo.$condicion.$excluidos.$tipo_subserie,"$orden ASC",$conn); 
+  $papas=busca_filtro_tabla("*",$tabla,"cod_padre=".$serie.$activo.$condicion.$excluidos.$tipo_subserie.$tvd,"$orden ASC",$conn); 
    
 if($papas["numcampos"])
 { 
   for($i=0; $i<$papas["numcampos"]; $i++)
   {
-    $hijos = busca_filtro_tabla("count(*) AS cant",$tabla,"cod_padre=".$papas[$i]["id$tabla"].$activo.$condicion.$tipo_subserie,"",$conn);
+    $hijos = busca_filtro_tabla("count(*) AS cant",$tabla,"cod_padre=".$papas[$i]["id$tabla"].$activo.$condicion.$tipo_subserie.$tvd,"",$conn);
     echo("<item style=\"font-family:verdana; font-size:7pt;\" ");
     $cadena_codigo='';
     if(@$papas[$i]["codigo"]){

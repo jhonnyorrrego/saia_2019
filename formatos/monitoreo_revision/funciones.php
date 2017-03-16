@@ -88,7 +88,7 @@ function obtener_controles_existentes_riesgo($idformato, $iddoc){
 	for ($i=0; $i < $control_riesgos["numcampos"]; $i++) { 
 		$div .="
 					<tr id='".$control_riesgos[$i]["idft_control_riesgos"]."'>
-						<td>".strip_tags(utf8_encode(html_entity_decode($control_riesgos[$i]["descripcion_control"])))."</td>
+						<td>".strip_tags(codifica_encabezado(html_entity_decode($control_riesgos[$i]["descripcion_control"])))."</td>
 						<td>			   
 							&nbsp;&nbsp;Si <input type='radio' id='".$control_riesgos[$i]["idft_control_riesgos"]."' name='".$control_riesgos[$i]["idft_control_riesgos"]."' value='1'>
 							No <input type='radio' id='".$control_riesgos[$i]["idft_control_riesgos"]."' name='".$control_riesgos[$i]["idft_control_riesgos"]."' value='0'>
@@ -150,7 +150,7 @@ function obtener_acciones_propuestas_riesgo($idformato, $iddoc){
 	for ($i=0; $i < $acciones_riesgos["numcampos"]; $i++) { 
 		$div .="
 					<tr id='".$acciones_riesgos[$i]["idft_control_riesgos"]."'>
-						<td>".strip_tags(utf8_encode(html_entity_decode($acciones_riesgos[$i]["acciones_accion"])))."</td>
+						<td>".strip_tags(codifica_encabezado(html_entity_decode($acciones_riesgos[$i]["acciones_accion"])))."</td>
 						<td>
 							&nbsp;&nbsp;Si <input type='radio' id='".$acciones_riesgos[$i]["idft_acciones_riesgo"]."' name='".$acciones_riesgos[$i]["idft_acciones_riesgo"]."' value='1'>
 							No <input type='radio' id='".$acciones_riesgos[$i]["idft_acciones_riesgo"]."' name='".$acciones_riesgos[$i]["idft_acciones_riesgo"]."' value='0'>
@@ -211,7 +211,7 @@ function mostrar_controles_existentes_riesgo($idformato, $iddoc){
 	for ($i=0; $i < $control_riesgos["numcampos"]; $i++) { 
 		$tabla .= "
 					<tr>
-						<td style='width: 305px;'>".strip_tags(utf8_encode(html_entity_decode($control_riesgos[$i]["descripcion_control"])))."</td>
+						<td style='width: 305px;'>".strip_tags(codifica_encabezado(html_entity_decode($control_riesgos[$i]["descripcion_control"])))."</td>
 						<td>
 				  ";
 				  switch ($calificacion_controles->$control_riesgos[$i]["idft_control_riesgos"]) {
@@ -247,7 +247,7 @@ function mostrar_acciones_propuestas_riesgo($idformato, $iddoc){
 	for ($i=0; $i < $acciones_riesgos["numcampos"]; $i++) { 
 		$tabla .= "
 					<tr>
-						<td style='width: 305px;'>".strip_tags(utf8_encode(html_entity_decode($acciones_riesgos[$i]["acciones_accion"])))."</td>
+						<td style='width: 305px;'>".strip_tags(codifica_encabezado(html_entity_decode($acciones_riesgos[$i]["acciones_accion"])))."</td>
 						<td>
 				  ";
 				switch ($cumplimiento_acciones->$acciones_riesgos[$i]["idft_acciones_riesgo"]) {

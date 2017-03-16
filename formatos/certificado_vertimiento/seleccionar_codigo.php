@@ -18,7 +18,7 @@ $busqueda=busca_filtro_tabla("a.idft_certificado_vertimiento, a.codigo_ciiu, a.a
 
 //print_r($busqueda);
 for($i=0;$i<$busqueda["numcampos"];$i++){
-echo $busqueda[$i]["codigo_ciiu"]."|".utf8_encode(html_entity_decode($busqueda[$i]["nombre"]))."|".utf8_encode(html_entity_decode($busqueda[$i]["actividad"]))."|".utf8_encode(html_entity_decode($busqueda[$i]["direccion"]))."|".utf8_encode(html_entity_decode($busqueda[$i]["descripcion"]))."\n";
+echo $busqueda[$i]["codigo_ciiu"]."|".codifica_encabezado(html_entity_decode($busqueda[$i]["nombre"]))."|".codifica_encabezado(html_entity_decode($busqueda[$i]["actividad"]))."|".codifica_encabezado(html_entity_decode($busqueda[$i]["direccion"]))."|".codifica_encabezado(html_entity_decode($busqueda[$i]["descripcion"]))."\n";
 //echo $busqueda[$i]["actividad"]."|\n";
 }
 

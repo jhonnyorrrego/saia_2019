@@ -161,7 +161,7 @@ return true;
 <?php
         $titulos=array("Se&ntilde;or","Se&ntilde;ora","Doctor","Doctora","Ingeniera","Ingeniero");
            echo '<select name="x_titulo" id="obligatorio">';
-           //echo "<option value='".utf8_encode($resultado[0][$_POST["op"]])."' selected>".utf8_encode($resultado[0][$_POST["op"]])."</option>";
+           //echo "<option value='".codifica_encabezado($resultado[0][$_POST["op"]])."' selected>".codifica_encabezado($resultado[0][$_POST["op"]])."</option>";
            $encontrado=0;
            foreach($titulos as $fila)
               {if($fila==$x_titulo)
@@ -171,8 +171,8 @@ return true;
                else
                   echo "<option value='".$fila."'>".$fila."</option>";
               }
-           if($encontrado==0 && utf8_encode($x_titulo)<>"")
-              echo "<option value='".utf8_encode($x_titulo)."' selected>".utf8_encode($x_titulo)."</option>";
+           if($encontrado==0 && codifica_encabezado($x_titulo)<>"")
+              echo "<option value='".codifica_encabezado($x_titulo)."' selected>".codifica_encabezado($x_titulo)."</option>";
            elseif($encontrado==0)
               echo "<option value='Se&ntilde;or' selected>Se&ntilde;or</option>";     
   
@@ -299,16 +299,16 @@ function EditData($sKey,$conn)
 
  $condicion=($x_identificacion != "") ?  "identificacion='".$x_identificacion."'"  :  "(identificacion is NULL or identificacion='')";
      
-  $campo = busca_filtro_tabla("iddatos_ejecutor,idejecutor","ejecutor,datos_ejecutor","ejecutor_idejecutor=idejecutor and idejecutor=$sKey and nombre ='".htmlentities(utf8_decode($x_nombre))."' and $condicion","iddatos_ejecutor desc",$conn);
+  $campo = busca_filtro_tabla("iddatos_ejecutor,idejecutor","ejecutor,datos_ejecutor","ejecutor_idejecutor=idejecutor and idejecutor=$sKey and nombre ='".(($x_nombre))."' and $condicion","iddatos_ejecutor desc",$conn);
   if($campo["numcampos"]>0)
   {
-  $repetido = busca_filtro_tabla("iddatos_ejecutor","ejecutor,datos_ejecutor","idejecutor=ejecutor_idejecutor and iddatos_ejecutor=".$campo[0]["iddatos_ejecutor"]." and cargo='".htmlentities(utf8_decode($x_cargo))."' and direccion='".htmlentities(utf8_decode($x_direccion))."' and telefono='".htmlentities(utf8_decode($x_telefono))."' and titulo='".htmlentities(utf8_decode($x_titulo))."' and ciudad='".htmlentities(utf8_decode($x_ciudad))."'  and email='".htmlentities(utf8_decode($x_email))."' and empresa='".htmlentities(utf8_decode($x_empresa))."'","",$conn);
+  $repetido = busca_filtro_tabla("iddatos_ejecutor","ejecutor,datos_ejecutor","idejecutor=ejecutor_idejecutor and iddatos_ejecutor=".$campo[0]["iddatos_ejecutor"]." and cargo='".(($x_cargo))."' and direccion='".(($x_direccion))."' and telefono='".(($x_telefono))."' and titulo='".(($x_titulo))."' and ciudad='".(($x_ciudad))."'  and email='".(($x_email))."' and empresa='".(($x_empresa))."'","",$conn);
 
   if($repetido["numcampos"]>0)
      {return ($sKey);}
   else   
    {
-    phpmkr_query("INSERT INTO ".DB.".datos_ejecutor(ejecutor_idejecutor,telefono,fecha,cargo,empresa,direccion,titulo,ciudad,email) VALUES(".$campo[0]["idejecutor"].",'".htmlentities(utf8_decode($x_telefono))."',".fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s').",'".htmlentities(utf8_decode($x_cargo))."','".htmlentities(utf8_decode($x_empresa))."','".htmlentities(utf8_decode($x_direccion))."','".htmlentities(utf8_decode($x_titulo))."','$x_ciudad','".htmlentities(utf8_decode($x_email))."')",$conn) or error("NO SE INSERTO EJECUTOR 1");         
+    phpmkr_query("INSERT INTO ".DB.".datos_ejecutor(ejecutor_idejecutor,telefono,fecha,cargo,empresa,direccion,titulo,ciudad,email) VALUES(".$campo[0]["idejecutor"].",'".(($x_telefono))."',".fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s').",'".(($x_cargo))."','".(($x_empresa))."','".(($x_direccion))."','".(($x_titulo))."','$x_ciudad','".(($x_email))."')",$conn) or error("NO SE INSERTO EJECUTOR 1");         
 
  //die();  
  return(phpmkr_insert_id());
@@ -316,10 +316,10 @@ function EditData($sKey,$conn)
   }
   else 
   {   
-    phpmkr_query("INSERT INTO ".DB.".ejecutor(nombre,identificacion,fecha_ingreso) VALUES('".htmlentities(utf8_decode($x_nombre))."','".$x_identificacion."',".fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s').")",$conn) or error("NO SE INSERTO EJECUTOR 2");
+    phpmkr_query("INSERT INTO ".DB.".ejecutor(nombre,identificacion,fecha_ingreso) VALUES('".(($x_nombre))."','".$x_identificacion."',".fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s').")",$conn) or error("NO SE INSERTO EJECUTOR 2");
     $idejecutor=phpmkr_insert_id();
   
-    phpmkr_query("INSERT INTO ".DB.".datos_ejecutor(ejecutor_idejecutor,telefono,fecha,cargo,empresa,direccion,titulo,ciudad,email) VALUES(".$idejecutor.",'".htmlentities(utf8_decode($x_telefono))."',".fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s').",'".htmlentities(utf8_decode($x_cargo))."','".htmlentities(utf8_decode($x_empresa))."','".htmlentities(utf8_decode($x_direccion))."','".htmlentities(utf8_decode($x_titulo))."','$x_ciudad','".htmlentities(utf8_decode($x_email))."')",$conn) or error("NO SE INSERTO EJECUTOR 3"); 
+    phpmkr_query("INSERT INTO ".DB.".datos_ejecutor(ejecutor_idejecutor,telefono,fecha,cargo,empresa,direccion,titulo,ciudad,email) VALUES(".$idejecutor.",'".(($x_telefono))."',".fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s').",'".(($x_cargo))."','".(($x_empresa))."','".(($x_direccion))."','".(($x_titulo))."','$x_ciudad','".(($x_email))."')",$conn) or error("NO SE INSERTO EJECUTOR 3"); 
 //die();
    return(phpmkr_insert_id());    
      } 

@@ -57,14 +57,13 @@ if(@$fecha[0][0]<0)
 $usuario=usuario_actual("funcionario_codigo");
 $idfuncionario=usuario_actual("idfuncionario");
 
-$etiquetados=busca_filtro_tabla("count(*) AS cant","documento a, documento_etiqueta b, etiqueta c","a.iddocumento=b.documento_iddocumento and b.etiqueta_idetiqueta=c.idetiqueta AND c.funcionario='".$usuario."'","",$conn);
+$etiquetados=busca_filtro_tabla("c.nombre","documento a, documento_etiqueta b, etiqueta c,formato d","LOWER(a.estado) NOT IN ('eliminado') AND a.iddocumento=b.documento_iddocumento AND lower(a.plantilla)=d.nombre  and b.etiqueta_idetiqueta=c.idetiqueta AND c.funcionario='".$usuario."' GROUP BY a.iddocumento","",$conn);
 
+$pendientes=busca_filtro_tabla("count(*) AS cant","documento A,asignacion B,formato c ","LOWER(A.estado)<>'eliminado' AND A.iddocumento=B.documento_iddocumento AND B.tarea_idtarea<>-1 AND B.entidad_identidad=1 AND B.llave_entidad=".$usuario." and lower(A.plantilla)=c.nombre ","GROUP BY A.iddocumento",$conn);
 
-
-$pendientes=busca_filtro_tabla("count(*) AS cant","documento A,asignacion B","A.estado<>'ELIMINADO' AND A.iddocumento=B.documento_iddocumento AND B.tarea_idtarea<>-1 AND B.entidad_identidad=1 AND B.llave_entidad=".$usuario,"GROUP BY A.iddocumento",$conn);
-$con_indicador=busca_filtro_tabla("","prioridad_documento A, documento B","A.prioridad in (1,2,3,4,5) AND iddocumento=documento_iddocumento AND funcionario_idfuncionario=".usuario_actual("idfuncionario")." AND B.estado not in('ELIMINADO')","",$conn);
+$con_indicador=busca_filtro_tabla("","prioridad_documento A, documento B,formato c ","A.prioridad in (1,2,3,4,5) AND iddocumento=documento_iddocumento AND funcionario_idfuncionario=".usuario_actual("idfuncionario")." AND B.estado not in('ELIMINADO') and lower(B.plantilla)=c.nombre","",$conn); 
 //$destacados=busca_filtro_tabla("","prioridad_documento A, documento B","A.prioridad=2 AND iddocumento=documento_iddocumento AND B.estado<>'ELIMINADO' AND funcionario_idfuncionario=".usuario_actual("idfuncionario"),"",$conn);
-$borradores=busca_filtro_tabla("count(*) AS cant","documento A","ejecutor=".$usuario." AND A.estado='ACTIVO' AND A.numero='0'","",$conn);
+$borradores=busca_filtro_tabla("count(*) AS cant","documento A, formato c ","ejecutor=".$usuario." AND A.estado='ACTIVO' AND A.numero='0' and lower(A.plantilla)=c.nombre","",$conn); 
 $mis_roles=busca_filtro_tabla("","vfuncionario_dc","funcionario_codigo=".usuario_actual("funcionario_codigo"),"",$conn);
 if($mis_roles["numcampos"]){
 	$roles=extrae_campo($mis_roles,"iddependencia_cargo");
@@ -148,7 +147,7 @@ $componente_tareas=busca_filtro_tabla("","busqueda_componente A","A.nombre='list
 <style type="text/css">
 .modal-body{max-height:80%}
 .modal-footer{min-height:0}
-.footer_login { font-weight: bold; background-image: url(imagenes/login/footerbkg.png); background-repeat: repeat-x; background-position: left top; height: 25px; width: 100%; padding-top: 0px; padding-bottom: 0px; text-align: right; color: #FFF; position: fixed; bottom: 0px; }
+.footer_login { font-weight: bold; background-color: #69b3e3; background-repeat: repeat-x; background-position: left top; height: 25px; width: 100%; padding-top: 0px; padding-bottom: 0px; text-align: right; color: #FFF; position: fixed; bottom: 0px; }
 .footer_login_text, .footer_login_text * { color:#FFF; font-size:10px; font-weight:bold; }
 #timer{margin:0px auto 0;width:130px; border: 1px solid;border-radius: 5px;}
 #timer .timer_container{padding-right:15px;padding-left:15px;}
@@ -312,7 +311,8 @@ if($_SESSION["tipo_dispositivo"]=="movil"){ ?>
       <div class="modbox-saia-main ui-corner-all shadow">
         <div class="modbox-saia-main-title ui-corner-top">
         </div>
-        <div class="icon-collapser ui-corner-tr"></div>
+        <div class="icon-collapser ui-corner-tr" style="text-align: center; border-bottom-left-radius: 9px; height: 22px;
+    width: 39px;"> <i class="icon-minus icon-white"></i></div>
         <div class="modbox-saia-main-content ui-corner-bottom">
           <ul id="MenuSaiaVin">
             <li><i class="icon-inbox"></i><a href="pantallas/buscador_principal.php?idbusqueda=3&cmd=resetall" target="centro" class="enlace_indicadores_index" idcomponente="<?php echo($componente_pendiente[0]["idbusqueda_componente"]); ?>" nombre_componente="documento_pendiente">Documentos Recibidos <div class="pull-right"><span class="badge" id="documento_pendiente"><?php echo($pendientes["numcampos"]);?></span></div></a>
@@ -366,7 +366,7 @@ if($_SESSION["tipo_dispositivo"]=="movil"){ ?>
             
             
             
-            <li><i class="icon-tag"></i><a href="pantallas/buscador_principal.php?nombre=documentos_etiquetados&cmd=resetall" target="centro" class="enlace_indicadores_index" idcomponente="<?php echo($componente_etiquetados[0]["idbusqueda_componente"]); ?>" nombre_componente="documentos_etiquetados">Etiquetados <div class="pull-right"><span class="badge" id="documentos_etiquetados"><?php echo($etiquetados[0]["cant"]);?></span></div></a>
+            <li><i class="icon-tag"></i><a href="pantallas/buscador_principal.php?nombre=documentos_etiquetados&cmd=resetall" target="centro" class="enlace_indicadores_index" idcomponente="<?php echo($componente_etiquetados[0]["idbusqueda_componente"]); ?>" nombre_componente="documentos_etiquetados">Etiquetados <div class="pull-right"><span class="badge" id="documentos_etiquetados"><?php echo($etiquetados["numcampos"]);?></span></div></a>
             </li>            
             <li><i class="icon-refresh"></i><a href="#" id="actualizar_info_index">Actualizado<div class="pull-right"><span class="badge" id="div_actualizar_info_index"></span></div></a>
             </li>
@@ -389,7 +389,8 @@ if($_SESSION["tipo_dispositivo"]=="movil"){ ?>
       <div class="modbox-saia-addon ui-corner-all shadow">
         <div class="modbox-saia-addon-title">
           <span id="ModulosSaiaTab">M&oacute;dulos Saia</span><img src="asset/img/layout/tabline.png" width="24" height="28" align="absmiddle" /><!--span id="BusquedaRapidaTab">Busqueda Rapida</span--></div>
-        <div class="icon-collapser  ui-corner-tr"></div>
+        <div class="icon-collapser  ui-corner-tr" style="text-align: center; border-bottom-left-radius: 9px; height: 22px;
+    width: 39px;"> <i class="icon-minus icon-white"></i></div>
         <div class="modbox-saia-addon-content">
         <!--div id="busquedaRapidaForm">
           <form id="form1" name="form1" method="post" action="">
@@ -413,7 +414,7 @@ if($_SESSION["tipo_dispositivo"]=="movil"){ ?>
     </td>  
     <?php } ?>
     <td align="left" valign="top" id="CellContainer">
-    <div class="<?php if($_SESSION["tipo_dispositivo"]!="movil"){echo("container-saia");}?> ui-corner-all shadow">
+    <div class="<?php if($_SESSION["tipo_dispositivo"]!="movil"){echo("container-saia");}?> ui-corner-all shadow" style="padding-bottom: 0px;">
         <!--div class="container-saia-title">
           <div class="icon-help  ui-corner-tr"></div>
           <span id="TituloContenedor"></span>
@@ -564,7 +565,7 @@ function menu_saia(){
    		handle: ".modal-header"
    	});   	
    	
-	  var meses=new Array("En","Feb","Mar","Abr","May","Jun","Jul","Ag","Sep","Oct","Nov","Dic");
+	  var meses=new Array("Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic");
 	  var refreshInterval_SAIA;
 	  var today=new Date();
 		var h=today.getHours();
@@ -644,7 +645,7 @@ function menu_saia(){
 		        if(objeto.records==0){  
 							$("#"+div_actualizar).html(0);	        	              
 		          $("#"+div_actualizar).removeClass("label-important");
-		          $("#"+div_actualizar).addClass("label-success");
+		          //$("#"+div_actualizar).addClass("label-success"); 
 		        }         
 		      }
 		      else{ 

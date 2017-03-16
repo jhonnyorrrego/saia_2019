@@ -71,7 +71,11 @@ elseif($tabla=="serie")
 		   	$nocheck="nocheckbox=\"1\"";
 		   }
        	echo  "<item style=\"font-family:verdana; font-size:7pt;\" text=\"Produccion Documental\" id=\"2-categoria-Produccion Documental\" ".$nocheck.">\n"; 
-       llena_serie($id," and categoria=2 ");
+		$condicion_tvd=' AND tvd=0';
+		if(@$_REQUEST['tvd']){
+			$condicion_tvd=' AND tvd=1';
+		}
+       llena_serie($id," and categoria=2 ".$condicion_tvd);
    echo "</item>\n";
               break;
        case 3: echo  "<item style=\"font-family:verdana; font-size:7pt;\" text=\"Otras categorias\" id=\"3-categoria-Otras categorias\" >\n"; 

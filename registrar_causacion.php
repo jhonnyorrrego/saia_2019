@@ -27,7 +27,7 @@ if($_REQUEST["docs"]&&$_REQUEST["accion"])
  }
 
  phpmkr_query($sql);
- //alerta(utf8_encode("Se ha registrado la causaci�n."));
+ //alerta(codifica_encabezado("Se ha registrado la causaci�n."));
  //--------------Terminar flujo------------------------
  $actividad = Null;
  $actividad_next = Null;

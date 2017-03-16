@@ -192,7 +192,7 @@ function crear_tomo_expediente(){
     $cantidad_tomos=$ccantidad_tomos['numcampos']+1; //tomos + el padre
     $tomo_siguiente=$cantidad_tomos+1; //tomo siguiente
     
-    $datos_padre=busca_filtro_tabla("nombre,serie_idserie,tomo_no,estado_archivo,descripcion","expediente","idexpediente=".$tomo_padre,"",$conn);
+    $datos_padre=busca_filtro_tabla("nombre,serie_idserie,tomo_no,estado_archivo,descripcion,cod_padre","expediente","idexpediente=".$tomo_padre,"",$conn);
     
     if(!$datos_padre[0]['tomo_no']){
         $up="UPDATE expediente SET tomo_no=1 WHERE idexpediente=".$tomo_padre;
@@ -204,9 +204,9 @@ function crear_tomo_expediente(){
         $expediente_actual[0]['serie_idserie']=0;
     }
     $sql="INSERT INTO expediente 
-        (serie_idserie,nombre,fecha,propietario,ver_todos,editar_todos,tomo_padre,tomo_no,estado_archivo,descripcion) 
+        (serie_idserie,nombre,fecha,propietario,ver_todos,editar_todos,tomo_padre,tomo_no,estado_archivo,descripcion,cod_padre) 
             VALUES 
-                (".$expediente_actual[0]['serie_idserie'].",'".$datos_padre[0]['nombre']."',".fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s').",".usuario_actual('funcionario_codigo').",0,0,".$tomo_padre.",".$tomo_siguiente.",".$expediente_actual[0]['estado_archivo'].",'".$datos_padre[0]['descripcion']."')";
+                (".$expediente_actual[0]['serie_idserie'].",'".$datos_padre[0]['nombre']."',".fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s').",".usuario_actual('funcionario_codigo').",0,0,".$tomo_padre.",".$tomo_siguiente.",".$expediente_actual[0]['estado_archivo'].",'".$datos_padre[0]['descripcion']."',".$datos_padre[0]['cod_padre'].")";
    // print_r($sql);die();            
     phpmkr_query($sql);
     $id_insertado=phpmkr_insert_id();
@@ -440,9 +440,18 @@ function cambiar_responsable_expediente(){
 	}
 	$sql="UPDATE expediente SET propietario='".$funcionario_codigo."' WHERE idexpediente IN(".$idexpediente.")";
 	phpmkr_query($sql);
+	
+    $exp_res_actual=busca_filtro_tabla("propietario","expediente","idexpediente=".$_REQUEST['idexpediente'],"",$conn);
+    $idfuncionario_antiguo=busca_filtro_tabla("idfuncionario","funcionario","funcionario_codigo=".$exp_res_actual[0]['propietario'],"",$conn);
+    $idfuncionario_nuevo=busca_filtro_tabla("idfuncionario","funcionario","funcionario_codigo=".$funcionario_codigo,"",$conn);
+	
+    $permisos_expedientes_antiguo=busca_filtro_tabla("identidad_expediente","entidad_expediente","estado=1 AND entidad_identidad=1 AND llave_entidad=".$idfuncionario_antiguo[0]['idfuncionario']." AND expediente_idexpediente IN(".$idexpediente.")","",$conn);
+    $identidad_expediente=implode(",",extrae_campo($permisos_expedientes_antiguo,'identidad_expediente'));
+    $sql4="UPDATE entidad_expediente SET llave_entidad=".$idfuncionario_nuevo[0]['idfuncionario']." WHERE identidad_expediente IN(".$identidad_expediente.")";
+    phpmkr_query($sql4);	
+	
 	$retorno->exito=1;
 	return($retorno);	
-	
 }
 
 

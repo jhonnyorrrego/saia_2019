@@ -12,13 +12,10 @@ $max_salida--;
 }
 include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."librerias_saia.php");
-
 include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
 $validar_enteros=array("iddoc","key");
 desencriptar_sqli('form_info');
 echo(librerias_jquery());
-
-//print_r($_REQUEST);die();
 if((@$_REQUEST["iddoc"] || @$_REQUEST["key"]) && @$_REQUEST["no_menu"]!=1){
 	if(!@$_REQUEST["iddoc"])$_REQUEST["iddoc"]=@$_REQUEST["key"];
 	include_once($ruta_db_superior."pantallas/documento/menu_principal_documento.php");
@@ -38,7 +35,7 @@ if((@$_REQUEST["iddoc"] || @$_REQUEST["key"]) && @$_REQUEST["no_menu"]!=1){
 <?php
 include_once("funciones_archivo.php");
 include_once("librerias_saia.php");
-echo(estilo_bootstrap());
+//echo(estilo_bootstrap());
 if(!isset($_REQUEST["menu"])||$_REQUEST["menu"]!="0") // Si esta en menu_ordenar omite el header el footer y el menu
 {
 include_once("../header.php");
@@ -57,8 +54,8 @@ else
  
 if(isset($_REQUEST["Adicionar"])) // Se procesa el formulario
   {
+
     $permisos=$_REQUEST["permisos_anexos"];
-    
     //procesar_anexos($iddocumento,$permisos);
     cargar_archivo($iddocumento,$permisos);
     if(!isset($_REQUEST["menu"])||$_REQUEST["menu"]!="0") // Si esta en menu_ordenar omite el header el footer y el menu
@@ -180,7 +177,7 @@ if($config["numcampos"]){
         $dato_formato=array("","");
         if($tipo_almacenamiento=="archivo"){ // Los anexos estan guardados en archivos
             $sql="INSERT INTO anexos(documento_iddocumento,ruta,tipo,etiqueta".$dato_formato[0].") values(".$iddoc.",'".$dir_anexos_tmp.$temp_filename."','".$datos_anexo["extension"]."','".$nombre."'".$dato_formato[1].")";
-     	    phpmkr_query(htmlentities($sql),$conn) or alerta("No se puede Adicionar el Anexo ".$_FILES['anexos']['name'][$j],'error',4000);
+     	    phpmkr_query(($sql),$conn) or alerta("No se puede Adicionar el Anexo ".$_FILES['anexos']['name'][$j],'error',4000);
             $idanexo=phpmkr_insert_id();
           }
           elseif($tipo_almacenamiento=="db"){
@@ -230,6 +227,5 @@ if($config["numcampos"]){
  
 return;
 }
-
 encriptar_sqli("anexos_documento",1,"form_info",$ruta_db_superior);
 ?>

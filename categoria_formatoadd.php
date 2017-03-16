@@ -1,23 +1,21 @@
 <?php
-$max_salida=6; // Previene algun posible ciclo infinito limitando a 10 los ../
-$ruta_db_superior=$ruta="";
-while($max_salida>0){
-	if(is_file($ruta."db.php")){
-	   $ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
+	$max_salida=6; // Previene algun posible ciclo infinito limitando a 10 los ../
+	$ruta_db_superior=$ruta="";
+	while($max_salida>0)
+	{
+	if(is_file($ruta."db.php"))
+	{
+	$ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
 	}
 	$ruta.="../";
 	$max_salida--;
-}
-include_once($ruta_db_superior."db.php");  
-include_once("pantallas/lib/librerias_cripto.php");
-$validar_enteros=array("padre");
-include_once("librerias_saia.php");
-print_r($_REQUEST);
-echo("<hr>");
-print_r($_SESSION);
-desencriptar_sqli('form_info');
-echo(librerias_jquery());
-  
+	}
+  include_once($ruta_db_superior."db.php");
+	include_once("pantallas/lib/librerias_cripto.php");
+	$validar_enteros=array("padre");
+	include_once("librerias_saia.php");
+	desencriptar_sqli('form_info');
+	echo(librerias_jquery());  
   include_once($ruta_db_superior."formatos/librerias/estilo_formulario.php");
   $material = NULL;
   $padre = NULL;
@@ -48,7 +46,6 @@ echo(librerias_jquery());
     <script type="text/javascript">
   function validar_formu1()
   {
-  	
     var campo = document.formu1;
     campo.send.value=1;
     <?php encriptar_sqli("formu1");?>
@@ -80,9 +77,9 @@ echo(librerias_jquery());
 	<script type="text/javascript" src="<?php echo $ruta_db_superior; ?>js/dhtmlXTree.js"></script>			
 	<div id="seleccionados"></div>
                           <div id='categoria'></div>                        
-                          <br />  Buscar: <input  tabindex='5'  type="text" id="stext_padre" width="200px" size="25"><a href="javascript:void(0)" onclick="tree_padre.findItem(htmlentities(document.getElementById('stext_padre').value),1)"> <img src="botones/general/anterior.png"border="0px"></a>
-                   <a href="javascript:void(0)" onclick="tree_padre.findItem(htmlentities(document.getElementById('stext_padre').value),0,1)"><img src="botones/general/buscar.png"border="0px"></a>                          
-                   <a href="javascript:void(0)" onclick="tree_padre.findItem(htmlentities(document.getElementById('stext_padre').value))"><img src="botones/general/siguiente.png"border="0px"></a> 
+                          <br />  Buscar: <input  tabindex='5'  type="text" id="stext_padre" width="200px" size="25"><a href="javascript:void(0)" onclick="tree_padre.findItem((document.getElementById('stext_padre').value),1)"> <img src="botones/general/anterior.png"border="0px"></a>
+                   <a href="javascript:void(0)" onclick="tree_padre.findItem((document.getElementById('stext_padre').value),0,1)"><img src="botones/general/buscar.png"border="0px"></a>                          
+                   <a href="javascript:void(0)" onclick="tree_padre.findItem((document.getElementById('stext_padre').value))"><img src="botones/general/siguiente.png"border="0px"></a> 
                           <br /><div id="esperando_padre"><img src="imagenes/cargando.gif"></div><div id="treeboxbox_padre" height="90%"></div><input type="hidden"  class="required" name="padre" id="padre"  value="" ><label style="display:none" class="error" for="padre">Campo obligatorio.</label><script type="text/javascript">
                   <!--
                       var browserType;

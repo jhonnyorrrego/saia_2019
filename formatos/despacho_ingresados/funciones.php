@@ -56,7 +56,7 @@ function mostrar_seleccionados_entrega($idformato,$iddoc){
 	$documentos=explode(",",$seleccionado[0]['iddestino_radicacion']);
 	$docs=array_filter($documentos);
 	$texto='';
-	$registros=busca_filtro_tabla("d.iddocumento,d.plantilla,b.numero_item,b.observacion_destino,b.nombre_destino,b.destino_externo,b.origen_externo,b.tipo_origen,b.tipo_destino,b.nombre_origen,a.documento_iddocumento,a.descripcion","ft_radicacion_entrada a,ft_destino_radicacion b,ft_item_despacho_ingres c, documento d,ft_despacho_ingresados e","b.ft_radicacion_entrada=a.idft_radicacion_entrada AND c.ft_destino_radicacio=b.idft_destino_radicacion AND d.iddocumento=a.documento_iddocumento AND c.ft_despacho_ingresados=e.idft_despacho_ingresados AND e.documento_iddocumento=".$iddoc,"",$conn);
+	$registros=busca_filtro_tabla("d.iddocumento,d.plantilla,b.numero_item,b.observacion_destino,b.nombre_destino,b.destino_externo,b.origen_externo,b.tipo_origen,b.tipo_destino,b.nombre_origen,a.documento_iddocumento,a.descripcion,a.tipo_mensajeria","ft_radicacion_entrada a,ft_destino_radicacion b,ft_item_despacho_ingres c, documento d,ft_despacho_ingresados e","b.ft_radicacion_entrada=a.idft_radicacion_entrada AND c.ft_destino_radicacio=b.idft_destino_radicacion AND d.iddocumento=a.documento_iddocumento AND c.ft_despacho_ingresados=e.idft_despacho_ingresados AND e.documento_iddocumento=".$iddoc,"",$conn);
 	
 	$texto.=reporte_entradas2($idformato,$iddoc);
 	echo($texto);
@@ -96,9 +96,9 @@ function reporte_entradas2($idformato,$iddoc){
 	$texto='<table style="border-collapse:collapse;width:100%" border="1px">';
 	$texto.='<tr>';
 	$texto.='<td style="text-align:center;" colspan="3"><br/><br/><img src="'.PROTOCOLO_CONEXION.RUTA_PDF.'/'.$logo[0]['valor'].'" width="125px" heigth="83px"></td>';
-	$texto.='<td style="text-align:center" colspan="4"><br/><br/><br/><br/><br/><b>PLANILLA DE ENTREGA </b></td>';
-	$texto.='<td style="text-align:left"><br/><br/><br/><br/><br/><b>RADICADO: '.formato_numero($idformato,$iddoc,1).'</b></td>
-	<td style="text-align:center">'.$qr.'</td>
+	$texto.='<td style="text-align:center" colspan="5"><br/><br/><br/><br/><br/><b>PLANILLA DE ENTREGA </b></td>';
+	$texto.='
+	<td style="text-align:center"><br><br>'.$qr.'<br>Planilla No. '.formato_numero($idformato,$iddoc,1).'</td>
 	</tr>';
 	$texto.='<tr>';
 	$texto.='<td colspan="3"><b>MENSAJERO O ENCARGADO: '.$funcionario[0]['nombres'].' '.$funcionario[0]['apellidos'].'</b></td>';
@@ -126,6 +126,19 @@ function reporte_entradas2($idformato,$iddoc){
 	for($i=0;$i<$registros["numcampos"];$i++){
 	    
 		$origen=busca_filtro_tabla("concat(nombres,' ',apellidos) AS nombre","vfuncionario_dc","funcionario_codigo=".$registros[$i]['nombre_origen'],"",$conn);
+
+			if($registros[$i]['tipo_origen']==1){
+				$origen=busca_filtro_tabla("nombre","vejecutor a","a.iddatos_ejecutor=".$registros[$i]['nombre_origen'],"",$conn);
+				if(!$origen['numcampos']){
+					$origen=busca_filtro_tabla("nombre","vejecutor a","a.iddatos_ejecutor=".$registros[$i]['origen_externo'],"",$conn);
+				}
+			}else{
+				if($registros[$i]['tipo_origen']==2 && $registros[$i]['tipo_mensajeria']==2){
+					$origen=busca_filtro_tabla("concat(nombres,' ',apellidos) AS nombre","vfuncionario_dc a","a.iddependencia_cargo=".$registros[$i]['nombre_origen'],"",$conn);
+				}
+			}		
+				
+		
         $ubicacion="";
 		if($registros[$i]["tipo_destino"]==1){
 		    $destino=busca_filtro_tabla("b.nombre,a.direccion","datos_ejecutor a, ejecutor b","b.idejecutor=a.ejecutor_idejecutor AND a.iddatos_ejecutor=".$registros[$i]['nombre_destino'],"",$conn);

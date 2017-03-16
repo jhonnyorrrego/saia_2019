@@ -19,7 +19,7 @@ include_once($ruta_db_superior."define.php");
 ?>
 <script language="javascript" type="text/javascript">
 	window.parent.window.jbImagesDialog.uploadFinish({
-		filename:'<?php echo utf8_encode(PROTOCOLO_CONEXION.RUTA_PDF."/".$file_name); ?>',
+		filename:'<?php echo codifica_encabezado(PROTOCOLO_CONEXION.RUTA_PDF."/".$file_name); ?>',
 		result: '<?php echo $result; ?>',
 		resultCode: '<?php echo $resultcode; ?>'
 	});

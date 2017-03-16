@@ -14,15 +14,12 @@ $max_salida--;
 include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."class_transferencia.php");
 include_once($ruta_db_superior."header.php");
-
+include_once($ruta_db_superior."pantallas/lib/librerias_archivo.php");
 include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
 $validar_enteros=array("iddoc","archivo_idarchivo");
 include_once($ruta_db_superior."librerias_saia.php");
 desencriptar_sqli('form_info');
 echo(librerias_jquery());
-
-
-
 ?>
 <script> 
 /*
@@ -45,11 +42,10 @@ echo(librerias_jquery());
   {  alert("Debe escribir el asunto del e-mail");
      return false;
   }   
-
-  <?php encriptar_sqli("email",0,"form_info",$ruta_db_superior); ?>		
-		if(salida_sqli){
-			return true;
-		}
+	<?php encriptar_sqli("email",0,"form_info",$ruta_db_superior); ?>		
+	if(salida_sqli){
+		return true;
+	}
  }
 </script>
 <?php
@@ -69,7 +65,6 @@ echo(librerias_jquery());
 */
 function formato_email()
 {
-	
  global $conn,$ruta_db_superior;
    $datos=busca_filtro_tabla("numero,pdf,plantilla,ejecutor,descripcion,tipo_radicado,".fecha_db_obtener("fecha","Y-m-d H:i:s")." as fecha","documento","iddocumento=".$_REQUEST["iddoc"],"",$conn);
    //si es un radicado de entrada
@@ -152,23 +147,29 @@ if($paginas["numcampos"])
  //si el documento es un formato se envio el pdf como adjunto
  if(strtolower($datos[0]["plantilla"])<>"" && $datos[0]["numero"]<>'0')
     {
-     if($datos[0]["pdf"]=="") 
+     if($datos[0]["pdf"]=="" || !is_file($ruta_db_superior.$datos[0]["pdf"]))
      {  //se llama el pdf para crearlo y colocarlo como adjunto
         ?>
-        <script type="text/javascript" src="../js/jquery.js"> </script>
         <script>
         $.ajax({
            type: "POST",
-           url: "../html2ps/public_html/demo/html2ps.php",
-           data: 'plantilla=<?php echo strtolower($datos[0]["plantilla"]); ?>&iddoc=<?php echo $_REQUEST["iddoc"]; ?>&nombre_archivo=temporal_<?php echo usuario_actual("login"); ?>/pdf_formato_<?php echo $_REQUEST["iddoc"]; ?>',
+           url:"../class_impresion.php",
+           data:'iddoc=<?php echo $_REQUEST["iddoc"]; ?>&rand=<?php echo(rand(1,999)); ?>',
            async: false
          });    
         </script>
       <?php 
-        $texto_pdf.='<input name="pdf" value="'."../temporal_".usuario_actual("login")."/pdf_formato_".$_REQUEST["iddoc"].".pdf".'" type="checkbox" checked><a href="'."../temporal_".usuario_actual("login")."/pdf_formato_".$_REQUEST["iddoc"].".pdf".'" target="_blank">'."documento_".$datos[0]['numero'].".pdf".'</a><input type="hidden" name="nombre_pdf" value="'."documento_".$datos[0]['numero'].".pdf".'"><br />';
+      $datos_documento = busca_filtro_tabla(fecha_db_obtener('A.fecha', 'Y-m-d') . " as x_fecha, A.*", "documento A", "A.iddocumento=" . $_REQUEST["iddoc"], "", $conn);
+      $ruta_pdfs = ruta_almacenamiento("pdf");
+      $formato_ruta = aplicar_plantilla_ruta_documento($_REQUEST["iddoc"]);
+      $ruta = $ruta_pdfs . $formato_ruta . "/pdf/";
+      $ruta .= ($datos_documento[0]["plantilla"]) . "_" . $datos_documento[0]["numero"] . "_" . str_replace("-", "_", $datos_documento[0]["x_fecha"]) .".pdf";
+      
+      $texto_pdf.='<input name="pdf" value="'.$ruta.'" type="checkbox" checked><a href="'.$ruta.'" target="_blank">'."documento_".$datos[0]['numero'].".pdf".'</a><input type="hidden" name="nombre_pdf" value="'."documento_".$datos[0]['numero'].".pdf".'"><br />';
      }
-     else
-       $texto_pdf.='<input name="pdf" value="'."../".$datos[0]['pdf'].'" type="checkbox" checked><a href="'."../".$datos[0]['pdf'].'" target="_blank">'."documento_".$datos[0]['numero'].".pdf".'</a><input type="hidden" name="nombre_pdf" value="'."documento_".$datos[0]['numero'].".pdf".'"><br />';        
+     else{
+       $texto_pdf.='<input name="pdf" value="'.$ruta_db_superior.$datos[0]['pdf'].'" type="checkbox" checked><a href="'.$ruta_db_superior.$datos[0]['pdf'].'" target="_blank">'."documento_".$datos[0]['numero'].".pdf".'</a><input type="hidden" name="nombre_pdf" value="'."documento_".$datos[0]['numero'].".pdf".'"><br />';
+     }        
     }   
    echo "<tr><td class='encabezado'>ARCHIVOS ADJUNTOS</td><td bgcolor='#F5F5F5'><br />".$texto_anexo.$texto_pagina.$texto_pdf; 
    echo "<input type='hidden' name='archivo_idarchivo' value='".$_REQUEST["iddoc"]."' >";
@@ -231,7 +232,7 @@ return $s;
 */  
 function enviar_email($doc=0){
 	global $conn;
-//  $var_adjunto = false;
+   
    $copia = array();
    $email=busca_filtro_tabla("valor","configuracion","nombre='servidor_correo'","",$conn);    
    $puerto=busca_filtro_tabla("valor","configuracion","nombre='puerto_servidor_correo'","",$conn);
@@ -262,7 +263,7 @@ function enviar_email($doc=0){
         if($pdf_documento['numcampos']){
             $mail->AddAttachment("../".$pdf_documento[0]["pdf"],'documento_'.$pdf_documento[0]['numero'].'.pdf');
         }
-        
+                
       }
       $enlace="../documentoview.php?key=$doc";
      }
@@ -271,22 +272,23 @@ function enviar_email($doc=0){
       if(isset($_REQUEST["de"]))
         $from = $_REQUEST["de"];
       if(isset($_REQUEST["asunto"]))
-        $asunto = utf8_decode($_REQUEST["asunto"]);
+        $asunto = html_entity_decode($_REQUEST["asunto"]);
        if(isset($_REQUEST["para"]))
         $destinos = $_REQUEST["para"];        
        if(isset($_REQUEST["contenido"]))
-         $contenido = utf8_decode($_REQUEST["contenido"]);
+         $contenido = ($_REQUEST["contenido"]);
        $enlace="../documentoview.php?key=$doc";
      } 
+        $copia_asunto=utf8_decode($asunto);
 
         $nombre=busca_filtro_tabla("nombres,apellidos","funcionario","funcionario_codigo=".$_SESSION["usuario_actual"],"",$conn);        
-        $mail->FromName = "Gestion Documental SAIA (".$nombre[0]["nombres"]." ".$nombre[0]["apellidos"].")";
+        $mail->FromName = "Gestion Documental SAIA (".utf8_decode(html_entity_decode($nombre[0]["nombres"]." ".$nombre[0]["apellidos"])).")";
         $mail->Host     = $email[0]["valor"];
         $mail->Port     = $puerto[0]["valor"];
         $mail->Mailer   = "mail";       // Alternative to IsSMTP()
         $mail->WordWrap = 75;      
-        $mail->From    = $from;
-        $mail->Subject = $asunto;
+        $mail->From    = (($from));
+        $mail->Subject = $copia_asunto;
         $mail->ClearAddresses();
         $mail->ClearBCCs();
         $mail->ClearCCs();
@@ -429,24 +431,22 @@ function enviar_email($doc=0){
           $datos["nombre"]="DISTRIBUCION";
           if(transferir_archivo_prueba($datos,$ejecutores,$otros)){
             alerta("Mensaje enviado");
-
-          }
-          
-          else alerta("Por favor confirme su transferencia es posible que existan problemas");
-          volver(1);
+	  } else {
+		  alerta("Por favor confirme su transferencia es posible que existan problemas");
+	  }
+	  volver(2);
+	  die();
         }
 
-        abrir_url($enlace,"centro");      
-   }  
-  else{
+        abrir_url("email_doc.php?formato_enviar=true&no_menu=1&iddoc=".$_REQUEST["archivo_idarchivo"],"_self");
+   } else {
     alerta("No se ha definido un servidor de Correo en la configuracion del sistema, por favor comuniquese con su administrador");
-    volver(2);
+    abrir_url("email_doc.php?formato_enviar=true&no_menu=1&iddoc=".$_REQUEST["archivo_idarchivo"],"_self");
   }
 }
 
-if(isset($_REQUEST["formato_enviar"])){
-	formato_email();
-}  
+if(isset($_REQUEST["formato_enviar"]))
+  formato_email();
 elseif(isset($_REQUEST["enviar"]))
   enviar_email();
   

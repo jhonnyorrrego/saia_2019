@@ -27,12 +27,14 @@ $(document).ready( function() {
 		$(this).next().toggle('fast');
     $(this).addClass('icon-collapser-close');
     $(this).removeClass('icon-collapser');
+	$(this).html(' <i id="icono" class="icon-plus icon-white"></i>');
 		return false;
 	}).next();
   $('.icon-collapser-close').live("click",function() {
 		$(this).next().toggle('fast');
     $(this).addClass('icon-collapser');
-    $(this).removeClass('icon-collapser-close');        
+    $(this).removeClass('icon-collapser-close');
+    $(this).html(' <i id="icono" class="icon-minus icon-white"></i>');       
 		return false;
 	}).next();
 	

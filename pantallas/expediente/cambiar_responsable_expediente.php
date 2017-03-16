@@ -59,7 +59,8 @@ echo(estilo_bootstrap());
                 data:$("#form_cambiar_responsable").serialize(),
                 success: function(datos){
                     notificacion_saia('Cambio de responsable exitoso','success','',4000);
-                    window.parent.location.reload();
+                    //window.parent.location.reload();
+                    window.parent.parent.location.reload();
                     window.parent.hs.close();
                 }
             });             

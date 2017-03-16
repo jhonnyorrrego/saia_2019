@@ -257,7 +257,7 @@ else//********* listado de plantillas ************************//
   for($i=0;$i<$plantilla["numcampos"];$i++)
     {$ruta="?idformato=".$plantilla[$i]["idformato"];
      echo '<tr><td align=center >';
-     agrega_boton("texto","",$ruta,"centro",utf8_encode(strtoupper(html_entity_decode($plantilla[$i]["etiqueta"]))),"",strtolower(utf8_encode($plantilla[$i]["nombre"])));
+     agrega_boton("texto","",$ruta,"centro",codifica_encabezado(strtoupper(html_entity_decode($plantilla[$i]["etiqueta"]))),"",strtolower(codifica_encabezado($plantilla[$i]["nombre"])));
      echo '</td></tr>';
     }
   echo '</table>';

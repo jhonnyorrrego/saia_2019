@@ -25,17 +25,18 @@ function formulario_terminar(){
 	</style>';
 	$tabla.='<body>';
 	$tabla.='<form method="post" name="formulario_formatos"  id="formulario_formatos" action="terminar_pendientes.php">';
-	$tabla.='<table style="width:70%;" class="table table-bordered">';
+	$tabla.='<legend>Sacar de mis pendientes</legend><br>';
+	$tabla.='<table style="width:100%;" class="table table-bordered">';
 	$tabla.='<tr>';
-	$tabla.='<td style="text-align:center"><b>Radicado</b></td>';
-	$tabla.='<td style="text-align:center"><b>Descripci&oacute;n</b></td>';
-	$tabla.='<td style="text-align:center"><a id="seleccionar_todos" class="link">Todos</a><br /><a id="ninguno" class="link">Ninguno</a></td>';
+	$tabla.='<td style="text-align:center" class="encabezado_list"><b>Radicado</b></td>';
+	$tabla.='<td style="text-align:center" class="encabezado_list"><b>Descripci&oacute;n</b></td>';
+	$tabla.='<td style="text-align:center" class="encabezado_list"><a id="seleccionar_todos" class="link" style="color:white;text-decoration:underline;">Todos</a><br /><a id="ninguno" class="link" style="color:white;text-decoration:underline;">Ninguno</a></td>';
 	$tabla.='</tr>';
 	for($i=0;$i<$documentos["numcampos"];$i++){
 		$pendiente=busca_filtro_tabla("idasignacion","asignacion","documento_iddocumento=".$documentos[$i]["iddocumento"]." and entidad_identidad=1 and llave_entidad=".$usuario,"",$conn);
 		$tabla.='<tr>';
 		$tabla.='<td style="text-align:center"><div class="btn btn-mini kenlace_saia" conector="iframe" enlace="ordenar.php?key='.$documentos[$i]["iddocumento"].'&accion=mostrar&mostrar_formato=1" title="Radicado No '.$documentos[$i]["numero"].'" titulo="Radicado No '.$documentos[$i]["numero"].'" onclick=" ">'.$documentos[$i]["numero"].'</div></td>';
-		$tabla.='<td style="text-align:left">'.strip_tags(utf8_encode(html_entity_decode($documentos[$i]["descripcion"]))).'&nbsp;</td>';
+		$tabla.='<td style="text-align:left">'.strip_tags(codifica_encabezado(html_entity_decode($documentos[$i]["descripcion"]))).'&nbsp;</td>';
 		if($pendiente["numcampos"]){
 			$tabla.='<td style="text-align:center"><input class="documentos" type="checkbox" name="docs[]" id="documento_'.$documentos[$i]["iddocumento"].'" value="'.$documentos[$i]["iddocumento"].'" checked="true"></td>';
 		}
@@ -50,11 +51,19 @@ function formulario_terminar(){
 		}
 		$tabla.='</tr>';
 	}
-	$tabla.='<tr><td colspan="3" style="text-align:center">
-	<input type="radio" name="detalle" onclick=\'document.getElementById("notas").value=this.value;\' value="Ya fue le&iacute;do">Ya fue le&iacute;do &nbsp;&nbsp;  <input type="radio" name="detalle" onclick=\'document.getElementById("notas").value=this.value;\' value="Recibido en medio f&iacute;sico">Recibido en medio f&iacute;sico &nbsp;&nbsp;<input type="radio" name="detalle" onclick=\'document.getElementById("notas").value=this.value;\' value="Documento Informativo">Documento Informativo<br>
-	<textarea style="width: 950px;" name="notas" id="notas"></textarea></td></tr>';
+
+   	$justificaciones_configuracion=busca_filtro_tabla('','configuracion','nombre="justificacion_terminar"','',$conn);
+	$justificaciones=explode(',',$justificaciones_configuracion[0]['valor']);
+	$cadena_justificaciones='';
+	for($i=0;$i<count($justificaciones);$i++){
+		$cadena_justificaciones.='<input type="radio" name="detalle" onclick=\'document.getElementById("notas").value=this.value;\' value="'.codifica_encabezado(html_entity_decode($justificaciones[$i])).'">'.codifica_encabezado(html_entity_decode($justificaciones[$i])).' &nbsp;&nbsp;';		
+	}
+	$tabla.='<tr><td colspan="3" style="text-align:left;">
+	'.$cadena_justificaciones.'
+	<br><br>
+	<textarea style="width:50%;" name="notas" id="notas"></textarea></td></tr>';
 	$tabla.='</table>';
-	$tabla.='<input class="btn btn-mini" type="submit" value="Terminar documentos">';
+	$tabla.='<input class="btn btn-mini btn-primary" type="submit" value="Aceptar">';
 	$tabla.='<input type="hidden" name="accion" value="1">';
 	$tabla.='<input type="hidden" name="docus_preseleccionados" value="'.$docs.'">';
 	$tabla.='</form>';

@@ -44,12 +44,14 @@ for($i=0;$i<$graficos["numcampos"];$i++){
 			if($enmascarar){
 				$resultados[$j]["dato"]=$mascaras[$resultados[$j]["dato"]];
 			}		
-			array_push($series,array(utf8_encode(html_entity_decode($resultados[$j]["dato"])),intval($resultados[$j]["valor"])));				
+			array_push($series,array(codifica_encabezado(html_entity_decode($resultados[$j]["dato"])),intval($resultados[$j]["valor"])));				
 		}
 		array_push($datos,$series);		
 		unset($series);	
 		array_push($nombre_serie,array("label"=>$graficos[$i]['nombre']));
 		array_push($sql_serie,$resultados["sql"]);			
+	}else{
+		array_push($sql_serie,$resultados["sql"]);	
 	}
 }
 //array_push($nombre_serie,array("renderer"=>$.jqplot.BarRenderer));

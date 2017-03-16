@@ -14,7 +14,7 @@ global $conn;
  $records = explode("\n",$contenido);
  for($i=0; $i<count($records)-1; $i++)
  {
-    $fila = explode(";",str_replace('"','',strtolower(utf8_encode($records[$i]))));
+    $fila = explode(";",str_replace('"','',strtolower(codifica_encabezado($records[$i]))));
     for($ind=0; $ind<count($fila);$ind++)
       if($fila[$ind]=="\\N")
         $fila[$ind] = "";

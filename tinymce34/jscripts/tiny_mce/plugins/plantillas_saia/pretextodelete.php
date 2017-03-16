@@ -30,6 +30,7 @@ $x_ayuda = Null;
 $x_imagen = Null;
 ?>
 <?php include ("../../../../../db.php") ?>
+<?php include_once("../../../../../librerias_saia.php"); echo(estilo_bootstrap()); ?>
 <?php include ("../../../../../phpmkrfn.php") ?>
 <?php
 
@@ -78,17 +79,18 @@ switch ($sAction)
 		break;
 }
 ?>
-
-<p><span class="phpmaker">Borrar .:: pretexto<br><br><a href="pretextolist.php">Regresar al listado</a></span></p>
+<body style="background-color:#F0F0EE">
+<div class="container">
+<a href="pretextolist.php"><i class="icon-share-alt"></i>Regresar</a><h5>ELIMINAR PLANTILLAS DE TEXTO</h5>
 <form action="pretextodelete.php" method="post">
 <p>
 <input type="hidden" name="a_delete" value="D">
 <?php $sKey = (get_magic_quotes_gpc()) ? stripslashes($sKey) : $sKey; ?>
 <input type="hidden" name="key_d" value="<?php echo  htmlspecialchars($sKey); ?>">
-<table border="0" cellspacing="1" cellpadding="4" bgcolor="#CCCCCC">
-	<tr bgcolor="#666666">
-		<td valign="top"><span class="phpmaker" style="color: #FFFFFF;">Asunto</span></td>
-		<td valign="top"><span class="phpmaker" style="color: #FFFFFF;">Icono</span></td>
+<table class="table">
+	<tr >
+		<th valign="top"><span >Asunto</span></td>
+		<th valign="top"><span >Icono</span></td>
 	</tr>
 <?php
 $nRecCount = 0;
@@ -120,9 +122,10 @@ foreach ($arRecKey as $sRecKey) {
 ?>
 </table>
 <p>
-<input type="submit" name="Action" value="Confirmar Borrado">
+<input class="btn-mini btn-primary" type="submit" name="Action" value="Confirmar Borrado">
 </form>
-
+</div>
+</body>
 <?php
 phpmkr_db_close($conn);
 ?>

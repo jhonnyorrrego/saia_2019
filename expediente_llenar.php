@@ -3,15 +3,11 @@
 $max_salida=6; $ruta_db_superior=$ruta=""; while($max_salida>0){ if(is_file($ruta."db.php")){ $ruta_db_superior=$ruta;} $ruta.="../"; $max_salida--; }
 
 include_once("db.php");
-
 include_once("pantallas/lib/librerias_cripto.php");
 $validar_enteros=array("iddoc");
 include_once("librerias_saia.php");
 desencriptar_sqli('form_info');
-echo(librerias_jquery());
-
 include_once("pantallas/expediente/librerias.php");
-include_once($ruta_db_superior."calendario/calendario.php");
 $iddoc = $_REQUEST["iddoc"];
 $doc_menu=@$_REQUEST["iddoc"];
 include_once("pantallas/documento/menu_principal_documento.php");
@@ -46,11 +42,11 @@ $doc=busca_filtro_tabla("","documento","iddocumento in($iddoc)","",$conn);
   </label>
   <div class="controls">
 			<input type="text" id="stext" width="200px" size="20">
-      <a href="javascript:void(0)" onclick="tree2.findItem(htmlentities(document.getElementById('stext').value),1)">
+      <a href="javascript:void(0)" onclick="tree2.findItem((document.getElementById('stext').value),1)">
       <img src="botones/general/anterior.png"border="0px"></a>
-      <a href="javascript:void(0)" onclick="tree2.findItem(htmlentities(document.getElementById('stext').value),0,1)">
+      <a href="javascript:void(0)" onclick="tree2.findItem((document.getElementById('stext').value),0,1)">
       <img src="botones/general/buscar.png"border="0px"></a>
-      <a href="javascript:void(0)" onclick="tree2.findItem(htmlentities(document.getElementById('stext').value))">
+      <a href="javascript:void(0)" onclick="tree2.findItem((document.getElementById('stext').value))">
       <img src="botones/general/siguiente.png"border="0px"></a>
       <div id="esperando_expediente"><img src="imagenes/cargando.gif"></div>
 			<div id="treeboxbox_tree2"></div>
@@ -127,24 +123,6 @@ if(count($nombres_exp)){
 <?php    
 }
 ?>
-
-
-<div class="control-group element">
-    <label class="control-label" for="fecha_limite"> Fecha Limite de Respuesta
-  </label>
-  <div class="controls">
-      <?php 
-          $fecha_limite='0000-00-00';
-          if($doc[0]['fecha_limite']){
-            $fecha_limite=$doc[0]['fecha_limite'];
-          }
-      ?>
-      
-      <input class="btn btn-mini" type="button" onclick="document.getElementById('fecha_limite').value='<?php echo($fecha_limite); ?>'" value="L" />
-      <input id="fecha_limite" name="fecha_limite" style="width:100px" type="text" value="<?php echo($fecha_limite); ?>" readonly />
-      <?php selector_fecha("fecha_limite","form1","Y-m-d",date("m"),date("Y"),"default.css","",""); ?>
-  </div>
-</div>
 <div>
  <input type="hidden" name="expedientes" id="expedientes" value="">
  <input type="hidden" name="iddoc" value="<?php echo $iddoc; ?>">
@@ -155,21 +133,21 @@ if(count($nombres_exp)){
  <script>
  $().ready(function() {
 	$('#form1').submit(function(){
-		
     seleccionados=tree2.getAllChecked();
     if(seleccionados!="")
       {$('#expedientes').val(seleccionados);
-       <?php encriptar_sqli("form1",0); ?>		
+	    <?php encriptar_sqli("form1",0); ?>		
 		if(salida_sqli){
 			return true;
 		}
       }
     else
       {$('#expedientes').val('');
-       <?php encriptar_sqli("form1",0); ?>		
-		if(salida_sqli){
-			return true;
-		}
+       //alert("Debe seleccionar al menos un expediente");
+        <?php encriptar_sqli("form1",0); ?>
+        if(salida_sqli){
+       		return(true);
+       	}
       }
     return(false);
   });

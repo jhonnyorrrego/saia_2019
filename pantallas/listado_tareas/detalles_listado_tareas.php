@@ -64,7 +64,7 @@ $listado_tareas=busca_filtro_tabla("","listado_tareas a","idlistado_tareas=".$id
       <b>Creador:</b>
     </td>
     <td colspan="3">
-       <?php echo utf8_encode(html_entity_decode(creador_listado($listado_tareas[0]["creador_lista"])));?>
+       <?php echo codifica_encabezado(html_entity_decode(creador_listado($listado_tareas[0]["creador_lista"])));?>
     </td>
   </tr>
   <tr>
@@ -72,7 +72,7 @@ $listado_tareas=busca_filtro_tabla("","listado_tareas a","idlistado_tareas=".$id
       <b>Cliente:</b>
     </td>
     <td colspan="3">
-       <?php  echo utf8_encode(html_entity_decode(mostrar_cliente_proyecto($listado_tareas[0]["cliente_proyecto"])));?>
+       <?php  echo codifica_encabezado(html_entity_decode(mostrar_cliente_proyecto($listado_tareas[0]["cliente_proyecto"])));?>
     </td>
   </tr>
   
@@ -81,7 +81,7 @@ $listado_tareas=busca_filtro_tabla("","listado_tareas a","idlistado_tareas=".$id
       <b>Macroproceso/Proceso:</b>
     </td>
     <td colspan="3">
-       <?php  echo utf8_encode(html_entity_decode(mostrar_macroproceso($listado_tareas[0]["macro_proceso"])));?>
+       <?php  echo codifica_encabezado(html_entity_decode(mostrar_macroproceso($listado_tareas[0]["macro_proceso"])));?>
     </td>
   </tr>
   

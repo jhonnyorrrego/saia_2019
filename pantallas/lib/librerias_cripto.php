@@ -58,7 +58,7 @@ function validar_enteros(){
 global $validar_enteros;
 if(isset($validar_enteros)){
   foreach($validar_enteros AS $key=>$valor){
-    if(isset($_REQUEST[$valor] && !is_int($_REQUEST[$valor])){
+    if(isset($_REQUEST[$valor]) && !is_int($_REQUEST[$valor])){
       return($valor);
     }
   }

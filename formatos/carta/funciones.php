@@ -116,8 +116,13 @@ function cargar_destinos_carta($idformato,$idcampo,$iddoc)
 function mostrar_anexos($idformato,$iddoc){
 	global $conn,$ruta_db_superior;
 		$html="Anexos: ";
-		$anexos_fis=busca_filtro_tabla("anexos_fisicos","ft_comunicacion_interna","documento_iddocumento=".$iddoc,"",conn);
-	  $html.=$anexos_fis[0]['anexos_fisicos']."&nbsp;";
+		$nombre_tabla=busca_filtro_tabla("b.nombre_tabla","documento a, formato b","lower(a.plantilla)=b.nombre AND a.iddocumento=".$iddoc,"",$conn);
+		$anexos_fis=busca_filtro_tabla("anexos_fisicos",$nombre_tabla[0]['nombre_tabla'],"documento_iddocumento=".$iddoc,"",$conn);
+		if($anexos_fis['numcampos']){
+			if($anexos_fis[0]['anexos_fisicos']!=''){
+				$html.=$anexos_fis[0]['anexos_fisicos'].", ";
+			}
+		}
 	  $anex=busca_filtro_tabla("","anexos","documento_iddocumento=".$iddoc,"",$conn);
 		for($i=0;$i<$anex['numcampos'];$i++){
 			if($_REQUEST["tipo"]==5)
@@ -128,7 +133,6 @@ function mostrar_anexos($idformato,$iddoc){
 		if($anexos_fis[0]['anexos_fisicos']!='' || $anex['numcampos']>0){
 			echo $html."<br/><br/>";
 		}
-
 }
 
 function asunto_carta($idformato,$idcampo,$iddoc){
@@ -745,22 +749,25 @@ function generar_correo_confirmacion($idformato,$iddoc){
 }
 function parsear_arbol_expediente_serie_carta(){
     global $conn,$ruta_db_superior;
-    
     ?>
     <script>
         $(document).ready(function(){
              tree_serie_idserie.setOnCheckHandler(parsear_expediente_serie);
         });
-        
         function parsear_expediente_serie(nodeId){
             var idexpediente_idserie = nodeId.split('sub');
             $('[name="serie_idserie"]').val(idexpediente_idserie[1]);
             $('[name="expediente_serie"]').val(idexpediente_idserie[0]);
+            var seleccionados=tree_serie_idserie.getAllChecked();
+            var vector_seleccionados=seleccionados.split(',');
+            for(i=0;i<vector_seleccionados.length;i++){
+            	if(vector_seleccionados[i]!=nodeId){
+            		tree_serie_idserie.setCheck(vector_seleccionados[i],0 );
+            	}
+            }
         }
     </script>
     <?php
-    
-    
 }
 function vincular_expediente_serie_carta($idformato,$iddoc){ //POSTERIOR AL APROBAR
     global $conn,$ruta_db_superior;
@@ -774,6 +781,77 @@ function vincular_expediente_serie_carta($idformato,$iddoc){ //POSTERIOR AL APRO
         phpmkr_query($sql);
     }
 }
+function formato_radicado_enviada($idformato,$iddoc,$retorno=0){
+	global $conn;
+	$formato=busca_filtro_tabla("","formato A","A.idformato=".$idformato,"",$conn);
+	$datos_documento=busca_filtro_tabla(fecha_db_obtener('A.fecha','Y-m-d')." as x_fecha, A.*, B.*","documento A, ".$formato[0]["nombre_tabla"]." B","A.iddocumento=B.documento_iddocumento AND A.iddocumento=".$iddoc,"",$conn);
+	$dep=busca_filtro_tabla("B.codigo,B.codigo_arbol","dependencia_cargo A, dependencia B","A.iddependencia_cargo=".$datos_documento[0]["dependencia"]." AND A.dependencia_iddependencia=B.iddependencia","",$conn);
+	
+	$fecha=$datos_documento[0]["x_fecha"];//año mes dia
+	$fecha_sin_guion=str_replace("-","",$fecha);
+	$cadena=$fecha_sin_guion;
+		
+	
+	$ruta=busca_filtro_tabla("","ruta","tipo<>'INACTIVO' and documento_iddocumento=".$iddoc,"",$conn);
+	if($ruta['numcampos']>0){
+					
+		$depcar=$ruta[$ruta['numcampos']-1]['origen'];
+		$dep2=busca_filtro_tabla("","vfuncionario_dc","iddependencia_cargo=".$depcar,"",$conn);
+		$cod=busca_filtro_tabla("","dependencia","iddependencia=".$dep2[0]['iddependencia'],"",$conn);
+		
+		$dep=busca_filtro_tabla("codigo_arbol","dependencia","iddependencia=".$dep2[0]['iddependencia'],"",$conn);
+        $tem=explode('.',$dep[0]['codigo_arbol']);
 
+		if(count($tem)==2){
+			$tercer=busca_filtro_tabla("","dependencia","iddependencia=".$tem[1],"",$conn);
+		}
+		else{
+			$tercer=busca_filtro_tabla("","dependencia","iddependencia=".$tem[2],"",$conn);
+		}
+
+		$cadena.=$tercer[0]['codigo']; // (muestra la direccion del ultimo en la ruta)
+		
+	}else{
+
+        $tem=explode('.',$dep[0]['codigo_arbol']);
+		
+		//Array ( [0] => 23 [1] => 1 [2] => 311 )
+		
+		if(count($tem)==2){
+			$tercer=busca_filtro_tabla("","dependencia","iddependencia=".$tem[1],"",$conn);
+		}
+		else{
+			$tercer=busca_filtro_tabla("","dependencia","iddependencia=".$tem[2],"",$conn);
+		}
+		$cadena.=$tercer[0]["codigo"]; // (muestra la direccion creador por que no tiene ruta)
+	}	
+	
+
+	//Dirección de Archivo de los Derechos Humanos 
+	//$cadena.=str_pad($datos_documento[0]["numero"],4,"0",STR_PAD_LEFT);
+	if($_REQUEST['destino']){
+		$dep=busca_filtro_tabla("","radicados_carta","documento_iddocumento=".$iddoc." and destino=".$_REQUEST['destino'],"",$conn);
+		if($dep['numcampos'])
+		$datos_documento[0]["numero"]=$dep[0]['radicado'];
+	}
+	if(strlen($datos_documento[0]["numero"])==1){
+		$cadena.='000<b>'.$datos_documento[0]["numero"].'</b>';
+	}
+	if(strlen($datos_documento[0]["numero"])==2){
+		$cadena.='00<b>'.$datos_documento[0]["numero"].'</b>';
+	}	
+	if(strlen($datos_documento[0]["numero"])==3){
+		$cadena.='0<b>'.$datos_documento[0]["numero"].'</b>';
+	}	
+	if(strlen($datos_documento[0]["numero"])>3){
+		$cadena.='<b>'.$datos_documento[0]["numero"].'</b>';
+	}
+		
+	$cadena.="-1"; //antes2
+	if($retorno==1){
+	  return($cadena);
+	}
+	echo($cadena);	
+}
 
 ?>

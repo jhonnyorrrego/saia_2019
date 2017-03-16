@@ -163,7 +163,7 @@ function obtener_descripcion_listado_tareas($descripcion_lista){
 	if($descripcion_lista=="descripcion_lista"){
 		$descripcion_lista="";
 	}
-	return(utf8_encode(substr(html_entity_decode($descripcion_lista),0,200))."...");
+	return(codifica_encabezado(substr(html_entity_decode($descripcion_lista),0,200))."...");
 }
 
 function creador_listado($idfuncionario=0){

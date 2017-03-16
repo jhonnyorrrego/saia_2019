@@ -61,7 +61,7 @@ $iddocumento=$_REQUEST["iddoc"];
     $numero=$formato[0]["numero"];
     $texto.='<b>'.strtoupper($formato[0]["nombre"]).':</b><br>';
     $texto.="Numero Radicado: ".$formato[0]["numero"]."<br>";
-    $texto.=strip_tags(html_entity_decode("Descripcion:".htmlentities(stripslashes($formato[0]["etiqueta"]))),"<br>");
+    $texto.=strip_tags(html_entity_decode("Descripcion:".(stripslashes($formato[0]["etiqueta"]))),"<br>");
     $descripcion=busca_filtro_tabla("","campos_formato","formato_idformato=".$formato[0]["idformato"]." AND acciones LIKE '%d%'","",$conn);
     if($descripcion["numcampos"]){
       $campo_descripcion=$descripcion[0]["nombre"];
@@ -190,6 +190,8 @@ else{
     	$origen=busca_filtro_tabla("B.*","respuesta A, documento B","A.destino='".$iddocumento."' AND A.origen=B.iddocumento","",$conn);
     	if($origen["numcampos"]){
     		echo('<li><div class="row-fluid"><div class="pull-left tootltip_saia_abajo">'.$origen[0]["numero"].'-'.$origen[0]["descripcion"].'</div><div class="pull-right"><a href="#" enlace="ordenar.php?key='.$origen[0]["iddocumento"].'&mostrar_formato=1'.$adicionales_enlace.'" conector="iframe"  titulo="Documento No.'.$origen[0]["numero"].'" class="kenlace_saia pull-left" ><i class="icon-download tooltip_saia_izquierda" title="Ver documento"></i></a></div></div></li>');
+    	}else{
+    		echo("<li class='alert' style='margin-bottom:3px;'>No se encuentra asociado ning&uacute;n documento</li>");
     	}
 			?>
       </ul><br />
@@ -254,12 +256,13 @@ echo(librerias_acciones_kaiten());
 <script>
 $(document).ready(function(){
   $("#adicionar_anexos").live('click',function(){
-    window.open("<?php echo($ruta_db_superior); ?>anexosdigitales/anexos_documento.php?key=<?php echo($iddocumento); ?>","detalles");
+    window.open("<?php echo($ruta_db_superior); ?>anexosdigitales/anexos_documento.php?key="+documento_saia,"detalles");
   });
 });
 </script>
 <script type="text/javascript">	
 $(document).ready(function(){
+documento_saia=0;
 var item="<?php echo($nodoinicial);?>";
 open_tabs=1;
 $(".tooltip_saia").attr("class","");
@@ -301,7 +304,7 @@ function click_funcion(div){
             $.ajax({
               type: "POST",
               url: "<?php echo $ruta_db_superior ;?>"+"pantallas/busquedas/servidor_busqueda.php",		  		  
-              data:{idbusqueda_componente: $(this).attr('componente'),iddocumento : "<?php echo $iddocumento;?>",rows:"100",actual_row:"0",limpio:"1"},
+              data:{idbusqueda_componente: $(this).attr('componente'),iddocumento : documento_saia,rows:"100",actual_row:"0",limpio:"1"},
               success:function(html){
               	if(jQuery.isEmptyObject(html)){
               		$(div).html('');
@@ -328,7 +331,7 @@ function click_funcion(div){
 	                    $(div).append("<li>"+item.info+"</li>");	                           
 	                });	
               	}
-                cargar_cantidades_documento("<?php echo($iddocumento);?>");
+                cargar_cantidades_documento(documento_saia);
               }
             });
         }    
@@ -337,7 +340,7 @@ function click_funcion(div){
             $.ajax({
             type: "POST",
             url: "<?php echo $ruta_db_superior ;?>"+"pantallas/busquedas/servidor_busqueda.php",		  		  
-            data:{idbusqueda_componente:'<?php echo($buzon_salida);?>',iddocumento : "<?php echo $iddocumento;?>",actual_row:"0",limpio:"1",rows:"100"},
+            data:{idbusqueda_componente:'<?php echo($buzon_salida);?>',iddocumento : documento_saia,actual_row:"0",limpio:"1",rows:"100"},
             success:function(html){
             	$("#panel_notas_tranferencia").html('');
             	if(jQuery.isEmptyObject(html)){            		
@@ -363,11 +366,12 @@ function click_funcion(div){
           $.ajax({
             type: "POST",
             url: "<?php echo $ruta_db_superior ;?>"+"pantallas/busquedas/servidor_busqueda.php",		  		  
-            data:{idbusqueda_componente:'<?php echo($documentos_relacionados);?>',iddocumento : "<?php echo $iddocumento;?>",actual_row:"0",limpio:"1",rows:"100"},
+            data:{idbusqueda_componente:'<?php echo($documentos_relacionados);?>',iddocumento : documento_saia,actual_row:"0",limpio:"1",rows:"100"},
             success:function(html){
             	$("#panel_relacionados_funcionario").html('');
-            	if(jQuery.isEmptyObject(html)){
-            		$("#panel_relacionados_funcionario").append("<li class='alert' style='margin-bottom:3px;'>No hay documentos relacionados por funcionario</li>");
+            	var objeto2=jQuery.parseJSON(html)
+            	if(objeto2.records=='0'){
+            		$("#panel_relacionados_funcionario").append("<li class='alert' style='margin-bottom:3px;'>No hay documentos vinculados por funcionario</li>");
             	}else{
 	                var objeto=jQuery.parseJSON(html);                    
 	                $.each(objeto.rows,function(i,item){                          
@@ -383,11 +387,12 @@ function click_funcion(div){
           $.ajax({
             type: "POST",
             url: "<?php echo $ruta_db_superior ;?>"+"pantallas/busquedas/servidor_busqueda.php",		  		  
-            data:{idbusqueda_componente:'<?php echo($documentos_respuesta);?>',iddocumento : "<?php echo $iddocumento;?>", actual_row:"0",limpio:"1",rows:"100"},
+            data:{idbusqueda_componente:'<?php echo($documentos_respuesta);?>',iddocumento : documento_saia, actual_row:"0",limpio:"1",rows:"100"},
             success:function(html){
             	$("#panel_respuesta").html('');
-            	if(jQuery.isEmptyObject(html)){
-            		$("#panel_respuesta").append("<li class='alert' style='margin-bottom:3px;'>No hay documentos relacionados por funcionario</li>");
+            	var objeto2=jQuery.parseJSON(html)
+            	if(objeto2.records=='0'){
+            		$("#panel_respuesta").append("<li class='alert' style='margin-bottom:3px;'>No hay documentos vinculados como respuesta</li>");
             	}else{
 	                var objeto=jQuery.parseJSON(html);                    
 	                $.each(objeto.rows,function(i,item){                          
@@ -400,8 +405,8 @@ function click_funcion(div){
         }
         if(componente==='<?php echo($versiones_documento);?>'){
             tree5.deleteChildItems(0);
-            tree5.setXMLAutoLoading("<?php echo($ruta_db_superior); ?>pantallas/versiones/test_versiones.php?iddoc=<?php echo($iddocumento); ?>");	
-  	        tree5.loadXML("<?php echo($ruta_db_superior); ?>pantallas/versiones/test_versiones.php?iddoc=<?php echo($iddocumento); ?>");
+            tree5.setXMLAutoLoading("<?php echo($ruta_db_superior); ?>pantallas/versiones/test_versiones.php?iddoc="+documento_saia);	
+  	        tree5.loadXML("<?php echo($ruta_db_superior); ?>pantallas/versiones/test_versiones.php?iddoc="+documento_saia);
         }
       }
     }
@@ -461,6 +466,7 @@ function click_funcion(div){
     }
   }    
   function onNodeSelect(nodeId){
+  	
   	var llave=0;
     llave=tree2.getParentId(nodeId);
     var datos=nodeId.split("-");
@@ -469,6 +475,7 @@ function click_funcion(div){
     }
     else{
     	cargar_cantidades_documento(datos[3]);
+    	documento_saia=datos[3];
 	    conexion="<?php echo($ruta_db_superior); ?>formatos/arboles/parsear_accion_arbol.php?id="+nodeId+"&accion=mostrar&llave="+llave+"&enlace_adicionar_formato=1";
 	    redireccion_detalles(conexion);
     }

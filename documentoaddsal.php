@@ -399,9 +399,9 @@ AL LISTADO</a></span> </font-->
 	<script type="text/javascript" src="js/dhtmlXTree.js"></script>        
         <td bgcolor="#F5F5F5" colspan="4" ><font size="1,5" face="Verdana, Arial, Helvetica, sans-serif">
 Buscar: <input type="text" id="stext_responsable" width="200px" size="25">
-<a href="javascript:void(0)" onclick="tree3.findItem(htmlentities(document.getElementById('stext_responsable').value),1)"><img src="botones/general/anterior.png" alt="Buscar Anterior" border="0px"></a>
-<a href="javascript:void(0)" onclick="tree3.findItem(htmlentities(document.getElementById('stext_responsable').value),0,1)"><img src="botones/general/buscar.png" alt="Buscar" border="0px"></a>
-    <a href="javascript:void(0)" onclick="tree3.findItem(htmlentities(document.getElementById('stext_responsable').value))"><img src="botones/general/siguiente.png" alt="Buscar Siguiente" border="0px"></a>
+<a href="javascript:void(0)" onclick="tree3.findItem((document.getElementById('stext_responsable').value),1)"><img src="botones/general/anterior.png" alt="Buscar Anterior" border="0px"></a>
+<a href="javascript:void(0)" onclick="tree3.findItem((document.getElementById('stext_responsable').value),0,1)"><img src="botones/general/buscar.png" alt="Buscar" border="0px"></a>
+    <a href="javascript:void(0)" onclick="tree3.findItem((document.getElementById('stext_responsable').value))"><img src="botones/general/siguiente.png" alt="Buscar Siguiente" border="0px"></a>
     <br />
                 <div id="treeboxbox_tree3"></div>
 	              <script type="text/javascript">
@@ -425,9 +425,9 @@ Buscar: <input type="text" id="stext_responsable" width="200px" size="25">
 	<script type="text/javascript" src="js/dhtmlXCommon.js"></script>
 	<script type="text/javascript" src="js/dhtmlXTree.js"></script>
 Buscar: <input type="text" id="stext_serie" width="200px" size="25">
-<a href="javascript:void(0)" onclick="tree_serie.findItem(htmlentities(document.getElementById('stext_serie').value),1)"><img src="botones/general/anterior.png" alt="Buscar Anterior" border="0px"></a></a>
-<a href="javascript:void(0)" onclick="tree_serie.findItem(htmlentities(document.getElementById('stext_serie').value),0,1)"><img src="botones/general/buscar.png" alt="Buscar" border="0px"></a>  
-    <a href="javascript:void(0)" onclick="tree_serie.findItem(htmlentities(document.getElementById('stext_serie').value))"><img src="botones/general/siguiente.png" alt="Buscar Siguiente" border="0px"></a><br />
+<a href="javascript:void(0)" onclick="tree_serie.findItem((document.getElementById('stext_serie').value),1)"><img src="botones/general/anterior.png" alt="Buscar Anterior" border="0px"></a></a>
+<a href="javascript:void(0)" onclick="tree_serie.findItem((document.getElementById('stext_serie').value),0,1)"><img src="botones/general/buscar.png" alt="Buscar" border="0px"></a>  
+    <a href="javascript:void(0)" onclick="tree_serie.findItem((document.getElementById('stext_serie').value))"><img src="botones/general/siguiente.png" alt="Buscar Siguiente" border="0px"></a><br />
     <div id="esperando_serie"><img src="imagenes/cargando.gif"></div>
     <div id="treeboxbox_serie" height="100%"></div>
     <input type="hidden" name="serie" id="serie" obligatorio="obligatorio"  value="" >
@@ -892,12 +892,12 @@ $pais = busca_filtro_tabla("*","pais","","nombre",$conn);
       {$dep=busca_filtro_tabla("*","departamento","pais_idpais=".$pais[$i]["idpais"],"nombre",$conn);      
        for($j=0;$j<$dep["numcampos"];$j++)
           {
-           $texto.=  'c_departamento.forValue("'.$pais[$i]["idpais"].'").addOptionsTextValue("'.utf8_encode(html_entity_decode($dep[$j]["nombre"])).'","'.$dep[$j]["iddepartamento"].'");';           
+           $texto.=  'c_departamento.forValue("'.$pais[$i]["idpais"].'").addOptionsTextValue("'.codifica_encabezado(html_entity_decode($dep[$j]["nombre"])).'","'.$dep[$j]["iddepartamento"].'");';           
            if($dep[$j]["iddepartamento"]==$defaultd)
              $texto.="c_departamento.forValue(".$pais[$i][0].").setDefaultOptions('".$dep[$j]["iddepartamento"]."');"; 
            $mun = busca_filtro_tabla("*","municipio","departamento_iddepartamento=".$dep[$j]["iddepartamento"],limpiar_cadena_sql("nombre")." asc",$conn);         
            for($k=0; $k<$mun["numcampos"]; $k++)
-            { $texto.=  'c_departamento.forValue("'.$pais[$i]["idpais"].'").forValue("'.$dep[$j]["iddepartamento"].'").addOptionsTextValue("'.utf8_encode(html_entity_decode($mun[$k]["nombre"])).'","'.$mun[$k]["idmunicipio"].'");';
+            { $texto.=  'c_departamento.forValue("'.$pais[$i]["idpais"].'").forValue("'.$dep[$j]["iddepartamento"].'").addOptionsTextValue("'.codifica_encabezado(html_entity_decode($mun[$k]["nombre"])).'","'.$mun[$k]["idmunicipio"].'");';
               if($mun[$k]["idmunicipio"]==$defaultm)
                   $texto.="c_departamento.forValue(".$pais[$i][0].").forValue('".$dep[$j]["iddepartamento"]."').setDefaultOptions(".$mun[$k]["idmunicipio"].");";
             }       

@@ -67,31 +67,34 @@ if((@$_REQUEST["iddoc"] || @$_REQUEST["key"])&& !@$_REQUEST["idpaso_documento"])
 				<!--img width="16px" border="0" src="<?php echo($ruta_db_superior); ?>botones/formatos/adicionar.gif"-->Adicionar Avances
 			</a>
 			<div class="table-responsive">
-				<table class="table" style="border-collapse: collapse;width: 100%;" border="1">
+				<table class="table">
 					<tbody>
 						<tr>
-							<td class="encabezado_list">Fecha y Hora</td>
-							<td class="encabezado_list">Descripci&oacute;n</td>
-							<td class="encabezado_list">Estado</td>
-							<td class="encabezado_list">Funcionario</td>
+							<th class="prettyprint">Fecha y Hora</th>
+							<th class="prettyprint">Descripci&oacute;n</th>
+							<th class="prettyprint">Estado</th>
+							<th class="prettyprint">Funcionario</th>
 						</tr>
 						<?php
 							for($i=0;$i<$busca_avances['numcampos'];$i++){
 								switch ($busca_avances[$i]['estado']) {
 									case 0 :
 										$estado = "Pendiente";
+										$color="orange";
 										break;
 									case 1 :
 										$estado = "Proceso";
+										$color="orange";
 										break;
 									case 2 :
 										$estado = "Terminada";
+										$color="green";
 									break;
 							}
 								$campo.="<tr>
 											<td>".$busca_avances[$i]['fecha']."</td>
 											<td>".$busca_avances[$i]['descripcion']."</td>
-											<td>".$estado."</td>
+											<td style='color:".$color."'>".$estado."</td>
 											<td>".$busca_avances[$i]['nombres']." ".$busca_avances[$i]['apellidos']."</td>
 										</tr>";
 							}

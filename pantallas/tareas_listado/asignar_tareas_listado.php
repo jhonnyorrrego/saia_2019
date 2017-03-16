@@ -83,7 +83,7 @@ $nombres=array_unique($nombres);
   <div class="controls"> 
     <span class="phpmaker">
 			Buscar:<br><input type="text" id="stext" width="200px" size="20">          
-      <a href="javascript:void(0)" onclick="find_item_tree(htmlentities(document.getElementById('stext').value),'');">
+      <a href="javascript:void(0)" onclick="find_item_tree((document.getElementById('stext').value),'');">
       <img src="<?php echo($ruta_db_superior);?>botones/general/buscar.png"border="0px"></a>      
       <div id="esperando_expediente"><img src="<?php echo $ruta_db_superior; ?>imagenes/cargando.gif"></div>
 			<div id="treeboxbox_tree2" class="arbol_saia"></div>

@@ -38,6 +38,8 @@ $funcionarios=array();
 $idfunc=usuario_actual("idfuncionario");
 
 $lista2=expedientes_asignados();
+$idfuncionario=usuario_actual("idfuncionario"); 
+$datos_admin_funcionario = busca_datos_administrativos_funcionario($idfuncionario);
 
 $id = @$_REQUEST["id"];
 
@@ -78,7 +80,7 @@ llena_expediente($id);
 echo("</tree>\n");
 
 function llena_expediente($id){
-global $conn,$sql,$exp_doc,$funcionarios,$excluidos,$dependencias,$varios,$lista2;
+global $conn,$sql,$exp_doc,$funcionarios,$excluidos,$dependencias,$varios,$lista2,$datos_admin_funcionario;
 if($id==0){
   $papas=busca_filtro_tabla("a.fecha, a
 .nombre, a.descripcion, a.cod_arbol, a.idexpediente, estado_cierre","vexpediente_serie a",$lista2." and (a.cod_padre=0 OR a.cod_padre IS NULL) AND a.estado_cierre=1","GROUP BY a.fecha, a
@@ -106,7 +108,7 @@ if($papas["numcampos"]){
 				$texto_item.=" <span style=\"color:red\">(CERRADO)</span>";
 			}
 		
-	  	echo("<item style=\"font-family:verdana; font-size:7pt;\" ");
+	  	echo("<item style=\"font-family:verdana; font-size:7pt; font-weight: 900;\" ");
 	    echo("text=\"".htmlspecialchars($texto_item)." \" id=\"".$papas[$i]["idexpediente"]."\"");
 	    if(@$_REQUEST["doc"]){
       	if($_REQUEST["accion"]==1 && in_array($papas[$i]["idexpediente"],$exp_doc)){
@@ -133,10 +135,23 @@ if($papas["numcampos"]){
     	    	echo(" nocheckbox=\"1\" ");
     	}
         
+		
+		$child=0;
         if($hijos_entidad_serie['numcampos']){
-            echo(" child=\"1\" ");    	   
+        	for($x=0;$x<$hijos_entidad_serie['numcampos'];$x++){
+        		if(in_array($hijos_entidad_serie[$x]['serie_idserie'], $datos_admin_funcionario["series"])){
+        			$child=1;	 
+        		}
+        	}	   
         }
-			
+		$hijos_expediente=busca_filtro_tabla("a.fecha, a
+.nombre, a.descripcion, a.cod_arbol, a.idexpediente, a.estado_cierre","vexpediente_serie a",$lista2." and (a.cod_padre=".$papas[$i]["idexpediente"].") AND a.estado_cierre=1","GROUP BY a.fecha, a
+.nombre, a.descripcion, a.cod_arbol, a.idexpediente, estado_cierre order by idexpediente desc",$conn);
+		if($hijos_expediente['numcampos']){
+			$child=1;
+		}
+		echo(" child=\"".$child."\" ");    
+		
     	echo(">");
 			if(@$_REQUEST["uid"] || @$_REQUEST["carga_total"]){
     		llena_expediente($papas[$i]["idexpediente"]);
@@ -171,7 +186,7 @@ return;
 function llena_entidad_serie($iddependencia,$series){
     global $conn,$activo;
     
-    $condicion_final="categoria=2 AND tipo=1 AND idserie IN(".$series.")";
+    $condicion_final="categoria=2 AND idserie IN(".$series.")";
     $series=busca_filtro_tabla("nombre,idserie,codigo","serie",$condicion_final.$activo,"",$conn);
     
    
@@ -198,7 +213,7 @@ function llena_entidad_serie($iddependencia,$series){
         }
         
         echo("</item>\n");
-    }
+    }	
 }
 
 function llena_subseries_tipo_documental($iddependencia,$idserie){

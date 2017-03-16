@@ -13,7 +13,7 @@ $iddocumento=$_REQUEST["iddoc"];
     $numero=$formato[0]["numero"];
     $texto.='<b>'.strtoupper($formato[0]["nombre"]).':</b><br>';
     $texto.="Numero Radicado: ".$formato[0]["numero"]."<br>";
-    $texto.=strip_tags(utf8_encode(html_entity_decode("Descripcion:".$formato[0]["etiqueta"])),"<b>");
+    $texto.=strip_tags(codifica_encabezado(html_entity_decode("Descripcion:".$formato[0]["etiqueta"])),"<b>");
     $descripcion=busca_filtro_tabla("","campos_formato","formato_idformato=".$formato[0]["idformato"]." AND acciones LIKE '%d%'","",$conn);
     if($descripcion["numcampos"]){
       $campo_descripcion=$descripcion[0]["nombre"];

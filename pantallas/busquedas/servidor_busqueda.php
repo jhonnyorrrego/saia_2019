@@ -9,10 +9,7 @@ while($max_salida>0){
   $max_salida--;
 }
 include_once($ruta_db_superior."db.php");
-
 $validar_enteros=array("idbusqueda_componente","idbusqueda_filtro_temp","idbusqueda_temporal","llave_unica");
-
-
 usuario_actual("login");
 $array_export=array();
 if(@$_REQUEST["exportar_saia"]=='excel'){
@@ -91,7 +88,7 @@ if(@$_REQUEST["exportar_saia"]=='excel'){
 			$nombre_campo_funcion=explode("@",$datos2[1]);
 			array_push($columnas_excel,$nombre_campo_funcion[0]);
 			if($page==1)
-				$array_export[-1][$datos2[1]]=utf8_encode(html_entity_decode(strip_tags($datos2[0])));
+				$array_export[-1][$datos2[1]]=codifica_encabezado(html_entity_decode(strip_tags($datos2[0])));
 		}
 		$cant_columnas_excel=count($columnas_excel);
 	} else if($datos_busqueda[0]["tipo_busqueda"]==2) {
@@ -104,7 +101,7 @@ if(@$_REQUEST["exportar_saia"]=='excel'){
 			$datos2=explode("@",$datos[1]);
 			array_push($columnas_excel,$datos2[0]);
 			if($page==1)
-				$array_export[-1][$datos2[0]]=utf8_encode(html_entity_decode(strip_tags($datos[0])));
+				$array_export[-1][$datos2[0]]=codifica_encabezado(html_entity_decode(strip_tags($datos[0])));
 		}
 		$cant_columnas_excel=count($columnas_excel);
 	}
@@ -202,11 +199,29 @@ $lcampos=$campos;
 $campos_consulta=strtolower(implode(",",array_unique($lcampos)));
 $tablas_consulta=strtolower(implode(",",array_unique($tablas)));
 
+$funciones_tablas=parsear_datos_plantilla_visual($tablas_consulta);
+foreach($funciones_tablas AS $key=>$valor){
+  unset($valor_variables);
+  $valor_variables=array();
+  $funcion=explode("@",$valor);
+  $variables=explode(",",$funcion[1]);
+  $cant_variables=count($variables);
+  for($h=0;$h<$cant_variables;$h++){
+    if(@$variables_final[$variables[$h]])
+      array_push($valor_variables,$variables_final[$variables[$h]]);
+    else
+      array_push($valor_variables,$variables[$h]);
+  }
+  $resultado=call_user_func_array($funcion[0],$valor_variables);
+  $tablas_consulta=str_replace("{*".$valor."*}",$resultado,$tablas_consulta);  
+}
+
+
 $ordenar_consulta="";
 $agrupar_consulta=$datos_busqueda[0]["agrupado_por"];
 if(MOTOR=='MySql' || MOTOR=='Oracle') {
 	if($agrupar_consulta!=""){
-	  $ordenar_consulta.=" GROUP BY ".implode(",",$agrupacion);
+	  $ordenar_consulta.=" GROUP BY ".$agrupar_consulta;
 	  $ordenar_consulta_aux=" GROUP BY ".implode(",",$agrupacion);
 	}
 	if($sidx && $sord){
@@ -495,7 +510,7 @@ if($result["numcampos"]){
 
 			if(@$_REQUEST["exportar_saia"]=='excel' || @$_REQUEST["exportar_saia"]=='csv'){
 				for($k=0;$k<$cant_columnas_excel;$k++){
-					$array_export[$i][$columnas_excel[$k]] = utf8_encode(html_entity_decode(strip_tags($response->rows[$i]->$columnas_excel[$k])));
+					$array_export[$i][$columnas_excel[$k]] = codifica_encabezado(html_entity_decode(strip_tags($response->rows[$i]->$columnas_excel[$k])));
 				}
 				
 			}
@@ -504,7 +519,7 @@ if($result["numcampos"]){
 				if(@$_REQUEST["exportar_saia"]=='excel' || @$_REQUEST["exportar_saia"]=='csv') {
 					$array_export[$i][$columnas_excel[$k]]=(html_entity_decode(strip_tags($response->rows[$i]->$columnas_excel[$k])));
 				} else {
-					$array_export[$i][$columnas_excel[$k]]=utf8_encode(html_entity_decode(strip_tags($response->rows[$i]->$columnas_excel[$k])));
+					$array_export[$i][$columnas_excel[$k]]=codifica_encabezado(html_entity_decode(strip_tags($response->rows[$i]->$columnas_excel[$k])));
 				}
 			}
 		}

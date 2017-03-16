@@ -139,7 +139,7 @@ function buscar_plantilla($tipo=0){
                }
             elseif($lcampos[$j]["etiqueta_html"]!="arbol"){
              if(@$_REQUEST[$lcampos[$j]["nombre"]]<>'')
-                array_push($where_busqueda,array($lcampos[$j]["nombre"]=>htmlentities(utf8_decode(@$_REQUEST[$lcampos[$j]["nombre"]]))));
+                array_push($where_busqueda,array($lcampos[$j]["nombre"]=>((@$_REQUEST[$lcampos[$j]["nombre"]]))));
             }
           break;
         }

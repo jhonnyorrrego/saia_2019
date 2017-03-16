@@ -26,11 +26,11 @@ $dato_padre=busca_filtro_tabla("","expediente a","a.idexpediente=".$_REQUEST["co
   <div class="controls"> 
     <span class="phpmaker">
 			<input type="text" id="stext" width="200px" size="20">          
-      <a href="javascript:void(0)" onclick="tree2.findItem(htmlentities(document.getElementById('stext').value),1)">
+      <a href="javascript:void(0)" onclick="tree2.findItem((document.getElementById('stext').value),1)">
       <img src="<?php echo $ruta_db_superior; ?>botones/general/anterior.png"border="0px"></a>
-      <a href="javascript:void(0)" onclick="tree2.findItem(htmlentities(document.getElementById('stext').value),0,1)">
+      <a href="javascript:void(0)" onclick="tree2.findItem((document.getElementById('stext').value),0,1)">
       <img src="<?php echo $ruta_db_superior; ?>botones/general/buscar.png"border="0px"></a>
-      <a href="javascript:void(0)" onclick="tree2.findItem(htmlentities(document.getElementById('stext').value))">
+      <a href="javascript:void(0)" onclick="tree2.findItem((document.getElementById('stext').value))">
       <img src="<?php echo $ruta_db_superior; ?>botones/general/siguiente.png"border="0px"></a>      
       <div id="esperando_expediente"><img src="<?php echo $ruta_db_superior; ?>imagenes/cargando.gif"></div>
 			<div id="treeboxbox_tree2" class="arbol_saia"></div>
@@ -164,7 +164,7 @@ $(document).ready(function(){
     	<?php if(@$_REQUEST["volver"]&&@$_REQUEST["enlace"]){ ?>
     		window.open('<?php echo($ruta_db_superior.$_REQUEST["enlace"]); ?>?variable_busqueda=idexpediente/**/<?php echo($_REQUEST["cod_padre"]); ?>&idbusqueda_componente=<?php echo($_REQUEST["idbusqueda_componente"]); ?>','_self');
     	<?php } ?>
-    <?php encriptar_sqli("formulario_expediente",0,"form_info",$ruta_db_superior); ?>
+    	<?php encriptar_sqli("formulario_expediente",0,"form_info",$ruta_db_superior); ?>
       $.ajax({
         type:'POST',
         async:false,

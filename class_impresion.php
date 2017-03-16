@@ -196,7 +196,7 @@ class Imprime_Pdf {
 	}
 
 	function imprimir() {
-		$this->pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false, true);
+		$this->pdf = new MYPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false, true);
 		$this->pdf->SetMargins($this->margenes["izquierda"], $this->margenes["superior"], $this->margenes["derecha"], 1);
 		$this->pdf->AddFont($this->font_family);
 		$this->pdf->SetFont($this->font_family, '', $this->font_size);
@@ -330,7 +330,7 @@ class Imprime_Pdf {
 		    $request_url=str_replace('.php','.php?1=1',$_REQUEST['url']);
 		    $direccion[]= PROTOCOLO_CONEXION.RUTA_PDF_LOCAL."/".str_replace('|','&',$request_url);
 		}else{
-    		$datos_formato = busca_filtro_tabla("nombre,nombre_tabla,ruta_mostrar,idformato", "formato,documento", "lower(plantilla)=nombre and iddocumento=$iddocumento", "", $conn);
+    		$datos_formato = busca_filtro_tabla("papel,orientacion,nombre,nombre_tabla,ruta_mostrar,idformato", "formato,documento", "lower(plantilla)=nombre and iddocumento=$iddocumento", "", $conn);
     			
     		$datos_plantilla = busca_filtro_tabla("", $datos_formato[0]["nombre_tabla"], "documento_iddocumento=$iddocumento", "", $conn);
     		
@@ -362,7 +362,18 @@ class Imprime_Pdf {
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 			
 			$this->pdf->startPageGroup();
-			$this->pdf->AddPage();
+			
+			$orientacion_pag='';
+			$tamanio_pag='';
+			if($datos_formato['numcampos']){  // P-vertical ,L-horizontal
+				if($datos_formato[0]['orientacion']){   //HORIZONTAL
+					$orientacion_pag='L';
+				}else{  //VERTICAL
+					$orientacion_pag='P';
+				}
+				$tamanio_pag=$datos_formato[0]['papel'];	
+			}
+			$this->pdf->AddPage($orientacion_pag,$tamanio_pag);
 			$contenido = curl_exec($ch);
 			
 			$contenido = str_replace("../../../images", PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . "/../images", $contenido);

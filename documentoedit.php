@@ -1016,11 +1016,11 @@ function ad_ejecutor($value,$tipo,$nombre)
   
   $condicion=($x_nitejecutor2 != "") ?  "identificacion='".$x_nitejecutor2."'"  :  '(identificacion is NULL or identificacion="")';
      
-  $campo = busca_filtro_tabla("idejecutor","ejecutor,datos_ejecutor","ejecutor_idejecutor=idejecutor and iddatos_ejecutor=$value and nombre like '".htmlentities($nombre)."' and $condicion","",$conn);
+  $campo = busca_filtro_tabla("idejecutor","ejecutor,datos_ejecutor","ejecutor_idejecutor=idejecutor and iddatos_ejecutor=$value and nombre like '".($nombre)."' and $condicion","",$conn);
 
   if($campo["numcampos"]>0)
   {
-   $repetido = busca_filtro_tabla("iddatos_ejecutor","ejecutor,datos_ejecutor","idejecutor=ejecutor_idejecutor and iddatos_ejecutor=$value and cargo='".htmlentities(utf8_decode($x_cargoejecutor))."' and direccion='".htmlentities(utf8_decode($x_direccionejecutor))."' and telefono='".htmlentities(utf8_decode($x_telefonoejecutor))."' and empresa='".htmlentities(utf8_decode($x_empresaejecutor))."' and email='".htmlentities(utf8_decode($x_emailejecutor))."'","",$conn);
+   $repetido = busca_filtro_tabla("iddatos_ejecutor","ejecutor,datos_ejecutor","idejecutor=ejecutor_idejecutor and iddatos_ejecutor=$value and cargo='".(($x_cargoejecutor))."' and direccion='".(($x_direccionejecutor))."' and telefono='".(($x_telefonoejecutor))."' and empresa='".(($x_empresaejecutor))."' and email='".(($x_emailejecutor))."'","",$conn);
   // print_r($repetido);
   if($repetido["numcampos"]>0)
      return  ($value);
@@ -1044,7 +1044,7 @@ function ad_ejecutor($value,$tipo,$nombre)
   }
   else 
   {   
-    phpmkr_query("INSERT INTO ejecutor(nombre,identificacion,fecha_ingreso) VALUES('".htmlentities($nombre)."','".$x_nitejecutor2."',".fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s').")",$conn) or error("NO SE INSERTO EJECUTOR");
+    phpmkr_query("INSERT INTO ejecutor(nombre,identificacion,fecha_ingreso) VALUES('".($nombre)."','".$x_nitejecutor2."',".fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s').")",$conn) or error("NO SE INSERTO EJECUTOR");
     $idejecutor=phpmkr_insert_id();
     phpmkr_query("INSERT INTO datos_ejecutor(ejecutor_idejecutor,telefono,fecha,cargo,direccion,empresa,email) VALUES(".$idejecutor.",'".$x_telefonoejecutor."',".fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s').",'".$x_cargoejecutor."','$x_direccionejecutor','$x_empresaejecutor','$x_emailejecutor')",$conn) or error("NO SE INSERTO EJECUTOR"); 
      return(phpmkr_insert_id());    
@@ -1065,12 +1065,12 @@ $pais = busca_filtro_tabla("*","pais","","nombre",$conn);
       {$dep=busca_filtro_tabla("*","departamento","pais_idpais=".$pais[$i]["idpais"],"nombre",$conn);      
        for($j=0;$j<$dep["numcampos"];$j++)
           {
-           $texto.=  'c_departamento.forValue("'.$pais[$i]["idpais"].'").addOptionsTextValue("'.utf8_encode(html_entity_decode($dep[$j]["nombre"])).'","'.$dep[$j]["iddepartamento"].'");';           
+           $texto.=  'c_departamento.forValue("'.$pais[$i]["idpais"].'").addOptionsTextValue("'.codifica_encabezado(html_entity_decode($dep[$j]["nombre"])).'","'.$dep[$j]["iddepartamento"].'");';           
            if($dep[$j]["iddepartamento"]==$defaultd)
              $texto.="c_departamento.forValue(".$pais[$i][0].").setDefaultOptions('".$dep[$j]["iddepartamento"]."');"; 
            $mun = busca_filtro_tabla("*","municipio","departamento_iddepartamento=".$dep[$j]["iddepartamento"], limpiar_cadena_sql('nombre')." asc",$conn);         
            for($k=0; $k<$mun["numcampos"]; $k++)
-            { $texto.=  'c_departamento.forValue("'.$pais[$i]["idpais"].'").forValue("'.$dep[$j]["iddepartamento"].'").addOptionsTextValue("'.utf8_encode(html_entity_decode($mun[$k]["nombre"])).'","'.$mun[$k]["idmunicipio"].'");';
+            { $texto.=  'c_departamento.forValue("'.$pais[$i]["idpais"].'").forValue("'.$dep[$j]["iddepartamento"].'").addOptionsTextValue("'.codifica_encabezado(html_entity_decode($mun[$k]["nombre"])).'","'.$mun[$k]["idmunicipio"].'");';
               if($mun[$k]["idmunicipio"]==$defaultm)
                   $texto.="c_departamento.forValue(".$pais[$i][0].").forValue('".$dep[$j]["iddepartamento"]."').setDefaultOptions(".$mun[$k]["idmunicipio"].");";
             }       

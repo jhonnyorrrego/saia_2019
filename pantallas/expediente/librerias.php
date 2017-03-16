@@ -229,6 +229,7 @@ function asignar_expediente($idexp, $tipo_entidad, $llave_entidad, $permiso="", 
 	else return true;
 }
 function insertar_expediente_automatico($idserie,$hijo="",$indice=1){
+	/*
 	$indice++;
 	if($indice>100)return false;
 	$serie=busca_filtro_tabla("","serie a","a.idserie=".$idserie,"",$conn);
@@ -236,7 +237,12 @@ function insertar_expediente_automatico($idserie,$hijo="",$indice=1){
 	if($serie["numcampos"]){
 		$busqueda=busca_filtro_tabla("","expediente a","a.serie_idserie=".$serie[0]["idserie"],"",$conn);
 		if(!$busqueda["numcampos"]){
-			$sql1="insert into expediente(nombre, fecha, serie_idserie)values('".$serie[0]["nombre"]."', ".fecha_db_almacenar(date('Y-m-d'),'Y-m-d').", '".$serie[0]["idserie"]."')";
+			$super_serie_padre=obtener_super_padre_serie($serie[0]["idserie"]);
+			$value_agrupador="0";
+			if(intval($serie[0]['tipo_expediente'])==2){
+				$value_agrupador="1";
+			}
+			$sql1="insert into expediente(nombre, fecha, serie_idserie,agrupador)values('".$serie[0]["nombre"]."', ".fecha_db_almacenar(date('Y-m-d'),'Y-m-d').", '".$super_serie_padre."',".$value_agrupador.")";
 			phpmkr_query($sql1);
 			$id=phpmkr_insert_id();
 		}
@@ -258,6 +264,8 @@ function insertar_expediente_automatico($idserie,$hijo="",$indice=1){
 		insertar_expediente_automatico($serie[0]["cod_padre"],"",$indice);
 	}
 	else return true;
+	 */
+	 return true;
 }
 function actualizar_codigo_arbol($idserie){
 	$idexpediente=busca_filtro_tabla("","expediente A","A.serie_idserie=".$idserie,"",$conn);
@@ -312,6 +320,7 @@ function obtener_descripcion_expediente($descripcion){
 
 function mostrar_contador_expediente($idexpediente,$cod_arbol){
 	global $conn, $dependencia,$arreglo;
+	/*
 	$expedientes=arreglo_expedientes_asignados();
 	$arreglo=array();
 	obtener_expedientes_padre($idexpediente,$expedientes);
@@ -323,6 +332,7 @@ function mostrar_contador_expediente($idexpediente,$cod_arbol){
 	if(!$documentos["numcampos"])$documentos[0]["cantidad"]=0;
 	
 	return("<span class='pull-right badge' style='margin-top:3px' id='contador_docs_".$idexpediente."'>".$documentos[0]["cantidad"]."</span>");
+	*/
 }
  
 /*
@@ -564,6 +574,7 @@ function arreglo_expedientes_asignados(){
 	return($lista);
 }
 function barra_inferior_documento_expediente($iddoc,$numero,$idexpediente){
+	global $conn,$ruta_db_superior;
 $dato_prioridad=busca_filtro_tabla("","prioridad_documento","documento_iddocumento=".$iddoc,"fecha_asignacion DESC",$conn);
 
 $prioridad="icon-flag";
@@ -589,7 +600,7 @@ if($dato_prioridad["numcampos"]){
     break;
   }
 }
-$texto.='<div class="btn-group pull" >
+$texto.='<div class="pull"><div class="btn-group pull-left" >
   <button type="button" class="btn btn-mini detalle_documento_saia tooltip_saia" enlace="ordenar.php?accion=mostrar&mostrar_formato=1&key='.$iddoc.'" title="No.'.$numero.'" idregistro="'.$iddoc.'" id="expediente_'.$iddoc.'"><i class="icon-info-sign"></i></button>
   <button type="button" class="btn btn-mini dropdown-toggle tooltip_saia" data-toggle="dropdown" title="Prioridad">
     <i class="'.$prioridad.'" id="prioridad_'.$iddoc.'" prioridad="'.$prioridad.'"></i><span class="caret"></span>
@@ -609,7 +620,7 @@ $texto.='<div class="btn-group pull" >
     <i class="icon-remove"></i>
     </button>';
     }
-$texto.='</div>';
+$texto.='</div>'.mostrar_fecha_limite_documento($iddoc).'</div><br><br>';
 //$texto.=barra_estandar_documento($iddoc,$funcionario);
 return($texto);
 }
@@ -645,5 +656,17 @@ function validar_relacion_documento_expediente($doc){
     
     $consulta=busca_filtro_tabla("archivo_idarchivo","buzon_salida","archivo_idarchivo=".$doc." AND tipo_destino=1 AND lower(nombre) IN(".implode(',',$estados_validar).") AND destino=".$funcionario_codigo,"",$conn);
     return($consulta);
+}
+function obtener_super_padre_serie($idserie){
+	global $conn;
+	
+	$serie=busca_filtro_tabla("cod_padre","serie","idserie=".$idserie,"",$conn);
+	if($serie['numcampos']){
+		if($serie[0]['cod_padre']){
+			return(obtener_super_padre_serie($serie[0]['cod_padre']));
+		}else{
+			return($idserie);
+		}
+	}
 }
 ?>

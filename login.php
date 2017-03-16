@@ -37,8 +37,12 @@ if (@$_REQUEST["boton_ui"] <> "") {
 	/*$_SESSION["db"] = "saia";
 	$_SESSION["db"] = $nom_bd;*/  	
 	$configuracion=busca_filtro_tabla("A.valor","configuracion A","A.tipo='usuario' AND A.nombre='login_administrador'","",$conn);
-	$clave_admin=busca_filtro_tabla("A.valor","configuracion A","A.tipo='clave' AND A.nombre='clave_administrador'","",$conn);
-	if($configuracion["numcampos"]&&$clave_admin["numcampos"]){	 
+	$clave_admin=busca_filtro_tabla("A.valor,A.encrypt","configuracion A","A.tipo='clave' AND A.nombre='clave_administrador'","",$conn);
+	if($configuracion["numcampos"]&&$clave_admin["numcampos"]){
+		if($clave_admin[0]["encrypt"]){
+			include_once('pantallas/lib/librerias_cripto.php');
+			$clave_admin[0]["valor"]=decrypt_blowfish($clave_admin[0]["valor"],LLAVE_SAIA_CRYPTO);			
+		}	
 	 if($configuracion[0]["valor"]==$sUserId && $clave_admin[0]["valor"]==$sPassWd){
 	   $_SESSION["LOGIN".LLAVE_SAIA]=$configuracion[0]["valor"];
      alerta("IMPORTANTE: Acaba de ingresar como Administrador del sistema, todas las acciones que ejecute se registr�n bajo su responsabilidad.");
@@ -91,7 +95,7 @@ if (@$_REQUEST["boton_ui"] <> "") {
 			}
 			else
 			{
-          alerta(utf8_encode("El funcionario esta inactivo o no pertenece al sistema."));
+          alerta(codifica_encabezado("El funcionario esta inactivo o no pertenece al sistema."));
 			   	@session_unset();
           @session_destroy();
           almacenar_sesion(0,$sUserId);
@@ -128,7 +132,7 @@ if (@$_REQUEST["boton_ui"] <> "") {
      abrir_url($redirecciona_exito,"_top");    
 	} 
   else {	  
-		alerta(utf8_encode("CLAVE DE ACCESO O NOMBRE DE USUARIO NO VALIDO."));
+		alerta(codifica_encabezado("CLAVE DE ACCESO O NOMBRE DE USUARIO NO VALIDO."));
 		@session_unset();
     @session_destroy();
     almacenar_sesion(0,$sUserId);

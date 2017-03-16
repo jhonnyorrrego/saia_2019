@@ -218,7 +218,7 @@ $tareas=busca_filtro_tabla("*","tarea","","nombre ASC",$conn);
 	    { 
 	     $xmlhijo=$xml->asigna_hijo("item");
 		 $xmlhijo->asigna_atributo("style","font-family:verdana; font-size:7pt;");
-	     $xmlhijo->asigna_atributo("text",ucwords(htmlentities($tareas[$i]["nombre"])));
+	     $xmlhijo->asigna_atributo("text",ucwords(($tareas[$i]["nombre"])));
 	     $xmlhijo->asigna_atributo("id",$tareas[$i]["idtarea"]); // ."#") para idientificar las que tienen tareas hijas
 	     $hijos=busca_filtro_tabla("*","tarea D","D.idpadre='".$tareas[$i]["idtarea"]."'","idpadre",$conn);
 	   

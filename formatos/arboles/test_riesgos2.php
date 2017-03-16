@@ -197,7 +197,7 @@ $dato=busca_filtro_tabla($campo.",documento_iddocumento,id".$tabla,$tabla." a,do
 for($i=0;$i<$dato["numcampos"];$i++){
   $texto.='<item style="font-family:verdana; font-size:7pt;" '.$imagenes;
   $llave=$arreglo[0]."-".$arreglo[2]."-".$dato[$i]["id".$tabla];
-  //$texto.=strip_tags('text="'.decodifica(utf8_encode(html_entity_decode(htmlspecialchars_decode($dato[$i][$campo])))).'" id="'.$llave.'">');
+  //$texto.=strip_tags('text="'.decodifica(codifica_encabezado(html_entity_decode(htmlspecialchars_decode($dato[$i][$campo])))).'" id="'.$llave.'">');
   if($tabla=="ft_riesgos_proceso"){
   	$texto.=strip_tags('text="'.decodifica(mostrar_valor_campo("consecutivo",$arreglo[0],$dato[$i]["documento_iddocumento"],1)." - ".mostrar_valor_campo($campo,$arreglo[0],$dato[$i]["documento_iddocumento"],1)).'" id="'.$llave.'">');
   }

@@ -28,8 +28,8 @@ echo(librerias_notificaciones());
         
         <!--a href='asignarserie_entidad.php' target='serielist'>Asignar o quitar serie/categoria</a-->
         <br><br>
-			  <!--br />  Buscar: <input type="text" id="stext_serie_idserie" width="200px" size="25"><a href="javascript:void(0)" onclick="tree2.findItem(htmlentities(document.getElementById('stext_serie_idserie').value),1)"> <img src="botones/general/anterior.png" alt="Buscar Anterior" border="0px"></a><a href="javascript:void(0)" onclick="tree2.findItem(htmlentities(document.getElementById('stext_serie_idserie').value),0,1)"> <img src="botones/general/buscar.png" alt="Buscar" border="0px"></a>
-                          <a href="javascript:void(0)" onclick="tree2.findItem(htmlentities(document.getElementById('stext_serie_idserie').value))"><img src="botones/general/siguiente.png" alt="Buscar Siguiente" border="0px"></a-->
+			  <!--br />  Buscar: <input type="text" id="stext_serie_idserie" width="200px" size="25"><a href="javascript:void(0)" onclick="tree2.findItem((document.getElementById('stext_serie_idserie').value),1)"> <img src="botones/general/anterior.png" alt="Buscar Anterior" border="0px"></a><a href="javascript:void(0)" onclick="tree2.findItem((document.getElementById('stext_serie_idserie').value),0,1)"> <img src="botones/general/buscar.png" alt="Buscar" border="0px"></a>
+                          <a href="javascript:void(0)" onclick="tree2.findItem((document.getElementById('stext_serie_idserie').value))"><img src="botones/general/siguiente.png" alt="Buscar Siguiente" border="0px"></a-->
                           </span>
 			  <div id="esperando_serie"><img src="imagenes/cargando.gif"></div>
 				<div id="treeboxbox_tree2" width="100px" height="100px"></div>
@@ -63,18 +63,32 @@ echo(librerias_notificaciones());
             var dato=datos[1];
             if(datos2[1]){
                 dato=datos2[1];
+	            var datos3=dato.split("_tv");
+				var es_tvd = dato.indexOf("_tv");
+				var tvd='&tvd=1';
+	            if(es_tvd==-1){
+	            	tvd='';
+	            }                
+                
+                
                 dependencia_serie="&dependencia_serie="+datos2[0];
             }
             
            if(nodeId=='3-categoria-Otras categorias'){
            	 parent.serielist.location = "serieadd.php?otras_categorias=1"; 
            }else{
-           	parent.serielist.location = "serieview.php?key=" + dato + dependencia_serie; 
+           	parent.serielist.location = "serieview.php?key=" + datos3[0] + dependencia_serie+tvd; 
            }
            
         }else{    
             var datos=nodeId.split("d");
-            parent.serielist.location = "asignarserie_entidad.php?tipo_entidad=2&llave_entidad=" + datos[1]+'&from_dependencia=1&dependencia_serie=' + datos[1];
+            var datos2=datos[1].split("_tv");
+			var es_tvd = datos[1].indexOf("_tv");
+			var tvd='&tvd=1';
+            if(es_tvd==-1){
+            	tvd='';
+            }
+            parent.serielist.location = "asignarserie_entidad.php?tipo_entidad=2&llave_entidad=" + datos2[0]+'&from_dependencia=1&dependencia_serie=' + datos2[0] + tvd;
             //parent.serielist.location = "serieadd.php?from_dependencia=1&dependencia_serie=" + datos[1];
             
         }
@@ -131,7 +145,7 @@ echo(librerias_notificaciones());
        			});
 					}
 				});
-				tree2.findItem(htmlentities(document.getElementById('stext_serie_idserie').value));
+				tree2.findItem((document.getElementById('stext_serie_idserie').value));
        }
 	--> 		
 	</script>

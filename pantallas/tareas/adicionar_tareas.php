@@ -10,18 +10,15 @@ while($max_salida>0){
 }
 include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."librerias_saia.php");
-
 include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
 $validar_enteros=array("responsable","iddoc");
 desencriptar_sqli('form_info');
-
-
 echo(librerias_jquery("1.7"));
 include_once($ruta_db_superior."class_transferencia.php");
 include_once($ruta_db_superior."formatos/librerias/funciones_generales.php");
 echo(estilo_bootstrap());
 if($_REQUEST['guardar']==1){
-	$sql="INSERT INTO tareas (fecha,tarea,responsable,descripcion,prioridad,fecha_tarea,ejecutor,documento_iddocumento) VALUES(".fecha_db_almacenar($_REQUEST['fecha'],"Y-m-d H:i:s").",'".htmlentities($_REQUEST['tarea'])."','".$_REQUEST['responsable']."','".htmlentities($_REQUEST[descripcion])."','".$_REQUEST[prioridad]."',".fecha_db_almacenar($_REQUEST['fecha_tarea'],"Y-m-d").",'".usuario_actual("funcionario_codigo")."','".$_REQUEST['iddoc']."')";
+	$sql="INSERT INTO tareas (fecha,tarea,responsable,descripcion,prioridad,fecha_tarea,ejecutor,documento_iddocumento) VALUES(".fecha_db_almacenar($_REQUEST['fecha'],"Y-m-d H:i:s").",'".($_REQUEST['tarea'])."','".$_REQUEST['responsable']."','".($_REQUEST[descripcion])."','".$_REQUEST[prioridad]."',".fecha_db_almacenar($_REQUEST['fecha_tarea'],"Y-m-d").",'".usuario_actual("funcionario_codigo")."','".$_REQUEST['iddoc']."')";
 	phpmkr_query($sql);
 	$formato=busca_filtro_tabla("b.idformato","documento a, formato b","lower(a.plantilla)=b.nombre AND a.iddocumento=".$_REQUEST['iddoc'],"",$conn);
 	$responsable=str_replace(",", "@", $_REQUEST['responsable']);
@@ -41,7 +38,6 @@ if($_REQUEST['guardar']==1){
     echo(librerias_datepicker_bootstrap());
   }
   else{
-    
     echo(librerias_arboles());
     echo(librerias_bootstrap());
     echo(librerias_datepicker_bootstrap());
@@ -140,11 +136,11 @@ function arbol($campo,$nombre_arbol,$url,$cargar_todos=0,$padresehijos=false,$qu
 	?>
 	<div ><?php //echo $seleccionados; ?></div>
 	<input type="text" id="stext<?php echo $entidad; ?>" width="200px" size="25" placeholder="Buscar">
-<a href="javascript:void(0)" onclick="stext<?php echo $entidad; ?>.findItem(htmlentities(document.getElementById('stext<?php echo $entidad; ?>').value),1)">
+<a href="javascript:void(0)" onclick="stext<?php echo $entidad; ?>.findItem((document.getElementById('stext<?php echo $entidad; ?>').value),1)">
 <img src="<?php echo $ruta_db_superior; ?>botones/general/anterior.png" alt="Buscar Anterior" border="0px"></a>
-<a href="javascript:void(0)" onclick="tree<?php echo $entidad; ?>.findItem(htmlentities(document.getElementById('stext<?php echo $entidad; ?>').value),0,1)">
+<a href="javascript:void(0)" onclick="tree<?php echo $entidad; ?>.findItem((document.getElementById('stext<?php echo $entidad; ?>').value),0,1)">
 <img src="<?php echo $ruta_db_superior; ?>botones/general/buscar.png" alt="Buscar" border="0px"></a>
-<a href="javascript:void(0)" onclick="tree<?php echo $entidad; ?>.findItem(htmlentities(document.getElementById('stext<?php echo $entidad; ?>').value))">
+<a href="javascript:void(0)" onclick="tree<?php echo $entidad; ?>.findItem((document.getElementById('stext<?php echo $entidad; ?>').value))">
 <img src="<?php echo $ruta_db_superior; ?>botones/general/siguiente.png" alt="Buscar Siguiente" border="0px"></a>
 </span>
 

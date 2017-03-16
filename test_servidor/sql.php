@@ -168,7 +168,7 @@ la matriz es del tipo: resultado[0]['campo']='valor'
 <Post-condiciones>la matriz con los valores del resultado se obtiene por medio de la función Resultado
 */ 
   function  Ejecutar_Sql_Noresult($sql)
-    { $sql = html_entity_decode(htmlentities(utf8_decode($sql)));
+    { $sql = html_entity_decode((utf8_decode($sql)));
       switch ($this->motor)
         {
            case "MySql":
@@ -387,7 +387,7 @@ valores-los valores a insertar
 <Post-condiciones>
 */   
   function  Insertar($campos, $tabla, $valores)
-    { $valores = html_entity_decode(htmlentities(utf8_decode($valores)));
+    { $valores = html_entity_decode((utf8_decode($valores)));
         switch ($this->motor)
         {
             case "MySql":
@@ -453,7 +453,7 @@ valores-los valores a insertar
 <Post-condiciones>
 */      
   function Modificar($tabla, $actualizaciones, $where){ 
-    $actualizaciones = html_entity_decode(htmlentities(utf8_decode($actualizaciones)));
+    $actualizaciones = html_entity_decode((utf8_decode($actualizaciones)));
     switch ($this->motor){
         case "MySql":
           $this->Modificar_MySql($tabla, $actualizaciones, $where);
@@ -524,7 +524,7 @@ valores-los valores a insertar
 */
   //ejecuta un sql que debe devuelve un solo registro
   function Ejecutar_Sql_Tipo($sql)
-    { $sql = html_entity_decode(htmlentities(utf8_decode($sql)));
+    { $sql = html_entity_decode((utf8_decode($sql)));
       switch ($this->motor)
           {
               case "MySql":

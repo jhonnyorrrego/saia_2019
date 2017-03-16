@@ -17,10 +17,9 @@ $max_salida=6; $ruta_db_superior=$ruta=""; while($max_salida>0){ if(is_file($rut
   border: 0px solid #E3E3E3;
 }
 </style>
-<?php include_once($ruta_db_superior."db.php");
+<?php include_once($ruta_db_superior."db.php"); 
 include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
-
- ?>
+?>
 <script type="text/javascript" src="<?php echo($ruta_db_superior);?>js/jquery-1.7.min.js"></script>
 <?php include_once($ruta_db_superior."librerias_saia.php");
 $datos=busca_filtro_tabla(fecha_db_obtener('a.fecha','Y-m-d')." as x_fecha, ".fecha_db_obtener('a.fecha_extrema_i','Y-m-d')." as x_fecha_extrema_i, ".fecha_db_obtener('a.fecha_extrema_f','Y-m-d')." x_fecha_extrema_f,a.*","expediente a","a.idexpediente=".$_REQUEST["idexpediente"],"",$conn);
@@ -97,11 +96,11 @@ if($dato_padre["numcampos"]){
   	<br />
     <span class="phpmaker">
 			<input type="text" id="stext" width="200px" size="20">          
-      <a href="javascript:void(0)" onclick="tree2.findItem(htmlentities(document.getElementById('stext').value),1)">
+      <a href="javascript:void(0)" onclick="tree2.findItem((document.getElementById('stext').value),1)">
       <img src="<?php echo $ruta_db_superior; ?>botones/general/anterior.png"border="0px"></a>
-      <a href="javascript:void(0)" onclick="tree2.findItem(htmlentities(document.getElementById('stext').value),0,1)">
+      <a href="javascript:void(0)" onclick="tree2.findItem((document.getElementById('stext').value),0,1)">
       <img src="<?php echo $ruta_db_superior; ?>botones/general/buscar.png"border="0px"></a>
-      <a href="javascript:void(0)" onclick="tree2.findItem(htmlentities(document.getElementById('stext').value))">
+      <a href="javascript:void(0)" onclick="tree2.findItem((document.getElementById('stext').value))">
       <img src="<?php echo $ruta_db_superior; ?>botones/general/siguiente.png"border="0px"></a>      
       <div id="esperando_expediente"><img src="<?php echo $ruta_db_superior; ?>imagenes/cargando.gif"></div>
 			<div id="treeboxbox_tree2" class="arbol_saia"></div>
@@ -113,36 +112,21 @@ if($dato_padre["numcampos"]){
 <div class="control-group element">
   <label class="control-label" for="serie_idserie">Serie asociada *
   </label>
-  <div class="controls">
-      
-    <?php
-    if(!$dato_padre['numcampos']){
-    
-    ?>         
+  <div class="controls">       
   	<b><?php echo(mostrar_seleccionados_exp($datos[0]["serie_idserie"],"nombre","serie")); ?></b>
   	<br />
     <span class="phpmaker">
 			<input type="text" id="stext_serie" width="200px" size="20">          
-      <a href="javascript:void(0)" onclick="tree3.findItem(htmlentities(document.getElementById('stext_serie').value),1)">
+      <a href="javascript:void(0)" onclick="tree3.findItem((document.getElementById('stext_serie').value),1)">
       <img src="<?php echo $ruta_db_superior; ?>botones/general/anterior.png"border="0px"></a>
-      <a href="javascript:void(0)" onclick="tree3.findItem(htmlentities(document.getElementById('stext_serie').value),0,1)">
+      <a href="javascript:void(0)" onclick="tree3.findItem((document.getElementById('stext_serie').value),0,1)">
       <img src="<?php echo $ruta_db_superior; ?>botones/general/buscar.png"border="0px"></a>
-      <a href="javascript:void(0)" onclick="tree3.findItem(htmlentities(document.getElementById('stext_serie').value))">
+      <a href="javascript:void(0)" onclick="tree3.findItem((document.getElementById('stext_serie').value))">
       <img src="<?php echo $ruta_db_superior; ?>botones/general/siguiente.png"border="0px"></a>      
       <div id="esperando_serie"><img src="<?php echo $ruta_db_superior; ?>imagenes/cargando.gif"></div>
 			<div id="treeboxbox_tree3" class="arbol_saia"></div>
     </span>
      <input type="text" style="display:none;" name="serie_idserie" id="serie_idserie" value="<?php echo($datos[0]["serie_idserie"]); ?>">
-    <?php
-    }else{
-        $datos_serie_padre=busca_filtro_tabla("nombre","serie","idserie=".$dato_padre[0]['serie_idserie'],"",$conn);
-        echo('<ul><li><b>'.$datos_serie_padre[0]['nombre'].'</b></li></ul>');
-    ?>
-    <input style="display:none;" type="text" name="serie_idserie" id="serie_idserie" value="<?php echo($dato_padre[0]['serie_idserie']); ?>">
-    <?php
-    }
-    ?> 
-     
   </div>
 </div>
 
@@ -196,11 +180,11 @@ if($dato_padre["numcampos"]){
 	  	<br />
 	    <span class="phpmaker">
 				<input type="text" id="stext_dependencia" width="200px" size="20">          
-	      <a href="javascript:void(0)" onclick="tree4.findItem(htmlentities(document.getElementById('stext_unidad_admin').value),1)">
+	      <a href="javascript:void(0)" onclick="tree4.findItem((document.getElementById('stext_unidad_admin').value),1)">
 	      <img src="<?php echo $ruta_db_superior; ?>botones/general/anterior.png"border="0px"></a>
-	      <a href="javascript:void(0)" onclick="tree4.findItem(htmlentities(document.getElementById('stext_unidad_admin').value),0,1)">
+	      <a href="javascript:void(0)" onclick="tree4.findItem((document.getElementById('stext_unidad_admin').value),0,1)">
 	      <img src="<?php echo $ruta_db_superior; ?>botones/general/buscar.png"border="0px"></a>
-	      <a href="javascript:void(0)" onclick="tree4.findItem(htmlentities(document.getElementById('stext_unidad_admin').value))">
+	      <a href="javascript:void(0)" onclick="tree4.findItem((document.getElementById('stext_unidad_admin').value))">
 	      <img src="<?php echo $ruta_db_superior; ?>botones/general/siguiente.png"border="0px"></a>      
 	      <div id="esperando_unidad_admin"><img src="<?php echo $ruta_db_superior; ?>imagenes/cargando.gif"></div>
 				<div id="treeboxbox_tree4" class="arbol_saia"></div>
@@ -422,11 +406,7 @@ if($dato_padre["numcampos"]){
       else
         document.poppedLayer = eval('document.layers["esperando_expediente"]');
       document.poppedLayer.style.display = "";
-    }
-    <?php
-    if(!$dato_padre['numcampos']){
-    
-    ?>    
+    }  
     
     tree3=new dhtmlXTreeObject("treeboxbox_tree3","","",0);
   	tree3.setImagePath("<?php echo($ruta_db_superior);?>imgs/");
@@ -436,8 +416,8 @@ if($dato_padre["numcampos"]){
     tree3.setOnLoadingStart(cargando_serie);
     tree3.setOnLoadingEnd(fin_cargando_serie);
     tree3.enableSmartXMLParsing(true);
-    tree3.setXMLAutoLoading("<?php echo($ruta_db_superior);?>test_serie_funcionario.php?con_padres=1&seleccionado=<?php echo($datos[0]["serie_idserie"]); ?>&seleecionar_padre=1&pantalla=expediente");	
-  	tree3.loadXML("<?php echo($ruta_db_superior);?>test_serie_funcionario.php?con_padres=1&seleccionado=<?php echo($datos[0]["serie_idserie"]); ?>&seleecionar_padre=1&pantalla=expediente");
+    tree3.setXMLAutoLoading("<?php echo($ruta_db_superior);?>test_serie_funcionario.php?seleccionado=<?php echo($datos[0]["serie_idserie"]); ?>&seleecionar_padre=1&pantalla=expediente&categoria=2&nivel=series,subseries&con_padres=1");	
+  	tree3.loadXML("<?php echo($ruta_db_superior);?>test_serie_funcionario.php?seleccionado=<?php echo($datos[0]["serie_idserie"]); ?>&seleecionar_padre=1&pantalla=expediente&categoria=2&nivel=series,subseries&con_padres=1");
     tree3.setOnCheckHandler(onNodeSelect_serie);
       
   	function onNodeSelect_serie(nodeId){
@@ -482,11 +462,7 @@ if($dato_padre["numcampos"]){
       else
         document.poppedLayer = eval('document.layers["esperando_serie"]');
       document.poppedLayer.style.display = "";
-    }
-    <?php
-    }
-    
-    ?>     
+    }   
     
     tree4=new dhtmlXTreeObject("treeboxbox_tree4","","",0);
   	tree4.setImagePath("<?php echo($ruta_db_superior);?>imgs/");
@@ -578,7 +554,7 @@ $(document).ready(function(){
     if(formulario_expediente.valid()){
     	$('#cargando_enviar').html("<div id='icon-cargando'></div>Procesando");
 			$(this).attr('disabled', 'disabled');
-	<?php encriptar_sqli("formulario_expediente",0,"form_info",$ruta_db_superior); ?>
+			<?php encriptar_sqli("formulario_expediente",0,"form_info",$ruta_db_superior); ?>
       $.ajax({
         type:'POST',
         async:false,

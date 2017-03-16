@@ -177,21 +177,20 @@ if($datos[0]["numero"]){
 	$codigo_qr=busca_filtro_tabla("","documento_verificacion","documento_iddocumento=".$doc,"", $conn);	
 	$qr='';
 	if($codigo_qr['numcampos']){
-	    
 	    if(file_exists(PROTOCOLO_CONEXION.RUTA_PDF_LOCAL."/".$codigo_qr[0]['ruta_qr'])){
-            $qr='<img src="'.PROTOCOLO_CONEXION.RUTA_PDF_LOCAL.'/'.$codigo_qr[0]['ruta_qr'].'" width="50px" height="50px">';		        
+            $qr='<img src="'.PROTOCOLO_CONEXION.RUTA_PDF_LOCAL.'/'.$codigo_qr[0]['ruta_qr'].'" width="70px" height="70px">';		        
 	    }else{
     		include_once($ruta_db_superior."pantallas/qr/librerias.php");
     		generar_codigo_qr('',$doc);
     		$codigo_qr=busca_filtro_tabla("","documento_verificacion","documento_iddocumento=".$doc,"", $conn);	
-    		$qr='<img src="'.PROTOCOLO_CONEXION.RUTA_PDF_LOCAL.'/'.$codigo_qr[0]['ruta_qr'].'" width="50px" height="50px">';		        
+    		$qr='<img src="'.PROTOCOLO_CONEXION.RUTA_PDF_LOCAL.'/'.$codigo_qr[0]['ruta_qr'].'" width="70px" height="70px">';		        
 	    }
 	}
 	else{
 		include_once($ruta_db_superior."pantallas/qr/librerias.php");
 		generar_codigo_qr('',$doc);
 		$codigo_qr=busca_filtro_tabla("","documento_verificacion","documento_iddocumento=".$doc,"", $conn);	
-		$qr='<img src="'.PROTOCOLO_CONEXION.RUTA_PDF_LOCAL.'/'.$codigo_qr[0]['ruta_qr'].'" width="50px" height="50px">';		        
+		$qr='<img src="'.PROTOCOLO_CONEXION.RUTA_PDF_LOCAL.'/'.$codigo_qr[0]['ruta_qr'].'" width="70px" height="70px">';		        
 	}
 }
 ?>
@@ -249,7 +248,7 @@ function imprime(atras){
   window.print();
   //comando_documento('ClearAuthenticationCache');
   if(url!=""){
-      window.open("<?php echo $enlace; ?>","<?php echo $target; ?>");
+      window.open("<?php echo $enlace; ?>","<?php echo $target; ?>","scrollbars=no");
   }else{
       window.history.go(-atras);
   }       
@@ -280,8 +279,28 @@ function imprime(atras){
   <b>Fecha: <?php echo $datos_fecha; ?></b><br/>
   
  <?php if(($datos[0]["tipo_radicado"]==1 || $datos[0]["tipo_radicado"]==2) && $datos[0]['plantilla']=='radicacion_entrada'){
+     
+         //print_r($datos);
         ?>
-      <b>Desc: <?php echo codifica_encabezado(html_entity_decode(@$_REQUEST["descripcion_general"]));/*$numero_folios[0]['numero_folios'];*/ ?></b><br/>
+      <b>Asunto: <?php 
+      
+              if(@$_REQUEST['descripcion_general']){
+              	$suspensivos='';	
+				$cadena=codifica_encabezado(html_entity_decode(@$_REQUEST["descripcion_general"]));
+              	if(strlen(  $cadena  ) > 30){
+              		$suspensivos='...';
+              	}	
+                echo  substr($cadena,0,30).$suspensivos;
+              }else{
+              	$suspensivos='';
+              	$cadena=codifica_encabezado(html_entity_decode(@$datos[0]["descripcion"]));
+              	if(strlen(  $cadena  ) > 30){
+              		$suspensivos='...';
+              	}              	
+                echo substr($cadena,0,30).$suspensivos; 
+              }
+             
+             ?></b><br/>
  <?php }?>
  <b>Origen: <?php echo($origen);?></b><br/>
   
@@ -331,7 +350,7 @@ function generar_ingreso_formato($nombre_formato){
 			$_REQUEST[$formato[$i]["nombre_campo"]]='0';
 		}
 		else if(strtolower($formato[$i]["tipo_dato"])=='varchar'){
-		        if($formato[$i]["nombre_campo"]!='descripcion_general'){
+		        if($formato[$i]["nombre_campo"]!='descripcion'){
 		            $_REQUEST[$formato[$i]["nombre_campo"]]='&nbsp;';
                 }
 		}
@@ -363,7 +382,7 @@ function generar_ingreso_formato($nombre_formato){
 	$_REQUEST["continuar"] = "Solicitar Radicado";  //Siempre va esto
 	$_REQUEST["ejecutor"] = usuario_actual("funcionario_codigo");
 	$_REQUEST["estado_radicado"]='2';
-	$_REQUEST["descripcion_general"]=decodifica_encabezado(htmlentities($_REQUEST["descripcion_general"]));
+	$_REQUEST["descripcion"]=(($_REQUEST["descripcion_general"]));
 	
 	
 	

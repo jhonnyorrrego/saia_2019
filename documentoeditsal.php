@@ -184,7 +184,7 @@ if (($sAction == "") || (($sAction == NULL))) {
 	 if(!$x_tipoejecutor){
 	   $x_tipoejecutor=3;
 	 }   	
-	 $nombre=htmlspecialchars_decode(html_entity_decode(utf8_decode(trim($_POST["x_ejecutor2"]))));
+	 $nombre=htmlspecialchars_decode(html_entity_decode((trim($_POST["x_ejecutor2"]))));
    //$value=$_POST["x_ejecutor2"];
    $value = $_POST["ejecutor"];
 	 $x_ejecutor=ad_ejecutor($value,$x_tipoejecutor,$nombre);
@@ -373,9 +373,9 @@ return true;
 	<script type="text/javascript" src="js/dhtmlXTree.js"></script>        
         <td bgcolor="#F5F5F5" colspan="4" ><font size="1,5" face="Verdana, Arial, Helvetica, sans-serif">
 Buscar: <input type="text" id="stext_responsable" width="200px" size="25">
-<a href="javascript:void(0)" onclick="tree3.findItem(htmlentities(document.getElementById('stext_responsable').value),1)"><img src="botones/general/anterior.png"border="0px"></a>
-<a href="javascript:void(0)" onclick="tree3.findItem(htmlentities(document.getElementById('stext_responsable').value),0,1)"><img src="botones/general/buscar.png" alt="Buscar" border="0px"></a>
-    <a href="javascript:void(0)" onclick="tree3.findItem(htmlentities(document.getElementById('stext_responsable').value))"> <img src="botones/general/siguiente.png" alt="Buscar Siguiente" border="0px"></a><br />
+<a href="javascript:void(0)" onclick="tree3.findItem((document.getElementById('stext_responsable').value),1)"><img src="botones/general/anterior.png"border="0px"></a>
+<a href="javascript:void(0)" onclick="tree3.findItem((document.getElementById('stext_responsable').value),0,1)"><img src="botones/general/buscar.png" alt="Buscar" border="0px"></a>
+    <a href="javascript:void(0)" onclick="tree3.findItem((document.getElementById('stext_responsable').value))"> <img src="botones/general/siguiente.png" alt="Buscar Siguiente" border="0px"></a><br />
                 <div id="treeboxbox_tree3"></div>
 	              <script type="text/javascript">
                 <!--
@@ -430,9 +430,9 @@ echo $nombreSerie."<br />";
 	<script type="text/javascript" src="js/dhtmlXCommon.js"></script>
 	<script type="text/javascript" src="js/dhtmlXTree.js"></script>
 Buscar: <input type="text" id="stext_serie" width="200px" size="25">
-<a href="javascript:void(0)" onclick="tree_serie.findItem(htmlentities(document.getElementById('stext_serie').value),1)"><img src="botones/general/anterior.png" alt="Buscar Anterior" border="0px"></a>
-<a href="javascript:void(0)" onclick="tree_serie.findItem(htmlentities(document.getElementById('stext_serie').value),0,1)"><img src="botones/general/buscar.png" alt="Buscar" border="0px"></a>
-    <a href="javascript:void(0)" onclick="tree_serie.findItem(htmlentities(document.getElementById('stext_serie').value))"><img src="botones/general/siguiente.png" alt="Buscar Siguiente" border="0px"></a>  
+<a href="javascript:void(0)" onclick="tree_serie.findItem((document.getElementById('stext_serie').value),1)"><img src="botones/general/anterior.png" alt="Buscar Anterior" border="0px"></a>
+<a href="javascript:void(0)" onclick="tree_serie.findItem((document.getElementById('stext_serie').value),0,1)"><img src="botones/general/buscar.png" alt="Buscar" border="0px"></a>
+    <a href="javascript:void(0)" onclick="tree_serie.findItem((document.getElementById('stext_serie').value))"><img src="botones/general/siguiente.png" alt="Buscar Siguiente" border="0px"></a>  
     <br />
     <div id="esperando_serie"><img src="imagenes/cargando.gif"></div>
     <div id="treeboxbox_serie" height="100%"></div>
@@ -832,11 +832,11 @@ function ad_ejecutor($value,$tipo,$nombre)
   
   $condicion=($x_nitejecutor2 != "") ?  "identificacion='".$x_nitejecutor2."'"  :  "(identificacion is NULL or identificacion='')";
      
-  $campo = busca_filtro_tabla("idejecutor","ejecutor,datos_ejecutor","ejecutor_idejecutor=idejecutor and iddatos_ejecutor='$value' and nombre like '".htmlentities($nombre)."' and $condicion","",$conn);
+  $campo = busca_filtro_tabla("idejecutor","ejecutor,datos_ejecutor","ejecutor_idejecutor=idejecutor and iddatos_ejecutor='$value' and nombre like '".($nombre)."' and $condicion","",$conn);
  
   if($campo["numcampos"]>0)
   {
-  $repetido = busca_filtro_tabla("iddatos_ejecutor","ejecutor,datos_ejecutor","idejecutor=ejecutor_idejecutor and iddatos_ejecutor=$value and cargo='".htmlentities(utf8_decode($x_cargoejecutor))."' and direccion='".htmlentities(utf8_decode($x_direccionejecutor))."' and email='".htmlentities(utf8_decode($x_emailejecutor))."' and telefono='".htmlentities(utf8_decode($x_telefonoejecutor))."' and empresa='".htmlentities(utf8_decode($x_empresaejecutor))."'","",$conn);
+  $repetido = busca_filtro_tabla("iddatos_ejecutor","ejecutor,datos_ejecutor","idejecutor=ejecutor_idejecutor and iddatos_ejecutor=$value and cargo='".(($x_cargoejecutor))."' and direccion='".(($x_direccionejecutor))."' and email='".(($x_emailejecutor))."' and telefono='".(($x_telefonoejecutor))."' and empresa='".(($x_empresaejecutor))."'","",$conn);
        
   if($repetido["numcampos"]>0)
      return  ($value);
@@ -860,7 +860,7 @@ function ad_ejecutor($value,$tipo,$nombre)
   }
   else 
   {   
-    phpmkr_query("INSERT INTO ejecutor(nombre,identificacion,fecha_ingreso) VALUES('".htmlentities($nombre)."','".$x_nitejecutor2."',".fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s').")",$conn) or error("NO SE INSERTO EJECUTOR");
+    phpmkr_query("INSERT INTO ejecutor(nombre,identificacion,fecha_ingreso) VALUES('".($nombre)."','".$x_nitejecutor2."',".fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s').")",$conn) or error("NO SE INSERTO EJECUTOR");
     $idejecutor=phpmkr_insert_id();
     phpmkr_query("INSERT INTO datos_ejecutor(ejecutor_idejecutor,telefono,fecha,cargo,direccion,email,empresa) VALUES(".$idejecutor.",'".$x_telefonoejecutor."',".fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s').",'".$x_cargoejecutor."','$x_direccionejecutor','$x_emailejecutor','$x_empresaejecutor')",$conn) or error("NO SE INSERTO EJECUTOR"); 
      return(phpmkr_insert_id());    
@@ -880,12 +880,12 @@ $pais = busca_filtro_tabla("*","pais","","nombre",$conn);
       {$dep=busca_filtro_tabla("*","departamento","pais_idpais=".$pais[$i]["idpais"],"nombre",$conn);      
        for($j=0;$j<$dep["numcampos"];$j++)
           {
-           $texto.=  'c_departamento.forValue("'.$pais[$i]["idpais"].'").addOptionsTextValue("'.utf8_encode(html_entity_decode($dep[$j]["nombre"])).'","'.$dep[$j]["iddepartamento"].'");';           
+           $texto.=  'c_departamento.forValue("'.$pais[$i]["idpais"].'").addOptionsTextValue("'.codifica_encabezado(html_entity_decode($dep[$j]["nombre"])).'","'.$dep[$j]["iddepartamento"].'");';           
            if($dep[$j]["iddepartamento"]==$defaultd)
              $texto.="c_departamento.forValue(".$pais[$i][0].").setDefaultOptions('".$dep[$j]["iddepartamento"]."');"; 
            $mun = busca_filtro_tabla("*","municipio","departamento_iddepartamento=".$dep[$j]["iddepartamento"],limpiar_cadena_sql("nombre")." asc",$conn);         
            for($k=0; $k<$mun["numcampos"]; $k++)
-            { $texto.=  'c_departamento.forValue("'.$pais[$i]["idpais"].'").forValue("'.$dep[$j]["iddepartamento"].'").addOptionsTextValue("'.utf8_encode(html_entity_decode($mun[$k]["nombre"])).'","'.$mun[$k]["idmunicipio"].'");';
+            { $texto.=  'c_departamento.forValue("'.$pais[$i]["idpais"].'").forValue("'.$dep[$j]["iddepartamento"].'").addOptionsTextValue("'.codifica_encabezado(html_entity_decode($mun[$k]["nombre"])).'","'.$mun[$k]["idmunicipio"].'");';
               if($mun[$k]["idmunicipio"]==$defaultm)
                   $texto.="c_departamento.forValue(".$pais[$i][0].").forValue('".$dep[$j]["iddepartamento"]."').setDefaultOptions(".$mun[$k]["idmunicipio"].");";
             }       

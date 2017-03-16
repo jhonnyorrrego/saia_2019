@@ -24,6 +24,7 @@ $x_ayuda = Null;
 $x_imagen = Null;
 ?>
 <?php include_once("../../../../../db.php") ?>
+<?php include_once("../../../../../librerias_saia.php"); echo(estilo_bootstrap()); ?>
 <?php include_once("../../../../../phpmkrfn.php") ?>
 
 <?php
@@ -145,7 +146,7 @@ if ($sOrderBy != "") {
 	
 </head>
 <body>
-
+<div class="container">
 
 <?php
 
@@ -168,8 +169,8 @@ if ($nDisplayRecs <= 0) { // Display All Records
  
 //SetUpStartRec(); // Set Up Start Record Position
 ?>
-<p><span class="phpmaker"><H3>PLANTILLAS DE TEXTO</H3>
-</span></p>
+<H5>PLANTILLAS DE TEXTO</H5>
+
 
 <table border="0" cellspacing="0" cellpadding="0">
 
@@ -185,13 +186,13 @@ if (@$HTTP_SESSION_VARS["ewmsg"] <> "") {
 }
 ?>
 <form method="post">
-<table border="0" cellspacing="1" cellpadding="4" bgcolor="#CCCCCC">
+<table border="0"  class="table">
 <?php if ($nTotalRecs > 0) { ?>
 	<!-- Table header -->
-	<tr bgcolor="#666666">
-		<td valign="top"><span class="phpmaker" style="color: #FFFFFF;">
-	<a href="pretextolist.php?order=<?php echo urlencode("asunto"); ?>" style="color: #FFFFFF;">Asunto&nbsp;(*)<?php if (@$HTTP_SESSION_VARS["pretexto_x_asunto_Sort"] == "ASC") { ?><img src="images/sortup.gif" width="10" height="9" border="0"><?php } elseif (@$HTTP_SESSION_VARS["pretexto_x_asunto_Sort"] == "DESC") { ?><img src="images/sortdown.gif" width="10" height="9" border="0"><?php } ?></a>
-		</span></td>
+	<tr >
+		<th valign="top">
+	<a href="pretextolist.php?order=<?php echo urlencode("asunto"); ?>" >Asunto&nbsp;(*)<?php if (@$HTTP_SESSION_VARS["pretexto_x_asunto_Sort"] == "ASC") { ?><img src="images/sortup.gif" width="10" height="9" border="0"><?php } elseif (@$HTTP_SESSION_VARS["pretexto_x_asunto_Sort"] == "DESC") { ?><img src="images/sortdown.gif" width="10" height="9" border="0"><?php } ?></a>
+		</th>
 		<!--td valign="top"><span class="phpmaker" style="color: #FFFFFF;">
 	<a href="pretextolist.php?order=<?php echo urlencode("imagen"); ?>" style="color: #FFFFFF;">Icono&nbsp;(*)<?php if (@$HTTP_SESSION_VARS["pretexto_x_imagen_Sort"] == "ASC") { ?><img src="images/sortup.gif" width="10" height="9" border="0"><?php } elseif (@$HTTP_SESSION_VARS["pretexto_x_imagen_Sort"] == "DESC") { ?><img src="images/sortdown.gif" width="10" height="9" border="0"><?php } ?></a>
 		</span></td-->
@@ -279,7 +280,7 @@ if(1){
 ?>
 <form action="pretextolist.php" name="ewpagerform" id="ewpagerform" onSubmit="return activa_iframe(4)"
 >
-<table bgcolor="" border="0" cellspacing="1" cellpadding="4" bgcolor="#CCCCCC">
+<table class="table" border="0" cellspacing="1" cellpadding="4" >
 	<tr>
 		<td nowrap>
 <?php
@@ -341,7 +342,7 @@ if ($nTotalRecs > 0) {
 			<span id="tmpldesc"></span></div>
 			<fieldset>
 				<legend>{#template_dlg.preview}</legend>
-				<iframe id="plantillas_saiasrc" name="plantillas_saiasrc" src="pretextoview.php" width="600" height="280" frameborder="0"></iframe>
+				<iframe id="plantillas_saiasrc" name="plantillas_saiasrc" src="pretextoview.php" width="100%" height="280" frameborder="0"></iframe>
 			</fieldset>
 
 <div class="mceActionPanel">
@@ -355,7 +356,7 @@ if ($nTotalRecs > 0) {
 
 			<br style="clear:both" />
 </div>
-
+</div>
 </body>
 <?php
 

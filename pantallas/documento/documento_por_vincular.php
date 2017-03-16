@@ -31,6 +31,10 @@ else{
 }
 ?>
 <script type="text/javascript">
-top.noty({text: "<?php echo($mensaje);?>",type: 'alert',layout: "topCenter",timeout:3500});
-window.open("<?php echo($ruta_db_superior);?>documentoview.php?key=<?php echo($_REQUEST['iddocumento']);?>","_self");
+top.noty({text: "<?php echo($mensaje);?>",type: 'success',layout: "topCenter",timeout:3500});
+//window.open("<?php echo($ruta_db_superior);?>documentoview.php?key=<?php echo($_REQUEST['iddocumento']);?>","_self");
+
 </script>
+<?php 
+volver(1);
+?>

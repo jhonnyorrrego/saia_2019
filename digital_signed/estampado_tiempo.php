@@ -12,7 +12,7 @@ include_once($ruta_db_superior."db.php");
 
 if(@$_REQUEST["verificar"] == 1){
 	$respuesta = verificar_estampa(@$_REQUEST["idpagina"]);
-	echo utf8_encode($respuesta);
+	echo codifica_encabezado($respuesta);
 }
 
 

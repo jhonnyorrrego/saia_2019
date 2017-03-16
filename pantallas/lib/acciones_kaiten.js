@@ -93,7 +93,7 @@ function actualizar_informacion_info($panel,idregistro,componente){
     if(consulta_busqueda!='undefined'){
       $.ajax({
         type:'GET',
-        url: "../busquedas/servidor_busqueda.php",
+        url: "busquedas/servidor_busqueda.php",
         data:data,
         success: function(html){
           if(html){

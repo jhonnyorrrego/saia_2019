@@ -204,14 +204,14 @@ function validar_destino()
           $tipo="copia";   
       else 
           $tipo="";
-     $x_cargoejecutor=htmlentities(utf8_decode($_REQUEST["cargo"]));
-     $x_direccionejecutor=htmlentities(utf8_decode($_REQUEST["direccion"]));
-     $x_emailejecutor=htmlentities(utf8_decode($_REQUEST["email"]));
-     $x_empresaejecutor=htmlentities(utf8_decode($_REQUEST["empresa"]));
+     $x_cargoejecutor=(($_REQUEST["cargo"]));
+     $x_direccionejecutor=(($_REQUEST["direccion"]));
+     $x_emailejecutor=(($_REQUEST["email"]));
+     $x_empresaejecutor=(($_REQUEST["empresa"]));
      $x_ciudadejecutor=$_REQUEST["ciudad_destino"];
-     $x_telefonoejecutor=htmlentities(utf8_decode($_REQUEST["telefono"]));
-     $x_tituloejecutor=htmlentities(utf8_decode($_REQUEST["titulo"]));
-     $nombre=htmlentities(utf8_decode($_REQUEST["mostrar"]));
+     $x_telefonoejecutor=(($_REQUEST["telefono"]));
+     $x_tituloejecutor=(($_REQUEST["titulo"]));
+     $nombre=(($_REQUEST["mostrar"]));
      //si estoy adicionado
      if(!isset($_REQUEST["idejecutor"]))
         $value=$_REQUEST["nombre"];
@@ -270,7 +270,7 @@ function validar_destino()
         {phpmkr_query("UPDATE ".DB.".".$_REQUEST["tabla"]." SET $campo='$nuevo_destino' WHERE documento_iddocumento=".$_REQUEST["iddoc"],$conn);
         }
     } 
-   echo "<script>validar_destino('".$llave."','".utf8_decode($_REQUEST["mostrar"])."','$tipo');</script>";
+   echo "<script>validar_destino('".$llave."','".($_REQUEST["mostrar"])."','$tipo');</script>";
    if($tipo=="adicionar" || $tipo=="editar")
       redirecciona("funciones_adicionales.php?funcion=$funcion&iddoc=".$_REQUEST["iddoc"]."&tabla=".$_REQUEST["tabla"]);
    else if($tipo=="copia")

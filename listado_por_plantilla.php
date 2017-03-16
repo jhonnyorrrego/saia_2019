@@ -208,10 +208,10 @@ AND iddatos_ejecutor = b.cliente","",$conn);
     <?php  } ?>
     <!--last page button-->	
     <?php if ($LastStart == $nStartRec) { ?>	<td>
-      <img src="images/lastdisab.gif" alt="Último" width="16" height="16" border="0"></td>	
+      <img src="images/lastdisab.gif" alt="ï¿½ltimo" width="16" height="16" border="0"></td>	
     <?php } else { ?>	<td>
       <a href="<?php echo $ruta."&start=".$LastStart; ?>">
-        <img src="images/last.gif" alt="Último" width="16" height="16" border="0"></td>	
+        <img src="images/last.gif" alt="ï¿½ltimo" width="16" height="16" border="0"></td>	
     <?php } ?>	<td>
       <span class="phpmaker">&nbsp;de 
         <?php echo intval(($nTotalRecs-1)/$nDisplayRecs+1);?>
@@ -248,7 +248,7 @@ else//********* listado de plantillas ************************//
   for($i=0;$i<$plantilla["numcampos"];$i++)  
     {$ruta="?idformato=".$plantilla[$i]["idformato"];
      echo '<tr><td align=center >';
-     agrega_boton("texto","",$ruta,"centro",utf8_encode(strtoupper(html_entity_decode($plantilla[$i]["etiqueta"]))),"",strtolower(utf8_encode($plantilla[$i]["nombre"])));
+     agrega_boton("texto","",$ruta,"centro",codifica_encabezado(strtoupper(html_entity_decode($plantilla[$i]["etiqueta"]))),"",strtolower(codifica_encabezado($plantilla[$i]["nombre"])));
      echo '</td></tr>';
     }      
   echo '</table>';

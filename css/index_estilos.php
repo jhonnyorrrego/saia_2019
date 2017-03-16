@@ -42,6 +42,9 @@ function index_estilos($tipo_tema) {
 				case 'letra_tabs':
 					$letra_tabs = $configuracion[$i]['valor'];
 					break;
+				case 'letra_tabs_superior':
+					$letra_tabs_superior = $configuracion[$i]['valor'];
+					break;
 				case 'fondo_tab' :
 					$explode=explode(",",$configuracion[$i]['valor']);
 					 $fondo_tabs1=$explode[0];
@@ -50,6 +53,10 @@ function index_estilos($tipo_tema) {
 				case 'color_encabezado_list' :
 					$encabezado_list = $configuracion[$i]['valor'];
 					break;
+				case 'color_encabezado' :
+					$encabezado_list = $configuracion[$i]['valor'];
+					break;
+				
 				case 'barra_busqueda' :
 					$barra_busqueda = $configuracion[$i]['valor'];
 					break;
@@ -96,12 +103,13 @@ function index_estilos($tipo_tema) {
 				#userid, #passwd { background-color: transparent; height: auto; width: 200px; font-family: Verdana, Geneva, sans-serif; font-size: 20px; color: #999; font-weight: bold; margin-bottom:3px}
 				a { color: '.$color_letra.'; text-decoration: underline; font-weight: bold; }
 				a:hover { text-decoration: none; color: '.$enlace_hover.'; }
-				.footer_login { font-weight: bold; background-image: url('.$ruta_db_superior.'imagenes/login/'.$footer_login.'); background-repeat: repeat-x; background-position: left top; height: 25px; width: 100%; padding-top: 0px; padding-bottom: 0px; text-align: right; color: #FFF; position: fixed; bottom: 0px; }
+				.footer_login { font-weight: bold; background-color:'.$footer_login.'; background-repeat: repeat-x; background-position: left top; height: 25px; width: 100%; padding-top: 0px; padding-bottom: 0px; text-align: right; color: #FFF; position: fixed; bottom: 0px; }
 				.modbox-saia-main .modbox-saia-main-title {height: 45px; border-bottom:1px solid #E3E3E3; background-position:5px 5px; background-repeat: no-repeat; background-image:url('.$ruta_db_superior.'asset/img/layout/'.$icono_saia.'); background-color:#fff;}
-				.icon-collapser { background-color: transparent; background-image: url('.$ruta_db_superior.'asset/img/layout/'.$imagen_minimizar.'); background-repeat: no-repeat; background-position: right top; height: 29px; width: 47px; float: right; cursor:pointer; margin-top:-29px; }
-				.icon-collapser-close { background-color: transparent; background-image: url('.$ruta_db_superior.'asset/img/layout/'.$imagen_minimizar_close.'); background-repeat: no-repeat; background-position: right top; height: 29px; width: 47px; float: right; cursor:pointer; margin-top:-29px; }
+				.icon-collapser { background-color: '.$imagen_minimizar.'; background-image: url('.$ruta_db_superior.'asset/img/layout/'.$imagen_minimizar.'); background-repeat: no-repeat; background-position: right top; height: 29px; width: 47px; float: right; cursor:pointer; margin-top:-29px; }
+				
+				.icon-collapser-close { background-color: '.$imagen_minimizar_close.'; background-image: url('.$ruta_db_superior.'asset/img/layout/'.$imagen_minimizar_close.'); background-repeat: no-repeat; background-position: right top; height: 29px; width: 47px; float: right; cursor:pointer; margin-top:-29px; }
 				#menu-modulos .ac-title { font-weight: bold; color: '.$letra_tabs.'; padding: 2px; border: 1px solid #FFF; background: #EDF9FF; background: -moz-linear-gradient(top, '.$fondo_tabs1.' 0%, '.$fondo_tabs2.' 99%); background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, '.$fondo_tabs1.'), color-stop(99%, '.$fondo_tabs2.'));  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr=\''.$fondo_tabs1.'\', endColorstr=\''.$fondo_tabs2.'\', GradientType=0 );}
-				ul#MenuSaiaVin li a { margin: 0px; list-style-type: none; list-style-position: inside; padding: 0px; text-decoration: none; color: '.$color_letra.'; }
+				ul#MenuSaiaVin li a { margin: 0px; list-style-type: none; list-style-position: inside; padding: 0px; text-decoration: none; color: '.$letra_tabs_superior.'; }
 				.boton_saia { font-family: "Trebuchet MS", Arial, Helvetica, sans-serif; font-size: 12px; font-weight: bold; color: #4c4c4c; padding: 5px; width:100px; text-align:center;}
 				.sombra_f5 { -webkit-box-shadow: 0px 0px 10px 0px #E4E4E4; -moz-box-shadow: 0px 0px 10px 0px #E4E4E4; box-shadow: 0px 0px 10px 0px #E4E4E4; color:#4c4c4c; }
 				</style>';
@@ -117,6 +125,9 @@ function index_estilos($tipo_tema) {
 			  background-image: linear-gradient(to bottom, '.$boton_ui.');
 			}
 			.encabezado_list { 
+			    background-color: '.$encabezado_list.';
+			}
+			.encabezado { 
 			    background-color: '.$encabezado_list.';
 			}
 			textarea, input[type="text"], input[type="password"], input[type="datetime"], 

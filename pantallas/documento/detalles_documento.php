@@ -61,7 +61,7 @@ echo(origen_documento($documento[0]["iddocumento"],$documento[0]["numero"],$docu
 	<b><div class="texto-azul pull-right paso_actual"></div></b>
 </div>
 	<br />
-	<div style="text-align: justify;"><?php echo(utf8_encode(html_entity_decode($documento[0]["descripcion"])));?></div><br />
+	<div style="text-align: justify;"><?php echo(codifica_encabezado(html_entity_decode($documento[0]["descripcion"])));?></div><br />
 	<div class="btn-group pull-center"><?php echo(barra_adicional_documento($iddocumento));?></div><br /--><br />
 <div data-toggle="collapse" data-target="#div_info_doc" style="cursor:pointer;">
   <i class="icon-minus-sign"></i>  <b>Informaci&oacute;n del documento</b>

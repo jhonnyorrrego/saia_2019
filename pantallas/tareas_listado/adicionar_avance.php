@@ -19,7 +19,7 @@ echo(estilo_bootstrap());
 echo(librerias_bootstrap());
 if($_REQUEST['guardar']==1){
 	$idtareas_listado=$_REQUEST['idtareas_listado'];
-	$sql="INSERT INTO tareas_avance (tareas_idtareas,fecha,descripcion,estado,ejecutor) VALUES(".$idtareas_listado.",".fecha_db_almacenar($_REQUEST['fecha'],"Y-m-d H:i:s").",'".htmlentities($_REQUEST['descripcion'])."',".$_REQUEST['estado'].",".usuario_actual("funcionario_codigo").")";
+	$sql="INSERT INTO tareas_avance (tareas_idtareas,fecha,descripcion,estado,ejecutor) VALUES(".$idtareas_listado.",".fecha_db_almacenar($_REQUEST['fecha'],"Y-m-d H:i:s").",'".($_REQUEST['descripcion'])."',".$_REQUEST['estado'].",".usuario_actual("funcionario_codigo").")";
 	phpmkr_query($sql);
 	$sql="UPDATE tareas SET estado_tarea=".$_REQUEST["estado"]." WHERE idtareas=".$idtareas_listado;
 	phpmkr_query($sql);

@@ -30,11 +30,11 @@ global $conn;
         <div class="control-group">
           <label class="string required control-label" for="codigo">
 			<b>C&oacute;digo:</b>
-			<input type="hidden" name="bksaiacondicion_codigo" id="bksaiacondicion_codigo" value="=">
+			<input type="hidden" name="bksaiacondicion_s@codigo" id="bksaiacondicion_codigo" value="like">
           </label>
           <div class="controls">
-            <input id="bqsaia_codigo" name="bqsaia_codigo" size="50" type="text">
-            <input type="hidden" name="bqsaiaenlace_codigo" id="bqsaiaenlace_codigo" value="y">
+            <input id="bqsaia_codigo" name="bqsaia_s@codigo" size="50" type="text">
+            <input type="hidden" name="bqsaiaenlace_s@codigo" id="bqsaiaenlace_codigo" value="y">
           </div>
         </div> 
         
@@ -44,11 +44,11 @@ global $conn;
         <div class="control-group">
           <label class="string required control-label" for="nombre">
 			<b>Nombre:</b>
-			<input type="hidden" name="bksaiacondicion_nombre" id="bksaiacondicion_nombre" value="like">
+			<input type="hidden" name="bksaiacondicion_s@nombre" id="bksaiacondicion_nombre" value="like">
           </label>
           <div class="controls">
-            <input id="bqsaia_nombre" name="bqsaia_nombre" size="50" type="text">
-            <input type="hidden" name="bqsaiaenlace_nombre" id="bqsaiaenlace_nombre" value="y">
+            <input id="bqsaia_nombre" name="bqsaia_s@nombre" size="50" type="text">
+            <input type="hidden" name="bqsaiaenlace_s@nombre" id="bqsaiaenlace_nombre" value="y">
           </div>
         </div> 
        
@@ -97,11 +97,11 @@ function arbol($campo,$nombre_arbol,$url,$cargar_todos=0,$padresehijos=false,$qu
 	$entidad=$nombre_arbol;
 	?>
 	<input type="text" id="stext<?php echo $entidad; ?>" width="200px" size="25" placeholder="Buscar">
-<a href="javascript:void(0)" onclick="stext<?php echo $entidad; ?>.findItem(htmlentities(document.getElementById('stext<?php echo $entidad; ?>').value),1)">
+<a href="javascript:void(0)" onclick="stext<?php echo $entidad; ?>.findItem((document.getElementById('stext<?php echo $entidad; ?>').value),1)">
 <img src="<?php echo $ruta_db_superior; ?>botones/general/anterior.png" alt="Buscar Anterior" border="0px"></a>
-<a href="javascript:void(0)" onclick="tree<?php echo $entidad; ?>.findItem(htmlentities(document.getElementById('stext<?php echo $entidad; ?>').value),0,1)">
+<a href="javascript:void(0)" onclick="tree<?php echo $entidad; ?>.findItem((document.getElementById('stext<?php echo $entidad; ?>').value),0,1)">
 <img src="<?php echo $ruta_db_superior; ?>botones/general/buscar.png" alt="Buscar" border="0px"></a>
-<a href="javascript:void(0)" onclick="tree<?php echo $entidad; ?>.findItem(htmlentities(document.getElementById('stext<?php echo $entidad; ?>').value))">
+<a href="javascript:void(0)" onclick="tree<?php echo $entidad; ?>.findItem((document.getElementById('stext<?php echo $entidad; ?>').value))">
 <img src="<?php echo $ruta_db_superior; ?>botones/general/siguiente.png" alt="Buscar Siguiente" border="0px"></a>
 </span>
 

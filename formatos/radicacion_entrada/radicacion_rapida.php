@@ -201,9 +201,9 @@ if(@$_REQUEST["idcategoria_formato"]){
             var ibusqueda_pendiente_ingresar='<?php echo($var_ibusqueda_pendiente_ingresar); ?>';
             
             if(nodeId=='radicacion_salida'){
-                $('#enlace').val("pantallas/buscador_principal.php?idbusqueda="+ibusqueda_pendiente_ingresar+"|default_componente=pendiente_salida");
+                $('#enlace').val("ordenar.php?accion=mostrar&mostrar_formato=1");
             }else{
-                $('#enlace').val("pantallas/buscador_principal.php?idbusqueda="+ibusqueda_pendiente_ingresar+"|default_componente=pendientes_ingresar");
+                $('#enlace').val("ordenar.php?accion=mostrar&mostrar_formato=1");  //ordenar.php?accion=mostrar&mostrar_formato=1
             }
 	     }
       }
@@ -238,7 +238,7 @@ if(@$_REQUEST["idcategoria_formato"]){
 	        </td>
                     </tr>
                     <tr><td style="font-size:8pt;"  align="center">Descripci&oacuten General</td>
-                        <td align="center"><input type="text" maxlength="15" id="descripcion_general" name="descripcion_general"/></td>
+                        <td align="center"><input type="text"  id="descripcion_general" name="descripcion_general"/></td>
                     </tr>
                     <tr>
                         <td colspan="2" align="center"><input class="btn btn-primary btn-mini" type="submit" value="Radicar" id="enviar" name="enviar"/></td>

@@ -50,7 +50,7 @@ function control_funcion($idformato,$iddoc){
 	for($i=0;$i<$valoracion["numcampos"];$i++){
 		$selected='';
 		if($accion[0]["acciones_control"]==$valoracion[$i]["idft_control_riesgos"])$selected='selected';
-		$cadena_descripcion=ucfirst(strip_tags(decodifica_encabezado(html_entity_decode($valoracion[$i]["descripcion_control"]))));
+		$cadena_descripcion=ucfirst(strip_tags((html_entity_decode($valoracion[$i]["descripcion_control"]))));
 		if(strlen ( $cadena_descripcion )>70){
 		    $cadena_descripcion=substr( $cadena_descripcion , 0 , 70 ).'...';
 		}
@@ -65,7 +65,7 @@ function valor_control($idformato,$iddoc){
 	
 	$valor=busca_filtro_tabla("descripcion_control","ft_control_riesgos a","idft_control_riesgos=".$dato[0]["acciones_control"],"",$conn);
 	
-	echo strip_tags(utf8_decode(html_entity_decode($valor[0]["descripcion_control"])));
+	echo strip_tags((html_entity_decode($valor[0]["descripcion_control"])));
 }
 function validar_entrada_acciones_riesgo($idformato,$iddoc){
 	global $conn, $ruta_db_superior;

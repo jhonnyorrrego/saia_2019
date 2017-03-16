@@ -10,17 +10,12 @@ $ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
 $ruta.="../";
 $max_salida--;
 }
-
 include_once("../db.php");
-
 include_once($ruta_db_superior."librerias_saia.php");
 echo(librerias_jquery());
 include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
 $validar_enteros=array("idgrafico");
 desencriptar_sqli('form_info');
-
-
-
 if(!@$_REQUEST["idgrafico"]){
   alerta("No se ha seleccionado un gráfico");
   volver(1);
@@ -31,7 +26,6 @@ include_once("includes/funciones.php");
 <HTML>
 <HEAD> 
   <SCRIPT LANGUAGE="Javascript" SRC="FusionCharts/FusionCharts.js"></SCRIPT>
-  <script src="../js/jquery.js" type="text/javascript"></script>
   <script type="text/javascript"> 
   $().ready(function() {
     $('#opbusqueda').click(function(){
@@ -54,10 +48,10 @@ $grafico=busca_filtro_tabla("","grafico","idgrafico=".$_REQUEST["idgrafico"],"",
 //print_r($grafico);
 $ancho=$grafico[0]["ancho"];
 $alto=$grafico[0]["alto"];
-$titulo=utf8_encode(html_entity_decode($grafico[0]["etiqueta"]));
+$titulo=codifica_encabezado(html_entity_decode($grafico[0]["etiqueta"]));
 $subtitulo="";
-$titulo_x=utf8_encode(html_entity_decode($grafico[0]["etiquetax"]));
-$titulo_y=utf8_encode(html_entity_decode($grafico[0]["etiquetay"]));
+$titulo_x=codifica_encabezado(html_entity_decode($grafico[0]["etiquetax"]));
+$titulo_y=codifica_encabezado(html_entity_decode($grafico[0]["etiquetay"]));
 $prefijo=$grafico[0]["prefijo"];  //aplica para todos los numeros que se muestran
 $precision=$grafico[0]["presicion_dato"];
 $separados_decimal="";
@@ -198,7 +192,7 @@ for($i=0;isset($tipo[$i]);$i++){
        else {
         $color="#".dechex(rand(0,15)).dechex(rand(0,15)).dechex(rand(0,15)).dechex(rand(0,15)).dechex(rand(0,15)).dechex(rand(0,15));
        } 
-      $FC->addChartData($datos[$j]["valor"],"color=".$color.";name=".utf8_encode(html_entity_decode($datos[$j]["dato"])));
+      $FC->addChartData($datos[$j]["valor"],"color=".$color.";name=".codifica_encabezado(html_entity_decode($datos[$j]["dato"])));
       $leyenda.='<tr style="border:1px solid;"><td style="width:10px; border:1px solid; background-color:'.$color.';">&nbsp;</td><td style="border:1px solid;">'.$datos[$j]["dato"].'</td><td style="border:1px solid; text-align:right;">'.$datos[$j]["valor"].'</td></tr>'; 
       $suma+=$datos[$j]["valor"];  
     } 
@@ -213,7 +207,6 @@ for($i=0;isset($tipo[$i]);$i++){
 </table> 
 <?php include_once("../footer.php");
 encriptar_sqli("graficas",1,"form_info",$ruta_db_superior);
-
 ?>
 </BODY>
 </HTML>

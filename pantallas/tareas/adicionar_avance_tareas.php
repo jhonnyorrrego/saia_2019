@@ -10,11 +10,9 @@ while($max_salida>0){
 }
 include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."librerias_saia.php");
-
 include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
 $validar_enteros=array("idtareas","iddoc");
 desencriptar_sqli('form_info');
-
 include_once($ruta_db_superior."class_transferencia.php");
 include_once($ruta_db_superior."formatos/librerias/funciones_generales.php");
 include_once($ruta_db_superior."pantallas/lib/librerias_notificaciones.php");
@@ -24,7 +22,7 @@ echo(estilo_bootstrap());
 echo(librerias_bootstrap());
 if($_REQUEST['guardar']==1){
 	$tarea=$_REQUEST['idtareas'];
-	$sql="INSERT INTO tareas_avance (tareas_idtareas,fecha,descripcion,estado,ejecutor) VALUES(".$tarea.",".fecha_db_almacenar($_REQUEST['fecha'],"Y-m-d H:i:s").",'".htmlentities($_REQUEST['descripcion'])."',".$_REQUEST['estado'].",".usuario_actual("funcionario_codigo").")";
+	$sql="INSERT INTO tareas_avance (tareas_idtareas,fecha,descripcion,estado,ejecutor) VALUES(".$tarea.",".fecha_db_almacenar($_REQUEST['fecha'],"Y-m-d H:i:s").",'".($_REQUEST['descripcion'])."',".$_REQUEST['estado'].",".usuario_actual("funcionario_codigo").")";
 	phpmkr_query($sql);
 	$sql="UPDATE tareas SET estado_tarea=".$_REQUEST["estado"]." WHERE idtareas=".$tarea;
 	phpmkr_query($sql);
@@ -94,3 +92,4 @@ if($_REQUEST['iddoc']){
 	</script>
 <?php
 }
+?>

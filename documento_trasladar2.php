@@ -73,11 +73,11 @@ $procesos=ejecuta_filtro_tabla("select valor,nombre from (select a.idft_proceso 
         <div id="seleccionados">              
         </div>                          <br />  Buscar:  
         <input type="text" id="stext_documento_calidad" width="200px" size="25">
-        <a href="javascript:void(0)" onclick="tree_documento_calidad.findItem(htmlentities(document.getElementById('stext_documento_calidad').value),1)">    
+        <a href="javascript:void(0)" onclick="tree_documento_calidad.findItem((document.getElementById('stext_documento_calidad').value),1)">    
           <img src="botones/general/anterior.png"border="0px"></a>                    
-        <a href="javascript:void(0)" onclick="tree_documento_calidad.findItem(htmlentities(document.getElementById('stext_documento_calidad').value),0,1)">  
+        <a href="javascript:void(0)" onclick="tree_documento_calidad.findItem((document.getElementById('stext_documento_calidad').value),0,1)">  
           <img src="botones/general/buscar.png"border="0px"></a>                                               
-        <a href="javascript:void(0)" onclick="tree_documento_calidad.findItem(htmlentities(document.getElementById('stext_documento_calidad').value))">  
+        <a href="javascript:void(0)" onclick="tree_documento_calidad.findItem((document.getElementById('stext_documento_calidad').value))">  
           <img src="botones/general/siguiente.png"border="0px"></a>                            
           <br />
         <div id="esperando_documento_calidad">  

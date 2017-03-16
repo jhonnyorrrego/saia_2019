@@ -79,7 +79,7 @@ for($i=0;$i<$tareas["numcampos"];$i++){
       }
     }
   }  
-  $cadena='{"id":'.$tareas[$i]["idasignacion"].',"allDay":false,"className":"'.$estado_general.'","title":"'.utf8_encode(html_entity_decode($titulo)).' ('.$estado_general.')","start":"'.$tareas[$i]["fecha_inicial"].'","end":"'.$tareas[$i]["fecha_final"].'","url":"'.$url.'"}';
+  $cadena='{"id":'.$tareas[$i]["idasignacion"].',"allDay":false,"className":"'.$estado_general.'","title":"'.codifica_encabezado(html_entity_decode($titulo)).' ('.$estado_general.')","start":"'.$tareas[$i]["fecha_inicial"].'","end":"'.$tareas[$i]["fecha_final"].'","url":"'.$url.'"}';
   array_push($arreglo,$cadena);
 }   
 $feedURL = "http://www.google.com/calendar/feeds/dhemian@gmail.com/private-dc75f64292569547e35189b22f95300b/basic";
@@ -87,7 +87,7 @@ $feedURL = "http://www.google.com/calendar/feeds/dhemian@gmail.com/private-dc75f
 // read feed into SimpleXML object
 $sxml = simplexml_load_file($feedURL);
 foreach ($sxml->entry as $entry) {
-  $title = utf8_encode(html_entity_decode($entry->title));
+  $title = codifica_encabezado(html_entity_decode($entry->title));
   $cadena='{"allDay":true,"title":"Google->'.$title.'"}';
   array_push($arreglo,$cadena);
 }

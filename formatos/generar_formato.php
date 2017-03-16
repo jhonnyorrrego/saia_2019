@@ -1221,7 +1221,7 @@ function crear_vista_formato($idformato, $arreglo) {
  * <Post-condiciones><Post-condiciones>
  * </Clase>
  */
-function codifica($texto) { // strtoupper(utf8_encode(html_entity_decode($campos[$h]["etiqueta"])))
+function codifica($texto) { // strtoupper(codifica_encabezado(html_entity_decode($campos[$h]["etiqueta"])))
 	return mayusculas($texto);
 }
 
@@ -1668,9 +1668,9 @@ function crear_formato_ae($idformato, $accion) {
 						$texto .= '<div id="seleccionados">' . arma_funcion("mostrar_seleccionados", $idformato . "," . $campos[$h]["idcampos_formato"] . ",'" . $arreglo[6] . "'", "mostrar") . '</div>
                           <br />  ';
 						if ($arreglo[4]) {
-							$texto .= 'Buscar: <input ' . $tabindex . ' type="text" id="stext_' . $campos[$h]["nombre"] . '" width="200px" size="25"><a href="javascript:void(0)" onclick="tree_' . $campos[$h]["nombre"] . '.findItem(htmlentities(document.getElementById(\'stext_' . $campos[$h]["nombre"] . '\').value),1)"> <img src="../../botones/general/anterior.png"border="0px"></a>
-                   <a href="javascript:void(0)" onclick="tree_' . $campos[$h]["nombre"] . '.findItem(htmlentities(document.getElementById(\'stext_' . $campos[$h]["nombre"] . '\').value),0,1)"><img src="../../botones/general/buscar.png"border="0px"></a>                          
-                   <a href="javascript:void(0)" onclick="tree_' . $campos[$h]["nombre"] . '.findItem(htmlentities(document.getElementById(\'stext_' . $campos[$h]["nombre"] . '\').value))"><img src="../../botones/general/siguiente.png"border="0px"></a> 
+							$texto .= 'Buscar: <input ' . $tabindex . ' type="text" id="stext_' . $campos[$h]["nombre"] . '" width="200px" size="25"><a href="javascript:void(0)" onclick="tree_' . $campos[$h]["nombre"] . '.findItem((document.getElementById(\'stext_' . $campos[$h]["nombre"] . '\').value),1)"> <img src="../../botones/general/anterior.png"border="0px"></a>
+                   <a href="javascript:void(0)" onclick="tree_' . $campos[$h]["nombre"] . '.findItem((document.getElementById(\'stext_' . $campos[$h]["nombre"] . '\').value),0,1)"><img src="../../botones/general/buscar.png"border="0px"></a>                          
+                   <a href="javascript:void(0)" onclick="tree_' . $campos[$h]["nombre"] . '.findItem((document.getElementById(\'stext_' . $campos[$h]["nombre"] . '\').value))"><img src="../../botones/general/siguiente.png"border="0px"></a> 
                           <br />';
 							$indice_tabindex++;
 						}
@@ -1868,7 +1868,7 @@ function crear_formato_ae($idformato, $accion) {
 		}
 		// ******************************************************************************************
 		if ($formato[0]["item"] && $accion == "adicionar") {
-			$texto .= '<tr><td class="encabezado">ACCION A SEGUIR LUEGO DE GUARDAR</td><td ><input type="radio" name="opcion_item" value="adicionar">Adicionar otro&nbsp;&nbsp;<input type="radio" name="opcion_item" value="terminar">Terminar</td></tr>';
+			$texto .= '<tr><td class="encabezado">ACCION A SEGUIR LUEGO DE GUARDAR</td><td ><input type="radio" name="opcion_item" id="opcion_item1" value="adicionar">Adicionar otro&nbsp;&nbsp;<input type="radio" id="opcion_item2" name="opcion_item" value="terminar" checked>Terminar</td></tr>';
 		}
 		$wheref = "(A.formato LIKE '" . $idformato . "' OR A.formato LIKE '%," . $idformato . ",%' OR A.formato LIKE '%," . $idformato . "' OR A.formato LIKE '" . $idformato . ",%') AND A.acciones LIKE '%" . strtolower($accion[0]) . "%' ";
 		if (count($listado_campos)) {
@@ -1967,13 +1967,12 @@ function crear_formato_ae($idformato, $accion) {
 		$texto .= '</form></body>';
 		if ($textareas) {
 			$includes .= incluir_libreria("header_formato.php", "librerias");
-			
 		}
 		$includes .= incluir("../../pantallas/lib/librerias_cripto.php", "librerias");
 		if ($fecha) {
 			$includes .= incluir("../../calendario/calendario.php", "librerias");
 		}
-		 
+		
 		$includes .= incluir("../../js/jquery.js", "javascript");
 		$includes .= incluir("../../js/jquery.validate.js", "javascript");
 		
@@ -2302,9 +2301,9 @@ function crear_formato_buscar($idformato, $accion) {
                           <br />  ';
 						if ($arreglo[4]) {
 							$texto .= 'Buscar: <input type="text" id="stext_' . $campos[$h]["nombre"] . '" width="200px" size="25">
-                   <a href="javascript:void(0)" onclick="tree_' . $campos[$h]["nombre"] . '.findItem(htmlentities(document.getElementById(\'stext_' . $campos[$h]["nombre"] . '\').value),1)"><img src="../../botones/general/anterior.png"border="0px"></a>
-                   <a href="javascript:void(0)" onclick="tree_' . $campos[$h]["nombre"] . '.findItem(htmlentities(document.getElementById(\'stext_' . $campos[$h]["nombre"] . '\').value),0,1)"><img src="../../botones/general/buscar.png"border="0px"></a>
-                          <a href="javascript:void(0)" onclick="tree_' . $campos[$h]["nombre"] . '.findItem(htmlentities(document.getElementById(\'stext_' . $campos[$h]["nombre"] . '\').value))"><img src="../../botones/general/siguiente.png"border="0px"></a>
+                   <a href="javascript:void(0)" onclick="tree_' . $campos[$h]["nombre"] . '.findItem((document.getElementById(\'stext_' . $campos[$h]["nombre"] . '\').value),1)"><img src="../../botones/general/anterior.png"border="0px"></a>
+                   <a href="javascript:void(0)" onclick="tree_' . $campos[$h]["nombre"] . '.findItem((document.getElementById(\'stext_' . $campos[$h]["nombre"] . '\').value),0,1)"><img src="../../botones/general/buscar.png"border="0px"></a>
+                          <a href="javascript:void(0)" onclick="tree_' . $campos[$h]["nombre"] . '.findItem((document.getElementById(\'stext_' . $campos[$h]["nombre"] . '\').value))"><img src="../../botones/general/siguiente.png"border="0px"></a>
                           <br /><br />
                 ';
 						}

@@ -247,7 +247,7 @@ if(@$_REQUEST["id"]) {
 							$ruta = "../../email/email_doc.php?formato_enviar=true&iddoc=" . $datos_formato[0]["documento_iddocumento"] . "&no_menu=1";
 						}
 				} else {
-					alerta(utf8_encode("El documento debe tener n�mero de radicado para poder enviarlo"));
+					alerta(codifica_encabezado("El documento debe tener n�mero de radicado para poder enviarlo"));
 					$ruta = "../../vacio.php";
 				}
 				break;

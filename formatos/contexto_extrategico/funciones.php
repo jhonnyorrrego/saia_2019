@@ -20,8 +20,8 @@ function obtener_valor_campos($idformato,$iddoc){
 ?>
 <script type="text/javascript">
 	$(document).ready(function(){		
-		$("#proceso").val("<?php echo(utf8_encode(html_entity_decode($datos[0]['nombre'])));?>");		
-		$("#objetivo").val('<?php echo(utf8_encode(html_entity_decode($datos[0]['objetivo'])));?>');				
+		$("#proceso").val("<?php echo(codifica_encabezado(html_entity_decode($datos[0]['nombre'])));?>");		
+		$("#objetivo").val('<?php echo(codifica_encabezado(html_entity_decode($datos[0]['objetivo'])));?>');				
 	});
 </script>
 <?php		
@@ -33,7 +33,7 @@ function mostrar_objetivo_contexto_estrategico($idformato,$iddoc){
     
     $objetivo=busca_filtro_tabla("objetivo","ft_contexto_extrategico","documento_iddocumento=".$iddoc,"",$conn);
     
-    $cadena=strip_tags(utf8_encode(html_entity_decode($objetivo[0]['objetivo'])));
+    $cadena=strip_tags(codifica_encabezado(html_entity_decode($objetivo[0]['objetivo'])));
     
     echo($cadena);
 }

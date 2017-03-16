@@ -13,14 +13,10 @@
 $max_salida=6; $ruta_db_superior=$ruta=""; while($max_salida>0){ if(is_file($ruta."db.php")){ $ruta_db_superior=$ruta;} $ruta.="../"; $max_salida--; }
 
 include_once("db.php");
-
 include_once("pantallas/lib/librerias_cripto.php");
 $validar_enteros=array("doc","idsalidas","id");
 include_once("librerias_saia.php");
 desencriptar_sqli('form_info');
-echo(librerias_jquery());
-
-
 $doc_menu=@$_REQUEST["doc"];
 include_once("pantallas/documento/menu_principal_documento.php");
 echo(menu_principal_documento($doc_menu,1));
@@ -88,6 +84,8 @@ if(isset($_REQUEST["anular_despacho"]))
   anular_despacho() ;
 
  mostrar_despacho();
+
+ mostrar_despacho_radicacion(); 
  if(isset($_REQUEST["funcion_despacho"]))    
    echo $_REQUEST["funcion_despacho"]();
  echo("<br/><br/>");
@@ -361,7 +359,7 @@ function transferir()
   $x_mensajero = @$_REQUEST["x_mensajero"];       
   $empresa=@$_REQUEST["x_empresa0"];  
   $guia=@$_REQUEST["guia"];  
-  $responsable=htmlentities(htmlspecialchars_decode(html_entity_decode(utf8_decode(trim($_REQUEST["x_responsable0"])))));
+  $responsable=(htmlspecialchars_decode(html_entity_decode((trim($_REQUEST["x_responsable0"])))));
   if($responsable!="")
   {$lresponsable=busca_filtro_tabla("A.*","ejecutor A","A.nombre LIKE '".$responsable."'","",$conn); 
   if($lresponsable["numcampos"] ){
@@ -755,3 +753,59 @@ function eliminarespacio(elemento)
 }
 </script>
 <?php include_once("footer.php"); ?>
+
+
+<?php 
+
+function mostrar_despacho_radicacion(){
+	global $conn,$ruta_db_superior;
+	$html='<br><br><table class="table" style="width:100%;">';
+	$iddoc=@$_REQUEST['doc'];
+	$formato_radicacion=busca_filtro_tabla("b.nombre","documento a, formato b","lower(a.plantilla)=b.nombre AND a.iddocumento=".$iddoc,"",$conn);
+	if($formato_radicacion[0]['nombre']=='radicacion_entrada'){
+		$html.='<tr><th class="encabezado_list" style="text-align:center;" colspan="5">Despacho de Correspondencia</th></tr>';
+		$html.='
+			<tr>
+				<th class="encabezado_list" style="text-align:center;">Numero Planilla</th>
+				<th class="encabezado_list" style="text-align:center;">Fecha de Creaci&oacute;n</th>
+				<th class="encabezado_list" style="text-align:center;">Mensajero</th>
+				<th class="encabezado_list" style="text-align:center;">Recorrido</th>
+				<th class="encabezado_list" style="text-align:center;">Novedad</th>
+			</tr>';		
+		$datos_radicacion=busca_filtro_tabla("idft_radicacion_entrada","documento a, ft_radicacion_entrada b","a.iddocumento=b.documento_iddocumento AND b.documento_iddocumento=".$iddoc,"",$conn);
+		$destino_radicacion=busca_filtro_tabla("idft_destino_radicacion","ft_destino_radicacion","ft_radicacion_entrada=".$datos_radicacion[0]['idft_radicacion_entrada'],"",$conn);
+		for($i=0;$i<$destino_radicacion['numcampos'];$i++){
+			$idft_destino_radicacion=$destino_radicacion[$i]['idft_destino_radicacion'];
+			$planillas=busca_filtro_tabla("c.numero,c.iddocumento,c.descripcion,b.mensajero,b.idft_despacho_ingresados","ft_item_despacho_ingres a,ft_despacho_ingresados b, documento c","a.ft_despacho_ingresados=b.idft_despacho_ingresados AND b.documento_iddocumento=c.iddocumento AND c.estado NOT IN('ELIMINADO','ANULADO') AND a.ft_destino_radicacio=".$idft_destino_radicacion,"",$conn);
+        	if($planillas['numcampos']){
+            	for($j=0;$j<$planillas['numcampos'];$j++){
+            		$funcionario=busca_filtro_tabla("nombres,apellidos","vfuncionario_dc","iddependencia_cargo=".$planillas[$j]['mensajero'],"",$conn);
+            		$idformato_despacho_ingresados=busca_filtro_tabla("","documento a, formato b","lower(a.plantilla)=b.nombre AND a.iddocumento=".$planillas[$j]['iddocumento'],"",$conn);
+            		$tiene_novedades=busca_filtro_tabla("novedad,documento_iddocumento","ft_novedad_despacho","ft_despacho_ingresados=".$planillas[$j]['idft_despacho_ingresados'],"",$conn);
+					$cadena_novedad='Sin Novedad';
+            		if($tiene_novedades['numcampos']){
+            			$cadena_novedad='';
+            			for($x=0;$x<$tiene_novedades['numcampos'];$x++){
+            				$titulo_novedad=ucwords(strtolower(codifica_encabezado(html_entity_decode($tiene_novedades[$x]['novedad']))));
+            				$cadena_novedad='<div class="link kenlace_saia" enlace="ordenar.php?key='.$tiene_novedades[$x]['documento_iddocumento'].'&amp;accion=mostrar&amp;mostrar_formato=1" conector="iframe" titulo="Novedad '.$titulo_novedad.'"><span class="badge">'.$titulo_novedad.'</span></div><br>';
+            			}			
+            		}
+            		
+                	$html.='
+                		<tr>
+                			<td><div class="link kenlace_saia" enlace="ordenar.php?key='.$planillas[$j]['iddocumento'].'&amp;accion=mostrar&amp;mostrar_formato=1" conector="iframe" titulo="No Radicado '.$planillas[$j]['numero'].'"><center><span class="badge">'.$planillas[$j]['numero'].'</span></center></div>
+                			</td>                		
+                			<td>'.codifica_encabezado(html_entity_decode($planillas[$j]['descripcion'])).'</td>
+                			<td>'.codifica_encabezado(html_entity_decode($funcionario[0]['nombres'].' '.$funcionario[0]['apellidos'])).'</td>
+                			<td>'.mostrar_valor_campo('tipo_recorrido',$idformato_despacho_ingresados[0]['idformato'],$planillas[$j]['iddocumento'],1).'</td>
+                			<td>'.$cadena_novedad.'</td>
+                		</tr>';
+            	} //fin for planillas
+        	} //fin if planillas numcampos			
+		} //fin for $destino_radicacion		
+	} //fin if formato=='radicacion_entrada'
+	$html.='</table>';
+	echo($html);
+} //fin function
+
+?>

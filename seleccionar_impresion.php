@@ -183,7 +183,31 @@ else {
 }
 $_SESSION["iddoc"]=$iddocumento;
 
-$texto.="<div align=right><label style='cursor:pointer; color:blue'><a href=\"?configurar_impresion=1\" class=\"highslide\" onclick=\"return hs.htmlExpand(this, { objectType: 'iframe',width: 400, height:280,preserveContent:false } )\">Configurar Impresi&oacute;n</a></label>&nbsp;&nbsp;&nbsp;<label name='generar' style='cursor:pointer; color:blue' onClick='generar_seleccion();'>Imprimir</label></div>
+  $texto.="<div align=right><label style='cursor:pointer; color:blue'><a href=\"?configurar_impresion=1\" class=\"highslide\" onclick=\"return hs.htmlExpand(this, { objectType: 'iframe',width: 400, height:280,preserveContent:false } )\">Configurar Impresi&oacute;n</a></label>&nbsp;&nbsp;&nbsp;
+  <style>
+      .submitLink {
+        background-color: transparent;
+        text-decoration: underline;
+        border: none;
+        color: blue;
+        cursor: pointer;
+      }
+      submitLink:focus {
+        outline: none;
+      }
+  </style>
+  <form name='genera_pdf' target='_blank' method='post' action='exportar_seleccionar_impresion.php'>
+    <input type='submit' name='generar_registros' style='cursor:pointer; color:blue' onClick='generar_seleccion();'class='submitLink' value='Imprimir Registros'>
+    <input type='hidden' name='seleccion' id='seleccion_imp' value=''>
+    <input type='hidden' name='iddoc' id='iddoc' value='".$iddocumento."'>
+    <input type='hidden' name='margenes' id='margenes_imp' value=''>
+    <input type='hidden' name='font_size' id='font_size_imp' value=''>
+    <input type='hidden' name='orientacion' id='orientacion_imp' value=''>
+    <input type='hidden' name='papel' id='papel_imp' value=''>
+    <input type='hidden' name='ocultar_firmas' id='ocultar_firmas_imp' value=''>
+  </form>
+</div>
+
 <form name='configuracion' action='' method=post>
 <input type='hidden' id='margenes' value='".$formato[0]["margenes"]."'>
 <input type='hidden' id='font_size' value='".$formato[0]["font_size"]."'>
@@ -294,15 +318,22 @@ else $nodoinicial=$iddoc;
               if(selectos=="" || !selectos){
               	alert("Seleccione algun item del arbol para imprimir");
               	return false;
-              }  
+              }
+              
+              $("#seleccion_imp").val(selectos);
+              $("#margenes_imp").val(configuracion.margenes.value);
+              $("#font_size_imp").val(configuracion.font_size.value);
+              $("#orientacion_imp").val(configuracion.orientacion.value);
+              $("#papel_imp").val(configuracion.papel.value);
+              $("#ocultar_firmas_imp").val(configuracion.ocultar_firmas.value);
               ';
-              $exportar_pdf=busca_filtro_tabla("valor","configuracion A","A.nombre='exportar_pdf'","",$conn);
+              /*$exportar_pdf=busca_filtro_tabla("valor","configuracion A","A.nombre='exportar_pdf'","",$conn);
 							if($exportar_pdf[0]["valor"]=='html2ps'){
               	$texto.='window.open("exportar_impresion.php?seleccionados="+selectos+"&iddoc='.$iddocumento.'&margenes="+configuracion.margenes.value+"&font_size="+configuracion.font_size.value+"&orientacion="+configuracion.orientacion.value+"&papel="+configuracion.papel.value+"&ocultar_firmas="+configuracion.ocultar_firmas.value,"_blank");';
 							}
 							if($exportar_pdf[0]["valor"]=='class_impresion'){
               	$texto.='window.open("exportar_seleccionar_impresion.php?seleccion="+selectos+"&iddoc='.$iddocumento.'&margenes="+configuracion.margenes.value+"&font_size="+configuracion.font_size.value+"&orientacion="+configuracion.orientacion.value+"&papel="+configuracion.papel.value+"&ocultar_firmas="+configuracion.ocultar_firmas.value,"_blank");';
-							}
+							}*/
             $texto.='}
       	-->
       	</script>

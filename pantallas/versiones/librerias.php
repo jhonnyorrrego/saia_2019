@@ -19,17 +19,6 @@ $iddoc=@$_REQUEST["iddoc"];
 $documento=busca_filtro_tabla(fecha_db_obtener('a.fecha','Y-m-d')." as x_fecha, a.*","documento a","a.iddocumento=".$iddoc,"",$conn);
 $formato=busca_filtro_tabla("","formato a","lower(a.nombre)='".strtolower($documento[0]["plantilla"])."'","",$conn);
 $ruta_documento=$ruta_db_superior."pantallas/documento/informacion_resumen_documento.php?idformato=".$formato[0]['idformato']."&iddoc=".$iddoc;
-if($documento[0]["estado"]=='ACTIVO'){
-	?>
-	<script>
-	$(document).ready(function(){
-	   notificacion_saia('El documento esta en borrador','warning','',3000);
-	   window.open("<?php echo($ruta_documento); ?>","arbol_formato");
-	});
-	</script>
-	<?php
-	die();
-}
 
 $version=version_documento($documento);
 version_vista($documento,$version);
@@ -149,8 +138,8 @@ function version_pagina($documento,$id){
 	
 	$pagina = busca_filtro_tabla("", "pagina a", "a.id_documento=" . $documento[0]["iddocumento"], "", $conn);
 	if($pagina["numcampos"]) {
-		crear_destino($ruta_db_superior . $destino1);
-		crear_destino($ruta_db_superior . $destino2);
+		crear_destino($destino1);
+		crear_destino($destino2);
 	}
 	
 	for($i = 0; $i < $pagina["numcampos"]; $i++) {

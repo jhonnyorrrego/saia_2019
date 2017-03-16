@@ -17,7 +17,7 @@ include_once($ruta_db_superior."formatos/librerias/funciones_generales.php");
 echo(estilo_bootstrap());
 
 if($_REQUEST['guardar']==1){
-	$sql="INSERT INTO listado_tareas (nombre_lista,descripcion_lista,cliente_proyecto,creador_lista,macro_proceso) VALUES('".htmlentities($_REQUEST['nombre_lista'])."','".htmlentities($_REQUEST['descripcion'])."','".$_REQUEST['cliente_proyecto']."',".usuario_actual("idfuncionario").",'".$_REQUEST['macro_proceso']."')";
+	$sql="INSERT INTO listado_tareas (nombre_lista,descripcion_lista,cliente_proyecto,creador_lista,macro_proceso) VALUES('".($_REQUEST['nombre_lista'])."','".($_REQUEST['descripcion'])."','".$_REQUEST['cliente_proyecto']."',".usuario_actual("idfuncionario").",'".$_REQUEST['macro_proceso']."')";
 	phpmkr_query($sql);
 	$idbin = phpmkr_insert_id();
 	
@@ -252,11 +252,11 @@ function arbol($campo,$nombre_arbol,$url,$cargar_todos=0,$padresehijos=false,$qu
 	?>
 	<div ><?php //echo $seleccionados; ?></div>
 	<input type="text" id="stext<?php echo $entidad; ?>" width="200px" size="25" placeholder="Buscar">
-<a href="javascript:void(0)" onclick="stext<?php echo $entidad; ?>.findItem(htmlentities(document.getElementById('stext<?php echo $entidad; ?>').value),1)">
+<a href="javascript:void(0)" onclick="stext<?php echo $entidad; ?>.findItem((document.getElementById('stext<?php echo $entidad; ?>').value),1)">
 <img src="<?php echo $ruta_db_superior; ?>botones/general/anterior.png" alt="Buscar Anterior" border="0px"></a>
-<a href="javascript:void(0)" onclick="tree<?php echo $entidad; ?>.findItem(htmlentities(document.getElementById('stext<?php echo $entidad; ?>').value),0,1)">
+<a href="javascript:void(0)" onclick="tree<?php echo $entidad; ?>.findItem((document.getElementById('stext<?php echo $entidad; ?>').value),0,1)">
 <img src="<?php echo $ruta_db_superior; ?>botones/general/buscar.png" alt="Buscar" border="0px"></a>
-<a href="javascript:void(0)" onclick="tree<?php echo $entidad; ?>.findItem(htmlentities(document.getElementById('stext<?php echo $entidad; ?>').value))">
+<a href="javascript:void(0)" onclick="tree<?php echo $entidad; ?>.findItem((document.getElementById('stext<?php echo $entidad; ?>').value))">
 <img src="<?php echo $ruta_db_superior; ?>botones/general/siguiente.png" alt="Buscar Siguiente" border="0px"></a>
 </span>
 

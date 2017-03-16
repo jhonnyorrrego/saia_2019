@@ -103,14 +103,20 @@ if(isset($_REQUEST["orden"]))
   $orden=$_REQUEST["orden"];
 else
   $orden="nombre";
+
+$tvd=" AND tvd=0";
+if(@$_REQUEST['tvd']){
+	$tvd=" AND tvd=1";	
+}
+
 if($serie=="NULL"){
-  $papas=busca_filtro_tabla("*",$tabla,"(cod_padre IS NULL OR cod_padre=0) $activo $condicion","$orden ASC",$conn);
+  $papas=busca_filtro_tabla("*",$tabla,"(cod_padre IS NULL OR cod_padre=0) $activo $condicion".$tvd,"$orden ASC",$conn);
 }else
-  $papas=busca_filtro_tabla("*",$tabla,"cod_padre=".$serie.$activo.$condicion.$condicion_dependencia,"$orden ASC",$conn); 
+  $papas=busca_filtro_tabla("*",$tabla,"cod_padre=".$serie.$activo.$condicion.$condicion_dependencia.$tvd,"$orden ASC",$conn); 
 
 if($papas["numcampos"]){
   for($i=0; $i<$papas["numcampos"]; $i++){
-    $hijos = busca_filtro_tabla("count(*) AS cant",$tabla,"cod_padre=".$papas[$i]["id$tabla"].$activo.$condicion,"",$conn);
+    $hijos = busca_filtro_tabla("count(*) AS cant",$tabla,"cod_padre=".$papas[$i]["id$tabla"].$activo.$condicion.$tvd,"",$conn);
     echo("<item style=\"font-family:verdana; font-size:7pt;color:blue\" ");
     $cadena_codigo='';
     if(@$papas[$i]["codigo"]){
@@ -141,14 +147,20 @@ return;
 }
 function llena_series_asignadas($id){
 	global $conn;
+	
+$tvd=" AND b.tvd=0";
+if(@$_REQUEST['tvd']){
+	$tvd=" AND b.tvd=1";	
+}	
+	
 	$series_disponibles=busca_filtro_tabla("serie_idserie","entidad_serie a","a.entidad_identidad='2' and a.llave_entidad='".$id."' and a.estado='1'","",$conn);
 	$series_dispon=extrae_campo($series_disponibles,"serie_idserie");
 	
-	$series=busca_filtro_tabla("","entidad_serie a, serie b","a.entidad_identidad='2' and a.llave_entidad='".$id."' and a.serie_idserie=b.idserie and (b.cod_padre is null or b.cod_padre=0) and a.estado='1'","",$conn);
+	$series=busca_filtro_tabla("","entidad_serie a, serie b","a.entidad_identidad='2' and a.llave_entidad='".$id."' and a.serie_idserie=b.idserie and (b.cod_padre is null or b.cod_padre=0) and a.estado='1'".$tvd,"",$conn);
 	
 	if($series["numcampos"]){
 		for($i=0;$i<$series["numcampos"];$i++){
-			$hijos = busca_filtro_tabla("count(*) AS cant","serie","cod_padre=".$series[$i]["idserie"],"",$conn);
+			$hijos = busca_filtro_tabla("count(*) AS cant","serie","cod_padre=".$series[$i]["idserie"].$tvd,"",$conn);
 			echo("<item style=\"font-family:verdana; font-size:7pt;\" text=\"".htmlspecialchars($series[$i]["nombre"])."(".$series[$i]["codigo"].")\" id=\"d".$id."-".$series[$i]["idserie"]."\"");
 			if($hijos[0][0])
 	      echo(" child=\"1\">\n");
@@ -163,14 +175,20 @@ function llena_series_asignadas($id){
 }
 function llenar_hijos_series($id,$dep,$series_dispon){
 	global $conn;
+	
+$tvd=" AND a.tvd=0";
+if(@$_REQUEST['tvd']){
+	$tvd=" AND a.tvd=1";	
+}		
+	
 	if(count($series_dispon)){
-		$series=busca_filtro_tabla("","serie a","a.cod_padre=".$id." and a.idserie in(".implode(",",$series_dispon).")","",$conn);		
+		$series=busca_filtro_tabla("","serie a","a.cod_padre=".$id." and a.idserie in(".implode(",",$series_dispon).")".$tvd,"",$conn);		
 	}else{
-		$series=busca_filtro_tabla("","serie a","a.cod_padre=".$id."","",$conn);	
+		$series=busca_filtro_tabla("","serie a","a.cod_padre=".$id."".$tvd,"",$conn);	
 	}
 
 	for($i=0;$i<$series["numcampos"];$i++){
-		$hijos = busca_filtro_tabla("count(*) AS cant","serie","cod_padre=".$series[$i]["idserie"],"",$conn);
+		$hijos = busca_filtro_tabla("count(*) AS cant","serie","cod_padre=".$series[$i]["idserie"].$tvd,"",$conn);
 		
 		echo("<item style=\"font-family:verdana; font-size:7pt;\" text=\"".htmlspecialchars($series[$i]["nombre"])."(".$series[$i]["codigo"].")\" id=\"d".$dep."-".$series[$i]["idserie"]."\"");
 		if($hijos[0][0])
@@ -185,7 +203,12 @@ function llenar_hijos_series($id,$dep,$series_dispon){
 }
 function series_sin_asignar(){
 	global $conn;
-	$series=busca_filtro_tabla("","serie a left join entidad_serie b ON a.idserie=b.serie_idserie AND b.entidad_identidad =2","b.serie_idserie IS NULL AND a.categoria<>3","nombre asc",$conn);
+	
+$tvd=" AND a.tvd=0";
+if(@$_REQUEST['tvd']){
+	$tvd=" AND a.tvd=1";	
+}	
+	$series=busca_filtro_tabla("","serie a left join entidad_serie b ON a.idserie=b.serie_idserie AND b.entidad_identidad =2","b.serie_idserie IS NULL AND a.categoria<>3".$tvd,"nombre asc",$conn);
 	for($i=0;$i<$series["numcampos"];$i++){
 		echo("<item style=\"font-family:verdana; font-size:7pt;\" text=\"".htmlspecialchars($series[$i]["nombre"])."(".$series[$i]["codigo"].")\" id=\"d"."-".$series[$i]["idserie"]."\" child=\"0\">\n");
 		echo("</item>\n");
