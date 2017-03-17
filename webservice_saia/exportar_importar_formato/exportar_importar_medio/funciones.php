@@ -1,6 +1,6 @@
 <?php
 @session_start();
-ini_set('display_errors',true);
+ini_set('display_errors',false);
 $max_salida=10; // Previene algun posible ciclo infinito limitando a 10 los ../
 $ruta_db_superior=$ruta="";
 while($max_salida>0){
@@ -10,9 +10,15 @@ while($max_salida>0){
 	$ruta.="../";
 	$max_salida--;
 }
-
+if(!defined("PROTOCOLO_CONEXION")){
+if(@$_SERVER["HTTPS"]=='on'){
+	define("PROTOCOLO_CONEXION","https://");//Sitio seguro
+}else{
+	define("PROTOCOLO_CONEXION","http://");
+}
+}
 if(!defined("SERVIDOR_IMPORTAR")){
-	define("SERVIDOR_IMPORTAR","http://sgddesarrollo.ucm.edu.co/saia/webservice_saia/exportar_importar_formato/webservice_saia/exportar_importar_formato/importar_formato/receptor_importar.php");
+	define("SERVIDOR_IMPORTAR",PROTOCOLO_CONEXION."sgddesarrollo.ucm.edu.co/saia/webservice_saia/exportar_importar_formato/webservice_saia/exportar_importar_formato/importar_formato/receptor_importar.php");
 }
 
 include_once($ruta_db_superior."db.php");

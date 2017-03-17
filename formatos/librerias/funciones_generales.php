@@ -2599,7 +2599,7 @@ function listar_formato_hijo($campos, $tabla, $campo_enlace, $llave, $orden, $al
  * $respuesta=busca_filtro_tabla("","respuesta","destino=".$iddoc,"",$conn);
  * if($respuesta["numcampos"]){
  * $formato=busca_filtro_tabla("A.*,B.iddocumento,B.descripcion, B.numero","formato A,documento B","A.nombre=B.plantilla AND iddocumento=".$respuesta[0]["origen"],"",$conn);
- * $rutadoc='http://'.RUTA_PDF.'/formatos/'.$formato[0]["nombre"]."/".$formato[0]["ruta_mostrar"];
+ * $rutadoc=PROTOCOLO_CONEXION.RUTA_PDF.'/formatos/'.$formato[0]["nombre"]."/".$formato[0]["ruta_mostrar"];
  * $texto.=$formato[0]["etiqueta"].': No '.$formato[0]["numero"].' <br /><a href="'.$rutadoc.'?iddoc='.$formato[0]["iddocumento"].'" target="_blank">'.strip_tags( $formato[0]["descripcion"]).'</a><br />';
  * }
  * if($tipo)
@@ -3532,7 +3532,7 @@ function crear_pdf_documento_tcpdf($datos_documento, $datos_ejecutor = null) {
 		$ch = curl_init();
 		
 		// Establecer URL y otras opciones apropiadas
-		$url = "http://" . RUTA_PDF_LOCAL . "/class_impresion.php?iddoc=" . $datos_documento['iddocumento'];
+		$url = PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . "/class_impresion.php?iddoc=" . $datos_documento['iddocumento'];
 		$datos_session = "&LOGIN=" . $_SESSION["LOGIN" . LLAVE_SAIA] . "&usuario_actual=" . $_SESSION["usuario_actual"] . "&llave_saia=" . LLAVE_SAIA;
 		$url = $url . $datos_session;
         

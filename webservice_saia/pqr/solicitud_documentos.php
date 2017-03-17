@@ -39,7 +39,7 @@ and d2.iddocumento= j.documento_iddocumento and d2.estado<>'ELIMINADO'","d.fecha
 if($documento["numcampos"])
   {$pdf=busca_filtro_tabla("ruta","pdf_vista","documento_iddocumento=".$documento[0][0]." and idvista_formato=2","",$conn);
    if($pdf["numcampos"]&& is_file("../".$pdf[0]["ruta"]))
-     return("1|"."http://".RUTA_PDF."/".$pdf[0]["ruta"]."|".filesize("../".$pdf[0]["ruta"]));
+     return("1|".PROTOCOLO_CONEXION.RUTA_PDF."/".$pdf[0]["ruta"]."|".filesize("../".$pdf[0]["ruta"]));
    else
      return("0|No se encontro el pdf del certificado");
   }
@@ -59,7 +59,7 @@ if($documento["numcampos"])
    if($documento[0]["imprimir_carnet"]==1)
     {if($pdf["numcampos"]&& is_file("../".$pdf[0]["ruta"]))
       {$conn->Ejecutar_Sql("UPDATE ft_dignatario SET imprimir_carnet=0 WHERE idft_dignatario=".$documento[0]["idft_dignatario"]);
-       return("1|"."http://".RUTA_PDF."/".$pdf[0]["ruta"]."|".filesize("../".$pdf[0]["ruta"]));
+       return("1|".PROTOCOLO_CONEXION.RUTA_PDF."/".$pdf[0]["ruta"]."|".filesize("../".$pdf[0]["ruta"]));
       } 
      else
        return("0|No se encontro el pdf del carnet");

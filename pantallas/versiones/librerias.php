@@ -181,8 +181,7 @@ function generar_pdf($documento) {
 	phpmkr_query($sql1);
 	
 	$ch = curl_init();
-	// $fila = "http://".RUTA_PDF_LOCAL."/html2ps/public_html/demo/html2ps.php?plantilla=".strtolower($datos_formato[0]["nombre_formato"])."&iddoc=".$iddoc."&conexion_remota=1";
-	$fila = "http://" . RUTA_PDF_LOCAL . "/" . $export . "&LOGIN=" . $_SESSION["LOGIN" . LLAVE_SAIA] . "&usuario_actual=" . $_SESSION["usuario_actual"] . "&LLAVE_SAIA=" . LLAVE_SAIA;
+	$fila = PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . "/" . $export . "&LOGIN=" . $_SESSION["LOGIN" . LLAVE_SAIA] . "&usuario_actual=" . $_SESSION["usuario_actual"] . "&LLAVE_SAIA=" . LLAVE_SAIA;
 	
 	curl_setopt($ch, CURLOPT_URL, $fila);
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -221,7 +220,7 @@ function generar_pdf_vista($documento,$vista){
 	}
 	
 	$ch = curl_init();
-	$fila = "http://" . RUTA_PDF_LOCAL . "/" . $export . "&LOGIN=" . $_SESSION["LOGIN" . LLAVE_SAIA] . "&usuario_actual=" . $_SESSION["usuario_actual"] . "&LLAVE_SAIA=" . LLAVE_SAIA . "&vista=" . $vista;
+	$fila = PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . "/" . $export . "&LOGIN=" . $_SESSION["LOGIN" . LLAVE_SAIA] . "&usuario_actual=" . $_SESSION["usuario_actual"] . "&LLAVE_SAIA=" . LLAVE_SAIA . "&vista=" . $vista;
 	
 	curl_setopt($ch, CURLOPT_URL, $fila);
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);

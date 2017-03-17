@@ -1444,7 +1444,7 @@ global $idfactura;
                            $fila_abierta=1;
                            }
                        if($fila["nombre"]=="POR_APROBAR")
-                          {echo '<td align=left><img src="http://'.$ruta.'/firmas/faltante.jpg" width="'.$ancho_firma[0]["valor"].'" height="'.$alto_firma[0]["valor"].'"><br />
+                          {echo '<td align=left><img src="'.PROTOCOLO_CONEXION.$ruta.'/firmas/faltante.jpg" width="'.$ancho_firma[0]["valor"].'" height="'.$alto_firma[0]["valor"].'"><br />
                          '.mayusculas($fila["nombres"]." ".$fila["apellidos"]).'<br />';
 													  if($cargos["numcampos"])
                               {
@@ -1473,11 +1473,11 @@ global $idfactura;
                                 {//$ruta="../librerias/";
 																 $ruta=RUTA_PDF;
                                 }
-                              echo '<img src="http://'.$ruta.'/formatos/librerias/mostrar_foto.php?codigo='.$fila["funcionario_codigo"];
+                              echo '<img src="'.PROTOCOLO_CONEXION.$ruta.'/formatos/librerias/mostrar_foto.php?codigo='.$fila["funcionario_codigo"];
                               echo '" width="'.$ancho_firma[0]["valor"].'" height="'.$alto_firma[0]["valor"].'"/><br />';
                              }
                            else
-                              echo '<img src="http://'.$ruta.'/firmas/blanco.gif" width="'.$ancho_firma[0]["valor"].'" height="'.$alto_firma[0]["valor"].'" ><br />';
+                              echo '<img src="'.PROTOCOLO_CONEXION.$ruta.'/firmas/blanco.gif" width="'.$ancho_firma[0]["valor"].'" height="'.$alto_firma[0]["valor"].'" ><br />';
                            echo "".mayusculas($fila["nombres"]." ".$fila["apellidos"])."&nbsp;&nbsp;&nbsp;<br />";
                           if($cargos["numcampos"])
                             {for($h=0;$h<$cargos["numcampos"];$h++)
@@ -1488,7 +1488,7 @@ global $idfactura;
                            echo "</td>";
                           }
                        else
-                          {echo "<font size='2'><td align='left'><img src='http://".$ruta."/firmas/faltante.gif' width='".$ancho_firma[0]["valor"]."' height='".$alto_firma[0]["valor"]."'>
+                          {echo "<font size='2'><td align='left'><img src='".PROTOCOLO_CONEXION.$ruta."/firmas/faltante.gif' width='".$ancho_firma[0]["valor"]."' height='".$alto_firma[0]["valor"]."'>
                                  <br />".mayusculas($fila["nombres"]." ".$fila["apellidos"])."</b>&nbsp;<br />";
 
                            if($cargos["numcampos"])
@@ -1506,7 +1506,7 @@ global $idfactura;
                            if($fila["nombre"]=="POR_APROBAR")
      $revisados.="<tr><td><br><span style='font-size:13px;' class='phpmaker'>Revis&oacute; : ".mayusculas($fila["nombres"]." ".$fila["apellidos"])."-".formato_cargo($cargos[0]["nombre"])." (Pendiente)</span></td><td>&nbsp;</td></tr>";
 elseif($fila["nombre"]=="APROBADO"||$fila["nombre"]=="REVISADO")
-   $revisados.="<tr><td><br><span style='font-size:13px;' class='phpmaker'>Revis&oacute; : ".mayusculas($fila["nombres"]." ".$fila["apellidos"])."-".formato_cargo($cargos[0]["nombre"])."</span> <img src=\"http://".$ruta."/images/check.jpg\">"." </td><td></td></tr>";
+   $revisados.="<tr><td><br><span style='font-size:13px;' class='phpmaker'>Revis&oacute; : ".mayusculas($fila["nombres"]." ".$fila["apellidos"])."-".formato_cargo($cargos[0]["nombre"])."</span> <img src=\"".PROTOCOLO_CONEXION.$ruta."/images/check.jpg\">"." </td><td></td></tr>";
 
 
 
@@ -2996,9 +2996,9 @@ if($transferencias["numcampos"]){
 }
 
 echo '<p><span style="font-family: Verdana; font-size: 9px; font-weight: bold;">
-<img style="vertical-align:middle" src="http://'.RUTA_PDF.'/botones/comentarios/devolver_documento.png" border="0">&nbsp;&nbsp;DEVOLVER DOCUMENTOS&nbsp;&nbsp;&nbsp;&nbsp;
+<img style="vertical-align:middle" src="'.PROTOCOLO_CONEXION.RUTA_PDF.'/botones/comentarios/devolver_documento.png" border="0">&nbsp;&nbsp;DEVOLVER DOCUMENTOS&nbsp;&nbsp;&nbsp;&nbsp;
 <br><br></span></p>
-<form name="transferenciadev" id="transferenciadev" action="http://'.RUTA_PDF.'/class_transferencia.php" method="post">
+<form name="transferenciadev" id="transferenciadev" action="'.PROTOCOLO_CONEXION.RUTA_PDF.'/class_transferencia.php" method="post">
 <table border="0" cellspacing="1" cellpadding="4" bgcolor="#CCCCCC">
 <tr>
   <td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">

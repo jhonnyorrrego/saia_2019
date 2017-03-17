@@ -146,7 +146,7 @@ elseif(@$_REQUEST["accion"]=="anular"){
  $doc=busca_filtro_tabla("lower(plantilla)","documento","iddocumento='".$_REQUEST["key"]."'","",$conn);
 
  $ch = curl_init();
- $fila = "http://".RUTA_PDF_LOCAL."/class_impresion.php?iddoc=".$iddoc."&conexion_remota=1&usuario_actual=".$_SESSION["usuario_actual"]."&LOGIN=".$_SESSION["LOGIN".LLAVE_SAIA];
+ $fila = PROTOCOLO_CONEXION.RUTA_PDF_LOCAL."/class_impresion.php?iddoc=".$iddoc."&conexion_remota=1&usuario_actual=".$_SESSION["usuario_actual"]."&LOGIN=".$_SESSION["LOGIN".LLAVE_SAIA];
  curl_setopt($ch, CURLOPT_URL,$fila); 
  curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
  $contenido=curl_exec($ch);    

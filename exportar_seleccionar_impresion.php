@@ -160,7 +160,7 @@ foreach ($listado_pdf as $i => $url)
 {
 	if($url!=''){
 		$ch = curl_init();
- 		curl_setopt($ch, CURLOPT_URL,"http://".RUTA_PDF."/".$url); 
+ 		curl_setopt($ch, CURLOPT_URL,PROTOCOLO_CONEXION.RUTA_PDF."/".$url); 
  		curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
  		fwrite($archivo,curl_exec ($ch));
  		curl_close ($ch);

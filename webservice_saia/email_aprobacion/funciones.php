@@ -31,7 +31,7 @@ function ejecuta_funciones($datos){
 		$borrar_pdf="UPDATE documento set pdf='' where iddocumento=".$datos['iddoc'];
 		phpmkr_query($borrar_pdf);
 		$ch = curl_init();
-	  $fila = "http://".RUTA_PDF_LOCAL."/class_impresion.php?plantilla=carta&iddoc=".$datos['iddoc']."&conexion_remota=1&conexio_usuario=".$_SESSION["LOGIN".LLAVE_SAIA]."&usuario_actual=".$_SESSION["usuario_actual"]."&LOGIN=".$_SESSION["LOGIN".LLAVE_SAIA]."&LLAVE_SAIA=".LLAVE_SAIA;
+	  $fila = PROTOCOLO_CONEXION.RUTA_PDF_LOCAL."/class_impresion.php?plantilla=carta&iddoc=".$datos['iddoc']."&conexion_remota=1&conexio_usuario=".$_SESSION["LOGIN".LLAVE_SAIA]."&usuario_actual=".$_SESSION["usuario_actual"]."&LOGIN=".$_SESSION["LOGIN".LLAVE_SAIA]."&LLAVE_SAIA=".LLAVE_SAIA;
 	  curl_setopt($ch, CURLOPT_URL,$fila);
 	  curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
 	  $contenido=curl_exec($ch);

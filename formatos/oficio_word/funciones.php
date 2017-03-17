@@ -125,7 +125,7 @@ function enviar_correo_pqr_oficio($idformato, $iddoc) {
 	if($datos['numcampos']) {
 		$documento = busca_filtro_tabla("", "documento", "iddocumento=" . $datos[0]['origen'], "", $conn);
 		$ch = curl_init();
-		$fila = "http://" . RUTA_PDF_LOCAL . "/class_impresion.php?iddoc=" . $iddoc . "&conexion_usuario=" . $_SESSION["LOGIN" . LLAVE_SAIA] . "&conexion_actual=" . $_SESSION["usuario_actual"] . "&conexion_remota=1&llave_saia=" . LLAVE_SAIA . "&LOGIN=" . $_SESSION["LOGIN" . LLAVE_SAIA];
+		$fila = PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . "/class_impresion.php?iddoc=" . $iddoc . "&conexion_usuario=" . $_SESSION["LOGIN" . LLAVE_SAIA] . "&conexion_actual=" . $_SESSION["usuario_actual"] . "&conexion_remota=1&llave_saia=" . LLAVE_SAIA . "&LOGIN=" . $_SESSION["LOGIN" . LLAVE_SAIA];
 		curl_setopt($ch, CURLOPT_URL, $fila);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		$contenido = curl_exec($ch);
