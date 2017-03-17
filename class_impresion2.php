@@ -127,15 +127,15 @@ class Imprime_Pdf {
 		if($vista > 0) {
 			$datos_vista = busca_filtro_tabla("", "vista_formato", "idvista_formato=$vista", "", $conn);
 			
-			$this->direccion[] = "http://" . RUTA_PDF_LOCAL . "/formatos/" . $datos_formato[0]["nombre"] . "/" . $datos_vista[0]["ruta_mostrar"] . "?tipo=6&iddoc=" . $datos_plantilla[0]["documento_iddocumento"] . "&formato=" . $datos_formato[0]["idformato"] . "&idfunc=" . usuario_actual("id");
+			$this->direccion[] = PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . "/formatos/" . $datos_formato[0]["nombre"] . "/" . $datos_vista[0]["ruta_mostrar"] . "?tipo=6&iddoc=" . $datos_plantilla[0]["documento_iddocumento"] . "&formato=" . $datos_formato[0]["idformato"] . "&idfunc=" . usuario_actual("id");
 		} elseif($datos_formato[0]["nombre"] == "carta") {
 			$destinos = explode(",", $datos_plantilla[0]["destinos"]);
 			
 			foreach($destinos as $fila) {
-				$this->direccion[] = "http://" . RUTA_PDF_LOCAL . "/formatos/" . $datos_formato[0]["nombre"] . "/" . $datos_formato[0]["ruta_mostrar"] . "?tipo=6&iddoc=" . $datos_plantilla[0]["documento_iddocumento"] . "&formato=" . $datos_formato[0]["idformato"] . "&idfunc=" . usuario_actual("id") . "&destino=$fila";
+				$this->direccion[] = PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . "/formatos/" . $datos_formato[0]["nombre"] . "/" . $datos_formato[0]["ruta_mostrar"] . "?tipo=6&iddoc=" . $datos_plantilla[0]["documento_iddocumento"] . "&formato=" . $datos_formato[0]["idformato"] . "&idfunc=" . usuario_actual("id") . "&destino=$fila";
 			}
 		} else {
-			$this->direccion[] = "http://" . RUTA_PDF_LOCAL . "/formatos/" . $datos_formato[0]["nombre"] . "/" . $datos_formato[0]["ruta_mostrar"] . "?tipo=5&iddoc=" . $datos_plantilla[0]["documento_iddocumento"] . "&formato=" . $datos_formato[0]["idformato"] . "&idfunc=" . usuario_actual("id");
+			$this->direccion[] = PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . "/formatos/" . $datos_formato[0]["nombre"] . "/" . $datos_formato[0]["ruta_mostrar"] . "?tipo=5&iddoc=" . $datos_plantilla[0]["documento_iddocumento"] . "&formato=" . $datos_formato[0]["idformato"] . "&idfunc=" . usuario_actual("id");
 		}
 	}
 
@@ -344,9 +344,9 @@ class Imprime_Pdf {
 			$this->pdf->startPageGroup();
 			$this->pdf->AddPage();
 			$contenido = curl_exec($ch);
-			$contenido = preg_replace("/(..\/){3}images/", "http://" . RUTA_PDF_LOCAL . "/../images", $contenido);
-			$contenido = preg_replace("/(..\/)*imagenes/", "http://" . RUTA_PDF_LOCAL . "/imagenes", $contenido);
-			$contenido = preg_replace("/(..\/)*botones/", "http://" . RUTA_PDF_LOCAL . "/botones", $contenido);
+			$contenido = preg_replace("/(..\/){3}images/", PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . "/../images", $contenido);
+			$contenido = preg_replace("/(..\/)*imagenes/", PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . "/imagenes", $contenido);
+			$contenido = preg_replace("/(..\/)*botones/", PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . "/botones", $contenido);
 			$contenido = str_replace("<pagebreak/>", "<br pagebreak=\"true\"/>", $contenido);
 			$contenido = str_replace("<p> </p>", "<p></p>", $contenido);
 			$contenido = str_replace("<p>&nbsp;</p>", "<p></p>", $contenido);
@@ -640,7 +640,7 @@ class MYPDF extends TCPDF {
 		$texto = str_replace("##PAGE##", $this->pagina_actual(), $texto);
 		
 		if($this->piepagina == 2) {
-			$img_file = 'http://saia.eep.com.co/saia_actualizacion3/saia/imagenes/logo_superservicios.jpg';
+			$img_file = PROTOCOLO_CONEXION.'saia.eep.com.co/saia_actualizacion3/saia/imagenes/logo_superservicios.jpg';
 			$this->Image($img_file, 5, 243, 0, 0, 'JPG', '', '', false, 300, '', false, false, 0);
 			$texto = preg_replace('#(<img.*?>)#', '', $texto);
 		}

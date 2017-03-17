@@ -55,14 +55,14 @@ function consultar_pqr($identificacion,$criterio){
   	$documentos =busca_filtro_tabla("iddocumento","ft_pqrs a, documento d","documento_iddocumento=iddocumento and d.estado<>'ELIMINADO' and identificacion='$identificacion'","d.fecha desc",$conn);
   //return("prueba");
 		if($documentos["numcampos"]){
-  		$texto=contenido_documento("http://".RUTA_PDF."/formatos/pqrs/pqr_por_persona.php?identificacion=$identificacion&remoto=1&idfunc=111222333&tipo=6");
+  		$texto=contenido_documento(PROTOCOLO_CONEXION.RUTA_PDF."/formatos/pqrs/pqr_por_persona.php?identificacion=$identificacion&remoto=1&idfunc=111222333&tipo=6");
 	  	return("0|".$texto);
 	  }else
 	  	return("0|No hay PQR registrada para este documento.");			
 	}else if($criterio==1){				
 		$documentos =busca_filtro_tabla("iddocumento","ft_pqrs a, documento d","documento_iddocumento=iddocumento and d.estado<>'ELIMINADO' and d.numero='$identificacion'","d.fecha desc",$conn);	  	
 	  if($documentos["numcampos"]){
-	  	$texto=contenido_documento("http://".RUTA_PDF."/formatos/pqrs/pqr_por_persona.php?numero_radicado=$identificacion&remoto=1&idfunc=111222333&tipo=6");
+	  	$texto=contenido_documento(PROTOCOLO_CONEXION.RUTA_PDF."/formatos/pqrs/pqr_por_persona.php?numero_radicado=$identificacion&remoto=1&idfunc=111222333&tipo=6");
   	return("0|".$texto);
 	  }else
 	  	return("0|No hay PQR registrada para este radicado.");		
@@ -89,7 +89,7 @@ function consultar_pdf($datos){
   }
  	$respuesta=busca_filtro_tabla("pdf,lower(plantilla)","documento","iddocumento=".$_REQUEST["iddoc"],"",$conn);
  	if($respuesta[0][0]){
-    $direccion="http://".RUTA_PDF."/".$respuesta[0][0];
+    $direccion=PROTOCOLO_CONEXION.RUTA_PDF."/".$respuesta[0][0];
    
 	  $direccion=str_replace('saia/../../../../almacenamiento','almacenamiento',$direccion);
 		if($direccion==''){
@@ -97,7 +97,7 @@ function consultar_pdf($datos){
 		}		
   }
   else
-  	$direccion="http://".RUTA_PDF."/html2ps/public_html/demo/html2ps.php?plantilla=".$respuesta[0][1]."&iddoc=".$_REQUEST["iddoc"];
+  	$direccion=PROTOCOLO_CONEXION.RUTA_PDF."/html2ps/public_html/demo/html2ps.php?plantilla=".$respuesta[0][1]."&iddoc=".$_REQUEST["iddoc"];
  return($direccion);  
 }
 

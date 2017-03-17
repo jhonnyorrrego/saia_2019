@@ -23,8 +23,6 @@ if($papa["numcampos"]){
   if(count($listado_estructuras))
     $condicion="idft_estructura_hoja_vida NOT IN(".implode(",",array_unique($listado_estructuras)).")";
   $estructura=busca_filtro_tabla("","ft_estructura_hoja_vida",$condicion,"obligatoriedad DESC",$conn);
-  //print_r($estructura);
-//  http://201.236.218.74:85/aguas/saia1.06/formatos/anexos_hoja_vida/adicionar_anexos_hoja_vida.php?anterior=27002
   $texto="<br /><br />Listado de Documentos Obligatorios Pendientes:<br />";
   $obligatorio=0;
   for($i=0;$i<$estructura["numcampos"];$i++){
@@ -32,7 +30,7 @@ if($papa["numcampos"]){
       $texto.="<br /><br /> Listado de Documentos no obligatorios Pendientes:<br />";
       $obligatorio=1;
     }
-    $texto.='<br /><a href="http://'.RUTA_PDF.'/formatos/anexos_hoja_vida/adicionar_anexos_hoja_vida.php?anterior='.$papa[0]["documento_iddocumento"].'&seleccionado='.$estructura[$i]["idft_estructura_hoja_vida"].'">'.mostrar_valor_campo("nombre",$formato_estructura,$estructura[$i]["documento_iddocumento"],1).'</a><br />';
+    $texto.='<br /><a href="'.PROTOCOLO_CONEXION.RUTA_PDF.'/formatos/anexos_hoja_vida/adicionar_anexos_hoja_vida.php?anterior='.$papa[0]["documento_iddocumento"].'&seleccionado='.$estructura[$i]["idft_estructura_hoja_vida"].'">'.mostrar_valor_campo("nombre",$formato_estructura,$estructura[$i]["documento_iddocumento"],1).'</a><br />';
   }
   echo($texto);
   echo('</spam>');
@@ -76,7 +74,7 @@ if(count($campos)){
       for($j=0;$j<$lcampos["numcampos"];$j++){
         $texto.='<td align="center">'.mostrar_valor_campo($lcampos[$j]["nombre"],$lcampos[$j]["formato_idformato"],$hijo[$i]["documento_iddocumento"],1)."</td>";
       }
-      $texto.='<td><a href="http://'.RUTA_PDF.'/formatos/anexos_hoja_vida/mostrar_anexos_hoja_vida.php?idformato='.$lcampos[0]["formato_idformato"].'&iddoc='.$hijo[$i]["documento_iddocumento"].'" class="highslide" onclick="return hs.htmlExpand(this, { objectType: '."'".'iframe'."'".',width: 400, height:250 } )">ver</a></td>';
+      $texto.='<td><a href="'.PROTOCOLO_CONEXION.RUTA_PDF.'/formatos/anexos_hoja_vida/mostrar_anexos_hoja_vida.php?idformato='.$lcampos[0]["formato_idformato"].'&iddoc='.$hijo[$i]["documento_iddocumento"].'" class="highslide" onclick="return hs.htmlExpand(this, { objectType: '."'".'iframe'."'".',width: 400, height:250 } )">ver</a></td>';
       array_push($listado_estructuras,$hijo[$i]["estructura"]);
       $texto.='</tr>';
     }

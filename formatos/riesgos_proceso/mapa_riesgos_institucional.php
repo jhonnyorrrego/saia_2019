@@ -75,8 +75,6 @@ table thead td {
 $proceso=busca_filtro_tabla("","ft_proceso a, documento b","a.documento_iddocumento=b.iddocumento AND b.estado not in('ELIMINADO') AND a.estado!='INACTIVO'","",$conn);	
 
 		if($_REQUEST["tipo"] != 5 && !@$_REQUEST["excel"]){
-			//$url = "http://".RUTA_PDF_LOCAL."/formatos/riesgos_proceso/mapa_riesgos_institucional.php?tipo=5";
-			//$ruta = $ruta_db_superior."class_impresion2.php?tipo=5&orientacion=1&url=".$url."&pdf=1&url_encabezado=";
 			$url="mapa_riesgos_institucional.php?excel=1";
 			$tabla = '
   					     <a target="_blank" href="'.$url.'">

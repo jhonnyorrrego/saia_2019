@@ -172,13 +172,13 @@ function generar_qr_pqrsf($idformato,$iddoc){
 	global $conn,$ruta_db_superior;	
 	$codigo_qr=busca_filtro_tabla("","documento_verificacion","documento_iddocumento=".$iddoc,"", $conn);
 	if($codigo_qr['numcampos']){
-	$qr='<img src="http://'.RUTA_PDF_LOCAL.'/'.$codigo_qr[0]['ruta_qr'].'" >';	
+	$qr='<img src="'.PROTOCOLO_CONEXION.RUTA_PDF_LOCAL.'/'.$codigo_qr[0]['ruta_qr'].'" >';	
 	}else{
 		include_once($ruta_db_superior."pantallas/qr/librerias.php");
 		generar_codigo_qr($idformato,$iddoc);
 		
 		$codigo_qr=busca_filtro_tabla("","documento_verificacion","documento_iddocumento=".$iddoc,"", $conn);	
-		$qr="<img src='http://".RUTA_PDF_LOCAL."/".$codigo_qr[0]['ruta_qr']."' >";	
+		$qr="<img src='".PROTOCOLO_CONEXION.RUTA_PDF_LOCAL."/".$codigo_qr[0]['ruta_qr']."' >";	
 	}
 	echo $qr;
 }

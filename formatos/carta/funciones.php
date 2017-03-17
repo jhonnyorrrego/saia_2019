@@ -22,12 +22,12 @@ function mostrar_qr_carta($idformato,$iddoc){
 		$codigo_qr=busca_filtro_tabla("","documento_verificacion","documento_iddocumento=".$iddoc,"iddocumento_verificacion DESC", $conn);
 		if($codigo_qr['numcampos']){
 			$extension=explode(".",$codigo_qr[0]['ruta_qr']);
-			$img='<img src="http://'.RUTA_PDF.'/'.$codigo_qr[0]['ruta_qr'].'"  />';
+			$img='<img src="'.PROTOCOLO_CONEXION.RUTA_PDF.'/'.$codigo_qr[0]['ruta_qr'].'"  />';
 		}else{
 			generar_codigo_qr_carta($idformato,$iddoc);
 			$codigo_qr=busca_filtro_tabla("","documento_verificacion","documento_iddocumento=".$iddoc,"iddocumento_verificacion DESC", $conn);
 			$extension=explode(".",$codigo_qr[0]['ruta_qr']);
-			$img='<img src="http://'.RUTA_PDF.'/'.$codigo_qr[0]['ruta_qr'].'"   />';
+			$img='<img src="'.PROTOCOLO_CONEXION.RUTA_PDF.'/'.$codigo_qr[0]['ruta_qr'].'"   />';
 		}
 		echo($img);
 	}
@@ -693,15 +693,12 @@ function generar_correo_confirmacion($idformato,$iddoc){
 			if($consulta[0]['pdf']!=""){
 	      $anexos[]=$ruta_db_superior.$consulta[0]['pdf'];
 	    }else{
-				//$nombre_archivo="temporal_".$_SESSION["LOGIN"]."/".$iddoc;
 				$ch = curl_init();
-		    //$fila = "http://".RUTA_PDF_LOCAL."/class_impresion.php?iddoc=".$iddoc."&LOGIN=".$_SESSION["LOGIN".LLAVE_SAIA]."&conexion_remota=1&usuario_actual=".$_SESSION["usuario_actual"]."&LLAVE_SAIA=".LLAVE_SAIA;
-		    $fila = "http://".RUTA_PDF_LOCAL."/class_impresion.php?plantilla=".$formato[0]['nombre']."&iddoc=".$iddoc."&conexion_remota=1&conexio_usuario=".$_SESSION["LOGIN".LLAVE_SAIA]."&usuario_actual=".$_SESSION["usuario_actual"]."&LOGIN=".$_SESSION["LOGIN".LLAVE_SAIA]."&LLAVE_SAIA=".LLAVE_SAIA;
+		    $fila = PROTOCOLO_CONEXION.RUTA_PDF_LOCAL."/class_impresion.php?plantilla=".$formato[0]['nombre']."&iddoc=".$iddoc."&conexion_remota=1&conexio_usuario=".$_SESSION["LOGIN".LLAVE_SAIA]."&usuario_actual=".$_SESSION["usuario_actual"]."&LOGIN=".$_SESSION["LOGIN".LLAVE_SAIA]."&LLAVE_SAIA=".LLAVE_SAIA;
 		    curl_setopt($ch, CURLOPT_URL,$fila);
 		    curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
 		    $contenido=curl_exec($ch);
 		    curl_close ($ch);
-				//$anexos[]=$ruta_db_superior.$nombre_archivo.".pdf";
 	    }
 			$consulta=busca_filtro_tabla("","documento","iddocumento=".$iddoc,"",$conn);
 			if($consulta[0]['pdf']!=""){

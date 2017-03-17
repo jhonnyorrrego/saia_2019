@@ -223,12 +223,12 @@ function mostrar_qr_interna($idformato,$iddoc){
 		$codigo_qr=busca_filtro_tabla("","documento_verificacion","documento_iddocumento=".$iddoc,"", $conn);
 		if($codigo_qr['numcampos']){
 			$extension=explode(".",$codigo_qr[0]['ruta_qr']);
-			$img='&nbsp;<img src="http://'.RUTA_PDF.'/'.$codigo_qr[0]['ruta_qr'].'" />';
+			$img='&nbsp;<img src="'.PROTOCOLO_CONEXION.RUTA_PDF.'/'.$codigo_qr[0]['ruta_qr'].'" />';
 		}else{
 			generar_codigo_qr_interna($idformato,$iddoc);
 			$codigo_qr=busca_filtro_tabla("","documento_verificacion","documento_iddocumento=".$iddoc,"", $conn);
 			$extension=explode(".",$codigo_qr[0]['ruta_qr']);
-			$img='&nbsp;<img src="http://'.RUTA_PDF.'/'.$codigo_qr[0]['ruta_qr'].'" />';	
+			$img='&nbsp;<img src="'.PROTOCOLO_CONEXION.RUTA_PDF.'/'.$codigo_qr[0]['ruta_qr'].'" />';	
 		}
 		echo($img);
 	}
@@ -410,8 +410,8 @@ function generar_correo_confirmacion_memorando($idformato,$iddoc){
 	    }else{
 				//$nombre_archivo="temporal_".$_SESSION["LOGIN"]."/".$iddoc;
 				$ch = curl_init();
-		    //$fila = "http://".RUTA_PDF_LOCAL."/class_impresion.php?iddoc=".$iddoc."&LOGIN=".$_SESSION["LOGIN".LLAVE_SAIA]."&conexion_remota=1&usuario_actual=".$_SESSION["usuario_actual"]."&LLAVE_SAIA=".LLAVE_SAIA;
-		    $fila = "http://".RUTA_PDF_LOCAL."/class_impresion.php?plantilla=".$formato[0]['nombre']."&iddoc=".$iddoc."&conexion_remota=1&conexio_usuario=".$_SESSION["LOGIN".LLAVE_SAIA]."&usuario_actual=".$_SESSION["usuario_actual"]."&LOGIN=".$_SESSION["LOGIN".LLAVE_SAIA]."&LLAVE_SAIA=".LLAVE_SAIA;
+		    //$fila = PROTOCOLO_CONEXION.RUTA_PDF_LOCAL."/class_impresion.php?iddoc=".$iddoc."&LOGIN=".$_SESSION["LOGIN".LLAVE_SAIA]."&conexion_remota=1&usuario_actual=".$_SESSION["usuario_actual"]."&LLAVE_SAIA=".LLAVE_SAIA;
+		    $fila = PROTOCOLO_CONEXION.RUTA_PDF_LOCAL."/class_impresion.php?plantilla=".$formato[0]['nombre']."&iddoc=".$iddoc."&conexion_remota=1&conexio_usuario=".$_SESSION["LOGIN".LLAVE_SAIA]."&usuario_actual=".$_SESSION["usuario_actual"]."&LOGIN=".$_SESSION["LOGIN".LLAVE_SAIA]."&LLAVE_SAIA=".LLAVE_SAIA;
 		    curl_setopt($ch, CURLOPT_URL,$fila);
 		    curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
 		    $contenido=curl_exec($ch);

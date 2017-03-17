@@ -120,7 +120,7 @@ function graficas_resultado($formulas,$indicador)
  $cadena="";
  for($i=0;$i<$formulas["numcampos"];$i++)
    {if(is_file("../indicadores_calidad/imagenes/resultado_".$indicador."_".$formulas[$i]["id"]."_2.png"))
-    $cadena.=$formulas[$i]["nombre"]."<br /><a class='highslide' onclick='return hs.htmlExpand(this, { objectType: \"iframe\",width: 650, height:400,preserveContent:false } )' href='".PROTOCOLO_CONEXION.RUTA_PDF."/formatos/indicadores_calidad/imagenes/resultado_".$indicador."_".$formulas[$i]["id"]."_2.png'><img src='http://".RUTA_PDF."/formatos/indicadores_calidad/imagenes/resultado_".$indicador."_".$formulas[$i]["id"]."_2.png' width='300px' /></a><br />";
+    $cadena.=$formulas[$i]["nombre"]."<br /><a class='highslide' onclick='return hs.htmlExpand(this, { objectType: \"iframe\",width: 650, height:400,preserveContent:false } )' href='".PROTOCOLO_CONEXION.RUTA_PDF."/formatos/indicadores_calidad/imagenes/resultado_".$indicador."_".$formulas[$i]["id"]."_2.png'><img src='".PROTOCOLO_CONEXION.RUTA_PDF."/formatos/indicadores_calidad/imagenes/resultado_".$indicador."_".$formulas[$i]["id"]."_2.png' width='300px' /></a><br />";
    }
  return($cadena);  
 }

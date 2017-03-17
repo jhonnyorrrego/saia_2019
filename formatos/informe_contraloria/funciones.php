@@ -77,7 +77,7 @@ function porcentaje_plan($idformato, $idcampo, $iddoc = NULL, $informe = null) {
 
 
 function logo_contraloria() {
-	echo '<img src="http://' . RUTA_PDF . '/imagenes/contraloria.jpg" alt="" />';
+	echo '<img src="'. PROTOCOLO_CONEXION . RUTA_PDF . '/imagenes/contraloria.jpg" alt="" />';
 }
 
 function listar_hallazgo_informe($idformato, $iddoc, $condicion = "") {

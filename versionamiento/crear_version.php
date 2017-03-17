@@ -65,7 +65,7 @@ if(isset($_REQUEST["key"])&&$_REQUEST["key"]){
 $(document).ready(function(){	
 	$.ajax({
 		type: "POST",
-		url: "http://".RUTA_PDF."/saia/html2ps/public_html/demo/html2ps.php",
+		url: PROTOCOLO_CONEXION.RUTA_PDF."/saia/html2ps/public_html/demo/html2ps.php",
 		dataType: 'json',
 		data: {
 			plantilla: "<?php echo($doc[0]["plantilla"]); ?>",

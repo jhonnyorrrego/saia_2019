@@ -739,7 +739,7 @@ function carga_soporte_ingresados($iddocumento){
 		  $("#cargar_soporte").click(function(){	    	
 		    var docus=$("#seleccionados").val();
 			  if(docus!=""){			  	
-						top.hs.htmlExpand(this, { objectType: "iframe",width: 400, height: 300, src:"http://'.RUTA_PDF.'/formatos/despacho_ingresados/anexos_despacho.php?docs="+docus,outlineType: "rounded-white",wrapperClassName:"highslide-wrapper drag-header"});
+						top.hs.htmlExpand(this, { objectType: "iframe",width: 400, height: 300, src:"'.RUTA_PDF_LOCAL.RUTA_PDF.'/formatos/despacho_ingresados/anexos_despacho.php?docs="+docus,outlineType: "rounded-white",wrapperClassName:"highslide-wrapper drag-header"});
 			  }else{
 			  	alert("Seleccione por lo menos un documento");
 			  }

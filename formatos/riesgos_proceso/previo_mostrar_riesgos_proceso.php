@@ -13,16 +13,8 @@ $max_salida--;
 include_once($ruta_db_superior.'librerias_saia.php');
 
 echo(estilo_bootstrap());
-//echo('<a href="http://saia.risaralda.gov.co/SAIA/saia/class_impresion.php?url=formatos/riesgos_proceso/previo_mostrar_riesgos_proceso2.php?llave=9-idft_proceso-161&iddoc=439252&enlace_adicionar_formato=1&padre=161&formato_padre=13&no_menu=1"><img src="../../enlaces/imprimir.gif" border="0"></a>');
-//echo('<a href="http://saia.risaralda.gov.co/SAIA/saia/class_impresion.php?url=formatos/riesgos_proceso/previo_mostrar_riesgos_proceso.php?llave=9-idft_proceso-161&iddoc=439252&enlace_adicionar_formato=1&padre=161&formato_padre=13&no_menu=1"><img src="../../enlaces/imprimir_pdf.png" border="0"></a>');
 
 $datos=busca_filtro_tabla("","documento","iddocumento=".$_REQUEST["iddoc"],"",$conn);
-//print_r($datos);
-/*include_once($ruta_db_superior."db.php");
-include_once('../librerias/estilo_formulario.php');
-include_once($ruta_db_superior.'formatos/librerias/funciones_generales.php');
-include_once($ruta_db_superior.'librerias_saia.php');
-include_once('librerias_riesgos.php');*/
 
 include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior.'formatos/librerias/estilo_formulario.php');
