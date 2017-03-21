@@ -22,7 +22,11 @@ if($documentos['numcampos']){
     for ($i=0; $i < $documentos['numcampos']; $i++) {
         /*GENERACION DEL PDF*/
         $ch = curl_init();
-        $fila = "http://".RUTA_PDF_LOCAL."/class_impresion.php?plantilla=carta&iddoc=".$documentos[$i]['iddocumento']."&conexion_remota=1&conexio_usuario=".$_SESSION["LOGIN".LLAVE_SAIA]."&usuario_actual=".$_SESSION["usuario_actual"]."&LOGIN=".$_SESSION["LOGIN".LLAVE_SAIA]."&LLAVE_SAIA=".LLAVE_SAIA;
+        $fila = "".PROTOCOLO_CONEXION . RUTA_PDF_LOCAL."/class_impresion.php?plantilla=carta&iddoc=".$documentos[$i]['iddocumento']."&conexion_remota=1&conexio_usuario=".$_SESSION["LOGIN".LLAVE_SAIA]."&usuario_actual=".$_SESSION["usuario_actual"]."&LOGIN=".$_SESSION["LOGIN".LLAVE_SAIA]."&LLAVE_SAIA=".LLAVE_SAIA;
+        if (strpos(PROTOCOLO_CONEXION, 'https') !== false) {
+		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false); 
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        }
         curl_setopt($ch, CURLOPT_URL,$fila); 
         curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
         $contenido=curl_exec($ch);    
@@ -31,7 +35,7 @@ if($documentos['numcampos']){
     }
     @session_destroy();
     unset($_SESSIONS);
-    redirecciona("http://".RUTA_PDF_LOCAL."/tareas_administrativas_saia/generar_pdf.php");
+    redirecciona("".PROTOCOLO_CONEXION.RUTA_PDF_LOCAL."/tareas_administrativas_saia/generar_pdf.php");
 }else{
     die("Termino");
 }

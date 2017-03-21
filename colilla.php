@@ -177,20 +177,26 @@ if($datos[0]["numero"]){
 	$codigo_qr=busca_filtro_tabla("","documento_verificacion","documento_iddocumento=".$doc,"", $conn);	
 	$qr='';
 	if($codigo_qr['numcampos']){
-	    if(file_exists(PROTOCOLO_CONEXION.RUTA_PDF_LOCAL."/".$codigo_qr[0]['ruta_qr'])){
-            $qr='<img src="'.PROTOCOLO_CONEXION.RUTA_PDF_LOCAL.'/'.$codigo_qr[0]['ruta_qr'].'" width="70px" height="70px">';		        
+    $archivo_binario=StorageUtils::get_binary_file($codigo_qr[0]['ruta_qr']);
+	    
+    if($archivo_binario){
+          $qr='<img src="'.$archivo_binario.'" width="70px" height="70px">';		        
 	    }else{
     		include_once($ruta_db_superior."pantallas/qr/librerias.php");
     		generar_codigo_qr('',$doc);
     		$codigo_qr=busca_filtro_tabla("","documento_verificacion","documento_iddocumento=".$doc,"", $conn);	
-    		$qr='<img src="'.PROTOCOLO_CONEXION.RUTA_PDF_LOCAL.'/'.$codigo_qr[0]['ruta_qr'].'" width="70px" height="70px">';		        
+      $archivo_binario=StorageUtils::get_binary_file($codigo_qr[0]['ruta_qr']);
+      	
+  		$qr='<img src="'.$archivo_binario.'" width="70px" height="70px">';		        
 	    }
 	}
 	else{
 		include_once($ruta_db_superior."pantallas/qr/librerias.php");
 		generar_codigo_qr('',$doc);
 		$codigo_qr=busca_filtro_tabla("","documento_verificacion","documento_iddocumento=".$doc,"", $conn);	
-		$qr='<img src="'.PROTOCOLO_CONEXION.RUTA_PDF_LOCAL.'/'.$codigo_qr[0]['ruta_qr'].'" width="70px" height="70px">';		        
+    $archivo_binario=StorageUtils::get_binary_file($codigo_qr[0]['ruta_qr']);
+    	
+		$qr='<img src="'.$archivo_binario.'" width="70px" height="70px">';		        
 	}
 }
 ?>

@@ -144,7 +144,9 @@ function mostrar_anexos_pqrsf($idformato,$iddoc){
 	$anexos=busca_filtro_tabla("","anexos a","a.documento_iddocumento=".$iddoc,"",$conn);
 	$anexos_array=array();
 	for($i=0;$i<$anexos["numcampos"];$i++){
-		$anexos_array[]='<a class="previo_high" style="cursor:pointer" enlace="'.$anexos[$i]["ruta"].'">'.$anexos[$i]["etiqueta"].'</a>';
+		$ruta = $anexos[$i]["ruta"];
+		$ruta64 = base64_encode($ruta);
+		$anexos_array[] = '<a class="previo_high" style="cursor:pointer" enlace="' . "filesystem/mostrar_binario.php?ruta=$ruta64" . '">' . $anexos[$i]["etiqueta"] . '</a>';
 	}
 	echo(implode(", ",$anexos_array));
 	if($_REQUEST["tipo"]!=5){
@@ -170,15 +172,21 @@ function mostrar_radicado_pqrsf($idformato,$iddoc){
 
 function generar_qr_pqrsf($idformato,$iddoc){
 	global $conn,$ruta_db_superior;	
+	include_once($ruta_db_superior.'StorageUtils.php');
+	include_once($ruta_db_superior.'filesystem/SaiaStorage.php');
+
 	$codigo_qr=busca_filtro_tabla("","documento_verificacion","documento_iddocumento=".$iddoc,"", $conn);
 	if($codigo_qr['numcampos']){
-	$qr='<img src="'.PROTOCOLO_CONEXION.RUTA_PDF_LOCAL.'/'.$codigo_qr[0]['ruta_qr'].'" >';	
+		$contenido_qr = StorageUtils::get_binary_file($codigo_qr[0]['ruta_qr']);
+		$qr = '<img src="' . $contenido_qr . '" >';
 	}else{
 		include_once($ruta_db_superior."pantallas/qr/librerias.php");
 		generar_codigo_qr($idformato,$iddoc);
 		
 		$codigo_qr=busca_filtro_tabla("","documento_verificacion","documento_iddocumento=".$iddoc,"", $conn);	
-		$qr="<img src='".PROTOCOLO_CONEXION.RUTA_PDF_LOCAL."/".$codigo_qr[0]['ruta_qr']."' >";	
+		$contenido_qr = StorageUtils::get_binary_file($codigo_qr[0]['ruta_qr']);
+
+		$qr = "<img src='" . $contenido_qr . "' >";
 	}
 	echo $qr;
 }

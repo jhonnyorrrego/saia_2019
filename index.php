@@ -15,7 +15,8 @@ while($max_salida>0){
 include_once("db.php");
 include_once("librerias_saia.php");
 include_once("cargando.php");
-
+require_once('StorageUtils.php');
+require_once('filesystem/SaiaStorage.php');
 
 if(@$_REQUEST['texto_salir']){
 	
@@ -81,8 +82,14 @@ if(@$_SESSION["LOGIN".LLAVE_SAIA]){
 }
 $logo=busca_filtro_tabla("valor","configuracion","nombre='logo'","",$conn);
 $ruta_logo="imagenes/".$logo[0]["valor"];
-if($logo["numcampos"] && is_file($logo[0]["valor"])){
-  $ruta_logo=$logo[0]["valor"];
+$tipo_almacenamiento = new SaiaStorage("archivos");
+$ruta_imagen=json_decode($logo[0]["valor"]);	
+if(is_object($ruta_imagen)){
+	if($logo["numcampos"] && $tipo_almacenamiento->get_filesystem()->has($ruta_imagen->ruta)){
+	  $ruta_imagen=json_encode($ruta_imagen);
+	  $archivo_binario=StorageUtils::get_binary_file($ruta_imagen);	
+	  $ruta_logo=$archivo_binario;
+	}
 }
 ?>
 <html>
@@ -131,7 +138,7 @@ $mayor_informacion=busca_filtro_tabla("valor","configuracion","nombre='mayor_inf
     <tr class="footer_login_text">
       <td width="1%" height="25">&nbsp;</td>
       <td>©<?php echo date(Y);?> CEROK</td>
-      <!--<td><a href="">Términos de uso y servicio - SAIA</a><sup>®</sup></td>-->
+      <!--<td><a href="">Términos de uso y servicio - SAIA</a><sup>&reg;</sup></td>-->
       <td>Para mayor información: <?php echo($mayor_informacion[0]["valor"]); ?></td>
       <td>
       </td>

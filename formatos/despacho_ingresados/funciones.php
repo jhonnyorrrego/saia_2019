@@ -81,21 +81,30 @@ function generar_pdf_entrega($idformato,$iddoc){
 function reporte_entradas2($idformato,$iddoc){
 	global $conn,$registros,$ruta_db_superior;
 	include_once($ruta_db_superior."pantallas/qr/librerias.php");
+  include_once($ruta_db_superior."StorageUtils.php");
+  require_once $ruta_db_superior.'filesystem/SaiaStorage.php';
+  
 	$codigo_qr=busca_filtro_tabla("","documento_verificacion","documento_iddocumento=".$iddoc,"", $conn);
 	if($codigo_qr['numcampos']){
-		$qr='<img src="'.PROTOCOLO_CONEXION.RUTA_PDF.'/'.$codigo_qr[0]['ruta_qr'].'" width="80px" height="80px">';	
+    $archivo_binario=StorageUtils::get_binary_file($codigo_qr[0]['ruta_qr']);
+  
+		$qr='<img src="'.$archivo_binario.'" width="80px" height="80px">';	
 	}else{
 		generar_codigo_qr($idformato,$iddoc);
 		$codigo_qr=busca_filtro_tabla("","documento_verificacion","documento_iddocumento=".$iddoc,"", $conn);	
-		$qr='<img src="'.PROTOCOLO_CONEXION.RUTA_PDF.'/'.$codigo_qr[0]['ruta_qr'].'" width="80px" height="80px">';	
+    $archivo_binario=StorageUtils::get_binary_file($codigo_qr[0]['ruta_qr']);
+    	
+		$qr='<img src="'.$archivo_binario.'" width="80px" height="80px">';	
 	}
 	$documentos2=busca_filtro_tabla("","ft_despacho_ingresados","documento_iddocumento=".$iddoc,"",$conn);
 	$funcionario=busca_filtro_tabla("","vfuncionario_dc","iddependencia_cargo=".$documentos2[0]['mensajero'],"",$conn);
 	
 	$logo=busca_filtro_tabla("valor","configuracion","nombre='logo'","",$conn);
+	$archivo_binario=StorageUtils::get_binary_file($logo[0]["valor"]);
+  
 	$texto='<table style="border-collapse:collapse;width:100%" border="1px">';
 	$texto.='<tr>';
-	$texto.='<td style="text-align:center;" colspan="3"><br/><br/><img src="'.PROTOCOLO_CONEXION.RUTA_PDF.'/'.$logo[0]['valor'].'" width="125px" heigth="83px"></td>';
+	$texto.='<td style="text-align:center;" colspan="3"><br/><br/><img src="'.$archivo_binario.'" width="125px" heigth="83px"></td>';
 	$texto.='<td style="text-align:center" colspan="5"><br/><br/><br/><br/><br/><b>PLANILLA DE ENTREGA </b></td>';
 	$texto.='
 	<td style="text-align:center"><br><br>'.$qr.'<br>Planilla No. '.formato_numero($idformato,$iddoc,1).'</td>

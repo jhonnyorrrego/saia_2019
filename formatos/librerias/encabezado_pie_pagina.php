@@ -214,14 +214,23 @@ function nombre_proceso($doc)
   return("");
 }
 
-function logo_empresa()
-{
+function logo_empresa() {
  global $conn;
  $logo = busca_filtro_tabla("valor","configuracion","nombre='logo'","",$conn);
  if($logo["numcampos"]){
-  return('<img src="'.PROTOCOLO_CONEXION.RUTA_PDF_LOCAL.'/'.$logo[0][0].'" width="109" />');
+		// $tipo_almacenamiento = new SaiaStorage("archivos");
+		$tipo_almacenamiento = new SaiaStorage("archivos");
+		$ruta_imagen=json_decode($logo[0]["valor"]);
+		if( is_object ($ruta_imagen) ){
+			if($tipo_almacenamiento->get_filesystem()->has($ruta_imagen->ruta)){
+				$ruta_imagen=json_encode($ruta_imagen);
+				$archivo_binario=StorageUtils::get_binary_file($ruta_imagen);
+				return ('<img src="' . $archivo_binario . '" width="109" />');
  }
-else return ("");
+		}
+		//$archivo_binario = StorageUtils::get_binary_file($logo[0]["valor"]);
+	} else
+		return ("");
 }
 
 function logo_encabezado()

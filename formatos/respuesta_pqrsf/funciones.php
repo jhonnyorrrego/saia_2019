@@ -146,7 +146,6 @@ function generar_pdf_pqrsf($documento){
 	/*$datos_documento=busca_filtro_tabla(fecha_db_obtener('A.fecha','Y-m-d')." as x_fecha, A.*","documento A","A.iddocumento=".$iddoc,"",$conn);
 	
 	$fecha=explode("-", $datos_documento[0]["x_fecha"]);
-	$ruta=RUTA_PDFS.$datos_documento[0]["estado"]."/".$fecha[0]."-".$fecha[1]."/".$datos_documento[0]["iddocumento"]."/pdf/";
 	$ruta.=($datos_documento[0]["plantilla"])."_".$datos_documento[0]["numero"]."_".str_replace("-","_",$datos_documento[0]["x_fecha"]).".pdf";*/
 	$consulta=busca_filtro_tabla("","documento","iddocumento=".$iddoc,"",$conn);
 	if($consulta[0]['pdf']!=""){

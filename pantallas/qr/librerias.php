@@ -12,9 +12,13 @@ include_once ($ruta_db_superior . "db.php");
 
 function mostrar_codigo_qr($idformato, $iddoc) {
 	global $conn, $ruta_db_superior;
+  include_once($ruta_db_superior."StorageUtils.php");
+  require_once $ruta_db_superior.'filesystem/SaiaStorage.php';
+  
 	$codigo_qr = busca_filtro_tabla("", "documento_verificacion", "documento_iddocumento=" . $iddoc, "", $conn);
 	if($codigo_qr['numcampos']) {
-		echo ("<img src='" . PROTOCOLO_CONEXION . RUTA_PDF . "/" . $codigo_qr[0]['ruta_qr'] . "'>");
+    $archivo_binario=StorageUtils::get_binary_file($codigo_qr[0]['ruta_qr']);
+		$img='<img src="'.$archivo_binario.'" />';
 	}
 }
 
@@ -57,13 +61,19 @@ function generar_codigo_qr($idformato, $iddoc, $idfunc = 0) {
 	//}
 	
 	$formato_ruta = aplicar_plantilla_ruta_documento($iddoc);
-	$ruta = RUTA_QR . $formato_ruta . '/qr/';
-	$imagen = generar_qr($ruta, $datos_qr, 3);
+	$almacenamiento = new SaiaStorage(RUTA_QR);
+
+	$ruta = $formato_ruta . '/qr/';
+	$imagen = generar_qr_bin($datos_qr, 3);
+
+	$filename = $ruta . 'qr' . date('Y_m_d_H_m_s') . '.png';
 	
 	if($imagen == false) {
 		alerta("Error al tratar de crear el codigo qr");
 	} else {
-		$sql_documento_qr = "INSERT INTO documento_verificacion(documento_iddocumento,funcionario_idfuncionario,fecha,ruta_qr,verificacion) VALUES (" . $iddoc . "," . $idfun . "," . fecha_db_almacenar(date("Y-m-d H:m:s"), 'Y-m-d H:i:S') . ",'" . $imagen . "','vacio')";
+		$almacenamiento->almacenar_contenido($filename, $imagen);
+		$ruta_qr = array ("servidor" => $almacenamiento->get_ruta_servidor(), "ruta" => $filename);
+		$sql_documento_qr = "INSERT INTO documento_verificacion(documento_iddocumento,funcionario_idfuncionario,fecha,ruta_qr,verificacion) VALUES (" . $iddoc . "," . $idfun . "," . fecha_db_almacenar(date("Y-m-d H:m:s"), 'Y-m-d H:i:S') . ",'" . json_encode($ruta_qr) . "','vacio')";
 		phpmkr_query($sql_documento_qr);
 	}
 }
@@ -86,4 +96,28 @@ function generar_qr($filename, $datos, $matrixPointSize = 2, $errorCorrectionLev
 		return false;
 	}
 }
+
+function generar_qr_bin($datos, $matrixPointSize = 2, $errorCorrectionLevel = 'L') {
+	global $ruta_db_superior;
+	include_once ($ruta_db_superior . "phpqrcode/qrlib.php");
+	if($datos) {
+		if(trim($datos) == '') {
+			return false;
+		} else {
+			$filename = StorageUtils::obtener_archivo_temporal("qr");
+			//ob_implicit_flush(false);
+			//ob_start('callback');
+			QRcode::png($datos, $filename, $errorCorrectionLevel, $matrixPointSize, 0);
+			//$imageString = base64_encode( ob_get_contents() );
+			//$imageString = ob_get_contents();
+			//ob_end_clean();
+			$imageString = file_get_contents($filename);
+			unlink($filename);
+			return $imageString;
+		}
+	} else {
+		return false;
+	}
+}
+
 ?>

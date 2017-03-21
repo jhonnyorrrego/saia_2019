@@ -33,49 +33,46 @@ if(isset($_REQUEST['adicionar2'])){
 			//recuerden que deben crear un directorio con este mismo nombre
 			//en el mismo lugar donde se encuentra el archivo subir.php
 			//$ruta = $ruta_db_superior.RUTA_NOTICIA_IMAGENES;
-			$ruta=$ruta_db_superior.RUTA_NOTICIA_IMAGENES;
-			crear_destino($ruta);
+			require_once $ruta_db_superior . 'StorageUtils.php';
+			require_once $ruta_db_superior . 'filesystem/SaiaStorage.php';
+			
+			$ruta=RUTA_NOTICIA_IMAGENES;
+			$tipo_almacenamiento = new SaiaStorage("archivos");
 			
 			//comprovamos si este archivo existe para cambiar el nombre.
-			
 			$nombre_extension = basename($_FILES['imagen_modulo']['name']);
 			$vector_nombre_extension = explode('.',$nombre_extension);
 			$extencion=$vector_nombre_extension[(count($vector_nombre_extension)-1)];
 			$nombre_imagen=$vector_nombre_extension[0];
 		
-			
-			
-			if(file_exists($ruta.$_FILES["imagen_modulo"]["name"])){	
+			if($tipo_almacenamiento->get_filesystem()->has($ruta.$_FILES["imagen_modulo"]["name"])){
 				$tmpVar = 1;
-				while(file_exists($ruta.$nombre_imagen.'_'.$tmpVar.'.'.$extencion)){
+				while($tipo_almacenamiento->get_filesystem()->has($ruta.$nombre_imagen.'_'.$tmpVar.'.'.$extencion)){
 					$tmpVar++;
 				}
 				$nombre_imagen=$nombre_imagen . '_' . $tmpVar;	
 			}
 			$ruta.=$nombre_imagen.'.'.$extencion;
+			$ruta_anexos = array("servidor" => $tipo_almacenamiento->get_ruta_servidor(), "ruta" => $ruta);	
+			$ruta_anexos=json_encode($ruta_anexos);
 				
-			
-			
-			
-			if (!file_exists($ruta)){
+			if (!$tipo_almacenamiento->get_filesystem()->has($ruta)){
 				//aqui movemos el archivo desde la ruta temporal a nuestra ruta
-				$resultado = @move_uploaded_file($_FILES["imagen_modulo"]["tmp_name"], $ruta);
+				$resultado = $tipo_almacenamiento->almacenar_recurso($ruta, $_FILES["imagen_modulo"]["tmp_name"], false);
+				unlink($_FILES["imagen_modulo"]["tmp_name"]);
 			} else {
-					
 				$ejecutar=false;
 				echo "La imagen ".$_FILES['imagen_modulo']['name']." ya existe en el servidor, La imagen debe tener otro nombre";
 			}
 		} else {
 				$ejecutar=false;
 				echo "Solo se permite imagen PNG con fondo transparente";
-			
 		}
 	
 		if($ejecutar==true){
 			$fecha=date('Y-m-d');
 			$previo=substr($_REQUEST['noticia'], 0,200);
-			$sql="INSERT INTO noticia_index (noticia,previo,imagen,titulo,subtitulo,fecha) values ('".$_REQUEST['noticia']."','".$previo."','".RUTA_NOTICIA_IMAGENES.$_FILES['imagen_modulo']['name']."','".$_REQUEST['titulo']."','".$_REQUEST['subtitulo']."','".$fecha."')";
-			
+			$sql="INSERT INTO noticia_index (noticia,previo,imagen,titulo,subtitulo,fecha) values ('".$_REQUEST['noticia']."','".$previo."','".$ruta_anexos."','".$_REQUEST['titulo']."','".$_REQUEST['subtitulo']."','".$fecha."')";
 			phpmkr_query($sql);
 			echo "Noticia adicionada satisfactoriamente";  
 		}			

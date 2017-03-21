@@ -248,14 +248,18 @@ function validar_sticker($idformato, $iddoc){
 }
 function imagenes_digitalizadas_funcion($idformato,$iddoc){
 	global $conn, $ruta_db_superior;
+	include_once $ruta_db_superior . "StorageUtils.php";
 	$paginas=busca_filtro_tabla("","pagina a","id_documento=".$iddoc,"consecutivo asc",$conn);
 	if($paginas["numcampos"]){
 		$tabla='';
 		$tabla.='<table>';
 		$tabla.='<tr>';
 		for($i=0;$i<$paginas["numcampos"];$i++){
-			$tabla.='<td><a class="previo_high" enlace="'.$paginas[$i]["consecutivo"].'" tipo="pagina"><img border="1px" style="border-collapse:collapse" src="'.PROTOCOLO_CONEXION.RUTA_PDF.'/'.$paginas[$i]["imagen"].'"></a></td>';
-			if(($i%4)==0&&$i<>0)$tabla.='</tr><tr>';
+			$datos_img = StorageUtils::get_binary_file($paginas[$i]["imagen"]);
+
+			$tabla .= '<td><a class="previo_high" enlace="' . $paginas[$i]["consecutivo"] . '" tipo="pagina"><img border="1px" style="border-collapse:collapse" src="' . $datos_img . '"></a></td>';
+			if (($i % 4) == 0 && $i != 0)
+				$tabla .= '</tr><tr>';
 		}
 		$tabla.='</tr>';
 		$tabla.='</table>';
@@ -268,12 +272,15 @@ function imagenes_digitalizadas_funcion($idformato,$iddoc){
 		$tabla.='<table>';
 		$tabla.='<tr>';
 		for($i=0;$i<$anexos["numcampos"];$i++){
-			if($_REQUEST['carga_highslide']){				
-			}else{
-				$tabla.='<td><a class="previo_high" enlace="'.$anexos[$i]["ruta"].'" tipo="anexo"><img border="1px" style="border-collapse:collapse" width="90px" height="80px" src="'.PROTOCOLO_CONEXION.RUTA_PDF.'/'.$anexos[$i]["ruta"].'"></a></td>';
-			if(($i%4)==0&&$i<>0)$tabla.='</tr><tr>';
+			if (!$_REQUEST['carga_highslide']) {
+				$datos_img = StorageUtils::get_binary_file($anexos[$i]["ruta"]);
+				$ruta64 = base64_encode($anexos[$i]["ruta"]);
+				$ruta_abrir = "filesystem/mostrar_binario.php?ruta=$ruta64";
+				$tabla .= '<td><a class="previo_high" enlace="' . $ruta_abrir . '" tipo="anexo"><img border="1px" style="border-collapse:collapse" width="90px" height="80px" src="' . $datos_img . '"></a></td>';
+				if (($i % 4) == 0 && $i != 0) {
+					$tabla .= '</tr><tr>';
 			}
-			
+			}
 		}
 		$tabla.='</tr>';
 		$tabla.='</table>';
@@ -831,8 +838,8 @@ function obtener_radicado_entrada($idformato,$iddoc){
 
 function mostrar_informacion_general_radicacion($idformato,$iddoc){
 	global $conn,$ruta_db_superior;
-	
-	
+	include_once ($ruta_db_superior . "StorageUtils.php");
+	require_once $ruta_db_superior . 'filesystem/SaiaStorage.php';
 	
 	$datos=busca_filtro_tabla("serie_idserie,descripcion,descripcion_anexos,descripcion_general,tipo_origen,numero_oficio,".fecha_db_obtener("fecha_oficio_entrada","Y-m-d")." AS fecha_oficio_entrada,".fecha_db_obtener("fecha_radicacion_entrada","Y-m-d")." AS fecha_radicacion_entrada,numero_guia,empresa_transportado","ft_radicacion_entrada","documento_iddocumento=".$iddoc,"",$conn);
     
@@ -859,13 +866,14 @@ function mostrar_informacion_general_radicacion($idformato,$iddoc){
 	if($estado_doc[0]['estado']=='APROBADO'){
 		$codigo_qr=busca_filtro_tabla("","documento_verificacion","documento_iddocumento=".$iddoc,"iddocumento_verificacion DESC", $conn);
 		if($codigo_qr['numcampos']){
-			$extension=explode(".",$codigo_qr[0]['ruta_qr']);
-			$img='<img src="'.PROTOCOLO_CONEXION.RUTA_PDF.'/'.$codigo_qr[0]['ruta_qr'].'"  />';
+			$archivo_binario = StorageUtils::get_binary_file($codigo_qr[0]['ruta_qr']);
+			$img = '<img src="' . $archivo_binario . '" />';
 		}else{
 			generar_codigo_qr_carta($idformato,$iddoc);
 			$codigo_qr=busca_filtro_tabla("","documento_verificacion","documento_iddocumento=".$iddoc,"iddocumento_verificacion DESC", $conn);
-			$extension=explode(".",$codigo_qr[0]['ruta_qr']);
-			$img='<img src="'.PROTOCOLO_CONEXION.RUTA_PDF.'/'.$codigo_qr[0]['ruta_qr'].'"   />';
+			$archivo_binario = StorageUtils::get_binary_file($codigo_qr[0]['ruta_qr']);
+
+			$img = '<img src="' . $archivo_binario . '" />';
 		}
 		//echo($img);
 	}

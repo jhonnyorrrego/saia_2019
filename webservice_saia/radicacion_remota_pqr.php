@@ -57,7 +57,11 @@ function enviar_mail($iddocumento){
 	/*GENERACION DEL PDF*/
 	//$abrir=fopen("log_curl.txt","a+");
 		$ch = curl_init();
-		$fila = PROTOCOLO_CONEXION.RUTA_PDF_LOCAL."/class_impresion.php?iddoc=".$iddocumento."&conexion_remota=1";
+		$fila = "".PROTOCOLO_CONEXION.RUTA_PDF_LOCAL."/class_impresion.php?iddoc=".$iddocumento."&conexion_remota=1";
+        if (strpos(PROTOCOLO_CONEXION, 'https') !== false) {
+		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false); 
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+	}		
 		curl_setopt($ch, CURLOPT_URL,$fila); 
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
 		$contenido=curl_exec($ch);

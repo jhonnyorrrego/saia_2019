@@ -25,17 +25,28 @@ if(@$_REQUEST["ejecutar_accion_tarea"]){
 function descargar_anexo_nombre_original(){
 	global $conn,$ruta_db_superior;
 
+	include_once($ruta_db_superior."StorageUtils.php");
+	include_once($ruta_db_superior.'filesystem/SaiaStorage.php');
 	$idtareas_listado_anexos=@$_REQUEST['idtareas_listado_anexos'];  	
     $datos=busca_filtro_tabla("etiqueta,ruta","tareas_listado_anexos","idtareas_listado_anexos=".$idtareas_listado_anexos,"",$conn);
-    $file=$datos[0]["ruta"];  
-    $file=$ruta_db_superior.$file;
-    if (!is_file($file)) { return; }
+	$arr_almacen = StorageUtils::resolver_ruta($datos[0]["ruta"]);
+	
+	if($arr_almacen["clase"]->get_filesystem()->has($arr_almacen["ruta"])){
+		$instancia = $arr_almacen["clase"];
+		$fs = $instancia->get_filesystem();
+		$archivo = $fs->get($arr_almacen["ruta"]);
+		$tipo = $fs->mimeType($arr_almacen["ruta"]);
+
   	header("Content-Type: application/octet-stream");
-  	header("Content-Size: ".filesize($file));
   	header("Content-Disposition: attachment; filename=\"".html_entity_decode($datos[0]["etiqueta"])."\"");
-  	header("Content-Length: ".filesize($file));
+		header("Content-Length: " . $archivo->getSize());
   	header("Content-transfer-encoding: binary");
-  	@readfile($file);
+		echo($archivo->getContent());		
+	}else{
+		return;
+	}
+
+	
   	exit;
 }
 
@@ -568,28 +579,31 @@ function registrar_tiempo_tarea_listado(){
 
 function delete_tarea_listado(){
 	global $conn,$ruta_db_superior;
+	
+	include_once($ruta_db_superior."StorageUtils.php");
+	include_once($ruta_db_superior.'filesystem/SaiaStorage.php');
+	
 	$retorno=new stdClass;
 	$retorno->exito=0;
 	$retorno->mensaje="Error al eliminar";
 	$exito=0;
 	if($_REQUEST["idtareas_listado"]!=""){
+		$tipo_almacenamiento = new SaiaStorage(RUTA_BACKUP_ELIMINADOS);
+		$idlistado_tareas=busca_filtro_tabla('listado_tareas_fk','tareas_listado','idtareas_listado='.$_REQUEST["idtareas_listado"],'',$conn);
+		$listado_tareas_fk=$idlistado_tareas[0]['listado_tareas_fk'];
 		$sql2="DELETE FROM tareas_listado WHERE idtareas_listado=".$_REQUEST["idtareas_listado"];
 		phpmkr_query($sql2);
 		$verifica=busca_filtro_tabla("","tareas_listado","idtareas_listado=".$_REQUEST["idtareas_listado"],"",$conn);
 		if($verifica["numcampos"]==0){
 			$anexos=busca_filtro_tabla("ruta","tareas_listado_anexos","fk_tareas_listado=".$_REQUEST["idtareas_listado"],"",$conn);
 			for($i=0;$i<$anexos["numcampos"];$i++){
-				$ruta_archivo=$ruta_db_superior.$anexos[$i]["ruta"];
-				if(is_file($ruta_archivo)){
-				   $eliminacion=$ruta_db_superior.RUTA_BACKUP_ANEXOS_TAREAS.$_REQUEST["idtareas_listado"];
-				   $nombre=$eliminacion."/".date("Y-m-d_H_i_s")."_".basename($ruta_archivo);
-				   crear_destino($eliminacion);
-					 if(copy($ruta_archivo,$nombre)){
-					    unlink($ruta_archivo);
+				$arr_almacen = StorageUtils::resolver_ruta($anexos[$i]["ruta"]);
+				$nombre_anexo=basename($arr_almacen["ruta"]);
+				$ruta_eliminados="anexos_tareas/".$listado_tareas_fk."/".$_REQUEST["idtareas_listado"]."/";
+				$resultado=$arr_almacen['clase']->copiar_contenido($tipo_almacenamiento, $arr_almacen["ruta"], $ruta_eliminados.$nombre_anexo);
+				$arr_almacen['clase']->get_filesystem()->delete($arr_almacen["ruta"]);
 						 	$sql_anexos="DELETE FROM tareas_listado_anexos WHERE idtareas_listado_anexos=".$anexos[$i]["idtareas_listado_anexos"];
 							phpmkr_query($sql_anexos);
-					 }
-				}
 			}
 		 	$sql_tiempo="DELETE FROM tareas_listado_tiempo WHERE fk_tareas_listado=".$_REQUEST["idtareas_listado"];
 			phpmkr_query($sql_tiempo);

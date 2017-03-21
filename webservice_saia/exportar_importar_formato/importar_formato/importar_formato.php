@@ -12,7 +12,8 @@ include_once('define_remoto.php');
 require_once('lib/nusoap.php');  
 
 $cliente = new nusoap_client(SERVIDOR_IMPORTAR.'receptor_importar.php');
-
+// Pegar en $datos_formato el json generado en caso de fallar el ws
+$datos_formato = '';
 if(@$datos_formato){
 	$datos_formato=json_decode($datos_formato,true);
 	$datos_formato=json_encode($datos_formato);	

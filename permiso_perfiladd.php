@@ -162,8 +162,8 @@ if(isset($_REQUEST["pantalla"]))
 <select name="x_perfil_idperfil" id="x_perfil_idperfil" class="required"><option value="0">Seleccionar...</option>
 <?php
 $x_perfil_idperfilList = "<label for='x_perfil_idperfil[]' class='error'>Campo obligatorio</label><br />";
-$sSqlWrk = "SELECT DISTINCT A.idperfil, A.nombre FROM perfil A" . " ORDER BY A.nombre Asc";
-$rswrk = phpmkr_query($sSqlWrk,$conn) or error("Failed to execute query" . phpmkr_error() . ' SQL:' . $sSqlWrk);
+$sSqlWrk = "SELECT DISTINCT A.idperfil, A.nombre FROM perfil A ORDER BY A.nombre Asc";
+$rswrk = phpmkr_query($sSqlWrk,$conn);
 if ($rswrk) {
 	$rowcntwrk = 0;
 	while ($datawrk = phpmkr_fetch_array($rswrk)) {

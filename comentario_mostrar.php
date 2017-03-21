@@ -8,6 +8,11 @@ if(@$_REQUEST["iddoc"] || @$_REQUEST["key"] || @$_REQUEST["doc"]){
 }  
 
 include_once("header.php");
+
+require_once('StorageUtils.php');
+require_once('filesystem/SaiaStorage.php');
+require('vendor/autoload.php');
+
   header("Expires: Mon, 26 Jul 1997 05:00:00 GMT"); // date in the past
   header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT"); // always modified
   header("Cache-Control: no-store, no-cache, must-revalidate"); // HTTP/1.1 
@@ -21,19 +26,20 @@ else
  
 $frame="centro";
 $plantilla=busca_filtro_tabla("plantilla","documento","iddocumento=$llave","",$conn);
-if($plantilla[0][0]<>"")
+if($plantilla[0][0] != "")
  $frame="detalles";
 ?>
 
   <style type="text/css">
-.estilotextarea 
-{   width: 140px;
+.estilotextarea {
+	width: 140px;
     height:100px;
     border: none;
     background-color: #ffff99;       
     font-family: Verdana; 
     font-size: 9px;  
 }
+
 .ppal{
 		margin:0px;
 		margin-top:0px;
@@ -43,6 +49,7 @@ if($plantilla[0][0]<>"")
 		font-size: 9px;
     overflow:scroll;
 	}
+
 .tool_tabla{
     border-width: 10px;
     border-color: blue;    
@@ -50,10 +57,12 @@ if($plantilla[0][0]<>"")
     border-spacing: 2pt;   
     border: 5px solid #073A78;     
 }
+
 .tool_td{
     border: 1px solid #073A78; 
     padding: 1em;     
 }	
+
 img{
     border: none;   
 }	
@@ -61,14 +70,12 @@ img{
 </style>
 <script text="javascript">
 
-function ocultar_enlaces()
-{ 
+function ocultar_enlaces() {
   window.frames[0].document.getElementById("div3").style.display="none";  
   document.getElementById("tool").style.display="none";    
 }
 
- function pagina_navegador(doc,pag)
- {
+ function pagina_navegador(doc,pag) {
   if(pag=='0')
    return;     
   parent.<?php echo $frame; ?>.location ="comentario_mostrar.php?pagina=pagina&key="+doc+"&pag="+pag;
@@ -79,36 +86,32 @@ function ocultar_enlaces()
 $x_comentario = Null;
 $enlace="";
 $tipo_pag="";
-
-
  
 $tipo_doc=@$_SESSION["tipo_doc"];
 
-if(isset($_REQUEST["enlace"]) && $_REQUEST["enlace"]!="")
-    {$enlace = $_REQUEST["enlace"]; 
-     if(stristr($enlace,"factura_final.php"))
-       {$enlace .= "&mostrar=true"; }
-     if(isset($_REQUEST["id"])&& strpos($enlace,'.pdf')==false)
+if (isset($_REQUEST["enlace"]) && $_REQUEST["enlace"] != "") {
+	$enlace = $_REQUEST["enlace"];
+	if (stristr($enlace, "factura_final.php")) {
+		$enlace .= "&mostrar=true";
+	}
+	if (isset($_REQUEST["id"]) && strpos($enlace, '.pdf') == false) {
 	$enlace.="&iddoc='".$_REQUEST["id"]."'";
+	}
      $_SESSION["pagina_actual"]=$_REQUEST["id"];
      $pag=$_SESSION["pagina_actual"];
      $_SESSION["tipo_pagina"]=$enlace;
      $tipo_pag = "PLANTILLA";   
-    }   
-elseif(isset($_REQUEST["pag"]))  
-{   $pag=$_REQUEST["pag"]; 
+} elseif (isset($_REQUEST["pag"])) {
+	$pag = $_REQUEST["pag"];
     $tipo_pag="PAGINA";   
     $_SESSION["tipo_pagina"]="pagina";
     $_SESSION["pagina_actual"]=$pag;
-}
-elseif(isset($_REQUEST["tipo"]))  
-{   $pag=$_REQUEST["pag"]; 
+} elseif (isset($_REQUEST["tipo"])) {
+	$pag = $_REQUEST["pag"];
     $tipo_pag="REGISTRO";   
     $_SESSION["tipo_pagina"]="pagina";
     $_SESSION["pagina_actual"]=$pag;
-}   
-elseif(isset($_REQUEST["rotar"]))
-    {  
+} elseif (isset($_REQUEST["rotar"])) {
       $pag=$_SESSION["pagina_actual"];
       $valida_pag = busca_filtro_tabla("*","pagina","id_documento=$llave AND consecutivo='$pag'","",$conn);
       if(!($valida_pag["numcampos"]))
@@ -321,11 +324,12 @@ $aux_formato=strtolower($detalle_doc[0]["plantilla"]);
   <div width="50" align="center" >
   <?php 
   $var = md5(time());   //para evitar la memoria cache  
-  if($enlace=="")       //si es una pagina (imagen) del documento
-  {
+  if($enlace=="") {      //si es una pagina (imagen) del documento
+  	//print_r($ruta);die();
+  	$contenido_img = StorageUtils::get_binary_file($ruta);
   ?> 
   <br />    
-  <img id="prueba" src="<?php echo "$ruta?var=".$var; ?>"><br><br>  
+  <img id="prueba" src="<?php echo $contenido_img; ?>"><br><br>
 </div>
   </div>  
   <?php

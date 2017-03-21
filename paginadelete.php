@@ -5,6 +5,11 @@ header("Cache-Control: no-store, no-cache, must-revalidate");
 header("Cache-Control: post-check=0, pre-check=0", true);
 header("Pragma: no-cache");
 include_once ("db.php");
+
+require ('vendor/autoload.php');
+require_once 'filesystem/SaiaStorage.php';
+include_once "StorageUtils.php";
+
 $config = busca_filtro_tabla("valor", "configuracion", "nombre='color_encabezado'", "", $conn);
 if ($config["numcampos"]) {
 	$style = "<style type='text/css'>
@@ -279,15 +284,27 @@ function DeleteData($sqlKey, $llave, $conn) {
 
 	//se cambia la ruta de la pagina eliminada a la carpeta eliminados
 	$inf_eliminado = busca_filtro_tabla("imagen,ruta", "pagina", $sqlKey, "", $conn);
-	if ($inf_eliminado["numcampos"] > 0) {  $pag = substr($sqlKey, 12);
+	if ($inf_eliminado["numcampos"] > 0) {
+		$pag = substr($sqlKey, 12);
 		$ruta1 = $inf_eliminado[0]["imagen"];
-		$eliminacion = RUTA_BACKUP_ELIMINADOS . $rutaD;
+		$eliminacion = $rutaD;
+		$alm_backup = new SaiaStorage(RUTA_BACKUP_ELIMINADOS);
 		$nombre = $eliminacion . "/" . date("Y-m-d_H_i_s") . "_" . basename($inf_eliminado[0]["ruta"]);
 		crear_destino($eliminacion);
-		copy($inf_eliminado[0]["ruta"], $nombre);
+
+		$arr_origen = StorageUtils::resolver_ruta($inf_eliminado[0]["ruta"]);
+		$alm_origen = $arr_origen["clase"];
+
+		$alm_origen->copiar_contenido($alm_backup, $arr_origen["ruta"], $nombre);
+		//copy($inf_eliminado[0]["ruta"], $nombre);
 		//se eliminan las imagenes de las carpetas
-		if (unlink($inf_eliminado[0]["imagen"]) && unlink($inf_eliminado[0]["ruta"]))
+
+		$arr_img = StorageUtils::resolver_ruta($inf_eliminado[0]["imagen"]);
+		$alm_imagen = $arr_img["clase"];
+
+		if ($alm_imagen->eliminar($arr_img["ruta"]) && $alm_origen->eliminar($arr_origen["ruta"])) {
 			alerta("ELIMINACION EXITOSA DE LA PAGINA");
+		}
 		phpmkr_query($sSql, $conn) or error("PROBLEMAS AL EJECUTAR LA B�SQUEDA" . phpmkr_error() . ' SQL:' . $sSql);
 
 		$estampa = busca_filtro_tabla("", "pagina_estampado", "pagina_idpagina=" . $pag, "", $conn);
@@ -295,7 +312,7 @@ function DeleteData($sqlKey, $llave, $conn) {
 		$sql_estampado = "DELETE FROM pagina_estampado WHERE pagina_idpagina=" . $pag;
 		phpmkr_query($sql_estampado, $conn);
 
-		$x_detalle = "Identificador: $pag ,Nombre: " . basename($inf_eliminado[0]["ruta"]) . " ,Justificaci&oacute;n: " . ($x_detalle) . " <a href=\"$nombre\" target=\"_blank\" >Imagen</a>";
+		$x_detalle = "Identificador: $pag ,Nombre: " . basename($inf_eliminado[0]["ruta"]) . " ,Justificaci&oacute;n: " . htmlentities($x_detalle) . " <a href=\"$nombre\" target=\"_blank\" >Imagen</a>";
 		registrar_accion_digitalizacion($rutaD, 'ELIMINACION PAGINA', $x_detalle);
 		//se eliminanan los comentarios de la pagina eliminada
 		$sql_eliminar_nota = "DELETE FROM comentario_img WHERE pagina=" . $pag;
@@ -304,22 +321,27 @@ function DeleteData($sqlKey, $llave, $conn) {
 		$lista = busca_filtro_tabla("A.*", "pagina A", "id_documento=" . $rutaD, "pagina", $conn);
 		for ($i = 0; $i < $lista["numcampos"]; $i++) {
 			$actualizar = "update pagina set pagina=" . ($i + 1) . " where consecutivo = " . $lista[$i]["consecutivo"];
-			$datos_archivo = pathinfo($lista[$i]["imagen"]);
+			$arr_arch = StorageUtils::resolver_ruta($lista[$i]["ruta"]);
+			$arr_img = StorageUtils::resolver_ruta($lista[$i]["imagen"]);
+
+			$datos_archivo = pathinfo($arr_img["ruta"]);
 			$extension_miniatura = '.' . $datos_archivo['extension'];
-			$datos_archivo = pathinfo($lista[$i]["ruta"]);
+			$datos_archivo = pathinfo($arr_arch["ruta"]);
 			$extension = '.' . $datos_archivo['extension'];
 
-			$posmin = strpos($lista[$i]["imagen"], "miniaturas/");
-			$nueva_miniatura = substr($lista[$i]["imagen"], 0, $posmin) . "miniaturas/" . "doc" . $rutaD . "pag" . ($i + 1) . $extension_miniatura;
+			$posmin = strpos($arr_img["ruta"], "miniaturas/");
+			$nueva_miniatura = substr($arr_img["ruta"], 0, $posmin) . "miniaturas/" . "doc" . $rutaD . "pag" . ($i + 1) . $extension_miniatura;
 
-			$posdoc = strpos($lista[$i]["imagen"], "documentos/");
-			$nuevo_doc = substr($lista[$i]["imagen"], 0, $posmin) . "documentos/" . "doc" . $rutaD . "pag" . ($i + 1) . $extension;
+			$posdoc = strpos($arr_arch["ruta"], "documentos/");
+			$nuevo_doc = substr($arr_arch["ruta"], 0, $posdoc) . "documentos/" . "doc" . $rutaD . "pag" . ($i + 1) . $extension;
 
-			if ($lista[$i]["imagen"] != $nueva_miniatura) {
-				rename($lista[$i]["imagen"], $nueva_miniatura);
+			if ($arr_img["ruta"] != $nueva_miniatura) {
+				//rename($lista[$i]["imagen"], $nueva_miniatura);
+				$arr_img["clase"]->renombrar($arr_img["ruta"], $nueva_miniatura);
 			}
-			if ($lista[$i]["ruta"] != $nuevo_doc) {
-				rename($lista[$i]["ruta"], $nuevo_doc);
+			if ($arr_arch["ruta"] != $nuevo_doc) {
+				//rename($lista[$i]["ruta"], $nuevo_doc);
+				$arr_arch["clase"]->renombrar($arr_arch["ruta"], $nuevo_doc);
 				$sql1 = "UPDATE pagina SET imagen='" . $nueva_miniatura . "', ruta='" . $nuevo_doc . "' where consecutivo=" . $lista[$i]["consecutivo"];
 				phpmkr_query($sql1);
 			}

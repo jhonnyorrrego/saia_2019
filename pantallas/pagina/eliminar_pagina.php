@@ -24,7 +24,6 @@ if($_REQUEST['evento'] == 'Aceptar'){
 	eliminar_paginas_documento2($_REQUEST['paginas'],$_REQUEST['iddocumento'],$_REQUEST['justificacion']);	
 }
 ?>
-<script type="text/javascript" src="<?php echo $ruta_db_superior;?>js/jquery.js"></script>
 <script type="text/javascript" src="<?php echo $ruta_db_superior;?>js/jquery.validate.js"></script>
 
 
@@ -58,6 +57,7 @@ if($_REQUEST['evento'] == 'Aceptar'){
   </div>
 </form>
 <?php	
+
 	function eliminar_paginas_documento2($paginas,$iddocumento,$justificacion){
 		global $conn,$ruta_db_superior;		
 		$idpaginas = explode(',',$paginas);				
@@ -65,14 +65,18 @@ if($_REQUEST['evento'] == 'Aceptar'){
 		foreach ($idpaginas as $key){
 			$inf_eliminado = busca_filtro_tabla("imagen,ruta","pagina","consecutivo=".$key,"",$conn);
 			if($inf_eliminado["numcampos"]){
-			   $imagen=$ruta_db_superior.$inf_eliminado[0]["imagen"];
-				 $ruta=$ruta_db_superior.$inf_eliminado[0]["ruta"];
+			$arr_imagen = StorageUtils::resolver_ruta($inf_eliminado[0]["imagen"]);
+			$arr_origen = StorageUtils::resolver_ruta($inf_eliminado[0]["ruta"]);
+			$alm_origen = $arr_origen["clase"];
+			$alm_imagen = $arr_imagen["clase"];
 				 
-			   $eliminacion=$ruta_db_superior."../backup/eliminados/".$iddocumento;
-			   $nombre=$eliminacion."/".date("Y-m-d_H_i_s")."_".basename($inf_eliminado[0]["ruta"]);
-			   crear_destino($eliminacion);
-			   copy($ruta,$nombre);
-				  if(unlink($imagen) && unlink($ruta)){
+			$alm_backup = new SaiaStorage(RUTA_BACKUP_ELIMINADOS);
+			$ruta_eliminacion = RUTA_BACKUP_ELIMINADOS . $iddocumento;
+			$nombre = $ruta_eliminacion . "/" . date("Y-m-d_H_i_s") . "_" . basename($arr_origen["ruta"]);
+			//crear_destino($ruta_eliminacion);
+			//copy($ruta, $nombre);
+			$alm_origen->copiar_contenido($alm_backup, $arr_origen["ruta"], $nombre);
+			if ($alm_imagen->eliminar($arr_imagen["ruta"]) && $alm_origen->eliminar($arr_origen["ruta"])) {
 							$sql_delete = "DELETE FROM pagina WHERE consecutivo=".$key.' AND id_documento='.$iddocumento;						
 							phpmkr_query($sql_delete);
 							$sql_digitalizacion ="INSERT INTO digitalizacion (documento_iddocumento,fecha,accion,funcionario, justificacion)VALUES (".$iddocumento.",'".date('Y-m-d H:m:s')."','ELIMINACION PAGINA','".$idfuncionario."','Identificador:".$key.",".$justificacion."')";

@@ -138,7 +138,7 @@ width:"350px"
    echo "<tr><td  style='text-align: center; background-color:#57B0DE; color: #ffffff;'>PREVISUALIZAR</td><td><textarea name='preview' id='preview' class=''>".stripslashes(@$contenido[0]["preview"])."</textarea></td></tr>";
    echo "<tr><td  style='text-align: center; background-color:#57B0DE; color: #ffffff;'>IMAGEN</td><td>";
    if($contenido[0]["imagen"]<>"")
-     echo "<a href='".$ruta_db_superior.$contenido[0]["imagen"]."' target='_blank'>Ver Imagen Actual</a><br />Borrar Imagen<input type='checkbox' value='1' name='borrar_imagen'><br />Subir nueva <input type='file' name='imagen' id='imagen' >";
+     echo "<a href='".$ruta_db_superior.'filesystem/mostrar_binario.php?ruta='.base64_encode($contenido[0]["imagen"])."' target='_blank'>Ver Imagen Actual</a><br />Borrar Imagen<input type='checkbox' value='1' name='borrar_imagen'><br />Subir nueva <input type='file' name='imagen' id='imagen' >";
    else
      echo "<input type=file name='imagen' id='imagen' >";  
    echo "</td></tr>";
@@ -180,18 +180,26 @@ elseif($_REQUEST["accion"]=="guardar_adicionar")
  phpmkr_query($sql,$conn);
  if (is_uploaded_file($_FILES["imagen"]["tmp_name"])) 
      {
+		 
+		require_once $ruta_db_superior . 'StorageUtils.php';
+		require_once $ruta_db_superior . 'filesystem/SaiaStorage.php';
+		 
       $extension=explode(".",($_FILES["imagen"]["name"]));
 	  $ultimo=count($extension);
 	  $formato=$extension[$ultimo-1];
       $aleatorio=rand(5,15);
 	  $aux=RUTA_CARRUSEL_IMAGENES;
-      $imagen_reducida=$ruta_db_superior.$aux;
-      crear_destino($imagen_reducida);
+	  $tipo_almacenamiento = new SaiaStorage("imagenes");
+      $imagen_reducida=$aux;
       $imagen_reducida=$imagen_reducida.$aleatorio.".".$formato;
-      if(copy($_FILES["imagen"]["tmp_name"],$imagen_reducida))
-	  		$sql1="update contenidos_carrusel set imagen='".$aux.$aleatorio.".".$formato."' where idcontenidos_carrusel=".$id;
+	  $resultado = $tipo_almacenamiento->almacenar_recurso($imagen_reducida, $_FILES["imagen"]["tmp_name"], false);
+	  $ruta_anexos = array("servidor" => $tipo_almacenamiento->get_ruta_servidor(), "ruta" =>$imagen_reducida);	
+	  $ruta_anexos=json_encode($ruta_anexos);	  
+      if($tipo_almacenamiento->get_filesystem()->has($imagen_reducida)){
+		  $sql1="update contenidos_carrusel set imagen='".$ruta_anexos."' where idcontenidos_carrusel=".$id;
  			phpmkr_query($sql1,$conn);
 			@unlink($_FILES["imagen"]["tmp_name"]);
+	  }  
       }
   
  header("location: sliderconfig.php");
@@ -212,13 +220,20 @@ elseif($_REQUEST["accion"]=="guardar_editar")
  guardar_lob("contenido","contenidos_carrusel","idcontenidos_carrusel=".$_REQUEST["id"],$_REQUEST["contenido"],"texto",$conn);
  guardar_lob("preview","contenidos_carrusel","idcontenidos_carrusel=".$_REQUEST["id"],$_REQUEST["preview"],"texto",$conn);
  
+ 
+		require_once $ruta_db_superior . 'StorageUtils.php';
+		require_once $ruta_db_superior . 'filesystem/SaiaStorage.php'; 
+ 
 	if(@$_REQUEST["borrar_imagen"]){
 		$contenido=busca_filtro_tabla("","contenidos_carrusel","idcontenidos_carrusel=".$_REQUEST["id"],"",$conn);
 		if(MOTOR=="MySql")
 		 phpmkr_query("update contenidos_carrusel set imagen=null where idcontenidos_carrusel=".$_REQUEST["id"]);
 		 elseif(MOTOR=="Oracle")
 		 phpmkr_query("update contenidos_carrusel set imagen=empty_blob() where idcontenidos_carrusel=".$_REQUEST["id"]);
-		 @unlink($ruta_db_superior.$contenido[0]["imagen"]);
+		 
+		 $arr_almacen = StorageUtils::resolver_ruta($contenido[0]["imagen"]);
+		 $arr_almacen['clase']->get_filesystem()->delete($arr_almacen["ruta"]);
+		 //@unlink($ruta_db_superior.$contenido[0]["imagen"]);
 	}
  
  if (is_uploaded_file($_FILES["imagen"]["tmp_name"])) 
@@ -228,15 +243,19 @@ elseif($_REQUEST["accion"]=="guardar_editar")
 	  $formato=$extension[$ultimo-1];
       $aleatorio=rand(5,15);
 	  $aux=RUTA_CARRUSEL_IMAGENES;
-      $imagen_reducida=$ruta_db_superior.$aux;
-      crear_destino($imagen_reducida);
+	  $tipo_almacenamiento = new SaiaStorage("imagenes");
+      $imagen_reducida=$aux;
       $imagen_reducida=$imagen_reducida.$aleatorio.".".$formato;
-      if(copy($_FILES["imagen"]["tmp_name"],$imagen_reducida))
-	  		$sql1="update contenidos_carrusel set imagen='".$aux.$aleatorio.".".$formato."' where idcontenidos_carrusel=".$_REQUEST["id"];
+	  $resultado = $tipo_almacenamiento->almacenar_recurso($imagen_reducida, $_FILES["imagen"]["tmp_name"], false);
+	  $ruta_anexos = array("servidor" => $tipo_almacenamiento->get_ruta_servidor(), "ruta" =>$imagen_reducida);	
+	  $ruta_anexos=json_encode($ruta_anexos);	  
+	  if($tipo_almacenamiento->get_filesystem()->has($imagen_reducida)){
+		  $sql1="update contenidos_carrusel set imagen='".$ruta_anexos."' where idcontenidos_carrusel=".$_REQUEST["id"];
  			phpmkr_query($sql1,$conn);
 			@unlink($_FILES["imagen"]["tmp_name"]);
       }
- header("location: sliderconfig.php");
+      }
+ redirecciona("sliderconfig.php");
 }
 elseif($_REQUEST["accion"]=="eliminar")
 {$sql="delete from contenidos_carrusel where idcontenidos_carrusel=".$_REQUEST["id"];

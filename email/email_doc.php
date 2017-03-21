@@ -20,6 +20,9 @@ $validar_enteros=array("iddoc","archivo_idarchivo");
 include_once($ruta_db_superior."librerias_saia.php");
 desencriptar_sqli('form_info');
 echo(librerias_jquery());
+include_once ($ruta_db_superior . "StorageUtils.php");
+include_once ($ruta_db_superior . "filesystem/SaiaStorage.php");
+
 ?>
 <script> 
 /*
@@ -52,19 +55,18 @@ echo(librerias_jquery());
 
 
 /*
-<Clase>
-<Nombre>formato_email</Nombre> 
-<Parametros></Parametros>
-<Responsabilidades>Crea el formulario para el envio de correo electronico, el origen es el login del funcionario de la sesion y los adjuntos son los anexos o imagenes del documento y el pdf relacionado.<Responsabilidades>
-<Notas>El iddocumento se pasa por la variable $_REQUEST["iddoc"]; Si el funcionario no tiene correo se coloca uno por defecto que es info@cerok.com</Notas>
-<Excepciones></Excpciones>
-<Salida></Salida>
-<Pre-condiciones>El documento debe estar aprobado, debe terner numero de radicado<Pre-condiciones>
-<Post-condiciones><Post-condiciones>
-</Clase>
+ * <Clase>
+ * <Nombre>formato_email</Nombre>
+ * <Parametros></Parametros>
+ * <Responsabilidades>Crea el formulario para el envio de correo electronico, el origen es el login del funcionario de la sesion y los adjuntos son los anexos o imagenes del documento y el pdf relacionado.<Responsabilidades>
+ * <Notas>El iddocumento se pasa por la variable $_REQUEST["iddoc"]; Si el funcionario no tiene correo se coloca uno por defecto que es info@cerok.com</Notas>
+ * <Excepciones></Excpciones>
+ * <Salida></Salida>
+ * <Pre-condiciones>El documento debe estar aprobado, debe terner numero de radicado<Pre-condiciones>
+ * <Post-condiciones><Post-condiciones>
+ * </Clase>
 */
-function formato_email()
-{
+function formato_email() {
  global $conn,$ruta_db_superior;
    $datos=busca_filtro_tabla("numero,pdf,plantilla,ejecutor,descripcion,tipo_radicado,".fecha_db_obtener("fecha","Y-m-d H:i:s")." as fecha","documento","iddocumento=".$_REQUEST["iddoc"],"",$conn);
    //si es un radicado de entrada
@@ -130,10 +132,12 @@ function formato_email()
  $nombres=array();
  $texto_anexo='';  
  $texto_pagina='';
- if($anexos["numcampos"])
-    {
-     for($i=0;$i<$anexos["numcampos"];$i++)
-         $texto_anexo.='<input name="anexos[]" value="'.$anexos[$i]['idanexos'].'" type="checkbox" checked><a href="'.$ruta_db_superior.'../'.$anexos[$i]['ruta'].'" target="_blank">'.$anexos[$i]["etiqueta"].'</a><br />';
+	if ($anexos["numcampos"]) {
+		$ruta_mostrar = $ruta_db_superior . "filesystem/mostrar_binario.php?ruta=";
+		for($i = 0; $i < $anexos["numcampos"]; $i++) {
+			$mostrar = $ruta_mostrar . base64_encode($anexos[$i]['ruta']);
+			$texto_anexo .= '<input name="anexos[]" value="' . $anexos[$i]['idanexos'] . '" type="checkbox" checked><a href="' . $mostrar . '" target="_blank">' . $anexos[$i]["etiqueta"] . '</a><br />';
+		}
     }      
  
 //creo un pdf con las paginas del documento
@@ -145,31 +149,26 @@ if($paginas["numcampos"])
        $texto_pagina.='<input name="paginas" value="'."../temporal_".$login[0]["login"]."/paginas_documento".$datos[0]["numero"].".pdf".'" type="checkbox" checked><a href="'.$ruta_db_superior."../temporal_".$login[0]["login"]."/paginas_documento".$datos[0]["numero"].".pdf".'" target="_blank">'."paginas_documento".$datos[0]["numero"].".pdf".'</a><input type="hidden" name="nombre_paginas" value="'."paginas_documento".$datos[0]["numero"].".pdf".'"><br />';
   }    
  //si el documento es un formato se envio el pdf como adjunto
- if(strtolower($datos[0]["plantilla"])<>"" && $datos[0]["numero"]<>'0')
-    {
-     if($datos[0]["pdf"]=="" || !is_file($ruta_db_superior.$datos[0]["pdf"]))
-     {  //se llama el pdf para crearlo y colocarlo como adjunto
-        ?>
-        <script>
-        $.ajax({
-           type: "POST",
-           url:"../class_impresion.php",
-           data:'iddoc=<?php echo $_REQUEST["iddoc"]; ?>&rand=<?php echo(rand(1,999)); ?>',
-           async: false
-         });    
-        </script>
-      <?php 
-      $datos_documento = busca_filtro_tabla(fecha_db_obtener('A.fecha', 'Y-m-d') . " as x_fecha, A.*", "documento A", "A.iddocumento=" . $_REQUEST["iddoc"], "", $conn);
-      $ruta_pdfs = ruta_almacenamiento("pdf");
-      $formato_ruta = aplicar_plantilla_ruta_documento($_REQUEST["iddoc"]);
-      $ruta = $ruta_pdfs . $formato_ruta . "/pdf/";
-      $ruta .= ($datos_documento[0]["plantilla"]) . "_" . $datos_documento[0]["numero"] . "_" . str_replace("-", "_", $datos_documento[0]["x_fecha"]) .".pdf";
+	if (strtolower($datos[0]["plantilla"]) != "" && $datos[0]["numero"] != '0') {
+		if ($datos[0]["pdf"] == "") { // se llama el pdf para crearlo y colocarlo como adjunto
+			$iddoc = $_REQUEST["iddoc"];
+			$url = $_REQUEST["url"];
+			unset($_REQUEST["iddoc"]);
+			unset($_REQUEST["url"]);
+			include_once($ruta_db_superior . "class_impresion.php");
+			$pdf = new Imprime_Pdf($iddoc);
+			$datos = array("iddoc" => $iddoc);
+			$pdf->configurar_pagina($datos);
+			$pdf->imprimir(false);
+			$_REQUEST["iddoc"] = $iddoc;
+			$_REQUEST["url"] = $url;
+			$datos = busca_filtro_tabla("numero,pdf,plantilla,ejecutor,descripcion,tipo_radicado," . fecha_db_obtener("fecha", "Y-m-d H:i:s") . " as fecha", "documento", "iddocumento=" . $_REQUEST["iddoc"], "", $conn);
       
-      $texto_pdf.='<input name="pdf" value="'.$ruta.'" type="checkbox" checked><a href="'.$ruta.'" target="_blank">'."documento_".$datos[0]['numero'].".pdf".'</a><input type="hidden" name="nombre_pdf" value="'."documento_".$datos[0]['numero'].".pdf".'"><br />';
      }
-     else{
-       $texto_pdf.='<input name="pdf" value="'.$ruta_db_superior.$datos[0]['pdf'].'" type="checkbox" checked><a href="'.$ruta_db_superior.$datos[0]['pdf'].'" target="_blank">'."documento_".$datos[0]['numero'].".pdf".'</a><input type="hidden" name="nombre_pdf" value="'."documento_".$datos[0]['numero'].".pdf".'"><br />';
-     }        
+		//print_r($datos[0]['pdf']);die();
+		$datos64 = base64_encode($datos[0]['pdf']);
+		$ruta_mostrar = $ruta_db_superior . "filesystem/mostrar_binario.php?ruta=$datos64";
+		$texto_pdf .= '<input name="pdf" value="' . $datos64 . '" type="checkbox" checked><a href="' . $ruta_mostrar . '" target="_blank">' . "documento_" . $datos[0]['numero'] . ".pdf" . '</a><input type="hidden" name="nombre_pdf" value="' . "documento_" . $datos[0]['numero'] . ".pdf" . '"><br />';
     }   
    echo "<tr><td class='encabezado'>ARCHIVOS ADJUNTOS</td><td bgcolor='#F5F5F5'><br />".$texto_anexo.$texto_pagina.$texto_pdf; 
    echo "<input type='hidden' name='archivo_idarchivo' value='".$_REQUEST["iddoc"]."' >";
@@ -237,7 +236,7 @@ function enviar_email($doc=0){
    $email=busca_filtro_tabla("valor","configuracion","nombre='servidor_correo'","",$conn);    
    $puerto=busca_filtro_tabla("valor","configuracion","nombre='puerto_servidor_correo'","",$conn);
    include_once("class.phpmailer.php");    
-   $mail = new PHPMailer;
+	$mail = new PHPMailer();
    $mail->ClearAttachments();
    if($email["numcampos"])
     {
@@ -254,14 +253,19 @@ function enviar_email($doc=0){
         $copia = explode(",",$datos[0]["copia"]);
        
        $archivo = busca_filtro_tabla("*","anexos","documento_iddocumento=".$doc,"",$conn);
-       if($archivo["numcampos"]>0)
-        { for($i=0; $i<$archivo["numcampos"]; $i++)
-            $mail->AddAttachment("../".$archivo[$i]["ruta"],$archivo[$i]["etiqueta"]);
+				if ($archivo["numcampos"] > 0) {
+					for($i = 0; $i < $archivo["numcampos"]; $i++) {
+						$contenido = StorageUtils::get_file_content($archivo[$i]["ruta"]);
+						//$mail->AddAttachment("../" . $archivo[$i]["ruta"], $archivo[$i]["etiqueta"]);
+						$mail->AddStringAttachment($contenido, $archivo[$i]["etiqueta"]);
+					}
         } 
         
         $pdf_documento=busca_filtro_tabla("pdf,numero","documento","iddocumento=".$doc,"",$conn);
         if($pdf_documento['numcampos']){
-            $mail->AddAttachment("../".$pdf_documento[0]["pdf"],'documento_'.$pdf_documento[0]['numero'].'.pdf');
+					//$mail->AddAttachment("../" . $pdf_documento[0]["pdf"], 'documento_' . $pdf_documento[0]['numero'] . '.pdf');
+					$contenido = StorageUtils::get_file_content($pdf_documento[0]["pdf"]);
+					$mail->AddStringAttachment($contenido, 'documento_' . $pdf_documento[0]['numero'] . '.pdf');
         }
                 
       }
@@ -373,7 +377,9 @@ function enviar_email($doc=0){
           $anexos=busca_filtro_tabla("ruta,etiqueta,idanexos","anexos","idanexos IN(".implode(",",$anexo).")","",$conn);
           if($anexos["numcampos"]){
             for($i=0;$i<$anexos["numcampos"];$i++){
-              $mail->AddAttachment("../".$anexos[$i]["ruta"],$anexos[$i]["etiqueta"]);
+					//$mail->AddAttachment("../" . $anexos[$i]["ruta"], $anexos[$i]["etiqueta"]);
+					$contenido = StorageUtils::get_file_content($anexos[$i]["ruta"]);
+					$mail->AddStringAttachment($contenido, $anexos[$i]["etiqueta"]);
             }
           }    
         }
@@ -383,7 +389,9 @@ function enviar_email($doc=0){
 
         }  
         if(@$_REQUEST["pdf"]!="" && @$_REQUEST["nombre_pdf"]){
-          $mail->AddAttachment($_REQUEST["pdf"],$_REQUEST["nombre_pdf"]);    
+			//$mail->AddAttachment($_REQUEST["pdf"], $_REQUEST["nombre_pdf"]);
+			$contenido = StorageUtils::get_file_content(base64_decode($_REQUEST["pdf"]));
+			$mail->AddStringAttachment($contenido, $_REQUEST["nombre_pdf"]);
         }        
         if(!$mail->Send())
         {

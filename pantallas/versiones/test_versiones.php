@@ -58,16 +58,19 @@ for($i=0;$i<$datos_version["numcampos"];$i++){
     echo("</item>");
 }
 echo("</tree>");
+
 function pdf($version){
     global $conn;
     $datos=busca_filtro_tabla("","version_documento a","a.idversion_documento=".$version,"",$conn);
     $cadena=array();
     for($i=0;$i<$datos["numcampos"];$i++){
-        $archivo=basename($datos[$i]["pdf"]);
+		$arr_alm = StorageUtils::resolver_ruta($datos[$i]["pdf"]);
+		$archivo = basename($arr_alm["ruta"]);
         $cadena[]="<item style=\"font-family:verdana; font-size:7pt;\" text=\"".$archivo."\" id=\"pdf-".$version."\" nocheckbox=\"1\" ></item>";
     }
     return(implode("",$cadena));
 }
+
 function anexos($version){
     global $conn;
     $datos=busca_filtro_tabla("","version_anexos a","a.fk_idversion_documento=".$version,"",$conn);
@@ -79,6 +82,7 @@ function anexos($version){
     }
     return(implode("",$cadena));
 }
+
 function paginas($version){
     global $conn;
     $datos=busca_filtro_tabla("","version_pagina a","a.fk_idversion_documento=".$version,"",$conn);
@@ -90,6 +94,7 @@ function paginas($version){
     }
     return(implode("",$cadena));
 }
+
 function vistas($version){
     global $conn;
     $datos=busca_filtro_tabla("","version_vista a","a.fk_idversion_documento=".$version,"",$conn);

@@ -1,9 +1,14 @@
 <?php
 include_once(dirname(__FILE__)."/../../db.php");
 include_once(dirname(__FILE__)."/../../anexosdigitales/funciones_archivo.php");
+
+require_once dirname(__FILE__) . '/../../StorageUtils.php';
+require_once dirname(__FILE__) . '/../../filesystem/SaiaStorage.php';
+
 function documento_seleccionado(){
         return($_REQUEST["documento_seleccionado"]);
 }
+
 function vista_previa_anexo($idanexo,$tipo){
     switch ($tipo){        
         case "pdf":
@@ -15,45 +20,40 @@ function vista_previa_anexo($idanexo,$tipo){
     }
     return($ruta.$imagen);
 }
+
 function descargar_anexo($idanexo,$tipo_al=NULL){   
 //Recibe el id del anexo y opcinalmente el id del binario para descargar archivos o desde la bd respectivamente
   global $conn;
    if(!$tipo_al){
    	 // Si no se solicita directamente el origen (BD O ARCHIVO ) se busca en configuracion cual se va a descargar     
      	$config = busca_filtro_tabla("valor","configuracion","nombre='tipo_almacenamiento'","",$conn);
-       if($config["numcampos"])
+		if ($config["numcampos"]) {
          $tipo_al=$config[0]['valor'];
-        else 
+		} else {
          $tipo_al="archivo"; // Si no encuentra el registro en configuracion almacena en archivo
+		}
   }
   if($tipo_al=="archivo"){   	
     $datos=busca_filtro_tabla("","anexos","idanexos=".$idanexo,"",$conn);
-    if(!$datos["numcampos"])
+		if (! $datos["numcampos"]) {
        alerta('problema con el archivo anexo');
-    else
-      $file=$datos[0]["ruta"];  
+		}
      
-    $max_salida=10; // Previene algun posible ciclo infinito limitando a 10 los ../
-    $ruta_db_superior2=$ruta="";
-  	while($max_salida>0){
-        if(is_file($ruta."db.php"))
-        {
-        $ruta_db_superior2=$ruta; //Preserva la ruta superior encontrada
+		$arr_alm = StorageUtils::resolver_ruta($datos[0]["ruta"]);
+		$almacenamiento = $arr_alm["clase"];
+		$file_name = $arr_alm["ruta"];
+		if (!$almacenamiento->get_filesystem()->has($file_name)) {
+			return;
         }
-        $ruta.="../";
-        $max_salida--;
-    }
-   $file=$ruta_db_superior2.$file;   
-    if (!is_file($file)) { return; }		
+		$file = $almacenamiento->get_filesystem()->get($file_name);
   	header("Content-Type: application/octet-stream");
-  	header("Content-Size: ".filesize($file));
+		header("Content-Size: " . $file->getSize());
   	header("Content-Disposition: attachment; filename=\"".html_entity_decode($datos[0]["etiqueta"])."\"");
-  	header("Content-Length: ".filesize($file));
+		header("Content-Length: " . $file->getSize());
   	header("Content-transfer-encoding: binary");
-  	@readfile($file);
-  	exit;
-   }
-   elseif($tipo_al=="db"){
+		echo $file->getContent();
+		exit();
+	} elseif ($tipo_al == "db") {
    	// almacenamiento binario
    	$anexo=busca_filtro_tabla("ruta","anexos","idanexos='$id'","",$conn);
     $archivo=busca_filtro_tabla("nombre_original,datos","binario","idbinario=".$anexo[0]["ruta"],"",$conn);
@@ -63,9 +63,10 @@ function descargar_anexo($idanexo,$tipo_al=NULL){
 		header("Content-Type: application/download");
 		header("Content-Disposition: attachment; filename=".$nomb_limpio); 	
 		echo $archivo[0]['datos'];
-		exit;
+		exit();
    }
 }
+
 function mostrar_datos_anexos($iddoc){
 $anexos=datos_anexos($iddoc);
 if($anexos["numcampos"]){
@@ -76,9 +77,12 @@ if($anexos["numcampos"]){
     $texto.='<tr><td>';
     $texto.=$anexos[$i]["etiqueta"].'</td><td>';    
     if(strpos($permisos,"l")!==false){
-      $texto.='<a href="'.PROTOCOLO_CONEXION.RUTA_PDF."/".$anexos[$i]["ruta"].'"><i class="icon-download" target="_blank"></i></a>';  
+				$mostrar = dirname(__FILE__) . '/../../filesystem/mostrar_binario.php?ruta=';
+				$ruta64 = base64_encode($anexos[$i]["ruta"]);
+				$texto .= '<a href="' . $mostrar . $ruta64 . '"><i class="icon-download" target="_blank"></i></a>';
     }
     if(strpos($permisos,"e")!==false){
+				//TODO: En cuales casos se usa? como?
       $texto.='<div enlace="'.PROTOCOLO_CONEXION.RUTA_PDF."/".$anexos[$i]["ruta"].'"><i class="icon-minus-sign"></i></div>';
     }
     $texto.='</td>';    
@@ -88,11 +92,13 @@ if($anexos["numcampos"]){
 }
 return($texto);
 }
+
 function datos_anexos($iddoc){
 global $conn;
 $datos=busca_filtro_tabla("","anexos","documento_iddocumento=".$iddoc,"",$conn);
 return($datos);
 }
+
 function eliminar_anexos($idanexo,$tipo_retorno=1){
 	global $conn,$ruta_db_superior;
   $retorno=array("exito"=>0);

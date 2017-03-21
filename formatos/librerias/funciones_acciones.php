@@ -200,6 +200,7 @@ if(!$listado_func)
 $ar_func=explode("|",$listado_func);
 $encontrado=0;
 
+	$ruta = null;
 for($i=0;$i<count($ar_func);$i++){
   $datos_funcion=busca_filtro_tabla("","funciones_formato","idfunciones_formato=".$ar_func[$i],"",$conn);
   if($datos_funcion["numcampos"]){
@@ -217,8 +218,7 @@ for($i=0;$i<count($ar_func);$i++){
           }
         }
       }
-    }
-    else {
+			} else {
       $encontrado=1;
     }
 
@@ -226,9 +226,9 @@ for($i=0;$i<count($ar_func);$i++){
 
       if($datos_funcion[0]["parametros"]==""){
         $datos_funcion[0]["parametros"]=$idformato.','.$iddoc;
-      }
-      else
+				} else {
        $datos_funcion[0]["parametros"]=$idformato.','.$iddoc.",".$datos_funcion[0]["parametros"];      
+				}
       ejecutar_funcion($datos_funcion[0]["nombre_funcion"],$ruta,$datos_funcion[0]["parametros"]);
     }
 	}

@@ -536,6 +536,9 @@ function aprobar_control_documentos($idformato, $iddoc){
 	global $conn,$ruta_db_superior;	
 	include_once($ruta_db_superior."class_transferencia.php");
 	include_once ($ruta_db_superior . "pantallas/lib/librerias_archivo.php");
+  include_once($ruta_db_superior."StorageUtils.php");
+  require_once $ruta_db_superior.'filesystem/SaiaStorage.php';
+  
 	if($_REQUEST["activar_accion"]){
 							
 		$control_documento = busca_filtro_tabla("a.revisado,a.aprobado,a.tipo_solicitud,a.listado_procesos,a.documento_calidad,a.nombre_documento,a.origen_documento,a.version,a.vigencia,b.ejecutor,a.secretaria","ft_control_documentos a, documento b ","a.documento_iddocumento=b.iddocumento and a.documento_iddocumento=".$iddoc,"",$conn);		
@@ -601,19 +604,11 @@ function aprobar_control_documentos($idformato, $iddoc){
 						$datos_documento_nuevo = obtener_datos_documento($iddocumento);						
 
 						$formato_ruta = aplicar_plantilla_ruta_documento($datos_documento_nuevo["iddocumento"]);
-						$ruta_archivos = ruta_almacenamiento("archivos");
+						//$ruta_archivos = ruta_almacenamiento("archivos");
+            $almacenamiento = new SaiaStorage("archivos");
+            $alm_destino = new SaiaStorage("archivos");
 						
-						//$fecha_ruta = date("Y-m", strtotime($datos_documento_nuevo["fecha"]));						
-						//$ruta_anexos = RUTA_ARCHIVOS.$datos_documento_nuevo["estado"]."/".$fecha_ruta."/".$datos_documento_nuevo["iddocumento"]."/anexos";
-						$ruta_anexos = $ruta_archivos . $formato_ruta . "/anexos";
-						
-						if(!is_dir($ruta_anexos)){				
-							if(!crear_destino($ruta_anexos)){
-								notificaciones("<b>Error al crear la carpeta del anexo.</b>","warning",8500);
-								return(false);			
-							}
-						}					
-						
+						$ruta_anexos = $formato_ruta . "/anexos";
 						$anexos = busca_filtro_tabla("","anexos","documento_iddocumento=".$iddoc,"",$conn);
 						
 						$array_anexos = array();
@@ -622,14 +617,16 @@ function aprobar_control_documentos($idformato, $iddoc){
 							$nombre_anexo = explode("/", $anexos[$i]['ruta']);
 							$nombre_anexo = $nombre_anexo[sizeof($nombre_anexo)-1];	
 							
-							$ruta_origen  = $ruta_db_superior.$anexos[$i]['ruta'];
+							$ruta_origen  = $anexos[$i]['ruta'];
 							$ruta_destino = $ruta_anexos."/".$nombre_anexo; 					
 																
-							if(!copy($ruta_origen, $ruta_destino)){
+							if(!$almacenamiento->copiar_contenido($alm_destino, $ruta_origen, $ruta_destino)){
 								notificaciones("<b>Error al pasar el anexo ".$anexos[$i]["etiqueta"]." a la carpeta del documento.</b>","warning",8500);											
 							}else{								
-								$ruta_alm = substr($ruta_destino, strlen($ruta_db_superior));
-								$sql_anexo = "INSERT INTO anexos(documento_iddocumento, ruta, tipo, etiqueta, formato, fecha_anexo) VALUES(".$iddocumento.",'".$ruta_alm."','".$anexos[$i]['tipo']."','".$anexos[$i]['etiqueta']."',".$datos_formato['idformato'].",".fecha_db_almacenar(date("Y-m-d"),"Y-m-d").")";							
+								//$ruta_alm = substr($ruta_destino, strlen($ruta_db_superior));
+                $ruta_almacenamiento=array("servidor" => $alm_dest->get_ruta_servidor(), "ruta" => $ruta_destino);
+                
+								$sql_anexo = "INSERT INTO anexos(documento_iddocumento, ruta, tipo, etiqueta, formato, fecha_anexo) VALUES(".$iddocumento.",'".json_encode($ruta_almacenamiento)."','".$anexos[$i]['tipo']."','".$anexos[$i]['etiqueta']."',".$datos_formato['idformato'].",".fecha_db_almacenar(date("Y-m-d"),"Y-m-d").")";							
 													
 								phpmkr_query($sql_anexo);								
 								$idanexo = phpmkr_insert_id();							 

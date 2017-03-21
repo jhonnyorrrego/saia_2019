@@ -11,6 +11,8 @@ while ($max_salida > 0) {
 include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."librerias_saia.php");
 include_once($ruta_db_superior."pantallas/anexos/librerias_anexos.php");
+require_once($ruta_db_superior.'StorageUtils.php');
+require_once($ruta_db_superior.'filesystem/SaiaStorage.php');
 
 if(!@$_REQUEST['ruta_recorte']){
 	echo(librerias_jquery("1.7"));
@@ -22,7 +24,8 @@ if(@$_REQUEST['ruta_recorte'] && @$_REQUEST['idfuncionario']){ //RETORNA LA RUTA
 
 	$idfuncionario=$_REQUEST['idfuncionario'];
 	$foto_recortada=busca_filtro_tabla("foto_recorte","funcionario","idfuncionario=".$idfuncionario,"",$conn);	
-	echo(json_encode(array('ruta'=>$foto_recortada[0]['foto_recorte'])));
+	$archivo_binario=StorageUtils::get_binary_file($foto_recortada[0]['foto_recorte']);
+	echo(json_encode(array('ruta'=>$archivo_binario)));
 }
   
  
@@ -30,6 +33,7 @@ if(@$_REQUEST['recortar'] && @$_REQUEST['idfuncionario']){   //PERMITE RECORTAR 
 	
 	$idfuncionario=$_REQUEST['idfuncionario'];
 	$foto_original=busca_filtro_tabla("foto_original,foto_cordenadas","funcionario","idfuncionario=".$idfuncionario,"",$conn);
+	$archivo_binario=StorageUtils::get_binary_file($foto_original[0]['foto_original']);	
 	$cordenadas=explode(',',$foto_original[0]['foto_cordenadas']);
 	$cordenadas=array_map('intval', $cordenadas);
 	echo(librerias_jqcrop());
@@ -42,7 +46,7 @@ if(@$_REQUEST['recortar'] && @$_REQUEST['idfuncionario']){   //PERMITE RECORTAR 
 	</style>
 	<strong>Seleccione el rango de imagen:</strong>
 	<hr>
-	<img src="<?php echo($ruta_db_superior.$foto_original[0]['foto_original']); ?>" id="foto_original"  />
+	<img src="<?php echo($archivo_binario); ?>" id="foto_original"  />
 	<input type="hidden" name="x" id="x" />
 	<input type="hidden" name="y" id="y" />
 	<input type="hidden" name="x2" id="x2" />

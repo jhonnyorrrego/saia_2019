@@ -3,7 +3,11 @@
        session_start();*/
   include_once("db.php");
   include_once("librerias_saia.php");
-  
+
+require_once('StorageUtils.php');
+  require_once('filesystem/SaiaStorage.php');
+  require('vendor/autoload.php');  
+
 include_once("pantallas/lib/librerias_cripto.php");
 $validar_enteros=array("iddoc","key","doc");
 desencriptar_sqli('form_info');
@@ -636,12 +640,13 @@ else
  {
   $codigo="";
   $listado = busca_filtro_tabla("A.*","pagina A","A.id_documento=".$llave,"A.pagina",$conn);  //busca las paginas del documento  
-    if($listado["numcampos"]>0)
-  {
-    for($i=0; $i<$listado["numcampos"]; $i++)  //muestra las miniaturas de las paginas del documento
-    { $var = md5(time());                      //para evitar el cache
+	if ($listado["numcampos"] > 0) {
+		for($i = 0; $i < $listado["numcampos"]; $i++) { // muestra las miniaturas de las paginas del documento
+			$var = md5(time()); // para evitar el cache
+			//$arr_alm = StorageUtils::resolver_ruta($listado[$i]["imagen"]);
+			$contenido_imagen = StorageUtils::get_binary_file($listado[$i]["imagen"]);
       $codigo.= "<div class=\"imageBox\" id=\"".$listado[$i]["consecutivo"]."\">";
-      $codigo.="<div class=\"imageBox_theImage\" style=\"background-image:url('".$listado[$i]["imagen"]."?var=$var')\" onclick=\"imagen_seleccionada('PAGINA',".$llave.",".$listado[$i]["consecutivo"].",'');\"></div>";
+			$codigo .= "<div class=\"imageBox_theImage\" style=\"background-image:url('" . $contenido_imagen . "')\" onclick=\"imagen_seleccionada('PAGINA'," . $llave . "," . $listado[$i]["consecutivo"] . ",'');\"></div>";
       $codigo.="<div class=\"imageBox_label\"><span>P&aacute;gina ".$listado[$i]["pagina"]."</span></div></div>";
     }        
   }
