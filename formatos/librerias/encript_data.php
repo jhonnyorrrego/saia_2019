@@ -38,6 +38,8 @@ if (isset($_POST["datos"])) {
     $data[$k]["es_arreglo"]=1;
     $k++; 
 	}
+	$_SESSION["token_csrf"]=cadena_aleatoria(50);
+	$data["token_csrf"]=$_SESSION["token_csrf"];
 }
 
 echo(json_encode($data));
