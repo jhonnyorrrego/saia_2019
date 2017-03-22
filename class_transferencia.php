@@ -2100,7 +2100,9 @@ function radicar_plantilla() {
 			aprobar($_POST["iddoc"]);
 		}
 		// die();
-		enrutar_documento(@$_POST["pagina_siguiente"]);
+		if(!@$_SESSION['radicacion_masiva']){
+			enrutar_documento(@$_POST["pagina_siguiente"]);
+		}
 	}
 }
 
