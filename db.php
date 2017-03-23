@@ -1634,7 +1634,7 @@ function sincronizar_carpetas($tipo, $conn) {
 	return (TRUE);
 }
 
-function vincular_anexo_documento($iddoc,$ruta_origen){
+function vincular_anexo_documento($iddoc,$ruta_origen,$etiqueta=''){
 	global $conn,$ruta_db_superior;
 	include_once($ruta_db_superior."anexosdigitales/funciones_archivo.php");
 	$ruta_destino=selecciona_ruta_anexos("",$iddoc,'archivo');
@@ -1654,9 +1654,20 @@ function vincular_anexo_documento($iddoc,$ruta_origen){
 	$data_sql=array();
 	$data_sql['documento_iddocumento']=$iddoc;
 	$data_sql['ruta']=$ruta_destino.$nombre_temporal;
-	$data_sql['etiqueta']=$nombre_extension;
+	if($etiqueta!=''){
+		$data_sql['etiqueta']=$etiqueta;
+	}else{
+		$data_sql['etiqueta']=$nombre_extension;
+	}
 	$data_sql['tipo']=$extencion;
-
+	
+	$datos_documento=busca_filtro_tabla("a.formato_idformato,b.idcampos_formato","documento a LEFT JOIN campos_formato b ON a.formato_idformato=b.formato_idformato","b.etiqueta_html='archivo' AND a.iddocumento=".$iddoc,"",$conn);
+	$data_sql['formato']=Null;
+	$data_sql['campos_formato']=Null;
+	if($datos_documento['numcampos']){
+		$data_sql['formato']=$datos_documento[0]['formato_idformato'];
+		$data_sql['campos_formato']=$datos_documento[0]['idcampos_formato'];	
+	}
 	$tabla="anexos";
 	$strsql = "INSERT INTO ".$tabla." (fecha_anexo,"; //fecha_anexo
 	$strsql .= implode(",", array_keys($data_sql));			
