@@ -112,7 +112,18 @@ if (isset($_REQUEST["key"]) && isset($_REQUEST["idformato"]) && isset($_REQUEST[
 $validaciones = busca_filtro_tabla("valor", "campos_formato A", "A.idcampos_formato=" . @$_REQUEST["idcampo"], "", $conn);
 $adicional = "";
 if ($validaciones[0]["valor"]){
-	$adicional = 'accept="' . $validaciones[0]["valor"] . '"';
+		$extensiones_fijas=$validaciones[0]["valor"];
+		$mystring = $validaciones[0]["valor"];
+		$findme   = '@';
+		$pos = strpos($mystring, $findme);
+		if ($pos !== false) { //fue encontrada
+			$vector_extensiones_tipo=explode($findme,$mystring);
+			$tipo_input=$vector_extensiones_tipo[1];
+			$extensiones_fijas=$vector_extensiones_tipo[0];
+		}
+	if($extensiones_fijas!=''){
+		$adicional = 'accept="' . $extensiones_fijas . '"';
+	}
 }
 ?>
 </br>
@@ -129,7 +140,7 @@ if ($validaciones[0]["valor"]){
 	</tr>
 	<tr>
 		<td class="celda_transparente">
-			<input type="file" name="anexos[]" class="multi" <?php echo($adicional); ?>
+			<input type="file" name="anexos[]" class="multi" <?php echo($adicional); ?>>
 		</td>
 	</tr>
 	<tr>

@@ -1542,21 +1542,67 @@ function crear_formato_ae($idformato, $accion) {
 						}
 						break;
 					case "archivo" :
-						if (strpos($adicionales, "class") !== false)
-							$adicionales = str_replace("required", "required multi", $adicionales);
-						else
-							$adicionales .= " class='multi' ";
+						$tipo_input='unico';
+						if($campos[$h]["valor"]!=''){
+							$mystring = $campos[$h]["valor"];
+							$findme   = '@';
+							$pos = strpos($mystring, $findme);
+							if ($pos !== false) { //fue encontrada
+								$vector_extensiones_tipo=explode($findme,$mystring);
+								$tipo_input=$vector_extensiones_tipo[1];
+								$extensiones_fijas=$vector_extensiones_tipo[0];
+							}
+						}
+						$funcion_adicional_archivo='';
+						$ul_adicional_archivo='';
+						switch($tipo_input){
+							case 'unico':
+								if (strpos($adicionales, "class") !== false){
+									$adicionales = str_replace("required", "required multi", $adicionales);
+								}else{
+									$adicionales .= " class='multi' ";
+								}									
+								break;
+							case 'multiple':
+								$adicionales .= " multiple='multiple' onchange='makeFileList_".$campos[$h]["nombre"]."();' ";
+								$ul_adicional_archivo='<ul id="fileList_'.$campos[$h]["nombre"].'"></ul>';
+								$funcion_adicional_archivo='
+								<script>
+								function makeFileList_'.$campos[$h]["nombre"].'() {
+									var input = document.getElementById("'.$campos[$h]["nombre"].'");
+									var ul = document.getElementById("fileList_'.$campos[$h]["nombre"].'");
+									
+									while (ul.hasChildNodes()) {
+										ul.removeChild(ul.firstChild);
+									}
+									for (var i = 0; i < input.files.length; i++) {
+										var li = document.createElement("li");
+										li.innerHTML = input.files[i].name;
+										ul.appendChild(li);
+									}
+									if(!ul.hasChildNodes()) {
+										var li = document.createElement("li");
+										li.innerHTML = "No se eligi&oacute; archivo";
+										ul.appendChild(li);
+									}
+								}								
+								</script>
+								';						
+								break;	
+						}
+						
 						$texto .= '<tr>
                      <td class="encabezado" width="20%" title="' . $campos[$h]["ayuda"] . '">' . codifica($campos[$h]["etiqueta"]) . $obliga . '</td>
-                     <td class="celda_transparente">';
+                     <td class="celda_transparente">'.$funcion_adicional_archivo;
 						
-						if ($campos[$h]["valor"] != "")
-							$extensiones = $campos[$h]["valor"];
+						if ($extensiones_fijas != "")
+							$extensiones = $extensiones_fijas;
 						else
 							$extensiones = '<?php echo $extensiones;?' . '>';
 						
 						if ($accion == "adicionar") {
-							$texto .= '<input ' . $tabindex . ' type="file" ' . $adicionales . ' name="' . $campos[$h]["nombre"] . '[]" ' . 'accept="' . $extensiones . '"' . '>';
+							$texto .= '<input ' . $tabindex . ' type="file" ' . $adicionales . ' id="'.$campos[$h]["nombre"].'" name="' . $campos[$h]["nombre"] . '[]" ' . 'accept="' . $extensiones . '"' . '>';
+							$texto.=$ul_adicional_archivo;
 						}
 						if ($accion == "editar") {
 							
