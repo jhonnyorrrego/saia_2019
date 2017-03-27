@@ -50,6 +50,9 @@ for($i=0;$i<$datos_version["numcampos"];$i++){
 		echo("<item style=\"font-family:verdana; font-size:7pt;\" text=\"Vistas\" id=\"vistas".$datos_version[$i]["idversion_documento"]."\" nocheckbox=\"1\" >\n");
     echo vistas($datos_version[$i]["idversion_documento"]);
     echo("</item>");
+
+		echo("<item style=\"font-family:verdana; font-size:7pt;\" text=\"Notas\" id=\"_notas".$datos_version[$i]["idversion_documento"]."|".$iddoc."\" nocheckbox=\"1\" >\n");
+    echo("</item>");
     
     echo("</item>");
 }

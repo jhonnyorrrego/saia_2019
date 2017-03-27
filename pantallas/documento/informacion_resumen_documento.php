@@ -680,6 +680,12 @@ function click_funcion(div){
           var conexion="<?php echo($ruta_db_superior); ?>pantallas/versiones/abrir_anexo.php?id="+llave;
           window.open(conexion,"detalles");
       }
+      var datos2=llave.split("notas");
+      if(datos2[1]){
+          var conexion="<?php echo($ruta_db_superior); ?>pantallas/versiones/notas_versiones.php?id="+datos2[1];
+          window.open(conexion,"detalles");
+      }      
+      
   }
 });
 </script>
