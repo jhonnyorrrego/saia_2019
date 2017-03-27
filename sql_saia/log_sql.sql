@@ -129,3 +129,14 @@ UPDATE  busqueda_componente SET  acciones_seleccionados =  'vincular_documentos,
 UPDATE  busqueda_componente SET  acciones_seleccionados =  'vincular_documentos,transferir_docs' WHERE  idbusqueda_componente =105;
 
 /* ------------------------------------- */
+
+CREATE TABLE IF NOT EXISTS version_notas (
+  idversion_notas int(11) NOT NULL AUTO_INCREMENT,
+  fecha datetime NOT NULL,
+  funcionario_idfuncionario int(11) NOT NULL,
+  observaciones text NOT NULL,
+  fk_idversion_documento int(11) NOT NULL,
+  PRIMARY KEY (idversion_notas)
+);	
+
+/* ------------------------------------- */
