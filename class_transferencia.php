@@ -2163,8 +2163,12 @@ die();
        {$formato_doc=busca_filtro_tabla("A.nombre,A.idformato","formato A, documento B","B.iddocumento=".$_POST["iddoc"]." AND lower(A.nombre)=lower(B.plantilla)","",$conn);
        if($formato_doc["numcampos"])
         {$nom_formato=$formato_doc[0]["nombre"];
-			 //Cuando el documento es creado por el modulo formatos
-        abrir_url("formatos/$nom_formato/detalles_mostrar_$nom_formato.php?idformato=".$formato_doc[0]["idformato"]."&iddoc=".$_POST["iddoc"],"_self");
+	   		if($_SESSION["tipo_dispositivo"]=='movil'){
+	   			 abrir_url("ordenar.php?key=".$_POST["iddoc"]."&accion=mostrar&mostrar_formato=1","_self");	
+	   		}else{
+				 //Cuando el documento es creado por el modulo formatos
+       			 abrir_url("formatos/$nom_formato/detalles_mostrar_$nom_formato.php?idformato=".$formato_doc[0]["idformato"]."&iddoc=".$_POST["iddoc"],"_self");	   			
+	   		}
         die();
         }
        }
