@@ -1253,7 +1253,7 @@ function crear_formato_ae($idformato, $accion) {
 		$texto .= '<body bgcolor="#F5F5F5"><?php llama_funcion_accion(@$_REQUEST["iddoc"],@$_REQUEST["idformato"],"ingresar","ANTERIOR");? ><form name="formulario_formatos" id="formulario_formatos" method="post" action="' . $action . '" enctype="multipart/form-data"><table width="100%" cellspacing="1" cellpadding="4">';
 		
 		if (!$formato[0]["item"]) {
-			$texto .= '<tr><td colspan="2" class="encabezado_list">' . mayusculas(codifica_encabezado(html_entity_decode($formato[0]["etiqueta"]))) . '</td></tr>';
+			$texto .= '<tr><td colspan="2" class="encabezado_list">' . codifica_encabezado(html_entity_decode(mayusculas($formato[0]["etiqueta"]))) . '</td></tr>';
 		}
 		$librerias = array();
 		if ($formato[0]["librerias"] && $formato[0]["librerias"] != "") {
