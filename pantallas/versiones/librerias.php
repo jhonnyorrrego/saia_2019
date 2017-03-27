@@ -30,7 +30,7 @@ actualizar_documento($documento,$version);
 <script>
 $(document).ready(function(){
    notificacion_saia('Version creada con exito','success','',3000);
-   window.open("<?php echo($ruta_documento); ?>","arbol_formato");
+   parent.location.reload();
 });
 </script>
 <?php
@@ -180,6 +180,9 @@ function generar_pdf($documento) {
 	$sql1 = "update documento set pdf=null where iddocumento=" . $iddoc;
 	phpmkr_query($sql1);
 	
+	//print_r($export);die();
+
+	
 	$ch = curl_init();
 	$fila = PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . "/" . $export . "&LOGIN=" . $_SESSION["LOGIN" . LLAVE_SAIA] . "&usuario_actual=" . $_SESSION["usuario_actual"] . "&LLAVE_SAIA=" . LLAVE_SAIA;
 	
@@ -201,6 +204,7 @@ function generar_pdf($documento) {
 	$ruta = $ruta_pdfs . $formato_ruta . "/pdf/";
 	
 	$ruta .= ($datos_documento[0]["plantilla"]) . "_" . $datos_documento[0]["numero"] . "_" . str_replace("-", "_", $datos_documento[0]["x_fecha"]) . ".pdf";
+	
 	return ($ruta);
 }
 
