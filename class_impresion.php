@@ -271,7 +271,10 @@ class Imprime_Pdf {
 		}
 		
 		chmod($nombre_pdf,0777);
-		if($this->tipo_salida == "FI" && $this->documento[0]["estado"] != 'ACTIVO') {
+		if($this->documento[0]["estado"] == 'ACTIVO'){
+			$this->tipo_salida="FI";
+		}	
+		if($this->tipo_salida == "FI") {
 			$codigo_hash=obtener_codigo_hash_pdf($nombre_pdf,'crc32'); 
 			$paginas_pdf = $this->pdf->getNumPages();
 			phpmkr_query("update documento set paginas='" . $paginas_pdf . "',pdf='" . $nombre_pdf . "',pdf_hash='".$codigo_hash."' where iddocumento=" . $this->documento[0]["iddocumento"]);
@@ -285,8 +288,7 @@ class Imprime_Pdf {
 			} else {
 				$nombre_pdf = basename($nombre_pdf);
 			}
-		}
-		
+		}	
 		$this->pdf->Output($nombre_pdf, $this->tipo_salida);
 	}
 
