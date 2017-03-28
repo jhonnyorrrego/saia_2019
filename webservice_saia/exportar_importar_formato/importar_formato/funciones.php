@@ -400,9 +400,9 @@ function generar_importar($datos){
 		//INICIO INSERT CAMPOS_FORMATO	
 			if(@$datos['campos_formato'] && @$idformato){
 				$vector_idcampos_formato=array();
+				$contador_error=0;
 				for($i=0;$i<count($datos['campos_formato']);$i++){
 					$datos['campos_formato'][$i]['formato_idformato']=$idformato;
-					$datos['campos_formato'][$i]['valor']=addslashes($datos['campos_formato'][$i]['valor']);
 					$tabla="campos_formato";
 					$strsql = "INSERT INTO ".$tabla." (";
 					$strsql .= implode(",", array_keys($datos['campos_formato'][$i]));			
@@ -415,7 +415,8 @@ function generar_importar($datos){
 					if($idcampos_formato){
 						$vector_idcampos_formato[]=$idcampos_formato;
 					}else{
-						$formato['campos_formato_error']['campos_formato_error_'.$i]=$strsql;
+						$formato['campos_formato_error']['campos_formato_error_'.$contador_error]=$strsql;
+						$contador_error++;
 					}
 				}
 				if($nombre_padre!='' && @$cod_padre){
@@ -430,6 +431,7 @@ function generar_importar($datos){
 		
 		//INICIO INSERT FUNCIONES_FORMATO
 			if(@$datos['funciones_formato'] && @$idformato){
+				$contador_error=0;
 				for($i=0;$i<count($datos['funciones_formato']);$i++){
 					
 					$existe_funcion=busca_filtro_tabla("idfunciones_formato,formato","funciones_formato","lower(nombre_funcion)='".strtolower($datos['funciones_formato'][$i]['nombre_funcion'])."'","",$conn);
@@ -460,13 +462,15 @@ function generar_importar($datos){
 					}
 					
 					if(!$idfunciones_formato){
-						$formato['funciones_formato_error']['funciones_formato_error_'.$i]=$strsql;
+						$formato['funciones_formato_error']['funciones_formato_error_'.$contador_error]=$strsql;
+						$contador_error++;
 					}
 					
 					
 					
 					//FUNCIONES_FORMATO_ACCION
 					if(@$idfunciones_formato && @$datos['funciones_formato'][$i]['accion_funcion']){
+						$contador_error=0;
 						for($j=0;$j<count($datos['funciones_formato'][$i]['accion_funcion']);$j++){
 							
 							$vector_accion_funcion=$datos['funciones_formato'][$i]['accion_funcion'][$j];
@@ -491,7 +495,8 @@ function generar_importar($datos){
 									$idfunciones_formato_accion=0;
 									$idfunciones_formato_accion=phpmkr_insert_id();	
 									if(!$idfunciones_formato_accion){
-										$formato['funciones_formato_accion_error']['funciones_formato_accion_error_'.$j]=$strsql;
+										$formato['funciones_formato_accion_error']['funciones_formato_accion_error_'.$contador_error]=$strsql;
+										$contador_error++;
 									}									
 									
 																
