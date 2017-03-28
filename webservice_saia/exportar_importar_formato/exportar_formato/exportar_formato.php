@@ -57,40 +57,40 @@ if(@$_REQUEST['idformato'] || @$idformato){ //idformato a exportar
 		';
 		
 		if(@$respuesta_medio['campos_formato_error']){
-				$cadena_respuesta.='<tr>
-					<td colspan="2">Errores En \'campos_formato\'</td>
-				';
-			for($i=0;$i<count($formato['campos_formato_error']);$i++){
 				$cadena_respuesta.='
-						<td>Error Campo Nro.'.($i+1).': </td><td>'.$respuesta_medio['campos_formato_error']['campos_formato_error_'.$i].'</td>
+					<tr>
+						<td colspan="2" style="text-align:center;font-weight:bold;">Errores En \'campos_formato\'</td>
+					</tr>
 				';
-					
-			}
-			$cadena_respuesta.='</tr>';			
+			for($i=0;$i<count($respuesta_medio['campos_formato_error']);$i++){
+				$cadena_respuesta.='<tr>
+						<td>Error Campo Nro.'.($i+1).': </td><td>'.$respuesta_medio['campos_formato_error']['campos_formato_error_'.$i].'</td></tr>
+				';
+			}	
 		}
 		if(@$respuesta_medio['funciones_formato_error']){
 				$cadena_respuesta.='<tr>
 					<td colspan="2">Errores En \'funciones_formato\'</td>
+					</tr>
 				';
-			for($i=0;$i<count($formato['funciones_formato_error']);$i++){
-				$cadena_respuesta.='
-						<td>Error Funcion Nro.'.($i+1).': </td><td>'.$respuesta_medio['funciones_formato_error']['funciones_formato_error_'.$i].'</td>
+			for($i=0;$i<count($respuesta_medio['funciones_formato_error']);$i++){
+				$cadena_respuesta.='<tr>
+						<td>Error Funcion Nro.'.($i+1).': </td><td>'.$respuesta_medio['funciones_formato_error']['funciones_formato_error_'.$i].'</td></tr>
 				';
 					
-			}
-			$cadena_respuesta.='</tr>';			
+			}		
 		}		
 		if(@$respuesta_medio['funciones_formato_accion_error']){
 				$cadena_respuesta.='<tr>
 					<td colspan="2">Errores En \'funciones_formato_accion\'</td>
+					</tr>
 				';
-			for($i=0;$i<count($formato['funciones_formato_accion_error']);$i++){
-				$cadena_respuesta.='
-						<td>Error Funcion Accion Nro.'.($i+1).': </td><td>'.$respuesta_medio['funciones_formato_accion_error']['funciones_formato_accion_error_'.$i].'</td>
+			for($i=0;$i<count($respuesta_medio['funciones_formato_accion_error']);$i++){
+				$cadena_respuesta.='<tr>
+						<td>Error Funcion Accion Nro.'.($i+1).': </td><td>'.$respuesta_medio['funciones_formato_accion_error']['funciones_formato_accion_error_'.$i].'</td></tr>
 				';
 					
-			}
-			$cadena_respuesta.='</tr>';			
+			}		
 		}		
 		
 		$cadena_respuesta.='</table>';
