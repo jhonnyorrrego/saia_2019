@@ -360,8 +360,10 @@ function generar_importar($datos){
 				
 			}		
 			//COD_PADRE
+			$nombre_padre='';
 			if($datos['datos_formato']['cod_padre']){
 				$cod_padre=validar_cod_padre($datos['datos_formato']['cod_padre']);
+				$nombre_padre=$datos['datos_formato']['cod_padre'];
 				if(!$cod_padre){
 					$insertar_formato=0;
 					$formato['mensaje']="No existe el formato Padre";
@@ -414,6 +416,10 @@ function generar_importar($datos){
 					}else{
 						$formato['campos_formato_error']['campos_formato_error_'.$i]=$strsql;
 					}
+				}
+				if($nombre_padre!='' && @$cod_padre){
+					$sqlu="UPDATE ".$tabla." SET valor='".$cod_padre."' WHERE nombre='ft_".strtolower($nombre_padre)."' AND formato_idformato=".$idformato;
+					phpmkr_query($sqlu);
 				}
 				$idcampos_formato=implode(',',$vector_idcampos_formato);		
 			}
