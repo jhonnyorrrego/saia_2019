@@ -402,6 +402,7 @@ function generar_importar($datos){
 				$vector_idcampos_formato=array();
 				for($i=0;$i<count($datos['campos_formato']);$i++){
 					$datos['campos_formato'][$i]['formato_idformato']=$idformato;
+					$datos['campos_formato'][$i]['valor']=addslashes($datos['campos_formato'][$i]['valor']);
 					$tabla="campos_formato";
 					$strsql = "INSERT INTO ".$tabla." (";
 					$strsql .= implode(",", array_keys($datos['campos_formato'][$i]));			
