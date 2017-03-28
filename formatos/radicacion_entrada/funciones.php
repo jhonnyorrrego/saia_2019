@@ -25,8 +25,8 @@ function cargar_fecha_limite_respuesta($idformato,$iddoc){
 ?>
 	<script type="text/javascript">
 		$(document).ready(function(){
-		    $("#descripcion").attr("maxlength",150);
-		    $("#descripcion_general").attr("maxlength",150);
+		    //$("#descripcion").attr("maxlength",150);
+		    //$("#descripcion_general").attr("maxlength",150);
 			//var fecha_masocho_dias="<?php echo($fecha_ochodias);?>";
 			//$("#tiempo_respuesta").val(fecha_masocho_dias);			
 		});
@@ -702,22 +702,25 @@ function mostrar_item_destino_radicacion($idformato,$iddoc){
                 registros_seleccionados[i][1]=$(this).val();
                 i++;
             });
-            console.log(registros_seleccionados);
-            $.ajax({
-                type:'POST',
-                dataType: 'json',
-                url: "actualizar_item_destino_radicacion.php",
-                data:{
-                    parametros:JSON.stringify(registros_seleccionados),
-                    iddoc: '<?php echo($iddoc); ?>',
-                    idformato: '<?php echo($idformato); ?>'
-                    },
-                async: false,
-                success: function(datos){
-                    top.noty({text: '<b>ATENCI&Oacute;N</b><br>Confirmaci&oacute;n Exitosa!',type: 'success',layout: "topCenter",timeout:3500});
-                    location.reload();
-                }
-            });
+            if(JSON.stringify(registros_seleccionados)=='[]'){
+            	top.noty({text: '<b>ATENCI&Oacute;N</b><br>Por favor diligencie la informaci&oacute;n faltante antes de Confirmar!',type: 'warning',layout: "topCenter",timeout:3500});
+            }else{
+	            $.ajax({
+	                type:'POST',
+	                dataType: 'json',
+	                url: "actualizar_item_destino_radicacion.php",
+	                data:{
+	                    parametros:JSON.stringify(registros_seleccionados),
+	                    iddoc: '<?php echo($iddoc); ?>',
+	                    idformato: '<?php echo($idformato); ?>'
+	                    },
+	                async: false,
+	                success: function(datos){
+	                    top.noty({text: '<b>ATENCI&Oacute;N</b><br>Confirmaci&oacute;n Exitosa!',type: 'success',layout: "topCenter",timeout:3500});
+	                    location.reload();
+	                }
+	            });
+	        }   
         }
     </script>
     <?php 
