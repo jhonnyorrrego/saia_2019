@@ -25,8 +25,8 @@ function cargar_fecha_limite_respuesta($idformato,$iddoc){
 ?>
 	<script type="text/javascript">
 		$(document).ready(function(){
-		    $("#descripcion").attr("maxlength",150);
-		    $("#descripcion_general").attr("maxlength",150);
+		    //$("#descripcion").attr("maxlength",150);
+		    //$("#descripcion_general").attr("maxlength",150);
 			//var fecha_masocho_dias="<?php echo($fecha_ochodias);?>";
 			//$("#tiempo_respuesta").val(fecha_masocho_dias);			
 		});
