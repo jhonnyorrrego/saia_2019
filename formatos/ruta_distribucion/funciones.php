@@ -117,7 +117,7 @@ function mostrar_datos_dependencias_ruta($idformato,$iddoc){
 				';	
 				
 				$tabla.='
-					<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+					
 					<script>
 					$(document).ready(function(){
 						$(".cambio_estado_dependencia").change(function(){
@@ -224,7 +224,7 @@ function mostrar_datos_funcionarios_ruta($idformato,$iddoc){
 				';	
 				
 				$tabla.='
-					<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+					
 					<script>
 					$(document).ready(function(){
 						$(".cambio_estado").change(function(){
