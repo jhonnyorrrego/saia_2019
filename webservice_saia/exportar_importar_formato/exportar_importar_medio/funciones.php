@@ -1,6 +1,4 @@
 <?php
-@session_start();
-ini_set('display_errors',false);
 $max_salida=10; // Previene algun posible ciclo infinito limitando a 10 los ../
 $ruta_db_superior=$ruta="";
 while($max_salida>0){
@@ -10,40 +8,24 @@ while($max_salida>0){
 	$ruta.="../";
 	$max_salida--;
 }
-if(!defined("PROTOCOLO_CONEXION")){
-if(@$_SERVER["HTTPS"]=='on'){
-	define("PROTOCOLO_CONEXION","https://");//Sitio seguro
-}else{
-	define("PROTOCOLO_CONEXION","http://");
-}
-}
-if(!defined("SERVIDOR_IMPORTAR")){
-	define("SERVIDOR_IMPORTAR",PROTOCOLO_CONEXION."sgddesarrollo.ucm.edu.co/saia/webservice_saia/exportar_importar_formato/webservice_saia/exportar_importar_formato/importar_formato/receptor_importar.php");
-}
-
-include_once($ruta_db_superior."db.php");
+include_once($ruta_db_superior."define.php");
 if(!@$_SESSION["LOGIN".LLAVE_SAIA]){
-  
-  $_SESSION["LOGIN".LLAVE_SAIA]="radicador_web";
-  $_SESSION["usuario_actual"]="111222333";
+  @session_start();
+  $_SESSION["LOGIN".LLAVE_SAIA]=LOGIN_LOGIN;
+  $_SESSION["usuario_actual"]=FUNCIONARIO_CODIGO_LOGIN;
   $_SESSION["conexion_remota"]=1; 
 }
- 
-
+include_once($ruta_db_superior."db.php");
 
 function conexion_exportar_importar($datos){
 	global $conn; 
-    
 
-	
 	$datos = json_decode($datos);
 	$importar=json_encode($datos);
-	
 	$destino = new nusoap_client(SERVIDOR_IMPORTAR);
 	$respuesta_destino = $destino->call('generar_importar', array($importar));	
 	$respuesta_destino = json_decode($respuesta_destino);
 	$respuesta_destino=json_encode($respuesta_destino);	
     return($respuesta_destino);
 }	
-
 ?>

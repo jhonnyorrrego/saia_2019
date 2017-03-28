@@ -1,6 +1,4 @@
 <?php
-  @session_start();
-  
 $max_salida=10; // Previene algun posible ciclo infinito limitando a 10 los ../
 $ruta_db_superior=$ruta="";
 while($max_salida>0){
@@ -11,14 +9,12 @@ while($max_salida>0){
 	$max_salida--;
 }
 include_once($ruta_db_superior."define.php");
-
 if(!@$_SESSION["LOGIN".LLAVE_SAIA]){
-  $_SESSION["LOGIN".LLAVE_SAIA]="radicador_web";
-  $_SESSION["usuario_actual"]="111222333";
+  @session_start();
+  $_SESSION["LOGIN".LLAVE_SAIA]=LOGIN_LOGIN;
+  $_SESSION["usuario_actual"]=FUNCIONARIO_CODIGO_LOGIN;
   $_SESSION["conexion_remota"]=1; 
 }
-
-
 include_once($ruta_db_superior."db.php");
  
 function crear_modulo_formato_importar($idformato) {

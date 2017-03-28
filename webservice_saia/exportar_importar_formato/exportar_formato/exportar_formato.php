@@ -8,7 +8,7 @@ while($max_salida>0){
   $ruta.="../";
   $max_salida--;
 }
-include_once('define_remoto.php');
+include_once('../define_exportar_importar.php');
 require_once('lib/nusoap.php');  
 
 $cliente = new nusoap_client(SERVIDOR_EXPORTAR);

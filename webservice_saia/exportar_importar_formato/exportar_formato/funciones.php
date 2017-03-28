@@ -9,16 +9,12 @@ while($max_salida>0){
 	$max_salida--;
 }
 include_once($ruta_db_superior."define.php");
-
-
 if(!@$_SESSION["LOGIN".LLAVE_SAIA]){
   @session_start();
-  $_SESSION["LOGIN"]="radicador_web";
-  $_SESSION["usuario_actual"]="111222333";
+  $_SESSION["LOGIN".LLAVE_SAIA]=LOGIN_LOGIN;
+  $_SESSION["usuario_actual"]=FUNCIONARIO_CODIGO_LOGIN;
   $_SESSION["conexion_remota"]=1; 
 }
- 
-
 include_once($ruta_db_superior."db.php");
 
 function generar_idformato($datos){
@@ -168,7 +164,4 @@ function generar_exportar($datos){
 	}
 	return(json_encode($formato));
 }	
-
-
-
 ?>
