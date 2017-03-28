@@ -244,6 +244,7 @@ if(@$_REQUEST["idcategoria_formato"]){
                         <td colspan="2" align="center"><input class="btn btn-primary btn-mini" type="submit" value="Radicar" id="enviar" name="enviar"/></td>
                     </tr>
                 </table>
+                <input type="hidden" name="target" value="_self">
             </form>
     <!--script>
 	$(document).ready(function(){
