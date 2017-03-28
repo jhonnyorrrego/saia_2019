@@ -76,6 +76,7 @@ $busca_componente=busca_filtro_tabla("nombre","busqueda_componente","idbusqueda_
                         },
                         success: function(datos){
                             notificacion_saia('Mensajero asignado exitosamente','success','',4000);
+                            window.location.reload();
                         }
                         
             });   
