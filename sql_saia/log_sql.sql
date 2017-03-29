@@ -148,6 +148,6 @@ INSERT INTO  busqueda ( idbusqueda ,nombre ,etiqueta ,estado ,ancho ,campos ,lla
 INSERT INTO  busqueda_componente (idbusqueda_componente ,busqueda_idbusqueda ,tipo ,conector ,url ,etiqueta ,nombre ,orden ,info ,exportar ,exportar_encabezado ,encabezado_componente ,estado ,ancho ,cargar ,campos_adicionales ,tablas_adicionales ,ordenado_por ,direccion ,agrupado_por ,busqueda_avanzada ,acciones_seleccionados ,modulo_idmodulo ,menu_busqueda_superior ,enlace_adicionar ,encabezado_grillas) VALUES (
 NULL ,  '107',  '2',  '2',  'formatos/radicacion_entrada/radicacion_rapida.php?idcategoria_formato=1&cmd=resetall',  'Radicaci&oacute;n Rapida',  'radicacion_rapida_kaiten',  '1', NULL , NULL , NULL , NULL ,  '2', '320',  '2', NULL , NULL , NULL , NULL , NULL , NULL , NULL , NULL , NULL , NULL , NULL);
 
-
+UPDATE  modulo SET  enlace =  'pantallas/buscador_principal.php?idbusqueda=107' WHERE  idmodulo =24;
 
 
