@@ -636,6 +636,7 @@ global $x_autoguardado,$x_idcampos_formato, $x_formato_idformato, $x_nombre, $x_
 	$fieldList["etiqueta_html"] = $theValue;
 
 	// Field valor
+	$x_valor=parsear_comilla_sencilla_cadena($x_valor);
 	$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_valor) : $x_valor; 
 	$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
 	$fieldList["valor"] = $theValue;
