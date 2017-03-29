@@ -192,30 +192,6 @@ function validar_cod_padre($nombre_padre){
 	return($cod_padre);
 }
 
-
-function parsear_cadena_valor_campos_formato($cadena){
-	global $conn;
-	$cadena_original=$cadena;
-	$cadena=trim($cadena);
-	$cadena=strtolower($cadena);
-	$parseada=0;
-	if( substr($cadena,0,6)=='select' ){
-		$findme   = "'";
-		$pos = strpos($cadena, $findme);
-		if ($pos !== false) {  //fue encontrada
-			$motor=$conn->motor;
-			$vector_replaces=array('Oracle'=>"''",'MySql'=>"''",'SqlServer'=>"''",'MSSql'=>"''");
-			$cadena=str_replace("'",$vector_replaces[$motor],$cadena);	
-			$parseada=1;
-		}
-	}
-	if($parseada){
-		return($cadena);
-	}else{
-		return($cadena_original);
-	}	
-}
-
 function generar_importar($datos){
 	global $conn; 
 	$datos = json_decode($datos,true);
@@ -427,7 +403,7 @@ function generar_importar($datos){
 				$contador_error=0;
 				for($i=0;$i<count($datos['campos_formato']);$i++){
 					$datos['campos_formato'][$i]['formato_idformato']=$idformato;
-					$datos['campos_formato'][$i]['valor']=parsear_cadena_valor_campos_formato($datos['campos_formato'][$i]['valor']);
+					$datos['campos_formato'][$i]['valor']=parsear_comilla_sencilla_cadena($datos['campos_formato'][$i]['valor']);
 					$tabla="campos_formato";
 					$strsql = "INSERT INTO ".$tabla." (";
 					$strsql .= implode(",", array_keys($datos['campos_formato'][$i]));			
