@@ -140,3 +140,14 @@ CREATE TABLE IF NOT EXISTS version_notas (
 );	
 
 /* ------------------------------------- */
+
+//VERIFICAR LOS IDS
+
+INSERT INTO  busqueda ( idbusqueda ,nombre ,etiqueta ,estado ,ancho ,campos ,llave ,tablas ,ruta_libreria ,ruta_libreria_pantalla ,cantidad_registros ,tiempo_refrescar ,ruta_visualizacion ,tipo_busqueda ,badge_cantidades) VALUES (NULL ,  'radicacion_rapida_kaiten',  'Radicaci&oacute;n Rapida',  '1',  '200',  NULL, NULL , NULL , NULL , NULL ,  '30',  '500', 'formatos/radicacion_entrada/radicacion_rapida.php?idcategoria_formato=1&cmd=resetall',  '1', NULL);
+
+INSERT INTO  busqueda_componente (idbusqueda_componente ,busqueda_idbusqueda ,tipo ,conector ,url ,etiqueta ,nombre ,orden ,info ,exportar ,exportar_encabezado ,encabezado_componente ,estado ,ancho ,cargar ,campos_adicionales ,tablas_adicionales ,ordenado_por ,direccion ,agrupado_por ,busqueda_avanzada ,acciones_seleccionados ,modulo_idmodulo ,menu_busqueda_superior ,enlace_adicionar ,encabezado_grillas) VALUES (
+NULL ,  '107',  '2',  '2',  'formatos/radicacion_entrada/radicacion_rapida.php?idcategoria_formato=1&cmd=resetall',  'Radicaci&oacute;n Rapida',  'radicacion_rapida_kaiten',  '1', NULL , NULL , NULL , NULL ,  '2', '320',  '2', NULL , NULL , NULL , NULL , NULL , NULL , NULL , NULL , NULL , NULL , NULL);
+
+
+
+
