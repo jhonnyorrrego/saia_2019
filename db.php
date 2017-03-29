@@ -4162,6 +4162,34 @@ function obtener_codigo_hash_pdf($archivo,$algoritmo="crc32",$tmp=0){
    // return( hash_file($algoritmo,$ruta_db_superior.$archivo) );
    return( md5_file($ruta_db_superior.$archivo) );
 }
-
+function parsear_comilla_sencilla_cadena($cadena){
+	global $conn;
+	$cadena_original=$cadena;
+	$cadena_sinespacios=trim($cadena);
+	$cadena_minuscula=strtolower($cadena_sinespacios);
+	$parseada=0;
+	if( substr($cadena_minuscula,0,6)=='select' ){
+		$findme   = "'";
+		$pos = strpos($cadena, $findme);
+		if ($pos !== false) {  //fue encontrada
+			$motor=$conn->motor;
+			$vector_replaces=array('Oracle'=>"''",'MySql'=>"''",'SqlServer'=>"''",'MSSql'=>"''");
+			$cadena=str_replace("'",$vector_replaces[$motor],$cadena);	
+			$parseada=1;
+		}
+	}else{
+		$findme   = "'";
+		$pos = strpos($cadena, $findme);
+		if ($pos !== false) {  //fue encontrada
+			$cadena=str_replace("'","''",$cadena);	
+			$parseada=1;
+		}		
+	}
+	if($parseada){
+		return($cadena);
+	}else{
+		return($cadena_original);
+	}	
+}
 
 ?>
