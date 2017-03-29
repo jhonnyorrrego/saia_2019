@@ -23,6 +23,11 @@ while($max_salida>0){
 ), array (
         "return" => "xsd:string" 
 ), "urn:tools", "urn:tools#generar_exportar" );
+  $server->register ( "generar_lista_funciones", array (
+        "datos" => "xsd:string" 
+), array (
+        "return" => "xsd:string" 
+), "urn:tools", "urn:tools#generar_lista_funciones" );
   
   $HTTP_RAW_POST_DATA = isset($HTTP_RAW_POST_DATA) ? $HTTP_RAW_POST_DATA : '';
   $server->service($HTTP_RAW_POST_DATA);
