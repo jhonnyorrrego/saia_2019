@@ -65,17 +65,9 @@ switch ($sAction)
 <a href="<?php echo $ruta_db_superior; ?>formatos/rutas_automaticas.php?idformato=<?php echo $_REQUEST["key"];?>">Rutas</a>&nbsp;&nbsp;
 <a href="<?php echo $ruta_db_superior; ?>formatos/formatoexport.php?key=<?php echo $_REQUEST["key"];?>">Exportar Formato</a>
 &nbsp;&nbsp;
-<a style="cursor:pointer;color: -webkit-link;text-decoration: underline;" onclick="paso_productivo()">Pasar a productivo</a>
+<a href="<?php echo $ruta_db_superior; ?>webservice_saia/exportar_importar_formato/exportar_formato/exportar_formato.php?pre_exportar_formato=1&idformato=<?php echo $_REQUEST["key"];?>">Pasar a productivo</a>
 </span></p>
 </span></p>
-<script>
-	function paso_productivo(){
-		if(confirm('¿Esta seguro de realiza el paso a productivo?')){
-			var ruta_webservice_exportar="<?php echo $ruta_db_superior; ?>webservice_saia/exportar_importar_formato/exportar_formato/exportar_formato.php?idformato=<?php echo $_REQUEST["key"];?>";
-			window.open(ruta_webservice_exportar,"_blank");
-		}
-	}
-</script>
 <p>
 <form>
 <table border="0" cellspacing="1" cellpadding="4" bgcolor="#CCCCCC" width="100%">
