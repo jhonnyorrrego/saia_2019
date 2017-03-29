@@ -204,7 +204,7 @@ function parsear_cadena_valor_campos_formato($cadena){
 		$pos = strpos($cadena, $findme);
 		if ($pos !== false) {  //fue encontrada
 			$motor=$conn->motor;
-			$vector_replaces=array('Oracle'=>"''",'MySql'=>"\'",'SqlServer'=>"''",'MSSql'=>"''");
+			$vector_replaces=array('Oracle'=>"''",'MySql'=>"''",'SqlServer'=>"''",'MSSql'=>"''");
 			$cadena=str_replace("'",$vector_replaces[$motor],$cadena);	
 			$parseada=1;
 		}
