@@ -164,4 +164,42 @@ function generar_exportar($datos){
 	}
 	return(json_encode($formato));
 }	
+function generar_lista_funciones($datos){
+	global $ruta_db_superior,$conn; 
+		
+	$datos = json_decode($datos);
+	$idformato=$datos->idformato;
+	$retorno_formato=array();
+	$formato = busca_filtro_tabla("*", "formato A", "A.idformato=" . $idformato, "", $conn);
+	$condicional="formato LIKE'%,$idformato,%' OR formato LIKE '$idformato,%' OR formato LIKE'%,$idformato' OR formato='$idformato'";
+	$funciones=busca_filtro_tabla("","funciones_formato",$condicional,"",$conn);
+	$includes='';
+	for($i=0;$i<$funciones['numcampos'];$i++){
+		$formato_orig = explode(",", $funciones[$i]["formato"]);
+		if ($formato_orig[0] != $idformato) { // busco el nombre del formato inicial
+				$dato_formato_orig = busca_filtro_tabla("nombre", "formato", "idformato=" . $formato_orig[0], "", $conn);
+				if ($dato_formato_orig["numcampos"] && ($dato_formato_orig[0]["nombre"] != $formato[0]["nombre"])) {
+					$eslibreria = strpos($funciones[$i]["ruta"], "../librerias/");
+					if ($eslibreria === false) {
+						$eslibreria = strpos($funciones[$i]["ruta"], "../class_transferencia");
+					}
+					// si el archivo existe dentro de la carpeta del archivo inicial
+					if (is_file($ruta_db_superior.$dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"]) && $eslibreria === false) {
+						$includes .= $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"]."|";
+					} elseif (is_file($ruta_db_superior.$funciones[$i]["ruta"]) && $eslibreria === false) { // si el archivo existe en la ruta especificada partiendo de la raiz
+						$includes .= $funciones[$i]["ruta"]."|";
+					}
+				}
+		}else{
+				if (is_file($ruta_db_superior.$formato[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
+					$includes .= $funciones[$i]["ruta"]."|";
+				} elseif (is_file($ruta_db_superior.$funciones[$i]["ruta"])) { // si el archivo existe en la ruta especificada partiendo de la raiz
+					$includes .= $funciones[$i]["ruta"]."|";
+				}			
+		}		
+	} //fin for
+	$retorno_formato['lista_funciones']=$includes;
+	return(json_encode($retorno_formato));
+			
+}
 ?>

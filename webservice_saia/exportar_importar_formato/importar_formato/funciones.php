@@ -403,6 +403,7 @@ function generar_importar($datos){
 				$contador_error=0;
 				for($i=0;$i<count($datos['campos_formato']);$i++){
 					$datos['campos_formato'][$i]['formato_idformato']=$idformato;
+					$datos['campos_formato'][$i]['valor']=parsear_comilla_sencilla_cadena($datos['campos_formato'][$i]['valor']);
 					$tabla="campos_formato";
 					$strsql = "INSERT INTO ".$tabla." (";
 					$strsql .= implode(",", array_keys($datos['campos_formato'][$i]));			

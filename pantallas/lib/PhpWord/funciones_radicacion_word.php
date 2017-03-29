@@ -1,5 +1,4 @@
 <?php
-
 $max_salida = 6; // Previene algun posible ciclo infinito limitando a 10 los ../
 $ruta_db_superior = $ruta = "";
 while ($max_salida > 0) {
@@ -24,10 +23,12 @@ use PhpOffice\PhpWord\Settings;
 
 error_reporting(E_ALL);
 
+if (! defined('CLI')) {
 define('CLI', (PHP_SAPI == 'cli') ? true : false);
 define('EOL', CLI ? PHP_EOL : '<br />');
 define('SCRIPT_FILENAME', basename($_SERVER['SCRIPT_FILENAME'], '.php'));
 define('IS_INDEX', SCRIPT_FILENAME == 'index');
+}
 
 Autoloader::register();
 Settings::loadConfig();
@@ -47,9 +48,9 @@ class RadicadoWord {
 	    $this->ruta_db_superior = $ruta_db_superior;
 		$this->iddocumento = $iddoc;
 		$this->ruta_docx = '';
-		$this->archivo_csv = "";
+		$this->archivo_csv = null;
 		$this->combinar = false;
-		$this->ruta_procesar = '';
+		$this->ruta_procesar = null;
 		$this->idformato = null;
 		$this->prepare();
 	}
@@ -135,8 +136,7 @@ class RadicadoWord {
 					$this->combinar_documento($radicado);
 				}
 			} // fin si existe iddoc y el word tiene campos del formato
-		} // fin si existe word
-		else {
+		} else { // fin si existe word
 		    die("No existe la plantilla" . $this->ruta_docx . 'documento_word.docx');
 		}
 	}
@@ -144,7 +144,7 @@ class RadicadoWord {
 	protected function combinar_documento($numero_radicado) {
 		global $conn;
 		
-		$archivo_riginal = $this->ruta_docx . 'documento_word.docx';
+		$archivo_original = $this->ruta_docx . 'documento_word.docx';
 		$marca_agua = mostrar_estado_documento($this->iddocumento);
 		$extension_doc = '.docx';
 
@@ -153,7 +153,7 @@ class RadicadoWord {
 			// Cada elemento es un array campo => valor
 			$archivo_out = "documento_word_" . ($i + 1);
 			$archivo_copia = $this->ruta_combinar . $archivo_out . $extension_doc;
-			copy($archivo_riginal, $archivo_copia);
+			copy($archivo_original, $archivo_copia);
 			$templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor($archivo_copia);
 			$campos_word = $templateProcessor->getVariables();
 			$templateProcessor->setValue('formato_numero', $numero_radicado);
