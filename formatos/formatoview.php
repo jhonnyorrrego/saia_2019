@@ -25,11 +25,11 @@ $_pertenece_nucleo = Null;
 <?php
 $sKey = @$_GET["key"];
 if (($sKey == "") || ((is_null($sKey)))) {
-	$sKey = @$_GET["key"]; 
+	$sKey = @$_GET["key"];
 }
 if (($sKey == "") || ((is_null($sKey)))) {
-	ob_end_clean(); 
-	header("Location:formatolist.php"); 
+	ob_end_clean();
+	header("Location:formatolist.php");
 	exit();
 }
 if (!empty($sKey)) $sKey = (get_magic_quotes_gpc()) ? stripslashes($sKey) : $sKey;
@@ -55,15 +55,16 @@ switch ($sAction)
 }
 ?>
 <?php include ("header.php") ?>
-<p><br /><a href="<?php echo "formatoedit.php?key=" . urlencode($sKey); ?>">Editar</a>&nbsp;   
-<a href="<?php echo $ruta_db_superior; ?>formatos/<?php echo "formatoadd_paso2.php?key=" . urlencode($sKey); ?>">Editar cuerpo</a>&nbsp;
-<a href="<?php echo $ruta_db_superior; ?>formatos/campos_formatolist.php?idformato=<?php echo $_REQUEST["key"];?>">Campos del Formato</a>&nbsp;&nbsp;
-<a href="<?php echo $ruta_db_superior; ?>formatos/funciones_formatolist.php?idformato=<?php echo $_REQUEST["key"];?>">Funciones del Formato</a>&nbsp;&nbsp;
-<a href="<?php echo $ruta_db_superior; ?>formatos/llamado_formatos.php?acciones_formato=formato,adicionar,buscar,editar,mostrar,tabla&accion=generar&condicion=idformato@<?php echo $_REQUEST["key"];?>">Generar el Formato</a>&nbsp;&nbsp;
-<a href="<?php echo $ruta_db_superior; ?>formatos/formatoadd.php?x_cod_padre=<?php echo $_REQUEST["key"];?>">Adicionar hijo</a>&nbsp;&nbsp;
-<a href="<?php echo $ruta_db_superior; ?>formatos/transferencias_automaticas.php?idformato=<?php echo $_REQUEST["key"];?>">Transferencias automaticas</a>&nbsp;&nbsp;
-<a href="<?php echo $ruta_db_superior; ?>formatos/rutas_automaticas.php?idformato=<?php echo $_REQUEST["key"];?>">Rutas</a>&nbsp;&nbsp;
-<a href="<?php echo $ruta_db_superior; ?>formatos/formatoexport.php?key=<?php echo $_REQUEST["key"];?>">Exportar Formato</a>
+<p><br />
+<a href="<?php echo $ruta_db_superior?>formatos/formatoedit.php?key=<?php echo $sKey; ?>">Editar</a>&nbsp;
+<a href="<?php echo $ruta_db_superior;?>formatos/<?php echo "formatoadd_paso2.php?key=" . urlencode($sKey); ?>">Editar cuerpo</a>&nbsp;
+<a href="<?php echo $ruta_db_superior;?>formatos/campos_formatolist.php?idformato=<?php echo $_REQUEST["key"];?>">Campos del Formato</a>&nbsp;&nbsp;
+<a href="<?php echo $ruta_db_superior;?>formatos/funciones_formatolist.php?idformato=<?php echo $_REQUEST["key"];?>">Funciones del Formato</a>&nbsp;&nbsp;
+<a href="<?php echo $ruta_db_superior;?>formatos/llamado_formatos.php?acciones_formato=formato,adicionar,buscar,editar,mostrar,tabla&accion=generar&condicion=idformato@<?php echo $_REQUEST["key"];?>">Generar el Formato</a>&nbsp;&nbsp;
+<a href="<?php echo $ruta_db_superior;?>formatos/formatoadd.php?x_cod_padre=<?php echo $_REQUEST["key"];?>">Adicionar hijo</a>&nbsp;&nbsp;
+<a href="<?php echo $ruta_db_superior;?>formatos/transferencias_automaticas.php?idformato=<?php echo $_REQUEST["key"];?>">Transferencias automaticas</a>&nbsp;&nbsp;
+<a href="<?php echo $ruta_db_superior;?>formatos/rutas_automaticas.php?idformato=<?php echo $_REQUEST["key"];?>">Rutas</a>&nbsp;&nbsp;
+<a href="<?php echo $ruta_db_superior;?>formatos/formatoexport.php?key=<?php echo $_REQUEST["key"];?>">Exportar Formato</a>
 &nbsp;&nbsp;
 <a href="<?php echo $ruta_db_superior; ?>webservice_saia/exportar_importar_formato/exportar_formato/exportar_formato.php?pre_exportar_formato=1&idformato=<?php echo $_REQUEST["key"];?>">Pasar a productivo</a>
 </span></p>
@@ -147,8 +148,8 @@ if($x_encabezado){
     echo($encab[0]["contenido"]);
   else{
     echo("Encabezado no encontrado");
-  }  
-} 
+  }
+}
 else{
   echo("Encabezado no asignado");
 }
@@ -171,12 +172,12 @@ else{
 			    echo($pie[0]["contenido"]);
 			  else{
 			    echo("Pie de p&aacute;gina no encontrado");
-			  }  
-			} 
+			  }
+			}
 			else{
 			  echo("Pie de p&aacute;gina no asignado");
 			}
-			?>			
+			?>
 </span></td>
 	</tr>
 	<tr>
@@ -188,10 +189,10 @@ else{
 	<tr>
 		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">Orientaci&oacute;n</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
-<?php 
+<?php
 	if($x_orientacion==0){
 		echo("Horizontal");
-	} 
+	}
 	else {
 		echo("Vertical");
 	}
@@ -201,7 +202,7 @@ else{
 	<tr>
 		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">Tama&ntilde;o del Papel</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
-<?php 
+<?php
 if(@$x_papel=="A4"){
 	echo('A4');
 }
@@ -255,7 +256,7 @@ $x_exportar = $sTmp;
 	<tr>
     <td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">Formato pertenece al n&uacute;cleo</span></td>
     <td bgcolor="#F5F5F5"><span class="phpmaker">
-    <?php 
+    <?php
     if(intval($x_pertenece_nucleo)){
       echo("Si");
     }
