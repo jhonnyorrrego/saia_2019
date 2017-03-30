@@ -133,7 +133,7 @@ function reporte_entradas2($idformato,$iddoc){
 					$origen=busca_filtro_tabla("nombre","vejecutor a","a.iddatos_ejecutor=".$registros[$i]['origen_externo'],"",$conn);
 				}
 			}else{
-				if($registros[$i]['tipo_origen']==2 && $registros[$i]['tipo_mensajeria']==2){
+				if($registros[$i]['tipo_origen']==2 && ($registros[$i]['tipo_mensajeria']==2 || $registros[$i]['tipo_mensajeria']==1)){
 					$origen=busca_filtro_tabla("concat(nombres,' ',apellidos) AS nombre","vfuncionario_dc a","a.iddependencia_cargo=".$registros[$i]['nombre_origen'],"",$conn);
 				}
 			}		

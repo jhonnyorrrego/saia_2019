@@ -519,7 +519,7 @@ function ingresar_item_destino_radicacion($idformato,$iddoc){//posterior al adic
 				if($padre[0]['tipo_origen']==1){
 					$valor_origen=$padre[0]['persona_natural'];
 				}else{
-					if($padre[0]['tipo_origen']==2 && $padre[0]['tipo_mensajeria']==2){
+					if($padre[0]['tipo_origen']==2 && ($padre[0]['tipo_mensajeria']==2 || $padre[0]['tipo_mensajeria']==1)){
 						$valor_origen=$padre[0]['area_responsable'];
 					}else{
 						$valor_origen=$padre[0]['ejecutor'];
