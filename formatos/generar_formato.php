@@ -1,7 +1,7 @@
 <?php
 $max_salida = 10; // Previene algun posible ciclo infinito limitando a 10 los ../
 $ruta_db_superior = $ruta = "";
-while ($max_salida > 0) {
+while($max_salida > 0) {
 	if (is_file($ruta . "db.php")) {
 		$ruta_db_superior = $ruta; // Preserva la ruta superior encontrada
 	}
@@ -33,6 +33,10 @@ else {
 if (@$_REQUEST["genera"]) {
 	$_REQUEST["crea"] = $_REQUEST["genera"];
 }
+
+//ir a la carpeta anterior
+$ruta_padre =  dirname(__DIR__);
+chdir($ruta_padre);
 switch (@$_REQUEST["crea"]) {
 	case "formato" :
 		generar_formato($idformato);
@@ -40,7 +44,6 @@ switch (@$_REQUEST["crea"]) {
 		if ($archivo != '') {
 			$redireccion = $archivo;
 		}
-		redireacciona($redireccion);
 		break;
 	case "tabla" :
 		generar_tabla($idformato);
@@ -48,7 +51,6 @@ switch (@$_REQUEST["crea"]) {
 		if ($archivo != '') {
 			$redireccion = $archivo;
 		}
-		redirecciona($redireccion);
 		break;
 	case "vista" :
 		generar_vista($idformato);
@@ -56,7 +58,6 @@ switch (@$_REQUEST["crea"]) {
 		if ($archivo != '') {
 			$redireccion = $archivo;
 		}
-		redirecciona($redireccion);
 		break;
 	case "mostrar" :
 		crear_formato_mostrar($idformato);
@@ -64,7 +65,6 @@ switch (@$_REQUEST["crea"]) {
 		if ($archivo != '') {
 			$redireccion = $archivo;
 		}
-		redirecciona($redireccion);
 		break;
 	case "adicionar" :
 		crear_formato_ae($idformato, "adicionar");
@@ -72,7 +72,6 @@ switch (@$_REQUEST["crea"]) {
 		if ($archivo != '') {
 			$redireccion = $archivo;
 		}
-		redirecciona($redireccion);
 		break;
 	case "editar" :
 		crear_formato_ae($idformato, "editar");
@@ -80,7 +79,6 @@ switch (@$_REQUEST["crea"]) {
 		if ($archivo != '') {
 			$redireccion = $archivo;
 		}
-		redirecciona($redireccion);
 		break;
 	case "buscar" :
 		$ch = curl_init();
@@ -95,7 +93,6 @@ switch (@$_REQUEST["crea"]) {
 		if ($archivo != '') {
 			$redireccion = $archivo;
 		}
-		redirecciona($redireccion);
 		break;
 	case "eliminar" :
 		crear_formato_mostrar($idformato, "eliminar");
@@ -103,9 +100,11 @@ switch (@$_REQUEST["crea"]) {
 		if ($archivo != '') {
 			$redireccion = $archivo;
 		}
-		redirecciona($redireccion);
 		break;
 }
+
+chdir(__DIR__);
+redirecciona($redireccion);
 
 /*
  * <Clase>
@@ -177,14 +176,14 @@ function generar_tabla($idformato) {
 			guardar_traza($sqldoc, $formato[0]["nombre_tabla"]);
 			phpmkr_query($sqldoc, $conn) or die($sqldoc);
 		}
-		//20160916 Agregar el campo estado_documento si no existe
+		// 20160916 Agregar el campo estado_documento si no existe
 		$pos = busca_filtro_tabla("nombre", "campos_formato", "formato_idformato=$idformato and nombre='estado_documento'", "", $conn);
 		if (!$pos["numcampos"] && !$formato[0]["item"]) {
 			$sqldoc = "INSERT INTO campos_formato(formato_idformato,nombre,etiqueta,tipo_dato,longitud,obligatoriedad,banderas,acciones,etiqueta_html,predeterminado) VALUES('" . $idformato . "','estado_documento','ESTADO DEL DOCUMENTO','INT','11','1','','a,e','hidden',1)";
 			guardar_traza($sqldoc, $formato[0]["nombre_tabla"]);
 			phpmkr_query($sqldoc, $conn) or die($sqldoc);
 		}
-		//20160916 FIN Agregar el campo estado_documento si no existe
+		// 20160916 FIN Agregar el campo estado_documento si no existe
 
 		$campos = busca_filtro_tabla("*", "campos_formato A", "A.formato_idformato=" . $idformato, "", $conn);
 		if (!$tabla_esta) {
@@ -861,25 +860,24 @@ function crear_formato_mostrar($idformato) {
 		$hijos = busca_filtro_tabla("", "campos_formato", "etiqueta_html='detalle' and nombre like '" . $formato[0]["nombre_tabla"] . "'", "", $conn);
 
 		// if($hijos["numcampos"])
-		{
-			// $enlace='<a href="detalles_'.$formato[0]["ruta_mostrar"].'?idformato='.$idformato.'&iddoc=<?php echo($_REQUEST["iddoc"]); ?'.'>" target="centro"> Detalles</a>';
-			if (strpos($formato[0]["banderas"], "acordeon") !== false) {
-				$texto .= '<frameset cols="410,*" >';
-				$texto .= '<frame name="arbol_formato" id="arbol_formato" src="../librerias/formato_detalles.php?idformato=' . $idformato . '&iddoc=<?php echo($_REQUEST[' . "'" . "iddoc" . "'" . ']); ? >" marginwidth="0" marginheight="0" scrolling="no" >';
-			} else {
-				$texto .= '<frameset cols="250,*" >';
-				$texto .= '<frame name="arbol_formato" id="arbol_formato" src="../arboles/arbolformato_documento.php?idformato=' . $idformato . '&iddoc=<?php echo($_REQUEST[' . "'" . "iddoc" . "'" . ']); ? >" marginwidth="0" marginheight="0" scrolling="auto" >';
-			}
-			$texto .= '
+		// $enlace='<a href="detalles_'.$formato[0]["ruta_mostrar"].'?idformato='.$idformato.'&iddoc=<?php echo($_REQUEST["iddoc"]); ?'.'>" target="centro"> Detalles</a>';
+		if (strpos($formato[0]["banderas"], "acordeon") !== false) {
+			$texto .= '<frameset cols="410,*" >';
+			$texto .= '<frame name="arbol_formato" id="arbol_formato" src="../librerias/formato_detalles.php?idformato=' . $idformato . '&iddoc=<?php echo($_REQUEST[' . "'" . "iddoc" . "'" . ']); ? >" marginwidth="0" marginheight="0" scrolling="no" >';
+		} else {
+			$texto .= '<frameset cols="250,*" >';
+			$texto .= '<frame name="arbol_formato" id="arbol_formato" src="../arboles/arbolformato_documento.php?idformato=' . $idformato . '&iddoc=<?php echo($_REQUEST[' . "'" . "iddoc" . "'" . ']); ? >" marginwidth="0" marginheight="0" scrolling="auto" >';
+		}
+		$texto .= '
   <frame name="detalles" src="" border="0" marginwidth="20px" marginheight="10" scrolling="auto">
 </frameset>';
-			$contenido_detalles = $texto;
+		$contenido_detalles = $texto;
 
-			if (!crear_archivo($formato[0]["nombre"] . "/detalles_" . $formato[0]["ruta_mostrar"], $contenido_detalles)) {
-				alerta("No es posible crear el Archivo de detalles");
-			}
-			$texto = '';
+		if (!crear_archivo(FORMATOS_CLIENTE . $formato[0]["nombre"] . "/detalles_" . $formato[0]["ruta_mostrar"], $contenido_detalles)) {
+			alerta("No es posible crear el Archivo de detalles");
 		}
+		$texto = '';
+		// FIN if($hijos["numcampos"])
 		/*
 		 * else
 		 * {if(is_file($formato[0]["nombre"]."/detalles_".$formato[0]["ruta_mostrar"]))
@@ -919,29 +917,29 @@ function crear_formato_mostrar($idformato) {
 						$eslibreria = strpos($funciones[$i]["ruta"], "../class_transferencia");
 					}
 					// si el archivo existe dentro de la carpeta del archivo inicial
-					if (is_file($dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"]) && $eslibreria === false) {
+					if (is_file(FORMATOS_CLIENTE . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"]) && $eslibreria === false) {
 						$includes .= incluir("../" . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"], "librerias");
-					} elseif (is_file($funciones[$i]["ruta"]) && $eslibreria === false) { // si el archivo existe en la ruta especificada partiendo de la raiz
+					} elseif (is_file(FORMATOS_CLIENTE . $funciones[$i]["ruta"]) && $eslibreria === false) { // si el archivo existe en la ruta especificada partiendo de la raiz
 
 						$includes .= incluir("../" . $funciones[$i]["ruta"], "librerias");
-					} else if ($eslibreria === false) // si no existe en ninguna de las dos
-{ // trato de crearlo dentro de la carpeta del formato actual
+					} else if ($eslibreria === false) { // si no existe en ninguna de las dos
+					                                    // trato de crearlo dentro de la carpeta del formato actual
 						alerta("Las funciones del Formato " . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"] . " son requeridas  no se han encontrado");
-						if (crear_archivo($dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
+						if (crear_archivo(FORMATOS_CLIENTE . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
 							$includes .= incluir($dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"], "librerias");
 						} else
 							alerta("No es posible generar el archivo " . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"]);
 					}
 				}
-			} else // $ruta_orig=$formato[0]["nombre"];
-{ // si el archivo existe dentro de la carpeta del formato actual
+			} else { // $ruta_orig=$formato[0]["nombre"];
+			         // si el archivo existe dentro de la carpeta del formato actual
 				if (is_file($formato[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
 					$includes .= incluir($funciones[$i]["ruta"], "librerias");
 				} elseif (is_file($funciones[$i]["ruta"])) { // si el archivo existe en la ruta especificada partiendo de la raiz
 					$includes .= incluir("../" . $funciones[$i]["ruta"], "librerias");
-				} else // si no existe en ninguna de las dos
-{ // trato de crearlo dentro de la carpeta del formato actual
-					if (crear_archivo($formato[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
+				} else { // si no existe en ninguna de las dos
+				         // trato de crearlo dentro de la carpeta del formato actual
+					if (crear_archivo(FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
 						$includes .= incluir($funciones[$i]["ruta"], "librerias");
 					} else
 						alerta("No es posible generar el archivo " . $formato[0]["nombre"] . "/" . $funciones[$i]["ruta"]);
@@ -962,7 +960,7 @@ function crear_formato_mostrar($idformato) {
 		$includes .= incluir("../../class_transferencia.php", "librerias");
 
 		$contenido = $includes . $texto . $enlace . incluir_libreria("footer_nuevo.php", "librerias");
-		$mostrar = crear_archivo($formato[0]["nombre"] . "/" . $formato[0]["ruta_mostrar"], $contenido);
+		$mostrar = crear_archivo(FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $formato[0]["ruta_mostrar"], $contenido);
 		// Las siguientes lineas comentadas, estan pendientes por eliminar, todo el funcionamiento de la creacion de modulos y la creacion del permiso del formato se realiza en formatoaddp.php en la funcion crear_modulo_formato
 		if ($mostrar != "") {
 		}
@@ -1008,7 +1006,7 @@ function generar_vista($idformato) {
 		if ($campos) {
 			$l1campos = array();
 			$l1tablas = array();
-			foreach ($campos as $key => $value) {
+			foreach ( $campos as $key => $value ) {
 				$valor = explode('.', $value);
 				if (@$valor[1] == "" && $valor[0] != "") {
 					$valor[1] = $valor[0];
@@ -1064,12 +1062,12 @@ function crear_vista_formato($idformato, $arreglo) {
 			if ($campos[$i]["etiqueta_html"] == "autocompletar") {
 				$parametros = explode(";", $campos[$i]["valor"]);
 				$texto = str_replace("{*" . $campos[$i]["nombre"] . "*}", "<?php busca_campo(" . "'" . $parametros[0] . "','" . $parametros[1] . "','" . $parametros[2] . "',mostrar_valor_campo('" . $campos[$i]["nombre"] . "','" . $idformato_padre . "',$" . "_REQUEST['iddoc'],1)); ?" . ">", $texto);
-			} 			/*
-			 * elseif($campos[$i]["etiqueta_html"]=="detalle"){
-			 * $texto=str_replace("{*listado_detalles_".str_replace("id","",$campos[$i]["nombre"])."*}",arma_funcion("buscar_listado_formato","'".$formato[0]["nombre"]."',".$campos[$i]["valor"],"mostrar"),$texto);
-			 * }
-			 */
-			else
+			}  /*
+			   * elseif($campos[$i]["etiqueta_html"]=="detalle"){
+			   * $texto=str_replace("{*listado_detalles_".str_replace("id","",$campos[$i]["nombre"])."*}",arma_funcion("buscar_listado_formato","'".$formato[0]["nombre"]."',".$campos[$i]["valor"],"mostrar"),$texto);
+			   * }
+			   */
+else
 				$texto = str_replace("{*" . $campos[$i]["nombre"] . "*}", arma_funcion("mostrar_valor_campo", "'" . $campos[$i]["nombre"] . "',$idformato_padre", "mostrar"), $texto);
 			if ($campos[$i]["etiqueta_html"] == "archivo") {
 				$archivos++;
@@ -1106,7 +1104,7 @@ function crear_vista_formato($idformato, $arreglo) {
 					} else if ($eslibreria === false) // si no existe en ninguna de las dos
 { // trato de crearlo dentro de la carpeta del formato actual
 						alerta("Las funciones del Formato " . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"] . " son requeridas  no se han encontrado");
-						if (crear_archivo($dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
+						if (crear_archivo(FORMATOS_CLIENTE . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
 							$includes .= incluir($dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"], "librerias");
 						} else
 							alerta("No es posible generar el archivo " . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"]);
@@ -1120,7 +1118,7 @@ function crear_vista_formato($idformato, $arreglo) {
 					$includes .= incluir("../" . $funciones[$i]["ruta"], "librerias");
 				} else // si no existe en ninguna de las dos
 { // trato de crearlo dentro de la carpeta del formato actual
-					if (crear_archivo($fpadre[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
+					if (crear_archivo(FORMATOS_CLIENTE . $fpadre[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
 						$includes .= incluir($funciones[$i]["ruta"], "librerias");
 					} else
 						alerta("No es posible generar el archivo " . $fpadre[0]["nombre"] . "/" . $funciones[$i]["ruta"]);
@@ -1307,16 +1305,16 @@ function crear_formato_ae($idformato, $accion) {
 				if ($accion == 'adicionar')
 					$valor = '<?php echo(validar_valor_campo(' . $campos[$h]["idcampos_formato"] . ')); ? >';
 				elseif ($accion == "editar") { /*
-				   * if($formato[0]["item"])
-				   * $valor="<?php echo(mostrar_valor_campo('".$campos[$h]["nombre"]."',$idformato,$"."_REQUEST['item'])); ? >";
-				   * else
-				   */
+				                                * if($formato[0]["item"])
+				                                * $valor="<?php echo(mostrar_valor_campo('".$campos[$h]["nombre"]."',$idformato,$"."_REQUEST['item'])); ? >";
+				                                * else
+				                                */
 					$valor = "<?php echo(mostrar_valor_campo('" . $campos[$h]["nombre"] . "',$idformato,$" . "_REQUEST['iddoc'])); ? >";
 				}
 				switch ($campos[$h]["etiqueta_html"]) {
 					case "etiqueta" :
 						$texto .= '<tr>
-                     <td class="encabezado" width="20%" title="' . $campos[$h]["ayuda"] . '" colspan="2" id="'.$campos[$h]["nombre"].'">' . $campos[$h]["valor"] . '</td>
+                     <td class="encabezado" width="20%" title="' . $campos[$h]["ayuda"] . '" colspan="2" id="' . $campos[$h]["nombre"] . '">' . $campos[$h]["valor"] . '</td>
                     </tr>';
 						break;
 					case "password" :
@@ -1494,35 +1492,35 @@ function crear_formato_ae($idformato, $accion) {
 						}
 						break;
 					case "archivo" :
-						$tipo_input='unico';
-						if($campos[$h]["valor"]!=''){
+						$tipo_input = 'unico';
+						if ($campos[$h]["valor"] != '') {
 							$mystring = $campos[$h]["valor"];
-							$findme   = '@';
+							$findme = '@';
 							$pos = strpos($mystring, $findme);
-							if ($pos !== false) { //fue encontrada
-								$vector_extensiones_tipo=explode($findme,$mystring);
-								$tipo_input=$vector_extensiones_tipo[1];
-								$extensiones_fijas=$vector_extensiones_tipo[0];
+							if ($pos !== false) { // fue encontrada
+								$vector_extensiones_tipo = explode($findme, $mystring);
+								$tipo_input = $vector_extensiones_tipo[1];
+								$extensiones_fijas = $vector_extensiones_tipo[0];
 							}
 						}
-						$funcion_adicional_archivo='';
-						$ul_adicional_archivo='';
-						switch($tipo_input){
-							case 'unico':
-								if (strpos($adicionales, "class") !== false){
+						$funcion_adicional_archivo = '';
+						$ul_adicional_archivo = '';
+						switch ($tipo_input) {
+							case 'unico' :
+								if (strpos($adicionales, "class") !== false) {
 									$adicionales = str_replace("required", "required multi", $adicionales);
-								}else{
+								} else {
 									$adicionales .= " class='multi' ";
 								}
 								break;
-							case 'multiple':
-								$adicionales .= " multiple='multiple' onchange='makeFileList_".$campos[$h]["nombre"]."();' ";
-								$ul_adicional_archivo='<ul id="fileList_'.$campos[$h]["nombre"].'"></ul>';
-								$funcion_adicional_archivo='
+							case 'multiple' :
+								$adicionales .= " multiple='multiple' onchange='makeFileList_" . $campos[$h]["nombre"] . "();' ";
+								$ul_adicional_archivo = '<ul id="fileList_' . $campos[$h]["nombre"] . '"></ul>';
+								$funcion_adicional_archivo = '
 								<script>
-								function makeFileList_'.$campos[$h]["nombre"].'() {
-									var input = document.getElementById("'.$campos[$h]["nombre"].'");
-									var ul = document.getElementById("fileList_'.$campos[$h]["nombre"].'");
+								function makeFileList_' . $campos[$h]["nombre"] . '() {
+									var input = document.getElementById("' . $campos[$h]["nombre"] . '");
+									var ul = document.getElementById("fileList_' . $campos[$h]["nombre"] . '");
 
 									while (ul.hasChildNodes()) {
 										ul.removeChild(ul.firstChild);
@@ -1545,7 +1543,7 @@ function crear_formato_ae($idformato, $accion) {
 
 						$texto .= '<tr>
                      <td class="encabezado" width="20%" title="' . $campos[$h]["ayuda"] . '">' . codifica($campos[$h]["etiqueta"]) . $obliga . '</td>
-                     <td class="celda_transparente">'.$funcion_adicional_archivo;
+                     <td class="celda_transparente">' . $funcion_adicional_archivo;
 
 						if ($extensiones_fijas != "")
 							$extensiones = $extensiones_fijas;
@@ -1553,8 +1551,8 @@ function crear_formato_ae($idformato, $accion) {
 							$extensiones = '<?php echo $extensiones;?' . '>';
 
 						if ($accion == "adicionar") {
-							$texto .= '<input ' . $tabindex . ' type="file" ' . $adicionales . ' id="'.$campos[$h]["nombre"].'" name="' . $campos[$h]["nombre"] . '[]" ' . 'accept="' . $extensiones . '"' . '>';
-							$texto.=$ul_adicional_archivo;
+							$texto .= '<input ' . $tabindex . ' type="file" ' . $adicionales . ' id="' . $campos[$h]["nombre"] . '" name="' . $campos[$h]["nombre"] . '[]" ' . 'accept="' . $extensiones . '"' . '>';
+							$texto .= $ul_adicional_archivo;
 						}
 						if ($accion == "editar") {
 
@@ -1850,7 +1848,7 @@ function crear_formato_ae($idformato, $accion) {
 						$spinner++;
 						break;
 					default : // text
-						$texto .= '<tr id="tr_'.$campos[$h]["nombre"].'">
+						$texto .= '<tr id="tr_' . $campos[$h]["nombre"] . '">
                      <td class="encabezado" width="20%" title="' . $campos[$h]["ayuda"] . '">' . codifica($campos[$h]["etiqueta"]) . $obliga . '</td>
                      <td bgcolor="#F5F5F5"><input ' . " $adicionales $tabindex" . ' type="text" size="100" id="' . $campos[$h]["nombre"] . '" name="' . $campos[$h]["nombre"] . '" ' . $obligatorio . ' value="' . $valor . '"></td>
                     </tr>';
@@ -1889,7 +1887,7 @@ function crear_formato_ae($idformato, $accion) {
 						$includes .= incluir("../" . $funciones[$i]["ruta"], "librerias");
 					} else // si no existe en ninguna de las dos
 { // trato de crearlo dentro de la carpeta del formato actual
-						if (crear_archivo($formato[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
+						if (crear_archivo(FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
 							$includes .= incluir($funciones[$i]["ruta"], "librerias");
 						} else
 							alerta("No es posible generar el archivo " . $formato[0]["nombre_tabla"] . "/" . $funciones[$i]["ruta"]);
@@ -1900,11 +1898,11 @@ function crear_formato_ae($idformato, $accion) {
 				if (is_file($formato[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
 					$includes .= incluir($funciones[$i]["ruta"], "librerias");
 				} elseif (is_file($funciones[$i]["ruta"])) { // si el archivo existe en la ruta especificada partiendo de la raiz
-				  // Modificacion realizada el 28-02-2009 porque buscaba la ruta en la raiz pero debia buscarla en la raiz del propio formato se quita el ../
+				                                             // Modificacion realizada el 28-02-2009 porque buscaba la ruta en la raiz pero debia buscarla en la raiz del propio formato se quita el ../
 					$includes .= incluir($funciones[$i]["ruta"], "librerias");
 				} else // si no existe en ninguna de las dos
 { // trato de crearlo dentro de la carpeta del formato actual
-					if (crear_archivo($formato[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
+					if (crear_archivo(FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
 						$includes .= incluir($funciones[$i]["ruta"], "librerias");
 					} else
 						alerta("No es posible generar el archivo " . $formato[0]["nombre_tabla"] . "/" . $funciones[$i]["ruta"]);
@@ -2080,7 +2078,7 @@ $.ajax({url: '../librerias/validar_unico.php',
 		if ($accion == "editar")
 			$contenido .= '<?php include_once("../librerias/footer_plantilla.php");?' . '>';
 
-		$mostrar = crear_archivo($formato[0]["nombre"] . "/" . $formato[0]["ruta_" . $accion], $contenido);
+		$mostrar = crear_archivo(FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $formato[0]["ruta_" . $accion], $contenido);
 		if ($mostrar != "")
 			alerta("Formato Creado con exito por favor verificar la carpeta " . dirname($mostrar));
 	} else
@@ -2460,7 +2458,7 @@ function crear_formato_buscar($idformato, $accion) {
 						$includes .= incluir("../" . $funciones[$i]["ruta"], "librerias");
 					} else // si no existe en ninguna de las dos
 { // trato de crearlo dentro de la carpeta del formato actual
-						if (crear_archivo($formato[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
+						if (crear_archivo(FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
 							$includes .= incluir($funciones[$i]["ruta"], "librerias");
 						} else
 							alerta("No es posible generar el archivo " . $formato[0]["nombre_tabla"] . "/" . $funciones[$i]["ruta"]);
@@ -2474,7 +2472,7 @@ function crear_formato_buscar($idformato, $accion) {
 					$includes .= incluir("../" . $funciones[$i]["ruta"], "librerias");
 				} else // si no existe en ninguna de las dos
 { // trato de crearlo dentro de la carpeta del formato actual
-					if (crear_archivo($formato[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
+					if (crear_archivo(FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
 						$includes .= incluir($funciones[$i]["ruta"], "librerias");
 					} else
 						alerta("No es posible generar el archivo " . $formato[0]["nombre_tabla"] . "/" . $funciones[$i]["ruta"]);
@@ -2573,7 +2571,7 @@ function crear_formato_buscar($idformato, $accion) {
 		$contenido = "<html><title>.:" . strtoupper($accion . " " . $formato[0]["etiqueta"]) . ":.</title><head>" . $includes . $enmascarar . "</head>" . $texto . "</html>";
 		if ($accion == "editar")
 			$contenido .= '<?php include_once("../librerias/footer_plantilla.php");?' . '>';
-		$mostrar = crear_archivo($formato[0]["nombre"] . "/buscar_" . $formato[0]["nombre"] . ".php", $contenido);
+		$mostrar = crear_archivo(FORMATOS_CLIENTE . $formato[0]["nombre"] . "/buscar_" . $formato[0]["nombre"] . ".php", $contenido);
 		// die();
 		if ($mostrar != "")
 			alerta("Formato Creado con exito por favor verificar la carpeta " . dirname($mostrar));
@@ -2646,7 +2644,7 @@ function generar_comparacion($tipo, $nombre) {
 	}
 	if (count($listado)) {
 		$texto .= '<select name="compara_' . $nombre . '" id="compara_' . $nombre . '"> ';
-		foreach ($listado as $llave => $valor) {
+		foreach ( $listado as $llave => $valor ) {
 
 			$texto .= '<option value="' . $valor . '">' . $llave . '</option>';
 		}
@@ -2724,13 +2722,12 @@ function incluir($cad, $tipo, $eval = 0) {
  */
 function incluir_libreria($nombre, $tipo) {
 	$includes = "";
-	if (!is_file("librerias/" . $nombre)) {
-		if (crear_archivo("librerias/" . $nombre)) {
-			$includes .= incluir("../librerias/" . $nombre, $tipo);
-		} else
+	if (!is_file(FORMATOS_SAIA . "librerias/" . $nombre)) {
+		if (!crear_archivo(FORMATOS_SAIA . "librerias/" . $nombre)) {
 			alerta("No es posible generar el archivo " . $nombre);
-	} else
-		$includes .= incluir("../librerias/" . $nombre, $tipo);
+		}
+	}
+	$includes .= incluir("../../" . FORMATOS_SAIA . "librerias/" . $nombre, $tipo);
 	return ($includes);
 }
 
@@ -2778,21 +2775,21 @@ function generar_formato($idformato) {
 	$formato = busca_filtro_tabla("*", "formato A", "A.idformato=" . $idformato, "", $conn);
 	$encabezado = busca_filtro_tabla("contenido", "encabezado_formato", "idencabezado_formato='" . $formato[0]["encabezado"] . "'", "", $conn);
 
-	$data = "adicionar_".$formato[0]['nombre'].".php
-editar_".$formato[0]['nombre'].".php
-buscar_".$formato[0]['nombre'].".php
-buscar_".$formato[0]['nombre']."2.php
-mostrar_".$formato[0]['nombre'].".php
-detalles_mostrar_".$formato[0]['nombre'].".php";
+	$data = "adicionar_" . $formato[0]['nombre'] . ".php
+editar_" . $formato[0]['nombre'] . ".php
+buscar_" . $formato[0]['nombre'] . ".php
+buscar_" . $formato[0]['nombre'] . "2.php
+mostrar_" . $formato[0]['nombre'] . ".php
+detalles_mostrar_" . $formato[0]['nombre'] . ".php";
 	if (intval($formato[0]["pertenece_nucleo"]) == 0) {
-		//Ignorar todo el contenido de la carpeta
+		// Ignorar todo el contenido de la carpeta
 		$data = "*";
 	}
-	//file_put_contents($ruta_db_superior . FORMATOS_CLIENTE . $formato[0]["nombre"] . "/.gitignore", $data);
-	$fp = fopen($ruta_db_superior . FORMATOS_CLIENTE . $formato[0]["nombre"] . "/.gitignore", 'w+');
-    fwrite($fp,$data);
-    fclose($fp);
-	chmod($ruta_db_superior . FORMATOS_CLIENTE . $formato[0]["nombre"] . "/.gitignore",PERMISOS_ARCHIVOS);
+	// file_put_contents($ruta_db_superior . FORMATOS_CLIENTE . $formato[0]["nombre"] . "/.gitignore", $data);
+	$fp = fopen(FORMATOS_CLIENTE . $formato[0]["nombre"] . "/.gitignore", 'w+');
+	fwrite($fp, $data);
+	fclose($fp);
+	chmod(FORMATOS_CLIENTE . $formato[0]["nombre"] . "/.gitignore", PERMISOS_ARCHIVOS);
 	$pie = busca_filtro_tabla("contenido", "encabezado_formato", "idencabezado_formato='" . $formato[0]["pie_pagina"] . "'", "", $conn);
 	$lcampos = "";
 	$regs = array();

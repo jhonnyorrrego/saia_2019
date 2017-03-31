@@ -15,7 +15,7 @@ include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."formatos/librerias/header_formato.php");
 if(@$_REQUEST["almacenar"]=="true" && $_REQUEST["ruta"]!="" && @$_REQUEST["formato"]){
 $enlace_adicion="";
-  if(!crear_archivo($_REQUEST["ruta"],"<?php include_once('../librerias/estilo_formulario.php'); include_once('../librerias/funciones_formatos_generales.php');?".">".limpia_tabla($_REQUEST["archivo"])."<?php listado_hijos_formato(".$_REQUEST["formato"].',$_REQUEST["iddoc"]); ?'.">")){
+  if(!crear_archivo_formato($_REQUEST["ruta"],"<?php include_once('../librerias/estilo_formulario.php'); include_once('../librerias/funciones_formatos_generales.php');?".">".limpia_tabla($_REQUEST["archivo"])."<?php listado_hijos_formato(".$_REQUEST["formato"].',$_REQUEST["iddoc"]); ?'.">")){
     alerta("<br>Archivo no se ha podido crear<br>");
   }
 }
@@ -30,7 +30,7 @@ if(@$_REQUEST["idformato"]){
       $bufer = file_get_contents($ruta);
     }
     else {
-      if(!crear_archivo($ruta,""))
+      if(!crear_archivo_formato($ruta,""))
         echo("<br>Archivo no se ha podido crear<br>");
     }
   }

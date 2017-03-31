@@ -467,7 +467,7 @@ if($tablas_adicionales){
                     }
                  else//si no existe en ninguna de las dos
                     {//trato de crearlo dentro de la carpeta del formato actual
-                     if(crear_archivo($formato[0]["nombre"]."/".$funciones[$i]["ruta"]))
+                     if(crear_archivo_formato($formato[0]["nombre"]."/".$funciones[$i]["ruta"]))
                         {
                           $includes.=incluir($funciones[$i]["ruta"],"librerias");
                         }
@@ -486,7 +486,7 @@ if($tablas_adicionales){
                     }
                  else//si no existe en ninguna de las dos
                     {//trato de crearlo dentro de la carpeta del formato actual
-                     if(crear_archivo($formato[0]["nombre"]."/".$funciones[$i]["ruta"]))
+                     if(crear_archivo_formato($formato[0]["nombre"]."/".$funciones[$i]["ruta"]))
                         {
                           $includes.=incluir($funciones[$i]["ruta"],"librerias");
                         }
@@ -589,7 +589,7 @@ if($tablas_adicionales){
     $texto.='<input type="hidden" name="idbusqueda_componente" value="'.$componente.'">';*/
 
     $contenido=$includes.$enmascarar.$texto;
-    $mostrar=crear_archivo($formato[0]["nombre"]."/buscar_".$formato[0]["nombre"]."2.php",$contenido);
+    $mostrar=crear_archivo_formato($formato[0]["nombre"]."/buscar_".$formato[0]["nombre"]."2.php",$contenido);
 
     if($mostrar<>"")
       alerta("Formato Creado con exito por favor verificar la carpeta ".dirname($mostrar));
@@ -703,7 +703,7 @@ return($includes);
 function incluir_libreria($nombre,$tipo){
 $includes="";
   if(!is_file("librerias/".$nombre)){
-    if(crear_archivo("librerias/".$nombre)){
+    if(crear_archivo_formato("librerias/".$nombre)){
       $includes.=incluir("../librerias/".$nombre,$tipo);
     }
     else alerta("No es posible generar el archivo ".$nombre);

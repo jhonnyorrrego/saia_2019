@@ -3690,28 +3690,14 @@ else{
 <Post-condiciones><Post-condiciones>
 </Clase>  */
 function crear_archivo($nombre,$texto=NULL,$modo='wb'){
-global $cont;
-	$cont++;
-	// echo("Creando Archivo ".$nombre);
 	$path = pathinfo($nombre);
-	$ruta_dir = explode("/", $path["dirname"]);
-	$cont1 = count($ruta_dir);
-	if ($cont1) {
-		$ruta = $ruta_dir[0];
-		for($i = 0; $i < $cont1; $i++) {
-			if (!is_dir($ruta)) {
-				if (mkdir($ruta, PERMISOS_CARPETAS)) {
-					chmod($ruta, PERMISOS_CARPETAS);
-					if (isset($ruta_dir[$i + 1]))
-						$ruta .= "/" . $ruta_dir[$i + 1];
-				} else {
-					alerta("Problemas al generar las carpetas");
-					return (false);
-				}
-			} else {
-				if (isset($ruta_dir[$i + 1]))
-					$ruta .= "/" . $ruta_dir[$i + 1];
-			}
+	$ruta = $path["dirname"];
+	if (!is_dir($ruta)) {
+		if (mkdir($ruta, PERMISOS_CARPETAS, true)) {
+			chmod($ruta, PERMISOS_CARPETAS);
+		} else {
+			alerta("Problemas al generar las carpetas");
+			return (false);
 		}
 	}
 	$f = fopen($nombre, $modo);
@@ -3729,6 +3715,39 @@ global $cont;
 	}
 	return (false);
 }
+
+function crear_archivo_formato($nombre,$texto=NULL,$modo='wb'){
+	global $cont;
+	//file_put_contents("debug.txt", "Nombre1: $nombre", FILE_APPEND);
+	$ruta_superior = __DIR__ . "/" . FORMATOS_CLIENTE;
+	$nombre = $ruta_superior . $nombre;
+	//file_put_contents("debug.txt", "Nombre1: $nombre", FILE_APPEND);
+	$path = pathinfo($nombre);
+	$ruta = $path["dirname"];
+	if (!is_dir($ruta)) {
+		if (mkdir($ruta, PERMISOS_CARPETAS, true)) {
+			chmod($ruta, PERMISOS_CARPETAS);
+		} else {
+			alerta("Problemas al generar las carpetas");
+			return (false);
+		}
+	}
+	$f = fopen($nombre, $modo);
+	if ($f) {
+		chmod($nombre, PERMISOS_ARCHIVOS);
+		$texto = str_replace("? >", "?" . ">", $texto);
+		if (fwrite($f, $texto, strlen($texto))) {
+			fclose($f);
+			return ($nombre);
+		} else {
+			fclose($f);
+		}
+	} else {
+		alerta('No se puede crear el archivo: ' . $nombre);
+	}
+	return (false);
+}
+
 
 /*<Clase>
 <Nombre>crear_destino</Nombre>
