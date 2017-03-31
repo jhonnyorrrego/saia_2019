@@ -11,7 +11,7 @@
 	include_once($ruta_db_superior."db.php");
 	include_once($ruta_db_superior."librerias_saia.php");
 	usuario_actual("login");
-  
+
   $adicional="";
   $request=array();
   foreach(@$_REQUEST as $id => $value){
@@ -31,7 +31,7 @@
 	$idcategoria_formato=$_REQUEST['idcategoria_formato'];
 	//$lista_formatos=busca_filtro_tabla("","formato","cod_padre=0 AND (fk_categoria_formato like'".$idcategoria_formato."' OR   fk_categoria_formato like'%,".$idcategoria_formato."'  OR   fk_categoria_formato like'".$idcategoria_formato.",%' OR   fk_categoria_formato like'%,".$idcategoria_formato.",%') ","etiqueta ASC",$conn);
 	$lista_formatos=busca_filtro_tabla("","formato","mostrar=1 AND (cod_padre IS NULL OR cod_padre=0) AND (fk_categoria_formato like'".$idcategoria_formato."' OR   fk_categoria_formato like'%,".$idcategoria_formato."'  OR   fk_categoria_formato like'".$idcategoria_formato.",%' OR   fk_categoria_formato like'%,".$idcategoria_formato.",%') AND (fk_categoria_formato like'2' OR   fk_categoria_formato like'%,2'  OR   fk_categoria_formato like'2,%' OR   fk_categoria_formato like'%,2,%')","etiqueta ASC",$conn);
-	
+
 	$proceso=busca_filtro_tabla('','categoria_formato','idcategoria_formato='.$idcategoria_formato,'',$conn);
 	$nombre_proceso=codifica_encabezado(html_entity_decode($proceso[0]['nombre']));
 	$nombre_proceso=strtolower($nombre_proceso);
@@ -52,20 +52,20 @@
 			</tr>
 	';
 	for($i=0;$i<$lista_formatos['numcampos'];$i++){
-		
+
 		$modulo_formato=busca_filtro_tabla('idmodulo','modulo','nombre="crear_'.$lista_formatos[$i]['nombre'].'"','',$conn);
 		$ok=0;
 		if($modulo_formato['numcampos']){
-		    $ok=acceso_modulo($modulo_formato[0]['idmodulo']);	
+		    $ok=acceso_modulo($modulo_formato[0]['idmodulo']);
 		}
 
 		if($ok){
 			$etiqueta=codifica_encabezado(html_entity_decode($lista_formatos[$i]['etiqueta']));
 			$etiqueta=strtolower($etiqueta);
 			$etiqueta=ucwords($etiqueta);
-		
-			$enlace_adicionar='formatos/'.$lista_formatos[$i]['nombre'].'/'.$lista_formatos[$i]['ruta_adicionar'];
-			
+
+			$enlace_adicionar= FORMATOS_CLIENTE . $lista_formatos[$i]['nombre'].'/'.$lista_formatos[$i]['ruta_adicionar'];
+
 			$texto.='
 				<tr>
 					<td>
@@ -73,7 +73,7 @@
 					</td>
 				</tr>
 			';
-		}	
+		}
 	}
 	$texto.='</tbody></table></div>';
 	echo($texto);
@@ -88,7 +88,7 @@
 	  $modulo=busca_filtro_tabla("","modulo","idmodulo=".$idmodulo,"");
 	  $acceso=$ok->acceso_modulo_perfil($modulo[0]["nombre"]);
 	  return $acceso;
-	}	
-	
+	}
+
 
 ?>
