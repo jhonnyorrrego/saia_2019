@@ -34,8 +34,8 @@ if (@$_REQUEST["genera"]) {
 	$_REQUEST["crea"] = $_REQUEST["genera"];
 }
 
-//ir a la carpeta anterior
-$ruta_padre =  dirname(__DIR__);
+// ir a la carpeta anterior
+$ruta_padre = dirname(__DIR__);
 chdir($ruta_padre);
 switch (@$_REQUEST["crea"]) {
 	case "formato" :
@@ -1881,27 +1881,27 @@ function crear_formato_ae($idformato, $accion) {
 				$dato_formato_orig = busca_filtro_tabla("nombre", "formato", "idformato=" . $formato_orig[0], "", $conn);
 				if ($dato_formato_orig["numcampos"]) {
 					// si el archivo existe dentro de la carpeta del archivo inicial
-					if (is_file($dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
+					if (is_file(FORMATOS_CLIENTE . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
 						$includes .= incluir("../" . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"], "librerias");
 					} elseif (is_file($funciones[$i]["ruta"])) { // si el archivo existe en la ruta especificada partiendo de la raiz
 						$includes .= incluir("../" . $funciones[$i]["ruta"], "librerias");
-					} else // si no existe en ninguna de las dos
-{ // trato de crearlo dentro de la carpeta del formato actual
+					} else { // si no existe en ninguna de las dos
+					         // trato de crearlo dentro de la carpeta del formato actual
 						if (crear_archivo(FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
 							$includes .= incluir($funciones[$i]["ruta"], "librerias");
 						} else
 							alerta("No es posible generar el archivo " . $formato[0]["nombre_tabla"] . "/" . $funciones[$i]["ruta"]);
 					}
 				}
-			} else // $ruta_orig=$formato[0]["nombre"];
-{ // si el archivo existe dentro de la carpeta del formato actual
+			} else { // $ruta_orig=$formato[0]["nombre"];
+			         // si el archivo existe dentro de la carpeta del formato actual
 				if (is_file($formato[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
 					$includes .= incluir($funciones[$i]["ruta"], "librerias");
 				} elseif (is_file($funciones[$i]["ruta"])) { // si el archivo existe en la ruta especificada partiendo de la raiz
 				                                             // Modificacion realizada el 28-02-2009 porque buscaba la ruta en la raiz pero debia buscarla en la raiz del propio formato se quita el ../
 					$includes .= incluir($funciones[$i]["ruta"], "librerias");
-				} else // si no existe en ninguna de las dos
-{ // trato de crearlo dentro de la carpeta del formato actual
+				} else { // si no existe en ninguna de las dos
+				         // trato de crearlo dentro de la carpeta del formato actual
 					if (crear_archivo(FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
 						$includes .= incluir($funciones[$i]["ruta"], "librerias");
 					} else
@@ -2689,6 +2689,8 @@ function incluir($cad, $tipo, $eval = 0) {
 			return (""); // retorna un vacio si no existe el tipo
 			break;
 	}
+	// file_put_contents("debug.txt", "\nLibreria: $cad :: $tipo", FILE_APPEND);
+
 	for($j = 0; $j < count($lib); $j++) {
 		$pos = array_search($texto1 . $lib[$j] . $texto2, $incluidos);
 		if ($pos === false) {
