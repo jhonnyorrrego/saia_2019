@@ -61,7 +61,7 @@ $etiquetados=busca_filtro_tabla("c.nombre","documento a, documento_etiqueta b, e
 
 $pendientes=busca_filtro_tabla("count(*) AS cant","documento A,asignacion B,formato c ","LOWER(A.estado)<>'eliminado' AND A.iddocumento=B.documento_iddocumento AND B.tarea_idtarea<>-1 AND B.entidad_identidad=1 AND B.llave_entidad=".$usuario." and lower(A.plantilla)=c.nombre ","GROUP BY A.iddocumento",$conn);
 
-$con_indicador=busca_filtro_tabla("","prioridad_documento A, documento B,formato c ","A.prioridad in (1,2,3,4,5) AND iddocumento=documento_iddocumento AND funcionario_idfuncionario=".usuario_actual("idfuncionario")." AND B.estado not in('ELIMINADO') and lower(B.plantilla)=c.nombre","",$conn); 
+$con_indicador=busca_filtro_tabla("","documento a, prioridad_documento b,formato c ","b.documento_iddocumento=a.iddocumento AND b.prioridad in (1,2,3,4,5) AND lower(a.estado) not in('ELIMINADO') AND lower(a.plantilla)=c.nombre AND b.funcionario_idfuncionario=".usuario_actual("idfuncionario"),"group by a.iddocumento order by a.fecha  desc",$conn); 
 //$destacados=busca_filtro_tabla("","prioridad_documento A, documento B","A.prioridad=2 AND iddocumento=documento_iddocumento AND B.estado<>'ELIMINADO' AND funcionario_idfuncionario=".usuario_actual("idfuncionario"),"",$conn);
 $borradores=busca_filtro_tabla("count(*) AS cant","documento A, formato c ","ejecutor=".$usuario." AND A.estado='ACTIVO' AND A.numero='0' and lower(A.plantilla)=c.nombre","",$conn); 
 $mis_roles=busca_filtro_tabla("","vfuncionario_dc","funcionario_codigo=".usuario_actual("funcionario_codigo"),"",$conn);
