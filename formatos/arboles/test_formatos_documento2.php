@@ -126,7 +126,7 @@ for($i=0;$i<$dato["numcampos"];$i++){
  if($estado[0][0]<>"ELIMINADO") 
   {$tips="";
    for($j=0;$j<$num_campo;$j++){
-    $tips.=strip_tags(str_replace('"','',decodifica($campo[$j]["etiqueta"]).": ")).((mostrar_valor_campo($campo[$j]["nombre"],$arreglo[0],$dato[$i]["documento_iddocumento"],1)))."\n";
+    $tips.=strip_tags(str_replace('"','',decodifica($campo[$j]["etiqueta"]).": ")).str_replace('"','',(mostrar_valor_campo($campo[$j]["nombre"],$arreglo[0],$dato[$i]["documento_iddocumento"],1)))."\n";
     }
 	
 	$version=busca_filtro_tabla("max(version) as max_version","version_documento a","a.documento_iddocumento=".$dato[$i]["documento_iddocumento"],"",$conn);
