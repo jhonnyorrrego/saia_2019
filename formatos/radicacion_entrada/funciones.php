@@ -654,6 +654,8 @@ function mostrar_item_destino_radicacion($idformato,$iddoc){
     	    }else{
     	        $destino=busca_filtro_tabla("concat(nombres,' ',apellidos) AS nombre, cargo, dependencia,funcionario_codigo","vfuncionario_dc","iddependencia_cargo=".$datos[$i]['nombre_destino'],"",$conn);
     	        $ubicacion=$destino[0]['dependencia'];
+
+    	    }
                 if(($_REQUEST['tipo']!=5 && $datos[$i]['estado_item']==2 && usuario_actual('funcionario_codigo')==$destino[0]['funcionario_codigo'])){
                     $parte_tabla='<a style="cursor:pointer;" class="highslide" onclick="return hs.htmlExpand(this, { objectType: \'iframe\',width: 300, height: 300,preserveContent:false} )" tipo="finalizacion" href="'.PROTOCOLO_CONEXION.RUTA_PDF.'/formatos/radicacion_entrada/finalizar_items.php?idft='.$datos[$i]['idft_destino_radicacion'].'">Finalizar</a>';
                 }elseif($datos[$i]['estado_item']<=2){
@@ -661,7 +663,7 @@ function mostrar_item_destino_radicacion($idformato,$iddoc){
                 }elseif($datos[$i]['estado_item']==3){
                     $parte_tabla='Finalizado';
                 }
-    	    }
+
     	    
     	    $tabla.="
     	        <tr>
