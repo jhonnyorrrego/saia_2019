@@ -49,7 +49,7 @@ if($_SESSION["tipo_dispositivo"]=="movil"){
     $clase_info="kenlace_saia";
 }
 $texto.='<div class="pull"><div class="btn-group pull-left" >
-	<button type="button" class="btn btn-mini  tooltip_saia documento_leido" onClick=" " enlace="pantallas/documento/detalles_documento.php?iddoc='.$iddoc.'&idbusqueda_componente='.$_REQUEST["idbusqueda_componente"].'" titulo="Detalle Doc No.'.$numero.'" conector="iframe" idregistro="'.$iddoc.'"ancho_columna="470" eliminar_hijos_kaiten="1">
+	<button type="button" class="btn btn-mini  tooltip_saia_derecha documento_leido" onClick=" " enlace="pantallas/documento/detalles_documento.php?iddoc='.$iddoc.'&idbusqueda_componente='.$_REQUEST["idbusqueda_componente"].'" titulo="Detalle Doc No.'.$numero.'" conector="iframe" idregistro="'.$iddoc.'"ancho_columna="470" eliminar_hijos_kaiten="1">
     <i class="'.$dato_leido[1].'"></i>
   </button>
 
@@ -548,7 +548,7 @@ if($dato_prioridad["numcampos"]){
 $tarea="icon-check";
 $dato_leido=documento_leido($iddoc);
 $texto.='<div class="btn-group pull-left" >
-  <button type="button" class="btn btn-mini kenlace_saia tooltip_saia documento_leido" enlace="ordenar.php?accion=mostrar&mostrar_formato=1&key='.$iddoc.'" titulo="'.$dato_leido[0].' No.'.$numero.'" conector="iframe" idregistro="'.$iddoc.'">
+  <button type="button" class="btn btn-mini kenlace_saia tooltip_saia_derecha documento_leido" enlace="ordenar.php?accion=mostrar&mostrar_formato=1&key='.$iddoc.'" titulo="'.$dato_leido[0].' No.'.$numero.'" conector="iframe" idregistro="'.$iddoc.'">
     <i class="'.$dato_leido[1].'"></i>
   </button>
 
@@ -577,7 +577,7 @@ if($dato_prioridad["numcampos"]){
 $tarea="icon-check";
 $dato_leido=documento_leido($iddoc);
 $texto.='<div class="btn-group pull-left" >
-  <button type="button" class="btn btn-mini kenlace_saia tooltip_saia" titulo="Activar documento" enlace="activar_documentofunc.php?func=1&key='.$iddoc.'" conector="iframe" idregistro="'.$iddoc.'"><i class="icon-ok"></i></button>
+  <button type="button" class="btn btn-mini kenlace_saia tooltip_saia_derecha" titulo="Activar documento" enlace="activar_documentofunc.php?func=1&key='.$iddoc.'" conector="iframe" idregistro="'.$iddoc.'"><i class="icon-ok"></i></button>
 
   </div>';
 $texto.=barra_estandar_documento($iddoc,$funcionario);
