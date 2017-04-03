@@ -150,4 +150,5 @@ NULL ,  '107',  '2',  '2',  'formatos/radicacion_entrada/radicacion_rapida.php?i
 
 UPDATE  modulo SET  enlace =  'pantallas/buscador_principal.php?idbusqueda=107' WHERE  idmodulo =24;
 
+UPDATE modulo SET etiqueta='Acciones P&aacute;ginas del documento' WHERE nombre='ordenar_pag'
 
