@@ -1841,7 +1841,7 @@ function validar_valor_campo($campo) {
 		return ($campos[0][0]);
 	} elseif(in_array('p', $acciones) && in_array('r', $banderas)) {
 		if(isset($_REQUEST["anterior"]) && $padre[0][0] == "0") {
-      $desc = busca_filtro_tabla("a.descripcion,a.numero,b.nombre,b.idformato", "documento a, formato b", "iddocumento=" . $_REQUEST["anterior"]." and a.formato_idformato=b.idformato", "", $conn);
+      $desc = busca_filtro_tabla("a.descripcion,a.numero,b.nombre,b.idformato", "documento a, formato b", "a.iddocumento=" . $_REQUEST["anterior"]." and lower(a.plantilla)=b.nombre", "", $conn);
       if($desc[0]["nombre"]=='radicacion_entrada'){
         include_once($ruta_db_superior."formatos/radicacion_entrada/funciones.php");
         $radicado=obtener_radicado_entrada($desc[0]["idformato"],$_REQUEST["anterior"]);
