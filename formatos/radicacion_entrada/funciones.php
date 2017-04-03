@@ -378,9 +378,9 @@ function tipo_radicado_radicacion($idformato,$iddoc){//en el adicionar
                 });
             });
             function tipo_origen(tipo){
-                if(tipo==1){
+                if(tipo==1){   //EXTERNO
                     $('[name="tipo_radicado"]').val('radicacion_entrada');
-                        
+                    seleccionar_interno_actual(0);    
                     $('#area_responsable').parent().parent().hide();
                     $('#area_responsable').removeClass('required');
                     $('#destino').addClass('required');
@@ -400,9 +400,11 @@ function tipo_radicado_radicacion($idformato,$iddoc){//en el adicionar
                     $('#persona_natural').addClass('required');
                     $('#persona_natural').parent().parent().show();
                     //$('#anexos_digitales').parent().parent().show();
-                }else{
+                }else{ //INTERNO
+                
+                    seleccionar_interno_actual(1);
+                
                     $('[name="tipo_radicado"]').val('radicacion_salida');
-                        console.log("entro");
                     $('[name="area_responsable"]').parent().parent().show();
                     $('#area_responsable').addClass('required');
                     $('#tr_tipo_destino').show();
@@ -489,9 +491,17 @@ function tipo_radicado_radicacion($idformato,$iddoc){//en el adicionar
 			     }  	           
             
             }
-            function chekeararbol(){
-                tree_area_responsable.setCheck('<?php echo $cargo[0]["iddependencia_cargo"];?>',true);
-                $('#area_responsable').val(<?php echo $cargo[0]["iddependencia_cargo"];?>);
+            function seleccionar_interno_actual(seleccionar){
+                if(seleccionar){
+                    tree_area_responsable.setCheck('<?php echo $cargo[0]["iddependencia_cargo"];?>',true);
+                    tree_area_responsable.openItem('<?php echo $cargo[0]["iddependencia_cargo"];?>'); //ARBOL: expande nodo hasta el item indicado
+                    $('#area_responsable').val(<?php echo $cargo[0]["iddependencia_cargo"];?>);
+                   
+                }else{
+                    tree_area_responsable.setCheck('<?php echo $cargo[0]["iddependencia_cargo"];?>',false);
+                    tree_area_responsable.closeAllItems(); //ARBOL: cierra todo el arbol
+                    $('#area_responsable').val('');                    
+                }
             }
         </script>
     <?php
