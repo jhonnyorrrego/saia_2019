@@ -154,3 +154,12 @@ UPDATE  modulo SET  enlace =  'pantallas/buscador_principal.php?idbusqueda=107' 
 UPDATE modulo SET etiqueta='Acciones P&aacute;ginas del documento' WHERE nombre='ordenar_pag'
 -----------
 ALTER TABLE  `ejecutor` ADD  `tipo_ejecutor` INT NOT NULL DEFAULT  '1'
+-----------
+//VERIFICAR LOS IDS
+ALTER TABLE  modulo ADD  pertenece_nucleo INT NOT NULL DEFAULT  '0' AFTER  idmodulo;	
+INSERT INTO  modulo (idmodulo ,pertenece_nucleo ,nombre ,tipo ,imagen ,etiqueta ,enlace ,enlace_mobil ,destino ,cod_padre ,orden ,ayuda ,parametros ,busqueda_idbusqueda ,permiso_admin ,busqueda) VALUES (NULL ,  '1',  'permiso_radicacion_externa',  'secundario',  'botones/configuracion/default.gif',  'Radicaci&oacute;n Externa',  '#', NULL ,  '_self',  '6',  '0', 'Modulo creado para dar permiso a un funcionario si desean que realice radicaciones de origen externo', NULL ,  '0',  '0',  '');
+
+
+
+
+

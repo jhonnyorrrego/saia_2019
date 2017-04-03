@@ -376,6 +376,19 @@ function tipo_radicado_radicacion($idformato,$iddoc){//en el adicionar
                 $('[name="tipo_destino"]').click(function(){
                     tipo_destino($(this).val());
                 });
+                
+                <?php
+                $permiso_mod=new Permiso();
+		        $ok_permiso_radicacion_externa=$permiso_mod->acceso_modulo_perfil("permiso_radicacion_externa");
+		        if(!$ok_permiso_radicacion_externa){
+		            ?>
+		            $('#tipo_origen0').parent().hide();
+		            $('#tipo_origen1').attr('checked',true);
+		            $('[name="tipo_origen"]').click();
+		            <?php
+		        }
+                ?>
+                
             });
             function tipo_origen(tipo){
                 if(tipo==1){   //EXTERNO
