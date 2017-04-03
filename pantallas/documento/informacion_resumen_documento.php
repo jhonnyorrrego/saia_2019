@@ -647,7 +647,7 @@ function click_funcion(div){
 	tree5=new dhtmlXTreeObject("treeboxbox_tree5","","",0);
 	tree5.setImagePath("<?php echo($ruta_db_superior);?>imgs/");
 	tree5.enableIEImageFix(true);
-  
+	tree5.enableTreeImages("false");
   tree5.setOnLoadingStart(cargando_version);
   tree5.setOnLoadingEnd(fin_cargando_version);
   tree5.enableSmartXMLParsing(true);
