@@ -1788,7 +1788,7 @@ function submit_formato($formato, $iddoc = NULL) {
 			phpmkr_query($sql, $conn) or die("Failed to execute query" . phpmkr_error() . ' SQL:' . $sql);
 			echo '<input type="hidden" name="tipo_radicado" value="' . $contador[0]["nombre_tabla"] . '">';
 			
-			alerta("El contador de este formato no existe");
+			alerta("El contador de este formato no existe","error");
 			volver(1);
 		}
 		if(@$_REQUEST["idpaso_documento"])
