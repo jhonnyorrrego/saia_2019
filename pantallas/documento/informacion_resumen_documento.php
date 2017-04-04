@@ -489,7 +489,6 @@ function click_funcion(div){
       return;
     }
     llave=tree2.getParentId(nodeId);
-
     tree2.closeAllItems(tree2.getParentId(nodeId))
     tree2.openItem(nodeId);
     tree2.openItem(tree2.getParentId(nodeId));
@@ -497,7 +496,6 @@ function click_funcion(div){
     redireccion_detalles(conexion);
     }
     function redireccion_detalles(conexion){
-        console.log(no_seleccionar);
         if(!no_seleccionar){
             window.parent.open(conexion,"detalles");    
         }
