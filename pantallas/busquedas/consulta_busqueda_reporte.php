@@ -35,7 +35,9 @@ if($datos_busqueda[0]["ruta_libreria_pantalla"]){
 $info=stripslashes($datos_busqueda[0]["info"]);
 $grupos=explode("|-|",$info);
 $cant=count($grupos);
+$campos=$datos_busqueda[0]["campos"].",".$datos_busqueda[0]["campos_adicionales"];
 for($i=0;$i<$cant;$i++){
+    $sortable="false";
 	$datos=explode("|",$grupos[$i]);
 	array_push($columnas["etiquetas"],@$datos[0]);
 	$datos[1]=str_replace("{*","",str_replace("*}","",$datos[1]));
@@ -44,9 +46,11 @@ for($i=0;$i<$cant;$i++){
   if($datos[3]){
     $width=',"width":'.$datos[3];
   }
-	array_push($columnas["modelo"],'{"encabezado":"'.$datos[0].'","sortable":false,"name":"'.$datos2[0].'","align":"'.$datos[2].'"'.$width.'}');
+  if(in_array($datos[1],$campos)!==false){
+      $sortable="true";
+  }
+	array_push($columnas["modelo"],'{"encabezado":"'.$datos[0].'","sortable":'.$sortable.',"name":"'.$datos2[0].'","align":"'.$datos[2].'"'.$width.'}');
 }
-
 $encabezado=stripslashes($datos_busqueda[0]["encabezado_grillas"]);
 $grupos=explode("|-|",$encabezado);
 $cant=count($grupos);
