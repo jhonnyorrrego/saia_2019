@@ -860,7 +860,7 @@ function mostrar_fecha_limite_documento($iddoc){
 	return('<div class="pull-right"><b>Vence:&nbsp;</b>'.$fecha_limite.'</div>');
 }
 function filtro_funcionario_etiquetados(){ 
-	$condicional_etiquetados="AND d.funcionario='".usuario_actual('idfuncionario')."'";
+	$condicional_etiquetados="AND d.funcionario='".usuario_actual('funcionario_codigo')."'";
 	return($condicional_etiquetados);
 }
 function mostrar_nombre_etiquetas($iddoc){

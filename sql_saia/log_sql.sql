@@ -157,9 +157,13 @@ ALTER TABLE  `ejecutor` ADD  `tipo_ejecutor` INT NOT NULL DEFAULT  '1'
 -----------
 //VERIFICAR LOS IDS
 ALTER TABLE  modulo ADD  pertenece_nucleo INT NOT NULL DEFAULT  '0' AFTER  idmodulo;	
+
 INSERT INTO  modulo (idmodulo ,pertenece_nucleo ,nombre ,tipo ,imagen ,etiqueta ,enlace ,enlace_mobil ,destino ,cod_padre ,orden ,ayuda ,parametros ,busqueda_idbusqueda ,permiso_admin ,busqueda) VALUES (NULL ,  '1',  'permiso_radicacion_externa',  'secundario',  'botones/configuracion/default.gif',  'Radicaci&oacute;n Externa',  '#', NULL ,  '_self',  '6',  '0', 'Modulo creado para dar permiso a un funcionario si desean que realice radicaciones de origen externo', NULL ,  '0',  '0',  '');
 
 
+----------
 
+UPDATE  busqueda_condicion SET  codigo_where = 'lower(a.estado) not in(''eliminado'') AND  a.iddocumento=b.documento_iddocumento and b.etiqueta_idetiqueta=d.idetiqueta {*filtro_categoria@categoria*}  {*filtro_funcionario_etiquetados@funcionario*}' WHERE  `busqueda_condicion`.`idbusqueda_condicion` =183;
 
+UPDATE busqueda_componente SET tablas_adicionales='documento_etiqueta b, etiqueta d' WHERE nombre LIkE 'documentos_etiquetados';
 
