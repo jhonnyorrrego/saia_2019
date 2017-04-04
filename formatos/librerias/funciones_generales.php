@@ -1771,7 +1771,7 @@ function mostrar_imagenes($idformato, $campo, $iddoc = NULL) {
  * </Clase>
  */
 function submit_formato($formato, $iddoc = NULL) {
-	global $conn;
+	global $conn,$ruta_db_superior;
 	$datos_f = busca_filtro_tabla("item", "formato", "idformato=" . $formato, "", $conn);
 	if($iddoc == NULL || $datos_f[0][0]) {
 		$contador = busca_filtro_tabla("A.nombre,B.nombre_tabla,B.nombre as formato", "contador A,formato B", "A.idcontador=B.contador_idcontador AND B.idformato=" . $formato, "", $conn);
@@ -1784,23 +1784,36 @@ function submit_formato($formato, $iddoc = NULL) {
 		} 
 
 		else {
-			$sql = "INSERT INTO contador(consecutivo,nombre ) VALUE(1,'" . $contador[0]["nombre_tabla"] . "')";
-			phpmkr_query($sql, $conn) or die("Failed to execute query" . phpmkr_error() . ' SQL:' . $sql);
+			$sql2 = "INSERT INTO contador(consecutivo,nombre ) VALUE(1,'" . $contador[0]["nombre_tabla"] . "')";
+			phpmkr_query($sql2, $conn) or die("Failed to execute query" . phpmkr_error() . ' SQL:' . $sql);
+			$idcontador=phpmkr_insert_id();
 			echo '<input type="hidden" name="tipo_radicado" value="' . $contador[0]["nombre_tabla"] . '">';
-			
-			alerta("El contador de este formato no existe","error");
-			volver(1);
+			$sql2="UPDATE formato SET contador_idcontador=".$idcontador." WHERE idformato=".$formato;
+			phpmkr_query($sql2);
 		}
 		if(@$_REQUEST["idpaso_documento"])
 			echo '<input type="hidden" name="idpaso_documento" value="' . $_REQUEST["idpaso_documento"] . '">';
 		
-		echo '<input type="hidden" name="funcion" value="radicar_plantilla">
+		echo('<input type="hidden" name="funcion" value="radicar_plantilla">
               <input type="hidden" name="tabla" value="' . $contador[0]["nombre_tabla"] . '">
               <input type="hidden" name="formato" value="' . $contador[0]["formato"] . '">
-              <input type="hidden" name="continuar" value="Solicitar Radicado" >
-              <!--input type="button" id="aceptar" name="aceptar" value="Continuar" onclick="validar_formato();"-->
-              <input class="submit" type="submit" id="continuar" value="Continuar" >
-              </td></tr>';
+              <input type="hidden" name="continuar" value="Solicitar Radicado" >');
+        $codigo_js='history.go(-1);';
+        if($datos_f["numcampos"] && $datos_f[0][0] ){
+            if($_REQUEST["pantalla"]=='padre'){
+                if($_REQUEST["padre"]){
+                    $datos_padre=busca_filtro_tabla("","formato","idformato=".$_REQUEST["idformato"],"",$conn);
+                    if($datos_padre["numcampos"]){
+                        $cadena=$ruta_db_superior.'formatos/'.$datos_padre[0]["nombre"].'/mostrar_'.$datos_padre[0]["nombre"].'.php?iddoc='.$_REQUEST["idpadre"].'&idformato='.$datos_padre[0]["idformato"];
+                        $codigo_js='<script type="text/javascript">function redirecciona_padre(){window.open("'.$cadena.'","_self");}</script>';    
+                        echo($codigo_js);
+                    }
+                }
+            }
+            echo('<button class="cancel" onClick="javascript:redirecciona_padre(); return false;" id="cancel" value="Cancelar" style="margin-right:6px;">Cancelar</button>');
+            echo('<button class="submit" type="submit" id="continuar" value="Continuar">Continuar</button>');
+        }
+        echo('</td></tr>');
 	} else {
 		$contador = busca_filtro_tabla("A.nombre,B.nombre_tabla", "contador A,formato B", "A.idcontador=B.contador_idcontador AND B.idformato=" . $formato, "", $conn);
 		
