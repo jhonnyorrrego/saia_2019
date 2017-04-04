@@ -73,13 +73,15 @@ function planilla_mensajero($idft_destino_radicacion,$mensajero_encargado,$estad
         $disable="disabled";
     }
     if($mensajero_encargado=='mensajero_encargado'){
-        $html.="Sin Mensajero Asignado";
+        $html.="Pendiente";
     }else{
         $planillas=busca_filtro_tabla("c.numero,c.iddocumento","ft_item_despacho_ingres a,ft_despacho_ingresados b, documento c","a.ft_despacho_ingresados=b.idft_despacho_ingresados AND b.documento_iddocumento=c.iddocumento AND c.estado NOT IN('ELIMINADO','ANULADO') AND a.ft_destino_radicacio=".$idft_destino_radicacion,"",$conn);
         if($planillas['numcampos']){
             for($i=0;$i<$planillas['numcampos'];$i++){
                 $html.='<div class="link kenlace_saia" enlace="ordenar.php?key='.$planillas[$i]['iddocumento'].'&amp;accion=mostrar&amp;mostrar_formato=1" conector="iframe" titulo="No Radicado '.$planillas[$i]['numero'].'"><center><span class="badge">'.$planillas[$i]['numero']."</span></center></div>\n";
             }
+        }else{
+            $html="No se han generado planillas";
         }
         //$html.="<input type='checkbox' class='planilla_mensajero' ".$disable." mensajero='".$mensajero_encargado."' value='$idft_destino_radicacion'>";
     }
@@ -93,7 +95,7 @@ function planilla_mensajero2($idft_destino_radicacion,$mensajero_encargado,$esta
         $disable="disabled";
     }
     if($mensajero_encargado=='mensajero_encargado'){
-        $html.="Sin Mensajero Asignado";
+        $html.="Pendiente";
     }else{
         $planillas=busca_filtro_tabla("c.numero,c.iddocumento","ft_item_despacho_ingres a,ft_despacho_ingresados b, documento c","a.ft_despacho_ingresados=b.idft_despacho_ingresados AND b.documento_iddocumento=c.iddocumento AND c.estado NOT IN('ELIMINADO','ANULADO') AND a.ft_destino_radicacio=".$idft_destino_radicacion,"",$conn);
         if($planillas['numcampos']){
