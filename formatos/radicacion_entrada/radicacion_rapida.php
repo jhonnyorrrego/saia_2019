@@ -34,7 +34,7 @@ echo(estilo_bootstrap());
                             <input type="hidden" name="enlace" id="enlace" value="pantallas/buscador_principal.php?idbusqueda=7">
                             
                             <?php
-$adicional=Null;
+$adicional='';
 if(@$_REQUEST["idcategoria_formato"]){
 	$adicional="&idcategoria_formato=".$_REQUEST["idcategoria_formato"];
 }
