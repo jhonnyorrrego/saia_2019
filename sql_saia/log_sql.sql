@@ -167,3 +167,6 @@ UPDATE  busqueda_condicion SET  codigo_where = 'lower(a.estado) not in(''elimina
 
 UPDATE busqueda_componente SET tablas_adicionales='documento_etiqueta b, etiqueta d' WHERE nombre LIkE 'documentos_etiquetados';
 
+---------
+
+UPDATE modulo SET  etiqueta =  'Opciones de la p&aacute;gina' WHERE  nombre ='ordenar_pag';

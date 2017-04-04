@@ -122,7 +122,7 @@ else{
     	</a>
     </li>
     <li>
-    	<a href="#paginas" id="ordenar_pag" data-toggle="tab" componente="<?php echo($paginas_documento);?>"  class="tooltip_saia_izquierda" title="<?php echo($iconos['ordenar_pag']);?>">
+    	<a href="#paginas" id="ordenar_pag" data-toggle="tab" componente="<?php echo($paginas_documento);?>"  class="tooltip_saia_izquierda" title="P&aacute;ginas del documento">
     		<i class="icon-ver_pag_documento"><span class="badge badge-info" id="cantidad_paginas"></span></i>
     	</a>
     </li>
@@ -163,7 +163,7 @@ else{
       <div id="tree_box" class="arbol_saia"></div>
     </div>      
     <div class="tab-pane" id="paginas">  
-      <b><?php echo($iconos['ordenar_pag']);?></b>        
+      <b>P&aacute;ginas del documento</b>        
       <ul id="panel_paginas" class="ordenar_paginas" style="margin:5px 0 10px 0;">
       </ul>   
     </div>
