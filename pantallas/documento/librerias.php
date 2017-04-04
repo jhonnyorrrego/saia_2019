@@ -15,7 +15,7 @@ include_once($ruta_db_superior."workflow/libreria_paso.php");
 include_once($ruta_db_superior."formatos/librerias/funciones_generales.php");
 
 function barra_inferior_documento($iddoc,$numero){
-$dato_prioridad=busca_filtro_tabla("","prioridad_documento","documento_iddocumento=".$iddoc,"fecha_asignacion DESC",$conn);
+$dato_prioridad=busca_filtro_tabla("","prioridad_documento","documento_iddocumento=".$iddoc." AND funcionario_idfuncionario=".usuario_actual("idfuncionario"),"fecha_asignacion DESC",$conn);
 
 $prioridad="icon-flag";
 if($dato_prioridad["numcampos"]){

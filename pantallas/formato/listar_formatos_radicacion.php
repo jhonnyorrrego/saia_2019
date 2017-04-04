@@ -30,7 +30,7 @@ if(count($request)){
 	      	
 	      		$idcategoria_formato=1;
 			  	$mostrar=0;
-				$cuantos_formatos=busca_filtro_tabla("","formato","(cod_padre IS NULL OR cod_padre=0) AND (fk_categoria_formato like'".$idcategoria_formato."' OR   fk_categoria_formato like'%,".$idcategoria_formato."'  OR   fk_categoria_formato like'".$idcategoria_formato.",%' OR   fk_categoria_formato like'%,".$idcategoria_formato.",%')","etiqueta ASC",$conn);
+				$cuantos_formatos=busca_filtro_tabla("","formato","(cod_padre IS NULL OR cod_padre=0) AND (concat(',',fk_categoria_formato,',') like'%,".$idcategoria_formato.",%')","etiqueta ASC",$conn);
 				
 				for($i=0;$i<$cuantos_formatos['numcampos'];$i++){
 					$url=$ruta_db_superior.'formatos/'.$cuantos_formatos[$i]['nombre'].'/'.$cuantos_formatos[$i]['ruta_adicionar']."?1=1";
