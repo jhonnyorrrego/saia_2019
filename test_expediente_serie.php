@@ -15,7 +15,7 @@ else
 include_once("db.php");
 include_once("class.funcionarios.php");
 include_once("pantallas/expediente/librerias.php");
-
+$ingresado=0;
 $exp_doc=array();
 $id=@$_REQUEST["inicia"];
 $excluidos=array();
@@ -50,8 +50,10 @@ if(@$_REQUEST['carga_partes_serie']){
         if(strpos($id,'sub')!==false){
             echo("<tree id=\"".$id."\">\n");
                 $ids=explode('sub',$id);
-                
                 llena_subseries_tipo_documental($ids[0],$ids[1]);            
+                if(!$ingresado){
+                    echo ("<item style=\"font-family:verdana; font-size:7pt;\" text=\"No tiene series documentales asignadas\" id=\"-1\" nocheckbox=\"1\"></item>\n");
+                }
             echo("</tree>\n");
             die();            
         }
@@ -65,6 +67,9 @@ if(@$_REQUEST["id"] && @$_REQUEST["uid"]){
 	echo("<?xml version=\"1.0\" encoding=\"UTF-8\"?".">");
 	echo("<tree id=\"".$_REQUEST["id"]."\">\n");
 	llena_expediente($_REQUEST["id"]);
+	if(!$ingresado){
+        echo ("<item style=\"font-family:verdana; font-size:7pt;\" text=\"No tiene series documentales asignadas\" id=\"-1\"  nocheckbox=\"1\"></item>\n");
+    }
 	echo("</tree>\n");
 	die();
 }
@@ -77,10 +82,13 @@ if(@$_REQUEST["id"] && @$_REQUEST["uid"]){
 echo("<?xml version=\"1.0\" encoding=\"UTF-8\"?".">");
 echo("<tree id=\"0\">\n");
 llena_expediente($id);
+if(!$ingresado){
+    echo ("<item style=\"font-family:verdana; font-size:7pt;\" text=\"No tiene series documentales asignadas\" id=\"-1\"  nocheckbox=\"1\"></item>\n");
+}
 echo("</tree>\n");
 
 function llena_expediente($id){
-global $conn,$sql,$exp_doc,$funcionarios,$excluidos,$dependencias,$varios,$lista2,$datos_admin_funcionario;
+global $conn,$sql,$exp_doc,$funcionarios,$excluidos,$dependencias,$varios,$lista2,$datos_admin_funcionario,$ingresado;
 if($id==0){
   $papas=busca_filtro_tabla("a.fecha, a
 .nombre, a.descripcion, a.cod_arbol, a.idexpediente, estado_cierre","vexpediente_serie a",$lista2." and (a.cod_padre=0 OR a.cod_padre IS NULL) AND a.estado_cierre=1","GROUP BY a.fecha, a
@@ -93,12 +101,11 @@ else{
 .nombre, a.descripcion, a.cod_arbol, a.idexpediente, estado_cierre order by idexpediente desc",$conn);
    
 } 
-
 if($papas["numcampos"]){
 	for($i=0; $i<$papas["numcampos"]; $i++){
   	$permitido=0;
   	if(!in_array($papas[$i]["idexpediente"],$excluidos)){
-  	    
+  	    $ingresado=1;
   	    $hijos_entidad_serie = busca_filtro_tabla("serie_idserie","expediente","idexpediente=".$papas[$i]["idexpediente"],"",$conn);
   	    
   	    
@@ -160,8 +167,6 @@ if($papas["numcampos"]){
    	} 
   }     
 }
-
-
 if(@$_REQUEST['uid'] || @$_REQUEST['id'] ){
     if($_REQUEST['id']==$id){
         $hijos_entidad_serie = busca_filtro_tabla("serie_idserie","expediente","idexpediente=".$_REQUEST['id'],"",$conn);
@@ -177,14 +182,12 @@ if(@$_REQUEST['uid'] || @$_REQUEST['id'] ){
         }
     }  
 }
-
-
 return;
 }
 
 //llena series asignadas segun dependencia  (dsa)
 function llena_entidad_serie($iddependencia,$series){
-    global $conn,$activo;
+    global $conn,$activo,$ingresado;
     
     $condicion_final="categoria=2 AND idserie IN(".$series.")";
     $series=busca_filtro_tabla("nombre,idserie,codigo","serie",$condicion_final.$activo,"",$conn);
@@ -196,7 +199,7 @@ function llena_entidad_serie($iddependencia,$series){
         if(@$_REQUEST['sin_padre']){
             echo(" nocheckbox=\"1\" ");	
         }
-        
+        $ingresado=1;
         $subseries_tipo_documental=busca_filtro_tabla("idserie","serie","categoria=2 AND tipo IN(2,3) AND cod_padre=".$series[$i]['idserie'].$activo,"",$conn);
         //print_r($subseries_tipo_documental);
         if($subseries_tipo_documental['numcampos']){
@@ -217,7 +220,7 @@ function llena_entidad_serie($iddependencia,$series){
 }
 
 function llena_subseries_tipo_documental($iddependencia,$idserie){
-    global $conn,$activo,$excluidos;
+    global $conn,$activo,$excluidos,$ingresado;
 
 
     
@@ -237,7 +240,7 @@ function llena_subseries_tipo_documental($iddependencia,$idserie){
 			    	$estado_serie=' - INACTIVA';				
 			    }
 		    }	
-	
+	        $ingresado=1;
             echo("text=\"".htmlspecialchars(($papas[$i]["nombre"])).' ('.$papas[$i]['codigo'].') '." \" id=\"".$iddependencia."sub".$papas[$i]['idserie']."\"");
 		    if(@$_REQUEST["arbol_series"]){		
 				
