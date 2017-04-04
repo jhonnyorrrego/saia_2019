@@ -1687,7 +1687,7 @@ function asignar_responsables($campo, $idformato, $iddoc = NULL) {
       <input type="radio" name="firmado" id="varias" value="varias" checked><label for="varias">Varios</label>
       </td>
     </tr>
-    <tr>
+    <tr id="tr_firma">
       <td class="encabezado" width="21%">';
 	$nombre = busca_filtro_tabla("nombres,apellidos", "funcionario", "funcionario_codigo=" . usuario_actual("funcionario_codigo"), "", $conn);
 	echo codifica_encabezado(strtoupper(html_entity_decode($nombre[0]["nombres"] . " " . $nombre[0]["apellidos"])));
@@ -1696,6 +1696,15 @@ function asignar_responsables($campo, $idformato, $iddoc = NULL) {
       <td width="79%" bgcolor="#F5F5F5">
       <input type="radio" name="obligatorio" id="si1" value="1"><label for="si1">Si</label>
       <input type="radio" name="obligatorio" id="no1" value="0" checked><label for="no1">No</label>
+      <script type="text/javascript">
+          $("#una").click(function(){
+              $("#si1").attr("checked","checked");
+              $("#tr_firma").hide();
+          });
+          $("#varias").click(function(){
+              $("#tr_firma").show();
+          });
+      </script>
       </td>
     </tr>';
 }
