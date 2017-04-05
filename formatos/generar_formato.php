@@ -1198,8 +1198,9 @@ function crear_formato_ae($idformato, $accion) {
 	if ($formato["numcampos"]) {
 		if ($formato[0]["item"]) {
 			$action = '../librerias/funciones_item.php';
-		} else
+		} else {
 			$action = '../../class_transferencia.php';
+		}
 		$texto .= '<body bgcolor="#F5F5F5"><?php llama_funcion_accion(@$_REQUEST["iddoc"],@$_REQUEST["idformato"],"ingresar","ANTERIOR");? ><form name="formulario_formatos" id="formulario_formatos" method="post" action="' . $action . '" enctype="multipart/form-data"><table width="100%" cellspacing="1" cellpadding="4">';
 
 		if (!$formato[0]["item"]) {

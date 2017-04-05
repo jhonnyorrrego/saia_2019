@@ -17,7 +17,7 @@ if(@$_REQUEST["id"]) {
 	if(!$datos[2] && $datos[3] == "mostrar") {
 		$datos[3] = "detalle_mostrar";
 	}
-	
+
 	if($formato["numcampos"]) {
 		$ruta = "";
 		$alerta = "existe problema para redireccionar";
@@ -41,7 +41,7 @@ if(@$_REQUEST["id"]) {
 			case "aprobar":
 				include_once ("../../class_transferencia.php");
 				$documento = busca_filtro_tabla("", "documento A," . $formato[0]["nombre_tabla"] . " B", "A.iddocumento=B.documento_iddocumento AND B.id" . $formato[0]["nombre_tabla"] . "=" . $datos[2], "", $conn);
-				
+
 				if($documento["numcampos"]) {
 					if(!$documento[0]["numero"]) {
 						aprobar($documento[0]["iddocumento"]);
@@ -70,7 +70,7 @@ if(@$_REQUEST["id"]) {
 				break;
 			case "ver_notas":
 				if($datos_formato[0]["estado"] == "ACTIVO" || $formato[0]["mostrar_pdf"] == 0) {
-					$ruta = "../" . $formato[0]["nombre"] . "/" . $formato[0]["ruta_mostrar"] . "?iddoc=" . $datos_formato[0]["documento_iddocumento"] . "&idformato=" . $formato[0]["idformato"] . "&ver_notas=1";
+					$ruta = "../../" . FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $formato[0]["ruta_mostrar"] . "?iddoc=" . $datos_formato[0]["documento_iddocumento"] . "&idformato=" . $formato[0]["idformato"] . "&ver_notas=1";
 				} else {
 					$ruta = "../../pantallas/notas/ver_notas_documento.php?iddoc=" . $datos_formato[0]["documento_iddocumento"] . "&idformato=" . $formato[0]["idformato"] . "&ver_notas=1";
 				}
@@ -85,12 +85,12 @@ if(@$_REQUEST["id"]) {
 				$ruta = "../../navegacion_respuesta_doc.php?iddoc=" . $datos_formato[0]["documento_iddocumento"];
 				break;
 			case "notas":
-				$ruta = "../" . $formato[0]["nombre"] . "/" . $formato[0]["ruta_mostrar"] . "?iddoc=" . $datos_formato[0]["documento_iddocumento"] . "&idformato=" . $formato[0]["idformato"] . "&ver_notas=1";
+				$ruta = "../../" . FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $formato[0]["ruta_mostrar"] . "?iddoc=" . $datos_formato[0]["documento_iddocumento"] . "&idformato=" . $formato[0]["idformato"] . "&ver_notas=1";
 				// die($ruta);
 				break;
 			case "mostrar":
 				if($formato[0]["item"]) {
-					$ruta = "../" . $formato[0]["nombre"] . "/" . $formato[0]["ruta_mostrar"] . "?iddoc=" . $datos[2] . "&idformato=" . $formato[0]["idformato"];
+					$ruta = "../../" . FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $formato[0]["ruta_mostrar"] . "?iddoc=" . $datos[2] . "&idformato=" . $formato[0]["idformato"];
 				} else {
 					$descargable = array(
 							"instructivo",
@@ -104,7 +104,7 @@ if(@$_REQUEST["id"]) {
 					leido(usuario_actual("funcionario_codigo"), $datos_formato[0]["iddocumento"]);
 					if(in_array($formato[0]["nombre"], $descargable) && @$_REQUEST['pantalla'] == 'calidad') {
 						if($datos_formato["numcampos"]) {
-							
+
 							$anexo = busca_filtro_tabla("", "anexos", "(formato=" . $formato[0]["idformato"] . " AND documento_iddocumento=" . $datos_formato[0]["iddocumento"] . ")", "idanexos desc", $conn);
 							if(is_file("../../" . $anexo[0]["ruta"])) {
 								$ruta = "../../" . $anexo[0]["ruta"];
@@ -134,30 +134,30 @@ if(@$_REQUEST["id"]) {
 									redirecciona($ruta . "&rnd=" . rand(0, 100));
 								} else if($formato[0]["mostrar_pdf"] == 2) {
 									$ruta = "../../pantallas/documento/visor_documento.php?pdf_word=1&iddoc=" . $datos_formato[0]["documento_iddocumento"];
-									
+
 									redirecciona($ruta . "&rnd=" . rand(0, 100));
 								} else {
-									$ruta = "../" . $formato[0]["nombre"] . "/" . $formato[0]["ruta_mostrar"] . "?iddoc=" . $datos_formato[0]["documento_iddocumento"] . "&idformato=" . $formato[0]["idformato"];
+									$ruta = "../../" . FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $formato[0]["ruta_mostrar"] . "?iddoc=" . $datos_formato[0]["documento_iddocumento"] . "&idformato=" . $formato[0]["idformato"];
 								}
 								if(!$datos_formato[0]["pdf"] && $formato[0]["mostrar_pdf"] == 1) {
 									// $ruta="../../class_impresion.php?iddoc=".$datos_formato[0]["documento_iddocumento"];
 								}
 							}
-							if(is_file("../" . $formato[0]["nombre"] . "/" . $formato[0]["ruta_mostrar"]))
+							if(is_file("../../" . FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $formato[0]["ruta_mostrar"]))
 								redirecciona($ruta);
-							else if(is_file("../" . $formato[0]["nombre"] . "/previo_" . $formato[0]["ruta_mostrar"]))
-								redirecciona("../" . $formato[0]["nombre"] . "/previo_" . $formato[0]["ruta_mostrar"]);
+							else if(is_file("../../" . FORMATOS_CLIENTE . $formato[0]["nombre"] . "/previo_" . $formato[0]["ruta_mostrar"]))
+								redirecciona("../../" . FORMATOS_CLIENTE . $formato[0]["nombre"] . "/previo_" . $formato[0]["ruta_mostrar"]);
 						}
 					}
 				}
 				break;
 			case "detalle_mostrar":
 			   // print_r("../" . $formato[0]["nombre"] . "/" . "previo_" . $formato[0]["ruta_mostrar"]);die();
-				if(is_file("../" . $formato[0]["nombre"] . "/" . "previo_" . $formato[0]["ruta_mostrar"])) {
+				if(is_file("../../" . FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . "previo_" . $formato[0]["ruta_mostrar"])) {
 					$datos_padre = parsea_idformato($_REQUEST["llave"]);
 					$formato2 = busca_filtro_tabla("", "formato", "idformato=" . $datos_padre[0], "", $conn);
 					$datos_formato2 = busca_filtro_tabla("", "documento A," . $formato2[0]["nombre_tabla"] . " B", "A.iddocumento=B.documento_iddocumento AND id" . $formato2[0]["nombre_tabla"] . "=" . $datos_padre[2], "", $conn);
-					$ruta = "../" . $formato[0]["nombre"] . "/" . "previo_" . $formato[0]["ruta_mostrar"] . "?llave=" . $_REQUEST["llave"] . "&iddoc=" . $datos_formato2[0]["iddocumento"];
+					$ruta = "../../" . FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . "previo_" . $formato[0]["ruta_mostrar"] . "?llave=" . $_REQUEST["llave"] . "&iddoc=" . $datos_formato2[0]["iddocumento"];
 					if(@$_REQUEST["enlace_adicionar_formato"]) {
 						$ruta .= "&enlace_adicionar_formato=" . $_REQUEST["enlace_adicionar_formato"] . "&padre=" . $datos_padre[2] . "&formato_padre=" . $datos[0];
 					}
@@ -166,28 +166,28 @@ if(@$_REQUEST["id"]) {
 				break;
 			case "adicionar":
 				if(!$datos[2] && $_REQUEST["llave"] && $datos[0]) {
-					
+
 					$datos_padre = parsea_idformato($_REQUEST["llave"]);
 					$formato2 = busca_filtro_tabla("", "formato", "idformato=" . $datos_padre[0], "", $conn);
 					$datos_formato2 = busca_filtro_tabla("", "documento A," . $formato2[0]["nombre_tabla"] . " B", "A.iddocumento=B.documento_iddocumento AND id" . $formato2[0]["nombre_tabla"] . "=" . $datos_padre[2], "", $conn);
-					
+
 					if($formato[0]["item"]) {
-						$ruta = "../" . $formato[0]["nombre"] . "/" . $formato[0]["ruta_adicionar"] . "?padre=" . $datos[1] . "&idformato=" . $datos[0];
+						$ruta = "../../" . FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $formato[0]["ruta_adicionar"] . "?padre=" . $datos[1] . "&idformato=" . $datos[0];
 					} elseif($datos_formato2["numcampos"] && $datos_formato2[0]["numero"]) {
 						if(array_key_exists("documento_iddocumento", $datos_formato2[0]))
 							$ruta = "../../responder.php?iddoc=" . $datos_padre[2] . "&idformato=" . $datos[0];
 					} else if(!@$datos_formato2[0]["numero"]) {
 						$alerta = "No se puede responder el documento porque no ha terminado su proceso.";
 					}
-					
-					if(is_file("../" . $formato[0]["nombre"] . "/previo_" . $formato[0]["ruta_mostrar"])) {
-						redirecciona("../" . $formato[0]["nombre"] . "/previo_" . $formato[0]["ruta_mostrar"] . "?padre=" . $datos_formato2[0]["id" . $formato2[0]["nombre_tabla"]] . "&iddoc=" . $datos_formato2[0]["iddocumento"]);
+
+					if(is_file("../../" . FORMATOS_CLIENTE . $formato[0]["nombre"] . "/previo_" . $formato[0]["ruta_mostrar"])) {
+						redirecciona("../../" . FORMATOS_CLIENTE . $formato[0]["nombre"] . "/previo_" . $formato[0]["ruta_mostrar"] . "?padre=" . $datos_formato2[0]["id" . $formato2[0]["nombre_tabla"]] . "&iddoc=" . $datos_formato2[0]["iddocumento"]);
 					}
 				}
 				break;
 			case "vincular":
 				if($datos[2] && $datos_formato[0]["numero"]) {
-					
+
 					if($datos_formato["numcampos"] && array_key_exists("documento_iddocumento", $datos_formato[0]) && array_key_exists("numero", $datos_formato[0]))
 						$ruta = "../../responder.php?iddoc=" . $datos_formato[0]["documento_iddocumento"];
 					else {
@@ -200,11 +200,11 @@ if(@$_REQUEST["id"]) {
 				}
 				break;
 			case "editar":
-				if($datos[2] && is_file("../" . $formato[0]["nombre"] . "/" . $formato[0]["ruta_editar"]))
+				if($datos[2] && is_file("../../" . FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $formato[0]["ruta_editar"]))
 					if($formato[0]["item"]) {
-						$ruta = "../" . $formato[0]["nombre"] . "/" . $formato[0]["ruta_editar"] . "?item=" . $datos[2] . "&idformato=" . $datos[0];
+						$ruta = "../../" . FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $formato[0]["ruta_editar"] . "?item=" . $datos[2] . "&idformato=" . $datos[0];
 					} elseif($datos_formato["numcampos"] && array_key_exists("documento_iddocumento", $datos_formato[0])) {
-						$ruta = "../" . $formato[0]["nombre"] . "/" . $formato[0]["ruta_editar"] . "?idformato=" . $datos[0] . "&iddoc=" . $datos_formato[0]["documento_iddocumento"];
+						$ruta = "../../" . FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $formato[0]["ruta_editar"] . "?idformato=" . $datos[0] . "&iddoc=" . $datos_formato[0]["documento_iddocumento"];
 					}
 				break;
 			case "actualizar_pdf":
@@ -339,7 +339,7 @@ if(@$_REQUEST["id"]) {
 				if($formato[0]["item"]) {
 					$formato2 = busca_filtro_tabla("", "formato", "idformato=" . $formato[0]["cod_padre"], "", $conn);
 					$datos_formato2 = busca_filtro_tabla("", "documento A," . $formato2[0]["nombre_tabla"] . " B", "A.iddocumento=B.documento_iddocumento AND id" . $formato2[0]["nombre_tabla"] . "=" . $datos[4], "", $conn);
-					
+
 					$ruta = "../librerias/funciones_item.php?accion=eliminar_item&tabla=" . $formato[0]["nombre_tabla"] . "&id=" . $datos[2] . "&formato=" . $datos[0] . "&idpadre=" . $datos_formato2[0]["documento_iddocumento"];
 				} elseif(!$datos_formato[0]["numero"]) {
 					$doc_principal = 0;
@@ -395,9 +395,9 @@ if(@$_REQUEST["id"]) {
 				);
 				if(in_array($formato[0]["nombre"], $descargable)) {
 					if($datos_formato["numcampos"]) {
-						
+
 						$anexo = busca_filtro_tabla("", "anexos", "(formato=" . $formato[0]["idformato"] . " AND documento_iddocumento=" . $datos_formato[0]["iddocumento"] . ")", "", $conn);
-						
+
 						for($i = 0; $i < $anexo["numcampos"]; $i++) {
 							$ruta = "../../" . $anexo[$i]["ruta"];
 							abrir_url($ruta, "_blank");
@@ -412,21 +412,21 @@ if(@$_REQUEST["id"]) {
 							if(is_file($ruta)) {
 								abrir_url($ruta, "_blank");
 							} else {
-								$ruta = "../" . $formato[0]["nombre"] . "/" . $formato[0]["ruta_mostrar"] . "?iddoc=" . $datos_formato[0]["documento_iddocumento"] . "&idformato=" . $formato[0]["idformato"];
+								$ruta = "../../" . FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $formato[0]["ruta_mostrar"] . "?iddoc=" . $datos_formato[0]["documento_iddocumento"] . "&idformato=" . $formato[0]["idformato"];
 							}
 						} else {
-							$ruta = "../" . $formato[0]["nombre"] . "/" . $formato[0]["ruta_mostrar"] . "?iddoc=" . $datos_formato[0]["documento_iddocumento"] . "&idformato=" . $formato[0]["idformato"];
+							$ruta = "../../" . FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $formato[0]["ruta_mostrar"] . "?iddoc=" . $datos_formato[0]["documento_iddocumento"] . "&idformato=" . $formato[0]["idformato"];
 						}
-						if(is_file("../" . $formato[0]["nombre"] . "/" . $formato[0]["ruta_mostrar"]))
+						if(is_file("../../" . FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $formato[0]["ruta_mostrar"]))
 							abrir_url($ruta, "_blank");
-						else if(is_file("../" . $formato[0]["nombre"] . "/previo_" . $formato[0]["ruta_mostrar"]))
-							abrir_url("../" . $formato[0]["nombre"] . "/previo_" . $formato[0]["ruta_mostrar"], "_blank");
+						else if(is_file("../../" . FORMATOS_CLIENTE . $formato[0]["nombre"] . "/previo_" . $formato[0]["ruta_mostrar"]))
+							abrir_url("../../" . FORMATOS_CLIENTE . $formato[0]["nombre"] . "/previo_" . $formato[0]["ruta_mostrar"], "_blank");
 					}
 				}
 				break;
 			case 'vista':
 				$vista = busca_filtro_tabla("", "vista_formato", "idvista_formato=" . $datos[4], "", $conn);
-				$ruta = "../" . $formato[0]["nombre"] . "/" . $vista[0]["ruta_mostrar"] . "?iddoc=" . $datos_formato[0]["documento_iddocumento"] . "&idformato=" . $formato[0]["idformato"] . "&vista=" . $datos[4];
+				$ruta = "../../" . FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $vista[0]["ruta_mostrar"] . "?iddoc=" . $datos_formato[0]["documento_iddocumento"] . "&idformato=" . $formato[0]["idformato"] . "&vista=" . $datos[4];
 				redirecciona($ruta);
 				break;
 		}
@@ -436,7 +436,7 @@ if(@$_REQUEST["id"]) {
 			else
 				$ruta .= "?no_menu=1";
 		}
-		
+
 
 	} else {
 		switch($datos[0]) {
