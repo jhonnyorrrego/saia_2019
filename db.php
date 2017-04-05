@@ -434,33 +434,35 @@ END";
 <Post-condiciones><Post-condiciones>
 </Clase>*/
 function evento_archivo($cadena){
-  global $conn;
-  $max_salida=6; // Previene algun posible ciclo infinito limitando a 10 los ../
-  $ruta_db_superior=$ruta="";
-  while($max_salida>0){
-    if(is_file($ruta."db.php")){
-      $ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
-    }
-    $ruta.="../";
-    $max_salida--;
-  }
-  /*$ruta_evento=busca_filtro_tabla("valor","configuracion","nombre like 'ruta_evento'","",$conn);
-
-  $nombre=$ruta_db_superior."../".$ruta_evento[0]['valor']."/".DB."_log_".date("Y_m_d").".txt";*/
-  $nombre=$ruta_db_superior.RUTA_BACKUP_EVENTO.DB."_log_".date("Y_m_d").".txt";
-  if(!@is_file($nombre))
-    crear_archivo($nombre);
-  $contenido="";
-  if(is_file($nombre)){
-    $link=fopen($nombre,"ab");
-    $contenido=$cadena."*|*";
-  }
-  else{
-    $link=fopen($nombre,"wb");
-    $contenido="idevento|||funcionario_codigo|||fecha|||evento|||tabla_e|||estado|||detalle|||registro_id|||codigo_sql*|*".$cadena."*|*";
-  }
-  fwrite($link,$contenido);
-  fclose($link);
+	global $conn;
+	$max_salida = 6; // Previene algun posible ciclo infinito limitando a 10 los ../
+	$ruta_db_superior = $ruta = "";
+	while($max_salida > 0) {
+		if (is_file($ruta . "db.php")) {
+			$ruta_db_superior = $ruta; // Preserva la ruta superior encontrada
+		}
+		$ruta .= "../";
+		$max_salida--;
+	}
+	/*
+	 * $ruta_evento=busca_filtro_tabla("valor","configuracion","nombre like 'ruta_evento'","",$conn);
+	 *
+	 * $nombre=$ruta_db_superior."../".$ruta_evento[0]['valor']."/".DB."_log_".date("Y_m_d").".txt";
+	 */
+	$nombre = RUTA_BACKUP_EVENTO . DB . "_log_" . date("Y_m_d") . ".txt";
+	if (!@is_file($nombre)) {
+		crear_archivo($nombre);
+	}
+	$contenido = "";
+	if (is_file($nombre)) {
+		$link = fopen($nombre, "ab");
+		$contenido = $cadena . "*|*";
+	} else {
+		$link = fopen($nombre, "wb");
+		$contenido = "idevento|||funcionario_codigo|||fecha|||evento|||tabla_e|||estado|||detalle|||registro_id|||codigo_sql*|*" . $cadena . "*|*";
+	}
+	fwrite($link, $contenido);
+	fclose($link);
 }
 /*
 <Clase>
@@ -3696,6 +3698,9 @@ function crear_archivo($nombre,$texto=NULL,$modo='wb'){
 		if (mkdir($ruta, PERMISOS_CARPETAS, true)) {
 			chmod($ruta, PERMISOS_CARPETAS);
 		} else {
+			$e = new \Exception;
+			var_dump($e->getTraceAsString());
+			die();
 			alerta("Problemas al generar las carpetas");
 			return (false);
 		}
