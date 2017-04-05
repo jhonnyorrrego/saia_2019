@@ -495,7 +495,7 @@ function rastro_documento($x_doc,$filtro){
           $leidos=recorrido($x_doc,$recorrido[$i]["origen"],$recorrido[$i]["fecha_format"],"leido");
         echo('<tr'.$sItemRowClass.'><td><span class="phpmaker" ><a href="#" '.$leidos.'>'.codifica_encabezado(busca_entidad_ruta(1,$recorrido[$i]["origen"]))."</a></span></td>");
 
-				$accion=str_replace("COPIA","Transferido con copia a",str_replace('TRANSFERIDO','Transferido a Destino Responsable',$recorrido[$i]["nombre"]));
+				$accion=str_replace("COPIA","Transferido como copia",str_replace('TRANSFERIDO','Transferido',$recorrido[$i]["nombre"]));
         echo('<td><span class="phpmaker" >'.$accion."</span></td>");
 
         $sig="";
