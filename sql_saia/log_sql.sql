@@ -170,3 +170,7 @@ UPDATE busqueda_componente SET tablas_adicionales='documento_etiqueta b, etiquet
 ---------
 
 UPDATE modulo SET  etiqueta =  'Opciones de la p&aacute;gina' WHERE  nombre ='ordenar_pag';
+
+---------
+
+ALTER TABLE  `modulo` ADD  `enlace_pantalla` INT( 11 ) NULL DEFAULT  '0'
