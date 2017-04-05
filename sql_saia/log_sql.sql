@@ -174,3 +174,23 @@ UPDATE modulo SET  etiqueta =  'Opciones de la p&aacute;gina' WHERE  nombre ='or
 ---------
 
 ALTER TABLE  `modulo` ADD  `enlace_pantalla` INT( 11 ) NULL DEFAULT  '0'
+
+
+----------------
+
+UPDATE  modulo SET  enlace =  'formatos/radicacion_entrada/radicacion_rapida.php?idcategoria_formato=1',enlace_pantalla =  '1' WHERE  idmodulo =24;
+UPDATE  modulo SET  enlace =  'cargo.php',enlace_pantalla =  '1' WHERE  idmodulo =12;
+UPDATE  modulo SET  enlace =  'pantallas/busquedas/consulta_busqueda.php',enlace_pantalla =  '1' WHERE  idmodulo =17;
+UPDATE  modulo SET  enlace =  'rutalist.php',enlace_pantalla =  '1' WHERE idmodulo =63;
+UPDATE  modulo SET  enlace =  'calendario/festivos_list.php',enlace_pantalla =  '1' WHERE idmodulo =200;
+UPDATE  modulo SET  enlace =  'pantallas/logo/adicionar_logo.php',enlace_pantalla =  '1' WHERE  idmodulo =1188;
+UPDATE  modulo SET  enlace =  'carrusel/sliderconfig.php',enlace_pantalla =  '1' WHERE idmodulo =821;
+UPDATE  modulo SET  enlace =  'noticia_index/noticia_detalles.php',enlace_pantalla =  '1' WHERE  idmodulo =1402;
+UPDATE  modulo SET  enlace_pantalla =  '1' WHERE  idmodulo =1641;
+UPDATE  modulo SET  enlace_pantalla =  '1' WHERE idmodulo =1552;
+UPDATE  modulo SET  enlace_pantalla =  '1' WHERE idmodulo =1522;
+UPDATE  modulo SET  enlace_pantalla =  '1' WHERE  idmodulo =1141;
+UPDATE  modulo SET  enlace_pantalla =  '1' WHERE  idmodulo =1142;
+UPDATE  modulo SET  enlace =  'arboldependencia.php',enlace_pantalla =  '1' WHERE  idmodulo =16;
+UPDATE  modulo SET  enlace =  'arbolserie.php',enlace_pantalla =  '1' WHERE  idmodulo =14;
+
