@@ -18,12 +18,10 @@ if(isset($_REQUEST["seleccionado"]))
 else
   $seleccionado=array(); 
    
-if ( stristr($_SERVER["HTTP_ACCEPT"],"application/xhtml+xml") ) 
-{ 
+if ( stristr($_SERVER["HTTP_ACCEPT"],"application/xhtml+xml") ) { 
   header("Content-type: application/xhtml+xml"); 
 } 
-else 
-{ 
+else { 
   header("Content-type: text/xml"); 
 }
 echo("<?xml version=\"1.0\" encoding=\"UTF-8\"?".">");
@@ -66,11 +64,11 @@ else
 if($papas["numcampos"])
 { 
   for($i=0; $i<$papas["numcampos"]; $i++)
-  {$hijos = busca_filtro_tabla("count(*)",$tabla,"cod_padre=".$papas[$i]["id$tabla"].$activo.$condicion,"",$conn);
-   $hijos_seleccionados = busca_filtro_tabla("count(*)",$tabla,"cod_padre=".$papas[$i]["id$tabla"]." and idmodulo in(".implode(',',$seleccionado).")","",$conn);
+  {/*$hijos = busca_filtro_tabla("count(*)",$tabla,"cod_padre=".$papas[$i]["id$tabla"].$activo.$condicion,"",$conn);
+   $hijos_seleccionados = busca_filtro_tabla("count(*)",$tabla,"cod_padre=".$papas[$i]["id$tabla"]." and idmodulo in(".implode(',',$seleccionado).")","",$conn);*/
     echo("<item style=\"font-family:verdana; font-size:7pt;\" ");
     echo "text=\"".(htmlspecialchars($papas[$i]["etiqueta"]))." (".$papas[$i]["nombre"].") \" ";
-    if(isset($_REQUEST["filtro_perfil"]))
+    /*if(isset($_REQUEST["filtro_perfil"]))
       {
        if(in_array($papas[$i]["idmodulo"],$seleccionado)!==false)
           {if(!$hijos[0][0]) //si no tiene hijos
@@ -86,16 +84,17 @@ if($papas["numcampos"])
          echo ' opcion="adicionar" im0="blue.gif" im1="blue.gif" im2="blue.gif " ';
        else
          echo ' opcion="adicionar" im0="red.gif" im1="red.gif" im2="red.gif " '; 
-      }
+      }*/
 
     echo " id=\"".$papas[$i]["idmodulo"]."\"";
     if(in_array($papas[$i]["idmodulo"],$seleccionado)!==false)
       echo " checked=\"1\" ";
         
-    if($hijos[0][0])
+    /*if($hijos[0][0])
       echo(" child=\"1\">\n");
     else
-      echo(" child=\"0\">\n");
+      echo(" child=\"0\">\n");*/
+    echo(" >\n");
     llena_serie($papas[$i]["id$tabla"]);
     echo("</item>\n");
   }     
