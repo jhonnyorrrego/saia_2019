@@ -43,26 +43,25 @@ if(count($request)){
   $adicional="?".implode("&",$request);
 }
 
-$idconfiguracion=@$_REQUEST['idconfiguracion'];
 $idmodulo=@$_REQUEST['idmodulo'];
-
-if(!$idconfiguracion || !$idmodulo){
-    echo('<br><center><div class="alert alert-warning"><b>ATENCI&Oacute;N</b><br>No se recibieron los parametros suficientes para generar la pantalla kaiten</div></center>');
+if(!$idmodulo){
+    echo('<br><center><div class="alert alert-warning"><b>ATENCI&Oacute;N</b><br>No se recibieron los parametros suficientes para generar la barra de navegaci&oacute;n</div></center>');
     die();
 }
-$etiqueta_modulo=busca_filtro_tabla("etiqueta","modulo","idmodulo=".$idmodulo,"",$conn);
-$etiqueta=codifica_encabezado(html_entity_decode($etiqueta_modulo[0]['etiqueta']));
-
-$configuracion_url=busca_filtro_tabla("valor","configuracion","idconfiguracion=".$idconfiguracion,"",$conn);
-$url=$ruta_db_superior.$configuracion_url[0]['valor'];
-
+$modulo=busca_filtro_tabla("etiqueta,enlace","modulo","idmodulo in(".$idmodulo.")","",$conn);
+$url=$ruta_db_superior.$modulo[0]['enlace'];
+$etiqueta=codifica_encabezado(html_entity_decode($modulo[0]['etiqueta']));
+$etiqueta_titulo=$etiqueta;
+if(@$_REQUEST['etiqueta'] && @$_REQUEST['etiqueta']!=''){
+    $etiqueta_titulo=codifica_encabezado(html_entity_decode($_REQUEST['etiqueta']));
+}
 ?>
 <script type="text/javascript">   
         $('#contenedor_busqueda').kaiten({ 
           columnWidth : '100%',
           startup : function(dataFromURL){          
-            this.kaiten('load', { kConnector:'html.page', url:'listador.php<?php echo($adicional); ?>', 'kTitle':'<?php echo($etiqueta); ?>'});
-            this.kaiten('load', { kConnector:'html.page', url:'<?php echo($url); ?>', 'kTitle':'<?php echo($etiqueta); ?>'});
+            this.kaiten('load', { kConnector:'html.page', url:'listador.php<?php echo($adicional); ?>', 'kTitle':'<?php echo($etiqueta_titulo); ?>'});
+            this.kaiten('load', { kConnector:'iframe', url:'<?php echo($url); ?>', 'kTitle':'<?php echo($etiqueta); ?>'});
           }
         });
         function crear_pantalla_busqueda(datos,elimina){
@@ -71,7 +70,7 @@ $url=$ruta_db_superior.$configuracion_url[0]['valor'];
             if(typeof($panel)!='undefined'){
               $('#contenedor_busqueda').kaiten("removeChildren",$panel);
             }
-          }  
+          }
           datos["url"]=datos["url"];
           $('#contenedor_busqueda').kaiten("load",datos);                                                  
         }         

@@ -10,7 +10,7 @@ while($max_salida>0){
 }
 include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."librerias_saia.php");
-include_once($ruta_db_superior."pantallas/lib/encabezado_componente.php");
+//include_once($ruta_db_superior."pantallas/lib/encabezado_componente.php");
 usuario_actual("login");
 ?>
 <div class="panel-body">	
@@ -18,26 +18,23 @@ usuario_actual("login");
 	<?php 
 	      $texto='';
 		  $conector='iframe';
-	      	
-            $idconfiguracion=@$_REQUEST['idconfiguracion'];
+	      	$mostrar=1;
             $idmodulo=@$_REQUEST['idmodulo'];
-		    $mostrar=1;
-			$etiqueta_modulo=busca_filtro_tabla("etiqueta","modulo","idmodulo=".$idmodulo,"",$conn);
-            $etiqueta=codifica_encabezado(html_entity_decode($etiqueta_modulo[0]['etiqueta']));	
-            
-            $configuracion_url=busca_filtro_tabla("valor","configuracion","idconfiguracion=".$idconfiguracion,"",$conn);
-            $url=$ruta_db_superior.$configuracion_url[0]['valor'];
+            $modulo=busca_filtro_tabla("etiqueta,enlace,idmodulo","modulo","idmodulo in(".$idmodulo.")","",$conn);
+            for($i=0;$i<$modulo['numcampos'];$i++){
+                $etiqueta=codifica_encabezado(html_entity_decode($modulo[$i]['etiqueta']));
+                $url=$ruta_db_superior.$modulo[$i]['enlace'];
+                $id_div='enlace_pantallas_kaiten_'.$modulo[$i]['idmodulo'];
             
 				if($mostrar){						
-		              $texto.='<div title="'.$etiqueta.'" data-load=\'{"kConnector":"'.$conector.'", "url":"'.$url.'", "kTitle":"'.$etiqueta.'"}\' class="items navigable" id="enlace_pantallas_kaiten">';
+		              $texto.='<div title="'.$etiqueta.'" data-load=\'{"kConnector":"'.$conector.'", "url":"'.$url.'", "kTitle":"'.$etiqueta.'"}\' class="items navigable" id="'.$id_div.'">';
 		              $texto.='<div class="head"></div>';              				            
 		              $texto.='<div class="label">'.$etiqueta.'</div>';
 		              $texto.='<div class="info"></div>'; 		
 		              $texto.='<div class="tail"></div>';
 				      $texto.='</div>'; 
-				}	
-			 
-	      
+				}
+			}	
 	      echo($texto);
 	?>	
   </div>

@@ -458,7 +458,7 @@ function mostrar_iconos($modulo_actual){
     $permisos=extrae_campo($permisos_perfil,"idmodulo","U");
     $finales=array_diff(array_merge((array)$permisos,(array)$adicionales),$suprimir);
     if(count($finales))
-      $tablas=busca_filtro_tabla("A.nombre,A.etiqueta,A.imagen,A.enlace,A.destino,A.ayuda,A.parametros","modulo A","A.idmodulo IN(".implode(",",$finales).")","A.orden ASC",$conn);
+      $tablas=busca_filtro_tabla("A.nombre,A.etiqueta,A.imagen,A.enlace,A.destino,A.ayuda,A.parametros,A.enlace_pantalla,A.idmodulo","modulo A","A.idmodulo IN(".implode(",",$finales).")","A.orden ASC",$conn);
     else
       $tablas["numcampos"]=0; 
     if($tablas["numcampos"]){
@@ -484,7 +484,10 @@ function mostrar_iconos($modulo_actual){
         }
         if($j>0&&$j%$cols==0 && $_SESSION["tipo_dispositivo"]!='movil'){
             echo('</tr><tr>');
-        }    
+        }
+        if(@$tablas[$j]["enlace_pantalla"]){  //si requiere de barra de navegacion (KAITEN)
+            $tablas[$j]["enlace"]="pantallas/pantallas_kaiten/principal.php?idmodulo=".$tablas[$j]["idmodulo"];
+        }
         if($_SESSION["tipo_dispositivo"]!='movil'){
           echo('<td width="'.(($cols*35)) .'px" height="44" align="center" valign="top"><a href="'.$tablas[$j]["enlace"]);
           if(!strpos($tablas[$j]["enlace"],"?"))
