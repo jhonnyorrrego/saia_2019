@@ -171,7 +171,7 @@ function llenar_datos_funcion($idformato,$iddoc){
 	    $sql="UPDATE ft_radicacion_entrada SET tipo_origen=".$dato[0]['tipo_radicado']." WHERE documento_iddocumento=".$iddoc;
 	    phpmkr_query($sql);
 		$texto='';
-		$texto.='<a href="editar_radicacion_entrada.php?no_sticker=1&iddoc='.$iddoc.'&idformato='.$idformato.'">Llenar datos</a>';
+		$texto.='<br><br><a href="editar_radicacion_entrada.php?no_sticker=1&iddoc='.$iddoc.'&idformato='.$idformato.'">Llenar datos</a>';
 		echo $texto;
 	}
 }
