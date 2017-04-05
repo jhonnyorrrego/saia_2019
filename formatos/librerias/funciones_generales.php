@@ -1811,8 +1811,9 @@ function submit_formato($formato, $iddoc = NULL) {
                 }
             }
             echo('<button class="cancel" onClick="javascript:redirecciona_padre(); return false;" id="cancel" value="Cancelar" style="margin-right:6px;">Cancelar</button>');
-            echo('<button class="submit" type="submit" id="continuar" value="Continuar">Continuar</button>');
+
         }
+        echo('<button class="submit" type="submit" id="continuar" value="Continuar">Continuar</button>');
         echo('</td></tr>');
 	} else {
 		$contador = busca_filtro_tabla("A.nombre,B.nombre_tabla", "contador A,formato B", "A.idcontador=B.contador_idcontador AND B.idformato=" . $formato, "", $conn);
