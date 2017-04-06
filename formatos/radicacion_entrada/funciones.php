@@ -602,21 +602,25 @@ function mostrar_item_destino_radicacion($idformato,$iddoc){
 					$origen=busca_filtro_tabla("nombre","vejecutor a","a.iddatos_ejecutor=".$datos[$i]['origen_externo'],"",$conn);
 				}
 			}
-			
+			$persona_natural_destino='';
     	    if($datos[$i]['tipo_destino']==1){
-    	        $destino=busca_filtro_tabla("b.nombre, a.cargo , a.ciudad, a.direccion","datos_ejecutor a, ejecutor b","b.idejecutor=a.ejecutor_idejecutor AND a.iddatos_ejecutor=".$datos[$i]['nombre_destino'],"",$conn);
+    	        $destino=busca_filtro_tabla("b.nombre, a.cargo , a.ciudad, a.direccion,a.iddatos_ejecutor as nombre_destino","datos_ejecutor a, ejecutor b","b.idejecutor=a.ejecutor_idejecutor AND a.iddatos_ejecutor=".$datos[$i]['nombre_destino'],"",$conn);
     	        $ciudad=busca_filtro_tabla("nombre","municipio","idmunicipio=".$destino[0]['ciudad'],"",$conn);
     	        $ubicacion=$ciudad[0]['nombre'].' '.$destino[0]['direccion'];
+
     	        if(!$destino['numcampos']){
-                    $destino=busca_filtro_tabla("nombre, cargo, empresa as dependencia","vejecutor","iddatos_ejecutor=".$datos[$i]['destino_externo'],"",$conn);
+                    $destino=busca_filtro_tabla("nombre, cargo, empresa as dependencia,iddatos_ejecutor as nombre_destino","vejecutor","iddatos_ejecutor=".$datos[$i]['destino_externo'],"",$conn);
                     $ubicacion=$destino[0]['direccion'];
                 }
+                $persona_natural_destino='persona_natural_dest';
     	    }else{
-    	        $destino=busca_filtro_tabla("concat(nombres,' ',apellidos) AS nombre, cargo, dependencia","vfuncionario_dc","iddependencia_cargo=".$datos[$i]['nombre_destino'],"",$conn);
+    	        $destino=busca_filtro_tabla("concat(nombres,' ',apellidos) AS nombre, cargo, dependencia,iddependencia_cargo as nombre_destino","vfuncionario_dc","iddependencia_cargo=".$datos[$i]['nombre_destino'],"",$conn);
     	        $ubicacion=$destino[0]['dependencia'];
+    	        $persona_natural_destino='destino';
     	        if(!$destino['numcampos']){
-    	            $destino=busca_filtro_tabla("nombre, cargo, empresa as dependencia","vejecutor","iddatos_ejecutor=".$datos[$i]['destino_externo'],"",$conn);
+    	            $destino=busca_filtro_tabla("nombre, cargo, empresa as dependencia,iddatos_ejecutor as nombre_destino","vejecutor","iddatos_ejecutor=".$datos[$i]['destino_externo'],"",$conn);
                     $ubicacion=$destino[0]['direccion'];
+                    $persona_natural_destino='persona_natural_dest';
     	        }
     	    }
     	    
@@ -631,7 +635,7 @@ function mostrar_item_destino_radicacion($idformato,$iddoc){
     	   if($_REQUEST['tipo']!=5){
     	       $idformato_item=busca_filtro_tabla("idformato","formato","tabla='ft_destino_radicacion'","",$conn);
     	       $tabla.='<td>                
-                    <a href="#" onclick="if(confirm(&quot;En realidad desea borrar este elemento?&quot;)) window.location=&quot;'.$ruta_db_superior.'formatos/librerias/funciones_item.php?formato='.$idformato_item[0]['idformato'].'&amp;idpadre='.$iddoc.'&amp;accion=eliminar_item&amp;tabla=ft_destino_radicacion&amp;id='.$datos[$i]['idft_destino_radicacion'].'&quot;;">
+                    <a href="#" onclick="if(confirm(&quot;En realidad desea borrar este elemento?&quot;)){ eliminar_destino_radicacion('.$datos[$i]['idft_destino_radicacion'].','.$destino[0]['nombre_destino'].',\''.$persona_natural_destino.'\'); }" >
                         <img src="'.$ruta_db_superior.'images/eliminar_pagina.png" border="0">
                     </a>
                 </td>';
@@ -640,6 +644,29 @@ function mostrar_item_destino_radicacion($idformato,$iddoc){
     	}
     	$tabla.="</table><br/>
     	       <button style='float:right;' class='btn btn-danger' onclick='guardar_destinos();' id='confirmar_distribucion'>Confirmar datos de distribuci&oacute;n</button>";
+
+                $tabla.='
+                <script>
+                    function eliminar_destino_radicacion(idft_destino_radicacion,nombre_destino,campo){
+                    $.ajax({
+                        type:"POST",
+                        dataType: "html",
+                        url: "eliminar_destino_radicacion.php",
+                        data: {
+                            idft_destino_radicacion:idft_destino_radicacion,
+                            nombre_destino:nombre_destino,
+                            campo:campo
+                        },
+                        success: function(datos){
+                            var mensaje_exito="<b>ATENCI&Oacute;N</b><br>Destino eliminado satisfactoriamente!";
+                            top.noty({text: mensaje_exito,type: "success",layout: "topCenter",timeout:3000});
+                            window.location.reload();
+                        }
+                    })
+                    }
+                </script>
+                ';
+
 	}else{
 	    $tabla='<table class="table table-bordered" style="width: 100%; font-size:10px; text-align:left;" border="1">
     	<tr>
@@ -757,7 +784,11 @@ function mostrar_destino_radicacion($idformato,$iddoc){
 	$nombres="";
 	if($datos[0]['tipo_destino']==1){
 	    $destino=busca_filtro_tabla("b.nombre","datos_ejecutor a, ejecutor b","b.idejecutor=a.ejecutor_idejecutor AND a.iddatos_ejecutor IN(".$datos[0]['persona_natural_dest'].")","",$conn);
-        $nombres=$destino[0]['nombre'];
+        for($i=0;$i<$destino['numcampos'];$i++){
+            $nombres.=$destino[$i]['nombre'].'</br>';
+        }
+        
+        
     }else{
         $destinos=explode(",", $datos[0]['destino']);
         $cont=count($destinos);
