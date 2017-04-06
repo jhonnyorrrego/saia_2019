@@ -194,3 +194,16 @@ UPDATE  modulo SET  enlace_pantalla =  '1' WHERE  idmodulo =1142;
 UPDATE  modulo SET  enlace =  'arboldependencia.php',enlace_pantalla =  '1' WHERE  idmodulo =16;
 UPDATE  modulo SET  enlace =  'arbolserie.php',enlace_pantalla =  '1' WHERE  idmodulo =14;
 UPDATE  modulo SET  enlace ='calidad_macro.php?from_modulo_calidad=1',enlace_pantalla =  '1' WHERE  idmodulo =202;
+
+
+---------------
+INSERT INTO busqueda_componente (idbusqueda_componente, busqueda_idbusqueda, tipo, conector, url, etiqueta, nombre,orden, info,exportar, exportar_encabezado, encabezado_componente, estado, ancho, cargar, campos_adicionales, tablas_adicionales, ordenado_por, direccion, agrupado_por, busqueda_avanzada, acciones_seleccionados, modulo_idmodulo, menu_busqueda_superior, enlace_adicionar, encabezado_grillas) VALUES (NULL, '49', '3', '2', 'busquedas/consulta_busqueda.php', 'Vinculado  por el funcionario', 'documentos_relacionados_a', '1', '<div class="row-fluid"><div class="pull-left tooltip_saia_abajo" title="{*etiqueta*}">{*numero*}-{*obtener_descripcion_informacion@descripcion*}</div><div class=''pull-right''><a href="#" enlace=''ordenar.php?key={*documento_origen*}&mostrar_formato=1'' conector=''iframe''  titulo="Documento No.{*numero*}" class=''kenlace_saia pull-left'' ><i class=''icon-download tooltip_saia_izquierda'' title=''Ver documento''></i></a></div></div>
+</div>', NULL, NULL, NULL, '1', '320', '1', 'F.fecha,F.documento_origen,F.documento_destino,F.funcionario_idfuncionario,F.observaciones,A.ejecutor,A.numero,A.iddocumento,A.descripcion', 'documento_vinculados F, documento A', 'F.fecha', 'DESC', NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+
+
+INSERT INTO busqueda_condicion (idbusqueda_condicion, busqueda_idbusqueda, fk_busqueda_componente, codigo_where, etiqueta_condicion) VALUES (NULL, NULL, '291', 'F.documento_origen=A.iddocumento AND F.documento_destino={*obtener_iddocumento*}', 'condicion_documentos_vinculados_a');
+
+
+
+
+

@@ -10,14 +10,15 @@ while($max_salida>0){
 }
 include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."librerias_saia.php");
+include_once($ruta_db_superior."pantallas/documento/menu_principal_documento.php");
 if(@$_REQUEST["iddoc"] || @$_REQUEST["key"]){
-	include_once($ruta_db_superior."formatos/librerias/menu_principal_documento.php");
-	echo(menu_principal_documento($_REQUEST["iddoc"],@$_REQUEST["vista"]));
+	menu_principal_documento($_REQUEST["iddoc"],@$_REQUEST["vista"]);
 }
 echo(estilo_bootstrap());
 echo(librerias_arboles());
 $usuario=usuario_actual("idfuncionario");
 ?> 
+<br>
 <div class="container">
 Buscar:<br><input type="text" id="stext_3" width="200px" size="20">      
       <a href="javascript:void(0)" onclick="tree3.findItem(document.getElementById('stext_3').value,1)">
@@ -28,7 +29,7 @@ Buscar:<br><input type="text" id="stext_3" width="200px" size="20">
     <img src="<?php echo($ruta_db_superior);?>botones/general/siguiente.png" border="0px" alt="Siguiente"></a>  
   <br /><div id="esperando_serie">
   <img src="<?php echo($ruta_db_superior);?>imagenes/cargando.gif"></div>
-  <div id="treeboxbox_tree3"></div>  
+  <div id="treeboxbox_tree3" class="arboles_saia"></div>  
 <div >
   <div class="btn btn-primary" id="vincular">Vincular</div> <div class="btn btn-warning" id="vincular_quitar">Vincular y Deseleccionar Documento</div>
 </div>  
@@ -123,33 +124,42 @@ Buscar:<br><input type="text" id="stext_3" width="200px" size="20">
     }              
     $(document).ready(function(){
       $("#vincular").click(function(){
+        var exito=1;
         var variable=tree3.getAllChecked();           
         $.post('<?php echo($ruta_db_superior."pantallas/documento/vincular_documento.php");?>',{documento_iddocumento:<?php echo($_REQUEST['iddoc']); ?>,idfuncionario:<?php echo($usuario);?>,arreglo:variable}, function(resultado){
           if(resultado){            
             var objeto=jQuery.parseJSON(resultado);      
             $.each(objeto,function(i,item){                 
+             validar_exito_vinculado(0);
              top.noty({text:item.mensaje, type:item.tipo, layout:"topCenter", timeout:5000});
             }); 
           }
         });                          
       });
       $("#vincular_quitar").click(function(){
-        var exito=1;
         var variable=tree3.getAllChecked();           
         $.post('<?php echo($ruta_db_superior."pantallas/documento/vincular_documento.php");?>',{documento_iddocumento:<?php echo($_REQUEST['iddoc']); ?>,idfuncionario:<?php echo($usuario);?>,arreglo:variable,deseleccionar:1}, function(resultado){
           if(resultado){            
             var objeto=jQuery.parseJSON(resultado);      
             $.each(objeto,function(i,item){                 
-             top.noty({text:item.mensaje, type:item.tipo, layout:"topCenter", timeout:5000});
-             if(item.tipo=="error"){
-                exito=0;
-             }
+                top.noty({text:item.mensaje, type:item.tipo, layout:"topCenter", timeout:5000});
             });
-            if(exito) 
-              document.location.reload();              
+            validar_exito_vinculado(1);
           }
         });        
       });
-    });                                
+    });  
+    function validar_exito_vinculado(recargar){
+	    var open_tab_vinculado=$("#arbol_formato",parent.document).contents().find("#cantidad_documentos_relacionados").closest("li").hasClass("active");
+	    if(open_tab_vinculado===false){
+	        $("#arbol_formato",parent.document).contents().find("#cantidad_documentos_relacionados").click();
+	    }
+	    else{
+	        $("#arbol_formato",parent.document).contents().find("#arbol_documento").click();
+	        $("#arbol_formato",parent.document).contents().find("#documentos_relacionados").click();
+	    }
+        if(recargar)
+            document.location.reload();              
+    }
 --> 		
 </script>

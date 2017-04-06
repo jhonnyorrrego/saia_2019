@@ -344,8 +344,9 @@ if($tipo=='ordenar_pag'||$tipo=='todos'){
 }
 if($tipo=='documentos_relacionados'||$tipo=='todos'){
 	$respuestas=busca_filtro_tabla("count(*) AS respuestas","respuesta","origen=".$doc,"",$conn);
-	$vinculados=busca_filtro_tabla("count(*) AS vinculados","documento_vinculados","documento_origen=".$doc,"",$conn);
-  $cantidades["documentos_relacionados"]=intval($respuestas[0]["respuestas"])+intval($vinculados[0]["vinculados"]);
+	$vinculados=busca_filtro_tabla("count(*) AS vinculados","documento_vinculados","(documento_origen=".$doc.") AND funcionario_idfuncionario=".$funcionario,"",$conn);
+	$vinculados_a=busca_filtro_tabla("count(*) AS vinculados","documento_vinculados","(documento_destino=".$doc.") AND funcionario_idfuncionario=".$funcionario,"",$conn);
+    $cantidades["documentos_relacionados"]=intval($respuestas[0]["respuestas"])+intval($vinculados[0]["vinculados"])+intval($vinculados_a[0]["vinculados"]);
 }
 if($tipo=='ver_tareas'||$tipo=='todos'){
 	$tareas=busca_filtro_tabla("count(*) AS tareas","tareas","documento_iddocumento=".$doc,"",$conn);
