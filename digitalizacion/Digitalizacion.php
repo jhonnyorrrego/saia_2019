@@ -119,9 +119,19 @@ class Digitalizacion {
 				$params["radica"] = $datos_dig[0]["iddocumento"];
 				$params["numero"] = $documento[0]["numero"];
 				//$params["descripcion"] = "<html>" . $documento[0]["descripcion"] . "</html>";
+				
+                
+                    //parseo descripcion
+                    $documento[0]["descripcion"]=codifica_encabezado(html_entity_decode($documento[0]["descripcion"]));
+                    if($documento[0]["descripcion"]!=''){
+                        if(strlen($documento[0]["descripcion"])>30){
+                            $documento[0]["descripcion"]=substr( $documento[0]["descripcion"],0,30).'...';
+                        }
+                    }
+            			
 				$descripcion = preg_replace("/<br\W*?\/?>/i", "$1 ", $documento[0]["descripcion"]);
-				$params["descripcion"] = strip_tags(codifica_encabezado(html_entity_decode($descripcion)));
-				$params["verLog"] = "true";
+				$params["descripcion"] = strip_tags($descripcion);
+				$params["verLog"] = "false";
 				$params["idtarea"] = $datos_dig[0]["idtarea_dig"];
 
 				$resp = array(

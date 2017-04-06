@@ -405,7 +405,15 @@ if (PROTOCOLO_CONEXION == 'https://') {
             if(!websocket || websocket.readyState == 3) {
                 testWebSocket();
             }
-
+                <?php 
+                    //parseo descripcion
+                    $documento[0]["descripcion"]=codifica_encabezado(html_entity_decode($documento[0]["descripcion"]));
+                    if($documento[0]["descripcion"]!=''){
+                        if(strlen($documento[0]["descripcion"])>30){
+                            $documento[0]["descripcion"]=substr( $documento[0]["descripcion"],0,30).'...';
+                        }
+                    } 
+                ?>
                 var data = {
                     "url": "<?php print($temporal_usuario); ?>",
                     "radica": "<?php print($key); ?>",
@@ -414,7 +422,7 @@ if (PROTOCOLO_CONEXION == 'https://') {
                     "usuario": "<?php print($usuario); ?>",
                     "dftp": "<?php print($ruta_ftp); ?>",
                     "clave": "<?php print($clave); ?>",
-                    "verLog": "true",
+                    "verLog": "false",
                     "ancho": "<?php print($ancho); ?>",
                     "alto": "<?php print($alto); ?>",
                     "numero": "<?php print($documento[0]["numero"]); ?>",
