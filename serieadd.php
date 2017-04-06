@@ -94,11 +94,15 @@ switch ($sAction)
 	case "A": // Add
 		$ok=AddData($conn);
         if($ok){ // Add New Record
-        	abrir_url("arbolserie.php","arbol");
+        	        abrir_url("arbolserie.php","arbol");
         			$parametro_dependencia_serie='';
         			if(@$_REQUEST['dependencia_serie']){
         				$parametro_dependencia_serie="&dependencia_serie=".$_REQUEST['dependencia_serie'];
         			}
+        			if(@$_REQUEST['x_cod_padre']){
+        			    $ok=$_REQUEST['x_cod_padre'];
+        			}
+        			
 					abrir_url("serieview.php?key=".$ok.$parametro_dependencia_serie,"_self");
 					exit();
 				}
