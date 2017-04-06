@@ -1489,7 +1489,7 @@ function mostrar_valor_campo($campo, $idformato, $iddoc, $tipo = NULL) {
 			} elseif($datos[0]["etiqueta_html"] == "archivo") {
 				include_once ("../../anexosdigitales/funciones_archivo.php");
 				$idcampo = busca_filtro_tabla("idcampos_formato", "campos_formato", "nombre like '$campo' and formato_idformato=$idformato", "", $conn);
-				$retorno = listar_anexos_documento($iddoc, $idformato, $idcampo[0][0], $_REQUEST["tipo"], "DESCARGAR");
+				$retorno = listar_anexos_ver_descargar($idformato,$iddoc, $idcampo[0][0], $_REQUEST["tipo"], 1);
 			} elseif($datos[0]["etiqueta_html"] == "autocompletar")
 				$retorno = $campos[0][0];
 			elseif($datos[0]["etiqueta_html"] == "textarea") {
