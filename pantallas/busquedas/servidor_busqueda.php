@@ -233,6 +233,9 @@ if(MOTOR=='MySql' || MOTOR=='Oracle') {
 	}
 }
 if($sidx && $sord){
+  if(MOTOR=='MySql' || MOTOR=='Oracle') {
+       $ordenar_consulta2.=$ordenar_consulta;
+  }
   $ordenar_consulta2.=" ORDER BY ".$sidx." ".$sord;
   $ordenar_grafico=" ORDER BY ".$sidx." ".$sord;
 }
