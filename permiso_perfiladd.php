@@ -148,6 +148,14 @@ echo $x_perfil_idperfilList;
                    eval('document.layers["esperando_modulo"]');
             document.poppedLayer.style.visibility = "visible";
           }
+          $(document).ready(function(){
+              $("#x_perfil_idperfil").change(function() {
+                 if($('#x_perfil_idperfil :selected').val()!="")
+                   {tree3.deleteChildItems(0);
+                    tree3.loadXML('test_permiso_modulo.php?filtro_perfil=1&entidad=perfil&llave_entidad='+$('#x_perfil_idperfil :selected').val());
+                   }
+              });
+          });
     	-->
     	</script>
   </td>
