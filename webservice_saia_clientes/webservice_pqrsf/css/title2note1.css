@@ -1,0 +1,22 @@
+#title2note{
+	position: fixed;
+	z-index:1;
+	left: 0px;
+	top: 0px;
+	width: 500px;
+	margin: 0px;
+	padding: 4px 4px 4px 6px;
+	font: 11px, "verdana", "Courier New", monospace,bold;
+	text-align: left;
+	color: #ffffff;
+	background-color: transparent;
+	border: 0px solid #111;
+}
+/* star html hack - IE only */
+* html #title2note{
+	position: absolute;
+}
+/* a bet on future IEs */
+#title2note[id]{
+	position: fixed;
+}

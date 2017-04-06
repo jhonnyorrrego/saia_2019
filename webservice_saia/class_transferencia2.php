@@ -2328,7 +2328,7 @@ function guardar_documento($iddoc,$tipo=0)
          if(is_array($_REQUEST[$lcampos[$j]["nombre"]]))
             array_push($valores,"'".implode(',',@$_REQUEST[$lcampos[$j]["nombre"]])."'");
          elseif(@$_REQUEST[$lcampos[$j]["nombre"]]<>'')
-            array_push($valores,"'".(utf8_decode(@$_REQUEST[$lcampos[$j]["nombre"]]))."'");
+            array_push($valores,"'".((@$_REQUEST[$lcampos[$j]["nombre"]]))."'");
          else 
           {  array_push($valores,"''");  
              
