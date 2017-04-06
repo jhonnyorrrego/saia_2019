@@ -164,6 +164,9 @@ if($datos_busqueda["numcampos"]){
     if($datos_busqueda[0]["ordenado_por"]){
       $sidx=$datos_busqueda[0]["ordenado_por"];
     }
+    if($datos_busqueda[0]["direccion"]){
+      $sord=$datos_busqueda[0]["direccion"];
+    }    
     if(!$sord){
         $sord=" DESC ";
     }  
