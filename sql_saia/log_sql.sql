@@ -204,8 +204,9 @@ INSERT INTO busqueda_componente (idbusqueda_componente, busqueda_idbusqueda, tip
 INSERT INTO busqueda_condicion (idbusqueda_condicion, busqueda_idbusqueda, fk_busqueda_componente, codigo_where, etiqueta_condicion) VALUES (NULL, NULL, '291', 'F.documento_origen=A.iddocumento AND F.documento_destino={*obtener_iddocumento*}', 'condicion_documentos_vinculados_a');
 
 --------------
-
 UPDATE busqueda_componente set direccion='ASC' WHERE direccion IS NULL;
+--------------
+delete modulo WHERE  nombre='indicadores_funcionario' and tipo='secundario' and etiqueta='Indicadores funcionario' and enlace='pantallas/buscador_principal.php?idbusqueda=1&default_componente=indicadores_funcionario';
 
-
+UPDATE modulo SET etiqueta='Reporte usuarios' WHERE nombre='reporte_acceso_usuarios'; 
 
