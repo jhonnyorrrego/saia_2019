@@ -2965,6 +2965,11 @@ exit();
 
 function formato_devolucion($iddoc=0){
 global $conn,$ruta_db_superior;
+if(@$_REQUEST["iddoc"] || @$_REQUEST["key"]){
+  if(!@$_REQUEST["iddoc"])$_REQUEST["iddoc"]=@$_REQUEST["key"];
+  include_once("pantallas/documento/menu_principal_documento.php");
+  menu_principal_documento($_REQUEST["iddoc"]);
+}
 $config = busca_filtro_tabla("valor","configuracion","nombre='color_encabezado'","",$conn);
 if($config[0]["valor"]){
   $style = "<style type=\"text/css\"><!--INPUT, TEXTAREA, SELECT {font-family: Tahoma; font-size: 10px;} .phpmaker {font-family: Verdana; font-size: 9px;} .encabezado { background-color:".$config[0]["valor"]."; color:white ; padding:10px; text-align: left;  } .encabezado_list { background-color:".$config[0]["valor"]."; color:white ; vertical-align:middle; text-align: center; } --></style>";
@@ -2993,9 +2998,9 @@ if($transferencias["numcampos"]){
   redirecciona($ruta_db_superior."formatos/".$mostar_formato_devolver[0]['nombre']."/mostrar_".$mostar_formato_devolver[0]['nombre'].".php?iddoc=".$iddoc."&idformato=".$mostar_formato_devolver[0]['idformato']);
   //redirecciona($ruta_db_superior."vacio.php");
 }
-
+//<img style="vertical-align:middle" src="'.PROTOCOLO_CONEXION.RUTA_PDF.'/botones/comentarios/devolver_documento.png" border="0">
 echo '<p><span style="font-family: Verdana; font-size: 9px; font-weight: bold;">
-<img style="vertical-align:middle" src="'.PROTOCOLO_CONEXION.RUTA_PDF.'/botones/comentarios/devolver_documento.png" border="0">&nbsp;&nbsp;DEVOLVER DOCUMENTOS&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;DEVOLVER DOCUMENTOS&nbsp;&nbsp;&nbsp;&nbsp;
 <br><br></span></p>
 <form name="transferenciadev" id="transferenciadev" action="'.PROTOCOLO_CONEXION.RUTA_PDF.'/class_transferencia.php" method="post">
 <table border="0" cellspacing="1" cellpadding="4" bgcolor="#CCCCCC">
