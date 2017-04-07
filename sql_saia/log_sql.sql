@@ -210,3 +210,8 @@ delete modulo WHERE  nombre='indicadores_funcionario' and tipo='secundario' and 
 
 UPDATE modulo SET etiqueta='Reporte usuarios' WHERE nombre='reporte_acceso_usuarios'; 
 
+-------------
+UPDATE formato SET etiqueta='Comunicaci&oacute;n Externa (WORD)' WHERE nombre='oficio_word' AND mostrar_pdf=2;
+UPDATE modulo SET etiqueta='Comunicaci&oacute;n Externa (WORD)' WHERE nombre='oficio_word';
+UPDATE modulo SET etiqueta='Crear Comunicaci&oacute;n Externa (WORD)' WHERE nombre='crear_oficio_word';
+INSERT INTO serie ( nombre, cod_padre, dias_entrega, codigo, tipo_entidad, llave_entidad, retencion_gestion, retencion_central, conservacion, digitalizacion, seleccion, otro, procedimiento, copia, tipo, clase, estado, categoria, orden, tipo_expediente, tvd) VALUES ('Comunicaci&oacute;n Externa (WORD)', NULL, 8, NULL, NULL, NULL, 3, 5, NULL, NULL, NULL, NULL, NULL, 0, 0, 1, 1, 3, NULL, NULL, 0);
