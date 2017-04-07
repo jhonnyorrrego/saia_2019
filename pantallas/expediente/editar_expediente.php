@@ -342,6 +342,11 @@ if($dato_padre["numcampos"]){
   $(document).ready(function(){
       
       
+  $(".documento_actual",parent.document).removeClass("alert-info");
+  $(".documento_actual",parent.document).removeClass("documento_actual");
+  $("#resultado_pantalla_<?php echo(@$_REQUEST["idexpediente"]);?>",parent.document).addClass("documento_actual").addClass("alert-info");        
+      
+      
       <?php 
           if($datos[0]['agrupador']){
               ?>

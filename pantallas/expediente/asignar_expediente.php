@@ -338,6 +338,12 @@ if(@$_REQUEST["mostrar_arbol_expediente"]){
 
 <script type="text/javascript">
 $(document).ready(function(){
+    
+    
+  $(".documento_actual",parent.document).removeClass("alert-info");
+  $(".documento_actual",parent.document).removeClass("documento_actual");
+  $("#resultado_pantalla_<?php echo(@$_REQUEST["idexpediente"]);?>",parent.document).addClass("documento_actual").addClass("alert-info");        
+    
 $("#submit_formulario_asignar_expediente").click(function(){  
 	var formulario_asignar_expediente=$("#formulario_asignar_expediente");
   $('#cargando_enviar').html("<div id='icon-cargando'></div>Procesando");
