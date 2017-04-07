@@ -88,5 +88,20 @@ function ocultar_campos_destino_radicacion($idformato,$iddoc){
             </script>
         <?php 
     }
+    
+    //Seleccionar origen automaticamente
+   if($datos[0]['tipo_origen']==2){?>
+   <script>
+   $(document).ready(function(){
+     tree_nombre_origen.setOnLoadingEnd(fin_cargando_nombre_origen2);
+   });
+   
+   function fin_cargando_nombre_origen2(){
+     tree_nombre_origen.setCheck(<?php echo($datos[0]["area_responsable"]); ?>,true);
+     $("#nombre_origen").val("<?php echo($datos[0]["area_responsable"]); ?>");
+     tree_nombre_origen.openItem(<?php echo($datos[0]["area_responsable"]); ?>);
+   }
+   </script>
+   <?php }    
 }
 ?>
