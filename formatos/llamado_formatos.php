@@ -47,6 +47,7 @@ if(@$_REQUEST["accion"]=="generar"){
             curl_setopt($ch, CURLOPT_VERBOSE, true);
 			//curl_setopt($ch, CURLOPT_STDERR, $abrir);
 			$contenido=curl_exec ($ch);
+			print_r($contenido);echo "<br>";
             if($contenido===false){
                 alerta("No se puede generar el formato por favor verifique la generaci&oacute;n manual del formato");
             }

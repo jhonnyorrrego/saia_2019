@@ -899,8 +899,9 @@ function crear_formato_mostrar($idformato) {
 				$texto = str_replace("{*" . $campos[$i]["nombre"] . "*}", "<?php busca_campo(" . "'" . $parametros[0] . "','" . $parametros[1] . "','" . $parametros[2] . "',mostrar_valor_campo('" . $campos[$i]["nombre"] . "','" . $idformato . "',$" . "_REQUEST['iddoc'],1)); ?" . ">", $texto);
 			} elseif ($campos[$i]["etiqueta_html"] == "detalle") {
 				$texto = str_replace("{*listado_detalles_" . str_replace("id", "", $campos[$i]["nombre"]) . "*}", arma_funcion("buscar_listado_formato", "'" . $formato[0]["nombre"] . "'," . $campos[$i]["valor"], "mostrar"), $texto);
-			} else
+			} else {
 				$texto = str_replace("{*" . $campos[$i]["nombre"] . "*}", arma_funcion("mostrar_valor_campo", "'" . $campos[$i]["nombre"] . "',$idformato", "mostrar"), $texto);
+			}
 			if ($campos[$i]["etiqueta_html"] == "archivo") {
 				$archivos++;
 			}
@@ -927,13 +928,14 @@ function crear_formato_mostrar($idformato) {
 						alerta("Las funciones del Formato " . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"] . " son requeridas  no se han encontrado");
 						if (crear_archivo(FORMATOS_CLIENTE . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
 							$includes .= incluir($dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"], "librerias");
-						} else
+						} else {
 							alerta("No es posible generar el archivo " . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"]);
+						}
 					}
 				}
 			} else { // $ruta_orig=$formato[0]["nombre"];
 			         // si el archivo existe dentro de la carpeta del formato actual
-				if (is_file($formato[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
+				if (is_file(FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
 					$includes .= incluir($funciones[$i]["ruta"], "librerias");
 				} elseif (is_file($funciones[$i]["ruta"])) { // si el archivo existe en la ruta especificada partiendo de la raiz
 					$includes .= incluir($funciones[$i]["ruta"], "librerias");
@@ -941,8 +943,9 @@ function crear_formato_mostrar($idformato) {
 				         // trato de crearlo dentro de la carpeta del formato actual
 					if (crear_archivo(FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
 						$includes .= incluir($funciones[$i]["ruta"], "librerias");
-					} else
+					} else {
 						alerta("No es posible generar el archivo " . $formato[0]["nombre"] . "/" . $funciones[$i]["ruta"]);
+					}
 				}
 			}
 			if ($funciones[$i]["parametros"] != "")
