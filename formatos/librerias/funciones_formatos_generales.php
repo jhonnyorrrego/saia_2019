@@ -9,7 +9,7 @@ $ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
 }
 $ruta.="../";
 $max_salida--;
-}    
+}
 
 include_once($ruta_db_superior."db.php");
 include_once("funciones_generales.php");
@@ -18,7 +18,7 @@ function listado_hijos_formato($idformato,$iddoc){
 global $conn,$alto_frame;
 if($idformato){
   $formato=busca_filtro_tabla("","formato","idformato=".$idformato,"",$conn);
-  
+
   if($formato["numcampos"]){
     $campos=busca_filtro_tabla("","campos_formato","formato_idformato=".$idformato." AND etiqueta_html NOT IN('detalle','hidden')","",$conn);
     //$datos_hijo=busca_filtro_tabla("",$formato[0]["nombre_tabla"],$_REQUEST["llave"]."=".$iddoc,"",$conn);
@@ -38,7 +38,7 @@ orden: campo por el que se debe ordenar
     $id=$id_padre[0]["id"];
     $enlace_adicionar="";
     array_push($lcampos,"id".$tabla);
-    
+
     if(@$_REQUEST["iddoc"]){
       agrega_boton("texto","../../botones/formatos/adicionar.gif","../../responder.php?idformato=".$idformato."&iddoc=".$_REQUEST["padre"],"","Adicionar ".$formato[0]["etiqueta"],$formato[0]["nombre_tabla"],"","",0);
       $enlace_adicionar.="<br /><br />";
@@ -59,10 +59,10 @@ if(in_array("estado",$campos) && !@$_REQUEST["enlace_adicionar_formato"]){
 
 if(count($campos)){
   $where.=" AND A.nombre IN('".implode("','",$campos)."')";
-}            
+}
 $lcampos=busca_filtro_tabla("A.*,B.idformato,B.nombre AS nombre_formato,B.ruta_mostrar","campos_formato A,formato B","B.nombre_tabla LIKE '".$tabla."' AND A.formato_idformato=B.idformato".$where,"A.orden",$conn);
 
-$hijo=busca_filtro_tabla("",$tabla." A, documento B","A.documento_iddocumento=B.iddocumento AND A.".$campo_enlace."=".$llave.$condicion,$orden,$conn); 
+$hijo=busca_filtro_tabla("",$tabla." A, documento B","A.documento_iddocumento=B.iddocumento AND A.".$campo_enlace."=".$llave.$condicion,$orden,$conn);
 
     if($hijo["numcampos"] && $lcampos["numcampos"]){
       $texto.='<div style="overflow:auto; border:1px solid; width:100%; height:'.$alto_frame.';"><table border="1px" style="border-collapse:collapse;width:60%" ><thead><tr class="encabezado_list">';
@@ -117,7 +117,7 @@ global $conn;
     phpmkr_query("UPDATE buzon_salida SET nombre=".concatenar_cadena_sql(array("'ELIMINA_'","nombre"))." WHERE archivo_idarchivo='$iddoc' and nombre IN('POR_APROBAR','LEIDO','COPIA','BLOQUEADO','RECHAZADO','REVISADO','APROBADO','DEVOLUCION','TRANSFERIDO','TERMINADO')",$conn);
     phpmkr_query("delete from ruta where documento_iddocumento='$iddoc'");
   }
-  
+
   for($i=0;$i<count($ruta)-1;$i++){ //ANTES ESTABA "count($ruta)-1", se cambia a "count($ruta)-2" y se arregla las rutas en flujos y la devolucion de documentos
     if(!isset($ruta[$i]["tipo_firma"])){
       $ruta[$i]["tipo_firma"]=1;
@@ -127,8 +127,8 @@ global $conn;
     }
     if(!isset($ruta[$i+1]["tipo"])){
       $ruta[$i+1]["tipo"]=1;
-    }    
-    
+    }
+
     $sql="insert into ruta(destino,origen,documento_iddocumento,condicion_transferencia,tipo_origen,tipo_destino,orden,obligatorio,idenlace_nodo) values('".$ruta[$i+1]["funcionario"]."','".$ruta[$i]["funcionario"]."','$iddoc','POR_APROBAR',".$ruta[$i]["tipo"].",".$ruta[$i+1]["tipo"].",$i,".$ruta[$i]["tipo_firma"].",'".@$ruta[$i]["paso_actividad"]."')" ;
     phpmkr_query($sql);
     $idruta=phpmkr_insert_id();
@@ -164,7 +164,7 @@ global $conn;
     phpmkr_query("UPDATE buzon_salida SET nombre=".concatenar_cadena_sql(array("'ELIMINA_'","nombre"))." WHERE archivo_idarchivo='$iddoc' and nombre IN('POR_APROBAR','LEIDO','COPIA','BLOQUEADO','RECHAZADO','REVISADO','APROBADO','DEVOLUCION','TRANSFERIDO','TERMINADO')",$conn);
     phpmkr_query("DELETE FROM ruta WHERE documento_iddocumento='$iddoc'");
   }
-    
+
   for($i=0;$i<count($ruta)-1;$i++){
     if(!isset($ruta[$i]["tipo_firma"])){
       $ruta[$i]["tipo_firma"]=1;
@@ -174,8 +174,8 @@ global $conn;
     }
     if(!isset($ruta[$i+1]["tipo"])){
       $ruta[$i+1]["tipo"]=1;
-    }    
-    
+    }
+
     $sql="insert into ruta(destino,origen,documento_iddocumento,condicion_transferencia,tipo_origen,tipo_destino,orden,obligatorio) values('".$ruta[$i+1]["funcionario"]."','".$ruta[$i]["funcionario"]."','$iddoc','POR_APROBAR',".$ruta[$i]["tipo"].",".$ruta[$i+1]["tipo"].",$i,".$ruta[$i]["tipo_firma"].")" ;
     phpmkr_query($sql);
     $idruta=phpmkr_insert_id();
@@ -211,7 +211,7 @@ global $conn;
 function validar_digitalizacion_formato($idformato,$iddoc)
 {global $conn,$ruta_db_superior;
   if($_REQUEST["digitalizacion"]==1){
-    redirecciona($ruta_db_superior."paginaadd.php?&key=".$iddoc."&x_enlace=mostrar");
+    redirecciona(RUTA_SAIA . "paginaadd.php?&key=".$iddoc."&x_enlace=mostrar");
   }
 }
 /*<Clase>

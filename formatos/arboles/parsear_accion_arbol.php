@@ -29,17 +29,17 @@ if(@$_REQUEST["id"]) {
 			case "documento_por_vincular":
 				$documento = busca_filtro_tabla("", "documento A," . $formato[0]["nombre_tabla"] . " B", "A.iddocumento=B.documento_iddocumento AND B.id" . $formato[0]["nombre_tabla"] . "=" . $datos[2], "", $conn);
 				if($documento["numcampos"]) {
-					$ruta = "../../pantallas/documento/documento_por_vincular.php?iddocumento=" . $documento[0]["iddocumento"];
+					$ruta = RUTA_SAIA . "pantallas/documento/documento_por_vincular.php?iddocumento=" . $documento[0]["iddocumento"];
 				}
 				break;
 			case "documentos_seleccionados":
 				$documento = busca_filtro_tabla("", "documento A," . $formato[0]["nombre_tabla"] . " B", "A.iddocumento=B.documento_iddocumento AND B.id" . $formato[0]["nombre_tabla"] . "=" . $datos[2], "", $conn);
 				if($documento["numcampos"]) {
-					$ruta = "../../pantallas/documento/documento_seleccionados.php?iddoc=" . $documento[0]["iddocumento"];
+					$ruta = RUTA_SAIA . "pantallas/documento/documento_seleccionados.php?iddoc=" . $documento[0]["iddocumento"];
 				}
 				break;
 			case "aprobar":
-				include_once ("../../class_transferencia.php");
+				include_once (RUTA_SAIA . "class_transferencia.php");
 				$documento = busca_filtro_tabla("", "documento A," . $formato[0]["nombre_tabla"] . " B", "A.iddocumento=B.documento_iddocumento AND B.id" . $formato[0]["nombre_tabla"] . "=" . $datos[2], "", $conn);
 
 				if($documento["numcampos"]) {
@@ -51,38 +51,38 @@ if(@$_REQUEST["id"]) {
 				}
 				break;
 			case "mostrar_versiones":
-				$ruta = "../../versionamiento/listar_versiones.php?key=" . $datos_formato[0]["documento_iddocumento"];
+				$ruta = RUTA_SAIA . "versionamiento/listar_versiones.php?key=" . $datos_formato[0]["documento_iddocumento"];
 				break;
 			case "mostrar_versiones":
-				$ruta = "../../versionamiento/listar_versiones.php?key=" . $datos_formato[0]["documento_iddocumento"];
+				$ruta = RUTA_SAIA . "versionamiento/listar_versiones.php?key=" . $datos_formato[0]["documento_iddocumento"];
 				break;
 			case "adicionar_etiqueta":
-				$ruta = "../../etiqueta.php?accion=seleccionar_etiqueta&key=" . $datos_formato[0]["documento_iddocumento"];
+				$ruta = RUTA_SAIA . "etiqueta.php?accion=seleccionar_etiqueta&key=" . $datos_formato[0]["documento_iddocumento"];
 				break;
 			case "solicitar_anulacion":
-				$ruta = "../../solicitar_anulacion.php?accion=adicionar&key=" . $datos_formato[0]["documento_iddocumento"];
+				$ruta = RUTA_SAIA . "solicitar_anulacion.php?accion=adicionar&key=" . $datos_formato[0]["documento_iddocumento"];
 				break;
 			case "permisos_documento":
-				$ruta = "../../permisos_documento.php?accion=ver&iddoc=" . $datos_formato[0]["documento_iddocumento"];
+				$ruta = RUTA_SAIA . "permisos_documento.php?accion=ver&iddoc=" . $datos_formato[0]["documento_iddocumento"];
 				break;
 			case "crear_version":
-				$ruta = "../../versionamiento/crear_version.php?key=" . $datos_formato[0]["documento_iddocumento"];
+				$ruta = RUTA_SAIA . "versionamiento/crear_version.php?key=" . $datos_formato[0]["documento_iddocumento"];
 				break;
 			case "ver_notas":
 				if($datos_formato[0]["estado"] == "ACTIVO" || $formato[0]["mostrar_pdf"] == 0) {
 					$ruta = "../../" . FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $formato[0]["ruta_mostrar"] . "?iddoc=" . $datos_formato[0]["documento_iddocumento"] . "&idformato=" . $formato[0]["idformato"] . "&ver_notas=1";
 				} else {
-					$ruta = "../../pantallas/notas/ver_notas_documento.php?iddoc=" . $datos_formato[0]["documento_iddocumento"] . "&idformato=" . $formato[0]["idformato"] . "&ver_notas=1";
+					$ruta = RUTA_SAIA . "pantallas/notas/ver_notas_documento.php?iddoc=" . $datos_formato[0]["documento_iddocumento"] . "&idformato=" . $formato[0]["idformato"] . "&ver_notas=1";
 				}
 				break;
 			case "vincular_documento":
-				$ruta = "../../vincular_documentoview.php?iddoc=" . $datos_formato[0]["documento_iddocumento"];
+				$ruta = RUTA_SAIA . "vincular_documentoview.php?iddoc=" . $datos_formato[0]["documento_iddocumento"];
 				break;
 			case "verificar_flujo_documento":
-				$ruta = "../../flujos_documento.php?key=" . $datos_formato[0]["documento_iddocumento"];
+				$ruta = RUTA_SAIA . "flujos_documento.php?key=" . $datos_formato[0]["documento_iddocumento"];
 				break;
 			case "navegacion_respuesta":
-				$ruta = "../../navegacion_respuesta_doc.php?iddoc=" . $datos_formato[0]["documento_iddocumento"];
+				$ruta = RUTA_SAIA . "navegacion_respuesta_doc.php?iddoc=" . $datos_formato[0]["documento_iddocumento"];
 				break;
 			case "notas":
 				$ruta = "../../" . FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $formato[0]["ruta_mostrar"] . "?iddoc=" . $datos_formato[0]["documento_iddocumento"] . "&idformato=" . $formato[0]["idformato"] . "&ver_notas=1";
@@ -107,12 +107,12 @@ if(@$_REQUEST["id"]) {
 
 							$anexo = busca_filtro_tabla("", "anexos", "(formato=" . $formato[0]["idformato"] . " AND documento_iddocumento=" . $datos_formato[0]["iddocumento"] . ")", "idanexos desc", $conn);
 							if(is_file("../../" . $anexo[0]["ruta"])) {
-								$ruta = "../../" . $anexo[0]["ruta"];
+								$ruta = RUTA_SAIA . $anexo[0]["ruta"];
 								redirecciona($ruta);
 								die();
 							} else {
 								alerta("No hay anexos relacionados.");
-								$ruta = "../../vacio.php";
+								$ruta = RUTA_SAIA . "vacio.php";
 							}
 						} else {
 							alerta("Problemas al encontrar el Documento");
@@ -126,21 +126,21 @@ if(@$_REQUEST["id"]) {
 						 */
 						if($datos_formato["numcampos"]) {
 							if($datos_formato[0]["pdf"] && $formato[0]["mostrar_pdf"] == 1) {
-								$ruta = "../../pantallas/documento/visor_documento.php?iddoc=" . $datos_formato[0]["documento_iddocumento"];
+								$ruta = RUTA_SAIA . "pantallas/documento/visor_documento.php?iddoc=" . $datos_formato[0]["documento_iddocumento"];
 								redirecciona($ruta . "&rnd=" . rand(0, 100));
 							} else {
 								if($formato[0]["mostrar_pdf"] == 1) {
-									$ruta = "../../pantallas/documento/visor_documento.php?iddoc=" . $datos_formato[0]["documento_iddocumento"] . "&actualizar_pdf=1";
+									$ruta = RUTA_SAIA . "pantallas/documento/visor_documento.php?iddoc=" . $datos_formato[0]["documento_iddocumento"] . "&actualizar_pdf=1";
 									redirecciona($ruta . "&rnd=" . rand(0, 100));
 								} else if($formato[0]["mostrar_pdf"] == 2) {
-									$ruta = "../../pantallas/documento/visor_documento.php?pdf_word=1&iddoc=" . $datos_formato[0]["documento_iddocumento"];
+									$ruta = RUTA_SAIA . "pantallas/documento/visor_documento.php?pdf_word=1&iddoc=" . $datos_formato[0]["documento_iddocumento"];
 
 									redirecciona($ruta . "&rnd=" . rand(0, 100));
 								} else {
 									$ruta = "../../" . FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $formato[0]["ruta_mostrar"] . "?iddoc=" . $datos_formato[0]["documento_iddocumento"] . "&idformato=" . $formato[0]["idformato"];
 								}
 								if(!$datos_formato[0]["pdf"] && $formato[0]["mostrar_pdf"] == 1) {
-									// $ruta="../../class_impresion.php?iddoc=".$datos_formato[0]["documento_iddocumento"];
+									// $ruta=RUTA_SAIA . "class_impresion.php?iddoc=".$datos_formato[0]["documento_iddocumento"];
 								}
 							}
 							if(is_file("../../" . FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $formato[0]["ruta_mostrar"]))
@@ -162,7 +162,7 @@ if(@$_REQUEST["id"]) {
 						$ruta .= "&enlace_adicionar_formato=" . $_REQUEST["enlace_adicionar_formato"] . "&padre=" . $datos_padre[2] . "&formato_padre=" . $datos[0];
 					}
 				} else
-					$ruta = "../../vacio.php";
+					$ruta = RUTA_SAIA . "vacio.php";
 				break;
 			case "adicionar":
 				if(!$datos[2] && $_REQUEST["llave"] && $datos[0]) {
@@ -172,10 +172,10 @@ if(@$_REQUEST["id"]) {
 					$datos_formato2 = busca_filtro_tabla("", "documento A," . $formato2[0]["nombre_tabla"] . " B", "A.iddocumento=B.documento_iddocumento AND id" . $formato2[0]["nombre_tabla"] . "=" . $datos_padre[2], "", $conn);
 
 					if($formato[0]["item"]) {
-						$ruta = "../../" . FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $formato[0]["ruta_adicionar"] . "?padre=" . $datos[1] . "&idformato=" . $datos[0];
+						$ruta = RUTA_SAIA . FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $formato[0]["ruta_adicionar"] . "?padre=" . $datos[1] . "&idformato=" . $datos[0];
 					} elseif($datos_formato2["numcampos"] && $datos_formato2[0]["numero"]) {
 						if(array_key_exists("documento_iddocumento", $datos_formato2[0]))
-							$ruta = "../../responder.php?iddoc=" . $datos_padre[2] . "&idformato=" . $datos[0];
+							$ruta = RUTA_SAIA . "responder.php?iddoc=" . $datos_padre[2] . "&idformato=" . $datos[0];
 					} else if(!@$datos_formato2[0]["numero"]) {
 						$alerta = "No se puede responder el documento porque no ha terminado su proceso.";
 					}
@@ -189,101 +189,101 @@ if(@$_REQUEST["id"]) {
 				if($datos[2] && $datos_formato[0]["numero"]) {
 
 					if($datos_formato["numcampos"] && array_key_exists("documento_iddocumento", $datos_formato[0]) && array_key_exists("numero", $datos_formato[0]))
-						$ruta = "../../responder.php?iddoc=" . $datos_formato[0]["documento_iddocumento"];
+						$ruta = RUTA_SAIA . "responder.php?iddoc=" . $datos_formato[0]["documento_iddocumento"];
 					else {
 						alerta("El documento debe estar aprobado para poder responderlo.");
-						$ruta = "../../vacio.php";
+						$ruta = RUTA_SAIA . "vacio.php";
 					}
 				} else {
 					alerta("El documento debe estar aprobado para poder responderlo.");
-					$ruta = "../../vacio.php";
+					$ruta = RUTA_SAIA . "vacio.php";
 				}
 				break;
 			case "editar":
 				if($datos[2] && is_file("../../" . FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $formato[0]["ruta_editar"]))
 					if($formato[0]["item"]) {
-						$ruta = "../../" . FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $formato[0]["ruta_editar"] . "?item=" . $datos[2] . "&idformato=" . $datos[0];
+						$ruta = RUTA_SAIA . FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $formato[0]["ruta_editar"] . "?item=" . $datos[2] . "&idformato=" . $datos[0];
 					} elseif($datos_formato["numcampos"] && array_key_exists("documento_iddocumento", $datos_formato[0])) {
-						$ruta = "../../" . FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $formato[0]["ruta_editar"] . "?idformato=" . $datos[0] . "&iddoc=" . $datos_formato[0]["documento_iddocumento"];
+						$ruta = RUTA_SAIA . FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $formato[0]["ruta_editar"] . "?idformato=" . $datos[0] . "&iddoc=" . $datos_formato[0]["documento_iddocumento"];
 					}
 				break;
 			case "actualizar_pdf":
-				$ruta = "../../borrar_pdf.php?iddoc=" . $datos_formato[0]["documento_iddocumento"];
+				$ruta = RUTA_SAIA . "borrar_pdf.php?iddoc=" . $datos_formato[0]["documento_iddocumento"];
 				break;
 			case "anexos":
 				if($datos[2])
 					if($datos_formato["numcampos"] && array_key_exists("documento_iddocumento", $datos_formato[0])) {
-						$ruta = "../../anexosdigitales/anexos_documento.php?key=" . $datos_formato[0]["documento_iddocumento"] . "&no_menu=1&iddoc=" . $datos_formato[0]["documento_iddocumento"];
+						$ruta = RUTA_SAIA . "anexosdigitales/anexos_documento.php?key=" . $datos_formato[0]["documento_iddocumento"] . "&no_menu=1&iddoc=" . $datos_formato[0]["documento_iddocumento"];
 					}
 				break;
 			case "tareas":
 				if($datos[2])
 					if($datos_formato["numcampos"] && array_key_exists("documento_iddocumento", $datos_formato[0])) {
-						$ruta = "../../asignaciones/asignacionadd.php?key=" . $datos_formato[0]["documento_iddocumento"] . "&no_menu=1&iddoc=" . $datos_formato[0]["documento_iddocumento"];
+						$ruta = RUTA_SAIA . "asignaciones/asignacionadd.php?key=" . $datos_formato[0]["documento_iddocumento"] . "&no_menu=1&iddoc=" . $datos_formato[0]["documento_iddocumento"];
 					}
 				break;
 			case "mostrar_paginas":
 				if($datos[2])
 					if($datos_formato["numcampos"] && array_key_exists("documento_iddocumento", $datos_formato[0])) {
-						$ruta = "../../ordenar.php?key=" . $datos_formato[0]["documento_iddocumento"] . "&accion=mostrar&no_menu=1&iddoc=" . $datos_formato[0]["documento_iddocumento"];
+						$ruta = RUTA_SAIA . "ordenar.php?key=" . $datos_formato[0]["documento_iddocumento"] . "&accion=mostrar&no_menu=1&iddoc=" . $datos_formato[0]["documento_iddocumento"];
 					}
 				break;
 			case "ordenar_paginas":
 				if($datos[2])
 					if($datos_formato["numcampos"] && array_key_exists("documento_iddocumento", $datos_formato[0])) {
-						$ruta = "../../ordenar.php?key=" . $datos_formato[0]["documento_iddocumento"] . "&no_menu=1&iddoc=" . $datos_formato[0]["documento_iddocumento"];
+						$ruta = RUTA_SAIA . "ordenar.php?key=" . $datos_formato[0]["documento_iddocumento"] . "&no_menu=1&iddoc=" . $datos_formato[0]["documento_iddocumento"];
 					}
 				break;
 			case "seleccionar_impresion":
 				if($datos[2])
 					if($datos_formato["numcampos"] && array_key_exists("documento_iddocumento", $datos_formato[0])) {
-						$ruta = "../../seleccionar_impresion.php?doc=" . $datos_formato[0]["documento_iddocumento"] . "&no_menu=1&iddoc=" . $datos_formato[0]["documento_iddocumento"];
+						$ruta = RUTA_SAIA . "seleccionar_impresion.php?doc=" . $datos_formato[0]["documento_iddocumento"] . "&no_menu=1&iddoc=" . $datos_formato[0]["documento_iddocumento"];
 					}
 				break;
 			case "enviar_email":
 				if($datos_formato[0]["numero"]) {
 					if($datos[2])
 						if($datos_formato["numcampos"] && array_key_exists("documento_iddocumento", $datos_formato[0])) {
-							$ruta = "../../email/email_doc.php?formato_enviar=true&iddoc=" . $datos_formato[0]["documento_iddocumento"] . "&no_menu=1";
+							$ruta = RUTA_SAIA . "email/email_doc.php?formato_enviar=true&iddoc=" . $datos_formato[0]["documento_iddocumento"] . "&no_menu=1";
 						}
 				} else {
 					alerta(codifica_encabezado("El documento debe tener n�mero de radicado para poder enviarlo"));
-					$ruta = "../../vacio.php";
+					$ruta = RUTA_SAIA . "vacio.php";
 				}
 				break;
 			case "despacho":
 				if($datos[2])
 					if($datos_formato["numcampos"] && array_key_exists("documento_iddocumento", $datos_formato[0])) {
-						$ruta = "../../despachar_admin.php?doc=" . $datos_formato[0]["documento_iddocumento"] . "&no_menu=1";
+						$ruta = RUTA_SAIA . "despachar_admin.php?doc=" . $datos_formato[0]["documento_iddocumento"] . "&no_menu=1";
 					}
 				break;
 			case "clasificar":
 				if($datos[2])
 					if($datos_formato["numcampos"] && array_key_exists("documento_iddocumento", $datos_formato[0])) {
-						$ruta = "../../clasificar.php?origen=view&iddocumento=" . $datos_formato[0]["documento_iddocumento"] . "&no_menu=1";
+						$ruta = RUTA_SAIA . "clasificar.php?origen=view&iddocumento=" . $datos_formato[0]["documento_iddocumento"] . "&no_menu=1";
 					}
 				break;
 			case "expediente":
 				if($datos[2])
 					if($datos_formato["numcampos"] && array_key_exists("documento_iddocumento", $datos_formato[0])) {
-						$ruta = "../../expediente_llenar.php?iddoc=" . $datos_formato[0]["documento_iddocumento"] . "&no_menu=1";
+						$ruta = RUTA_SAIA . "expediente_llenar.php?iddoc=" . $datos_formato[0]["documento_iddocumento"] . "&no_menu=1";
 					}
 				break;
 			case "almacenamiento":
 				if($datos_formato[0]["numero"]) {
 					if($datos[2])
 						if($datos_formato["numcampos"] && array_key_exists("documento_iddocumento", $datos_formato[0])) {
-							$ruta = "../../almacenamientoadd.php?documentos=" . $datos_formato[0]["documento_iddocumento"] . "&no_menu=1";
+							$ruta = RUTA_SAIA . "almacenamientoadd.php?documentos=" . $datos_formato[0]["documento_iddocumento"] . "&no_menu=1";
 						}
 				} else {
 					alerta("No es posible almacenar un documento que no tenga numero de radicado");
-					$ruta = "../../vacio.php";
+					$ruta = RUTA_SAIA . "vacio.php";
 				}
 				break;
 			case "transferir":
 				if($datos[2] && strpos($formato[0]["banderas"], "nd") === false) {
 					if($datos_formato["numcampos"] && array_key_exists("documento_iddocumento", $datos_formato[0])) {
-						$ruta = "../../transferenciaadd.php?doc=" . $datos_formato[0]["documento_iddocumento"];
+						$ruta = RUTA_SAIA . "transferenciaadd.php?doc=" . $datos_formato[0]["documento_iddocumento"];
 					}
 				} else {
 					alerta("No se puede realizar el proceso de transferencia");
@@ -293,8 +293,8 @@ if(@$_REQUEST["id"]) {
 			case "imprime_radicado":
 				if($datos[2] && strpos($formato[0]["banderas"], "nd") === false) {
 					if($datos_formato["numcampos"] && array_key_exists("documento_iddocumento", $datos_formato[0])) {
-						// $ruta="../../colilla.php?doc=".$datos_formato[0]["documento_iddocumento"]."&enlace=vacio.php&target=detalles";
-						$ruta = "../../colilla.php?doc=" . $datos_formato[0]["documento_iddocumento"] . "&formato=" . $datos[0] . "&target=detalles";
+						// $ruta=RUTA_SAIA . "colilla.php?doc=".$datos_formato[0]["documento_iddocumento"]."&enlace=vacio.php&target=detalles";
+						$ruta = RUTA_SAIA . "colilla.php?doc=" . $datos_formato[0]["documento_iddocumento"] . "&formato=" . $datos[0] . "&target=detalles";
 					}
 				} else {
 					alerta("No se puede generar la Colilla");
@@ -304,7 +304,7 @@ if(@$_REQUEST["id"]) {
 			case "adicionar_comentario":
 				if($datos[2] && strpos($formato[0]["banderas"], "nd") === false) {
 					if($datos_formato["numcampos"] && array_key_exists("documento_iddocumento", $datos_formato[0])) {
-						$ruta = "../../comentario_img.php?accion=adicionar&key=" . $datos_formato[0]["documento_iddocumento"];
+						$ruta = RUTA_SAIA . "comentario_img.php?accion=adicionar&key=" . $datos_formato[0]["documento_iddocumento"];
 					}
 				} else {
 					alerta("No se puede generar la Colilla");
@@ -314,7 +314,7 @@ if(@$_REQUEST["id"]) {
 			case "administrar_comentario":
 				if($datos[2] && strpos($formato[0]["banderas"], "nd") === false) {
 					if($datos_formato["numcampos"] && array_key_exists("documento_iddocumento", $datos_formato[0])) {
-						$ruta = "../../comentario_img.php?key=" . $datos_formato[0]["documento_iddocumento"];
+						$ruta = RUTA_SAIA . "comentario_img.php?key=" . $datos_formato[0]["documento_iddocumento"];
 					}
 				} else {
 					alerta("No se puede generar la Colilla");
@@ -323,16 +323,16 @@ if(@$_REQUEST["id"]) {
 				break;
 			case "adicionar_pagina":
 				if($datos_formato[0]["documento_iddocumento"])
-					$ruta = "../../paginaadd.php?key=" . $datos_formato[0]["documento_iddocumento"];
+					$ruta = RUTA_SAIA . "paginaadd.php?key=" . $datos_formato[0]["documento_iddocumento"];
 				break;
 			case "seguir":
 				if($datos_formato["numcampos"] && array_key_exists("documento_iddocumento", $datos_formato[0])) {
-					$ruta = "../../doctransflist.php?doc=" . $datos_formato[0]["documento_iddocumento"];
+					$ruta = RUTA_SAIA . "doctransflist.php?doc=" . $datos_formato[0]["documento_iddocumento"];
 				}
 				break;
 			case "ordenar_pagina":
 				if($datos_formato["numcampos"] && array_key_exists("documento_iddocumento", $datos_formato[0])) {
-					$ruta = "../../ordenar.php?accion=ordenar&key=" . $datos_formato[0]["documento_iddocumento"];
+					$ruta = RUTA_SAIA . "ordenar.php?accion=ordenar&key=" . $datos_formato[0]["documento_iddocumento"];
 				}
 				break;
 			case "eliminar":
@@ -346,11 +346,11 @@ if(@$_REQUEST["id"]) {
 					if(!$_REQUEST["llave"])
 						$doc_principal = 1;
 					if($datos[2]) {
-						$ruta = "../../documento_borrar.php?iddoc=" . $datos_formato[0]["documento_iddocumento"] . "&doc_principal=$doc_principal";
+						$ruta = RUTA_SAIA . "documento_borrar.php?iddoc=" . $datos_formato[0]["documento_iddocumento"] . "&doc_principal=$doc_principal";
 					}
 				} else {
 					alerta("El documento no se puede eliminar porque ya se encuentra aprobado.");
-					$ruta = "../../vacio.php";
+					$ruta = RUTA_SAIA . "vacio.php";
 				}
 				/*
 				 * }
@@ -360,7 +360,7 @@ if(@$_REQUEST["id"]) {
 				break;
 			case "detalles":
 				if($datos_formato["numcampos"] && array_key_exists("documento_iddocumento", $datos_formato[0])) {
-					$ruta = "../../documentoview.php?key=" . $datos_formato[0]["documento_iddocumento"];
+					$ruta = RUTA_SAIA . "documentoview.php?key=" . $datos_formato[0]["documento_iddocumento"];
 				}
 				break;
 			case "actualiza_arbol":
@@ -368,7 +368,7 @@ if(@$_REQUEST["id"]) {
 				break;
 			case "imprimir":
 				if($datos_formato["numcampos"] && array_key_exists("documento_iddocumento", $datos_formato[0])) {
-					$ruta = "../../seleccionar_impresion.php?doc=" . $datos_formato[0]["documento_iddocumento"];
+					$ruta = RUTA_SAIA . "seleccionar_impresion.php?doc=" . $datos_formato[0]["documento_iddocumento"];
 				}
 				break;
 			case "devolver":
@@ -399,7 +399,7 @@ if(@$_REQUEST["id"]) {
 						$anexo = busca_filtro_tabla("", "anexos", "(formato=" . $formato[0]["idformato"] . " AND documento_iddocumento=" . $datos_formato[0]["iddocumento"] . ")", "", $conn);
 
 						for($i = 0; $i < $anexo["numcampos"]; $i++) {
-							$ruta = "../../" . $anexo[$i]["ruta"];
+							$ruta = RUTA_SAIA . $anexo[$i]["ruta"];
 							abrir_url($ruta, "_blank");
 						}
 					} else {
@@ -408,7 +408,7 @@ if(@$_REQUEST["id"]) {
 				} else {
 					if($datos_formato["numcampos"]) {
 						if($datos_formato[0]["pdf"]) {
-							$ruta = "../../" . $datos_formato[0]["pdf"];
+							$ruta = RUTA_SAIA . $datos_formato[0]["pdf"];
 							if(is_file($ruta)) {
 								abrir_url($ruta, "_blank");
 							} else {
@@ -477,7 +477,7 @@ if(@$_REQUEST["id"]) {
 	else {
 		if($alerta != "")
 			alerta($alerta);
-		redirecciona("../../vacio.php");
+		redirecciona(RUTA_SAIA . "vacio.php");
 	}
 } else
 	alerta("El formato No se ha podido capturar");

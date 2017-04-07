@@ -2391,7 +2391,7 @@ function foto_pagina($idformato, $iddoc) {
 	if($foto["numcampos"]) {
 		echo ("<a href='../../comentario_mostrar.php?key=" . $iddoc . "&pag=" . $foto[0]["consecutivo"] . "' border='0' target='centro'><img src='../../" . $foto[0]["imagen"] . "'></a>");
 	} else
-		echo ("<a href='" . $ruta_db_superior . "paginaadd.php?key=" . $iddoc . "&no_menu=1'><img src='" . $ruta_db_superior . "imagenes/sin_foto.jpg'></a>");
+		echo ("<a href='" . RUTA_SAIA . "paginaadd.php?key=" . $iddoc . "&no_menu=1'><img src='" . RUTA_SAIA . "imagenes/sin_foto.jpg'></a>");
 }
 
 /*
