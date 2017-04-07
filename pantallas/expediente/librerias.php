@@ -452,7 +452,7 @@ function enlaces_adicionales_expediente($idexpediente, $nombre,$estado_cierre,$p
 		$e = 1;
 		$p = 1;
 	} else {
-		$permiso = busca_filtro_tabla("permiso", "entidad_expediente", "entidad_identidad=1 and estado=1 and llave_entidad=" . usuario_actual("idfuncionario"), "", $conn);
+		$permiso = busca_filtro_tabla("permiso", "entidad_expediente", "expediente_idexpediente=".$idexpediente." AND entidad_identidad=1 and estado=1 and llave_entidad=" . usuario_actual("idfuncionario"), "", $conn);
 		if ($permiso["numcampos"] && $permiso[0]["permiso"] != "") {
 			if (strpos($permiso[0]["permiso"], "m") !== false) {
 				$m = 1;
