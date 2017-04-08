@@ -410,8 +410,21 @@ if($_SESSION["tipo_dispositivo"]=="movil"){ ?>
         </div>
       </div>
     </td>
-    <td width="16px" id="collapser_mainui">
-    </td>  
+    <td width="16px" id="collapser_mainui" title="Contraer área de trabajo">
+    </td>
+    <script>
+        $(document).ready(function(){
+            $('#collapser_mainui').click(function(){
+                var title=$(this).attr('title');
+                if(title=="Contraer área de trabajo"){
+                    title="Expandir área de trabajo";
+                }else{
+                    title="Contraer área de trabajo";
+                }
+                $(this).attr('title',title);
+            });
+        });
+    </script>
     <?php } ?>
     <td align="left" valign="top" id="CellContainer">
     <div class="<?php if($_SESSION["tipo_dispositivo"]!="movil"){echo("container-saia");}?> ui-corner-all shadow" style="padding-bottom: 0px;">
