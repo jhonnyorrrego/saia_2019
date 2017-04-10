@@ -191,8 +191,8 @@ UPDATE  modulo SET  enlace_pantalla =  '1' WHERE idmodulo =1552;
 UPDATE  modulo SET  enlace_pantalla =  '1' WHERE idmodulo =1522;
 UPDATE  modulo SET  enlace_pantalla =  '1' WHERE  idmodulo =1141;
 UPDATE  modulo SET  enlace_pantalla =  '1' WHERE  idmodulo =1142;
-UPDATE  modulo SET  enlace =  'arboldependencia.php',enlace_pantalla =  '1' WHERE  idmodulo =16;
-UPDATE  modulo SET  enlace =  'arbolserie.php',enlace_pantalla =  '1' WHERE  idmodulo =14;
+UPDATE  modulo SET  enlace =  'dependencia.php',enlace_pantalla =  '1' WHERE  idmodulo =16;
+UPDATE  modulo SET  enlace =  'serielist.php',enlace_pantalla =  '1' WHERE  idmodulo =14;
 UPDATE  modulo SET  enlace ='calidad_macro.php?from_modulo_calidad=1',enlace_pantalla =  '1' WHERE  idmodulo =202;
 
 
