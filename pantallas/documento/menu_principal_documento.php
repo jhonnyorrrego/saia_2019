@@ -27,7 +27,7 @@ if($formato[0]['mostrar_pdf']==1){
 }elseif($formato[0]['mostrar_pdf']==2){
     $_SESSION["tipo_pagina"]="pantallas/documento/visor_documento.php?pdf_word=1&iddoc=".$iddoc;
 }else{
-    $_SESSION["tipo_pagina"]="formatos/$nombre/mostrar_$nombre.php?iddoc=$iddoc";
+    $_SESSION["tipo_pagina"]= FORMATOS_CLIENTE . "$nombre/mostrar_$nombre.php?iddoc=$iddoc";
 }
 
 echo(librerias_jquery("1.7"));

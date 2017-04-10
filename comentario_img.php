@@ -426,7 +426,7 @@ if(isset($_GET["eliminar"]) && $_GET["eliminar"])
    if($_SESSION["tipo_pagina"]!="pagina")
    {
     $ruta=strtolower($_REQUEST["plantilla"])."/mostrar_".strtolower($_REQUEST["plantilla"]).".php?tipo=1&iddoc=$llave";
-    redirecciona("comentario_mostrar.php?enlace=formatos/$ruta&id=$llave");
+    redirecciona("comentario_mostrar.php?enlace=" . FORMATOS_CLIENTE . "$ruta&id=$llave");
   }
    else
      redirecciona("comentario_mostrar.php?key=".$llave."&pag=".$_SESSION["pagina_actual"]."&accion=mostrar");
