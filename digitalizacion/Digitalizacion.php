@@ -88,7 +88,7 @@ class Digitalizacion {
 							break;
 						case "clave_ftp" :
 							if ($configuracion[$i]['encrypt']) {
-								include_once ('pantallas/lib/librerias_cripto.php');
+								include_once ($ruta_db_superior . 'pantallas/lib/librerias_cripto.php');
 								$configuracion[$i]['valor'] = decrypt_blowfish($configuracion[$i]['valor'], LLAVE_SAIA_CRYPTO);
 							}
 							$params["clave"] = $configuracion[$i]["valor"];
@@ -119,8 +119,8 @@ class Digitalizacion {
 				$params["radica"] = $datos_dig[0]["iddocumento"];
 				$params["numero"] = $documento[0]["numero"];
 				//$params["descripcion"] = "<html>" . $documento[0]["descripcion"] . "</html>";
-				
-                
+
+
                     //parseo descripcion
                     $documento[0]["descripcion"]=codifica_encabezado(html_entity_decode($documento[0]["descripcion"]));
                     if($documento[0]["descripcion"]!=''){
@@ -128,7 +128,7 @@ class Digitalizacion {
                             $documento[0]["descripcion"]=substr( $documento[0]["descripcion"],0,30).'...';
                         }
                     }
-            			
+
 				$descripcion = preg_replace("/<br\W*?\/?>/i", "$1 ", $documento[0]["descripcion"]);
 				$params["descripcion"] = strip_tags($descripcion);
 				$params["verLog"] = "false";
