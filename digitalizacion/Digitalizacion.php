@@ -263,7 +263,6 @@ class Digitalizacion {
 	public function prueba($to = 'mundo') {
 		return "Hola $to!";
 	}
-
 }
 
 ?>

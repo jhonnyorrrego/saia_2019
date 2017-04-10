@@ -3,7 +3,9 @@
 
 ini_set("display_errors", true);
 
-require_once __DIR__ . '/../vendor/luracast/restler/vendor/restler.php';
+//require_once '../vendor/luracast/restler/vendor/restler.php';
+
+require_once '../vendor/restler.php';
 
 use Luracast\Restler\Restler;
 
