@@ -215,3 +215,15 @@ UPDATE formato SET etiqueta='Comunicaci&oacute;n Externa (WORD)' WHERE nombre='o
 UPDATE modulo SET etiqueta='Comunicaci&oacute;n Externa (WORD)' WHERE nombre='oficio_word';
 UPDATE modulo SET etiqueta='Crear Comunicaci&oacute;n Externa (WORD)' WHERE nombre='crear_oficio_word';
 INSERT INTO serie ( nombre, cod_padre, dias_entrega, codigo, tipo_entidad, llave_entidad, retencion_gestion, retencion_central, conservacion, digitalizacion, seleccion, otro, procedimiento, copia, tipo, clase, estado, categoria, orden, tipo_expediente, tvd) VALUES ('Comunicaci&oacute;n Externa (WORD)', NULL, 8, NULL, NULL, NULL, 3, 5, NULL, NULL, NULL, NULL, NULL, 0, 0, 1, 1, 3, NULL, NULL, 0);
+-------------
+INSERT INTO modulo (pertenece_nucleo, nombre, tipo, imagen, etiqueta, enlace, enlace_mobil, destino, cod_padre, orden, ayuda, parametros, busqueda_idbusqueda, permiso_admin, busqueda, enlace_pantalla) VALUES 
+(1, 'permiso_expedientes_gestion', 'secundario', 'botones/principal/defaut.png', 'Permiso Gesti&oacute;n', '#', NULL, '_self', 45, 0, '', '', 0, 0, '', 0),
+(1, 'permiso_expedientes_central', 'secundario', 'botones/principal/defaut.png', 'Permiso Central', '#', NULL, '_self', 45, 0, '', '', 0, 0, '', 0),
+(1, 'permiso_expedientes_historico', 'secundario', 'botones/principal/defaut.png', 'Permiso Hist&oacute;rico', '#', NULL, '_self', 45, 0, '', '', 0, 0, '', 0),
+(1, 'permiso_expedientes_cajas', 'secundario', 'botones/principal/defaut.png', 'Permiso Cajas', '#', NULL, '_self', 45, 0, '', '', 0, 0, '', 0);
+
+UPDATE  busqueda_componente SET  modulo_idmodulo =  '1644' WHERE  idbusqueda_componente =110;
+UPDATE  busqueda_componente SET  modulo_idmodulo =  '1645' WHERE  idbusqueda_componente =10;
+UPDATE  busqueda_componente SET  modulo_idmodulo =  '1646' WHERE  idbusqueda_componente =9;
+UPDATE  busqueda_componente SET  modulo_idmodulo =  '1647' WHERE  idbusqueda_componente =160;
+------------
