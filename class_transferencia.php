@@ -3243,7 +3243,7 @@ function dependencias_asistentes($padre){
 <Post-condiciones><Post-condiciones>
 </Clase>
 */
-function arbol_serie()
+function arbol_serie($condicion_adicional='')
 {include_once("formatos/librerias/header_formato.php");
   echo '<meta http-equiv="Content-Type" content="text/html; charset= UTF-8 ">
 	<link rel="STYLESHEET" type="text/css" href="css/dhtmlXTree.css">
@@ -3270,8 +3270,8 @@ function arbol_serie()
       tree2.setOnLoadingEnd(fin_cargando_serie);
 			tree2.enableThreeStateCheckboxes(true);
 			tree2.enableThreeStateCheckboxes(true);
-			tree2.setXMLAutoLoading("test_serie_funcionario.php");
-			tree2.loadXML("test_serie_funcionario.php");
+			tree2.setXMLAutoLoading("test_serie_funcionario.php'.$condicion_adicional.'");
+			tree2.loadXML("test_serie_funcionario.php'.$condicion_adicional.'");
 			function fin_cargando_serie() {
         if (browserType == "gecko" )
            document.poppedLayer =
