@@ -180,7 +180,7 @@ ALTER TABLE  `modulo` ADD  `enlace_pantalla` INT( 11 ) NULL DEFAULT  '0'
 
 UPDATE  modulo SET  enlace =  'formatos/radicacion_entrada/radicacion_rapida.php?idcategoria_formato=1',enlace_pantalla =  '1' WHERE  idmodulo =24;
 UPDATE  modulo SET  enlace =  'cargo.php',enlace_pantalla =  '1' WHERE  idmodulo =12;
-UPDATE  modulo SET  enlace =  'pantallas/busquedas/consulta_busqueda.php',enlace_pantalla =  '1' WHERE  idmodulo =17;
+UPDATE  modulo SET  enlace =  'permiso_perfiladd.php',enlace_pantalla =  '1' WHERE  idmodulo =17;
 UPDATE  modulo SET  enlace =  'rutalist.php',enlace_pantalla =  '1' WHERE idmodulo =63;
 UPDATE  modulo SET  enlace =  'calendario/festivos_list.php',enlace_pantalla =  '1' WHERE idmodulo =200;
 UPDATE  modulo SET  enlace =  'pantallas/logo/adicionar_logo.php',enlace_pantalla =  '1' WHERE  idmodulo =1188;
