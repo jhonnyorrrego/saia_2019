@@ -667,6 +667,13 @@ function mostrar_item_destino_radicacion($idformato,$iddoc){
                     }
                 </script>
                 ';
+        include_once($ruta_db_superior."librerias_saia.php");
+        echo(librerias_notificaciones());
+        ?>
+            <script>
+                notificacion_saia('<b>ATENCI&Oacute;N</b><br/>Recuerde confirmar la radicación para completar el proceso','warning','',4000);
+            </script>
+        <?php
 
 	}else{
 	    $tabla='<table class="table table-bordered" style="width: 100%; font-size:10px; text-align:left;" border="1">
