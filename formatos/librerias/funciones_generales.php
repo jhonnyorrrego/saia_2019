@@ -1660,9 +1660,9 @@ function formatea_campo($valor, $tipo, $llenado) {
 		return (implode(", ", $resultado));
 	}
 	if($tipo = 'text')
-		return (codifica_encabezado(html_entity_decode($valor)));
+		return ((($valor)));
 	else
-		return (htmlspecialchars_decode($valor));
+		return (($valor));
 }
 
 /*
