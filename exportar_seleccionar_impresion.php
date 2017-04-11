@@ -44,7 +44,7 @@ class concat_pdf extends FPDI {
                    $orientacion="L";
                  else
                    $orientacion="P";
- 
+
                  $this->AddPage($orientacion, array($s['w'], $s['h']));
                  $this->useTemplate($tplidx);
             }
@@ -62,72 +62,66 @@ $listado_pdf=array();
 $plantilla="";
 $iddocpadre="";
 if(isset($_REQUEST["nombre_archivo"]))
-   $listado_pdf[]=$_REQUEST["nombre_archivo"]; 
+   $listado_pdf[]=$_REQUEST["nombre_archivo"];
 $arreglo_dato=array_diff($arreglo_dato,array(''));
 sort($arreglo_dato);
 
-for($i=0;$i<count($arreglo_dato);$i++){
-  if($arreglo_dato[$i]){
-    $dato=parsea_idformato($arreglo_dato[$i]);
+for($i = 0; $i < count($arreglo_dato); $i++) {
+	if ($arreglo_dato[$i]) {
+		$dato = parsea_idformato($arreglo_dato[$i]);
 
-    // caso cuando es un formato
-    if($dato[1] && $dato[2] && $dato[0]!="p"){
-      $formato=busca_filtro_tabla("","formato","idformato=".$dato[0],"",$conn);
-      $hijos=busca_filtro_tabla("count(idformato) as cuantos","formato","cod_padre=".$dato["0"],"",$conn);
-      if($formato["numcampos"])
-      {if($hijos[0]["cuantos"]>0)
-         {$ruta="formatos/".$formato[0]["nombre"]."/".$formato[0]["ruta_mostrar"];
+		// caso cuando es un formato
+		if ($dato[1] && $dato[2] && $dato[0] != "p") {
+			$formato = busca_filtro_tabla("", "formato", "idformato=" . $dato[0], "", $conn);
+			$hijos = busca_filtro_tabla("count(idformato) as cuantos", "formato", "cod_padre=" . $dato["0"], "", $conn);
+			if ($formato["numcampos"]) {
+				if ($hijos[0]["cuantos"] > 0) {
+					$ruta = FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $formato[0]["ruta_mostrar"];
 
-          $busca_doc=busca_filtro_tabla("documento_iddocumento",$formato[0]["nombre_tabla"],"id".$formato[0]["nombre_tabla"]."=".$dato[2],"",$conn);
-          if($i==0)
-            {$iddocpadre=$busca_doc[0][0];
-             $plantilla=$formato[0]["nombre"];
-            }
-           array_push($listado_pdf,$ruta."?idformato=".$dato[0]."&tipo=5&iddoc=".$busca_doc[0][0]."&font_size=".$_REQUEST["font_size"]."&ocultar_firmas=".$_REQUEST["ocultar_firmas"]);
-         }
-       else
-         {$busca_doc=busca_filtro_tabla("documento_iddocumento",$formato[0]["nombre_tabla"],"id".$formato[0]["nombre_tabla"]."=".$dato[2],"",$conn);
-         $iddocpadre=$busca_doc[0][0];
-         $plantilla=$formato[0]["nombre"];
-         $nombre_archivo="temporal_".usuario_actual("login")."/".date("Y_m_d_H_i_s").$i.".pdf";
-//print_r($_REQUEST); die();
-         if(!isset($_REQUEST["nombre_archivo"])){
-         	if($exportar_pdf[0]["valor"]=='html2ps'){
-         		redirecciona("html2ps/public_html/demo/html2ps.php?background=2&nombre_archivo=$nombre_archivo&seleccion=".$_REQUEST["seleccion"]."&margenes=".$_REQUEST["margenes"]."&font_size=".$_REQUEST["font_size"]."&orientacion=".$_REQUEST["orientacion"]."&plantilla=$plantilla&iddoc=$iddocpadre&papel=".$_REQUEST["papel"]."&ocultar_firmas=".$_REQUEST["ocultar_firmas"]);
-         	}
-					if($exportar_pdf[0]["valor"]=='class_impresion'){
-          	redirecciona("class_impresion.php?background=2&nombre_archivo=$nombre_archivo&seleccion=".$_REQUEST["seleccion"]."&margenes=".$_REQUEST["margenes"]."&font_size=".$_REQUEST["font_size"]."&orientacion=".$_REQUEST["orientacion"]."&plantilla=$plantilla&iddoc=$iddocpadre&papel=".$_REQUEST["papel"]."&ocultar_firmas=".$_REQUEST["ocultar_firmas"]);
+					$busca_doc = busca_filtro_tabla("documento_iddocumento", $formato[0]["nombre_tabla"], "id" . $formato[0]["nombre_tabla"] . "=" . $dato[2], "", $conn);
+					if ($i == 0) {
+						$iddocpadre = $busca_doc[0][0];
+						$plantilla = $formato[0]["nombre"];
 					}
-				 }
-         else
-           $listado_pdf[]=$_REQUEST["nombre_archivo"];
-         }
-      }
-    }
-    // caso cuando es una pagina
-    else if($dato[0]=="p" && $dato[1] )
-    { 
-        $pagina=busca_filtro_tabla("","pagina","consecutivo=".$dato[1],"",$conn);
+					array_push($listado_pdf, $ruta . "?idformato=" . $dato[0] . "&tipo=5&iddoc=" . $busca_doc[0][0] . "&font_size=" . $_REQUEST["font_size"] . "&ocultar_firmas=" . $_REQUEST["ocultar_firmas"]);
+				} else {
+					$busca_doc = busca_filtro_tabla("documento_iddocumento", $formato[0]["nombre_tabla"], "id" . $formato[0]["nombre_tabla"] . "=" . $dato[2], "", $conn);
+					$iddocpadre = $busca_doc[0][0];
+					$plantilla = $formato[0]["nombre"];
+					$nombre_archivo = "temporal_" . usuario_actual("login") . "/" . date("Y_m_d_H_i_s") . $i . ".pdf";
+					// print_r($_REQUEST); die();
+					if (!isset($_REQUEST["nombre_archivo"])) {
+						if ($exportar_pdf[0]["valor"] == 'html2ps') {
+							redirecciona("html2ps/public_html/demo/html2ps.php?background=2&nombre_archivo=$nombre_archivo&seleccion=" . $_REQUEST["seleccion"] . "&margenes=" . $_REQUEST["margenes"] . "&font_size=" . $_REQUEST["font_size"] . "&orientacion=" . $_REQUEST["orientacion"] . "&plantilla=$plantilla&iddoc=$iddocpadre&papel=" . $_REQUEST["papel"] . "&ocultar_firmas=" . $_REQUEST["ocultar_firmas"]);
+						}
+						if ($exportar_pdf[0]["valor"] == 'class_impresion') {
+							redirecciona("class_impresion.php?background=2&nombre_archivo=$nombre_archivo&seleccion=" . $_REQUEST["seleccion"] . "&margenes=" . $_REQUEST["margenes"] . "&font_size=" . $_REQUEST["font_size"] . "&orientacion=" . $_REQUEST["orientacion"] . "&plantilla=$plantilla&iddoc=$iddocpadre&papel=" . $_REQUEST["papel"] . "&ocultar_firmas=" . $_REQUEST["ocultar_firmas"]);
+						}
+					} else
+						$listado_pdf[] = $_REQUEST["nombre_archivo"];
+				}
+			}
+		} else if ($dato[0] == "p" && $dato[1]) { // caso cuando es una pagina
+			$pagina = busca_filtro_tabla("", "pagina", "consecutivo=" . $dato[1], "", $conn);
 
-        if($pagina["numcampos"])
-        {
-          array_push($listado_paginas,$pagina[0]["ruta"]);
-        }
-    }
-  }
+			if ($pagina["numcampos"]) {
+				array_push($listado_paginas, $pagina[0]["ruta"]);
+			}
+		}
+	}
 }
  $listado_final=array();
 if(!empty($listado_paginas)){
   if(!is_dir("temporal_".usuario_actual("login")))
      mkdir("temporal_".usuario_actual("login"),0777);
-  $nombre_archivo="temporal_".usuario_actual("login")."/".date("Y_m_d_H_i_s").$i.".pdf";  
+  $nombre_archivo="temporal_".usuario_actual("login")."/".date("Y_m_d_H_i_s").$i.".pdf";
   if(crear_pdf_imagenes($nombre_archivo,$listado_paginas)){
     array_push($listado_final,$nombre_archivo);
   }
 }
 
 if(isset($_REQUEST["nombre_archivo"]) || count($listado_pdf)==0)
-{ 
+{
   if($_REQUEST["orientacion"])
    $orientacion="L";
   else
@@ -138,15 +132,15 @@ if(isset($_REQUEST["nombre_archivo"]) || count($listado_pdf)==0)
      die();
     }
   else
-  {$nombre_archivo="temporal_".usuario_actual("login")."/".date("Y_m_d_H_i_s").".pdf";  
-  array_push($listado_final,$_REQUEST["nombre_archivo"]); 
+  {$nombre_archivo="temporal_".usuario_actual("login")."/".date("Y_m_d_H_i_s").".pdf";
+  array_push($listado_final,$_REQUEST["nombre_archivo"]);
   //die($_REQUEST["nombre_archivo"]);
-  //redirecciona($_REQUEST["nombre_archivo"]);     
-  $pdf =& new concat_pdf($orientacion,"mm",$_REQUEST["papel"]);    
-  $pdf->SetXY(0, 0);  
-  $pdf->setFiles($listado_final);    
-  $pdf->concat();  
-  $pdf->Output($nombre_archivo, 'F');      
+  //redirecciona($_REQUEST["nombre_archivo"]);
+  $pdf =& new concat_pdf($orientacion,"mm",$_REQUEST["papel"]);
+  $pdf->SetXY(0, 0);
+  $pdf->setFiles($listado_final);
+  $pdf->concat();
+  $pdf->Output($nombre_archivo, 'F');
   if(is_file($nombre_archivo)){
     redirecciona($nombre_archivo);
   }
@@ -156,11 +150,11 @@ if(!empty($listado_pdf)){
   $nombre_archivo="temporal_".usuario_actual("login")."/".date("Y_m_d_H_i_s");
 $mh = curl_multi_init();
 $archivo=fopen($nombre_archivo.".html","w+");
-foreach ($listado_pdf as $i => $url) 
+foreach ($listado_pdf as $i => $url)
 {
 	if($url!=''){
 		$ch = curl_init();
- 		curl_setopt($ch, CURLOPT_URL,PROTOCOLO_CONEXION.RUTA_PDF."/".$url); 
+ 		curl_setopt($ch, CURLOPT_URL,PROTOCOLO_CONEXION.RUTA_PDF."/".$url);
  		curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
  		fwrite($archivo,curl_exec ($ch));
  		curl_close ($ch);

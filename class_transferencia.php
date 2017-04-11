@@ -843,7 +843,7 @@ function mostrar_formato($idformato,$iddoc)
  	$url=$ruta_db_superior."pantallas/documento/visor_documento.php?iddoc=".$iddoc."&pdf_word=1";
 
  } else {
- 	$url="formatos/".$datos_formato[0]["nombre"]."/".$datos_formato[0]["ruta_mostrar"]."?iddoc=".$iddoc."&idformato=$idformato";
+ 	$url= FORMATOS_CLIENTE . $datos_formato[0]["nombre"]."/".$datos_formato[0]["ruta_mostrar"]."?iddoc=".$iddoc."&idformato=$idformato";
  }
 
  if(!@$_REQUEST['aprobacion_externa']){
@@ -2133,7 +2133,7 @@ global $conn;
 			// para ver si el formato actual es hijo del anterior o es solo una respuesta
 			$formato_hijo = busca_filtro_tabla("A.*", "formato A, documento B", "B.iddocumento=" . $_POST["iddoc"] . " AND lower(A.nombre)=lower(B.plantilla)", "", $conn);
 
-			if ($formato_hijo[0]["cod_padre"] > 0 && is_file("formatos/" . $formato_hijo[0]["nombre"] . "/" . $formato_hijo[0]["ruta_mostrar"])) {
+			if ($formato_hijo[0]["cod_padre"] > 0 && is_file(FORMATOS_CLIENTE . $formato_hijo[0]["nombre"] . "/" . $formato_hijo[0]["ruta_mostrar"])) {
 				echo "<script>
              direccion=new String(window.parent.frames[0].location);
              vector=direccion.split('&');
@@ -2984,7 +2984,7 @@ if($transferencias["numcampos"]){
 
   $mostar_formato_devolver=busca_filtro_tabla('','documento a, formato b','b.nombre=lower(a.plantilla) AND a.iddocumento='.$iddoc,'',$conn);
 
-  redirecciona($ruta_db_superior."formatos/".$mostar_formato_devolver[0]['nombre']."/mostrar_".$mostar_formato_devolver[0]['nombre'].".php?iddoc=".$iddoc."&idformato=".$mostar_formato_devolver[0]['idformato']);
+  redirecciona($ruta_db_superior. FORMATOS_CLIENTE .$mostar_formato_devolver[0]['nombre']."/mostrar_".$mostar_formato_devolver[0]['nombre'].".php?iddoc=".$iddoc."&idformato=".$mostar_formato_devolver[0]['idformato']);
   //redirecciona($ruta_db_superior."vacio.php");
 }
 
