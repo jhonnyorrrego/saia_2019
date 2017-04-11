@@ -227,3 +227,12 @@ UPDATE  busqueda_componente SET  modulo_idmodulo =  '1645' WHERE  idbusqueda_com
 UPDATE  busqueda_componente SET  modulo_idmodulo =  '1646' WHERE  idbusqueda_componente =9;
 UPDATE  busqueda_componente SET  modulo_idmodulo =  '1647' WHERE  idbusqueda_componente =160;
 ------------
+
+UPDATE  busqueda_componente SET  direccion =  'DESC' WHERE  idbusqueda_componente =7;
+UPDATE  busqueda_componente SET  ordenado_por =  'B.fecha_inicial',direccion='DESC' WHERE  idbusqueda_componente =12;
+UPDATE  busqueda_componente SET  ordenado_por =  'B.fecha_inicial',direccion =  'DESC' WHERE  idbusqueda_componente =13;
+UPDATE  busqueda_componente SET  direccion =  'DESC' WHERE  idbusqueda_componente =16;
+UPDATE  busqueda_componente SET  direccion =  'DESC' WHERE  idbusqueda_componente =18;
+UPDATE  busqueda_componente SET  direccion =  'DESC' WHERE  idbusqueda_componente =23;
+
+----------
