@@ -238,6 +238,35 @@ function transferencia_cargo_lider_pqrsf($idformato,$iddoc){
 }
 
 
-
+function cambiar_estado_iniciado_pqrsf($idformato,$iddoc){ //posterior al aprobar
+	global $conn;
+	
+	$datos=busca_filtro_tabla("estado_radicado","ft_pqrsf","documento_iddocumento=".$iddoc,"",$conn);
+	if($datos[0]['estado_radicado']==2){ //INICIADO 
+	    $up="UPDATE documento SET estado='INICIADO' WHERE iddocumento=".$iddoc;   
+	    phpmkr_query($up);
+	}
+}
+function enlace_llenar_datos_radicacion_rapida_pqrsf($idformato,$iddoc){ //mostrar
+	global $conn;
+	
+	$doc=busca_filtro_tabla("estado","documento","iddocumento=".$iddoc,"",$conn);
+	if($doc[0]['estado']=='INICIADO'){
+	    $texto.='<br><br><button class="btn btn-mini btn-warning" onclick="window.location=\'editar_pqrsf.php?no_sticker=1&iddoc='.$iddoc.'&idformato='.$idformato.'\';">Llenar datos</button>';
+        echo $texto;
+	}
+}
+function cambiar_estado_aprobado_pqrsf($idformato,$iddoc){//posterior al editar
+	global $conn;  
+	
+	$datos=busca_filtro_tabla("estado_radicado","ft_pqrsf","documento_iddocumento=".$iddoc,"",$conn);
+	if($datos[0]['estado_radicado']==2){ //INICIADO 
+	    $up="UPDATE documento SET estado='APROBADO' WHERE iddocumento=".$iddoc;   
+	    phpmkr_query($up);
+	    $up2="UPDATE ft_pqrsf SET estado_radicado='1' WHERE documento_iddocumento=".$iddoc;   
+	    phpmkr_query($up2);	    
+	}	
+	
+}
 
 ?>

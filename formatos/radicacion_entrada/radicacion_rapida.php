@@ -66,19 +66,12 @@ if(@$_REQUEST["idcategoria_formato"]){
 			tree_equipos.setOnLoadingStart(cargando_serie);
             tree_equipos.setOnLoadingEnd(fin_cargando_serie);
             
-            tree_equipos.setXMLAutoLoading("<?php echo($ruta_db_superior); ?>test_categoria.php?tipo_radicado=radicacion_entrada<?php echo $adicional; ?>");
+            tree_equipos.setXMLAutoLoading("<?php echo($ruta_db_superior); ?>formatos/radicacion_entrada/test_radicacion_rapida.php");
       //tree_equipos.enableSmartXMLParsing(true);
-			tree_equipos.loadXML("<?php echo($ruta_db_superior); ?>test_categoria.php?tipo_radicado=radicacion_entrada<?php echo $adicional; ?>");
+			tree_equipos.loadXML("<?php echo($ruta_db_superior); ?>formatos/radicacion_entrada/test_radicacion_rapida.php");
 	    function onNodeSelect(nodeId){
 	     if(nodeId.indexOf('#',0)==-1){
             $('#generar_consecutivo').val(nodeId);
-            
-            <?php 
-                $ibusqueda_pendiente_ingresar=busca_filtro_tabla("idbusqueda","busqueda","nombre='pendiente_ingresar'","",$conn);
-                $var_ibusqueda_pendiente_ingresar=$ibusqueda_pendiente_ingresar[0]['idbusqueda'];
-            ?>
-            var ibusqueda_pendiente_ingresar='<?php echo($var_ibusqueda_pendiente_ingresar); ?>';
-            
             if(nodeId=='radicacion_salida'){
                 $('#enlace').val("ordenar.php?accion=mostrar&mostrar_formato=1");
             }else{

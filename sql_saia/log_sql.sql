@@ -236,3 +236,66 @@ UPDATE  busqueda_componente SET  direccion =  'DESC' WHERE  idbusqueda_component
 UPDATE  busqueda_componente SET  direccion =  'DESC' WHERE  idbusqueda_componente =23;
 
 ----------
+
+INSERT INTO `campos_formato` (`formato_idformato`, `nombre`, `etiqueta`, `tipo_dato`, `longitud`, `obligatoriedad`, `valor`, `acciones`, `ayuda`, `predeterminado`, `banderas`, `etiqueta_html`, `orden`, `mascara`, `adicionales`, `autoguardado`, `fila_visible`) VALUES
+(305, 'estado_radicado', 'estado_radicado', 'INT', '11', 0, NULL, 'a,e,b', NULL, '1', NULL, 'hidden', 0, NULL, NULL, 0, 1);
+
+INSERT INTO `funciones_formato` (`nombre`, `nombre_funcion`, `parametros`, `etiqueta`, `descripcion`, `ruta`, `formato`, `acciones`) VALUES
+('{*cambiar_estado_iniciado_pqrsf*}', 'cambiar_estado_iniciado_pqrsf', NULL, 'cambiar_estado_iniciado_pqrsf', '', 'funciones.php', '305', ''),
+('{*enlace_llenar_datos_radicacion_rapida_pqrsf*}', 'enlace_llenar_datos_radicacion_rapida_pqrsf', NULL, 'enlace_llenar_datos_radicacion_rapida_pqrsf', '', 'funciones.php', '305', 'm'),
+('{*cambiar_estado_aprobado_pqrsf*}', 'cambiar_estado_aprobado_pqrsf', NULL, 'cambiar_estado_aprobado_pqrsf', '', 'funciones.php', '305', '');
+
+INSERT INTO `funciones_formato_accion` (`accion_idaccion`, `formato_idformato`, `momento`, `estado`, `orden`) VALUES
+(3, 305, 'POSTERIOR', 1, 1),
+(5, 305, 'POSTERIOR', 1, 1);
+
+UPDATE formato SET cuerpo='<p style="text-align: left;">{*enlace_llenar_datos_radicacion_rapida_pqrsf*}</p>
+<table style="border-collapse: collapse; width: 100%;" border="1">
+<tbody>
+<tr>
+<td style="text-align: left; width: 20%;"><strong>&nbsp;Estado PQRSF</strong></td>
+<td style="text-align: left; width: 25%;">&nbsp;{*estado_reporte*}</td>
+<td style="text-align: left; width: 20%;">&nbsp;<strong>Fecha Cambio Estado</strong></td>
+<td style="text-align: left; width: 15%;">&nbsp;{*ver_fecha_reporte*}</td>
+<td style="text-align: center; width: 20%;" rowspan="5">{*generar_qr_pqrsf*}</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>&nbsp;Tipo Comentario:</strong></td>
+<td style="text-align: left;" colspan="3">&nbsp;{*tipo*}<strong></strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>&nbsp;Nombre Completo:</strong></td>
+<td>&nbsp;{*nombre*}</td>
+<td>&nbsp;<strong>Documento:</strong></td>
+<td>&nbsp;{*documento*}</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>&nbsp;Email:&nbsp;</strong></td>
+<td style="text-align: left;">&nbsp;{*email*}</td>
+<td style="text-align: left;">&nbsp;<strong>Telefono o Celular:</strong></td>
+<td style="text-align: left;">&nbsp;{*telefono*}</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>&nbsp;<strong>Rol en la Insitucion:</strong></strong></td>
+<td style="text-align: left;" colspan="3">&nbsp;{*rol_institucion*}</td>
+</tr>
+<tr>
+<td style="text-align: left;" colspan="5"><strong>&nbsp;Comentario:</strong></td>
+</tr>
+<tr>
+<td colspan="5">&nbsp;{*comentarios*}</td>
+</tr>
+<tr>
+<td colspan="5">&nbsp;<strong>Documento Soporte del Comentario:&nbsp;</strong>{*mostrar_anexos_pqrsf*}<strong></strong></td>
+</tr>
+</tbody>
+</table>
+<p>{*mostrar_datos_hijos*}</p>
+<p>{*mostrar_estado_proceso*}</p>' WHERE idformato=305;
+
+DELETE FROM campos_formato WHERE nombre='iniciativa_publica' AND formato_idformato=305;
+DELETE FROM campos_formato WHERE nombre='sector_iniciativa' AND formato_idformato=305;
+DELETE FROM campos_formato WHERE nombre='cluster' AND formato_idformato=305;
+DELETE FROM campos_formato WHERE nombre='region' AND formato_idformato=305;
+
+--------------------------
