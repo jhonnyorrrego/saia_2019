@@ -406,7 +406,7 @@ function cargar_datos(idfunc,nombre){
 	$("#ul_completar").empty();
 	$("#buscar_radicado").val("");
 	if(idfunc!=0){
-		$("#funcionarios_seleccionados").append("<tr id='fila_"+idfunc+"'><td><input type='hidden' name='idfuncionario[]' value='"+idfunc+"'>"+nombre+" <img style='cursor:pointer' src='<?php echo($ruta_db_superior); ?>imagenes/eliminar_nota.gif' onclick='eliminar_asociado("+idfunc+");'></td> <td style='text-align:center'><input type='checkbox' name='permisos_"+idfunc+"[]' value='l' disabled checked=true></td><td style='text-align:center'><input type='checkbox' name='permisos_"+idfunc+"[]' value='m'></td><td style='text-align:center'><input type='checkbox' name='permisos_"+idfunc+"[]' value='e'></td> <td style='text-align:center'><input type='checkbox' name='permisos_"+idfunc+"[]' value='p'></td> </tr>");
+		$("#funcionarios_seleccionados").append("<tr id='fila_"+idfunc+"'><td><input type='hidden' name='idfuncionario[]' value='"+idfunc+"'>"+nombre+" <img style='cursor:pointer' src='<?php echo($ruta_db_superior); ?>imagenes/eliminar_nota.gif' onclick='eliminar_asociado("+idfunc+");'></td> <td style='text-align:center'><input type='checkbox' name='permisos_"+idfunc+"[]' value='l' disabled checked=true></td><td style='text-align:center'><input type='checkbox' name='permisos_"+idfunc+"[]' value='m' class='realizar_submit'></td><td style='text-align:center'><input type='checkbox' name='permisos_"+idfunc+"[]' value='e' class='realizar_submit'></td> <td style='text-align:center'><input type='checkbox' name='permisos_"+idfunc+"[]' value='p' class='realizar_submit'></td> </tr>");
 		var sel=$("#idfuncionario").val();
 		if(sel!=""){
 			$("#idfuncionario").val(sel+","+idfunc);
