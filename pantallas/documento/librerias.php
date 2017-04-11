@@ -197,9 +197,9 @@ if(!$ruta){
 	}elseif($tipo_radicado==2){
 	    $datos_ejecutor=busca_filtro_tabla("A.ejecutor","documento A","A.iddocumento=".$doc,"",$conn);
         $ejecutor=busca_filtro_tabla("CONCAT(nombres,' ',apellidos) as nombre","funcionario","funcionario_codigo=".$datos_ejecutor[0]["ejecutor"],"",$conn);
-        
+
 	}
-    
+
 	if($ejecutor["numcampos"]&&$datos_ejecutor[0]["plantilla"]==""){
 		$ruta=$ejecutor[0]["nombre"]."-".serie_documento($serie);
 	}else{
@@ -720,7 +720,7 @@ function mostrar_prioridad_tareas($prioridad){
 
 function filtro_despacho(){
 	global $ruta_db_superior;
-	
+
 	if($_REQUEST['variable_busqueda'] && $_REQUEST['variable_busqueda']!='' ){
 		$docs=busca_filtro_tabla("","documento,ft_despacho_ingresados","documento_iddocumento=iddocumento and estado not in ('ELIMINADO','ANULADO') and numero=".$_REQUEST['variable_busqueda'],"",$conn);
 		if($docs['numcampos']){
@@ -736,10 +736,10 @@ function carga_soporte_ingresados($iddocumento){
 	if(isset($_REQUEST['variable_busqueda'])){
 		$texto='<li><a href="#" id="cargar_soporte">Cargar soporte</a></li>';
 		$texto.='<script>
-		  $("#cargar_soporte").click(function(){	    	
+		  $("#cargar_soporte").click(function(){
 		    var docus=$("#seleccionados").val();
-			  if(docus!=""){			  	
-						top.hs.htmlExpand(this, { objectType: "iframe",width: 400, height: 300, src:"'.RUTA_PDF_LOCAL.RUTA_PDF.'/formatos/despacho_ingresados/anexos_despacho.php?docs="+docus,outlineType: "rounded-white",wrapperClassName:"highslide-wrapper drag-header"});
+			  if(docus!=""){
+						top.hs.htmlExpand(this, { objectType: "iframe",width: 400, height: 300, src:"'.RUTA_PDF_LOCAL.RUTA_PDF. FORMATOS_CLIENTE . 'despacho_ingresados/anexos_despacho.php?docs="+docus,outlineType: "rounded-white",wrapperClassName:"highslide-wrapper drag-header"});
 			  }else{
 			  	alert("Seleccione por lo menos un documento");
 			  }
@@ -798,7 +798,7 @@ function iddoc_distribuidos(){
 function iddoc_no_distribuidos(){
   global $conn;
   $distribuidos=busca_filtro_tabla("docs_seleccionados","ft_despacho_ingresados","","",$conn);
-  
+
   $iddoc=array();
 
   if($distribuidos['numcampos']){
@@ -807,7 +807,7 @@ function iddoc_no_distribuidos(){
       $iddoc=array_merge($iddoc,$tmp);
     }
   }
-   
+
   $iddoc=array_unique($iddoc);
   $iddoc=array_values($iddoc);
   $cantidad=count($iddoc);
@@ -825,11 +825,11 @@ function iddoc_no_distribuidos(){
 }
 function mostrar_fecha_limite_documento($iddoc){
 	global $conn,$ruta_db_superior;
-	
+
 	$parametro_expediente='';
 	if(@$_REQUEST['idexpediente']){
 		$parametro_expediente='&idexpediente='.$_REQUEST['idexpediente'];
-	}	
+	}
 	$enlace_fecha_limite='pantallas/documento/fecha_limite_documento.php?iddoc='.$iddoc.'&idbusqueda_componente='.@$_REQUEST['idbusqueda_componente'].$parametro_expediente;
 	$consulta_fecha_limite=busca_filtro_tabla("fecha_limite","documento","iddocumento=".$iddoc,"",$conn);
 	$fecha_limite=$consulta_fecha_limite[0]['fecha_limite'];
@@ -850,24 +850,24 @@ function mostrar_fecha_limite_documento($iddoc){
 	    	$color='btn-warning'; //naranja
 	    }elseif($interval_diferencia<5){  //si la diferencia es menor a 5 dias
 	    	$color='btn-danger';  //rojo
-	    }    
+	    }
 	    if($interval_pos_neg==1){  //si ya se vencio
 	        $color='btn-danger';  //rojo
 			$title='Hace '.$interval_diferencia.' dias';
-	    }      	
+	    }
 		$fecha_limite='<button type="button" iddoc="'.$iddoc.'" conector="iframe" class="kenlace_saia tooltip_saia btn btn-mini '.$color.' boton_fecha_limite" titulo="'.$title.'" enlace="'.$enlace_fecha_limite.'" idbusqueda_componente="'.@$_REQUEST['idbusqueda_componente'].'">'.$fecha_limite.'&nbsp;<i class="icon-time" style="margin-top: -1;"></i></button>';
 	}
 	return('<div class="pull-right"><b>Vence:&nbsp;</b>'.$fecha_limite.'</div>');
 }
-function filtro_funcionario_etiquetados(){ 
+function filtro_funcionario_etiquetados(){
 	$condicional_etiquetados="AND d.funcionario='".usuario_actual('idfuncionario')."'";
 	return($condicional_etiquetados);
 }
 function mostrar_nombre_etiquetas($iddoc){
-	global $conn; 
+	global $conn;
 	$usuario=usuario_actual('idfuncionario');
 	$etiquetados=busca_filtro_tabla("c.nombre","documento a, documento_etiqueta b, etiqueta c,formato d","LOWER(a.estado) NOT IN ('eliminado') AND a.iddocumento=b.documento_iddocumento AND lower(a.plantilla)=d.nombre  and b.etiqueta_idetiqueta=c.idetiqueta AND c.funcionario='".$usuario."' AND a.iddocumento=".$iddoc,"",$conn);
-	$nombre_etiquetas='';	
+	$nombre_etiquetas='';
 	for($i=0;$i<$etiquetados['numcampos'];$i++){
 		$nombre_etiquetas.=codifica_encabezado(html_entity_decode($etiquetados[$i]['nombre']));
 		if( ($i+1)!= $etiquetados['numcampos']){

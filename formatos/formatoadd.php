@@ -133,7 +133,7 @@ switch($sAction) {
 				</script>
 <?php
 			} else {
-				redirecciona("detalle_formato.php?idformato=" . $llave . "&default_open=formatos/formatoadd_paso2.php");
+				redirecciona("detalle_formato.php?idformato=" . $llave . "&default_open=" . FORMATOS_CLIENTE . "formatoadd_paso2.php");
 				exit();
 			}
 		}
