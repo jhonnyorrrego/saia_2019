@@ -533,7 +533,16 @@ function click_funcion(div){
         document.poppedLayer.style.visibility = "hidden";
         tree2.selectItem(item,true,false);
         tree2.openAllItems(0); //esta linea permite que los arboles carguen abiertos totalmente
-        
+        <?php 
+            if(@$_REQUEST['click_mostrar']){
+                ?>
+                nodeId=tree2.getSelectedItemId();
+                llave=tree2.getParentId(nodeId);
+                console.log(nodeId+'<--->'+llave+'<--->'+no_seleccionar);
+                onNodeSelect(nodeId);
+                <?php
+            }
+        ?>
       }
     function cargando() {
       if (browserType == "gecko" )
