@@ -2420,8 +2420,7 @@ return($arreglo);
 <Pre-condiciones>
 <Post-condiciones>
 */
-function alerta_javascript ($mensaje, $back)
-{
+function alerta_javascript ($mensaje, $back) {
  ?>
 <script type="text/javascript">
 <!--
@@ -2431,6 +2430,7 @@ alert("<?php echo($mensaje);?>");
 </script>
 <?php
 }
+
 function alerta($mensaje,$tipo='success',$duraccion=3000){
 $max_salida=10; // Previene algun posible ciclo infinito limitando a 10 los ../
 $ruta_superior_temporal=$ruta="";

@@ -1296,12 +1296,6 @@ else
 							if (count($valor2)) {
 								$nivel_barra = $valor2[0];
 								if (@$valor2[1] != "") {
-									/*
-									 * $funcion_textarea=busca_filtro_tabla("","funciones_formato","nombre_funcion='".$valor[1]."'","",$conn);
-									 * if($funcio_textarea["numcampos"]){
-									 * inlcuir($funciones_textareas[0][""]);
-									 * }
-									 */
 									if ($accion == "adicionar" && strpos($valor2[1], "*}")) {
 										$includes .= $this->incluir("funciones.php", "librerias");
 										$valor = $this->arma_funcion($valor2[1], $this->idformato . ",$" . "_REQUEST['iddoc']", $accion);
@@ -1602,16 +1596,6 @@ else
                   </tr>';
 							break;
 						case "arbol":
-                /*En campos valor se deben almacenar los siguientes datos:
-                ../../test.php;1;0;1;1;0;0   ../arboles/test.xml;2;0;1;1;0;0  ../arboles/test_secretarias.xml;1;0;1;1;1;2
-                arreglo[0]:ruta de el xml
-                arreglo[1]=1=> checkbox;arreglo[1]=2=>radiobutton
-                arreglo[2] Modo calcular numero de nodos hijo
-                arreglo[3] Forma de carga 0=>autoloading; 1=>smartXML
-                arreglo[4] Busqueda
-                arreglo[5] Almacenar 0=>iddato 1=>valordato
-                arreglo[6] Tipo de arbol 0=>funcionarios 1=>series 2=>dependencias 3=>Otro (se debe sacar el dato) 4=>Sale de la tabla enviada a test_serie.php?tabla=nombre_tabla
-                */
                 $arreglo = explode(";", $campos[$h]["valor"]);
 							if (isset($arreglo) && $arreglo[0] != "") {
 								$ruta = "\"" . $arreglo[0] . "\"";

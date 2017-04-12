@@ -48,7 +48,7 @@ if(@$_REQUEST["accion"]=="generar"){
                 alerta("No se puede generar el formato por favor verifique la generaci&oacute;n manual del formato");
             }
             else{
-                $creados.='Fomato '.$acciones[$i]." ".$formato["nombre"]." <br>";
+                $creados.='Formato '.$acciones[$i]." ".$formato["nombre"]." <br>";
             }
             //fwrite($abrir,"En la fecha ".date('Y-m-d H:i:s')." Termina el proceso ".$fila." =>  ".$contenido." \n \n");
         }
