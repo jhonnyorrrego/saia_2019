@@ -237,17 +237,17 @@ UPDATE  busqueda_componente SET  direccion =  'DESC' WHERE  idbusqueda_component
 
 ----------
 
-INSERT INTO `campos_formato` (`formato_idformato`, `nombre`, `etiqueta`, `tipo_dato`, `longitud`, `obligatoriedad`, `valor`, `acciones`, `ayuda`, `predeterminado`, `banderas`, `etiqueta_html`, `orden`, `mascara`, `adicionales`, `autoguardado`, `fila_visible`) VALUES
+INSERT INTO campos_formato (formato_idformato, nombre, etiqueta, tipo_dato, longitud, obligatoriedad, valor, acciones, ayuda, predeterminado, banderas, etiqueta_html, orden, mascara, adicionales, autoguardado, fila_visible) VALUES
 (305, 'estado_radicado', 'estado_radicado', 'INT', '11', 0, NULL, 'a,e,b', NULL, '1', NULL, 'hidden', 0, NULL, NULL, 0, 1);
 
-INSERT INTO `funciones_formato` (`nombre`, `nombre_funcion`, `parametros`, `etiqueta`, `descripcion`, `ruta`, `formato`, `acciones`) VALUES
+INSERT INTO funciones_formato (nombre, nombre_funcion, parametros, etiqueta, descripcion, ruta, formato, acciones) VALUES
 ('{*cambiar_estado_iniciado_pqrsf*}', 'cambiar_estado_iniciado_pqrsf', NULL, 'cambiar_estado_iniciado_pqrsf', '', 'funciones.php', '305', ''),
 ('{*enlace_llenar_datos_radicacion_rapida_pqrsf*}', 'enlace_llenar_datos_radicacion_rapida_pqrsf', NULL, 'enlace_llenar_datos_radicacion_rapida_pqrsf', '', 'funciones.php', '305', 'm'),
 ('{*cambiar_estado_aprobado_pqrsf*}', 'cambiar_estado_aprobado_pqrsf', NULL, 'cambiar_estado_aprobado_pqrsf', '', 'funciones.php', '305', '');
 
-INSERT INTO `funciones_formato_accion` (`accion_idaccion`, `formato_idformato`, `momento`, `estado`, `orden`) VALUES
-(3, 305, 'POSTERIOR', 1, 1),
-(5, 305, 'POSTERIOR', 1, 1);
+INSERT INTO funciones_formato_accion (idfunciones_formato,accion_idaccion, formato_idformato, momento, estado, orden) VALUES
+(934,3, 305, 'POSTERIOR', 1, 1),
+(936,5, 305, 'POSTERIOR', 1, 1);
 
 UPDATE formato SET cuerpo='<p style="text-align: left;">{*enlace_llenar_datos_radicacion_rapida_pqrsf*}</p>
 <table style="border-collapse: collapse; width: 100%;" border="1">
