@@ -231,8 +231,8 @@ $(document).ready(function(){
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
     <!--input type='radio' name='x_categoria' value='1' id='cat1'  >
     <label for='cat1'>Comunicaciones oficiales</label-->
-    <?php if(!@$_REQUEST['otras_categorias']){ ?>	
-    <input type='radio' name='x_categoria' value='2' id='cat2' checked>
+    <?php if(!@$_REQUEST['otras_categorias']){ $disabled=''; if(@$_REQUEST['key_padre'] && @$_REQUEST['dependencia_serie']){ $disabled='disabled'; } ?>	
+    <input type='radio' name='x_categoria' value='2' id='cat2' checked <?php echo($disabled); ?> >
     <label for='cat2'>Produccion Documental</label>
     <?php } ?>
     
