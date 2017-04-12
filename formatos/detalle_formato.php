@@ -55,9 +55,8 @@ if($formato["numcampos"]){
 	//se valida si recibe el default_open es que requiere abrir una pantalla por defecto en el lado derecho, se debe tener en cuenta que no se deben enviar parametros o modificar para hacer la validacion
 	if(@$_REQUEST["default_open"]){
 		$default_open=$ruta_db_superior.$_REQUEST["default_open"]."?key=".$_REQUEST['idformato'];
-	}
-	else{
-		$default_open=$ruta_db_superior. FORMATOS_CLIENTE . "formatoview.php?key=".$_REQUEST['idformato'];
+	} else {
+		$default_open=$ruta_db_superior. FORMATOS_SAIA . "formatoview.php?key=".$_REQUEST['idformato'];
 	}
 	?>
 <script type="text/javascript">

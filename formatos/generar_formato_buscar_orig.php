@@ -9,17 +9,29 @@ while($max_salida > 0) {
 	$max_salida--;
 }
 include_once ($ruta_db_superior . "db.php");
+$ruta_actual = '../';
 include_once ($ruta_db_superior . "librerias_saia.php");
-
-class GenerarBuscar {
-
-	private $idformato;
-	private $accion;
-
-	public function __construct($idformato, $accion) {
-		$this->idformato = $idformato;
-		$this->accion = $accion;
+if (@$_REQUEST["idformato"])
+	$idformato = $_REQUEST["idformato"];
+else {
+	alerta("por favor seleccione un Formato a Generar");
+	$redireccion = "formatolist.php";
+	if ($archivo != '') {
+		$redireccion = $archivo;
 	}
+	redirecciona($redireccion);
+}
+if (@$_REQUEST["crea"]) {
+	$ruta_padre = dirname(__DIR__);
+	chdir($ruta_padre);
+	crear_formato_buscar($idformato, "buscar");
+	chdir(__DIR__);
+	$redireccion = "funciones_formatolist.php?idformato=" . $idformato;
+	if ($archivo != '') {
+		$redireccion = $archivo;
+	}
+	redirecciona($redireccion);
+}
 
 /*
  * <Clase>
@@ -33,30 +45,30 @@ class GenerarBuscar {
  * <Post-condiciones><Post-condiciones>
  * </Clase>
  */
-public function crear_formato_buscar() {
+function crear_formato_buscar($idformato, $accion) {
 	global $sql, $conn, $ruta_db_superior;
 	$datos_detalles["numcampos"] = 0;
 	$texto = '';
 	$includes = "";
 	$incluidos = array();
 	$obligatorio = "";
-	$formato = busca_filtro_tabla("*", "formato A", "A.idformato=" . $this->idformato, "", $conn);
+	$formato = busca_filtro_tabla("*", "formato A", "A.idformato=" . $idformato, "", $conn);
 	if ($formato["numcampos"]) {
 		$action = '../librerias/funciones_buscador.php';
 		$texto .= '<legend id="label_formato" class="legend">B&uacute;squeda en formato ' . $formato[0]["etiqueta"] . '</legend><br /><br />';
 		$librerias = array();
 		if ($formato[0]["librerias"] && $formato[0]["librerias"] != "") {
-			$includes .= $this->incluir($formato[0]["librerias"], "librerias", 1);
+			$includes .= incluir($formato[0]["librerias"], "librerias", 1);
 		}
 		$texto1 = '<?php include_once("../../' . FORMATOS_SAIA . 'librerias/funciones_generales.php';
 		$texto2 = '"); ? >';
 		$includes .= $texto1 . $texto2;
-		// $includes.=$this->incluir_libreria("funciones_formatos.js","javascript");
+		// $includes.=incluir_libreria("funciones_formatos.js","javascript");
 		if ($formato[0]["estilos"] && $formato[0]["estilos"] != "") {
-			$includes .= $this->incluir($formato[0]["estilos"], "estilos", 1);
+			$includes .= incluir($formato[0]["estilos"], "estilos", 1);
 		}
 		if ($formato[0]["javascript"] && $formato[0]["javascript"] != "") {
-			$includes .= $this->incluir($formato[0]["javascript"], "javascript", 1);
+			$includes .= incluir($formato[0]["javascript"], "javascript", 1);
 		}
 		$radio = 0;
 
@@ -84,7 +96,7 @@ public function crear_formato_buscar() {
 		if ($cantidad_exclu) {
 			$filtro = " AND etiqueta_html NOT IN (" . implode(",", $campos_excluidos) . ") ";
 		}
-		$campos = busca_filtro_tabla("*", "campos_formato A", "A.acciones like '%" . $accion[0] . "%' and A.formato_idformato=" . $this->idformato . $filtro, "orden ASC", $conn);
+		$campos = busca_filtro_tabla("*", "campos_formato A", "A.acciones like '%" . $accion[0] . "%' and A.formato_idformato=" . $idformato . $filtro, "orden ASC", $conn);
 		// funciones creadas para el formato, pero que corresponden a nombres de campos
 		// print_r($campos);die();
 		$fun_campos = array();
@@ -122,9 +134,9 @@ public function crear_formato_buscar() {
 				$valor = "";
 				switch ($campos[$h]["etiqueta_html"]) {
 					case "password" :
-						$texto .= '<div class="control-group"><label class="string control-label" style="font-size:9pt" for="' . $campos[$h]["nombre"] . '"><b>' . $campos[$h]["etiqueta"] . $this->generar_comparacion($campos[$h]["tipo_dato"], $campos[$h]["nombre"]) . '</b></label><div class="controls"><input type="password" name="' . $campos[$h]["nombre"] . '" ' . $obligatorio . " $adicionales " . ' value="' . $valor . '">';
+						$texto .= '<div class="control-group"><label class="string control-label" style="font-size:9pt" for="' . $campos[$h]["nombre"] . '"><b>' . $campos[$h]["etiqueta"] . generar_comparacion($campos[$h]["tipo_dato"], $campos[$h]["nombre"]) . '</b></label><div class="controls"><input type="password" name="' . $campos[$h]["nombre"] . '" ' . $obligatorio . " $adicionales " . ' value="' . $valor . '">';
 						if ($h < ($campos["numcampos"] - 1))
-							$texto .= $this->generar_condicion($campos[$h]["nombre"]);
+							$texto .= generar_condicion($campos[$h]["nombre"]);
 						$texto .= '</div></div>';
 						break;
 					case "fecha" :
@@ -145,7 +157,7 @@ public function crear_formato_buscar() {
 							$datos_fecha[] = "g@" . $campos[$h]["nombre"] . "_y";
 							$fecha++;
 						} else if ($campos[$h]["tipo_dato"] == "DATETIME") {
-							$texto .= '<div class="control-group"><label class="string control-label" style="font-size:9pt" for="' . $campos[$h]["nombre"] . '"><b>' . $campos[$h]["etiqueta"] . $this->generar_comparacion($campos[$h]["tipo_dato"], $campos[$h]["nombre"]) . '</b></label><div class="controls">
+							$texto .= '<div class="control-group"><label class="string control-label" style="font-size:9pt" for="' . $campos[$h]["nombre"] . '"><b>' . $campos[$h]["etiqueta"] . generar_comparacion($campos[$h]["tipo_dato"], $campos[$h]["nombre"]) . '</b></label><div class="controls">
                     ENTRE &nbsp;<input type="text" readonly="true" name="' . $campos[$h]["nombre"] . '_1" ' . $adicionales . ' id="' . $campos[$h]["nombre"] . '_1" value="';
 							$texto .= '"><?php selector_fecha("' . $campos[$h]["nombre"] . '_1","kformulario_saia","Y-m-d H:i",date("m"),date("Y"),"default.css","../../","AD:VALOR"); ?' . '>&nbsp;&nbsp; Y &nbsp;&nbsp;';
 							$texto .= '<input type="text" readonly="true" name="' . $campos[$h]["nombre"] . '_2" ' . $adicionales . ' id="' . $campos[$h]["nombre"] . '_2" value="';
@@ -156,33 +168,33 @@ public function crear_formato_buscar() {
 							alerta("No esta definido su formato de Fecha");
 
 						if ($h < ($campos["numcampos"] - 1))
-							$texto .= $this->generar_condicion($campos[$h]["nombre"]);
+							$texto .= generar_condicion($campos[$h]["nombre"]);
 						$texto .= '</div></div>';
 						break;
 					case "radio":
               /* En los campos de este tipo se debe validar que valor contenga un listado con las siguentes caracteristicas*/
-                $texto .= '<div class="control-group"><label class="string control-label" style="font-size:9pt" for="' . $campos[$h]["nombre"] . '"><b>' . $campos[$h]["etiqueta"] . $this->generar_comparacion($campos[$h]["tipo_dato"], "g@" . $campos[$h]["nombre"]) . '</b></label><div class="controls">';
-						$texto .= $this->arma_funcion("genera_campo_listados_editar", $this->idformato . "," . $campos[$h]["idcampos_formato"], 'buscar');
+                $texto .= '<div class="control-group"><label class="string control-label" style="font-size:9pt" for="' . $campos[$h]["nombre"] . '"><b>' . $campos[$h]["etiqueta"] . generar_comparacion($campos[$h]["tipo_dato"], "g@" . $campos[$h]["nombre"]) . '</b></label><div class="controls">';
+						$texto .= arma_funcion("genera_campo_listados_editar", $idformato . "," . $campos[$h]["idcampos_formato"], 'buscar');
 
 						if ($h < ($campos["numcampos"] - 1))
-							$texto .= $this->generar_condicion("g@" . $campos[$h]["nombre"]);
+							$texto .= generar_condicion("g@" . $campos[$h]["nombre"]);
 						$radio = 1;
 						$texto .= '</div></div>';
 						break;
 					case "checkbox" :
-						$texto .= '<div class="control-group"><label class="string control-label" style="font-size:9pt" for="' . $campos[$h]["nombre"] . '"><b>' . $campos[$h]["etiqueta"] . $this->generar_comparacion($campos[$h]["tipo_dato"], $campos[$h]["nombre"]) . '</b></label><div class="controls">';
-						$texto .= $this->arma_funcion("genera_campo_listados_editar", $this->idformato . "," . $campos[$h]["idcampos_formato"], 'buscar');
+						$texto .= '<div class="control-group"><label class="string control-label" style="font-size:9pt" for="' . $campos[$h]["nombre"] . '"><b>' . $campos[$h]["etiqueta"] . generar_comparacion($campos[$h]["tipo_dato"], $campos[$h]["nombre"]) . '</b></label><div class="controls">';
+						$texto .= arma_funcion("genera_campo_listados_editar", $idformato . "," . $campos[$h]["idcampos_formato"], 'buscar');
 						if ($h < ($campos["numcampos"] - 1))
-							$texto .= $this->generar_condicion($campos[$h]["nombre"]);
+							$texto .= generar_condicion($campos[$h]["nombre"]);
 						$texto .= '</div></div>';
 						$checkboxes++;
 						break;
 					case "select" :
-						$texto .= '<div class="control-group"><label class="string control-label" style="font-size:9pt" for="' . $campos[$h]["nombre"] . '"><b>' . $campos[$h]["etiqueta"] . $this->generar_comparacion($campos[$h]["tipo_dato"], "g@" . $campos[$h]["nombre"]) . '</b></label><div class="controls">';
-						$texto .= $this->arma_funcion("genera_campo_listados_editar", $this->idformato . "," . $campos[$h]["idcampos_formato"], 'buscar');
+						$texto .= '<div class="control-group"><label class="string control-label" style="font-size:9pt" for="' . $campos[$h]["nombre"] . '"><b>' . $campos[$h]["etiqueta"] . generar_comparacion($campos[$h]["tipo_dato"], "g@" . $campos[$h]["nombre"]) . '</b></label><div class="controls">';
+						$texto .= arma_funcion("genera_campo_listados_editar", $idformato . "," . $campos[$h]["idcampos_formato"], 'buscar');
 
 						if ($h < ($campos["numcampos"] - 1))
-							$texto .= $this->generar_condicion($campos[$h]["nombre"]);
+							$texto .= generar_condicion($campos[$h]["nombre"]);
 
 						$texto .= '</div></div>';
 						break;
@@ -192,12 +204,12 @@ public function crear_formato_buscar() {
               (ej: departamento;select iddepartamento as id,nombre from departamento order by nombre| municipio; select idmunicipio as id,nombre from municipio where departamento_iddepartamento=)*/
                 $parametros = explode("|", $campos[$h]["valor"]);
 						if (count($parametros) < 2)
-							alerta("Por favor verifique los parametros de configuracion de su select dependiente " . $campos[$h]["etiqueta"] . $this->generar_comparacion($campos[$h]["tipo_dato"], $campos[$h]["nombre"]));
+							alerta("Por favor verifique los parametros de configuracion de su select dependiente " . $campos[$h]["etiqueta"] . generar_comparacion($campos[$h]["tipo_dato"], $campos[$h]["nombre"]));
 						else {
-							$texto .= '<div class="control-group"><label class="string control-label" style="font-size:9pt" for="' . $campos[$h]["nombre"] . '"><b>' . $campos[$h]["etiqueta"] . $this->generar_comparacion($campos[$h]["tipo_dato"], $campos[$h]["nombre"]) . '</b></label><div class="controls">' . $this->arma_funcion("genera_campo_listados_editar", $this->idformato . "," . $campos[$h]["idcampos_formato"], 'editar');
+							$texto .= '<div class="control-group"><label class="string control-label" style="font-size:9pt" for="' . $campos[$h]["nombre"] . '"><b>' . $campos[$h]["etiqueta"] . generar_comparacion($campos[$h]["tipo_dato"], $campos[$h]["nombre"]) . '</b></label><div class="controls">' . arma_funcion("genera_campo_listados_editar", $idformato . "," . $campos[$h]["idcampos_formato"], 'editar');
 
 							if ($h < ($campos["numcampos"] - 1))
-								$texto .= $this->generar_condicion($campos[$h]["nombre"]);
+								$texto .= generar_condicion($campos[$h]["nombre"]);
 
 							$texto .= '</div></div>';
 							$dependientes++;
@@ -209,7 +221,7 @@ public function crear_formato_buscar() {
 
                   Queda pendiente La parte de la busqueda.
                 */
-                $texto .= '<div class="control-group"><label class="string control-label" style="font-size:9pt" for="' . $campos[$h]["nombre"] . '"><b>' . $campos[$h]["etiqueta"] . $this->generar_comparacion($campos[$h]["tipo_dato"], $campos[$h]["nombre"]) . '</b></label><div class="controls">';
+                $texto .= '<div class="control-group"><label class="string control-label" style="font-size:9pt" for="' . $campos[$h]["nombre"] . '"><b>' . $campos[$h]["etiqueta"] . generar_comparacion($campos[$h]["tipo_dato"], $campos[$h]["nombre"]) . '</b></label><div class="controls">';
 						$texto .= '<input type="text" size="30" ' . $adicionales . ' value="" id="input' . $campos[$h]["idcampos_formato"] . '" onkeyup="lookup(this.value,' . $campos[$h]["idcampos_formato"] . ');" onblur="fill(this.value,' . $campos[$h]["idcampos_formato"] . ');" />
                 <div class="suggestionsBox" id="suggestions' . $campos[$h]["idcampos_formato"] . '" style="display: none;">
 				        <div class="suggestionList" id="list' . $campos[$h]["idcampos_formato"] . '" >&nbsp;
@@ -219,13 +231,13 @@ public function crear_formato_buscar() {
                 ';
 
 						if ($h < ($campos["numcampos"] - 1))
-							$texto .= $this->generar_condicion($campos[$h]["nombre"]);
+							$texto .= generar_condicion($campos[$h]["nombre"]);
 
 						$texto .= '</div></div>';
 						$autocompletar++;
 						break;
 					case "etiqueta" :
-						$texto .= '<div class="control-group"><label class="string control-label" style="font-size:9pt" for="' . $campos[$h]["nombre"] . '"><b>' . $campos[$h]["etiqueta"] . $this->generar_comparacion($campos[$h]["tipo_dato"], $campos[$h]["nombre"]) . '</b></label></div>';
+						$texto .= '<div class="control-group"><label class="string control-label" style="font-size:9pt" for="' . $campos[$h]["nombre"] . '"><b>' . $campos[$h]["etiqueta"] . generar_comparacion($campos[$h]["tipo_dato"], $campos[$h]["nombre"]) . '</b></label></div>';
 						break;
 					case "arbol":
                /*En campos valor se deben almacenar los siguientes datos:
@@ -252,7 +264,7 @@ public function crear_formato_buscar() {
 							$arreglo[3] = 0;
 							$arreglo[4] = 1;
 						}
-						$texto .= '<div class="control-group"><div class="controls"><b>' . $campos[$h]["etiqueta"] . $this->generar_comparacion($campos[$h]["tipo_dato"], $campos[$h]["nombre"]) . '</b><div id="esperando_' . $campos[$h]["nombre"] . '"><img src="../../imagenes/cargando.gif"></div>';
+						$texto .= '<div class="control-group"><div class="controls"><b>' . $campos[$h]["etiqueta"] . generar_comparacion($campos[$h]["tipo_dato"], $campos[$h]["nombre"]) . '</b><div id="esperando_' . $campos[$h]["nombre"] . '"><img src="../../imagenes/cargando.gif"></div>';
 						$texto .= '<div id="seleccionados"></div>';
 						if ($arreglo[4]) {
 							$texto .= '<input type="text" id="stext_' . $campos[$h]["nombre"] . '" placeholder="Buscar" width="200px" size="25">
@@ -337,7 +349,7 @@ public function crear_formato_buscar() {
 						if ($accion == "editar") {
 							$texto .= "
                   function checkear_arbol(){
-                  vector2=\"" . $this->arma_funcion("cargar_seleccionados", $this->idformato . "," . $campos[$h]["idcampos_formato"] . ",1", "mostrar") . "\";
+                  vector2=\"" . arma_funcion("cargar_seleccionados", $idformato . "," . $campos[$h]["idcampos_formato"] . ",1", "mostrar") . "\";
                   vector2=vector2.split(\",\");
                   for(m=0;m<vector2.length;m++)
                     {tree_" . $campos[$h]["nombre"] . ".setCheck(vector2[m],true);
@@ -345,7 +357,7 @@ public function crear_formato_buscar() {
 						}
 						$texto .= "--></script>";
 						if ($h < ($campos["numcampos"] - 1))
-							$texto .= $this->generar_condicion($campos[$h]["nombre"]);
+							$texto .= generar_condicion($campos[$h]["nombre"]);
 						$texto .= '</div></div>';
 						$campos_especiales[] = $campos[$h]["nombre"] . "@arbol";
 						$arboles++;
@@ -362,14 +374,14 @@ public function crear_formato_buscar() {
                 <fieldset>
                 <legend style="font-size:10pt;line-height:15px"><b>' . $campos[$h]["etiqueta"] . '</b></legend>
                 <div class="control-group;" style="background-color:#F5F5F5">
-                <b>Nombre' . $this->generar_comparacion($campos[$h]["tipo_dato"], 'f@nombre__' . $h) . '</b><div class="controls"><input type="text" ' . " $adicionales " . ' id="' . $campos[$h]["nombre"] . '-nombre" name="g@' . $campos[$h]["nombre"] . '-nombre" ' . $obligatorio . '></div>';
+                <b>Nombre' . generar_comparacion($campos[$h]["tipo_dato"], 'f@nombre__' . $h) . '</b><div class="controls"><input type="text" ' . " $adicionales " . ' id="' . $campos[$h]["nombre"] . '-nombre" name="g@' . $campos[$h]["nombre"] . '-nombre" ' . $obligatorio . '></div>';
 
 						$texto .= '<b>Identificacion</b><div class="controls"><input type="text" ' . " $adicionales " . ' id="' . $campos[$h]["nombre"] . '-identificacion" name="g@' . $campos[$h]["nombre"] . '-identificacion" ' . $obligatorio . '></div>';
 
 						$texto .= '<b>Empresa</b><div class="controls"><input type="text" ' . " $adicionales " . ' id="' . $campos[$h]["nombre"] . '-empresa" name="g@' . $campos[$h]["nombre"] . '-empresa" ' . $obligatorio . '></div>';
 
 						// if($h<($campos["numcampos"]-1))
-						// $texto.=$this->generar_condicion('f@nombre__'.$h);
+						// $texto.=generar_condicion('f@nombre__'.$h);
 
 						$texto .= '</div></fieldset><br>';
 						// $adicional_ejecutor[]=" ".$campos[$h]["nombre"]."=iddatos_ejecutor ";
@@ -377,10 +389,10 @@ public function crear_formato_buscar() {
 						$ejecutores++;
 						break;
 					case "textarea" :
-						$texto .= '<div class="control-group"><b>' . $campos[$h]["etiqueta"] . $this->generar_comparacion($campos[$h]["tipo_dato"], "g@" . $campos[$h]["nombre"]) . '</b><div class="controls"><textarea ' . " $adicionales " . ' id="' . $campos[$h]["nombre"] . '" name="bqsaia_g@' . $campos[$h]["nombre"] . '" ' . $obligatorio . ' style="width:500px;height:100px"></textarea>';
+						$texto .= '<div class="control-group"><b>' . $campos[$h]["etiqueta"] . generar_comparacion($campos[$h]["tipo_dato"], "g@" . $campos[$h]["nombre"]) . '</b><div class="controls"><textarea ' . " $adicionales " . ' id="' . $campos[$h]["nombre"] . '" name="bqsaia_g@' . $campos[$h]["nombre"] . '" ' . $obligatorio . ' style="width:500px;height:100px"></textarea>';
 
 						if ($h < ($campos["numcampos"] - 1))
-							$texto .= $this->generar_condicion("g@" . $campos[$h]["nombre"]);
+							$texto .= generar_condicion("g@" . $campos[$h]["nombre"]);
 						$texto .= '</div></div>';
 
 						$textarea++;
@@ -392,15 +404,15 @@ public function crear_formato_buscar() {
 						}
 						if ($campos[$h]["tipo_dato"] == "DATE") {
 							$adicionales = str_replace("required", "dateISO", $adicionales);
-							$texto .= '<div class="control-group"><label class="string control-label" style="font-size:9pt" for="' . $campos[$h]["nombre"] . '"><b>' . $campos[$h]["etiqueta"] . $this->generar_comparacion("date", "g@" . $campos[$h]["nombre"]) . '</b></label><div class="controls">
+							$texto .= '<div class="control-group"><label class="string control-label" style="font-size:9pt" for="' . $campos[$h]["nombre"] . '"><b>' . $campos[$h]["etiqueta"] . generar_comparacion("date", "g@" . $campos[$h]["nombre"]) . '</b></label><div class="controls">
                    <input type="text" readonly="true" ' . $adicionales . ' name="bqsaia_g@' . $campos[$h]["nombre"] . '" id="' . $campos[$h]["nombre"] . '" tipo="fecha" value="">';
 							$texto .= '<?php selector_fecha("' . $campos[$h]["nombre"] . '","kformulario_saia","Y-m-d",date("m"),date("Y"),"default.css","../../","AD:VALOR"); ?' . '></form>';
 							$fecha++;
 						} else {
-							$texto .= '<div class="control-group"><b>' . $campos[$h]["etiqueta"] . $this->generar_comparacion($campos[$h]["tipo_dato"], "g@" . $campos[$h]["nombre"]) . '</b><div class="controls"><input type="text" id="' . $campos[$h]["nombre"] . '" name="bqsaia_g@' . $campos[$h]["nombre"] . '">';
+							$texto .= '<div class="control-group"><b>' . $campos[$h]["etiqueta"] . generar_comparacion($campos[$h]["tipo_dato"], "g@" . $campos[$h]["nombre"]) . '</b><div class="controls"><input type="text" id="' . $campos[$h]["nombre"] . '" name="bqsaia_g@' . $campos[$h]["nombre"] . '">';
 						}
 						if ($h < ($campos["numcampos"] - 1))
-							$texto .= $this->generar_condicion("g@" . $campos[$h]["nombre"]);
+							$texto .= generar_condicion("g@" . $campos[$h]["nombre"]);
 
 						$texto .= '</div></div>';
 						break;
@@ -428,7 +440,7 @@ public function crear_formato_buscar() {
 		}
 		// die();
 		// ******************************************************************************************
-		$wheref = "(A.formato LIKE '" . $this->idformato . "' OR A.formato LIKE '%," . $this->idformato . ",%' OR A.formato LIKE '%," . $this->idformato . "' OR A.formato LIKE '" . $this->idformato . ",%') AND A.acciones LIKE '%" . strtolower($accion[0]) . "%' ";
+		$wheref = "(A.formato LIKE '" . $idformato . "' OR A.formato LIKE '%," . $idformato . ",%' OR A.formato LIKE '%," . $idformato . "' OR A.formato LIKE '" . $idformato . ",%') AND A.acciones LIKE '%" . strtolower($accion[0]) . "%' ";
 		/*
 		 * if(count($listado_campos)){
 		 * $wheref.="AND nombre_funcion NOT IN(".implode(",",$listado_campos).")";
@@ -442,18 +454,18 @@ public function crear_formato_buscar() {
 			// saco el primer formato de la lista de la funcion (formato inicial)
 			$formato_orig = explode(",", $funciones[$i]["formato"]);
 			// si el formato actual es distinto del formato inicial
-			if ($formato_orig[0] != $this->idformato) { // busco el nombre del formato inicial
+			if ($formato_orig[0] != $idformato) { // busco el nombre del formato inicial
 				$dato_formato_orig = busca_filtro_tabla("nombre", "formato", "idformato=" . $formato_orig[0], "", $conn);
 				if ($dato_formato_orig["numcampos"]) {
 					// si el archivo existe dentro de la carpeta del archivo inicial
 					if (is_file($dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
-						$includes .= $this->incluir("../" . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"], "librerias");
+						$includes .= incluir("../" . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"], "librerias");
 					} elseif (is_file($funciones[$i]["ruta"])) { // si el archivo existe en la ruta especificada partiendo de la raiz
-						$includes .= $this->incluir("../" . $funciones[$i]["ruta"], "librerias");
+						$includes .= incluir("../" . $funciones[$i]["ruta"], "librerias");
 					} else // si no existe en ninguna de las dos
 { // trato de crearlo dentro de la carpeta del formato actual
 						if (crear_archivo(FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
-							$includes .= $this->incluir($funciones[$i]["ruta"], "librerias");
+							$includes .= incluir($funciones[$i]["ruta"], "librerias");
 						} else
 							alerta("No es posible generar el archivo " . $formato[0]["nombre_tabla"] . "/" . $funciones[$i]["ruta"]);
 					}
@@ -461,24 +473,24 @@ public function crear_formato_buscar() {
 			} else // $ruta_orig=$formato[0]["nombre"];
 { // si el archivo existe dentro de la carpeta del formato actual
 				if (is_file($formato[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
-					$includes .= $this->incluir($funciones[$i]["ruta"], "librerias");
+					$includes .= incluir($funciones[$i]["ruta"], "librerias");
 				} elseif (is_file($funciones[$i]["ruta"])) { // si el archivo existe en la ruta especificada partiendo de la raiz
-					$includes .= $this->incluir("../" . $funciones[$i]["ruta"], "librerias");
+					$includes .= incluir("../" . $funciones[$i]["ruta"], "librerias");
 				} else // si no existe en ninguna de las dos
 { // trato de crearlo dentro de la carpeta del formato actual
 					if (crear_archivo(FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
-						$includes .= $this->incluir($funciones[$i]["ruta"], "librerias");
+						$includes .= incluir($funciones[$i]["ruta"], "librerias");
 					} else
 						alerta("No es posible generar el archivo " . $formato[0]["nombre_tabla"] . "/" . $funciones[$i]["ruta"]);
 				}
 			}
 			if (!in_array($funciones[$i]["nombre_funcion"], $fun_campos)) {
-				$parametros = "$this->idformato,NULL";
-				$texto .= $this->arma_funcion($funciones[$i]["nombre_funcion"], $parametros, $accion);
+				$parametros = "$idformato,NULL";
+				$texto .= arma_funcion($funciones[$i]["nombre_funcion"], $parametros, $accion);
 			}
 		}
 		// ******************************************************************************************
-		$campo_descripcion = busca_filtro_tabla("", "campos_formato", "formato_idformato=" . $this->idformato . " AND acciones LIKE '%p%'", "", $conn);
+		$campo_descripcion = busca_filtro_tabla("", "campos_formato", "formato_idformato=" . $idformato . " AND acciones LIKE '%p%'", "", $conn);
 		$valor1 = extrae_campo($campo_descripcion, "idcampos_formato", "U");
 		$valor = implode(",", $valor1);
 		if ($formato[0]["detalle"]) {
@@ -507,18 +519,18 @@ public function crear_formato_buscar() {
              <?php  } ?' . '>';
 		$texto .= '</body>';
 		if ($fecha) {
-			$includes .= $this->incluir("../../calendario/calendario.php", "librerias");
+			$includes .= incluir("../../calendario/calendario.php", "librerias");
 			$texto .= '<input type="hidden" name="bqtipodato_plantilla" id="bqtipodato_plantilla" value="date|' . implode(",", $datos_fecha) . '">';
 		}
 		if ($textareas) {
-			$includes .= $this->incluir_libreria("header_formato.php", "librerias");
+			$includes .= incluir_libreria("header_formato.php", "librerias");
 		}
 
 		if ($autocompletar) {
-			$includes .= $this->incluir("../librerias/autocompletar.js", "javascript");
+			$includes .= incluir("../librerias/autocompletar.js", "javascript");
 		}
 		if ($dependientes > 0) {
-			$includes .= $this->incluir("../librerias/dependientes.js", "javascript");
+			$includes .= incluir("../librerias/dependientes.js", "javascript");
 		}
 
 		$contenido = $includes . $enmascarar . $texto;
@@ -542,7 +554,7 @@ public function crear_formato_buscar() {
  * <Post-condiciones><Post-condiciones>
  * </Clase>
  */
-private function generar_condicion($nombre) {
+function generar_condicion($nombre) {
 	$texto = '<div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor(\'bqsaiaenlace_' . $nombre . '\',this.id)">
 		    Y
@@ -567,7 +579,7 @@ private function generar_condicion($nombre) {
  * <Post-condiciones><Post-condiciones>
  * </Clase>
  */
-private function generar_comparacion($tipo, $nombre) {
+function generar_comparacion($tipo, $nombre) {
 	$texto = '';
 	$listado = array();
 	switch ($tipo) {
@@ -604,7 +616,7 @@ private function generar_comparacion($tipo, $nombre) {
  * <Post-condiciones><Post-condiciones>
  * </Clase>
  */
-private function incluir($cad, $tipo, $eval = 0) {
+function incluir($cad, $tipo, $eval = 0) {
 	global $incluidos;
 	$includes = "";
 	$lib = explode(",", $cad);
@@ -644,14 +656,14 @@ private function incluir($cad, $tipo, $eval = 0) {
  * <Post-condiciones><Post-condiciones>
  * </Clase>
  */
-private function incluir_libreria($nombre, $tipo) {
+function incluir_libreria($nombre, $tipo) {
 	$includes = "";
 	if (!is_file(FORMATOS_SAIA . "librerias/" . $nombre)) {
 		if (!crear_archivo(FORMATOS_SAIA . "librerias/" . $nombre)) {
 			alerta("No es posible generar el archivo " . $nombre);
 		}
 	}
-	$includes .= $this->incluir("../../" . FORMATOS_SAIA . "librerias/" . $nombre, $tipo);
+	$includes .= incluir("../../" . FORMATOS_SAIA . "librerias/" . $nombre, $tipo);
 	return ($includes);
 }
 
@@ -693,10 +705,7 @@ function arma_funcion($nombre, $parametros, $accion) {
  * <Post-condiciones><Post-condiciones>
  * </Clase>
  */
-function codifica($texto) {
-	// strtoupper(codifica_encabezado(html_entity_decode($campos[$h]["etiqueta"].generar_comparacion($campos[$h]["tipo_dato"],$campos[$h]["nombre"]))))
+function codifica($texto) { // strtoupper(codifica_encabezado(html_entity_decode($campos[$h]["etiqueta"].generar_comparacion($campos[$h]["tipo_dato"],$campos[$h]["nombre"]))))
 	return mayusculas($texto);
-}
-
 }
 ?>
