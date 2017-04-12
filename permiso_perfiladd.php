@@ -31,6 +31,13 @@ echo(librerias_arboles());
 ?>
 </head>
 <body>
+		<script type="text/javascript" src="<?php echo $ruta_db_superior;?>anexosdigitales/highslide-4.0.10/highslide/highslide-with-html.js"></script>
+		 <link rel="stylesheet" type="text/css" href="<?php echo $ruta_db_superior;?>anexosdigitales/highslide-4.0.10/highslide/highslide.css" />
+		 <script type='text/javascript'>
+		   hs.graphicsDir = '<?php echo $ruta_db_superior;?>anexosdigitales/highslide-4.0.10/highslide/graphics/';
+		   hs.outlineType = 'rounded-white';
+		</script>   
+		<a style="display:none;" id="enlace_highslide" class="highslide" onclick="return hs.htmlExpand(this, { objectType: 'iframe',width: 300, height: 100,preserveContent:false} )" >I</a>
 <div class="container">
 		<h5>ADICIONAR PERMISO PERFIL</h5>
 		<br/>
@@ -105,6 +112,7 @@ echo $x_perfil_idperfilList;
             tree3.setOnLoadingEnd(fin_cargando_serie);
     		tree3.loadXML("test_permiso_modulo.php?filtro_perfil=1&entidad=perfil&llave_entidad=<?php echo $sKey; echo $condicion; ?>");
     		tree3.setOnCheckHandler(onNodeSelect);
+    		tree3.setOnClickHandler(high_slide_permiso_crear_formato);
           function fin_cargando_serie() {
             if (browserType == "gecko" )
                document.poppedLayer =
@@ -148,6 +156,31 @@ echo $x_perfil_idperfilList;
                    eval('document.layers["esperando_modulo"]');
             document.poppedLayer.style.visibility = "visible";
           }
+          function high_slide_permiso_crear_formato(nodeId){
+            var idperfil=parseInt($('#x_perfil_idperfil').val());
+            if(idperfil){   
+                $.ajax({
+                    type:'POST',
+                    dataType: 'html',
+                    url: "<?php echo($ruta_db_superior); ?>pantallas/permisos/validar_permiso_perfil.php",
+                    data: {
+                        valida_modulo_formato:1,
+                        idmodulo:nodeId
+                    },
+                    success: function(exito){
+                        exito=parseInt(exito);
+                        if(exito){ //es formato
+                            var enlace="<?php echo($ruta_db_superior); ?>pantallas/permisos/validar_permiso_perfil.php?valida_permiso_crear_formato=1&idmodulo="+nodeId+"&idperfil="+idperfil;
+                            $('#enlace_highslide').attr('href',enlace);
+                            $('#enlace_highslide').click();
+                           // hs.htmlExpand(this, { objectType: 'iframe',width: 500, height: 200,preserveContent:false, src:enlace,outlineType: 'rounded-white',wrapperClassName:'highslide-wrapper drag-header'});	
+                        }
+                    }
+                });   
+            }    
+          }
+          
+          
           $(document).ready(function(){
               $("#x_perfil_idperfil").change(function() {
                  if($('#x_perfil_idperfil :selected').val()!="")
@@ -160,5 +193,6 @@ echo $x_perfil_idperfilList;
     	</script>
   </td>
 </tr>
+</table>
 </body>
 </html>
