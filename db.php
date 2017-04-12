@@ -3698,9 +3698,8 @@ function crear_archivo($nombre,$texto=NULL,$modo='wb'){
 		if (mkdir($ruta, PERMISOS_CARPETAS, true)) {
 			chmod($ruta, PERMISOS_CARPETAS);
 		} else {
-			$e = new \Exception;
-			var_dump($e->getTraceAsString());
-			die();
+			/*$e = new \Exception($nombre);
+			throw $e;*/
 			alerta("Problemas al generar las carpetas");
 			return (false);
 		}
