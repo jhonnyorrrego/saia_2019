@@ -108,10 +108,10 @@ $(document).ready(function(){
 </script>
 <?php
 if($formato["numcampos"]){ 
-    $llave="&idformato=".$formato[0]["idformato"]."&iddoc=".$iddocumento; 
+    $llave="idformato=".$formato[0]["idformato"]."&iddoc=".$iddocumento; 
 ?>
 <script type="text/javascript">
-llamado_pantalla("pantallas/documento/informacion_resumen_documento.php","<?php if(@$_REQUEST['click_mostrar']){echo('click_mostrar=1&');} ?>form_info=1<?php echo($llave);?>&alto_pantalla="+(alto-1),$("#izquierdo_saia"),"arbol_formato");
+llamado_pantalla("pantallas/documento/informacion_resumen_documento.php","<?php if(@$_REQUEST['click_mostrar']){echo('click_mostrar=1&');} ?>form_info=<?php echo($llave);?>&alto_pantalla="+(alto-1),$("#izquierdo_saia"),"arbol_formato");
 <?php if(!@$_REQUEST['click_mostrar']){
     ?>
     llamado_pantalla("","",$("#contenedor_saia"),'detalles');
