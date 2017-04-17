@@ -299,3 +299,5 @@ DELETE FROM campos_formato WHERE nombre='cluster' AND formato_idformato=305;
 DELETE FROM campos_formato WHERE nombre='region' AND formato_idformato=305;
 
 --------------------------
+UPDATE campos_formato SET  ayuda ='Comunicaci&oacute;n Externa (WORD)',predeterminado='1332' WHERE  idcampos_formato =4796;
+--------------------------
