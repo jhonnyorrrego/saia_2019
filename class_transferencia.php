@@ -518,7 +518,8 @@ function transferir_archivo_prueba($datos, $destino, $adicionales) {
 cambia el estado del documento a APROBADO
 */
 function aprobar($iddoc=0,$url="")
-  {//$con=new Conexion("radica_camara");
+  {global $ruta_db_superior;
+      //$con=new Conexion("radica_camara");
    //$buscar=new SQL($con->Obtener_Conexion(), "Oracle");
    global $conn;
    $transferir=1;
