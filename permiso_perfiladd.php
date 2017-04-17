@@ -124,6 +124,15 @@ echo $x_perfil_idperfilList;
                document.poppedLayer =
                   eval('document.layers["esperando_modulo"]');
             document.poppedLayer.style.visibility = "hidden";
+            
+            
+            <?php 
+                $cmodulo_crear=busca_filtro_tabla("idmodulo","modulo","nombre='creacion_formatos'","",$conn);
+                if($cmodulo_crear['numcampos']){
+                    echo("tree3.deleteItem('".$cmodulo_crear[0]['idmodulo']."');");
+                }
+            ?>            
+            
           }
           function onNodeSelect(nodeId){
         	$.ajax({
