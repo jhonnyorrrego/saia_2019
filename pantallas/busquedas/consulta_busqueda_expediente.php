@@ -205,6 +205,7 @@ $(document).ready(function(){
 	          } 
           } 
           else{
+               $("#busqueda_total_paginas").val(0);
           	cargar_datos_scroll2();
           }              
         }else{
@@ -228,10 +229,10 @@ $(document).ready(function(){
   	          $("#busqueda_total_paginas_doc").val(objeto.total);
   	          //$("#busqueda_sql").html(objeto.sql);          
   	          $("#fila_actual_doc").val(objeto.actual_row);          
-  	          $.each(objeto.rows,function(index,item){                
-  	            if(objeto.page===2 && index===0){                
+  	          $.each(objeto.rows,function(index,item){   
+  	            if(parseInt($("#busqueda_total_paginas").val())==0 && index===0){                
   	                $("#iframe_detalle").attr({
-  	                    'src':'<?php echo($ruta_db_superior);?>pantallas/documento/detalles_documento.php?iddocumento='+item.iddocumento+"&idbusqueda_componente=<?php echo($idbusqueda_componente);?>&rand=<?php echo(rand());?>",
+  	                    'src':'<?php echo($ruta_db_superior);?>pantallas/documento/detalles_documento.php?iddoc='+item.iddocumento+"&idbusqueda_componente=<?php echo($idbusqueda_componente);?>&rand=<?php echo(rand());?>",
   	                    'height': ($("#panel_body").height())
   	                });                
   	            }
