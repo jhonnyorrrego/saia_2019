@@ -49,7 +49,7 @@ if (@$_REQUEST["userid"]<>"" && @$_REQUEST["passwd"]<>"") {
         $row=$usuario[0]; 
         $rol=0;  
         for($i=0;$i<$usuario["numcampos"];$i++){
-            if($usuario[$i]["estado_dc"] && $rol==0){
+            if($usuario[$i]["estado_dc"] && $rol==0 && ( $usuario[$i]["fecha_final"]>=date('Y-m-d- H:i:s'))){
                 $rol=1;
                 break;
             }
