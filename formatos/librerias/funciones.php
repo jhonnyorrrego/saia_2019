@@ -37,9 +37,9 @@ function valor_letras($idformato, $iddoc) {
  */
 function guardar_traza($sql, $nombre_formato, $sql_export) {
 	global $conn, $ruta_db_superior;
-	// ../../almacenamiento/configuracion/evento_formato/ft_carta
-	$nombre = RUTA_ABS_SAIA. RUTA_EVENTO_FORMATO . strtolower($nombre_formato) . "/" . DB . "_" . date("Ymd") . ".txt";
-	$ruta_real = realpath($nombre);
+	$nombre = RUTA_ABS_SAIA . RUTA_EVENTO_FORMATO . strtolower($nombre_formato) . "/" . DB . "_" . date("Ymd") . ".txt";
+	// Quitar .. de en medio de la ruta /path1/../path2
+	$ruta_real = normalizePath($nombre);
 	if (!@is_file($ruta_real)) {
 		crear_archivo($ruta_real);
 	}
@@ -57,6 +57,21 @@ function guardar_traza($sql, $nombre_formato, $sql_export) {
 			file_put_contents($nombre_export, json_encode($arreglo_export), FILE_APPEND);
 		}
 	}
+}
+
+function normalizePath($path) {
+	return array_reduce(explode('/', $path), create_function('$a, $b', '
+			if($a === 0)
+				$a = "/";
+
+			if($b === "" || $b === ".")
+				return $a;
+
+			if($b === "..")
+				return dirname($a);
+
+			return preg_replace("/\/+/", "/", "$a/$b");
+		'), 0);
 }
 
 function guardar_traza_corregir($sql, $nombre_formato) {
