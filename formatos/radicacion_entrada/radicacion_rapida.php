@@ -23,14 +23,14 @@ echo(estilo_bootstrap());
 </head>
 <body>
 <div id="div_contenido">
-			<form method="POST" action="<?php echo($ruta_db_superior); ?>colilla.php"><br/><br />
+			<form method="POST" id="form_radicacion_rapida" action="<?php echo($ruta_db_superior); ?>colilla.php" ><br/><br />
                 <table class="table-bordered" border="1" align="center">
                     <tr>
                         <td class="encabezado_list" colspan="2" align="center">Seleccione Tipo de Radicación</td>
                     </tr>
                     <tr>
                         <td colspan="2">
-                            <input type="hidden" id="generar_consecutivo" name="generar_consecutivo"/ required>
+                            <input type="hidden" id="generar_consecutivo" name="generar_consecutivo">
                             <input type="hidden" name="enlace" id="enlace" value="pantallas/buscador_principal.php?idbusqueda=7">
                             
                             <?php
@@ -118,3 +118,21 @@ if(@$_REQUEST["idcategoria_formato"]){
         </table>
         <input type="hidden" name="target" value="_self">
     </form>
+    <?php
+    echo(librerias_validar_formulario(11));
+    ?>
+    <script>
+        $(document).ready(function(){
+            $( "#form_radicacion_rapida" ).validate({
+               submitHandler: function(form){
+                   var generar_consecutivo=$('#generar_consecutivo').val();
+                   if(!generar_consecutivo || generar_consecutivo==''){
+                       	top.noty({text: '<b>ATENCI&Oacute;N</b><br>De seleccionar una opci&oacute;n para radicar!',type: 'warning',layout: 'topCenter',timeout:2500});
+                       return(false);
+                   }
+                    
+                    form.submit();   
+                }                 
+            });
+        });
+    </script>
