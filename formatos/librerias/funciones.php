@@ -37,11 +37,13 @@ function valor_letras($idformato, $iddoc) {
  */
 function guardar_traza($sql, $nombre_formato, $sql_export) {
 	global $conn, $ruta_db_superior;
-	$nombre = $ruta_db_superior . RUTA_EVENTO_FORMATO . strtolower($nombre_formato) . "/" . DB . "_" . date("Ymd") . ".txt";
-	if (!@is_file($nombre)) {
-		crear_archivo($nombre);
+	// ../../almacenamiento/configuracion/evento_formato/ft_carta
+	$nombre = RUTA_ABS_SAIA. RUTA_EVENTO_FORMATO . strtolower($nombre_formato) . "/" . DB . "_" . date("Ymd") . ".txt";
+	$ruta_real = realpath($nombre);
+	if (!@is_file($ruta_real)) {
+		crear_archivo($ruta_real);
 	}
-	if (file_put_contents($nombre, $sql, FILE_APPEND)) {
+	if (file_put_contents($ruta_real, $sql, FILE_APPEND)) {
 		if ($sql_export) {
 			if (!@is_file($nombre_export)) {
 				crear_archivo($nombre_export);

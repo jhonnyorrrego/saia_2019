@@ -111,7 +111,7 @@ class GenerarFormato {
 	 * </Clase>
 	 */
 	function generar_tabla() {
-		global $sql, $conn, $ruta_db_superior;
+		global $sql, $conn;
 		$sql_tabla = "";
 		$lcampos = array();
 		$idesta = 0;
@@ -341,7 +341,7 @@ class GenerarFormato {
 	 * </Clase>
 	 */
 	function elimina_indice($tabla, $campo) {
-		global $conn, $ruta_db_superior;
+		global $conn;
 		if (MOTOR == "MySql") {
 			if ($campo["Key_name"] == "PRIMARY") {
 				$verifica_existencia = busca_filtro_tabla("*", $tabla, "", "", $conn);
@@ -447,7 +447,7 @@ class GenerarFormato {
 	 * </Clase>
 	 */
 	private function crear_indice($todas_banderas, $nombre_campo, $nombre_tabla) {
-		global $conn, $ruta_db_superior;
+		global $conn;
 		$nombre_tabla = strtoupper($nombre_tabla);
 		$nombre_campo = strtoupper($nombre_campo);
 		$banderas = explode(",", $todas_banderas);
@@ -571,7 +571,7 @@ class GenerarFormato {
 	 * </Clase>
 	 */
 	private function crear_campo($datos_campo, $tabla, $estructura_campo = null) {
-		global $conn, $ruta_db_superior;
+		global $conn;
 		$campo = "";
 
 		if ($datos_campo["nombre"]) {
@@ -1004,7 +1004,7 @@ class GenerarFormato {
 	 * </Clase>
 	 */
 	private function crear_vista_formato($arreglo) {
-		global $sql, $conn, $ruta_db_superior;
+		global $sql, $conn;
 		$vista = busca_filtro_tabla("*", "vista_formato A", "A.idvista_formato=" . $this->idformato, "", $conn);
 		$includes = '';
 		$texto = '';

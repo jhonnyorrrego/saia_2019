@@ -451,7 +451,7 @@ public function crear_formato_buscar() {
 					} elseif (is_file($funciones[$i]["ruta"])) { // si el archivo existe en la ruta especificada partiendo de la raiz
 						$includes .= $this->incluir("../" . $funciones[$i]["ruta"], "librerias");
 					} else { // si no existe en ninguna de las dos
- // trato de crearlo dentro de la carpeta del formato actual
+						// trato de crearlo dentro de la carpeta del formato actual
 						if (crear_archivo(FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
 							$includes .= $this->incluir($funciones[$i]["ruta"], "librerias");
 						} else
@@ -459,13 +459,15 @@ public function crear_formato_buscar() {
 					}
 				}
 			} else {// $ruta_orig=$formato[0]["nombre"];
- // si el archivo existe dentro de la carpeta del formato actual
-				if (is_file($formato[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
+				// si el archivo existe dentro de la carpeta del formato actual
+				//../carta/funciones.php
+
+				if (is_file(FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
 					$includes .= $this->incluir($funciones[$i]["ruta"], "librerias");
 				} elseif (is_file($funciones[$i]["ruta"])) { // si el archivo existe en la ruta especificada partiendo de la raiz
 					$includes .= $this->incluir("../" . $funciones[$i]["ruta"], "librerias");
 				} else { // si no existe en ninguna de las dos
- // trato de crearlo dentro de la carpeta del formato actual
+					// trato de crearlo dentro de la carpeta del formato actual
 					$ruta_libreria = FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $funciones[$i]["ruta"];
 					$ruta_real = realpath($ruta_libreria);
 					if (crear_archivo($ruta_real)) {
