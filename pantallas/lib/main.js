@@ -65,9 +65,9 @@ $('.adicionar_seleccionados_expediente').live('click',function(){
     else{
       $("#seleccionados_expediente").val($("#seleccionados_expediente").val()+","+idregistro);            
     }
-    $('#resultado_pantalla_'+idregistro).removeClass("well");
-    $('#resultado_pantalla_'+idregistro).addClass("alert");
-    $('#resultado_pantalla_'+idregistro).addClass("alert-success"); 
+    //$('#resultado_pantalla_'+idregistro).removeClass("well");
+    //$('#resultado_pantalla_'+idregistro).addClass("alert");
+    //$('#resultado_pantalla_'+idregistro).addClass("alert-success"); 
          
   }    
 }); 
