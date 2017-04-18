@@ -153,7 +153,7 @@ public function crear_formato_buscar() {
 							$texto .= '"><?php selector_fecha("' . $campos[$h]["nombre"] . '_2","kformulario_saia","Y-m-d H:i",date("m"),date("Y"),"default.css","../../","AD:VALOR"); ?' . '>';
 							$fecha++;
 						} else
-							alerta("No esta definido su formato de Fecha");
+							alerta_formatos("No esta definido su formato de Fecha");
 
 						if ($h < ($campos["numcampos"] - 1))
 							$texto .= $this->generar_condicion($campos[$h]["nombre"]);
@@ -192,7 +192,7 @@ public function crear_formato_buscar() {
               (ej: departamento;select iddepartamento as id,nombre from departamento order by nombre| municipio; select idmunicipio as id,nombre from municipio where departamento_iddepartamento=)*/
                 $parametros = explode("|", $campos[$h]["valor"]);
 						if (count($parametros) < 2)
-							alerta("Por favor verifique los parametros de configuracion de su select dependiente " . $campos[$h]["etiqueta"] . $this->generar_comparacion($campos[$h]["tipo_dato"], $campos[$h]["nombre"]));
+							alerta_formatos("Por favor verifique los parametros de configuracion de su select dependiente " . $campos[$h]["etiqueta"] . $this->generar_comparacion($campos[$h]["tipo_dato"], $campos[$h]["nombre"]));
 						else {
 							$texto .= '<div class="control-group"><label class="string control-label" style="font-size:9pt" for="' . $campos[$h]["nombre"] . '"><b>' . $campos[$h]["etiqueta"] . $this->generar_comparacion($campos[$h]["tipo_dato"], $campos[$h]["nombre"]) . '</b></label><div class="controls">' . $this->arma_funcion("genera_campo_listados_editar", $this->idformato . "," . $campos[$h]["idcampos_formato"], 'editar');
 
@@ -450,26 +450,28 @@ public function crear_formato_buscar() {
 						$includes .= $this->incluir("../" . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"], "librerias");
 					} elseif (is_file($funciones[$i]["ruta"])) { // si el archivo existe en la ruta especificada partiendo de la raiz
 						$includes .= $this->incluir("../" . $funciones[$i]["ruta"], "librerias");
-					} else // si no existe en ninguna de las dos
-{ // trato de crearlo dentro de la carpeta del formato actual
+					} else { // si no existe en ninguna de las dos
+ // trato de crearlo dentro de la carpeta del formato actual
 						if (crear_archivo(FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
 							$includes .= $this->incluir($funciones[$i]["ruta"], "librerias");
 						} else
-							alerta("No es posible generar el archivo " . $formato[0]["nombre_tabla"] . "/" . $funciones[$i]["ruta"]);
+							alerta_formatos("FB 458 No es posible generar el archivo " . $formato[0]["nombre"] . "/" . $funciones[$i]["ruta"]);
 					}
 				}
-			} else // $ruta_orig=$formato[0]["nombre"];
-{ // si el archivo existe dentro de la carpeta del formato actual
+			} else {// $ruta_orig=$formato[0]["nombre"];
+ // si el archivo existe dentro de la carpeta del formato actual
 				if (is_file($formato[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
 					$includes .= $this->incluir($funciones[$i]["ruta"], "librerias");
 				} elseif (is_file($funciones[$i]["ruta"])) { // si el archivo existe en la ruta especificada partiendo de la raiz
 					$includes .= $this->incluir("../" . $funciones[$i]["ruta"], "librerias");
-				} else // si no existe en ninguna de las dos
-{ // trato de crearlo dentro de la carpeta del formato actual
-					if (crear_archivo(FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
+				} else { // si no existe en ninguna de las dos
+ // trato de crearlo dentro de la carpeta del formato actual
+					$ruta_libreria = FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $funciones[$i]["ruta"];
+					$ruta_real = realpath($ruta_libreria);
+					if (crear_archivo($ruta_real)) {
 						$includes .= $this->incluir($funciones[$i]["ruta"], "librerias");
 					} else
-						alerta("No es posible generar el archivo " . $formato[0]["nombre_tabla"] . "/" . $funciones[$i]["ruta"]);
+						alerta_formatos("FB 472 No es posible generar el archivo " . $ruta_real);
 				}
 			}
 			if (!in_array($funciones[$i]["nombre_funcion"], $fun_campos)) {
@@ -525,9 +527,9 @@ public function crear_formato_buscar() {
 		$mostrar = crear_archivo(FORMATOS_CLIENTE . $formato[0]["nombre"] . "/buscar_" . $formato[0]["nombre"] . "2.php", $contenido);
 
 		if ($mostrar != "")
-			alerta("Formato Creado con exito por favor verificar la carpeta " . dirname($mostrar));
+			alerta_formatos("Formato Creado con exito por favor verificar la carpeta " . dirname($mostrar));
 	} else
-		alerta("No es posible generar el Formato");
+		alerta_formatos("No es posible generar el Formato");
 }
 
 /*
@@ -648,7 +650,7 @@ private function incluir_libreria($nombre, $tipo) {
 	$includes = "";
 	if (!is_file(FORMATOS_SAIA . "librerias/" . $nombre)) {
 		if (!crear_archivo(FORMATOS_SAIA . "librerias/" . $nombre)) {
-			alerta("No es posible generar el archivo " . $nombre);
+			alerta_formatos("No es posible generar el archivo " . $nombre);
 		}
 	}
 	$includes .= $this->incluir("../../" . FORMATOS_SAIA . "librerias/" . $nombre, $tipo);

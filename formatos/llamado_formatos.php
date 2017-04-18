@@ -45,7 +45,7 @@ if(@$_REQUEST["accion"]=="generar"){
         	$redireccion = $generar->ejecutar_accion();
 
             if($contenido===false){
-                alerta("No se puede generar el formato por favor verifique la generaci&oacute;n manual del formato");
+            	alerta_formatos("No se puede generar el formato por favor verifique la generaci&oacute;n manual del formato");
             }
             else{
                 $creados.='Formato '.$acciones[$i]." ".$formato["nombre"]." <br>";
@@ -56,7 +56,7 @@ if(@$_REQUEST["accion"]=="generar"){
         echo($creados);
 		//fclose($abrir);
         if($formatos["numcampos"]==1){
-            alerta("Formato ".$formatos[0]["nombre"]." creado con exito");
+        	alerta_formatos("Formato ".$formatos[0]["nombre"]." creado con exito");
             //die("AQUI");
             redirecciona(PROTOCOLO_CONEXION.RUTA_PDF."/formatos/formatoview.php?key=".$formatos[0]["idformato"]);
         }
@@ -64,11 +64,11 @@ if(@$_REQUEST["accion"]=="generar"){
     }
     else{
         if($registro>=$formatos["numcampos"]){
-            alerta($formatos["numcampos"]." Formatos Creados con exito");
+        	alerta_formatos($formatos["numcampos"]." Formatos Creados con exito");
             die("<hr>PRUEBA");
             redirecciona(PROTOCOLO_CONEXION.RUTA_PDF."/formatos/formatolist.php");
         }
-        alerta("No se puede realizar (".$cant_acciones.") en ".$formatos["numcampos"]." formatos " );
+        alerta_formatos("No se puede realizar (".$cant_acciones.") en ".$formatos["numcampos"]." formatos " );
     }
 
 }

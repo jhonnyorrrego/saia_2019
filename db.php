@@ -2420,7 +2420,8 @@ return($arreglo);
 <Pre-condiciones>
 <Post-condiciones>
 */
-function alerta_javascript ($mensaje, $back) {
+function alerta_javascript ($mensaje, $back)
+{
  ?>
 <script type="text/javascript">
 <!--
@@ -2432,21 +2433,34 @@ alert("<?php echo($mensaje);?>");
 }
 
 function alerta($mensaje,$tipo='success',$duraccion=3000){
-$max_salida=10; // Previene algun posible ciclo infinito limitando a 10 los ../
-$ruta_superior_temporal=$ruta="";
-while($max_salida>0){
-	if(is_file($ruta."db.php")){
-		$ruta_superior_temporal=$ruta; //Preserva la ruta superior encontrada
+	$max_salida = 10; // Previene algun posible ciclo infinito limitando a 10 los ../
+	$ruta_superior_temporal = $ruta = "";
+	while($max_salida > 0) {
+		if (is_file($ruta . "db.php")) {
+			$ruta_superior_temporal = $ruta; // Preserva la ruta superior encontrada
+		}
+		$ruta .= "../";
+		$max_salida--;
 	}
-	$ruta.="../";
-	$max_salida--;
-}
-	include_once('librerias_saia.php');
+	require_once ('librerias_saia.php');
 	global $raiz_saia;
-	$raiz_saia=$ruta_superior_temporal;
-	echo(librerias_notificaciones());
+	$raiz_saia = $ruta_superior_temporal;
+	echo (librerias_notificaciones());
 
- ?>
+	?>
+<script>
+notificacion_saia("<?php echo $mensaje ;?>","<?php echo($tipo); ?>",'',<?php echo($duraccion); ?>);
+</script>
+<?php
+}
+
+function alerta_formatos($mensaje,$tipo='success',$duraccion=3000){
+	require_once ('librerias_saia.php');
+	global $raiz_saia;
+	$raiz_saia = "/" . RUTA_SAIA . $ruta_superior_temporal;
+	echo (librerias_notificaciones());
+
+	?>
 <script>
 notificacion_saia("<?php echo $mensaje ;?>","<?php echo($tipo); ?>",'',<?php echo($duraccion); ?>);
 </script>
@@ -3700,7 +3714,7 @@ function crear_archivo($nombre,$texto=NULL,$modo='wb'){
 		} else {
 			/*$e = new \Exception($nombre);
 			throw $e;*/
-			alerta("Problemas al generar las carpetas");
+			alerta("Problemas al generar la carpeta $ruta desde " . getcwd());
 			return (false);
 		}
 	}
