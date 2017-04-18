@@ -59,21 +59,6 @@ function guardar_traza($sql, $nombre_formato, $sql_export) {
 	}
 }
 
-function normalizePath($path) {
-	return array_reduce(explode('/', $path), create_function('$a, $b', '
-			if($a === 0)
-				$a = "/";
-
-			if($b === "" || $b === ".")
-				return $a;
-
-			if($b === "..")
-				return dirname($a);
-
-			return preg_replace("/\/+/", "/", "$a/$b");
-		'), 0);
-}
-
 function guardar_traza_corregir($sql, $nombre_formato) {
 	global $conn, $ruta_db_superior;
 

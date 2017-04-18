@@ -265,7 +265,6 @@ function librerias_notificaciones(){
 	$texto .= '<script src="' . $raiz_saia . 'js/noty/layouts/topRight.js" type="text/javascript" charset="utf-8"></script>';
 	$texto .= '<script src="' . $raiz_saia . 'js/noty/themes/default.js" type="text/javascript" charset="utf-8"></script>';
 	$texto .= '<script src="' . $raiz_saia . 'pantallas/lib/librerias_notificaciones.js" type="text/javascript" charset="utf-8"></script>';
-	$texto .= '<!--script src="' . getcwd(). '/pantallas/lib/librerias_notificaciones.js" type="text/javascript" charset="utf-8"></script-->';
 	return ($texto);
 }
 

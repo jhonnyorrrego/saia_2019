@@ -449,21 +449,38 @@ function evento_archivo($cadena){
 	 *
 	 * $nombre=$ruta_db_superior."../".$ruta_evento[0]['valor']."/".DB."_log_".date("Y_m_d").".txt";
 	 */
-	$nombre = RUTA_BACKUP_EVENTO . DB . "_log_" . date("Y_m_d") . ".txt";
-	if (!@is_file($nombre)) {
-		crear_archivo($nombre);
+	$nombre = RUTA_ABS_SAIA . RUTA_BACKUP_EVENTO . DB . "_log_" . date("Y_m_d") . ".txt";
+	$ruta_real = normalizePath($nombre);
+	if (!@is_file($ruta_real)) {
+		crear_archivo($ruta_real);
 	}
 	$contenido = "";
-	if (is_file($nombre)) {
-		$link = fopen($nombre, "ab");
+	if (is_file($ruta_real)) {
+		$link = fopen($ruta_real, "ab");
 		$contenido = $cadena . "*|*";
 	} else {
-		$link = fopen($nombre, "wb");
+		$link = fopen($ruta_real, "wb");
 		$contenido = "idevento|||funcionario_codigo|||fecha|||evento|||tabla_e|||estado|||detalle|||registro_id|||codigo_sql*|*" . $cadena . "*|*";
 	}
 	fwrite($link, $contenido);
 	fclose($link);
 }
+
+function normalizePath($path) {
+	return array_reduce(explode('/', $path), create_function('$a, $b', '
+			if($a === 0)
+				$a = "/";
+
+			if($b === "" || $b === ".")
+				return $a;
+
+			if($b === "..")
+				return dirname($a);
+
+			return preg_replace("/\/+/", "/", "$a/$b");
+		'), 0);
+}
+
 /*
 <Clase>
 <Nombre>formato_cargo</Nombre>
