@@ -143,7 +143,7 @@ width:"350px"
    echo "</table></form>";
 }
 elseif($_REQUEST["accion"]=="guardar_adicionar")
-{$campos=array("nombre","carrusel_idcarrusel","orden","align");
+{$campos=array("nombre","carrusel_idcarrusel","orden","align","preview");
  $nombres[]="fecha_inicio";
  $nombres[]="fecha_fin";
  $valores[]=fecha_db_almacenar($_REQUEST["fecha_inicio"],"Y-m-d");
@@ -160,7 +160,6 @@ elseif($_REQUEST["accion"]=="guardar_adicionar")
  phpmkr_query($sql,$conn);
  $id=phpmkr_insert_id();
  guardar_lob("contenido","contenidos_carrusel","idcontenidos_carrusel=".$id,$_REQUEST["contenido"],"texto",$conn);
- guardar_lob("preview","contenidos_carrusel","idcontenidos_carrusel=".$id,$_REQUEST["preview"],"texto",$conn);
  phpmkr_query($sql,$conn);
  if (is_uploaded_file($_FILES["imagen"]["tmp_name"])) 
      {
@@ -181,7 +180,7 @@ elseif($_REQUEST["accion"]=="guardar_adicionar")
  header("location: sliderconfig.php");
 }
 elseif($_REQUEST["accion"]=="guardar_editar")
-{$campos=array("nombre","carrusel_idcarrusel","orden","align");
+{$campos=array("nombre","carrusel_idcarrusel","orden","align","preview");
  $valores[]="fecha_inicio=".fecha_db_almacenar($_REQUEST["fecha_inicio"],"Y-m-d");
  $valores[]="fecha_fin=".fecha_db_almacenar($_REQUEST["fecha_fin"],"Y-m-d");
  $carrusel=busca_filtro_tabla("alto","carrusel","idcarrusel=".$_REQUEST["carrusel_idcarrusel"],"",$conn); 
@@ -194,7 +193,6 @@ elseif($_REQUEST["accion"]=="guardar_editar")
  $sql1="update contenidos_carrusel set ".implode(",",$valores)." where idcontenidos_carrusel=".$_REQUEST["id"];
  phpmkr_query($sql1,$conn);
  guardar_lob("contenido","contenidos_carrusel","idcontenidos_carrusel=".$_REQUEST["id"],$_REQUEST["contenido"],"texto",$conn);
- guardar_lob("preview","contenidos_carrusel","idcontenidos_carrusel=".$_REQUEST["id"],htmlentities($_REQUEST["preview"]),"texto",$conn);
  
 	if(@$_REQUEST["borrar_imagen"]){
 		$contenido=busca_filtro_tabla("","contenidos_carrusel","idcontenidos_carrusel=".$_REQUEST["id"],"",$conn);
