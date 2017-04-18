@@ -33,7 +33,7 @@ echo("<tree id=\"0\">\n");
 for($i=0;$i<$datos_version["numcampos"];$i++){
     $fecha=$datos_version[$i]["x_fecha"];
     if(is_object($datos_version[$i]["x_fecha"]))$fecha=$datos_version[$i]["x_fecha"]->format('Y-m-d H:i');
-    echo("<item style=\"font-family:verdana; font-size:7pt;\" text=\"V".$datos_version[$i]["version"].". ".$fecha."\" id=\"".$iddoc.$i."\" nocheckbox=\"1\" >\n");
+    echo("<item style=\"font-family:verdana; font-size:7pt;\" text=\"V".$datos_version[$i]["version"].". ".$fecha."\" id=\"ppal-".$datos_version[$i]["idversion_documento"]."\" nocheckbox=\"1\" >\n");
     
     echo("<item style=\"font-family:verdana; font-size:7pt;\" text=\"Pdf\" id=\"pdf".$datos_version[$i]["idversion_documento"]."\" nocheckbox=\"1\" >\n");
     echo pdf($datos_version[$i]["idversion_documento"]);
