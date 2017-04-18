@@ -471,7 +471,7 @@ public function crear_formato_buscar() {
 					$ruta_libreria = FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $funciones[$i]["ruta"];
 					$ruta_real = realpath($ruta_libreria);
 					if($ruta_real === false) {
-						$ruta_real = $ruta_libreria;
+						$ruta_real = normalizePath($ruta_libreria);
 					}
 					if (crear_archivo($ruta_real)) {
 						$includes .= $this->incluir($funciones[$i]["ruta"], "librerias");
