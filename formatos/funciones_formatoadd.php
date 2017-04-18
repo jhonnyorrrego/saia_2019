@@ -49,12 +49,18 @@ if ($adicionar == "" && $sAction != "A") {
 	if (@$_REQUEST["pantalla"] == "tiny") {
 		include_once ("generar_formato.php");
 		$generar = new GenerarFormato($x_formato, "", '');
+		$ruta_padre = dirname(__DIR__);
+		chdir($ruta_padre);
 
 		$generar->generar_tabla();
 		$generar->crear_formato_ae("adicionar");
 		$generar->crear_formato_ae("editar");
 		$generar->crear_formato_mostrar();
-		$generar->crear_formato_buscar("buscar");
+
+		$buscar = new GenerarBuscar($x_formato, "buscar");
+		$buscar->crear_formato_buscar();
+
+		chdir(__DIR__);
 	}
 	redirecciona("formatoview.php?key=" . $x_formato);
 }

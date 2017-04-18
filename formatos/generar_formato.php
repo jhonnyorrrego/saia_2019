@@ -42,11 +42,13 @@ class GenerarFormato {
 	private $accion;
 	private $idformato;
 	private $archivo;
+	private $incluidos;
 
 	public function __construct($idformato, $accion, $archivo='') {
 		$this->idformato = $idformato;
 		$this->accion = $accion;
 		$this->archivo = $archivo;
+		$this->incluidos = array();
 	}
 
 	public function ejecutar_accion() {
@@ -928,7 +930,7 @@ class GenerarFormato {
 			if ($mostrar != "") {
 			}
 		} else
-			alerta_formatos("No es posible generar el Formato");
+			alerta_formatos("931 No es posible generar el Formato");
 	}
 
 	/*
@@ -1119,7 +1121,7 @@ else
 				return (TRUE);
 			}
 		} else
-			alerta_formatos("No es posible generar el Formato");
+			alerta_formatos("1122 No es posible generar el Formato");
 	}
 
 	/*
@@ -2030,7 +2032,7 @@ $.ajax({url: '../librerias/validar_unico.php',
 			if ($mostrar != "")
 				alerta_formatos("Formato Creado con exito por favor verificar la carpeta " . dirname($mostrar));
 		} else
-			alerta_formatos("No es posible generar el Formato");
+			alerta_formatos("2033 No es posible generar el Formato");
 		// die();
 	}
 
@@ -2046,7 +2048,7 @@ $.ajax({url: '../librerias/validar_unico.php',
 	 * <Post-condiciones><Post-condiciones>
 	 * </Clase>
 	 */
-	private function crear_formato_buscar($idformato, $accion) {
+	public function crear_formato_buscar($idformato, $accion) {
 		global $sql, $conn;
 		$datos_detalles["numcampos"] = 0;
 		$texto = '';
@@ -2404,22 +2406,22 @@ $.ajax({url: '../librerias/validar_unico.php',
 							$includes .= $this->incluir("../" . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"], "librerias");
 						} elseif (is_file($funciones[$i]["ruta"])) { // si el archivo existe en la ruta especificada partiendo de la raiz
 							$includes .= $this->incluir("../" . $funciones[$i]["ruta"], "librerias");
-						} else // si no existe en ninguna de las dos
-{ // trato de crearlo dentro de la carpeta del formato actual
+						} else { // si no existe en ninguna de las dos
+							// trato de crearlo dentro de la carpeta del formato actual
 							if (crear_archivo(FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
 								$includes .= $this->incluir($funciones[$i]["ruta"], "librerias");
 							} else
 								alerta_formatos("2412 No es posible generar el archivo " . $formato[0]["nombre"] . "/" . $funciones[$i]["ruta"]);
 						}
 					}
-				} else // $ruta_orig=$formato[0]["nombre"];
-{ // si el archivo existe dentro de la carpeta del formato actual
+				} else { // $ruta_orig=$formato[0]["nombre"];
+					// si el archivo existe dentro de la carpeta del formato actual
 					if (is_file($formato[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
 						$includes .= $this->incluir($funciones[$i]["ruta"], "librerias");
 					} elseif (is_file($funciones[$i]["ruta"])) { // si el archivo existe en la ruta especificada partiendo de la raiz
 						$includes .= $this->incluir("../" . $funciones[$i]["ruta"], "librerias");
-					} else // si no existe en ninguna de las dos
-{ // trato de crearlo dentro de la carpeta del formato actual
+					} else { // si no existe en ninguna de las dos
+						// trato de crearlo dentro de la carpeta del formato actual
 						if (crear_archivo(FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
 							$includes .= $this->incluir($funciones[$i]["ruta"], "librerias");
 						} else
@@ -2523,8 +2525,9 @@ $.ajax({url: '../librerias/validar_unico.php',
 			// die();
 			if ($mostrar != "")
 				alerta_formatos("Formato Creado con exito por favor verificar la carpeta " . dirname($mostrar));
-		} else
-			alerta_formatos("No es posible generar el Formato");
+		} else {
+			alerta_formatos("2527 No es posible generar el Formato");
+		}
 	}
 
 	/*
@@ -2616,8 +2619,7 @@ $.ajax({url: '../librerias/validar_unico.php',
 	 * <Post-condiciones><Post-condiciones>
 	 * </Clase>
 	 */
-	function incluir($cad, $tipo, $eval = 0) {
-		global $incluidos;
+	private function incluir($cad, $tipo, $eval = 0) {
 		$includes = "";
 		$lib = explode(",", $cad);
 		switch ($tipo) {
@@ -2640,21 +2642,24 @@ $.ajax({url: '../librerias/validar_unico.php',
 		// file_put_contents("debug.txt", "\nLibreria: $cad :: $tipo", FILE_APPEND);
 
 		for($j = 0; $j < count($lib); $j++) {
-			$pos = array_search($texto1 . $lib[$j] . $texto2, $incluidos);
+			$pos = array_search($texto1 . $lib[$j] . $texto2, $this->incluidos);
 			if ($pos === false) {
 				if (!is_file($lib[$j]) & $eval) {
 					if (crear_archivo($lib[$j])) {
 						$includes .= $texto1 . $lib[$j] . $texto2;
 					} else {
-						alerta_formatos("Problemas al generar el Formato en " . $lib[$j]);
+						alerta_formatos("2650 Problemas al generar el Formato en " . $lib[$j]);
 						return ("");
 					}
 				} else {
 					$includes .= $texto1 . $lib[$j] . $texto2;
 				}
-				array_push($incluidos, $texto1 . $lib[$j] . $texto2);
+				array_push($this->incluidos, $texto1 . $lib[$j] . $texto2);
 			}
 		}
+		/*print_r($cad); echo "<br>";
+		print_r($tipo); echo "<br>";
+		print_r($includes);die("<---");*/
 		return ($includes);
 	}
 
@@ -2670,7 +2675,7 @@ $.ajax({url: '../librerias/validar_unico.php',
 	 * <Post-condiciones><Post-condiciones>
 	 * </Clase>
 	 */
-	function incluir_libreria($nombre, $tipo) {
+	private function incluir_libreria($nombre, $tipo) {
 		$includes = "";
 		if (!is_file(FORMATOS_SAIA . "librerias/" . $nombre)) {
 			if (!crear_archivo(FORMATOS_SAIA . "librerias/" . $nombre)) {

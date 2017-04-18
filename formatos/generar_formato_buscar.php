@@ -15,6 +15,7 @@ class GenerarBuscar {
 
 	private $idformato;
 	private $accion;
+	private $incluidos;
 
 	public function __construct($idformato, $accion) {
 		$this->idformato = $idformato;
@@ -38,7 +39,7 @@ public function crear_formato_buscar() {
 	$datos_detalles["numcampos"] = 0;
 	$texto = '';
 	$includes = "";
-	$incluidos = array();
+	$this->incluidos = array();
 	$obligatorio = "";
 	$formato = busca_filtro_tabla("*", "formato A", "A.idformato=" . $this->idformato, "", $conn);
 	if ($formato["numcampos"]) {
@@ -612,7 +613,6 @@ private function generar_comparacion($tipo, $nombre) {
  * </Clase>
  */
 private function incluir($cad, $tipo, $eval = 0) {
-	global $incluidos;
 	$includes = "";
 	$lib = explode(",", $cad);
 	switch ($tipo) {
@@ -634,7 +634,7 @@ private function incluir($cad, $tipo, $eval = 0) {
 	}
 	for($j = 0; $j < count($lib); $j++) {
 		$includes .= $texto1 . $lib[$j] . $texto2;
-		array_push($incluidos, $texto1 . $lib[$j] . $texto2);
+		array_push($this->incluidos, $texto1 . $lib[$j] . $texto2);
 	}
 	return ($includes);
 }
