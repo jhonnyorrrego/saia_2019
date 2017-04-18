@@ -1839,8 +1839,9 @@ else
 						         // trato de crearlo dentro de la carpeta del formato actual
 							if (crear_archivo(FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
 								$includes .= $this->incluir($funciones[$i]["ruta"], "librerias");
-							} else
-								alerta_formatos("1841 No es posible generar el archivo " . $formato[0]["nombre"] . "/" . $funciones[$i]["ruta"]);
+							} else {
+								alerta_formatos("1843 No es posible generar el archivo " . $formato[0]["nombre"] . "/" . $funciones[$i]["ruta"]);
+							}
 						}
 					}
 				} else { // $ruta_orig=$formato[0]["nombre"];
@@ -1855,7 +1856,7 @@ else
 						if (crear_archivo(FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
 							$includes .= $this->incluir($funciones[$i]["ruta"], "librerias");
 						} else
-							alerta_formatos("1856 No es posible generar el archivo " . $formato[0]["nombre"] . "/" . $funciones[$i]["ruta"]);
+							alerta_formatos("1858 No es posible generar el archivo " . FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $funciones[$i]["ruta"]);
 					}
 				}
 				if (!in_array($funciones[$i]["nombre_funcion"], $fun_campos)) {

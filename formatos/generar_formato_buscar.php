@@ -447,16 +447,22 @@ public function crear_formato_buscar() {
 				$dato_formato_orig = busca_filtro_tabla("nombre", "formato", "idformato=" . $formato_orig[0], "", $conn);
 				if ($dato_formato_orig["numcampos"]) {
 					// si el archivo existe dentro de la carpeta del archivo inicial
-					if (is_file($dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
+					if (is_file(FORMATOS_CLIENTE . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
 						$includes .= $this->incluir("../" . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"], "librerias");
 					} elseif (is_file($funciones[$i]["ruta"])) { // si el archivo existe en la ruta especificada partiendo de la raiz
 						$includes .= $this->incluir("../" . $funciones[$i]["ruta"], "librerias");
 					} else { // si no existe en ninguna de las dos
+						$ruta_libreria = FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $funciones[$i]["ruta"];
+						$ruta_real = realpath($ruta_libreria);
+						if($ruta_real === false) {
+							$ruta_real = normalizePath($ruta_libreria);
+						}
 						// trato de crearlo dentro de la carpeta del formato actual
-						if (crear_archivo(FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
+						if (crear_archivo($ruta_real)) {
 							$includes .= $this->incluir($funciones[$i]["ruta"], "librerias");
-						} else
-							alerta_formatos("FB 458 No es posible generar el archivo " . $formato[0]["nombre"] . "/" . $funciones[$i]["ruta"]);
+						} else {
+							alerta_formatos("FB 464 No es posible generar el archivo " . $ruta_real);
+						}
 					}
 				}
 			} else {// $ruta_orig=$formato[0]["nombre"];
@@ -477,7 +483,7 @@ public function crear_formato_buscar() {
 					if (crear_archivo($ruta_real)) {
 						$includes .= $this->incluir($funciones[$i]["ruta"], "librerias");
 					} else
-						alerta_formatos("FB 472 No es posible generar el archivo " . $ruta_real);
+						alerta_formatos("FB 486 No es posible generar el archivo " . $ruta_real);
 				}
 			}
 			if (!in_array($funciones[$i]["nombre_funcion"], $fun_campos)) {
