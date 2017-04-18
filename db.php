@@ -65,6 +65,7 @@ function mayusculas($texto)
  $texto_nuevo=str_replace("UML;","uml;",$texto_nuevo);
  return($texto_nuevo);
 }
+
 /*<Clase>
 <Nombre>compara_ruta_archivos</Nombre>
 <Parametros>$buscado:nombre del archivo</Parametros>
@@ -75,29 +76,29 @@ function mayusculas($texto)
 <Pre-condiciones><Pre-condiciones>
 <Post-condiciones><Post-condiciones>
 </Clase>  */
-function compara_ruta_archivos($buscado)
-{$info= pathinfo($_SERVER["PHP_SELF"]);
- $uno=explode("/",$info["dirname"]);
- $dos=explode("/",$buscado);
- $igual=array();
- if(count($uno)>count($dos))
-    $j=count($dos);
- else
-    $j=count($uno);
- $espacios=0;
- for($i=1;$i<$j;$i++)
-   {if($uno[$i]==$dos[$i])
-      {$igual[]=$uno[$i];
-      }
-   }
- $igual=implode("/",$igual);
- $nueva_actual=str_replace("/".$igual,"",$info["dirname"]);
- $nueva_buscada=str_replace("/".$igual."/","",$buscado);
- $distanciauno=count(explode("/",$nueva_actual));
- for($i=1;$i<$distanciauno;$i++)
-     $ruta="../".$ruta;
- $ruta=str_replace("//","/",$ruta.$nueva_buscada);
- return($ruta);
+function compara_ruta_archivos($buscado) {
+	$info = pathinfo($_SERVER["PHP_SELF"]);
+	$uno = explode("/", $info["dirname"]);
+	$dos = explode("/", $buscado);
+	$igual = array();
+	if (count($uno) > count($dos))
+		$j = count($dos);
+	else
+		$j = count($uno);
+	$espacios = 0;
+	for($i = 1; $i < $j; $i++) {
+		if ($uno[$i] == $dos[$i]) {
+			$igual[] = $uno[$i];
+		}
+	}
+	$igual = implode("/", $igual);
+	$nueva_actual = str_replace("/" . $igual, "", $info["dirname"]);
+	$nueva_buscada = str_replace("/" . $igual . "/", "", $buscado);
+	$distanciauno = count(explode("/", $nueva_actual));
+	for($i = 1; $i < $distanciauno; $i++)
+		$ruta = "../" . $ruta;
+	$ruta = str_replace("//", "/", $ruta . $nueva_buscada);
+	return ($ruta);
 }
 /*<Clase>
 <Nombre>leido</Nombre>
