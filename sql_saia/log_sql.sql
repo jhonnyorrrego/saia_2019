@@ -301,3 +301,9 @@ DELETE FROM campos_formato WHERE nombre='region' AND formato_idformato=305;
 --------------------------
 UPDATE campos_formato SET  ayuda ='Comunicaci&oacute;n Externa (WORD)',predeterminado='1332' WHERE  idcampos_formato =4796;
 --------------------------
+UPDATE  busqueda_condicion SET  codigo_where = 'F.documento_destino=A.iddocumento AND F.documento_origen={*obtener_iddocumento*} AND lower(A.estado) NOT IN(''eliminado'',''anulado'')' WHERE  idbusqueda_condicion =131;
+
+UPDATE  busqueda_condicion SET  codigo_where =  'G.destino=A.iddocumento AND G.origen={*obtener_iddocumento*} AND lower(A.estado) NOT IN(''eliminado'',''anulado'')' WHERE  idbusqueda_condicion =133;
+
+UPDATE  busqueda_condicion SET  codigo_where = 'F.documento_origen=A.iddocumento AND F.documento_destino={*obtener_iddocumento*} AND lower(A.estado) NOT IN(''eliminado'',''anulado'')' WHERE  idbusqueda_condicion =229;
+--------------------------
