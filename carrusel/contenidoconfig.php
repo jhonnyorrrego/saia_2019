@@ -194,7 +194,7 @@ elseif($_REQUEST["accion"]=="guardar_editar")
  $sql1="update contenidos_carrusel set ".implode(",",$valores)." where idcontenidos_carrusel=".$_REQUEST["id"];
  phpmkr_query($sql1,$conn);
  guardar_lob("contenido","contenidos_carrusel","idcontenidos_carrusel=".$_REQUEST["id"],$_REQUEST["contenido"],"texto",$conn);
- guardar_lob("preview","contenidos_carrusel","idcontenidos_carrusel=".$_REQUEST["id"],$_REQUEST["preview"],"texto",$conn);
+ guardar_lob("preview","contenidos_carrusel","idcontenidos_carrusel=".$_REQUEST["id"],htmlentities($_REQUEST["preview"]),"texto",$conn);
  
 	if(@$_REQUEST["borrar_imagen"]){
 		$contenido=busca_filtro_tabla("","contenidos_carrusel","idcontenidos_carrusel=".$_REQUEST["id"],"",$conn);
