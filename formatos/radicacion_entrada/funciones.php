@@ -818,6 +818,18 @@ function mostrar_destino_radicacion($idformato,$iddoc){
             }
         }
     }
+    
+    $hijo_destino_radicacion=busca_filtro_tabla("","ft_destino_radicacion","ft_radicacion_entrada=".$datos[0]['idft_radicacion_entrada'],"",$conn);
+    for($i=0;$i<$hijo_destino_radicacion['numcampos'];$i++){
+        if($hijo_destino_radicacion[$i]['nombre_destino']!=''){
+            $fun=busca_filtro_tabla("nombres,apellidos","vfuncionario_dc","iddependencia_cargo=".$hijo_destino_radicacion[$i]['nombre_destino'],"",$conn);
+            $nombres.=$fun[0]['nombres'].' '.$fun[0]['apellidos'].'</br>';
+        }
+        if($hijo_destino_radicacion[$i]['destino_externo']!=''){
+            $fun=busca_filtro_tabla("nombre","vejecutor","iddatos_ejecutor=".$hijo_destino_radicacion[$i]['destino_externo'],"",$conn);
+            $nombres.=$fun[0]['nombre'].'</br>';
+        }        
+    }
     return($nombres);
 }
 
