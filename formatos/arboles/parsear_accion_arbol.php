@@ -126,14 +126,14 @@ if(@$_REQUEST["id"]) {
 						 */
 						if($datos_formato["numcampos"]) {
 							if($datos_formato[0]["pdf"] && $formato[0]["mostrar_pdf"] == 1) {
-								$ruta = RUTA_SAIA . "pantallas/documento/visor_documento.php?iddoc=" . $datos_formato[0]["documento_iddocumento"];
+								$ruta = "/" . RUTA_SAIA . "pantallas/documento/visor_documento.php?iddoc=" . $datos_formato[0]["documento_iddocumento"];
 								redirecciona($ruta . "&rnd=" . rand(0, 100));
 							} else {
 								if($formato[0]["mostrar_pdf"] == 1) {
-									$ruta = RUTA_SAIA . "pantallas/documento/visor_documento.php?iddoc=" . $datos_formato[0]["documento_iddocumento"] . "&actualizar_pdf=1";
+									$ruta = "/" . RUTA_SAIA . "pantallas/documento/visor_documento.php?iddoc=" . $datos_formato[0]["documento_iddocumento"] . "&actualizar_pdf=1";
 									redirecciona($ruta . "&rnd=" . rand(0, 100));
 								} else if($formato[0]["mostrar_pdf"] == 2) {
-									$ruta = RUTA_SAIA . "pantallas/documento/visor_documento.php?pdf_word=1&iddoc=" . $datos_formato[0]["documento_iddocumento"];
+									$ruta = "/" . RUTA_SAIA . "pantallas/documento/visor_documento.php?pdf_word=1&iddoc=" . $datos_formato[0]["documento_iddocumento"];
 
 									redirecciona($ruta . "&rnd=" . rand(0, 100));
 								} else {
