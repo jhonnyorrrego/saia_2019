@@ -41,17 +41,17 @@ if($datos[0]["pdf"] && is_file($ruta_db_superior.$datos[0]["pdf"]) && !@$_REQUES
 }
 } else {
 	  $anexos_documento_word=busca_filtro_tabla("d.ruta","documento a, formato b, campos_formato c, anexos d","lower(a.plantilla)=b.nombre AND b.idformato=c.formato_idformato AND c.nombre='anexo_word' AND c.idcampos_formato=d.campos_formato AND a.iddocumento=".$iddoc." AND d.documento_iddocumento=".$iddoc,"",$conn) ;
-	  
-	  
+
+
 	  if($anexos_documento_word['numcampos']){
 	    $ruta_almacenar=explode('anexos',$anexos_documento_word[0]["ruta"]);
-	    $pdf=$ruta_db_superior.$ruta_almacenar[0].'docx/documento_word.pdf';	  	
+	    $pdf=$ruta_db_superior.$ruta_almacenar[0].'docx/documento_word.pdf';
 	  }
 
-	
+
 	if(!file_exists($pdf)){
 		$documento=busca_filtro_tabla("","documento a, formato b","lower(a.plantilla)=b.nombre AND a.iddocumento=".$iddoc,"",$conn);
-		$ruta_mostrar=$ruta_db_superior.'formatos/'.$documento[0]['nombre'].'/'.$documento[0]['ruta_mostrar'].'?idformato='.$documento[0]['idformato'].'&iddoc='.$iddoc;
+		$ruta_mostrar=$ruta_db_superior.FORMATOS_CLIENTE.$documento[0]['nombre'].'/'.$documento[0]['ruta_mostrar'].'?idformato='.$documento[0]['idformato'].'&iddoc='.$iddoc;
 		include_once($ruta_db_superior."db.php");
 		abrir_url($ruta_mostrar,'_self');
 		die();

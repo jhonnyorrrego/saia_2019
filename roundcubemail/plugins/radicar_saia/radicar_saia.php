@@ -96,7 +96,7 @@ class radicar_saia extends rcube_plugin{
     $rcmail->output->command('display_message', $this->gettext('reportedasradicado'), 'confirmation');
     $rcmail->dato_correo=$dato_correo;
     $configuracion=busca_filtro_tabla("","configuracion","tipo='correo' AND nombre='formato_correo'","",$conn);
-    $ruta_formato='formatos/correo_saia/adicionar_correo_saia.php';
+    $ruta_formato= FORMATOS_CLIENTE . 'correo_saia/adicionar_correo_saia.php';
     if($configuracion["numcampos"]){
       $ruta_formato=$configuracion[0]["valor"];
     }
@@ -106,5 +106,5 @@ class radicar_saia extends rcube_plugin{
   private function _convert_filename($str){
     $str = rcube_charset::convert($str, RCUBE_CHARSET, $this->charset);
     return strtr($str, array(':' => '', '/' => '-'));
-  } 
+  }
 }

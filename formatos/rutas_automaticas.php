@@ -13,7 +13,7 @@ $max_salida--;
 include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."formatos/librerias/estilo_formulario.php");
 include_once($ruta_db_superior."formatos/librerias/header_formato.php");
-include_once($ruta_db_superior."formatos/librerias/funciones.php"); 
+include_once($ruta_db_superior."formatos/librerias/funciones.php");
 ?>
 <link rel="STYLESHEET" type="text/css" href="<?php echo $ruta_db_superior; ?>css/dhtmlXTree.css">
 <script type="text/javascript" src="<?php echo $ruta_db_superior; ?>js/dhtmlXCommon.js"></script>
@@ -96,7 +96,7 @@ function formulario(){
               $nombre_origen.='<br><b> Sin usuario para reasignar</b>';
             }
           }
-        }  
+        }
 			}
 			$checked1='';
 			$checked2='';
@@ -104,7 +104,7 @@ function formulario(){
 			if($datos[$i]["firma"]==1)$checked1='checked';
 			if($datos[$i]["firma"]==2)$checked2='checked';
 			if($datos[$i]["firma"]==0)$checked0='checked';
-			
+
 			if($datos[$i]["tipo_campo"]==1){
 				$tipo_camp="Dato fijo";
 			}
@@ -117,7 +117,7 @@ function formulario(){
 				$tipo_camp="Traido de una<br>funcion";
 				$nombre_origen="<b>funcion</b><br>".(strtolower($datos[$i]["funcion"]));
 			}
-			
+
 			echo '<tr bgcolor="#FFFFFF">';
 			echo '<td style="text-align:center">'.$tipo_camp.'</td>';
 			echo '<td style="text-align:center">'.$nombre_origen.'</td>';
@@ -141,7 +141,7 @@ function formulario_adicionar(){
 	$idformato=$_REQUEST["idformato"];
 	$formato=busca_filtro_tabla("","formato","idformato=".$idformato,"",$conn);
 	$orden=busca_filtro_tabla("MAX(orden) as ultimo","formato_ruta","formato_idformato=".$_REQUEST["idformato"],"",$conn);
-	
+
 	$checked1='checked';
 	$checked2='';
 	$checked3='';
@@ -168,7 +168,7 @@ function formulario_adicionar(){
 		<tr id="fila_ruta" style="display:none">
 			<td class="encabezado">Ruta libreria</td>
 			<td bgcolor="#FFFFFF">
-				<input type="text" name="ruta" value="formatos/<?php echo $formato[0]["nombre"]; ?>/funciones.php" style="width:100%">
+				<input type="text" name="ruta" value="<?php echo FORMATOS_CLIENTE . $formato[0]["nombre"]; ?>/funciones.php" style="width:100%">
 			</td>
 		</tr>
 		<tr id="fila_llave">
@@ -186,7 +186,7 @@ function formulario_adicionar(){
 			<input type="radio" name="firma" value="1" <?php echo $checked1; ?>>Firma visible<br>
 			<input type="radio" name="firma" value="2" <?php echo $checked2; ?>>Revisado<br>
 			<input type="radio" name="firma" value="0" <?php echo $checked0; ?>>Ninguna
-				
+
 			</td>
 		</tr>
 		<tr>
@@ -227,7 +227,7 @@ function formulario_adicionar(){
 			$("#lista_1").hide();
 			$("#arbol_1").show();
 			$("#lista_formatos").removeAttr("name");
-			
+
 			$("#fila_entidad").show();
 			$("#fila_llave").show();
 			$("#fila_ruta").hide();
@@ -237,7 +237,7 @@ function formulario_adicionar(){
 			$("#arbol_1").hide();
 			$("#lista_1").show();
 			$("#lista_formatos").attr("name","llave");
-			
+
 			$("#fila_entidad").show();
 			$("#fila_llave").show();
 			$("#fila_ruta").hide();
@@ -259,18 +259,18 @@ function formulario_editar(){
 	$formato=busca_filtro_tabla("","formato","idformato=".$idformato,"",$conn);
 	$datos=busca_filtro_tabla("","formato_ruta","idformato_ruta=".$_REQUEST["idformato_ruta"],"",$conn);
 	$orden=busca_filtro_tabla("orden","formato_ruta","idformato_ruta=".$_REQUEST["idformato_ruta"],"",$conn);
-	
+
 	$checked1='';
 	$checked2='';
 	$checked3='';
 	if($datos[0]["firma"]==1)$checked1='checked';
 	if($datos[0]["firma"]==2)$checked2='checked';
 	if($datos[0]["firma"]==0)$checked0='checked';
-	
+
 	$entidad1='';
 	$entidad4='';
 	$entidad5='';
-	
+
 	if($datos[0]["entidad"]==1){
 		$archivo=Null;
 		$entidad1='checked';
@@ -336,7 +336,7 @@ function formulario_editar(){
 			<input type="radio" name="firma" value="1" <?php echo $checked1; ?>>Firma visible<br>
 			<input type="radio" name="firma" value="2" <?php echo $checked2; ?>>Revisado<br>
 			<input type="radio" name="firma" value="0" <?php echo $checked0; ?>>Ninguna
-				
+
 			</td>
 		</tr>
 		<tr>
@@ -375,7 +375,7 @@ function formulario_editar(){
 			$("#lista_1").hide();
 			$("#arbol_1").show();
 			$("#lista_formatos").removeAttr("name");
-			
+
 			$("#fila_entidad").show();
 			$("#fila_llave").show();
 			$("#fila_ruta").hide();
@@ -385,7 +385,7 @@ function formulario_editar(){
 			$("#arbol_1").hide();
 			$("#lista_1").show();
 			$("#lista_formatos").attr("name","llave");
-			
+
 			$("#fila_entidad").show();
 			$("#fila_llave").show();
 			$("#fila_ruta").hide();
@@ -431,7 +431,7 @@ function registrar_adicionar(){
 	$idformato=$_REQUEST["idformato"];
 	$formato=busca_filtro_tabla("","formato","idformato=".$idformato,"",$conn);
 	$sql="insert into formato_ruta (llave, firma, orden, entidad, formato_idformato, tipo_campo, ruta, funcion) values ('".$fun."', '".$firma."', '".$orden."', '".$entidad."', '".$idformato."' , '".$tipo_campo."', '".$ruta."', '".$funcion."')";
-	
+
 	guardar_traza($sql,$formato[0]["nombre_tabla"]);
 	phpmkr_query($sql);
 	redirecciona("rutas_automaticas.php?idformato=".$idformato);
@@ -485,7 +485,7 @@ function arbol($nombre,$seleccionado=Null,$entidad=Null,$archivo=Null){
 	?>
 	<input type="hidden" class="required" name="<?php echo $nombre; ?>" id="<?php echo $nombre; ?>" value="<?php echo $seleccionado; ?>">
 			<span class="phpmaker">
-			      Buscar:<br><input type="text" id="stext" width="200px" size="20">      
+			      Buscar:<br><input type="text" id="stext" width="200px" size="20">
       <a href="javascript:void(0)" onclick="tree<?php echo $nombre; ?>.findItem(document.getElementById('stext').value,1)">
       <img src="<?php echo $ruta_db_superior; ?>botones/general/anterior.png" border="0px" alt="Anterior"></a>
       <a href="javascript:void(0)" onclick="tree<?php echo $nombre; ?>.findItem(document.getElementById('stext').value,0,1)">
@@ -495,7 +495,7 @@ function arbol($nombre,$seleccionado=Null,$entidad=Null,$archivo=Null){
 <br />
          <div id="esperando_func">
     <img src="<?php echo $ruta_db_superior; ?>imagenes/cargando.gif"></div>
-				<div id="treeboxbox_tree<?php echo $nombre; ?>"></div>				
+				<div id="treeboxbox_tree<?php echo $nombre; ?>"></div>
 	<script type="text/javascript">
   <!--
   		var browserType;
@@ -552,7 +552,7 @@ function arbol($nombre,$seleccionado=Null,$entidad=Null,$archivo=Null){
                eval('document.layers["esperando_func"]');
         document.poppedLayer.style.display = "";
       }
-	-->					
+	-->
 	</script>
 	<?php
 }

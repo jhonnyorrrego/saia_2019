@@ -23,13 +23,13 @@ function despachar_fisico_doc(){
       var docus=$("#seleccionados").val();
 	  if(docus!=""){
 	  	//enlace_katien_saia("pantallas/documento/despachar_fisico.php?docs="+docus+",","Despachar documentos","iframe","");
-			enlace_katien_saia("formatos/despacho_fisico/adicionar_despacho_fisico.php?docs="+docus+",","Despachar documentos","iframe","");
+			enlace_katien_saia("' . FORMATOS_CLIENTE . 'despacho_fisico/adicionar_despacho_fisico.php?docs="+docus+",","Despachar documentos","iframe","");
 	  }
 	  else{
 	  	notificacion_saia("<b>ATENCI&Oacute;N</b><br>Seleccione por lo menos un documento","warning","",4000);
 	  }
     });
-  </script>'; 
+  </script>';
   return $texto;
 }
 function planilla_control(){
@@ -40,7 +40,7 @@ function planilla_control(){
       var docus=$("#seleccionados").val();
     if(docus!=""){
       //enlace_katien_saia("pantallas/documento/planilla_control.php?docs="+docus+",","Entrega Interna","iframe","");
-      enlace_katien_saia("formatos/despacho_ingresados/adicionar_despacho_ingresados.php?docs="+docus+",","Entrega Interna","iframe","");
+      enlace_katien_saia("' . FORMATOS_CLIENTE . 'despacho_ingresados/adicionar_despacho_ingresados.php?docs="+docus+",","Entrega Interna","iframe","");
     }
     else{
       notificacion_saia("<b>ATENCI&Oacute;N</b><br>Seleccione por lo menos un documento","warning","",4000);
@@ -65,20 +65,20 @@ function filtrar_despachados(){
 }
 function no_guia($iddoc){
 	$despacho=busca_filtro_tabla("A.numero_guia,B.tipo_despacho","salidas A, documento B","B.iddocumento=".$iddoc." AND A.documento_iddocumento=B.iddocumento","",$conn);
-	
+
   if($despacho["numcampos"] && ($despacho[0]["tipo_despacho"]==1 || $despacho[0]["tipo_despacho"]==2 || $despacho[0]["tipo_despacho"]==3)){
 	$texto.='<div class="despachados_documentos"></div>';
     switch($despacho[0]["tipo_despacho"]){
-      case 1://mensajeria Externa genera salida 
+      case 1://mensajeria Externa genera salida
         $texto=("<b>Guia:</b> ".$despacho[0]["numero_guia"]);
       break;
       case 2://Mensajeria Interna enviada con mensajero.
         $texto=("Mensajeria interna");
-      break;  
+      break;
       case 3: //Personal enviada con el ejecutor.
         $texto=("Personal");
-      break;     
-    }  
+      break;
+    }
   }
   else{
 	  $doc=busca_filtro_tabla("A.numero","documento A","A.iddocumento=$iddoc","",$conn);
@@ -90,16 +90,16 @@ function no_guia($iddoc){
   return ($texto);
 }
 function barra_inferior_documento_tramitados($iddoc,$numero){
-$dato_prioridad=busca_filtro_tabla("","prioridad_documento","documento_iddocumento=".$iddoc,"fecha_asignacion DESC",$conn);	
+$dato_prioridad=busca_filtro_tabla("","prioridad_documento","documento_iddocumento=".$iddoc,"fecha_asignacion DESC",$conn);
 $prioridad="icon-flag";
 if($dato_prioridad["numcampos"]){
-  switch ($dato_prioridad[0]["prioridad"]) {  	
+  switch ($dato_prioridad[0]["prioridad"]) {
     case 1:
-      $prioridad='icon-star';    
+      $prioridad='icon-star';
     break;
     case 2:
       $prioridad='icon-star-empty';
-	  break; 
+	  break;
     default:
       $prioridad='icon-flag';
     break;
@@ -112,7 +112,7 @@ $texto.='<div class="btn-group pull-left" >
   </button>
   <button type="button" class="btn btn-mini dropdown-toggle tooltip_saia" data-toggle="dropdown" titulo="Prioridad">
     <i class="'.$prioridad.'" id="prioridad_'.$iddoc.'" prioridad="'.$dato_prioridad[0]["prioridad"].'"></i><span class="caret"></span>
-  </button> 
+  </button>
     <ul class="dropdown-menu">
       <li><a href="#" idregistro="'.$iddoc.'" class="documento_prioridad" prioridad="1"><i class="icon-star"></i> Importante</a></li>
       <li><a href="#" idregistro="'.$iddoc.'" class="documento_prioridad" prioridad="2"><i class="icon-star-empty"></i> Destacada</a></li>
@@ -167,13 +167,13 @@ function ciudad_destino_remitente($iddocumento){
 	return(ucwords(strtolower(implode(",",$nombres))));
 }
 function recibido_por($iddocumento){
-	
+
 }
 function recibido_fecha_por($iddocumento){
-	
+
 }
 function recibido_hora_por($iddocumento){
-	
+
 }
 function retornar_fecha_hoy(){
 	return(date('Y-m-d'));
@@ -204,11 +204,11 @@ function registrar_despacho(){
 	  $max_salida--;
 	}
 	include_once($ruta_db_superior."db.php");
-	
+
 	$documentos=explode(",",@$_REQUEST["docs"]);
 	$mensajero=@$_REQUEST["mensajero"];
 	$tipo_despacho=2;
-	
+
 	$cant=count($documentos);
 	for($i=0;$i<$cant;$i++){
 		if($documentos[$i]){

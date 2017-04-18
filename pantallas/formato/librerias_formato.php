@@ -1,4 +1,4 @@
-<?php 
+<?php
 function menu_principal_formatos($idformato){
 	global $ruta_db_superior;
 	$texto='';

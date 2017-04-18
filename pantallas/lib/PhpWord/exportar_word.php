@@ -60,7 +60,7 @@ if (@$_REQUEST["iddoc"]) {
 	if ($anexo['numcampos']) {
 
 		if (@$_REQUEST['from_externo']) {
-			include_once ($ruta_db_superior . 'formatos/' . $anexo[0]['nombre'] . '/funciones.php');
+			include_once ($ruta_db_superior . FORMATOS_CLIENTE . $anexo[0]['nombre'] . '/funciones.php');
 		}
 
 		$ruta_procesar = $ruta_db_superior . $anexo[0]["ruta"];
