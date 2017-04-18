@@ -307,3 +307,7 @@ UPDATE  busqueda_condicion SET  codigo_where =  'G.destino=A.iddocumento AND G.o
 
 UPDATE  busqueda_condicion SET  codigo_where = 'F.documento_origen=A.iddocumento AND F.documento_destino={*obtener_iddocumento*} AND lower(A.estado) NOT IN(''eliminado'',''anulado'')' WHERE  idbusqueda_condicion =229;
 --------------------------
+INSERT INTO busqueda_componente (busqueda_idbusqueda, tipo, conector, url, etiqueta, nombre, orden, info, exportar, exportar_encabezado, encabezado_componente, estado, ancho, cargar, campos_adicionales, tablas_adicionales, ordenado_por, direccion, agrupado_por, busqueda_avanzada, acciones_seleccionados, modulo_idmodulo, menu_busqueda_superior, enlace_adicionar, encabezado_grillas) VALUES
+(7, 3, 2, 'pantallas/busquedas/consulta_busqueda_documento.php', 'pendiente por ingresar PQRSF', 'pendientes_ingresar_pqrsf', 1, '<div>{*origen_documento@iddocumento,numero,ejecutor,tipo_radicado,estado,serie,tipo_ejecutor*} {*fecha_creacion_documento@fecha,plantilla,iddocumento*}<br><br><div>{*descripcion*}</div><br><br>\r\n{*barra_inferior_documento@iddocumento,numero*}</div>', '', NULL, NULL, 1, 320, 2, NULL, 'ft_pqrsf B', 'A.fecha', 'DESC', NULL, NULL, 'vincular_documentos', NULL, NULL, NULL, NULL);
+
+INSERT INTO  busqueda_condicion (busqueda_idbusqueda ,fk_busqueda_componente ,codigo_where ,etiqueta_condicion) VALUES (NULL ,  '298',  'lower(a.estado)=''iniciado'' AND a.iddocumento=b.documento_iddocumento', NULL);
