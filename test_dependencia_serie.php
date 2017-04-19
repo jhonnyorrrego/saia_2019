@@ -174,9 +174,7 @@ elseif($mostrar_nodos['dsatvd']){ //si se va a cargar todo el arbol dependencia/
 
 //NODO:  ssa: series sin asignar 
 if($mostrar_nodos['ssa']){
-    echo("<item style=\"font-family:verdana; font-size:7pt;\" text=\"Series sin asignar\" id=\"-1\" child=\"1\">");
     series_sin_asignar();
-    echo("</item>");    
 }
 
 //NODO:   soc: series otras categorias 
@@ -443,12 +441,17 @@ function llena_subseries_tipo_documental($iddependencia,$idserie,$tvd=0){
 //SERIES SIN ASIGNAR (ssa)
 function series_sin_asignar(){
 	global $conn;
-	//$series=busca_filtro_tabla("","serie a left join entidad_serie b ON a.idserie=b.serie_idserie AND b.entidad_identidad =2","b.serie_idserie IS NULL AND a.categoria=2 AND a.estado=1 AND a.tipo=1","nombre asc",$conn);
 	$series=busca_filtro_tabla("","serie a left join entidad_serie b ON a.idserie=b.serie_idserie AND b.entidad_identidad =2","b.serie_idserie IS NULL AND a.categoria=2 AND a.estado=1","nombre asc",$conn);
+	$child=0;
+	if($series['numcampos']){
+	    $child=1;
+	}
+	echo("<item style=\"font-family:verdana; font-size:7pt;\" text=\"Series sin asignar\" id=\"series_sin_asignar\" child=\"".$child."\">");
 	for($i=0;$i<$series["numcampos"];$i++){
-		echo("<item style=\"font-family:verdana; font-size:7pt;\" text=\"".htmlspecialchars($series[$i]["nombre"])."(".$series[$i]["codigo"].")\" id=\"d"."-".$series[$i]["idserie"]."\" child=\"0\">\n");
+		echo("<item style=\"font-family:verdana; font-size:7pt;\" text=\"".htmlspecialchars($series[$i]["nombre"])."(".$series[$i]["codigo"].")\" id=\"sin_asignar"."-".$series[$i]["idserie"]."\" child=\"0\">\n");
 		echo("</item>\n");
 	}
+	echo("</item>");  
 }
 
 

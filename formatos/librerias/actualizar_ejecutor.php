@@ -1,5 +1,10 @@
 <?php
 include_once("../../db.php");
+foreach($_REQUEST AS $key=>$valor){
+    if($valor=='undefined'){
+        unset($_REQUEST[$key]);
+    }
+}
 /*
 Si la identificacion llega y es valida se mira si existe alg�n ejecutor que
 la tenga asignada, si es asi, se actualizan los datos de la tabla ejecutor
@@ -35,7 +40,8 @@ if($ejecutor["numcampos"]){
      $otros.=",lugar_expedicion='".$_REQUEST["lugar_expedicion"]."'";
   if(isset($_REQUEST["identificacion"])&&$_REQUEST["identificacion"]&&$_REQUEST["identificacion"]<>"undefined")
      $otros.=",identificacion='".$_REQUEST["identificacion"]."'";
-
+  if(isset($_REQUEST["tipo_ejecutor"])&&$_REQUEST["tipo_ejecutor"]&&$_REQUEST["tipo_ejecutor"]<>"undefined")
+     $otros.=",tipo_ejecutor='".$_REQUEST["tipo_ejecutor"]."'";
   /*if(isset($_REQUEST["codigo"])&&$_REQUEST["codigo"]){
   	$datos = busca_filtro_tabla("","datos_ejecutor","ejecutor_idejecutor=".$ejecutor[0]["idejecutor"],"",$conn);
 

@@ -640,7 +640,7 @@ if($listado["numcampos"]>0 || $tipo_pag != "PAGINA")  //Se muestarn la pagna o e
  else
   echo "<span class='phpmaker'><center>El documento no tiene p&aacute;gina</center></span>";
 
-if($permisos == false)
+if($permisos == false && @$_REQUEST["accion"] !='mostrar')
  {
   alerta("<b>ATENCI&Oacute;N</b><br>No tiene permisos para editar los comentarios, pero puede adicionar uno nuevo","warning");
  }

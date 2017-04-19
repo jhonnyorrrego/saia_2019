@@ -18,7 +18,7 @@ if($_SESSION["tipo_dispositivo"]=="movil"){
     menu_principal_documento($_REQUEST["iddoc"]);
 }
 $adicionales_enlace="";
-$busquedas=busca_filtro_tabla("", "busqueda_componente", "nombre LIKE 'notas_documento' OR nombre LIKE 'anexos' OR nombre LIKE 'paginas_documento' OR nombre LIKE 'buzon_salida' OR nombre LIKE 'documentos_relacionados' OR nombre LIKE 'documentos_respuesta' OR nombre LIKE 'tareas_documento' OR nombre LIKE 'versiones_documento'", "", $conn);
+$busquedas=busca_filtro_tabla("", "busqueda_componente", "nombre LIKE 'notas_documento' OR nombre LIKE 'anexos' OR nombre LIKE 'paginas_documento' OR nombre LIKE 'buzon_salida' OR nombre LIKE 'documentos_relacionados' OR nombre LIKE 'documentos_relacionados_a' OR nombre LIKE 'documentos_respuesta' OR nombre LIKE 'tareas_documento' OR nombre LIKE 'versiones_documento'", "", $conn);
 $modulos=busca_filtro_tabla("nombre,etiqueta","modulo","nombre LIKE 'ordenar_pag' OR nombre LIKE 'ver_notas' OR nombre LIKE 'adjuntos_documento' OR nombre LIKE 'documentos_relacionados' OR nombre LIKE 'arbol_documento' OR nombre LIKE 'tareas_documento' OR nombre LIKE 'ver_versiones'","",$conn);
 $iconos = array();
 for($i=0; $i< $modulos['numcampos']; $i++){
@@ -40,6 +40,9 @@ for($i=0;$i<$busquedas["numcampos"];$i++){
         break;
         case 'documentos_relacionados':
             $documentos_relacionados=$busquedas[$i]["idbusqueda_componente"];            
+        break;
+        case 'documentos_relacionados_a':
+            $documentos_relacionados_a=$busquedas[$i]["idbusqueda_componente"];  
         break;
 		case 'documentos_respuesta':
             $documentos_respuesta=$busquedas[$i]["idbusqueda_componente"];			            
@@ -122,7 +125,7 @@ else{
     	</a>
     </li>
     <li>
-    	<a href="#paginas" id="ordenar_pag" data-toggle="tab" componente="<?php echo($paginas_documento);?>"  class="tooltip_saia_izquierda" title="<?php echo($iconos['ordenar_pag']);?>">
+    	<a href="#paginas" id="ordenar_pag" data-toggle="tab" componente="<?php echo($paginas_documento);?>"  class="tooltip_saia_izquierda" title="P&aacute;ginas del documento">
     		<i class="icon-ver_pag_documento"><span class="badge badge-info" id="cantidad_paginas"></span></i>
     	</a>
     </li>
@@ -132,7 +135,7 @@ else{
     	</a>
     </li>
     <li>        
-    	<a href="#respuesta" id="documentos_relacionados" data-toggle="tab" componente="<?php echo($documentos_relacionados);?>" componente2="<?php echo($documentos_respuesta);?>" class="tooltip_saia_izquierda" title="<?php echo($iconos['documentos_relacionados']);?>">
+    	<a href="#respuesta" id="documentos_relacionados" data-toggle="tab" componente="<?php echo($documentos_relacionados);?>" componente2="<?php echo($documentos_respuesta);?>" componente3="<?php echo($documentos_relacionados_a);?>" class="tooltip_saia_izquierda" title="<?php echo($iconos['documentos_relacionados']);?>">
             
             <i class="icon-documentos_relacionados"><span class="badge badge-info" id="cantidad_documentos_relacionados"></span></i>
     	</a>        
@@ -163,7 +166,7 @@ else{
       <div id="tree_box" class="arbol_saia"></div>
     </div>      
     <div class="tab-pane" id="paginas">  
-      <b><?php echo($iconos['ordenar_pag']);?></b>        
+      <b>P&aacute;ginas del documento</b>        
       <ul id="panel_paginas" class="ordenar_paginas" style="margin:5px 0 10px 0;">
       </ul>   
     </div>
@@ -180,24 +183,13 @@ else{
         <b><?php echo($iconos['documentos_relacionados']);?></b>
       </div>
     	<b>a. Vinculados como respuesta</b>
-    	<ul class="lista_datos" id="panel_respuesta">
-      </ul>
-    	<!--button class="btn btn-mini btn-primary pull-right vinculado_respuesta" iddocumento="<?php echo($_REQUEST['iddocumento']);?>">Vincular otro</button-->
+    	<ul class="lista_datos" id="panel_respuesta"></ul>
     	<br />
     	<b>b. Asociado a</b>
-    	<ul class="lista_datos" id="panel_asociado_a">
-    	<?php
-    	$origen=busca_filtro_tabla("B.*","respuesta A, documento B","A.destino='".$iddocumento."' AND A.origen=B.iddocumento","",$conn);
-    	if($origen["numcampos"]){
-    		echo('<li><div class="row-fluid"><div class="pull-left tootltip_saia_abajo">'.$origen[0]["numero"].'-'.$origen[0]["descripcion"].'</div><div class="pull-right"><a href="#" enlace="ordenar.php?key='.$origen[0]["iddocumento"].'&mostrar_formato=1'.$adicionales_enlace.'" conector="iframe"  titulo="Documento No.'.$origen[0]["numero"].'" class="kenlace_saia pull-left" ><i class="icon-download tooltip_saia_izquierda" title="Ver documento"></i></a></div></div></li>');
-    	}else{
-    		echo("<li class='alert' style='margin-bottom:3px;'>No se encuentra asociado ning&uacute;n documento</li>");
-    	}
-			?>
-      </ul><br />
+    	<ul class="lista_datos" id="panel_asociado_a"></ul>
+    	<br>
     	<b>c. Vinculados por funcionario</b>
     	<ul class="lista_datos" id="panel_relacionados_funcionario"></ul>
-    	<!--button class="btn btn-mini btn-primary pull-right" id="boton_documentos_relacionados" enlace="pantallas/vincular_documento/adicionar_vincular_documento.php?iddocumento=<?php echo($_REQUEST['iddocumento'].$adicionales_enlace);?>">Vincular otro</button-->
     	<div id="pie_relacionados"></div>
     </div>
     <div class="tab-pane" id="notas">
@@ -294,8 +286,12 @@ function click_funcion(div){
       if(enlace!==''){
         var componente = $(this).attr('componente');
         var componente2 = '';
+        var componente3 = '';
         if($(this).attr('componente2')){
         	var componente2 = $(this).attr('componente2');
+        }
+        if($(this).attr('componente3')){
+        	var componente3 = $(this).attr('componente3');
         }
         var div = "#panel_"+$(this).attr('href').replace("#","");
         var etiqueta = $(this).attr('href').replace("#","");
@@ -369,13 +365,13 @@ function click_funcion(div){
             data:{idbusqueda_componente:'<?php echo($documentos_relacionados);?>',iddocumento : documento_saia,actual_row:"0",limpio:"1",rows:"100"},
             success:function(html){
             	$("#panel_relacionados_funcionario").html('');
-            	var objeto2=jQuery.parseJSON(html)
-            	if(objeto2.records=='0'){
+            	var objeto2rf=jQuery.parseJSON(html)
+            	if(objeto2rf.records=='0'){
             		$("#panel_relacionados_funcionario").append("<li class='alert' style='margin-bottom:3px;'>No hay documentos vinculados por funcionario</li>");
             	}else{
-	                var objeto=jQuery.parseJSON(html);                    
-	                $.each(objeto.rows,function(i,item){                          
-                        $("#panel_relacionados_funcionario").append("<li>"+item.info+"</li>");        
+	                var objeto2rf=jQuery.parseJSON(html);                    
+	                $.each(objeto2rf.rows,function(i,itemrf){                          
+                        $("#panel_relacionados_funcionario").append("<li>"+itemrf.info+"</li>");        
 	                });	               
                }
             	//iniciar_tooltip();
@@ -390,13 +386,34 @@ function click_funcion(div){
             data:{idbusqueda_componente:'<?php echo($documentos_respuesta);?>',iddocumento : documento_saia, actual_row:"0",limpio:"1",rows:"100"},
             success:function(html){
             	$("#panel_respuesta").html('');
-            	var objeto2=jQuery.parseJSON(html)
-            	if(objeto2.records=='0'){
+            	var objetor=jQuery.parseJSON(html)
+            	if(objetor.records=='0'){
             		$("#panel_respuesta").append("<li class='alert' style='margin-bottom:3px;'>No hay documentos vinculados como respuesta</li>");
             	}else{
-	                var objeto=jQuery.parseJSON(html);                    
-	                $.each(objeto.rows,function(i,item){                          
-                  	$("#panel_respuesta").append("<li>"+item.info+"</li>");        
+	                var objetor=jQuery.parseJSON(html);                    
+	                $.each(objetor.rows,function(i,itemr){                          
+                  	$("#panel_respuesta").append("<li>"+itemr.info+"</li>");        
+	                });	               
+               }
+            	//iniciar_tooltip();
+            }            
+          });         
+        }
+        if(componente3 === '<?php echo($documentos_relacionados_a);?>'){ 
+          $("#panel_asociado_a").html('');                
+          $.ajax({
+            type: "POST",
+            url: "<?php echo $ruta_db_superior ;?>"+"pantallas/busquedas/servidor_busqueda.php",		  		  
+            data:{idbusqueda_componente:'<?php echo($documentos_relacionados_a);?>',iddocumento : documento_saia,actual_row:"0",limpio:"1",rows:"100"},
+            success:function(html){
+            	$("#panel_asociado_a").html('');
+            	var objetoa=jQuery.parseJSON(html)
+            	if(objetoa.records=='0'){
+            		$("#panel_asociado_a").append("<li class='alert' style='margin-bottom:3px;'>No hay documentos vinculados al documento</li>");
+            	}else{
+	                var objetoa=jQuery.parseJSON(html);                    
+	                $.each(objetoa.rows,function(i,itema){                          
+                        $("#panel_asociado_a").append("<li>"+itema.info+"</li>");        
 	                });	               
                }
             	//iniciar_tooltip();
@@ -424,7 +441,7 @@ function click_funcion(div){
           $("#cantidad_notas").html(objeto.ver_notas);
           $("#cantidad_tareas").html(objeto.ver_tareas);
           $("#cantidad_versiones").html(objeto.ver_versiones);
-          var cantidad_relacionados=parseInt(objeto.documentos_relacionados)+parseInt(<?php echo($origen["numcampos"]); ?>);
+          var cantidad_relacionados=parseInt(objeto.documentos_relacionados);
           $("#cantidad_documentos_relacionados").html(cantidad_relacionados);                       
         }
       }
@@ -489,7 +506,6 @@ function click_funcion(div){
       return;
     }
     llave=tree2.getParentId(nodeId);
-
     tree2.closeAllItems(tree2.getParentId(nodeId))
     tree2.openItem(nodeId);
     tree2.openItem(tree2.getParentId(nodeId));
@@ -497,7 +513,6 @@ function click_funcion(div){
     redireccion_detalles(conexion);
     }
     function redireccion_detalles(conexion){
-        console.log(no_seleccionar);
         if(!no_seleccionar){
             window.parent.open(conexion,"detalles");    
         }
@@ -518,7 +533,16 @@ function click_funcion(div){
         document.poppedLayer.style.visibility = "hidden";
         tree2.selectItem(item,true,false);
         tree2.openAllItems(0); //esta linea permite que los arboles carguen abiertos totalmente
-        
+        <?php 
+            if(@$_REQUEST['click_mostrar']){
+                ?>
+                nodeId=tree2.getSelectedItemId();
+                llave=tree2.getParentId(nodeId);
+                console.log(nodeId+'<--->'+llave+'<--->'+no_seleccionar);
+                onNodeSelect(nodeId);
+                <?php
+            }
+        ?>
       }
     function cargando() {
       if (browserType == "gecko" )
@@ -647,7 +671,7 @@ function click_funcion(div){
 	tree5=new dhtmlXTreeObject("treeboxbox_tree5","","",0);
 	tree5.setImagePath("<?php echo($ruta_db_superior);?>imgs/");
 	tree5.enableIEImageFix(true);
-  
+	tree5.enableTreeImages("false");
   tree5.setOnLoadingStart(cargando_version);
   tree5.setOnLoadingEnd(fin_cargando_version);
   tree5.enableSmartXMLParsing(true);

@@ -150,4 +150,164 @@ NULL ,  '107',  '2',  '2',  'formatos/radicacion_entrada/radicacion_rapida.php?i
 
 UPDATE  modulo SET  enlace =  'pantallas/buscador_principal.php?idbusqueda=107' WHERE  idmodulo =24;
 
+-----------
+UPDATE modulo SET etiqueta='Acciones P&aacute;ginas del documento' WHERE nombre='ordenar_pag'
+-----------
+ALTER TABLE  `ejecutor` ADD  `tipo_ejecutor` INT NOT NULL DEFAULT  '1'
+-----------
+//VERIFICAR LOS IDS
+ALTER TABLE  modulo ADD  pertenece_nucleo INT NOT NULL DEFAULT  '0' AFTER  idmodulo;	
 
+INSERT INTO  modulo (idmodulo ,pertenece_nucleo ,nombre ,tipo ,imagen ,etiqueta ,enlace ,enlace_mobil ,destino ,cod_padre ,orden ,ayuda ,parametros ,busqueda_idbusqueda ,permiso_admin ,busqueda) VALUES (NULL ,  '1',  'permiso_radicacion_externa',  'secundario',  'botones/configuracion/default.gif',  'Radicaci&oacute;n Externa',  '#', NULL ,  '_self',  '6',  '0', 'Modulo creado para dar permiso a un funcionario si desean que realice radicaciones de origen externo', NULL ,  '0',  '0',  '');
+
+
+----------
+
+UPDATE  busqueda_condicion SET  codigo_where = 'lower(a.estado) not in(''eliminado'') AND  a.iddocumento=b.documento_iddocumento and b.etiqueta_idetiqueta=d.idetiqueta {*filtro_categoria@categoria*}  {*filtro_funcionario_etiquetados@funcionario*}' WHERE  `busqueda_condicion`.`idbusqueda_condicion` =183;
+
+UPDATE busqueda_componente SET tablas_adicionales='documento_etiqueta b, etiqueta d' WHERE nombre LIkE 'documentos_etiquetados';
+
+---------
+
+UPDATE modulo SET  etiqueta =  'Opciones de la p&aacute;gina' WHERE  nombre ='ordenar_pag';
+
+---------
+
+ALTER TABLE  `modulo` ADD  `enlace_pantalla` INT( 11 ) NULL DEFAULT  '0'
+
+
+----------------
+
+UPDATE  modulo SET  enlace =  'formatos/radicacion_entrada/radicacion_rapida.php?idcategoria_formato=1',enlace_pantalla =  '1' WHERE  idmodulo =24;
+UPDATE  modulo SET  enlace =  'cargo.php',enlace_pantalla =  '1' WHERE  idmodulo =12;
+UPDATE  modulo SET  enlace =  'permiso_perfiladd.php',enlace_pantalla =  '1' WHERE  idmodulo =17;
+UPDATE  modulo SET  enlace =  'rutalist.php',enlace_pantalla =  '1' WHERE idmodulo =63;
+UPDATE  modulo SET  enlace =  'calendario/festivos_list.php',enlace_pantalla =  '1' WHERE idmodulo =200;
+UPDATE  modulo SET  enlace =  'pantallas/logo/adicionar_logo.php',enlace_pantalla =  '1' WHERE  idmodulo =1188;
+UPDATE  modulo SET  enlace =  'carrusel/sliderconfig.php',enlace_pantalla =  '1' WHERE idmodulo =821;
+UPDATE  modulo SET  enlace =  'noticia_index/noticia_detalles.php',enlace_pantalla =  '1' WHERE  idmodulo =1402;
+UPDATE  modulo SET  enlace_pantalla =  '1' WHERE  idmodulo =1641;
+UPDATE  modulo SET  enlace_pantalla =  '1' WHERE idmodulo =1552;
+UPDATE  modulo SET  enlace_pantalla =  '1' WHERE idmodulo =1522;
+UPDATE  modulo SET  enlace_pantalla =  '1' WHERE  idmodulo =1141;
+UPDATE  modulo SET  enlace_pantalla =  '1' WHERE  idmodulo =1142;
+UPDATE  modulo SET  enlace =  'dependencia.php',enlace_pantalla =  '1' WHERE  idmodulo =16;
+UPDATE  modulo SET  enlace =  'serielist.php',enlace_pantalla =  '1' WHERE  idmodulo =14;
+UPDATE  modulo SET  enlace ='calidad_macro.php?from_modulo_calidad=1',enlace_pantalla =  '1' WHERE  idmodulo =202;
+
+
+---------------
+INSERT INTO busqueda_componente (idbusqueda_componente, busqueda_idbusqueda, tipo, conector, url, etiqueta, nombre,orden, info,exportar, exportar_encabezado, encabezado_componente, estado, ancho, cargar, campos_adicionales, tablas_adicionales, ordenado_por, direccion, agrupado_por, busqueda_avanzada, acciones_seleccionados, modulo_idmodulo, menu_busqueda_superior, enlace_adicionar, encabezado_grillas) VALUES (NULL, '49', '3', '2', 'busquedas/consulta_busqueda.php', 'Vinculado  por el funcionario', 'documentos_relacionados_a', '1', '<div class="row-fluid"><div class="pull-left tooltip_saia_abajo" title="{*etiqueta*}">{*numero*}-{*obtener_descripcion_informacion@descripcion*}</div><div class=''pull-right''><a href="#" enlace=''ordenar.php?key={*documento_origen*}&mostrar_formato=1'' conector=''iframe''  titulo="Documento No.{*numero*}" class=''kenlace_saia pull-left'' ><i class=''icon-download tooltip_saia_izquierda'' title=''Ver documento''></i></a></div></div>
+</div>', NULL, NULL, NULL, '1', '320', '1', 'F.fecha,F.documento_origen,F.documento_destino,F.funcionario_idfuncionario,F.observaciones,A.ejecutor,A.numero,A.iddocumento,A.descripcion', 'documento_vinculados F, documento A', 'F.fecha', 'DESC', NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+
+
+INSERT INTO busqueda_condicion (idbusqueda_condicion, busqueda_idbusqueda, fk_busqueda_componente, codigo_where, etiqueta_condicion) VALUES (NULL, NULL, '291', 'F.documento_origen=A.iddocumento AND F.documento_destino={*obtener_iddocumento*}', 'condicion_documentos_vinculados_a');
+
+--------------
+UPDATE busqueda_componente set direccion='ASC' WHERE direccion IS NULL;
+--------------
+delete modulo WHERE  nombre='indicadores_funcionario' and tipo='secundario' and etiqueta='Indicadores funcionario' and enlace='pantallas/buscador_principal.php?idbusqueda=1&default_componente=indicadores_funcionario';
+
+UPDATE modulo SET etiqueta='Reporte usuarios' WHERE nombre='reporte_acceso_usuarios'; 
+
+-------------
+UPDATE formato SET etiqueta='Comunicaci&oacute;n Externa (WORD)' WHERE nombre='oficio_word' AND mostrar_pdf=2;
+UPDATE modulo SET etiqueta='Comunicaci&oacute;n Externa (WORD)' WHERE nombre='oficio_word';
+UPDATE modulo SET etiqueta='Crear Comunicaci&oacute;n Externa (WORD)' WHERE nombre='crear_oficio_word';
+INSERT INTO serie ( nombre, cod_padre, dias_entrega, codigo, tipo_entidad, llave_entidad, retencion_gestion, retencion_central, conservacion, digitalizacion, seleccion, otro, procedimiento, copia, tipo, clase, estado, categoria, orden, tipo_expediente, tvd) VALUES ('Comunicaci&oacute;n Externa (WORD)', NULL, 8, NULL, NULL, NULL, 3, 5, NULL, NULL, NULL, NULL, NULL, 0, 0, 1, 1, 3, NULL, NULL, 0);
+-------------
+INSERT INTO modulo (pertenece_nucleo, nombre, tipo, imagen, etiqueta, enlace, enlace_mobil, destino, cod_padre, orden, ayuda, parametros, busqueda_idbusqueda, permiso_admin, busqueda, enlace_pantalla) VALUES 
+(1, 'permiso_expedientes_gestion', 'secundario', 'botones/principal/defaut.png', 'Permiso Gesti&oacute;n', '#', NULL, '_self', 45, 0, '', '', 0, 0, '', 0),
+(1, 'permiso_expedientes_central', 'secundario', 'botones/principal/defaut.png', 'Permiso Central', '#', NULL, '_self', 45, 0, '', '', 0, 0, '', 0),
+(1, 'permiso_expedientes_historico', 'secundario', 'botones/principal/defaut.png', 'Permiso Hist&oacute;rico', '#', NULL, '_self', 45, 0, '', '', 0, 0, '', 0),
+(1, 'permiso_expedientes_cajas', 'secundario', 'botones/principal/defaut.png', 'Permiso Cajas', '#', NULL, '_self', 45, 0, '', '', 0, 0, '', 0);
+
+UPDATE  busqueda_componente SET  modulo_idmodulo =  '1644' WHERE  idbusqueda_componente =110;
+UPDATE  busqueda_componente SET  modulo_idmodulo =  '1645' WHERE  idbusqueda_componente =10;
+UPDATE  busqueda_componente SET  modulo_idmodulo =  '1646' WHERE  idbusqueda_componente =9;
+UPDATE  busqueda_componente SET  modulo_idmodulo =  '1647' WHERE  idbusqueda_componente =160;
+------------
+
+UPDATE  busqueda_componente SET  direccion =  'DESC' WHERE  idbusqueda_componente =7;
+UPDATE  busqueda_componente SET  ordenado_por =  'B.fecha_inicial',direccion='DESC' WHERE  idbusqueda_componente =12;
+UPDATE  busqueda_componente SET  ordenado_por =  'B.fecha_inicial',direccion =  'DESC' WHERE  idbusqueda_componente =13;
+UPDATE  busqueda_componente SET  direccion =  'DESC' WHERE  idbusqueda_componente =16;
+UPDATE  busqueda_componente SET  direccion =  'DESC' WHERE  idbusqueda_componente =18;
+UPDATE  busqueda_componente SET  direccion =  'DESC' WHERE  idbusqueda_componente =23;
+
+----------
+
+INSERT INTO campos_formato (formato_idformato, nombre, etiqueta, tipo_dato, longitud, obligatoriedad, valor, acciones, ayuda, predeterminado, banderas, etiqueta_html, orden, mascara, adicionales, autoguardado, fila_visible) VALUES
+(305, 'estado_radicado', 'estado_radicado', 'INT', '11', 0, NULL, 'a,e,b', NULL, '1', NULL, 'hidden', 0, NULL, NULL, 0, 1);
+
+INSERT INTO funciones_formato (nombre, nombre_funcion, parametros, etiqueta, descripcion, ruta, formato, acciones) VALUES
+('{*cambiar_estado_iniciado_pqrsf*}', 'cambiar_estado_iniciado_pqrsf', NULL, 'cambiar_estado_iniciado_pqrsf', '', 'funciones.php', '305', ''),
+('{*enlace_llenar_datos_radicacion_rapida_pqrsf*}', 'enlace_llenar_datos_radicacion_rapida_pqrsf', NULL, 'enlace_llenar_datos_radicacion_rapida_pqrsf', '', 'funciones.php', '305', 'm'),
+('{*cambiar_estado_aprobado_pqrsf*}', 'cambiar_estado_aprobado_pqrsf', NULL, 'cambiar_estado_aprobado_pqrsf', '', 'funciones.php', '305', '');
+
+INSERT INTO funciones_formato_accion (idfunciones_formato,accion_idaccion, formato_idformato, momento, estado, orden) VALUES
+(934,3, 305, 'POSTERIOR', 1, 1),
+(936,5, 305, 'POSTERIOR', 1, 1);
+
+UPDATE formato SET cuerpo='<p style="text-align: left;">{*enlace_llenar_datos_radicacion_rapida_pqrsf*}</p>
+<table style="border-collapse: collapse; width: 100%;" border="1">
+<tbody>
+<tr>
+<td style="text-align: left; width: 20%;"><strong>&nbsp;Estado PQRSF</strong></td>
+<td style="text-align: left; width: 25%;">&nbsp;{*estado_reporte*}</td>
+<td style="text-align: left; width: 20%;">&nbsp;<strong>Fecha Cambio Estado</strong></td>
+<td style="text-align: left; width: 15%;">&nbsp;{*ver_fecha_reporte*}</td>
+<td style="text-align: center; width: 20%;" rowspan="5">{*generar_qr_pqrsf*}</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>&nbsp;Tipo Comentario:</strong></td>
+<td style="text-align: left;" colspan="3">&nbsp;{*tipo*}<strong></strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>&nbsp;Nombre Completo:</strong></td>
+<td>&nbsp;{*nombre*}</td>
+<td>&nbsp;<strong>Documento:</strong></td>
+<td>&nbsp;{*documento*}</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>&nbsp;Email:&nbsp;</strong></td>
+<td style="text-align: left;">&nbsp;{*email*}</td>
+<td style="text-align: left;">&nbsp;<strong>Telefono o Celular:</strong></td>
+<td style="text-align: left;">&nbsp;{*telefono*}</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>&nbsp;<strong>Rol en la Insitucion:</strong></strong></td>
+<td style="text-align: left;" colspan="3">&nbsp;{*rol_institucion*}</td>
+</tr>
+<tr>
+<td style="text-align: left;" colspan="5"><strong>&nbsp;Comentario:</strong></td>
+</tr>
+<tr>
+<td colspan="5">&nbsp;{*comentarios*}</td>
+</tr>
+<tr>
+<td colspan="5">&nbsp;<strong>Documento Soporte del Comentario:&nbsp;</strong>{*mostrar_anexos_pqrsf*}<strong></strong></td>
+</tr>
+</tbody>
+</table>
+<p>{*mostrar_datos_hijos*}</p>
+<p>{*mostrar_estado_proceso*}</p>' WHERE idformato=305;
+
+DELETE FROM campos_formato WHERE nombre='iniciativa_publica' AND formato_idformato=305;
+DELETE FROM campos_formato WHERE nombre='sector_iniciativa' AND formato_idformato=305;
+DELETE FROM campos_formato WHERE nombre='cluster' AND formato_idformato=305;
+DELETE FROM campos_formato WHERE nombre='region' AND formato_idformato=305;
+
+--------------------------
+UPDATE campos_formato SET  ayuda ='Comunicaci&oacute;n Externa (WORD)',predeterminado='1332' WHERE  idcampos_formato =4796;
+--------------------------
+UPDATE  busqueda_condicion SET  codigo_where = 'F.documento_destino=A.iddocumento AND F.documento_origen={*obtener_iddocumento*} AND lower(A.estado) NOT IN(''eliminado'',''anulado'')' WHERE  idbusqueda_condicion =131;
+
+UPDATE  busqueda_condicion SET  codigo_where =  'G.destino=A.iddocumento AND G.origen={*obtener_iddocumento*} AND lower(A.estado) NOT IN(''eliminado'',''anulado'')' WHERE  idbusqueda_condicion =133;
+
+UPDATE  busqueda_condicion SET  codigo_where = 'F.documento_origen=A.iddocumento AND F.documento_destino={*obtener_iddocumento*} AND lower(A.estado) NOT IN(''eliminado'',''anulado'')' WHERE  idbusqueda_condicion =229;
+--------------------------
+INSERT INTO busqueda_componente (busqueda_idbusqueda, tipo, conector, url, etiqueta, nombre, orden, info, exportar, exportar_encabezado, encabezado_componente, estado, ancho, cargar, campos_adicionales, tablas_adicionales, ordenado_por, direccion, agrupado_por, busqueda_avanzada, acciones_seleccionados, modulo_idmodulo, menu_busqueda_superior, enlace_adicionar, encabezado_grillas) VALUES
+(7, 3, 2, 'pantallas/busquedas/consulta_busqueda_documento.php', 'pendiente por ingresar PQRSF', 'pendientes_ingresar_pqrsf', 1, '<div>{*origen_documento@iddocumento,numero,ejecutor,tipo_radicado,estado,serie,tipo_ejecutor*} {*fecha_creacion_documento@fecha,plantilla,iddocumento*}<br><br><div>{*descripcion*}</div><br><br>\r\n{*barra_inferior_documento@iddocumento,numero*}</div>', '', NULL, NULL, 1, 320, 2, NULL, 'ft_pqrsf B', 'A.fecha', 'DESC', NULL, NULL, 'vincular_documentos', NULL, NULL, NULL, NULL);
+
+INSERT INTO  busqueda_condicion (busqueda_idbusqueda ,fk_busqueda_componente ,codigo_where ,etiqueta_condicion) VALUES (NULL ,  '298',  'lower(a.estado)=''iniciado'' AND a.iddocumento=b.documento_iddocumento', NULL);

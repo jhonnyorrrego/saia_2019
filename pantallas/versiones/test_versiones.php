@@ -33,7 +33,7 @@ echo("<tree id=\"0\">\n");
 for($i=0;$i<$datos_version["numcampos"];$i++){
     $fecha=$datos_version[$i]["x_fecha"];
     if(is_object($datos_version[$i]["x_fecha"]))$fecha=$datos_version[$i]["x_fecha"]->format('Y-m-d H:i');
-    echo("<item style=\"font-family:verdana; font-size:7pt;\" text=\"V".$datos_version[$i]["version"].". ".$fecha."\" id=\"".$iddoc.$i."\" nocheckbox=\"1\" >\n");
+    echo("<item style=\"font-family:verdana; font-size:7pt;\" text=\"V".$datos_version[$i]["version"].". ".$fecha."\" id=\"ppal-".$datos_version[$i]["idversion_documento"]."\" nocheckbox=\"1\" >\n");
     
     echo("<item style=\"font-family:verdana; font-size:7pt;\" text=\"Pdf\" id=\"pdf".$datos_version[$i]["idversion_documento"]."\" nocheckbox=\"1\" >\n");
     echo pdf($datos_version[$i]["idversion_documento"]);
@@ -63,7 +63,7 @@ function pdf($version){
     $cadena=array();
     for($i=0;$i<$datos["numcampos"];$i++){
         $archivo=basename($datos[$i]["pdf"]);
-        $cadena[]="<item style=\"font-family:verdana; font-size:7pt;\" text=\"".$archivo."\" id=\"pdf-".$version."\" nocheckbox=\"1\" ></item>";
+        $cadena[]="<item style=\"font-family:verdana; font-size:7pt;\" text=\"".codifica_encabezado(html_entity_decode($archivo))."\" id=\"pdf-".$version."\" nocheckbox=\"1\" ></item>";
     }
     return(implode("",$cadena));
 }
@@ -74,7 +74,7 @@ function anexos($version){
     for($i=0;$i<$datos["numcampos"];$i++){
         $dato_anexo=busca_filtro_tabla("","anexos a","a.idanexos=".$datos[$i]["anexos_idanexos"],"",$conn);
         $archivo=($dato_anexo[0]["etiqueta"]);
-        $cadena[]="<item style=\"font-family:verdana; font-size:7pt;\" text=\"".$archivo."\" id=\"anexo-".$datos[$i]["idversion_anexos"]."\" nocheckbox=\"1\" ></item>";
+        $cadena[]="<item style=\"font-family:verdana; font-size:7pt;\" text=\"".codifica_encabezado(html_entity_decode($archivo))."\" id=\"anexo-".$datos[$i]["idversion_anexos"]."\" nocheckbox=\"1\" ></item>";
     }
     return(implode("",$cadena));
 }
@@ -85,7 +85,7 @@ function paginas($version){
     for($i=0;$i<$datos["numcampos"];$i++){
         $dato_pagina=busca_filtro_tabla("","pagina a","a.consecutivo=".$datos[$i]["pagina_idpagina"],"",$conn);
         $archivo=("Documento ".$dato_pagina[0]["pagina"]);
-        $cadena[]="<item style=\"font-family:verdana; font-size:7pt;\" text=\"".$archivo."\" id=\"pagina-".$datos[$i]["idversion_pagina"]."\" nocheckbox=\"1\" ></item>";
+        $cadena[]="<item style=\"font-family:verdana; font-size:7pt;\" text=\"".codifica_encabezado(html_entity_decode($archivo))."\" id=\"pagina-".$datos[$i]["idversion_pagina"]."\" nocheckbox=\"1\" ></item>";
     }
     return(implode("",$cadena));
 }
@@ -95,7 +95,7 @@ function vistas($version){
     $cadena=array();
     for($i=0;$i<$datos["numcampos"];$i++){
         $archivo=basename($datos[$i]["pdf"]);
-        $cadena[]="<item style=\"font-family:verdana; font-size:7pt;\" text=\"".$archivo."\" id=\"vista-".$datos[$i]["idversion_vista"]."\" nocheckbox=\"1\" ></item>";
+        $cadena[]="<item style=\"font-family:verdana; font-size:7pt;\" text=\"".codifica_encabezado(html_entity_decode($archivo))."\" id=\"vista-".$datos[$i]["idversion_vista"]."\" nocheckbox=\"1\" ></item>";
     }
     return(implode("",$cadena));
 }

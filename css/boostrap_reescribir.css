@@ -39,6 +39,10 @@ body{
     font-family: verdana,tahoma,arial;
     font-size: 10px;  
 }
+.dhx_bg_img_fix{
+    width:0px;
+}
+
 .encabezado {
     color:white ; 
     padding:10px; 

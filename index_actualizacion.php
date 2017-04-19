@@ -57,7 +57,7 @@ if(@$fecha[0][0]<0)
 $usuario=usuario_actual("funcionario_codigo");
 $idfuncionario=usuario_actual("idfuncionario");
 
-$etiquetados=busca_filtro_tabla("c.nombre","documento a, documento_etiqueta b, etiqueta c,formato d","LOWER(a.estado) NOT IN ('eliminado') AND a.iddocumento=b.documento_iddocumento AND lower(a.plantilla)=d.nombre  and b.etiqueta_idetiqueta=c.idetiqueta AND c.funcionario='".$usuario."' GROUP BY a.iddocumento","",$conn);
+$etiquetados=busca_filtro_tabla("c.nombre","documento a, documento_etiqueta b, etiqueta c","LOWER(a.estado) NOT IN ('eliminado') AND a.iddocumento=b.documento_iddocumento AND b.etiqueta_idetiqueta=c.idetiqueta AND c.funcionario='".$usuario."' GROUP BY a.iddocumento","",$conn);
 
 $pendientes=busca_filtro_tabla("count(*) AS cant","documento A,asignacion B,formato c ","LOWER(A.estado)<>'eliminado' AND A.iddocumento=B.documento_iddocumento AND B.tarea_idtarea<>-1 AND B.entidad_identidad=1 AND B.llave_entidad=".$usuario." and lower(A.plantilla)=c.nombre ","GROUP BY A.iddocumento",$conn);
 
@@ -410,8 +410,21 @@ if($_SESSION["tipo_dispositivo"]=="movil"){ ?>
         </div>
       </div>
     </td>
-    <td width="16px" id="collapser_mainui">
-    </td>  
+    <td width="16px" id="collapser_mainui" title="Contraer área de trabajo">
+    </td>
+    <script>
+        $(document).ready(function(){
+            $('#collapser_mainui').click(function(){
+                var title=$(this).attr('title');
+                if(title=="Contraer área de trabajo"){
+                    title="Expandir área de trabajo";
+                }else{
+                    title="Contraer área de trabajo";
+                }
+                $(this).attr('title',title);
+            });
+        });
+    </script>
     <?php } ?>
     <td align="left" valign="top" id="CellContainer">
     <div class="<?php if($_SESSION["tipo_dispositivo"]!="movil"){echo("container-saia");}?> ui-corner-all shadow" style="padding-bottom: 0px;">
@@ -458,7 +471,7 @@ function mostrar_iconos($modulo_actual){
     $permisos=extrae_campo($permisos_perfil,"idmodulo","U");
     $finales=array_diff(array_merge((array)$permisos,(array)$adicionales),$suprimir);
     if(count($finales))
-      $tablas=busca_filtro_tabla("A.nombre,A.etiqueta,A.imagen,A.enlace,A.destino,A.ayuda,A.parametros","modulo A","A.idmodulo IN(".implode(",",$finales).")","A.orden ASC",$conn);
+      $tablas=busca_filtro_tabla("A.nombre,A.etiqueta,A.imagen,A.enlace,A.destino,A.ayuda,A.parametros,A.enlace_pantalla,A.idmodulo","modulo A","A.idmodulo IN(".implode(",",$finales).")","A.orden ASC",$conn);
     else
       $tablas["numcampos"]=0; 
     if($tablas["numcampos"]){
@@ -484,7 +497,10 @@ function mostrar_iconos($modulo_actual){
         }
         if($j>0&&$j%$cols==0 && $_SESSION["tipo_dispositivo"]!='movil'){
             echo('</tr><tr>');
-        }    
+        }
+        if(@$tablas[$j]["enlace_pantalla"]){  //si requiere de barra de navegacion (KAITEN)
+            $tablas[$j]["enlace"]="pantallas/pantallas_kaiten/principal.php?idmodulo=".$tablas[$j]["idmodulo"];
+        }
         if($_SESSION["tipo_dispositivo"]!='movil'){
           echo('<td width="'.(($cols*35)) .'px" height="44" align="center" valign="top"><a href="'.$tablas[$j]["enlace"]);
           if(!strpos($tablas[$j]["enlace"],"?"))

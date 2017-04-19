@@ -322,6 +322,17 @@ function radicar_documento_prueba($tipo_contador,$arreglo,$archivos=NULL,$idfluj
     //Modificacion 01-06-2015 para que la validacion al iniciar flujo se realice dentro de la funcion
     include_once($ruta_db_superior."workflow/libreria_paso.php");
     iniciar_flujo($doc,$idflujo);
+	/*
+	
+    if($idflujo){
+      include_once($ruta_db_superior."workflow/libreria_paso.php");
+      if($idflujo){  
+        iniciar_flujo($doc,$idflujo);
+        //echo($idflujo." AQUI");
+      }  
+    } 
+    */
+    
     return ($doc);
 }
 /*
@@ -2317,10 +2328,10 @@ function guardar_documento($iddoc,$tipo=0)
          if(is_array($_REQUEST[$lcampos[$j]["nombre"]]))
             array_push($valores,"'".implode(',',@$_REQUEST[$lcampos[$j]["nombre"]])."'");
          elseif(@$_REQUEST[$lcampos[$j]["nombre"]]<>'')
-            array_push($valores,"'".(utf8_decode(@$_REQUEST[$lcampos[$j]["nombre"]]))."'");
-         else
-          {  array_push($valores,"''");
-
+            array_push($valores,"'".((@$_REQUEST[$lcampos[$j]["nombre"]]))."'");
+         else 
+          {  array_push($valores,"''");  
+             
           }
          array_push($campos,$lcampos[$j]["nombre"]);
         break;

@@ -343,9 +343,13 @@ function asignar_permiso_expediente() {
 			$retorno -> exito = 0;
 			$retorno -> mensaje = "Se realizan algunas asignaciones al expediente se presentan errores";
 		}
-	} else if (!$_REQUEST["idfuncionario"]) {
-		$retorno -> exito = 2;
-		$retorno -> mensaje = "Por favor ingrese los funcionarios";
+	} else if (!$_REQUEST["idfuncionario"] && @$_REQUEST["idexpediente"] && @$_REQUEST['propietario']) {
+	    
+	    $sql1 = "DELETE FROM entidad_expediente WHERE expediente_idexpediente IN(" . $_REQUEST["idexpediente"] . ") AND entidad_identidad=1 AND llave_entidad NOT IN(" . $_REQUEST["propietario"] . ")";
+		phpmkr_query($sql1) or die($retorno);
+	    
+		$retorno -> exito = 1;
+		$retorno -> mensaje = "Des-Asignaciones al expediente realizadas con &eacute;xito";
 	}
 	return ($retorno);
 }

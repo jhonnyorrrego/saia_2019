@@ -23,6 +23,7 @@ if(!defined("PROTOCOLO_CONEXION")){
 		define("PROTOCOLO_CONEXION","http://");
 	}
 }
+define("PROTOCOLO_CONEXION_IMPORTAR","http://");
 
 if(!defined("SERVIDOR_EXPORTAR")){
 	define("SERVIDOR_EXPORTAR",PROTOCOLO_CONEXION.'52.205.58.68/saia_release1/saia/webservice_saia/exportar_importar_formato/exportar_formato/receptor_exportar.php');
@@ -31,6 +32,11 @@ if(!defined("SERVIDOR_MEDIO")){
 	define("SERVIDOR_MEDIO",PROTOCOLO_CONEXION.'52.205.58.68/saia_release1/saia/webservice_saia/exportar_importar_formato/exportar_importar_medio/exportar_importar_medio.php');
 }
 if(!defined("SERVIDOR_IMPORTAR")){
-	define("SERVIDOR_IMPORTAR",PROTOCOLO_CONEXION."sgddesarrollo.ucm.edu.co/saia/webservice_saia/exportar_importar_formato/webservice_saia/exportar_importar_formato/importar_formato/receptor_importar.php");
+	define("SERVIDOR_IMPORTAR",PROTOCOLO_CONEXION_IMPORTAR."saiaxxx.com/saia/webservice_saia/exportar_importar_formato/importar_formato/receptor_importar.php");
 }
 ?>
+
+
+
+
+

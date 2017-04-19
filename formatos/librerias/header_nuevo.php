@@ -30,6 +30,22 @@ if(isset($_REQUEST["idformato"])){
 else{
   $formato=busca_filtro_tabla("","formato,documento","lower(plantilla)=nombre and iddocumento=".$_REQUEST["iddoc"],"",$conn);
 }
+//Redirecciona en caso de que el documento sea visible en PDF.
+if($formato["numcampos"] && @$_REQUEST["tipo"]!=5){
+    if($formato[0]["pdf"] && $formato[0]["mostrar_pdf"] == 1) {
+		$ruta = $ruta_db_superior."pantallas/documento/visor_documento.php?iddoc=" . $formato[0]["iddocumento"];
+		redirecciona($ruta . "&rnd=" . rand(0, 100));
+	} else {
+		if($formato[0]["mostrar_pdf"] == 1) {
+			$ruta = $ruta_db_superior."pantallas/documento/visor_documento.php?iddoc=" . $formato[0]["iddocumento"] . "&actualizar_pdf=1";
+			redirecciona($ruta . "&rnd=" . rand(0, 100));
+		} else if($formato[0]["mostrar_pdf"] == 2) {
+			$ruta = $ruta_db_superior."pantallas/documento/visor_documento.php?pdf_word=1&iddoc=" . $formato[0]["iddocumento"];
+			redirecciona($ruta . "&rnd=" . rand(0, 100));
+		}
+	}
+}
+
 if(!isset($_REQUEST["tipo"]) || $_REQUEST["tipo"]==1){
   $codigo=usuario_actual("funcionario_codigo");
   leido($codigo,$_REQUEST["iddoc"]);

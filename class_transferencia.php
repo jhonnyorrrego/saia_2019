@@ -518,7 +518,8 @@ function transferir_archivo_prueba($datos, $destino, $adicionales) {
 cambia el estado del documento a APROBADO
 */
 function aprobar($iddoc=0,$url="")
-  {//$con=new Conexion("radica_camara");
+  {global $ruta_db_superior;
+      //$con=new Conexion("radica_camara");
    //$buscar=new SQL($con->Obtener_Conexion(), "Oracle");
    global $conn;
    $transferir=1;
@@ -2157,7 +2158,7 @@ global $conn;
 				$formato_doc = busca_filtro_tabla("A.nombre,A.idformato", "formato A, documento B", "B.iddocumento=" . $_POST["iddoc"] . " AND lower(A.nombre)=lower(B.plantilla)", "", $conn);
 				if ($formato_doc["numcampos"]) {
 					$nom_formato = $formato_doc[0]["nombre"];
-					if ($_SESSION["tipo_dispositivo"] == 'movil') {
+					if (@$_SESSION["tipo_dispositivo"] == 'movil') {
 						abrir_url("ordenar.php?key=" . $_POST["iddoc"] . "&accion=mostrar&mostrar_formato=1", "_self");
 					} else {
 						// Cuando el documento es creado por el modulo formatos
@@ -2959,6 +2960,11 @@ exit();
 
 function formato_devolucion($iddoc=0){
 global $conn,$ruta_db_superior;
+if(@$_REQUEST["iddoc"] || @$_REQUEST["key"]){
+  if(!@$_REQUEST["iddoc"])$_REQUEST["iddoc"]=@$_REQUEST["key"];
+  include_once("pantallas/documento/menu_principal_documento.php");
+  menu_principal_documento($_REQUEST["iddoc"]);
+}
 $config = busca_filtro_tabla("valor","configuracion","nombre='color_encabezado'","",$conn);
 if($config[0]["valor"]){
   $style = "<style type=\"text/css\"><!--INPUT, TEXTAREA, SELECT {font-family: Tahoma; font-size: 10px;} .phpmaker {font-family: Verdana; font-size: 9px;} .encabezado { background-color:".$config[0]["valor"]."; color:white ; padding:10px; text-align: left;  } .encabezado_list { background-color:".$config[0]["valor"]."; color:white ; vertical-align:middle; text-align: center; } --></style>";
@@ -2987,9 +2993,9 @@ if($transferencias["numcampos"]){
   redirecciona($ruta_db_superior. FORMATOS_CLIENTE .$mostar_formato_devolver[0]['nombre']."/mostrar_".$mostar_formato_devolver[0]['nombre'].".php?iddoc=".$iddoc."&idformato=".$mostar_formato_devolver[0]['idformato']);
   //redirecciona($ruta_db_superior."vacio.php");
 }
-
+//<img style="vertical-align:middle" src="'.PROTOCOLO_CONEXION.RUTA_PDF.'/botones/comentarios/devolver_documento.png" border="0">
 echo '<p><span style="font-family: Verdana; font-size: 9px; font-weight: bold;">
-<img style="vertical-align:middle" src="'.PROTOCOLO_CONEXION.RUTA_PDF.'/botones/comentarios/devolver_documento.png" border="0">&nbsp;&nbsp;DEVOLVER DOCUMENTOS&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;DEVOLVER DOCUMENTOS&nbsp;&nbsp;&nbsp;&nbsp;
 <br><br></span></p>
 <form name="transferenciadev" id="transferenciadev" action="'.PROTOCOLO_CONEXION.RUTA_PDF.'/class_transferencia.php" method="post">
 <table border="0" cellspacing="1" cellpadding="4" bgcolor="#CCCCCC">
@@ -3232,7 +3238,7 @@ function dependencias_asistentes($padre){
 <Post-condiciones><Post-condiciones>
 </Clase>
 */
-function arbol_serie()
+function arbol_serie($condicion_adicional='')
 {include_once("formatos/librerias/header_formato.php");
   echo '<meta http-equiv="Content-Type" content="text/html; charset= UTF-8 ">
 	<link rel="STYLESHEET" type="text/css" href="css/dhtmlXTree.css">
@@ -3259,8 +3265,8 @@ function arbol_serie()
       tree2.setOnLoadingEnd(fin_cargando_serie);
 			tree2.enableThreeStateCheckboxes(true);
 			tree2.enableThreeStateCheckboxes(true);
-			tree2.setXMLAutoLoading("test_serie_funcionario.php");
-			tree2.loadXML("test_serie_funcionario.php");
+			tree2.setXMLAutoLoading("test_serie_funcionario.php'.$condicion_adicional.'");
+			tree2.loadXML("test_serie_funcionario.php'.$condicion_adicional.'");
 			function fin_cargando_serie() {
         if (browserType == "gecko" )
            document.poppedLayer =

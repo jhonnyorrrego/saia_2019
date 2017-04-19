@@ -110,7 +110,11 @@ if($papas["numcampos"]){
 			if($papas[$i]["estado_cierre"]==2){
 				echo(" nocheckbox=\"1\" ");
 			}
-			echo(" child=\"1\" ");
+			
+			$hijos=busca_filtro_tabla("idexpediente","vexpediente_serie a",$lista2." AND cod_padre=".$papas[$i]["idexpediente"],"",$conn);
+			if($hijos['numcampos']){
+               echo(" child=\"1\" ");
+			}
     	echo(">");
 			if(@$_REQUEST["uid"] || @$_REQUEST["carga_total"]){
     		llena_expediente($papas[$i]["idexpediente"]);

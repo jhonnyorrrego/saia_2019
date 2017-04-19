@@ -2,8 +2,14 @@
 include_once("db.php");
 include_once("pantallas/expediente/librerias.php");
 
-if($_REQUEST["iddoc"])  //si estoy llenando desde la pantalla del menu intermedio del documento
-{$expedientes=explode(",",$_REQUEST["expedientes"]);
+if(@$_REQUEST["iddoc"])  //si estoy llenando desde la pantalla del menu intermedio del documento
+{
+    if(@$_REQUEST['serie_idserie']){
+        $sqlus="UPDATE documento SET serie=".@$_REQUEST['serie_idserie']." WHERE iddocumento=".$_REQUEST["iddoc"];
+        phpmkr_query($sqlus);
+    }
+    
+    $expedientes=explode(",",$_REQUEST["expedientes"]);
  if(is_array($expedientes)&&$_REQUEST["iddoc"]&&@$_REQUEST["accion"]!=4)
   {if($_REQUEST["accion"]==3) //mover a otro expediente
       {phpmkr_query("delete from expediente_doc where expediente_idexpediente='".$_REQUEST["expediente_actual"]."' and documento_iddocumento in (".$_REQUEST["iddoc"].")"); 

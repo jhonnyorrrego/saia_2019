@@ -122,7 +122,7 @@ return true;
 	<tr>
 		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">VALOR</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
-<input type="text" name="x_valor" id="x_valor" size="30" maxlength="255" value="<?php echo htmlspecialchars(@$x_valor) ?>">
+<input type="text" name="x_valor" id="x_valor" size="30" maxlength="255" value="<?php echo codifica_encabezado(html_entity_decode(@$x_valor)) ?>">
 </span></td>
 	</tr>
 	<tr>

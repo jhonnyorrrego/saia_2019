@@ -269,17 +269,17 @@ function imprime(atras){
 	<td border="1px" colspan="2" align="left" height="2px" cellspacing="0" cellpadding="0">
 		<strong><?php echo($nombre_empresa);?>
 		</strong><br/><br/>
-		<?php if($datos[0]["tipo_radicado"]==1 || $datos[0]["tipo_radicado"]==2){?>
-
+		<?php if($datos[0]["tipo_radicado"]==1 || $datos[0]["tipo_radicado"]==2 &&  $datos[0]['plantilla']!='pqrsf'){?>
+      	
       	<b>Radicaci&oacute;n No: <?php echo(date("Y-m-d")."-".$datos[0]["numero"]."-".$tipo_radicacion);?></b>
  <?php }else{?>
 		<b>Radicaci&oacute;n No: <?php echo($dependencia_creador[0]['codigo']."-".$datos[0]["numero"]."-".$fecha["year"]);?></b>
 		<?php }?>
   <br/>
   <b>Fecha: <?php echo $datos_fecha; ?></b><br/>
-
- <?php if(($datos[0]["tipo_radicado"]==1 || $datos[0]["tipo_radicado"]==2) && $datos[0]['plantilla']=='radicacion_entrada'){
-
+  
+ <?php if((($datos[0]["tipo_radicado"]==1 || $datos[0]["tipo_radicado"]==2) && $datos[0]['plantilla']=='radicacion_entrada') || $datos[0]['plantilla']=='pqrsf' ){
+     
          //print_r($datos);
         ?>
       <b>Asunto: <?php
@@ -336,7 +336,9 @@ function generar_ingreso_formato($nombre_formato){
     if($nombre_formato=='radicacion_salida'){
         $nombre_formato='radicacion_entrada';
     }
-	$formato=busca_filtro_tabla("A.*,B.nombre as nombre_campo, B.*","formato A, campos_formato B","A.nombre='".$nombre_formato."' AND idformato=formato_idformato AND obligatoriedad=1","",$conn);
+	$formato=busca_filtro_tabla("A.serie_idserie,A.nombre_tabla,B.nombre as nombre_campo, B.tipo_dato","formato A, campos_formato B","A.nombre='".$nombre_formato."' AND idformato=formato_idformato AND obligatoriedad=1","",$conn);
+	
+	//print_r($formato);die();
 	$dependencia=busca_filtro_tabla("","dependencia_cargo","funcionario_idfuncionario=".usuario_actual("idfuncionario")." AND estado=1","",$conn);
 
 	for($i=0;$i<$formato["numcampos"];$i++){
@@ -366,6 +368,12 @@ function generar_ingreso_formato($nombre_formato){
 		$campos_formato_radicacion_salida=busca_filtro_tabla("idcampos_formato","formato a, campos_formato b","a.nombre='radicacion_salida' AND a.idformato=b.formato_idformato AND b.nombre='descripcion_salida'","",$conn);
         $_REQUEST["campo_descripcion"] = $campos_formato_radicacion_salida[0]['idcampos_formato']; //se colocan los idcampos del campo descripcion;
 	}
+	else if($nombre_formato=='pqrsf'){
+		//$_REQUEST["descripcion_salida"]=$_REQUEST["descripcion_salida"];
+		$campos_formato_pqrsf=busca_filtro_tabla("idcampos_formato","formato a, campos_formato b","a.nombre='pqrsf' AND a.idformato=b.formato_idformato AND b.nombre='nombre'","",$conn);
+        $_REQUEST["campo_descripcion"] = $campos_formato_pqrsf[0]['idcampos_formato']; //se colocan los idcampos del campo descripcion;
+        $_REQUEST["fecha"] = date('Y-m-d H:i:s');
+	}	
 
 	$_REQUEST["serie_idserie"] = $formato[0]["serie_idserie"]; //idserie del formato;
 	$_REQUEST["dependencia"]= $dependencia[0]["dependencia_iddependencia"]; //iddependencia_cargo de la persona;

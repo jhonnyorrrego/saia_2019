@@ -111,7 +111,7 @@ DESCRIPCI&Oacute;N DEL DOCUMENTO&nbsp;
                if($serie["numcampos"]>0)
                  echo ucwords($serie[0]["nombre"])."<br /><br />";
              }
-             echo arbol_serie(1); ?> 
+             echo arbol_serie('?categoria=2'); ?> 
             <input type="hidden" name="x_serie" id="x_serie" value="<?php echo @$serie[0]["idserie"];?>">
             </td>
       </tr>

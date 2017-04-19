@@ -1489,7 +1489,7 @@ function mostrar_valor_campo($campo, $idformato, $iddoc, $tipo = NULL) {
 			} elseif($datos[0]["etiqueta_html"] == "archivo") {
 				include_once ("../../anexosdigitales/funciones_archivo.php");
 				$idcampo = busca_filtro_tabla("idcampos_formato", "campos_formato", "nombre like '$campo' and formato_idformato=$idformato", "", $conn);
-				$retorno = listar_anexos_documento($iddoc, $idformato, $idcampo[0][0], $_REQUEST["tipo"], "DESCARGAR");
+				$retorno = listar_anexos_ver_descargar($idformato,$iddoc, $idcampo[0][0], $_REQUEST["tipo"], 1);
 			} elseif($datos[0]["etiqueta_html"] == "autocompletar")
 				$retorno = $campos[0][0];
 			elseif($datos[0]["etiqueta_html"] == "textarea") {
@@ -1660,9 +1660,9 @@ function formatea_campo($valor, $tipo, $llenado) {
 		return (implode(", ", $resultado));
 	}
 	if($tipo = 'text')
-		return (codifica_encabezado(html_entity_decode($valor)));
+		return ((($valor)));
 	else
-		return (htmlspecialchars_decode($valor));
+		return (($valor));
 }
 
 /*
@@ -1687,7 +1687,7 @@ function asignar_responsables($campo, $idformato, $iddoc = NULL) {
       <input type="radio" name="firmado" id="varias" value="varias" checked><label for="varias">Varios</label>
       </td>
     </tr>
-    <tr>
+    <tr id="tr_firma">
       <td class="encabezado" width="21%">';
 	$nombre = busca_filtro_tabla("nombres,apellidos", "funcionario", "funcionario_codigo=" . usuario_actual("funcionario_codigo"), "", $conn);
 	echo codifica_encabezado(strtoupper(html_entity_decode($nombre[0]["nombres"] . " " . $nombre[0]["apellidos"])));
@@ -1696,6 +1696,15 @@ function asignar_responsables($campo, $idformato, $iddoc = NULL) {
       <td width="79%" bgcolor="#F5F5F5">
       <input type="radio" name="obligatorio" id="si1" value="1"><label for="si1">Si</label>
       <input type="radio" name="obligatorio" id="no1" value="0" checked><label for="no1">No</label>
+      <script type="text/javascript">
+          $("#una").click(function(){
+              $("#si1").attr("checked","checked");
+              $("#tr_firma").hide();
+          });
+          $("#varias").click(function(){
+              $("#tr_firma").show();
+          });
+      </script>
       </td>
     </tr>';
 }
@@ -1762,7 +1771,7 @@ function mostrar_imagenes($idformato, $campo, $iddoc = NULL) {
  * </Clase>
  */
 function submit_formato($formato, $iddoc = NULL) {
-	global $conn;
+	global $conn,$ruta_db_superior;
 	$datos_f = busca_filtro_tabla("item", "formato", "idformato=" . $formato, "", $conn);
 	if($iddoc == NULL || $datos_f[0][0]) {
 		$contador = busca_filtro_tabla("A.nombre,B.nombre_tabla,B.nombre as formato", "contador A,formato B", "A.idcontador=B.contador_idcontador AND B.idformato=" . $formato, "", $conn);
@@ -1773,23 +1782,37 @@ function submit_formato($formato, $iddoc = NULL) {
 		if($contador["numcampos"]) {
 			echo '<input type="hidden" name="tipo_radicado" value="' . $contador[0]["nombre"] . '">';
 		} else {
-			$sql = "INSERT INTO contador(consecutivo,nombre ) VALUE(1,'" . $contador[0]["nombre_tabla"] . "')";
-			phpmkr_query($sql, $conn) or die("Failed to execute query" . phpmkr_error() . ' SQL:' . $sql);
+			$sql2 = "INSERT INTO contador(consecutivo,nombre ) VALUE(1,'" . $contador[0]["nombre_tabla"] . "')";
+			phpmkr_query($sql2, $conn) or die("Failed to execute query" . phpmkr_error() . ' SQL:' . $sql);
+			$idcontador=phpmkr_insert_id();
 			echo '<input type="hidden" name="tipo_radicado" value="' . $contador[0]["nombre_tabla"] . '">';
-
-			alerta("El contador de este formato no existe");
-			volver(1);
+			$sql2="UPDATE formato SET contador_idcontador=".$idcontador." WHERE idformato=".$formato;
+			phpmkr_query($sql2);
 		}
 		if(@$_REQUEST["idpaso_documento"])
 			echo '<input type="hidden" name="idpaso_documento" value="' . $_REQUEST["idpaso_documento"] . '">';
 
-		echo '<input type="hidden" name="funcion" value="radicar_plantilla">
+		echo('<input type="hidden" name="funcion" value="radicar_plantilla">
               <input type="hidden" name="tabla" value="' . $contador[0]["nombre_tabla"] . '">
               <input type="hidden" name="formato" value="' . $contador[0]["formato"] . '">
-              <input type="hidden" name="continuar" value="Solicitar Radicado" >
-              <!--input type="button" id="aceptar" name="aceptar" value="Continuar" onclick="validar_formato();"-->
-              <input class="submit" type="submit" id="continuar" value="Continuar" >
-              </td></tr>';
+              <input type="hidden" name="continuar" value="Solicitar Radicado" >');
+        $codigo_js='history.go(-1);';
+        if($datos_f["numcampos"] && $datos_f[0][0] ){
+            if($_REQUEST["pantalla"]=='padre'){
+                if($_REQUEST["padre"]){
+                    $datos_padre=busca_filtro_tabla("","formato","idformato=".$_REQUEST["idformato"],"",$conn);
+                    if($datos_padre["numcampos"]){
+                        $cadena=$ruta_db_superior.'formatos/'.$datos_padre[0]["nombre"].'/mostrar_'.$datos_padre[0]["nombre"].'.php?iddoc='.$_REQUEST["idpadre"].'&idformato='.$datos_padre[0]["idformato"];
+                        $codigo_js='<script type="text/javascript">function redirecciona_padre(){window.open("'.$cadena.'","_self");}</script>';    
+                        echo($codigo_js);
+                    }
+                }
+            }
+            echo('<button class="cancel" onClick="javascript:redirecciona_padre(); return false;" id="cancel" value="Cancelar" style="margin-right:6px;">Cancelar</button>');
+
+        }
+        echo('<button class="submit" type="submit" id="continuar" value="Continuar">Continuar</button>');
+        echo('</td></tr>');
 	} else {
 		$contador = busca_filtro_tabla("A.nombre,B.nombre_tabla", "contador A,formato B", "A.idcontador=B.contador_idcontador AND B.idformato=" . $formato, "", $conn);
 
@@ -1839,7 +1862,7 @@ function validar_valor_campo($campo) {
 		return ($campos[0][0]);
 	} elseif(in_array('p', $acciones) && in_array('r', $banderas)) {
 		if(isset($_REQUEST["anterior"]) && $padre[0][0] == "0") {
-      $desc = busca_filtro_tabla("a.descripcion,a.numero,b.nombre,b.idformato", "documento a, formato b", "iddocumento=" . $_REQUEST["anterior"]." and a.formato_idformato=b.idformato", "", $conn);
+      $desc = busca_filtro_tabla("a.descripcion,a.numero,b.nombre,b.idformato", "documento a, formato b", "a.iddocumento=" . $_REQUEST["anterior"]." and lower(a.plantilla)=b.nombre", "", $conn);
       if($desc[0]["nombre"]=='radicacion_entrada'){
         include_once($ruta_db_superior."formatos/radicacion_entrada/funciones.php");
         $radicado=obtener_radicado_entrada($desc[0]["idformato"],$_REQUEST["anterior"]);
@@ -3598,3 +3621,4 @@ function obtener_funciones_anexo($idanexo, $tipo, $ruta, $etiqueta) {
 }
 
 ?>
+
