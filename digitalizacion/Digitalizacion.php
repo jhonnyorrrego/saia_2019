@@ -235,6 +235,8 @@ class Digitalizacion {
 					phpmkr_query($sql1) or die($sql1);
 					$resp["status"] = 1;
 					$resp["message"] = "OK";
+				} else {
+					$resp["message"] = "Fallo la sincronizacion de carpetas";
 				}
 			} else {
 				$resp["message"] = "No existe el funcionario";
