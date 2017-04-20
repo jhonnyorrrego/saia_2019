@@ -213,6 +213,48 @@ class Digitalizacion {
 	 * Manually routed method.
 	 * we can specify as many routes as we want
 	 *
+	 * @url POST actualizar_estado_ip
+	 * @url POST actualizar_estado/{dir_ip}
+	 */
+	public function sincronizar_archivos($id_tarea) {
+		global $conn;
+
+		$resp = array(
+				"status" => 0,
+				"message" => "Error de ejecucion"
+		);
+
+		$datos_dig = busca_filtro_tabla("t.*", "tarea_dig t", "idtarea_dig='$id_tarea'", "", $conn);
+		if($datos_dig["numcampos"]) {
+			$user_info = busca_filtro_tabla("f.login", "funcionario f", "idfuncionario=" . $datos_dig[0]["idfuncionario"], "", $conn);
+			if($user_info["numcampos"]) {
+				$_SESSION["LOGIN" . LLAVE_SAIA] = $user_info[0]["login"];
+				$_SESSION["usuario_actual"] = $datos_dig[0]["idfuncionario"];
+				if(sincronizar_carpetas("pagina", $conn)) {
+					$sql1 = "update tarea_dig set estado = 0 where idtarea_dig = $id_tarea";
+					phpmkr_query($sql1) or die($sql1);
+					$resp["status"] = 1;
+					$resp["message"] = "OK";
+				}
+			} else {
+				$resp["message"] = "No existe el funcionario";
+			}
+		}
+
+		/*$sql1 = "update tarea_dig set estado = 0 where idtarea_dig = $id_tarea";
+		phpmkr_query($sql1) or die($sql1);
+
+		$resp = array(
+				"status" => 1,
+				"message" => "OK"
+		);*/
+		return $resp;
+	}
+
+	/**
+	 * Manually routed method.
+	 * we can specify as many routes as we want
+	 *
 	 * @url POST verificar_login
 	 * @url POST verificar_login/{user}/{pass}
 	 */

@@ -82,17 +82,17 @@ if (($sAction == "") || (($sAction == NULL))) {
 	if (@$_POST["x_enlace"]) {
 		$x_enlace = @$_POST["x_enlace"];
 	}
-	sincronizar_carpetas($tabla, $conn);
+	//sincronizar_carpetas($tabla, $conn);
 }
 
 switch ($sAction) {
 	case "A" :
 		// Add
-		if (sincronizar_carpetas($tabla, $conn)) { // Add New Record
+		//if (sincronizar_carpetas($tabla, $conn)) {
 			if ($key && $idformato[0][0]) {
 				llama_funcion_accion($key, $idformato[0][0], "digitalizar", "POSTERIOR");
 			}
-		}
+		//}
 		if ($x_escaneo == "1") {
 			$x_enlace = "paginaadd.php?key=" . $key . "&" . $x_enlace;
 		} else if ($x_enlace == '') {
@@ -407,5 +407,5 @@ if($buscar_tarea["numcampos"]) {
         } else {
     		notificacion_saia("No es posible obtener su dirección IP. Contacte con soporte técnico", "error", 5000);
         }
-    }); 
+    });
     </script>
