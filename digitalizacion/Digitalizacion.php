@@ -9,14 +9,14 @@ while($max_salida > 0) {
 	$max_salida--;
 }
 
-include_once ($ruta_db_superior . "db.php");
-
 if (!@$_SESSION["LOGIN" . LLAVE_SAIA]) {
 	@session_start();
 	$_SESSION["LOGIN" . LLAVE_SAIA] = "radicador_web";
 	$_SESSION["usuario_actual"] = "20";
 	$_SESSION["conexion_remota"] = 1;
 }
+
+include_once ($ruta_db_superior . "db.php");
 
 class Digitalizacion {
 
