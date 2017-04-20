@@ -47,9 +47,9 @@ class Digitalizacion {
 			if ($datos_dig["numcampos"]) {
 
 				/*
-				 if ($datos_dig["numcampos"] > 1) {
-				 $resp["message"] = "Tiene tareas pendientes";
-				 }
+				 * if ($datos_dig["numcampos"] > 1) {
+				 * $resp["message"] = "Tiene tareas pendientes";
+				 * }
 				 */
 
 				$user_info = busca_filtro_tabla("f.login", "funcionario f", "idfuncionario=" . $datos_dig[0]["idfuncionario"], "", $conn);
@@ -58,11 +58,11 @@ class Digitalizacion {
 				$configuracion["numcampos"] = 0;
 				$configuracion = busca_filtro_tabla("A.*", "configuracion A", "tipo IN('ruta', 'clave', 'usuario', 'peso', 'imagen', 'ftp')", "", $conn);
 				$documento = busca_filtro_tabla("d.numero,d.descripcion", "documento d", "d.iddocumento=" . $datos_dig[0]["iddocumento"], "", $conn);
-				if(!$documento["numcampos"]) {
+				if (!$documento["numcampos"]) {
 					$resp["message"] = "No se encontró información del documento";
 					return $resp;
 				}
-				if(!$configuracion["numcampos"]) {
+				if (!$configuracion["numcampos"]) {
 					$resp["message"] = "No se encontró configuración";
 					return $resp;
 				}
@@ -114,21 +114,20 @@ class Digitalizacion {
 					$params["url"] .= "_" . $user_info[0]["login"];
 				}
 
-				//$params["ftp_type"] = "sftp";
+				// $params["ftp_type"] = "sftp";
 				$params["ftp_type"] = "ftp";
 
 				$params["radica"] = $datos_dig[0]["iddocumento"];
 				$params["numero"] = $documento[0]["numero"];
-				//$params["descripcion"] = "<html>" . $documento[0]["descripcion"] . "</html>";
+				// $params["descripcion"] = "<html>" . $documento[0]["descripcion"] . "</html>";
 
-
-                    //parseo descripcion
-                    $documento[0]["descripcion"]=codifica_encabezado(html_entity_decode($documento[0]["descripcion"]));
-                    if($documento[0]["descripcion"]!=''){
-                        if(strlen($documento[0]["descripcion"])>30){
-                            $documento[0]["descripcion"]=substr( $documento[0]["descripcion"],0,30).'...';
-                        }
-                    }
+				// parseo descripcion
+				$documento[0]["descripcion"] = codifica_encabezado(html_entity_decode($documento[0]["descripcion"]));
+				if ($documento[0]["descripcion"] != '') {
+					if (strlen($documento[0]["descripcion"]) > 30) {
+						$documento[0]["descripcion"] = substr($documento[0]["descripcion"], 0, 30) . '...';
+					}
+				}
 
 				$descripcion = preg_replace("/<br\W*?\/?>/i", "$1 ", $documento[0]["descripcion"]);
 				$params["descripcion"] = strip_tags($descripcion);
@@ -225,12 +224,12 @@ class Digitalizacion {
 		);
 
 		$datos_dig = busca_filtro_tabla("t.*", "tarea_dig t", "idtarea_dig='$id_tarea'", "", $conn);
-		if($datos_dig["numcampos"]) {
+		if ($datos_dig["numcampos"]) {
 			$user_info = busca_filtro_tabla("f.login, f.funcionario_codigo", "funcionario f", "idfuncionario=" . $datos_dig[0]["idfuncionario"], "", $conn);
-			if($user_info["numcampos"]) {
+			if ($user_info["numcampos"]) {
 				$_SESSION["LOGIN" . LLAVE_SAIA] = $user_info[0]["login"];
 				$_SESSION["usuario_actual"] = $user_info[0]["funcionario_codigo"];
-				if(sincronizar_carpetas("pagina", $conn)) {
+				if (sincronizar_carpetas("pagina", $conn)) {
 					$sql1 = "update tarea_dig set estado = 0 where idtarea_dig = $id_tarea";
 					phpmkr_query($sql1) or die($sql1);
 					$resp["status"] = 1;
@@ -243,13 +242,15 @@ class Digitalizacion {
 			}
 		}
 
-		/*$sql1 = "update tarea_dig set estado = 0 where idtarea_dig = $id_tarea";
-		phpmkr_query($sql1) or die($sql1);
-
-		$resp = array(
-				"status" => 1,
-				"message" => "OK"
-		);*/
+		/*
+		 * $sql1 = "update tarea_dig set estado = 0 where idtarea_dig = $id_tarea";
+		 * phpmkr_query($sql1) or die($sql1);
+		 *
+		 * $resp = array(
+		 * "status" => 1,
+		 * "message" => "OK"
+		 * );
+		 */
 		return $resp;
 	}
 
