@@ -213,8 +213,8 @@ class Digitalizacion {
 	 * Manually routed method.
 	 * we can specify as many routes as we want
 	 *
-	 * @url POST actualizar_estado_ip
-	 * @url POST actualizar_estado/{dir_ip}
+	 * @url POST sincronizar_archivos
+	 * @url POST sincronizar_archivos/{id_tarea}
 	 */
 	public function sincronizar_archivos($id_tarea) {
 		global $conn;
