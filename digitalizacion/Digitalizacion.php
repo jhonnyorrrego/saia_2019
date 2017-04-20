@@ -9,14 +9,14 @@ while($max_salida > 0) {
 	$max_salida--;
 }
 
+include_once ($ruta_db_superior . "db.php");
+
 if (!@$_SESSION["LOGIN" . LLAVE_SAIA]) {
 	@session_start();
 	$_SESSION["LOGIN" . LLAVE_SAIA] = "radicador_web";
-	$_SESSION["usuario_actual"] = "20";
+	$_SESSION["usuario_actual"] = "111222333";
 	$_SESSION["conexion_remota"] = 1;
 }
-
-include_once ($ruta_db_superior . "db.php");
 
 class Digitalizacion {
 
@@ -226,10 +226,10 @@ class Digitalizacion {
 
 		$datos_dig = busca_filtro_tabla("t.*", "tarea_dig t", "idtarea_dig='$id_tarea'", "", $conn);
 		if($datos_dig["numcampos"]) {
-			$user_info = busca_filtro_tabla("f.login", "funcionario f", "idfuncionario=" . $datos_dig[0]["idfuncionario"], "", $conn);
+			$user_info = busca_filtro_tabla("f.login, f.funcionario_codigo", "funcionario f", "idfuncionario=" . $datos_dig[0]["idfuncionario"], "", $conn);
 			if($user_info["numcampos"]) {
 				$_SESSION["LOGIN" . LLAVE_SAIA] = $user_info[0]["login"];
-				$_SESSION["usuario_actual"] = $datos_dig[0]["idfuncionario"];
+				$_SESSION["usuario_actual"] = $user_info[0]["funcionario_codigo"];
 				if(sincronizar_carpetas("pagina", $conn)) {
 					$sql1 = "update tarea_dig set estado = 0 where idtarea_dig = $id_tarea";
 					phpmkr_query($sql1) or die($sql1);

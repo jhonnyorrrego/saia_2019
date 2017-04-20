@@ -1374,8 +1374,8 @@ function sincronizar_carpetas($tipo, $conn) {
 	}
 
 	if ($tipo_almacenamiento == "archivo") {// Se alcenan paginas y miniaturas en la BD
-		if (is_dir($dir))//ruta_temporal
-			$directorio = opendir("$dir");
+		if (is_dir($ruta_db_superior . $dir))//ruta_temporal
+			$directorio = opendir($ruta_db_superior . $dir);
 		else
 			$directorio = null;
 
@@ -1392,12 +1392,10 @@ function sincronizar_carpetas($tipo, $conn) {
 			}
 			natsort($archivos);
 			
-			
-			
 			foreach ($archivos as $archivo) {
 				$estado = "";
 				$dir3 = "";
-				$ruta = $dir . "/" . $archivo;
+				$ruta = $ruta_db_superior . $dir . "/" . $archivo;
 				$path = pathinfo($ruta);
 				if ($archivo && $archivo != "." && $archivo != ".." && is_file("$archivo") != "dir" && (strtolower($path['extension']) == 'jpg' || strtolower($path['extension']) == 'jpeg') && @filesize($archivo) <= $peso) {
 
@@ -1420,14 +1418,14 @@ function sincronizar_carpetas($tipo, $conn) {
 					$paginas = busca_filtro_tabla("A.pagina,A.ruta", "" . $tabla . " A", "A.id_documento=" . $fieldList["id_documento"], "A.pagina", $conn);
 					$numero_pagina = $paginas["numcampos"];
 
-					//Este es el punto dode se puede hacer el cambio de carpeta en cad donde se almacenaran fisicamente las imagenes.
+					//Este es el punto donde se puede hacer el cambio de carpeta en cad donde se almacenaran fisicamente las imagenes.
 					$ruta_imagenes = ruta_almacenamiento("imagenes");
 					$cad2 = $fieldList["id_documento"];
 					$dir3 = $ruta_imagenes . $estado . "/" . $fecha . "/" . $cad2 . "/" . $dir2 . "/";
 					$ruta_dir = $ruta_imagenes . $estado . "/" . $fecha . "/" . $cad2;
 					crear_destino($dir3);
 
-					if ($numero_pagina <> "")
+					if ($numero_pagina != "")
 						$numero_pagina = intval($numero_pagina) + 1;
 					else
 						$numero_pagina = 1;
@@ -1442,10 +1440,12 @@ function sincronizar_carpetas($tipo, $conn) {
 							}
 						}
 						chmod($dirminiatura . "/", PERMISOS_CARPETAS);
-						$fieldList["imagen"] = cambia_tam($ruta2, $dirminiatura . "/doc" . $fieldList["id_documento"] . "pag" . $numero_pagina . ".jpg", $miniatura_ancho, $miniatura_alto, 0);
+                        $ruta_min = cambia_tam($ruta2, $dirminiatura . "/doc" . $fieldList["id_documento"] . "pag" . $numero_pagina . ".jpg", $miniatura_ancho, $miniatura_alto, 0);
+                        
+						$fieldList["imagen"] = preg_replace("%^" . $ruta_db_superior . "%", "", $ruta_min);
 
 						array_push($rutas, $fieldList["id_documento"]);
-						$fieldList["ruta"] = $ruta2;
+						$fieldList["ruta"] = preg_replace("%^" . $ruta_db_superior . "%", "", $ruta2);
 						$fieldList["pagina"] = $numero_pagina;
 
 						$campo_adicional = "";
@@ -1470,10 +1470,9 @@ function sincronizar_carpetas($tipo, $conn) {
 			closedir($directorio);
 		} //Fin If directorio
 		
-		
 		//aqui desarrollo para subir digitalizacion de PDF,DOCX,ETC
-		if (is_dir($dir))//ruta_temporal
-			$directorio = opendir("$dir");
+		if (is_dir($ruta_db_superior . $dir))//ruta_temporal
+			$directorio = opendir($ruta_db_superior . $dir);
 		else
 			$directorio = null;
 
@@ -1490,7 +1489,6 @@ function sincronizar_carpetas($tipo, $conn) {
 			}
 			natsort($archivos);
 			
-			
 			$archivos_anexos=array();
 			$extension_image=array('jpg','jpeg'); 
 			$cant=count($archivos);
@@ -1504,17 +1502,18 @@ function sincronizar_carpetas($tipo, $conn) {
 			}		
 			$archivos=array_values($archivos);
 			$archivos_anexos=array_unique($archivos_anexos);
-			$ruta_tem=busca_filtro_tabla("","configuracion","nombre='ruta_temporal'","",$conn);
-			$ruta_temporal=$ruta_tem[0]['valor'].'_'.usuario_actual('login');
+			//$ruta_tem=busca_filtro_tabla("","configuracion","nombre='ruta_temporal'","",$conn);
+			$ruta_temporal= $dir;
 			foreach ($archivos_anexos as $archivo) {
 				$ruta_archivo=$ruta_db_superior.$ruta_temporal.'/'.$archivo;
 				if(file_exists($ruta_archivo)){
 					$ic = strrpos($archivo, "#");
 					$fc = strrpos($archivo, ")");
 					$cad = substr($archivo, $ic + 1, $fc - $ic - 1);
-					if(intval($cad)==intval(@$_REQUEST['x_id_documento'])){
-						vincular_anexo_documento(@$_REQUEST['x_id_documento'],$ruta_temporal.'/'.$archivo);
-						unlink($ruta_db_superior.$ruta_temporal.'/'.$archivo);						
+                    //No se puede usar $_REQUEST porque la funcion se puede invocar desde un webservice
+					if(!empty($cad)) {
+						vincular_anexo_documento(intval($cad),$ruta_temporal.'/'.$archivo);
+						unlink($ruta_archivo);						
 					}
 				} //fin if file_exist
 			} //recorriendo directorio 				
@@ -1578,7 +1577,7 @@ function sincronizar_carpetas($tipo, $conn) {
 							$dir3 = "../documentos/error/" . $cad2;
 					}
 					//Me lleva hasta la Ultima pagina del documento.
-					if ($cad_temp <> "") {
+					if ($cad_temp != "") {
 						$cont = intval($cad_temp) + intval($cont);
 					}
 					if (cambia_tam($ruta, $dir3 . "doc" . $fieldList["id_documento"] . "pag" . $cont . ".jpg", $imgancho, $imgalto, 1)) {
@@ -1630,7 +1629,6 @@ function sincronizar_carpetas($tipo, $conn) {
 		}
 	}
 	
-
 	return (TRUE);
 }
 
@@ -1642,18 +1640,21 @@ function vincular_anexo_documento($iddoc,$ruta_origen,$etiqueta=''){
 
 	$vector_nombre_extension = explode('.',$nombre_extension);
 	$extencion=$vector_nombre_extension[(count($vector_nombre_extension)-1)];
-	$nombre_temporal=time().".".$extencion;
+	$nombre_temporal=uniqid().".".$extencion;
 	mkdir($ruta_db_superior.$ruta_destino,0777);
-	$tmpVar = 1;
+	/*$tmpVar = 1;
 	while(file_exists($ruta_db_superior.$ruta_destino. $tmpVar . '_' . $nombre_temporal)){
 		$tmpVar++;
 	}
-	$nombre_temporal=$tmpVar . '_' . $nombre_temporal;
-	copy($ruta_db_superior.$ruta_origen,$ruta_db_superior.$ruta_destino.$nombre_temporal);
+	$nombre_temporal=$tmpVar . '_' . $nombre_temporal;*/
+	if(!copy($ruta_db_superior.$ruta_origen, $ruta_destino.$nombre_temporal)) {
+	    return "error al copiar dede: " . $ruta_db_superior.$ruta_origen . " a " . $ruta_destino.$nombre_temporal;
+	}
 	
 	$data_sql=array();
 	$data_sql['documento_iddocumento']=$iddoc;
-	$data_sql['ruta']=$ruta_destino.$nombre_temporal;
+    
+	$data_sql['ruta']=preg_replace("%^" . $ruta_db_superior . "%", "", $ruta_destino.$nombre_temporal);
 	if($etiqueta!=''){
 		$data_sql['etiqueta']=$etiqueta;
 	}else{
