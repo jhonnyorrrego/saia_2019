@@ -82,17 +82,17 @@ if (($sAction == "") || (($sAction == NULL))) {
 	if (@$_POST["x_enlace"]) {
 		$x_enlace = @$_POST["x_enlace"];
 	}
-	sincronizar_carpetas($tabla, $conn);
+	//sincronizar_carpetas($tabla, $conn);
 }
 
 switch ($sAction) {
 	case "A" :
 		// Add
-		if (sincronizar_carpetas($tabla, $conn)) { // Add New Record
+		//if (sincronizar_carpetas($tabla, $conn)) {
 			if ($key && $idformato[0][0]) {
 				llama_funcion_accion($key, $idformato[0][0], "digitalizar", "POSTERIOR");
 			}
-		}
+		//}
 		if ($x_escaneo == "1") {
 			$x_enlace = "paginaadd.php?key=" . $key . "&" . $x_enlace;
 		} else if ($x_enlace == '') {
@@ -108,7 +108,7 @@ switch ($sAction) {
 				$x_enlace = 'documentoaddsal.php';
 			}
 		}
-		abrir_url($x_enlace, "_self");
+		abrir_url_digitalizacion($key, $x_enlace, "_self");
 		exit();
 		break;
 }
@@ -409,3 +409,36 @@ if($buscar_tarea["numcampos"]) {
         }
     });
     </script>
+
+<?php
+
+function abrir_url_digitalizacion($iddocumento, $location, $target = "_blank") {
+	if (!@$_SESSION['radicacion_masiva']) {
+		if ($target) {
+			?>
+	<script language="javascript">
+		var iddoc = "<?php echo $iddocumento;?>";
+		//alert(iddoc);
+		//parent.getElementById('arbol_formato').cargar_cantidades_documento(iddoc);
+		if(parent.frames['arbol_formato']) {
+			parent.frames['arbol_formato'].postMessage({iddocumento: iddoc}, "*");
+		}
+    	window.open("<?php print($location);?>","<?php print($target);?>");
+    </script>
+<?php
+		} else {
+			?>
+	<script language="javascript">
+		var iddoc = "<?php echo $iddocumento;?>";
+		//alert(iddoc);
+		//parent.getElementById('arbol_formato').cargar_cantidades_documento(iddoc);
+		if(parent.frames['arbol_formato']) {
+			parent.frames['arbol_formato'].postMessage({iddocumento: iddoc}, "*");
+		}
+    	window.open("<?php print($location);?>","centro");
+    </script>
+<?php
+		}
+	}
+}
+?>

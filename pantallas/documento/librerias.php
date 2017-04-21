@@ -865,10 +865,10 @@ function filtro_funcionario_etiquetados(){
 	return($condicional_etiquetados);
 }
 function mostrar_nombre_etiquetas($iddoc){
-	global $conn;
-	$usuario=usuario_actual('idfuncionario');
-	$etiquetados=busca_filtro_tabla("c.nombre","documento a, documento_etiqueta b, etiqueta c,formato d","LOWER(a.estado) NOT IN ('eliminado') AND a.iddocumento=b.documento_iddocumento AND lower(a.plantilla)=d.nombre  and b.etiqueta_idetiqueta=c.idetiqueta AND c.funcionario='".$usuario."' AND a.iddocumento=".$iddoc,"",$conn);
-	$nombre_etiquetas='';
+	global $conn; 
+	$usuario=usuario_actual('funcionario_codigo');
+	$etiquetados=busca_filtro_tabla("c.nombre","documento_etiqueta b, etiqueta c","b.documento_iddocumento=".$iddoc." AND  b.etiqueta_idetiqueta=c.idetiqueta AND c.funcionario=".$usuario,"",$conn);	
+	$nombre_etiquetas='';	
 	for($i=0;$i<$etiquetados['numcampos'];$i++){
 		$nombre_etiquetas.=codifica_encabezado(html_entity_decode($etiquetados[$i]['nombre']));
 		if( ($i+1)!= $etiquetados['numcampos']){

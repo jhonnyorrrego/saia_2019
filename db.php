@@ -76,29 +76,29 @@ function mayusculas($texto)
 <Pre-condiciones><Pre-condiciones>
 <Post-condiciones><Post-condiciones>
 </Clase>  */
-function compara_ruta_archivos($buscado) {
-	$info = pathinfo($_SERVER["PHP_SELF"]);
-	$uno = explode("/", $info["dirname"]);
-	$dos = explode("/", $buscado);
-	$igual = array();
-	if (count($uno) > count($dos))
-		$j = count($dos);
-	else
-		$j = count($uno);
-	$espacios = 0;
-	for($i = 1; $i < $j; $i++) {
-		if ($uno[$i] == $dos[$i]) {
-			$igual[] = $uno[$i];
-		}
-	}
-	$igual = implode("/", $igual);
-	$nueva_actual = str_replace("/" . $igual, "", $info["dirname"]);
-	$nueva_buscada = str_replace("/" . $igual . "/", "", $buscado);
-	$distanciauno = count(explode("/", $nueva_actual));
-	for($i = 1; $i < $distanciauno; $i++)
-		$ruta = "../" . $ruta;
-	$ruta = str_replace("//", "/", $ruta . $nueva_buscada);
-	return ($ruta);
+function compara_ruta_archivos($buscado)
+{$info= pathinfo($_SERVER["PHP_SELF"]);
+ $uno=explode("/",$info["dirname"]);
+ $dos=explode("/",$buscado);
+ $igual=array();
+ if(count($uno)>count($dos))
+    $j=count($dos);
+ else
+    $j=count($uno);
+ $espacios=0;
+ for($i=1;$i<$j;$i++)
+   {if($uno[$i]==$dos[$i])
+      {$igual[]=$uno[$i];
+      }
+   }
+ $igual=implode("/",$igual);
+ $nueva_actual=str_replace("/".$igual,"",$info["dirname"]);
+ $nueva_buscada=str_replace("/".$igual."/","",$buscado);
+ $distanciauno=count(explode("/",$nueva_actual));
+ for($i=1;$i<$distanciauno;$i++)
+     $ruta="../".$ruta;
+ $ruta=str_replace("//","/",$ruta.$nueva_buscada);
+ return($ruta);
 }
 /*<Clase>
 <Nombre>leido</Nombre>
@@ -435,36 +435,33 @@ END";
 <Post-condiciones><Post-condiciones>
 </Clase>*/
 function evento_archivo($cadena){
-	global $conn;
-	$max_salida = 6; // Previene algun posible ciclo infinito limitando a 10 los ../
-	$ruta_db_superior = $ruta = "";
-	while($max_salida > 0) {
-		if (is_file($ruta . "db.php")) {
-			$ruta_db_superior = $ruta; // Preserva la ruta superior encontrada
-		}
-		$ruta .= "../";
-		$max_salida--;
-	}
-	/*
-	 * $ruta_evento=busca_filtro_tabla("valor","configuracion","nombre like 'ruta_evento'","",$conn);
-	 *
-	 * $nombre=$ruta_db_superior."../".$ruta_evento[0]['valor']."/".DB."_log_".date("Y_m_d").".txt";
-	 */
-	$nombre = RUTA_ABS_SAIA . RUTA_BACKUP_EVENTO . DB . "_log_" . date("Y_m_d") . ".txt";
-	$ruta_real = normalizePath($nombre);
-	if (!@is_file($ruta_real)) {
-		crear_archivo($ruta_real);
-	}
-	$contenido = "";
-	if (is_file($ruta_real)) {
-		$link = fopen($ruta_real, "ab");
-		$contenido = $cadena . "*|*";
-	} else {
-		$link = fopen($ruta_real, "wb");
-		$contenido = "idevento|||funcionario_codigo|||fecha|||evento|||tabla_e|||estado|||detalle|||registro_id|||codigo_sql*|*" . $cadena . "*|*";
-	}
-	fwrite($link, $contenido);
-	fclose($link);
+  global $conn;
+  $max_salida=6; // Previene algun posible ciclo infinito limitando a 10 los ../
+  $ruta_db_superior=$ruta="";
+  while($max_salida>0){
+    if(is_file($ruta."db.php")){
+      $ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
+    }
+    $ruta.="../";
+    $max_salida--;
+  }
+  /*$ruta_evento=busca_filtro_tabla("valor","configuracion","nombre like 'ruta_evento'","",$conn);
+
+  $nombre=$ruta_db_superior."../".$ruta_evento[0]['valor']."/".DB."_log_".date("Y_m_d").".txt";*/
+  $nombre=$ruta_db_superior.RUTA_BACKUP_EVENTO.DB."_log_".date("Y_m_d").".txt";
+  if(!@is_file($nombre))
+    crear_archivo($nombre);
+  $contenido="";
+  if(is_file($nombre)){
+    $link=fopen($nombre,"ab");
+    $contenido=$cadena."*|*";
+  }
+  else{
+    $link=fopen($nombre,"wb");
+    $contenido="idevento|||funcionario_codigo|||fecha|||evento|||tabla_e|||estado|||detalle|||registro_id|||codigo_sql*|*".$cadena."*|*";
+  }
+  fwrite($link,$contenido);
+  fclose($link);
 }
 
 function normalizePath($path) {
@@ -1394,8 +1391,10 @@ function sincronizar_carpetas($tipo, $conn) {
 	}
 
 	if ($tipo_almacenamiento == "archivo") {// Se alcenan paginas y miniaturas en la BD
-		if (is_dir($dir))//ruta_temporal
-			$directorio = opendir("$dir");
+		include_once($ruta_db_superior . "pantallas/lib/librerias_archivo.php");
+
+		if (is_dir($ruta_db_superior . $dir))//ruta_temporal
+			$directorio = opendir($ruta_db_superior . $dir);
 		else
 			$directorio = null;
 
@@ -1417,7 +1416,7 @@ function sincronizar_carpetas($tipo, $conn) {
 			foreach ($archivos as $archivo) {
 				$estado = "";
 				$dir3 = "";
-				$ruta = $dir . "/" . $archivo;
+				$ruta = $ruta_db_superior . $dir . "/" . $archivo;
 				$path = pathinfo($ruta);
 				if ($archivo && $archivo != "." && $archivo != ".." && is_file("$archivo") != "dir" && (strtolower($path['extension']) == 'jpg' || strtolower($path['extension']) == 'jpeg') && @filesize($archivo) <= $peso) {
 
@@ -1440,14 +1439,18 @@ function sincronizar_carpetas($tipo, $conn) {
 					$paginas = busca_filtro_tabla("A.pagina,A.ruta", "" . $tabla . " A", "A.id_documento=" . $fieldList["id_documento"], "A.pagina", $conn);
 					$numero_pagina = $paginas["numcampos"];
 
-					//Este es el punto dode se puede hacer el cambio de carpeta en cad donde se almacenaran fisicamente las imagenes.
+					//Este es el punto donde se puede hacer el cambio de carpeta en cad donde se almacenaran fisicamente las imagenes.
 					$ruta_imagenes = ruta_almacenamiento("imagenes");
 					$cad2 = $fieldList["id_documento"];
-					$dir3 = $ruta_imagenes . $estado . "/" . $fecha . "/" . $cad2 . "/" . $dir2 . "/";
-					$ruta_dir = $ruta_imagenes . $estado . "/" . $fecha . "/" . $cad2;
+					$formato_ruta = aplicar_plantilla_ruta_documento($cad2);
+					$dir3 = $ruta_imagenes . $formato_ruta . "/" . $dir2 . "/";
+					//$dir3 = $ruta_imagenes . $estado . "/" . $fecha . "/" . $cad2 . "/" . $dir2 . "/";
+
+					$ruta_dir = $ruta_imagenes. $formato_ruta;
+					//$ruta_dir = $ruta_imagenes . $estado . "/" . $fecha . "/" . $cad2;
 					crear_destino($dir3);
 
-					if ($numero_pagina <> "")
+					if ($numero_pagina != "")
 						$numero_pagina = intval($numero_pagina) + 1;
 					else
 						$numero_pagina = 1;
@@ -1462,10 +1465,12 @@ function sincronizar_carpetas($tipo, $conn) {
 							}
 						}
 						chmod($dirminiatura . "/", PERMISOS_CARPETAS);
-						$fieldList["imagen"] = cambia_tam($ruta2, $dirminiatura . "/doc" . $fieldList["id_documento"] . "pag" . $numero_pagina . ".jpg", $miniatura_ancho, $miniatura_alto, 0);
+                        $ruta_min = cambia_tam($ruta2, $dirminiatura . "/doc" . $fieldList["id_documento"] . "pag" . $numero_pagina . ".jpg", $miniatura_ancho, $miniatura_alto, 0);
+
+						$fieldList["imagen"] = preg_replace("%^" . $ruta_db_superior . "%", "", $ruta_min);
 
 						array_push($rutas, $fieldList["id_documento"]);
-						$fieldList["ruta"] = $ruta2;
+						$fieldList["ruta"] = preg_replace("%^" . $ruta_db_superior . "%", "", $ruta2);
 						$fieldList["pagina"] = $numero_pagina;
 
 						$campo_adicional = "";
@@ -1492,8 +1497,8 @@ function sincronizar_carpetas($tipo, $conn) {
 
 
 		//aqui desarrollo para subir digitalizacion de PDF,DOCX,ETC
-		if (is_dir($dir))//ruta_temporal
-			$directorio = opendir("$dir");
+		if (is_dir($ruta_db_superior . $dir))//ruta_temporal
+			$directorio = opendir($ruta_db_superior . $dir);
 		else
 			$directorio = null;
 
@@ -1524,17 +1529,18 @@ function sincronizar_carpetas($tipo, $conn) {
 			}
 			$archivos=array_values($archivos);
 			$archivos_anexos=array_unique($archivos_anexos);
-			$ruta_tem=busca_filtro_tabla("","configuracion","nombre='ruta_temporal'","",$conn);
-			$ruta_temporal=$ruta_tem[0]['valor'].'_'.usuario_actual('login');
+			//$ruta_tem=busca_filtro_tabla("","configuracion","nombre='ruta_temporal'","",$conn);
+			$ruta_temporal= $dir;
 			foreach ($archivos_anexos as $archivo) {
 				$ruta_archivo=$ruta_db_superior.$ruta_temporal.'/'.$archivo;
 				if(file_exists($ruta_archivo)){
 					$ic = strrpos($archivo, "#");
 					$fc = strrpos($archivo, ")");
 					$cad = substr($archivo, $ic + 1, $fc - $ic - 1);
-					if(intval($cad)==intval(@$_REQUEST['x_id_documento'])){
-						vincular_anexo_documento(@$_REQUEST['x_id_documento'],$ruta_temporal.'/'.$archivo);
-						unlink($ruta_db_superior.$ruta_temporal.'/'.$archivo);
+                    //No se puede usar $_REQUEST porque la funcion se puede invocar desde un webservice
+					if(!empty($cad)) {
+						vincular_anexo_documento(intval($cad),$ruta_temporal.'/'.$archivo);
+						unlink($ruta_archivo);
 					}
 				} //fin if file_exist
 			} //recorriendo directorio
@@ -1598,7 +1604,7 @@ function sincronizar_carpetas($tipo, $conn) {
 							$dir3 = "../documentos/error/" . $cad2;
 					}
 					//Me lleva hasta la Ultima pagina del documento.
-					if ($cad_temp <> "") {
+					if ($cad_temp != "") {
 						$cont = intval($cad_temp) + intval($cont);
 					}
 					if (cambia_tam($ruta, $dir3 . "doc" . $fieldList["id_documento"] . "pag" . $cont . ".jpg", $imgancho, $imgalto, 1)) {
@@ -1662,18 +1668,21 @@ function vincular_anexo_documento($iddoc,$ruta_origen,$etiqueta=''){
 
 	$vector_nombre_extension = explode('.',$nombre_extension);
 	$extencion=$vector_nombre_extension[(count($vector_nombre_extension)-1)];
-	$nombre_temporal=time().".".$extencion;
+	$nombre_temporal=uniqid().".".$extencion;
 	mkdir($ruta_db_superior.$ruta_destino,0777);
-	$tmpVar = 1;
+	/*$tmpVar = 1;
 	while(file_exists($ruta_db_superior.$ruta_destino. $tmpVar . '_' . $nombre_temporal)){
 		$tmpVar++;
 	}
-	$nombre_temporal=$tmpVar . '_' . $nombre_temporal;
-	copy($ruta_db_superior.$ruta_origen,$ruta_db_superior.$ruta_destino.$nombre_temporal);
+	$nombre_temporal=$tmpVar . '_' . $nombre_temporal;*/
+	if(!copy($ruta_db_superior.$ruta_origen, $ruta_destino.$nombre_temporal)) {
+	    return "error al copiar dede: " . $ruta_db_superior.$ruta_origen . " a " . $ruta_destino.$nombre_temporal;
+	}
 
 	$data_sql=array();
 	$data_sql['documento_iddocumento']=$iddoc;
-	$data_sql['ruta']=$ruta_destino.$nombre_temporal;
+
+	$data_sql['ruta']=preg_replace("%^" . $ruta_db_superior . "%", "", $ruta_destino.$nombre_temporal);
 	if($etiqueta!=''){
 		$data_sql['etiqueta']=$etiqueta;
 	}else{
@@ -2451,18 +2460,18 @@ alert("<?php echo($mensaje);?>");
 }
 
 function alerta($mensaje,$tipo='success',$duraccion=3000){
-	$max_salida = 10; // Previene algun posible ciclo infinito limitando a 10 los ../
-	$ruta_superior_temporal = $ruta = "";
-	while($max_salida > 0) {
-		if (is_file($ruta . "db.php")) {
-			$ruta_superior_temporal = $ruta; // Preserva la ruta superior encontrada
-		}
-		$ruta .= "../";
-		$max_salida--;
+$max_salida=10; // Previene algun posible ciclo infinito limitando a 10 los ../
+$ruta_superior_temporal=$ruta="";
+while($max_salida>0){
+	if(is_file($ruta."db.php")){
+		$ruta_superior_temporal=$ruta; //Preserva la ruta superior encontrada
 	}
+	$ruta.="../";
+	$max_salida--;
+}
 	require_once ('librerias_saia.php');
 	global $raiz_saia;
-	$raiz_saia = $ruta_superior_temporal;
+	$raiz_saia=$ruta_superior_temporal;
 	echo (librerias_notificaciones());
 
 	?>
@@ -2476,7 +2485,7 @@ function alerta_formatos($mensaje,$tipo='success',$duraccion=3000){
 	require_once ('librerias_saia.php');
 	global $raiz_saia;
 	$raiz_saia = "/" . RUTA_SAIA . $ruta_superior_temporal;
-	echo (librerias_notificaciones());
+	echo(librerias_notificaciones());
 
 	?>
 <script>

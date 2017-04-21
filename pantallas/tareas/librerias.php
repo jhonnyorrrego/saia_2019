@@ -75,8 +75,10 @@ $mis_roles=busca_filtro_tabla("","vfuncionario_dc","funcionario_codigo=".usuario
 if($mis_roles["numcampos"]){
 	$roles=extrae_campo($mis_roles,"iddependencia_cargo");
 	$concat=array();
-	foreach ($roles AS $key=>$value){	
-		array_push($concat,"CONCAT(',',responsable,',') LIKE('%,".$value.",%')");
+	$cadena_concatenar=array("','","responsable","','");
+	foreach ($roles AS $key=>$value){
+			
+		array_push($concat,concatenar_cadena_sql($cadena_concatenar)." LIKE('%,".$value.",%')");
 	}
 	return("(".implode(" OR ",$concat).")");
 }
@@ -85,7 +87,8 @@ else{
 }
 }
 function condicion_mis_tareas_asignadas(){
-return("CONCAT(',',ejecutor,',') LIKE('%,".usuario_actual("funcionario_codigo").",%')");
+	$cadena_concatenar=array("','","ejecutor","','");
+	return(concatenar_cadena_sql($cadena_concatenar)." LIKE('%,".usuario_actual("funcionario_codigo").",%')");
 }
 function informacion_tarea_documento($documento_iddocumento){
 if($documento_iddocumento!="documento_iddocumento"){

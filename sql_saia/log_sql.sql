@@ -311,3 +311,81 @@ INSERT INTO busqueda_componente (busqueda_idbusqueda, tipo, conector, url, etiqu
 (7, 3, 2, 'pantallas/busquedas/consulta_busqueda_documento.php', 'pendiente por ingresar PQRSF', 'pendientes_ingresar_pqrsf', 1, '<div>{*origen_documento@iddocumento,numero,ejecutor,tipo_radicado,estado,serie,tipo_ejecutor*} {*fecha_creacion_documento@fecha,plantilla,iddocumento*}<br><br><div>{*descripcion*}</div><br><br>\r\n{*barra_inferior_documento@iddocumento,numero*}</div>', '', NULL, NULL, 1, 320, 2, NULL, 'ft_pqrsf B', 'A.fecha', 'DESC', NULL, NULL, 'vincular_documentos', NULL, NULL, NULL, NULL);
 
 INSERT INTO  busqueda_condicion (busqueda_idbusqueda ,fk_busqueda_componente ,codigo_where ,etiqueta_condicion) VALUES (NULL ,  '298',  'lower(a.estado)=''iniciado'' AND a.iddocumento=b.documento_iddocumento', NULL);
+
+---------------------------
+//MODIFICACIONES BD POSTERIOR AL PASO DE BASE DE DATOS DE MYSQL A ORACLE (ERRORES DETECTADOS DURANTE EL PASO DE BD)
+
+ALTER TABLE  accion CHANGE  ruta  ruta VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL
+
+ALTER TABLE  accion CHANGE  funcion  funcion VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL
+
+ALTER TABLE  asignacion CHANGE  fecha_inicial  fecha_inicial DATETIME NULL
+
+ALTER TABLE  busquedas CHANGE  tipo  tipo VARCHAR( 50 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT  ''
+
+ALTER TABLE  buzon_entrada CHANGE  fecha  fecha DATETIME NULL DEFAULT  '0000-00-00 00:00:00'
+
+ALTER TABLE  calendario_saia CHANGE  fecha  fecha DATE NULL DEFAULT  '0000-00-00'
+
+ALTER TABLE  calendario_saia CHANGE  estilo  estilo VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL
+
+ALTER TABLE  calendario_saia CHANGE  adicionar_evento  adicionar_evento VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL
+
+ALTER TABLE  configuracion CHANGE  fecha  fecha TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP
+
+ALTER TABLE  configuracion CHANGE  tipo  tipo VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT  ''
+
+ALTER TABLE  contenidos_carrusel CHANGE  miniatura  miniatura VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL
+
+ALTER TABLE  funcionario CHANGE  mensajeria  mensajeria CHAR( 1 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL
+
+ALTER TABLE  funcionario CHANGE  ultimo_pwd  ultimo_pwd DATETIME NULL DEFAULT  '0000-00-00 00:00:00'
+
+ALTER TABLE  funcionario CHANGE  fecha_ingreso  fecha_ingreso TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP
+
+ALTER TABLE  funcionario_editor CHANGE  email_contrasena  email_contrasena VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL
+
+ALTER TABLE  funciones_paso CHANGE  parametros  parametros VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL
+
+ALTER TABLE  modulo CHANGE  imagen  imagen VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT  'botones/configuracion/default.gif'
+
+ALTER TABLE  paso CHANGE  posicion  posicion VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL
+
+ALTER TABLE  paso CHANGE  plazo_paso  plazo_paso VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL
+
+ALTER TABLE  paso_condicional CHANGE  etiqueta  etiqueta VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL
+
+ALTER TABLE  tareas_listado CHANGE  prioridad  prioridad VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL
+
+ALTER TABLE  tareas_planeadas CHANGE  fecha_planeada  fecha_planeada DATETIME NULL
+
+UPDATE buzon_entrada SET origen='-1' WHERE origen='';
+
+UPDATE  funciones_formato SET  etiqueta =  'Ver campo estado' WHERE  idfunciones_formato =694;
+
+UPDATE funciones_formato_accion SET momento='ANTERIOR' WHERE momento ='';
+
+UPDATE modulo SET enlace='#' WHERE enlace='';
+
+
+CREATE OR REPLACE VIEW vdependencia_serie AS select concat(d.codigo,'.',s.codigo) AS orden_dependencia_serie,d.nombre AS dependencia,s.idserie AS idserie,d.iddependencia AS iddependencia,s.nombre AS nombre,(case s.estado when 1 then 'Activo' else 'Inactivo' end) AS estado,s.codigo AS codigo,(case s.tipo when 1 then 'Serie' when 2 then 'Subserie' else 'Tipo documental' end) AS tipo,s.tipo AS tipo_serie,s.retencion_gestion AS retencion_gestion,s.retencion_central AS retencion_central,s.conservacion AS conservacion,s.seleccion AS seleccion,s.digitalizacion AS digitalizacion,s.procedimiento AS procedimiento,s.tvd AS tvd from serie s , dependencia d , entidad_serie e where ((e.serie_idserie = s.idserie) and (e.llave_entidad = d.iddependencia) and (s.categoria = 2) and (d.tipo = 1));
+
+CREATE OR REPLACE VIEW vdocumento AS select A.iddocumento AS iddocumento,A.estado AS estado,A.descripcion AS descripcion,B.nombre AS serie,A.fecha AS fecha,A.tipo_radicado AS tipo_radicado,A.plantilla AS plantilla from documento A , serie B where (A.serie = B.idserie);
+---------------------------
+
+UPDATE  campos_formato SET  tipo_dato =  'VARCHAR' WHERE  idcampos_formato =5065;
+
+UPDATE  campos_formato SET  longitud =  '255' WHERE  idcampos_formato =5065;
+
+UPDATE  campos_formato SET  tipo_dato =  'VARCHAR' WHERE  idcampos_formato =5039;
+
+UPDATE  campos_formato SET  longitud =  '255' WHERE  idcampos_formato =5039;
+
+CREATE OR REPLACE VIEW vexpediente AS select A.idexpediente AS idexpediente,A.nombre AS nombre,A.fecha AS fecha,A.descripcion AS descripcion,A.codigo AS codigo,A.cod_padre AS cod_padre,A.propietario AS propietario,A.ver_todos AS ver_todos,A.editar_todos AS editar_todos,B.idexpediente_doc AS idexpediente_doc,B.documento_iddocumento AS documento_iddocumento,B.fecha AS fecha_ed from expediente A , expediente_doc B where (A.idexpediente = B.expediente_idexpediente) group by A.idexpediente;
+
+CREATE OR REPLACE VIEW vreporte_inventario AS select documento_iddocumento AS documento_iddocumento,ubicacion AS ubicacion,numero_caja AS numero_caja,fecha_extrema_inicia AS fecha_extrema_inicia,fecha_extrema_final AS fecha_extrema_final,folios AS folios,observaciones AS observaciones from ft_inventario_retirados union select documento_iddocumento AS documento_iddocumento,ubicacion AS ubicacion,numero_caja AS numero_caja,fecha_extrema_inicia AS fecha_extrema_inicia,fecha_extrema_final AS fecha_extrema_final,folios AS folios,observaciones AS observaciones from ft_inventario_jubilados;
+
+ALTER TABLE  contenidos_carrusel CHANGE  contenido  contenido TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL;
+
+UPDATE  `saia_release1_viejo`.`busqueda_condicion` SET  `codigo_where` =  'a.cod_padre IS NULL OR a.cod_padre='''' OR cod_padre=0' WHERE  `busqueda_condicion`.`idbusqueda_condicion` =118;
+

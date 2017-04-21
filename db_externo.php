@@ -14,7 +14,7 @@ $max_salida=10; // Previene algun posible ciclo infinito limitando a 10 los ../
 include_once("db.php");
 function listar_tablas_externa($conn2=NULL,$tabla=NULL){
 if($conn2->Conn->Motor=="Oracle"){
-  $sql2="select TABLE_NAME from DBA_TABLES WHERE OWNER='".$conn2->Conn->Usuario."'";
+  $sql2="select TABLE_NAME from user_tables WHERE 1=1";
   if($tabla){
     $sql2.=" AND TABLE_NAME='".strtoupper($tabla)."'";
   } 
@@ -26,6 +26,8 @@ if($conn2->Conn->Motor=="MySql"){
   }
 }
 $sql2.=' ORDER BY table_name ';
+//print_r($sql2);
+//echo('<br>');
 $listado=$conn2->Ejecutar_Sql($sql2); 
 $lista_tablas["tablas"]=array();
 $lista_tablas["cantidad"]=0;
