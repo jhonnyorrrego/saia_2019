@@ -108,7 +108,7 @@ switch ($sAction) {
 				$x_enlace = 'documentoaddsal.php';
 			}
 		}
-		abrir_url($x_enlace, "_self");
+		abrir_url_digitalizacion($key, $x_enlace, "_self");
 		exit();
 		break;
 }
@@ -409,3 +409,30 @@ if($buscar_tarea["numcampos"]) {
         }
     });
     </script>
+
+<?php
+
+function abrir_url_digitalizacion($iddocumento, $location, $target = "_blank") {
+	if (!@$_SESSION['radicacion_masiva']) {
+		if ($target) {
+			?>
+<script language="javascript">
+		var iddocumento = "<?php echo $iddocumento;?>";
+		alert(iddocumento);
+		document.getElementById('arbol_formato').cargar_cantidades_documento(iddocumento);
+    	window.open("<?php print($location);?>","<?php print($target);?>");
+    </script>
+<?php
+		} else {
+			?>
+<script language="javascript">
+		var iddocumento = "<?php echo $iddocumento;?>";
+		alert(iddocumento);
+		document.getElementById('arbol_formato').cargar_cantidades_documento(iddocumento);
+    	window.open("<?php print($location);?>","centro");
+    </script>
+<?php
+		}
+	}
+}
+?>
