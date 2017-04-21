@@ -373,5 +373,19 @@ CREATE OR REPLACE VIEW vdependencia_serie AS select concat(d.codigo,'.',s.codigo
 CREATE OR REPLACE VIEW vdocumento AS select A.iddocumento AS iddocumento,A.estado AS estado,A.descripcion AS descripcion,B.nombre AS serie,A.fecha AS fecha,A.tipo_radicado AS tipo_radicado,A.plantilla AS plantilla from documento A , serie B where (A.serie = B.idserie);
 ---------------------------
 
+UPDATE  campos_formato SET  tipo_dato =  'VARCHAR' WHERE  idcampos_formato =5065;
 
+UPDATE  campos_formato SET  longitud =  '255' WHERE  idcampos_formato =5065;
+
+UPDATE  campos_formato SET  tipo_dato =  'VARCHAR' WHERE  idcampos_formato =5039;
+
+UPDATE  campos_formato SET  longitud =  '255' WHERE  idcampos_formato =5039;
+
+CREATE OR REPLACE VIEW vexpediente AS select A.idexpediente AS idexpediente,A.nombre AS nombre,A.fecha AS fecha,A.descripcion AS descripcion,A.codigo AS codigo,A.cod_padre AS cod_padre,A.propietario AS propietario,A.ver_todos AS ver_todos,A.editar_todos AS editar_todos,B.idexpediente_doc AS idexpediente_doc,B.documento_iddocumento AS documento_iddocumento,B.fecha AS fecha_ed from expediente A , expediente_doc B where (A.idexpediente = B.expediente_idexpediente) group by A.idexpediente;
+
+CREATE OR REPLACE VIEW vreporte_inventario AS select documento_iddocumento AS documento_iddocumento,ubicacion AS ubicacion,numero_caja AS numero_caja,fecha_extrema_inicia AS fecha_extrema_inicia,fecha_extrema_final AS fecha_extrema_final,folios AS folios,observaciones AS observaciones from ft_inventario_retirados union select documento_iddocumento AS documento_iddocumento,ubicacion AS ubicacion,numero_caja AS numero_caja,fecha_extrema_inicia AS fecha_extrema_inicia,fecha_extrema_final AS fecha_extrema_final,folios AS folios,observaciones AS observaciones from ft_inventario_jubilados;
+
+ALTER TABLE  contenidos_carrusel CHANGE  contenido  contenido TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL;
+
+UPDATE  `saia_release1_viejo`.`busqueda_condicion` SET  `codigo_where` =  'a.cod_padre IS NULL OR a.cod_padre='''' OR cod_padre=0' WHERE  `busqueda_condicion`.`idbusqueda_condicion` =118;
 
