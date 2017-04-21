@@ -416,19 +416,25 @@ function abrir_url_digitalizacion($iddocumento, $location, $target = "_blank") {
 	if (!@$_SESSION['radicacion_masiva']) {
 		if ($target) {
 			?>
-<script language="javascript">
-		var iddocumento = "<?php echo $iddocumento;?>";
-		alert(iddocumento);
-		document.getElementById('arbol_formato').cargar_cantidades_documento(iddocumento);
+	<script language="javascript">
+		var iddoc = "<?php echo $iddocumento;?>";
+		//alert(iddoc);
+		//parent.getElementById('arbol_formato').cargar_cantidades_documento(iddoc);
+		if(parent.frames['arbol_formato']) {
+			parent.frames['arbol_formato'].postMessage({iddocumento: iddoc}, "*");
+		}
     	window.open("<?php print($location);?>","<?php print($target);?>");
     </script>
 <?php
 		} else {
 			?>
-<script language="javascript">
-		var iddocumento = "<?php echo $iddocumento;?>";
-		alert(iddocumento);
-		document.getElementById('arbol_formato').cargar_cantidades_documento(iddocumento);
+	<script language="javascript">
+		var iddoc = "<?php echo $iddocumento;?>";
+		//alert(iddoc);
+		//parent.getElementById('arbol_formato').cargar_cantidades_documento(iddoc);
+		if(parent.frames['arbol_formato']) {
+			parent.frames['arbol_formato'].postMessage({iddocumento: iddoc}, "*");
+		}
     	window.open("<?php print($location);?>","centro");
     </script>
 <?php
