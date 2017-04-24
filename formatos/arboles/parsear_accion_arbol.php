@@ -472,15 +472,20 @@ if(@$_REQUEST["id"]) {
 				break;
 		}
 	}
-	if($ruta != "" && basename($ruta) != "..")
+	if($ruta != "" && basename($ruta) != "..") {
+		if (0 !== strpos($ruta, '/')) {
+			$ruta = "/" . $ruta;
+		}
 		redirecciona($ruta);
-	else {
-		if($alerta != "")
+	} else {
+		if($alerta != "") {
 			alerta($alerta);
+		}
 		redirecciona(RUTA_SAIA . "vacio.php");
 	}
-} else
+} else {
 	alerta("El formato No se ha podido capturar");
+}
 
 	/*
  * debe retornar un arreglo con el siguiente orden:

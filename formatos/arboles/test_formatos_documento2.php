@@ -15,7 +15,7 @@ else
 echo("<?xml version=\"1.0\" encoding=\"UTF-8\"?".">");
 $imagenes="";
 include_once("../../db.php");
-include_once("../librerias/funciones_generales.php"); 
+include_once("../librerias/funciones_generales.php");
 $id = @$_GET["id"];
 //print_r($id);
 echo("<tree id=\"0\">\n");
@@ -34,11 +34,11 @@ $permiso=new PERMISO();
 $formato=busca_filtro_tabla("","formato","idformato='".$arreglo[0]."'","etiqueta",$conn);
 $ok=$permiso->permiso_usuario($formato[0]["nombre"],"");
 /*
-	Si el funcionario no tiene el permiso de forma regular se valida si tiene permiso asociado a un flujo 
+	Si el funcionario no tiene el permiso de forma regular se valida si tiene permiso asociado a un flujo
 
 if(!$ok){
 	$doc=busca_filtro_tabla("documento_iddocumento",$arreglo[2]." A","A.id".$arreglo[2]."=".$arreglo[1],"",$conn);
-	$ok=$permiso->acceso_flujo($doc[0]["documento_iddocumento"],$arreglo[0]);	
+	$ok=$permiso->acceso_flujo($doc[0]["documento_iddocumento"],$arreglo[0]);
 }
 */
 if($formato["numcampos"]&& $ok){
@@ -97,7 +97,7 @@ return($texto);
 }
 function decodifica($cadena){
 $cadena=htmlspecialchars(codifica_encabezado(html_entity_decode(strip_tags(htmlspecialchars_decode($cadena)))));
-//$cadena=htmlspecialchars(strip_tags($cadena)); 
+//$cadena=htmlspecialchars(strip_tags($cadena));
 $cadena=str_replace('"','',$cadena);
 return($cadena);
 }
@@ -123,12 +123,12 @@ $dato=busca_filtro_tabla($cad_tips.",id".$tabla.",documento_iddocumento",$tabla,
 
 for($i=0;$i<$dato["numcampos"];$i++){
  $estado=busca_filtro_tabla("estado","documento","iddocumento=".$dato[$i]["documento_iddocumento"],"",$conn);
- if($estado[0][0]<>"ELIMINADO") 
+ if($estado[0][0]<>"ELIMINADO")
   {$tips="";
    for($j=0;$j<$num_campo;$j++){
     $tips.=strip_tags(str_replace('"','',decodifica($campo[$j]["etiqueta"]).": ")).str_replace('"','',decodifica(mostrar_valor_campo($campo[$j]["nombre"],$arreglo[0],$dato[$i]["documento_iddocumento"],1)))."\n";
     }
-	
+
 	$version=busca_filtro_tabla("max(version) as max_version","version_documento a","a.documento_iddocumento=".$dato[$i]["documento_iddocumento"],"",$conn);
   if(!$version["numcampos"])$cadena_version=1;
   else $cadena_version=$version[0]["max_version"]+1;
@@ -146,7 +146,7 @@ $texto.=llena_hijos($arreglo[0],$dato[$i]["id".$tabla],$tabla);
   $texto.=llena_vista($idformato);
   //$texto.=llena_anexos($dato[$i]["documento_iddocumento"]);
  $texto.='</item>';
- } 
+ }
 }
 return($texto);
 }
@@ -180,7 +180,7 @@ for($i=0;$i<$dato["numcampos"];$i++){
   $texto.='<item style="font-family:verdana; font-size:7pt;" '.$imagenes;
   $llave=$arreglo[0]."-".$arreglo[2]."-".$dato[$i]["id".$tabla]."-".$formato[0]["nombre_tabla"]."-".$arreglo[1];
   $texto.=strip_tags('text="'. str_replace('"','',decodifica(mostrar_valor_campo($campo[0]["nombre"],$arreglo[0],$dato[$i]["id".$tabla],1))).'" id="'.$llave.'" tooltip="'.decodifica($tips)).'">';
- $texto.='</item>'; 
+ $texto.='</item>';
 }
 return($texto);
 }
