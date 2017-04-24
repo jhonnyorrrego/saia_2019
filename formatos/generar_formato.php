@@ -1846,17 +1846,22 @@ else
 					}
 				} else { // $ruta_orig=$formato[0]["nombre"];
 				         // si el archivo existe dentro de la carpeta del formato actual
-					if (is_file($formato[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
+					if (is_file(FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
 						$includes .= $this->incluir($funciones[$i]["ruta"], "librerias");
-					} elseif (is_file($funciones[$i]["ruta"])) { // si el archivo existe en la ruta especificada partiendo de la raiz
-					                                             // Modificacion realizada el 28-02-2009 porque buscaba la ruta en la raiz pero debia buscarla en la raiz del propio formato se quita el ../
+					} else if (is_file($funciones[$i]["ruta"])) { // si el archivo existe en la ruta especificada partiendo de la raiz
 						$includes .= $this->incluir($funciones[$i]["ruta"], "librerias");
 					} else { // si no existe en ninguna de las dos
 					         // trato de crearlo dentro de la carpeta del formato actual
-						if (crear_archivo(FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
+						$ruta_libreria = FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $funciones[$i]["ruta"];
+						$ruta_real = realpath($ruta_libreria);
+						if($ruta_real === false) {
+							$ruta_real = normalizePath($ruta_libreria);
+						}
+						if (crear_archivo($ruta_real)) {
 							$includes .= $this->incluir($funciones[$i]["ruta"], "librerias");
-						} else
-							alerta_formatos("1858 No es posible generar el archivo " . FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $funciones[$i]["ruta"]);
+						} else {
+							alerta_formatos("1863 No es posible generar el archivo " . FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $funciones[$i]["ruta"]);
+						}
 					}
 				}
 				if (!in_array($funciones[$i]["nombre_funcion"], $fun_campos)) {

@@ -471,7 +471,7 @@ public function crear_formato_buscar() {
 
 				if (is_file(FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
 					$includes .= $this->incluir($funciones[$i]["ruta"], "librerias");
-				} elseif (is_file($funciones[$i]["ruta"])) { // si el archivo existe en la ruta especificada partiendo de la raiz
+				} else if (is_file($funciones[$i]["ruta"])) { // si el archivo existe en la ruta especificada partiendo de la raiz
 					$includes .= $this->incluir("../" . $funciones[$i]["ruta"], "librerias");
 				} else { // si no existe en ninguna de las dos
 					// trato de crearlo dentro de la carpeta del formato actual
@@ -482,8 +482,9 @@ public function crear_formato_buscar() {
 					}
 					if (crear_archivo($ruta_real)) {
 						$includes .= $this->incluir($funciones[$i]["ruta"], "librerias");
-					} else
+					} else {
 						alerta_formatos("FB 486 No es posible generar el archivo " . $ruta_real);
+					}
 				}
 			}
 			if (!in_array($funciones[$i]["nombre_funcion"], $fun_campos)) {
