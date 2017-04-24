@@ -387,5 +387,8 @@ CREATE OR REPLACE VIEW vreporte_inventario AS select documento_iddocumento AS do
 
 ALTER TABLE  contenidos_carrusel CHANGE  contenido  contenido TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL;
 
-UPDATE  `saia_release1_viejo`.`busqueda_condicion` SET  `codigo_where` =  'a.cod_padre IS NULL OR a.cod_padre='''' OR cod_padre=0' WHERE  `busqueda_condicion`.`idbusqueda_condicion` =118;
+UPDATE  busqueda_condicion SET  codigo_where =  'a.cod_padre IS NULL OR a.cod_padre='''' OR cod_padre=0' WHERE idbusqueda_condicion=118;
 
+----------------------------
+
+UPDATE  campos_formato SET  valor =  '../../test.php?iddependencia=75&rol=1&agrupar=1;1;0;1;1;0;0' WHERE  idcampos_formato=4999;
