@@ -2148,10 +2148,11 @@ function mostrar_seleccionados($idformato, $idcampo, $tipo_arbol, $iddoc, $tipo 
 	$campo = busca_filtro_tabla("", "campos_formato", "idcampos_formato=$idcampo", "", $conn);
 	if($iddoc != NULL) {
 		$tabla = busca_filtro_tabla("nombre_tabla,item", "formato", "idformato=$idformato", "", $conn);
-		if($tabla[0]["item"])
+		if($tabla[0]["item"]) {
 			$valor = busca_filtro_tabla($campo[0]["nombre"], $tabla[0]['nombre_tabla'], "id" . $tabla[0]['nombre_tabla'] . "=$iddoc", "", $conn);
-		else
+		} else {
 			$valor = busca_filtro_tabla($campo[0]["nombre"], $tabla[0]['nombre_tabla'], "documento_iddocumento=$iddoc", "", $conn);
+		}
 		$vector = explode(",", str_replace("#", "d", $valor[0][0]));
 		$vector = array_unique($vector);
 		sort($vector);
@@ -2163,12 +2164,10 @@ function mostrar_seleccionados($idformato, $idcampo, $tipo_arbol, $iddoc, $tipo 
 		}
 
 		foreach($vector as $fila) {
-			if($tipo_arbol == 1) // arbol de series
-{
+			if($tipo_arbol == 1) { // arbol de series
 				$datos = busca_filtro_tabla("nombre", "serie", "idserie=" . $fila, "", $conn);
 				$nombres[] = $datos[0]["nombre"];
-			} elseif($tipo_arbol == 0) // arbol de funcionarios
-{
+			} else if($tipo_arbol == 0) { // arbol de funcionarios
 				if(strpos($fila, 'd') > 0) {
 					$datos = busca_filtro_tabla("nombre", "dependencia", "iddependencia=" . str_replace("d", "", $fila), "", $conn);
 					$nombres[] = $datos[0]["nombre"];
@@ -2179,22 +2178,21 @@ function mostrar_seleccionados($idformato, $idcampo, $tipo_arbol, $iddoc, $tipo 
 
 					$nombres[] = ucwords($datos[0]["nombres"] . " " . $datos[0]["apellidos"]);
 				}
-			} elseif($tipo_arbol == 5) // arbol de roles
-{
+			} else if($tipo_arbol == 5) { // arbol de roles
 				if(strpos($fila, 'd') > 0) {
 					$datos = busca_filtro_tabla("nombre", "dependencia", "iddependencia=" . str_replace("d", "", $fila), "", $conn);
 					$nombres[] = $datos[0]["nombre"];
 				} else {
-					if($pos = strpos($fila, "_"))
+					if($pos = strpos($fila, "_")) {
 						$fila = substr($fila, 0, $pos);
+					}
 					$datos = busca_filtro_tabla("nombres,apellidos,cargo.nombre as cargo", "funcionario,dependencia_cargo,cargo", "funcionario_idfuncionario=idfuncionario and cargo_idcargo=idcargo and iddependencia_cargo='" . $fila . "'", "", $conn);
 					$nombres[] = ucwords($datos[0]["nombres"] . " " . $datos[0]["apellidos"] . " - " . $datos[0]["cargo"]);
 				}
-			} elseif($tipo_arbol == 2) // arbol de dependencias
-{
+			} else if($tipo_arbol == 2) { // arbol de dependencias
 				$datos = busca_filtro_tabla("nombre", "dependencia", "iddependencia=" . $fila, "", $conn);
 				$nombres[] = ucwords($datos[0]["nombre"]);
-			} elseif($tipo_arbol == 4) { // valor de tabla cuando se llama a test_serie.php el unico campo que se puede mostrar de la tabla es nombre
+			} else if($tipo_arbol == 4) { // valor de tabla cuando se llama a test_serie.php el unico campo que se puede mostrar de la tabla es nombre
 				if($campo["numcampos"]) {
 					$arreglo = explode(";", $campo[0]["valor"]);
 					if(strpos($arreglo[0], "test_serie")) {
@@ -2215,8 +2213,9 @@ function mostrar_seleccionados($idformato, $idcampo, $tipo_arbol, $iddoc, $tipo 
 	}
 	if($tipo) {
 		return ($nombres);
-	} else
+	} else {
 		echo ($nombres);
+	}
 	return;
 }
 /*

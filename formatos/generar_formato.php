@@ -1162,7 +1162,7 @@ else
 		$formato = busca_filtro_tabla("*", "formato A", "A.idformato=" . $this->idformato, "", $conn);
 		if ($formato["numcampos"]) {
 			if ($formato[0]["item"]) {
-				$action = '../librerias/funciones_item.php';
+				$action = '../../' . FORMATOS_SAIA . 'librerias/funciones_item.php';
 			} else {
 				$action = '../../class_transferencia.php';
 			}
