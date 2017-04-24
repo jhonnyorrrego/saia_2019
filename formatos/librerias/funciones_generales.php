@@ -288,7 +288,7 @@ function componente_ejecutor($idcampo, $iddoc) {
 		// $parametros=explode("@",$campo[0]["valor"]);
 	$campos = explode(",", $parametros[2]);
 	$alto = 26 * (count($campos) + 6);
-	echo '<iframe border=0 frameborder="0" framespacing="0" name="frame_' . $campo[0]["nombre"] . '" id="frame_' . $campo[0]["nombre"] . '" src="../librerias/acciones_ejecutor.php?formulario_autocompletar=formulario_formatos&campo_autocompletar=' . $campo[0]["nombre"] . '&tabla=' . $formato[0]["nombre_tabla"] . '&campos_auto=' . $parametros[1] . '&tipo=' . $parametros[0] . '&campos=' . $parametros[2] . $adicionales . '" width="100%" height="' . $alto . 'px"></iframe>';
+	echo '<iframe border=0 frameborder="0" framespacing="0" name="frame_' . $campo[0]["nombre"] . '" id="frame_' . $campo[0]["nombre"] . '" src="../../' . FORMATOS_SAIA . 'librerias/acciones_ejecutor.php?formulario_autocompletar=formulario_formatos&campo_autocompletar=' . $campo[0]["nombre"] . '&tabla=' . $formato[0]["nombre_tabla"] . '&campos_auto=' . $parametros[1] . '&tipo=' . $parametros[0] . '&campos=' . $parametros[2] . $adicionales . '" width="100%" height="' . $alto . 'px"></iframe>';
 }
 
 /*
@@ -1511,7 +1511,7 @@ function mostrar_valor_campo($campo, $idformato, $iddoc, $tipo = NULL) {
 						$parametros = explode("@", $datos[0]["valor"]);
 					$ejecutores = busca_filtro_tabla("", "ejecutor,datos_ejecutor", "ejecutor_idejecutor=idejecutor and iddatos_ejecutor in(" . $campos[0][$campo] . ")", "", $conn);
 					if($parametros[3] != "") {
-						include_once ($ruta_db_superior . "/formatos/librerias/funciones_ejecutor.php");
+						include_once ($ruta_db_superior . FORMATOS_SAIA . "librerias/funciones_ejecutor.php");
 						$retorno .= llamado_ejecutor($parametros[3], $campo, $idformato, $iddoc);
 					} else {
 
@@ -1803,7 +1803,7 @@ function submit_formato($formato, $iddoc = NULL) {
                     $datos_padre=busca_filtro_tabla("","formato","idformato=".$_REQUEST["idformato"],"",$conn);
                     if($datos_padre["numcampos"]){
                         $cadena=$ruta_db_superior.'formatos/'.$datos_padre[0]["nombre"].'/mostrar_'.$datos_padre[0]["nombre"].'.php?iddoc='.$_REQUEST["idpadre"].'&idformato='.$datos_padre[0]["idformato"];
-                        $codigo_js='<script type="text/javascript">function redirecciona_padre(){window.open("'.$cadena.'","_self");}</script>';    
+                        $codigo_js='<script type="text/javascript">function redirecciona_padre(){window.open("'.$cadena.'","_self");}</script>';
                         echo($codigo_js);
                     }
                 }
