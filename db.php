@@ -210,31 +210,39 @@ return($tabla);
 <Pre-condiciones><Pre-condiciones>
 <Post-condiciones><Post-condiciones>
 </Clase>  */
-function listar_campos_tabla($tabla=NULL)
-  {global $conn;
+function listar_campos_tabla($tabla=NULL,$tipo_retorno=0)
+  {global $conn;   
   	if($tabla==NULL)
       $tabla=$_REQUEST["tabla"];
    if(MOTOR=="MySql"){
       $datos_tabla=$conn->Ejecutar_Sql("DESCRIBE ".$tabla);
-	   while($fila=phpmkr_fetch_array($datos_tabla))
-      {// print_r($fila);
-       $lista_campos[]=$fila[0];
-      }
+	   while($fila=phpmkr_fetch_array($datos_tabla)){// print_r($fila);
+        if($tipo_retorno){
+            $lista_campos[]=array_map(strtolower,$fila);    
+        }   
+        else{
+            $lista_campos[]=strtolower($fila[0]);
+       }
+      }   
    		return($lista_campos);
     }
    else if(MOTOR=="Oracle"){
 	      $datos_tabla=$conn->Ejecutar_Sql("SELECT column_name AS Field FROM user_tab_columns WHERE table_name='".strtoupper($tabla)."' ORDER BY column_name ASC");
 	      $lista_campos=array();
-	  	  while($fila=phpmkr_fetch_array($datos_tabla))
-	      {
-			  $lista_campos[]=$fila[0];
+	  	  while($fila=phpmkr_fetch_array($datos_tabla)) {
+			  if($tipo_retorno){
+                    $lista_campos[]=array_map(strtolower,$fila);    
+                }   
+                else{
+                    $lista_campos[]=strtolower($fila[0]);
+               }
 	      }
-	   	  return($lista_campos);
+	   	  return($lista_campos);  
 	  }
 	  else{
-	   	return($conn->Busca_tabla());
+	   	return($conn->Busca_Tabla());
 	  }
-  }
+  } 
 /*
 <Clase>
 <Nombre>guardar_lob</Nombre>
@@ -3227,6 +3235,11 @@ function fecha_db_almacenar($fecha, $formato = NULL)
 
   if($conn->motor=="Oracle")
     {
+    		
+    	$mystring = $fecha;
+		$findme   = 'TO_DATE';
+		$pos = strpos($mystring, $findme);
+		if ($pos === false) {
          $reemplazos=array('M'=>'MON','H'=>'HH24','d'=>'DD','m'=>'MM','Y'=>'YYYY','y'=>'YY','h'=>'HH','i'=>'MI','s'=>'SS','yyyy'=>'YYYY' );
          $resfecha=$formato;
          foreach ($reemplazos as $ph => $mot)
@@ -3241,7 +3254,10 @@ function fecha_db_almacenar($fecha, $formato = NULL)
 
 	   	$fsql="TO_DATE('$fecha','$resfecha')";
 
-
+		}ELSE{
+			$fsql=$fecha;
+		}
+		
  	 }
    	elseif($conn->motor=="MySql")
     	 {  //TO_DATE(TO_CHAR(sysdate,'dd/mm/yyyy '))
