@@ -387,5 +387,20 @@ CREATE OR REPLACE VIEW vreporte_inventario AS select documento_iddocumento AS do
 
 ALTER TABLE  contenidos_carrusel CHANGE  contenido  contenido TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL;
 
-UPDATE  `saia_release1_viejo`.`busqueda_condicion` SET  `codigo_where` =  'a.cod_padre IS NULL OR a.cod_padre='''' OR cod_padre=0' WHERE  `busqueda_condicion`.`idbusqueda_condicion` =118;
+UPDATE  busqueda_condicion SET  codigo_where =  'a.cod_padre IS NULL OR a.cod_padre='''' OR cod_padre=0' WHERE idbusqueda_condicion=118;
+
+----------------------------
+
+UPDATE  campos_formato SET  valor =  '../../test.php?iddependencia=75&rol=1&agrupar=1;1;0;1;1;0;0' WHERE  idcampos_formato=4999;
+
+----------------------------
+
+UPDATE busqueda_componente SET info='Radicado|{*ver_items@iddocumento,numero,fecha_radicacion_entrada,tipo_radicado*}|center|-|No. Item|{*numero_item*}|center|-|Tramite|{*mostrar_tramite_radicacion@idft_destino_radicacion,tipo_mensajeria,estado_recogida*}|center|-|Mensajero|{*mostrar_mensajeros_dependencia@idft_destino_radicacion*}|center|-|Planilla Asociada|{*planilla_mensajero@idft_destino_radicacion,mensajero_encargado*}|center|-|Generar planilla|{*planilla_mensajero2@idft_destino_radicacion,mensajero_encargado*}|center|-|Finalizar Tr&aacute;mite|{*aceptar_recepcion@idft_destino_radicacion*}|center|-|Tipo de origen|{*mostrar_tipo_origen_reporte@tipo_origen*}|center|-|Fecha de Radicaci&oacute;n|{*fecha_radicacion_entrada*}|center|-|Asunto|{*descripcion*}|left|-|Origen|{*mostrar_origen_reporte@idft_radicacion_entrada*}|center|-|Destino|{*mostrar_destino_reporte@idft_destino_radicacion*}|center|-|Observaciones|{*observacion_destino*}|left|-|Ruta|{*mostrar_ruta_reporte@idft_destino_radicacion*}|left|-|Descripci&oacute;n o Asunto|{*descripcion*}|center|-|Estado|{*estado_item*}|center' WHERE idbusqueda_componente=281;	
+
+----------------------------
+INSERT INTO funciones_formato_accion (idfunciones_formato_accion, idfunciones_formato, accion_idaccion, formato_idformato, momento, estado, orden) VALUES
+(300, 609, 5, 305, 'POSTERIOR', 1, 1);
+----------------------------
+
+
 

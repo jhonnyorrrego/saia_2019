@@ -372,7 +372,7 @@ function generar_ingreso_formato($nombre_formato){
 		//$_REQUEST["descripcion_salida"]=$_REQUEST["descripcion_salida"];
 		$campos_formato_pqrsf=busca_filtro_tabla("idcampos_formato","formato a, campos_formato b","a.nombre='pqrsf' AND a.idformato=b.formato_idformato AND b.nombre='nombre'","",$conn);
         $_REQUEST["campo_descripcion"] = $campos_formato_pqrsf[0]['idcampos_formato']; //se colocan los idcampos del campo descripcion;
-        $_REQUEST["fecha"] = date('Y-m-d H:i:s');
+        $_REQUEST["fecha"] = fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s');
 	}	
 
 	$_REQUEST["serie_idserie"] = $formato[0]["serie_idserie"]; //idserie del formato;
@@ -445,7 +445,7 @@ function radicar_plantilla2()
     //print_r($_POST);
     //echo("<br />-------<br />");
     foreach($_POST as $key=>$valor){
-      if(in_array($key,$lista_campos)&&$key<>"estado"){
+      if(in_array($key,$lista_campos)&& ($key<>"estado" && $key<>'fecha')){
         if($valor[0]!="'")
           $valor="'".$valor."'";
         $valores[$key]=$valor;
@@ -568,7 +568,9 @@ function radicar_plantilla2()
     llama_funcion_accion($iddoc,$idformato,"adicionar","ANTERIOR");
    /* if($_POST["iddoc"] && $_POST["tabla"]=="ft_decision_disciplinaria")
       $idplantilla=guardar_decision_disciplinaria($_POST["iddoc"]);
-    else*/if($_POST["iddoc"])
+    else*/
+    //print_r($_POST);die();
+    if($_POST["iddoc"])
       $idplantilla=guardar_documento($_POST["iddoc"]);
  	  //die();
     if(!$idplantilla)

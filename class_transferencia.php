@@ -1638,7 +1638,7 @@ global $conn,$idfactura;
 					if($fila["tipo_origen"]==5){  //rol
 						$cargos=busca_filtro_tabla("distinct cargo.nombre","cargo,dependencia_cargo","cargo_idcargo=idcargo AND tipo_cargo=1 and iddependencia_cargo=".$fila["origen"],"",$conn);
 					}elseif($fila["tipo_origen"]==1){  //funcionario_codigo
-						$cargos=busca_filtro_tabla("distinct funcionario_codigo,nombres,idfuncionario,apellidos,cargo.nombre","cargo,dependencia_cargo,funcionario,dependencia","dependencia.iddependencia=dependencia_cargo.dependencia_iddependencia and cargo_idcargo=idcargo AND tipo_cargo=1 AND idfuncionario=funcionario_idfuncionario and fecha_inicial<='".$fila["fecha"]."' and fecha_final>='".$fila["fecha"]."' and funcionario_codigo='".$fila["origen"]."'","",$conn);
+						$cargos=busca_filtro_tabla("distinct funcionario_codigo,nombres,idfuncionario,apellidos,cargo.nombre","cargo,dependencia_cargo,funcionario,dependencia","dependencia.iddependencia=dependencia_cargo.dependencia_iddependencia and cargo_idcargo=idcargo AND tipo_cargo=1 AND idfuncionario=funcionario_idfuncionario and fecha_inicial<='".$fila["fecha"]."' and fecha_final>='".$fila["fecha"]."' and funcionario_codigo='".$fila["origen"]."' AND dependencia_cargo.estado=1","",$conn);
 						if(!$cargos["numcampos"])
 							$cargos=busca_filtro_tabla("funcionario_codigo,nombres,idfuncionario,apellidos,cargo.nombre","cargo,dependencia_cargo,funcionario,dependencia","dependencia.iddependencia=dependencia_cargo.dependencia_iddependencia and cargo_idcargo=idcargo AND tipo_cargo=1 AND idfuncionario=funcionario_idfuncionario and funcionario_codigo='".$fila["origen"]."'","fecha desc",$conn);
 					}
