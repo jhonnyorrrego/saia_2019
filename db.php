@@ -3262,7 +3262,10 @@ function fecha_db_almacenar($fecha, $formato = NULL)
    	elseif($conn->motor=="MySql")
     	 {  //TO_DATE(TO_CHAR(sysdate,'dd/mm/yyyy '))
 
-            $reemplazos=array('d'=>'%d','m'=>'%m','y'=>'%y','Y'=>'%Y','h'=>'%H','H'=>'%H','i'=>'%i','s'=>'%s','M'=>'%b','yyyy'=>'%Y'  );
+    	$mystring = $fecha;
+		$findme   = 'DATE_FORMAT';
+		$pos = strpos($mystring, $findme);
+		if ($pos === false) {            $reemplazos=array('d'=>'%d','m'=>'%m','y'=>'%y','Y'=>'%Y','h'=>'%H','H'=>'%H','i'=>'%i','s'=>'%s','M'=>'%b','yyyy'=>'%Y'  );
             $resfecha=$formato;
              foreach ($reemplazos as $ph => $mot)
              { // echo $ph," = ",$mot,"<br>","^$ph([-/:])", "%Y\\1","<br>";
@@ -3275,6 +3278,9 @@ function fecha_db_almacenar($fecha, $formato = NULL)
              }
 
     	 	$fsql="DATE_FORMAT('$fecha','$resfecha')";
+		}else{
+			$fsql=$fecha;
+		}	
     	 }
   elseif($conn->motor=="SqlServer"||$conn->motor=="MSSql"){
       //solo se relacionan los principales si se requiere de cualquier otro se debe adicionar al switch
