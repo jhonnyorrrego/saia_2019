@@ -19,7 +19,7 @@ $busca_componente=busca_filtro_tabla("nombre","busqueda_componente","idbusqueda_
 <script>
     $(document).ready(function(){
         var componente='<?php echo($busca_componente[0]['nombre']); ?>';
-        var enlace_finalizar="&nbsp;<button class='btn btn-mini' title='Finalizar Entrega' id='boton_finalizar_entrega'>Finalizar Entrega</button>";
+        var enlace_finalizar="&nbsp;<button class='btn btn-mini' title='Finalizar Entrega' id='boton_finalizar_entrega'>Finalizar Tr&aacute;mite</button>";
         if(componente!='reporte_radicacion_correspondencia_finalizado' && componente!='reporte_radicacion_correspondencia_dependencias'){
         	if(componente=='reporte_radicacion_correspondencia'){
         		enlace_finalizar='';
