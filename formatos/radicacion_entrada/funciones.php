@@ -790,9 +790,14 @@ function mostrar_destino_radicacion($idformato,$iddoc){
 	global $conn,$ruta_db_superior;
 	$datos=busca_filtro_tabla("","ft_radicacion_entrada","documento_iddocumento=".$iddoc,"",$conn);
 	$nombres="";
+	
+	
+	$array_ejecutores=array();
+	$array_funcionarios=array();
 	if($datos[0]['tipo_destino']==1){
-	    $destino=busca_filtro_tabla("b.nombre","datos_ejecutor a, ejecutor b","b.idejecutor=a.ejecutor_idejecutor AND a.iddatos_ejecutor IN(".$datos[0]['persona_natural_dest'].")","",$conn);
+	    $destino=busca_filtro_tabla("b.nombre,b.iddatos_ejecutor","datos_ejecutor a, ejecutor b","b.idejecutor=a.ejecutor_idejecutor AND a.iddatos_ejecutor IN(".$datos[0]['persona_natural_dest'].")","",$conn);
         for($i=0;$i<$destino['numcampos'];$i++){
+            $array_ejecutores[]=$destino[$i]['iddatos_ejecutor'];
             $nombres.=$destino[$i]['nombre'].'</br>';
         }
         
@@ -804,15 +809,17 @@ function mostrar_destino_radicacion($idformato,$iddoc){
         for ($i=0; $i < $cont; $i++) { 
             $posicion_coincidencia = strpos($destinos[$i], $cadena_buscada);
             if ($posicion_coincidencia === false) {
-               $busca_funcionarios=busca_filtro_tabla("concat(nombres,' ',apellidos) AS nombre","vfuncionario_dc","iddependencia_cargo=".$destinos[$i],"",$conn);
+               $busca_funcionarios=busca_filtro_tabla("concat(nombres,' ',apellidos) AS nombre,iddependencia_cargo","vfuncionario_dc","iddependencia_cargo=".$destinos[$i],"",$conn);
                if($busca_funcionarios['numcampos']){
+                   $array_funcionarios[]=$busca_funcionarios[0]['iddependencia_cargo'];
                		$nombres.=$busca_funcionarios[0]['nombre']." </br> ";
                }
                
             }else {
                 $dependencia=str_replace("#", "", $destinos[$i]);
-                $busca_funcionarios=busca_filtro_tabla("concat(nombres,' ',apellidos) AS nombre","vfuncionario_dc","estado=1 AND estado_dc=1 AND estado_dep=1 AND iddependencia=".$dependencia,"",$conn);
+                $busca_funcionarios=busca_filtro_tabla("concat(nombres,' ',apellidos) AS nombre,iddependencia_cargo","vfuncionario_dc","estado=1 AND estado_dc=1 AND estado_dep=1 AND iddependencia=".$dependencia,"",$conn);
                 for ($k=0; $k < $busca_funcionarios['numcampos']; $k++) { 
+                    $array_funcionarios[]=$busca_funcionarios[$k]['iddependencia_cargo'];
                     $nombres.=$busca_funcionarios[$k]['nombre']." </br> ";
                 }
             }
@@ -822,12 +829,16 @@ function mostrar_destino_radicacion($idformato,$iddoc){
     $hijo_destino_radicacion=busca_filtro_tabla("","ft_destino_radicacion","ft_radicacion_entrada=".$datos[0]['idft_radicacion_entrada'],"",$conn);
     for($i=0;$i<$hijo_destino_radicacion['numcampos'];$i++){
         if($hijo_destino_radicacion[$i]['nombre_destino']!=''){
-            $fun=busca_filtro_tabla("nombres,apellidos","vfuncionario_dc","iddependencia_cargo=".$hijo_destino_radicacion[$i]['nombre_destino'],"",$conn);
-            $nombres.=$fun[0]['nombres'].' '.$fun[0]['apellidos'].'</br>';
+            if(!in_array($hijo_destino_radicacion[$i]['nombre_destino'],$array_funcionarios)){
+                $fun=busca_filtro_tabla("nombres,apellidos","vfuncionario_dc","iddependencia_cargo=".$hijo_destino_radicacion[$i]['nombre_destino'],"",$conn);
+                $nombres.=$fun[0]['nombres'].' '.$fun[0]['apellidos'].'</br>';    
+            }
         }
         if($hijo_destino_radicacion[$i]['destino_externo']!=''){
-            $fun=busca_filtro_tabla("nombre","vejecutor","iddatos_ejecutor=".$hijo_destino_radicacion[$i]['destino_externo'],"",$conn);
-            $nombres.=$fun[0]['nombre'].'</br>';
+            if(!in_array($hijo_destino_radicacion[$i]['destino_externo'],$array_ejecutores)){
+                $fun=busca_filtro_tabla("nombre","vejecutor","iddatos_ejecutor=".$hijo_destino_radicacion[$i]['destino_externo'],"",$conn);
+                $nombres.=$fun[0]['nombre'].'</br>';
+            }
         }        
     }
     return($nombres);
