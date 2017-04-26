@@ -1823,7 +1823,7 @@ function submit_formato($formato, $iddoc = NULL) {
 
 		echo '<tr><td colspan="2" align="center"><input type="hidden" name="iddoc" value="' . $iddoc . '">
           <input type="hidden" name="tabla" value="' . $contador[0]["nombre_tabla"] . '">
-          <script>formulario_formatos.action="../librerias/modificar_plantilla.php";</script>
+          <script>formulario_formatos.action="../../' . FORMATOS_SAIA . 'librerias/modificar_plantilla.php";</script>
           <input class="submit" type="submit" id="continuar" value="Continuar"></td></tr>';
 	}
 	?>
