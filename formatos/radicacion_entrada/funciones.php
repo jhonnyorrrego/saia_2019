@@ -588,6 +588,8 @@ function mostrar_item_destino_radicacion($idformato,$iddoc){
         	<th style="text-align:center;">Acciones</th>
       	</tr>
     	';
+    	
+    	
     	for ($i=0; $i < $datos['numcampos']; $i++) {
     	    $origen=busca_filtro_tabla("concat(nombres,' ',apellidos) AS nombre","vfuncionario_dc a","a.funcionario_codigo=".$datos[$i]['nombre_origen'],"",$conn);
 
@@ -610,7 +612,7 @@ function mostrar_item_destino_radicacion($idformato,$iddoc){
     	        $ubicacion=$ciudad[0]['nombre'].' '.$destino[0]['direccion'];
 
     	        if(!$destino['numcampos']){
-                    $destino=busca_filtro_tabla("nombre, cargo, empresa as dependencia,iddatos_ejecutor as nombre_destino","vejecutor","iddatos_ejecutor=".$datos[$i]['destino_externo'],"",$conn);
+                    $destino=busca_filtro_tabla("nombre, cargo, empresa as dependencia,iddatos_ejecutor as nombre_destino,direccion","vejecutor","iddatos_ejecutor=".$datos[$i]['destino_externo'],"",$conn);
                     $ubicacion=$destino[0]['direccion'];
                 }
                 $persona_natural_destino='persona_natural_dest';
@@ -706,13 +708,24 @@ function mostrar_item_destino_radicacion($idformato,$iddoc){
 			
             $parte_tabla="";
     	    if($datos[$i]['tipo_destino']==1){
-    	        $destino=busca_filtro_tabla("b.nombre, a.cargo","datos_ejecutor a, ejecutor b","b.idejecutor=a.ejecutor_idejecutor AND a.iddatos_ejecutor=".$datos[$i]['nombre_destino'],"",$conn);
+    	        $destino=busca_filtro_tabla("b.nombre, a.cargo , a.ciudad, a.direccion,a.iddatos_ejecutor as nombre_destino","datos_ejecutor a, ejecutor b","b.idejecutor=a.ejecutor_idejecutor AND a.iddatos_ejecutor=".$datos[$i]['nombre_destino'],"",$conn);
     	        $ciudad=busca_filtro_tabla("nombre","municipio","idmunicipio=".$destino[0]['ciudad'],"",$conn);
     	        $ubicacion=$ciudad[0]['nombre'].' '.$destino[0]['direccion'];
-    	    }else{
-    	        $destino=busca_filtro_tabla("concat(nombres,' ',apellidos) AS nombre, cargo, dependencia,funcionario_codigo","vfuncionario_dc","iddependencia_cargo=".$datos[$i]['nombre_destino'],"",$conn);
-    	        $ubicacion=$destino[0]['dependencia'];
 
+    	        if(!$destino['numcampos']){
+                    $destino=busca_filtro_tabla("nombre, cargo, empresa as dependencia,iddatos_ejecutor as nombre_destino,direccion","vejecutor","iddatos_ejecutor=".$datos[$i]['destino_externo'],"",$conn);
+                    $ubicacion=$destino[0]['direccion'];
+                }
+                $persona_natural_destino='persona_natural_dest';
+    	    }else{
+    	        $destino=busca_filtro_tabla("concat(nombres,' ',apellidos) AS nombre, cargo, dependencia,iddependencia_cargo as nombre_destino","vfuncionario_dc","iddependencia_cargo=".$datos[$i]['nombre_destino'],"",$conn);
+    	        $ubicacion=$destino[0]['dependencia'];
+    	        $persona_natural_destino='destino';
+    	        if(!$destino['numcampos']){
+    	            $destino=busca_filtro_tabla("nombre, cargo, empresa as dependencia,iddatos_ejecutor as nombre_destino","vejecutor","iddatos_ejecutor=".$datos[$i]['destino_externo'],"",$conn);
+                    $ubicacion=$destino[0]['direccion'];
+                    $persona_natural_destino='persona_natural_dest';
+    	        }
     	    }
                 if(($_REQUEST['tipo']!=5 && $datos[$i]['estado_item']==2 && usuario_actual('funcionario_codigo')==$destino[0]['funcionario_codigo'])){
                     $parte_tabla='<a style="cursor:pointer;" class="highslide" onclick="return hs.htmlExpand(this, { objectType: \'iframe\',width: 300, height: 300,preserveContent:false} )" tipo="finalizacion" href="'.PROTOCOLO_CONEXION.RUTA_PDF.'/formatos/radicacion_entrada/finalizar_items.php?idft='.$datos[$i]['idft_destino_radicacion'].'">Finalizar</a>';
@@ -795,7 +808,7 @@ function mostrar_destino_radicacion($idformato,$iddoc){
 	$array_ejecutores=array();
 	$array_funcionarios=array();
 	if($datos[0]['tipo_destino']==1){
-	    $destino=busca_filtro_tabla("b.nombre,b.iddatos_ejecutor","datos_ejecutor a, ejecutor b","b.idejecutor=a.ejecutor_idejecutor AND a.iddatos_ejecutor IN(".$datos[0]['persona_natural_dest'].")","",$conn);
+	    $destino=busca_filtro_tabla("b.nombre,a.iddatos_ejecutor","datos_ejecutor a, ejecutor b","b.idejecutor=a.ejecutor_idejecutor AND a.iddatos_ejecutor IN(".$datos[0]['persona_natural_dest'].")","",$conn);
         for($i=0;$i<$destino['numcampos'];$i++){
             $array_ejecutores[]=$destino[$i]['iddatos_ejecutor'];
             $nombres.=$destino[$i]['nombre'].'</br>';
