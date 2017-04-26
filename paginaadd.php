@@ -46,9 +46,9 @@ if (@$_REQUEST["enlace"]) {
 } else if ($_REQUEST["x_enlace"] == "") {
 	$documento = busca_filtro_tabla("", "documento", "iddocumento=" . $key, "");
 	if ($documento[0]["tipo_radicado"] != 1 && $documento[0]["tipo_radicado"] != 2) {
-		$x_enlace = "ordenar.php?key=" . $key . "&accion=mostrar";
+		$x_enlace = "ordenar.php?key=" . $key . "&accion=mostrar&mostrar_formato=1";
 	} else {
-		$x_enlace = "ordenar.php?key=" . $key;
+		$x_enlace = "ordenar.php?key=" . $key."&accion=mostrar&mostrar_formato=1";
 	}
 }
 if ($_REQUEST["defecto"]) {
