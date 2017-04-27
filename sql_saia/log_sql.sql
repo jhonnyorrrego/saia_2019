@@ -401,6 +401,6 @@ UPDATE busqueda_componente SET info='Radicado|{*ver_items@iddocumento,numero,fec
 INSERT INTO funciones_formato_accion (idfunciones_formato_accion, idfunciones_formato, accion_idaccion, formato_idformato, momento, estado, orden) VALUES
 (300, 609, 5, 305, 'POSTERIOR', 1, 1);
 ----------------------------
-
-
+UPDATE campos_formato SET acciones=NULL WHERE idcampos_formato=34 AND formato_idformato=2;
+DELETE FROM funciones_formato WHERE nombre_funcion='seleccionar_origen';
 
