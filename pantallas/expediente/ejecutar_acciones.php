@@ -19,19 +19,47 @@ function set_expediente(){
     $retorno->exito=0;
     $retorno->mensaje="Error al guardar Prueba";
     $exito=0;
-    $campos=array("nombre","descripcion","cod_padre","codigo","fecha", "serie_idserie", "codigo_numero", "fondo", "proceso", "fecha_extrema_i", "fecha_extrema_f", "no_unidad_conservacion", "no_folios", "no_carpeta", "soporte", "frecuencia_consulta", "ubicacion", "unidad_admin", "estado_archivo", "estado_cierre","fk_idcaja","notas_transf","agrupador");
-    $valores=array();
-    foreach($campos AS $key=>$campo){
-      if(@$_REQUEST[$campo]){
-        array_push($valores,$_REQUEST[$campo]);
-      }
-      else{
-        array_push($valores,"");
-      }
-    }
-    $sql2="INSERT INTO expediente(".implode(",",$campos).",propietario,tomo_no) VALUES('".implode("','",$valores)."',".usuario_actual("funcionario_codigo").",1)";
+    $campos=array("nombre","cod_padre","codigo","fecha", "serie_idserie", "codigo_numero", "fondo", "proceso", "fecha_extrema_i", "fecha_extrema_f", "no_unidad_conservacion", "no_folios", "no_carpeta", "soporte", "frecuencia_consulta", "ubicacion", "unidad_admin", "estado_archivo", "estado_cierre","fk_idcaja","agrupador","propietario","tomo_no");
+	
+	$array_vacios=array('cod_padre','serie_idserie','soporte','frecuencia_consulta','ubicacion','estado_archivo','estado_cierre','estado_cierre','fk_idcaja','agrupador');
+	for($i=0;$i<count($array_vacios);$i++){
+		if(!@$_REQUEST[$array_vacios[$i]] || @$_REQUEST[$array_vacios[$i]]==''){
+			$_REQUEST[$array_vacios[$i]]=0;
+		}		
+	}
+
+    $sql2="INSERT INTO expediente(".implode(",",$campos).") VALUES 
+		(
+			'".@$_REQUEST['nombre']."',
+			".@$_REQUEST['cod_padre'].",
+			'".@$_REQUEST['codigo']."',
+			".fecha_db_almacenar(@$_REQUEST['fecha'],'Y-m-d').",
+			".@$_REQUEST['serie_idserie'].",
+			'".@$_REQUEST['codigo_numero']."',
+			'".@$_REQUEST['fondo']."',
+			'".@$_REQUEST['proceso']."',
+			".fecha_db_almacenar(@$_REQUEST['fecha_extrema_i'],'Y-m-d').",
+			".fecha_db_almacenar(@$_REQUEST['fecha_extrema_f'],'Y-m-d').",
+			'".@$_REQUEST['no_unidad_conservacion']."',
+			'".@$_REQUEST['no_folios']."',
+			'".@$_REQUEST['no_carpeta']."',
+			".@$_REQUEST['soporte'].",
+			".@$_REQUEST['frecuencia_consulta'].",
+			".@$_REQUEST['ubicacion'].",
+			'".@$_REQUEST['unidad_admin']."',
+			".@$_REQUEST['estado_archivo'].",
+			".@$_REQUEST['estado_cierre'].",
+			".@$_REQUEST['fk_idcaja'].",
+			".@$_REQUEST['agrupador'].",
+			".usuario_actual("funcionario_codigo").",
+			1
+		)	
+    ";
     phpmkr_query($sql2);
     $idexpediente=phpmkr_insert_id();
+	guardar_lob('descripcion','expediente',"idexpediente=".$idexpediente,@$_REQUEST['descripcion'],'texto',$conn,0);
+	guardar_lob('notas_transf','expediente',"idexpediente=".$idexpediente,@$_REQUEST['notas_transf'],'texto',$conn,0);
+	
     $cod_padre=busca_filtro_tabla("cod_arbol","expediente A","A.idexpediente=".$_REQUEST["cod_padre"],"",$conn);
     if($cod_padre["numcampos"]){
     	$codigo_arbol=$cod_padre[0]["cod_arbol"].".".$idexpediente;
@@ -97,19 +125,40 @@ $retorno=new stdClass;
 $retorno->exito=0;
 $retorno->mensaje="Error al guardar";
 $exito=0;
-$campos=array("nombre","descripcion","fecha","fk_idcaja","cod_padre", "codigo_numero", "fondo", "proceso", "fecha_extrema_i", "fecha_extrema_f", "no_unidad_conservacion", "no_folios", "no_carpeta", "soporte", "frecuencia_consulta", "ubicacion", "serie_idserie", "unidad_admin","notas_transf");
-$valores=array();
-$update=array();
-foreach($campos AS $key=>$campo){
-	$update[]=$campo."='".$_REQUEST[$campo]."'";
+$array_vacios=array('cod_padre','serie_idserie','soporte','frecuencia_consulta','ubicacion','estado_archivo','estado_cierre','estado_cierre','fk_idcaja','agrupador');
+for($i=0;$i<count($array_vacios);$i++){
+	if(!@$_REQUEST[$array_vacios[$i]] || @$_REQUEST[$array_vacios[$i]]==''){
+		$_REQUEST[$array_vacios[$i]]=0;
+	}		
 }
+$update=array();
+$update[]=" nombre='".@$_REQUEST['nombre']."' ";
+$update[]=" fecha=".fecha_db_almacenar(@$_REQUEST['fecha'],'Y-m-d');
+$update[]=" fk_idcaja=".@$_REQUEST['fk_idcaja'];
+$update[]=" cod_padre=".@$_REQUEST['cod_padre'];
+$update[]=" codigo_numero='".@$_REQUEST['codigo_numero']."' ";
+$update[]=" fondo='".@$_REQUEST['fondo']."' ";
+$update[]=" proceso='".@$_REQUEST['proceso']."' ";
+$update[]=" fecha_extrema_i=".fecha_db_almacenar(@$_REQUEST['fecha_extrema_i'],'Y-m-d');
+$update[]=" fecha_extrema_f=".fecha_db_almacenar(@$_REQUEST['fecha_extrema_f'],'Y-m-d');
+$update[]=" no_unidad_conservacion='".@$_REQUEST['no_unidad_conservacion']."' ";
+$update[]=" no_folios='".@$_REQUEST['no_folios']."' ";
+$update[]=" no_carpeta='".@$_REQUEST['no_carpeta']."' ";
+$update[]=" soporte=".@$_REQUEST['soporte'];
+$update[]=" frecuencia_consulta=".@$_REQUEST['frecuencia_consulta'];
+$update[]=" ubicacion=".@$_REQUEST['ubicacion'];
+$update[]=" serie_idserie=".@$_REQUEST['serie_idserie'];
+$update[]=" unidad_admin='".@$_REQUEST['unidad_admin']."' ";
+
 
 $antiguo=busca_filtro_tabla("cod_padre","expediente A","A.idexpediente=".$_REQUEST["idexpediente"],"",$conn);
 $antiguo_padre=busca_filtro_tabla("idexpediente,cod_arbol","expediente A","A.idexpediente=".$antiguo[0]["cod_padre"],"",$conn);
 
-$sql2="UPDATE expediente SET ".implode(",",$update)." WHERE idexpediente=".$_REQUEST["idexpediente"];
+$sql2="UPDATE expediente SET ".implode(",",$update)." WHERE idexpediente=".$_REQUEST["idexpediente"]; 
 phpmkr_query($sql2);
 $idexpediente=$_REQUEST["idexpediente"];
+guardar_lob('descripcion','expediente',"idexpediente=".$idexpediente,@$_REQUEST['descripcion'],'texto',$conn,0);
+guardar_lob('notas_transf','expediente',"idexpediente=".$idexpediente,@$_REQUEST['notas_transf'],'texto',$conn,0);
 
 $cod_padre=busca_filtro_tabla("cod_arbol","expediente A","A.idexpediente=".$_REQUEST["cod_padre"],"",$conn);
 if($cod_padre["numcampos"]){
