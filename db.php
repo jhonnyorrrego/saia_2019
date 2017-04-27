@@ -264,6 +264,20 @@ function guardar_lob($campo,$tabla,$condicion,$contenido,$tipo,$conn,$log=1){
     OCIExecute($stmt, OCI_DEFAULT) or print_r(OCIError ($stmt));
     // Fetch the SELECTed row
     OCIFetchInto($stmt,$row,OCI_ASSOC);
+    
+	if(!count($row)){  //soluciona el problema del size() & ya no se necesita el emty_clob() en bd en los campos clob
+		oci_rollback($conn->Conn->conn);
+		oci_free_statement($stmt);
+		
+    	$up_clob="UPDATE ".$tabla." SET ".$campo."=empty_clob() WHERE ".$condicion;
+		$conn->Ejecutar_Sql($up_clob);
+	    $stmt = OCIParse($conn->Conn->conn, $sql) or print_r(OCIError ($stmt));
+	    // Execute the statement using OCI_DEFAULT (begin a transaction)
+	    OCIExecute($stmt, OCI_DEFAULT) or print_r(OCIError ($stmt));
+	    // Fetch the SELECTed row
+	    OCIFetchInto($stmt,$row,OCI_ASSOC);		
+	}    
+    
     if(FALSE ===$row){
       OCIRollback($conn->Conn->conn);
       alerta("No se pudo modificar el campo.");
