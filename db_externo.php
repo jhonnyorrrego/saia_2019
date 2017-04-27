@@ -1,15 +1,13 @@
 <?php
-$max_salida=10; // Previene algun posible ciclo infinito limitando a 10 los ../
-  $ruta_db_superior=$ruta="";
-  while($max_salida>0)
-  {
-  if(is_file($ruta."db.php"))
-  {
-  $ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
-  }
-  $ruta.="../";
-  $max_salida--;
-  }
+$max_salida = 10; // Previene algun posible ciclo infinito limitando a 10 los ../
+$ruta_db_superior = $ruta = "";
+while($max_salida > 0) {
+	if (is_file($ruta . "db.php")) {
+		$ruta_db_superior = $ruta; // Preserva la ruta superior encontrada
+	}
+	$ruta .= "../";
+	$max_salida--;
+}
 
 include_once("db.php");
 function listar_tablas_externa($conn2=NULL,$tabla=NULL){
@@ -17,7 +15,7 @@ if($conn2->Conn->Motor=="Oracle"){
   $sql2="select TABLE_NAME from user_tables WHERE 1=1";
   if($tabla){
     $sql2.=" AND TABLE_NAME='".strtoupper($tabla)."'";
-  } 
+  }
 }
 if($conn2->Conn->Motor=="MySql"){
   $sql2="SELECT table_name, table_type FROM information_schema.tables WHERE table_schema =  '".$conn2->Conn->Db."' AND table_type='BASE TABLE'";
@@ -28,13 +26,13 @@ if($conn2->Conn->Motor=="MySql"){
 $sql2.=' ORDER BY table_name ';
 //print_r($sql2);
 //echo('<br>');
-$listado=$conn2->Ejecutar_Sql($sql2); 
+$listado=$conn2->Ejecutar_Sql($sql2);
 $lista_tablas["tablas"]=array();
 $lista_tablas["cantidad"]=0;
 while($fila=phpmkr_fetch_array_externo($listado,$conn2)){
   array_push($lista_tablas["tablas"],$fila[0]);
   $lista_tablas["cantidad"]++;
-}  
+}
 return($lista_tablas);
 }
 function listar_campos_tabla_externa($tabla=NULL,$conn2=NULL,$campo=Null){
@@ -43,7 +41,7 @@ function listar_campos_tabla_externa($tabla=NULL,$conn2=NULL,$campo=Null){
    if($conn2->Conn->Motor=="MySql"){
       $sql2="SELECT COLUMN_NAME AS Field, COLUMN_TYPE AS Type, IS_NULLABLE AS Null_, COLUMN_DEFAULT AS Default_ FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '".$tabla."' AND table_schema = '".$conn2->Conn->Db."'";
       if($campo)
-        $sql2.=" AND column_name LIKE '".$campo."'";      
+        $sql2.=" AND column_name LIKE '".$campo."'";
       $sql2.=' ORDER BY Field';
       $datos_tabla=$conn2->Ejecutar_Sql($sql2);
     }
@@ -52,7 +50,7 @@ function listar_campos_tabla_externa($tabla=NULL,$conn2=NULL,$campo=Null){
       if($campo)
         $sql2.=" AND column_name ='".strtoupper($campo)."'";
       $sql2.=' ORDER BY Field';
-      $datos_tabla=$conn2->Ejecutar_Sql($sql2); 
+      $datos_tabla=$conn2->Ejecutar_Sql($sql2);
     }
    $lista_campos["campos"]=array();
    $lista_campos["cantidad"]=0;
@@ -63,75 +61,60 @@ function listar_campos_tabla_externa($tabla=NULL,$conn2=NULL,$campo=Null){
            $fila[1].='('.$fila[4].')';
           else
            $fila[1].='('.$fila[5].')';
-     }  
+     }
    }
        array_push($lista_campos["campos"],array($fila[0],$fila[1],$fila[2],$fila[3]));
        $lista_campos["cantidad"]++;
-      } 
-   return($lista_campos);   
-}  
-function guardar_lob_externa($campo,$tabla,$condicion,$contenido,$tipo,$conn2,$log=1){ 
-  $resultado=TRUE;
-  
-  if(MOTOR=="Oracle")
-    {$sql = "SELECT
-           $campo
-        FROM
-           ".DB.".$tabla
-        WHERE
-           $condicion
-        FOR UPDATE ";
+      }
+   return($lista_campos);
+}
 
-      $stmt = oci_parse($conn2->Conn->conn, $sql);
-      // Execute the statement using OCI_DEFAULT (begin a transaction)
-      oci_execute($stmt, OCI_DEFAULT) or print_r(OCIError ($stmt));
-      
-      // Fetch the SELECTed row
-      if ( FALSE === ($row = oci_fetch_assoc($stmt) ) ) 
-        {
-         oci_rollback($conn2->Conn->conn);
-         alerta("No se pudo modificar el campo.");
-         echo $sql;
-         die();
-         //die("tabla:$tabla  campo:$campo condicion:$condicion");
-         $resultado=FALSE;
-        }
-       else
-      {// Now save a value to the LOB
-      if($tipo=="texto")//para campos clob como en los formatos
-        { //echo strtoupper($campo)."<br />";
-        if($row[strtoupper($campo)]->size()>0)
-            $contenido_actual=htmlspecialchars_decode($row[strtoupper($campo)]->read($row[strtoupper($campo)]->size()));
-         else
-            $contenido_actual="";  
-            if($contenido_actual<>$contenido)
-           { if ($row[strtoupper($campo)]->size()>0 && !$row[strtoupper($campo)]->truncate() ) 
-                {
-                  oci_rollback($conn2->Conn->conn);
-                  alerta("No se pudo modificar el campo.");
-                  $resultado=FALSE;
-                }
-            else    
-               {$contenido=limpia_tabla($contenido);
-                if ( !$row[strtoupper($campo)]->save(trim((($contenido))))) 
-                  {  oci_rollback($conn2->Conn->conn);
-                     $resultado=FALSE;
-                  }
-                else 
-                  oci_commit($conn2->Conn->conn);  
-                //*********** guardo el log en la base de datos **********************
-                preg_match("/.*=(.*)/", strtolower($condicion), $resultados);
-                $llave=trim($resultados[1]);
+function guardar_lob_externa($campo, $tabla, $condicion, $contenido, $tipo, $conn2, $log = 1) {
+	$resultado = TRUE;
 
-                if($log)
-                  {$sqleve="INSERT INTO ".DB.".evento(funcionario_codigo, fecha, evento, tabla_e, registro_id, estado) VALUES('".usuario_actual("funcionario_codigo")."',to_date('".date('Y-m-d H:i:s')."','YYYY-MM-DD HH24:MI:SS') ,'MODIFICAR', '$tabla', $llave, '0')";
-                  
-                   $conn2->Ejecutar_Sql($sqleve);
-                   $registro=$conn2->Ultimo_Insert();
-                   $texto_ant="DECLARE
+	if ($conn2->Conn->Motor == "Oracle") {
+		$sql = "SELECT $campo FROM " . $conn2->Conn->Db . "$tabla WHERE $condicion FOR UPDATE ";
+		$stmt = OCIParse($conn2->Conn->conn, $sql) or print_r(OCIError($stmt));
+		// Execute the statement using OCI_DEFAULT (begin a transaction)
+		OCIExecute($stmt, OCI_DEFAULT) or print_r(OCIError($stmt));
+		// Fetch the SELECTed row
+		OCIFetchInto($stmt, $row, OCI_ASSOC);
+		if (FALSE === $row) {
+			OCIRollback($conn2->Conn->conn);
+			alerta("No se pudo modificar el campo.");
+			die($sql);
+			$resultado = FALSE;
+		} else { // Now save a value to the LOB
+			if (!empty($row) && $tipo == "texto") { // para campos clob como en los formatos
+				if ($row[strtoupper($campo)]->size() > 0)
+					$contenido_actual = htmlspecialchars_decode($row[strtoupper($campo)]->read($row[strtoupper($campo)]->size()));
+				else
+					$contenido_actual = "";
+				if ($contenido_actual != $contenido) {
+					if ($row[strtoupper($campo)]->size() > 0 && !$row[strtoupper($campo)]->truncate()) {
+						oci_rollback($conn2->Conn->conn);
+						alerta("No se pudo modificar el campo.");
+						$resultado = FALSE;
+					} else {
+						$contenido = limpia_tabla($contenido);
+						if (!$row[strtoupper($campo)]->save(trim((($contenido))))) {
+							oci_rollback($conn2->Conn->conn);
+							$resultado = FALSE;
+						} else
+							oci_commit($conn2->Conn->conn);
+						// *********** guardo el log en la base de datos **********************
+						preg_match("/.*=(.*)/", strtolower($condicion), $resultados);
+						$llave = trim($resultados[1]);
+
+						if ($log) {
+							$sqleve = "INSERT INTO " . $conn2->Conn->Db . ".evento(funcionario_codigo, fecha, evento, tabla_e, registro_id, estado) VALUES('" . usuario_actual("funcionario_codigo") . "',to_date('" . date('Y-m-d H:i:s') . "','YYYY-MM-DD HH24:MI:SS') ,'MODIFICAR', '$tabla', $llave, '0')";
+
+							$conn2->Ejecutar_Sql($sqleve);
+							$registro = $conn2->Ultimo_Insert();
+							$texto_ant = "DECLARE
 cont$   CLOB;
 BEGIN
-    UPDATE $tabla SET $campo=EMPTY_CLOB() 
+    UPDATE $tabla SET $campo=EMPTY_CLOB()
     WHERE $condicion;
     SELECT $campo
          INTO cont$
@@ -139,12 +122,12 @@ BEGIN
         WHERE $condicion
    FOR UPDATE;
    DBMS_LOB.WRITE (cont$, DBMS_LOB.getlength('$contenido_actual'), 1, '$contenido_actual');
-COMMIT;   
+COMMIT;
 END";
-                   $texto_sig="DECLARE
+							$texto_sig = "DECLARE
 cont$   CLOB;
 BEGIN
-UPDATE $tabla SET $campo=EMPTY_CLOB() 
+UPDATE $tabla SET $campo=EMPTY_CLOB()
 WHERE $condicion;
 SELECT $campo
      INTO cont$
@@ -153,69 +136,62 @@ SELECT $campo
 FOR UPDATE;
 DBMS_LOB.WRITE (cont$, DBMS_LOB.getlength('$contenido'), 1, '$contenido');
 COMMIT;
-END";    
-                   guardar_lob('codigo_sql','evento',"idevento=".$registro,$texto_sig,'texto',$conn2,0);
-                   guardar_lob('detalle','evento',"idevento=".$registro,$texto_ant,'texto',$conn2,0);
-                   $archivo="$registro|||".usuario_actual("funcionario_codigo")."|||".date('Y-m-d H:i:s')."|||MODIFICAR|||$tabla|||0|||$texto_ant|||$llave|||$texto_sig";
-                   evento_archivo($archivo);
-                   //*********************************
-                
-                }  
-              }
-           }  
+END";
+							guardar_lob('codigo_sql', 'evento', "idevento=" . $registro, $texto_sig, 'texto', $conn2, 0);
+							guardar_lob('detalle', 'evento', "idevento=" . $registro, $texto_ant, 'texto', $conn2, 0);
+							$archivo = "$registro|||" . usuario_actual("funcionario_codigo") . "|||" . date('Y-m-d H:i:s') . "|||MODIFICAR|||$tabla|||0|||$texto_ant|||$llave|||$texto_sig";
+							evento_archivo($archivo);
+							// *********************************
+						}
+					}
+				}
+			} elseif ($tipo == "archivo") { // para campos blob como la firma
+			                                // echo ($campo.$tabla.$condicion.$contenido);
+				$contenido = addslashes($contenido);
+				if (!$row[strtoupper($campo)]->truncate()) {
+					oci_rollback($conn2->Conn->conn);
+					alerta("No se pudo modificar el campo.");
+					$resultado = FALSE;
+				}
+				if (!$row[strtoupper($campo)]->save($contenido)) {
+					oci_rollback($conn2->Conn->conn);
+					alerta("No se pudo modificar el campo.");
+					$resultado = FALSE;
+				} else
+					oci_commit($conn2->Conn->conn);
+			}
+			oci_free_statement($stmt);
+			$row[strtoupper($campo)]->free();
+		}
+	}
+	if ($conn2->Conn->Motor == "MySql") {
+		if ($tipo == "archivo") {
+			$sql = "update $tabla set $campo='" . addslashes($contenido) . "' where $condicion";
+			mysqli_query($conn2->Conn->conn, $sql);
+			// TODO verificar resultado de la insecion $resultado=FALSE;
+		} elseif ($tipo == "texto") {
+			$contenido = codifica_encabezado(limpia_tabla($contenido));
+			$sql = "update $tabla set $campo='" . addslashes(stripslashes($contenido)) . "' where $condicion";
+			if ($log) {
+				preg_match("/.*=(.*)/", strtolower($condicion), $resultados);
+				$llave = trim($resultados[1]);
+				$anterior = busca_filtro_tabla("$campo", "$tabla", "$condicion", "", $conn2);
+				$sql_anterior = "update $tabla set $campo='" . addslashes(stripslashes($anterior[0][0])) . "' where $condicion";
 
-        }
-      elseif($tipo=="archivo")//para campos blob como la firma
-        {//echo ($campo.$tabla.$condicion.$contenido);
-        $contenido=addslashes($contenido);
-         if ( !$row[strtoupper($campo)]->truncate() ) 
-            {
-              oci_rollback($conn2->Conn->conn);
-              alerta("No se pudo modificar el campo.");
-              $resultado=FALSE;
-            }
-         if ( !$row[strtoupper($campo)]->save($contenido)) 
-           { oci_rollback($conn2->Conn->conn);
-            alerta("No se pudo modificar el campo.");
-             $resultado=FALSE;
-           }  
-         else 
-           oci_commit($conn2->Conn->conn);  
-  
-        }      
-      oci_free_statement($stmt);
-      $row[strtoupper($campo)]->free();
-     } 
-    }
- if(MOTOR=="MySql")
-    {if($tipo=="archivo")
-       {$sql="update $tabla set $campo='".addslashes($contenido)."' where $condicion";
-        mysqli_query($conn2->Conn->conn, $sql);
-        // TODO verificar resultado de la insecion $resultado=FALSE; 
-       }
-     elseif($tipo=="texto")
-        {$contenido=codifica_encabezado(limpia_tabla($contenido));
-         $sql="update $tabla set $campo='".addslashes(stripslashes($contenido))."' where $condicion";
-        if($log)
-            {preg_match("/.*=(.*)/", strtolower($condicion), $resultados);
-             $llave=trim($resultados[1]);
-             $anterior=busca_filtro_tabla("$campo","$tabla","$condicion","",$conn2);
-             $sql_anterior="update $tabla set $campo='".addslashes(stripslashes($anterior[0][0]))."' where $condicion";
-
-             $sqleve="INSERT INTO ".DB.".evento(funcionario_codigo, fecha, evento, tabla_e, registro_id, estado,detalle,codigo_sql) VALUES('".usuario_actual("funcionario_codigo")."','".date('Y-m-d H:i:s')."','MODIFICAR', '$tabla', $llave, '0','".addslashes($sql_anterior)."','".addslashes($sql)."')"; 
-             $conn2->Ejecutar_Sql($sqleve);
-             $registro=$conn2->Ultimo_Insert();
-             if($registro)
-               {
-                $archivo="$registro|||".usuario_actual("funcionario_codigo")."|||".date('Y-m-d H:i:s')."|||MODIFICAR|||$tabla|||0|||".addslashes($sql_anterior)."|||$llave|||".addslashes($sql);
-                evento_archivo($archivo);
-               }
-            }         
-         mysqli_query($conn2->Conn->conn, $sql) or die(mysqli_error($conn2->Conn->conn));
-        }
-    }
- return($resultado);   
+				$sqleve = "INSERT INTO " . $conn2->Conn->Db . ".evento(funcionario_codigo, fecha, evento, tabla_e, registro_id, estado,detalle,codigo_sql) VALUES('" . usuario_actual("funcionario_codigo") . "','" . date('Y-m-d H:i:s') . "','MODIFICAR', '$tabla', $llave, '0','" . addslashes($sql_anterior) . "','" . addslashes($sql) . "')";
+				$conn2->Ejecutar_Sql($sqleve);
+				$registro = $conn2->Ultimo_Insert();
+				if ($registro) {
+					$archivo = "$registro|||" . usuario_actual("funcionario_codigo") . "|||" . date('Y-m-d H:i:s') . "|||MODIFICAR|||$tabla|||0|||" . addslashes($sql_anterior) . "|||$llave|||" . addslashes($sql);
+					evento_archivo($archivo);
+				}
+			}
+			mysqli_query($conn2->Conn->conn, $sql) or die(mysqli_error($conn2->Conn->conn));
+		}
+	}
+	return ($resultado);
 }
+
 /*
 <Clase>
 <Nombre>phpmkr_db_connect
@@ -278,148 +254,35 @@ function phpmkr_db_close_externo($conn2)
 <Pre-condiciones>
 <Post-condiciones>
 */
-function phpmkr_query_externo($strsql,$conn2){ 
-if(!get_magic_quotes_gpc()) // SI NO ESTAN ACTIVADAS LAS MAGIC QUOTES DE PHP ESCAPA LA SECUENCIA SQL
-    $strsql=stripslashes($strsql);
-  $rs=Null;
-  if($conn2){ 
-  $sqleve="";
-  $sql = trim($strsql);
-  $sql = str_replace(" =","=",$sql);
-  $sql = str_replace("= ","=",$sql);
-  $accion = strtoupper(substr($sql,0,strpos($sql,' '))); 
-  $llave=0;  
-  $tabla = ""; 
-  $string_detalle="";
-  
-  if ($accion<>"SELECT")
-   $func = usuario_actual("funcionario_codigo");
-  else
-    $rs=$conn2->Ejecutar_Sql($strsql);
-  $sqleve=""; 
-  
- switch($accion)
-  {
-    case("SELECT"):
-      $strsql=htmlspecialchars_decode((($strsql)));
-    break;
-    /*case("INSERT"):
-       $values=substr($strsql,strpos("VALUES",strtoupper($strsql)+6));
-       
-       $rs=$conn->Ejecutar_Sql(htmlspecialchars_decode((($strsql))));
-       
-       $llave = $conn->Ultimo_Insert();
-      // die("<br />$strsql<br />llave:".$llave);
-       preg_match("/insert into (\w*\.)*(\w+)/", strtolower($strsql), $resultados);
-       if(isset($resultados[2]))
-       $tabla=$resultados[2];
-       else
-         {preg_match("/insert all into (\w*\.)*(\w+)/", strtolower($strsql), $resultados);
-          if(isset($resultados[2]))
-            $tabla=$resultados[2];
-          else
-            break;  
-         }
-         
-       //guardo el evento
-       $sqleve="INSERT INTO ".DB.".evento(funcionario_codigo, fecha, evento, tabla_e, registro_id, estado) VALUES('".$func."',".fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s').",'ADICIONAR', '$tabla', $llave, '0')";  
-       //die($sqleve);
-       $conn->Ejecutar_Sql($sqleve);
-       $registro=$conn->Ultimo_Insert();
-      
-       if($registro)
-       {
-       guardar_lob('codigo_sql','evento',"idevento=".$registro,$strsql,'texto',$conn,0);
-       $archivo="$registro|||$func|||".date('Y-m-d H:i:s')."|||ADICIONAR|||$tabla|||0|||NULL|||$llave|||$strsql";
-       evento_archivo($archivo);
-       }
-      break; 
-    case('UPDATE'):
-       preg_match("/update (\w*\.)*(\w+)/", strtolower($strsql), $resultados);
-       $tabla=$resultados[2];
-       preg_match("/where (.+)=(.*)/", strtolower($strsql), $resultados);
-       $llave=trim($resultados[2]);
-       $campo_llave=$resultados[1];
-       $detalle=busca_filtro_tabla("",$tabla,$campo_llave."=".$llave,"",$conn);
-                  
-       $rs=$conn->Ejecutar_Sql(htmlspecialchars_decode((($strsql)))); 
-       $detalle2=busca_filtro_tabla("",$tabla,$campo_llave."=".$llave,"",$conn);
-       //************ miro cuales campos cambiaron en la tabla  ****************
-       $nombres_campos=array();
-       if($detalle["numcampos"])
-          $nombres_campos=array_keys($detalle[0]);
-       $cambios=array();
-       if($detalle2["numcampos"]&&$detalle["numcampos"])
-       {
-        for($i=0;$i<(count($detalle[0])/2);$i++)
-           {
-            if($detalle[0][$i]<>$detalle2[0][$i])
-              $cambios[]=$nombres_campos[($i*2)+1]."='".codifica_encabezado(html_entity_decode(htmlspecialchars_decode($detalle[0][$i])))."'";          
-           }
-       }    
-       $diferencias="update $tabla set ".implode(", ",$cambios)." where ".$campo_llave."=".$llave;    
-      
-       //guardo el evento
-       if(count($cambios))    
-          {if(!is_numeric($llave))
-              $llave=$detalle[0]["id".$tabla];
-           $sqleve="INSERT INTO ".DB.".evento(funcionario_codigo, fecha, evento, tabla_e, registro_id, estado) VALUES('".$func."',".fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s').",'MODIFICAR', '$tabla', ".intval($llave).", '0')"; 
+function phpmkr_query_externo($strsql, $conn2) {
+	if (!get_magic_quotes_gpc()) // SI NO ESTAN ACTIVADAS LAS MAGIC QUOTES DE PHP ESCAPA LA SECUENCIA SQL
+		$strsql = stripslashes($strsql);
+	$rs = Null;
+	if ($conn2) {
+		$sqleve = "";
+		$sql = trim($strsql);
+		$sql = str_replace(" =", "=", $sql);
+		$sql = str_replace("= ", "=", $sql);
+		$accion = strtoupper(substr($sql, 0, strpos($sql, ' ')));
+		$llave = 0;
+		$tabla = "";
+		$string_detalle = "";
 
-           $conn->Ejecutar_Sql($sqleve);
+		if ($accion != "SELECT") {
+			$func = usuario_actual("funcionario_codigo");
+		}
+		$rs = $conn2->Ejecutar_Sql($strsql);
+		$sqleve = "";
 
-           $registro=$conn->Ultimo_Insert();
-           //die("registro:$registro");
-           if($registro)
-           {
-            guardar_lob('codigo_sql','evento',"idevento=".$registro,$strsql,'texto',$conn,0);
-            guardar_lob('detalle','evento',"idevento=".$registro,$diferencias,'texto',$conn,0);
-            $archivo="$registro|||$func|||".date('Y-m-d H:i:s')."|||MODIFICAR|||$tabla|||0|||$diferencias|||$llave|||$strsql";
-            evento_archivo($archivo);
-           }
-          }            
-      break;  
-    case('DELETE'):
-       preg_match("/delete from (\w*\.)*(\w+)/", strtolower($strsql), $resultados);
-       $tabla=$resultados[2];
-       preg_match("/where (.+)=(.*)/", strtolower($strsql), $resultados);
-       $llave=trim($resultados[2]);
-       $campo_llave=$resultados[1];
-       $detalle=busca_filtro_tabla("",$tabla,$campo_llave."=".$llave,"",$conn);
-       $rs=$conn->Ejecutar_Sql(htmlspecialchars_decode((($strsql)))); 
-       
-       if($detalle["numcampos"]>0)
-         {$nombres_campos=array_keys($detalle[0]);
-          $datos1=array();
-          $datos2=array();
-          for($i=0;$i<(count($detalle[0])/2);$i++)
-             {
-              if($detalle[0][$i]<>$detalle2[0][$i])
-                {$datos1[]=$nombres_campos[($i*2)+1];
-                 $datos2[]="'".codifica_encabezado(html_entity_decode(htmlspecialchars_decode($detalle[0][$i])))."'";     
-                }     
-             }         
-          $string_detalle="insert into $tabla(".implode(",",$datos1).") values(".implode(",",$datos2).")";
-          
-          $sqleve="INSERT INTO ".DB.".evento(funcionario_codigo, fecha, evento, tabla_e, registro_id, estado) VALUES('".$func."',".fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s').",'ELIMINAR', '$tabla', $llave, '0')";
-          $conn->Ejecutar_Sql($sqleve);
-          $registro=$conn->Ultimo_Insert();
-          if($registro)
-          {
-           guardar_lob('codigo_sql','evento',"idevento=".$registro,$strsql,'texto',$conn,0);
-           guardar_lob('detalle','evento',"idevento=".$registro,$string_detalle,'texto',$conn,0);
-           $archivo="$registro|||$func|||".date('Y-m-d H:i:s')."|||ELIMINAR|||$tabla|||0|||$string_detalle|||$llave|||$strsql";
-           evento_archivo($archivo);
-          } 
-         }    
-     break; 
-   default:
-   $rs=$conn->Ejecutar_Sql($strsql);
-   break;  */ 
-  }  
-  if ($accion<>"SELECT") 
-    phpmkr_free_result_externo($rs);
-   return $rs; 
-  }
+		switch ($accion) {
+			case ("SELECT") :
+				$strsql = htmlspecialchars_decode((($strsql)));
+				break;
+		}
+		if ($accion != "SELECT")
+			phpmkr_free_result_externo($rs);
+		return $rs;
+	}
 }
 /*
 <Clase>
@@ -432,7 +295,7 @@ if(!get_magic_quotes_gpc()) // SI NO ESTAN ACTIVADAS LAS MAGIC QUOTES DE PHP ESC
 <Pre-condiciones>
 <Post-condiciones>
 */
-function phpmkr_num_fields_externo($rs,$conn2){ 
+function phpmkr_num_fields_externo($rs,$conn2){
  return($conn2->Numero_Campos($rs));
 }
 
@@ -447,7 +310,7 @@ function phpmkr_num_fields_externo($rs,$conn2){
 <Pre-condiciones>
 <Post-condiciones>
 */
-function phpmkr_field_type_externo($rs,$pos,$conn2){ 
+function phpmkr_field_type_externo($rs,$pos,$conn2){
  return($conn2->Tipo_Campo($rs,$pos));
 }
 
@@ -463,7 +326,7 @@ function phpmkr_field_type_externo($rs,$pos,$conn2){
 <Post-condiciones>
 */
 
-function phpmkr_field_name_externo($rs,$pos,$conn2){ 
+function phpmkr_field_name_externo($rs,$pos,$conn2){
  return($conn2->Nombre_Campo($rs,$pos));
 }
 
@@ -484,11 +347,11 @@ function phpmkr_num_rows_externo($rs,$conn2){
       if(!$rs&&$conn2->res)
        $rs = $conn2->res;
      return $conn2->Numero_Filas($rs);
-    } 
+    }
   else{
      alerta("Error en numero de filas.".$rs->sql);
      return FALSE;
-  }      
+  }
 }
 
 /*
@@ -508,11 +371,11 @@ function phpmkr_fetch_array_externo($rs,$conn2){
        $rs = $conn2->res;
        $retorno=$conn2->sacar_fila($rs);
      return $retorno;
-    } 
+    }
   else{
      alerta("Error en capturar resultado en arreglo.".$rs->sql);
      return FALSE;
-  }      
+  }
 }
 
 /*
@@ -533,11 +396,11 @@ function phpmkr_fetch_row_externo($rs,$conn2){
        $rs = $conn2->res;
        $retorno=$conn2->sacar_fila($rs);
      return $retorno;
-    } 
+    }
   else{
      alerta("Error en capturar resultado en arreglo.".$rs->sql);
      return FALSE;
-  }      
+  }
 
 }
 
@@ -556,7 +419,7 @@ function phpmkr_free_result_externo($rs,$conn2){
  if($conn2->motor=="MySql")
       @mysqli_free_result($conn2->res);
  else if($conn2->motor=="Oracle")
-    @OCIFreeStatement($conn2->res);   
+    @OCIFreeStatement($conn2->res);
 }
 
 /*
@@ -579,7 +442,7 @@ function phpmkr_free_result_externo($rs,$conn2){
   else{
      alerta("Error al buscar la ultima insercion.".$rs->sql);
      return FALSE;
-  }      
+  }
 } */
 
 /*
@@ -600,8 +463,8 @@ function phpmkr_error_externo($conn2){
      }
  else if($conn2->motor=="Oracle")
   {if($conn2->error<>"")
-      echo  ($conn2->error["message"]." en \"".$conn2->consulta."\"");   
-  } 
+      echo  ($conn2->error["message"]." en \"".$conn2->consulta."\"");
+  }
 }
 
 
@@ -630,7 +493,7 @@ function busca_filtro_tabla_externo($campos,$tabla,$filtro,$orden,$conn2){
   if($campos)
     $sql.=$campos;
   else $sql.="*";
-  if($tabla)      
+  if($tabla)
     $sql.=" FROM ".$tabla;
 
   if($filtro)
@@ -638,7 +501,7 @@ function busca_filtro_tabla_externo($campos,$tabla,$filtro,$orden,$conn2){
   if($orden){
     if(substr($orden,0,5)=="GROUP")
       $sql.=" ".$orden;
-    else  
+    else
       $sql.=" ORDER BY ".$orden;
   }
   $sql=htmlspecialchars_decode((($sql)));
@@ -647,7 +510,7 @@ function busca_filtro_tabla_externo($campos,$tabla,$filtro,$orden,$conn2){
   $retorno["sql"]=$sql;
   for($i=0;$temp;$temp=phpmkr_fetch_array_externo($rs,$conn2),$i++)
     array_push($retorno,$temp);
-  $retorno["numcampos"]=$i;  
+  $retorno["numcampos"]=$i;
   phpmkr_free_result_externo($rs,$conn2);
   return($retorno);
 }
@@ -681,18 +544,18 @@ function busca_filtro_tabla_limit_externo($campos,$tabla,$filtro,$orden,$inicio,
 
   if($filtro)
     $sql.=" WHERE ".str_replace('"',"'",$filtro);
-  if($orden){ 
+  if($orden){
       $sql.=$orden;
   }
   $sql=htmlspecialchars_decode((($sql)));
-  $rs=$conn2->Ejecutar_Limit($sql,$inicio,($inicio+$registros),$conn2);  
+  $rs=$conn2->Ejecutar_Limit($sql,$inicio,($inicio+$registros),$conn2);
   $temp=phpmkr_fetch_array_externo($rs,$conn2);
 
   $retorno["sql"]=$sql;
-  
+
   for($i=0;$temp;$temp=phpmkr_fetch_array_externo($rs,$conn2),$i++)
     array_push($retorno,$temp);
-  $retorno["numcampos"]=$i;  
+  $retorno["numcampos"]=$i;
   phpmkr_free_result_externo($rs,$conn2);
   return($retorno);
 }
@@ -703,12 +566,12 @@ function ejecuta_filtro_tabla_externo($sql2,$conn2){
   $temp=phpmkr_fetch_array_externo($rs,$conn2);
   $i=0;
   if($temp){
-    array_push($retorno,$temp); 
+    array_push($retorno,$temp);
     $i++;
-  }  
+  }
   for($temp;$temp=phpmkr_fetch_array_externo($rs,$conn2);$i++)
    array_push($retorno,$temp );
-  $retorno["numcampos"]=$i; 
+  $retorno["numcampos"]=$i;
   phpmkr_free_result($rs,$conn2);
   return ($retorno);
 }
@@ -730,14 +593,14 @@ function ejecuta_filtro_tabla_externo($sql2,$conn2){
 { global $conn;
   $sql = trim($strsql);
   $sql = str_replace('','',$sql);
-  $accion = strtoupper(substr($sql,0,strpos($sql,' ')));    
-  $tabla = ""; 
+  $accion = strtoupper(substr($sql,0,strpos($sql,' ')));
+  $tabla = "";
   $llave=0; $string_detalle="";
   if ($accion<>"SELECT")
    $func = usuario_actual("funcionario_codigo");
-   //echo $strsql;   
+   //echo $strsql;
   $strsql=htmlspecialchars_decode((($strsql)));
-  //echo "<br />".$strsql;    
+  //echo "<br />".$strsql;
   $rs = $conn->Ejecutar_Sql_Noresult($strsql);
     return $rs;
 }  */
@@ -756,12 +619,12 @@ function ejecuta_filtro_tabla_externo($sql2,$conn2){
 /*function ejecuta_sql($sql,$conn2){
 phpmkr_query_externo($sql,$conn2);
 $id=phpmkr_insert_id();
-if($id>0){ 
+if($id>0){
   return($id);
-} 
+}
 else
-  return false;  
-phpmkr_free_result();      
+  return false;
+phpmkr_free_result();
 }
 */
 /*
@@ -783,56 +646,14 @@ $resultado["numcampos"]=@phpmkr_num_rows($rs,$conn2);
 if($resultado["numcampos"]){
   $resultado=@phpmkr_fetch_array($rs,$conn2);
   $resultado["numcampos"]=@phpmkr_num_rows($rs,$conn2);
-}   
+}
 return($resultado);
 }
 /*
 <Clase>
-<Nombre>fecha_db 
-<Parametros> $formato : formato de la fecha a obtener en fromato tipo PHP; 
-<Responsabilidades> Retornar la cadena adecuada dependiendo del motor para las consultas 
-de tipo select
-<Notas>
-<Excepciones>
-<Salida>cadena lista para compementar las secuecias  ejem  TO_CHAR(fecha_ini,'DD-MM-YYYY')
-<Pre-condiciones>
-<Post-condiciones>
-*/ 
-function fecha_db_externo($conn2,$campo,$formato = NULL){ 
-if(!$formato)
-  $formato="Y-m-d";  // formato por defecto php
-if($conn2->motor=="Oracle"){   
-  $reemplazos=array('d'=>'DD','m'=>'MM','y'=>'YY','Y'=>'YYYY','h'=>'HH','H'=>'HH24','i'=>'MI','s'=>'SS','M'=>'MON','yyyy'=>'YYYY'  );
-  $resfecha=$formato;
-  foreach ($reemplazos as $ph => $mot){ 
-    $resfecha=ereg_replace("^$ph([-/:])", "$mot\\1", $resfecha);
-    $resfecha=ereg_replace("( )$ph([-/:])", "\\1$mot\\2", $resfecha);
-    $resfecha=ereg_replace("^$ph", "$mot", $resfecha);
-    $resfecha=ereg_replace("([-/:])$ph([-/:])", "\\1$mot\\2", $resfecha);
-    $resfecha=ereg_replace("([-/:])$ph$", "\\1$mot", $resfecha);
-    $resfecha=ereg_replace("$ph( )", "$mot\\1", $resfecha); // espacio entre fecha y hora            
-  }          
-} 
-elseif($conn2->motor=="MySql"){        
-  $reemplazos=array('d'=>'%d','m'=>'%m','y'=>'%y','Y'=>'%Y','h'=>'%h','H'=>'%H','i'=>'%i','s'=>'%s','M'=>'%b','yyyy'=>'%Y');
-  $resfecha=$formato;
-  foreach ($reemplazos as $ph => $mot){ 
-    $resfecha=ereg_replace("^$ph([-/:])", "$mot\\1", $resfecha);
-    $resfecha=ereg_replace("( )$ph([-/:])", "\\1$mot\\2", $resfecha);
-    $resfecha=ereg_replace("^$ph", "$mot", $resfecha);
-    $resfecha=ereg_replace("([-/:])$ph([-/:])", "\\1$mot\\2", $resfecha);
-    $resfecha=ereg_replace("([-/:])$ph$", "\\1$mot", $resfecha);
-    $resfecha=ereg_replace("$ph( )", "$mot\\1", $resfecha); // espacio entre fecha y hora
-  } 
-  $fsql="DATE_FORMAT($campo,'$resfecha')";
-}
-return $fsql;       
-} // Fin Funcion fecha_db_obtener
-/*
-<Clase>
-<Nombre>fecha_db_obtener
-<Parametros> campo : Campo de la tabla con la fecha a obrener; $formato : formato de la fecha a obtener en fromato tipo PHP; 
-<Responsabilidades> Retornar la cadena adecuada dependiendo del motor para las consultas 
+<Nombre>fecha_db
+<Parametros> $formato : formato de la fecha a obtener en fromato tipo PHP;
+<Responsabilidades> Retornar la cadena adecuada dependiendo del motor para las consultas
 de tipo select
 <Notas>
 <Excepciones>
@@ -840,38 +661,80 @@ de tipo select
 <Pre-condiciones>
 <Post-condiciones>
 */
- 
-function fecha_db_obtener_externo( $conn2, $campo, $formato = NULL){ 
+function fecha_db_externo($conn2,$campo,$formato = NULL){
 if(!$formato)
   $formato="Y-m-d";  // formato por defecto php
-if($conn2->motor=="Oracle"){   
-  $reemplazos=array('Y'=>'YYYY','yyyy'=>'YYYY','d'=>'DD','M'=>'MON','m'=>'MM','y'=>'YY','H'=>'HH24','h'=>'HH','i'=>'MI','s'=>'SS'  );
+if($conn2->motor=="Oracle"){
+  $reemplazos=array('d'=>'DD','m'=>'MM','y'=>'YY','Y'=>'YYYY','h'=>'HH','H'=>'HH24','i'=>'MI','s'=>'SS','M'=>'MON','yyyy'=>'YYYY'  );
   $resfecha=$formato;
   foreach ($reemplazos as $ph => $mot){
-    $resfecha=ereg_replace("$ph", "$mot", $resfecha);
-  } 
-  $fsql="TO_CHAR($campo,'$resfecha')";     
-} 
-elseif($conn2->motor=="MySql"){  
-  $reemplazos=array('d'=>'%d','m'=>'%m','y'=>'%y','Y'=>'%Y','h'=>'%h','H'=>'%H','i'=>'%i','s'=>'%s','M'=>'%b','yyyy'=>'%Y');
-  $resfecha=$formato;
-  foreach ($reemplazos as $ph => $mot){ 
     $resfecha=ereg_replace("^$ph([-/:])", "$mot\\1", $resfecha);
     $resfecha=ereg_replace("( )$ph([-/:])", "\\1$mot\\2", $resfecha);
     $resfecha=ereg_replace("^$ph", "$mot", $resfecha);
     $resfecha=ereg_replace("([-/:])$ph([-/:])", "\\1$mot\\2", $resfecha);
     $resfecha=ereg_replace("([-/:])$ph$", "\\1$mot", $resfecha);
     $resfecha=ereg_replace("$ph( )", "$mot\\1", $resfecha); // espacio entre fecha y hora
-  } 
+  }
+}
+elseif($conn2->motor=="MySql"){
+  $reemplazos=array('d'=>'%d','m'=>'%m','y'=>'%y','Y'=>'%Y','h'=>'%h','H'=>'%H','i'=>'%i','s'=>'%s','M'=>'%b','yyyy'=>'%Y');
+  $resfecha=$formato;
+  foreach ($reemplazos as $ph => $mot){
+    $resfecha=ereg_replace("^$ph([-/:])", "$mot\\1", $resfecha);
+    $resfecha=ereg_replace("( )$ph([-/:])", "\\1$mot\\2", $resfecha);
+    $resfecha=ereg_replace("^$ph", "$mot", $resfecha);
+    $resfecha=ereg_replace("([-/:])$ph([-/:])", "\\1$mot\\2", $resfecha);
+    $resfecha=ereg_replace("([-/:])$ph$", "\\1$mot", $resfecha);
+    $resfecha=ereg_replace("$ph( )", "$mot\\1", $resfecha); // espacio entre fecha y hora
+  }
   $fsql="DATE_FORMAT($campo,'$resfecha')";
 }
-return $fsql;       
+return $fsql;
+} // Fin Funcion fecha_db_obtener
+/*
+<Clase>
+<Nombre>fecha_db_obtener
+<Parametros> campo : Campo de la tabla con la fecha a obrener; $formato : formato de la fecha a obtener en fromato tipo PHP;
+<Responsabilidades> Retornar la cadena adecuada dependiendo del motor para las consultas
+de tipo select
+<Notas>
+<Excepciones>
+<Salida>cadena lista para compementar las secuecias  ejem  TO_CHAR(fecha_ini,'DD-MM-YYYY')
+<Pre-condiciones>
+<Post-condiciones>
+*/
+
+function fecha_db_obtener_externo( $conn2, $campo, $formato = NULL){
+if(!$formato)
+  $formato="Y-m-d";  // formato por defecto php
+if($conn2->motor=="Oracle"){
+  $reemplazos=array('Y'=>'YYYY','yyyy'=>'YYYY','d'=>'DD','M'=>'MON','m'=>'MM','y'=>'YY','H'=>'HH24','h'=>'HH','i'=>'MI','s'=>'SS'  );
+  $resfecha=$formato;
+  foreach ($reemplazos as $ph => $mot){
+    $resfecha=ereg_replace("$ph", "$mot", $resfecha);
+  }
+  $fsql="TO_CHAR($campo,'$resfecha')";
+}
+elseif($conn2->motor=="MySql"){
+  $reemplazos=array('d'=>'%d','m'=>'%m','y'=>'%y','Y'=>'%Y','h'=>'%h','H'=>'%H','i'=>'%i','s'=>'%s','M'=>'%b','yyyy'=>'%Y');
+  $resfecha=$formato;
+  foreach ($reemplazos as $ph => $mot){
+    $resfecha=ereg_replace("^$ph([-/:])", "$mot\\1", $resfecha);
+    $resfecha=ereg_replace("( )$ph([-/:])", "\\1$mot\\2", $resfecha);
+    $resfecha=ereg_replace("^$ph", "$mot", $resfecha);
+    $resfecha=ereg_replace("([-/:])$ph([-/:])", "\\1$mot\\2", $resfecha);
+    $resfecha=ereg_replace("([-/:])$ph$", "\\1$mot", $resfecha);
+    $resfecha=ereg_replace("$ph( )", "$mot\\1", $resfecha); // espacio entre fecha y hora
+  }
+  $fsql="DATE_FORMAT($campo,'$resfecha')";
+}
+return $fsql;
 } // Fin Funcion fecha_db_obtener
 /*
 <Clase>
 <Nombre>fecha_db_almacenar
-<Parametros> fecha : fecha a almacenar conxsecuente al fromato; $formato : formato de la fecha a almacenar tipo PHP; 
-<Responsabilidades> Retornar la cadena adecuada dependiendo del motor para las consultas 
+<Parametros> fecha : fecha a almacenar conxsecuente al fromato; $formato : formato de la fecha a almacenar tipo PHP;
+<Responsabilidades> Retornar la cadena adecuada dependiendo del motor para las consultas
 de tipo select
 <Notas>
 <Excepciones>
@@ -879,15 +742,15 @@ de tipo select
 <Pre-condiciones>
 <Post-condiciones>
 */
-function fecha_db_almacenar_externo($conn2, $fecha, $formato = NULL){ 
+function fecha_db_almacenar_externo($conn2, $fecha, $formato = NULL){
   if(!$fecha || $fecha==""){
     $fecha=date($formato);
   }
   if(!$formato)
         $formato="Y-m-d";  // formato por defecto php
-  
+
   if($conn2->motor=="Oracle")
-    {   
+    {
          $reemplazos=array('d'=>'DD','m'=>'MM','y'=>'YY','Y'=>'YYYY','h'=>'HH','H'=>'HH24','i'=>'MI','s'=>'SS','M'=>'MON','yyyy'=>'YYYY'  );
          $resfecha=$formato;
          foreach ($reemplazos as $ph => $mot)
@@ -897,9 +760,9 @@ function fecha_db_almacenar_externo($conn2, $fecha, $formato = NULL){
             $resfecha=ereg_replace("([-/:])$ph([-/:])", "\\1$mot\\2", $resfecha);
             $resfecha=ereg_replace("([-/:])$ph$", "\\1$mot", $resfecha);
             $resfecha=ereg_replace("$ph( )", "$mot\\1", $resfecha); // espacio entre fecha y hora
-          }                     
-        $fsql="TO_DATE('$fecha','$resfecha')";      
-     } 
+          }
+        $fsql="TO_DATE('$fecha','$resfecha')";
+     }
     elseif($conn2->motor=="MySql"){
             $reemplazos=array('d'=>'%d','m'=>'%m','y'=>'%y','Y'=>'%Y','h'=>'%H','H'=>'%H','i'=>'%i','s'=>'%s','M'=>'%b','yyyy'=>'%Y'  );
             $resfecha=$formato;
@@ -910,38 +773,38 @@ function fecha_db_almacenar_externo($conn2, $fecha, $formato = NULL){
                 $resfecha=ereg_replace("([-/:])$ph([-/:])", "\\1$mot\\2", $resfecha);
                 $resfecha=ereg_replace("([-/:])$ph$", "\\1$mot", $resfecha);
                 $resfecha=ereg_replace("$ph( )", "$mot\\1", $resfecha); // espacio entre fecha y hora
-             }                   
-            $fsql="DATE_FORMAT('$fecha','$resfecha')";          
+             }
+            $fsql="DATE_FORMAT('$fecha','$resfecha')";
          }
-         return $fsql;      
+         return $fsql;
 } // Fin Funcion fecha_db_almacenar
- 
+
  function suma_fechas_externo($conn2,$fecha1,$cantidad,$tipo="") {
    if($conn2->motor=="Oracle")
    {if($tipo=="" || $tipo=="DAY")
-        return "$fecha1+$cantidad"; 
+        return "$fecha1+$cantidad";
     else if($tipo=="MONTH")
-        return "ADD_MONTHS($fecha1,$cantidad)"; 
+        return "ADD_MONTHS($fecha1,$cantidad)";
     else if($tipo=="YEAR")
-        return "ADD_MONTHS($fecha1,$cantidad*12)"; 
+        return "ADD_MONTHS($fecha1,$cantidad*12)";
    }
-  elseif($conn2->motor=="MySql"){ 
+  elseif($conn2->motor=="MySql"){
     if($tipo=="")
-      $tipo='DAY';    
+      $tipo='DAY';
      return "DATE_ADD($fecha1, INTERVAL $cantidad $tipo)";
-   }   
- } 
+   }
+ }
  function resta_fechas_externo($conn2,$fecha1,$fecha2)
  {
    if($conn2->motor=="Oracle")
    {if($fecha2 == "")
-     $fecha2= "sysdate";    
-    return "$fecha1-$fecha2 ";   
+     $fecha2= "sysdate";
+    return "$fecha1-$fecha2 ";
    }
-  elseif($conn2->motor=="MySql")   
+  elseif($conn2->motor=="MySql")
    { if($fecha2 == "")
-     $fecha2= "CURDATE()";       
+     $fecha2= "CURDATE()";
      return "DATEDIFF($fecha1,$fecha2)";
-   }   
+   }
  }
 ?>

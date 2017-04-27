@@ -17,30 +17,26 @@ class Conexion
 <Pre-condiciones>
 <Post-condiciones>
 */
-  function Conexion($datos=NULL)
-	{ 
-    if($datos!==NULL)
-       {$this->Motor = $datos["motor"];
+  function __construct($datos = NULL) { 
+    if($datos!==NULL) {
+        $this->Motor = $datos["motor"];
         $this->Host = $datos["host"];
         $this->Usuario = $datos["user"];
         $this->Pass = $datos["pass"];
         $this->Nombredb =$datos["basedatos"];
         $this->Db=$datos["db"];  
         $this->Puerto = $datos["port"];        
-        $this->Conectar();
-       }
-     else
-       {  
+       } else {  
         $this->Motor = MOTOR;
         $this->Host = HOST;
         $this->Usuario = USER;
         $this->Pass = PASS;
         $this->Nombredb =BASEDATOS;  
         $this->Puerto = PORT;
-        $this->Conectar();
-       } 
-   
 	}
+        $this->Conectar();
+      }
+   
 /*
 <Clase>Conexion
 <Nombre>Conectar()
