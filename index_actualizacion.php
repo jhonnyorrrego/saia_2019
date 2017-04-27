@@ -84,10 +84,9 @@ $funcionario_idfuncionario=usuario_actual('idfuncionario');
 
 $tareas_responsable=busca_filtro_tabla("count(*) AS cant","tareas_listado A","A.generica=0 AND A.estado_tarea<>'TERMINADO' AND A.listado_tareas_fk<>-1 AND A.cod_padre=0 AND  A.responsable_tarea =".usuario_actual("idfuncionario"),"",$conn); 
 $condicion_coparticipantes_unico=" AND ( a.co_participantes LIKE '%,".$funcionario_idfuncionario.",%' OR a.co_participantes LIKE '%,".$funcionario_idfuncionario."' OR a.co_participantes LIKE '".$funcionario_idfuncionario.",%' OR  a.co_participantes='".$funcionario_idfuncionario."' )";
-$tareas_coparticipante=busca_filtro_tabla("count(*) AS cant","tareas_listado A","A.generica=0 AND A.estado_tarea<>'TERMINADO'  AND A.listado_tareas_fk<>-1 AND A.cod_padre=0 ".$condicion_coparticipantes_unico,"",$conn); 
+$tareas_coparticipante=busca_filtro_tabla("count(*) AS cant","tareas_listado a","a.generica=0 AND a.estado_tarea<>'TERMINADO'  AND a.listado_tareas_fk<>-1 AND a.cod_padre=0 ".$condicion_coparticipantes_unico,"",$conn); 
 $condicion_seguidores_unico=" AND ( a.seguidores LIKE '%,".$funcionario_idfuncionario.",%' OR a.seguidores LIKE '%,".$funcionario_idfuncionario."' OR a.seguidores LIKE '".$funcionario_idfuncionario.",%' OR  a.seguidores='".$funcionario_idfuncionario."' )";
-$tareas_seguidor=busca_filtro_tabla("count(*) AS cant","tareas_listado A","A.generica=0 AND A.estado_tarea<>'TERMINADO' AND A.listado_tareas_fk<>-1 AND A.cod_padre=0 ".$condicion_seguidores_unico,"",$conn); 
-
+$tareas_seguidor=busca_filtro_tabla("count(*) AS cant","tareas_listado a","a.generica=0 AND a.estado_tarea<>'TERMINADO' AND a.listado_tareas_fk<>-1 AND a.cod_padre=0 ".$condicion_seguidores_unico,"",$conn); 
 $tareas_evaluador=busca_filtro_tabla("count(*) AS cant","tareas_listado A","A.generica=0 AND A.estado_tarea<>'TERMINADO' AND A.listado_tareas_fk<>-1 AND A.cod_padre=0 AND  A.evaluador =".usuario_actual("idfuncionario"),"",$conn); 
 
 
