@@ -265,7 +265,7 @@ function guardar_lob($campo,$tabla,$condicion,$contenido,$tipo,$conn,$log=1){
     // Fetch the SELECTed row
     OCIFetchInto($stmt,$row,OCI_ASSOC);
     
-	if(!count($row)){  //soluciona el problema del size() & ya no se necesita el emty_clob() en bd en los campos clob
+	if(!count($row)){  //soluciona el problema del size() & ya no se necesita el emty_clob() en bd en los campos clob NULL, los campos obligatorios siguen dependendiendo de empty_clob() como valor predeterminado.
 		oci_rollback($conn->Conn->conn);
 		oci_free_statement($stmt);
 		
