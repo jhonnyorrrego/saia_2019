@@ -13,6 +13,11 @@ include_once($ruta_db_superior."librerias_saia.php");
 usuario_actual("login");
 echo(estilo_bootstrap());
 if(is_dir("roundcubemail")){
+    
+    if(!is_dir($ruta_db_superior."roundcubemail/temp")){
+        mkdir($ruta_db_superior."roundcubemail/temp/",0777);
+    }
+    
   $funcionario=busca_filtro_tabla("","funcionario","funcionario_codigo=".$_SESSION["usuario_actual"],"",$conn);
   if(!$funcionario["numcampos"]){
   ?>
