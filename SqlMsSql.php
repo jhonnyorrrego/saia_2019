@@ -207,7 +207,6 @@ else
 	}
 
 	function Busca_tabla($tabla, $campo = null) {
-		global $conn;
 		if (!$tabla && @$_REQUEST["tabla"])
 			$tabla = $_REQUEST["tabla"];
 		else if (!$tabla)
@@ -222,7 +221,7 @@ else
 		return ($resultado);
 	}
 
-	function Ejecutar_Limit($sql, $inicio, $fin, $conn) {
+	function Ejecutar_Limit($sql, $inicio, $fin) {
 		$consulta = trim($sql);
 		$search = array(
 				"ORDER BY",
@@ -257,7 +256,7 @@ else
 			$order = "order by (select 1)";
 		}
 
-		mssql_query("USE " . $this->Conn->Db, $conn->Conn->conn);
+		mssql_query("USE " . $this->Conn->Db, $this->Conn->conn);
 		$complemento = substr($sql_count, strpos($sql_count, ' '));
 		/*
 		 * $sql_cantidad="SELECT COUNT(*) as cant FROM (".$sql_count.") cantidad_reg";
@@ -274,7 +273,7 @@ else
 	SELECT *,ROW_NUMBER() OVER(" . $order . ") as numfila__oculto FROM (" . $select . ") datos
 	) SELECT * FROM informacion_tabla WHERE numfila__oculto BETWEEN " . ($inicio + 1) . " AND " . ($fin);
 
-		$res = mssql_query($consulta, $conn->Conn->conn) or die("consulta fallida ---- $consulta ");
+		$res = mssql_query($consulta, $this->Conn->conn) or die("consulta fallida ---- $consulta ");
 		return ($res);
 	}
 
@@ -313,7 +312,6 @@ else
 	}
 
 	function Guardar_log($strsql) {
-		global $conn;
 		$sqleve = "";
 		$sql = trim($strsql);
 		$sql = str_replace('', '', $sql);
@@ -333,7 +331,7 @@ else
 				$result = mssql_query($sqleve, $this->Conn->conn);
 				if (!$result)
 					die(" Error en la consulta: " . mssql_get_last_message());
-				$registro = $conn->Ultimo_Insert();
+					$registro = $this->Ultimo_Insert();
 			}
 		}
 	}
@@ -345,8 +343,6 @@ else
 	}
 
 	function fecha_db_almacenar($fecha, $formato = NULL) {
-		global $conn;
-
 		if (is_object($fecha)) {
 			$fecha = $fecha->format($formato);
 		}
@@ -378,10 +374,9 @@ else
 		}
 		return $fsql;
 	}
- // Fin Funcion fecha_db_almacenar
-	function fecha_db_obtener($campo, $formato = NULL) {
-		global $conn;
 
+	// Fin Funcion fecha_db_almacenar
+	function fecha_db_obtener($campo, $formato = NULL) {
 		if (!$formato)
 			$formato = "Y-m-d"; // formato por defecto php
 
@@ -408,5 +403,92 @@ else
 				break;
 		}
 		return $fsql;
-	} // Fin Funcion fecha_db_obtener
+	}
+ // Fin Funcion fecha_db_obtener
+	function mostrar_error() {
+		if ($this->error != "")
+			echo ($this->error["message"] . " en \"" . $this->consulta . "\"");
+	}
+
+	function fecha_db($campo, $formato = NULL) {
+	}
+ // Fin Funcion fecha_db_obtener
+	function case_fecha($dato, $compara, $valor1, $valor2) {
+		if ($compara = "" || $compara == 0)
+			$compara = ">0";
+		return ("CASE WHEN $dato$compara THEN $valor2 ELSE $valor1 END");
+	}
+
+	function suma_fechas($fecha1, $cantidad, $tipo = "") {
+		if ($tipo == "")
+			$tipo = 'DAY';
+		return "DATEADD($tipo,$cantidad,$fecha1)";
+	}
+
+	function resta_horas($fecha1, $fecha2) {
+		if ($fecha2 == "")
+			$fecha2 = "CURRENT_TIMESTAMP";
+		return "DATEDIFF(HOUR,$fecha2,$fecha1)";
+	}
+
+	function fecha_actual($fecha1, $fecha2) {
+		return "CONVERT(CHAR(10),CURRENT_TIMESTAMP,20)";
+	}
+
+	// /Recibe la fecha inicial y la fecha que se debe controlar o fecha de referencia, si tiempo =1 es que la fecha iniicial esta por encima ese tiempo de la fecha de control ejemplo si fecha_inicial=2010-11-11 y fecha_control=2011-12-11 quiere decir que ha pasado 1 año , 1 mes y 0 dias desde la fecha inicial a la de control
+	function compara_fechas($fecha_control, $fecha_inicial) {
+		if (!strlen($fecha_control)) {
+			$fecha_control = date('Y-m-d');
+		}
+		$resultado = $this->ejecuta_filtro_tabla("SELECT " . $this->resta_fechas("'" . $fecha_control . "'", "'" . $fecha_inicial . "'") . " AS diff");
+		return ($resultado);
+	}
+
+	function listar_campos_tabla($tabla = NULL, $tipo_retorno = 0) {
+		return ($this->Busca_Tabla());
+	}
+
+	function guardar_lob($campo, $tabla, $condicion, $contenido, $tipo, $log = 1) {
+		$resultado = TRUE;
+
+		if ($tipo == "archivo") {
+			$dato = busca_filtro_tabla("$campo", "$tabla", "$condicion", "", $this);
+			// CODIFICA EL ARCHIVO PARA SER GUARDADO
+			$fileData = $contenido;
+			$fileData = unpack("H*hex", $fileData);
+			$content = "0x" . $fileData['hex'];
+
+			if ($dato[0][0] == "") {
+				$sql = "UPDATE " . $tabla . " SET " . $campo . " .write(convert(varbinary(max),'XXX'),0,NULL) WHERE " . $condicion;
+				$this->ejecutar_sql($sql);
+			}
+			$sql = "UPDATE " . $tabla . " SET " . $campo . " = " . $content . " WHERE " . $condicion;
+			$this->ejecutar_sql($sql);
+		} elseif ($tipo == "texto") {
+			$contenido = codifica_encabezado(limpia_tabla($contenido));
+			$sql = "update $tabla set $campo='" . str_replace("'", '"', stripslashes($contenido)) . "' where $condicion";
+			if ($log) {
+				preg_match("/.*=(.*)/", strtolower($condicion), $resultados);
+				$llave = trim($resultados[1]);
+				$anterior = busca_filtro_tabla("$campo", "$tabla", "$condicion", "", $this);
+				$sql_anterior = "update $tabla set $campo='" . str_replace("'", '"', stripslashes($anterior[0][0])) . "' where $condicion";
+				$sqleve = "INSERT INTO evento(funcionario_codigo, fecha, evento, tabla_e, registro_id, estado,detalle,codigo_sql) VALUES('" . usuario_actual("funcionario_codigo") . "','" . date('Y-m-d H:i:s') . "','MODIFICAR', '$tabla', $llave, '0','" . addslashes($sql_anterior) . "','" . addslashes($sql) . "')";
+				$this->Ejecutar_Sql($sqleve);
+				$registro = $this->Ultimo_Insert();
+				if ($registro) {
+					$archivo = "$registro|||" . usuario_actual("funcionario_codigo") . "|||" . date('Y-m-d H:i:s') . "|||MODIFICAR|||$tabla|||0|||" . addslashes($sql_anterior) . "|||$llave|||" . addslashes($sql);
+					evento_archivo($archivo);
+				}
+			}
+			if (MOTOR == "SqlServer") {
+				sqlsrv_query($this->Conn->conn, "USE " . $$this->Conn->Db);
+				sqlsrv_query($this->Conn->conn, $sql) or die("consulta fallida ---- $sql " . implode("<br />", sqlsrv_errors()));
+			} else {
+				mssql_query($sql, $this->Conn->conn) or die("consulta fallida ---- $sql " . implode("<br />", mssql_get_last_message()));
+			}
+		}
+
+		return ($resultado);
+	}
+
 }

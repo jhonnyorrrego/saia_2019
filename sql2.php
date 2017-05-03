@@ -271,7 +271,7 @@ abstract class SQL2 {
 	 * <Post-condiciones>
 	 */
 	// devuelve los primeros $limit registros de la consulta en un array
-	public abstract function Ejecutar_Limit($sql, $inicio, $fin, $conn);
+	public abstract function Ejecutar_Limit($sql, $inicio, $fin);
 
 	/*
 	 * <Clase>SQL
@@ -321,5 +321,42 @@ abstract class SQL2 {
 	public abstract function fecha_db_almacenar($fecha, $formato);
 
 	public abstract function fecha_db_obtener($campo, $formato);
+
+	public abstract function mostrar_error();
+
+	public abstract function fecha_db($campo, $formato);
+
+	public abstract function case_fecha($dato, $compara, $valor1, $valor2);
+
+	public abstract function suma_fechas($fecha1, $cantidad, $tipo);
+
+	public abstract function resta_horas($fecha1, $fecha2);
+
+	public abstract function fecha_actual($fecha1, $fecha2);
+
+	public abstract function compara_fechas($fecha_control, $fecha_inicial);
+
+	protected function ejecuta_filtro_tabla($sql2) {
+		$retorno = array();
+		$rs = $this->Ejecutar_Sql($sql2) or alerta("Error en Busqueda de Proceso SQL: $sql2");
+		$temp = $this->sacar_fila($rs);
+		$i = 0;
+		if ($temp) {
+			array_push($retorno, $temp);
+			$i++;
+		}
+		for($temp; $temp = $this->sacar_fila($rs); $i++) {
+			array_push($retorno, $temp);
+		}
+		$retorno["numcampos"] = $i;
+		$retorno["sql"] = $sql2;
+		$this->liberar_resultado($rs);
+		return ($retorno);
+	}
+
+	public abstract function listar_campos_tabla($tabla, $tipo_retorno);
+
+	public abstract function guardar_lob($campo, $tabla, $condicion, $contenido, $tipo, $log);
+
 }
 ?>

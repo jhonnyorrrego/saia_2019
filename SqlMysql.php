@@ -65,6 +65,7 @@ class SqlMysql extends SQL2 {
 		$strsql = str_replace("= ", "=", $strsql);
 		$accion = strtoupper(substr($strsql, 0, strpos($strsql, ' ')));
 		if ($accion == "INSERT" || $accion == "UPDATE") {
+			$this->ultimo_insert = 0;
 			$sql = htmlentities($sql, ENT_NOQUOTES, "UTF-8", false);
 			$sql = htmlspecialchars_decode($sql, ENT_NOQUOTES);
 		}
@@ -351,7 +352,7 @@ class SqlMysql extends SQL2 {
 	 * <Post-condiciones>
 	 */
 	// devuelve los registro en el rango $inicio:$fin de la consulta, para mysql
-	function Ejecutar_Limit($sql, $inicio, $fin, $conn) {
+	function Ejecutar_Limit($sql, $inicio, $fin) {
 		$cuantos = $fin - $inicio + 1;
 		if ($inicio < 0)
 			$inicio = 0;
@@ -359,7 +360,7 @@ class SqlMysql extends SQL2 {
 		$consulta = "$sql LIMIT $inicio,$cuantos";
 		$consulta = str_replace("key", "'key'", $consulta);
 		// echo $consulta;
-		$res = mysqli_query($conn->Conn->conn, $consulta); // or die("consulta fallida ".mysqli_error($conn->Conn->conn));
+		$res = mysqli_query($this->Conn->conn, $consulta); // or die("consulta fallida ".mysqli_error($conn->Conn->conn));
 		return ($res);
 	}
 
@@ -411,6 +412,9 @@ class SqlMysql extends SQL2 {
 	 * <Post-condiciones>
 	 */
 	function Ultimo_Insert() {
+		if($this->ultimo_insert) {
+			return $this->ultimo_insert;
+		}
 		return @mysqli_insert_id($this->Conn->conn);
 	}
 
@@ -445,8 +449,6 @@ class SqlMysql extends SQL2 {
 	}
 
 	function fecha_db_almacenar($fecha, $formato = NULL) {
-		global $conn;
-
 		if (is_object($fecha)) {
 			$fecha = $fecha->format($formato);
 		}
@@ -491,10 +493,9 @@ class SqlMysql extends SQL2 {
 		}
 		return $fsql;
 	}
- // Fin Funcion fecha_db_almacenar
-	function fecha_db_obtener($campo, $formato = NULL) {
-		global $conn;
 
+	// Fin Funcion fecha_db_almacenar
+	function fecha_db_obtener($campo, $formato = NULL) {
 		if (!$formato)
 			$formato = "Y-m-d"; // formato por defecto php
 
@@ -525,5 +526,110 @@ class SqlMysql extends SQL2 {
 		}
 		$fsql = "DATE_FORMAT($campo,'$resfecha')";
 		return $fsql;
-	} // Fin Funcion fecha_db_obtener
+	}
+
+	// Fin Funcion fecha_db_obtener
+	function mostrar_error() {
+		if ($this->error != "")
+			echo ($this->error . " en \"" . $this->consulta . "\"");
+	}
+
+	function fecha_db($campo, $formato = NULL) {
+		if (!$formato)
+			$formato = "Y-m-d"; // formato por defecto php
+
+		$reemplazos = array(
+				'd' => '%d',
+				'm' => '%m',
+				'y' => '%y',
+				'Y' => '%Y',
+				'h' => '%h',
+				'H' => '%H',
+				'i' => '%i',
+				's' => '%s',
+				'M' => '%b',
+				'yyyy' => '%Y'
+		);
+		$resfecha = $formato;
+		foreach ( $reemplazos as $ph => $mot ) { // echo $ph," = ",$mot,"<br>","^$ph([-/:])", "%Y\\1","<br>";
+			$resfecha = preg_replace('/' . $ph . '/', "$mot", $resfecha);
+		}
+		$fsql = "DATE_FORMAT($campo,'$resfecha')";
+
+		return $fsql;
+	}
+
+	// Fin Funcion fecha_db_obtener
+	function case_fecha($dato, $compara, $valor1, $valor2) {
+		if ($compara = "" || $compara == 0)
+			$compara = ">0";
+		return ("IF($dato$compara,$valor2,$valor1)");
+	}
+
+	function suma_fechas($fecha1, $cantidad, $tipo = "") {
+		if ($tipo == "")
+			$tipo = 'DAY';
+		return "DATE_ADD($fecha1, INTERVAL $cantidad $tipo)";
+	}
+
+	function resta_horas($fecha1, $fecha2) {
+		if ($fecha2 == "")
+			$fecha2 = "CURDATE()";
+		return "timediff($fecha1,$fecha2)";
+	}
+
+	function fecha_actual($fecha1, $fecha2) {
+		return "CURDATE()";
+	}
+
+	// /Recibe la fecha inicial y la fecha que se debe controlar o fecha de referencia, si tiempo =1 es que la fecha iniicial esta por encima ese tiempo de la fecha de control ejemplo si fecha_inicial=2010-11-11 y fecha_control=2011-12-11 quiere decir que ha pasado 1 año , 1 mes y 0 dias desde la fecha inicial a la de control
+	function compara_fechas($fecha_control, $fecha_inicial) {
+		if (!strlen($fecha_control)) {
+			$fecha_control = date('Y-m-d');
+		}
+		$resultado = $this->ejecuta_filtro_tabla("SELECT " . $this->resta_fechas("'" . $fecha_control . "'", "'" . $fecha_inicial . "'") . " AS diff FROM dual");
+		return ($resultado);
+	}
+
+	function listar_campos_tabla($tabla = NULL, $tipo_retorno = 0) {
+		if ($tabla == NULL)
+			$tabla = $_REQUEST["tabla"];
+		$datos_tabla = $this->Ejecutar_Sql("DESCRIBE " . $tabla);
+		while($fila = phpmkr_fetch_array($datos_tabla)) { // print_r($fila);
+			if ($tipo_retorno) {
+				$lista_campos[] = array_map(strtolower, $fila);
+			} else {
+				$lista_campos[] = strtolower($fila[0]);
+			}
+		}
+		return ($lista_campos);
+	}
+
+	function guardar_lob($campo, $tabla, $condicion, $contenido, $tipo, $log = 1) {
+		$resultado = TRUE;
+		if ($tipo == "archivo") {
+			$sql = "update $tabla set $campo='" . addslashes($contenido) . "' where $condicion";
+			mysqli_query($this->Conn->conn, $sql);
+			// TODO verificar resultado de la insecion $resultado=FALSE;
+		} elseif ($tipo == "texto") {
+			$contenido = codifica_encabezado(limpia_tabla($contenido));
+			$sql = "update $tabla set $campo='" . addslashes(stripslashes($contenido)) . "' where $condicion";
+			if ($log) {
+				preg_match("/.*=(.*)/", strtolower($condicion), $resultados);
+				$llave = trim($resultados[1]);
+				$anterior = busca_filtro_tabla($campo, $tabla, $condicion, "", $this);
+				$sql_anterior = "update $tabla set $campo='" . addslashes(stripslashes($anterior[0][0])) . "' where $condicion";
+
+				$sqleve = "INSERT INTO evento(funcionario_codigo, fecha, evento, tabla_e, registro_id, estado,detalle,codigo_sql) VALUES('" . usuario_actual("funcionario_codigo") . "','" . date('Y-m-d H:i:s') . "','MODIFICAR', '$tabla', $llave, '0','" . addslashes($sql_anterior) . "','" . addslashes($sql) . "')";
+				$this->Ejecutar_Sql($sqleve);
+				$registro = $this->Ultimo_Insert();
+				if ($registro) {
+					$archivo = "$registro|||" . usuario_actual("funcionario_codigo") . "|||" . date('Y-m-d H:i:s') . "|||MODIFICAR|||$tabla|||0|||" . addslashes($sql_anterior) . "|||$llave|||" . addslashes($sql);
+					evento_archivo($archivo);
+				}
+			}
+			mysqli_query($this->Conn->conn, $sql) or die(mysqli_error($this->Conn->conn));
+		}
+		return ($resultado);
+	}
 }

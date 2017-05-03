@@ -198,7 +198,7 @@ class SqlOracle extends SQL2 {
 	 * <Post-condiciones>
 	 */
 	// devuelve los registro en el rango $inicio:$fin de la consulta, para oracle
-	function Ejecutar_Limit($sql, $inicio, $fin, $conn) {
+	function Ejecutar_Limit($sql, $inicio, $fin) {
 		$inicio = $inicio + 1;
 		$fin += 1;
 		$cuantos = $fin - $inicio;
@@ -207,7 +207,7 @@ class SqlOracle extends SQL2 {
 		FROM ($sql) a
 		WHERE ROWNUM <= $fin)
 		WHERE FILA >= $inicio";
-		$stmt = OCIParse($conn->Conn->conn, $sql);
+		$stmt = OCIParse($this->Conn->conn, $sql);
 		// echo $sql;
 		if (!OCIExecute($stmt, OCI_COMMIT_ON_SUCCESS))
 			$this->error = OCIError();
@@ -296,7 +296,6 @@ class SqlOracle extends SQL2 {
 	}
 
 	function Guardar_log($strsql) {
-		global $conn;
 		$sqleve = "";
 		$sql = trim($strsql);
 		$sql = str_replace('', '', $sql);
@@ -320,7 +319,7 @@ class SqlOracle extends SQL2 {
 						$this->error = OCIError($rs);
 					}
 				}
-				$registro = $conn->Ultimo_Insert();
+				$registro = $this->Ultimo_Insert();
 			}
 		}
 	}
@@ -332,8 +331,6 @@ class SqlOracle extends SQL2 {
 	}
 
 	function fecha_db_almacenar($fecha, $formato = NULL) {
-		global $conn;
-
 		if (is_object($fecha)) {
 			$fecha = $fecha->format($formato);
 		}
@@ -378,10 +375,9 @@ class SqlOracle extends SQL2 {
 		}
 		return $fsql;
 	}
- // Fin Funcion fecha_db_almacenar
-	function fecha_db_obtener($campo, $formato = NULL) {
-		global $conn;
 
+	// Fin Funcion fecha_db_almacenar
+	function fecha_db_obtener($campo, $formato = NULL) {
 		if (!$formato)
 			$formato = "Y-m-d"; // formato por defecto php
 
@@ -404,5 +400,195 @@ class SqlOracle extends SQL2 {
 		}
 		$fsql = "TO_CHAR($campo,'$resfecha')";
 		return $fsql;
-	} // Fin Funcion fecha_db_obtener
+	}
+
+	// Fin Funcion fecha_db_obtener
+	function mostrar_error() {
+		if ($this->error != "")
+			echo ($this->error["message"] . " en \"" . $this->consulta . "\"");
+	}
+
+	function fecha_db($campo, $formato = NULL) {
+		if (!$formato)
+			$formato = "Y-m-d"; // formato por defecto php
+
+		$reemplazos = array(
+				'd' => 'DD',
+				'm' => 'MM',
+				'y' => 'YY',
+				'Y' => 'YYYY',
+				'h' => 'HH',
+				'H' => 'HH24',
+				'i' => 'MI',
+				's' => 'SS',
+				'M' => 'MON',
+				'yyyy' => 'YYYY'
+		);
+		$resfecha = $formato;
+		foreach ( $reemplazos as $ph => $mot ) { // echo $ph," = ",$mot,"<br>","^$ph([-/:])", "%Y\\1","<br>";
+			$resfecha = preg_replace('/' . $ph . '/', "$mot", $resfecha);
+		}
+
+		return $fsql;
+	}
+
+	// Fin Funcion fecha_db_obtener
+	function case_fecha($dato, $compara, $valor1, $valor2) {
+		return ("decode($dato,$compara,$valor1,$valor2)");
+	}
+
+	function suma_fechas($fecha1, $cantidad, $tipo = "") {
+		if ($tipo == "HOUR") {
+			return "$fecha1+($cantidad/24)";
+		}
+		if ($tipo == "" || $tipo == "DAY")
+			return "$fecha1+$cantidad";
+		else if ($tipo == "MONTH")
+			return "ADD_MONTHS($fecha1,$cantidad)";
+		else if ($tipo == "YEAR")
+			return "ADD_MONTHS($fecha1,$cantidad*12)";
+	}
+
+	function resta_horas($fecha1, $fecha2) {
+		if ($fecha2 == "")
+			$fecha2 = "sysdate";
+		return "($fecha1-$fecha2)*24";
+	}
+
+	function fecha_actual($fecha1, $fecha2) {
+		return "sysdate";
+	}
+
+	// /Recibe la fecha inicial y la fecha que se debe controlar o fecha de referencia, si tiempo =1 es que la fecha iniicial esta por encima ese tiempo de la fecha de control ejemplo si fecha_inicial=2010-11-11 y fecha_control=2011-12-11 quiere decir que ha pasado 1 año , 1 mes y 0 dias desde la fecha inicial a la de control
+	function compara_fechas($fecha_control, $fecha_inicial) {
+		if (!strlen($fecha_control)) {
+			$fecha_control = date('Y-m-d');
+		}
+		$resultado = $this->ejecuta_filtro_tabla("SELECT " . $this->resta_fechas("'" . $fecha_control . "'", "'" . $fecha_inicial . "'") . " AS diff FROM dual");
+		return ($resultado);
+	}
+
+	function listar_campos_tabla($tabla = NULL, $tipo_retorno = 0) {
+		if ($tabla == NULL)
+			$tabla = $_REQUEST["tabla"];
+		$datos_tabla = $this->Ejecutar_Sql("SELECT column_name AS Field FROM user_tab_columns WHERE table_name='" . strtoupper($tabla) . "' ORDER BY column_name ASC");
+		$lista_campos = array();
+		while($fila = $this->sacar_fila($datos_tabla)) {
+			if ($tipo_retorno) {
+				$lista_campos[] = array_map(strtolower, $fila);
+			} else {
+				$lista_campos[] = strtolower($fila[0]);
+			}
+		}
+		return ($lista_campos);
+	}
+
+	function guardar_lob($campo, $tabla, $condicion, $contenido, $tipo, $log = 1) {
+		$resultado = TRUE;
+		$sql = "SELECT " . $campo . " FROM " . $tabla . " WHERE " . $condicion . " FOR UPDATE";
+		$stmt = OCIParse($this->Conn->conn, $sql) or print_r(OCIError($stmt));
+		// Execute the statement using OCI_DEFAULT (begin a transaction)
+		OCIExecute($stmt, OCI_DEFAULT) or print_r(OCIError($stmt));
+		// Fetch the SELECTed row
+		OCIFetchInto($stmt, $row, OCI_ASSOC);
+
+		if (!count($row)) { // soluciona el problema del size() & ya no se necesita el emty_clob() en bd en los campos clob
+			oci_rollback($this->Conn->conn);
+			oci_free_statement($stmt);
+
+			$up_clob = "UPDATE " . $tabla . " SET " . $campo . "=empty_clob() WHERE " . $condicion;
+			$this->Ejecutar_Sql($up_clob);
+			$stmt = OCIParse($this->Conn->conn, $sql) or print_r(OCIError($stmt));
+			// Execute the statement using OCI_DEFAULT (begin a transaction)
+			OCIExecute($stmt, OCI_DEFAULT) or print_r(OCIError($stmt));
+			// Fetch the SELECTed row
+			OCIFetchInto($stmt, $row, OCI_ASSOC);
+		}
+
+		if (FALSE === $row) {
+			OCIRollback($this->Conn->conn);
+			alerta("No se pudo modificar el campo.");
+			die($sql);
+			$resultado = FALSE;
+		} else { // Now save a value to the LOB
+			if ($tipo == "texto") { // para campos clob como en los formatos
+				if ($row[strtoupper($campo)]->size() > 0)
+					$contenido_actual = htmlspecialchars_decode($row[strtoupper($campo)]->read($row[strtoupper($campo)]->size()));
+				else
+					$contenido_actual = "";
+
+				if ($contenido_actual != $contenido) {
+					if ($row[strtoupper($campo)]->size() > 0 && !$row[strtoupper($campo)]->truncate()) {
+						oci_rollback($this->Conn->conn);
+						alerta("No se pudo modificar el campo.");
+						$resultado = FALSE;
+					} else {
+						$contenido = limpia_tabla($contenido);
+						if (!$row[strtoupper($campo)]->save(trim((($contenido))))) {
+							oci_rollback($this->Conn->conn);
+							$resultado = FALSE;
+						} else
+							oci_commit($this->Conn->conn);
+						// *********** guardo el log en la base de datos **********************
+						preg_match("/.*=(.*)/", strtolower($condicion), $resultados);
+						$llave = trim($resultados[1]);
+
+						if ($log) {
+							$sqleve = "INSERT INTO evento(funcionario_codigo, fecha, evento, tabla_e, registro_id, estado) VALUES('" . usuario_actual("funcionario_codigo") . "',to_date('" . date('Y-m-d H:i:s') . "','YYYY-MM-DD HH24:MI:SS') ,'MODIFICAR', '$tabla', $llave, '0')";
+
+							$this->Ejecutar_Sql($sqleve);
+							$registro = $this->Ultimo_Insert();
+							$texto_ant = "DECLARE
+								cont$   CLOB;
+								BEGIN
+								UPDATE $tabla SET $campo=EMPTY_CLOB()
+								WHERE $condicion;
+								SELECT $campo
+								INTO cont$
+								FROM $tabla
+								WHERE $condicion
+								FOR UPDATE;
+								DBMS_LOB.WRITE (cont$, DBMS_LOB.getlength('$contenido_actual'), 1, '$contenido_actual');
+								COMMIT;
+								END";
+							$texto_sig = "DECLARE
+								cont$   CLOB;
+								BEGIN
+								UPDATE $tabla SET $campo=EMPTY_CLOB()
+								WHERE $condicion;
+								SELECT $campo
+								INTO cont$
+								FROM $tabla
+								WHERE $condicion
+								FOR UPDATE;
+								DBMS_LOB.WRITE (cont$, DBMS_LOB.getlength('$contenido'), 1, '$contenido');
+								COMMIT;
+								END";
+							guardar_lob('codigo_sql', 'evento', "idevento=" . $registro, $texto_sig, 'texto', $this, 0);
+							guardar_lob('detalle', 'evento', "idevento=" . $registro, $texto_ant, 'texto', $this, 0);
+							$archivo = "$registro|||" . usuario_actual("funcionario_codigo") . "|||" . date('Y-m-d H:i:s') . "|||MODIFICAR|||$tabla|||0|||$texto_ant|||$llave|||$texto_sig";
+							evento_archivo($archivo);
+							// *********************************
+						}
+					}
+				}
+			} elseif ($tipo == "archivo") { // para campos blob como la firma
+			                                // echo ($campo.$tabla.$condicion.$contenido);
+				if (!$row[strtoupper($campo)]->truncate()) {
+					oci_rollback($this->Conn->conn);
+					alerta("No se pudo modificar el campo.");
+					$resultado = FALSE;
+				}
+				if (!$row[strtoupper($campo)]->save($contenido)) {
+					oci_rollback($this->Conn->conn);
+					alerta("No se pudo modificar el campo.");
+					$resultado = FALSE;
+				} else
+					oci_commit($this->Conn->conn);
+			}
+			oci_free_statement($stmt);
+			$row[strtoupper($campo)]->free();
+		}
+		return ($resultado);
+	}
 }
