@@ -1,7 +1,7 @@
 <?php
 require_once("define.php");
 require_once("conexion.php");
-require_once("sql.php");
+require_once("sql2.php");
 if(!isset($_SESSION["LOGIN".LLAVE_SAIA])){
   @session_start();
   @ob_start();
@@ -211,19 +211,19 @@ return($tabla);
 <Post-condiciones><Post-condiciones>
 </Clase>  */
 function listar_campos_tabla($tabla=NULL,$tipo_retorno=0)
-  {global $conn;   
+  {global $conn;
   	if($tabla==NULL)
       $tabla=$_REQUEST["tabla"];
    if(MOTOR=="MySql"){
       $datos_tabla=$conn->Ejecutar_Sql("DESCRIBE ".$tabla);
 	   while($fila=phpmkr_fetch_array($datos_tabla)){// print_r($fila);
         if($tipo_retorno){
-            $lista_campos[]=array_map(strtolower,$fila);    
-        }   
+            $lista_campos[]=array_map(strtolower,$fila);
+        }
         else{
             $lista_campos[]=strtolower($fila[0]);
        }
-      }   
+      }
    		return($lista_campos);
     }
    else if(MOTOR=="Oracle"){
@@ -231,18 +231,18 @@ function listar_campos_tabla($tabla=NULL,$tipo_retorno=0)
 	      $lista_campos=array();
 	  	  while($fila=phpmkr_fetch_array($datos_tabla)) {
 			  if($tipo_retorno){
-                    $lista_campos[]=array_map(strtolower,$fila);    
-                }   
+                    $lista_campos[]=array_map(strtolower,$fila);
+                }
                 else{
                     $lista_campos[]=strtolower($fila[0]);
                }
 	      }
-	   	  return($lista_campos);  
+	   	  return($lista_campos);
 	  }
 	  else{
 	   	return($conn->Busca_Tabla());
 	  }
-  } 
+  }
 /*
 <Clase>
 <Nombre>guardar_lob</Nombre>
@@ -264,20 +264,20 @@ function guardar_lob($campo,$tabla,$condicion,$contenido,$tipo,$conn,$log=1){
     OCIExecute($stmt, OCI_DEFAULT) or print_r(OCIError ($stmt));
     // Fetch the SELECTed row
     OCIFetchInto($stmt,$row,OCI_ASSOC);
-    
+
 	if(!count($row)){  //soluciona el problema del size() & ya no se necesita el emty_clob() en bd en los campos clob
 		oci_rollback($conn->Conn->conn);
 		oci_free_statement($stmt);
-		
+
     	$up_clob="UPDATE ".$tabla." SET ".$campo."=empty_clob() WHERE ".$condicion;
 		$conn->Ejecutar_Sql($up_clob);
 	    $stmt = OCIParse($conn->Conn->conn, $sql) or print_r(OCIError ($stmt));
 	    // Execute the statement using OCI_DEFAULT (begin a transaction)
 	    OCIExecute($stmt, OCI_DEFAULT) or print_r(OCIError ($stmt));
 	    // Fetch the SELECTed row
-	    OCIFetchInto($stmt,$row,OCI_ASSOC);		
-	}    
-    
+	    OCIFetchInto($stmt,$row,OCI_ASSOC);
+	}
+
     if(FALSE ===$row){
       OCIRollback($conn->Conn->conn);
       alerta("No se pudo modificar el campo.");
@@ -541,7 +541,7 @@ global $conn;
   {
     $datos=array('basedatos'=>$BASEDATOS,'db'=>$DB,'motor'=>$MOTOR,'host'=>$HOST,'user'=>$USER,'pass'=>$PASS,'port'=>$PORT);
     $con=new conexion($datos);
-    $conn=new SQL($con,$MOTOR);
+    $conn = SQL2::get_instance($con,$MOTOR);
     if($conn && $conn->Conn){
       return ($conn);
     }
@@ -3159,66 +3159,9 @@ de tipo select
 <Post-condiciones>
 */
 
-function fecha_db_obtener($campo, $formato = NULL)
- { global $conn;
-
-   if(!$formato)
-        $formato="Y-m-d";  // formato por defecto php
-
-  if($conn->motor=="Oracle")
-    {
-         $reemplazos=array('Y'=>'YYYY','yyyy'=>'YYYY','d'=>'DD','M'=>'MON','m'=>'MM','y'=>'YY','H'=>'HH24','h'=>'HH','i'=>'MI','s'=>'SS'  );
-         $resfecha=$formato;
-         foreach ($reemplazos as $ph => $mot){
-         	$resfecha=preg_replace('/'.$ph.'/', "$mot", $resfecha);
-            //$resfecha=ereg_replace("$ph", "$mot", $resfecha);
-          }
-          $fsql="TO_CHAR($campo,'$resfecha')";
-
- 	 }
-   	elseif($conn->motor=="MySql")
-    	 {  //TO_DATE(TO_CHAR(sysdate,'dd/mm/yyyy '))
-
-            $reemplazos=array('d'=>'%d','m'=>'%m','y'=>'%y','Y'=>'%Y','h'=>'%h','H'=>'%H','i'=>'%i','s'=>'%s','M'=>'%b','yyyy'=>'%Y');
-            $resfecha=$formato;
-             foreach ($reemplazos as $ph => $mot)
-             { // echo $ph," = ",$mot,"<br>","^$ph([-/:])", "%Y\\1","<br>";
-             	$resfecha=preg_replace('/'.$ph.'/', "$mot", $resfecha);
-             	/*$resfecha=preg_replace('/'.$ph.'/', "$mot", $resfecha);
-                $resfecha=ereg_replace("^$ph([-/:])", "$mot\\1", $resfecha);
-                $resfecha=ereg_replace("( )$ph([-/:])", "\\1$mot\\2", $resfecha);
-                $resfecha=ereg_replace("^$ph", "$mot", $resfecha);
-         		$resfecha=ereg_replace("([-/:])$ph([-/:])", "\\1$mot\\2", $resfecha);
-         		$resfecha=ereg_replace("([-/:])$ph$", "\\1$mot", $resfecha);
-         		$resfecha=ereg_replace("$ph( )", "$mot\\1", $resfecha); // espacio entre fecha y hora*/
-             }
-         $fsql="DATE_FORMAT($campo,'$resfecha')";
-    	 }
-    elseif($conn->motor=="SqlServer"||$conn->motor=="MSSql"){
-      //solo se relacionan los principales si se requiere de cualquier otro se debe adicionar al switch
-      switch($formato){
-        case 'Y-m-d H:i:s':
-          $fsql="CONVERT(CHAR(19),".$campo.",120) ";
-        break;
-        case 'Y-m-d H:i':
-          $fsql="CONVERT(CHAR(16),".$campo.",20)";
-        break;
-        case 'H:i:s':
-          $fsql="CONVERT(CHAR(8),".$campo.",108)";
-        break;
-        case 'h:i:s':
-          $fsql="SUBSTRING(CONVERT(CHAR(20),".$campo.",100),12,20)";
-        break;
-        case 'd/m/Y-H:i:s':
-          $fsql="CONVERT(CHAR(255),".$campo.",103)+'-'+SUBSTRING(CONVERT(CHAR(20),".$campo.",100),12,20)";
-        break;
-        default:
-          //deafault Y-m-d Standar
-           $fsql=" CONVERT(VARCHAR(10), ".$campo.", 120) ";
-        break;
-      }
-    }
-    return $fsql;
+function fecha_db_obtener($campo, $formato = NULL) {
+	global $conn;
+	return $conn->fecha_db_obtener($campo, $formato);
 } // Fin Funcion fecha_db_obtener
 
 /*
@@ -3234,93 +3177,11 @@ de tipo select
 <Post-condiciones>
 */
 
-function fecha_db_almacenar($fecha, $formato = NULL)
- { global $conn;
-
- if(is_object($fecha)){
-   $fecha=$fecha->format($formato);
- }
-
-  if(!$fecha || $fecha==""){
-    $fecha=date($formato);
-  }
-  if(!$formato)
-        $formato="Y-m-d";  // formato por defecto php
-
-  if($conn->motor=="Oracle")
-    {
-    		
-    	$mystring = $fecha;
-		$findme   = 'TO_DATE';
-		$pos = strpos($mystring, $findme);
-		if ($pos === false) {
-         $reemplazos=array('M'=>'MON','H'=>'HH24','d'=>'DD','m'=>'MM','Y'=>'YYYY','y'=>'YY','h'=>'HH','i'=>'MI','s'=>'SS','yyyy'=>'YYYY' );
-         $resfecha=$formato;
-         foreach ($reemplazos as $ph => $mot)
-          { // echo $ph," = ",$mot,"<br>","^$ph([-/:])", "%Y\\1","<br>";
-          	$resfecha=preg_replace('/'.$ph.'/', "$mot", $resfecha);
-          	/*$resfecha=ereg_replace("^$ph([-/:])", "$mot\\1", $resfecha);
-          	$resfecha=ereg_replace("( )$ph([-/:])", "\\1$mot\\2", $resfecha);
-            $resfecha=ereg_replace("([-/:])$ph([-/:])", "\\1$mot\\2", $resfecha);
-            $resfecha=ereg_replace("([-/:])$ph$", "\\1$mot", $resfecha);
-            $resfecha=ereg_replace("$ph( )", "$mot\\1", $resfecha); // espacio entre fecha y hora*/
-          }
-
-	   	$fsql="TO_DATE('$fecha','$resfecha')";
-
-		}ELSE{
-			$fsql=$fecha;
-		}
-		
- 	 }
-   	elseif($conn->motor=="MySql")
-    	 {  //TO_DATE(TO_CHAR(sysdate,'dd/mm/yyyy '))
-
-    	$mystring = $fecha;
-		$findme   = 'DATE_FORMAT';
-		$pos = strpos($mystring, $findme);
-		if ($pos === false) {            $reemplazos=array('d'=>'%d','m'=>'%m','y'=>'%y','Y'=>'%Y','h'=>'%H','H'=>'%H','i'=>'%i','s'=>'%s','M'=>'%b','yyyy'=>'%Y'  );
-            $resfecha=$formato;
-             foreach ($reemplazos as $ph => $mot)
-             { // echo $ph," = ",$mot,"<br>","^$ph([-/:])", "%Y\\1","<br>";
-             	$resfecha=preg_replace('/'.$ph.'/', "$mot", $resfecha);
-                /*$resfecha=ereg_replace("^$ph([-/:])", "$mot\\1", $resfecha);
-                $resfecha=ereg_replace("( )$ph([-/:])", "\\1$mot\\2", $resfecha);
-         		$resfecha=ereg_replace("([-/:])$ph([-/:])", "\\1$mot\\2", $resfecha);
-         		$resfecha=ereg_replace("([-/:])$ph$", "\\1$mot", $resfecha);
-         		$resfecha=ereg_replace("$ph( )", "$mot\\1", $resfecha); // espacio entre fecha y hora*/
-             }
-
-    	 	$fsql="DATE_FORMAT('$fecha','$resfecha')";
-		}else{
-			$fsql=$fecha;
-		}	
-    	 }
-  elseif($conn->motor=="SqlServer"||$conn->motor=="MSSql"){
-      //solo se relacionan los principales si se requiere de cualquier otro se debe adicionar al switch
-      switch($formato){
-        case 'Y-m-d H:i:s':
-          $fsql="CONVERT(datetime,'".$fecha."',20)";
-        break;
-        case 'Y-m-d H:i':
-          $fsql="CONVERT(datetime,'".$fecha."',20)";
-        break;
-        case 'H:i:s':
-          $fsql="CONVERT(time,'".$fecha."',20)";
-        break;
-       	case 'd-m-y':
-          $fsql=" CONVERT(datetime, '".$fecha."', 3) ";
-        break;
-        default:
-          //deafault Y-m-d Standar
-           $fsql="CONVERT(datetime,'".$fecha."',20)";
-        break;
-      }
-
-    }
-    	 return $fsql;
-
+function fecha_db_almacenar($fecha, $formato = NULL) {
+	global $conn;
+	return $conn->fecha_db_almacenar($fecha, $formato);;
 } // Fin Funcion fecha_db_almacenar
+
 /*<Clase>
 <Nombre>case_fecha</Nombre>
 <Parametros>$dato:nombre del campo;$compara:valor con el que se va a comparar;$valor1:valor a mostrar si la comparacion da verdadero;$valor2:valor a devolver si la comparacion da falso</Parametros>
@@ -3396,22 +3257,21 @@ function fecha_db_almacenar($fecha, $formato = NULL)
 </Clase>  */
  function resta_fechas($fecha1,$fecha2)
  {
-  global $conn;
-   if($conn->motor=="Oracle")
-   {if($fecha2 == "")
-     $fecha2= "sysdate";
-    return "$fecha1-$fecha2 ";
-   }
-  elseif($conn->motor=="MySql")
-   { if($fecha2 == "")
-     $fecha2= "CURDATE()";
-     return "DATEDIFF($fecha1,$fecha2)";
-   }
-   elseif($conn->motor=="SqlServer" || $conn->motor=="MSSql")
-   { if($fecha2 == "")
-     $fecha2= "CURRENT_TIMESTAMP";
-     return "DATEDIFF(DAY,$fecha2,$fecha1)";
-   }
+	global $conn;
+	return $conn->resta_fechas($fecha1, $fecha2);
+	/*if ($conn->motor == "Oracle") {
+		if ($fecha2 == "")
+			$fecha2 = "sysdate";
+		return "$fecha1-$fecha2 ";
+	} elseif ($conn->motor == "MySql") {
+		if ($fecha2 == "")
+			$fecha2 = "CURDATE()";
+		return "DATEDIFF($fecha1,$fecha2)";
+	} elseif ($conn->motor == "SqlServer" || $conn->motor == "MSSql") {
+		if ($fecha2 == "")
+			$fecha2 = "CURRENT_TIMESTAMP";
+		return "DATEDIFF(DAY,$fecha2,$fecha1)";
+	}*/
  }
  /*<Clase>
 <Nombre>resta_horas</Nombre>
