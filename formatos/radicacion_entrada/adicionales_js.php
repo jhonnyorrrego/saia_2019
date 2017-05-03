@@ -24,7 +24,7 @@ $busca_componente=busca_filtro_tabla("nombre","busqueda_componente","idbusqueda_
         	if(componente=='reporte_radicacion_correspondencia'){
         		enlace_finalizar='';
         	}
-          $("#nav_busqueda").after("<div style='margin-left:9px;margin-right:9px;' class='ui-state-default ui-jqgrid-pager ui-corner-bottom'><button class='btn btn-mini' title='Realizar despacho' id='boton_seleccionar_registros'>Generar Planilla de Entrega</button>"+enlace_finalizar+"</div>");
+          $("#nav_busqueda").after("<div style='margin-left:9px;margin-right:9px;' class='ui-state-default ui-jqgrid-pager ui-corner-bottom'><button class='btn btn-mini' title='Realizar despacho' id='boton_seleccionar_registros'>Generar Planilla</button>"+enlace_finalizar+"</div>");
           } 
         
         /*Genera Planilla de Mensajeros*/

@@ -47,7 +47,6 @@ $funcionarios=array();
 $idfunc=usuario_actual("idfuncionario");
 
 $lista2=expedientes_asignados();
-
 if(@$_REQUEST["id"] && @$_REQUEST["uid"]){
 	echo("<?xml version=\"1.0\" encoding=\"UTF-8\"?".">");
 	echo("<tree id=\"".$_REQUEST["id"]."\">\n");
@@ -65,16 +64,15 @@ function llena_expediente($id){
 global $conn,$sql,$exp_doc,$funcionarios,$excluidos,$dependencias,$varios,$lista2,$estado_cierre,$estado_archivo;
 if($id==0){
   $papas=busca_filtro_tabla("a.fecha, a
-.nombre, a.descripcion, a.cod_arbol, a.idexpediente, estado_cierre","vexpediente_serie a",$lista2." and (a.cod_padre=0 OR a.cod_padre IS NULL)".$estado_cierre.$estado_archivo,"GROUP BY a.fecha, a
-.nombre, a.descripcion, a.cod_arbol, a.idexpediente, estado_cierre order by idexpediente desc",$conn);
+.nombre, a.cod_arbol, a.idexpediente, estado_cierre","vexpediente_serie a",$lista2." and (a.cod_padre=0 OR a.cod_padre IS NULL)".$estado_cierre.$estado_archivo,"GROUP BY a.fecha, a
+.nombre, a.cod_arbol, a.idexpediente, estado_cierre order by idexpediente desc",$conn);
 	
 }
 else{
 	$papas=busca_filtro_tabla("a.fecha, a
-.nombre, a.descripcion, a.cod_arbol, a.idexpediente, a.estado_cierre","vexpediente_serie a",$lista2." and (a.cod_padre=".$id.")".$estado_cierre.$estado_archivo,"GROUP BY a.fecha, a
-.nombre, a.descripcion, a.cod_arbol, a.idexpediente, estado_cierre order by idexpediente desc",$conn);
+.nombre, a.cod_arbol, a.idexpediente, a.estado_cierre","vexpediente_serie a",$lista2." and (a.cod_padre=".$id.")".$estado_cierre.$estado_archivo,"GROUP BY a.fecha, a
+.nombre, a.cod_arbol, a.idexpediente, estado_cierre order by idexpediente desc",$conn);
 } 
-
 if($papas["numcampos"]){
 	for($i=0; $i<$papas["numcampos"]; $i++){
   	$permitido=0;

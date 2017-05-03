@@ -91,14 +91,14 @@ function llena_expediente($id){
 global $conn,$sql,$exp_doc,$funcionarios,$excluidos,$dependencias,$varios,$lista2,$datos_admin_funcionario,$ingresado;
 if($id==0){
   $papas=busca_filtro_tabla("a.fecha, a
-.nombre, a.descripcion, a.cod_arbol, a.idexpediente, estado_cierre","vexpediente_serie a",$lista2." and (a.cod_padre=0 OR a.cod_padre IS NULL) AND a.estado_cierre=1","GROUP BY a.fecha, a
-.nombre, a.descripcion, a.cod_arbol, a.idexpediente, estado_cierre order by idexpediente desc",$conn);
+.nombre, a.cod_arbol, a.idexpediente, estado_cierre","vexpediente_serie a",$lista2." and (a.cod_padre=0 OR a.cod_padre IS NULL) AND a.estado_cierre=1","GROUP BY a.fecha, a
+.nombre, a.cod_arbol, a.idexpediente, estado_cierre order by idexpediente desc",$conn);
 	
 }
 else{
 	$papas=busca_filtro_tabla("a.fecha, a
-.nombre, a.descripcion, a.cod_arbol, a.idexpediente, a.estado_cierre","vexpediente_serie a",$lista2." and (a.cod_padre=".$id.") AND a.estado_cierre=1","GROUP BY a.fecha, a
-.nombre, a.descripcion, a.cod_arbol, a.idexpediente, estado_cierre order by idexpediente desc",$conn);
+.nombre, a.cod_arbol, a.idexpediente, a.estado_cierre","vexpediente_serie a",$lista2." and (a.cod_padre=".$id.") AND a.estado_cierre=1","GROUP BY a.fecha, a
+.nombre, a.cod_arbol, a.idexpediente, estado_cierre order by idexpediente desc",$conn);
    
 } 
 if($papas["numcampos"]){
@@ -152,8 +152,8 @@ if($papas["numcampos"]){
         	}	   
         }
 		$hijos_expediente=busca_filtro_tabla("a.fecha, a
-.nombre, a.descripcion, a.cod_arbol, a.idexpediente, a.estado_cierre","vexpediente_serie a",$lista2." and (a.cod_padre=".$papas[$i]["idexpediente"].") AND a.estado_cierre=1","GROUP BY a.fecha, a
-.nombre, a.descripcion, a.cod_arbol, a.idexpediente, estado_cierre order by idexpediente desc",$conn);
+.nombre, a.cod_arbol, a.idexpediente, a.estado_cierre","vexpediente_serie a",$lista2." and (a.cod_padre=".$papas[$i]["idexpediente"].") AND a.estado_cierre=1","GROUP BY a.fecha, a
+.nombre, a.cod_arbol, a.idexpediente, estado_cierre order by idexpediente desc",$conn);
 		if($hijos_expediente['numcampos']){
 			$child=1;
 		}

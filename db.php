@@ -3590,6 +3590,9 @@ function concatenar_cadena_sql($arreglo_cadena){
 		case 'MSSql':
       return(implode("+",$arreglo_cadena));
     break;
+    case 'Oracle':
+	    return(implode("||",$arreglo_cadena));
+		break;    
     default:
       if(@$arreglo_cadena[($i+1)]==""){
         return($arreglo_cadena[0]);
