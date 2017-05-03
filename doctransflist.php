@@ -459,13 +459,13 @@ function rastro_documento($x_doc,$filtro){
  if($cantidad[0]["cant"]>$cantidad_maxima_rastro[0]["valor"] && !$filtro){
  	$start=0;
 	$limit=$cantidad_maxima_rastro[0]["valor"];
- 	$recorrido = busca_filtro_tabla_limit("buzon_salida.*,".fecha_db_obtener("fecha","Y-m-d H:i:s")." as fecha_format","buzon_salida","archivo_idarchivo=$x_doc and nombre not in ('LEIDO','ELIMINA_LEIDO','ELIMINA_APROBADO','ELIMINA_REVISADO','ELIMINA_TERMINADO','ELIMINA_TRANSFERIDO')","order by idtransferencia desc",$start,($limit-1),$conn);
+ 	$recorrido = busca_filtro_tabla_limit("buzon_salida.*,".fecha_db_obtener("fecha","Y-m-d H:i:s")." as fecha_format","buzon_salida","archivo_idarchivo=$x_doc and nombre not in ('LEIDO','ELIMINA_LEIDO','ELIMINA_APROBADO','ELIMINA_REVISADO','ELIMINA_TERMINADO','ELIMINA_TRANSFERIDO','ELIMINA_BORRADOR')","order by idtransferencia desc",$start,($limit-1),$conn);
  }
  else if($filtro){
- 	$recorrido = busca_filtro_tabla("buzon_salida.*,".fecha_db_obtener("fecha","Y-m-d H:i:s")." as fecha_format","buzon_salida","archivo_idarchivo=$x_doc and nombre not in ('LEIDO','ELIMINA_LEIDO','ELIMINA_APROBADO','ELIMINA_REVISADO','ELIMINA_TERMINADO','ELIMINA_TRANSFERIDO') AND destino='".usuario_actual('funcionario_codigo')."'","idtransferencia DESC",$conn);
+ 	$recorrido = busca_filtro_tabla("buzon_salida.*,".fecha_db_obtener("fecha","Y-m-d H:i:s")." as fecha_format","buzon_salida","archivo_idarchivo=$x_doc and nombre not in ('LEIDO','ELIMINA_LEIDO','ELIMINA_APROBADO','ELIMINA_REVISADO','ELIMINA_TERMINADO','ELIMINA_TRANSFERIDO','ELIMINA_BORRADOR') AND destino='".usuario_actual('funcionario_codigo')."'","idtransferencia DESC",$conn);
  }
  else{
- 	$recorrido = busca_filtro_tabla("buzon_salida.*,".fecha_db_obtener("fecha","Y-m-d H:i:s")." as fecha_format","buzon_salida","archivo_idarchivo=$x_doc and nombre not in ('LEIDO','ELIMINA_LEIDO','ELIMINA_APROBADO','ELIMINA_REVISADO','ELIMINA_TERMINADO','ELIMINA_TRANSFERIDO')","idtransferencia DESC",$conn);
+ 	$recorrido = busca_filtro_tabla("buzon_salida.*,".fecha_db_obtener("fecha","Y-m-d H:i:s")." as fecha_format","buzon_salida","archivo_idarchivo=$x_doc and nombre not in ('LEIDO','ELIMINA_LEIDO','ELIMINA_APROBADO','ELIMINA_REVISADO','ELIMINA_TERMINADO','ELIMINA_TRANSFERIDO','ELIMINA_BORRADOR')","idtransferencia DESC",$conn);
  }
 
  $documento=busca_filtro_tabla("plantilla","documento","iddocumento=$x_doc","",$conn);

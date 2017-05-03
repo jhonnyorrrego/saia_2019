@@ -1,7 +1,6 @@
 <?php
 include_once("conexion.php");
-class SQL
-{
+class SQL {
     var $consulta,$motor;
     var $Conn;
     var $res=NULL;
@@ -12,6 +11,7 @@ class SQL
     var $numfilas=NULL;
     var $ultimo_insert=NULL;
     var $filas=0;
+
 /*
 <Clase>SQL
 <Nombre>SQL.
@@ -23,11 +23,11 @@ class SQL
 <Pre-condiciones>debe existir una conexion a la base de datos
 <Post-condiciones>
 */
-  function SQL($conn, $motorBd)
-  	{
+  function __construct($conn, $motorBd) {
           $this->Conn = $conn;
           $this->motor = $motorBd;
   	}
+
 /*
 <Clase>SQL
 <Nombre>Buscar.

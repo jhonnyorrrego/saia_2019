@@ -1018,17 +1018,44 @@ function AddData($conn)
 */
 function cambiar_ruta($iddoc){
 	global $conn;  
-  $temp=busca_filtro_tabla("","documento","iddocumento=".$iddoc,"",$conn);  
+  $temp=busca_filtro_tabla("","documento","iddocumento=".$iddoc,"",$conn); 
+  
+     $condicion_not_borrador=" AND A.nombre NOT LIKE('BORRADOR') ";
+     $adiciona_in_borrador='';
+    if(@$_REQUEST['reset_borrador']){
+        $condicion_not_borrador='';
+        $adiciona_in_borrador="'BORRADOR',";
+    }
+  
   
 	if($temp[0]["estado"]=='ACTIVO'){
 	$sql="UPDATE ruta A SET A.tipo='INACTIVO' WHERE A.documento_iddocumento=".$temp[0]["iddocumento"];      
 	phpmkr_query($sql,$conn);
-	$sql="UPDATE buzon_entrada A SET A.nombre=".concatenar_cadena_sql(array("'ELIMINA_'","A.nombre"))." WHERE A.archivo_idarchivo=".$temp[0]["iddocumento"]." AND A.nombre NOT LIKE('ELIMINA_%') AND A.nombre NOT LIKE('BORRADOR') AND A.nombre IN('POR_APROBAR','LEIDO','COPIA','BLOQUEADO','RECHAZADO','REVISADO','APROBADO','DEVOLUCION','TRANSFERIDO','TERMINADO')";
+	$sql="UPDATE buzon_entrada A SET A.nombre=".concatenar_cadena_sql(array("'ELIMINA_'","A.nombre"))." WHERE A.archivo_idarchivo=".$temp[0]["iddocumento"]." AND A.nombre NOT LIKE('ELIMINA_%') ".$condicion_not_borrador." AND A.nombre IN(".$adiciona_in_borrador."'POR_APROBAR','LEIDO','COPIA','BLOQUEADO','RECHAZADO','REVISADO','APROBADO','DEVOLUCION','TRANSFERIDO','TERMINADO')";
 	phpmkr_query($sql,$conn);
-	$sql="UPDATE buzon_salida A SET A.nombre=".concatenar_cadena_sql(array("'ELIMINA_'","A.nombre"))."  WHERE A.archivo_idarchivo=".$temp[0]["iddocumento"]." AND A.nombre NOT LIKE('ELIMINA_%') AND A.nombre NOT LIKE('BORRADOR') AND A.nombre IN('POR_APROBAR','LEIDO','COPIA','BLOQUEADO','RECHAZADO','REVISADO','APROBADO','DEVOLUCION','TRANSFERIDO','TERMINADO')";
+	$sql="UPDATE buzon_salida A SET A.nombre=".concatenar_cadena_sql(array("'ELIMINA_'","A.nombre"))."  WHERE A.archivo_idarchivo=".$temp[0]["iddocumento"]." AND A.nombre NOT LIKE('ELIMINA_%') ".$condicion_not_borrador." AND A.nombre IN(".$adiciona_in_borrador."'POR_APROBAR','LEIDO','COPIA','BLOQUEADO','RECHAZADO','REVISADO','APROBADO','DEVOLUCION','TRANSFERIDO','TERMINADO')";
 	phpmkr_query($sql,$conn);
 	$sql1="DELETE FROM asignacion where tarea_idtarea=2 and documento_iddocumento=".$temp[0]["iddocumento"];
 	phpmkr_query($sql1,$conn);
+	
+
+    if(@$_REQUEST['reset_borrador']){ //se recrea el borrador con un nuevo usuario
+        $new_user_borrador=@$_REQUEST['new_user_borrador'];
+    
+        $sqlbe="
+        INSERT INTO buzon_entrada (archivo_idarchivo,nombre,destino,tipo_destino,fecha,origen,tipo_origen,tipo,activo,ruta_idruta,ver_notas) VALUES 
+            (".$temp[0]["iddocumento"].",'BORRADOR','".$new_user_borrador."',1,".fecha_db_almacenar(date("Y-m-d h:i:s"),'Y-m-d H:i:s').",'".$new_user_borrador."',1,'ARCHIVO',0,0,0)
+        ";
+        phpmkr_query($sqlbe,$conn);
+        
+        $sqlbs="
+        INSERT INTO buzon_salida (archivo_idarchivo,nombre,destino,tipo_destino,fecha,origen,tipo_origen,tipo,ruta_idruta,ver_notas) VALUES 
+            (".$temp[0]["iddocumento"].",'BORRADOR','".$new_user_borrador."',1,".fecha_db_almacenar(date("Y-m-d h:i:s"),'Y-m-d H:i:s').",'".$new_user_borrador."',1,'ARCHIVO',0,0)
+        ";
+        phpmkr_query($sqlbs,$conn);        
+    }
+	
+	
 	if($temp[0]["plantilla"]=="")
 		$temp[0]["plantilla"]="Documento";  
 	}else if($temp[0]["estado"]!='ACTIVO'){ 
