@@ -68,7 +68,7 @@ function generar_codigo_qr($idformato, $iddoc, $idfunc = 0) {
 	if($imagen == false) {
 		alerta("Error al tratar de crear el codigo qr");
 	} else {
-		$sql_documento_qr = "INSERT INTO documento_verificacion(documento_iddocumento,funcionario_idfuncionario,fecha,ruta_qr,verificacion) VALUES (" . $iddoc . "," . $idfun . "," . fecha_db_almacenar(date("Y-m-d H:m:s"), 'Y-m-d H:i:S') . ",'" . $imagen . "','vacio')";
+		$sql_documento_qr = "INSERT INTO documento_verificacion(documento_iddocumento,funcionario_idfuncionario,fecha,ruta_qr,verificacion) VALUES (" . $iddoc . "," . $idfun . "," . fecha_db_almacenar(date("Y-m-d"), 'Y-m-d') . ",'" . $imagen . "','vacio')";
 		phpmkr_query($sql_documento_qr);
 	}
 }
