@@ -424,6 +424,10 @@ function generar_importar($datos){
 					$sqlu="UPDATE ".$tabla." SET valor='".$cod_padre."' WHERE nombre='ft_".strtolower($nombre_padre)."' AND formato_idformato=".$idformato;
 					phpmkr_query($sqlu);
 				}
+				if(@$datos['datos_formato']['serie_idserie']){
+					$sqlus="UPDATE ".$tabla." SET valor='".$datos['datos_formato']['serie_idserie']."' WHERE nombre='serie_idserie' AND formato_idformato=".$idformato;
+					phpmkr_query($sqlus);				    
+				}
 				$idcampos_formato=implode(',',$vector_idcampos_formato);		
 			}
 		//FIN INSERT CAMPOS_FORMATO	
