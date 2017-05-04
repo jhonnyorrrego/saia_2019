@@ -142,27 +142,6 @@ function actualizar_campos_documento($idformato,$iddoc){
 function vincular_flujo($idformato,$iddoc){
 global $conn;
 actualizar_campos_documento($idformato,$iddoc);
-$max_salida=6; // Previene algun posible ciclo infinito limitando a 10 los ../
-$ruta_db_superior=$ruta="";
-while($max_salida>0)
-{
-if(is_file($ruta."db.php"))
-{
-$ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
-}
-$ruta.="../";
-$max_salida--;
-}
-include_once($ruta_db_superior."workflow/libreria_paso.php");
-$datos=busca_filtro_tabla("","ft_radicacion_entrada A, documento B","documento_iddocumento=iddocumento AND documento_iddocumento=".$iddoc,"",$conn);
-//print_r($datos);
-if($datos[0]["estado"]=='APROBADO'){
-	
-	$paso_documento=busca_filtro_tabla("","paso_documento A","documento_iddocumento=".$iddoc,"idpaso_documento desc",$conn);
-	if($paso_documento["numcampos"]){
-		terminar_actividad_paso($iddoc,'',2,$paso_documento[0]["idpaso_documento"],2);
-	}
-}
 }
 function llenar_datos_funcion($idformato,$iddoc){
 	global $conn;
@@ -553,13 +532,13 @@ function ingresar_item_destino_radicacion($idformato,$iddoc){//posterior al adic
             if ($posicion_coincidencia === false) {
                 $funcionario=$destino[$i];
 
-                $cadena='INSERT INTO ft_destino_radicacion (ft_radicacion_entrada,nombre_destino, nombre_origen, tipo_origen, tipo_destino, numero_item) VALUES ('.$padre[0]['idft_radicacion_entrada'].','.$destino[$i].', '.$valor_origen.', '.$padre[0]['tipo_origen'].', '.$padre[0]['tipo_destino'].',"0")';
+                $cadena='INSERT INTO ft_destino_radicacion (ft_radicacion_entrada,nombre_destino, nombre_origen, tipo_origen, tipo_destino, numero_item,serie_idserie,estado_item) VALUES ('.$padre[0]['idft_radicacion_entrada'].','.$destino[$i].', '.$valor_origen.', '.$padre[0]['tipo_origen'].', '.$padre[0]['tipo_destino'].',\'0\','.$padre[0]['serie_idserie'].',0)';
                 phpmkr_query($cadena);
             }else {
                 $dependencia=str_replace("#", "", $destino[$i]);
                 $busca_funcionarios=busca_filtro_tabla("iddependencia_cargo","vfuncionario_dc","estado=1 AND estado_dc=1 AND estado_dep=1 AND iddependencia=".$dependencia,"",$conn);
                 for ($j=0; $j < $busca_funcionarios['numcampos']; $j++) { 
-                    $cadena='INSERT INTO ft_destino_radicacion (ft_radicacion_entrada,nombre_destino, nombre_origen, tipo_origen, tipo_destino, numero_item) VALUES ('.$padre[0]['idft_radicacion_entrada'].','.$busca_funcionarios[$j]['iddependencia_cargo'].', '.$valor_origen.', '.$padre[0]['tipo_origen'].', '.$padre[0]['tipo_destino'].',"0")';
+                    $cadena='INSERT INTO ft_destino_radicacion (ft_radicacion_entrada,nombre_destino, nombre_origen, tipo_origen, tipo_destino, numero_item,serie_idserie,estado_item) VALUES ('.$padre[0]['idft_radicacion_entrada'].','.$busca_funcionarios[$j]['iddependencia_cargo'].', '.$valor_origen.', '.$padre[0]['tipo_origen'].', '.$padre[0]['tipo_destino'].',\'0\','.$padre[0]['serie_idserie'].',0)';
                     phpmkr_query($cadena);
                 }
             }
@@ -591,13 +570,17 @@ function mostrar_item_destino_radicacion($idformato,$iddoc){
     	
     	
     	for ($i=0; $i < $datos['numcampos']; $i++) {
-    	    $origen=busca_filtro_tabla("concat(nombres,' ',apellidos) AS nombre","vfuncionario_dc a","a.funcionario_codigo=".$datos[$i]['nombre_origen'],"",$conn);
+    	    $concat=array("nombres","' '","apellidos");
+    	    $concat_nombres=concatenar_cadena_sql($concat);     		
+    	    $origen=busca_filtro_tabla($concat_nombres." AS nombre","vfuncionario_dc a","a.funcionario_codigo=".$datos[$i]['nombre_origen'],"",$conn);
 
             if(!$origen['numcampos']){
                 $origen=busca_filtro_tabla("nombre","vejecutor a","a.iddatos_ejecutor=".$datos[$i]['origen_externo'],"",$conn);
             }
             if(!$origen['numcampos']){
-                $origen=busca_filtro_tabla("concat(nombres,' ',apellidos) AS nombre","vfuncionario_dc a","a.iddependencia_cargo=".$datos[$i]['nombre_origen'],"",$conn);
+    	    	$concat=array("nombres","' '","apellidos");
+    	    	$concat_nombres=concatenar_cadena_sql($concat);            	
+                $origen=busca_filtro_tabla($concat_nombres." AS nombre","vfuncionario_dc a","a.iddependencia_cargo=".$datos[$i]['nombre_origen'],"",$conn);
             }
 			if($datos[$i]['tipo_origen']==1){
 				$origen=busca_filtro_tabla("nombre","vejecutor a","a.iddatos_ejecutor=".$datos[$i]['nombre_origen'],"",$conn);
@@ -617,7 +600,9 @@ function mostrar_item_destino_radicacion($idformato,$iddoc){
                 }
                 $persona_natural_destino='persona_natural_dest';
     	    }else{
-    	        $destino=busca_filtro_tabla("concat(nombres,' ',apellidos) AS nombre, cargo, dependencia,iddependencia_cargo as nombre_destino","vfuncionario_dc","iddependencia_cargo=".$datos[$i]['nombre_destino'],"",$conn);
+    	    	$concat=array("nombres","' '","apellidos");
+    	    	$concat_nombres=concatenar_cadena_sql($concat);
+    	        $destino=busca_filtro_tabla($concat_nombres." AS nombre, cargo, dependencia,iddependencia_cargo as nombre_destino","vfuncionario_dc","iddependencia_cargo=".$datos[$i]['nombre_destino'],"",$conn);
     	        $ubicacion=$destino[0]['dependencia'];
     	        $persona_natural_destino='destino';
     	        if(!$destino['numcampos']){
@@ -691,12 +676,16 @@ function mostrar_item_destino_radicacion($idformato,$iddoc){
     	';
     	
     	for ($i=0; $i < $datos['numcampos']; $i++) {
-    	    $origen=busca_filtro_tabla("concat(nombres,' ',apellidos) AS nombre","funcionario a","a.funcionario_codigo=".$datos[$i]['nombre_origen'],"",$conn);
+    	    $concat=array("nombres","' '","apellidos");
+    	    $concat_nombres=concatenar_cadena_sql($concat);      		
+    	    $origen=busca_filtro_tabla($concat_nombres." AS nombre","funcionario a","a.funcionario_codigo=".$datos[$i]['nombre_origen'],"",$conn);
             if(!$origen['numcampos']){
                 $origen=busca_filtro_tabla("nombre","vejecutor a","a.iddatos_ejecutor=".$datos[$i]['origen_externo'],"",$conn);
             }
             if(!$origen['numcampos']){
-                $origen=busca_filtro_tabla("concat(nombres,' ',apellidos) AS nombre","vfuncionario_dc a","a.iddependencia_cargo=".$datos[$i]['nombre_origen'],"",$conn);
+    	    	$concat=array("nombres","' '","apellidos");
+    	    	$concat_nombres=concatenar_cadena_sql($concat);             	
+                $origen=busca_filtro_tabla($concat_nombres." AS nombre","vfuncionario_dc a","a.iddependencia_cargo=".$datos[$i]['nombre_origen'],"",$conn);
             }
 
 			if($datos[$i]['tipo_origen']==1){
@@ -718,7 +707,9 @@ function mostrar_item_destino_radicacion($idformato,$iddoc){
                 }
                 $persona_natural_destino='persona_natural_dest';
     	    }else{
-    	        $destino=busca_filtro_tabla("concat(nombres,' ',apellidos) AS nombre, cargo, dependencia,iddependencia_cargo as nombre_destino","vfuncionario_dc","iddependencia_cargo=".$datos[$i]['nombre_destino'],"",$conn);
+    	    	$concat=array("nombres","' '","apellidos");
+    	    	$concat_nombres=concatenar_cadena_sql($concat);     	    	
+    	        $destino=busca_filtro_tabla($concat_nombres." AS nombre, cargo, dependencia,iddependencia_cargo as nombre_destino","vfuncionario_dc","iddependencia_cargo=".$datos[$i]['nombre_destino'],"",$conn);
     	        $ubicacion=$destino[0]['dependencia'];
     	        $persona_natural_destino='destino';
     	        if(!$destino['numcampos']){
