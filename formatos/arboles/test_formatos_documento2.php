@@ -118,8 +118,11 @@ for($i=0;$i<$num_campo;$i++){
        $cad_tips[]=$campo[$i]["nombre"];
     }
 }
+$cad_tips[]="id".$tabla;
+$cad_tips[]="documento_iddocumento";
+$cad_tips=array_unique($cad_tips);
 $cad_tips=implode(",",$cad_tips);
-$dato=busca_filtro_tabla($cad_tips.",id".$tabla.",documento_iddocumento",$tabla,$arreglo[2]."=".$arreglo[1],"id".$tabla." asc",$conn);
+$dato=busca_filtro_tabla($cad_tips,$tabla,$arreglo[2]."=".$arreglo[1],"id".$tabla." asc",$conn);
 
 for($i=0;$i<$dato["numcampos"];$i++){
  $estado=busca_filtro_tabla("estado","documento","iddocumento=".$dato[$i]["documento_iddocumento"],"",$conn);
@@ -167,10 +170,12 @@ for($i=0;$i<$num_campo;$i++){
        $cad_tips[]=$campo[$i]["nombre"];
     }
 }
+
+$cad_tips[]="id".$tabla;
+$cad_tips=array_unique($cad_tips);
 $cad_tips=implode(",",$cad_tips);
 $formato=busca_filtro_tabla("","formato","idformato=(select cod_padre from formato where idformato=".$arreglo[0].")","",$conn);
-
-$dato=busca_filtro_tabla($cad_tips.",id".$tabla,$tabla,$formato[0]["nombre_tabla"]."=".$arreglo[1],"id".$tabla." asc",$conn);
+$dato=busca_filtro_tabla($cad_tips,$tabla,$formato[0]["nombre_tabla"]."=".$arreglo[1],"id".$tabla." asc",$conn);
 
 for($i=0;$i<$dato["numcampos"];$i++){
   $tips="";
