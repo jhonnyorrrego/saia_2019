@@ -403,4 +403,7 @@ INSERT INTO funciones_formato_accion (idfunciones_formato_accion, idfunciones_fo
 ----------------------------
 UPDATE campos_formato SET acciones=NULL WHERE idcampos_formato=34 AND formato_idformato=2;
 DELETE FROM funciones_formato WHERE nombre_funcion='seleccionar_origen';
+----------------------------
+UPDATE modulo SET tipo='secundario' WHERE  nombre='radicacion_entrada_formulario' AND tipo='1';
+----------------------------
 
