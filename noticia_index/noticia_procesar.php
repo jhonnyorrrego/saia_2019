@@ -71,13 +71,12 @@ if(isset($_REQUEST['adicionar2'])){
 		}
 	
 		if($ejecutar==true){
-			$fecha=date('Y-m-d');
+			$fecha=fecha_db_almacenar(date('Y-m-d'),'Y-m-d');
 			$previo=substr($_REQUEST['noticia'], 0,200);
-			$sql="INSERT INTO noticia_index (noticia,previo,imagen,titulo,subtitulo,fecha) values ('".$_REQUEST['noticia']."','".$previo."','".RUTA_NOTICIA_IMAGENES.$_FILES['imagen_modulo']['name']."','".$_REQUEST['titulo']."','".$_REQUEST['subtitulo']."','".$fecha."')";
-			
+			$sql="INSERT INTO noticia_index (noticia,previo,imagen,titulo,subtitulo,fecha) values ('".$_REQUEST['noticia']."','".$previo."','".RUTA_NOTICIA_IMAGENES.$_FILES['imagen_modulo']['name']."','".$_REQUEST['titulo']."','".$_REQUEST['subtitulo']."',".$fecha.")";
 			phpmkr_query($sql);
 			echo "Noticia adicionada satisfactoriamente";  
-		}			
+		}				
 	}
 	
 
