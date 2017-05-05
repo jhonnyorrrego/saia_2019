@@ -481,7 +481,7 @@ if(@$_REQUEST["id"]) {
 		if($alerta != "") {
 			alerta($alerta);
 		}
-		redirecciona(RUTA_SAIA . "vacio.php");
+		redirecciona("/" . RUTA_SAIA . "vacio.php");
 	}
 } else {
 	alerta("El formato No se ha podido capturar");
