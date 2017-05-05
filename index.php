@@ -189,7 +189,7 @@ $mayor_informacion=busca_filtro_tabla("valor","configuracion","nombre='mayor_inf
           <tr>
             <td width="62" rowspan="2">&nbsp;</td>
             <td width="125" rowspan="2" align="left" valign="top">
-              <div id="CustomerLogoContainer" align="center"><img src="<?php echo($ruta_logo);?>"></div>
+              <div id="CustomerLogoContainer" align="center"><img src="<?php echo($ruta_logo);?>" style="max-height:100%;"></div>
             </td>
             <td width="18" rowspan="2" align="left" valign="top">&nbsp;</td>
             <td width="102" height="50" nowrap class="blueTexts">Nombre de usuario:</td>
