@@ -307,7 +307,9 @@ function obtener_informacion_proveedor($idformato,$iddoc){
 	
 	echo(implode(", &nbsp;",$texto));
 	}else{
-	    $origen=busca_filtro_tabla("concat(nombres,' ',apellidos) AS nombre, dependencia, cargo","vfuncionario_dc","iddependencia_cargo IN(".$tipo_origen[0]['area_responsable'].")","",$conn);
+        $array_concat=array("nombres","' '","apellidos");
+        $cadena_concat=concatenar_cadena_sql($array_concat); 	    
+	    $origen=busca_filtro_tabla($cadena_concat." AS nombre, dependencia, cargo","vfuncionario_dc","iddependencia_cargo IN(".$tipo_origen[0]['area_responsable'].")","",$conn);
 	    $texto=array();
 	$texto[]="<b>Nombre:</b> ".$origen[0]["nombre"];
 	$texto[]="<b>Dependencia:</b> ".$origen[0]["dependencia"];
@@ -813,7 +815,9 @@ function mostrar_destino_radicacion($idformato,$iddoc){
         for ($i=0; $i < $cont; $i++) { 
             $posicion_coincidencia = strpos($destinos[$i], $cadena_buscada);
             if ($posicion_coincidencia === false) {
-               $busca_funcionarios=busca_filtro_tabla("concat(nombres,' ',apellidos) AS nombre,iddependencia_cargo","vfuncionario_dc","iddependencia_cargo=".$destinos[$i],"",$conn);
+               $array_concat=array("nombres","' '","apellidos");
+               $cadena_concat=concatenar_cadena_sql($array_concat);
+               $busca_funcionarios=busca_filtro_tabla($cadena_concat." AS nombre,iddependencia_cargo","vfuncionario_dc","iddependencia_cargo=".$destinos[$i],"",$conn);
                if($busca_funcionarios['numcampos']){
                    $array_funcionarios[]=$busca_funcionarios[0]['iddependencia_cargo'];
                		$nombres.=$busca_funcionarios[0]['nombre']." </br> ";
@@ -821,7 +825,9 @@ function mostrar_destino_radicacion($idformato,$iddoc){
                
             }else {
                 $dependencia=str_replace("#", "", $destinos[$i]);
-                $busca_funcionarios=busca_filtro_tabla("concat(nombres,' ',apellidos) AS nombre,iddependencia_cargo","vfuncionario_dc","estado=1 AND estado_dc=1 AND estado_dep=1 AND iddependencia=".$dependencia,"",$conn);
+                $array_concat=array("nombres","' '","apellidos");
+                $cadena_concat=concatenar_cadena_sql($array_concat);                
+                $busca_funcionarios=busca_filtro_tabla($cadena_concat." AS nombre,iddependencia_cargo","vfuncionario_dc","estado=1 AND estado_dc=1 AND estado_dep=1 AND iddependencia=".$dependencia,"",$conn);
                 for ($k=0; $k < $busca_funcionarios['numcampos']; $k++) { 
                     $array_funcionarios[]=$busca_funcionarios[$k]['iddependencia_cargo'];
                     $nombres.=$busca_funcionarios[$k]['nombre']." </br> ";
@@ -1043,13 +1049,17 @@ function mostrar_informacion_destino_radicacion($idformato,$iddoc){
         for ($i=0; $i < $cont; $i++) { 
             $posicion_coincidencia = strpos($destinos[$i], $cadena_buscada);
             if ($posicion_coincidencia === false) {
-               $busca_funcionarios=busca_filtro_tabla("concat(nombres,' ',apellidos) AS nombre","vfuncionario_dc","iddependencia_cargo=".$destinos[$i],"",$conn);
+               $array_concat=array("nombres","' '","apellidos");
+               $cadena_concat=concatenar_cadena_sql($array_concat);                 
+               $busca_funcionarios=busca_filtro_tabla($cadena_concat." AS nombre","vfuncionario_dc","iddependencia_cargo=".$destinos[$i],"",$conn);
                if($busca_funcionarios['numcampos']){
                		$datos_copia.=codifica_encabezado(html_entity_decode($busca_funcionarios[0]['nombre']))."</br>";
                }
             }else {
                 $dependencia=str_replace("#", "", $destinos[$i]);
-                $busca_funcionarios=busca_filtro_tabla("concat(nombres,' ',apellidos) AS nombre","vfuncionario_dc","estado=1 AND estado_dc=1 AND estado_dep=1 AND iddependencia=".$dependencia,"",$conn);
+                $array_concat=array("nombres","' '","apellidos");
+                $cadena_concat=concatenar_cadena_sql($array_concat);                 
+                $busca_funcionarios=busca_filtro_tabla($cadena_concat." AS nombre","vfuncionario_dc","estado=1 AND estado_dc=1 AND estado_dep=1 AND iddependencia=".$dependencia,"",$conn);
                 for ($k=0; $k < $busca_funcionarios['numcampos']; $k++) { 
                     $datos_copia.=codifica_encabezado(html_entity_decode($busca_funcionarios[$k]['nombre']))." </br>";
                 }
