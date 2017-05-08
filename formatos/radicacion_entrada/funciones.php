@@ -518,6 +518,8 @@ function ingresar_item_destino_radicacion($idformato,$iddoc){//posterior al adic
         
         $destino=explode(",",$padre[0]["$campo"]);
         $cont=count($destino);
+		
+		
 		for($i=0; $i < $cont; $i++){
 		    $cadena_buscada   = '#';
             $posicion_coincidencia = strpos($destino[$i], $cadena_buscada);
@@ -530,11 +532,18 @@ function ingresar_item_destino_radicacion($idformato,$iddoc){//posterior al adic
 						$valor_origen=$padre[0]['ejecutor'];
 					}
 					
-				}             
+				} 
+				
+			  if(!$padre[0]['serie_idserie'] || $padre[0]['serie_idserie']==''){
+			  	$serie_destino_radicacion=busca_filtro_tabla("serie_idserie","formato","nombre='destino_radicacion'","",$conn);
+			  	if($serie_destino_radicacion['numcampos']){
+			  		$padre[0]['serie_idserie']=	$serie_destino_radicacion[0]['serie_idserie'];
+			  	}
+			  }          
             if ($posicion_coincidencia === false) {
                 $funcionario=$destino[$i];
 
-                $cadena='INSERT INTO ft_destino_radicacion (ft_radicacion_entrada,nombre_destino, nombre_origen, tipo_origen, tipo_destino, numero_item,serie_idserie,estado_item) VALUES ('.$padre[0]['idft_radicacion_entrada'].','.$destino[$i].', '.$valor_origen.', '.$padre[0]['tipo_origen'].', '.$padre[0]['tipo_destino'].',\'0\','.$padre[0]['serie_idserie'].',0)';
+                $cadena='INSERT INTO ft_destino_radicacion (ft_radicacion_entrada,nombre_destino, nombre_origen, tipo_origen, tipo_destino, numero_item,serie_idserie,estado_item) VALUES ('.$padre[0]['idft_radicacion_entrada'].','.$destino[$i].', '.$valor_origen.', '.$padre[0]['tipo_origen'].', '.$padre[0]['tipo_destino'].',\'0\','.$padre[0]['serie_idserie'].',0)';	
                 phpmkr_query($cadena);
             }else {
                 $dependencia=str_replace("#", "", $destino[$i]);
