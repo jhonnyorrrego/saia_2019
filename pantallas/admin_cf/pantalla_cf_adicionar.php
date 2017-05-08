@@ -56,7 +56,7 @@ if($_REQUEST['guardar']==1){
 				</div>
 			</div>
 			<div class="control-group">
-				<label class="control-label" for="etiqueta">Código*:</label>
+				<label class="control-label" for="etiqueta">Valor*:</label>
 				<div class="controls">
 					<input type="text" name="valor" id="valor" class="required" value="">
 				</div>
