@@ -163,10 +163,13 @@ if($datos_busqueda["numcampos"]){
   if(!$sidx){
     if($datos_busqueda[0]["ordenado_por"]){
       $sidx=$datos_busqueda[0]["ordenado_por"];
-      if(!$sord){
-        $sord=" DESC ";
-      }  
     }
+    if($datos_busqueda[0]["direccion"]){
+      $sord=$datos_busqueda[0]["direccion"];
+    }    
+    if(!$sord){
+        $sord=" DESC ";
+    }  
   } 
 } else
   die();
@@ -218,16 +221,11 @@ foreach($funciones_tablas AS $key=>$valor){
 
 $ordenar_consulta="";
 $agrupar_consulta=$datos_busqueda[0]["agrupado_por"];
+
 if(MOTOR=='MySql' || MOTOR=='Oracle') {
 	if($agrupar_consulta!=""){
 	  $ordenar_consulta.=" GROUP BY ".$agrupar_consulta;
 	  $ordenar_consulta_aux=" GROUP BY ".implode(",",$agrupacion);
-	}
-	if($sidx && $sord){
-		if($datos_busqueda[0]["direccion"]!=''){
-			$sord=$datos_busqueda[0]["direccion"];
-		}
-	  $ordenar_consulta2.=$ordenar_consulta." ORDER BY ".$sidx." ".$sord;
 	}
 } else if(MOTOR == 'SqlServer' || MOTOR == 'MSSql') {
 	$ordenar_consulta2="";
@@ -236,13 +234,13 @@ if(MOTOR=='MySql' || MOTOR=='Oracle') {
 	  $ordenar_consulta2.=" GROUP BY ".$agrupar_consulta;
 	  $ordenar_consulta_aux=" GROUP BY ".implode(",",$agrupacion);
 	}
-	if($sidx && $sord){
-	  if($datos_busqueda[0]["direccion"] != '') {
-	    $sord=$datos_busqueda[0]["direccion"];
-	  }
-	  $ordenar_consulta2.=" ORDER BY ".$sidx." ".$sord;
-	  $ordenar_grafico=" ORDER BY ".$sidx." ".$sord;
-	}
+}
+if($sidx && $sord){
+  if(MOTOR=='MySql' || MOTOR=='Oracle') {
+       $ordenar_consulta2.=$ordenar_consulta;
+  }
+  $ordenar_consulta2.=" ORDER BY ".$sidx." ".$sord;
+  $ordenar_grafico=" ORDER BY ".$sidx." ".$sord;
 }
 $ordenar_consulta=strtolower($ordenar_consulta);
 $ordenar_consulta2=strtolower($ordenar_consulta2);

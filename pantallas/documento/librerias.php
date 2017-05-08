@@ -15,7 +15,7 @@ include_once($ruta_db_superior."workflow/libreria_paso.php");
 include_once($ruta_db_superior."formatos/librerias/funciones_generales.php");
 
 function barra_inferior_documento($iddoc,$numero){
-$dato_prioridad=busca_filtro_tabla("","prioridad_documento","documento_iddocumento=".$iddoc,"fecha_asignacion DESC",$conn);
+$dato_prioridad=busca_filtro_tabla("","prioridad_documento","documento_iddocumento=".$iddoc." AND funcionario_idfuncionario=".usuario_actual("idfuncionario"),"fecha_asignacion DESC",$conn);
 
 $prioridad="icon-flag";
 if($dato_prioridad["numcampos"]){
@@ -49,7 +49,7 @@ if($_SESSION["tipo_dispositivo"]=="movil"){
     $clase_info="kenlace_saia";
 }
 $texto.='<div class="pull"><div class="btn-group pull-left" >
-	<button type="button" class="btn btn-mini  tooltip_saia documento_leido" onClick=" " enlace="pantallas/documento/detalles_documento.php?iddoc='.$iddoc.'&idbusqueda_componente='.$_REQUEST["idbusqueda_componente"].'" titulo="Detalle Doc No.'.$numero.'" conector="iframe" idregistro="'.$iddoc.'"ancho_columna="470" eliminar_hijos_kaiten="1">
+	<button type="button" class="btn btn-mini  tooltip_saia_derecha documento_leido" onClick=" " enlace="pantallas/documento/detalles_documento.php?iddoc='.$iddoc.'&idbusqueda_componente='.$_REQUEST["idbusqueda_componente"].'" titulo="Detalle Doc No.'.$numero.'" conector="iframe" idregistro="'.$iddoc.'"ancho_columna="470" eliminar_hijos_kaiten="1">
     <i class="'.$dato_leido[1].'"></i>
   </button>
 
@@ -343,9 +343,10 @@ if($tipo=='ordenar_pag'||$tipo=='todos'){
 	$cantidades["ordenar_pag"]=intval($paginas[0]["paginas"]);
 }
 if($tipo=='documentos_relacionados'||$tipo=='todos'){
-	$respuestas=busca_filtro_tabla("count(*) AS respuestas","respuesta","origen=".$doc,"",$conn);
-	$vinculados=busca_filtro_tabla("count(*) AS vinculados","documento_vinculados","documento_origen=".$doc,"",$conn);
-  $cantidades["documentos_relacionados"]=intval($respuestas[0]["respuestas"])+intval($vinculados[0]["vinculados"]);
+	$respuestas=busca_filtro_tabla("count(*) AS respuestas","respuesta a ,documento b","a.origen=b.iddocumento AND lower(b.estado) NOT IN('eliminado','anulado') AND a.origen=".$doc,"",$conn);
+	$vinculados=busca_filtro_tabla("count(*) AS vinculados","documento_vinculados a,documento b","a.documento_origen=b.iddocumento AND lower(b.estado) NOT IN('eliminado','anulado') AND (a.documento_origen=".$doc.") AND a.funcionario_idfuncionario=".$funcionario,"",$conn);
+	$vinculados_a=busca_filtro_tabla("count(*) AS vinculados","documento_vinculados a,documento b","a.documento_destino=b.iddocumento AND lower(b.estado) NOT IN('eliminado','anulado') AND (a.documento_destino=".$doc.") AND a.funcionario_idfuncionario=".$funcionario,"",$conn);
+    $cantidades["documentos_relacionados"]=intval($respuestas[0]["respuestas"])+intval($vinculados[0]["vinculados"])+intval($vinculados_a[0]["vinculados"]);
 }
 if($tipo=='ver_tareas'||$tipo=='todos'){
 	$tareas=busca_filtro_tabla("count(*) AS tareas","tareas","documento_iddocumento=".$doc,"",$conn);
@@ -548,7 +549,7 @@ if($dato_prioridad["numcampos"]){
 $tarea="icon-check";
 $dato_leido=documento_leido($iddoc);
 $texto.='<div class="btn-group pull-left" >
-  <button type="button" class="btn btn-mini kenlace_saia tooltip_saia documento_leido" enlace="ordenar.php?accion=mostrar&mostrar_formato=1&key='.$iddoc.'" titulo="'.$dato_leido[0].' No.'.$numero.'" conector="iframe" idregistro="'.$iddoc.'">
+  <button type="button" class="btn btn-mini kenlace_saia tooltip_saia_derecha documento_leido" enlace="ordenar.php?accion=mostrar&mostrar_formato=1&key='.$iddoc.'" titulo="'.$dato_leido[0].' No.'.$numero.'" conector="iframe" idregistro="'.$iddoc.'">
     <i class="'.$dato_leido[1].'"></i>
   </button>
 
@@ -577,7 +578,7 @@ if($dato_prioridad["numcampos"]){
 $tarea="icon-check";
 $dato_leido=documento_leido($iddoc);
 $texto.='<div class="btn-group pull-left" >
-  <button type="button" class="btn btn-mini kenlace_saia tooltip_saia" titulo="Activar documento" enlace="activar_documentofunc.php?func=1&key='.$iddoc.'" conector="iframe" idregistro="'.$iddoc.'"><i class="icon-ok"></i></button>
+  <button type="button" class="btn btn-mini kenlace_saia tooltip_saia_derecha" titulo="Activar documento" enlace="activar_documentofunc.php?func=1&key='.$iddoc.'" conector="iframe" idregistro="'.$iddoc.'"><i class="icon-ok"></i></button>
 
   </div>';
 $texto.=barra_estandar_documento($iddoc,$funcionario);
@@ -860,13 +861,13 @@ function mostrar_fecha_limite_documento($iddoc){
 	return('<div class="pull-right"><b>Vence:&nbsp;</b>'.$fecha_limite.'</div>');
 }
 function filtro_funcionario_etiquetados(){ 
-	$condicional_etiquetados="AND d.funcionario='".usuario_actual('idfuncionario')."'";
+	$condicional_etiquetados="AND d.funcionario='".usuario_actual('funcionario_codigo')."'";
 	return($condicional_etiquetados);
 }
 function mostrar_nombre_etiquetas($iddoc){
 	global $conn; 
-	$usuario=usuario_actual('idfuncionario');
-	$etiquetados=busca_filtro_tabla("c.nombre","documento a, documento_etiqueta b, etiqueta c,formato d","LOWER(a.estado) NOT IN ('eliminado') AND a.iddocumento=b.documento_iddocumento AND lower(a.plantilla)=d.nombre  and b.etiqueta_idetiqueta=c.idetiqueta AND c.funcionario='".$usuario."' AND a.iddocumento=".$iddoc,"",$conn);
+	$usuario=usuario_actual('funcionario_codigo');
+	$etiquetados=busca_filtro_tabla("c.nombre","documento_etiqueta b, etiqueta c","b.documento_iddocumento=".$iddoc." AND  b.etiqueta_idetiqueta=c.idetiqueta AND c.funcionario=".$usuario,"",$conn);	
 	$nombre_etiquetas='';	
 	for($i=0;$i<$etiquetados['numcampos'];$i++){
 		$nombre_etiquetas.=codifica_encabezado(html_entity_decode($etiquetados[$i]['nombre']));

@@ -10,6 +10,9 @@ while ($max_salida > 0) {
 	$max_salida--;
 }
 $texto_alter = '';
+
+
+
 ini_set("display_errors", true);
 include_once ($ruta_db_superior . "db_externo.php");
 include_once ($ruta_db_superior . "librerias_saia.php");
@@ -35,8 +38,10 @@ $puerto2=trim($_REQUEST['puerto2']);
 $bd2=trim($_REQUEST['bd2']);
 
 $conexion1 = phpmkr_db_connect_externo($host1, $user1, $clave1, $instancia1, $motor1, $puerto1, $bd1);
-
+//print_r($conexion1);
+//echo('<br><br>');
 $conexion2 = phpmkr_db_connect_externo($host2, $user2, $clave2, $instancia2, $motor2, $puerto2, $bd2);
+//print_r($conexion2);
 comparar_tablas($conexion1, $conexion2);
 //comparar_vistas($conexion1, $conexion2);
 phpmkr_db_close_externo($conexion1);
@@ -48,6 +53,7 @@ echo("
 function comparar_tablas($conexion1, $conexion2) {
 	global $texto_alter;
 	$tablas = listar_tablas_externa($conexion1);
+	//print_r($tablas);
 	$texto = '
 <style>
 .obligatorio{ width:30px;} size{width:400px;}.nombre_campo{width:300px; background-color:#cccccc;}

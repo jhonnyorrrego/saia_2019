@@ -334,7 +334,7 @@
             // Clear element value (DOES NOT WORK in some browsers)
             //slave.reset().val('').attr('value', '')[0].value = '';
             
-            // 2007-06-24: BUG FIX - Thanks to Adrian Wróbel <adrian [dot] wrobel [at] gmail.com>
+            // 2007-06-24: BUG FIX - Thanks to Adrian Wrï¿½bel <adrian [dot] wrobel [at] gmail.com>
             // Ditch the trouble maker and add a fresh new element
             MF.n--;
             MF.addSlave(newEle[0], this.i);
@@ -384,11 +384,11 @@
          v = String(slave.value || ''/*.attr('value)*/),
          a = $('<span class="file" title="'+MF.STRING.selected.replace('$file', v)+'">'+v.match(/[^\/\\]+$/gi)[0]+'</span>'),
          b = $('<a href="#'+MF.wrapID+'">'+MF.STRING.remove+'</a>');
-	       c = $('<a href="'+ruta_esc+'anexosdigitales/anexos_permiso_add.php?numanexo='+v.match(/[^\/\\]+$/gi)[0]+'" id="formexample" class="highslide" onclick="return hs.htmlExpand( this, {objectType: '+"'iframe'"+', outlineType: '+"'rounded-white'"+', wrapperClassName: '+"'highslide-wrapper drag-header'"+', outlineWhileAnimating: true, preserveContent: false, width: 250 } )">Permisos</a>');
-        
+	       //c = $('<a href="'+ruta_esc+'anexosdigitales/anexos_permiso_add.php?numanexo='+v.match(/[^\/\\]+$/gi)[0]+'" id="formexample" class="highslide" onclick="return hs.htmlExpand( this, {objectType: '+"'iframe'"+', outlineType: '+"'rounded-white'"+', wrapperClassName: '+"'highslide-wrapper drag-header'"+', outlineWhileAnimating: true, preserveContent: false, width: 250 } )">Permisos</a>');
+        	c='';
         // Insert label
         MF.labels.append(
-         r.append('[', c, ']&nbsp;','[', b, ']&nbsp;', a)//.prepend(slave.i+': ')
+         r.append('[', b, ']&nbsp;', a)//.prepend(slave.i+': ')
         );
 	       
         b.click(function(){

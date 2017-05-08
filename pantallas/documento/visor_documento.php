@@ -11,9 +11,9 @@ while ($max_salida > 0) {
 include_once($ruta_db_superior."pantallas/documento/menu_principal_documento.php");
 $iddoc=@$_REQUEST["iddoc"];
 menu_principal_documento($iddoc,1);
-$datos=busca_filtro_tabla("pdf,plantilla","documento A","A.iddocumento=".$iddoc,"",$conn);
+$datos=busca_filtro_tabla("A.pdf,A.plantilla,B.mostrar_pdf","documento A,formato B","lower(A.plantilla)=B.nombre AND A.iddocumento=".$iddoc,"",$conn);
 
-if($iddoc && !@$_REQUEST['pdf_word']){
+if($iddoc && !@$_REQUEST['pdf_word'] && $datos[0]['mostrar_pdf']!=2){
 $exportar_pdf=busca_filtro_tabla("valor","configuracion A","A.nombre='exportar_pdf'","",$conn);
 $export="";
 if($exportar_pdf[0]["valor"]=='html2ps'){

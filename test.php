@@ -226,11 +226,19 @@ else
      } 
     }       
   } 
+  
+	$item_agrupar='';
+	$item_agrupar_fin='';
+	if(@$_REQUEST['agrupar']){	
+		$item_agrupar.="<item style=\"font-family:verdana; font-size:7pt;\" nocheckbox=\"1\" id=\"agrupador_".$codigo."\" text=\"".codifica_encabezado(html_entity_decode($prof[0]['nombre']))."\" child=\"1\"> ";
+		$item_agrupar_fin.="</item>\n";	  
+	}    
+  
   $funcionarios=llena_funcionarios($codigo,$ruta,$tipo_llenado);  
   if($cadena=="" and $funcionarios=="")
     return("");
   else       
-    return $funcionarios.$cadena;
+    return $item_agrupar.$funcionarios.$cadena.$item_agrupar_fin;
  }
  }
 } 

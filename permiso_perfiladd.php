@@ -1,12 +1,21 @@
-<?php include ("db.php") ?>
 <?php
-header("Expires: Mon, 26 Jul 1997 05:00:00 GMT"); // date in the past
-header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT"); // always modified
-header("Cache-Control: no-store, no-cache, must-revalidate"); // HTTP/1.1 
-header("Cache-Control: post-check=0, pre-check=0", false); 
-header("Pragma: no-cache"); // HTTP/1.0 
+$max_salida=6; // Previene algun posible ciclo infinito limitando a 10 los ../
+$ruta_db_superior=$ruta="";
+while($max_salida>0){
+if(is_file($ruta."db.php")){
+  $ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
+}
+$ruta.="../";
+$max_salida--;
+}
+include_once($ruta_db_superior."librerias_saia.php"); 
+include_once($ruta_db_superior."db.php");
+usuario_actual();
+?>
+<htm>
+<head>
+<?php
 $ewCurSec = 0; // Initialise
-				
 // Initialize common variables
 $x_idpermiso_perfil = Null;
 $x_modulo_idmodulo = Null;
@@ -15,132 +24,34 @@ $x_perfil_idperfil = Null;
 $x_caracteristica_propio = Null;
 $x_caracteristica_grupo = Null;
 $x_caracteristica_total = Null;
-
-include ("phpmkrfn.php"); 
-// Get action
-$sAction = @$_POST["a_add"];
-if (($sAction == "") || ((is_null($sAction)))) {
-	$sKey = @$_GET["key"];
-	$sKey = (get_magic_quotes_gpc()) ? stripslashes($sKey) : $sKey;
-	if ($sKey <> "") {
-		$sAction = "C"; // Copy record
-	}
-	else
-	{
-		$sAction = "I"; // Display blank record
-	}
-}
-
-switch ($sAction)
-{
-	case "A": // Add
-		if (AddData($conn)) { // Add New Record
-			$_SESSION["ewmsg"] = "ADICION&Oacute; NUEVO REGISTRO CON &Eacute;XITO";
-		    abrir_url("permiso_perfiladd.php?key=".$_REQUEST["x_perfil_idperfil"],"_self");
-		}
-		break;
-}
-?>
-<?php include ("header.php") ?>
-<?php include_once("formatos/librerias/header_formato.php");
-?>
-<script type="text/javascript" src="js/jquery.js"></script>
-<script type="text/javascript" src="js/jquery.validate.js"></script>
-<meta http-equiv="Content-Type" content="text/html; charset= UTF-8 ">
-<link rel="stylesheet" type="text/css" href="css/dhtmlXTree.css">
-<script type="text/javascript" src="js/dhtmlXCommon.js"></script>
-<script type="text/javascript" src="js/dhtmlXTree.js"></script>
-<script type="text/javascript">
-<!--
-EW_dateSep = "/"; // set date separator	
-$().ready(function() {
-	// validar los campos del formato
-	$('#permiso_perfiladd').validate();
-
- $('#modulo_todos').click(function(){
-   todos_check(tree3,'x_modulo_idmodulo')
- });
- $('#modulo_ninguno').click(function(){
-    ninguno_check(tree3,'x_modulo_idmodulo')
- });
- 
- $("#x_perfil_idperfil").change(function() {
-    if($('#x_perfil_idperfil :selected').val()!="")
-      {tree3.deleteChildItems(0);
-       tree3.loadXML('test_permiso_modulo.php?filtro_perfil=1&entidad=perfil&llave_entidad='+$('#x_perfil_idperfil :selected').val());
-      }
- });
-  
-});
-function todos_check(elemento,campo)
-{
-	
- seleccionados=elemento.getAllLeafs(); 
- nodos=seleccionados.split(",");
-
- for(i=0;i<nodos.length;i++){
- 	elemento.setCheck(nodos[i],true);
- }
-   
- seleccionados_padres=elemento.getAllFatItems();	 
- nodos_padre=seleccionados_padres.split(",");
- for(i=0;i<nodos_padre.length;i++){
- 	elemento.setCheck(nodos_padre[i],true);   
- }
-   
-   
- document.getElementById(campo).value=elemento.getAllChecked();   
-} 
-function ninguno_check(elemento,campo)
-{seleccionados=elemento.getAllLeafs();
- nodos=seleccionados.split(",");
- for(i=0;i<nodos.length;i++)
-   elemento.setCheck(nodos[i],false);
-   
- seleccionados_padres=elemento.getAllFatItems();	 
- nodos_padre=seleccionados_padres.split(",");
- for(i=0;i<nodos_padre.length;i++){
- 	elemento.setCheck(nodos_padre[i],false);   
- }
-      
-   
- document.getElementById(campo).value="";
-} 
-//-->
-</script>
-
-
-
-
-
-
-<?php
-include_once($ruta_db_superior."librerias_saia.php"); 
-
 echo(estilo_bootstrap());
-
+echo(librerias_jquery("1.7"));
+echo(librerias_notificaciones());
+echo(librerias_arboles());
 ?>
-
-
+</head>
+<body>
+		<script type="text/javascript" src="<?php echo $ruta_db_superior;?>anexosdigitales/highslide-4.0.10/highslide/highslide-with-html.js"></script>
+		 <link rel="stylesheet" type="text/css" href="<?php echo $ruta_db_superior;?>anexosdigitales/highslide-4.0.10/highslide/highslide.css" />
+		 <script type='text/javascript'>
+		   hs.graphicsDir = '<?php echo $ruta_db_superior;?>anexosdigitales/highslide-4.0.10/highslide/graphics/';
+		   hs.outlineType = 'rounded-white';
+		</script>   
+		<a style="display:none;" id="enlace_highslide" class="highslide" onclick="return hs.htmlExpand(this, { objectType: 'iframe',width: 300, height: 100,preserveContent:false} )" >I</a>
 <div class="container">
 		<h5>ADICIONAR PERMISO PERFIL</h5>
 		<br/>
-
 		<ul class="nav nav-tabs">
 		  <li class="active"><a href="permiso_perfiladd.php">Adicionar Permiso</a></li>
 		     <li><a href="perfiladd.php">Adicionar Perfil</a></li>
 		</ul>		
-		<br/>
-
-<form name="permiso_perfiladd" id="permiso_perfiladd" action="permiso_perfiladd.php" method="post">
 <?php
 if(isset($_REQUEST["pantalla"]))
   echo '<input type="hidden" name="pantalla" value="'.$_REQUEST["pantalla"].'">';
 ?>
 <p>
-<input type="hidden" name="a_add" value="A">
 <table border="0" cellspacing="1" cellpadding="4" bgcolor="#CCCCCC" style="width:100%;">
-<tr>
+    <tr>
 		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">PERFIL</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker">		
 <?php
@@ -167,9 +78,8 @@ if ($rswrk) {
 echo $x_perfil_idperfilList;
 ?>
 </select>
-		</td>
-		<!--td bgcolor="#F5F5F5" width="30%" style="text-align:center;font-size:10pt"><b>AYUDA</b></td-->
-	</tr>
+</td>
+</tr>
   <tr>
 		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">MODULO*</span></td>
 		<td bgcolor="#F5F5F5">
@@ -186,24 +96,23 @@ echo $x_perfil_idperfilList;
         <img src="imagenes/cargando.gif"></div>
         <div id="treeboxbox_tree3"></div>
     	<script type="text/javascript">
-      <!--
+          <!--
           var browserType;
           if (document.layers) {browserType = "nn4"}
           if (document.all) {browserType = "ie"}
           if (window.navigator.userAgent.toLowerCase().match("gecko")) {
              browserType= "gecko"
           }
-    			tree3=new dhtmlXTreeObject("treeboxbox_tree3","100%","100%",0);
-    			tree3.setImagePath("imgs/");
-    			tree3.enableIEImageFix(true);
-    			tree3.enableAutoTooltips(1);
-          tree3.enableCheckBoxes(1);
-    			tree3.setOnLoadingStart(cargando_serie);
-          tree3.setOnLoadingEnd(fin_cargando_serie);
-    			//tree3.enableThreeStateCheckboxes(true);
-    			tree3.loadXML("test_permiso_modulo.php?filtro_perfil=1&entidad=perfil&llave_entidad=<?php echo $sKey; echo $condicion; ?>");
-    			tree3.setOnCheckHandler(onNodeSelect);
-    			tree3.setOnClickHandler(onNodeSelect2);
+    		tree3=new dhtmlXTreeObject("treeboxbox_tree3","100%","100%",0);
+    		tree3.setImagePath("imgs/");
+    		tree3.enableIEImageFix(true);
+    		tree3.enableTreeImages("false");
+            tree3.enableCheckBoxes(1);
+    		tree3.setOnLoadingStart(cargando_serie);
+            tree3.setOnLoadingEnd(fin_cargando_serie);
+    		tree3.loadXML("test_permiso_modulo.php?filtro_perfil=1&entidad=perfil&llave_entidad=<?php echo $sKey; echo $condicion; ?>");
+    		tree3.setOnCheckHandler(onNodeSelect);
+    		tree3.setOnClickHandler(high_slide_permiso_crear_formato);
           function fin_cargando_serie() {
             if (browserType == "gecko" )
                document.poppedLayer =
@@ -215,20 +124,35 @@ echo $x_perfil_idperfilList;
                document.poppedLayer =
                   eval('document.layers["esperando_modulo"]');
             document.poppedLayer.style.visibility = "hidden";
-            $('#x_modulo_idmodulo').val(tree3.getAllChecked() );
             
-            $("#x_perfil_idperfil").show();
+            
+            <?php 
+                $cmodulo_crear=busca_filtro_tabla("idmodulo","modulo","nombre='creacion_formatos'","",$conn);
+                if($cmodulo_crear['numcampos']){
+                    echo("tree3.deleteItem('".$cmodulo_crear[0]['idmodulo']."');");
+                }
+            ?>            
+            
           }
-          function onNodeSelect(nodeId)
-            {
-            	document.getElementById("x_modulo_idmodulo").value=tree3.getAllChecked();
-            }
-          function onNodeSelect2(nodeId)
-            {
-            	/*$.post("ayuda_modulo.php",{idmodulo:nodeId},function(datos){
-            		top.noty({text: datos,type: 'success',layout: "topCenter",timeout:1000});
-            	});*/
-            }
+          function onNodeSelect(nodeId){
+        	$.ajax({
+        	    url: '<?php echo($ruta_db_superior);?>pantallas/permisos/validar_permiso_perfil.php', 
+                type:'POST',
+                data:'perfil='+$('#x_perfil_idperfil :selected').val()+"&modulo="+nodeId+"&nombre_perfil="+$('#x_perfil_idperfil :selected').text()+"&nombre_modulo="+tree3.getItemText(nodeId),
+                success: function(retorno){
+                    var datos=jQuery.parseJSON(retorno); 
+                    if(datos["exito"]==0){
+                        if(tree3.isItemChecked(nodeId)===0){
+                            tree3.setCheck(nodeId, true);
+                        }
+                        else{
+                            tree3.setCheck(nodeId, false);
+                        }
+                    }
+                    notificacion_saia(datos["mensaje"],datos["tipo_mensaje"],"topRight",3000);
+                }
+        	});
+          }
           function cargando_serie() {
             if (browserType == "gecko" )
                document.poppedLayer =
@@ -240,139 +164,44 @@ echo $x_perfil_idperfilList;
                document.poppedLayer =
                    eval('document.layers["esperando_modulo"]');
             document.poppedLayer.style.visibility = "visible";
-            
-            $("#x_perfil_idperfil").hide();
           }
+          function high_slide_permiso_crear_formato(nodeId){
+            var idperfil=parseInt($('#x_perfil_idperfil').val());
+            if(idperfil){   
+                $.ajax({
+                    type:'POST',
+                    dataType: 'html',
+                    url: "<?php echo($ruta_db_superior); ?>pantallas/permisos/validar_permiso_perfil.php",
+                    data: {
+                        valida_modulo_formato:1,
+                        idmodulo:nodeId
+                    },
+                    success: function(exito){
+                        exito=parseInt(exito);
+                        if(exito){ //es formato
+                            var enlace="<?php echo($ruta_db_superior); ?>pantallas/permisos/validar_permiso_perfil.php?valida_permiso_crear_formato=1&idmodulo="+nodeId+"&idperfil="+idperfil;
+                            $('#enlace_highslide').attr('href',enlace);
+                            $('#enlace_highslide').click();
+                           // hs.htmlExpand(this, { objectType: 'iframe',width: 500, height: 200,preserveContent:false, src:enlace,outlineType: 'rounded-white',wrapperClassName:'highslide-wrapper drag-header'});	
+                        }
+                    }
+                });   
+            }    
+          }
+          
+          
+          $(document).ready(function(){
+              $("#x_perfil_idperfil").change(function() {
+                 if($('#x_perfil_idperfil :selected').val()!="")
+                   {tree3.deleteChildItems(0);
+                    tree3.loadXML('test_permiso_modulo.php?filtro_perfil=1&entidad=perfil&llave_entidad='+$('#x_perfil_idperfil :selected').val());
+                   }
+              });
+          });
     	-->
     	</script>
-  <br /><a href="#" id="modulo_todos">Todos</a>&nbsp;&nbsp;<a href="#" id="modulo_ninguno">Ninguno</a>
   </td>
-  <!--td id="mostrar_ayuda" bgcolor="#F5F5F5"></td-->
-	</tr>
-	<!--tr>
-	<td class="encabezado" title="Permite establecer si se quita o se adiciona un permiso a un usuario en la organizaci&oacute;."><span class="phpmaker" style="color: #FFFFFF;">ACCI&Oacute;N *</span></td>
-		<td bgcolor="#F5F5F5"><span class="phpmaker">
-<?php if (!(!is_null($x_accion)) || ($x_accion == "")) { $x_accion = 0;} // Set default value ?>
-<input type="radio" checked name="x_accion" id="x_accion_add" value="<?php echo htmlspecialchars("1"); ?>">
-<?php echo "Asignar";  ?>
-<?php echo EditOptionSeparator(0); ?>
-<input type="radio" name="x_accion" id="x_accion_del" value="<?php echo htmlspecialchars("0"); ?>">
-<?php echo "Eliminar"; ?>
-</span></td>
-  </tr-->
+</tr>
 </table>
-<p>
-<input type="submit" name="Action" value="Adicionar" class='btn btn-primary'>
-</form>
-<?php include ("footer.php") ?>
-<?php
-
-//-------------------------------------------------------------------------------
-// Function LoadData
-// - Load Data based on Key Value sKey
-// - Variables setup: field variables
-
-function LoadData($sKey,$conn)
-{
-	$sKeyWrk = "" . addslashes($sKey) . "";
-	$sSql = "SELECT * FROM permiso_perfil A";
-	$sSql .= " WHERE A.idpermiso_perfil = " . $sKeyWrk;
-	$sGroupBy = "";
-	$sHaving = "";
-	$sOrderBy = "";
-	if ($sGroupBy <> "") {
-		$sSql .= " GROUP BY " . $sGroupBy;
-	}
-	if ($sHaving <> "") {
-		$sSql .= " HAVING " . $sHaving;
-	}
-	if ($sOrderBy <> "") {
-		$sSql .= " ORDER BY " . $sOrderBy;
-	}
-	$rs = phpmkr_query($sSql,$conn) or error("Failed to execute query" . phpmkr_error() . ' SQL:' . $sSql);
-	if (phpmkr_num_rows($rs) == 0) {
-		$LoadData = false;
-	}else{
-		$LoadData = true;
-		$row = phpmkr_fetch_array($rs);
-
-		// Get the field contents
-		$_REQUEST["x_idpermiso_perfil"] = $row["idpermiso_perfil"];
-		$_REQUEST["x_modulo_idmodulo"] = $row["modulo_idmodulo"];
-		$_REQUEST["x_perfil_idperfil"] = $row["perfil_idperfil"];
-		$_REQUEST["x_caracteristica_propio"] = $row["caracteristica_propio"];
-		$_REQUEST["x_caracteristica_grupo"] = $row["caracteristica_grupo"];
-		$_REQUEST["x_caracteristica_total"] = $row["caracteristica_total"];
-	}
-	phpmkr_free_result($rs);
-	return $LoadData;
-}
-?>
-<?php
-
-//-------------------------------------------------------------------------------
-// Function AddData
-// - Add Data
-// - Variables used: field variables
-
-function AddData($conn)
-{
-	// Add New Record
-	$sSql = "SELECT * FROM permiso_perfil A";
-	$sSql .= " WHERE 0 = 1";
-	$sGroupBy = "";
-	$sHaving = "";
-	$sOrderBy = "";
-	if ($sGroupBy <> "") {
-		$sSql .= " GROUP BY " . $sGroupBy;
-	}
-	if ($sHaving <> "") {
-		$sSql .= " HAVING " . $sHaving;
-	}
-	if ($sOrderBy <> "") {
-		$sSql .= " ORDER BY " . $sOrderBy;
-	}
- 
- $modulos=explode(",",$_REQUEST["x_modulo_idmodulo"]);
- 
- $modulo=busca_filtro_tabla("","permiso_perfil A, modulo B","perfil_idperfil=".$_REQUEST["x_perfil_idperfil"]." AND modulo_idmodulo=idmodulo","",$conn);
-
- $datos=extrae_campo($modulo,'modulo_idmodulo','U');
- /*echo "Mios<br>";
- print_r(($datos));
- echo "<br><br>Escogidos<br>";
- print_r(($modulos));
- echo "<br><br>";*/
- $quitar=array_diff($datos,$modulos);
- /*echo "Quitar modulos<br>";
- print_r($quitar);*/
- $quitar=array_merge($quitar);
- //echo "<br><br>";
- 
- $adicionales=array_diff($modulos,$datos);
- /*echo "Adicionar nuevos modulos<br>";
- print_r($adicionales);*/
- $adicionales=array_merge($adicionales);
- //echo "<br><br>";
- 
- $cantidad_eliminar=count($quitar);
- $cantidad_adicionar=count($adicionales);
- 
- if($cantidad_eliminar){
- 	$sql1="DELETE FROM permiso_perfil WHERE perfil_idperfil=".$_REQUEST["x_perfil_idperfil"]." AND modulo_idmodulo IN(".implode(",",$quitar).")";
-	 phpmkr_query($sql1);
-	 //die($sql1);
- }
- if($cantidad_adicionar){
- 	for($i=0;$i<$cantidad_adicionar;$i++){
- 		$sql1="INSERT INTO permiso_perfil (perfil_idperfil,caracteristica_propio,modulo_idmodulo) VALUES(".$_REQUEST["x_perfil_idperfil"].",'l,e,m,a',".$adicionales[$i].")";
-		phpmkr_query($sql1);
-	 	//echo $sql1;
-		//echo "<br><br>";
- 	}
- }
- //die();
- 	
-return true;
-}
-?>
+</body>
+</html>

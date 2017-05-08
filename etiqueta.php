@@ -3,7 +3,7 @@ include_once("header.php");
 include_once("db.php");
 include_once("librerias_saia.php");
 echo(estilo_bootstrap() );
-
+echo(librerias_jquery("1.7"));
 if(@$_REQUEST["key"] && @$_REQUEST["accion"]=='seleccionar_etiqueta'){
 	$doc_menu=@$_REQUEST["key"];
 	include_once("pantallas/documento/menu_principal_documento.php");
@@ -224,14 +224,19 @@ elseif($_REQUEST["accion"]=="seleccionar_etiqueta")
 }
 elseif($_REQUEST["accion"]=="etiquetar_documento"){
 global $conn;
- $sql="delete from documento_etiqueta where etiqueta_idetiqueta in(select idetiqueta from etiqueta where privada_saia=0 and funcionario='".$usuario."') and documento_iddocumento='".$_REQUEST["key"]."'";
- phpmkr_query($sql,$conn);
+ $sql2="delete from documento_etiqueta where etiqueta_idetiqueta in(select idetiqueta from etiqueta where privada_saia=0 and funcionario='".$usuario."') and documento_iddocumento='".$_REQUEST["key"]."'";
+ phpmkr_query($sql2,$conn);
  foreach($_REQUEST["etiquetas"] as $fila){
- 	$sql="insert into documento_etiqueta(documento_iddocumento,etiqueta_idetiqueta) values('".$_REQUEST["key"]."','$fila')";
-      phpmkr_query($sql,$conn);
+ 	$sql2="insert into documento_etiqueta(documento_iddocumento,etiqueta_idetiqueta) values('".$_REQUEST["key"]."','$fila')";
+    phpmkr_query($sql2,$conn);
    }
 	$formato=busca_filtro_tabla("f.ruta_mostrar,f.nombre,f.idformato","documento d, formato f","lower(f.nombre)=lower(d.plantilla) and d.iddocumento=".$_REQUEST["key"],"",$conn);
   alerta("Documento Etiquetado.");  
+  ?>
+  <script>
+      $("#div_actualizar_info_index",top.document).click();
+  </script>
+  <?php
   abrir_url("formatos/".$formato[0]['nombre']."/".$formato[0]['ruta_mostrar']."?iddoc=".$_REQUEST["key"]."&idformato=".$formato[0]['idformato'],"_self");
 }
 include_once("footer.php");

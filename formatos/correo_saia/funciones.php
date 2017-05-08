@@ -43,7 +43,9 @@ function recibir_datos($idformato, $iddoc){
   	$cadena_anexos='<tr><td class="encabezado">Anexos</td><td>';
   	$cant_anexo=explode(",",$anexos);
   	for ($i=0; $i <count($cant_anexo) ; $i++) { 
-		  $cadena_anexos.="<li>".array_pop(explode("/",$cant_anexo[$i]))."</li>";
+  	      $nombre_anexo_temporal=array_pop(explode("/",$cant_anexo[$i]));
+  	      $nombre_real_anexo=explode('_|_',$nombre_anexo_temporal);
+		  $cadena_anexos.="<li>".$nombre_real_anexo[1]."</li>";
 	  }
 
     $cadena_anexos.="</td></tr>";
@@ -73,42 +75,34 @@ function recibir_datos($idformato, $iddoc){
 function guardar_anexos($idformato, $iddoc){
 	  global $conn,$ruta_db_superior;	  
 	  require_once($ruta_db_superior."anexosdigitales/funciones_archivo.php");    
-    //require_once($ruta_db_superior."pantallas/lib/librerias_adicionales.php");
-    //require_once($ruta_db_superior."pantallas/ocr/librerias.php");
     
     $datos=busca_filtro_tabla('','ft_correo_saia','documento_iddocumento='.$iddoc,'',$conn);
     $vector=explode(',',$datos[0]['anexos']);
-    //$vector=$datos[0]['anexos'];
 	
     for($i=0;$i<count($vector);$i++){
         $dir_anexos=selecciona_ruta_anexos("",$iddoc,'archivo');
-		//print_r($dir_anexos."-----");
         
         $ruta_real=array('');
         $ruta_real[1]=$vector[$i];
-     
-        //$ruta_real[1]='index.jpeg';
-        $archivo_actual = basename($ruta_db_superior.$ruta_real[1]);    
+
+        $archivo_actual_nombre_temporal = basename($ruta_db_superior.$ruta_real[1]);    
+        
+        $archivo_actual_vector =explode('_|_',$archivo_actual_nombre_temporal);
+        $archivo_actual=$archivo_actual_vector[1];
         $vec_ext=explode('.',$archivo_actual);
         $extencion=$vec_ext[1];
         $nombre_temporal=time().".".$extencion;
         mkdir($ruta_db_superior.$dir_anexos,0777);
         
-          $tmpVar = 1;
-            while(file_exists($ruta_db_superior.$dir_anexos. $tmpVar . '_' . $nombre_temporal)){
-                $tmpVar++;
-            }
-          $nombre_temporal=$tmpVar . '_' . $nombre_temporal;    
-        
-         //print_r($ruta_real[1]."<------->".$dir_anexos.$nombre_temporal);
-       // die();          
-        //copy($ruta_db_superior.$ruta_real[1],$ruta_db_superior.$dir_anexos.$nombre_temporal);
+        $tmpVar = 1;
+        while(file_exists($ruta_db_superior.$dir_anexos. $tmpVar . '_' . $nombre_temporal)){
+            $tmpVar++;
+        }
+        $nombre_temporal=$tmpVar . '_' . $nombre_temporal;    
+
 		rename($ruta_db_superior.$ruta_real[1], $ruta_db_superior.$dir_anexos.$nombre_temporal);
-		
-// 		
-		// print_r($dir_anexos);
         
- $sql="INSERT INTO anexos(documento_iddocumento,ruta,tipo,etiqueta,fecha_anexo,formato,campos_formato) values(".$iddoc.",'".$dir_anexos.$nombre_temporal."','".$extencion."','".$archivo_actual."'".",".fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s').",'".$idformato."','7358')";        
+        $sql="INSERT INTO anexos(documento_iddocumento,ruta,tipo,etiqueta,fecha_anexo,formato,campos_formato) values(".$iddoc.",'".$dir_anexos.$nombre_temporal."','".$extencion."','".$archivo_actual."'".",".fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s').",'".$idformato."','7358')";        
          phpmkr_query($sql,$conn);
         $idanexo=phpmkr_insert_id();
         

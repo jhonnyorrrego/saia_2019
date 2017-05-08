@@ -41,7 +41,7 @@ if(@$_REQUEST['guardar']){
 		
 		echo('
 		<script>
-				notificacion_saia("<b>ATENC&Oacute;N</b><br>La fecha limite se ha actualizado satisfactoriamente!","success","",3000);
+				notificacion_saia("<b>ATENCI&Oacute;N</b><br>La fecha limite se ha actualizado satisfactoriamente!","success","",3000);
 					var json={"idbusqueda_componente":"'.@$_REQUEST['idbusqueda_componente'].$add_componente.'","llave":'.$llave.'};
 				   parent.postMessage(json,"*");       //actualiza contenedor del listado
 				   parent.eliminar_panel_kaiten(0);    //cierra kaiten actual

@@ -122,7 +122,7 @@ function armar_ramas_arbol(&$arbol,$cierre = 1, $etiqueta, $idrama, $nocheckbox=
 		$checked = "";		
 	}	
 	
-	$arbol .= "<item style='font-family:verdana; font-size:7pt;' text='".(codifica_caracteres(strtoupper($etiqueta)))."' id='".$idrama."' ".$nocheckbox." ".$checked.">\n";
+	$arbol .= "<item style='font-family:verdana; font-size:7pt;' text='".((htmlspecialchars($etiqueta)))."' id='".$idrama."' ".$nocheckbox." ".$checked.">\n";
 	if($cierre){
 		$arbol.= "</item>\n";	
 	}else{

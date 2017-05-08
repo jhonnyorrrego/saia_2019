@@ -19,7 +19,8 @@ function mostrar_funcionario($funcionario_codigo){
 function mostrar_funcionario_asignado_por($funcionario_codigo){
 	$responsable=busca_filtro_tabla("nombres,apellidos","funcionario","funcionario_codigo=".$funcionario_codigo,"",$conn);
 	//$responsable = busca_filtro_tabla("nombres,apellidos", "vfuncionario_dc", "iddependencia_cargo=" . $funcionario_codigo, "", $conn);
-	return($responsable[0]['nombres']." ".$responsable[0]['apellidos']);
+	$respo=codifica_encabezado(html_entity_decode($responsable[0]['nombres']." ".$responsable[0]['apellidos']));
+	return($respo);
 }
 function mostrar_prioridad($prioridad){
 	switch ($prioridad) {
@@ -75,8 +76,10 @@ $mis_roles=busca_filtro_tabla("","vfuncionario_dc","funcionario_codigo=".usuario
 if($mis_roles["numcampos"]){
 	$roles=extrae_campo($mis_roles,"iddependencia_cargo");
 	$concat=array();
-	foreach ($roles AS $key=>$value){	
-		array_push($concat,"CONCAT(',',responsable,',') LIKE('%,".$value.",%')");
+	$cadena_concatenar=array("','","responsable","','");
+	foreach ($roles AS $key=>$value){
+			
+		array_push($concat,concatenar_cadena_sql($cadena_concatenar)." LIKE('%,".$value.",%')");
 	}
 	return("(".implode(" OR ",$concat).")");
 }
@@ -85,14 +88,15 @@ else{
 }
 }
 function condicion_mis_tareas_asignadas(){
-return("CONCAT(',',ejecutor,',') LIKE('%,".usuario_actual("funcionario_codigo").",%')");
+	$cadena_concatenar=array("','","ejecutor","','");
+	return(concatenar_cadena_sql($cadena_concatenar)." LIKE('%,".usuario_actual("funcionario_codigo").",%')");
 }
 function informacion_tarea_documento($documento_iddocumento){
 if($documento_iddocumento!="documento_iddocumento"){
 	$documento=busca_filtro_tabla("","documento","iddocumento=".$documento_iddocumento,"",$conn);
 	if($documento["numcampos"]){
 		if(strpos($_SERVER["HTTP_REFERER"],"iddoc=")==FALSE){
-			return('<br> Ver documento:<br><div class="link kenlace_saia" conector="iframe"  enlace="ordenar.php?key='.$documento[0]["iddocumento"].'&mostrar_formato=1'.'" titulo="Documento No.'.$documento[0]["numero"].'"><b>'.$documento[0]["numero"]."-".$documento[0]["descripcion"].'</b></div>');
+			return('<br> Ver documento:<br><div class="link kenlace_saia" conector="iframe"  enlace="ordenar.php?key='.$documento[0]["iddocumento"].'&mostrar_formato=1'.'" titulo="Documento No.'.$documento[0]["numero"].'"><b>'.$documento[0]["numero"]."-".codifica_encabezado(html_entity_decode($documento[0]["descripcion"])).'</b></div>');
 		}
 	}	
 }
@@ -100,7 +104,7 @@ if($documento_iddocumento!="documento_iddocumento"){
 
 function mostrar_texto_codificado($texto){
     global $conn,$ruta_db_superior;
-    $texto=html_entity_decode($texto);
+    $texto=codifica_encabezado(html_entity_decode($texto));
     return($texto);
 }
 

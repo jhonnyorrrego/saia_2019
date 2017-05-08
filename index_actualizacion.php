@@ -57,7 +57,7 @@ if(@$fecha[0][0]<0)
 $usuario=usuario_actual("funcionario_codigo");
 $idfuncionario=usuario_actual("idfuncionario");
 
-$etiquetados=busca_filtro_tabla("c.nombre","documento a, documento_etiqueta b, etiqueta c,formato d","LOWER(a.estado) NOT IN ('eliminado') AND a.iddocumento=b.documento_iddocumento AND lower(a.plantilla)=d.nombre  and b.etiqueta_idetiqueta=c.idetiqueta AND c.funcionario='".$usuario."' GROUP BY a.iddocumento","",$conn);
+$etiquetados=busca_filtro_tabla("c.nombre","documento a, documento_etiqueta b, etiqueta c","LOWER(a.estado) NOT IN ('eliminado') AND a.iddocumento=b.documento_iddocumento AND b.etiqueta_idetiqueta=c.idetiqueta AND c.funcionario='".$usuario."' GROUP BY a.iddocumento","",$conn);
 
 $pendientes=busca_filtro_tabla("count(*) AS cant","documento A,asignacion B,formato c ","LOWER(A.estado)<>'eliminado' AND A.iddocumento=B.documento_iddocumento AND B.tarea_idtarea<>-1 AND B.entidad_identidad=1 AND B.llave_entidad=".$usuario." and lower(A.plantilla)=c.nombre ","GROUP BY A.iddocumento",$conn);
 
@@ -68,24 +68,35 @@ $mis_roles=busca_filtro_tabla("","vfuncionario_dc","funcionario_codigo=".usuario
 if($mis_roles["numcampos"]){
 	$roles=extrae_campo($mis_roles,"iddependencia_cargo");
 	$concat=array();
+	$cadena_concatenar=array("','","responsable","','");
 	foreach ($roles AS $key=>$value){
-		array_push($concat,"CONCAT(',',responsable,',') LIKE('%,".$value.",%')");
+		array_push($concat,concatenar_cadena_sql($cadena_concatenar)." LIKE('%,".$value.",%')");
 	}
 }
 $tareas=busca_filtro_tabla("count(*) AS cant","tareas A","((".implode(" OR ",$concat).") OR ejecutor =".$usuario.") AND estado_tarea<>2","",$conn); 
-//print_r($tareas);
 $actualizaciones=busca_filtro_tabla("count(*) AS cant","documento_accion A,asignacion B","A.documento_iddocumento=B.documento_iddocumento AND B.tarea_idtarea<>-1 AND B.entidad_identidad=1 AND B.llave_entidad=".$usuario,"GROUP BY A.documento_iddocumento",$conn);
 
 
 
 
 
+$funcionario_idfuncionario=usuario_actual('idfuncionario');
 
 $tareas_responsable=busca_filtro_tabla("count(*) AS cant","tareas_listado A","A.generica=0 AND A.estado_tarea<>'TERMINADO' AND A.listado_tareas_fk<>-1 AND A.cod_padre=0 AND  A.responsable_tarea =".usuario_actual("idfuncionario"),"",$conn); 
-$tareas_coparticipante=busca_filtro_tabla("count(*) AS cant","tareas_listado A","A.generica=0 AND A.estado_tarea<>'TERMINADO'  AND A.listado_tareas_fk<>-1 AND A.cod_padre=0 AND FIND_IN_SET('".usuario_actual('idfuncionario')."', A.co_participantes)","",$conn); 
-$tareas_seguidor=busca_filtro_tabla("count(*) AS cant","tareas_listado A","A.generica=0 AND A.estado_tarea<>'TERMINADO' AND A.listado_tareas_fk<>-1 AND A.cod_padre=0 AND FIND_IN_SET('".usuario_actual('idfuncionario')."', A.seguidores)","",$conn); 
+$condicion_coparticipantes_unico=" AND ( a.co_participantes LIKE '%,".$funcionario_idfuncionario.",%' OR a.co_participantes LIKE '%,".$funcionario_idfuncionario."' OR a.co_participantes LIKE '".$funcionario_idfuncionario.",%' OR  a.co_participantes='".$funcionario_idfuncionario."' )";
+$tareas_coparticipante=busca_filtro_tabla("count(*) AS cant","tareas_listado a","a.generica=0 AND a.estado_tarea<>'TERMINADO'  AND a.listado_tareas_fk<>-1 AND a.cod_padre=0 ".$condicion_coparticipantes_unico,"",$conn); 
+$condicion_seguidores_unico=" AND ( a.seguidores LIKE '%,".$funcionario_idfuncionario.",%' OR a.seguidores LIKE '%,".$funcionario_idfuncionario."' OR a.seguidores LIKE '".$funcionario_idfuncionario.",%' OR  a.seguidores='".$funcionario_idfuncionario."' )";
+$tareas_seguidor=busca_filtro_tabla("count(*) AS cant","tareas_listado a","a.generica=0 AND a.estado_tarea<>'TERMINADO' AND a.listado_tareas_fk<>-1 AND a.cod_padre=0 ".$condicion_seguidores_unico,"",$conn); 
 $tareas_evaluador=busca_filtro_tabla("count(*) AS cant","tareas_listado A","A.generica=0 AND A.estado_tarea<>'TERMINADO' AND A.listado_tareas_fk<>-1 AND A.cod_padre=0 AND  A.evaluador =".usuario_actual("idfuncionario"),"",$conn); 
-$tareas_total=busca_filtro_tabla("count(*) AS cant","tareas_listado a","generica=0 AND a.estado_tarea<>'TERMINADO' AND a.listado_tareas_fk<>-1 AND a.cod_padre=0 AND (a.responsable_tarea=".usuario_actual('idfuncionario')." OR find_in_set('".usuario_actual('idfuncionario')."', a.co_participantes) OR find_in_set('".usuario_actual('idfuncionario')."', a.seguidores) OR a.evaluador=".usuario_actual('idfuncionario').")","",$conn);
+
+
+
+$condicion_coparticipantes=" OR ( a.co_participantes LIKE '%,".$funcionario_idfuncionario.",%' OR a.co_participantes LIKE '%,".$funcionario_idfuncionario."' OR a.co_participantes LIKE '".$funcionario_idfuncionario.",%' OR  a.co_participantes='".$funcionario_idfuncionario."' )";
+$condicion_seguidores=" OR ( a.seguidores LIKE '%,".$funcionario_idfuncionario.",%' OR a.seguidores LIKE '%,".$funcionario_idfuncionario."' OR a.seguidores LIKE '".$funcionario_idfuncionario.",%' OR  a.seguidores='".$funcionario_idfuncionario."' )";
+$condicion_evaluador=" OR a.evaluador=".$funcionario_idfuncionario;
+$condicion_tareas_total="generica=0 AND a.estado_tarea<>'TERMINADO' AND a.listado_tareas_fk<>-1 AND a.cod_padre=0 AND ( a.responsable_tarea=".$funcionario_idfuncionario."".$condicion_coparticipante.$condicion_coparticipantes.$condicion_seguidores.$condicion_evaluador."  )"; 
+
+$tareas_total=busca_filtro_tabla("count(*) AS cant","tareas_listado a",$condicion_tareas_total,"",$conn);
 //DESARROLLO TODAS LAS TAREAS
 $componente_tareas_responsable=busca_filtro_tabla("","busqueda_componente A","A.nombre='listado_tareas_responsable'","",$conn);
 $componente_tareas_coparticipante=busca_filtro_tabla("","busqueda_componente A","A.nombre='listado_tareas_coparticipante'","",$conn);
@@ -410,8 +421,21 @@ if($_SESSION["tipo_dispositivo"]=="movil"){ ?>
         </div>
       </div>
     </td>
-    <td width="16px" id="collapser_mainui">
-    </td>  
+    <td width="16px" id="collapser_mainui" title="Contraer área de trabajo">
+    </td>
+    <script>
+        $(document).ready(function(){
+            $('#collapser_mainui').click(function(){
+                var title=$(this).attr('title');
+                if(title=="Contraer área de trabajo"){
+                    title="Expandir área de trabajo";
+                }else{
+                    title="Contraer área de trabajo";
+                }
+                $(this).attr('title',title);
+            });
+        });
+    </script>
     <?php } ?>
     <td align="left" valign="top" id="CellContainer">
     <div class="<?php if($_SESSION["tipo_dispositivo"]!="movil"){echo("container-saia");}?> ui-corner-all shadow" style="padding-bottom: 0px;">
@@ -458,7 +482,7 @@ function mostrar_iconos($modulo_actual){
     $permisos=extrae_campo($permisos_perfil,"idmodulo","U");
     $finales=array_diff(array_merge((array)$permisos,(array)$adicionales),$suprimir);
     if(count($finales))
-      $tablas=busca_filtro_tabla("A.nombre,A.etiqueta,A.imagen,A.enlace,A.destino,A.ayuda,A.parametros","modulo A","A.idmodulo IN(".implode(",",$finales).")","A.orden ASC",$conn);
+      $tablas=busca_filtro_tabla("A.nombre,A.etiqueta,A.imagen,A.enlace,A.destino,A.ayuda,A.parametros,A.enlace_pantalla,A.idmodulo","modulo A","A.idmodulo IN(".implode(",",$finales).")","A.orden ASC",$conn);
     else
       $tablas["numcampos"]=0; 
     if($tablas["numcampos"]){
@@ -484,7 +508,10 @@ function mostrar_iconos($modulo_actual){
         }
         if($j>0&&$j%$cols==0 && $_SESSION["tipo_dispositivo"]!='movil'){
             echo('</tr><tr>');
-        }    
+        }
+        if(@$tablas[$j]["enlace_pantalla"]){  //si requiere de barra de navegacion (KAITEN)
+            $tablas[$j]["enlace"]="pantallas/pantallas_kaiten/principal.php?idmodulo=".$tablas[$j]["idmodulo"];
+        }
         if($_SESSION["tipo_dispositivo"]!='movil'){
           echo('<td width="'.(($cols*35)) .'px" height="44" align="center" valign="top"><a href="'.$tablas[$j]["enlace"]);
           if(!strpos($tablas[$j]["enlace"],"?"))

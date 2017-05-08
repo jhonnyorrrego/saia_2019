@@ -8,7 +8,7 @@ while($max_salida>0){
   $ruta.="../";
   $max_salida--;
 }
-include_once($ruta_db_superior."db.php");
+include_once($ruta_db_superior."db.php");;
 include_once($ruta_db_superior."pantallas/documento/librerias.php");
 $mensaje=array();
 if(@$_REQUEST["documento_iddocumento"]){  
@@ -30,7 +30,6 @@ if(@$_REQUEST["documento_iddocumento"]){
         switch($variable[0]){
           case "documento":        
             array_push($documentos,$variable[1]);
-            
           break;
           case "pagina":  
             array_push($paginas,$variable[1]);
@@ -68,33 +67,48 @@ if(@$_REQUEST["documento_iddocumento"]){
     }  
     if(count($documentos)){
       $vincular=$documentos;
-      array_push($vincular,$_REQUEST["documento_iddocumento"]);
       $cantidad=count($vincular);
+      //array_push($vincular,$_REQUEST["documento_iddocumento"]);
       $insertados=0;
+      $lya_vinculados=0;
+      $ya_vinculados=array();
       for($i=0;$i<$cantidad;$i++){
-      	for($j=0;$j<$cantidad;$j++){
-      		if($vincular[$i]!=$vincular[$j]){
-      			$origen=$vincular[$i];
-      			$destino=$vincular[$j];
-      			$sql2="INSERT INTO documento_vinculados(documento_origen,documento_destino,fecha,funcionario_idfuncionario) VALUES('".$origen."','".$destino."',".fecha_db_almacenar(date("Y-m-d H:i:s"),"Y-m-d H:i:s").",".$_REQUEST["idfuncionario"].")";
-      		    phpmkr_query($sql2);
-              if(phpmkr_insert_id()){
-                $insertados++;
-              }
-      		}
-      	}                          
+        $origen=$_REQUEST["documento_iddocumento"];
+  	    $destino=$vincular[$i];
+  	    if($origen && $destino){
+      	    $ya_vinculados=busca_filtro_tabla('','documento_vinculados','documento_origen='.$origen." AND documento_destino=".$destino." AND funcionario_idfuncionario=".$_REQUEST["idfuncionario"],'',$conn);    
+      	    if($ya_vinculados["numcampos"]){
+      	        $lya_vinculados++;
+      	    }
+  	    }
+  	    else{
+  	        $ya_vinculados["numcampos"]=0;
+  	    }
+  		if(@$origen && @$destino && $origen!=$destino && !$ya_vinculados["numcampos"]){
+  		  $sql2="INSERT INTO documento_vinculados(documento_origen,documento_destino,fecha,funcionario_idfuncionario) VALUES('".$origen."','".$destino."',".fecha_db_almacenar(date("Y-m-d H:i:s"),"Y-m-d H:i:s").",".$_REQUEST["idfuncionario"].")";
+  		  phpmkr_query($sql2);
+          if(phpmkr_insert_id()){
+            $insertados++;
+          }
+  		}
       }
       // se le resta el documento que se adiciona del documento original
-      if($insertados>=$cantidad){
-        array_push($mensaje,array("mensaje"=>"<b>ATENCI&Oacute;N</b><br>Todos los documentos han sido vinculados","tipo"=>"success"));
+      if($lya_vinculados){
+        array_push($mensaje,array("mensaje"=>"Algunos documentos ya se encuentran vinculados","tipo"=>"warning"));  
+      }
+      else if($insertados>=$cantidad){
+        array_push($mensaje,array("mensaje"=>"Todos los documentos han sido vinculados","tipo"=>"success"));
+      }
+      else if($insertados){
+        array_push($mensaje,array("mensaje"=>"Algunos documentos han sido vinculados","tipo"=>"warning"));  
       }
       else{
-        array_push($mensaje,array("mensaje"=>"<b>ATENCI&Oacute;N</b><br>Algunos documentos no han podido vincularse por favor verifique e intente de nuevo","tipo"=>"warning"));
-      }      
+        array_push($mensaje,array("mensaje"=>"Algunos documentos no han podido vincularse por favor verifique e intente de nuevo","tipo"=>"warning"));
+      }
     }      
   }
   else{
-    array_push($mensaje,array("mensaje"=>"<b>ATENCI&Oacute;N</b><br>Por favor selecione los documentos, paginas o anexos seleccionados que desea vincular","tipo"=>"warning"));
+    array_push($mensaje,array("mensaje"=>"Por favor selecione los documentos, paginas o anexos seleccionados que desea vincular","tipo"=>"warning"));
     $exito=0;
   }
 if($exito&&@$_REQUEST["deseleccionar"]){
@@ -103,7 +117,7 @@ if($exito&&@$_REQUEST["deseleccionar"]){
 }
 }
 else{
-  array_push($mensaje,array("mensaje"=>"<b>ATENCI&Oacute;N</b><br>Por favor selecione un documento al que desea vincular los documentos, paginas o anexos seleccionados","tipo"=>"warning"));
+  array_push($mensaje,array("mensaje"=>"Por favor selecione un documento al que desea vincular los documentos, paginas o anexos seleccionados","tipo"=>"warning"));
 }
-echo stripslashes(json_encode($mensaje));
+echo stripslashes(json_encode($mensaje,JSON_FORCE_OBJECT));
 ?>
