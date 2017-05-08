@@ -430,3 +430,5 @@ INSERT INTO busqueda_condicion (busqueda_idbusqueda, fk_busqueda_componente, cod
 
 UPDATE  campos_formato SET  valor =  'SELECT idcf_empresa_trans as id, nombre as nombre FROM cf_empresa_trans WHERE estado=1' WHERE  idcampos_formato =5084 AND formato_idformato=3;
 ----------------------------
+ALTER TABLE  asignacion CHANGE  serie_idserie  serie_idserie INT( 11 ) NULL;
+----------------------------
