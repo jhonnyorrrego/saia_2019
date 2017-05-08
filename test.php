@@ -308,7 +308,7 @@ if($verifica_flujo==-1){
 }
 $func="";
 //GROUP BY funcionario_codigo 
-$where_usuarios= "B.cargo_idcargo=C.idcargo AND B.funcionario_idfuncionario=A.idfuncionario  AND B.dependencia_iddependencia <> 1 AND A.estado=1 AND B.estado=1 and C.estado=1 AND B.dependencia_iddependencia=".$codigo;
+$where_usuarios= "C.tipo_cargo=1 AND B.cargo_idcargo=C.idcargo AND B.funcionario_idfuncionario=A.idfuncionario  AND B.dependencia_iddependencia <> 1 AND A.estado=1 AND B.estado=1 and C.estado=1 AND B.dependencia_iddependencia=".$codigo;
 //Tipo de LLenado =1 es para los funcionarios
 if($tipo_llenado==2 && !empty($dependencias_flujo)){
   if(!in_array($codigo,$dependencias_flujo)){
