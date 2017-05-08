@@ -38,21 +38,21 @@ for($i=0;$i<$dependencia["numcampos"];$i++){
 		$raiz_saia="../../";
 		echo(librerias_notificaciones());
         ?>
-        <!-- 
+        <!--
         <a title="" id="actualizar_arbol" style="color: -webkit-link; text-decoration: underline; cursor: pointer;"><span class="phpmaker">ACTUALIZAR ARBOL</span></a >
         <script>
         	$('#actualizar_arbol').click(function(){
 				$.ajax({
                     dataType: 'html',
                     url: "test_calidad_prueba2.php",
-              
+
                     success: function(datos){
                     	notificacion_saia("Arbol Actualizado Satisfactoriamente","success",'',3000);
                 	}
-            	});         		
+            	});
         	});
         </script>
-        
+
         -->
         <!--div id="div_secretarias">
         Filtro de procesos Por secretaria
@@ -68,8 +68,8 @@ for($i=0;$i<$dependencia["numcampos"];$i++){
           <a href="javascript:void(0)" onclick="tree_calidad.findItem(document.getElementById('stext').value,0,1)"> Buscar</a>  |
             <a href="javascript:void(0)" onclick="tree_calidad.findItem(document.getElementById('stext').value)"> Siguiente</a>  |
             <a href="javascript:void(0)" onclick="tree_calidad.findItem(document.getElementById('stext').value,1)"> Anterior</a><br /><br / >
-        -->    
-         <hr/>   
+        -->
+         <hr/>
     	<div id="treeboxbox_tree_calidad"></div>
     	<script type="text/javascript">
       <!--
@@ -102,9 +102,9 @@ for($i=0;$i<$dependencia["numcampos"];$i++){
         tree_calidad.closeAllItems(tree_calidad.getParentId(nodeId))
         tree_calidad.openItem(nodeId);
         tree_calidad.openItem(tree_calidad.getParentId(nodeId));
-       
+
         var bases_calidad = nodeId.split('|');
-        
+
         if(bases_calidad[0]=='bcp'){ //PADRE: BASES DE CALIDAD
             conexion="../bases_calidad/previo_mostrar_bases_calidad.php?iddoc=todos";
         }else if(bases_calidad[0]=='bc'){ //HIJOS DE BASES DE CALIDAD
@@ -112,12 +112,12 @@ for($i=0;$i<$dependencia["numcampos"];$i++){
         }else{ //MACROPROCESO-PROCESO,
             accion="mostrar";
             conexion="parsear_accion_arbol.php?riesgos=2&id="+nodeId+"&accion="+accion+"&llave="+llave+"&pantalla=calidad";
-           
+
         }
-        
-        window.parent.open(conexion,"detalles"); 
+
+        window.parent.open(conexion,"detalles");
         //tree2.refreshItem(nodeId);
-       
+
       }
 
       function cargando() {
@@ -147,18 +147,18 @@ for($i=0;$i<$dependencia["numcampos"];$i++){
       	var item="<?php echo $_REQUEST["item"]; ?>";
       	tree_calidad.selectItem(item,true,false);
       <?php } ?>
-      
-         <?php 
+
+         <?php
          $iddoc_mapa_proceso=busca_filtro_tabla("idformato","formato","lower(nombre)='proceso'","",$conn);
          ?>
          if( parseInt($('#ejecutar_evento_mapa_proceso').val())==1 ){
              tree_calidad.selectItem(parseInt('<?php echo($iddoc_mapa_proceso[0]['idformato']); ?>'),true,false); /*por defecto Mapa de proceso*/
             $('#ejecutar_evento_mapa_proceso').val(0);
          }
-      }    
-      
-      
-      
+      }
+
+
+
     	</script>
     </td>
   </tr>

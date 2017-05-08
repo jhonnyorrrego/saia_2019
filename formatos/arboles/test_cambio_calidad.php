@@ -15,7 +15,8 @@ else
 }*/
 $imagenes="";
 $texto="<?xml version=\"1.0\" encoding=\"UTF-8\"?".">";
-include_once("../librerias/funciones_generales.php");
+include_once("../../" . FORMATOS_SAIA . "/librerias/funciones_generales.php");
+
 $formatos_calidad=array('ft_proceso','ft_manual_calidad','ft_procedimiento','ft_instructivo','ft_politica_proceso','ft_modelo_proceso','ft_levantamiento_procesos','ft_caracterizacion','ft_registro','ft_m_documentos','ft_m_registros','ft_m_externos','ft_m_controles');
 
 $id = @$_GET["id"];
