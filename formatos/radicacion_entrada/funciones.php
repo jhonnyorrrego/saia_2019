@@ -1008,7 +1008,8 @@ function mostrar_informacion_general_radicacion($idformato,$iddoc){
   <table class="table table-bordered" style="width: 100%; font-size:10px; text-align:left;" border="1">
     ';
     if($datos[0]['tipo_origen']==1){
-        $empresa_transportadora=busca_filtro_tabla("nombre","serie","idserie=".$datos[0]['empresa_transportado'],"",$conn);
+    	
+        $empresa_transportadora=mostrar_valor_campo('empresa_transportado', $idformato, $iddoc, 1);
         $tabla.="<tr>
                     <td style='width:25%;'><strong>Número Oficio:</strong></td>
                     <td colspan='2' style='width:25%;'>".$datos[0]['numero_oficio']."</td>
@@ -1019,7 +1020,7 @@ function mostrar_informacion_general_radicacion($idformato,$iddoc){
                     <td><strong>Número Gu&iacute;a:</strong></td>
                     <td colspan='2'>".$datos[0]['numero_guia']."</td>
                     <td><strong>Empresa Transportadora:</strong></td>
-                    <td colspan='2'>".$empresa_transportadora[0]['nombre']."</td>
+                    <td colspan='2'>".$empresa_transportadora."</td>
                  </tr>";
     }
     
