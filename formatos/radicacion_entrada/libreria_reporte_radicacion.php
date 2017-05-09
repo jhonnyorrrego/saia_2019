@@ -30,7 +30,9 @@ function mostrar_origen_reporte($idft_radicacion_entrada){
         $origen=busca_filtro_tabla("b.nombre","datos_ejecutor a, ejecutor b","b.idejecutor=a.ejecutor_idejecutor AND a.iddatos_ejecutor=".$datos[0]['persona_natural'],"",$conn);
 
     }else{
-        $origen=busca_filtro_tabla("concat(nombres,' ',apellidos) AS nombre","vfuncionario_dc","iddependencia_cargo=".$datos[0]['area_responsable'],"",$conn);
+    	$array_concat=array("nombres","' '","apellidos");
+		$cadena_concat=concatenar_cadena_sql($array_concat);
+        $origen=busca_filtro_tabla($cadena_concat." AS nombre","vfuncionario_dc","iddependencia_cargo=".$datos[0]['area_responsable'],"",$conn);
     }
     return ($origen[0]['nombre']);
 }
@@ -43,7 +45,9 @@ function mostrar_destino_reporte($idft_destino_radicacion){
     if($datos[0]['tipo_destino']==1){
         $destino=busca_filtro_tabla("b.nombre","datos_ejecutor a, ejecutor b","b.idejecutor=a.ejecutor_idejecutor AND a.iddatos_ejecutor=".$datos[0]['nombre_destino'],"",$conn);
     }else{
-        $destino=busca_filtro_tabla("concat(nombres,' ',apellidos) AS nombre","vfuncionario_dc","iddependencia_cargo=".$datos[0]['nombre_destino'],"",$conn);
+    	$array_concat=array("nombres","' '","apellidos");
+		$cadena_concat=concatenar_cadena_sql($array_concat);    	
+        $destino=busca_filtro_tabla($cadena_concat." AS nombre","vfuncionario_dc","iddependencia_cargo=".$datos[0]['nombre_destino'],"",$conn);
     }
     return ($destino[0]['nombre']);
     
@@ -111,7 +115,9 @@ function planilla_mensajero2($idft_destino_radicacion,$mensajero_encargado,$esta
 function mostrar_mensajeros_dependencia($idft_destino_radicacion,$estado_item){
     global $ruta_db_superior, $conn;
     $funcionario_codigo=usuario_actual('funcionario_codigo');
-    $cargo=busca_filtro_tabla("lower(cargo) AS cargo, concat(nombres,' ',apellidos) AS nombre","vfuncionario_dc a","a.funcionario_codigo=".$funcionario_codigo,"",$conn);
+    $array_concat=array("nombres","' '","apellidos");
+	$cadena_concat=concatenar_cadena_sql($array_concat);     
+    $cargo=busca_filtro_tabla("lower(cargo) AS cargo, ".$cadena_concat." AS nombre","vfuncionario_dc a","a.funcionario_codigo=".$funcionario_codigo,"",$conn);
     $disable="";
     if($estado_item=='finalizado'){
         $disable="disabled";
@@ -139,8 +145,9 @@ function mostrar_mensajeros_dependencia($idft_destino_radicacion,$estado_item){
     $select="<select class='mensajeros' ".$disable." data-idft='$idft_destino_radicacion' name='responsable_{$idft_destino_radicacion}' style='width:150px;'>";
     
     if($responsable['numcampos']==1){
-            
-            $mensajero=busca_filtro_tabla("concat(nombres,' ',apellidos) AS nombre","vfuncionario_dc","iddependencia_cargo=".$responsable[0]['mensajero_ruta'],"",$conn);
+    		$array_concat=array("nombres","' '","apellidos");
+			$cadena_concat=concatenar_cadena_sql($array_concat);             
+            $mensajero=busca_filtro_tabla($cadena_concat." AS nombre","vfuncionario_dc","iddependencia_cargo=".$responsable[0]['mensajero_ruta'],"",$conn);
             
             if($responsable[0]['mensajero_ruta']==$datos[0]['mensajero_encargado']){
                 $select.="<option value='".$responsable[0]['mensajero_ruta']."' selected>".$mensajero[0]['nombre']."</option>";
@@ -152,7 +159,9 @@ function mostrar_mensajeros_dependencia($idft_destino_radicacion,$estado_item){
         
         $select.="<option value=''>Seleccione</option>";
         for($i=0;$i<$responsable['numcampos'];$i++){
-            $mensajero=busca_filtro_tabla("concat(nombres,' ',apellidos) AS nombre","vfuncionario_dc","iddependencia_cargo={$responsable[$i]['mensajero_ruta']}","",$conn);
+    		$array_concat=array("nombres","' '","apellidos");
+			$cadena_concat=concatenar_cadena_sql($array_concat);          	
+            $mensajero=busca_filtro_tabla($cadena_concat." AS nombre","vfuncionario_dc","iddependencia_cargo={$responsable[$i]['mensajero_ruta']}","",$conn);
             if($responsable[$i]['mensajero_ruta']==$datos[0]['mensajero_encargado']){
                 $select.="<option value='{$responsable[$i]['mensajero_ruta']}' selected>".$mensajero[0]['nombre']."</option>";
             }else{
@@ -206,7 +215,9 @@ function filtrar_mensajero(){
     
     $select="<select class='pull-left btn btn-mini dropdown-toggle' style='height:22px; margin-left: 30px;' name='filtro_mensajeros' id='filtro_mensajeros'>";
     $select.="<option value=''>Todos Los Mensajeros</option>";
-    $datos=busca_filtro_tabla("iddependencia_cargo, concat(nombres,' ',apellidos) AS nombre","vfuncionario_dc","lower(cargo)='mensajero' AND estado_dc=1","",$conn);
+	$array_concat=array("nombres","' '","apellidos");
+	$cadena_concat=concatenar_cadena_sql($array_concat);
+    $datos=busca_filtro_tabla("iddependencia_cargo, ".$cadena_concat." AS nombre","vfuncionario_dc","lower(cargo)='mensajero' AND estado_dc=1","",$conn);
     //print_r($datos);die();
     $filtrar_mensajero=@$_REQUEST['variable_busqueda'];
     for($i=0;$i<$datos['numcampos'];$i++){
