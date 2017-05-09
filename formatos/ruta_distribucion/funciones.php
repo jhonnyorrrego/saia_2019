@@ -209,8 +209,9 @@ function mostrar_datos_funcionarios_ruta($idformato,$iddoc){
 			$estado=array(1=>"Activo",2=>"Inactivo");			
 
 			for($j=$item['numcampos']-1;$j>=0;$j--){
-                    
-                    $mensajero=busca_filtro_tabla('concat(nombres," ",apellidos) AS nombre','vfuncionario_dc','iddependencia_cargo='.$item[$j]['mensajero_ruta'],'',conn);
+                    $array_concat=array("nombres","' '","apellidos");
+					$cadena_concat=concatenar_cadena_sql($array_concat);                    
+                    $mensajero=busca_filtro_tabla($cadena_concat.' AS nombre','vfuncionario_dc','iddependencia_cargo='.$item[$j]['mensajero_ruta'],'',conn);
                     
                             $seleccionar=array(1=>"",2=>"");
 		                    $seleccionar[$item[$j]['estado_mensajero']]='selected';
