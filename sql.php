@@ -390,6 +390,11 @@ function Ejecutar_Sql_MSSql($sql)
                 {
                 	$this->ultimo_insert=0;
                 }
+            }else{
+            	if(DEBUGEAR){
+            		$e=oci_error($rs);
+					print_r($e);
+            	}
             }
         }
       if(strpos(strtolower($sql),'select')!==false)

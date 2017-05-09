@@ -80,13 +80,13 @@ class radicar_saia extends rcube_plugin{
                 $filename .= '.' . $ext;
             }
         }
-        $tmpfn       =$temp_dir."/".$this->_convert_filename($filename);
+        $tmpfn       =$temp_dir."/".uniqid ()."_|_".$this->_convert_filename($filename);
         $tmpfp       = fopen($tmpfn, 'w');
         $tempfiles[] = $tmpfn;
         $message->get_part_body($part->mime_id, false, 0, $tmpfp);
         fclose($tmpfp);
       }
-      $tmpfn       =$temp_dir."/mail.eml";
+      $tmpfn       =$temp_dir."/".uniqid ()."_|_mail.eml";
       $tmpfp       = fopen($tmpfn, 'w');
       $storage->get_raw_body($uids[0],$tmpfp);
       fclose($tmpfp);

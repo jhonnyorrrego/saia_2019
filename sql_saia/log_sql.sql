@@ -403,4 +403,32 @@ INSERT INTO funciones_formato_accion (idfunciones_formato_accion, idfunciones_fo
 ----------------------------
 UPDATE campos_formato SET acciones=NULL WHERE idcampos_formato=34 AND formato_idformato=2;
 DELETE FROM funciones_formato WHERE nombre_funcion='seleccionar_origen';
+----------------------------
+UPDATE modulo SET tipo='secundario' WHERE  nombre='radicacion_entrada_formulario' AND tipo='1';
+----------------------------
+CREATE TABLE IF NOT EXISTS cf_empresa_trans (
+  idcf_empresa_trans int(11) NOT NULL AUTO_INCREMENT,
+  nombre varchar(255) DEFAULT NULL,
+  valor varchar(255) DEFAULT NULL,
+  cod_padre varchar(255) DEFAULT NULL,
+  descripcion varchar(255) DEFAULT NULL,
+  tipo varchar(255) DEFAULT NULL,
+  categoria varchar(255) DEFAULT NULL,
+  estado int(11) DEFAULT NULL,
+  PRIMARY KEY (idcf_empresa_trans)
+);
 
+UPDATE busqueda SET nombre='configuracion',etiqueta='Configuracion',estado=1,ancho=200,campos='',llave='',tablas='',ruta_libreria='pantallas/configuracion/librerias.php,pantallas/admin_cf/librerias.php',ruta_libreria_pantalla=NULL,cantidad_registros=10,tiempo_refrescar=500,ruta_visualizacion='pantallas/busquedas/consulta_busqueda_reporte.php',tipo_busqueda=2,badge_cantidades=NULL WHERE idbusqueda=19
+
+UPDATE busqueda_componente SET busqueda_idbusqueda=19, tipo=3, conector=2, url='pantallas/busquedas/consulta_busqueda_reporte.php', etiqueta='Configuracion', nombre='configuracion', orden=1, info='Nombre|{*nombre*}|center|-|Valor|{*mostrar_valor_configuracion_encrypt@valor,encrypt*}|center|-|Tipo|{*tipo*}|center|-|Fecha|{*fecha*}|center|-|Acciones|{*barra_superior_configuracion@idconfiguracion*}|center', exportar=NULL, exportar_encabezado=NULL, encabezado_componente='', estado=2, ancho=320, cargar=2, campos_adicionales='A.idconfiguracion,A.nombre,A.valor,A.tipo,A.fecha,A.encrypt', tablas_adicionales='configuracion A', ordenado_por='A.nombre', direccion='ASC', agrupado_por=NULL, busqueda_avanzada='pantallas/configuracion/busqueda_avanzada_configuracion.php', acciones_seleccionados=NULL, modulo_idmodulo=NULL, menu_busqueda_superior=NULL, enlace_adicionar='configuracionadd.php', encabezado_grillas=NULL WHERE idbusqueda_componente=84
+
+INSERT INTO busqueda_componente (busqueda_idbusqueda, tipo, conector, url, etiqueta, nombre, orden, info, exportar, exportar_encabezado, encabezado_componente, estado, ancho, cargar, campos_adicionales, tablas_adicionales, ordenado_por, direccion, agrupado_por, busqueda_avanzada, acciones_seleccionados, modulo_idmodulo, menu_busqueda_superior, enlace_adicionar, encabezado_grillas) VALUES
+(19, 3, 2, 'pantallas/busquedas/consulta_busqueda_reporte.php', 'Empresas Transportadoras', 'cf_empresa_trans', 2, 'Nombre|{*nombre*}|center|-|Valor|{*valor*}|center|-|Categoria|{*categoria*}|center|-|Estado|{*estado*}|center|-|Acciones|{*barra_superior_cf@idcf_empresa_trans,nombre_tabla*}|center', NULL, NULL, '', 2, 320, 2, 'idcf_empresa_trans,nombre,valor,categoria, case estado when 1 then ''activo'' else ''inactivo'' end as estado, ''cf_empresa_trans'' as nombre_tabla', 'cf_empresa_trans', 'nombre', 'ASC', NULL, 'pantallas/admin_cf/busqueda_avanzada_cf.php?tabla=cf_empresa_trans&idbusqueda_componente=299', NULL, NULL, NULL, 'pantallas/admin_cf/pantalla_cf_adicionar.php?tabla=cf_empresa_trans', NULL);
+
+INSERT INTO busqueda_condicion (busqueda_idbusqueda, fk_busqueda_componente, codigo_where, etiqueta_condicion) VALUES
+(NULL, 299, '1=1', 'cf_empresa_trans');
+
+UPDATE  campos_formato SET  valor =  'SELECT idcf_empresa_trans as id, nombre as nombre FROM cf_empresa_trans WHERE estado=1' WHERE  idcampos_formato =5084 AND formato_idformato=3;
+----------------------------
+ALTER TABLE  asignacion CHANGE  serie_idserie  serie_idserie INT( 11 ) NULL;
+----------------------------
