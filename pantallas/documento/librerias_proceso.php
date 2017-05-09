@@ -28,7 +28,7 @@ function filtro_consulta_vista($iddoc,$destino){
 }
 
 function filtro_consulta($iddoc){
-	global $conn,$count,$start;
+	global $conn,$start;
 	$destino =  usuario_actual("funcionario_codigo");
 	$doc_usuario="SELECT DISTINCT iddocumento,1 as creado, d.fecha FROM buzon_salida s,documento d WHERE s.archivo_idarchivo=d.iddocumento AND s.nombre IN('BORRADOR', 'REVISADO', 'RESPONDIDO', 'TRAMITE', 'TRANSFERIDO', 'DEVOLUCION','APROBADO', 'TERMINADO', 'DELEGADO', 'DISTRIBUCION') AND d.estado IN('APROBADO', 'ACTIVO','ANULADO') AND s.origen ='".$destino."' ORDER BY d.fecha desc";
 	$enviados = "SELECT DISTINCT documento_iddocumento FROM asignacion WHERE entidad_identidad=1 and llave_entidad='".$destino."' and  estado='PENDIENTE' and tarea_idtarea=2";
@@ -64,7 +64,7 @@ function filtro_consulta($iddoc){
 }
 
 function filtro_consulta_($iddoc){
-	global $conn,$count,$start;
+	global $conn,$start;
 	$destino=usuario_actual("funcionario_codigo");
 	return "origen='".$destino."'";
 }
