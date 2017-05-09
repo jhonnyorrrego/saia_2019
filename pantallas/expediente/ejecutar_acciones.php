@@ -89,19 +89,26 @@ $retorno=new stdClass;
 $retorno->exito=0;
 $retorno->mensaje="Error al guardar Prueba";
 $exito=0;
-$campos=array("nombre","descripcion","cod_padre","codigo","fecha");
-$valores=array();
-foreach($campos AS $key=>$campo){
-  if(@$_REQUEST[$campo]){
-    array_push($valores,$_REQUEST[$campo]);
-  }
-  else{
-    array_push($valores,"");
-  }
+$campos=array("nombre","cod_padre","codigo","fecha","propietario","estado_archivo");
+$array_vacios=array('cod_padre');
+for($i=0;$i<count($array_vacios);$i++){
+	if(!@$_REQUEST[$array_vacios[$i]] || @$_REQUEST[$array_vacios[$i]]==''){
+		$_REQUEST[$array_vacios[$i]]=0;
+	}		
 }
-$sql2="INSERT INTO expediente(".implode(",",$campos).",propietario) VALUES('".implode("','",$valores)."',".usuario_actual("funcionario_codigo").")";
+$sql2="INSERT INTO expediente(".implode(",",$campos).") VALUES
+	(
+		'".@$_REQUEST['nombre']."',
+		".@$_REQUEST['cod_padre'].",
+		'".@$_REQUEST['codigo']."',
+		".fecha_db_almacenar(@$_REQUEST['fecha'],'Y-m-d').",
+		".usuario_actual("funcionario_codigo")."
+		1
+	)
+";
 phpmkr_query($sql2);
 $idexpediente=phpmkr_insert_id();
+guardar_lob('descripcion','expediente',"idexpediente=".$idexpediente,@$_REQUEST['descripcion'],'texto',$conn,0);
 $cod_padre=busca_filtro_tabla("cod_arbol","expediente A","A.idexpediente=".$_REQUEST["cod_padre"],"",$conn);
 $sql3="UPDATE expediente SET cod_arbol='".$cod_padre[0]["cod_arbol"].".".$idexpediente."' where idexpediente=".$idexpediente;
 phpmkr_query($sql3);
