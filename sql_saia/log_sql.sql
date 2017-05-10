@@ -432,3 +432,4 @@ UPDATE  campos_formato SET  valor =  'SELECT idcf_empresa_trans as id, nombre as
 ----------------------------
 ALTER TABLE  asignacion CHANGE  serie_idserie  serie_idserie INT( 11 ) NULL;
 ----------------------------
+ALTER TABLE  formato ADD  permite_imprimir INT( 11 ) NULL DEFAULT  '1';
