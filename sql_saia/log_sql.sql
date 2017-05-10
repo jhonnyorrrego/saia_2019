@@ -433,3 +433,9 @@ UPDATE  campos_formato SET  valor =  'SELECT idcf_empresa_trans as id, nombre as
 ALTER TABLE  asignacion CHANGE  serie_idserie  serie_idserie INT( 11 ) NULL;
 ----------------------------
 ALTER TABLE  formato ADD  permite_imprimir INT( 11 ) NULL DEFAULT  '1';
+----------------------------
+UPDATE  campos_formato SET  valor =  'select iddependencia_cargo AS id, concat(nombres,'' '',apellidos) AS nombre from vfuncionario_dc where lower(cargo)=''mensajero'' AND estado_dc=1' WHERE idcampos_formato =5005;
+
+UPDATE campos_formato SET valor='select iddependencia_cargo AS id, concat(nombres,'' '',apellidos) AS nombre from vfuncionario_dc where lower(cargo)=''mensajero'' AND estado_dc=1', etiqueta_html='select' WHERE idcampos_formato=4999;
+----------------------------
+
