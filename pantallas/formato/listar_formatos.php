@@ -64,7 +64,7 @@
 			$etiqueta=strtolower($etiqueta);
 			$etiqueta=ucwords($etiqueta);
 
-			$enlace_adicionar= FORMATOS_CLIENTE . $lista_formatos[$i]['nombre'].'/'.$lista_formatos[$i]['ruta_adicionar'];
+			$enlace_adicionar= $ruta_db_superior . FORMATOS_CLIENTE . $lista_formatos[$i]['nombre'].'/'.$lista_formatos[$i]['ruta_adicionar'];
 
 			$texto.='
 				<tr>
