@@ -9076,6 +9076,10 @@ class TCPDF {
 					fwrite($f, $this->getBuffer(), $this->bufferlen);
 					fclose($f);
 				}
+				if ($dest == 'FI' || $dest == 'F') {
+					return(1);
+					die();
+				}				
 				if ($dest == 'FI') {
 					// send headers to browser
 					header('Content-Type: application/pdf');
