@@ -3620,4 +3620,3 @@ function obtener_funciones_anexo($idanexo, $tipo, $ruta, $etiqueta) {
 }
 
 ?>
-
