@@ -156,7 +156,9 @@ $(document).ready(function(){
 	window.parent.$(".block-iframe").attr("style","margin-top:0px; width: 100%; border:0px solid; overflow:auto; -webkit-overflow-scrolling:touch;");
 
 	var alto_document=($(document).height()-130);
-  jQuery("#datos_busqueda").jqGrid({
+    var emptyMsgDiv = $("<div class='alert alert-warning' style='font-size:24px;'><center>No se encontraron resultados</center></div>");
+	var $grid = $("#datos_busqueda");
+    $grid.jqGrid({
     height:alto_document,
     type:'POST',
    	url: "servidor_busqueda.php?idbusqueda_componente=<?php echo($datos_componente);?>&idbusqueda_grafico=<?php echo(@$_REQUEST['idbusqueda_grafico']); ?>&idbusqueda_filtro_temp=<?php echo(@$_REQUEST['idbusqueda_filtro_temp']);?>&idbusqueda_filtro=<?php echo(@$_REQUEST['idbusqueda_filtro']);?>&idbusqueda_temporal=<?php echo (@$_REQUEST['idbusqueda_temporal']);?>&actual_row="+$("#fila_actual").val()+"&variable_busqueda="+$("#variable_busqueda").val()+"&reporte=1",
@@ -176,9 +178,18 @@ $(document).ready(function(){
     rowList : [20,30,50],
     jsonReader: {
 	    page: function (obj) { if(obj.exito){$("#busqueda_pagina").val(obj.page); return(obj.page);}else{ $("#busqueda_pagina").val(0); return(0); } },
-	    total: function (obj) {$("#busqueda_total_paginas").val(obj.total); return(obj.total);  }
+	    total: function (obj) {$("#busqueda_total_paginas").val(obj.total); return(obj.total);  }	   
 		},
-
+        loadComplete: function () {
+            var ts = this;
+            if (ts.p.reccount === 0) {
+                $(this).hide();
+                emptyMsgDiv.show();
+            } else {
+                $(this).show();
+                emptyMsgDiv.hide();
+            }
+        },
 			<?php if($encabezado_pie["numcampos"]){ ?>
 		footerrow:true,
 		userDataOnFooter:true,
@@ -211,7 +222,9 @@ $(document).ready(function(){
    	pager: '#nav_busqueda',
     caption:"<?php echo $boton_buscar;?><button class=\"btn btn-mini btn-primary exportar_reporte_saia pull-left\" title=\"Exportar reporte <?php echo($datos_busqueda[0]['etiqueta']);?>\" enlace=\"<?php echo($datos_busqueda[0]['busqueda_avanzada']);?>\">Exportar &nbsp;</button><?php echo($boton_adicionar); ?>  <?php echo $acciones_selecionados;?><div class=\"pull-left\" style=\"text-align:center; width:60%;\"><?php echo($datos_busqueda[0]['etiqueta']);?></div><div id=\"barra_exportar_ppal\"><iframe name='iframe_exportar_saia' height='25px' width='150px' frameborder=0 scrolling='no'></iframe></div></div>"
 });
-jQuery("#datos_busqueda").jqGrid('navGrid','#nav_busqueda',{edit:false,add:false,del:false,search:false});
+$grid.jqGrid('navGrid','#nav_busqueda',{edit:false,add:false,del:false,search:false});
+	emptyMsgDiv.insertAfter($grid.parent());
+	emptyMsgDiv.hide();
 var cm = jQuery("#datos_busqueda")[0].p.colModel;
     $.each(jQuery("#datos_busqueda")[0].grid.headers, function(index, value) {
         var cmi = cm[index], colName = cmi.name;
