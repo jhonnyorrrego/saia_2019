@@ -30,13 +30,13 @@ $id = @$_GET["id"];
 // print_r($id);
 if (!$id) {
 	$texto .= "<tree id=\"0\">\n";
-	llenar_formatos();
+	$texto .= llenar_formatos();
 	$texto .= "</tree>\n";
 	echo ($texto);
 } else {
 	$datos_id = explode("-", $id);
 	$texto .= "<tree id=\"" . $id . "\">\n";
-	llena_hijos($datos_id[0], $datos_id[2], str_replace("id", "", $datos_id[1]));
+	$texto .= llena_hijos($datos_id[0], $datos_id[2], str_replace("id", "", $datos_id[1]));
 	$texto .= "</tree>\n";
 	echo ($texto);
 }
@@ -45,29 +45,30 @@ if (!$id) {
 
 // iddoc=idformato-nombre-nombre_tabla
 function llenar_formatos() {
-	global $texto;
-	crear_dato_formato('ft_proceso');
+	return crear_dato_formato('ft_proceso');
 }
 
 function crear_dato_formato($nombre) {
-	global $texto, $conn, $imagenes, $formatos_calidad;
+	global $conn, $imagenes, $formatos_calidad;
 	$formato = busca_filtro_tabla("A.idformato,A.nombre,A.nombre_tabla,A.etiqueta", "formato A", "A.nombre_tabla LIKE '" . $nombre . "'", "idformato DESC", $conn);
-
+	$texto = "";
 	if ($formato["numcampos"]) {
 		$imagenes = ' im0="' . strtolower($formato[0]["nombre"]) . '.gif" im1="' . strtolower($formato[0]["nombre"]) . '.gif" im2="' . strtolower($formato[0]["nombre"]) . '.gif" ';
 		$iddoc = $formato[0]["idformato"] . "-" . $formato[0]["nombre"] . "-" . $formato[0]["nombre_tabla"];
 		$texto .= '<item style="font-family:verdana; font-size:7pt;" ' . $imagenes;
 		$texto .= strip_tags('text="' . decodifica($formato[0]["etiqueta"]) . '" id="' . $formato[0]["idformato"] . '">' . "\n");
-		llenar_documentos($iddoc);
+		$texto .= llenar_documentos($iddoc);
 		if ($nombre == "ft_proceso") {
-			crear_macroprocesos($formato);
+			$texto .= crear_macroprocesos($formato);
 		}
 		$texto .= "</item>\n";
 	}
+	return $texto;
 }
 
 function crear_macroprocesos($formato) {
-	global $texto, $conn, $imagenes, $formatos_calidad, $validar_macro;
+	global $conn, $imagenes, $formatos_calidad, $validar_macro;
+	$texto = "";
 	if ($formato["numcampos"]) {
 		$macros = busca_filtro_tabla("", "ft_macroproceso_calidad B, documento c", "B.documento_iddocumento=c.iddocumento and c.estado not in('ELIMINADO')", "", $conn);
 		$formato_macro = busca_filtro_tabla("", "formato", "lower(nombre)='macroproceso_calidad'", "", $conn);
@@ -81,7 +82,7 @@ function crear_macroprocesos($formato) {
 			$texto .= strip_tags('text="' . decodifica($macros[$i]["nombre"]) . '" id="macros-' . $macros[$i]["idft_macroproceso_calidad"] . '">' . "\n");
 
 			// $iddocmacro=$formato_macro[0]["idformato"]."-".$macros[$i]["idft_macroproceso_calidad"].'-'.$formato_macro[0]["nombre_tabla"];
-			llena_hijos($formato_macro[0]["idformato"], $macros[$i]["idft_macroproceso_calidad"], $formato_macro[0]["nombre_tabla"]);
+			$texto .= llena_hijos($formato_macro[0]["idformato"], $macros[$i]["idft_macroproceso_calidad"], $formato_macro[0]["nombre_tabla"]);
 			for($j = 0; $j < $documentos["numcampos"]; $j++) {
 				/*
 				 * $imagenes=' im0="proceso.gif" im1="proceso.gif" im2="proceso.gif" ';
@@ -91,7 +92,7 @@ function crear_macroprocesos($formato) {
 				 * ;
 				 */
 				$iddoc = $formato[0]["idformato"] . "-" . $formato[0]["nombre"] . "-" . $formato[0]["nombre_tabla"] . "-" . $documentos[$j]["documento_iddocumento"];
-				llenar_documentos($iddoc);
+				$texto .= llenar_documentos($iddoc);
 				/*
 				 * $papas=busca_filtro_tabla("id".$arreglo[2]." AS llave,'".$arreglo[2]."' AS nombre_tabla",$arreglo[2],"documento_iddocumento=".$formato[$i]["iddocumento"],"",$conn);
 				 * if($papas["numcampos"])
@@ -104,10 +105,12 @@ function crear_macroprocesos($formato) {
 			$texto .= "</item>\n";
 		}
 	}
+	return $texto;
 }
 
 function llenar_documentos($iddoc) {
-	global $conn, $texto;
+	global $conn;
+	$texto = "";
 	$arreglo = explode("-", $iddoc);
 	$where = '';
 	if (@$_REQUEST["iddocumento"]) {
@@ -141,15 +144,16 @@ function llenar_documentos($iddoc) {
 			$iddoc = 0;
 		}
 
-		llena_datos_formato($iddoc, 0);
+		$texto .= llena_datos_formato($iddoc, 0);
 	}
+	return $texto;
 }
 
 function llena_datos_formato($formato, $estado = 0) {
-	global $conn, $texto, $imagenes, $formatos_calidad;
+	global $conn, $imagenes, $formatos_calidad;
 	$arreglo = explode("-", $formato);
 	$formato = busca_filtro_tabla("", "formato", "idformato='" . $arreglo[0] . "'", "", $conn);
-
+	$texto = "";
 	if ($formato["numcampos"]) {
 		$descripcion = busca_filtro_tabla("", "campos_formato", "formato_idformato=" . $formato[0]["idformato"] . " AND acciones LIKE '%d%'", "", $conn);
 
@@ -165,12 +169,12 @@ function llena_datos_formato($formato, $estado = 0) {
 			$texto .= '<item style="font-family:verdana; font-size:7pt;" ' . $imagenes;
 			$texto .= strip_tags('text="' . decodifica(htmlspecialchars($formato[0]["etiqueta"])) . '" id="' . $formato[0]["idformato"] . "-" . $arreglo[2] . "-r" . rand() . '">' . "\n");
 		}
-		llena_datos($idformato, $formato[0]["nombre_tabla"], $campo_descripcion);
+		$texto .= llena_datos($idformato, $formato[0]["nombre_tabla"], $campo_descripcion);
 		if ($estado)
 			$texto .= "</item>\n";
 		/* Aqui se deben adicionar los formatos o consideraciones adicionales para el arbol de calidad. Especificamente la parte de Planes de Mejoramiento para los procesos */
 	}
-	return;
+	return $texto;
 }
 
 function decodifica($cadena) {
@@ -178,11 +182,11 @@ function decodifica($cadena) {
 }
 
 function llena_datos($idformato, $tabla, $campo) {
-	global $conn, $texto, $imagenes, $validar_macro;
+	global $conn, $imagenes, $validar_macro;
 	$arreglo = explode("-", $idformato);
 	// echo("<br />".$idformato."<br />");
 	$estado = busca_filtro_tabla("estado", $tabla, $arreglo[2] . "=" . $arreglo[1], "", $conn);
-
+	$texto = "";
 	$adicional = '';
 	if ($tabla == 'ft_seguimiento_riesgo') {
 		$adicional = " and seguimiento_antiguo='2' ";
@@ -215,14 +219,15 @@ function llena_datos($idformato, $tabla, $campo) {
 			$texto .= strip_tags('text="' . decodifica(mostrar_valor_campo($campo, $arreglo[0], $dato[$i]["documento_iddocumento"], 1)) . '" id="' . $llave . '">');
 		}
 		if (isset($_REQUEST["id"]))
-			llena_hijos($arreglo[0], $dato[$i]["id" . $tabla], $tabla);
+			$texto .= llena_hijos($arreglo[0], $dato[$i]["id" . $tabla], $tabla);
 		$texto .= "</item>\n";
 	}
 	return ($texto);
 }
 
 function llena_hijos($idformato, $iddato, $tabla) {
-	global $conn, $texto, $formatos_calidad;
+	global $conn, $formatos_calidad;
+	$texto = "";
 	$formato = busca_filtro_tabla("", "formato", "cod_padre=" . $idformato . " AND nombre_tabla IN('" . implode("','", $formatos_calidad) . "')", "etiqueta", $conn);
 	for($i = 0; $i < $formato["numcampos"]; $i++) {
 		$campo_formato = busca_filtro_tabla("", "campos_formato", "nombre LIKE '" . $tabla . "' AND formato_idformato=" . $formato[$i]["idformato"], "", $conn);
@@ -233,9 +238,9 @@ function llena_hijos($idformato, $iddato, $tabla) {
 			$llave .= "-" . "id" . $formato[$i]["nombre_tabla"] . "-" . $iddato;
 		// $texto.='<item style="font-family:verdana; font-size:7pt;" ';
 		// $texto.=decodifica('text="'.$formato[0]["etiqueta"].'" id="'.$llave.'">');
-		llena_datos_formato($llave, 1);
+			$texto .= llena_datos_formato($llave, 1);
 		// $texto.="</item>\n";
 	}
-	return;
+	return $texto;
 }
 ?>
