@@ -438,4 +438,5 @@ UPDATE  campos_formato SET  valor =  'select iddependencia_cargo AS id, concat(n
 
 UPDATE campos_formato SET valor='select iddependencia_cargo AS id, concat(nombres,'' '',apellidos) AS nombre from vfuncionario_dc where lower(cargo)=''mensajero'' AND estado_dc=1', etiqueta_html='select' WHERE idcampos_formato=4999;
 ----------------------------
-
+UPDATE  campos_formato SET  obligatoriedad =  '0' WHERE  idcampos_formato=5088;
+----------------------------
