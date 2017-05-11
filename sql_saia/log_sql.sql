@@ -442,3 +442,13 @@ UPDATE  campos_formato SET  obligatoriedad =  '0' WHERE  idcampos_formato=5088;
 ----------------------------
 UPDATE  busqueda_componente SET  busqueda_avanzada =  'pantallas/configuracion/busqueda_avanzada_configuracion.php?idbusqueda_componente=84' WHERE  idbusqueda_componente=84;
 ----------------------------
+CREATE TABLE IF NOT EXISTS tarea_dig (
+  idtarea_dig int(11) NOT NULL AUTO_INCREMENT,
+  idfuncionario int(11) NOT NULL,
+  iddocumento int(11) NOT NULL,
+  estado int(11) NOT NULL DEFAULT '1',
+  fecha datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  direccion_ip varchar(20) DEFAULT NULL,
+  PRIMARY KEY (idtarea_dig)
+);
+----------------------------
