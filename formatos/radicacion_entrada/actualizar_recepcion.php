@@ -12,6 +12,7 @@ while($max_salida>0){
 include_once($ruta_db_superior."db.php");
 
 $idft_funcionario=json_decode(@$_REQUEST['idft_funcionario'],1);
+$sql1='';
 for($i=0;$i<count($idft_funcionario);$i++){
 	$separacion_idft_funcionario=explode('|',$idft_funcionario[$i]['value']);
 	
@@ -29,13 +30,17 @@ for($i=0;$i<count($idft_funcionario);$i++){
 		$sql="UPDATE ft_destino_radicacion SET estado_recogida=1,estado_item=1 WHERE idft_destino_radicacion=".$separacion_idft_funcionario[0];	
 		
 		if(@$responsable[0]['mensajero_ruta'] && @$responsable[0]['mensajero_ruta']!=''){
-			$sql1="UPDATE ft_destino_radicacion SET mensajero_encargado=".$responsable[0]['mensajero_ruta']." WHERE idft_destino_radicacion=".$separacion_idft_funcionario[0];	
-			phpmkr_query($sql1);	 
-		}	
+			$sql1="UPDATE ft_destino_radicacion SET mensajero_encargado='".$responsable[0]['mensajero_ruta']."' WHERE idft_destino_radicacion=".$separacion_idft_funcionario[0];		 
+		}
 	}else{
 		if($datos[0]['recepcion']==0){
 			$sql="UPDATE ft_destino_radicacion SET recepcion='".$separacion_idft_funcionario[1]."', recepcion_fecha=".fecha_db_almacenar(date("Y-m-d H:i:s"),"Y-m-d H:i:s").", estado_item=3 WHERE idft_destino_radicacion=".$separacion_idft_funcionario[0];		
 		}		
 	}
 	phpmkr_query($sql);	   
+	
+	if($sql1!=''){
+		phpmkr_query($sql1);
+	}
 }
+?>
