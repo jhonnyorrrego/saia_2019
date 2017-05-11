@@ -212,7 +212,7 @@ elseif($_REQUEST["accion"]=="guardar_editar")
       $extension=explode(".",($_FILES["imagen"]["name"]));
 	  $ultimo=count($extension);
 	  $formato=$extension[$ultimo-1];
-      $aleatorio=rand(5,15);
+      $aleatorio=uniqid();
 	  $aux=RUTA_CARRUSEL_IMAGENES;
       $imagen_reducida=$ruta_db_superior.$aux;
       crear_destino($imagen_reducida);
