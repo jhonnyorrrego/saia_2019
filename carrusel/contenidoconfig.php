@@ -1,9 +1,4 @@
 <?php
-include_once("../db.php");
-include_once("../header.php");
-include_once($ruta_db_superior . "librerias_saia.php");
-echo(estilo_bootstrap());
-
 $max_salida=10; // Previene algun posible ciclo infinito limitando a 10 los ../
 $ruta_db_superior=$ruta="";
 while($max_salida>0)
@@ -15,6 +10,14 @@ $ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
 $ruta.="../";
 $max_salida--;
 }
+
+
+include_once("../db.php");
+include_once("../header.php");
+include_once($ruta_db_superior . "librerias_saia.php");
+echo(estilo_bootstrap());
+
+
 
 ?>
 <div class="container">
@@ -160,24 +163,25 @@ elseif($_REQUEST["accion"]=="guardar_adicionar")
  phpmkr_query($sql,$conn);
  $id=phpmkr_insert_id();
  guardar_lob("contenido","contenidos_carrusel","idcontenidos_carrusel=".$id,$_REQUEST["contenido"],"texto",$conn);
- phpmkr_query($sql,$conn);
- if (is_uploaded_file($_FILES["imagen"]["tmp_name"])) 
-     {
+
+    if (is_uploaded_file($_FILES["imagen"]["tmp_name"])){
       $extension=explode(".",($_FILES["imagen"]["name"]));
 	  $ultimo=count($extension);
 	  $formato=$extension[$ultimo-1];
-      $aleatorio=rand(5,15);
+      $aleatorio=uniqid();
 	  $aux=RUTA_CARRUSEL_IMAGENES;
       $imagen_reducida=$ruta_db_superior.$aux;
       crear_destino($imagen_reducida);
       $imagen_reducida=$imagen_reducida.$aleatorio.".".$formato;
-      if(copy($_FILES["imagen"]["tmp_name"],$imagen_reducida))
-	  		$sql1="update contenidos_carrusel set imagen='".$aux.$aleatorio.".".$formato."' where idcontenidos_carrusel=".$id;
- 			phpmkr_query($sql1,$conn);
-			@unlink($_FILES["imagen"]["tmp_name"]);
+      if(copy($_FILES["imagen"]["tmp_name"],$imagen_reducida)){
+	  	$sql1="update contenidos_carrusel set imagen='".$aux.$aleatorio.".".$formato."' where idcontenidos_carrusel=".$id;
+ 		phpmkr_query($sql1,$conn);
+		@unlink($_FILES["imagen"]["tmp_name"]);          
       }
+
+    }
   
- header("location: sliderconfig.php");
+ redirecciona($ruta_db_superior."carrusel/sliderconfig.php");
 }
 elseif($_REQUEST["accion"]=="guardar_editar")
 {$campos=array("nombre","carrusel_idcarrusel","orden","align","preview");
@@ -218,12 +222,12 @@ elseif($_REQUEST["accion"]=="guardar_editar")
  			phpmkr_query($sql1,$conn);
 			@unlink($_FILES["imagen"]["tmp_name"]);
       }
- header("location: sliderconfig.php");
+ redirecciona($ruta_db_superior."carrusel/sliderconfig.php");
 }
 elseif($_REQUEST["accion"]=="eliminar")
 {$sql="delete from contenidos_carrusel where idcontenidos_carrusel=".$_REQUEST["id"];
  phpmkr_query($sql,$conn);
- header("location: sliderconfig.php");
+ redirecciona($ruta_db_superior."carrusel/sliderconfig.php");
 }
 include_once("../footer.php");
 ?>
