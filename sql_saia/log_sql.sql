@@ -440,3 +440,5 @@ UPDATE campos_formato SET valor='select iddependencia_cargo AS id, concat(nombre
 ----------------------------
 UPDATE  campos_formato SET  obligatoriedad =  '0' WHERE  idcampos_formato=5088;
 ----------------------------
+UPDATE  busqueda_componente SET  busqueda_avanzada =  'pantallas/configuracion/busqueda_avanzada_configuracion.php?idbusqueda_componente=84' WHERE  idbusqueda_componente=84;
+----------------------------
