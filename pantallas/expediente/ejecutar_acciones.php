@@ -102,7 +102,7 @@ $sql2="INSERT INTO expediente(".implode(",",$campos).") VALUES
 		".@$_REQUEST['cod_padre'].",
 		'".@$_REQUEST['codigo']."',
 		".fecha_db_almacenar(@$_REQUEST['fecha'],'Y-m-d').",
-		".usuario_actual("funcionario_codigo")."
+		".usuario_actual("funcionario_codigo").",
 		1
 	)
 ";
