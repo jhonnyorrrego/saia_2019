@@ -79,7 +79,9 @@ function planilla_mensajero($idft_destino_radicacion,$mensajero_encargado,$estad
     if($mensajero_encargado=='mensajero_encargado'){
         $html.="Pendiente";
     }else{
-        $planillas=busca_filtro_tabla("c.numero,c.iddocumento","ft_item_despacho_ingres a,ft_despacho_ingresados b, documento c","a.ft_despacho_ingresados=b.idft_despacho_ingresados AND b.documento_iddocumento=c.iddocumento AND c.estado NOT IN('ELIMINADO','ANULADO') AND a.ft_destino_radicacio=".$idft_destino_radicacion,"",$conn);
+        $condicion_item=" AND ( iddestino_radicacion LIKE '%,".$idft_destino_radicacion.",%' OR iddestino_radicacion LIKE '%,".$idft_destino_radicacion."' OR  iddestino_radicacion LIKE '".$idft_destino_radicacion.",%' OR  iddestino_radicacion='".$idft_destino_radicacion."')"; 
+        $planillas=busca_filtro_tabla("c.numero,c.iddocumento","ft_despacho_ingresados b, documento c","b.documento_iddocumento=c.iddocumento AND c.estado NOT IN('ELIMINADO','ANULADO') ".$condicion_item,"",$conn);
+        
         if($planillas['numcampos']){
             for($i=0;$i<$planillas['numcampos'];$i++){
                 $html.='<div class="link kenlace_saia" enlace="ordenar.php?key='.$planillas[$i]['iddocumento'].'&amp;accion=mostrar&amp;mostrar_formato=1" conector="iframe" titulo="No Radicado '.$planillas[$i]['numero'].'"><center><span class="badge">'.$planillas[$i]['numero']."</span></center></div>\n";
