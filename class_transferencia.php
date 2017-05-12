@@ -18,7 +18,7 @@ include_once($ruta_db_superior."sql.php");
 include_once($ruta_db_superior."asignacion.php");
 include_once($ruta_db_superior."formatos/librerias/funciones_acciones.php");
 include_once($ruta_db_superior."bpmn/librerias_formato.php");
-
+include_once($ruta_db_superior.'pantallas/documento/class_documento_adicionales.php');
 /*<Clase>
 <Nombre>buscar_funcionarios</Nombre>
 <Parametros>$dependencia:id de las dependencias a revisar;$arreglo:variable donde se va a guardar el resultado</Parametros>
@@ -2061,6 +2061,16 @@ function radicar_plantilla() {
 		if($formato["numcampos"]) {
 			$banderas = explode(",", $formato[0]["banderas"]);
 			// print_r($banderas);
+		}
+		
+		//Ejemplo de uso de la clase elasticsearch
+		if(INDEXA_ELASTICSEARCH){
+			$d2j=new documento();
+			$d2j->asignar_iddocumento($_POST["iddoc"]);
+			$exportado=$d2j->exportar_informacion();
+			if($exportado){
+				$d2j->indexar_elasticsearch($_POST["iddoc"]);	
+			}
 		}
 		// arreglo con los datos que necesita transferir archivo
 		$datos["archivo_idarchivo"] = $_POST["iddoc"];
