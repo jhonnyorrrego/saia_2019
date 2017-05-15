@@ -1,7 +1,7 @@
 {
     "require": {
         "luracast/restler": "*",
-	"elasticsearch/elasticsearch": "~2.0@beta"
+	"elasticsearch/elasticsearch": "~2.0"
     }
 }
 
