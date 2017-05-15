@@ -60,7 +60,7 @@ class elasticsearch_saia {
 		return (false);
 	}
 
-	function adicionar_indice($indice, $id, $arreglo_datos, $tipo_dato) {
+	function adicionar_indice($indice, $id, $arreglo_datos, $tipo_dato, $padre=null) {
 		if (!$this->existe_indice($indice)) {
 			$this->crear_indice($indice);
 		}
@@ -68,6 +68,9 @@ class elasticsearch_saia {
 		$parametros['id'] = $id;
 		$parametros['body'] = $arreglo_datos;
 		$parametros['type'] = $tipo_dato;
+		if(!empty($padre)) {
+			$parametros['parent'] = $padre;
+		}
 		return ($this->cliente->index($parametros));
 	}
 
@@ -102,7 +105,7 @@ class elasticsearch_saia {
 		return ($response);
 	}
 
-	function verificar_indice($indice, $id, $tipo_dato) {
+	public function verificar_indice($indice, $id, $tipo_dato) {
 		$parametros = [
 				'index' => $indice,
 				'type' => $tipo_dato,
