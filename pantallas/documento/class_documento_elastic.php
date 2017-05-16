@@ -318,13 +318,16 @@ class DocumentoElastic {
 			$hijos = array();
 
 			$this->obtener_info_hijos($this->iddocumento, $hijos);
-			if(count($hijos) > 0) {
+			if (count($hijos) > 0) {
 				$total = count($hijos);
-				foreach ($hijos as $padre => $idhijo) {
-					$arreglo_datos = $this->obtener_info_doc($idhijo);
+				foreach ( $hijos as $padre => $idhijo ) {
+					if ($padre) {
+						$arreglo_datos = $this->obtener_info_doc($idhijo);
 
-					if ($arreglo_datos) {
-						$this->guardar_indice($arreglo_datos, $padre);
+						if ($arreglo_datos) {
+							//$arreglo_datos["_parent"] = $padre;
+							$this->guardar_indice($arreglo_datos, $padre);
+						}
 					}
 				}
 			}
@@ -341,13 +344,15 @@ class DocumentoElastic {
 			$indice = "documentos";
 			$tipo_dato = $arreglo_datos["documento"]["plantilla"];
 			$id = $arreglo_datos["documento"]["iddocumento"];
-			/*print_r("Tipo: $tipo_dato");
-			echo "<br>";
-			print_r("ID: $id, Padre: $id_padre");
-			echo "<br>";
-			echo ("Datos: ");
-			print_r($arreglo_datos);
-			echo "<br>";*/
+			/*
+			 * print_r("Tipo: $tipo_dato");
+			 * echo "<br>";
+			 * print_r("ID: $id, Padre: $id_padre");
+			 * echo "<br>";
+			 * echo ("Datos: ");
+			 * print_r($arreglo_datos);
+			 * echo "<br>";
+			 */
 			return ($this->get_cliente_elasticsearch()->adicionar_indice($indice, $id, $arreglo_datos, $tipo_dato, $id_padre));
 		}
 	}
