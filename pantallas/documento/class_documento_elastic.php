@@ -155,7 +155,7 @@ class DocumentoElastic {
 			$indice = "documentos";
 			$tipo_dato = $this->documento[0]["plantilla"];
 			$id = $this->documento[0]["iddocumento"];
-			return ($this->get_cliente_elasticsearch()->adicionar_indice($indice, $id, $arreglo_datos, $tipo_dato));
+			return ($this->get_cliente_elasticsearch()->adicionar_indice_simple($indice, $id, $arreglo_datos, $tipo_dato));
 		}
 		return (false);
 	}
@@ -298,7 +298,13 @@ class DocumentoElastic {
 				for($h = 0; $h < $documentos_hijos["numcampos"]; $h++) {
 					$id_hijo = $documentos_hijos[$h]["documento_iddocumento"];
 					if ($id_hijo) {
-						$datos_hijos[$iddocumento] = $id_hijo;
+						$relacion = new StdClass();
+						$relacion->id_padre = $iddocumento;
+						$relacion->id_hijo = $id_hijo;
+						$relacion->tipo_padre = $plantilla_padre;
+						$relacion->tipo_hijo = $plantilla;
+						$datos_hijos[] = $relacion;
+						// $datos_hijos[$iddocumento] = $id_hijo;
 						// print_r($documentos_hijos[$h]);echo "<br>";
 						$this->obtener_info_hijos($id_hijo, $datos_hijos);
 					}
@@ -311,25 +317,62 @@ class DocumentoElastic {
 	public function indexar_elasticsearch_completo() {
 		// $this->asignar_iddocumento();
 		// $this->obtener_info_hijos($this->iddocumento);
-		$arreglo_datos = $this->obtener_info_doc($this->iddocumento);
+		$doc_ppal = $this->iddocumento;
+		$arreglo_datos = $this->obtener_info_doc($doc_ppal);
 
 		if ($arreglo_datos) {
-			$this->guardar_indice($arreglo_datos);
 			$hijos = array();
 
-			$this->obtener_info_hijos($this->iddocumento, $hijos);
+			$this->obtener_info_hijos($doc_ppal, $hijos);
 			if (count($hijos) > 0) {
-				$total = count($hijos);
-				foreach ( $hijos as $padre => $idhijo ) {
-					if ($padre) {
-						$arreglo_datos = $this->obtener_info_doc($idhijo);
 
-						if ($arreglo_datos) {
-							//$arreglo_datos["_parent"] = $padre;
-							$this->guardar_indice($arreglo_datos, $padre);
+				/*
+				 * $params['index'] = "documentos";
+				 * $params['id'] = $id;
+				 * $params['body'] = $arreglo_datos;
+				 * $params['type'] = $arreglo_datos["documento"]["plantilla"];
+				 */
+				$params = [
+						"mappings" => [
+								$arreglo_datos["documento"]["plantilla"] => []/*,
+								"employee" => [
+										"_parent" => [
+												"type" => $arreglo_datos["documento"]["plantilla"]
+										]
+								] */
+						]
+				];
+
+				$total = count($hijos);
+				$arreglo_hijos = array();
+				// Primero es necesario crear el mapeo entre el documento padre y sus hijos
+				foreach ( $hijos as $key => $hijo ) {
+					if ($key) {
+						$datos_hijo = $this->obtener_info_doc($hijo->id_hijo);
+
+						if ($datos_hijo) {
+							$params["mappings"][$hijo->tipo_hijo] = [
+									"_parent" => [
+											"type" => $hijo->tipo_padre
+									]
+
+							];
+							$datos_hijo["parent"] = $hijo->id_padre;
+							$arreglo_hijos[] = $datos_hijo;
 						}
 					}
 				}
+				$this->guardar_indice($params);
+				//Se debe indexar el documento padre
+				$this->guardar_indice_simple($arreglo_datos);
+				if(count($arreglo_hijos) > 0) {
+					foreach ( $arreglo_hijos as $key => $hijo ) {
+						$this->guardar_indice_simple($hijo);
+					}
+				}
+
+			} else {
+				$this->guardar_indice_simple($arreglo_datos);
 			}
 		} else {
 			throw new \Exception("Error al tomar los datos del registro " . $this->iddocumento);
@@ -338,7 +381,7 @@ class DocumentoElastic {
 		return (true);
 	}
 
-	private function guardar_indice($arreglo_datos, $id_padre) {
+	private function guardar_indice_simple($arreglo_datos, $id_padre) {
 		if ($arreglo_datos) {
 			$datos_json = json_encode($arreglo_datos);
 			$indice = "documentos";
@@ -353,7 +396,13 @@ class DocumentoElastic {
 			 * print_r($arreglo_datos);
 			 * echo "<br>";
 			 */
-			return ($this->get_cliente_elasticsearch()->adicionar_indice($indice, $id, $arreglo_datos, $tipo_dato, $id_padre));
+			return ($this->get_cliente_elasticsearch()->adicionar_indice_simple($indice, $id, $arreglo_datos, $tipo_dato, $id_padre));
+		}
+	}
+
+	private function guardar_indice($params) {
+		if ($arreglo_datos) {
+			return ($this->get_cliente_elasticsearch()->adicionar_indice($params));
 		}
 	}
 }

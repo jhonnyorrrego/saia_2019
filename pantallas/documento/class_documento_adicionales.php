@@ -124,7 +124,7 @@ class documento{
             $indice="documentos";
             $tipo_dato=$this->documento[0]["plantilla"];
             $id=$this->documento[0]["iddocumento"];
-            return($this->cliente_elasticsearch->adicionar_indice($indice,$id,$arreglo_datos,$tipo_dato));
+            return($this->cliente_elasticsearch->adicionar_indice_simple($indice,$id,$arreglo_datos,$tipo_dato));
         }
         return(false);
     }

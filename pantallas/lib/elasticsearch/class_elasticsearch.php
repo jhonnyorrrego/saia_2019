@@ -60,7 +60,7 @@ class elasticsearch_saia {
 		return (false);
 	}
 
-	function adicionar_indice($indice, $id, $arreglo_datos, $tipo_dato, $padre=null) {
+	function adicionar_indice_simple($indice, $id, $arreglo_datos, $tipo_dato, $padre=null) {
 		if (!$this->existe_indice($indice)) {
 			$this->crear_indice($indice);
 		}
@@ -73,6 +73,11 @@ class elasticsearch_saia {
 		}
 		return ($this->cliente->index($parametros));
 	}
+
+	function adicionar_indice($parametros) {
+		return ($this->cliente->index($parametros));
+	}
+
 
 	function buscar_item_elastic($parametros, $json) {
 		/*Ejemplo Json que se debe enviar con un arreglo de campos donde buscar
