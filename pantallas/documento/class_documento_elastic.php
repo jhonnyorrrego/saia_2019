@@ -76,7 +76,7 @@ class DocumentoElastic {
 
 	private function cargar_informacion_ft($plantilla) {
 		if (@$this->documento["numcampos"]) {
-			$datos_ft = busca_filtro_tabla('', 'ft_' . strtolower($plantilla) . " A", 'A.documento_iddocumento=' . $this->iddocumento, '', conn);
+			$datos_ft = busca_filtro_tabla('', 'ft_' . strtolower($plantilla) . " A", 'A.documento_iddocumento=' . $this->iddocumento, '', $conn);
 			return $datos_ft;
 		}
 		return false;
@@ -84,7 +84,17 @@ class DocumentoElastic {
 
 	private function cargar_informacion_ft2($plantilla, $iddocumento) {
 		if ($iddocumento) {
-			$datos_ft = busca_filtro_tabla('', 'ft_' . strtolower($plantilla) . " A", 'A.documento_iddocumento=' . $iddocumento, '', conn);
+			$tabla = 'ft_' . strtolower($plantilla);
+			$datos_ft = busca_filtro_tabla("", "$tabla a", "a.documento_iddocumento = $iddocumento", "", $conn);
+			return $datos_ft;
+		}
+		return false;
+	}
+
+	private function cargar_informacion_item($plantilla, $iddocumento) {
+		if ($iddocumento) {
+			$tabla = 'ft_' . strtolower($plantilla);
+			$datos_ft = busca_filtro_tabla("", "$tabla a", "a.id$tabla = $iddocumento", "", $conn);
 			return $datos_ft;
 		}
 		return false;
@@ -270,47 +280,105 @@ class DocumentoElastic {
 					$datos_temporal["datos_ft"][$key] = mostrar_valor_campo($key, $info_doc["idformato"], $iddocumento, 1);
 				}
 			}
+			$datos_temporal["datos_ft"]["nombre_formato"] = strtolower($plantilla);
 		}
 		return ($datos_temporal);
 	}
 
-	private function obtener_info_hijos($iddocumento, &$datos_hijos) {
-		if (empty($iddocumento)) {
-			return;
+	private function obtener_info_item($plantilla, $iddocumento, $idformato) {
+		$datos_temporal = array();
+
+		$datos_ft = $this->cargar_informacion_item($plantilla, $iddocumento);
+		//print_r($datos_ft);die();
+		// $this->cargar_adicional_documento();
+
+		if (!$datos_ft["numcampos"]) {
+			throw new \Exception("Existe un error al tratar de buscar el documento con id " . $iddocumento);
 		}
-		$info_doc = static::obtener_documento($iddocumento);
 
-		$plantilla_padre = $info_doc["nombre_formato"];
-		$idplantilla_padre = $info_doc["idformato"];
-		$formatos_hijos = busca_filtro_tabla("h.nombre, h.nombre_tabla", "formato h", "h.item = 0 and h.cod_padre = $idplantilla_padre", "", $conn);
+		if (@$datos_ft["numcampos"]) {
+			foreach ( $datos_ft[0] as $key => $valor ) {
+				if (!is_int($key) && $key != "documento_iddocumento") {
+					$datos_temporal["datos_ft"][$key] = mostrar_valor_campo($key, $idformato, $iddocumento, 1);
+				}
+			}
+			$datos_temporal["datos_ft"]["nombre_formato"] = strtolower($plantilla);
+		}
+		return ($datos_temporal);
+	}
 
+	private function obtener_info_hijos($iddocumento, $hijos, $idformato) {
+		if (empty($iddocumento)) {
+			return $hijos;
+		}
+
+		$info_formato = busca_filtro_tabla("idformato, nombre, nombre_tabla, item", "formato", "idformato=$idformato", "", $conn);
+
+		if(!$info_formato["numcampos"]) {
+			return $hijos;
+		}
+		$es_item1 = $info_formato[0]["item"] == '1';
+		$tabla1 = $info_formato[0]["nombre_tabla"];
+		$plantilla_padre = $info_formato[0]["nombre"];
+		$idplantilla_padre = $info_formato[0]["idformato"];
+		$formatos_hijos = busca_filtro_tabla("h.idformato, h.nombre, h.nombre_tabla, h.item", "formato h", "h.cod_padre = $idplantilla_padre", "", $conn);
+
+		if($es_item1) {
+			$datos_ft = $this->obtener_info_item($plantilla_padre, $iddocumento, $idformato);
+		} else {
 		$datos_ft = $this->cargar_informacion_ft2($plantilla_padre, $iddocumento);
+		}
 
-		// print_r($plantilla_padre);die();
+		//print_r($formatos_hijos);die();
 		// print_r($datos_ft[0]);die();
-		// $datos_hijos = array();
+		$datos_hijos = array();
 		for($i = 0; $i < $formatos_hijos["numcampos"]; $i++) {
 			$plantilla = strtolower($formatos_hijos[$i]["nombre"]);
 			$tabla = $formatos_hijos[$i]["nombre_tabla"];
+			$es_item = $formatos_hijos[$i]["item"] == '1';
+			$idformato_hijo= $formatos_hijos[$i]["idformato"];
 			$documentos_hijos = busca_filtro_tabla("", $tabla, "ft_" . $plantilla_padre . " = " . $datos_ft[0]["idft_" . $plantilla_padre], "", $conn);
 			// print_r($documentos_hijos);die();
 			if ($documentos_hijos["numcampos"]) {
 				for($h = 0; $h < $documentos_hijos["numcampos"]; $h++) {
+					if($es_item) {
+						$id_hijo = $documentos_hijos[$h]["id$tabla"];
+					} else {
 					$id_hijo = $documentos_hijos[$h]["documento_iddocumento"];
+					}
 					if ($id_hijo) {
 						$relacion = new StdClass();
 						$relacion->id_padre = $iddocumento;
 						$relacion->id_hijo = $id_hijo;
 						$relacion->tipo_padre = $plantilla_padre;
 						$relacion->tipo_hijo = $plantilla;
+						$relacion->hijo_es_item = $es_item;
+						$relacion->idformato_hijo = $idformato_hijo;
 						$datos_hijos[] = $relacion;
 						// $datos_hijos[$iddocumento] = $id_hijo;
 						// print_r($documentos_hijos[$h]);echo "<br>";
-						$this->obtener_info_hijos($id_hijo, $datos_hijos);
+						$datos_hijos = $this->obtener_info_hijos($id_hijo, $datos_hijos, $idformato_hijo);
 					}
 				}
 			}
 		}
+		return  array_merge($hijos, $datos_hijos);
+	}
+
+	private function buildTree(array $elements, $parentId = 0) {
+		$branch = array();
+
+		foreach ($elements as $element) {
+			if ($element->id_padre == $parentId) {
+				$children = $this->buildTree($elements, $element->id_hijo);
+				if ($children) {
+					$element->hijos = $children;
+				}
+				$branch[] = $element;
+			}
+		}
+
+		return $branch;
 	}
 
 	// Se debe tener en cuenta que el documento ya debe estar cargado
@@ -318,26 +386,23 @@ class DocumentoElastic {
 		// $this->asignar_iddocumento();
 		// $this->obtener_info_hijos($this->iddocumento);
 		$doc_ppal = $this->iddocumento;
-		$arreglo_datos = $this->obtener_info_doc($doc_ppal);
+		$documento_origen = $this->obtener_info_doc($doc_ppal);
 
-		if ($arreglo_datos) {
+		if ($documento_origen) {
 			$hijos = array();
 
-			$this->obtener_info_hijos($doc_ppal, $hijos);
-			if (count($hijos) > 0) {
+			$idformato = $documento_origen["documento"]["formato_idformato"];
 
-				/*
-				 * $params['index'] = "documentos";
-				 * $params['id'] = $id;
-				 * $params['body'] = $arreglo_datos;
-				 * $params['type'] = $arreglo_datos["documento"]["plantilla"];
-				 */
+			$hijos = $this->obtener_info_hijos($doc_ppal, $hijos, $idformato);
+			//var_dump($hijos);
+			//var_dump($this->buildTree($hijos));die();
+			if (count($hijos) > 0) {
 				$params = [
 						"mappings" => [
-								$arreglo_datos["documento"]["plantilla"] => []/*,
-								"employee" => [
+								$documento_origen["documento"]["plantilla"] => []
+								/* "empleado" => [
 										"_parent" => [
-												"type" => $arreglo_datos["documento"]["plantilla"]
+												"type" => "dependencia"
 										]
 								] */
 						]
@@ -348,8 +413,12 @@ class DocumentoElastic {
 				// Primero es necesario crear el mapeo entre el documento padre y sus hijos
 				foreach ( $hijos as $key => $hijo ) {
 					if ($key) {
+						if($hijo->hijo_es_item) {
+							$datos_hijo = $this->obtener_info_item($hijo->tipo_hijo, $hijo->id_hijo, $hijo->idformato_hijo);
+							//print_r($datos_hijo);die();
+						} else {
 						$datos_hijo = $this->obtener_info_doc($hijo->id_hijo);
-
+						}
 						if ($datos_hijo) {
 							$params["mappings"][$hijo->tipo_hijo] = [
 									"_parent" => [
@@ -364,9 +433,9 @@ class DocumentoElastic {
 				}
 				$this->guardar_indice($params);
 				//Se debe indexar el documento padre
-				$this->guardar_indice_simple($arreglo_datos);
+				$this->guardar_indice_simple($documento_origen);
 				if(count($arreglo_hijos) > 0) {
-					foreach ( $arreglo_hijos as $key => $hijo ) {
+					foreach ( $arreglo_hijos as $hijo ) {
 						$this->guardar_indice_simple($hijo);
 					}
 				}
@@ -381,22 +450,30 @@ class DocumentoElastic {
 		return (true);
 	}
 
-	private function guardar_indice_simple($arreglo_datos, $id_padre) {
-		if ($arreglo_datos) {
-			$datos_json = json_encode($arreglo_datos);
+	private function guardar_indice_simple(&$datos) {
+		if ($datos) {
+			$datos_json = json_encode($datos);
 			$indice = "documentos";
-			$tipo_dato = $arreglo_datos["documento"]["plantilla"];
-			$id = $arreglo_datos["documento"]["iddocumento"];
-			/*
-			 * print_r("Tipo: $tipo_dato");
-			 * echo "<br>";
-			 * print_r("ID: $id, Padre: $id_padre");
-			 * echo "<br>";
-			 * echo ("Datos: ");
-			 * print_r($arreglo_datos);
-			 * echo "<br>";
-			 */
-			return ($this->get_cliente_elasticsearch()->adicionar_indice_simple($indice, $id, $arreglo_datos, $tipo_dato, $id_padre));
+			$tipo_dato = $datos["documento"]["plantilla"];
+			$id = $datos["documento"]["iddocumento"];
+
+			if(empty($id)) {
+				$nombre = $datos["datos_ft"]["nombre_formato"];
+				$id = $datos["datos_ft"]["idft_$nombre"];
+				//print_r($datos);die("kaput $id");
+			}
+			if(empty($tipo_dato)) {
+				$nombre =
+				$tipo_dato= strtoupper($datos["datos_ft"]["nombre_formato"]);
+				//print_r($datos);die("kaput $id");
+			}
+			$salida = "";
+			try {
+				$salida = $this->get_cliente_elasticsearch()->adicionar_indice_simple($indice, $id, $datos_json, $tipo_dato);
+			} catch (\Exception $e) {
+				print_r($e);
+			}
+			return $salida;
 		}
 	}
 
