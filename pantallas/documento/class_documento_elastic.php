@@ -399,14 +399,13 @@ class DocumentoElastic {
 			$total = count($hijos);
 			if ($total > 0) {
 				$params = [
-						"mappings" => [
+						"index" => "documentos",
+						"type" => $documento_origen["documento"]["plantilla"],
+						"body" => []
+								/*"mappings" => [
 								$documento_origen["documento"]["plantilla"] => []
-								/* "empleado" => [
-										"_parent" => [
-												"type" => "dependencia"
-										]
 								] */
-						]
+						//]
 				];
 
 				$arreglo_hijos = array();
@@ -419,17 +418,31 @@ class DocumentoElastic {
 						$datos_hijo = $this->obtener_info_doc($hijo->id_hijo);
 						}
 						if ($datos_hijo) {
-							$params["mappings"][$hijo->tipo_hijo] = [
+						$params["body"][$hijo->tipo_hijo] = [
+								"mappings" => [
 									"_parent" => [
 											"type" => $hijo->tipo_padre
 									]
-
+								]
 							];
 							$datos_hijo["parent"] = $hijo->id_padre;
 							$arreglo_hijos[] = $datos_hijo;
 						}
 				}
-				$this->guardar_indice($params);
+				$resultado_indice = null;
+				//print_r($params);die();
+				if($this->existe_indice("documentos")) {
+					$resultado_indice = $this->guardar_mapeo_indice($params);
+					print_r($resultado_indice);
+				} else {
+					$resultado_indice = $this->guardar_indice($params);
+					print_r($resultado_indice);
+				}
+				//$resultado_indice = $this->guardar_indice($params);
+				if(!$resultado_indice["created"]){
+					throw new \Exception("No fue posible crear el indice");
+					die();
+				}
 				//Se debe indexar el documento padre
 				$this->guardar_indice_simple($documento_origen);
 				if(count($arreglo_hijos) > 0) {
@@ -437,7 +450,6 @@ class DocumentoElastic {
 						$this->guardar_indice_simple($hijo);
 					}
 				}
-
 			} else {
 				$this->guardar_indice_simple($arreglo_datos);
 			}
@@ -474,9 +486,27 @@ class DocumentoElastic {
 		}
 	}
 
+	private function guardar_configuracion_indice($params) {
+		if ($params) {
+			return ($this->get_cliente_elasticsearch()->guardar_configuracion_indice($params));
+		}
+	}
+
+	private function guardar_mapeo_indice($params) {
+		if ($params) {
+			return ($this->get_cliente_elasticsearch()->guardar_mapeo_indice($params));
+		}
+	}
+
 	private function guardar_indice($params) {
 		if ($params) {
 			return ($this->get_cliente_elasticsearch()->adicionar_indice($params));
+		}
+	}
+
+	private function existe_indice($nombre) {
+		if ($params) {
+			return ($this->get_cliente_elasticsearch()->existe_indice($nombre));
 		}
 	}
 

@@ -43,10 +43,11 @@ if ($_REQUEST["id"]) {
 			print_r($retorno);
 			break;
 		case "verificar_indice" :
-			if (@$_REQUEST["indice"] && @$_REQUEST["id"] && @$_REQUEST["tipo_dato"]) {
+			if ($_REQUEST["indice"] && $_REQUEST["tipo_dato"]) {
 				$retorno = $d2j->get_cliente_elasticsearch()->verificar_indice($_REQUEST["indice"], $_REQUEST["id"], $_REQUEST["tipo_dato"]);
 				print_r($retorno);
 			} else {
+				print_r($_REQUEST);
 				die("No es posible verificar los datos con los registros enviados");
 			}
 			break;
