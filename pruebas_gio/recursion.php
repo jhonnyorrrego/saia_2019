@@ -15,8 +15,12 @@ while($max_salida > 0) {
 include_once ($ruta_db_superior . "db.php");
 include_once ($ruta_db_superior . "formatos/librerias/funciones_generales.php");
 include_once ($ruta_db_superior . "pantallas/lib/elasticsearch/class_elasticsearch.php");
+include_once ($ruta_db_superior . "anexosdigitales/funciones_archivo.php");
 
-class DocumentoElastic {
+$d2j = new DocumentoElastic2(1596);
+print_r($d2j->indexar_elasticsearch_completo());
+
+class DocumentoElastic2 {
 	var $datos_ft;
 	private $cliente_elasticsearch;
 	var $iddocumento;
@@ -326,7 +330,7 @@ class DocumentoElastic {
 		if($es_item1) {
 			$datos_ft = $this->obtener_info_item($plantilla_padre, $iddocumento, $idformato);
 		} else {
-		$datos_ft = $this->cargar_informacion_ft2($plantilla_padre, $iddocumento);
+			$datos_ft = $this->cargar_informacion_ft2($plantilla_padre, $iddocumento);
 		}
 
 		//print_r($formatos_hijos);die();
@@ -344,7 +348,7 @@ class DocumentoElastic {
 					if($es_item) {
 						$id_hijo = $documentos_hijos[$h]["id$tabla"];
 					} else {
-					$id_hijo = $documentos_hijos[$h]["documento_iddocumento"];
+						$id_hijo = $documentos_hijos[$h]["documento_iddocumento"];
 					}
 					if ($id_hijo) {
 						$relacion = new StdClass();
@@ -416,7 +420,7 @@ class DocumentoElastic {
 							$datos_hijo = $this->obtener_info_item($hijo->tipo_hijo, $hijo->id_hijo, $hijo->idformato_hijo);
 							//print_r($datos_hijo);die();
 						} else {
-						$datos_hijo = $this->obtener_info_doc($hijo->id_hijo);
+							$datos_hijo = $this->obtener_info_doc($hijo->id_hijo);
 						}
 						if ($datos_hijo) {
 							$params["mappings"][$hijo->tipo_hijo] = [
@@ -429,7 +433,9 @@ class DocumentoElastic {
 							$arreglo_hijos[] = $datos_hijo;
 						}
 				}
-				$this->guardar_indice($params);
+				//print_r($params); die();
+				//print_r($this->guardar_mapeo_indice($params)); die();
+				print_r($this->guardar_indice($params)); die();
 				//Se debe indexar el documento padre
 				$this->guardar_indice_simple($documento_origen);
 				if(count($arreglo_hijos) > 0) {
@@ -471,6 +477,18 @@ class DocumentoElastic {
 				print_r($e);
 			}
 			return $salida;
+		}
+	}
+
+	private function guardar_configuracion_indice($params) {
+		if ($params) {
+			return ($this->get_cliente_elasticsearch()->guardar_configuracion_indice($params));
+		}
+	}
+
+	private function guardar_mapeo_indice($params) {
+		if ($params) {
+			return ($this->get_cliente_elasticsearch()->guardar_mapeo_indice($params));
 		}
 	}
 
