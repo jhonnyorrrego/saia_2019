@@ -452,3 +452,5 @@ CREATE TABLE IF NOT EXISTS tarea_dig (
   PRIMARY KEY (idtarea_dig)
 );
 ----------------------------
+//Se modifica la pantalla en la que se ejecuta la funcion mostrar_solicitante del formato solicitud prestamo
+update funciones_formato set acciones='e' where nombre_funcion='mostrar_solicitante';
