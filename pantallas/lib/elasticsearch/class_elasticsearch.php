@@ -8,9 +8,8 @@ while($max_salida > 0) {
 	$ruta .= "../";
 	$max_salida--;
 }
-?>
-<?php include_once($ruta_db_superior."db.php"); ?>
-<?php
+
+include_once($ruta_db_superior."db.php");
 
 class elasticsearch_saia {
 	var $hosts;
@@ -60,7 +59,7 @@ class elasticsearch_saia {
 		return (false);
 	}
 
-	function adicionar_indice_simple($indice, $id, $arreglo_datos, $tipo_dato, $padre=null) {
+	function adicionar_indice_simple($indice, $id, $arreglo_datos, $tipo_dato, $padre = null) {
 		if (!$this->existe_indice($indice)) {
 			$this->crear_indice($indice);
 		}
@@ -68,7 +67,7 @@ class elasticsearch_saia {
 		$parametros['id'] = $id;
 		$parametros['body'] = $arreglo_datos;
 		$parametros['type'] = $tipo_dato;
-		if(!empty($padre)) {
+		if (!empty($padre)) {
 			$parametros['parent'] = $padre;
 		}
 		return ($this->cliente->index($parametros));
@@ -78,25 +77,41 @@ class elasticsearch_saia {
 		return ($this->cliente->index($parametros));
 	}
 
+	function guardar_configuracion_indice($parametros) {
+		return ($this->cliente->indices()->putSettings($parametros));
+	}
+
+	function obtener_configuracion_indice($parametros) {
+		return ($this->cliente->indices()->getSettings($parametros));
+	}
+
+	function guardar_mapeo_indice($parametros) {
+		return ($this->cliente->indices()->putMapping($parametros));
+	}
+
+	function obtener_mapeo_indice($parametros) {
+		return ($this->cliente->indices()->getMapping($parametros));
+	}
 
 	function buscar_item_elastic($parametros, $json) {
-		/*Ejemplo Json que se debe enviar con un arreglo de campos donde buscar
-		 $json = '{
-		 "query":{
-		 "query_string" : {
-		 "fields" : ["title", "author", "genre", "description"],
-		 "query" : 'genre:adventure NOT verne' "
-		 }
-		 }
-		 }';
-		 Ejemplo Json cuando quiero buscar sobre un solo campo
-		 $json = '{
-		 "query" : {
-		 "match" : {
-		 "author" : "Jules Verne"
-		 }
-		 }
-		 }';
+		/*
+		 * Ejemplo Json que se debe enviar con un arreglo de campos donde buscar
+		 * $json = '{
+		 * "query":{
+		 * "query_string" : {
+		 * "fields" : ["title", "author", "genre", "description"],
+		 * "query" : 'genre:adventure NOT verne' "
+		 * }
+		 * }
+		 * }';
+		 * Ejemplo Json cuando quiero buscar sobre un solo campo
+		 * $json = '{
+		 * "query" : {
+		 * "match" : {
+		 * "author" : "Jules Verne"
+		 * }
+		 * }
+		 * }';
 		 */
 		$parametros['body'] = $json;
 		return ($this->resultado = $this->cliente->search($parametros));

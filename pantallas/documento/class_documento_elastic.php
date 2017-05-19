@@ -425,7 +425,7 @@ class DocumentoElastic {
 									]
 								]
 							];
-							$datos_hijo["parent"] = $hijo->id_padre;
+						//$datos_hijo["parent"] = $hijo->id_padre;
 							$arreglo_hijos[] = $datos_hijo;
 						}
 				}
@@ -447,7 +447,7 @@ class DocumentoElastic {
 				$this->guardar_indice_simple($documento_origen);
 				if(count($arreglo_hijos) > 0) {
 					foreach ( $arreglo_hijos as $hijo ) {
-						$this->guardar_indice_simple($hijo);
+						$this->guardar_indice_simple($hijo, $documento_origen);
 					}
 				}
 			} else {
@@ -460,9 +460,9 @@ class DocumentoElastic {
 		return (true);
 	}
 
-	private function guardar_indice_simple($datos) {
+	private function guardar_indice_simple($datos, $padre=null) {
 		if ($datos) {
-			$datos_json = json_encode($datos);
+			//$datos_json = json_encode($datos);
 			$indice = "documentos";
 			$tipo_dato = $datos["documento"]["plantilla"];
 			$id = $datos["documento"]["iddocumento"];
@@ -478,7 +478,7 @@ class DocumentoElastic {
 			}
 			$salida = "";
 			try {
-				$salida = $this->get_cliente_elasticsearch()->adicionar_indice_simple($indice, $id, $datos_json, $tipo_dato);
+				$salida = $this->get_cliente_elasticsearch()->adicionar_indice_simple($indice, $id, $datos, $tipo_dato, $padre);
 			} catch (\Exception $e) {
 				print_r($e);
 			}

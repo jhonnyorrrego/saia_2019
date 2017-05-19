@@ -2069,7 +2069,7 @@ function radicar_plantilla() {
 			//$d2j->asignar_iddocumento();
 			$exportado = $d2j->exportar_informacion();
 			if ($exportado) {
-				$d2j->indexar_elasticsearch($_POST["iddoc"]);
+				$d2j->indexar_elasticsearch_completo();
 			}
 		}
 		// arreglo con los datos que necesita transferir archivo
