@@ -5,6 +5,8 @@ interface IndiceSaia {
 
 	public function consultar_indice(string $tabla, string $campo);
 
-	public function listar_indices();
+	public function listar_indices($tabla);
+
+	public function validar_indices($lista_tablas);
 
 }

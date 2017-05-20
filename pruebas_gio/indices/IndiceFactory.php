@@ -1,29 +1,22 @@
 <?php
-$max_salida = 6;
-$ruta_db_superior = $ruta = "";
-while($max_salida > 0) {
-	if (is_file($ruta . "db.php")) {
-		$ruta_db_superior = $ruta;
-	}
-	$ruta .= "../";
-	$max_salida--;
-}
 
-include_once ($ruta_db_superior . "db.php");
+include_once ("IndiceMysql.php");
+include_once ("IndiceOracle.php");
+include_once ("IndiceSqlserver.php");
 
 class IndiceFactory {
 
-	public function getIndice() {
+	public static function getIndice($conn) {
+		//var_dump($conn);die();
 		switch ($conn->motor) {
-			case "MySql":
-				return new IndiceMysql();
-			case "Oracle":
-				return new IndiceOracle();
-			case "SqlServer":
-				return new IndiceSqlserver();
-			case "MSSql":
-				return new IndiceMssql();
+			case "MySql" :
+				return new IndiceMysql($conn);
+			case "Oracle" :
+				return new IndiceOracle($conn);
+			case "SqlServer" :
+			case "MSSql" :
+				return new IndiceSqlserver($conn);
 		}
-
 	}
 }
+?>
