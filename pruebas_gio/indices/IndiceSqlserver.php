@@ -1,16 +1,35 @@
 <?php
+$max_salida = 10; // Previene algun posible ciclo infinito limitando a 10 los ../
+$ruta_db_superior = $ruta = "";
+while($max_salida > 0) {
+	if (is_file($ruta . "db.php")) {
+		$ruta_db_superior = $ruta; // Preserva la ruta superior encontrada
+	}
+	$ruta .= "../";
+	$max_salida--;
+}
+include_once ($ruta_db_superior . "db.php");
+
 include_once "IndiceSaia.php";
 
-class IndiceSqlserver implements IndiceSaia {
-	private $conn;
+class IndiceSqlserver extends IndiceSaia {
+
 	public function __construct($conn) {
-		$this->conn =  $conn;
+		$this->conn = $conn;
 	}
 
-	public function crear_indice(string $tabla, string $campo) {
+	protected function crear_indice(string $tabla, string $campo, string $nombre_indice) {
+		return ("CREATE INDEX " . $nombre_indice . " ON " . $tabla . " (" . $campo . ");");
 	}
 
-	public function consultar_indice(string $tabla, string $campo) {
+	protected function renombrar_indice($table_space, $tabla, $anterior, $nuevo) {
+		return ("EXEC sp_rename N'" . $table_space . "." . $tabla . "." . $anterior . "', N'" . $nuevo . "', N'INDEX';");
+	}
+
+	protected function consultar_indice(string $tabla, string $campo) {
+	}
+
+	protected function consultar_nombre_pk($tabla) {
 	}
 
 	public function listar_indices($tabla) {
@@ -25,43 +44,8 @@ class IndiceSqlserver implements IndiceSaia {
 		return $indices;
 	}
 
-	public function validar_indices($lista_tablas) {
-		$array_create = array();
-		$array_alter = array();
-		for($i = 0; $i < $lista_tablas["numcampos"]; $i++) {
-			$indices = $this->listar_indices($lista_tablas[$i]);
-			$exito = 0;
-			$exito_documento = 0;
-			for($j = 0; $j < $indices["numcampos"]; $j++) {
-				if (strtoupper($indices[$j]["column_name"]) == "ID" . strtoupper($lista_tablas[$i]) || strtoupper($indices[$j]["column_name"]) == "IDTRANSFERENCIA") {
-					$exito = 1;
-					if (strtoupper($indices[$j]["index_name"]) != strtoupper($lista_tablas[$i] . "_PK")) {
-						$array_alter[] = ("EXEC sp_rename N'" . ($indices[$j]["tablespace_name"]) . "." . ($indices[$j]["table_name"]) . "." . ($indices[$j]["index_name"]) . "', N'" . ($lista_tablas[$i]) . "_PK', N'INDEX';");
-					}
-				}
-
-				if (strtoupper($indices[$j]["column_name"]) == "DOCUMENTO_IDDOCUMENTO") {
-					$exito_documento = 1;
-					if (strtoupper($indices[$j]["index_name"]) != strtoupper($lista_tablas[$i] . "_DOC")) {
-						$array_alter[] = ("EXEC sp_rename N'" . ($indices[$j]["tablespace_name"]) . "." . ($indices[$j]["table_name"]) . "." . ($indices[$j]["index_name"]) . "', N'" . ($lista_tablas[$i]) . "_DOC', N'INDEX';");
-					}
-				}
-			}
-
-			if ($exito == 0) {
-				$array_create[] = ("CREATE INDEX " . ($lista_tablas[$i]) . "_PK  on " . ($lista_tablas[$i]) . " (id" . ($lista_tablas[$i]) . ");");
-			}
-
-			if (!$exito_documento) {
-				$campos = $this->conn->Busca_tabla($lista_tablas[$i], "documento_iddocumento");
-				if (count($campos)) {
-					$array_create[] = ("CREATE INDEX " . ($lista_tablas[$i]) . "_DOC  on " . ($lista_tablas[$i]) . " (documento_iddocumento);");
-				}
-			}
-		}
-		echo ("CREATE<hr>");
-		echo implode("<br/>", $array_create);
-		echo ("<hr>ALTER O RENAME<hr>");
-		echo implode("<br/>", $array_alter);
+	protected function mover_indice($tablespace, $nombre) {
+		return null;
 	}
+
 }
