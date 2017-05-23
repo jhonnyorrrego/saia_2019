@@ -10,6 +10,7 @@ abstract class IndiceSaia {
 
 	protected function crear_indice($tabla, $campo, $nombre_indice) {
 		$this->creados[] = strtoupper($nombre_indice);
+		$this->creados = array_unique($this->creados);
 	}
 
 	protected abstract function consultar_indice($tabla, $campo);
@@ -19,6 +20,7 @@ abstract class IndiceSaia {
 	protected function renombrar_indice($table_space, $tabla, $anterior, $nuevo) {
 		unset($this->creados[strtoupper($anterior)]);
 		$this->creados[] = strtoupper($nuevo);
+		$this->creados = array_unique($this->creados);
 	}
 
 	protected abstract function consultar_nombre_pk($tabla);
@@ -46,7 +48,6 @@ abstract class IndiceSaia {
 	protected function indices_llaves() {
 		$lista_tablas = $this->conn->Lista_Tabla();
 		$lista_tablas["numcampos"] = count($lista_tablas);
-
 		for($i = 0; $i < $lista_tablas["numcampos"]; $i++) {
 			$indices = $this->listar_indices($lista_tablas[$i]);
 			$exito = 0;
@@ -110,18 +111,15 @@ abstract class IndiceSaia {
 			}
 			if (!empty($sentencia)) {
 				$this->array_create[] = $sentencia;
-				$this->creados[] = $nombre_indice;
-				//echo $sentencia;
 			}
 		}
 	}
 
 	protected function indices_saia() {
 		$indices = $this->listar_indices_saia();
-		print_r($indices);die();
 		for($i = 0; $i < $indices["numcampos"]; $i++) {
 			$nombre_indice = $this->obtener_nombre_indice($indices[$i]["table_name"], $indices[$i]["column_name"]);
-			$this->creados[] =  $this->crear_indice($indices[$i]["table_name"], $indices[$i]["column_name"], $nombre_indice);
+			$this->array_create[] =  $this->crear_indice($indices[$i]["table_name"], $indices[$i]["column_name"], $nombre_indice);
 		}
 	}
 
