@@ -11,13 +11,9 @@ while ($max_salida > 0) {
 include_once ($ruta_db_superior . "db.php");
 include_once ("IndiceFactory.php");
 
-
-$tablas = $conn->Lista_Tabla();
-$tablas["numcampos"] = count($tablas);
-//print_r($conn);die();
 $verificador = IndiceFactory::getIndice($conn);
 //$factory = new IndiceFactory();
 //$verificador = $factory->getIndice();
-$verificador->validar_indices($tablas);
+$verificador->validar_indices();
 
 ?>

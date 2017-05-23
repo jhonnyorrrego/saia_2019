@@ -29,11 +29,11 @@ abstract class IndiceSaia {
 
 	protected abstract function listar_indices_saia();
 
-	public function validar_indices($lista_tablas) {
+	public function validar_indices() {
 		$this->array_create = array();
 		$this->array_alter = array();
 		$this->creados = array();
-		//$this->indices_llaves($lista_tablas);
+		$this->indices_llaves();
 		$this->indices_adicionales();
 		$this->indices_saia();
 
@@ -43,7 +43,10 @@ abstract class IndiceSaia {
 		echo implode("<br/>", $this->array_alter);
 	}
 
-	protected function indices_llaves($lista_tablas) {
+	protected function indices_llaves() {
+		$lista_tablas = $this->conn->Lista_Tabla();
+		$lista_tablas["numcampos"] = count($lista_tablas);
+
 		for($i = 0; $i < $lista_tablas["numcampos"]; $i++) {
 			$indices = $this->listar_indices($lista_tablas[$i]);
 			$exito = 0;

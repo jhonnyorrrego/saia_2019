@@ -33,13 +33,17 @@ class IndiceOracle extends IndiceSaia {
 	}
 
 	protected function consultar_nombre_pk($tabla) {
-		"SELECT cols.table_name, cols.column_name, cols.position, cons.
+		$indices = ejecuta_filtro_tabla("SELECT cols.table_name, cols.column_name, cons.constraint_name
 			FROM user_constraints cons, user_cons_columns cols
 			WHERE cols.table_name = 'DOCUMENTO'
 			AND cons.constraint_type = 'P'
 			AND cons.constraint_name = cols.constraint_name
 			AND cons.owner = cols.owner
-			ORDER BY cols.table_name, cols.position";
+			ORDER BY cols.table_name, cols.position", $this->conn);
+		if ($indices["numcampos"]) {
+			return $indices[0]["CONSTRAINT_NAME"];
+		}
+		return "";
 	}
 
 	protected function mover_indice($tablespace, $nombre) {
@@ -66,9 +70,6 @@ class IndiceOracle extends IndiceSaia {
 		$sin_indices = ejecuta_filtro_tabla("SELECT tc.table_name, tc.column_name from cf_indice_saia tc
 		WHERE NOT EXISTS(SELECT null FROM user_indexes ui JOIN user_ind_columns uic ON ui.index_name = uic.index_name WHERE ui.table_name = tc.table_name)
 		ORDER BY tc.table_name,tc.column_name", $this->conn);
-		return $sin_indices;
-
-
 		return $sin_indices;
 	}
 
