@@ -11,7 +11,8 @@ while ($max_salida > 0) {
 include_once ($ruta_db_superior . "db.php");
 include_once ("IndiceFactory.php");
 
-$verificador = IndiceFactory::getIndice($conn);
+//Para oracle se puede incluir un parametro con el nombre del tablespace de indices
+$verificador = IndiceFactory::getIndice($conn, "USERS");
 //$factory = new IndiceFactory();
 //$verificador = $factory->getIndice();
 $verificador->validar_indices();

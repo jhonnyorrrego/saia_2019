@@ -14,14 +14,18 @@ include_once "IndiceSaia.php";
 
 class IndiceOracle extends IndiceSaia {
 
-	public function __construct($conn) {
+	public function __construct($conn, $tablespace = null) {
 		$this->conn = $conn;
 		$this->tablespace = "SAIA_INDEX01";
+		if(!empty($tablespace)) {
+			$this->tablespace = $tablespace;
+		}
+		$this->mover_tablespace = true;
 	}
 
 	protected function crear_indice($tabla, $campo, $nombre_indice) {
 		parent::crear_indice($tabla, $campo, $nombre_indice);
-		return ("CREATE INDEX " . strtoupper($nombre_indice) . " ON " . $tabla . " (" . $campo . ");");
+		return ("CREATE INDEX " . strtoupper($nombre_indice) . " ON " . $tabla . " (" . strtoupper($campo) . ");");
 	}
 
 	protected function renombrar_indice($table_space, $tabla, $anterior, $nuevo) {
@@ -30,6 +34,15 @@ class IndiceOracle extends IndiceSaia {
 	}
 
 	protected function consultar_indice($tabla, $campo) {
+		$indices = ejecuta_filtro_tabla("select i.index_name, ic.table_name, ic.column_name
+			from user_indexes i
+			join user_ind_columns ic on ic.index_name = i.index_name
+			where ic.table_name = '$tabla' and ic.column_name = '$campo'
+			order by ic.table_name, ic.column_name;", $this->conn);
+		if ($indices["numcampos"]) {
+			return $indices[0]["INDEX_NAME"];
+		}
+		return "";
 	}
 
 	protected function consultar_nombre_pk($tabla) {
@@ -73,6 +86,21 @@ class IndiceOracle extends IndiceSaia {
 			WHERE uic.index_name is null
 			ORDER BY tc.table_name, tc.column_name", $this->conn);
 		return $sin_indices;
+	}
+
+	protected function listar_campos_tabla($tabla, $solo_nombres=false) {
+		$campos = ejecuta_filtro_tabla("select t.table_name, c.column_name
+			from user_tables t
+			join user_tab_cols c on t.table_name = c.table_name
+			where t.table_name = '$tabla'", $this->conn);
+		if($solo_nombres) {
+			$resp = array();
+			for($i = 0; $i < $campos["numcampos"]; $i++) {
+				$resp[] = $campos[$i]["column_name"];
+			}
+			return $resp;
+		}
+		return $campos;
 	}
 
 }
