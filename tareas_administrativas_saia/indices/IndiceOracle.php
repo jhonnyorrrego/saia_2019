@@ -60,18 +60,19 @@ class IndiceOracle extends IndiceSaia {
 
 	protected function listar_sin_indices() {
 		$sin_indices = ejecuta_filtro_tabla("SELECT tc.table_name, tc.column_name from user_tab_cols tc
-		WHERE table_name not like '%$%'
-		AND NOT EXISTS(SELECT null FROM user_indexes ui JOIN user_ind_columns uic ON ui.index_name = uic.index_name WHERE ui.table_name = tc.table_name)
-		ORDER BY tc.table_name,tc.column_name", $this->conn);
+			WHERE table_name not like '%$%'
+			AND NOT EXISTS(SELECT null FROM user_indexes ui JOIN user_ind_columns uic ON ui.index_name = uic.index_name WHERE ui.table_name = tc.table_name)
+			ORDER BY tc.table_name,tc.column_name", $this->conn);
 		return $sin_indices;
 	}
 
 	protected function listar_indices_saia() {
-		$sin_indices = ejecuta_filtro_tabla("SELECT tc.table_name, tc.column_name from cf_indice_saia tc
-		WHERE NOT EXISTS(SELECT null FROM user_indexes ui JOIN user_ind_columns uic ON ui.index_name = uic.index_name WHERE ui.table_name = tc.table_name)
-		ORDER BY tc.table_name,tc.column_name", $this->conn);
+		$sin_indices = ejecuta_filtro_tabla("SELECT tc.table_name, tc.column_name
+			FROM cf_indice_saia tc
+			LEFT JOIN user_ind_columns uic ON uic.table_name = tc.table_name and uic.column_name = tc.column_name
+			WHERE uic.index_name is null
+			ORDER BY tc.table_name, tc.column_name", $this->conn);
 		return $sin_indices;
 	}
-
 
 }
