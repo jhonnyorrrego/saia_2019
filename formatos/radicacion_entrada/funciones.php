@@ -720,7 +720,7 @@ function mostrar_item_destino_radicacion($idformato,$iddoc){
     	    }else{
     	    	$concat=array("nombres","' '","apellidos");
     	    	$concat_nombres=concatenar_cadena_sql($concat);     	    	
-    	        $destino=busca_filtro_tabla($concat_nombres." AS nombre, cargo, dependencia,iddependencia_cargo as nombre_destino","vfuncionario_dc","iddependencia_cargo=".$datos[$i]['nombre_destino'],"",$conn);
+    	        $destino=busca_filtro_tabla($concat_nombres." AS nombre, cargo, dependencia,iddependencia_cargo as nombre_destino,funcionario_codigo","vfuncionario_dc","iddependencia_cargo=".$datos[$i]['nombre_destino'],"",$conn);
     	        $ubicacion=$destino[0]['dependencia'];
     	        $persona_natural_destino='destino';
     	        if(!$destino['numcampos']){
