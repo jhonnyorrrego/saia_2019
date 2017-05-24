@@ -16,6 +16,7 @@ class IndiceMysql extends IndiceSaia {
 
 	public function __construct($conn) {
 		$this->conn = $conn;
+		$this->renombrar_pk = false;
 	}
 
 	protected function crear_indice($tabla, $campo, $nombre_indice) {
@@ -88,4 +89,18 @@ class IndiceMysql extends IndiceSaia {
 		return $sin_indices;
 	}
 
+	protected function listar_campos_tabla($tabla, $solo_nombres=false) {
+		$campos = ejecuta_filtro_tabla("select distinct a.table_name, a.column_name
+			from information_schema.columns a
+			where a.TABLE_SCHEMA = '" . $this->conn->Conn->Db . "'
+			and a.TABLE_NAME = '$tabla'", $this->conn);
+		if($solo_nombres) {
+			$resp = array();
+			for($i = 0; $i < $campos["numcampos"]; $i++) {
+				$resp[] = $campos[$i]["column_name"];
+			}
+			return $resp;
+		}
+		return $campos;
+	}
 }

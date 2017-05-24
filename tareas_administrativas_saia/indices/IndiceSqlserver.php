@@ -71,15 +71,25 @@ class IndiceSqlserver extends IndiceSaia {
 
 	protected function listar_indices_saia() {
 		$indices = ejecuta_filtro_tabla("SELECT ci.table_name, ci.tablespace_name, ci.column_name
-	    from sys.schemas s
-	    inner join sys.tables t on t.schema_id = s.schema_id
-	    inner join cf_indice_saia ci on ci.table_name = t.name
-	    inner join sys.columns c on c.object_id = t.object_id and c.name = ci.column_name
-	    where not exists( select null from sys.indexes i
-	    	join sys.index_columns ic on ic.index_id=i.index_id
-	    	where i.object_id = t.object_id and ic.object_id = t.object_id and ic.column_id = c.column_id
-		) order by ci.table_name, ci.tablespace_name", $this->conn);
+		    from sys.schemas s
+		    inner join sys.tables t on t.schema_id = s.schema_id
+		    inner join cf_indice_saia ci on ci.table_name = t.name
+		    inner join sys.columns c on c.object_id = t.object_id and c.name = ci.column_name
+		    where not exists( select null from sys.indexes i
+		    	join sys.index_columns ic on ic.index_id=i.index_id
+		    	where i.object_id = t.object_id and ic.object_id = t.object_id and ic.column_id = c.column_id
+			) order by ci.table_name, ci.tablespace_name", $this->conn);
 		return $indices;
+	}
+
+	protected function listar_campos_tabla($tabla, $solo_nombres=false) {
+		if($solo_nombres) {
+			$resp = array();
+			for($i = 0; $i < $campos["numcampos"]; $i++) {
+				$resp[] = $campos[$i]["column_name"];
+			}
+			return $resp;
+		}
 	}
 
 }
