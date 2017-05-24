@@ -18,9 +18,7 @@ include_once ($ruta_db_superior . "pantallas/lib/elasticsearch/class_elasticsear
 include_once ($ruta_db_superior . "anexosdigitales/funciones_archivo.php");
 
 $d2j = new DocumentoElastic2(1596);
-//$d2j = new DocumentoElastic2(1638);
-//$d2j = new DocumentoElastic2(1639);
-$d2j->indexar_elasticsearch_completo();
+print_r($d2j->indexar_elasticsearch_completo());
 
 class DocumentoElastic2 {
 	var $datos_ft;
@@ -404,15 +402,24 @@ class DocumentoElastic2 {
 			// var_dump($this->buildTree($hijos));die();
 			$total = count($hijos);
 			if ($total > 0) {
-				$params = [
+				$params_padre = [
 						"index" => "documentos",
-						"type" => $documento_origen["documento"]["plantilla"],
-						"body" => []
-								/*"mappings" => [
-										$documento_origen["documento"]["plantilla"] => []
-								]*/
-						//]
+						"body" => [
+								"mappings" => [
+										$documento_origen["documento"]["plantilla"] => [
+												"_source" => [
+														"enabled" => true
+												]
+										]
+								]
+						]
 				];
+				$resultado_indice = $this->guardar_indice($params_padre);
+				/*if (!$resultado_indice["created"]) {
+					print_r($resultado_indice);
+					throw new \Exception("No fue posible crear el indice");
+					die();
+				}*/
 
 				$arreglo_hijos = array();
 				// Primero es necesario crear el mapeo entre el documento padre y sus hijos
@@ -424,33 +431,32 @@ class DocumentoElastic2 {
 						$datos_hijo = $this->obtener_info_doc($hijo->id_hijo);
 					}
 					if ($datos_hijo) {
-						$params["body"][$hijo->tipo_hijo] = [
-								/*"mappings" => [*/
-										"_parent" => [
-												"type" => $hijo->tipo_padre
+						$params = [
+								"index" => "documentos",
+								"type" => $hijo->tipo_hijo,
+								"body" => [
+										$hijo->tipo_hijo => [
+												"_source" => [
+														"enabled" => true
+												],
+												/*"mappings" => [*/
+														"_parent" => [
+																"type" => $hijo->tipo_padre
+														]
+												//]
 										]
-								//]
+								]
 						];
-						//$datos_hijo["parent"] = $hijo->id_padre;
+						$this->guardar_mapeo_indice($params);
+						// $datos_hijo["parent"] = $hijo->id_padre;
 						$arreglo_hijos[] = $datos_hijo;
 					}
 				}
 				$resultado_indice = null;
-				//print_r($params);die();
-				if($this->existe_indice("documentos")) {
-					$resultado_indice = $this->guardar_mapeo_indice($params);
-					print_r($resultado_indice);
-				} else {
-					$resultado_indice = $this->guardar_indice($params);
-					print_r($resultado_indice);
-				}
-				//$resultado_indice = $this->guardar_indice($params);
-				if(!$resultado_indice["created"]){
-					throw new \Exception("No fue posible crear el indice");
-					die();
-				}
+				// print_r($params);die();
+
 				// Se debe indexar el documento padre
-				$this->guardar_indice_simple($documento_origen);
+				var_dump($this->guardar_indice_simple($documento_origen));die("HASTA ACA");
 				if (count($arreglo_hijos) > 0) {
 					foreach ( $arreglo_hijos as $hijo ) {
 						$this->guardar_indice_simple($hijo, $documento_origen);
@@ -466,9 +472,9 @@ class DocumentoElastic2 {
 		return (true);
 	}
 
-	private function guardar_indice_simple($datos, $padre=null) {
+	private function guardar_indice_simple($datos, $padre = null) {
 		if ($datos) {
-			//$datos_json = json_encode($datos);
+			// $datos_json = json_encode($datos);
 			$indice = "documentos";
 			$tipo_dato = $datos["documento"]["plantilla"];
 			$id = $datos["documento"]["iddocumento"];
@@ -515,6 +521,5 @@ class DocumentoElastic2 {
 			return ($this->get_cliente_elasticsearch()->existe_indice($nombre));
 		}
 	}
-
 }
 ?>

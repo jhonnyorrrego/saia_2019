@@ -74,7 +74,13 @@ class elasticsearch_saia {
 	}
 
 	function adicionar_indice($parametros) {
-		return ($this->cliente->index($parametros));
+		$resultado = null;
+		if (!$this->existe_indice($parametros["index"])) {
+			$resultado = $this->cliente->indices()->create($parametros);
+		} else {
+			$resultado = ["created" => 1];
+		}
+		return $resultado;
 	}
 
 	function guardar_configuracion_indice($parametros) {
