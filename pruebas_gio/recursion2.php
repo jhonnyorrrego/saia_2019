@@ -402,24 +402,27 @@ class DocumentoElastic2 {
 			// var_dump($this->buildTree($hijos));die();
 			$total = count($hijos);
 			if ($total > 0) {
-				$params_padre = [
+				$params = [
 						"index" => "documentos",
+						"type" => $documento_origen["documento"]["plantilla"],
 						"body" => [
-								"mappings" => [
+								/*"mappings" => [*/
 										$documento_origen["documento"]["plantilla"] => [
 												"_source" => [
 														"enabled" => true
 												]
 										]
-								]
+								//]
 						]
 				];
-				$resultado_indice = $this->guardar_indice($params_padre);
-				/*if (!$resultado_indice["created"]) {
+				$resultado_indice = $this->guardar_indice(array("index" => "documentos"));
+				//$resultado_indice = $this->guardar_mapeo_indice($params);
+				//print_r($resultado_indice);die();
+				if (!$resultado_indice["acknowledged"]) {
 					print_r($resultado_indice);
 					throw new \Exception("No fue posible crear el indice");
 					die();
-				}*/
+				}
 
 				$arreglo_hijos = array();
 				// Primero es necesario crear el mapeo entre el documento padre y sus hijos
@@ -431,11 +434,7 @@ class DocumentoElastic2 {
 						$datos_hijo = $this->obtener_info_doc($hijo->id_hijo);
 					}
 					if ($datos_hijo) {
-						$params = [
-								"index" => "documentos",
-								"type" => $hijo->tipo_hijo,
-								"body" => [
-										$hijo->tipo_hijo => [
+						$params["body"][$hijo->tipo_hijo] = [
 												"_source" => [
 														"enabled" => true
 												],
@@ -444,19 +443,23 @@ class DocumentoElastic2 {
 																"type" => $hijo->tipo_padre
 														]
 												//]
-										]
-								]
-						];
-						$this->guardar_mapeo_indice($params);
+										];
 						// $datos_hijo["parent"] = $hijo->id_padre;
 						$arreglo_hijos[] = $datos_hijo;
 					}
 				}
+
+				$resultado_mapeo = $this->guardar_mapeo_indice($params);
+				if (!$resultado_mapeo["acknowledged"]) {
+					print_r($resultado_mapeo);
+					throw new \Exception("No fue posible crear el indice");
+					die();
+				}
+
 				$resultado_indice = null;
 				// print_r($params);die();
 
 				// Se debe indexar el documento padre
-				var_dump($this->guardar_indice_simple($documento_origen));die("HASTA ACA");
 				if (count($arreglo_hijos) > 0) {
 					foreach ( $arreglo_hijos as $hijo ) {
 						$this->guardar_indice_simple($hijo, $documento_origen);
