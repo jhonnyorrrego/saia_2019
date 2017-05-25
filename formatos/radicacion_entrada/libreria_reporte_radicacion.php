@@ -247,7 +247,9 @@ function aceptar_recepcion($idft_destino_radicacion){
         $funcionario=busca_filtro_tabla("nombres,apellidos","vfuncionario_dc","iddependencia_cargo=".$datos[0]['recepcion'],"",$conn);
         $input.="</br>".$funcionario[0]['nombres']." ".$funcionario[0]['apellidos']."<br>".$datos[0]['recepcion_fecha'];
     }else{
-        $planillas=busca_filtro_tabla("c.numero,c.iddocumento","ft_item_despacho_ingres a,ft_despacho_ingresados b, documento c","a.ft_despacho_ingresados=b.idft_despacho_ingresados AND b.documento_iddocumento=c.iddocumento AND c.estado NOT IN('ELIMINADO','ANULADO') AND a.ft_destino_radicacio=".$idft_destino_radicacion,"",$conn);
+        //$planillas=busca_filtro_tabla("c.numero,c.iddocumento","ft_item_despacho_ingres a,ft_despacho_ingresados b, documento c","a.ft_despacho_ingresados=b.idft_despacho_ingresados AND b.documento_iddocumento=c.iddocumento AND c.estado NOT IN('ELIMINADO','ANULADO') AND a.ft_destino_radicacio=".$idft_destino_radicacion,"",$conn);
+	$condicion_item=" AND ( iddestino_radicacion LIKE '%,".$idft_destino_radicacion.",%' OR iddestino_radicacion LIKE '%,".$idft_destino_radicacion."' OR  iddestino_radicacion LIKE '".$idft_destino_radicacion.",%' OR  iddestino_radicacion='".$idft_destino_radicacion."')";
+        $planillas=busca_filtro_tabla("c.numero,c.iddocumento","ft_despacho_ingresados b, documento c","b.documento_iddocumento=c.iddocumento AND c.estado NOT IN('ELIMINADO','ANULADO') ".$condicion_item,"",$conn);
         if($planillas['numcampos']){
             $input="<input type='checkbox' name='recepcion[]' value='".$idft_destino_radicacion.'|'.$cargo[0]['iddependencia_cargo']."|".$datos[0]['ft_radicacion_entrada']."'>";
         }else{

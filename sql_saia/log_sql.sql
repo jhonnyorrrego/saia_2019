@@ -452,3 +452,14 @@ CREATE TABLE IF NOT EXISTS tarea_dig (
   PRIMARY KEY (idtarea_dig)
 );
 ----------------------------
+//Se modifica la pantalla en la que se ejecuta la funcion mostrar_solicitante del formato solicitud prestamo
+update funciones_formato set acciones='e' where nombre_funcion='mostrar_solicitante';
+
+-- CREAR TABLA DE CONFIGURACION PARA INDICES NECESARIOS DIFERENTES A ID<TABLA>, DOCUMENTO_IDDOCUMENTO
+CREATE TABLE IF NOT EXISTS cf_indice_saia(
+	idcf_indice_saia int(11) NOT NULL AUTO_INCREMENT,
+	tablespace_name varchar(255) NOT NULL,
+       	table_name varchar(255) NOT NULL,
+       	column_name varchar(255) NOT NULL,
+	PRIMARY KEY (idcf_indice_saia)
+);

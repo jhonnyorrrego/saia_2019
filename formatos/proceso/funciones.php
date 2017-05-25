@@ -33,7 +33,7 @@ function icono_detalles($idformato,$iddoc){
 			echo(librerias_bootstrap());
 			//echo(librerias_acciones_kaiten()); //DESCOMENTAR SI AL PASAR A OTRO CLIENTE NO FUNCIONA EL ENLACE
 			$nombre_proceso=busca_filtro_tabla("nombre","ft_proceso A","A.documento_iddocumento=".$iddoc,"",$conn);
-    	echo "<a class='kenlace_saia' conector='iframe' title='".$nombre_proceso[0]["nombre"]."' titulo='".$nombre_proceso[0]["nombre"]."' enlace='ordenar.php?accion=mostrar&mostrar_formato=1&key=".$iddoc."' style='cursor:pointer'><img border=0 src='../../botones/comentarios/detalles.png' /></a>";
+    	echo "<a class='kenlace_saia' conector='iframe' title='".$nombre_proceso[0]["nombre"]."' titulo='".$nombre_proceso[0]["nombre"]."' enlace='".$ruta_db_superior."ordenar.php?accion=mostrar&mostrar_formato=1&key=".$iddoc."' style='cursor:pointer'><img border=0 src='../../botones/comentarios/detalles.png' /></a>";
       //echo "<a href='$ruta' target='centro'><img border=0 src='../../botones/comentarios/detalles.png' /></a>";
     }
   } 
