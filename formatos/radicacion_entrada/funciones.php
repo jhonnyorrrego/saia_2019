@@ -340,7 +340,7 @@ function tipo_radicado_radicacion($idformato,$iddoc){//en el adicionar
 	global $conn,$ruta_db_superior;
     $funcionario_codigo=usuario_actual('funcionario_codigo');
     $cargo=busca_filtro_tabla("iddependencia,iddependencia_cargo","vfuncionario_dc a","estado_dc=1 AND a.funcionario_codigo=".$funcionario_codigo,"",$conn);
-    
+    $lista_iddependencia_cargo=implode(',',(extrae_campo($cargo,'iddependencia_cargo')));
 	$dependencia_principal=buscar_dependencias_principal($cargo[0]["iddependencia"]);
 
 	?>
@@ -486,17 +486,39 @@ function tipo_radicado_radicacion($idformato,$iddoc){//en el adicionar
 			     }  	           
             
             }
+            
+            
+            
             function seleccionar_interno_actual(seleccionar){
+
                 if(seleccionar){
-                    tree_area_responsable.setCheck('<?php echo $cargo[0]["iddependencia_cargo"];?>',true);
-                    tree_area_responsable.openItem('<?php echo $cargo[0]["iddependencia_cargo"];?>'); //ARBOL: expande nodo hasta el item indicado
-                    $('#area_responsable').val(<?php echo $cargo[0]["iddependencia_cargo"];?>);
-                   
+                   seleccion_reponsable_actual();
+                   tree_area_responsable.setOnLoadingEnd(seleccion_reponsable_actual);
                 }else{
-                    tree_area_responsable.setCheck('<?php echo $cargo[0]["iddependencia_cargo"];?>',false);
+                    tree_area_responsable.setCheck(tree_area_responsable.getAllChecked(),false);
                     tree_area_responsable.closeAllItems(); //ARBOL: cierra todo el arbol
                     $('#area_responsable').val('');                    
                 }
+            }
+            
+            
+            function seleccion_reponsable_actual(){
+                    var lista_iddependencia_cargo='<?php echo($lista_iddependencia_cargo); ?>';
+                    var vector_iddependencia_cargo=lista_iddependencia_cargo.split(',');
+                   
+                    var sin_open=undefined;
+                    for(i=0;i<vector_iddependencia_cargo.length;i++){
+                        var iddependencia_cargo=parseInt(vector_iddependencia_cargo[i]);
+                        sin_open=tree_area_responsable.openItem(iddependencia_cargo); //ARBOL: expande nodo hasta el item indicado
+                        tree_area_responsable.setCheck(iddependencia_cargo,true);
+                    }  
+                    var str = tree_area_responsable.getAllChecked();
+                    
+                    var long=str.length;
+                    for(i=0;i<long;i++){
+                        str = str.replace(",", "");
+                    }
+                    $('#area_responsable').val(str); 
             }
         </script>
     <?php
