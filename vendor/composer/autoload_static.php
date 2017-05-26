@@ -17,13 +17,6 @@ class ComposerStaticInit718f03846feaff3d4705b9006384fb76
             'Symfony\\Polyfill\\Mbstring\\' => 26,
             'Stringy\\' => 8,
         ),
-        'I' => 
-        array (
-            'Icewind\\Streams\\Tests\\' => 22,
-            'Icewind\\Streams\\' => 16,
-            'Icewind\\SMB\\Test\\' => 17,
-            'Icewind\\SMB\\' => 12,
-        ),
     );
 
     public static $prefixDirsPsr4 = array (
@@ -34,22 +27,6 @@ class ComposerStaticInit718f03846feaff3d4705b9006384fb76
         'Stringy\\' => 
         array (
             0 => __DIR__ . '/..' . '/danielstjules/stringy/src',
-        ),
-        'Icewind\\Streams\\Tests\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/icewind/streams/tests',
-        ),
-        'Icewind\\Streams\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/icewind/streams/src',
-        ),
-        'Icewind\\SMB\\Test\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/icewind/smb/tests',
-        ),
-        'Icewind\\SMB\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/icewind/smb/src',
         ),
     );
 
