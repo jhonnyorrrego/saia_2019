@@ -6,4 +6,10 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'Symfony\\Polyfill\\Mbstring\\' => array($vendorDir . '/symfony/polyfill-mbstring'),
+    'Stringy\\' => array($vendorDir . '/danielstjules/stringy/src'),
+    'Icewind\\Streams\\Tests\\' => array($vendorDir . '/icewind/streams/tests'),
+    'Icewind\\Streams\\' => array($vendorDir . '/icewind/streams/src'),
+    'Icewind\\SMB\\Test\\' => array($vendorDir . '/icewind/smb/tests'),
+    'Icewind\\SMB\\' => array($vendorDir . '/icewind/smb/src'),
 );
