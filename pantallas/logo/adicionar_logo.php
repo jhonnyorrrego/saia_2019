@@ -10,6 +10,8 @@ while($max_salida>0){
 }
 include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."librerias_saia.php");
+require_once($ruta_db_superior . 'StorageUtils.php');
+require_once($ruta_db_superior . 'filesystem/SaiaStorage.php');
 echo(estilo_bootstrap());
 echo(estilo_file_upload());
 $ruta_logo=busca_filtro_tabla("","configuracion a","a.nombre='logo'","",$conn);
@@ -27,8 +29,14 @@ else{
 function formulario(){
 	global $ruta_db_superior,$ruta_imagen;
 	$imagen="Actualmente no existe un logo";
-	if(is_file($ruta_db_superior.$ruta_imagen)){
-		$imagen="<img src='".$ruta_db_superior.$ruta_imagen."' border='1px'>";
+	$tipo_almacenamiento = new SaiaStorage("archivos");
+	$ruta_imagen=json_decode($ruta_imagen);	
+	if( is_object ($ruta_imagen) ){
+		if($tipo_almacenamiento->get_filesystem()->has($ruta_imagen->ruta)){
+			$ruta_imagen=json_encode($ruta_imagen);
+			$archivo_binario=StorageUtils::get_binary_file($ruta_imagen);
+			$imagen="<img src='".$archivo_binario."' border='1px'>";
+		}
 	}
 	?>
 	<br/>
@@ -133,33 +141,24 @@ function guardar_anexo(){
 	$cant=count($tipo);
 	$extension=$tipo[$cant-1];
 	if($extension=="jpg"||$extension=="jpeg"){
-		//rename($_FILES["file"]["tmp_name"],$ruta_db_superior."imagenes/logo_demo.jpg");
 		$aleatorio=rand(1,999)."_".date("Y-m-d");
 		$ruta_imagen2=RUTA_LOGO_SAIA."logo_".$aleatorio.".".$extension;
-		
-		
 		if(RUTA_LOGO_SAIA==''){
 		    alerta("<span style='color:white;'>No existe configuracion para el almacenado del logo... favor verificar e intentarlo nuevamente!</span>",'error',5000);
 		    return false;		    
 		}
-        
-        if(!crear_destino($ruta_db_superior.RUTA_LOGO_SAIA)){
-		    alerta("<span style='color:white;'>No Fue posible crear la ruta para almacenar el logo... favor verificar la configuracion e intentarlo nuevamente!</span>",'error',5000);
-		    return false;	            
-        }
-        
-		//cambia_tam($_FILES["anexo"]["tmp_name"],$ruta_db_superior.$ruta_imagen2,145,90,"");
-		
-		if( cambia_tam($_FILES["anexo"]["tmp_name"],$ruta_db_superior.$ruta_imagen2,145,90,"") ){
-    		chmod($ruta_db_superior.$ruta_imagen2,PERMISOS_ARCHIVOS);
-    		$sql="UPDATE configuracion SET valor='".$ruta_imagen2."' WHERE nombre='logo'";
+		$binario_image=cambia_tam($_FILES["anexo"]["tmp_name"],$_FILES["anexo"]["tmp_name"],145,90,"",1);
+		if( $binario_image ){
+			$tipo_almacenamiento = new SaiaStorage("archivos");
+			$tipo_almacenamiento->almacenar_contenido($ruta_imagen2,$binario_image);
+			$ruta_anexos = array("servidor" => $tipo_almacenamiento->get_ruta_servidor(), "ruta" => $ruta_imagen2);	
+			$ruta_anexos=json_encode($ruta_anexos);
+    		$sql="UPDATE configuracion SET valor='".$ruta_anexos."' WHERE nombre='logo'";
     		phpmkr_query($sql);		    
 		}else{
 		    alerta("No fue posible subir el logo... favor intentarlo nuevamente!",'error',5000);
 		    return false;
 		}
-		
-
 	}
 	else{
 		alerta("El archivo anexo no es jpg... favor intentarlo con un logo correcto!",'warning');

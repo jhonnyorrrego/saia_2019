@@ -50,11 +50,12 @@ mode : "textareas",
 theme : "advanced",
 language : "es",
 editor_selector: "tiny_avanzado2",
-plugins : "formatos,spellchecker,pagebreak,style,table,save,advhr,advlink,iespell,inlinepopups,searchreplace,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,template",
-theme_advanced_buttons1 : "bold,italic,underline,|,justifyleft,justifycenter,justifyright,justifyfull,|,styleselect,formatselect,fontselect,fontsizeselect",
-theme_advanced_buttons2 : "cut,copy,paste,pastetext,pasteword,|,search,replace,|,bullist,numlist,|,outdent,indent,|,undo,redo,|,link,unlink,cleanup,code,|,forecolor,backcolor",
-theme_advanced_buttons3 : "tablecontrols,|,hr,removeformat",
+plugins : "formatos,spellchecker,pagebreak,style,table,save,advhr,advimage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,template",
+theme_advanced_buttons1 : "newdocument,|,bold,italic,underline,|,justifyleft,justifycenter,justifyright,justifyfull,|,styleselect,formatselect,fontselect,fontsizeselect",
+theme_advanced_buttons2 : "cut,copy,paste,pastetext,pasteword,|,search,replace,|,bullist,numlist,|,outdent,indent,|,undo,redo,|,link,unlink,image,cleanup,code,|,forecolor,backcolor",
+theme_advanced_buttons3 : "tablecontrols,|,hr,removeformat,|,iespell,spellchecker,|,fullscreen",
 spellchecker_languages : "+Espa=es,Ingles=en",
+theme_advanced_buttons4 : "visualchars",
 theme_advanced_toolbar_location : "top",
 theme_advanced_toolbar_align : "left",
 theme_advanced_statusbar_location : "bottom",
@@ -125,7 +126,7 @@ width:"350px"
    echo "<tr><td  style='text-align: center; background-color:#57B0DE; color: #ffffff;'>PREVISUALIZAR</td><td><textarea name='preview' id='preview' class=''>".stripslashes(codifica_encabezado(html_entity_decode(@$contenido[0]["preview"])))."</textarea></td></tr>";
    echo "<tr><td  style='text-align: center; background-color:#57B0DE; color: #ffffff;'>IMAGEN</td><td>";
    if($contenido[0]["imagen"]<>"")
-     echo "<a href='".$ruta_db_superior.$contenido[0]["imagen"]."' target='_blank'>Ver Imagen Actual</a><br />Borrar Imagen<input type='checkbox' value='1' name='borrar_imagen'><br />Subir nueva <input type='file' name='imagen' id='imagen' >";
+     echo "<a href='".$ruta_db_superior.'filesystem/mostrar_binario.php?ruta='.base64_encode($contenido[0]["imagen"])."' target='_blank'>Ver Imagen Actual</a><br />Borrar Imagen<input type='checkbox' value='1' name='borrar_imagen'><br />Subir nueva <input type='file' name='imagen' id='imagen' >";
    else
      echo "<input type=file name='imagen' id='imagen' >";  
    echo "</td></tr>";
@@ -146,7 +147,7 @@ width:"350px"
    echo "</table></form>";
 }
 elseif($_REQUEST["accion"]=="guardar_adicionar")
-{$campos=array("nombre","carrusel_idcarrusel","orden","align","preview");
+{$campos=array("nombre","carrusel_idcarrusel","orden","align");
  $nombres[]="fecha_inicio";
  $nombres[]="fecha_fin";
  $valores[]=fecha_db_almacenar($_REQUEST["fecha_inicio"],"Y-m-d");
@@ -163,28 +164,36 @@ elseif($_REQUEST["accion"]=="guardar_adicionar")
  phpmkr_query($sql,$conn);
  $id=phpmkr_insert_id();
  guardar_lob("contenido","contenidos_carrusel","idcontenidos_carrusel=".$id,$_REQUEST["contenido"],"texto",$conn);
+ guardar_lob("preview","contenidos_carrusel","idcontenidos_carrusel=".$id,$_REQUEST["preview"],"texto",$conn);
+ phpmkr_query($sql,$conn);
+ if (is_uploaded_file($_FILES["imagen"]["tmp_name"])) 
+     {
 
-    if (is_uploaded_file($_FILES["imagen"]["tmp_name"])){
+		require_once $ruta_db_superior . 'StorageUtils.php';
+		require_once $ruta_db_superior . 'filesystem/SaiaStorage.php';
+		 
       $extension=explode(".",($_FILES["imagen"]["name"]));
 	  $ultimo=count($extension);
 	  $formato=$extension[$ultimo-1];
       $aleatorio=uniqid();
 	  $aux=RUTA_CARRUSEL_IMAGENES;
-      $imagen_reducida=$ruta_db_superior.$aux;
-      crear_destino($imagen_reducida);
+	  $tipo_almacenamiento = new SaiaStorage("imagenes");
+      $imagen_reducida=$aux;
       $imagen_reducida=$imagen_reducida.$aleatorio.".".$formato;
-      if(copy($_FILES["imagen"]["tmp_name"],$imagen_reducida)){
-	  	$sql1="update contenidos_carrusel set imagen='".$aux.$aleatorio.".".$formato."' where idcontenidos_carrusel=".$id;
+	  $resultado = $tipo_almacenamiento->almacenar_recurso($imagen_reducida, $_FILES["imagen"]["tmp_name"], false);
+	  $ruta_anexos = array("servidor" => $tipo_almacenamiento->get_ruta_servidor(), "ruta" =>$imagen_reducida);	
+	  $ruta_anexos=json_encode($ruta_anexos);	  
+      if($tipo_almacenamiento->get_filesystem()->has($imagen_reducida)){
+		  $sql1="update contenidos_carrusel set imagen='".$ruta_anexos."' where idcontenidos_carrusel=".$id;
  		phpmkr_query($sql1,$conn);
 		@unlink($_FILES["imagen"]["tmp_name"]);          
       }
-
     }
   
  redirecciona($ruta_db_superior."carrusel/sliderconfig.php");
 }
 elseif($_REQUEST["accion"]=="guardar_editar")
-{$campos=array("nombre","carrusel_idcarrusel","orden","align","preview");
+{$campos=array("nombre","carrusel_idcarrusel","orden","align");
  $valores[]="fecha_inicio=".fecha_db_almacenar($_REQUEST["fecha_inicio"],"Y-m-d");
  $valores[]="fecha_fin=".fecha_db_almacenar($_REQUEST["fecha_fin"],"Y-m-d");
  $carrusel=busca_filtro_tabla("alto","carrusel","idcarrusel=".$_REQUEST["carrusel_idcarrusel"],"",$conn); 
@@ -197,6 +206,11 @@ elseif($_REQUEST["accion"]=="guardar_editar")
  $sql1="update contenidos_carrusel set ".implode(",",$valores)." where idcontenidos_carrusel=".$_REQUEST["id"];
  phpmkr_query($sql1,$conn);
  guardar_lob("contenido","contenidos_carrusel","idcontenidos_carrusel=".$_REQUEST["id"],$_REQUEST["contenido"],"texto",$conn);
+ guardar_lob("preview","contenidos_carrusel","idcontenidos_carrusel=".$_REQUEST["id"],$_REQUEST["preview"],"texto",$conn);
+ 
+ 
+		require_once $ruta_db_superior . 'StorageUtils.php';
+		require_once $ruta_db_superior . 'filesystem/SaiaStorage.php'; 
  
 	if(@$_REQUEST["borrar_imagen"]){
 		$contenido=busca_filtro_tabla("","contenidos_carrusel","idcontenidos_carrusel=".$_REQUEST["id"],"",$conn);
@@ -204,7 +218,10 @@ elseif($_REQUEST["accion"]=="guardar_editar")
 		 phpmkr_query("update contenidos_carrusel set imagen=null where idcontenidos_carrusel=".$_REQUEST["id"]);
 		 elseif(MOTOR=="Oracle")
 		 phpmkr_query("update contenidos_carrusel set imagen=empty_blob() where idcontenidos_carrusel=".$_REQUEST["id"]);
-		 @unlink($ruta_db_superior.$contenido[0]["imagen"]);
+		 
+		 $arr_almacen = StorageUtils::resolver_ruta($contenido[0]["imagen"]);
+		 $arr_almacen['clase']->get_filesystem()->delete($arr_almacen["ruta"]);
+		 //@unlink($ruta_db_superior.$contenido[0]["imagen"]);
 	}
  
  if (is_uploaded_file($_FILES["imagen"]["tmp_name"])) 
@@ -214,14 +231,18 @@ elseif($_REQUEST["accion"]=="guardar_editar")
 	  $formato=$extension[$ultimo-1];
       $aleatorio=uniqid();
 	  $aux=RUTA_CARRUSEL_IMAGENES;
-      $imagen_reducida=$ruta_db_superior.$aux;
-      crear_destino($imagen_reducida);
+	  $tipo_almacenamiento = new SaiaStorage("imagenes");
+      $imagen_reducida=$aux;
       $imagen_reducida=$imagen_reducida.$aleatorio.".".$formato;
-      if(copy($_FILES["imagen"]["tmp_name"],$imagen_reducida))
-	  		$sql1="update contenidos_carrusel set imagen='".$aux.$aleatorio.".".$formato."' where idcontenidos_carrusel=".$_REQUEST["id"];
+	  $resultado = $tipo_almacenamiento->almacenar_recurso($imagen_reducida, $_FILES["imagen"]["tmp_name"], false);
+	  $ruta_anexos = array("servidor" => $tipo_almacenamiento->get_ruta_servidor(), "ruta" =>$imagen_reducida);	
+	  $ruta_anexos=json_encode($ruta_anexos);	  
+	  if($tipo_almacenamiento->get_filesystem()->has($imagen_reducida)){
+		  $sql1="update contenidos_carrusel set imagen='".$ruta_anexos."' where idcontenidos_carrusel=".$_REQUEST["id"];
  			phpmkr_query($sql1,$conn);
 			@unlink($_FILES["imagen"]["tmp_name"]);
       }
+}
  redirecciona($ruta_db_superior."carrusel/sliderconfig.php");
 }
 elseif($_REQUEST["accion"]=="eliminar")

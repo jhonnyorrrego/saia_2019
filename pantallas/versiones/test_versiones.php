@@ -62,8 +62,9 @@ function pdf($version){
     $datos=busca_filtro_tabla("","version_documento a","a.idversion_documento=".$version,"",$conn);
     $cadena=array();
     for($i=0;$i<$datos["numcampos"];$i++){
-        $archivo=basename($datos[$i]["pdf"]);
-        $cadena[]="<item style=\"font-family:verdana; font-size:7pt;\" text=\"".codifica_encabezado(html_entity_decode($archivo))."\" id=\"pdf-".$version."\" nocheckbox=\"1\" ></item>";
+		$arr_alm = StorageUtils::resolver_ruta($datos[$i]["pdf"]);
+		$archivo = basename($arr_alm["ruta"]);
+		$cadena[] = "<item style=\"font-family:verdana; font-size:7pt;\" text=\"" . $archivo . "\" id=\"pdf-" . $version . "\" nocheckbox=\"1\" ></item>";
     }
     return(implode("",$cadena));
 }

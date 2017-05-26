@@ -1,5 +1,4 @@
 <?php
-
 $max_salida=10; // Previene algun posible ciclo infinito limitando a 10 los ../
 $ruta_db_superior=$ruta="";
 while($max_salida>0){
@@ -41,12 +40,12 @@ if(@$_REQUEST['cargar']){
 	}
 	cargar_archivo($iddoc,'',$idformato, $anexo[0]['idcampos_formato']);		
 	
-	$anexo = busca_filtro_tabla("d.ruta,d.idanexos", "documento a, formato b, campos_formato c, anexos d", "lower(a.plantilla)=b.nombre AND b.idformato=c.formato_idformato AND c.nombre='anexo_word' AND c.idcampos_formato=d.campos_formato AND a.iddocumento=" . $iddoc . " AND d.documento_iddocumento=" . $iddoc, "", $conn);
+	/*$anexo = busca_filtro_tabla("d.ruta,d.idanexos", "documento a, formato b, campos_formato c, anexos d", "lower(a.plantilla)=b.nombre AND b.idformato=c.formato_idformato AND c.nombre='anexo_word' AND c.idcampos_formato=d.campos_formato AND a.iddocumento=" . $iddoc . " AND d.documento_iddocumento=" . $iddoc, "", $conn);
 	
 	$vector_ruta=explode('../',$anexo[0]['ruta']);
 	$nueva_ruta='../'.$vector_ruta[ count($vector_ruta)-1 ];
 	$sql="UPDATE anexos SET ruta='".$nueva_ruta."' WHERE idanexos=".$anexo[0]['idanexos'];
-	phpmkr_query($sql);
+	phpmkr_query($sql);*/
 
 	$_REQUEST['from_externo']=1;
 	include_once($ruta_db_superior.'pantallas/lib/PhpWord/exportar_word.php');
@@ -61,13 +60,15 @@ if(@$_REQUEST['cargar']){
 	
 	?>
 	
-		<form action="cargar_word.php" method="POST" enctype="multipart/form-data">
-			<input type="file" name="anexos[]" id="anexos[]" />
-			<input type="hidden" name="iddoc" id="iddoc" value="<?php echo(@$_REQUEST['iddoc']); ?>" />
-			<input type="hidden" name="idformato" id="idformato" value="<?php echo(@$_REQUEST['idformato']); ?>" />
-			<input type="hidden" name="cargar" id="cargar" value="1" />
-			<br>
-			<input type="submit" name="enviar" id="enviar" value="Cargar" />
+<form action="cargar_word.php" method="POST"
+	enctype="multipart/form-data">
+	<input type="file" name="anexos[]" id="anexos[]" /> <input
+		type="hidden" name="iddoc" id="iddoc"
+		value="<?php echo(@$_REQUEST['iddoc']); ?>" /> <input type="hidden"
+		name="idformato" id="idformato"
+		value="<?php echo(@$_REQUEST['idformato']); ?>" /> <input
+		type="hidden" name="cargar" id="cargar" value="1" /> <br> <input
+		type="submit" name="enviar" id="enviar" value="Cargar" />
 		</form>
 	
 	<?php

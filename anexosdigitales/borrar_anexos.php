@@ -17,33 +17,26 @@ function recargar_centro()
 <?php 
 include_once("funciones_archivo.php");
 
-if(isset($_REQUEST["Eliminar"])&&isset($_REQUEST["idanexo"])) // Permisos a una anexo ALMACENADO  
-{ 
+if (isset($_REQUEST["Eliminar"]) && isset($_REQUEST["idanexo"])) { // Permisos a una anexo ALMACENADO
   $idanexo=$_REQUEST["idanexo"];
   $anexo=busca_filtro_tabla("","anexos","idanexos=".$idanexo,"",$conn);
-  if($anexo["numcampos"]>0) 
-     { 
+	if ($anexo["numcampos"] > 0) {
        $idanexo=$_REQUEST["idanexo"];
        borrar($idanexo);
        echo "Anexo Eliminado";
        echo "<script> cerrar(); recargar_centro();</script>";
-     }
-    else 
-    {
+	} else {
      echo "No se encontraron los datos del anexo al confirmar la eliminacion";
      }
   exit();
-}
-elseif(isset($_REQUEST["idanexo"]))// Obtiene el parametro y verifica la existencia del anexo
-{  $idanexo=$_REQUEST["idanexo"];
+} else if (isset($_REQUEST["idanexo"])) { // Obtiene el parametro y verifica la existencia del anexo
+	$idanexo = $_REQUEST["idanexo"];
     $anexo=busca_filtro_tabla("","anexos","idanexos=".$idanexo,"",$conn);
-    if(!$anexo["numcampos"]>0) // Se recibe un anexo invalido no se imprime el formulario 
-    { alerta("No se encontraron los datos del anexo a eliminar",'error',4000); 
+	if (! $anexo["numcampos"] > 0) {// Se recibe un anexo invalido no se imprime el formulario
+		alerta("No se encontraron los datos del anexo a eliminar", 'error', 4000);
       exit();
      }
- }
-else 
-{
+} else {
  echo ("No se recibio la informacion del anexo");
   exit();
  }

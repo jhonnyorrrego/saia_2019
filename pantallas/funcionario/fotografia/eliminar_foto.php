@@ -10,6 +10,8 @@ while($max_salida>0){
 }
 
 include_once($ruta_db_superior."db.php");
+require_once($ruta_db_superior.'StorageUtils.php');
+require_once($ruta_db_superior.'filesystem/SaiaStorage.php');
 
 if(@$_REQUEST['eliminar_foto']){
 	
@@ -19,12 +21,16 @@ if(@$_REQUEST['eliminar_foto']){
 	
 	$exito=0;
 	if($datos_fotografia['numcampos']){
-		if( file_exists( $ruta_db_superior.$datos_fotografia[0]['foto_original'] ) ){
-			unlink( $ruta_db_superior.$datos_fotografia[0]['foto_original'] );
+		$tipo_almacenamiento_original = StorageUtils::resolver_ruta($datos_fotografia[0]['foto_original']);
+		$tipo_almacenamiento_recortada = StorageUtils::resolver_ruta($datos_fotografia[0]['foto_recorte']);
+		
+		if($tipo_almacenamiento_original['clase']->get_filesystem()->has($tipo_almacenamiento_original['ruta'])){
+			$tipo_almacenamiento_original['clase']->get_filesystem()->delete($tipo_almacenamiento_original['ruta']);
 		}
-		if( file_exists( $ruta_db_superior.$datos_fotografia[0]['foto_recorte'] ) ){
-			unlink( $ruta_db_superior.$datos_fotografia[0]['foto_recorte'] );
+		if($tipo_almacenamiento_recortada['clase']->get_filesystem()->has($tipo_almacenamiento_recortada['ruta'])){
+			$tipo_almacenamiento_recortada['clase']->get_filesystem()->delete($tipo_almacenamiento_recortada['ruta']);
 		}	
+		
 		$sql=" UPDATE funcionario SET  foto_original=null,foto_recorte=null,foto_cordenadas=null WHERE idfuncionario=".$idfuncionario;
 		phpmkr_query($sql);	
 		$exito=1;

@@ -10,6 +10,9 @@ while($max_salida > 0) {
 }
 include_once ($ruta_db_superior . "db.php");
 
+include_once($ruta_db_superior.'StorageUtils.php');
+include_once($ruta_db_superior.'filesystem/SaiaStorage.php');
+
 function retornar_seleccionados($valor) {
 	global $ruta_db_superior;
 	$vector = explode(",", str_replace("#", "d", $valor));
@@ -3436,22 +3439,26 @@ function cargar_anexos_documento_web($datos_documento, $anexos) {
 	global $conn, $ruta_db_superior;
 	include_once ($ruta_db_superior . "pantallas/lib/librerias_archivo.php");
 	$formato_ruta = aplicar_plantilla_ruta_documento($datos_documento["iddocumento"]);
-	$ruta_archivos = ruta_almacenamiento("archivos");
+	$tipo_almacenamiento = new SaiaStorage("archivos");
+	//$ruta_archivos = ruta_almacenamiento("archivos");
 	$funcionario = busca_filtro_tabla("idfuncionario", "funcionario", "funcionario_codigo=" . $datos_documento["funcionario_codigo"], "", $conn);
 	foreach($anexos as $key => $value) {
 		// $ruta = RUTA_ARCHIVOS.$datos_documento["estado"]."/".$datos_documento["fecha"]."/".$datos_documento["iddocumento"]."/anexos";
-		$ruta = $ruta_archivos . $formato_ruta . "/anexos";
-		crear_destino($ruta);
-		$extencion = pathinfo($value['filename']);
-		$ruta .= "/" . rand() . "." . $extencion["extension"];
-		$archivo = fopen($ruta, "w+"); // crea el archivo jpg
-		fclose($archivo);
+		//$ruta = $ruta_archivos . $formato_ruta . "/anexos";
+		$ruta = $formato_ruta . "/anexos";
+		//crear_destino($ruta);
+		$extension = pathinfo($value['filename']);
+		$ruta .= "/" . rand() . "." . $extension["extension"];
+		//$archivo = fopen($ruta, "w+"); // crea el archivo jpg
+		//fclose($archivo);
 		$contenido = base64_decode($value['content']);
-		file_put_contents($ruta, $contenido);
+		$guardados = $tipo_almacenamiento->almacenar_contenido($ruta, $contenido);
+		//file_put_contents($ruta, $contenido);
 		
-		if(file_exists($ruta)) {
-			$ruta_alm = substr($ruta, strlen($ruta_db_superior));
-			$insert_anexo = "insert into anexos(documento_iddocumento, ruta, etiqueta, tipo, formato) VALUES (" . $datos_documento["iddocumento"] . ",'" . $ruta_alm . "','" . $value['filename'] . "','" . $extencion["extension"] . "'," . $datos_documento["idformato"] . ")";
+		if($guardados) {
+			//$ruta_alm = substr($ruta, strlen($ruta_db_superior));
+			$ruta_alm = array("servidor" => $tipo_almacenamiento->get_ruta_servidor(), "ruta" => $ruta);
+			$insert_anexo = "insert into anexos(documento_iddocumento, ruta, etiqueta, tipo, formato) VALUES (" . $datos_documento["iddocumento"] . ",'" . json_encode($ruta_alm) . "','" . $value['filename'] . "','" . $extencion["extension"] . "'," . $datos_documento["idformato"] . ")";
 			phpmkr_query($insert_anexo, $conn, $datos_documento["funcionario_codigo"]);
 			$idnexo = phpmkr_insert_id();
 			$insert_permiso = "insert into permiso_anexo (anexos_idanexos, idpropietario, caracteristica_propio, caracteristica_dependencia, caracteristica_cargo, caracteristica_total) VALUES (" . $idnexo . "," . $funcionario[0]["idfuncionario"] . ",'lem', '', '', 'l')";
@@ -3558,9 +3565,11 @@ function crear_pdf_documento_tcpdf($datos_documento, $datos_ejecutor = null) {
 		$url = PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . "/class_impresion.php?iddoc=" . $datos_documento['iddocumento'];
 		$datos_session = "&LOGIN=" . $_SESSION["LOGIN" . LLAVE_SAIA] . "&usuario_actual=" . $_SESSION["usuario_actual"] . "&llave_saia=" . LLAVE_SAIA;
 		$url = $url . $datos_session;
-        
+        if (strpos(PROTOCOLO_CONEXION, 'https') !== false) {
+		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false); 
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+	}		
 		curl_setopt($ch, CURLOPT_URL, $url);
-		
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 	
 		// Capturar la URL y pasarla al navegador

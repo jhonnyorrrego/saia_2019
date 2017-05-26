@@ -10,7 +10,8 @@ while ($max_salida > 0) {
 }
 include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."pantallas/anexos/librerias_anexos.php");
-
+include_once($ruta_db_superior."StorageUtils.php");
+include_once($ruta_db_superior.'filesystem/SaiaStorage.php');
 if(@$_REQUEST['recortar']){
 	
 	$idfuncionario=intval($_REQUEST['idfuncionario']);
@@ -21,36 +22,43 @@ if(@$_REQUEST['recortar']){
 	
 	$src = $ruta_db_superior.$foto_original[0]['foto_original'];
 	$exito=0;
-	if(file_exists($src)){ 
+	$arr_alm = StorageUtils::resolver_ruta($foto_original[0]['foto_original']);
+	$tipo_almacenamiento2 = $arr_alm["clase"];
+	if($tipo_almacenamiento2->get_filesystem()->has($arr_alm["ruta"])){
 		
-		$img_r = imagecreatefromjpeg($src);
+		$archivo=$tipo_almacenamiento2->get_filesystem()->get($arr_alm["ruta"]);
+		$archivo_binario = $archivo->getContent();	
+		
+		$img_r = imagecreatefromstring($archivo_binario);
 		$dst_r = ImageCreateTrueColor($targ_w, $targ_h);
 		imagecopyresampled($dst_r, $img_r, 0, 0, $_REQUEST['x'], $_REQUEST['y'], $targ_w, $targ_h, $_REQUEST['w'], $_REQUEST['h']);
 		header('Content-type: image/jpeg');	
 		
-		$nombre=basename($src);
 		$ruta_recortada=RUTA_FOTOGRAFIA_FUNCIONARIO.'recorte/';
-		crear_destino($ruta_db_superior.$ruta_recortada);	
 
-		if(file_exists($ruta_db_superior.$ruta_recortada.$nombre)){
-			unlink($ruta_db_superior.$ruta_recortada.$nombre);
-		}
+		$variable=StorageUtils::get_memory_filesystem('fotos','saia');
+		$variable->write('foto_funcionario_recorte/helloworld.txt','helloworld'); //se usa para crear directorio temporal
+		$ruta_temporal='saia://fotos/foto_funcionario_recorte/';		
 		
-		
-		$extencion=explode('.',$nombre);
+		$extencion='jpg';
 		$nombre_nuevo = (rand());
-		$ruta_recortada.=$nombre_nuevo.'.'.$extencion[ count($extencion)-1 ];		
+		$ruta_recortada.=$nombre_nuevo.'.'.$extencion;		
 		
-		imagejpeg($dst_r, $ruta_db_superior.$ruta_recortada, $jpeg_quality);
+		imagejpeg($dst_r, $ruta_temporal.$nombre_nuevo.'.'.$extencion, $jpeg_quality);
 		imagedestroy($dst_r);
-		clearstatcache();
+		$binario = file_get_contents($ruta_temporal.$nombre_nuevo.'.'.$extencion);	
+		$tipo_almacenamiento = new SaiaStorage("imagenes");
+		$ruta_final = RUTA_FOTOGRAFIA_FUNCIONARIO.'recorte/';
+		$resultado = $tipo_almacenamiento->almacenar_contenido($ruta_final.$nombre_nuevo.'.'.$extencion, $binario);
+		$ruta_anexos = array("servidor" => $tipo_almacenamiento->get_ruta_servidor(), "ruta" => $ruta_final.$nombre_nuevo.'.'.$extencion);	
+		$ruta_anexos=json_encode($ruta_anexos);		
 		
 		$cordenadas=$_REQUEST['x'].','.$_REQUEST['y'].','.$_REQUEST['x2'].','.$_REQUEST['y2'];
-		$sql="UPDATE funcionario SET foto_cordenadas='".$cordenadas."',foto_recorte='".$ruta_recortada."' WHERE idfuncionario=".$idfuncionario;
+		$sql="UPDATE funcionario SET foto_cordenadas='".$cordenadas."',foto_recorte='".$ruta_anexos."' WHERE idfuncionario=".$idfuncionario;
 		phpmkr_query($sql);				
 		$exito=1;
 	}
-	$retorno=array('exito'=>$exito,'ruta_recortada'=>$ruta_recortada);
+	$retorno=array('exito'=>$exito,'ruta_recortada'=>$ruta_anexos);
 	echo(json_encode($retorno));
 	
 }
