@@ -1,6 +1,4 @@
 <?php
-use PhpOffice\PhpWord\Exception\Exception;
-
 $max_salida = 6;
 $ruta_db_superior = $ruta = "";
 while($max_salida > 0) {
@@ -15,8 +13,15 @@ while($max_salida > 0) {
 include_once ($ruta_db_superior . "db.php");
 include_once ($ruta_db_superior . "formatos/librerias/funciones_generales.php");
 include_once ($ruta_db_superior . "pantallas/lib/elasticsearch/class_elasticsearch.php");
+include_once ($ruta_db_superior . "anexosdigitales/funciones_archivo.php");
 
-class DocumentoElastic {
+ini_set("display_errors", true);
+
+$d2j = new DocumentoElastic3(1596);
+print_r($d2j->indexar_elasticsearch_completo());
+//print_r($d2j->crear_indice_saia());
+
+class DocumentoElastic3 {
 	var $datos_ft;
 	private $cliente_elasticsearch;
 	var $iddocumento;
@@ -289,7 +294,7 @@ class DocumentoElastic {
 		$datos_temporal = array();
 
 		$datos_ft = $this->cargar_informacion_item($plantilla, $iddocumento);
-		//print_r($datos_ft);die();
+		// print_r($datos_ft);die();
 		// $this->cargar_adicional_documento();
 
 		if (!$datos_ft["numcampos"]) {
@@ -314,7 +319,7 @@ class DocumentoElastic {
 
 		$info_formato = busca_filtro_tabla("idformato, nombre, nombre_tabla, item", "formato", "idformato=$idformato", "", $conn);
 
-		if(!$info_formato["numcampos"]) {
+		if (!$info_formato["numcampos"]) {
 			return $hijos;
 		}
 		$es_item1 = $info_formato[0]["item"] == '1';
@@ -323,28 +328,28 @@ class DocumentoElastic {
 		$idplantilla_padre = $info_formato[0]["idformato"];
 		$formatos_hijos = busca_filtro_tabla("h.idformato, h.nombre, h.nombre_tabla, h.item", "formato h", "h.cod_padre = $idplantilla_padre", "", $conn);
 
-		if($es_item1) {
+		if ($es_item1) {
 			$datos_ft = $this->obtener_info_item($plantilla_padre, $iddocumento, $idformato);
 		} else {
-		$datos_ft = $this->cargar_informacion_ft2($plantilla_padre, $iddocumento);
+			$datos_ft = $this->cargar_informacion_ft2($plantilla_padre, $iddocumento);
 		}
 
-		//print_r($formatos_hijos);die();
+		// print_r($formatos_hijos);die();
 		// print_r($datos_ft[0]);die();
 		$datos_hijos = array();
 		for($i = 0; $i < $formatos_hijos["numcampos"]; $i++) {
 			$plantilla = strtoupper($formatos_hijos[$i]["nombre"]);
 			$tabla = $formatos_hijos[$i]["nombre_tabla"];
 			$es_item = $formatos_hijos[$i]["item"] == '1';
-			$idformato_hijo= $formatos_hijos[$i]["idformato"];
+			$idformato_hijo = $formatos_hijos[$i]["idformato"];
 			$documentos_hijos = busca_filtro_tabla("", $tabla, "ft_" . $plantilla_padre . " = " . $datos_ft[0]["idft_" . $plantilla_padre], "", $conn);
 			// print_r($documentos_hijos);die();
 			if ($documentos_hijos["numcampos"]) {
 				for($h = 0; $h < $documentos_hijos["numcampos"]; $h++) {
-					if($es_item) {
+					if ($es_item) {
 						$id_hijo = $documentos_hijos[$h]["id$tabla"];
 					} else {
-					$id_hijo = $documentos_hijos[$h]["documento_iddocumento"];
+						$id_hijo = $documentos_hijos[$h]["documento_iddocumento"];
 					}
 					if ($id_hijo) {
 						$relacion = new StdClass();
@@ -362,13 +367,13 @@ class DocumentoElastic {
 				}
 			}
 		}
-		return  array_merge($hijos, $datos_hijos);
+		return array_merge($hijos, $datos_hijos);
 	}
 
 	private function buildTree(array $elements, $parentId = 0) {
 		$branch = array();
 
-		foreach ($elements as $element) {
+		foreach ( $elements as $element ) {
 			if ($element->id_padre == $parentId) {
 				$children = $this->buildTree($elements, $element->id_hijo);
 				if ($children) {
@@ -394,8 +399,8 @@ class DocumentoElastic {
 			$idformato = $documento_origen["documento"]["formato_idformato"];
 
 			$hijos = $this->obtener_info_hijos($doc_ppal, $hijos, $idformato);
-			//var_dump($hijos);
-			//var_dump($this->buildTree($hijos));die();
+			// var_dump($hijos);
+			// var_dump($this->buildTree($hijos));die();
 			$total = count($hijos);
 			if ($total > 0) {
 				$params = [
@@ -416,23 +421,23 @@ class DocumentoElastic {
 				$arreglo_hijos = array();
 				// Primero es necesario crear el mapeo entre el documento padre y sus hijos
 				foreach ( $hijos as $hijo ) {
-						if($hijo->hijo_es_item) {
-							$datos_hijo = $this->obtener_info_item($hijo->tipo_hijo, $hijo->id_hijo, $hijo->idformato_hijo);
-							//print_r($datos_hijo);die();
-						} else {
+					if ($hijo->hijo_es_item) {
+						$datos_hijo = $this->obtener_info_item($hijo->tipo_hijo, $hijo->id_hijo, $hijo->idformato_hijo);
+						// print_r($datos_hijo);die();
+					} else {
 						$datos_hijo = $this->obtener_info_doc($hijo->id_hijo);
-						}
-						if ($datos_hijo) {
+					}
+					if ($datos_hijo) {
 						$resultado_indice = $this->guardar_indice_simple($datos_hijo, $hijo->id_padre);
 						print_r($resultado_indice);
 						//$arreglo_hijos[] = $datos_hijo;
-						}
+					}
 				}
 
 				//$resultado_indice = null;
-				//print_r($params);die();
+				// print_r($params);die();
 
-				//Se debe indexar el documento padre
+				// Se debe indexar el documento padre
 				/*if (count($arreglo_hijos) > 0) {
 					foreach ( $arreglo_hijos as $hijo ) {
 						print_r($hijo);die();
@@ -449,26 +454,26 @@ class DocumentoElastic {
 		return (true);
 	}
 
-	private function guardar_indice_simple($datos, $padre=null) {
+	private function guardar_indice_simple($datos, $padre = null) {
 		if ($datos) {
-			//$datos_json = json_encode($datos);
+			// $datos_json = json_encode($datos);
 			$indice = "documentos";
 			$tipo_dato = $datos["documento"]["plantilla"];
 			$id = $datos["documento"]["iddocumento"];
 
-			if(empty($id)) {
+			if (empty($id)) {
 				$nombre = $datos["datos_ft"]["nombre_formato"];
 				$id = $datos["datos_ft"]["idft_$nombre"];
-				//print_r($datos);die("kaput $id");
+				// print_r($datos);die("kaput $id");
 			}
-			if(empty($tipo_dato)) {
-				$tipo_dato= strtoupper($datos["datos_ft"]["nombre_formato"]);
-				//print_r($datos);die("kaput $id");
+			if (empty($tipo_dato)) {
+				$tipo_dato = strtoupper($datos["datos_ft"]["nombre_formato"]);
+				// print_r($datos);die("kaput $id");
 			}
 			$salida = "";
 			try {
 				$salida = $this->get_cliente_elasticsearch()->adicionar_indice_simple($indice, $id, $datos, $tipo_dato, $padre);
-			} catch (\Exception $e) {
+			} catch ( \Exception $e ) {
 				print_r($e);
 			}
 			return $salida;

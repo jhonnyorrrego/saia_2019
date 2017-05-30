@@ -47,7 +47,7 @@ function obtener_info_hijos($idformato) {
 	$info_formato = busca_filtro_tabla("idformato, nombre, nombre_tabla, item", "formato", "idformato=$idformato", "", $conn);
 
 	if (!$info_formato["numcampos"]) {
-		return $hijos;
+		return array();
 	}
 	$es_item1 = $info_formato[0]["item"] == '1';
 	$tabla1 = $info_formato[0]["nombre_tabla"];
