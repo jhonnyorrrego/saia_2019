@@ -1,7 +1,7 @@
 <?php
-require_once (__DIR__ . "/../define.php");
-require_once (__DIR__ . "/../StorageUtils.php");
-require (__DIR__ . '/../vendor/autoload.php');
+require_once ( __DIR__ . "/../define.php");
+require_once ( __DIR__ . "/../StorageUtils.php");
+require ( __DIR__ . '/../vendor/autoload.php');
 require_once 'SaiaLocalAdapter.php';
 
 use Gaufrette\Filesystem;
@@ -18,9 +18,9 @@ class SaiaStorage {
 	private $filesystem;
 	private $ruta_servidor;
 
-	public function __construct($tipo = null) {
+	public function __construct($tipo=null) {
 		$this->tipo = $tipo;
-		if ($tipo) {
+		if($tipo) {
 			$this->__init();
 		}
 	}
@@ -49,7 +49,7 @@ class SaiaStorage {
 			case 'configuracion' :
 				$server_path = RUTA_CONFIGURACION;
 				break;
-			default : // Usar el tipo. Ej. BACKUP
+			default: //Usar el tipo. Ej. BACKUP
 				$server_path = $this->tipo;
 		}
 		$this->resolver_adaptador($server_path);
@@ -61,34 +61,34 @@ class SaiaStorage {
 		$path = $str_path->removeLeft($storage_type);
 
 		switch ($storage_type) {
-			case StorageUtils::LOCAL :
-			case StorageUtils::NETWORK :
-				$root = $_SERVER["DOCUMENT_ROOT"] . StorageUtils::SEPARADOR . RUTA_SCRIPT;
-				if (StringUtils::startsWith($path, "..")) {
-					$path = String::create($path)->trimLeft(".." . StorageUtils::SEPARADOR)->removeRight(StorageUtils::SEPARADOR)->ensureLeft(StorageUtils::SEPARADOR);
+			case StorageUtils::LOCAL:
+			case StorageUtils::NETWORK:
+				$root = $_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . RUTA_SCRIPT;
+				if(StringUtils::startsWith($path, "..")) {
+					$path = String::create($path)->trimLeft(".." . DIRECTORY_SEPARATOR)->removeRight(DIRECTORY_SEPARATOR)->ensureLeft(DIRECTORY_SEPARATOR);
 					$this->adapter = new Local($root . $path, true, 0777);
 				} else {
 					$this->adapter = new Local($path, true, 0777);
 				}
 				break;
-			case StorageUtils::GOOGLE :
+			case StorageUtils::GOOGLE:
 				$this->adapter = $this->obtener_google_adapter();
 				break;
-			case StorageUtils::S3 :
+			case StorageUtils::S3:
 				$s3client = S3Client::factory(array(
-						'key' => 'your_key_here',
-						'secret' => 'your_secret',
-						'version' => 'latest',
+				'key'     => 'your_key_here',
+				'secret'  => 'your_secret',
+				'version' => 'latest',
 						'region' => 'eu-west-1'
 				));
-				$this->adapter = new AwsS3Adapter($s3client, $path);
+				$this->adapter = new AwsS3Adapter($s3client,$path);
 				break;
-			default :
-				$this->adapter = new Local($path, true, 0777);
+			default:
+					$this->adapter = new Local($path, true, 0777);
 		}
 		$this->ruta_servidor = $server_path;
 
-		if ($this->adapter) {
+		if($this->adapter) {
 			$this->filesystem = new Filesystem($this->adapter);
 		}
 	}
@@ -113,12 +113,12 @@ class SaiaStorage {
 	 * @param unknown $temp
 	 * @return la suma md5 si el parametro md5 es true. O el numero de bytes escritos
 	 */
-	public function almacenar_recurso($ruta_recurso, $temp, $md5 = false) {
-		// print_r($filesystem);die();
+	public function almacenar_recurso($ruta_recurso, $temp, $md5=false) {
+		//print_r($filesystem);die();
 		$adapter = new Local(dirname($temp));
 		$content = $adapter->read(basename($temp));
 		$numbytes = $this->filesystem->write($ruta_recurso, $content, true);
-		if ($md5) {
+		if($md5) {
 			$checksum = $this->filesystem->checksum($ruta_recurso);
 			return $checksum;
 		}
@@ -134,7 +134,7 @@ class SaiaStorage {
 	 * @return integer Numero de bytes que fueron escriton en el archvio $ruta_recurso
 	 */
 	public function almacenar_contenido($ruta_recurso, $contenido) {
-		// print_r($filesystem);die();
+		//print_r($filesystem);die();
 		return $this->filesystem->write($ruta_recurso, $contenido, true);
 	}
 
@@ -158,15 +158,15 @@ class SaiaStorage {
 	 * @param unknown $ruta_destino
 	 */
 	public function copiar_contenido($alm_destino, $ruta_origen, $ruta_destino) {
-		if ($this->filesystem->has($ruta_origen)) {
+		if($this->filesystem->has($ruta_origen)) {
 			$content = $this->filesystem->read($ruta_origen);
 			$alm_destino->filesystem->write($ruta_destino, $content, true);
 		}
 	}
 
 	private function completar_ruta($filesystem1, $ruta_origen) {
-		$ruta1 = String::create($filesystem1->getAdapter()->getDirectory())->ensureRight(StorageUtils::SEPARADOR);
-		$ruta2 = String::create(dirname($ruta_origen))->removeLeft(StorageUtils::SEPARADOR);
+		$ruta1 = String::create($filesystem1->getAdapter()->getDirectory())->ensureRight(DIRECTORY_SEPARATOR);
+		$ruta2 = String::create(dirname($ruta_origen))->removeLeft(DIRECTORY_SEPARATOR);
 		$adapter = new Local($ruta1->append($ruta2));
 		return $adapter;
 	}
@@ -217,8 +217,8 @@ class SaiaStorage {
 	 * @return string
 	 */
 	public function get_ruta_servidor() {
-		$cad = String::create($this->ruta_servidor)->ensureRight(StorageUtils::SEPARADOR);
-		return (string) $cad;
+		$cad = String::create($this->ruta_servidor)->ensureRight(DIRECTORY_SEPARATOR);
+		return (string)$cad;
 	}
 
 	private function obtener_google_adapter() {
