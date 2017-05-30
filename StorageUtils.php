@@ -20,6 +20,8 @@ class StorageUtils {
 	const GOOGLE = 'gc://';
 	const S3 = 's3://';
 
+	const SEPARADOR = "/"; //DIRECTORY_SEPARATOR
+
 	/**
 	 * Debe devolver la ruta de almacenamiento, asegurando que el directorio exista
 	 *
@@ -97,8 +99,8 @@ class StorageUtils {
 		$adapter = null;
 		$mi_ruta = String::create(__DIR__);
 		$root = $_SERVER["DOCUMENT_ROOT"];
-		// $resto = $mi_ruta->removeLeft($root)->removeRight(DIRECTORY_SEPARATOR . "saia");
-		$resto = DIRECTORY_SEPARATOR . RUTA_SCRIPT;
+		// $resto = $mi_ruta->removeLeft($root)->removeRight(self::SEPARADOR . "saia");
+		$resto = self::SEPARADOR . RUTA_SCRIPT;
 
 		$root .= $resto;
 
@@ -107,19 +109,19 @@ class StorageUtils {
 		$path = $str_path->removeLeft($storage_type);
 
 		switch ($storage_type) {
-			case StorageUtils::LOCAL :
-			case StorageUtils::NETWORK :
+			case self::LOCAL :
+			case self::NETWORK :
 				if (StringUtils::startsWith($path, "..")) {
-					$path = String::create($path)->trimLeft(".." . DIRECTORY_SEPARATOR)->removeRight(DIRECTORY_SEPARATOR)->ensureLeft(DIRECTORY_SEPARATOR);
+					$path = String::create($path)->trimLeft(".." . self::SEPARADOR)->removeRight(self::SEPARADOR)->ensureLeft(self::SEPARADOR);
 					$adapter = new Local($root . $path, true, 0777);
 				} else {
 					$adapter = new Local($path, true, 0777);
 				}
 				break;
-			case StorageUtils::GOOGLE :
+			case self::GOOGLE :
 				$adapter = obtener_google_adapter();
 				break;
-			case StorageUtils::S3 :
+			case self::S3 :
 				$s3client = S3Client::factory(array(
 						'key' => 'your_key_here',
 						'secret' => 'your_secret',
@@ -144,19 +146,21 @@ class StorageUtils {
 	 * @return array con los datos de la ruta
 	 */
 	public static function resolver_ruta($path) {
-		$ruta = json_decode($path);
 		$resp = array(
 				"error" => true
 		);
 
+		$ruta = String::create($path);
+
 		$almacenamiento = null;
-		if (json_last_error() === JSON_ERROR_NONE) {
-			// JSON is valid
-			$almacenamiento = SaiaStorage::con_ruta_servidor($ruta->servidor);
-			$resp["servidor"] = $ruta->servidor;
-			$resp["ruta"] = $ruta->ruta;
+		if ($ruta->isJson()) {
+			$rutaj = json_decode($path);
+			$almacenamiento = SaiaStorage::con_ruta_servidor($rutaj->servidor);
+			$resp["servidor"] = $rutaj->servidor;
+			$resp["ruta"] = $rutaj->ruta;
 			$resp["error"] = false;
 		} else {
+			$resp["mensaje"] = "la cadena '$path' no es json" ;
 			$constantes = array();
 			foreach (get_defined_constants() as $k => $value) {
 				if ($k === "RUTA_DISCO") {
@@ -234,8 +238,8 @@ class StorageUtils {
 					$archivo_temporal = tempnam($usr_temp, $nombre_temporal);
 				}
 			} else {
-				if (is_writable($ruta_db_superior . DIRECTORY_SEPARATOR . "temporal")) {
-					$archivo_temporal = tempnam($ruta_db_superior . DIRECTORY_SEPARATOR . "temporal", $nombre_temporal);
+				if (is_writable($ruta_db_superior . self::SEPARADOR . "temporal")) {
+					$archivo_temporal = tempnam($ruta_db_superior . self::SEPARADOR . "temporal", $nombre_temporal);
 				}
 			}
 		}
@@ -263,16 +267,16 @@ class StorageUtils {
 
 	public static function get_app_root() {
 		$abspath = __DIR__;
-		$docRoot = rtrim($_SERVER['DOCUMENT_ROOT'], DIRECTORY_SEPARATOR);
+		$docRoot = rtrim($_SERVER['DOCUMENT_ROOT'], self::SEPARADOR);
 		$dir = substr($abspath, strlen($docRoot));
 
 		$app_root = $docRoot;
 
-		$rutas = new ArrayObject(explode(DIRECTORY_SEPARATOR, ltrim($dir, DIRECTORY_SEPARATOR)));
+		$rutas = new ArrayObject(explode(self::SEPARADOR, ltrim($dir, self::SEPARADOR)));
 		for($it = $rutas->getIterator(); $it->valid(); $it->next()) {
 			// echo $it->key() . "=" . $it->current() . "<br>";
-			$app_root .= DIRECTORY_SEPARATOR . $it->current();
-			if (is_file($app_root . DIRECTORY_SEPARATOR . "db.php")) {
+			$app_root .= self::SEPARADOR . $it->current();
+			if (is_file($app_root . self::SEPARADOR . "db.php")) {
 				break;
 			}
 		}
