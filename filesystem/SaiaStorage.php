@@ -63,9 +63,9 @@ class SaiaStorage {
 		switch ($storage_type) {
 			case StorageUtils::LOCAL:
 			case StorageUtils::NETWORK:
-				$root = $_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . RUTA_SCRIPT;
+				$root = $_SERVER["DOCUMENT_ROOT"] . StorageUtils::SEPARADOR . RUTA_SCRIPT;
 				if(StringUtils::startsWith($path, "..")) {
-					$path = String::create($path)->trimLeft(".." . DIRECTORY_SEPARATOR)->removeRight(DIRECTORY_SEPARATOR)->ensureLeft(DIRECTORY_SEPARATOR);
+					$path = String::create($path)->trimLeft(".." . StorageUtils::SEPARADOR)->removeRight(StorageUtils::SEPARADOR)->ensureLeft(StorageUtils::SEPARADOR);
 					$this->adapter = new Local($root . $path, true, 0777);
 				} else {
 					$this->adapter = new Local($path, true, 0777);
@@ -165,8 +165,8 @@ class SaiaStorage {
 	}
 
 	private function completar_ruta($filesystem1, $ruta_origen) {
-		$ruta1 = String::create($filesystem1->getAdapter()->getDirectory())->ensureRight(DIRECTORY_SEPARATOR);
-		$ruta2 = String::create(dirname($ruta_origen))->removeLeft(DIRECTORY_SEPARATOR);
+		$ruta1 = String::create($filesystem1->getAdapter()->getDirectory())->ensureRight(StorageUtils::SEPARADOR);
+		$ruta2 = String::create(dirname($ruta_origen))->removeLeft(StorageUtils::SEPARADOR);
 		$adapter = new Local($ruta1->append($ruta2));
 		return $adapter;
 	}
@@ -217,7 +217,7 @@ class SaiaStorage {
 	 * @return string
 	 */
 	public function get_ruta_servidor() {
-		$cad = String::create($this->ruta_servidor)->ensureRight(DIRECTORY_SEPARATOR);
+		$cad = String::create($this->ruta_servidor)->ensureRight(StorageUtils::SEPARADOR);
 		return (string)$cad;
 	}
 
