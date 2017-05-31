@@ -18,6 +18,9 @@ include_once ($ruta_db_superior . "anexosdigitales/funciones_archivo.php");
 ini_set("display_errors", true);
 
 $d2j = new DocumentoElastic3(1596);
+//$d2j = new DocumentoElastic3(1638);
+//$d2j = new DocumentoElastic3(1639);
+
 print_r($d2j->indexar_elasticsearch_completo());
 //print_r($d2j->crear_indice_saia());
 
@@ -406,6 +409,7 @@ class DocumentoElastic3 {
 				$params = [
 						"index" => "documentos",
 						"type" => $documento_origen["documento"]["plantilla"],
+						"id" => $doc_ppal
 				];
 				$params["documento"] = $documento_origen["documento"];
 				$params["datos_ft"] = $documento_origen["datos_ft"];

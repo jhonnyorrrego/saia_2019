@@ -1,6 +1,4 @@
 <?php
-use PhpOffice\PhpWord\Exception\Exception;
-
 $max_salida = 6;
 $ruta_db_superior = $ruta = "";
 while($max_salida > 0) {
@@ -401,6 +399,7 @@ class DocumentoElastic {
 				$params = [
 						"index" => "documentos",
 						"type" => $documento_origen["documento"]["plantilla"],
+						"id" => $doc_ppal
 				];
 				$params["documento"] = $documento_origen["documento"];
 				$params["datos_ft"] = $documento_origen["datos_ft"];
