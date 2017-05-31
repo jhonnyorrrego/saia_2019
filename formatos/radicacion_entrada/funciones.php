@@ -457,7 +457,9 @@ function tipo_radicado_radicacion($idformato,$iddoc){//en el adicionar
             tree_area_responsable.setOnCheckHandler(refrescar_arbol_tipo_documental_funcionario_responsable);
 			        	
             function refrescar_arbol_tipo_documental_funcionario_responsable(){
-            	
+				<?php 
+				$dependencia_maestra=busca_filtro_tabla("iddependencia","dependencia","cod_padre=0 OR cod_padre IS NULL","",$conn);
+				?>            	
             	if($("input:radio[name=tipo_origen]:checked").val()==2 && $("input:radio[name=tipo_destino]:checked").val()==1){
             		
             	
@@ -466,22 +468,22 @@ function tipo_radicado_radicacion($idformato,$iddoc){//en el adicionar
 			        	if(seleccionado){
 			        		var dependencia=tree_area_responsable.getParentId(seleccionado);
 				            var padre=tree_area_responsable.getParentId(dependencia);
+
+            	            if(padre==0){  //SOLO PARA SU ORGANIZACION
+            	                padre='<?php echo($dependencia_maestra[0]['iddependencia']); ?>';
+            	            }				            
+				            
 				            padre=padre.replace("#","");
 				            dependencia=dependencia.replace("#","");
+
+                	       var parametro_adicional='';
+                	       if(dependencia=='<?php echo($dependencia_maestra[0]['iddependencia']); ?>'){
+                	           parametro_adicional='&carga_partes_dependencia=1';
+                	       }				            
 				            
-				            
-				            <?php 
-				                $dependencia_principal=busca_filtro_tabla("iddependencia","dependencia","cod_padre IS NULL","",$conn);
-				                $var_iddpendencia_principal=$dependencia_principal[0]['iddependencia'];
-				            ?>
-				            var iddependencia_principal='<?php echo($var_iddpendencia_principal); ?>';
-				            if(dependencia==iddependencia_principal){ //SU ORGANIZACION HAY ERROR CON ESTA NO DETECTADO AUN LA RAZON
-				            	
-				       		}else{
-				           		tree_serie_idserie.setXMLAutoLoading("<?php echo($ruta_db_superior); ?>test_dependencia_serie.php?tabla=dependencia&mostrar_nodos=dsa&sin_padre_dependencia=1&estado=1&cargar_series=1&carga_partes_serie=1&iddependencia="+dependencia);
-				           		tree_serie_idserie.smartRefreshItem("d"+padre);  
-				           		tree_serie_idserie.openItem( "d"+padre ); 
-				       		}	
+                	       tree_serie_idserie.setXMLAutoLoading("<?php echo($ruta_db_superior); ?>test_dependencia_serie.php?tabla=dependencia&mostrar_nodos=dsa&sin_padre_dependencia=1&estado=1&cargar_series=1&carga_partes_serie=1&iddependencia="+dependencia+parametro_adicional);
+                	       tree_serie_idserie.smartRefreshItem("d"+padre);  
+                	       tree_serie_idserie.openItem( "d"+padre ); //ARBOL: expande nodo hasta el item indicado	
 			        	}  
 			     }  	           
             
