@@ -320,19 +320,32 @@ if($_SESSION["tipo_dispositivo"]=="movil"){ ?>
     width: 39px;"> <i class="icon-minus icon-white"></i></div>
         <div class="modbox-saia-main-content ui-corner-bottom">
           <ul id="MenuSaiaVin">
+             
+             
+             <!-- INICIO OPCIONES PRINCIPALES -->
+             
+             <!-- DOCUMENTOS RECIBIDOS -->
+              
             <li><i class="icon-inbox"></i><a href="pantallas/buscador_principal.php?idbusqueda=3&cmd=resetall" target="centro" class="enlace_indicadores_index" idcomponente="<?php echo($componente_pendiente[0]["idbusqueda_componente"]); ?>" nombre_componente="documento_pendiente">Documentos Recibidos <div class="pull-right"><span class="badge" id="documento_pendiente"><?php echo($pendientes["numcampos"]);?></span></div></a>
             </li>
+            
+             <!-- DOCUMENTOS CON INDICADOR -->
+            
             <li><i class="icon-flag"></i><a href="pantallas/buscador_principal.php?idbusqueda=24&cmd=resetall" target="centro" class="enlace_indicadores_index" idcomponente="<?php echo($componente_prioridad[0]["idbusqueda_componente"]); ?>" nombre_componente="documentos_importantes">Con Indicador <div class="pull-right"><span class="badge" id="documentos_importantes"><?php echo(intval($con_indicador["numcampos"]));?></span></div></a>
             </li>
-            <!--li><i class="icon-star-empty"></i><a href="pantallas/buscador_principal.php?idbusqueda=53&cmd=resetall" target="centro" class="enlace_indicadores_index" idcomponente="186" nombre_componente="documentos_destacados"> Destacados <div class="pull-right"><span class="badge" id="documentos_destacados"><?php echo(intval($destacados["numcampos"]));?></span></div></a>
-            </li-->
-            <!--li><i class="icon-ok-circle"></i><a href="pantallas/buscador_principal.php?idbusqueda=3&cmd=resetall" target="centro"> Actividades Recientes <div class="pull-right"><span class="badge" id="documentos_importantes"><?php echo(intval($actualizaciones[0]["cant"]));?></span></div></a>
-            </li-->
+ 
+             <!-- DOCUMENTOS EN BORRADOR -->
+ 
             <li><i class="icon-calendar"></i><a href="pantallas/buscador_principal.php?idbusqueda=25&cmd=resetall" target="centro" class="enlace_indicadores_index" idcomponente="<?php echo($componente_borrador[0]["idbusqueda_componente"]); ?>" nombre_componente="borradores">Borradores <div class="pull-right"><span class="badge" id="borradores"><?php echo($borradores[0]["cant"]);?></span></div></a>
             </li>
+            
+             <!-- TAREAS BASICAS -->
+            
             <li><i class="icon-tasks"></i><a href="pantallas/buscador_principal.php?nombre=listado_tareas&cmd=resetall" target="centro" class="enlace_indicadores_index" idcomponente="<?php echo($componente_tareas[0]["idbusqueda_componente"]); ?>" nombre_componente="listado_tareas_pendientes">Mis Tareas <div class="pull-right"><span class="badge" id="listado_tareas_pendientes"><?php echo($tareas[0]["cant"]);?></span></div></a>
             </li>
 
+
+            <!-- PLANEADOR TAREAS AVANZADAS -->
 
             <li>
             	<i class="icon-calendar"></i>
@@ -341,6 +354,9 @@ if($_SESSION["tipo_dispositivo"]=="movil"){ ?>
             			Planeador
             		</a>
             </li>
+            
+            <!-- TAREAS AVANZADAS -->
+            
             <li>
             	<i class="icon-tasks"></i>
             		<a href="pantallas/tareas_listado/principal_listados_tareas_calendarios.php?click=tareas&rol_tareas=todos" target="centro" class="enlace_indicadores_index" nombre_componente="listado_tareas_total" idcomponente="<?php echo($componente_tareas_total[0]["idbusqueda_componente"]); ?>" >
@@ -368,11 +384,15 @@ if($_SESSION["tipo_dispositivo"]=="movil"){ ?>
 
             </li>
 
-
-
+            <!-- ETIQUETADOS -->
 
             <li><i class="icon-tag"></i><a href="pantallas/buscador_principal.php?nombre=documentos_etiquetados&cmd=resetall" target="centro" class="enlace_indicadores_index" idcomponente="<?php echo($componente_etiquetados[0]["idbusqueda_componente"]); ?>" nombre_componente="documentos_etiquetados">Etiquetados <div class="pull-right"><span class="badge" id="documentos_etiquetados"><?php echo($etiquetados["numcampos"]);?></span></div></a>
             </li>
+            
+            
+            <!-- FIN OPCIONES PRINCIPALES -->
+            
+            
             <li><i class="icon-refresh"></i><a href="#" id="actualizar_info_index">Actualizado<div class="pull-right"><span class="badge" id="div_actualizar_info_index"></span></div></a>
             </li>
             <!--li><i class="icon-tasks"></i><a href="pantallas/buscador_principal.php?idbusqueda=3&cmd=resetall" target="centro"> Tareas Pendientes <div class="pull-right"><span class="badge" id="documentos_pendientes"><?php echo(0);?></span></div></a>
