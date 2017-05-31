@@ -182,7 +182,7 @@ $llenado=FALSE;
 $cadena="";
 if($codigo == 0)
 {
-  $prof=busca_filtro_tabla("","dependencia","cod_padre is null AND estado=1","",$conn);
+  $prof=busca_filtro_tabla("","dependencia","(cod_padre is null OR cod_padre=0) AND estado=1","",$conn);
   if($prof["numcampos"]){
     $cadena.=("<item style=\"font-family:verdana; font-size:7pt;\" ");
     $cadena.=("text=\"".ucwords(codifica_encabezado(html_entity_decode($prof[0]["nombre"])))."\" id=\"".$prof[0]["iddependencia"]."#\"");
