@@ -1,0 +1,74 @@
+# MySQL address, user and password
+# user must have replication privilege in MySQL.
+my_addr = "54.84.23.212:3308"
+my_user = "saia"
+my_pass = "cerok_saia421_5"
+my_charset = "utf8"
+
+# Elasticsearch address
+es_addr = "127.0.0.1:9200"
+
+# mysql or mariadb
+flavor = "mysql"
+
+# mysqldump execution path
+# if not set or empty, ignore mysqldump.
+mysqldump = "mysqldump"
+
+# minimal items to be inserted in one bulk
+bulk_size = 128
+
+# force flush the pending requests if we don not have enough items >= bulk_size
+flush_bulk_time = "200ms"
+
+# MySQL data source
+
+[[source]]
+schema="saia_elasticsearch_2017"
+tables="[documento,pqrsf]"
+[[rule]]
+schema = "saia_elasticsearch_2017"
+index = "documentos"
+type = "DOCUMENTO"
+table = "documento"
+
+[[rule]]
+schema = "saia_elasticsearch_2017"
+index = "documentos"
+type = "PQRSF"
+table = "ft_pqrsf"
+
+[[rule]]
+schema = "saia_elasticsearch_2017"
+index = "documentos"
+type = "CLASIFICACION_PQRSF"
+table = "ft_clasificacion_pqrsf"
+parent = "ft_pqrsf"
+
+[[rule]]
+schema = "saia_elasticsearch_2017"
+index = "documentos"
+type = "ANALISIS_PQRSF"
+table = "ft_analisis_pqrsf"
+parent = "ft_clasificacion_pqrsf"
+
+[[rule]]
+schema = "saia_elasticsearch_2017"
+index = "documentos"
+type = "ITEM_CAUSAS_PQRSF"
+table = "ft_item_causas_pqrsf"
+parent = "ft_analisis_pqrsf"
+
+[[rule]]
+schema = "saia_elasticsearch_2017"
+index = "documentos"
+type = "RESPUESTA_PQRSF"
+table = "ft_respuesta_pqrsf"
+parent = "ft_pqrsf"
+
+[[rule]]
+schema = "saia_elasticsearch_2017"
+index = "documentos"
+type = "CALIFICACION_QRSF"
+table = "ft_calificacion_qrsf"
+parent = "ft_respuesta_pqrsf"

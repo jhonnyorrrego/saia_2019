@@ -25,18 +25,19 @@ Version Matrix
 
 | Elasticsearch Version | Elasticsearch-PHP Branch |
 | --------------------- | ------------------------ |
-| >= 2.0                | 1.0 or 2.                |
+| >= 5.0                | 5.0               |
+| >= 2.0, < 5.0         | 1.0 or 2.0               |
 | >= 1.0, < 2.0         | 1.0 or 2.0               |
 | <= 0.90.x             | 0.4                      |
 
- - If you are using Elasticsearch 2.0+, prefer using the Elasticsearch-PHP 2.0 branch.  The 1.0 branch is compatible however.
- - If you are using Elasticsearch 1.0+, you must install the `1.0` or `2.0` Elasticsearch-PHP branch.
+ - If you are using Elasticsearch 5.0+ , use Elasticsearch-PHP 5.0 branch.
+ - If you are using Elasticsearch 1.x or 2.x, prefer using the Elasticsearch-PHP 2.0 branch.  The 1.0 branch is compatible however.
  - If you are using a version older than 1.0, you must install the `0.4` Elasticsearch-PHP branch. Since ES 0.90.x and below is now EOL, the corresponding `0.4` branch will not receive any more development or bugfixes.  Please upgrade.
  - You should never use Elasticsearch-PHP Master branch, as it tracks Elasticearch master and may contain incomplete features or breaks in backwards compat.  Only use ES-PHP master if you are developing against ES master for some reason.
 
 Documentation
 --------------
-[Full documentation can be found here.](http://www.elasticsearch.org/guide/en/elasticsearch/client/php-api/2.0/index.html)  Docs are stored within the repo under /docs/, so if you see a typo or problem, please submit a PR to fix it!
+[Full documentation can be found here.](http://www.elasticsearch.org/guide/en/elasticsearch/client/php-api/5.0/index.html)  Docs are stored within the repo under /docs/, so if you see a typo or problem, please submit a PR to fix it!
 
 Installation via Composer
 -------------------------
@@ -47,7 +48,7 @@ The recommended method to install _Elasticsearch-PHP_ is through [Composer](http
     ```json
         {
             "require": {
-                "elasticsearch/elasticsearch": "~2.0"
+                "elasticsearch/elasticsearch": "~5.0"
             }
         }
     ```
@@ -70,9 +71,9 @@ The recommended method to install _Elasticsearch-PHP_ is through [Composer](http
 
     ```php
         <?php
-        
+
         use Elasticsearch\ClientBuilder;
-        
+
         require 'vendor/autoload.php';
 
         $client = ClientBuilder::create()->build();
@@ -83,14 +84,15 @@ You'll notice that the installation command specified `--no-dev`.  This prevents
 
 PHP Version Requirement
 ----
-Version 2.0 of this library requires at least PHP version 5.4.0 to function.  If you are on an older version of PHP, it is recommended
-that you upgrade, as PHP 5.3 is official EOL.  Elasticsearch-PHP v0.4.x and v1.x are compatible with PHP 5.3.9+, but will
-eventually stop being supported.
+Version 5.0 of this library requires at least PHP version 5.6.6 to function.  In addition, it requires the native JSON
+extension to be version 1.3.7 or higher.
 
 | PHP Version | Elasticsearch-PHP Branch |
 | ----------- | ------------------------ |
+| >= 5.6.6    | 5.0              |
 | >= 5.4.0    | 2.0                      |
 | >= 5.3.9    | 0.4, 1.0                 |
+
 
 Quickstart
 ----
@@ -163,6 +165,19 @@ Array
         )
 
 )
+```
+
+If you want to retrieve the `_source` field directly, there is the `getSource` method:
+
+```php
+$params = [
+    'index' => 'my_index',
+    'type' => 'my_type',
+    'id' => 'my_id'
+];
+
+$source = $client->getSource($params);
+doSomething($source);
 ```
 
 ### Search for a document
@@ -330,7 +345,7 @@ If no explicit choice is made, assumption is that redistribution obeys rules of 
 All contributions to the library are to be so that they can be licensed under both licenses.
 
 Apache v2.0 License:
->Copyright 2013-2014 Elasticsearch
+>Copyright 2013-2016 Elasticsearch
 >
 >Licensed under the Apache License, Version 2.0 (the "License");
 >you may not use this file except in compliance with the License.
@@ -345,7 +360,7 @@ Apache v2.0 License:
 >limitations under the License.
 
 LGPL v2.1 Notice:
->Copyright (C) 2013-2014 Elasticsearch
+>Copyright (C) 2013-2016 Elasticsearch
 >
 >This library is free software; you can redistribute it and/or
 >modify it under the terms of the GNU Lesser General Public

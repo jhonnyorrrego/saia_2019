@@ -1,6 +1,4 @@
 <?php
-use PhpOffice\PhpWord\Exception\Exception;
-
 $max_salida = 6;
 $ruta_db_superior = $ruta = "";
 while($max_salida > 0) {
@@ -401,12 +399,18 @@ class DocumentoElastic {
 				$params = [
 						"index" => "documentos",
 						"type" => $documento_origen["documento"]["plantilla"],
-						"body" => []
-								/*"mappings" => [
-								$documento_origen["documento"]["plantilla"] => []
-								] */
-						//]
+						"id" => $doc_ppal
 				];
+				$params["documento"] = $documento_origen["documento"];
+				$params["datos_ft"] = $documento_origen["datos_ft"];
+				$resultado_indice = $this->guardar_indice_simple($params);
+				// $resultado_indice = $this->guardar_mapeo_indice($params);
+				// print_r($resultado_indice);die();
+				if (!$resultado_indice["_shards"]["successful"]) {
+					print_r($resultado_indice);
+					throw new \Exception("No fue posible crear el indice");
+					die();
+				}
 
 				$arreglo_hijos = array();
 				// Primero es necesario crear el mapeo entre el documento padre y sus hijos
@@ -418,38 +422,22 @@ class DocumentoElastic {
 						$datos_hijo = $this->obtener_info_doc($hijo->id_hijo);
 						}
 						if ($datos_hijo) {
-						$params["body"][$hijo->tipo_hijo] = [
-								"mappings" => [
-									"_parent" => [
-											"type" => $hijo->tipo_padre
-									]
-								]
-							];
-						//$datos_hijo["parent"] = $hijo->id_padre;
-							$arreglo_hijos[] = $datos_hijo;
+						$resultado_indice = $this->guardar_indice_simple($datos_hijo, $hijo->id_padre);
+						print_r($resultado_indice);
+						//$arreglo_hijos[] = $datos_hijo;
 						}
 				}
-				$resultado_indice = null;
+
+				//$resultado_indice = null;
 				//print_r($params);die();
-				if($this->existe_indice("documentos")) {
-					$resultado_indice = $this->guardar_mapeo_indice($params);
-					print_r($resultado_indice);
-				} else {
-					$resultado_indice = $this->guardar_indice($params);
-					print_r($resultado_indice);
-				}
-				//$resultado_indice = $this->guardar_indice($params);
-				if(!$resultado_indice["created"]){
-					throw new \Exception("No fue posible crear el indice");
-					die();
-				}
+
 				//Se debe indexar el documento padre
-				$this->guardar_indice_simple($documento_origen);
-				if(count($arreglo_hijos) > 0) {
+				/*if (count($arreglo_hijos) > 0) {
 					foreach ( $arreglo_hijos as $hijo ) {
+						print_r($hijo);die();
 						$this->guardar_indice_simple($hijo, $documento_origen);
 					}
-				}
+				}*/
 			} else {
 				$this->guardar_indice_simple($arreglo_datos);
 			}
@@ -510,5 +498,66 @@ class DocumentoElastic {
 		}
 	}
 
+	public function crear_indice_saia() {
+		$formatos = busca_filtro_tabla("idformato, nombre, nombre_tabla", "formato", "cod_padre = 0", "nombre ", $conn);
+		$mapa_formatos = array();
+		$params = array("index" => "documentos");
+		for($i = 0; $i < $formatos["numcampos"]; $i++) {
+			$hijos= array();
+			// $hijos = $this->obtener_formato_hijo($hijos, $formatos[$i]["idformato"]);
+			$hijos = $this->obtener_formato_hijo($hijos, $formatos[$i]["idformato"]);
+			$tipo_indice = strtoupper($formatos[$i]["nombre"]);
+			$mapa_formatos[] = $hijos;
+			$params["body"]["mappings"][$tipo_indice] = ["_source" => [
+					"enabled" => true
+			]];
+			$num_hijos= count($hijos);
+			for($h=0; $h<$num_hijos; $h++){
+				$params["body"]["mappings"][$hijos[$h]->tipo_hijo] = ["_parent" => ["type" => $hijos[$h]->tipo_padre]];
+			}
+		}
+		//print_r(json_encode($params));
+		print_r($this->guardar_indice($params));
+	}
+
+	private function obtener_formato_hijo($hijos, $idformato) {
+		if (empty($idformato)) {
+			return $hijos;
+		}
+
+		$info_formato = busca_filtro_tabla("idformato, nombre, nombre_tabla, item", "formato", "idformato=$idformato", "", $conn);
+
+		if (!$info_formato["numcampos"]) {
+			return $hijos;
+		}
+		$es_item1 = $info_formato[0]["item"] == '1';
+		$tabla1 = $info_formato[0]["nombre_tabla"];
+		$plantilla_padre = $info_formato[0]["nombre"];
+		$idplantilla_padre = $info_formato[0]["idformato"];
+		$formatos_hijos = busca_filtro_tabla("h.idformato, h.nombre, h.nombre_tabla, h.item", "formato h", "h.cod_padre = $idplantilla_padre", "", $conn);
+		$datos_hijos = array();
+		for($i = 0; $i < $formatos_hijos["numcampos"]; $i++) {
+			//echo "$i<br>";
+			$plantilla = strtoupper($formatos_hijos[$i]["nombre"]);
+			$tabla = $formatos_hijos[$i]["nombre_tabla"];
+			$es_item = $formatos_hijos[$i]["item"] == '1';
+			$idformato_hijo = $formatos_hijos[$i]["idformato"];
+			$relacion = new StdClass();
+			$relacion->tipo_padre = strtoupper($plantilla_padre);
+			$relacion->tipo_hijo = $plantilla;
+			$relacion->hijo_es_item = $es_item;
+			$relacion->idformato_hijo = $idformato_hijo;
+			$relacion->idformato_padre = $idplantilla_padre;
+			$datos_hijos[] = $relacion;
+			//$datos_hijos = array_merge($datos_hijos, $this->obtener_formato_hijo($idformato_hijo));
+			$datos_hijos = $this->obtener_formato_hijo($datos_hijos, $idformato_hijo);
+			//print_r($datos_hijos);
+		}
+		//print_r($datos_hijos); die();
+		/*if (!empty($datos_hijos)) {
+			$hijos=array_merge($hijos, $datos_hijos);
+		}*/
+		return array_merge($hijos, $datos_hijos);;
+	}
 }
 ?>

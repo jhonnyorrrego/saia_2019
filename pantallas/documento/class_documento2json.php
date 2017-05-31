@@ -16,14 +16,9 @@ if ($_REQUEST["id"]) {
 	switch ($_REQUEST["accion"]) {
 		case "indexar" :
 			//$d2j->asignar_iddocumento($_REQUEST["id"]);
-			$exportado = $d2j->exportar_informacion();
-			if ($exportado) {
-				print_r($d2j->indexar_elasticsearch($_REQUEST["id"]));
-			} else {
-				die("Error al tomar los datos del registro");
-			}
+			print_r($d2j->crear_indice_saia());
 			break;
-		case "indexar_completo":
+		case "indexar_documento":
 			print_r($d2j->indexar_elasticsearch_completo());
 			break;
 		case "buscar" :
