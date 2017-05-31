@@ -21,7 +21,10 @@ $d2j = new DocumentoElastic3(1596);
 //$d2j = new DocumentoElastic3(1638);
 //$d2j = new DocumentoElastic3(1639);
 
+//Comentar para crear el indicie nuevamente
 print_r($d2j->indexar_elasticsearch_completo());
+
+//Quitar comentario para crear el indicie nuevamente
 //print_r($d2j->crear_indice_saia());
 
 class DocumentoElastic3 {
