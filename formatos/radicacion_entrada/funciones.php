@@ -894,55 +894,6 @@ function campos_adicionales_radicacion($idformato,$iddoc){
     echo $tabla;
 }
 
-function campos_numericos_radicacion_correspondencia($idformato,$iddoc){
-	global $conn,$ruta_db_superior;
-    	?>
-<script>
-$('#numero_folios').keyup(function(){
-    var valor=$(this).val();
-    valor=valor.replace(/[^0-9]/g, '');
-    $(this).val(valor);
-
-});
-
-function cargar_puntos(){
-Moneda_r($("#numero_folios").attr('id'));
-
-}
-
-cargar_puntos();
-$("#numero_folios").keyup(function(){
-Moneda_r($("#numero_folios").attr('id'));
-});
-$("#numero_folios").blur(function(){
-Moneda_r($("#numero_folios").attr('id'));
-});
-/**/
-
-$('#form1').
-validate({
-submitHandler: function(form){
-var valor_ =new String($("#numero_folios").val());
-var nuevo_valor = valor_.replace(/\./g,"");
-$("#numero_folios").val(nuevo_valor);
-
-
-form.submit(); 
-} 
-});
-
-function Moneda_r(input){
-var num = $("#"+input).val().replace(/\./g,'');
-if(!isNaN(num)){
-num = num.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1.');
-num = num.split('').reverse().join('').replace(/^[\.]/,'');
-$("#"+input).val(num);
-}
-}
-</script>
-<?php
-}
-
 function obtener_radicado_entrada($idformato,$iddoc){
   global $conn;
   $datos=busca_filtro_tabla("serie_idserie,descripcion,descripcion_anexos,descripcion_general,tipo_origen,numero_oficio,".fecha_db_obtener("fecha_oficio_entrada","Y-m-d")." AS fecha_oficio_entrada,".fecha_db_obtener("fecha_radicacion_entrada","Y-m-d")." AS fecha_radicacion_entrada,numero_guia,empresa_transportado","ft_radicacion_entrada","documento_iddocumento=".$iddoc,"",$conn);
@@ -1189,6 +1140,10 @@ function buscar_dependencias_principal($iddependencia){
 }
 function serie_documental_radicacion($idformato,$iddoc){
 	global $conn,$ruta_db_superior;
+	
+	
+	$dependencia_maestra=busca_filtro_tabla("iddependencia","dependencia","cod_padre=0 OR cod_padre IS NULL","",$conn);
+	
 	$dependencia_actual=busca_filtro_tabla("iddependencia","vfuncionario_dc","estado_dep=1 AND estado_dc=1 AND funcionario_codigo=".usuario_actual("funcionario_codigo"),"",$conn);
 	$dependencia_principal=buscar_dependencias_principal($dependencia_actual[0]["iddependencia"]);
 	$primeros_hijos=busca_filtro_tabla("iddependencia","dependencia","cod_padre=".$dependencia_principal,"",$conn);
@@ -1200,8 +1155,6 @@ function serie_documental_radicacion($idformato,$iddoc){
 	?>
 	<script>
 	$(document).ready(function(){
-		
-		
 		tree_serie_idserie.setOnCheckHandler(onNodeSelect_dependencia_serie);
 		
 		function onNodeSelect_dependencia_serie(nodeId){
@@ -1213,42 +1166,16 @@ function serie_documental_radicacion($idformato,$iddoc){
 			
 		}
 	    var dependencia_principal='<?php echo($dependencia_principal); ?>';
-	    //tree_serie_idserie.setOnLoadingEnd(cargar_arbol());
-                function cargar_arbol(){
-                	
-                	
-                setTimeout(function(){  
-                    
-                    //tree_serie_idserie.deleteItem('d1');
-                   // tree_serie_idserie.loadXML("<?php echo($ruta_db_superior); ?>test_dependencia_serie.php?tabla=dependencia&admin=1&mostrar_nodos=dsa&sin_padre_dependencia=1&solo_dependencias=1&carga_partes_serie=1");
-                }, 2000);
-                }
 	    var cargado=[<?php echo($cargo); ?>];
 	    cargado.push(dependencia_principal);
 
-	    //Busca las dependencias del rol actual para que no carguen duplicados en la recursion del abrol de series
-	   /* $.ajax({
-	        type:'POST',
-            dataType: 'json',
-            url: "ajax_serie.php",
-            data:{rol:$('#dependencia').val()},
-            async: false,
-            success: function(datos){
-                for (var i=1; i<datos.length; i++){
-                    cargado.push(datos[i]);
-                 }
-            }
-        });*/
 	    tree_destino.setOnCheckHandler(onNodeSelect);
 	    
         function onNodeSelect(nodeId){
         	
         	var seleccionados=tree_destino.getAllChecked();
-        	//$('#destino').val(seleccionados);
-        	//console.log(seleccionados);
         	
 	        var numeral=nodeId.indexOf("#");
-	        
 	        
 	        if(numeral>=0){
 	            var padre=tree_destino.getParentId(nodeId);
@@ -1256,34 +1183,29 @@ function serie_documental_radicacion($idformato,$iddoc){
 	            var dependencia=nodeId.replace("#","");
 	        }else{
 	            
-	            
 	            var dependencia=tree_destino.getParentId(nodeId);
 	            var padre=tree_destino.getParentId(dependencia);
 	            
-	            /*if(padre==0){  //SOLO PARA SU ORGANIZACION
-	                padre=dependencia;
-	            }*/
+	            if(padre==0){  //SOLO PARA SU ORGANIZACION
+	                padre='<?php echo($dependencia_maestra[0]['iddependencia']); ?>';
+	            }
 	            
 	            padre=padre.replace("#","");
 	            dependencia=dependencia.replace("#","");
 	        }
 	        
-	       if(dependencia==1){ //SU ORGANIZACION HAY ERROR CON ESTA NO DETECTADO AUN LA RAZON
-	           
-	       }else{
-	           tree_serie_idserie.setXMLAutoLoading("<?php echo($ruta_db_superior); ?>test_dependencia_serie.php?tabla=dependencia&mostrar_nodos=dsa&sin_padre_dependencia=1&estado=1&cargar_series=1&carga_partes_serie=1&iddependencia="+dependencia);
-	           tree_serie_idserie.smartRefreshItem("d"+padre);  
-	           tree_serie_idserie.openItem( "d"+padre ); //ARBOL: expande nodo hasta el item indicado
+	       var parametro_adicional='';
+	       if(dependencia=='<?php echo($dependencia_maestra[0]['iddependencia']); ?>'){
+	           parametro_adicional='&carga_partes_dependencia=1';
 	       }
-	        
-	        
-
+	       
+	       tree_serie_idserie.setXMLAutoLoading("<?php echo($ruta_db_superior); ?>test_dependencia_serie.php?tabla=dependencia&mostrar_nodos=dsa&sin_padre_dependencia=1&estado=1&cargar_series=1&carga_partes_serie=1&iddependencia="+dependencia+parametro_adicional);
+	       tree_serie_idserie.smartRefreshItem("d"+padre);  
+	       tree_serie_idserie.openItem( "d"+padre ); //ARBOL: expande nodo hasta el item indicado
+	       
         }
         
         $('#tipo_origen1').click(function(){
-//tree_serie_idserie.deleteChildItems(0); 
-  //                  tree_serie_idserie.loadXML("<?php echo($ruta_db_superior); ?>test_serie_funcionario2.php?tabla=dependencia&admin=1&dependencia=38&sin_padre=1");
-    //                tree_serie_idserie.loadXML("<?php echo($ruta_db_superior); ?>test_serie_funcionario2.php?tabla=dependencia&admin=1&sin_padre=1&uid=1477409126024&id=d"+dependencia_principal);
                     
                     var dependencia=$('#dependencia').val();
                 tree_serie_idserie.setOnLoadingEnd(obtener_dependencia(dependencia));
@@ -1305,12 +1227,6 @@ function serie_documental_radicacion($idformato,$iddoc){
                         }
                     });  
                 }
-        });
-        
-        $('#tipo_origen0').click(function(){
-          //  tree_serie_idserie.deleteChildItems(0); 
-            //tree_serie_idserie.loadXML("<?php echo($ruta_db_superior); ?>test_serie_funcionario2.php?tabla=dependencia&admin=1&dependencia=38&sin_padre=1");
-            //tree_serie_idserie.loadXML("<?php echo($ruta_db_superior); ?>test_serie_funcionario2.php?tabla=dependencia&admin=1&sin_padre=1&uid=1477409126024&id=d"+dependencia_principal);
         });
         
 	});
