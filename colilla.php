@@ -35,7 +35,7 @@ if(@$_REQUEST["doc"] || @$_REQUEST["key"]){
   //registrar_accion_digitalizacion($doc,'IMPRIME COLILLA');
 }else{
 	if(@$_REQUEST["generar_consecutivo"]){	
-		validar_confirmacion_salida($_REQUEST["generar_consecutivo"],$_REQUEST["enlace"]);
+		validar_confirmacion_salida($_REQUEST["generar_consecutivo"],$_REQUEST["enlace"],$_REQUEST["enlace2"]);
 	}else if(@$_REQUEST["consecutivo"] && @$_REQUEST["salidas"]){
 		$formato=$_REQUEST["consecutivo"];
 		//$_REQUEST["enlace"]="pantallas/buscador_principal.php?idbusqueda=10";
@@ -649,7 +649,7 @@ function validar_confirmacion(){
 	else
 		return;
 }
-function validar_confirmacion_salida($consecutivo, $enlace){
+function validar_confirmacion_salida($consecutivo, $enlace,$enlace2){
 	global $conn;
 	//if($consecutivo=='radicacion_salida'){
 	$enlace_redireccion=$enlace;
@@ -661,7 +661,7 @@ function validar_confirmacion_salida($consecutivo, $enlace){
 		if(ingreso){
 			window.open("colilla.php?consecutivo=<?php echo $consecutivo;?>&salidas=1&target=_self&enlace=<?php echo $enlace_redireccion;?>&descripcion_general=<?php echo $_REQUEST['descripcion_general'];?>","_self"); 
 		}else{
-			window.open("<?php echo $enlace;?>","_self");
+			window.open("<?php echo $enlace2;?>","_self");
 		}
 		</script>
 		<?php

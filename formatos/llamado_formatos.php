@@ -42,6 +42,10 @@ if(@$_REQUEST["accion"]=="generar"){
         for($i=0;$i<$cant_acciones;$i++){
             $url=PROTOCOLO_CONEXION.RUTA_PDF.'/formatos/generar_formato.php?crea='.$acciones[$i].'&idformato='.$formato["idformato"].'&sesion='.$_SESSION["LOGIN".LLAVE_SAIA];
             //fwrite($abrir,"En la fecha ".date('Y-m-d H:i:s')." se ejecutaron las siguientes tareas ".$url." \n");
+	        if (strpos(PROTOCOLO_CONEXION, 'https') !== false) {
+				curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false); 
+				curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+			}		            
             curl_setopt($ch, CURLOPT_URL,$url); 
             curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
             curl_setopt($ch, CURLOPT_VERBOSE, true);

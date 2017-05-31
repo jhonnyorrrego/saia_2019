@@ -32,7 +32,7 @@ echo(estilo_bootstrap());
                         <td colspan="2">
                             <input type="hidden" id="generar_consecutivo" name="generar_consecutivo">
                             <input type="hidden" name="enlace" id="enlace" value="pantallas/buscador_principal.php?idbusqueda=7">
-                            
+                            <input type="hidden" name="enlace2" id="enlace2" value="formatos/radicacion_entrada/radicacion_rapida.php">
                             <?php
 $adicional='';
 if(@$_REQUEST["idcategoria_formato"]){

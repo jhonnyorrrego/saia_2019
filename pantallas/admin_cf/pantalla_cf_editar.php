@@ -72,7 +72,7 @@ echo(librerias_bootstrap());
 				<label class="control-label" for="etiqueta">Padre:</label>
 				<div class="controls">
 					<?php
-						echo arbol("cod_padre","cod_padre","pantallas/configuracion/test_tabla_cf.php?tabla=".$_REQUEST['tabla'],0,0,1,1,'radio',$datos[0]['cod_padre']);
+						echo arbol("cod_padre","cod_padre","pantallas/admin_cf/test_tabla_cf.php?tabla=".$_REQUEST['tabla'],0,0,1,1,'radio',$datos[0]['cod_padre']);
 					?>
 				</div>
 			</div>
