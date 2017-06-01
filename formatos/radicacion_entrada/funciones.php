@@ -375,6 +375,7 @@ function tipo_radicado_radicacion($idformato,$iddoc){//en el adicionar
 		            $('#tipo_origen0').parent().hide();
 		            $('#tipo_origen1').attr('checked',true);
 		            $('[name="tipo_origen"]').click();
+		            tipo_origen(2);
 		            <?php
 		        }
                 ?>
