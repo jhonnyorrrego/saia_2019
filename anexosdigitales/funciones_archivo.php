@@ -943,7 +943,17 @@ function listar_anexos_ver_descargar($idformato,$iddoc,$idcampo='',$tipo_mostrar
 	        if(in_array(strtolower($anexos[$j]['tipo']),$array_extensiones_ver)){
 	            $href='';
 	            if($tipo_mostrar!=5){
-	                $href=$ruta_db_superior.$anexos[$j]['ruta'];
+	            	require_once($ruta_db_superior.'StorageUtils.php');
+					require_once($ruta_db_superior.'filesystem/SaiaStorage.php');
+					$tipo_almacenamiento = new SaiaStorage("archivos");
+					$ruta_imagen=json_decode($anexos[$j]['ruta']);	
+					if(is_object($ruta_imagen)){
+						if($tipo_almacenamiento->get_filesystem()->has($ruta_imagen->ruta)){
+							$ruta64 = base64_encode($anexos[$j]["ruta"]);
+							$ruta_abrir = $ruta_db_superior."filesystem/mostrar_binario.php?ruta=$ruta64";
+							$href=$ruta_abrir;
+						}
+					}					  
 	            }
 	            $tabla.="<li><a href='".$href."' target='_blank'>".$anexos[$j]['etiqueta']."</a></li>";
 	        }else{
