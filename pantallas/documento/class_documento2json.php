@@ -51,6 +51,15 @@ if ($_REQUEST["id"]) {
 			print_r($retorno);
 			break;
 	}
+} else if($_REQUEST["accion"] == "indexar_completo") {
+	$elastic = new DocumentoElastic(null);
+	$elastic->crear_indice_saia();
+	//consultar todos los documentos que son padre
+	$documentos = busca_filtro_tabla("d.iddocumento", "documento d, formato f", "upper(f.nombre)=d.plantilla and f.cod_padre = 0", "d.iddocumento", $conn);
+	for($i=0; $i < $documentos["numcampos"]; $i++) {
+		$d2j= new DocumentoElastic($documentos[$i]["iddocumento"]);
+		$d2j->indexar_elasticsearch_completo();
+	}
 } else {
 	die("Por favor ingrese el id");
 }

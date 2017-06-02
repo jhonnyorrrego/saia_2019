@@ -64,7 +64,7 @@ if (@$_REQUEST["idbusqueda_componente"]) {
 		if (count($arreglo) || count($arreglo_sub)) {
 			$cadena = str_replace("@", ".", $cadena);
 			$cadena_adicional = str_replace("@", ".", $cadena_adicional);
-			
+
 			if (($cadena || $consulta_adicional) && $cadena_adicional) {
 				$cadena_adicional = " and " . $cadena_adicional;
 			}
@@ -81,7 +81,7 @@ if (@$_REQUEST["idbusqueda_componente"]) {
 				$conn->Ejecutar_Sql($sql2);
 				$idbusqueda_temp = $conn->Ultimo_Insert();
 			}
-			
+
 			$idbusqueda_fil = filtros_adicionales();
 		}
 	} else if (@$_REQUEST["idbusqueda_filtro"]) {
@@ -117,7 +117,7 @@ if (@$_REQUEST["idbusqueda_componente"]) {
 	}
 	if (@$_REQUEST["idbusqueda_grafico"] != "") {
 		$url .= "&idbusqueda_grafico=" . $_REQUEST['idbusqueda_grafico'];
-	}	
+	}
 	// Procesar parametros adicionales
 	if (@$_REQUEST["parametros_adicionales_buscador"]) {
 		$complemento = explode("|", $_REQUEST["parametros_adicionales_buscador"]);
@@ -126,7 +126,7 @@ if (@$_REQUEST["idbusqueda_componente"]) {
 			$url .= "&" . $complemento2[0] . "=" . $complemento2[1];
 		}
 	}
-	
+
 	$retorno["exito"] = 1;
 	$retorno["url"] = $url;
 	$retorno["filtro"] = "&idbusqueda_filtro_temp=" . $idbusqueda_temp . $filtro;
@@ -216,7 +216,7 @@ function valor_dato($campo, $valor) {
 	} else {
 		$retorno = ($retorno_);
 	}
-	
+
 	if ($retorno_ != '')
 		return (($retorno));
 	else {
@@ -318,7 +318,7 @@ function campos_especiales() {
 						}
 					}
 					$datos_ejecutor = busca_filtro_tabla("distinct iddatos_ejecutor", "ejecutor a, datos_ejecutor b", "a.idejecutor=b.ejecutor_idejecutor and (" . implode(" and ", $where) . ")", "", $conn);
-					
+
 					for($k = 0; $k < $datos_ejecutor["numcampos"]; $k++) {
 						$cadena[] = "(" . $alias . $tipo[0] . "|like|''" . $datos_ejecutor[$k]["iddatos_ejecutor"] . "''|-|" . $alias . $tipo[0] . "|like|''%," . $datos_ejecutor[$k]["iddatos_ejecutor"] . "''|-|" . $alias . $tipo[0] . "|like|''" . $datos_ejecutor[$k]["iddatos_ejecutor"] . ",%''|-|" . $alias . $tipo[0] . "|like|''%," . $datos_ejecutor[$k]["iddatos_ejecutor"] . ",%'')";
 					}
@@ -406,22 +406,17 @@ function realizar_consulta() {
 	return array(
 			$tablas_consulta,
 			$condicion,
-			$ordenar_consulta 
+			$ordenar_consulta
 	);
 }
 
 function crear_condicion_sql($idbusqueda, $idcomponente, $filtros = '') {
 	global $conn;
-	$condicion_filtro = '';
-	$datos_condicion = busca_filtro_tabla("", "busqueda_condicion_enlace A, busqueda_condicion B", "B.idbusqueda_condicion=A.fk_busqueda_condicion AND (B.fk_busqueda_componente=" . $idcomponente . " or B.busqueda_idbusqueda=" . $idbusqueda . ") AND cod_padre IS NULL " . $condicion_filtro, "orden", $conn);
+	$datos_condicion = busca_filtro_tabla("", "busqueda_condicion_enlace A, busqueda_condicion B", "B.idbusqueda_condicion=A.fk_busqueda_condicion AND (B.fk_busqueda_componente=" . $idcomponente . " or B.busqueda_idbusqueda=" . $idbusqueda . ") AND cod_padre IS NULL ", "orden", $conn);
 	if (!$datos_condicion["numcampos"]) {
-		$datos_condicion = busca_filtro_tabla("", "busqueda_condicion B", "B.fk_busqueda_componente=" . $idcomponente . " or B.busqueda_idbusqueda=" . $idbusqueda . $condicion_filtro, "", $conn);
+		$datos_condicion = busca_filtro_tabla("", "busqueda_condicion B", "B.fk_busqueda_componente=" . $idcomponente . " or B.busqueda_idbusqueda=" . $idbusqueda, "", $conn);
 		$condicion = $datos_condicion[0]["codigo_where"];
 	} else {
-		if ($filtros != '') {
-			$condicion_filtro = "AND (A.estado=1 OR (A.estado=2 AND A.condicion_idcondicion IN(" . $filtros . ")))";
-		} else
-			$condicion_filtro = " AND estado=1 ";
 		for($i = 0; $i < $datos_condicion["numcampos"]; $i++) {
 			if (@$datos_condicion[$i]["comparacion"] == '') {
 				$datos_condicion[$i]["comparacion"] = "AND";
@@ -452,7 +447,7 @@ function parsear_datos_plantilla_visual($cadena, $campos = array()) {
 	if ($result !== FALSE) {
 		$patrones = str_replace(array(
 				"{*",
-				"*}" 
+				"*}"
 		), "", $resultado[0]);
 		if ($campos) {
 			$listado_campos = array_unique(explode(",", $campos));
@@ -501,7 +496,7 @@ function parsear_consulta($key, $valor, $req_condicion_llave) {
 	if ($fin) {
 		$key = substr($key, 0, $fin);
 	}
-	
+
 	$condicion_min = strtolower($req_condicion_llave);
 	switch ($condicion_min) {
 		case '=' :
@@ -522,7 +517,7 @@ function parsear_consulta($key, $valor, $req_condicion_llave) {
 				$cadena = ($key . $condicion . $valor);
 			}
 			break;
-		
+
 		case 'like' :
 			$condicion = "|" . $req_condicion_llave . "|";
 			if (MOTOR == "MySql") {
@@ -575,7 +570,7 @@ function parsear_consulta($key, $valor, $req_condicion_llave) {
 				$cadena = ("lower(" . $key . ")" . $condicion . $valor);
 			}
 			break;
-		
+
 		case 'like_comas' :
 			$condicion = "|" . str_replace("like_comas", "like", $req_condicion_llave) . "|";
 			if (MOTOR == "MySql") {
@@ -589,7 +584,7 @@ function parsear_consulta($key, $valor, $req_condicion_llave) {
 					$cadena = addslashes("lower(" . concatenar_cadena_sql(array(
 							"'',''",
 							"CAST(" . $key . " AS CHAR(255))",
-							"'',''" 
+							"'',''"
 					)) . ")" . $condicion . str_replace(" ", "%", $valor));
 				} else {
 					$valores = explode(",", $valor);
@@ -602,7 +597,7 @@ function parsear_consulta($key, $valor, $req_condicion_llave) {
 						$cadena .= addslashes("lower(" . concatenar_cadena_sql(array(
 								"'',''",
 								"CAST(" . $key . " AS CHAR(255))",
-								"'',''" 
+								"'',''"
 						)) . ")" . $condicion . str_replace(" ", "%", $valor));
 						if (($j + 1) < $cant) {
 							$cadena .= "|-|";
@@ -622,7 +617,7 @@ function parsear_consulta($key, $valor, $req_condicion_llave) {
 						$cadena = ("lower(" . concatenar_cadena_sql(array(
 								"'',''",
 								"CAST(" . $key . " AS CHAR(255))",
-								"'',''" 
+								"'',''"
 						)) . ")" . $condicion . str_replace(" ", "%", $valor));
 					} else {
 						$valores = explode(",", $valor);
@@ -635,7 +630,7 @@ function parsear_consulta($key, $valor, $req_condicion_llave) {
 							$cadena .= ("lower(" . concatenar_cadena_sql(array(
 									"'',''",
 									"CAST(" . $key . " AS CHAR(255))",
-									"'',''" 
+									"'',''"
 							)) . ")" . $condicion . str_replace(" ", "%", $valor));
 							if (($j + 1) < $cant) {
 								$cadena .= "|-|";
@@ -652,7 +647,7 @@ function parsear_consulta($key, $valor, $req_condicion_llave) {
 						$cadena = ("lower(cast(" . concatenar_cadena_sql(array(
 								"'',''",
 								"CONVERT(VARCHAR(MAX)," . $key . ")",
-								"'',''" 
+								"'',''"
 						)) . " as varchar(max)))" . $condicion . str_replace(" ", "%", $valor));
 					} else {
 						$valores = explode(",", $valor);
@@ -665,7 +660,7 @@ function parsear_consulta($key, $valor, $req_condicion_llave) {
 							$cadena = ("lower(cast(" . concatenar_cadena_sql(array(
 									"'',''",
 									"CONVERT(VARCHAR(MAX)," . $key . ")",
-									"'',''" 
+									"'',''"
 							)) . " as varchar(max)))" . $condicion . str_replace(" ", "%", $valor));
 							if (($j + 1) < $cant) {
 								$cadena .= "|-|";
@@ -677,9 +672,9 @@ function parsear_consulta($key, $valor, $req_condicion_llave) {
 					$cadena = procesar_filtro_like_general($key, $valor, $condicion);
 				}
 			}
-			
+
 			break;
-		
+
 		case 'like_total' :
 			$condicion = "|" . str_replace("like_total", "like", $req_condicion_llave) . "|";
 			if (MOTOR == "MySql") {
@@ -734,7 +729,7 @@ function parsear_consulta($key, $valor, $req_condicion_llave) {
 				$cadena = procesar_filtro_like_general($key, $valor, $condicion);
 			}
 			break;
-		
+
 		case 'in' :
 		case 'in_enteros':
 			//$condicion = "|" . $req_condicion_llave . "|";
@@ -828,7 +823,7 @@ function parsear_consulta($key, $valor, $req_condicion_llave) {
 				$cadena = ("CONVERT(date," . $key . ",20)='" . $valor . "'");
 			}
 			break;
-		
+
 		default :
 			$condicion = "|" . $req_condicion_llave . "|";
 			$tipodate = False;
@@ -952,7 +947,7 @@ function guardar_lob2($campo, $tabla, $condicion, $contenido, $tipo, $conn, $log
 	OCIExecute($stmt, OCI_DEFAULT) or print_r(OCIError($stmt));
 	// Fetch the SELECTed row
 	OCIFetchInto($stmt, $row, OCI_ASSOC);
-	
+
 	if(!count($row)){  //soluciona el problema del size().
 		oci_rollback($conn->Conn->conn);
 		oci_free_statement($stmt);
@@ -966,8 +961,8 @@ function guardar_lob2($campo, $tabla, $condicion, $contenido, $tipo, $conn, $log
 	    // Execute the statement using OCI_DEFAULT (begin a transaction)
 	    OCIExecute($stmt, OCI_DEFAULT) or print_r(OCIError ($stmt));
 	    // Fetch the SELECTed row
-	    OCIFetchInto($stmt,$row,OCI_ASSOC);		
-	}	
+	    OCIFetchInto($stmt,$row,OCI_ASSOC);
+	}
 	if (FALSE === $row) {
 		OCIRollback($conn->Conn->conn);
 		alerta("No se pudo modificar el campo.");
