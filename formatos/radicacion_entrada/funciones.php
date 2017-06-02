@@ -878,13 +878,13 @@ function mostrar_destino_radicacion($idformato,$iddoc){
     
     $hijo_destino_radicacion=busca_filtro_tabla("","ft_destino_radicacion","ft_radicacion_entrada=".$datos[0]['idft_radicacion_entrada'],"",$conn);
     for($i=0;$i<$hijo_destino_radicacion['numcampos'];$i++){
-        if($hijo_destino_radicacion[$i]['nombre_destino']!=''){
+        if($hijo_destino_radicacion[$i]['nombre_destino']!='' && $datos[0]['tipo_destino']==2){
             if(!in_array($hijo_destino_radicacion[$i]['nombre_destino'],$array_funcionarios)){
                 $fun=busca_filtro_tabla("nombres,apellidos","vfuncionario_dc","tipo_cargo=1 AND iddependencia_cargo=".$hijo_destino_radicacion[$i]['nombre_destino'],"",$conn);
                 $nombres.=$fun[0]['nombres'].' '.$fun[0]['apellidos'].'<br/>';    
             }
         }
-        if($hijo_destino_radicacion[$i]['destino_externo']!=''){
+        if($hijo_destino_radicacion[$i]['destino_externo']!='' && $datos[0]['tipo_destino']==1){
             if(!in_array($hijo_destino_radicacion[$i]['destino_externo'],$array_ejecutores)){
                 $fun=busca_filtro_tabla("nombre","vejecutor","iddatos_ejecutor=".$hijo_destino_radicacion[$i]['destino_externo'],"",$conn);
                 $nombres.=$fun[0]['nombre'].'<br/>';
