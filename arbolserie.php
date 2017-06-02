@@ -53,14 +53,43 @@ echo(librerias_notificaciones());
 			//tree2.loadXML("test_serie_funcionario2.php?tabla=dependencia&admin=1");
 			tree2.setXMLAutoLoading("test_dependencia_serie.php?tabla=dependencia&admin=1&carga_partes_dependencia=1&carga_partes_serie=1");
 			tree2.loadXML("test_dependencia_serie.php?tabla=dependencia&admin=1&carga_partes_dependencia=1&carga_partes_serie=1");
-			function onNodeSelect(nodeId){
 			
-				
+			function validar_oc(nodeId){
+			    
+			    var id_validar=nodeId;
+			    
+			    if(tree2.getParentId(id_validar)=='3-categoria-Otras categorias'){
+			        return true;
+			    }
+			    if(tree2.getParentId(id_validar)=='series_sin_asignar'){
+			        return false;
+			    }			    
+			    while ( id_validar!='3-categoria-Otras categorias'){
+			        
+			        var es_dep1 = id_validar.indexOf("d");
+			        if(es_dep1!=-1){
+			            return false;
+			        }			        
+			        
+			        id_validar=tree2.getParentId(id_validar);
+			        
+			        if(id_validar=='3-categoria-Otras categorias'){
+			            return true;
+			        }
+			        
+			        var es_dep = id_validar.indexOf("d");
+			        if(es_dep!=-1){
+			            return false;
+			        }
+			    }
+			}
+			
+			function onNodeSelect(nodeId){
         		if(nodeId=='3-categoria-Otras categorias'){
                    	 parent.serielist.location = "serieadd.php?otras_categorias=1"; 
                 }else if(nodeId=='series_sin_asignar'){
                         parent.serielist.location ="vacio.php";	
-                }else if(tree2.getParentId(nodeId)=='3-categoria-Otras categorias'){
+                }else if(validar_oc(nodeId)){
                     var datos=nodeId.split("-");
                     parent.serielist.location = "serieview.php?key=" + datos[0]; 
                 }else if(tree2.getParentId(nodeId)=='series_sin_asignar'){
