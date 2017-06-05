@@ -88,7 +88,7 @@ class Digitalizacion {
 							break;
 						case "clave_ftp" :
 							if ($configuracion[$i]['encrypt']) {
-								include_once ('../pantallas/lib/librerias_cripto.php');
+								include_once ($ruta_db_superior.'pantallas/lib/librerias_cripto.php');
 								$configuracion[$i]['valor'] = decrypt_blowfish($configuracion[$i]['valor'], LLAVE_SAIA_CRYPTO);
 							}
 							$params["clave"] = $configuracion[$i]["valor"];
