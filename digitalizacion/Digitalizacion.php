@@ -114,8 +114,8 @@ class Digitalizacion {
 					$params["url"] .= "_" . $user_info[0]["login"];
 				}
 
-				// $params["ftp_type"] = "sftp";
-				$params["ftp_type"] = "ftp";
+				$params["ftp_type"] = "sftp";
+				//$params["ftp_type"] = "ftp";
 
 				$params["radica"] = $datos_dig[0]["iddocumento"];
 				$params["numero"] = $documento[0]["numero"];
