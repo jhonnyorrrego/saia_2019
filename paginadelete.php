@@ -5,6 +5,8 @@ header("Cache-Control: no-store, no-cache, must-revalidate");
 header("Cache-Control: post-check=0, pre-check=0", true);
 header("Pragma: no-cache");
 include_once ("db.php");
+require_once('StorageUtils.php');
+require_once('filesystem/SaiaStorage.php');
 $config = busca_filtro_tabla("valor", "configuracion", "nombre='color_encabezado'", "", $conn);
 if ($config["numcampos"]) {
 	$style = "<style type='text/css'>
@@ -221,8 +223,20 @@ function LoadData($sKey, $conn) {
 
 		$x_consecutivo = $row["consecutivo"];
 		$x_id_documento = $row["id_documento"];
-		$x_imagen = $row["imagen"];
+		
+		$tipo_almacenamiento = new SaiaStorage("archivos");
+		$ruta_imagen=json_decode($row["imagen"]);
+		$ruta_logo='';
+		if(is_object($ruta_imagen)){
+			if($tipo_almacenamiento->get_filesystem()->has($ruta_imagen->ruta)){
+			  $ruta_imagen=json_encode($ruta_imagen);
+			  $archivo_binario=StorageUtils::get_binary_file($ruta_imagen);
+			  $ruta_logo=$archivo_binario;
+			}
+		}
+		$x_imagen = $ruta_logo;
 		$x_pagina = $row["pagina"];
+		
 		$x_ruta = $row["ruta"];
 		$x_detalle = $row["detalle"];
 		$numero_radicado = busca_tabla("documento", $x_id_documento);
