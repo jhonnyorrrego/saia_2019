@@ -418,7 +418,7 @@ function tipo_radicado_radicacion($idformato,$iddoc){//en el adicionar
 	                  $.ajax({
 	                      type:'POST',
 	                      dataType: 'json',
-		
+						  async:false,
 	                      url: "tipo_contador.php",
 	                      data: {
 	                          tipo_radicacion:tipo
