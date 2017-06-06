@@ -3,6 +3,7 @@
 $max_salida=6; $ruta_db_superior=$ruta=""; while($max_salida>0){ if(is_file($ruta."db.php")){ $ruta_db_superior=$ruta;} $ruta.="../"; $max_salida--; }
 
 include_once("db.php");
+include_once("librerias_saia.php");
 include_once("pantallas/expediente/librerias.php");
 $iddoc = $_REQUEST["iddoc"];
 $doc_menu=@$_REQUEST["iddoc"];
@@ -23,9 +24,11 @@ $nombres_exp=array_unique(extrae_campo($expedientes_documento,"nombre"));
 <link rel="stylesheet" type="text/css" href="<?php echo($ruta_db_superior);?>pantallas/lib/librerias_css.css"/>
 <link rel="stylesheet" type="text/css" href="<?php echo($ruta_db_superior);?>css/bootstrap_reescribir.css"/>
 <link rel="stylesheet" type="text/css" href="<?php echo($ruta_db_superior);?>css/bootstrap-iconos-segundarios.css"/>
-<?php echo(menu_principal_documento($doc_menu,1)); ?>
-<script type="text/javascript" src="js/jquery.js"></script>
-<script type="text/javascript" src="js/jquery.validate.js"></script>
+<?php 
+    echo(menu_principal_documento($doc_menu,1));
+    echo(librerias_jquery('1.7'));
+    echo( librerias_validar_formulario(11) );
+?>
 <script type="text/javascript" src="js/dhtmlXCommon.js"></script>
 <script type="text/javascript" src="js/dhtmlXTree.js"></script>
 <legend>Adicionar a un expediente ya existente</legend>
@@ -95,7 +98,7 @@ $doc=busca_filtro_tabla("","documento","iddocumento in($iddoc)","",$conn);
       }
 			-->
       </script>
-<div class="control-group element">
+<!-- div class="control-group element">
 	<label class="control-label" for="serie">Serie
   </label>
   <div class="controls">
@@ -158,7 +161,7 @@ $doc=busca_filtro_tabla("","documento","iddocumento in($iddoc)","",$conn);
         document.poppedLayer.style.display = "";
       }
 
-      </script>      
+      </scrip t -->      
 <?php if($doc["numcampos"]>1){ ?>
  <!--tr>
   <td  class="encabezado">ACCI&Oacute;N A REALIZAR: </td>
