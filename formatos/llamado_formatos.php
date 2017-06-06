@@ -66,5 +66,6 @@ if (@$_REQUEST["accion"] == "generar") {
 		}
 		alerta_formatos("No se puede realizar (" . $cant_acciones . ") en " . $formatos["numcampos"] . " formatos ");
 	}
+
 }
 ?>

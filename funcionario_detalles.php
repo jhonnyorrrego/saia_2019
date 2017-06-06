@@ -129,7 +129,7 @@ body
 
 <script>
 	$(document).ready(function(){
-		window.open('funcionario_detalles_start.php?key=<?php echo(@$_REQUEST['key']); ?>','detalles');
+		window.parent.frames["detalles"].location='funcionario_detalles_start.php?key=<?php echo(@$_REQUEST['key']); ?>';
 	});
 </script>
 

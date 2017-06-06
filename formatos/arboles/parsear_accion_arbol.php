@@ -99,7 +99,9 @@ if(@$_REQUEST["id"]) {
 							"manual",
 							"plan_calidad",
 							"otros_calidad",
-							"prog_calidad"
+							"prog_calidad",
+							"procedimiento",
+							"politicas_proceso"
 					);
 					leido(usuario_actual("funcionario_codigo"), $datos_formato[0]["iddocumento"]);
 					if(in_array($formato[0]["nombre"], $descargable) && @$_REQUEST['pantalla'] == 'calidad') {
@@ -385,13 +387,15 @@ if(@$_REQUEST["id"]) {
 				break;
 			case "ventana_externa":
 				$descargable = array(
-						"instructivo",
-						"formato",
-						"guia",
-						"manual",
-						"plan_calidad",
-						"otros_calidad",
-						"prog_calidad"
+							"instructivo",
+							"formato",
+							"guia",
+							"manual",
+							"plan_calidad",
+							"otros_calidad",
+							"prog_calidad",
+							"procedimiento",
+							"politicas_proceso"
 				);
 				if(in_array($formato[0]["nombre"], $descargable)) {
 					if($datos_formato["numcampos"]) {
