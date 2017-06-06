@@ -463,3 +463,6 @@ CREATE TABLE IF NOT EXISTS cf_indice_saia(
        	column_name varchar(255) NOT NULL,
 	PRIMARY KEY (idcf_indice_saia)
 );
+-- -------------------------------
+INSERT INTO  configuracion (nombre ,valor ,tipo ,fecha ,encrypt) VALUES ('tipo_ftp','sftp','ftp',CURRENT_TIMESTAMP ,'0');
+

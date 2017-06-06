@@ -105,6 +105,9 @@ class Digitalizacion {
 						case "alto_imagen" :
 							$params["alto"] = $configuracion[$i]["valor"];
 							break;
+						case 'tipo_ftp':
+							$params["ftp_type"] = $configuracion[$i]["valor"];
+							break;	
 					}
 				}
 				if ($params["dftp"]) {
@@ -114,9 +117,10 @@ class Digitalizacion {
 					$params["url"] .= "_" . $user_info[0]["login"];
 				}
 
-				// $params["ftp_type"] = "sftp";
-				$params["ftp_type"] = "ftp";
-
+				if(!$params["ftp_type"] || $params["ftp_type"]==''){
+					$params["ftp_type"] = "ftp";
+				}
+				
 				$params["radica"] = $datos_dig[0]["iddocumento"];
 				$params["numero"] = $documento[0]["numero"];
 				// $params["descripcion"] = "<html>" . $documento[0]["descripcion"] . "</html>";

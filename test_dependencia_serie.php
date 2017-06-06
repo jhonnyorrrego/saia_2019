@@ -99,9 +99,17 @@ if(@$_REQUEST['carga_partes_dependencia']){
 				llena_subseries_tipo_documental($ids[0],$ids[1]);
 			}			
             
+        }else if( ( strpos($id,'sin_asignar')!==false || strpos($id,'asignada')!==false) && $mostrar_nodos['ssa']){
+        	
+			if( strpos($id,'sin_asignar')!==false ){
+				$ids=explode('sin_asignar-',$id);
+			}else{
+				$ids=explode('asignada-',$id);
+			}
+			series_sin_asignar(intval($ids[1]));
         }else if($mostrar_nodos['soc']){ //si es serie otras categorias
             $ids=explode('-',$id);
-            llena_serie_otras($ids[0]," and categoria=3 ");
+            llena_serie_otras($ids[1]," and categoria=3 ");
         }
         echo("</tree>\n");
         die();
@@ -439,21 +447,51 @@ function llena_subseries_tipo_documental($iddependencia,$idserie,$tvd=0){
 
 
 //SERIES SIN ASIGNAR (ssa)
-function series_sin_asignar(){
+function series_sin_asignar($id=0){
 	global $conn;
-	$series=busca_filtro_tabla("","serie a left join entidad_serie b ON a.idserie=b.serie_idserie AND b.entidad_identidad =2","b.serie_idserie IS NULL AND a.categoria=2 AND a.estado=1","nombre asc",$conn);
-	$child=0;
-	if($series['numcampos']){
-	    $child=1;
+	
+	$condicion_id=' AND (cod_padre IS NULL OR cod_padre=0)';
+	if($id){
+		$condicion_id=' AND cod_padre='.$id;
 	}
-	echo("<item style=\"font-family:verdana; font-size:7pt;\" text=\"Series sin asignar\" id=\"series_sin_asignar\" child=\"".$child."\">");
-	for($i=0;$i<$series["numcampos"];$i++){
-		echo("<item style=\"font-family:verdana; font-size:7pt;\" text=\"".htmlspecialchars($series[$i]["nombre"])."(".$series[$i]["codigo"].")\" id=\"sin_asignar"."-".$series[$i]["idserie"]."\" child=\"0\">\n");
-		echo("</item>\n");
-	}
-	echo("</item>");  
-}
+	
+	
+	$series=busca_filtro_tabla("","serie","categoria=2 AND estado=1".$condicion_id,"nombre asc",$conn);
 
+	if($series['numcampos']){
+		
+		if(!$id){
+			$child=0;
+			if($series['numcampos']){
+			    $child=1;
+			}
+			echo("<item style=\"font-family:verdana; font-size:7pt;\" text=\"Series sin asignar\" id=\"series_sin_asignar\" child=\"".$child."\">");		
+		}
+		for($i=0;$i<$series["numcampos"];$i++){
+			$hijos=busca_filtro_tabla("cod_padre","serie","cod_padre=".$series[$i]["idserie"],"",$conn);
+			$child_hijos=0;
+			if($hijos['numcampos']){
+				$child_hijos=1;
+			}
+			
+			$asignada=busca_filtro_tabla("serie_idserie","entidad_serie","entidad_identidad=2 AND serie_idserie=".$series[$i]["idserie"],"",$conn);
+			$remarcar='';
+			$pretexto='sin_asignar';
+			if($asignada['numcampos']){
+				$remarcar='font-weight: 900;';
+				$pretexto='asignada';	
+			}
+
+			echo("<item style=\"font-family:verdana; font-size:7pt;".$remarcar."\" text=\"".htmlspecialchars($series[$i]["nombre"])."(".$series[$i]["codigo"].")\" id=\"".$pretexto.""."-".$series[$i]["idserie"]."\" child=\"".$child_hijos."\">\n");
+			echo("</item>\n");	
+		}
+		
+		if(!$id){
+			echo("</item>");  
+		}
+	
+	}
+}
 
 
 //SERIES OTRAS CATEGORIAS (soc)
@@ -489,7 +527,7 @@ if($papas["numcampos"])
 			}
 		}	
 	
-    echo("text=\"".htmlspecialchars(($papas[$i]["nombre"])).$cadena_codigo." \" id=\"".$papas[$i]["id$tabla_otra"]."-".$papas[$i]["id$tabla_otra"]."\"");
+    echo("text=\"".htmlspecialchars(($papas[$i]["nombre"])).$cadena_codigo." \" id=\"otras_categorias-".$papas[$i]["id$tabla_otra"]."\"");
 		if(@$_REQUEST["arbol_series"]){		
 				
 	}		
