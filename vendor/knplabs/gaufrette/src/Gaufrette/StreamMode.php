@@ -4,10 +4,14 @@ namespace Gaufrette;
 
 /**
 <<<<<<< HEAD
+<<<<<<< HEAD
  * Represents a stream mode
 =======
  * Represents a stream mode.
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+ * Represents a stream mode
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
  *
  * @author Antoine Hérault <antoine.herault@gmail.com>
  */
@@ -20,10 +24,15 @@ class StreamMode
 
     /**
 <<<<<<< HEAD
+<<<<<<< HEAD
      * Constructor
      *
 =======
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * Constructor
+     *
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      * @param string $mode A stream mode as for the use of fopen()
      */
     public function __construct($mode)
@@ -40,10 +49,14 @@ class StreamMode
 
     /**
 <<<<<<< HEAD
+<<<<<<< HEAD
      * Returns the underlying mode
 =======
      * Returns the underlying mode.
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * Returns the underlying mode
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      *
      * @return string
      */
@@ -54,6 +67,7 @@ class StreamMode
 
     /**
 <<<<<<< HEAD
+<<<<<<< HEAD
      * Indicates whether the mode allows to read
      *
      * @return Boolean
@@ -62,6 +76,11 @@ class StreamMode
      *
      * @return bool
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * Indicates whether the mode allows to read
+     *
+     * @return Boolean
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function allowsRead()
     {
@@ -74,6 +93,7 @@ class StreamMode
 
     /**
 <<<<<<< HEAD
+<<<<<<< HEAD
      * Indicates whether the mode allows to write
      *
      * @return Boolean
@@ -82,6 +102,11 @@ class StreamMode
      *
      * @return bool
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * Indicates whether the mode allows to write
+     *
+     * @return Boolean
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function allowsWrite()
     {
@@ -94,6 +119,7 @@ class StreamMode
 
     /**
 <<<<<<< HEAD
+<<<<<<< HEAD
      * Indicates whether the mode allows to open an existing file
      *
      * @return Boolean
@@ -102,6 +128,11 @@ class StreamMode
      *
      * @return bool
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * Indicates whether the mode allows to open an existing file
+     *
+     * @return Boolean
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function allowsExistingFileOpening()
     {
@@ -109,6 +140,7 @@ class StreamMode
     }
 
     /**
+<<<<<<< HEAD
 <<<<<<< HEAD
      * Indicates whether the mode allows to create a new file
      *
@@ -118,6 +150,11 @@ class StreamMode
      *
      * @return bool
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * Indicates whether the mode allows to create a new file
+     *
+     * @return Boolean
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function allowsNewFileOpening()
     {
@@ -127,6 +164,7 @@ class StreamMode
     /**
      * Indicates whether the mode implies to delete the existing content of the
 <<<<<<< HEAD
+<<<<<<< HEAD
      * file when it already exists
      *
      * @return Boolean
@@ -135,6 +173,11 @@ class StreamMode
      *
      * @return bool
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * file when it already exists
+     *
+     * @return Boolean
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function impliesExistingContentDeletion()
     {
@@ -144,6 +187,7 @@ class StreamMode
     /**
      * Indicates whether the mode implies positioning the cursor at the
 <<<<<<< HEAD
+<<<<<<< HEAD
      * beginning of the file
      *
      * @return Boolean
@@ -152,6 +196,11 @@ class StreamMode
      *
      * @return bool
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * beginning of the file
+     *
+     * @return Boolean
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function impliesPositioningCursorAtTheBeginning()
     {
@@ -161,6 +210,7 @@ class StreamMode
     /**
      * Indicates whether the mode implies positioning the cursor at the end of
 <<<<<<< HEAD
+<<<<<<< HEAD
      * the file
      *
      * @return Boolean
@@ -169,6 +219,11 @@ class StreamMode
      *
      * @return bool
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * the file
+     *
+     * @return Boolean
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function impliesPositioningCursorAtTheEnd()
     {
@@ -176,6 +231,7 @@ class StreamMode
     }
 
     /**
+<<<<<<< HEAD
 <<<<<<< HEAD
      * Indicates whether the stream is in binary mode
      *
@@ -185,6 +241,11 @@ class StreamMode
      *
      * @return bool
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * Indicates whether the stream is in binary mode
+     *
+     * @return Boolean
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function isBinary()
     {
@@ -192,6 +253,7 @@ class StreamMode
     }
 
     /**
+<<<<<<< HEAD
 <<<<<<< HEAD
      * Indicates whether the stream is in text mode
      *
@@ -201,6 +263,11 @@ class StreamMode
      *
      * @return bool
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * Indicates whether the stream is in text mode
+     *
+     * @return Boolean
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function isText()
     {

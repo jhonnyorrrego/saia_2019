@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 language: php
 
 <<<<<<< HEAD
@@ -50,3 +51,25 @@ script:
   - php vendor/bin/phpspec run -fpretty --verbose
   - php vendor/bin/phpunit
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+language: php
+
+php:
+  - 5.3
+  - 5.4
+  - 5.5
+  - 5.6
+  - hhvm
+ 
+matrix:
+    allow_failures:
+        - php: hhvm
+
+before_script:
+  - ./bin/configure_test_env.sh
+  - composer self-update && composer install --dev --prefer-source --no-interaction
+
+script:
+  - php bin/phpspec run -fpretty --verbose
+  - bin/phpunit
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889

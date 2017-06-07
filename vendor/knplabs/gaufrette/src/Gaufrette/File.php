@@ -7,10 +7,14 @@ use Gaufrette\Exception\FileNotFound;
 
 /**
 <<<<<<< HEAD
+<<<<<<< HEAD
  * Points to a file in a filesystem
 =======
  * Points to a file in a filesystem.
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+ * Points to a file in a filesystem
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
  *
  * @author Antoine Hérault <antoine.herault@gmail.com>
  */
@@ -21,11 +25,15 @@ class File
 
     /**
 <<<<<<< HEAD
+<<<<<<< HEAD
      * Content variable is lazy. It will not be read from filesystem until it's requested first time
 =======
      * Content variable is lazy. It will not be read from filesystem until it's requested first time.
      *
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * Content variable is lazy. It will not be read from filesystem until it's requested first time
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      * @var mixed content
      */
     protected $content = null;
@@ -37,43 +45,60 @@ class File
 
     /**
 <<<<<<< HEAD
+<<<<<<< HEAD
      * Human readable filename (usually the end of the key)
 =======
      * Human readable filename (usually the end of the key).
      *
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * Human readable filename (usually the end of the key)
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      * @var string name
      */
     protected $name = null;
 
     /**
 <<<<<<< HEAD
+<<<<<<< HEAD
      * File size in bytes
 =======
      * File size in bytes.
      *
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * File size in bytes
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      * @var int size
      */
     protected $size = 0;
 
     /**
 <<<<<<< HEAD
+<<<<<<< HEAD
      * File date modified
 =======
      * File date modified.
      *
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * File date modified
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      * @var int mtime
      */
     protected $mtime = null;
 
     /**
 <<<<<<< HEAD
+<<<<<<< HEAD
      * Constructor
      *
 =======
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * Constructor
+     *
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      * @param string     $key
      * @param Filesystem $filesystem
      */
@@ -86,10 +111,14 @@ class File
 
     /**
 <<<<<<< HEAD
+<<<<<<< HEAD
      * Returns the key
 =======
      * Returns the key.
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * Returns the key
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      *
      * @return string
      */
@@ -100,11 +129,15 @@ class File
 
     /**
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      * Returns the content
      *
      * @throws FileNotFound
      *
      * @param  array  $metadata optional metadata which should be send when read
+<<<<<<< HEAD
 =======
      * Returns the content.
      *
@@ -113,6 +146,8 @@ class File
      * @param array $metadata optional metadata which should be set when read
      *
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      * @return string
      */
     public function getContent($metadata = array())
@@ -152,16 +187,22 @@ class File
 
     /**
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      * Returns the file modified time
      *
      * @return int
      */    
+<<<<<<< HEAD
 =======
      * Returns the file modified time.
      *
      * @return int
      */
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
     public function getMtime()
     {
         return $this->mtime = $this->filesystem->mtime($this->key);
@@ -177,14 +218,19 @@ class File
 
     /**
 <<<<<<< HEAD
+<<<<<<< HEAD
      * Sets the content
 =======
      * Sets the content.
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * Sets the content
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      *
      * @param string $content
      * @param array  $metadata optional metadata which should be send when write
      *
+<<<<<<< HEAD
 <<<<<<< HEAD
      * @return integer The number of bytes that were written into the file, or
      *                 FALSE on failure
@@ -192,6 +238,10 @@ class File
      * @return int The number of bytes that were written into the file, or
      *             FALSE on failure
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * @return integer The number of bytes that were written into the file, or
+     *                 FALSE on failure
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function setContent($content, $metadata = array())
     {
@@ -211,6 +261,7 @@ class File
 
     /**
 <<<<<<< HEAD
+<<<<<<< HEAD
      * Indicates whether the file exists in the filesystem
      *
      * @return boolean
@@ -219,6 +270,11 @@ class File
      *
      * @return bool
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * Indicates whether the file exists in the filesystem
+     *
+     * @return boolean
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function exists()
     {
@@ -227,12 +283,16 @@ class File
 
     /**
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      * Deletes the file from the filesystem
      *
      * @throws FileNotFound
      * @throws \RuntimeException                when cannot delete file
      * @param  array                            $metadata optional metadata which should be send when write
      * @return boolean                          TRUE on success
+<<<<<<< HEAD
 =======
      * Deletes the file from the filesystem.
      *
@@ -243,6 +303,8 @@ class File
      *
      * @return bool TRUE on success
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function delete($metadata = array())
     {
@@ -253,10 +315,14 @@ class File
 
     /**
 <<<<<<< HEAD
+<<<<<<< HEAD
      * Creates a new file stream instance of the file
 =======
      * Creates a new file stream instance of the file.
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * Creates a new file stream instance of the file
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      *
      * @return Stream
      */
@@ -267,10 +333,14 @@ class File
 
     /**
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      * Sets the metadata array to be stored in adapters that can support it
      *
      * @param  array   $metadata
      * @return boolean
+<<<<<<< HEAD
 =======
      * Sets the metadata array to be stored in adapters that can support it.
      *
@@ -278,6 +348,8 @@ class File
      *
      * @return bool
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     protected function setMetadata(array $metadata)
     {
@@ -292,10 +364,14 @@ class File
 
     /**
 <<<<<<< HEAD
+<<<<<<< HEAD
      * @return boolean
 =======
      * @return bool
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * @return boolean
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     private function supportsMetadata()
     {

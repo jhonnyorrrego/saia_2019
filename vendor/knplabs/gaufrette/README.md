@@ -2,6 +2,9 @@ Gaufrette
 =========
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 Gaufrette is a PHP5 library that provides a filesystem abstraction layer.
 
 This project does not have any stable release yet but we do not want to break BC now.
@@ -13,6 +16,7 @@ This project does not have any stable release yet but we do not want to break BC
 Symfony integration is available here: [KnpLabs/KnpGaufretteBundle](https://github.com/KnpLabs/KnpGaufretteBundle).
 
 Documentation is available [here](doc/index.md).
+<<<<<<< HEAD
 =======
 Gaufrette provides a filesystem abstraction layer.
 
@@ -23,6 +27,8 @@ Gaufrette provides a filesystem abstraction layer.
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE)
 [![Join the chat at Gitter](https://img.shields.io/gitter/room/nwjs/nw.js.svg?style=flat-square)](https://gitter.im/KnpLabs/Gaufrette)
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 
 Why use Gaufrette?
 ------------------
@@ -40,6 +46,9 @@ limits, you can easily move your medias in an Amazon S3 server or any other
 solution.
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 Try it!
 -------
 
@@ -99,6 +108,7 @@ To check basic functionality of the adapters (adapters should be configured you 
     $ bin/phpunit
 
 Is it green?
+<<<<<<< HEAD
 =======
 ### Documentation
 
@@ -128,3 +138,5 @@ Is it green?
 
 This project does not have any stable release yet but we do not want to break BC now.
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889

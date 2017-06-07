@@ -53,11 +53,11 @@ if(@$_REQUEST["id"]){
     switch($datos[3]){
       case "mostrar":
         if($datos[2]){
-          $ruta="formatos/".$formato[0]["nombre"]."/".$formato[0]["ruta_mostrar"]."?iddoc=".$datos_formato[0]["documento_iddocumento"]."&idformato=".$formato[0]["idformato"];
-          if(is_file("formatos/".$formato[0]["nombre"]."/".$formato[0]["ruta_mostrar"]))
+          $ruta=FORMATOS_CLIENTE.$formato[0]["nombre"]."/".$formato[0]["ruta_mostrar"]."?iddoc=".$datos_formato[0]["documento_iddocumento"]."&idformato=".$formato[0]["idformato"];
+          if(is_file(FORMATOS_CLIENTE.$formato[0]["nombre"]."/".$formato[0]["ruta_mostrar"]))
             redirecciona($ruta);
-          else if(is_file("formatos/".$formato[0]["nombre"]."/previo_".$formato[0]["ruta_mostrar"]))
-            redirecciona("formatos/".$formato[0]["nombre"]."/previo_".$formato[0]["ruta_mostrar"]);
+          else if(is_file(FORMATOS_CLIENTE.$formato[0]["nombre"]."/previo_".$formato[0]["ruta_mostrar"]))
+            redirecciona(FORMATOS_CLIENTE.$formato[0]["nombre"]."/previo_".$formato[0]["ruta_mostrar"]);
         }
         //die($ruta);
       break;

@@ -12,7 +12,7 @@ include_once($ruta_db_superior."pantallas/lib/librerias_fechas.php");
 function barra_superior_flujo($iddoc,$idpaso_documento,$plantilla){
 if($plantilla!="plantilla"){
   $etiqueta = busca_filtro_tabla("etiqueta,idformato","formato","lower(nombre)='".strtolower($plantilla)."'","",$conn);
-  $enlace_ver="formatos/".strtolower($plantilla)."/detalles_mostrar_".strtolower($plantilla).".php?tipo=1&iddoc=$iddoc&idformato=".$etiqueta[0]["idformato"];
+  $enlace_ver=FORMATOS_CLIENTE.strtolower($plantilla)."/detalles_mostrar_".strtolower($plantilla).".php?tipo=1&iddoc=$iddoc&idformato=".$etiqueta[0]["idformato"];
 }
 else{
   $enlace_ver="documentoview.php?key=".$iddoc;
@@ -194,5 +194,5 @@ elseif($plantilla!=''){
 		}
 	}
 return(array("numcampos"=>0));
-}                 
+}
 ?>

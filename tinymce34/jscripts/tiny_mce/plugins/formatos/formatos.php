@@ -147,7 +147,7 @@ elseif(isset($_REQUEST["tipo"])&&$_REQUEST["tipo"])
     {$ordenar="";
      if($_REQUEST["tipo"]=="campos_formato")
      {
-       echo "<a href='".$ruta_db_superior."formatos/campos_formatoadd.php?idformato=".$_REQUEST["formato"]."&pantalla=tiny'>Adicionar</a>&nbsp;&nbsp;&nbsp;<a href='".$ruta_db_superior."formatos/campos_formato_ordenar.php?idformato=".$_REQUEST["formato"]."&pantalla=tiny'>Ordenar</a>&nbsp;&nbsp;<a href='formatos.php?pantalla=funciones&formato=".$_REQUEST["formato"]."'>Funciones</a><br><br /><br>";
+       echo "<a href='".$ruta_db_superior. FORMATOS_SAIA . "campos_formatoadd.php?idformato=".$_REQUEST["formato"]."&pantalla=tiny'>Adicionar</a>&nbsp;&nbsp;&nbsp;<a href='".$ruta_db_superior. FORMATOS_SAIA . "campos_formato_ordenar.php?idformato=".$_REQUEST["formato"]."&pantalla=tiny'>Ordenar</a>&nbsp;&nbsp;<a href='formatos.php?pantalla=funciones&formato=".$_REQUEST["formato"]."'>Funciones</a><br><br /><br>";
      }
     else
      echo "<br /><br /><a href='?formato=".$_REQUEST["formato"]."&adicionar=1&tipo=".$_REQUEST["tipo"]."'>Adicionar</a>$ordenar<br /><br>";
@@ -169,10 +169,10 @@ elseif(isset($_REQUEST["tipo"])&&$_REQUEST["tipo"])
          {echo "<tr><td>".$resultado[$i]["etiqueta"]."</td><td align='center' valign='center'>".'<img onmouseover="ajax_showTooltip(window.event,\'detalles.php?tipo=funciones_formato&id='.$resultado[$i]["idfunciones_formato"].'\',this);return false" onmouseout="ajax_hideTooltip()" src="images/mostrar_nota.png"/>'."</td><td align='center'>";
           echo'<a title="'.$resultado[$i]["descripcion"].'" href="javascript:FormatosDialog.insert(\''.$resultado[$i]["nombre_funcion"].'\');" >Insertar</a></td>';
           if($_REQUEST["formato"])
-           echo "<td  align='center'><a href='".$ruta_db_superior."formatos/funciones_formatoedit.php?idformato=".$_REQUEST["formato"]."&key=".$resultado[$i]["idfunciones_formato"]."&pantalla=tiny' >Editar</a></td>";
+           echo "<td  align='center'><a href='".$ruta_db_superior. FORMATOS_SAIA . "funciones_formatoedit.php?idformato=".$_REQUEST["formato"]."&key=".$resultado[$i]["idfunciones_formato"]."&pantalla=tiny' >Editar</a></td>";
 
           if(isset($_REQUEST["formato"])&&$resultado[$i]["formato"]==$_REQUEST["formato"])
-             echo "<td align='center'><a  href='".$ruta_db_superior."formatos/funciones_formatodelete.php?idformato=".$_REQUEST["formato"]."&key=".$resultado[$i]["idfunciones_formato"]."&pantalla=tiny' >Eliminar</a></td>";
+             echo "<td align='center'><a  href='".$ruta_db_superior. FORMATOS_SAIA . "funciones_formatodelete.php?idformato=".$_REQUEST["formato"]."&key=".$resultado[$i]["idfunciones_formato"]."&pantalla=tiny' >Eliminar</a></td>";
           elseif(isset($_REQUEST["formato"]))
              echo "<td>&nbsp;</td>";
 
@@ -181,8 +181,8 @@ elseif(isset($_REQUEST["tipo"])&&$_REQUEST["tipo"])
        else
          {echo "<tr><td  align='center' >".$resultado[$i]["etiqueta"]."</td><td align='center' valign='center'>".'<img onmouseover="ajax_showTooltip(window.event,\'detalles.php?tipo=campos_formato&id='.$resultado[$i]["idcampos_formato"].'\',this);return false" onmouseout="ajax_hideTooltip()" src="images/mostrar_nota.png"/>'."</td>";
           echo'<td align="center"><a href="javascript:FormatosDialog.insert(\''.$resultado[$i]["nombre"].'\');" >Insertar</a>';
-          echo "</td><td  align='center'><a  href='".$ruta_db_superior."formatos/campos_formatoedit.php?idformato=".$_REQUEST["formato"]."&key=".$resultado[$i]["idcampos_formato"]."&pantalla=tiny' >Editar</a></td>";
-          echo "</td><td  align='center'><a  href='".$ruta_db_superior."formatos/campos_formatodelete.php?idformato=".$_REQUEST["formato"]."&key=".$resultado[$i]["idcampos_formato"]."&pantalla=tiny'>Eliminar</a></td>";
+          echo "</td><td  align='center'><a  href='".$ruta_db_superior. FORMATOS_SAIA . "campos_formatoedit.php?idformato=".$_REQUEST["formato"]."&key=".$resultado[$i]["idcampos_formato"]."&pantalla=tiny' >Editar</a></td>";
+          echo "</td><td  align='center'><a  href='".$ruta_db_superior. FORMATOS_SAIA . "campos_formatodelete.php?idformato=".$_REQUEST["formato"]."&key=".$resultado[$i]["idcampos_formato"]."&pantalla=tiny'>Eliminar</a></td>";
           echo "</tr>";
          }
       }

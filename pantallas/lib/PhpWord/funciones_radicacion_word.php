@@ -53,9 +53,12 @@ class RadicadoWord {
 		$this->ruta_docx = '';
 		$this->archivo_csv = null;
 <<<<<<< HEAD
+<<<<<<< HEAD
 		$this->alm_csv = null;
 =======
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 		$this->combinar = false;
 		$this->ruta_procesar = null;
 		$this->idformato = null;
@@ -184,8 +187,11 @@ class RadicadoWord {
 			} // fin si existe iddoc y el word tiene campos del formato
 		} else { // fin si existe word
 <<<<<<< HEAD
+<<<<<<< HEAD
 			die("No existe la plantilla" . $this->ruta_procesar);
 =======
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 		    die("No existe la plantilla" . $this->ruta_docx . 'documento_word.docx');
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
 		}
@@ -195,10 +201,14 @@ class RadicadoWord {
 		global $conn;
 		
 <<<<<<< HEAD
+<<<<<<< HEAD
 		$archivo_original = $this->ruta_procesar;
 =======
 		$archivo_original = $this->ruta_docx . 'documento_word.docx';
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+		$archivo_original = $this->ruta_docx . 'documento_word.docx';
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 		$marca_agua = mostrar_estado_documento($this->iddocumento);
 		$extension_doc = '.docx';
 
@@ -210,7 +220,10 @@ class RadicadoWord {
 			$archivo_copia = $this->ruta_combinar . "/$archivo_out" . $extension_doc;
 =======
 			$archivo_copia = $this->ruta_combinar . $archivo_out . $extension_doc;
+<<<<<<< HEAD
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 			copy($archivo_original, $archivo_copia);
 			$templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor($archivo_copia);
 			$campos_word = $templateProcessor->getVariables();

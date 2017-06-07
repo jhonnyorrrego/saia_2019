@@ -26,13 +26,13 @@ global $raiz_saia;
 $texto='';
 switch($version){
   case "1.4.2":
-    $texto='<script src="'.$raiz_saia.'js/jquery-1.4.2.js" type="text/javascript"><\/script>';
+    $texto='<script src="'.$raiz_saia.'js/jquery-1.4.2.js" type="text/javascript"></script>';
   break;
   case "1.7":
-    $texto='<script src="'.$raiz_saia.'js/jquery-1.7.min.js" type="text/javascript"><\/script>';
+    $texto='<script src="'.$raiz_saia.'js/jquery-1.7.min.js" type="text/javascript"></script>';
   break;
   case "1.2.3":
-    $texto='<script src="'.$raiz_saia.'js/jquery-1.2.3.min.js" type="text/javascript"><\/script>';
+    $texto='<script src="'.$raiz_saia.'js/jquery-1.2.3.min.js" type="text/javascript"></script>';
   break;
   case "sapi":
     $texto='<script type="text/javascript" src="http://www.google.com/jsapi"><\/script><script type="text/javascript">google.load("jquery", "1.7");<\/script>';
@@ -254,16 +254,18 @@ $texto='';
 $texto.='<script src="'.$raiz_saia.'js/jquery.infini_scroll.js" type="text/javascript" charset="utf-8"></script>';
 return($texto);
 }
+
 function librerias_notificaciones(){
-global $raiz_saia;
-$texto='';
-$texto.='<script src="'.$raiz_saia.'js/noty/jquery.noty.js" type="text/javascript" charset="utf-8"></script>';
-$texto.='<script src="'.$raiz_saia.'js/noty/layouts/topCenter.js" type="text/javascript" charset="utf-8"></script>';
-$texto.='<script src="'.$raiz_saia.'js/noty/layouts/topRight.js" type="text/javascript" charset="utf-8"></script>';
-$texto.='<script src="'.$raiz_saia.'js/noty/themes/default.js" type="text/javascript" charset="utf-8"></script>';
-$texto.='<script src="'.$raiz_saia.'pantallas/lib/librerias_notificaciones.js" type="text/javascript" charset="utf-8"></script>';
-return($texto);
+	global $raiz_saia;
+	$texto = '';
+	$texto .= '<script src="' . $raiz_saia . 'js/noty/jquery.noty.js" type="text/javascript" charset="utf-8"></script>';
+	$texto .= '<script src="' . $raiz_saia . 'js/noty/layouts/topCenter.js" type="text/javascript" charset="utf-8"></script>';
+	$texto .= '<script src="' . $raiz_saia . 'js/noty/layouts/topRight.js" type="text/javascript" charset="utf-8"></script>';
+	$texto .= '<script src="' . $raiz_saia . 'js/noty/themes/default.js" type="text/javascript" charset="utf-8"></script>';
+	$texto .= '<script src="' . $raiz_saia . 'pantallas/lib/librerias_notificaciones.js" type="text/javascript" charset="utf-8"></script>';
+	return ($texto);
 }
+
 function librerias_datepicker_bootstrap(){
 global $raiz_saia;
 $texto='';

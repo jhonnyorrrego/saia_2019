@@ -1,6 +1,7 @@
 [
     {
 <<<<<<< HEAD
+<<<<<<< HEAD
         "name": "icewind/streams",
         "version": "0.5.2",
         "version_normalized": "0.5.2.0",
@@ -295,6 +296,8 @@
             "amazonwebservices/aws-sdk-for-php": "1.5.*",
             "aws/aws-sdk-php": "~2",
 =======
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
         "name": "luracast/restler",
         "version": "3.0.0",
         "version_normalized": "3.0.0.0",
@@ -346,7 +349,11 @@
                 "v3": "v3.0.x-dev"
             }
         },
+<<<<<<< HEAD
         "installation-source": "source",
+=======
+        "installation-source": "dist",
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
         "autoload": {
             "psr-0": {
                 "Luracast\\Restler": "vendor/"
@@ -374,6 +381,7 @@
             "rest",
             "server"
         ]
+<<<<<<< HEAD
     },
     {
         "name": "knplabs/gaufrette",
@@ -538,5 +546,7 @@
         ]
 =======
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
     }
 ]

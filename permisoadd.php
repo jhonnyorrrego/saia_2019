@@ -91,7 +91,6 @@ switch ($sAction)
 		</script>  
 <a style="display:none;" id="enlace_highslide" class="highslide" onclick="return hs.htmlExpand(this, { objectType: 'iframe',width: 300, height: 100,preserveContent:false} )" >I</a>
 <legend>&nbsp;&nbsp;ADICIONAR PERMISO DE ACCESO</legend><br>
->>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
 <form name="permisoadd" id="permisoadd" action="permisoadd.php" method="post" >
 <input type="hidden" name="a_add" value="A">
 <input type="hidden" name="funcionario_elegido" value="<?php echo($x_funcionario_idfuncionario);?>">

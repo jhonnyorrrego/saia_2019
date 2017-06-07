@@ -1,15 +1,15 @@
 <?php
 require_once("define.php");
 require_once("conexion.php");
-require_once("sql.php");
+
 require_once('StorageUtils.php');
 require_once('filesystem/SaiaStorage.php');
 require('vendor/autoload.php');
 use Gaufrette\Filesystem;
-
 use Gaufrette\StreamMode;
 use Imagine\Image\Box;
 use Imagine\Gd\Imagine;
+require_once("sql2.php");
 
 if(!isset($_SESSION["LOGIN".LLAVE_SAIA])){
   @session_start();
@@ -74,6 +74,7 @@ function mayusculas($texto)
  $texto_nuevo=str_replace("UML;","uml;",$texto_nuevo);
  return($texto_nuevo);
 }
+
 /*<Clase>
 <Nombre>compara_ruta_archivos</Nombre>
 <Parametros>$buscado:nombre del archivo</Parametros>
@@ -219,39 +220,10 @@ return($tabla);
 <Pre-condiciones><Pre-condiciones>
 <Post-condiciones><Post-condiciones>
 </Clase>  */
-function listar_campos_tabla($tabla=NULL,$tipo_retorno=0)
-  {global $conn;   
-  	if($tabla==NULL)
-      $tabla=$_REQUEST["tabla"];
-   if(MOTOR=="MySql"){
-      $datos_tabla=$conn->Ejecutar_Sql("DESCRIBE ".$tabla);
-	   while($fila=phpmkr_fetch_array($datos_tabla)){// print_r($fila);
-        if($tipo_retorno){
-            $lista_campos[]=array_map(strtolower,$fila);    
-        }   
-        else{
-            $lista_campos[]=strtolower($fila[0]);
-       }
-      }   
-   		return($lista_campos);
-    }
-   else if(MOTOR=="Oracle"){
-	      $datos_tabla=$conn->Ejecutar_Sql("SELECT column_name AS Field FROM user_tab_columns WHERE table_name='".strtoupper($tabla)."' ORDER BY column_name ASC");
-	      $lista_campos=array();
-	  	  while($fila=phpmkr_fetch_array($datos_tabla)) {
-			  if($tipo_retorno){
-                    $lista_campos[]=array_map(strtolower,$fila);    
-                }   
-                else{
-                    $lista_campos[]=strtolower($fila[0]);
-               }
-	      }
-	   	  return($lista_campos);  
-	  }
-	  else{
-	   	return($conn->Busca_Tabla());
-	  }
-  } 
+function listar_campos_tabla($tabla = NULL, $tipo_retorno = 0) {
+	global $conn;
+	return $conn->listar_campos_tabla($tabla, $tipo_retorno);
+}
 /*
 <Clase>
 <Nombre>guardar_lob</Nombre>
@@ -263,198 +235,8 @@ function listar_campos_tabla($tabla=NULL,$tipo_retorno=0)
 <Pre-condiciones><Pre-condiciones>
 <Post-condiciones><Post-condiciones>
 </Clase>*/
-function guardar_lob($campo,$tabla,$condicion,$contenido,$tipo,$conn,$log=1){
-  global $conn;
-  $resultado=TRUE;
-  if(MOTOR=="Oracle"){
-    $sql = "SELECT ".$campo." FROM ".$tabla." WHERE ".$condicion." FOR UPDATE";
-    $stmt = OCIParse($conn->Conn->conn, $sql) or print_r(OCIError ($stmt));
-    // Execute the statement using OCI_DEFAULT (begin a transaction)
-    OCIExecute($stmt, OCI_DEFAULT) or print_r(OCIError ($stmt));
-    // Fetch the SELECTed row
-    OCIFetchInto($stmt,$row,OCI_ASSOC);
-    
-	if(!count($row)){  //soluciona el problema del size() & ya no se necesita el emty_clob() en bd en los campos clob NULL, los campos obligatorios siguen dependendiendo de empty_clob() como valor predeterminado.
-		oci_rollback($conn->Conn->conn);
-		oci_free_statement($stmt);
-		$clob_blob='clob';
-		if($tipo=='archivo'){
-			$clob_blob='blob';
-		}		
-    	$up_clob="UPDATE ".$tabla." SET ".$campo."=empty_".$clob_blob."() WHERE ".$condicion;
-		$conn->Ejecutar_Sql($up_clob);
-	    $stmt = OCIParse($conn->Conn->conn, $sql) or print_r(OCIError ($stmt));
-	    // Execute the statement using OCI_DEFAULT (begin a transaction)
-	    OCIExecute($stmt, OCI_DEFAULT) or print_r(OCIError ($stmt));
-	    // Fetch the SELECTed row
-	    OCIFetchInto($stmt,$row,OCI_ASSOC);		
-	}    
-    
-    if(FALSE ===$row){
-      OCIRollback($conn->Conn->conn);
-      alerta("No se pudo modificar el campo.");
-      die($sql);
-      $resultado=FALSE;
-    }
-    else{// Now save a value to the LOB
-      if($tipo=="texto"){//para campos clob como en los formatos
-        if($row[strtoupper($campo)]->size()>0)
-          $contenido_actual=htmlspecialchars_decode($row[strtoupper($campo)]->read($row[strtoupper($campo)]->size()));
-         else
-            $contenido_actual="";
-
-            if($contenido_actual<>$contenido)
-           { if ($row[strtoupper($campo)]->size()>0 && !$row[strtoupper($campo)]->truncate() )
-                {
-                  oci_rollback($conn->Conn->conn);
-                  alerta("No se pudo modificar el campo.");
-                  $resultado=FALSE;
-                }
-            else
-               {$contenido=limpia_tabla($contenido);
-                if ( !$row[strtoupper($campo)]->save(trim((($contenido)))))
-                  {  oci_rollback($conn->Conn->conn);
-                     $resultado=FALSE;
-                  }
-                else
-                  oci_commit($conn->Conn->conn);
-                //*********** guardo el log en la base de datos **********************
-                preg_match("/.*=(.*)/", strtolower($condicion), $resultados);
-                $llave=trim($resultados[1]);
-
-                if($log)
-                  {$sqleve="INSERT INTO evento(funcionario_codigo, fecha, evento, tabla_e, registro_id, estado) VALUES('".usuario_actual("funcionario_codigo")."',to_date('".date('Y-m-d H:i:s')."','YYYY-MM-DD HH24:MI:SS') ,'MODIFICAR', '$tabla', $llave, '0')";
-
-                   $conn->Ejecutar_Sql($sqleve);
-                   $registro=$conn->Ultimo_Insert();
-                   $texto_ant="DECLARE
-cont$   CLOB;
-BEGIN
-    UPDATE $tabla SET $campo=EMPTY_CLOB()
-    WHERE $condicion;
-    SELECT $campo
-         INTO cont$
-         FROM $tabla
-        WHERE $condicion
-   FOR UPDATE;
-   DBMS_LOB.WRITE (cont$, DBMS_LOB.getlength('$contenido_actual'), 1, '$contenido_actual');
-COMMIT;
-END";
-                   $texto_sig="DECLARE
-cont$   CLOB;
-BEGIN
-UPDATE $tabla SET $campo=EMPTY_CLOB()
-WHERE $condicion;
-SELECT $campo
-     INTO cont$
-     FROM $tabla
-    WHERE $condicion
-FOR UPDATE;
-DBMS_LOB.WRITE (cont$, DBMS_LOB.getlength('$contenido'), 1, '$contenido');
-COMMIT;
-END";
-                   guardar_lob('codigo_sql','evento',"idevento=".$registro,$texto_sig,'texto',$conn,0);
-                   guardar_lob('detalle','evento',"idevento=".$registro,$texto_ant,'texto',$conn,0);
-                   $archivo="$registro|||".usuario_actual("funcionario_codigo")."|||".date('Y-m-d H:i:s')."|||MODIFICAR|||$tabla|||0|||$texto_ant|||$llave|||$texto_sig";
-                   evento_archivo($archivo);
-                   //*********************************
-
-                }
-              }
-           }
-
-        }
-      elseif($tipo=="archivo")//para campos blob como la firma
-        {//echo ($campo.$tabla.$condicion.$contenido);
-        /*if(lower($campo)=="firma")
-         $contenido=addslashes($contenido); */
-         if ( !$row[strtoupper($campo)]->truncate() )
-            {
-              oci_rollback($conn->Conn->conn);
-              alerta("No se pudo modificar el campo.");
-              $resultado=FALSE;
-            }
-         if ( !$row[strtoupper($campo)]->save($contenido))
-           { oci_rollback($conn->Conn->conn);
-            alerta("No se pudo modificar el campo.");
-             $resultado=FALSE;
-           }
-         else
-           oci_commit($conn->Conn->conn);
-
-        }
-      oci_free_statement($stmt);
-      $row[strtoupper($campo)]->free();
-     }
-    }
- elseif(MOTOR=="MySql")
-    {if($tipo=="archivo")
-       {$sql="update $tabla set $campo='".addslashes($contenido)."' where $condicion";
-        mysqli_query($conn->Conn->conn,$sql);
-        // TODO verificar resultado de la insecion $resultado=FALSE;
-       }
-     elseif($tipo=="texto")
-        {$contenido=codifica_encabezado(limpia_tabla($contenido));
-         $sql="update $tabla set $campo='".addslashes(stripslashes($contenido))."' where $condicion";
-        if($log)
-            {preg_match("/.*=(.*)/", strtolower($condicion), $resultados);
-             $llave=trim($resultados[1]);
-             $anterior=busca_filtro_tabla($campo,$tabla,$condicion,"",$conn);
-             $sql_anterior="update $tabla set $campo='".addslashes(stripslashes($anterior[0][0]))."' where $condicion";
-
-             $sqleve="INSERT INTO evento(funcionario_codigo, fecha, evento, tabla_e, registro_id, estado,detalle,codigo_sql) VALUES('".usuario_actual("funcionario_codigo")."','".date('Y-m-d H:i:s')."','MODIFICAR', '$tabla', $llave, '0','".addslashes($sql_anterior)."','".addslashes($sql)."')";
-             $conn->Ejecutar_Sql($sqleve);
-             $registro=$conn->Ultimo_Insert();
-             if($registro)
-               {
-                $archivo="$registro|||".usuario_actual("funcionario_codigo")."|||".date('Y-m-d H:i:s')."|||MODIFICAR|||$tabla|||0|||".addslashes($sql_anterior)."|||$llave|||".addslashes($sql);
-                evento_archivo($archivo);
-               }
-            }
-         mysqli_query($conn->Conn->conn,$sql) or die(mysqli_error($conn->Conn->conn));
-        }
-    }
-  elseif(MOTOR=="SqlServer" || MOTOR=="MSSql" ){
-    if($tipo=="archivo"){
-      $dato=busca_filtro_tabla("$campo","$tabla","$condicion","",$conn);
-		//CODIFICA EL ARCHIVO PARA SER GUARDADO
-      $fileData = $contenido;
-      $fileData = unpack("H*hex",$fileData);
-      $content = "0x" . $fileData['hex'];
-
-      if($dato[0][0]==""){
-        $sql="UPDATE ".$tabla." SET ".$campo." .write(convert(varbinary(max),'XXX'),0,NULL) WHERE ".$condicion;
-        $conn->ejecutar_sql($sql);
-      }
-      $sql="UPDATE ".$tabla." SET ".$campo." = ".$content." WHERE ".$condicion;
-      $conn->ejecutar_sql($sql);
-    }
-    elseif($tipo=="texto"){
-      $contenido=codifica_encabezado(limpia_tabla($contenido));
-      $sql="update $tabla set $campo='".str_replace("'",'"',stripslashes($contenido))."' where $condicion";
-      if($log){
-        preg_match("/.*=(.*)/", strtolower($condicion), $resultados);
-        $llave=trim($resultados[1]);
-        $anterior=busca_filtro_tabla("$campo","$tabla","$condicion","",$conn);
-        $sql_anterior="update $tabla set $campo='".str_replace("'",'"',stripslashes($anterior[0][0]))."' where $condicion";
-        $sqleve="INSERT INTO evento(funcionario_codigo, fecha, evento, tabla_e, registro_id, estado,detalle,codigo_sql) VALUES('".usuario_actual("funcionario_codigo")."','".date('Y-m-d H:i:s')."','MODIFICAR', '$tabla', $llave, '0','".addslashes($sql_anterior)."','".addslashes($sql)."')";
-        $conn->Ejecutar_Sql($sqleve);
-        $registro=$conn->Ultimo_Insert();
-        if($registro){
-          $archivo="$registro|||".usuario_actual("funcionario_codigo")."|||".date('Y-m-d H:i:s')."|||MODIFICAR|||$tabla|||0|||".addslashes($sql_anterior)."|||$llave|||".addslashes($sql);
-          evento_archivo($archivo);
-        }
-      }
-      if(MOTOR=="SqlServer")
-      {sqlsrv_query($conn->Conn->conn,"USE ".$conn->Conn->Db);
-       sqlsrv_query($conn->Conn->conn,$sql) or die("consulta fallida ---- $sql ".implode("<br />",sqlsrv_errors()));
-      }
-      else
-        {mssql_query($sql,$conn->Conn->conn) or die("consulta fallida ---- $sql ".implode("<br />",mssql_get_last_message()));
-        }
-    }
-  }
- return($resultado);
+function guardar_lob($campo, $tabla, $condicion, $contenido, $tipo, $conn, $log = 1) {
+	return $conn->guardar_lob($campo, $tabla, $condicion, $contenido, $tipo, $log);
 }
 
 /*
@@ -490,8 +272,7 @@ function evento_archivo($cadena){
 	$nombre = DB . "_log_" . date("Y_m_d") . ".txt";
 
 	$filesystem = $storage->get_filesystem();
-
-  $contenido="";
+  	$contenido="";
 	if ($filesystem->has($nombre)) {
 		$mode = "ab";
     $contenido=$cadena."*|*";
@@ -505,6 +286,20 @@ function evento_archivo($cadena){
 
 	$stream->write($contenido);
 	$stream->close();
+}
+function normalizePath($path) {
+	return array_reduce(explode('/', $path), create_function('$a, $b', '
+			if($a === 0)
+				$a = "/";
+
+			if($b === "" || $b === ".")
+				return $a;
+
+			if($b === "..")
+				return dirname($a);
+
+			return preg_replace("/\/+/", "/", "$a/$b");
+		'), 0);
 }
 
 /*
@@ -564,7 +359,7 @@ global $conn;
   {
     $datos=array('basedatos'=>$BASEDATOS,'db'=>$DB,'motor'=>$MOTOR,'host'=>$HOST,'user'=>$USER,'pass'=>$PASS,'port'=>$PORT);
     $con=new conexion($datos);
-    $conn=new SQL($con,$MOTOR);
+    $conn = SQL2::get_instance($con,$MOTOR);
     if($conn && $conn->Conn){
       return ($conn);
     }
@@ -928,26 +723,20 @@ $conn->liberar_resultado($rs);
 <Pre-condiciones>
 <Post-condiciones>
 */
-function phpmkr_insert_id(){
-global $conn;
-if($conn){
-  if($conn->motor=="Oracle"){
-  	$evento = $conn->ultimo_insert();
-  }
-  else{
-  	$evento = $conn->ultimo_insert;
-  }
-  $buscar = busca_filtro_tabla("*","evento","idevento=".$evento,"",$conn);
-  if($buscar["numcampos"])
-    return $buscar[0]["registro_id"];
-  else{
-    //alerta(" Error al recuperar id ".$evento);
-  }
-}
-else{
-  alerta("Error al buscar la ultima insercion.".$rs->sql);
-  return FALSE;
-}
+function phpmkr_insert_id() {
+	global $conn;
+	if ($conn) {
+		$evento = $conn->Ultimo_Insert();
+		$buscar = busca_filtro_tabla("*", "evento", "idevento=" . $evento, "", $conn);
+		if ($buscar["numcampos"]) {
+			return $buscar[0]["registro_id"];
+		} else {
+			// alerta(" Error al recuperar id ".$evento);
+		}
+	} else {
+		alerta("Error al buscar la ultima insercion." . $rs->sql);
+		return FALSE;
+	}
 }
 /*
 <Clase>
@@ -960,22 +749,12 @@ else{
 <Pre-condiciones>
 <Post-condiciones>
 */
-function phpmkr_error(){
-global $conn;
-if($conn->motor=="MySql"){
-  if($conn->error<>"")
-    echo  ($conn->error." en \"".$conn->consulta."\"");
+function phpmkr_error() {
+	global $conn;
+	$conn->mostrar_error();
 }
-else if($conn->motor=="Oracle"){
-  if($conn->error<>"")
-    echo  ($conn->error["message"]." en \"".$conn->consulta."\"");
-  }
-  else if($conn->motor=="SqlServer" || $conn->motor=="MSSql"){
-    if($conn->error<>"")
-      echo  ($conn->error["message"]." en \"".$conn->consulta."\"");
-  }
-}
-/*
+
+	/*
 <Clase>
 <Nombre>busca_filtro_tabla
 <Parametros>$campos: columnas que se van a seleccionar
@@ -1592,8 +1371,9 @@ function sincronizar_carpetas($tipo, $conn) {
 					$ic = strrpos($archivo, "#");
 					$fc = strrpos($archivo, ")");
 					$cad = substr($archivo, $ic + 1, $fc - $ic - 1);
-					if (intval($cad) == intval(@$_REQUEST['x_id_documento'])) {
-						vincular_anexo_documento(@$_REQUEST['x_id_documento'], $ruta_temporal . '/' . $archivo);
+                    //No se puede usar $_REQUEST porque la funcion se puede invocar desde un webservice
+					if(!empty($cad)) {
+						vincular_anexo_documento(intval($cad),$ruta_temporal.'/'.$archivo);
 						unlink($ruta_archivo);
 					}
 				} //fin if file_exist
@@ -2532,6 +2312,7 @@ alert("<?php echo($mensaje);?>");
 </script>
 <?php
 }
+
 function alerta($mensaje,$tipo='success',$duraccion=3000){
 $max_salida=10; // Previene algun posible ciclo infinito limitando a 10 los ../
 $ruta_superior_temporal=$ruta="";
@@ -2547,7 +2328,20 @@ while($max_salida>0){
 	$raiz_saia=$ruta_superior_temporal;
 	echo(librerias_notificaciones());
 
- ?>
+	?>
+<script>
+notificacion_saia("<?php echo $mensaje ;?>","<?php echo($tipo); ?>",'',<?php echo($duraccion); ?>);
+</script>
+<?php
+}
+
+function alerta_formatos($mensaje,$tipo='success',$duraccion=3000){
+	require_once ('librerias_saia.php');
+	global $raiz_saia;
+	$raiz_saia = "/" . RUTA_SAIA . $ruta_superior_temporal;
+	echo(librerias_notificaciones());
+
+	?>
 <script>
 notificacion_saia("<?php echo $mensaje ;?>","<?php echo($tipo); ?>",'',<?php echo($duraccion); ?>);
 </script>
@@ -3176,49 +2970,10 @@ de tipo select
 <Pre-condiciones>
 <Post-condiciones>
 */
-
-function fecha_db($campo, $formato = NULL)
- { global $conn;
-
-   if(!$formato)
-        $formato="Y-m-d";  // formato por defecto php
-
-  if($conn->motor=="Oracle")
-    {
-         $reemplazos=array('d'=>'DD','m'=>'MM','y'=>'YY','Y'=>'YYYY','h'=>'HH','H'=>'HH24','i'=>'MI','s'=>'SS','M'=>'MON','yyyy'=>'YYYY'  );
-         $resfecha=$formato;
-         foreach ($reemplazos as $ph => $mot)
-          { // echo $ph," = ",$mot,"<br>","^$ph([-/:])", "%Y\\1","<br>";
-          	$resfecha=preg_replace('/'.$ph.'/', "$mot", $resfecha);
-            /*$resfecha=ereg_replace("^$ph([-/:])", "$mot\\1", $resfecha);
-            $resfecha=ereg_replace("( )$ph([-/:])", "\\1$mot\\2", $resfecha);
-            $resfecha=ereg_replace("^$ph", "$mot", $resfecha);
-            $resfecha=ereg_replace("([-/:])$ph([-/:])", "\\1$mot\\2", $resfecha);
-            $resfecha=ereg_replace("([-/:])$ph$", "\\1$mot", $resfecha);
-            $resfecha=ereg_replace("$ph( )", "$mot\\1", $resfecha); // espacio entre fecha y hora*/
-          }
- 	 }
-   	elseif($conn->motor=="MySql")
-    	 {  //TO_DATE(TO_CHAR(sysdate,'dd/mm/yyyy '))
-
-            $reemplazos=array('d'=>'%d','m'=>'%m','y'=>'%y','Y'=>'%Y','h'=>'%h','H'=>'%H','i'=>'%i','s'=>'%s','M'=>'%b','yyyy'=>'%Y');
-            $resfecha=$formato;
-             foreach ($reemplazos as $ph => $mot)
-             { // echo $ph," = ",$mot,"<br>","^$ph([-/:])", "%Y\\1","<br>";
-             	$resfecha=preg_replace('/'.$ph.'/', "$mot", $resfecha);
-                /*$resfecha=ereg_replace("^$ph([-/:])", "$mot\\1", $resfecha);
-                $resfecha=ereg_replace("( )$ph([-/:])", "\\1$mot\\2", $resfecha);
-                $resfecha=ereg_replace("^$ph", "$mot", $resfecha);
-         		$resfecha=ereg_replace("([-/:])$ph([-/:])", "\\1$mot\\2", $resfecha);
-         		$resfecha=ereg_replace("([-/:])$ph$", "\\1$mot", $resfecha);
-         		$resfecha=ereg_replace("$ph( )", "$mot\\1", $resfecha); // espacio entre fecha y hora*/
-             }
-         $fsql="DATE_FORMAT($campo,'$resfecha')";
-    	 }
-
-    	 return $fsql;
-
-    } // Fin Funcion fecha_db_obtener
+function fecha_db($campo, $formato = NULL) {
+	global $conn;
+	return $conn->fecha_db($campo, $formato);
+} // Fin Funcion fecha_db_obtener
 
 /*
 <Clase>
@@ -3232,67 +2987,9 @@ de tipo select
 <Pre-condiciones>
 <Post-condiciones>
 */
-
-function fecha_db_obtener($campo, $formato = NULL)
- { global $conn;
-
-   if(!$formato)
-        $formato="Y-m-d";  // formato por defecto php
-
-  if($conn->motor=="Oracle")
-    {
-         $reemplazos=array('Y'=>'YYYY','yyyy'=>'YYYY','d'=>'DD','M'=>'MON','m'=>'MM','y'=>'YY','H'=>'HH24','h'=>'HH','i'=>'MI','s'=>'SS'  );
-         $resfecha=$formato;
-         foreach ($reemplazos as $ph => $mot){
-         	$resfecha=preg_replace('/'.$ph.'/', "$mot", $resfecha);
-            //$resfecha=ereg_replace("$ph", "$mot", $resfecha);
-          }
-          $fsql="TO_CHAR($campo,'$resfecha')";
-
- 	 }
-   	elseif($conn->motor=="MySql")
-    	 {  //TO_DATE(TO_CHAR(sysdate,'dd/mm/yyyy '))
-
-            $reemplazos=array('d'=>'%d','m'=>'%m','y'=>'%y','Y'=>'%Y','h'=>'%h','H'=>'%H','i'=>'%i','s'=>'%s','M'=>'%b','yyyy'=>'%Y');
-            $resfecha=$formato;
-             foreach ($reemplazos as $ph => $mot)
-             { // echo $ph," = ",$mot,"<br>","^$ph([-/:])", "%Y\\1","<br>";
-             	$resfecha=preg_replace('/'.$ph.'/', "$mot", $resfecha);
-             	/*$resfecha=preg_replace('/'.$ph.'/', "$mot", $resfecha);
-                $resfecha=ereg_replace("^$ph([-/:])", "$mot\\1", $resfecha);
-                $resfecha=ereg_replace("( )$ph([-/:])", "\\1$mot\\2", $resfecha);
-                $resfecha=ereg_replace("^$ph", "$mot", $resfecha);
-         		$resfecha=ereg_replace("([-/:])$ph([-/:])", "\\1$mot\\2", $resfecha);
-         		$resfecha=ereg_replace("([-/:])$ph$", "\\1$mot", $resfecha);
-         		$resfecha=ereg_replace("$ph( )", "$mot\\1", $resfecha); // espacio entre fecha y hora*/
-             }
-         $fsql="DATE_FORMAT($campo,'$resfecha')";
-    	 }
-    elseif($conn->motor=="SqlServer"||$conn->motor=="MSSql"){
-      //solo se relacionan los principales si se requiere de cualquier otro se debe adicionar al switch
-      switch($formato){
-        case 'Y-m-d H:i:s':
-          $fsql="CONVERT(CHAR(19),".$campo.",120) ";
-        break;
-        case 'Y-m-d H:i':
-          $fsql="CONVERT(CHAR(16),".$campo.",20)";
-        break;
-        case 'H:i:s':
-          $fsql="CONVERT(CHAR(8),".$campo.",108)";
-        break;
-        case 'h:i:s':
-          $fsql="SUBSTRING(CONVERT(CHAR(20),".$campo.",100),12,20)";
-        break;
-        case 'd/m/Y-H:i:s':
-          $fsql="CONVERT(CHAR(255),".$campo.",103)+'-'+SUBSTRING(CONVERT(CHAR(20),".$campo.",100),12,20)";
-        break;
-        default:
-          //deafault Y-m-d Standar
-           $fsql=" CONVERT(VARCHAR(10), ".$campo.", 120) ";
-        break;
-      }
-    }
-    return $fsql;
+function fecha_db_obtener($campo, $formato = NULL) {
+	global $conn;
+	return $conn->fecha_db_obtener($campo, $formato);
 } // Fin Funcion fecha_db_obtener
 
 /*
@@ -3307,186 +3004,62 @@ de tipo select
 <Pre-condiciones>
 <Post-condiciones>
 */
+function fecha_db_almacenar($fecha, $formato = NULL) {
+	global $conn;
+	return $conn->fecha_db_almacenar($fecha, $formato);;
+}
+ // Fin Funcion fecha_db_almacenar
 
-function fecha_db_almacenar($fecha, $formato = NULL)
- { global $conn;
+/*
+ * <Clase>
+ * <Nombre>case_fecha</Nombre>
+ * <Parametros>$dato:nombre del campo;$compara:valor con el que se va a comparar;$valor1:valor a mostrar si la comparacion da verdadero;$valor2:valor a devolver si la comparacion da falso</Parametros>
+ * <Responsabilidades>Crea la cadena Sql requerida para el enmascaramiento de los datos<Responsabilidades>
+ * <Notas></Notas>
+ * <Excepciones></Excpciones>
+ * <Salida>Cadena Sql</Salida>
+ * <Pre-condiciones><Pre-condiciones>
+ * <Post-condiciones><Post-condiciones>
+ * </Clase>
+ */
+function case_fecha($dato, $compara, $valor1, $valor2) {
+	global $conn;
+	return $conn->case_fecha($dato, $compara, $valor1, $valor2);
+}
 
- if(is_object($fecha)){
-   $fecha=$fecha->format($formato);
- }
+	/*
+ * <Clase>
+ * <Nombre>suma_fechas</Nombre>
+ * <Parametros>$fecha1:fecha inicial;$cantidad:cantidad de tiempo a sumarle;$tipo:tipo de medida de tiempo usada 'DAY','YEAR','MONTH'</Parametros>
+ * <Responsabilidades>Crea la cadena sql que se necesita para sumar cierta cantidad de tiempo a una fecha determinada<Responsabilidades>
+ * <Notas></Notas>
+ * <Excepciones></Excepciones>
+ * <Salida>Cadena Sql</Salida>
+ * <Pre-condiciones><Pre-condiciones>
+ * <Post-condiciones><Post-condiciones>
+ * </Clase>
+ */
+function suma_fechas($fecha1, $cantidad, $tipo = "") {
+	global $conn;
+	return $conn->suma_fechas($fecha1, $cantidad, $tipo);
+}
 
-  if(!$fecha || $fecha==""){
-    $fecha=date($formato);
-  }
-  if(!$formato)
-        $formato="Y-m-d";  // formato por defecto php
-
-  if($conn->motor=="Oracle")
-    {
-    		
-    	$mystring = $fecha;
-		$findme   = 'TO_DATE';
-		$pos = strpos($mystring, $findme);
-		if ($pos === false) {
-         $reemplazos=array('M'=>'MON','H'=>'HH24','d'=>'DD','m'=>'MM','Y'=>'YYYY','y'=>'YY','h'=>'HH','i'=>'MI','s'=>'SS','yyyy'=>'YYYY' );
-         $resfecha=$formato;
-         foreach ($reemplazos as $ph => $mot)
-          { // echo $ph," = ",$mot,"<br>","^$ph([-/:])", "%Y\\1","<br>";
-          	$resfecha=preg_replace('/'.$ph.'/', "$mot", $resfecha);
-          	/*$resfecha=ereg_replace("^$ph([-/:])", "$mot\\1", $resfecha);
-          	$resfecha=ereg_replace("( )$ph([-/:])", "\\1$mot\\2", $resfecha);
-            $resfecha=ereg_replace("([-/:])$ph([-/:])", "\\1$mot\\2", $resfecha);
-            $resfecha=ereg_replace("([-/:])$ph$", "\\1$mot", $resfecha);
-            $resfecha=ereg_replace("$ph( )", "$mot\\1", $resfecha); // espacio entre fecha y hora*/
-          }
-
-	   	$fsql="TO_DATE('$fecha','$resfecha')";
-
-		}ELSE{
-			$fsql=$fecha;
-		}
-		
- 	 }
-   	elseif($conn->motor=="MySql")
-    	 {  //TO_DATE(TO_CHAR(sysdate,'dd/mm/yyyy '))
-
-    	$mystring = $fecha;
-		$findme   = 'DATE_FORMAT';
-		$pos = strpos($mystring, $findme);
-		if ($pos === false) {            $reemplazos=array('d'=>'%d','m'=>'%m','y'=>'%y','Y'=>'%Y','h'=>'%H','H'=>'%H','i'=>'%i','s'=>'%s','M'=>'%b','yyyy'=>'%Y'  );
-            $resfecha=$formato;
-             foreach ($reemplazos as $ph => $mot)
-             { // echo $ph," = ",$mot,"<br>","^$ph([-/:])", "%Y\\1","<br>";
-             	$resfecha=preg_replace('/'.$ph.'/', "$mot", $resfecha);
-                /*$resfecha=ereg_replace("^$ph([-/:])", "$mot\\1", $resfecha);
-                $resfecha=ereg_replace("( )$ph([-/:])", "\\1$mot\\2", $resfecha);
-         		$resfecha=ereg_replace("([-/:])$ph([-/:])", "\\1$mot\\2", $resfecha);
-         		$resfecha=ereg_replace("([-/:])$ph$", "\\1$mot", $resfecha);
-         		$resfecha=ereg_replace("$ph( )", "$mot\\1", $resfecha); // espacio entre fecha y hora*/
-             }
-
-    	 	$fsql="DATE_FORMAT('$fecha','$resfecha')";
-		}else{
-			$fsql=$fecha;
-		}	
-    	 }
-  elseif($conn->motor=="SqlServer"||$conn->motor=="MSSql"){
-      //solo se relacionan los principales si se requiere de cualquier otro se debe adicionar al switch
-      switch($formato){
-        case 'Y-m-d H:i:s':
-          $fsql="CONVERT(datetime,'".$fecha."',20)";
-        break;
-        case 'Y-m-d H:i':
-          $fsql="CONVERT(datetime,'".$fecha."',20)";
-        break;
-        case 'H:i:s':
-          $fsql="CONVERT(time,'".$fecha."',20)";
-        break;
-       	case 'd-m-y':
-          $fsql=" CONVERT(datetime, '".$fecha."', 3) ";
-        break;
-        default:
-          //deafault Y-m-d Standar
-           $fsql="CONVERT(datetime,'".$fecha."',20)";
-        break;
-      }
-
-    }
-    	 return $fsql;
-
-} // Fin Funcion fecha_db_almacenar
-/*<Clase>
-<Nombre>case_fecha</Nombre>
-<Parametros>$dato:nombre del campo;$compara:valor con el que se va a comparar;$valor1:valor a mostrar si la comparacion da verdadero;$valor2:valor a devolver si la comparacion da falso</Parametros>
-<Responsabilidades>Crea la cadena Sql requerida para el enmascaramiento de los datos<Responsabilidades>
-<Notas></Notas>
-<Excepciones></Excpciones>
-<Salida>Cadena Sql</Salida>
-<Pre-condiciones><Pre-condiciones>
-<Post-condiciones><Post-condiciones>
-</Clase>  */
- function case_fecha($dato,$compara,$valor1,$valor2)
- {
-  global $conn;
-   if($conn->motor=="Oracle")
-   {
-    return("decode($dato,$compara,$valor1,$valor2)");
-   }
-  elseif($conn->motor=="MySql")
-   {  if($compara="" || $compara==0)
-         $compara=">0";
-      return("IF($dato$compara,$valor2,$valor1)");
-   }
-  elseif($conn->motor=="SqlServer" || $conn->motor=="MSSql")
-   {  if($compara="" || $compara==0)
-         $compara=">0";
-      return("CASE WHEN $dato$compara THEN $valor2 ELSE $valor1 END");
-   }
-  }
-/*<Clase>
-<Nombre>suma_fechas</Nombre>
-<Parametros>$fecha1:fecha inicial;$cantidad:cantidad de tiempo a sumarle;$tipo:tipo de medida de tiempo usada 'DAY','YEAR','MONTH'</Parametros>
-<Responsabilidades>Crea la cadena sql que se necesita para sumar cierta cantidad de tiempo a una fecha determinada<Responsabilidades>
-<Notas></Notas>
-<Excepciones></Excepciones>
-<Salida>Cadena Sql</Salida>
-<Pre-condiciones><Pre-condiciones>
-<Post-condiciones><Post-condiciones>
-</Clase>  */
- function suma_fechas($fecha1,$cantidad,$tipo="")
- {
-  global $conn;
-   if($conn->motor=="Oracle"){
-    if($tipo=="HOUR"){
-      return "$fecha1+($cantidad/24)";
-    }
-    if($tipo=="" || $tipo=="DAY")
-        return "$fecha1+$cantidad";
-    else if($tipo=="MONTH")
-        return "ADD_MONTHS($fecha1,$cantidad)";
-    else if($tipo=="YEAR")
-        return "ADD_MONTHS($fecha1,$cantidad*12)";
-   }
-  elseif($conn->motor=="MySql")
-   { if($tipo=="")
-      $tipo='DAY';
-     return "DATE_ADD($fecha1, INTERVAL $cantidad $tipo)";
-   }
-  elseif($conn->motor=="SqlServer" ||$conn->motor=="MSSql")
-   { if($tipo=="")
-      $tipo='DAY';
-     return "DATEADD($tipo,$cantidad,$fecha1)";
-   }
- }
-/*<Clase>
-<Nombre>resta_fechas</Nombre>
-<Parametros>$fecha1:fecha inicial;$fecha2:fecha a restar</Parametros>
-<Responsabilidades>Crea la cadena Sql para calcular el numero de dias de diferencia entre dos fechas<Responsabilidades>
-<Notas></Notas>
-<Excepciones></Excepciones>
-<Salida>Cadena Sql</Salida>
-<Pre-condiciones><Pre-condiciones>
-<Post-condiciones><Post-condiciones>
-</Clase>  */
- function resta_fechas($fecha1,$fecha2)
- {
-  global $conn;
-   if($conn->motor=="Oracle")
-   {if($fecha2 == "")
-     $fecha2= "sysdate";
-    return "$fecha1-$fecha2 ";
-   }
-  elseif($conn->motor=="MySql")
-   { if($fecha2 == "")
-     $fecha2= "CURDATE()";
-     return "DATEDIFF($fecha1,$fecha2)";
-   }
-   elseif($conn->motor=="SqlServer" || $conn->motor=="MSSql")
-   { if($fecha2 == "")
-     $fecha2= "CURRENT_TIMESTAMP";
-     return "DATEDIFF(DAY,$fecha2,$fecha1)";
-   }
- }
+	/*
+ * <Clase>
+ * <Nombre>resta_fechas</Nombre>
+ * <Parametros>$fecha1:fecha inicial;$fecha2:fecha a restar</Parametros>
+ * <Responsabilidades>Crea la cadena Sql para calcular el numero de dias de diferencia entre dos fechas<Responsabilidades>
+ * <Notas></Notas>
+ * <Excepciones></Excepciones>
+ * <Salida>Cadena Sql</Salida>
+ * <Pre-condiciones><Pre-condiciones>
+ * <Post-condiciones><Post-condiciones>
+ * </Clase>
+ */
+function resta_fechas($fecha1, $fecha2) {
+	global $conn;
+	return $conn->resta_fechas($fecha1, $fecha2);
+}
  /*<Clase>
 <Nombre>resta_horas</Nombre>
 <Parametros>$fecha1:fecha inicial;$fecha2:fecha a restar</Parametros>
@@ -3497,27 +3070,10 @@ function fecha_db_almacenar($fecha, $formato = NULL)
 <Pre-condiciones><Pre-condiciones>
 <Post-condiciones><Post-condiciones>
 </Clase>  */
-function resta_horas($fecha1,$fecha2)
- {
-  global $conn;
-   if($conn->motor=="Oracle")
-   {if($fecha2 == "")
-     $fecha2= "sysdate";
-    return "($fecha1-$fecha2)*24";
-   }
-  elseif($conn->motor=="MySql")
-   { if($fecha2 == "")
-     $fecha2= "CURDATE()";
-     return "timediff($fecha1,$fecha2)";
-   }
-  elseif($conn->motor=="SqlServer" ||$conn->motor=="MSSql")
-   { if($fecha2 == "")
-     $fecha2= "CURRENT_TIMESTAMP";
-     return "DATEDIFF(HOUR,$fecha2,$fecha1)";
-   }
-
-
- }
+function resta_horas($fecha1, $fecha2) {
+	global $conn;
+	return $conn->resta_horas($fecha1, $fecha2);
+}
 
 /*<Clase>
 <Nombre>fecha_actual</Nombre>
@@ -3529,56 +3085,15 @@ function resta_horas($fecha1,$fecha2)
 <Pre-condiciones>debe estar definido el motor de base de datos<Pre-condiciones>
 <Post-condiciones><Post-condiciones>
 </Clase>  */
-function fecha_actual($fecha1,$fecha2){
-global $conn;
-if($conn->motor=="Oracle")
-  return "sysdate";
-elseif($conn->motor=="MySql")
-   return "CURDATE()";
-elseif($conn->motor=="SqlServer" || $conn->motor=="MSSql")
-   return "CONVERT(CHAR(10),CURRENT_TIMESTAMP,20)";
+function fecha_actual($fecha1, $fecha2) {
+	global $conn;
+	return $conn->fecha_actual($fecha1, $fecha2);
 }
-///Recibe la fecha inicial y la fecha que se debe controlar o fecha de referencia, si tiempo =1 es que la fecha iniicial esta por encima ese tiempo de la fecha de control ejemplo si fecha_inicial=2010-11-11 y fecha_control=2011-12-11 quiere decir que ha pasado 1 año , 1 mes y 0 dias desde la fecha inicial a la de control
-function compara_fechas($fecha_control,$fecha_inicial){
-global $conn;
-if(!strlen($fecha_control)){
-    $fecha_control = date('Y-m-d');
- }
- if(MOTOR=='MSSql' || MOTOR=='SqlServer'){
- 	$resultado=ejecuta_filtro_tabla("SELECT ".resta_fechas("'".$fecha_control."'","'".$fecha_inicial."'")." AS diff",$conn);
- }
- else{
- 	$resultado=ejecuta_filtro_tabla("SELECT ".resta_fechas("'".$fecha_control."'","'".$fecha_inicial."'")." AS diff FROM dual",$conn);
- }
- return($resultado);
- // separamos en partes las fechas
- $array_inicial = date_parse($fecha_inicial );
- $array_actual = date_parse($fecha_control);
- $anos =  $array_actual["year"] - $array_inicial["year"]; // calculamos años
- $meses = $array_actual["month"] - $array_inicial["month"]; // calculamos meses
- $dias =  $array_actual["day"] - $array_inicial["day"]; // calculamos días
- //ajuste de posible negativo en $días
-if ($dias<0){
-  --$meses;
-  if($meses<0){
-    $anos--;
-    $meses=$meses + 12;
-    if($array_actua["month"]==1)
-      $mes_actual=12;
-    else
-      $mes_actual=($array_actual["month"]-1);
-  }
-  $mes = mktime( 0, 0, 0, $mes_actual,1, $array_actual["year"]  );
-  $dias=$dias + date('t',$mes);
-}
-if($anos<0){
-  $tiempo=1;
-  $anos=abs($anos);
-}
-else{
-  $tiempo=0;
-}
-return(array("year"=>$anos,"month"=>$meses,"day"=>$dias,"tiempo"=>$tiempo));
+
+// /Recibe la fecha inicial y la fecha que se debe controlar o fecha de referencia, si tiempo =1 es que la fecha iniicial esta por encima ese tiempo de la fecha de control ejemplo si fecha_inicial=2010-11-11 y fecha_control=2011-12-11 quiere decir que ha pasado 1 año , 1 mes y 0 dias desde la fecha inicial a la de control
+function compara_fechas($fecha_control, $fecha_inicial) {
+	global $conn;
+	return $conn->compara_fechas($fecha_control, $fecha_inicial);
 }
 /*<Clase>
 <Nombre>dbToPdf</Nombre>
@@ -3807,49 +3322,67 @@ else{
 <Post-condiciones><Post-condiciones>
 </Clase>  */
 function crear_archivo($nombre,$texto=NULL,$modo='wb'){
-global $cont;
-$cont++;
-//echo("Creando Archivo ".$nombre);
-$path=pathinfo($nombre);
-$ruta_dir=explode("/",$path["dirname"]);
-$cont1=count($ruta_dir);
-if($cont1){
-  $ruta=$ruta_dir[0];
-  for($i=0;$i<$cont1;$i++){
-    if(!is_dir($ruta)){
-      if(mkdir($ruta,PERMISOS_CARPETAS)){
-        chmod($ruta,PERMISOS_CARPETAS);
-        if(isset($ruta_dir[$i+1]))
-          $ruta.="/".$ruta_dir[$i+1];
-      }
-      else{
-        alerta("Problemas al generar las carpetas");
-        return(false);
-      }
-    }
-    else {
-      if(isset($ruta_dir[$i+1]))
-        $ruta.="/".$ruta_dir[$i+1];
-    }
-  }
+	$path = pathinfo($nombre);
+	$ruta = $path["dirname"];
+	if (!is_dir($ruta)) {
+		if (mkdir($ruta, PERMISOS_CARPETAS, true)) {
+			chmod($ruta, PERMISOS_CARPETAS);
+		} else {
+			/*$e = new \Exception($nombre);
+			throw $e;*/
+			alerta("Problemas al generar la carpeta $ruta desde " . getcwd());
+			return (false);
+		}
+	}
+	$f = fopen($nombre, $modo);
+	if ($f) {
+		chmod($nombre, PERMISOS_ARCHIVOS);
+		$texto = str_replace("? >", "?" . ">", $texto);
+		if (fwrite($f, $texto, strlen($texto))) {
+			fclose($f);
+			return ($nombre);
+		} else {
+			fclose($f);
+		}
+	} else {
+		alerta('No se puede crear el archivo: ' . $nombre);
+	}
+	return (false);
 }
-$f=fopen($nombre,$modo);
-if($f){
-  chmod($nombre,PERMISOS_ARCHIVOS);
-  $texto=str_replace("? >","?".">",$texto);
-  if(fwrite($f,$texto,strlen($texto))){
-    fclose($f);
-    return($nombre);
-  }
-  else {
-    fclose($f);
-  }
+
+function crear_archivo_formato($nombre,$texto=NULL,$modo='wb'){
+	global $cont;
+	//file_put_contents("debug.txt", "Nombre1: $nombre", FILE_APPEND);
+	$ruta_superior = __DIR__ . "/" . FORMATOS_CLIENTE;
+	$nombre = $ruta_superior . $nombre;
+	//file_put_contents("debug.txt", "Nombre1: $nombre", FILE_APPEND);
+	$path = pathinfo($nombre);
+	$ruta = $path["dirname"];
+	if (!is_dir($ruta)) {
+		if (mkdir($ruta, PERMISOS_CARPETAS, true)) {
+			chmod($ruta, PERMISOS_CARPETAS);
+		} else {
+			alerta("Problemas al generar las carpetas");
+			return (false);
+		}
+	}
+	$f = fopen($nombre, $modo);
+	if ($f) {
+		chmod($nombre, PERMISOS_ARCHIVOS);
+		$texto = str_replace("? >", "?" . ">", $texto);
+		if (fwrite($f, $texto, strlen($texto))) {
+			fclose($f);
+			return ($nombre);
+		} else {
+			fclose($f);
+		}
+	} else {
+		alerta('No se puede crear el archivo: ' . $nombre);
+	}
+	return (false);
 }
-else{
-  alerta('No se puede crear el archivo: '.$nombre);
-}
-return(false);
-}
+
+
 /*<Clase>
 <Nombre>crear_destino</Nombre>
 <Parametros>$destino:estructura de carpetas a crear</Parametros>
@@ -4100,7 +3633,7 @@ else
 }
 
 function ruta_almacenamiento($tipo,$raiz=1) {
-require_once("StorageUtils.php");
+	require_once("StorageUtils.php");
 	$max_salida=6; // Previene algun posible ciclo infinito limitando a 10 los ../
 	$ruta_db_superior=$ruta="";
 	while($max_salida>0){

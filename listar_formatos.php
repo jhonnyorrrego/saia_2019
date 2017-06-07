@@ -33,7 +33,7 @@ $cadena='
 				<td style="text-align:center;" class="encabezado_list">
 				&nbsp;<br/>
 					'.$etiqueta_proceso.'
-				<br/>	&nbsp;	
+				<br/>	&nbsp;
 				</td>
 			<tr>
 ';
@@ -43,14 +43,14 @@ for($i=0;$i<$formatos['numcampos'];$i++){
 	$etiqueta=$formatos[$i]['etiqueta'];
 	$etiqueta=strtolower($etiqueta);
 	$etiqueta=ucwords($etiqueta);
-													
+
 	$cadena.='
 			<tr bgcolor="#CCCCCC">
 				<td style="text-align:center;">
-					<a href="'.$ruta_db_superior.'formatos/'.$formatos[$i]['nombre'].'/'.$formatos[$i]['ruta_adicionar'].'">'.$etiqueta.'</a>
+					<a href="'.$ruta_db_superior.FORMATOS_CLIENTE.$formatos[$i]['nombre'].'/'.$formatos[$i]['ruta_adicionar'].'">'.$etiqueta.'</a>
 				</td>
 			<tr>
-	';	
+	';
 }
 $cadena.='</table></div>';
 

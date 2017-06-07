@@ -13,7 +13,6 @@ include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
 $validar_enteros=array("x_idpermiso_perfil","x_modulo_idmodulo","x_perfil_idperfil");
 desencriptar_sqli('form_info');
-//echo(librerias_jquery());
 usuario_actual();
 ?>
 <htm>
@@ -28,7 +27,6 @@ $x_perfil_idperfil = Null;
 $x_caracteristica_propio = Null;
 $x_caracteristica_grupo = Null;
 $x_caracteristica_total = Null;
-
 echo(estilo_bootstrap());
 echo(librerias_jquery("1.7"));
 echo(librerias_notificaciones());

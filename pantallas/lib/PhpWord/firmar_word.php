@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 <?php
 
 //	POSTERIOR AL CONFIRMAR, se debe definir la variable ruta_db_superior desde donde se hace el llamado.
@@ -250,6 +251,8 @@ if ($arr_ruta["ruta"] != '') {
 
 ?>
 =======
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 <?php
 include_once ($ruta_db_superior . "pantallas/lib/PhpWord/funciones_include.php");
 require_once ($ruta_db_superior . 'pantallas/lib/PhpWord/Autoloader.php');
@@ -423,5 +426,9 @@ if (file_exists($ruta_docx . 'documento_word.docx')) {
 		}
 	}
 }
+<<<<<<< HEAD
 ?>
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+?>
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889

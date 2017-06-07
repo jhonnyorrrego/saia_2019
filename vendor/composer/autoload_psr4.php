@@ -6,6 +6,7 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+<<<<<<< HEAD
     'Symfony\\Polyfill\\Mbstring\\' => array($vendorDir . '/symfony/polyfill-mbstring'),
     'Stringy\\' => array($vendorDir . '/danielstjules/stringy/src'),
 <<<<<<< HEAD
@@ -15,4 +16,6 @@ return array(
     'Icewind\\SMB\\' => array($vendorDir . '/icewind/smb/src'),
 =======
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 );

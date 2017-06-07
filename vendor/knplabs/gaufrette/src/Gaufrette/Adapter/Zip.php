@@ -6,15 +6,21 @@ use ZipArchive;
 use Gaufrette\Adapter;
 use Gaufrette\Util;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 use Gaufrette\Exception;
 
 /**
  * ZIP Archive adapter
+<<<<<<< HEAD
 =======
 
 /**
  * ZIP Archive adapter.
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
  *
  * @author Boris Guéry <guery.b@gmail.com>
  * @author Antoine Hérault <antoine.herault@gmail.com>
@@ -46,10 +52,14 @@ class Zip implements Adapter
 
     /**
 <<<<<<< HEAD
+<<<<<<< HEAD
      * {@inheritDoc}
 =======
      * {@inheritdoc}
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * {@inheritDoc}
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function read($key)
     {
@@ -62,10 +72,14 @@ class Zip implements Adapter
 
     /**
 <<<<<<< HEAD
+<<<<<<< HEAD
      * {@inheritDoc}
 =======
      * {@inheritdoc}
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * {@inheritDoc}
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function write($key, $content)
     {
@@ -82,10 +96,14 @@ class Zip implements Adapter
 
     /**
 <<<<<<< HEAD
+<<<<<<< HEAD
      * {@inheritDoc}
 =======
      * {@inheritdoc}
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * {@inheritDoc}
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function exists($key)
     {
@@ -94,10 +112,14 @@ class Zip implements Adapter
 
     /**
 <<<<<<< HEAD
+<<<<<<< HEAD
      * {@inheritDoc}
 =======
      * {@inheritdoc}
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * {@inheritDoc}
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function keys()
     {
@@ -114,10 +136,14 @@ class Zip implements Adapter
      * @todo implement
      *
 <<<<<<< HEAD
+<<<<<<< HEAD
      * {@inheritDoc}
 =======
      * {@inheritdoc}
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * {@inheritDoc}
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function isDirectory($key)
     {
@@ -126,10 +152,14 @@ class Zip implements Adapter
 
     /**
 <<<<<<< HEAD
+<<<<<<< HEAD
      * {@inheritDoc}
 =======
      * {@inheritdoc}
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * {@inheritDoc}
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function mtime($key)
     {
@@ -140,10 +170,14 @@ class Zip implements Adapter
 
     /**
 <<<<<<< HEAD
+<<<<<<< HEAD
      * {@inheritDoc}
 =======
      * {@inheritdoc}
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * {@inheritDoc}
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function delete($key)
     {
@@ -156,10 +190,14 @@ class Zip implements Adapter
 
     /**
 <<<<<<< HEAD
+<<<<<<< HEAD
      * {@inheritDoc}
 =======
      * {@inheritdoc}
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * {@inheritDoc}
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function rename($sourceKey, $targetKey)
     {
@@ -173,6 +211,7 @@ class Zip implements Adapter
     /**
      * Returns the stat of a file in the zip archive
 <<<<<<< HEAD
+<<<<<<< HEAD
      *  (name, index, crc, mtime, compression size, compression method, filesize)
      *
      * @param $key
@@ -182,6 +221,11 @@ class Zip implements Adapter
      * @param $key
      *
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     *  (name, index, crc, mtime, compression size, compression method, filesize)
+     *
+     * @param $key
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      * @return array|bool
      */
     public function getStat($key)
@@ -201,9 +245,13 @@ class Zip implements Adapter
                 $this->zipArchive->close();
             } catch (\Exception $e) {
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
             }
             unset($this->zipArchive);
         }
@@ -255,10 +303,14 @@ class Zip implements Adapter
 
     /**
 <<<<<<< HEAD
+<<<<<<< HEAD
      * Saves archive modifications and updates current ZipArchive instance
 =======
      * Saves archive modifications and updates current ZipArchive instance.
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * Saves archive modifications and updates current ZipArchive instance
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      *
      * @throws \RuntimeException If file could not be saved
      */

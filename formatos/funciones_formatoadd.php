@@ -25,16 +25,12 @@ $sAction = @$_POST["a_add"];
 if (($sAction == "") || ((is_null($sAction)))) {
 	$sKey = @$_GET["key"];
 	$sKey = (get_magic_quotes_gpc()) ? stripslashes($sKey) : $sKey;
-	if ($sKey <> "") {
+	if ($sKey != "") {
 		$sAction = "C"; // Copy record
-	}
-	else
-	{
+	} else {
 		$sAction = "I"; // Display blank record
 	}
-}
-else
-{
+} else {
 	// Get fields from form
 	$x_idfuncion_formato = @$_POST["x_idfuncion_formato"];
 	$x_nombre = @$_POST["x_nombre"];
@@ -46,43 +42,50 @@ else
 	$x_campodb = @$_POST["x_campodb"];
 }
 
-$adicionar=@$_REQUEST["adicionar"];
-$noadiciona=@$_REQUEST["noadiciona"];
-$editar=@$_REQUEST["editar"];
-if($adicionar==""&&$sAction!="A"){
- if(@$_REQUEST["pantalla"]=="tiny")
-  {include_once("generar_formato.php");
-   generar_tabla($x_formato);
-   crear_formato_ae($x_formato,"adicionar");
-   crear_formato_ae($x_formato,"editar");
-   crear_formato_mostrar($x_formato);
-   crear_formato_buscar($x_formato,"buscar");   
-  }  
-  redirecciona("formatoview.php?key=".$x_formato);
+$adicionar = @$_REQUEST["adicionar"];
+$noadiciona = @$_REQUEST["noadiciona"];
+$editar = @$_REQUEST["editar"];
+if ($adicionar == "" && $sAction != "A") {
+	if (@$_REQUEST["pantalla"] == "tiny") {
+		include_once ("generar_formato.php");
+		$generar = new GenerarFormato($x_formato, "", '');
+		$ruta_padre = dirname(__DIR__);
+		chdir($ruta_padre);
+
+		$generar->generar_tabla();
+		$generar->crear_formato_ae("adicionar");
+		$generar->crear_formato_ae("editar");
+		$generar->crear_formato_mostrar();
+
+		$buscar = new GenerarBuscar($x_formato, "buscar");
+		$buscar->crear_formato_buscar();
+
+		chdir(__DIR__);
+	}
+	redirecciona("formatoview.php?key=" . $x_formato);
 }
-switch ($sAction)
-{
-	case "C": // Get a record to display
-		if (!LoadData($sKey,$conn)) { // Load Record based on key
+switch ($sAction) {
+	case "C" : // Get a record to display
+		if (!LoadData($sKey, $conn)) { // Load Record based on key
 			$_SESSION["ewmsg"] = "No Record Found for Key = " . $sKey;
-		//	//phpmkr_db_close($conn);
+			// //phpmkr_db_close($conn);
 			ob_end_clean();
 			redirecciona("Location: funciones_formatolist.php");
 			exit();
 		}
 		break;
-	case "A": // Add
+	case "A" : // Add
 		if (AddData($conn)) { // Add New Record
-		  alerta("Funcion Adicionada");
-	//		//phpmkr_db_close($conn);
-			if($adicionar!="")
-			 redirecciona("funciones_formatoadd.php?adicionar=".$adicionar."&editar=".$editar."&idformato=".$x_formato);
-			else  
-			 redirecciona("funciones_formatolist.php?idformato=".$x_formato);
+			alerta("Funcion Adicionada");
+			// //phpmkr_db_close($conn);
+			if ($adicionar != "")
+				redirecciona("funciones_formatoadd.php?adicionar=" . $adicionar . "&editar=" . $editar . "&idformato=" . $x_formato);
+			else
+				redirecciona("funciones_formatolist.php?idformato=" . $x_formato);
 		}
-		if($noadiciona!=""){
-		 alerta("No se Adiciona la Funcion");
-		 redirecciona("funciones_formatoadd.php?adicionar=".$noadiciona."&editar=".$editar."&idformato=".$x_formato);
+		if ($noadiciona != "") {
+			alerta("No se Adiciona la Funcion");
+			redirecciona("funciones_formatoadd.php?adicionar=" . $noadiciona . "&editar=" . $editar . "&idformato=" . $x_formato);
 		}
 		break;
 }
@@ -99,7 +102,7 @@ echo(librerias_jquery());
 </script>
 <script type="text/javascript">
 <!--
-EW_dateSep = "/"; // set date separator	
+EW_dateSep = "/"; // set date separator
 
 //-->
 </script>
@@ -163,7 +166,7 @@ if(!$funciones["numcampos"] && !$campos["numcampos"]){
 echo("<tr class='encabezado_list' align='center'><!--td>&nbsp;</td--><td>Almacenada</td><td>Nombre</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp</td><td>&nbsp;</td></tr>");
 }
 if($funciones["numcampos"]){
-  echo("<tr class='encabezado_list' align='center'><!--td>&nbsp;</td--><td>Almacenada</td><td>Nombre</td><td>Descripcion</td><td>ruta</td><td>Acciones<br>Mostrar(m)<br>Adicionar(a)<br>editar(e)</td><td>Pertenece al <br />Formato</td></tr>"); 
+  echo("<tr class='encabezado_list' align='center'><!--td>&nbsp;</td--><td>Almacenada</td><td>Nombre</td><td>Descripcion</td><td>ruta</td><td>Acciones<br>Mostrar(m)<br>Adicionar(a)<br>editar(e)</td><td>Pertenece al <br />Formato</td></tr>");
   }
 for($i=0;$i<$funciones["numcampos"];$i++){
   echo("<tr bgcolor='#F5F5F5' align='center'><!--td><a href='funciones_formatoedit.php?key=".$funciones[$i]["idfunciones_formato"]."'>Editar</a></td--><td>Si</td><td>".delimita($funciones[$i]["nombre"],100)."</td><td>".delimita($funciones[$i]["descripcion"],100)."</td><td>".$funciones[$i]["ruta"]."</td><td>".$funciones[$i]["acciones"]."</td>");
@@ -179,7 +182,7 @@ echo($sql." ---<br />");
 print_r($campos);*/
 if($campos["numcampos"]){
   echo("<tr class='encabezado_list' align='center'><!--td>&nbsp;</td--><td>Almacenada</td><td>Nombre</td><td>Descripcion</td><td>ruta</td><td>Acciones<br>Mostrar(m)<br>Adicionar(a)<br>editar(e)</td><td>Tipo de Dato</td></tr>");
-} 
+}
 for($i=0;$i<$campos["numcampos"];$i++){
   echo("<tr bgcolor='#F5F5F5' align='center'><!--td><a href='funciones_formatoedit.php?key=".$campos[$i]["idfunciones_formato"]."'>Editar</a></td--><td>Si</td><td>".delimita($campos[$i]["nombre"],100)."</td><td>".delimita($campos[$i]["ayuda"],100)."</td><td>".$campos[$i]["etiqueta_html"]."</td><td>".$campos[$i]["acciones"]."</td>");
 echo("<td>".$campos[$i]["tipo_dato"]."</td>");
@@ -231,7 +234,7 @@ for($i=0;$i<$cont;$i++){
 		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">acciones</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
 <?php if (!(!is_null($x_acciones)) || ($x_acciones == "")) { $x_acciones = "m";} // Set default value ?>
-<?php 
+<?php
 $ar_x_acciones = explode(",",@$x_acciones);
 $x_accionesChk = "";
 $x_accionesChk .= "<input type=\"checkbox\" name=\"x_acciones[]\" value=\"" . htmlspecialchars("a"). "\"";
@@ -350,28 +353,28 @@ function AddData($conn)
 	}
 
 	// Field nombre
-	$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_nombre) : $x_nombre; 
+	$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_nombre) : $x_nombre;
 	$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
 	$fieldList["nombre"] = $theValue;
-  
+
   // Field nombre_funcion
-  $theValue = (!get_magic_quotes_gpc()) ? addslashes($x_nombre) : $x_nombre; 
+  $theValue = (!get_magic_quotes_gpc()) ? addslashes($x_nombre) : $x_nombre;
 	$theValue = ($theValue != "") ? " '" . str_replace("*}","",str_replace("{*","",$theValue)) . "'" : "NULL";
 	$fieldList["nombre_funcion"] = $theValue;
-	
-  
+
+
   // Field etiqueta
-	$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_etiqueta) : $x_etiqueta; 
+	$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_etiqueta) : $x_etiqueta;
 	$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
 	$fieldList["etiqueta"] = $theValue;
 
 	// Field descripcion
-	$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_descripcion) : $x_descripcion; 
+	$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_descripcion) : $x_descripcion;
 	$theValue = ($theValue != "") ? " '" . $theValue . "'" : "'"."'";
 	$fieldList["descripcion"] = $theValue;
 
 	// Field ruta
-	$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_ruta) : $x_ruta; 
+	$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_ruta) : $x_ruta;
 	$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
 	$fieldList["ruta"] = $theValue;
 
@@ -386,7 +389,7 @@ function AddData($conn)
 	$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
 	$fieldList["acciones"] = $theValue;
 
-  //Si lo que se requeire en el formato es un campo entonces no es necesario almacenar los datos que se encuentran en funcion 
+  //Si lo que se requeire en el formato es un campo entonces no es necesario almacenar los datos que se encuentran en funcion
   if($x_campodb==1){
     $nombre=str_replace("{*","",$fieldList["nombre"]);
     $nombre=str_replace("*}","",$nombre);
@@ -403,7 +406,7 @@ function AddData($conn)
 	$strsql .= ")";
 	guardar_traza($strsql,$formato[0]["nombre_tabla"]);
 	phpmkr_query($strsql, $conn) or die("Failed to execute query" . phpmkr_error() . ' SQL:<br />' . $strsql." <br />");
-  
+
 	return true;
 }
 ?>

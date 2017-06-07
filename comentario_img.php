@@ -85,38 +85,22 @@ $tipo_pag = "";
 
 $tipo_doc = @$_SESSION["tipo_doc"];
 
-if (isset($_REQUEST["enlace"]) && $_REQUEST["enlace"] != "") {
-	$enlace = $_REQUEST["enlace"];
-	if (stristr($enlace, "factura_final.php")) {
-		$enlace .= "&mostrar=true";
-	}
-	if (isset($_REQUEST["id"]) && strpos($enlace, '.pdf') == false) {
-		$enlace .= "&iddoc='" . $_REQUEST["id"] . "'";
-	}
-	$_SESSION["pagina_actual"] = $_REQUEST["id"];
-	$pag = $_SESSION["pagina_actual"];
-	$_SESSION["tipo_pagina"] = $enlace;
-	$tipo_pag = "PLANTILLA";
-} elseif (isset($_REQUEST["pag"])) {
-	$pag = $_REQUEST["pag"];
-	$tipo_pag = "PAGINA";
-	$_SESSION["tipo_pagina"] = "pagina";
-	$_SESSION["pagina_actual"] = $pag;
-} elseif (isset($_REQUEST["tipo"])) {
-	$pag = $_REQUEST["pag"];
-	$tipo_pag = "REGISTRO";
-	$_SESSION["tipo_pagina"] = "pagina";
-	$_SESSION["pagina_actual"] = $pag;
-} elseif (isset($_REQUEST["rotar"])) {
-	$pag = $_SESSION["pagina_actual"];
-	$valida_pag = busca_filtro_tabla("*", "pagina", "id_documento=$llave AND consecutivo='$pag'", "", $conn);
-	if (!($valida_pag["numcampos"])) {
-		echo utf8_encode("<script type='text/javascript'>alert('Debe seleccionar una p�gina del documento'); parent.$frame.location='ordenar.php?key=" . $llave . "&accion=mostrar';</script>");
-	}
-} elseif (isset($_REQUEST["pagina"])) {
-	$pag = $_SESSION["pagina_actual"];
-} else {
-	echo utf8_encode("<script type='text/javascript'>alert('Debe seleccionar una p�gina del documento'); parent.$frame.location='ordenar.php?key=" . $llave . "&accion=mostrar';</script>");
+// Se Elimina un comentario de la imagen en la base de datos
+if(isset($_GET["eliminar"]) && $_GET["eliminar"])
+{ $datos=busca_filtro_tabla("","comentario_img","idcomentario_img=".$_GET["id"],"",$conn);
+  $eliminar = "DELETE FROM comentario_img WHERE idcomentario_img=".$_GET["id"];
+   phpmkr_query($eliminar, $conn);
+	 if(is_object($datos[0]["fecha"]))$datos[0]["fecha"]=$datos[0]["fecha"]->format('Y-m-d');
+   $detalle="comentario creado por:".$datos[0]["funcionario"].", el: ".$datos[0]["fecha"].", texto: ".$datos[0]["comentario"];
+   registrar_accion_digitalizacion($datos[0]["documento_iddocumento"],'ELIMINACION COMENTARIO',$detalle);
+   redirecciona("comentario_img.php?key=".$llave."&pag=".$_SESSION["pagina_actual"]."&accion=mostrar");
+   if($_SESSION["tipo_pagina"]!="pagina")
+   {
+    $ruta=strtolower($_REQUEST["plantilla"])."/mostrar_".strtolower($_REQUEST["plantilla"]).".php?tipo=1&iddoc=$llave";
+    redirecciona("comentario_mostrar.php?enlace=" . FORMATOS_CLIENTE . "$ruta&id=$llave");
+  }
+   else
+     redirecciona("comentario_mostrar.php?key=".$llave."&pag=".$_SESSION["pagina_actual"]."&accion=mostrar");
 }
 $paginas_doc = busca_filtro_tabla("DISTINCT pagina, consecutivo", "pagina", "id_documento=" . $llave, "pagina", $conn);
 if ($paginas_doc["numcampos"] > 0 || $tipo_pag != "PAGINA" || $tipo_pag != "REGISTRO") {

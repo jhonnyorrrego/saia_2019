@@ -22,6 +22,7 @@ s('string')->toTitleCase()->ensureRight('y') == 'Stringy'
     * [create](#createmixed-str--encoding-)
 * [Instance methods](#instance-methods)
 <<<<<<< HEAD
+<<<<<<< HEAD
     * [append](#appendstring-string)
     * [at](#atint-index)
     * [between](#betweenstring-start-string-end--int-offset)
@@ -100,6 +101,8 @@ s('string')->toTitleCase()->ensureRight('y') == 'Stringy'
     * [upperCamelize](#uppercamelize)
     * [upperCaseFirst](#uppercasefirst)
 =======
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 <table>
     <tr>
         <td>[append](#appendstring-string)</td>
@@ -222,7 +225,10 @@ s('string')->toTitleCase()->ensureRight('y') == 'Stringy'
         <td>[upperCaseFirst](#uppercasefirst)</td>
     </tr>
 </table>
+<<<<<<< HEAD
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 * [Extensions](#extensions)
 * [Tests](#tests)
 * [License](#license)
@@ -257,10 +263,14 @@ in your composer.json file:
 ```json
 "require": {
 <<<<<<< HEAD
+<<<<<<< HEAD
     "danielstjules/stringy": "~2.3"
 =======
     "danielstjules/stringy": "~2.4"
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+    "danielstjules/stringy": "~2.4"
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 }
 ```
 
@@ -521,7 +531,10 @@ s('fòôbàř')->endsWith('bàř', true); // true
 ```
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 ##### endsWithAny(string[] $substrings [, boolean $caseSensitive = true ])
 
 Returns true if the string ends with any of $substrings, false otherwise.
@@ -532,7 +545,10 @@ by setting $caseSensitive to false.
 s('fòôbàř')->endsWith(['bàř', 'baz'], true); // true
 ```
 
+<<<<<<< HEAD
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 ##### ensureLeft(string $substring)
 
 Ensures that the string begins with $substring. If it doesn't, it's prepended.
@@ -916,7 +932,10 @@ s('FÒÔbàřbaz')->startsWith('fòôbàř', false); // true
 ```
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 ##### startsWithAny(string[] $substrings [, boolean $caseSensitive = true ])
 
 Returns true if the string begins with any of $substrings, false
@@ -927,7 +946,10 @@ insensitive by setting $caseSensitive to false.
 s('FÒÔbàřbaz')->startsWith(['fòô', 'bàř'], false); // true
 ```
 
+<<<<<<< HEAD
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 ##### slice(int $start [, int $end ])
 
 Returns the substring beginning at $start, and up to, but not including
@@ -950,7 +972,10 @@ s('foo,bar,baz')->split(',', 2); // ['foo', 'bar']
 ```
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 ##### stripWhitespace()
 
 Strip all whitespace characters. This includes tabs and newline
@@ -961,7 +986,10 @@ and ideographic space.
 s('   Ο     συγγραφέας  ')->stripWhitespace(); // 'Οσυγγραφέας'
 ```
 
+<<<<<<< HEAD
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 ##### substr(int $start [, int $length ])
 
 Returns the substring beginning at $start with the specified $length.

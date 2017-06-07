@@ -23,6 +23,7 @@ use function Gaufrette\Adapter\file_exists;
 
 error_reporting(E_ALL);
 
+<<<<<<< HEAD
 error_reporting(E_ALL);
 
 if (!defined('CLI')) {
@@ -32,11 +33,17 @@ define('EOL', CLI ? PHP_EOL : '<br />');
 define('SCRIPT_FILENAME', basename($_SERVER['SCRIPT_FILENAME'], '.php'));
 define('IS_INDEX', SCRIPT_FILENAME == 'index');
 =======
+=======
+if (!defined('CLI')) {
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 	define('CLI', (PHP_SAPI == 'cli') ? true : false);
 	define('EOL', CLI ? PHP_EOL : '<br />');
 	define('SCRIPT_FILENAME', basename($_SERVER['SCRIPT_FILENAME'], '.php'));
 	define('IS_INDEX', SCRIPT_FILENAME == 'index');
+<<<<<<< HEAD
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 }
 
 Autoloader::register();
@@ -76,6 +83,7 @@ $idformato = null;
 $ruta_combinar = null;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 if(@$anexo['numcampos']) {
 	$arr_ruta = StorageUtils::resolver_ruta($anexo[0]["ruta"]);
 
@@ -110,6 +118,8 @@ if($arr_ruta["ruta"] != '') {
 	$templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor($ruta_procesar);
 	
 =======
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 if (@$anexo['numcampos']) {
 	$ruta_anexo = explode('anexos', $anexo[0]["ruta"]);
 	$ruta_combinar = $ruta_db_superior . $ruta_anexo[0] . 'pdf_temp/';
@@ -126,7 +136,10 @@ if (file_exists($ruta_docx . 'documento_word.docx')) {
 
 	$templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor($ruta_docx . 'documento_word.docx');
 
+<<<<<<< HEAD
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 	$campos_word = $templateProcessor->getVariables();
 
 	if (@$_REQUEST["iddoc"] && count($campos_word)) {
@@ -136,6 +149,7 @@ if (file_exists($ruta_docx . 'documento_word.docx')) {
 			$templateProcessor->setValue('formato_numero', $numero_radicado[0]['numero']);
 
 			$campo_qr_word = "codigo_qr";
+<<<<<<< HEAD
 <<<<<<< HEAD
 			if(in_array($campo_qr_word, $campos_word)) {
 				$src_qr = obtener_codigo_qr($idformato, $_REQUEST["iddoc"]);
@@ -157,6 +171,11 @@ if (file_exists($ruta_docx . 'documento_word.docx')) {
 				$src = $ruta_db_superior . obtener_codigo_qr($idformato, $_REQUEST["iddoc"]);
 
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+			if (in_array($campo_qr_word, $campos_word)) {
+				$src = $ruta_db_superior . obtener_codigo_qr($idformato, $_REQUEST["iddoc"]);
+
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 				$img2 = array(
 						array(
 								'img' => htmlspecialchars($src),
@@ -168,6 +187,7 @@ if (file_exists($ruta_docx . 'documento_word.docx')) {
 				);
 				$templateProcessor->setImg($campo_qr_word, $img2);
 			}
+<<<<<<< HEAD
 <<<<<<< HEAD
 			
 			$directorio_out = $ruta_docx . "/";
@@ -187,12 +207,23 @@ if (file_exists($ruta_docx . 'documento_word.docx')) {
 
 			if (file_exists($directorio_out . $archivo_out . $extension_doc)) {
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+
+			$directorio_out = $ruta_docx;
+
+			$archivo_out = 'documento_word';
+
+			$extension_doc = '.docx';
+
+			if (file_exists($directorio_out . $archivo_out . $extension_doc)) {
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 				unlink($directorio_out . $archivo_out . $extension_doc);
 				unlink($directorio_out . $archivo_out . '.pdf');
 			}*/
 			$marca_agua = mostrar_estado_documento($_REQUEST['iddoc']);
 			$templateProcessor->setTextWatermark($marca_agua);
 			$templateProcessor->saveAs($directorio_out . $archivo_out . $extension_doc);
+<<<<<<< HEAD
 <<<<<<< HEAD
 			
 			$ruta_temporal = busca_filtro_tabla("valor", "configuracion", "nombre='ruta_temporal'", "", $conn);
@@ -204,6 +235,8 @@ if (file_exists($ruta_docx . 'documento_word.docx')) {
 			if(is_file($word_temp . $extension_doc)) {
 				$comando = 'export HOME=/tmp && libreoffice5.1 --headless --convert-to pdf:writer_pdf_Export --outdir ' . dirname($word_temp) . ' ' . $word_temp . $extension_doc;
 =======
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 
 			if (file_exists($directorio_out . $archivo_out . $extension_doc)) {
 				$comando = 'export HOME=/tmp && libreoffice5.1 --headless --convert-to pdf:writer_pdf_Export --outdir ' . $directorio_out . ' ' . $directorio_out . $archivo_out . $extension_doc;
@@ -218,6 +251,7 @@ if (file_exists($ruta_docx . 'documento_word.docx')) {
 			}
 		} else {
 <<<<<<< HEAD
+<<<<<<< HEAD
 			$ruta_combinar = StorageUtils::obtener_tempdir();
 			$tipo_alm_csv = $archivo_csv["clase"];
 			$csv_file = $tipo_alm_csv->get_filesystem()->get($archivo_csv["clase"]);
@@ -225,6 +259,8 @@ if (file_exists($ruta_docx . 'documento_word.docx')) {
 			file_put_contents($archivo_csv, $csv_file->getContent());
 			combinar_documento($archivo_csv, $ruta_combinar, $ruta_docx, $idformato, $_REQUEST["iddoc"], $alm_plantilla, $ruta_plantilla);
 =======
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 			crear_destino($ruta_combinar);
 			chmod($ruta_combinar, 0777);
 			// TODO: Eliminar. Se genera pdf antes de procesar para ver porque no salen las firmas
@@ -264,15 +300,20 @@ function combinar_documento($archivo_csv, $directorio_out, $ruta_docx, $idformat
 	$marca_agua = mostrar_estado_documento($iddoc);
 	$extension_doc = '.docx';
 <<<<<<< HEAD
+<<<<<<< HEAD
 	
 =======
 
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 	//print_r($ruta_docx); echo "<br>";die();
 	$datos = cargar_csv($archivo_csv);
 	for($i = 0; $i < count($datos); $i++) {
 		// Cada elemento es un array campo => valor
 		$archivo_out = "documento_word_$i";
+<<<<<<< HEAD
 <<<<<<< HEAD
 		
 	    $templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor($ruta_docx . '/documento_word.docx');
@@ -294,6 +335,9 @@ function combinar_documento($archivo_csv, $directorio_out, $ruta_docx, $idformat
 			
 =======
 
+=======
+
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 		$templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor($ruta_docx . 'documento_word.docx');
 		$campos_word = $templateProcessor->getVariables();
 
@@ -301,7 +345,10 @@ function combinar_documento($archivo_csv, $directorio_out, $ruta_docx, $idformat
 		if (in_array($campo_qr_word, $campos_word)) {
 			$src = $ruta_db_superior . obtener_codigo_qr($idformato, $iddoc);
 
+<<<<<<< HEAD
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 			$img2 = array(
 					array(
 							'img' => htmlspecialchars($src),
@@ -318,10 +365,13 @@ function combinar_documento($archivo_csv, $directorio_out, $ruta_docx, $idformat
 			if (in_array($campo, $campos_word)) {
 				$templateProcessor->setValue($campo, $valor);
 <<<<<<< HEAD
+<<<<<<< HEAD
 				
 				if(is_file($directorio_out . "/$archivo_out" . $extension_doc)) {
 					unlink($directorio_out . "/$archivo_out" . $extension_doc);
 =======
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 
 				if (file_exists($directorio_out . $archivo_out . $extension_doc)) {
 					unlink($directorio_out . $archivo_out . $extension_doc);
@@ -335,6 +385,7 @@ function combinar_documento($archivo_csv, $directorio_out, $ruta_docx, $idformat
 		$templateProcessor->saveAs($directorio_out . "/$archivo_out" . $extension_doc);
 		$templateProcessor = null;
 	}
+<<<<<<< HEAD
 <<<<<<< HEAD
 	
 	if(is_dir($directorio_out)) {
@@ -355,6 +406,8 @@ function combinar_documento($archivo_csv, $directorio_out, $ruta_docx, $idformat
 		//$alm_plantilla->copiar_contenido_externo($word_temp . $extension_doc, $ruta_plantilla);
 		//$alm_plantilla->copiar_contenido_externo($word_temp . $extension_doc, $pdf_name . $extension_doc);
 =======
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 
 	if (is_dir($directorio_out)) {
 		$comando1 = 'export HOME=/tmp && libreoffice5.1 --headless -print-to-file --outdir ' . $directorio_out . ' ' . $directorio_out . "*" . $extension_doc;
@@ -370,7 +423,10 @@ function combinar_documento($archivo_csv, $directorio_out, $ruta_docx, $idformat
 		// print_r($salida_ps);echo "<br>";
 		// print_r($var2);echo "<br>";
 		// $comando2 = 'export HOME=/tmp && libreoffice5.1 --headless --convert-to pdf:writer_pdf_Export --outdir ' . $directorio_out . ' ' . $directorio_out . "*" . $extension_doc;
+<<<<<<< HEAD
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 	}
 	// die();
 }

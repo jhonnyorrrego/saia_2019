@@ -214,6 +214,7 @@ class FtpSpec extends ObjectBehavior
         $this->keys()->shouldReturn(array('archive', 'file1.zip', 'file2.zip'));
     }
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 
     function it_supports_sizecalculator()
@@ -228,4 +229,6 @@ class FtpSpec extends ObjectBehavior
         $this->shouldThrow('RuntimeException')->during('size', ['/erroneous']);
     }
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 }

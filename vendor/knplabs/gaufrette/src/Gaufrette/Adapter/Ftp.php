@@ -6,28 +6,38 @@ use Gaufrette\Adapter;
 use Gaufrette\File;
 use Gaufrette\Filesystem;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 use Gaufrette\Exception;
 
 /**
  * Ftp adapter
  *
  * @package Gaufrette
+<<<<<<< HEAD
 =======
 
 /**
  * Ftp adapter.
  *
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
  * @author  Antoine Hérault <antoine.herault@gmail.com>
  */
 class Ftp implements Adapter,
                      FileFactory,
+<<<<<<< HEAD
 <<<<<<< HEAD
                      ListKeysAware
 =======
                      ListKeysAware,
                      SizeCalculator
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+                     ListKeysAware
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 {
     protected $connection = null;
     protected $directory;
@@ -40,11 +50,15 @@ class Ftp implements Adapter,
     protected $mode;
     protected $ssl;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
     protected $fileData = array();
 
     /**
      * Constructor
      *
+<<<<<<< HEAD
 =======
     protected $timeout;
     protected $fileData = array();
@@ -52,6 +66,8 @@ class Ftp implements Adapter,
 
     /**
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      * @param string $directory The directory to use in the ftp server
      * @param string $host      The host of the ftp server
      * @param array  $options   The options like port, username, password, passive, create, mode
@@ -64,6 +80,9 @@ class Ftp implements Adapter,
 
         $this->directory = (string) $directory;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
         $this->host      = $host;
         $this->port      = isset($options['port']) ? $options['port'] : 21;
         $this->username  = isset($options['username']) ? $options['username'] : null;
@@ -76,6 +95,7 @@ class Ftp implements Adapter,
 
     /**
      * {@inheritDoc}
+<<<<<<< HEAD
 =======
         $this->host = $host;
         $this->port = isset($options['port']) ? $options['port'] : 21;
@@ -92,6 +112,8 @@ class Ftp implements Adapter,
     /**
      * {@inheritdoc}
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function read($key)
     {
@@ -112,10 +134,14 @@ class Ftp implements Adapter,
 
     /**
 <<<<<<< HEAD
+<<<<<<< HEAD
      * {@inheritDoc}
 =======
      * {@inheritdoc}
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * {@inheritDoc}
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function write($key, $content)
     {
@@ -123,10 +149,14 @@ class Ftp implements Adapter,
 
         $path = $this->computePath($key);
 <<<<<<< HEAD
+<<<<<<< HEAD
         $directory = dirname($path);
 =======
         $directory = \Gaufrette\Util\Path::dirname($path);
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+        $directory = dirname($path);
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 
         $this->ensureDirectoryExists($directory, true);
 
@@ -147,10 +177,14 @@ class Ftp implements Adapter,
 
     /**
 <<<<<<< HEAD
+<<<<<<< HEAD
      * {@inheritDoc}
 =======
      * {@inheritdoc}
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * {@inheritDoc}
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function rename($sourceKey, $targetKey)
     {
@@ -160,20 +194,28 @@ class Ftp implements Adapter,
         $targetPath = $this->computePath($targetKey);
 
 <<<<<<< HEAD
+<<<<<<< HEAD
         $this->ensureDirectoryExists(dirname($targetPath), true);
 =======
         $this->ensureDirectoryExists(\Gaufrette\Util\Path::dirname($targetPath));
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+        $this->ensureDirectoryExists(dirname($targetPath), true);
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 
         return ftp_rename($this->getConnection(), $sourcePath, $targetPath);
     }
 
     /**
 <<<<<<< HEAD
+<<<<<<< HEAD
      * {@inheritDoc}
 =======
      * {@inheritdoc}
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * {@inheritDoc}
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function exists($key)
     {
@@ -181,10 +223,14 @@ class Ftp implements Adapter,
 
         $file  = $this->computePath($key);
 <<<<<<< HEAD
+<<<<<<< HEAD
         $lines = ftp_rawlist($this->getConnection(), '-al ' . dirname($file));
 =======
         $lines = ftp_rawlist($this->getConnection(), '-al ' . \Gaufrette\Util\Path::dirname($file));
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+        $lines = ftp_rawlist($this->getConnection(), '-al ' . dirname($file));
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 
         if (false === $lines) {
             return false;
@@ -202,10 +248,14 @@ class Ftp implements Adapter,
 
     /**
 <<<<<<< HEAD
+<<<<<<< HEAD
      * {@inheritDoc}
 =======
      * {@inheritdoc}
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * {@inheritDoc}
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function keys()
     {
@@ -218,10 +268,14 @@ class Ftp implements Adapter,
 
     /**
 <<<<<<< HEAD
+<<<<<<< HEAD
      * {@inheritDoc}
 =======
      * {@inheritdoc}
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * {@inheritDoc}
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function listKeys($prefix = '')
     {
@@ -251,10 +305,14 @@ class Ftp implements Adapter,
 
     /**
 <<<<<<< HEAD
+<<<<<<< HEAD
      * {@inheritDoc}
 =======
      * {@inheritdoc}
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * {@inheritDoc}
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function mtime($key)
     {
@@ -272,10 +330,14 @@ class Ftp implements Adapter,
 
     /**
 <<<<<<< HEAD
+<<<<<<< HEAD
      * {@inheritDoc}
 =======
      * {@inheritdoc}
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * {@inheritDoc}
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function delete($key)
     {
@@ -290,10 +352,14 @@ class Ftp implements Adapter,
 
     /**
 <<<<<<< HEAD
+<<<<<<< HEAD
      * {@inheritDoc}
 =======
      * {@inheritdoc}
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * {@inheritDoc}
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function isDirectory($key)
     {
@@ -318,34 +384,48 @@ class Ftp implements Adapter,
 
         $items = $this->parseRawlist(
 <<<<<<< HEAD
+<<<<<<< HEAD
             ftp_rawlist($this->getConnection(), '-al ' . $this->directory . $directory ) ? : array()
 =======
             ftp_rawlist($this->getConnection(), '-al '.$this->directory.$directory) ?: array()
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+            ftp_rawlist($this->getConnection(), '-al ' . $this->directory . $directory ) ? : array()
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
         );
 
         $fileData = $dirs = array();
         foreach ($items as $itemData) {
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
             if ('..' === $itemData['name'] || '.' === $itemData['name']) {
                 continue;
             }
 
             $item = array(
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
                 'name'  => $itemData['name'],
                 'path'  => trim(($directory ? $directory . '/' : '') . $itemData['name'], '/'),
                 'time'  => $itemData['time'],
                 'size'  => $itemData['size'],
+<<<<<<< HEAD
 =======
                 'name' => $itemData['name'],
                 'path' => trim(($directory ? $directory.'/' : '').$itemData['name'], '/'),
                 'time' => $itemData['time'],
                 'size' => $itemData['size'],
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
             );
 
             if ('-' === substr($itemData['perms'], 0, 1)) {
@@ -359,21 +439,30 @@ class Ftp implements Adapter,
 
         return array(
 <<<<<<< HEAD
+<<<<<<< HEAD
            'keys'   => array_keys($fileData),
            'dirs'   => $dirs
 =======
            'keys' => array_keys($fileData),
            'dirs' => $dirs,
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+           'keys'   => array_keys($fileData),
+           'dirs'   => $dirs
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
         );
     }
 
     /**
 <<<<<<< HEAD
+<<<<<<< HEAD
      * {@inheritDoc}
 =======
      * {@inheritdoc}
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * {@inheritDoc}
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function createFile($key, Filesystem $filesystem)
     {
@@ -383,11 +472,15 @@ class Ftp implements Adapter,
 
         if (!array_key_exists($key, $this->fileData)) {
 <<<<<<< HEAD
+<<<<<<< HEAD
             $directory = dirname($key) == '.' ? '' : dirname($key);
 =======
             $dirname = \Gaufrette\Util\Path::dirname($key);
             $directory = $dirname == '.' ? '' : $dirname;
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+            $directory = dirname($key) == '.' ? '' : dirname($key);
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
             $this->listDirectory($directory);
         }
 
@@ -403,12 +496,16 @@ class Ftp implements Adapter,
 
     /**
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      * Ensures the specified directory exists. If it does not, and the create
      * parameter is set to TRUE, it tries to create it
      *
      * @param string  $directory
      * @param boolean $create    Whether to create the directory if it does not
      *                         exist
+<<<<<<< HEAD
 =======
      * @param string $key
      *
@@ -435,6 +532,8 @@ class Ftp implements Adapter,
      * @param bool   $create    Whether to create the directory if it does not
      *                          exist
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      *
      * @throws RuntimeException if the directory does not exist and could not
      *                          be created
@@ -452,10 +551,14 @@ class Ftp implements Adapter,
 
     /**
 <<<<<<< HEAD
+<<<<<<< HEAD
      * Creates the specified directory and its parent directories
 =======
      * Creates the specified directory and its parent directories.
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * Creates the specified directory and its parent directories
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      *
      * @param string $directory Directory to create
      *
@@ -465,10 +568,14 @@ class Ftp implements Adapter,
     {
         // create parent directory if needed
 <<<<<<< HEAD
+<<<<<<< HEAD
         $parent = dirname($directory);
 =======
         $parent = \Gaufrette\Util\Path::dirname($directory);
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+        $parent = dirname($directory);
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
         if (!$this->isDir($parent)) {
             $this->createDirectory($parent);
         }
@@ -482,6 +589,7 @@ class Ftp implements Adapter,
 
     /**
 <<<<<<< HEAD
+<<<<<<< HEAD
      * @param  string  $directory - full directory path
      * @return boolean
 =======
@@ -489,6 +597,10 @@ class Ftp implements Adapter,
      *
      * @return bool
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * @param  string  $directory - full directory path
+     * @return boolean
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     private function isDir($directory)
     {
@@ -511,20 +623,28 @@ class Ftp implements Adapter,
         $directory = preg_replace('/^[\/]*([^\/].*)$/', '/$1', $directory);
 
 <<<<<<< HEAD
+<<<<<<< HEAD
         $lines = ftp_rawlist($this->getConnection(), '-alR '. $this->directory . $directory);
 =======
         $lines = ftp_rawlist($this->getConnection(), '-alR '.$this->directory.$directory);
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+        $lines = ftp_rawlist($this->getConnection(), '-alR '. $this->directory . $directory);
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 
         if (false === $lines) {
             return array('keys' => array(), 'dirs' => array());
         }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
         $regexDir = '/'.preg_quote($this->directory . $directory, '/').'\/?(.+):$/u';
 =======
         $regexDir = '/'.preg_quote($this->directory.$directory, '/').'\/?(.+):$/u';
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+        $regexDir = '/'.preg_quote($this->directory . $directory, '/').'\/?(.+):$/u';
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
         $regexItem = '/^(?:([d\-\d])\S+)\s+\S+(?:(?:\s+\S+){5})?\s+(\S+)\s+(.+?)$/';
 
         $prevLine = null;
@@ -539,10 +659,14 @@ class Ftp implements Adapter,
                     $keys = array(
                         'keys' => array_merge($keys['keys'], $keys['dirs']),
 <<<<<<< HEAD
+<<<<<<< HEAD
                         'dirs' => array()
 =======
                         'dirs' => array(),
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+                        'dirs' => array()
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
                     );
                 }
             } elseif (preg_match($regexItem, $line, $tokens)) {
@@ -553,10 +677,14 @@ class Ftp implements Adapter,
                 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
                 $path = ltrim($directory . '/' . $name, '/');
 =======
                 $path = ltrim($directory.'/'.$name, '/');
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+                $path = ltrim($directory . '/' . $name, '/');
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 
                 if ('d' === $tokens[1] || '<dir>' === $tokens[2]) {
                     $keys['dirs'][] = $path;
@@ -572,10 +700,14 @@ class Ftp implements Adapter,
             $keys = array(
                 'keys' => array_merge($keys['keys'], $keys['dirs']),
 <<<<<<< HEAD
+<<<<<<< HEAD
                 'dirs' => array()
 =======
                 'dirs' => array(),
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+                'dirs' => array()
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
             );
         }
 
@@ -588,10 +720,14 @@ class Ftp implements Adapter,
 
     /**
 <<<<<<< HEAD
+<<<<<<< HEAD
      * Parses the given raw list
 =======
      * Parses the given raw list.
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * Parses the given raw list
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      *
      * @param array $rawlist
      *
@@ -605,6 +741,9 @@ class Ftp implements Adapter,
 
             if ($this->isLinuxListing($infos)) {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
                 $infos[7] = (strrpos($infos[7], ':') != 2 ) ? ($infos[7] . ' 00:00') : (date('Y') . ' ' . $infos[7]);
                 if ('total' !== $infos[0]) {
                     $parsed[] = array(
@@ -623,6 +762,7 @@ class Ftp implements Adapter,
                     'size'  => $isDir ? '' : $infos[2],
                     'time'  => strtotime($infos[0] . ' ' . $infos[1]),
                     'name'  => $infos[3]
+<<<<<<< HEAD
 =======
                 $infos[7] = (strrpos($infos[7], ':') != 2) ? ($infos[7].' 00:00') : (date('Y').' '.$infos[7]);
                 if ('total' !== $infos[0]) {
@@ -643,6 +783,8 @@ class Ftp implements Adapter,
                     'time' => strtotime($infos[0].' '.$infos[1]),
                     'name' => $infos[3],
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
                 );
             }
         }
@@ -652,16 +794,23 @@ class Ftp implements Adapter,
 
     /**
 <<<<<<< HEAD
+<<<<<<< HEAD
      * Computes the path for the given key
 =======
      * Computes the path for the given key.
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * Computes the path for the given key
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      *
      * @param string $key
      */
     private function computePath($key)
     {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
         return rtrim($this->directory, '/') . '/' . $key;
     }
 
@@ -669,6 +818,7 @@ class Ftp implements Adapter,
      * Indicates whether the adapter has an open ftp connection
      *
      * @return boolean
+<<<<<<< HEAD
 =======
         return rtrim($this->directory, '/').'/'.$key;
     }
@@ -678,6 +828,8 @@ class Ftp implements Adapter,
      *
      * @return bool
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     private function isConnected()
     {
@@ -687,10 +839,14 @@ class Ftp implements Adapter,
     /**
      * Returns an opened ftp connection resource. If the connection is not
 <<<<<<< HEAD
+<<<<<<< HEAD
      * already opened, it open it before
 =======
      * already opened, it open it before.
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * already opened, it open it before
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      *
      * @return resource The ftp connection
      */
@@ -705,16 +861,23 @@ class Ftp implements Adapter,
 
     /**
 <<<<<<< HEAD
+<<<<<<< HEAD
      * Opens the adapter's ftp connection
 =======
      * Opens the adapter's ftp connection.
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * Opens the adapter's ftp connection
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      *
      * @throws RuntimeException if could not connect
      */
     private function connect()
     {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
         // open ftp connection
         if (!$this->ssl) {
             $this->connection = ftp_connect($this->host, $this->port);
@@ -725,6 +888,7 @@ class Ftp implements Adapter,
                 throw new \RuntimeException('This Server Has No SSL-FTP Available.');
             }
         }
+<<<<<<< HEAD
 =======
         if ($this->ssl && !function_exists('ftp_ssl_connect')) {
             throw new \RuntimeException('This Server Has No SSL-FTP Available.');
@@ -742,10 +906,13 @@ class Ftp implements Adapter,
         }
 
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
         if (!$this->connection) {
             throw new \RuntimeException(sprintf('Could not connect to \'%s\' (port: %s).', $this->host, $this->port));
         }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
         $username = $this->username ? : 'anonymous';
         $password = $this->password ? : '';
@@ -753,6 +920,10 @@ class Ftp implements Adapter,
         $username = $this->username ?: 'anonymous';
         $password = $this->password ?: '';
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+        $username = $this->username ? : 'anonymous';
+        $password = $this->password ? : '';
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 
         // login ftp user
         if (!@ftp_login($this->connection, $username, $password)) {
@@ -767,6 +938,7 @@ class Ftp implements Adapter,
         }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
         // enable utf8 mode if configured
         if($this->utf8 == true) {
@@ -774,6 +946,8 @@ class Ftp implements Adapter,
         }
 
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
         // ensure the adapter's directory exists
         if ('/' !== $this->directory) {
             try {
@@ -793,10 +967,14 @@ class Ftp implements Adapter,
 
     /**
 <<<<<<< HEAD
+<<<<<<< HEAD
      * Closes the adapter's ftp connection
 =======
      * Closes the adapter's ftp connection.
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * Closes the adapter's ftp connection
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     private function close()
     {

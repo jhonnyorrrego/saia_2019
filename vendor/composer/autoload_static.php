@@ -5,6 +5,7 @@
 namespace Composer\Autoload;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 class ComposerStaticInitd519995838db71c3b1d30a6ef56a6013
 =======
 class ComposerStaticInite7142146f71b0ca55e7c61c51f6171eb
@@ -65,6 +66,10 @@ class ComposerStaticInite7142146f71b0ca55e7c61c51f6171eb
 =======
     );
 
+=======
+class ComposerStaticInit718f03846feaff3d4705b9006384fb76
+{
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
     public static $prefixesPsr0 = array (
         'L' => 
         array (
@@ -73,6 +78,7 @@ class ComposerStaticInite7142146f71b0ca55e7c61c51f6171eb
                 0 => __DIR__ . '/..' . '/luracast/restler/vendor',
             ),
         ),
+<<<<<<< HEAD
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
         'I' => 
         array (
@@ -88,11 +94,14 @@ class ComposerStaticInite7142146f71b0ca55e7c61c51f6171eb
                 0 => __DIR__ . '/..' . '/knplabs/gaufrette/src',
             ),
         ),
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
     );
 
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
+<<<<<<< HEAD
 <<<<<<< HEAD
             $loader->prefixLengthsPsr4 = ComposerStaticInitd519995838db71c3b1d30a6ef56a6013::$prefixLengthsPsr4;
             $loader->prefixDirsPsr4 = ComposerStaticInitd519995838db71c3b1d30a6ef56a6013::$prefixDirsPsr4;
@@ -102,6 +111,9 @@ class ComposerStaticInite7142146f71b0ca55e7c61c51f6171eb
             $loader->prefixDirsPsr4 = ComposerStaticInite7142146f71b0ca55e7c61c51f6171eb::$prefixDirsPsr4;
             $loader->prefixesPsr0 = ComposerStaticInite7142146f71b0ca55e7c61c51f6171eb::$prefixesPsr0;
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+            $loader->prefixesPsr0 = ComposerStaticInit718f03846feaff3d4705b9006384fb76::$prefixesPsr0;
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 
         }, null, ClassLoader::class);
     }

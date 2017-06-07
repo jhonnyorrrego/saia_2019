@@ -5,7 +5,7 @@ if(@$_REQUEST["iddoc"] || @$_REQUEST["key"] || @$_REQUEST["doc"]){
 	$_REQUEST["iddoc"]=@$_REQUEST["key"];
 	include_once("pantallas/documento/menu_principal_documento.php");
 	echo(menu_principal_documento(@$_REQUEST["iddoc"],1));
-}  
+}
 
 include_once("header.php");
 
@@ -15,15 +15,15 @@ require('vendor/autoload.php');
 
   header("Expires: Mon, 26 Jul 1997 05:00:00 GMT"); // date in the past
   header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT"); // always modified
-  header("Cache-Control: no-store, no-cache, must-revalidate"); // HTTP/1.1 
-  header("Cache-Control: post-check=0, pre-check=0", false); 
-  header("Pragma: no-cache"); // HTTP/1.0 
+  header("Cache-Control: no-store, no-cache, must-revalidate"); // HTTP/1.1
+  header("Cache-Control: post-check=0, pre-check=0", false);
+  header("Pragma: no-cache"); // HTTP/1.0
 
 if(isset($_REQUEST["key"]))  //identificador del documento
   $llave=$_REQUEST["key"];
 else
  $llave=$_GET["iddoc"];//$_REQUEST["key"];
- 
+
 $frame="centro";
 $plantilla=busca_filtro_tabla("plantilla","documento","iddocumento=$llave","",$conn);
 if($plantilla[0][0] != "")
@@ -35,15 +35,15 @@ if($plantilla[0][0] != "")
 	width: 140px;
     height:100px;
     border: none;
-    background-color: #ffff99;       
-    font-family: Verdana; 
-    font-size: 9px;  
+    background-color: #ffff99;
+    font-family: Verdana;
+    font-size: 9px;
 }
 
 .ppal{
 		margin:0px;
 		margin-top:0px;
-		width:100%;		
+		width:100%;
 		background-color:#CCCCCC;
 		font-family: Verdana;
 		font-size: 9px;
@@ -52,20 +52,19 @@ if($plantilla[0][0] != "")
 
 .tool_tabla{
     border-width: 10px;
-    border-color: blue;    
-    border: outset 3pt;    
-    border-spacing: 2pt;   
-    border: 5px solid #073A78;     
+    border-color: blue;
+    border: outset 3pt;
+    border-spacing: 2pt;
+    border: 5px solid #073A78;
 }
 
 .tool_td{
     border: 1px solid #073A78; 
     padding: 1em;     
 }	
-
 img{
-    border: none;   
-}	
+    border: none;
+}
 
 </style>
 <script text="javascript">
@@ -77,7 +76,7 @@ function ocultar_enlaces() {
 
  function pagina_navegador(doc,pag) {
   if(pag=='0')
-   return;     
+   return;
   parent.<?php echo $frame; ?>.location ="comentario_mostrar.php?pagina=pagina&key="+doc+"&pag="+pag;
  }
 
@@ -142,27 +141,27 @@ if ($paginas_doc["numcampos"] > 0 || $tipo_pag != "PAGINA" || $tipo_pag != "REGI
 						if ($paginas_doc[$j]["pagina"] > $paginas_doc[0]["pagina"]) {
 							$pag = $paginas_doc[$j - 1]["consecutivo"];
              $j=$num_pag;
-           } 
+           }
       }
      break;
-        
+
      case "sig":
-				for($j = 0; $j < $num_pag; $j++) {
+			for($j = 0; $j < $num_pag; $j++) {
 					if ($paginas_doc[$j]["consecutivo"] == $pag)
 						if ($paginas_doc[$j]["pagina"] < $paginas_doc[($num_pag - 1)]["pagina"]) {
              $pag = $paginas_doc[$j+1]["consecutivo"];               
              $j=$num_pag;
            }
-       }         
+       }
      break;
-       
+
      case "fin":
-      if($num_pag >= $paginas_doc[0]["pagina"])                    
-        $pag=$paginas_doc[$num_pag-1]["consecutivo"];  
+      if($num_pag >= $paginas_doc[0]["pagina"])
+        $pag=$paginas_doc[$num_pag-1]["consecutivo"];
      break;
-      
+
      case "pagina":
-				for($j = 0; $j < $num_pag; $j++) {
+			for($j = 0; $j < $num_pag; $j++) {
 					if ($paginas_doc[$j]["consecutivo"] == $_REQUEST["pag"])
 						if ($paginas_doc[$j]["pagina"] <= $num_pag) {
             $pag = $paginas_doc[$j]["consecutivo"];             
@@ -173,7 +172,7 @@ if ($paginas_doc["numcampos"] > 0 || $tipo_pag != "PAGINA" || $tipo_pag != "REGI
     }
     $_SESSION["pagina_actual"]=$pag;
     $tipo_pag = "PAGINA";
-  }    
+  }
   // Busca en la BD la rutra de las imagenes de las paginas - miniatura y imagen normal.
   $listado=busca_filtro_tabla("*"," pagina ","id_documento=".$llave." AND consecutivo='".$pag."'","pagina",$conn);
 	if ($listado["numcampos"]) {
@@ -210,41 +209,40 @@ if ($paginas_doc["numcampos"] > 0 || $tipo_pag != "PAGINA" || $tipo_pag != "REGI
 	}
  $detalle_doc = busca_filtro_tabla("numero,descripcion,plantilla,pdf",$documento_tabla,"id".$documento_tabla."='$llave'","",$conn);  
 
-  ?>  
+  ?>
 <div  align="center">
 <?php
 menu_ordenar($llave);
 ?>
-</div>   
+</div>
 <div id="tool" style="display:block;"><br /><br />
 
 <span class="internos">&nbsp;&nbsp;DOCUMENTO:&nbsp;</span>
 
-<span class="phpmaker" margin-top="0"> 
+<span class="phpmaker" margin-top="0">
 <?php echo $detalle_doc[0]["numero"]." - ".str_replace(chr(10), "<br>", stripslashes($detalle_doc[0]["descripcion"]));?>
 </span>
 <hr>
 <div align="center">
 <table width="100%" border="0" cellpadding="0" cellspacing="0"><tr>
 <?php
-$aux_formato=strtolower($detalle_doc[0]["plantilla"]);
- 
-	if (is_file("formatos/$aux_formato/detalles_mostrar_$aux_formato.php")) {
+$aux_formato = strtolower($detalle_doc[0]["plantilla"]);
+
+	if (is_file(FORMATOS_CLIENTE . "$aux_formato/detalles_mostrar_$aux_formato.php")) {
 		$idformato = busca_filtro_tabla('idformato', 'formato', 'nombre like "' . $aux_formato . '"', '', $conn);
-   
-    $ruta_detalles="formatos/$aux_formato/detalles_mostrar_$aux_formato.php?idformato=".$idformato[0]["idformato"]."&iddoc=".$llave;
-    //echo "<a href='$ruta_detalles' target='centro'><img src=''></a>";
-   echo "<td align='center'>";
-    agrega_boton("images","botones/comentarios/detalles.png",$ruta_detalles,"centro","Formatos Relacionados","","formatos");
-   echo "</td>"; 
-   }   
- 
+
+		$ruta_detalles = FORMATOS_CLIENTE . "$aux_formato/detalles_mostrar_$aux_formato.php?idformato=" . $idformato[0]["idformato"] . "&iddoc=" . $llave;
+		// echo "<a href='$ruta_detalles' target='centro'><img src=''></a>";
+		echo "<td align='center'>";
+		agrega_boton("images", "botones/comentarios/detalles.png", $ruta_detalles, "centro", "Formatos Relacionados", "", "formatos");
+		echo "</td>";
+	}
+
 	if ($detalle_doc[0]["numero"] > 0 && $detalle_doc[0]["pdf"] != "" && $enlace != "") {
 		echo "<td align='center'>";
-    agrega_boton("images","enlaces/imprimir_pdf.png","borrar_pdf.php?iddoc=$llave","centro_prueba","Actualizar PDF","","regenerar_pdf");
-    echo "</td>";
- }
- 
+		agrega_boton("images", "enlaces/imprimir_pdf.png", "borrar_pdf.php?iddoc=$llave", "centro_prueba", "Actualizar PDF", "", "regenerar_pdf");
+		echo "</td>";
+	}
 	if ($paginas_doc["numcampos"] > 0 || ($tipo_pag == 'PLANTILLA' && $detalle_doc[0]["numero"] == 0)) {
 
 		/*
@@ -252,10 +250,10 @@ $aux_formato=strtolower($detalle_doc[0]["plantilla"]);
 		 	echo "<td align='center'>";
     agrega_boton("images","botones/comentarios/eliminar_pagina.png","documento_borrar.php?iddoc=$llave","centro","Eliminar Borrador","","eliminar_borrador");
     echo "</td>";
-		 }
-		 */
-   
-		if ($paginas_doc["numcampos"] > 0 && $enlace == "") {
+}   */
+
+ if($paginas_doc["numcampos"]>0 && $enlace=="") {
+
 ?>
 <script src="js/jquery.js"></script>
 <script>
@@ -273,7 +271,7 @@ $aux_formato=strtolower($detalle_doc[0]["plantilla"]);
    <td align="center"><br>
      <?php
      agrega_boton("images","botones/comentarios/eliminar_pagina.png","paginadelete.php","$frame","","","eliminar_pagina");
-     ?> 
+     ?>
    </td>
    <td align="center"><br>
    <form>
@@ -285,8 +283,8 @@ $aux_formato=strtolower($detalle_doc[0]["plantilla"]);
    <option value="150">150%</option>
    <option value="200">200%</option>
    </select>
-   </form>  
-  </td> 
+   </form>
+  </td>
 
    <td align="center" valign="middle">
    <a href="comentario_mostrar.php?pagina=inicio&key=<?php echo $_REQUEST["key"]; ?>" target="<?php echo $frame;?>"><img src="imagenes/principio.gif" alt="Primera P&aacute;gina" border="0"></a>
@@ -312,7 +310,7 @@ $aux_formato=strtolower($detalle_doc[0]["plantilla"]);
 ?>
    </tr>
    </table></div><hr>
-   </div>   
+   </div>
   <div width="50" align="center" >
   <?php 
   $var = md5(time());   //para evitar la memoria cache  
@@ -323,15 +321,15 @@ $aux_formato=strtolower($detalle_doc[0]["plantilla"]);
   <br />    
   <img id="prueba" src="<?php echo $contenido_img; ?>"><br><br>
 </div>
-  </div>  
+  </div>
   <?php
   }  else  {//si es plantilla que corresponde al documento.
   ?>
   <div id="imprimir">
-  <br><br></div>   
+  <br><br></div>
   <iframe id="centro_prueba" name="centro_prueba" style="position:relative; left:10px; top:-20;" height="1150pt" width="900pt" scrolling="auto" frameborder="no" src="<?php echo $enlace; ?>" allowtransparency="yes" onload="ocultar_enlaces();"></iframe>
   <?php
-  }  
+  }
   $componentes="";
 	if ($tipo_pag == 'PAGINA') {
   $comentario=busca_filtro_tabla("*","comentario_img","documento_iddocumento=".$llave." AND tipo='$tipo_pag' AND pagina='".$pag."'","",$conn);
@@ -354,12 +352,12 @@ $aux_formato=strtolower($detalle_doc[0]["plantilla"]);
        $texto=$comentario[$i]["comentario"];
        $id = $comentario[$i]["idcomentario_img"];
        $nombre_usuario_nota = busca_filtro_tabla("nombres, apellidos","funcionario","login='".$comentario[$i]["funcionario"]."'","",$conn);
-       ?>       
+       ?>
        <table class="tooltip_text" href="#" onmousemove="showToolTip(event,'<?php echo trim($texto); ?>','<?php echo ($posy); ?>'); return false" onmouseout="hideToolTip()" width="20px" height="20px" style="position:absolute; top:<?php echo ($posy+85); ?>px; left:<?php echo ($posx+25); ?>px">
        <tr><td  align="center" background="images/mostrar_nota.png"><?php echo ($i+1);?></td></tr>
-       </table>   
+       </table>
        Comentario N&ordm;
-       <?php   
+       <?php
        echo ($i+1).": ".$texto."&nbsp;&nbsp;&nbsp;&nbsp; Autor: ".$nombre_usuario_nota[0]["nombres"]." ".$nombre_usuario_nota[0]["apellidos"]."<br>";
     }
    echo '</div>';
@@ -368,5 +366,5 @@ $aux_formato=strtolower($detalle_doc[0]["plantilla"]);
   echo codifica_encabezado("<script type='text/javascript'>alert('El documento no tiene p�ginas');</script>");
   redirecciona("ordenar.php?key=".$llave."&accion=mostrar");
 }
-include("footer.php");  
+include("footer.php");
 ?>

@@ -20,6 +20,7 @@ function mostrar_codigo_qr($idformato, $iddoc) {
     $archivo_binario=StorageUtils::get_binary_file($codigo_qr[0]['ruta_qr']);
 		$img='<img src="'.$archivo_binario.'" />';
 	}
+	echo $qr;	
 }
 
 function generar_codigo_qr($idformato, $iddoc, $idfunc = 0) {
@@ -96,7 +97,6 @@ function generar_qr($filename, $datos, $matrixPointSize = 2, $errorCorrectionLev
 		return false;
 	}
 }
-
 function generar_qr_bin($datos, $matrixPointSize = 2, $errorCorrectionLevel = 'L') {
 	global $ruta_db_superior;
 	include_once ($ruta_db_superior . "phpqrcode/qrlib.php");
@@ -119,5 +119,4 @@ function generar_qr_bin($datos, $matrixPointSize = 2, $errorCorrectionLevel = 'L
 		return false;
 	}
 }
-
 ?>

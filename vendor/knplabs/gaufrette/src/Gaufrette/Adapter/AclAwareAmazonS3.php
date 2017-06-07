@@ -3,11 +3,15 @@
 namespace Gaufrette\Adapter;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 use \AmazonS3 as AmazonClient;
 use Gaufrette\Adapter;
 
 /**
  * Makes the AmazonS3 adapter ACL aware. Uses the AWS SDK for PHP v1.x
+<<<<<<< HEAD
 =======
 use AmazonS3 as AmazonClient;
 use Gaufrette\Adapter;
@@ -15,15 +19,21 @@ use Gaufrette\Adapter;
 /**
  * Makes the AmazonS3 adapter ACL aware. Uses the AWS SDK for PHP v1.x.
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
  *
  * See the AwsS3 adapter for using the AWS SDK for PHP v2.x. There is
  * no distinction in the AwsS3 adapter between an ACL aware adapter
  * and regular adapter.
  *
 <<<<<<< HEAD
+<<<<<<< HEAD
  * @package Gaufrette
 =======
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+ * @package Gaufrette
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
  * @author Johannes M. Schmitt <schmittjoh@gmail.com>
  */
 class AclAwareAmazonS3 implements Adapter,
@@ -81,10 +91,14 @@ class AclAwareAmazonS3 implements Adapter,
 
     /**
 <<<<<<< HEAD
+<<<<<<< HEAD
      * {@inheritDoc}
 =======
      * {@inheritdoc}
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * {@inheritDoc}
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function read($key)
     {
@@ -93,10 +107,14 @@ class AclAwareAmazonS3 implements Adapter,
 
     /**
 <<<<<<< HEAD
+<<<<<<< HEAD
      * {@inheritDoc}
 =======
      * {@inheritdoc}
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * {@inheritDoc}
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function rename($key, $new)
     {
@@ -115,10 +133,14 @@ class AclAwareAmazonS3 implements Adapter,
 
     /**
 <<<<<<< HEAD
+<<<<<<< HEAD
      * {@inheritDoc}
 =======
      * {@inheritdoc}
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * {@inheritDoc}
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function write($key, $content)
     {
@@ -137,10 +159,14 @@ class AclAwareAmazonS3 implements Adapter,
 
     /**
 <<<<<<< HEAD
+<<<<<<< HEAD
      * {@inheritDoc}
 =======
      * {@inheritdoc}
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * {@inheritDoc}
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function exists($key)
     {
@@ -149,10 +175,14 @@ class AclAwareAmazonS3 implements Adapter,
 
     /**
 <<<<<<< HEAD
+<<<<<<< HEAD
      * {@inheritDoc}
 =======
      * {@inheritdoc}
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * {@inheritDoc}
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function mtime($key)
     {
@@ -161,10 +191,14 @@ class AclAwareAmazonS3 implements Adapter,
 
     /**
 <<<<<<< HEAD
+<<<<<<< HEAD
      * {@inheritDoc}
 =======
      * {@inheritdoc}
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * {@inheritDoc}
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function keys()
     {
@@ -173,10 +207,14 @@ class AclAwareAmazonS3 implements Adapter,
 
     /**
 <<<<<<< HEAD
+<<<<<<< HEAD
      * {@inheritDoc}
 =======
      * {@inheritdoc}
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * {@inheritDoc}
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function delete($key)
     {
@@ -185,10 +223,14 @@ class AclAwareAmazonS3 implements Adapter,
 
     /**
 <<<<<<< HEAD
+<<<<<<< HEAD
      * {@inheritDoc}
 =======
      * {@inheritdoc}
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * {@inheritDoc}
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function setMetadata($key, $metadata)
     {
@@ -199,10 +241,14 @@ class AclAwareAmazonS3 implements Adapter,
 
     /**
 <<<<<<< HEAD
+<<<<<<< HEAD
      * {@inheritDoc}
 =======
      * {@inheritdoc}
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * {@inheritDoc}
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function getMetadata($key)
     {
@@ -215,10 +261,14 @@ class AclAwareAmazonS3 implements Adapter,
 
     /**
 <<<<<<< HEAD
+<<<<<<< HEAD
      * {@inheritDoc}
 =======
      * {@inheritdoc}
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * {@inheritDoc}
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function isDirectory($key)
     {

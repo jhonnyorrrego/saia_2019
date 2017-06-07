@@ -4,10 +4,14 @@ namespace Gaufrette\Util;
 
 /**
 <<<<<<< HEAD
+<<<<<<< HEAD
  * Utility class for file sizes
 =======
  * Utility class for file sizes.
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+ * Utility class for file sizes
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
  *
  * @author Antoine Hérault <antoine.herault@gmail.com>
  */
@@ -15,11 +19,15 @@ class Size
 {
     /**
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      * Returns the size in bytes from the given content
      *
      * @param string $content
      *
      * @return integer
+<<<<<<< HEAD
 =======
      * Returns the size in bytes from the given content.
      *
@@ -27,6 +35,8 @@ class Size
      *
      * @return int
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      *
      * @todo handle the case the mbstring is not loaded
      */
@@ -39,11 +49,15 @@ class Size
 
     /**
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      * Returns the size in bytes from the given file
      *
      * @param string $filename
      *
      * @return string
+<<<<<<< HEAD
 =======
      * Returns the size in bytes from the given file.
      *
@@ -51,11 +65,14 @@ class Size
      *
      * @return int
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public static function fromFile($filename)
     {
         return filesize($filename);
     }
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
 
@@ -73,4 +90,6 @@ class Size
         return $cStat ? $cStat['size'] : 0;
     }
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 }

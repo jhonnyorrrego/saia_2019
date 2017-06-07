@@ -1,6 +1,6 @@
-<html>  
-  <body>    
-    <head>      
+<html>
+  <body>
+    <head>
       <meta http-equiv="Content-Type" content="text/html; charset= UTF-8 ">
 <?php
 include_once("db.php");
@@ -18,9 +18,9 @@ $_SESSION["punto_retorno"]="documento.buscar.php";
 <script type="text/javascript" src="js/interface.js"></script>
 <script type="text/javascript" src="js/jquery.fcbkcomplete.js"></script>
 <script type="text/javascript" src="js/dhtmlXCommon.js"></script>
-<script type="text/javascript" src="js/dhtmlXTree.js"></script>   
-<script type="text/javascript" src="dropdownlist/ui.core.js"></script> 
-<script type="text/javascript" src="dropdownlist/ui.dropdownchecklist.js"></script>        
+<script type="text/javascript" src="js/dhtmlXTree.js"></script>
+<script type="text/javascript" src="dropdownlist/ui.core.js"></script>
+<script type="text/javascript" src="dropdownlist/ui.dropdownchecklist.js"></script>
 <script language="javascript" type="text/javascript">
 function EW_checkMyForm(f)
 {
@@ -51,29 +51,29 @@ function codificar_repetidos(lista)
        {vector[i]=vector[i].substr(0,vector[i].indexOf("_"));
        }
     }
- return(vector.join(','));      
+ return(vector.join(','));
 }
-</script> 
-      <style type="text/css" media="all">  * { margin: 0; 	padding: 0; }    body { background: #ffffff; 	height: 100%; 	font-family: Arial, Helvetica, sans-serif; 	font-size: 12px; }    #myAccordion{ 	width: 95%; 	border: 1px solid #F5F5F5; 	position: absolute; 	left: 10px; 	background-color:#ffffff; }    #myAccordion dt{ 	line-height: 20px; 	background-color: 
-        <?php echo($config[0]["valor"]); ?>  ; 	border-top: 2px solid #ffffff; 	border-bottom: 2px solid #000000; 	padding: 0 10px; 	font-weight: bold; 	color: #ffffff; }    #myAccordion dd{ 	overflow: auto; }    #myAccordion p{ 	margin: 16px 10px; }    #myAccordion dt.myAccordionHover { 	background-color: #000077; }    #myAccordion dt.myAccordionActive { 	background-color: 
-        <?php echo($config[0]["valor"]); ?>  ; 	border-top: 2px solid #ffffff; 	border-bottom: 2px solid #000000; }  
-      </style>    
-    </head>    
-    <body>    
+</script>
+      <style type="text/css" media="all">  * { margin: 0; 	padding: 0; }    body { background: #ffffff; 	height: 100%; 	font-family: Arial, Helvetica, sans-serif; 	font-size: 12px; }    #myAccordion{ 	width: 95%; 	border: 1px solid #F5F5F5; 	position: absolute; 	left: 10px; 	background-color:#ffffff; }    #myAccordion dt{ 	line-height: 20px; 	background-color:
+        <?php echo($config[0]["valor"]); ?>  ; 	border-top: 2px solid #ffffff; 	border-bottom: 2px solid #000000; 	padding: 0 10px; 	font-weight: bold; 	color: #ffffff; }    #myAccordion dd{ 	overflow: auto; }    #myAccordion p{ 	margin: 16px 10px; }    #myAccordion dt.myAccordionHover { 	background-color: #000077; }    #myAccordion dt.myAccordionActive { 	background-color:
+        <?php echo($config[0]["valor"]); ?>  ; 	border-top: 2px solid #ffffff; 	border-bottom: 2px solid #000000; }
+      </style>
+    </head>
+    <body>
       <br><b>BUSQUEDA DE DOCUMENTOS</b>
       <br>
-      <br>      
-      <form method="POST" name="fomulario_busqueda" id="fomulario_busqueda" action="documento.busqueda.php" onSubmit="return EW_checkMyForm(this);"><br />        
-        <div style="clear:both;">          
-          <input type="submit" id="accion" value="Buscar documento"> de 
+      <br>
+      <form method="POST" name="fomulario_busqueda" id="fomulario_busqueda" action="documento.busqueda.php" onSubmit="return EW_checkMyForm(this);"><br />
+        <div style="clear:both;">
+          <input type="submit" id="accion" value="Buscar documento"> de
           <input type='radio' id='x_tipo_documento1' name='x_tipo_documento' value='1'>Radicaci&oacute;n Entrada
-          <input type='radio' id='x_tipo_documento3' name='x_tipo_documento' value='3'>Radicaci&oacute;n Salida 
-          <input type='radio' id='x_tipo_documento2' name='x_tipo_documento' value='2'>Formato Interno           
+          <input type='radio' id='x_tipo_documento3' name='x_tipo_documento' value='3'>Radicaci&oacute;n Salida
+          <input type='radio' id='x_tipo_documento2' name='x_tipo_documento' value='2'>Formato Interno
 <?php
         if(@$_REQUEST["pagina_exp"])
           echo '<input type="hidden" name="pagina_exp" value="'.$_REQUEST["pagina_exp"].'">' ;
         if(@$_REQUEST["vincular_documento"])
-          echo '<input type="hidden" name="vincular_documento" value="'.$_REQUEST["vincular_documento"].'">' ;        
+          echo '<input type="hidden" name="vincular_documento" value="'.$_REQUEST["vincular_documento"].'">' ;
         $busquedas=busca_filtro_tabla("","busqueda_usuario","funcionario='".usuario_actual("funcionario_codigo")."'","lower(etiqueta)",$conn);
         $radicador = new PERMISO();
         $permiso = false;
@@ -81,7 +81,7 @@ function codificar_repetidos(lista)
         if($permiso)
           echo "<b>Perteneciente a </b><input type='radio' name='x_busqueda_general' value='1' checked>Busqueda general&nbsp;&nbsp;<input type='radio' name='x_busqueda_general' value='0'>Documentos Usuario";
         else
-          echo "<input type='hidden' name='x_busqueda_general' value='0'> ";          
+          echo "<input type='hidden' name='x_busqueda_general' value='0'> ";
         echo  "<br><br><table border=1 width='90%' style='border-collapse:collapse'>
                 <tr class='encabezado_list'><td>Guardar busqueda como</td>
                 <td>Busquedas Guardadas</td>
@@ -103,13 +103,13 @@ function codificar_repetidos(lista)
           tree_aprobado.setSubChecked(0, 0);
           $("#x_asunto").empty();
           $("#x_numero").empty();
-          $("#x_oficio").empty(); 
-          $("#x_nombre_remitente").empty(); 
-          $("#x_anexo").empty();  
-          $("#ejecutor2").empty();  
+          $("#x_oficio").empty();
+          $("#x_nombre_remitente").empty();
+          $("#x_anexo").empty();
+          $("#ejecutor2").empty();
           $(".bit-box").remove();
          }
-         $("#etiqueta_busqueda").blur(function(){ 
+         $("#etiqueta_busqueda").blur(function(){
           $.ajax({
               url: 'documento.busqueda_guardada.php?etiqueta='+$("#etiqueta_busqueda").val(),
               success: function(data) {
@@ -117,17 +117,17 @@ function codificar_repetidos(lista)
                  {alert('<?php echo codifica_encabezado("El m�ximo de busquedas guardadas es 15, por favor borre alguna si desea crear una nueva."); ?>');
                   $("#etiqueta_busqueda").val("");
                  }
-               else if(data>0)  
+               else if(data>0)
                  {pregunta=confirm("Ya existe una busqueda guardada con ese nombre, desea reemplazarla?");
                   if(!pregunta)
                     $("#etiqueta_busqueda").val("");
                  }
               }
-            }); 
+            });
          });
-         
+
          function eliminar_busqueda()
-         {busqueda=$("#busqueda_usuario option:selected").val(); 
+         {busqueda=$("#busqueda_usuario option:selected").val();
           if(busqueda!="")
             {$.ajax({
               url: 'documento.busqueda_guardada.php?borrar_busqueda='+busqueda,
@@ -139,16 +139,16 @@ function codificar_repetidos(lista)
                else
                  alert("Problemas al eliminar la busqueda.");
               }
-            }); 
+            });
             }
           else
             alert("Por favor seleccione una busqueda guardada previamente.");
          }
-         
-         $().ready(function() {   
+
+         $().ready(function() {
           $("#busqueda_usuario").change(
          function(){
-         busqueda=$("#busqueda_usuario option:selected").val(); 
+         busqueda=$("#busqueda_usuario option:selected").val();
         if(busqueda!="")
           {$.ajax({
               url: 'documento.busqueda_guardada.php?idbusqueda='+busqueda,
@@ -190,7 +190,7 @@ function codificar_repetidos(lista)
                      {fila[1]=fila[1].replace(/\,{2,}(d)*/gi,",");
                       fila[1]=fila[1].replace(/\,$/gi,"");
                       tree3.setCheck(fila[1],true);
-                     }  
+                     }
                    else if(fila[0]=="x_fecha_aprobacion1" || fila[0]=="x_fecha_aprobacion2" || fila[0]=="x_fecha_borrador1" || fila[0]=="x_fecha_borrador2" || fila[0]=="x_fecha_transferencia1" || fila[0]=="x_fecha_transferencia2"|| fila[0]=="campos_formato")
                      {
                       $("#"+fila[0]).val(fila[1]);
@@ -199,77 +199,77 @@ function codificar_repetidos(lista)
                      {valores=fila[1].split("@@");
                       for(j=0;j<valores.length;j++)
                         $("#"+fila[0]).trigger("addItem",[{"title": valores[j], "value": valores[j]}]);
-                     }          
+                     }
                   }
               }
-            });        
+            });
           }
-         })  
+         })
 });
          </script>
-        <br />                
-        </div>        
-        <br />        
-        <div >          
-          <dl id="myAccordion">               
-            <dt>Datos B&aacute;sicos             
-            </dt>               
-            <dd>                 
-              <div id="div1">    <br />                     
-                <table border="1px" width="100%">                         
-                  <tr>                    
-                    <td width="50%" class="encabezado">N&uacute;mero</td>        <td>                                 
-                      <select name="x_numero" id="x_numero" >                                 
-                      </select>                             </td>                         
-                  </tr> 
-                  <tr id="oficio_entrante">                    
-                    <td width="50%" class="encabezado">N&uacute;mero de oficio entrante</td>        <td>                                 
-                      <select name="x_oficio" id="x_oficio" >                                 
-                      </select>                             </td>                         
-                  </tr>                        
+        <br />
+        </div>
+        <br />
+        <div >
+          <dl id="myAccordion">
+            <dt>Datos B&aacute;sicos
+            </dt>
+            <dd>
+              <div id="div1">    <br />
+                <table border="1px" width="100%">
+                  <tr>
+                    <td width="50%" class="encabezado">N&uacute;mero</td>        <td>
+                      <select name="x_numero" id="x_numero" >
+                      </select>                             </td>
+                  </tr>
+                  <tr id="oficio_entrante">
+                    <td width="50%" class="encabezado">N&uacute;mero de oficio entrante</td>        <td>
+                      <select name="x_oficio" id="x_oficio" >
+                      </select>                             </td>
+                  </tr>
                   <tr id="tr_ciudad_origen">
-                    <td width="50%" class="encabezado">Ciudad de origen</td>        <td>          
+                    <td width="50%" class="encabezado">Ciudad de origen</td>        <td>
                       <select name="x_municipio" id="x_municipio" >
-                      <option value="">Seleccionar...</option> 
+                      <option value="">Seleccionar...</option>
                       <?php
                       $municipios=busca_filtro_tabla("distinct idmunicipio,municipio.nombre,departamento.nombre as nomdep","municipio,documento,departamento","tipo_radicado=1 and departamento_iddepartamento=iddepartamento and municipio_idmunicipio=idmunicipio","lower(municipio.nombre) asc",$conn);
                       for($i=0;$i<$municipios["numcampos"];$i++)
                         echo "<option value='".$municipios[$i]["idmunicipio"]."'>".$municipios[$i]["nombre"]." (".$municipios[$i]["nomdep"].")</option>"
-                      ?>         
-                      </select>        
-                    </td>      
-                  </tr>   
-                  <tr id="fecha_borrador">                    
-                    <td class="encabezado">Fecha del Borrador</td>        <td>Entre                        
-                      <input type="text" name="x_fecha_borrador1" id="x_fecha_borrador1" value="" size="22">                                   
-                      <?php selector_fecha("x_fecha_borrador1","0","Y-m-d H:i:s",date("m"),date("Y"),"default.css","","AD:VALOR","VENTANA",false,false,7,00,"AM"); ?>         Y                        
-                      <input type="text" name="x_fecha_borrador2" id="x_fecha_borrador2" value="" size="22">                               
-                      <?php selector_fecha("x_fecha_borrador2","0","Y-m-d H:i:s",date("m"),date("Y"),"default.css","","AD:VALOR","VENTANA",false,false,7,00,"AM");?>         </td>                         
-                  </tr>                         
-                  <tr>                    
+                      ?>
+                      </select>
+                    </td>
+                  </tr>
+                  <tr id="fecha_borrador">
+                    <td class="encabezado">Fecha del Borrador</td>        <td>Entre
+                      <input type="text" name="x_fecha_borrador1" id="x_fecha_borrador1" value="" size="22">
+                      <?php selector_fecha("x_fecha_borrador1","0","Y-m-d H:i:s",date("m"),date("Y"),"default.css","","AD:VALOR","VENTANA",false,false,7,00,"AM"); ?>         Y
+                      <input type="text" name="x_fecha_borrador2" id="x_fecha_borrador2" value="" size="22">
+                      <?php selector_fecha("x_fecha_borrador2","0","Y-m-d H:i:s",date("m"),date("Y"),"default.css","","AD:VALOR","VENTANA",false,false,7,00,"AM");?>         </td>
+                  </tr>
+                  <tr>
                     <td class="encabezado">Fecha del documento
-                      <br>(Entrada/Aprobaci&oacute;n)</td>        <td>Entre                        
-                      <input type="text" name="x_fecha_aprobacion1" id="x_fecha_aprobacion1" value="" size="22">                               
-                      <?php selector_fecha("x_fecha_aprobacion1","0","Y-m-d H:i:s",date("m"),date("Y"),"default.css","","AD:VALOR","VENTANA",false,false,7,00,"AM");?>         Y                        
-                      <input type="text" name="x_fecha_aprobacion2" id="x_fecha_aprobacion2" value="" size="22">                               
-                      <?php selector_fecha("x_fecha_aprobacion2","0","Y-m-d H:i:s",date("m"),date("Y"),"default.css","","AD:VALOR","VENTANA",false,false,7,00,"AM");?>         </td>                         
-                  </tr>                    
-                  <tr id="creador">                    
-                    <td class="encabezado">Creador del documento</td><td>                    
-                      <input type='hidden' name='x_ejecutor1' id='x_ejecutor1'/>  			  Buscar:                       
-                      <br>                      
-                      <input type="text" id="stext2" width="200px" size="20">                                 
-                      <a href="javascript:void(0)" onclick="tree_ejecutor.findItem(document.getElementById('stext2').value,1)">                                   
-                        <img src="botones/general/anterior.png" border="0px" alt="Anterior"></a>                                 
-                      <a href="javascript:void(0)" onclick="tree_ejecutor.findItem(document.getElementById('stext2').value,0,1)">                                   
-                        <img src="botones/general/buscar.png" border="0px" alt="Buscar"></a>                                 
-                      <a href="javascript:void(0)" onclick="tree_ejecutor.findItem(document.getElementById('stext2').value)">                                   
-                        <img src="botones/general/siguiente.png" border="0px" alt="Siguiente"></a><br />          <br />                                 
-                      <div id="esperando_func2">                                     
-                        <img src="imagenes/cargando.gif">                                 
-                      </div>  				                       
-                      <div id="treeboxbox_tree_ejecutor">                      
-                      </div>        	                       
+                      <br>(Entrada/Aprobaci&oacute;n)</td>        <td>Entre
+                      <input type="text" name="x_fecha_aprobacion1" id="x_fecha_aprobacion1" value="" size="22">
+                      <?php selector_fecha("x_fecha_aprobacion1","0","Y-m-d H:i:s",date("m"),date("Y"),"default.css","","AD:VALOR","VENTANA",false,false,7,00,"AM");?>         Y
+                      <input type="text" name="x_fecha_aprobacion2" id="x_fecha_aprobacion2" value="" size="22">
+                      <?php selector_fecha("x_fecha_aprobacion2","0","Y-m-d H:i:s",date("m"),date("Y"),"default.css","","AD:VALOR","VENTANA",false,false,7,00,"AM");?>         </td>
+                  </tr>
+                  <tr id="creador">
+                    <td class="encabezado">Creador del documento</td><td>
+                      <input type='hidden' name='x_ejecutor1' id='x_ejecutor1'/>  			  Buscar:
+                      <br>
+                      <input type="text" id="stext2" width="200px" size="20">
+                      <a href="javascript:void(0)" onclick="tree_ejecutor.findItem(document.getElementById('stext2').value,1)">
+                        <img src="botones/general/anterior.png" border="0px" alt="Anterior"></a>
+                      <a href="javascript:void(0)" onclick="tree_ejecutor.findItem(document.getElementById('stext2').value,0,1)">
+                        <img src="botones/general/buscar.png" border="0px" alt="Buscar"></a>
+                      <a href="javascript:void(0)" onclick="tree_ejecutor.findItem(document.getElementById('stext2').value)">
+                        <img src="botones/general/siguiente.png" border="0px" alt="Siguiente"></a><br />          <br />
+                      <div id="esperando_func2">
+                        <img src="imagenes/cargando.gif">
+                      </div>
+                      <div id="treeboxbox_tree_ejecutor">
+                      </div>
 <script type="text/javascript">
                       <!--
                     		var browserType;
@@ -312,68 +312,67 @@ function codificar_repetidos(lista)
                           document.poppedLayer.style.display = "";
                         }
                   	  -->
-              	      </script>                              </td>                         
-                  </tr>                  
-                  <tr id="remitente">                    
+              	      </script>                              </td>
+                  </tr>
+                  <tr id="remitente">
                     <td class="encabezado">Remitente Externo</td>                    <td>                      Nombre del Remitento Externo
-                      <select name="x_ejecutor2" id="ejecutor2">                      
-                      </select>                    </td>                         
-                  </tr>                  
-                  <tr id="plantillas">                  
+                      <select name="x_ejecutor2" id="ejecutor2">
+                      </select>                    </td>
+                  </tr>
+                  <tr id="plantillas">
                     <td class="encabezado">Plantilla</td>                  <td>
-<?php $plantillas = busca_filtro_tabla("nombre,etiqueta,nombre_tabla","formato","mostrar=1","etiqueta",$conn);
-                      if($plantillas["numcampos"]>0)
-                      { echo "<select name='plantilla' id='plantilla' ><option value='' >Seleccionar...</option>";
-                        for($i=0; $i<$plantillas["numcampos"]; $i++)
-                         echo "<option value='".$plantillas[$i]["nombre_tabla"]."' title=\"".$plantillas[$i]["nombre"]."\">".$plantillas[$i]["etiqueta"]."</option>";
-                       echo "</select>";
-                      }
-                      
-                                            ?>                                               
-                      <div id="busqueda_interna">                                                              
-                      </div>                    
-<script type="text/javascript" src="anexosdigitales/highslide-4.0.10/highslide/highslide-with-html.js"></script>                                           
+<?php
+$plantillas = busca_filtro_tabla("nombre,etiqueta,nombre_tabla", "formato", "mostrar=1", "etiqueta", $conn);
+if ($plantillas["numcampos"] > 0) {
+	echo "<select name='plantilla' id='plantilla' ><option value='' >Seleccionar...</option>";
+	for($i = 0; $i < $plantillas["numcampos"]; $i++)
+		echo "<option value='" . $plantillas[$i]["nombre_tabla"] . "' title=\"" . $plantillas[$i]["nombre"] . "\">" . $plantillas[$i]["etiqueta"] . "</option>";
+	echo "</select>";
+}
+
+?>
+                      <div id="busqueda_interna">
+                      </div>
+<script type="text/javascript" src="anexosdigitales/highslide-4.0.10/highslide/highslide-with-html.js"></script>
                       <link rel="stylesheet" type="text/css" href="anexosdigitales/highslide-4.0.10/highslide/highslide.css" />
 <script type='text/javascript'>
     hs.graphicsDir = 'anexosdigitales/highslide-4.0.10/highslide/graphics/';
     hs.outlineType = 'rounded-white';
-</script>                    
+</script>
 <script>
-                   $().ready(function() {
-	                  $("#link_buscador").click(
-                   function(){
-                   formato=$("#plantilla option:selected").attr('title'); 
-                  if(formato!="")
-                    {
-                     $("#link_buscador").attr("href","formatos/"+formato+"/buscar_"+formato+".php?campo__retorno=campos_formato");
-                     return hs.htmlExpand(this, { objectType: 'iframe',width: 700, height:500,preserveContent:false} );
-                     }
-                    else
-                      alert("Por favor seleccione una plantilla");   
-                   })  
-});
-                    
-                   </script>                                          
-                      <a class="highslide" name="link_buscador" id="link_buscador" >Campos dentro de la plantilla</a>                                          
-                      <input type="hidden" id="campos_formato" name="campos_formato" value="">                          </td>                  
+	$().ready(function() {
+		$("#link_buscador").click(function() {
+			formato=$("#plantilla option:selected").attr('title');
+			if(formato!="") {
+				$("#link_buscador").attr("href","<?php echo FORMATOS_CLIENTE ;?>"+formato+"/buscar_"+formato+".php?campo__retorno=campos_formato");
+				return hs.htmlExpand(this, { objectType: 'iframe',width: 700, height:500,preserveContent:false} );
+			} else {
+				alert("Por favor seleccione una plantilla");
+			}
+		});
+	});
+
+                   </script>
+                      <a class="highslide" name="link_buscador" id="link_buscador" >Campos dentro de la plantilla</a>
+                      <input type="hidden" id="campos_formato" name="campos_formato" value="">                          </td>
                   </td>
-                  </tr>                           
-                  <tr>                             
-                    <td class="encabezado" title="Buscar documentos seg&uacute;n la clasificaci&oacute;n (Serie Documental)">Clasificaci&oacute;n</td>                             <td>                                 
-                      <input type='hidden' name='x_serie' id='x_serie'/>  			  Buscar:                       
-                      <br>                      
-                      <input type="text" id="stext" width="200px" size="20">                                 
-                      <a href="javascript:void(0)" onclick="tree3.findItem(document.getElementById('stext').value,1)">                                   
-                        <img src="botones/general/anterior.png" border="0px" alt="Anterior"></a>                                 
-                      <a href="javascript:void(0)" onclick="tree3.findItem(document.getElementById('stext').value,0,1)">                                   
-                        <img src="botones/general/buscar.png" border="0px" alt="Buscar"></a>                                 
-                      <a href="javascript:void(0)" onclick="tree3.findItem(document.getElementById('stext').value)">                                   
-                        <img src="botones/general/siguiente.png" border="0px" alt="Siguiente"></a><br />          <br />                                 
-                      <div id="esperando_func">                                     
-                        <img src="imagenes/cargando.gif">                                 
-                      </div>  				                       
-                      <div id="treeboxbox_tree3">                      
-                      </div>        	                       
+                  </tr>
+                  <tr>
+                    <td class="encabezado" title="Buscar documentos seg&uacute;n la clasificaci&oacute;n (Serie Documental)">Clasificaci&oacute;n</td>                             <td>
+                      <input type='hidden' name='x_serie' id='x_serie'/>  			  Buscar:
+                      <br>
+                      <input type="text" id="stext" width="200px" size="20">
+                      <a href="javascript:void(0)" onclick="tree3.findItem(document.getElementById('stext').value,1)">
+                        <img src="botones/general/anterior.png" border="0px" alt="Anterior"></a>
+                      <a href="javascript:void(0)" onclick="tree3.findItem(document.getElementById('stext').value,0,1)">
+                        <img src="botones/general/buscar.png" border="0px" alt="Buscar"></a>
+                      <a href="javascript:void(0)" onclick="tree3.findItem(document.getElementById('stext').value)">
+                        <img src="botones/general/siguiente.png" border="0px" alt="Siguiente"></a><br />          <br />
+                      <div id="esperando_func">
+                        <img src="imagenes/cargando.gif">
+                      </div>
+                      <div id="treeboxbox_tree3">
+                      </div>
 <script type="text/javascript">
                       <!--
                     		var browserType;
@@ -430,33 +429,33 @@ function codificar_repetidos(lista)
                           document.poppedLayer.style.display = "";
                         }
                   	  -->
-              	      </script>                              </td>                         
+              	      </script>                              </td>
                   </tr>
-                  <?php 
+                  <?php
                     $ok=new PERMISO();
                     $permiso = false;
                     $permiso=$ok->acceso_modulo_perfil("busqueda_total_series");
                     if($permiso==1){
                   ?>
-                  <tr>        
-                    <td class="encabezado" title="Buscar documentos seg&uacute;n la clasificaci&oacute;n (En todos los documentos seg&uacute;n la serie)">Clasificaci&oacute;n General</td>        
+                  <tr>
+                    <td class="encabezado" title="Buscar documentos seg&uacute;n la clasificaci&oacute;n (En todos los documentos seg&uacute;n la serie)">Clasificaci&oacute;n General</td>
                     <td>
                       <a href="Javascript:seleccionar_todos(1)">Seleccionar Todos</a>
-                      <a href="Javascript:seleccionar_todos(0)">Quitar Todos</a> <br />           
+                      <a href="Javascript:seleccionar_todos(0)">Quitar Todos</a> <br />
                       <input type='hidden' name='x_serie_total' id='x_serie_total'/>  			  Buscar:
                       <br>
-                      <input type="text" id="stext_total" width="200px" size="20">          
-                      <a href="javascript:void(0)" onclick="tree_St.findItem(document.getElementById('stext_total').value,1)">          
-                        <img src="botones/general/anterior.png" border="0px" alt="Anterior"></a>          
-                      <a href="javascript:void(0)" onclick="tree_st.findItem(document.getElementById('stext_total').value,0,1)">          
-                        <img src="botones/general/buscar.png" border="0px" alt="Buscar"></a>          
-                      <a href="javascript:void(0)" onclick="tree_st.findItem(document.getElementById('stext_total').value)">          
-                        <img src="botones/general/siguiente.png" border="0px" alt="Siguiente"></a><br />          <br />          
-                      <div id="esperando_func_st">            
-                        <img src="imagenes/cargando.gif">          
-                      </div>  				
+                      <input type="text" id="stext_total" width="200px" size="20">
+                      <a href="javascript:void(0)" onclick="tree_St.findItem(document.getElementById('stext_total').value,1)">
+                        <img src="botones/general/anterior.png" border="0px" alt="Anterior"></a>
+                      <a href="javascript:void(0)" onclick="tree_st.findItem(document.getElementById('stext_total').value,0,1)">
+                        <img src="botones/general/buscar.png" border="0px" alt="Buscar"></a>
+                      <a href="javascript:void(0)" onclick="tree_st.findItem(document.getElementById('stext_total').value)">
+                        <img src="botones/general/siguiente.png" border="0px" alt="Siguiente"></a><br />          <br />
+                      <div id="esperando_func_st">
+                        <img src="imagenes/cargando.gif">
+                      </div>
                       <div id="treeboxbox_tree_serie_total">
-                      </div>        	
+                      </div>
                       <script type="text/javascript">
                       <!--
                     		var browserType;
@@ -485,22 +484,22 @@ function codificar_repetidos(lista)
                           {if(vector[i].indexOf("_")!=-1)
                              {vector[i]=vector[i].substr(0,vector[i].indexOf("_"));
                              }
-                           nuevo=vector.join(",");  
+                           nuevo=vector.join(",");
                            if(vector[i].indexOf("#")!=-1)
                               {hijos=tree_st.getAllSubItems(vector[i]);
                                hijos=hijos.replace(/\,{2,}(d)*/gi,",");
                                hijos=hijos.replace(/\,$/gi,"");
                                vectorh=hijos.split(",");
-                               
+
                                for(h=0;h<vectorh.length;h++)
                                   {if(vectorh[h].indexOf("_")!=-1)
                                       vectorh[h]=vectorh[h].substr(0,vectorh[h].indexOf("_"));
                                    nuevo=eliminarItem(nuevo,vectorh[h]);
-                                  } 
+                                  }
                               }
                           }
                        nuevo=nuevo.replace(/\,{2,}(d)*/gi,",");
-                       nuevo=nuevo.replace(/\,$/gi,"");   
+                       nuevo=nuevo.replace(/\,$/gi,"");
                        valor_destino.value=nuevo;
                       }
                       function seleccionar_todos(tipo)
@@ -509,7 +508,7 @@ function codificar_repetidos(lista)
                          for(i=0;i<vector.length;i++)
                           {tree_st.setCheck(vector[i],tipo);
                           }
-                         document.getElementById("x_serie_total").value=tree_st.getAllChecked(); 
+                         document.getElementById("x_serie_total").value=tree_st.getAllChecked();
                         }
                   			/*function onNodeSelect_tree3(nodeId){
                           valor_destino=document.getElementById("x_serie_total");
@@ -550,58 +549,58 @@ function codificar_repetidos(lista)
                           document.poppedLayer.style.display = "";
                         }
                   	  -->
-              	      </script>        
-                    </td>      
+              	      </script>
+                    </td>
                   </tr>
-                  <?php }?>                         
-                  <tr>                    
-                    <td class="encabezado">Descripci&oacute;n o Asunto</td>        <td>                                 
-                      <select name="x_asunto" id="x_asunto" name="x_asunto">                                 
-                      </select>        </td>                         
-                  </tr>                    
-                  <tr>                    
-                    <td class="encabezado">Etiqueta</td> <td>                        
-                      <select name="x_etiqueta[]" id="x_etiqueta" multiple='multiple'>                      
+                  <?php }?>
+                  <tr>
+                    <td class="encabezado">Descripci&oacute;n o Asunto</td>        <td>
+                      <select name="x_asunto" id="x_asunto" name="x_asunto">
+                      </select>        </td>
+                  </tr>
+                  <tr>
+                    <td class="encabezado">Etiqueta</td> <td>
+                      <select name="x_etiqueta[]" id="x_etiqueta" multiple='multiple'>
 <?php
                         $listado_etiquetas=busca_filtro_tabla("","etiqueta","funcionario=".usuario_actual("funcionario_codigo"),"",$conn);
                         for($i=0;$i<$listado_etiquetas["numcampos"];$i++){
                           echo('<option value="'.$listado_etiquetas[$i]["idetiqueta"].'">'.$listado_etiquetas[$i]["nombre"].'</option>');
                         }
-                                              ?>                      
-                      </select></td>                  
-                  </tr>                        
-                  <tr>                    
-                    <td class="encabezado">Anexos</td>        <td>                                 
-                      <select name="x_anexo" id="x_anexo" name="x_anexo">                                 
-                      </select>        </td>                         
-                  </tr>                     
-                </table>                 
-              </div>               
-            </dd>               
-            <dt >Transferidos y/o pertenecientes a Rutas             
-            </dt>               
-            <dd>                 
-              <div id="div3">                
-                <br>                
-                <br>                     
-                <table border="1px" width="100%">                         
-                  <tr>                             
-                    <td width="50%" class="encabezado">Tranferido a</td>                             
-                    <td >                                 
-                      <input type='hidden' name='x_transferido' id='x_transferido'/>  			  Buscar:                       
-                      <br>                      
-                      <input type="text" id="stexttrans" width="200px" size="20">                                 
-                      <a href="javascript:void(0)" onclick="tree_trans.findItem(document.getElementById('stexttrans').value,1)">                                   
-                        <img src="botones/general/anterior.png" border="0px" alt="Anterior"></a>                                 
-                      <a href="javascript:void(0)" onclick="tree_trans.findItem(document.getElementById('stexttrans').value,0,1)">                                   
-                        <img src="botones/general/buscar.png" border="0px" alt="Buscar"></a>                                 
-                      <a href="javascript:void(0)" onclick="tree_trans.findItem(document.getElementById('stexttrans').value)">                                   
-                        <img src="botones/general/siguiente.png" border="0px" alt="Siguiente"></a><br />          <br />                                 
-                      <div id="esperando_trans">                                     
-                        <img src="imagenes/cargando.gif">                                 
-                      </div>  				                       
-                      <div id="treeboxbox_tree_trans">                      
-                      </div>        	                       
+                                              ?>
+                      </select></td>
+                  </tr>
+                  <tr>
+                    <td class="encabezado">Anexos</td>        <td>
+                      <select name="x_anexo" id="x_anexo" name="x_anexo">
+                      </select>        </td>
+                  </tr>
+                </table>
+              </div>
+            </dd>
+            <dt >Transferidos y/o pertenecientes a Rutas
+            </dt>
+            <dd>
+              <div id="div3">
+                <br>
+                <br>
+                <table border="1px" width="100%">
+                  <tr>
+                    <td width="50%" class="encabezado">Tranferido a</td>
+                    <td >
+                      <input type='hidden' name='x_transferido' id='x_transferido'/>  			  Buscar:
+                      <br>
+                      <input type="text" id="stexttrans" width="200px" size="20">
+                      <a href="javascript:void(0)" onclick="tree_trans.findItem(document.getElementById('stexttrans').value,1)">
+                        <img src="botones/general/anterior.png" border="0px" alt="Anterior"></a>
+                      <a href="javascript:void(0)" onclick="tree_trans.findItem(document.getElementById('stexttrans').value,0,1)">
+                        <img src="botones/general/buscar.png" border="0px" alt="Buscar"></a>
+                      <a href="javascript:void(0)" onclick="tree_trans.findItem(document.getElementById('stexttrans').value)">
+                        <img src="botones/general/siguiente.png" border="0px" alt="Siguiente"></a><br />          <br />
+                      <div id="esperando_trans">
+                        <img src="imagenes/cargando.gif">
+                      </div>
+                      <div id="treeboxbox_tree_trans">
+                      </div>
 <script type="text/javascript">
                       <!--
                     		var browserType;
@@ -644,25 +643,25 @@ function codificar_repetidos(lista)
                           document.poppedLayer.style.display = "";
                         }
                   	  -->
-              	      </script>                              </td>                         
+              	      </script>                              </td>
                   </tr>
-                                     <tr>        
-                    <td width="50%" class="encabezado">Tranferido por</td>        
-                    <td >          
+                                     <tr>
+                    <td width="50%" class="encabezado">Tranferido por</td>
+                    <td >
                       <input type='hidden' name='x_transferido2' id='x_transferido2'/>  			  Buscar:
                       <br>
-                      <input type="text" id="stexttrans2" width="200px" size="20">          
-                      <a href="javascript:void(0)" onclick="tree_trans2.findItem(document.getElementById('stexttrans2').value,1)">          
-                        <img src="botones/general/anterior.png" border="0px" alt="Anterior"></a>          
-                      <a href="javascript:void(0)" onclick="tree_trans2.findItem(document.getElementById('stexttrans2').value,0,1)">          
-                        <img src="botones/general/buscar.png" border="0px" alt="Buscar"></a>          
-                      <a href="javascript:void(0)" onclick="tree_trans2.findItem(document.getElementById('stexttrans2').value)">          
-                        <img src="botones/general/siguiente.png" border="0px" alt="Siguiente"></a><br />          <br />          
-                      <div id="esperando_trans2">            
-                        <img src="imagenes/cargando.gif">          
-                      </div>  				
+                      <input type="text" id="stexttrans2" width="200px" size="20">
+                      <a href="javascript:void(0)" onclick="tree_trans2.findItem(document.getElementById('stexttrans2').value,1)">
+                        <img src="botones/general/anterior.png" border="0px" alt="Anterior"></a>
+                      <a href="javascript:void(0)" onclick="tree_trans2.findItem(document.getElementById('stexttrans2').value,0,1)">
+                        <img src="botones/general/buscar.png" border="0px" alt="Buscar"></a>
+                      <a href="javascript:void(0)" onclick="tree_trans2.findItem(document.getElementById('stexttrans2').value)">
+                        <img src="botones/general/siguiente.png" border="0px" alt="Siguiente"></a><br />          <br />
+                      <div id="esperando_trans2">
+                        <img src="imagenes/cargando.gif">
+                      </div>
                       <div id="treeboxbox_tree_trans2">
-                      </div>        	
+                      </div>
                       <script type="text/javascript">
                       <!--
                     		var browserType;
@@ -705,33 +704,33 @@ function codificar_repetidos(lista)
                           document.poppedLayer.style.display = "";
                         }
                   	  -->
-              	      </script>        
-                    </td>      
-                  </tr>                          
-                  <tr>                    
-                    <td class="encabezado">Fecha de Transferencia</td>        <td>Entre                        
-                      <input type="text" name="x_fecha_transferencia1" id="x_fecha_transferencia1" value="" size="22">                               
-                      <?php selector_fecha("x_fecha_transferencia1","0","Y-m-d H:i:s",date("m"),date("Y"),"default.css","","AD:VALOR","VENTANA",false,false,7,00,"AM");?>         Y                        
-                      <input type="text" name="x_fecha_transferencia2" id="x_fecha_transferencia2" value="" size="22">                               
-                      <?php selector_fecha("x_fecha_transferencia2","0","Y-m-d H:i:s",date("m"),date("Y"),"default.css","","AD:VALOR","VENTANA",false,false,7,00,"AM");?>         </td>                         
-                  </tr>                         
-                  <tr id="aprobacion">                             
-                    <td width="50%" class="encabezado">Aprobado/Revisado por</td>                             
-                    <td >                                 
-                      <input type='hidden' name='x_aprobado' id='x_aprobado'/>  			  Buscar:                       
-                      <br>                      
-                      <input type="text" id="stext3" width="200px" size="20">                                 
-                      <a href="javascript:void(0)" onclick="tree_aprobado.findItem(document.getElementById('stext3').value,1)">                                   
-                        <img src="botones/general/anterior.png" border="0px" alt="Anterior"></a>                                 
-                      <a href="javascript:void(0)" onclick="tree_aprobado.findItem(document.getElementById('stext3').value,0,1)">                                   
-                        <img src="botones/general/buscar.png" border="0px" alt="Buscar"></a>                                 
-                      <a href="javascript:void(0)" onclick="tree_aprobado.findItem(document.getElementById('stext3').value)">                                   
-                        <img src="botones/general/siguiente.png" border="0px" alt="Siguiente"></a><br />          <br />                                 
-                      <div id="esperando_func3">                                     
-                        <img src="imagenes/cargando.gif">                                 
-                      </div>  				                       
-                      <div id="treeboxbox_tree_aprobado">                      
-                      </div>        	                       
+              	      </script>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="encabezado">Fecha de Transferencia</td>        <td>Entre
+                      <input type="text" name="x_fecha_transferencia1" id="x_fecha_transferencia1" value="" size="22">
+                      <?php selector_fecha("x_fecha_transferencia1","0","Y-m-d H:i:s",date("m"),date("Y"),"default.css","","AD:VALOR","VENTANA",false,false,7,00,"AM");?>         Y
+                      <input type="text" name="x_fecha_transferencia2" id="x_fecha_transferencia2" value="" size="22">
+                      <?php selector_fecha("x_fecha_transferencia2","0","Y-m-d H:i:s",date("m"),date("Y"),"default.css","","AD:VALOR","VENTANA",false,false,7,00,"AM");?>         </td>
+                  </tr>
+                  <tr id="aprobacion">
+                    <td width="50%" class="encabezado">Aprobado/Revisado por</td>
+                    <td >
+                      <input type='hidden' name='x_aprobado' id='x_aprobado'/>  			  Buscar:
+                      <br>
+                      <input type="text" id="stext3" width="200px" size="20">
+                      <a href="javascript:void(0)" onclick="tree_aprobado.findItem(document.getElementById('stext3').value,1)">
+                        <img src="botones/general/anterior.png" border="0px" alt="Anterior"></a>
+                      <a href="javascript:void(0)" onclick="tree_aprobado.findItem(document.getElementById('stext3').value,0,1)">
+                        <img src="botones/general/buscar.png" border="0px" alt="Buscar"></a>
+                      <a href="javascript:void(0)" onclick="tree_aprobado.findItem(document.getElementById('stext3').value)">
+                        <img src="botones/general/siguiente.png" border="0px" alt="Siguiente"></a><br />          <br />
+                      <div id="esperando_func3">
+                        <img src="imagenes/cargando.gif">
+                      </div>
+                      <div id="treeboxbox_tree_aprobado">
+                      </div>
 <script type="text/javascript">
                       <!--
                     		var browserType;
@@ -774,14 +773,14 @@ function codificar_repetidos(lista)
                           document.poppedLayer.style.display = "";
                         }
                   	  -->
-              	      </script>                              
-                      </td>                         
-                  </tr>                   
-                </table>                 
-              </div>               
-            </dd>               
-        </div>        
-      </form>      
+              	      </script>
+                      </td>
+                  </tr>
+                </table>
+              </div>
+            </dd>
+        </div>
+      </form>
 <script type="text/javascript">
       var estado = new Array();
       	$(document).ready(
@@ -830,15 +829,15 @@ function codificar_repetidos(lista)
               $("#fecha_borrador").val("");
               $("#remitente").show();
               $("#aprobacion").hide();
-              $("#treeboxbox_tree_aprobado").hide(); 
+              $("#treeboxbox_tree_aprobado").hide();
               $("#tr_ciudad_origen").show();
-              $("#oficio_entrante").show();            
+              $("#oficio_entrante").show();
             });
             $("#x_tipo_documento2").click(function(){
               $("#plantillas").show();
               $("#creador").show();
               $("#fecha_borrador").show();
-              $("#remitente").hide();              
+              $("#remitente").hide();
               $("#remitente").val("");
               $("#aprobacion").show();
               $("#treeboxbox_tree_aprobado").show();
@@ -857,11 +856,11 @@ function codificar_repetidos(lista)
               $("#treeboxbox_tree_aprobado").hide();
               $("#tr_ciudad_origen").hide();
               $("#oficio_entrante").hide();
-            });  
+            });
             $("#x_tipo_documento1").click();
-            $('#x_etiqueta').dropdownchecklist({width:200, maxDropHeight: 100}); 
+            $('#x_etiqueta').dropdownchecklist({width:200, maxDropHeight: 100});
          });
-      </script>      
-      <?php include_once("footer.php");?>       
+      </script>
+      <?php include_once("footer.php");?>
     </body>
 </html>

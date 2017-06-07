@@ -65,10 +65,14 @@ class Stringy implements Countable, IteratorAggregate, ArrayAccess
      * @param  mixed   $str      Value to modify, after being cast to string
      * @param  string  $encoding The character encoding
 <<<<<<< HEAD
+<<<<<<< HEAD
      * @return Stringy A Stringy object
 =======
      * @return static A Stringy object
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * @return static A Stringy object
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      * @throws \InvalidArgumentException if an array or object without a
      *         __toString method is passed as the first argument
      */
@@ -92,10 +96,14 @@ class Stringy implements Countable, IteratorAggregate, ArrayAccess
      *
      * @param  string  $string The string to append
 <<<<<<< HEAD
+<<<<<<< HEAD
      * @return Stringy Object with appended $string
 =======
      * @return static Object with appended $string
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * @return static Object with appended $string
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function append($string)
     {
@@ -107,10 +115,14 @@ class Stringy implements Countable, IteratorAggregate, ArrayAccess
      *
      * @param  int     $index Position of the character
 <<<<<<< HEAD
+<<<<<<< HEAD
      * @return Stringy The character at $index
 =======
      * @return static The character at $index
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * @return static The character at $index
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function at($index)
     {
@@ -124,6 +136,7 @@ class Stringy implements Countable, IteratorAggregate, ArrayAccess
      *
      * @param  string $start  Delimiter marking the start of the substring
 <<<<<<< HEAD
+<<<<<<< HEAD
      * @param  string $end    Delimiter marketing the end of the substring
      * @param  int    $offset Index from which to begin the search
      * @return Stringy Object whose $str has been converted to an URL slug
@@ -132,6 +145,11 @@ class Stringy implements Countable, IteratorAggregate, ArrayAccess
      * @param  int    $offset Index from which to begin the search
      * @return static Object whose $str is a substring between $start and $end
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * @param  string $end    Delimiter marking the end of the substring
+     * @param  int    $offset Index from which to begin the search
+     * @return static Object whose $str is a substring between $start and $end
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function between($start, $end, $offset = 0)
     {
@@ -155,10 +173,14 @@ class Stringy implements Countable, IteratorAggregate, ArrayAccess
      * and removes spaces, dashes, as well as underscores.
      *
 <<<<<<< HEAD
+<<<<<<< HEAD
      * @return Stringy Object with $str in camelCase
 =======
      * @return static Object with $str in camelCase
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * @return static Object with $str in camelCase
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function camelize()
     {
@@ -210,10 +232,14 @@ class Stringy implements Countable, IteratorAggregate, ArrayAccess
      * multibyte whitespace such as the thin space and ideographic space.
      *
 <<<<<<< HEAD
+<<<<<<< HEAD
      * @return Stringy Object with a trimmed $str and condensed whitespace
 =======
      * @return static Object with a trimmed $str and condensed whitespace
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * @return static Object with a trimmed $str and condensed whitespace
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function collapseWhitespace()
     {
@@ -325,10 +351,14 @@ class Stringy implements Countable, IteratorAggregate, ArrayAccess
      * character of the string), and in place of spaces as well as underscores.
      *
 <<<<<<< HEAD
+<<<<<<< HEAD
      * @return Stringy Object with a dasherized $str
 =======
      * @return static Object with a dasherized $str
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * @return static Object with a dasherized $str
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function dasherize()
     {
@@ -343,10 +373,14 @@ class Stringy implements Countable, IteratorAggregate, ArrayAccess
      *
      * @param  string  $delimiter Sequence used to separate parts of the string
 <<<<<<< HEAD
+<<<<<<< HEAD
      * @return Stringy Object with a delimited $str
 =======
      * @return static Object with a delimited $str
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * @return static Object with a delimited $str
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function delimit($delimiter)
     {
@@ -389,7 +423,10 @@ class Stringy implements Countable, IteratorAggregate, ArrayAccess
 
     /**
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      * Returns true if the string ends with any of $substrings, false otherwise.
      * By default, the comparison is case-sensitive, but can be made insensitive
      * by setting $caseSensitive to false.
@@ -415,16 +452,23 @@ class Stringy implements Countable, IteratorAggregate, ArrayAccess
     }
 
     /**
+<<<<<<< HEAD
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      * Ensures that the string begins with $substring. If it doesn't, it's
      * prepended.
      *
      * @param  string  $substring The substring to add if not present
 <<<<<<< HEAD
+<<<<<<< HEAD
      * @return Stringy Object with its $str prefixed by the $substring
 =======
      * @return static Object with its $str prefixed by the $substring
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * @return static Object with its $str prefixed by the $substring
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function ensureLeft($substring)
     {
@@ -443,10 +487,14 @@ class Stringy implements Countable, IteratorAggregate, ArrayAccess
      *
      * @param  string  $substring The substring to add if not present
 <<<<<<< HEAD
+<<<<<<< HEAD
      * @return Stringy Object with its $str suffixed by the $substring
 =======
      * @return static Object with its $str suffixed by the $substring
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * @return static Object with its $str suffixed by the $substring
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function ensureRight($substring)
     {
@@ -464,10 +512,14 @@ class Stringy implements Countable, IteratorAggregate, ArrayAccess
      *
      * @param  int     $n Number of characters to retrieve from the start
 <<<<<<< HEAD
+<<<<<<< HEAD
      * @return Stringy Object with its $str being the first $n chars
 =======
      * @return static Object with its $str being the first $n chars
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * @return static Object with its $str being the first $n chars
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function first($n)
     {
@@ -534,10 +586,14 @@ class Stringy implements Countable, IteratorAggregate, ArrayAccess
      *
      * @param  int|null $flags Optional flags
 <<<<<<< HEAD
+<<<<<<< HEAD
      * @return Stringy  Object with the resulting $str after being html decoded.
 =======
      * @return static  Object with the resulting $str after being html decoded.
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * @return static  Object with the resulting $str after being html decoded.
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function htmlDecode($flags = ENT_COMPAT)
     {
@@ -553,10 +609,14 @@ class Stringy implements Countable, IteratorAggregate, ArrayAccess
      *
      * @param  int|null $flags Optional flags
 <<<<<<< HEAD
+<<<<<<< HEAD
      * @return Stringy  Object with the resulting $str after being html encoded.
 =======
      * @return static  Object with the resulting $str after being html encoded.
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * @return static  Object with the resulting $str after being html encoded.
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function htmlEncode($flags = ENT_COMPAT)
     {
@@ -570,10 +630,14 @@ class Stringy implements Countable, IteratorAggregate, ArrayAccess
      * spaces, and strips '_id'.
      *
 <<<<<<< HEAD
+<<<<<<< HEAD
      * @return Stringy Object with a humanized $str
 =======
      * @return static Object with a humanized $str
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * @return static Object with a humanized $str
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function humanize()
     {
@@ -619,10 +683,14 @@ class Stringy implements Countable, IteratorAggregate, ArrayAccess
      * @param  string  $substring String to be inserted
      * @param  int     $index     The index at which to insert the substring
 <<<<<<< HEAD
+<<<<<<< HEAD
      * @return Stringy Object with the resulting $str after the insertion
 =======
      * @return static Object with the resulting $str after the insertion
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * @return static Object with the resulting $str after the insertion
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function insert($substring, $index)
     {
@@ -750,10 +818,14 @@ class Stringy implements Countable, IteratorAggregate, ArrayAccess
      *
      * @param  int     $n Number of characters to retrieve from the end
 <<<<<<< HEAD
+<<<<<<< HEAD
      * @return Stringy Object with its $str being the last $n chars
 =======
      * @return static Object with its $str being the last $n chars
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * @return static Object with its $str being the last $n chars
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function last($n)
     {
@@ -782,10 +854,14 @@ class Stringy implements Countable, IteratorAggregate, ArrayAccess
      * objects corresponding to the lines in the string.
      *
 <<<<<<< HEAD
+<<<<<<< HEAD
      * @return Stringy[] An array of Stringy objects
 =======
      * @return static[] An array of Stringy objects
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * @return static[] An array of Stringy objects
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function lines()
     {
@@ -802,10 +878,14 @@ class Stringy implements Countable, IteratorAggregate, ArrayAccess
      *
      * @param  string  $otherStr Second string for comparison
 <<<<<<< HEAD
+<<<<<<< HEAD
      * @return Stringy Object with its $str being the longest common prefix
 =======
      * @return static Object with its $str being the longest common prefix
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * @return static Object with its $str being the longest common prefix
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function longestCommonPrefix($otherStr)
     {
@@ -831,10 +911,14 @@ class Stringy implements Countable, IteratorAggregate, ArrayAccess
      *
      * @param  string  $otherStr Second string for comparison
 <<<<<<< HEAD
+<<<<<<< HEAD
      * @return Stringy Object with its $str being the longest common suffix
 =======
      * @return static Object with its $str being the longest common suffix
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * @return static Object with its $str being the longest common suffix
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function longestCommonSuffix($otherStr)
     {
@@ -861,10 +945,14 @@ class Stringy implements Countable, IteratorAggregate, ArrayAccess
      *
      * @param  string  $otherStr Second string for comparison
 <<<<<<< HEAD
+<<<<<<< HEAD
      * @return Stringy Object with its $str being the longest common substring
 =======
      * @return static Object with its $str being the longest common substring
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * @return static Object with its $str being the longest common substring
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function longestCommonSubstring($otherStr)
     {
@@ -912,10 +1000,14 @@ class Stringy implements Countable, IteratorAggregate, ArrayAccess
      * Converts the first character of the string to lower case.
      *
 <<<<<<< HEAD
+<<<<<<< HEAD
      * @return Stringy Object with the first character of $str being lower case
 =======
      * @return static Object with the first character of $str being lower case
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * @return static Object with the first character of $str being lower case
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function lowerCaseFirst()
     {
@@ -1009,10 +1101,14 @@ class Stringy implements Countable, IteratorAggregate, ArrayAccess
      * @param  string  $padStr  String used to pad, defaults to space
      * @param  string  $padType One of 'left', 'right', 'both'
 <<<<<<< HEAD
+<<<<<<< HEAD
      * @return Stringy Object with a padded $str
 =======
      * @return static Object with a padded $str
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * @return static Object with a padded $str
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      * @throws /InvalidArgumentException If $padType isn't one of 'right',
      *         'left' or 'both'
      */
@@ -1040,10 +1136,14 @@ class Stringy implements Countable, IteratorAggregate, ArrayAccess
      * @param  int     $length Desired string length after padding
      * @param  string  $padStr String used to pad, defaults to space
 <<<<<<< HEAD
+<<<<<<< HEAD
      * @return Stringy String with padding applied
 =======
      * @return static String with padding applied
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * @return static String with padding applied
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function padBoth($length, $padStr = ' ')
     {
@@ -1060,10 +1160,14 @@ class Stringy implements Countable, IteratorAggregate, ArrayAccess
      * @param  int     $length Desired string length after padding
      * @param  string  $padStr String used to pad, defaults to space
 <<<<<<< HEAD
+<<<<<<< HEAD
      * @return Stringy String with left padding
 =======
      * @return static String with left padding
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * @return static String with left padding
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function padLeft($length, $padStr = ' ')
     {
@@ -1077,10 +1181,14 @@ class Stringy implements Countable, IteratorAggregate, ArrayAccess
      * @param  int     $length Desired string length after padding
      * @param  string  $padStr String used to pad, defaults to space
 <<<<<<< HEAD
+<<<<<<< HEAD
      * @return Stringy String with right padding
 =======
      * @return static String with right padding
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * @return static String with right padding
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function padRight($length, $padStr = ' ')
     {
@@ -1092,10 +1200,14 @@ class Stringy implements Countable, IteratorAggregate, ArrayAccess
      *
      * @param  string  $string The string to append
 <<<<<<< HEAD
+<<<<<<< HEAD
      * @return Stringy Object with appended $string
 =======
      * @return static Object with appended $string
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * @return static Object with appended $string
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function prepend($string)
     {
@@ -1113,10 +1225,14 @@ class Stringy implements Countable, IteratorAggregate, ArrayAccess
      * @param  string  $replacement The string to replace with
      * @param  string  $options     Matching conditions to be used
 <<<<<<< HEAD
+<<<<<<< HEAD
      * @return Stringy Object with the resulting $str after the replacements
 =======
      * @return static Object with the resulting $str after the replacements
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * @return static Object with the resulting $str after the replacements
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function regexReplace($pattern, $replacement, $options = 'msr')
     {
@@ -1134,10 +1250,14 @@ class Stringy implements Countable, IteratorAggregate, ArrayAccess
      *
      * @param  string  $substring The prefix to remove
 <<<<<<< HEAD
+<<<<<<< HEAD
      * @return Stringy Object having a $str without the prefix $substring
 =======
      * @return static Object having a $str without the prefix $substring
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * @return static Object having a $str without the prefix $substring
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function removeLeft($substring)
     {
@@ -1156,10 +1276,14 @@ class Stringy implements Countable, IteratorAggregate, ArrayAccess
      *
      * @param  string  $substring The suffix to remove
 <<<<<<< HEAD
+<<<<<<< HEAD
      * @return Stringy Object having a $str without the suffix $substring
 =======
      * @return static Object having a $str without the suffix $substring
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * @return static Object having a $str without the suffix $substring
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function removeRight($substring)
     {
@@ -1178,10 +1302,14 @@ class Stringy implements Countable, IteratorAggregate, ArrayAccess
      *
      * @param  int     $multiplier The number of times to repeat the string
 <<<<<<< HEAD
+<<<<<<< HEAD
      * @return Stringy Object with a repeated str
 =======
      * @return static Object with a repeated str
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * @return static Object with a repeated str
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function repeat($multiplier)
     {
@@ -1196,10 +1324,14 @@ class Stringy implements Countable, IteratorAggregate, ArrayAccess
      * @param  string  $search      The needle to search for
      * @param  string  $replacement The string to replace with
 <<<<<<< HEAD
+<<<<<<< HEAD
      * @return Stringy Object with the resulting $str after the replacements
 =======
      * @return static Object with the resulting $str after the replacements
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * @return static Object with the resulting $str after the replacements
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function replace($search, $replacement)
     {
@@ -1210,10 +1342,14 @@ class Stringy implements Countable, IteratorAggregate, ArrayAccess
      * Returns a reversed string. A multibyte version of strrev().
      *
 <<<<<<< HEAD
+<<<<<<< HEAD
      * @return Stringy Object with a reversed $str
 =======
      * @return static Object with a reversed $str
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * @return static Object with a reversed $str
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function reverse()
     {
@@ -1237,10 +1373,14 @@ class Stringy implements Countable, IteratorAggregate, ArrayAccess
      * @param  int     $length    Desired length of the truncated string
      * @param  string  $substring The substring to append if it can fit
 <<<<<<< HEAD
+<<<<<<< HEAD
      * @return Stringy Object with the resulting $str after truncating
 =======
      * @return static Object with the resulting $str after truncating
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * @return static Object with the resulting $str after truncating
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function safeTruncate($length, $substring = '')
     {
@@ -1261,12 +1401,18 @@ class Stringy implements Countable, IteratorAggregate, ArrayAccess
             // Find pos of the last occurrence of a space, get up to that
             $lastPos = \mb_strrpos($truncated, ' ', 0, $encoding);
 <<<<<<< HEAD
+<<<<<<< HEAD
             $truncated = \mb_substr($truncated, 0, $lastPos, $encoding);
 =======
             if ($lastPos !== false) {
                 $truncated = \mb_substr($truncated, 0, $lastPos, $encoding);
             }
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+            if ($lastPos !== false) {
+                $truncated = \mb_substr($truncated, 0, $lastPos, $encoding);
+            }
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
         }
 
         $stringy->str = $truncated . $substring;
@@ -1279,10 +1425,14 @@ class Stringy implements Countable, IteratorAggregate, ArrayAccess
      * characters in random order.
      *
 <<<<<<< HEAD
+<<<<<<< HEAD
      * @return Stringy Object with a shuffled $str
 =======
      * @return static Object with a shuffled $str
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * @return static Object with a shuffled $str
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function shuffle()
     {
@@ -1306,10 +1456,14 @@ class Stringy implements Countable, IteratorAggregate, ArrayAccess
      *
      * @param  string  $replacement The string used to replace whitespace
 <<<<<<< HEAD
+<<<<<<< HEAD
      * @return Stringy Object whose $str has been converted to an URL slug
 =======
      * @return static Object whose $str has been converted to an URL slug
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * @return static Object whose $str has been converted to an URL slug
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function slugify($replacement = '-')
     {
@@ -1348,7 +1502,10 @@ class Stringy implements Countable, IteratorAggregate, ArrayAccess
 
     /**
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      * Returns true if the string begins with any of $substrings, false
      * otherwise. By default the comparison is case-sensitive, but can be made
      * insensitive by setting $caseSensitive to false.
@@ -1374,7 +1531,10 @@ class Stringy implements Countable, IteratorAggregate, ArrayAccess
     }
 
     /**
+<<<<<<< HEAD
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      * Returns the substring beginning at $start, and up to, but not including
      * the index specified by $end. If $end is omitted, the function extracts
      * the remaining string. If $end is negative, it is computed from the end
@@ -1383,10 +1543,14 @@ class Stringy implements Countable, IteratorAggregate, ArrayAccess
      * @param  int     $start Initial index from which to begin extraction
      * @param  int     $end   Optional index at which to end extraction
 <<<<<<< HEAD
+<<<<<<< HEAD
      * @return Stringy Object with its $str being the extracted substring
 =======
      * @return static Object with its $str being the extracted substring
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * @return static Object with its $str being the extracted substring
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function slice($start, $end = null)
     {
@@ -1401,12 +1565,16 @@ class Stringy implements Countable, IteratorAggregate, ArrayAccess
         }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
         $str = \mb_substr($this->str, $start, $length, $this->encoding);
 
         return static::create($str, $this->encoding);
 =======
         return $this->substr($start, $length);
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+        return $this->substr($start, $length);
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
     }
 
     /**
@@ -1417,10 +1585,14 @@ class Stringy implements Countable, IteratorAggregate, ArrayAccess
      * @param  string    $pattern The regex with which to split the string
      * @param  int       $limit   Optional maximum number of results to return
 <<<<<<< HEAD
+<<<<<<< HEAD
      * @return Stringy[] An array of Stringy objects
 =======
      * @return static[] An array of Stringy objects
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * @return static[] An array of Stringy objects
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function split($pattern, $limit = null)
     {
@@ -1467,7 +1639,10 @@ class Stringy implements Countable, IteratorAggregate, ArrayAccess
 
     /**
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      * Strip all whitespace characters. This includes tabs and newline
      * characters, as well as multibyte whitespace such as the thin space
      * and ideographic space.
@@ -1480,7 +1655,10 @@ class Stringy implements Countable, IteratorAggregate, ArrayAccess
     }
 
     /**
+<<<<<<< HEAD
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      * Returns the substring beginning at $start with the specified $length.
      * It differs from the mb_substr() function in that providing a $length of
      * null will return the rest of the string, rather than an empty string.
@@ -1488,10 +1666,14 @@ class Stringy implements Countable, IteratorAggregate, ArrayAccess
      * @param  int     $start  Position of the first character to use
      * @param  int     $length Maximum number of characters used
 <<<<<<< HEAD
+<<<<<<< HEAD
      * @return Stringy Object with its $str being the substring
 =======
      * @return static Object with its $str being the substring
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * @return static Object with its $str being the substring
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function substr($start, $length = null)
     {
@@ -1506,10 +1688,14 @@ class Stringy implements Countable, IteratorAggregate, ArrayAccess
      *
      * @param  string  $substring The substring to add to both sides
 <<<<<<< HEAD
+<<<<<<< HEAD
      * @return Stringy Object whose $str had the substring both prepended and
 =======
      * @return static Object whose $str had the substring both prepended and
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * @return static Object whose $str had the substring both prepended and
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      *                 appended
      */
     public function surround($substring)
@@ -1523,10 +1709,14 @@ class Stringy implements Countable, IteratorAggregate, ArrayAccess
      * Returns a case swapped version of the string.
      *
 <<<<<<< HEAD
+<<<<<<< HEAD
      * @return Stringy Object whose $str has each character's case swapped
 =======
      * @return static Object whose $str has each character's case swapped
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * @return static Object whose $str has each character's case swapped
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function swapCase()
     {
@@ -1554,10 +1744,14 @@ class Stringy implements Countable, IteratorAggregate, ArrayAccess
      * equivalents.
      *
 <<<<<<< HEAD
+<<<<<<< HEAD
      * @return Stringy Object whose $str has those characters removed
 =======
      * @return static Object whose $str has those characters removed
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * @return static Object whose $str has those characters removed
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function tidy()
     {
@@ -1583,10 +1777,14 @@ class Stringy implements Countable, IteratorAggregate, ArrayAccess
      *
      * @param  array   $ignore An array of words not to capitalize
 <<<<<<< HEAD
+<<<<<<< HEAD
      * @return Stringy Object with a titleized $str
 =======
      * @return static Object with a titleized $str
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * @return static Object with a titleized $str
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function titleize($ignore = null)
     {
@@ -1618,10 +1816,14 @@ class Stringy implements Countable, IteratorAggregate, ArrayAccess
      * @param  bool    $removeUnsupported Whether or not to remove the
      *                                    unsupported characters
 <<<<<<< HEAD
+<<<<<<< HEAD
      * @return Stringy Object whose $str contains only ASCII characters
 =======
      * @return static Object whose $str contains only ASCII characters
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * @return static Object whose $str contains only ASCII characters
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function toAscii($removeUnsupported = true)
     {
@@ -1677,10 +1879,14 @@ class Stringy implements Countable, IteratorAggregate, ArrayAccess
      * mb_strtolower().
      *
 <<<<<<< HEAD
+<<<<<<< HEAD
      * @return Stringy Object with all characters of $str being lowercase
 =======
      * @return static Object with all characters of $str being lowercase
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * @return static Object with all characters of $str being lowercase
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function toLowerCase()
     {
@@ -1695,10 +1901,14 @@ class Stringy implements Countable, IteratorAggregate, ArrayAccess
      *
      * @param  int     $tabLength Number of spaces to replace each tab with
 <<<<<<< HEAD
+<<<<<<< HEAD
      * @return Stringy Object whose $str has had tabs switched to spaces
 =======
      * @return static Object whose $str has had tabs switched to spaces
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * @return static Object whose $str has had tabs switched to spaces
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function toSpaces($tabLength = 4)
     {
@@ -1715,10 +1925,14 @@ class Stringy implements Countable, IteratorAggregate, ArrayAccess
      *
      * @param  int     $tabLength Number of spaces to replace with a tab
 <<<<<<< HEAD
+<<<<<<< HEAD
      * @return Stringy Object whose $str has had spaces switched to tabs
 =======
      * @return static Object whose $str has had spaces switched to tabs
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * @return static Object whose $str has had spaces switched to tabs
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function toTabs($tabLength = 4)
     {
@@ -1732,10 +1946,14 @@ class Stringy implements Countable, IteratorAggregate, ArrayAccess
      * Converts the first character of each word in the string to uppercase.
      *
 <<<<<<< HEAD
+<<<<<<< HEAD
      * @return Stringy Object with all characters of $str being title-cased
 =======
      * @return static Object with all characters of $str being title-cased
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * @return static Object with all characters of $str being title-cased
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function toTitleCase()
     {
@@ -1749,10 +1967,14 @@ class Stringy implements Countable, IteratorAggregate, ArrayAccess
      * mb_strtoupper().
      *
 <<<<<<< HEAD
+<<<<<<< HEAD
      * @return Stringy Object with all characters of $str being uppercase
 =======
      * @return static Object with all characters of $str being uppercase
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * @return static Object with all characters of $str being uppercase
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function toUpperCase()
     {
@@ -1768,10 +1990,14 @@ class Stringy implements Countable, IteratorAggregate, ArrayAccess
      *
      * @param  string  $chars Optional string of characters to strip
 <<<<<<< HEAD
+<<<<<<< HEAD
      * @return Stringy Object with a trimmed $str
 =======
      * @return static Object with a trimmed $str
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * @return static Object with a trimmed $str
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function trim($chars = null)
     {
@@ -1787,10 +2013,14 @@ class Stringy implements Countable, IteratorAggregate, ArrayAccess
      *
      * @param  string  $chars Optional string of characters to strip
 <<<<<<< HEAD
+<<<<<<< HEAD
      * @return Stringy Object with a trimmed $str
 =======
      * @return static Object with a trimmed $str
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * @return static Object with a trimmed $str
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function trimLeft($chars = null)
     {
@@ -1806,10 +2036,14 @@ class Stringy implements Countable, IteratorAggregate, ArrayAccess
      *
      * @param  string  $chars Optional string of characters to strip
 <<<<<<< HEAD
+<<<<<<< HEAD
      * @return Stringy Object with a trimmed $str
 =======
      * @return static Object with a trimmed $str
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * @return static Object with a trimmed $str
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function trimRight($chars = null)
     {
@@ -1826,10 +2060,14 @@ class Stringy implements Countable, IteratorAggregate, ArrayAccess
      * @param  int     $length    Desired length of the truncated string
      * @param  string  $substring The substring to append if it can fit
 <<<<<<< HEAD
+<<<<<<< HEAD
      * @return Stringy Object with the resulting $str after truncating
 =======
      * @return static Object with the resulting $str after truncating
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * @return static Object with the resulting $str after truncating
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function truncate($length, $substring = '')
     {
@@ -1855,10 +2093,14 @@ class Stringy implements Countable, IteratorAggregate, ArrayAccess
      * dashes.
      *
 <<<<<<< HEAD
+<<<<<<< HEAD
      * @return Stringy Object with an underscored $str
 =======
      * @return static Object with an underscored $str
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * @return static Object with an underscored $str
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function underscored()
     {
@@ -1871,10 +2113,14 @@ class Stringy implements Countable, IteratorAggregate, ArrayAccess
      * and underscores, and removes spaces, dashes, underscores.
      *
 <<<<<<< HEAD
+<<<<<<< HEAD
      * @return Stringy Object with $str in UpperCamelCase
 =======
      * @return static Object with $str in UpperCamelCase
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * @return static Object with $str in UpperCamelCase
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function upperCamelize()
     {
@@ -1885,10 +2131,14 @@ class Stringy implements Countable, IteratorAggregate, ArrayAccess
      * Converts the first character of the supplied string to upper case.
      *
 <<<<<<< HEAD
+<<<<<<< HEAD
      * @return Stringy Object with the first character of $str being upper case
 =======
      * @return static Object with the first character of $str being upper case
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * @return static Object with the first character of $str being upper case
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function upperCaseFirst()
     {
@@ -1913,6 +2163,7 @@ class Stringy implements Countable, IteratorAggregate, ArrayAccess
 
         return $charsArray = array(
 <<<<<<< HEAD
+<<<<<<< HEAD
             '0'    => array('°', '₀', '۰'),
             '1'    => array('¹', '₁', '۱'),
             '2'    => array('²', '₂', '۲'),
@@ -1924,6 +2175,8 @@ class Stringy implements Countable, IteratorAggregate, ArrayAccess
             '8'    => array('⁸', '₈', '۸'),
             '9'    => array('⁹', '₉', '۹'),
 =======
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
             '0'    => array('°', '₀', '۰', '０'),
             '1'    => array('¹', '₁', '۱', '１'),
             '2'    => array('²', '₂', '۲', '２'),
@@ -1934,12 +2187,16 @@ class Stringy implements Countable, IteratorAggregate, ArrayAccess
             '7'    => array('⁷', '₇', '۷', '７'),
             '8'    => array('⁸', '₈', '۸', '８'),
             '9'    => array('⁹', '₉', '۹', '９'),
+<<<<<<< HEAD
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
             'a'    => array('à', 'á', 'ả', 'ã', 'ạ', 'ă', 'ắ', 'ằ', 'ẳ', 'ẵ',
                             'ặ', 'â', 'ấ', 'ầ', 'ẩ', 'ẫ', 'ậ', 'ā', 'ą', 'å',
                             'α', 'ά', 'ἀ', 'ἁ', 'ἂ', 'ἃ', 'ἄ', 'ἅ', 'ἆ', 'ἇ',
                             'ᾀ', 'ᾁ', 'ᾂ', 'ᾃ', 'ᾄ', 'ᾅ', 'ᾆ', 'ᾇ', 'ὰ', 'ά',
                             'ᾰ', 'ᾱ', 'ᾲ', 'ᾳ', 'ᾴ', 'ᾶ', 'ᾷ', 'а', 'أ', 'အ',
+<<<<<<< HEAD
 <<<<<<< HEAD
                             'ာ', 'ါ', 'ǻ', 'ǎ', 'ª', 'ა', 'अ', 'ا'),
             'b'    => array('б', 'β', 'Ъ', 'Ь', 'ب', 'ဗ', 'ბ'),
@@ -1954,6 +2211,8 @@ class Stringy implements Countable, IteratorAggregate, ArrayAccess
             'g'    => array('ĝ', 'ğ', 'ġ', 'ģ', 'г', 'ґ', 'γ', 'ဂ', 'გ', 'گ'),
             'h'    => array('ĥ', 'ħ', 'η', 'ή', 'ح', 'ه', 'ဟ', 'ှ', 'ჰ'),
 =======
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
                             'ာ', 'ါ', 'ǻ', 'ǎ', 'ª', 'ა', 'अ', 'ا', 'ａ'),
             'b'    => array('б', 'β', 'Ъ', 'Ь', 'ب', 'ဗ', 'ბ', 'ｂ'),
             'c'    => array('ç', 'ć', 'č', 'ĉ', 'ċ', 'ｃ'),
@@ -1967,11 +2226,15 @@ class Stringy implements Countable, IteratorAggregate, ArrayAccess
             'g'    => array('ĝ', 'ğ', 'ġ', 'ģ', 'г', 'ґ', 'γ', 'ဂ', 'გ', 'گ',
                             'ｇ'),
             'h'    => array('ĥ', 'ħ', 'η', 'ή', 'ح', 'ه', 'ဟ', 'ှ', 'ჰ', 'ｈ'),
+<<<<<<< HEAD
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
             'i'    => array('í', 'ì', 'ỉ', 'ĩ', 'ị', 'î', 'ï', 'ī', 'ĭ', 'į',
                             'ı', 'ι', 'ί', 'ϊ', 'ΐ', 'ἰ', 'ἱ', 'ἲ', 'ἳ', 'ἴ',
                             'ἵ', 'ἶ', 'ἷ', 'ὶ', 'ί', 'ῐ', 'ῑ', 'ῒ', 'ΐ', 'ῖ',
                             'ῗ', 'і', 'ї', 'и', 'ဣ', 'ိ', 'ီ', 'ည်', 'ǐ', 'ი',
+<<<<<<< HEAD
 <<<<<<< HEAD
                             'इ', 'ی'),
             'j'    => array('ĵ', 'ј', 'Ј', 'ჯ', 'ج'),
@@ -2002,6 +2265,8 @@ class Stringy implements Countable, IteratorAggregate, ArrayAccess
                             'ϋ', 'ύ', 'ΰ', 'ي', 'ယ'),
             'z'    => array('ź', 'ž', 'ż', 'з', 'ζ', 'ز', 'ဇ', 'ზ'),
 =======
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
                             'इ', 'ی', 'ｉ'),
             'j'    => array('ĵ', 'ј', 'Ј', 'ჯ', 'ج', 'ｊ'),
             'k'    => array('ķ', 'ĸ', 'к', 'κ', 'Ķ', 'ق', 'ك', 'က', 'კ', 'ქ',
@@ -2032,7 +2297,10 @@ class Stringy implements Countable, IteratorAggregate, ArrayAccess
             'y'    => array('ý', 'ỳ', 'ỷ', 'ỹ', 'ỵ', 'ÿ', 'ŷ', 'й', 'ы', 'υ',
                             'ϋ', 'ύ', 'ΰ', 'ي', 'ယ', 'ｙ'),
             'z'    => array('ź', 'ž', 'ż', 'з', 'ζ', 'ز', 'ဇ', 'ზ', 'ｚ'),
+<<<<<<< HEAD
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
             'aa'   => array('ع', 'आ', 'آ'),
             'ae'   => array('ä', 'æ', 'ǽ'),
             'ai'   => array('ऐ'),
@@ -2067,6 +2335,7 @@ class Stringy implements Countable, IteratorAggregate, ArrayAccess
                             'Ặ', 'Â', 'Ấ', 'Ầ', 'Ẩ', 'Ẫ', 'Ậ', 'Å', 'Ā', 'Ą',
                             'Α', 'Ά', 'Ἀ', 'Ἁ', 'Ἂ', 'Ἃ', 'Ἄ', 'Ἅ', 'Ἆ', 'Ἇ',
                             'ᾈ', 'ᾉ', 'ᾊ', 'ᾋ', 'ᾌ', 'ᾍ', 'ᾎ', 'ᾏ', 'Ᾰ', 'Ᾱ',
+<<<<<<< HEAD
 <<<<<<< HEAD
                             'Ὰ', 'Ά', 'ᾼ', 'А', 'Ǻ', 'Ǎ'),
             'B'    => array('Б', 'Β', 'ब'),
@@ -2104,6 +2373,8 @@ class Stringy implements Countable, IteratorAggregate, ArrayAccess
                             'Ы', 'Й', 'Υ', 'Ϋ', 'Ŷ'),
             'Z'    => array('Ź', 'Ž', 'Ż', 'З', 'Ζ'),
 =======
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
                             'Ὰ', 'Ά', 'ᾼ', 'А', 'Ǻ', 'Ǎ', 'Ａ'),
             'B'    => array('Б', 'Β', 'ब', 'Ｂ'),
             'C'    => array('Ç','Ć', 'Č', 'Ĉ', 'Ċ', 'Ｃ'),
@@ -2143,7 +2414,10 @@ class Stringy implements Countable, IteratorAggregate, ArrayAccess
             'Y'    => array('Ý', 'Ỳ', 'Ỷ', 'Ỹ', 'Ỵ', 'Ÿ', 'Ῠ', 'Ῡ', 'Ὺ', 'Ύ',
                             'Ы', 'Й', 'Υ', 'Ϋ', 'Ŷ', 'Ｙ'),
             'Z'    => array('Ź', 'Ž', 'Ż', 'З', 'Ζ', 'Ｚ'),
+<<<<<<< HEAD
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
             'AE'   => array('Ä', 'Æ', 'Ǽ'),
             'CH'   => array('Ч'),
             'DJ'   => array('Ђ'),
@@ -2171,11 +2445,16 @@ class Stringy implements Countable, IteratorAggregate, ArrayAccess
                             "\xE2\x80\x85", "\xE2\x80\x86", "\xE2\x80\x87",
                             "\xE2\x80\x88", "\xE2\x80\x89", "\xE2\x80\x8A",
 <<<<<<< HEAD
+<<<<<<< HEAD
                             "\xE2\x80\xAF", "\xE2\x81\x9F", "\xE3\x80\x80"),
 =======
                             "\xE2\x80\xAF", "\xE2\x81\x9F", "\xE3\x80\x80",
                             "\xEF\xBE\xA0"),
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+                            "\xE2\x80\xAF", "\xE2\x81\x9F", "\xE3\x80\x80",
+                            "\xEF\xBE\xA0"),
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
         );
     }
 
@@ -2187,6 +2466,7 @@ class Stringy implements Countable, IteratorAggregate, ArrayAccess
      * @param  int     $right  Length of right padding
      * @param  string  $padStr String used to pad
 <<<<<<< HEAD
+<<<<<<< HEAD
      * @return Stringy String with padding applied
      */
     private function applyPadding($left = 0, $right = 0, $padStr = ' ')
@@ -2195,6 +2475,11 @@ class Stringy implements Countable, IteratorAggregate, ArrayAccess
      */
     protected function applyPadding($left = 0, $right = 0, $padStr = ' ')
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * @return static String with padding applied
+     */
+    protected function applyPadding($left = 0, $right = 0, $padStr = ' ')
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
     {
         $stringy = static::create($this->str, $this->encoding);
         $length = \mb_strlen($padStr, $stringy->encoding);
@@ -2223,10 +2508,14 @@ class Stringy implements Countable, IteratorAggregate, ArrayAccess
      * @return bool   Whether or not $str matches the pattern
      */
 <<<<<<< HEAD
+<<<<<<< HEAD
     private function matchesPattern($pattern)
 =======
     protected function matchesPattern($pattern)
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+    protected function matchesPattern($pattern)
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
     {
         $regexEncoding = $this->regexEncoding();
         $this->regexEncoding($this->encoding);
@@ -2242,10 +2531,14 @@ class Stringy implements Countable, IteratorAggregate, ArrayAccess
      * mbstring module is not installed.
      */
 <<<<<<< HEAD
+<<<<<<< HEAD
     private function eregReplace($pattern, $replacement, $string, $option = 'msr')
 =======
     protected function eregReplace($pattern, $replacement, $string, $option = 'msr')
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+    protected function eregReplace($pattern, $replacement, $string, $option = 'msr')
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
     {
         static $functionExists;
         if ($functionExists === null) {
@@ -2265,10 +2558,14 @@ class Stringy implements Countable, IteratorAggregate, ArrayAccess
      * module is not installed.
      */
 <<<<<<< HEAD
+<<<<<<< HEAD
     private function regexEncoding()
 =======
     protected function regexEncoding()
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+    protected function regexEncoding()
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
     {
         static $functionExists;
 
@@ -2283,16 +2580,21 @@ class Stringy implements Countable, IteratorAggregate, ArrayAccess
     }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     private function supportsEncoding()
 =======
     protected function supportsEncoding()
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+    protected function supportsEncoding()
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
     {
         $supported = array('UTF-8' => true, 'ASCII' => true);
 
         if (isset($supported[$this->encoding])) {
             return true;
         } else {
+<<<<<<< HEAD
 <<<<<<< HEAD
             throw new \RuntimeExpception('Stringy method requires the ' .
                 'mbstring module for encodings other than ASCII and UTF-8');
@@ -2301,6 +2603,11 @@ class Stringy implements Countable, IteratorAggregate, ArrayAccess
                 'mbstring module for encodings other than ASCII and UTF-8. ' .
                 'Encoding used: ' . $this->encoding);
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+            throw new \RuntimeException('Stringy method requires the ' .
+                'mbstring module for encodings other than ASCII and UTF-8. ' .
+                'Encoding used: ' . $this->encoding);
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
         }
     }
 }

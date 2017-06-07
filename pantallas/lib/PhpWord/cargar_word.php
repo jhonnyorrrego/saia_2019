@@ -39,8 +39,13 @@ if(@$_REQUEST['cargar']){
 		$anexo=busca_filtro_tabla("idcampos_formato","campos_formato","nombre='anexo_word' AND formato_idformato=".$idformato,"",$conn);
 	}
 	cargar_archivo($iddoc,'',$idformato, $anexo[0]['idcampos_formato']);		
+<<<<<<< HEAD
 	//OJO: estaba comentado en el desarrollo de almacenamiento 
 	/*$anexo = busca_filtro_tabla("d.ruta,d.idanexos", "documento a, formato b, campos_formato c, anexos d", "lower(a.plantilla)=b.nombre AND b.idformato=c.formato_idformato AND c.nombre='anexo_word' AND c.idcampos_formato=d.campos_formato AND a.iddocumento=" . $iddoc . " AND d.documento_iddocumento=" . $iddoc, "", $conn);
+=======
+	
+	$anexo = busca_filtro_tabla("d.ruta,d.idanexos", "documento a, formato b, campos_formato c, anexos d", "lower(a.plantilla)=b.nombre AND b.idformato=c.formato_idformato AND c.nombre='anexo_word' AND c.idcampos_formato=d.campos_formato AND a.iddocumento=" . $iddoc . " AND d.documento_iddocumento=" . $iddoc, "", $conn);
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 	
 	$vector_ruta=explode('../',$anexo[0]['ruta']);
 	$nueva_ruta='../'.$vector_ruta[ count($vector_ruta)-1 ];

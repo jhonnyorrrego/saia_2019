@@ -328,7 +328,6 @@ if($buscar_tarea["numcampos"]) {
 	$id_tarea = phpmkr_insert_id();
 }*/
 ?>
-<<<<<<< HEAD
     <div id="output"></div>
     <script language="javascript" type="text/javascript">
         //var wsUri = "ws://echo.websocket.org/";
@@ -341,7 +340,6 @@ if($buscar_tarea["numcampos"]) {
         function init() {
             output = document.getElementById("output");
             testWebSocket();
-=======
 
             <div id="output"></div>
 
@@ -369,7 +367,6 @@ if($buscar_tarea["numcampos"]) {
                 || win.mozRTCPeerConnection
                 || win.webkitRTCPeerConnection;
             useWebKit = !!win.webkitRTCPeerConnection;
->>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
         }
         //minimal requirements for data connection
         var mediaConstraints = {

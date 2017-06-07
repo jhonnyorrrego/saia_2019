@@ -19,7 +19,7 @@ include_once($ruta_db_superior."class_transferencia.php");
 
 guardar_documento($_REQUEST["iddoc"],1);
 
-$datos_formato=busca_filtro_tabla("","formato","idformato=".$_REQUEST["formato"],"",$conn); 
+$datos_formato=busca_filtro_tabla("","formato","idformato=".$_REQUEST["formato"],"",$conn);
 if($datos_formato[0]["mostrar_pdf"]==1){
 	$sql1="update documento set pdf='' where iddocumento=".$_REQUEST["iddoc"];
 	phpmkr_query($sql1);
@@ -27,7 +27,7 @@ if($datos_formato[0]["mostrar_pdf"]==1){
 }else if($datos_formato[0]["mostrar_pdf"]==2){
 		redirecciona("../../pantallas/documento/visor_documento.php?pdf_word=1&iddoc=".$_REQUEST["iddoc"]);
 	}
- // Recibe el parametro para editar una ruta 
+ // Recibe el parametro para editar una ruta
 if(@$_REQUEST["adruta"]){
   echo "<script>window.location='rutaadd.php?x_plantilla=".@$_REQUEST["x_plantilla"]."&obligatorio=".$_REQUEST["obligatorio"]."&doc=".$_REQUEST["iddoc"]."&origen=".usuario_actual("funcionario_codigo")."&reset_ruta=1';</script>";
 }
@@ -37,12 +37,12 @@ if($tiene_ruta['numcampos']>1){
     $sql="DELETE FROM buzon_salida WHERE lower(nombre) IN('revisado','aprobado') AND archivo_idarchivo=".$_REQUEST["iddoc"];
     phpmkr_query($sql);
     $sql="DELETE FROM buzon_entrada WHERE lower(nombre) IN('revisado','aprobado') AND archivo_idarchivo=".$_REQUEST["iddoc"];
-    phpmkr_query($sql);    
+    phpmkr_query($sql);
     $sql="UPDATE buzon_entrada SET activo=1 WHERE lower(nombre)='por_aprobar' AND archivo_idarchivo=".$_REQUEST["iddoc"];
-    phpmkr_query($sql);    
-    
+    phpmkr_query($sql);
+
 }
 
 
-echo "<script>window.location='".$ruta_db_superior."formatos/".$datos_formato[0]["nombre"]."/mostrar_".$datos_formato[0]["nombre"].".php?iddoc=".$_REQUEST["iddoc"]."&tipo_destino=1';</script>";
+echo "<script>window.location='".$ruta_db_superior . FORMATOS_CLIENTE . $datos_formato[0]["nombre"]."/mostrar_".$datos_formato[0]["nombre"].".php?iddoc=".$_REQUEST["iddoc"]."&tipo_destino=1';</script>";
 ?>

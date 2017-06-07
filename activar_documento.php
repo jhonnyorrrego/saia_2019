@@ -1,7 +1,7 @@
 <?php
-/* 
+/*
 <Archivo>
-<Nombre>activar_documento.php</Nombre> 
+<Nombre>activar_documento.php</Nombre>
 <Parametros>$_REQUEST["buscar"]:permite mostrar el fomulario de busqueda, $_REQUEST["key"]:numero de radicado, $_REQUEST["plantilla"]:tipo de plantilla</Parametros>
 <ruta>saia1.06/activar_documento.php</ruta>
 <Responsabilidades>permite buscar documentos por numero y plantilla y muestra el resultado y muestra enlace para activar el documento<Responsabilidades>
@@ -19,7 +19,7 @@ function seleccionado(tipo)
 {if(tipo=="plantilla")
    document.getElementById("tr_plantilla").style.display="";
  else
-   document.getElementById("tr_plantilla").style.display="none";  
+   document.getElementById("tr_plantilla").style.display="none";
 }
 </script>
 <form accept="Activar" enctype="text/plain" action="" target="listado" name="form1">
@@ -37,19 +37,19 @@ function seleccionado(tipo)
         <td class="encabezado"> Tipo de documento</td><td bgcolor="#f5f5f5">
         <input type="radio" name="tipo_documento" value="plantilla" onclick="seleccionado('plantilla')">Plantilla&nbsp;&nbsp;
         <input type="radio" name="tipo_documento" value="rad_entrada" onclick="seleccionado('entrada')" checked>Entrada </td>
-       </tr> 
+       </tr>
        <tr id="tr_plantilla" style="display:none">
        <td class="encabezado">Plantilla</td> <td bgcolor="#f5f5f5">
          <?php
       $formatos = busca_filtro_tabla("distinct f.nombre,lower(f.etiqueta) as etiqueta","formato f","f.mostrar=1 or f.cod_padre>0","lower(f.etiqueta) asc", $conn);
        //print_r($formatos);
-       ?> 
+       ?>
           <select title="tipo" name="plantilla" id="">
 <?php
        for($i=0; $i<$formatos["numcampos"]; $i++)
        {
         echo "<option value='".$formatos[$i]["nombre"]."'>".ucfirst($formatos[$i]["etiqueta"])."</option>";
-       } 
+       }
             ?>
           </select></td>
       </tr-->
@@ -87,7 +87,7 @@ document.getElementById("ocultar").style.display="none";
       Plantilla</td>
     <td colspan="2"></td>
   </tr>
-<?php 
+<?php
  $ruta = strtolower($_REQUEST["plantilla"]);
   for($i=0;$i<$res["numcampos"];$i++)
      {echo "<tr><td>".$res[$i]["fecha"]."</td>
@@ -98,13 +98,13 @@ document.getElementById("ocultar").style.display="none";
       echo "<a href='activar_documentofunc.php?func=1&key=".$res[$i]["iddocumento"]."'>Activar</a>";
       echo "&nbsp;</td>";
       echo "<td width='30px'>";
-      if($res[$i]["plantilla"]<>"")      
-      echo "<a href='formatos/$ruta/mostrar_$ruta.php?iddoc=".$res[$i]["iddocumento"]."'>Detalles</a>";
+      if($res[$i]["plantilla"] != "")
+      	echo "<a href='" . FORMATOS_CLIENTE . "$ruta/mostrar_$ruta.php?iddoc=".$res[$i]["iddocumento"]."'>Detalles</a>";
       echo "&nbsp;</td></tr>";
      }
   ?>
 </table>
-<?php      
+<?php
 }
 else alerta("Por Favor Seleccione un Documento",'error',4000);
 include_once("footer.php");

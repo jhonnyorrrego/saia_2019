@@ -15,21 +15,30 @@ class Sftp implements Adapter,
 
     /**
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      * Constructor
      *
      * @param \Ssh\Sftp $sftp      An Sftp instance
      * @param string    $directory The distant directory
      * @param boolean   $create    Whether to create the remote directory if it
+<<<<<<< HEAD
 =======
      * @param \Ssh\Sftp $sftp      An Sftp instance
      * @param string    $directory The distant directory
      * @param bool      $create    Whether to create the remote directory if it
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      *                             does not exist
      */
     public function __construct(SftpClient $sftp, $directory = null, $create = false)
     {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
         $this->sftp      = $sftp;
         $this->directory = $directory;
         $this->create    = $create;
@@ -37,6 +46,7 @@ class Sftp implements Adapter,
 
     /**
      * {@inheritDoc}
+<<<<<<< HEAD
 =======
         $this->sftp = $sftp;
         $this->directory = $directory;
@@ -46,6 +56,8 @@ class Sftp implements Adapter,
     /**
      * {@inheritdoc}
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function read($key)
     {
@@ -58,10 +70,14 @@ class Sftp implements Adapter,
 
     /**
 <<<<<<< HEAD
+<<<<<<< HEAD
      * {@inheritDoc}
 =======
      * {@inheritdoc}
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * {@inheritDoc}
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function rename($sourceKey, $targetKey)
     {
@@ -69,20 +85,28 @@ class Sftp implements Adapter,
         $targetPath = $this->computePath($targetKey);
 
 <<<<<<< HEAD
+<<<<<<< HEAD
         $this->ensureDirectoryExists(dirname($targetPath), true);
 =======
         $this->ensureDirectoryExists(\Gaufrette\Util\Path::dirname($targetPath), true);
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+        $this->ensureDirectoryExists(dirname($targetPath), true);
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 
         return $this->sftp->rename($sourcePath, $targetPath);
     }
 
     /**
 <<<<<<< HEAD
+<<<<<<< HEAD
      * {@inheritDoc}
 =======
      * {@inheritdoc}
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * {@inheritDoc}
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function write($key, $content)
     {
@@ -90,10 +114,14 @@ class Sftp implements Adapter,
 
         $path = $this->computePath($key);
 <<<<<<< HEAD
+<<<<<<< HEAD
         $this->ensureDirectoryExists(dirname($path), true);
 =======
         $this->ensureDirectoryExists(\Gaufrette\Util\Path::dirname($path), true);
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+        $this->ensureDirectoryExists(dirname($path), true);
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
         $numBytes = $this->sftp->write($path, $content);
 
         return $numBytes;
@@ -101,10 +129,14 @@ class Sftp implements Adapter,
 
     /**
 <<<<<<< HEAD
+<<<<<<< HEAD
      * {@inheritDoc}
 =======
      * {@inheritdoc}
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * {@inheritDoc}
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function exists($key)
     {
@@ -118,10 +150,14 @@ class Sftp implements Adapter,
 
     /**
 <<<<<<< HEAD
+<<<<<<< HEAD
      * {@inheritDoc}
 =======
      * {@inheritdoc}
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * {@inheritDoc}
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function isDirectory($key)
     {
@@ -134,10 +170,14 @@ class Sftp implements Adapter,
 
     /**
 <<<<<<< HEAD
+<<<<<<< HEAD
      * {@inheritDoc}
 =======
      * {@inheritdoc}
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * {@inheritDoc}
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function keys()
     {
@@ -148,12 +188,17 @@ class Sftp implements Adapter,
         $dirs = array();
         foreach ($files as $file) {
 <<<<<<< HEAD
+<<<<<<< HEAD
             if ('.' !== dirname($file)) {
                 $dirs[] = dirname($file);
 =======
             if ('.' !== $dirname = \Gaufrette\Util\Path::dirname($file)) {
                 $dirs[] = $dirname;
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+            if ('.' !== dirname($file)) {
+                $dirs[] = dirname($file);
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
             }
         }
 
@@ -165,10 +210,14 @@ class Sftp implements Adapter,
 
     /**
 <<<<<<< HEAD
+<<<<<<< HEAD
      * {@inheritDoc}
 =======
      * {@inheritdoc}
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * {@inheritDoc}
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function mtime($key)
     {
@@ -179,10 +228,14 @@ class Sftp implements Adapter,
 
     /**
 <<<<<<< HEAD
+<<<<<<< HEAD
      * {@inheritDoc}
 =======
      * {@inheritdoc}
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * {@inheritDoc}
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function checksum($key)
     {
@@ -197,10 +250,14 @@ class Sftp implements Adapter,
 
     /**
 <<<<<<< HEAD
+<<<<<<< HEAD
      * {@inheritDoc}
 =======
      * {@inheritdoc}
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * {@inheritDoc}
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function delete($key)
     {
@@ -211,10 +268,14 @@ class Sftp implements Adapter,
 
     /**
 <<<<<<< HEAD
+<<<<<<< HEAD
      * Computes the key from the specified path
 =======
      * Computes the key from the specified path.
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * Computes the key from the specified path
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      *
      * @param string $path
      *
@@ -231,10 +292,14 @@ class Sftp implements Adapter,
 
     /**
 <<<<<<< HEAD
+<<<<<<< HEAD
      * Computes the path for the specified key
 =======
      * Computes the path for the specified key.
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+     * Computes the path for the specified key
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      *
      * @param string $key
      *
@@ -243,11 +308,15 @@ class Sftp implements Adapter,
     protected function computePath($key)
     {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
         return $this->directory . '/' . ltrim($key, '/');
     }
 
     /**
      * Performs the adapter's initialization
+<<<<<<< HEAD
 =======
         return $this->directory.'/'.ltrim($key, '/');
     }
@@ -255,6 +324,8 @@ class Sftp implements Adapter,
     /**
      * Performs the adapter's initialization.
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      *
      * It will ensure the root directory exists
      */
@@ -270,16 +341,22 @@ class Sftp implements Adapter,
 
     /**
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      * Ensures the specified directory exists
      *
      * @param string  $directory The directory that we ensure the existence
      * @param boolean $create    Whether to create it if it does not exist
+<<<<<<< HEAD
 =======
      * Ensures the specified directory exists.
      *
      * @param string $directory The directory that we ensure the existence
      * @param bool   $create    Whether to create it if it does not exist
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      *
      * @throws RuntimeException if the specified directory does not exist and
      *                          could not be created
@@ -293,10 +370,14 @@ class Sftp implements Adapter,
             throw new \RuntimeException(sprintf('The directory \'%s\' does not exist and could not be created.', $directory));
         }
 <<<<<<< HEAD
+<<<<<<< HEAD
         
 =======
 
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+        
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
         // make sure we don't leak the resource
         if (is_resource($resource)) {
             closedir($resource);
@@ -305,11 +386,15 @@ class Sftp implements Adapter,
 
     /**
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      * Creates the specified directory and its parents
      *
      * @param string $directory The directory to create
      *
      * @return boolean TRUE on success, or FALSE on failure
+<<<<<<< HEAD
 =======
      * Creates the specified directory and its parents.
      *
@@ -317,6 +402,8 @@ class Sftp implements Adapter,
      *
      * @return bool TRUE on success, or FALSE on failure
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     protected function createDirectory($directory)
     {

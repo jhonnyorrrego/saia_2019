@@ -47,7 +47,6 @@ foreach($lcampos AS $key=>$valor){
         else{
             array_push($campos_limpios,$val[1]);
         }
-        
     }
 }
 for($i=0;$i<$cant;$i++){
@@ -81,10 +80,21 @@ if($encabezado_pie["numcampos"]){
 	$cant_f=count($resultado);
 }
 
+$configuracion_temporal=busca_filtro_tabla("valor","configuracion","nombre='ruta_temporal' AND tipo='ruta'","",$conn);
+if($configuracion_temporal['numcampos']){
+	$ruta_temporal=$configuracion_temporal[0]['valor'];
+	$ruta_temporal.= '_'.usuario_actual("login");
+} else {
+	$ruta_temporal = "temporal_" . usuario_actual('login');
+}
+
+
+
+
 echo(estilo_jqgrid());
 echo(estilo_redmond());
-echo(estilo_bootstrap());                           
-?> 
+echo(estilo_bootstrap());
+?>
 <style>
 .ui-jqgrid, .ui-jqgrid, tr.jqgrow td, .ui-pg-table td, .ui-jqgrid-labels th{font-size:0.6em}
 .ui-pg-table .ui-pg-input{height:23px; width:25px;}
@@ -116,17 +126,17 @@ if($datos_busqueda[0]['enlace_adicionar']!=""){
 	$boton_adicionar='<button class=\"btn btn-mini btn-primary kenlace_saia pull-left\" titulo=\"Adicionar '.$datos_busqueda[0]["etiqueta"].'\" title=\"Adicionar '.$datos_busqueda[0]["etiqueta"].'\" conector=\"iframe\" enlace=\"'.$datos_busqueda[0]['enlace_adicionar'].'\">Adicionar</button>';
 }
 
-$acciones_selecionados='';		
-if($datos_busqueda[0]["acciones_seleccionados"]!=''){		
-	$datos_reporte=array();		
-	$datos_reporte['idbusqueda_componente']=$datos_busqueda[0]["idbusqueda_componente"];		
-	$datos_reporte['variable_busqueda']=@$_REQUEST["variable_busqueda"]; 		
-     $acciones=explode(",",$datos_busqueda[0]["acciones_seleccionados"]);		
-     $cantidad=count($acciones);		
-     for($i=0;$i<$cantidad;$i++){		
-	     $acciones_selecionados=($acciones[$i]($datos_reporte));		
-     }              		
-}  
+$acciones_selecionados='';
+if($datos_busqueda[0]["acciones_seleccionados"]!=''){
+	$datos_reporte=array();
+	$datos_reporte['idbusqueda_componente']=$datos_busqueda[0]["idbusqueda_componente"];
+	$datos_reporte['variable_busqueda']=@$_REQUEST["variable_busqueda"];
+     $acciones=explode(",",$datos_busqueda[0]["acciones_seleccionados"]);
+     $cantidad=count($acciones);
+     for($i=0;$i<$cantidad;$i++){
+	     $acciones_selecionados=($acciones[$i]($datos_reporte));
+     }
+}
 
 echo(librerias_jquery("1.7"));
 echo(librerias_UI());
@@ -134,7 +144,7 @@ echo(librerias_jqgrid());
 echo(librerias_tooltips());
 echo(librerias_notificaciones());
 echo(librerias_acciones_kaiten());
-?>          
+?>
 <script type="text/javascript">
 var isOpera="";
 var isFirefox="";
@@ -143,7 +153,7 @@ var isChrome="";
 var isIE="";
 $(document).ready(function(){
 	window.parent.$(".block-iframe").attr("style","margin-top:0px; width: 100%; border:0px solid; overflow:auto; -webkit-overflow-scrolling:touch;");
-	
+
 	var alto_document=($(document).height()-130);
     var emptyMsgDiv = $("<div class='alert alert-warning' style='font-size:24px;'><center>No se encontraron resultados</center></div>");
 	var $grid = $("#datos_busqueda");
@@ -154,12 +164,12 @@ $(document).ready(function(){
 	  datatype: "json",
    	colNames:[<?php echo('"'.implode('","',$columnas["etiquetas"]).'"');?>],
    	colModel:[
-      <?php 
+      <?php
         $cant_columnas=count($columnas["modelo"]);
         for($i=0;$i<$cant_columnas;$i++){
           echo($columnas["modelo"][$i].",");
         }
-      ?>   	            
+      ?>
    	],
    	rowNum:20,
     rownumbers: true,
@@ -184,7 +194,7 @@ $(document).ready(function(){
 		userDataOnFooter:true,
 		gridComplete:function(){
     	var $self = $(this);
-    	<?php 
+    	<?php
 	    	for ($i=0; $i <$cant_f; $i++) {
 	    		if($resultado[$i]["sumar"]==1){
 	    			?>
@@ -201,7 +211,7 @@ $(document).ready(function(){
 								$self.jqGrid("footerData","set",{"<?php echo($resultado[$i]["nombre_columna"]); ?>":"<?php echo($resultado[$i]["nombre_funcion"]()); ?>"});
 						<?php
 						}
-					} 
+					}
 				}
 			?>
    	},
@@ -240,7 +250,7 @@ jQuery("#datos_busqueda").jqGrid('setGroupHeaders', {useColSpanStyle: false, gro
 });
 <?php } ?>
 
-$(".exportar_reporte_saia").click(function(obj){	
+$(".exportar_reporte_saia").click(function(obj){
 	isOpera = !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;
     // Opera 8.0+ (UA detection to detect Blink/v8-powered Opera)
 	isFirefox = typeof InstallTrigger !== 'undefined';   // Firefox 1.0+
@@ -249,7 +259,7 @@ $(".exportar_reporte_saia").click(function(obj){
 	isChrome = !!window.chrome && !isOpera;              // Chrome 1+
 	isIE = /*@cc_on!@*/false || !!document.documentMode;   // At least IE6
 	if(isChrome||isIE){
-		var busqueda_total=$("#busqueda_total_paginas").val(); 
+		var busqueda_total=$("#busqueda_total_paginas").val();
 		if(parseInt(busqueda_total)!=0){
 			notificacion_saia('Espere un momento por favor, hasta que se habilite el enlace de descarga','success','',9500);
 		}
@@ -260,13 +270,13 @@ $(".exportar_reporte_saia").click(function(obj){
 $(window).bind('resize', function() {
     jQuery("#datos_busqueda").setGridWidth(($("#contenedor").width()-20), false);
 }).trigger('resize');
-}); 
+});
 function exportar_funcion_excel_reporte(){
-	var busqueda_total=$("#busqueda_total_paginas").val(); 
+	var busqueda_total=$("#busqueda_total_paginas").val();
 	if(parseInt(busqueda_total)!=0){
-		
 
-	var ruta_file="temporal_<?php echo(usuario_actual('login'));?>/reporte_<?php echo($datos_busqueda[0]["nombre"].'_'.date('Ymd').'.xls'); ?>";
+
+	var ruta_file="<?php echo($ruta_temporal);?>/reporte_<?php echo($datos_busqueda[0]["nombre"].'_'.date('Ymd').'.xls'); ?>";
 	var url="exportar_saia.php?tipo_reporte=1&idbusqueda_componente=<?php echo $datos_busqueda[0]["idbusqueda_componente"]; ?>&page=1&exportar_saia=excel&ruta_exportar_saia="+ruta_file+"&rows="+$("#busqueda_registros").val()*4+"&actual_row=0&variable_busqueda="+$("#variable_busqueda").val()+"&idbusqueda_filtro_temp=<?php echo(@$_REQUEST['idbusqueda_filtro_temp']);?>&idbusqueda_filtro=<?php echo(@$_REQUEST['idbusqueda_filtro']);?>&idbusqueda_temporal=<?php echo (@$_REQUEST['idbusqueda_temporal']);?>";
 	window.open(url,"iframe_exportar_saia");
 	}else{
@@ -287,7 +297,7 @@ function exportar_funcion_excel_para_eliminar_ya_no_sirve(){
   	$.ajax({
       type:'POST',
       async:false,
-      url:jQuery("#datos_busqueda").jqGrid('getGridParam', 'url')+"&page="+(i+1)+"&exportar_saia=excel&ruta_exportar_saia="+ruta_file+"&rows="+jQuery("#datos_busqueda").jqGrid('getGridParam', 'rowNum'), 
+      url:jQuery("#datos_busqueda").jqGrid('getGridParam', 'url')+"&page="+(i+1)+"&exportar_saia=excel&ruta_exportar_saia="+ruta_file+"&rows="+jQuery("#datos_busqueda").jqGrid('getGridParam', 'rowNum'),
       success: function(html){
         if(html){
           var objeto=jQuery.parseJSON(html);

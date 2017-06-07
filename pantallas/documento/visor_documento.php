@@ -45,7 +45,6 @@ if($datos[0]["pdf"] && is_file($ruta_db_superior.$datos[0]["pdf"]) && !@$_REQUES
 }
 } else {
 	  $anexos_documento_word=busca_filtro_tabla("d.ruta","documento a, formato b, campos_formato c, anexos d","lower(a.plantilla)=b.nombre AND b.idformato=c.formato_idformato AND c.nombre='anexo_word' AND c.idcampos_formato=d.campos_formato AND a.iddocumento=".$iddoc." AND d.documento_iddocumento=".$iddoc,"",$conn) ;
-	  
 	$almacenamiento = null;
 	$ruta_pdf = null;
 	//print_r($anexos_documento_word);die("KAPUT");
@@ -62,7 +61,7 @@ if($datos[0]["pdf"] && is_file($ruta_db_superior.$datos[0]["pdf"]) && !@$_REQUES
 
 	if ($almacenamiento && !$almacenamiento->get_filesystem()->has($pdf)) {
 		$documento=busca_filtro_tabla("","documento a, formato b","lower(a.plantilla)=b.nombre AND a.iddocumento=".$iddoc,"",$conn);
-		$ruta_mostrar=$ruta_db_superior.'formatos/'.$documento[0]['nombre'].'/'.$documento[0]['ruta_mostrar'].'?idformato='.$documento[0]['idformato'].'&iddoc='.$iddoc;
+		$ruta_mostrar=$ruta_db_superior.FORMATOS_CLIENTE.$documento[0]['nombre'].'/'.$documento[0]['ruta_mostrar'].'?idformato='.$documento[0]['idformato'].'&iddoc='.$iddoc;
 		include_once($ruta_db_superior."db.php");
 		abrir_url($ruta_mostrar,'_self');
 		die();

@@ -10,7 +10,6 @@ while($max_salida>0){
 }
 include_once('../define_exportar_importar.php');
 require_once('lib/nusoap.php'); 
-
 $cliente = new nusoap_client(SERVIDOR_IMPORTAR);
 if(@$datos_formato){
 	$datos_formato=json_decode($datos_formato,true);

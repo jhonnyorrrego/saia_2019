@@ -25,7 +25,6 @@ if ( stristr($_SERVER["HTTP_ACCEPT"],"application/xhtml+xml")){
 else{
     header("Content-type: text/xml"); 
 }
-
 $documento=busca_filtro_tabla("","documento a","a.iddocumento=".$iddoc,"",$conn);
 if($version){
     $datos_version=busca_filtro_tabla(fecha_db_obtener('a.fecha','Y-m-d H:i')." as x_fecha, a.*","version_documento a","a.idversion_documento=".$version,"",$conn);
@@ -61,7 +60,6 @@ for($i=0;$i<$datos_version["numcampos"];$i++){
     echo("</item>");
 }
 echo("</tree>");
-
 function pdf($version){
     global $conn;
     $datos=busca_filtro_tabla("","version_documento a","a.idversion_documento=".$version,"",$conn);
@@ -73,7 +71,6 @@ function pdf($version){
     }
     return(implode("",$cadena));
 }
-
 function anexos($version){
     global $conn;
     $datos=busca_filtro_tabla("","version_anexos a","a.fk_idversion_documento=".$version,"",$conn);
@@ -85,7 +82,6 @@ function anexos($version){
     }
     return(implode("",$cadena));
 }
-
 function paginas($version){
     global $conn;
     $datos=busca_filtro_tabla("","version_pagina a","a.fk_idversion_documento=".$version,"",$conn);
@@ -97,7 +93,6 @@ function paginas($version){
     }
     return(implode("",$cadena));
 }
-
 function vistas($version){
     global $conn;
     $datos=busca_filtro_tabla("","version_vista a","a.fk_idversion_documento=".$version,"",$conn);

@@ -1,4 +1,7 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 SFTP
 ====
 
@@ -10,6 +13,7 @@ the [`PhpseclibSftp`](phpseclibSftp.md) adapter is based on a full-php ssh clien
 
 Prerequisites
 -------------
+<<<<<<< HEAD
 =======
 ---
 currentMenu: sftp
@@ -25,6 +29,8 @@ the [`PhpseclibSftp`](phpseclib-sftp.html) adapter is based on a full-php ssh cl
 
 ## Prerequisites
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 
 * [PHP-SSH](https://github.com/Herzult/php-ssh)
 * [SSH2 extension](http://www.php.net/manual/en/book.ssh2.php)
@@ -37,24 +43,34 @@ pecl install ssh2-beta
 ```
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 Example
 -------
 
 The first argument should be an instance of `\Ssh\Client`. Please refer to 
+<<<<<<< HEAD
 =======
 ## Example
 
 The first argument should be an instance of `\Ssh\Client`. Please refer to
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 [`herzult/php-ssh`](https://github.com/Herzult/php-ssh) documentation to know how to build it.
 
 The second argument is the base directory you want to use.
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 The third one indicates whether you want to automatically create directories if they does not exists 
 =======
 The third one indicates whether you want to automatically create directories if they does not exists
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+The third one indicates whether you want to automatically create directories if they does not exists 
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 (i.e. when you create a file in a directory that does not exist yet).
 
 ```php

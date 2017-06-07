@@ -4,10 +4,14 @@ namespace Gaufrette\Adapter;
 
 use Gaufrette\Adapter;
 <<<<<<< HEAD
+<<<<<<< HEAD
 use phpseclib\Net\SFTP;
 =======
 use phpseclib\Net\SFTP as SecLibSFTP;
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+use phpseclib\Net\SFTP;
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 use Gaufrette\Filesystem;
 use Gaufrette\File;
 
@@ -22,6 +26,9 @@ class PhpseclibSftp implements Adapter,
 
     /**
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      * Constructor.
      *
      * @param SFTP        $sftp      An Sftp instance
@@ -32,6 +39,7 @@ class PhpseclibSftp implements Adapter,
      * @param string|null $password  SFTP user password
      */
     public function __construct(SFTP $sftp, $directory = null, $create = false, $username = null, $password = null)
+<<<<<<< HEAD
 =======
      * @param SecLibSFTP  $sftp      An Sftp instance
      * @param string      $directory The distant directory
@@ -40,6 +48,8 @@ class PhpseclibSftp implements Adapter,
      */
     public function __construct(SecLibSFTP $sftp, $directory = null, $create = false)
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
     {
         $this->sftp = $sftp;
         $this->directory = $directory;
@@ -65,10 +75,14 @@ class PhpseclibSftp implements Adapter,
         $targetPath = $this->computePath($targetKey);
 
 <<<<<<< HEAD
+<<<<<<< HEAD
         $this->ensureDirectoryExists(dirname($targetPath), true);
 =======
         $this->ensureDirectoryExists(\Gaufrette\Util\Path::dirname($targetPath), true);
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+        $this->ensureDirectoryExists(dirname($targetPath), true);
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 
         return $this->sftp->rename($sourcePath, $targetPath);
     }
@@ -82,10 +96,14 @@ class PhpseclibSftp implements Adapter,
 
         $path = $this->computePath($key);
 <<<<<<< HEAD
+<<<<<<< HEAD
         $this->ensureDirectoryExists(dirname($path), true);
 =======
         $this->ensureDirectoryExists(\Gaufrette\Util\Path::dirname($path), true);
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+        $this->ensureDirectoryExists(dirname($path), true);
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
         if ($this->sftp->put($path, $content)) {
             return $this->sftp->size($path);
         }

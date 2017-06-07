@@ -17,7 +17,6 @@ $incluidos=array();
 function imagen_firma_faltante() {
 	echo PROTOCOLO_CONEXION . RUTA_PDF . "/firmas/faltante.jpg' />";
 }
-
 function crear_encabezado_pie_pagina($texto,$iddoc,$idformato,$pagina=1){
 	global $conn,$ruta_db_superior;
  
@@ -194,9 +193,13 @@ if($dep["numcampos"]){
  } else
    $retorno=$dep[0][$tipo];
 }
-return ($retorno);
-}
 
+function dependencia_nombre($idformato, $doc, $tipo = 0) {
+	if ($tipo)
+		return (formato_dependencia($doc, "nombre"));
+	else
+		echo formato_dependencia($doc, "nombre");
+}
 function nombre_proceso($doc) {
  global $conn;
  $datos = array();
@@ -248,111 +251,135 @@ function nombre_empresa() {
  $logo = busca_filtro_tabla("valor","configuracion","nombre='nombre'","",$conn);
  if($logo["numcampos"]){
   return ($logo[0]["valor"]);
-}
-else return ("");
-}
-function nombre_empresa2()
-{
- global $conn;
- $logo = busca_filtro_tabla("valor","configuracion","nombre='nombre'","",$conn);
- if($logo["numcampos"]){
-  return (mayusculas($logo[0]["valor"]));
-}
-else return ("");
+
 }
 
-function estilo_formato($idformato,$iddoc,$pagina)
-{global $conn;
- $fuente = busca_filtro_tabla("valor","configuracion","nombre='tipo_letra'","",$conn);
- $doc=$_REQUEST["iddoc"];
- $plantilla=busca_filtro_tabla("lower(plantilla) as plantilla","documento B","iddocumento=".$doc,"",$conn);
-$size=busca_filtro_tabla('font_size','formato',"nombre like '".strtolower($plantilla[0]["plantilla"])."'",'',$conn);
-//cambio de tama�o de letra por el request
- if(isset($_REQUEST["font_size"]))
-     $size[0]["font_size"]=$_REQUEST["font_size"];
-
- if(!$_REQUEST["pagina"])
-  return "font-size:9pt; font-family:verdana;"; 
- elseif($fuente["numcampos"])
-  return "font-size:".$size[0]["font_size"]."pt; font-family:".$fuente[0]["valor"].";";
-}
-
-function version_calidad()
-{global $conn;
- $formato=busca_filtro_tabla("nombre_tabla,nombre","formato","idformato=$idformato","",$conn);
- $valor=busca_filtro_tabla("version_".$formato[0]["nombre"],$formato[0]["nombre_tabla"],"documento_iddocumento=$iddoc","",$conn);
- if($tipo)
-  return($valor[0][0]);
- else
-  echo $valor[0][0];
-}
-
-function nombre_formato($idformato,$iddoc,$tipo)
-{global $conn;
- $formato=busca_filtro_tabla("etiqueta","formato","idformato=$idformato","",$conn);
- if($tipo)
-  return(((ucfirst($formato[0][0]))));
- else
-  echo ucfirst($formato[0][0]);
-}
-
-function codigo_calidad($idformato,$iddoc,$tipo)
-{global $conn;
- global $conn;
- $formato=busca_filtro_tabla("nombre_tabla,nombre","formato","idformato=$idformato","",$conn);
- $valor=busca_filtro_tabla("codigo_".$formato[0]["nombre"],$formato[0]["nombre_tabla"],"documento_iddocumento=$iddoc","",$conn);
- if($tipo)
-  return($valor[0][0]);
- else
-  echo $valor[0][0];
-}
-
-function nombre_calidad($idformato,$iddoc,$tipo)
-{global $conn;
- global $conn;
- $formato=busca_filtro_tabla("nombre_tabla,nombre","formato","idformato=$idformato","",$conn);
- $valor=busca_filtro_tabla("nombre_".$formato[0]["nombre"],$formato[0]["nombre_tabla"],"documento_iddocumento=$iddoc","",$conn);
- if($tipo)
-  return($valor[0][0]);
- else
-  echo $valor[0][0];
-}
-
-function encabezado_ruta_n($idformato,$iddoc){
-return ("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".PROTOCOLO_CONEXION.RUTA_PDF."/imagenes/encabezado_ruta_n.jpg' border='0' />");   
-}
-
-function footer_rutan($idformato,$iddoc){
- return (" <img src=".PROTOCOLO_CONEXION.RUTA_PDF."/imagenes/footer_rutan.jpg' border='0'/>");    
-}
-
-function encabezado_legalizacion($idformato,$iddoc){
- return '<img src= '.PROTOCOLO_CONEXION.RUTA_PDF.'/imagenes/logo_legalizacion.png"  >';
-}
-
-function encabezado_orden($idformato,$iddoc){
- return  '<img src= '.PROTOCOLO_CONEXION.RUTA_PDF.'/imagenes/logo_demo.jpg" >';
-}
-function mostrar_datos_radicaion($idformato, $iddoc){
+function logo_encabezado() {
 	global $conn;
-	//echo(estilo_bootstrap());
-	$datos_radicacion = busca_filtro_tabla("","documento","iddocumento=".$iddoc,"",$conn);
-	$nombre_empresa = busca_filtro_tabla("valor","configuracion","LOWER(nombre) LIKE'nombre'","",$conn);
-	if($_REQUEST['tipo']!=5){
-		$margin="margin-top:37px;";
-	}else{
-		$margin="margin-top:-30px;";
-	}	
-	$datos="<div id='header_first_page' style='float:right; border-radius: 5px; ".$margin."'>
-	<div style='border: solid 1px; padding:10px; font-size: 16px; '><b style='float:right;'>".$nombre_empresa[0]['valor']."</b><br />";
-	$datos.="<b>Radicado No:</b> ".formato_numero($idformato,$iddoc,1).'<br />';
-	$date = new DateTime($datos_radicacion[0]['fecha']);
-	$datos.="<b>Fecha:</b> ".$date->format('Y-m-d H:i').'<br />';
-	$datos.="</div></div>";
-	return($datos);
+	$logo = busca_filtro_tabla("valor", "configuracion", "nombre='logo_comunicaciones'", "", $conn);
+	if ($logo["numcampos"]) {
+		;
+		if ($_REQUEST['plantilla'] == "carta" || $_REQUEST['plantilla'] == "memorando" || $_REQUEST['plantilla'] == "circular_mf") {
+			return ("<div><img style='left:-40px;top:-175px;position:fixed;' src='" . PROTOCOLO_CONEXION . RUTA_PDF . "/" . $logo[0]["valor"] . "' border='0' /></div>");
+		} else {
+			return ('<div><img style="left:20px;top:35px" src="' . PROTOCOLO_CONEXION . RUTA_PDF . '/' . $logo[0]["valor"] . '" border="0"></div>');
+		}
+	} else
+		return ("");
 }
-function pie_pagina_carta($idformato, $iddoc){
-   global $conn;         
-     return('<img src="'.PROTOCOLO_CONEXION.RUTA_PDF_LOCAL.'/imagenes/pie_pagina_carta.jpg" />');  
+
+function nombre_empresa() {
+	global $conn;
+	$logo = busca_filtro_tabla("valor", "configuracion", "nombre='nombre'", "", $conn);
+	if ($logo["numcampos"]) {
+		return ($logo[0]["valor"]);
+	} else
+		return ("");
+}
+
+function nombre_empresa2() {
+	global $conn;
+	$logo = busca_filtro_tabla("valor", "configuracion", "nombre='nombre'", "", $conn);
+	if ($logo["numcampos"]) {
+		return (mayusculas($logo[0]["valor"]));
+	} else
+		return ("");
+}
+
+function estilo_formato($idformato, $iddoc, $pagina) {
+	global $conn;
+	$fuente = busca_filtro_tabla("valor", "configuracion", "nombre='tipo_letra'", "", $conn);
+	$doc = $_REQUEST["iddoc"];
+	$plantilla = busca_filtro_tabla("lower(plantilla) as plantilla", "documento B", "iddocumento=" . $doc, "", $conn);
+	$size = busca_filtro_tabla('font_size', 'formato', "nombre like '" . strtolower($plantilla[0]["plantilla"]) . "'", '', $conn);
+	// cambio de tama�o de letra por el request
+	if (isset($_REQUEST["font_size"]))
+		$size[0]["font_size"] = $_REQUEST["font_size"];
+
+	if (!$_REQUEST["pagina"])
+		return "font-size:9pt; font-family:verdana;";
+	elseif ($fuente["numcampos"])
+		return "font-size:" . $size[0]["font_size"] . "pt; font-family:" . $fuente[0]["valor"] . ";";
+}
+
+function version_calidad() {
+	global $conn;
+	$formato = busca_filtro_tabla("nombre_tabla,nombre", "formato", "idformato=$idformato", "", $conn);
+	$valor = busca_filtro_tabla("version_" . $formato[0]["nombre"], $formato[0]["nombre_tabla"], "documento_iddocumento=$iddoc", "", $conn);
+	if ($tipo)
+		return ($valor[0][0]);
+	else
+		echo $valor[0][0];
+}
+
+function nombre_formato($idformato, $iddoc, $tipo) {
+	global $conn;
+	$formato = busca_filtro_tabla("etiqueta", "formato", "idformato=$idformato", "", $conn);
+	if ($tipo)
+		return (((ucfirst($formato[0][0]))));
+	else
+		echo ucfirst($formato[0][0]);
+}
+
+function codigo_calidad($idformato, $iddoc, $tipo) {
+	global $conn;
+	global $conn;
+	$formato = busca_filtro_tabla("nombre_tabla,nombre", "formato", "idformato=$idformato", "", $conn);
+	$valor = busca_filtro_tabla("codigo_" . $formato[0]["nombre"], $formato[0]["nombre_tabla"], "documento_iddocumento=$iddoc", "", $conn);
+	if ($tipo)
+		return ($valor[0][0]);
+	else
+		echo $valor[0][0];
+}
+
+function nombre_calidad($idformato, $iddoc, $tipo) {
+	global $conn;
+	global $conn;
+	$formato = busca_filtro_tabla("nombre_tabla,nombre", "formato", "idformato=$idformato", "", $conn);
+	$valor = busca_filtro_tabla("nombre_" . $formato[0]["nombre"], $formato[0]["nombre_tabla"], "documento_iddocumento=$iddoc", "", $conn);
+	if ($tipo)
+		return ($valor[0][0]);
+	else
+		echo $valor[0][0];
+}
+
+function encabezado_ruta_n($idformato, $iddoc) {
+	return ("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" . PROTOCOLO_CONEXION . RUTA_PDF . "/imagenes/encabezado_ruta_n.jpg' border='0' />");
+}
+
+function footer_rutan($idformato, $iddoc) {
+	return (" <img src=" . PROTOCOLO_CONEXION . RUTA_PDF . "/imagenes/footer_rutan.jpg' border='0'/>");
+}
+
+function encabezado_legalizacion($idformato, $iddoc) {
+	return '<img src= ' . PROTOCOLO_CONEXION . RUTA_PDF . '/imagenes/logo_legalizacion.png"  >';
+}
+
+function encabezado_orden($idformato, $iddoc) {
+	return '<img src= ' . PROTOCOLO_CONEXION . RUTA_PDF . '/imagenes/logo_demo.jpg" >';
+}
+
+function mostrar_datos_radicaion($idformato, $iddoc) {
+	global $conn;
+	// echo(estilo_bootstrap());
+	$datos_radicacion = busca_filtro_tabla("", "documento", "iddocumento=" . $iddoc, "", $conn);
+	$nombre_empresa = busca_filtro_tabla("valor", "configuracion", "LOWER(nombre) LIKE'nombre'", "", $conn);
+	if ($_REQUEST['tipo'] != 5) {
+		$margin = "margin-top:37px;";
+	} else {
+		$margin = "margin-top:-30px;";
+	}
+	$datos = "<div id='header_first_page' style='float:right; border-radius: 5px; " . $margin . "'>
+	<div style='border: solid 1px; padding:10px; font-size: 16px; '><b style='float:right;'>" . $nombre_empresa[0]['valor'] . "</b><br />";
+	$datos .= "<b>Radicado No:</b> " . formato_numero($idformato, $iddoc, 1) . '<br />';
+	$date = new DateTime($datos_radicacion[0]['fecha']);
+	$datos .= "<b>Fecha:</b> " . $date->format('Y-m-d H:i') . '<br />';
+	$datos .= "</div></div>";
+	return ($datos);
+}
+
+function pie_pagina_carta($idformato, $iddoc) {
+	global $conn;
+	return ('<img src="' . PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . '/imagenes/pie_pagina_carta.jpg" />');
 }
 ?>

@@ -1,6 +1,7 @@
 <?php
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 //	POSTERIOR AL ADICIONAR, se debe definir la variable ruta_db_superior desde donde se hace el llamado.
 include_once($ruta_db_superior."pantallas/lib/PhpWord/funciones_include.php");
 include_once($ruta_db_superior."formatos/librerias/funciones_generales.php");
@@ -39,6 +40,19 @@ require_once $ruta_db_superior . 'filesystem/SaiaStorage.php';
 use Gaufrette\Filesystem;
 
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+// POSTERIOR AL ADICIONAR, se debe definir la variable ruta_db_superior desde donde se hace el llamado.
+include_once ($ruta_db_superior . "pantallas/lib/PhpWord/funciones_include.php");
+include_once ($ruta_db_superior . "formatos/librerias/funciones_generales.php");
+include_once ($ruta_db_superior . "pantallas/lib/librerias_cripto.php");
+
+/* include_once 'Sample_Header.php'; */
+
+// Template processor instance creation
+// require_once($ruta_db_superior.'pantallas/lib/PhpWord/Autoloader.php');
+// require_once($ruta_db_superior.'pantallas/lib/PHPWord/src/PhpWord/Autoloader.php');
+require_once ($ruta_db_superior . 'pantallas/lib/PhpWord/Autoloader.php');
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 date_default_timezone_set('UTC');
 
 /**
@@ -82,6 +96,7 @@ if (@$iddoc) {
 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 if(@$_REQUEST["iddoc"]){
 	
   $anexo=busca_filtro_tabla("d.ruta,b.nombre","documento a, formato b, campos_formato c, anexos d","lower(a.plantilla)=b.nombre AND b.idformato=c.formato_idformato AND c.nombre='anexo_word' AND c.idcampos_formato=d.campos_formato AND a.iddocumento=".$_REQUEST["iddoc"]." AND d.documento_iddocumento=".$_REQUEST["iddoc"],"",$conn) ;
@@ -94,6 +109,8 @@ if(@$_REQUEST["iddoc"]){
 	
 		print_r($anexo[0]["ruta"]);
 =======
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 if (@$_REQUEST["iddoc"]) {
 
 	$anexo = busca_filtro_tabla("d.ruta,b.nombre", "documento a, formato b, campos_formato c, anexos d", "lower(a.plantilla)=b.nombre AND b.idformato=c.formato_idformato AND c.nombre='anexo_word' AND c.idcampos_formato=d.campos_formato AND a.iddocumento=" . $_REQUEST["iddoc"] . " AND d.documento_iddocumento=" . $_REQUEST["iddoc"], "", $conn);
@@ -101,6 +118,7 @@ if (@$_REQUEST["iddoc"]) {
 	if ($anexo['numcampos']) {
 
 		if (@$_REQUEST['from_externo']) {
+<<<<<<< HEAD
 			include_once ($ruta_db_superior . 'formatos/' . $anexo[0]['nombre'] . '/funciones.php');
 		}
 
@@ -170,6 +188,26 @@ if ($arr_ruta["ruta"] != '') {
 	  
 	  $nombre_formato=$campos_obligatorios[0]['nombre_formato'];
 =======
+=======
+			include_once ($ruta_db_superior . FORMATOS_CLIENTE . $anexo[0]['nombre'] . '/funciones.php');
+		}
+
+		$ruta_procesar = $ruta_db_superior . $anexo[0]["ruta"];
+		$ruta_almacenar = explode('anexos', $anexo[0]["ruta"]);
+		$ruta_docx = $ruta_db_superior . $ruta_almacenar[0] . 'docx/';
+		$ruta_imagen = $ruta_db_superior . $ruta_almacenar[0] . 'firma_temp/';
+
+		crear_destino($ruta_docx);
+		chmod($ruta_docx, 0777);
+		crear_destino($ruta_imagen);
+		chmod($ruta_imagen, 0777);
+	}
+}
+
+if ($ruta_procesar != '') {
+	$ejecutar = 0;
+	$templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor($ruta_procesar);
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 	$campos_word = $templateProcessor->getVariables();
 	if (@$_REQUEST["iddoc"] && count($campos_word)) {
 		// include_once($ruta_db_superior."formatos/librerias/funciones_generales.php");
@@ -179,7 +217,10 @@ if ($arr_ruta["ruta"] != '') {
 		$campos_obligatorios = busca_filtro_tabla("C.*,B.nombre as nombre_formato", "documento A,formato B,campos_formato C", "A.plantilla=B.nombre AND B.idformato=C.formato_idformato AND A.iddocumento=" . $_REQUEST["iddoc"] . " AND C.obligatoriedad=1", "", $conn);
 
 		$nombre_formato = $campos_obligatorios[0]['nombre_formato'];
+<<<<<<< HEAD
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 		$obligatorios_permitidos = array(
 				'serie_idserie',
 				'idft_' . $nombre_formato,
@@ -188,6 +229,7 @@ if ($arr_ruta["ruta"] != '') {
 				'encabezado',
 				'firma'
 		);
+<<<<<<< HEAD
 <<<<<<< HEAD
 	  
 	  for($i=0;$i<$campos_obligatorios["numcampos"];$i++){
@@ -264,6 +306,30 @@ if ($arr_ruta["ruta"] != '') {
 		    		//notificacion_saia('no es posible encontrar en el documento el campo obligatorio:  <?php echo($nombre); ?>','error','',4000);
 		    	//	alert('no es posible encontrar en el documento el campo obligatorio: <?php echo($nombre); ?>');
 		    	</script>
+=======
+
+		for($i = 0; $i < $campos_obligatorios["numcampos"]; $i++) {
+
+			if ($ejecutar) {
+				$nombre = $campos_obligatorios[$i]["nombre"];
+
+				if ($campos_obligatorios[$i]["etiqueta_html"] == 'archivo') { // permite que los tipo anexo obligatorios los pase por alto
+					$obligatorios_permitidos[] = $nombre;
+				}
+
+				if (in_array($nombre, $campos_word)) {
+					$valor = mostrar_valor_campo($nombre, $campos_obligatorios[$i]["formato_idformato"], $_REQUEST['iddoc'], 1);
+					$templateProcessor->setValue($nombre, htmlspecialchars($valor));
+				} else if (in_array($nombre, $obligatorios_permitidos)) {
+				} else {
+					// $ejecutar=0;
+
+					?>
+<script>
+		    		//notificacion_saia('no es posible encontrar en el documento el campo obligatorio:  <?php echo($nombre); ?>','error','',4000);
+		    	//	alert('no es posible encontrar en el documento el campo obligatorio: <?php echo($nombre); ?>');
+		    	</script>
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 <?php
 					// die();
 				}
@@ -294,13 +360,17 @@ if ($arr_ruta["ruta"] != '') {
 
 			$funciones_ejecutar = array(
 					'espacio_firma',
+<<<<<<< HEAD
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 					'logo_empresa',
 					'ciudad_fecha',
 					'nombre_formato',
 					'formato_numero',
 					'elaborado_por'
 			);
+<<<<<<< HEAD
 <<<<<<< HEAD
 	
 		for($i=0;$i<count($funciones_ejecutar);$i++){
@@ -500,16 +570,132 @@ if ($arr_ruta["ruta"] != '') {
 										} else {
 											$img = stripslashes(base64_decode($info_funcionario[0]["firma"]));
 										}
+=======
+			$espacio_firma = 0;
+			if (!in_array("espacio_firma", $campos_word)) {
+				$campos_word[] = "espacio_firma";
+				$espacio_firma = 1;
+			}
+			for($i = 0; $i < count($funciones_ejecutar); $i++) {
+				$nombre = $funciones_ejecutar[$i];
+				if (in_array($nombre, $campos_word)) {
+
+					switch ($nombre) {
+						case 'elaborado_por' :
+							$doc_aprobado = busca_filtro_tabla("ejecutor", "documento", "iddocumento=" . $_REQUEST["iddoc"], "", $conn);
+							$ejecutor = busca_filtro_tabla("nombres,apellidos", "vfuncionario_dc", "funcionario_codigo=" . $doc_aprobado[0]['ejecutor'], "", $conn);
+							$elaborador_por = codifica_encabezado(html_entity_decode($ejecutor[0]['nombres'] . ' ' . $ejecutor[0]['apellidos']));
+							$elaborador_por = ucwords(strtolower($elaborador_por));
+							$templateProcessor->setValue('elaborado_por', $elaborador_por);
+							break;
+						case 'formato_numero' :
+							$doc_aprobado = busca_filtro_tabla("estado,numero", "documento", "iddocumento=" . $_REQUEST["iddoc"], "", $conn);
+							if ($doc_aprobado[0]['estado'] == 'APROBADO') {
+								$templateProcessor->setValue('formato_numero', $doc_aprobado[0]['numero']);
+							}
+							break;
+						case 'logo_empresa' :
+							$logo_empresa = busca_filtro_tabla("valor", "configuracion", "nombre='logo'", "", $conn);
+							$ruta_logo = $ruta_db_superior . $logo_empresa[0]['valor'];
+							$img = array(
+									array(
+											'img' => htmlspecialchars($ruta_logo),
+											'size' => array(
+													170,
+													100
+											)
+									)
+							);
+							$templateProcessor->setImg('logo_empresa', $img);
+							break;
+						case 'ciudad_fecha' :
+							$fecha_radicado = busca_filtro_tabla(fecha_db_obtener('fecha', 'Y-m-d') . " as fecha", "documento", "iddocumento=" . $_REQUEST['iddoc'], "", $conn);
+							$config_ciudad = busca_filtro_tabla("", "configuracion", "nombre='ciudad'", "", $conn);
+							$ciudad = busca_filtro_tabla("nombre", "municipio", "idmunicipio=" . $config_ciudad[0]['valor'], "", $conn);
+							$meses = array(
+									1 => 'Enero',
+									2 => 'Febrero',
+									3 => 'Marzo',
+									4 => 'Abril',
+									5 => 'Mayo',
+									6 => 'Junio',
+									7 => 'Julio',
+									8 => 'Agosto',
+									9 => 'Septiembre',
+									10 => 'Octubre',
+									11 => 'Noviembre',
+									12 => 'Diciembre'
+							);
+							$vector_fecha = explode('-', $fecha_radicado[0]['fecha']);
+							$vector_fecha = array_map('intval', $vector_fecha);
+							$cadena_fecha = $vector_fecha[2] . ' de ' . $meses[$vector_fecha[1]] . ' de ' . $vector_fecha[0];
+							$cadena = html_entity_decode($ciudad[0]['nombre']) . ', ' . $cadena_fecha;
+							$templateProcessor->setValue('ciudad_fecha', $cadena);
+							break;
+						case 'nombre_formato' :
+							$templateProcessor->setValue('nombre_formato', $formato[0]['etiqueta']);
+							break;	
+						case 'espacio_firma' :
+							$ruta = busca_filtro_tabla("tipo_origen,origen,idruta", "ruta", "obligatorio=1 AND condicion_transferencia='POR_APROBAR' AND tipo='ACTIVO' AND documento_iddocumento=" . $_REQUEST["iddoc"], "idruta asc", $conn);
+							$ruta_revisado = busca_filtro_tabla("tipo_origen,origen,idruta", "ruta", "obligatorio=2 AND condicion_transferencia='POR_APROBAR' AND tipo='ACTIVO' AND documento_iddocumento=" . $_REQUEST["iddoc"], "idruta asc", $conn);
+
+							if (!$ruta['numcampos'] && !$ruta_revisado['numcampos']) {
+								$ninguno_firma = busca_filtro_tabla("", "ruta", "obligatorio=0 AND condicion_transferencia='POR_APROBAR' AND tipo='ACTIVO' AND documento_iddocumento=" . $_REQUEST["iddoc"], "", $conn);
+								if (!$ninguno_firma['numcampos']) {
+									$ruta = busca_filtro_tabla("destino as origen, tipo_destino as tipo_origen, ruta_idruta as idruta", "buzon_entrada", "nombre='POR_APROBAR' AND archivo_idarchivo=" . $_REQUEST["iddoc"], "", $conn);
+								}
+							}
+							if ($ruta['numcampos']) {
+								$izq = 1;
+								$der = 1;
+								$filas = 0;
+								if ($ruta['numcampos'] % 2 == 0) {//CALCULO FILAS FIRMAN
+									$filas = $ruta['numcampos'] / 2;
+								} else {
+									$filas = ($ruta['numcampos'] + 1) / 2;
+								}
+								if ($espacio_firma == 0) {
+									$templateProcessor -> cloneRow('espacio_firma', $filas);
+								} else {
+									$templateProcessor -> cloneRow('nombre_funcionario', $filas);
+								}
+								for ($j = 0; $j < $ruta['numcampos']; $j++) {
+									$firma = '';
+									$nombre = '';
+									$cargo = '';
+
+									if ($ruta[$j]['tipo_origen'] != 1) {
+										$info_funcionario = busca_filtro_tabla("funcionario_codigo,firma,nombres,apellidos,cargo,dependencia", "vfuncionario_dc", "iddependencia_cargo=" . $ruta[$j]['origen'], "", $conn);
+									} else {
+										$info_funcionario = busca_filtro_tabla("funcionario_codigo,firma,nombres,apellidos,cargo,dependencia", "vfuncionario_dc", "estado_dc=1 and funcionario_codigo=" . $ruta[$j]['origen'], "", $conn);
+									}
+									$funcionario_codigo = $info_funcionario[0]['funcionario_codigo'];
+									$funcionario_codigo_encriptado = substr(encrypt_md5($funcionario_codigo), 0, 10);
+
+									$bzn_salida = busca_filtro_tabla("archivo_idarchivo", "buzon_entrada", "ruta_idruta='" . $ruta[$j]['idruta'] . "' AND archivo_idarchivo=" . $_REQUEST["iddoc"] . " AND activo=0", "", $conn);
+									if ($bzn_salida['numcampos']) {//YA FIRMO
+										if (MOTOR == "Oracle") {
+											$img = ($info_funcionario[0]["firma"]);
+										} elseif (MOTOR == "MySql") {
+											$img = $info_funcionario[0]["firma"];
+										} else {
+											$img = stripslashes(base64_decode($info_funcionario[0]["firma"]));
+										}
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 										crear_destino($ruta_imagen);
 										chmod($ruta_imagen, 0777);
 
 										if (file_exists($imagen_firma)) {
+<<<<<<< HEAD
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 											unlink($imagen_firma);
 										}
 
 										$im = imagecreatefromstring($img);
 										imagejpeg($im, $imagen_firma);
+<<<<<<< HEAD
 <<<<<<< HEAD
 										//chmod($imagen_firma, 0777);
 											
@@ -837,6 +1023,136 @@ if ($arr_ruta["ruta"] != '') {
 								}
 							}
 
+=======
+										chmod($imagen_firma, 0777);
+
+										$src = $imagen_firma;
+										$img2 = array( array('img' => htmlspecialchars($src), 'size' => array(170, 100)));
+
+										$buscar_nombre = 'n_' . $funcionario_codigo_encriptado;
+										$nombre = codifica_encabezado(html_entity_decode($info_funcionario[0]['nombres'] . ' ' . $info_funcionario[0]['apellidos']));
+										$nombre = ucwords(strtolower($nombre));
+										$buscar_cargo = 'c_' . $funcionario_codigo_encriptado;
+										$cargo = codifica_encabezado(html_entity_decode($info_funcionario[0]['cargo']));
+										$cargo = ucwords(strtolower($cargo));
+										$buscar_dependencia = 'd_' . $funcionario_codigo_encriptado;
+										$dependencia = codifica_encabezado(html_entity_decode($info_funcionario[0]['dependencia']));
+
+										if ($j % 2 == 0 || $j == 0) {//columna 1
+											if ($espacio_firma == 0) {
+												$templateProcessor -> setImg('espacio_firma#' . $izq, $img2);
+											}
+											$templateProcessor -> setValue('nombre_funcionario#' . $izq, htmlspecialchars($nombre));
+											$templateProcessor -> setValue('cargo#' . $izq, htmlspecialchars($cargo));
+											$templateProcessor -> setValue('nombre_dependencia#' . $izq, htmlspecialchars($dependencia));
+											$izq++;
+										} else {//columna 2
+											if ($espacio_firma == 0) {
+												$templateProcessor -> setValue('espacio_firma1#' . $der, htmlspecialchars($firma));
+											}
+											$templateProcessor -> setValue('nombre_funcionario1#' . $der, htmlspecialchars($nombre));
+											$templateProcessor -> setValue('cargo1#' . $der, htmlspecialchars($cargo));
+											$templateProcessor -> setValue('nombre_dependencia1#' . $der, htmlspecialchars($dependencia));
+											$der++;
+										}
+										imagedestroy($im);
+									} else {
+										if ($espacio_firma == 0) {
+											$firma = '${f_' . $funcionario_codigo_encriptado . '}';
+										}
+										$nombre = '${n_' . $funcionario_codigo_encriptado . '}';
+										$cargo = '${c_' . $funcionario_codigo_encriptado . '}';
+										$dependencia = '${d_' . $funcionario_codigo_encriptado . '}';
+
+										if ($j % 2 == 0 || $j == 0) {//columna 1
+											if ($espacio_firma == 0) {
+												$templateProcessor -> setValue('espacio_firma#' . $izq, htmlspecialchars($firma));
+											}
+											$templateProcessor -> setValue('nombre_funcionario#' . $izq, htmlspecialchars($nombre));
+											$templateProcessor -> setValue('cargo#' . $izq, htmlspecialchars($cargo));
+											$templateProcessor -> setValue('nombre_dependencia#' . $izq, htmlspecialchars($dependencia));
+											$izq++;
+										} else {//columna 2
+											if ($espacio_firma == 0) {
+												$templateProcessor -> setValue('espacio_firma1#' . $der, htmlspecialchars($firma));
+											}
+											$templateProcessor -> setValue('nombre_funcionario1#' . $der, htmlspecialchars($nombre));
+											$templateProcessor -> setValue('cargo1#' . $der, htmlspecialchars($cargo));
+											$templateProcessor -> setValue('nombre_dependencia1#' . $der, htmlspecialchars($dependencia));
+											$der++;
+										}
+									}
+
+									if (($j + 1) == $ruta['numcampos']) {
+										if ($j % 2 == 0) {
+											if ($espacio_firma == 0) {
+												$templateProcessor -> setValue('espacio_firma1#' . $der, '');
+											}
+											$templateProcessor -> setValue('nombre_funcionario1#' . $der, '');
+											$templateProcessor -> setValue('cargo1#' . $der, '');
+											$templateProcessor -> setValue('nombre_dependencia1#' . $der, '');
+											$der++;
+										}
+									}
+								}
+							} else {
+								if ($espacio_firma == 0) {
+									$templateProcessor -> setValue('espacio_firma', '');
+									$templateProcessor -> setValue('espacio_firma1', '');
+								}
+								$templateProcessor -> setValue('nombre_funcionario', '');
+								$templateProcessor -> setValue('nombre_funcionario1', '');
+								$templateProcessor -> setValue('cargo', '');
+								$templateProcessor -> setValue('cargo1', '');
+								$templateProcessor -> setValue('nombre_dependencia', '');
+								$templateProcessor -> setValue('nombre_dependencia1', '');
+							}
+							//DESAROLLO REVISADO
+							if ($ruta_revisado['numcampos']) {
+								$revisado = "Revisó: ";
+								for ($j = 0; $j < $ruta_revisado['numcampos']; $j++) {
+									if ($ruta[$j]['tipo_origen'] != 1) {
+										$info_funcionario = busca_filtro_tabla("funcionario_codigo,firma,nombres,apellidos,cargo,dependencia", "vfuncionario_dc", "iddependencia_cargo=" . $ruta_revisado[$j]['origen'], "", $conn);
+									} else {
+										$info_funcionario = busca_filtro_tabla("funcionario_codigo,firma,nombres,apellidos,cargo,dependencia", "vfuncionario_dc", "estado_dc=1 and funcionario_codigo=" . $ruta_revisado[$j]['origen'], "", $conn);
+									}
+									$funcionario_codigo = $info_funcionario[0]['funcionario_codigo'];
+									$funcionario_codigo_encriptado = substr(encrypt_md5($funcionario_codigo), 0, 10);
+									$bzn_salida = busca_filtro_tabla("archivo_idarchivo", "buzon_entrada", "ruta_idruta='" . $ruta_revisado[$j]['idruta'] . "' AND archivo_idarchivo=" . $_REQUEST["iddoc"] . " AND activo=0", "", $conn);
+									if (!$bzn_salida['numcampos']) {
+										if (($j + 1) == $ruta_revisado['numcampos']) {
+											$revisado .= '${r_' . $funcionario_codigo_encriptado . '}';
+										} else {
+											$revisado .= '${r_' . $funcionario_codigo_encriptado . '}, ';
+										}
+									} else {
+										$nombre = codifica_encabezado(html_entity_decode($info_funcionario[0]['nombres'] . ' ' . $info_funcionario[0]['apellidos']));
+										$nombre = ucwords(strtolower($nombre));
+										if (($j + 1) == $ruta_revisado['numcampos']) {
+											$revisado .= $nombre;
+										} else {
+											$revisado .= $nombre . ", ";
+										}
+									}
+								}
+								$templateProcessor -> setValue('nombre_revisado', htmlspecialchars($revisado));
+							} else {
+								$templateProcessor -> setValue('nombre_revisado', '');
+							}
+							break;							
+						/*case 'mostrar_estado_proceso' :
+
+							$ruta = busca_filtro_tabla("", "ruta", "obligatorio=1 AND condicion_transferencia='POR_APROBAR' AND tipo='ACTIVO' AND documento_iddocumento=" . $_REQUEST["iddoc"], "", $conn);
+							$ruta_revisado = busca_filtro_tabla("", "ruta", "obligatorio=2 AND condicion_transferencia='POR_APROBAR' AND tipo='ACTIVO' AND documento_iddocumento=" . $_REQUEST["iddoc"], "", $conn);
+
+							if (!$ruta['numcampos'] && !$ruta_revisado['numcampos']) {
+								$ninguno_firma = busca_filtro_tabla("", "ruta", "obligatorio=0 AND condicion_transferencia='POR_APROBAR' AND tipo='ACTIVO' AND documento_iddocumento=" . $_REQUEST["iddoc"], "", $conn);
+								if (!$ninguno_firma['numcampos']) {
+									$ruta = busca_filtro_tabla("destino as origen, tipo_destino as tipo_origen, ruta_idruta as idruta", "buzon_entrada", "nombre='POR_APROBAR' AND archivo_idarchivo=" . $_REQUEST["iddoc"], "", $conn);
+								}
+							}
+
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 							$filas = 0;
 							if ($ruta['numcampos']) {
 								if ($ruta['numcampos'] % 2 == 0) { // CALCULO FILAS FIRMAN
@@ -884,8 +1200,13 @@ if ($arr_ruta["ruta"] != '') {
 											$img = stripslashes(base64_decode($funcionario[0]["firma"]));
 										}
 
+<<<<<<< HEAD
 										//crear_destino($ruta_imagen);
 										//chmod($ruta_imagen, 0777);
+=======
+										crear_destino($ruta_imagen);
+										chmod($ruta_imagen, 0777);
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 
 										if (empty($imagen_firma)) {
 											$funcionario_codigo_encriptado = encrypt_md5($funcionario_codigo);
@@ -898,12 +1219,18 @@ if ($arr_ruta["ruta"] != '') {
 
 										$im = imagecreatefromstring($img);
 										imagejpeg($im, $imagen_firma);
+<<<<<<< HEAD
 										//chmod($imagen_firma, 0777);
 
 										$src = StorageUtils::obtener_archivo_temporal("sgn_");
 										file_put_contents($src, file_get_contents($imagen_firma));
 										rename($src, $src . ".jpg");
 										$src .= ".jpg";
+=======
+										chmod($imagen_firma, 0777);
+
+										$src = $imagen_firma;
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 
 										$img2 = array(
 												array(
@@ -1045,6 +1372,7 @@ if ($arr_ruta["ruta"] != '') {
 	if ($ejecutar) {
 		$marca_agua = mostrar_estado_documento($_REQUEST['iddoc']);
 		$templateProcessor->setTextWatermark($marca_agua);
+<<<<<<< HEAD
 		$directorio_out = $ruta_docx . "/";
 		$archivo_out = 'documento_word';
 		$extension_doc = '.docx';
@@ -1070,11 +1398,26 @@ if ($arr_ruta["ruta"] != '') {
 		} else {
 			die("No existe el archivo para procesar: " . $word_temp . $extension_doc);
 			exit();
+=======
+		$directorio_out = $ruta_docx;
+		$archivo_out = 'documento_word';
+		$extension_doc = '.docx';
+		$templateProcessor->saveAs($directorio_out . $archivo_out . $extension_doc);
+		chmod($directorio_out . $archivo_out . $extension_doc, 0777);
+
+		if (file_exists($directorio_out . $archivo_out . $extension_doc)) {
+			$comando = 'export HOME=/tmp && libreoffice5.1 --headless --norestore --invisible --convert-to pdf:writer_pdf_Export --outdir ' . $directorio_out . ' ' . $directorio_out . $archivo_out . $extension_doc;
+			$var = shell_exec($comando);
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 		}
 		if (@$anexo['numcampos']) { // elimina las imagenes de la carpeta
 
 			$dir = $ruta_imagen;
+<<<<<<< HEAD
 			//chmod($dir, 0777);
+=======
+			chmod($dir, 0777);
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 			foreach ( glob($dir . "*.jpg") as $filename ) {
 				chmod($filename, 0777);
 				unlink($filename);
@@ -1083,5 +1426,8 @@ if ($arr_ruta["ruta"] != '') {
 	}
 } // fin if ruta_procesar
 
+<<<<<<< HEAD
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 ?>

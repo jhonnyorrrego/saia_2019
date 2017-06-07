@@ -20,7 +20,6 @@ $validar_enteros=array("id","carrusel_idcarrusel");
 desencriptar_sqli('form_info');
 echo(librerias_jquery());
 echo(estilo_bootstrap());
-
 ?>
 <div class="container">
 		<h5>CONFIGURACI&Oacute;N DE CARRUSEL Y CONTENIDOS RELACIONADOS</h5>
@@ -52,12 +51,11 @@ mode : "textareas",
 theme : "advanced",
 language : "es",
 editor_selector: "tiny_avanzado2",
-plugins : "formatos,spellchecker,pagebreak,style,table,save,advhr,advimage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,template",
-theme_advanced_buttons1 : "newdocument,|,bold,italic,underline,|,justifyleft,justifycenter,justifyright,justifyfull,|,styleselect,formatselect,fontselect,fontsizeselect",
-theme_advanced_buttons2 : "cut,copy,paste,pastetext,pasteword,|,search,replace,|,bullist,numlist,|,outdent,indent,|,undo,redo,|,link,unlink,image,cleanup,code,|,forecolor,backcolor",
-theme_advanced_buttons3 : "tablecontrols,|,hr,removeformat,|,iespell,spellchecker,|,fullscreen",
+plugins : "formatos,spellchecker,pagebreak,style,table,save,advhr,advlink,iespell,inlinepopups,searchreplace,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,template",
+theme_advanced_buttons1 : "bold,italic,underline,|,justifyleft,justifycenter,justifyright,justifyfull,|,styleselect,formatselect,fontselect,fontsizeselect",
+theme_advanced_buttons2 : "cut,copy,paste,pastetext,pasteword,|,search,replace,|,bullist,numlist,|,outdent,indent,|,undo,redo,|,link,unlink,cleanup,code,|,forecolor,backcolor",
+theme_advanced_buttons3 : "tablecontrols,|,hr,removeformat",
 spellchecker_languages : "+Espa=es,Ingles=en",
-theme_advanced_buttons4 : "visualchars",
 theme_advanced_toolbar_location : "top",
 theme_advanced_toolbar_align : "left",
 theme_advanced_statusbar_location : "bottom",
@@ -155,7 +153,7 @@ width:"350px"
    echo "</table></form>";
 }
 elseif($_REQUEST["accion"]=="guardar_adicionar")
-{$campos=array("nombre","carrusel_idcarrusel","orden","align");
+{$campos=array("nombre","carrusel_idcarrusel","orden","align","preview");
  $nombres[]="fecha_inicio";
  $nombres[]="fecha_fin";
  $valores[]=fecha_db_almacenar($_REQUEST["fecha_inicio"],"Y-m-d");
@@ -178,7 +176,7 @@ elseif($_REQUEST["accion"]=="guardar_adicionar")
      {
 		require_once $ruta_db_superior . 'StorageUtils.php';
 		require_once $ruta_db_superior . 'filesystem/SaiaStorage.php';
-		 
+
       $extension=explode(".",($_FILES["imagen"]["name"]));
 	  $ultimo=count($extension);
 	  $formato=$extension[$ultimo-1];
@@ -201,7 +199,7 @@ elseif($_REQUEST["accion"]=="guardar_adicionar")
  redirecciona($ruta_db_superior."carrusel/sliderconfig.php");
 }
 elseif($_REQUEST["accion"]=="guardar_editar")
-{$campos=array("nombre","carrusel_idcarrusel","orden","align");
+{$campos=array("nombre","carrusel_idcarrusel","orden","align","preview");
  $valores[]="fecha_inicio=".fecha_db_almacenar($_REQUEST["fecha_inicio"],"Y-m-d");
  $valores[]="fecha_fin=".fecha_db_almacenar($_REQUEST["fecha_fin"],"Y-m-d");
  $carrusel=busca_filtro_tabla("alto","carrusel","idcarrusel=".$_REQUEST["carrusel_idcarrusel"],"",$conn); 
@@ -214,7 +212,6 @@ elseif($_REQUEST["accion"]=="guardar_editar")
  $sql1="update contenidos_carrusel set ".implode(",",$valores)." where idcontenidos_carrusel=".$_REQUEST["id"];
  phpmkr_query($sql1,$conn);
  guardar_lob("contenido","contenidos_carrusel","idcontenidos_carrusel=".$_REQUEST["id"],$_REQUEST["contenido"],"texto",$conn);
- guardar_lob("preview","contenidos_carrusel","idcontenidos_carrusel=".$_REQUEST["id"],$_REQUEST["preview"],"texto",$conn);
  
  
 		require_once $ruta_db_superior . 'StorageUtils.php';
@@ -250,7 +247,9 @@ elseif($_REQUEST["accion"]=="guardar_editar")
  			phpmkr_query($sql1,$conn);
 			@unlink($_FILES["imagen"]["tmp_name"]);
       }
+
 }
+
  redirecciona($ruta_db_superior."carrusel/sliderconfig.php");
 }
 elseif($_REQUEST["accion"]=="eliminar")

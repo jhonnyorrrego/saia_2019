@@ -38,22 +38,22 @@ if(count($parametros)){
   }
   tree3=new dhtmlXTreeObject("treeboxbox_tree3","100%","100%",0);
   tree3.setImagePath("<?php echo($ruta_db_superior);?>imgs/");
-  tree3.enableTreeImages(false); 
+  tree3.enableTreeImages(false);
   tree3.enableIEImageFix(true);
   tree3.setOnLoadingStart(cargando_serie);
   tree3.setOnLoadingEnd(fin_cargando_serie);
   tree3.setOnClickHandler(onNodeSelect);
   tree3.loadXML("<?php echo($ruta_db_superior);?>pantallas/formato/test_formatos_admin.php<?php echo $parametros_arbol; ?>");
-  function onNodeSelect(nodeId){ 
+  function onNodeSelect(nodeId){
   	var tipo_nodo=nodeId.split("_");
   	if(tipo_nodo[1]=="v"){
-  		conexion="<?php echo($ruta_db_superior);?>formatos/vista_formatoedit.php?key="+tipo_nodo[0];
+  		conexion="<?php echo($ruta_db_superior . FORMATOS_SAIA);?>vista_formatoedit.php?key="+tipo_nodo[0];
   	}
   	else if(tipo_nodo[0]=='vistasmenu'){
-  		conexion="<?php echo($ruta_db_superior);?>formatos/vista_formatoadd.php?formato_padre="+tipo_nodo[1];
+  		conexion="<?php echo($ruta_db_superior . FORMATOS_SAIA);?>vista_formatoadd.php?formato_padre="+tipo_nodo[1];
   	}
   	else{
-   		conexion="<?php echo($ruta_db_superior);?>formatos/formatoview.php?key="+nodeId;
+   		conexion="<?php echo($ruta_db_superior . FORMATOS_SAIA);?>formatoview.php?key="+nodeId;
    	}
     window.parent.frames["detalles"].location=conexion;
   }
@@ -70,7 +70,7 @@ if(count($parametros)){
     document.poppedLayer.style.visibility = "hidden";
   	tree3.openAllItems(0);
   }
-  
+
   function cargando_serie() {
     if (browserType == "gecko" )
        document.poppedLayer =
@@ -82,7 +82,7 @@ if(count($parametros)){
        document.poppedLayer =
            eval('document.layers["esperando_formato"]');
     document.poppedLayer.style.visibility = "visible";
-  }              
+  }
 </script>
 </body>
 </html>
