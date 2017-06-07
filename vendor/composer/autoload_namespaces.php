@@ -6,14 +6,7 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
     'Luracast\\Restler' => array($vendorDir . '/luracast/restler/vendor'),
->>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
     'Imagine' => array($vendorDir . '/imagine/imagine/lib'),
     'Gaufrette' => array($vendorDir . '/knplabs/gaufrette/src'),
-=======
-    'Luracast\\Restler' => array($vendorDir . '/luracast/restler/vendor'),
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 );

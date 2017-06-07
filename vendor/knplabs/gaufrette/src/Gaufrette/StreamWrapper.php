@@ -3,15 +3,7 @@
 namespace Gaufrette;
 
 /**
-<<<<<<< HEAD
-<<<<<<< HEAD
- * Stream wrapper class for the Gaufrette filesystems
-=======
  * Stream wrapper class for the Gaufrette filesystems.
->>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
-=======
- * Stream wrapper class for the Gaufrette filesystems
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
  *
  * @author Antoine Hérault <antoine.herault@gmail.com>
  * @author Leszek Prabucki <leszek.prabucki@gmail.com>
@@ -23,15 +15,7 @@ class StreamWrapper
     private $stream;
 
     /**
-<<<<<<< HEAD
-<<<<<<< HEAD
-     * Defines the filesystem map
-=======
      * Defines the filesystem map.
->>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
-=======
-     * Defines the filesystem map
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      *
      * @param FilesystemMap $map
      */
@@ -41,15 +25,7 @@ class StreamWrapper
     }
 
     /**
-<<<<<<< HEAD
-<<<<<<< HEAD
-     * Returns the filesystem map
-=======
      * Returns the filesystem map.
->>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
-=======
-     * Returns the filesystem map
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      *
      * @return FilesystemMap $map
      */
@@ -63,15 +39,7 @@ class StreamWrapper
     }
 
     /**
-<<<<<<< HEAD
-<<<<<<< HEAD
-     * Registers the stream wrapper to handle the specified scheme
-=======
      * Registers the stream wrapper to handle the specified scheme.
->>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
-=======
-     * Registers the stream wrapper to handle the specified scheme
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      *
      * @param string $scheme Default is gaufrette
      */
@@ -79,15 +47,7 @@ class StreamWrapper
     {
         static::streamWrapperUnregister($scheme);
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-        if (! static::streamWrapperRegister($scheme, __CLASS__)) {
-=======
         if (!static::streamWrapperRegister($scheme, __CLASS__)) {
->>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
-=======
-        if (! static::streamWrapperRegister($scheme, __CLASS__)) {
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
             throw new \RuntimeException(sprintf(
                 'Could not register stream wrapper class %s for scheme %s.',
                 __CLASS__,
@@ -133,16 +93,8 @@ class StreamWrapper
     }
 
     /**
-<<<<<<< HEAD
-<<<<<<< HEAD
-     * @param  int   $bytes
-=======
      * @param int $bytes
      *
->>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
-=======
-     * @param  int   $bytes
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      * @return mixed
      */
     public function stream_read($bytes)
@@ -155,16 +107,8 @@ class StreamWrapper
     }
 
     /**
-<<<<<<< HEAD
-<<<<<<< HEAD
-     * @param  string $data
-=======
      * @param string $data
      *
->>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
-=======
-     * @param  string $data
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      * @return int
      */
     public function stream_write($data)
@@ -184,15 +128,7 @@ class StreamWrapper
     }
 
     /**
-<<<<<<< HEAD
-<<<<<<< HEAD
-     * @return boolean
-=======
      * @return bool
->>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
-=======
-     * @return boolean
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function stream_flush()
     {
@@ -204,22 +140,10 @@ class StreamWrapper
     }
 
     /**
-<<<<<<< HEAD
-<<<<<<< HEAD
-     * @param  int     $offset
-     * @param  int     $whence - one of values [SEEK_SET, SEEK_CUR, SEEK_END]
-     * @return boolean
-=======
      * @param int $offset
      * @param int $whence - one of values [SEEK_SET, SEEK_CUR, SEEK_END]
      *
      * @return bool
->>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
-=======
-     * @param  int     $offset
-     * @param  int     $whence - one of values [SEEK_SET, SEEK_CUR, SEEK_END]
-     * @return boolean
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function stream_seek($offset, $whence = SEEK_SET)
     {
@@ -243,15 +167,7 @@ class StreamWrapper
     }
 
     /**
-<<<<<<< HEAD
-<<<<<<< HEAD
-     * @return boolean
-=======
      * @return bool
->>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
-=======
-     * @return boolean
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function stream_eof()
     {
@@ -275,23 +191,11 @@ class StreamWrapper
     }
 
     /**
-<<<<<<< HEAD
-<<<<<<< HEAD
-     * @param  string $path
-     * @param  int    $flags
-     * @return mixed
-=======
      * @param string $path
      * @param int    $flags
      *
      * @return mixed
      *
->>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
-=======
-     * @param  string $path
-     * @param  int    $flags
-     * @return mixed
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      * @todo handle $flags parameter
      */
     public function url_stat($path, $flags)
@@ -307,16 +211,8 @@ class StreamWrapper
     }
 
     /**
-<<<<<<< HEAD
-<<<<<<< HEAD
-     * @param  string $path
-=======
      * @param string $path
      *
->>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
-=======
-     * @param  string $path
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      * @return mixed
      */
     public function unlink($path)
@@ -348,44 +244,16 @@ class StreamWrapper
     {
         $parts = array_merge(
             array(
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
-                'scheme'    => null,
-                'host'      => null,
-                'path'      => null,
-                'query'     => null,
-                'fragment'  => null,
-<<<<<<< HEAD
-=======
                 'scheme' => null,
                 'host' => null,
                 'path' => null,
                 'query' => null,
                 'fragment' => null,
->>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
-=======
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
             ),
             parse_url($path) ?: array()
         );
 
         $domain = $parts['host'];
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
-        $key    = substr($parts['path'], 1);
-
-        if (null !== $parts['query']) {
-            $key.= '?' . $parts['query'];
-        }
-
-        if (null !== $parts['fragment']) {
-            $key.= '#' . $parts['fragment'];
-<<<<<<< HEAD
-=======
         $key = substr($parts['path'], 1);
 
         if (null !== $parts['query']) {
@@ -394,9 +262,6 @@ class StreamWrapper
 
         if (null !== $parts['fragment']) {
             $key .= '#'.$parts['fragment'];
->>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
-=======
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
         }
 
         if (empty($domain) || empty($key)) {

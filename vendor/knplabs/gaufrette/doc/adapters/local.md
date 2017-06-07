@@ -1,16 +1,3 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
-Local & SafeLocal
-=================
-
-Those two adapters aims to use local filesystem. The second one will encode in base64 the filename before storing/retrieving.
-
-Example
--------
-<<<<<<< HEAD
-=======
 ---
 currentMenu: local
 ---
@@ -20,9 +7,6 @@ currentMenu: local
 Those two adapters aims to use local filesystem. The second one will encode in base64 the filename before storing/retrieving.
 
 ## Example
->>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
-=======
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 
 ```php
 <?php

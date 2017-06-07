@@ -4,12 +4,7 @@
 
 namespace Composer\Autoload;
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 class ComposerStaticInitd519995838db71c3b1d30a6ef56a6013
-=======
-class ComposerStaticInite7142146f71b0ca55e7c61c51f6171eb
->>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
 {
     public static $files = array (
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
@@ -22,16 +17,6 @@ class ComposerStaticInite7142146f71b0ca55e7c61c51f6171eb
             'Symfony\\Polyfill\\Mbstring\\' => 26,
             'Stringy\\' => 8,
         ),
-<<<<<<< HEAD
-        'I' => 
-        array (
-            'Icewind\\Streams\\Tests\\' => 22,
-            'Icewind\\Streams\\' => 16,
-            'Icewind\\SMB\\Test\\' => 17,
-            'Icewind\\SMB\\' => 12,
-        ),
-=======
->>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
     );
 
     public static $prefixDirsPsr4 = array (
@@ -43,33 +28,8 @@ class ComposerStaticInite7142146f71b0ca55e7c61c51f6171eb
         array (
             0 => __DIR__ . '/..' . '/danielstjules/stringy/src',
         ),
-<<<<<<< HEAD
-        'Icewind\\Streams\\Tests\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/icewind/streams/tests',
-        ),
-        'Icewind\\Streams\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/icewind/streams/src',
-        ),
-        'Icewind\\SMB\\Test\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/icewind/smb/tests',
-        ),
-        'Icewind\\SMB\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/icewind/smb/src',
-        ),
     );
 
-    public static $prefixesPsr0 = array (
-=======
-    );
-
-=======
-class ComposerStaticInit718f03846feaff3d4705b9006384fb76
-{
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
     public static $prefixesPsr0 = array (
         'L' => 
         array (
@@ -78,8 +38,6 @@ class ComposerStaticInit718f03846feaff3d4705b9006384fb76
                 0 => __DIR__ . '/..' . '/luracast/restler/vendor',
             ),
         ),
-<<<<<<< HEAD
->>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
         'I' => 
         array (
             'Imagine' => 
@@ -94,26 +52,14 @@ class ComposerStaticInit718f03846feaff3d4705b9006384fb76
                 0 => __DIR__ . '/..' . '/knplabs/gaufrette/src',
             ),
         ),
-=======
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
     );
 
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-<<<<<<< HEAD
-<<<<<<< HEAD
             $loader->prefixLengthsPsr4 = ComposerStaticInitd519995838db71c3b1d30a6ef56a6013::$prefixLengthsPsr4;
             $loader->prefixDirsPsr4 = ComposerStaticInitd519995838db71c3b1d30a6ef56a6013::$prefixDirsPsr4;
             $loader->prefixesPsr0 = ComposerStaticInitd519995838db71c3b1d30a6ef56a6013::$prefixesPsr0;
-=======
-            $loader->prefixLengthsPsr4 = ComposerStaticInite7142146f71b0ca55e7c61c51f6171eb::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInite7142146f71b0ca55e7c61c51f6171eb::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInite7142146f71b0ca55e7c61c51f6171eb::$prefixesPsr0;
->>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
-=======
-            $loader->prefixesPsr0 = ComposerStaticInit718f03846feaff3d4705b9006384fb76::$prefixesPsr0;
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 
         }, null, ClassLoader::class);
     }

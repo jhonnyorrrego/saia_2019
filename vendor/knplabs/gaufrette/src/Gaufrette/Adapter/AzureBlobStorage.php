@@ -5,21 +5,6 @@ namespace Gaufrette\Adapter;
 use Gaufrette\Adapter;
 use Gaufrette\Util;
 use Gaufrette\Adapter\AzureBlobStorage\BlobProxyFactoryInterface;
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
-
-use WindowsAzure\Blob\Models\CreateBlobOptions;
-use WindowsAzure\Blob\Models\CreateContainerOptions;
-use WindowsAzure\Blob\Models\DeleteContainerOptions;
-use WindowsAzure\Blob\Models\ListBlobsOptions;
-use WindowsAzure\Common\ServiceException;
-
-/**
- * Microsoft Azure Blob Storage adapter
-<<<<<<< HEAD
-=======
 use MicrosoftAzure\Storage\Blob\Models\CreateBlobOptions;
 use MicrosoftAzure\Storage\Blob\Models\CreateContainerOptions;
 use MicrosoftAzure\Storage\Blob\Models\DeleteContainerOptions;
@@ -28,9 +13,6 @@ use MicrosoftAzure\Storage\Common\ServiceException;
 
 /**
  * Microsoft Azure Blob Storage adapter.
->>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
-=======
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
  *
  * @author Luciano Mammino <lmammino@oryzone.com>
  * @author Paweł Czyżewski <pawel.czyzewski@enginewerk.com>
@@ -39,82 +21,32 @@ class AzureBlobStorage implements Adapter,
                                   MetadataSupporter
 {
     /**
-<<<<<<< HEAD
-<<<<<<< HEAD
-     * Error constants
-=======
      * Error constants.
->>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
-=======
-     * Error constants
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     const ERROR_CONTAINER_ALREADY_EXISTS = 'ContainerAlreadyExists';
     const ERROR_CONTAINER_NOT_FOUND = 'ContainerNotFound';
 
     /**
-<<<<<<< HEAD
-<<<<<<< HEAD
-     * @var AzureBlobStorage\BlobProxyFactoryInterface $blobProxyFactory
-=======
      * @var AzureBlobStorage\BlobProxyFactoryInterface
->>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
-=======
-     * @var AzureBlobStorage\BlobProxyFactoryInterface $blobProxyFactory
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     protected $blobProxyFactory;
 
     /**
-<<<<<<< HEAD
-<<<<<<< HEAD
-     * @var string $containerName
-=======
      * @var string
->>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
-=======
-     * @var string $containerName
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     protected $containerName;
 
     /**
-<<<<<<< HEAD
-<<<<<<< HEAD
-     * @var bool $detectContentType
-=======
      * @var bool
->>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
-=======
-     * @var bool $detectContentType
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     protected $detectContentType;
 
     /**
-<<<<<<< HEAD
-<<<<<<< HEAD
-     * @var \WindowsAzure\Blob\Internal\IBlob $blobProxy
-=======
      * @var \MicrosoftAzure\Storage\Blob\Internal\IBlob
->>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
-=======
-     * @var \WindowsAzure\Blob\Internal\IBlob $blobProxy
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     protected $blobProxy;
 
     /**
-<<<<<<< HEAD
-<<<<<<< HEAD
-     * Constructor
-     *
-=======
->>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
-=======
-     * Constructor
-     *
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      * @param AzureBlobStorage\BlobProxyFactoryInterface $blobProxyFactory
      * @param string                                     $containerName
      * @param bool                                       $create
@@ -131,26 +63,12 @@ class AzureBlobStorage implements Adapter,
     }
 
     /**
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
-     * Creates a new container
-     *
-     * @param  string                                           $containerName
-     * @param  \WindowsAzure\Blob\Models\CreateContainerOptions $options
-     * @throws \RuntimeException                                if cannot create the container
-<<<<<<< HEAD
-=======
      * Creates a new container.
      *
      * @param string                                                     $containerName
      * @param \MicrosoftAzure\Storage\Blob\Models\CreateContainerOptions $options
      *
      * @throws \RuntimeException if cannot create the container
->>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
-=======
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function createContainer($containerName, CreateContainerOptions $options = null)
     {
@@ -173,26 +91,12 @@ class AzureBlobStorage implements Adapter,
     }
 
     /**
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
-     * Deletes a container
-     *
-     * @param  string                 $containerName
-     * @param  DeleteContainerOptions $options
-     * @throws \RuntimeException      if cannot delete the container
-<<<<<<< HEAD
-=======
      * Deletes a container.
      *
      * @param string                 $containerName
      * @param DeleteContainerOptions $options
      *
      * @throws \RuntimeException if cannot delete the container
->>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
-=======
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function deleteContainer($containerName, DeleteContainerOptions $options = null)
     {
@@ -215,15 +119,7 @@ class AzureBlobStorage implements Adapter,
     }
 
     /**
-<<<<<<< HEAD
-<<<<<<< HEAD
-     * {@inheritDoc}
-=======
      * {@inheritdoc}
->>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
-=======
-     * {@inheritDoc}
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function read($key)
     {
@@ -241,15 +137,7 @@ class AzureBlobStorage implements Adapter,
     }
 
     /**
-<<<<<<< HEAD
-<<<<<<< HEAD
-     * {@inheritDoc}
-=======
      * {@inheritdoc}
->>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
-=======
-     * {@inheritDoc}
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function write($key, $content)
     {
@@ -259,35 +147,17 @@ class AzureBlobStorage implements Adapter,
             $options = new CreateBlobOptions();
 
             if ($this->detectContentType) {
-<<<<<<< HEAD
-<<<<<<< HEAD
-                $fileInfo = new \finfo(FILEINFO_MIME_TYPE);
-                $contentType = $fileInfo->buffer($content);
-                $options->setContentType($contentType);
-=======
                 $contentType = $this->guessContentType($content);
 
                 $options->setBlobContentType($contentType);
->>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
-=======
-                $fileInfo = new \finfo(FILEINFO_MIME_TYPE);
-                $contentType = $fileInfo->buffer($content);
-                $options->setContentType($contentType);
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
             }
 
             $this->blobProxy->createBlockBlob($this->containerName, $key, $content, $options);
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
             if (is_resource($content)) {
                 return Util\Size::fromResource($content);
             }
 
->>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
-=======
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
             return Util\Size::fromContent($content);
         } catch (ServiceException $e) {
             $this->failIfContainerNotFound($e, sprintf('write content for key "%s"', $key));
@@ -297,15 +167,7 @@ class AzureBlobStorage implements Adapter,
     }
 
     /**
-<<<<<<< HEAD
-<<<<<<< HEAD
-     * {@inheritDoc}
-=======
      * {@inheritdoc}
->>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
-=======
-     * {@inheritDoc}
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function exists($key)
     {
@@ -339,15 +201,7 @@ class AzureBlobStorage implements Adapter,
     }
 
     /**
-<<<<<<< HEAD
-<<<<<<< HEAD
-     * {@inheritDoc}
-=======
      * {@inheritdoc}
->>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
-=======
-     * {@inheritDoc}
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function keys()
     {
@@ -357,15 +211,7 @@ class AzureBlobStorage implements Adapter,
             $blobList = $this->blobProxy->listBlobs($this->containerName);
 
             return array_map(
-<<<<<<< HEAD
-<<<<<<< HEAD
-                function($blob) {
-=======
                 function ($blob) {
->>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
-=======
-                function($blob) {
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
                     return $blob->getName();
                 },
                 $blobList->getBlobs()
@@ -384,15 +230,7 @@ class AzureBlobStorage implements Adapter,
     }
 
     /**
-<<<<<<< HEAD
-<<<<<<< HEAD
-     * {@inheritDoc}
-=======
      * {@inheritdoc}
->>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
-=======
-     * {@inheritDoc}
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function mtime($key)
     {
@@ -410,15 +248,7 @@ class AzureBlobStorage implements Adapter,
     }
 
     /**
-<<<<<<< HEAD
-<<<<<<< HEAD
-     * {@inheritDoc}
-=======
      * {@inheritdoc}
->>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
-=======
-     * {@inheritDoc}
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function delete($key)
     {
@@ -436,15 +266,7 @@ class AzureBlobStorage implements Adapter,
     }
 
     /**
-<<<<<<< HEAD
-<<<<<<< HEAD
-     * {@inheritDoc}
-=======
      * {@inheritdoc}
->>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
-=======
-     * {@inheritDoc}
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function rename($sourceKey, $targetKey)
     {
@@ -463,15 +285,7 @@ class AzureBlobStorage implements Adapter,
     }
 
     /**
-<<<<<<< HEAD
-<<<<<<< HEAD
-     * {@inheritDoc}
-=======
      * {@inheritdoc}
->>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
-=======
-     * {@inheritDoc}
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function isDirectory($key)
     {
@@ -480,15 +294,7 @@ class AzureBlobStorage implements Adapter,
     }
 
     /**
-<<<<<<< HEAD
-<<<<<<< HEAD
-     * {@inheritDoc}
-=======
      * {@inheritdoc}
->>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
-=======
-     * {@inheritDoc}
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function setMetadata($key, $content)
     {
@@ -510,15 +316,7 @@ class AzureBlobStorage implements Adapter,
     }
 
     /**
-<<<<<<< HEAD
-<<<<<<< HEAD
-     * {@inheritDoc}
-=======
      * {@inheritdoc}
->>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
-=======
-     * {@inheritDoc}
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function getMetadata($key)
     {
@@ -542,15 +340,7 @@ class AzureBlobStorage implements Adapter,
     }
 
     /**
-<<<<<<< HEAD
-<<<<<<< HEAD
-     * Lazy initialization, automatically called when some method is called after construction
-=======
      * Lazy initialization, automatically called when some method is called after construction.
->>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
-=======
-     * Lazy initialization, automatically called when some method is called after construction
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     protected function init()
     {
@@ -560,24 +350,11 @@ class AzureBlobStorage implements Adapter,
     }
 
     /**
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
-     * Throws a runtime exception if a give ServiceException derived from a "container not found" error
-     *
-     * @param  ServiceException  $exception
-     * @param  string            $action
-<<<<<<< HEAD
-=======
      * Throws a runtime exception if a give ServiceException derived from a "container not found" error.
      *
      * @param ServiceException $exception
      * @param string           $action
      *
->>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
-=======
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      * @throws \RuntimeException
      */
     protected function failIfContainerNotFound(ServiceException $exception, $action)
@@ -594,22 +371,10 @@ class AzureBlobStorage implements Adapter,
     }
 
     /**
-<<<<<<< HEAD
-<<<<<<< HEAD
-     * Extracts the error code from a service exception
-     *
-     * @param  ServiceException $exception
-=======
      * Extracts the error code from a service exception.
      *
      * @param ServiceException $exception
      *
->>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
-=======
-     * Extracts the error code from a service exception
-     *
-     * @param  ServiceException $exception
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      * @return string
      */
     protected function getErrorCodeFromServiceException(ServiceException $exception)
@@ -622,9 +387,6 @@ class AzureBlobStorage implements Adapter,
 
         return $exception->getErrorReason();
     }
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
 
     /**
      * @param string $content
@@ -641,7 +403,4 @@ class AzureBlobStorage implements Adapter,
 
         return $fileInfo->buffer($content);
     }
->>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
-=======
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 }

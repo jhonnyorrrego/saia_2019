@@ -21,88 +21,6 @@ s('string')->toTitleCase()->ensureRight('y') == 'Stringy'
 * [Class methods](#class-methods)
     * [create](#createmixed-str--encoding-)
 * [Instance methods](#instance-methods)
-<<<<<<< HEAD
-<<<<<<< HEAD
-    * [append](#appendstring-string)
-    * [at](#atint-index)
-    * [between](#betweenstring-start-string-end--int-offset)
-    * [camelize](#camelize)
-    * [chars](#chars)
-    * [collapseWhitespace](#collapsewhitespace)
-    * [contains](#containsstring-needle--boolean-casesensitive--true-)
-    * [containsAll](#containsallarray-needles--boolean-casesensitive--true-)
-    * [containsAny](#containsanyarray-needles--boolean-casesensitive--true-)
-    * [countSubstr](#countsubstrstring-substring--boolean-casesensitive--true-)
-    * [dasherize](#dasherize)
-    * [delimit](#delimitint-delimiter)
-    * [endsWith](#endswithstring-substring--boolean-casesensitive--true-)
-    * [ensureLeft](#ensureleftstring-substring)
-    * [ensureRight](#ensurerightstring-substring)
-    * [first](#firstint-n)
-    * [getEncoding](#getencoding)
-    * [hasLowerCase](#haslowercase)
-    * [hasUpperCase](#hasuppercase)
-    * [htmlDecode](#htmldecode)
-    * [htmlEncode](#htmlencode)
-    * [humanize](#humanize)
-    * [indexOf](#indexofstring-needle--offset--0-)
-    * [indexOfLast](#indexoflaststring-needle--offset--0-)
-    * [insert](#insertint-index-string-substring)
-    * [isAlpha](#isalpha)
-    * [isAlphanumeric](#isalphanumeric)
-    * [isBase64](#isbase64)
-    * [isBlank](#isblank)
-    * [isHexadecimal](#ishexadecimal)
-    * [isJson](#isjson)
-    * [isLowerCase](#islowercase)
-    * [isSerialized](#isserialized)
-    * [isUpperCase](#isuppercase)
-    * [last](#last)
-    * [length](#length)
-    * [lines](#lines)
-    * [longestCommonPrefix](#longestcommonprefixstring-otherstr)
-    * [longestCommonSuffix](#longestcommonsuffixstring-otherstr)
-    * [longestCommonSubstring](#longestcommonsubstringstring-otherstr)
-    * [lowerCaseFirst](#lowercasefirst)
-    * [pad](#padint-length--string-padstr-----string-padtype--right-)
-    * [padBoth](#padbothint-length--string-padstr----)
-    * [padLeft](#padleftint-length--string-padstr----)
-    * [padRight](#padrightint-length--string-padstr----)
-    * [prepend](#prependstring-string)
-    * [regexReplace](#regexreplacestring-pattern-string-replacement--string-options--msr)
-    * [removeLeft](#removeleftstring-substring)
-    * [removeRight](#removerightstring-substring)
-    * [repeat](#repeatmultiplier)
-    * [replace](#replacestring-search-string-replacement)
-    * [reverse](#reverse)
-    * [safeTruncate](#safetruncateint-length--string-substring---)
-    * [shuffle](#shuffle)
-    * [slugify](#slugify-string-replacement----)
-    * [startsWith](#startswithstring-substring--boolean-casesensitive--true-)
-    * [slice](#sliceint-start--int-end-)
-    * [split](#splitstring-pattern--int-limit-)
-    * [substr](#substrint-start--int-length-)
-    * [surround](#surroundstring-substring)
-    * [swapCase](#swapcase)
-    * [tidy](#tidy)
-    * [titleize](#titleize-array-ignore)
-    * [toAscii](#toascii)
-    * [toBoolean](#toboolean)
-    * [toLowerCase](#tolowercase)
-    * [toSpaces](#tospaces-tablength--4-)
-    * [toTabs](#totabs-tablength--4-)
-    * [toTitleCase](#totitlecase)
-    * [toUpperCase](#touppercase)
-    * [trim](#trim-string-chars)
-    * [trimLeft](#trimleft-string-chars)
-    * [trimRight](#trimright-string-chars)
-    * [truncate](#truncateint-length--string-substring---)
-    * [underscored](#underscored)
-    * [upperCamelize](#uppercamelize)
-    * [upperCaseFirst](#uppercasefirst)
-=======
-=======
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 <table>
     <tr>
         <td>[append](#appendstring-string)</td>
@@ -225,10 +143,6 @@ s('string')->toTitleCase()->ensureRight('y') == 'Stringy'
         <td>[upperCaseFirst](#uppercasefirst)</td>
     </tr>
 </table>
-<<<<<<< HEAD
->>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
-=======
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 * [Extensions](#extensions)
 * [Tests](#tests)
 * [License](#license)
@@ -262,15 +176,7 @@ in your composer.json file:
 
 ```json
 "require": {
-<<<<<<< HEAD
-<<<<<<< HEAD
-    "danielstjules/stringy": "~2.3"
-=======
     "danielstjules/stringy": "~2.4"
->>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
-=======
-    "danielstjules/stringy": "~2.4"
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 }
 ```
 
@@ -530,11 +436,6 @@ setting $caseSensitive to false.
 s('fòôbàř')->endsWith('bàř', true); // true
 ```
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 ##### endsWithAny(string[] $substrings [, boolean $caseSensitive = true ])
 
 Returns true if the string ends with any of $substrings, false otherwise.
@@ -545,10 +446,6 @@ by setting $caseSensitive to false.
 s('fòôbàř')->endsWith(['bàř', 'baz'], true); // true
 ```
 
-<<<<<<< HEAD
->>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
-=======
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 ##### ensureLeft(string $substring)
 
 Ensures that the string begins with $substring. If it doesn't, it's prepended.
@@ -931,11 +828,6 @@ by setting $caseSensitive to false.
 s('FÒÔbàřbaz')->startsWith('fòôbàř', false); // true
 ```
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 ##### startsWithAny(string[] $substrings [, boolean $caseSensitive = true ])
 
 Returns true if the string begins with any of $substrings, false
@@ -946,10 +838,6 @@ insensitive by setting $caseSensitive to false.
 s('FÒÔbàřbaz')->startsWith(['fòô', 'bàř'], false); // true
 ```
 
-<<<<<<< HEAD
->>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
-=======
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 ##### slice(int $start [, int $end ])
 
 Returns the substring beginning at $start, and up to, but not including
@@ -971,11 +859,6 @@ results.
 s('foo,bar,baz')->split(',', 2); // ['foo', 'bar']
 ```
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 ##### stripWhitespace()
 
 Strip all whitespace characters. This includes tabs and newline
@@ -986,10 +869,6 @@ and ideographic space.
 s('   Ο     συγγραφέας  ')->stripWhitespace(); // 'Οσυγγραφέας'
 ```
 
-<<<<<<< HEAD
->>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
-=======
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 ##### substr(int $start [, int $length ])
 
 Returns the substring beginning at $start with the specified $length.

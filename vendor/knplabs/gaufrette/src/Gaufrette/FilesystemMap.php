@@ -3,15 +3,7 @@
 namespace Gaufrette;
 
 /**
-<<<<<<< HEAD
-<<<<<<< HEAD
- * Associates filesystem instances to domains
-=======
  * Associates filesystem instances to domains.
->>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
-=======
- * Associates filesystem instances to domains
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
  *
  * @author Antoine Hérault <antoine.herault@gmail.com>
  */
@@ -21,15 +13,7 @@ class FilesystemMap
 
     /**
      * Returns an array of all the registered filesystems where the key is the
-<<<<<<< HEAD
-<<<<<<< HEAD
-     * domain and the value the filesystem
-=======
      * domain and the value the filesystem.
->>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
-=======
-     * domain and the value the filesystem
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      *
      * @return array
      */
@@ -39,15 +23,7 @@ class FilesystemMap
     }
 
     /**
-<<<<<<< HEAD
-<<<<<<< HEAD
-     * Register the given filesystem for the specified domain
-=======
      * Register the given filesystem for the specified domain.
->>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
-=======
-     * Register the given filesystem for the specified domain
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      *
      * @param string     $domain
      * @param Filesystem $filesystem
@@ -57,15 +33,7 @@ class FilesystemMap
      */
     public function set($domain, Filesystem $filesystem)
     {
-<<<<<<< HEAD
-<<<<<<< HEAD
-        if (! preg_match('/^[-_a-zA-Z0-9]+$/', $domain)) {
-=======
         if (!preg_match('/^[-_a-zA-Z0-9]+$/', $domain)) {
->>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
-=======
-        if (! preg_match('/^[-_a-zA-Z0-9]+$/', $domain)) {
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
             throw new \InvalidArgumentException(sprintf(
                 'The specified domain "%s" is not a valid domain.',
                 $domain
@@ -77,25 +45,11 @@ class FilesystemMap
 
     /**
      * Indicates whether there is a filesystem registered for the specified
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
-     * domain
-     *
-     * @param string $domain
-     *
-     * @return Boolean
-<<<<<<< HEAD
-=======
      * domain.
      *
      * @param string $domain
      *
      * @return bool
->>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
-=======
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function has($domain)
     {
@@ -103,15 +57,7 @@ class FilesystemMap
     }
 
     /**
-<<<<<<< HEAD
-<<<<<<< HEAD
-     * Returns the filesystem registered for the specified domain
-=======
      * Returns the filesystem registered for the specified domain.
->>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
-=======
-     * Returns the filesystem registered for the specified domain
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      *
      * @param string $domain
      *
@@ -122,15 +68,7 @@ class FilesystemMap
      */
     public function get($domain)
     {
-<<<<<<< HEAD
-<<<<<<< HEAD
-        if (! $this->has($domain)) {
-=======
         if (!$this->has($domain)) {
->>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
-=======
-        if (! $this->has($domain)) {
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
             throw new \InvalidArgumentException(sprintf(
                 'There is no filesystem defined for the "%s" domain.',
                 $domain
@@ -141,21 +79,6 @@ class FilesystemMap
     }
 
     /**
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
-     * Removes the filesystem registered for the specified domain
-     *
-     * @param string $domain
-     *
-     * @return void
-     */
-    public function remove($domain)
-    {
-        if (! $this->has($domain)) {
-<<<<<<< HEAD
-=======
      * Removes the filesystem registered for the specified domain.
      *
      * @param string $domain
@@ -163,9 +86,6 @@ class FilesystemMap
     public function remove($domain)
     {
         if (!$this->has($domain)) {
->>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
-=======
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
             throw new \InvalidArgumentException(sprintf(
                 'Cannot remove the "%s" filesystem as it is not defined.',
                 $domain
@@ -176,19 +96,7 @@ class FilesystemMap
     }
 
     /**
-<<<<<<< HEAD
-<<<<<<< HEAD
-     * Clears all the registered filesystems
-     *
-     * @return void
-=======
      * Clears all the registered filesystems.
->>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
-=======
-     * Clears all the registered filesystems
-     *
-     * @return void
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function clear()
     {

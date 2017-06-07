@@ -4,7 +4,6 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-<<<<<<< HEAD
     "content-hash": "2542ac07583fe2bca9b3ccdc31c31bed",
     "packages": [
         {
@@ -204,11 +203,6 @@
             "time": "2017-03-20T01:23:34+00:00"
         },
         {
-=======
-    "content-hash": "24c85dcc2f82d8c29037be7743d63b00",
-    "packages": [
-        {
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
             "name": "luracast/restler",
             "version": "3.0.0",
             "source": {
@@ -286,7 +280,6 @@
                 "server"
             ],
             "time": "2017-01-11T03:42:36+00:00"
-<<<<<<< HEAD
         },
         {
             "name": "symfony/polyfill-mbstring",
@@ -346,8 +339,6 @@
                 "shim"
             ],
             "time": "2016-11-14T01:06:16+00:00"
-=======
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
         }
     ],
     "packages-dev": [],

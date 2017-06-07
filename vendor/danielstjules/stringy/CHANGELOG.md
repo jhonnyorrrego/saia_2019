@@ -1,8 +1,3 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 ### 2.4.0 (2017-03-02)
 
 * Add startsWithAny
@@ -14,10 +9,6 @@
 * Additional char support in toAscii, e.g. full width chars and wide
   non-breaking space
 
-<<<<<<< HEAD
->>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
-=======
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 ### 2.3.2 (2016-05-02)
 
 * Improve support without mbstring

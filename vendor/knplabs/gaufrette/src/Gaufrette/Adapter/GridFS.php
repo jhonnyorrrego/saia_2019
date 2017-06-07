@@ -3,25 +3,11 @@
 namespace Gaufrette\Adapter;
 
 use Gaufrette\Adapter;
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
-use \MongoGridFS as MongoGridFs;
-use \MongoDate;
-
-/**
- * Adapter for the GridFS filesystem on MongoDB database
-<<<<<<< HEAD
-=======
 use MongoGridFS as MongoGridFs;
 use MongoDate;
 
 /**
  * Adapter for the GridFS filesystem on MongoDB database.
->>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
-=======
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
  *
  * @author Tomi Saarinen <tomi.saarinen@rohea.com>
  * @author Antoine Hérault <antoine.herault@gmail.com>
@@ -36,16 +22,6 @@ class GridFS implements Adapter,
     protected $gridFS = null;
 
     /**
-<<<<<<< HEAD
-<<<<<<< HEAD
-     * Constructor
-     *
-=======
->>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
-=======
-     * Constructor
-     *
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      * @param \MongoGridFS $gridFS
      */
     public function __construct(MongoGridFs $gridFS)
@@ -54,15 +30,7 @@ class GridFS implements Adapter,
     }
 
     /**
-<<<<<<< HEAD
-<<<<<<< HEAD
-     * {@inheritDoc}
-=======
      * {@inheritdoc}
->>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
-=======
-     * {@inheritDoc}
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function read($key)
     {
@@ -72,15 +40,7 @@ class GridFS implements Adapter,
     }
 
     /**
-<<<<<<< HEAD
-<<<<<<< HEAD
-     * {@inheritDoc}
-=======
      * {@inheritdoc}
->>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
-=======
-     * {@inheritDoc}
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function write($key, $content)
     {
@@ -89,30 +49,14 @@ class GridFS implements Adapter,
         }
 
         $metadata = array_replace_recursive(array('date' => new MongoDate()), $this->getMetadata($key), array('filename' => $key));
-<<<<<<< HEAD
-<<<<<<< HEAD
-        $id   = $this->gridFS->storeBytes($content, $metadata);
-=======
         $id = $this->gridFS->storeBytes($content, $metadata);
->>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
-=======
-        $id   = $this->gridFS->storeBytes($content, $metadata);
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
         $file = $this->gridFS->findOne(array('_id' => $id));
 
         return $file->getSize();
     }
 
     /**
-<<<<<<< HEAD
-<<<<<<< HEAD
-     * {@inheritDoc}
-=======
      * {@inheritdoc}
->>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
-=======
-     * {@inheritDoc}
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function isDirectory($key)
     {
@@ -120,15 +64,7 @@ class GridFS implements Adapter,
     }
 
     /**
-<<<<<<< HEAD
-<<<<<<< HEAD
-     * {@inheritDoc}
-=======
      * {@inheritdoc}
->>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
-=======
-     * {@inheritDoc}
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function rename($sourceKey, $targetKey)
     {
@@ -139,15 +75,7 @@ class GridFS implements Adapter,
     }
 
     /**
-<<<<<<< HEAD
-<<<<<<< HEAD
-     * {@inheritDoc}
-=======
      * {@inheritdoc}
->>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
-=======
-     * {@inheritDoc}
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function exists($key)
     {
@@ -155,25 +83,11 @@ class GridFS implements Adapter,
     }
 
     /**
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
-     * {@inheritDoc}
-     */
-    public function keys()
-    {
-        $keys   = array();
-<<<<<<< HEAD
-=======
      * {@inheritdoc}
      */
     public function keys()
     {
         $keys = array();
->>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
-=======
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
         $cursor = $this->gridFS->find(array(), array('filename'));
 
         foreach ($cursor as $file) {
@@ -184,15 +98,7 @@ class GridFS implements Adapter,
     }
 
     /**
-<<<<<<< HEAD
-<<<<<<< HEAD
-     * {@inheritDoc}
-=======
      * {@inheritdoc}
->>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
-=======
-     * {@inheritDoc}
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function mtime($key)
     {
@@ -202,15 +108,7 @@ class GridFS implements Adapter,
     }
 
     /**
-<<<<<<< HEAD
-<<<<<<< HEAD
-     * {@inheritDoc}
-=======
      * {@inheritdoc}
->>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
-=======
-     * {@inheritDoc}
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function checksum($key)
     {
@@ -220,15 +118,7 @@ class GridFS implements Adapter,
     }
 
     /**
-<<<<<<< HEAD
-<<<<<<< HEAD
-     * {@inheritDoc}
-=======
      * {@inheritdoc}
->>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
-=======
-     * {@inheritDoc}
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function delete($key)
     {
@@ -238,15 +128,7 @@ class GridFS implements Adapter,
     }
 
     /**
-<<<<<<< HEAD
-<<<<<<< HEAD
-     * {@inheritDoc}
-=======
      * {@inheritdoc}
->>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
-=======
-     * {@inheritDoc}
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function setMetadata($key, $metadata)
     {
@@ -254,15 +136,7 @@ class GridFS implements Adapter,
     }
 
     /**
-<<<<<<< HEAD
-<<<<<<< HEAD
-     * {@inheritDoc}
-=======
      * {@inheritdoc}
->>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
-=======
-     * {@inheritDoc}
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function getMetadata($key)
     {
@@ -275,15 +149,7 @@ class GridFS implements Adapter,
     }
 
     /**
-<<<<<<< HEAD
-<<<<<<< HEAD
-     * {@inheritDoc}
-=======
      * {@inheritdoc}
->>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
-=======
-     * {@inheritDoc}
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
      */
     public function listKeys($prefix = '')
     {
@@ -292,39 +158,17 @@ class GridFS implements Adapter,
         if ('' == $prefix) {
             return array(
                 'dirs' => array(),
-<<<<<<< HEAD
-<<<<<<< HEAD
-                'keys' => $this->keys()
-=======
                 'keys' => $this->keys(),
->>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
-=======
-                'keys' => $this->keys()
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
             );
         }
 
         $result = array(
             'dirs' => array(),
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
-            'keys' => array()
-        );
-
-        $gridFiles = $this->gridFS->find(array(
-            'filename' => new \MongoRegex(sprintf('/^%s/', $prefix))
-<<<<<<< HEAD
-=======
             'keys' => array(),
         );
 
         $gridFiles = $this->gridFS->find(array(
             'filename' => new \MongoRegex(sprintf('/^%s/', $prefix)),
->>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
-=======
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
         ));
 
         foreach ($gridFiles as $file) {
