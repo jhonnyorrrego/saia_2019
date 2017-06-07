@@ -226,15 +226,9 @@ for($i=0;$i<count($ar_func);$i++){
 
       if($datos_funcion[0]["parametros"]==""){
         $datos_funcion[0]["parametros"]=$idformato.','.$iddoc;
-<<<<<<< HEAD
-				} else {
+	  } else {
        $datos_funcion[0]["parametros"]=$idformato.','.$iddoc.",".$datos_funcion[0]["parametros"];      
-				}
-=======
       }
-      else
-       $datos_funcion[0]["parametros"]=$idformato.','.$iddoc.",".$datos_funcion[0]["parametros"];
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
       ejecutar_funcion($datos_funcion[0]["nombre_funcion"],$ruta,$datos_funcion[0]["parametros"]);
     }
 	}
