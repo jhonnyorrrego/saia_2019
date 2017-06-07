@@ -26,13 +26,13 @@ global $raiz_saia;
 $texto='';
 switch($version){
   case "1.4.2":
-    $texto='<script src="'.$raiz_saia.'js/jquery-1.4.2.js" type="text/javascript"></script>';
+    $texto='<script src="'.$raiz_saia.'js/jquery-1.4.2.js" type="text/javascript"><\/script>';
   break;
   case "1.7":
-    $texto='<script src="'.$raiz_saia.'js/jquery-1.7.min.js" type="text/javascript"></script>';
+    $texto='<script src="'.$raiz_saia.'js/jquery-1.7.min.js" type="text/javascript"><\/script>';
   break;
   case "1.2.3":
-    $texto='<script src="'.$raiz_saia.'js/jquery-1.2.3.min.js" type="text/javascript"></script>';
+    $texto='<script src="'.$raiz_saia.'js/jquery-1.2.3.min.js" type="text/javascript"><\/script>';
   break;
   case "sapi":
     $texto='<script type="text/javascript" src="http://www.google.com/jsapi"><\/script><script type="text/javascript">google.load("jquery", "1.7");<\/script>';
