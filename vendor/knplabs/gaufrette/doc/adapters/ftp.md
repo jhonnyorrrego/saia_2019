@@ -1,11 +1,23 @@
+<<<<<<< HEAD
 FTP
 ===
+=======
+---
+currentMenu: ftp
+---
+
+# FTP
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
 
 `ftp` extension should be enabled in order to use this adapter.
 Also, some FTP servers need valid configuration so Gaufrette can work with them as expected.
 
+<<<<<<< HEAD
 Server configuration
 --------------------
+=======
+## Server configuration
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
 
 Some FTP servers does not show hidden files by default. You will probably need to tweak your server configuration.
 
@@ -23,10 +35,16 @@ We need to change `ListOptions` in proftpd configuration (at debian system `/etc
 ListOptions  "-la"
 ```
 
+<<<<<<< HEAD
 Example
 -------
 
 The third argument of the `Ftp` adapter is not mandatory, however you can use it to pass configuration options 
+=======
+### Example
+
+The third argument of the `Ftp` adapter is not mandatory, however you can use it to pass configuration options
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
 (port, username, password, etc.):
 
 ```php

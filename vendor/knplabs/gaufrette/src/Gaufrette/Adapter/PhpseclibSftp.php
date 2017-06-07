@@ -3,7 +3,11 @@
 namespace Gaufrette\Adapter;
 
 use Gaufrette\Adapter;
+<<<<<<< HEAD
 use phpseclib\Net\SFTP;
+=======
+use phpseclib\Net\SFTP as SecLibSFTP;
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
 use Gaufrette\Filesystem;
 use Gaufrette\File;
 
@@ -17,6 +21,7 @@ class PhpseclibSftp implements Adapter,
     protected $initialized = false;
 
     /**
+<<<<<<< HEAD
      * Constructor.
      *
      * @param SFTP        $sftp      An Sftp instance
@@ -27,6 +32,14 @@ class PhpseclibSftp implements Adapter,
      * @param string|null $password  SFTP user password
      */
     public function __construct(SFTP $sftp, $directory = null, $create = false, $username = null, $password = null)
+=======
+     * @param SecLibSFTP  $sftp      An Sftp instance
+     * @param string      $directory The distant directory
+     * @param bool        $create    Whether to create the remote directory if it
+     *                               does not exist
+     */
+    public function __construct(SecLibSFTP $sftp, $directory = null, $create = false)
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
     {
         $this->sftp = $sftp;
         $this->directory = $directory;
@@ -51,7 +64,11 @@ class PhpseclibSftp implements Adapter,
         $sourcePath = $this->computePath($sourceKey);
         $targetPath = $this->computePath($targetKey);
 
+<<<<<<< HEAD
         $this->ensureDirectoryExists(dirname($targetPath), true);
+=======
+        $this->ensureDirectoryExists(\Gaufrette\Util\Path::dirname($targetPath), true);
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
 
         return $this->sftp->rename($sourcePath, $targetPath);
     }
@@ -64,7 +81,11 @@ class PhpseclibSftp implements Adapter,
         $this->initialize();
 
         $path = $this->computePath($key);
+<<<<<<< HEAD
         $this->ensureDirectoryExists(dirname($path), true);
+=======
+        $this->ensureDirectoryExists(\Gaufrette\Util\Path::dirname($path), true);
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
         if ($this->sftp->put($path, $content)) {
             return $this->sftp->size($path);
         }

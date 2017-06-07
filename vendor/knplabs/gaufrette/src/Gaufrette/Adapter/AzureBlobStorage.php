@@ -5,6 +5,7 @@ namespace Gaufrette\Adapter;
 use Gaufrette\Adapter;
 use Gaufrette\Util;
 use Gaufrette\Adapter\AzureBlobStorage\BlobProxyFactoryInterface;
+<<<<<<< HEAD
 
 use WindowsAzure\Blob\Models\CreateBlobOptions;
 use WindowsAzure\Blob\Models\CreateContainerOptions;
@@ -14,6 +15,16 @@ use WindowsAzure\Common\ServiceException;
 
 /**
  * Microsoft Azure Blob Storage adapter
+=======
+use MicrosoftAzure\Storage\Blob\Models\CreateBlobOptions;
+use MicrosoftAzure\Storage\Blob\Models\CreateContainerOptions;
+use MicrosoftAzure\Storage\Blob\Models\DeleteContainerOptions;
+use MicrosoftAzure\Storage\Blob\Models\ListBlobsOptions;
+use MicrosoftAzure\Storage\Common\ServiceException;
+
+/**
+ * Microsoft Azure Blob Storage adapter.
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
  *
  * @author Luciano Mammino <lmammino@oryzone.com>
  * @author Paweł Czyżewski <pawel.czyzewski@enginewerk.com>
@@ -22,34 +33,57 @@ class AzureBlobStorage implements Adapter,
                                   MetadataSupporter
 {
     /**
+<<<<<<< HEAD
      * Error constants
+=======
+     * Error constants.
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     const ERROR_CONTAINER_ALREADY_EXISTS = 'ContainerAlreadyExists';
     const ERROR_CONTAINER_NOT_FOUND = 'ContainerNotFound';
 
     /**
+<<<<<<< HEAD
      * @var AzureBlobStorage\BlobProxyFactoryInterface $blobProxyFactory
+=======
+     * @var AzureBlobStorage\BlobProxyFactoryInterface
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     protected $blobProxyFactory;
 
     /**
+<<<<<<< HEAD
      * @var string $containerName
+=======
+     * @var string
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     protected $containerName;
 
     /**
+<<<<<<< HEAD
      * @var bool $detectContentType
+=======
+     * @var bool
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     protected $detectContentType;
 
     /**
+<<<<<<< HEAD
      * @var \WindowsAzure\Blob\Internal\IBlob $blobProxy
+=======
+     * @var \MicrosoftAzure\Storage\Blob\Internal\IBlob
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     protected $blobProxy;
 
     /**
+<<<<<<< HEAD
      * Constructor
      *
+=======
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      * @param AzureBlobStorage\BlobProxyFactoryInterface $blobProxyFactory
      * @param string                                     $containerName
      * @param bool                                       $create
@@ -66,11 +100,20 @@ class AzureBlobStorage implements Adapter,
     }
 
     /**
+<<<<<<< HEAD
      * Creates a new container
      *
      * @param  string                                           $containerName
      * @param  \WindowsAzure\Blob\Models\CreateContainerOptions $options
      * @throws \RuntimeException                                if cannot create the container
+=======
+     * Creates a new container.
+     *
+     * @param string                                                     $containerName
+     * @param \MicrosoftAzure\Storage\Blob\Models\CreateContainerOptions $options
+     *
+     * @throws \RuntimeException if cannot create the container
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function createContainer($containerName, CreateContainerOptions $options = null)
     {
@@ -93,11 +136,20 @@ class AzureBlobStorage implements Adapter,
     }
 
     /**
+<<<<<<< HEAD
      * Deletes a container
      *
      * @param  string                 $containerName
      * @param  DeleteContainerOptions $options
      * @throws \RuntimeException      if cannot delete the container
+=======
+     * Deletes a container.
+     *
+     * @param string                 $containerName
+     * @param DeleteContainerOptions $options
+     *
+     * @throws \RuntimeException if cannot delete the container
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function deleteContainer($containerName, DeleteContainerOptions $options = null)
     {
@@ -120,7 +172,11 @@ class AzureBlobStorage implements Adapter,
     }
 
     /**
+<<<<<<< HEAD
      * {@inheritDoc}
+=======
+     * {@inheritdoc}
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function read($key)
     {
@@ -138,7 +194,11 @@ class AzureBlobStorage implements Adapter,
     }
 
     /**
+<<<<<<< HEAD
      * {@inheritDoc}
+=======
+     * {@inheritdoc}
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function write($key, $content)
     {
@@ -148,13 +208,26 @@ class AzureBlobStorage implements Adapter,
             $options = new CreateBlobOptions();
 
             if ($this->detectContentType) {
+<<<<<<< HEAD
                 $fileInfo = new \finfo(FILEINFO_MIME_TYPE);
                 $contentType = $fileInfo->buffer($content);
                 $options->setContentType($contentType);
+=======
+                $contentType = $this->guessContentType($content);
+
+                $options->setBlobContentType($contentType);
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
             }
 
             $this->blobProxy->createBlockBlob($this->containerName, $key, $content, $options);
 
+<<<<<<< HEAD
+=======
+            if (is_resource($content)) {
+                return Util\Size::fromResource($content);
+            }
+
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
             return Util\Size::fromContent($content);
         } catch (ServiceException $e) {
             $this->failIfContainerNotFound($e, sprintf('write content for key "%s"', $key));
@@ -164,7 +237,11 @@ class AzureBlobStorage implements Adapter,
     }
 
     /**
+<<<<<<< HEAD
      * {@inheritDoc}
+=======
+     * {@inheritdoc}
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function exists($key)
     {
@@ -198,7 +275,11 @@ class AzureBlobStorage implements Adapter,
     }
 
     /**
+<<<<<<< HEAD
      * {@inheritDoc}
+=======
+     * {@inheritdoc}
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function keys()
     {
@@ -208,7 +289,11 @@ class AzureBlobStorage implements Adapter,
             $blobList = $this->blobProxy->listBlobs($this->containerName);
 
             return array_map(
+<<<<<<< HEAD
                 function($blob) {
+=======
+                function ($blob) {
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
                     return $blob->getName();
                 },
                 $blobList->getBlobs()
@@ -227,7 +312,11 @@ class AzureBlobStorage implements Adapter,
     }
 
     /**
+<<<<<<< HEAD
      * {@inheritDoc}
+=======
+     * {@inheritdoc}
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function mtime($key)
     {
@@ -245,7 +334,11 @@ class AzureBlobStorage implements Adapter,
     }
 
     /**
+<<<<<<< HEAD
      * {@inheritDoc}
+=======
+     * {@inheritdoc}
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function delete($key)
     {
@@ -263,7 +356,11 @@ class AzureBlobStorage implements Adapter,
     }
 
     /**
+<<<<<<< HEAD
      * {@inheritDoc}
+=======
+     * {@inheritdoc}
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function rename($sourceKey, $targetKey)
     {
@@ -282,7 +379,11 @@ class AzureBlobStorage implements Adapter,
     }
 
     /**
+<<<<<<< HEAD
      * {@inheritDoc}
+=======
+     * {@inheritdoc}
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function isDirectory($key)
     {
@@ -291,7 +392,11 @@ class AzureBlobStorage implements Adapter,
     }
 
     /**
+<<<<<<< HEAD
      * {@inheritDoc}
+=======
+     * {@inheritdoc}
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function setMetadata($key, $content)
     {
@@ -313,7 +418,11 @@ class AzureBlobStorage implements Adapter,
     }
 
     /**
+<<<<<<< HEAD
      * {@inheritDoc}
+=======
+     * {@inheritdoc}
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function getMetadata($key)
     {
@@ -337,7 +446,11 @@ class AzureBlobStorage implements Adapter,
     }
 
     /**
+<<<<<<< HEAD
      * Lazy initialization, automatically called when some method is called after construction
+=======
+     * Lazy initialization, automatically called when some method is called after construction.
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     protected function init()
     {
@@ -347,10 +460,18 @@ class AzureBlobStorage implements Adapter,
     }
 
     /**
+<<<<<<< HEAD
      * Throws a runtime exception if a give ServiceException derived from a "container not found" error
      *
      * @param  ServiceException  $exception
      * @param  string            $action
+=======
+     * Throws a runtime exception if a give ServiceException derived from a "container not found" error.
+     *
+     * @param ServiceException $exception
+     * @param string           $action
+     *
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      * @throws \RuntimeException
      */
     protected function failIfContainerNotFound(ServiceException $exception, $action)
@@ -367,9 +488,16 @@ class AzureBlobStorage implements Adapter,
     }
 
     /**
+<<<<<<< HEAD
      * Extracts the error code from a service exception
      *
      * @param  ServiceException $exception
+=======
+     * Extracts the error code from a service exception.
+     *
+     * @param ServiceException $exception
+     *
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      * @return string
      */
     protected function getErrorCodeFromServiceException(ServiceException $exception)
@@ -382,4 +510,23 @@ class AzureBlobStorage implements Adapter,
 
         return $exception->getErrorReason();
     }
+<<<<<<< HEAD
+=======
+
+    /**
+     * @param string $content
+     *
+     * @return string
+     */
+    private function guessContentType($content)
+    {
+        $fileInfo = new \finfo(FILEINFO_MIME_TYPE);
+
+        if (is_resource($content)) {
+            return $fileInfo->file(stream_get_meta_data($content)['uri']);
+        }
+
+        return $fileInfo->buffer($content);
+    }
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
 }

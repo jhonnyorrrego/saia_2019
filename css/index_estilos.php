@@ -87,7 +87,7 @@ function index_estilos($tipo_tema) {
 		switch($tipo_tema) {
 		   case "temas_main":
 			$tema_index .= '<style type="text/css">
-				body, * { font-family: Verdana, Geneva, sans-serif; font-size: 10px; color: '.$color_letra.'; }
+				body, * { font-family: Verdana, Geneva, sans-serif; font-size: 10px;}
 				body { overflow-x:hidden; margin-left: 0px; margin-top: 0px;margin-right: 0px; margin-bottom: 0px; 
 				background-image: url('.$ruta_db_superior.'imagenes/login/' . $body . '); background-repeat: repeat-x; background-position: left top; background-color: #e7e7e7; font-family: Verdana, Geneva, sans-serif; font-size: 10px; font-weight: normal; }
 				#loginForm { margin: auto; width: 700px; height: 180px; }

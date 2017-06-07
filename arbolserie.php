@@ -53,51 +53,77 @@ echo(librerias_notificaciones());
 			//tree2.loadXML("test_serie_funcionario2.php?tabla=dependencia&admin=1");
 			tree2.setXMLAutoLoading("test_dependencia_serie.php?tabla=dependencia&admin=1&carga_partes_dependencia=1&carga_partes_serie=1");
 			tree2.loadXML("test_dependencia_serie.php?tabla=dependencia&admin=1&carga_partes_dependencia=1&carga_partes_serie=1");
+		
+			function validar_oc(nodeId){
+				var datos=nodeId.split("-");
+				if(datos[0]=='otras_categorias'){
+					return(true);
+				}else{
+					return(false);
+				}
+			}
+			function validar_ssa(nodeId){
+				var datos=nodeId.split("-");
+				if(datos[0]=='sin_asignar' || datos[0]=='asignada'){
+					return(true);
+				}else{
+					return(false);
+				}
+			}			
 			function onNodeSelect(nodeId){
-				
-			if(nodeId!=-1){	
-        var datos=nodeId.split("-");
-        var datos2=nodeId.split("sub");
-        var dependencia_serie='';
-        if(datos[1] || datos2[1]){
-            var dato=datos[1];
-            if(datos2[1]){
-                dato=datos2[1];
-	            var datos3=dato.split("_tv");
-				var es_tvd = dato.indexOf("_tv");
-				var tvd='&tvd=1';
-	            if(es_tvd==-1){
-	            	tvd='';
-	            }                
-                
-                
-                dependencia_serie="&dependencia_serie="+datos2[0];
-            }
-            
-           if(nodeId=='3-categoria-Otras categorias'){
-           	 parent.serielist.location = "serieadd.php?otras_categorias=1"; 
-           }else{
-           	parent.serielist.location = "serieview.php?key=" + datos3[0] + dependencia_serie+tvd; 
-           }
-           
-        }else{    
-            var datos=nodeId.split("d");
-            var datos2=datos[1].split("_tv");
-			var es_tvd = datos[1].indexOf("_tv");
-			var tvd='&tvd=1';
-            if(es_tvd==-1){
-            	tvd='';
-            }
-            parent.serielist.location = "asignarserie_entidad.php?tipo_entidad=2&llave_entidad=" + datos2[0]+'&from_dependencia=1&dependencia_serie=' + datos2[0] + tvd;
-            //parent.serielist.location = "serieadd.php?from_dependencia=1&dependencia_serie=" + datos[1];
-            
-        }
-        }else{ //fin if -1
-        	parent.serielist.location ="vacio.php";	
-        }  
-            //asignarserie_entidad.php
-            
-        	//notificacion_saia("Esto es una dependencia","error","",2500);
+        		if(nodeId=='3-categoria-Otras categorias'){
+                   	 parent.serielist.location = "serieadd.php?otras_categorias=1"; 
+                }else if(nodeId=='series_sin_asignar'){
+                        parent.serielist.location ="vacio.php";	
+                }else if(validar_oc(nodeId)){
+                    var datos=nodeId.split("-");
+                    parent.serielist.location = "serieview.php?key=" + datos[1]; 
+                }else if(validar_ssa(nodeId)){
+                    var datos=nodeId.split("-");
+                    	if(datos[0]=='sin_asignar'){
+                    		parent.serielist.location = "serieview.php?sin_asignar=1&key=" + datos[1]; 
+                    	}else{
+                    		parent.serielist.location ="vacio.php";	
+                    	}                      
+                }else{	
+        				
+                    var datos=nodeId.split("-");
+                    var datos2=nodeId.split("sub");
+                    var dependencia_serie='';
+                    if(datos[1] || datos2[1]){
+                        var dato=datos[1];
+                        if(datos2[1]){
+                            dato=datos2[1];
+            	            var datos3=dato.split("_tv");
+            				var es_tvd = dato.indexOf("_tv");
+            				var tvd='&tvd=1';
+            	            if(es_tvd==-1){
+            	            	tvd='';
+            	            }                
+                            
+                            
+                            dependencia_serie="&dependencia_serie="+datos2[0];
+                        }
+                        
+                       parent.serielist.location = "serieview.php?key=" + datos3[0] + dependencia_serie+tvd; 
+                       
+                       
+                    }else{    
+                        var datos=nodeId.split("d");
+                        var datos2=datos[1].split("_tv");
+            			var es_tvd = datos[1].indexOf("_tv");
+            			var tvd='&tvd=1';
+                        if(es_tvd==-1){
+                        	tvd='';
+                        }
+                        parent.serielist.location = "asignarserie_entidad.php?tipo_entidad=2&llave_entidad=" + datos2[0]+'&from_dependencia=1&dependencia_serie=' + datos2[0] + tvd;
+                        //parent.serielist.location = "serieadd.php?from_dependencia=1&dependencia_serie=" + datos[1];
+                        
+                    }
+                }  
+                    //asignarserie_entidad.php
+                    
+                	//notificacion_saia("Esto es una dependencia","error","",2500);
       }
       function fin_cargando_serie() {
         if (browserType == "gecko" )

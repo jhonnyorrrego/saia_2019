@@ -5,7 +5,11 @@ namespace Gaufrette\Exception;
 use Gaufrette\Exception;
 
 /**
+<<<<<<< HEAD
  * Exception to be thrown when an unexpected file exists
+=======
+ * Exception to be thrown when an unexpected file exists.
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
  *
  * @author  Antoine Hérault <antoine.herault@gmail.com>
  */

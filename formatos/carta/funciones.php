@@ -42,60 +42,8 @@ function mostrar_qr_carta($idformato,$iddoc){
 
 function generar_codigo_qr_carta($idformato,$iddoc){
   global $conn,$ruta_db_superior;
-	include_once($ruta_db_superior."pantallas/lib/librerias_fechas.php");
-  $codigo_qr=busca_filtro_tabla("ruta_qr, iddocumento_verificacion","documento_verificacion","documento_iddocumento=".$iddoc,"", $conn);
-  $datos=busca_filtro_tabla("A.fecha,A.estado, A.numero","documento A","A.iddocumento=".$iddoc,"",$conn);
-	$fecha=mostrar_fecha_saia($datos[0]['fecha']);
-	$datos_qr="Fecha: ".$fecha." \n";
-	$datos_qr.="Radicado No: ".$datos[0]["numero"]." \n";
-	$firmas=busca_filtro_tabla("CONCAT(B.nombres,CONCAT(' ',B.apellidos)) AS nombre","buzon_salida A, funcionario B","A.origen=B.funcionario_codigo AND (A.nombre LIKE 'APROBADO' OR A.nombre LIKE 'REVISADO')AND A.archivo_idarchivo=".$iddoc,"idtransferencia asc", $conn);
-	$datos_qr.="Firman: \n";
-	for($i=0; $i<$firmas['numcampos']; $i++){
-	  $datos_qr .= $firmas[$i]['nombre']." \n";
-	}
-	$formato_ruta = aplicar_plantilla_ruta_documento($iddoc);
-	$ruta=$formato_ruta . '/qr/';
-
-	$imagen=generar_qr_carta($ruta,$datos_qr);
-
-	if($imagen==false){
-	  alerta("Error al tratar de crear el codigo qr");
-	}else{
-	  $fun_qr=usuario_actual('idfuncionario');
-	  $sql_documento_qr="INSERT INTO documento_verificacion(documento_iddocumento,funcionario_idfuncionario,fecha,ruta_qr,verificacion) VALUES (".$iddoc.",".$fun_qr.",".fecha_db_almacenar(date("Y-m-d H:i:s"),'Y-m-d H:i:s').",'".json_encode($imagen)."','vacio')";
-	  phpmkr_query($sql_documento_qr);
-	}
-}
-
-function generar_qr_carta($filename,$datos,$matrixPointSize = 2,$errorCorrectionLevel = 'Q'){
-  global $ruta_db_superior;
-  include_once ($ruta_db_superior."phpqrcode/qrlib.php");
-  include_once($ruta_db_superior."StorageUtils.php");
-  require_once $ruta_db_superior.'filesystem/SaiaStorage.php';
-
-
-  if ($datos) {
-        if (trim($datos) == ''){
-            return false;
-        }else{
-          $nombre_qr= 'qr'.date('Y_m_d_H_m_s').'.jpg';
-          $filename .= $nombre_qr;
-
-          ob_start();
-          QRcode::png($datos,false, $errorCorrectionLevel, $matrixPointSize, 0);
-          $imageString = ob_get_contents();
-			    ob_end_clean();
-          
-          $almacenamiento = new SaiaStorage(RUTA_QR);
-          $almacenamiento->almacenar_contenido($filename, $imageString);
-          
-          $ruta_qr = array ("servidor" => $almacenamiento->get_ruta_servidor(), "ruta" => $filename);
-
-          return $ruta_qr;
-        }
-    }else{
-      return false;
-    }
+	include_once ($ruta_db_superior . "pantallas/qr/librerias.php");
+	generar_codigo_qr($idformato,$iddoc);
 }
 //***************
 

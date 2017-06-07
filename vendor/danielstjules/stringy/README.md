@@ -21,6 +21,7 @@ s('string')->toTitleCase()->ensureRight('y') == 'Stringy'
 * [Class methods](#class-methods)
     * [create](#createmixed-str--encoding-)
 * [Instance methods](#instance-methods)
+<<<<<<< HEAD
     * [append](#appendstring-string)
     * [at](#atint-index)
     * [between](#betweenstring-start-string-end--int-offset)
@@ -98,6 +99,130 @@ s('string')->toTitleCase()->ensureRight('y') == 'Stringy'
     * [underscored](#underscored)
     * [upperCamelize](#uppercamelize)
     * [upperCaseFirst](#uppercasefirst)
+=======
+<table>
+    <tr>
+        <td>[append](#appendstring-string)</td>
+        <td>[at](#atint-index)</td>
+        <td>[between](#betweenstring-start-string-end--int-offset)</td>
+        <td>[camelize](#camelize)</td>
+    </tr>
+    <tr>
+        <td>[chars](#chars)</td>
+        <td>[collapseWhitespace](#collapsewhitespace)</td>
+        <td>[contains](#containsstring-needle--boolean-casesensitive--true-)</td>
+        <td>[containsAll](#containsallarray-needles--boolean-casesensitive--true-)</td>
+    </tr>
+    <tr>
+        <td>[containsAny](#containsanyarray-needles--boolean-casesensitive--true-)</td>
+        <td>[countSubstr](#countsubstrstring-substring--boolean-casesensitive--true-)</td>
+        <td>[dasherize](#dasherize)</td>
+        <td>[delimit](#delimitint-delimiter)</td>
+    </tr>
+    <tr>
+        <td>[endsWith](#endswithstring-substring--boolean-casesensitive--true-)</td>
+        <td>[endsWithAny](#endsWithAnystring-substrings--boolean-casesensitive--true-)</td>
+        <td>[ensureLeft](#ensureleftstring-substring)</td>
+        <td>[ensureRight](#ensurerightstring-substring)</td>
+    </tr>
+    <tr>
+        <td>[first](#firstint-n)</td>
+        <td>[getEncoding](#getencoding)</td>
+        <td>[hasLowerCase](#haslowercase)</td>
+        <td>[hasUpperCase](#hasuppercase)</td>
+    </tr>
+    <tr>
+        <td>[htmlDecode](#htmldecode)</td>
+        <td>[htmlEncode](#htmlencode)</td>
+        <td>[humanize](#humanize)</td>
+        <td>[indexOf](#indexofstring-needle--offset--0-)</td>
+    </tr>
+    <tr>
+        <td>[indexOfLast](#indexoflaststring-needle--offset--0-)</td>
+        <td>[insert](#insertint-index-string-substring)</td>
+        <td>[isAlpha](#isalpha)</td>
+        <td>[isAlphanumeric](#isalphanumeric)</td>
+    </tr>
+    <tr>
+        <td>[isBase64](#isbase64)</td>
+        <td>[isBlank](#isblank)</td>
+        <td>[isHexadecimal](#ishexadecimal)</td>
+        <td>[isJson](#isjson)</td>
+    </tr>
+    <tr>
+        <td>[isLowerCase](#islowercase)</td>
+        <td>[isSerialized](#isserialized)</td>
+        <td>[isUpperCase](#isuppercase)</td>
+        <td>[last](#last)</td>
+    </tr>
+    <tr>
+        <td>[length](#length)</td>
+        <td>[lines](#lines)</td>
+        <td>[longestCommonPrefix](#longestcommonprefixstring-otherstr)</td>
+        <td>[longestCommonSuffix](#longestcommonsuffixstring-otherstr)</td>
+    </tr>
+    <tr>
+        <td>[longestCommonSubstring](#longestcommonsubstringstring-otherstr)</td>
+        <td>[lowerCaseFirst](#lowercasefirst)</td>
+        <td>[pad](#padint-length--string-padstr-----string-padtype--right-)</td>
+        <td>[padBoth](#padbothint-length--string-padstr----)</td>
+    </tr>
+    <tr>
+        <td>[padLeft](#padleftint-length--string-padstr----)</td>
+        <td>[padRight](#padrightint-length--string-padstr----)</td>
+        <td>[prepend](#prependstring-string)</td>
+        <td>[regexReplace](#regexreplacestring-pattern-string-replacement--string-options--msr)</td>
+    </tr>
+    <tr>
+        <td>[removeLeft](#removeleftstring-substring)</td>
+        <td>[removeRight](#removerightstring-substring)</td>
+        <td>[repeat](#repeatmultiplier)</td>
+        <td>[replace](#replacestring-search-string-replacement)</td>
+    </tr>
+    <tr>
+        <td>[reverse](#reverse)</td>
+        <td>[safeTruncate](#safetruncateint-length--string-substring---)</td>
+        <td>[shuffle](#shuffle)</td>
+        <td>[slugify](#slugify-string-replacement----)</td>
+    </tr>
+    <tr>
+        <td>[startsWith](#startswithstring-substring--boolean-casesensitive--true-)</td>
+        <td>[startsWithAny](#startswithanystring-substrings--boolean-casesensitive--true-)</td>
+        <td>[slice](#sliceint-start--int-end-)</td>
+        <td>[split](#splitstring-pattern--int-limit-)</td>
+    </tr>
+    <tr>
+        <td>[stripWhitespace](#stripwhitespace)</td>
+        <td>[substr](#substrint-start--int-length-)</td>
+        <td>[surround](#surroundstring-substring)</td>
+        <td>[swapCase](#swapcase)</td>
+    </tr>
+    <tr>
+        <td>[tidy](#tidy)</td>
+        <td>[titleize](#titleize-array-ignore)</td>
+        <td>[toAscii](#toascii)</td>
+        <td>[toBoolean](#toboolean)</td>
+    </tr>
+    <tr>
+        <td>[toLowerCase](#tolowercase)</td>
+        <td>[toSpaces](#tospaces-tablength--4-)</td>
+        <td>[toTabs](#totabs-tablength--4-)</td>
+        <td>[toTitleCase](#totitlecase)</td>
+    </tr>
+    <tr>
+        <td>[toUpperCase](#touppercase)</td>
+        <td>[trim](#trim-string-chars)</td>
+        <td>[trimLeft](#trimleft-string-chars)</td>
+        <td>[trimRight](#trimright-string-chars)</td>
+    </tr>
+    <tr>
+        <td>[truncate](#truncateint-length--string-substring---)</td>
+        <td>[underscored](#underscored)</td>
+        <td>[upperCamelize](#uppercamelize)</td>
+        <td>[upperCaseFirst](#uppercasefirst)</td>
+    </tr>
+</table>
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
 * [Extensions](#extensions)
 * [Tests](#tests)
 * [License](#license)
@@ -131,7 +256,11 @@ in your composer.json file:
 
 ```json
 "require": {
+<<<<<<< HEAD
     "danielstjules/stringy": "~2.3"
+=======
+    "danielstjules/stringy": "~2.4"
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
 }
 ```
 
@@ -391,6 +520,19 @@ setting $caseSensitive to false.
 s('fòôbàř')->endsWith('bàř', true); // true
 ```
 
+<<<<<<< HEAD
+=======
+##### endsWithAny(string[] $substrings [, boolean $caseSensitive = true ])
+
+Returns true if the string ends with any of $substrings, false otherwise.
+By default, the comparison is case-sensitive, but can be made insensitive
+by setting $caseSensitive to false.
+
+```php
+s('fòôbàř')->endsWith(['bàř', 'baz'], true); // true
+```
+
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
 ##### ensureLeft(string $substring)
 
 Ensures that the string begins with $substring. If it doesn't, it's prepended.
@@ -773,6 +915,19 @@ by setting $caseSensitive to false.
 s('FÒÔbàřbaz')->startsWith('fòôbàř', false); // true
 ```
 
+<<<<<<< HEAD
+=======
+##### startsWithAny(string[] $substrings [, boolean $caseSensitive = true ])
+
+Returns true if the string begins with any of $substrings, false
+otherwise. By default the comparison is case-sensitive, but can be made
+insensitive by setting $caseSensitive to false.
+
+```php
+s('FÒÔbàřbaz')->startsWith(['fòô', 'bàř'], false); // true
+```
+
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
 ##### slice(int $start [, int $end ])
 
 Returns the substring beginning at $start, and up to, but not including
@@ -794,6 +949,19 @@ results.
 s('foo,bar,baz')->split(',', 2); // ['foo', 'bar']
 ```
 
+<<<<<<< HEAD
+=======
+##### stripWhitespace()
+
+Strip all whitespace characters. This includes tabs and newline
+characters, as well as multibyte whitespace such as the thin space
+and ideographic space.
+
+```php
+s('   Ο     συγγραφέας  ')->stripWhitespace(); // 'Οσυγγραφέας'
+```
+
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
 ##### substr(int $start [, int $length ])
 
 Returns the substring beginning at $start with the specified $length.

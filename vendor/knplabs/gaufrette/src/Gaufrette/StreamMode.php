@@ -3,7 +3,11 @@
 namespace Gaufrette;
 
 /**
+<<<<<<< HEAD
  * Represents a stream mode
+=======
+ * Represents a stream mode.
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
  *
  * @author Antoine Hérault <antoine.herault@gmail.com>
  */
@@ -15,8 +19,11 @@ class StreamMode
     private $flag;
 
     /**
+<<<<<<< HEAD
      * Constructor
      *
+=======
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      * @param string $mode A stream mode as for the use of fopen()
      */
     public function __construct($mode)
@@ -32,7 +39,11 @@ class StreamMode
     }
 
     /**
+<<<<<<< HEAD
      * Returns the underlying mode
+=======
+     * Returns the underlying mode.
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      *
      * @return string
      */
@@ -42,9 +53,15 @@ class StreamMode
     }
 
     /**
+<<<<<<< HEAD
      * Indicates whether the mode allows to read
      *
      * @return Boolean
+=======
+     * Indicates whether the mode allows to read.
+     *
+     * @return bool
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function allowsRead()
     {
@@ -56,9 +73,15 @@ class StreamMode
     }
 
     /**
+<<<<<<< HEAD
      * Indicates whether the mode allows to write
      *
      * @return Boolean
+=======
+     * Indicates whether the mode allows to write.
+     *
+     * @return bool
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function allowsWrite()
     {
@@ -70,9 +93,15 @@ class StreamMode
     }
 
     /**
+<<<<<<< HEAD
      * Indicates whether the mode allows to open an existing file
      *
      * @return Boolean
+=======
+     * Indicates whether the mode allows to open an existing file.
+     *
+     * @return bool
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function allowsExistingFileOpening()
     {
@@ -80,9 +109,15 @@ class StreamMode
     }
 
     /**
+<<<<<<< HEAD
      * Indicates whether the mode allows to create a new file
      *
      * @return Boolean
+=======
+     * Indicates whether the mode allows to create a new file.
+     *
+     * @return bool
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function allowsNewFileOpening()
     {
@@ -91,9 +126,15 @@ class StreamMode
 
     /**
      * Indicates whether the mode implies to delete the existing content of the
+<<<<<<< HEAD
      * file when it already exists
      *
      * @return Boolean
+=======
+     * file when it already exists.
+     *
+     * @return bool
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function impliesExistingContentDeletion()
     {
@@ -102,9 +143,15 @@ class StreamMode
 
     /**
      * Indicates whether the mode implies positioning the cursor at the
+<<<<<<< HEAD
      * beginning of the file
      *
      * @return Boolean
+=======
+     * beginning of the file.
+     *
+     * @return bool
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function impliesPositioningCursorAtTheBeginning()
     {
@@ -113,9 +160,15 @@ class StreamMode
 
     /**
      * Indicates whether the mode implies positioning the cursor at the end of
+<<<<<<< HEAD
      * the file
      *
      * @return Boolean
+=======
+     * the file.
+     *
+     * @return bool
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function impliesPositioningCursorAtTheEnd()
     {
@@ -123,9 +176,15 @@ class StreamMode
     }
 
     /**
+<<<<<<< HEAD
      * Indicates whether the stream is in binary mode
      *
      * @return Boolean
+=======
+     * Indicates whether the stream is in binary mode.
+     *
+     * @return bool
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function isBinary()
     {
@@ -133,9 +192,15 @@ class StreamMode
     }
 
     /**
+<<<<<<< HEAD
      * Indicates whether the stream is in text mode
      *
      * @return Boolean
+=======
+     * Indicates whether the stream is in text mode.
+     *
+     * @return bool
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function isText()
     {

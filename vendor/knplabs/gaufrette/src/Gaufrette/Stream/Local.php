@@ -6,7 +6,11 @@ use Gaufrette\Stream;
 use Gaufrette\StreamMode;
 
 /**
+<<<<<<< HEAD
  * Local stream
+=======
+ * Local stream.
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
  *
  * @author Antoine Hérault <antoine.herault@gmail.com>
  */
@@ -17,8 +21,11 @@ class Local implements Stream
     private $fileHandle;
 
     /**
+<<<<<<< HEAD
      * Constructor
      *
+=======
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      * @param string $path
      */
     public function __construct($path)
@@ -27,11 +34,19 @@ class Local implements Stream
     }
 
     /**
+<<<<<<< HEAD
      * {@inheritDoc}
      */
     public function open(StreamMode $mode)
     {
         $baseDirPath = dirname($this->path);
+=======
+     * {@inheritdoc}
+     */
+    public function open(StreamMode $mode)
+    {
+        $baseDirPath = \Gaufrette\Util\Path::dirname($this->path);
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
         if ($mode->allowsWrite() && !is_dir($baseDirPath)) {
             @mkdir($baseDirPath, 0755, true);
         }
@@ -52,11 +67,19 @@ class Local implements Stream
     }
 
     /**
+<<<<<<< HEAD
      * {@inheritDoc}
      */
     public function read($count)
     {
         if (! $this->fileHandle) {
+=======
+     * {@inheritdoc}
+     */
+    public function read($count)
+    {
+        if (!$this->fileHandle) {
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
             return false;
         }
 
@@ -68,11 +91,19 @@ class Local implements Stream
     }
 
     /**
+<<<<<<< HEAD
      * {@inheritDoc}
      */
     public function write($data)
     {
         if (! $this->fileHandle) {
+=======
+     * {@inheritdoc}
+     */
+    public function write($data)
+    {
+        if (!$this->fileHandle) {
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
             return false;
         }
 
@@ -84,11 +115,19 @@ class Local implements Stream
     }
 
     /**
+<<<<<<< HEAD
      * {@inheritDoc}
      */
     public function close()
     {
         if (! $this->fileHandle) {
+=======
+     * {@inheritdoc}
+     */
+    public function close()
+    {
+        if (!$this->fileHandle) {
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
             return false;
         }
 
@@ -103,7 +142,11 @@ class Local implements Stream
     }
 
     /**
+<<<<<<< HEAD
      * {@inheritDoc}
+=======
+     * {@inheritdoc}
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function flush()
     {
@@ -115,7 +158,11 @@ class Local implements Stream
     }
 
     /**
+<<<<<<< HEAD
      * {@inheritDoc}
+=======
+     * {@inheritdoc}
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function seek($offset, $whence = SEEK_SET)
     {
@@ -127,7 +174,11 @@ class Local implements Stream
     }
 
     /**
+<<<<<<< HEAD
      * {@inheritDoc}
+=======
+     * {@inheritdoc}
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function tell()
     {
@@ -139,7 +190,11 @@ class Local implements Stream
     }
 
     /**
+<<<<<<< HEAD
      * {@inheritDoc}
+=======
+     * {@inheritdoc}
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function eof()
     {
@@ -151,7 +206,11 @@ class Local implements Stream
     }
 
     /**
+<<<<<<< HEAD
      * {@inheritDoc}
+=======
+     * {@inheritdoc}
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function stat()
     {
@@ -165,7 +224,11 @@ class Local implements Stream
     }
 
     /**
+<<<<<<< HEAD
      * {@inheritDoc}
+=======
+     * {@inheritdoc}
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function cast($castAs)
     {
@@ -177,7 +240,11 @@ class Local implements Stream
     }
 
     /**
+<<<<<<< HEAD
      * {@inheritDoc}
+=======
+     * {@inheritdoc}
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function unlink()
     {

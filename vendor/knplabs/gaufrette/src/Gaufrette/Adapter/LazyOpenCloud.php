@@ -5,7 +5,11 @@ namespace Gaufrette\Adapter;
 use Gaufrette\Adapter\OpenStackCloudFiles\ObjectStoreFactoryInterface;
 
 /**
+<<<<<<< HEAD
  * LazyOpenCloud
+=======
+ * LazyOpenCloud.
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
  *
  * @author  Daniel Richter <nexyz9@gmail.com>
  */
@@ -18,8 +22,13 @@ class LazyOpenCloud extends OpenCloud
 
     /**
      * @param ObjectStoreFactoryInterface $objectStoreFactory
+<<<<<<< HEAD
      * @param string $containerName
      * @param bool $createContainer
+=======
+     * @param string                      $containerName
+     * @param bool                        $createContainer
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function __construct(ObjectStoreFactoryInterface $objectStoreFactory, $containerName, $createContainer = false)
     {
@@ -29,7 +38,11 @@ class LazyOpenCloud extends OpenCloud
     }
 
     /**
+<<<<<<< HEAD
      * Override parent to lazy-load object store
+=======
+     * Override parent to lazy-load object store.
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      *
      * {@inheritdoc}
      */

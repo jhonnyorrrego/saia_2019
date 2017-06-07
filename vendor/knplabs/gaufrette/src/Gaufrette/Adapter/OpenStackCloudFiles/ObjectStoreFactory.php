@@ -5,7 +5,11 @@ namespace Gaufrette\Adapter\OpenStackCloudFiles;
 use OpenCloud\OpenStack;
 
 /**
+<<<<<<< HEAD
  * ObjectStoreFactory
+=======
+ * ObjectStoreFactory.
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
  *
  * @author Daniel Richter <nexyz9@gmail.com>
  */
@@ -32,12 +36,19 @@ class ObjectStoreFactory implements ObjectStoreFactoryInterface
     protected $objectStoreType;
 
     /**
+<<<<<<< HEAD
      * Constructor
      *
      * @param OpenStack $connection
      * @param string $region
      * @param string $urlType
      * @param string $objectStoreType
+=======
+     * @param OpenStack $connection
+     * @param string    $region
+     * @param string    $urlType
+     * @param string    $objectStoreType
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function __construct(OpenStack $connection, $region, $urlType, $objectStoreType = 'cloudFiles')
     {

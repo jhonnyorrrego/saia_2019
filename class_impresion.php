@@ -99,7 +99,6 @@ class Imprime_Pdf {
     					$this->tipo_salida = "FI"; // para generarlo de nuevo y guardar la ruta
     				}
     			}
-    			
     			// si el documento ya no esta activo, pero nunca le guardaron el pdf, se guarda
     			if($this->documento[0]["pdf"] == "" && $this->documento[0]["estado"] != "ACTIVO") {
     				$this->tipo_salida = "FI";
@@ -205,7 +204,9 @@ class Imprime_Pdf {
 	 * @param boolean $mostrar Indica si el pdf se imprime en la salida. Por defecto en true para no alterar el comportamiento estandar
 	 */
 	function imprimir($mostrar=true) {
-		$this->pdf = new MYPDF($this->orientacion, PDF_UNIT, $this->papel, true, 'UTF-8', false, true);
+		//$this->pdf = new MYPDF($this->orientacion, PDF_UNIT, $this->papel, true, 'UTF-8', false, true);
+		$this->pdf = new MYPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false, true);
+
 		$this->pdf->SetMargins($this->margenes["izquierda"], $this->margenes["superior"], $this->margenes["derecha"], 1);
 		$this->pdf->AddFont($this->font_family);
 		$this->pdf->SetFont($this->font_family, '', $this->font_size);
@@ -305,12 +306,11 @@ class Imprime_Pdf {
 		if($actualizar_y_hash) {
 			$sqlu = "update documento set paginas='" . $paginas_pdf . "',pdf='" . json_encode($ruta_pdf) . "',pdf_hash='".$codigo_hash."' where iddocumento=" . $this->documento[0]["iddocumento"];
 			phpmkr_query($sqlu) or die($sqlu);
-		}
+		}		
 		if($mostrar) {
 			$this->pdf->Output($pdf_temp, 'I');
-		}
+				}
 	}
-
 	function imprimir_paginas() {
 	    global $conn;
 		if($this->idpaginas != "") {

@@ -1,6 +1,7 @@
 Gaufrette
 =========
 
+<<<<<<< HEAD
 Gaufrette is a PHP5 library that provides a filesystem abstraction layer.
 
 This project does not have any stable release yet but we do not want to break BC now.
@@ -12,6 +13,16 @@ This project does not have any stable release yet but we do not want to break BC
 Symfony integration is available here: [KnpLabs/KnpGaufretteBundle](https://github.com/KnpLabs/KnpGaufretteBundle).
 
 Documentation is available [here](doc/index.md).
+=======
+Gaufrette provides a filesystem abstraction layer.
+
+[![Build Status](https://img.shields.io/travis/KnpLabs/Gaufrette/master.svg?style=flat-square)](http://travis-ci.org/KnpLabs/Gaufrette)
+[![Quality Score](https://img.shields.io/scrutinizer/g/KnpLabs/Gaufrette.svg?style=flat-square)](https://scrutinizer-ci.com/g/KnpLabs/Gaufrette)
+[![Packagist Version](https://img.shields.io/packagist/v/KnpLabs/Gaufrette.svg?style=flat-square)](https://packagist.org/packages/KnpLabs/Gaufrette)
+[![Total Downloads](https://img.shields.io/packagist/dt/KnpLabs/Gaufrette.svg?style=flat-square)](https://packagist.org/packages/KnpLabs/Gaufrette)
+[![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE)
+[![Join the chat at Gitter](https://img.shields.io/gitter/room/nwjs/nw.js.svg?style=flat-square)](https://gitter.im/KnpLabs/Gaufrette)
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
 
 Why use Gaufrette?
 ------------------
@@ -28,6 +39,7 @@ In example, if your project grows up very fast and if your server reaches its
 limits, you can easily move your medias in an Amazon S3 server or any other
 solution.
 
+<<<<<<< HEAD
 Try it!
 -------
 
@@ -87,3 +99,32 @@ To check basic functionality of the adapters (adapters should be configured you 
     $ bin/phpunit
 
 Is it green?
+=======
+### Documentation
+
+Read the official [Gaufrette documentation](http://knplabs.github.io/Gaufrette/).
+
+### Symfony integration
+
+Symfony integration is available through [KnpLabs/KnpGaufretteBundle](https://github.com/KnpLabs/KnpGaufretteBundle).
+
+### Launch the Test Suite
+
+Requires:
+  * docker
+  * docker-compose
+
+Build images:
+
+    $ docker-compose build
+
+Launch the tests:
+
+    $ bin/tests-all
+
+Is it green?
+
+### Note
+
+This project does not have any stable release yet but we do not want to break BC now.
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744

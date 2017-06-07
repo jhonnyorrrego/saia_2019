@@ -4,11 +4,18 @@ namespace Gaufrette\Adapter;
 
 use Gaufrette\Adapter;
 use Gaufrette\Util;
+<<<<<<< HEAD
 
 use Doctrine\DBAL\Connection;
 
 /**
  * Doctrine DBAL adapter
+=======
+use Doctrine\DBAL\Connection;
+
+/**
+ * Doctrine DBAL adapter.
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
  *
  * @author Markus Bachmann <markus.bachmann@bachi.biz>
  * @author Antoine Hérault <antoine.herault@gmail.com>
@@ -21,15 +28,24 @@ class DoctrineDbal implements Adapter,
     protected $connection;
     protected $table;
     protected $columns = array(
+<<<<<<< HEAD
         'key'      => 'key',
         'content'  => 'content',
         'mtime'    => 'mtime',
+=======
+        'key' => 'key',
+        'content' => 'content',
+        'mtime' => 'mtime',
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
         'checksum' => 'checksum',
     );
 
     /**
+<<<<<<< HEAD
      * Constructor
      *
+=======
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      * @param Connection $connection The DBAL connection
      * @param string     $table      The files table
      * @param array      $columns    The column names
@@ -37,12 +53,21 @@ class DoctrineDbal implements Adapter,
     public function __construct(Connection $connection, $table, array $columns = array())
     {
         $this->connection = $connection;
+<<<<<<< HEAD
         $this->table      = $table;
         $this->columns    = array_replace($this->columns, $columns);
     }
 
     /**
      * {@inheritDoc}
+=======
+        $this->table = $table;
+        $this->columns = array_replace($this->columns, $columns);
+    }
+
+    /**
+     * {@inheritdoc}
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function keys()
     {
@@ -57,7 +82,11 @@ class DoctrineDbal implements Adapter,
     }
 
     /**
+<<<<<<< HEAD
      * {@inheritDoc}
+=======
+     * {@inheritdoc}
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function rename($sourceKey, $targetKey)
     {
@@ -69,7 +98,11 @@ class DoctrineDbal implements Adapter,
     }
 
     /**
+<<<<<<< HEAD
      * {@inheritDoc}
+=======
+     * {@inheritdoc}
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function mtime($key)
     {
@@ -77,7 +110,11 @@ class DoctrineDbal implements Adapter,
     }
 
     /**
+<<<<<<< HEAD
      * {@inheritDoc}
+=======
+     * {@inheritdoc}
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function checksum($key)
     {
@@ -85,7 +122,11 @@ class DoctrineDbal implements Adapter,
     }
 
     /**
+<<<<<<< HEAD
      * {@inheritDoc}
+=======
+     * {@inheritdoc}
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function exists($key)
     {
@@ -101,7 +142,11 @@ class DoctrineDbal implements Adapter,
     }
 
     /**
+<<<<<<< HEAD
      * {@inheritDoc}
+=======
+     * {@inheritdoc}
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function read($key)
     {
@@ -109,7 +154,11 @@ class DoctrineDbal implements Adapter,
     }
 
     /**
+<<<<<<< HEAD
      * {@inheritDoc}
+=======
+     * {@inheritdoc}
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function delete($key)
     {
@@ -120,13 +169,22 @@ class DoctrineDbal implements Adapter,
     }
 
     /**
+<<<<<<< HEAD
      * {@inheritDoc}
+=======
+     * {@inheritdoc}
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function write($key, $content)
     {
         $values = array(
+<<<<<<< HEAD
             $this->getQuotedColumn('content')  => $content,
             $this->getQuotedColumn('mtime')    => time(),
+=======
+            $this->getQuotedColumn('content') => $content,
+            $this->getQuotedColumn('mtime') => time(),
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
             $this->getQuotedColumn('checksum') => Util\Checksum::fromContent($content),
         );
 
@@ -145,7 +203,11 @@ class DoctrineDbal implements Adapter,
     }
 
     /**
+<<<<<<< HEAD
      * {@inheritDoc}
+=======
+     * {@inheritdoc}
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function isDirectory($key)
     {
@@ -168,7 +230,11 @@ class DoctrineDbal implements Adapter,
     }
 
     /**
+<<<<<<< HEAD
      * {@inheritDoc}
+=======
+     * {@inheritdoc}
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function listKeys($prefix = '')
     {
@@ -189,7 +255,11 @@ class DoctrineDbal implements Adapter,
             'keys' => array_map(function ($value) {
                     return $value['_key'];
                 },
+<<<<<<< HEAD
                 $keys)
+=======
+                $keys),
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
         );
     }
 

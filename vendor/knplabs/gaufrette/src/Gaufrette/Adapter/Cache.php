@@ -7,9 +7,14 @@ use Gaufrette\Adapter;
 use Gaufrette\Adapter\InMemory as InMemoryAdapter;
 
 /**
+<<<<<<< HEAD
  * Cache adapter
  *
  * @package Gaufrette
+=======
+ * Cache adapter.
+ *
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
  * @author  Antoine Hérault <antoine.herault@gmail.com>
  */
 class Cache implements Adapter,
@@ -26,7 +31,11 @@ class Cache implements Adapter,
     protected $cache;
 
     /**
+<<<<<<< HEAD
      * @var integer
+=======
+     * @var int
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     protected $ttl;
 
@@ -36,11 +45,17 @@ class Cache implements Adapter,
     protected $serializeCache;
 
     /**
+<<<<<<< HEAD
      * Constructor
      *
      * @param Adapter $source         The source adapter that must be cached
      * @param Adapter $cache          The adapter used to cache the source
      * @param integer $ttl            Time to live of a cached file
+=======
+     * @param Adapter $source         The source adapter that must be cached
+     * @param Adapter $cache          The adapter used to cache the source
+     * @param int     $ttl            Time to live of a cached file
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      * @param Adapter $serializeCache The adapter used to cache serializations
      */
     public function __construct(Adapter $source, Adapter $cache, $ttl = 0, Adapter $serializeCache = null)
@@ -56,9 +71,15 @@ class Cache implements Adapter,
     }
 
     /**
+<<<<<<< HEAD
      * Returns the time to live of the cache
      *
      * @return integer $ttl
+=======
+     * Returns the time to live of the cache.
+     *
+     * @return int $ttl
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function getTtl()
     {
@@ -66,9 +87,15 @@ class Cache implements Adapter,
     }
 
     /**
+<<<<<<< HEAD
      * Defines the time to live of the cache
      *
      * @param integer $ttl
+=======
+     * Defines the time to live of the cache.
+     *
+     * @param int $ttl
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function setTtl($ttl)
     {
@@ -76,7 +103,11 @@ class Cache implements Adapter,
     }
 
     /**
+<<<<<<< HEAD
      * {@InheritDoc}
+=======
+     * {@inheritdoc}
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function read($key)
     {
@@ -91,7 +122,11 @@ class Cache implements Adapter,
     }
 
     /**
+<<<<<<< HEAD
      * {@inheritDoc}
+=======
+     * {@inheritdoc}
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function rename($key, $new)
     {
@@ -99,7 +134,11 @@ class Cache implements Adapter,
     }
 
     /**
+<<<<<<< HEAD
      * {@inheritDoc}
+=======
+     * {@inheritdoc}
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function write($key, $content, array $metadata = null)
     {
@@ -119,18 +158,30 @@ class Cache implements Adapter,
     }
 
     /**
+<<<<<<< HEAD
      * {@inheritDoc}
+=======
+     * {@inheritdoc}
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function exists($key)
     {
         if ($this->needsReload($key)) {
             return $this->source->exists($key);
         }
+<<<<<<< HEAD
+=======
+
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
         return $this->cache->exists($key);
     }
 
     /**
+<<<<<<< HEAD
      * {@inheritDoc}
+=======
+     * {@inheritdoc}
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function mtime($key)
     {
@@ -138,7 +189,11 @@ class Cache implements Adapter,
     }
 
     /**
+<<<<<<< HEAD
      * {@inheritDoc}
+=======
+     * {@inheritdoc}
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function keys()
     {
@@ -155,7 +210,11 @@ class Cache implements Adapter,
     }
 
     /**
+<<<<<<< HEAD
      * {@inheritDoc}
+=======
+     * {@inheritdoc}
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function delete($key)
     {
@@ -163,7 +222,11 @@ class Cache implements Adapter,
     }
 
     /**
+<<<<<<< HEAD
      * {@inheritDoc}
+=======
+     * {@inheritdoc}
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function isDirectory($key)
     {
@@ -171,7 +234,11 @@ class Cache implements Adapter,
     }
 
     /**
+<<<<<<< HEAD
      * {@inheritDoc}
+=======
+     * {@inheritdoc}
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function setMetadata($key, $metadata)
     {
@@ -185,7 +252,11 @@ class Cache implements Adapter,
     }
 
     /**
+<<<<<<< HEAD
      * {@inheritDoc}
+=======
+     * {@inheritdoc}
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function getMetadata($key)
     {
@@ -197,7 +268,11 @@ class Cache implements Adapter,
     }
 
     /**
+<<<<<<< HEAD
      * Indicates whether the cache for the specified key needs to be reloaded
+=======
+     * Indicates whether the cache for the specified key needs to be reloaded.
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      *
      * @param string $key
      */
@@ -214,14 +289,23 @@ class Cache implements Adapter,
                     $dateSource = $this->source->mtime($key);
                     $needsReload = $dateCache < $dateSource;
                 }
+<<<<<<< HEAD
             } catch (\RuntimeException $e) { }
+=======
+            } catch (\RuntimeException $e) {
+            }
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
         }
 
         return $needsReload;
     }
 
     /**
+<<<<<<< HEAD
      * Indicates whether the serialized cache file needs to be rebuild
+=======
+     * Indicates whether the serialized cache file needs to be rebuild.
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      *
      * @param string $cacheFile
      */
@@ -232,7 +316,12 @@ class Cache implements Adapter,
         if ($this->serializeCache->exists($cacheFile)) {
             try {
                 $needsRebuild = time() - $this->ttl >= $this->serializeCache->mtime($cacheFile);
+<<<<<<< HEAD
             } catch (\RuntimeException $e) { }
+=======
+            } catch (\RuntimeException $e) {
+            }
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
         }
 
         return $needsRebuild;

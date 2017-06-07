@@ -5,11 +5,18 @@ namespace Gaufrette\Adapter;
 use Gaufrette\Util;
 use Gaufrette\Adapter;
 use Gaufrette\Stream;
+<<<<<<< HEAD
 use Gaufrette\Adapter\StreamFactory;
 use Gaufrette\Exception;
 
 /**
  * Adapter for the local filesystem
+=======
+
+
+/**
+ * Adapter for the local filesystem.
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
  *
  * @author Antoine Hérault <antoine.herault@gmail.com>
  * @author Leszek Prabucki <leszek.prabucki@gmail.com>
@@ -25,12 +32,19 @@ class Local implements Adapter,
     private $mode;
 
     /**
+<<<<<<< HEAD
      * Constructor
      *
      * @param string  $directory Directory where the filesystem is located
      * @param boolean $create    Whether to create the directory if it does not
      *                            exist (default FALSE)
      * @param integer $mode      Mode for mkdir
+=======
+     * @param string $directory Directory where the filesystem is located
+     * @param bool   $create    Whether to create the directory if it does not
+     *                          exist (default FALSE)
+     * @param int    $mode      Mode for mkdir
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      *
      * @throws RuntimeException if the specified directory does not exist and
      *                          could not be created
@@ -48,7 +62,11 @@ class Local implements Adapter,
     }
 
     /**
+<<<<<<< HEAD
      * {@inheritDoc}
+=======
+     * {@inheritdoc}
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function read($key)
     {
@@ -56,29 +74,49 @@ class Local implements Adapter,
     }
 
     /**
+<<<<<<< HEAD
      * {@inheritDoc}
+=======
+     * {@inheritdoc}
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function write($key, $content)
     {
         $path = $this->computePath($key);
+<<<<<<< HEAD
         $this->ensureDirectoryExists(dirname($path), true);
+=======
+        $this->ensureDirectoryExists(\Gaufrette\Util\Path::dirname($path), true);
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
 
         return file_put_contents($path, $content);
     }
 
     /**
+<<<<<<< HEAD
      * {@inheritDoc}
+=======
+     * {@inheritdoc}
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function rename($sourceKey, $targetKey)
     {
         $targetPath = $this->computePath($targetKey);
+<<<<<<< HEAD
         $this->ensureDirectoryExists(dirname($targetPath), true);
+=======
+        $this->ensureDirectoryExists(\Gaufrette\Util\Path::dirname($targetPath), true);
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
 
         return rename($this->computePath($sourceKey), $targetPath);
     }
 
     /**
+<<<<<<< HEAD
      * {@inheritDoc}
+=======
+     * {@inheritdoc}
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function exists($key)
     {
@@ -86,7 +124,11 @@ class Local implements Adapter,
     }
 
     /**
+<<<<<<< HEAD
      * {@inheritDoc}
+=======
+     * {@inheritdoc}
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function keys()
     {
@@ -101,7 +143,11 @@ class Local implements Adapter,
                 \RecursiveIteratorIterator::CHILD_FIRST
             );
         } catch (\Exception $e) {
+<<<<<<< HEAD
             $files = new \EmptyIterator;
+=======
+            $files = new \EmptyIterator();
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
         }
 
         $keys = array();
@@ -114,7 +160,11 @@ class Local implements Adapter,
     }
 
     /**
+<<<<<<< HEAD
      * {@inheritDoc}
+=======
+     * {@inheritdoc}
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function mtime($key)
     {
@@ -122,7 +172,11 @@ class Local implements Adapter,
     }
 
     /**
+<<<<<<< HEAD
      * {@inheritDoc}
+=======
+     * {@inheritdoc}
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function delete($key)
     {
@@ -134,8 +188,14 @@ class Local implements Adapter,
     }
 
     /**
+<<<<<<< HEAD
      * @param  string  $key
      * @return boolean
+=======
+     * @param string $key
+     *
+     * @return bool
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function isDirectory($key)
     {
@@ -143,7 +203,11 @@ class Local implements Adapter,
     }
 
     /**
+<<<<<<< HEAD
      * {@inheritDoc}
+=======
+     * {@inheritdoc}
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function createStream($key)
     {
@@ -177,7 +241,11 @@ class Local implements Adapter,
     }
 
     /**
+<<<<<<< HEAD
      * Computes the key from the specified path
+=======
+     * Computes the key from the specified path.
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      *
      * @param string $path
      *
@@ -191,7 +259,11 @@ class Local implements Adapter,
     }
 
     /**
+<<<<<<< HEAD
      * Computes the path from the specified key
+=======
+     * Computes the path from the specified key.
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      *
      * @param string $key The key which for to compute the path
      *
@@ -199,17 +271,29 @@ class Local implements Adapter,
      *
      * @throws OutOfBoundsException If the computed path is out of the
      *                              directory
+<<<<<<< HEAD
      * @throws RuntimeException If directory does not exists and cannot be created
+=======
+     * @throws RuntimeException     If directory does not exists and cannot be created
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     protected function computePath($key)
     {
         $this->ensureDirectoryExists($this->directory, $this->create);
 
+<<<<<<< HEAD
         return $this->normalizePath($this->directory . '/' . $key);
     }
 
     /**
      * Normalizes the given path
+=======
+        return $this->normalizePath($this->directory.'/'.$key);
+    }
+
+    /**
+     * Normalizes the given path.
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      *
      * @param string $path
      *
@@ -227,11 +311,19 @@ class Local implements Adapter,
     }
 
     /**
+<<<<<<< HEAD
      * Ensures the specified directory exists, creates it if it does not
      *
      * @param string  $directory Path of the directory to test
      * @param boolean $create    Whether to create the directory if it does
      *                            not exist
+=======
+     * Ensures the specified directory exists, creates it if it does not.
+     *
+     * @param string $directory Path of the directory to test
+     * @param bool   $create    Whether to create the directory if it does
+     *                          not exist
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      *
      * @throws RuntimeException if the directory does not exists and could not
      *                          be created
@@ -248,7 +340,11 @@ class Local implements Adapter,
     }
 
     /**
+<<<<<<< HEAD
      * Creates the specified directory and its parents
+=======
+     * Creates the specified directory and its parents.
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      *
      * @param string $directory Path of the directory to create
      *

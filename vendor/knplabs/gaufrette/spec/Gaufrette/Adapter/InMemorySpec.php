@@ -19,6 +19,19 @@ class InMemorySpec extends ObjectBehavior
         $this->shouldHaveType('Gaufrette\Adapter');
     }
 
+<<<<<<< HEAD
+=======
+    function it_is_a_mime_type_provider()
+    {
+        $this->shouldHaveType('Gaufrette\Adapter\MimeTypeProvider');
+    }
+
+    function it_gets_the_file_mime_type()
+    {
+        $this->mimeType('filename')->shouldReturn('text/plain');
+    }
+
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
     function it_reads_file()
     {
         $this->read('filename')->shouldReturn('content');

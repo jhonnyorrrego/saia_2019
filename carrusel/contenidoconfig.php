@@ -15,15 +15,11 @@ $max_salida--;
 include_once("../db.php");
 include_once("../header.php");
 include_once($ruta_db_superior . "librerias_saia.php");
-
 include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
 $validar_enteros=array("id","carrusel_idcarrusel");
 desencriptar_sqli('form_info');
 echo(librerias_jquery());
-
 echo(estilo_bootstrap());
-
-
 
 ?>
 <div class="container">
@@ -116,7 +112,7 @@ width:"350px"
 		<br/>   
     
    <?php    
-   echo "<br /><fieldset><legend>".ucwords($_REQUEST["accion"]." contenido")."</legend></fieldset><br /><br /><form name='form1' method='post' id='form1' enctype='multipart/form-data'><table class='table table-bordered table-striped'>";
+   echo "<br /><fieldset><legend>".ucwords($_REQUEST["accion"]." contenido")."</legend></fieldset><br /><br /><form action='contenidoconfig.php' name='form1' method='post' id='form1' enctype='multipart/form-data'><table class='table table-bordered table-striped'>";
    echo "<tr><td  style='text-align: center; background-color:#57B0DE; color: #ffffff;'>NOMBRE*</td><td><input class='required'  type='text' name='nombre' value='".@$contenido[0]["nombre"]."'></td></tr>";
    echo "<tr><td  style='text-align: center; background-color:#57B0DE; color: #ffffff;'>CARRUSEL*</td><td><select class='required'  type='text' name='carrusel_idcarrusel'>";
    $carrusel=busca_filtro_tabla("idcarrusel,nombre","carrusel","","nombre",$conn);
@@ -135,7 +131,7 @@ width:"350px"
    selector_fecha("fecha_fin","form1","Y-m-d",date("m"),date("Y"),"default.css","../","AD:VALOR");
    echo "</td></tr>";
    echo "<tr><td  style='text-align: center; background-color:#57B0DE; color: #ffffff;'>CONTENIDO*</td><td><textarea class='required tiny_avanzado2' name='contenido' id='contenido'>".stripslashes(@$contenido[0]["contenido"])."</textarea></td></tr>";
-   echo "<tr><td  style='text-align: center; background-color:#57B0DE; color: #ffffff;'>PREVISUALIZAR</td><td><textarea name='preview' id='preview' class=''>".stripslashes(@$contenido[0]["preview"])."</textarea></td></tr>";
+   echo "<tr><td  style='text-align: center; background-color:#57B0DE; color: #ffffff;'>PREVISUALIZAR</td><td><textarea name='preview' id='preview' class=''>".stripslashes(codifica_encabezado(html_entity_decode(@$contenido[0]["preview"])))."</textarea></td></tr>";
    echo "<tr><td  style='text-align: center; background-color:#57B0DE; color: #ffffff;'>IMAGEN</td><td>";
    if($contenido[0]["imagen"]<>"")
      echo "<a href='".$ruta_db_superior.'filesystem/mostrar_binario.php?ruta='.base64_encode($contenido[0]["imagen"])."' target='_blank'>Ver Imagen Actual</a><br />Borrar Imagen<input type='checkbox' value='1' name='borrar_imagen'><br />Subir nueva <input type='file' name='imagen' id='imagen' >";
@@ -180,14 +176,13 @@ elseif($_REQUEST["accion"]=="guardar_adicionar")
  phpmkr_query($sql,$conn);
  if (is_uploaded_file($_FILES["imagen"]["tmp_name"])) 
      {
-		 
 		require_once $ruta_db_superior . 'StorageUtils.php';
 		require_once $ruta_db_superior . 'filesystem/SaiaStorage.php';
 		 
       $extension=explode(".",($_FILES["imagen"]["name"]));
 	  $ultimo=count($extension);
 	  $formato=$extension[$ultimo-1];
-      $aleatorio=rand(5,15);
+      $aleatorio=uniqid();
 	  $aux=RUTA_CARRUSEL_IMAGENES;
 	  $tipo_almacenamiento = new SaiaStorage("imagenes");
       $imagen_reducida=$aux;
@@ -199,10 +194,11 @@ elseif($_REQUEST["accion"]=="guardar_adicionar")
 		  $sql1="update contenidos_carrusel set imagen='".$ruta_anexos."' where idcontenidos_carrusel=".$id;
  			phpmkr_query($sql1,$conn);
 			@unlink($_FILES["imagen"]["tmp_name"]);
-	  }  
+
       }
+    }
   
- header("location: sliderconfig.php");
+ redirecciona($ruta_db_superior."carrusel/sliderconfig.php");
 }
 elseif($_REQUEST["accion"]=="guardar_editar")
 {$campos=array("nombre","carrusel_idcarrusel","orden","align");
@@ -241,7 +237,7 @@ elseif($_REQUEST["accion"]=="guardar_editar")
       $extension=explode(".",($_FILES["imagen"]["name"]));
 	  $ultimo=count($extension);
 	  $formato=$extension[$ultimo-1];
-      $aleatorio=rand(5,15);
+      $aleatorio=uniqid();
 	  $aux=RUTA_CARRUSEL_IMAGENES;
 	  $tipo_almacenamiento = new SaiaStorage("imagenes");
       $imagen_reducida=$aux;
@@ -254,13 +250,13 @@ elseif($_REQUEST["accion"]=="guardar_editar")
  			phpmkr_query($sql1,$conn);
 			@unlink($_FILES["imagen"]["tmp_name"]);
       }
-      }
- redirecciona("sliderconfig.php");
+}
+ redirecciona($ruta_db_superior."carrusel/sliderconfig.php");
 }
 elseif($_REQUEST["accion"]=="eliminar")
 {$sql="delete from contenidos_carrusel where idcontenidos_carrusel=".$_REQUEST["id"];
  phpmkr_query($sql,$conn);
- header("location: sliderconfig.php");
+ redirecciona($ruta_db_superior."carrusel/sliderconfig.php");
 }
 include_once("../footer.php");
 ?>

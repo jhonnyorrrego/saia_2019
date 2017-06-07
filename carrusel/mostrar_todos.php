@@ -8,28 +8,50 @@
 include_once("../db.php");
 $fecha_actual=date("Y-m-d");
 $color=busca_filtro_tabla("valor","configuracion","nombre='color_encabezado'","",$conn);
-/*************** para el link de ver mas ***************
- muestra un solo contenido, completo
- **/
-if(isset($_REQUEST["idcontenido"])&&$_REQUEST["idcontenido"])
-  {$contenidos=busca_filtro_tabla("","contenidos_carrusel","idcontenidos_carrusel=".$_REQUEST["idcontenido"],"",$conn);
-   if($contenidos[0]["imagen"]<>"")
-     echo '<img src="'.RUTA_DISCO."/".$ruta_db_superior.$contenidos[0]["imagen"].'" align="'.$contenidos[0]["align"].'" />';
+/**
+ * ************* para el link de ver mas ***************
+ * muestra un solo contenido, completo
+ */
+if (isset($_REQUEST["idcontenido"]) && $_REQUEST["idcontenido"]) {
+	$contenidos = busca_filtro_tabla("", "contenidos_carrusel", "idcontenidos_carrusel=" . $_REQUEST["idcontenido"], "", $conn);
+	if ($contenidos[0]["imagen"] != "") {
+		$objeto = json_decode($contenidos[0]["imagen"]);
+		if (is_object($objeto)) {
+			$archivo_binario = StorageUtils::get_binary_file($contenidos[0]["imagen"]);
+			$imagen = $archivo_binario;
+		} else {
+			$imagen = RUTA_DISCO . "/" . $ruta_db_superior . $contenidos[0]["imagen"];
+		}
+		echo '<img src="' . $imagen . '" align="' . $contenidos[0]["align"] . '" />';
+	}
    echo stripslashes(codifica_encabezado(html_entity_decode($contenidos[0]["contenido"])));
    exit();
-  } /********* para ver un solo carrusel ***************/
-elseif(isset($_REQUEST["idcarrusel"])&&$_REQUEST["idcarrusel"])
+} else if (isset($_REQUEST["idcarrusel"]) && $_REQUEST["idcarrusel"]) {
+	/**
+	 * ******* para ver un solo carrusel **************
+	 */
   $carrusel=busca_filtro_tabla("","carrusel","idcarrusel=".$_REQUEST["idcarrusel"],"",$conn);
-else /********* para ver todos los sliders vigentes **********/
-  {$carrusel=busca_filtro_tabla("","carrusel","'".$fecha_actual."'<=".fecha_db_obtener("fecha_fin","Y-m-d")." and '".$fecha_actual."'>=".fecha_db_obtener("fecha_inicio","Y-m-d"),"",$conn);
+} else {
+	/**
+	 * ******* para ver todos los sliders vigentes *********
+	 */
+	$carrusel = busca_filtro_tabla("", "carrusel", "'" . $fecha_actual . "'<=" . fecha_db_obtener("fecha_fin", "Y-m-d") . " and '" . $fecha_actual . "'>=" . fecha_db_obtener("fecha_inicio", "Y-m-d"), "", $conn);
   
    if($carrusel["numcampos"]){
     echo "<table align=center width=100%>";
-    for($h=0;$h<$carrusel["numcampos"];$h++)
-      echo "<tr><td width=100% align='center'><iframe frameborder='0' scrolling='no' align=center style='width:".($carrusel[$h]["ancho"]+50)."px;height:".($carrusel[$h]["alto"]+50)."px' src='".RUTA_DISCO."/".$ruta_db_superior.$func[$h]["imagen"]."'></iframe></td></tr>";      
-    echo "</table>";
+		for($h = 0; $h < $carrusel["numcampos"]; $h++) {
+			if ($carrusel[$i]["imagen"] != "") {
+				$path_src = RUTA_DISCO . "/" . $ruta_db_superior . $carrusel[$h]["imagen"];
+				$objeto = json_decode($contenidos[0]["imagen"]);
+				if (is_object($objeto)) {
+					$ruta_img = base64_encode(json_encode($carrusel[$h]["imagen"]));
+					$path_src = "../filesystem/mostrar_binario.php?ruta=" . $ruta_img;
    }
-   else {
+				echo "<tr><td width=100% align='center'><iframe frameborder='0' scrolling='no' align=center style='width:" . ($carrusel[$h]["ancho"] + 50) . "px;height:" . ($carrusel[$h]["alto"] + 50) . "px' src='" . $path_src . "'></iframe></td></tr>";
+			}
+		}
+		echo "</table>";
+	} else {
      redirecciona("../login.php");
    }   
    exit();
@@ -40,8 +62,9 @@ else /********* para ver todos los sliders vigentes **********/
     <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
     <?php 
     $estilos=explode(",",$carrusel[0]["css"]);
-    foreach($estilos as $fila)
+				foreach ( $estilos as $fila ) {
        echo '<link rel="stylesheet" href="'.$fila.'" type="text/css" media="screen" />';
+				}
      echo '<style>
            .anythingSlider{width: '.$carrusel[0]["ancho"].'px; height: '.$carrusel[0]["alto"].'px;}
            .anythingSlider {
@@ -64,8 +87,7 @@ else /********* para ver todos los sliders vigentes **********/
 
 $contenidos=busca_filtro_tabla("","contenidos_carrusel","carrusel_idcarrusel=".$carrusel[0]["idcarrusel"]." and '".$fecha_actual."'<=".fecha_db_obtener("fecha_fin","Y-m-d")." and '".$fecha_actual."'>=".fecha_db_obtener("fecha_inicio","Y-m-d"),"orden",$conn);
 
-if($contenidos["numcampos"])
-  {
+if ($contenidos["numcampos"]) {
 //print_r($contenidos);
 ?>    
     <script type="text/javascript">
@@ -100,24 +122,33 @@ if($contenidos["numcampos"])
           <div class="wrapper" >
             <ul>
             <?php
-            for($i=0;$i<$contenidos["numcampos"];$i++)
-              {echo "<li><div align='center'><div style='width:85%;height:100%;valign:middle'>";
+	for($i = 0; $i < $contenidos["numcampos"]; $i++) {
+		echo "<li><div align='center'><div style='width:85%;height:100%;valign:middle'>";
               //width:'.($carrusel[0]["ancho"]-10).', height:'.($carrusel[0]["alto"]-10).'
-              if($contenidos[$i]["imagen"]<>"")
-                 echo '<img src="'.RUTA_DISCO."/".$ruta_db_superior.$contenidos[$i]["imagen"].'" align="'.$contenidos[$i]["align"].'" />';
-              if($contenidos[$i]["preview"]<>"")
+		if ($contenidos[$i]["imagen"] != "") {
+			$objeto = json_decode($contenidos[$i]["imagen"]);
+			if (is_object($objeto)) {
+				$archivo_binario = StorageUtils::get_binary_file($contenidos[$i]["imagen"]);
+				$imagen = $archivo_binario;
+			} else {
+				$imagen = RUTA_DISCO . "/" . $ruta_db_superior . $contenidos[$i]["imagen"];
+			}
+			echo '<img src="' . $imagen . '" align="' . $contenidos[$i]["align"] . '" />';
+		}
+		if ($contenidos[$i]["preview"] != "") {
                  echo stripslashes(codifica_encabezado(html_entity_decode($contenidos[$i]["preview"]))).'<div id="textSlide" style="width:80%" align="right"><a id="uno" href="#" style="font-size:x-small" onclick="parent.$.fn.colorbox({href:\'mostrar_todos.php?idcontenido='.$contenidos[$i]["idcontenidos_carrusel"].'\',width:\'700px\', height:\'400px\', iframe:true}); return false;" >Ver mas...</a></div>';
-              else
+		} else {
                  echo stripslashes(codifica_encabezado(html_entity_decode($contenidos[$i]["contenido"])));
+		}
               echo "</div></div></li>";
               }
             ?>   
             </ul>        
           </div> 
-        </div> <!-- END AnythingSlider -->              
+		</div>
+		<!-- END AnythingSlider -->
     </div>        
 <?php
-  
 }
 
 ?>

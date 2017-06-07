@@ -1,8 +1,14 @@
 {
     "require": {
+<<<<<<< HEAD
         "icewind/smb": "^2.0",
         "danielstjules/stringy": "~2.3",
         "knplabs/gaufrette": "^0.2.1",
+=======
+        "luracast/restler": "*",
+        "danielstjules/stringy": "~2.3",
+        "knplabs/gaufrette": "^0.3.1",
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
 	"imagine/imagine": "~0.5.0"
     }
 }

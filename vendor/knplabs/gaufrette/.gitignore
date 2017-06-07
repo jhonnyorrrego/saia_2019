@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 vendor/
 composer.lock
 phpunit.xml
@@ -5,3 +6,14 @@ tests/adapters/*
 !tests/adapters/*.dist
 bin/*
 !bin/configure_test_env.sh
+=======
+bin/*
+!bin/tests
+!bin/tests-all
+doc/.couscous
+tests/adapters/*
+!tests/adapters/*.dist
+vendor/
+composer.lock
+phpunit.xml
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744

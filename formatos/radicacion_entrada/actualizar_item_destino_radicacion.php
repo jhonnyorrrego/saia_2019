@@ -40,7 +40,7 @@ for ($i=0; $i < $cont; $i++) {
 		
 		
 		//VINCULANDO MENSAJERO INMEDIATAMENTE
-		if($tipo_mensajeria_radicacion[0]['tipo_mensajeria']==2){
+		if($tipo_mensajeria_radicacion[0]['tipo_mensajeria']==2 || $tipo_mensajeria_radicacion[0]['tipo_mensajeria']==1){
 			$datos_destino[0]['nombre_destino']=$tipo_mensajeria_radicacion[0]['area_responsable'];
 		}else{
 			$datos_destino=busca_filtro_tabla('nombre_destino','ft_destino_radicacion','idft_destino_radicacion='.$parametros[$i][0],'',$conn);
@@ -56,7 +56,7 @@ for ($i=0; $i < $cont; $i++) {
         $repetidos[]=$parametros[$i][0];
     }
 }
-transferencia_automatica($idformato,$iddoc,"copia_a",2,'','COPIA ELECTR&Oacute;NICA');
+transferencia_automatica($idformato,$iddoc,"copia_a",2,'','COPIA');
 $radicado=busca_filtro_tabla('b.numero, c.idft_destino_radicacion,c.estado_item','ft_radicacion_entrada a,documento b,ft_destino_radicacion c','a.documento_iddocumento = b.iddocumento AND a.idft_radicacion_entrada = c.ft_radicacion_entrada AND a.documento_iddocumento='.$iddoc,'',conn);
 
 

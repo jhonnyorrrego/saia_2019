@@ -17,6 +17,7 @@ echo(librerias_jquery("1.7"));
 include_once($ruta_db_superior."class_transferencia.php");
 include_once($ruta_db_superior."formatos/librerias/funciones_generales.php");
 echo(estilo_bootstrap());
+echo(librerias_jquery("1.7"));
 if($_REQUEST['guardar']==1){
 	$sql="INSERT INTO tareas (fecha,tarea,responsable,descripcion,prioridad,fecha_tarea,ejecutor,documento_iddocumento) VALUES(".fecha_db_almacenar($_REQUEST['fecha'],"Y-m-d H:i:s").",'".($_REQUEST['tarea'])."','".$_REQUEST['responsable']."','".($_REQUEST[descripcion])."','".$_REQUEST[prioridad]."',".fecha_db_almacenar($_REQUEST['fecha_tarea'],"Y-m-d").",'".usuario_actual("funcionario_codigo")."','".$_REQUEST['iddoc']."')";
 	phpmkr_query($sql);
@@ -25,6 +26,19 @@ if($_REQUEST['guardar']==1){
 	
 	transferencia_automatica($formato[0]["idformato"],$_REQUEST["iddoc"],$responsable,1);
 	alerta("Tarea asignada!");
+	?>
+	<script type="text/javascript">
+	    $("#div_actualizar_info_index",top.document).click();
+	    var open_tab_tarea=$("#arbol_formato",parent.document).contents().find("#cantidad_tareas").closest("li").hasClass("active");
+	    if(open_tab_tarea===false){
+	        $("#arbol_formato",parent.document).contents().find("#cantidad_tareas").click();
+	    }
+	    else{
+	        $("#arbol_formato",parent.document).contents().find("#arbol_documento").click();
+	        $("#arbol_formato",parent.document).contents().find("#cantidad_tareas").click();
+	    }
+	</script>
+	<?php
 	redirecciona("adicionar_tareas.php?iddoc=".$_REQUEST['iddoc']);
 }else{
   if(@$_REQUEST["fecha"]){

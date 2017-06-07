@@ -1,10 +1,8 @@
 <?php
 $max_salida=6; // Previene algun posible ciclo infinito limitando a 10 los ../
 $ruta_db_superior=$ruta="";
-while($max_salida>0)
-{
-if(is_file($ruta."db.php"))
-{
+while($max_salida > 0) {
+	if (is_file($ruta . "db.php")) {
 $ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
 }
 $ruta.="../";
@@ -12,10 +10,12 @@ $max_salida--;
 }
 include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."formatos/librerias/funciones_generales.php");
+require_once ($ruta_db_superior . 'StorageUtils.php');
+require_once ($ruta_db_superior . 'filesystem/SaiaStorage.php');
 $incluidos=array();
 
-function imagen_firma_faltante()
-{echo PROTOCOLO_CONEXION.RUTA_PDF."/firmas/faltante.jpg' />";
+function imagen_firma_faltante() {
+	echo PROTOCOLO_CONEXION . RUTA_PDF . "/firmas/faltante.jpg' />";
 }
 
 function crear_encabezado_pie_pagina($texto,$iddoc,$idformato,$pagina=1){
@@ -46,7 +46,7 @@ function crear_encabezado_pie_pagina($texto,$iddoc,$idformato,$pagina=1){
       	include_once($ruta_db_superior."/formatos/".$funciones[$i]["ruta"]);
       if(is_file($ruta_db_superior."/".$dato_formato_orig[0]["nombre"]."/".$funciones[$i]["ruta"])&&$dato_formato_orig["numcampos"])
       	include_once($ruta_db_superior."/".$dato_formato_orig[0]["nombre"]."/".$funciones[$i]["ruta"]);
-      if($funciones[$i]["parametros"]<>"")
+			if ($funciones[$i]["parametros"] != "")
       	$parametros=explode(",",$idformato.",".$funciones[$i]["parametros"].",".$_REQUEST["iddoc"].",1");
       else
         $parametros=explode(",",$idformato.",".$_REQUEST["iddoc"].",1");  
@@ -54,7 +54,7 @@ function crear_encabezado_pie_pagina($texto,$iddoc,$idformato,$pagina=1){
       
       $texto=str_replace($funciones[$i]["nombre"],call_user_func_array($funciones[$i]["nombre_funcion"], $parametros),$texto);
     }
-    if($formato[0]["librerias"] && $formato[0]["librerias"]<>""){
+		if ($formato[0]["librerias"] && $formato[0]["librerias"] != "") {
     	$includes.=include_once($ruta_db_superior."/".$formato[0]["nombre"]."/".$formato[0]["librerias"]);
     }
   }
@@ -66,17 +66,18 @@ function crear_encabezado_pie_pagina($texto,$iddoc,$idformato,$pagina=1){
 	$texto.='<style>table,td {font-size:'.$formato[0]["font_size"].'pt; font-family:'.$fuente[0]["valor"].';}</style>';
   return(codifica_encabezado(html_entity_decode(htmlspecialchars_decode($texto))));
 }
-function arma_funcion($nombre,$parametros,$accion){
-if($parametros<>"" && $accion<>"adicionar")
-   $parametros.=",";
 
-if($accion=="mostrar")
-  $texto="<?php ".$nombre."(".$parametros."$"."_REQUEST['iddoc']); ?".">";
-elseif($accion=="adicionar")
-  $texto="<?php ".$nombre."(".$parametros."); ?".">";
-elseif($accion=="editar")  
-  $texto="<?php ".$nombre."(".$parametros."$"."_REQUEST['iddoc']); ?".">";
-return($texto);
+function arma_funcion($nombre,$parametros,$accion){
+	if ($parametros != "" && $accion != "adicionar")
+	   $parametros.=",";
+
+	if($accion=="mostrar")
+	  $texto="<?php ".$nombre."(".$parametros."$"."_REQUEST['iddoc']); ?".">";
+	elseif($accion=="adicionar")
+	  $texto="<?php ".$nombre."(".$parametros."); ?".">";
+	elseif($accion=="editar")  
+	  $texto="<?php ".$nombre."(".$parametros."$"."_REQUEST['iddoc']); ?".">";
+	return($texto);
 } 
 
 function incluir($cad,$tipo,$eval=0){
@@ -108,13 +109,11 @@ global $incluidos;
       if(!is_file($lib[$j])&$eval){
         if(crear_archivo($lib[$j])){
           $includes.=$texto1.$lib[$j].$texto2;
-        }
-        else {
+				} else {
           alerta("Problemas al generar el Formato en ".$lib[$j]);
           return("");
         }    
-      }
-      else {
+			} else {
         $includes.=$texto1.$lib[$j].$texto2;
       } 
     array_push($incluidos,$texto1.$lib[$j].$texto2);
@@ -122,13 +121,14 @@ global $incluidos;
   } 
 return($includes);  
 }
+
 function formato_numero($idformato,$doc,$tipo=0){
 global $conn;
 $documento=busca_filtro_tabla("numero","documento A","A.iddocumento=".$doc,"",$conn);
 $carta=busca_filtro_tabla("varios_radicados,destinos","ft_carta A","A.documento_iddocumento=".$doc,"",$conn);
 
-if($carta["numcampos"]&&$carta[0]["varios_radicados"])
-  {$destinos=explode(",",$carta[0]["destinos"]);
+	if ($carta["numcampos"] && $carta[0]["varios_radicados"]) {
+		$destinos = explode(",", $carta[0]["destinos"]);
    if(!isset($_REQUEST["destino"])||$_REQUEST["destino"]=="")
      $_REQUEST["destino"]=$destinos[0]; 
    $radicado=busca_filtro_tabla("radicado","radicados_carta","destino='".$_REQUEST["destino"]."' and documento_iddocumento=$doc","",$conn);
@@ -141,9 +141,10 @@ if($documento["numcampos"]){
    return ($documento[0]["numero"]);
  else
    echo  $documento[0]["numero"];
+	} else
+		echo ("");
 }
-else echo ("");
-}
+
 function formato_serie($idformato,$doc,$tipo=0){
 global $conn;
 $serie=busca_filtro_tabla("B.codigo as serie","serie B,documento C","C.iddocumento=".$doc." AND C.serie=B.idserie","",$conn);
@@ -152,30 +153,29 @@ if($serie["numcampos"]){
     return ($serie[0]["serie"]);
   else
     echo   $serie[0]["serie"];
-}
-else return ("");
+	} else
+		return ("");
 }
 
-function dependencia_codigo($idformato,$doc,$tipo=0)
-{if($tipo)
+function dependencia_codigo($idformato, $doc, $tipo = 0) {
+ if ($tipo)
   return(formato_dependencia($doc,"codigo"));
  else
   echo formato_dependencia($doc,"codigo");
- 
 }
-function dependencia_nombre($idformato,$doc,$tipo=0)
-{if($tipo)
+
+function dependencia_nombre($idformato, $doc, $tipo = 0) {
+ if ($tipo)
   return(formato_dependencia($doc,"nombre"));
  else
   echo formato_dependencia($doc,"nombre");
-
 }
-function dependencia_logo($idformato,$doc,$tipo=0)
-{if($tipo)
+
+function dependencia_logo($idformato,$doc,$tipo=0){
+ if($tipo)
   return(formato_dependencia($doc,"logo"));
  else
   echo formato_dependencia($doc,"logo");
-
 }
 
 function formato_dependencia($doc,$tipo){
@@ -186,32 +186,29 @@ $tabla=busca_filtro_tabla('nombre_tabla','formato',"nombre like '".strtolower($p
 $dep=busca_filtro_tabla("A.*","dependencia A,dependencia_cargo C,".$tabla[0]["nombre_tabla"]." B","C.dependencia_iddependencia=A.iddependencia and B.dependencia=C.iddependencia_cargo and B.documento_iddocumento=$doc","",$conn);
 
 if($dep["numcampos"]){
- if($tipo=="logo")
-   {if($dep[0][$tipo])
+ if ($tipo == "logo") {
+    if ($dep[0][$tipo])
       $retorno=PROTOCOLO_CONEXION.RUTA_PDF.'/formatos/librerias/mostrar_logo.php?codigo='.$dep[0]["iddependencia"].'" />';
     else
       $retorno=logo_empresa();   
-   }
- else
+ } else
    $retorno=$dep[0][$tipo];
 }
 return ($retorno);
 }
 
-function nombre_proceso($doc)
-{
+function nombre_proceso($doc) {
  global $conn;
  $datos = array();
  $nombre=busca_filtro_tabla("nombre_proceso,codigo,fecha_proceso,version","proceso","documento_iddocumento=".$doc,"",$conn); 
- if($nombre["numcampos"]>0)
- {  $datos["nombre_proceso"]=$nombre[0]["nombre_proceso"];
+	if ($nombre["numcampos"] > 0) {
+		$datos["nombre_proceso"] = $nombre[0]["nombre_proceso"];
     $datos["fecha"]=$nombre[0]["fecha_proceso"];
     $datos["version"]=$nombre[0]["version"];
     $datos["codigo"]=$nombre[0]["codigo"];
     return($datos);
- }  
- else 
-  return("");
+	} else
+           return("");
 }
 
 function logo_empresa() {
@@ -233,8 +230,7 @@ function logo_empresa() {
 		return ("");
 }
 
-function logo_encabezado()
-{
+function logo_encabezado() {
  global $conn;
  $logo = busca_filtro_tabla("valor","configuracion","nombre='logo_comunicaciones'","",$conn);
  if($logo["numcampos"]){
@@ -247,8 +243,7 @@ function logo_encabezado()
 else return ("");
 }
 
-function nombre_empresa()
-{
+function nombre_empresa() {
  global $conn;
  $logo = busca_filtro_tabla("valor","configuracion","nombre='nombre'","",$conn);
  if($logo["numcampos"]){

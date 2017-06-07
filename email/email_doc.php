@@ -1,10 +1,8 @@
 <?php
 $max_salida=10; // Previene algun posible ciclo infinito limitando a 10 los ../
 $ruta_db_superior=$ruta="";
-while($max_salida>0)
-{
-if(is_file($ruta."db.php"))
-{
+while($max_salida > 0) {
+	if (is_file($ruta . "db.php")) {
 $ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
 }
 $ruta.="../";
@@ -53,7 +51,6 @@ include_once ($ruta_db_superior . "filesystem/SaiaStorage.php");
 </script>
 <?php
 
-
 /*
  * <Clase>
  * <Nombre>formato_email</Nombre>
@@ -71,23 +68,23 @@ function formato_email() {
    $datos=busca_filtro_tabla("numero,pdf,plantilla,ejecutor,descripcion,tipo_radicado,".fecha_db_obtener("fecha","Y-m-d H:i:s")." as fecha","documento","iddocumento=".$_REQUEST["iddoc"],"",$conn);
    //si es un radicado de entrada
    $contenido="Documento Número: ".$datos[0]["numero"]."\nFecha: ".$datos[0]["fecha"]."\nDescripción: ".strip_tags(str_replace("<br />"," ",$datos[0]["descripcion"]));
-   if($datos[0]["tipo_radicado"]==1)
-     {$ejecutor=busca_filtro_tabla("nombre,cargo,empresa","ejecutor,datos_ejecutor","ejecutor_idejecutor=idejecutor and iddatos_ejecutor=".$datos[0]["ejecutor"],"",$conn);
+	if ($datos[0]["tipo_radicado"] == 1) {
+		$ejecutor = busca_filtro_tabla("nombre,cargo,empresa", "ejecutor,datos_ejecutor", "ejecutor_idejecutor=idejecutor and iddatos_ejecutor=" . $datos[0]["ejecutor"], "", $conn);
       $contenido.="\nRemitente: ".$ejecutor[0]["nombre"];
-      if($ejecutor[0]["cargo"]<>"")
+		if ($ejecutor[0]["cargo"] != "") {
         $contenido.=", Cargo: ".$ejecutor[0]["cargo"];
-      if($ejecutor[0]["empresa"]<>"")  
+		}
+		if ($ejecutor[0]["empresa"] != "") {
         $contenido.=", Empresa: ".$ejecutor[0]["empresa"];
      }
-   elseif($datos[0]["plantilla"]<>"")
-     {$ejecutor=busca_filtro_tabla("nombres,apellidos","funcionario","funcionario_codigo=".$datos[0]["ejecutor"],"",$conn);
+	} elseif ($datos[0]["plantilla"] != "") {
+		$ejecutor = busca_filtro_tabla("nombres,apellidos", "funcionario", "funcionario_codigo=" . $datos[0]["ejecutor"], "", $conn);
       $contenido.="\nCreador: ".$ejecutor[0]["nombres"]." ".$ejecutor[0]["apellidos"];
      }  
  if(!$datos["numcampos"]||!$datos[0]["numero"]){
     if(!$datos["numcampos"]){
       alerta("Su documento no puede ser enviado por correo ya que no se encuentra en el sistema por favor comuniquese con su administrador con el siguiente numero: ".$_REQUEST["iddoc"]);
-    }
-    else if(!$datos[0]["numero"]){
+		} else if (!$datos[0]["numero"]) {
       alerta("Su documento no puede ser enviado por correo ya que no posee número de radicado.");
     }
     volver(1);
@@ -97,24 +94,26 @@ function formato_email() {
    $direcciones=busca_filtro_tabla("email","funcionario","funcionario_codigo=".$_SESSION["usuario_actual"]." AND email IS NOT NULL and email<>''","",$conn);
  //print_r($direcciones);
  $login=busca_filtro_tabla("login","funcionario","funcionario_codigo=".$_SESSION["usuario_actual"],"",$conn);
- if(!is_dir("../temporal_".$login[0]["login"]))
-    {mkdir("../temporal_".$login[0]["login"],PERMISOS_CARPETAS);
+	if (!is_dir("../temporal_" . $login[0]["login"])) {
+		mkdir("../temporal_" . $login[0]["login"], PERMISOS_CARPETAS);
      chmod("../temporal_".$login[0]["login"],PERMISOS_CARPETAS);
     }
     
-   if($direcciones["numcampos"])
+	if ($direcciones["numcampos"]) {
       $ldirecciones=explode(",",$direcciones[0]["email"]);
-   else
+	} else {
       $ldirecciones[0]= "info@cerok.com";
 
  echo "<form  name='email' id='email' action='email_doc.php' method='post' onsubmit='return validar_campos(this)'>
+
        <table border=0 width=80%>
        <tr>
        <td class='encabezado_list' colspan=2 height='20px' >ENVIAR DOCUMENTO POR E-MAIL</td></tr>
        <tr><td class='encabezado'>DE</td>
        <td width=80% bgcolor='#F5F5F5'><select name='de'>";
-   foreach($ldirecciones as $fila)     
+	foreach ( $ldirecciones as $fila ) {
       echo "<option value='".$fila."'>".$fila."</option>";
+	}
  echo "</select></td></tr>
        <tr><td class='encabezado'>PARA*</td>
        <td bgcolor='#F5F5F5'><input name='para' value='' type='text' size='100'></td></tr>
@@ -142,11 +141,12 @@ function formato_email() {
  
 //creo un pdf con las paginas del documento
 $paginas=busca_filtro_tabla("ruta","pagina","id_documento=".$_REQUEST["iddoc"],"",$conn);
-if($paginas["numcampos"])
-  {$ruta=substr($paginas[0]["ruta"],0,strrpos($paginas[0]["ruta"],"/")+1);    
+	if ($paginas["numcampos"]) {
+		$ruta = substr($paginas[0]["ruta"], 0, strrpos($paginas[0]["ruta"], "/") + 1);
    $pdf=dirToPdf("../temporal_".$login[0]["login"]."/paginas_documento".$datos[0]["numero"].".pdf", "../".$ruta);
-   if($pdf!==false)
+		if ($pdf !== false) {
        $texto_pagina.='<input name="paginas" value="'."../temporal_".$login[0]["login"]."/paginas_documento".$datos[0]["numero"].".pdf".'" type="checkbox" checked><a href="'.$ruta_db_superior."../temporal_".$login[0]["login"]."/paginas_documento".$datos[0]["numero"].".pdf".'" target="_blank">'."paginas_documento".$datos[0]["numero"].".pdf".'</a><input type="hidden" name="nombre_paginas" value="'."paginas_documento".$datos[0]["numero"].".pdf".'"><br />';
+		}
   }    
  //si el documento es un formato se envio el pdf como adjunto
 	if (strtolower($datos[0]["plantilla"]) != "" && $datos[0]["numero"] != '0') {
@@ -179,22 +179,22 @@ if($paginas["numcampos"])
        </form>";
   include_once($ruta_db_superior."footer.php");        
 }
+
 /*
-<Clase>
-<Nombre>pc_html2ascii</Nombre> 
-<Parametros>$s</Parametros>
-<Responsabilidades>Convierte codigo HTML a codigo ASCII<Responsabilidades>
-<Notas>Se utiliza para el contenido del email</Notas>
-<Excepciones></Excpciones>
-<Salida></Salida>
-<Pre-condiciones><Pre-condiciones>
-<Post-condiciones><Post-condiciones>
-</Clase>
+ * <Clase>
+ * <Nombre>pc_html2ascii</Nombre>
+ * <Parametros>$s</Parametros>
+ * <Responsabilidades>Convierte codigo HTML a codigo ASCII<Responsabilidades>
+ * <Notas>Se utiliza para el contenido del email</Notas>
+ * <Excepciones></Excpciones>
+ * <Salida></Salida>
+ * <Pre-condiciones><Pre-condiciones>
+ * <Post-condiciones><Post-condiciones>
+ * </Clase>
 */
 function pc_html2ascii($s) {
 // convert links
-$s = preg_replace('/<a\s+.*?href="?([^\" >]*)"?[^>]*>(.*?)<\/a>/i',
-'$2 ($1)', $s);
+	$s = preg_replace('/<a\s+.*?href="?([^\" >]*)"?[^>]*>(.*?)<\/a>/i', '$2 ($1)', $s);
 
 // convert <br>, <hr>, <p>, <div> to line breaks
 $s = preg_replace('@<(b|h)r[^>]*>@i',"\n",$s);
@@ -218,40 +218,38 @@ return $s;
 }   
   
 /*
-<Clase>
-<Nombre>enviar_email</Nombre> 
-<Parametros>$doc:identificador del documento</Parametros>
-<Responsabilidades>recibe los datos y envia el mensaje por correo electronico. Despues de enviar el mensaje realiza transferencia al radicador de salida y en notas queda el registro de a quien se envio el documento (destino,copia y copia oculta)<Responsabilidades>
-<Notas>cuando $doc tiene un valor se trata del formato mensaje por lo tanto se busca los datos en la tabla ft_mensaje, cuando no hay $doc se trata  del formulario y se reciben los datos en el $_REQUEST</Notas>
-<Excepciones>No hace el envio de correo si no esta configurado el servidor de correo; Muestra mensaje sino fue exitoso el envio; Si no se hace la transferencia muestra notificacion</Excpciones>
-<Salida></Salida>
-<Pre-condiciones>En la tabla configuracion debe de estar creado el campo servidor_correo y radicador_salida<Pre-condiciones>
-<Post-condiciones><Post-condiciones>
-</Clase>
+ * <Clase>
+ * <Nombre>enviar_email</Nombre>
+ * <Parametros>$doc:identificador del documento</Parametros>
+ * <Responsabilidades>recibe los datos y envia el mensaje por correo electronico. Despues de enviar el mensaje realiza transferencia al radicador de salida y en notas queda el registro de a quien se envio el documento (destino,copia y copia oculta)<Responsabilidades>
+ * <Notas>cuando $doc tiene un valor se trata del formato mensaje por lo tanto se busca los datos en la tabla ft_mensaje, cuando no hay $doc se trata del formulario y se reciben los datos en el $_REQUEST</Notas>
+ * <Excepciones>No hace el envio de correo si no esta configurado el servidor de correo; Muestra mensaje sino fue exitoso el envio; Si no se hace la transferencia muestra notificacion</Excpciones>
+ * <Salida></Salida>
+ * <Pre-condiciones>En la tabla configuracion debe de estar creado el campo servidor_correo y radicador_salida<Pre-condiciones>
+ * <Post-condiciones><Post-condiciones>
+ * </Clase>
 */  
 function enviar_email($doc=0){
 	global $conn;
-   
+	// $var_adjunto = false;
    $copia = array();
    $email=busca_filtro_tabla("valor","configuracion","nombre='servidor_correo'","",$conn);    
    $puerto=busca_filtro_tabla("valor","configuracion","nombre='puerto_servidor_correo'","",$conn);
    include_once("class.phpmailer.php");    
 	$mail = new PHPMailer();
    $mail->ClearAttachments();
-   if($email["numcampos"])
-    {
-     if($doc<>0) 
-     {$datos = busca_filtro_tabla("*","ft_mensaje","documento_iddocumento=$doc","",$conn);  
+	if ($email["numcampos"]) {
+		if ($doc != 0) {
+			$datos = busca_filtro_tabla("*", "ft_mensaje", "documento_iddocumento=$doc", "", $conn);
      
-      if($datos["numcampos"]>0)
-      { 
+			if ($datos["numcampos"] > 0) {
        $asunto = html_entity_decode($datos[0]["asunto"]); 
        $destinos=$datos[0]["destinatario"];
        $contenido=pc_html2ascii($datos[0]["contenido"]);
        $from = $datos[0]["remitente_mensaje"];
-       if($datos[0]["copia"]!="")
+				if ($datos[0]["copia"] != "") {
         $copia = explode(",",$datos[0]["copia"]);
-       
+				}
        $archivo = busca_filtro_tabla("*","anexos","documento_iddocumento=".$doc,"",$conn);
 				if ($archivo["numcampos"] > 0) {
 					for($i = 0; $i < $archivo["numcampos"]; $i++) {
@@ -267,12 +265,9 @@ function enviar_email($doc=0){
 					$contenido = StorageUtils::get_file_content($pdf_documento[0]["pdf"]);
 					$mail->AddStringAttachment($contenido, 'documento_' . $pdf_documento[0]['numero'] . '.pdf');
         }
-                
       }
       $enlace="../documentoview.php?key=$doc";
-     }
-     else
-     {        
+		} else {
       if(isset($_REQUEST["de"]))
         $from = $_REQUEST["de"];
       if(isset($_REQUEST["asunto"]))
@@ -291,29 +286,26 @@ function enviar_email($doc=0){
         $mail->Port     = $puerto[0]["valor"];
         $mail->Mailer   = "mail";       // Alternative to IsSMTP()
         $mail->WordWrap = 75;      
-        $mail->From    = (($from));
+		$mail->From = $from;
         $mail->Subject = $copia_asunto;
         $mail->ClearAddresses();
         $mail->ClearBCCs();
         $mail->ClearCCs();
 		
         $para=explode(",",$destinos);
-        foreach($para as $direccion)          
-        {  
+		foreach ( $para as $direccion ) {
          $mail->AddAddress("$direccion","$direccion");
         }  
-        if($_REQUEST["para_cc"]<>"")
-        {$para=explode(",",$_REQUEST["para_cc"]);
-         foreach($para as $direccion)          
-         {  
+		if ($_REQUEST["para_cc"] != "") {
+			$para = explode(",", $_REQUEST["para_cc"]);
+			foreach ( $para as $direccion ) {
           $mail->AddCC("$direccion","$direccion");
          }
         }
          
-        if($_REQUEST["para_cco"]<>"")
-        {$para=explode(",",$_REQUEST["para_cco"]);
-          foreach($para as $direccion)          
-          {  
+		if ($_REQUEST["para_cco"] != "") {
+			$para = explode(",", $_REQUEST["para_cco"]);
+			foreach ( $para as $direccion ) {
            $mail->AddBCC("$direccion","$direccion");
           }
         }     
@@ -339,21 +331,17 @@ function enviar_email($doc=0){
 		</tr>
 	</table>
 ";  
-  
 
   $inicio_style='
   <div id="fondo" style="   padding: 10px; 	background-color: #f5f5f5;	">
-  
   	<div id="encabezado" style="background-color:'.$config[0]["valor"].';color:white ;  vertical-align:middle;   text-align: left;    font-weight: bold;  border-top-left-radius:5px;   border-top-right-radius:5px;   padding: 10px;">
   		NOTIFICACI&Oacute;N - SAIA
   	</div>
- 
   	<div id="cuerpo" style="padding: 10px;background-color:white;">
   		<br>
   		<span style="font-weight:bold;color:'.$config[0]["valor"].';">'.$asunto.'</span>
   		<hr>
   		<br>';
-  
   $fin_style='
   	</div>
   	<div  id="pie" style="font-size:11px;font-family:Roboto,Arial,Helvetica,sans-serif;color:#646464;vertical-align:middle;padding: 10px;">
@@ -362,15 +350,9 @@ function enviar_email($doc=0){
   </div>';	
 	
  		$contenido=$inicio_style.$contenido.$fin_style;			
-		
-		
-		
-		
-		
 		         
         $mail->Body = $contenido;
 		$mail -> IsHTML (true);
-		
 		
         $anexo=@$_REQUEST["anexos"];
         if($anexo!=""){
@@ -386,30 +368,32 @@ function enviar_email($doc=0){
         
         if(@$_REQUEST["paginas"]!="" && @$_REQUEST["nombre_paginas"]){
           $mail->AddAttachment($_REQUEST["paginas"],$_REQUEST["nombre_paginas"]);    
-
         }  
         if(@$_REQUEST["pdf"]!="" && @$_REQUEST["nombre_pdf"]){
 			//$mail->AddAttachment($_REQUEST["pdf"], $_REQUEST["nombre_pdf"]);
 			$contenido = StorageUtils::get_file_content(base64_decode($_REQUEST["pdf"]));
 			$mail->AddStringAttachment($contenido, $_REQUEST["nombre_pdf"]);
         }        
-        if(!$mail->Send())
-        {
+		if (!$mail->Send()) {
           alerta("No fue enviado el mensaje, configure los datos de su servidor de correo");
-        }
-        else{
+		} else {
           $radicador_salida=busca_filtro_tabla("","configuracion","nombre LIKE 'radicador_salida'","",$conn);
           if($radicador_salida["numcampos"]){
             $funcionario=busca_filtro_tabla("","funcionario","login LIKE '".$radicador_salida[0]["valor"]."'","",$conn);
             if($funcionario["numcampos"]){
-              $ejecutores=array($funcionario[0]["funcionario_codigo"]);
-            }
-            else {
-              $ejecutores=array(usuario_actual("funcionario_codigo"));
+					$ejecutores = array(
+							$funcionario[0]["funcionario_codigo"]
+					);
+				} else {
+					$ejecutores = array(
+							usuario_actual("funcionario_codigo")
+					);
             }
           }
           if(!count($ejecutores))
-            $ejecutores=array(usuario_actual("funcionario_codigo"));
+				$ejecutores = array(
+						usuario_actual("funcionario_codigo")
+				);
           $otros["notas"]="'Documento enviado por e-mail por medio del correo: ".$mail->FromName;
           for($i=0;$i<count($mail->to);$i++){
             if(!in_array($mail->to[$i][0],$para))
@@ -453,12 +437,11 @@ function enviar_email($doc=0){
   }
 }
 
-if(isset($_REQUEST["formato_enviar"]))
+if (isset($_REQUEST["formato_enviar"])) {
   formato_email();
-elseif(isset($_REQUEST["enviar"]))
+} else if (isset($_REQUEST["enviar"])) {
   enviar_email();
-  
-
+}
 ?>
 
 <!--head>

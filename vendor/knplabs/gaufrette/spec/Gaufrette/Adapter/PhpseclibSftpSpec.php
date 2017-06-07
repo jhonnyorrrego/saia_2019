@@ -21,7 +21,10 @@ class PhpseclibSftpSpec extends ObjectBehavior
     function let($sftp)
     {
         $this->beConstructedWith($sftp, '/home/l3l0', false, 'l3lo', 'password');
+<<<<<<< HEAD
         $sftp->login('l3lo', 'password')->shouldBeCalled();
+=======
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
     }
 
     function it_is_adapter()

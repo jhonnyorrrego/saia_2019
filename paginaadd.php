@@ -12,6 +12,12 @@ if (@$_REQUEST["iddoc"] || @$_REQUEST["key"]) {
 	}
 	menu_principal_documento($_REQUEST["iddoc"]);
 }
+
+
+include_once("librerias_saia.php");
+echo(librerias_notificaciones());
+
+
 $x_consecutivo = Null;
 $x_id_documento = Null;
 $x_imagen = Null;
@@ -45,9 +51,9 @@ if (@$_REQUEST["enlace"]) {
 } else if ($_REQUEST["x_enlace"] == "") {
 	$documento = busca_filtro_tabla("", "documento", "iddocumento=" . $key, "");
 	if ($documento[0]["tipo_radicado"] != 1 && $documento[0]["tipo_radicado"] != 2) {
-		$x_enlace = "ordenar.php?key=" . $key . "&accion=mostrar";
+		$x_enlace = "ordenar.php?key=" . $key . "&accion=mostrar&mostrar_formato=1";
 	} else {
-		$x_enlace = "ordenar.php?key=" . $key;
+		$x_enlace = "ordenar.php?key=" . $key."&accion=mostrar&mostrar_formato=1";
 	}
 }
 if ($_REQUEST["defecto"]) {
@@ -81,17 +87,17 @@ if (($sAction == "") || (($sAction == NULL))) {
 	if (@$_POST["x_enlace"]) {
 		$x_enlace = @$_POST["x_enlace"];
 	}
-	sincronizar_carpetas($tabla, $conn);
+	//sincronizar_carpetas($tabla, $conn);
 }
 
 switch ($sAction) {
 	case "A" :
 		// Add
-		if (sincronizar_carpetas($tabla, $conn)) { // Add New Record
+		//if (sincronizar_carpetas($tabla, $conn)) {
 			if ($key && $idformato[0][0]) {
 				llama_funcion_accion($key, $idformato[0][0], "digitalizar", "POSTERIOR");
 			}
-		}
+		//}
 		if ($x_escaneo == "1") {
 			$x_enlace = "paginaadd.php?key=" . $key . "&" . $x_enlace;
 		} else if ($x_enlace == '') {
@@ -107,7 +113,7 @@ switch ($sAction) {
 				$x_enlace = 'documentoaddsal.php';
 			}
 		}
-		abrir_url($x_enlace, "_self");
+		abrir_url_digitalizacion($key, $x_enlace, "_self");
 		exit();
 		break;
 }
@@ -115,43 +121,48 @@ $config = busca_filtro_tabla("valor", "configuracion", "nombre='color_encabezado
 ?>
 
 <style type="text/css">
-	<!--INPUT, TEXTAREA, SELECT, body {
+<!--
+INPUT, TEXTAREA, SELECT, body {
 	font-family: Tahoma;
 	font-size: 10px;
-	}
-	.phpmaker {
+}
+
+.phpmaker {
 	font-family: Verdana;
 	font-size: 9px;
-	}
-	.encabezado {
+}
+
+.encabezado {
 	background-color: <?php echo($config[0]["valor"]); ?>;
-	color:white ;
-	padding:10px;
+	color: white;
+	padding: 10px;
 	text-align: left;
-	}
-	.encabezado_list {
+}
+
+.encabezado_list {
 	background-color: <?php echo($config[0]["valor"]); ?>;
-	color:white ;
-	vertical-align:middle;
+	color: white;
+	vertical-align: middle;
 	text-align: center;
 	font-weight: bold;
-	}
-	table thead td {
-	font-weight:bold;
-	cursor:pointer;
+}
+
+table thead td {
+	font-weight: bold;
+	cursor: pointer;
 	background-color: <?php echo($config[0]["valor"]); ?>;
 	text-align: center;
 	font-family: Verdana;
 	font-size: 9px;
-	text-transform:Uppercase;
-	vertical-align:middle;
-	}
-	table tbody td {
+	text-transform: Uppercase;
+	vertical-align: middle;
+}
+
+table tbody td {
 	font-family: Verdana;
 	font-size: 9px;
-	}
-
-	-->
+}
+-->
 </style>
 <script type="text/javascript">
 		<!--
@@ -170,14 +181,14 @@ $config = busca_filtro_tabla("valor", "configuracion", "nombre='color_encabezado
 	}
 	}
 	--></script>
-<div  align="center">
+<div align="center">
 	<?php
-  menu_ordenar($key);
+	menu_ordenar($key);
 	?>
 </div>
 <br />
 <br />
-<span class="internos" style="display:none;font-family:verdana;font-size:10px">&nbsp;&nbsp;<b>ADICI&Oacute;N DE P&Aacute;GINAS AL DOCUMENTO</b></span>
+<span class="internos" style="display: none; font-family: verdana; font-size: 10px">&nbsp;&nbsp;<b>ADICI&Oacute;N DE P&Aacute;GINAS AL DOCUMENTO</b></span>
 <form name="paginaadd" id="paginaadd" action="paginaadd.php<?php echo("?key=".$key) ?>" method="POST" onSubmit="return EW_checkMyForm(this);">
 	<input type="hidden" name="a_add" value="A">
 	<?php
@@ -187,52 +198,73 @@ $config = busca_filtro_tabla("valor", "configuracion", "nombre='color_encabezado
 	$usuario = "";
 	$clave = "";
 	$puerto_ftp = 21;
+	$params = array();
 	$configuracion["numcampos"] = 0;
 	$configuracion = busca_filtro_tabla("A.*", "configuracion A", "tipo IN('ruta', 'clave', 'usuario', 'peso', 'imagen', 'ftp')", "", $conn);
 	for($i = 0; $i < $configuracion["numcampos"]; $i++) {
 		switch ($configuracion[$i]["nombre"]) {
 			case "ruta_servidor" :
 				$dir = $configuracion[$i]["valor"];
+				$params["host"]= $configuracion[$i]["valor"];
 				break;
 			case "ruta_ftp" :
 				$ruta_ftp = $configuracion[$i]["valor"] . "_" . $_SESSION["LOGIN" . LLAVE_SAIA];
+				$params["dftp"]= $configuracion[$i]["valor"] . "_" . $_SESSION["LOGIN" . LLAVE_SAIA];
 				break;
 			case "ruta_temporal" :
 				$temporal_usuario = $configuracion[$i]["valor"] . "_" . $_SESSION["LOGIN" . LLAVE_SAIA];
+				$params["url"]= $configuracion[$i]["valor"] . "_" . $_SESSION["LOGIN" . LLAVE_SAIA];
 				break;
 			case "puerto_ftp" :
 				$puerto_ftp = $configuracion[$i]["valor"];
+				if(empty($configuracion[$i]["valor"])) {
+					$params["port"]= 21;
+				} else {
+					$params["port"]= $configuracion[$i]["valor"];
+				}
 				break;
 			case "clave_ftp" :
-				if($configuracion[$i]['encrypt']){
-					include_once('pantallas/lib/librerias_cripto.php');
-					$configuracion[$i]['valor']=decrypt_blowfish($configuracion[$i]['valor'],LLAVE_SAIA_CRYPTO);					
-				}				
+				if ($configuracion[$i]['encrypt']) {
+					include_once ('pantallas/lib/librerias_cripto.php');
+					$configuracion[$i]['valor'] = decrypt_blowfish($configuracion[$i]['valor'], LLAVE_SAIA_CRYPTO);
+				}
 				$clave = $configuracion[$i]["valor"];
+				$params["clave"]= $configuracion[$i]["valor"];
 				break;
 			case "usuario_ftp" :
 				$usuario = $configuracion[$i]["valor"];
+				$params["usuario"]= $configuracion[$i]["valor"];
 				break;
 			case "maximo_tamanio_upload" :
 				$peso = $configuracion[$i]["valor"];
 				break;
 			case "ancho_imagen" :
 				$ancho = $configuracion[$i]["valor"];
+				$params["ancho"]= $configuracion[$i]["valor"];
 				break;
 			case "alto_imagen" :
 				$alto = $configuracion[$i]["valor"];
+				$params["alto"]= $configuracion[$i]["valor"];
+				break;
+			case 'tipo_ftp' :
+				$params["ftp_type"] = $configuracion[$i]["valor"];
 				break;
 		}
 	}
+	if(!$params["ftp_type"] || $params["ftp_type"]==''){
+		$params["ftp_type"] = "ftp";
+	}
+
 	?>
 
 	<input type="hidden" name="EW_Max_File_Size" value="<?php echo($peso); ?>">
 	<input type="hidden" name="x_enlace" value="<?php echo($x_enlace); ?>">
-	<table width="100%"  border="0" cellpadding="4" cellspacing="1" bgcolor="#CCCCCC">
+	<table width="100%" border="0" cellpadding="4" cellspacing="1" bgcolor="#CCCCCC">
 		<tr>
-			<td width="205" class="encabezado" ><span class="phpmaker" style="color: #FFFFFF;">DOCUMENTO
-				ASOCIADO</span></td>
-			<td width="335" bgcolor="#F5F5F5"><span class="phpmaker"> <?php
+			<td width="205" class="encabezado">
+				<span class="phpmaker" style="color: #FFFFFF;">DOCUMENTO ASOCIADO</span></td>
+			<td width="335" bgcolor="#F5F5F5"><span class="phpmaker">
+<?php
 			if ($key) {
 				$x_id_documento = $key;
 			} else {
@@ -246,8 +278,7 @@ $config = busca_filtro_tabla("valor", "configuracion", "nombre='color_encabezado
 			}
 			chmod($temporal_usuario, PERMISOS_CARPETAS);
 			?>
-				<input type="hidden" name="x_id_documento" id="x_id_documento"
-					size="30" value="<?php echo htmlspecialchars(@$x_id_documento) ?>">
+				<input type="hidden" name="x_id_documento" id="x_id_documento" size="30" value="<?php echo htmlspecialchars(@$x_id_documento) ?>">
 					<?php
 					$tabla = "documento";
 					if (isset($_SESSION["tipo_doc"]) && $_SESSION["tipo_doc"] == 'registro') {
@@ -263,35 +294,17 @@ $config = busca_filtro_tabla("valor", "configuracion", "nombre='color_encabezado
 					}
 					?> </span></td>
 			<td width="207" rowspan="2" bgcolor="#F5F5F5"><span class="phpmaker">
-				<input type="submit" name="Action" value="CONTINUAR" />
+					<input type="submit" name="Action" value="CONTINUAR" />
 			</span><div align="center"></div></td>
 		</tr>
 		<tr>
-			<td width="205" class="encabezado" ><span class="phpmaker" style="color: #FFFFFF;">ESCANEAR DE NUEVO</span></td>
+			<td width="205" class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">ESCANEAR DE NUEVO</span></td>
 			<td width="335" bgcolor="#F5F5F5"><span class="phpmaker"> SI
-				<input type="radio" name="x_escaneo" value="1">
-				NO
+				<input type="radio" name="x_escaneo" value="1">NO
 				<input type="radio" name="x_escaneo" value="0" checked>
 			</span></td>
 		</tr>
-		
-		
-		<!--tr>
-			<td colspan="3">
-			<applet code="uk.co.mmscomputing.application.imageviewer.MainApp.class"  archive="visor.jar" width="100%" height="640" name="scaner">
-				<param name="url" value="<?php print($temporal_usuario); ?>">
-				<param name="radica" value="<?php print($key); ?>">
-				<param name="port" value="<?php print($puerto_ftp); ?>">
-				<param name="host" value="<?php print($dir); ?>">
-				<param name="usuario" value="<?php print($usuario); ?>">
-				<param name="dftp" value="<?php print($ruta_ftp); ?>">
-				<param name="clave" value="<?php print($clave); ?>">
-				<param name="verLog" value="true">
-				<param name="ancho" value="<?php print($ancho); ?>">
-				<param name="alto" value="<?php print($alto); ?>">
-				<param name="maxtabs" value="50">
-			</applet></td>
-		</tr-->
+
 	</table>
 	<div class="container" id="info_scanner"></div>
 
@@ -300,17 +313,22 @@ $config = busca_filtro_tabla("valor", "configuracion", "nombre='color_encabezado
 
 
 <?php
-//poner notificaciones noty
-include_once ("librerias_saia.php");
-global $raiz_saia;
-$raiz_saia = '';
-echo (librerias_notificaciones());
-
-$s_https = '';
-if (PROTOCOLO_CONEXION == 'https://') {
-	$s_https = 's';
-}
+//TODO: Descomentar si no se pueden usar json web tokens
+//$datos = json_encode($params);
+//$info_doc = busca_filtro_tabla("numero,descripcion", "documento", "iddocumento=$key", "", $conn);
+$funcionario = usuario_actual("idfuncionario");
+/*$buscar_tarea = busca_filtro_tabla("", "tarea_dig", "estado=1 and iddocumento=$key", "", $conn);
+$existe_tarea = 0;
+if($buscar_tarea["numcampos"]) {
+	//$existe_tarea = 1;
+	$id_tarea = $buscar_tarea[0]["idtarea_dig"];
+} else {
+	$qry = "insert into tarea_dig (idfuncionario, iddocumento, estado) values ($funcionario, $key, 1)";
+	phpmkr_query($qry);
+	$id_tarea = phpmkr_insert_id();
+}*/
 ?>
+<<<<<<< HEAD
     <div id="output"></div>
     <script language="javascript" type="text/javascript">
         //var wsUri = "ws://echo.websocket.org/";
@@ -323,116 +341,130 @@ if (PROTOCOLO_CONEXION == 'https://') {
         function init() {
             output = document.getElementById("output");
             testWebSocket();
-        }
+=======
 
-        function getUid() {
-            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-                var r = Math.random() * 16 | 0,
-                        v = c == 'x' ? r : (r & 0x3 | 0x8);
-                return v.toString(16);
+            <div id="output"></div>
+
+    <script type="text/javascript">
+
+    var iddoc = "<?php echo $key;?>";
+    var idfunc = "<?php echo $funcionario;?>";
+    //get the IP addresses associated with an account
+    function getIPs(callback){
+        var ip_dups = {};
+        //compatibility for firefox and chrome
+        var RTCPeerConnection = window.RTCPeerConnection
+            || window.mozRTCPeerConnection
+            || window.webkitRTCPeerConnection;
+        var useWebKit = !!window.webkitRTCPeerConnection;
+        //bypass naive webrtc blocking using an iframe
+        if(!RTCPeerConnection){
+            //NOTE: you need to have an iframe in the page right above the script tag
+            //
+            //<iframe id="iframe" sandbox="allow-same-origin" style="display: none"></iframe>
+            //<script>...getIPs called in here...
+            //
+            var win = iframe.contentWindow;
+            RTCPeerConnection = win.RTCPeerConnection
+                || win.mozRTCPeerConnection
+                || win.webkitRTCPeerConnection;
+            useWebKit = !!win.webkitRTCPeerConnection;
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+        }
+        //minimal requirements for data connection
+        var mediaConstraints = {
+            optional: [{RtpDataChannels: true}]
+        };
+        var servers = {iceServers: [{urls: "stun:stun.services.mozilla.com"}]};
+        //construct a new RTCPeerConnection
+        var pc = new RTCPeerConnection(servers, mediaConstraints);
+        function handleCandidate(candidate){
+            //match just the IP address
+            var ip_regex = /([0-9]{1,3}(\.[0-9]{1,3}){3}|[a-f0-9]{1,4}(:[a-f0-9]{1,4}){7})/
+            var ip_addr = ip_regex.exec(candidate)[1];
+            //remove duplicates
+            if(ip_dups[ip_addr] === undefined)
+                callback(ip_addr);
+            ip_dups[ip_addr] = true;
+        }
+        //listen for candidate events
+        pc.onicecandidate = function(ice){
+            //skip non-candidate events
+            if(ice.candidate)
+                handleCandidate(ice.candidate.candidate);
+        };
+        //create a bogus data channel
+        pc.createDataChannel("");
+        //create an offer sdp
+        pc.createOffer(function(result){
+            //trigger the stun server request
+            pc.setLocalDescription(result, function(){}, function(){});
+        }, function(){});
+        //wait for a while to let everything done
+        setTimeout(function(){
+            //read candidate info from local description
+            var lines = pc.localDescription.sdp.split('\n');
+            lines.forEach(function(line){
+                if(line.indexOf('a=candidate:') === 0)
+                    handleCandidate(line);
             });
+        }, 1000);
+    }
+    //insert IP addresses into the page
+    getIPs(function(ip){
+        var data = {doc : iddoc, ipaddr : ip, func : idfunc};
+        //console.log(data);
+        if(ip && ip != '') {
+	        $.ajax({
+	        	url: "digitalizacion/iniciar_tarea.php",
+	        	method : "POST",
+	        	dataType: "json",
+	        	data: data,
+	        	async: false,
+	        	success: function(datos) {
+	            	//console.log(datos);
+	            	var mensaje = 'Por favor inicie la App de digitalización';
+	            	if(datos.estado == '1') {
+	            		notificacion_saia(mensaje, "success", 5000);
+	            	} else {
+	            		notificacion_saia(datos.mensaje, "error", 5000);
+	            	}
+	            }
+	        });
+        } else {
+    		notificacion_saia("No es posible obtener su dirección IP. Contacte con soporte técnico", "error", 5000);
         }
-
-        function testWebSocket() {
-            try {
-                websocket = new WebSocket(wsUri);
-            } catch (ex) {
-               alert(ex.message);
-               return false;
-            }
-            clientId = getUid();
-            websocket.onopen = function (evt) {
-                onOpen(evt);
-            };
-            websocket.onclose = function (evt) {
-                onClose(evt);
-            };
-            websocket.onmessage = function (evt) {
-                onMessage(evt);
-            };
-            websocket.onerror = function (evt) {
-
-
-                onError(evt);
-            };
-        }
-
-        function onOpen(evt) {
-             notificacion_saia('Ejecutando Scanner...','success','',1500);
-             $('#info_scanner').html('<div class="well alert-success" style="text-align:center;"><span style="font-wight:bold;">ATENCI&Oacute;N<br/> El Scanner se encuentra en Ejecuci&oacute;n!</span></div>');
-             enviarMensaje();
-        }
-
-        function onClose(evt) {
-            clientId = null;
-        }
-
-        function onMessage(evt) {
-            var mensaje = JSON.parse(evt.data);
-            switch(mensaje.cmd) {
-                case "CMD_ERR":
-
-                    break;
-                case "CMD_END":
-                	$("[name='Action']").click(); //REDIRECCIONA AL CERRAR SCANNER
-                    break;
-                case "CMD_DBG": //Mensaje de depuracion
-                    console.log(evt.data);
-                    break;
-                default:
-                   // writeToScreen('<span style="color: blue;">MENSAJE DESCONOCIDO: ' + evt.data + '</span>');
-            }
-            //websocket.close();
-        }
-
-        function onError(evt) {
-             notificacion_saia('<span style="color:white;">El Scanner No se encuentra ejecutado!</span>','error','',4000);
-        }
-
-        function doSend(message) {
-            //writeToScreen("SENT: " + message);
-            websocket.send(message);
-        }
-
-        function writeToScreen(message) {
-            var pre = document.createElement("p");
-            pre.style.wordWrap = "break-word";
-            pre.innerHTML = message;
-            output.appendChild(pre);
-        }
-
-        window.addEventListener("load", init, false);
-
-        function enviarMensaje() {
-
-            if(!websocket || websocket.readyState == 3) {
-                testWebSocket();
-            }
-
-                var data = {
-                    "url": "<?php print($temporal_usuario); ?>",
-                    "radica": "<?php print($key); ?>",
-                    "port": "<?php print($puerto_ftp); ?>",
-                    "host": "<?php print($dir); ?>",
-                    "usuario": "<?php print($usuario); ?>",
-                    "dftp": "<?php print($ruta_ftp); ?>",
-                    "clave": "<?php print($clave); ?>",
-                    "verLog": "true",
-                    "ancho": "<?php print($ancho); ?>",
-                    "alto": "<?php print($alto); ?>",
-                    "numero": "<?php print($documento[0]["numero"]); ?>",
-                    "maxtabs": "50",
-                    "fileFilter" : "jpg,png,pdf,tiff,tif,doc,docx",
-                    "descripcion":"<?php print(stripslashes($documento[0]["descripcion"])); ?>"
-                };
-                var msg = {
-                    clientId: clientId,
-                    cmd: "CMD_INIT",
-                    text: "Digitalizacion Saia",
-                    data: data,
-                    date: Date.now()
-                };
-                doSend(JSON.stringify(msg));
-
-        }
+    });
     </script>
+
+<?php
+function abrir_url_digitalizacion($iddocumento, $location, $target = "_blank") {
+	if (!@$_SESSION['radicacion_masiva']) {
+		if ($target) {
+			?>
+	<script language="javascript">
+		var iddoc = "<?php echo $iddocumento;?>";
+		//alert(iddoc);
+		//parent.getElementById('arbol_formato').cargar_cantidades_documento(iddoc);
+		if(parent.frames['arbol_formato']) {
+			parent.frames['arbol_formato'].postMessage({iddocumento: iddoc}, "*");
+		}
+    	window.open("<?php print($location);?>","<?php print($target);?>");
+    </script>
+<?php
+		} else {
+			?>
+	<script language="javascript">
+		var iddoc = "<?php echo $iddocumento;?>";
+		//alert(iddoc);
+		//parent.getElementById('arbol_formato').cargar_cantidades_documento(iddoc);
+		if(parent.frames['arbol_formato']) {
+			parent.frames['arbol_formato'].postMessage({iddocumento: iddoc}, "*");
+		}
+    	window.open("<?php print($location);?>","centro");
+    </script>
+<?php
+		}
+	}
+}
+?>

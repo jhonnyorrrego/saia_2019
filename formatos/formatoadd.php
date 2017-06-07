@@ -373,10 +373,10 @@ echo $x_contador_idcontadorList;
 			<td bgcolor="#F5F5F5"><span class="phpmaker">
         <?php
 								$formatos = busca_filtro_tabla("", "serie A", "tvd=0", "nombre DESC", $conn);
-								if($formatos["numcampos"]) {
-									$inicio = '<SELECT name="x_serie_idserie"><OPTION value="0">Sin Serie Documental</OPTION><OPTION value="" selected>Crear Serie Documental</OPTION>';
-									$fin = '</SELECT>';
-								}
+								
+								$inicio = '<SELECT name="x_serie_idserie"><OPTION value="0">Sin Serie Documental</OPTION><OPTION value="" selected>Crear Serie Documental</OPTION>';
+								$fin = '</SELECT>';
+								
 								for($i = 0; $i < $formatos["numcampos"]; $i++) {
 									$inicio .= '<OPTION value="' . $formatos[$i]["idserie"] . '">' . $formatos[$i]["nombre"] . "-e" . $formatos[$i]["codigo"] . '</OPTION>';
 								}

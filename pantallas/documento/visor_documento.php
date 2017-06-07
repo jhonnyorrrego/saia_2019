@@ -16,11 +16,11 @@ require_once $ruta_db_superior . 'filesystem/SaiaStorage.php';
 
 $iddoc=@$_REQUEST["iddoc"];
 menu_principal_documento($iddoc,1);
-$datos=busca_filtro_tabla("pdf,plantilla","documento A","A.iddocumento=".$iddoc,"",$conn);
-$es_pdf_word = @$_REQUEST['pdf_word'];
-if ($iddoc && !$es_pdf_word) {
+$datos=busca_filtro_tabla("A.pdf,A.plantilla,B.mostrar_pdf","documento A,formato B","lower(A.plantilla)=B.nombre AND A.iddocumento=".$iddoc,"",$conn);
+if($iddoc && !@$_REQUEST['pdf_word'] && $datos[0]['mostrar_pdf']!=2){
 $exportar_pdf=busca_filtro_tabla("valor","configuracion A","A.nombre='exportar_pdf'","",$conn);
 $export="";
+$ruta_visor="visores/pdf/web/viewer2.php?iddocumento=".$iddoc;
 if($exportar_pdf[0]["valor"]=='html2ps'){
 	$export="exportar_impresion.php?iddoc=".$iddoc."&plantilla=".strtolower($datos[0]["plantilla"])."&rand=".rand(1,100000);
 	} else if ($exportar_pdf[0]["valor"] == 'class_impresion') {
@@ -40,7 +40,8 @@ if(@$_REQUEST["vista"]){
 	$pdf.="&vista=".$_REQUEST["vista"];
 }
 if($datos[0]["pdf"] && is_file($ruta_db_superior.$datos[0]["pdf"]) && !@$_REQUEST["vista"] ){
-	$pdf=$ruta_db_superior.$datos[0]["pdf"];
+	//$pdf=$ruta_db_superior.$datos[0]["pdf"];
+	$pdf=$ruta_db_superior.$ruta_visor;
 }
 } else {
 	  $anexos_documento_word=busca_filtro_tabla("d.ruta","documento a, formato b, campos_formato c, anexos d","lower(a.plantilla)=b.nombre AND b.idformato=c.formato_idformato AND c.nombre='anexo_word' AND c.idcampos_formato=d.campos_formato AND a.iddocumento=".$iddoc." AND d.documento_iddocumento=".$iddoc,"",$conn) ;

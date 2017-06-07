@@ -64,6 +64,8 @@ switch ($sAction)
 <a href="<?php echo $ruta_db_superior; ?>formatos/transferencias_automaticas.php?idformato=<?php echo $_REQUEST["key"];?>">Transferencias automaticas</a>&nbsp;&nbsp;
 <a href="<?php echo $ruta_db_superior; ?>formatos/rutas_automaticas.php?idformato=<?php echo $_REQUEST["key"];?>">Rutas</a>&nbsp;&nbsp;
 <a href="<?php echo $ruta_db_superior; ?>formatos/formatoexport.php?key=<?php echo $_REQUEST["key"];?>">Exportar Formato</a>
+&nbsp;&nbsp;
+<a href="<?php echo $ruta_db_superior; ?>webservice_saia/exportar_importar_formato/exportar_formato/exportar_formato.php?pre_exportar_formato=1&idformato=<?php echo $_REQUEST["key"];?>">Pasar a productivo</a>
 </span></p>
 </span></p>
 <p>

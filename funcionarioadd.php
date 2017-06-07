@@ -264,7 +264,17 @@ switch ($sAction) {
 	
 		<input type="submit" name="Action" value="Adicionar">
 </form>
-
+<script>
+    $(document).ready(function(){
+		
+		$('[name="Action"]').click(function(){
+		    if ($("#funcionarioadd").valid()){
+				$(this).attr('disabled',true);
+		    }	
+		});		
+		
+    });
+</script>
 <?php
 function LoadData($sKey, $conn) {
 	$sKeyWrk = "" . addslashes($sKey) . "";

@@ -30,7 +30,9 @@ function mostrar_origen_reporte($idft_radicacion_entrada){
         $origen=busca_filtro_tabla("b.nombre","datos_ejecutor a, ejecutor b","b.idejecutor=a.ejecutor_idejecutor AND a.iddatos_ejecutor=".$datos[0]['persona_natural'],"",$conn);
 
     }else{
-        $origen=busca_filtro_tabla("concat(nombres,' ',apellidos) AS nombre","vfuncionario_dc","iddependencia_cargo=".$datos[0]['area_responsable'],"",$conn);
+    	$array_concat=array("nombres","' '","apellidos");
+		$cadena_concat=concatenar_cadena_sql($array_concat);
+        $origen=busca_filtro_tabla($cadena_concat." AS nombre","vfuncionario_dc","iddependencia_cargo=".$datos[0]['area_responsable'],"",$conn);
     }
     return ($origen[0]['nombre']);
 }
@@ -43,7 +45,9 @@ function mostrar_destino_reporte($idft_destino_radicacion){
     if($datos[0]['tipo_destino']==1){
         $destino=busca_filtro_tabla("b.nombre","datos_ejecutor a, ejecutor b","b.idejecutor=a.ejecutor_idejecutor AND a.iddatos_ejecutor=".$datos[0]['nombre_destino'],"",$conn);
     }else{
-        $destino=busca_filtro_tabla("concat(nombres,' ',apellidos) AS nombre","vfuncionario_dc","iddependencia_cargo=".$datos[0]['nombre_destino'],"",$conn);
+    	$array_concat=array("nombres","' '","apellidos");
+		$cadena_concat=concatenar_cadena_sql($array_concat);    	
+        $destino=busca_filtro_tabla($cadena_concat." AS nombre","vfuncionario_dc","iddependencia_cargo=".$datos[0]['nombre_destino'],"",$conn);
     }
     return ($destino[0]['nombre']);
     
@@ -73,13 +77,17 @@ function planilla_mensajero($idft_destino_radicacion,$mensajero_encargado,$estad
         $disable="disabled";
     }
     if($mensajero_encargado=='mensajero_encargado'){
-        $html.="Sin Mensajero Asignado";
+        $html.="Pendiente";
     }else{
-        $planillas=busca_filtro_tabla("c.numero,c.iddocumento","ft_item_despacho_ingres a,ft_despacho_ingresados b, documento c","a.ft_despacho_ingresados=b.idft_despacho_ingresados AND b.documento_iddocumento=c.iddocumento AND c.estado NOT IN('ELIMINADO','ANULADO') AND a.ft_destino_radicacio=".$idft_destino_radicacion,"",$conn);
+        $condicion_item=" AND ( iddestino_radicacion LIKE '%,".$idft_destino_radicacion.",%' OR iddestino_radicacion LIKE '%,".$idft_destino_radicacion."' OR  iddestino_radicacion LIKE '".$idft_destino_radicacion.",%' OR  iddestino_radicacion='".$idft_destino_radicacion."')"; 
+        $planillas=busca_filtro_tabla("c.numero,c.iddocumento","ft_despacho_ingresados b, documento c","b.documento_iddocumento=c.iddocumento AND c.estado NOT IN('ELIMINADO','ANULADO') ".$condicion_item,"",$conn);
+        
         if($planillas['numcampos']){
             for($i=0;$i<$planillas['numcampos'];$i++){
                 $html.='<div class="link kenlace_saia" enlace="ordenar.php?key='.$planillas[$i]['iddocumento'].'&amp;accion=mostrar&amp;mostrar_formato=1" conector="iframe" titulo="No Radicado '.$planillas[$i]['numero'].'"><center><span class="badge">'.$planillas[$i]['numero']."</span></center></div>\n";
             }
+        }else{
+            $html="No se han generado planillas";
         }
         //$html.="<input type='checkbox' class='planilla_mensajero' ".$disable." mensajero='".$mensajero_encargado."' value='$idft_destino_radicacion'>";
     }
@@ -93,7 +101,7 @@ function planilla_mensajero2($idft_destino_radicacion,$mensajero_encargado,$esta
         $disable="disabled";
     }
     if($mensajero_encargado=='mensajero_encargado'){
-        $html.="Sin Mensajero Asignado";
+        $html.="Pendiente";
     }else{
         $planillas=busca_filtro_tabla("c.numero,c.iddocumento","ft_item_despacho_ingres a,ft_despacho_ingresados b, documento c","a.ft_despacho_ingresados=b.idft_despacho_ingresados AND b.documento_iddocumento=c.iddocumento AND c.estado NOT IN('ELIMINADO','ANULADO') AND a.ft_destino_radicacio=".$idft_destino_radicacion,"",$conn);
         if($planillas['numcampos']){
@@ -109,7 +117,9 @@ function planilla_mensajero2($idft_destino_radicacion,$mensajero_encargado,$esta
 function mostrar_mensajeros_dependencia($idft_destino_radicacion,$estado_item){
     global $ruta_db_superior, $conn;
     $funcionario_codigo=usuario_actual('funcionario_codigo');
-    $cargo=busca_filtro_tabla("lower(cargo) AS cargo, concat(nombres,' ',apellidos) AS nombre","vfuncionario_dc a","a.funcionario_codigo=".$funcionario_codigo,"",$conn);
+    $array_concat=array("nombres","' '","apellidos");
+	$cadena_concat=concatenar_cadena_sql($array_concat);     
+    $cargo=busca_filtro_tabla("lower(cargo) AS cargo, ".$cadena_concat." AS nombre","vfuncionario_dc a","a.funcionario_codigo=".$funcionario_codigo,"",$conn);
     $disable="";
     if($estado_item=='finalizado'){
         $disable="disabled";
@@ -119,30 +129,41 @@ function mostrar_mensajeros_dependencia($idft_destino_radicacion,$estado_item){
     }else{  
     $datos=busca_filtro_tabla('','ft_destino_radicacion','idft_destino_radicacion='.$idft_destino_radicacion,'',conn);
 	
-	$tipo_mensajeria_radicacion=busca_filtro_tabla("tipo_mensajeria,area_responsable","ft_radicacion_entrada","idft_radicacion_entrada=".$datos[0]['ft_radicacion_entrada'],"",$conn);
-	if($tipo_mensajeria_radicacion[0]['tipo_mensajeria']==2 && !$datos[0]['estado_recogida']){
+	$tipo_mensajeria_radicacion=busca_filtro_tabla("tipo_mensajeria,area_responsable,tipo_destino","ft_radicacion_entrada","idft_radicacion_entrada=".$datos[0]['ft_radicacion_entrada'],"",$conn);
+	if(($tipo_mensajeria_radicacion[0]['tipo_mensajeria']==2  || $tipo_mensajeria_radicacion[0]['tipo_mensajeria']==1) && !$datos[0]['estado_recogida']){
 		$datos[0]['nombre_destino']=$tipo_mensajeria_radicacion[0]['area_responsable'];
+	}else if($datos[0]['estado_recogida'] && $tipo_mensajeria_radicacion[0]['tipo_destino']==1){
+		$destino_externo=busca_filtro_tabla("iddependencia_cargo","vfuncionario_dc","lower(cargo) LIKE 'mensajer%extern%'","",$conn);
+		$datos[0]['nombre_destino']=$destino_externo[0]['iddependencia_cargo'];
 	}
 	
-    $destino=busca_filtro_tabla("","vfuncionario_dc","iddependencia_cargo=".$datos[0]['nombre_destino'],"",$conn);
-	$responsable=busca_filtro_tabla("mensajero_ruta","ft_ruta_distribucion a, ft_dependencias_ruta b, ft_funcionarios_ruta c,documento d","a.documento_iddocumento=d.iddocumento AND lower(d.estado)='aprobado' AND b.estado_dependencia=1 AND c.estado_mensajero=1 AND a.idft_ruta_distribucion=b.ft_ruta_distribucion AND a.idft_ruta_distribucion=c.ft_ruta_distribucion AND b.dependencia_asignada=".$destino[0]['iddependencia'],"",$conn);
-	
+    if($datos[0]['estado_recogida'] && $tipo_mensajeria_radicacion[0]['tipo_destino']==1){
+    	$responsable[0]['mensajero_ruta']=$destino_externo[0]['iddependencia_cargo'];
+		$responsable['numcampos']=1;
+    }else{
+    	$destino=busca_filtro_tabla("","vfuncionario_dc","iddependencia_cargo=".$datos[0]['nombre_destino'],"",$conn);
+		$responsable=busca_filtro_tabla("mensajero_ruta","ft_ruta_distribucion a, ft_dependencias_ruta b, ft_funcionarios_ruta c,documento d","a.documento_iddocumento=d.iddocumento AND lower(d.estado)='aprobado' AND b.estado_dependencia=1 AND c.estado_mensajero=1 AND a.idft_ruta_distribucion=b.ft_ruta_distribucion AND a.idft_ruta_distribucion=c.ft_ruta_distribucion AND b.dependencia_asignada=".$destino[0]['iddependencia'],"",$conn);
+	}
     $select="<select class='mensajeros' ".$disable." data-idft='$idft_destino_radicacion' name='responsable_{$idft_destino_radicacion}' style='width:150px;'>";
     
     if($responsable['numcampos']==1){
-            
-            $mensajero=busca_filtro_tabla("concat(nombres,' ',apellidos) AS nombre","vfuncionario_dc","iddependencia_cargo=".$responsable[0]['mensajero_ruta'],"",$conn);
+    		$array_concat=array("nombres","' '","apellidos");
+			$cadena_concat=concatenar_cadena_sql($array_concat);             
+            $mensajero=busca_filtro_tabla($cadena_concat." AS nombre","vfuncionario_dc","iddependencia_cargo=".$responsable[0]['mensajero_ruta'],"",$conn);
             
             if($responsable[0]['mensajero_ruta']==$datos[0]['mensajero_encargado']){
                 $select.="<option value='".$responsable[0]['mensajero_ruta']."' selected>".$mensajero[0]['nombre']."</option>";
             }else{
+            	$select.="<option value='' selected>Seleccione</option>";
                 $select.="<option value='".$responsable[0]['mensajero_ruta']."'>".$mensajero[0]['nombre']."</option>";
             }
     }else{
         
         $select.="<option value=''>Seleccione</option>";
         for($i=0;$i<$responsable['numcampos'];$i++){
-            $mensajero=busca_filtro_tabla("concat(nombres,' ',apellidos) AS nombre","vfuncionario_dc","iddependencia_cargo={$responsable[$i]['mensajero_ruta']}","",$conn);
+    		$array_concat=array("nombres","' '","apellidos");
+			$cadena_concat=concatenar_cadena_sql($array_concat);          	
+            $mensajero=busca_filtro_tabla($cadena_concat." AS nombre","vfuncionario_dc","iddependencia_cargo={$responsable[$i]['mensajero_ruta']}","",$conn);
             if($responsable[$i]['mensajero_ruta']==$datos[0]['mensajero_encargado']){
                 $select.="<option value='{$responsable[$i]['mensajero_ruta']}' selected>".$mensajero[0]['nombre']."</option>";
             }else{
@@ -172,16 +193,9 @@ function ver_items($iddocumento, $numero,$fecha_radicacion_entrada,$tipo) {
 function condicion_adicional(){
     global $ruta_db_superior, $conn;
     
+    $condicion="";
     if(@$_REQUEST['variable_busqueda']){
         $condicion="AND B.mensajero_encargado=".$_REQUEST['variable_busqueda'];
-    }else{
-        $funcionario_codigo=usuario_actual('funcionario_codigo');
-        $cargo=busca_filtro_tabla("lower(cargo) AS cargo, iddependencia_cargo","vfuncionario_dc a","a.funcionario_codigo=".$funcionario_codigo,"",$conn);
-        for($i=0;$i<$cargo['numcampos'];$i++){
-        if($cargo[$i]['cargo']=="mensajero"){
-            $condicion="AND B.mensajero_encargado=".$cargo[$i]['iddependencia_cargo'];
-        }
-        }
     }
     return $condicion;
 }
@@ -196,7 +210,9 @@ function filtrar_mensajero(){
     
     $select="<select class='pull-left btn btn-mini dropdown-toggle' style='height:22px; margin-left: 30px;' name='filtro_mensajeros' id='filtro_mensajeros'>";
     $select.="<option value=''>Todos Los Mensajeros</option>";
-    $datos=busca_filtro_tabla("iddependencia_cargo, concat(nombres,' ',apellidos) AS nombre","vfuncionario_dc","lower(cargo)='mensajero' AND estado_dc=1","",$conn);
+	$array_concat=array("nombres","' '","apellidos");
+	$cadena_concat=concatenar_cadena_sql($array_concat);
+    $datos=busca_filtro_tabla("iddependencia_cargo, ".$cadena_concat." AS nombre","vfuncionario_dc","lower(cargo)='mensajero' AND estado_dc=1","",$conn);
     //print_r($datos);die();
     $filtrar_mensajero=@$_REQUEST['variable_busqueda'];
     for($i=0;$i<$datos['numcampos'];$i++){
@@ -231,7 +247,9 @@ function aceptar_recepcion($idft_destino_radicacion){
         $funcionario=busca_filtro_tabla("nombres,apellidos","vfuncionario_dc","iddependencia_cargo=".$datos[0]['recepcion'],"",$conn);
         $input.="</br>".$funcionario[0]['nombres']." ".$funcionario[0]['apellidos']."<br>".$datos[0]['recepcion_fecha'];
     }else{
-        $planillas=busca_filtro_tabla("c.numero,c.iddocumento","ft_item_despacho_ingres a,ft_despacho_ingresados b, documento c","a.ft_despacho_ingresados=b.idft_despacho_ingresados AND b.documento_iddocumento=c.iddocumento AND c.estado NOT IN('ELIMINADO','ANULADO') AND a.ft_destino_radicacio=".$idft_destino_radicacion,"",$conn);
+        //$planillas=busca_filtro_tabla("c.numero,c.iddocumento","ft_item_despacho_ingres a,ft_despacho_ingresados b, documento c","a.ft_despacho_ingresados=b.idft_despacho_ingresados AND b.documento_iddocumento=c.iddocumento AND c.estado NOT IN('ELIMINADO','ANULADO') AND a.ft_destino_radicacio=".$idft_destino_radicacion,"",$conn);
+	$condicion_item=" AND ( iddestino_radicacion LIKE '%,".$idft_destino_radicacion.",%' OR iddestino_radicacion LIKE '%,".$idft_destino_radicacion."' OR  iddestino_radicacion LIKE '".$idft_destino_radicacion.",%' OR  iddestino_radicacion='".$idft_destino_radicacion."')";
+        $planillas=busca_filtro_tabla("c.numero,c.iddocumento","ft_despacho_ingresados b, documento c","b.documento_iddocumento=c.iddocumento AND c.estado NOT IN('ELIMINADO','ANULADO') ".$condicion_item,"",$conn);
         if($planillas['numcampos']){
             $input="<input type='checkbox' name='recepcion[]' value='".$idft_destino_radicacion.'|'.$cargo[0]['iddependencia_cargo']."|".$datos[0]['ft_radicacion_entrada']."'>";
         }else{
@@ -312,7 +330,7 @@ function mostrar_tramite_radicacion($idft_destino_radicacion,$tipo_mensajeria,$e
     global $ruta_db_superior, $conn;
 	
 	$tramite='ENTREGA';
-	if($tipo_mensajeria==2 && ($estado_recogida==0 || $estado_recogida=='estado_recogida') ){
+	if(($tipo_mensajeria==2 || $tipo_mensajeria==1) && ($estado_recogida==0 || $estado_recogida=='estado_recogida') ){
 		$tramite='RECOGIDA';
 	}
 	return($tramite);

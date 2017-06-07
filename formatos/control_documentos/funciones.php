@@ -748,9 +748,12 @@ function confirmar_control_documentos($idformato, $iddoc){
 			    
 			    //CARGO_FUNCIONAL (aprobador calidad)
 	            $cf_versionador_calidad=busca_filtro_tabla("login","vfuncionario_dc","estado=1 AND tipo_cargo=2 AND lower(cargo) LIKE 'aprobador%calidad'","",$conn);
-			    if(usuario_actual('login')==$cf_versionador_calidad[0]['login']){
-			         echo($boton);
-			    }
+	            $actual_logueado=usuario_actual('login');
+	            for($i=0;$i<$cf_versionador_calidad['numcampos'];$i++){
+				    if($actual_logueado==$cf_versionador_calidad[$i]['login']){
+				         echo($boton);
+				    }	            	
+	            }
 			
 			}			
 		}

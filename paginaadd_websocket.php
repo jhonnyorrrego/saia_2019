@@ -201,8 +201,8 @@ $config = busca_filtro_tabla("valor", "configuracion", "nombre='color_encabezado
 			case "clave_ftp" :
 				if($configuracion[$i]['encrypt']){
 					include_once('pantallas/lib/librerias_cripto.php');
-					$configuracion[$i]['valor']=decrypt_blowfish($configuracion[$i]['valor'],LLAVE_SAIA_CRYPTO);					
-				}					
+					$configuracion[$i]['valor']=decrypt_blowfish($configuracion[$i]['valor'],LLAVE_SAIA_CRYPTO);
+				}
 				$clave = $configuracion[$i]["valor"];
 				break;
 			case "usuario_ftp" :
@@ -217,8 +217,16 @@ $config = busca_filtro_tabla("valor", "configuracion", "nombre='color_encabezado
 			case "alto_imagen" :
 				$alto = $configuracion[$i]["valor"];
 				break;
+			case 'tipo_ftp' :
+				$ftp_type = $configuracion[$i]["valor"];
+				break;
 		}
 	}
+
+	if(!$ftp_type || $ftp_type==''){
+		$ftp_type = "ftp";
+	}
+
 	?>
 
 	<input type="hidden" name="EW_Max_File_Size" value="<?php echo($peso); ?>">
@@ -269,24 +277,7 @@ $config = busca_filtro_tabla("valor", "configuracion", "nombre='color_encabezado
 				<input type="radio" name="x_escaneo" value="0" checked>
 			</span></td>
 		</tr>
-		
-		
-		<!--tr>
-			<td colspan="3">
-			<applet code="uk.co.mmscomputing.application.imageviewer.MainApp.class"  archive="visor.jar" width="100%" height="640" name="scaner">
-				<param name="url" value="<?php print($temporal_usuario); ?>">
-				<param name="radica" value="<?php print($key); ?>">
-				<param name="port" value="<?php print($puerto_ftp); ?>">
-				<param name="host" value="<?php print($dir); ?>">
-				<param name="usuario" value="<?php print($usuario); ?>">
-				<param name="dftp" value="<?php print($ruta_ftp); ?>">
-				<param name="clave" value="<?php print($clave); ?>">
-				<param name="verLog" value="true">
-				<param name="ancho" value="<?php print($ancho); ?>">
-				<param name="alto" value="<?php print($alto); ?>">
-				<param name="maxtabs" value="50">
-			</applet></td>
-		</tr-->
+
 	</table>
 	<div class="container" id="info_scanner"></div>
 
@@ -405,7 +396,15 @@ if (PROTOCOLO_CONEXION == 'https://') {
             if(!websocket || websocket.readyState == 3) {
                 testWebSocket();
             }
-
+                <?php
+                    //parseo descripcion
+                    $documento[0]["descripcion"]=codifica_encabezado(html_entity_decode($documento[0]["descripcion"]));
+                    if($documento[0]["descripcion"]!=''){
+                        if(strlen($documento[0]["descripcion"])>30){
+                            $documento[0]["descripcion"]=substr( $documento[0]["descripcion"],0,30).'...';
+                        }
+                    }
+                ?>
                 var data = {
                     "url": "<?php print($temporal_usuario); ?>",
                     "radica": "<?php print($key); ?>",
@@ -414,13 +413,14 @@ if (PROTOCOLO_CONEXION == 'https://') {
                     "usuario": "<?php print($usuario); ?>",
                     "dftp": "<?php print($ruta_ftp); ?>",
                     "clave": "<?php print($clave); ?>",
-                    "verLog": "true",
+                    "verLog": "false",
                     "ancho": "<?php print($ancho); ?>",
                     "alto": "<?php print($alto); ?>",
                     "numero": "<?php print($documento[0]["numero"]); ?>",
                     "maxtabs": "50",
                     "fileFilter" : "jpg,png,pdf,tiff,tif,doc,docx",
-                    "descripcion":"<?php print(stripslashes($documento[0]["descripcion"])); ?>"
+                    "descripcion":"<?php print(stripslashes($documento[0]["descripcion"])); ?>",
+                    "ftp_type" : "<?php echo $ftp_type;?>"
                 };
                 var msg = {
                     clientId: clientId,

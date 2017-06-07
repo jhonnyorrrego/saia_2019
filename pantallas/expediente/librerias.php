@@ -42,40 +42,34 @@ function permiso_funcionario_expediente($expediente,$entidad,$llave){
 
 function mostrar_informacion_adicional_expediente($idexpediente){
     global $conn; 
-    
     $cadena='';
-    
     //EXPEDIENTE
-    $expediente_actual=busca_filtro_tabla("serie_idserie,propietario","expediente","idexpediente=".$idexpediente,"",$conn);
-    
-    //NOMBRE DE LA DEPENDENCIA
-    $dependencia_propietario=busca_filtro_tabla("dependencia","vfuncionario_dc","estado_dc=1 AND funcionario_codigo=".$expediente_actual[0]['propietario'],"",$conn);
-    $nombre_dependencia_propietario=$dependencia_propietario[0]['dependencia'];  
-    $cadena.=$nombre_dependencia_propietario;
-    
+    $expediente_actual=busca_filtro_tabla("serie_idserie","expediente","idexpediente=".$idexpediente,"",$conn);
     //NOMBRE DE LA SERIE
     $serie=busca_filtro_tabla("nombre","serie","idserie=".$expediente_actual[0]['serie_idserie'],"",$conn);
+    
+    if($serie['numcampos']){
+        $cadena.=$serie[0]['nombre'];
+    }
     $cadena.='<br>';
-    $cadena.=$serie[0]['nombre'];
     return($cadena);
 }
 
 function enlace_expediente($idexpediente,$nombre){
 	global $conn;    
 
-    $expediente_actual=busca_filtro_tabla("tomo_padre,tomo_no,serie_idserie,propietario","expediente","idexpediente=".$idexpediente,"",$conn);
-    //$dependencia_propietario=busca_filtro_tabla("dependencia","vfuncionario_dc","estado_dc=1 AND funcionario_codigo=".$expediente_actual[0]['propietario'],"",$conn);
-    //$nombre_dependencia_propietario=$dependencia_propietario[0]['dependencia'];
-    
-    $tomo_padre=$idexpediente;
-    if($expediente_actual[0]['tomo_padre']){
-        $tomo_padre=$expediente_actual[0]['tomo_padre'];
+    $expediente_actual=busca_filtro_tabla("tomo_padre,tomo_no,serie_idserie,propietario,agrupador","expediente","idexpediente=".$idexpediente,"",$conn);
+    $cadena_tomos="";
+    if(!$expediente_actual[0]['agrupador']){
+        $tomo_padre=$idexpediente;
+        if($expediente_actual[0]['tomo_padre']){
+            $tomo_padre=$expediente_actual[0]['tomo_padre'];
+        }
+        $ccantidad_tomos=busca_filtro_tabla("idexpediente","expediente","tomo_padre=".$tomo_padre,"",$conn);
+        $cantidad_tomos=$ccantidad_tomos['numcampos']+1; //tomos + el padre  
+        $cadena_tomos=("&nbsp;&nbsp;&nbsp;<i><b style='font-size:10px;'>Tomo: </b></i><i style='font-size:10px;'>".$expediente_actual[0]['tomo_no']." de ".$cantidad_tomos."</i>");
+            
     }
-    $ccantidad_tomos=busca_filtro_tabla("idexpediente","expediente","tomo_padre=".$tomo_padre,"",$conn);
-    $cantidad_tomos=$ccantidad_tomos['numcampos']+1; //tomos + el padre  
-    $cadena_tomos=("&nbsp;&nbsp;&nbsp;<i><b style='font-size:10px;'>Tomo: </b></i><i style='font-size:10px;'>".$expediente_actual[0]['tomo_no']." de ".$cantidad_tomos."</i>");
-
-    
     return("<div style='' class='link kenlace_saia' enlace='pantallas/busquedas/consulta_busqueda_expediente.php?idbusqueda_componente=".$_REQUEST["idbusqueda_componente"]."&idexpediente=".$idexpediente."&variable_busqueda=".@$_REQUEST['variable_busqueda']."' conector='iframe' titulo='".$nombre."'><table><tr><td style='font-size:12px;'> <i class=' icon-folder-open pull-left'></i>&nbsp;<b>".$nombre."</b>&nbsp;".$cadena_tomos."</td></tr></table></div>");
 }
 function request_expediente_padre(){
@@ -457,7 +451,7 @@ function enlaces_adicionales_expediente($idexpediente, $nombre,$estado_cierre,$p
 		$e = 1;
 		$p = 1;
 	} else {
-		$permiso = busca_filtro_tabla("permiso", "entidad_expediente", "entidad_identidad=1 and estado=1 and llave_entidad=" . usuario_actual("idfuncionario"), "", $conn);
+		$permiso = busca_filtro_tabla("permiso", "entidad_expediente", "expediente_idexpediente=".$idexpediente." AND entidad_identidad=1 and estado=1 and llave_entidad=" . usuario_actual("idfuncionario"), "", $conn);
 		if ($permiso["numcampos"] && $permiso[0]["permiso"] != "") {
 			if (strpos($permiso[0]["permiso"], "m") !== false) {
 				$m = 1;
@@ -478,7 +472,7 @@ function enlaces_adicionales_expediente($idexpediente, $nombre,$estado_cierre,$p
 		$texto.='<div class=\'btn btn-mini eliminar_expediente tooltip_saia pull-right\' idregistro=\''.$idexpediente.'\' title=\'Eliminar '.$nombre.'\'><i class=\'icon-remove\'></i></div>';
 	}
 	if ($m) {
-		$texto.='<div class=\'btn btn-mini enlace_expediente tooltip_saia pull-right\' idregistro=\''.$idexpediente.'\' title=\'Editar '.$nombre.'\' enlace=\'pantallas/expediente/editar_expediente.php?idexpediente='.$idexpediente.'\'><i class=\'icon-pencil\'></i></div>';
+		$texto.='<div class=\'btn btn-mini enlace_expediente tooltip_saia pull-right\' idregistro=\''.$idexpediente.'\' title=\'Editar '.$nombre.'\' enlace=\'pantallas/expediente/editar_expediente.php?idexpediente='.$idexpediente.'&idbusqueda_componente='.@$_REQUEST['idbusqueda_componente'].'&div_actualiza=resultado_pantalla_'.$idexpediente.'\'><i class=\'icon-pencil\'></i></div>';
 	}
 	$texto.='<div class=\'btn btn-mini link kenlace_saia tooltip_saia pull-right\' title=\'Imprimir rotulo\' titulo=\'Imprimir rotulo\' enlace=\'pantallas/caja/rotulo.php?idexpediente='.$idexpediente.'\' conector=\'iframe\'><i class=\'icon-print\'></i></div>';
 	if ($p) {

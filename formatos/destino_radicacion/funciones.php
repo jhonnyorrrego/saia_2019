@@ -12,11 +12,12 @@ $max_salida--;
 }
 
 include_once($ruta_db_superior."db.php");
+include_once($ruta_db_superior."librerias_saia.php");
 include_once($ruta_db_superior."formatos/librerias_funciones_generales.php");
 
 function ocultar_campos_destino_radicacion($idformato,$iddoc){
     global $conn,$ruta_db_superior;
-    
+    echo(librerias_jquery('1.7'));
     $datos=busca_filtro_tabla('','ft_radicacion_entrada','idft_radicacion_entrada='.$_REQUEST['padre'],'',conn);
     //print_r($datos);
     
@@ -88,5 +89,20 @@ function ocultar_campos_destino_radicacion($idformato,$iddoc){
             </script>
         <?php 
     }
+    
+    //Seleccionar origen automaticamente
+   if($datos[0]['tipo_origen']==2){?>
+   <script>
+   $(document).ready(function(){
+     tree_nombre_origen.setOnLoadingEnd(fin_cargando_nombre_origen2);
+   });
+   
+   function fin_cargando_nombre_origen2(){
+     tree_nombre_origen.setCheck(<?php echo($datos[0]["area_responsable"]); ?>,true);
+     $("#nombre_origen").val("<?php echo($datos[0]["area_responsable"]); ?>");
+     tree_nombre_origen.openItem(<?php echo($datos[0]["area_responsable"]); ?>);
+   }
+   </script>
+   <?php }    
 }
 ?>

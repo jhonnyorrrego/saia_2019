@@ -1,7 +1,6 @@
 <?php
 include_once("conexion.php");
-class SQL
-{
+class SQL {
     var $consulta,$motor;
     var $Conn;
     var $res=NULL;
@@ -12,6 +11,7 @@ class SQL
     var $numfilas=NULL;
     var $ultimo_insert=NULL;
     var $filas=0;
+
 /*
 <Clase>SQL
 <Nombre>SQL.
@@ -23,11 +23,11 @@ class SQL
 <Pre-condiciones>debe existir una conexion a la base de datos
 <Post-condiciones>
 */
-  function SQL($conn, $motorBd)
-  	{
+  function __construct($conn, $motorBd) {
           $this->Conn = $conn;
           $this->motor = $motorBd;
   	}
+
 /*
 <Clase>SQL
 <Nombre>Buscar.
@@ -258,16 +258,16 @@ function liberar_resultado_MSSql($rs){
 		$strsql = trim($sql);
 		$strsql = str_replace(" =", "=", $strsql);
 		$strsql = str_replace("= ", "=", $strsql);
-		$accion = strtoupper(substr($strsql, 0, strpos($strsql, ' ')));    
+		$accion = strtoupper(substr($strsql, 0, strpos($strsql, ' ')));
 		if($accion=="INSERT" || $accion=="UPDATE"){
 			$sql=htmlentities($sql, ENT_NOQUOTES, "UTF-8",false);
 			$sql=htmlspecialchars_decode($sql,ENT_NOQUOTES);
-		}  
-      	
+		}
+
         switch ($this->motor)
         {
             case "MySql":
-               
+
                 return($this->Ejecutar_Sql_MySql($sql));
             break;
             case "Oracle":
@@ -296,13 +296,13 @@ la matriz con los valores del resultado se obtiene por medio de la función Resu
 */
   function Ejecutar_Sql_MySql($sql)
     {
-        
+
         $this->filas=0;
      if($sql && $sql<>"" && $this->Conn->conn){
          $this->res=mysqli_query($this->Conn->conn,$sql); // or die("ERROR SQL ".mysqli_error($this->Conn->conn)." en ".$_SERVER["PHP_SELF"]." ->".$sql);// or error//("Error al Ejecutar:  $sql --- ".mysql_error());
-         
-   
-         
+
+
+
         if($this->res){
          if(strpos(strtolower($sql),"insert")!==false)
             $this->ultimo_insert=$this->Ultimo_Insert_Mysql();
@@ -316,7 +316,7 @@ la matriz con los valores del resultado se obtiene por medio de la función Resu
 
           $this->consulta=trim($sql);
           //$fin=strpos($this->consulta," ");
-          //$accion=substr($this->consulta,0,$fin); 
+          //$accion=substr($this->consulta,0,$fin);
         }
         return($this->res);
       }
@@ -390,6 +390,11 @@ function Ejecutar_Sql_MSSql($sql)
                 {
                 	$this->ultimo_insert=0;
                 }
+            }else{
+            	if(DEBUGEAR){
+            		$e=oci_error($rs);
+					print_r($e);
+            	}
             }
         }
       if(strpos(strtolower($sql),'select')!==false)
@@ -971,27 +976,43 @@ valores-los valores a insertar
 */
 
   function Lista_Tabla($db){
-    if($this->motor=="MySql"){
-       $this->res=mysqli_query($this->Conn->conn,"SHOW TABLES") or die("Error en la Ejecucución del Proceso SQL: " . mysqli_error($this->Conn->conn));
-       while($row=mysqli_fetch_row($this->res))
-       $resultado[]=$row[0];
-    }
-    else if($this->motor=="MSSql"){
-      mssql_query("USE ".$this->Conn->Db,$this->Conn->conn);
-      $this->res=mssql_query("select name AS nombre from sysobjects where type='U'",$this->Conn->conn) or die("Error en la Ejecucucion del Proceso MSSQL: ".mssql_get_last_message());
-      while($row=mssql_fetch_array($this->res,MSSQL_NUM))
-        $resultado[]=$row[0];
-      asort($resultado);
-    }
-     else if($this->motor=="SqlServer"){
-       sqlsrv_query($this->Conn->conn,"USE ".$this->Conn->Db);
-       $this->res=sqlsrv_query($this->Conn->conn,"select name AS nombre from sysobjects where type='U'");
-       while($row=sqlsrv_fetch_array($this->res,SQLSRV_FETCH_NUMERIC))
-            $resultado[]=$row[0];
-       asort($resultado);
-     }
-    return($resultado);
+		switch ($this->motor) {
+			case "MySql" :
+				$this->res = mysqli_query($this->Conn->conn, "SHOW TABLES") or die("Error en la Ejecucución del Proceso SQL: " . mysqli_error($this->Conn->conn));
+				while($row = mysqli_fetch_row($this->res))
+					$resultado[] = $row[0];
+				break;
+			case "MSSql" :
+				mssql_query("USE " . $this->Conn->Db, $this->Conn->conn);
+				$this->res = mssql_query("select name AS nombre from sysobjects where type='U'", $this->Conn->conn) or die("Error en la Ejecucucion del Proceso MSSQL: " . mssql_get_last_message());
+				while($row = mssql_fetch_array($this->res, MSSQL_NUM))
+					$resultado[] = $row[0];
+				asort($resultado);
+				break;
+			case "SqlServer" :
+				sqlsrv_query($this->Conn->conn, "USE " . $this->Conn->Db);
+				$this->res = sqlsrv_query($this->Conn->conn, "select name AS nombre from sysobjects where type='U'");
+				while($row = sqlsrv_fetch_array($this->res, SQLSRV_FETCH_NUMERIC))
+					$resultado[] = $row[0];
+				asort($resultado);
+				break;
+			case "Oracle":
+				$rs = @ OCIParse($this->Conn->conn, "SELECT table_name FROM user_tables ORDER BY table_name");
+				if ($rs) {
+					if (@OCIExecute($rs, OCI_COMMIT_ON_SUCCESS)) {
+						$this->res = $rs;
+						while($row = oci_fetch_array($this->res, OCI_BOTH + OCI_RETURN_NULLS)) {
+							$resultado[] = $row[0];
+						}
+					} else {
+						$this->error = OCIError($rs);
+					}
+				}
+				break;
+		}
+		return ($resultado);
   }
+
 /*
 <Clase>SQL
 <Nombre>Lista_Bd
@@ -1102,9 +1123,9 @@ valores-los valores a insertar
 	  sqlsrv_query($this->Conn->conn,"USE ".$this->Conn->Db) or die ($this->consulta);
 	  $this->res=sqlsrv_query($this->Conn->conn,$this->consulta);
 	  while($row=sqlsrv_fetch_array($this->res,SQLSRV_FETCH_NUMERIC))
-	  $resultado[]=$row[0]; 
-	  
-	  asort($resultado);      
+	  $resultado[]=$row[0];
+
+	  asort($resultado);
 	  return($resultado);
 	}
     function Busca_tabla_MSSql($tabla){
@@ -1450,7 +1471,7 @@ $conn-objeto de tipo sql
 <Post-condiciones>
 */
   function Ultimo_Insert_Mysql()
-    { 
+    {
     	return @mysqli_insert_id($this->Conn->conn);
     }
 

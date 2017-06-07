@@ -18,19 +18,30 @@ class InMemoryBuffer implements Stream
     private $synchronized;
 
     /**
+<<<<<<< HEAD
      * Constructor
      *
+=======
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      * @param Filesystem $filesystem The filesystem managing the file to stream
      * @param string     $key        The file key
      */
     public function __construct(Filesystem $filesystem, $key)
     {
         $this->filesystem = $filesystem;
+<<<<<<< HEAD
         $this->key     = $key;
     }
 
     /**
      * {@inheritDoc}
+=======
+        $this->key = $key;
+    }
+
+    /**
+     * {@inheritdoc}
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function open(StreamMode $mode)
     {
@@ -66,7 +77,11 @@ class InMemoryBuffer implements Stream
         }
 
         $chunk = substr($this->content, $this->position, $count);
+<<<<<<< HEAD
         $this->position+= Util\Size::fromContent($chunk);
+=======
+        $this->position += Util\Size::fromContent($chunk);
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
 
         return $chunk;
     }
@@ -79,23 +94,41 @@ class InMemoryBuffer implements Stream
 
         $numWrittenBytes = Util\Size::fromContent($data);
 
+<<<<<<< HEAD
         $newPosition     = $this->position + $numWrittenBytes;
         $newNumBytes     = $newPosition > $this->numBytes ? $newPosition : $this->numBytes;
+=======
+        $newPosition = $this->position + $numWrittenBytes;
+        $newNumBytes = $newPosition > $this->numBytes ? $newPosition : $this->numBytes;
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
 
         if ($this->eof()) {
             $this->numBytes += $numWrittenBytes;
             if ($this->hasNewContentAtFurtherPosition()) {
+<<<<<<< HEAD
                 $data = str_pad($data, $this->position + strlen($data), " ", STR_PAD_LEFT);
+=======
+                $data = str_pad($data, $this->position + strlen($data), ' ', STR_PAD_LEFT);
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
             }
             $this->content .= $data;
         } else {
             $before = substr($this->content, 0, $this->position);
+<<<<<<< HEAD
             $after  = $newNumBytes > $newPosition ? substr($this->content, $newPosition) : '';
             $this->content  = $before . $data . $after;
         }
 
         $this->position     = $newPosition;
         $this->numBytes     = $newNumBytes;
+=======
+            $after = $newNumBytes > $newPosition ? substr($this->content, $newPosition) : '';
+            $this->content = $before.$data.$after;
+        }
+
+        $this->position = $newPosition;
+        $this->numBytes = $newNumBytes;
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
         $this->synchronized = false;
 
         return $numWrittenBytes;
@@ -103,7 +136,11 @@ class InMemoryBuffer implements Stream
 
     public function close()
     {
+<<<<<<< HEAD
         if (! $this->synchronized) {
+=======
+        if (!$this->synchronized) {
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
             $this->flush();
         }
     }
@@ -153,12 +190,17 @@ class InMemoryBuffer implements Stream
     }
 
     /**
+<<<<<<< HEAD
      * {@inheritDoc}
+=======
+     * {@inheritdoc}
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function stat()
     {
         if ($this->filesystem->has($this->key)) {
             $isDirectory = $this->filesystem->isDirectory($this->key);
+<<<<<<< HEAD
             $time        = $this->filesystem->mtime($this->key);
 
             $stats = array(
@@ -170,11 +212,28 @@ class InMemoryBuffer implements Stream
                 'gid'   => 0,
                 'rdev'  => 0,
                 'size'  => $isDirectory ? 0 : Util\Size::fromContent($this->content),
+=======
+            $time = $this->filesystem->mtime($this->key);
+
+            $stats = array(
+                'dev' => 1,
+                'ino' => 0,
+                'mode' => $isDirectory ? 16893 : 33204,
+                'nlink' => 1,
+                'uid' => 0,
+                'gid' => 0,
+                'rdev' => 0,
+                'size' => $isDirectory ? 0 : Util\Size::fromContent($this->content),
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
                 'atime' => $time,
                 'mtime' => $time,
                 'ctime' => $time,
                 'blksize' => -1,
+<<<<<<< HEAD
                 'blocks'  => -1,
+=======
+                'blocks' => -1,
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
             );
 
             return array_merge(array_values($stats), $stats);
@@ -184,7 +243,11 @@ class InMemoryBuffer implements Stream
     }
 
     /**
+<<<<<<< HEAD
      * {@inheritDoc}
+=======
+     * {@inheritdoc}
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function cast($castAst)
     {
@@ -192,7 +255,11 @@ class InMemoryBuffer implements Stream
     }
 
     /**
+<<<<<<< HEAD
      * {@inheritDoc}
+=======
+     * {@inheritdoc}
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function unlink()
     {
@@ -204,7 +271,11 @@ class InMemoryBuffer implements Stream
     }
 
     /**
+<<<<<<< HEAD
      * @return Boolean
+=======
+     * @return bool
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     protected function hasNewContentAtFurtherPosition()
     {
@@ -212,8 +283,14 @@ class InMemoryBuffer implements Stream
     }
 
     /**
+<<<<<<< HEAD
      * @param string $content Empty string by default
      * @param bool $overwrite Overwrite by default
+=======
+     * @param string $content   Empty string by default
+     * @param bool   $overwrite Overwrite by default
+     *
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      * @return string
      */
     protected function writeContent($content = '', $overwrite = true)

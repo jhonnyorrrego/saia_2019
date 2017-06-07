@@ -19,12 +19,12 @@ $busca_componente=busca_filtro_tabla("nombre","busqueda_componente","idbusqueda_
 <script>
     $(document).ready(function(){
         var componente='<?php echo($busca_componente[0]['nombre']); ?>';
-        var enlace_finalizar="&nbsp;<button class='btn btn-mini' title='Finalizar Entrega' id='boton_finalizar_entrega'>Finalizar Entrega</button>";
+        var enlace_finalizar="&nbsp;<button class='btn btn-mini' title='Finalizar Entrega' id='boton_finalizar_entrega'>Finalizar Tr&aacute;mite</button>";
         if(componente!='reporte_radicacion_correspondencia_finalizado' && componente!='reporte_radicacion_correspondencia_dependencias'){
         	if(componente=='reporte_radicacion_correspondencia'){
         		enlace_finalizar='';
         	}
-          $("#nav_busqueda").after("<div style='margin-left:9px;margin-right:9px;' class='ui-state-default ui-jqgrid-pager ui-corner-bottom'><button class='btn btn-mini' title='Realizar despacho' id='boton_seleccionar_registros'>Generar Planilla de Entrega</button>"+enlace_finalizar+"</div>");
+          $("#nav_busqueda").after("<div style='margin-left:9px;margin-right:9px;' class='ui-state-default ui-jqgrid-pager ui-corner-bottom'><button class='btn btn-mini' title='Realizar despacho' id='boton_seleccionar_registros'>Generar Planilla</button>"+enlace_finalizar+"</div>");
           } 
         
         /*Genera Planilla de Mensajeros*/
@@ -76,6 +76,7 @@ $busca_componente=busca_filtro_tabla("nombre","busqueda_componente","idbusqueda_
                         },
                         success: function(datos){
                             notificacion_saia('Mensajero asignado exitosamente','success','',4000);
+                            window.location.reload();
                         }
                         
             });   

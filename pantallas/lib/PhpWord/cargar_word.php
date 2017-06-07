@@ -60,13 +60,15 @@ if(@$_REQUEST['cargar']){
 	
 	?>
 	
-		<form action="cargar_word.php" method="POST" enctype="multipart/form-data">
-			<input type="file" name="anexos[]" id="anexos[]" />
-			<input type="hidden" name="iddoc" id="iddoc" value="<?php echo(@$_REQUEST['iddoc']); ?>" />
-			<input type="hidden" name="idformato" id="idformato" value="<?php echo(@$_REQUEST['idformato']); ?>" />
-			<input type="hidden" name="cargar" id="cargar" value="1" />
-			<br>
-			<input type="submit" name="enviar" id="enviar" value="Cargar" />
+<form action="cargar_word.php" method="POST"
+	enctype="multipart/form-data">
+	<input type="file" name="anexos[]" id="anexos[]" /> <input
+		type="hidden" name="iddoc" id="iddoc"
+		value="<?php echo(@$_REQUEST['iddoc']); ?>" /> <input type="hidden"
+		name="idformato" id="idformato"
+		value="<?php echo(@$_REQUEST['idformato']); ?>" /> <input
+		type="hidden" name="cargar" id="cargar" value="1" /> <br> <input
+		type="submit" name="enviar" id="enviar" value="Cargar" />
 		</form>
 	
 	<?php

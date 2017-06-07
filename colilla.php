@@ -35,7 +35,7 @@ if(@$_REQUEST["doc"] || @$_REQUEST["key"]){
   //registrar_accion_digitalizacion($doc,'IMPRIME COLILLA');
 }else{
 	if(@$_REQUEST["generar_consecutivo"]){	
-		validar_confirmacion_salida($_REQUEST["generar_consecutivo"],$_REQUEST["enlace"]);
+		validar_confirmacion_salida($_REQUEST["generar_consecutivo"],$_REQUEST["enlace"],$_REQUEST["enlace2"]);
 	}else if(@$_REQUEST["consecutivo"] && @$_REQUEST["salidas"]){
 		$formato=$_REQUEST["consecutivo"];
 		//$_REQUEST["enlace"]="pantallas/buscador_principal.php?idbusqueda=10";
@@ -177,25 +177,23 @@ if($datos[0]["numero"]){
 	$codigo_qr=busca_filtro_tabla("","documento_verificacion","documento_iddocumento=".$doc,"", $conn);	
 	$qr='';
 	if($codigo_qr['numcampos']){
-    $archivo_binario=StorageUtils::get_binary_file($codigo_qr[0]['ruta_qr']);
-	    
-    if($archivo_binario){
-          $qr='<img src="'.$archivo_binario.'" width="70px" height="70px">';		        
-	    }else{
-    		include_once($ruta_db_superior."pantallas/qr/librerias.php");
-    		generar_codigo_qr('',$doc);
-    		$codigo_qr=busca_filtro_tabla("","documento_verificacion","documento_iddocumento=".$doc,"", $conn);	
-      $archivo_binario=StorageUtils::get_binary_file($codigo_qr[0]['ruta_qr']);
-      	
-  		$qr='<img src="'.$archivo_binario.'" width="70px" height="70px">';		        
-	    }
+	    $archivo_binario=StorageUtils::get_binary_file($codigo_qr[0]['ruta_qr']);
+		    
+	    if($archivo_binario){
+	          $qr='<img src="'.$archivo_binario.'" width="70px" height="70px">';		        
+		}else{
+	      include_once($ruta_db_superior."pantallas/qr/librerias.php");
+	      generar_codigo_qr('',$doc);
+	      $codigo_qr=busca_filtro_tabla("","documento_verificacion","documento_iddocumento=".$doc,"", $conn);	
+	      $archivo_binario=StorageUtils::get_binary_file($codigo_qr[0]['ruta_qr']);
+	  	  $qr='<img src="'.$archivo_binario.'" width="70px" height="70px">';		        
+		}
 	}
 	else{
 		include_once($ruta_db_superior."pantallas/qr/librerias.php");
 		generar_codigo_qr('',$doc);
 		$codigo_qr=busca_filtro_tabla("","documento_verificacion","documento_iddocumento=".$doc,"", $conn);	
     $archivo_binario=StorageUtils::get_binary_file($codigo_qr[0]['ruta_qr']);
-    	
 		$qr='<img src="'.$archivo_binario.'" width="70px" height="70px">';		        
 	}
 }
@@ -275,7 +273,7 @@ function imprime(atras){
 	<td border="1px" colspan="2" align="left" height="2px" cellspacing="0" cellpadding="0">
 		<strong><?php echo($nombre_empresa);?>
 		</strong><br/><br/>
-		<?php if($datos[0]["tipo_radicado"]==1 || $datos[0]["tipo_radicado"]==2){?>
+		<?php if($datos[0]["tipo_radicado"]==1 || $datos[0]["tipo_radicado"]==2 &&  $datos[0]['plantilla']!='pqrsf'){?>
       	
       	<b>Radicaci&oacute;n No: <?php echo(date("Y-m-d")."-".$datos[0]["numero"]."-".$tipo_radicacion);?></b>
  <?php }else{?>
@@ -284,7 +282,7 @@ function imprime(atras){
   <br/>
   <b>Fecha: <?php echo $datos_fecha; ?></b><br/>
   
- <?php if(($datos[0]["tipo_radicado"]==1 || $datos[0]["tipo_radicado"]==2) && $datos[0]['plantilla']=='radicacion_entrada'){
+ <?php if((($datos[0]["tipo_radicado"]==1 || $datos[0]["tipo_radicado"]==2) && $datos[0]['plantilla']=='radicacion_entrada') || $datos[0]['plantilla']=='pqrsf' ){
      
          //print_r($datos);
         ?>
@@ -342,7 +340,9 @@ function generar_ingreso_formato($nombre_formato){
     if($nombre_formato=='radicacion_salida'){
         $nombre_formato='radicacion_entrada';
     }
-	$formato=busca_filtro_tabla("A.*,B.nombre as nombre_campo, B.*","formato A, campos_formato B","A.nombre='".$nombre_formato."' AND idformato=formato_idformato AND obligatoriedad=1","",$conn);
+	$formato=busca_filtro_tabla("A.serie_idserie,A.nombre_tabla,B.nombre as nombre_campo, B.tipo_dato","formato A, campos_formato B","A.nombre='".$nombre_formato."' AND idformato=formato_idformato AND obligatoriedad=1","",$conn);
+	
+	//print_r($formato);die();
 	$dependencia=busca_filtro_tabla("","dependencia_cargo","funcionario_idfuncionario=".usuario_actual("idfuncionario")." AND estado=1","",$conn);
 	
 	for($i=0;$i<$formato["numcampos"];$i++){
@@ -372,6 +372,12 @@ function generar_ingreso_formato($nombre_formato){
 		$campos_formato_radicacion_salida=busca_filtro_tabla("idcampos_formato","formato a, campos_formato b","a.nombre='radicacion_salida' AND a.idformato=b.formato_idformato AND b.nombre='descripcion_salida'","",$conn);
         $_REQUEST["campo_descripcion"] = $campos_formato_radicacion_salida[0]['idcampos_formato']; //se colocan los idcampos del campo descripcion;
 	}
+	else if($nombre_formato=='pqrsf'){
+		//$_REQUEST["descripcion_salida"]=$_REQUEST["descripcion_salida"];
+		$campos_formato_pqrsf=busca_filtro_tabla("idcampos_formato","formato a, campos_formato b","a.nombre='pqrsf' AND a.idformato=b.formato_idformato AND b.nombre='nombre'","",$conn);
+        $_REQUEST["campo_descripcion"] = $campos_formato_pqrsf[0]['idcampos_formato']; //se colocan los idcampos del campo descripcion;
+        $_REQUEST["fecha"] = fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s');
+	}	
 
 	$_REQUEST["serie_idserie"] = $formato[0]["serie_idserie"]; //idserie del formato;
 	$_REQUEST["dependencia"]= $dependencia[0]["dependencia_iddependencia"]; //iddependencia_cargo de la persona;
@@ -443,7 +449,7 @@ function radicar_plantilla2()
     //print_r($_POST);
     //echo("<br />-------<br />");
     foreach($_POST as $key=>$valor){
-      if(in_array($key,$lista_campos)&&$key<>"estado"){
+      if(in_array($key,$lista_campos)&& ($key<>"estado" && $key<>'fecha')){
         if($valor[0]!="'")
           $valor="'".$valor."'";
         $valores[$key]=$valor;
@@ -566,7 +572,9 @@ function radicar_plantilla2()
     llama_funcion_accion($iddoc,$idformato,"adicionar","ANTERIOR");
    /* if($_POST["iddoc"] && $_POST["tabla"]=="ft_decision_disciplinaria")
       $idplantilla=guardar_decision_disciplinaria($_POST["iddoc"]);
-    else*/if($_POST["iddoc"])
+    else*/
+    //print_r($_POST);die();
+    if($_POST["iddoc"])
       $idplantilla=guardar_documento($_POST["iddoc"]);
  	  //die();
     if(!$idplantilla)  
@@ -633,7 +641,7 @@ function validar_confirmacion(){
 		<script>
 		var ingreso=confirm("Esta seguro de generar un nuevo radicado?");
 		if(ingreso){
-			window.open("colilla.php?<?php echo $cadena; ?>&descripcion_general=<?php echo $_REQUEST['descripcion_general'];?>","_self");
+			window.open("colilla.php?<?php echo $cadena; ?>&target=_self&descripcion_general=<?php echo $_REQUEST['descripcion_general'];?>","_self");
 		}
 		else{
 			window.open("<?php echo $enlace;?>","_self");
@@ -645,7 +653,7 @@ function validar_confirmacion(){
 	else
 		return;
 }
-function validar_confirmacion_salida($consecutivo, $enlace){
+function validar_confirmacion_salida($consecutivo, $enlace,$enlace2){
 	global $conn;
 	//if($consecutivo=='radicacion_salida'){
 	$enlace_redireccion=$enlace;
@@ -655,9 +663,9 @@ function validar_confirmacion_salida($consecutivo, $enlace){
 		<script>
 		var ingreso=confirm("Esta seguro de generar un nuevo radicado?");
 		if(ingreso){
-			window.open("colilla.php?consecutivo=<?php echo $consecutivo;?>&salidas=1&enlace=<?php echo $enlace_redireccion;?>&descripcion_general=<?php echo $_REQUEST['descripcion_general'];?>","_self"); 
+			window.open("colilla.php?consecutivo=<?php echo $consecutivo;?>&salidas=1&target=_self&enlace=<?php echo $enlace_redireccion;?>&descripcion_general=<?php echo $_REQUEST['descripcion_general'];?>","_self"); 
 		}else{
-			window.open("<?php echo $enlace;?>","_self");
+			window.open("<?php echo $enlace2;?>","_self");
 		}
 		</script>
 		<?php

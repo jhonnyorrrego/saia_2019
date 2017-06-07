@@ -5,7 +5,11 @@ namespace Gaufrette;
 use Gaufrette\Adapter\ListKeysAware;
 
 /**
+<<<<<<< HEAD
  * A filesystem is used to store and retrieve files
+=======
+ * A filesystem is used to store and retrieve files.
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
  *
  * @author Antoine Hérault <antoine.herault@gmail.com>
  * @author Leszek Prabucki <leszek.prabucki@gmail.com>
@@ -15,15 +19,22 @@ class Filesystem
     protected $adapter;
 
     /**
+<<<<<<< HEAD
      * Contains File objects created with $this->createFile() method
+=======
+     * Contains File objects created with $this->createFile() method.
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      *
      * @var array
      */
     protected $fileRegister = array();
 
     /**
+<<<<<<< HEAD
      * Constructor
      *
+=======
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      * @param Adapter $adapter A configured Adapter instance
      */
     public function __construct(Adapter $adapter)
@@ -32,7 +43,11 @@ class Filesystem
     }
 
     /**
+<<<<<<< HEAD
      * Returns the adapter
+=======
+     * Returns the adapter.
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      *
      * @return Adapter
      */
@@ -42,6 +57,7 @@ class Filesystem
     }
 
     /**
+<<<<<<< HEAD
      * Indicates whether the file matching the specified key exists
      *
      * @param string $key
@@ -50,15 +66,34 @@ class Filesystem
      */
     public function has($key)
     {
+=======
+     * Indicates whether the file matching the specified key exists.
+     *
+     * @param string $key
+     *
+     * @return bool TRUE if the file exists, FALSE otherwise
+     *
+     * @throws \InvalidArgumentException If $key is invalid
+     */
+    public function has($key)
+    {
+        self::assertValidKey($key);
+
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
         return $this->adapter->exists($key);
     }
 
     /**
+<<<<<<< HEAD
      * Renames a file
+=======
+     * Renames a file.
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      *
      * @param string $sourceKey
      * @param string $targetKey
      *
+<<<<<<< HEAD
      * @return boolean                  TRUE if the rename was successful
      * @throws Exception\FileNotFound   when sourceKey does not exist
      * @throws Exception\UnexpectedFile when targetKey exists
@@ -66,17 +101,39 @@ class Filesystem
      */
     public function rename($sourceKey, $targetKey)
     {
+=======
+     * @return bool TRUE if the rename was successful
+     *
+     * @throws Exception\FileNotFound    when sourceKey does not exist
+     * @throws Exception\UnexpectedFile  when targetKey exists
+     * @throws \RuntimeException         when cannot rename
+     * @throws \InvalidArgumentException If $sourceKey or $targetKey are invalid
+     */
+    public function rename($sourceKey, $targetKey)
+    {
+        self::assertValidKey($sourceKey);
+        self::assertValidKey($targetKey);
+
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
         $this->assertHasFile($sourceKey);
 
         if ($this->has($targetKey)) {
             throw new Exception\UnexpectedFile($targetKey);
         }
 
+<<<<<<< HEAD
         if (! $this->adapter->rename($sourceKey, $targetKey)) {
             throw new \RuntimeException(sprintf('Could not rename the "%s" key to "%s".', $sourceKey, $targetKey));
         }
 
         if($this->isFileInRegister($sourceKey)) {
+=======
+        if (!$this->adapter->rename($sourceKey, $targetKey)) {
+            throw new \RuntimeException(sprintf('Could not rename the "%s" key to "%s".', $sourceKey, $targetKey));
+        }
+
+        if ($this->isFileInRegister($sourceKey)) {
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
             $this->fileRegister[$targetKey] = $this->fileRegister[$sourceKey];
             unset($this->fileRegister[$sourceKey]);
         }
@@ -85,16 +142,32 @@ class Filesystem
     }
 
     /**
+<<<<<<< HEAD
      * Returns the file matching the specified key
      *
      * @param string  $key    Key of the file
      * @param boolean $create Whether to create the file if it does not exist
      *
      * @throws Exception\FileNotFound
+=======
+     * Returns the file matching the specified key.
+     *
+     * @param string $key    Key of the file
+     * @param bool   $create Whether to create the file if it does not exist
+     *
+     * @throws Exception\FileNotFound
+     * @throws \InvalidArgumentException If $key is invalid
+     *
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      * @return File
      */
     public function get($key, $create = false)
     {
+<<<<<<< HEAD
+=======
+        self::assertValidKey($key);
+
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
         if (!$create) {
             $this->assertHasFile($key);
         }
@@ -103,6 +176,7 @@ class Filesystem
     }
 
     /**
+<<<<<<< HEAD
      * Writes the given content into the file
      *
      * @param string  $key                 Key of the file
@@ -115,6 +189,24 @@ class Filesystem
      */
     public function write($key, $content, $overwrite = false)
     {
+=======
+     * Writes the given content into the file.
+     *
+     * @param string $key       Key of the file
+     * @param string $content   Content to write in the file
+     * @param bool   $overwrite Whether to overwrite the file if exists
+     *
+     * @throws Exception\FileAlreadyExists When file already exists and overwrite is false
+     * @throws \RuntimeException           When for any reason content could not be written
+     * @throws \InvalidArgumentException   If $key is invalid
+     *
+     * @return int The number of bytes that were written into the file
+     */
+    public function write($key, $content, $overwrite = false)
+    {
+        self::assertValidKey($key);
+
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
         if (!$overwrite && $this->has($key)) {
             throw new Exception\FileAlreadyExists($key);
         }
@@ -129,16 +221,31 @@ class Filesystem
     }
 
     /**
+<<<<<<< HEAD
      * Reads the content from the file
      *
      * @param  string                 $key Key of the file
      * @throws Exception\FileNotFound when file does not exist
      * @throws \RuntimeException      when cannot read file
+=======
+     * Reads the content from the file.
+     *
+     * @param string $key Key of the file
+     *
+     * @throws Exception\FileNotFound    when file does not exist
+     * @throws \RuntimeException         when cannot read file
+     * @throws \InvalidArgumentException If $key is invalid
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      *
      * @return string
      */
     public function read($key)
     {
+<<<<<<< HEAD
+=======
+        self::assertValidKey($key);
+
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
         $this->assertHasFile($key);
 
         $content = $this->adapter->read($key);
@@ -151,6 +258,7 @@ class Filesystem
     }
 
     /**
+<<<<<<< HEAD
      * Deletes the file matching the specified key
      *
      * @param string $key
@@ -160,10 +268,29 @@ class Filesystem
      */
     public function delete($key)
     {
+=======
+     * Deletes the file matching the specified key.
+     *
+     * @param string $key
+     *
+     * @throws \RuntimeException         when cannot read file
+     * @throws \InvalidArgumentException If $key is invalid
+     *
+     * @return bool
+     */
+    public function delete($key)
+    {
+        self::assertValidKey($key);
+
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
         $this->assertHasFile($key);
 
         if ($this->adapter->delete($key)) {
             $this->removeFromRegister($key);
+<<<<<<< HEAD
+=======
+
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
             return true;
         }
 
@@ -171,7 +298,11 @@ class Filesystem
     }
 
     /**
+<<<<<<< HEAD
      * Returns an array of all keys
+=======
+     * Returns an array of all keys.
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      *
      * @return array
      */
@@ -182,12 +313,21 @@ class Filesystem
 
     /**
      * Lists keys beginning with given prefix
+<<<<<<< HEAD
      * (no wildcard / regex matching)
+=======
+     * (no wildcard / regex matching).
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      *
      * if adapter implements ListKeysAware interface, adapter's implementation will be used,
      * in not, ALL keys will be requested and iterated through.
      *
+<<<<<<< HEAD
      * @param  string $prefix
+=======
+     * @param string $prefix
+     *
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      * @return array
      */
     public function listKeys($prefix = '')
@@ -211,11 +351,16 @@ class Filesystem
 
         return array(
             'keys' => $keys,
+<<<<<<< HEAD
             'dirs' => $dirs
+=======
+            'dirs' => $dirs,
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
         );
     }
 
     /**
+<<<<<<< HEAD
      * Returns the last modified time of the specified file
      *
      * @param string $key
@@ -224,20 +369,48 @@ class Filesystem
      */
     public function mtime($key)
     {
+=======
+     * Returns the last modified time of the specified file.
+     *
+     * @param string $key
+     *
+     * @return int An UNIX like timestamp
+     *
+     * @throws \InvalidArgumentException If $key is invalid
+     */
+    public function mtime($key)
+    {
+        self::assertValidKey($key);
+
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
         $this->assertHasFile($key);
 
         return $this->adapter->mtime($key);
     }
 
     /**
+<<<<<<< HEAD
      * Returns the checksum of the specified file's content
+=======
+     * Returns the checksum of the specified file's content.
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      *
      * @param string $key
      *
      * @return string A MD5 hash
+<<<<<<< HEAD
      */
     public function checksum($key)
     {
+=======
+     *
+     * @throws \InvalidArgumentException If $key is invalid
+     */
+    public function checksum($key)
+    {
+        self::assertValidKey($key);
+
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
         $this->assertHasFile($key);
 
         if ($this->adapter instanceof Adapter\ChecksumCalculator) {
@@ -248,6 +421,7 @@ class Filesystem
     }
 
     /**
+<<<<<<< HEAD
      * Returns the size of the specified file's content
      *
      * @param string $key
@@ -256,6 +430,20 @@ class Filesystem
      */
     public function size($key)
     {
+=======
+     * Returns the size of the specified file's content.
+     *
+     * @param string $key
+     *
+     * @return int File size in Bytes
+     *
+     * @throws \InvalidArgumentException If $key is invalid
+     */
+    public function size($key)
+    {
+        self::assertValidKey($key);
+
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
         $this->assertHasFile($key);
 
         if ($this->adapter instanceof Adapter\SizeCalculator) {
@@ -269,10 +457,22 @@ class Filesystem
      * Gets a new stream instance of the specified file.
      *
      * @param $key
+<<<<<<< HEAD
      * @return Stream|Stream\InMemoryBuffer
      */
     public function createStream($key)
     {
+=======
+     *
+     * @return Stream|Stream\InMemoryBuffer
+     *
+     * @throws \InvalidArgumentException If $key is invalid
+     */
+    public function createStream($key)
+    {
+        self::assertValidKey($key);
+
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
         if ($this->adapter instanceof Adapter\StreamFactory) {
             return $this->adapter->createStream($key);
         }
@@ -284,11 +484,24 @@ class Filesystem
      * Creates a new file in a filesystem.
      *
      * @param $key
+<<<<<<< HEAD
      * @return File
      */
     public function createFile($key)
     {
         if(false === $this->isFileInRegister($key)) {
+=======
+     *
+     * @return File
+     *
+     * @throws \InvalidArgumentException If $key is invalid
+     */
+    public function createFile($key)
+    {
+        self::assertValidKey($key);
+
+        if (false === $this->isFileInRegister($key)) {
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
             if ($this->adapter instanceof Adapter\FileFactory) {
                 $this->fileRegister[$key] = $this->adapter->createFile($key, $this);
             } else {
@@ -300,14 +513,28 @@ class Filesystem
     }
 
     /**
+<<<<<<< HEAD
      * Get the mime type of the provided key
+=======
+     * Get the mime type of the provided key.
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      *
      * @param string $key
      *
      * @return string
+<<<<<<< HEAD
      */
     public function mimeType($key)
     {
+=======
+     *
+     * @throws \InvalidArgumentException If $key is invalid
+     */
+    public function mimeType($key)
+    {
+        self::assertValidKey($key);
+
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
         $this->assertHasFile($key);
 
         if ($this->adapter instanceof Adapter\MimeTypeProvider) {
@@ -321,24 +548,40 @@ class Filesystem
     }
 
     /**
+<<<<<<< HEAD
      * Checks if matching file by given key exists in the filesystem
+=======
+     * Checks if matching file by given key exists in the filesystem.
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      *
      * Key must be non empty string, otherwise it will throw Exception\FileNotFound
      * {@see http://php.net/manual/en/function.empty.php}
      *
      * @param string $key
      *
+<<<<<<< HEAD
      * @throws Exception\FileNotFound   when sourceKey does not exist
      */
     private function assertHasFile($key)
     {
         if (! empty($key) && ! $this->has($key)) {
+=======
+     * @throws Exception\FileNotFound when sourceKey does not exist
+     */
+    private function assertHasFile($key)
+    {
+        if (!$this->has($key)) {
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
             throw new Exception\FileNotFound($key);
         }
     }
 
     /**
+<<<<<<< HEAD
      * Checks if matching File object by given key exists in the fileRegister
+=======
+     * Checks if matching File object by given key exists in the fileRegister.
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      *
      * @param string $key
      *
@@ -350,7 +593,11 @@ class Filesystem
     }
 
     /**
+<<<<<<< HEAD
      * Clear files register
+=======
+     * Clear files register.
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function clearFileRegister()
     {
@@ -358,7 +605,11 @@ class Filesystem
     }
 
     /**
+<<<<<<< HEAD
      * Removes File object from register
+=======
+     * Removes File object from register.
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      *
      * @param string $key
      */
@@ -378,4 +629,19 @@ class Filesystem
     {
         return $this->adapter->isDirectory($key);
     }
+<<<<<<< HEAD
+=======
+
+    /**
+     * @param string $key
+     *
+     * @throws \InvalidArgumentException Given $key should not be empty
+     */
+    private static function assertValidKey($key)
+    {
+        if (empty($key)) {
+            throw new \InvalidArgumentException('Object path is empty.');
+        }
+    }
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
 }

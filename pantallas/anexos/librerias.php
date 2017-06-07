@@ -101,15 +101,17 @@ return($datos);
 
 function eliminar_anexos($idanexo,$tipo_retorno=1){
 	global $conn,$ruta_db_superior;
-  $retorno=array("exito"=>0);
+	$retorno = array(
+			"exito" => 0
+	);
   $config = busca_filtro_tabla("valor","configuracion","nombre='tipo_almacenamiento'","",$conn);
   
   $anexo=busca_filtro_tabla("","anexos","idanexos=".$idanexo,"",$conn);  
-  if($anexo["numcampos"]>0)
-   if($anexo[0]['idbinario']!=''&&$anexo[0]['idbinario']!=NULL) // Evita errores si el binario no fue bien almacenado y no se asocio
-     {
+	if ($anexo["numcampos"] > 0) {
+		if ($anexo[0]['idbinario'] != '' && $anexo[0]['idbinario'] != NULL) {// Evita errores si el binario no fue bien almacenado y no se asocio
        $sql1="DELETE FROM binario WHERE idbinario=".$anexo[0]['idbinario'];
         phpmkr_query($sql1,$conn); 
+		}
      }  
    $file=$ruta_db_superior.$anexo[0]["ruta"];
    $info=busca_filtro_tabla("","anexos","idanexos=".$idanexo,"",$conn);
@@ -125,27 +127,28 @@ function eliminar_anexos($idanexo,$tipo_retorno=1){
     $x_detalle= "Identificador: ".$info[0]["idanexos"]." ,Nombre: ".$info[0]["etiqueta"];
 		if($justificacion!=''){
     	$x_detalle.=" , Justificacion: ".$justificacion;
-    }		
-    else if(@$_REQUEST["justificacion"]){
+	} else if (@$_REQUEST["justificacion"]) {
       $x_detalle.=" , Justificacion: ".$_REQUEST["justificacion"];
     }
     $idregistro=registrar_accion_digitalizacion($info[0]["documento_iddocumento"],'ELIMINACION ANEXO',$x_detalle);
     if($idregistro){
       $retorno["exito"]=1;      
     }
-  if($tipo_retorno==1)
+	if ($tipo_retorno == 1) {
   	echo(json_encode($retorno));
-  else{
+	} else {
   	return($retorno);
   }    
 }
+
 function mostrar_anexo($idanexo){
 	$file='';
 	$datos=busca_filtro_tabla("","anexos","idanexos=".$idanexo,"",$conn);
-  if(!$datos["numcampos"])
+	if (! $datos["numcampos"]) {
     $file='<span class="label label-important">problema con el archivo anexo</span>';
-  else 
+	} else {
   	$file='<a href="'.PROTOCOLO_CONEXION.RUTA_PDF.'/pantallas/anexos/librerias.php?ejecutar_anexos=descargar_anexo&idanexo='.$datos[0]["idanexos"].'" target="_blank">'.$datos[0]["etiqueta"].'</a>'; 	
+	}
 	return($file);	
 }
 if(@$_REQUEST["ejecutar_anexos"]){

@@ -2,7 +2,11 @@
 
 namespace Gaufrette\Adapter;
 
+<<<<<<< HEAD
 use \AmazonS3 as AmazonClient;
+=======
+use AmazonS3 as AmazonClient;
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
 use Gaufrette\Adapter;
 
 /**
@@ -10,7 +14,10 @@ use Gaufrette\Adapter;
  *
  * See the AwsS3 adapter for using the AWS SDK for PHP v2.x.
  *
+<<<<<<< HEAD
  * @package Gaufrette
+=======
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
  * @author  Antoine Hérault <antoine.herault@gmail.com>
  * @author  Leszek Prabucki <leszek.prabucki@gmail.com>
  */
@@ -26,7 +33,11 @@ class AmazonS3 implements Adapter,
     public function __construct(AmazonClient $service, $bucket, $options = array())
     {
         $this->service = $service;
+<<<<<<< HEAD
         $this->bucket  = $bucket;
+=======
+        $this->bucket = $bucket;
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
         $this->options = array_replace_recursive(
             array('directory' => '', 'create' => false, 'region' => $service->hostname, 'acl' => AmazonClient::ACL_PUBLIC),
             $options
@@ -34,7 +45,11 @@ class AmazonS3 implements Adapter,
     }
 
     /**
+<<<<<<< HEAD
      * Set the acl used when writing files
+=======
+     * Set the acl used when writing files.
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      *
      * @param string $acl
      */
@@ -44,7 +59,11 @@ class AmazonS3 implements Adapter,
     }
 
     /**
+<<<<<<< HEAD
      * Get the acl used when writing files
+=======
+     * Get the acl used when writing files.
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      *
      * @return string
      */
@@ -54,7 +73,11 @@ class AmazonS3 implements Adapter,
     }
 
     /**
+<<<<<<< HEAD
      * Set the base directory the user will have access to
+=======
+     * Set the base directory the user will have access to.
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      *
      * @param string $directory
      */
@@ -64,7 +87,11 @@ class AmazonS3 implements Adapter,
     }
 
     /**
+<<<<<<< HEAD
      * Get the directory the user has access to
+=======
+     * Get the directory the user has access to.
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      *
      * @return string
      */
@@ -74,7 +101,11 @@ class AmazonS3 implements Adapter,
     }
 
     /**
+<<<<<<< HEAD
      * {@inheritDoc}
+=======
+     * {@inheritdoc}
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function setMetadata($key, $metadata)
     {
@@ -84,7 +115,11 @@ class AmazonS3 implements Adapter,
     }
 
     /**
+<<<<<<< HEAD
      * {@inheritDoc}
+=======
+     * {@inheritdoc}
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function getMetadata($key)
     {
@@ -94,7 +129,11 @@ class AmazonS3 implements Adapter,
     }
 
     /**
+<<<<<<< HEAD
      * {@inheritDoc}
+=======
+     * {@inheritdoc}
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function read($key)
     {
@@ -114,7 +153,11 @@ class AmazonS3 implements Adapter,
     }
 
     /**
+<<<<<<< HEAD
      * {@inheritDoc}
+=======
+     * {@inheritdoc}
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function rename($sourceKey, $targetKey)
     {
@@ -122,12 +165,21 @@ class AmazonS3 implements Adapter,
 
         $response = $this->service->copy_object(
             array( // source
+<<<<<<< HEAD
                 'bucket'   => $this->bucket,
                 'filename' => $this->computePath($sourceKey)
             ),
             array( // target
                 'bucket'   => $this->bucket,
                 'filename' => $this->computePath($targetKey)
+=======
+                'bucket' => $this->bucket,
+                'filename' => $this->computePath($sourceKey),
+            ),
+            array( // target
+                'bucket' => $this->bucket,
+                'filename' => $this->computePath($targetKey),
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
             ),
             $this->getMetadata($sourceKey)
         );
@@ -136,14 +188,22 @@ class AmazonS3 implements Adapter,
     }
 
     /**
+<<<<<<< HEAD
      * {@inheritDoc}
+=======
+     * {@inheritdoc}
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function write($key, $content)
     {
         $this->ensureBucketExists();
 
         $opt = array_replace_recursive(
+<<<<<<< HEAD
             array('acl'  => $this->options['acl']),
+=======
+            array('acl' => $this->options['acl']),
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
             $this->getMetadata($key),
             array('body' => $content)
         );
@@ -158,11 +218,19 @@ class AmazonS3 implements Adapter,
             return false;
         };
 
+<<<<<<< HEAD
         return intval($response->header["x-aws-requestheaders"]["Content-Length"]);
     }
 
     /**
      * {@inheritDoc}
+=======
+        return intval($response->header['x-aws-requestheaders']['Content-Length']);
+    }
+
+    /**
+     * {@inheritdoc}
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function exists($key)
     {
@@ -175,7 +243,11 @@ class AmazonS3 implements Adapter,
     }
 
     /**
+<<<<<<< HEAD
      * {@inheritDoc}
+=======
+     * {@inheritdoc}
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function mtime($key)
     {
@@ -191,7 +263,11 @@ class AmazonS3 implements Adapter,
     }
 
     /**
+<<<<<<< HEAD
      * {@inheritDoc}
+=======
+     * {@inheritdoc}
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function keys()
     {
@@ -201,8 +277,13 @@ class AmazonS3 implements Adapter,
 
         $keys = array();
         foreach ($list as $file) {
+<<<<<<< HEAD
             if ('.' !== dirname($file)) {
                 $keys[] = dirname($file);
+=======
+            if ('.' !== $dirname = \Gaufrette\Util\Path::dirname($file)) {
+                $keys[] = $dirname;
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
             }
             $keys[] = $file;
         }
@@ -212,7 +293,11 @@ class AmazonS3 implements Adapter,
     }
 
     /**
+<<<<<<< HEAD
      * {@inheritDoc}
+=======
+     * {@inheritdoc}
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function delete($key)
     {
@@ -228,7 +313,11 @@ class AmazonS3 implements Adapter,
     }
 
     /**
+<<<<<<< HEAD
      * {@inheritDoc}
+=======
+     * {@inheritdoc}
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function isDirectory($key)
     {
@@ -242,10 +331,17 @@ class AmazonS3 implements Adapter,
     /**
      * Ensures the specified bucket exists. If the bucket does not exists
      * and the create parameter is set to true, it will try to create the
+<<<<<<< HEAD
      * bucket
      *
      * @throws \RuntimeException if the bucket does not exists or could not be
      *                          created
+=======
+     * bucket.
+     *
+     * @throws \RuntimeException if the bucket does not exists or could not be
+     *                           created
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     private function ensureBucketExists()
     {
@@ -286,7 +382,11 @@ class AmazonS3 implements Adapter,
     }
 
     /**
+<<<<<<< HEAD
      * Computes the path for the specified key taking the bucket in account
+=======
+     * Computes the path for the specified key taking the bucket in account.
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      *
      * @param string $key The key for which to compute the path
      *

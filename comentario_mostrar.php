@@ -114,45 +114,42 @@ if (isset($_REQUEST["enlace"]) && $_REQUEST["enlace"] != "") {
 } elseif (isset($_REQUEST["rotar"])) {
       $pag=$_SESSION["pagina_actual"];
       $valida_pag = busca_filtro_tabla("*","pagina","id_documento=$llave AND consecutivo='$pag'","",$conn);
-      if(!($valida_pag["numcampos"]))
+	if (!($valida_pag["numcampos"])) {
         echo codifica_encabezado("<script type='text/javascript'>alert('Debe seleccionar una p�gina del documento'); parent.$frame.location='ordenar.php?key=".$llave."&accion=mostrar';</script>");
     }
-elseif(isset($_REQUEST["pagina"]))
+} elseif (isset($_REQUEST["pagina"])) {
   $pag=$_SESSION["pagina_actual"];    
-else 
+} else {
     echo codifica_encabezado("<script type='text/javascript'>alert('Debe seleccionar una p�gina del documento'); parent.$frame.location='ordenar.php?key=".$llave."&accion=mostrar';</script>");
+}
 $paginas_doc=busca_filtro_tabla("DISTINCT pagina, consecutivo","pagina","id_documento=".$llave,"pagina",$conn);
-if($paginas_doc["numcampos"]>0 || $tipo_pag!="PAGINA" || $tipo_pag!="REGISTRO" )
-{ 
-  if (isset($_REQUEST["pagina"]))  //Especifica que hacer en el Navegador de las paginas del documento.
-  {
+if ($paginas_doc["numcampos"] > 0 || $tipo_pag != "PAGINA" || $tipo_pag != "REGISTRO") {
+	if (isset($_REQUEST["pagina"])) { // Especifica que hacer en el Navegador de las paginas del documento.
     $num_pag=$paginas_doc["numcampos"]; 
     $pagina_actual="";
     $accion = $_REQUEST["pagina"];    
     $pag=$_SESSION["pagina_actual"];  
     
-    switch($accion)
-    {
+		switch ($accion) {
      case "inicio":      
       if($num_pag >= 1)   
        $pag=$paginas_doc[0]["consecutivo"];     
      break;
           
      case "ant":      
-      for($j=0; $j<$num_pag; $j++)
-      { if($paginas_doc[$j]["consecutivo"] == $pag)
-          if ($paginas_doc[$j]["pagina"]>$paginas_doc[0]["pagina"])
-           { $pag = $paginas_doc[$j-1]["consecutivo"];
+				for($j = 0; $j < $num_pag; $j++) {
+					if ($paginas_doc[$j]["consecutivo"] == $pag)
+						if ($paginas_doc[$j]["pagina"] > $paginas_doc[0]["pagina"]) {
+							$pag = $paginas_doc[$j - 1]["consecutivo"];
              $j=$num_pag;
            } 
       }
      break;
         
      case "sig":
-      for($j=0; $j<$num_pag; $j++)
-       { if($paginas_doc[$j]["consecutivo"] == $pag)
-           if ($paginas_doc[$j]["pagina"]<$paginas_doc[($num_pag-1)]["pagina"])
-           {             
+				for($j = 0; $j < $num_pag; $j++) {
+					if ($paginas_doc[$j]["consecutivo"] == $pag)
+						if ($paginas_doc[$j]["pagina"] < $paginas_doc[($num_pag - 1)]["pagina"]) {
              $pag = $paginas_doc[$j+1]["consecutivo"];               
              $j=$num_pag;
            }
@@ -165,10 +162,9 @@ if($paginas_doc["numcampos"]>0 || $tipo_pag!="PAGINA" || $tipo_pag!="REGISTRO" )
      break;
       
      case "pagina":
-      for($j=0; $j<$num_pag; $j++)
-       { if($paginas_doc[$j]["consecutivo"] == $_REQUEST["pag"])
-          if ($paginas_doc[$j]["pagina"]<=$num_pag)
-           {
+				for($j = 0; $j < $num_pag; $j++) {
+					if ($paginas_doc[$j]["consecutivo"] == $_REQUEST["pag"])
+						if ($paginas_doc[$j]["pagina"] <= $num_pag) {
             $pag = $paginas_doc[$j]["consecutivo"];             
             $j=$num_pag;             
            }  
@@ -180,40 +176,38 @@ if($paginas_doc["numcampos"]>0 || $tipo_pag!="PAGINA" || $tipo_pag!="REGISTRO" )
   }    
   // Busca en la BD la rutra de las imagenes de las paginas - miniatura y imagen normal.
   $listado=busca_filtro_tabla("*"," pagina ","id_documento=".$llave." AND consecutivo='".$pag."'","pagina",$conn);
-  if($listado["numcampos"])
+	if ($listado["numcampos"]) {
     $ruta=$listado[0]["ruta"]; 
-      
-  if(isset($_REQUEST["rotar"]))  // Rota 90 grados la imagen real, guardando los cambios 
-  { $grados=0;
-    if($_REQUEST["rotar"]=="derecha")
+	}
+	if (isset($_REQUEST["rotar"])) { // Rota 90 grados la imagen real, guardando los cambios
+		$grados = 0;
+		if ($_REQUEST["rotar"] == "derecha") {
       $grados = 90;
-    else
+		} else {
       $grados = -90;        
+		}
     $imagen = imagecreatefromjpeg($ruta);
     $color = imagecolorallocate($imagen,220,220,200);
-    if(function_exists("imagerotate"))
-      {
+		if (function_exists("imagerotate")) {
        $imagen = imagerotate($imagen,$grados,$color);
-       if($imagen)
-       {
+			if ($imagen) {
         imagejpeg($imagen,$ruta);
         imagedestroy($imagen);
        }     
-      } 
-    else 
+		} else {
       alerta("No es posible rotar la Imagen(Caracteristica no instalada)");   
-   
+		}
     $tipo_pag = "PAGINA";    
   }  
 
  // informacion del documento 
  $mostrar = "DOCUMENTO:"; 
- if($tipo_doc=="registro")
-  { $documento_tabla="archivo";
+	if ($tipo_doc == "registro") {
+		$documento_tabla = "archivo";
     $mostrar= "REGISTRO:";
-  }
- else
+	} else {
    $documento_tabla="documento";   
+	}
  $detalle_doc = busca_filtro_tabla("numero,descripcion,plantilla,pdf",$documento_tabla,"id".$documento_tabla."='$llave'","",$conn);  
 
   ?>  
@@ -235,8 +229,8 @@ menu_ordenar($llave);
 <?php
 $aux_formato=strtolower($detalle_doc[0]["plantilla"]);
  
- if(is_file("formatos/$aux_formato/detalles_mostrar_$aux_formato.php"))
-   {$idformato=busca_filtro_tabla('idformato','formato','nombre like "'.$aux_formato.'"','',$conn);
+	if (is_file("formatos/$aux_formato/detalles_mostrar_$aux_formato.php")) {
+		$idformato = busca_filtro_tabla('idformato', 'formato', 'nombre like "' . $aux_formato . '"', '', $conn);
    
     $ruta_detalles="formatos/$aux_formato/detalles_mostrar_$aux_formato.php?idformato=".$idformato[0]["idformato"]."&iddoc=".$llave;
     //echo "<a href='$ruta_detalles' target='centro'><img src=''></a>";
@@ -245,25 +239,23 @@ $aux_formato=strtolower($detalle_doc[0]["plantilla"]);
    echo "</td>"; 
    }   
  
- if($detalle_doc[0]["numero"]>0 && $detalle_doc[0]["pdf"]<>"" && $enlace<>"")
- {  echo "<td align='center'>";
+	if ($detalle_doc[0]["numero"] > 0 && $detalle_doc[0]["pdf"] != "" && $enlace != "") {
+		echo "<td align='center'>";
     agrega_boton("images","enlaces/imprimir_pdf.png","borrar_pdf.php?iddoc=$llave","centro_prueba","Actualizar PDF","","regenerar_pdf");
     echo "</td>";
-	
-	
  }
  
- if($paginas_doc["numcampos"]>0 || ($tipo_pag=='PLANTILLA' && $detalle_doc[0]["numero"]==0))
- { 
+	if ($paginas_doc["numcampos"] > 0 || ($tipo_pag == 'PLANTILLA' && $detalle_doc[0]["numero"] == 0)) {
 
-/*if($tipo_pag=="PLANTILLA" && $detalle_doc[0]["numero"]==0)
- {  echo "<td align='center'>";
+		/*
+		 if($tipo_pag=="PLANTILLA" && $detalle_doc[0]["numero"]==0) {
+		 	echo "<td align='center'>";
     agrega_boton("images","botones/comentarios/eliminar_pagina.png","documento_borrar.php?iddoc=$llave","centro","Eliminar Borrador","","eliminar_borrador");
     echo "</td>";
-}   */
+		 }
+		 */
    
- if($paginas_doc["numcampos"]>0 && $enlace=="")
- { 
+		if ($paginas_doc["numcampos"] > 0 && $enlace == "") {
 ?>
 <script src="js/jquery.js"></script>
 <script>
@@ -303,11 +295,11 @@ $aux_formato=strtolower($detalle_doc[0]["plantilla"]);
    $paginas=0;
    $paginas=$paginas_doc["numcampos"];        
    $select_pag= "<select id=\"idpagina\" onchange=\"pagina_navegador(".$llave.",idpagina.value);\">";  
-   for($i=0; $i<$paginas; $i++)
-   { 
+			for($i = 0; $i < $paginas; $i++) {
      $select_pag.="<option value=\"".$paginas_doc[$i]["consecutivo"]."\"";
-     if($paginas_doc[$i]["consecutivo"]==$pag)        
+				if ($paginas_doc[$i]["consecutivo"] == $pag) {
        $select_pag.=" selected ";
+				}
      $select_pag.= ">".($paginas_doc[$i]["pagina"])."</option>";                
    }
    echo $select_pag."</select>";     
@@ -315,9 +307,9 @@ $aux_formato=strtolower($detalle_doc[0]["plantilla"]);
    <a href="comentario_mostrar.php?pagina=sig&key=<?php echo $_REQUEST["key"]; ?>" target="<?php echo $frame;?>"><img src="imagenes/adelante.gif" alt="Siguiente P&aacute;gina" border="0"></a>
    <a href="comentario_mostrar.php?pagina=fin&key=<?php echo $_REQUEST["key"]; ?>" target="<?php echo $frame;?>"><img src="imagenes/final.gif" alt="&Uacute;ltima P&aacute;gina" border="0"></a>&nbsp;
    </td>
-   <?php } ?>
-   
-   <?php } ?>
+   <?php }
+	}
+?>
    </tr>
    </table></div><hr>
    </div>   
@@ -333,9 +325,7 @@ $aux_formato=strtolower($detalle_doc[0]["plantilla"]);
 </div>
   </div>  
   <?php
-  }
-  else  //si es plantilla que corresponde al documento.
-  {  
+  }  else  {//si es plantilla que corresponde al documento.
   ?>
   <div id="imprimir">
   <br><br></div>   
@@ -343,14 +333,14 @@ $aux_formato=strtolower($detalle_doc[0]["plantilla"]);
   <?php
   }  
   $componentes="";
-  if($tipo_pag=='PAGINA')
-   {$comentario=busca_filtro_tabla("*","comentario_img","documento_iddocumento=".$llave." AND tipo='$tipo_pag' AND pagina='".$pag."'","",$conn);
-   }
-  else 
+	if ($tipo_pag == 'PAGINA') {
   $comentario=busca_filtro_tabla("*","comentario_img","documento_iddocumento=".$llave." AND tipo='$tipo_pag' AND pagina='".$pag."'","",$conn);
+	} else {
+		$comentario = busca_filtro_tabla("*", "comentario_img", "documento_iddocumento=" . $llave . " AND tipo='$tipo_pag' AND pagina='" . $pag . "'", "", $conn);
+	}
   //print_r($comentario);
-  if($comentario["numcampos"])
-  { echo '<div id="notas" style="display:block;">';
+	if ($comentario["numcampos"]) {
+		echo '<div id="notas" style="display:block;">';
    ?>
    <div id="bubble_tooltip" >
 	<div class="bubble_top"></div>
@@ -358,8 +348,8 @@ $aux_formato=strtolower($detalle_doc[0]["plantilla"]);
 	<div class="bubble_bottom"></div>
 </div>
    <?php
-    for($i=0; $i<$comentario["numcampos"]; $i++)
-    {  $posx=$comentario[$i]["posx"];
+		for($i = 0; $i < $comentario["numcampos"]; $i++) {
+			$posx = $comentario[$i]["posx"];
        $posy=$comentario[$i]["posy"];
        $texto=$comentario[$i]["comentario"];
        $id = $comentario[$i]["idcomentario_img"];
@@ -374,9 +364,7 @@ $aux_formato=strtolower($detalle_doc[0]["plantilla"]);
     }
    echo '</div>';
   }
-}
-else
-{
+} else {
   echo codifica_encabezado("<script type='text/javascript'>alert('El documento no tiene p�ginas');</script>");
   redirecciona("ordenar.php?key=".$llave."&accion=mostrar");
 }

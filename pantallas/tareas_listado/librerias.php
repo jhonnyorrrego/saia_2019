@@ -86,14 +86,16 @@ function condicion_actualizar_responsable(){
 }
 function condicion_actualizar_coparticipante(){
 	global $ruta_db_superior;
-	
-	return("generica=0 AND a.estado_tarea<>'TERMINADO' AND a.listado_tareas_fk<>-1 AND a.cod_padre=0 AND FIND_IN_SET('".usuario_actual('idfuncionario')."', a.co_participantes)");
+	$funcionario_idfuncionario=usuario_actual('idfuncionario');
+	$condicion_coparticipantes_unico=" AND ( a.co_participantes LIKE '%,".$funcionario_idfuncionario.",%' OR a.co_participantes LIKE '%,".$funcionario_idfuncionario."' OR a.co_participantes LIKE '".$funcionario_idfuncionario.",%' OR  a.co_participantes='".$funcionario_idfuncionario."' )";
+	return("generica=0 AND a.estado_tarea<>'TERMINADO' AND a.listado_tareas_fk<>-1 AND a.cod_padre=0 ".$condicion_coparticipantes_unico);
 
 }
 function condicion_actualizar_seguidor(){
 	global $ruta_db_superior;
-	
-	return("generica=0 AND a.estado_tarea<>'TERMINADO' AND a.listado_tareas_fk<>-1 AND a.cod_padre=0 AND FIND_IN_SET('".usuario_actual('idfuncionario')."', a.seguidores)");
+	$funcionario_idfuncionario=usuario_actual('idfuncionario');
+	$condicion_seguidores_unico=" AND ( a.seguidores LIKE '%,".$funcionario_idfuncionario.",%' OR a.seguidores LIKE '%,".$funcionario_idfuncionario."' OR a.seguidores LIKE '".$funcionario_idfuncionario.",%' OR  a.seguidores='".$funcionario_idfuncionario."' )";
+	return("generica=0 AND a.estado_tarea<>'TERMINADO' AND a.listado_tareas_fk<>-1 AND a.cod_padre=0 ".$condicion_seguidores_unico);
 
 }
 function condicion_actualizar_evaluador(){
@@ -107,7 +109,13 @@ function usuario_actual_codigo(){
 }
 
 function condicion_actualizar_tareas_total(){
-	return("generica=0 AND a.estado_tarea<>'TERMINADO' AND a.listado_tareas_fk<>-1 AND a.cod_padre=0 AND (a.responsable_tarea=".usuario_actual('idfuncionario')." OR find_in_set('".usuario_actual('idfuncionario')."', a.co_participantes) OR find_in_set('".usuario_actual('idfuncionario')."', a.seguidores) OR a.evaluador=".usuario_actual('idfuncionario').")");
+		
+	$funcionario_idfuncionario=usuario_actual('idfuncionario');
+	$condicion_coparticipantes=" OR ( a.co_participantes LIKE '%,".$funcionario_idfuncionario.",%' OR a.co_participantes LIKE '%,".$funcionario_idfuncionario."' OR a.co_participantes LIKE '".$funcionario_idfuncionario.",%' OR  a.co_participantes='".$funcionario_idfuncionario."' )";
+	$condicion_seguidores=" OR ( a.seguidores LIKE '%,".$funcionario_idfuncionario.",%' OR a.seguidores LIKE '%,".$funcionario_idfuncionario."' OR a.seguidores LIKE '".$funcionario_idfuncionario.",%' OR  a.seguidores='".$funcionario_idfuncionario."' )";
+	$condicion_evaluador=" OR a.evaluador=".$funcionario_idfuncionario;
+	$condicion_tareas_total="generica=0 AND a.estado_tarea<>'TERMINADO' AND a.listado_tareas_fk<>-1 AND a.cod_padre=0 AND ( a.responsable_tarea=".$funcionario_idfuncionario."".$condicion_coparticipante.$condicion_coparticipantes.$condicion_seguidores.$condicion_evaluador."  )"; 
+	return($condicion_tareas_total);
 }
 
 

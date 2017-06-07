@@ -954,6 +954,22 @@ function guardar_lob2($campo, $tabla, $condicion, $contenido, $tipo, $conn, $log
 	OCIExecute($stmt, OCI_DEFAULT) or print_r(OCIError($stmt));
 	// Fetch the SELECTed row
 	OCIFetchInto($stmt, $row, OCI_ASSOC);
+	
+	if(!count($row)){  //soluciona el problema del size().
+		oci_rollback($conn->Conn->conn);
+		oci_free_statement($stmt);
+		$clob_blob='clob';
+		if($tipo=='archivo'){
+			$clob_blob='blob';
+		}
+    	$up_clob="UPDATE ".$tabla." SET ".$campo."=empty_".$clob_blob."() WHERE ".$condicion;
+		$conn->Ejecutar_Sql($up_clob);
+	    $stmt = OCIParse($conn->Conn->conn, $sql) or print_r(OCIError ($stmt));
+	    // Execute the statement using OCI_DEFAULT (begin a transaction)
+	    OCIExecute($stmt, OCI_DEFAULT) or print_r(OCIError ($stmt));
+	    // Fetch the SELECTed row
+	    OCIFetchInto($stmt,$row,OCI_ASSOC);		
+	}	
 	if (FALSE === $row) {
 		OCIRollback($conn->Conn->conn);
 		alerta("No se pudo modificar el campo.");

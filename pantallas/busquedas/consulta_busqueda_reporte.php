@@ -35,18 +35,36 @@ if($datos_busqueda[0]["ruta_libreria_pantalla"]){
 $info=stripslashes($datos_busqueda[0]["info"]);
 $grupos=explode("|-|",$info);
 $cant=count($grupos);
+$campos=$datos_busqueda[0]["campos"].",".$datos_busqueda[0]["campos_adicionales"];
+$campos_limpios=array();
+$lcampos=explode(",",$campos);
+foreach($lcampos AS $key=>$valor){
+    if(trim($valor)){
+        $val=explode(".",$valor);
+        if(count($val)==1){
+            array_push($campos_limpios,$val[0]);    
+        }
+        else{
+            array_push($campos_limpios,$val[1]);
+        }
+        
+    }
+}
 for($i=0;$i<$cant;$i++){
+    $sortable="false";
 	$datos=explode("|",$grupos[$i]);
 	array_push($columnas["etiquetas"],@$datos[0]);
 	$datos[1]=str_replace("{*","",str_replace("*}","",$datos[1]));
 	$datos2=explode("@",$datos[1]);
 	$width="";
-  if($datos[3]){
-    $width=',"width":'.$datos[3];
-  }
-	array_push($columnas["modelo"],'{"encabezado":"'.$datos[0].'","sortable":false,"name":"'.$datos2[0].'","align":"'.$datos[2].'"'.$width.'}');
+    if($datos[3]){
+        $width=',"width":'.$datos[3];
+    }
+    if(in_array($datos[1],$campos_limpios)){
+         $sortable="true";
+    }
+	array_push($columnas["modelo"],'{"encabezado":"'.$datos[0].'","sortable":'.$sortable.',"name":"'.$datos2[0].'","align":"'.$datos[2].'"'.$width.'}');
 }
-
 $encabezado=stripslashes($datos_busqueda[0]["encabezado_grillas"]);
 $grupos=explode("|-|",$encabezado);
 $cant=count($grupos);
@@ -93,6 +111,10 @@ $boton_buscar="";
 if($datos_busqueda[0]['busqueda_avanzada']!=""){
 	$boton_buscar='<button class=\"btn btn-mini btn-primary kenlace_saia pull-left\" titulo=\"B&uacute;squeda '.$datos_busqueda[0]["etiqueta"].'\" title=\"B&uacute;squeda '.$datos_busqueda[0]["etiqueta"].'\" conector=\"iframe\" enlace=\"'.$datos_busqueda[0]['busqueda_avanzada'].'\">B&uacute;squeda &nbsp;</button>';
 }
+$boton_adicionar="";
+if($datos_busqueda[0]['enlace_adicionar']!=""){
+	$boton_adicionar='<button class=\"btn btn-mini btn-primary kenlace_saia pull-left\" titulo=\"Adicionar '.$datos_busqueda[0]["etiqueta"].'\" title=\"Adicionar '.$datos_busqueda[0]["etiqueta"].'\" conector=\"iframe\" enlace=\"'.$datos_busqueda[0]['enlace_adicionar'].'\">Adicionar</button>';
+}
 
 $acciones_selecionados='';		
 if($datos_busqueda[0]["acciones_seleccionados"]!=''){		
@@ -123,7 +145,9 @@ $(document).ready(function(){
 	window.parent.$(".block-iframe").attr("style","margin-top:0px; width: 100%; border:0px solid; overflow:auto; -webkit-overflow-scrolling:touch;");
 	
 	var alto_document=($(document).height()-130);
-  jQuery("#datos_busqueda").jqGrid({
+    var emptyMsgDiv = $("<div class='alert alert-warning' style='font-size:24px;'><center>No se encontraron resultados</center></div>");
+	var $grid = $("#datos_busqueda");
+    $grid.jqGrid({
     height:alto_document,
     type:'POST',
    	url: "servidor_busqueda.php?idbusqueda_componente=<?php echo($datos_componente);?>&idbusqueda_grafico=<?php echo(@$_REQUEST['idbusqueda_grafico']); ?>&idbusqueda_filtro_temp=<?php echo(@$_REQUEST['idbusqueda_filtro_temp']);?>&idbusqueda_filtro=<?php echo(@$_REQUEST['idbusqueda_filtro']);?>&idbusqueda_temporal=<?php echo (@$_REQUEST['idbusqueda_temporal']);?>&actual_row="+$("#fila_actual").val()+"&variable_busqueda="+$("#variable_busqueda").val()+"&reporte=1",
@@ -142,10 +166,19 @@ $(document).ready(function(){
 	rownumWidth: 40,
     rowList : [20,30,50],
     jsonReader: {
-	    page: function (obj) { if(obj.exito){$("#busqueda_pagina").val(obj.page); return(obj.page);}else{ $("#busqueda_pagina").val(0); return(0); } },
+	  page: function (obj) { if(obj.exito){$("#busqueda_pagina").val(obj.page); return(obj.page);}else{ $("#busqueda_pagina").val(0); return(0); } },
 	    total: function (obj) {$("#busqueda_total_paginas").val(obj.total); return(obj.total);  }	   
 		},
-		
+        loadComplete: function () {
+            var ts = this;
+            if (ts.p.reccount === 0) {
+                $(this).hide();
+                emptyMsgDiv.show();
+            } else {
+                $(this).show();
+                emptyMsgDiv.hide();
+            }
+        },
 			<?php if($encabezado_pie["numcampos"]){ ?>
 		footerrow:true,
 		userDataOnFooter:true,
@@ -172,13 +205,30 @@ $(document).ready(function(){
 				}
 			?>
    	},
-   	<?php } ?>		
-		
-		
+        loadComplete: function () {
+            var ts = this;
+            if (ts.p.reccount === 0) {
+                $(this).hide();
+                emptyMsgDiv.show();
+            } else {
+                $(this).show();
+                emptyMsgDiv.hide();
+            }
+        },   	
+<?php } ?>		
    	pager: '#nav_busqueda',
-    caption:"<?php echo $boton_buscar;?><button class=\"btn btn-mini btn-primary exportar_reporte_saia pull-left\" title=\"Exportar reporte <?php echo($datos_busqueda[0]['etiqueta']);?>\" enlace=\"<?php echo($datos_busqueda[0]['busqueda_avanzada']);?>\">Exportar &nbsp;</button><?php echo $acciones_selecionados;?><div class=\"pull-left\" style=\"text-align:center; width:60%;\"><?php echo($datos_busqueda[0]['etiqueta']);?></div><div id=\"barra_exportar_ppal\"><iframe name='iframe_exportar_saia' height='25px' width='150px' frameborder=0 scrolling='no'></iframe></div></div>"
+    caption:"<?php echo $boton_buscar;?><button class=\"btn btn-mini btn-primary exportar_reporte_saia pull-left\" title=\"Exportar reporte <?php echo($datos_busqueda[0]['etiqueta']);?>\" enlace=\"<?php echo($datos_busqueda[0]['busqueda_avanzada']);?>\">Exportar &nbsp;</button><?php echo($boton_adicionar); ?>  <?php echo $acciones_selecionados;?><div class=\"pull-left\" style=\"text-align:center; width:60%;\"><?php echo($datos_busqueda[0]['etiqueta']);?></div><div id=\"barra_exportar_ppal\"><iframe name='iframe_exportar_saia' height='25px' width='150px' frameborder=0 scrolling='no'></iframe></div></div>"
 });
-jQuery("#datos_busqueda").jqGrid('navGrid','#nav_busqueda',{edit:false,add:false,del:false,search:false});
+$grid.jqGrid('navGrid','#nav_busqueda',{edit:false,add:false,del:false,search:false});
+	emptyMsgDiv.insertAfter($grid.parent());
+	emptyMsgDiv.hide();
+var cm = jQuery("#datos_busqueda")[0].p.colModel;
+    $.each(jQuery("#datos_busqueda")[0].grid.headers, function(index, value) {
+        var cmi = cm[index], colName = cmi.name;
+        if(!cmi.sortable && colName!=='rn' && colName!=='cb' && colName!=='subgrid') {
+            $('div.ui-jqgrid-sortable',value.el).css({cursor:"default"});
+        }
+    });
 
 <?php
  if($datos_busqueda[0]["encabezado_grillas"]){ ?>

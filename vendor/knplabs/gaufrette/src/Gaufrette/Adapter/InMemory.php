@@ -6,6 +6,7 @@ use Gaufrette\Adapter;
 use Gaufrette\Util;
 
 /**
+<<<<<<< HEAD
  * In memory adapter
  *
  * Stores some files in memory for test purposes
@@ -14,12 +15,25 @@ use Gaufrette\Util;
  * @author Antoine Hérault <antoine.herault@gmail.com>
  */
 class InMemory implements Adapter
+=======
+ * In memory adapter.
+ *
+ * Stores some files in memory for test purposes
+ *
+ * @author Antoine Hérault <antoine.herault@gmail.com>
+ */
+class InMemory implements Adapter,
+                          MimeTypeProvider
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
 {
     protected $files = array();
 
     /**
+<<<<<<< HEAD
      * Constructor
      *
+=======
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      * @param array $files An array of files
      */
     public function __construct(array $files = array())
@@ -28,7 +42,11 @@ class InMemory implements Adapter
     }
 
     /**
+<<<<<<< HEAD
      * Defines the files
+=======
+     * Defines the files.
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      *
      * @param array $files An array of files
      */
@@ -41,8 +59,13 @@ class InMemory implements Adapter
             }
 
             $file = array_merge(array(
+<<<<<<< HEAD
                 'content'   => null,
                 'mtime'     => null,
+=======
+                'content' => null,
+                'mtime' => null,
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
             ), $file);
 
             $this->setFile($key, $file['content'], $file['mtime']);
@@ -50,11 +73,19 @@ class InMemory implements Adapter
     }
 
     /**
+<<<<<<< HEAD
      * Defines a file
      *
      * @param string  $key     The key
      * @param string  $content The content
      * @param integer $mtime   The last modified time (automatically set to now if NULL)
+=======
+     * Defines a file.
+     *
+     * @param string $key     The key
+     * @param string $content The content
+     * @param int    $mtime   The last modified time (automatically set to now if NULL)
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function setFile($key, $content = null, $mtime = null)
     {
@@ -63,13 +94,22 @@ class InMemory implements Adapter
         }
 
         $this->files[$key] = array(
+<<<<<<< HEAD
             'content'   => (string) $content,
             'mtime'     => (integer) $mtime
+=======
+            'content' => (string) $content,
+            'mtime' => (integer) $mtime,
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
         );
     }
 
     /**
+<<<<<<< HEAD
      * {@inheritDoc}
+=======
+     * {@inheritdoc}
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function read($key)
     {
@@ -77,7 +117,11 @@ class InMemory implements Adapter
     }
 
     /**
+<<<<<<< HEAD
      * {@inheritDoc}
+=======
+     * {@inheritdoc}
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function rename($sourceKey, $targetKey)
     {
@@ -88,18 +132,31 @@ class InMemory implements Adapter
     }
 
     /**
+<<<<<<< HEAD
      * {@inheritDoc}
      */
     public function write($key, $content, array $metadata = null)
     {
         $this->files[$key]['content']  = $content;
         $this->files[$key]['mtime']    = time();
+=======
+     * {@inheritdoc}
+     */
+    public function write($key, $content, array $metadata = null)
+    {
+        $this->files[$key]['content'] = $content;
+        $this->files[$key]['mtime'] = time();
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
 
         return Util\Size::fromContent($content);
     }
 
     /**
+<<<<<<< HEAD
      * {@inheritDoc}
+=======
+     * {@inheritdoc}
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function exists($key)
     {
@@ -107,7 +164,11 @@ class InMemory implements Adapter
     }
 
     /**
+<<<<<<< HEAD
      * {@inheritDoc}
+=======
+     * {@inheritdoc}
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function keys()
     {
@@ -115,7 +176,11 @@ class InMemory implements Adapter
     }
 
     /**
+<<<<<<< HEAD
      * {@inheritDoc}
+=======
+     * {@inheritdoc}
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function mtime($key)
     {
@@ -123,7 +188,11 @@ class InMemory implements Adapter
     }
 
     /**
+<<<<<<< HEAD
      * {@inheritDoc}
+=======
+     * {@inheritdoc}
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function delete($key)
     {
@@ -134,10 +203,27 @@ class InMemory implements Adapter
     }
 
     /**
+<<<<<<< HEAD
      * {@inheritDoc}
+=======
+     * {@inheritdoc}
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function isDirectory($path)
     {
         return false;
     }
+<<<<<<< HEAD
+=======
+
+    /**
+     * {@inheritdoc}
+     */
+    public function mimeType($key)
+    {
+        $fileInfo = new \finfo(FILEINFO_MIME_TYPE);
+
+        return $fileInfo->buffer($this->files[$key]['content']);
+    }
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
 }

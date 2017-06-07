@@ -4,11 +4,19 @@ namespace Gaufrette\Adapter;
 
 use Gaufrette\Adapter;
 use Aws\S3\S3Client;
+<<<<<<< HEAD
 
 /**
  * Amazon S3 adapter using the AWS SDK for PHP v2.x
  *
  * @package Gaufrette
+=======
+use Gaufrette\Util;
+
+/**
+ * Amazon S3 adapter using the AWS SDK for PHP v2.x.
+ *
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
  * @author  Michael Dowling <mtdowling@gmail.com>
  */
 class AwsS3 implements Adapter,
@@ -40,6 +48,7 @@ class AwsS3 implements Adapter,
     }
 
     /**
+<<<<<<< HEAD
      * Gets the publicly accessible URL of an Amazon S3 object
      *
      * @param string $key     Object key
@@ -48,6 +57,17 @@ class AwsS3 implements Adapter,
      *                           represented as a UNIX timestamp
      *                       - Any options available in the Amazon S3 GetObject
      *                           operation may be specified.
+=======
+     * Gets the publicly accessible URL of an Amazon S3 object.
+     *
+     * @param string $key     Object key
+     * @param array  $options Associative array of options used to buld the URL
+     *                        - expires: The time at which the URL should expire
+     *                        represented as a UNIX timestamp
+     *                        - Any options available in the Amazon S3 GetObject
+     *                        operation may be specified.
+     *
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      * @return string
      */
     public function getUrl($key, array $options = array())
@@ -61,7 +81,11 @@ class AwsS3 implements Adapter,
     }
 
     /**
+<<<<<<< HEAD
      * {@inheritDoc}
+=======
+     * {@inheritdoc}
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function setMetadata($key, $metadata)
     {
@@ -75,7 +99,11 @@ class AwsS3 implements Adapter,
     }
 
     /**
+<<<<<<< HEAD
      * {@inheritDoc}
+=======
+     * {@inheritdoc}
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function getMetadata($key)
     {
@@ -83,7 +111,11 @@ class AwsS3 implements Adapter,
     }
 
     /**
+<<<<<<< HEAD
      * {@inheritDoc}
+=======
+     * {@inheritdoc}
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function read($key)
     {
@@ -98,7 +130,11 @@ class AwsS3 implements Adapter,
     }
 
     /**
+<<<<<<< HEAD
      * {@inheritDoc}
+=======
+     * {@inheritdoc}
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function rename($sourceKey, $targetKey)
     {
@@ -112,6 +148,10 @@ class AwsS3 implements Adapter,
 
         try {
             $this->service->copyObject(array_merge($options, $this->getMetadata($targetKey)));
+<<<<<<< HEAD
+=======
+
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
             return $this->delete($sourceKey);
         } catch (\Exception $e) {
             return false;
@@ -119,34 +159,59 @@ class AwsS3 implements Adapter,
     }
 
     /**
+<<<<<<< HEAD
      * {@inheritDoc}
+=======
+     * {@inheritdoc}
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function write($key, $content)
     {
         $this->ensureBucketExists();
         $options = $this->getOptions($key, array('Body' => $content));
 
+<<<<<<< HEAD
         /**
+=======
+        /*
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
          * If the ContentType was not already set in the metadata, then we autodetect
          * it to prevent everything being served up as binary/octet-stream.
          */
         if (!isset($options['ContentType']) && $this->detectContentType) {
+<<<<<<< HEAD
             $finfo = new \finfo(FILEINFO_MIME_TYPE);
             $mimeType = $finfo->buffer($content);
 
             $options['ContentType'] = $mimeType;
+=======
+            $options['ContentType'] = $this->guessContentType($content);
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
         }
 
         try {
             $this->service->putObject($options);
+<<<<<<< HEAD
             return strlen($content);
+=======
+
+            if (is_resource($content)) {
+                return Util\Size::fromResource($content);
+            }
+
+            return Util\Size::fromContent($content);
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
         } catch (\Exception $e) {
             return false;
         }
     }
 
     /**
+<<<<<<< HEAD
      * {@inheritDoc}
+=======
+     * {@inheritdoc}
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function exists($key)
     {
@@ -154,12 +219,20 @@ class AwsS3 implements Adapter,
     }
 
     /**
+<<<<<<< HEAD
      * {@inheritDoc}
+=======
+     * {@inheritdoc}
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function mtime($key)
     {
         try {
             $result = $this->service->headObject($this->getOptions($key));
+<<<<<<< HEAD
+=======
+
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
             return strtotime($result['LastModified']);
         } catch (\Exception $e) {
             return false;
@@ -167,12 +240,20 @@ class AwsS3 implements Adapter,
     }
 
     /**
+<<<<<<< HEAD
      * {@inheritDoc}
+=======
+     * {@inheritdoc}
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function size($key)
     {
         try {
             $result = $this->service->headObject($this->getOptions($key));
+<<<<<<< HEAD
+=======
+
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
             return $result['ContentLength'];
         } catch (\Exception $e) {
             return false;
@@ -180,7 +261,11 @@ class AwsS3 implements Adapter,
     }
 
     /**
+<<<<<<< HEAD
      * {@inheritDoc}
+=======
+     * {@inheritdoc}
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function keys()
     {
@@ -209,12 +294,20 @@ class AwsS3 implements Adapter,
     }
 
     /**
+<<<<<<< HEAD
      * {@inheritDoc}
+=======
+     * {@inheritdoc}
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function delete($key)
     {
         try {
             $this->service->deleteObject($this->getOptions($key));
+<<<<<<< HEAD
+=======
+
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
             return true;
         } catch (\Exception $e) {
             return false;
@@ -222,14 +315,24 @@ class AwsS3 implements Adapter,
     }
 
     /**
+<<<<<<< HEAD
      * {@inheritDoc}
+=======
+     * {@inheritdoc}
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function isDirectory($key)
     {
         $result = $this->service->listObjects(array(
+<<<<<<< HEAD
             'Bucket'  => $this->bucket,
             'Prefix'  => rtrim($this->computePath($key), '/') . '/',
             'MaxKeys' => 1
+=======
+            'Bucket' => $this->bucket,
+            'Prefix' => rtrim($this->computePath($key), '/').'/',
+            'MaxKeys' => 1,
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
         ));
 
         return count($result['Contents']) > 0;
@@ -242,7 +345,11 @@ class AwsS3 implements Adapter,
      * client object.
      *
      * @throws \RuntimeException if the bucket does not exists or could not be
+<<<<<<< HEAD
      *                          created
+=======
+     *                           created
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     protected function ensureBucketExists()
     {
@@ -278,7 +385,11 @@ class AwsS3 implements Adapter,
         $options['Bucket'] = $this->bucket;
         $options['Key'] = $this->computePath($key);
 
+<<<<<<< HEAD
         /**
+=======
+        /*
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
          * Merge global options for adapter, which are set in the constructor, with metadata.
          * Metadata will override global options.
          */
@@ -297,7 +408,11 @@ class AwsS3 implements Adapter,
     }
 
     /**
+<<<<<<< HEAD
      * Computes the key from the specified path
+=======
+     * Computes the key from the specified path.
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      *
      * @param string $path
      *
@@ -307,4 +422,23 @@ class AwsS3 implements Adapter,
     {
         return ltrim(substr($path, strlen($this->options['directory'])), '/');
     }
+<<<<<<< HEAD
+=======
+
+    /**
+     * @param string $content
+     *
+     * @return string
+     */
+    private function guessContentType($content)
+    {
+        $fileInfo = new \finfo(FILEINFO_MIME_TYPE);
+
+        if (is_resource($content)) {
+            return $fileInfo->file(stream_get_meta_data($content)['uri']);
+        }
+
+        return $fileInfo->buffer($content);
+    }
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
 }

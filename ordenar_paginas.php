@@ -3,8 +3,7 @@
        session_start();*/
   include_once("db.php");
   include_once("librerias_saia.php");
-
-require_once('StorageUtils.php');
+  require_once('StorageUtils.php');
   require_once('filesystem/SaiaStorage.php');
   require('vendor/autoload.php');  
 
@@ -12,7 +11,6 @@ include_once("pantallas/lib/librerias_cripto.php");
 $validar_enteros=array("iddoc","key","doc");
 desencriptar_sqli('form_info');
 echo(librerias_jquery());
- 
 echo(estilo_bootstrap());   
   
 if(@$_REQUEST["iddoc"] || @$_REQUEST["key"] || @$_REQUEST["doc"]){
@@ -30,8 +28,8 @@ if(@$_REQUEST["iddoc"] || @$_REQUEST["key"] || @$_REQUEST["doc"]){
   header("Cache-Control: post-check=0, pre-check=0", true); 
   header("Pragma: no-cache"); // HTTP/1.0 */
 $config = busca_filtro_tabla("valor","configuracion","nombre='color_encabezado'","",$conn); 
- if($config["numcampos"])
- {  $style = "
+if($config["numcampos"]) {
+ 	$style = "
      <style type=\"text/css\">     
        .encabezado 
        {
@@ -166,8 +164,7 @@ necesario segun el tipo de imagen que se desea ver
 	</style>
 <script type="text/javascript">
 
-	function imagen_seleccionada(tipo,doc,pag,id)
-	{	
+	function imagen_seleccionada(tipo,doc,pag,id) {
 	if(tipo=='PAGINA')
 	 window.open("comentario_mostrar.php?key="+doc+"&pag="+pag,"_self");
   else
@@ -476,8 +473,7 @@ necesario segun el tipo de imagen que se desea ver
 <Pre-condiciones>
 <Post-condiciones>
 */		
-	function initGallery()
-	{
+	function initGallery() {
 		var divs = document.getElementsByTagName('DIV');
 		for(var no=0;no<divs.length;no++){
 			if(divs[no].className=='imageBox_theImage' || divs[no].className=='imageBox_label'){
@@ -513,24 +509,26 @@ necesario segun el tipo de imagen que se desea ver
 pantalla principal donde se muestran la imagen a tama�o completo y el menu con las
 opciones para manipularla
 --------------------------------------------------------------------------------------------*/
-if(@$_SESSION["LOGIN".LLAVE_SAIA]<>""){
+if (@$_SESSION["LOGIN" . LLAVE_SAIA] != "") {
  $url = $_SERVER["PHP_SELF"];
  $cambio_password = "";
 $password = busca_filtro_tabla("valor","configuracion","nombre='cambio_password'","",$conn);
-if($password["numcampos"] && $password[0]["valor"]==1)
+	if ($password["numcampos"] && $password[0]["valor"] == 1) {
  $cambio_password = "&nbsp;&nbsp;<a href='../changepwd.php'>Cambiar contrase&ntilde;a</a>";
-if(strpos($url,'comentario_mostrar.php') || strpos($url,'ordenar.php') || strpos($url,'view.php'))
+	}
+	if (strpos($url, 'comentario_mostrar.php') || strpos($url, 'ordenar.php') || strpos($url, 'view.php')) {
  $url = "'".$_SESSION["punto_retorno"]."'"; 
-else
+	} else {
  $url = "'#' onclick='window.history.go(-1)'"; 
-
+	}
 $sig_ant=array();
 $sig_ant=documento_siguiente_anterior();
 if(isset($_REQUEST["mostrar_doc"])){
-  if($_REQUEST["mostrar_doc"]=="ant" && $sig_ant[0]!="")
+		if ($_REQUEST["mostrar_doc"] == "ant" && $sig_ant[0] != "") {
     redirecciona("ordenar.php?accion=mostrar&key=".$sig_ant[0]."#");
-  else if($_REQUEST["mostrar_doc"]=="sig" && $sig_ant[1]!="")
+		} else if ($_REQUEST["mostrar_doc"] == "sig" && $sig_ant[1] != "") {
     redirecciona("ordenar.php?accion=mostrar&key=".$sig_ant[1]."#");
+		}
 }
  
 ///$sig_ant[0] tiene el valor del Anterior documento en la lista
@@ -566,8 +564,7 @@ menu_ordenar($llave);
 <br>
 <span class="internos"></span>
 <?php 
-if(!(isset($_GET["accion"]) && $_GET["accion"]=="mostrar"))
- {
+if (!(isset($_GET["accion"]) && $_GET["accion"] == "mostrar")) {
    echo "<script type=\"text/javascript\">	window.onload = initGallery; </script>";
  }
 $llave="";
@@ -576,68 +573,71 @@ $list_orden=array();
 $actualizar = "";
   
 global $conn;
-if(isset($_REQUEST["key"]))     //identificador del documento
+if (isset($_REQUEST["key"])) {// identificador del documento
  $llave=$_REQUEST["key"]; 
-else  
+} else {
   $llave = @$_SESSION["iddoc"]; 
-if($llave)
+}
+if ($llave) {
   @$_SESSION["iddoc"]=$llave; 
 //datos del documento
-if(isset($_REQUEST["tipo"]))     //identificador del documento
+}
+if (isset($_REQUEST["tipo"])) {// identificador del documento
  $tipo=$_REQUEST["tipo"]; 
-else if(isset($_SESSION["tipo_doc"]))
+} else if (isset($_SESSION["tipo_doc"])) {
   $tipo = $_SESSION["tipo_doc"];
-else $tipo="";  
+} else {
+	$tipo = "";
+}
  $codigo=usuario_actual("funcionario_codigo");
  leido($codigo,$llave);
  $mostrar = "DOCUMENTO:";   
 //die($llave);  
-if($tipo=="registro")
-  {$detalle_doc = busca_filtro_tabla("codigo as numero,titulo as descripcion,tipo_documental_idtipo_documental as serie","archivo","idarchivo=".$llave,"",$conn);
+if ($tipo == "registro") {
+	$detalle_doc = busca_filtro_tabla("codigo as numero,titulo as descripcion,tipo_documental_idtipo_documental as serie", "archivo", "idarchivo=" . $llave, "", $conn);
     //print_r($detalle_doc);
     //echo($sql);
    $mostrar= "REGISTRO:";
-  }
-else
+} else {
 $detalle_doc = busca_filtro_tabla("numero,descripcion,serie,plantilla,pdf,estado","documento","iddocumento=".$llave,"",$conn);
+}
 //imprime en pantalla la descripcion del documento y numero de radicado
 ?> 
 <span class="phpmaker">DOCUMENTO:&nbsp; 
 <?php echo $detalle_doc[0]["numero"]." - ".str_replace(chr(10), "<br>", stripslashes($detalle_doc[0]["descripcion"]));
-if($detalle_doc[0]["estado"]=="ANULADO")
+if ($detalle_doc[0]["estado"] == "ANULADO") {
   echo "<font color='red'> (ANULADO)</font>";
-  if(isset($detalle_doc[0]["plantilla"]))
+}
+if (isset($detalle_doc[0]["plantilla"])) {
     $plantilla = $detalle_doc[0]["plantilla"];
-  else $plantilla="";    
+} else {
+	$plantilla = "";
+}
   $serie = $detalle_doc[0]["serie"];
 ?>
 </span>
 <hr>
 
 <?php
-if($plantilla<>"")
-    {$tabla=busca_filtro_tabla("tabla_imagenes","plantillas","plantilla='".strtolower($plantilla)."'","",$conn);
-     if($tabla["numcampos"] && $tabla[0]["tabla_imagenes"]<>"")
+if ($plantilla != "") {
+	$tabla = busca_filtro_tabla("tabla_imagenes", "plantillas", "plantilla='" . strtolower($plantilla) . "'", "", $conn);
+	if ($tabla["numcampos"] && $tabla[0]["tabla_imagenes"] != "") {
         $tabla_imagenes=$tabla[0]["tabla_imagenes"];
-     else
+	} else {
         $tabla_imagenes="pagina";   
     }
-else
+} else {
    $tabla_imagenes="pagina";
-
-if(isset($_POST["orden"]))   //solo es posible para los usuarios que tienen permiso de ordenar paginas.
- {
+}
+if (isset($_POST["orden"])) { // solo es posible para los usuarios que tienen permiso de ordenar paginas.
   $orden = $_POST["orden"];  //string con el orden de las paginas  
   $list_orden = split(",",$orden);  
-  for($i=0; $i<count($list_orden)-1; $i++)
-  { 
+	for($i = 0; $i < count($list_orden) - 1; $i++) {
     $actualizar = "update $tabla_imagenes A set pagina='".($i+1)."' where consecutivo = ".$list_orden[$i];            
     phpmkr_query($actualizar,$conn);    
   }  
  redirecciona("ordenar.php?key=".$llave."&accion=mostrar");        
- }
-else
- {
+} else {
   $codigo="";
   $listado = busca_filtro_tabla("A.*","pagina A","A.id_documento=".$llave,"A.pagina",$conn);  //busca las paginas del documento  
 	if ($listado["numcampos"] > 0) {
@@ -649,21 +649,20 @@ else
 			$codigo .= "<div class=\"imageBox_theImage\" style=\"background-image:url('" . $contenido_imagen . "')\" onclick=\"imagen_seleccionada('PAGINA'," . $llave . "," . $listado[$i]["consecutivo"] . ",'');\"></div>";
       $codigo.="<div class=\"imageBox_label\"><span>P&aacute;gina ".$listado[$i]["pagina"]."</span></div></div>";
     }        
-  }
-  else
+	} else {
    $codigo="<span class=\"imageBox_label\"><center><label style='font-family: Verdana;font-size: 9px;'><b>El documento no tiene p&aacute;ginas digitalizadas.</b></center></span>";
+	}
   echo "<div class='container'>".$codigo."</div><br><br><br><br><br><br><br>";
   //muestra los formatos que esta relacionado con el documento    
 $destino='targee="centro"';
-  if($plantilla<>"")  
-   {
+	if ($plantilla != "") {
    $destino='target="_parent"';
    $etiqueta = busca_filtro_tabla("etiqueta,idformato","formato","lower(nombre)='".strtolower($plantilla)."'","",$conn);
-   if($etiqueta["numcampos"]>0)
-   { $nombre_plantilla = $etiqueta[0]["etiqueta"];
-   }
-   else
+		if ($etiqueta["numcampos"] > 0) {
+			$nombre_plantilla = $etiqueta[0]["etiqueta"];
+		} else {
     $nombre_plantilla = $plantilla;
+		}
    }
     $tipo_documento = busca_filtro_tabla("A.serie","documento A","A.iddocumento=".$llave,"",$conn);
     $serie = busca_filtro_tabla("","serie","idserie=".$tipo_documento[0]["serie"],"",$conn);

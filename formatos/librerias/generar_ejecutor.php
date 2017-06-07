@@ -1,15 +1,10 @@
-<script type="text/javascript" src="../../anexosdigitales/highslide-4.0.10/highslide/highslide-with-html.js"></script>
-<link rel="stylesheet" type="text/css" href="../../anexosdigitales/highslide-4.0.10/highslide/highslide.css" />
-<script type='text/javascript'>
-    hs.graphicsDir = '../../anexosdigitales/highslide-4.0.10/highslide/graphics/';
-    hs.outlineType = 'rounded-white';
-</script>
 <?php
 include_once("../../db.php");
 
 $campos=explode(",",$_REQUEST["campos"]);
+$etiquetas=array("titulo"=>"T&iacute;tulo","direccion"=>"Direcci&oacute;n","telefono"=>"Tel&eacute;fono","email"=>"Email","ciudad"=>"Ciudad","empresa"=>"Nombres y apellidos","identificacion"=>"Identificaci&oacute;n","nombre"=>"Nombres y apellidos","nombre_pj"=>"Entidad");
 $texto='';
-$texto.='<table width="500px" >';
+$texto.='<table>';
 foreach($campos as $nombre)
  {
  	if($nombre<>'')
@@ -19,16 +14,15 @@ $texto.='</table>';
 echo $texto;
 
 
-function crear_campo($nombre)
-{
-	global $conn;
+function crear_campo($nombre){
+ global $conn,$etiquetas;
 	if($nombre=="fecha_nacimiento")
    $datos_ejecutor=busca_filtro_tabla(fecha_db_obtener($nombre,"Y-m-d")." as fecha_nacimiento","datos_ejecutor,ejecutor","ejecutor_idejecutor=idejecutor and ejecutor_idejecutor=".$_REQUEST["idejecutor"],"fecha desc",$conn);
  else
    $datos_ejecutor=busca_filtro_tabla($nombre,"datos_ejecutor,ejecutor","ejecutor_idejecutor=idejecutor and ejecutor_idejecutor=".$_REQUEST["idejecutor"],"fecha desc",$conn);
 
  $texto='<tr><td width="150">
-      <label>'.mayusculas(str_replace("_"," ",$nombre)).':</label>
+      <label id="label_'.$nombre.'">'.$etiquetas[$nombre].':</label>
     </td>';
  if($nombre=="titulo")
     {$texto.='<td><div id="div_titulo_ejecutor">
@@ -172,7 +166,7 @@ if(!$ciudad)
         $texto.=" SELECTED ";
       $texto.=">".$municipios[$i]["nombre"].'</option>';
     }
-    $texto.='</select><a style="cursor:pointer" id="nuevo_municipio_'.$campo.'">Otro</a>';
+    $texto.='</select>&nbsp;&nbsp;&nbsp;<a style="cursor:pointer" id="nuevo_municipio_'.$campo.'">Otro</a>';
 
   }
 return($texto);

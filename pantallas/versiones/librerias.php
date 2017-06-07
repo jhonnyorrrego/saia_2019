@@ -33,7 +33,7 @@ actualizar_documento($documento,$version);
 <script>
 $(document).ready(function(){
    notificacion_saia('Version creada con exito','success','',3000);
-   window.open("<?php echo($ruta_documento); ?>","arbol_formato");
+   parent.location.reload();
 });
 </script>
 <?php

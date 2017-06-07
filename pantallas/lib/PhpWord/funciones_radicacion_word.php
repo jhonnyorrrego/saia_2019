@@ -52,7 +52,10 @@ class RadicadoWord {
 		$this->iddocumento = $iddoc;
 		$this->ruta_docx = '';
 		$this->archivo_csv = null;
+<<<<<<< HEAD
 		$this->alm_csv = null;
+=======
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
 		$this->combinar = false;
 		$this->ruta_procesar = null;
 		$this->idformato = null;
@@ -180,14 +183,22 @@ class RadicadoWord {
 				}
 			} // fin si existe iddoc y el word tiene campos del formato
 		} else { // fin si existe word
+<<<<<<< HEAD
 			die("No existe la plantilla" . $this->ruta_procesar);
+=======
+		    die("No existe la plantilla" . $this->ruta_docx . 'documento_word.docx');
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
 		}
 	}
 
 	protected function combinar_documento($numero_radicado) {
 		global $conn;
 		
+<<<<<<< HEAD
 		$archivo_original = $this->ruta_procesar;
+=======
+		$archivo_original = $this->ruta_docx . 'documento_word.docx';
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
 		$marca_agua = mostrar_estado_documento($this->iddocumento);
 		$extension_doc = '.docx';
 
@@ -195,7 +206,11 @@ class RadicadoWord {
 		for($i = 0; $i < count($datos); $i++) {
 			// Cada elemento es un array campo => valor
 			$archivo_out = "documento_word_" . ($i + 1);
+<<<<<<< HEAD
 			$archivo_copia = $this->ruta_combinar . "/$archivo_out" . $extension_doc;
+=======
+			$archivo_copia = $this->ruta_combinar . $archivo_out . $extension_doc;
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
 			copy($archivo_original, $archivo_copia);
 			$templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor($archivo_copia);
 			$campos_word = $templateProcessor->getVariables();

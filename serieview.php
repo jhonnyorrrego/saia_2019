@@ -70,7 +70,7 @@ switch ($sAction)
 <p><span class="internos"><br>&nbsp;&nbsp;VER TIPOS/SERIES DOCUMENTALES<br><br>&nbsp;&nbsp;
 
 <?php 
-    if($x_categoria==2 && $x_tipo!=3){
+    if($x_categoria==2 && $x_tipo!=3 && !@$_REQUEST['sin_asignar']){
     	$dependencia_serie='';
     	if(@$_REQUEST['dependencia_serie']){
     		$dependencia_serie="&dependencia_serie=".$_REQUEST['dependencia_serie'];
@@ -87,7 +87,7 @@ switch ($sAction)
 <a href="<?php echo "serieedit.php?key=" . urlencode($sKey); ?>">Editar</a>&nbsp;
 <!--a href="<?php echo "seriedelete.php?key=" . urlencode($sKey); ?>">Desactivar</a-->&nbsp;
 <?php 
-    if($x_categoria==2 ){
+    if($x_categoria==2){
         ?>
         <a href="<?php echo "asignarserie_entidad.php?filtrar_serie=" . urlencode($sKey); ?>">Asignar / Quitar Series</a>&nbsp;&nbsp;
         <?php

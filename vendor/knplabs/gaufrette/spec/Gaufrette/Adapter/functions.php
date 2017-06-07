@@ -284,3 +284,15 @@ function apc_exists($path)
 
     return true;
 }
+<<<<<<< HEAD
+=======
+
+function ftp_size($connection, $path)
+{
+    if ($path === '/erroneous') {
+        return -1;
+    }
+
+    return 5000;
+}
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744

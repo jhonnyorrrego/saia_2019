@@ -3,24 +3,20 @@ include_once("../db.php");
 $max_salida=10; // Previene algun posible ciclo infinito limitando a 10 los ../
 $ruta_db_superior=$ruta="";
 
-while($max_salida>0)
-{
-if(is_file($ruta."db.php"))
-{
+while($max_salida > 0) {
+	if (is_file($ruta . "db.php")) {
 $ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
 }
 $ruta.="../";
 $max_salida--;
 }
-
 include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
 $validar_enteros=array("idanexo");
 include_once($ruta_db_superior."librerias_saia.php");
 desencriptar_sqli('form_info');
 echo(librerias_jquery());
 //print_r($_REQUEST);die();
-if(isset($_REQUEST["editar_anexo"]))
-{
+if (isset($_REQUEST["editar_anexo"])) {
   global $conn;
 $info=busca_filtro_tabla("","anexos","idanexos=".$_REQUEST["idanexo"],"",$conn);
  $ruta_nueva=$ruta_db_superior.$info[0]["ruta"];
@@ -65,11 +61,11 @@ $info=busca_filtro_tabla("","anexos","idanexos=".$_REQUEST["idanexo"],"",$conn);
    alerta("Anexo editado.",'success',4000);
    echo "<script>window.parent.hs.close();</script>";
   }  
-}
-elseif($_REQUEST["idanexo"])
-{
+} elseif ($_REQUEST["idanexo"]) {
 ?>
-<b>Editar Anexo</b><br /><br />
+<b>Editar Anexo</b>
+<br />
+<br />
 <form name="form1" id="form1" method="POST" enctype="multipart/form-data">
 <input type="file" name="anexo">
 <input type="hidden" name="idanexo" value="<?php echo $_REQUEST["idanexo"]?>">
@@ -77,5 +73,7 @@ elseif($_REQUEST["idanexo"])
 <input type="hidden" value="1" name="editar_anexo">
 </form>
 <?php
-}encriptar_sqli("form1",1,"form_info",$ruta_db_superior);
+encriptar_sqli("form1",1,"form_info",$ruta_db_superior);
+}
+
 ?>

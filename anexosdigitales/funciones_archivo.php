@@ -285,7 +285,14 @@ function acciones_anexos_usuario($idfunc,$idanexo,$limita_accion=NULL,$num=-1){
  	if($limita_accion!=NULL)
   	$limita_accion=explode("|",$limita_accion);
   else
-   	$limita_accion=array("PERMISOS","ELIMINAR","DESCARGAR","ICONO","PROPIETARIO","EDITAR");
+		$limita_accion = array(
+				"PERMISOS",
+				"ELIMINAR",
+				"DESCARGAR",
+				"ICONO",
+				"PROPIETARIO",
+				"EDITAR"
+		);
   
  	$anexo=busca_filtro_tabla("","anexos","idanexos=".$idanexo,"",$conn);
  	$propietario=busca_filtro_tabla("nombres,apellidos,funcionario_codigo,idfuncionario","permiso_anexo,funcionario","idpropietario=idfuncionario and anexos_idanexos=".$idanexo,"",$conn);
@@ -294,12 +301,14 @@ function acciones_anexos_usuario($idfunc,$idanexo,$limita_accion=NULL,$num=-1){
     $permisos=func_permiso_anexo($idfunc,$idanexo);
     $arper1=str_split($permisos);
     $resultado="";
-    if(html_entity_decode($anexo[0]["etiqueta"])!="")
+		if (html_entity_decode($anexo[0]["etiqueta"]) != "") {
     	$etiqueta=($anexo[0]["etiqueta"]);
-    else
+		} else {
     	$etiqueta=substr(html_entity_decode($anexo[0]["ruta"]),(strrpos(html_entity_decode($anexo[0]["ruta"]),"/")+1));
-    if(in_array("ICONO",$limita_accion))
+		}
+		if (in_array("ICONO", $limita_accion)) {
     	$resultado.=($etiqueta);
+		}
     if(in_array ("l", $arper1)&&in_array("DESCARGAR",$limita_accion)){// Simpre se muestra la opcion de descarga
    		if(in_array("ICONO",$limita_accion)){ // IMPRIME CON ICONOS
    		
@@ -310,8 +319,7 @@ function acciones_anexos_usuario($idfunc,$idanexo,$limita_accion=NULL,$num=-1){
         
     		$resultado.='<a href="'.$ruta.'anexosdigitales/parsea_accion_archivo.php?idanexo='.$idanexo.'&accion=descargar" border="0px"><img title="Descargar" src="'.$ruta.'botones/anexos/application.png" style="border-width:0px; cursor:auto;" /></a>';	
    		    }
-    	}
-      else{// ES SOLO LA OPCION DE DESCARGA SE IMPRIME EL LINK CON EL NOMBRE DEL ARCHIVO
+			} else { // ES SOLO LA OPCION DE DESCARGA SE IMPRIME EL LINK CON EL NOMBRE DEL ARCHIVO
 				if(@$_REQUEST["tipo"]==5)
 					$resultado.=($anexo[0]["etiqueta"]);
 				else{
@@ -322,8 +330,7 @@ function acciones_anexos_usuario($idfunc,$idanexo,$limita_accion=NULL,$num=-1){
     if(in_array ("e", $arper1)&&in_array("ELIMINAR",$limita_accion)){// Verifica el permismo y que no se pida solo mostrar la opcion de descarga
     	if(in_array("ICONO",$limita_accion)){//enlace con icono
     		$objeto='<img title="Eliminar" name="permisos" src="'.$ruta.'botones/anexos/application_delete.png" style="border-width:0px">';
-      }
-    	else{   
+			} else {
     		$objeto="Eliminar";
     	}
   	  $resultado.= '<a href="'.$ruta.'anexosdigitales/borrar_anexos.php?idanexo='.$idanexo.'" id="el_'.$idanexo.'" class="highslide" onclick="return hs.htmlExpand( this, {objectType: \'iframe\', outlineWhileAnimating: true, width: 250 });">'.$objeto.'</a>';
@@ -331,8 +338,7 @@ function acciones_anexos_usuario($idfunc,$idanexo,$limita_accion=NULL,$num=-1){
 	  if(in_array("m",$arper1)&&in_array("EDITAR",$limita_accion)){// Verifica el permismo y que no se pida solo mostrar la opcion de descarga
 	  	if(in_array("ICONO",$limita_accion)){//enlace con icono
     		$objeto='<img title="Editar" name="editar" src="'.$ruta.'botones/anexos/application_edit.png" style="border-width:0px; cursor:wait;">';
-      }
-    	else{   
+			} else {
     		$objeto="Editar";
     	}
   	  $resultado.= '<a href="'.$ruta.'anexosdigitales/anexos_permiso_edit.php?idanexo='.$idanexo.'" id="el_'.$idanexo.'" class="highslide" onclick="return hs.htmlExpand(this,{objectType: \'iframe\', outlineWhileAnimating: true, width: 250,preserveContent:false } )" style="border-width:0px; cursor:auto;">'.$objeto.'</a>';
@@ -341,8 +347,7 @@ function acciones_anexos_usuario($idfunc,$idanexo,$limita_accion=NULL,$num=-1){
     if($datos_permisos["numcampos"]>0){ 
     	if(in_array("ICONO",$limita_accion)){//enlace con icono
     		$objeto='<img title="Permisos" name="permisos" src="'.$ruta.'botones/anexos/application_key.png" style="border-width:0px; cursor:wait;">';
-    	}
-    	else{
+			} else {
     		$objeto="Permisos";
     	}
 	    if($datos_permisos[0]["idpropietario"]==$idfunc&&in_array("PERMISOS",$limita_accion)){// Si es el propietario ademas se agrega el permiso para modificar permisos
@@ -351,12 +356,11 @@ function acciones_anexos_usuario($idfunc,$idanexo,$limita_accion=NULL,$num=-1){
 		}
    	if(!isset($_REQUEST["idfunc"])){ 
     	$idfunc=usuario_actual("id");
-    }
-    else{ 
+		} else {
     	$func=busca_filtro_tabla("idfuncionario","funcionario","funcionario_codigo=".$_REQUEST["idfunc"],"",$conn);
       $idfunc=$func[0][0];
     }  
-   	if($idfunc<>$propietario[0]["idfuncionario"] && (!isset($_REQUEST["tipo"])||$_REQUEST["tipo"]==1) ){
+		if ($idfunc != $propietario[0]["idfuncionario"] && (! isset($_REQUEST["tipo"]) || $_REQUEST["tipo"] == 1)) {
    		$objeto='<img title="Propietario&nbsp;del&nbsp;anexo:&nbsp;'.str_replace(" ","&nbsp;",$propietario[0]["nombres"]." ".$propietario[0]["apellidos"]).'" name="permisos" src="'.$ruta.'botones/anexos/application_home.png" style="border-width:0px;">';
       $resultado.= '<a>'.$objeto.'</a>';
 		}
@@ -440,18 +444,6 @@ function descargar_archivo($id,$tipo_al=NULL) {
        alerta('problema con el archivo anexo','error',4000);
 		} else {
       $file=$datos[0]["ruta"];  
-	}
-     
-      $max_salida=10; // Previene algun posible ciclo infinito limitando a 10 los ../
-      $ruta_db_superior=$ruta="";
-    while($max_salida>0)
-      {
-          if(is_file($ruta."db.php"))
-          {
-          $ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
-          }
-          $ruta.="../";
-          $max_salida--;
       }
 
 		$arr_alm = StorageUtils::resolver_ruta($file);
@@ -565,8 +557,6 @@ if($campo["numcampos"]){
 return TRUE;
 }
 
-
-
 function cargar_archivo($iddoc, $permisos_anexos, $formato = NULL, $campo = NULL) {
 	global $conn;
 
@@ -590,7 +580,8 @@ function cargar_archivo($iddoc, $permisos_anexos, $formato = NULL, $campo = NULL
 	else
 		$salir = $ruta_db_superior;
 
-	for ($i = 0; $i < count($aux_permisos); $i++) {$fila = explode(";", $aux_permisos[$i]);
+	for($i = 0; $i < count($aux_permisos); $i ++) {
+		$fila = explode(";", $aux_permisos[$i]);
 		$permisos[$fila[0]]["propio"] = @$fila[1];
 		$permisos[$fila[0]]["dependencia"] = @$fila[2];
 		$permisos[$fila[0]]["cargo"] = @$fila[3];
@@ -609,7 +600,7 @@ function cargar_archivo($iddoc, $permisos_anexos, $formato = NULL, $campo = NULL
 	$almacenamiento = new SaiaStorage($tipo_almacenamiento);
 	for ($j = 0; @$_FILES['anexos']['name'][$j]; $j++) {
 		if (is_uploaded_file($_FILES['anexos']['tmp_name'][$j]) && $_FILES['anexos']['size'][$j]) {
-			$nombre = (($_FILES['anexos']['name'][$j]));
+			$nombre = htmlentities(decodifica_encabezado($_FILES['anexos']['name'][$j]));
 			$datos_anexo = pathinfo($_FILES['anexos']['name'][$j]);
 			$temp_filename = uniqid() . "." . $datos_anexo["extension"];
 			$dir_anexos = selecciona_ruta_anexos2($iddoc, $tipo_almacenamiento);
@@ -660,18 +651,19 @@ function cargar_archivo($iddoc, $permisos_anexos, $formato = NULL, $campo = NULL
 					}
 				}
 				if ($idanexo) {
-					if (array_key_exists($nombre, $permisos)) {$propio = $permisos[$nombre]["propio"];
+					if (array_key_exists($nombre, $permisos)) {
+						$propio = $permisos[$nombre]["propio"];
 						$dependencia = $permisos[$nombre]["dependencia"];
 						$cargo = $permisos[$nombre]["cargo"];
 						$total = $permisos[$nombre]["total"];
-					} else {$propio = "lem";
+					} else {
+						$propio = "lem";
 						$dependencia = "";
 						$cargo = "";
 						$total = "l";
 					}
 					$sql_permiso = "insert into permiso_anexo(anexos_idanexos,idpropietario,caracteristica_propio,caracteristica_dependencia,caracteristica_cargo,caracteristica_total) values('$idanexo','" . usuario_actual("idfuncionario") . "','$propio','$dependencia','$cargo','$total')";
 					phpmkr_query($sql_permiso, $conn);
-
 				}
 			}
 		}
@@ -683,19 +675,18 @@ function cargar_archivo_formato($idcampo,$idformato,$iddoc){
 global $conn;
 $resultado=NULL;
 $larchivos=array();
+	$permisos = array();
+	$aux_permisos = explode("|", $_REQUEST["permisos_anexos"]);
+
 $max_salida=10; // Previene algun posible ciclo infinito limitando a 10 los ../
 $ruta_db_superior=$ruta="";
-while($max_salida>0)
-{
-if(is_file($ruta."db.php"))
-{
+	while($max_salida > 0) {
+		if (is_file($ruta . "db.php")) {
 $ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
 }
 $ruta.="../";
 $max_salida--;
 }
-$permisos=array();
-$aux_permisos=explode("|",$_REQUEST["permisos_anexos"]);
 
 	for($i = 0; $i < count($aux_permisos); $i ++) {
 		$fila = explode(";", $aux_permisos[$i]);
@@ -723,7 +714,7 @@ if($campo["numcampos"]){
 		//print_r($_FILES);die();
   for($i=0;$i<$campo["numcampos"];$i++){
     for($j=0;$_FILES[$campo[$i]["nombre"]]['name'][$j];$j++){
-				$nombre = $_FILES[$campo[$i]["nombre"]]['name'][$j];
+				$nombre = htmlentities(decodifica_encabezado($_FILES[$campo[$i]["nombre"]]['name'][$j]));
       if(is_uploaded_file($_FILES[$campo[$i]["nombre"]]['tmp_name'][$j]) && $_FILES[$campo[$i]["nombre"]]['size'][$j]){
 					$datos_anexo = pathinfo($nombre);
 					$temp_filename = uniqid() . "." . $datos_anexo["extension"];
@@ -747,11 +738,9 @@ if($campo["numcampos"]){
 							phpmkr_query($sql1) or die($sql1);
             $idanexo=phpmkr_insert_id();
             //echo("<br />SQL:".$sql."<br />");
-          }
-          elseif($tipo_almacenamiento=="db"){
+						} elseif ($tipo_almacenamiento == "db") {
             phpmkr_query("INSERT INTO binario(nombre_original) VALUES ('$nombre')", $conn);
             $idbin = phpmkr_insert_id();
-           
           	$fcont=fopen($ruta_db_superior.$dir_anexos.$temp_filename,"rb");
           	$cont=fread($fcont,filesize($ruta_db_superior.$dir_anexos.$temp_filename));
 
@@ -762,8 +751,8 @@ if($campo["numcampos"]){
           	 if($idanexo){
 			  // EN EL MOMENTO SE HACE ALMACENAMIENTO DUAL NO SE BORRA EL ARCHIVO
               //unlink($dir_anexos.$temp_filename); // Se elimina el temporal .. el blob se almaceno correctamente
-             }
-             else alerta("No se puede Adicionar el Anexo xx".$_FILES[$campo[$i]["nombre"]]['name'][$j],'error',4000);
+								} else
+									alerta("No se puede Adicionar el Anexo xx" . $nombre, 'error', 4000);
           	}
           }
           if($idanexo){
@@ -771,24 +760,21 @@ if($campo["numcampos"]){
             phpmkr_query($update);
             array_push($larchivos,$idanexo);
              
-            if(array_key_exists ($nombre , $permisos ))
-              {$propio=$permisos[$nombre]["propio"];
+							if (array_key_exists($nombre, $permisos)) {
+								$propio = $permisos[$nombre]["propio"];
                $dependencia=$permisos[$nombre]["dependencia"];
                $cargo=$permisos[$nombre]["cargo"];
                $total=$permisos[$nombre]["total"];
-              }
-            else
-              {$propio="lem";
+							} else {
+								$propio = "lem";
                $dependencia="";
                $cargo="";
                $total="l";
               }  
             $sql_permiso="insert into permiso_anexo(anexos_idanexos,idpropietario,caracteristica_propio,caracteristica_dependencia,caracteristica_cargo,caracteristica_total) values('$idanexo','".usuario_actual("idfuncionario")."','$propio','$dependencia','$cargo','$total')";
             phpmkr_query($sql_permiso,$conn);
-          
           }
-        }
-        else {
+					} else {
           alerta("!Se ha generado un error al tratar de copiar el archivo ".$nombre,'error',4000);
         }
       }
@@ -861,8 +847,7 @@ function verifica_ruta($ruta) {
 }
 
 
-function borrar($idanexo) 
-{  
+function borrar($idanexo) {
   global $conn,$ruta_db_superior;
   $config = busca_filtro_tabla("valor","configuracion","nombre='tipo_almacenamiento'","",$conn);
   $anexo=busca_filtro_tabla("","anexos","idanexos=".$idanexo,"",$conn);
@@ -942,4 +927,52 @@ if(isset($_REQUEST["ft_funcion"])&& trim($_REQUEST["ft_funcion"])<>""){
   if(function_exists($funcion))
     call_user_func_array($funcion,explode(",",$parametros));
 }
+function listar_anexos_ver_descargar($idformato,$iddoc,$idcampo='',$tipo_mostrar='',$retorno=0){
+	global $ruta_db_superior,$conn;
+
+    $condicion_icampo='';
+    if($idcampo!=''){
+        $condicion_icampo=" AND campos_formato='".$idcampo."'";
+    }
+	$anexos=busca_filtro_tabla("","anexos","documento_iddocumento=".$iddoc.$condicion_icampo,"",$conn);
+	$tabla='';
+	if($anexos['numcampos']){
+	    $array_extensiones_ver=array('jpg','pdf','png');
+		$tabla='<ul>';
+	    for($j=0;$j<$anexos['numcampos'];$j++){
+	        if(in_array(strtolower($anexos[$j]['tipo']),$array_extensiones_ver)){
+	            $href='';
+	            if($tipo_mostrar!=5){
+	            	require_once($ruta_db_superior.'StorageUtils.php');
+					require_once($ruta_db_superior.'filesystem/SaiaStorage.php');
+					$tipo_almacenamiento = new SaiaStorage("archivos");
+					$ruta_imagen=json_decode($anexos[$j]['ruta']);	
+					if(is_object($ruta_imagen)){
+						if($tipo_almacenamiento->get_filesystem()->has($ruta_imagen->ruta)){
+							$ruta64 = base64_encode($anexos[$j]["ruta"]);
+							$ruta_abrir = $ruta_db_superior."filesystem/mostrar_binario.php?ruta=$ruta64";
+							$href=$ruta_abrir;
+						}
+					}					  
+	            }
+	            $tabla.="<li><a href='".$href."' target='_blank'>".$anexos[$j]['etiqueta']."</a></li>";
+	        }else{
+	            $href='';
+	            if($tipo_mostrar!=5){
+	                $href=$ruta_db_superior.'anexosdigitales/parsea_accion_archivo.php?idanexo='.$anexos[$j]['idanexos'].'&accion=descargar';
+	            }     
+	            $tabla.='<li><a title="Descargar" href="'.$href.'" border="0px">'.$anexos[$j]['etiqueta'].'</a></li>';
+	        }
+	    }
+		$tabla.='</ul>';
+	}
+    if($retorno){
+	    return($tabla);
+	}else{
+	    echo($tabla);	
+	}
+}
+
+
+
 ?>

@@ -11,9 +11,14 @@ use OpenCloud\Common\Exceptions\CreateUpdateError;
 use OpenCloud\ObjectStore\Exception\ObjectNotFoundException;
 
 /**
+<<<<<<< HEAD
  * OpenCloud adapter
  *
  * @package Gaufrette
+=======
+ * OpenCloud adapter.
+ *
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
  * @author  James Watson <james@sitepulse.org>
  * @author  Daniel Richter <nexyz9@gmail.com>
  */
@@ -41,23 +46,38 @@ class OpenCloud implements Adapter,
     protected $container;
 
     /**
+<<<<<<< HEAD
      * Constructor
      *
+=======
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      * @param Service $objectStore
      * @param string  $containerName   The name of the container
      * @param bool    $createContainer Whether to create the container if it does not exist
      */
     public function __construct(Service $objectStore, $containerName, $createContainer = false)
     {
+<<<<<<< HEAD
         $this->objectStore     = $objectStore;
         $this->containerName   = $containerName;
+=======
+        $this->objectStore = $objectStore;
+        $this->containerName = $containerName;
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
         $this->createContainer = $createContainer;
     }
 
     /**
+<<<<<<< HEAD
      * Returns an initialized container
      *
      * @throws \RuntimeException
+=======
+     * Returns an initialized container.
+     *
+     * @throws \RuntimeException
+     *
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      * @return Container
      */
     protected function getContainer()
@@ -82,11 +102,19 @@ class OpenCloud implements Adapter,
     }
 
     /**
+<<<<<<< HEAD
      * Reads the content of the file
      *
      * @param string $key
      *
      * @return string|boolean if cannot read content
+=======
+     * Reads the content of the file.
+     *
+     * @param string $key
+     *
+     * @return string|bool if cannot read content
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function read($key)
     {
@@ -98,19 +126,31 @@ class OpenCloud implements Adapter,
     }
 
     /**
+<<<<<<< HEAD
      * Writes the given content into the file
+=======
+     * Writes the given content into the file.
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      *
      * @param string $key
      * @param string $content
      *
+<<<<<<< HEAD
      * @return integer|boolean The number of bytes that were written into the file
+=======
+     * @return int|bool The number of bytes that were written into the file
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function write($key, $content)
     {
         try {
             $object = $this->getContainer()->uploadObject($key, $content);
+<<<<<<< HEAD
         }
         catch (CreateUpdateError $updateError) {
+=======
+        } catch (CreateUpdateError $updateError) {
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
             return false;
         }
 
@@ -118,11 +158,19 @@ class OpenCloud implements Adapter,
     }
 
     /**
+<<<<<<< HEAD
      * Indicates whether the file exists
      *
      * @param string $key
      *
      * @return boolean
+=======
+     * Indicates whether the file exists.
+     *
+     * @param string $key
+     *
+     * @return bool
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function exists($key)
     {
@@ -136,14 +184,22 @@ class OpenCloud implements Adapter,
     }
 
     /**
+<<<<<<< HEAD
      * Returns an array of all keys (files and directories)
+=======
+     * Returns an array of all keys (files and directories).
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      *
      * @return array
      */
     public function keys()
     {
         $objectList = $this->getContainer()->objectList();
+<<<<<<< HEAD
         $keys = array ();
+=======
+        $keys = array();
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
 
         while ($object = $objectList->next()) {
             $keys[] = $object->getName();
@@ -155,11 +211,19 @@ class OpenCloud implements Adapter,
     }
 
     /**
+<<<<<<< HEAD
      * Returns the last modified time
      *
      * @param string $key
      *
      * @return integer|boolean An UNIX like timestamp or false
+=======
+     * Returns the last modified time.
+     *
+     * @param string $key
+     *
+     * @return int|bool An UNIX like timestamp or false
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function mtime($key)
     {
@@ -171,11 +235,19 @@ class OpenCloud implements Adapter,
     }
 
     /**
+<<<<<<< HEAD
      * Deletes the file
      *
      * @param string $key
      *
      * @return boolean
+=======
+     * Deletes the file.
+     *
+     * @param string $key
+     *
+     * @return bool
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function delete($key)
     {
@@ -185,8 +257,12 @@ class OpenCloud implements Adapter,
 
         try {
             $object->delete();
+<<<<<<< HEAD
         }
         catch (DeleteError $deleteError) {
+=======
+        } catch (DeleteError $deleteError) {
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
             return false;
         }
 
@@ -194,12 +270,20 @@ class OpenCloud implements Adapter,
     }
 
     /**
+<<<<<<< HEAD
      * Renames a file
+=======
+     * Renames a file.
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      *
      * @param string $sourceKey
      * @param string $targetKey
      *
+<<<<<<< HEAD
      * @return boolean
+=======
+     * @return bool
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function rename($sourceKey, $targetKey)
     {
@@ -213,11 +297,19 @@ class OpenCloud implements Adapter,
     }
 
     /**
+<<<<<<< HEAD
      * Check if key is directory
      *
      * @param string $key
      *
      * @return boolean
+=======
+     * Check if key is directory.
+     *
+     * @param string $key
+     *
+     * @return bool
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      */
     public function isDirectory($key)
     {
@@ -225,7 +317,11 @@ class OpenCloud implements Adapter,
     }
 
     /**
+<<<<<<< HEAD
      * Returns the checksum of the specified key
+=======
+     * Returns the checksum of the specified key.
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
      *
      * @param string $key
      *
@@ -249,8 +345,12 @@ class OpenCloud implements Adapter,
     {
         try {
             return $this->getContainer()->getObject($key);
+<<<<<<< HEAD
         }
         catch (ObjectNotFoundException $objFetchError) {
+=======
+        } catch (ObjectNotFoundException $objFetchError) {
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
             return false;
         }
     }
