@@ -1986,8 +1986,7 @@ global $conn;
 		}
 	}
  if(count($to)){
-	include_once("PHPMaile/class.phpmailer.php");
-	include_once("PHPMaile/language/phpmailer.lang-es.php");
+	include_once($ruta_db_superior."PHPMailer/PHPMailerAutoload.php");
 
 	$configuracion_correo=busca_filtro_tabla("valor,nombre,encrypt","configuracion","nombre in('servidor_correo','puerto_servidor_correo','puerto_correo_salida','servidor_correo_salida','correo_notificacion','clave_correo_notificacion','asunto_defecto_correo')","",$conn);
 	for($i=0;$i<$configuracion_correo['numcampos'];$i++){
