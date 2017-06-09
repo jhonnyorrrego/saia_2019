@@ -291,12 +291,13 @@ class DocumentoElastic {
 		$datos_ft = $this->cargar_informacion_item($plantilla, $iddocumento);
 
 		if (!$datos_ft["numcampos"]) {
-			throw new \Exception("Existe un error al tratar de buscar el documento con id " . $iddocumento);
+			throw new \Exception("Existe un error al tratar de buscar el item con id " . $iddocumento);
 		}
 
 		if (@$datos_ft["numcampos"]) {
+			$pk = 'idft_' . strtolower($plantilla);
 			foreach ( $datos_ft[0] as $key => $valor ) {
-				if (!is_int($key) && $key != "documento_iddocumento") {
+				if (!is_int($key) && $key != $pk) {
 					$datos_temporal["datos_ft"][$key] = mostrar_valor_campo($key, $idformato, $iddocumento, 1);
 				}
 			}
@@ -395,7 +396,9 @@ class DocumentoElastic {
 				$params["documento"] = $documento_origen["documento"];
 				$params["datos_ft"] = $documento_origen["datos_ft"];
 				$resultado_indice = $this->guardar_indice_simple($params);
-				if (!$resultado_indice["_shards"]["successful"]) {
+				if (!$resultado_indice["created"]) {
+					echo "No creado: ", $doc_ppal, "<br>";
+					return true;
 					print_r($resultado_indice);
 					throw new \Exception("No fue posible crear el indice");
 					die();
@@ -414,7 +417,10 @@ class DocumentoElastic {
 					}
 				}
 			} else {
-				$this->guardar_indice_simple($arreglo_datos);
+				$resultado_indice = $this->guardar_indice_simple($documento_origen);
+				if (!$resultado_indice["created"]) {
+					echo "No creado: ", $doc_ppal, "<br>";
+				}
 			}
 		} else {
 			throw new \Exception("Error al tomar los datos del registro " . $this->iddocumento);
@@ -439,8 +445,9 @@ class DocumentoElastic {
 			$salida = "";
 			try {
 				$salida = $this->get_cliente_elasticsearch()->adicionar_indice_simple($indice, $id, $datos, $tipo_dato, $padre);
-			} catch (\Exception $e) {
-				print_r($e);
+			} catch (Exception $e) {
+				echo 'Excepción capturada: ',  $e->getMessage(), "<br>", $e->getTraceAsString(), "<br>";
+				die();
 			}
 			return $salida;
 		}

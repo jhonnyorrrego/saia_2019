@@ -114,6 +114,8 @@ echo $x_perfil_idperfilList;
     		tree3.setOnCheckHandler(onNodeSelect);
     		tree3.setOnClickHandler(high_slide_permiso_crear_formato);
           function fin_cargando_serie() {
+              
+              $("#x_perfil_idperfil").attr('disabled',false);
             if (browserType == "gecko" )
                document.poppedLayer =
                    eval('document.getElementById("esperando_modulo")');
@@ -195,6 +197,7 @@ echo $x_perfil_idperfilList;
                  if($('#x_perfil_idperfil :selected').val()!="")
                    {tree3.deleteChildItems(0);
                     tree3.loadXML('test_permiso_modulo.php?filtro_perfil=1&entidad=perfil&llave_entidad='+$('#x_perfil_idperfil :selected').val());
+                         $("#x_perfil_idperfil").attr('disabled',true);
                    }
               });
           });

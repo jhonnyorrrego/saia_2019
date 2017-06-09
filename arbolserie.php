@@ -53,19 +53,38 @@ echo(librerias_notificaciones());
 			//tree2.loadXML("test_serie_funcionario2.php?tabla=dependencia&admin=1");
 			tree2.setXMLAutoLoading("test_dependencia_serie.php?tabla=dependencia&admin=1&carga_partes_dependencia=1&carga_partes_serie=1");
 			tree2.loadXML("test_dependencia_serie.php?tabla=dependencia&admin=1&carga_partes_dependencia=1&carga_partes_serie=1");
+		
+			function validar_oc(nodeId){
+				var datos=nodeId.split("-");
+				if(datos[0]=='otras_categorias'){
+					return(true);
+				}else{
+					return(false);
+				}
+			}
+			function validar_ssa(nodeId){
+				var datos=nodeId.split("-");
+				if(datos[0]=='sin_asignar' || datos[0]=='asignada'){
+					return(true);
+				}else{
+					return(false);
+				}
+			}			
 			function onNodeSelect(nodeId){
-			
-				
         		if(nodeId=='3-categoria-Otras categorias'){
                    	 parent.serielist.location = "serieadd.php?otras_categorias=1"; 
                 }else if(nodeId=='series_sin_asignar'){
                         parent.serielist.location ="vacio.php";	
-                }else if(tree2.getParentId(nodeId)=='3-categoria-Otras categorias'){
+                }else if(validar_oc(nodeId)){
                     var datos=nodeId.split("-");
-                    parent.serielist.location = "serieview.php?key=" + datos[0]; 
-                }else if(tree2.getParentId(nodeId)=='series_sin_asignar'){
+                    parent.serielist.location = "serieview.php?key=" + datos[1]; 
+                }else if(validar_ssa(nodeId)){
                     var datos=nodeId.split("-");
-                    parent.serielist.location = "serieview.php?sin_asignar=1&key=" + datos[1];                     
+                    	if(datos[0]=='sin_asignar'){
+                    		parent.serielist.location = "serieview.php?sin_asignar=1&key=" + datos[1]; 
+                    	}else{
+                    		parent.serielist.location ="vacio.php";	
+                    	}                      
                 }else{	
         				
                     var datos=nodeId.split("-");

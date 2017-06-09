@@ -241,8 +241,15 @@ table tbody td {
 				$alto = $configuracion[$i]["valor"];
 				$params["alto"]= $configuracion[$i]["valor"];
 				break;
+			case 'tipo_ftp' :
+				$params["ftp_type"] = $configuracion[$i]["valor"];
+				break;
 		}
 	}
+	if(!$params["ftp_type"] || $params["ftp_type"]==''){
+		$params["ftp_type"] = "ftp";
+	}
+
 	?>
 
 	<input type="hidden" name="EW_Max_File_Size" value="<?php echo($peso); ?>">

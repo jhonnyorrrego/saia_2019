@@ -70,15 +70,22 @@ body
        //for($j=0;isset($datos[$index0][$j]);$j++){
           switch($index0){
             case "informacion": 
-              echo('<br /><a href="funcionarioedit.php?key='.$datos[$index0][0].'" target="detalles">Modificar Funcionario</a>&nbsp;&nbsp;<a href="compartir_documentos.php?accion=mover_documentos_adicionar&idfun='.$datos[$index0][0].'" target="detalles">Compartir Documentos</a>&nbsp;&nbsp;<a href="funcionariodelete.php?key='.$datos[$index0][0].'" target="detalles">Estados Funcionario</a><br /><br />');
+              echo('<br />
+              	<a class="enlace_detalles_funcionario" enlace="funcionarioedit.php?key='.$datos[$index0][0].'" target="detalles">Modificar Funcionario</a>&nbsp;&nbsp;
+              	<a class="enlace_detalles_funcionario" enlace="compartir_documentos.php?accion=mover_documentos_adicionar&idfun='.$datos[$index0][0].'" target="detalles">Compartir Documentos</a>&nbsp;&nbsp;
+              	<a class="enlace_detalles_funcionario" enlace="funcionariodelete.php?key='.$datos[$index0][0].'" target="detalles">Estados Funcionario</a><br /><br />
+              ');
               $dato=mostrar_informacion_funcionario($datos[$index0][0],"");
             break;
             case "roles": 
-              echo('<br /><a href="dependencia_cargoadd.php?func='.$datos["informacion"][0].'" target="detalles">Adicionar Rol al Funcionario</a>&nbsp;&nbsp;<a href="dependencia_cargoedit.php?func='.$datos["informacion"][0].'" target="detalles">Editar Roles del Funcionario</a><br /><br />');
+              echo('<br />
+              	<a class="enlace_detalles_funcionario"  enlace="dependencia_cargoadd.php?func='.$datos["informacion"][0].'" target="detalles">Adicionar Rol al Funcionario</a>&nbsp;&nbsp;
+              	<a class="enlace_detalles_funcionario"  enlace="dependencia_cargoedit.php?func='.$datos["informacion"][0].'" target="detalles">Editar Roles del Funcionario</a><br /><br />');
               $dato=mostrar_informacion_roles($datos["roles"],array("ver","eliminar","editar"));
             break;
             case "series_funcionario":
-              echo('<br /><a href="asignarserie_entidad.php?llave_entidad='.@$_REQUEST['key'].'&tipo_entidad=1&pantalla=funcionario" target="detalles">Asignar Serie al Funcionario</a><br /><br />');              
+              echo('<br />
+              	<a class="enlace_detalles_funcionario" enlace="asignarserie_entidad.php?llave_entidad='.@$_REQUEST['key'].'&tipo_entidad=1&pantalla=funcionario" target="detalles">Asignar Serie al Funcionario</a><br /><br />');              
               $series=array();
               array_push($series,$datos["series_funcionario"]);
               array_push($series,$datos["series_cargo"]);
@@ -91,7 +98,7 @@ body
               $dato=mostrar_informacion_permisos($datos["informacion"][0],"",array("ver")); 
             break;
             case "permisos":
-              echo('<br /><a href="permisoadd.php?func='.$datos["informacion"][0].'" target="detalles">Adicionar/Quitar Permiso al Funcionario</a><br /><br />');            
+              echo('<br /><a class="enlace_detalles_funcionario"  enlace="permisoadd.php?func='.$datos["informacion"][0].'" target="detalles">Adicionar/Quitar Permiso al Funcionario</a><br /><br />');            
               $dato=mostrar_informacion_permisos($datos["informacion"][0],"permiso",array("ver","eliminar","editar")); 
               //$dato=busca_filtro_tabla("*","modulo","idmodulo=".$datos[$index0][$j],"",$conn);
             break;
@@ -129,10 +136,23 @@ body
 
 <script>
 	$(document).ready(function(){
-		window.open('funcionario_detalles_start.php?key=<?php echo(@$_REQUEST['key']); ?>','detalles');
+		window.parent.frames["detalles"].location='funcionario_detalles_start.php?key=<?php echo(@$_REQUEST['key']); ?>';
+		
+		$('.enlace_detalles_funcionario').click(function(){
+			var enlace=$(this).attr('enlace');
+			window.parent.frames["detalles"].location=enlace;
+		});
+		
 	});
 </script>
-
+<style>
+	.enlace_detalles_funcionario{
+		color: -webkit-link;
+    	cursor: auto;
+    	text-decoration: underline;	
+    	cursor:pointer;	
+	}
+</style>
 
   </body>
 </html>
