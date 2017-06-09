@@ -480,7 +480,7 @@ function crear_log_busqueda_excel($file, $texto) {
 	// file_put_contents($file, $texto,FILE_APPEND);
 }
 
-function crear_condicion_sql($idbusqueda, $idcomponente, $filtros = '') {
+function crear_condicion_elastic($idbusqueda, $idcomponente, $filtros = '') {
 	global $conn;
 	$datos_condicion = busca_filtro_tabla("", "busqueda_condicion_enlace A, busqueda_condicion B", "B.idbusqueda_condicion=A.fk_busqueda_condicion AND (B.fk_busqueda_componente=" . $idcomponente . " or B.busqueda_idbusqueda=" . $idbusqueda . ") AND cod_padre IS NULL ", "orden", $conn);
 	if (!$datos_condicion["numcampos"]) {
@@ -644,19 +644,20 @@ function procesar_busqueda_elastic($datos_busqueda) {
 		$tablas = array_merge((array)$tablas, (array)explode(",", $datos_busqueda[0]["tablas_adicionales"]));
 	}*/
 	if ($datos_busqueda[0]["campos"] != '') {
-		$campos = array_merge((array)$campos, (array)explode(",", $datos_busqueda[0]["campos"]));
+		$campos["campos"] = $datos_busqueda[0]["campos"];
 	}
 	if ($datos_busqueda[0]["campos_adicionales"] != '') {
-		$campos = array_merge((array)$campos, (array)explode(",", $datos_busqueda[0]["campos_adicionales"]));
+		$campos["adicionales"] = $datos_busqueda[0]["campos_adicionales"];
 	}
 	if ($datos_busqueda[0]["llave"]) {
-		$campos = array_merge((array)$campos, (array)explode(",", $datos_busqueda[0]["llave"]));
+		$campos["llave"] = $datos_busqueda[0]["llave"];
 	}
-	//TODO: Posiblemente no se necesite porque la consulta trae todo
-	$condicion = crear_condicion_sql($datos_busqueda[0]["idbusqueda"], $datos_busqueda[0]["idbusqueda_componente"], @$filtro);
-	//TODO: Se usa si se llama a una funcion para obtener la condicion
+	//TODO: Obtiene las condiciones de la tabla busqueda_condicion. Esta puede llamar funciones para completar el filtro
+	$condicion = crear_condicion_elastic($datos_busqueda[0]["idbusqueda"], $datos_busqueda[0]["idbusqueda_componente"], @$filtro);
+	//TODO: Obtiene la lista de funciones que se usan para completar la condicion
 	$funciones_condicion = parsear_datos_plantilla_visual($condicion);
-
+	print_r($condicion);die();
+	//print_r($condicion);die();
 	$valor_variables = array();
 	$includes = array();
 
@@ -679,6 +680,7 @@ function procesar_busqueda_elastic($datos_busqueda) {
 
 	$condicion = str_replace(" AND  and  ", " and ", $condicion);
 	//TODO: $campos trae la consulta elastic (json)
+	//TODO: Esto busca los alias para crear los group by
 	foreach ( $campos as $valor ) {
 		$as = strpos(strtolower($valor), " as ");
 		if ($as !== false) {
@@ -688,7 +690,8 @@ function procesar_busqueda_elastic($datos_busqueda) {
 		$agrupacion[] = $valor;
 	}
 	//TODO: $campos trae la consulta elastic (json)
-	$lcampos = $campos;
+	$lcampos = json_decode($campos["campos"], true);
+	//print_r($lcampos);die();
 	$campos_consulta = strtolower(implode(",", array_unique($lcampos)));
 	//TODO: Cambiar $tablas y $tablas_consulta
 	$tablas_consulta = strtolower(implode(",", array_unique($tablas)));
@@ -700,10 +703,11 @@ function procesar_busqueda_elastic($datos_busqueda) {
 		$variables = explode(",", $funcion[1]);
 		$cant_variables = count($variables);
 		for($h = 0; $h < $cant_variables; $h++) {
-			if (@$variables_final[$variables[$h]])
+			if (@$variables_final[$variables[$h]]) {
 				array_push($valor_variables, $variables_final[$variables[$h]]);
-			else
+			} else {
 				array_push($valor_variables, $variables[$h]);
+			}
 		}
 		$resultado = call_user_func_array($funcion[0], $valor_variables);
 		$tablas_consulta = str_replace("{*" . $valor . "*}", $resultado, $tablas_consulta);
@@ -816,6 +820,8 @@ function procesar_busqueda_elastic($datos_busqueda) {
 
 	if ($start < 0)
 		$start = 0;
+	//TODO: Ejecutar la consulta
+
 	if (MOTOR == 'SqlServer') {
 		// Sin esta validacion, los reportes de grillas embolan 1 registro en cada pagina
 		$result = busca_filtro_tabla_limit($campos_consulta, $tablas_consulta, $condicion, $ordenar_consulta2, intval($start), intval($limit), $conn);
