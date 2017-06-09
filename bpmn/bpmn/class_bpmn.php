@@ -748,47 +748,10 @@ public function get_tarea_proceso($id){
 	return($tarea);
 }
 public function asignar_enlace_proceso($id,$objeto_svg,$origen,$destino){
-	$enlace=$this->get_enlace_proceso($id);
-	if($enlace["numcampos"]){
-		// Se debe actualizar el enlace del bpmn
-		//$bpmn_enlace->get_bpmn_enlace($enlace[0]["idpaso_enlace"]);
-		//$datos["idconector"]=$id;
-		$datos["diagram_iddiagram"]=$this->idbpmn;
-		//$datos["texto_svg"]=''; //$objeto_svg->getXML();
-		$origen_svg=$this->get_objeto_svg($origen);
-		$destino_svg=$this->get_objeto_svg($destino);
-		$cad_orig=str_replace("bpmn:","",strtolower($origen_svg->item(0)->tagName));
-		$cad_orig=str_replace("bpmn2:","",$cad_orig);
-		$cad_destino=str_replace("bpmn:","",strtolower($destino_svg->item(0)->tagName));
-		$cad_destino=str_replace("bpmn2:","",$cad_destino);
-		$dato_origen=$this->validar_tipo_svg($cad_orig,$origen);
-		$dato_destino=$this->validar_tipo_svg($cad_destino,$destino);
 		
-		if($cad_orig=="startevent"){
-			$dato_origen["iddato"]=-1;	
-		}
-		if($cad_destino=="endevent" || $cad_destino=="intermediatethrowevent"){
-			$dato_destino["iddato"]=-2;
-		}
-		$datos["tipo_origen"]=$dato_origen["tipo"];
-		$datos["tipo_destino"]=$dato_destino["tipo"];
-		$datos["origen"]=$dato_origen["iddato"];
-		$datos["destino"]=$dato_destino["iddato"];
+		$del_pe="DELETE FROM paso_enlace WHERE diagram_iddiagram=".$this->idbpmn;
+		phpmkr_query($del_pe);
 		
-		$arreglo_update=array();;
-		$sql_update="UPDATE paso_enlace SET ";
-		foreach($datos AS $key=>$valor){
-			array_push($arreglo_update,$key."='".$valor."'");
-		}
-		$sql_update.=implode(", ",$arreglo_update);
-		$sql_update.=" WHERE idconector='".$id."'";
-		phpmkr_query($sql_update);
-		//retorna el listado de acciones (funciones ejecutables relacionadas con la accion)
-		//las acciones se deben guardar en una tabla adicional y estan definidas por el estado_ejecucion=administracion,ejecucion y debe tener un estado que defina si esta activo o inactivo
-		$estado="administracion";
-		//$bpmn_evento->ejecutar_acciones_bpmn_tarea($estado);
-	}
-	else{
 		//adicionar inicio de proceso BPMN
 		$datos=array();
 		$datos["idconector"]=$id;
@@ -815,7 +778,7 @@ public function asignar_enlace_proceso($id,$objeto_svg,$origen,$destino){
 		$datos["destino"]=$dato_destino["iddato"];
 		$sql_insert="INSERT INTO paso_enlace(".implode(",",array_keys($datos)).") VALUES ('".implode("','",array_values($datos))."')";
 		phpmkr_query($sql_insert);
-	}
+	
 }
 public function get_enlace_proceso($id){
 	$enlace=busca_filtro_tabla("","paso_enlace A","A.diagram_iddiagram=".$this->idbpmn." AND A.idconector='".$id."'","",$conn);
