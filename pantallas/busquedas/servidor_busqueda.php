@@ -102,7 +102,6 @@ foreach ( $funciones_condicion as $key => $valor ) {
 	$resultado = call_user_func_array($funcion[0], $valor_variables);
 	$condicion = str_replace("{*" . $valor . "*}", $resultado, $condicion);
 }
-$includes = array();
 
 if (!$sidx) {
 	if ($datos_busqueda[0]["ordenado_por"]) {
@@ -536,9 +535,13 @@ function incluir_librerias_busqueda($elemento, $indice) {
 }
 
 /**
- * @param array_export
- * @param page
- * @param datos_busqueda
+ *
+ * @param
+ *        	array_export
+ * @param
+ *        	page
+ * @param
+ *        	datos_busqueda
  */
 function obtener_columnas_excel(&$array_export, $page, $datos_busqueda) {
 	global $ruta_db_superior;
@@ -613,6 +616,14 @@ function obtener_columnas_excel(&$array_export, $page, $datos_busqueda) {
 }
 
 function procesar_busqueda_elastic($datos_busqueda) {
+	$page = @$_REQUEST['page']; // pagina actual inicia en 1
+	$limit = @$_REQUEST['rows']; // registros por listado de datos
+	$sidx = @$_REQUEST['sidx']; // Campo por el que se debe ordenar
+	$sord = @$_REQUEST['sord']; // Orden de la consulta
+	$actual_row = @$_REQUEST['actual_row'];
+	$count = false;
+	$start = @$_REQUEST['actual_row'];
+
 	if ($datos_busqueda[0]["ruta_libreria"]) {
 		$librerias = array_unique(explode(",", $datos_busqueda[0]["ruta_libreria"]));
 		array_walk($librerias, "incluir_librerias_busqueda");
@@ -634,15 +645,15 @@ function procesar_busqueda_elastic($datos_busqueda) {
 	$ordenar = array();
 	$agrupar = array();
 	$sumar = array();
-	//$tablas = array();
-	$condicion = "";
+	$tablas = array();
+	$condiciones = array();
 	// En elastic la consulta esta en campos y campos_adicionales
-	/*if ($datos_busqueda[0]["tablas"] != '') {
+	if ($datos_busqueda[0]["tablas"] != '') {
 		$tablas = array_merge((array)$tablas, (array)explode(",", $datos_busqueda[0]["tablas"]));
 	}
 	if ($datos_busqueda[0]["tablas_adicionales"] != '') {
 		$tablas = array_merge((array)$tablas, (array)explode(",", $datos_busqueda[0]["tablas_adicionales"]));
-	}*/
+	}
 	if ($datos_busqueda[0]["campos"] != '') {
 		$campos["campos"] = $datos_busqueda[0]["campos"];
 	}
@@ -652,15 +663,38 @@ function procesar_busqueda_elastic($datos_busqueda) {
 	if ($datos_busqueda[0]["llave"]) {
 		$campos["llave"] = $datos_busqueda[0]["llave"];
 	}
-	//TODO: Obtiene las condiciones de la tabla busqueda_condicion. Esta puede llamar funciones para completar el filtro
+	// TODO: Obtiene las condiciones de la tabla busqueda_condicion. Esta puede llamar funciones para completar el filtro
 	$condicion = crear_condicion_elastic($datos_busqueda[0]["idbusqueda"], $datos_busqueda[0]["idbusqueda_componente"], @$filtro);
-	//TODO: Obtiene la lista de funciones que se usan para completar la condicion
+	// TODO: Obtiene la lista de funciones que se usan para completar la condicion
 	$funciones_condicion = parsear_datos_plantilla_visual($condicion);
-	print_r($condicion);die();
-	//print_r($condicion);die();
-	$valor_variables = array();
-	$includes = array();
 
+	$valor_variables = array();
+	if (@$_REQUEST["variable_busqueda"] != '' && count($funciones_condicion)) {
+		$variables_final = array();
+		$variables1 = explode(",", $_REQUEST["variable_busqueda"]);
+		foreach ( $variables1 as $key => $valor ) {
+			$variable2 = explode("=", $valor);
+			$variables_final[$variable2[0]] = $variable2[1];
+		}
+	}
+	foreach ( $funciones_condicion as $key => $valor ) {
+		unset($valor_variables);
+		$valor_variables = array();
+		$funcion = explode("@", $valor);
+		$variables = explode(",", $funcion[1]);
+		$cant_variables = count($variables);
+		for($h = 0; $h < $cant_variables; $h++) {
+			if (@$variables_final[$variables[$h]])
+				array_push($valor_variables, $variables_final[$variables[$h]]);
+			else
+				array_push($valor_variables, $variables[$h]);
+		}
+		$resultado = call_user_func_array($funcion[0], $valor_variables);
+		$condicion = str_replace("{*" . $valor . "*}", $resultado, $condicion);
+	}
+	$condiciones[] = $condicion;
+
+	//TODO: Seccion ordenar de la busqueda elastic
 	if (!$sidx) {
 		if ($datos_busqueda[0]["ordenado_por"]) {
 			$sidx = $datos_busqueda[0]["ordenado_por"];
@@ -669,18 +703,17 @@ function procesar_busqueda_elastic($datos_busqueda) {
 			$sord = $datos_busqueda[0]["direccion"];
 		}
 		if (!$sord) {
-			$sord = " DESC ";
+			$sord = " desc ";
 		}
 	}
 
 	if (@$_REQUEST["idbusqueda_filtro_temp"]) {
-		//TODO: Devuelve un json son los criterios adicionales tomados de la pantalla. Se debe concatenar con el criterio guardado en campos
-		$condicion .= parsear_filtro_elastic($_REQUEST["idbusqueda_filtro_temp"]);
+		// TODO: Devuelve un json con los criterios adicionales tomados de la pantalla. Se debe concatenar con el criterio guardado en campos y busqueda_condicion
+		$condiciones[] = parsear_filtro_elastic($_REQUEST["idbusqueda_filtro_temp"]);
 	}
 
-	$condicion = str_replace(" AND  and  ", " and ", $condicion);
-	//TODO: $campos trae la consulta elastic (json)
-	//TODO: Esto busca los alias para crear los group by
+	// TODO: $campos trae la consulta elastic (json)
+	// TODO: Esto busca los alias para crear los group by
 	foreach ( $campos as $valor ) {
 		$as = strpos(strtolower($valor), " as ");
 		if ($as !== false) {
@@ -689,11 +722,11 @@ function procesar_busqueda_elastic($datos_busqueda) {
 		}
 		$agrupacion[] = $valor;
 	}
-	//TODO: $campos trae la consulta elastic (json)
+	// TODO: $campos trae la consulta elastic (json)
 	$lcampos = json_decode($campos["campos"], true);
-	//print_r($lcampos);die();
-	$campos_consulta = strtolower(implode(",", array_unique($lcampos)));
-	//TODO: Cambiar $tablas y $tablas_consulta
+	// TODO: campos_consulta solo se usa cuando se ejecuta la consulta. Se puede quitar???
+	// $campos_consulta = strtolower(implode(",", array_unique($lcampos)));
+	// TODO: Cambiar $tablas y $tablas_consulta
 	$tablas_consulta = strtolower(implode(",", array_unique($tablas)));
 
 	$funciones_tablas = parsear_datos_plantilla_visual($tablas_consulta);
@@ -716,6 +749,7 @@ function procesar_busqueda_elastic($datos_busqueda) {
 	$ordenar_consulta = "";
 	$agrupar_consulta = $datos_busqueda[0]["agrupado_por"];
 
+	// TODO: Aca se crean los agregados (aggs)
 	if (MOTOR == 'MySql' || MOTOR == 'Oracle') {
 		if ($agrupar_consulta != "") {
 			$ordenar_consulta .= " GROUP BY " . $agrupar_consulta;
@@ -738,7 +772,8 @@ function procesar_busqueda_elastic($datos_busqueda) {
 	}
 	$ordenar_consulta = strtolower($ordenar_consulta);
 	$ordenar_consulta2 = strtolower($ordenar_consulta2);
-	$condicion = str_replace("%y-%m-%d", "%Y-%m-%d", strtolower($condicion));
+	$condiciones = str_replace("%y-%m-%d", "%Y-%m-%d", strtolower($condiciones));
+	// TODO: Se ignora de momento
 	if (@$_REQUEST["idbusqueda_temporal"]) {
 		$datos = busca_filtro_tabla("", "busqueda_filtro", "idbusqueda_filtro=" . $_REQUEST["idbusqueda_temporal"], "", $conn);
 		if ($datos["numcampos"]) {
@@ -758,12 +793,13 @@ function procesar_busqueda_elastic($datos_busqueda) {
 			$cantidad = count($nuevas_tablas);
 			if ($cantidad) {
 				$tablas_consulta .= "," . implode(",", $nuevas_tablas);
-				$condicion .= $datos[0]["where_adicional"];
+				$condiciones[] = $datos[0]["where_adicional"];
 			}
 		}
 	}
+	// TODO: La cantidad total se obtiene de la busqueda directamente
 	if (!@$_REQUEST["cantidad_total"]) {
-		$result = ejecuta_filtro_tabla("SELECT COUNT(*) AS cant FROM " . $tablas_consulta . " WHERE " . $condicion . $ordenar_consulta, $conn);
+		$result = ejecuta_filtro_tabla("SELECT COUNT(*) AS cant FROM " . $tablas_consulta . " WHERE " . $condiciones . $ordenar_consulta, $conn);
 		if ($result["numcampos"] > 1) {
 			$_REQUEST["cantidad_total"] = $result["numcampos"];
 		} else {
@@ -773,6 +809,7 @@ function procesar_busqueda_elastic($datos_busqueda) {
 		$result["numcampos"] = @$_REQUEST["cantidad_total"];
 		$result[0]['cant'] = @$_REQUEST["cantidad_total"];
 	}
+
 	$response = new stdClass();
 	$response->cantidad_total = $result[0]['cant'];
 	$response->exito = 0;
@@ -815,18 +852,18 @@ function procesar_busqueda_elastic($datos_busqueda) {
 	}
 
 	if (@$_REQUEST['llave_unica']) {
-		$condicion .= " AND " . $datos_busqueda[0]["llave"] . "='" . $_REQUEST['llave_unica'] . "'";
+		$condiciones[] = " AND " . $datos_busqueda[0]["llave"] . "='" . $_REQUEST['llave_unica'] . "'";
 	}
 
 	if ($start < 0)
 		$start = 0;
-	//TODO: Ejecutar la consulta
+	// TODO: Ejecutar la consulta
 
 	if (MOTOR == 'SqlServer') {
 		// Sin esta validacion, los reportes de grillas embolan 1 registro en cada pagina
-		$result = busca_filtro_tabla_limit($campos_consulta, $tablas_consulta, $condicion, $ordenar_consulta2, intval($start), intval($limit), $conn);
+		$result = busca_filtro_tabla_limit($campos_consulta, $tablas_consulta, $condiciones[], $ordenar_consulta2, intval($start), intval($limit), $conn);
 	} else {
-		$result = busca_filtro_tabla_limit($campos_consulta, $tablas_consulta, $condicion, $ordenar_consulta2, intval($start), intval($limit - 1), $conn);
+		$result = busca_filtro_tabla_limit($campos_consulta, $tablas_consulta, $condiciones[], $ordenar_consulta2, intval($start), intval($limit - 1), $conn);
 	}
 
 	$start = $limit * $page - $limit; // do not put $limit*($page - 1)
@@ -1045,22 +1082,22 @@ function parsear_filtro_elastic($idbusqueda_filtro_temp) {
 		$condicion .= " AND (" . stripslashes($cadena) . ")";
 		// die($condicion);
 	}
-	//TODO: Debe devolver un json con los criterios elastic
+	// TODO: Debe devolver un json con los criterios elastic
 	return $condicion;
 }
 
-function parsear_cadena_elastic($cadena1){
+function parsear_cadena_elastic($cadena1) {
 	global $conn;
-	$cadena1=str_replace("|+|"," AND ",$cadena1);
-	$cadena1=str_replace("|=|"," = ",$cadena1);
-	$cadena1=str_replace("|like|"," like ",$cadena1);
-	$cadena1=str_replace("|-|"," OR ",$cadena1);
-	$cadena1=str_replace("|<|"," < ",$cadena1);
-	$cadena1=str_replace("|>|"," > ",$cadena1);
-	$cadena1=str_replace("|>=|"," >= ",$cadena1);
-	$cadena1=str_replace("|<=|"," <= ",$cadena1);
-	$cadena1=str_replace("|in|"," in ",$cadena1);
-	$cadena1=str_replace("||"," LIKE ",$cadena1);
+	$cadena1 = str_replace("|+|", " AND ", $cadena1);
+	$cadena1 = str_replace("|=|", " = ", $cadena1);
+	$cadena1 = str_replace("|like|", " like ", $cadena1);
+	$cadena1 = str_replace("|-|", " OR ", $cadena1);
+	$cadena1 = str_replace("|<|", " < ", $cadena1);
+	$cadena1 = str_replace("|>|", " > ", $cadena1);
+	$cadena1 = str_replace("|>=|", " >= ", $cadena1);
+	$cadena1 = str_replace("|<=|", " <= ", $cadena1);
+	$cadena1 = str_replace("|in|", " in ", $cadena1);
+	$cadena1 = str_replace("||", " LIKE ", $cadena1);
 	return $cadena1;
 }
 ?>
