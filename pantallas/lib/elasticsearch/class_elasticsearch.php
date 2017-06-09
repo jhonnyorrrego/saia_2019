@@ -20,6 +20,7 @@ class elasticsearch_saia {
 	// var $error_saia;
 	function __construct($hosts) {
 		if ($hosts == '') {
+			//'192.168.0.13:9200'
 			$hosts = [
 					'localhost:9200'
 			];
@@ -41,7 +42,7 @@ class elasticsearch_saia {
 			$this->install_elasticsearch();
 		}
 		require $ruta_db_superior . 'vendor/autoload.php';
-		$this->cliente = Elasticsearch\ClientBuilder::create()->setHosts($hosts)->build();
+		$this->cliente = Elasticsearch\ClientBuilder::create()->setHosts($this->hosts)->build();
 	}
 
 	function crear_indice($indice) {
