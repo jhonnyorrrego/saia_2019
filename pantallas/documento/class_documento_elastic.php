@@ -209,6 +209,43 @@ class DocumentoElastic {
 		return ($response);
 	}
 
+	public function ejecutar_consulta_elasticsearch($body) {
+		if (empty($body)) {
+			$body = '{
+		    	"query": {
+		        "match_all": {}
+		    	}
+				}';
+		}
+		$parametros = array(
+				"index" => "documentos",
+				"body" => $body
+		);
+
+		$response = $this->get_cliente_elasticsearch()->ejecutar_consulta($parametros);
+		return ($response);
+	}
+
+	public function contar_resultados_elasticsearch($body) {
+		$parametros = array(
+				"index" => "documentos",
+				"body" => $body
+		);
+
+		$response = $this->get_cliente_elasticsearch()->contar_resultados($parametros);
+		return ($response);
+	}
+
+	public function validar_consulta_elasticsearch($body) {
+		$parametros = array(
+				"index" => "documentos",
+				"body" => $body
+		);
+
+		$response = $this->get_cliente_elasticsearch()->contar_resultados($parametros);
+		return ($response);
+	}
+
 	public function borrar_elasticsearch_all($parametros = '') {
 		$json = '{
 		    "query": {

@@ -616,6 +616,7 @@ function obtener_columnas_excel(&$array_export, $page, $datos_busqueda) {
 }
 
 function procesar_busqueda_elastic($datos_busqueda) {
+	global $ruta_db_superior;
 	$page = @$_REQUEST['page']; // pagina actual inicia en 1
 	$limit = @$_REQUEST['rows']; // registros por listado de datos
 	$sidx = @$_REQUEST['sidx']; // Campo por el que se debe ordenar
@@ -714,22 +715,62 @@ function procesar_busqueda_elastic($datos_busqueda) {
 	}
 
 	// TODO: $campos trae la consulta elastic (json)
-	$lcampos = json_decode($campos["campos"], true);
+	$filtro_elasti = json_decode($campos["campos"], true);
+	//print_r($lcampos);echo "\n";
+
+	if (@$_REQUEST['llave_unica']) {
+		$condiciones[] = '{"match":{"' . $datos_busqueda[0]["llave"] . '":"' . $_REQUEST['llave_unica'] . '"}}';
+	}
+
+	$condiciones_json = [];
+	foreach ($condiciones as $cond) {
+		$condiciones_json[] = json_decode($cond, true);
+	}
+
+	$consulta_elastic = array();
+	$consulta_elastic["query"]["bool"]["must"] = $condiciones_json;
+	$consulta_elastic["query"]["bool"]["filter"] = $filtro_elasti["filter"];
+	//print_r(json_encode($consulta_elastic));die();
+
+	$response = new stdClass();
+	$response->cantidad_total = $result[0]['cant'];
+	$response->exito = 0;
+	$response->mensaje = 'Error inesperado';
+
+	include_once ($ruta_db_superior . 'pantallas/documento/class_documento_elastic.php');
+	$d2j = new DocumentoElastic(null);
+
+	//TODO: La validacion devuelve el total. Tal vez se pueda omitir el conteo
+	//Array ( [count] => 7 [_shards] => Array ( [total] => 5 [successful] => 5 [failed] => 0 ) )
+	try {
+		$validacion = $d2j->validar_consulta_elasticsearch($consulta_elastic);
+		//print_r($validacion); die();
+	} catch (Exception $e) {
+		$response->mensaje = $e->getMessage();
+		echo json_encode($response); die();
+	}
+
+	//$conteo = $d2j->contar_resultados_elasticsearch($consulta_elastic);
+	//print_r($conteo); die();
+	if($validacion) {
+		// TODO: La cantidad total se obtiene de la busqueda directamente
+		if (@$_REQUEST["cantidad_total"]) {
+			$result["numcampos"] = @$_REQUEST["cantidad_total"];
+			$result[0]['cant'] = @$_REQUEST["cantidad_total"];
+		} else {
+			$result["numcampos"] = $validacion["count"];
+			$result[0]['cant'] = $validacion["count"];
+		}
+	}
+
 	// TODO: campos_consulta solo se usa cuando se ejecuta la consulta. Se puede quitar???
 	// $campos_consulta = strtolower(implode(",", array_unique($lcampos)));
 	// TODO: Cambiar $tablas y $tablas_consulta
 	$tablas_consulta = strtolower(implode(",", array_unique($tablas)));
-
-	$ordenar_consulta = "";
-	// TODO: Aca se crean los agregados (aggs)
+	//print_r($tablas_consulta);die();
+	// TODO: Aca se crean los agregados (aggs). Esto deberia hacerse antes de ejecutar la consulta !!!
 	$agrupar_consulta = $datos_busqueda[0]["agrupado_por"];
 
-	if ($sidx) {
-		$ordenar_consulta2 = $sidx;
-		$ordenar_grafico = $sidx;
-	}
-
-	//$condiciones = str_replace("%y-%m-%d", "%Y-%m-%d", strtolower($condiciones));
 	// TODO: Se ignora de momento
 	if (@$_REQUEST["idbusqueda_temporal"]) {
 		$datos = busca_filtro_tabla("", "busqueda_filtro", "idbusqueda_filtro=" . $_REQUEST["idbusqueda_temporal"], "", $conn);
@@ -754,16 +795,8 @@ function procesar_busqueda_elastic($datos_busqueda) {
 			}
 		}
 	}
-	// TODO: La cantidad total se obtiene de la busqueda directamente
-	if (@$_REQUEST["cantidad_total"]) {
-		$result["numcampos"] = @$_REQUEST["cantidad_total"];
-		$result[0]['cant'] = @$_REQUEST["cantidad_total"];
-	}
+	// FIN: Se ignora de momento
 
-	$response = new stdClass();
-	$response->cantidad_total = $result[0]['cant'];
-	$response->exito = 0;
-	$response->mensaje = 'Error inesperado';
 	if (trim($agrupar_consulta) != "" && !@$count && $datos_busqueda[0]["tipo_busqueda"] == 2) {
 		if (@$_REQUEST["exportar_saia"]) {
 			$count = ($result["numcampos"]);
@@ -772,8 +805,9 @@ function procesar_busqueda_elastic($datos_busqueda) {
 		}
 	} else if (trim($agrupar_consulta) != "" && !@$count) {
 		$count = ($result["numcampos"]);
-	} elseif (trim($agrupar_consulta) == "" && !@$count)
+	} else if (trim($agrupar_consulta) == "" && !@$count) {
 		$count = $result[0]['cant'];
+	}
 	$aux_limit = $limit;
 
 	if ($limit == "todos") {
@@ -801,20 +835,25 @@ function procesar_busqueda_elastic($datos_busqueda) {
 		$start = $limit * $page - $limit; // do not put $limit*($page - 1)
 	}
 
-	if (@$_REQUEST['llave_unica']) {
-		$condiciones[] = " AND " . $datos_busqueda[0]["llave"] . "='" . $_REQUEST['llave_unica'] . "'";
-	}
+	//TODO: El ordenamiento falla sobre campos text. Es necesario revisar el mapeo y poner los tipos de datos porque documento.fecha debe ser fecha y no text
+	/*if(!empty($sidx)) {
+	 $orden_elastic = json_decode($sidx, true);
+	 $consulta_elastic["sort"] = $orden_elastic["sort"];
+	 }*/
 
-	if ($start < 0)
+	if ($start < 0) {
 		$start = 0;
+	}
 	// TODO: Ejecutar la consulta
 
-	if (MOTOR == 'SqlServer') {
-		// Sin esta validacion, los reportes de grillas embolan 1 registro en cada pagina
-		$result = busca_filtro_tabla_limit($campos_consulta, $tablas_consulta, $condiciones[], $ordenar_consulta2, intval($start), intval($limit), $conn);
-	} else {
-		$result = busca_filtro_tabla_limit($campos_consulta, $tablas_consulta, $condiciones[], $ordenar_consulta2, intval($start), intval($limit - 1), $conn);
-	}
+	$consulta_elastic["from"] = $start;
+	$consulta_elastic["size"] = $limit;
+	$resultado_elastic = $d2j->ejecutar_consulta_elasticsearch($consulta_elastic);
+
+	//print_r($resultado_elastic); die();
+	$result = parsear_resultado_elastic($resultado_elastic, $tablas_consulta);
+
+	//print_r($result); die();
 
 	$start = $limit * $page - $limit; // do not put $limit*($page - 1)
 	if ($datos_busqueda[0]["tipo_busqueda"] == 1 || $_REQUEST['tipo_busqueda'] == 1) {
@@ -826,7 +865,11 @@ function procesar_busqueda_elastic($datos_busqueda) {
 	$response->total = $total_pages;
 	$response->records = $count;
 
-	$response->sql = $result["sql"];
+	$response->sql = $consulta_elastic;
+
+	//TODO: Esto es un workaround. Hay que buscar otra forma
+	$lcampos = array_keys($result[0]);
+
 	$cant_campos = count($lcampos);
 	$info_base = str_replace('"', "'", $datos_busqueda[0]["info"]);
 	for($j = 0; $j < $cant_campos; $j++) {
@@ -923,7 +966,6 @@ function procesar_busqueda_elastic($datos_busqueda) {
 		}
 		for($i = 0; $i < $result["numcampos"]; $i++) {
 			$response->rows[$i] = new stdClass();
-			unset($listado_campos);
 			$listado_campos = array();
 			$info = $info_base;
 			for($j = 0; $j < $cant_campos; $j++) {
@@ -1049,5 +1091,44 @@ function parsear_cadena_elastic($cadena1) {
 	$cadena1 = str_replace("|in|", " in ", $cadena1);
 	$cadena1 = str_replace("||", " LIKE ", $cadena1);
 	return $cadena1;
+}
+
+function parsear_resultado_elastic($resultado_elastic,  $tablas_consulta) {
+	$result = array();
+	$result["numcampos"] = $resultado_elastic["hits"]["total"];
+	//print_r($resultado_elastic["hits"]["hits"]);die();
+	//TODO: Es un array con indice numerico donde cada elemento tiene la estructura
+	/*
+	[_index] => documentos
+	[_type] => ANALISIS_PQRSF
+	[_id] => 1422
+	[_score] => 0.39239302
+	[_routing] => 1421
+	[_parent] => 1421
+	[_source][documento] => Array
+	[_source][datos_ft]=> Array
+	*/
+	$tablas = array_map('trim', explode(',', strtolower($tablas_consulta)));
+	$resultados = $resultado_elastic["hits"]["hits"];
+	$total = count($resultados);
+	for($i=0; $i<$total; $i++) {
+		$plantilla = $resultados[$i]["_type"]; //$resultados[$i]["_type"] => ANALISIS_PQRSF
+		$tipo = strtolower($plantilla);
+		//TODO: Esto es ineficiente. Al indexar poner el nombre de la tabla. [formato_idformato] => 313
+		$tabla = "ft_" . strtolower($tipo);
+		if(in_array("documento", $tablas)) {
+			$datos_doc = $resultados[$i]["_source"]["documento"];
+			foreach ($datos_doc as $key => $value) {
+				$result[$i][$key] = $value;
+			}
+		}
+		if(in_array($tabla, $tablas)) {
+			$datos_doc = $resultados[$i]["_source"]["datos_ft"];
+			foreach ($datos_doc as $key => $value) {
+				$result[$i][$key] = $value;
+			}
+		}
+	}
+	return $result;
 }
 ?>

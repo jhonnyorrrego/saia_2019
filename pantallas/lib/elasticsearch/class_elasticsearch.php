@@ -20,7 +20,7 @@ class elasticsearch_saia {
 	// var $error_saia;
 	function __construct($hosts) {
 		if ($hosts == '') {
-			//'192.168.0.13:9200'
+			//'192.168.0.13:9200' 'localhost:9200'
 			$hosts = [
 					'localhost:9200'
 			];
@@ -74,7 +74,7 @@ class elasticsearch_saia {
 		return ($this->cliente->index($parametros));
 	}
 
-	function adicionar_indice($parametros) {
+	public function adicionar_indice($parametros) {
 		$resultado = null;
 		if (!$this->existe_indice($parametros["index"])) {
 			$resultado = $this->cliente->indices()->create($parametros);
@@ -100,7 +100,7 @@ class elasticsearch_saia {
 		return ($this->cliente->indices()->getMapping($parametros));
 	}
 
-	function buscar_item_elastic($parametros, $json) {
+	public function buscar_item_elastic($parametros, $json) {
 		/*
 		 * Ejemplo Json que se debe enviar con un arreglo de campos donde buscar
 		 * $json = '{
@@ -122,6 +122,23 @@ class elasticsearch_saia {
 		 */
 		$parametros['body'] = $json;
 		return ($this->resultado = $this->cliente->search($parametros));
+	}
+
+	/**
+	 * Ejecuta una consulta en el servidor elasticsearch con los parametros enviados. Debe traer parametros[index], parametros[body]
+	 * @param unknown $parametros
+	 * @return array
+	 */
+	public function ejecutar_consulta($parametros) {
+		return ($this->resultado = $this->cliente->search($parametros));
+	}
+
+	public function contar_resultados($parametros) {
+		return ($this->resultado = $this->cliente->count($parametros));
+	}
+
+	public function validar_consulta($parametros) {
+		return ($this->resultado = $this->cliente->indices()->validate($parametros));
 	}
 
 	function borrar_indice($indice, $id, $tipo_dato) {
