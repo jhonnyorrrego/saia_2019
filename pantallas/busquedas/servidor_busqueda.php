@@ -481,35 +481,19 @@ function crear_log_busqueda_excel($file, $texto) {
 
 function crear_condicion_elastic($idbusqueda, $idcomponente, $filtros = '') {
 	global $conn;
-	$datos_condicion = busca_filtro_tabla("", "busqueda_condicion_enlace A, busqueda_condicion B", "B.idbusqueda_condicion=A.fk_busqueda_condicion AND (B.fk_busqueda_componente=" . $idcomponente . " or B.busqueda_idbusqueda=" . $idbusqueda . ") AND cod_padre IS NULL ", "orden", $conn);
-	if (!$datos_condicion["numcampos"]) {
-		$datos_condicion = busca_filtro_tabla("", "busqueda_condicion B", "B.fk_busqueda_componente=" . $idcomponente . " or B.busqueda_idbusqueda=" . $idbusqueda, "", $conn);
-		$condicion = $datos_condicion[0]["codigo_where"];
-	} else {
-		for($i = 0; $i < $datos_condicion["numcampos"]; $i++) {
-			if (@$datos_condicion[$i]["comparacion"] == '') {
-				$datos_condicion[$i]["comparacion"] = "AND";
-			}
-			if (@$datos_condicion[$i]["idbusqueda_condicion"]) {
-				if ($i > 0) {
-					$condicion .= " " . $datos_condicion[$i]["comparacion"] . " ";
-				}
-				$condicion .= $datos_condicion[$i]["codigo_where"];
-			}
-		}
-	}
-	if ($condicion == "") {
-		if (@$_REQUEST["condicion_adicional"]) {
-			$condicion = $_REQUEST["condicion_adicional"];
-		} else {
-			$condicion = ' 1=1 ';
-		}
-		return ('(' . $condicion . ')');
-	}
+	$condicion = array();
+	$datos_condicion = busca_filtro_tabla("", "busqueda_condicion B", "B.fk_busqueda_componente=" . $idcomponente . " or B.busqueda_idbusqueda=" . $idbusqueda, "", $conn);
 	if (@$_REQUEST["condicion_adicional"]) {
-		$condicion .= $_REQUEST["condicion_adicional"];
+		$condicion[] = $_REQUEST["condicion_adicional"];
 	}
-	return ('(' . $condicion . ')');
+	if ($datos_condicion["numcampos"]) {
+		for($i=0; $i < $datos_condicion["numcampos"]; $i++) {
+			if($datos_condicion[$i]["codigo_where"] != "") {
+				$condicion[] = $datos_condicion[$i]["codigo_where"];
+			}
+		}
+	}
+	return $condicion;
 }
 
 function parsear_datos_plantilla_visual($cadena, $campos = array()) {
@@ -528,6 +512,22 @@ function parsear_datos_plantilla_visual($cadena, $campos = array()) {
 	}
 	return ($listado_funciones);
 }
+
+function parsear_plantilla_funcion($cadena, $campos = array()) {
+	$result = preg_match_all('/<\*(.*?)\*>/', $cadena, $resultado);
+	//print_r($resultado); die("Expresion");
+	if ($result !== FALSE) {
+		$patrones = $resultado[1];
+		if ($campos) {
+			$listado_campos = array_unique(explode(",", $campos));
+			$listado_funciones = array_diff($patrones, $listado_campos);
+		} else {
+			$listado_funciones = $patrones;
+		}
+	}
+	return ($listado_funciones);
+}
+
 
 function incluir_librerias_busqueda($elemento, $indice) {
 	global $ruta_db_superior;
@@ -664,46 +664,47 @@ function procesar_busqueda_elastic($datos_busqueda) {
 		$campos["llave"] = $datos_busqueda[0]["llave"];
 	}
 	// TODO: Obtiene las condiciones de la tabla busqueda_condicion. Esta puede llamar funciones para completar el filtro
-	$condicion = crear_condicion_elastic($datos_busqueda[0]["idbusqueda"], $datos_busqueda[0]["idbusqueda_componente"], @$filtro);
+	$condicionbd = crear_condicion_elastic($datos_busqueda[0]["idbusqueda"], $datos_busqueda[0]["idbusqueda_componente"], @$filtro);
 	// TODO: Obtiene la lista de funciones que se usan para completar la condicion
-	$funciones_condicion = parsear_datos_plantilla_visual($condicion);
 
 	$valor_variables = array();
-	if (@$_REQUEST["variable_busqueda"] != '' && count($funciones_condicion)) {
-		$variables_final = array();
-		$variables1 = explode(",", $_REQUEST["variable_busqueda"]);
-		foreach ( $variables1 as $key => $valor ) {
-			$variable2 = explode("=", $valor);
-			$variables_final[$variable2[0]] = $variable2[1];
+	$variables_final = array();
+	foreach ($condicionbd as $condicion) {
+		$funciones_condicion = array();
+		$funciones = parsear_plantilla_funcion($condicion);
+		$funciones_condicion = array_merge($funciones_condicion, $funciones);
+		if (@$_REQUEST["variable_busqueda"] != '' && count($funciones_condicion)) {
+			$variables1 = explode(",", $_REQUEST["variable_busqueda"]);
+			foreach ( $variables1 as $valor_var ) {
+				$variable2 = explode("=", $valor_var);
+				$variables_final[$variable2[0]] = $variable2[1];
+			}
 		}
-	}
-	foreach ( $funciones_condicion as $key => $valor ) {
-		unset($valor_variables);
-		$valor_variables = array();
-		$funcion = explode("@", $valor);
-		$variables = explode(",", $funcion[1]);
-		$cant_variables = count($variables);
-		for($h = 0; $h < $cant_variables; $h++) {
-			if (@$variables_final[$variables[$h]])
-				array_push($valor_variables, $variables_final[$variables[$h]]);
-			else
-				array_push($valor_variables, $variables[$h]);
+
+		foreach ( $funciones_condicion as $valor ) {
+			$valor_variables = array();
+			$funcion = explode("@", $valor);
+			$variables = explode(",", $funcion[1]);
+			$cant_variables = count($variables);
+			for($h = 0; $h < $cant_variables; $h++) {
+				if (@$variables_final[$variables[$h]]) {
+					array_push($valor_variables, $variables_final[$variables[$h]]);
+				} else {
+					array_push($valor_variables, $variables[$h]);
+				}
+			}
+			$resultado = call_user_func_array($funcion[0], $valor_variables);
+			$condicion = str_replace("<*" . $valor . "*>", $resultado, $condicion);
+			//var_dump($condicion);die("RESULTADO");
+			$condiciones[] = $condicion;
 		}
-		$resultado = call_user_func_array($funcion[0], $valor_variables);
-		$condicion = str_replace("{*" . $valor . "*}", $resultado, $condicion);
+
 	}
-	$condiciones[] = $condicion;
 
 	//TODO: Seccion ordenar de la busqueda elastic
 	if (!$sidx) {
 		if ($datos_busqueda[0]["ordenado_por"]) {
 			$sidx = $datos_busqueda[0]["ordenado_por"];
-		}
-		if ($datos_busqueda[0]["direccion"]) {
-			$sord = $datos_busqueda[0]["direccion"];
-		}
-		if (!$sord) {
-			$sord = " desc ";
 		}
 	}
 
@@ -713,66 +714,22 @@ function procesar_busqueda_elastic($datos_busqueda) {
 	}
 
 	// TODO: $campos trae la consulta elastic (json)
-	// TODO: Esto busca los alias para crear los group by
-	foreach ( $campos as $valor ) {
-		$as = strpos(strtolower($valor), " as ");
-		if ($as !== false) {
-			$agrupacion[] = substr($valor, 0, ($as));
-			continue;
-		}
-		$agrupacion[] = $valor;
-	}
-	// TODO: $campos trae la consulta elastic (json)
 	$lcampos = json_decode($campos["campos"], true);
 	// TODO: campos_consulta solo se usa cuando se ejecuta la consulta. Se puede quitar???
 	// $campos_consulta = strtolower(implode(",", array_unique($lcampos)));
 	// TODO: Cambiar $tablas y $tablas_consulta
 	$tablas_consulta = strtolower(implode(",", array_unique($tablas)));
 
-	$funciones_tablas = parsear_datos_plantilla_visual($tablas_consulta);
-	foreach ( $funciones_tablas as $key => $valor ) {
-		$valor_variables = array();
-		$funcion = explode("@", $valor);
-		$variables = explode(",", $funcion[1]);
-		$cant_variables = count($variables);
-		for($h = 0; $h < $cant_variables; $h++) {
-			if (@$variables_final[$variables[$h]]) {
-				array_push($valor_variables, $variables_final[$variables[$h]]);
-			} else {
-				array_push($valor_variables, $variables[$h]);
-			}
-		}
-		$resultado = call_user_func_array($funcion[0], $valor_variables);
-		$tablas_consulta = str_replace("{*" . $valor . "*}", $resultado, $tablas_consulta);
-	}
-
 	$ordenar_consulta = "";
+	// TODO: Aca se crean los agregados (aggs)
 	$agrupar_consulta = $datos_busqueda[0]["agrupado_por"];
 
-	// TODO: Aca se crean los agregados (aggs)
-	if (MOTOR == 'MySql' || MOTOR == 'Oracle') {
-		if ($agrupar_consulta != "") {
-			$ordenar_consulta .= " GROUP BY " . $agrupar_consulta;
-			$ordenar_consulta_aux = " GROUP BY " . implode(",", $agrupacion);
-		}
-	} else if (MOTOR == 'SqlServer' || MOTOR == 'MSSql') {
-		$ordenar_consulta2 = "";
-		if ($agrupar_consulta != "") {
-			$ordenar_consulta .= " GROUP BY " . $agrupar_consulta;
-			$ordenar_consulta2 .= " GROUP BY " . $agrupar_consulta;
-			$ordenar_consulta_aux = " GROUP BY " . implode(",", $agrupacion);
-		}
+	if ($sidx) {
+		$ordenar_consulta2 = $sidx;
+		$ordenar_grafico = $sidx;
 	}
-	if ($sidx && $sord) {
-		if (MOTOR == 'MySql' || MOTOR == 'Oracle') {
-			$ordenar_consulta2 .= $ordenar_consulta;
-		}
-		$ordenar_consulta2 .= " ORDER BY " . $sidx . " " . $sord;
-		$ordenar_grafico = " ORDER BY " . $sidx . " " . $sord;
-	}
-	$ordenar_consulta = strtolower($ordenar_consulta);
-	$ordenar_consulta2 = strtolower($ordenar_consulta2);
-	$condiciones = str_replace("%y-%m-%d", "%Y-%m-%d", strtolower($condiciones));
+
+	//$condiciones = str_replace("%y-%m-%d", "%Y-%m-%d", strtolower($condiciones));
 	// TODO: Se ignora de momento
 	if (@$_REQUEST["idbusqueda_temporal"]) {
 		$datos = busca_filtro_tabla("", "busqueda_filtro", "idbusqueda_filtro=" . $_REQUEST["idbusqueda_temporal"], "", $conn);
@@ -798,14 +755,7 @@ function procesar_busqueda_elastic($datos_busqueda) {
 		}
 	}
 	// TODO: La cantidad total se obtiene de la busqueda directamente
-	if (!@$_REQUEST["cantidad_total"]) {
-		$result = ejecuta_filtro_tabla("SELECT COUNT(*) AS cant FROM " . $tablas_consulta . " WHERE " . $condiciones . $ordenar_consulta, $conn);
-		if ($result["numcampos"] > 1) {
-			$_REQUEST["cantidad_total"] = $result["numcampos"];
-		} else {
-			$_REQUEST["cantidad_total"] = $result[0]["cant"];
-		}
-	} else {
+	if (@$_REQUEST["cantidad_total"]) {
 		$result["numcampos"] = @$_REQUEST["cantidad_total"];
 		$result[0]['cant'] = @$_REQUEST["cantidad_total"];
 	}
