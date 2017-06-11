@@ -479,6 +479,39 @@ function crear_log_busqueda_excel($file, $texto) {
 	// file_put_contents($file, $texto,FILE_APPEND);
 }
 
+function crear_condicion_sql($idbusqueda, $idcomponente, $filtros = '') {
+	global $conn;
+	$datos_condicion = busca_filtro_tabla("", "busqueda_condicion_enlace A, busqueda_condicion B", "B.idbusqueda_condicion=A.fk_busqueda_condicion AND (B.fk_busqueda_componente=" . $idcomponente . " or B.busqueda_idbusqueda=" . $idbusqueda . ") AND cod_padre IS NULL ", "orden", $conn);
+	if (!$datos_condicion["numcampos"]) {
+		$datos_condicion = busca_filtro_tabla("", "busqueda_condicion B", "B.fk_busqueda_componente=" . $idcomponente . " or B.busqueda_idbusqueda=" . $idbusqueda, "", $conn);
+		$condicion = $datos_condicion[0]["codigo_where"];
+	} else {
+		for($i = 0; $i < $datos_condicion["numcampos"]; $i++) {
+			if (@$datos_condicion[$i]["comparacion"] == '') {
+				$datos_condicion[$i]["comparacion"] = "AND";
+			}
+			if (@$datos_condicion[$i]["idbusqueda_condicion"]) {
+				if ($i > 0) {
+					$condicion .= " " . $datos_condicion[$i]["comparacion"] . " ";
+				}
+				$condicion .= $datos_condicion[$i]["codigo_where"];
+			}
+		}
+	}
+	if ($condicion == "") {
+		if (@$_REQUEST["condicion_adicional"]) {
+			$condicion = $_REQUEST["condicion_adicional"];
+		} else {
+			$condicion = ' 1=1 ';
+		}
+		return ('(' . $condicion . ')');
+	}
+	if (@$_REQUEST["condicion_adicional"]) {
+		$condicion .= $_REQUEST["condicion_adicional"];
+	}
+	return ('(' . $condicion . ')');
+}
+
 function crear_condicion_elastic($idbusqueda, $idcomponente, $filtros = '') {
 	global $conn;
 	$condicion = array();
