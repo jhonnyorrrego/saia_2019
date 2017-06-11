@@ -267,7 +267,25 @@ class DocumentoElastic {
 
 	public function get_cliente_elasticsearch() {
 		if (!@$this->cliente_elasticsearch) {
-			$this->cliente_elasticsearch = new elasticsearch_saia();
+			$config = busca_filtro_tabla("", "configuracion", "tipo='elasticsearch'", "", $conn);
+			if($config["numcampos"]) {
+				for($i = 0; $i < $config["numcampos"]; $i++) {
+					switch ($config[$i]["nombre"]) {
+						case "servidor_elasticsearch" :
+							$servidor = $config[$i]["valor"];
+							break;
+						case "puerto_elasticsearch" :
+							$puerto = $config[$i]["valor"];
+							break;
+					}
+				}
+				$hosts = [
+						"$servidor:$puerto"
+				];
+				$this->cliente_elasticsearch = new elasticsearch_saia($hosts);
+			} else {
+				$this->cliente_elasticsearch = new elasticsearch_saia();
+			}
 		}
 		return $this->cliente_elasticsearch;
 	}
