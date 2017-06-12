@@ -674,6 +674,7 @@ function EditData($sKey,$conn)
   	$theValue = (!get_magic_quotes_gpc()) ? addslashes($theValue) : $theValue;
   	$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
   	$fieldList["banderas"] = $theValue;
+	$GLOBALS["x_valor"]=parsear_comilla_sencilla_cadena($GLOBALS["x_valor"]);
     $theValue = (!get_magic_quotes_gpc()) ? addslashes($GLOBALS["x_valor"]) : $GLOBALS["x_valor"]; 
 		$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
 		$fieldList["valor"] = $theValue;

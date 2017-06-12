@@ -128,8 +128,8 @@ function radicar_documento_remoto($datos){
 		generar_codigo_qr($datos_formato[0]['idformato'],$iddoc,$_SESSION["usuario_actual"]);		
 		
 		$ch = curl_init();
-		//$fila = "http://".RUTA_PDF_LOCAL."/html2ps/public_html/demo/html2ps.php?plantilla=".strtolower($datos_formato[0]["nombre_formato"])."&iddoc=".$iddoc."&conexion_remota=1";
-		$fila = "http://".RUTA_PDF_LOCAL."/class_impresion.php?iddoc=".$iddoc."&LOGIN=".$_SESSION["LOGIN".LLAVE_SAIA]."&usuario_actual=".$_SESSION["usuario_actual"]."&LLAVE_SAIA=".LLAVE_SAIA;
+		//$fila = PROTOCOLO_CONEXION.RUTA_PDF_LOCAL."/html2ps/public_html/demo/html2ps.php?plantilla=".strtolower($datos_formato[0]["nombre_formato"])."&iddoc=".$iddoc."&conexion_remota=1";
+		$fila = PROTOCOLO_CONEXION.RUTA_PDF_LOCAL."/class_impresion.php?iddoc=".$iddoc."&LOGIN=".$_SESSION["LOGIN".LLAVE_SAIA]."&usuario_actual=".$_SESSION["usuario_actual"]."&LLAVE_SAIA=".LLAVE_SAIA;
 		curl_setopt($ch, CURLOPT_URL,$fila); 
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
 		
@@ -155,7 +155,7 @@ function radicar_documento_remoto($datos){
 		  $ruta.=($datos_documento[0]["plantilla"])."_".$datos_documento[0]["numero"]."_".str_replace("-","_",$datos_documento[0]["x_fecha"]).".pdf";
 		
 		if(file_exists($ruta_db_superior.$ruta)){
-			$retorno['pdf']="http://".RUTA_PDF."/".$ruta;
+			$retorno['pdf']=PROTOCOLO_CONEXION.RUTA_PDF."/".$ruta;
 		}
 		
 		//$retorno['data']=$info;

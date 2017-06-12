@@ -1,0 +1,6 @@
+{
+    "require": {
+        "luracast/restler": "*"
+    }
+}
+

@@ -15,7 +15,11 @@ if(isset($_REQUEST["key"]))
 if(isset($_REQUEST["accion"]))
 {switch (trim($_REQUEST["accion"]))
    {case 'guardar_adicionar':
-     $sql="INSERT INTO modulo(nombre,tipo,imagen,etiqueta,enlace,destino,cod_padre,orden,parametros,busqueda_idbusqueda,ayuda,permiso_admin,busqueda) VALUES('".$_REQUEST["nombre"]."','".$_REQUEST["tipo"]."','".$_REQUEST["imagen"]."','".$_REQUEST["etiqueta"]."','".$_REQUEST["enlace"]."','".$_REQUEST["destino"]."','".$_REQUEST["cod_padre"]."','".$_REQUEST["orden"]."','".$_REQUEST["parametros"]."','".$_REQUEST["busqueda_idbusqueda"]."','".$_REQUEST["ayuda"]."',".$_REQUEST["permiso_admin"].",'".$_REQUEST["busqueda"]."')";
+        $enlace_pantalla=0;
+        if(@$_REQUEST['enlace_pantalla']){
+            $enlace_pantalla=1;
+        }       
+     $sql="INSERT INTO modulo(nombre,tipo,imagen,etiqueta,enlace,destino,cod_padre,orden,parametros,busqueda_idbusqueda,ayuda,permiso_admin,busqueda,enlace_pantalla) VALUES('".$_REQUEST["nombre"]."','".$_REQUEST["tipo"]."','".$_REQUEST["imagen"]."','".$_REQUEST["etiqueta"]."','".$_REQUEST["enlace"]."','".$_REQUEST["destino"]."','".$_REQUEST["cod_padre"]."','".$_REQUEST["orden"]."','".$_REQUEST["parametros"]."','".$_REQUEST["busqueda_idbusqueda"]."','".$_REQUEST["ayuda"]."',".$_REQUEST["permiso_admin"].",'".$_REQUEST["busqueda"]."',".$enlace_pantalla.")";
 
      $insertado=ejecuta_sql($sql);
      if($insertado)
@@ -25,7 +29,11 @@ if(isset($_REQUEST["accion"]))
     abrir_url("moduloadd.php?accion=listar","_self");   
     break;
     case 'guardar_editar':
-     $sql="UPDATE modulo SET nombre='".$_REQUEST["nombre"]."',tipo='".$_REQUEST["tipo"]."',imagen='".$_REQUEST["imagen"]."',etiqueta='".$_REQUEST["etiqueta"]."',enlace='".$_REQUEST["enlace"]."',destino='".$_REQUEST["destino"]."',cod_padre='".$_REQUEST["cod_padre"]."',orden='".$_REQUEST["orden"]."',parametros='".$_REQUEST["parametros"]."',busqueda_idbusqueda='".$_REQUEST["busqueda_idbusqueda"]."',ayuda='".$_REQUEST["ayuda"]."',permiso_admin=".$_REQUEST["permiso_admin"].", busqueda='".$_REQUEST["busqueda"]."' WHERE idmodulo='".$_REQUEST["idmodulo"]."'";
+        $enlace_pantalla=0;
+        if(@$_REQUEST['enlace_pantalla']){
+            $enlace_pantalla=1;
+        }
+     $sql="UPDATE modulo SET nombre='".$_REQUEST["nombre"]."',tipo='".$_REQUEST["tipo"]."',imagen='".$_REQUEST["imagen"]."',etiqueta='".$_REQUEST["etiqueta"]."',enlace='".$_REQUEST["enlace"]."',destino='".$_REQUEST["destino"]."',cod_padre='".$_REQUEST["cod_padre"]."',orden='".$_REQUEST["orden"]."',parametros='".$_REQUEST["parametros"]."',busqueda_idbusqueda='".$_REQUEST["busqueda_idbusqueda"]."',ayuda='".$_REQUEST["ayuda"]."',permiso_admin=".$_REQUEST["permiso_admin"].", busqueda='".$_REQUEST["busqueda"]."', enlace_pantalla=".$enlace_pantalla." WHERE idmodulo='".$_REQUEST["idmodulo"]."'";
      $insertado=ejecuta_sql($sql);
      if($insertado)
        alerta("Modulo actualizado.",'success',4000);
@@ -153,7 +161,10 @@ if($ver==2)
 </tr> 
 <tr>
 <td class="encabezado" >ENLACE*</td>
-<td><input size="60" type="text" class="required" name="enlace" id="enlace" value="<?php echo @$modulo[0]["enlace"]; ?>"></td>
+<td>
+    <input size="60" type="text" class="required" name="enlace" id="enlace" value="<?php echo @$modulo[0]["enlace"]; ?>">
+    <input type="checkbox" name="enlace_pantalla" id="enlace_pantalla" value="1" title="¿Requiere barra de navegacion?" <?php if(@$modulo[0]["enlace_pantalla"]){ echo('checked');} ?> >
+</td>
 </tr> 
 <tr>
 <td class="encabezado" >DESTINO*</td>

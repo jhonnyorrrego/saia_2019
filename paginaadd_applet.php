@@ -206,6 +206,16 @@ for($i=0;$i<$configuracion["numcampos"];$i++){
         </span> </tr>
   </table>
   <div>
+                <?php 
+                    //parseo descripcion
+                    $documento[0]["descripcion"]=codifica_encabezado(html_entity_decode($documento[0]["descripcion"]));
+                    if($documento[0]["descripcion"]!=''){
+                        if(strlen($documento[0]["descripcion"])>30){
+                            $documento[0]["descripcion"]=substr( $documento[0]["descripcion"],0,30).'...';
+                        }
+                    }
+                ?>      
+      
     <applet code="uk.co.mmscomputing.application.imageviewer.MainApp.class"  archive="visor.jar" width =100% height="640" name="scaner">
       <param name="url" value="<?php print($dir3);  ?>">
       <param name="radica" value="<?php print($key);?>">
@@ -213,7 +223,7 @@ for($i=0;$i<$configuracion["numcampos"];$i++){
       <param name="usuario" value="<?php print($usuario);?>">
       <param name="dftp" value="<?php print($dir2);?>">
       <param name="clave" value="<?php print($clave);?>">
-      <param name="verLog" value="true">
+      <param name="verLog" value="false">
       <param name="ancho" value="<?php print($ancho);?>">
       <param name="alto" value="<?php print($alto);?>">
       <param name="maxtabs" value="50">

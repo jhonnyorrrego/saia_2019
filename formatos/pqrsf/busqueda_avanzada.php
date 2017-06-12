@@ -130,7 +130,7 @@ for($i=0;$i<$datos_option['numcampos'];$i++){
           <input type="hidden" name="bqsaiaenlace_ft@estado_reporte" id="bqsaiaenlace_ft-estado_reporte" value="" />
           <input type="hidden" name="adicionar_consulta" id="adicionar_consulta" value="1">
            <input type="hidden" name="campos_especiales" id="campos_especiales" value="cliente_backup@arbol">
-          <button type="button" class="btn btn-primary" id="ksubmit_saia" enlace="pantallas/busquedas/procesa_filtro_busqueda.php" titulo="Resultado">Buscar</button>
+          <button type="button" class="btn btn-primary" id="ksubmit_saia" enlace="<?php echo($ruta_db_superior); ?>pantallas/busquedas/procesa_filtro_busqueda.php" titulo="Resultado">Buscar</button>
           <input class="btn btn-danger" name="commit" type="reset" value="Cancelar">  
         </div>
       </form>

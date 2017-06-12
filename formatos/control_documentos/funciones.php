@@ -14,8 +14,6 @@ include_once($ruta_db_superior."formatos/mod_autocomisorio/funciones.php");
 include_once($ruta_db_superior."librerias_saia.php");
 include_once($ruta_db_superior."pantallas/lib/librerias_notificaciones.php");
 
-ini_set('display_errors',true);
-
 function validar_tipo_documento($idformato, $iddoc){
 	global $conn,$ruta_db_superior;
 	
@@ -478,8 +476,6 @@ function mostrar_firma_confirmacion_documento($idformato, $iddoc){
 		}
 		
 		$funcionario_codigo = busca_filtro_tabla("funcionario_codigo","funcionario","lower(login) like'lina.alzate'","",$conn);
-		//$firma .= "<b>FIRMA COORDINADOR SGC:</b><br />";
-		//$firma .= '<img src="http://'.RUTA_PDF.'/formatos/librerias/mostrar_foto.php?codigo='.$funcionario_codigo[0]["funcionario_codigo"].'" width="'.$ancho_firma[0]["valor"].'" height="'.$alto_firma[0]["valor"].'"/>.<br />';
 		$firma.= "<span style='font-size:12pt;'>FECHA DE TRAMITE Y VIGENCIA DEL DOCUMENTO : ".$fecha_confirmacion[0]["fecha_confirmacion"]."<br />";
 		$firma .= "Solicitud procesada satisfactoriamente, por favor socializar con los involucrados en el proceso.</span>";
 		
@@ -663,9 +659,9 @@ function aprobar_control_documentos($idformato, $iddoc){
 								
 						notificaciones("<b>El documento <h6>".$control_documento[0]["nombre_documento"]."</h6> ha sido creado con exito</b>","success",8500);							
 						if($control_documento[0]["origen_documento"] == 1){
-							$url = "http://".RUTA_PDF."/versionamiento/versionar_documentos.php?no_redirecciona=1&iddocumento=".$iddocumento."&tipo_versionamiento=".$control_documento[0]["tipo_solicitud"]."&version_numero=".$control_documento[0]["version"]."&iddocumento_anexo=".$iddoc."&funcionario_codigo=".usuario_actual("funcionario_codigo");
+							$url = PROTOCOLO_CONEXION.RUTA_PDF."/versionamiento/versionar_documentos.php?no_redirecciona=1&iddocumento=".$iddocumento."&tipo_versionamiento=".$control_documento[0]["tipo_solicitud"]."&version_numero=".$control_documento[0]["version"]."&iddocumento_anexo=".$iddoc."&funcionario_codigo=".usuario_actual("funcionario_codigo");
 						}else{
-							$url = "http://".RUTA_PDF."/versionamiento/versionar_documentos.php?no_redirecciona=1&iddocumento=".$iddocumento."&tipo_versionamiento=".$control_documento[0]["tipo_solicitud"]."&version_numero=".$control_documento[0]["version"]."&iddocumento_anexo=".$iddoc."&funcionario_codigo=".usuario_actual("funcionario_codigo");
+							$url = PROTOCOLO_CONEXION.RUTA_PDF."/versionamiento/versionar_documentos.php?no_redirecciona=1&iddocumento=".$iddocumento."&tipo_versionamiento=".$control_documento[0]["tipo_solicitud"]."&version_numero=".$control_documento[0]["version"]."&iddocumento_anexo=".$iddoc."&funcionario_codigo=".usuario_actual("funcionario_codigo");
 						}											
 					}else{						
 						notificaciones("<b>No se creo el documento <h6>".$control_documento[0]["nombre_documento"]."</h6> favor comuniquese con el administrador del sistema.</b>","warning",8500);
@@ -683,11 +679,11 @@ function aprobar_control_documentos($idformato, $iddoc){
 				
 					if($control_documento[0]["origen_documento"] == 1){
 										
-						$url = "http://".RUTA_PDF."/versionamiento/versionar_documentos.php?no_redirecciona=1&iddocumento=".$datos_formato["iddocumento"]."&iddocumento_anexo=".$iddoc."&tipo_versionamiento=".$control_documento[0]["tipo_solicitud"]."&nombre_documento=".$control_documento[0]["nombre_documento"]."&version_numero=".$control_documento[0]["version"]."&funcionario_codigo=".usuario_actual("funcionario_codigo");
+						$url = PROTOCOLO_CONEXION.RUTA_PDF."/versionamiento/versionar_documentos.php?no_redirecciona=1&iddocumento=".$datos_formato["iddocumento"]."&iddocumento_anexo=".$iddoc."&tipo_versionamiento=".$control_documento[0]["tipo_solicitud"]."&nombre_documento=".$control_documento[0]["nombre_documento"]."&version_numero=".$control_documento[0]["version"]."&funcionario_codigo=".usuario_actual("funcionario_codigo");
 						
 						
 					}else{
-						$url = "http://".RUTA_PDF."/versionamiento/versionar_documentos.php?no_redirecciona=1&iddocumento=".$datos_formato["iddocumento"]."&iddocumento_anexo=".$iddoc."&tipo_versionamiento=".$control_documento[0]["tipo_solicitud"]."&nombre_documento=".$control_documento[0]["nombre_documento"]."&version_numero=".$control_documento[0]["version"]."&funcionario_codigo=".usuario_actual("funcionario_codigo");
+						$url = PROTOCOLO_CONEXION.RUTA_PDF."/versionamiento/versionar_documentos.php?no_redirecciona=1&iddocumento=".$datos_formato["iddocumento"]."&iddocumento_anexo=".$iddoc."&tipo_versionamiento=".$control_documento[0]["tipo_solicitud"]."&nombre_documento=".$control_documento[0]["nombre_documento"]."&version_numero=".$control_documento[0]["version"]."&funcionario_codigo=".usuario_actual("funcionario_codigo");
 					}									
 				}else{				
 					notificaciones("<b>No se puede encontrar el documento a ser versionado y modificado. Favor comuniquese a sistemas.</b>","warning",8500);
@@ -755,9 +751,12 @@ function confirmar_control_documentos($idformato, $iddoc){
 			    
 			    //CARGO_FUNCIONAL (aprobador calidad)
 	            $cf_versionador_calidad=busca_filtro_tabla("login","vfuncionario_dc","estado=1 AND tipo_cargo=2 AND lower(cargo) LIKE 'aprobador%calidad'","",$conn);
-			    if(usuario_actual('login')==$cf_versionador_calidad[0]['login']){
-			         echo($boton);
-			    }
+	            $actual_logueado=usuario_actual('login');
+	            for($i=0;$i<$cf_versionador_calidad['numcampos'];$i++){
+				    if($actual_logueado==$cf_versionador_calidad[$i]['login']){
+				         echo($boton);
+				    }	            	
+	            }
 			
 			}			
 		}

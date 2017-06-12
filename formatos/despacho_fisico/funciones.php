@@ -67,15 +67,6 @@ function mostrar_seleccionados_despacho($idformato,$iddoc){
 //------------------------------Posterior aprobar------------------------------------//
 function generar_pdf_despacho($idformato,$iddoc){
 	global $conn,$ruta_db_superior;
-	/*$ch = curl_init();
-	$fila = "http://".RUTA_PDF_LOCAL."/html2ps/public_html/demo/html2ps.php?plantilla=".strtolower($datos_formato[0]["nombre_formato"])."&iddoc=".$iddoc."&conexion_remota=1";
-	$fila = "http://".RUTA_PDF_LOCAL."/class_impresion.php?iddoc=".$iddoc."&LOGIN=".$_SESSION["LOGIN".LLAVE_SAIA]."&usuario_actual=".$_SESSION["usuario_actual"]."&LLAVE_SAIA=".LLAVE_SAIA;
-	curl_setopt($ch, CURLOPT_URL,$fila); 
-	curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
-	curl_setopt($ch, CURLOPT_VERBOSE, true); 
-	curl_setopt($ch, CURLOPT_STDERR, $abrir);
-	$contenido=curl_exec($ch);
-	curl_close ($ch);*/
 	$seleccionado=busca_filtro_tabla("","ft_despacho_fisico,documento","documento_iddocumento=iddocumento and documento_iddocumento=".$iddoc,"",$conn);	
 	if($seleccionado[0]['mensajero']==0 || $seleccionado[0]['mensajero']==''){
 		$sql1_mensajero="UPDATE ft_despacho_fisico SET mensajero='".usuario_actual('idfuncionario')."' where idft_despacho_fisico=".$seleccionado[0]['idft_despacho_fisico'];

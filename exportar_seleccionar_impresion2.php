@@ -147,15 +147,14 @@ foreach ($listado_pdf as $i => $url)
 {
 	if($url!=''){
 		$ch = curl_init();
- //die("http://190.254.10.116/Apps/CEROK/saia1.06/".$url);
- 		curl_setopt($ch, CURLOPT_URL,"http://".RUTA_PDF."/".$url); 
+ 		curl_setopt($ch, CURLOPT_URL,PROTOCOLO_CONEXION.RUTA_PDF."/".$url); 
  		curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
  		fwrite($archivo,curl_exec ($ch));
  		curl_close ($ch);
 	}
 }
 fclose($archivo);	
-	redirecciona("html2ps/public_html/demo/html2ps.php?URL=http://".RUTA_PDF."/".$nombre_archivo.".html&background=2&nombre_archivo=$nombre_archivo&idfunc=".usuario_actual('funcionario_codigo')."&seleccion=".$_REQUEST["seleccion"]."&margenes=".$_REQUEST["margenes"]."&font_size=".$_REQUEST["font_size"]."&orientacion=".$_REQUEST["orientacion"]."&plantilla=$plantilla&iddoc=$iddocpadre&papel=".$_REQUEST["papel"]);
+	redirecciona("html2ps/public_html/demo/html2ps.php?URL=".PROTOCOLO_CONEXION.RUTA_PDF."/".$nombre_archivo.".html&background=2&nombre_archivo=$nombre_archivo&idfunc=".usuario_actual('funcionario_codigo')."&seleccion=".$_REQUEST["seleccion"]."&margenes=".$_REQUEST["margenes"]."&font_size=".$_REQUEST["font_size"]."&orientacion=".$_REQUEST["orientacion"]."&plantilla=$plantilla&iddoc=$iddocpadre&papel=".$_REQUEST["papel"]);
 }
 
 function parsea_idformato($id=0){

@@ -14,16 +14,16 @@ usuario_actual("login");
 $array_export=array();
 if(@$_REQUEST["exportar_saia"]=='excel'){
   include_once($ruta_db_superior. 'pantallas/busquedas/PHPExcel.php');
-	include_once($ruta_db_superior."pantallas/lib/convertir_estructura.php");	
+	include_once($ruta_db_superior."pantallas/lib/convertir_estructura.php");
 }
 $listado_funciones=array();
 $page = @$_REQUEST['page']; // pagina actual inicia en 1
-$limit = @$_REQUEST['rows']; // registros por listado de datos 
-$sidx = @$_REQUEST['sidx']; // Campo por el que se debe ordenar  
+$limit = @$_REQUEST['rows']; // registros por listado de datos
+$sidx = @$_REQUEST['sidx']; // Campo por el que se debe ordenar
 $sord = @$_REQUEST['sord']; // Orden de la consulta
-$actual_row = @$_REQUEST['actual_row']; 
+$actual_row = @$_REQUEST['actual_row'];
 $count=false;
-$start = @$_REQUEST['actual_row']; 
+$start = @$_REQUEST['actual_row'];
 crear_log_busqueda_excel($ruta_db_superior."../backup/log_exportar.txt", "INICIO-------".date("Y-m-d H:i:s")."-----------\n");
 //$filtro= @$_REQUEST['filtros']; //get the filters from pantalla
 if(!$limit) $limit=30;
@@ -31,7 +31,7 @@ if(!$limit) $limit=30;
 $datos_busqueda=busca_filtro_tabla("","busqueda A, busqueda_componente B","A.idbusqueda=B.busqueda_idbusqueda AND B.idbusqueda_componente=".@$_REQUEST["idbusqueda_componente"],"orden",$conn);
 if($datos_busqueda["numcampos"]){
 	if($datos_busqueda[0]["ruta_libreria"]){
-    $librerias=array_unique(explode(",",$datos_busqueda[0]["ruta_libreria"])); 
+    $librerias=array_unique(explode(",",$datos_busqueda[0]["ruta_libreria"]));
     array_walk($librerias,"incluir_librerias_busqueda");
   }
 }
@@ -116,32 +116,32 @@ if($datos_busqueda["numcampos"]){
   $agrupar=array();
   $sumar=array();
   $tablas=array();
-  $condicion="";  
-  if($datos_busqueda[0]["tablas"]!=''){  
+  $condicion="";
+  if($datos_busqueda[0]["tablas"]!=''){
     $tablas=array_merge((array)$tablas,(array)explode(",",$datos_busqueda[0]["tablas"]));
-  }  
+  }
   if($datos_busqueda[0]["tablas_adicionales"]!=''){
-    $tablas=array_merge((array)$tablas,(array)explode(",",$datos_busqueda[0]["tablas_adicionales"]));	
+    $tablas=array_merge((array)$tablas,(array)explode(",",$datos_busqueda[0]["tablas_adicionales"]));
   }
   if($datos_busqueda[0]["campos"]!=''){
   	$campos=array_merge((array)$campos,(array)explode(",",$datos_busqueda[0]["campos"]));
-  } 
+  }
   if($datos_busqueda[0]["campos_adicionales"]!=''){
     $campos=array_merge((array)$campos,(array)explode(",",$datos_busqueda[0]["campos_adicionales"]));
   }
   if($datos_busqueda[0]["llave"]){
   	$campos=array_merge((array)$campos,(array)explode(",", $datos_busqueda[0]["llave"]));
-  }                    
+  }
   $condicion=crear_condicion_sql($datos_busqueda[0]["idbusqueda"],$datos_busqueda[0]["idbusqueda_componente"],@$filtro);
   $funciones_condicion=parsear_datos_plantilla_visual($condicion);
-  
+
   $valor_variables=array();
   if(@$_REQUEST["variable_busqueda"]!='' && count($funciones_condicion)){
-    $variables_final=array(); 
+    $variables_final=array();
     $variables1=explode(",",$_REQUEST["variable_busqueda"]);
     foreach($variables1 as $key=>$valor){
       $variable2=explode("=",$valor);
-      $variables_final[$variable2[0]]=$variable2[1];      
+      $variables_final[$variable2[0]]=$variable2[1];
     }
   }
   foreach($funciones_condicion as $key=>$valor){
@@ -157,18 +157,21 @@ if($datos_busqueda["numcampos"]){
         array_push($valor_variables,$variables[$h]);
     }
     $resultado=call_user_func_array($funcion[0],$valor_variables);
-    $condicion=str_replace("{*".$valor."*}",$resultado,$condicion);  
+    $condicion=str_replace("{*".$valor."*}",$resultado,$condicion);
   }
   $includes=array();
 
   if(!$sidx){
     if($datos_busqueda[0]["ordenado_por"]){
       $sidx=$datos_busqueda[0]["ordenado_por"];
-      if(!$sord){
-        $sord=" DESC ";
-      }  
     }
-  } 
+    if($datos_busqueda[0]["direccion"]){
+      $sord=$datos_busqueda[0]["direccion"];
+    }
+    if(!$sord){
+        $sord=" DESC ";
+    }
+  }
 } else
   die();
 if(@$_REQUEST["idbusqueda_filtro_temp"]){
@@ -180,7 +183,7 @@ if(@$_REQUEST["idbusqueda_filtro_temp"]){
       $cadena.=$cadena1;
       if(@$filtro_temp[$i+1]["detalle"]){
         $cadena.=' AND ';
-      } 
+      }
     }
     $condicion.=" AND (".stripslashes($cadena).")";
 	//die($condicion);
@@ -213,22 +216,17 @@ foreach($funciones_tablas AS $key=>$valor){
       array_push($valor_variables,$variables[$h]);
   }
   $resultado=call_user_func_array($funcion[0],$valor_variables);
-  $tablas_consulta=str_replace("{*".$valor."*}",$resultado,$tablas_consulta);  
+  $tablas_consulta=str_replace("{*".$valor."*}",$resultado,$tablas_consulta);
 }
 
 
 $ordenar_consulta="";
 $agrupar_consulta=$datos_busqueda[0]["agrupado_por"];
+
 if(MOTOR=='MySql' || MOTOR=='Oracle') {
 	if($agrupar_consulta!=""){
 	  $ordenar_consulta.=" GROUP BY ".$agrupar_consulta;
 	  $ordenar_consulta_aux=" GROUP BY ".implode(",",$agrupacion);
-	}
-	if($sidx && $sord){
-		if($datos_busqueda[0]["direccion"]!=''){
-			$sord=$datos_busqueda[0]["direccion"];
-		}
-	  $ordenar_consulta2.=$ordenar_consulta." ORDER BY ".$sidx." ".$sord;
 	}
 } else if(MOTOR == 'SqlServer' || MOTOR == 'MSSql') {
 	$ordenar_consulta2="";
@@ -237,13 +235,13 @@ if(MOTOR=='MySql' || MOTOR=='Oracle') {
 	  $ordenar_consulta2.=" GROUP BY ".$agrupar_consulta;
 	  $ordenar_consulta_aux=" GROUP BY ".implode(",",$agrupacion);
 	}
-	if($sidx && $sord){
-	  if($datos_busqueda[0]["direccion"] != '') {
-	    $sord=$datos_busqueda[0]["direccion"];
-	  }
-	  $ordenar_consulta2.=" ORDER BY ".$sidx." ".$sord;
-	  $ordenar_grafico=" ORDER BY ".$sidx." ".$sord;
-	}
+}
+if($sidx && $sord){
+  if(MOTOR=='MySql' || MOTOR=='Oracle') {
+       $ordenar_consulta2.=$ordenar_consulta;
+  }
+  $ordenar_consulta2.=" ORDER BY ".$sidx." ".$sord;
+  $ordenar_grafico=" ORDER BY ".$sidx." ".$sord;
 }
 $ordenar_consulta=strtolower($ordenar_consulta);
 $ordenar_consulta2=strtolower($ordenar_consulta2);
@@ -259,7 +257,7 @@ if(@$_REQUEST["idbusqueda_temporal"]){
 				$tabla2=substr($dat[$i],0,$fin);
 			} else {
 				$tabla2=$dat[$i];
-			}	
+			}
 			if(strpos(@$tablas_consulta,@$tabla2)===false){
 				$nuevas_tablas[]=$dat[$i];
 			}
@@ -297,7 +295,7 @@ if(!@$_REQUEST["cantidad_total"]){ //DESARROLLO ALEJANDRO CARVAJAL
     $result[0]=array();
     $result[0]['cant']=$result['cant'];
     $result["numcampos"]=$result['cant'];
-    $_REQUEST["cantidad_total"]=$result["numcampos"];    
+    $_REQUEST["cantidad_total"]=$result["numcampos"];
 
 } else {
 	$result["numcampos"]=@$_REQUEST["cantidad_total"];
@@ -318,7 +316,7 @@ if(trim($agrupar_consulta)!=""&&!@$count&&$datos_busqueda[0]["tipo_busqueda"]==2
 } else if(trim($agrupar_consulta)!=""&&!@$count) {
   $count = ($result["numcampos"]);
 } elseif(trim($agrupar_consulta) == "" && ! @$count)
-  $count = $result[0]['cant']; 
+  $count = $result[0]['cant'];
 $aux_limit=$limit;
 
 if($limit=="todos"){
@@ -326,23 +324,23 @@ if($limit=="todos"){
 }
 if($actual_row=='')
   $actual_row=0;
-if( $count >0 ) { 
-  $total_pages = ceil($count/$limit); 
-} else { 
-  $total_pages = 0; 
+if( $count >0 ) {
+  $total_pages = ceil($count/$limit);
+} else {
+  $total_pages = 0;
 	$response->exito=0;
 	$response->mensaje="No existen registros";
-} 
+}
 if($count<=$actual_row){
   $response->exito=0;
 	$response->mensaje="Existe un error al recuperar los datos de la consulta ".$result["sql"];
 }
-if ($page >= $total_pages){ 
+if ($page >= $total_pages){
   //$page=$total_pages;
   $response->exito=0;
 	$response->mensaje="Fin del listado";
-}	
-if(@$start!==0&&$aux_limit!="todos"&&@$_REQUEST["reporte"]){  
+}
+if(@$start!==0&&$aux_limit!="todos"&&@$_REQUEST["reporte"]){
   $start = $limit*$page - $limit; // do not put $limit*($page - 1)
 }
 
@@ -362,12 +360,12 @@ if(MOTOR=='SqlServer'){
 
 $start = $limit*$page - $limit; // do not put $limit*($page - 1)
 if($datos_busqueda[0]["tipo_busqueda"]==1 || $_REQUEST['tipo_busqueda']==1){
-  $response->page = $page+1; 
+  $response->page = $page+1;
 } else {
   $response->page = $page;
 }
 //$response->total = $count; //DESARROLLO ALEJANDRO CARVAJAL
-$response->total = $total_pages; 
+$response->total = $total_pages;
 $response->records = $count;
 
 $response->sql= $result["sql"];
@@ -376,20 +374,20 @@ $info_base=str_replace('"',"'",$datos_busqueda[0]["info"]);
 for($j=0;$j<$cant_campos;$j++){
   $as=strpos(strtolower($lcampos[$j])," as ");
   if($as!==false){
-  	$lcampos[$j]=substr($lcampos[$j],($as+4),strlen($lcampos[$j]));  
+  	$lcampos[$j]=substr($lcampos[$j],($as+4),strlen($lcampos[$j]));
 	  continue;
   }
   $pos=strpos($lcampos[$j],".");
   if($pos!==false){
     $lcampos[$j]=substr($lcampos[$j],($pos+1),strlen($lcampos[$j]));
-  }  
-}  
+  }
+}
 $pos=strpos($datos_busqueda[0]["llave"],".");
 if($pos!==false){
-  $llave=substr($datos_busqueda[0]["llave"],($pos+1),strlen($datos_busqueda[0]["llave"]));  
+  $llave=substr($datos_busqueda[0]["llave"],($pos+1),strlen($datos_busqueda[0]["llave"]));
 } else {
   $llave=$datos_busqueda[0]["llave"];
-}  
+}
 $listado_funciones=parsear_datos_plantilla_visual($info_base,implode(",",$lcampos));
 if(@$_REQUEST["exportar_saia"]){
 	$listado_funciones2=parsear_datos_plantilla_visual($datos_busqueda[0]["exportar"],implode(",",$lcampos));
@@ -401,17 +399,24 @@ if($result["numcampos"]){
 	$response->mensaje="Registros encontrados";
 	if(@$_REQUEST["exportar_saia"]){
 		if(@$_REQUEST["ruta_exportar_saia"]){
-			
+
 			if(file_exists($ruta_db_superior.$_REQUEST["ruta_exportar_saia"])===false || $page==1){
 				if($page==1 && file_exists($ruta_db_superior.$_REQUEST["ruta_exportar_saia"])){
 					unlink($ruta_db_superior.$_REQUEST["ruta_exportar_saia"]);
 				}
-				crear_destino($ruta_db_superior . "temporal/temporal_" . usuario_actual('login'));
+				$configuracion_temporal=busca_filtro_tabla("valor","configuracion","nombre='ruta_temporal' AND tipo='ruta'","",$conn);
+				if($configuracion_temporal['numcampos']){
+					$cont_ruta=$configuracion_temporal[0]['valor'];
+					$cont_ruta .= '_'.usuario_actual("login");
+					crear_destino($ruta_db_superior . $cont_ruta);
+				} else {
+					crear_destino($ruta_db_superior . "temporal/temporal_" . usuario_actual('login'));
+				}
         crear_log_busqueda_excel($ruta_db_superior."../backup/log_exportar.txt", "INICIO CREAR ARCHIVO ".$ruta_db_superior.$_REQUEST["ruta_exportar_saia"]." -------".date("Y-m-d H:i:s")."-----------\n");
 				if($_REQUEST["exportar_saia"]=="excel"){
 					//AQUI SE CREA EL ARCHIVO SI NO EXISTE
 					include_once($ruta_db_superior.'pantallas/busquedas/PHPExcel/IOFactory.php');
-					
+
 					$archivo_excel=1;
 					$objPHPExcel = new PHPExcel();
 					$nombre=usuario_actual("nombres")." ".usuario_actual("apellidos");
@@ -439,7 +444,7 @@ if($result["numcampos"]){
 				$objPHPExcel = $objReader->load($ruta_db_superior.$_REQUEST["ruta_exportar_saia"]);
 				crear_log_busqueda_excel($ruta_db_superior."../backup/log_exportar.txt", "FIN LEER ARCHIVO ".$ruta_db_superior.$_REQUEST["ruta_exportar_saia"]." -------".date("Y-m-d H:i:s")."-----------\n");
         $highestRow =$_REQUEST["actual_row"];
-				//$highestRow = $objPHPExcel->setActiveSheetIndex(0)->getHighestRow();				
+				//$highestRow = $objPHPExcel->setActiveSheetIndex(0)->getHighestRow();
 			}
 			if($_REQUEST["exportar_saia"]=="csv"){
 				$file_export=fopen($ruta_db_superior.$_REQUEST["ruta_exportar_saia"],"a+");
@@ -468,12 +473,12 @@ if($result["numcampos"]){
 	  $listado_campos=array();
 	  $info=$info_base;
 	  for($j=0;$j<$cant_campos;$j++){
-	    $caden=' \ ';   
+	    $caden=' \ ';
 			if(is_object($result[$i][$lcampos[$j]])){ // para mssql y sqlserver
 				$result[$i][$lcampos[$j]]=$result[$i][$lcampos[$j]]->date;
-			} 
-	    $response->rows[$i]->$lcampos[$j]=str_replace('"',"",str_replace(trim($caden),"",$result[$i][$lcampos[$j]]));    
-	      $info=str_replace("{*".$lcampos[$j]."*}",addslashes($result[$i][$lcampos[$j]]),$info);                      
+			}
+	    $response->rows[$i]->$lcampos[$j]=str_replace('"',"",str_replace(trim($caden),"",$result[$i][$lcampos[$j]]));
+	      $info=str_replace("{*".$lcampos[$j]."*}",addslashes($result[$i][$lcampos[$j]]),$info);
 	  }
 	  foreach($listado_funciones as $key=>$valor){
 	    unset($valor_variables);
@@ -488,7 +493,7 @@ if($result["numcampos"]){
 	        array_push($valor_variables,$variables[$h]);
 	    }
 			if(function_exists($funcion[0])){
-	    	$valor_funcion=call_user_func_array($funcion[0],$valor_variables);     
+	    	$valor_funcion=call_user_func_array($funcion[0],$valor_variables);
 	    	$info=str_replace("{*".$valor."*}",$valor_funcion,$info);
 
 				if(@$_REQUEST["exportar_saia"]=="excel" || @$_REQUEST["exportar_saia"]=='csv'){
@@ -497,12 +502,12 @@ if($result["numcampos"]){
 				if($datos_busqueda[0]["tipo_busqueda"]==2){
 					$response->rows[$i]->$funcion[0]=$valor_funcion;
 				}
-			}  
+			}
 	  }
 	  if($datos_busqueda[0]["tipo_busqueda"]==1){
-	    if(!@$_REQUEST["estilo_actualizar_informacion"])                                                                
+	    if(!@$_REQUEST["estilo_actualizar_informacion"])
 	      $response->rows[$i]->info="<div id='resultado_pantalla_".$result[$i][$llave]."' class='well'>";
-	    
+
 	    if(!@$_REQUEST["estilo_actualizar_informacion"])
 	      $response->rows[$i]->info.="</div>";
 			$response->rows[$i]->info=str_replace("\n","",str_replace("\r","",$info));
@@ -512,7 +517,7 @@ if($result["numcampos"]){
 				for($k=0;$k<$cant_columnas_excel;$k++){
 					$array_export[$i][$columnas_excel[$k]] = codifica_encabezado(html_entity_decode(strip_tags($response->rows[$i]->$columnas_excel[$k])));
 				}
-				
+
 			}
 	  } else if($datos_busqueda[0]["tipo_busqueda"]==2) {
 			for($k=0;$k<$cant_columnas_excel;$k++){
@@ -524,7 +529,7 @@ if($result["numcampos"]){
 			}
 		}
     if($_REQUEST["export_saia"]=="csv" || $_REQUEST["export_saia"]=="excel"){
-      unset($response->rows[$i]);  
+      unset($response->rows[$i]);
     }
 	}
   if(@$_REQUEST["exportar_saia"]=="csv"){
@@ -547,12 +552,12 @@ if($result["numcampos"]){
 		fclose($file_export);
 	}
 }
-$response->actual_row=$actual_row+$i; 
+$response->actual_row=$actual_row+$i;
 if($response->actual_row>$response->records){
   $response->actual_row=$response->records;
 }
 if($response->records<0){
-  $response->records=0;   
+  $response->records=0;
 }
 if(!@$_REQUEST["no_imprime"])
 	echo json_encode($response);
@@ -568,14 +573,14 @@ $condicion_filtro='';
 $datos_condicion=busca_filtro_tabla("","busqueda_condicion_enlace A, busqueda_condicion B","B.idbusqueda_condicion=A.fk_busqueda_condicion AND (B.fk_busqueda_componente=".$idcomponente ." or B.busqueda_idbusqueda=".$idbusqueda.") AND cod_padre IS NULL ".$condicion_filtro,"orden",$conn);
 if(!$datos_condicion["numcampos"]){
   $datos_condicion=busca_filtro_tabla("","busqueda_condicion B","B.fk_busqueda_componente=".$idcomponente ." or B.busqueda_idbusqueda=".$idbusqueda.$condicion_filtro,"",$conn);
-  $condicion=$datos_condicion[0]["codigo_where"]; 
+  $condicion=$datos_condicion[0]["codigo_where"];
 } else {
 if($filtros!=''){
   $condicion_filtro="AND (A.estado=1 OR (A.estado=2 AND A.condicion_idcondicion IN(".$filtros.")))";
 } else
-  $condicion_filtro=" AND estado=1 "; 
+  $condicion_filtro=" AND estado=1 ";
 for($i=0;$i<$datos_condicion["numcampos"];$i++){
-  if(@$datos_condicion[$i]["comparacion"]==''){      
+  if(@$datos_condicion[$i]["comparacion"]==''){
     $datos_condicion[$i]["comparacion"]="AND";
   }
   if(@$datos_condicion[$i]["idbusqueda_condicion"]) {
@@ -583,7 +588,7 @@ for($i=0;$i<$datos_condicion["numcampos"];$i++){
       $condicion.=" ".$datos_condicion[$i]["comparacion"]." ";
     }
     $condicion.=$datos_condicion[$i]["codigo_where"];
-  }      
+  }
 }
 }
 if($condicion==""){
@@ -591,9 +596,9 @@ if($condicion==""){
     $condicion=$_REQUEST["condicion_adicional"];
   } else {
     $condicion=' 1=1 ';
-  } 
+  }
   return('('.$condicion.')');
-}      
+}
 if(@$_REQUEST["condicion_adicional"]){
     $condicion.=$_REQUEST["condicion_adicional"];
   }
@@ -616,7 +621,7 @@ return($listado_funciones);
 
 function incluir_librerias_busqueda($elemento,$indice){
   global $ruta_db_superior;
-  include_once($ruta_db_superior.$elemento); 
+  include_once($ruta_db_superior.$elemento);
 }
 
 ?>

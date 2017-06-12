@@ -230,7 +230,7 @@ function logo_encabezado()
  $logo = busca_filtro_tabla("valor","configuracion","nombre='logo_comunicaciones'","",$conn);
  if($logo["numcampos"]){
 ; 	if($_REQUEST['plantilla']=="carta"||$_REQUEST['plantilla']=="memorando"||$_REQUEST['plantilla']=="circular_mf"){ 		
-  		return ("<div><img style='left:-40px;top:-175px;position:fixed;' src='http://".RUTA_PDF."/".$logo[0]["valor"]."' border='0' /></div>");
+  		return ("<div><img style='left:-40px;top:-175px;position:fixed;' src='".PROTOCOLO_CONEXION.RUTA_PDF."/".$logo[0]["valor"]."' border='0' /></div>");
  	}else{
  		return('<div><img style="left:20px;top:35px" src="'.PROTOCOLO_CONEXION.RUTA_PDF.'/'.$logo[0]["valor"].'" border="0"></div>');
  	}  
@@ -319,8 +319,6 @@ return ("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".PROTOCOLO_CONEXION.RUTA_PDF."/imagenes/
 }
 
 function footer_rutan($idformato,$iddoc){
- //return '<img src="http://'.RUTA_PDF.'/imagenes/footer_rutan.jpg" >';
- //return ("<img src='http://".RUTA_PDF."/imagenes/footer_rutan.jpg' border='0' width='500px'/>");
  return (" <img src=".PROTOCOLO_CONEXION.RUTA_PDF."/imagenes/footer_rutan.jpg' border='0'/>");    
 }
 
@@ -330,10 +328,6 @@ function encabezado_legalizacion($idformato,$iddoc){
 
 function encabezado_orden($idformato,$iddoc){
  return  '<img src= '.PROTOCOLO_CONEXION.RUTA_PDF.'/imagenes/logo_demo.jpg" >';
-/* $logo = busca_filtro_tabla("valor","configuracion","nombre='logo'","",$conn);
- if($logo["numcampos"]){
-  return ("<img src='http://".RUTA_PDF."/".$logo[0]["valor"]."' border='0' />");
- } */
 }
 function mostrar_datos_radicaion($idformato, $iddoc){
 	global $conn;

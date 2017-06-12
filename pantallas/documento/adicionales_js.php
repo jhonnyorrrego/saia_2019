@@ -29,6 +29,7 @@ $("document").ready(function(){
         	$("#prioridad_"+idregistro).removeClass();
           $("#prioridad_"+idregistro).addClass(clase);
           $("#prioridad_"+idregistro).attr("prioridad",prioridad);
+          $("#div_actualizar_info_index", window.top.document).click();
         }
       });
     }

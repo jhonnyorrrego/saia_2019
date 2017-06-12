@@ -9,6 +9,20 @@ include_once("../../librerias_saia.php");
 	echo(librerias_notificaciones());	
 $campos_auto=explode(",",$_REQUEST["campos_auto"]);
 $campos=explode(",",$_REQUEST["campos"]);
+$etiquetas=array("titulo"=>"T&iacute;tulo","direccion"=>"Direcci&oacute;n","telefono"=>"Tel&eacute;fono","email"=>"Email","ciudad"=>"Ciudad","empresa"=>"Nombres y apellidos","identificacion"=>"Identificaci&oacute;n","nombre"=>"Nombres y apellidos","nombre_pj"=>"Entidad");
+//Se adiciona el componente vacio porque no funciona la comparacion estricta 
+$orden_campos_pn=array("","titulo","direccion","telefono","email","ciudad");
+$orden_campos_pj=array("","direccion","ciudad","empresa","telefono","email");
+foreach($campos AS $key=>$valor){
+    $id_arreglo1=array_search(trim($valor),$orden_campos_pj);
+    if($id_arreglo1===false){
+        unset($orden_campos_pj[$id_arreglo1]);
+    }
+    $id_arreglo2=array_search(trim($valor),$orden_campos_pn);
+    if($id_arreglo2===false){
+        unset($orden_campos_pn[$id_arreglo2]);
+    }
+}
 ?>
 </head>
 <script type="text/javascript" src="../../js/jquery.js"></script>
@@ -16,18 +30,15 @@ $campos=explode(",",$_REQUEST["campos"]);
 <script type='text/javascript' src='../../js/jquery.bgiframe.min.js'></script>
 <link rel="stylesheet" type="text/css" href="../../css/jquery.autocomplete.css" />
 <style >
-body, INPUT, SELECT{
-   FONT-FAMILY:VERDANA;
-   FONT-SIZE:X-SMALL
+  body, input, select{
+   font-family:verdana;
+   font-size:x-small
   }
   table{
     border:0px groove;
   }
   input{
   width:200px;
-  }
-  LABEL{
-  TEXT-TRANSFORM:UPPERCASE
   }
   .rotulo_nombre{
     width:400px;
@@ -53,10 +64,17 @@ body, INPUT, SELECT{
   .boton{
     border:1px solid;
     float:left;
-    TEXT-TRANSFORM:UPPERCASE;
+    text-transform:UPPERCASE;
     border-color:gray;
     cursor:pointer;
-    padding:3px
+    padding:3px;
+    border-width: 2px;
+    background-color: buttonface;
+    border-style: outset;
+    border-color: buttonface;
+    border-image: initial;
+    -webkit-appearance: push-button;
+    padding: 2px 6px 3px;
   }
 </style>
 <script type="text/javascript">
@@ -104,8 +122,9 @@ $().ready(function() {
 	function formatResult(row) {
 		return row[1].replace(/(<.+?>)/gi, '');
 	}
-  function iddatos_ejecutor(idejecutor,nombre)
-    {$.ajax({
+  function iddatos_ejecutor(idejecutor,nombre){
+      $("#idejecutor").val(idejecutor);
+      $.ajax({
         type:'POST',
         url:'ultimo_dato_ejecutor.php',
         data:'idejecutor='+idejecutor,
@@ -117,7 +136,7 @@ $().ready(function() {
             }
           });
     }
-
+    
 	$("#nombre_ejecutor").autocomplete('../librerias/seleccionar_ejecutor.php?tipo=nombre', {
 		width: 500,
 		max:20,
@@ -243,7 +262,7 @@ $().ready(function() {
       $.ajax({
         type:'POST',
         url:'actualizar_ejecutor.php',
-				data:{
+		data:{
           seleccionados_ejecutor:$("#seleccionados_ejecutor").val(),
           iddatos_ejecutor:$("#iddatos_ejecutor").val(),
           nombre:$("#nombre_ejecutor").val(),
@@ -267,7 +286,8 @@ $().ready(function() {
           email:$("#email_ejecutor").val(),
           identificacion:$("#identificacion_ejecutor").val(),
           celular:$("#celular_ejecutor").val(),
-          codigo:$("#codigo_ejecutor").val()
+          codigo:$("#codigo_ejecutor").val(),
+          tipo_ejecutor:$(".tipo_ejecutor:checked").val(),
         },
         success: function(datos,exito){
         	//alert(datos);
@@ -319,8 +339,16 @@ $().ready(function() {
   $("#estado_actualizacion").bind("change", function() {
         //alert($(this).text())
         //llenar_ejecutor();
-	});
-
+  });
+  $(".tipo_ejecutor").click(function(){
+      if($(this).val()==2){
+          $("#label_nombre").html('<?php echo($etiquetas["nombre_pj"]);?>');
+      }
+      else{
+          $("#label_nombre").html('<?php echo($etiquetas["nombre"]);?>');
+      }
+      llenar_ejecutor($("#idejecutor").val());
+  });
   $("#eliminar").click(function(){
     var f=$("#estado_actualizacion").find(":selected");
     if(f.val()!=0)
@@ -351,10 +379,21 @@ $().ready(function() {
    // alert(campo.value);
   }
   function llenar_ejecutor(id){
+    var lista_campos='';
+    var tipo_ejecutor=$(".tipo_ejecutor:checked").val();
+    $("#idejecutor").val(id);
+    if(tipo_ejecutor==2){
+        //persona juridica
+        lista_campos='<?php echo(implode(',',$orden_campos_pj));?>';
+    }
+    else{
+        //Persona natural
+        lista_campos='<?php echo(implode(',',$orden_campos_pn));?>';
+    }
     $.ajax({
       type:'POST',
       url:'generar_ejecutor.php',
-      data:'idejecutor='+id+"&campos=<?php echo $_REQUEST['campos']; ?>",
+      data:'idejecutor='+id+"&campos="+lista_campos,
       success: function(datos,exito){
         $("#datos_ejecutor").empty();
         $("#datos_ejecutor").append(datos);
@@ -366,7 +405,7 @@ $().ready(function() {
 </head>
 <body>
 <form name="form1" id="form1">
-  <table width="500px">
+  <table>
   <tr>
     <td width="150">
       <label>Seleccionados:</label>
@@ -427,12 +466,17 @@ $().ready(function() {
   </tr>
  </table>
  <table width="500px">
+    <tr>
+        <td colspan="2">
+            Persona natural <input type="radio" name="tipo_ejecutor" value="1" class="tipo_ejecutor" id="tipo_ejecutor1" style="width:20px;" checked="checked">&nbsp;&nbsp;Persona Jur&iacute;dica <input type="radio" name="tipo_ejecutor" value="2" class="tipo_ejecutor" id="tipo_ejecutor2" style="width:20px">
+        </td>
+    </tr>     
   <?php
-      foreach($campos_auto as $nombre)
-         {if($nombre<>"")
+      foreach($campos_auto as $nombre){
+          if($nombre<>"")
           echo '<tr>
                 <td width="150">
-                  <label>'.mayusculas($nombre).':</label>
+                  <label id="label_'.$nombre.'">'.$etiquetas[$nombre].':</label>
                 </td>
                 <td>
                   <input type="text" id="'.$nombre.'_ejecutor" name="'.$nombre.'" /><br />
@@ -446,11 +490,11 @@ $().ready(function() {
 </div>
 <table width="500px">
   <tr >
-    <td width="33%">
-      <div id="borrar_todos" class="boton">Quitar Seleccionado</div>
+    <td width="20%">
+      <div id="borrar_todos" class="boton">QUITAR TODOS</div>
     </td>
-    <td width="33%">
-      <div id="actualizar" class="boton">Actualizar</div>
+    <td width="80%" align="left">
+      <div id="actualizar" class="boton">ACTUALIZAR DATOS</div>
     </td>
   </tr>
 </table>
@@ -468,18 +512,19 @@ $().ready(function() {
 </div>
 <table width="500px">
   <tr >
-    <td width="33%">
-      <div id="limpiar" class="boton">Limpiar Formulario</div>
+    <td width="30%">
+      <div id="limpiar" class="boton">LIMPIAR FORMULARIO</div>
     </td>
-    <td width="33%">
-      <div id="borrar_todos" class="boton">Quitar todos</div>
+    <td width="20%">
+      <div id="borrar_todos" class="boton">QUITAR TODOS</div>
     </td>
-    <td width="33%">
-      <div id="actualizar" class="boton">Seleccionar</div>
+    <td width="50%">
+      <div id="actualizar" class="boton">ACTUALIZAR DATOS</div>
     </td>
   </tr>
 </table>
 <input type="hidden"  id="destinos_seleccionados" name="destinos_seleccionados">
+<input type="hidden" id="idejecutor" name="idejecutor_temp" value="">
 </form>
 </body>
 </html>

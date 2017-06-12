@@ -271,7 +271,10 @@ class Imprime_Pdf {
 		}
 		
 		chmod($nombre_pdf,0777);
-		if($this->tipo_salida == "FI" && $this->documento[0]["estado"] != 'ACTIVO') {
+		if($this->documento[0]["estado"] == 'ACTIVO'){
+			$this->tipo_salida="FI";
+		}	
+		if($this->tipo_salida == "FI") {
 			$codigo_hash=obtener_codigo_hash_pdf($nombre_pdf,'crc32'); 
 			$paginas_pdf = $this->pdf->getNumPages();
 			phpmkr_query("update documento set paginas='" . $paginas_pdf . "',pdf='" . $nombre_pdf . "',pdf_hash='".$codigo_hash."' where iddocumento=" . $this->documento[0]["iddocumento"]);
@@ -287,7 +290,39 @@ class Imprime_Pdf {
 			}
 		}
 		
-		$this->pdf->Output($nombre_pdf, $this->tipo_salida);
+		if($_REQUEST["url"]){
+			$nombre_pdf=basename($_REQUEST["url"]);
+			//$this->pdf->Output($nombre_pdf,$this->tipo_salida);
+		}		
+			
+		$valor=$this->pdf->Output($nombre_pdf, $this->tipo_salida);
+	    if($this->documento[0]["estado"]<>'ACTIVO' && $this->tipo_salida=="I"){
+			//$valor=$this->pdf->Output($ruta,'F');
+			redirecciona("visores/pdf/web/viewer2.php?iddocumento=".$this->documento[0]["iddocumento"]);
+			die();
+		}else{
+			if($this->documento[0]["estado"]=='ACTIVO'){
+				//crear_destino('temporal_'.usuario_actual('login').'/');
+				//$ruta='temporal_'.usuario_actual('login').'/'.$this->documento[0]["iddocumento"];
+				//$valor=$this->pdf->Output($ruta,'F');
+				//redirecciona("visores/pdf/web/viewer2.php?print=".$this->formato[0]["permite_imprimir"]."&files=".base64_encode("../../../".$ruta));
+				redirecciona("visores/pdf/web/viewer2.php?iddocumento=".$this->documento[0]["iddocumento"]);
+				//redirecciona("pantallas/documento/visor_documento.php?iddoc=".$this->documento[0]["iddocumento"]."&ruta_pdf=".$ruta);
+				//redirecciona("visores/pdf/web/viewer2.php?iddocumento=".$this->documento[0]["iddocumento"]);
+				die();
+			}else{
+				if($_REQUEST["url"]){
+					$nombre_pdf=basename($_REQUEST["url"]);
+					//$this->pdf->Output($nombre_pdf,$this->tipo_salida);
+				}else{
+					//$valor=$this->pdf->Output($nombre_pdf,$this->tipo_salida);
+					redirecciona("visores/pdf/web/viewer2.php?iddocumento=".$this->documento[0]["iddocumento"]);
+					die();
+				}
+			}
+		}		
+		
+		//$this->pdf->Output($nombre_pdf, $this->tipo_salida);
 	}
 
 	function imprimir_paginas() {

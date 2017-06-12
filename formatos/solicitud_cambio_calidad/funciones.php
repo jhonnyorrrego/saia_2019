@@ -20,7 +20,7 @@ if($documento["numcampos"]){
     $alto_firma=busca_filtro_tabla("valor",DB.".configuracion A","A.nombre='alto_firma'","",$conn);
     if(!$alto_firma["numcampos"])
       $alto_firma[0]["valor"]=100;
-    echo '<img src="http://'.RUTA_PDF.'/formatos/librerias/mostrar_foto.php?codigo='.$documento[0]["firma_sgc"];
+    echo '<img src="'.PROTOCOLO_CONEXION.RUTA_PDF.'/formatos/librerias/mostrar_foto.php?codigo='.$documento[0]["firma_sgc"];
     echo '" width="'.$ancho_firma[0]["valor"].'" height="'.$alto_firma[0]["valor"].'"/><br /><br /><span class="phpmaker">FECHA DE TR&Aacute;MITE Y VIGENCIA DEL DOCUMENTO :'.$documento[0]["fecha_vigencia"].'</span>';    
   }
   else if($usuario_actual==$funcionario_sgc){

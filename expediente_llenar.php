@@ -27,9 +27,11 @@ $nombres_exp=array_unique(extrae_campo($expedientes_documento,"nombre"));
 <link rel="stylesheet" type="text/css" href="<?php echo($ruta_db_superior);?>pantallas/lib/librerias_css.css"/>
 <link rel="stylesheet" type="text/css" href="<?php echo($ruta_db_superior);?>css/bootstrap_reescribir.css"/>
 <link rel="stylesheet" type="text/css" href="<?php echo($ruta_db_superior);?>css/bootstrap-iconos-segundarios.css"/>
-<?php echo(menu_principal_documento($doc_menu,1)); ?>
-<script type="text/javascript" src="js/jquery.js"></script>
-<script type="text/javascript" src="js/jquery.validate.js"></script>
+<?php 
+    echo(menu_principal_documento($doc_menu,1));
+    echo(librerias_jquery('1.7'));
+    echo( librerias_validar_formulario(11) );
+?>
 <script type="text/javascript" src="js/dhtmlXCommon.js"></script>
 <script type="text/javascript" src="js/dhtmlXTree.js"></script>
 <legend>Adicionar a un expediente ya existente</legend>
@@ -99,6 +101,70 @@ $doc=busca_filtro_tabla("","documento","iddocumento in($iddoc)","",$conn);
       }
 			-->
       </script>
+<!-- div class="control-group element">
+	<label class="control-label" for="serie">Serie
+  </label>
+  <div class="controls">
+			<input type="text" id="stext" width="200px" size="20">
+      <a href="javascript:void(0)" onclick="tree3.findItem((document.getElementById('stext').value),1)">
+      <img src="botones/general/anterior.png"border="0px"></a>
+      <a href="javascript:void(0)" onclick="tree3.findItem((document.getElementById('stext').value),0,1)">
+      <img src="botones/general/buscar.png"border="0px"></a>
+      <a href="javascript:void(0)" onclick="tree3.findItem((document.getElementById('stext').value))">
+      <img src="botones/general/siguiente.png"border="0px"></a>
+      <input type="hidden" name="serie_idserie" id="serie_idserie">
+      <div id="esperando_serie"><img src="imagenes/cargando.gif"></div>
+			<div id="treeboxbox_tree3"></div>
+	</div>
+</div>      
+				<script type="text/javascript">
+  		var browserType;
+      if (document.layers) {browserType = "nn4"}
+      if (document.all) {browserType = "ie"}
+      if (window.navigator.userAgent.toLowerCase().match("gecko")) {
+         browserType= "gecko"
+      }
+  		
+			tree3=new dhtmlXTreeObject("treeboxbox_tree3","100%","",0);
+			tree3.setImagePath("imgs/");
+			tree3.enableIEImageFix(true);
+      tree3.enableRadioButtons(1);
+      //tree2.enableSmartXMLParsing(true);
+      tree3.setOnLoadingStart(cargando_serie);
+      tree3.setOnLoadingEnd(fin_cargando_serie);
+      
+			tree3.setXMLAutoLoading("test_serie_funcionario.php?categoria=2");
+			tree3.loadXML("test_serie_funcionario.php?categoria=2");
+			
+		function fin_cargando_serie() {
+        if (browserType == "gecko" )
+           document.poppedLayer =
+               eval('document.getElementById("esperando_serie")');
+        else if (browserType == "ie")
+           document.poppedLayer =
+              eval('document.getElementById("esperando_serie")');
+        else
+           document.poppedLayer =
+              eval('document.layers["esperando_serie"]');
+        document.poppedLayer.style.display = "none";
+        tree3.openItem('cat2');
+        tree3.setCheck('<?php echo($doc[0]['serie']); ?>',1 );
+      }
+
+      function cargando_serie() {
+        if (browserType == "gecko" )
+           document.poppedLayer =
+               eval('document.getElementById("esperando_serie")');
+        else if (browserType == "ie")
+           document.poppedLayer =
+              eval('document.getElementById("esperando_serie")');
+        else
+           document.poppedLayer =
+               eval('document.layers["esperando_serie"]');
+        document.poppedLayer.style.display = "";
+      }
+
+      </scrip t -->      
 <?php if($doc["numcampos"]>1){ ?>
  <!--tr>
   <td  class="encabezado">ACCI&Oacute;N A REALIZAR: </td>
@@ -133,6 +199,13 @@ if(count($nombres_exp)){
  <script>
  $().ready(function() {
 	$('#form1').submit(function(){
+	    
+	seleccionados_series=tree3.getAllChecked();
+    if(seleccionados_series!="")
+      {$('#serie_idserie').val(seleccionados_series);
+       
+      }	  
+	    
     seleccionados=tree2.getAllChecked();
     if(seleccionados!="")
       {$('#expedientes').val(seleccionados);

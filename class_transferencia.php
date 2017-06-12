@@ -42,7 +42,7 @@ $dependencias=dependencias($dependencia);
 
 array_push($dependencias,$dependencia);
 $dependencias=array_unique($dependencias);
-$funcionarios = busca_filtro_tabla("A.funcionario_codigo","funcionario A,dependencia_cargo B, cargo C,dependencia D","B.cargo_idcargo=C.idcargo AND B.funcionario_idfuncionario=A.idfuncionario AND B.dependencia_iddependencia=D.iddependencia and B.dependencia_iddependencia IN(".implode(",",$dependencias).") AND A.estado=1 AND B.estado=1 AND C.estado=1 AND D.estado=1 AND A.sistema=1","",$conn);
+$funcionarios = busca_filtro_tabla("A.funcionario_codigo","funcionario A,dependencia_cargo B, cargo C,dependencia D","B.cargo_idcargo=C.idcargo AND B.funcionario_idfuncionario=A.idfuncionario AND B.dependencia_iddependencia=D.iddependencia and B.dependencia_iddependencia IN(".implode(",",$dependencias).") AND A.estado=1 AND B.estado=1 AND C.estado=1 AND D.estado=1 AND A.sistema=1 AND C.tipo_cargo=1","",$conn);
 $arreglo=extrae_campo($funcionarios,"funcionario_codigo","U");
 
 return($arreglo);
@@ -524,7 +524,8 @@ function transferir_archivo_prueba($datos, $destino, $adicionales) {
 cambia el estado del documento a APROBADO
 */
 function aprobar($iddoc=0,$url="")
-  {//$con=new Conexion("radica_camara");
+  {global $ruta_db_superior;
+      //$con=new Conexion("radica_camara");
    //$buscar=new SQL($con->Obtener_Conexion(), "Oracle");
    global $conn;
    $transferir=1;
@@ -1444,7 +1445,7 @@ global $idfactura;
                            $fila_abierta=1;
                            }
                        if($fila["nombre"]=="POR_APROBAR")
-                          {echo '<td align=left><img src="http://'.$ruta.'/firmas/faltante.jpg" width="'.$ancho_firma[0]["valor"].'" height="'.$alto_firma[0]["valor"].'"><br />
+                          {echo '<td align=left><img src="'.PROTOCOLO_CONEXION.$ruta.'/firmas/faltante.jpg" width="'.$ancho_firma[0]["valor"].'" height="'.$alto_firma[0]["valor"].'"><br />
                          '.mayusculas($fila["nombres"]." ".$fila["apellidos"]).'<br />';
 													  if($cargos["numcampos"])
                               {
@@ -1473,11 +1474,11 @@ global $idfactura;
                                 {//$ruta="../librerias/";
 																 $ruta=RUTA_PDF;
                                 }
-                              echo '<img src="http://'.$ruta.'/formatos/librerias/mostrar_foto.php?codigo='.$fila["funcionario_codigo"];
+                              echo '<img src="'.PROTOCOLO_CONEXION.$ruta.'/formatos/librerias/mostrar_foto.php?codigo='.$fila["funcionario_codigo"];
                               echo '" width="'.$ancho_firma[0]["valor"].'" height="'.$alto_firma[0]["valor"].'"/><br />';
                              }
                            else
-                              echo '<img src="http://'.$ruta.'/firmas/blanco.gif" width="'.$ancho_firma[0]["valor"].'" height="'.$alto_firma[0]["valor"].'" ><br />';
+                              echo '<img src="'.PROTOCOLO_CONEXION.$ruta.'/firmas/blanco.gif" width="'.$ancho_firma[0]["valor"].'" height="'.$alto_firma[0]["valor"].'" ><br />';
                            echo "".mayusculas($fila["nombres"]." ".$fila["apellidos"])."&nbsp;&nbsp;&nbsp;<br />";
                           if($cargos["numcampos"])
                             {for($h=0;$h<$cargos["numcampos"];$h++)
@@ -1488,7 +1489,7 @@ global $idfactura;
                            echo "</td>";
                           }
                        else
-                          {echo "<font size='2'><td align='left'><img src='http://".$ruta."/firmas/faltante.gif' width='".$ancho_firma[0]["valor"]."' height='".$alto_firma[0]["valor"]."'>
+                          {echo "<font size='2'><td align='left'><img src='".PROTOCOLO_CONEXION.$ruta."/firmas/faltante.gif' width='".$ancho_firma[0]["valor"]."' height='".$alto_firma[0]["valor"]."'>
                                  <br />".mayusculas($fila["nombres"]." ".$fila["apellidos"])."</b>&nbsp;<br />";
 
                            if($cargos["numcampos"])
@@ -1506,7 +1507,7 @@ global $idfactura;
                            if($fila["nombre"]=="POR_APROBAR")
      $revisados.="<tr><td><br><span style='font-size:13px;' class='phpmaker'>Revis&oacute; : ".mayusculas($fila["nombres"]." ".$fila["apellidos"])."-".formato_cargo($cargos[0]["nombre"])." (Pendiente)</span></td><td>&nbsp;</td></tr>";
 elseif($fila["nombre"]=="APROBADO"||$fila["nombre"]=="REVISADO")
-   $revisados.="<tr><td><br><span style='font-size:13px;' class='phpmaker'>Revis&oacute; : ".mayusculas($fila["nombres"]." ".$fila["apellidos"])."-".formato_cargo($cargos[0]["nombre"])."</span> <img src=\"http://".$ruta."/images/check.jpg\">"." </td><td></td></tr>";
+   $revisados.="<tr><td><br><span style='font-size:13px;' class='phpmaker'>Revis&oacute; : ".mayusculas($fila["nombres"]." ".$fila["apellidos"])."-".formato_cargo($cargos[0]["nombre"])."</span> <img src=\"".PROTOCOLO_CONEXION.$ruta."/images/check.jpg\">"." </td><td></td></tr>";
 
 
 
@@ -1643,7 +1644,7 @@ global $conn,$idfactura;
 					if($fila["tipo_origen"]==5){  //rol
 						$cargos=busca_filtro_tabla("distinct cargo.nombre","cargo,dependencia_cargo","cargo_idcargo=idcargo AND tipo_cargo=1 and iddependencia_cargo=".$fila["origen"],"",$conn);
 					}elseif($fila["tipo_origen"]==1){  //funcionario_codigo
-						$cargos=busca_filtro_tabla("distinct funcionario_codigo,nombres,idfuncionario,apellidos,cargo.nombre","cargo,dependencia_cargo,funcionario,dependencia","dependencia.iddependencia=dependencia_cargo.dependencia_iddependencia and cargo_idcargo=idcargo AND tipo_cargo=1 AND idfuncionario=funcionario_idfuncionario and fecha_inicial<='".$fila["fecha"]."' and fecha_final>='".$fila["fecha"]."' and funcionario_codigo='".$fila["origen"]."'","",$conn);
+						$cargos=busca_filtro_tabla("distinct funcionario_codigo,nombres,idfuncionario,apellidos,cargo.nombre","cargo,dependencia_cargo,funcionario,dependencia","dependencia.iddependencia=dependencia_cargo.dependencia_iddependencia and cargo_idcargo=idcargo AND tipo_cargo=1 AND idfuncionario=funcionario_idfuncionario and fecha_inicial<='".$fila["fecha"]."' and fecha_final>='".$fila["fecha"]."' and funcionario_codigo='".$fila["origen"]."' AND dependencia_cargo.estado=1","",$conn);
 						if(!$cargos["numcampos"])
 							$cargos=busca_filtro_tabla("funcionario_codigo,nombres,idfuncionario,apellidos,cargo.nombre","cargo,dependencia_cargo,funcionario,dependencia","dependencia.iddependencia=dependencia_cargo.dependencia_iddependencia and cargo_idcargo=idcargo AND tipo_cargo=1 AND idfuncionario=funcionario_idfuncionario and funcionario_codigo='".$fila["origen"]."'","fecha desc",$conn);
 					}
@@ -2107,7 +2108,9 @@ function radicar_plantilla() {
 			aprobar($_POST["iddoc"]);
 		}
 		// die();
-		enrutar_documento(@$_POST["pagina_siguiente"]);
+		if(!@$_SESSION['radicacion_masiva']){
+			enrutar_documento(@$_POST["pagina_siguiente"]);
+		}
 	}
 }
 
@@ -2168,8 +2171,12 @@ die();
        {$formato_doc=busca_filtro_tabla("A.nombre,A.idformato","formato A, documento B","B.iddocumento=".$_POST["iddoc"]." AND lower(A.nombre)=lower(B.plantilla)","",$conn);
        if($formato_doc["numcampos"])
         {$nom_formato=$formato_doc[0]["nombre"];
-			 //Cuando el documento es creado por el modulo formatos
-        abrir_url("formatos/$nom_formato/detalles_mostrar_$nom_formato.php?idformato=".$formato_doc[0]["idformato"]."&iddoc=".$_POST["iddoc"],"_self");
+	   		if(@$_SESSION["tipo_dispositivo"]=='movil'){
+	   			 abrir_url("ordenar.php?key=".$_POST["iddoc"]."&accion=mostrar&mostrar_formato=1","_self");	
+	   		}else{
+				 //Cuando el documento es creado por el modulo formatos
+       			 abrir_url("formatos/$nom_formato/detalles_mostrar_$nom_formato.php?idformato=".$formato_doc[0]["idformato"]."&iddoc=".$_POST["iddoc"],"_self");	   			
+	   		}
         die();
         }
        }
@@ -2966,6 +2973,11 @@ exit();
 
 function formato_devolucion($iddoc=0){
 global $conn,$ruta_db_superior;
+if(@$_REQUEST["iddoc"] || @$_REQUEST["key"]){
+  if(!@$_REQUEST["iddoc"])$_REQUEST["iddoc"]=@$_REQUEST["key"];
+  include_once("pantallas/documento/menu_principal_documento.php");
+  menu_principal_documento($_REQUEST["iddoc"]);
+}
 $config = busca_filtro_tabla("valor","configuracion","nombre='color_encabezado'","",$conn);
 if($config[0]["valor"]){
   $style = "<style type=\"text/css\"><!--INPUT, TEXTAREA, SELECT {font-family: Tahoma; font-size: 10px;} .phpmaker {font-family: Verdana; font-size: 9px;} .encabezado { background-color:".$config[0]["valor"]."; color:white ; padding:10px; text-align: left;  } .encabezado_list { background-color:".$config[0]["valor"]."; color:white ; vertical-align:middle; text-align: center; } --></style>";
@@ -2994,11 +3006,11 @@ if($transferencias["numcampos"]){
   redirecciona($ruta_db_superior."formatos/".$mostar_formato_devolver[0]['nombre']."/mostrar_".$mostar_formato_devolver[0]['nombre'].".php?iddoc=".$iddoc."&idformato=".$mostar_formato_devolver[0]['idformato']);
   //redirecciona($ruta_db_superior."vacio.php");
 }
-
+//<img style="vertical-align:middle" src="'.PROTOCOLO_CONEXION.RUTA_PDF.'/botones/comentarios/devolver_documento.png" border="0">
 echo '<p><span style="font-family: Verdana; font-size: 9px; font-weight: bold;">
-<img style="vertical-align:middle" src="http://'.RUTA_PDF.'/botones/comentarios/devolver_documento.png" border="0">&nbsp;&nbsp;DEVOLVER DOCUMENTOS&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;DEVOLVER DOCUMENTOS&nbsp;&nbsp;&nbsp;&nbsp;
 <br><br></span></p>
-<form name="transferenciadev" id="transferenciadev" action="http://'.RUTA_PDF.'/class_transferencia.php" method="post">
+<form name="transferenciadev" id="transferenciadev" action="'.PROTOCOLO_CONEXION.RUTA_PDF.'/class_transferencia.php" method="post">
 <table border="0" cellspacing="1" cellpadding="4" bgcolor="#CCCCCC">
 <tr>
   <td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">
@@ -3239,7 +3251,7 @@ function dependencias_asistentes($padre){
 <Post-condiciones><Post-condiciones>
 </Clase>
 */
-function arbol_serie()
+function arbol_serie($condicion_adicional='')
 {include_once("formatos/librerias/header_formato.php");
   echo '<meta http-equiv="Content-Type" content="text/html; charset= UTF-8 ">
 	<link rel="STYLESHEET" type="text/css" href="css/dhtmlXTree.css">
@@ -3266,8 +3278,8 @@ function arbol_serie()
       tree2.setOnLoadingEnd(fin_cargando_serie);
 			tree2.enableThreeStateCheckboxes(true);
 			tree2.enableThreeStateCheckboxes(true);
-			tree2.setXMLAutoLoading("test_serie_funcionario.php");
-			tree2.loadXML("test_serie_funcionario.php");
+			tree2.setXMLAutoLoading("test_serie_funcionario.php'.$condicion_adicional.'");
+			tree2.loadXML("test_serie_funcionario.php'.$condicion_adicional.'");
 			function fin_cargando_serie() {
         if (browserType == "gecko" )
            document.poppedLayer =

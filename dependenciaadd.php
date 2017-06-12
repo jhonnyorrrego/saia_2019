@@ -147,30 +147,82 @@ $(document).ready(function() {
 <input type="text" name="x_codigo" id="x_codigo" size="30" maxlength="50" value="<?php echo htmlspecialchars(@$x_codigo) ?>">
 </span></td>
 	</tr>
-	<tr>
-		<td class="encabezado" title="Seleccionar la dependencia a la cual depende la nueva."><span class="phpmaker" style="color: #FFFFFF;">NOMBRE DE LA DEPENDENCIA PADRE</span></td>
-		<td bgcolor="#F5F5F5"><span class="phpmaker">
-<?php
-$x_cod_padreList = "<select name=\"x_cod_padre\">";
-$x_cod_padreList .= "<option value=''>Por favor seleccionar</option>";
-$sSqlWrk = "SELECT DISTINCT A.iddependencia, A.nombre, A.codigo FROM dependencia A" . " ORDER BY A.nombre Asc";
-$rswrk = phpmkr_query($sSqlWrk,$conn) or error("Fall� la b�squeda" . phpmkr_error() . ' SQL:' . $sSqlWrk);
-if ($rswrk) {
-	$rowcntwrk = 0;
-	while ($datawrk = phpmkr_fetch_array($rswrk)) {
-		$x_cod_padreList .= "<option value=\"" . htmlspecialchars($datawrk[0]) . "\"";
-		if ($datawrk["iddependencia"] == @$x_cod_padre) {
-			$x_cod_padreList .= "' selected";
-		}
-		$x_cod_padreList .= ">" . $datawrk["nombre"] . ValueSeparator($rowcntwrk) . $datawrk["codigo"] . "</option>";
-		$rowcntwrk++;
-	}
-}
-@phpmkr_free_result($rswrk);
-$x_cod_padreList .= "</select>";
-echo $x_cod_padreList;
-?>
-</span></td>
+<tr>
+<td class="encabezado" title="Seleccione  dependencia de la cual depende esta dependencia"><span class="phpmaker" style="color: #FFFFFF;">Dependencia Padre</span></td>
+<td bgcolor="#F5F5F5"><link rel="stylesheet" type="text/css" href="css/dhtmlXTree.css">
+	<script type="text/javascript" src="js/dhtmlXCommon.js"></script>
+	<script type="text/javascript" src="js/dhtmlXTree.js"></script>
+	<span class="phpmaker">
+    <input type="hidden" name="x_cod_padre" id="x_cod_padre" value="<?php echo($x_cod_padre)?>">
+	<br><input type="text" id="stext" width="200px" size="20" placeholder="Buscar">
+      <a href="javascript:void(0)" onclick="tree2.findItem(document.getElementById('stext').value,1)">
+      <img src="botones/general/anterior.png" border="0px" alt="Anterior"></a>
+      <a href="javascript:void(0)" onclick="tree2.findItem(document.getElementById('stext').value,0,1)">
+      <img src="botones/general/buscar.png" border="0px" alt="Buscar"></a>
+      <a href="javascript:void(0)" onclick="tree2.findItem(document.getElementById('stext').value)">
+      <img src="botones/general/siguiente.png" border="0px" alt="Siguiente"></a><br />
+<br />
+    <div id="esperando_func">
+    <img src="imagenes/cargando.gif"></div>
+	<div id="treeboxbox_tree2"></div>
+	<script type="text/javascript">
+  <!--
+  		var browserType;
+      if (document.layers) {browserType = "nn4"}
+      if (document.all) {browserType = "ie"}
+      if (window.navigator.userAgent.toLowerCase().match("gecko")) {
+         browserType= "gecko"
+      }
+      tree2=new dhtmlXTreeObject("treeboxbox_tree2","100%","100%",0);
+      tree2.setImagePath("imgs/");
+      tree2.enableIEImageFix(true);
+      tree2.enableRadioButtons(true);
+      tree2.setOnLoadingStart(cargando_func);
+      tree2.setOnLoadingEnd(fin_cargando_func);
+      tree2.enableSmartXMLParsing(true);
+      tree2.loadXML("test_serie.php?tabla=dependencia");
+      tree2.setOnCheckHandler(onNodeSelect_padre);
+      function onNodeSelect_padre(nodeId){
+        valor_destino=document.getElementById("x_cod_padre");
+        if(tree2.isItemChecked(nodeId)){
+          if(valor_destino.value!=="")
+          tree2.setCheck(valor_destino.value,false);
+          if(nodeId.indexOf("_")!=-1)
+             nodeId=nodeId.substr(0,nodeId.indexOf("_"));
+          valor_destino.value=nodeId;
+         }
+        else{
+           valor_destino.value="";
+        }
+      }
+	  function fin_cargando_func() {
+        if (browserType == "gecko" )
+           document.poppedLayer =
+               eval('document.getElementById("esperando_func")');
+        else if (browserType == "ie")
+           document.poppedLayer =
+              eval('document.getElementById("esperando_func")');
+        else
+           document.poppedLayer =
+              eval('document.layers["esperando_func"]');
+        document.poppedLayer.style.display = "none";
+      }
+
+      function cargando_func() {
+        if (browserType == "gecko" )
+           document.poppedLayer =
+               eval('document.getElementById("esperando_func")');
+        else if (browserType == "ie")
+           document.poppedLayer =
+              eval('document.getElementById("esperando_func")');
+        else
+           document.poppedLayer =
+               eval('document.layers["esperando_func"]');
+        document.poppedLayer.style.display = "";
+      }
+	-->
+	</script>
+	</td>
 	</tr>
 	<tr>
 		<td class="encabezado" title="Nombre de la nueva dependencia." ><span class="phpmaker" style="color: #FFFFFF;">NOMBRE DEPENDENCIA</span></td>

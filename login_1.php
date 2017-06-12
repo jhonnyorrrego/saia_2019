@@ -109,18 +109,6 @@ if (@$_REQUEST["submit"] <> "") {
   		else setCookie("alcalde_pwd", "", 0);
     }
     else setCookie("alcalde_userid", "" ,0);
-		///////////////////////////REDIRECCION INTRANET////////////////////////////////////////
-/*    if($datos_int["numcampos"])
-    {
-      for($col=0;$col<count($datos_int[0])/2-1;$col++)
-		  {
-        if($datos_int[0][$col]=="" OR !$datos_int[0][$col])
-        {
-          abrir_url("http://10.1.7.31/Apps/Consultas/Usuario.php?Login=".$_SESSION["LOGIN".LLAVE_SAIA],"_parent");
-        }
-      }
-    }*/
-    ///////////////////////////////////////////////////////////////////////////////////
      include_once("tarea_limpiar_carpeta.php");
      borrar_archivos_carpeta("temporal_".$_POST["userid"],false);
      abrir_url("index.php","_top");    

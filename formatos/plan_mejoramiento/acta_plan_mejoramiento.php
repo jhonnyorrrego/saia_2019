@@ -58,7 +58,7 @@
 <style> body, table { font-size:12pt; font-family:arial; } </style></head><table  border="0" id="tabla1" width="100%"" bgcolor="white" ><tr ><td><div style="width:30mm; height:40mm;">&nbsp;</div></td><td><div id="encabezado" style="background-color:white;"><table style="font-family: verdana; height: 88px; font-size: 9pt;" border="0" width="100%">
 <tbody>
 <tr>
-<td style="text-align: left; width: 30%; font-size: smaller;" valign="middle"><p><img src="http://'.RUTA_PDF.'/Apps/CEROK/saia1.06/imagenes/logob.jpg" alt="Logo" height="90" /></p></td>
+<td style="text-align: left; width: 30%; font-size: smaller;" valign="middle"><p><img src="'.PROTOCOLO_CONEXION.RUTA_PDF.'/Apps/CEROK/saia1.06/imagenes/logob.jpg" alt="Logo" height="90" /></p></td>
 
 </tr>
 <tr>

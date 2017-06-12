@@ -257,6 +257,16 @@ for($i=0;$i<$configuracion["numcampos"];$i++){
     </tr>
   	<tr>
   		<td colspan="3">
+  		    
+                <?php 
+                    //parseo descripcion
+                    $documento[0]["descripcion"]=codifica_encabezado(html_entity_decode($documento[0]["descripcion"]));
+                    if($documento[0]["descripcion"]!=''){
+                        if(strlen($documento[0]["descripcion"])>30){
+                            $documento[0]["descripcion"]=substr( $documento[0]["descripcion"],0,30).'...';
+                        }
+                    }
+                ?>  		    
     <applet code="uk.co.mmscomputing.application.imageviewer.MainApp.class"  archive="visor1.jar" width="100%" height="640" name="scaner">
       <param name="url" value="<?php print($dir3);  ?>">
       <param name="radica" value="<?php print($key);?>">

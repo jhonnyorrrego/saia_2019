@@ -1395,7 +1395,7 @@ function mostrar_estado_proceso($idformato, $iddoc) {
             }
             
             if ($fila["nombre"] == "POR_APROBAR") {
-              echo '<td style="width:50%;" align="left"><img src="http://' . RUTA_PDF_LOCAL . '/firmas/faltante.jpg" width="' . $ancho_firma[0]["valor"] . '" height="' . $alto_firma[0]["valor"] . '">&nbsp;&nbsp;&nbsp;<br /></td>';
+              echo '<td style="width:50%;" align="left"><img src="' .PROTOCOLO_CONEXION. RUTA_PDF_LOCAL . '/firmas/faltante.jpg" width="' . $ancho_firma[0]["valor"] . '" height="' . $alto_firma[0]["valor"] . '">&nbsp;&nbsp;&nbsp;<br /></td>';
               if ($iniciales == ($fila["funcionario_codigo"]))
                 $firma_actual = true;
             }
@@ -1404,11 +1404,11 @@ function mostrar_estado_proceso($idformato, $iddoc) {
               echo '<td style="width:50%;" align="left">';
               if ($firma[0]["firma"] <> "") { //echo $firma[0]["firma"]."..";                              
                 $pagina_actual = $_SERVER["PHP_SELF"];
-                echo '<img src="http://' . RUTA_PDF_LOCAL . '/formatos/librerias/mostrar_foto.php?codigo=' . $fila["funcionario_codigo"].'"';
+                echo '<img src="'.PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . '/formatos/librerias/mostrar_foto.php?codigo=' . $fila["funcionario_codigo"].'"';
                 echo ' width="' . $ancho_firma[0]["valor"] . '" height="' . $alto_firma[0]["valor"] . '"/><br />';
               }
               else
-                echo '<img src="http://' . RUTA_PDF_LOCAL . '/firmas/blanco.jpg" width="' . $ancho_firma[0]["valor"] . '" height="' . $alto_firma[0]["valor"] . '" ><br />';
+                echo '<img src="'.PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . '/firmas/blanco.jpg" width="' . $ancho_firma[0]["valor"] . '" height="' . $alto_firma[0]["valor"] . '" ><br />';
               echo "<strong>" . mayusculas($fila["nombres"] . " " . $fila["apellidos"]) . "</strong>&nbsp;&nbsp;&nbsp;<br />";
                if (!$cargos["numcampos"]) {
                 $cargos = busca_filtro_tabla("distinct cargo.nombre,dependencia.nombre as dep", "cargo,dependencia_cargo,funcionario,dependencia", "dependencia.iddependencia=dependencia_cargo.dependencia_iddependencia and cargo_idcargo=idcargo AND idfuncionario=funcionario_idfuncionario and lower(cargo.nombre)<>'distribuidor de documentos' and dependencia_cargo.estado=1 and funcionario.estado=1 AND dependencia.tipo=1 and " . fecha_db_obtener('fecha_inicial', 'Y-m-d H:i') . "<='" . $resultado[$k]["fecha"] . "' and " . fecha_db_obtener('fecha_final', 'Y-m-d H:i') . ">='" . $resultado[$k]["fecha"] . "' and funcionario_idfuncionario=" . $fila["idfuncionario"], "", $conn);
@@ -1430,9 +1430,9 @@ function mostrar_estado_proceso($idformato, $iddoc) {
                 $firma_actual = true;
               echo "</td>";
             }
-            else {/* echo "<font size='2'><td align='left'><img src='http://".RUTA_PDF_LOCAL."/firmas/blanco.jpg' width='".$ancho_firma[0]["valor"]."' height='".$alto_firma[0]["valor"]."'>
+            else {/* echo "<font size='2'><td align='left'><img src='".PROTOCOLO_CONEXION.RUTA_PDF_LOCAL."/firmas/blanco.jpg' width='".$ancho_firma[0]["valor"]."' height='".$alto_firma[0]["valor"]."'>
               <br />".mayusculas($fila["nombres"]." ".$fila["apellidos"])."</b>&nbsp;&nbsp;&nbsp;<br />"; */
-              echo '<td style="width:50%;" align="left"><img src="http://' . RUTA_PDF_LOCAL . '/firmas/blanco.jpg" width="' . $ancho_firma[0]["valor"] . '" height="' . $alto_firma[0]["valor"] . '" ><br />';
+              echo '<td style="width:50%;" align="left"><img src="'.PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . '/firmas/blanco.jpg" width="' . $ancho_firma[0]["valor"] . '" height="' . $alto_firma[0]["valor"] . '" ><br />';
               echo "<strong>" . mayusculas($fila["nombres"] . " " . $fila["apellidos"]) . "</strong>&nbsp;&nbsp;&nbsp;<br />";
               if ($cargos["numcampos"]) {
                 for ($h = 0; $h < $cargos["numcampos"]; $h++)
@@ -1448,7 +1448,7 @@ function mostrar_estado_proceso($idformato, $iddoc) {
             if ($fila["nombre"] == "POR_APROBAR")
               $revisados.="<tr><td style='width:50%;'><br /><br /><span class='phpmaker'>Reviso : " . mayusculas($fila["nombres"] . " " . $fila["apellidos"]) . "-" . formato_cargo($cargos[0]["nombre"]) . " (Pendiente)</span></td><td>&nbsp;</td></tr>";
             elseif ($fila["nombre"] == "APROBADO" || $fila["nombre"] == "REVISADO")
-              $revisados.="<tr><td><span class='phpmaker'>Reviso : " . mayusculas($fila["nombres"] . " " . $fila["apellidos"]) . "-" . formato_cargo($cargos[0]["nombre"]) . "</span> <img src=\"http://" . RUTA_PDF_LOCAL . "/images/check.jpg\">" . " </td><td></td></tr>";
+              $revisados.="<tr><td><span class='phpmaker'>Reviso : " . mayusculas($fila["nombres"] . " " . $fila["apellidos"]) . "-" . formato_cargo($cargos[0]["nombre"]) . "</span> <img src=\"".PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . "/images/check.jpg\">" . " </td><td></td></tr>";
           }
           if ($firmas == $num_cols) {
             $firmas = 0;
@@ -1575,7 +1575,7 @@ function mostrar_estado_proceso($idformato, $iddoc) {
                            $fila_abierta=1;
                            }      
                        if($fila["nombre"]=="POR_APROBAR")
-                          {echo '<td align=left><img src="http://'.RUTA_PDF_LOCAL.'/firmas/faltante.jpg" width="'.$ancho_firma[0]["valor"].'" height="'.$alto_firma[0]["valor"].'">&nbsp;&nbsp;&nbsp;<br /></td>';        
+                          {echo '<td align=left><img src="'.PROTOCOLO_CONEXION.RUTA_PDF_LOCAL.'/firmas/faltante.jpg" width="'.$ancho_firma[0]["valor"].'" height="'.$alto_firma[0]["valor"].'">&nbsp;&nbsp;&nbsp;<br /></td>';        
                           if($iniciales == ($fila["funcionario_codigo"]))
                             $firma_actual = true;     
                           }
@@ -1592,11 +1592,11 @@ function mostrar_estado_proceso($idformato, $iddoc) {
                                else
                                 {$ruta="../librerias/";
                                 } 
-                              echo '<img src="http://'.RUTA_PDF_LOCAL.'/formatos/librerias/mostrar_foto.php?codigo='.$fila["funcionario_codigo"];
+                              echo '<img src="'.PROTOCOLO_CONEXION.RUTA_PDF_LOCAL.'/formatos/librerias/mostrar_foto.php?codigo='.$fila["funcionario_codigo"];
                               echo '" width="'.$ancho_firma[0]["valor"].'" height="'.$alto_firma[0]["valor"].'"/><br />';
                              }
                            else
-                              echo '<img src="http://'.RUTA_PDF_LOCAL.'/firmas/blanco.jpg" width="'.$ancho_firma[0]["valor"].'" height="'.$alto_firma[0]["valor"].'" ><br />'; 
+                              echo '<img src="'.PROTOCOLO_CONEXION.RUTA_PDF_LOCAL.'/firmas/blanco.jpg" width="'.$ancho_firma[0]["valor"].'" height="'.$alto_firma[0]["valor"].'" ><br />'; 
                            echo "<strong>".mayusculas($fila["nombres"]." ".$fila["apellidos"])."</strong>&nbsp;&nbsp;&nbsp;<br />";
 						   if(!$cargos["numcampos"]){
                            $cargos=busca_filtro_tabla("distinct cargo.nombre,dependencia.nombre as dep","cargo,dependencia_cargo,funcionario,dependencia","dependencia.iddependencia=dependencia_cargo.dependencia_iddependencia and cargo_idcargo=idcargo AND idfuncionario=funcionario_idfuncionario and lower(cargo.nombre)<>'distribuidor de documentos' and dependencia_cargo.estado=1 and funcionario.estado=1 AND dependencia.tipo=1 and ".fecha_db_obtener('fecha_inicial','Y-m-d H:i')."<='".$resultado[$k]["fecha"]."' and ".fecha_db_obtener('fecha_final','Y-m-d H:i').">='".$resultado[$k]["fecha"]."' and funcionario_idfuncionario=".$fila["idfuncionario"],"",$conn);
@@ -1614,7 +1614,7 @@ function mostrar_estado_proceso($idformato, $iddoc) {
                            echo "</td>";                           
                           }
                        else   
-                          {echo "<font size='2'><td align='left'><img src='http://".RUTA_PDF_LOCAL."/firmas/blanco.jpg' width='".$ancho_firma[0]["valor"]."' height='".$alto_firma[0]["valor"]."'>
+                          {echo "<font size='2'><td align='left'><img src='".PROTOCOLO_CONEXION.RUTA_PDF_LOCAL."/firmas/blanco.jpg' width='".$ancho_firma[0]["valor"]."' height='".$alto_firma[0]["valor"]."'>
                                  <br />".mayusculas($fila["nombres"]." ".$fila["apellidos"])."</b>&nbsp;&nbsp;&nbsp;<br />";
                            if($cargos["numcampos"])
                               {for($h=0;$h<$cargos["numcampos"];$h++)
@@ -1632,7 +1632,7 @@ function mostrar_estado_proceso($idformato, $iddoc) {
                            if($fila["nombre"]=="POR_APROBAR")
      $revisados.="<tr><td><span class='phpmaker'>Reviso : ".mayusculas($fila["nombres"]." ".$fila["apellidos"])."-".formato_cargo($cargos[0]["nombre"])." (Pendiente)</span></td><td>&nbsp;</td></tr>";
 elseif($fila["nombre"]=="APROBADO"||$fila["nombre"]=="REVISADO")
-   $revisados.="<tr><td><span class='phpmaker'>Reviso : ".mayusculas($fila["nombres"]." ".$fila["apellidos"])."-".formato_cargo($cargos[0]["nombre"])."</span> <img src=\"http://".RUTA_PDF_LOCAL."/images/check.jpg\">"." </td><td></td></tr>";
+   $revisados.="<tr><td><span class='phpmaker'>Reviso : ".mayusculas($fila["nombres"]." ".$fila["apellidos"])."-".formato_cargo($cargos[0]["nombre"])."</span> <img src=\"".PROTOCOLO_CONEXION.RUTA_PDF_LOCAL."/images/check.jpg\">"." </td><td></td></tr>";
 
 
                          
@@ -2328,7 +2328,7 @@ function guardar_documento($iddoc,$tipo=0)
          if(is_array($_REQUEST[$lcampos[$j]["nombre"]]))
             array_push($valores,"'".implode(',',@$_REQUEST[$lcampos[$j]["nombre"]])."'");
          elseif(@$_REQUEST[$lcampos[$j]["nombre"]]<>'')
-            array_push($valores,"'".(utf8_decode(@$_REQUEST[$lcampos[$j]["nombre"]]))."'");
+            array_push($valores,"'".((@$_REQUEST[$lcampos[$j]["nombre"]]))."'");
          else 
           {  array_push($valores,"''");  
              
@@ -2894,9 +2894,9 @@ function formato_devolucion($iddoc=0)
   menu_ordenar($_REQUEST["iddoc"]);
 
   echo '<p><span style="font-family: Verdana; font-size: 9px; font-weight: bold;">
-      <img style="vertical-align:middle" src="http://'.RUTA_PDF.'/botones/comentarios/devolver_documento.png" border="0">&nbsp;&nbsp;DEVOLVER DOCUMENTOS&nbsp;&nbsp;&nbsp;&nbsp;
+      <img style="vertical-align:middle" src="'.PROTOCOLO_CONEXION.RUTA_PDF.'/botones/comentarios/devolver_documento.png" border="0">&nbsp;&nbsp;DEVOLVER DOCUMENTOS&nbsp;&nbsp;&nbsp;&nbsp;
       <br><br></span></p>
-      <form name="transferenciadev" id="transferenciadev" action="http://'.RUTA_PDF.'/class_transferencia.php" method="post">
+      <form name="transferenciadev" id="transferenciadev" action="'.PROTOCOLO_CONEXION.RUTA_PDF.'/class_transferencia.php" method="post">
       <p>
       <table border="0" cellspacing="1" cellpadding="4" bgcolor="#CCCCCC">
       <tr><td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">CAMBIANDO ESTADO AL DOCUMENTO:</span></td>

@@ -19,26 +19,21 @@ function validar_digitalizacion_formato_pqr($idformato,$iddoc){
 
   if($_REQUEST["digitalizacion"]==1){
   	if(@$_REQUEST["iddoc"]){
-  		$enlace="pantallas/buscador_principal.php?idbusqueda=9";
-  		//abrir_url($ruta_db_superior."colilla.php?key=".$_REQUEST["iddoc"]."&enlace=paginaadd.php?key=".$_REQUEST["iddoc"]."&enlace2=".$enlace,'_self');
-  		abrir_url($ruta_db_superior."paginaadd.php?key=".$_REQUEST["iddoc"]."&enlace=".$enlace,'centro');
+  	    $iddoc=$_REQUEST["iddoc"];
+  		$enlace="ordenar.php?key=" . $iddoc."&accion=mostrar&mostrar_formato=1";
+  		abrir_url($ruta_db_superior."paginaadd.php?target=_self&key=".$iddoc."&enlace=".$enlace,'_self');
   	}
 	else{
-		$enlace="busqueda_categoria.php?idcategoria_formato=1&defecto=radicacion_entrada";
-		abrir_url($ruta_db_superior."colilla.php?key=".$iddoc."&enlace=paginaadd.php?key=".$iddoc."&enlace2=".$enlace,'centro');
+		abrir_url($ruta_db_superior."colilla.php?target=_self&key=".$iddoc."&enlace=paginaadd.php?key=".$iddoc,'_self');
 	}
-    //redirecciona($ruta_db_superior."paginaadd.php?&key=".$iddoc."&enlace=".$enlace);
   }elseif($_REQUEST["digitalizacion"]==2 && $_REQUEST['no_sticker'] == 1){
   	abrir_url($ruta_db_superior."formatos/radicacion_entrada/mostrar_radicacion_entrada.php?iddoc=".$iddoc."&idformato=".$idformato,'_self');
   }else if($_REQUEST["digitalizacion"]==2){
   	if(@$_REQUEST["iddoc"]){
   		$iddoc=$_REQUEST["iddoc"];
-  		$enlace="pantallas/buscador_principal.php?idbusqueda=9";
   	}
-	else{
-		$enlace="busqueda_categoria.php?idcategoria_formato=1&defecto=pqrsf";
-	}
-  		abrir_url($ruta_db_superior."colilla.php?key=".$iddoc."&enlace=".$enlace,'centro');
+	$enlace="ordenar.php?key=" . $iddoc."&accion=mostrar&mostrar_formato=1";
+  	abrir_url($ruta_db_superior."colilla.php?target=_self&key=".$iddoc."&enlace=".$enlace,'_self');
   }
 }
 
@@ -172,13 +167,13 @@ function generar_qr_pqrsf($idformato,$iddoc){
 	global $conn,$ruta_db_superior;	
 	$codigo_qr=busca_filtro_tabla("","documento_verificacion","documento_iddocumento=".$iddoc,"", $conn);
 	if($codigo_qr['numcampos']){
-	$qr='<img src="http://'.RUTA_PDF_LOCAL.'/'.$codigo_qr[0]['ruta_qr'].'" >';	
+	$qr='<img src="'.PROTOCOLO_CONEXION.RUTA_PDF_LOCAL.'/'.$codigo_qr[0]['ruta_qr'].'" >';	
 	}else{
 		include_once($ruta_db_superior."pantallas/qr/librerias.php");
 		generar_codigo_qr($idformato,$iddoc);
 		
 		$codigo_qr=busca_filtro_tabla("","documento_verificacion","documento_iddocumento=".$iddoc,"", $conn);	
-		$qr="<img src='http://".RUTA_PDF_LOCAL."/".$codigo_qr[0]['ruta_qr']."' >";	
+		$qr="<img src='".PROTOCOLO_CONEXION.RUTA_PDF_LOCAL."/".$codigo_qr[0]['ruta_qr']."' >";	
 	}
 	echo $qr;
 }
@@ -204,9 +199,8 @@ function generar_codigo_qr_pqrsf($idformato,$iddoc){
 	if($imagen==false){
 	  alerta("Error al tratar de crear el codigo qr");
 	}else{
-	  $codigo_hash=obtener_codigo_hash_archivo($imagen,'crc32'); 
 	  $fun_qr=usuario_actual('idfuncionario');
-	  $sql_documento_qr="INSERT INTO documento_verificacion(documento_iddocumento,funcionario_idfuncionario,fecha,ruta_qr,verificacion,codigo_hash) VALUES (".$iddoc.",".$fun_qr.",".fecha_db_almacenar(date("Y-m-d H:i:s"),'Y-m-d H:i:s').",'".$imagen."','vacio','".$codigo_hash."')";
+	  $sql_documento_qr="INSERT INTO documento_verificacion(documento_iddocumento,funcionario_idfuncionario,fecha,ruta_qr,verificacion) VALUES (".$iddoc.",".$fun_qr.",".fecha_db_almacenar(date("Y-m-d H:i:s"),'Y-m-d H:i:s').",'".$imagen."','vacio')";
 	  phpmkr_query($sql_documento_qr);
 	}
 }
@@ -239,6 +233,35 @@ function transferencia_cargo_lider_pqrsf($idformato,$iddoc){
 }
 
 
-
+function cambiar_estado_iniciado_pqrsf($idformato,$iddoc){ //posterior al aprobar
+	global $conn;
+	
+	$datos=busca_filtro_tabla("estado_radicado","ft_pqrsf","documento_iddocumento=".$iddoc,"",$conn);
+	if($datos[0]['estado_radicado']==2){ //INICIADO 
+	    $up="UPDATE documento SET estado='INICIADO' WHERE iddocumento=".$iddoc;   
+	    phpmkr_query($up);
+	}
+}
+function enlace_llenar_datos_radicacion_rapida_pqrsf($idformato,$iddoc){ //mostrar
+	global $conn;
+	
+	$doc=busca_filtro_tabla("estado","documento","iddocumento=".$iddoc,"",$conn);
+	if($doc[0]['estado']=='INICIADO'){
+	    $texto.='<br><br><button class="btn btn-mini btn-warning" onclick="window.location=\'editar_pqrsf.php?no_sticker=1&iddoc='.$iddoc.'&idformato='.$idformato.'\';">Llenar datos</button>';
+        echo $texto;
+	}
+}
+function cambiar_estado_aprobado_pqrsf($idformato,$iddoc){//posterior al editar
+	global $conn;  
+	
+	$datos=busca_filtro_tabla("estado_radicado","ft_pqrsf","documento_iddocumento=".$iddoc,"",$conn);
+	if($datos[0]['estado_radicado']==2){ //INICIADO 
+	    $up="UPDATE documento SET estado='APROBADO' WHERE iddocumento=".$iddoc;   
+	    phpmkr_query($up);
+	    $up2="UPDATE ft_pqrsf SET estado_radicado='1' WHERE documento_iddocumento=".$iddoc;   
+	    phpmkr_query($up2);	    
+	}	
+	
+}
 
 ?>

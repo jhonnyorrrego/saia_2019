@@ -33,7 +33,7 @@ function icono_detalles($idformato,$iddoc){
 			echo(librerias_bootstrap());
 			//echo(librerias_acciones_kaiten()); //DESCOMENTAR SI AL PASAR A OTRO CLIENTE NO FUNCIONA EL ENLACE
 			$nombre_proceso=busca_filtro_tabla("nombre","ft_proceso A","A.documento_iddocumento=".$iddoc,"",$conn);
-    	echo "<a class='kenlace_saia' conector='iframe' title='".$nombre_proceso[0]["nombre"]."' titulo='".$nombre_proceso[0]["nombre"]."' enlace='ordenar.php?accion=mostrar&mostrar_formato=1&key=".$iddoc."' style='cursor:pointer'><img border=0 src='../../botones/comentarios/detalles.png' /></a>";
+    	echo "<a class='kenlace_saia' conector='iframe' title='".$nombre_proceso[0]["nombre"]."' titulo='".$nombre_proceso[0]["nombre"]."' enlace='".$ruta_db_superior."ordenar.php?accion=mostrar&mostrar_formato=1&key=".$iddoc."' style='cursor:pointer'><img border=0 src='../../botones/comentarios/detalles.png' /></a>";
       //echo "<a href='$ruta' target='centro'><img border=0 src='../../botones/comentarios/detalles.png' /></a>";
     }
   } 
@@ -94,7 +94,7 @@ function mostrar_riesgos($idformato,$iddoc){
     echo "<ul>";
     if($fila<>""){
       $anexo=busca_filtro_tabla("","anexos","idanexos=".$fila,"",$conn);
-      echo "<li><a href='http://".RUTA_PDF."/".$anexo[0]["ruta"]."'>".$anexo[0]["etiqueta"]."</a></li>";
+      echo "<li><a href='".PROTOCOLO_CONEXION.RUTA_PDF."/".$anexo[0]["ruta"]."'>".$anexo[0]["etiqueta"]."</a></li>";
     }
     echo "</ul>";  
    }
@@ -193,13 +193,13 @@ if($formato["numcampos"]){
                      <tr><td>Cargo: ".ucwords(@$revisado[0]["nombre"])."</td><td>Cargo: ".ucwords(@$aprobado[0]["nombre"])."</td></tr>
                      <tr><td>";
           if(@$revisado[0]["firma"]<>"")
-            echo "<img width='".$ancho_firma[0]["valor"]."' height='".$alto_firma[0]["valor"]."' src='http://".RUTA_PDF."/formatos/librerias/mostrar_foto.php?codigo=".@$revisado[0]["funcionario_codigo"]."' />";
+            echo "<img width='".$ancho_firma[0]["valor"]."' height='".$alto_firma[0]["valor"]."' src='".PROTOCOLO_CONEXION.RUTA_PDF."/formatos/librerias/mostrar_foto.php?codigo=".@$revisado[0]["funcionario_codigo"]."' />";
           else 
-            echo "<img width='".$ancho_firma[0]["valor"]."' height='".$alto_firma[0]["valor"]."' src='http://".RUTA_PDF."/firmas/blanco.jpg'/>";  
+            echo "<img width='".$ancho_firma[0]["valor"]."' height='".$alto_firma[0]["valor"]."' src='".PROTOCOLO_CONEXION.RUTA_PDF."/firmas/blanco.jpg'/>";  
           if(@$aprobado[0]["firma"]<>"")
-            echo "</td><td><img width='".$ancho_firma[0]["valor"]."' height='".$alto_firma[0]["valor"]."' src='http://".RUTA_PDF."/formatos/librerias/mostrar_foto.php?codigo=".@$aprobado[0]["funcionario_codigo"]."' />";
+            echo "</td><td><img width='".$ancho_firma[0]["valor"]."' height='".$alto_firma[0]["valor"]."' src='".PROTOCOLO_CONEXION.RUTA_PDF."/formatos/librerias/mostrar_foto.php?codigo=".@$aprobado[0]["funcionario_codigo"]."' />";
           else 
-            echo "<img width='".$ancho_firma[0]["valor"]."' height='".$alto_firma[0]["valor"]."' src='http://".RUTA_PDF."/firmas/blanco.jpg'/>";
+            echo "<img width='".$ancho_firma[0]["valor"]."' height='".$alto_firma[0]["valor"]."' src='".PROTOCOLO_CONEXION.RUTA_PDF."/firmas/blanco.jpg'/>";
           echo "</td></tr>
                      <tr><td>Fecha: ".@$proceso[0]["fecha_revision"]."</td><td>Fecha: ".@$proceso[0]["fecha_aprobacion"]."</td></tr>
                      </table>";
@@ -220,13 +220,13 @@ if($formato["numcampos"]){
                  <tr><td>Cargo: ".ucwords(@$revisado[0]["nombre"])."</td><td>Cargo: ".ucwords(@$aprobado[0]["nombre"])."</td></tr>
                  <tr><td>";
       if(@$revisado[0]["firma"]<>"")
-        echo "<img width='".$ancho_firma[0]["valor"]."' height='".$alto_firma[0]["valor"]."' src='http://".RUTA_PDF."/formatos/librerias/mostrar_foto.php?codigo=".@$revisado[0]["funcionario_codigo"]."' />";
+        echo "<img width='".$ancho_firma[0]["valor"]."' height='".$alto_firma[0]["valor"]."' src='".PROTOCOLO_CONEXION.RUTA_PDF."/formatos/librerias/mostrar_foto.php?codigo=".@$revisado[0]["funcionario_codigo"]."' />";
       else 
-        echo "<img width='".$ancho_firma[0]["valor"]."' height='".$alto_firma[0]["valor"]."' src='http://".RUTA_PDF."/firmas/blanco.jpg'/>";  
+        echo "<img width='".$ancho_firma[0]["valor"]."' height='".$alto_firma[0]["valor"]."' src='".PROTOCOLO_CONEXION.RUTA_PDF."/firmas/blanco.jpg'/>";  
       if(@$aprobado[0]["firma"]<>"")
-        echo "</td><td><img width='".$ancho_firma[0]["valor"]."' height='".$alto_firma[0]["valor"]."' src='http://".RUTA_PDF."/formatos/librerias/mostrar_foto.php?codigo=".@$aprobado[0]["funcionario_codigo"]."' />";
+        echo "</td><td><img width='".$ancho_firma[0]["valor"]."' height='".$alto_firma[0]["valor"]."' src='".PROTOCOLO_CONEXION.RUTA_PDF."/formatos/librerias/mostrar_foto.php?codigo=".@$aprobado[0]["funcionario_codigo"]."' />";
       else 
-        echo "<img width='".$ancho_firma[0]["valor"]."' height='".$alto_firma[0]["valor"]."' src='http://".RUTA_PDF."/firmas/blanco.jpg'/>";
+        echo "<img width='".$ancho_firma[0]["valor"]."' height='".$alto_firma[0]["valor"]."' src='".PROTOCOLO_CONEXION.RUTA_PDF."/firmas/blanco.jpg'/>";
       echo "</td></tr>
                  <tr><td>Fecha: ".@$proceso[0]["fecha_revision"]."</td><td>Fecha: ".@$proceso[0]["fecha_aprobacion"]."</td></tr>
                  </table>";

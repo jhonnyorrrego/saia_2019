@@ -41,9 +41,7 @@ $riesgos=obtener_riesgos_proceso($proceso[0]['idft_proceso']);
 }
 
 if(@$_REQUEST["tipo"] != 5 && !@$proceso[0]['idft_proceso'] && !@$_REQUEST["excel"]){
-	//$url = "http://".RUTA_PDF_LOCAL."/formatos/riesgos_proceso/mostrar_riesgos_tipo_corrupcion.php?tipo=5";
 	$url="mostrar_riesgos_tipo_corrupcion.php?excel=1";
-	//$ruta = $ruta_db_superior."class_impresion2.php?tipo=5&orientacion=1&url=".$url."&pdf=1";
 	$tabla = '
    <a target="_blank" href="'.$url.'">
     <img src="'.$ruta_db_superior.'enlaces/imprimir.gif" height="30" width="30" border="0">

@@ -904,4 +904,42 @@ if(isset($_REQUEST["ft_funcion"])&& trim($_REQUEST["ft_funcion"])<>""){
   if(function_exists($funcion))
     call_user_func_array($funcion,explode(",",$parametros));
 }
+function listar_anexos_ver_descargar($idformato,$iddoc,$idcampo='',$tipo_mostrar='',$retorno=0){
+	global $ruta_db_superior,$conn;
+
+    $condicion_icampo='';
+    if($idcampo!=''){
+        $condicion_icampo=" AND campos_formato='".$idcampo."'";
+    }
+	$anexos=busca_filtro_tabla("","anexos","documento_iddocumento=".$iddoc.$condicion_icampo,"",$conn);
+	$tabla='';
+	if($anexos['numcampos']){
+	    $array_extensiones_ver=array('jpg','pdf','png');
+		$tabla='<ul>';
+	    for($j=0;$j<$anexos['numcampos'];$j++){
+	        if(in_array(strtolower($anexos[$j]['tipo']),$array_extensiones_ver)){
+	            $href='';
+	            if($tipo_mostrar!=5){
+	                $href=$ruta_db_superior.$anexos[$j]['ruta'];
+	            }
+	            $tabla.="<li><a href='".$href."' target='_blank'>".$anexos[$j]['etiqueta']."</a></li>";
+	        }else{
+	            $href='';
+	            if($tipo_mostrar!=5){
+	                $href=$ruta_db_superior.'anexosdigitales/parsea_accion_archivo.php?idanexo='.$anexos[$j]['idanexos'].'&accion=descargar';
+	            }     
+	            $tabla.='<li><a title="Descargar" href="'.$href.'" border="0px">'.$anexos[$j]['etiqueta'].'</a></li>';
+	        }
+	    }
+		$tabla.='</ul>';
+	}
+    if($retorno){
+	    return($tabla);
+	}else{
+	    echo($tabla);	
+	}
+}
+
+
+
 ?>

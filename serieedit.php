@@ -220,7 +220,17 @@ return true;
 		            filtrar_arbol="&filtrar_arbol=documental";
 		            tree2.loadXML("test_serie.php?tabla=serie&admin=1&arbol_series=1&categoria=2"+filtrar_arbol);
 		            break;
-		    }	    
+		    }	
+		    
+		    <?php
+		    if($x_cod_padre){
+		    ?>
+		   	 	$('[name="x_cod_padre"]').val('<?php echo($x_cod_padre); ?>');
+		    <?php
+			}
+		    ?>
+		    
+		        
 	}
 	
 	$(document).ready(function(){

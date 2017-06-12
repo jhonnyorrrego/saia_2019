@@ -101,17 +101,17 @@ if(@$_REQUEST["tipo"]!==5 && !@$_REQUEST["output"] && !@$_REQUEST["imprimir"]){
  							});			
                    		});
                    		function redirecciona_home_documento(iddoc,cod_padre){
-                   			if(cod_padre!=''){
+                   			if(cod_padre!='' && cod_padre!='0'){
 	                   			direccion=new String(window.parent.frames[0].location);
 	             				vector=direccion.split('&');
 	             				vector_iddoc=vector[1].split('=');
 	             				if(window.parent.parent.frames[0].frameElement.name=='centro'){
-	             					window.parent.parent.frames[0].location="<?php echo($ruta_db_superior);?>ordenar.php?accion=mostrar&mostrar_formato=1&key="+vector_iddoc[1];
-	             				}else{
-	             					window.parent.parent.frames[2].location="<?php echo($ruta_db_superior);?>ordenar.php?accion=mostrar&mostrar_formato=1&key="+vector_iddoc[1];
+	             					window.parent.parent.frames[0].location="<?php echo($ruta_db_superior);?>ordenar.php?click_mostrar=1&accion=mostrar&mostrar_formato=1&key="+vector_iddoc[1];
+	             				}else if(window.parent.parent.frames[2].frameElement.name=='centro'){
+	             					window.parent.parent.frames[2].location="<?php echo($ruta_db_superior);?>ordenar.php?click_mostrar=1&accion=mostrar&mostrar_formato=1&key="+vector_iddoc[1];
 	             				}					  
                    			}else{
-                   				window.open("<?php echo($ruta_db_superior);?>ordenar.php?accion=mostrar&mostrar_formato=1&key="+iddoc,"arbol_formato");				
+                   				window.open("<?php echo($ruta_db_superior);?>ordenar.php?click_mostrar=1&accion=mostrar&mostrar_formato=1&key="+iddoc,"arbol_formato");				
                    			}              			
                    		}
                    </script>               

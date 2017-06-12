@@ -16,7 +16,11 @@ menu_principal_documento(@$_REQUEST["id"],1);
 $datos=explode("-",@$_REQUEST["id"]);
 $tipo=$datos[0];
 $ruta="";
-if($tipo=='pdf'){
+if($tipo=='ppal'){
+    $dato=busca_filtro_tabla("","version_documento a","a.idversion_documento=".$datos[1],"",$conn);
+    $ruta=$dato[0]["pdf"];
+}
+else if($tipo=='pdf'){
     $dato=busca_filtro_tabla("","version_documento a","a.idversion_documento=".$datos[1],"",$conn);
     $ruta=$dato[0]["pdf"];
 }else if($tipo=='anexo'){

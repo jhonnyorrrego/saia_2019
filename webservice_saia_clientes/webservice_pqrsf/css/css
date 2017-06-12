@@ -1,0 +1,170 @@
+<?php include_once ("db.php");  ?>
+<html>
+<head>
+<title>..::ADMINISTRADOR DE ARCHIVO::.. </title>
+<?php
+ include_once("cargando.php");
+/*if(!isset($_SESSION["LOGIN"])){
+  redirecciona("login.php?fin=1");  
+}   */
+$config = busca_filtro_tabla("valor","configuracion","nombre='color_encabezado'","",$conn); 
+ if($config["numcampos"])
+ {  $style = "
+     <style type=\"text/css\">
+     <!--INPUT, TEXTAREA, SELECT 
+     {
+        font-family: Verdana,Tahoma,arial; 
+        font-size: 10px; 
+        /*text-transform:Uppercase;*/
+       } 
+       .phpmaker 
+       {
+       font-family: Verdana,Tahoma,arial; 
+       font-size: 9px; 
+       /*text-transform:Uppercase;*/
+       } 
+       .encabezado 
+       {
+       background-color:".$config[0]["valor"]."; 
+       color:white ; 
+       padding:10px; 
+       text-align: left;	
+       } 
+       .encabezado_list 
+       { 
+       background-color:".$config[0]["valor"]."; 
+       color:white ; 
+       vertical-align:middle;
+       text-align: center;
+       font-weight: bold;	
+       }
+       table thead td 
+       {
+		    font-weight:bold;
+    		cursor:pointer;
+    		background-color:".$config[0]["valor"].";
+    		text-align: center;
+        font-family: Verdana,Tahoma,arial; 
+        font-size: 9px;
+        /*text-transform:Uppercase;*/
+        vertical-align:middle;    
+    	 }
+    	 table tbody td 
+       {	
+    		font-family: Verdana,Tahoma,arial; 
+        font-size: 9px;
+    	 }
+       -->
+       </style>";
+  echo $style;
+  }
+?>
+<style type="text/css" media="screen">
+	
+	@import "css/title2note.css";
+	
+	/* DEMO CSS */
+	.nota
+  {
+	  TEXT-DECORATION: none; 
+		color:#FFFFFF;
+	}
+	</style>
+<script type="text/javascript" src="js/ordenar_list.js"></script>	
+<link rel="stylesheet" href="css/bubble-tooltip.css" media="screen">
+<script type="text/javascript" src="js/bubble-tooltip.js"></script>
+<!--script language="javascript" type="text/javascript" src="niceforms.js"></script-->
+<style type="text/css">	
+.imagen_internos {vertical-align:middle} 
+.internos {font-family: Verdana; font-size: 9px; font-weight: bold;}
+/* If you wish to highlight current sortable column, add layout effects below */
+.highlightedColumn{background-color:#CCC;} 
+</style>
+<meta http-equiv="Content-Type" content="text/html; charset= UTF-8 ">
+	<script type="text/javascript">
+	function findDOM(objectId) 
+  {  //funciones para el zoom de las imagenes
+    if (document.getElementById) 
+      {
+       return (document.getElementById(objectId));
+      }
+    if (document.all) 
+      {
+       return (document.all[objectId]);
+      }
+  }
+function zoom(type,imgx,sz,pag) 
+{ //Aleja y Acerca las paginas del documento
+  imgd = findDOM(imgx);
+  imgd.width = 750;
+  imgd.height = 900;
+  if(sz < 100)
+    type = "-";
+  else if(sz > 100)
+    type="+";
+  else
+  { 
+    window.location='comentario_mostrar.php?pagina=pagina&key=<?php echo $_SESSION["iddoc"];?>&pag='+pag;
+    return;
+  }
+  if (type=="+" && imgd.width < 1900) 
+  {
+    imgd.width = (sz*imgd.width/100);
+    imgd.height = (sz*imgd.height/100);//(30*sz);
+  }
+  if (type=="-" && imgd.width > 200) 
+  {
+    imgd.width = (sz*imgd.width/100);//30;
+    imgd.height = (sz*imgd.height/100);//(30*sz);
+  }
+}
+
+	</script>
+</head>
+<body style="background-color: transparent;"  marginheight="0" topmargin="0" vspace="0"
+marginwidth="0" leftmargin="0" hspace="0" style="margin:0; padding:0">
+<?php 
+if(@$_SESSION["LOGIN"]<>"")
+{
+?>
+<div id="header">
+<span class="phpmaker">Usuario:&nbsp;&nbsp;<b>
+<?php 
+
+  if(strpos($_SERVER["PHP_SELF"],"factura/")>0)
+    $ruta="../";
+  else
+    $ruta=""; 
+ echo usuario_actual("nombres")." ".usuario_actual("apellidos");
+$url = $_SERVER["PHP_SELF"];
+//echo "url: ".$url." retorno ".$_SESSION["punto_retorno"];
+if(strpos($url,'comentario_mostrar.php') || strpos($url,'ordenar.php') || strpos($url,'view.php'))
+ $url = "'".$_SESSION["punto_retorno"]."'"; 
+else
+ $url = "'#' onclick='window.history.go(-1)'";
+//echo $url;  
+//echo "Pagina referencia: ".$_SESSION["punto_retorno"]."           Pagina actual".$_SERVER["PHP_SELF"];  
+echo "<div align='right'><a href=$url>Volver</a>&nbsp;&nbsp;&nbsp;</div>";
+/*
+echo "<a href=\"/".RUTA_SCRIPT."/changepwd.php\">Cambiar contrase&ntilde;a</a>&nbsp;&nbsp;</div>";
+echo "<br /><div align='right'><a href=\"".$ruta."logout.php\">Cerrar Sesi&oacute;n</a>
+        <!--a href=\"../Usuario.php?Login=".$_SESSION['LOGIN']."\">Actualizaci&oacute;n</a-->&nbsp;&nbsp;</div>";
+*/              
+?>
+</b></span></div>
+<?php 
+//echo "informacion del servidor: "; print_r($_SERVER); HTTP_REFERER
+}
+if (@$sExport == "") 
+{ 
+?><table width="100%" height="100%" border="0" cellspacing="0" cellpadding="0"> 
+<tr>
+<!-- left column -->
+  <td width="0%" height="100%" valign="top">&nbsp; </td>
+<!-- right column -->
+<td width="950" valign="top" >
+<?php
+}
+?>
+
+

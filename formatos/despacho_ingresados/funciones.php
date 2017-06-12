@@ -56,7 +56,11 @@ function mostrar_seleccionados_entrega($idformato,$iddoc){
 	$documentos=explode(",",$seleccionado[0]['iddestino_radicacion']);
 	$docs=array_filter($documentos);
 	$texto='';
-	$registros=busca_filtro_tabla("d.iddocumento,d.plantilla,b.numero_item,b.observacion_destino,b.nombre_destino,b.destino_externo,b.origen_externo,b.tipo_origen,b.tipo_destino,b.nombre_origen,a.documento_iddocumento,a.descripcion,a.tipo_mensajeria","ft_radicacion_entrada a,ft_destino_radicacion b,ft_item_despacho_ingres c, documento d,ft_despacho_ingresados e","b.ft_radicacion_entrada=a.idft_radicacion_entrada AND c.ft_destino_radicacio=b.idft_destino_radicacion AND d.iddocumento=a.documento_iddocumento AND c.ft_despacho_ingresados=e.idft_despacho_ingresados AND e.documento_iddocumento=".$iddoc,"",$conn);
+	
+	$items_seleccionados=busca_filtro_tabla("iddestino_radicacion","ft_despacho_ingresados","documento_iddocumento=".$iddoc,"",$conn);
+	$cadena_items_seleccionados=$items_seleccionados[0]['iddestino_radicacion'];
+	
+	$registros=busca_filtro_tabla("b.estado_recogida,d.iddocumento,d.plantilla,b.numero_item,b.observacion_destino,b.nombre_destino,b.destino_externo,b.origen_externo,b.tipo_origen,b.tipo_destino,b.nombre_origen,a.documento_iddocumento,a.descripcion,a.tipo_mensajeria","ft_destino_radicacion b, ft_radicacion_entrada a, documento d","a.idft_radicacion_entrada=b.ft_radicacion_entrada AND a.documento_iddocumento=d.iddocumento AND b.idft_destino_radicacion in(".$cadena_items_seleccionados.")","",$conn);
 	
 	$texto.=reporte_entradas2($idformato,$iddoc);
 	echo($texto);
@@ -64,13 +68,13 @@ function mostrar_seleccionados_entrega($idformato,$iddoc){
 //------------------------------Posterior aprobar------------------------------------//
 function generar_pdf_entrega($idformato,$iddoc){
 	global $conn,$ruta_db_superior;
-	$seleccionado=busca_filtro_tabla("iddestino_radicacion,idft_despacho_ingresados","ft_despacho_ingresados","documento_iddocumento=".$iddoc,"",$conn);
+	$seleccionado=busca_filtro_tabla("iddestino_radicacion,idft_despacho_ingresados,serie_idserie","ft_despacho_ingresados","documento_iddocumento=".$iddoc,"",$conn);
 	$iddestino_radicacion=explode(",",$seleccionado[0]['iddestino_radicacion']);
 	$cont=count($iddestino_radicacion);
 	for($i=0;$i<$cont;$i++){
-	    $insert="INSERT INTO ft_item_despacho_ingres(idft_item_despacho_ingres,ft_destino_radicacio,ft_despacho_ingresados) VALUES (NULL, '".$iddestino_radicacion[$i]."', '".$seleccionado[0]['idft_despacho_ingresados']."')";
+	    $insert="INSERT INTO ft_item_despacho_ingres(idft_item_despacho_ingres,ft_destino_radicacio,ft_despacho_ingresados,serie_idserie) VALUES (NULL, '".$iddestino_radicacion[$i]."', '".$seleccionado[0]['idft_despacho_ingresados']."',".$seleccionado[$i]['serie_idserie'].")";
 	    phpmkr_query($insert);
-	    $update="UPDATE ft_destino_radicacion SET estado_item=2 WHERE idft_destino_radicacion={$iddestino_radicacion[$i]}";
+	    $update="UPDATE ft_destino_radicacion SET estado_item=2 WHERE idft_destino_radicacion=".$iddestino_radicacion[$i];
         phpmkr_query($update);
 	    
 	}
@@ -111,7 +115,8 @@ function reporte_entradas2($idformato,$iddoc){
 	$texto.='<br />';
 	$texto.='<table style="border-collapse:collapse;width:100%" border="1px">';
 	$texto.='<tr style="height:70px">';
-    $texto.='<td style="text-align:center; width:2%"></td>';
+	 $texto.='<td style="text-align:center; width:7%"><b>TRAMITE</b></td>';
+    $texto.='<td style="text-align:center; width:3%"><b>TIPO</b></td>';
 	$texto.='<td style="text-align:center; width:3%"><b>Rad. Item</b></td>';
 	$texto.='<td style="text-align:center; width:5%"><b>FECHA DE RECIBO</b></td>';
 	$texto.='<td style="text-align:center; width:10%"><b>ORIGEN</b></td>';
@@ -119,13 +124,14 @@ function reporte_entradas2($idformato,$iddoc){
     $texto.='<td style="text-align:center; width:15%"><b>ASUNTO</b></td>';
 	$texto.='<td style="text-align:center; width:10%"><b>NOTAS</b></td>';
 	
-	$texto.='<td style="text-align:center; width:20%"><b>FIRMA DE QUIEN RECIBE</b></td>';
-    $texto.='<td style="text-align:center; width:20%"><b>OBSERVACIONES</b></td>';
+	$texto.='<td style="text-align:center; width:15%"><b>FIRMA DE QUIEN RECIBE</b></td>';
+    $texto.='<td style="text-align:center; width:17%"><b>OBSERVACIONES</b></td>';
 	$texto.='</tr>';
 	
 	for($i=0;$i<$registros["numcampos"];$i++){
-	    
-		$origen=busca_filtro_tabla("concat(nombres,' ',apellidos) AS nombre","vfuncionario_dc","funcionario_codigo=".$registros[$i]['nombre_origen'],"",$conn);
+	    $array_concat=array("nombres","' '","apellidos");
+		$cadena_concat=concatenar_cadena_sql($array_concat);
+		$origen=busca_filtro_tabla($cadena_concat." AS nombre","vfuncionario_dc","funcionario_codigo=".$registros[$i]['nombre_origen'],"",$conn);
 
 			if($registros[$i]['tipo_origen']==1){
 				$origen=busca_filtro_tabla("nombre","vejecutor a","a.iddatos_ejecutor=".$registros[$i]['nombre_origen'],"",$conn);
@@ -133,8 +139,10 @@ function reporte_entradas2($idformato,$iddoc){
 					$origen=busca_filtro_tabla("nombre","vejecutor a","a.iddatos_ejecutor=".$registros[$i]['origen_externo'],"",$conn);
 				}
 			}else{
-				if($registros[$i]['tipo_origen']==2 && $registros[$i]['tipo_mensajeria']==2){
-					$origen=busca_filtro_tabla("concat(nombres,' ',apellidos) AS nombre","vfuncionario_dc a","a.iddependencia_cargo=".$registros[$i]['nombre_origen'],"",$conn);
+				if($registros[$i]['tipo_origen']==2 && ($registros[$i]['tipo_mensajeria']==2 || $registros[$i]['tipo_mensajeria']==1)){
+	    			$array_concat=array("nombres","' '","apellidos");
+					$cadena_concat=concatenar_cadena_sql($array_concat);					
+					$origen=busca_filtro_tabla($cadena_concat." AS nombre","vfuncionario_dc a","a.iddependencia_cargo=".$registros[$i]['nombre_origen'],"",$conn);
 				}
 			}		
 				
@@ -144,7 +152,9 @@ function reporte_entradas2($idformato,$iddoc){
 		    $destino=busca_filtro_tabla("b.nombre,a.direccion","datos_ejecutor a, ejecutor b","b.idejecutor=a.ejecutor_idejecutor AND a.iddatos_ejecutor=".$registros[$i]['nombre_destino'],"",$conn);
             $ubicacion=$ciudad[0]['nombre'].' '.$destino[0]['direccion'];
 		}elseif($registros[$i]["tipo_destino"]==2){
-		    $destino=busca_filtro_tabla("concat(nombres,' ',apellidos) AS nombre,dependencia","vfuncionario_dc","iddependencia_cargo=".$registros[$i]['nombre_destino'],"",$conn);
+	    	$array_concat=array("nombres","' '","apellidos");
+			$cadena_concat=concatenar_cadena_sql($array_concat);			
+		    $destino=busca_filtro_tabla($cadena_concat." AS nombre,dependencia","vfuncionario_dc","iddependencia_cargo=".$registros[$i]['nombre_destino'],"",$conn);
 		    $ubicacion=$destino[0]['dependencia'];
 		}
 
@@ -159,15 +169,21 @@ function reporte_entradas2($idformato,$iddoc){
             $tipo_radicado="I";
         }
         
-        $texto.='<td style="text-align:center; width:2%">'.$tipo_radicado.'</td>';
+    	$tipo_tramite='ENTREGA';
+    	if(($registros[$i]['tipo_mensajeria']==2 || $registros[$i]['tipo_mensajeria']==1) && ($registros[$i]['estado_recogida']==0 || $registros[$i]['estado_recogida']=='estado_recogida') ){
+    		$tipo_tramite='RECOGIDA';
+    	}
+        
+        $texto.='<td style="text-align:center; width:7%">'.$tipo_tramite.'</td>';
+        $texto.='<td style="text-align:center; width:3%">'.$tipo_radicado.'</td>';
 		$texto.='<td style="text-align:center; width:3%">'.$registros[$i]["numero_item"].'</td>';
 		$texto.='<td style="text-align:center; width:5%">'.$fecha_radicacion[0]["fecha"].'</td>';
 		$texto.='<td style="text-align:left; width:10%">'.$origen[0]['nombre'].'</td>';
 		$texto.='<td style="text-align:left; width:15%">'.$destino[0]["nombre"].'<br><b>Ubicacion:</b>'.$ubicacion.'</td>';
 		$texto.='<td style="text-align:left; width:15%">'.$registros[$i]["descripcion"].'</td>';
 		$texto.='<td style="text-align:center; width:10%">'.$registros[$i]["observacion_destino"].'</td>';
-		$texto.='<td style="text-align:center; width:20%"></td>';
-		$texto.='<td style="text-align:left; width:20%"></td>';
+		$texto.='<td style="text-align:center; width:15%"></td>';
+		$texto.='<td style="text-align:left; width:17%"></td>';
 
 		$texto.='</tr>';
 	}

@@ -73,7 +73,7 @@ echo("</tree>\n");
 <?php
 
 function llena_serie($serie,$condicion="",$padre=""){ 
-global $conn,$datos,$seleccionado;
+global $conn,$datos,$seleccionado,$categoria;
 $lista_papas = array();
 $texto="";
 $lista= "'".implode("','",$datos["series"])."'";
@@ -107,7 +107,11 @@ else
 			$condicion_nivel.=')';
 		}		
  	}
- 	$papas=busca_filtro_tabla("nombre,codigo,idserie,cod_padre","serie","idserie in($lista) and cod_padre=$serie $condicion"." ".$condicion_nivel."".$tvd,"nombre ASC",$conn);
+	$condicion_lista="idserie in($lista) and ";
+	if($categoria==3){
+		$condicion_lista='';
+	}	
+ 	$papas=busca_filtro_tabla("nombre,codigo,idserie,cod_padre","serie",$condicion_lista."cod_padre=$serie $condicion"." ".$condicion_nivel."".$tvd,"nombre ASC",$conn);
 }
 
 if($papas["numcampos"]>0)
@@ -117,7 +121,7 @@ if($papas["numcampos"]>0)
     if(!@$_REQUEST["solo_papas"])
       $hijos=llena_serie($papas[$i]["idserie"]);
     $texto.=("\n<item style=\"font-family:verdana; font-size:7pt;\" ");
-    $texto.= "text=\"".ucwords(($papas[$i]["nombre"]))."(".strtoupper($papas[$i]["codigo"]).") \" ";
+    $texto.= "text=\"".ucwords(codifica_caracteres($papas[$i]["nombre"]))."(".strtoupper($papas[$i]["codigo"]).") \" ";
     if($hijos<>""){
     	if(!@$_REQUEST["con_padres"])
       	$texto.=" nocheckbox=\"1\"";

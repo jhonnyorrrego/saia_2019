@@ -11,17 +11,12 @@ while($max_salida>0){
 }
 include_once($ruta_db_superior."db.php");
 
-
-
-
 if(@$_REQUEST['cargar']){
 	
 	$iddoc=@$_REQUEST['iddoc'];
 	$idformato=@$_REQUEST['idformato'];
 	
 	$anexo=busca_filtro_tabla("d.ruta,d.idanexos,c.idcampos_formato","documento a, formato b, campos_formato c, anexos d","lower(a.plantilla)=b.nombre AND b.idformato=c.formato_idformato AND c.nombre='anexo_word' AND c.idcampos_formato=d.campos_formato AND a.iddocumento=".$iddoc." AND d.documento_iddocumento=".$iddoc,"",$conn) ;
-	
-	
 	
 	if($anexo['numcampos']){
 		
@@ -40,15 +35,13 @@ if(@$_REQUEST['cargar']){
 			$sqld="DELETE FROM anexos WHERE idanexos=".$anexo[$i]['idanexos'];
 			phpmkr_query($sqld);
 		}		
-
 	}else{
 		include_once($ruta_db_superior."anexosdigitales/funciones_archivo.php");
 		$anexo=busca_filtro_tabla("idcampos_formato","campos_formato","nombre='anexo_word' AND formato_idformato=".$idformato,"",$conn);
 	}
 	cargar_archivo($iddoc,'',$idformato, $anexo[0]['idcampos_formato']);		
 	
-	$anexo=busca_filtro_tabla("d.ruta,d.idanexos","documento a, formato b, campos_formato c, anexos d","lower(a.plantilla)=b.nombre AND b.idformato=c.formato_idformato AND c.nombre='anexo_word' AND c.idcampos_formato=d.campos_formato AND a.iddocumento=".$iddoc." AND d.documento_iddocumento=".$iddoc,"",$conn) ;
-	
+	$anexo = busca_filtro_tabla("d.ruta,d.idanexos", "documento a, formato b, campos_formato c, anexos d", "lower(a.plantilla)=b.nombre AND b.idformato=c.formato_idformato AND c.nombre='anexo_word' AND c.idcampos_formato=d.campos_formato AND a.iddocumento=" . $iddoc . " AND d.documento_iddocumento=" . $iddoc, "", $conn);
 	
 	$vector_ruta=explode('../',$anexo[0]['ruta']);
 	$nueva_ruta='../'.$vector_ruta[ count($vector_ruta)-1 ];
@@ -64,10 +57,7 @@ if(@$_REQUEST['cargar']){
 			window.parent.parent.location.reload();
 		</script>
 	";	
-	
-	
 }else{
-	
 	
 	?>
 	
@@ -81,9 +71,6 @@ if(@$_REQUEST['cargar']){
 		</form>
 	
 	<?php
-	
 }
-
-
 
 ?>

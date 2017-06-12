@@ -1,6 +1,4 @@
 <?php
-  @session_start();
-  
 $max_salida=10; // Previene algun posible ciclo infinito limitando a 10 los ../
 $ruta_db_superior=$ruta="";
 while($max_salida>0){
@@ -11,14 +9,12 @@ while($max_salida>0){
 	$max_salida--;
 }
 include_once($ruta_db_superior."define.php");
-
 if(!@$_SESSION["LOGIN".LLAVE_SAIA]){
-  $_SESSION["LOGIN".LLAVE_SAIA]="radicador_web";
-  $_SESSION["usuario_actual"]="111222333";
+  @session_start();
+  $_SESSION["LOGIN".LLAVE_SAIA]=LOGIN_LOGIN;
+  $_SESSION["usuario_actual"]=FUNCIONARIO_CODIGO_LOGIN;
   $_SESSION["conexion_remota"]=1; 
 }
-
-
 include_once($ruta_db_superior."db.php");
  
 function crear_modulo_formato_importar($idformato) {
@@ -364,8 +360,10 @@ function generar_importar($datos){
 				
 			}		
 			//COD_PADRE
+			$nombre_padre='';
 			if($datos['datos_formato']['cod_padre']){
 				$cod_padre=validar_cod_padre($datos['datos_formato']['cod_padre']);
+				$nombre_padre=$datos['datos_formato']['cod_padre'];
 				if(!$cod_padre){
 					$insertar_formato=0;
 					$formato['mensaje']="No existe el formato Padre";
@@ -402,8 +400,10 @@ function generar_importar($datos){
 		//INICIO INSERT CAMPOS_FORMATO	
 			if(@$datos['campos_formato'] && @$idformato){
 				$vector_idcampos_formato=array();
+				$contador_error=0;
 				for($i=0;$i<count($datos['campos_formato']);$i++){
 					$datos['campos_formato'][$i]['formato_idformato']=$idformato;
+					$datos['campos_formato'][$i]['valor']=parsear_comilla_sencilla_cadena($datos['campos_formato'][$i]['valor']);
 					$tabla="campos_formato";
 					$strsql = "INSERT INTO ".$tabla." (";
 					$strsql .= implode(",", array_keys($datos['campos_formato'][$i]));			
@@ -416,8 +416,17 @@ function generar_importar($datos){
 					if($idcampos_formato){
 						$vector_idcampos_formato[]=$idcampos_formato;
 					}else{
-						$formato['campos_formato_error']['campos_formato_error_'.$i]=$strsql;
+						$formato['campos_formato_error']['campos_formato_error_'.$contador_error]=$strsql;
+						$contador_error++;
 					}
+				}
+				if($nombre_padre!='' && @$cod_padre){
+					$sqlu="UPDATE ".$tabla." SET valor='".$cod_padre."' WHERE nombre='ft_".strtolower($nombre_padre)."' AND formato_idformato=".$idformato;
+					phpmkr_query($sqlu);
+				}
+				if(@$datos['datos_formato']['serie_idserie']){
+					$sqlus="UPDATE ".$tabla." SET valor='".$datos['datos_formato']['serie_idserie']."' WHERE nombre='serie_idserie' AND formato_idformato=".$idformato;
+					phpmkr_query($sqlus);				    
 				}
 				$idcampos_formato=implode(',',$vector_idcampos_formato);		
 			}
@@ -427,6 +436,7 @@ function generar_importar($datos){
 		
 		//INICIO INSERT FUNCIONES_FORMATO
 			if(@$datos['funciones_formato'] && @$idformato){
+				$contador_error=0;
 				for($i=0;$i<count($datos['funciones_formato']);$i++){
 					
 					$existe_funcion=busca_filtro_tabla("idfunciones_formato,formato","funciones_formato","lower(nombre_funcion)='".strtolower($datos['funciones_formato'][$i]['nombre_funcion'])."'","",$conn);
@@ -457,13 +467,15 @@ function generar_importar($datos){
 					}
 					
 					if(!$idfunciones_formato){
-						$formato['funciones_formato_error']['funciones_formato_error_'.$i]=$strsql;
+						$formato['funciones_formato_error']['funciones_formato_error_'.$contador_error]=$strsql;
+						$contador_error++;
 					}
 					
 					
 					
 					//FUNCIONES_FORMATO_ACCION
 					if(@$idfunciones_formato && @$datos['funciones_formato'][$i]['accion_funcion']){
+						$contador_error=0;
 						for($j=0;$j<count($datos['funciones_formato'][$i]['accion_funcion']);$j++){
 							
 							$vector_accion_funcion=$datos['funciones_formato'][$i]['accion_funcion'][$j];
@@ -488,7 +500,8 @@ function generar_importar($datos){
 									$idfunciones_formato_accion=0;
 									$idfunciones_formato_accion=phpmkr_insert_id();	
 									if(!$idfunciones_formato_accion){
-										$formato['funciones_formato_accion_error']['funciones_formato_accion_error_'.$j]=$strsql;
+										$formato['funciones_formato_accion_error']['funciones_formato_accion_error_'.$contador_error]=$strsql;
+										$contador_error++;
 									}									
 									
 																

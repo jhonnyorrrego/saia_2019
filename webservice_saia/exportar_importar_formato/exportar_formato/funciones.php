@@ -9,16 +9,12 @@ while($max_salida>0){
 	$max_salida--;
 }
 include_once($ruta_db_superior."define.php");
-
-
 if(!@$_SESSION["LOGIN".LLAVE_SAIA]){
   @session_start();
-  $_SESSION["LOGIN"]="radicador_web";
-  $_SESSION["usuario_actual"]="111222333";
+  $_SESSION["LOGIN".LLAVE_SAIA]=LOGIN_LOGIN;
+  $_SESSION["usuario_actual"]=FUNCIONARIO_CODIGO_LOGIN;
   $_SESSION["conexion_remota"]=1; 
 }
- 
-
 include_once($ruta_db_superior."db.php");
 
 function generar_idformato($datos){
@@ -66,21 +62,29 @@ function generar_datos_formato($idformato){
 					switch($keys[$i]){
 						case 'cod_padre':
 							$nombre_padre=busca_filtro_tabla("nombre","formato","idformato=".$datos_formato[0][$keys[$i]],"",$conn);	
-							$formato['datos_formato']['cod_padre']=$nombre_padre[0]['nombre'];						
+							if($nombre_padre['numcampos']){
+								$formato['datos_formato']['cod_padre']=$nombre_padre[0]['nombre'];
+							}						
 							break;
 						case 'contador_idcontador':
 							$nombre_contador=busca_filtro_tabla("nombre","contador","idcontador=".$datos_formato[0][$keys[$i]],"",$conn);	
-							$formato['datos_formato']['contador_idcontador']=$nombre_contador[0]['nombre'];
+							if($nombre_contador['numcampos']){
+								$formato['datos_formato']['contador_idcontador']=$nombre_contador[0]['nombre'];
+							}
 							break;		
 						case 'encabezado':
 							$encabezado=busca_filtro_tabla("","encabezado_formato","idencabezado_formato=".$datos_formato[0][$keys[$i]],"",$conn);
-							$formato['datos_formato']['encabezado_etiqueta']=$encabezado[0]['etiqueta'];
-							$formato['datos_formato']['encabezado_contenido']=$encabezado[0]['contenido'];					
+							if($encabezado['numcampos']){
+								$formato['datos_formato']['encabezado_etiqueta']=$encabezado[0]['etiqueta'];
+								$formato['datos_formato']['encabezado_contenido']=$encabezado[0]['contenido'];
+							}
 							break;	
 						case 'pie_pagina':
 							$pie=busca_filtro_tabla("","encabezado_formato","idencabezado_formato=".$datos_formato[0][$keys[$i]],"",$conn);
-							$formato['datos_formato']['pie_etiqueta']=$pie[0]['etiqueta'];
-							$formato['datos_formato']['pie_contenido']=$pie[0]['contenido'];				
+							if($pie['numcampos']){
+								$formato['datos_formato']['pie_etiqueta']=$pie[0]['etiqueta'];
+								$formato['datos_formato']['pie_contenido']=$pie[0]['contenido'];		
+							}			
 							break;	
 						case 'funcionario_idfuncionario':
 							$formato['datos_formato'][$keys[$i]]=1;
@@ -90,12 +94,16 @@ function generar_datos_formato($idformato){
 							break;			
 						case 'serie_idserie':
 							$serie_formato=busca_filtro_tabla("nombre","serie","idserie=".$datos_formato[0][$keys[$i]],"",$conn);
-							$formato['datos_formato']['nombre_serie']=$serie_formato[0]['nombre'];
+							if($serie_formato['numcampos']){
+								$formato['datos_formato']['nombre_serie']=$serie_formato[0]['nombre'];
+							}
 							break;		
 						case 'fk_categoria_formato':
 							$categorias_formato=busca_filtro_tabla("nombre","categoria_formato","idcategoria_formato IN(".$datos_formato[0][$keys[$i]].")","",$conn);
-							$nombres_categorias=implode(',',extrae_campo($categorias_formato,'nombre'));
-							$formato['datos_formato']['nombre_categorias']=$nombres_categorias;
+							if($categorias_formato['numcampos']){
+								$nombres_categorias=implode(',',extrae_campo($categorias_formato,'nombre'));
+								$formato['datos_formato']['nombre_categorias']=$nombres_categorias;
+							}
 							break;																						
 					}				
 				}
@@ -168,7 +176,42 @@ function generar_exportar($datos){
 	}
 	return(json_encode($formato));
 }	
-
-
-
+function generar_lista_funciones($datos){
+	global $ruta_db_superior,$conn; 
+		
+	$datos = json_decode($datos);
+	$idformato=$datos->idformato;
+	$retorno_formato=array();
+	$formato = busca_filtro_tabla("*", "formato A", "A.idformato=" . $idformato, "", $conn);
+	$condicional="formato LIKE'%,$idformato,%' OR formato LIKE '$idformato,%' OR formato LIKE'%,$idformato' OR formato='$idformato'";
+	$funciones=busca_filtro_tabla("","funciones_formato",$condicional,"",$conn);
+	$includes='';
+	for($i=0;$i<$funciones['numcampos'];$i++){
+		$formato_orig = explode(",", $funciones[$i]["formato"]);
+		if ($formato_orig[0] != $idformato) { // busco el nombre del formato inicial
+				$dato_formato_orig = busca_filtro_tabla("nombre", "formato", "idformato=" . $formato_orig[0], "", $conn);
+				if ($dato_formato_orig["numcampos"] && ($dato_formato_orig[0]["nombre"] != $formato[0]["nombre"])) {
+					$eslibreria = strpos($funciones[$i]["ruta"], "../librerias/");
+					if ($eslibreria === false) {
+						$eslibreria = strpos($funciones[$i]["ruta"], "../class_transferencia");
+					}
+					// si el archivo existe dentro de la carpeta del archivo inicial
+					if (is_file($ruta_db_superior.$dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"]) && $eslibreria === false) {
+						$includes .= $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"]."|";
+					} elseif (is_file($ruta_db_superior.$funciones[$i]["ruta"]) && $eslibreria === false) { // si el archivo existe en la ruta especificada partiendo de la raiz
+						$includes .= $funciones[$i]["ruta"]."|";
+					}
+				}
+		}else{
+				if (is_file($ruta_db_superior.$formato[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
+					$includes .= $funciones[$i]["ruta"]."|";
+				} elseif (is_file($ruta_db_superior.$funciones[$i]["ruta"])) { // si el archivo existe en la ruta especificada partiendo de la raiz
+					$includes .= $funciones[$i]["ruta"]."|";
+				}			
+		}		
+	} //fin for
+	$retorno_formato['lista_funciones']=$includes;
+	return(json_encode($retorno_formato));
+			
+}
 ?>

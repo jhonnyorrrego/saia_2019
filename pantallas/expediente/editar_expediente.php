@@ -346,6 +346,11 @@ if($dato_padre["numcampos"]){
   $(document).ready(function(){
       
       
+  $(".documento_actual",parent.document).removeClass("alert-info");
+  $(".documento_actual",parent.document).removeClass("documento_actual");
+  $("#resultado_pantalla_<?php echo(@$_REQUEST["idexpediente"]);?>",parent.document).addClass("documento_actual").addClass("alert-info");        
+      
+      
       <?php 
           if($datos[0]['agrupador']){
               ?>
@@ -572,7 +577,10 @@ $(document).ready(function(){
                 success: function(html2){
                   if(html2){
                     var objeto2=jQuery.parseJSON(html2);
-                    $("#<?php echo($_REQUEST['div_actualiza']);?>", parent.document).prepend(objeto2.rows[0].info);
+                    $("#<?php echo($_REQUEST['div_actualiza']);?>", parent.document).after('<div id="senuelo_actualiza_'+objeto.idexpediente+'"></div>');
+                    $("#<?php echo($_REQUEST['div_actualiza']);?>", parent.document).remove();
+                    $("#senuelo_actualiza_"+objeto.idexpediente, parent.document).after(objeto2.rows[0].info);
+                    $("#senuelo_actualiza_"+objeto.idexpediente, parent.document).remove();
                   }
                 }
               });   

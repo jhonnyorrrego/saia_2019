@@ -5,24 +5,24 @@ require_once("sql.php");
 if(!isset($_SESSION["LOGIN".LLAVE_SAIA])){
   @session_start();
   @ob_start();
-}   
+}
 
- 
+
 if(@$_REQUEST['idfunc'] && !isset($_SESSION["LOGIN".LLAVE_SAIA])){
-    $fun=busca_filtro_tabla("login,funcionario_codigo","funcionario","idfuncionario=".$_REQUEST['idfunc'],"",$conn); 
+    $fun=busca_filtro_tabla("login,funcionario_codigo","funcionario","idfuncionario=".$_REQUEST['idfunc'],"",$conn);
     $_SESSION["LOGIN" . LLAVE_SAIA] = $fun[0]['login'];
     $_SESSION["usuario_actual"] = $fun[0]['funcionario_codigo'];
-        	
+
     global $usuactual;
-    $usuactual = $fun[0]['login']; 
-}  
+    $usuactual = $fun[0]['login'];
+}
 
 //print_r(session_id());
 $error=array();
 $dat_orig=0;
 $sql="";
 $conn=NULL;
-$conn=phpmkr_db_connect();       
+$conn=phpmkr_db_connect();
 //Almacenar la variable del usuario actual
 $usuactual=@$_SESSION["LOGIN".LLAVE_SAIA];
 if(isset($_SESSION["LOGIN".LLAVE_SAIA])&&$_SESSION["LOGIN".LLAVE_SAIA]){
@@ -82,15 +82,15 @@ function compara_ruta_archivos($buscado)
  $igual=array();
  if(count($uno)>count($dos))
     $j=count($dos);
- else 
+ else
     $j=count($uno);
  $espacios=0;
  for($i=1;$i<$j;$i++)
    {if($uno[$i]==$dos[$i])
       {$igual[]=$uno[$i];
       }
-   }   
- $igual=implode("/",$igual);  
+   }
+ $igual=implode("/",$igual);
  $nueva_actual=str_replace("/".$igual,"",$info["dirname"]);
  $nueva_buscada=str_replace("/".$igual."/","",$buscado);
  $distanciauno=count(explode("/",$nueva_actual));
@@ -112,12 +112,12 @@ function compara_ruta_archivos($buscado)
 function leido($codigo,$llave){
 global $conn;
 	$pendiente = busca_filtro_tabla(fecha_db_obtener("fecha_inicial","Y-m-d H:i:s")." as fecha_inicial","asignacion","documento_iddocumento=".$llave." and llave_entidad=".$codigo,"fecha_inicial DESC",$conn);
-	if($pendiente["numcampos"]>0){ 
+	if($pendiente["numcampos"]>0){
 		$leido = busca_filtro_tabla("nombre,idtransferencia","buzon_entrada","archivo_idarchivo=$llave and origen=$codigo and nombre='LEIDO' AND fecha >= ".fecha_db_almacenar($pendiente[0]["fecha_inicial"],"Y-m-d H:i:s"),"",$conn);
 		if(!$leido["numcampos"]){
 		$insertar="insert into buzon_salida(archivo_idarchivo,nombre,fecha,origen,tipo_origen,destino,tipo_destino,tipo)";
 		$insertar.=" values(".$llave.",'LEIDO',".fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s').",$codigo,1,$codigo,1,'DOCUMENTO')";
-		phpmkr_query($insertar, $conn) or error("Fallo la busqueda" . phpmkr_error() . ' SQL buzon_salida:' . $insertar);  
+		phpmkr_query($insertar, $conn) or error("Fallo la busqueda" . phpmkr_error() . ' SQL buzon_salida:' . $insertar);
 		$insertar="insert into buzon_entrada(archivo_idarchivo,nombre,fecha,origen,tipo_origen,destino,tipo_destino,tipo)";
 		$insertar.=" values(".$llave.",'LEIDO',".fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s').",$codigo,1,".$codigo.",1,'DOCUMENTO')";
 		phpmkr_query($insertar, $conn) or error("Fallo la busqueda" . phpmkr_error() . ' SQL buzon_entrada:' . $insertar);
@@ -127,7 +127,7 @@ global $conn;
 		if(!$leido["numcampos"] || $leido[0]["nombre"]<>"LEIDO"){
 			$insertar="insert into buzon_salida(archivo_idarchivo,nombre,fecha,origen,tipo_origen,destino,tipo_destino,tipo)";
 			$insertar.=" values(".$llave.",'LEIDO',".fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s').",$codigo,1,$codigo,1,'DOCUMENTO')";
-			phpmkr_query($insertar, $conn) or error("Fallo la busqueda" . phpmkr_error() . ' SQL buzon_salida:' . $insertar);  
+			phpmkr_query($insertar, $conn) or error("Fallo la busqueda" . phpmkr_error() . ' SQL buzon_salida:' . $insertar);
 			$insertar="insert into buzon_entrada(archivo_idarchivo,nombre,fecha,origen,tipo_origen,destino,tipo_destino,tipo)";
 			$insertar.=" values(".$llave.",'LEIDO',".fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s').",$codigo,1,".$codigo.",1,'DOCUMENTO')";
 			phpmkr_query($insertar, $conn) or error("Fallo la busqueda" . phpmkr_error() . ' SQL buzon_entrada:' . $insertar);
@@ -159,18 +159,18 @@ function limpia_tabla($tabla)
 
  include_once($ruta_db_superior."kses-0.2.3/kses.php");
 
- $allowed = array('table' => array('cellpadding' => 1, 
-                                   'cellspacing' => 1, 
+ $allowed = array('table' => array('cellpadding' => 1,
+                                   'cellspacing' => 1,
                                    'border' => 1,
-                                   'align' => 1, 
+                                   'align' => 1,
                                    'width' => 1,
                                    'height' => 1,
                                    'style' => 1),
                    'tr' => array('width' => 1,
                                  'height' => 1),
-                   'td' => array('valign' => 1, 
-                                 'align' => 1, 
-                                 'rowspan' => 1, 
+                   'td' => array('valign' => 1,
+                                 'align' => 1,
+                                 'rowspan' => 1,
                                  'colspan' => 1,
                                  'width' => 1,
                                  'height' => 1,
@@ -183,9 +183,9 @@ function limpia_tabla($tabla)
                    'ol'=>array(),
                    'li'=>array('style'=>array('maxlen' => 100)),
                    'img'=>array('src'=>1, 'alt'=>1,'width'=>1,'height'=>1),
-                   'br'=>array(),   
-                   'b'=>array(),  
-                   'em'=>array(),          
+                   'br'=>array(),
+                   'b'=>array(),
+                   'em'=>array(),
                    'hr'=>array(),
                    'pagebreak'=>array(),//<!-- pagebreak -->
                    'strong' => array(),
@@ -193,7 +193,7 @@ function limpia_tabla($tabla)
                    'sub' => array(),
                    'a' => array('href'=>1, 'target'=>1)
                   );
-                             
+
 $tabla=stripslashes($tabla);
 $tabla=str_replace('<!-- pagebreak -->','pagebreak',$tabla);
 $tabla=kses($tabla, $allowed);
@@ -210,29 +210,37 @@ return($tabla);
 <Pre-condiciones><Pre-condiciones>
 <Post-condiciones><Post-condiciones>
 </Clase>  */
-function listar_campos_tabla($tabla=NULL)
+function listar_campos_tabla($tabla=NULL,$tipo_retorno=0)
   {global $conn;   
   	if($tabla==NULL)
       $tabla=$_REQUEST["tabla"];
    if(MOTOR=="MySql"){
       $datos_tabla=$conn->Ejecutar_Sql("DESCRIBE ".$tabla);
-	   while($fila=phpmkr_fetch_array($datos_tabla))
-      {// print_r($fila);
-       $lista_campos[]=$fila[0];
+	   while($fila=phpmkr_fetch_array($datos_tabla)){// print_r($fila);
+        if($tipo_retorno){
+            $lista_campos[]=array_map(strtolower,$fila);    
+        }   
+        else{
+            $lista_campos[]=strtolower($fila[0]);
+       }
       }   
    		return($lista_campos);
     }
    else if(MOTOR=="Oracle"){
 	      $datos_tabla=$conn->Ejecutar_Sql("SELECT column_name AS Field FROM user_tab_columns WHERE table_name='".strtoupper($tabla)."' ORDER BY column_name ASC");
 	      $lista_campos=array();
-	  	  while($fila=phpmkr_fetch_array($datos_tabla))
-	      {
-			  $lista_campos[]=$fila[0];
+	  	  while($fila=phpmkr_fetch_array($datos_tabla)) {
+			  if($tipo_retorno){
+                    $lista_campos[]=array_map(strtolower,$fila);    
+                }   
+                else{
+                    $lista_campos[]=strtolower($fila[0]);
+               }
 	      }
 	   	  return($lista_campos);  
 	  }
 	  else{
-	   	return($conn->Busca_tabla());
+	   	return($conn->Busca_Tabla());
 	  }
   } 
 /*
@@ -245,17 +253,34 @@ function listar_campos_tabla($tabla=NULL)
 <Salida></Salida>
 <Pre-condiciones><Pre-condiciones>
 <Post-condiciones><Post-condiciones>
-</Clase>*/  
-function guardar_lob($campo,$tabla,$condicion,$contenido,$tipo,$conn,$log=1){ 
+</Clase>*/
+function guardar_lob($campo,$tabla,$condicion,$contenido,$tipo,$conn,$log=1){
   global $conn;
   $resultado=TRUE;
   if(MOTOR=="Oracle"){
     $sql = "SELECT ".$campo." FROM ".$tabla." WHERE ".$condicion." FOR UPDATE";
     $stmt = OCIParse($conn->Conn->conn, $sql) or print_r(OCIError ($stmt));
     // Execute the statement using OCI_DEFAULT (begin a transaction)
-    OCIExecute($stmt, OCI_DEFAULT) or print_r(OCIError ($stmt));      
+    OCIExecute($stmt, OCI_DEFAULT) or print_r(OCIError ($stmt));
     // Fetch the SELECTed row
     OCIFetchInto($stmt,$row,OCI_ASSOC);
+    
+	if(!count($row)){  //soluciona el problema del size() & ya no se necesita el emty_clob() en bd en los campos clob NULL, los campos obligatorios siguen dependendiendo de empty_clob() como valor predeterminado.
+		oci_rollback($conn->Conn->conn);
+		oci_free_statement($stmt);
+		$clob_blob='clob';
+		if($tipo=='archivo'){
+			$clob_blob='blob';
+		}		
+    	$up_clob="UPDATE ".$tabla." SET ".$campo."=empty_".$clob_blob."() WHERE ".$condicion;
+		$conn->Ejecutar_Sql($up_clob);
+	    $stmt = OCIParse($conn->Conn->conn, $sql) or print_r(OCIError ($stmt));
+	    // Execute the statement using OCI_DEFAULT (begin a transaction)
+	    OCIExecute($stmt, OCI_DEFAULT) or print_r(OCIError ($stmt));
+	    // Fetch the SELECTed row
+	    OCIFetchInto($stmt,$row,OCI_ASSOC);		
+	}    
+    
     if(FALSE ===$row){
       OCIRollback($conn->Conn->conn);
       alerta("No se pudo modificar el campo.");
@@ -267,36 +292,36 @@ function guardar_lob($campo,$tabla,$condicion,$contenido,$tipo,$conn,$log=1){
         if($row[strtoupper($campo)]->size()>0)
           $contenido_actual=htmlspecialchars_decode($row[strtoupper($campo)]->read($row[strtoupper($campo)]->size()));
          else
-            $contenido_actual="";  
-            
+            $contenido_actual="";
+
             if($contenido_actual<>$contenido)
-           { if ($row[strtoupper($campo)]->size()>0 && !$row[strtoupper($campo)]->truncate() ) 
+           { if ($row[strtoupper($campo)]->size()>0 && !$row[strtoupper($campo)]->truncate() )
                 {
                   oci_rollback($conn->Conn->conn);
                   alerta("No se pudo modificar el campo.");
                   $resultado=FALSE;
                 }
-            else    
+            else
                {$contenido=limpia_tabla($contenido);
-                if ( !$row[strtoupper($campo)]->save(trim((($contenido))))) 
+                if ( !$row[strtoupper($campo)]->save(trim((($contenido)))))
                   {  oci_rollback($conn->Conn->conn);
                      $resultado=FALSE;
                   }
-                else 
-                  oci_commit($conn->Conn->conn);  
+                else
+                  oci_commit($conn->Conn->conn);
                 //*********** guardo el log en la base de datos **********************
                 preg_match("/.*=(.*)/", strtolower($condicion), $resultados);
                 $llave=trim($resultados[1]);
 
                 if($log)
                   {$sqleve="INSERT INTO evento(funcionario_codigo, fecha, evento, tabla_e, registro_id, estado) VALUES('".usuario_actual("funcionario_codigo")."',to_date('".date('Y-m-d H:i:s')."','YYYY-MM-DD HH24:MI:SS') ,'MODIFICAR', '$tabla', $llave, '0')";
-                  
+
                    $conn->Ejecutar_Sql($sqleve);
                    $registro=$conn->Ultimo_Insert();
                    $texto_ant="DECLARE
 cont$   CLOB;
 BEGIN
-    UPDATE $tabla SET $campo=EMPTY_CLOB() 
+    UPDATE $tabla SET $campo=EMPTY_CLOB()
     WHERE $condicion;
     SELECT $campo
          INTO cont$
@@ -304,12 +329,12 @@ BEGIN
         WHERE $condicion
    FOR UPDATE;
    DBMS_LOB.WRITE (cont$, DBMS_LOB.getlength('$contenido_actual'), 1, '$contenido_actual');
-COMMIT;   
+COMMIT;
 END";
                    $texto_sig="DECLARE
 cont$   CLOB;
 BEGIN
-UPDATE $tabla SET $campo=EMPTY_CLOB() 
+UPDATE $tabla SET $campo=EMPTY_CLOB()
 WHERE $condicion;
 SELECT $campo
      INTO cont$
@@ -318,46 +343,46 @@ SELECT $campo
 FOR UPDATE;
 DBMS_LOB.WRITE (cont$, DBMS_LOB.getlength('$contenido'), 1, '$contenido');
 COMMIT;
-END";    
+END";
                    guardar_lob('codigo_sql','evento',"idevento=".$registro,$texto_sig,'texto',$conn,0);
                    guardar_lob('detalle','evento',"idevento=".$registro,$texto_ant,'texto',$conn,0);
                    $archivo="$registro|||".usuario_actual("funcionario_codigo")."|||".date('Y-m-d H:i:s')."|||MODIFICAR|||$tabla|||0|||$texto_ant|||$llave|||$texto_sig";
                    evento_archivo($archivo);
                    //*********************************
-                
-                }  
+
+                }
               }
-           }  
+           }
 
         }
       elseif($tipo=="archivo")//para campos blob como la firma
         {//echo ($campo.$tabla.$condicion.$contenido);
         /*if(lower($campo)=="firma")
          $contenido=addslashes($contenido); */
-         if ( !$row[strtoupper($campo)]->truncate() ) 
+         if ( !$row[strtoupper($campo)]->truncate() )
             {
               oci_rollback($conn->Conn->conn);
               alerta("No se pudo modificar el campo.");
               $resultado=FALSE;
             }
-         if ( !$row[strtoupper($campo)]->save($contenido)) 
+         if ( !$row[strtoupper($campo)]->save($contenido))
            { oci_rollback($conn->Conn->conn);
             alerta("No se pudo modificar el campo.");
              $resultado=FALSE;
-           }  
-         else 
-           oci_commit($conn->Conn->conn);  
-  
-        }      
+           }
+         else
+           oci_commit($conn->Conn->conn);
+
+        }
       oci_free_statement($stmt);
       $row[strtoupper($campo)]->free();
-     } 
+     }
     }
  elseif(MOTOR=="MySql")
     {if($tipo=="archivo")
        {$sql="update $tabla set $campo='".addslashes($contenido)."' where $condicion";
         mysqli_query($conn->Conn->conn,$sql);
-        // TODO verificar resultado de la insecion $resultado=FALSE; 
+        // TODO verificar resultado de la insecion $resultado=FALSE;
        }
      elseif($tipo=="texto")
         {$contenido=codifica_encabezado(limpia_tabla($contenido));
@@ -368,7 +393,7 @@ END";
              $anterior=busca_filtro_tabla($campo,$tabla,$condicion,"",$conn);
              $sql_anterior="update $tabla set $campo='".addslashes(stripslashes($anterior[0][0]))."' where $condicion";
 
-             $sqleve="INSERT INTO evento(funcionario_codigo, fecha, evento, tabla_e, registro_id, estado,detalle,codigo_sql) VALUES('".usuario_actual("funcionario_codigo")."','".date('Y-m-d H:i:s')."','MODIFICAR', '$tabla', $llave, '0','".addslashes($sql_anterior)."','".addslashes($sql)."')"; 
+             $sqleve="INSERT INTO evento(funcionario_codigo, fecha, evento, tabla_e, registro_id, estado,detalle,codigo_sql) VALUES('".usuario_actual("funcionario_codigo")."','".date('Y-m-d H:i:s')."','MODIFICAR', '$tabla', $llave, '0','".addslashes($sql_anterior)."','".addslashes($sql)."')";
              $conn->Ejecutar_Sql($sqleve);
              $registro=$conn->Ultimo_Insert();
              if($registro)
@@ -376,11 +401,11 @@ END";
                 $archivo="$registro|||".usuario_actual("funcionario_codigo")."|||".date('Y-m-d H:i:s')."|||MODIFICAR|||$tabla|||0|||".addslashes($sql_anterior)."|||$llave|||".addslashes($sql);
                 evento_archivo($archivo);
                }
-            }         
+            }
          mysqli_query($conn->Conn->conn,$sql) or die(mysqli_error($conn->Conn->conn));
         }
     }
-  elseif(MOTOR=="SqlServer" || MOTOR=="MSSql" ){  
+  elseif(MOTOR=="SqlServer" || MOTOR=="MSSql" ){
     if($tipo=="archivo"){
       $dato=busca_filtro_tabla("$campo","$tabla","$condicion","",$conn);
 		//CODIFICA EL ARCHIVO PARA SER GUARDADO
@@ -393,7 +418,7 @@ END";
         $conn->ejecutar_sql($sql);
       }
       $sql="UPDATE ".$tabla." SET ".$campo." = ".$content." WHERE ".$condicion;
-      $conn->ejecutar_sql($sql); 
+      $conn->ejecutar_sql($sql);
     }
     elseif($tipo=="texto"){
       $contenido=codifica_encabezado(limpia_tabla($contenido));
@@ -403,14 +428,14 @@ END";
         $llave=trim($resultados[1]);
         $anterior=busca_filtro_tabla("$campo","$tabla","$condicion","",$conn);
         $sql_anterior="update $tabla set $campo='".str_replace("'",'"',stripslashes($anterior[0][0]))."' where $condicion";
-        $sqleve="INSERT INTO evento(funcionario_codigo, fecha, evento, tabla_e, registro_id, estado,detalle,codigo_sql) VALUES('".usuario_actual("funcionario_codigo")."','".date('Y-m-d H:i:s')."','MODIFICAR', '$tabla', $llave, '0','".addslashes($sql_anterior)."','".addslashes($sql)."')"; 
+        $sqleve="INSERT INTO evento(funcionario_codigo, fecha, evento, tabla_e, registro_id, estado,detalle,codigo_sql) VALUES('".usuario_actual("funcionario_codigo")."','".date('Y-m-d H:i:s')."','MODIFICAR', '$tabla', $llave, '0','".addslashes($sql_anterior)."','".addslashes($sql)."')";
         $conn->Ejecutar_Sql($sqleve);
         $registro=$conn->Ultimo_Insert();
         if($registro){
           $archivo="$registro|||".usuario_actual("funcionario_codigo")."|||".date('Y-m-d H:i:s')."|||MODIFICAR|||$tabla|||0|||".addslashes($sql_anterior)."|||$llave|||".addslashes($sql);
           evento_archivo($archivo);
         }
-      }     
+      }
       if(MOTOR=="SqlServer")
       {sqlsrv_query($conn->Conn->conn,"USE ".$conn->Conn->Db);
        sqlsrv_query($conn->Conn->conn,$sql) or die("consulta fallida ---- $sql ".implode("<br />",sqlsrv_errors()));
@@ -419,8 +444,8 @@ END";
         {mssql_query($sql,$conn->Conn->conn) or die("consulta fallida ---- $sql ".implode("<br />",mssql_get_last_message()));
         }
     }
-  }   
- return($resultado);   
+  }
+ return($resultado);
 }
 /*
 <Clase>
@@ -432,7 +457,7 @@ END";
 <Salida></Salida>
 <Pre-condiciones><Pre-condiciones>
 <Post-condiciones><Post-condiciones>
-</Clase>*/ 
+</Clase>*/
 function evento_archivo($cadena){
   global $conn;
   $max_salida=6; // Previene algun posible ciclo infinito limitando a 10 los ../
@@ -445,7 +470,7 @@ function evento_archivo($cadena){
     $max_salida--;
   }
   /*$ruta_evento=busca_filtro_tabla("valor","configuracion","nombre like 'ruta_evento'","",$conn);
-  
+
   $nombre=$ruta_db_superior."../".$ruta_evento[0]['valor']."/".DB."_log_".date("Y_m_d").".txt";*/
   $nombre=$ruta_db_superior.RUTA_BACKUP_EVENTO.DB."_log_".date("Y_m_d").".txt";
   if(!@is_file($nombre))
@@ -472,13 +497,13 @@ function evento_archivo($cadena){
 <Salida></Salida>
 <Pre-condiciones><Pre-condiciones>
 <Post-condiciones><Post-condiciones>
-</Clase>*/ 
+</Clase>*/
 function formato_cargo($nombre_cargo){
 $cargo="";
 $pal='';
 if($nombre_cargo!='')
   $pal = explode(" ",strtolower($nombre_cargo));
-$cant=count($pal);    
+$cant=count($pal);
 for($i=0; $i<$cant; $i++){
 if($pal[$i]=="del" || $pal[$i]=="de" || $pal[$i]=="y" || $pal[$i]=="en" || $pal[$i]=="al" || $pal[$i]=="los" || $pal[$i]=="a")
 $cargo.=$pal[$i]." ";
@@ -532,7 +557,7 @@ global $conn;
        return FALSE;
     }
   }
-  else return(TRUE);      
+  else return(TRUE);
 }
 
 
@@ -565,7 +590,7 @@ function phpmkr_db_close($conn)
 <Pre-condiciones>
 <Post-condiciones>
 */
-function phpmkr_query($strsql){ 
+function phpmkr_query($strsql){
 global $conn;
 
 	if(!get_magic_quotes_gpc()) // SI NO ESTAN ACTIVADAS LAS MAGIC QUOTES DE PHP ESCAPA LA SECUENCIA SQL
@@ -582,22 +607,22 @@ global $conn;
 		$string_detalle = "";
 		if($accion != "SELECT") {
 	        $func = usuario_actual("funcionario_codigo");
-	
+
 		} else {
 			$rs = $conn->Ejecutar_Sql($strsql);
 		}
-		
+
 		$sqleve = "";
 		switch($accion) {
 			case ("SELECT"):
 				$strsql = htmlspecialchars_decode((($strsql)));
 				break;
 			case ("INSERT"):
-			    
+
 				$values = substr($strsql, strpos("VALUES", strtoupper($strsql) + 6));
 				//$rs = $conn->Ejecutar_Sql(htmlspecialchars_decode((($strsql))));
 				$rs = $conn->Ejecutar_Sql($strsql);
-				
+
 				$llave = $conn->Ultimo_Insert();
 				preg_match("/insert into (\w*\.)*(\w+)/", strtolower($strsql), $resultados);
 				if(isset($resultados[2])) {
@@ -620,13 +645,13 @@ global $conn;
 				$llave = trim($resultados[2]);
 				$llave = str_replace("'","",$llave);
 				$campo_llave = $resultados[1];
-				$detalle = busca_filtro_tabla("", $tabla, $campo_llave . "=" . $llave, "", $conn); 
+				$detalle = busca_filtro_tabla("", $tabla, $campo_llave . "=" . $llave, "", $conn);
 				$rs = $conn->Ejecutar_Sql(((($strsql))));
 				$detalle2 = busca_filtro_tabla("", $tabla, $campo_llave . "=" . $llave, "", $conn);
 				// ************ miro cuales campos cambiaron en la tabla ****************
 				$nombres_campos = array();
 				if($detalle["numcampos"]) {
-					$nombres_campos = array_keys($detalle[0]); 
+					$nombres_campos = array_keys($detalle[0]);
 				}
 				$cambios = array();
 				if($detalle2["numcampos"] && $detalle["numcampos"]) {
@@ -641,7 +666,7 @@ global $conn;
 					if(!is_numeric($llave)) {
 						$llave = $detalle[0]["id" . $tabla];
 					}
-					guardar_evento($strsql, intval($llave), $tabla, $func, "MODIFICAR", $diferencias);						
+					guardar_evento($strsql, intval($llave), $tabla, $func, "MODIFICAR", $diferencias);
 				}
 				break;
 			case ('DELETE'):
@@ -666,7 +691,7 @@ global $conn;
 					}
 					$string_detalle = "insert into $tabla(" . implode(",", $datos1) . ") values(" . implode(",", $datos2) . ")";
 
-					guardar_evento($strsql, $llave, $tabla, $func, "ELIMINAR", $string_detalle);						
+					guardar_evento($strsql, $llave, $tabla, $func, "ELIMINAR", $string_detalle);
 				}
 				break;
 			default:
@@ -680,7 +705,7 @@ global $conn;
 				error($strsql);
 			}
 		}
-		
+
 		return $rs;
 	}
 }
@@ -696,9 +721,9 @@ global $conn;
 
 function guardar_evento($strsql, $llave, $tabla, $func, $accion, $diferencias=null) {
 	global $conn;
-	
+
 	$sqleve = "INSERT INTO evento(funcionario_codigo, fecha, evento, tabla_e, registro_id, estado,codigo_sql,detalle) VALUES('" . $func . "'," . fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s') . ",'$accion', '$tabla', $llave, '0','','')";
-	
+
 	$conn->Ejecutar_Sql($sqleve);
 	$registro = $conn->Ultimo_Insert();
 	if($registro) {
@@ -711,7 +736,7 @@ function guardar_evento($strsql, $llave, $tabla, $func, $accion, $diferencias=nu
 		}
 		$archivo = "$registro|||$func|||" . date('Y-m-d H:i:s') . "|||$accion|||$tabla|||0|||$diferencias|||$llave|||$strsql";
 		evento_archivo($archivo);
-	}	
+	}
 	//20160915. Actualizar el estado del documento en el ft
 	if($tabla == "documento" && $accion == "MODIFICAR") {
 		actualizar_estado_formato($llave);
@@ -753,7 +778,7 @@ function actualizar_estado_formato($iddoc) {
 <Post-condiciones>
 */
 function phpmkr_num_fields($rs){
-global $conn; 
+global $conn;
 return($conn->Numero_Campos($rs));
 }
 /*
@@ -768,7 +793,7 @@ return($conn->Numero_Campos($rs));
 <Post-condiciones>
 */
 function phpmkr_field_type($rs,$pos){
-global $conn; 
+global $conn;
 return($conn->Tipo_Campo($rs,$pos));
 }
 /*
@@ -783,7 +808,7 @@ return($conn->Tipo_Campo($rs,$pos));
 <Post-condiciones>
 */
 function phpmkr_field_name($rs,$pos){
-global $conn; 
+global $conn;
 return($conn->Nombre_Campo($rs,$pos));
 }
 /*
@@ -801,13 +826,13 @@ function phpmkr_num_rows($rs){
   global $conn;
 	if($conn){
     if(!$rs&&$conn->res)
-      $rs = $conn->res;	 
+      $rs = $conn->res;
     return $conn->Numero_Filas($rs);
-	} 
+	}
   else{
     alerta("Error en numero de filas.".$rs->sql);
     return FALSE;
-  }      
+  }
 }
 /*
 <Clase>
@@ -827,11 +852,11 @@ function phpmkr_fetch_array($rs){
       $rs = $conn->res;
 	  $retorno=$conn->sacar_fila($rs);
     return $retorno;
-	} 
+	}
   else{
     alerta("Error en capturar resultado en arreglo.".$rs->sql);
     return FALSE;
-  }      
+  }
 }
 /*
 <Clase>
@@ -851,11 +876,11 @@ if($conn){
     $rs = $conn->res;
 	$retorno=$conn->sacar_fila($rs);
 	return $retorno;
-} 
+}
 else{
   alerta("Error en capturar resultado en arreglo.".$rs->sql);
   return FALSE;
-}      
+}
 }
 /*
 <Clase>
@@ -897,12 +922,12 @@ if($conn){
     return $buscar[0]["registro_id"];
   else{
     //alerta(" Error al recuperar id ".$evento);
-  }  
+  }
 }
 else{
   alerta("Error al buscar la ultima insercion.".$rs->sql);
   return FALSE;
-}      
+}
 }
 /*
 <Clase>
@@ -923,12 +948,12 @@ if($conn->motor=="MySql"){
 }
 else if($conn->motor=="Oracle"){
   if($conn->error<>"")
-    echo  ($conn->error["message"]." en \"".$conn->consulta."\"");   
+    echo  ($conn->error["message"]." en \"".$conn->consulta."\"");
   }
   else if($conn->motor=="SqlServer" || $conn->motor=="MSSql"){
     if($conn->error<>"")
-      echo  ($conn->error["message"]." en \"".$conn->consulta."\"");   
-  } 
+      echo  ($conn->error["message"]." en \"".$conn->consulta."\"");
+  }
 }
 /*
 <Clase>
@@ -961,15 +986,15 @@ switch ($tabla){
   break;
   case ("cargo3"):
     $tabla="dependencia_cargo";
-  break; 
+  break;
   case ("funcionario2"):
     $tabla="funcionario";
-  break;    
+  break;
 }
 $sql="Select ";
 if($campos)
   $sql.=$campos;
-else 
+else
   $sql.="*";
 if($tabla)
   $sql.=" FROM ".$tabla;
@@ -978,7 +1003,7 @@ if($filtro)
 if($orden){
   if(substr(strtolower($orden),0,5)=="group")
     $sql.=" ".$orden;
-  else  
+  else
     $sql.=" ORDER BY ".$orden;
 }
 $sql=htmlspecialchars_decode((($sql)));
@@ -987,7 +1012,7 @@ $temp=phpmkr_fetch_array($rs);
 $retorno["sql"]=$sql;
 for($i=0;$temp;$temp=phpmkr_fetch_array($rs),$i++)
   array_push($retorno,$temp);
-$retorno["numcampos"]=$i;  
+$retorno["numcampos"]=$i;
 phpmkr_free_result($rs);
 if(DEBUGEAR_FLUJOS && strpos($tabla,'funcionario')===FALSE && strpos($tabla,'evento')===FALSE){
   error(print_r($retorno,true));
@@ -1027,7 +1052,7 @@ function busca_filtro_tabla_limit($campos,$tabla,$filtro,$orden,$inicio,$registr
 
   if($filtro)
     $sql.=" WHERE ".str_replace('"',"'",$filtro);
-  if($orden){ 
+  if($orden){
       $sql.=$orden;
   }
   $sql=htmlspecialchars_decode((($sql)));
@@ -1035,10 +1060,10 @@ function busca_filtro_tabla_limit($campos,$tabla,$filtro,$orden,$inicio,$registr
   $temp=phpmkr_fetch_array($rs);
 
   $retorno["sql"]=$sql;
-  
+
   for($i=0;$temp;$temp=phpmkr_fetch_array($rs),$i++)
     array_push($retorno,$temp);
-  $retorno["numcampos"]=$i;  
+  $retorno["numcampos"]=$i;
   phpmkr_free_result($rs);
   if(DEBUGEAR_FLUJOS && strpos($tabla,'funcionario')===FALSE){
     error(print_r($retorno,true));
@@ -1059,15 +1084,15 @@ function busca_filtro_tabla_limit($campos,$tabla,$filtro,$orden,$inicio,$registr
 <Pre-condiciones>
 <Post-condiciones>
 */
-function evento($tabla,$evento,$strsql,$llave){ 
+function evento($tabla,$evento,$strsql,$llave){
 global $conn;
 $sql = trim($strsql);
 $sql = str_replace('','',$sql);
-$accion = strtoupper(substr($sql,0,strpos($sql,' ')));    
-$tabla = ""; 
+$accion = strtoupper(substr($sql,0,strpos($sql,' ')));
+$tabla = "";
 $llave=0; $string_detalle="";
 if ($accion<>"SELECT")
- $func = usuario_actual("funcionario_codigo");   
+ $func = usuario_actual("funcionario_codigo");
 $strsql=htmlspecialchars_decode((($strsql)));
 $rs = $conn->Ejecutar_Sql_Noresult($strsql);
 return $rs;
@@ -1089,12 +1114,12 @@ global $conn;
 
 phpmkr_query($sql,$conn);
 $id=phpmkr_insert_id();
-if($id>0){ 
+if($id>0){
   return($id);
-} 
+}
 else
-  return false;  
-phpmkr_free_result();      
+  return false;
+phpmkr_free_result();
 }
 /*
 <Clase>
@@ -1130,9 +1155,9 @@ return($resultado);
 <Post-condiciones>
 */
 function delimita($cad,$long) {
-if( strlen($cad) < $long) 
+if( strlen($cad) < $long)
   return($cad);
-else 
+else
   return(substr($cad,0,$long-3)."<B> ... </B>");
 }
 /*
@@ -1161,10 +1186,10 @@ switch ($tabla){
   break;
   case ("cargo3"):
     $tabla="dependencia_cargo";
-  break; 
+  break;
   case ("funcionario2"):
     $tabla="funcionario";
-  break;    
+  break;
 }
 $motor=MOTOR;
 if($motor=="MySql")
@@ -1176,7 +1201,7 @@ $rs=phpmkr_query($sql,$conn) or error("Error en Busqueda de Proceso SQL: $sql");
 $temp=phpmkr_fetch_array($rs);
 for($i=0;$temp;$temp=phpmkr_fetch_array($rs),$i++)
  array_push($retorno,$temp);
-$retorno["numcampos"]=$i; 
+$retorno["numcampos"]=$i;
 phpmkr_free_result($rs);
 return($retorno);
 }
@@ -1213,7 +1238,7 @@ for(;$temp;$temp=phpmkr_fetch_array($rs))
  array_push($retorno,$temp);
 phpmkr_free_result($rs);
 }
-else 
+else
 {
 switch ($tabla)
 {
@@ -1225,10 +1250,10 @@ switch ($tabla)
   break;
  case ("cargo3"):
   $tabla="dependencia_cargo";
-  break; 
+  break;
  case ("funcionario2"):
   $tabla="funcionario";
- break;    
+ break;
 }
 $sql="Select DISTINCT * FROM ".$tabla;
 $rs=phpmkr_query($sql,$conn) or error("Error en Bsqueda de Proceso SQL: $sql");
@@ -1250,7 +1275,7 @@ return($retorno);
 <Salida></Salida>
 <Pre-condiciones><Pre-condiciones>
 <Post-condiciones><Post-condiciones>
-</Clase>*/ 
+</Clase>*/
 function extrae_campo($arreglo,$campo,$banderas="U,M"){
 $retorno=array();
 for($i=0;$i<$arreglo["numcampos"];$i++){
@@ -1260,11 +1285,11 @@ $band=explode(",",$banderas);
 $cont=count($band);
 for($j=0;$j<$cont;$j++){
   switch($band[$j]){
-    case "U" : 
+    case "U" :
       $retorno_aplicado=array_unique($retorno);
       $retorno=$retorno_aplicado;
       sort($retorno,SORT_ASC);
-    break;  
+    break;
     case "M":
       unset($retorno_aplicado);
       $retorno_aplicado=array();
@@ -1281,7 +1306,7 @@ for($j=0;$j<$cont;$j++){
     break;
     case "D":
       sort($retorno,SORT_DESC);
-    break;       
+    break;
   }
 }
 return($retorno);
@@ -1291,7 +1316,7 @@ return($retorno);
 <Nombre>sincronizar_carpetas
 <Parametros>$conn: conexion activa con la base de datos
 <Responsabilidades>Esta funcion genera una sincronizacion de la carpeta temporal, tomando las imagenes e indexandolas
-                   de forma automatica si no logra encontrar el tipo documental lo envia a  una carpeta sin indexacion 
+                   de forma automatica si no logra encontrar el tipo documental lo envia a  una carpeta sin indexacion
 <Notas>
 <Excepciones>
 <Salida>
@@ -1374,8 +1399,10 @@ function sincronizar_carpetas($tipo, $conn) {
 	}
 
 	if ($tipo_almacenamiento == "archivo") {// Se alcenan paginas y miniaturas en la BD
-		if (is_dir($dir))//ruta_temporal
-			$directorio = opendir("$dir");
+		include_once($ruta_db_superior . "pantallas/lib/librerias_archivo.php");
+
+		if (is_dir($ruta_db_superior . $dir))//ruta_temporal
+			$directorio = opendir($ruta_db_superior . $dir);
 		else
 			$directorio = null;
 
@@ -1391,13 +1418,11 @@ function sincronizar_carpetas($tipo, $conn) {
 					$archivos[] = $archivo;
 			}
 			natsort($archivos);
-			
-			
-			
+
 			foreach ($archivos as $archivo) {
 				$estado = "";
 				$dir3 = "";
-				$ruta = $dir . "/" . $archivo;
+				$ruta = $ruta_db_superior . $dir . "/" . $archivo;
 				$path = pathinfo($ruta);
 				if ($archivo && $archivo != "." && $archivo != ".." && is_file("$archivo") != "dir" && (strtolower($path['extension']) == 'jpg' || strtolower($path['extension']) == 'jpeg') && @filesize($archivo) <= $peso) {
 
@@ -1420,14 +1445,18 @@ function sincronizar_carpetas($tipo, $conn) {
 					$paginas = busca_filtro_tabla("A.pagina,A.ruta", "" . $tabla . " A", "A.id_documento=" . $fieldList["id_documento"], "A.pagina", $conn);
 					$numero_pagina = $paginas["numcampos"];
 
-					//Este es el punto dode se puede hacer el cambio de carpeta en cad donde se almacenaran fisicamente las imagenes.
+					//Este es el punto donde se puede hacer el cambio de carpeta en cad donde se almacenaran fisicamente las imagenes.
 					$ruta_imagenes = ruta_almacenamiento("imagenes");
 					$cad2 = $fieldList["id_documento"];
-					$dir3 = $ruta_imagenes . $estado . "/" . $fecha . "/" . $cad2 . "/" . $dir2 . "/";
-					$ruta_dir = $ruta_imagenes . $estado . "/" . $fecha . "/" . $cad2;
+					$formato_ruta = aplicar_plantilla_ruta_documento($cad2);
+					$dir3 = $ruta_imagenes . $formato_ruta . "/" . $dir2 . "/";
+					//$dir3 = $ruta_imagenes . $estado . "/" . $fecha . "/" . $cad2 . "/" . $dir2 . "/";
+
+					$ruta_dir = $ruta_imagenes. $formato_ruta;
+					//$ruta_dir = $ruta_imagenes . $estado . "/" . $fecha . "/" . $cad2;
 					crear_destino($dir3);
 
-					if ($numero_pagina <> "")
+					if ($numero_pagina != "")
 						$numero_pagina = intval($numero_pagina) + 1;
 					else
 						$numero_pagina = 1;
@@ -1442,10 +1471,12 @@ function sincronizar_carpetas($tipo, $conn) {
 							}
 						}
 						chmod($dirminiatura . "/", PERMISOS_CARPETAS);
-						$fieldList["imagen"] = cambia_tam($ruta2, $dirminiatura . "/doc" . $fieldList["id_documento"] . "pag" . $numero_pagina . ".jpg", $miniatura_ancho, $miniatura_alto, 0);
+                        $ruta_min = cambia_tam($ruta2, $dirminiatura . "/doc" . $fieldList["id_documento"] . "pag" . $numero_pagina . ".jpg", $miniatura_ancho, $miniatura_alto, 0);
+
+						$fieldList["imagen"] = preg_replace("%^" . $ruta_db_superior . "%", "", $ruta_min);
 
 						array_push($rutas, $fieldList["id_documento"]);
-						$fieldList["ruta"] = $ruta2;
+						$fieldList["ruta"] = preg_replace("%^" . $ruta_db_superior . "%", "", $ruta2);
 						$fieldList["pagina"] = $numero_pagina;
 
 						$campo_adicional = "";
@@ -1469,11 +1500,10 @@ function sincronizar_carpetas($tipo, $conn) {
 			}
 			closedir($directorio);
 		} //Fin If directorio
-		
-		
+
 		//aqui desarrollo para subir digitalizacion de PDF,DOCX,ETC
-		if (is_dir($dir))//ruta_temporal
-			$directorio = opendir("$dir");
+		if (is_dir($ruta_db_superior . $dir))//ruta_temporal
+			$directorio = opendir($ruta_db_superior . $dir);
 		else
 			$directorio = null;
 
@@ -1489,10 +1519,9 @@ function sincronizar_carpetas($tipo, $conn) {
 					$archivos[] = $archivo;
 			}
 			natsort($archivos);
-			
-			
+
 			$archivos_anexos=array();
-			$extension_image=array('jpg','jpeg'); 
+			$extension_image=array('jpg','jpeg');
 			$cant=count($archivos);
 			for($i=0;$i<$cant;$i++){
 				$extension=explode('.',$archivos[$i]);
@@ -1500,26 +1529,27 @@ function sincronizar_carpetas($tipo, $conn) {
 				if( !in_array($extension[($cant-1)],$extension_image) ){
 					$archivos_anexos[]=$archivos[$i];
 					unset($archivos[$i]);
-				}	
-			}		
+				}
+			}
 			$archivos=array_values($archivos);
 			$archivos_anexos=array_unique($archivos_anexos);
-			$ruta_tem=busca_filtro_tabla("","configuracion","nombre='ruta_temporal'","",$conn);
-			$ruta_temporal=$ruta_tem[0]['valor'].'_'.usuario_actual('login');
+			//$ruta_tem=busca_filtro_tabla("","configuracion","nombre='ruta_temporal'","",$conn);
+			$ruta_temporal= $dir;
 			foreach ($archivos_anexos as $archivo) {
 				$ruta_archivo=$ruta_db_superior.$ruta_temporal.'/'.$archivo;
 				if(file_exists($ruta_archivo)){
 					$ic = strrpos($archivo, "#");
 					$fc = strrpos($archivo, ")");
 					$cad = substr($archivo, $ic + 1, $fc - $ic - 1);
-					if(intval($cad)==intval(@$_REQUEST['x_id_documento'])){
-						vincular_anexo_documento(@$_REQUEST['x_id_documento'],$ruta_temporal.'/'.$archivo);
-						unlink($ruta_db_superior.$ruta_temporal.'/'.$archivo);						
+                    //No se puede usar $_REQUEST porque la funcion se puede invocar desde un webservice
+					if(!empty($cad)) {
+						vincular_anexo_documento(intval($cad),$ruta_temporal.'/'.$archivo);
+						unlink($ruta_archivo);
 					}
 				} //fin if file_exist
-			} //recorriendo directorio 				
+			} //recorriendo directorio
 		} //fin if directorio
-		
+
 	} elseif ($tipo_almacenamiento == "db") {// Se almacena en la base de datos
 		if (is_dir($dir))
 			$directorio = opendir("$dir");
@@ -1578,7 +1608,7 @@ function sincronizar_carpetas($tipo, $conn) {
 							$dir3 = "../documentos/error/" . $cad2;
 					}
 					//Me lleva hasta la Ultima pagina del documento.
-					if ($cad_temp <> "") {
+					if ($cad_temp != "") {
 						$cont = intval($cad_temp) + intval($cont);
 					}
 					if (cambia_tam($ruta, $dir3 . "doc" . $fieldList["id_documento"] . "pag" . $cont . ".jpg", $imgancho, $imgalto, 1)) {
@@ -1629,12 +1659,11 @@ function sincronizar_carpetas($tipo, $conn) {
 			$retorno = estampar_imagen($idimagenes, $fieldList);
 		}
 	}
-	
 
 	return (TRUE);
 }
 
-function vincular_anexo_documento($iddoc,$ruta_origen){
+function vincular_anexo_documento($iddoc,$ruta_origen,$etiqueta=''){
 	global $conn,$ruta_db_superior;
 	include_once($ruta_db_superior."anexosdigitales/funciones_archivo.php");
 	$ruta_destino=selecciona_ruta_anexos("",$iddoc,'archivo');
@@ -1642,47 +1671,61 @@ function vincular_anexo_documento($iddoc,$ruta_origen){
 
 	$vector_nombre_extension = explode('.',$nombre_extension);
 	$extencion=$vector_nombre_extension[(count($vector_nombre_extension)-1)];
-	$nombre_temporal=time().".".$extencion;
+	$nombre_temporal=uniqid().".".$extencion;
 	mkdir($ruta_db_superior.$ruta_destino,0777);
-	$tmpVar = 1;
+	/*$tmpVar = 1;
 	while(file_exists($ruta_db_superior.$ruta_destino. $tmpVar . '_' . $nombre_temporal)){
 		$tmpVar++;
 	}
-	$nombre_temporal=$tmpVar . '_' . $nombre_temporal;
-	copy($ruta_db_superior.$ruta_origen,$ruta_db_superior.$ruta_destino.$nombre_temporal);
-	
+	$nombre_temporal=$tmpVar . '_' . $nombre_temporal;*/
+	if(!copy($ruta_db_superior.$ruta_origen, $ruta_destino.$nombre_temporal)) {
+	    return "error al copiar dede: " . $ruta_db_superior.$ruta_origen . " a " . $ruta_destino.$nombre_temporal;
+	}
+
 	$data_sql=array();
 	$data_sql['documento_iddocumento']=$iddoc;
-	$data_sql['ruta']=$ruta_destino.$nombre_temporal;
-	$data_sql['etiqueta']=$nombre_extension;
+
+	$data_sql['ruta']=preg_replace("%^" . $ruta_db_superior . "%", "", $ruta_destino.$nombre_temporal);
+	if($etiqueta!=''){
+		$data_sql['etiqueta']=$etiqueta;
+	}else{
+		$data_sql['etiqueta']=$nombre_extension;
+	}
 	$data_sql['tipo']=$extencion;
 
+	$datos_documento=busca_filtro_tabla("a.formato_idformato,b.idcampos_formato","documento a LEFT JOIN campos_formato b ON a.formato_idformato=b.formato_idformato","b.etiqueta_html='archivo' AND a.iddocumento=".$iddoc,"",$conn);
+	$data_sql['formato']=Null;
+	$data_sql['campos_formato']=Null;
+	if($datos_documento['numcampos']){
+		$data_sql['formato']=$datos_documento[0]['formato_idformato'];
+		$data_sql['campos_formato']=$datos_documento[0]['idcampos_formato'];
+	}
 	$tabla="anexos";
 	$strsql = "INSERT INTO ".$tabla." (fecha_anexo,"; //fecha_anexo
-	$strsql .= implode(",", array_keys($data_sql));			
-	$strsql .= ") VALUES (".fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s').",'";	//fecha_anexo		
-	$strsql .= implode("','", array_values($data_sql));			
+	$strsql .= implode(",", array_keys($data_sql));
+	$strsql .= ") VALUES (".fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s').",'";	//fecha_anexo
+	$strsql .= implode("','", array_values($data_sql));
 	$strsql .= "')";
  	phpmkr_query($strsql,$conn);
 	$idanexo=phpmkr_insert_id();
-	
-	
+
+
 	$data_sql=array();
 	$data_sql['anexos_idanexos']=$idanexo;
 	$data_sql['idpropietario']=usuario_actual('idfuncionario');
 	$data_sql['caracteristica_propio']='lem';
 	$data_sql['caracteristica_total']='1';
-	
+
 	$tabla="permiso_anexo";
-	$strsql = "INSERT INTO ".$tabla." ("; 
-	$strsql .= implode(",", array_keys($data_sql));			
-	$strsql .= ") VALUES ('";		
-	$strsql .= implode("','", array_values($data_sql));			
+	$strsql = "INSERT INTO ".$tabla." (";
+	$strsql .= implode(",", array_keys($data_sql));
+	$strsql .= ") VALUES ('";
+	$strsql .= implode("','", array_values($data_sql));
 	$strsql .= "')";
 	$sql1=$strsql;
-	phpmkr_query($sql1);	
-	
-	return($idanexo);	
+	phpmkr_query($sql1);
+
+	return($idanexo);
 }
 
 /*Manipulacion de Imagenes*/
@@ -1693,7 +1736,7 @@ function vincular_anexo_documento($iddoc,$ruta_origen){
             $nombredest: nombre de la nueva imagen
             $nwidth: ancho del a nueva imagen
             $nheight: alto de la nueva imagen
-            $tipo: 
+            $tipo:
 <Responsabilidades>cambiar el tama� de la imagen, generando una nueva de las dimensiones deseadas
 <Notas>
 <Excepciones>
@@ -1709,16 +1752,16 @@ if ($nwidth && ($width < $height)) {
 $nwidth = ($nheight / $height) * $width;
 } else {
 $nheight = ($nwidth / $width) * $height;
-} 
-$image_p = imagecreatetruecolor($nwidth,$nheight); 
-imagecolorallocate ($image_p, 255, 255, 255); 
-if($ext=='gif'){ 
+}
+$image_p = imagecreatetruecolor($nwidth,$nheight);
+imagecolorallocate ($image_p, 255, 255, 255);
+if($ext=='gif'){
 $image = imagecreatefromgif($nombreorig);///nombre del archivo origen
 imagecopyresampled($image_p, $image, 0, 0, 0, 0, $nwidth, $nheight, $width, $height);
 imagegif($image_p, $nombredest);///nombre del destino
 imagedestroy($image_p);
-imagedestroy($image); 
-return($nombredest); 
+imagedestroy($image);
+return($nombredest);
 }
 else
 {
@@ -1739,7 +1782,7 @@ return(Null);
 <Nombre>error
 <Parametros>$cad: cadena de error
 <Responsabilidades>Imprimir la cadena de error
-<Notas>Esta Funcion realiza la insercion de el error generado en una rreglo que debe mostrarse en alguna instancia 
+<Notas>Esta Funcion realiza la insercion de el error generado en una rreglo que debe mostrarse en alguna instancia
        puede ser en una marquesina en la parte inferior
 <Excepciones>
 <Salida>
@@ -1750,7 +1793,7 @@ function error($cad,$ruta="",$file="",$imprime_cadena=0){
   if(DEBUGEAR){
     if($imprime_cadena){
       echo ($cad."<BR>");
-    }  
+    }
     if($file==""){
       $file=str_replace(CARPETA_SAIA."/saia/","",$_SERVER["PHP_SELF"]);
     }
@@ -1794,7 +1837,7 @@ die();
 */
 function abrir_url($location,$target="_blank")
 {
-  if(!@$_SESSION['radicacion_masiva']){  
+  if(!@$_SESSION['radicacion_masiva']){
     if($target){
     ?>
     <script language="javascript">
@@ -1844,20 +1887,20 @@ function redirecciona($location){
 <Salida></Salida>
 <Pre-condiciones><Pre-condiciones>
 <Post-condiciones><Post-condiciones>
-</Clase>*/ 
+</Clase>*/
 function enviar_mensaje($correo="",$tipo_usuario='codigo',$usuarios,$asunto="",$mensaje,$anexos=array(),$copia_oculta=0, $iddoc=''){
 global $conn;
- 
+
   $to = array();
 	if($tipo_usuario=='codigo'){
-		  for($i=0; isset($usuarios[$i])&&$usuarios[$i]; $i++){ 
+		  for($i=0; isset($usuarios[$i])&&$usuarios[$i]; $i++){
 	   $funcionario=busca_filtro_tabla("login,email","funcionario","funcionario_codigo='".$usuarios[$i]."'","",$conn);
 	   if($funcionario["numcampos"]){
 	     if($funcionario[0]["email"]){
 	     	array_push($to,$funcionario[0]["email"]);
 	     }
-	   }    
-	  } 
+	   }
+	  }
 	}else{
 		$cant=count($usuarios);
 		for($i=0;$i<$cant;$i++){
@@ -1865,9 +1908,8 @@ global $conn;
 		}
 	}
  if(count($to)){
-	include_once("PHPMaile/class.phpmailer.php"); 
-	include_once("PHPMaile/language/phpmailer.lang-es.php"); 
-	
+	include_once($ruta_db_superior."PHPMailer/PHPMailerAutoload.php");
+
 	$configuracion_correo=busca_filtro_tabla("valor,nombre,encrypt","configuracion","nombre in('servidor_correo','puerto_servidor_correo','puerto_correo_salida','servidor_correo_salida','correo_notificacion','clave_correo_notificacion','asunto_defecto_correo')","",$conn);
 	for($i=0;$i<$configuracion_correo['numcampos'];$i++){
 		switch ($configuracion_correo[$i]['nombre']) {
@@ -1889,8 +1931,8 @@ global $conn;
 			case 'clave_correo_notificacion':
 				if($configuracion_correo[$i]['encrypt']){
 					include_once('pantallas/lib/librerias_cripto.php');
-					$configuracion_correo[$i]['valor']=decrypt_blowfish($configuracion_correo[$i]['valor'],LLAVE_SAIA_CRYPTO);					
-				}					
+					$configuracion_correo[$i]['valor']=decrypt_blowfish($configuracion_correo[$i]['valor'],LLAVE_SAIA_CRYPTO);
+				}
 				$clave_correo_notificacion=$configuracion_correo[$i]['valor'];
 				break;
 			case 'asunto_defecto_correo':
@@ -1898,13 +1940,13 @@ global $conn;
 				break;
 		}
 	}
-	
+
 	switch ($correo) {
 		default:
 			$usuario_correo=$correo_notificacion;
 			$pass_correo=$clave_correo_notificacion;
 		break;
-	} 
+	}
  $mail = new PHPMailer ();
  $mail->IsSMTP();
 // $mail->SMTPDebug  = 2;
@@ -1912,16 +1954,16 @@ global $conn;
  $mail->Port = $puerto_correo_salida;
  $mail->SMTPAuth = true;
  $mail->Username = $usuario_correo;
- $mail->Password = $pass_correo; 
+ $mail->Password = $pass_correo;
  $mail->FromName = $usuario_correo;
- 
+
  if($asunto!=""){
 		$mail->Subject = $asunto;
 	}else{
 		$mail->Subject = $asunto_defecto_correo;
 	}
-	
-	
+
+
 
 
   $config = busca_filtro_tabla("valor","configuracion","nombre='color_encabezado'","",$conn);
@@ -1931,53 +1973,53 @@ global $conn;
   	<table style='border:none; width:100%; font-size:11px;font-family:Roboto,Arial,Helvetica,sans-serif;color:#646464;vertical-align:middle;	padding: 10px;'>
 		<tr>
 			<td>
-				Este email ha sido enviado automáticamente desde SAIA (Sistema de Administración Integral de Documentos y Procesos). 
+				Este email ha sido enviado automáticamente desde SAIA (Sistema de Administración Integral de Documentos y Procesos).
 				<br>
 				<br>
-				Por favor, NO responda a este mail. 
+				Por favor, NO responda a este mail.
 				<br>
 				<br>
 				Para obtener soporte o realizar preguntas, envié un correo electrónico a ".$correo_admin[0]['email']."
 			</td>
 			<td style='text-align:right;'>
-				<img src='".PROTOCOLO_CONEXION.RUTA_PDF_LOCAL."/imagenes/saia_gray.png'>				
+				<img src='".PROTOCOLO_CONEXION.RUTA_PDF_LOCAL."/imagenes/saia_gray.png'>
 			</td>
 		</tr>
 	</table>
-";  
-  
+";
+
 
   $inicio_style='
   <div id="fondo" style="   padding: 10px; 	background-color: #f5f5f5;	">
-  
+
   	<div id="encabezado" style="background-color:'.$config[0]["valor"].';color:white ;  vertical-align:middle;   text-align: left;    font-weight: bold;  border-top-left-radius:5px;   border-top-right-radius:5px;   padding: 10px;">
   		NOTIFICACIÓN - SAIA
   	</div>
- 
+
   	<div id="cuerpo" style="padding: 10px;background-color:white;">
   		<br>
   		<span style="font-weight:bold;color:'.$config[0]["valor"].';">'.$asunto.'</span>
   		<hr>
   		<br>';
-  
+
   $fin_style='
   	</div>
   	<div  id="pie" style="font-size:11px;font-family:Roboto,Arial,Helvetica,sans-serif;color:#646464;vertical-align:middle;padding: 10px;">
   		'.$texto_pie.'
   	</div>
-  </div>';	
-	
- $mensaje=$inicio_style.$mensaje.$fin_style;	
+  </div>';
 
-	
-	
+ $mensaje=$inicio_style.$mensaje.$fin_style;
+
+
+
  $mail->Body = $mensaje;
  $mail -> IsHTML (true);
- 
+
  $mail->ClearAllRecipients();
  $mail->ClearAddresses();
  $para=array();
- 
+
  foreach($to as $fila){
  	if($copia_oculta==1){
  		$mail->AddBCC($fila,$fila);
@@ -1994,7 +2036,7 @@ global $conn;
   	foreach($anexos as $fila){
   		$mail->AddAttachment($fila);
   	}
-   }  
+   }
    if(!$mail->Send()){
    	return($mail->ErrorInfo);
    }else{
@@ -2011,7 +2053,7 @@ global $conn;
 	    }
 	    if(!count($ejecutores))
 	      $ejecutores=array(usuario_actual("funcionario_codigo"));
-			
+
 			$otros["notas"]="'Documento enviado por e-mail por medio del correo: ".$mail->FromName;
 		  if(count($para)){
 		    $otros["notas"].= " Para :".implode(",",$para);
@@ -2024,7 +2066,7 @@ global $conn;
 		  transferir_archivo_prueba($datos,$ejecutores,$otros);
 		}
    	return (true);
-   } 
+   }
   }
 }
 
@@ -2067,8 +2109,8 @@ global $sql,$conn;
 $cuenta=busca_filtro_tabla("A.consecutivo,A.idcontador","contador A","A.nombre='".$cad."'","",$conn);
 if($cuenta["numcampos"]){
 $consecutivo=$cuenta[0]["consecutivo"];
-return($consecutivo);	
-}  
+return($consecutivo);
+}
 else {
 error("NO EXISTE UN CONSECUTIVO LLAMADO ".$cad);
 return(0);
@@ -2095,9 +2137,9 @@ global $usuactual,$sql,$conn;
 
 
 if(!isset($_SESSION["LOGIN".LLAVE_SAIA])){
-  salir(utf8_decode("Su sesi&oacute;n ha expirado, por favor ingrese de nuevo."));  
+  salir(utf8_decode("Su sesi&oacute;n ha expirado, por favor ingrese de nuevo."));
 }
-   
+
 
 if($usuactual<>""){
 $dato=busca_filtro_tabla("A.*,A.idfuncionario AS id","funcionario A","A.login='".$usuactual."'","",$conn);
@@ -2123,21 +2165,21 @@ else
 function salir($texto){
 	global $usuactual,$conn;
 
-	
+
 
 	if($texto){
-		$usuactual="";  
+		$usuactual="";
 		$conn->Conn->Desconecta();
 		@session_unset();
 		@session_destroy();
-		abrir_url(PROTOCOLO_CONEXION.RUTA_PDF."/logout.php?texto_salir=".urlencode($texto),"_top");	
-			
+		abrir_url(PROTOCOLO_CONEXION.RUTA_PDF."/logout.php?texto_salir=".urlencode($texto),"_top");
+
 	}else{
-		$usuactual="";  
+		$usuactual="";
 		$conn->Conn->Desconecta();
 		@session_unset();
 		@session_destroy();
-		abrir_url(PROTOCOLO_CONEXION.RUTA_PDF."/logout.php","_top"); 		
+		abrir_url(PROTOCOLO_CONEXION.RUTA_PDF."/logout.php","_top");
 	}
 }
 
@@ -2153,7 +2195,7 @@ function salir($texto){
 <Pre-condiciones>
 <Post-condiciones>
 */
-function generar_ingreso($tipo_contador){ 
+function generar_ingreso($tipo_contador){
 global $conn;
   // Field numero
   $contador=busca_filtro_tabla("*","contador","lower(nombre)=lower('".$tipo_contador."')","",$conn);
@@ -2172,7 +2214,7 @@ global $conn;
   $strsql .= ") VALUES (";
   $strsql .= implode(",", array_values($fieldList));
   $strsql .= ")";
-  $doc = ejecuta_sql($strsql);  
+  $doc = ejecuta_sql($strsql);
   contador($doc,$tipo_contador);
   registrar_accion_digitalizacion($doc,'CREACION DOCUMENTO');
 return $doc;
@@ -2184,7 +2226,7 @@ return $doc;
 <Parametros>$doc: identificador del documento;
             $tipo_contador: tipo de radicacion a realizar
             $arreglo: nuevos datos del documento
-            $destino: 
+            $destino:
             $archivos: son los anexos al documento
 	    $flujo: Es el flujo al que esta vinculado la radicacion. Viene desde el editar de la radicacion (documentoedit.php)
 <Responsabilidades>Insertar un documento en la base de datos y sus respectivos anexos
@@ -2194,7 +2236,7 @@ return $doc;
 <Pre-condiciones>
 <Post-condiciones>
 */
-function ingresar_documento($doc,$tipo_contador,$arreglo,$destino,$archivos=NULL,$flujo=NULL){  
+function ingresar_documento($doc,$tipo_contador,$arreglo,$destino,$archivos=NULL,$flujo=NULL){
   global $conn;
 	$contador=busca_filtro_tabla("*","contador A","A.nombre='".$tipo_contador."'","",$conn);
   $estado=busca_filtro_tabla("estado","documento","iddocumento=$doc","",$conn);
@@ -2206,7 +2248,7 @@ function ingresar_documento($doc,$tipo_contador,$arreglo,$destino,$archivos=NULL
   if($contador["numcampos"]){
   $arreglo["tipo_radicado"] = $contador[0]["idcontador"];  //consecutivo
       if($contador[0]["idcontador"]==2){
-      $arreglo["estado"] = "'APROBADO'";  
+      $arreglo["estado"] = "'APROBADO'";
     }
 
   }
@@ -2221,21 +2263,21 @@ function ingresar_documento($doc,$tipo_contador,$arreglo,$destino,$archivos=NULL
 			$strsql = substr($strsql, 0, strlen($strsql)-2);
 		}
 		$sKeyWrk = "" . addslashes($sKey) . "";
-		$strsql .= " WHERE iddocumento =". $sKeyWrk;    	
+		$strsql .= " WHERE iddocumento =". $sKeyWrk;
     phpmkr_query($strsql,$conn);
     registrar_accion_digitalizacion($doc,'LLENADO DATOS');
 	 if($archivos<>NULL && $archivos<>"")
       {
-       /*  Manejo anterior de los anexos ... cuando el frame ya los almacenaba  
+       /*  Manejo anterior de los anexos ... cuando el frame ya los almacenaba
        $archivos=explode(",",$archivos);
        foreach($archivos as $nombre)
           {$datos_anexo=explode(";",$nombre);
            $sql="insert into anexos(ruta,documento_iddocumento,tipo) values('anexos/".$datos_anexo[0]."',$sKeyWrk,'".$datos_anexo[1]."')";
            $resultado=evento("ANEXOS","ADICIONAR",$sql,0) or error("PROBLEMAS CON EL ANEXO: $nombre");
           }
-       */          
-       /// Nuevo Procesamiento de anexos ... los anexos seran almacenados en documento edit..  
-  
+       */
+       /// Nuevo Procesamiento de anexos ... los anexos seran almacenados en documento edit..
+
       }
   global $ruta_db_superior;
   include_once($ruta_db_superior."workflow/libreria_paso.php");
@@ -2269,9 +2311,9 @@ for($i=0;$i<count($destino)-1;$i++)
     phpmkr_query($sql,$conn) or error("No se puede Generar una Ruta entre los funcionarios ".$destino[$i]['codigo']." y ".$destino[$i+1]['codigo']);
     $idruta=phpmkr_insert_id();
     if($idruta)
-    {  
+    {
       $valores["archivo_idarchivo"]=$doc;
-      $valores["nombre"]="'POR_APROBAR'";      
+      $valores["nombre"]="'POR_APROBAR'";
       $valores["destino"]="'".codigo_rol($destino[$i]["codigo"],$destino[$i]["tipo"])."'";
       $valores["tipo_destino"]="'".$destino[$i]["tipo"]."'";
       $valores["fecha"]=fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s');
@@ -2284,14 +2326,14 @@ for($i=0;$i<count($destino)-1;$i++)
       $values=implode(",",array_values($valores));
       $sql = "INSERT INTO buzon_entrada($campos) VALUES($values)";
       phpmkr_query($sql,$conn) or error("No se puede Generar una Ruta entre los funcionarios ".$destino[$i]['codigo']." y ".$destino[$i+1]['codigo']);
-    }  
+    }
   }
 }
 return TRUE;
 }
 /*
 <Clase>
-<Nombre>codigo_rol</Nombre> 
+<Nombre>codigo_rol</Nombre>
 <Parametros>$id:identificador de funcionario;$tipo:entidad</Parametros>
 <Responsabilidades>busca el codigo del funcionario<Responsabilidades>
 <Notas>Esta funcion se creo por la actualizacion de roles en SAIA</Notas>
@@ -2306,7 +2348,7 @@ function codigo_rol($id,$tipo)
   if($tipo==5)
    $cod = busca_filtro_tabla("funcionario_codigo as cod","funcionario,dependencia_cargo","idfuncionario=funcionario_idfuncionario and iddependencia_cargo=$id","",$conn);
   else
-   return $id; 
+   return $id;
   return($cod[0]["cod"]);
 }
 
@@ -2360,11 +2402,11 @@ else if($tipo=='iddependencia_cargo' || $tipo==5){
 }
 else{
     $datorig[0]['iddependencia_cargo']=$dato;
-} 
+}
     if($temp["numcampos"]){
         $datorig[0]=array_merge((array)$datorig[0],(array)$temp[0]);
     }
-        
+
 return($datorig);
 }
 
@@ -2373,7 +2415,7 @@ return($datorig);
 <Nombre>agregar_destino_ruta
 <Parametros>$arreglo: arreglo en el que se van a introducir los datos
             $tipo,$nit_usuario,$dependencia,$condicion,$orden: datos que se le introduciran al arreglo
-<Responsabilidades>adiciona un nuevo componente de la ruta recibe el arreglo donde almacena el listado de rutas 
+<Responsabilidades>adiciona un nuevo componente de la ruta recibe el arreglo donde almacena el listado de rutas
                    el tipo de destino, el codigo de destino, la dependencia a la que pertenece y la condicion de transferencia
 <Notas>
 <Excepciones>
@@ -2389,7 +2431,7 @@ function agregar_destino_ruta($arreglo,$tipo,$nit_usuario,$dependencia,$condicio
  if($dependencia<>""&&$dependencia<>NULL)
   $temp2["dependencia"]=$dependencia;
  else $temp2["dependencia"]=1;
- $temp2["condicion"]=$condicion;  
+ $temp2["condicion"]=$condicion;
  $temp2["obligatorio"]=$orden;
   array_push($arreglo,$temp2);
 return($arreglo);
@@ -2408,7 +2450,7 @@ return($arreglo);
 <Post-condiciones>
 */
 function alerta_javascript ($mensaje, $back)
-{ 
+{
  ?>
 <script type="text/javascript">
 <!--
@@ -2427,16 +2469,16 @@ while($max_salida>0){
 	}
 	$ruta.="../";
 	$max_salida--;
-}	
+}
 	include_once('librerias_saia.php');
 	global $raiz_saia;
 	$raiz_saia=$ruta_superior_temporal;
-	echo(librerias_notificaciones());	 
+	echo(librerias_notificaciones());
 
  ?>
 <script>
 notificacion_saia("<?php echo $mensaje ;?>","<?php echo($tipo); ?>",'',<?php echo($duraccion); ?>);
-</script> 
+</script>
 <?php
 }
 
@@ -2444,7 +2486,7 @@ notificacion_saia("<?php echo $mensaje ;?>","<?php echo($tipo); ?>",'',<?php ech
 /*
 
 function alerta($mensaje)
-{ 
+{
  ?>
 <script type="text/javascript">
 <!--
@@ -2453,7 +2495,7 @@ alert("<?php echo $mensaje ;?>");
 </script>
 <?php
 }
-  
+
  * /
 
 
@@ -2481,7 +2523,7 @@ function volver($back)
 
 /*
 <Clase>
-<Nombre>PERMISO</Nombre> 
+<Nombre>PERMISO</Nombre>
 <Parametros></Parametros>
 <Responsabilidades>Busca los permisos de un funcionario con respecto a un modulo<Responsabilidades>
 <Notas>Esta clase busca los permisos por funcionario y por perfil</Notas>
@@ -2555,7 +2597,7 @@ else {
 		$configuracion = busca_filtro_tabla("A.valor,A.fecha", "configuracion A", "A.tipo='usuario' AND A.nombre='login_administrador'", "", $this -> conn);
 		if ($configuracion["numcampos"] && $this -> login == $configuracion[0]["valor"])
 			return (TRUE);
-else return(FALSE);  
+else return(FALSE);
 	}
 
 /*
@@ -2692,7 +2734,7 @@ if($dato["numcampos"])
 			else
 				return (TRUE);
   }
-else  
+else
 			return ($this -> acceso_modulo($nombre));
 	}
 }
@@ -2700,7 +2742,7 @@ else
 /*
 <Clase>
 <Nombre>agrega_boton
-<Parametros>$nombre: 
+<Parametros>$nombre:
             $imagen:
             $dir:
             $destino:
@@ -2718,21 +2760,21 @@ function agrega_boton($nombre,$imagen,$dir,$destino,$texto,$acceso,$modulo,$reto
 
 global $conn;
 $cadena="";
-if($modulo!=""){ 
+if($modulo!=""){
   if($modulo=="formatos")
-    {$ayuda = busca_filtro_tabla("f.ayuda","formato f","f.nombre='".strtolower($nombre)."'","",$conn);     
-    }       
+    {$ayuda = busca_filtro_tabla("f.ayuda","formato f","f.nombre='".strtolower($nombre)."'","",$conn);
+    }
   else
     $ayuda = busca_filtro_tabla("A.ayuda","modulo A","A.nombre='$modulo'","",$conn);
   $ok=FALSE;
   $perm=new PERMISO();
   $ok=$perm->acceso_modulo_perfil($modulo,$acceso);
-  
+
 }
-else if(isset($_SESSION["LOGIN".LLAVE_SAIA])) 
+else if(isset($_SESSION["LOGIN".LLAVE_SAIA]))
   $ok=1;
-else $ok=0;   
-if($ok){  
+else $ok=0;
+if($ok){
   if($dir=="" || $dir==NULL)
     $dir="#";
     //||!is_file($imagen)
@@ -2770,7 +2812,7 @@ else {
 }
 /*
 <Clase>
-<Nombre>agrega_boton2</Nombre> 
+<Nombre>agrega_boton2</Nombre>
 <Parametros>$nombre:tipo de enlace por boton o texto; $imagen:ruta de la imagen para el enlace; $dir:ruta del archivo (href) o accion(javascript); $destino:tipo de frame; $texto:etiqueta que se muestra; $acceso:valor 1 (No se utiliza este parametro);$modulo:nombre del modulo;$click:opcional, sentencias de javascript</Parametros>
 <Responsabilidades>Permite el acceso en el sistema de un modulo dependiendo si tiene los permisos<Responsabilidades>
 <Notas></Notas>
@@ -2782,8 +2824,8 @@ else {
 */
 function agrega_boton2($nombre="Boton",$imagen="../../botones/configuracion/default.gif",$dir="#",$destino="_self",$texto="",$acceso="",$modulo="",$click=""){
 global $usuactual;
-global $conn; 
-$acceso=1;  
+global $conn;
+$acceso=1;
 if($modulo!=""){
   $ok=FALSE;
   $perm=new PERMISO();
@@ -2793,7 +2835,7 @@ else if(isset($_SESSION["LOGIN".LLAVE_SAIA]))
   $ok=1;
 else $ok=0;
 if($ok){
-  
+
   $ayuda = busca_filtro_tabla("","modulo A","lower(A.nombre)=lower('$modulo') and cod_padre in(64,1043,1044,1045)","",$conn);
   $etiqueta_html="a";
   $parametros=explode("-",$_REQUEST["nodo"]);
@@ -2806,7 +2848,7 @@ if($ok){
   }
   else
     $dir="../../".str_replace('@key@',$doc[0][0],$ayuda[0]["enlace"]);
-   
+
   if($nombre=="texto"){
     echo('&nbsp;<'.$etiqueta_html.' href="'.$dir.'" target="'.$destino.'" '.$click.' ><span class="phpmaker"> '.$texto.'</span></'.$etiqueta_html.'>&nbsp;');
   }
@@ -2815,18 +2857,18 @@ if($ok){
   if(@$ayuda[0]["imagen"]=="")
     $ayuda[0]["imagen"] =$imagen;
   else
-    $ayuda[0]["imagen"] ="../../".$ayuda[0]["imagen"];  
+    $ayuda[0]["imagen"] ="../../".$ayuda[0]["imagen"];
   if(@$ayuda[0]["etiqueta"]=="")
     $alt =strip_tags(codifica_encabezado($texto));
   else
     $alt=strip_tags(codifica_encabezado($ayuda[0]["etiqueta"]));
-    
+
   if(strpos($dir,".php")!==false && $destino=="detalles")
     {if(strpos($dir,"?")!==false)
        $dir.="&no_menu=1";
      else
        $dir.="?no_menu=1";
-    }  
+    }
   echo('&nbsp;<'.$etiqueta_html.' href="'.$dir.'" ><img width=16 height=16 src="'.$ayuda[0]["imagen"].'" alt="'.$alt.'" title="'.$alt.'" border="0"  hspace="0" vspace="0" ></'.$etiqueta_html.'>&nbsp;');
   }
   return(TRUE);
@@ -2845,12 +2887,12 @@ return(FALSE);
 <Post-condiciones>
 */
 function menu_pagina()
-{ 
+{
   echo '<table border="0" cellpadding="2" cellspacing="5" align="left"><tr><td align="center">';
   agrega_boton("botones/configuracion","botones/comentarios/ver_documentos.gif\" width='32px' height=\"32px","ordenar.php?accion=mostrar","centro","MOSTRAR","","mostrar_documentos");
-  echo '</td><td align="center">'; 
+  echo '</td><td align="center">';
   agrega_boton("botones/configuracion","botones/comentarios/ordenar.gif\" width='32px' height=\"32px","ordenar.php","centro","ORDENAR","","ordenar_pag");
-  echo '<td><td align="center">'; 
+  echo '<td><td align="center">';
   agrega_boton("botones/configuracion","botones/comentarios/adicionar.gif\" width='32px' height=\"32px","paginaadd.php?x_enlace=mostrar","centro","ADICIONAR","","adicionar_pag");
   echo '</td><td align="center">';
   agrega_boton("botones/configuracion","imagenes/notas.gif\" width='32px' height=\"32px","comentario_img.php?accion=adicionar","centro","ADICIONAR NOTA","","adicionar_comentario");
@@ -2859,9 +2901,9 @@ function menu_pagina()
   echo '</td><td align="center">';
   agrega_boton("botones/configuracion","imagenes/administrar_notas.gif\" width='32px' height=\"32px","factura/responder.php","centro","RESPONDER","","responder");
 echo '</td><td align="center">';
-  agrega_boton("botones/configuracion","botones/documentacion/transferir.gif\" width='32px' height=\"32px","transferenciaadd.php?doc=".$_REQUEST["key"],"centro","TRANSFERIR","","transferir");  
-  echo '</td><td align="center">';  
-  agrega_boton("botones/configuracion","botones/comentarios/volver.gif\" width='32px' height=\"32px","documentoview.php","centro","VOLVER","","detalles");  
+  agrega_boton("botones/configuracion","botones/documentacion/transferir.gif\" width='32px' height=\"32px","transferenciaadd.php?doc=".$_REQUEST["key"],"centro","TRANSFERIR","","transferir");
+  echo '</td><td align="center">';
+  agrega_boton("botones/configuracion","botones/comentarios/volver.gif\" width='32px' height=\"32px","documentoview.php","centro","VOLVER","","detalles");
   echo '</td></tr></table><br /><br /><br /><br /><br /><br />';
 }
 
@@ -2898,14 +2940,14 @@ return(FALSE);
 <Salida>
 <Pre-condiciones>
 <Post-condiciones>
-*/  
+*/
 
 function actualiza_contador($fecha){
 global $conn;
 global $sql;
   ejecuta_filtro("UPDATE contador SET consecutivo=1",$conn);
   $anio=ejecuta_filtro("SELECT ".suma_fecha($fecha,1,"YEAR")." AS year",$conn);
-  ejecuta_filtro("UPDATE configuracion SET valor=".fecha_db_almacenar($anio["year"])." WHERE nombre='fecha_inicio_contador'",$conn);  
+  ejecuta_filtro("UPDATE configuracion SET valor=".fecha_db_almacenar($anio["year"])." WHERE nombre='fecha_inicio_contador'",$conn);
 }
 
 /*
@@ -2920,13 +2962,13 @@ global $sql;
 <Salida>
 <Pre-condiciones>
 <Post-condiciones>
-*/  
+*/
 
 function valida_envio($llave="",$default,$tipo=3){
 if(isset($_GET[$llave])&&$_GET[$llave]&&($tipo==1||$tipo==3))
   return($_GET[$llave]);
 else if(isset($_POST[$llave])&&$_POST[$llave]&&($tipo==2||$tipo==3))
-  return($_POST[$llave]);  
+  return($_POST[$llave]);
 else return($default);
 }
 /*
@@ -2943,7 +2985,7 @@ else return($default);
 <Salida>
 <Pre-condiciones>
 <Post-condiciones>
-*/  
+*/
 function convertir_formato_fecha($foriginal,$fdestino,$cadena,$soriginal,$sdestino){
   switch($foriginal){
   case "yyyy".$soriginal."mm".$soriginal."dd":
@@ -2955,11 +2997,11 @@ function convertir_formato_fecha($foriginal,$fdestino,$cadena,$soriginal,$sdesti
   case "dd".$soriginal."mm".$soriginal."yyyy":
     $dd=substr($cadena,0,2);
     $mm=substr($cadena,3,2);
-    $yyy=substr($cadena,6);    
+    $yyy=substr($cadena,6);
     $cad=convertir_fecha($yyy,$mm,$dd,$sdestino,$fdestino);
-  break;    
+  break;
   }
- return($cad); 
+ return($cad);
 }
 
 /*
@@ -2972,7 +3014,7 @@ function convertir_formato_fecha($foriginal,$fdestino,$cadena,$soriginal,$sdesti
 <Salida>
 <Pre-condiciones>
 <Post-condiciones>
-*/  
+*/
 function convertir_fecha($y,$m,$d,$sep,$formato){
 //echo($y.",".$m.",".$d);
 $cad="";
@@ -2986,7 +3028,7 @@ $cad="";
       $cad=$d.$sep.$m.$sep.$y;
     break;
   }
- //echo($cad); 
+ //echo($cad);
 return($cad);
 }
 
@@ -3000,14 +3042,14 @@ return($cad);
 <Salida>
 <Pre-condiciones>
 <Post-condiciones>
-*/ 
+*/
 function fecha_in($fecha, $motor=MOTOR)
 {
   switch($motor)
   {
     case "MySql":
       return $fecha;
-    break;  
+    break;
     case "Oracle":
       return "to_date($fecha,'YYYY-MM-DD HH24:MI:SS')";
     break;
@@ -3016,9 +3058,9 @@ function fecha_in($fecha, $motor=MOTOR)
       return "CONVERT(datetime,'".$fecha."',20)";
     case "MSSql":
       //20 equivale al estilo de la conversion
-      return "CONVERT(datetime,'".$fecha."',20)";  
+      return "CONVERT(datetime,'".$fecha."',20)";
     break;
-    
+
   }
 }
 
@@ -3032,7 +3074,7 @@ function fecha_in($fecha, $motor=MOTOR)
 <Salida>
 <Pre-condiciones>
 <Post-condiciones>
-*/ 
+*/
 function fecha_out($columna, $motor=MOTOR)
 {
   switch($motor)
@@ -3043,18 +3085,18 @@ function fecha_out($columna, $motor=MOTOR)
       return "to_char($columna,'YYYY-MM-DD HH24:MI:SS')";
     case "SqlServer":
        //20 equivale al estilo de la conversion
-      return "CONVERT(CHAR(19),'".$columna."',20)";  
+      return "CONVERT(CHAR(19),'".$columna."',20)";
     case "MSSql":
        //20 equivale al estilo de la conversion
-      return "CONVERT(CHAR(19),'".$columna."',20)";  
+      return "CONVERT(CHAR(19),'".$columna."',20)";
   }
 }
 
 /*
 <Clase>
-<Nombre>fecha_db 
-<Parametros> $formato : formato de la fecha a obtener en fromato tipo PHP; 
-<Responsabilidades> Retornar la cadena adecuada dependiendo del motor para las consultas 
+<Nombre>fecha_db
+<Parametros> $formato : formato de la fecha a obtener en fromato tipo PHP;
+<Responsabilidades> Retornar la cadena adecuada dependiendo del motor para las consultas
 de tipo select
 <Notas>
 <Excepciones>
@@ -3062,15 +3104,15 @@ de tipo select
 <Pre-condiciones>
 <Post-condiciones>
 */
- 
+
 function fecha_db($campo, $formato = NULL)
  { global $conn;
-   
+
    if(!$formato)
         $formato="Y-m-d";  // formato por defecto php
-  
+
   if($conn->motor=="Oracle")
-    {   
+    {
          $reemplazos=array('d'=>'DD','m'=>'MM','y'=>'YY','Y'=>'YYYY','h'=>'HH','H'=>'HH24','i'=>'MI','s'=>'SS','M'=>'MON','yyyy'=>'YYYY'  );
          $resfecha=$formato;
          foreach ($reemplazos as $ph => $mot)
@@ -3081,12 +3123,12 @@ function fecha_db($campo, $formato = NULL)
             $resfecha=ereg_replace("^$ph", "$mot", $resfecha);
             $resfecha=ereg_replace("([-/:])$ph([-/:])", "\\1$mot\\2", $resfecha);
             $resfecha=ereg_replace("([-/:])$ph$", "\\1$mot", $resfecha);
-            $resfecha=ereg_replace("$ph( )", "$mot\\1", $resfecha); // espacio entre fecha y hora*/       
-          }		     
- 	 } 
-   	elseif($conn->motor=="MySql")    	  		  
+            $resfecha=ereg_replace("$ph( )", "$mot\\1", $resfecha); // espacio entre fecha y hora*/
+          }
+ 	 }
+   	elseif($conn->motor=="MySql")
     	 {  //TO_DATE(TO_CHAR(sysdate,'dd/mm/yyyy '))
-    	   
+
             $reemplazos=array('d'=>'%d','m'=>'%m','y'=>'%y','Y'=>'%Y','h'=>'%h','H'=>'%H','i'=>'%i','s'=>'%s','M'=>'%b','yyyy'=>'%Y');
             $resfecha=$formato;
              foreach ($reemplazos as $ph => $mot)
@@ -3098,19 +3140,19 @@ function fecha_db($campo, $formato = NULL)
          		$resfecha=ereg_replace("([-/:])$ph([-/:])", "\\1$mot\\2", $resfecha);
          		$resfecha=ereg_replace("([-/:])$ph$", "\\1$mot", $resfecha);
          		$resfecha=ereg_replace("$ph( )", "$mot\\1", $resfecha); // espacio entre fecha y hora*/
-             } 
+             }
          $fsql="DATE_FORMAT($campo,'$resfecha')";
     	 }
-    	
-    	 return $fsql;	    
-    
+
+    	 return $fsql;
+
     } // Fin Funcion fecha_db_obtener
 
 /*
 <Clase>
 <Nombre>fecha_db_obtener
-<Parametros> campo : Campo de la tabla con la fecha a obrener; $formato : formato de la fecha a obtener en fromato tipo PHP; 
-<Responsabilidades> Retornar la cadena adecuada dependiendo del motor para las consultas 
+<Parametros> campo : Campo de la tabla con la fecha a obrener; $formato : formato de la fecha a obtener en fromato tipo PHP;
+<Responsabilidades> Retornar la cadena adecuada dependiendo del motor para las consultas
 de tipo select
 <Notas>
 <Excepciones>
@@ -3118,27 +3160,27 @@ de tipo select
 <Pre-condiciones>
 <Post-condiciones>
 */
- 
+
 function fecha_db_obtener($campo, $formato = NULL)
  { global $conn;
-   
+
    if(!$formato)
         $formato="Y-m-d";  // formato por defecto php
-  
+
   if($conn->motor=="Oracle")
-    {   
+    {
          $reemplazos=array('Y'=>'YYYY','yyyy'=>'YYYY','d'=>'DD','M'=>'MON','m'=>'MM','y'=>'YY','H'=>'HH24','h'=>'HH','i'=>'MI','s'=>'SS'  );
          $resfecha=$formato;
          foreach ($reemplazos as $ph => $mot){
          	$resfecha=preg_replace('/'.$ph.'/', "$mot", $resfecha);
             //$resfecha=ereg_replace("$ph", "$mot", $resfecha);
-          } 
+          }
           $fsql="TO_CHAR($campo,'$resfecha')";
- 		     
- 	 } 
-   	elseif($conn->motor=="MySql")    	  		  
+
+ 	 }
+   	elseif($conn->motor=="MySql")
     	 {  //TO_DATE(TO_CHAR(sysdate,'dd/mm/yyyy '))
-    	   
+
             $reemplazos=array('d'=>'%d','m'=>'%m','y'=>'%y','Y'=>'%Y','h'=>'%h','H'=>'%H','i'=>'%i','s'=>'%s','M'=>'%b','yyyy'=>'%Y');
             $resfecha=$formato;
              foreach ($reemplazos as $ph => $mot)
@@ -3151,41 +3193,41 @@ function fecha_db_obtener($campo, $formato = NULL)
          		$resfecha=ereg_replace("([-/:])$ph([-/:])", "\\1$mot\\2", $resfecha);
          		$resfecha=ereg_replace("([-/:])$ph$", "\\1$mot", $resfecha);
          		$resfecha=ereg_replace("$ph( )", "$mot\\1", $resfecha); // espacio entre fecha y hora*/
-             } 
+             }
          $fsql="DATE_FORMAT($campo,'$resfecha')";
     	 }
     elseif($conn->motor=="SqlServer"||$conn->motor=="MSSql"){
-      //solo se relacionan los principales si se requiere de cualquier otro se debe adicionar al switch 
+      //solo se relacionan los principales si se requiere de cualquier otro se debe adicionar al switch
       switch($formato){
         case 'Y-m-d H:i:s':
-          $fsql="CONVERT(CHAR(19),".$campo.",120) "; 
+          $fsql="CONVERT(CHAR(19),".$campo.",120) ";
         break;
         case 'Y-m-d H:i':
           $fsql="CONVERT(CHAR(16),".$campo.",20)";
         break;
         case 'H:i:s':
-          $fsql="CONVERT(CHAR(8),".$campo.",108)"; 
+          $fsql="CONVERT(CHAR(8),".$campo.",108)";
         break;
         case 'h:i:s':
-          $fsql="SUBSTRING(CONVERT(CHAR(20),".$campo.",100),12,20)"; 
+          $fsql="SUBSTRING(CONVERT(CHAR(20),".$campo.",100),12,20)";
         break;
         case 'd/m/Y-H:i:s':
-          $fsql="CONVERT(CHAR(255),".$campo.",103)+'-'+SUBSTRING(CONVERT(CHAR(20),".$campo.",100),12,20)"; 
+          $fsql="CONVERT(CHAR(255),".$campo.",103)+'-'+SUBSTRING(CONVERT(CHAR(20),".$campo.",100),12,20)";
         break;
         default:
-          //deafault Y-m-d Standar       
+          //deafault Y-m-d Standar
            $fsql=" CONVERT(VARCHAR(10), ".$campo.", 120) ";
         break;
       }
     }
-    return $fsql;	        
+    return $fsql;
 } // Fin Funcion fecha_db_obtener
 
 /*
 <Clase>
 <Nombre>fecha_db_almacenar
-<Parametros> fecha : fecha a almacenar conxsecuente al fromato; $formato : formato de la fecha a almacenar tipo PHP; 
-<Responsabilidades> Retornar la cadena adecuada dependiendo del motor para las consultas 
+<Parametros> fecha : fecha a almacenar conxsecuente al fromato; $formato : formato de la fecha a almacenar tipo PHP;
+<Responsabilidades> Retornar la cadena adecuada dependiendo del motor para las consultas
 de tipo select
 <Notas>
 <Excepciones>
@@ -3193,22 +3235,27 @@ de tipo select
 <Pre-condiciones>
 <Post-condiciones>
 */
- 
+
 function fecha_db_almacenar($fecha, $formato = NULL)
  { global $conn;
- 
+
  if(is_object($fecha)){
    $fecha=$fecha->format($formato);
- } 
- 
+ }
+
   if(!$fecha || $fecha==""){
     $fecha=date($formato);
   }
   if(!$formato)
         $formato="Y-m-d";  // formato por defecto php
-  
+
   if($conn->motor=="Oracle")
-    {   
+    {
+    		
+    	$mystring = $fecha;
+		$findme   = 'TO_DATE';
+		$pos = strpos($mystring, $findme);
+		if ($pos === false) {
          $reemplazos=array('M'=>'MON','H'=>'HH24','d'=>'DD','m'=>'MM','Y'=>'YYYY','y'=>'YY','h'=>'HH','i'=>'MI','s'=>'SS','yyyy'=>'YYYY' );
          $resfecha=$formato;
          foreach ($reemplazos as $ph => $mot)
@@ -3219,16 +3266,22 @@ function fecha_db_almacenar($fecha, $formato = NULL)
             $resfecha=ereg_replace("([-/:])$ph([-/:])", "\\1$mot\\2", $resfecha);
             $resfecha=ereg_replace("([-/:])$ph$", "\\1$mot", $resfecha);
             $resfecha=ereg_replace("$ph( )", "$mot\\1", $resfecha); // espacio entre fecha y hora*/
-          } 
-                    
-	   	$fsql="TO_DATE('$fecha','$resfecha')";    	
-        
-   		     
- 	 } 
-   	elseif($conn->motor=="MySql")    	  		  
+          }
+
+	   	$fsql="TO_DATE('$fecha','$resfecha')";
+
+		}ELSE{
+			$fsql=$fecha;
+		}
+		
+ 	 }
+   	elseif($conn->motor=="MySql")
     	 {  //TO_DATE(TO_CHAR(sysdate,'dd/mm/yyyy '))
-    	   
-            $reemplazos=array('d'=>'%d','m'=>'%m','y'=>'%y','Y'=>'%Y','h'=>'%H','H'=>'%H','i'=>'%i','s'=>'%s','M'=>'%b','yyyy'=>'%Y'  );
+
+    	$mystring = $fecha;
+		$findme   = 'DATE_FORMAT';
+		$pos = strpos($mystring, $findme);
+		if ($pos === false) {            $reemplazos=array('d'=>'%d','m'=>'%m','y'=>'%y','Y'=>'%Y','h'=>'%H','H'=>'%H','i'=>'%i','s'=>'%s','M'=>'%b','yyyy'=>'%Y'  );
             $resfecha=$formato;
              foreach ($reemplazos as $ph => $mot)
              { // echo $ph," = ",$mot,"<br>","^$ph([-/:])", "%Y\\1","<br>";
@@ -3238,34 +3291,37 @@ function fecha_db_almacenar($fecha, $formato = NULL)
          		$resfecha=ereg_replace("([-/:])$ph([-/:])", "\\1$mot\\2", $resfecha);
          		$resfecha=ereg_replace("([-/:])$ph$", "\\1$mot", $resfecha);
          		$resfecha=ereg_replace("$ph( )", "$mot\\1", $resfecha); // espacio entre fecha y hora*/
-             }                   
-	   	    
-    	 	$fsql="DATE_FORMAT('$fecha','$resfecha')";   	   	
+             }
+
+    	 	$fsql="DATE_FORMAT('$fecha','$resfecha')";
+		}else{
+			$fsql=$fecha;
+		}	
     	 }
   elseif($conn->motor=="SqlServer"||$conn->motor=="MSSql"){
-      //solo se relacionan los principales si se requiere de cualquier otro se debe adicionar al switch 
+      //solo se relacionan los principales si se requiere de cualquier otro se debe adicionar al switch
       switch($formato){
         case 'Y-m-d H:i:s':
-          $fsql="CONVERT(datetime,'".$fecha."',20)"; 
+          $fsql="CONVERT(datetime,'".$fecha."',20)";
         break;
         case 'Y-m-d H:i':
           $fsql="CONVERT(datetime,'".$fecha."',20)";
         break;
         case 'H:i:s':
-          $fsql="CONVERT(time,'".$fecha."',20)"; 
+          $fsql="CONVERT(time,'".$fecha."',20)";
         break;
        	case 'd-m-y':
           $fsql=" CONVERT(datetime, '".$fecha."', 3) ";
         break;
         default:
-          //deafault Y-m-d Standar       
+          //deafault Y-m-d Standar
            $fsql="CONVERT(datetime,'".$fecha."',20)";
         break;
       }
-      
+
     }
-    	 return $fsql;	    
-     
+    	 return $fsql;
+
 } // Fin Funcion fecha_db_almacenar
 /*<Clase>
 <Nombre>case_fecha</Nombre>
@@ -3276,24 +3332,24 @@ function fecha_db_almacenar($fecha, $formato = NULL)
 <Salida>Cadena Sql</Salida>
 <Pre-condiciones><Pre-condiciones>
 <Post-condiciones><Post-condiciones>
-</Clase>  */ 
+</Clase>  */
  function case_fecha($dato,$compara,$valor1,$valor2)
  {
   global $conn;
    if($conn->motor=="Oracle")
    {
-    return("decode($dato,$compara,$valor1,$valor2)");    
+    return("decode($dato,$compara,$valor1,$valor2)");
    }
-  elseif($conn->motor=="MySql") 
+  elseif($conn->motor=="MySql")
    {  if($compara="" || $compara==0)
-         $compara=">0";       
+         $compara=">0";
       return("IF($dato$compara,$valor2,$valor1)");
-   } 
-  elseif($conn->motor=="SqlServer" || $conn->motor=="MSSql") 
+   }
+  elseif($conn->motor=="SqlServer" || $conn->motor=="MSSql")
    {  if($compara="" || $compara==0)
-         $compara=">0";       
+         $compara=">0";
       return("CASE WHEN $dato$compara THEN $valor2 ELSE $valor1 END");
-   } 
+   }
   }
 /*<Clase>
 <Nombre>suma_fechas</Nombre>
@@ -3305,7 +3361,7 @@ function fecha_db_almacenar($fecha, $formato = NULL)
 <Pre-condiciones><Pre-condiciones>
 <Post-condiciones><Post-condiciones>
 </Clase>  */
- function suma_fechas($fecha1,$cantidad,$tipo="") 
+ function suma_fechas($fecha1,$cantidad,$tipo="")
  {
   global $conn;
    if($conn->motor=="Oracle"){
@@ -3313,22 +3369,22 @@ function fecha_db_almacenar($fecha, $formato = NULL)
       return "$fecha1+($cantidad/24)";
     }
     if($tipo=="" || $tipo=="DAY")
-        return "$fecha1+$cantidad"; 
+        return "$fecha1+$cantidad";
     else if($tipo=="MONTH")
-        return "ADD_MONTHS($fecha1,$cantidad)"; 
+        return "ADD_MONTHS($fecha1,$cantidad)";
     else if($tipo=="YEAR")
-        return "ADD_MONTHS($fecha1,$cantidad*12)"; 
+        return "ADD_MONTHS($fecha1,$cantidad*12)";
    }
-  elseif($conn->motor=="MySql")   
+  elseif($conn->motor=="MySql")
    { if($tipo=="")
-      $tipo='DAY';    
+      $tipo='DAY';
      return "DATE_ADD($fecha1, INTERVAL $cantidad $tipo)";
    }
-  elseif($conn->motor=="SqlServer" ||$conn->motor=="MSSql")   
+  elseif($conn->motor=="SqlServer" ||$conn->motor=="MSSql")
    { if($tipo=="")
-      $tipo='DAY';    
+      $tipo='DAY';
      return "DATEADD($tipo,$cantidad,$fecha1)";
-   }    
+   }
  }
 /*<Clase>
 <Nombre>resta_fechas</Nombre>
@@ -3339,25 +3395,25 @@ function fecha_db_almacenar($fecha, $formato = NULL)
 <Salida>Cadena Sql</Salida>
 <Pre-condiciones><Pre-condiciones>
 <Post-condiciones><Post-condiciones>
-</Clase>  */ 
+</Clase>  */
  function resta_fechas($fecha1,$fecha2)
  {
   global $conn;
    if($conn->motor=="Oracle")
    {if($fecha2 == "")
-     $fecha2= "sysdate";    
-    return "$fecha1-$fecha2 ";   
+     $fecha2= "sysdate";
+    return "$fecha1-$fecha2 ";
    }
-  elseif($conn->motor=="MySql")   
+  elseif($conn->motor=="MySql")
    { if($fecha2 == "")
-     $fecha2= "CURDATE()";       
+     $fecha2= "CURDATE()";
      return "DATEDIFF($fecha1,$fecha2)";
    }
-   elseif($conn->motor=="SqlServer" || $conn->motor=="MSSql")   
+   elseif($conn->motor=="SqlServer" || $conn->motor=="MSSql")
    { if($fecha2 == "")
-     $fecha2= "CURRENT_TIMESTAMP";       
+     $fecha2= "CURRENT_TIMESTAMP";
      return "DATEDIFF(DAY,$fecha2,$fecha1)";
-   }   
+   }
  }
  /*<Clase>
 <Nombre>resta_horas</Nombre>
@@ -3374,23 +3430,23 @@ function resta_horas($fecha1,$fecha2)
   global $conn;
    if($conn->motor=="Oracle")
    {if($fecha2 == "")
-     $fecha2= "sysdate";    
-    return "($fecha1-$fecha2)*24";   
+     $fecha2= "sysdate";
+    return "($fecha1-$fecha2)*24";
    }
-  elseif($conn->motor=="MySql")   
+  elseif($conn->motor=="MySql")
    { if($fecha2 == "")
-     $fecha2= "CURDATE()";       
+     $fecha2= "CURDATE()";
      return "timediff($fecha1,$fecha2)";
-   }   
-  elseif($conn->motor=="SqlServer" ||$conn->motor=="MSSql")   
+   }
+  elseif($conn->motor=="SqlServer" ||$conn->motor=="MSSql")
    { if($fecha2 == "")
-     $fecha2= "CURRENT_TIMESTAMP";       
+     $fecha2= "CURRENT_TIMESTAMP";
      return "DATEDIFF(HOUR,$fecha2,$fecha1)";
-   }   
+   }
 
-   
+
  }
- 
+
 /*<Clase>
 <Nombre>fecha_actual</Nombre>
 <Parametros></Parametros>
@@ -3408,14 +3464,14 @@ if($conn->motor=="Oracle")
 elseif($conn->motor=="MySql")
    return "CURDATE()";
 elseif($conn->motor=="SqlServer" || $conn->motor=="MSSql")
-   return "CONVERT(CHAR(10),CURRENT_TIMESTAMP,20)";      
+   return "CONVERT(CHAR(10),CURRENT_TIMESTAMP,20)";
 }
-///Recibe la fecha inicial y la fecha que se debe controlar o fecha de referencia, si tiempo =1 es que la fecha iniicial esta por encima ese tiempo de la fecha de control ejemplo si fecha_inicial=2010-11-11 y fecha_control=2011-12-11 quiere decir que ha pasado 1 año , 1 mes y 0 dias desde la fecha inicial a la de control 
+///Recibe la fecha inicial y la fecha que se debe controlar o fecha de referencia, si tiempo =1 es que la fecha iniicial esta por encima ese tiempo de la fecha de control ejemplo si fecha_inicial=2010-11-11 y fecha_control=2011-12-11 quiere decir que ha pasado 1 año , 1 mes y 0 dias desde la fecha inicial a la de control
 function compara_fechas($fecha_control,$fecha_inicial){
 global $conn;
 if(!strlen($fecha_control)){
     $fecha_control = date('Y-m-d');
- }   
+ }
  if(MOTOR=='MSSql' || MOTOR=='SqlServer'){
  	$resultado=ejecuta_filtro_tabla("SELECT ".resta_fechas("'".$fecha_control."'","'".$fecha_inicial."'")." AS diff",$conn);
  }
@@ -3423,23 +3479,23 @@ if(!strlen($fecha_control)){
  	$resultado=ejecuta_filtro_tabla("SELECT ".resta_fechas("'".$fecha_control."'","'".$fecha_inicial."'")." AS diff FROM dual",$conn);
  }
  return($resultado);
- // separamos en partes las fechas 
- $array_inicial = date_parse($fecha_inicial ); 
- $array_actual = date_parse($fecha_control); 
- $anos =  $array_actual["year"] - $array_inicial["year"]; // calculamos años 
- $meses = $array_actual["month"] - $array_inicial["month"]; // calculamos meses 
- $dias =  $array_actual["day"] - $array_inicial["day"]; // calculamos días 
- //ajuste de posible negativo en $días 
-if ($dias<0){ 
-  --$meses; 
+ // separamos en partes las fechas
+ $array_inicial = date_parse($fecha_inicial );
+ $array_actual = date_parse($fecha_control);
+ $anos =  $array_actual["year"] - $array_inicial["year"]; // calculamos años
+ $meses = $array_actual["month"] - $array_inicial["month"]; // calculamos meses
+ $dias =  $array_actual["day"] - $array_inicial["day"]; // calculamos días
+ //ajuste de posible negativo en $días
+if ($dias<0){
+  --$meses;
   if($meses<0){
     $anos--;
-    $meses=$meses + 12;   
+    $meses=$meses + 12;
     if($array_actua["month"]==1)
       $mes_actual=12;
-    else   
+    else
       $mes_actual=($array_actual["month"]-1);
-  }      
+  }
   $mes = mktime( 0, 0, 0, $mes_actual,1, $array_actual["year"]  );
   $dias=$dias + date('t',$mes);
 }
@@ -3449,9 +3505,9 @@ if($anos<0){
 }
 else{
   $tiempo=0;
-}     
+}
 return(array("year"=>$anos,"month"=>$meses,"day"=>$dias,"tiempo"=>$tiempo));
-} 
+}
 /*<Clase>
 <Nombre>dbToPdf</Nombre>
 <Parametros>$nameFile:nombre del archivo a crear;$tabla:nombre de la tabla;$campo:nombre del campo;$idcampo:valor del campo;$conn:objeto de conexion</Parametros>
@@ -3481,7 +3537,7 @@ if($listado["numcampos"]){
         if($pag==0)
           $pdf=new FPDF("P","mm","Letter");
         $pag++;
-        $pdf->AddPage();  
+        $pdf->AddPage();
         $pdf->Image($listado[$i]["ruta"],X0,Y0,W,H);
         }
       }
@@ -3842,7 +3898,7 @@ return ($client_ip);
 /*Fin de manejo de sesion*/
 /*
 <Clase>
-<Nombre>cerrar_ventana</Nombre> 
+<Nombre>cerrar_ventana</Nombre>
 <Parametros></Parametros>
 <Responsabilidades>Cierra ventana del navegador<Responsabilidades>
 <Notas>javascript</Notas>
@@ -3875,12 +3931,12 @@ function ejecuta_filtro_tabla($sql2,$conn){
   $temp=phpmkr_fetch_array($rs);
   $i=0;
   if($temp){
-    array_push($retorno,$temp); 
+    array_push($retorno,$temp);
     $i++;
-  }  
+  }
   for($temp;$temp=phpmkr_fetch_array($rs);$i++)
     array_push($retorno,$temp );
-  $retorno["numcampos"]=$i; 
+  $retorno["numcampos"]=$i;
   $retorno["sql"]=$sql2;
   phpmkr_free_result($rs);
   return ($retorno);
@@ -3920,7 +3976,7 @@ if(@$tipo[0]["plantilla"]=="" || @$_REQUEST["mostrar_menu"]){
   if($retorno){
     return($texto);
   }
-  else 
+  else
     echo($texto);
 }
 else{
@@ -3937,7 +3993,7 @@ else{
 <Pre-condiciones><Pre-condiciones>
 <Post-condiciones><Post-condiciones>
 </Clase>  */
-function dirToPdf($nameFile, $dir){ 
+function dirToPdf($nameFile, $dir){
 require_once('html2ps/public_html/fpdf/fpdf.php');
 //Coordenadas X, Y iniciales en las que se ubicará la imagen
 define("X0",0.5);
@@ -3949,7 +4005,7 @@ if(is_dir($dir)) {
   if ($pdir = opendir($dir)) {
     $pags=0;
     while (($archivo = readdir($pdir)) !== false) {
-      //si el archivo es un "." o ".." o no es una imagen .jpeg ni .jpg 
+      //si el archivo es un "." o ".." o no es una imagen .jpeg ni .jpg
       //if (($archivo=="." || $archivo=="..") || (!eregi(".jpeg",$archivo) && !eregi(".jpg",$archivo)))
       if (($archivo=="." || $archivo=="..") || (!preg_match("/.jpeg/i",$archivo) && !preg_match("/.jpg/i",$archivo)))
         continue;
@@ -3965,7 +4021,7 @@ if(is_dir($dir)) {
         $pdf->AddPage();
         //adition of an image to a page
         $pdf->Image($dir."/".$archivo,X0,Y0,W,H);
-        //linea de confirmacion:      
+        //linea de confirmacion:
       }
       //creation of the final pdf file
       $pdf->Output($nameFile);
@@ -3973,15 +4029,15 @@ if(is_dir($dir)) {
       return $nameFile;
     }
   }
-  else 
+  else
     return(FALSE);
 }
-else 
+else
   return(FALSE);
 }
 
 function ruta_almacenamiento($tipo,$raiz=1) {
-    
+
 	$max_salida=6; // Previene algun posible ciclo infinito limitando a 10 los ../
 	$ruta_db_superior=$ruta="";
 	while($max_salida>0){
@@ -3991,14 +4047,14 @@ function ruta_almacenamiento($tipo,$raiz=1) {
 	  $ruta.="../";
 	  $max_salida--;
 	}
-	
+
 	if($raiz){
 	    $ruta_raiz=$ruta_db_superior;
 	}else{
 	    $ruta_raiz='';
 	}
-	
-	
+
+
 	switch($tipo){
 	  case 'archivos':
 	    crear_destino($ruta_db_superior.RUTA_ARCHIVOS);
@@ -4007,7 +4063,7 @@ function ruta_almacenamiento($tipo,$raiz=1) {
 	  case 'pdf':
 	    crear_destino($ruta_db_superior.RUTA_PDFS);
 	    return($ruta_raiz.RUTA_PDFS);
-	  break;  
+	  break;
 	  case 'imagenes':
 	    crear_destino($ruta_db_superior.RUTA_IMAGENES);
 	    return($ruta_raiz.RUTA_IMAGENES);
@@ -4042,10 +4098,13 @@ function concatenar_cadena_sql($arreglo_cadena){
 		case 'MSSql':
       return(implode("+",$arreglo_cadena));
     break;
+    case 'Oracle':
+	    return(implode("||",$arreglo_cadena));
+		break;    
     default:
       if(@$arreglo_cadena[($i+1)]==""){
         return($arreglo_cadena[0]);
-      }  
+      }
       $cant=count($arreglo_cadena);
       for($i=0;$i<$cant;$i++){
         if($i>0){
@@ -4054,7 +4113,7 @@ function concatenar_cadena_sql($arreglo_cadena){
         $cadena_final.="CONCAT(".$arreglo_cadena[$i];
         if(@$arreglo_cadena[($i+2)]==""){
           $cadena_final.=",".$arreglo_cadena[($i+1)];
-          $i++;        
+          $i++;
         }
       }
       for(;$i>1;$i--){
@@ -4086,7 +4145,7 @@ function obtener_reemplazo($fun_codigo=0,$tipo=0){
 
 /*
  * Se crea esta funcion ya que en algunos servidores (Pavimentar nuevo) no funciona el rename cuando el destino existe(No realiza el reemplazo)
- * 
+ *
  * Mauricio orrego 28/04/2015
  */
 function rename_saia($origen,$destino){
@@ -4144,13 +4203,41 @@ return $cadena1;
 
 function obtener_codigo_hash_pdf($archivo,$algoritmo="crc32",$tmp=0){
     global $ruta_db_superior;
-    
+
     if($tmp){
         $ruta_db_superior='';
     }
    // return( hash_file($algoritmo,$ruta_db_superior.$archivo) );
    return( md5_file($ruta_db_superior.$archivo) );
 }
-
+function parsear_comilla_sencilla_cadena($cadena){
+	global $conn;
+	$cadena_original=$cadena;
+	$cadena_sinespacios=trim($cadena);
+	$cadena_minuscula=strtolower($cadena_sinespacios);
+	$parseada=0;
+	if( substr($cadena_minuscula,0,6)=='select' ){
+		$findme   = "'";
+		$pos = strpos($cadena, $findme);
+		if ($pos !== false) {  //fue encontrada
+			$motor=$conn->motor;
+			$vector_replaces=array('Oracle'=>"''",'MySql'=>"''",'SqlServer'=>"''",'MSSql'=>"''");
+			$cadena=str_replace("'",$vector_replaces[$motor],$cadena);
+			$parseada=1;
+		}
+	}else{
+		$findme   = "'";
+		$pos = strpos($cadena, $findme);
+		if ($pos !== false) {  //fue encontrada
+			$cadena=str_replace("'","''",$cadena);
+			$parseada=1;
+		}
+	}
+	if($parseada){
+		return($cadena);
+	}else{
+		return($cadena_original);
+	}
+}
 
 ?>

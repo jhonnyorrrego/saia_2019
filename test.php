@@ -182,7 +182,7 @@ $llenado=FALSE;
 $cadena="";
 if($codigo == 0)
 {
-  $prof=busca_filtro_tabla("","dependencia","cod_padre is null AND estado=1","",$conn);
+  $prof=busca_filtro_tabla("","dependencia","(cod_padre is null OR cod_padre=0) AND estado=1","",$conn);
   if($prof["numcampos"]){
     $cadena.=("<item style=\"font-family:verdana; font-size:7pt;\" ");
     $cadena.=("text=\"".ucwords(codifica_encabezado(html_entity_decode($prof[0]["nombre"])))."\" id=\"".$prof[0]["iddependencia"]."#\"");
@@ -226,11 +226,19 @@ else
      } 
     }       
   } 
+  
+	$item_agrupar='';
+	$item_agrupar_fin='';
+	if(@$_REQUEST['agrupar']){	
+		$item_agrupar.="<item style=\"font-family:verdana; font-size:7pt;\" nocheckbox=\"1\" id=\"agrupador_".$codigo."\" text=\"".codifica_encabezado(html_entity_decode($prof[0]['nombre']))."\" child=\"1\"> ";
+		$item_agrupar_fin.="</item>\n";	  
+	}    
+  
   $funcionarios=llena_funcionarios($codigo,$ruta,$tipo_llenado);  
   if($cadena=="" and $funcionarios=="")
     return("");
   else       
-    return $funcionarios.$cadena;
+    return $item_agrupar.$funcionarios.$cadena.$item_agrupar_fin;
  }
  }
 } 
@@ -300,7 +308,7 @@ if($verifica_flujo==-1){
 }
 $func="";
 //GROUP BY funcionario_codigo 
-$where_usuarios= "B.cargo_idcargo=C.idcargo AND B.funcionario_idfuncionario=A.idfuncionario  AND B.dependencia_iddependencia <> 1 AND A.estado=1 AND B.estado=1 and C.estado=1 AND B.dependencia_iddependencia=".$codigo;
+$where_usuarios= "C.tipo_cargo=1 AND B.cargo_idcargo=C.idcargo AND B.funcionario_idfuncionario=A.idfuncionario  AND B.dependencia_iddependencia <> 1 AND A.estado=1 AND B.estado=1 and C.estado=1 AND B.dependencia_iddependencia=".$codigo;
 //Tipo de LLenado =1 es para los funcionarios
 if($tipo_llenado==2 && !empty($dependencias_flujo)){
   if(!in_array($codigo,$dependencias_flujo)){

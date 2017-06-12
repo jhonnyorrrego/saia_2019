@@ -74,7 +74,12 @@ echo(estilo_bootstrap());
               		<?php
               		$where="";
               		if($filtro_documentos_activo["numcampos"]){
-              			$where=" AND fk_categoria_formato not in(".$filtro_documentos_activo[0]['idcategoria_formato'].")";
+              			$lista_in=explode(",",$filtro_documentos_activo[0]['idcategoria_formato']);
+						for($i=0;$i<count($lista_in);$i++){
+							$lista_in[$i]="'".$lista_in[$i]."'";
+						}
+						$lista_in=implode(",",$lista_in);
+              			$where=" AND fk_categoria_formato not in(".$lista_in.")";
               		}
               		$formatos=busca_filtro_tabla("A.nombre,A.etiqueta","formato A, modulo B","A.nombre=B.nombre AND busqueda=1".$where,"etiqueta asc",$conn);
 					for($i=0;$i<$formatos["numcampos"];$i++){

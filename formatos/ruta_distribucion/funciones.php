@@ -18,13 +18,29 @@ echo(librerias_notificaciones());
 
 function campo_fecha_ruta($idformato,$iddoc){
 	global $conn,$ruta_db_superior;
-	
+	$dependencia_mensajeros=busca_filtro_tabla("iddependencia","dependencia","lower(nombre)='mensajeros' OR lower(nombre)='mensajero'","",$conn);
 	$fecha=date('Y-m-d');
 	?>
 	<script>
 	    $(document).ready(function(){
 	       $('#fecha_ruta_distribuc').attr('readonly', true);
 	       $('#fecha_ruta_distribuc').val('<?php echo $fecha;?>'); 
+	       recargar=1;
+	       tree_asignar_mensajeros.setOnLoadingEnd(recargar_arbol_asignar_mensajeros);
+	       
+	       function recargar_arbol_asignar_mensajeros(){
+	       	<?php
+	       		if($dependencia_mensajeros['numcampos']){
+	       	?>
+		       		if(recargar){
+		       			recargar=0;
+		       			tree_asignar_mensajeros.deleteItem('agrupador_<?php echo($dependencia_mensajeros[0]['iddependencia']); ?>');	
+		       			tree_asignar_mensajeros.loadXML("<?php echo($ruta_db_superior); ?>test.php?iddependencia=<?php echo($dependencia_mensajeros[0]['iddependencia']); ?>&rol=1&agrupar=1");	       			
+		       		}	   
+	       	<?php       			
+	       		}
+	       	?>	    		
+	       }
 	    });
 	</script>
 	<?php
@@ -117,7 +133,7 @@ function mostrar_datos_dependencias_ruta($idformato,$iddoc){
 				';	
 				
 				$tabla.='
-					<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+					
 					<script>
 					$(document).ready(function(){
 						$(".cambio_estado_dependencia").change(function(){
@@ -193,8 +209,9 @@ function mostrar_datos_funcionarios_ruta($idformato,$iddoc){
 			$estado=array(1=>"Activo",2=>"Inactivo");			
 
 			for($j=$item['numcampos']-1;$j>=0;$j--){
-                    
-                    $mensajero=busca_filtro_tabla('concat(nombres," ",apellidos) AS nombre','vfuncionario_dc','iddependencia_cargo='.$item[$j]['mensajero_ruta'],'',conn);
+                    $array_concat=array("nombres","' '","apellidos");
+					$cadena_concat=concatenar_cadena_sql($array_concat);                    
+                    $mensajero=busca_filtro_tabla($cadena_concat.' AS nombre','vfuncionario_dc','iddependencia_cargo='.$item[$j]['mensajero_ruta'],'',conn);
                     
                             $seleccionar=array(1=>"",2=>"");
 		                    $seleccionar[$item[$j]['estado_mensajero']]='selected';
@@ -224,7 +241,7 @@ function mostrar_datos_funcionarios_ruta($idformato,$iddoc){
 				';	
 				
 				$tabla.='
-					<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+					
 					<script>
 					$(document).ready(function(){
 						$(".cambio_estado").change(function(){
