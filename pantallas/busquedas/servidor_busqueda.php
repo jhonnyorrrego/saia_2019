@@ -758,7 +758,7 @@ function procesar_busqueda_elastic($datos_busqueda) {
 	}
 
 	// TODO: $campos trae la consulta elastic (json)
-	$filtro_elasti = json_decode($campos["campos"], true);
+	$filtro_elastic = json_decode($campos["campos"], true);
 	//print_r($lcampos);echo "\n";
 
 	if (@$_REQUEST['llave_unica']) {
@@ -772,7 +772,7 @@ function procesar_busqueda_elastic($datos_busqueda) {
 
 	$consulta_elastic = array();
 	$consulta_elastic["query"]["bool"]["must"] = $condiciones_json;
-	$consulta_elastic["query"]["bool"]["filter"] = $filtro_elasti["filter"];
+	$consulta_elastic["query"]["bool"]["filter"] = $filtro_elastic["filter"];
 	//print_r(json_encode($consulta_elastic));die();
 
 	$response = new stdClass();
@@ -878,11 +878,11 @@ function procesar_busqueda_elastic($datos_busqueda) {
 		$start = $limit * $page - $limit; // do not put $limit*($page - 1)
 	}
 
-	//TODO: El ordenamiento falla sobre campos text. Es necesario revisar el mapeo y poner los tipos de datos porque documento.fecha debe ser fecha y no text
-	/*if(!empty($sidx)) {
-	 $orden_elastic = json_decode($sidx, true);
-	 $consulta_elastic["sort"] = $orden_elastic["sort"];
-	 }*/
+		// TODO: El ordenamiento falla sobre campos text. Es necesario revisar el mapeo y poner los tipos de datos porque documento.fecha debe ser fecha y no text
+	if (!empty($sidx)) {
+		$orden_elastic = json_decode($sidx, true);
+		$consulta_elastic["sort"] = $orden_elastic["sort"];
+	}
 
 	if ($start < 0) {
 		$start = 0;
@@ -991,7 +991,7 @@ function parsear_resultado_elastic($resultado_elastic,  $tablas_consulta) {
 			}
 		}
 		if(in_array($tabla, $tablas)) {
-			$datos_doc = $resultados[$i]["_source"]["datos_ft"];
+			$datos_doc = $resultados[$i]["_source"][$tabla];
 			foreach ($datos_doc as $key => $value) {
 				$result[$i][$key] = $value;
 			}
