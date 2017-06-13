@@ -355,7 +355,7 @@ $("#submit_formulario_asignar_expediente").click(function(){
   $('#cargando_enviar').html("<div id='icon-cargando'></div>Procesando");
 	$(this).attr('disabled', 'disabled');  
 	
-	<?php encriptar_sqli("formulario_asignar_expediente",0,"form_info",$ruta_db_superior); ?>
+	<?php encriptar_sqli("formulario_asignar_expediente",0,"form_info",$ruta_db_superior,false,false); ?>
   $.ajax({
     type:'POST',
     async:false,

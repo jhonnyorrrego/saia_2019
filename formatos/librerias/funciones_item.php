@@ -2,6 +2,10 @@
 <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <?php
 include_once ("../../db.php");
+include_once("../../pantallas/lib/librerias_cripto.php");
+if (isset($_REQUEST["form_info"]) && $_REQUEST["form_info"]!="") {
+	desencriptar_sqli('form_info');
+}
 
 if(isset($_REQUEST["accion"]))
   {$_REQUEST["accion"]();     

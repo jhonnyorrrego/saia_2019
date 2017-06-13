@@ -265,7 +265,7 @@ function guardar_lob($campo,$tabla,$condicion,$contenido,$tipo,$conn,$log=1){
     // Fetch the SELECTed row
     OCIFetchInto($stmt,$row,OCI_ASSOC);
     
-	if(!count($row)){  //soluciona el problema del size() & ya no se necesita el emty_clob() en bd en los campos clob NULL, los campos obligatorios siguen dependendiendo de empty_clob() como valor predeterminado.
+	if(!count($row)){  //soluciona el problema del size().
 		oci_rollback($conn->Conn->conn);
 		oci_free_statement($stmt);
 		$clob_blob='clob';
@@ -289,7 +289,7 @@ function guardar_lob($campo,$tabla,$condicion,$contenido,$tipo,$conn,$log=1){
     }
     else{// Now save a value to the LOB
       if($tipo=="texto"){//para campos clob como en los formatos
-        if($row[strtoupper($campo)]->size()>0)
+        if($row[strtoupper($campo)]->size()>0)  // si sale error le falto en el/los campo(s) clob el empty_clob()
           $contenido_actual=htmlspecialchars_decode($row[strtoupper($campo)]->read($row[strtoupper($campo)]->size()));
          else
             $contenido_actual="";

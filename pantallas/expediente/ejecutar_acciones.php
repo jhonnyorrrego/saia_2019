@@ -4,7 +4,7 @@
   include_once($ruta_db_superior."pantallas/expediente/librerias.php");  
   
   include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
-  $validar_enteros=array("iddoc","idexpediente","propietario","idfuncionario","iddocumento");
+  $validar_enteros=array("iddoc");
 	desencriptar_sqli('form_info');
 	//print_r($_REQUEST);die();
 if(@$_REQUEST["ejecutar_expediente"]){  

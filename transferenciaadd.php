@@ -1,14 +1,11 @@
 <?php
 include_once("db.php");
-include_once("class_transferencia.php");
 include_once("librerias_saia.php");
 
-
 include_once("pantallas/lib/librerias_cripto.php");
-$validar_enteros=array("iddoc","key","idpaso_actividad","idpaso_documento","doc");
 desencriptar_sqli('form_info');
 echo(librerias_jquery());
-
+include_once("class_transferencia.php");
 
 if(@$_REQUEST["iddoc"] || @$_REQUEST["key"]){
 	if(!@$_REQUEST["iddoc"])$_REQUEST["iddoc"]=@$_REQUEST["key"];

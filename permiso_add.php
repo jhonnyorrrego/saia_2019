@@ -2,7 +2,6 @@
 include_once("permisos_tabla.php");
 include_once("db.php");
 include_once("pantallas/lib/librerias_cripto.php");
-$validar_enteros=array("key");
 include_once("librerias_saia.php");
 desencriptar_sqli('form_info');
 echo(librerias_jquery());
