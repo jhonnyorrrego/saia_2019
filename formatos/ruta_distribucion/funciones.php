@@ -281,14 +281,13 @@ function crear_items_ruta_distribucion($idformato,$iddoc){
     
     $dependencias=explode(",",$datos[0]['asignar_dependencias']);
     $mensajeros=explode(",",$datos[0]['asignar_mensajeros']);
-    
+    $fecha_almacenar=fecha_db_almacenar(date('Y-m-d'),'Y-m-d');
     for($i=0;$i<count($dependencias);$i++){
-        $cadena="INSERT INTO ft_dependencias_ruta (fecha_item_dependenc,dependencia_asignada,estado_dependencia,ft_ruta_distribucion,orden_dependencia) VALUES ('".date('Y-m-d')."',".$dependencias[$i].",1,".$datos[0]['idft_ruta_distribucion'].",".($i+1).")";
+        $cadena="INSERT INTO ft_dependencias_ruta (fecha_item_dependenc,dependencia_asignada,estado_dependencia,ft_ruta_distribucion,orden_dependencia) VALUES (".$fecha_almacenar.",".$dependencias[$i].",1,".$datos[0]['idft_ruta_distribucion'].",".($i+1).")";
         phpmkr_query($cadena);
     }
     for($i=0;$i<count($mensajeros);$i++){
-        $cadena="INSERT INTO ft_funcionarios_ruta (fecha_mensajero,mensajero_ruta,estado_mensajero,ft_ruta_distribucion) VALUES ('".date('Y-m-d')."',".$mensajeros[$i].",1,".$datos[0]['idft_ruta_distribucion'].")";
-        //print_r($cadena);
+        $cadena="INSERT INTO ft_funcionarios_ruta (fecha_mensajero,mensajero_ruta,estado_mensajero,ft_ruta_distribucion) VALUES (".$fecha_almacenar.",".$mensajeros[$i].",1,".$datos[0]['idft_ruta_distribucion'].")";
         phpmkr_query($cadena);
     }
 }
