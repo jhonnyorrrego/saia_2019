@@ -759,7 +759,8 @@ function procesar_busqueda_elastic($datos_busqueda) {
 
 	// TODO: $campos trae la consulta elastic (json)
 	$filtro_elastic = json_decode($campos["campos"], true);
-	//print_r($lcampos);echo "\n";
+	//echo $campos["campos"];echo "\n";
+	//print_r($filtro_elastic);echo "\n"; die();
 
 	if (@$_REQUEST['llave_unica']) {
 		$condiciones[] = '{"match":{"' . $datos_busqueda[0]["llave"] . '":"' . $_REQUEST['llave_unica'] . '"}}';
@@ -771,8 +772,12 @@ function procesar_busqueda_elastic($datos_busqueda) {
 	}
 
 	$consulta_elastic = array();
-	$consulta_elastic["query"]["bool"]["must"] = $condiciones_json;
-	$consulta_elastic["query"]["bool"]["filter"] = $filtro_elastic["filter"];
+	if(!empty($condiciones_json)) {
+		$consulta_elastic["query"]["bool"]["must"] = $condiciones_json;
+	}
+	foreach ($filtro_elastic as $key => $elemento) {
+		$consulta_elastic["query"]["bool"][$key] = $filtro_elastic[$key];
+	}
 	//print_r(json_encode($consulta_elastic));die();
 
 	$response = new stdClass();
@@ -878,7 +883,7 @@ function procesar_busqueda_elastic($datos_busqueda) {
 		$start = $limit * $page - $limit; // do not put $limit*($page - 1)
 	}
 
-		// TODO: El ordenamiento falla sobre campos text. Es necesario revisar el mapeo y poner los tipos de datos porque documento.fecha debe ser fecha y no text
+	// TODO: El ordenamiento falla sobre campos text. Es necesario revisar el mapeo y poner los tipos de datos porque documento.fecha debe ser fecha y no text
 	if (!empty($sidx)) {
 		$orden_elastic = json_decode($sidx, true);
 		$consulta_elastic["sort"] = $orden_elastic["sort"];
@@ -889,6 +894,7 @@ function procesar_busqueda_elastic($datos_busqueda) {
 	}
 	// TODO: Ejecutar la consulta
 
+	//print_r(json_encode($consulta_elastic));die();
 	$consulta_elastic["from"] = $start;
 	$consulta_elastic["size"] = $limit;
 	$resultado_elastic = $d2j->ejecutar_consulta_elasticsearch($consulta_elastic);
