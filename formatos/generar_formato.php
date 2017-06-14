@@ -920,7 +920,8 @@ class GenerarFormato {
 				$includes .= $this->incluir($formato[0]["librerias"], "librerias", 1);
 			}
 			$includes .= $this->incluir_libreria("funciones_generales.php", "librerias");
-			$includes .= $this->incluir("../../js/jquery.js", "javascript");
+			$includes .= $this->incluir("../../librerias_saia.php", "librerias");
+			$includes .= "<?php echo(librerias_jquery('1.7')); ?>";
 			$includes .= $this->incluir_libreria("header_nuevo.php", "librerias");
 			$includes .= $this->incluir("../../class_transferencia.php", "librerias");
 
