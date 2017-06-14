@@ -137,11 +137,11 @@ $carta=busca_filtro_tabla("varios_radicados,destinos","ft_carta A","A.documento_
   
 if($documento["numcampos"]){
 	if($tipo)
-   return ($documento[0]["numero"]);
- else
-   echo  $documento[0]["numero"];
-	} else
-		echo ("");
+   		return ($documento[0]["numero"]);
+ 	else
+   		echo  $documento[0]["numero"];
+} else
+	echo ("");
 }
 
 function formato_serie($idformato,$doc,$tipo=0){
@@ -152,8 +152,8 @@ if($serie["numcampos"]){
     return ($serie[0]["serie"]);
   else
     echo   $serie[0]["serie"];
-	} else
-		return ("");
+} else
+	return ("");
 }
 
 function dependencia_codigo($idformato, $doc, $tipo = 0) {
@@ -193,6 +193,7 @@ if($dep["numcampos"]){
  } else
    $retorno=$dep[0][$tipo];
 }
+}
 function nombre_proceso($doc) {
  global $conn;
  $datos = array();
@@ -224,27 +225,6 @@ function logo_empresa() {
 		//$archivo_binario = StorageUtils::get_binary_file($logo[0]["valor"]);
 	} else
 		return ("");
-}
-
-function logo_encabezado() {
- global $conn;
- $logo = busca_filtro_tabla("valor","configuracion","nombre='logo_comunicaciones'","",$conn);
- if($logo["numcampos"]){
-; 	if($_REQUEST['plantilla']=="carta"||$_REQUEST['plantilla']=="memorando"||$_REQUEST['plantilla']=="circular_mf"){ 		
-  		return ("<div><img style='left:-40px;top:-175px;position:fixed;' src='".PROTOCOLO_CONEXION.RUTA_PDF."/".$logo[0]["valor"]."' border='0' /></div>");
- 	}else{
- 		return('<div><img style="left:20px;top:35px" src="'.PROTOCOLO_CONEXION.RUTA_PDF.'/'.$logo[0]["valor"].'" border="0"></div>');
- 	}  
- }
-else return ("");
-}
-
-function nombre_empresa() {
- global $conn;
- $logo = busca_filtro_tabla("valor","configuracion","nombre='nombre'","",$conn);
- if($logo["numcampos"]){
-  return ($logo[0]["valor"]);
-
 }
 
 function logo_encabezado() {
