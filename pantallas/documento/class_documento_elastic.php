@@ -220,7 +220,7 @@ class DocumentoElastic {
 		return ($response);
 	}
 
-	public function ejecutar_consulta_elasticsearch($body) {
+	public function ejecutar_consulta_elasticsearch($body, $indice="_all", $tipo=null) {
 		if (empty($body)) {
 			$body = '{
 		    	"query": {
@@ -229,9 +229,12 @@ class DocumentoElastic {
 				}';
 		}
 		$parametros = array(
-				"index" => "documentos",
+				"index" => $indice,
 				"body" => $body
 		);
+		if(!empty($tipo)) {
+			$parametros["type"] = $tipo;
+		}
 
 		$response = $this->get_cliente_elasticsearch()->ejecutar_consulta($parametros);
 		return ($response);
