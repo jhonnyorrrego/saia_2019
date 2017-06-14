@@ -56,9 +56,11 @@ function request_encriptado($param="key_cripto"){
 }
 function validar_enteros(){
 global $validar_enteros;
+
 if(isset($validar_enteros)){
   foreach($validar_enteros AS $key=>$valor){
-    if(isset($_REQUEST[$valor]) && !is_int($_REQUEST[$valor])){
+  	
+    if(@$_REQUEST[$valor] && !preg_match("/^[0-9]+$/", @$_REQUEST[$valor])){
       return($valor);
     }
   }
@@ -67,11 +69,7 @@ return(false);
 }
 
 function desencriptar_sqli($campo_info){
-  $error=validar_enteros();
-  if($error!==false){
-    die("Se encuentra una posible infecci&oacute;n en su c&oacute;digo, en la llave: ".$_REQUEST[$error]." (debe ser un entero),por favor contacte a su administrador");
-    //volver(1);
-  }
+
   if(strpos("script",$_SERVER["PHP_SELF"])!==false){
      die("Se encuentra una posible infecci&oacute;n en su c&oacute;digo, a trav&eacute;s DOM-based cross site scripting, por favor contacte a su administrador");
   }
@@ -102,13 +100,21 @@ function desencriptar_sqli($campo_info){
         $_POST[decrypt_blowfish($data[$i]["name"], LLAVE_SAIA_CRYPTO)] = decrypt_blowfish($data[$i]["value"], LLAVE_SAIA_CRYPTO);
       }
     }
+	
+	  $error=validar_enteros();
+	  if($error!==false){
+	  	unset($_REQUEST);
+		unset($_POST);
+	    die("Se encuentra una posible infecci&oacute;n en su c&oacute;digo, en la llave: ".$_REQUEST[$error]." (debe ser un entero),por favor contacte a su administrador");
+	    //volver(1);
+    }
 }
 unset($_REQUEST["token_csrf"]);
 unset($_SESSION["token_csrf"]);
 
 return;
 }
-function encriptar_sqli($nombre_form,$submit=false,$campo_info="form_info",$ruta_superior="",$retorno=false){
+function encriptar_sqli($nombre_form,$submit=false,$campo_info="form_info",$ruta_superior="",$retorno=false,$reset_form=true){
 
 $texto='';
 if ($submit) {
@@ -133,8 +139,14 @@ if ($submit) {
         data: {datos:JSON.stringify($("#'.$nombre_form.'").serializeArray())},
         success: function(data) {
 					//$("#'.$nombre_form.'")[0].reset();
+	';
+	if($reset_form){
+		$texto.='
 					$("#'.$nombre_form.'").find("input:hidden,input:text, input:password, select, textarea").val("");
     			$("#'.$nombre_form.'").find("input:radio, input:checkbox").removeAttr("checked").removeAttr("selected");
+		';	
+	}
+	$texto.='			
 					//console.log(JSON.stringify($("#'.$nombre_form.'").serializeArray()));
           $("#'.$campo_info.'").val(data);
 					//console.log(JSON.stringify($("#'.$nombre_form.'").serializeArray()));

@@ -22,7 +22,6 @@ include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
 
 
 if (isset($_REQUEST["form_info"]) && $_REQUEST["form_info"]!="") {
-	$validar_enteros=array("idflujo","iddoc","formato","idformato");
 	desencriptar_sqli('form_info');
 }
 /*<Clase>

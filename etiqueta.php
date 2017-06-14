@@ -2,8 +2,8 @@
 include_once("header.php");
 include_once("db.php");
 include_once("librerias_saia.php");
+
 include_once("pantallas/lib/librerias_cripto.php");
-$validar_enteros=array("key");
 desencriptar_sqli('form_info');
 echo(estilo_bootstrap() );
 echo(librerias_jquery("1.7"));

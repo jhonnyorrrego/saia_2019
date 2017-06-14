@@ -8,7 +8,7 @@ $validar_enteros=array("iddoc");
 include_once("librerias_saia.php");
 desencriptar_sqli('form_info');
 include_once("pantallas/expediente/librerias.php");
-$iddoc = $_REQUEST["iddoc"];
+$iddoc = @$_REQUEST["iddoc"];
 $doc_menu=@$_REQUEST["iddoc"];
 include_once("pantallas/documento/menu_principal_documento.php");
 

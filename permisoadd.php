@@ -10,6 +10,7 @@ $max_salida--;
 }
 include_once($ruta_db_superior."librerias_saia.php"); 
 include_once($ruta_db_superior."db.php");
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
 echo(estilo_bootstrap());
 echo(librerias_jquery("1.7"));
 echo(librerias_notificaciones());
@@ -37,13 +38,6 @@ $x_modulo = Null;
 
 <?php include ("phpmkrfn.php") ?>
 <?php
-
-include_once("pantallas/lib/librerias_cripto.php");
-$validar_enteros=array("x_idpermiso","funcionario_elegido","x_modulo_idmodulo","x_funcionario_idfuncionario");
-include_once("librerias_saia.php");
-desencriptar_sqli('form_info');
-//echo(librerias_jquery());
-
 
 // Get action
 $sAction = @$_POST["a_add"];
@@ -93,6 +87,7 @@ switch ($sAction)
 <legend>&nbsp;&nbsp;ADICIONAR PERMISO DE ACCESO</legend><br>
 <form name="permisoadd" id="permisoadd" action="permisoadd.php" method="post" >
 <input type="hidden" name="a_add" value="A">
+<input type="hidden" name="adicionar_quitar_permiso" id="adicionar_quitar_permiso" value="1">
 <input type="hidden" name="funcionario_elegido" value="<?php echo($x_funcionario_idfuncionario);?>">
 <input type="hidden" name="x_funcionario_idfuncionario"  id="x_funcionario_idfuncionario" class="required" value="<?php echo($x_funcionario_idfuncionario);?>">
 <table border="0" cellspacing="1" cellpadding="4" bgcolor="#CCCCCC" style="width:100%;">
@@ -148,15 +143,14 @@ switch ($sAction)
             ?>  
           }
           function onNodeSelect(nodeId){
+          	
+          	$("#x_modulo_idmodulo").val(nodeId);
+          	<?php encriptar_sqli("permisoadd",0,"form_info",$ruta_db_superior,false,false); ?>
         	$.ajax({
         	    url: '<?php echo($ruta_db_superior);?>pantallas/permisos/validar_permiso_funcionario.php', 
                 type:'POST',
                 dataType: 'json',
-                data: {
-                    idfuncionario:$('#x_funcionario_idfuncionario').val(),
-                    idmodulo:nodeId,
-                    adicionar_quitar_permiso:1
-                },
+                data:$("#permisoadd").serialize(),
                 success: function(retorno){
                     var tipo='warning';
                     var mensaje='<b>ATENCI&Oacute;N</b><br>Se ha retirado el permiso al modulo: '+tree3.getItemText(nodeId)+retorno.mensaje_crear_formato;

@@ -1275,7 +1275,7 @@ function iniciales($idformato, $idcampo, $iddoc = NULL) {
 		$nombres = explode(" ", $resultado[0]["nombres"]);
 		$apellidos = explode(" ", $resultado[0]["apellidos"]);
 		// $iniciales=@$nombres[0][0]."".@$nombres[1][0]."".$apellidos[0][0]."".$apellidos[1][0];
-		$iniciales = $resultado[0]["nombres"];
+		$iniciales = $resultado[0]["nombres"]." ".$resultado[0]['apellidos'];
 	} else {
 		$datos = busca_filtro_tabla("nombre,nombre_tabla", "formato", "idformato=$idformato", "", $conn);
 		$campo = busca_filtro_tabla("iniciales", $datos[0]["nombre_tabla"], "documento_iddocumento=$iddoc", "", $conn);

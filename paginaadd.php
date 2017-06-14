@@ -329,19 +329,6 @@ if($buscar_tarea["numcampos"]) {
 }*/
 ?>
     <div id="output"></div>
-    <script language="javascript" type="text/javascript">
-        //var wsUri = "ws://echo.websocket.org/";
-        //var wsUri = "ws://localhost:8025/";
-        var wsUri = "ws<?php echo($s_https); ?>://localhost:49888/websockets/wsocketservice";
-        var output;
-        var websocket;
-        var clientId;
-
-        function init() {
-            output = document.getElementById("output");
-            testWebSocket();
-
-            <div id="output"></div>
 
     <script type="text/javascript">
 

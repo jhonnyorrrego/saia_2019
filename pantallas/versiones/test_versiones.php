@@ -25,6 +25,7 @@ if ( stristr($_SERVER["HTTP_ACCEPT"],"application/xhtml+xml")){
 else{
     header("Content-type: text/xml"); 
 }
+
 $documento=busca_filtro_tabla("","documento a","a.iddocumento=".$iddoc,"",$conn);
 if($version){
     $datos_version=busca_filtro_tabla(fecha_db_obtener('a.fecha','Y-m-d H:i')." as x_fecha, a.*","version_documento a","a.idversion_documento=".$version,"",$conn);
@@ -66,7 +67,7 @@ function pdf($version){
     $cadena=array();
     for($i=0;$i<$datos["numcampos"];$i++){
 		$arr_alm = StorageUtils::resolver_ruta($datos[$i]["pdf"]);
-		$archivo = basename($arr_alm["ruta"]);
+		$archivo = codifica_encabezado(html_entity_decode(basename($arr_alm["ruta"])));
 		$cadena[] = "<item style=\"font-family:verdana; font-size:7pt;\" text=\"" . $archivo . "\" id=\"pdf-" . $version . "\" nocheckbox=\"1\" ></item>";
     }
     return(implode("",$cadena));

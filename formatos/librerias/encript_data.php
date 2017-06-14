@@ -43,5 +43,4 @@ if (isset($_POST["datos"])) {
 }
 
 echo(json_encode($data));
-
 ?>
