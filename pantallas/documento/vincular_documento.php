@@ -8,7 +8,7 @@ while($max_salida>0){
   $ruta.="../";
   $max_salida--;
 }
-include_once($ruta_db_superior."db.php");;
+include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."pantallas/documento/librerias.php");
 $mensaje=array();
 if(@$_REQUEST["documento_iddocumento"]){  
@@ -30,6 +30,7 @@ if(@$_REQUEST["documento_iddocumento"]){
         switch($variable[0]){
           case "documento":        
             array_push($documentos,$variable[1]);
+            
           break;
           case "pagina":  
             array_push($paginas,$variable[1]);
@@ -121,4 +122,3 @@ else{
 }
 echo stripslashes(json_encode($mensaje,JSON_FORCE_OBJECT));
 ?>
-

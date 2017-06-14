@@ -105,7 +105,6 @@ function formato_email() {
       $ldirecciones[0]= "info@cerok.com";
 
  echo "<form  name='email' id='email' action='email_doc.php' method='post' onsubmit='return validar_campos(this)'>
-
        <table border=0 width=80%>
        <tr>
        <td class='encabezado_list' colspan=2 height='20px' >ENVIAR DOCUMENTO POR E-MAIL</td></tr>

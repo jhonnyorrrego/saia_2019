@@ -14,13 +14,11 @@ function mostrar_codigo_qr($idformato, $iddoc) {
 	global $conn, $ruta_db_superior;
   include_once($ruta_db_superior."StorageUtils.php");
   require_once $ruta_db_superior.'filesystem/SaiaStorage.php';
-
 	$codigo_qr = busca_filtro_tabla("", "documento_verificacion", "documento_iddocumento=" . $iddoc, "", $conn);
 	if($codigo_qr['numcampos']) {
     $archivo_binario=StorageUtils::get_binary_file($codigo_qr[0]['ruta_qr']);
 		$img='<img src="'.$archivo_binario.'" />';
 	}
-	echo $qr;	
 }
 
 function generar_codigo_qr($idformato, $iddoc, $idfunc = 0) {

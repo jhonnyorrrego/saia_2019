@@ -193,13 +193,6 @@ if($dep["numcampos"]){
  } else
    $retorno=$dep[0][$tipo];
 }
-
-function dependencia_nombre($idformato, $doc, $tipo = 0) {
-	if ($tipo)
-		return (formato_dependencia($doc, "nombre"));
-	else
-		echo formato_dependencia($doc, "nombre");
-}
 function nombre_proceso($doc) {
  global $conn;
  $datos = array();

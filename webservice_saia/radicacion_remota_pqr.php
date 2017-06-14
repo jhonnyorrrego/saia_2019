@@ -81,7 +81,6 @@ function enviar_mail($iddocumento){
 	enviar_mensaje("","email",array($datos_documento[0]['email']),"Notificacion PQR",$mensaje,"e-interno",array($ruta_db_superior.$datos_documento[0]['pdf']));
 	return(json_encode($datos_documento));
 }
-
 function transferir_documento_encargado($datos){
 	global $conn, $ruta_db_superior;	
 	include_once($ruta_db_superior."formatos/librerias/funciones_generales.php");

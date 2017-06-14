@@ -44,8 +44,12 @@ if(@$_REQUEST['cargar']){
 	/*$anexo = busca_filtro_tabla("d.ruta,d.idanexos", "documento a, formato b, campos_formato c, anexos d", "lower(a.plantilla)=b.nombre AND b.idformato=c.formato_idformato AND c.nombre='anexo_word' AND c.idcampos_formato=d.campos_formato AND a.iddocumento=" . $iddoc . " AND d.documento_iddocumento=" . $iddoc, "", $conn);
 =======
 	
+<<<<<<< HEAD
 	$anexo = busca_filtro_tabla("d.ruta,d.idanexos", "documento a, formato b, campos_formato c, anexos d", "lower(a.plantilla)=b.nombre AND b.idformato=c.formato_idformato AND c.nombre='anexo_word' AND c.idcampos_formato=d.campos_formato AND a.iddocumento=" . $iddoc . " AND d.documento_iddocumento=" . $iddoc, "", $conn);
 >>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
+=======
+	/*$anexo = busca_filtro_tabla("d.ruta,d.idanexos", "documento a, formato b, campos_formato c, anexos d", "lower(a.plantilla)=b.nombre AND b.idformato=c.formato_idformato AND c.nombre='anexo_word' AND c.idcampos_formato=d.campos_formato AND a.iddocumento=" . $iddoc . " AND d.documento_iddocumento=" . $iddoc, "", $conn);
+>>>>>>> 570bf709379069bd0bce67296d600c0e1e158f4f
 	
 	$vector_ruta=explode('../',$anexo[0]['ruta']);
 	$nueva_ruta='../'.$vector_ruta[ count($vector_ruta)-1 ];

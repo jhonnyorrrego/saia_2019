@@ -1,7 +1,6 @@
 <?php
 require_once("define.php");
 require_once("conexion.php");
-
 require_once('StorageUtils.php');
 require_once('filesystem/SaiaStorage.php');
 require('vendor/autoload.php');
@@ -1250,7 +1249,6 @@ function sincronizar_carpetas($tipo, $conn) {
 
 					$paginas = busca_filtro_tabla("A.pagina,A.ruta", "" . $tabla . " A", "A.id_documento=" . $fieldList["id_documento"], "A.pagina", $conn);
 					$numero_pagina = $paginas["numcampos"];
-					
 					//Este es el punto dode se puede hacer el cambio de carpeta en cad donde se almacenaran fisicamente las imagenes.
 					//$ruta_imagenes = ruta_almacenamiento("imagenes");
 					$alm_imagenes = new SaiaStorage("imagenes");
@@ -1293,10 +1291,8 @@ function sincronizar_carpetas($tipo, $conn) {
 							}
 						}
 						chmod($dirminiatura . "/", PERMISOS_CARPETAS);*/
-
 						$alm_paginas->almacenar_contenido($ruta_img_dst, $imagen->get('jpeg'));
 						$alm_paginas->almacenar_contenido($ruta_img_min, $minitura->get('jpeg'));
-
 						$ruta_pagina = array("servidor" => $alm_paginas->get_ruta_servidor(), "ruta" => $ruta_img_dst);
 						$fieldList["ruta"] = json_encode($ruta_pagina);
 						$ruta_miniatura = array("servidor" => $alm_paginas->get_ruta_servidor(), "ruta" => $ruta_img_min);
@@ -1371,9 +1367,8 @@ function sincronizar_carpetas($tipo, $conn) {
 					$ic = strrpos($archivo, "#");
 					$fc = strrpos($archivo, ")");
 					$cad = substr($archivo, $ic + 1, $fc - $ic - 1);
-                    //No se puede usar $_REQUEST porque la funcion se puede invocar desde un webservice
-					if(!empty($cad)) {
-						vincular_anexo_documento(intval($cad),$ruta_temporal.'/'.$archivo);
+					if (intval($cad) == intval(@$_REQUEST['x_id_documento'])) {
+						vincular_anexo_documento(@$_REQUEST['x_id_documento'], $ruta_temporal . '/' . $archivo);
 						unlink($ruta_archivo);
 					}
 				} //fin if file_exist
@@ -1604,6 +1599,7 @@ imagecopyresampled($image_p, $image, 0, 0, 0, 0, $nwidth, $nheight, $width, $hei
 imagegif($image_p, $nombredest);///nombre del destino
 imagedestroy($image_p);
 imagedestroy($image); 
+
 		if ($binario) {
 			$im = file_get_contents($nombreorig);
 			return ($im);

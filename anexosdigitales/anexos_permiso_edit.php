@@ -15,7 +15,7 @@ $validar_enteros=array("idanexo");
 include_once($ruta_db_superior."librerias_saia.php");
 desencriptar_sqli('form_info');
 echo(librerias_jquery());
-//print_r($_REQUEST);die();
+
 if (isset($_REQUEST["editar_anexo"])) {
   global $conn;
 $info=busca_filtro_tabla("","anexos","idanexos=".$_REQUEST["idanexo"],"",$conn);
@@ -75,5 +75,4 @@ $info=busca_filtro_tabla("","anexos","idanexos=".$_REQUEST["idanexo"],"",$conn);
 <?php
 encriptar_sqli("form1",1,"form_info",$ruta_db_superior);
 }
-
 ?>

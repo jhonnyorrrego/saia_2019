@@ -20,6 +20,7 @@ if (!@$_SESSION["LOGIN" . LLAVE_SAIA]) {
 
 $prefijo_ruta = "local:///vol1/";
 $actualizacion = new ActualizarRutas($prefijo_ruta);
+die();
 $actualizacion->actualizar_rutas();
 
 class ActualizarRutas {

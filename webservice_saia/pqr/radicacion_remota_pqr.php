@@ -25,6 +25,9 @@ include_once($ruta_db_superior. FORMATOS_CLIENTE . "pqrsf/funciones.php");
 require_once $ruta_db_superior . 'StorageUtils.php';
 require_once $ruta_db_superior . 'filesystem/SaiaStorage.php';
 
+require_once $ruta_db_superior . 'StorageUtils.php';
+require_once $ruta_db_superior . 'filesystem/SaiaStorage.php';
+
 function consultar_iniciativa($datos){
 	global $conn;
 	$iniciativa=busca_filtro_tabla("a.idserie as id,a.nombre as nombre","serie a, serie b","a.estado=1 and a.cod_padre=b.idserie and b.nombre like 'Iniciativas publicas'","nombre",$conn);

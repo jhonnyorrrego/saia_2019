@@ -52,7 +52,17 @@ include_once ($ruta_db_superior . "pantallas/lib/librerias_cripto.php");
 // require_once($ruta_db_superior.'pantallas/lib/PhpWord/Autoloader.php');
 // require_once($ruta_db_superior.'pantallas/lib/PHPWord/src/PhpWord/Autoloader.php');
 require_once ($ruta_db_superior . 'pantallas/lib/PhpWord/Autoloader.php');
+<<<<<<< HEAD
 >>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
+=======
+
+require_once ($ruta_db_superior . 'vendor/autoload.php');
+require_once $ruta_db_superior . 'StorageUtils.php';
+require_once $ruta_db_superior . 'filesystem/SaiaStorage.php';
+
+use Gaufrette\Filesystem;
+
+>>>>>>> 570bf709379069bd0bce67296d600c0e1e158f4f
 date_default_timezone_set('UTC');
 
 /**
@@ -123,7 +133,10 @@ if (@$_REQUEST["iddoc"]) {
 		}
 
 		//print_r($anexo[0]["ruta"]);
+<<<<<<< HEAD
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+>>>>>>> 570bf709379069bd0bce67296d600c0e1e158f4f
 		//TODO: Validar si es una ruta json o normal
 		$arr_ruta = StorageUtils::resolver_ruta($anexo[0]["ruta"]);
 		//$ruta_procesar = $arr_ruta["ruta"];
@@ -131,6 +144,7 @@ if (@$_REQUEST["iddoc"]) {
 		//$ruta_almacenar = explode('anexos', $anexo[0]["ruta"]);
 		//$ruta_docx = $ruta_db_superior . $ruta_almacenar[0] . 'docx/';
 		//$ruta_imagen = $ruta_db_superior . $ruta_almacenar[0] . 'firma_temp/';
+<<<<<<< HEAD
 <<<<<<< HEAD
 	
 		//Se debe crear un almacenamiento en memoria para los docx y para la firma
@@ -140,6 +154,8 @@ if (@$_REQUEST["iddoc"]) {
 		$ruta_imagen = "saia://tmp_docx/firma_temp";
   
 =======
+=======
+>>>>>>> 570bf709379069bd0bce67296d600c0e1e158f4f
 
 		//Se debe crear un almacenamiento en memoria para los docx y para la firma
 		$temp_fs = StorageUtils::get_memory_filesystem("tmp_docx", "saia");
@@ -147,13 +163,17 @@ if (@$_REQUEST["iddoc"]) {
 		$ruta_docx = "saia://tmp_docx/docx";
 		$ruta_imagen = "saia://tmp_docx/firma_temp";
 
+<<<<<<< HEAD
 >>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+>>>>>>> 570bf709379069bd0bce67296d600c0e1e158f4f
 		//crear_destino($ruta_docx);
 		//chmod($ruta_docx, 0777);
 		//crear_destino($ruta_imagen);
 		//chmod($ruta_imagen, 0777);
 	} else {
 		die("No se encontraron anexos para el documento ". $_REQUEST["iddoc"]);
+<<<<<<< HEAD
 	}
 } else {
 	die("Se necesita el p&aacute;metro \$_REQUEST['iddoc']");
@@ -201,11 +221,26 @@ if ($arr_ruta["ruta"] != '') {
 		chmod($ruta_docx, 0777);
 		crear_destino($ruta_imagen);
 		chmod($ruta_imagen, 0777);
+=======
+>>>>>>> 570bf709379069bd0bce67296d600c0e1e158f4f
 	}
+} else {
+	die("Se necesita el p&aacute;metro \$_REQUEST['iddoc']");
+}
+if($arr_ruta["error"]) {
+	die("Error: " . $arr_ruta["mensaje"]);
 }
 
-if ($ruta_procesar != '') {
+if ($arr_ruta["ruta"] != '') {
 	$ejecutar = 0;
+	$ruta_plantilla = $arr_ruta["ruta"];
+	$alm_plantilla = $arr_ruta["clase"];
+	//copiar desde el almacen al temporal
+	$archivo_plantilla = $alm_plantilla->get_filesystem()->get($ruta_plantilla);
+	$ruta_procesar = "saia://tmp_docx/" . basename($archivo_plantilla->getName());
+
+	$temp_fs->write(basename($archivo_plantilla->getName()), $archivo_plantilla->getContent(), true);
+
 	$templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor($ruta_procesar);
 >>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 	$campos_word = $templateProcessor->getVariables();
@@ -1201,12 +1236,17 @@ if ($ruta_procesar != '') {
 										}
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 										//crear_destino($ruta_imagen);
 										//chmod($ruta_imagen, 0777);
 =======
 										crear_destino($ruta_imagen);
 										chmod($ruta_imagen, 0777);
 >>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
+=======
+										//crear_destino($ruta_imagen);
+										//chmod($ruta_imagen, 0777);
+>>>>>>> 570bf709379069bd0bce67296d600c0e1e158f4f
 
 										if (empty($imagen_firma)) {
 											$funcionario_codigo_encriptado = encrypt_md5($funcionario_codigo);
@@ -1220,6 +1260,7 @@ if ($ruta_procesar != '') {
 										$im = imagecreatefromstring($img);
 										imagejpeg($im, $imagen_firma);
 <<<<<<< HEAD
+<<<<<<< HEAD
 										//chmod($imagen_firma, 0777);
 
 										$src = StorageUtils::obtener_archivo_temporal("sgn_");
@@ -1231,6 +1272,14 @@ if ($ruta_procesar != '') {
 
 										$src = $imagen_firma;
 >>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
+=======
+										//chmod($imagen_firma, 0777);
+
+										$src = StorageUtils::obtener_archivo_temporal("sgn_");
+										file_put_contents($src, file_get_contents($imagen_firma));
+										rename($src, $src . ".jpg");
+										$src .= ".jpg";
+>>>>>>> 570bf709379069bd0bce67296d600c0e1e158f4f
 
 										$img2 = array(
 												array(
@@ -1373,6 +1422,7 @@ if ($ruta_procesar != '') {
 		$marca_agua = mostrar_estado_documento($_REQUEST['iddoc']);
 		$templateProcessor->setTextWatermark($marca_agua);
 <<<<<<< HEAD
+<<<<<<< HEAD
 		$directorio_out = $ruta_docx . "/";
 		$archivo_out = 'documento_word';
 		$extension_doc = '.docx';
@@ -1400,24 +1450,50 @@ if ($ruta_procesar != '') {
 			exit();
 =======
 		$directorio_out = $ruta_docx;
+=======
+		$directorio_out = $ruta_docx . "/";
+>>>>>>> 570bf709379069bd0bce67296d600c0e1e158f4f
 		$archivo_out = 'documento_word';
 		$extension_doc = '.docx';
 		$templateProcessor->saveAs($directorio_out . $archivo_out . $extension_doc);
-		chmod($directorio_out . $archivo_out . $extension_doc, 0777);
 
-		if (file_exists($directorio_out . $archivo_out . $extension_doc)) {
-			$comando = 'export HOME=/tmp && libreoffice5.1 --headless --norestore --invisible --convert-to pdf:writer_pdf_Export --outdir ' . $directorio_out . ' ' . $directorio_out . $archivo_out . $extension_doc;
+		$ruta_temporal = busca_filtro_tabla("valor", "configuracion", "nombre='ruta_temporal'", "", $conn);
+		$ruta_tmp_usr=$ruta_temporal[0]["valor"]. "_" . usuario_actual("login");
+		$word_temp = StorageUtils::obtener_archivo_temporal($archivo_out, $ruta_tmp_usr);
+		copy($directorio_out . $archivo_out. $extension_doc, $word_temp . $extension_doc);
+
+		chmod($word_temp . $extension_doc, 0777);
+
+		if(file_exists($word_temp . $extension_doc)) {
+			$comando = 'export HOME=/tmp && libreoffice5.1 --headless --norestore --invisible --convert-to pdf:writer_pdf_Export --outdir ' . dirname($word_temp) . ' ' . $word_temp . $extension_doc;
 			$var = shell_exec($comando);
+<<<<<<< HEAD
 >>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
+=======
+			//print_r($var);die();
+			$pdf_name = "documento_word";
+			$dir_name = rtrim (dirname($ruta_plantilla), "anexos");
+			$dir_name .= "docx/";
+			$alm_plantilla->copiar_contenido_externo($word_temp . ".pdf", $dir_name . $pdf_name . ".pdf");
+			$alm_plantilla->copiar_contenido_externo($word_temp . $extension_doc, $ruta_plantilla);
+			//$alm_plantilla->copiar_contenido_externo($word_temp . ".docx", $pdf_name . ".docx");
+		} else {
+			die("No existe el archivo para procesar: " . $word_temp . $extension_doc);
+			exit();
+>>>>>>> 570bf709379069bd0bce67296d600c0e1e158f4f
 		}
 		if (@$anexo['numcampos']) { // elimina las imagenes de la carpeta
 
 			$dir = $ruta_imagen;
 <<<<<<< HEAD
+<<<<<<< HEAD
 			//chmod($dir, 0777);
 =======
 			chmod($dir, 0777);
 >>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
+=======
+			//chmod($dir, 0777);
+>>>>>>> 570bf709379069bd0bce67296d600c0e1e158f4f
 			foreach ( glob($dir . "*.jpg") as $filename ) {
 				chmod($filename, 0777);
 				unlink($filename);

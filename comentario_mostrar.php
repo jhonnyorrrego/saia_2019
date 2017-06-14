@@ -62,6 +62,7 @@ if($plantilla[0][0] != "")
     border: 1px solid #073A78; 
     padding: 1em;     
 }	
+
 img{
     border: none;
 }
@@ -243,6 +244,7 @@ $aux_formato = strtolower($detalle_doc[0]["plantilla"]);
 		agrega_boton("images", "enlaces/imprimir_pdf.png", "borrar_pdf.php?iddoc=$llave", "centro_prueba", "Actualizar PDF", "", "regenerar_pdf");
 		echo "</td>";
 	}
+
 	if ($paginas_doc["numcampos"] > 0 || ($tipo_pag == 'PLANTILLA' && $detalle_doc[0]["numero"] == 0)) {
 
 		/*
@@ -253,7 +255,6 @@ $aux_formato = strtolower($detalle_doc[0]["plantilla"]);
 }   */
 
  if($paginas_doc["numcampos"]>0 && $enlace=="") {
-
 ?>
 <script src="js/jquery.js"></script>
 <script>

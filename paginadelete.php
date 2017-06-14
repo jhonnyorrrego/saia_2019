@@ -8,7 +8,6 @@ include_once ("db.php");
 require ('vendor/autoload.php');
 require_once 'filesystem/SaiaStorage.php';
 include_once "StorageUtils.php";
-
 $config = busca_filtro_tabla("valor", "configuracion", "nombre='color_encabezado'", "", $conn);
 if ($config["numcampos"]) {
 	$style = "<style type='text/css'>
