@@ -174,7 +174,7 @@ else{
 	$target="centro";
 }
 
-$qr=mostrar_codigo_qr(0,$iddoc,true);
+$qr=mostrar_codigo_qr(0,$doc,true);
 ?>
 <style type="text/css">
 <!--
