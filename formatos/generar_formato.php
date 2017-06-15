@@ -957,7 +957,8 @@ function crear_formato_mostrar($idformato) {
 			$includes .= incluir($formato[0]["librerias"], "librerias", 1);
 		}
 		$includes .= incluir_libreria("funciones_generales.php", "librerias");
-		$includes .= incluir("../../js/jquery.js", "javascript");
+		$includes .= incluir("../../librerias_saia.php", "librerias");
+		$includes .= "<?php echo(librerias_jquery('1.7')); ?>";
 		$includes .= incluir_libreria("header_nuevo.php", "librerias");
 		$includes .= incluir("../../class_transferencia.php", "librerias");
 		
