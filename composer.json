@@ -1,7 +1,8 @@
 {
     "require": {
         "luracast/restler": "*",
-	"elasticsearch/elasticsearch": "*"
+        "danielstjules/stringy": "~2.3",
+		"elasticsearch/elasticsearch": "*"
     }
 }
 
