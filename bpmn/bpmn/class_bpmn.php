@@ -378,6 +378,8 @@ public function get_formas(){
 }
 public function get_enlaces(){
 	$this->enlaces=$this->dom->getElementsByTagName("BPMNEdge");
+	$del_pe="DELETE FROM paso_enlace WHERE diagram_iddiagram=".$this->idbpmn;
+	phpmkr_query($del_pe);
 	foreach($this->enlaces AS $forma){
 		$id = $forma->getAttribute("bpmnElement");
 		$camino=$forma->getElementsByTagName("id:waypoint");
@@ -748,10 +750,7 @@ public function get_tarea_proceso($id){
 	return($tarea);
 }
 public function asignar_enlace_proceso($id,$objeto_svg,$origen,$destino){
-		
-		$del_pe="DELETE FROM paso_enlace WHERE diagram_iddiagram=".$this->idbpmn;
-		phpmkr_query($del_pe);
-		
+			
 		//adicionar inicio de proceso BPMN
 		$datos=array();
 		$datos["idconector"]=$id;
