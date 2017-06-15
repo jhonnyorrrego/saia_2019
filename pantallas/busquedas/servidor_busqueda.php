@@ -810,7 +810,7 @@ function procesar_busqueda_elastic($datos_busqueda) {
 	//TODO: La validacion devuelve el total. Tal vez se pueda omitir el conteo
 	//Array ( [count] => 7 [_shards] => Array ( [total] => 5 [successful] => 5 [failed] => 0 ) )
 	try {
-		$validacion = $d2j->validar_consulta_elasticsearch($consulta_elastic);
+		$validacion = $d2j->validar_consulta_elasticsearch($consulta_elastic, $indice_elastic, $tipo_elastic);
 		//print_r($validacion); die();
 	} catch (Exception $e) {
 		$response->mensaje = $e->getMessage();
@@ -858,7 +858,8 @@ function procesar_busqueda_elastic($datos_busqueda) {
 			$cantidad = count($nuevas_tablas);
 			if ($cantidad) {
 				$tablas_consulta .= "," . implode(",", $nuevas_tablas);
-				$condiciones[] = $datos[0]["where_adicional"];
+				$condiciones_pantalla = json_decode($datos[0]["where_adicional"], true);
+				$condiciones = array_merge_recursive($condiciones, $condiciones_pantalla);
 			}
 		}
 	}
@@ -916,7 +917,7 @@ function procesar_busqueda_elastic($datos_busqueda) {
 	//print_r(json_encode($consulta_elastic));die();
 	$consulta_elastic["from"] = $start;
 	$consulta_elastic["size"] = $limit;
-	$resultado_elastic = $d2j->ejecutar_consulta_elasticsearch($consulta_elastic);
+	$resultado_elastic = $d2j->ejecutar_consulta_elasticsearch($consulta_elastic, $indice_elastic, $tipo_elastic);
 
 	//print_r($resultado_elastic); die();
 	$result = parsear_resultado_elastic($resultado_elastic, $tablas_consulta);

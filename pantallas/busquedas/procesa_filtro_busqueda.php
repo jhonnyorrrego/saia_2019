@@ -18,6 +18,15 @@ $retorno = array();
 $retorno["exito"] = 0;
 $retorno["mensaje"] = "Existe un error al tratar de procesar la b&uacute;squeda";
 if (@$_REQUEST["idbusqueda_componente"]) {
+
+	$busqueda = busca_filtro_tabla("b.*", "busqueda b join busqueda_componente c on b.busqueda_idbusqueda = c.idbusqueda", "c.idbusqueda_componente=" . $_REQUEST["idbusqueda_componente"], "", $conn);
+
+	if($busqueda["numcampos"])  {
+		if($busqueda[0]["elastic"]) {
+			echo json_encode(procesar_componente_elastic());
+			die();
+		}
+	}
 	$cadena_adicional = '';
 	if (@$_REQUEST["adicionar_consulta"]) {
 		$arreglo = array();
@@ -948,20 +957,20 @@ function guardar_lob2($campo, $tabla, $condicion, $contenido, $tipo, $conn, $log
 	// Fetch the SELECTed row
 	OCIFetchInto($stmt, $row, OCI_ASSOC);
 
-	if(!count($row)){  //soluciona el problema del size().
+	if (!count($row)) { // soluciona el problema del size().
 		oci_rollback($conn->Conn->conn);
 		oci_free_statement($stmt);
-		$clob_blob='clob';
-		if($tipo=='archivo'){
-			$clob_blob='blob';
+		$clob_blob = 'clob';
+		if ($tipo == 'archivo') {
+			$clob_blob = 'blob';
 		}
-    	$up_clob="UPDATE ".$tabla." SET ".$campo."=empty_".$clob_blob."() WHERE ".$condicion;
+		$up_clob = "UPDATE " . $tabla . " SET " . $campo . "=empty_" . $clob_blob . "() WHERE " . $condicion;
 		$conn->Ejecutar_Sql($up_clob);
-	    $stmt = OCIParse($conn->Conn->conn, $sql) or print_r(OCIError ($stmt));
-	    // Execute the statement using OCI_DEFAULT (begin a transaction)
-	    OCIExecute($stmt, OCI_DEFAULT) or print_r(OCIError ($stmt));
-	    // Fetch the SELECTed row
-	    OCIFetchInto($stmt,$row,OCI_ASSOC);
+		$stmt = OCIParse($conn->Conn->conn, $sql) or print_r(OCIError($stmt));
+		// Execute the statement using OCI_DEFAULT (begin a transaction)
+		OCIExecute($stmt, OCI_DEFAULT) or print_r(OCIError($stmt));
+		// Fetch the SELECTed row
+		OCIFetchInto($stmt, $row, OCI_ASSOC);
 	}
 	if (FALSE === $row) {
 		OCIRollback($conn->Conn->conn);
@@ -983,7 +992,7 @@ function guardar_lob2($campo, $tabla, $condicion, $contenido, $tipo, $conn, $log
 					$resultado = FALSE;
 				} else
 					oci_commit($conn->Conn->conn);
-					// *********** guardo el log en la base de datos **********************
+				// *********** guardo el log en la base de datos **********************
 				preg_match("/.*=(.*)/", strtolower($condicion), $resultados);
 			}
 		}
@@ -998,5 +1007,111 @@ function parsear_cadena_tildes($cadena) {
 	$reemplazar=array('%','%','%','%','%','%','%','%','%','%','%','%');
 	$texto = str_replace($buscar, $reemplazar, $texto);
 	return $texto;
+}
+
+function procesar_componente_elastic() {
+
+	$filtro = '';
+	$idbusqueda_temp = '';
+	$retorno = array();
+	$retorno["exito"] = 0;
+	$retorno["mensaje"] = "Existe un error al tratar de procesar la b&uacute;squeda";
+
+	$cadena_adicional = '';
+	if (@$_REQUEST["adicionar_consulta"]) {
+		$arreglo = array();
+		$consulta_adicional = campos_especiales();
+		$componente = busca_filtro_tabla("", "busqueda_componente a", "a.idbusqueda_componente=" . $_REQUEST["idbusqueda_componente"], "", $conn);
+
+		// Todos los componentes que se deben considerar en el request como componentes o criterios de busqueda para el filtro deben tener el prefijo bqsaia_
+		$cantidad_campos = 0;
+		foreach ( $_REQUEST as $key => $valor ) {
+			$entra = strpos($key, "bqsaia_");
+			if ($entra !== FALSE && $valor != '') {
+				$cantidad_campos++;
+			}
+		}
+		foreach ( $_REQUEST as $key => $valor ) {
+			$entra = strpos($key, "bqsaia_");
+			if ($entra !== FALSE && $valor != '') {
+				$contador_campos++;
+				$cadena = parsear_cadena_temporal($key, $valor, $cantidad_campos);
+				array_push($arreglo, $cadena);
+			}
+		}
+		$cadena = implode("", $arreglo);
+		if ($cadena_adicional == '')
+			$cadena = limpiar_cadena($cadena);
+			if (count($arreglo) || count($arreglo_sub)) {
+				$cadena = str_replace("@", ".", $cadena);
+				$cadena_adicional = str_replace("@", ".", $cadena_adicional);
+
+				if (($cadena || $consulta_adicional) && $cadena_adicional) {
+					$cadena_adicional = " and " . $cadena_adicional;
+				}
+				if ($cadena && $consulta_adicional && ($componente[0]["nombre"] == "todos_documentos" || $componente[0]["nombre"] == "listado_documentos")) {
+					$consulta_adicional = " and " . $consulta_adicional;
+				}
+				if (MOTOR == "Oracle") {
+					$sql2 = "INSERT INTO busqueda_filtro_temp(fk_busqueda_componente,funcionario_idfuncionario,fecha) VALUES(" . $_REQUEST["idbusqueda_componente"] . "," . usuario_actual("idfuncionario") . "," . fecha_db_almacenar(date("Y-m-d H:i:s"), "Y-m-d H:i:s") . ")";
+					$conn->Ejecutar_Sql($sql2);
+					$idbusqueda_temp = $conn->Ultimo_Insert();
+					guardar_lob2('detalle', 'busqueda_filtro_temp', 'idbusqueda_filtro_temp=' . $idbusqueda_temp, str_replace("''", "'", $cadena . $consulta_adicional . $cadena_adicional), "texto", $conn);
+				} else {
+					$sql2 = "INSERT INTO busqueda_filtro_temp(fk_busqueda_componente,funcionario_idfuncionario,detalle,fecha) VALUES(" . $_REQUEST["idbusqueda_componente"] . "," . usuario_actual("idfuncionario") . ",'" . $cadena . $consulta_adicional . $cadena_adicional . "'," . fecha_db_almacenar(date("Y-m-d H:i:s"), "Y-m-d H:i:s") . ")";
+					$conn->Ejecutar_Sql($sql2);
+					$idbusqueda_temp = $conn->Ultimo_Insert();
+				}
+
+				$idbusqueda_fil = filtros_adicionales();
+			}
+	} else if (@$_REQUEST["idbusqueda_filtro"]) {
+		$filtro = "&idbusqueda_filtro=" . $_REQUEST["idbusqueda_filtro"];
+	} else if (@$_REQUEST['idbusqueda_filtro_temp']) {
+		if ($idbusqueda_temp != '')
+			$idbusqueda_temp .= "," . $_REQUEST['idbusqueda_filtro_temp'];
+			else
+				$idbusqueda_temp = $_REQUEST['idbusqueda_filtro_temp'];
+	}
+	if ($idbusqueda_fil) {
+		$filtro .= "&idbusqueda_temporal=" . $idbusqueda_fil;
+	}
+	if ($componente[0]["url"]) {
+		if (strpos($componente[0]["url"], "?")) {
+			$componente[0]["url"] .= '&';
+		} else {
+			$componente[0]["url"] .= '?';
+		}
+		$url = $componente[0]["url"] . "idbusqueda_componente=" . $_REQUEST["idbusqueda_componente"] . "&idbusqueda_filtro_temp=" . $idbusqueda_temp . $filtro;
+	} elseif ($componente[0]["ruta_visualizacion"]) {
+		if (strpos($componente[0]["ruta_visualizacion"], "?")) {
+			$componente[0]["ruta_visualizacion"] .= '&';
+		} else {
+			$componente[0]["ruta_visualizacion"] .= '?';
+		}
+		$url = $componente[0]["ruta_visualizacion"] . "idbusqueda_componente=" . $_REQUEST["idbusqueda_componente"] . "&idbusqueda_filtro_temp=" . $idbusqueda_temp . $filtro;
+	} else {
+		$url = "pantallas/busquedas/consulta_busqueda.php?idbusqueda_componente=" . $_REQUEST["idbusqueda_componente"] . "&idbusqueda_filtro_temp=" . $idbusqueda_temp . $filtro;
+	}
+	if (@$_REQUEST["variable_busqueda"] != "") {
+		$url .= "&variable_busqueda=" . $_REQUEST['variable_busqueda'];
+	}
+	if (@$_REQUEST["idbusqueda_grafico"] != "") {
+		$url .= "&idbusqueda_grafico=" . $_REQUEST['idbusqueda_grafico'];
+	}
+	// Procesar parametros adicionales
+	if (@$_REQUEST["parametros_adicionales_buscador"]) {
+		$complemento = explode("|", $_REQUEST["parametros_adicionales_buscador"]);
+		foreach ( $complemento as $key => $valor ) {
+			$complemento2 = explode("@", $valor);
+			$url .= "&" . $complemento2[0] . "=" . $complemento2[1];
+		}
+	}
+
+	$retorno["exito"] = 1;
+	$retorno["url"] = $url;
+	$retorno["filtro"] = "&idbusqueda_filtro_temp=" . $idbusqueda_temp . $filtro;
+	$retorno["mensaje"] = 'Filtro procesado con exito';
+	return $retorno;
 }
 ?>

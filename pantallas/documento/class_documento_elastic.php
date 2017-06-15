@@ -250,11 +250,14 @@ class DocumentoElastic {
 		return ($response);
 	}
 
-	public function validar_consulta_elasticsearch($body) {
+	public function validar_consulta_elasticsearch($body, $indice="_all", $tipo=null) {
 		$parametros = array(
-				"index" => "documentos",
+				"index" => $indice,
 				"body" => $body
 		);
+		if(!empty($tipo)) {
+			$parametros["type"] = $tipo;
+		}
 
 		$response = $this->get_cliente_elasticsearch()->contar_resultados($parametros);
 		return ($response);
