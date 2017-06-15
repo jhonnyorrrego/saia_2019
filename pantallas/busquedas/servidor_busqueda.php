@@ -9,6 +9,11 @@ while($max_salida > 0) {
 	$max_salida--;
 }
 include_once ($ruta_db_superior . "db.php");
+require ($ruta_db_superior . 'vendor/autoload.php');
+
+use Stringy\Stringy as String;
+use Stringy\StaticStringy as StringUtils;
+
 usuario_actual("login");
 
 if (@$_REQUEST["exportar_saia"] == 'excel') {
@@ -691,9 +696,23 @@ function procesar_busqueda_elastic($datos_busqueda) {
 	$sumar = array();
 	$tablas = array();
 	$condiciones = array();
+	$indice_elastic = "";
+	$tipo_elastic = "";
 	// En elastic la consulta esta en campos y campos_adicionales
-	if ($datos_busqueda[0]["tablas"] != '') {
-		$tablas = array_merge((array)$tablas, (array)explode(",", $datos_busqueda[0]["tablas"]));
+	if (!empty($datos_busqueda[0]["tablas"])) {
+		$index_data = String::create($datos_busqueda[0]["tablas"]);
+
+		if ($index_data->isJson()) {
+			$dataj = json_decode($index_data);
+			if(!empty($dataj->index)) {
+				$indice_elastic = $dataj->index;
+			}
+			if(!empty($dataj->type)) {
+				$tipo_elastic = $dataj->type;
+			}
+		} else {
+			$tablas = array_merge($tablas, explode(",", $datos_busqueda[0]["tablas"]));
+		}
 	}
 	if ($datos_busqueda[0]["tablas_adicionales"] != '') {
 		$tablas = array_merge((array)$tablas, (array)explode(",", $datos_busqueda[0]["tablas_adicionales"]));
