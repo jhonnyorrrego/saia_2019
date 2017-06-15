@@ -129,8 +129,6 @@ function radicar_documento_remoto($datos){
 	}
 
 	if($iddoc){
-		include_once($ruta_db_superior."pantallas/qr/librerias.php");
-		generar_codigo_qr($datos_formato[0]['idformato'],$iddoc,$_SESSION["usuario_actual"]);		
 		$ch = curl_init();
 		// $fila = "".PROTOCOLO_CONEXION.RUTA_PDF_LOCAL."/html2ps/public_html/demo/html2ps.php?plantilla=".strtolower($datos_formato[0]["nombre_formato"])."&iddoc=".$iddoc."&conexion_remota=1";
 		$fila = "".PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . "/class_impresion.php?iddoc=" . $iddoc . "&LOGIN=" . $_SESSION["LOGIN" . LLAVE_SAIA] . "&usuario_actual=" . $_SESSION["usuario_actual"] . "&LLAVE_SAIA=" . LLAVE_SAIA;

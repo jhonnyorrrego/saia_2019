@@ -9,16 +9,39 @@ while($max_salida > 0) {
 	$max_salida--;
 }
 include_once ($ruta_db_superior . "db.php");
-
-function mostrar_codigo_qr($idformato, $iddoc) {
+/*
+ * $idformato: id unico del formato
+ * $iddoc: id unico que identifica al documento
+ * $retorno: false: hace echo de <img>, true: hace return del <img>
+ * Se usa para mostrar el qr en los formatos.
+ */
+function mostrar_codigo_qr($idformato, $iddoc,$retorno=false) {
 	global $conn, $ruta_db_superior;
-  include_once($ruta_db_superior."StorageUtils.php");
-  require_once $ruta_db_superior.'filesystem/SaiaStorage.php';
+	
+	include_once($ruta_db_superior."StorageUtils.php");
+	require_once $ruta_db_superior.'filesystem/SaiaStorage.php';
 	$codigo_qr = busca_filtro_tabla("", "documento_verificacion", "documento_iddocumento=" . $iddoc, "", $conn);
+	$img='';
 	if($codigo_qr['numcampos']) {
-    $archivo_binario=StorageUtils::get_binary_file($codigo_qr[0]['ruta_qr']);
-		$img='<img src="'.$archivo_binario.'" />';
+		$ruta_qr=json_decode($codigo_qr[0]['ruta_qr']);	
+		if(is_object($ruta_qr)){
+			$tipo_almacenamiento = new SaiaStorage(RUTA_QR);
+			if($tipo_almacenamiento->get_filesystem()->has($ruta_qr->ruta)){
+    			$archivo_binario=StorageUtils::get_binary_file($codigo_qr[0]['ruta_qr']);
+				$img='<img src="'.$archivo_binario.'" />';					
+			}
+		}	
 	}
+	if($img==''){
+		generar_codigo_qr($idformato,$iddoc);
+		$img=mostrar_codigo_qr($idformato,$iddoc,true);
+	}
+	if($retorno){
+		return $img;
+	}else{
+		echo($img);
+	}
+	
 }
 
 function generar_codigo_qr($idformato, $iddoc, $idfunc = 0) {
@@ -28,6 +51,11 @@ function generar_codigo_qr($idformato, $iddoc, $idfunc = 0) {
 	include_once ($ruta_db_superior . "pantallas/lib/librerias_archivo.php");
 	
 	$codigo_qr = busca_filtro_tabla("ruta_qr, iddocumento_verificacion", "documento_verificacion", "documento_iddocumento=" . $iddoc, "", $conn);
+	if($codigo_qr['numcampos']){
+		$sqld="DELETE FROM documento_verificacion WHERE documento_iddocumento=".$iddoc;
+		phpmkr_query($sqld);
+	}
+	
 	$datos = busca_filtro_tabla("A.fecha,A.estado,A.numero", "documento A", "A.iddocumento=" . $iddoc, "", $conn);
 	$idfun = "";
 	if(@$_REQUEST['tipo'] == 5) {
@@ -47,18 +75,7 @@ function generar_codigo_qr($idformato, $iddoc, $idfunc = 0) {
 	$datos_qr = "";
 	$cadena = "id=" . $iddoc;
 	$codificada = encrypt_blowfish($cadena, LLAVE_SAIA_CRYPTO);
-	// $datos_qr=PROTOCOLO_CONEXION.RUTA_PDF."/informacion_documento.php?key_cripto=".$codificada;
-	// $datos_qr=PROTOCOLO_CONEXION.RUTA_PDF."/info.php?".$cadena;
 	$datos_qr = RUTA_INFO_QR . "?key_cripto=" . $codificada;
-	
-	// $datos_qr="Radicado No: ".$datos[0]["numero"]."\n";
-	// $datos_qr.="Fecha: ".$fecha["day"]." de ".mes($fecha["month"])." del ".$fecha["year"]." a las ".$fecha["hour"].":".$fecha["minute"]."\n";
-	// $firmas = busca_filtro_tabla("CONCAT(B.nombres,CONCAT(' ',B.apellidos)) AS nombre","buzon_salida A, funcionario B","A.origen=B.funcionario_codigo AND (A.nombre LIKE 'APROBADO' OR A.nombre LIKE 'REVISADO')AND A.archivo_idarchivo=".$iddoc,"", $conn);
-	// $datos_qr.="Firman: \n";
-	//for($i = 0; $i < $firmas['numcampos']; $i++) {
-		// $datos_qr .= codifica_encabezado(html_entity_decode($firmas[$i]['nombre']))." \n";
-	//}
-	
 	$formato_ruta = aplicar_plantilla_ruta_documento($iddoc);
 	$almacenamiento = new SaiaStorage(RUTA_QR);
 

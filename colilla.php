@@ -11,6 +11,7 @@ while($max_salida>0){
 include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."class_transferencia.php");
 include_once($ruta_db_superior."formatos/librerias/funciones_formatos_generales.php");
+include_once($ruta_db_superior."pantallas/qr/librerias.php");
 /*
 <Clase>
 <Nombre>colilla
@@ -173,30 +174,7 @@ else{
 	$target="centro";
 }
 
-if($datos[0]["numero"]){
-	$codigo_qr=busca_filtro_tabla("","documento_verificacion","documento_iddocumento=".$doc,"", $conn);
-	$qr='';
-	if($codigo_qr['numcampos']){
-	    $archivo_binario=StorageUtils::get_binary_file($codigo_qr[0]['ruta_qr']);
-		    
-	    if($archivo_binario){
-	          $qr='<img src="'.$archivo_binario.'" width="70px" height="70px">';		        
-		}else{
-	      include_once($ruta_db_superior."pantallas/qr/librerias.php");
-	      generar_codigo_qr('',$doc);
-	      $codigo_qr=busca_filtro_tabla("","documento_verificacion","documento_iddocumento=".$doc,"", $conn);	
-	      $archivo_binario=StorageUtils::get_binary_file($codigo_qr[0]['ruta_qr']);
-	  	  $qr='<img src="'.$archivo_binario.'" width="70px" height="70px">';		        
-		}
-	}
-	else{
-		include_once($ruta_db_superior."pantallas/qr/librerias.php");
-		generar_codigo_qr('',$doc);
-		$codigo_qr=busca_filtro_tabla("","documento_verificacion","documento_iddocumento=".$doc,"", $conn);	
-    $archivo_binario=StorageUtils::get_binary_file($codigo_qr[0]['ruta_qr']);
-		$qr='<img src="'.$archivo_binario.'" width="70px" height="70px">';		        
-	}
-}
+$qr=mostrar_codigo_qr(0,$iddoc,true);
 ?>
 <style type="text/css">
 <!--
