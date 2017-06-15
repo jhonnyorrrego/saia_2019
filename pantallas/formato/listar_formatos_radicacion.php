@@ -45,10 +45,12 @@ if(count($request)){
 					if($ok){
 						$mostrar=1;
 					}					
-				if($mostrar){						
-		              $texto.='<div title="'.$cuantos_formatos[$i]["etiqueta"].'" data-load=\'{"kConnector":"'.$conector.'", "url":"'.$url.$adicional.'", "kTitle":"'.$proceso.' '.$cuantos_formatos[$i]["etiqueta"].'"}\' class="items navigable">';
+				if($mostrar){
+					$etiqueta_formato=ucfirst(codifica_encabezado(html_entity_decode(strtolower($cuantos_formatos[$i]["etiqueta"]))));	
+											
+		              $texto.='<div title="'.$etiqueta_formato.'" data-load=\'{"kConnector":"'.$conector.'", "url":"'.$url.$adicional.'", "kTitle":"'.$proceso.' '.$etiqueta_formato.'"}\' class="items navigable">';
 		              $texto.='<div class="head"></div>';              				            
-		              $texto.='<div class="label">'.codifica_encabezado(html_entity_decode($cuantos_formatos[$i]["etiqueta"])).'</div>';
+		              $texto.='<div class="label">'.$etiqueta_formato.'</div>';
 		              $texto.='<div class="info"></div>'; 		
 		              $texto.='<div class="tail"></div>';
 				      $texto.='</div>'; 
