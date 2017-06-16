@@ -23,7 +23,8 @@ if (@$_REQUEST["idbusqueda_componente"]) {
 
 	if($busqueda["numcampos"])  {
 		if($busqueda[0]["elastic"]) {
-			echo json_encode(procesar_componente_elastic());
+			$componente_elastic = new FiltroBusquedaElastic($_REQUEST);
+			echo json_encode($componente_elastic->procesar_componente_elastic());
 			die();
 		}
 	}
@@ -198,39 +199,23 @@ function valor_dato($campo, $valor) {
 	$cant_date = count($date);
 	$datetime = explode(",", str_replace("datetime|", "", @$_REQUEST["bqtipodato"]));
 	$cant_datetime = count($date);
-	$retorno_ = False;
+	$retorno_ = false;
 	if ($cant_date > 0) {
 		if (in_array($campo, $date)) {
-			if (MOTOR == "Oracle") {
 				$retorno_ = $valor;
-			} else {
-				$retorno_ = $valor;
-			}
 		}
 	} else if ($cant_datetime > 0) {
 		if (in_array($campo, $datetime)) {
-			if (MOTOR == "Oracle") {
 				$retorno_ = $valor;
-			} else {
-				$retorno_ = $valor;
-			}
 		}
 	}
 	if (MOTOR == "MySql") {
 		$retorno = addslashes($retorno_);
-	} else if (MOTOR == "Oracle") {
-		$retorno = ($retorno_);
-	} else if (MOTOR == "SqlServer") {
-		$retorno = ($retorno_);
 	} else {
 		$retorno = ($retorno_);
 	}
 
-	if ($retorno_ != '')
-		return (($retorno));
-	else {
-		return false;
-	}
+	return (($retorno));
 }
 
 function filtros_adicionales() {
@@ -241,10 +226,7 @@ function filtros_adicionales() {
 		$usuario = usuario_actual("idfuncionario");
 		$fecha = fecha_db_almacenar(date("Y-m-d H:i:s"), "Y-m-d H:i:s");
 		$valores = explode("@", $datos);
-		if (MOTOR == "MySql") {
-			$tablas = stripslashes($valores[0]);
-			$where = stripslashes($valores[1]);
-		} else if (MOTOR == "Oracle") {
+		if (MOTOR == "Oracle") {
 			$tablas = str_replace("'", "''", $valores[0]);
 			$where = $valores[1];
 		} else {
@@ -545,7 +527,6 @@ function parsear_consulta($key, $valor, $req_condicion_llave) {
 						$valor_ = $valores[$j];
 						$escaped_val = ((strtolower(trim($valor_))));
 						$valor = get_valor_condicion($key, $valor_, $escaped_val, $str_quote1, $str_quote2);
-						// $key se puede calcular fuera del switch
 						$cadena .= addslashes("lower(" . $key . ")" . $condicion . $valor);
 						if (($j + 1) < $cant) {
 							$cadena .= "|-|";
@@ -557,17 +538,15 @@ function parsear_consulta($key, $valor, $req_condicion_llave) {
 				$str_quote1 = "''%";
 				$str_quote2 = "%''";
 				$valor_ = $valor;
-				$escaped_val = ((strtolower($valor)));
+				$escaped_val = strtolower($valor);
 				$valor = get_valor_condicion($key, $valor_, $escaped_val, $str_quote1, $str_quote2);
-				// $key se puede calcular fuera del switch
 				$cadena = ("lower(" . $key . ")" . $condicion . $valor);
 			} else if (MOTOR == "MSSql" || MOTOR == "SqlServer") {
 				$str_quote1 = "''%";
 				$str_quote2 = "%''";
 				$valor_ = $valor;
-				$escaped_val = ((strtolower($valor)));
+				$escaped_val = strtolower($valor);
 				$valor = get_valor_condicion($key, $valor_, $escaped_val, $str_quote1, $str_quote2);
-				// $key se puede calcular fuera del switch
 				$cadena = ("lower(cast(" . $key . " as varchar(max)))" . $condicion . $valor);
 			} else {
 				$str_quote1 = "''%";
@@ -575,7 +554,6 @@ function parsear_consulta($key, $valor, $req_condicion_llave) {
 				$valor_ = $valor;
 				$escaped_val = ((strtolower($valor)));
 				$valor = get_valor_condicion($key, $valor_, $escaped_val, $str_quote1, $str_quote2);
-				// $key se puede calcular fuera del switch
 				$cadena = ("lower(" . $key . ")" . $condicion . $valor);
 			}
 			break;
@@ -901,10 +879,11 @@ function ajustar_lista_valores($valor) {
  */
 function get_valor_condicion($key, $valor_, $escaped_val, $str_quote1, $str_quote2) {
 	$valor = "";
-	if (!valor_dato($key, $valor_)) {
+	$valor_fecha = valor_dato($key, $valor_);
+	if (!$valor_fecha) {
 		$valor = $str_quote1 . $escaped_val . $str_quote2;
 	} else {
-		$valor = valor_dato($key, $valor_);
+		$valor = $valor_fecha;
 	}
 	return $valor;
 }
@@ -920,10 +899,11 @@ function get_valor_condicion($key, $valor_, $escaped_val, $str_quote1, $str_quot
  */
 function procesar_filtro_like_general($key, $valor, $condicion) {
 	if (strpos($valor, ",") === false) {
-		if (!valor_dato($key, $valor)) {
-			$valor = "''%" . ((strtolower($valor))) . "%''";
+		$valor_fecha = valor_dato($key, $valor);
+		if (!$valor_fecha) {
+			$valor = "''%" . strtolower($valor) . "%''";
 		} else {
-			$valor = valor_dato($key, $valor);
+			$valor = $valor_fecha;
 		}
 		// $key se puede calcular fuera del switch
 		$cadena = ("lower(" . $key . ")" . $condicion . str_replace(" ", "%", $valor));
@@ -932,10 +912,11 @@ function procesar_filtro_like_general($key, $valor, $condicion) {
 		$cant = count($valores);
 		for($j = 0; $j < $cant; $j++) {
 			$valor_ = $valores[$j];
-			if (!valor_dato($key, $valor_)) {
-				$valor = "''%" . ((strtolower(trim($valor_)))) . "%''";
+			$valor_fecha = valor_dato($key, $valor_);
+			if (!$valor_fecha) {
+				$valor = "''%" . strtolower(trim($valor_)) . "%''";
 			} else {
-				$valor = valor_dato($key, $valor_);
+				$valor = $valor_fecha;
 			}
 			// $key se puede calcular fuera del switch
 			$cadena .= ("lower(" . $key . ")" . $condicion . str_replace(" ", "%", $valor));
@@ -1009,109 +990,4 @@ function parsear_cadena_tildes($cadena) {
 	return $texto;
 }
 
-function procesar_componente_elastic() {
-
-	$filtro = '';
-	$idbusqueda_temp = '';
-	$retorno = array();
-	$retorno["exito"] = 0;
-	$retorno["mensaje"] = "Existe un error al tratar de procesar la b&uacute;squeda";
-
-	$cadena_adicional = '';
-	if (@$_REQUEST["adicionar_consulta"]) {
-		$arreglo = array();
-		$consulta_adicional = campos_especiales();
-		$componente = busca_filtro_tabla("", "busqueda_componente a", "a.idbusqueda_componente=" . $_REQUEST["idbusqueda_componente"], "", $conn);
-
-		// Todos los componentes que se deben considerar en el request como componentes o criterios de busqueda para el filtro deben tener el prefijo bqsaia_
-		$cantidad_campos = 0;
-		foreach ( $_REQUEST as $key => $valor ) {
-			$entra = strpos($key, "bqsaia_");
-			if ($entra !== FALSE && $valor != '') {
-				$cantidad_campos++;
-			}
-		}
-		foreach ( $_REQUEST as $key => $valor ) {
-			$entra = strpos($key, "bqsaia_");
-			if ($entra !== FALSE && $valor != '') {
-				$contador_campos++;
-				$cadena = parsear_cadena_temporal($key, $valor, $cantidad_campos);
-				array_push($arreglo, $cadena);
-			}
-		}
-		$cadena = implode("", $arreglo);
-		if ($cadena_adicional == '')
-			$cadena = limpiar_cadena($cadena);
-			if (count($arreglo) || count($arreglo_sub)) {
-				$cadena = str_replace("@", ".", $cadena);
-				$cadena_adicional = str_replace("@", ".", $cadena_adicional);
-
-				if (($cadena || $consulta_adicional) && $cadena_adicional) {
-					$cadena_adicional = " and " . $cadena_adicional;
-				}
-				if ($cadena && $consulta_adicional && ($componente[0]["nombre"] == "todos_documentos" || $componente[0]["nombre"] == "listado_documentos")) {
-					$consulta_adicional = " and " . $consulta_adicional;
-				}
-				if (MOTOR == "Oracle") {
-					$sql2 = "INSERT INTO busqueda_filtro_temp(fk_busqueda_componente,funcionario_idfuncionario,fecha) VALUES(" . $_REQUEST["idbusqueda_componente"] . "," . usuario_actual("idfuncionario") . "," . fecha_db_almacenar(date("Y-m-d H:i:s"), "Y-m-d H:i:s") . ")";
-					$conn->Ejecutar_Sql($sql2);
-					$idbusqueda_temp = $conn->Ultimo_Insert();
-					guardar_lob2('detalle', 'busqueda_filtro_temp', 'idbusqueda_filtro_temp=' . $idbusqueda_temp, str_replace("''", "'", $cadena . $consulta_adicional . $cadena_adicional), "texto", $conn);
-				} else {
-					$sql2 = "INSERT INTO busqueda_filtro_temp(fk_busqueda_componente,funcionario_idfuncionario,detalle,fecha) VALUES(" . $_REQUEST["idbusqueda_componente"] . "," . usuario_actual("idfuncionario") . ",'" . $cadena . $consulta_adicional . $cadena_adicional . "'," . fecha_db_almacenar(date("Y-m-d H:i:s"), "Y-m-d H:i:s") . ")";
-					$conn->Ejecutar_Sql($sql2);
-					$idbusqueda_temp = $conn->Ultimo_Insert();
-				}
-
-				$idbusqueda_fil = filtros_adicionales();
-			}
-	} else if (@$_REQUEST["idbusqueda_filtro"]) {
-		$filtro = "&idbusqueda_filtro=" . $_REQUEST["idbusqueda_filtro"];
-	} else if (@$_REQUEST['idbusqueda_filtro_temp']) {
-		if ($idbusqueda_temp != '')
-			$idbusqueda_temp .= "," . $_REQUEST['idbusqueda_filtro_temp'];
-			else
-				$idbusqueda_temp = $_REQUEST['idbusqueda_filtro_temp'];
-	}
-	if ($idbusqueda_fil) {
-		$filtro .= "&idbusqueda_temporal=" . $idbusqueda_fil;
-	}
-	if ($componente[0]["url"]) {
-		if (strpos($componente[0]["url"], "?")) {
-			$componente[0]["url"] .= '&';
-		} else {
-			$componente[0]["url"] .= '?';
-		}
-		$url = $componente[0]["url"] . "idbusqueda_componente=" . $_REQUEST["idbusqueda_componente"] . "&idbusqueda_filtro_temp=" . $idbusqueda_temp . $filtro;
-	} elseif ($componente[0]["ruta_visualizacion"]) {
-		if (strpos($componente[0]["ruta_visualizacion"], "?")) {
-			$componente[0]["ruta_visualizacion"] .= '&';
-		} else {
-			$componente[0]["ruta_visualizacion"] .= '?';
-		}
-		$url = $componente[0]["ruta_visualizacion"] . "idbusqueda_componente=" . $_REQUEST["idbusqueda_componente"] . "&idbusqueda_filtro_temp=" . $idbusqueda_temp . $filtro;
-	} else {
-		$url = "pantallas/busquedas/consulta_busqueda.php?idbusqueda_componente=" . $_REQUEST["idbusqueda_componente"] . "&idbusqueda_filtro_temp=" . $idbusqueda_temp . $filtro;
-	}
-	if (@$_REQUEST["variable_busqueda"] != "") {
-		$url .= "&variable_busqueda=" . $_REQUEST['variable_busqueda'];
-	}
-	if (@$_REQUEST["idbusqueda_grafico"] != "") {
-		$url .= "&idbusqueda_grafico=" . $_REQUEST['idbusqueda_grafico'];
-	}
-	// Procesar parametros adicionales
-	if (@$_REQUEST["parametros_adicionales_buscador"]) {
-		$complemento = explode("|", $_REQUEST["parametros_adicionales_buscador"]);
-		foreach ( $complemento as $key => $valor ) {
-			$complemento2 = explode("@", $valor);
-			$url .= "&" . $complemento2[0] . "=" . $complemento2[1];
-		}
-	}
-
-	$retorno["exito"] = 1;
-	$retorno["url"] = $url;
-	$retorno["filtro"] = "&idbusqueda_filtro_temp=" . $idbusqueda_temp . $filtro;
-	$retorno["mensaje"] = 'Filtro procesado con exito';
-	return $retorno;
-}
 ?>
