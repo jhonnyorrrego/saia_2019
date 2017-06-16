@@ -1,4 +1,14 @@
 <?php
+$max_salida=6; // Previene algun posible ciclo infinito limitando a 10 los ../
+$ruta_db_superior=$ruta="";
+while($max_salida>0){
+	if(is_file($ruta."db.php")){
+		$ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
+	}
+	$ruta.="../";
+	$max_salida--;
+}
+
 function encrypt_md5($data){
 	return(md5(md5($data)));
 }
@@ -168,5 +178,30 @@ if ($submit) {
 		echo($texto);
 	}
 	return;
+}
+
+function seguridad_externa($data){
+	global $ruta_db_superior;
+	
+	include_once($ruta_db_superior."db.php");
+	
+	$data=decrypt_blowfish($data,LLAVE_SAIA_CRIPTO);
+	$data=json_decode($data,1);
+	$radicador_web=busca_filtro_tabla("login,funcionario_codigo","funcionario","login='".$data['login_usuario']."' AND funcionario_codigo='".$data['funcionario_codigo']."'","",$conn);
+	$ip_ws=busca_filtro_tabla("valor","configuracion","nombre='ip_valida_ws' AND tipo='empresa'","",$conn);
+	
+	$iplocal=getRealIP();
+	$ipremoto=servidor_remoto();
+	if($iplocal=="" || $ipremoto==""){
+		if($iplocal==""){
+			$iplocal=$ipremoto;
+		}else{
+			$ipremoto=$iplocal;
+		}
+	}
+	if($radicador_web['numcampos'] && $ip_ws[0]['valor']==$iplocal){  //pasa filtro de seguridad
+		return(true);	
+	}
+	return(false);
 }
 ?>

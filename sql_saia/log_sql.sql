@@ -466,3 +466,7 @@ CREATE TABLE IF NOT EXISTS cf_indice_saia(
 -- -------------------------------
 INSERT INTO  configuracion (nombre ,valor ,tipo ,fecha ,encrypt) VALUES ('tipo_ftp','sftp','ftp',CURRENT_TIMESTAMP ,'0');
 
+-- ------------------------------
+// OJO CON "IP_LOCAL_DE_DONDE_SE_EJECUTA_LA_TAREA_PROGRAMADA"
+INSERT INTO configuracion(nombre,valor,tipo,fecha,encrypt) VALUES ('ip_valida_ws','IP_LOCAL_DE_DONDE_SE_EJECUTA_LA_TAREA_PROGRAMADA','empresa',CURRENT_TIMESTAMP ,'0');
+
