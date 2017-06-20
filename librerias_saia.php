@@ -121,16 +121,19 @@ return($texto);
 function librerias_validar_formulario($version=''){
 global $raiz_saia;
 
-
-if($version==11){
-	$texto='<script type="text/javascript" src="'.$raiz_saia.'js/jquery.validate_v1.11.js"></script>';
-}else{
-	$texto='<script type="text/javascript" src="'.$raiz_saia.'js/jquery.validate.js"></script>';
-}
-
-
-$texto.='<style>label.valid {width: 24px; height: 24px; background: url('.$raiz_saia.'asset/img/layout/valid.png) center center no-repeat; display: inline-block;text-indent: -9999px;}label.error {font-weight: bold;color: red;padding: 2px 8px;margin-top: 2px;}</style>';
-return($texto);
+	switch($version){
+		case "1.11":
+			$texto='<script type="text/javascript" src="'.$raiz_saia.'js/jquery.validate1.11.js"></script>';
+			break;
+		case "1.16":	
+			$texto='<script type="text/javascript" src="'.$raiz_saia.'js/jquery.validate1.16.js"></script>';
+			break;
+		default: //1.5
+			$texto='<script type="text/javascript" src="'.$raiz_saia.'js/jquery.validate.js"></script>';
+			break;	
+	}
+	$texto.='<style>label.valid {width: 24px; height: 24px; background: url('.$raiz_saia.'asset/img/layout/valid.png) center center no-repeat; display: inline-block;text-indent: -9999px;}label.error {font-weight: bold;color: red;padding: 2px 8px;margin-top: 2px;}</style>';
+	return($texto);
 }
 function librerias_html5(){
 global $raiz_saia;
