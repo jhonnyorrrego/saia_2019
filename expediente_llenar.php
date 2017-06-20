@@ -199,13 +199,13 @@ if(count($nombres_exp)){
  <script>
  $().ready(function() {
 	$('#form1').submit(function(){
-	    
+	    /*
 	seleccionados_series=tree3.getAllChecked();
     if(seleccionados_series!="")
       {$('#serie_idserie').val(seleccionados_series);
        
       }	  
-	    
+	    */
     seleccionados=tree2.getAllChecked();
     if(seleccionados!="")
       {$('#expedientes').val(seleccionados);
