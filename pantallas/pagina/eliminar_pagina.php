@@ -24,7 +24,6 @@ if($_REQUEST['evento'] == 'Aceptar'){
 	eliminar_paginas_documento2($_REQUEST['paginas'],$_REQUEST['iddocumento'],$_REQUEST['justificacion']);	
 }
 ?>
-<script type="text/javascript" src="<?php echo $ruta_db_superior;?>js/jquery.validate.js"></script>
 
 
 <form class="form-horizontal" name="confirma_eliminacion_pagina" id="eliminar_pagina" action="#" method="POST">
@@ -93,7 +92,7 @@ if($_REQUEST['evento'] == 'Aceptar'){
 		<?php
 		die();
 	}		
-echo(librerias_validar_formulario());
+echo(librerias_validar_formulario('1.16'));
 ?>
 <script type="text/javascript">
 $(document).ready(function(){
