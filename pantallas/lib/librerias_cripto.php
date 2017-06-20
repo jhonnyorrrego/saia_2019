@@ -125,10 +125,13 @@ unset($_SESSION["token_csrf"]);
 return;
 }
 function encriptar_sqli($nombre_form,$submit=false,$campo_info="form_info",$ruta_superior="",$retorno=false,$reset_form=true){
+	global $ruta_db_superior;
 
 $texto='';
 if ($submit) {
-	$texto.='<script type="text/javascript">';
+	$texto.='<script type="text/javascript">  <!-- ';
+	
+	$texto.=' $(document).ready(function(){ ';
 }
 
 $texto.='
@@ -141,6 +144,22 @@ $texto.='
 if ($submit) {
 	$texto.='$("#'.$nombre_form.'").submit(function(event){';
 }
+
+	//correccion tiny no enviaba la info actualizada
+	$texto.='
+	
+	if($(".tiny_formatos").length){
+		
+		$.each( ".tiny_formatos", function() {
+			var id_textarea=$(this).attr("id");
+			var contenido_textarea=tinyMCE.get(id_textarea).getContent(); 
+			$("#"+id_textarea).val(contenido_textarea);
+		});
+		
+	}
+	
+	';
+
 	$texto.='salida_sqli = false;
       $.ajax({
         type:"POST",
@@ -152,15 +171,12 @@ if ($submit) {
 	';
 	if($reset_form){
 		$texto.='
-					$("#'.$nombre_form.'").find("input:hidden,input:text, input:password, select, textarea").val("");
-    			$("#'.$nombre_form.'").find("input:radio, input:checkbox").removeAttr("checked").removeAttr("selected");
+			$("#'.$nombre_form.'").find("input:hidden,input:text, input:password, select, textarea").val("");
+    		$("#'.$nombre_form.'").find("input:radio, input:checkbox").removeAttr("checked").removeAttr("selected");
 		';	
 	}
 	$texto.='			
-					//console.log(JSON.stringify($("#'.$nombre_form.'").serializeArray()));
           $("#'.$campo_info.'").val(data);
-					//console.log(JSON.stringify($("#'.$nombre_form.'").serializeArray()));
-          //console.log($("#'.$campo_info.'").val());
           salida_sqli = true;
         }
       });';
@@ -168,7 +184,10 @@ if ($submit) {
 	$texto.='return salida_sqli;
 			event.preventDefault();
 	  });
-	</script>';
+	
+	});
+		-->
+	 </script>';
 }
 
 	if($retorno){
