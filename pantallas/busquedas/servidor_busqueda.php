@@ -771,9 +771,14 @@ function procesar_busqueda_elastic($datos_busqueda) {
 		}
 	}
 
+	//TODO:busqueda_filtro_temp
 	if (@$_REQUEST["idbusqueda_filtro_temp"]) {
 		// TODO: Devuelve un json con los criterios adicionales tomados de la pantalla. Se debe concatenar con el criterio guardado en campos y busqueda_condicion
-		$condiciones[] = parsear_filtro_elastic($_REQUEST["idbusqueda_filtro_temp"]);
+		$condiciones_filtro = parsear_filtro_elastic($_REQUEST["idbusqueda_filtro_temp"]);
+		if(!empty($condiciones_filtro)) {
+			$condiciones[] = array_merge_recursive($condiciones, $condiciones_filtro);
+			//print_r($condiciones_filtro);die("FILTRO TEMP");
+		}
 	}
 
 	// TODO: $campos trae la consulta elastic (json)
@@ -797,7 +802,7 @@ function procesar_busqueda_elastic($datos_busqueda) {
 	foreach ($filtro_elastic as $key => $elemento) {
 		$consulta_elastic["query"]["bool"][$key] = $filtro_elastic[$key];
 	}
-	//print_r(json_encode($consulta_elastic));die();
+	//print_r(json_encode($consulta_elastic));die("CONSULTA ELASTIC");
 
 	$response = new stdClass();
 	$response->cantidad_total = $result[0]['cant'];
@@ -954,19 +959,14 @@ function procesar_busqueda_elastic($datos_busqueda) {
 
 function parsear_filtro_elastic($idbusqueda_filtro_temp) {
 	global $conn;
-	$condicion = "";
+	$condicion = null;
 	$filtro_temp = busca_filtro_tabla("", "busqueda_filtro_temp", "idbusqueda_filtro_temp IN(" . $idbusqueda_filtro_temp . ")", "", $conn);
 	if ($filtro_temp["numcampos"]) {
-		$cadena1 = '';
+		$condicion= array();
 		for($i = 0; $i < $filtro_temp["numcampos"]; $i++) {
-			$cadena1 = parsear_cadena_elastic($filtro_temp[$i]["detalle"]);
-			$cadena .= $cadena1;
-			if (@$filtro_temp[$i + 1]["detalle"]) {
-				$cadena .= ' AND ';
-			}
+			//TODO: La cadena ya viene en formato elastic
+			$condicion[] = $filtro_temp[$i]["detalle"];
 		}
-		$condicion .= " AND (" . stripslashes($cadena) . ")";
-		// die($condicion);
 	}
 	// TODO: Debe devolver un json con los criterios elastic
 	return $condicion;

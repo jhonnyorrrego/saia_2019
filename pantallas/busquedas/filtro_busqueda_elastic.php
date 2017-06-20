@@ -62,10 +62,11 @@ class FiltroBusquedaElastic {
 		} else if (@$this->parametros["idbusqueda_filtro"]) {
 			$filtro = "&idbusqueda_filtro=" . $this->parametros["idbusqueda_filtro"];
 		} else if (@$this->parametros['idbusqueda_filtro_temp']) {
-			if ($idbusqueda_temp != '')
+			if ($idbusqueda_temp != '') {
 				$idbusqueda_temp .= "," . $this->parametros['idbusqueda_filtro_temp'];
-			else
+			} else {
 				$idbusqueda_temp = $this->parametros['idbusqueda_filtro_temp'];
+			}
 		}
 		if ($idbusqueda_fil) {
 			$filtro .= "&idbusqueda_temporal=" . $idbusqueda_fil;
@@ -155,7 +156,7 @@ class FiltroBusquedaElastic {
 		$cant_date = count($date);
 		$datetime = explode(",", str_replace("datetime|", "", @$this->parametros["bqtipodato"]));
 		$cant_datetime = count($date);
-		$retorno_ = False;
+		$retorno_ = false;
 		if ($cant_date > 0) {
 			if (in_array($campo, $date)) {
 				$retorno_ = $valor;
@@ -180,6 +181,8 @@ class FiltroBusquedaElastic {
 			$idbusqueda_componente = $this->parametros["idbusqueda_componente"];
 			$usuario = usuario_actual("idfuncionario");
 			$fecha = fecha_db_almacenar(date("Y-m-d H:i:s"), "Y-m-d H:i:s");
+
+			//Viene en el formato "tabla alias@condicion" donde condicion es algo como "and campo=alias.campo"
 			$valores = explode("@", $datos);
 
 			$tablas = stripslashes($valores[0]);
@@ -537,37 +540,6 @@ class FiltroBusquedaElastic {
 			$valor = $valor_fecha;
 		}
 		return $valor;
-	}
-
-	function valor_dato($campo, $valor) {
-		$bqtipodato = array();
-		$bqtipodato_plantilla = array();
-		if ($this->parametros["bqtipodato"]) {
-			$bqtipodato = explode(",", str_replace("date|", "", @$this->parametros["bqtipodato"]));
-		}
-		if ($this->parametros["bqtipodato_plantilla"]) {
-			$bqtipodato_plantilla = explode(",", str_replace("date|", "", @$this->parametros["bqtipodato_plantilla"]));
-		}
-		$date = array_merge($bqtipodato, $bqtipodato_plantilla);
-		$cant_date = count($date);
-		$datetime = explode(",", str_replace("datetime|", "", @$this->parametros["bqtipodato"]));
-		$cant_datetime = count($date);
-		$retorno_ = false;
-		if ($cant_date > 0) {
-			if (in_array($campo, $date)) {
-					$retorno_ = $valor;
-			}
-		} else if ($cant_datetime > 0) {
-			if (in_array($campo, $datetime)) {
-					$retorno_ = $valor;
-			}
-		}
-		$retorno = addslashes($retorno_);
-
-		if ($retorno_ != '') {
-			return (($retorno));
-		}
-		return false;
 	}
 
 }
