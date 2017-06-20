@@ -2321,6 +2321,7 @@ while($max_salida>0){
 	include_once('librerias_saia.php');
 	global $raiz_saia;
 	$raiz_saia=$ruta_superior_temporal;
+	echo(librerias_jquery('1.7'));
 	echo(librerias_notificaciones());
 
 	?>
@@ -2334,6 +2335,7 @@ function alerta_formatos($mensaje,$tipo='success',$duraccion=3000){
 	require_once ('librerias_saia.php');
 	global $raiz_saia;
 	$raiz_saia = "/" . RUTA_SAIA . $ruta_superior_temporal;
+	echo(librerias_jquery('1.7'));
 	echo(librerias_notificaciones());
 
 	?>
