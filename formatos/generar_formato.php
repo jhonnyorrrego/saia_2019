@@ -1926,8 +1926,9 @@ else
 				$includes .= $this->incluir("../../calendario/calendario.php", "librerias");
 			}
 
-			$includes .= $this->incluir("../../js/jquery.js", "javascript");
-			$includes .= $this->incluir("../../js/jquery.validate.js", "javascript");
+			$includes .= $this->incluir("../../librerias_saia.php", "librerias");
+			$includes .= "<?php echo(librerias_jquery('1.7')); ?>";
+			$includes .= "<?php echo(librerias_validar_formulario('1.16')); ?>";	
 
 			$includes .= $this->incluir("../../js/title2note.js", "javascript");
 			if ($arboles) {
