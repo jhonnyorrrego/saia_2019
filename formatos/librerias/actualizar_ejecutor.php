@@ -85,6 +85,7 @@ $campos_todos=array("direccion","telefono","email","cargo","empresa","ciudad","t
 $condicion_actualiza="";
 for($i=0;$i<count($campos_ejecutor);$i++){
   if(isset($_REQUEST[$campos_ejecutor[$i]])){
+   $_REQUEST[$campos_ejecutor[$i]]=decodifica_encabezado(htmlentities($_REQUEST[$campos_ejecutor[$i]]));
    if($campos_ejecutor[$i]=="fecha_nacimiento")
     $condicion_actualiza.=' AND '.fecha_db_obtener($campos_ejecutor[$i],"Y-m-d")."='".$_REQUEST[$campos_ejecutor[$i]]."'";
    elseif($_REQUEST[$campos_ejecutor[$i]])
@@ -95,7 +96,7 @@ for($i=0;$i<count($campos_ejecutor);$i++){
   }
 }
 $datos_ejecutor=busca_filtro_tabla("","datos_ejecutor","ejecutor_idejecutor=".$idejecutor.$condicion_actualiza,"",$conn);
-//print_r($datos_ejecutor);
+//print_r($datos_ejecutor); die();
 if((!$datos_ejecutor["numcampos"] ||$insertado) && $condicion_actualiza!=""){$datos_ejecutor=busca_filtro_tabla("","datos_ejecutor","ejecutor_idejecutor=".$idejecutor,"iddatos_ejecutor desc",$conn);
 
   $campos=array();
