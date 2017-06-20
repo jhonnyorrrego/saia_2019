@@ -19,9 +19,9 @@ $retorno["exito"] = 0;
 $retorno["mensaje"] = "Existe un error al tratar de procesar la b&uacute;squeda";
 if (@$_REQUEST["idbusqueda_componente"]) {
 
-	$busqueda = busca_filtro_tabla("b.*", "busqueda b join busqueda_componente c on b.busqueda_idbusqueda = c.idbusqueda", "c.idbusqueda_componente=" . $_REQUEST["idbusqueda_componente"], "", $conn);
-
+	$busqueda = busca_filtro_tabla("b.*", "busqueda b join busqueda_componente c on b.idbusqueda = c.busqueda_idbusqueda", "c.idbusqueda_componente=" . $_REQUEST["idbusqueda_componente"], "", $conn);
 	if($busqueda["numcampos"])  {
+		include_once (__DIR__ . "/filtro_busqueda_elastic.php");
 		if($busqueda[0]["elastic"]) {
 			$componente_elastic = new FiltroBusquedaElastic($_REQUEST);
 			echo json_encode($componente_elastic->procesar_componente_elastic());
