@@ -19,7 +19,7 @@ include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
 echo(librerias_jquery('1.7'));
 echo(estilo_bootstrap());
 echo(librerias_notificaciones());
-echo( librerias_validar_formulario('11') );
+echo( librerias_validar_formulario('1.16') );
 ?>
 
 <!DOCTYPE html>
