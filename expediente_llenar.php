@@ -30,7 +30,6 @@ $nombres_exp=array_unique(extrae_campo($expedientes_documento,"nombre"));
 <?php 
     echo(menu_principal_documento($doc_menu,1));
     echo(librerias_jquery('1.7'));
-    echo( librerias_validar_formulario(11) );
 ?>
 <script type="text/javascript" src="js/dhtmlXCommon.js"></script>
 <script type="text/javascript" src="js/dhtmlXTree.js"></script>
