@@ -1026,7 +1026,7 @@ function parsear_cadena_elastic($cadena1) {
 	return $cadena1;
 }
 
-function parsear_resultado_elastic($resultado_elastic,  $tablas_consulta) {
+function parsear_resultado_elastic($resultado_elastic,  $tablas_consulta, $es_hijo=false) {
 	$result = array();
 	$result["numcampos"] = $resultado_elastic["hits"]["total"];
 	//print_r($resultado_elastic["hits"]["hits"]);die();
@@ -1039,7 +1039,8 @@ function parsear_resultado_elastic($resultado_elastic,  $tablas_consulta) {
 	[_routing] => 1421
 	[_parent] => 1421
 	[_source][documento] => Array
-	[_source][datos_ft]=> Array
+	[_source][ft_nombre_formato]=> Array
+	[_source][inner_hits] =>
 	*/
 	$tablas = array_map('trim', explode(',', strtolower($tablas_consulta)));
 	$resultados = $resultado_elastic["hits"]["hits"];
@@ -1049,7 +1050,7 @@ function parsear_resultado_elastic($resultado_elastic,  $tablas_consulta) {
 		$tipo = strtolower($plantilla);
 		//TODO: Esto es ineficiente. Al indexar poner el nombre de la tabla. [formato_idformato] => 313
 		$tabla = "ft_" . strtolower($tipo);
-		if(in_array("documento", $tablas)) {
+		if(in_array("documento", $tablas) && !$es_hijo) {
 			$datos_doc = $resultados[$i]["_source"]["documento"];
 			foreach ($datos_doc as $key => $value) {
 				$result[$i][$key] = $value;
@@ -1061,7 +1062,32 @@ function parsear_resultado_elastic($resultado_elastic,  $tablas_consulta) {
 				$result[$i][$key] = $value;
 			}
 		}
+		//los inner_hits
+		$hijos = $resultados[$i]["inner_hits"];
+		//$llave = $hijos = $resultados[$i]["inner_hits"][*];
+		if(!empty($hijos)) {
+			foreach ($hijos as $llave => $valor) {
+				$plantilla_hijo = $llave; //$resultados[$i]["_type"] => ANALISIS_PQRSF
+				$tipo_hijo = strtolower($plantilla_hijo);
+				$tabla_hijo = "ft_" . strtolower($tipo_hijo);
+
+				if(in_array($tabla_hijo, $tablas)) {
+					$respuesta = parsear_resultado_elastic($valor,  $tablas_consulta, true);
+					if($respuesta["numcampos"]) {
+						//TODO: Solo sirve si trae un hijo. Buscar como mezclar mas. Ademas si el hijo es un formato trae otro documento
+						foreach ($respuesta[0] as $llave_hijo => $valor_hijo) {
+							//print_r($respuesta);die($llave_hijo);
+							if(!is_numeric($llave_hijo)) {
+								$result[$i][$llave_hijo] = $valor_hijo;
+							}
+						}
+					}
+					//$result = array_merge_recursive($result, $respuesta);
+				}
+			}
+		}
 	}
+	//print_r($result);die();
 	return $result;
 }
 ?>
