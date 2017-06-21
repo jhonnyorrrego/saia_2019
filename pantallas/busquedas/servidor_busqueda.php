@@ -776,7 +776,9 @@ function procesar_busqueda_elastic($datos_busqueda) {
 		// TODO: Devuelve un json con los criterios adicionales tomados de la pantalla. Se debe concatenar con el criterio guardado en campos y busqueda_condicion
 		$condiciones_filtro = parsear_filtro_elastic($_REQUEST["idbusqueda_filtro_temp"]);
 		if(!empty($condiciones_filtro)) {
-			$condiciones[] = array_merge_recursive($condiciones, $condiciones_filtro);
+			foreach ($condiciones_filtro as $cond) {
+				$condiciones[] = $cond;
+			}
 			//print_r($condiciones_filtro);die("FILTRO TEMP");
 		}
 	}
@@ -784,7 +786,7 @@ function procesar_busqueda_elastic($datos_busqueda) {
 	// TODO: $campos trae la consulta elastic (json)
 	$filtro_elastic = json_decode($campos["campos"], true);
 	//echo $campos["campos"];echo "\n";
-	//print_r($filtro_elastic);echo "\n"; die();
+	//print_r($condiciones);echo "\n"; die();
 
 	if (@$_REQUEST['llave_unica']) {
 		$condiciones[] = '{"match":{"' . $datos_busqueda[0]["llave"] . '":"' . $_REQUEST['llave_unica'] . '"}}';
@@ -792,16 +794,20 @@ function procesar_busqueda_elastic($datos_busqueda) {
 
 	$condiciones_json = [];
 	foreach ($condiciones as $cond) {
-		$condiciones_json[] = json_decode($cond, true);
+		$cad_json = json_decode($cond, true);
+		if ($cad_json=== null && json_last_error() !== JSON_ERROR_NONE) {
+			echo "incorrect data: ";die($cond);
+		}
+		$condiciones_json = array_merge_recursive($condiciones_json, $cad_json);
 	}
+
+	//print_r($condiciones_json);die("FILTRO TEMP");
 
 	$consulta_elastic = array();
 	if(!empty($condiciones_json)) {
-		$consulta_elastic["query"]["bool"]["must"] = $condiciones_json;
+		$consulta_elastic = mezclar_consulta_elastic($consulta_elastic, $condiciones_json);
 	}
-	foreach ($filtro_elastic as $key => $elemento) {
-		$consulta_elastic["query"]["bool"][$key] = $filtro_elastic[$key];
-	}
+	$consulta_elastic = mezclar_consulta_elastic($consulta_elastic, $filtro_elastic);
 	//print_r(json_encode($consulta_elastic));die("CONSULTA ELASTIC");
 
 	$response = new stdClass();
@@ -955,6 +961,39 @@ function procesar_busqueda_elastic($datos_busqueda) {
 	}
 	if (!@$_REQUEST["no_imprime"])
 		echo json_encode($response);
+}
+
+
+/**
+ * preserva las llaves existentes en el json array $consulta_elastic
+ * @param consulta_elastic
+ * @param condiciones_json
+ */
+
+function mezclar_consulta_elastic($consulta_elastic, $condiciones_json) {
+	foreach ($condiciones_json as $key => $elemento) {
+		switch ($key) {
+			case "must":
+				$consulta_elastic["query"]["bool"][$key][] = $condiciones_json[$key];
+				break;
+			case "filter":
+				//print_r($condiciones_json);die();
+				if(is_array($condiciones_json[$key])) {
+					foreach ($condiciones_json[$key] as $value) {
+						$consulta_elastic["query"]["bool"][$key][] = $value;
+					}
+				} else {
+					$consulta_elastic["query"]["bool"][$key][] = $condiciones_json[$key];
+				}
+				break;
+			case "should":
+				$consulta_elastic["query"]["bool"][$key][] = $condiciones_json[$key];
+				break;
+			//TODO: Contemplar otras opciones que se conviertan en un array json
+		}
+	}
+	return $consulta_elastic;
+
 }
 
 function parsear_filtro_elastic($idbusqueda_filtro_temp) {

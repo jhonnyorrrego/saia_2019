@@ -42,21 +42,18 @@ class FiltroBusquedaElastic {
 			foreach ($campos_req as $key) {
 				$valor = $this->parametros[$key];
 				if(!empty($valor)) {
-					//Devuelve un array must o should que se mezcla con las condiciones existentes
+					//TODO: Devuelve un array must o should que se mezcla con las condiciones existentes
 					$cadena = $this->parsear_cadena_temporal($key, $valor, $cantidad_campos);
-					$arreglo[] = array_merge_recursive($arreglo, $cadena);
+					$arreglo = array_merge_recursive($arreglo, $cadena);
 				}
 			}
 
-			$cadena = json_encode($arreglo);
 
 			if (count($arreglo)) {
+				$cadena = json_encode($arreglo);
 				$cadena = str_replace("@", ".", $cadena);
-				$cadena_adicional = str_replace("@", ".", $cadena_adicional);
+				//print_r($cadena);die("FORMULARIO");
 
-				if (($cadena || $consulta_adicional) && $cadena_adicional) {
-					$cadena_adicional = " and " . $cadena_adicional;
-				}
 				if (MOTOR == "Oracle") {
 					$sql2 = "INSERT INTO busqueda_filtro_temp(fk_busqueda_componente,funcionario_idfuncionario,fecha) VALUES(" .
 					$this->parametros["idbusqueda_componente"] . "," . usuario_actual("idfuncionario") . "," . fecha_db_almacenar(date("Y-m-d H:i:s"), "Y-m-d H:i:s") . ")";
@@ -128,6 +125,7 @@ class FiltroBusquedaElastic {
 		$req_condicion_llave = $this->parametros["bksaiacondicion_" . $key];
 		$key = str_replace("_x", "", $key);
 		$key = str_replace("_y", "", $key);
+		//TODO: $cadena es un array devuelto por parsear_consulta
 		$cadena = $this->parsear_consulta($key, $valor, $req_condicion_llave);
 		$enlace = @$this->parametros["bqsaiaenlace_" . $key];
 		$conector = 'must';
@@ -378,6 +376,7 @@ class FiltroBusquedaElastic {
 		$key_aux = $key;
 		$valor = $this->parsear_cadena_tildes($valor);
 		$req_condicion_llave = $this->parametros["subcondicion_" . $key];
+		//TODO: $cadena es un array devuelto por parsear_consulta
 		$cadena = $this->parsear_consulta($key, $valor, $req_condicion_llave);
 		$enlace = @$this->parametros["subsaiaenlace_" . $key_aux];
 		$conector = '';
@@ -516,7 +515,7 @@ class FiltroBusquedaElastic {
 				$cadena_elastic["match"] = [$key => $valor];
 				$cadena = ($key . $condicion . $valor);
 		}
-		return $cadena;
+		return $cadena_elastic;
 	}
 
 	/**
