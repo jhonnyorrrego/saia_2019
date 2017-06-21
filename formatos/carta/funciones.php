@@ -516,10 +516,10 @@ echo($nombre_dependencia[0]["nombre"]);
 
 }
 if(@$_REQUEST["tipo"]!=5){
+	echo(librerias_jquery('1.7'));
 ?>
 <link rel="stylesheet" href="../css/image-enlarger.css" media="screen" type="text/css" />
 <script type="text/javascript" src="../../js/dhtml-suite-for-applications.js"></script>
-<script type='text/javascript' src='../../js/jquery.js'></script>
 <script>
 function displayImage(imagePath,title,description)
 {
