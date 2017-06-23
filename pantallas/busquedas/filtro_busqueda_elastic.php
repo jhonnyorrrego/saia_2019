@@ -44,10 +44,11 @@ class FiltroBusquedaElastic {
 				if(!empty($valor)) {
 					//TODO: Devuelve un array must o should que se mezcla con las condiciones existentes
 					$cadena = $this->parsear_cadena_temporal($key, $valor, $cantidad_campos);
-					$arreglo = array_merge_recursive($arreglo, $cadena);
+					if(!empty($cadena)) {
+						$arreglo = array_merge_recursive($arreglo, $cadena);
+					}
 				}
 			}
-
 
 			if (count($arreglo)) {
 				$cadena = json_encode($arreglo);
@@ -123,13 +124,23 @@ class FiltroBusquedaElastic {
 	function parsear_cadena_temporal($key, $valor, $contador_campos) {
 		$key = str_replace("bqsaia_", "", $key);
 		$req_condicion_llave = $this->parametros["bksaiacondicion_" . $key];
-		$key = str_replace("_x", "", $key);
-		$key = str_replace("_y", "", $key);
+		$rango = false;
+		$enlace = false;
+		$conector = 'must';
+		if(preg_match("/_[xy]$/", $key)) {
+			$rango = true;
+		} else {
+			$key = preg_replace("/_[xy]$/", "", $key);
+			$enlace = @$this->parametros["bqsaiaenlace_" . $key];
+		}
 		//TODO: $cadena es un array devuelto por parsear_consulta
 		$cadena = $this->parsear_consulta($key, $valor, $req_condicion_llave);
-		$enlace = @$this->parametros["bqsaiaenlace_" . $key];
-		$conector = 'must';
-		if ($enlace) {
+		if ($rango) {
+			if($cadena) {
+				return [$conector => $cadena];
+			}
+			return false;
+		} else if ($enlace) {
 			switch ($enlace) {
 				case 'y' :
 					$conector = 'must';
@@ -142,7 +153,9 @@ class FiltroBusquedaElastic {
 		if ($contador_campos > 1 && $conector == '') {
 			$conector = 'must';
 		}
-		return [$conector => $cadena];
+		$retorno = [];
+		$retorno[$conector][] = $cadena;
+		return $retorno;
 	}
 
 	function limpiar_cadena($cadena) {
@@ -171,6 +184,12 @@ class FiltroBusquedaElastic {
 		if ($cant_date > 0) {
 			if (in_array($campo, $date)) {
 				$retorno_ = $valor;
+			} else {
+				$regex = "/" . $campo . "_x|" . $campo . "_y/";
+				$rango = preg_grep($regex, $date);
+				if(!empty($rango)) {
+					$retorno_ = $valor;
+				}
 			}
 		} else if ($cant_datetime > 0) {
 			if (in_array($campo, $datetime)) {
@@ -236,18 +255,10 @@ class FiltroBusquedaElastic {
 						$cadena = array();
 						foreach ( $varios as $val ) {
 							if ($varios[$j]) {
-								$cadena[] = ["match" => [$alias . $tipo[0] => $varios[$j]
-								]
-								];
-								$cadena[] = ["match" => [$alias . $tipo[0] => "," . $varios[$j]
-								]
-								];
-								$cadena[] = ["match" => [$alias . $tipo[0] => $varios[$j] . ","
-								]
-								];
-								$cadena[] = ["match" => [$alias . $tipo[0] => "," . $varios[$j] . ","
-								]
-								];
+								$cadena[] = ["match" => [$alias . $tipo[0] => $varios[$j]]];
+								$cadena[] = ["match" => [$alias . $tipo[0] => "," . $varios[$j]]];
+								$cadena[] = ["match" => [$alias . $tipo[0] => $varios[$j] . ","]];
+								$cadena[] = ["match" => [$alias . $tipo[0] => "," . $varios[$j] . ","]];
 							}
 						}
 
@@ -500,7 +511,26 @@ class FiltroBusquedaElastic {
 				$cadena_elastic["term"] = [$key => $fecha->format("c")];
 				$cadena = addslashes("date_format(" . $key . ",'%Y-%m-%d')='" . $valor . "'");
 				break;
-
+			case 'rango_fecha':
+				//Se vuelven a seleccionar los 2 valores por si se envia el rango_fecha para el segundo campo
+				if(preg_match("/_y$/", $key)) {
+					return false;
+				}
+				$valor1 = $this->parametros["bqsaia_" . $key];
+				$key2 = preg_replace("/_x$/", "_y", $key);
+				//echo "KEY: $key <br>";
+				$key = preg_replace("/_x$/", "", $key);
+				$valor2 = $this->parametros["bqsaia_" . $key2];
+				//print_r($this->parametros); die();
+				//echo "1: $valor1 2: $valor2";
+				$fecha1=date_create($valor1);
+				$fecha2=date_create($valor2);
+				$cadena_elastic["range"] = [$key => [
+						"gte" => $fecha1->format("c"),
+						"lte" => $fecha2->format("c")
+					]
+				];
+				break;
 			default :
 				$condicion = "|" . $req_condicion_llave . "|";
 				$tipodate = False;

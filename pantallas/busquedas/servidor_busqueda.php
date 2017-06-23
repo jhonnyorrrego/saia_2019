@@ -990,6 +990,10 @@ function mezclar_consulta_elastic($consulta_elastic, $condiciones_json) {
 				$consulta_elastic["query"]["bool"][$key][] = $condiciones_json[$key];
 				break;
 			//TODO: Contemplar otras opciones que se conviertan en un array json
+			/*default:
+				$consulta_elastic["query"]["bool"]["must"][] = $condiciones_json[$key]
+				print_r($condiciones_json); die("NO CONTEMPLADO");
+				break;*/
 		}
 	}
 	return $consulta_elastic;
