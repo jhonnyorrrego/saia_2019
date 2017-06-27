@@ -261,6 +261,7 @@ switch ($sAction) {
 		$('[name="Action"]').click(function(){
 		    if ($("#funcionarioadd").valid()){
 				$(this).attr('disabled',true);
+				$('#funcionarioadd').submit();
 		    }	
 		});		
 		
