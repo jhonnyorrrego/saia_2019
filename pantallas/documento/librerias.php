@@ -196,7 +196,8 @@ if(!$ruta){
 		$ejecutor=busca_filtro_tabla("nombre","ejecutor","idejecutor=".$datos_ejecutor[0]["ejecutor_idejecutor"],"",$conn);
 	}elseif($tipo_radicado==2){
 	    $datos_ejecutor=busca_filtro_tabla("A.ejecutor","documento A","A.iddocumento=".$doc,"",$conn);
-        $ejecutor=busca_filtro_tabla("CONCAT(nombres,' ',apellidos) as nombre","funcionario","funcionario_codigo=".$datos_ejecutor[0]["ejecutor"],"",$conn);
+	    $cadena_concat=concatenar_cadena_sql(array("nombres","' '","apellidos"));
+        $ejecutor=busca_filtro_tabla($cadena_concat." as nombre","funcionario","funcionario_codigo=".$datos_ejecutor[0]["ejecutor"],"",$conn);
         
 	}
     
