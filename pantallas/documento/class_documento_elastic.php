@@ -708,8 +708,7 @@ class DocumentoElastic {
 						"type" => "text"
 				],
 				"estado" => [
-						"type" => "text",
-						"fielddata" => true
+						"type" => "keyword"
 				],
 				"fecha" => [
 						"type" => "date"/*,
@@ -741,8 +740,7 @@ class DocumentoElastic {
 						"type" => "text"
 				],
 				"numero" => [
-						"type" => "text",
-						"fielddata" => true
+						"type" => "keyword"
 				],
 				"paginas" => [
 						"type" => "integer"
