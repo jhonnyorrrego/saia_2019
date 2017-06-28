@@ -675,9 +675,12 @@ class DocumentoElastic {
 			 * ];
 			 * } else {
 			 */
-			$mapeo["properties"][$campos[$i]["nombre"]] = [
-					"type" => $tipo_dato
-			];
+
+			$mapeo_campo = ["type" => $tipo_dato];
+			if($tipo_dato == "text") {
+				$mapeo_campo = ["type" => "text", "fielddata" => true];
+			}
+			$mapeo["properties"][$campos[$i]["nombre"]] = $mapeo_campo;
 			// }
 		}
 		return $mapeo;
@@ -692,7 +695,8 @@ class DocumentoElastic {
 						"type" => "integer"
 				],
 				"descripcion" => [
-						"type" => "text"
+						"type" => "text",
+						"fielddata" => true
 				],
 				"dias" => [
 						"type" => "text"
@@ -704,7 +708,8 @@ class DocumentoElastic {
 						"type" => "text"
 				],
 				"estado" => [
-						"type" => "text"
+						"type" => "text",
+						"fielddata" => true
 				],
 				"fecha" => [
 						"type" => "date"/*,
@@ -736,7 +741,8 @@ class DocumentoElastic {
 						"type" => "text"
 				],
 				"numero" => [
-						"type" => "text"
+						"type" => "text",
+						"fielddata" => true
 				],
 				"paginas" => [
 						"type" => "integer"
