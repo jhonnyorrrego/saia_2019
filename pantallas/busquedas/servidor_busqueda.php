@@ -849,44 +849,28 @@ function procesar_busqueda_elastic($datos_busqueda) {
 	// TODO: Aca se crean los agregados (aggs). Esto deberia hacerse antes de ejecutar la consulta !!!
 	$agrupar_consulta = $datos_busqueda[0]["agrupado_por"];
 
-	// TODO: Se ignora de momento
-	if (@$_REQUEST["idbusqueda_temporal"]) {
-		$datos = busca_filtro_tabla("", "busqueda_filtro", "idbusqueda_filtro=" . $_REQUEST["idbusqueda_temporal"], "", $conn);
-		if ($datos["numcampos"]) {
-			$dat = explode(",", $datos[0]["tabla_adicional"]);
-			$cantidad = count($dat);
-			for($i = 0; $i < $cantidad; $i++) {
-				$fin = strpos($dat[$i], " ");
-				if ($fin) {
-					$tabla2 = substr($dat[$i], 0, $fin);
-				} else {
-					$tabla2 = $dat[$i];
-				}
-				if (strpos(@$tablas_consulta, @$tabla2) === false) {
-					$nuevas_tablas[] = $dat[$i];
-				}
-			}
-			$cantidad = count($nuevas_tablas);
-			if ($cantidad) {
-				$tablas_consulta .= "," . implode(",", $nuevas_tablas);
-				$condiciones_pantalla = json_decode($datos[0]["where_adicional"], true);
-				$condiciones = array_merge_recursive($condiciones, $condiciones_pantalla);
-			}
-		}
-	}
-	// FIN: Se ignora de momento
+	$agrupar_consulta = trim($agrupar_consulta);
 
-	if (trim($agrupar_consulta) != "" && !@$count && $datos_busqueda[0]["tipo_busqueda"] == 2) {
-		if (@$_REQUEST["exportar_saia"]) {
-			$count = ($result["numcampos"]);
+	// TODO: No se procesa busqueda_filtro. El formato no coincide con elastic.
+
+	if(!@$count) {
+		if ($agrupar_consulta != "") {
+			if ($datos_busqueda[0]["tipo_busqueda"] == 2){
+				if (@$_REQUEST["exportar_saia"]) {
+					$count = ($result["numcampos"]);
+				} else {
+					$count = ($result["numcampos"] - 1);
+				}
+			} else {
+				$count = ($result["numcampos"]);
+			}
+
+
 		} else {
-			$count = ($result["numcampos"] - 1);
+			$count = $result[0]['cant'];
 		}
-	} else if (trim($agrupar_consulta) != "" && !@$count) {
-		$count = ($result["numcampos"]);
-	} else if (trim($agrupar_consulta) == "" && !@$count) {
-		$count = $result[0]['cant'];
 	}
+
 	$aux_limit = $limit;
 
 	if ($limit == "todos") {
@@ -918,6 +902,16 @@ function procesar_busqueda_elastic($datos_busqueda) {
 	if (!empty($sidx)) {
 		$orden_elastic = json_decode($sidx, true);
 		$consulta_elastic["sort"] = $orden_elastic["sort"];
+	}
+
+	if(!empty($agrupar_consulta)) {
+		$grupo_elastic = json_decode($agrupar_consulta, true);
+		$llave_agg= "aggregations";
+		if(array_key_exists("aggs", $grupo_elastic)) {
+			$llave_agg= "aggs";
+		}
+		$consulta_elastic[$llave_agg] = $grupo_elastic[$llave_agg];
+		//$consulta_elastic = array_merge_recursive($consulta_elastic, $agrupar_consulta);
 	}
 
 	if ($start < 0) {

@@ -67,8 +67,6 @@ class FiltroBusquedaElastic {
 					$conn->Ejecutar_Sql($sql2);
 					$idbusqueda_temp = $conn->Ultimo_Insert();
 				}
-				//TODO: Revisar para convertir en elastic
-				$idbusqueda_fil = $this->filtros_adicionales();
 			}
 		} else if (@$this->parametros["idbusqueda_filtro"]) {
 			$filtro = "&idbusqueda_filtro=" . $this->parametros["idbusqueda_filtro"];
@@ -202,27 +200,6 @@ class FiltroBusquedaElastic {
 			return (($retorno));
 		}
 		return false;
-	}
-
-	function filtros_adicionales() {
-		global $conn;
-		if (@$this->parametros["filtro_adicional"]) {
-			$datos = $this->parametros["filtro_adicional"];
-			$idbusqueda_componente = $this->parametros["idbusqueda_componente"];
-			$usuario = usuario_actual("idfuncionario");
-			$fecha = fecha_db_almacenar(date("Y-m-d H:i:s"), "Y-m-d H:i:s");
-
-			//Viene en el formato "tabla alias@condicion" donde condicion es algo como "and campo=alias.campo"
-			$valores = explode("@", $datos);
-
-			$tablas = stripslashes($valores[0]);
-			$where = stripslashes($valores[1]);
-
-			$sql1 = "INSERT INTO busqueda_filtro (fk_busqueda_componente, funcionario_idfuncionario, tabla_adicional, where_adicional) VALUES (" . $idbusqueda_componente . "," . $usuario . ",'" . $tablas . "','" . $where . "')";
-			$conn->Ejecutar_Sql($sql1);
-			$idbusqueda = $conn->Ultimo_Insert();
-			return $idbusqueda;
-		}
 	}
 
 	function campos_especiales() {
