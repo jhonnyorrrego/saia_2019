@@ -1256,7 +1256,7 @@ function valida_tipo_destino_entrada($idformato,$iddoc){
             $radicado=busca_filtro_tabla('b.numero, c.idft_destino_radicacion,c.estado_item','ft_radicacion_entrada a,documento b,ft_destino_radicacion c','a.documento_iddocumento = b.iddocumento AND a.idft_radicacion_entrada = c.ft_radicacion_entrada AND a.documento_iddocumento='.$iddoc,'',conn);
             for($i=0;$i<$radicado['numcampos'];$i++){
                 $numero_item=$i+1;
-                $update_item="UPDATE ft_destino_radicacion SET numero_item='".$radicado[$i]['numero'].".".$numero_item."',estado_item=3, recepcion='".usuario_actual("funcionario_codigo")."',recepcion_fecha=".fecha_db_almacenar(date("Y-m-d"),"Y-m-d")." WHERE ft_radicacion_entrada=".$padre[0]['idft_radicacion_entrada'];
+                $update_item="UPDATE ft_destino_radicacion SET numero_item='".$radicado[$i]['numero'].".".$numero_item."',estado_item=3, recepcion='".usuario_actual("funcionario_codigo")."',recepcion_fecha=".fecha_db_almacenar(date("Y-m-d"),"Y-m-d")." WHERE  idft_destino_radicacion=".$radicado[$i]['idft_destino_radicacion'];
                 phpmkr_query($update_item);
            }
        }
