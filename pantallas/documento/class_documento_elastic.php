@@ -575,6 +575,37 @@ class DocumentoElastic {
 		$params = array(
 				"index" => "documentos"
 		);
+
+		$params["body"]["settings"] = [
+				"analysis" => [
+						"filter" =>[
+								"spanish_stop" =>[
+										"type" => "stop",
+										"stopwords" => "_spanish_"
+								],
+								/*"spanish_keywords" => [
+										"type" => "keyword_marker",
+										"keywords" => ["ejemplo"]
+								],*/
+								"spanish_stemmer" => [
+										"type" => "stemmer",
+										"language" => "light_spanish"
+								]
+						],
+						"analyzer" => [
+								"spanish" => [
+										"tokenizer" => "standard",
+										"filter" => [
+												"lowercase",
+												"spanish_stop",
+												/*"spanish_keywords",*/
+												"spanish_stemmer"
+										]
+								]
+						]
+				]
+		];
+
 		$mapeo_datos_doc = $this->obtener_mapeo_doc();
 		// print_r($mapeo_datos_doc);die();
 		for($i = 0; $i < $formatos["numcampos"]; $i++) {
@@ -678,7 +709,7 @@ class DocumentoElastic {
 
 			$mapeo_campo = ["type" => $tipo_dato];
 			if($tipo_dato == "text") {
-				$mapeo_campo = ["type" => "text", "fielddata" => true];
+				$mapeo_campo = ["type" => "text", "fielddata" => true, "analyzer" => "spanish"];
 			}
 			$mapeo["properties"][$campos[$i]["nombre"]] = $mapeo_campo;
 			// }
@@ -696,7 +727,8 @@ class DocumentoElastic {
 				],
 				"descripcion" => [
 						"type" => "text",
-						"fielddata" => true
+						"fielddata" => true,
+						"analyzer" => "spanish"
 				],
 				"dias" => [
 						"type" => "text"
@@ -904,7 +936,7 @@ class DocumentoElastic {
 								$retorno = null;
 							}
 						} else {
-							$retorno = $campos[0][$campo];
+							$retorno = codifica_encabezado(html_entity_decode($campos[0][$campo]));
 						}
 				}
 			}
