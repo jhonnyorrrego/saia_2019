@@ -277,7 +277,20 @@ class DocumentoElastic {
 		$response = $this->get_cliente_elasticsearch()->buscar_item_elastic($parametros, $json);
 		$response_borrar = array();
 		foreach ( $response["hits"]["hits"] as $key => $valor ) {
-			array_push($response_borrar, $this->cliente_elasticsearch->borrar_indice($valor["_index"], $valor["_id"], $valor["_type"]));
+			array_push($response_borrar, $this->get_cliente_elasticsearch()->borrar_indice($valor["_index"], $valor["_id"], $valor["_type"]));
+		}
+		return ($response_borrar);
+	}
+
+	public function borrar_elasticsearch($parametros = null) {
+		if (empty($this->iddocumento)) {
+			return false;
+		}
+		$doc = busca_filtro_tabla("plantilla", "documento", "iddocumento = " . $this->iddocumento, "", $conn);
+		$response_borrar = array();
+		if($doc["numcampos"]) {
+			$tipo = $doc[0]["plantilla"];
+			array_push($response_borrar, $this->get_cliente_elasticsearch()->borrar_indice("documentos", $this->iddocumento, $tipo));
 		}
 		return ($response_borrar);
 	}
