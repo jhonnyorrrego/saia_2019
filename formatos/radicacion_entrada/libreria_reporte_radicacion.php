@@ -133,7 +133,7 @@ function mostrar_mensajeros_dependencia($idft_destino_radicacion,$estado_item){
 	if(($tipo_mensajeria_radicacion[0]['tipo_mensajeria']==2  || $tipo_mensajeria_radicacion[0]['tipo_mensajeria']==1) && !$datos[0]['estado_recogida']){
 		$datos[0]['nombre_destino']=$tipo_mensajeria_radicacion[0]['area_responsable'];
 	}else if($datos[0]['estado_recogida'] && $tipo_mensajeria_radicacion[0]['tipo_destino']==1){
-		$destino_externo=busca_filtro_tabla("iddependencia_cargo","vfuncionario_dc","lower(cargo) LIKE 'mensajer%extern%'","",$conn);
+		$destino_externo=busca_filtro_tabla("iddependencia_cargo","vfuncionario_dc","lower(cargo) LIKE 'mensajer%extern%' AND estado_dc=1","",$conn);
 		$datos[0]['nombre_destino']=$destino_externo[0]['iddependencia_cargo'];
 	}
 	
@@ -206,7 +206,7 @@ function filtrar_mensajero(){
     $funcionario_codigo=usuario_actual('funcionario_codigo');
     $cargo=busca_filtro_tabla("lower(cargo) AS cargo, iddependencia_cargo","vfuncionario_dc a","a.funcionario_codigo=".$funcionario_codigo,"",$conn);
     for($j=0;$j<$cargo['numcampos'];$j++){
-    if($cargo[$j]['cargo']!="mensajero"){
+   // if($cargo[$j]['cargo']!="mensajero"){
     
     $select="<select class='pull-left btn btn-mini dropdown-toggle' style='height:22px; margin-left: 30px;' name='filtro_mensajeros' id='filtro_mensajeros'>";
     $select.="<option value=''>Todos Los Mensajeros</option>";
@@ -227,9 +227,9 @@ function filtrar_mensajero(){
 		
     }
     $select.="</select>";
-    }else{
+    /*}else{
     	$select="";
-    }
+    }*/
 	}
     return $select;
 }

@@ -17,7 +17,7 @@ include_once($ruta_db_superior."librerias_saia.php");
 
 $dependencia=$_REQUEST['iddependencia'];
 
-$datos=busca_filtro_tabla('','ft_dependencias_ruta a,ft_ruta_distribucion b,documento c','lower(c.estado)="aprobado" AND b.documento_iddocumento=c.iddocumento AND a.ft_ruta_distribucion=b.idft_ruta_distribucion AND a.dependencia_asignada='.$dependencia,'',$conn);
+$datos=busca_filtro_tabla('','ft_dependencias_ruta a,ft_ruta_distribucion b,documento c','lower(c.estado)="aprobado" AND b.documento_iddocumento=c.iddocumento AND a.ft_ruta_distribucion=b.idft_ruta_distribucion AND a.estado_dependencia=1 AND a.dependencia_asignada='.$dependencia,'',$conn);
 //print_r($datos);
 
 if($datos['numcampos']>0){

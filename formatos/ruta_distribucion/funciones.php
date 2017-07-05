@@ -78,7 +78,7 @@ function mostrar_datos_dependencias_ruta($idformato,$iddoc){
 						<tbody>
 						<tr class="encabezado_list">
 						    <td>Fecha</td>
-						    <td>Código</td>
+						   
 						    <td>Dependencia</td>
 						    <td>Descripción</td>
 						    <td>Estado</td>
@@ -99,7 +99,7 @@ function mostrar_datos_dependencias_ruta($idformato,$iddoc){
 							$tabla.='		
 									<tr>
 										<td>'.$item[$j]['fecha_item_dependenc'].'</td>
-										<td>'.$item[$j]['dependencia_asignada'].'</td>
+										
 										<input type="hidden" name="dependencia_asignada[]" value="'.$item[$j]['dependencia_asignada'].'">
 										<td>'.$dependencia[0]['nombre'].'</td>';
 							if($item[$j]['descripcion_dependen']==''){
@@ -112,7 +112,7 @@ function mostrar_datos_dependencias_ruta($idformato,$iddoc){
 							$seleccionar=array(1=>"",2=>"");
 		                    $seleccionar[$item[$j]['estado_dependencia']]='selected';
 							$tabla.='
-										<td><select class="cambio_estado_dependencia" data-idft='.$item[$j]['dependencia_asignada'].' name="estado[]" style="width:100px;">
+										<td><select class="cambio_estado_dependencia" data-idft_ruta_distribucion='.$dato[0]['idft_ruta_distribucion'].' data-idft='.$item[$j]['dependencia_asignada'].' name="estado[]" style="width:100px;">
                                               <option value="1" '.$seleccionar[1].'>Activo</option>
                                               <option value="2" '.$seleccionar[2].'>Inactivo</option>
                                         </select></td>
@@ -139,19 +139,25 @@ function mostrar_datos_dependencias_ruta($idformato,$iddoc){
 						$(".cambio_estado_dependencia").change(function(){
 							var estado=$(this).val();
 							var idft=$(this).attr("data-idft");
+							var idft_ruta_distribucion=$(this).attr("data-idft_ruta_distribucion");
+				
 							$.ajax({
 			                        type:"POST",
+			                       	dataType: "json",
 			                        url: "actualizar_estado_dependencias.php",
 			                        data: {
 			                                        idft:idft,
-			                                        estado:estado
+			                                        estado:estado,
+			                                        idft_ruta_distribucion:idft_ruta_distribucion
 			                        },
 			                        success: function(datos){
-			                            notificacion_saia("Estado de la dependencia actualizado correctamente","success","",4000);
+			                        	
+										var color="success";
+										if(!datos.exito){
+											color="warning";
+										}
+			                            notificacion_saia(datos.mensaje,color,"",4000);
 										location.reload();
-			                        },
-			                        error:function(){
-			                        	alert("error consulta ajax");
 			                        }
 			                    }); 	
 			                	  			
@@ -195,7 +201,7 @@ function mostrar_datos_funcionarios_ruta($idformato,$iddoc){
 						<tbody>
 						<tr class="encabezado_list">
 						    <td>Fecha</td>
-						    <td>Código</td>
+						   
 						    <td>Mensajero</td>
 						    <td>Estado</td>
 						</tr>
@@ -219,7 +225,7 @@ function mostrar_datos_funcionarios_ruta($idformato,$iddoc){
 							$tabla.='		
 									<tr>
 										<td>'.$item[$j]['fecha_mensajero'].'</td>
-										<td>'.$item[$j]['mensajero_ruta'].'</td>
+										
 									
 										<td>'.$mensajero[0]['nombre'].'</td>
 										<td><select class="cambio_estado" name="estado[]" data-idft="'.$item[$j]['idft_funcionarios_ruta'].'" style="width:100px;">
@@ -283,7 +289,14 @@ function crear_items_ruta_distribucion($idformato,$iddoc){
     $mensajeros=explode(",",$datos[0]['asignar_mensajeros']);
     $fecha_almacenar=fecha_db_almacenar(date('Y-m-d'),'Y-m-d');
     for($i=0;$i<count($dependencias);$i++){
-        $cadena="INSERT INTO ft_dependencias_ruta (fecha_item_dependenc,dependencia_asignada,estado_dependencia,ft_ruta_distribucion,orden_dependencia) VALUES (".$fecha_almacenar.",".$dependencias[$i].",1,".$datos[0]['idft_ruta_distribucion'].",".($i+1).")";
+    	
+		$busca_dep=busca_filtro_tabla("idft_dependencias_ruta,estado","ft_dependencias_ruta a,ft_ruta_distribucion b,documento c","lower(c.estado)='aprobado' AND b.documento_iddocumento=c.iddocumento AND a.ft_ruta_distribucion=b.idft_ruta_distribucion AND  a.estado_dependencia=1 AND a.ft_ruta_distribucion<>".$datos[0]['idft_ruta_distribucion']." AND a.dependencia_asignada=".$dependencias[$i],"",$conn);
+		$estado_dependencia=1;
+		if($busca_dep['numcampos']){
+			$estado_dependencia=2;
+		}
+		
+        $cadena="INSERT INTO ft_dependencias_ruta (fecha_item_dependenc,dependencia_asignada,estado_dependencia,ft_ruta_distribucion,orden_dependencia) VALUES (".$fecha_almacenar.",".$dependencias[$i].",".$estado_dependencia.",".$datos[0]['idft_ruta_distribucion'].",".($i+1).")";
         phpmkr_query($cadena);
     }
     for($i=0;$i<count($mensajeros);$i++){
