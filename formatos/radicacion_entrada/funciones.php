@@ -375,6 +375,9 @@ function tipo_radicado_radicacion($idformato,$iddoc){//en el adicionar
             });
             function tipo_origen(tipo){
                 if(tipo==1){   //EXTERNO
+                	
+                	$('#empresa_transportado').parent().parent().show();
+                	
                     $('[name="tipo_radicado"]').val('radicacion_entrada');
                     seleccionar_interno_actual(0);    
                     $('#area_responsable').parent().parent().hide();
@@ -397,6 +400,8 @@ function tipo_radicado_radicacion($idformato,$iddoc){//en el adicionar
                     $('#persona_natural').parent().parent().show();
                     //$('#anexos_digitales').parent().parent().show();
                 }else{ //INTERNO
+                
+                	$('#empresa_transportado').parent().parent().hide();
                 
                     seleccionar_interno_actual(1);
                 
@@ -714,7 +719,7 @@ function mostrar_item_destino_radicacion($idformato,$iddoc){
     	for ($i=0; $i < $datos['numcampos']; $i++) {
     	    $concat=array("nombres","' '","apellidos");
     	    $concat_nombres=concatenar_cadena_sql($concat);      		
-    	    $origen=busca_filtro_tabla($concat_nombres." AS nombre","funcionario a","a.iddependencia_cargo=".$datos[$i]['nombre_origen'],"",$conn);
+    	    $origen=busca_filtro_tabla($concat_nombres." AS nombre","vfuncionario_dc a","a.iddependencia_cargo=".$datos[$i]['nombre_origen'],"",$conn);
             if(!$origen['numcampos']){
                 $origen=busca_filtro_tabla("nombre","vejecutor a","a.iddatos_ejecutor=".$datos[$i]['origen_externo'],"",$conn);
             }
