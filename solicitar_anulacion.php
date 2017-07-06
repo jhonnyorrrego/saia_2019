@@ -134,7 +134,11 @@ elseif(@$_REQUEST["accion"]=="anular"){
  $doc=busca_filtro_tabla("lower(plantilla)","documento","iddocumento='".$_REQUEST["key"]."'","",$conn);
 
  $ch = curl_init();
- $fila = PROTOCOLO_CONEXION.RUTA_PDF_LOCAL."/class_impresion.php?iddoc=".$iddoc."&conexion_remota=1&usuario_actual=".$_SESSION["usuario_actual"]."&LOGIN=".$_SESSION["LOGIN".LLAVE_SAIA];
+ $fila = "".PROTOCOLO_CONEXION.RUTA_PDF_LOCAL."/class_impresion.php?iddoc=".$iddoc."&conexion_remota=1&usuario_actual=".$_SESSION["usuario_actual"]."&LOGIN=".$_SESSION["LOGIN".LLAVE_SAIA];
+        if (strpos(PROTOCOLO_CONEXION, 'https') !== false) {
+ curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false); 
+ curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+} 
  curl_setopt($ch, CURLOPT_URL,$fila); 
  curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
  $contenido=curl_exec($ch);    
@@ -146,7 +150,7 @@ elseif(@$_REQUEST["accion"]=="anular"){
  $revisores=busca_filtro_tabla("origen","buzon_salida","nombre in('REVISADO','APROBADO') and archivo_idarchivo='".$_REQUEST["key"]."'","",$conn);
  $mensaje="Ha sido ANULADO el documento con Radicado: ".$solicitante[0]["numero"]." y Descripci&oacute;n:".$solicitante[0]["descripcion"].".";
  for($i=0;$i<$revisores["numcampos"];$i++)
-   enviar_mensaje("",'codigo',array($revisores[$i]["login"]),"Solicitud de Anulacion".$datos[0]['numero'],utf8_encode($mensaje));
+   enviar_mensaje("",'codigo',array($revisores[$i]["origen"]),"Solicitud de Anulacion".$datos[0]['numero'],utf8_encode($mensaje));
   
  	alerta("<b>ATENCI&Oacute;N</b><br>El documento ha sido ANULADO");
    $flujo = busca_filtro_tabla("","paso_documento","documento_iddocumento=".$_REQUEST["key"],"idpaso_documento desc",$conn);
