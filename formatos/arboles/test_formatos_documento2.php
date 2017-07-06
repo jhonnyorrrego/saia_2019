@@ -136,9 +136,13 @@ for($i=0;$i<$dato["numcampos"];$i++){
   if(!$version["numcampos"])$cadena_version=1;
   else $cadena_version=$version[0]["max_version"]+1;
 
+  $texto_anulado='';
+  if($estado[0][0]=='ANULADO'){
+   $texto_anulado=' <strong>(ANULADO)</strong>';
+  }
   $texto.='<item style="font-family:verdana; font-size:7pt;" '.$imagenes;
   $llave=$arreglo[0]."-".$arreglo[2]."-".$dato[$i]["id".$tabla]."-".$dato[$i]["documento_iddocumento"];
-  $texto.=strip_tags('text="V'.$cadena_version.'. '. str_replace('"','',decodifica(mostrar_valor_campo($campo[0]["nombre"],$arreglo[0],$dato[$i]["documento_iddocumento"],1))).'" id="'.$llave.'" tooltip="'.($tips)).'">';
+  $texto.=strip_tags('text="V'.$cadena_version.'. '. str_replace('"','',decodifica(mostrar_valor_campo($campo[0]["nombre"],$arreglo[0],$dato[$i]["documento_iddocumento"],1))).$texto_anulado.'" id="'.$llave.'" tooltip="'.($tips)).'">';
   $items=llena_items($arreglo[0],$dato[$i]["id".$tabla],$tabla);
   /*if($items<>""){
   $texto.='<item style="font-family:verdana; font-size:7pt;" '.$imagenes.' text="Formatos tipo item" id="item" >';

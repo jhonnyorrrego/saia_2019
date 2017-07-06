@@ -162,7 +162,7 @@ elseif(@$_REQUEST["accion"]=="anular"){
  $revisores=busca_filtro_tabla("origen","buzon_salida","nombre in('REVISADO','APROBADO') and archivo_idarchivo='".$_REQUEST["key"]."'","",$conn);
  $mensaje="Ha sido ANULADO el documento con Radicado: ".$solicitante[0]["numero"]." y Descripci&oacute;n:".$solicitante[0]["descripcion"].".";
  for($i=0;$i<$revisores["numcampos"];$i++)
-   enviar_mensaje("",'codigo',array($revisores[$i]["login"]),"Solicitud de Anulacion".$datos[0]['numero'],utf8_encode($mensaje));
+   enviar_mensaje("",'codigo',array($revisores[$i]["origen"]),"Solicitud de Anulacion".$datos[0]['numero'],utf8_encode($mensaje));
 
  	alerta("<b>ATENCI&Oacute;N</b><br>El documento ha sido ANULADO");
    $flujo = busca_filtro_tabla("","paso_documento","documento_iddocumento=".$_REQUEST["key"],"idpaso_documento desc",$conn);
