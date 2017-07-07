@@ -381,9 +381,14 @@ function generar_importar($datos){
 				$strsql .= implode("','", array_values($datos['datos_formato']));			
 				$strsql .= "')";
 				phpmkr_query($strsql);
-				$idformato=phpmkr_insert_id();	
 				
-				if($idformato){
+				$consulta_insert_formato=busca_filtro_tabla("idformato","formato","lower(nombre)='".strtolower($datos['datos_formato']['nombre'])."'","",$conn);
+				
+				if($consulta_insert_formato['numcampos']){
+					$idformato=$consulta_insert_formato[0]['idformato'];
+				}
+				
+				if(@$idformato){
 					$formato['exito']=1;
 					$formato['mensaje']="Formato Creado con Exito!";
 					crear_modulo_formato_importar($idformato);
@@ -391,7 +396,6 @@ function generar_importar($datos){
 					$formato['exito']=0;
 					$formato['mensaje']="Inconvenientes al generar el insert del formato: ".$strsql;
 				}
-
 			}
 			
 		//FIN INSERT FORMATO
