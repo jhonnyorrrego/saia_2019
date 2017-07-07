@@ -10,7 +10,9 @@ while($max_salida>0){
 }
 
 include_once($ruta_db_superior."db.php");
+$mensajero_vector=explode('-',$_REQUEST['mensajero_encargado']);
 
-$sql="UPDATE ft_destino_radicacion SET mensajero_encargado={$_REQUEST['mensajero_encargado']} WHERE idft_destino_radicacion={$_REQUEST['idft_destino_radicacion']}";
+
+$sql="UPDATE ft_destino_radicacion SET mensajero_encargado=".$mensajero_vector[0].",tipo_mensajero='".$mensajero_vector[1]."' WHERE idft_destino_radicacion={$_REQUEST['idft_destino_radicacion']}";
 
 phpmkr_query($sql);

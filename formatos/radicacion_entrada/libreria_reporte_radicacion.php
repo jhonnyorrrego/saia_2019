@@ -103,13 +103,13 @@ function planilla_mensajero2($idft_destino_radicacion,$mensajero_encargado,$esta
     if($mensajero_encargado=='mensajero_encargado'){
         $html.="Pendiente";
     }else{
-        $planillas=busca_filtro_tabla("c.numero,c.iddocumento","ft_item_despacho_ingres a,ft_despacho_ingresados b, documento c","a.ft_despacho_ingresados=b.idft_despacho_ingresados AND b.documento_iddocumento=c.iddocumento AND c.estado NOT IN('ELIMINADO','ANULADO') AND a.ft_destino_radicacio=".$idft_destino_radicacion,"",$conn);
-        if($planillas['numcampos']){
-            for($i=0;$i<$planillas['numcampos'];$i++){
-                //$html.='<div class="link kenlace_saia" enlace="ordenar.php?key='.$planillas[$i]['iddocumento'].'&amp;accion=mostrar&amp;mostrar_formato=1" conector="iframe" titulo="No Radicado '.$planillas[$i]['numero'].'"><center><span class="badge">'.$planillas[$i]['numero']."</span></center></div>\n";
+    	$tipo_mensajero=busca_filtro_tabla("tipo_mensajero","ft_destino_radicacion","idft_destino_radicacion=".$idft_destino_radicacion,"",$conn);
+		if($tipo_mensajero[0]['tipo_mensajero']=="0"){
+			$tipo_mensajero[0]['tipo_mensajero']='i';
             }
-        }
-        $html.="<input type='checkbox' class='planilla_mensajero' ".$disable." mensajero='".$mensajero_encargado."' value='$idft_destino_radicacion'>";
+		
+		
+        $html.="<input type='checkbox' class='planilla_mensajero' ".$disable." mensajero='".$mensajero_encargado."-".$tipo_mensajero[0]['tipo_mensajero']."' value='$idft_destino_radicacion'>";
     }
     return $html;
 }
@@ -130,6 +130,7 @@ function mostrar_mensajeros_dependencia($idft_destino_radicacion,$estado_item){
     $datos=busca_filtro_tabla('','ft_destino_radicacion','idft_destino_radicacion='.$idft_destino_radicacion,'',conn);
 	
 	$tipo_mensajeria_radicacion=busca_filtro_tabla("tipo_mensajeria,area_responsable,tipo_destino","ft_radicacion_entrada","idft_radicacion_entrada=".$datos[0]['ft_radicacion_entrada'],"",$conn);
+	
 	if(($tipo_mensajeria_radicacion[0]['tipo_mensajeria']==2  || $tipo_mensajeria_radicacion[0]['tipo_mensajeria']==1) && !$datos[0]['estado_recogida']){
 		$datos[0]['nombre_destino']=$tipo_mensajeria_radicacion[0]['area_responsable'];
 	}else if($datos[0]['estado_recogida'] && $tipo_mensajeria_radicacion[0]['tipo_destino']==1){
@@ -138,13 +139,31 @@ function mostrar_mensajeros_dependencia($idft_destino_radicacion,$estado_item){
 	}
 	
     if($datos[0]['estado_recogida'] && $tipo_mensajeria_radicacion[0]['tipo_destino']==1){
-    	$responsable[0]['mensajero_ruta']=$destino_externo[0]['iddependencia_cargo'];
-		$responsable['numcampos']=1;
+    	$array_concat=array("nombres","' '","apellidos");
+    	$cadena_concat=concatenar_cadena_sql($array_concat);
+    	$mensajeros_externos=busca_filtro_tabla("iddependencia_cargo as id,".$cadena_concat." AS nombre","vfuncionario_dc","lower(cargo) LIKE 'mensajer%extern%' AND estado_dc=1","",$conn);
+		
+		$array_mensajeros_externos=array();
+		for($me=0;$me<$mensajeros_externos['numcampos'];$me++){
+			$array_mensajeros_externos[$me]['id']=$mensajeros_externos[$me]['id'].'-i';
+			$array_mensajeros_externos[$me]['nombre']=$mensajeros_externos[$me]['nombre'];
+		}
+
+		$empresas_transportadoras=busca_filtro_tabla("idcf_empresa_trans as id,nombre","cf_empresa_trans","","",$conn);
+		for($me=0;$me<$empresas_transportadoras['numcampos'];$me++){
+			$array_mensajeros_externos[$me+$mensajeros_externos['numcampos']]['id']=$empresas_transportadoras[$me]['id'].'-e';
+			$array_mensajeros_externos[$me+$mensajeros_externos['numcampos']]['nombre']=$empresas_transportadoras[$me]['nombre'];
+		}
+
+
+		$responsable['numcampos']=0;
     }else{
     	$destino=busca_filtro_tabla("","vfuncionario_dc","iddependencia_cargo=".$datos[0]['nombre_destino'],"",$conn);
 		$responsable=busca_filtro_tabla("mensajero_ruta","ft_ruta_distribucion a, ft_dependencias_ruta b, ft_funcionarios_ruta c,documento d","a.documento_iddocumento=d.iddocumento AND lower(d.estado)='aprobado' AND b.estado_dependencia=1 AND c.estado_mensajero=1 AND a.idft_ruta_distribucion=b.ft_ruta_distribucion AND a.idft_ruta_distribucion=c.ft_ruta_distribucion AND b.dependencia_asignada=".$destino[0]['iddependencia'],"",$conn);
 	}
     $select="<select class='mensajeros' ".$disable." data-idft='$idft_destino_radicacion' name='responsable_{$idft_destino_radicacion}' style='width:150px;'>";
+    
+	
     
     if($responsable['numcampos']==1){
     		$array_concat=array("nombres","' '","apellidos");
@@ -152,11 +171,23 @@ function mostrar_mensajeros_dependencia($idft_destino_radicacion,$estado_item){
             $mensajero=busca_filtro_tabla($cadena_concat." AS nombre","vfuncionario_dc","iddependencia_cargo=".$responsable[0]['mensajero_ruta'],"",$conn);
             
             if($responsable[0]['mensajero_ruta']==$datos[0]['mensajero_encargado']){
-                $select.="<option value='".$responsable[0]['mensajero_ruta']."' selected>".$mensajero[0]['nombre']."</option>";
+                $select.="<option value='".$responsable[0]['mensajero_ruta']."-i' selected>".$mensajero[0]['nombre']."</option>";
             }else{
             	$select.="<option value='' selected>Seleccione</option>";
-                $select.="<option value='".$responsable[0]['mensajero_ruta']."'>".$mensajero[0]['nombre']."</option>";
+                $select.="<option value='".$responsable[0]['mensajero_ruta']."-i'>".$mensajero[0]['nombre']."</option>";
             }
+    }else if(count($array_mensajeros_externos)){
+    	$select.="<option value='' selected>Seleccione</option>";
+    	
+		for($me=0;$me<count($array_mensajeros_externos);$me++){
+			$selected='';
+			if($array_mensajeros_externos[$me]['id']==$datos[0]['mensajero_encargado'].'-'.$datos[0]['tipo_mensajero']){
+				$selected='selected';
+			}	
+				
+			$select.="<option value='".$array_mensajeros_externos[$me]['id']."' ".$selected.">".$array_mensajeros_externos[$me]['nombre']."</option>";
+		}    	
+    
     }else{
         
         $select.="<option value=''>Seleccione</option>";
@@ -165,9 +196,9 @@ function mostrar_mensajeros_dependencia($idft_destino_radicacion,$estado_item){
 			$cadena_concat=concatenar_cadena_sql($array_concat);          	
             $mensajero=busca_filtro_tabla($cadena_concat." AS nombre","vfuncionario_dc","iddependencia_cargo={$responsable[$i]['mensajero_ruta']}","",$conn);
             if($responsable[$i]['mensajero_ruta']==$datos[0]['mensajero_encargado']){
-                $select.="<option value='{$responsable[$i]['mensajero_ruta']}' selected>".$mensajero[0]['nombre']."</option>";
+                $select.="<option value='".$responsable[$i]['mensajero_ruta']."-i' selected>".$mensajero[0]['nombre']."</option>";
             }else{
-                $select.="<option value='{$responsable[$i]['mensajero_ruta']}'>".$mensajero[0]['nombre']."</option>";
+                $select.="<option value='".$responsable[$i]['mensajero_ruta']."-i'>".$mensajero[0]['nombre']."</option>";
             }
             
         }
@@ -195,7 +226,8 @@ function condicion_adicional(){
     
     $condicion="";
     if(@$_REQUEST['variable_busqueda']){
-        $condicion="AND B.mensajero_encargado=".$_REQUEST['variable_busqueda'];
+		$vector_mensajero=explode('-',$_REQUEST['variable_busqueda']);
+        $condicion=" AND B.mensajero_encargado=".$vector_mensajero[0]." AND B.tipo_mensajero='".$vector_mensajero[1]."'";
     }
     return $condicion;
 }
@@ -203,34 +235,54 @@ function condicion_adicional(){
 function filtrar_mensajero(){
     global $ruta_db_superior, $conn;
     
-    $funcionario_codigo=usuario_actual('funcionario_codigo');
-    $cargo=busca_filtro_tabla("lower(cargo) AS cargo, iddependencia_cargo","vfuncionario_dc a","a.funcionario_codigo=".$funcionario_codigo,"",$conn);
-    for($j=0;$j<$cargo['numcampos'];$j++){
-   // if($cargo[$j]['cargo']!="mensajero"){
-    
     $select="<select class='pull-left btn btn-mini dropdown-toggle' style='height:22px; margin-left: 30px;' name='filtro_mensajeros' id='filtro_mensajeros'>";
     $select.="<option value=''>Todos Los Mensajeros</option>";
 	$array_concat=array("nombres","' '","apellidos");
 	$cadena_concat=concatenar_cadena_sql($array_concat);
     $datos=busca_filtro_tabla("iddependencia_cargo, ".$cadena_concat." AS nombre","vfuncionario_dc","lower(cargo)='mensajero' AND estado_dc=1","",$conn);
-    //print_r($datos);die();
     $filtrar_mensajero=@$_REQUEST['variable_busqueda'];
     for($i=0;$i<$datos['numcampos'];$i++){
         $selected='';	
 		if($filtrar_mensajero){
-			if($filtrar_mensajero==$datos[$i]['iddependencia_cargo']){
+			if($filtrar_mensajero==$datos[$i]['iddependencia_cargo']."-i"){
 				$selected='selected';
 			}
 		}	
 			
-        $select.="<option value='{$datos[$i]['iddependencia_cargo']}' ".$selected.">{$datos[$i]['nombre']}</option>";
+        $select.="<option value='".$datos[$i]['iddependencia_cargo']."-i' ".$selected.">".$datos[$i]['nombre']."&nbsp;-&nbsp;Mensajero</option>";
 		
     }
-    $select.="</select>";
-    /*}else{
-    	$select="";
-    }*/
+
+	$mensajeros_externos=busca_filtro_tabla("iddependencia_cargo, ".$cadena_concat." AS nombre","vfuncionario_dc","lower(cargo) LIKE 'mensajer%extern%' AND estado_dc=1","",$conn);
+	
+    for($i=0;$i<$mensajeros_externos['numcampos'];$i++){
+        $selected='';	
+		if($filtrar_mensajero){
+			if($filtrar_mensajero==$mensajeros_externos[$i]['iddependencia_cargo']."-i"){
+				$selected='selected';
 	}
+		}	
+			
+        $select.="<option value='".$mensajeros_externos[$i]['iddependencia_cargo']."-i' ".$selected.">".$mensajeros_externos[$i]['nombre']."&nbsp;-&nbsp;Mensajero Externo</option>";
+		
+    }
+	
+	
+	$empresas_transportadoras=busca_filtro_tabla("idcf_empresa_trans as id,nombre","cf_empresa_trans","","",$conn);
+    for($i=0;$i<$empresas_transportadoras['numcampos'];$i++){
+        $selected='';	
+		if($filtrar_mensajero){
+			if($filtrar_mensajero==$empresas_transportadoras[$i]['id']."-e"){
+				$selected='selected';
+			}
+		}	
+			
+        $select.="<option value='".$empresas_transportadoras[$i]['id']."-e' ".$selected.">".$empresas_transportadoras[$i]['nombre']."&nbsp;-&nbsp;Empresa Transportadora</option>";
+		
+    }		
+
+    $select.="</select>";
+	
     return $select;
 }
 

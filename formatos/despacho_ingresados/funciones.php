@@ -19,7 +19,9 @@ echo (librerias_jquery("1.7"));
 function campos_ocultos_entrega($idformato,$iddoc){
 	global $conn,$ruta_db_superior;
 	$valores=trim($_REQUEST['idft'],',');
-	$mensajero=trim($_REQUEST['mensajero'],',');
+	$vector_mensajero=explode('-',$_REQUEST['mensajero']);
+	$mensajero=trim($vector_mensajero[0],',');
+	$tipo_mensajero=$vector_mensajero[1];
 	$hoy=date("Y-m-d");
 	?>
 	<script>
@@ -31,6 +33,7 @@ function campos_ocultos_entrega($idformato,$iddoc){
 			}else{
 				$("input[name=iddestino_radicacion]").val('<?php echo $valores;?>');
 				$("input[name=mensajero]").val('<?php echo $mensajero;?>');
+				$("input[name=tipo_mensajero]").val('<?php echo $tipo_mensajero;?>');
 				$("input[name=fecha_entrega]").val('<?php echo $hoy;?>');
 			}
 		});
@@ -85,24 +88,23 @@ function generar_pdf_entrega($idformato,$iddoc){
 function reporte_entradas2($idformato,$iddoc){
 	global $conn,$registros,$ruta_db_superior;
 	include_once($ruta_db_superior."pantallas/qr/librerias.php");
-	$codigo_qr=busca_filtro_tabla("","documento_verificacion","documento_iddocumento=".$iddoc,"", $conn);
+	/*$codigo_qr=busca_filtro_tabla("","documento_verificacion","documento_iddocumento=".$iddoc,"", $conn);
 	if($codigo_qr['numcampos']){
 		$qr='<img src="'.PROTOCOLO_CONEXION.RUTA_PDF.'/'.$codigo_qr[0]['ruta_qr'].'" width="80px" height="80px">';	
 	}else{
 		generar_codigo_qr($idformato,$iddoc);
 		$codigo_qr=busca_filtro_tabla("","documento_verificacion","documento_iddocumento=".$iddoc,"", $conn);	
 		$qr='<img src="'.PROTOCOLO_CONEXION.RUTA_PDF.'/'.$codigo_qr[0]['ruta_qr'].'" width="80px" height="80px">';	
-	}
+	}*/
 	$documentos2=busca_filtro_tabla("","ft_despacho_ingresados","documento_iddocumento=".$iddoc,"",$conn);
 	$funcionario=busca_filtro_tabla("","vfuncionario_dc","iddependencia_cargo=".$documentos2[0]['mensajero'],"",$conn);
 	
 	$logo=busca_filtro_tabla("valor","configuracion","nombre='logo'","",$conn);
-	$texto='<table style="border-collapse:collapse;width:100%" border="1px">';
+	/*$texto='<table style="border-collapse:collapse;width:100%" border="1px">';
 	$texto.='<tr>';
 	$texto.='<td style="text-align:center;" colspan="3"><br/><br/><img src="'.PROTOCOLO_CONEXION.RUTA_PDF.'/'.$logo[0]['valor'].'" width="125px" heigth="83px"></td>';
 	$texto.='<td style="text-align:center" colspan="5"><br/><br/><br/><br/><br/><b>PLANILLA DE ENTREGA </b></td>';
-	$texto.='
-	<td style="text-align:center"><br><br>'.$qr.'<br>Planilla No. '.formato_numero($idformato,$iddoc,1).'</td>
+	$texto.='<td style="text-align:center"><br><br>'.$qr.'<br>Planilla No. '.formato_numero($idformato,$iddoc,1).'</td>
 	</tr>';
 	$texto.='<tr>';
 	$texto.='<td colspan="3"><b>MENSAJERO O ENCARGADO: '.$funcionario[0]['nombres'].' '.$funcionario[0]['apellidos'].'</b></td>';
@@ -110,11 +112,11 @@ function reporte_entradas2($idformato,$iddoc){
     $fecha_planilla=busca_filtro_tabla(fecha_db_obtener("fecha","Y-m-d H:i:s")." as fecha","documento","iddocumento=".$iddoc,"",$conn);
     $texto.='<td colspan="4"><b>FECHA PLANILLA: '.$fecha_planilla[0]['fecha'].'</b></td>';
 	$texto.='</tr>';
-	$texto.='</table>';
+	$texto.='</table>';*/
 	
 	$texto.='<br />';
 	$texto.='<table style="border-collapse:collapse;width:100%" border="1px">';
-	$texto.='<tr style="height:70px">';
+	/*$texto.='<tr style="height:70px">';
 	 $texto.='<td style="text-align:center; width:7%"><b>TRAMITE</b></td>';
     $texto.='<td style="text-align:center; width:3%"><b>TIPO</b></td>';
 	$texto.='<td style="text-align:center; width:3%"><b>Rad. Item</b></td>';
@@ -126,7 +128,7 @@ function reporte_entradas2($idformato,$iddoc){
 	
 	$texto.='<td style="text-align:center; width:15%"><b>FIRMA DE QUIEN RECIBE</b></td>';
     $texto.='<td style="text-align:center; width:17%"><b>OBSERVACIONES</b></td>';
-	$texto.='</tr>';
+	$texto.='</tr>';*/
 	
 	for($i=0;$i<$registros["numcampos"];$i++){
 	    $array_concat=array("nombres","' '","apellidos");
@@ -174,16 +176,16 @@ function reporte_entradas2($idformato,$iddoc){
     		$tipo_tramite='RECOGIDA';
     	}
         
-        $texto.='<td style="text-align:center; width:7%">'.$tipo_tramite.'</td>';
-        $texto.='<td style="text-align:center; width:3%">'.$tipo_radicado.'</td>';
-		$texto.='<td style="text-align:center; width:3%">'.$registros[$i]["numero_item"].'</td>';
-		$texto.='<td style="text-align:center; width:5%">'.$fecha_radicacion[0]["fecha"].'</td>';
-		$texto.='<td style="text-align:left; width:10%">'.$origen[0]['nombre'].'</td>';
-		$texto.='<td style="text-align:left; width:15%">'.$destino[0]["nombre"].'<br><b>Ubicacion:</b>'.$ubicacion.'</td>';
-		$texto.='<td style="text-align:left; width:15%">'.$registros[$i]["descripcion"].'</td>';
-		$texto.='<td style="text-align:center; width:10%">'.$registros[$i]["observacion_destino"].'</td>';
-		$texto.='<td style="text-align:center; width:15%"></td>';
-		$texto.='<td style="text-align:left; width:17%"></td>';
+        $texto.='<td style="text-align:center; width:6.95%">'.$tipo_tramite.'</td>';
+        $texto.='<td style="text-align:center; width:2.9%">'.$tipo_radicado.'</td>';
+		$texto.='<td style="text-align:center; width:3.05%">'.$registros[$i]["numero_item"].'</td>';
+		$texto.='<td style="text-align:center; width:5.08%">'.$fecha_radicacion[0]["fecha"].'</td>';
+		$texto.='<td style="text-align:left; width:9.9%">'.$origen[0]['nombre'].'</td>';
+		$texto.='<td style="text-align:left; width:14.95%">'.$destino[0]["nombre"].'<br><b>Ubicacion:</b>'.$ubicacion.'</td>';
+		$texto.='<td style="text-align:left; width:15.1%">'.$registros[$i]["descripcion"].'</td>';
+		$texto.='<td style="text-align:center; width:10.05%">'.$registros[$i]["observacion_destino"].'</td>';
+		$texto.='<td style="text-align:center; width:14.8%"></td>';
+		$texto.='<td style="text-align:left; width:17.2%"></td>';
 
 		$texto.='</tr>';
 	}
