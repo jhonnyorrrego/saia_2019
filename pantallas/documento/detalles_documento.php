@@ -113,7 +113,7 @@ else{
     </td>
     <td colspan="3">
        <?php
-			$aprobado = busca_filtro_tabla("nombres, apellidos, ".fecha_db_obtener("A.fecha","Y-m-d")." as fecha","buzon_salida A, funcionario B","B.funcionario_codigo=A.origen AND nombre LIKE 'APROBADO' AND A.archivo_idarchivo=".$iddocumento,"",$conn);
+			$aprobado = busca_filtro_tabla("nombres, apellidos, ".fecha_db_obtener("A.fecha","Y-m-d")." as fecha","buzon_salida A, funcionario B","B.funcionario_codigo=A.origen AND nombre = 'APROBADO' AND A.archivo_idarchivo=".$iddocumento,"",$conn);
 			if($aprobado['numcampos']){
 				$fecha=date_parse($aprobado[0]['fecha']);
 				$fecha = mostrar_fecha_saia($fecha["day"]."-".$fecha["month"]."-".$fecha["year"]);
@@ -131,7 +131,7 @@ else{
     </td>
     <td colspan="3">
        <?php
-       $revisado = busca_filtro_tabla("nombres, apellidos, ".fecha_db_obtener("A.fecha","Y-m-d")." as fecha","buzon_salida A, funcionario B","B.funcionario_codigo=A.origen AND nombre LIKE 'REVISADO' AND A.archivo_idarchivo=".$iddocumento,"",$conn);
+       $revisado = busca_filtro_tabla("nombres, apellidos, ".fecha_db_obtener("A.fecha","Y-m-d")." as fecha","buzon_salida A, funcionario B","B.funcionario_codigo=A.origen AND nombre = 'REVISADO' AND A.archivo_idarchivo=".$iddocumento,"",$conn);
        		if($revisado['numcampos']){
        			echo('<table>');
        			for($i=0; $i < $revisado['numcampos']; $i++){
