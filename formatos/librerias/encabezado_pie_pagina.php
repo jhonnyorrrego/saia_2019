@@ -193,6 +193,7 @@ if($dep["numcampos"]){
  } else
    $retorno=$dep[0][$tipo];
 }
+return ($retorno);
 }
 function nombre_proceso($doc) {
  global $conn;
@@ -354,5 +355,32 @@ function mostrar_datos_radicaion($idformato, $iddoc) {
 function pie_pagina_carta($idformato, $iddoc) {
 	global $conn;
 	return ('<img src="' . PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . '/imagenes/pie_pagina_carta.jpg" />');
+}
+function qr_entrega_interna($idformato,$iddoc){
+	global $conn,$ruta_db_superior;
+	include_once($ruta_db_superior."pantallas/qr/librerias.php");
+
+	$qr=mostrar_codigo_qr($idformato,$iddoc,true);
+	return($qr."<br/>Planilla No. ".formato_numero($idformato,$iddoc,1));
+}
+function recorrido($idformato,$iddoc){
+	return(mostrar_valor_campo('tipo_recorrido',$idformato,$iddoc,1));
+}
+function fecha_planilla($idformato,$iddoc){
+	global $conn;
+	$fecha_planilla=busca_filtro_tabla(fecha_db_obtener("fecha","Y-m-d H:i:s")." as fecha","documento","iddocumento=".$iddoc,"",$conn);
+    return($fecha_planilla[0]['fecha']);
+}
+function mensajero_entrega_interna($idformato,$iddoc){
+	global $conn;
+	$documentos2=busca_filtro_tabla("","ft_despacho_ingresados","documento_iddocumento=".$iddoc,"",$conn);
+	if($documentos2[0]['tipo_mensajero']=='e'){
+		$empresa_transportadora=busca_filtro_tabla("nombre","cf_empresa_trans","idcf_empresa_trans=".$documentos2[0]['mensajero'],"",$conn);
+		$cadena_nombre=$empresa_transportadora[0]['nombre'];
+	}else{
+		$funcionario=busca_filtro_tabla("","vfuncionario_dc","estado=1 and estado_dc=1 and iddependencia_cargo=".$documentos2[0]['mensajero'],"",$conn);
+		$cadena_nombre=$funcionario[0]['nombres'].' '.$funcionario[0]['apellidos'];
+	}
+	return(ucwords(strtolower($cadena_nombre)));
 }
 ?>

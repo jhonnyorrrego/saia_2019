@@ -123,8 +123,79 @@ if($doc<>FALSE){
     $origen=ucwords(strtolower($responsable[0]["nombres"]." ".$responsable[0]["apellidos"]));
     $destino=$radicador[0]["nombres"]." ".$radicador[0]["apellidos"];
   }
+   
+  if(strtolower($datos[0]["plantilla"])=='radicacion_entrada'){
+  	include_once($ruta_db_superior.'formatos/radicacion_entrada/funciones.php');				
+  	
+  	$datos_origen_radicacion=validar_persona_origen_destino($doc,'origen');
+	$destinos_radicacion=busca_filtro_tabla("b.idft_destino_radicacion,b.nombre_destino,b.destino_externo","ft_radicacion_entrada a, ft_destino_radicacion b","a.idft_radicacion_entrada=b.ft_radicacion_entrada AND a.documento_iddocumento=".$doc,"b.idft_destino_radicacion ASC",$conn);
+	
+	$lista_nombres_origen='';
+	$lista_nombres_destino='';
+	for($i=0;$i<$destinos_radicacion['numcampos'];$i++){
+	
+			//ORIGEN
+			$tabla_consulta=$datos_origen_radicacion['ft_destino_radicacion'][ $destinos_radicacion[$i]['idft_destino_radicacion'] ]['tabla_consulta'];
+			$tabla_campo=$datos_origen_radicacion['ft_destino_radicacion'][ $destinos_radicacion[$i]['idft_destino_radicacion'] ]['tabla_campo'];
+			$tabla_valor=$datos_origen_radicacion['ft_destino_radicacion'][ $destinos_radicacion[$i]['idft_destino_radicacion'] ]['tabla_valor'];
+			
+			if($datos_origen_radicacion['tipo_origen']=='INTERNO'){
+    	   		$concat=array("nombres","' '","apellidos");
+    	    	$concat_nombres=concatenar_cadena_sql($concat);      	
+    	    	$origen=busca_filtro_tabla($concat_nombres." AS nombre",$tabla_consulta,$tabla_campo."=".$tabla_valor,"",$conn);	
+							
+			}else if($datos_origen_radicacion['tipo_origen']=='EXTERNO'){	
+					
+				$origen=busca_filtro_tabla("nombre",$tabla_consulta,$tabla_campo."=".$tabla_valor,"",$conn);
+				if(!$origen['numcampos']){
+					$tabla_valor2=$datos_origen_radicacion['ft_destino_radicacion'][ $destinos_radicacion[$i]['idft_destino_radicacion'] ]['tabla_valor2'];
+					$origen=busca_filtro_tabla("nombre",$tabla_consulta,$tabla_campo."=".$tabla_valor2,"",$conn);
+				}					
+			}
 
-  //print_r($destino);die();
+			if($i==0){  //JORGE RAMIREZ SOLICITA QUE SOLO SALGA EL PRIMERO (CUALQUIER ERROR FAVOR HACERLE EL RECORDERIS)
+			$lista_nombres_origen.=$origen[0]['nombre'];
+			if( ($i+1)!= $destinos_radicacion['numcampos']){
+				$lista_nombres_origen.='<br> ';
+			}
+			}//fin if $i == 0   
+			
+			//DESTINOS
+			$persona_natural_destino='';
+    	    if($destinos_radicacion[$i]['tipo_destino']==1){
+    	        $destino=busca_filtro_tabla("b.nombre, a.cargo , a.ciudad, a.direccion,a.iddatos_ejecutor as nombre_destino","datos_ejecutor a, ejecutor b","b.idejecutor=a.ejecutor_idejecutor AND a.iddatos_ejecutor=".$destinos_radicacion[$i]['nombre_destino'],"",$conn);
+
+    	        if(!$destino['numcampos']){
+                    $destino=busca_filtro_tabla("nombre, cargo, empresa as dependencia,iddatos_ejecutor as nombre_destino,direccion","vejecutor","iddatos_ejecutor=".$destinos_radicacion[$i]['destino_externo'],"",$conn);
+                }
+                $persona_natural_destino='persona_natural_dest';
+    	    }else{
+    	    	$concat=array("nombres","' '","apellidos");
+    	    	$concat_nombres=concatenar_cadena_sql($concat);
+    	        $destino=busca_filtro_tabla($concat_nombres." AS nombre, cargo, dependencia,iddependencia_cargo as nombre_destino","vfuncionario_dc","iddependencia_cargo=".$destinos_radicacion[$i]['nombre_destino'],"",$conn);
+    	        $persona_natural_destino='destino';
+    	        if(!$destino['numcampos']){
+    	            $destino=busca_filtro_tabla("nombre, cargo, empresa as dependencia,iddatos_ejecutor as nombre_destino","vejecutor","iddatos_ejecutor=".$destinos_radicacion[$i]['destino_externo'],"",$conn);
+                    $persona_natural_destino='persona_natural_dest';
+    	        }
+    	    }
+    	    
+			if($i==0){  //JORGE RAMIREZ SOLICITA QUE SOLO SALGA EL PRIMERO (CUALQUIER ERROR FAVOR HACERLE EL RECORDERIS)
+				
+			
+			$lista_nombres_destino.=$destino[0]['nombre'];
+			if( ($i+1)!= $destinos_radicacion['numcampos']){
+				$lista_nombres_destino.='<br> ';
+			} 
+			} //fin if $i == 0   	    
+    	    	
+	}  	//fin for destinos_radicacion
+	
+	$origen=$lista_nombres_origen;
+	$destino=$lista_nombres_destino;
+	
+  } //fin if plantilla==radicacion_entrada
+  
 $anexos=busca_filtro_tabla("count(*) AS cantidad","anexos","documento_iddocumento=".$doc,"",$conn);
 $paginas=busca_filtro_tabla("count(*) AS paginas","pagina","id_documento=".$doc,"",$conn);
   $configuracion=busca_filtro_tabla("*","configuracion A","A.tipo='impresion'","",$conn);
@@ -285,11 +356,9 @@ function imprime(atras){
              ?></b><br/>
  <?php }?>
  <b>Origen: <?php echo($origen);?></b><br/>
-
-  <?php if($datos[0]["tipo_radicado"]==1){?>
+   
   <b>Destino: <?php echo substr(($destino),0,22)."..."; ?></b>
 
-  <?php }
   	$validar_impresion = busca_filtro_tabla("valor","configuracion","lower(nombre) LIKE'imprimir_colilla_automatico'","",$conn);
 
 		if($validar_impresion[0]['valor'] == 1){
