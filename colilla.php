@@ -129,7 +129,7 @@ if($doc<>FALSE){
   	include_once($ruta_db_superior.'formatos/radicacion_entrada/funciones.php');				
   	
   	$datos_origen_radicacion=validar_persona_origen_destino($doc,'origen');
-	$destinos_radicacion=busca_filtro_tabla("b.idft_destino_radicacion,b.nombre_destino,b.destino_externo","ft_radicacion_entrada a, ft_destino_radicacion b","a.idft_radicacion_entrada=b.ft_radicacion_entrada AND a.documento_iddocumento=".$doc,"b.idft_destino_radicacion ASC",$conn);
+	$destinos_radicacion=busca_filtro_tabla("b.idft_destino_radicacion,b.nombre_destino,b.destino_externo,b.tipo_destino","ft_radicacion_entrada a, ft_destino_radicacion b","a.idft_radicacion_entrada=b.ft_radicacion_entrada AND a.documento_iddocumento=".$doc,"b.idft_destino_radicacion ASC",$conn);
 	
 	$lista_nombres_origen='';
 	$lista_nombres_destino='';
@@ -191,6 +191,8 @@ if($doc<>FALSE){
 			} //fin if $i == 0   	    
     	    	
 	}  	//fin for destinos_radicacion
+	
+	
 	
 	$origen=$lista_nombres_origen;
 	$destino=$lista_nombres_destino;
