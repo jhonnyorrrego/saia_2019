@@ -381,7 +381,7 @@ function imprime(atras){
   
   <b>Destino: <?php echo substr(($destino),0,22)."..."; ?></b>
   
-   	
+   	<?php
   	$validar_impresion = busca_filtro_tabla("valor","configuracion","lower(nombre) LIKE'imprimir_colilla_automatico'","",$conn);
 		
 		if($validar_impresion[0]['valor'] == 1){
