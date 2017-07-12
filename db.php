@@ -4239,5 +4239,17 @@ function parsear_comilla_sencilla_cadena($cadena){
 		return($cadena_original);
 	}
 }
+function generar_cadena_like_comas($campo,$value){
+	$cadena_like="";
+	if($campo!="" && $value!=''){
+		$cadena_like.="(";
+		$cadena_like.=" ".$campo."='".$value."'";
+		$cadena_like.=" OR ".$campo." LIKE '".$value.",%'   ";
+		$cadena_like.=" OR ".$campo." LIKE '%,".$value."'   ";
+		$cadena_like.=" OR ".$campo." LIKE '%,".$value.",%' ";
+		$cadena_like.=")";
+	}
+	return($cadena_like);
+}
 
 ?>
