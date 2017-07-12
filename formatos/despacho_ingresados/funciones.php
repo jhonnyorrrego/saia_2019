@@ -151,7 +151,11 @@ function reporte_entradas2($idformato,$iddoc){
 		
         $ubicacion="";
 		if($registros[$i]["tipo_destino"]==1){
-		    $destino=busca_filtro_tabla("b.nombre,a.direccion","datos_ejecutor a, ejecutor b","b.idejecutor=a.ejecutor_idejecutor AND a.iddatos_ejecutor=".$registros[$i]['nombre_destino'],"",$conn);
+		    $destino=busca_filtro_tabla("b.nombre,a.direccion,a.ciudad","datos_ejecutor a, ejecutor b","b.idejecutor=a.ejecutor_idejecutor AND a.iddatos_ejecutor=".$registros[$i]['nombre_destino'],"",$conn);
+	        if(!$destino['numcampos']){
+	        	$destino=busca_filtro_tabla("b.nombre,a.direccion,a.ciudad","datos_ejecutor a, ejecutor b","b.idejecutor=a.ejecutor_idejecutor AND a.iddatos_ejecutor=".$registros[$i]['destino_externo'],"",$conn);
+	        }			
+			$ciudad=busca_filtro_tabla("nombre","municipio","idmunicipio=".$destino[0]['ciudad'],"",$conn);
             $ubicacion=$ciudad[0]['nombre'].' '.$destino[0]['direccion'];
 		}elseif($registros[$i]["tipo_destino"]==2){
 	    	$array_concat=array("nombres","' '","apellidos");
@@ -159,8 +163,6 @@ function reporte_entradas2($idformato,$iddoc){
 		    $destino=busca_filtro_tabla($cadena_concat." AS nombre,dependencia","vfuncionario_dc","iddependencia_cargo=".$registros[$i]['nombre_destino'],"",$conn);
 		    $ubicacion=$destino[0]['dependencia'];
 		}
-
-
 		$texto.='<tr>';
 		$fecha_radicacion=busca_filtro_tabla(fecha_db_obtener("fecha","Y-m-d")." as fecha,tipo_radicado","documento","iddocumento=".$registros[$i]["documento_iddocumento"],"",$conn);
         
