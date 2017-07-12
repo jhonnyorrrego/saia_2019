@@ -552,9 +552,14 @@ UPDATE ft_destino_radicacion SET tipo_mensajero='i' WHERE tipo_mensajero='0';
 
 -- ----------------------------------------------------------------
 
+	UPDATE `saia_release1`.`busqueda_componente` SET `info` = 'Radicado|{*ver_items@iddocumento,numero,fecha_radicacion_entrada,tipo_radicado*}|center|-|No. Item|{*numero_item*}|center|-|Estado|{*mostrar_estado_destino_radicacion@idft_destino_radicacion*}|center|-|Diligencia|{*mostrar_tramite_radicacion@idft_destino_radicacion,tipo_mensajeria,estado_recogida*}|center|-|Ruta|{*mostrar_ruta_reporte@idft_destino_radicacion*}|center|-|Mensajero|{*mostrar_mensajeros_dependencia@idft_destino_radicacion*}|center|-|Planilla Asociada|{*planilla_mensajero@idft_destino_radicacion,mensajero_encargado*}|center|-|Acci&oacute;n|{*generar_accion_destino_radicacion@idft_destino_radicacion,mensajero_encargado,estado_item*}|center|-|Origen|{*mostrar_origen_reporte@idft_radicacion_entrada*}|center|-|Destino|{*mostrar_destino_reporte@idft_destino_radicacion*}|center|-|Fecha de Radicaci&oacute;n|{*fecha_radicacion_entrada*}|center|-|Asunto|{*descripcion*}|left|-|Observaciones|{*observacion_destino*}|left' WHERE `busqueda_componente`.`idbusqueda_componente` = 279;
+	
+	UPDATE `saia_release1`.`busqueda_componente` SET `info` = 'Radicado|{*ver_items@iddocumento,numero,fecha_radicacion_entrada,tipo_radicado*}|center|-|No. Item|{*numero_item*}|center|-|Estado|{*mostrar_estado_destino_radicacion@idft_destino_radicacion*}|center|-|Diligencia|{*mostrar_tramite_radicacion@idft_destino_radicacion,tipo_mensajeria,estado_recogida*}|center|-|Ruta|{*mostrar_ruta_reporte@idft_destino_radicacion*}|center|-|Mensajero|{*mostrar_mensajeros_dependencia@idft_destino_radicacion*}|center|-|Planilla Asociada|{*planilla_mensajero@idft_destino_radicacion,mensajero_encargado*}|center|-|Acci&oacute;n|{*generar_accion_destino_radicacion_endistribucion@idft_destino_radicacion,mensajero_encargado,estado_item*}|center|-|Origen|{*mostrar_origen_reporte@idft_radicacion_entrada*}|center|-|Destino|{*mostrar_destino_reporte@idft_destino_radicacion*}|center|-|Fecha de Radicaci&oacute;n|{*fecha_radicacion_entrada*}|center|-|Asunto|{*descripcion*}|left|-|Observaciones|{*observacion_destino*}|left' WHERE `busqueda_componente`.`idbusqueda_componente` = 281;
+	
+	
+	UPDATE  `saia_release1`.`busqueda_componente` SET  `info` = 'Radicado|{*ver_items@iddocumento,numero,fecha_radicacion_entrada,tipo_radicado*}|center|-|No. Item|{*numero_item*}|center|-|Estado|{*mostrar_estado_destino_radicacion@idft_destino_radicacion*}|center|-|Diligencia|{*mostrar_tramite_radicacion@idft_destino_radicacion,tipo_mensajeria,estado_recogida*}|center|-|Ruta|{*mostrar_ruta_reporte@idft_destino_radicacion*}|center|-|Mensajero|{*mostrar_mensajeros_dependencia@idft_destino_radicacion,estado_item*}|center|-|Planilla Asociada|{*planilla_mensajero@idft_destino_radicacion,mensajero_encargado*}|center|-|Origen|{*mostrar_origen_reporte@idft_radicacion_entrada*}|center|-|Destino|{*mostrar_destino_reporte@idft_destino_radicacion*}|center|-|Fecha de Radicaci&oacute;n|{*fecha_radicacion_entrada*}|center|-|Asunto|{*descripcion*}|left|-|Observaciones|{*observacion_destino*}|left' WHERE  `busqueda_componente`.`idbusqueda_componente` =282;
 
-
-
+-- ----------------------------------------------------------------
 
 
 

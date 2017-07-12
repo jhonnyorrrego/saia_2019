@@ -27,6 +27,23 @@ $busca_componente=busca_filtro_tabla("nombre","busqueda_componente","idbusqueda_
           $("#nav_busqueda").after("<div style='margin-left:9px;margin-right:9px;' class='ui-state-default ui-jqgrid-pager ui-corner-bottom'><button class='btn btn-mini' title='Realizar despacho' id='boton_seleccionar_registros'>Generar Planilla</button>"+enlace_finalizar+"</div>");
           } 
         
+        
+        /*CHECK planilla y finalizar checkbox cuando es endistribucion, para que desde un solo checkbox se pueda usar finalizar y generar planilla*/
+       $('.asignar_planilla_finalizar').live("click",function(){
+       		var checkbox = $(this);
+       		var idft=$(this).val();
+       		
+       		//endistribucion_f_
+       		//endistribucion_p_
+       		if(checkbox.is(':checked')===true){
+       			$('#endistribucion_f_'+idft).attr('checked',true);
+       			$('#endistribucion_p_'+idft).attr('checked',true);
+       		}else{
+       			$('#endistribucion_f_'+idft).attr('checked',false);
+       			$('#endistribucion_p_'+idft).attr('checked',false);       			
+       		}
+       });
+        
         /*Genera Planilla de Mensajeros*/
         $("#boton_seleccionar_registros").live("click",function(){
             var mensajero_temp="";
