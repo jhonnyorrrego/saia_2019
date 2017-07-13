@@ -124,7 +124,7 @@ if($datos_busqueda[0]["acciones_seleccionados"]!=''){
      $acciones=explode(",",$datos_busqueda[0]["acciones_seleccionados"]);		
      $cantidad=count($acciones);		
      for($i=0;$i<$cantidad;$i++){		
-	     $acciones_selecionados=($acciones[$i]($datos_reporte));		
+	     $acciones_selecionados.=($acciones[$i]($datos_reporte));		
      }              		
 }  
 
