@@ -134,6 +134,7 @@ echo(librerias_jqgrid());
 echo(librerias_tooltips());
 echo(librerias_notificaciones());
 echo(librerias_acciones_kaiten());
+echo(librerias_bootstrap());
 ?>          
 <script type="text/javascript">
 var isOpera="";
