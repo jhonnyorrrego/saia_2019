@@ -473,12 +473,22 @@ function mostrar_estado_destino_radicacion($idft_destino_radicacion){
 	return($mensaje_retorno);
 		
 }
-function select_finalizar_generar_item(){
-	$cadena_acciones.="<select id='finalizar_generar_item' class='pull-left btn btn-mini' style='height:22px; margin-left: 10px;'>";
-		$cadena_acciones.="<option value=''>Acciones...</option>";
-		$cadena_acciones.="<option value='boton_seleccionar_registros'>Generar Planilla</option>";
-		$cadena_acciones.="<option value='boton_finalizar_entrega'>Finalizar Tr&aacute;mite</option>";
-	$cadena_acciones.="</select>";	
+function select_finalizar_generar_item($datos){
+	
+	$cnombre_componente=busca_filtro_tabla("nombre","busqueda_componente","idbusqueda_componente=".$datos['idbusqueda_componente'],"",$conn);
+	$nombre_componente=$cnombre_componente[0]['nombre'];
+	if( $nombre_componente=='reporte_radicacion_correspondencia' || $nombre_componente=='reporte_radicacion_correspondencia_distribucion' ){
+
+		$cadena_acciones.="<select id='finalizar_generar_item' class='pull-left btn btn-mini' style='height:22px; margin-left: 10px;'>";
+			$cadena_acciones.="<option value=''>Acciones...</option>";
+			$cadena_acciones.="<option value='boton_seleccionar_registros'>Generar Planilla</option>";
+			
+			if($nombre_componente=='reporte_radicacion_correspondencia_distribucion'){
+				$cadena_acciones.="<option value='boton_finalizar_entrega'>Finalizar Tr&aacute;mite</option>";
+			}	
+		$cadena_acciones.="</select>";	
+	}	
 	return($cadena_acciones);
+	
 }
 ?>
