@@ -234,65 +234,104 @@ function ver_items($iddocumento, $numero,$fecha_radicacion_entrada,$tipo) {
 
 function condicion_adicional(){
     global $ruta_db_superior, $conn;
-    
-    $condicion="";
-    if(@$_REQUEST['variable_busqueda']){
-		$vector_mensajero=explode('-',$_REQUEST['variable_busqueda']);
-        $condicion=" AND B.mensajero_encargado=".$vector_mensajero[0]." AND B.tipo_mensajero='".$vector_mensajero[1]."'";
+	
+	$condicion="";
+	$funcionario_codigo_usuario_actual=usuario_actual('funcionario_codigo');
+	$cargo_administrador_mensajeria=busca_filtro_tabla("funcionario_codigo","vfuncionario_dc"," lower(cargo) LIKE 'administrador%de%mensajer%a' AND estado_dc=1 ","",$conn);
+	
+	$es_administrador_mensajeria=false;
+	for($i=0;$i<$cargo_administrador_mensajeria['numcampos'];$i++){
+		if( $cargo_administrador_mensajeria[$i]['funcionario_codigo']==$funcionario_codigo_usuario_actual ){
+			$es_administrador_mensajeria=true;
+		}
+	}	
+    if($es_administrador_mensajeria){
+	    if(@$_REQUEST['variable_busqueda']){
+			$vector_mensajero=explode('-',$_REQUEST['variable_busqueda']);
+	        $condicion=" AND B.mensajero_encargado=".$vector_mensajero[0]." AND B.tipo_mensajero='".$vector_mensajero[1]."'";
+	    }    	
+    }else{
+    	$rol_funcionario=busca_filtro_tabla("iddependencia_cargo","vfuncionario_dc","funcionario_codigo='".$funcionario_codigo_usuario_actual."' AND estado_dc=1","",$conn);
+	
+		$lista_roles_funcionarios='';
+		for($i=0;$i<$rol_funcionario['numcampos'];$i++){
+			$lista_roles_funcionarios.=$rol_funcionario[$i]['iddependencia_cargo'];
+			if( ($i+1)!=$rol_funcionario['numcampos'] ){
+				$lista_roles_funcionarios.=',';
+			}
+		} //fin rol funcionario
+		
+		$condicion.=" AND (B.mensajero_encargado IN(".$lista_roles_funcionarios.") AND B.tipo_mensajero='i') ";
+    	
     }
+
     return $condicion;
 }
 
 function filtrar_mensajero(){
     global $ruta_db_superior, $conn;
     
-    $select="<select class='pull-left btn btn-mini dropdown-toggle' style='height:22px; margin-left: 10px;' name='filtro_mensajeros' id='filtro_mensajeros'>";
-    $select.="<option value=''>Todos Los Mensajeros</option>";
-	$array_concat=array("nombres","' '","apellidos");
-	$cadena_concat=concatenar_cadena_sql($array_concat);
-    $datos=busca_filtro_tabla("iddependencia_cargo, ".$cadena_concat." AS nombre","vfuncionario_dc","lower(cargo)='mensajero' AND estado_dc=1","",$conn);
-    $filtrar_mensajero=@$_REQUEST['variable_busqueda'];
-    for($i=0;$i<$datos['numcampos'];$i++){
-        $selected='';	
-		if($filtrar_mensajero){
-			if($filtrar_mensajero==$datos[$i]['iddependencia_cargo']."-i"){
-				$selected='selected';
-			}
-		}	
-			
-        $select.="<option value='".$datos[$i]['iddependencia_cargo']."-i' ".$selected.">".$datos[$i]['nombre']."&nbsp;-&nbsp;Mensajero</option>";
-		
-    }
-
-	$mensajeros_externos=busca_filtro_tabla("iddependencia_cargo, ".$cadena_concat." AS nombre","vfuncionario_dc","lower(cargo) LIKE 'mensajer%extern%' AND estado_dc=1","",$conn);
 	
-    for($i=0;$i<$mensajeros_externos['numcampos'];$i++){
-        $selected='';	
-		if($filtrar_mensajero){
-			if($filtrar_mensajero==$mensajeros_externos[$i]['iddependencia_cargo']."-i"){
-				$selected='selected';
+	$select="";
+	$funcionario_codigo_usuario_actual=usuario_actual('funcionario_codigo');
+	$cargo_administrador_mensajeria=busca_filtro_tabla("funcionario_codigo","vfuncionario_dc"," lower(cargo) LIKE 'administrador%de%mensajer%a' AND estado_dc=1 ","",$conn);
+	
+	$ver_select=false;
+	for($i=0;$i<$cargo_administrador_mensajeria['numcampos'];$i++){
+		if( $cargo_administrador_mensajeria[$i]['funcionario_codigo']==$funcionario_codigo_usuario_actual ){
+			$ver_select=true;
+		}
 	}
-		}	
-			
-        $select.="<option value='".$mensajeros_externos[$i]['iddependencia_cargo']."-i' ".$selected.">".$mensajeros_externos[$i]['nombre']."&nbsp;-&nbsp;Mensajero Externo</option>";
-		
-    }
 	
-	
-	$empresas_transportadoras=busca_filtro_tabla("idcf_empresa_trans as id,nombre","cf_empresa_trans","","",$conn);
-    for($i=0;$i<$empresas_transportadoras['numcampos'];$i++){
-        $selected='';	
-		if($filtrar_mensajero){
-			if($filtrar_mensajero==$empresas_transportadoras[$i]['id']."-e"){
-				$selected='selected';
-			}
-		}	
-			
-        $select.="<option value='".$empresas_transportadoras[$i]['id']."-e' ".$selected.">".$empresas_transportadoras[$i]['nombre']."&nbsp;-&nbsp;Empresa Transportadora</option>";
-		
-    }		
+	if($ver_select){
 
-    $select.="</select>";
+	    $select="<select class='pull-left btn btn-mini dropdown-toggle' style='height:22px; margin-left: 10px;' name='filtro_mensajeros' id='filtro_mensajeros'>";
+	    $select.="<option value=''>Todos Los Mensajeros</option>";
+		$array_concat=array("nombres","' '","apellidos");
+		$cadena_concat=concatenar_cadena_sql($array_concat);
+	    $datos=busca_filtro_tabla("iddependencia_cargo, ".$cadena_concat." AS nombre","vfuncionario_dc","lower(cargo)='mensajero' AND estado_dc=1","",$conn);
+	    $filtrar_mensajero=@$_REQUEST['variable_busqueda'];
+	    for($i=0;$i<$datos['numcampos'];$i++){
+	        $selected='';	
+			if($filtrar_mensajero){
+				if($filtrar_mensajero==$datos[$i]['iddependencia_cargo']."-i"){
+					$selected='selected';
+				}
+			}	
+				
+	        $select.="<option value='".$datos[$i]['iddependencia_cargo']."-i' ".$selected.">".$datos[$i]['nombre']."&nbsp;-&nbsp;Mensajero</option>";
+			
+	    }
+	
+		$mensajeros_externos=busca_filtro_tabla("iddependencia_cargo, ".$cadena_concat." AS nombre","vfuncionario_dc","lower(cargo) LIKE 'mensajer%extern%' AND estado_dc=1","",$conn);
+		
+	    for($i=0;$i<$mensajeros_externos['numcampos'];$i++){
+	        $selected='';	
+			if($filtrar_mensajero){
+				if($filtrar_mensajero==$mensajeros_externos[$i]['iddependencia_cargo']."-i"){
+					$selected='selected';
+		}
+			}	
+				
+	        $select.="<option value='".$mensajeros_externos[$i]['iddependencia_cargo']."-i' ".$selected.">".$mensajeros_externos[$i]['nombre']."&nbsp;-&nbsp;Mensajero Externo</option>";
+			
+	    }
+
+		$empresas_transportadoras=busca_filtro_tabla("idcf_empresa_trans as id,nombre","cf_empresa_trans","","",$conn);
+	    for($i=0;$i<$empresas_transportadoras['numcampos'];$i++){
+	        $selected='';	
+			if($filtrar_mensajero){
+				if($filtrar_mensajero==$empresas_transportadoras[$i]['id']."-e"){
+					$selected='selected';
+				}
+			}	
+				
+	        $select.="<option value='".$empresas_transportadoras[$i]['id']."-e' ".$selected.">".$empresas_transportadoras[$i]['nombre']."&nbsp;-&nbsp;Empresa Transportadora</option>";
+			
+	    }		
+	    $select.="</select>";
+		
+	} //fin if $ver_select	
 	
     return $select;
 }
