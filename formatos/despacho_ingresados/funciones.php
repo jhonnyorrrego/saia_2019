@@ -136,15 +136,19 @@ function reporte_entradas2($idformato,$iddoc){
 		$origen=busca_filtro_tabla($cadena_concat." AS nombre","vfuncionario_dc","funcionario_codigo=".$registros[$i]['nombre_origen'],"",$conn);
 
 			if($registros[$i]['tipo_origen']==1){
-				$origen=busca_filtro_tabla("nombre","vejecutor a","a.iddatos_ejecutor=".$registros[$i]['nombre_origen'],"",$conn);
+				$origen=busca_filtro_tabla("nombre,ciudad,direccion","vejecutor a","a.iddatos_ejecutor=".$registros[$i]['nombre_origen'],"",$conn);
 				if(!$origen['numcampos']){
-					$origen=busca_filtro_tabla("nombre","vejecutor a","a.iddatos_ejecutor=".$registros[$i]['origen_externo'],"",$conn);
+					$origen=busca_filtro_tabla("nombre,ciudad,direccion","vejecutor a","a.iddatos_ejecutor=".$registros[$i]['origen_externo'],"",$conn);
 				}
+				$ciudad=busca_filtro_tabla("nombre","municipio","idmunicipio=".$origen[0]['ciudad'],"",$conn);
+            	$ubicacion_origen=$ciudad[0]['nombre'].' '.$origen[0]['direccion'];
+				
 			}else{
 				if($registros[$i]['tipo_origen']==2 && ($registros[$i]['tipo_mensajeria']==2 || $registros[$i]['tipo_mensajeria']==1)){
 	    			$array_concat=array("nombres","' '","apellidos");
 					$cadena_concat=concatenar_cadena_sql($array_concat);					
-					$origen=busca_filtro_tabla($cadena_concat." AS nombre","vfuncionario_dc a","a.iddependencia_cargo=".$registros[$i]['nombre_origen'],"",$conn);
+					$origen=busca_filtro_tabla($cadena_concat." AS nombre,dependencia","vfuncionario_dc a","a.iddependencia_cargo=".$registros[$i]['nombre_origen'],"",$conn);
+					$ubicacion_origen=$origen[0]['dependencia'];
 				}
 			}		
 				
@@ -182,7 +186,7 @@ function reporte_entradas2($idformato,$iddoc){
         $texto.='<td style="text-align:center; width:2.9%">'.$tipo_radicado.'</td>';
 		$texto.='<td style="text-align:center; width:3.05%">'.$registros[$i]["numero_item"].'</td>';
 		$texto.='<td style="text-align:center; width:5.08%">'.$fecha_radicacion[0]["fecha"].'</td>';
-		$texto.='<td style="text-align:left; width:9.9%">'.$origen[0]['nombre'].'</td>';
+		$texto.='<td style="text-align:left; width:9.9%">'.$origen[0]['nombre'].'<br><b>Ubicacion:</b>'.$ubicacion_origen.'</td>';
 		$texto.='<td style="text-align:left; width:14.95%">'.$destino[0]["nombre"].'<br><b>Ubicacion:</b>'.$ubicacion.'</td>';
 		$texto.='<td style="text-align:left; width:15.1%">'.$registros[$i]["descripcion"].'</td>';
 		$texto.='<td style="text-align:center; width:10.05%">'.$registros[$i]["observacion_destino"].'</td>';
