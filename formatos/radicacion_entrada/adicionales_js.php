@@ -17,16 +17,7 @@ $busca_componente=busca_filtro_tabla("nombre","busqueda_componente","idbusqueda_
 
 ?>
 <script>
-    $(document).ready(function(){
-        var componente='<?php echo($busca_componente[0]['nombre']); ?>';
-        var enlace_finalizar="&nbsp;<button class='btn btn-mini' title='Finalizar Entrega' id='boton_finalizar_entrega'>Finalizar Tr&aacute;mite</button>";
-        if(componente!='reporte_radicacion_correspondencia_finalizado' && componente!='reporte_radicacion_correspondencia_dependencias'){
-        	if(componente=='reporte_radicacion_correspondencia'){
-        		enlace_finalizar='';
-        	}
-          $("#nav_busqueda").after("<div style='margin-left:9px;margin-right:9px;' class='ui-state-default ui-jqgrid-pager ui-corner-bottom'><button class='btn btn-mini' title='Realizar despacho' id='boton_seleccionar_registros'>Generar Planilla</button>"+enlace_finalizar+"</div>");
-          } 
-        
+    $(document).ready(function(){        
         
         /*CHECK planilla y finalizar checkbox cuando es endistribucion, para que desde un solo checkbox se pueda usar finalizar y generar planilla*/
        $('.asignar_planilla_finalizar').live("click",function(){
@@ -43,42 +34,6 @@ $busca_componente=busca_filtro_tabla("nombre","busqueda_componente","idbusqueda_
        			$('#endistribucion_p_'+idft).attr('checked',false);       			
        		}
        });
-        
-        /*Genera Planilla de Mensajeros*/
-        $("#boton_seleccionar_registros").live("click",function(){
-            var mensajero_temp="";
-            var registros_seleccionados="";
-			var mensajero="";
-			var error=0;
-			$('.planilla_mensajero').each(function(){
-			    var checkbox = $(this);
-			    if(checkbox.is(':checked')===true){
-			        mensajero=$(this).attr('mensajero');
-			        registros_seleccionados+=$(this).val()+",";
-			        
-			        if(mensajero_temp){
-			            if(mensajero_temp!=mensajero){
-			                error=1;
-			            }
-			        }
-			        mensajero_temp=$(this).attr('mensajero');
-				}
-			});
-				registros_seleccionados = registros_seleccionados.substring(0, registros_seleccionados.length-1);
-				
-				if(registros_seleccionados==""){
-					top.noty({text: 'No ha seleccionado ningun campo',type: 'error',layout: "topCenter",timeout:3500});
-				}else if(error==1){
-				    top.noty({text: 'No puede seleccionar diferentes mensajeros',type: 'error',layout: "topCenter",timeout:3500});
-				}else{
-					$("#boton_seleccionar_registros").after("<div id='ir_adicionar_documento' class='link kenlace_saia' enlace='formatos/despacho_ingresados/adicionar_despacho_ingresados.php?idft="+registros_seleccionados+"&mensajero="+mensajero+"' conector='iframe' titulo='Generar Planilla Mensajeros'>---</div>");
-					$("#ir_adicionar_documento").trigger("click");
-					$("#ir_adicionar_documento").remove();
-				}
-            
-        });
-        
-        
         
         $(".mensajeros").live("change",function(){
             var idft=$(this).attr("data-idft");
@@ -109,25 +64,67 @@ $busca_componente=busca_filtro_tabla("nombre","busqueda_componente","idbusqueda_
             
         });
         
-        $("#boton_finalizar_entrega").live("click",function(){
-            var idft_funcionario=JSON.stringify($('[name="recepcion[]"]').serializeArray());
- 			if(idft_funcionario=='[]'){
- 				top.noty({text: 'Debe seleccionar al menos un Item!',type: 'warning',layout: "topCenter",timeout:3500});
- 			}else{
-	            $.ajax({
-	                type:'POST',
-	                dataType: 'json',
-	                url: "<?php echo $ruta_db_superior;?>formatos/radicacion_entrada/actualizar_recepcion.php",
-	                data: {
-	                    idft_funcionario:idft_funcionario
-	                },
-	                success: function(datos){
-	                    top.noty({text: 'Items finalizados satisfactoriamente!',type: 'success',layout: "topCenter",timeout:3500});
-	                    window.location.reload();
-	                }
-	            });
- 			}
+        $('#finalizar_generar_item').live("change",function(){
+        	
+        	var valor=$(this).val();
+        	if(valor=='boton_seleccionar_registros'){
+
+		        /*Genera Planilla de Mensajeros*/
+		            var mensajero_temp="";
+		            var registros_seleccionados="";
+					var mensajero="";
+					var error=0;
+					$('.planilla_mensajero').each(function(){
+					    var checkbox = $(this);
+					    if(checkbox.is(':checked')===true){
+					        mensajero=$(this).attr('mensajero');
+					        registros_seleccionados+=$(this).val()+",";
+					        
+					        if(mensajero_temp){
+					            if(mensajero_temp!=mensajero){
+					                error=1;
+					            }
+					        }
+					        mensajero_temp=$(this).attr('mensajero');
+						}
+					});
+						registros_seleccionados = registros_seleccionados.substring(0, registros_seleccionados.length-1);
+						
+						if(registros_seleccionados==""){
+							top.noty({text: 'No ha seleccionado ningun campo',type: 'error',layout: "topCenter",timeout:3500});
+						}else if(error==1){
+						    top.noty({text: 'No puede seleccionar diferentes mensajeros',type: 'error',layout: "topCenter",timeout:3500});
+						}else{
+							$("#boton_seleccionar_registros").after("<div id='ir_adicionar_documento' class='link kenlace_saia' enlace='formatos/despacho_ingresados/adicionar_despacho_ingresados.php?idft="+registros_seleccionados+"&mensajero="+mensajero+"' conector='iframe' titulo='Generar Planilla Mensajeros'>---</div>");
+							$("#ir_adicionar_documento").trigger("click");
+							$("#ir_adicionar_documento").remove();
+						}
+        	} //fin if boton_seleccionar_registros
+        	
+        	if(valor=='boton_finalizar_entrega'){
+
+		            var idft_funcionario=JSON.stringify($('[name="recepcion[]"]').serializeArray());
+		 			if(idft_funcionario=='[]'){
+		 				top.noty({text: 'Debe seleccionar al menos un Item!',type: 'warning',layout: "topCenter",timeout:3500});
+		 			}else{
+			            $.ajax({
+			                type:'POST',
+			                dataType: 'json',
+			                url: "<?php echo $ruta_db_superior;?>formatos/radicacion_entrada/actualizar_recepcion.php",
+			                data: {
+			                    idft_funcionario:idft_funcionario
+			                },
+			                success: function(datos){
+			                    top.noty({text: 'Items finalizados satisfactoriamente!',type: 'success',layout: "topCenter",timeout:3500});
+			                    window.location.reload();
+			                }
+			            });
+		 			}
+        	} //fin if boton_finalizar_entrega
+        	
+       		$(this).val(''); 	
         });
+        
         
     });
 </script>

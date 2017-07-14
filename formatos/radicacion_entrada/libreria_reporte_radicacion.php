@@ -246,7 +246,7 @@ function condicion_adicional(){
 function filtrar_mensajero(){
     global $ruta_db_superior, $conn;
     
-    $select="<select class='pull-left btn btn-mini dropdown-toggle' style='height:22px; margin-left: 30px;' name='filtro_mensajeros' id='filtro_mensajeros'>";
+    $select="<select class='pull-left btn btn-mini dropdown-toggle' style='height:22px; margin-left: 10px;' name='filtro_mensajeros' id='filtro_mensajeros'>";
     $select.="<option value=''>Todos Los Mensajeros</option>";
 	$array_concat=array("nombres","' '","apellidos");
 	$cadena_concat=concatenar_cadena_sql($array_concat);
@@ -452,8 +452,6 @@ function generar_accion_destino_radicacion_endistribucion($idft_destino_radicaci
 
 
 }
-
-
 function mostrar_estado_destino_radicacion($idft_destino_radicacion){
     global $ruta_db_superior, $conn;
 	
@@ -475,5 +473,12 @@ function mostrar_estado_destino_radicacion($idft_destino_radicacion){
 	return($mensaje_retorno);
 		
 }
-
+function select_finalizar_generar_item(){
+	$cadena_acciones.="<select id='finalizar_generar_item' class='pull-left btn btn-mini' style='height:22px; margin-left: 10px;'>";
+		$cadena_acciones.="<option value=''>Acciones...</option>";
+		$cadena_acciones.="<option value='boton_seleccionar_registros'>Generar Planilla</option>";
+		$cadena_acciones.="<option value='boton_finalizar_entrega'>Finalizar Tr&aacute;mite</option>";
+	$cadena_acciones.="</select>";	
+	return($cadena_acciones);
+}
 ?>
