@@ -53,7 +53,7 @@ if($datos[0]["pdf"] && is_file($ruta_db_superior.$datos[0]["pdf"]) && !@$_REQUES
 	
 	if(!file_exists($pdf)){
 		$documento=busca_filtro_tabla("","documento a, formato b","lower(a.plantilla)=b.nombre AND a.iddocumento=".$iddoc,"",$conn);
-		$ruta_mostrar=$ruta_db_superior.'formatos/'.$documento[0]['nombre'].'/'.$documento[0]['ruta_mostrar'].'?idformato='.$documento[0]['idformato'].'&iddoc='.$iddoc;
+		$ruta_mostrar=$ruta_db_superior.'formatos/'.$documento[0]['nombre'].'/'.$documento[0]['ruta_mostrar'].'?idformato='.$documento[0]['idformato'].'&iddoc='.$iddoc.'&error_pdf_word=1';
 		include_once($ruta_db_superior."db.php");
 		abrir_url($ruta_mostrar,'_self');
 		die();

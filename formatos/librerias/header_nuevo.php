@@ -39,7 +39,7 @@ if($formato["numcampos"] && @$_REQUEST["tipo"]!=5){
 		if($formato[0]["mostrar_pdf"] == 1) {
 			$ruta = $ruta_db_superior."pantallas/documento/visor_documento.php?iddoc=" . $formato[0]["iddocumento"] . "&actualizar_pdf=1";
 			redirecciona($ruta . "&rnd=" . rand(0, 100));
-		} else if($formato[0]["mostrar_pdf"] == 2) {
+		} else if($formato[0]["mostrar_pdf"] == 2 && !@$_REQUEST['error_pdf_word']) {
 			$ruta = $ruta_db_superior."pantallas/documento/visor_documento.php?pdf_word=1&iddoc=" . $formato[0]["iddocumento"];
 			redirecciona($ruta . "&rnd=" . rand(0, 100));
 		}
