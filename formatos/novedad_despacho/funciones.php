@@ -14,6 +14,9 @@ $max_salida--;
 include_once($ruta_db_superior."db.php");
 function cargar_items_radicacion($idformato,$iddoc){
     global $conn;
+	
+	//include_once($ruta_db_superior.'librerias_saia.php');
+	//echo( librerias_jquery('1.7') );
 
 	$items_seleccionados=busca_filtro_tabla("iddestino_radicacion","ft_despacho_ingresados","documento_iddocumento=".$_REQUEST['anterior'],"",$conn);
 	$cadena_items_seleccionados=$items_seleccionados[0]['iddestino_radicacion'];
@@ -21,10 +24,10 @@ function cargar_items_radicacion($idformato,$iddoc){
 	$registros=busca_filtro_tabla("b.idft_destino_radicacion,b.numero_item,b.estado_recogida,d.iddocumento,d.plantilla,b.numero_item,b.nombre_destino,b.destino_externo,b.origen_externo,b.tipo_origen,b.tipo_destino,b.nombre_origen,a.documento_iddocumento,a.descripcion,a.tipo_mensajeria","ft_destino_radicacion b, ft_radicacion_entrada a, documento d","a.idft_radicacion_entrada=b.ft_radicacion_entrada AND a.documento_iddocumento=d.iddocumento AND b.idft_destino_radicacion in(".$cadena_items_seleccionados.")","",$conn);
 	
 	$html="<td>
-		<table style='width:100%;border-collapse:collapse;'  border='1px'>
+		<table style='width:100%;border-collapse:collapse;border-color:#cac8c8;border-style:solid;border-width:1px;'  border='1'>
 		<tr style='font-weight:bold;text-align:center;'>
 			<td>
-				
+				<input type='checkbox' name='boton_todos' id='boton_todos' value='todos'>
 			</td>
 			<td>
 				TR&Aacute;MITE
@@ -132,17 +135,24 @@ function cargar_items_radicacion($idformato,$iddoc){
 		</tr>
 		
 		";
-		
 
-		
-		
-		
-		
     }	
     $html.="
     </table>
     </td>
+    <script>
+    	$(document).ready(function(){
+    		$('#boton_todos').click(function(){
+				if( $(this).is(':checked') ){ //check
+					$('[name=\"item_radicacion[]\"]').attr('checked',true);		
+				}else{  //un-check	
+					$('[name=\"item_radicacion[]\"]').attr('checked',false);		
+				}	
+    		});
+    	});
+    </script>
     ";
+
     echo($html);
 }
 function mostrar_numero_item_novedad($idformato,$iddoc){
