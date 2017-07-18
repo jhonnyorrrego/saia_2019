@@ -1,7 +1,7 @@
 <?php
-require_once (__DIR__ . "/../define.php");
-require_once (__DIR__ . "/../StorageUtils.php");
-require (__DIR__ . '/../vendor/autoload.php');
+require_once ( __DIR__ . "/../define.php");
+require_once ( __DIR__ . "/../StorageUtils.php");
+require ( __DIR__ . '/../vendor/autoload.php');
 require_once 'SaiaLocalAdapter.php';
 
 use Gaufrette\Filesystem;
@@ -18,9 +18,9 @@ class SaiaStorage {
 	private $filesystem;
 	private $ruta_servidor;
 
-	public function __construct($tipo = null) {
+	public function __construct($tipo=null) {
 		$this->tipo = $tipo;
-		if ($tipo) {
+		if($tipo) {
 			$this->__init();
 		}
 	}
@@ -49,7 +49,10 @@ class SaiaStorage {
 			case 'configuracion' :
 				$server_path = RUTA_CONFIGURACION;
 				break;
-			default : // Usar el tipo. Ej. BACKUP
+			case 'backup':
+				$server_path = RUTA_BACKUPS;
+				break;
+			default: //Usar el tipo. Ej. BACKUP
 				$server_path = $this->tipo;
 		}
 		$this->resolver_adaptador($server_path);
@@ -59,7 +62,6 @@ class SaiaStorage {
 		$str_path = String::create($server_path);
 		$storage_type = $str_path->first($str_path->indexOf("://"))->ensureRight("://");
 		$path = $str_path->removeLeft($storage_type);
-
 		switch ($storage_type) {
 			case StorageUtils::LOCAL:
 			case StorageUtils::NETWORK:
@@ -71,24 +73,26 @@ class SaiaStorage {
 					$this->adapter = new Local($path, true, 0777);
 				}
 				break;
-			case StorageUtils::GOOGLE :
+			case StorageUtils::GOOGLE:
 				$this->adapter = $this->obtener_google_adapter();
 				break;
-			case StorageUtils::S3 :
-				$s3client = S3Client::factory(array(
-						'key' => 'your_key_here',
-						'secret' => 'your_secret',
-						'version' => 'latest',
-						'region' => 'eu-west-1'
-				));
-				$this->adapter = new AwsS3Adapter($s3client, $path);
+			case StorageUtils::S3:
+				$s3client = new S3Client([
+					'credentials' => [
+						'key'     => KEY_AWS,
+						'secret'  => SECRET_AWS,
+					],
+					'version' => 'latest',
+					'region'  => 'us-east-1',
+				]);
+				$this->adapter = new AwsS3Adapter($s3client,$path);
 				break;
-			default :
-				$this->adapter = new Local($path, true, 0777);
+			default:
+					$this->adapter = new Local($path, true, 0777);
 		}
 		$this->ruta_servidor = $server_path;
 
-		if ($this->adapter) {
+		if($this->adapter) {
 			$this->filesystem = new Filesystem($this->adapter);
 		}
 	}
@@ -113,12 +117,12 @@ class SaiaStorage {
 	 * @param unknown $temp
 	 * @return la suma md5 si el parametro md5 es true. O el numero de bytes escritos
 	 */
-	public function almacenar_recurso($ruta_recurso, $temp, $md5 = false) {
-		// print_r($filesystem);die();
+	public function almacenar_recurso($ruta_recurso, $temp, $md5=false) {
+		//print_r($filesystem);die();
 		$adapter = new Local(dirname($temp));
 		$content = $adapter->read(basename($temp));
 		$numbytes = $this->filesystem->write($ruta_recurso, $content, true);
-		if ($md5) {
+		if($md5) {
 			$checksum = $this->filesystem->checksum($ruta_recurso);
 			return $checksum;
 		}
@@ -134,6 +138,7 @@ class SaiaStorage {
 	 * @return integer Numero de bytes que fueron escriton en el archvio $ruta_recurso
 	 */
 	public function almacenar_contenido($ruta_recurso, $contenido) {
+		//print_r($filesystem);die();
 		return $this->filesystem->write($ruta_recurso, $contenido, true);
 	}
 
@@ -157,7 +162,7 @@ class SaiaStorage {
 	 * @param unknown $ruta_destino
 	 */
 	public function copiar_contenido($alm_destino, $ruta_origen, $ruta_destino) {
-		if ($this->filesystem->has($ruta_origen)) {
+		if($this->filesystem->has($ruta_origen)) {
 			$content = $this->filesystem->read($ruta_origen);
 			$alm_destino->filesystem->write($ruta_destino, $content, true);
 		}
