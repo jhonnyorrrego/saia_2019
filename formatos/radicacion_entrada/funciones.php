@@ -655,8 +655,12 @@ function mostrar_item_destino_radicacion($idformato,$iddoc){
     	            <td><input type='text' style='width:100px;' class='observaciones' id='".$datos[$i]['idft_destino_radicacion']."' value='".$datos[$i]['observacion_destino']."'></td>";
     	   if($_REQUEST['tipo']!=5){
     	       $idformato_item=busca_filtro_tabla("idformato","formato","tabla='ft_destino_radicacion'","",$conn);
+    	       if(!$destino[0]['nombre_destino'] || $destino[0]['nombre_destino']==''){
+    	       		$destino[0]['nombre_destino']=0;
+    	       }
+    	       
     	       $tabla.='<td>                
-                    <a href="#" onclick="if(confirm(&quot;En realidad desea borrar este elemento?&quot;)){ eliminar_destino_radicacion('.$datos[$i]['idft_destino_radicacion'].','.$destino[0]['nombre_destino'].',\''.$persona_natural_destino.'\'); }" >
+                    <a href="#" onclick="javascript:if(confirm(\'En realidad desea borrar este elemento?\')){ eliminar_destino_radicacion('.$datos[$i]['idft_destino_radicacion'].','.$destino[0]['nombre_destino'].',\''.$persona_natural_destino.'\'); }" >
                         <img src="'.$ruta_db_superior.'images/eliminar_pagina.png" border="0">
                     </a>
                 </td>';
