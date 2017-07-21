@@ -566,6 +566,7 @@ INSERT INTO campos_formato (idcampos_formato, formato_idformato, nombre, etiquet
 	INSERT INTO `saia_release1`.`cargo` (`idcargo`, `nombre`, `cod_padre`, `estado`, `codigo_cargo`, `tipo`, `tipo_cargo`) VALUES (NULL, 'ADMINISTRADOR DE MENSAJER&Iacute;A', '82', '1', '', '1', '2');
 -- ----------------------------------------------------------------
 
+UPDATE campos_formato SET tipo_dato='TEXT', longitud=NULL WHERE nombre='asignar_dependencias' AND formato_idformato=404;	
 
 
 
