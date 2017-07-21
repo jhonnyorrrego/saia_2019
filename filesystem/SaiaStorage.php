@@ -62,13 +62,17 @@ class SaiaStorage {
 	public function resolver_adaptador($server_path) {
 		$str_path = String::create($server_path);
 		$storage_type = $str_path->first($str_path->indexOf("://"))->ensureRight("://");
-		$path = $str_path->removeLeft($storage_type);
+
+		$ruta_resuelta = StorageUtils::parsear_ruta_servidor($server_path);
+		//$path = $str_path->removeLeft($storage_type);
+		$path = String::create($ruta_resuelta["servidor"])->removeLeft($storage_type);
+		//print_r($path);die();
 		switch ($storage_type) {
 			case StorageUtils::LOCAL:
 			case StorageUtils::NETWORK:
 				$root = $_SERVER["DOCUMENT_ROOT"] . StorageUtils::SEPARADOR . RUTA_SCRIPT;
 				if(StringUtils::startsWith($path, "..")) {
-					$path = String::create($path)->trimLeft(".." . StorageUtils::SEPARADOR)->removeRight(StorageUtils::SEPARADOR)->ensureLeft(StorageUtils::SEPARADOR);
+					$path = $path->trimLeft(".." . StorageUtils::SEPARADOR)->removeRight(StorageUtils::SEPARADOR)->ensureLeft(StorageUtils::SEPARADOR);
 					$this->adapter = new Local($root . $path, true, 0777);
 				} else {
 					$this->adapter = new Local($path, true, 0777);
@@ -86,13 +90,14 @@ class SaiaStorage {
 					'version' => 'latest',
 					'region'  => REGION_AWS,
 				]);
-				$this->adapter = new AwsS3Adapter($s3client,$path);
+				$path = $path->removeRight(StorageUtils::SEPARADOR);
+				$this->adapter = new AwsS3Adapter($s3client, $path);
 				break;
 			default:
 					$this->adapter = new Local($path, true, 0777);
 					break;
 		}
-		$this->ruta_servidor = $server_path;
+		$this->ruta_servidor = $ruta_resuelta["servidor"];
 
 		if($this->adapter) {
 			$this->filesystem = new Filesystem($this->adapter);

@@ -17,20 +17,20 @@ include_once ($ruta_db_superior . "db.php");
  */
 function mostrar_codigo_qr($idformato, $iddoc,$retorno=false) {
 	global $conn, $ruta_db_superior;
-	
+
 	include_once($ruta_db_superior."StorageUtils.php");
 	require_once $ruta_db_superior.'filesystem/SaiaStorage.php';
 	$codigo_qr = busca_filtro_tabla("", "documento_verificacion", "documento_iddocumento=" . $iddoc, "", $conn);
 	$img='';
 	if($codigo_qr['numcampos']) {
-		$ruta_qr=json_decode($codigo_qr[0]['ruta_qr']);	
+		$ruta_qr=json_decode($codigo_qr[0]['ruta_qr']);
 		if(is_object($ruta_qr)){
 			$tipo_almacenamiento = new SaiaStorage(RUTA_QR);
 			if($tipo_almacenamiento->get_filesystem()->has($ruta_qr->ruta)){
     			$archivo_binario=StorageUtils::get_binary_file($codigo_qr[0]['ruta_qr']);
-				$img='<img src="'.$archivo_binario.'" />';					
+				$img='<img src="'.$archivo_binario.'" />';
 			}
-		}	
+		}
 	}
 	if($img==''){
 		generar_codigo_qr($idformato,$iddoc);
@@ -41,7 +41,7 @@ function mostrar_codigo_qr($idformato, $iddoc,$retorno=false) {
 	}else{
 		echo($img);
 	}
-	
+
 }
 
 function generar_codigo_qr($idformato, $iddoc, $idfunc = 0) {
@@ -49,13 +49,13 @@ function generar_codigo_qr($idformato, $iddoc, $idfunc = 0) {
 	include_once ($ruta_db_superior . "formatos/librerias/funciones_generales.php");
 	include_once ($ruta_db_superior . "pantallas/lib/librerias_cripto.php");
 	include_once ($ruta_db_superior . "pantallas/lib/librerias_archivo.php");
-	
+
 	$codigo_qr = busca_filtro_tabla("ruta_qr, iddocumento_verificacion", "documento_verificacion", "documento_iddocumento=" . $iddoc, "", $conn);
 	if($codigo_qr['numcampos']){
 		$sqld="DELETE FROM documento_verificacion WHERE documento_iddocumento=".$iddoc;
 		phpmkr_query($sqld);
 	}
-	
+
 	$datos = busca_filtro_tabla("A.fecha,A.estado,A.numero", "documento A", "A.iddocumento=" . $iddoc, "", $conn);
 	$idfun = "";
 	if(@$_REQUEST['tipo'] == 5) {
@@ -66,11 +66,11 @@ function generar_codigo_qr($idformato, $iddoc, $idfunc = 0) {
 		    $idfun=1;
 		}
 	}
-	
+
 	if($idfunc) {
 		$idfun = $idfunc;
 	}
-	
+
 	$fecha = date_parse($datos[0]['fecha']);
 	$datos_qr = "";
 	$cadena = "id=" . $iddoc;
@@ -83,7 +83,7 @@ function generar_codigo_qr($idformato, $iddoc, $idfunc = 0) {
 	$imagen = generar_qr_bin($datos_qr, 3);
 
 	$filename = $ruta . 'qr' . date('Y_m_d_H_m_s') . '.png';
-	
+
 	if($imagen == false) {
 		alerta("Error al tratar de crear el codigo qr");
 	} else {

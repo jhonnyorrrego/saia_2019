@@ -145,6 +145,7 @@ class StorageUtils {
 					'version' => 'latest',
 					'region'  => REGION_AWS,
 				]);
+				$path = String::create($path)->removeRight(StorageUtils::SEPARADOR);
 				$adapter = new AwsS3Adapter($s3client, $path);
 				break;
 			default :
@@ -172,7 +173,13 @@ class StorageUtils {
 		$almacenamiento = null;
 		if ($ruta->isJson()) {
 			$rutaj = json_decode($path);
-			$almacenamiento = SaiaStorage::con_ruta_servidor($rutaj->servidor);
+			$ruta_resuelta = static::parsear_ruta_servidor($rutaj->servidor);
+			$rutaj->servidor = $ruta_resuelta["servidor"];
+			if(!empty($ruta_resuelta["ruta"])) {
+				$ruta_compuesta = String::create($ruta_resuelta["ruta"]);
+				$rutaj->ruta = $ruta_compuesta->ensureRight(static::SEPARADOR)->append($rutaj->ruta);
+			}
+			$almacenamiento = SaiaStorage::con_ruta_servidor();
 			$resp["servidor"] = $rutaj->servidor;
 			$resp["ruta"] = $rutaj->ruta;
 			$resp["error"] = false;
@@ -210,9 +217,16 @@ class StorageUtils {
 			$index = array_search($maxLength, $lengths);
 			if (@$posibles[$index]) {
 				$mejor_opcion = $posibles[$index];
-				$almacenamiento = new SaiaStorage($mejor_opcion);
+				$ruta_resuelta = static::parsear_ruta_servidor($mejor_opcion);
+
+				$ruta_compuesta = (string) $str_path->trimLeft($mejor_opcion);
+				if(!empty($ruta_resuelta["ruta"])) {
+					$ruta_compuesta = String::create($ruta_resuelta["ruta"]);
+				}
+
+				$almacenamiento = new SaiaStorage($ruta_resuelta["servidor"]);
 				$resp["servidor"] = $mejor_opcion;
-				$resp["ruta"] = (string) $str_path->trimLeft($mejor_opcion);
+				$resp["ruta"] = $ruta_compuesta;
 				$resp["error"] = false;
 			} else {
 				// print_r($path); echo "<br>";print_r($posibles[$index]);echo "<br>";
@@ -221,6 +235,28 @@ class StorageUtils {
 			}
 		}
 		$resp["clase"] = $almacenamiento;
+		return $resp;
+	}
+
+	public static function parsear_ruta_servidor($ruta_servidor) {
+		//debug_print_backtrace();
+		$str_ruta= String::create($ruta_servidor);
+		$storage_type = $str_ruta->first($str_ruta->indexOf("://"))->ensureRight("://");
+		$str_ruta = $str_ruta->trimLeft($storage_type);
+		$rutas = $str_ruta->split(static::SEPARADOR);
+		$rutas = array_filter($rutas);
+		$resto = "";
+		$ruta_srv = "";
+		if(empty($rutas)) {
+			$ruta_srv = $ruta_servidor;
+		} else {
+			$ruta_srv = String::create($rutas[0])->prepend($storage_type);
+			if(count($rutas) > 1) {
+				unset($rutas[0]);
+				$resto = implode(static::SEPARADOR, $rutas);
+			}
+		}
+		$resp = array("servidor" => (string)$ruta_srv, "ruta" => (string)$resto);
 		return $resp;
 	}
 

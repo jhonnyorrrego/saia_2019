@@ -238,7 +238,7 @@ function guardar_lob($campo, $tabla, $condicion, $contenido, $tipo, $conn, $log 
 	return $conn->guardar_lob($campo, $tabla, $condicion, $contenido, $tipo, $log);
 }
 
-/*
+	/*
  * <Clase>
  * <Nombre>evento_archivo</Nombre>
  * <Parametros>$cadena:cadena con los datos que se insertaron en la bd</Parametros>
@@ -250,35 +250,41 @@ function guardar_lob($campo, $tabla, $condicion, $contenido, $tipo, $conn, $log 
  * <Post-condiciones><Post-condiciones>
  * </Clase>
  */
-function evento_archivo($cadena){
-  global $conn;
-  $max_salida=6; // Previene algun posible ciclo infinito limitando a 10 los ../
-  $ruta_db_superior=$ruta="";
-  while($max_salida>0){
-    if(is_file($ruta."db.php")){
-      $ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
-    }
-    $ruta.="../";
-    $max_salida--;
-  }
+function evento_archivo($cadena) {
+	global $conn;
+	$max_salida = 6; // Previene algun posible ciclo infinito limitando a 10 los ../
+	$ruta_db_superior = $ruta = "";
+	while($max_salida > 0) {
+		if (is_file($ruta . "db.php")) {
+			$ruta_db_superior = $ruta; // Preserva la ruta superior encontrada
+		}
+		$ruta .= "../";
+		$max_salida--;
+	}
 	/*
 	 * $ruta_evento=busca_filtro_tabla("valor","configuracion","nombre like 'ruta_evento'","",$conn);
 	 *
 	 * $nombre=$ruta_db_superior."../".$ruta_evento[0]['valor']."/".DB."_log_".date("Y_m_d").".txt";
 	 */
-	$storage = new SaiaStorage(RUTA_BACKUP_EVENTO);
+	//$storage = new SaiaStorage(RUTA_BACKUP_EVENTO);
+	$storage = new SaiaStorage("backup");
+	//s3://almacenamiento2/backup/
+	//define("RUTA_BACKUP_EVENTO",RUTA_BACKUP."evento/");
 
 	$nombre = DB . "_log_" . date("Y_m_d") . ".txt";
+	$nombre = "backup/evento/" . $nombre;
 
 	$filesystem = $storage->get_filesystem();
-  	$contenido="";
+	$contenido = "";
 	if ($filesystem->has($nombre)) {
 		$mode = "ab";
-    $contenido=$cadena."*|*";
+		$contenido = $cadena . "*|*";
 	} else {
+		//$filesystem->getAdapter()->write($nombre, "");
+		$archivo = $filesystem->get($nombre, true);
 		$mode = "wb";
-    $contenido="idevento|||funcionario_codigo|||fecha|||evento|||tabla_e|||estado|||detalle|||registro_id|||codigo_sql*|*".$cadena."*|*";
-  }
+		$contenido = "idevento|||funcionario_codigo|||fecha|||evento|||tabla_e|||estado|||detalle|||registro_id|||codigo_sql*|*" . $cadena . "*|*";
+	}
 
 	$stream = $filesystem->createStream($nombre);
 	$stream->open(new StreamMode($mode));
@@ -286,6 +292,7 @@ function evento_archivo($cadena){
 	$stream->write($contenido);
 	$stream->close();
 }
+
 function normalizePath($path) {
 	return array_reduce(explode('/', $path), create_function('$a, $b', '
 			if($a === 0)
@@ -1598,13 +1605,13 @@ $image = imagecreatefromgif($nombreorig);///nombre del archivo origen
 imagecopyresampled($image_p, $image, 0, 0, 0, 0, $nwidth, $nheight, $width, $height);
 imagegif($image_p, $nombredest);///nombre del destino
 imagedestroy($image_p);
-imagedestroy($image); 
+imagedestroy($image);
 
 		if ($binario) {
 			$im = file_get_contents($nombreorig);
 			return ($im);
 		} else {
-return($nombredest); 
+return($nombredest);
 }
 	} else {
 $image = imagecreatefromjpeg($nombreorig);
@@ -3675,7 +3682,7 @@ function concatenar_cadena_sql($arreglo_cadena){
     break;
     case 'Oracle':
 	    return(implode("||",$arreglo_cadena));
-		break;    
+		break;
     default:
       if(@$arreglo_cadena[($i+1)]==""){
         return($arreglo_cadena[0]);
