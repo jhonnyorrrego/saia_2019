@@ -174,12 +174,12 @@ class StorageUtils {
 		if ($ruta->isJson()) {
 			$rutaj = json_decode($path);
 			$ruta_resuelta = static::parsear_ruta_servidor($rutaj->servidor);
-			$rutaj->servidor = $ruta_resuelta["servidor"];
+			$rutaj->servidor = (string)$ruta_resuelta["servidor"];
 			if(!empty($ruta_resuelta["ruta"])) {
 				$ruta_compuesta = String::create($ruta_resuelta["ruta"]);
 				$rutaj->ruta = $ruta_compuesta->ensureRight(static::SEPARADOR)->append($rutaj->ruta);
 			}
-			$almacenamiento = SaiaStorage::con_ruta_servidor();
+			$almacenamiento = SaiaStorage::con_ruta_servidor($rutaj->servidor);
 			$resp["servidor"] = $rutaj->servidor;
 			$resp["ruta"] = $rutaj->ruta;
 			$resp["error"] = false;

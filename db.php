@@ -266,13 +266,17 @@ function evento_archivo($cadena) {
 	 *
 	 * $nombre=$ruta_db_superior."../".$ruta_evento[0]['valor']."/".DB."_log_".date("Y_m_d").".txt";
 	 */
-	//$storage = new SaiaStorage(RUTA_BACKUP_EVENTO);
-	$storage = new SaiaStorage("backup");
-	//s3://almacenamiento2/backup/
-	//define("RUTA_BACKUP_EVENTO",RUTA_BACKUP."evento/");
 
-	$nombre = DB . "_log_" . date("Y_m_d") . ".txt";
-	$nombre = "backup/evento/" . $nombre;
+	$ruta_resuelta = StorageUtils::parsear_ruta_servidor(RUTA_BACKUP_EVENTO);
+	$storage = new SaiaStorage(RUTA_BACKUP_EVENTO);
+
+	$prefijo = "";
+	if(!empty($ruta_resuelta["ruta"])) {
+		$prefijo = $ruta_resuelta["ruta"];
+	}
+
+	$nombre = StorageUtils::SEPARADOR . DB . "_log_" . date("Y_m_d") . ".txt";
+	$nombre = $prefijo . $nombre;
 
 	$filesystem = $storage->get_filesystem();
 	$contenido = "";
