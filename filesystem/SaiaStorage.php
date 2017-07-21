@@ -12,6 +12,7 @@ use Gaufrette\Adapter\GoogleCloudStorage;
 use Stringy\Stringy as String;
 use Stringy\StaticStringy as StringUtils;
 use Gaufrette\Adapter\SaiaLocalAdapter as Local;
+
 class SaiaStorage {
 	private $tipo;
 	private $adapter;
@@ -83,12 +84,13 @@ class SaiaStorage {
 						'secret'  => SECRET_AWS,
 					],
 					'version' => 'latest',
-					'region'  => 'us-east-1',
+					'region'  => REGION_AWS,
 				]);
 				$this->adapter = new AwsS3Adapter($s3client,$path);
 				break;
 			default:
 					$this->adapter = new Local($path, true, 0777);
+					break;
 		}
 		$this->ruta_servidor = $server_path;
 
@@ -111,11 +113,10 @@ class SaiaStorage {
 
 	/**
 	 * Guarda $contenido del archivo $temp en el almacenamiento especificado por $tipo y en la ruta $ruta_recurso
-	 *
-	 * @param unknown $tipo
-	 * @param unknown $ruta_recurso
-	 * @param unknown $temp
-	 * @return la suma md5 si el parametro md5 es true. O el numero de bytes escritos
+	 * @param string $ruta_recurso
+	 * @param string $temp
+	 * @param string $md5
+	 * @return string|number
 	 */
 	public function almacenar_recurso($ruta_recurso, $temp, $md5=false) {
 		//print_r($filesystem);die();

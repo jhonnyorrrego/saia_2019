@@ -17,9 +17,21 @@ if($path) {
 
 	$fs = $instancia->get_filesystem();
 	$archivo = $fs->get($arr_almacen["ruta"]);
-	$tipo = $fs->mimeType($arr_almacen["ruta"]);
+
+	try {
+		$tipo = $fs->mimeType($arr_almacen["ruta"]);
+	} catch (Exception $le) {
+		$tipo = false;
+	}
+
+	$contenido_binario = $archivo->getContent();
+	if(!$tipo) {
+		$finfo = new finfo(FILEINFO_MIME_TYPE);
+		$tipo = $finfo->buffer($contenido_binario);
+	}
+
 	header("Content-Type: $tipo");
 	header("Content-Length: " . $archivo->getSize());
-	echo($archivo->getContent());
+	echo($contenido_binario);
 }
 

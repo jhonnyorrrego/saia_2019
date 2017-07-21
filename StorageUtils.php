@@ -6,6 +6,9 @@ require_once 'filesystem/SaiaLocalAdapter.php';
 require_once 'filesystem/SaiaStorage.php';
 
 use Gaufrette\Filesystem;
+use Aws\S3\S3Client;
+use Gaufrette\Adapter\AwsS3 as AwsS3Adapter;
+use Gaufrette\Adapter\GoogleCloudStorage;
 
 use Stringy\Stringy as String;
 use Stringy\StaticStringy as StringUtils;
@@ -43,6 +46,9 @@ class StorageUtils {
 			case 'versiones' :
 				$server_path = RUTA_VERSIONES;
 				break;
+			case 'backup' :
+				$server_path = RUTA_BACKUPS;
+				break;
 			default : // Usar el tipo. Ej. BACKUP
 				$server_path = $this->tipo;
 		}
@@ -61,12 +67,21 @@ class StorageUtils {
 	 * @return binary (contenido del archivo)
 	 */
 	public static function get_binary_file($vector_ruta) {
-		// print_r($_REQUEST);die();
+		// print_r($vector_ruta);die();
 		$tcpdf = @$_REQUEST["tipo"] == 5;
 		$resolver_ruta = static::resolver_ruta($vector_ruta);
 		$ruta = $resolver_ruta['ruta'];
-		$type = $resolver_ruta['clase']->get_filesystem()->mimeType($ruta);
+		try {
+			$type = $resolver_ruta['clase']->get_filesystem()->mimeType($ruta);
+		} catch (Exception $le) {
+			$type = false;
+		}
+
 		$contenido_binario = $resolver_ruta['clase']->get_filesystem()->read($ruta);
+		if(!$type) {
+			$finfo = new finfo(FILEINFO_MIME_TYPE);
+			$type = $finfo->buffer($contenido_binario);
+		}
 		switch ($type) {
 			case 'image/png' :
 			case 'image/jpeg' :
@@ -122,12 +137,14 @@ class StorageUtils {
 				$adapter = obtener_google_adapter();
 				break;
 			case self::S3 :
-				$s3client = S3Client::factory(array(
-						'key' => 'your_key_here',
-						'secret' => 'your_secret',
-						'version' => 'latest',
-						'region' => 'eu-west-1'
-				));
+				$s3client = new S3Client([
+					'credentials' => [
+						'key'     => KEY_AWS,
+						'secret'  => SECRET_AWS,
+					],
+					'version' => 'latest',
+					'region'  => REGION_AWS,
+				]);
 				$adapter = new AwsS3Adapter($s3client, $path);
 				break;
 			default :
