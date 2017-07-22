@@ -111,6 +111,7 @@ class SaiaStorage {
 	 * @return SaiaStorage
 	 */
 	public static function con_ruta_servidor($server_path) {
+		//debug_print_backtrace();
 		$instance = new self();
 		$instance->resolver_adaptador($server_path);
 		return $instance;

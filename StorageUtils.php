@@ -181,7 +181,7 @@ class StorageUtils {
 			}
 			$almacenamiento = SaiaStorage::con_ruta_servidor($rutaj->servidor);
 			$resp["servidor"] = $rutaj->servidor;
-			$resp["ruta"] = $rutaj->ruta;
+			$resp["ruta"] = (string)$rutaj->ruta;
 			$resp["error"] = false;
 		} else {
 			$resp["mensaje"] = "la cadena '$path' no es json" ;
@@ -219,7 +219,7 @@ class StorageUtils {
 				$mejor_opcion = $posibles[$index];
 				$ruta_resuelta = static::parsear_ruta_servidor($mejor_opcion);
 
-				$ruta_compuesta = (string) $str_path->trimLeft($mejor_opcion);
+				$ruta_compuesta = (string) $str_path->removeLeft($mejor_opcion);
 				if(!empty($ruta_resuelta["ruta"])) {
 					$ruta_compuesta = String::create($ruta_resuelta["ruta"]);
 				}
@@ -242,15 +242,19 @@ class StorageUtils {
 		//debug_print_backtrace();
 		$str_ruta= String::create($ruta_servidor);
 		$storage_type = $str_ruta->first($str_ruta->indexOf("://"))->ensureRight("://");
-		$str_ruta = $str_ruta->trimLeft($storage_type);
-		$rutas = $str_ruta->split(static::SEPARADOR);
+		$str_ruta = $str_ruta->removeLeft($storage_type);
+		$rutas = $str_ruta->removeLeft(static::SEPARADOR)->split(static::SEPARADOR);
 		$rutas = array_filter($rutas);
 		$resto = "";
 		$ruta_srv = "";
 		if(empty($rutas)) {
 			$ruta_srv = $ruta_servidor;
 		} else {
-			$ruta_srv = String::create($rutas[0])->prepend($storage_type);
+			$prefijo_servidor = "";
+			if($str_ruta->startsWith(StorageUtils::SEPARADOR)) {
+				$prefijo_servidor = StorageUtils::SEPARADOR;
+			}
+			$ruta_srv = String::create($rutas[0])->prepend($prefijo_servidor)->prepend($storage_type);
 			if(count($rutas) > 1) {
 				unset($rutas[0]);
 				$resto = implode(static::SEPARADOR, $rutas);
