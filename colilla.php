@@ -128,7 +128,7 @@ if($doc<>FALSE){
   	include_once($ruta_db_superior.'formatos/radicacion_entrada/funciones.php');				
   	
   	$datos_origen_radicacion=validar_persona_origen_destino($doc,'origen');
-	$destinos_radicacion=busca_filtro_tabla("b.idft_destino_radicacion,b.nombre_destino,b.destino_externo","ft_radicacion_entrada a, ft_destino_radicacion b","a.idft_radicacion_entrada=b.ft_radicacion_entrada AND a.documento_iddocumento=".$doc,"b.idft_destino_radicacion ASC",$conn);
+	$destinos_radicacion=busca_filtro_tabla("b.idft_destino_radicacion,b.nombre_destino,b.destino_externo,b.tipo_destino","ft_radicacion_entrada a, ft_destino_radicacion b","a.idft_radicacion_entrada=b.ft_radicacion_entrada AND a.documento_iddocumento=".$doc,"b.idft_destino_radicacion ASC",$conn);
 	
 	$lista_nombres_origen='';
 	$lista_nombres_destino='';
@@ -358,7 +358,8 @@ function imprime(atras){
  <b>Origen: <?php echo($origen);?></b><br/>
    
   <b>Destino: <?php echo substr(($destino),0,22)."..."; ?></b>
-
+  
+   	<?php
   	$validar_impresion = busca_filtro_tabla("valor","configuracion","lower(nombre) LIKE'imprimir_colilla_automatico'","",$conn);
 
 		if($validar_impresion[0]['valor'] == 1){
