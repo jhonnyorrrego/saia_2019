@@ -126,17 +126,17 @@ if($datos_busqueda[0]['enlace_adicionar']!=""){
 	$boton_adicionar='<button class=\"btn btn-mini btn-primary kenlace_saia pull-left\" titulo=\"Adicionar '.$datos_busqueda[0]["etiqueta"].'\" title=\"Adicionar '.$datos_busqueda[0]["etiqueta"].'\" conector=\"iframe\" enlace=\"'.$datos_busqueda[0]['enlace_adicionar'].'\">Adicionar</button>';
 }
 
-$acciones_selecionados='';
-if($datos_busqueda[0]["acciones_seleccionados"]!=''){
-	$datos_reporte=array();
-	$datos_reporte['idbusqueda_componente']=$datos_busqueda[0]["idbusqueda_componente"];
-	$datos_reporte['variable_busqueda']=@$_REQUEST["variable_busqueda"];
-     $acciones=explode(",",$datos_busqueda[0]["acciones_seleccionados"]);
-     $cantidad=count($acciones);
-     for($i=0;$i<$cantidad;$i++){
-	     $acciones_selecionados=($acciones[$i]($datos_reporte));
-     }
-}
+$acciones_selecionados='';		
+if($datos_busqueda[0]["acciones_seleccionados"]!=''){		
+	$datos_reporte=array();		
+	$datos_reporte['idbusqueda_componente']=$datos_busqueda[0]["idbusqueda_componente"];		
+	$datos_reporte['variable_busqueda']=@$_REQUEST["variable_busqueda"]; 		
+     $acciones=explode(",",$datos_busqueda[0]["acciones_seleccionados"]);		
+     $cantidad=count($acciones);		
+     for($i=0;$i<$cantidad;$i++){		
+	     $acciones_selecionados.=($acciones[$i]($datos_reporte));
+     }              		
+}  
 
 echo(librerias_jquery("1.7"));
 echo(librerias_UI());
@@ -144,7 +144,8 @@ echo(librerias_jqgrid());
 echo(librerias_tooltips());
 echo(librerias_notificaciones());
 echo(librerias_acciones_kaiten());
-?>
+echo(librerias_bootstrap());
+?>          
 <script type="text/javascript">
 var isOpera="";
 var isFirefox="";
