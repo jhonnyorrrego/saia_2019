@@ -71,13 +71,20 @@ class StorageUtils {
 		$tcpdf = @$_REQUEST["tipo"] == 5;
 		$resolver_ruta = static::resolver_ruta($vector_ruta);
 		$ruta = $resolver_ruta['ruta'];
+		$tipo_almacenamiento = $resolver_ruta['clase'];
 		try {
-			$type = $resolver_ruta['clase']->get_filesystem()->mimeType($ruta);
+			$type = $tipo_almacenamiento->get_filesystem()->mimeType($ruta);
 		} catch (Exception $le) {
 			$type = false;
 		}
 
-		$contenido_binario = $resolver_ruta['clase']->get_filesystem()->read($ruta);
+		if($tipo_almacenamiento->get_filesystem()->has($ruta)){
+			$contenido_binario = $tipo_almacenamiento->get_filesystem()->read($ruta);
+		} else {
+			//var_dump($resolver_ruta);die();
+		}
+
+		//var_dump($contenido_binario);die();
 		if(!$type) {
 			$finfo = new finfo(FILEINFO_MIME_TYPE);
 			$type = $finfo->buffer($contenido_binario);
@@ -174,15 +181,17 @@ class StorageUtils {
 		if ($ruta->isJson()) {
 			$rutaj = json_decode($path);
 			$ruta_resuelta = static::parsear_ruta_servidor($rutaj->servidor);
+			//print_r($ruta_resuelta);//die("<==== Resuelta");
 			$rutaj->servidor = (string)$ruta_resuelta["servidor"];
 			if(!empty($ruta_resuelta["ruta"])) {
 				$ruta_compuesta = String::create($ruta_resuelta["ruta"]);
-				$rutaj->ruta = $ruta_compuesta->ensureRight(static::SEPARADOR)->append($rutaj->ruta);
+				$rutaj->ruta = (string)$ruta_compuesta->ensureRight(static::SEPARADOR)->append($rutaj->ruta);
 			}
 			$almacenamiento = SaiaStorage::con_ruta_servidor($rutaj->servidor);
 			$resp["servidor"] = $rutaj->servidor;
 			$resp["ruta"] = (string)$rutaj->ruta;
 			$resp["error"] = false;
+			//print_r($resp);die("<==== Resuelta");
 		} else {
 			$resp["mensaje"] = "la cadena '$path' no es json" ;
 			$constantes = array();
@@ -258,6 +267,7 @@ class StorageUtils {
 			if(count($rutas) > 1) {
 				unset($rutas[0]);
 				$resto = implode(static::SEPARADOR, $rutas);
+				$resto = String::create($resto)->removeRight(static::SEPARADOR);
 			}
 		}
 		$resp = array("servidor" => (string)$ruta_srv, "ruta" => (string)$resto);
