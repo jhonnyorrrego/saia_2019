@@ -94,15 +94,13 @@ if (isset($_POST["llave_d"]) && $_POST["llave_d"]!="")
   $llave = @$_POST["llave_d"];
 $x_id_documento=$llave;
 $paginas = busca_filtro_tabla("A.*","pagina A","id_documento=$llave","",$conn);  //Validar si el documento tiene paginas
-if(!($paginas["numcampos"]))
-{
+if(!($paginas["numcampos"])) {
   echo codifica_encabezado("<script type='text/javascript'>alert('El documento no tiene paginas'); parent.centro.location='ordenar.php?key=".$llave."&accion=mostrar';</script>");  
 }
 $sDbWhere = "";
 $arRecKey = split(",",$sKey);
 
-if (($sKey == "") || (($sKey == NULL))) 
-{
+if (($sKey == "") || (($sKey == NULL))) {
   alerta(codifica_encabezado("Debe seleccionar una pagina"));
   redirecciona("ordenar.php?key=".$x_id_documento."&accion=mostrar");
   exit(); 
@@ -115,11 +113,9 @@ $x_detalle = @$_POST["x_detalle"];
 if (($sAction == "") || (($sAction == NULL))) 
 $sAction = "I";	// Display with input box
 
-switch ($sAction)
-{
+switch ($sAction) {
   case "I": // Display
-    if (LoadRecordCount($sDbWhere,$conn) <= 0) 
-    {
+    if (LoadRecordCount($sDbWhere,$conn) <= 0) {
       redirecciona("ordenar.php?key=".$x_id_documento."&accion=mostrar");
       exit();
     }
@@ -128,27 +124,24 @@ switch ($sAction)
     $numero=$_POST["numero"];
     $x_pagina=$_POST["x_pagina"];
     $x_id_documento=DeleteData($sDbWhere,$llave,$conn);
-    if ($x_id_documento) 
-    {
+    if ($x_id_documento) {
       redirecciona("ordenar.php?key=".$x_id_documento."&accion=mostrar");
       exit();
     }
   break;
 }
 $nRecCount = 0;
-foreach ($arRecKey as $sRecKey) 
-{
+foreach ($arRecKey as $sRecKey) {
   $sRecKey = trim($sRecKey);
   $sRecKey = (get_magic_quotes_gpc()) ? stripslashes($sRecKey) : $sRecKey;
   $nRecCount = $nRecCount + 1;
 
   $sItemRowClass = " bgcolor=\"#FFFFFF\"";
 
-  if ($nRecCount % 2 <> 0) {
+  if ($nRecCount % 2 != 0) {
   $sItemRowClass = " bgcolor=\"#F5F5F5\"";
   }
-  if (LoadData($sRecKey,$conn)) 
-  {
+  if (LoadData($sRecKey,$conn)) {
     ?>
     <span class="internos"><img class="imagen_internos" src="images/eliminar_pagina.png" border="0">&nbsp;&nbsp;ELIMINAR P&Aacute;GINA DEL DOCUMENTO</span>
     <form action="paginadelete.php" method="post" onSubmit="return EW_checkMyForm(this);">
@@ -169,9 +162,15 @@ foreach ($arRecKey as $sRecKey)
     <tr<?php echo $sItemRowClass; ?>>
     <td colspan="4"><div align="center"><span class="phpmaker">
     </span><span class="phpmaker">
-    <?php if (($x_imagen != NULL) &&  $x_imagen <> "") { ?>
-    <img src="<?php print($x_imagen); ?>" alt="Ruta <?php print($x_ruta)?>">
-    <?php } ?></span></div>
+    <?php if (($x_imagen != NULL) &&  $x_imagen != "") {
+    	$objeto = json_decode($x_imagen);
+    	if (is_object($objeto)) {
+    		$imagen = StorageUtils::get_binary_file($x_imagen);
+    	?>
+    <img src="<?php echo $imagen; ?>" alt="P&aacute;gina No. <?php print($x_pagina)?>">
+    <?php }
+    } ?>
+    </span></div>
     </td></tr>
     <tr class="encabezado">
     <td width="131" valign="top"><span class="phpmaker" style="color: #FFFFFF;">JUSTIFICACI&Oacute;N</span></td>
@@ -206,13 +205,13 @@ function LoadData($sKey, $conn) {
 	$sGroupBy = "";
 	$sHaving = "";
 	$sOrderBy = "";
-	if ($sGroupBy <> "") {
+	if ($sGroupBy != "") {
 		$sSql .= " GROUP BY " . $sGroupBy;
 	}
-	if ($sHaving <> "") {
+	if ($sHaving != "") {
 		$sSql .= " HAVING " . $sHaving;
 	}
-	if ($sOrderBy <> "") {
+	if ($sOrderBy != "") {
 		$sSql .= " ORDER BY " . $sOrderBy;
 	}
 	$rs = phpmkr_query($sSql, $conn) or error("PROBLEMAS AL EJECUTAR LA B�SQUEDA" . phpmkr_error() . ' SQL:' . $sSql);
@@ -254,13 +253,13 @@ function LoadRecordCount($sqlKey, $conn) {
 	$sGroupBy = "";
 	$sHaving = "";
 	$sOrderBy = "";
-	if ($sGroupBy <> "") {
+	if ($sGroupBy != "") {
 		$sSql .= " GROUP BY " . $sGroupBy;
 	}
-	if ($sHaving <> "") {
+	if ($sHaving != "") {
 		$sSql .= " HAVING " . $sHaving;
 	}
-	if ($sOrderBy <> "") {
+	if ($sOrderBy != "") {
 		$sSql .= " ORDER BY " . $sOrderBy;
 	}
 	$rs = phpmkr_query($sSql, $conn) or error("Fall� la b�squeda" . phpmkr_error() . ' SQL:' . $sSql);
@@ -281,13 +280,13 @@ function DeleteData($sqlKey, $llave, $conn) {
 	$sGroupBy = "";
 	$sHaving = "";
 	$sOrderBy = "";
-	if ($sGroupBy <> "") {
+	if ($sGroupBy != "") {
 		$sSql .= " GROUP BY " . $sGroupBy;
 	}
-	if ($sHaving <> "") {
+	if ($sHaving != "") {
 		$sSql .= " HAVING " . $sHaving;
 	}
-	if ($sOrderBy <> "") {
+	if ($sOrderBy != "") {
 		$sSql .= " ORDER BY " . $sOrderBy;
 	}
 	$rutaD = $llave;
@@ -300,7 +299,7 @@ function DeleteData($sqlKey, $llave, $conn) {
 		$eliminacion = $rutaD;
 		$alm_backup = new SaiaStorage(RUTA_BACKUP_ELIMINADOS);
 		$nombre = $eliminacion . "/" . date("Y-m-d_H_i_s") . "_" . basename($inf_eliminado[0]["ruta"]);
-		crear_destino($eliminacion);
+		//crear_destino($eliminacion);
 
 		$arr_origen = StorageUtils::resolver_ruta($inf_eliminado[0]["ruta"]);
 		$alm_origen = $arr_origen["clase"];
@@ -345,14 +344,18 @@ function DeleteData($sqlKey, $llave, $conn) {
 			$posdoc = strpos($arr_arch["ruta"], "documentos/");
 			$nuevo_doc = substr($arr_arch["ruta"], 0, $posdoc) . "documentos/" . "doc" . $rutaD . "pag" . ($i + 1) . $extension;
 
+			$ruta_mini = array("servidor" => $arr_img["servidor"], "ruta" => $arr_img["ruta"]);
 			if ($arr_img["ruta"] != $nueva_miniatura) {
 				//rename($lista[$i]["imagen"], $nueva_miniatura);
 				$arr_img["clase"]->renombrar($arr_img["ruta"], $nueva_miniatura);
+				$ruta_mini["ruta"] = $nueva_miniatura;
 			}
+			$ruta_img = array("servidor" => $arr_arch["servidor"], "ruta" => $arr_arch["ruta"]);
 			if ($arr_arch["ruta"] != $nuevo_doc) {
 				//rename($lista[$i]["ruta"], $nuevo_doc);
 				$arr_arch["clase"]->renombrar($arr_arch["ruta"], $nuevo_doc);
-				$sql1 = "UPDATE pagina SET imagen='" . $nueva_miniatura . "', ruta='" . $nuevo_doc . "' where consecutivo=" . $lista[$i]["consecutivo"];
+				$ruta_img["ruta"] = $nuevo_doc;
+				$sql1 = "UPDATE pagina SET imagen='" . json_encode($ruta_mini) . "', ruta='" . json_encode($ruta_img) . "' where consecutivo=" . $lista[$i]["consecutivo"];
 				phpmkr_query($sql1);
 			}
 

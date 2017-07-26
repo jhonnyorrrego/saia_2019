@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.31.6",
+            "version": "3.31.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "4e066559063683aa4574aee3ed54fcb90b2b10b2"
+                "reference": "5de0d53a7f49596e9a7fa02b3e589dfcfaebcdf3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/4e066559063683aa4574aee3ed54fcb90b2b10b2",
-                "reference": "4e066559063683aa4574aee3ed54fcb90b2b10b2",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/5de0d53a7f49596e9a7fa02b3e589dfcfaebcdf3",
+                "reference": "5de0d53a7f49596e9a7fa02b3e589dfcfaebcdf3",
                 "shasum": ""
             },
             "require": {
@@ -84,7 +84,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2017-07-17T21:18:04+00:00"
+            "time": "2017-07-25T22:25:14+00:00"
         },
         {
             "name": "danielstjules/stringy",

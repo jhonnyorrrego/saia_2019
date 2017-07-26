@@ -5,17 +5,19 @@ require ('vendor/autoload.php');
 require_once 'filesystem/SaiaLocalAdapter.php';
 require_once 'filesystem/SaiaStorage.php';
 
+use Gaufrette\Adapter\SaiaLocalAdapter as Local;
 use Gaufrette\Filesystem;
 use Aws\S3\S3Client;
 use Gaufrette\Adapter\AwsS3 as AwsS3Adapter;
 use Gaufrette\Adapter\GoogleCloudStorage;
+use Gaufrette\Adapter\InMemory;
+use Gaufrette\StreamWrapper;
 
 use Stringy\Stringy as String;
 use Stringy\StaticStringy as StringUtils;
-use Gaufrette\Adapter\SaiaLocalAdapter as Local;
 
-use Gaufrette\Adapter\InMemory;
-use Gaufrette\StreamWrapper;
+use Imagine\Image\Palette\RGB;
+use Imagine\Image\Box;
 
 class StorageUtils {
 	const LOCAL = 'local://';
@@ -81,7 +83,10 @@ class StorageUtils {
 		if($tipo_almacenamiento->get_filesystem()->has($ruta)){
 			$contenido_binario = $tipo_almacenamiento->get_filesystem()->read($ruta);
 		} else {
-			//var_dump($resolver_ruta);die();
+			$imagine = new Imagine\Gd\Imagine();
+			$size  = new Imagine\Image\Box(100, 100);
+			$image = $imagine->create($size);
+			$contenido_binario = $image->get("png");
 		}
 
 		//var_dump($contenido_binario);die();
