@@ -568,6 +568,11 @@ INSERT INTO campos_formato (idcampos_formato, formato_idformato, nombre, etiquet
 
 UPDATE campos_formato SET tipo_dato='TEXT', longitud=NULL WHERE nombre='asignar_dependencias' AND formato_idformato=404;	
 
+-- ----------------------------------------------------------------
+
+UPDATE formato SET exportar='tcpdf';
+
+-- ----------------------------------------------------------------
 
 
 

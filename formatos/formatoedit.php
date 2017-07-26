@@ -496,35 +496,16 @@ echo $x_contador_idcontadorList;
 	<tr>
 		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">M&eacute;todo Exportar</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
-<?php 
-$ar_x_exportar = explode(",",@$x_exportar);
-$x_exportarChk = "";
-$x_exportarChk .= "<input type=\"checkbox\" name=\"x_exportar[]\" value=\"" . htmlspecialchars("pdf"). "\"";
-foreach ($ar_x_exportar as $cnt_x_exportar) {
-	if (trim($cnt_x_exportar) == "pdf") {
-		$x_exportarChk .= " checked";
-		break;
-	}
-}
-	$x_exportarChk .= ">" . "PDF" . EditOptionSeparator(0);
-/*$x_exportarChk .= "<input type=\"checkbox\" name=\"x_exportar[]\" value=\"" . htmlspecialchars("xls"). "\"";
-foreach ($ar_x_exportar as $cnt_x_exportar) {
-	if (trim($cnt_x_exportar) == "xls") {
-		$x_exportarChk .= " checked";
-		break;
-	}
-}
-	$x_exportarChk .= ">" . "Excel" . EditOptionSeparator(1);
-$x_exportarChk .= "<input type=\"checkbox\" name=\"x_exportar[]\" value=\"" . htmlspecialchars("word"). "\"";
-foreach ($ar_x_exportar as $cnt_x_exportar) {
-	if (trim($cnt_x_exportar) == "word") {
-		$x_exportarChk .= " checked";
-		break;
-	}
-}
-	$x_exportarChk .= ">" . "Word (RTF)" . EditOptionSeparator(2);*/
-echo $x_exportarChk;
-?>
+
+			<?php 
+				$array_check_exportar=array("tcpdf"=>"","html2ps"=>"","mpdf"=>"");
+				$array_check_exportar[$x_exportar] = "checked";
+				if (!(!is_null($x_exportar)) || ($x_exportar == "")) { $array_check_exportar["tcpdf"] = "checked";} // Set default value 
+			?>
+			<input type="radio" name="x_exportar[]" id="x_exportar_tcpdf" value="tcpdf" <?php echo($array_check_exportar["tcpdf"]); ?> >	TCPDF	
+			<input type="radio" name="x_exportar[]" id="x_exportar_html2ps" value="html2ps"  <?php echo($array_check_exportar["html2ps"]); ?> >	HTML2ps	
+			<input type="radio" name="x_exportar[]" id="x_exportar_mpdf" value="mpdf" <?php echo($array_check_exportar["mpdf"]); ?>  >	mPDF	
+
 </span></td>
 	</tr>
 	<tr>
