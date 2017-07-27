@@ -574,5 +574,24 @@ UPDATE formato SET exportar='tcpdf';
 
 -- ----------------------------------------------------------------
 
+UPDATE encabezado_formato SET contenido='
 
+<table style="border-collapse: collapse; width: 102.8%;" border="1">
+<tbody>
+<tr>
+<td style="text-align: center; width: 27.75%;"><span><br />{*logo_empresa*}</span></td>
+<td style="text-align: center; width: 58.8%;"><strong><br /><br />PLANILLA DE MENSAJERIA<br />DIVISON DE ADMINISTRACION DE BIENES Y SERVICIOS - SECCION DE GESTION DOCUMENTAL</strong></td>
+<td style="text-align: center; width: 13%;"><br /><br />{*qr_entrega_interna*}</td>
+</tr>
+<tr>
+<td><strong>Auxiliar de Oficina:&nbsp;</strong>{*mensajero_entrega_interna*}</td>
+<td><strong>Recorrido del Dia: </strong>{*recorrido*}<strong> - Fecha Planilla:&nbsp;</strong>{*fecha_planilla*}</td>
+<td style="text-align: center;">Pagina {PAGENO}</td>
+</tr>
+</tbody>
+</table>' WHERE etiqueta='encabezado_despacho';
+
+-- -----------------------------------------------------------------
+UPDATE formato SET exportar='mpdf' WHERE nombre='despacho_ingresados';
+-- ----------------------------------------------------------------
 

@@ -63,9 +63,10 @@ function crear_encabezado_pie_pagina($texto,$iddoc,$idformato,$pagina=1){
     $texto=str_replace("##PAGE## DE ##PAGES##","",$texto);
   }
   $fuente = busca_filtro_tabla("valor","configuracion","nombre='tipo_letra'","",$conn);
-	$texto.='<style>table,td {font-size:'.$formato[0]["font_size"].'pt; font-family:'.$fuente[0]["valor"].';}</style>';
+	//$texto.='<style>table,td {font-size:'.$formato[0]["font_size"].'pt; font-family:'.$fuente[0]["valor"].';}</style>';
   return(codifica_encabezado(html_entity_decode(htmlspecialchars_decode($texto))));
 }
+
 function arma_funcion($nombre,$parametros,$accion){
 if($parametros<>"" && $accion<>"adicionar")
    $parametros.=",";
@@ -122,6 +123,7 @@ global $incluidos;
   } 
 return($includes);  
 }
+
 function formato_numero($idformato,$doc,$tipo=0){
 global $conn;
 $documento=busca_filtro_tabla("numero","documento A","A.iddocumento=".$doc,"",$conn);
@@ -380,7 +382,7 @@ function mensajero_entrega_interna($idformato,$iddoc){
 		$empresa_transportadora=busca_filtro_tabla("nombre","cf_empresa_trans","idcf_empresa_trans=".$documentos2[0]['mensajero'],"",$conn);
 		$cadena_nombre=$empresa_transportadora[0]['nombre'];
 	}else{
-		$funcionario=busca_filtro_tabla("","vfuncionario_dc","estado=1 and estado_dc=1 and iddependencia_cargo=".$documentos2[0]['mensajero'],"",$conn);
+		$funcionario=busca_filtro_tabla("","vfuncionario_dc","iddependencia_cargo=".$documentos2[0]['mensajero'],"",$conn);
 		$cadena_nombre=$funcionario[0]['nombres'].' '.$funcionario[0]['apellidos'];
 	}
 	return(ucwords(strtolower($cadena_nombre)));
