@@ -526,7 +526,18 @@ function tipo_radicado_radicacion($idformato,$iddoc){//en el adicionar
         </script>
     <?php
 }
-
+function buscar_dependencias_hijas_radicacion_correspondencia($iddependencia){
+	global $conn;
+	$lista_hijas='';
+	$busca_hijas=busca_filtro_tabla("iddependencia","dependencia","cod_padre=".$iddependencia,"",$conn);
+	if($busca_hijas['numcampos']){
+		for($i=0;$i<$busca_hijas['numcampos'];$i++){
+			$lista_hijas.=$busca_hijas[$i]['iddependencia'].",";
+			$lista_hijas.=buscar_dependencias_hijas_radicacion_correspondencia($busca_hijas[$i]['iddependencia']);
+		}
+	}
+	return($lista_hijas);
+}
 function ingresar_item_destino_radicacion($idformato,$iddoc){//posterior al adicionar - editar
 	global $conn,$ruta_db_superior;
     
@@ -566,7 +577,9 @@ function ingresar_item_destino_radicacion($idformato,$iddoc){//posterior al adic
                 phpmkr_query($cadena);
             }else {
                 $dependencia=str_replace("#", "", $destino[$i]);
-                $busca_funcionarios=busca_filtro_tabla("iddependencia_cargo","vfuncionario_dc","estado=1 AND estado_dc=1 AND estado_dep=1 AND iddependencia=".$dependencia,"",$conn);
+				$dependencia.=",".buscar_dependencias_hijas_radicacion_correspondencia($dependencia);
+				$dependencia=trim($dependencia,',');
+                $busca_funcionarios=busca_filtro_tabla("iddependencia_cargo","vfuncionario_dc","tipo_cargo=1 AND estado=1 AND estado_dc=1 AND estado_dep=1 AND iddependencia IN(".$dependencia.")","",$conn);
                 for ($j=0; $j < $busca_funcionarios['numcampos']; $j++) { 
                     $cadena='INSERT INTO ft_destino_radicacion (ft_radicacion_entrada,nombre_destino, nombre_origen, tipo_origen, tipo_destino, numero_item,serie_idserie,estado_item) VALUES ('.$padre[0]['idft_radicacion_entrada'].','.$busca_funcionarios[$j]['iddependencia_cargo'].', '.$valor_origen.', '.$padre[0]['tipo_origen'].', '.$padre[0]['tipo_destino'].',\'0\','.$padre[0]['serie_idserie'].',0)';
                     phpmkr_query($cadena);
@@ -575,7 +588,6 @@ function ingresar_item_destino_radicacion($idformato,$iddoc){//posterior al adic
         }
    }
 }
-
 
 function mostrar_item_destino_radicacion($idformato,$iddoc){
 	global $conn,$ruta_db_superior;

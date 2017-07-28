@@ -594,4 +594,5 @@ UPDATE encabezado_formato SET contenido='
 -- -----------------------------------------------------------------
 UPDATE formato SET exportar='mpdf' WHERE nombre='despacho_ingresados';
 -- ----------------------------------------------------------------
-
+UPDATE campos_formato SET tipo_dato='TEXT', longitud=NULL WHERE nombre IN('destino','copia_a') AND formato_idformato=3;
+-- ----------------------------------------------------------------
