@@ -100,22 +100,22 @@ echo(estilo_bootstrap());
 		<br>
         <div class="control-group">
           <label class="string required control-label" for="nombre">
-            Funcionario c&oacute;digo
-            <input type="hidden" name="bksaiacondicion_funcionario_codigo" id="bksaiacondicion_funcionario_codigo" value="=">
+            Nit
+            <input type="hidden" name="bksaiacondicion_nit" id="bksaiacondicion_nit" value="=">
           </label>
           <div class="controls">
-            <input id="bqsaia_funcionario_codigo" name="bqsaia_funcionario_codigo" size="50" type="text">
+            <input id="bqsaia_nit" name="bqsaia_nit" size="50" type="text">
           </div>
         </div>
         
         <div class="btn-group" data-toggle="buttons-radio" >
-		  <button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_funcionario_codigo',this.id)">
+		  <button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_nit',this.id)">
 		    Y
 		  </button>
-		  <button type="button" class="btn btn-mini" data-toggle="button" id="o" onclick="llenar_valor('bqsaiaenlace_funcionario_codigo',this.id)">
+		  <button type="button" class="btn btn-mini" data-toggle="button" id="o" onclick="llenar_valor('bqsaiaenlace_nit',this.id)">
 		    O
 		  </button>
-		  <input type="hidden" name="bqsaiaenlace_funcionario_codigo" id="bqsaiaenlace_funcionario_codigo" value="" />
+		  <input type="hidden" name="bqsaiaenlace_nit" id="bqsaiaenlace_nit" value="" />
 		</div>
         <br>
         <div class="row">
