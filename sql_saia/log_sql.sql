@@ -596,3 +596,5 @@ UPDATE formato SET exportar='mpdf' WHERE nombre='despacho_ingresados';
 -- ----------------------------------------------------------------
 UPDATE campos_formato SET tipo_dato='TEXT', longitud=NULL WHERE nombre IN('destino','copia_a') AND formato_idformato=3;
 -- ----------------------------------------------------------------
+UPDATE busqueda SET cantidad_registros = '100' WHERE idbusqueda = 103;
+-- ----------------------------------------------------------------

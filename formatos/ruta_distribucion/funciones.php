@@ -204,6 +204,7 @@ function mostrar_datos_funcionarios_ruta($idformato,$iddoc){
 						   
 						    <td>Mensajero</td>
 						    <td>Estado</td>
+						    <td>Asignar Ruta</td>
 						</tr>
 			';
 				
@@ -217,11 +218,21 @@ function mostrar_datos_funcionarios_ruta($idformato,$iddoc){
 			for($j=$item['numcampos']-1;$j>=0;$j--){
                     $array_concat=array("nombres","' '","apellidos");
 					$cadena_concat=concatenar_cadena_sql($array_concat);                    
-                    $mensajero=busca_filtro_tabla($cadena_concat.' AS nombre','vfuncionario_dc','iddependencia_cargo='.$item[$j]['mensajero_ruta'],'',conn);
+                    $mensajero=busca_filtro_tabla($cadena_concat.' AS nombre','vfuncionario_dc','iddependencia_cargo='.$item[$j]['mensajero_ruta'],'',$conn);
                     
                             $seleccionar=array(1=>"",2=>"");
 		                    $seleccionar[$item[$j]['estado_mensajero']]='selected';
 	               
+	               
+							$boton_asginar_ruta='
+								<button class="asignar_distribuciones" idft_ruta_distribucion="'.$dato[0]['idft_ruta_distribucion'].'" mensajero_ruta="'.$item[$j]['mensajero_ruta'].'" >
+									<i class="icon-ok"></i>
+								</button>
+							';	
+							if($item[$j]['estado_mensajero']==2){
+								$boton_asginar_ruta='';
+							}		   
+				   
 							$tabla.='		
 									<tr>
 										<td>'.$item[$j]['fecha_mensajero'].'</td>
@@ -232,6 +243,9 @@ function mostrar_datos_funcionarios_ruta($idformato,$iddoc){
                                               <option value="1" '.$seleccionar[1].'>Activo</option>
                                               <option value="2" '.$seleccionar[2].'>Inactivo</option>
                                         </select></td>
+                                        <td>
+                                        	'.$boton_asginar_ruta.'
+                                        </td>
 					                    </tr>
 							';				
 
@@ -250,6 +264,24 @@ function mostrar_datos_funcionarios_ruta($idformato,$iddoc){
 					
 					<script>
 					$(document).ready(function(){
+						$(".asignar_distribuciones").click(function(){
+							var idft_ruta_distribucion=$(this).attr("idft_ruta_distribucion");
+							var mensajero_ruta=$(this).attr("mensajero_ruta");
+							$.ajax({
+			                        type:"POST",
+			                        url: "actualizar_mensajero_distribuciones_inactivas.php",
+			                        data: {
+			                        	idft_ruta_distribucion:idft_ruta_distribucion,
+			                        	mensajero_ruta:mensajero_ruta
+			                        },
+			                        success: function(datos){
+			                            notificacion_saia("Se ha asignado este mensajero a las distribuciones inactivas de la ruta","success","",4000);
+										
+			                        }
+			                 }); 	
+						});
+						
+						
 						$(".cambio_estado").change(function(){
 							var estado=$(this).val();
 							var idft=$(this).attr("data-idft");
@@ -263,9 +295,6 @@ function mostrar_datos_funcionarios_ruta($idformato,$iddoc){
 			                        success: function(datos){
 			                            notificacion_saia("Estado del funcionario actualizado correctamente","success","",4000);
 										location.reload();
-			                        },
-			                        error:function(){
-			                        	alert("error consulta ajax");
 			                        }
 			                    }); 	
 			                	  			
