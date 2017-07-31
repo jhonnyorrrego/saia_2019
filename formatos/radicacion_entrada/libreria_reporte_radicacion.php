@@ -524,7 +524,16 @@ function select_finalizar_generar_item($datos){
 			
 			if($nombre_componente=='reporte_radicacion_correspondencia_distribucion'){
 				$cadena_acciones.="<option value='boton_finalizar_entrega'>Finalizar Tr&aacute;mite</option>";
-			}	
+			}
+			
+			//SELECCIONAR Y QUITAR SELECCIONADOS
+			$cadena_acciones.="<optgroup label='Seleccionar...'>";
+			$cadena_acciones.="<option value='seleccionar_todos_accion_distribucion'>Todos</option>";
+			$cadena_acciones.="<option value='quitar_seleccionados_accion_distribucion'>Niguno</option>";
+			$cadena_acciones.="</optgroup>";
+			//FIN SELECCIONAR Y QUITAR SELECCIONADOS	
+			
+			
 		$cadena_acciones.="</select>";	
 	}	
 	return($cadena_acciones);

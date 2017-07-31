@@ -122,9 +122,20 @@ $busca_componente=busca_filtro_tabla("nombre","busqueda_componente","idbusqueda_
 		 			}
         	} //fin if boton_finalizar_entrega
         	
+        	
+        	if( valor=='seleccionar_todos_accion_distribucion' ){
+         		$('.planilla_mensajero').attr('checked',true);
+        		$('[name="recepcion[]"]').attr('checked',true);
+        		$('.asignar_planilla_finalizar').attr('checked',true);       		
+        	}
+        	if( valor=='quitar_seleccionados_accion_distribucion' ){
+        		$('.planilla_mensajero').attr('checked',false);
+        		$('[name="recepcion[]"]').attr('checked',false);
+        		$('.asignar_planilla_finalizar').attr('checked',false);
+        	}
+        	
        		$(this).val(''); 	
         });
-        
         
     });
 </script>
