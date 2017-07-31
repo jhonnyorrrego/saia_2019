@@ -128,6 +128,15 @@ if($datos_busqueda[0]["acciones_seleccionados"]!=''){
      }              		
 }  
 
+$cantidad_mostrar=20;
+if($datos_busqueda[0]['cantidad_registros']>0){
+	$cantidad_mostrar=$datos_busqueda[0]['cantidad_registros'];
+}
+$cmf1=$cantidad_mostrar;
+$cmf2=$cantidad_mostrar+10;
+$cmf3=$cantidad_mostrar+20;
+$cantidad_mostrar_filtrar=$cmf1.','.$cmf2.','.$cmf3;
+
 echo(librerias_jquery("1.7"));
 echo(librerias_UI());
 echo(librerias_jqgrid());
@@ -162,10 +171,10 @@ $(document).ready(function(){
         }
       ?>   	            
    	],
-   	rowNum:20,
+   	rowNum:<?php echo($cantidad_mostrar); ?>,
     rownumbers: true,
 	rownumWidth: 40,
-    rowList : [20,30,50],
+    rowList : [<?php echo($cantidad_mostrar_filtrar); ?>],
     jsonReader: {
 	  page: function (obj) { if(obj.exito){$("#busqueda_pagina").val(obj.page); return(obj.page);}else{ $("#busqueda_pagina").val(0); return(0); } },
 	    total: function (obj) {$("#busqueda_total_paginas").val(obj.total); return(obj.total);  }	   
