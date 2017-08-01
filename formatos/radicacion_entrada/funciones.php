@@ -595,7 +595,7 @@ function mostrar_item_destino_radicacion($idformato,$iddoc){
 	$datos=busca_filtro_tabla("","ft_destino_radicacion","ft_radicacion_entrada=".$padre[0]["idft_radicacion_entrada"],"",$conn);
 	$datos_origen_radicacion=validar_persona_origen_destino($iddoc,'origen');
 	
-    if($_REQUEST['tipo']!=5 && $padre[0]['despachado']!=1){
+    if($_REQUEST['tipo']!=5 && $padre[0]['despachado']!=1 && $padre[0]['estado']=='APROBADO'){
 						
 				echo '<a href="../destino_radicacion/adicionar_destino_radicacion.php?pantalla=padre&amp;idpadre='.$iddoc.'&amp;idformato='.$idformato.'&amp;padre='.$padre[0]['idft_radicacion_entrada'].'" target="_self">Adicionar destino</a>'; //
 		}
@@ -679,8 +679,12 @@ function mostrar_item_destino_radicacion($idformato,$iddoc){
            }
     	   $tabla.="</tr>";
     	}
-    	$tabla.="</table><br/>
-    	       <button style='float:right;' class='btn btn-danger' onclick='guardar_destinos();' id='confirmar_distribucion'>Confirmar datos de distribuci&oacute;n</button>";
+    	$tabla.="</table><br/>";
+		
+		if($padre[0]['estado']=='APROBADO'){
+			$tabla.="<button style='float:right;' class='btn btn-danger' onclick='guardar_destinos();' id='confirmar_distribucion'>Confirmar datos de distribuci&oacute;n</button>";
+		}
+    		
 
                 $tabla.='
                 <script>
