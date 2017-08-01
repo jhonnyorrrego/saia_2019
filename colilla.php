@@ -45,7 +45,7 @@ if(@$_REQUEST["doc"] || @$_REQUEST["key"]){
   $doc=generar_ingreso_formato($formato);
 }
 $plantilla=busca_filtro_tabla("","documento a, formato b","lower(plantilla)=b.nombre AND iddocumento=".$doc,"",$conn);
-$datos=busca_filtro_tabla("dependencia,numero,tipo_radicado,".fecha_db_obtener("A.fecha",'d/m/Y-H:i:s')." AS fecha_oracle,A.descripcion,lower(plantilla) AS plantilla,ejecutor,paginas,A.iddocumento","documento A, ".$plantilla[0]["nombre_tabla"]." B","A.iddocumento=$doc AND A.iddocumento=B.documento_iddocumento","",$conn); 
+$datos=busca_filtro_tabla("dependencia,numero,tipo_radicado,".fecha_db_obtener("A.fecha",'d/m/Y-H:i:s')." AS fecha_oracle,A.descripcion,lower(plantilla) AS plantilla,ejecutor,paginas,A.iddocumento,A.estado","documento A, ".$plantilla[0]["nombre_tabla"]." B","A.iddocumento=$doc AND A.iddocumento=B.documento_iddocumento","",$conn); 
 $dependencia_creador=busca_filtro_tabla("b.codigo","vfuncionario_dc a, dependencia b","b.iddependencia=a.iddependencia AND a.iddependencia_cargo=".$datos[0]['dependencia'],"",$conn);
 
 $ejecutor["numcampos"]='';
@@ -378,8 +378,23 @@ function imprime(atras){
              
              ?></b><br/>
  <?php }?>
- <b>Origen: <?php echo($origen);?></b><br/>
-  
+ 
+ <?php 
+
+   	if(@$datos[0]['estado']=='INICIADO' && strtolower($datos[0]["plantilla"])=='radicacion_entrada'){
+  		$ejecutor_radicacion=busca_filtro_tabla("nombres,apellidos","documento a, funcionario b","a.ejecutor=b.funcionario_codigo AND a.iddocumento=".$doc,"",$conn);
+  		$origen=ucwords(strtolower($ejecutor_radicacion[0]["nombres"]." ".$ejecutor_radicacion[0]["apellidos"]));
+  		?>
+  		<b>Recibido Por: <?php echo($origen);?></b><br/>
+  		<?php
+		
+  	}else{
+  		?>
+  		<b>Origen: <?php echo($origen);?></b><br/>
+  		<?php
+  	}
+
+ ?>
   
   <b>Destino: <?php echo substr(($destino),0,22)."..."; ?></b>
   
