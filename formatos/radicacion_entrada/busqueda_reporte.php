@@ -62,6 +62,64 @@ global $conn;
         <input type="hidden" name="bqsaiaenlace_fecha_radicacion_entrada_y" id="bqsaiaenlace_fecha_radicacion_entrada_y" value="y" />
 
 		<br>
+		
+		<?php 
+			$vector_rutas_dependencias=array();
+			$rutas_distribucion=busca_filtro_tabla("idft_ruta_distribucion,nombre_ruta","ft_ruta_distribucion a, documento b"," a.documento_iddocumento=b.iddocumento AND lower(b.estado)='aprobado' ","",$conn);
+			for($i=0;$i<$rutas_distribucion['numcampos'];$i++){
+				$dependencias_ruta_distribucion=busca_filtro_tabla("","ft_dependencias_ruta","estado_dependencia=1 AND ft_ruta_distribucion=".$rutas_distribucion[$i]['idft_ruta_distribucion'],"",$conn);
+				$lista_dependencia_ruta=extrae_campo($dependencias_ruta_distribucion,'dependencia_asignada');
+				$lista_dependencia_ruta=array_map('intval', $lista_dependencia_ruta);
+				$lista_dependencia_ruta=implode(',',$lista_dependencia_ruta);
+				
+				$vector_rutas_dependencias[$i]['idft_ruta_distribucion']=$rutas_distribucion[$i]['idft_ruta_distribucion'];
+				$vector_rutas_dependencias[$i]['nombre_ruta']=$rutas_distribucion[$i]['nombre_ruta'];
+				$vector_rutas_dependencias[$i]['dependencias_ruta']=$lista_dependencia_ruta;
+			}
+			
+			$select_rutas='<select id="select_rutas_distribucion">';
+			$select_rutas.='<option value=""  selected>Seleccione...</option>';
+			for($i=0;$i<count($vector_rutas_dependencias);$i++){
+				$select_rutas.='
+					<option value="'.$vector_rutas_dependencias[$i]['idft_ruta_distribucion'].'">
+						'.$vector_rutas_dependencias[$i]['nombre_ruta'].'
+					</option>
+				';
+			}
+			$select_rutas.='</select>';
+		?>
+		
+        <div class="control-group">
+          <label class="string required control-label" for="lista_dependencia">
+            <b>Rutas de Distribucion:</b>
+            
+          </label>
+          <div class="controls">
+          		<?php echo($select_rutas); ?>
+          		
+          	<input type="hidden" name="variable_busqueda" id="variable_busqueda" value="">
+
+
+          </div>
+          <script>
+          	$(document).ready(function(){
+          		$('#select_rutas_distribucion').change(function(){
+          			var valor=$(this).val();
+          			console.log(valor);
+          			$('#variable_busqueda').val('|'+valor);
+          			console.log($('#variable_busqueda').val());
+          		});
+          	});
+          </script>
+          
+          
+          	<!-- input type="hidden" name="bksaiacondicion_numero_item" id="bksaiacondicion_numero_item" value="=">
+          	<input id="bqsaia_numero" name="bqsaia_numero_item" size="50" type="hidden">
+            <input type="hidden" name="bqsaiaenlace_numero_item" id="bqsaiaenlace_numero_item" value="y" -->
+          
+        </div> 		
+		
+		<br>
 
 
         <div class="row">

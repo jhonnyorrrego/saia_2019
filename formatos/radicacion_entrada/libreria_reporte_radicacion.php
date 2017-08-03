@@ -235,36 +235,53 @@ function ver_items($iddocumento, $numero,$fecha_radicacion_entrada,$tipo) {
 function condicion_adicional(){
     global $ruta_db_superior, $conn;
 	
-	$condicion="";
-	$funcionario_codigo_usuario_actual=usuario_actual('funcionario_codigo');
-	$cargo_administrador_mensajeria=busca_filtro_tabla("funcionario_codigo","vfuncionario_dc"," lower(cargo) LIKE 'administrador%de%mensajer%a' AND estado_dc=1 ","",$conn);
-	
-	$es_administrador_mensajeria=false;
-	for($i=0;$i<$cargo_administrador_mensajeria['numcampos'];$i++){
-		if( $cargo_administrador_mensajeria[$i]['funcionario_codigo']==$funcionario_codigo_usuario_actual ){
-			$es_administrador_mensajeria=true;
-		}
-	}	
-    if($es_administrador_mensajeria){
-	    if(@$_REQUEST['variable_busqueda']){
-			$vector_mensajero=explode('-',$_REQUEST['variable_busqueda']);
-	        $condicion=" AND B.mensajero_encargado=".$vector_mensajero[0]." AND B.tipo_mensajero='".$vector_mensajero[1]."'";
-	    }    	
-    }else{
-    	$rol_funcionario=busca_filtro_tabla("iddependencia_cargo","vfuncionario_dc","funcionario_codigo='".$funcionario_codigo_usuario_actual."' AND estado_dc=1","",$conn);
-	
-		$lista_roles_funcionarios='';
-		for($i=0;$i<$rol_funcionario['numcampos'];$i++){
-			$lista_roles_funcionarios.=$rol_funcionario[$i]['iddependencia_cargo'];
-			if( ($i+1)!=$rol_funcionario['numcampos'] ){
-				$lista_roles_funcionarios.=',';
-			}
-		} //fin rol funcionario
-		
-		$condicion.=" AND (B.mensajero_encargado IN(".$lista_roles_funcionarios.") AND B.tipo_mensajero='i') ";
-    	
-    }
+	$vector_variable_busqueda=explode('|',$_REQUEST['variable_busqueda']);
 
+	
+	$condicion="";
+	if(@$vector_variable_busqueda[0] && @$vector_variable_busqueda[0]!=''){ //filtro por mensajero
+		$funcionario_codigo_usuario_actual=usuario_actual('funcionario_codigo');
+		$cargo_administrador_mensajeria=busca_filtro_tabla("funcionario_codigo","vfuncionario_dc"," lower(cargo) LIKE 'administrador%de%mensajer%a' AND estado_dc=1 ","",$conn);
+		
+		$es_administrador_mensajeria=false;
+		for($i=0;$i<$cargo_administrador_mensajeria['numcampos'];$i++){
+			if( $cargo_administrador_mensajeria[$i]['funcionario_codigo']==$funcionario_codigo_usuario_actual ){
+				$es_administrador_mensajeria=true;
+			}
+		}	
+	    if($es_administrador_mensajeria){
+		    if(@$vector_variable_busqueda[0]){
+				$vector_mensajero=explode('-',$vector_variable_busqueda[0]);
+		        $condicion=" AND B.mensajero_encargado=".$vector_mensajero[0]." AND B.tipo_mensajero='".$vector_mensajero[1]."'";
+		    }    	
+	    }else{
+	    	$rol_funcionario=busca_filtro_tabla("iddependencia_cargo","vfuncionario_dc","funcionario_codigo='".$funcionario_codigo_usuario_actual."' AND estado_dc=1","",$conn);
+		
+			$lista_roles_funcionarios='';
+			for($i=0;$i<$rol_funcionario['numcampos'];$i++){
+				$lista_roles_funcionarios.=$rol_funcionario[$i]['iddependencia_cargo'];
+				if( ($i+1)!=$rol_funcionario['numcampos'] ){
+					$lista_roles_funcionarios.=',';
+				}
+			} //fin rol funcionario
+			
+			$condicion.=" AND (B.mensajero_encargado IN(".$lista_roles_funcionarios.") AND B.tipo_mensajero='i') ";
+	    	
+	    }
+	} //fin if $vector_variable_busqueda[0] !=''
+	
+	
+	if(@$vector_variable_busqueda[1] && @$vector_variable_busqueda[1]!=''){ //filtro por ruta de distribucion
+		
+		//CONDICION ORIGEN
+		$condicion.="  AND  ( (b.tipo_origen=2 AND b.estado_recogida IS NULL AND b.ruta_origen=".$vector_variable_busqueda[1].")   ";
+		
+		//CONDICION DESTINO
+		$condicion.="  OR (b.tipo_destino=2 AND b.estado_recogida=1 AND b.ruta_destino=".$vector_variable_busqueda[1].")  ) ";
+
+	}//fin if $vector_variable_busqueda[1] !=''
+	
+	
     return $condicion;
 }
 
@@ -290,7 +307,8 @@ function filtrar_mensajero(){
 		$array_concat=array("nombres","' '","apellidos");
 		$cadena_concat=concatenar_cadena_sql($array_concat);
 	    $datos=busca_filtro_tabla("iddependencia_cargo, ".$cadena_concat." AS nombre","vfuncionario_dc","lower(cargo)='mensajero' AND estado_dc=1","",$conn);
-	    $filtrar_mensajero=@$_REQUEST['variable_busqueda'];
+		$vector_variable_busqueda=explode('|',@$_REQUEST['variable_busqueda']);
+	    $filtrar_mensajero=@$vector_variable_busqueda[0];
 	    for($i=0;$i<$datos['numcampos'];$i++){
 	        $selected='';	
 			if($filtrar_mensajero){
