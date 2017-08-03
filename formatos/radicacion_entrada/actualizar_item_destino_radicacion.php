@@ -40,18 +40,20 @@ for ($i=0; $i < $cont; $i++) {
 		
 		
 		//VINCULANDO MENSAJERO INMEDIATAMENTE
+		$campo_ruta='ruta_origen';
 		if($tipo_mensajeria_radicacion[0]['tipo_mensajeria']==2 || $tipo_mensajeria_radicacion[0]['tipo_mensajeria']==1){
 			$datos_destino[0]['nombre_destino']=$tipo_mensajeria_radicacion[0]['area_responsable'];
 		}else{
+			$campo_ruta='ruta_destino';
 			$datos_destino=busca_filtro_tabla('nombre_destino','ft_destino_radicacion','idft_destino_radicacion='.$parametros[$i][0],'',$conn);
 		}
     	$destino=busca_filtro_tabla("iddependencia","vfuncionario_dc","iddependencia_cargo=".$datos_destino[0]['nombre_destino'],"",$conn);
-    	$responsable=busca_filtro_tabla("mensajero_ruta","documento d,ft_ruta_distribucion a, ft_dependencias_ruta b, ft_funcionarios_ruta c","d.iddocumento=a.documento_iddocumento AND lower(d.estado)='aprobado' AND b.estado_dependencia=1 AND c.estado_mensajero=1 AND a.idft_ruta_distribucion=b.ft_ruta_distribucion AND a.idft_ruta_distribucion=c.ft_ruta_distribucion AND b.dependencia_asignada=".$destino[0]['iddependencia'],"",$conn);
+    	$responsable=busca_filtro_tabla("mensajero_ruta,a.idft_ruta_distribucion","documento d,ft_ruta_distribucion a, ft_dependencias_ruta b, ft_funcionarios_ruta c","d.iddocumento=a.documento_iddocumento AND lower(d.estado)='aprobado' AND b.estado_dependencia=1 AND c.estado_mensajero=1 AND a.idft_ruta_distribucion=b.ft_ruta_distribucion AND a.idft_ruta_distribucion=c.ft_ruta_distribucion AND b.dependencia_asignada=".$destino[0]['iddependencia'],"",$conn);
     	if($responsable['numcampos']){
-    		$sql="UPDATE ft_destino_radicacion SET mensajero_encargado=".$responsable[0]['mensajero_ruta']." WHERE idft_destino_radicacion=".$parametros[$i][0];
+    		$sql="UPDATE ft_destino_radicacion SET ".$campo_ruta."=".$responsable[0]['idft_ruta_distribucion'].",mensajero_encargado=".$responsable[0]['mensajero_ruta']." WHERE idft_destino_radicacion=".$parametros[$i][0];
 			phpmkr_query($sql);
     	}
-    	//FIN VINCULANDO MENSAJERO INMEDIATAMENTE	
+    	//FIN VINCULANDO MENSAJERO INMEDIATAMENTE
 		
         $repetidos[]=$parametros[$i][0];
     }

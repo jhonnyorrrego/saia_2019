@@ -598,3 +598,7 @@ UPDATE campos_formato SET tipo_dato='TEXT', longitud=NULL WHERE nombre IN('desti
 -- ----------------------------------------------------------------
 UPDATE busqueda SET cantidad_registros = '100' WHERE idbusqueda = 103;
 -- ----------------------------------------------------------------
+	INSERT INTO campos_formato ( formato_idformato, nombre, etiqueta, tipo_dato, longitud, obligatoriedad, valor, acciones, ayuda, predeterminado, banderas, etiqueta_html, orden, mascara, adicionales, autoguardado, fila_visible) VALUES
+(403, 'ruta_origen', 'ruta_origen', 'INT', '11', 0, NULL, 'a,e,b', NULL, NULL, NULL, 'hidden', 0, NULL, NULL, 0, 1),
+(403, 'ruta_destino', 'ruta_destino', 'INT', '11', 0, NULL, 'a,e,b', NULL, NULL, NULL, 'hidden', 0, NULL, NULL, 0, 1);
+-- ----------------------------------------------------------------
