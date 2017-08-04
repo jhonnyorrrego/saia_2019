@@ -311,10 +311,14 @@ class Imprime_Pdf {
 				//redirecciona("visores/pdf/web/viewer2.php?iddocumento=".$this->documento[0]["iddocumento"]);
 				die();
 			}else{
+				//AQUI ENTRA CUANDO NO ES ACTIVO Y CUANDO TIPO SALIDA <>'I'
 				if($_REQUEST["url"]){
 					$nombre_pdf=basename($_REQUEST["url"]);
 					//$this->pdf->Output($nombre_pdf,$this->tipo_salida);
 				}else{
+					$codigo_hash=obtener_codigo_hash_pdf($nombre_pdf,'crc32');
+					$paginas_pdf = $this->pdf->getNumPages();
+					phpmkr_query("update documento set paginas='" . $paginas_pdf . "',pdf='" . $nombre_pdf . "',pdf_hash='".$codigo_hash."' where iddocumento=" . $this->documento[0]["iddocumento"]);
 					//$valor=$this->pdf->Output($nombre_pdf,$this->tipo_salida);
 					redirecciona("visores/pdf/web/viewer2.php?iddocumento=".$this->documento[0]["iddocumento"]);
 					die();
