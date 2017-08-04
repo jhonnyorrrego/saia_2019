@@ -274,7 +274,8 @@ class Imprime_Pdf {
 			phpmkr_query("update documento set paginas='" . $paginas_pdf . "',pdf='" . $nombre_pdf . "',pdf_hash='".$codigo_hash."' where iddocumento=" . $this->documento[0]["iddocumento"]);
 		} else if($this->tipo_salida == "FI" && $this->formato[0]["mostrar_pdf"] == 1) {
 		    $codigo_hash=obtener_codigo_hash_pdf($nombre_pdf,'crc32'); 
-			$paginas_pdf = $this->pdf->getNumPages();
+			//$paginas_pdf = $this->pdf->getNumPages();
+			$paginas_pdf = count($this->pdf->pages);
 			phpmkr_query("update documento set paginas='" . $paginas_pdf . "',pdf='" . $nombre_pdf . "',pdf_hash='".$codigo_hash."' where iddocumento=" . $this->documento[0]["iddocumento"]);
 		} else if($this->tipo_salida == "I") {
 			if($this->imprimir_vistas) {
@@ -292,7 +293,7 @@ class Imprime_Pdf {
 			$valor=$this->pdf->Output($nombre_pdf, 'F');
 		}	
 			
-		$valor=$this->pdf->Output($nombre_pdf, 'I');
+		//$valor=$this->pdf->Output($nombre_pdf, 'I');
 	    if($this->documento[0]["estado"]<>'ACTIVO' && $this->tipo_salida=="I"){
 			//$valor=$this->pdf->Output($ruta,'F');
 			redirecciona("visores/pdf/web/viewer2.php?iddocumento=".$this->documento[0]["iddocumento"]);
@@ -313,7 +314,7 @@ class Imprime_Pdf {
 					//$this->pdf->Output($nombre_pdf,$this->tipo_salida);
 				}else{
 					$codigo_hash=obtener_codigo_hash_pdf($nombre_pdf,'crc32');
-					$paginas_pdf = $this->pdf->getNumPages();
+					$paginas_pdf = count($this->pdf->pages);
 					phpmkr_query("update documento set paginas='" . $paginas_pdf . "',pdf='" . $nombre_pdf . "',pdf_hash='".$codigo_hash."' where iddocumento=" . $this->documento[0]["iddocumento"]);
 					//$valor=$this->pdf->Output($nombre_pdf,$this->tipo_salida);
 					redirecciona("visores/pdf/web/viewer2.php?iddocumento=".$this->documento[0]["iddocumento"]);
