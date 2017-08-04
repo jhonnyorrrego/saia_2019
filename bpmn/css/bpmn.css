@@ -23,3 +23,6 @@ ellipse{
 .task_iniciada{
 	background-color: rgba(255, 255, 40, 0.4); /*amarillo FFFF29*/
 }
+#diagram{
+  overflow: scroll;
+}
