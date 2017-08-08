@@ -12,7 +12,6 @@ include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."pantallas/documento/menu_principal_documento.php");
 menu_principal_documento(@$_REQUEST["id"],1);
 
-
 $datos=explode("-",@$_REQUEST["id"]);
 $tipo=$datos[0];
 $ruta="";
@@ -33,7 +32,10 @@ else if($tipo=='pdf'){
     $dato=busca_filtro_tabla("","version_vista a","a.idversion_vista=".$datos[1],"",$conn);
     $ruta=$dato[0]["pdf"];
 }
-//abrir_url($ruta_db_superior.$ruta,"_self");
+
+$ruta64 = base64_encode($ruta);
+$ruta_mostrar = $ruta_db_superior . "filesystem/mostrar_binario.php?ruta=" . $ruta64;
+
 ?>
 <script>
 $(document).ready(function(){
@@ -48,4 +50,5 @@ $(document).ready(function(){
 	}
 });
 </script>
-<iframe id="detalles" width="100%" frameborder="0" name="detalles" src="<?php echo($ruta_db_superior.$ruta); ?>"></iframe>
+<iframe id="detalles" width="100%" frameborder="0" name="detalles"
+	src="<?php echo($ruta_mostrar); ?>"></iframe>

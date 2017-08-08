@@ -26,6 +26,13 @@ $max_salida--;
 }
 include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."formatos/librerias/estilo_formulario.php");
+
+include_once("pantallas/lib/librerias_cripto.php");
+$validar_enteros=array("x_idalmacenamiento","x_documento_iddocumento");
+include_once("librerias_saia.php");
+desencriptar_sqli('form_info');
+echo(librerias_jquery());
+
 ?>
 <?php
 
@@ -78,12 +85,12 @@ switch ($sAction)
 			<script>top.noty({text: "Documento almacenado",modal:true, type: alert,layout: "topCenter",timeout:2500});</script>
 			<?php
 			$formato=busca_filtro_tabla("ruta_mostrar, nombre, idformato","documento a, formato b","lower(a.plantilla)=lower(b.nombre) and iddocumento=".$_REQUEST["x_documento_iddocumento"],"",$conn);
-      abrir_url("formatos/".$formato[0]["nombre"]."/".$formato[0]["ruta_mostrar"]."?iddoc=".$_REQUEST["x_documento_iddocumento"]."&idformato=".$formato[0]["idformato"],"detalles");
+			abrir_url(FORMATOS_CLIENTE.$formato[0]["nombre"]."/".$formato[0]["ruta_mostrar"]."?iddoc=".$_REQUEST["x_documento_iddocumento"]."&idformato=".$formato[0]["idformato"],"detalles");
 		}
 		break;
 	case "D": // Add
 		if (RegistrarDevolucion($conn, $arraydoc[$posicion-1])) { // Add New Record
-			//$_SESSION["ewmsg"] = "Adicion exitosa del registro.";			
+			//$_SESSION["ewmsg"] = "Adicion exitosa del registro.";
       if($posicion<count($arraydoc))
 			 redirecciona("almacenamientoadd.php?documentos=".$listado."&posicion=".$posicion."&tipo='devolucion'");
 			else
@@ -98,7 +105,7 @@ if(isset($_REQUEST["tipo"]) && $_REQUEST["tipo"]<>"")
   $tipoVentana = $_REQUEST["tipo"];
   cargaAlmacenamiento($x_documento_iddocumento);
 }
-  
+
 
 ?>
 <script type="text/javascript" src="ew.js"></script>
@@ -115,28 +122,28 @@ function todos_soporte()
      {var objeto=document.getElementById("almacenamientoadd").elements[i];
       if(objeto.name=="x_soporte[]")
          objeto.checked=true;
-     } 
+     }
 }
 function todos_deterioro1()
 {for(i=0;i<document.getElementById("almacenamientoadd").elements.length;i=i+1)
      {var objeto=document.getElementById("almacenamientoadd").elements[i];
       if(objeto.value=="rasgado" || objeto.value=="mutilado" || objeto.value=="perforado" || objeto.value=="faltantes")
          objeto.checked=true;
-     } 
+     }
 }
 function todos_deterioro2()
 {for(i=0;i<document.getElementById("almacenamientoadd").elements.length;i=i+1)
      {var objeto=document.getElementById("almacenamientoadd").elements[i];
       if(objeto.value=="oxidacion" || objeto.value=="tinta" || objeto.value=="soporte_debil")
          objeto.checked=true;
-     } 
+     }
 }//
 function todos_deterioro3()
 {for(i=0;i<document.getElementById("almacenamientoadd").elements.length;i=i+1)
      {var objeto=document.getElementById("almacenamientoadd").elements[i];
       if(objeto.value=="hongos" || objeto.value=="insectos" || objeto.value=="roedores")
          objeto.checked=true;
-     } 
+     }
 }
 function EW_checkMyForm(EW_this) {
 lleno=true;
@@ -190,7 +197,7 @@ else {
         alerta("<b>ATENCI&Oacute;N</b><br>No es posible almacenar Documentos que no posean un numero de radicado","warning");
         volver(1);
       }
-      
+
       $idserie=($descripdoc[0]["serie"]);
       if(!$x_num_folios){
         $paginas=busca_filtro_tabla("","pagina","id_documento=".$x_documento_iddocumento,"",$conn);
@@ -204,22 +211,22 @@ else {
 			<script>top.noty({text: "Documento almacenado en la carpeta <?php echo $folder[0]["nombre_expediente"];?>",modal:true, type: alert,layout: "topCenter",timeout:2500});</script>
 			<?php
 				$formato=busca_filtro_tabla("ruta_mostrar, nombre, idformato","documento a, formato b","lower(a.plantilla)=lower(b.nombre) and iddocumento=".$_REQUEST["documentos"],"",$conn);
-        redirecciona("formatos/".$formato[0]["nombre"]."/".$formato[0]["ruta_mostrar"]."?iddoc=".$_REQUEST["documentos"]."&idformato=".$formato[0]["idformato"],"detalles");
+				redirecciona(FORMATOS_CLIENTE.$formato[0]["nombre"]."/".$formato[0]["ruta_mostrar"]."?iddoc=".$_REQUEST["documentos"]."&idformato=".$formato[0]["idformato"],"detalles");
       }
       //print_r($almacenamiento);
-    }    
+    }
     ?>
-    <input type="hidden" name="x_documento_iddocumento" id="x_documento_iddocumento" value="<?php echo $x_documento_iddocumento?>">    
+    <input type="hidden" name="x_documento_iddocumento" id="x_documento_iddocumento" value="<?php echo $x_documento_iddocumento?>">
     <label ><?php echo $descripdoc[0]["numero"]." - ".$descripdoc[0]["descripcion"]; ?></label>
 </span></td>
 	</tr>
 			<tr>
 		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">UBICACION*</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
-		<?php  
+		<?php
     $folders = busca_filtro_tabla("","folder a,caja b","a.caja_idcaja=b.idcaja AND a.serie_idserie=".$idserie,"", $conn);
     if($folders["numcampos"])
-		{ 
+		{
 			?>
       <select id="x_folder_idfolder" name="x_folder_idfolder">
       <option value="">Seleccione folder...</option>
@@ -233,30 +240,30 @@ else {
       }
     ?>
     </select>
-    <?php 
-    } 
+    <?php
+    }
     else if($x_folder_idfolder)
     {
-    echo "Caja: ".$datosfolder[0]["numero"]." ".$datosfolder[0]["ubicacion"].", Carpeta: ". $datosfolder[0]["idfolder"]." ".$datosfolder[0]["etiqueta"]; 
+    echo "Caja: ".$datosfolder[0]["numero"]." ".$datosfolder[0]["ubicacion"].", Carpeta: ". $datosfolder[0]["idfolder"]." ".$datosfolder[0]["etiqueta"];
     ?>
   		<input type="hidden" name="x_folder_idfolder" id="x_folder_idfolder" value="<?php echo $folder_idfolder?>">
   		<?php
       $datosfolder = busca_filtro_tabla("A.numero, A.ubicacion, B.idfolder, B.etiqueta","caja A, folder B", "A.idcaja=B.caja_idcaja AND B.idfolder=".$x_folder_idfolder, "", $conn);
       ?>
-		<?php 
-    } 
+		<?php
+    }
     else if($idserie){
       alerta("<b>ATENCI&Oacute;N</b><br>No existen Carpetas para la Serie del Documento favor Cree la Carpeta y asigne el Documento respectivo","warning");
       redirecciona("vacio.php");
-    } 
+    }
     else if($x_documento_iddocumento){
       alerta("<b>ATENCI&Oacute;N</b><br>su documento no ha sido Calisifaco por Favor Clasifiquelo Antes de almacenarlo","warning");
       redirecciona("clasificar.php?origen=view&iddocumento=".$x_documento_iddocumento);
-    } 
+    }
     else {
       alerta("<b>ATENCI&Oacute;N</b><br>Su documento no Existe o no se puede Almacenar por favor Verifique sus datos","error");
       redirecciona("pendienteslist.php?cmd=resetall");
-    
+
     }
     ?>
 
@@ -268,7 +275,7 @@ else {
     <?php
     if($tipoVentana == "")
     {
-    ?>		
+    ?>
       <input type="checkbox" name="x_soporte[]" value="microfilmes">MICROFILMES
       <input type="checkbox" name="x_soporte[]" value="video">VIDEO
       <input type="checkbox" name="x_soporte[]" value="cassette">CASSETTE
@@ -292,19 +299,19 @@ else {
     ?>
 
 </span></td>
-	</tr>	
+	</tr>
 		<tr>
 		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">NUMERO DE FOLIOS *</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
 <input type="text" name="x_num_folios" id="x_num_folios" size="10" maxlength="255" value="<?php echo $x_num_folios;?>">
 </span></td>
-	</tr>	
+	</tr>
 		<tr>
 		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">ANEXOS</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
 <input type="text" name="x_anexos" id="x_anexos" size="80" maxlength="255" value="<?php echo $x_anexos?>">
 </span></td>
-	</tr>	
+	</tr>
 		<tr>
 		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">DETERIORO</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
@@ -356,7 +363,7 @@ for($j=0;$j<count($opciones);$j++)
 <p>
 </span></td>
 </tr>
-</table>  
+</table>
 <?php
 if($tipoVentana != "")
 {
@@ -429,30 +436,30 @@ function AddData($conn)
 	}
 
 	// Field nombre
-	$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_documento_iddocumento) : $x_documento_iddocumento; 
+	$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_documento_iddocumento) : $x_documento_iddocumento;
 	$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
 	$fieldList["documento_iddocumento"] = $theValue;
 
   $fieldList["folder_idfolder"] = $x_folder_idfolder;
-	
-	$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_soporte) : $x_soporte; 
+
+	$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_soporte) : $x_soporte;
 	$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
 	$fieldList["soporte"] = $theValue;
-	
+
 	$fieldList["num_folios"] = $x_num_folios;
-	
-	$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_anexos) : $x_anexos; 
+
+	$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_anexos) : $x_anexos;
 	$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
 	$fieldList["anexos"] = $theValue;
 
-	$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_deterioro) : $x_deterioro; 
+	$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_deterioro) : $x_deterioro;
 	$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
 	$fieldList["deterioro"] = $theValue;
-	
+
 	$fieldList["responsable"] = usuario_actual("funcionario_codigo");
-		
+
 	$fieldList["registro_entrada"] = fecha_db_almacenar(date("Y-m-d H:i:s"),'Y-m-d H:i:s');
-  
+
   // insert into database
 	$strsql = "INSERT INTO almacenamiento (";
 	$strsql .= implode(",", array_keys($fieldList));
@@ -461,7 +468,7 @@ function AddData($conn)
 	$strsql .= ")";
 	//die($strsql);
 	phpmkr_query($strsql) or error("Fallo la busqueda" . phpmkr_error() . ' SQL:' . $sSql);
-	
+
 	$strsql = "UPDATE documento SET almacenado = 1 WHERE iddocumento = ".$x_documento_iddocumento;
 	phpmkr_query($strsql) or error("Fallo la sentencia" . phpmkr_error() . ' SQL:' . $sSql);
 	return true;
@@ -505,7 +512,7 @@ function RegistrarDevolucion($conn, $idprestamo)
   $solicitud = busca_filtro_tabla("documento_iddocumento", "solicitud", "idsolicitud = ". $idprestamo, "", $conn);
   $sql = "INSERT INTO almacenamiento(documento_iddocumento, folder_idfolder, soporte, num_folios, anexos, deterioro, responsable, registro_entrada)";
   $sql .= " VALUES (".$solicitud[0]["documento_iddocumento"].",".$x_folder_idfolder.",'".$x_soporte."',".$x_num_folios.",'".$x_anexos."','".$x_deterioro."',".usuario_actual('funcionario_codigo').",'".date("Y-m-d H:i:s")."')";
-  phpmkr_query($sql,$conn) or error("Failed to execute query" . phpmkr_error() . ' SQL:' . $sql); 
+  phpmkr_query($sql,$conn) or error("Failed to execute query" . phpmkr_error() . ' SQL:' . $sql);
   return true;
 }
 function buscar_serie_papa($idserie){
@@ -516,4 +523,6 @@ function buscar_serie_papa($idserie){
   }
   return($idserie);
 }
+
+encriptar_sqli("almacenamientoadd",1);
 ?>

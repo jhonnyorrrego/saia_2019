@@ -1,4 +1,4 @@
-<?php 
+<?php
 $max_salida=10; // Previene algun posible ciclo infinito limitando a 10 los ../
 $ruta_db_superior=$ruta="";
 while($max_salida>0){
@@ -22,22 +22,22 @@ if(count($request)){
   $adicional="&".implode("&",$request);
 }
 ?>
-<div class="panel-body">	
-  <div class="block-nav">    
-	<?php 
+<div class="panel-body">
+  <div class="block-nav">
+	<?php
 	      $texto='';
 		  $conector='iframe';
-	      	
+
 	      		$idcategoria_formato=1;
 			  	$mostrar=0;
 				$concatenar=array("','","fk_categoria_formato","','");
 				$cuantos_formatos=busca_filtro_tabla("","formato","(cod_padre IS NULL OR cod_padre=0) AND (".concatenar_cadena_sql($concatenar)." like'%,".$idcategoria_formato.",%')","etiqueta ASC",$conn);
 				for($i=0;$i<$cuantos_formatos['numcampos'];$i++){
-					$url=$ruta_db_superior.'formatos/'.$cuantos_formatos[$i]['nombre'].'/'.$cuantos_formatos[$i]['ruta_adicionar']."?1=1";
+					$url=$ruta_db_superior. FORMATOS_CLIENTE .$cuantos_formatos[$i]['nombre'].'/'.$cuantos_formatos[$i]['ruta_adicionar']."?1=1";
 					$proceso='';
-					
+
 					$modulo_formato=busca_filtro_tabla('idmodulo','modulo','nombre="crear_'.$cuantos_formatos[$i]['nombre'].'"','',$conn);
-					
+
 					$ok=0;
 					if($modulo_formato['numcampos']){
 					    $ok=acceso_modulo($modulo_formato[0]['idmodulo']);
@@ -51,14 +51,14 @@ if(count($request)){
 		              $texto.='<div title="'.$etiqueta_formato.'" data-load=\'{"kConnector":"'.$conector.'", "url":"'.$url.$adicional.'", "kTitle":"'.$proceso.' '.$etiqueta_formato.'"}\' class="items navigable">';
 		              $texto.='<div class="head"></div>';              				            
 		              $texto.='<div class="label">'.$etiqueta_formato.'</div>';
-		              $texto.='<div class="info"></div>'; 		
+		              $texto.='<div class="info"></div>';
 		              $texto.='<div class="tail"></div>';
-				      $texto.='</div>'; 
-				}	
-			}  
-	      
+				      $texto.='</div>';
+				}
+			}
+
 	      echo($texto);
-	?>	
+	?>
   </div>
 </div>
 
@@ -72,5 +72,5 @@ if(count($request)){
 	  $modulo=busca_filtro_tabla("nombre","modulo","idmodulo=".$idmodulo,"");
 	  $acceso=$ok->acceso_modulo_perfil($modulo[0]["nombre"]);
 	  return $acceso;
-	}	
+	}
 ?>

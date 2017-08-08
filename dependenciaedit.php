@@ -1,4 +1,11 @@
-<?php include ("db.php") ?>
+<?php 
+include ("db.php");
+include ("librerias_saia.php");
+include_once ("pantallas/lib/librerias_cripto.php");
+$validar_enteros=array("x_iddependencia");
+desencriptar_sqli('form_info');
+echo(librerias_jquery());
+?>
 <?php //session_start(); ?>
 <?php //ob_start(); ?>
 <?php
@@ -412,4 +419,6 @@ function EditData($sKey,$conn)
 	}
 	return $EditData;
 }
+
+encriptar_sqli("dependenciaedit",1);
 ?>

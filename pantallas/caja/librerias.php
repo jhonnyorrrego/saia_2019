@@ -3,34 +3,34 @@
 function barra_superior_busqueda(){
     $permiso=new Permiso();
     $ok2=$permiso->acceso_modulo_perfil('transferencia_doc');
-    
+
 	$cadena='
-	<li class="divider-vertical"></li>                          
-	<li>            
-	 <div class="btn-group">                    
+	<li class="divider-vertical"></li>
+	<li>
+	 <div class="btn-group">
 	    <button class="btn btn-mini" id="adicionar_caja" idbusqueda_componente="'.$_REQUEST["idbusqueda_componente"].'" title="Adicionar caja" enlace="pantallas/caja/adicionar_caja.php?div_actualiza=resultado_busqueda'.$_REQUEST["idbusqueda_componente"].'&target_actualiza=parent&idbusqueda_componente='.$_REQUEST["idbusqueda_componente"].'">Adicionar Caja</button>
 	  </div>
 	</li>';
 	if($ok2){
-		$cadena.='<li class="divider-vertical"></li>                          
+		$cadena.='<li class="divider-vertical"></li>
 		<li>
-		 <div class="btn-group">                    
-		    <button class="btn btn-mini" id="transferencia_documental" titulo="Transferencia documental">Transferencia documental</button>                                            
-		  </div>    
+		 <div class="btn-group">
+		    <button class="btn btn-mini" id="transferencia_documental" titulo="Transferencia documental">Transferencia documental</button>
+		  </div>
 		</li>
 		<script>
 		$("#transferencia_documental").click(function(){
 			var seleccionados=$("#seleccionados_expediente").val();
 			if(seleccionados){
-				enlace_katien_saia("formatos/transferencia_doc/adicionar_transferencia_doc.php?id_caja="+seleccionados,"Transferencia documental","iframe","");
+				enlace_katien_saia("' . FORMATOS_CLIENTE . 'transferencia_doc/adicionar_transferencia_doc.php?id_caja="+seleccionados,"Transferencia documental","iframe","");
 			}
 			else{
 				alert("Seleccione por lo menos una caja");
 			}
 		});
 		</script>';
-	}	
-	
+	}
+
 	return($cadena);
 }
 function asignar_caja($idcaja, $tipo_entidad, $llave_entidad, $permiso="", $indice=1){
@@ -58,7 +58,7 @@ function enlaces_adicionales_caja($idcaja,$numero){
 	$texto='<div class="btn btn-mini eliminar_caja tooltip_saia pull-right" idregistro="'.$idcaja.'" title="Eliminar '.$numero.'"><i class="icon-remove"></i></div>';
 	$texto.='<div class="btn btn-mini enlace_caja tooltip_saia pull-right" idregistro="'.$idcaja.'" title="Editar '.$numero.'" enlace="pantallas/caja/editar_caja.php?idcaja='.$idcaja.'"><i class="icon-pencil"></i></div>';
 	$texto.='<div class="btn btn-mini link kenlace_saia tooltip_saia pull-right" title="Imprimir rotulo" titulo="Imprimir rotulo" enlace="pantallas/caja/rotulo.php?idcaja='.$idcaja.'" conector="iframe" onclick=" "><i class="icon-print"></i></div>';
-	
+
 	$mostrar_seleccionar='';
 	$busca_expedientes_caja=busca_filtro_tabla("estado_cierre,estado_archivo","expediente","fk_idcaja=".$idcaja,"",$conn);
 	if(!$busca_expedientes_caja['numcampos']){ //si la caja no tiene expedientes
@@ -70,17 +70,17 @@ function enlaces_adicionales_caja($idcaja,$numero){
 	if(in_array(1,$vector_estado_cierre)){ //si tiene expedientes abiertos
 	    $mostrar_seleccionar='style="display:none;"';
 	}
-	
+
 	if(count($vector_estado_archivo)>1){  //todos los expedientes no estan en el mismo estado (archivo, gestion, o historico)
 	     $mostrar_seleccionar='style="display:none;"';
 	}
-	
-    
-    
-    
-    
-	$texto.='<div id="seleccionados_expediente_'.$idcaja.'" idregistro=\''.$idcaja.'\' titulo=\'Seleccionar\' class=\'btn btn-mini tooltip_saia adicionar_seleccionados_expediente pull-right\' '.$mostrar_seleccionar.'><i class=\'icon-uncheck\' ></i></div>';	
-	
+
+
+
+
+
+	$texto.='<div id="seleccionados_expediente_'.$idcaja.'" idregistro=\''.$idcaja.'\' titulo=\'Seleccionar\' class=\'btn btn-mini tooltip_saia adicionar_seleccionados_expediente pull-right\' '.$mostrar_seleccionar.'><i class=\'icon-uncheck\' ></i></div>';
+
 	return($texto);
 }
 function obtener_descripcion_caja($fondo,$seccion,$subseccion,$codigo){

@@ -2,6 +2,18 @@
 <?php ob_start(); ?>
 <?php
 
+$max_salida=10; // Previene algun posible ciclo infinito limitando a 10 los ../
+$ruta_db_superior=$ruta="";
+while($max_salida>0)
+{
+if(is_file($ruta."db.php"))
+{
+$ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
+}
+$ruta.="../";
+$max_salida--;
+}
+
 // Initialize common variables
 $x_idfuncion_formato = Null;
 $x_nombre = Null;
@@ -11,7 +23,14 @@ $x_ruta = Null;
 $x_formato = Null;
 $x_acciones = Null;
 ?>
-<?php include ("db.php") ?>
+<?php include ("db.php");
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+$validar_enteros=array("key_d","key","idformato");
+include_once($ruta_db_superior."librerias_saia.php");
+desencriptar_sqli('form_info');
+echo(librerias_jquery());
+
+?>
 <?php
 include ("phpmkrfn.php");
 include_once("librerias/funciones.php");
@@ -65,7 +84,7 @@ switch ($sAction)
 ?>
 <?php include ("header.php") ?>
 <p><span class="phpmaker">Borrar Funci&oacute;n Formato<br><br><a href="funciones_formatolist.php<?php if($idformato)echo("?idformato=".$idformato);?>">Ir al Listado</a></span></p>
-<form action="funciones_formatodelete.php" method="post">
+<form id="funciones_formatodelete" name="funciones_formatodelete" action="funciones_formatodelete.php" method="post">
 <p>
 <input type="hidden" name="a_delete" value="D">
 <input type="hidden" name="idformato" value="<?php echo($idformato);?>">
@@ -151,7 +170,7 @@ phpmkr_db_close($conn);
 // Function LoadData
 // - Load Data based on Key Value sKey
 // - Variables setup: field variables
-
+encriptar_sqli("funciones_formatodelete",1,"form_info",$ruta_db_superior);
 function LoadData($sKey,$conn)
 {
 	global $x_idfuncion_formato, $x_nombre,	$x_etiqueta, $x_descripcion, $x_ruta, $x_formato, $x_acciones;

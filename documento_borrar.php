@@ -84,7 +84,7 @@ $llave = $_REQUEST["iddoc"];
   		notificacion_saia('Este documento no es un borrador','alert','',3500);
   		</script>
   		<?php
-  		abrir_url("formatos/".$formato[0]["nombre"]."/".$formato[0]["ruta_mostrar"]."?idformato=".$formato[0]["idformato"]."&iddoc=".$x_id_documento,"_self");
+  		abrir_url(FORMATOS_CLIENTE.$formato[0]["nombre"]."/".$formato[0]["ruta_mostrar"]."?idformato=".$formato[0]["idformato"]."&iddoc=".$x_id_documento,"_self");
 			die();
   	}
     ?>
@@ -116,17 +116,19 @@ $llave = $_REQUEST["iddoc"];
     <td width="131" valign="top"><span class="phpmaker" style="color: #FFFFFF;">EJECUTOR</span></td>
     <td valign="top" bgcolor="#F5F5F5"><span class="phpmaker"><font color="#000000">
     <?php
-	if ($x_plantilla != "") {
-		$nombre_ejecutor = busca_filtro_tabla("nombres,apellidos", "funcionario", "funcionario_codigo=$x_ejecutor", "", $conn);
-		if ($nombre_ejecutor["numcampos"] > 0)
-			echo $nombre_ejecutor[0]["nombres"] . " " . $nombre_ejecutor[0]["apellidos"];
-		else
-			echo "&nbsp;&nbsp;";
-	} else {
-		$nombre_ejecutor = busca_filtro_tabla("nombre", "ejecutor", "idejecutor=" . $x_ejecutor, "", $conn);
-		if ($nombre_ejecutor["numcampos"] > 0)
-			echo $nombre_ejecutor[0][0];
-	}
+    if($x_plantilla<>"")
+    {$nombre_ejecutor = busca_filtro_tabla("nombres,apellidos","funcionario","funcionario_codigo=$x_ejecutor","",$conn);
+     if($nombre_ejecutor["numcampos"]>0)
+       echo $nombre_ejecutor[0]["nombres"]." ".$nombre_ejecutor[0]["apellidos"];
+     else
+       echo "&nbsp;&nbsp;";
+     }
+    else
+    {
+      $nombre_ejecutor = busca_filtro_tabla("nombre","ejecutor","idejecutor=".$x_ejecutor,"",$conn);
+    if($nombre_ejecutor["numcampos"]>0)
+      echo $nombre_ejecutor[0][0];
+    }
     ?></font></span></td>
     </tr>
     <tr class="encabezado">

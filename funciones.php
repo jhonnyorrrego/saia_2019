@@ -32,50 +32,50 @@ function unidad_administrativa_almacenamiento($idfolder){
 
 function identifica_ejecutor($iddoc){
 	global $conn;
-	
+
 	$datos=busca_filtro_tabla("C.identificacion","ft_radicacion_entrada A, datos_ejecutor B, ejecutor C","A.persona_natural=B.iddatos_ejecutor AND C.idejecutor=B.ejecutor_idejecutor AND A.documento_iddocumento=".$iddoc,"",$conn);
-	
+
 	return("<td>".$datos[0]['identificacion']."</td>");
 }
 
 function nombre_empresa_ejec($iddoc){
 	global $conn;
-	
+
 	$datos=busca_filtro_tabla("B.empresa","ft_radicacion_entrada A, datos_ejecutor B","A.persona_natural=B.iddatos_ejecutor AND A.documento_iddocumento=".$iddoc,"",$conn);
-	
+
 	return("<td>".$datos[0]['empresa']."</td>");
 }
 
 function cargo_persona_elaboro($iddoc){
 	global $conn;
-	
+
 	$datos=busca_filtro_tabla("E.nombre","ft_radicacion_entrada A, documento B, funcionario C, dependencia_cargo D, cargo E","A.documento_iddocumento=B.iddocumento AND B.ejecutor=C.funcionario_codigo AND C.idfuncionario=D.funcionario_idfuncionario AND D.cargo=E.idcargo AND B.documento_iddocumento=".$iddoc,"",$conn);
-	
+
 	return("<td>".$datos[0]['nombre']."</td>");
 }
 //******************
 
 function identificacion_ejecutor($iddoc){
 	global $conn;
-	
+
 	$identificacion=busca_filtro_tabla("e.identificacion","ft_radicacion_entrada a, datos_ejecutor de, ejecutor e","a.persona_natural=de.iddatos_ejecutor and e.idejecutor=de.ejecutor_idejecutor and a.documento_iddocumento=".$iddoc,"",$conn);
-	
-	return("<td>".$identificacion[0]["identificacion"]."</td>");	
-}	
+
+	return("<td>".$identificacion[0]["identificacion"]."</td>");
+}
 function empresa_ejecutor($iddoc){
 	global $conn;
-	
+
 	$empresa=busca_filtro_tabla("de.empresa","ft_radicacion_entrada a, datos_ejecutor de","a.persona_natural=de.iddatos_ejecutor and a.documento_iddocumento=".$iddoc,"",$conn);
-	
-	return("<td>".$empresa[0]["empresa"]."</td>");	
-}	
+
+	return("<td>".$empresa[0]["empresa"]."</td>");
+}
 function cargo_creador_documento($iddoc){
 	global $conn;
-	
+
 	$cargo=busca_filtro_tabla("c.nombre","documento d, ft_radicacion_entrada a, cargo c, funcionario f, dependencia_cargo dc","d.ejecutor=f.funcionario_codigo AND f.idfuncionario=dc.funcionario_idfuncionario AND c.idcargo=dc.cargo_idcargo AND d.iddocumento=a.documento_iddocumento AND a.documento_iddocumento=".$iddoc,"",$conn);
-	
+
 	return("<td>".$cargo[0]["nombre"]."</td>");
-}	
+}
 
 function prueba_funcion($iddoc){
 	global $conn;
@@ -94,19 +94,19 @@ function solicitud_gasto($iddoc)
  $ok=$permiso->acceso_modulo_perfil("aprobar_solicitud_gastos");
  echo '<td align="center">';
  if(!@$_REQUEST["export"])
- echo '<a class="highslide" href="../formatos/solicitud_gastos_caja_menor/mostrar_solicitud_gastos_caja_menor.php?iddoc='.$accion[0][0].'&idformato=176" onclick="return hs.htmlExpand(this, { objectType: \'iframe\',width: 700, height:250,preserveContent:false } )" ><img src="../botones/general/ver.png" style="border:0px" /></a>';
- 
+ 	echo '<a class="highslide" href="../' . FORMATOS_CLIENTE . 'solicitud_gastos_caja_menor/mostrar_solicitud_gastos_caja_menor.php?iddoc='.$accion[0][0].'&idformato=176" onclick="return hs.htmlExpand(this, { objectType: \'iframe\',width: 700, height:250,preserveContent:false } )" ><img src="../botones/general/ver.png" style="border:0px" /></a>';
+
  if($accion[0]["fecha_aprobacion"]<>"")
   echo "<br />Aprobado<br />".$accion[0]["fecha_aprobacion"]."<br />".$accion[0]["usuario_aprobacion"];
  elseif($accion[0]["estado"]=="ACTIVO")
-  echo "<br />Documento Activado"; 
+  echo "<br />Documento Activado";
 
  elseif($ok && $accion[0]["fecha_reembolso"]<>"" && $accion[0]["fecha_aprobacion"]=="" && !$_REQUEST["export"]){
-  echo ' <a class="highslide" onclick="return hs.htmlExpand(this, { objectType: \'iframe\',width: 700, height:250,preserveContent:false } )" href="../formatos/solicitud_gastos_caja_menor/aprobar_rechazar_solicitud.php?accion_solicitud=rechazar&iddoc='.$accion[0]["doc1"].'&tipo='.$_REQUEST["tipo"].'"><img src="../botones/general/menos.png" style="border:0px"/></a><!--a class="highslide" onclick="return hs.htmlExpand(this, { objectType: \'iframe\',width: 700, height:250,preserveContent:false } )" href="../formatos/solicitud_gastos_caja_menor/aprobar_rechazar_solicitud.php?accion_solicitud=aprobar&iddoc='.$accion[0]["doc2"].'"><img src="../botones/general/mas.png" /></a--><input type="checkbox" value="'.$iddoc.'" name="aprobar_'.$iddoc.'" >
+ 	echo ' <a class="highslide" onclick="return hs.htmlExpand(this, { objectType: \'iframe\',width: 700, height:250,preserveContent:false } )" href="../' . FORMATOS_CLIENTE . 'solicitud_gastos_caja_menor/aprobar_rechazar_solicitud.php?accion_solicitud=rechazar&iddoc='.$accion[0]["doc1"].'&tipo='.$_REQUEST["tipo"].'"><img src="../botones/general/menos.png" style="border:0px"/></a><!--a class="highslide" onclick="return hs.htmlExpand(this, { objectType: \'iframe\',width: 700, height:250,preserveContent:false } )" href="../' . FORMATOS_CLIENTE . 'solicitud_gastos_caja_menor/aprobar_rechazar_solicitud.php?accion_solicitud=aprobar&iddoc='.$accion[0]["doc2"].'"><img src="../botones/general/mas.png" /></a--><input type="checkbox" value="'.$iddoc.'" name="aprobar_'.$iddoc.'" >
   <input type="hidden" name="tipo" value="'.$_REQUEST["tipo"].'">
   ';
  }
- echo '</td>';  
+ echo '</td>';
 }
 function dependencia_permisos($iddoc){
 	global $conn,$ruta_db_superior;
@@ -139,10 +139,10 @@ function dias_disfrutados($iddoc){
 	global $conn,$ruta_db_superior;
 	$formato = busca_filtro_tabla("","formato","nombre like '%proceso_vacaciones%'","",$conn);
 	return '<td>'.dias_vacaciones($formato[0]["idformato"],$iddoc).'</td>';
-	
+
 }
 function causacion_button()
-{global $conn; 
+{global $conn;
  $pos=strpos($_SESSION["sql"],"FROM documento A");
  $valor=ejecuta_filtro_tabla("SELECT sum(B.valor_total) ".stripslashes(substr($_SESSION["sql"],$pos)),$conn);
  $permiso=new PERMISO();
@@ -174,7 +174,7 @@ function causacion_button()
  if($ok4)
  $texto.="<td align='center'><input type='button' value='Aprobar' onclick='registrar_aprobacion(\"aprobar\");'></td>";
  $texto.="</tr></table>";
- return($texto);      
+ return($texto);
 }
 
 
@@ -186,18 +186,18 @@ function registrar_causacion($iddoc)
  echo "<td align='center'>";
  if(!$_REQUEST["export"]){
  $accion=busca_filtro_tabla("fecha_causacion,usuario_causante,usuario_remision","ft_recibo_caja_menor r","r.documento_iddocumento=$iddoc","",$conn);
- 
+
  if($accion[0]["usuario_remision"]=="")
-    echo "Falta remisi&oacute;n."; 
+    echo "Falta remisi&oacute;n.";
  elseif($accion[0]["usuario_causante"]=="")
     {if($ok)
       echo "<input type='hidden' name='tipo' value='".$_REQUEST["tipo"]."'>
           <input type='checkbox' name='causacion_$iddoc' value='$iddoc'>";
-    }      
+    }
  else
     echo $accion[0]["fecha_causacion"]."<br />(".$accion[0]["usuario_causante"].")";
- }   
- echo "</td>";      
+ }
+ echo "</td>";
 }
 
 function registrar_remision($iddoc)
@@ -207,16 +207,16 @@ function registrar_remision($iddoc)
  $accion=busca_filtro_tabla("fecha_remision,usuario_remision","ft_recibo_caja_menor r","r.documento_iddocumento=$iddoc","",$conn);
  $permiso=new PERMISO();
  $ok=$permiso->acceso_modulo_perfil("registrar_remision_recibos");
- 
+
  if($accion[0][1]=="")
     {if($ok)
      echo "<input type='hidden' name='tipo' value='".$_REQUEST["tipo"]."'>
           <input type='checkbox' name='remision_$iddoc' value='$iddoc'>";
-    }      
+    }
  else
     echo $accion[0]["fecha_remision"]."<br />(".$accion[0]["usuario_remision"].")";
- }   
- echo "</td>";      
+ }
+ echo "</td>";
 }
 
 function registrar_reembolso($iddoc)
@@ -232,11 +232,11 @@ function registrar_reembolso($iddoc)
     {if($ok)
       echo "<input type='hidden' name='tipo' value='".$_REQUEST["tipo"]."'>
           <input type='checkbox' name='reembolso_$iddoc' value='$iddoc'>";
-    }      
+    }
  else
     echo $accion[0][2]."<br />(".$accion[0][1].")";
- }   
- echo "</td>";      
+ }
+ echo "</td>";
 }
 function calculo_prg($iddoc)
 {global $conn;
@@ -276,7 +276,7 @@ function mostrar_flujo_doc($idpaso_documento){
 	return $dato;
 }
 function mostrar_flujo_paso($idpaso_documento){
-global $ruta_db_superior; 
+global $ruta_db_superior;
 include_once($ruta_db_superior."workflow/libreria_paso.php");
   $flujo=estado_flujo_instancia($idpaso_documento);
   $porcentaje=$flujo["porcentaje"];
@@ -296,24 +296,24 @@ include_once($ruta_db_superior."workflow/libreria_paso.php");
 	else if($dias > 1){
 		$color = '#99FF66';
 	}
-   
+
   $texto='<div class="texto_paso">Paso Actual: '.$flujo[0]["nombre_paso"]."<br />".$estadod." <br />Inicio: ".$fecha_inicio[0]["fecha_inicio"]."
   </br>Terminados: (".(($flujo["numcampos"]))."/".$flujo["pasos_flujo"]."):".$porcentaje."%<br />
   Fecha limite: ".$fecha_final_diagram."<br />
   Estado: Vence en ".$dias." dia(s)<br />
   Prioridad: Normal</div>";
-  
+
     echo "<td class='paso".$flujo[0]["estado_diagram_instance"]."' style='background:".$color."'>".$texto."</td>";
 }
 function mostrar_flujo_tarea($idpaso_documento){
-	global $ruta_db_superior,$conn; 
+	global $ruta_db_superior,$conn;
 	include_once($ruta_db_superior."workflow/libreria_paso.php");
 	$flujo=estado_flujo_instancia($idpaso_documento);
-	
+
 	$pasoo = busca_filtro_tabla("","paso_documento","diagram_iddiagram_instance=".$flujo[0]["iddiagram_instance"]." and paso_idpaso=".$flujo[0]["paso_idpaso"],"idpaso_documento desc",$conn);
-	
+
 	$restringido = false;
-	
+
 	$terminados = 0;
 	$actividades = busca_filtro_tabla("","paso_actividad","paso_idpaso=".$pasoo[0]["paso_idpaso"],"",$conn);
 	for($i=0;$i<$actividades["numcampos"];$i++){
@@ -324,16 +324,16 @@ function mostrar_flujo_tarea($idpaso_documento){
 	}
 	$porcentaje = round((($terminados*100)/$actividades["numcampos"]),2);
 	$pocentaje_tarea = '('.$terminados.'/'.$actividades["numcampos"].'):'.$porcentaje.'%';
-	
-	
-	$paso = busca_filtro_tabla("","paso_actividad","idpaso_actividad=".$idactividad,"",$conn);	
+
+
+	$paso = busca_filtro_tabla("","paso_actividad","idpaso_actividad=".$idactividad,"",$conn);
 	$tareas = busca_filtro_tabla("","paso_actividad","paso_idpaso=".$flujo[0]["paso_idpaso"],"idpaso_actividad asc",$conn);
 	for($i=0;$i<$tareas["numcampos"];$i++){
 		$tarea .= ($i+1).". ".$tareas[$i]["descripcion"]."<br>";
 	}
 	$dia = busca_filtro_tabla(resta_fechas(fecha_db_almacenar($flujo["fecha_final_paso"],'Y-m-d'),fecha_db_almacenar(date('Y-m-d'),'Y-m-d'))."as dias");
-  $dias = $dia[0]["dias"]; 
-	
+  $dias = $dia[0]["dias"];
+
    	if($dias < 0){
    		$color = '#FF3333';
    	}
@@ -365,7 +365,7 @@ function enviadopor_flujo($idpaso_documento){
 	global $ruta_db_superior,$conn;
 	include_once($ruta_db_superior."workflow/libreria_paso.php");
 	$flujo=estado_flujo_instancia($idpaso_documento);
-	
+
 	$pasoo = busca_filtro_tabla("","paso_documento","diagram_iddiagram_instance=".$flujo[0]["iddiagram_instance"]." and paso_idpaso=".$flujo[0]["paso_idpaso"],"idpaso_documento desc",$conn);
 	//print_r($pasoo);
 	$destino = busca_filtro_tabla("","buzon_entrada,funcionario","archivo_idarchivo=".$pasoo[0]["documento_iddocumento"]." and nombre='TRANSFERIDO' and destino=funcionario_codigo","",$conn);
@@ -377,7 +377,7 @@ function nombre_formato($iddoc)
  $datos=busca_filtro_tabla("etiqueta","documento,formato","iddocumento=$iddoc and plantilla=nombre","",$conn);
  echo "<td>";
  if($datos["numcampos"])
-    echo ucwords(strtolower($datos[0]["etiqueta"]));   
+    echo ucwords(strtolower($datos[0]["etiqueta"]));
  echo "</td>";
 }
 function mostrar_plan_mejoramiento($iddoc)
@@ -386,24 +386,24 @@ function mostrar_plan_mejoramiento($iddoc)
  if($plan["numcampos"])
    return("<td align='center'><a href='../ordenar.php?mostrar_formato=1&key=".$plan[0][0]."'>DETALLES PLAN</a></td>");
  else
-   return("<td align='center'>PLAN NO ENCONTRADO</td>");  
+   return("<td align='center'>PLAN NO ENCONTRADO</td>");
 }
 function mostrar_estructura($key)
 {
  global $conn;
- $datos = busca_filtro_tabla("documento_iddocumento","ft_estructura_hoja_vida","idft_estructura_hoja_vida=".$key,"",$conn); 
+ $datos = busca_filtro_tabla("documento_iddocumento","ft_estructura_hoja_vida","idft_estructura_hoja_vida=".$key,"",$conn);
  //echo "<td><a href='../formatos/estructura_hoja_vida/mostrar_estructura_hoja_vida.php?idformato=73&iddoc=".$datos[0]["documento_iddocumento"]."'>Detalles</a></td>";
  echo "<td><a href='../ordenar.php?accion=mostrar&mostrar_formato=1&key=".$datos[0]["documento_iddocumento"]."'>Detalles</a></td>";
- 
+
 }
 /*
 function mostrar_formato($key)
 {
  global $conn;
- $datos = busca_filtro_tabla("documento_iddocumento","ft_hoja_vida","idft_hoja_vida=".$key,"",$conn); 
+ $datos = busca_filtro_tabla("documento_iddocumento","ft_hoja_vida","idft_hoja_vida=".$key,"",$conn);
  //echo "<td><a href='../formatos/hoja_vida/mostrar_hoja_vida.php?idformato=71&iddoc=".$datos[0]["documento_iddocumento"]."'>Detalles</a></td>";
  echo "<td><a href='../ordenar.php?accion=mostrar&mostrar_formato=1&key=".$datos[0]["documento_iddocumento"]."'>Detalles</a></td>";
-}  
+}
 */
 function dependencia($iddoc)
 {global $conn;
@@ -415,13 +415,13 @@ function dependencia($iddoc)
       }
    }
  if($doc[0]["plantilla"]<>"")
-   {$dep=busca_filtro_tabla("dependencia.nombre","ft_".strtolower($doc[0]["plantilla"]).",dependencia,dependencia_cargo","dependencia_iddependencia=iddependencia and dependencia=iddependencia_cargo and documento_iddocumento=$iddoc","",$conn);  
+   {$dep=busca_filtro_tabla("dependencia.nombre","ft_".strtolower($doc[0]["plantilla"]).",dependencia,dependencia_cargo","dependencia_iddependencia=iddependencia and dependencia=iddependencia_cargo and documento_iddocumento=$iddoc","",$conn);
    }
    //print_r($dep);
-  if(isset($dep[0]["nombre"]))  
+  if(isset($dep[0]["nombre"]))
     return("<td>".$dep[0]["nombre"]."</td>");
  else
-    return("<td></td>");   
+    return("<td></td>");
 }
 
 function serie($iddoc)
@@ -433,7 +433,7 @@ function serie($iddoc)
      return("<td>".ucwords(strtolower($serie[0]["nombre"]))."</td>");
     }
  else
-   return("<td>&nbsp;</td>");   
+   return("<td>&nbsp;</td>");
 }
 
 function cargo_padre($id)
@@ -442,7 +442,7 @@ function cargo_padre($id)
  $padre = busca_filtro_tabla("cod_padre","cargo","idcargo=$id","",$conn);
  if($padre["numcampos"])
   $nombre = busca_filtro_tabla("nombre","cargo","idcago=".$padre[0]["cod_padre"],"",$conn);
- return("<td>".$nombre[0]["nombre"]."</td>"); 
+ return("<td>".$nombre[0]["nombre"]."</td>");
 }
 function asignacion_solicitud($iddoc)
 {global $conn;
@@ -459,7 +459,7 @@ function asignacion_solicitud($iddoc)
     for($i=0;$i<$asignacion["numcampos"];$i++)
       $asignados[]=ucwords($asignacion[$i]["nombres"]." ".$asignacion[$i]["apellidos"]);
     return("<td ><ul><li>".implode("</li><li>",$asignados)."</li></ul></td>");
-   }  
+   }
 }
 
 function transferir($iddoc)
@@ -481,23 +481,23 @@ function remitente($iddoc)
      // print_r($transferencia);
      $funcionario=busca_filtro_tabla("nombres,apellidos","funcionario","funcionario_codigo=".$transferencia[0]["origen"]."","",$conn);
      return("<td>".ucwords($funcionario[0]["nombres"]." ".$funcionario[0]["apellidos"])."</td>");
-    }   
-}  
+    }
+}
 
 function fecha_respuesta($iddoc)
-{global $conn; 
+{global $conn;
  include_once("../calendario/calendario.php");
  include_once("phpmkrfn.php");
-  $dias1=busca_filtro_tabla("iddocumento,".fecha_db_obtener("fecha",'Y-m-d')." as fecha,numero,".case_fecha('dias',"''",'dias_entrega','dias')." as dias_r,documento.estado","documento left join serie on serie=idserie","iddocumento=$iddoc","",$conn); 
+  $dias1=busca_filtro_tabla("iddocumento,".fecha_db_obtener("fecha",'Y-m-d')." as fecha,numero,".case_fecha('dias',"''",'dias_entrega','dias')." as dias_r,documento.estado","documento left join serie on serie=idserie","iddocumento=$iddoc","",$conn);
 
-  $estado = "";  
+  $estado = "";
   if($dias1[0]["estado"]=='APROBADO')
    $estado=$dias1[0]["estado"];
   if($dias1[0]["dias_r"]<>"")
-      {  
-       $fecha_f=dias_habiles($dias1[0]["dias_r"]+1,'Y-m-d',$dias1[0]["fecha"]);       
+      {
+       $fecha_f=dias_habiles($dias1[0]["dias_r"]+1,'Y-m-d',$dias1[0]["fecha"]);
        //echo resta_fechas(fecha_db_almacenar($fecha_f,'Y-m-d'),"");
-       $dias2=busca_filtro_tabla(resta_fechas(fecha_db_almacenar($fecha_f,'Y-m-d'),"")." as respuesta","dual","","",$conn); 
+       $dias2=busca_filtro_tabla(resta_fechas(fecha_db_almacenar($fecha_f,'Y-m-d'),"")." as respuesta","dual","","",$conn);
 
       }
 
@@ -505,19 +505,19 @@ function fecha_respuesta($iddoc)
  $pendiente=busca_filtro_tabla("nombre,valor","configuracion","nombre='color_pendiente'","",$conn);
  $atrasado=busca_filtro_tabla("nombre,valor","configuracion","nombre='color_atrasado'","",$conn);
  $retraso=busca_filtro_tabla("A.valor","configuracion A","A.nombre='dias_retraso'","",$conn);
- 
+
  if(isset($dias2) && $dias2["numcampos"])
-    {     
-     $cadena="<td align='center' ";     
+    {
+     $cadena="<td align='center' ";
      $retraso=busca_filtro_tabla("A.valor","configuracion A","A.nombre='dias_retraso'","",$conn);
-    
+
     if($dias2["numcampos"])
        {$dias=intval(ceil($dias2[0]["respuesta"]));
         if($dias<0)
         {
-          $cadena.="bgcolor=\"".$atrasado[0]["valor"]."\">"."<FONT SIZE=1>".$fecha_f."</FONT><br>".($dias)." Dias Calendario";          
-          $texto ="(Atrasado)"; 
-        }  
+          $cadena.="bgcolor=\"".$atrasado[0]["valor"]."\">"."<FONT SIZE=1>".$fecha_f."</FONT><br>".($dias)." Dias Calendario";
+          $texto ="(Atrasado)";
+        }
         else if($dias>$retraso[0]["valor"])
         {   $cadena.="bgcolor=\"".$aprobado[0]["valor"]."\">"."<FONT SIZE=1>".$fecha_f."</FONT><br>".$dias." Dias  Calendario";
            $texto ="(Normal)";
@@ -526,21 +526,21 @@ function fecha_respuesta($iddoc)
         {
            $cadena.="bgcolor=\"".$pendiente[0]["valor"]."\">"."<FONT SIZE=1>".$fecha_f."</FONT><br>".$dias." Dias Calendario";
            $texto ="(Urgente)";
-        }      
+        }
        }
    else
-      $cadena.="bgcolor=\"".$pendiente[0]["valor"]."\">No asignado (Urgente)";  
+      $cadena.="bgcolor=\"".$pendiente[0]["valor"]."\">No asignado (Urgente)";
    if($estado=="")
      $cadena.=$texto;
-    else  
-     $cadena.="($estado)";   
+    else
+     $cadena.="($estado)";
    $cadena.="</td>";
      //$cadena.=$dias1[0]["dias_r"]."</td>";
      return($cadena);
     }
  else
     {return("<td align='center' bgcolor='".$pendiente[0]["valor"]."'>No Asignado (Urgente)</td>");
-    }    
+    }
 }
 function detalles_recibo_caja($iddoc){
 	global $conn,$ruta_db_superior;
@@ -548,34 +548,34 @@ function detalles_recibo_caja($iddoc){
 	return ('<td><a href="'.$ruta_db_superior.'ordenar.php?mostrar_formato=1&key='.$doc[0]["doc"].'">DETALLES</a></td>');
 }
 function terminar($iddoc)
-{global $conn; 
+{global $conn;
  $estado=busca_filtro_tabla("estado,plantilla,numero","documento","iddocumento=".$iddoc,"",$conn);
 
  if( ($estado[0]['plantilla']=="" || ($estado[0]['plantilla']<>"" && $estado[0]['estado']<>'ACTIVO' && $estado[0]['numero']>'0')))
    {
-   if(isset($_REQUEST["ejecutor"]) && $_REQUEST["ejecutor"]!="")     
+   if(isset($_REQUEST["ejecutor"]) && $_REQUEST["ejecutor"]!="")
      $link='<td><a href="../documentoTerminar.php?doc='.$iddoc.'&ejecutor='.$_REQUEST["ejecutor"].'">TERMINAR</a></td>';
    else
-     $link='<td><a href="../documentoTerminar.php?doc='.$iddoc.'">TERMINAR</a></td>';  
+     $link='<td><a href="../documentoTerminar.php?doc='.$iddoc.'">TERMINAR</a></td>';
    }
  else
    {$link="<td>&nbsp;</td>";
    }
- return($link);      
+ return($link);
 }
 
 function estado_actual($iddoc)
   {global $conn;
-   
+
    $aprobado=busca_filtro_tabla("nombre,valor","configuracion","nombre='color_aprobado'","",$conn);
    $pendiente=busca_filtro_tabla("nombre,valor","configuracion","nombre='color_pendiente'","",$conn);
    $atrasado=busca_filtro_tabla("nombre,valor","configuracion","nombre='color_atrasado'","",$conn);
    $retraso=busca_filtro_tabla("A.valor","configuracion A","A.nombre='dias_retraso'","",$conn);
-   $color="";  
-   
-   $recibido=busca_filtro_tabla(fecha_db_obtener("max(BE.fecha)","Y-m-d H:i:s")." AS fechaf","buzon_entrada BE","BE.archivo_idarchivo=$iddoc and nombre not in('POR_APROBAR','BLOQUEADO') and BE.origen='".usuario_actual("funcionario_codigo")."'","",$conn);   
+   $color="";
+
+   $recibido=busca_filtro_tabla(fecha_db_obtener("max(BE.fecha)","Y-m-d H:i:s")." AS fechaf","buzon_entrada BE","BE.archivo_idarchivo=$iddoc and nombre not in('POR_APROBAR','BLOQUEADO') and BE.origen='".usuario_actual("funcionario_codigo")."'","",$conn);
     $enviado=busca_filtro_tabla(fecha_db_obtener("max(BS.fecha)","Y-m-d H:i:s")." AS fechaf","buzon_salida BS","BS.archivo_idarchivo=$iddoc and nombre not in('BLOQUEADO') and BS.origen='".usuario_actual("funcionario_codigo")."'","",$conn);
-    $estado=busca_filtro_tabla("BS.nombre","buzon_salida BS","BS.archivo_idarchivo=$iddoc and origen='".usuario_actual("funcionario_codigo")."' and ".fecha_db_obtener("BS.fecha",'Y-m-d H:i:s')."='".$enviado[0]["fechaf"]."'","idtransferencia desc",$conn);    
+    $estado=busca_filtro_tabla("BS.nombre","buzon_salida BS","BS.archivo_idarchivo=$iddoc and origen='".usuario_actual("funcionario_codigo")."' and ".fecha_db_obtener("BS.fecha",'Y-m-d H:i:s')."='".$enviado[0]["fechaf"]."'","idtransferencia desc",$conn);
  //print_r($estado);
 //echo($enviado[0]["fechaf"]." ".$recibido[0]["fechaf"]." ".$estado[0]["nombre"]);
     $estado_doc=busca_filtro_tabla("estado","documento A","A.iddocumento='$iddoc'","",$conn);
@@ -589,12 +589,12 @@ function estado_actual($iddoc)
        if($enviado[0]["fechaf"]>=$recibido[0]["fechaf"])
          {
           $texto=$estado[0]["nombre"];
-          $color=$aprobado[0]["valor"];//color verde        
+          $color=$aprobado[0]["valor"];//color verde
          }
        elseif($recibido["numcampos"])
         {
          $estado=busca_filtro_tabla("nombre","buzon_entrada","fecha=".fecha_db_almacenar($recibido[0]["fechaf"],'y-m-d H:i:s')." and archivo_idarchivo=$iddoc","",$conn);
-         //print_r($estado);                  
+         //print_r($estado);
           if($estado["numcampos"]&&$estado[0]["nombre"]=="DEVOLUCION")
               {
                $texto="DEVUELTO";
@@ -603,9 +603,9 @@ function estado_actual($iddoc)
            else
               {$texto="PENDIENTE";
                $color=$pendiente[0]["valor"];//col  or amarillo
-              }    
+              }
          }
-       else  
+       else
          {
           $estado_d=busca_filtro_tabla("A.estado","documento A ","A.iddocumento=$iddoc","",$conn);
 
@@ -616,41 +616,41 @@ function estado_actual($iddoc)
           else
               {$texto="PENDIENTE";
                $color=$pendiente[0]["valor"];//col  or amarillo
-              } 
-         }      
+              }
+         }
       }
-    else 
-      {      
-      $estado_e=busca_filtro_tabla("nombre","buzon_entrada","fecha=".fecha_db_almacenar(@$enviado[0]["fechaf"],'Y-m-d H:i:s')." and archivo_idarchivo=$iddoc","",$conn);           
+    else
+      {
+      $estado_e=busca_filtro_tabla("nombre","buzon_entrada","fecha=".fecha_db_almacenar(@$enviado[0]["fechaf"],'Y-m-d H:i:s')." and archivo_idarchivo=$iddoc","",$conn);
        if((!isset($estado[0]["nombre"]) && @$estado_e[0]["nombre"]=="LEIDO")|| (isset($estado[0]["nombre"]) && @$estado[0]["nombre"]=="LEIDO"))
           {$texto="LEIDO";
            $color=$pendiente[0]["valor"];//color amarillo
-          } 
+          }
        else if(!$recibido["numcampos"])
           {//creado por el usuario
            $texto=$estado[0]["nombre"];
            $color=$aprobado[0]["valor"];//color verde
-          }     
-       else 
+          }
+       else
           {$texto="PENDIENTE";
            $color=$pendiente[0]["valor"];//color amarillo
-          } 
+          }
       }
    $ayuda = ayuda_estado($texto);
-    return("<td bgcolor='$color' align='center'><a href='#' style='text-decoration:none;color:black;' onmouseout='hideTooltip()' onmouseover=\"showTooltip(event,'$ayuda');return false\">".$texto."</a></td>");       
+    return("<td bgcolor='$color' align='center'><a href='#' style='text-decoration:none;color:black;' onmouseout='hideTooltip()' onmouseover=\"showTooltip(event,'$ayuda');return false\">".$texto."</a></td>");
   }
 
 function ayuda_estado($estado)
 {
- $ayuda="";  
+ $ayuda="";
  switch($estado)
- {  
+ {
     case ("LEIDO"):
    $ayuda = "Usted ya ha tenido un contacto visual con el documento que est&aacute; bajo su responsabilidad, debe de hacer el seguimiento respectivo para brindar una respuesta o TRANSFERIRLO para delegar responsabilidad";
    break;
   case ("PENDIENTE"):
    $ayuda = "Este documento se encuentra pendiente de ser le&iacute;do. Debe hacer clic en detalles para tener acceso visual al documento y as&iacute; definir el procedimiento a seguir.";
-   break; 
+   break;
    case("BORRADOR"):
     $ayuda = "Este documento es un formato el cual falta confirmar para seguir su proceso.";
    break;
@@ -662,21 +662,21 @@ function ayuda_estado($estado)
    break;
   case("RESPONDIDO"):
     $ayuda = "El documento ha sido tramitado y respondido, este documento tiene una respuesta asociada en un formato interno .";
-   break;  
-  case("TERMINADO"):  
-    $ayuda = "El documento ha terminado con su ciclo &uacute;til en la organizaci&oacute;n.   Este documento lo podr&aacute; localizar posteriormente en la opci&oacute;n DOCUMENTOS EN GESTI&Oacute;N";  
+   break;
+  case("TERMINADO"):
+    $ayuda = "El documento ha terminado con su ciclo &uacute;til en la organizaci&oacute;n.   Este documento lo podr&aacute; localizar posteriormente en la opci&oacute;n DOCUMENTOS EN GESTI&Oacute;N";
    break;
   case("REVISADO"):
     $ayuda = "El documento ha sido confirmado por usted";
    break;
-  case("DEVOLUCION"):   
+  case("DEVOLUCION"):
     $ayuda="Le ha sido devuelto un documento que usted hab&iacute;a enviado previamente, debe revisarlo nuevamente ya sea para realizar el tr&aacute;mite respectivo o para reasignar una responsabilidad.";
   break;
  }
 // return ('class="tooltip_text" href="#" onmousemove="showToolTip(event,'.$ayuda.'); return false" onmouseout="hideToolTip();');
- return($ayuda); 
-}  
-  
+ return($ayuda);
+}
+
 function codigo_padre($key)
 {
  global $conn;
@@ -688,21 +688,21 @@ function codigo_padre($key)
 function checkbox($iddoc)
 {
 global $conn;
-  $despacho=busca_filtro_tabla("A.numero_guia,B.tipo_despacho","salidas A, documento B","B.iddocumento=".$iddoc." AND A.documento_iddocumento=B.iddocumento and A.estado=1","",$conn);  
+  $despacho=busca_filtro_tabla("A.numero_guia,B.tipo_despacho","salidas A, documento B","B.iddocumento=".$iddoc." AND A.documento_iddocumento=B.iddocumento and A.estado=1","",$conn);
   echo "<td>";
   if($despacho["numcampos"] && ($despacho[0]["tipo_despacho"]==1 || $despacho[0]["tipo_despacho"]==2 || $despacho[0]["tipo_despacho"]==3)){
 
     switch($despacho[0]["tipo_despacho"]){
-      case 1://mensajeria Externa genera salida 
+      case 1://mensajeria Externa genera salida
         echo("Guia:".$despacho[0]["numero_guia"]);
       break;
       case 2://Mensajeria Interna enviada con mensajero.
         echo("Mensajeria Interna");
-      break;  
+      break;
       case 3: //Personal enviada con el ejecutor.
         echo("Personal");
-      break;     
-    }  
+      break;
+    }
   }
   else{
   $doc=busca_filtro_tabla("A.numero","documento A","A.iddocumento=$iddoc","",$conn);
@@ -712,7 +712,7 @@ global $conn;
   else  echo "<input type=checkbox name='despachar_$iddoc'>";
 
   }
- echo "</td>";  
+ echo "</td>";
 }
 
 function detalles_calidad($iddoc)
@@ -741,7 +741,7 @@ function enviar_email($iddoc)
  <input value="Crear E-mail" type=button onclick="window.location='../email/email_doc.php?iddoc=<?php echo $iddoc ?>';" >
   <?php
     }
-  echo "</td>";     
+  echo "</td>";
 }
 
 function numero_detalles($iddoc){
@@ -757,42 +757,42 @@ function numero_detalles($iddoc){
 function llenar_expediente($id)
 {
  global $conn;
- /*$datos=busca_filtro_tabla("","busquedas","idbusquedas=17","",$conn); 
+ /*$datos=busca_filtro_tabla("","busquedas","idbusquedas=17","",$conn);
 $funciones=busca_filtro_tabla("idfunciones_busqueda","funciones_busqueda","busquedas_idbusqueda=17","",$conn);
 $id_func = array();
  if($funciones["numcampos"]>0)
   {for($i=0; $i<$funciones["numcampos"]; $i++)
       {
        $id_func[]=$funciones[$i]["idfunciones_busqueda"];
-      }      
+      }
    $id_func=implode(",",$id_func);
-  }  
+  }
    $tablas="documento";
   $busqueda = "index.php?bavanzada=documentolist.php&tabla=documento&llave=".$datos[0]["llave"]."&func_busqueda=".$id_func."&registros=1000&tablas=tablas&formu=$tablas&tipo=busqueda&pagina_exp=$id";
   */
   $busqueda = "../busqueda_documentos.php?pagina_exp=$id&tipo_b=todos";
   echo '<td><span class="phpmaker"><a href="'.$busqueda.'">Llenar</a></span></td>';
-  
-     
+
+
 }
 
 function adicionar_expediente($idexpediente)
 {
  global $conn;
- $iddoc = $_REQUEST["iddoc"]; 
+ $iddoc = $_REQUEST["iddoc"];
  $guardado = busca_filtro_tabla("expediente_idexpediente","expediente_doc","expediente_idexpediente=$idexpediente and documento_iddocumento=$iddoc","",$conn);
-  if($guardado["numcampos"]>0)  
+  if($guardado["numcampos"]>0)
     echo "<td>Guardado</td>";
   else
    { echo "<td><input type=checkbox name='exp_$idexpediente';></td>";
      $muestra_boton=true;
    }
-       
+
 }
 
 function mostrar_expediente($idexpediente)
-{  
-   echo "<td><a href='../expedienteview.php?key=$idexpediente' target='centro'>Mostrar</a></td>";   
+{
+   echo "<td><a href='../expedienteview.php?key=$idexpediente' target='centro'>Mostrar</a></td>";
 }
 function editar_flujo($Id){
     $ruta="<td><a href='../workflow/index.php?diagramId=".$Id."' target='editar_flujo'>Editar</a></td>";
@@ -803,9 +803,9 @@ function mostrar_flujo_documento($idpaso_documento){
     echo "<a href='../workflow/resumen_flujo.php?idpaso_documento=".$idpaso_documento."' class=\"highslide\" onclick=\"return hs.htmlExpand(this, { objectType: 'iframe',width: 700, height:250,preserveContent:false } )\">Ver Doc</a></td>";
 }
 function mostrar_flujo_estado_paso($idpaso_documento){
-global $ruta_db_superior; 
+global $ruta_db_superior;
 include_once($ruta_db_superior."workflow/libreria_paso.php");
-  $flujo=estado_flujo_instancia($idpaso_documento);  
+  $flujo=estado_flujo_instancia($idpaso_documento);
   //print_r($flujo);
   $porcentaje=$flujo["porcentaje"];
   $fecha_final_diagram=$flujo["fecha_final_diagrama"];
@@ -820,7 +820,7 @@ include_once($ruta_db_superior."workflow/libreria_paso.php");
 function mostrar_flujo_fecha_finalizacion($idpaso_documento){
 global $ruta_db_superior;
 include_once($ruta_db_superior."workflow/libreria_paso.php");
-  $flujo=estado_flujo_instancia($idpaso_documento);  
+  $flujo=estado_flujo_instancia($idpaso_documento);
   //print_r($flujo);
   $fecha_final_diagram=$flujo["fecha_final_diagrama"];
   $diferencia=$flujo["diferenciad"];
@@ -832,11 +832,11 @@ include_once($ruta_db_superior."workflow/libreria_paso.php");
       $estadod=$fecha_final_diagram;
     break;
     case 3:
-      $estadod=$fecha_final_diagram;      
+      $estadod=$fecha_final_diagram;
     break;
-    case 4:                     
-      $estadod=$fecha_final_diagram;                       
-    break;                                       
+    case 4:
+      $estadod=$fecha_final_diagram;
+    break;
     case 5:
       $estadod=$fecha_final_diagram." <br />Atrasado: ".$diferenciad["year"]." A&ntilde;os ".$diferenciad["month"]." Meses ".$diferenciad["day"]." d&iacute;as";
     break;
@@ -854,8 +854,8 @@ function adicionar_documento()
 
 function filtro_remitente($iddoc)
 { global $conn;
-  $ejecutor = busca_filtro_tabla("ejecutor","documento","iddocumento=$iddoc","",$conn);  
-  return "<td><a href='../pendienteslist.php?ejecutor=".$ejecutor[0]["ejecutor"]."'>filtrar</a></td>"; 
+  $ejecutor = busca_filtro_tabla("ejecutor","documento","iddocumento=$iddoc","",$conn);
+  return "<td><a href='../pendienteslist.php?ejecutor=".$ejecutor[0]["ejecutor"]."'>filtrar</a></td>";
 }
 
 function valor_reporte($iddoc)
@@ -881,7 +881,7 @@ function despachar()
     }
    if(elementos==0)
     {alert("Seleccione por lo menos un documento.")}
-   else 
+   else
     {document.getElementById("docs").value=docs;
      document.getElementById("resultados").action="../despachar.php";
      document.getElementById("resultados").submit();
@@ -899,7 +899,7 @@ function despachar()
     }
    if(elementos==0)
     {alert("Seleccione por lo menos un documento.")}
-   else 
+   else
     {
      if(tipo == 'reembolso'){
      	descripcio = prompt("Digite el numero de cheque");
@@ -930,18 +930,18 @@ function despachar()
     }
    if(elementos==0)
     {alert("Seleccione por lo menos un documento.")}
-   else 
+   else
     {
      document.getElementById("docs").value=docs;
      document.getElementById("accion").value=tipo;
      document.getElementById("resultados").action="../formatos/solicitud_gastos_caja_menor/aprobar_rechazar_solicitud.php";
      document.getElementById("resultados").submit();
     }
-  } 
+  }
  function seleccionar_todos(tipo,opcion)
   {for(i=0;i<document.getElementById("resultados").elements.length;i=i+1)
     {var objeto=document.getElementById("resultados").elements[i];
-     
+
      if(objeto.name.indexOf(tipo+"_")==0)
         {objeto.checked=opcion;
         }
@@ -960,11 +960,11 @@ function despachar()
     }
    if(elementos==0)
     {alert("Seleccione por lo menos un expediente.")}
-   else 
+   else
     {document.getElementById("expediente").value=docs;
      document.getElementById("resultados").action="../expediente_llenar.php";
      document.getElementById("resultados").submit();
     }
- } 
+ }
   -->
 </script>

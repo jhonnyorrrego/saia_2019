@@ -91,11 +91,15 @@ return(false);
 return(fecha_db_almacenar(date("Y-m-d H:i:s"),"Y-m-d H:i:s"));
 } */
 function ejecutar_accion($url){
-//$ruta="http://".RUTA_PDF."/".$url;
+//$ruta="".PROTOCOLO_CONEXION.RUTA_PDF."/".$url;
 $salida=false;
 $retorno=0;
 //$salida=exec('curl '.$ruta.' && exit',$salida,$retorno);
 $ch = curl_init();
+        if (strpos(PROTOCOLO_CONEXION, 'https') !== false) {
+curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false); 
+curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+}
 curl_setopt($ch, CURLOPT_URL,PROTOCOLO_CONEXION.RUTA_PDF."/".$url); 
 curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
 $salida=curl_exec($ch);

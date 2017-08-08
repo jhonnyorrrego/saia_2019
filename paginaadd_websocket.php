@@ -374,7 +374,7 @@ if (PROTOCOLO_CONEXION == 'https://') {
         }
 
         function onError(evt) {
-             notificacion_saia('<span style="color:white;">El Scanner No se encuentra ejecutado!</span>','error','',4000);
+             notificacion_saia('<span style="color:white;">La aplicacion de digitalizacion no se esta ejecutado!</span>','error','',4000);
         }
 
         function doSend(message) {

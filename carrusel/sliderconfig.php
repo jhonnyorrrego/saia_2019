@@ -3,6 +3,10 @@ include_once("../db.php");
 include_once("../header.php");
 
 include_once($ruta_db_superior . "librerias_saia.php");
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+$validar_enteros=array("id");
+desencriptar_sqli('form_info');
+
 echo(estilo_bootstrap());
 echo(librerias_jquery('1.7'));
 echo(librerias_kaiten());
@@ -100,7 +104,13 @@ elseif($_REQUEST["accion"]=="adicionar" || $_REQUEST["accion"]=="editar")
     </style>
     <script type='text/javascript'>
       $().ready(function() {
-    	$('#form1').validate();
+    	$('#form1').validate({
+    		submitHandler: function(form) {
+				<?php encriptar_sqli("form1",0,"form_info",$ruta_db_superior);?>
+			    form.submit();
+			    
+			  }
+    	});
     });
     </script>
     

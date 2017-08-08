@@ -2,7 +2,7 @@
 $ruta_db_superior='';
 if(@$_REQUEST['from_correo']){
 
-	$max_salida=6; // Previene algun posible ciclo infinito limitando a 10 los ../
+$max_salida=6; // Previene algun posible ciclo infinito limitando a 10 los ../
 	$ruta_db_superior=$ruta="";
 	while($max_salida>0){
 	  if(is_file($ruta."db.php")){
@@ -11,6 +11,10 @@ if(@$_REQUEST['from_correo']){
 	  $ruta.="../";
 	  $max_salida--;
 	}
+	
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+
+	
 	include_once($ruta_db_superior."db.php");
 	include_once($ruta_db_superior."librerias_saia.php");
 	echo(librerias_jquery('1.7'));
@@ -35,7 +39,10 @@ $(document).ready(function(){
 				alert('Debe ingresar una contraseña valida');
 				return false;			
 			}	
-			$("#cambio_pass").submit();
+			<?php encriptar_sqli("cambio_pass",0,"form_info",""); ?>		
+			if(salida_sqli){
+				$("#cambio_pass").submit();
+			}
 	});
 });
 </script>
@@ -91,7 +98,10 @@ $("#enviar_form").click(function(){
 			$("#confirmacion_pass").html('<span style="color:red">Las contraseñas no coinciden.</span>');
 			return false;
 		}		
-		$("#cambio_pass").submit();
+		<?php encriptar_sqli("cambio_pass",0,"form_info",""); ?>		
+		if(salida_sqli){
+			$("#cambio_pass").submit();
+		}
 	
 });
 $("#passwordTxt").blur(function(){

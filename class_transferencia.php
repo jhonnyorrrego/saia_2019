@@ -18,7 +18,16 @@ include_once($ruta_db_superior."sql.php");
 include_once($ruta_db_superior."asignacion.php");
 include_once($ruta_db_superior."formatos/librerias/funciones_acciones.php");
 include_once($ruta_db_superior."bpmn/librerias_formato.php");
+
 include_once($ruta_db_superior.'pantallas/documento/class_documento_elastic.php');
+
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+
+
+if (isset($_REQUEST["form_info"]) && $_REQUEST["form_info"]!="") {
+	desencriptar_sqli('form_info');
+}
+
 /*<Clase>
 <Nombre>buscar_funcionarios</Nombre>
 <Parametros>$dependencia:id de las dependencias a revisar;$arreglo:variable donde se va a guardar el resultado</Parametros>
@@ -844,7 +853,7 @@ function mostrar_formato($idformato,$iddoc)
  	$url=$ruta_db_superior."pantallas/documento/visor_documento.php?iddoc=".$iddoc."&pdf_word=1";
 
  } else {
- 	$url="formatos/".$datos_formato[0]["nombre"]."/".$datos_formato[0]["ruta_mostrar"]."?iddoc=".$iddoc."&idformato=$idformato";
+ 	$url= FORMATOS_CLIENTE . $datos_formato[0]["nombre"]."/".$datos_formato[0]["ruta_mostrar"]."?iddoc=".$iddoc."&idformato=$idformato";
  }
 
  if(!@$_REQUEST['aprobacion_externa']){
@@ -1439,7 +1448,7 @@ global $idfactura;
                            $fila_abierta=1;
                            }
                        if($fila["nombre"]=="POR_APROBAR")
-                          {echo '<td align=left><img src="'.PROTOCOLO_CONEXION.$ruta.'/firmas/faltante.jpg" width="'.$ancho_firma[0]["valor"].'" height="'.$alto_firma[0]["valor"].'"><br />
+                          {echo '<td align=left><img src="'.PROTOCOLO_CONEXION.$ruta.'/firmas/faltante.jpg" style="width:'.$ancho_firma[0]["valor"].'px; height:'.$alto_firma[0]["valor"].'px;"><br />
                          '.mayusculas($fila["nombres"]." ".$fila["apellidos"]).'<br />';
 													  if($cargos["numcampos"])
                               {
@@ -1469,10 +1478,10 @@ global $idfactura;
 																 $ruta=RUTA_PDF;
                                 }
                               echo '<img src="'.PROTOCOLO_CONEXION.$ruta.'/formatos/librerias/mostrar_foto.php?codigo='.$fila["funcionario_codigo"];
-                              echo '" width="'.$ancho_firma[0]["valor"].'" height="'.$alto_firma[0]["valor"].'"/><br />';
+                              echo '" style="width:'.$ancho_firma[0]["valor"].'px; height:'.$alto_firma[0]["valor"].'px;"/><br />';
                              }
                            else
-                              echo '<img src="'.PROTOCOLO_CONEXION.$ruta.'/firmas/blanco.gif" width="'.$ancho_firma[0]["valor"].'" height="'.$alto_firma[0]["valor"].'" ><br />';
+                              echo '<img src="'.PROTOCOLO_CONEXION.$ruta.'/firmas/blanco.gif" style="width:'.$ancho_firma[0]["valor"].'px; height:'.$alto_firma[0]["valor"].'px;" ><br />';
                            echo "".mayusculas($fila["nombres"]." ".$fila["apellidos"])."&nbsp;&nbsp;&nbsp;<br />";
                           if($cargos["numcampos"])
                             {for($h=0;$h<$cargos["numcampos"];$h++)
@@ -1652,7 +1661,7 @@ global $conn,$idfactura;
 						}
 
 						if($fila["nombre"]=="POR_APROBAR"){
-							echo '<td align=left><img src="'.PROTOCOLO_CONEXION.RUTA_PDF_LOCAL.'/firmas/faltante.jpg" width="'.$ancho_firma[0]["valor"].'" height="'.$alto_firma[0]["valor"].'">&nbsp;&nbsp;&nbsp;<br /></td>';
+							echo '<td align=left><img src="'.PROTOCOLO_CONEXION.RUTA_PDF_LOCAL.'/firmas/faltante.jpg" style="width:'.$ancho_firma[0]["valor"].'px; height:'.$alto_firma[0]["valor"].'px;">&nbsp;&nbsp;&nbsp;<br /></td>';
 							if($iniciales == ($fila["funcionario_codigo"]))
 							$firma_actual = true;
 						}else if($mostrar_firmas==1){
@@ -1661,9 +1670,9 @@ global $conn,$idfactura;
 							if($firma[0]["firma"]<>""){
 								$pagina_actual=$_SERVER["PHP_SELF"];
 								echo '<img src="'.PROTOCOLO_CONEXION.RUTA_PDF_LOCAL.'/formatos/librerias/mostrar_foto.php?codigo='.$fila["funcionario_codigo"];
-								echo '" width="'.$ancho_firma[0]["valor"].'" height="'.$alto_firma[0]["valor"].'"/><br />';
+								echo '" style="width:'.$ancho_firma[0]["valor"].'px; height:'.$alto_firma[0]["valor"].'px;"/><br />';
 							}else
-								echo '<img src="'.PROTOCOLO_CONEXION.RUTA_PDF_LOCAL.'/firmas/blanco.jpg" width="100" height="'.$alto_firma[0]["valor"].'" ><br />';
+								echo '<img src="'.PROTOCOLO_CONEXION.RUTA_PDF_LOCAL.'/firmas/blanco.jpg" style="width:'.$ancho_firma[0]["valor"].'px; height:'.$alto_firma[0]["valor"].'px;" ><br />';
 
 							echo "<strong>".mayusculas($fila["nombres"]." ".$fila["apellidos"])."</strong>&nbsp;&nbsp;&nbsp;<br />";
 							if($cargos["numcampos"]){
@@ -1674,7 +1683,7 @@ global $conn,$idfactura;
 								$firma_actual = true;
 							echo "</td>";
 						}else{
-							echo "<td align='left'><img src='".PROTOCOLO_CONEXION.RUTA_PDF_LOCAL."/firmas/blanco.jpg' width='".$ancho_firma[0]["valor"]."' height='".$alto_firma[0]["valor"]."'>
+							echo "<td align='left'><img src='".PROTOCOLO_CONEXION.RUTA_PDF_LOCAL."/firmas/blanco.jpg' style='width:".$ancho_firma[0]["valor"]."px; height:".$alto_firma[0]["valor"]."px;'>
 							<br /><b>".mayusculas($fila["nombres"]." ".$fila["apellidos"])."</b>&nbsp;&nbsp;&nbsp;<br />";
 							if($cargos["numcampos"]){
 								for($h=0;$h<$cargos["numcampos"];$h++)
@@ -1865,7 +1874,7 @@ function transferencias_pendientes($serie)
 function radicar_plantilla() {
 	global $conn, $sql;
 	global $ruta_db_superior;
-	// print_r($_REQUEST); die("aquiii");
+	//print_r($_REQUEST); die("aquiii");
 	$valores = array();
 	$plantilla = "";
 	$idformato = 0;
@@ -2130,69 +2139,63 @@ function radicar_plantilla() {
 */
 function enrutar_documento($pagina_siguiente=""){
 global $conn;
-$formato_envio="";
-$ruta_def="";
+	$formato_envio = "";
+	$ruta_def = "";
 
-if($pagina_siguiente<>"")
- $ruta_def=$pagina_siguiente;
-else if(strpos(".php",$_SESSION["pagina_actual"]))
-  abrir_url($_SESSION["pagina_actual"],"centro");
+	if ($pagina_siguiente != "") {
+		$ruta_def = $pagina_siguiente;
+	} else if (strpos(".php", $_SESSION["pagina_actual"])) {
+		abrir_url($_SESSION["pagina_actual"], "centro");
+	}
+	if (isset($_POST["iddoc"]) && $_POST["iddoc"] && $ruta_def == "") {
+		if (isset($_REQUEST["anterior"]) && $_REQUEST["anterior"]) {
+			$formato_doc = busca_filtro_tabla("A.nombre,A.idformato,ruta_mostrar,nombre_tabla", "formato A, documento B", "B.iddocumento=" . $_REQUEST["anterior"] . " AND lower(A.nombre)=lower(B.plantilla)", "", $conn);
+			// para ver si el formato actual es hijo del anterior o es solo una respuesta
+			$formato_hijo = busca_filtro_tabla("A.*", "formato A, documento B", "B.iddocumento=" . $_POST["iddoc"] . " AND lower(A.nombre)=lower(B.plantilla)", "", $conn);
 
-if(isset($_POST["iddoc"]) && $_POST["iddoc"] && $ruta_def=="")
-{
-  if(isset($_REQUEST["anterior"])&&$_REQUEST["anterior"])
-  {
-    $formato_doc=busca_filtro_tabla("A.nombre,A.idformato,ruta_mostrar,nombre_tabla","formato A, documento B","B.iddocumento=".$_REQUEST["anterior"]." AND lower(A.nombre)=lower(B.plantilla)","",$conn);
-    //para ver si el formato actual es hijo del anterior o es solo una respuesta
-    $formato_hijo=busca_filtro_tabla("A.*","formato A, documento B","B.iddocumento=".$_POST["iddoc"]." AND lower(A.nombre)=lower(B.plantilla)","",$conn);
-
-     if($formato_hijo[0]["cod_padre"]>0 && is_file("formatos/".$formato_hijo[0]["nombre"]."/".$formato_hijo[0]["ruta_mostrar"]))
-      {echo "<script>
+			if ($formato_hijo[0]["cod_padre"] > 0 && is_file(FORMATOS_CLIENTE . $formato_hijo[0]["nombre"] . "/" . $formato_hijo[0]["ruta_mostrar"])) {
+				echo "<script>
              direccion=new String(window.parent.frames[0].location);
              vector=direccion.split('&');
-             window.parent.frames[0].location=vector[0]+'&'+vector[1]+'&seleccionar=".$formato_hijo[0]["idformato"]."-".$formato_doc[0]["nombre_tabla"]."-".$formato_hijo[0]["nombre_tabla"]."-".$_POST["iddoc"]."';
+             window.parent.frames[0].location=vector[0]+'&'+vector[1]+'&seleccionar=" . $formato_hijo[0]["idformato"] . "-" . $formato_doc[0]["nombre_tabla"] . "-" . $formato_hijo[0]["nombre_tabla"] . "-" . $_POST["iddoc"] . "';
             </script>";
-       die();
-      }
-   else
-     {$formato_doc=$formato_hijo;
-      if($formato_doc["numcampos"])
-         $nom_formato=$formato_doc[0]["nombre"];
-			//Cuando el documento es creado como una respuesta
-        abrir_url("formatos/$nom_formato/detalles_mostrar_$nom_formato.php?idformato=".$formato_doc[0]["idformato"]."&iddoc=".$_POST["iddoc"],"_self");
-          die();
-     }
-die();
-  }
-  else
-    {
-     if(isset($_REQUEST["firmado"]) && $_REQUEST["firmado"]=="varias")
-       {abrir_url("formatos/librerias/rutaadd.php?doc=".$_POST["iddoc"]."&origen=".usuario_actual("funcionario_codigo"),"centro");
-        die();
-       }
-     else
-       {$formato_doc=busca_filtro_tabla("A.nombre,A.idformato","formato A, documento B","B.iddocumento=".$_POST["iddoc"]." AND lower(A.nombre)=lower(B.plantilla)","",$conn);
-       if($formato_doc["numcampos"])
-        {$nom_formato=$formato_doc[0]["nombre"];
-	   		if(@$_SESSION["tipo_dispositivo"]=='movil'){
-	   			 abrir_url("ordenar.php?key=".$_POST["iddoc"]."&accion=mostrar&mostrar_formato=1","_self");
-	   		}else{
-				 //Cuando el documento es creado por el modulo formatos
-       			 abrir_url("formatos/$nom_formato/detalles_mostrar_$nom_formato.php?idformato=".$formato_doc[0]["idformato"]."&iddoc=".$_POST["iddoc"],"_self");
-	   		}
-        die();
-        }
-       }
-    }
-}
-$ruta_def="pendienteslist.php?cmd=resetall";
-if(strpos($ruta_def,"iddoc")===false){
-  if(strpos($ruta_def,"?")===false){
-    $ruta_def.="?iddoc=".$_POST["iddoc"];
-  }
-  else $ruta_def.="&idddoc=".$_POST["iddoc"];
-}
-abrir_url($ruta_def,"centro");
+				die();
+			} else {
+				$formato_doc = $formato_hijo;
+				if ($formato_doc["numcampos"])
+					$nom_formato = $formato_doc[0]["nombre"];
+					// Cuando el documento es creado como una respuesta
+				abrir_url(FORMATOS_CLIENTE . "$nom_formato/detalles_mostrar_$nom_formato.php?idformato=" . $formato_doc[0]["idformato"] . "&iddoc=" . $_POST["iddoc"], "_self");
+				die();
+			}
+			die();
+		} else {
+			if (isset($_REQUEST["firmado"]) && $_REQUEST["firmado"] == "varias") {
+				abrir_url("formatos/librerias/rutaadd.php?doc=" . $_POST["iddoc"] . "&origen=" . usuario_actual("funcionario_codigo"), "centro");
+				die();
+			} else {
+				$formato_doc = busca_filtro_tabla("A.nombre,A.idformato", "formato A, documento B", "B.iddocumento=" . $_POST["iddoc"] . " AND lower(A.nombre)=lower(B.plantilla)", "", $conn);
+				if ($formato_doc["numcampos"]) {
+					$nom_formato = $formato_doc[0]["nombre"];
+					if (@$_SESSION["tipo_dispositivo"] == 'movil') {
+						abrir_url("ordenar.php?key=" . $_POST["iddoc"] . "&accion=mostrar&mostrar_formato=1", "_self");
+					} else {
+						// Cuando el documento es creado por el modulo formatos
+						abrir_url(FORMATOS_CLIENTE . "$nom_formato/detalles_mostrar_$nom_formato.php?idformato=" . $formato_doc[0]["idformato"] . "&iddoc=" . $_POST["iddoc"], "_self");
+					}
+					die();
+				}
+			}
+		}
+	}
+	$ruta_def = "pendienteslist.php?cmd=resetall";
+	if (strpos($ruta_def, "iddoc") === false) {
+		if (strpos($ruta_def, "?") === false) {
+			$ruta_def .= "?iddoc=" . $_POST["iddoc"];
+		} else
+			$ruta_def .= "&idddoc=" . $_POST["iddoc"];
+	}
+	abrir_url($ruta_def, "centro");
 }
 
 /*
@@ -3006,7 +3009,7 @@ if($transferencias["numcampos"]){
 
   $mostar_formato_devolver=busca_filtro_tabla('','documento a, formato b','b.nombre=lower(a.plantilla) AND a.iddocumento='.$iddoc,'',$conn);
 
-  redirecciona($ruta_db_superior."formatos/".$mostar_formato_devolver[0]['nombre']."/mostrar_".$mostar_formato_devolver[0]['nombre'].".php?iddoc=".$iddoc."&idformato=".$mostar_formato_devolver[0]['idformato']);
+  redirecciona($ruta_db_superior. FORMATOS_CLIENTE .$mostar_formato_devolver[0]['nombre']."/mostrar_".$mostar_formato_devolver[0]['nombre'].".php?iddoc=".$iddoc."&idformato=".$mostar_formato_devolver[0]['idformato']);
   //redirecciona($ruta_db_superior."vacio.php");
 }
 //<img style="vertical-align:middle" src="'.PROTOCOLO_CONEXION.RUTA_PDF.'/botones/comentarios/devolver_documento.png" border="0">

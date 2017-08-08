@@ -2,6 +2,9 @@
 include_once("header.php");
 include_once("db.php");
 include_once("librerias_saia.php");
+
+include_once("pantallas/lib/librerias_cripto.php");
+desencriptar_sqli('form_info');
 echo(estilo_bootstrap() );
 echo(librerias_jquery("1.7"));
 if(@$_REQUEST["key"] && @$_REQUEST["accion"]=='seleccionar_etiqueta'){
@@ -42,29 +45,29 @@ if(!isset($_REQUEST["accion"]))
           <td colspan='3'>OPCIONES</td>
           </tr>";
     for($i=0;$i<$etiquetas["numcampos"];$i++)
-      {$documentos=busca_filtro_tabla("count(*)","documento_etiqueta,documento,etiqueta","etiqueta_idetiqueta=idetiqueta and funcionario='".$usuario."' and documento_iddocumento=iddocumento and estado<>'ELIMINADO' and etiqueta_idetiqueta='".$etiquetas[$i]["idetiqueta"]."'","",$conn); 
-  
+      {$documentos=busca_filtro_tabla("count(*)","documento_etiqueta,documento,etiqueta","etiqueta_idetiqueta=idetiqueta and funcionario='".$usuario."' and documento_iddocumento=iddocumento and estado<>'ELIMINADO' and etiqueta_idetiqueta='".$etiquetas[$i]["idetiqueta"]."'","",$conn);
+
        echo "<tr align='center'><td>".$etiquetas[$i]["nombre"]."</td>
             <td>".$documentos[0][0]."</td>
             <td><a href='etiqueta.php?accion=editar&key=".$etiquetas[$i]["idetiqueta"]."' onclick='return hs.htmlExpand(this, { objectType: \"iframe\",width: 400, height:200,preserveContent:false } )'>Editar</a></td>
             <td><a href='JavaScript:eliminar_etiqueta(\"".$etiquetas[$i]["idetiqueta"]."\")'>Eliminar</a></td>
             <td><a href='etiquetalist.php?etiqueta=".$etiquetas[$i]["idetiqueta"]."'>Ver documentos</a>
             </td></tr>";
-     }       
-    
+     }
+
     $documentos=busca_filtro_tabla("count(*)","documento","iddocumento NOT IN (SELECT DISTINCT documento_iddocumento FROM documento_etiqueta, etiqueta WHERE etiqueta_idetiqueta = idetiqueta AND privada_saia=0 and funcionario = '$usuario') AND iddocumento IN (
-SELECT DISTINCT archivo_idarchivo FROM buzon_salida b  WHERE (b.destino = '$usuario' OR origen='$usuario') and b.nombre not like 'ELIMINADO_%') AND estado<>'ELIMINADO'","",$conn); 
-  //  print_r($documentos);        
+SELECT DISTINCT archivo_idarchivo FROM buzon_salida b  WHERE (b.destino = '$usuario' OR origen='$usuario') and b.nombre not like 'ELIMINADO_%') AND estado<>'ELIMINADO'","",$conn);
+  //  print_r($documentos);
     echo "<tr align='center'><td>Sin etiqueta</td>
             <td>".$documentos[0][0]."</td>
             <td>&nbsp;</td>
             <td>&nbsp;</td>
             <td><a href='etiquetalist.php'>Ver documentos</a>
-            </td></tr>";         
+            </td></tr>";
     echo "</table>";
    }
  else
-   echo "No hay etiquetas para mostrar.";  
+   echo "No hay etiquetas para mostrar.";
 }
 elseif($_REQUEST["accion"]=="eliminar")
 {global $conn;
@@ -73,15 +76,15 @@ elseif($_REQUEST["accion"]=="eliminar")
  $sql="delete from documento_etiqueta where etiqueta_idetiqueta='".$_REQUEST["key"]."'";
  phpmkr_query($sql,$conn);
  alerta("Etiqueta eliminada.");
- redirecciona("etiqueta.php");   
+ redirecciona("etiqueta.php");
 }
 elseif($_REQUEST["accion"]=="adicionar"||$_REQUEST["accion"]=="editar")
 {global $conn;
  if($_REQUEST["accion"]=="editar")
-   $dato=busca_filtro_tabla("","etiqueta","idetiqueta=".$_REQUEST["key"],"",$conn); 
+   $dato=busca_filtro_tabla("","etiqueta","idetiqueta=".$_REQUEST["key"],"",$conn);
  echo "<br /><br /><p><span class='internos'>".strtoupper($_REQUEST["accion"]." Etiqueta")."</p></span><br /><br />";
  ?>
- <form name="form1" method="post">
+ <form name="form1" id="form1" method="post">
  <table>
  <tr>
  <td class="encabezado">NOMBRE*</td>
@@ -89,9 +92,9 @@ elseif($_REQUEST["accion"]=="adicionar"||$_REQUEST["accion"]=="editar")
  </tr>
  <td >
  	<br/>
- 	
+
  	<input type="button" class="btn btn-mini btn-danger" value="Cancelar" onclick="window.parent.hs.close();">
- <input type="button" value="Guardar"  class="btn btn-mini btn-primary" onclick="if(form1.nombre.value!='')form1.submit(); else alert('Debe llenar el campo nombre');">
+ <input type="button" value="Guardar"  class="btn btn-mini btn-primary" onclick="validar_nombre()">
  <input type="hidden" name="accion" value="guardar_<?php echo $_REQUEST["accion"]; ?>">
  <input type="hidden" name="key" value="<?php echo $_REQUEST["key"]; ?>">
  </td>
@@ -99,10 +102,19 @@ elseif($_REQUEST["accion"]=="adicionar"||$_REQUEST["accion"]=="editar")
  </table>
  </form>
  <script>
+ function validar_nombre(){
+ 	if(form1.nombre.value!=''){
+ 		<?php encriptar_sqli("form1"); ?>		
+		if(salida_sqli){
+			form1.submit();
+		} 
+ 	}else alert('Debe llenar el campo nombre');
+ }
+ 
  document.getElementById("header").style.display="none";
  document.getElementById("ocultar").style.display="none";
  </script>
- <?php  
+ <?php
 }
 elseif($_REQUEST["accion"]=="guardar_adicionar")
 {global $conn;
@@ -117,9 +129,9 @@ elseif($_REQUEST["accion"]=="guardar_adicionar")
     if($id)
       alerta("Etiqueta creada.");
     else
-      alerta("No se pudo crear la etiqueta.");  
+      alerta("No se pudo crear la etiqueta.");
    }
- echo '<script>window.parent.hs.close();window.parent.location=window.parent.location;</script>';    
+ echo '<script>window.parent.hs.close();window.parent.location=window.parent.location;</script>';
 }
 elseif($_REQUEST["accion"]=="guardar_editar")
 {global $conn;
@@ -129,7 +141,7 @@ elseif($_REQUEST["accion"]=="guardar_editar")
  else
    {$sql="update etiqueta set nombre='".$_REQUEST["nombre"]."' where idetiqueta='".$_REQUEST["key"]."'";
     phpmkr_query($sql,$conn);
-    alerta("Etiqueta editada.");  
+    alerta("Etiqueta editada.");
    }
  echo '<script>window.parent.hs.close();window.parent.location="etiqueta.php";</script>';
 }
@@ -150,41 +162,41 @@ elseif($_REQUEST["accion"]=="seleccionar_etiqueta")
     hs.graphicsDir = 'anexosdigitales/highslide-4.0.10/highslide/graphics/';
     hs.outlineType = 'rounded-white';
 </script>
- <br /><br /><p><span class="internos">ETIQUETAR DOCUMENTO</span></p><br /><br /><form name='form1' method='post'>
+ <br /><br /><p><span class="internos">ETIQUETAR DOCUMENTO</span></p><br /><br /><form id="form1" name='form1' method='post'>
 
 		<ul class="nav nav-tabs">
 		 <li ><a href='etiqueta.php?accion=adicionar' onclick='return hs.htmlExpand(this, { objectType: "iframe",width: 400, height:200,preserveContent:false } )'>Adicionar Etiqueta</a ></li>
 		</ul>
  <br />
- <?php 
+ <?php
  if($etiquetas['numcampos']){
  ?>
- <table border="0" cellspacing="1" cellpadding="4" bgcolor="#CCCCCC"  width="100%"><tr><td  class="encabezado">Etiquetas: 
+ <table border="0" cellspacing="1" cellpadding="4" bgcolor="#CCCCCC"  width="100%"><tr><td  class="encabezado">Etiquetas:
  </td><td bgcolor="#F5F5F5">
 
- <?php 
- $max_etiquetas=1;   
+ <?php
+ $max_etiquetas=1;
  for($i=0;$i<$etiquetas["numcampos"];$i++)
     {echo "<input type='checkbox' name='etiquetas[]' value='".$etiquetas[$i]["idetiqueta"]."'";
      if(in_array($etiquetas[$i]["idetiqueta"],$seleccionados)){
      	echo " checked ";
      }
-        
+
      echo ">&nbsp;".$etiquetas[$i]["nombre"]."&nbsp;&nbsp;&nbsp;&nbsp;";
-    
+
      if($max_etiquetas==4){
      	echo('<br/><br/>');
      	$max_etiquetas=1;
      }else{
      	$max_etiquetas++;
      }
-	  
+
     }
  ?>
 
- 	
+
  <!-- select id='etiquetas' name='etiquetas[]' multiple='multiple'>
- <?php    
+ <?php
  for($i=0;$i<$etiquetas["numcampos"];$i++)
     {echo "<option value='".$etiquetas[$i]["idetiqueta"]."'";
      if(in_array($etiquetas[$i]["idetiqueta"],$seleccionados))
@@ -193,25 +205,25 @@ elseif($_REQUEST["accion"]=="seleccionar_etiqueta")
     }
  ?>
  </select -->
- 
+
  </td></tr>
  <tr><td colspan=2>
 	<br/>
- <input type='hidden' name='documento' value='<?php echo $_REQUEST["key"]; ?>'>
+ <input type='hidden' name='key' value='<?php echo $_REQUEST["key"]; ?>'>
  <input type='hidden' name='accion' value='etiquetar_documento'>
  </table>
- <?php 
+ <?php
   }
  ?>
- 
+
      <input type="button" class="btn btn-mini btn-danger" value="Cancelar" onclick="window.history.back(-1);">
- <?php 
+ <?php
  if($etiquetas['numcampos']){
- ?>     
+ ?>
     <input type="submit"  class="btn btn-mini btn-primary"value="Guardar">
-  <?php 
+  <?php
   }
- ?>   
+ ?>
  </form>
  <script>
  $(document).ready(function() {
@@ -221,8 +233,12 @@ elseif($_REQUEST["accion"]=="seleccionar_etiqueta")
 // document.getElementById("ocultar").style.display="none";
  </script>
  <?php
+	encriptar_sqli("form1",1); 
 }
 elseif($_REQUEST["accion"]=="etiquetar_documento"){
+	//print_r($_REQUEST);die();
+	
+	//$_REQUEST['etiquetas']=explode(",", $_REQUEST['etiquetas']);
 global $conn;
  $sql2="delete from documento_etiqueta where etiqueta_idetiqueta in(select idetiqueta from etiqueta where privada_saia=0 and funcionario='".$usuario."') and documento_iddocumento='".$_REQUEST["key"]."'";
  phpmkr_query($sql2,$conn);
@@ -237,11 +253,12 @@ global $conn;
       $("#div_actualizar_info_index",top.document).click();
   </script>
   <?php
-  abrir_url("formatos/".$formato[0]['nombre']."/".$formato[0]['ruta_mostrar']."?iddoc=".$_REQUEST["key"]."&idformato=".$formato[0]['idformato'],"_self");
+  abrir_url(FORMATOS_CLIENTE.$formato[0]['nombre']."/".$formato[0]['ruta_mostrar']."?iddoc=".$_REQUEST["key"]."&idformato=".$formato[0]['idformato'],"_self");
 }
+
 include_once("footer.php");
 ?>
-<script>
+<script> 
 function eliminar_etiqueta(id)
 {if(confirm("�En realidad desea eliminar la etiqueta?"))
    window.location="etiqueta.php?accion=eliminar&key="+id;

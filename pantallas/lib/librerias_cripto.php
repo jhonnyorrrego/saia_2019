@@ -31,7 +31,7 @@ function encrypt_blowfish($data,$key){
 	$iv_size = mcrypt_get_iv_size(MCRYPT_BLOWFISH, MCRYPT_MODE_CBC);
   //die($iv_size);
 	$iv = mcrypt_create_iv($iv_size, MCRYPT_RAND);
-	$crypttext = mcrypt_encrypt(MCRYPT_BLOWFISH, $key, $data, MCRYPT_MODE_CBC, 
+	$crypttext = mcrypt_encrypt(MCRYPT_BLOWFISH, $key, $data, MCRYPT_MODE_CBC,
 $iv);
 	return trim(bin2hex($iv . $crypttext));
 }
@@ -64,6 +64,141 @@ function request_encriptado($param="key_cripto"){
 	}
 	return($parametros);
 }
+function validar_enteros(){
+global $validar_enteros;
+
+if(isset($validar_enteros)){
+  foreach($validar_enteros AS $key=>$valor){
+  	
+    if(@$_REQUEST[$valor] && !preg_match("/^[0-9]+$/", @$_REQUEST[$valor])){
+      return($valor);
+    }
+  }
+}
+return(false);
+}
+
+function desencriptar_sqli($campo_info){
+
+  if(strpos("script",$_SERVER["PHP_SELF"])!==false){
+     die("Se encuentra una posible infecci&oacute;n en su c&oacute;digo, a trav&eacute;s DOM-based cross site scripting, por favor contacte a su administrador");
+  }
+
+	if (array_key_exists($campo_info, $_POST) ) {
+    $data = json_decode(@$_POST[$campo_info], true);
+    unset($_REQUEST);
+    unset($_POST);
+    $cant=count($data);
+	if($_SESSION["token_csrf"]!==$data["token_csrf"]){
+		alerta("Error de validacion del formulario por favor intente de nuevo (Posible Error: CSRF) ");
+		unset($_REQUEST["token_csrf"]);
+		unset($_SESSION["token_csrf"]);
+		return;		
+	}
+	
+    for($i = 0; $i < $cant; $i ++) {
+	  if(@$data[$i]["es_arreglo"]){
+        $_REQUEST[decrypt_blowfish($data[$i]["name"], LLAVE_SAIA_CRYPTO)] = explode(",",decrypt_blowfish($data[$i]["value"], LLAVE_SAIA_CRYPTO));
+      }
+      else{
+        $_REQUEST[decrypt_blowfish($data[$i]["name"], LLAVE_SAIA_CRYPTO)] = decrypt_blowfish($data[$i]["value"], LLAVE_SAIA_CRYPTO);
+      }
+      if(@$data[$i]["es_arreglo"]){
+        $_POST[decrypt_blowfish($data[$i]["name"], LLAVE_SAIA_CRYPTO)] = explode(",",decrypt_blowfish($data[$i]["value"], LLAVE_SAIA_CRYPTO));
+      }
+      else{
+        $_POST[decrypt_blowfish($data[$i]["name"], LLAVE_SAIA_CRYPTO)] = decrypt_blowfish($data[$i]["value"], LLAVE_SAIA_CRYPTO);
+      }
+    }
+	
+	  $error=validar_enteros();
+	  if($error!==false){
+	  	unset($_REQUEST);
+		unset($_POST);
+	    die("Se encuentra una posible infecci&oacute;n en su c&oacute;digo, en la llave: ".$_REQUEST[$error]." (debe ser un entero),por favor contacte a su administrador");
+	    //volver(1);
+    }
+}
+unset($_REQUEST["token_csrf"]);
+unset($_SESSION["token_csrf"]);
+
+return;
+}
+function encriptar_sqli($nombre_form,$submit=false,$campo_info="form_info",$ruta_superior="",$retorno=false,$reset_form=true){
+	global $ruta_db_superior;
+
+$texto='';
+if ($submit) {
+	$texto.='<script type="text/javascript">  <!-- ';
+	
+	$texto.=' $(document).ready(function(){ ';
+}
+
+$texto.='
+	if(!$("#'.$campo_info.'").length){
+		$("#'.$nombre_form.'").append('."'".'<input type="hidden" id="'.$campo_info.'" name="'.$campo_info.'">'."'".');
+	}
+';
+
+
+if ($submit) {
+	$texto.='$("#'.$nombre_form.'").submit(function(event){';
+}
+
+	//correccion tiny no enviaba la info actualizada
+	$texto.='
+	
+	if($(".tiny_formatos").length){
+		
+		$.each( ".tiny_formatos", function() {
+			var id_textarea=$(this).attr("id");
+			var contenido_textarea=tinyMCE.get(id_textarea).getContent(); 
+			$("#"+id_textarea).val(contenido_textarea);
+		});
+		
+	}
+	
+	';
+
+	$texto.='salida_sqli = false;
+      $.ajax({
+        type:"POST",
+        async: false,
+        url: "'.$ruta_superior.'formatos/librerias/encript_data.php",
+        data: {datos:JSON.stringify($("#'.$nombre_form.'").serializeArray())},
+        success: function(data) {
+					//$("#'.$nombre_form.'")[0].reset();
+	';
+	if($reset_form){
+		$texto.='
+			$("#'.$nombre_form.'").find("input:hidden,input:text, input:password, select, textarea").val("");
+    		$("#'.$nombre_form.'").find("input:radio, input:checkbox").removeAttr("checked").removeAttr("selected");
+		';	
+	}
+	$texto.='			
+          $("#'.$campo_info.'").val(data);
+          salida_sqli = true;
+        }
+      });';
+if ($submit) {
+	$texto.='return salida_sqli;
+			event.preventDefault();
+	  });
+	
+	});
+		-->
+	 </script>';
+}
+
+	if($retorno){
+		return($texto);
+	}
+	else{
+		echo($texto);
+	}
+	return;
+}
+
 function seguridad_externa($data){
 	global $ruta_db_superior;
 	
@@ -88,5 +223,4 @@ function seguridad_externa($data){
 	}
 	return(false);
 }
-
 ?>

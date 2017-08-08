@@ -12,7 +12,7 @@ $max_salida--;
 }
 include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."librerias_saia.php"); 
-
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
 echo(librerias_jquery('1.7'));
 echo(estilo_bootstrap());
 echo(librerias_notificaciones());
@@ -82,15 +82,21 @@ echo(librerias_notificaciones());
 		      <tr >
 		      	<td style="text-align:center;" id="titulo_mostrar">
 					<!-- Text input-->
+					<form name="form_actualizar_titulo" id="form_actualizar_titulo" method="post">
 					    <input id="titulo" name="titulo" type="text" placeholder="Titulo" class="input-xlarge">	
 					    <br/>    
-					    <input type="button" id="actualizar_titulo" name="actualizar_titulo" class="btn btn-primary" value="Actualizar" />  		
+					    <input type="hidden" name="actualizar_titulo" value="actualizar_titulo">
+					    <input type="button" id="actualizar_titulo" name="actualizar_titulo" class="btn btn-primary" value="Actualizar" />  
+					</form>		
 		      	</td>
 		      	<td style="text-align:center;" id="subtitulo_mostrar">
 					<!-- Text input-->
+					<form name="form_actualizar_subtitulo" id="form_actualizar_subtitulo" method="post">
 					    <input id="subtitulo" name="subtitulo" type="text" placeholder="Subtitulo" class="input-xlarge">
+					    <input type="hidden" name="actualizar_subtitulo" value="actualizar_subtitulo" />
 					    <br/>    
-					    <input type="button" id="actualizar_subtitulo" name="actualizar_subtitulo" class="btn btn-primary" value="Actualizar" />  						    
+					    <input type="button" id="actualizar_subtitulo" name="actualizar_subtitulo" class="btn btn-primary" value="Actualizar" />  
+					</form>						    
 		      	</td>
 		      </tr>		    	
 		    </tbody>
@@ -113,14 +119,13 @@ echo(librerias_notificaciones());
 				
 				
 				if(confirm('Esta seguro de actualizar el titulo')){
+					<?php encriptar_sqli("form_actualizar_titulo",0,"form_info",$ruta_db_superior); ?>
+					
 					$.ajax({
 				        type:"POST",
 				        url: "noticia_procesar.php",	
 						dataType: "html",
-						 data: {
-                                  titulo:$('#titulo').val(),
-                                  actualizar_titulo:'actualizar_titulo'		   
-                        },    
+						 data: $("#form_actualizar_titulo").serialize(),    
 				        success: function(datos){
 				        	$('#titulo_mostrar').html('');       	
 				        	$('#titulo_mostrar').html(datos);  
@@ -142,15 +147,12 @@ echo(librerias_notificaciones());
 			}else{
 				
 				if(confirm('Esta seguro de actualizar el subtitulo')){				
-				
+				<?php encriptar_sqli("form_actualizar_subtitulo",0,"form_info",$ruta_db_superior); ?>
 					$.ajax({
 				        type:"POST",
 				        url: "noticia_procesar.php",	
 						dataType: "html",
-						 data: {
-                                  subtitulo:$('#subtitulo').val(),
-                                  actualizar_subtitulo:'actualizar_subtitulo'		   
-                        },    
+						 data: $("#form_actualizar_subtitulo").serialize(), 
 				        success: function(datos){
 				        	$('#subtitulo_mostrar').html('');       	
 				        	$('#subtitulo_mostrar').html(datos);  
@@ -167,4 +169,4 @@ echo(librerias_notificaciones());
 		});		
 	
 	});
-</script>
+</script>  	

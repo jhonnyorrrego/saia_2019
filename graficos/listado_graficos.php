@@ -1,6 +1,24 @@
 <?php
+$max_salida=10; // Previene algun posible ciclo infinito limitando a 10 los ../
+$ruta_db_superior=$ruta="";
+while($max_salida>0)
+{
+if(is_file($ruta."db.php"))
+{
+$ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
+}
+$ruta.="../";
+$max_salida--;
+}
+
 include_once("../db.php");
 include_once("../header.php");
+
+include_once($ruta_db_superior."librerias_saia.php");
+echo(librerias_jquery());
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+$validar_enteros=array("lgraficos","lreportes");
+desencriptar_sqli('form_info');
 ?>
 <script type="text/javascript" src="../anexosdigitales/highslide-4.0.10/highslide/highslide-with-html.js"></script>
 <link rel="stylesheet" type="text/css" href="../anexosdigitales/highslide-4.0.10/highslide/highslide.css" />
@@ -26,7 +44,7 @@ $texto.="<br /><br />".agrega_boton("texto","","elegir_filtro.php?accion=listar"
 
   if($lgraficos["numcampos"] && !isset($_REQUEST["lreportes"])){
     $texto.='<br /><br /><b>Seleccione del listado de graficos </b><br />';
-    $texto.='<form name="form_grafico" action="graficas.php"><table style="border-collapse:collapse" border="1" width="100%"><tr>';
+    $texto.='<form name="form_grafico" id="form_grafico" action="graficas.php"><table style="border-collapse:collapse" border="1" width="100%"><tr>';
     $perm=new PERMISO();
     for($i=0;$i<$lgraficos["numcampos"];$i++){
       $ok=FALSE;
@@ -57,7 +75,7 @@ $texto.="<br /><br />".agrega_boton("texto","","elegir_filtro.php?accion=listar"
   $lreporte=busca_filtro_tabla("r.*,m.nombre as modulo","reporte r,modulo m","modulo_idmodulo=idmodulo and r.estado=1".$wherer,"",$conn);
   //print_r($lreporte);
   if($lreporte["numcampos"]){
-    $texto.='<br /><br /><b>Seleccione del listado de Reportes</b> <br /><form name="form_reporte" method=post action="../exportar_reporte.php">
+    $texto.='<br /><br /><b>Seleccione del listado de Reportes</b> <br /><form name="form_reporte" id="form_reporte" method=post action="../exportar_reporte.php">
     <input type="hidden" name="idreporte" id="idreporte" value="">
     <input type="hidden" name="filtro_reporte" id="filtro_reporte" value="">
     <input type="hidden" name="etiquetasfiltroreporte" id="etiquetasfiltroreporte" value="">
@@ -100,5 +118,10 @@ function reporte(id,reporte,exportar)
  document.getElementById("export").value=exportar; 
  document.getElementById("etiquetasfiltroreporte").value=document.getElementById("etiquetasfiltroreporte"+id).value;
  form_reporte.submit();
+ <?php encriptar_sqli("form_reporte",0,"form_info",$ruta_db_superior); ?>		
+		if(salida_sqli){
+			form_reporte.submit();
+		}
+ 
 }
 </script>

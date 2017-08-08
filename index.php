@@ -11,27 +11,28 @@ while($max_salida>0){
 ?>
 <meta http-equiv="X-UA-Compatible" content="IE=9">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<?php 
+<?php
 include_once("db.php");
 include_once("librerias_saia.php");
 include_once("cargando.php");
-
+require_once('StorageUtils.php');
+require_once('filesystem/SaiaStorage.php');
 
 if(@$_REQUEST['texto_salir']){
-	
+
 
 	echo(librerias_jquery("1.7"));
 	echo(librerias_notificaciones());
-	
-	
+
+
 	?>
 		<script>
 			var texto_salir='<?php echo(@$_REQUEST['texto_salir']); ?>';
 			texto_salir='<b>ATENCION!</b><br>'+texto_salir;
 			notificacion_saia(texto_salir,'success','',4000);
 		</script>
-	<?php	
-	
+	<?php
+
 }
 
 
@@ -39,7 +40,7 @@ if(!isset($_SESSION["LOGIN".LLAVE_SAIA])){
   @session_name();
   @session_start();
   @ob_start();
-} 
+}
 include_once($ruta_db_superior."pantallas/lib/mobile_detect.php");
 $detect = new Mobile_Detect;
 if(@$_REQUEST["INDEX"]!=''){
@@ -51,9 +52,9 @@ if(@$_REQUEST["INDEX"]!=''){
 	$_SESSION["INDEX"]="mobile";
 }*/
 else{
-  $_REQUEST["INDEX"]="actualizacion"; 
+  $_REQUEST["INDEX"]="actualizacion";
   $_SESSION["INDEX"]="actualizacion";
-} 
+}
 
 
 $parametro_tarea='';
@@ -61,7 +62,7 @@ if(@$_SERVER['QUERY_STRING']){
 	$parametro=$_SERVER['QUERY_STRING'];
 	$parametro_uncrypt=base64_decode($parametro);
 	$vector_parametro=explode('=',$parametro_uncrypt);
-			
+
 	if(strtolower(@$vector_parametro[0])=='idtareas_listado_unico' && is_numeric(@$vector_parametro[1])){
 		$parametro_tarea='?'.$parametro;
 	}
@@ -73,16 +74,19 @@ if ( $detect->isMobile() ) {
 }
 date_default_timezone_set ("America/Bogota");
 if(isset($_REQUEST['sesion']))
-  $_SESSION["LOGIN".LLAVE_SAIA]=$_REQUEST['sesion']; 
+  $_SESSION["LOGIN".LLAVE_SAIA]=$_REQUEST['sesion'];
 if(@$_SESSION["LOGIN".LLAVE_SAIA]){
     $fondo=busca_filtro_tabla("A.valor","configuracion A","A.tipo='empresa' AND A.nombre='fondo'","A.fecha,A.valor DESC",$conn);
     almacenar_sesion(1,"");
     redirecciona("index_".$_SESSION["INDEX"].".php".$parametro_tarea);
 }
 $logo=busca_filtro_tabla("valor","configuracion","nombre='logo'","",$conn);
-$ruta_logo="imagenes/".$logo[0]["valor"];
-if($logo["numcampos"] && is_file($logo[0]["valor"])){
-  $ruta_logo=$logo[0]["valor"];
+//$ruta_logo="imagenes/".$logo[0]["valor"];
+$ruta_logo=$logo[0]["valor"];
+$tipo_almacenamiento = new SaiaStorage("archivos");
+$ruta_imagen=json_decode($logo[0]["valor"]);
+if(is_object($ruta_imagen)) {
+	$ruta_logo = StorageUtils::get_binary_file($ruta_logo);
 }
 ?>
 <html>
@@ -109,15 +113,15 @@ if($_SESSION["tipo_dispositivo"]=="movil"){
 ?>
 }
 </style>
-<?php 
+<?php
 include_once("css/index_estilos.php");
 echo(estilo_bootstrap());
-if(@$_SESSION["tipo_dispositivo"]=="movil"){ 
+if(@$_SESSION["tipo_dispositivo"]=="movil"){
     echo(index_estilos('temas_movil'));
     echo(index_estilos('temas_bootstrap'));
 }
 else{
-    echo(index_estilos('temas_index'));    
+    echo(index_estilos('temas_index'));
     echo(index_estilos('temas_main'));
 }
 ?>
@@ -131,7 +135,7 @@ $mayor_informacion=busca_filtro_tabla("valor","configuracion","nombre='mayor_inf
     <tr class="footer_login_text">
       <td width="1%" height="25">&nbsp;</td>
       <td>©<?php echo date(Y);?> CEROK</td>
-      <!--<td><a href="">Términos de uso y servicio - SAIA</a><sup>®</sup></td>-->
+      <!--<td><a href="">Términos de uso y servicio - SAIA</a><sup>&reg;</sup></td>-->
       <td>Para mayor información: <?php echo($mayor_informacion[0]["valor"]); ?></td>
       <td>
       </td>
@@ -150,10 +154,10 @@ $mayor_informacion=busca_filtro_tabla("valor","configuracion","nombre='mayor_inf
         }
     ?>
   <tr align="center">
-    <td colspan="3" align="center" valign="middle" id="LoginBkg"> 
+    <td colspan="3" align="center" valign="middle" id="LoginBkg">
       <div id="loginForm">
         <form method="post" name="loguin" id="formulario_login" action="login.php" class="form-horizontal">
-        <?php if($_SESSION["tipo_dispositivo"]=="movil"){ ?>    
+        <?php if($_SESSION["tipo_dispositivo"]=="movil"){ ?>
             <div class="control-group">
                 <label class="control-label blueTexts" for="inputEmail">Nombre de usuario:</label>
                 <div class="controls">
@@ -174,9 +178,9 @@ $mayor_informacion=busca_filtro_tabla("valor","configuracion","nombre='mayor_inf
                     <button name="boton_ui" type="button" class="btn btn-primary" id="ingresar">Iniciar sesi&oacute;n</button>
                     </p>
                   	<p id="contenedor_recordar_contrasena">
-                  	
+
                   	<a href="recordar_contrasena.php" style="cursor:pointer"  class="highslide" onclick="return hs.htmlExpand(this,{objectType:'iframe',width: 550, height: 300, preserveContent:false})">¿No puedes acceder a tu cuenta?</a>
-                  	</p> 
+                  	</p>
                 </div>
             </div>
         <?php }
@@ -185,7 +189,7 @@ $mayor_informacion=busca_filtro_tabla("valor","configuracion","nombre='mayor_inf
         <table width="700" border="0" cellspacing="0" cellpadding="0">
           <tr>
             <td height="25" colspan="5"><img class="pull-right" style="height: 30px;" src="asset/img/layout/logosaia.png"></td>
-          </tr> 
+          </tr>
           <tr>
             <td width="62" rowspan="2">&nbsp;</td>
             <td width="125" rowspan="2" align="left" valign="top">
@@ -223,11 +227,11 @@ $mayor_informacion=busca_filtro_tabla("valor","configuracion","nombre='mayor_inf
                     <button name="boton_ui" type="button" class="btn btn-primary" id="ingresar">Iniciar sesi&oacute;n</button>
                     </p>
                   	<p id="contenedor_recordar_contrasena">
-                  	
+
                   	<a href="recordar_contrasena.php" style="cursor:pointer" class="highslide"   onclick="return hs.htmlExpand(this,{objectType:'iframe',width: 550, height: 300, preserveContent:false})">¿No puedes acceder a tu cuenta?</a>
                   	</p>
-                  	
-                  	
+
+
                   </td>
                 </tr>
                 <tr>
@@ -241,7 +245,7 @@ $mayor_informacion=busca_filtro_tabla("valor","configuracion","nombre='mayor_inf
             <td>&nbsp;</td>
           </tr>
         </table>
-          
+
           <?php
         }
         ?>
@@ -250,7 +254,7 @@ $mayor_informacion=busca_filtro_tabla("valor","configuracion","nombre='mayor_inf
       </div>
     </td>
   </tr>
-	
+
 </table>
 
 
@@ -260,7 +264,7 @@ $mayor_informacion=busca_filtro_tabla("valor","configuracion","nombre='mayor_inf
 			<?php
 		      	$titulo_mostrar=busca_filtro_tabla('','configuracion','nombre="titulo_index"','',$conn);
 				$subtitulo_mostrar=busca_filtro_tabla('','configuracion','nombre="subtitulo_index"','',$conn);
-				
+
 				$texto_tabla="<p style='font-weight:bold;color: #4099D2;text-align:left;font-size:16px;'>".$titulo_mostrar[0]['valor']."<p>";
 				$texto_tabla.="<hr>";
 				$texto_tabla.="<p style='color:#4099D2;text-align:left;font-size:15px'>".$subtitulo_mostrar[0]['valor']."</p><br />";
@@ -282,7 +286,7 @@ $mayor_informacion=busca_filtro_tabla("valor","configuracion","nombre='mayor_inf
 					echo $texto_tabla;
 				}
 			?>
-		</div>	
+		</div>
 
 
 
@@ -300,28 +304,28 @@ $mayor_informacion=busca_filtro_tabla("valor","configuracion","nombre='mayor_inf
 var mensaje="<b>El nombre de usuario o contrase&ntilde;a introducidos no son correctos! </b> <br> intente de nuevo";
 var tiempo=3500;
 $("#tabla_principal").height($(window).height()-56);
-$("#ingresar").click(function(){	
+$("#ingresar").click(function(){
   if($("#userid").val() && $("#passwd").val()){
-      $('#contenedor_recordar_contrasena').css('pointer-events','none');  
+      $('#contenedor_recordar_contrasena').css('pointer-events','none');
   	//$("#formulario_login").submit();
     $.ajax({
       type:'POST',
       url: "verificar_login.php",
       data: "userid="+$("#userid").val()+"&passwd="+$("#passwd").val()+"&INDEX=<?php echo(@$_REQUEST['INDEX']);?>",
-      success: function(html){   
+      success: function(html){
         if(html){
           var objeto=jQuery.parseJSON(html);
-          mensaje=objeto.mensaje;          
+          mensaje=objeto.mensaje;
           if(objeto.ingresar==1){
             noty({text: mensaje,type: 'success',layout: "topCenter",timeout:tiempo});
              var ruta=objeto.ruta+'<?php  echo($parametro_tarea);?>';
             setTimeout(function(){window.location=ruta},(tiempo+100));
-          }  
+          }
           else{
-            $('#contenedor_recordar_contrasena').css('pointer-events','auto'); 
+            $('#contenedor_recordar_contrasena').css('pointer-events','auto');
             mensaje='<span style="color:white;">'+mensaje+'</span>';
             noty({text: mensaje,type: 'error',layout: "topCenter",timeout:tiempo});
-          }                         
+          }
         }
       },
       error:function(){
@@ -329,9 +333,9 @@ $("#ingresar").click(function(){
       }
     });
   }
-  else{                         
+  else{
     noty({text: "<span style='color:white;'>Por favor ingrese un usuario y una clave v&aacute;lidos! <br> intente de nuevo</span>",type: 'error',layout: "topCenter",timeout:tiempo});
-  }  
+  }
 });
 $(document).keypress(function(event) {
     var keycode = (event.keyCode ? event.keyCode : event.which);

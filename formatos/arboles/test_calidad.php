@@ -10,7 +10,7 @@ $ruta.="../";
 $max_salida--;
 }
 include_once($ruta_db_superior."db.php");
-include_once($ruta_db_superior."formatos/librerias/funciones_generales.php");
+include_once($ruta_db_superior . FORMATOS_SAIA . "/librerias/funciones_generales.php");
 
 header("Expires: Mon, 26 Jul 1997 05:00:00 GMT"); // date in the past
 header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT"); // always modified
@@ -25,7 +25,7 @@ else{
 }
 $imagenes="";
 $texto="<?xml version=\"1.0\" encoding=\"UTF-8\"?".">";
-include_once("../librerias/funciones_generales.php");
+include_once("../../" . FORMATOS_SAIA . "/librerias/funciones_generales.php");
 $formatos_calidad=array('ft_proceso','ft_politica_proceso','ft_manual_calidad','ft_procedimiento','ft_instructivo','ft_politica_proceso','ft_modelo_proceso','ft_levantamiento_procesos','ft_caracterizacion','ft_procesos_planeacion','ft_procedimientos','ft_formatos_proceso','ft_indicadores','ft_instructivos','ft_guias','ft_manuales','ft_otros');
 
 $id = @$_GET["id"];
@@ -49,15 +49,15 @@ function llenar_formatos(){
   crear_dato_formato('ft_manual_calidad');
   //llenar_macro();
  //crear_dato_formato('ft_macroproceso');
-  crear_dato_formato('ft_proceso'); 
-  
- 
+  crear_dato_formato('ft_proceso');
+
+
 }
 function crear_dato_formato($nombre,$where=null){
 global $texto,$conn,$imagenes,$formatos_calidad;
 $formato=busca_filtro_tabla("A.idformato,A.nombre,A.nombre_tabla,A.etiqueta","formato A","A.nombre_tabla LIKE '".$nombre."'","nombre DESC",$conn);
   if($formato["numcampos"]){
-    
+
     $imagenes=' im0="'.strtolower($formato[0]["nombre"]).'.gif" im1="'.strtolower($formato[0]["nombre"]).'.gif" im2="'.strtolower($formato[0]["nombre"]).'.gif" ';
     $iddoc=$formato[0]["idformato"]."-".$formato[0]["nombre"]."-".$formato[0]["nombre_tabla"];
     $texto.='<item style="font-family:verdana; font-size:7pt;" '.$imagenes;
@@ -120,7 +120,7 @@ $formato=busca_filtro_tabla("","formato","nombre_tabla='ft_macroproceso'","",$co
 $macro=busca_filtro_tabla("","ft_macroproceso A, documento B","A.documento_iddocumento=B.iiddocumento AND B.estado<>'ELIMINADO' AND B.estado<>'ANULADO'","",$conn);
 //print_r($formato);
 $idformato=$formato[0]["idformato"];
-for($i=0;$i<$macro["numcampos"];$i++){  
+for($i=0;$i<$macro["numcampos"];$i++){
   //echo($idformato."<br />");
   $imagenes='im0="'.strtolower($formato[0]["nombre"]).'.gif" im1="'.strtolower($formato[0]["nombre"]).'.gif" im2="'.strtolower($formato[0]["nombre"]).'.gif" ';
   $texto.='<item style="font-family:verdana; font-size:7pt;" '.$imagenes;

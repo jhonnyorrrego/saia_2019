@@ -11,7 +11,9 @@ while ($max_salida > 0) {
 include_once ($ruta_db_superior . "db.php");
 include_once ($ruta_db_superior . "sql.php");
 usuario_actual("login");
-
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+$validar_enteros=array("idbusqueda_componente");
+desencriptar_sqli('form_info');
 $filtro = '';
 $idbusqueda_temp = '';
 $retorno = array();
@@ -989,5 +991,4 @@ function parsear_cadena_tildes($cadena) {
 	$texto = str_replace($buscar, $reemplazar, $texto);
 	return $texto;
 }
-
-?>
+?>

@@ -7,10 +7,11 @@ while($max_salida>0){
   }
   $ruta.="../";
   $max_salida--;
-}    
-include_once($ruta_db_superior."db.php"); 
+}
+include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."class_transferencia.php");
 include_once($ruta_db_superior."formatos/librerias/funciones_formatos_generales.php");
+include_once($ruta_db_superior."pantallas/qr/librerias.php");
 /*
 <Clase>
 <Nombre>colilla
@@ -25,8 +26,8 @@ include_once($ruta_db_superior."formatos/librerias/funciones_formatos_generales.
 if(@$_REQUEST["validar"])
 	validar_confirmacion();
 clearstatcache();
-$no_cache = md5(time()); 
-$doc=FALSE; 
+$no_cache = md5(time());
+$doc=FALSE;
 if(@$_REQUEST["doc"] || @$_REQUEST["key"]){
   $doc=@$_REQUEST["key"];
   if(@$_REQUEST["doc"]){
@@ -34,7 +35,7 @@ if(@$_REQUEST["doc"] || @$_REQUEST["key"]){
   }
   //registrar_accion_digitalizacion($doc,'IMPRIME COLILLA');
 }else{
-	if(@$_REQUEST["generar_consecutivo"]){	
+	if(@$_REQUEST["generar_consecutivo"]){
 		validar_confirmacion_salida($_REQUEST["generar_consecutivo"],$_REQUEST["enlace"],$_REQUEST["enlace2"]);
 	}else if(@$_REQUEST["consecutivo"] && @$_REQUEST["salidas"]){
 		$formato=$_REQUEST["consecutivo"];
@@ -45,7 +46,7 @@ if(@$_REQUEST["doc"] || @$_REQUEST["key"]){
   $doc=generar_ingreso_formato($formato);
 }
 $plantilla=busca_filtro_tabla("","documento a, formato b","lower(plantilla)=b.nombre AND iddocumento=".$doc,"",$conn);
-$datos=busca_filtro_tabla("dependencia,numero,tipo_radicado,".fecha_db_obtener("A.fecha",'d/m/Y-H:i:s')." AS fecha_oracle,A.descripcion,lower(plantilla) AS plantilla,ejecutor,paginas,A.iddocumento","documento A, ".$plantilla[0]["nombre_tabla"]." B","A.iddocumento=$doc AND A.iddocumento=B.documento_iddocumento","",$conn); 
+$datos=busca_filtro_tabla("dependencia,numero,tipo_radicado,".fecha_db_obtener("A.fecha",'d/m/Y-H:i:s')." AS fecha_oracle,A.descripcion,lower(plantilla) AS plantilla,ejecutor,paginas,A.iddocumento","documento A, ".$plantilla[0]["nombre_tabla"]." B","A.iddocumento=$doc AND A.iddocumento=B.documento_iddocumento","",$conn);
 $dependencia_creador=busca_filtro_tabla("b.codigo","vfuncionario_dc a, dependencia b","b.iddependencia=a.iddependencia AND a.iddependencia_cargo=".$datos[0]['dependencia'],"",$conn);
 
 $ejecutor["numcampos"]='';
@@ -57,11 +58,11 @@ if(@$_REQUEST["enlace"]){
   else
     $enlace=$_REQUEST["enlace"]."?key=".$doc;
 }
-else{  
+else{
   if($datos[0]["plantilla"]){
     $plantilla = busca_filtro_tabla("B.*","documento A,formato B","'".strtolower($datos[0]["plantilla"])."'=lower(B.nombre) AND A.iddocumento=".$doc." AND lower(A.plantilla)=lower(B.nombre)","",$conn);
-	  
-    $enlace = $ruta_db_superior."formatos/".$plantilla[0]["nombre"]."/mostrar_".$plantilla[0]["nombre"].".php?iddoc=$doc&idformato=".$plantilla[0]["idformato"];
+
+    $enlace = $ruta_db_superior.FORMATOS_CLIENTE.$plantilla[0]["nombre"]."/mostrar_".$plantilla[0]["nombre"].".php?iddoc=$doc&idformato=".$plantilla[0]["idformato"];
   }
   else if(isset($_REQUEST["pagina"])){
     $atras=2;
@@ -80,10 +81,10 @@ if($_REQUEST["mostrar_formato"]){
 }
 if($doc<>FALSE){
   $ejecutor=busca_filtro_tabla("nombre AS nombre, empresa","ejecutor A,datos_ejecutor B","A.idejecutor=B.ejecutor_idejecutor AND iddatos_ejecutor=".$datos[0]["ejecutor"],"",$conn);
-  $radicador1=busca_filtro_tabla("nombres,apellidos","digitalizacion,funcionario","funcionario=funcionario_codigo and documento_iddocumento=$doc","",$conn); 
-  $radicador = busca_filtro_tabla("destino,D.nombre,B.nombres, B.apellidos","buzon_salida A,funcionario B,dependencia_cargo C,dependencia D","A.destino=B.funcionario_codigo AND B.idfuncionario=C.funcionario_idfuncionario AND C.dependencia_iddependencia=D.iddependencia AND A.archivo_idarchivo=$doc AND A.nombre='TRANSFERIDO'","A.idtransferencia ASC",$conn);  
+  $radicador1=busca_filtro_tabla("nombres,apellidos","digitalizacion,funcionario","funcionario=funcionario_codigo and documento_iddocumento=$doc","",$conn);
+  $radicador = busca_filtro_tabla("destino,D.nombre,B.nombres, B.apellidos","buzon_salida A,funcionario B,dependencia_cargo C,dependencia D","A.destino=B.funcionario_codigo AND B.idfuncionario=C.funcionario_idfuncionario AND C.dependencia_iddependencia=D.iddependencia AND A.archivo_idarchivo=$doc AND A.nombre='TRANSFERIDO'","A.idtransferencia ASC",$conn);
   $responsable=busca_filtro_tabla("B.nombres,B.apellidos","documento A,funcionario B","A.ejecutor=B.funcionario_codigo AND iddocumento=".$doc,"",$conn);
-     
+
     if($radicador["numcampos"]){
       $usu=$radicador[0]["nombre"];
     }
@@ -91,7 +92,7 @@ if($doc<>FALSE){
         if(strtolower($datos[0]["plantilla"])=='radicacion_entrada'){
             $destino_radicacion=busca_filtro_tabla("b.funcionario_codigo","ft_radicacion_entrada a, vfuncionario_dc b","a.destino=b.iddependencia_cargo AND a.documento_iddocumento=".$doc,"",$conn);
             $fun_destino=busca_filtro_tabla("nombres,apellidos","funcionario","funcionario_codigo=".$destino_radicacion[0]['funcionario_codigo'],"",$conn);
-            
+
             if($fun_destino['numcampos']){
                 $usu=$nombre_fun_destino=ucwords(strtolower( codifica_encabezado(html_entity_decode($fun_destino[0]["nombres"]." ".$fun_destino[0]["apellidos"])) ));
             }else{
@@ -100,72 +101,143 @@ if($doc<>FALSE){
         }else{
             $usu="RADICACION";
         }
-    } 
-      
+    }
+
   if($datos[0]["tipo_radicado"]==1){
     $numero_folios=busca_filtro_tabla("","ft_radicacion_entrada","documento_iddocumento=".$doc,"",$conn);
     $tipo_radicacion='E';
-    if($ejecutor["numcampos"]) 
+    if($ejecutor["numcampos"])
       $origen=ucwords(strtolower($responsable[0]["nombres"]." ".$responsable[0]["apellidos"]));
-    else 
-      $origen=ucwords(strtolower($responsable[0]["nombres"]." ".$responsable[0]["apellidos"]));    
+    else
+      $origen=ucwords(strtolower($responsable[0]["nombres"]." ".$responsable[0]["apellidos"]));
     $destino=$usu;
-  
+
   }
   else if($datos[0]["tipo_radicado"]==2){
     $numero_folios=busca_filtro_tabla("","ft_radicacion_entrada","documento_iddocumento=".$doc,"",$conn);
     $tipo_radicacion='I';
-    $origen=ucwords(strtolower($responsable[0]["nombres"]." ".$responsable[0]["apellidos"])); 
+    $origen=ucwords(strtolower($responsable[0]["nombres"]." ".$responsable[0]["apellidos"]));
     $destino=$ejecutor[0]["nombre"];
   }
   else{
     $origen=ucwords(strtolower($responsable[0]["nombres"]." ".$responsable[0]["apellidos"]));
     $destino=$radicador[0]["nombres"]." ".$radicador[0]["apellidos"];
   }
-  
-  //print_r($destino);die();
+
+  if(strtolower($datos[0]["plantilla"])=='radicacion_entrada'){
+  	include_once($ruta_db_superior. FORMATOS_CLIENTE . 'radicacion_entrada/funciones.php');
+
+  	$datos_origen_radicacion=validar_persona_origen_destino($doc,'origen');
+	$destinos_radicacion=busca_filtro_tabla("b.idft_destino_radicacion,b.nombre_destino,b.destino_externo,b.tipo_destino","ft_radicacion_entrada a, ft_destino_radicacion b","a.idft_radicacion_entrada=b.ft_radicacion_entrada AND a.documento_iddocumento=".$doc,"b.idft_destino_radicacion ASC",$conn);
+
+	$lista_nombres_origen='';
+	$lista_nombres_destino='';
+	for($i=0;$i<$destinos_radicacion['numcampos'];$i++){
+
+			//ORIGEN
+			$tabla_consulta=$datos_origen_radicacion['ft_destino_radicacion'][ $destinos_radicacion[$i]['idft_destino_radicacion'] ]['tabla_consulta'];
+			$tabla_campo=$datos_origen_radicacion['ft_destino_radicacion'][ $destinos_radicacion[$i]['idft_destino_radicacion'] ]['tabla_campo'];
+			$tabla_valor=$datos_origen_radicacion['ft_destino_radicacion'][ $destinos_radicacion[$i]['idft_destino_radicacion'] ]['tabla_valor'];
+
+			if($datos_origen_radicacion['tipo_origen']=='INTERNO'){
+    	   		$concat=array("nombres","' '","apellidos");
+    	    	$concat_nombres=concatenar_cadena_sql($concat);
+    	    	$origen=busca_filtro_tabla($concat_nombres." AS nombre",$tabla_consulta,$tabla_campo."=".$tabla_valor,"",$conn);
+
+			}else if($datos_origen_radicacion['tipo_origen']=='EXTERNO'){
+
+				$origen=busca_filtro_tabla("nombre",$tabla_consulta,$tabla_campo."=".$tabla_valor,"",$conn);
+				if(!$origen['numcampos']){
+					$tabla_valor2=$datos_origen_radicacion['ft_destino_radicacion'][ $destinos_radicacion[$i]['idft_destino_radicacion'] ]['tabla_valor2'];
+					$origen=busca_filtro_tabla("nombre",$tabla_consulta,$tabla_campo."=".$tabla_valor2,"",$conn);
+				}
+			}
+
+			if($i==0){  //JORGE RAMIREZ SOLICITA QUE SOLO SALGA EL PRIMERO (CUALQUIER ERROR FAVOR HACERLE EL RECORDERIS)
+			$lista_nombres_origen.=$origen[0]['nombre'];
+			if( ($i+1)!= $destinos_radicacion['numcampos']){
+				$lista_nombres_origen.='<br> ';
+			}
+			}//fin if $i == 0
+
+			//DESTINOS
+			$persona_natural_destino='';
+    	    if($destinos_radicacion[$i]['tipo_destino']==1){
+    	        $destino=busca_filtro_tabla("b.nombre, a.cargo , a.ciudad, a.direccion,a.iddatos_ejecutor as nombre_destino","datos_ejecutor a, ejecutor b","b.idejecutor=a.ejecutor_idejecutor AND a.iddatos_ejecutor=".$destinos_radicacion[$i]['nombre_destino'],"",$conn);
+
+    	        if(!$destino['numcampos']){
+                    $destino=busca_filtro_tabla("nombre, cargo, empresa as dependencia,iddatos_ejecutor as nombre_destino,direccion","vejecutor","iddatos_ejecutor=".$destinos_radicacion[$i]['destino_externo'],"",$conn);
+                }
+                $persona_natural_destino='persona_natural_dest';
+    	    }else{
+    	    	$concat=array("nombres","' '","apellidos");
+    	    	$concat_nombres=concatenar_cadena_sql($concat);
+    	        $destino=busca_filtro_tabla($concat_nombres." AS nombre, cargo, dependencia,iddependencia_cargo as nombre_destino","vfuncionario_dc","iddependencia_cargo=".$destinos_radicacion[$i]['nombre_destino'],"",$conn);
+    	        $persona_natural_destino='destino';
+    	        if(!$destino['numcampos']){
+    	            $destino=busca_filtro_tabla("nombre, cargo, empresa as dependencia,iddatos_ejecutor as nombre_destino","vejecutor","iddatos_ejecutor=".$destinos_radicacion[$i]['destino_externo'],"",$conn);
+                    $persona_natural_destino='persona_natural_dest';
+    	        }
+    	    }
+
+			if($i==0){  //JORGE RAMIREZ SOLICITA QUE SOLO SALGA EL PRIMERO (CUALQUIER ERROR FAVOR HACERLE EL RECORDERIS)
+
+
+			$lista_nombres_destino.=$destino[0]['nombre'];
+			if( ($i+1)!= $destinos_radicacion['numcampos']){
+				$lista_nombres_destino.='<br> ';
+			}
+			} //fin if $i == 0
+
+	}  	//fin for destinos_radicacion
+
+	$origen=$lista_nombres_origen;
+	$destino=$lista_nombres_destino;
+
+  } //fin if plantilla==radicacion_entrada
+
 $anexos=busca_filtro_tabla("count(*) AS cantidad","anexos","documento_iddocumento=".$doc,"",$conn);
-$paginas=busca_filtro_tabla("count(*) AS paginas","pagina","id_documento=".$doc,"",$conn);     
-  $configuracion=busca_filtro_tabla("*","configuracion A","A.tipo='impresion'","",$conn);  
+$paginas=busca_filtro_tabla("count(*) AS paginas","pagina","id_documento=".$doc,"",$conn);
+  $configuracion=busca_filtro_tabla("*","configuracion A","A.tipo='impresion'","",$conn);
   $imprime=0;
   for($i=0;$i<$configuracion["numcampos"];$i++){
-   if($configuracion[$i]["nombre"]=="colilla") 
+   if($configuracion[$i]["nombre"]=="colilla")
     $imprime=$configuracion[$i]["valor"];
   }
   $web_empresa="";
   $nombre_empresa="EMPRESA";
-  $logo_empresa=""; 
+  $logo_empresa="";
   $datos_fecha = $datos[0]['fecha_oracle'];
   $datos_numero = $datos[0]['numero'];
   $datos_asunto = $datos[0]['descripcion'];
   $codigo_empresa='';
   if($datos["numcampos"]&&$imprime){
-    $tipo_r=busca_filtro_tabla("idcontador,etiqueta_contador","contador","idcontador=".$datos[0]["tipo_radicado"],"",$conn);   
-    $empresa=busca_filtro_tabla("A.nombre, A.valor","configuracion A","A.tipo='empresa'","A.nombre",$conn);  
-  
-    for($i=0;$i<$empresa["numcampos"];$i++){ 
+    $tipo_r=busca_filtro_tabla("idcontador,etiqueta_contador","contador","idcontador=".$datos[0]["tipo_radicado"],"",$conn);
+    $empresa=busca_filtro_tabla("A.nombre, A.valor","configuracion A","A.tipo='empresa'","A.nombre",$conn);
+
+    for($i=0;$i<$empresa["numcampos"];$i++){
       switch($empresa[$i]["nombre"]){
-        case "nombre": 
-            $nombre_empresa=$empresa[$i]["valor"];       
+        case "nombre":
+            $nombre_empresa=$empresa[$i]["valor"];
         break;
-        case "logo": 
+        case "logo":
             $logo_empresa=$empresa[$i]["valor"];
         break;
-				case "logo_colilla": 
+				case "logo_colilla":
             //$logo_empresa=$empresa[$i]["valor"];
         break;
-        case "web": 
+        case "web":
             $web_empresa=$empresa[$i]["valor"];
         break;
-        case "codigo_empresa": 
+        case "codigo_empresa":
             $codigo_empresa=$empresa[$i]["valor"];
         break;
-        default: 
-        break;         
+        default:
+        break;
       }
     }
- //$logo_empresa="";  
-$fecha=date_parse($datos[0]["fecha_oracle"]); 
+ //$logo_empresa="";
+$fecha=date_parse($datos[0]["fecha_oracle"]);
 if(@$_REQUEST["target"]){
 	$target=$_REQUEST["target"];
 }
@@ -173,26 +245,7 @@ else{
 	$target="centro";
 }
 
-if($datos[0]["numero"]){
-	$codigo_qr=busca_filtro_tabla("","documento_verificacion","documento_iddocumento=".$doc,"", $conn);	
-	$qr='';
-	if($codigo_qr['numcampos']){
-	    if(file_exists(PROTOCOLO_CONEXION.RUTA_PDF_LOCAL."/".$codigo_qr[0]['ruta_qr'])){
-            $qr='<img src="'.PROTOCOLO_CONEXION.RUTA_PDF_LOCAL.'/'.$codigo_qr[0]['ruta_qr'].'" width="70px" height="70px">';		        
-	    }else{
-    		include_once($ruta_db_superior."pantallas/qr/librerias.php");
-    		generar_codigo_qr('',$doc);
-    		$codigo_qr=busca_filtro_tabla("","documento_verificacion","documento_iddocumento=".$doc,"", $conn);	
-    		$qr='<img src="'.PROTOCOLO_CONEXION.RUTA_PDF_LOCAL.'/'.$codigo_qr[0]['ruta_qr'].'" width="70px" height="70px">';		        
-	    }
-	}
-	else{
-		include_once($ruta_db_superior."pantallas/qr/librerias.php");
-		generar_codigo_qr('',$doc);
-		$codigo_qr=busca_filtro_tabla("","documento_verificacion","documento_iddocumento=".$doc,"", $conn);	
-		$qr='<img src="'.PROTOCOLO_CONEXION.RUTA_PDF_LOCAL.'/'.$codigo_qr[0]['ruta_qr'].'" width="70px" height="70px">';		        
-	}
-}
+$qr=mostrar_codigo_qr(0,$doc,true);
 ?>
 <style type="text/css">
 <!--
@@ -215,7 +268,7 @@ td {
 /*
 <Clase>
 <Nombre>comando_documento
-<Parametros>sComando-comando que se desea ejecutar 
+<Parametros>sComando-comando que se desea ejecutar
 <Responsabilidades>Ejecuta el comando especificado sobre el documento
 <Notas>
 <Excepciones>
@@ -234,7 +287,7 @@ function comando_documento(sComando){
 <Clase>
 <Nombre>imprime
 <Parametros>atras-numero de saltos desde la pagina que la llama
-<Responsabilidades>retorna a la pagina que llamó a la colilla después de mostrarla 
+<Responsabilidades>retorna a la pagina que llamó a la colilla después de mostrarla
 <Notas>
 <Excepciones>
 <Salida>
@@ -243,80 +296,79 @@ function comando_documento(sComando){
 */
 function imprime(atras){
   window.focus();
-  var url = "<?php echo $enlace; ?>"; 
-  
+  var url = "<?php echo $enlace; ?>";
+
   window.print();
   //comando_documento('ClearAuthenticationCache');
   if(url!=""){
       window.open("<?php echo $enlace; ?>","<?php echo $target; ?>","scrollbars=no");
   }else{
       window.history.go(-atras);
-  }       
-     
-}	
+  }
+
+}
 -->
 </script>
 <html lang="en">
 <link rel="stylesheet" href="css/ui-lightness/jquery-ui-1.9.1.custom.min.css" />
-<script src="js/jquery-1.8.2.js"></script>    
-<script src="js/jquery-ui-1.8rc3.custom.min.js"></script> 
+<script src="js/jquery-1.8.2.js"></script>
+<script src="js/jquery-ui-1.8rc3.custom.min.js"></script>
 </head>
 <br/><br/>
 
 <table height="94px" width="300px" align="right" border="0px" cellspacing="0" cellpadding="0" style="border-collapse:collapse;">
-  <tr> 
+  <tr>
 	<td><?php echo "<br/><center>".($qr)."</center>"; ?></td>
 	<td border="1px" colspan="2" align="left" height="2px" cellspacing="0" cellpadding="0">
 		<strong><?php echo($nombre_empresa);?>
 		</strong><br/><br/>
 		<?php if($datos[0]["tipo_radicado"]==1 || $datos[0]["tipo_radicado"]==2 &&  $datos[0]['plantilla']!='pqrsf'){?>
-      	
+
       	<b>Radicaci&oacute;n No: <?php echo(date("Y-m-d")."-".$datos[0]["numero"]."-".$tipo_radicacion);?></b>
  <?php }else{?>
 		<b>Radicaci&oacute;n No: <?php echo($dependencia_creador[0]['codigo']."-".$datos[0]["numero"]."-".$fecha["year"]);?></b>
 		<?php }?>
   <br/>
   <b>Fecha: <?php echo $datos_fecha; ?></b><br/>
-  
+
  <?php if((($datos[0]["tipo_radicado"]==1 || $datos[0]["tipo_radicado"]==2) && $datos[0]['plantilla']=='radicacion_entrada') || $datos[0]['plantilla']=='pqrsf' ){
-     
+
          //print_r($datos);
         ?>
-      <b>Asunto: <?php 
-      
+      <b>Asunto: <?php
+
               if(@$_REQUEST['descripcion_general']){
-              	$suspensivos='';	
+              	$suspensivos='';
 				$cadena=codifica_encabezado(html_entity_decode(@$_REQUEST["descripcion_general"]));
               	if(strlen(  $cadena  ) > 30){
               		$suspensivos='...';
-              	}	
+              	}
                 echo  substr($cadena,0,30).$suspensivos;
               }else{
               	$suspensivos='';
               	$cadena=codifica_encabezado(html_entity_decode(@$datos[0]["descripcion"]));
               	if(strlen(  $cadena  ) > 30){
               		$suspensivos='...';
-              	}              	
-                echo substr($cadena,0,30).$suspensivos; 
+              	}
+                echo substr($cadena,0,30).$suspensivos;
               }
-             
+
              ?></b><br/>
  <?php }?>
  <b>Origen: <?php echo($origen);?></b><br/>
-  
-  <?php if($datos[0]["tipo_radicado"]==1){?>
+
   <b>Destino: <?php echo substr(($destino),0,22)."..."; ?></b>
-  
-  <?php }   	
+
+   	<?php
   	$validar_impresion = busca_filtro_tabla("valor","configuracion","lower(nombre) LIKE'imprimir_colilla_automatico'","",$conn);
-		
+
 		if($validar_impresion[0]['valor'] == 1){
-			$imprimir_colilla = 'onLoad="imprime('.$atras.')"';	
-			//abrir_url($enlace,'_self');		
+			$imprimir_colilla = 'onLoad="imprime('.$atras.')"';
+			//abrir_url($enlace,'_self');
 		}else{
-		    
-			abrir_url($enlace,'_self');			
-		}	 	
+
+			abrir_url($enlace,'_self');
+		}
   ?>
 	</td>
 </tr>
@@ -337,10 +389,10 @@ function generar_ingreso_formato($nombre_formato){
         $nombre_formato='radicacion_entrada';
     }
 	$formato=busca_filtro_tabla("A.serie_idserie,A.nombre_tabla,B.nombre as nombre_campo, B.tipo_dato","formato A, campos_formato B","A.nombre='".$nombre_formato."' AND idformato=formato_idformato AND obligatoriedad=1","",$conn);
-	
+
 	//print_r($formato);die();
 	$dependencia=busca_filtro_tabla("","dependencia_cargo","funcionario_idfuncionario=".usuario_actual("idfuncionario")." AND estado=1","",$conn);
-	
+
 	for($i=0;$i<$formato["numcampos"];$i++){
 		if(strtolower($formato[$i]["tipo_dato"])=='date'){
 			$_REQUEST[$formato[$i]["nombre_campo"]]=date('Y-m-d');
@@ -373,7 +425,7 @@ function generar_ingreso_formato($nombre_formato){
 		$campos_formato_pqrsf=busca_filtro_tabla("idcampos_formato","formato a, campos_formato b","a.nombre='pqrsf' AND a.idformato=b.formato_idformato AND b.nombre='nombre'","",$conn);
         $_REQUEST["campo_descripcion"] = $campos_formato_pqrsf[0]['idcampos_formato']; //se colocan los idcampos del campo descripcion;
         $_REQUEST["fecha"] = fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s');
-	}	
+	}
 
 	$_REQUEST["serie_idserie"] = $formato[0]["serie_idserie"]; //idserie del formato;
 	$_REQUEST["dependencia"]= $dependencia[0]["dependencia_iddependencia"]; //iddependencia_cargo de la persona;
@@ -381,7 +433,7 @@ function generar_ingreso_formato($nombre_formato){
 	$_REQUEST["firma"] = 1;
 	$_REQUEST["fecha_almacenar"] = date('Y-m-d');
 	//$_REQUEST["padre"] = $id;
-	
+
 	$_REQUEST["accion"] = "guardar_detalle";
 	$_REQUEST["tipo_radicado"] = $nombre_radicado; //se envia el nombre del radicado del formato;
 	$_REQUEST["funcion"] = "radicar_plantilla";// esto siempre va
@@ -391,20 +443,20 @@ function generar_ingreso_formato($nombre_formato){
 	$_REQUEST["ejecutor"] = usuario_actual("funcionario_codigo");
 	$_REQUEST["estado_radicado"]='2';
 	$_REQUEST["descripcion"]=(($_REQUEST["descripcion_general"]));
-	
-	
-	
+
+
+
 	//Adicionales
 	if($nombre_formato=="radicacion_entrada"){
 		$_REQUEST["idflujo"] = 1;
 	}
-	
+
 	$_POST=$_REQUEST;
 
 	return radicar_plantilla2();
 }
 function radicar_plantilla2()
-  { 
+  {
    global $conn,$sql,$ruta_db_superior;
    //print_r($_REQUEST); die("aquiii");
    $valores=array();
@@ -414,7 +466,7 @@ function radicar_plantilla2()
    if(!@$_POST["ejecutor"])
       $_POST["ejecutor"]=$_SESSION["usuario_actual"];
 
-    if(@$_POST["formato"]){       
+    if(@$_POST["formato"]){
       $plantilla="'".strtoupper($_POST["formato"])."'";
       $formato=busca_filtro_tabla("idformato,nombre_tabla","formato A","A.nombre LIKE '".strtolower($_POST["formato"])."'","",$conn);
       //print_r($formato);
@@ -430,7 +482,7 @@ function radicar_plantilla2()
               alerta("El campo ".$campos[$l]["nombre"]." Debe ser Unico por Favor Vuelva a Insertar la informacion");
               volver(1);
             }
-          }  
+          }
         }
 
       }
@@ -440,7 +492,7 @@ function radicar_plantilla2()
     $lista_campos = array();
     for($i=0;$i<phpmkr_num_fields($buscar);$i++)
       array_push($lista_campos,strtolower(phpmkr_field_name($buscar,$i)));
-    /////////////////////////////////////////////////////////////////////      	  
+    /////////////////////////////////////////////////////////////////////
     $valores=array("fecha"=>fecha_db_almacenar(date("Y-m-d H:i:s"),'Y-m-d H:i:s'));
     //print_r($_POST);
     //echo("<br />-------<br />");
@@ -451,19 +503,19 @@ function radicar_plantilla2()
         $valores[$key]=$valor;
 	   }
     }
-    //si le env?o el tipo de radicado 
+    //si le env?o el tipo de radicado
     if(isset($_POST["serie_idserie"]) && $_POST["serie_idserie"]){
       $valores["serie"]=$_POST["serie_idserie"];
     }
     else $valores["serie"]=0;
     $valores["plantilla"]=$plantilla;
     if(isset($_REQUEST["dependencia"]) && $_REQUEST["dependencia"]<>"")
-      $valores["responsable"]=$_REQUEST["dependencia"];      
-    if(@$_POST["tipo_radicado"]){  
+      $valores["responsable"]=$_REQUEST["dependencia"];
+    if(@$_POST["tipo_radicado"]){
       $tipo_radicado=busca_filtro_tabla("idcontador","contador","nombre='".$_POST["tipo_radicado"]."'","",$conn);
       if($tipo_radicado["numcampos"]){
         $valores["tipo_radicado"]=$tipo_radicado[0]["idcontador"];
-      }  
+      }
       else if(isset($formato)&&$formato["numcampos"]){
         $valores["tipo_radicado"]=$formato[0]["contador_idcontador"];
       }
@@ -477,33 +529,33 @@ function radicar_plantilla2()
     else{
       alerta("El Documento que intenta Radicar no posee Secuencia");
       volver(1);
-    } 
-    $valores["numero"]=0;       
+    }
+    $valores["numero"]=0;
     if(isset($_POST["municipio"]))
         $valores["municipio_idmunicipio"]=$_POST["municipio"];
     else if(isset($_POST["municipio_idmunicipio"]))
-        $valores["municipio_idmunicipio"]=$_POST["municipio_idmunicipio"]; 
+        $valores["municipio_idmunicipio"]=$_POST["municipio_idmunicipio"];
     else
     {$mun=busca_filtro_tabla("valor","configuracion","nombre='ciudad'","",$conn);
       if($mun["numcampos"])
           $valores["municipio_idmunicipio"]=$mun[0][0];
-     else	  
+     else
           $valores["municipio_idmunicipio"]=633;
-    }	  
+    }
     //radico el documento
     //print_r($valores);
     /*Se adiciona esta linea para las ejecutar las acciones sobre los formatos*/
     llama_funcion_accion(NULL,$idformato,"radicar","ANTERIOR");
     $_POST["iddoc"]=radicar_documento_prueba(trim($_POST["tipo_radicado"]),$valores,Null);
     $iddoc=$_POST["iddoc"];
-    include_once($ruta_db_superior."anexosdigitales/funciones_archivo.php");  
-   $permisos=NULL;    
-   cargar_archivo($_POST["iddoc"],$permisos); 
+    include_once($ruta_db_superior."anexosdigitales/funciones_archivo.php");
+   $permisos=NULL;
+   cargar_archivo($_POST["iddoc"],$permisos);
     /*Se adiciona esta linea para las ejecutar las acciones sobre los formatos*/
     llama_funcion_accion($iddoc,$idformato,"radicar","POSTERIOR");
 
-   if(!array_key_exists("destino",$_POST)) 	
-        { 
+   if(!array_key_exists("destino",$_POST))
+        {
          if($_POST["tabla"]=="encabezado_factura")
          		{$_POST["destino"]=$_POST["revisa"];
       		  }
@@ -511,19 +563,19 @@ function radicar_plantilla2()
          		{$_POST["destino"]=$_POST["revisado"];
       		  }
       	}
-   //  echo "Request  :"; print_r($_REQUEST); 	
+   //  echo "Request  :"; print_r($_REQUEST);
    //  echo "Valores :"; print_r($valores);
    //  die();
     //guardo la relaci?n del documento creado como respuesta con su antecesor
     if(array_key_exists("anterior",$_REQUEST))
-      {          
+      {
        /*Se adiciona esta linea para las ejecutar las acciones sobre los formatos*/
        llama_funcion_accion($_REQUEST["anterior"],$idformato,"responder","ANTERIOR");
        $idbuzon=busca_filtro_tabla("max(A.idtransferencia) as idbuzon","buzon_entrada A","A.archivo_idarchivo=".$_REQUEST["anterior"],"",$conn);
        phpmkr_query("INSERT INTO respuesta(fecha,destino,origen,idbuzon,plantilla) VALUES (".fecha_db_almacenar(date("Y-m-d H:i:s"),'Y-m-d H:i:s').",".$_POST["iddoc"].",".$_REQUEST["anterior"].",".$idbuzon[0]["idbuzon"].",".$plantilla.")",$conn);
-       $estado_anterior=busca_filtro_tabla("A.estado,B.nombre_tabla","documento A,formato B","A.plantilla=B.nombre AND A.iddocumento=".$_REQUEST["anterior"],"",$conn);       
+       $estado_anterior=busca_filtro_tabla("A.estado,B.nombre_tabla","documento A,formato B","A.plantilla=B.nombre AND A.iddocumento=".$_REQUEST["anterior"],"",$conn);
         if($estado_anterior["numcampos"]){
-          if($estado_anterior[0]["estado"]=="ACTIVO"){         
+          if($estado_anterior[0]["estado"]=="ACTIVO"){
           phpmkr_query("update documento set estado='TRAMITE' where iddocumento=".$_REQUEST["anterior"],$conn);
           //arreglo con los datos que necesita transferir archivo
           }
@@ -532,30 +584,30 @@ function radicar_plantilla2()
             $valores[$estado_anterior[0]["nombre_tabla"]]=$formato_detalle[0]["id".$estado_anterior[0]["nombre_tabla"]];
         }
         else
-         { $estado_anterior=busca_filtro_tabla("A.estado","documento A","A.iddocumento=".$_REQUEST["anterior"],"",$conn);       
-           if($estado_anterior["numcampos"] && $estado_anterior[0]["estado"]=="ACTIVO")          
-             phpmkr_query("update documento set estado='TRAMITE' where iddocumento=".$_REQUEST["anterior"],$conn);      
-         }       
+         { $estado_anterior=busca_filtro_tabla("A.estado","documento A","A.iddocumento=".$_REQUEST["anterior"],"",$conn);
+           if($estado_anterior["numcampos"] && $estado_anterior[0]["estado"]=="ACTIVO")
+             phpmkr_query("update documento set estado='TRAMITE' where iddocumento=".$_REQUEST["anterior"],$conn);
+         }
         $datos["archivo_idarchivo"]=$_REQUEST["anterior"];
         $datos["nombre"]="TRAMITE";
         $datos["tipo_destino"]=1;
         $datos["tipo"]="";
-        $destino_tramite[]=usuario_actual("funcionario_codigo");        
+        $destino_tramite[]=usuario_actual("funcionario_codigo");
         transferir_archivo_prueba($datos,$destino_tramite,"","");
         /*Se adiciona esta linea para las ejecutar las acciones sobre los formatos*/
         llama_funcion_accion($_REQUEST["anterior"],$idformato,"responder","POSTERIOR");
-      }     
-    $ins_calidad["numcampos"]=0;  
-    if(isset($_REQUEST["tabla"]))  
-      $ins_calidad=busca_filtro_tabla("*","estructura_calidad","nombre LIKE '".strtolower($_REQUEST["tabla"])."'","",$conn);    
+      }
+    $ins_calidad["numcampos"]=0;
+    if(isset($_REQUEST["tabla"]))
+      $ins_calidad=busca_filtro_tabla("*","estructura_calidad","nombre LIKE '".strtolower($_REQUEST["tabla"])."'","",$conn);
     //guardo los datos del formulario principal del documento (plantilla)
     if($_POST["tabla"]=="scdp")
       phpmkr_query("UPDATE scdp SET documento_iddocumento=".$_POST["iddoc"]." WHERE num_previo=".$_POST["num_previo"],$conn);
     elseif($ins_calidad["numcampos"]){
       $estructuras=explode(",",$_REQUEST["estructura"]);
       foreach($estructuras as $fila){
-        $datos_est=explode("#",$fila); 
-        $sql_calidad="insert into doc_calidad(documento_iddocumento,estructura_idestructura,cod_padre) values(".$_POST["iddoc"].",".$datos_est[0].",".$datos_est[1].")"; 
+        $datos_est=explode("#",$fila);
+        $sql_calidad="insert into doc_calidad(documento_iddocumento,estructura_idestructura,cod_padre) values(".$_POST["iddoc"].",".$datos_est[0].",".$datos_est[1].")";
         phpmkr_query($sql_calidad,$conn);
       }
       if(!isset($_POST["descripcion"])){
@@ -563,8 +615,8 @@ function radicar_plantilla2()
           $_POST["descripcion"]=$_POST["nombre_".strtolower($REQUEST["tabla"])];
         }
         $_POST["encabezado"]=1;
-      }       
-    } 
+      }
+    }
     llama_funcion_accion($iddoc,$idformato,"adicionar","ANTERIOR");
    /* if($_POST["iddoc"] && $_POST["tabla"]=="ft_decision_disciplinaria")
       $idplantilla=guardar_decision_disciplinaria($_POST["iddoc"]);
@@ -573,12 +625,12 @@ function radicar_plantilla2()
     if($_POST["iddoc"])
       $idplantilla=guardar_documento($_POST["iddoc"]);
  	  //die();
-    if(!$idplantilla)  
+    if(!$idplantilla)
       {alerta("No se ha podido Crear el Formato..");
        phpmkr_query("update documento set estado='ELIMINADO' where iddocumento=".$_POST["iddoc"],$conn);
-      } 
+      }
     else
-    {  
+    {
     //si es una factura busco el id de la ruta donde voy
     $formato=busca_filtro_tabla("","formato","nombre_tabla LIKE '".@$_POST["tabla"]."'","",$conn);
     $banderas=array();
@@ -607,8 +659,8 @@ function radicar_plantilla2()
       $radicador=busca_filtro_tabla("f.funcionario_codigo","configuracion c,funcionario f","c.nombre='radicador_salida' and f.login=c.valor","",$conn);
       if($radicador["numcampos"]){
         $aux_destino[0]=$radicador[0]["funcionario_codigo"];
-        transferir_archivo_prueba($datos,$aux_destino,$adicionales);   
-      }      
+        transferir_archivo_prueba($datos,$aux_destino,$adicionales);
+      }
     }
     elseif(isset($_POST["firmado"]) && $_POST["firmado"]=="varias")
     {
@@ -616,8 +668,8 @@ function radicar_plantilla2()
     }
     if(in_array("e",$banderas)){
       aprobar($_POST["iddoc"]);
-    }   
-   llama_funcion_accion($iddoc,$idformato,"adicionar","POSTERIOR");   
+    }
+   llama_funcion_accion($iddoc,$idformato,"adicionar","POSTERIOR");
    return $_POST["iddoc"];
    }
 }
@@ -625,7 +677,7 @@ function validar_confirmacion(){
 	global $conn;
 	$cantidad=busca_filtro_tabla("","configuracion a","a.nombre='cantidad_confirmacion'","",$conn);
 	$por_ingresar=busca_filtro_tabla("count(*) as cant","documento a","lower(a.estado)='iniciado' AND a.tipo_radicado=1","",$conn);
-	
+
 	if(($por_ingresar[0]["cant"]+1)>$cantidad[0]["valor"]){
 		$datos_url=array();
 		foreach($_REQUEST as $clave => $valor){
@@ -654,12 +706,13 @@ function validar_confirmacion_salida($consecutivo, $enlace,$enlace2){
 	//if($consecutivo=='radicacion_salida'){
 	$enlace_redireccion=$enlace;
 	$enlace=str_replace("|", "&", $enlace);
-	
+
 		?>
 		<script>
 		var ingreso=confirm("Esta seguro de generar un nuevo radicado?");
 		if(ingreso){
-			window.open("colilla.php?consecutivo=<?php echo $consecutivo;?>&salidas=1&target=_self&enlace=<?php echo $enlace_redireccion;?>&descripcion_general=<?php echo $_REQUEST['descripcion_general'];?>","_self"); 
+			window.open("colilla.php?consecutivo=<?php echo $consecutivo;?>&salidas=1&target=_self&enlace=<?php echo $enlace_redireccion;?>&descripcion_general=<?php echo $_REQUEST['descripcion_general'];?>","_self");
+
 		}else{
 			window.open("<?php echo $enlace2;?>","_self");
 		}

@@ -1,68 +1,64 @@
 <?php
 include ("db.php");
 include ("librerias/header_formato.php");
-include_once("librerias/funciones.php");
+include_once ("librerias/funciones.php");
 $x_encabezado = Null;
 $x_cuerpo = Null;
 $x_pie_pagina = Null;
-$x_nombre_pie = "Ninguno";  
-$x_nombre_encabezado =  "Ninguno";
+$x_nombre_pie = "Ninguno";
+$x_nombre_encabezado = "Ninguno";
 
-$max_salida=10; // Previene algun posible ciclo infinito limitando a 10 los ../
-$ruta_db_superior=$ruta="";
-while($max_salida>0)
-{
-if(is_file($ruta."db.php"))
-{
-$ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
+$max_salida = 10; // Previene algun posible ciclo infinito limitando a 10 los ../
+$ruta_db_superior = $ruta = "";
+while($max_salida > 0) {
+	if (is_file($ruta . "db.php")) {
+		$ruta_db_superior = $ruta; // Preserva la ruta superior encontrada
+	}
+	$ruta .= "../";
+	$max_salida--;
 }
-$ruta.="../";
-$max_salida--;
-}
+
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+$validar_enteros=array("formato","key");
+include_once($ruta_db_superior."librerias_saia.php");
+$validar_enteros=array("key");
+desencriptar_sqli('form_info');
+echo(librerias_jquery());
 
 $sAction = @$_POST["a_add"];
 if (($sAction == "") || ((is_null($sAction)))) {
 	$sKey = @$_GET["key"];
 	$sKey = (get_magic_quotes_gpc()) ? stripslashes($sKey) : $sKey;
-	if ($sKey <> "") {
+	if ($sKey != "") {
 		$sAction = "C"; // Copy record
-	}
-	else
-	{
+	} else {
 		$sAction = "I"; // Display blank record
 	}
-}
-else
-{
+} else {
 	// Get fields from form
 	$x_encabezado = @$_POST["x_encabezado"];
 	$x_cuerpo = @$_POST["x_cuerpo"];
 	$x_pie_pagina = @$_POST["x_pie_pagina"];
-
 }
 
-
-
-switch ($sAction)
-{
-	case "C": // Get a record to display
-		if (!LoadData($sKey,$conn)) { // Load Record based on key
+switch ($sAction) {
+	case "C" : // Get a record to display
+		if (!LoadData($sKey, $conn)) { // Load Record based on key
 			$_SESSION["ewmsg"] = "No Record Found for Key = " . $sKey;
-	//		//phpmkr_db_close($conn);
+			// //phpmkr_db_close($conn);
 			ob_end_clean();
-			header("Location: formatoview.php?key=".$sKey);
+			header("Location: formatoview.php?key=" . $sKey);
 			exit();
 		}
 		break;
-	case "A": // Add
+	case "A" : // Add
 		if (AddData($conn)) { // Add New Record
-			//alerta("Pantalla adicionada");
+		                      // alerta("Pantalla adicionada");
 			ob_end_clean();
-			if(usuario_actual('login')=='cerok'){
-      	header("Location: ".$ruta_db_superior."formatos/generar_formato.php?pantalla=tiny&genera=formato&idformato=".$_REQUEST["formato"]);
-			}
-			else{
-				header("Location: ".$ruta_db_superior."formatos/llamado_formatos.php?acciones_formato=formato,adicionar,buscar,editar,mostrar,tabla&accion=generar&condicion=idformato@".$_REQUEST["formato"]);
+			if (usuario_actual('login') == 'cerok') {
+				header("Location: " . $ruta_db_superior . "formatos/generar_formato.php?pantalla=tiny&genera=formato&idformato=" . $_REQUEST["formato"]);
+			} else {
+				header("Location: " . $ruta_db_superior . "formatos/llamado_formatos.php?acciones_formato=formato,adicionar,buscar,editar,mostrar,tabla&accion=generar&condicion=idformato@" . $_REQUEST["formato"]);
 			}
 			exit();
 		}
@@ -85,7 +81,7 @@ function ventanaSecundaria (URL){
     hs.graphicsDir = '<?php echo $ruta_db_superior; ?>anexosdigitales/highslide-4.0.10/highslide/graphics/';
     hs.outlineType = 'rounded-white';
 </script>
-<p><span class="phpmaker"><br>   
+<p><span class="phpmaker"><br>
 <a href="<?php echo $ruta_db_superior; ?>formatos/formatoedit.php?key=<?php echo $_REQUEST["key"];?>">Editar</a>&nbsp;&nbsp;&nbsp;
 <a href="<?php echo $ruta_db_superior; ?>formatos/campos_formatolist.php?idformato=<?php echo $_REQUEST["key"];?>">Listado de campos</a>&nbsp;&nbsp;&nbsp;
 <a href="<?php echo $ruta_db_superior; ?>formatos/funciones_formatolist.php?idformato=<?php echo $_REQUEST["key"];?>">Funciones del Formato</a>&nbsp;&nbsp;
@@ -117,14 +113,15 @@ function ventanaSecundaria (URL){
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
     <input type="hidden" name="x_pie_pagina" id="x_pie_pagina" value="<?php echo @$x_pie_pagina; ?>">
     <label id="x_pie_pagina_mostrar"><?php echo @$x_nombre_pie; ?></label>&nbsp;&nbsp;
-<a href="javascript:formatoadd.casilla.value='x_pie_pagina';ventanaSecundaria('encabezadoadd.php?listar=1')">ELEGIR</a> 
+<a href="javascript:formatoadd.casilla.value='x_pie_pagina';ventanaSecundaria('encabezadoadd.php?listar=1')">ELEGIR</a>
 &nbsp;&nbsp;<label onclick="document.getElementById('x_pie_pagina').value='';document.getElementById('x_pie_pagina_mostrar').innerHTML='Ninguno'" style="color:blue; text-decoration:underline; cursor:pointer">SIN PIE DE PAGINA</label>
 </span></td>
-	</tr>  
+	</tr>
 	</table>
 	<input type="submit" name="Action" value="CONTINUAR">
 	</form>
-<?php	
+<?php
+encriptar_sqli("formatoadd",1,"form_info",$ruta_db_superior);	
 	function LoadData($sKey,$conn)
 {
 	$sKeyWrk = "" . addslashes($sKey) . "";
@@ -163,7 +160,7 @@ function ventanaSecundaria (URL){
 		$x_nombre_pie=$pie[0][0];
 		}
 	}
-	phpmkr_free_result($rs);  
+	phpmkr_free_result($rs);
 	return $LoadData;
 
 }

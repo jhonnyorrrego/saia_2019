@@ -2,9 +2,13 @@
 <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <?php
 include_once ("../../db.php");
+include_once("../../pantallas/lib/librerias_cripto.php");
+if (isset($_REQUEST["form_info"]) && $_REQUEST["form_info"]!="") {
+	desencriptar_sqli('form_info');
+}
 
 if(isset($_REQUEST["accion"]))
-  {$_REQUEST["accion"]();     
+  {$_REQUEST["accion"]();
 }
 
 function editar()
@@ -29,7 +33,7 @@ function editar()
 	$padre = busca_filtro_tabla("", "formato", "idformato='" . $formato[0]["cod_padre"] . "'", "", $conn);
 	$doc_padre = busca_filtro_tabla("documento_iddocumento", $formato[0]["nombre_tabla"] . "," . $padre[0]["nombre_tabla"], "id" . $padre[0]["nombre_tabla"] . "=" . $padre[0]["nombre_tabla"] . " and id" . $formato[0]["nombre_tabla"] . "=" . $_REQUEST["item"], "", $conn);
 
-	redirecciona("../" . $padre[0]["nombre"] . "/" . $padre[0]["ruta_mostrar"] . "?idformato=" . $padre[0]["idformato"] . "&iddoc=" . $doc_padre[0][0]);
+	redirecciona("../../" . FORMATOS_CLIENTE . $padre[0]["nombre"] . "/" . $padre[0]["ruta_mostrar"] . "?idformato=" . $padre[0]["idformato"] . "&iddoc=" . $doc_padre[0][0]);
 }
 function eliminar_item()
   {global $conn;
@@ -73,7 +77,7 @@ function guardar_item()
 					$valores[] = ((fecha_db_almacenar($valor, 'Y-m-d')));
 				else
 					$valores[] = "''";
-           }           
+           }
 					 else if(strtolower($tipo[0]["tipo_dato"])=='datetime'){
 				if ($valor != '0000-00-00 00:00')
            				$valores[]=((fecha_db_almacenar($valor,'Y-m-d H:i:s')));//Y-m-d H:i:s
@@ -112,7 +116,7 @@ function guardar_item()
              param=direccion.split('&');
              direccion=param[0]+'&'+param[1]+'&seleccionar=" . $padre[0]["idformato"] . "-" . $superior[0][0] . "-" . $padre[0]["nombre_tabla"] . "-" . $doc_padre[0][0] . "';
              //window.parent.frames[0].location=direccion;
-             window.location='../".$padre[0]["nombre"]."/".$padre[0]["ruta_mostrar"]."?idformato=".$padre[0]["idformato"]."&iddoc=".$doc_padre[0]["documento_iddocumento"]."';  //correccion para que los items no recargen el arbol
+             window.location='../../" . FORMATOS_CLIENTE . $padre[0]["nombre"]."/".$padre[0]["ruta_mostrar"]."?idformato=".$padre[0]["idformato"]."&iddoc=".$doc_padre[0]["documento_iddocumento"]."';  //correccion para que los items no recargen el arbol
              </script>";
 			else
 				echo "<script>

@@ -21,31 +21,35 @@ if(!@$_SESSION["LOGIN".LLAVE_SAIA]){
 else{
   $_SESSION["usuario_actual"]=usuario_actual("funcionario_codigo");
   $_SESSION["conexion_remota"]=1;
-} 	
+}
 $resultado="";
 $_REQUEST=$datos;
-switch($_REQUEST["formato"]){  
+switch($_REQUEST["formato"]){
   case "pqr":
   	$resultado=consultar_pqr($_REQUEST["identificacion"]);
   break;
 }
-return($resultado);  
+return($resultado);
 }
 function consultar_pqr($identificacion){
 global $conn;
 $texto="";
 $documentos =busca_filtro_tabla("iddocumento","ft_pqr a, documento d","documento_iddocumento=iddocumento and d.estado<>'ELIMINADO' and identificacion='".$identificacion."'","d.fecha desc",$conn);
 if($documentos["numcampos"]){
-	$texto=contenido_documento(PROTOCOLO_CONEXION.RUTA_PDF."/formatos/pqr/pqr_por_persona.php?identificacion=".$identificacion."&remoto=1&idfunc=".$_SESSION["usuario_actual"]."&tipo=6");
+	$texto=contenido_documento(PROTOCOLO_CONEXION.RUTA_PDF."/" . FORMATOS_CLIENTE . "pqr/pqr_por_persona.php?identificacion=".$identificacion."&remoto=1&idfunc=".$_SESSION["usuario_actual"]."&tipo=6");
    	return("0|".$texto);
 }
 else
-  return(array("exito"=>0,"texto"=>"No hay PQR registrada para este documento."));  
+  return(array("exito"=>0,"texto"=>"No hay PQR registrada para este documento."));
 
 }
 function contenido_documento($direccion){
 $mh = curl_multi_init();
 $ch = curl_init();
+if (strpos(PROTOCOLO_CONEXION, 'https') !== false) {
+curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false); 
+curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+}
 curl_setopt($ch, CURLOPT_URL,$direccion); 
 curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
 $contenido=curl_exec ($ch);

@@ -13,6 +13,8 @@ include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."class_transferencia.php");
 include_once($ruta_db_superior."librerias_saia.php");
 include_once ($ruta_db_superior . "pantallas/lib/librerias_archivo.php");
+require_once($ruta_db_superior . 'StorageUtils.php');
+require_once($ruta_db_superior . 'filesystem/SaiaStorage.php');
 
 echo (librerias_jquery("1.7"));  
 echo(librerias_notificaciones());
@@ -22,21 +24,20 @@ function cargar_anexos_documento_despacho($datos_documento,$anexos){
 	global $conn,$ruta_db_superior;
 	$funcionario = busca_filtro_tabla("idfuncionario","funcionario","funcionario_codigo=".$datos_documento["funcionario_codigo"],"",$conn);
 	$formato_ruta = aplicar_plantilla_ruta_documento($datos_documento["iddocumento"]);
-	$ruta_archivos = ruta_almacenamiento("archivos");
 	
+  $tipo_almacenamiento = new SaiaStorage("archivos");
 	foreach ($anexos as $key => $value) {
-		$ruta = $ruta_archivos . $formato_ruta ."/anexos";
-		crear_destino($ruta);		
+		$ruta = $formato_ruta ."/anexos";
+
 		$extencion = pathinfo($value['filename']);
 		$ruta .= "/".rand().".".$extencion["extension"];		
-		$archivo = fopen($ruta, "w+");	 //crea el archivo jpg
-		fclose($archivo);
 		$contenido = base64_decode($value['content']);
-		file_put_contents($ruta, $contenido); 
+		$tipo_almacenamiento->almacenar_contenido($ruta,$contenido);
 		
-		if(file_exists($ruta)){
-			//Quitar el prefijo de ruta_db_superior para guardar en bdd
-			$ruta_alm = substr($ruta, strlen($ruta_db_superior));
+		if($tipo_almacenamiento->get_filesystem()->has($ruta)){
+		  $ruta_alm = array('servidor' => $tipo_almacenamiento->get_ruta_servidor(), "ruta" => $ruta);
+      $ruta_alm=json_encode($ruta_alm);
+      
 			$insert_anexo = "insert into anexos(documento_iddocumento, ruta, etiqueta, tipo, formato,fecha_anexo) VALUES (".$datos_documento["iddocumento"].",'".$ruta_alm."','".$value['filename']."','".$extencion["extension"]."',".$datos_documento["idformato"].",".fecha_db_almacenar(date("Y-m-d H:i:s"),'Y-m-d H:i:s').")";
 			phpmkr_query($insert_anexo,$conn,$datos_documento["funcionario_codigo"]);
 			$idnexo = phpmkr_insert_id();

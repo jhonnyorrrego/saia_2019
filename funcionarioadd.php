@@ -1,7 +1,10 @@
 <?php
 include_once("db.php");
-include_once("pantallas/lib/librerias_cripto.php");
 include_once("librerias_saia.php");
+include_once("pantallas/lib/librerias_cripto.php");
+$validar_enteros=array("x_idfuncionario");
+desencriptar_sqli('form_info');
+echo(librerias_jquery());
 echo(librerias_notificaciones());
 ?>
 <script type="text/javascript" src="js/jquery.js"></script>
@@ -53,7 +56,13 @@ echo(librerias_notificaciones());
 	})(jQuery);
 
 	$(document).ready(function() {
-		$("#funcionarioadd").validate();
+		$("#funcionarioadd").validate({
+			submitHandler: function(form) {
+				<?php encriptar_sqli("funcionarioadd");?>
+			    form.submit();
+			    
+			  }
+		});
 	}); 
 </script>
 <?php

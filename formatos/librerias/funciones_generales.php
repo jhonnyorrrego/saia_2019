@@ -10,6 +10,9 @@ while($max_salida > 0) {
 }
 include_once ($ruta_db_superior . "db.php");
 
+include_once($ruta_db_superior.'StorageUtils.php');
+include_once($ruta_db_superior.'filesystem/SaiaStorage.php');
+
 function retornar_seleccionados($valor) {
 	global $ruta_db_superior;
 	$vector = explode(",", str_replace("#", "d", $valor));
@@ -32,23 +35,23 @@ function retornar_seleccionados($valor) {
 
 function buscar_funcionarios2($dependencia, $arreglo = NULL) {
 	global $conn, $ruta_db_superior;
-	
+
 	include_once ($ruta_db_superior . "class_transferencia.php");
 	$dependencias = dependencias($dependencia);
 	array_push($dependencias, $dependencia);
-	
+
 	$dependencias = array_unique($dependencias);
-	
+
 	$funcionarios = busca_filtro_tabla("A.funcionario_codigo", "funcionario A,dependencia_cargo B, cargo C,dependencia D", "B.cargo_idcargo=C.idcargo AND B.funcionario_idfuncionario=A.idfuncionario AND B.dependencia_iddependencia=D.iddependencia and B.dependencia_iddependencia IN(" . implode(",", $dependencias) . ") AND A.estado=1 AND B.estado=1 AND C.estado=1 AND D.estado=1", "", $conn);
-	
+
 	$arreglo = extrae_campo($funcionarios, "funcionario_codigo", "U");
-	
+
 	return ($arreglo);
 }
 
 function serie_subserie($idformato, $iddoc, $tipo = 0) {
 	global $conn;
-	
+
 	$formato = busca_filtro_tabla("nombre_tabla", "formato", "idformato=" . $idformato, "", $conn);
 	$serie = busca_filtro_tabla("A.codigo,A.cod_padre", "serie A," . $formato[0]['nombre_tabla'] . " B", "B.serie_idserie=A.idserie and B.documento_iddocumento=$iddoc", "", $conn);
 	if($serie[0][0] == "") {
@@ -83,7 +86,7 @@ function transferencia_automatica($idformato, $iddoc, $destinos, $tipo, $notas =
 		$adicionales["notas"] = "'" . $notas . "'";
 		$datos["ver_notas"] = 1;
 	}
-	
+
 	foreach($vector as $fila) {
 		if(!strpos($fila, "#")) {
 			if($tipo == 3) {
@@ -99,7 +102,7 @@ function transferencia_automatica($idformato, $iddoc, $destinos, $tipo, $notas =
 		} else {
 			$lista = buscar_funcionarios(str_replace("#", "", $fila));
 		}
-		
+
 		$datos["tipo_destino"] = "1";
 		$datos["archivo_idarchivo"] = $iddoc;
 		$datos["origen"] = usuario_actual("funcionario_codigo");
@@ -113,7 +116,7 @@ function transferencia_automatica($idformato, $iddoc, $destinos, $tipo, $notas =
 function mostrar_preparo($idformato, $iddoc) {
 	global $conn;
 	$ejecutor = busca_filtro_tabla("ejecutor", "documento", "iddocumento=$iddoc", "", $conn);
-	
+
 	if($ejecutor["numcampos"] == 0)
 		return;
 	else {
@@ -127,7 +130,7 @@ function mostrar_preparo($idformato, $iddoc) {
 function buscar_jefe_directo($dep) {
 	global $conn;
 	$funcionario_dependencia = busca_filtro_tabla("c.funcionario_codigo", "dependencia_cargo a, cargo b, funcionario c", "a.funcionario_idfuncionario=c.idfuncionario and a.estado=1 and a.dependencia_iddependencia=" . $dep . " and a.cargo_idcargo=b.idcargo and (lower(b.nombre) like '%director%' OR lower(b.nombre) like '%lider%' OR lower(b.nombre) like '%jefe%')", "", $conn);
-	
+
 	if($funcionario_dependencia["numcampos"])
 		return ($funcionario_dependencia[0]["funcionario_codigo"]);
 	else {
@@ -288,7 +291,7 @@ function componente_ejecutor($idcampo, $iddoc) {
 		// $parametros=explode("@",$campo[0]["valor"]);
 	$campos = explode(",", $parametros[2]);
 	$alto = 26 * (count($campos) + 6);
-	echo '<iframe border=0 frameborder="0" framespacing="0" name="frame_' . $campo[0]["nombre"] . '" id="frame_' . $campo[0]["nombre"] . '" src="../librerias/acciones_ejecutor.php?formulario_autocompletar=formulario_formatos&campo_autocompletar=' . $campo[0]["nombre"] . '&tabla=' . $formato[0]["nombre_tabla"] . '&campos_auto=' . $parametros[1] . '&tipo=' . $parametros[0] . '&campos=' . $parametros[2] . $adicionales . '" width="100%" height="' . $alto . 'px"></iframe>';
+	echo '<iframe border=0 frameborder="0" framespacing="0" name="frame_' . $campo[0]["nombre"] . '" id="frame_' . $campo[0]["nombre"] . '" src="../../' . FORMATOS_SAIA . 'librerias/acciones_ejecutor.php?formulario_autocompletar=formulario_formatos&campo_autocompletar=' . $campo[0]["nombre"] . '&tabla=' . $formato[0]["nombre_tabla"] . '&campos_auto=' . $parametros[1] . '&tipo=' . $parametros[0] . '&campos=' . $parametros[2] . $adicionales . '" width="100%" height="' . $alto . 'px"></iframe>';
 }
 
 /*
@@ -308,7 +311,7 @@ function componente_ejecutor($idcampo, $iddoc) {
 function busca_campo($campos, $llave, $tabla, $id) {
 	global $conn;
 	$resultado = busca_filtro_tabla($campos, $tabla, $llave . "='" . $id . "'", "", $conn);
-	
+
 	if(strpos($campos, ",") > 0) {
 		$lista = explode(",", $campos);
 		foreach($lista as $uno)
@@ -507,7 +510,7 @@ function listar_funcionarios($idformato, $nombre_campo, $iddoc) {
 	global $conn;
 	$formato = busca_filtro_tabla('nombre_tabla', 'formato', 'idformato=' . $idformato, '', $conn);
 	$valor = busca_filtro_tabla($nombre_campo, $formato[0]["nombre_tabla"], 'documento_iddocumento=' . $iddoc, '', $conn);
-	
+
 	if($valor["numcampos"]) {
 		$lista = explode(',', $valor[0][0]);
 		for($i = 0; $i < count($lista); $i++) {
@@ -540,7 +543,7 @@ function listar_dependencias($idformato, $nombre_campo, $iddoc) {
 	global $conn;
 	$formato = busca_filtro_tabla('nombre_tabla', 'formato', 'idformato=' . $idformato, '', $conn);
 	$valor = busca_filtro_tabla($nombre_campo, $formato[0]["nombre_tabla"], 'documento_iddocumento=' . $iddoc, '', $conn);
-	
+
 	if($valor["numcampos"]) {
 		$lista = explode(',', $valor[0][0]);
 		for($i = 0; $i < count($lista); $i++) {
@@ -757,7 +760,7 @@ function guardar_plantilla($idformato, $idcampo, $iddoc = NULL) {
  */
 function ciudad($idformato = 0, $iddoc = 0, $tipo = 0) {
 	global $conn;
-	
+
 	$ciudad = busca_filtro_tabla("valor", "configuracion", "nombre='ciudad'", "", $conn);
 	if($ciudad["numcampos"]) {
 		$nombre_ciudad = busca_filtro_tabla("nombre", "municipio", "idmunicipio=" . $ciudad[0]["valor"], "", $conn);
@@ -789,7 +792,7 @@ function ciudad($idformato = 0, $iddoc = 0, $tipo = 0) {
 function mostrar_fecha($idformato, $iddoc, $tipo = NULL) {
 	global $conn;
 	$datos = busca_filtro_tabla("nombre,nombre_tabla", "formato", "idformato=$idformato", "", $conn);
-	
+
 	$resultado = busca_filtro_tabla(fecha_db_obtener("fecha_" . $datos[0]["nombre"], "Y-m-d") . " as fecha", $datos[0]["nombre_tabla"], "documento_iddocumento=$iddoc", "", $conn);
 	if(!$resultado["numcampos"])
 		$resultado = busca_filtro_tabla(fecha_db_obtener("fecha", "Y-m-d") . " as fecha", "documento", "iddocumento=$iddoc", "", $conn);
@@ -820,12 +823,12 @@ function mostrar_anexos_memo($idformato, $iddoc = NULL) {
 	if($inf_memorando[0]["anexos_fisicos"] != "") {
 		$anexos[] = $inf_memorando[0]["anexos_fisicos"];
 	}
-	
+
 	if(count($anexos) > 0) {
 		echo '<span><font size=2><br />Anexos: ';
 		echo implode(", ", $anexos) . '</font></span>';
 	}
-	
+
 	include_once ($ruta_db_superior . "anexosdigitales/funciones_archivo.php");
 	echo listar_anexos_documento($iddoc, NULL, NULL, $_REQUEST["tipo"], "DESCARGAR|ENCABEZADO");
 }
@@ -850,9 +853,9 @@ function despedida($idformato, $idcampo, $iddoc = NULL) {
               <option value="Atentamente,">Atentamente,</option>
               <option value="Cordialmente,">Cordialmente,</option>
             </select>
-          <label style="text-decoration:underline;cursor: pointer" 
+          <label style="text-decoration:underline;cursor: pointer"
           onclick="document.getElementById(' . "'despedida'" . ').innerHTML=' . "'<td><input type=text name=despedida id=obligatorio></td>'" . ';">OTRA
-          </label>  
+          </label>
           </td>';
 	} else {
 		$tabla = busca_filtro_tabla("nombre_tabla", "formato", "idformato=$idformato", "", $conn);
@@ -870,9 +873,9 @@ function despedida($idformato, $idcampo, $iddoc = NULL) {
 		if($valor[0]["despedida"] != "Atentamente," && $valor[0]["despedida"] != "Cordialmente,")
 			echo '<option value="' . $valor[0]["despedida"] . '" selected>' . $valor[0]["despedida"] . '</option>';
 		echo '</select>
-          <label style="text-decoration:underline;cursor: pointer" 
+          <label style="text-decoration:underline;cursor: pointer"
           onclick="document.getElementById(' . "'despedida'" . ').innerHTML=' . "'<td><input type=text name=despedida id=obligatorio></td>'" . ';">OTRA
-          </label>  
+          </label>
           </td>';
 	}
 }
@@ -953,7 +956,7 @@ function despedida($idformato, $idcampo, $iddoc = NULL) {
 function anexos_fisicos($idformato, $idcampo, $iddoc = NULL) {
 	global $conn;
 	?>
-<td bgcolor="#F5F5F5">    
+<td bgcolor="#F5F5F5">
     <?php
 	$anexos_fisicos = array();
 	$anexos_fisicos["numcampos"] = 0;
@@ -1027,15 +1030,15 @@ function genera_campo_listados_editar($idformato, $idcampo, $iddoc = NULL, $busc
 	// ***************** validaciones ******************
 	if($campo[0]["obligatoriedad"])
 		$obligatorio[] = "class='required'";
-	
+
 	$caracteristicas = busca_filtro_tabla("tipo_caracteristica as tipo,valor", "caracteristicas_campos", "idcampos_formato=$idcampo", "", $conn);
 	for($i = 0; $i < $caracteristicas["numcampos"]; $i++)
 		$obligatorio[] = $caracteristicas[$i]["tipo"] . "='" . $caracteristicas[$i]["valor"] . "'";
-	
+
 	if(is_array($obligatorio) && count($obligatorio) > 0)
 		$obligatorio = implode(" ", $obligatorio);
 		// *************************************************
-	
+
 	$listado0 = array();
 	if($accion == "SELECT") {
 		$datos = ejecuta_filtro_tabla($campo[0]["valor"], $conn);
@@ -1048,10 +1051,10 @@ function genera_campo_listados_editar($idformato, $idcampo, $iddoc = NULL, $busc
 		// else alerta("POSEE UN PROBLEMA EN LA BUSQUEDA CAMPO: ".$campo[0]["etiqueta"]);
 	} else
 		$llenado = html_entity_decode($campo[0]["valor"]);
-	
+
 	$tipo = $campo[0]["etiqueta_html"];
 	$nombre = $campo[0]["nombre"];
-	
+
 	$tabla = busca_filtro_tabla("nombre_tabla,item", "formato", "idformato=$idformato", "", $conn);
 	if($buscar)
 		$default = "";
@@ -1063,7 +1066,7 @@ function genera_campo_listados_editar($idformato, $idcampo, $iddoc = NULL, $busc
 		$default = $valor[0][0];
 	} else
 		$default = $campo[0]["predeterminado"];
-	
+
 	$texto = "";
 	$listado3 = array();
 	if($llenado != "" && $llenado != "Null") {
@@ -1075,7 +1078,7 @@ function genera_campo_listados_editar($idformato, $idcampo, $iddoc = NULL, $busc
 		}
 	}
 	$cont3 = count($listado3);
-	
+
 	switch($tipo) {
 		case "radio":
 			$texto .= '<table border="0">';
@@ -1110,11 +1113,11 @@ function genera_campo_listados_editar($idformato, $idcampo, $iddoc = NULL, $busc
 					$texto .= '<tr>';
 				}
 				$texto .= '<td><label for="' . $nombre . $j . '"><input type="' . $tipo . '" ';
-				
+
 				if($j == 0)
 					$texto .= $obligatorio;
 				$texto .= ' name="' . $nombre . '[]" id="' . $nombre . $j . '" value="' . ($listado3[$j][0]) . '"';
-				
+
 				if(in_array(($listado3[$j][0]), $lista_default))
 					$texto .= ' checked ';
 				$texto .= '>' . codifica_encabezado(strip_tags($listado3[$j][1])) . "</label></td>";
@@ -1158,14 +1161,14 @@ function genera_campo_listados_editar($idformato, $idcampo, $iddoc = NULL, $busc
 				$hijo = $select2[0] . $idcampo;
 			} else
 				$hijo = $nombre;
-			
-			$texto .= "<table width='100%'><tr><td width='20%'> " . ucfirst($select[0]) . "</td><td> 
+
+			$texto .= "<table width='100%'><tr><td width='20%'> " . ucfirst($select[0]) . "</td><td>
       <select name='" . $select[0] . "$idcampo' id='" . $select[0] . "$idcampo' idcomponente='" . $idcampo . "' pos='0' hijo='$hijo'><option value='' selected>Seleccionar...</option>";
 			for($i = 0; $i < $datos_padre["numcampos"]; $i++) {
 				$texto .= "<option value='" . $datos_padre[$i]["id"] . "'>" . $datos_padre[$i]["nombre"] . "</option>";
 			}
 			$texto .= "</select></td></tr>";
-			
+
 			for($i = 1; $i < count($parametros); $i++) {
 				$select = explode(";", $parametros[$i]);
 				// si es el ultimo select
@@ -1182,9 +1185,9 @@ function genera_campo_listados_editar($idformato, $idcampo, $iddoc = NULL, $busc
 					$select3 = explode(";", $parametros[$i + 1]);
 					$hijo = " hijo='" . $select3[0] . $idcampo . "' ";
 				}
-				
+
 				$texto .= "<tr><td>" . $select[0] . "</td><td><select name='$nombre2' id='$nombre2' pos='$i' idcomponente='" . $campo[0]["idcampos_formato"] . "' ";
-				
+
 				if($i == (count($parametros) - 1)) // si es el ultimo select
 {
 					$texto .= $obligatorio;
@@ -1229,11 +1232,11 @@ function buscar_dependencia() {
 	} else {
 		$dep_sel = "";
 	}
-	
+
 	$hoy = date('Y-m-d');
 	$dep = busca_filtro_tabla("distinct dependencia.nombre,iddependencia_cargo,cargo.nombre as cargo", "funcionario,dependencia_cargo,dependencia,cargo", "dependencia_cargo.funcionario_idfuncionario=funcionario.idfuncionario  AND cargo_idcargo=idcargo AND cargo.estado=1 AND dependencia_cargo.dependencia_iddependencia=dependencia.iddependencia AND dependencia_cargo.estado=1 AND funcionario.login='" . usuario_actual('login') . "' AND cargo.tipo_cargo='1' AND " . fecha_db_obtener('dependencia_cargo.fecha_inicial', 'Y-m-d') . "<='" . $hoy . "' AND " . fecha_db_obtener('dependencia_cargo.fecha_final', 'Y-m-d') . ">='" . $hoy . "'", "dependencia.nombre", $conn);
 	$numfilas = $dep["numcampos"];
-	
+
 	$html = '<td width="79%" bgcolor="#F5F5F5">';
 	if($numfilas > 1) {
 		$html .= '<select name="dependencia" id="dependencia" class="required">';
@@ -1275,7 +1278,7 @@ function iniciales($idformato, $idcampo, $iddoc = NULL) {
 		$nombres = explode(" ", $resultado[0]["nombres"]);
 		$apellidos = explode(" ", $resultado[0]["apellidos"]);
 		// $iniciales=@$nombres[0][0]."".@$nombres[1][0]."".$apellidos[0][0]."".$apellidos[1][0];
-		$iniciales = $resultado[0]["nombres"];
+		$iniciales = $resultado[0]["nombres"]." ".$resultado[0]['apellidos'];
 	} else {
 		$datos = busca_filtro_tabla("nombre,nombre_tabla", "formato", "idformato=$idformato", "", $conn);
 		$campo = busca_filtro_tabla("iniciales", $datos[0]["nombre_tabla"], "documento_iddocumento=$iddoc", "", $conn);
@@ -1301,12 +1304,12 @@ function fecha_formato($idformato, $idcampo, $iddoc = NULL) {
 	global $conn;
 	$datos = busca_filtro_tabla("nombre,nombre_tabla", "formato", "idformato=$idformato", "", $conn);
 	$campo = busca_filtro_tabla("", "campos_formato", "idcampos_formato=$idcampo", "", $conn);
-	
+
 	if($campo[0]["tipo_dato"] == 'DATE')
 		$formato = "Y-m-d";
 	elseif($campo[0]["tipo_dato"] == 'DATETIME')
 		$formato = "Y-m-d H:i";
-	
+
 	if($iddoc == NULL) {
 		$valor = date($formato);
 	} else {
@@ -1379,7 +1382,7 @@ function listar_item($campoenlace, $llave, $parametros, $edicion = 0) {
 	$filtro_campos = "";
 	$filtro_funciones = "";
 	$formato = $vector_parametros[0];
-	
+
 	if(isset($vector_parametros[1]) && $vector_parametros[1] != "")
 		$filtro_campos = " and nombre in('" . implode("','", explode(",", $vector_parametros[1])) . "') ";
 	if(isset($vector_parametros[2])) {
@@ -1390,9 +1393,9 @@ function listar_item($campoenlace, $llave, $parametros, $edicion = 0) {
 	}
 	$etiquetas_funciones = array();
 	$info_formato = busca_filtro_tabla("etiqueta,nombre_tabla,nombre,ruta_editar,ruta_adicionar,ruta_mostrar", "formato", "idformato=" . $formato, "", $conn);
-	
+
 	$campos = busca_filtro_tabla("nombre,etiqueta", "campos_formato", "etiqueta_html not in('hidden','detalle') $filtro_campos and formato_idformato=" . $formato, "", $conn);
-	
+
 	$nombres_campos = extrae_campo($campos, "nombre", "");
 	$etiquetas_campos = extrae_campo($campos, "etiqueta", "");
 	$ids = busca_filtro_tabla("id" . $info_formato[0]["nombre_tabla"], $info_formato[0]["nombre_tabla"], "$campoenlace=$llave", "", $conn);
@@ -1414,7 +1417,7 @@ function listar_item($campoenlace, $llave, $parametros, $edicion = 0) {
 	if($ids["numcampos"]) {
 		echo "<table border='1' width='100%' style='border-collapse:collapse'>
          <tr class='encabezado_list'><td>" . implode("</td><td>", $etiquetas_campos) . "</td></tr>";
-		
+
 		for($i = 0; $i < $ids["numcampos"]; $i++) {
 			echo "<tr>";
 			foreach($nombres_campos as $fila)
@@ -1457,7 +1460,7 @@ function mostrar_valor_campo($campo, $idformato, $iddoc, $tipo = NULL) {
 	if($datos["numcampos"]) {
 		if($datos[0]["etiqueta_html"] == "item") {
 			$datos_detalle = busca_filtro_tabla("id" . $datos[0]["nombre_tabla"] . ",d.estado", $datos[0]["nombre_tabla"] . " f,documento d", "documento_iddocumento=iddocumento and documento_iddocumento=" . $iddoc, "", $conn);
-			
+
 			$editar = 0;
 			if(!isset($_REQUEST["tipo"]) || @$_REQUEST["tipo"] == 1) {
 				$permisos = busca_filtro_tabla("permisos", "permiso_documento", "funcionario='" . usuario_actual("funcionario_codigo") . "' and documento_iddocumento='" . $iddoc . "'", "", $conn);
@@ -1480,7 +1483,7 @@ function mostrar_valor_campo($campo, $idformato, $iddoc, $tipo = NULL) {
 			}
 		} else
 			$campos = busca_filtro_tabla($campo, $datos[0]["nombre_tabla"], $llave . "=" . $iddoc, "", $conn);
-		
+
 		if($campos["numcampos"]) {
 			if($datos[0]["etiqueta_html"] == "arbol") {
 				$tipo_arbol = explode(";", $datos[0]["valor"]);
@@ -1499,7 +1502,7 @@ function mostrar_valor_campo($campo, $idformato, $iddoc, $tipo = NULL) {
 			} elseif($datos[0]["etiqueta_html"] == "valor" && strpos($_SERVER["PHP_SELF"], "edit") === false) {
 				$retorno = "$" . number_format($campos[0][$campo], 0, ",", ".");
 			} elseif($datos[0]["etiqueta_html"] == "ejecutor") {
-				
+
 				if(basename($_SERVER["PHP_SELF"]) != basename($datos[0]["ruta_adicionar"]) && basename($_SERVER["PHP_SELF"]) != basename($datos[0]["ruta_editar"])) {
 					if($datos[0]["valor"] == "") {
 						$parametros = array(
@@ -1511,10 +1514,10 @@ function mostrar_valor_campo($campo, $idformato, $iddoc, $tipo = NULL) {
 						$parametros = explode("@", $datos[0]["valor"]);
 					$ejecutores = busca_filtro_tabla("", "ejecutor,datos_ejecutor", "ejecutor_idejecutor=idejecutor and iddatos_ejecutor in(" . $campos[0][$campo] . ")", "", $conn);
 					if($parametros[3] != "") {
-						include_once ($ruta_db_superior . "/formatos/librerias/funciones_ejecutor.php");
+						include_once ($ruta_db_superior . FORMATOS_SAIA . "librerias/funciones_ejecutor.php");
 						$retorno .= llamado_ejecutor($parametros[3], $campo, $idformato, $iddoc);
 					} else {
-						
+
 						$vector_mostrar = array(
 								"nombre"
 						);
@@ -1630,7 +1633,7 @@ function formatea_campo($valor, $tipo, $llenado) {
 				$valores = array();
 				for($j = 0; $j < $datos["numcampos"]; $j++)
 					$valores[] = codifica_encabezado($datos[$j]["nombre"]);
-				
+
 				if($datos["numcampos"])
 					return (implode(", ", $valores));
 				else
@@ -1649,7 +1652,7 @@ function formatea_campo($valor, $tipo, $llenado) {
 				$resultado[0] = $valor;
 			for($i = 0; $i < count($arreglo1); $i++) {
 				$arreglo2 = explode(",", $arreglo1[$i]);
-				
+
 				foreach($valores as $fila) {
 					if($arreglo2[0] == $fila) {
 						$resultado[] = ($arreglo2[1]);
@@ -1679,7 +1682,7 @@ function formatea_campo($valor, $tipo, $llenado) {
  */
 function asignar_responsables($campo, $idformato, $iddoc = NULL) {
 	global $conn;
-	
+
 	echo '<tr>
       <td class="encabezado" width="21%">ASIGNAR RESPONSABLES:</td>
       <td width="79%" bgcolor="#F5F5F5">
@@ -1781,9 +1784,7 @@ function submit_formato($formato, $iddoc = NULL) {
 		}
 		if($contador["numcampos"]) {
 			echo '<input type="hidden" name="tipo_radicado" value="' . $contador[0]["nombre"] . '">';
-		} 
-
-		else {
+		} else {
 			$sql2 = "INSERT INTO contador(consecutivo,nombre ) VALUE(1,'" . $contador[0]["nombre_tabla"] . "')";
 			phpmkr_query($sql2, $conn) or die("Failed to execute query" . phpmkr_error() . ' SQL:' . $sql);
 			$idcontador=phpmkr_insert_id();
@@ -1793,7 +1794,7 @@ function submit_formato($formato, $iddoc = NULL) {
 		}
 		if(@$_REQUEST["idpaso_documento"])
 			echo '<input type="hidden" name="idpaso_documento" value="' . $_REQUEST["idpaso_documento"] . '">';
-		
+
 		echo('<input type="hidden" name="funcion" value="radicar_plantilla">
               <input type="hidden" name="tabla" value="' . $contador[0]["nombre_tabla"] . '">
               <input type="hidden" name="formato" value="' . $contador[0]["formato"] . '">
@@ -1805,7 +1806,7 @@ function submit_formato($formato, $iddoc = NULL) {
                     $datos_padre=busca_filtro_tabla("","formato","idformato=".$_REQUEST["idformato"],"",$conn);
                     if($datos_padre["numcampos"]){
                         $cadena=$ruta_db_superior.'formatos/'.$datos_padre[0]["nombre"].'/mostrar_'.$datos_padre[0]["nombre"].'.php?iddoc='.$_REQUEST["idpadre"].'&idformato='.$datos_padre[0]["idformato"];
-                        $codigo_js='<script type="text/javascript">function redirecciona_padre(){window.open("'.$cadena.'","_self");}</script>';    
+                        $codigo_js='<script type="text/javascript">function redirecciona_padre(){window.open("'.$cadena.'","_self");}</script>';
                         echo($codigo_js);
                     }
                 }
@@ -1817,15 +1818,15 @@ function submit_formato($formato, $iddoc = NULL) {
         echo('</td></tr>');
 	} else {
 		$contador = busca_filtro_tabla("A.nombre,B.nombre_tabla", "contador A,formato B", "A.idcontador=B.contador_idcontador AND B.idformato=" . $formato, "", $conn);
-		
+
 		if(isset($_REQUEST["anterior"]))
 			echo '<input type="hidden" name="anterior" value="' . $_REQUEST["anterior"] . '">';
 		if(@$_REQUEST["idpaso_documento"])
 			echo '<input type="hidden" name="idpaso_documento" value="' . $_REQUEST["idpaso_documento"] . '">';
-		
+
 		echo '<tr><td colspan="2" align="center"><input type="hidden" name="iddoc" value="' . $iddoc . '">
           <input type="hidden" name="tabla" value="' . $contador[0]["nombre_tabla"] . '">
-          <script>formulario_formatos.action="../librerias/modificar_plantilla.php";</script>
+          <script>formulario_formatos.action="../../' . FORMATOS_SAIA . 'librerias/modificar_plantilla.php";</script>
           <input class="submit" type="submit" id="continuar" value="Continuar"></td></tr>';
 	}
 	?>
@@ -1834,8 +1835,8 @@ function submit_formato($formato, $iddoc = NULL) {
     if($('#formulario_formatos').valid()){
   		$("#continuar").hide();
   		$("#continuar").after('<input type="button" disabled="true" value="Enviando...">');
-     } 
-  });  
+     }
+  });
   </script>
 <?php
 }
@@ -1858,7 +1859,7 @@ function validar_valor_campo($campo) {
 	$padre = busca_filtro_tabla("cod_padre,banderas,nombre", "formato", "idformato=" . $campos[0]["formato_idformato"], "", $conn);
 	$acciones = explode(",", $campos[0]["acciones"]);
 	$banderas = explode(",", $padre[0]["banderas"]);
-	
+
 	if($campos[0]["autoguardado"]) {
 		$campos = busca_filtro_tabla("contenido", "autoguardado", "usuario='" . usuario_actual("funcionario_codigo") . "' and formato='" . $padre[0]["nombre"] . "' and campo='" . $campos[0]["nombre"] . "'", "", $conn);
 		return ($campos[0][0]);
@@ -2150,10 +2151,11 @@ function mostrar_seleccionados($idformato, $idcampo, $tipo_arbol, $iddoc, $tipo 
 	$campo = busca_filtro_tabla("", "campos_formato", "idcampos_formato=$idcampo", "", $conn);
 	if($iddoc != NULL) {
 		$tabla = busca_filtro_tabla("nombre_tabla,item", "formato", "idformato=$idformato", "", $conn);
-		if($tabla[0]["item"])
+		if($tabla[0]["item"]) {
 			$valor = busca_filtro_tabla($campo[0]["nombre"], $tabla[0]['nombre_tabla'], "id" . $tabla[0]['nombre_tabla'] . "=$iddoc", "", $conn);
-		else
+		} else {
 			$valor = busca_filtro_tabla($campo[0]["nombre"], $tabla[0]['nombre_tabla'], "documento_iddocumento=$iddoc", "", $conn);
+		}
 		$vector = explode(",", str_replace("#", "d", $valor[0][0]));
 		$vector = array_unique($vector);
 		sort($vector);
@@ -2163,14 +2165,12 @@ function mostrar_seleccionados($idformato, $idcampo, $tipo_arbol, $iddoc, $tipo 
 				$nombres[] = $valor[0][$campo[0]["nombre"]];
 			}
 		}
-		
+
 		foreach($vector as $fila) {
-			if($tipo_arbol == 1) // arbol de series
-{
+			if($tipo_arbol == 1) { // arbol de series
 				$datos = busca_filtro_tabla("nombre", "serie", "idserie=" . $fila, "", $conn);
 				$nombres[] = $datos[0]["nombre"];
-			} elseif($tipo_arbol == 0) // arbol de funcionarios
-{
+			} else if($tipo_arbol == 0) { // arbol de funcionarios
 				if(strpos($fila, 'd') > 0) {
 					$datos = busca_filtro_tabla("nombre", "dependencia", "iddependencia=" . str_replace("d", "", $fila), "", $conn);
 					$nombres[] = $datos[0]["nombre"];
@@ -2178,25 +2178,24 @@ function mostrar_seleccionados($idformato, $idcampo, $tipo_arbol, $iddoc, $tipo 
 					if($pos = strpos($fila, "_"))
 						$fila = substr($fila, 0, $pos);
 					$datos = busca_filtro_tabla("nombres,apellidos", "funcionario", "funcionario_codigo=" . $fila, "", $conn);
-					
+
 					$nombres[] = ucwords($datos[0]["nombres"] . " " . $datos[0]["apellidos"]);
 				}
-			} elseif($tipo_arbol == 5) // arbol de roles
-{
+			} else if($tipo_arbol == 5) { // arbol de roles
 				if(strpos($fila, 'd') > 0) {
 					$datos = busca_filtro_tabla("nombre", "dependencia", "iddependencia=" . str_replace("d", "", $fila), "", $conn);
 					$nombres[] = $datos[0]["nombre"];
 				} else {
-					if($pos = strpos($fila, "_"))
+					if($pos = strpos($fila, "_")) {
 						$fila = substr($fila, 0, $pos);
+					}
 					$datos = busca_filtro_tabla("nombres,apellidos,cargo.nombre as cargo", "funcionario,dependencia_cargo,cargo", "funcionario_idfuncionario=idfuncionario and cargo_idcargo=idcargo and iddependencia_cargo='" . $fila . "'", "", $conn);
 					$nombres[] = ucwords($datos[0]["nombres"] . " " . $datos[0]["apellidos"] . " - " . $datos[0]["cargo"]);
 				}
-			} elseif($tipo_arbol == 2) // arbol de dependencias
-{
+			} else if($tipo_arbol == 2) { // arbol de dependencias
 				$datos = busca_filtro_tabla("nombre", "dependencia", "iddependencia=" . $fila, "", $conn);
 				$nombres[] = ucwords($datos[0]["nombre"]);
-			} elseif($tipo_arbol == 4) { // valor de tabla cuando se llama a test_serie.php el unico campo que se puede mostrar de la tabla es nombre
+			} else if($tipo_arbol == 4) { // valor de tabla cuando se llama a test_serie.php el unico campo que se puede mostrar de la tabla es nombre
 				if($campo["numcampos"]) {
 					$arreglo = explode(";", $campo[0]["valor"]);
 					if(strpos($arreglo[0], "test_serie")) {
@@ -2217,8 +2216,9 @@ function mostrar_seleccionados($idformato, $idcampo, $tipo_arbol, $iddoc, $tipo 
 	}
 	if($tipo) {
 		return ($nombres);
-	} else
+	} else {
 		echo ($nombres);
+	}
 	return;
 }
 /*
@@ -2416,7 +2416,7 @@ function foto_pagina($idformato, $iddoc) {
 	if($foto["numcampos"]) {
 		echo ("<a href='../../comentario_mostrar.php?key=" . $iddoc . "&pag=" . $foto[0]["consecutivo"] . "' border='0' target='centro'><img src='../../" . $foto[0]["imagen"] . "'></a>");
 	} else
-		echo ("<a href='" . $ruta_db_superior . "paginaadd.php?key=" . $iddoc . "&no_menu=1'><img src='" . $ruta_db_superior . "imagenes/sin_foto.jpg'></a>");
+		echo ("<a href='" . RUTA_SAIA . "paginaadd.php?key=" . $iddoc . "&no_menu=1'><img src='" . RUTA_SAIA . "imagenes/sin_foto.jpg'></a>");
 }
 
 /*
@@ -2454,21 +2454,21 @@ function datos_usuario_documento($idformato, $iddoc) {
  */
 function listar_select_padres($tabla) {
 	global $conn;
-	
+
 	if(!@$_REQUEST["anterior"]) {
 		$listado = busca_filtro_tabla("A.*, B.numero AS nombre_doc", $tabla . " A, documento B", "A.documento_iddocumento=B.iddocumento AND B.numero<>0", "", $conn);
-		
+
 		if($listado["numcampos"]) {
 			$campos = busca_filtro_tabla("A.nombre", "campos_formato A,formato B", "A.formato_idformato=B.idformato AND B.nombre_tabla LIKE'" . $tabla . "' AND acciones LIKE '%p%'", "orden", $conn);
-			
+
 			$etiqueta = busca_filtro_tabla("etiqueta", "formato", "nombre_tabla like '$tabla'", "", $conn);
-			
+
 			$nombres_campos = array();
 			for($i = 0; $i < $campos["numcampos"]; $i++)
 				$nombres_campos[] = $campos[$i][0];
 			$valores = busca_filtro_tabla("A." . implode(",A.", $nombres_campos) . ",id$tabla", $tabla . " A,documento B", "A.documento_iddocumento=B.iddocumento AND B.numero<>0", "A." . implode(",A.", $nombres_campos), $conn);
 			// $etiqueta=substr(str_replace("_"," ",$tabla),2);
-			
+
 			echo ('<tr ><td class="encabezado">' . strtoupper($etiqueta[0][0]) . '</td><td bgcolor="#F5F5F5">');
 			echo ('<select name="' . $tabla . '" obligatorio="obligatorio">');
 			for($i = 0; $i < $valores["numcampos"]; $i++) {
@@ -2585,7 +2585,7 @@ function listar_formato_hijo($campos, $tabla, $campo_enlace, $llave, $orden, $al
 	}
 	$lcampos = busca_filtro_tabla("A.*,B.idformato", "campos_formato A,formato B", "B.nombre_tabla LIKE '" . $tabla . "' AND A.formato_idformato=B.idformato" . $where, "A.orden", $conn);
 	$hijo = busca_filtro_tabla("a.*", $tabla . " a,documento d", "documento_iddocumento=iddocumento and d.estado<>'ELIMINADO' and " . $campo_enlace . "=" . $llave . $condicion, $orden, $lcampos);
-	
+
 	if($hijo["numcampos"] && $lcampos["numcampos"]) {
 		$texto = '<table bordercolor="black" style="border-collapse:collapse" border="1" width="100%"><tr class="encabezado_list">';
 		for($j = 0; $j < $lcampos["numcampos"]; $j++) {
@@ -2601,7 +2601,7 @@ function listar_formato_hijo($campos, $tabla, $campo_enlace, $llave, $orden, $al
 		}
 		$texto .= '</table>';
 	}
-	
+
 	return ($texto);
 }
 
@@ -2716,7 +2716,7 @@ function diferencia_inicial_respuesta($idformato, $iddoc) {
 		for($i = 0; $i < $tiempo_origen["numcampos"]; $i++) {
 			$tiempo_respuesta = busca_filtro_tabla("A.*,B.nombre,B.ruta_mostrar", "documento A,formato B", "A.plantilla=B.nombre AND A.iddocumento=" . $tiempo_origen[$i]["destino"], "", $conn);
 			if($tiempo_respuesta["numcampos"]) {
-				
+
 				$diferencia = ejecuta_filtro("SELECT DATEDIFF('" . $tiempo_origen[$i]["fecha_aprob"] . "','" . $tiempo_respuesta[0]["fecha"] . "') AS dif_dias, TIMEDIFF('" . $tiempo_respuesta[0]["fecha"] . "','" . $tiempo_origen[$i]["fecha_aprob"] . "') AS dif_horas", $conn);
 				if($diferencia["numcampos"]) {
 					$tiempo = explode(":", $diferencia["dif_horas"]);
@@ -2771,16 +2771,16 @@ function mostrar_firma_funcionario($func, $fechadoc, $retorno = 0) {
 	if(!$alto_firma["numcampos"])
 		$alto_firma[0]["valor"] = 100;
 	$func = busca_filtro_tabla("nombres,apellidos,firma,funcionario_codigo", "funcionario", "funcionario_codigo=" . $func, "", $conn);
-	
+
 	$cargo = cargos_memo($func[0]["funcionario_codigo"], $fechadoc, "de", 1);
-	
+
 	if($func["firma"] != "") {
 		$texto = '<img src="' . PROTOCOLO_CONEXION . RUTA_PDF . '/formatos/librerias/mostrar_foto.php?codigo=' . $func[0]["funcionario_codigo"] . '" width="' . $ancho_firma[0]["valor"] . '" height="' . $alto_firma[0]["valor"] . '"/>';
 	} else {
 		$texto = '<img src="' . PROTOCOLO_CONEXION . RUTA_PDF . '/firmas/blanco.jpg" width="' . $ancho_firma[0]["valor"] . '" height="' . $alto_firma[0]["valor"] . '" >';
 	}
 	$texto .= "<br /><b>" . mayusculas($func[0]["nombres"] . " " . $func[0]["apellidos"]) . "</b><br />" . $cargo;
-	
+
 	if($retorno)
 		return $texto;
 	else
@@ -2815,21 +2815,21 @@ function registrar_imagenes_documento($idformato, $iddoc, $campo) {
 		$ruta .= "../";
 		$max_salida--;
 	}
-	
+
 	if($iddoc == '')
 		$iddoc = $_REQUEST["iddoc"];
-	
+
 	$formato = busca_filtro_tabla("", "formato", "idformato=" . $idformato, "", $conn);
 	$contenido = busca_filtro_tabla("", $formato[0]["nombre_tabla"], "documento_iddocumento=" . $iddoc, "", $conn);
 	$cadena = $contenido[0][$campo];
-	
+
 	// --------------------------Creo el destino si no existe--------------------------
 	$atras = $ruta_db_superior . '../';
-	
+
 	$destino = 'imagenes_documentos/' . date('Y') . '/' . $iddoc . '/';
 	if(!is_dir($atras . $destino))
 		crear_destino($atras . $destino);
-	
+
 	$dir = 'images/' . usuario_actual("login") . '/';
 	if($dh = @opendir($atras . $dir)) {
 		while(false !== ($obj = readdir($dh))) {
@@ -2843,17 +2843,17 @@ function registrar_imagenes_documento($idformato, $iddoc, $campo) {
 		}
 	}
 	closedir($dh);
-	
+
 	// die();
 }
 
 function buscar_papa_formato_campo($idformato, $iddoc, $nombre_tabla, $campo) {
 	global $conn;
 	$formato = busca_filtro_tabla("nombre_tabla,idformato,cod_padre", "formato", "idformato=" . $idformato, "", $conn);
-	
+
 	if($formato["numcampos"]) {
 		$documento = busca_filtro_tabla("ft.*,d.estado,d.ejecutor,d.numero", $formato[0]["nombre_tabla"] . " ft,documento d", "d.iddocumento=ft.documento_iddocumento and ft.documento_iddocumento=" . $iddoc, "", $conn);
-		
+
 		if($formato[0]["nombre_tabla"] == $nombre_tabla && $documento["numcampos"]) {
 			return ($documento[0][$campo]);
 		} elseif($formato[0]["cod_padre"] != '' && $formato[0]["cod_padre"] != 0) {
@@ -2896,7 +2896,7 @@ function formato_primero($idformato, $campo) {
 
 function transferir_desde_papa($idformato, $iddoc, $destinos, $tipo, $notas = "") {
 	global $conn;
-	
+
 	if($tipo == "1") { // cuando es una lista de funcionarios fijos (roles)
 		$vector = explode("@", $destinos);
 	} elseif($tipo == "2") { // cuando el listado se toma de un campo del formato (roles)
@@ -2906,7 +2906,7 @@ function transferir_desde_papa($idformato, $iddoc, $destinos, $tipo, $notas = ""
 	} elseif($tipo == "3") { // cuando es una lista de funcionarios fijos (funcionario_codigo)
 		$vector = explode("@", $destinos);
 	}
-	
+
 	foreach($vector as $fila) {
 		if(strpos($fila, "#") === false) {
 			if($tipo == 3) {
@@ -2923,7 +2923,7 @@ function transferir_desde_papa($idformato, $iddoc, $destinos, $tipo, $notas = ""
 			$lista = buscar_funcionarios(str_replace("#", "", $fila));
 		}
 	}
-	
+
 	$ft_papa = formato_primero($idformato, 'nombre_tabla');
 	$idformato_papa = formato_primero($idformato, 'idformato');
 	$iddoc_papa = buscar_papa_formato($idformato, $iddoc, $ft_papa);
@@ -2985,10 +2985,10 @@ function buscar_papa_primero($iddoc) {
  */
 function generar_ruta_documento($idformato, $iddoc) {
 	global $conn;
-	
+
 	$diagram_instance = busca_filtro_tabla('', 'paso_documento A, diagram_instance B', 'A.diagram_iddiagram_instance=B.iddiagram_instance AND A.documento_iddocumento=' . $iddoc, '', conn);
 	$listado_pasos = busca_filtro_tabla("", "paso A, paso_actividad B, accion C", "B.estado=1 AND A.idpaso=B.paso_idpaso AND B.accion_idaccion=C.idaccion AND (C.nombre LIKE 'confirmar%' OR C.nombre LIKE 'aprobar%') AND A.diagram_iddiagram=" . $diagram_instance[0]["diagram_iddiagram"] . " AND B.paso_anterior=" . $diagram_instance[0]["paso_idpaso"], "", $conn);
-	
+
 	// print_r($listado_pasos);
 	/*
 	 * print_r($diagram_instance);
@@ -3087,7 +3087,7 @@ function transferencia_automatica_tareas($idformato, $iddoc, $origen, $destinos,
 		$adicionales["notas"] = "'" . $notas . "'";
 		$datos["ver_notas"] = 1;
 	}
-	
+
 	foreach($vector as $fila) {
 		if(!strpos($fila, "#")) {
 			if($tipo == 3)
@@ -3102,7 +3102,7 @@ function transferencia_automatica_tareas($idformato, $iddoc, $origen, $destinos,
 			}
 		} else
 			$lista = buscar_funcionarios(str_replace("#", "", $fila));
-		
+
 		$datos["tipo_destino"] = "1";
 		$datos["archivo_idarchivo"] = $iddoc;
 		$datos["origen"] = $origen; // usuario_actual("funcionario_codigo");
@@ -3165,14 +3165,14 @@ function buscar_papa_formato($idformato, $iddoc, $nombre_tabla) {
  */
 function actualizar_dependencia($iddoc) {
 	global $conn;
-	
+
 	$fecha = busca_filtro_tabla("", "configuracion", "nombre='fecha_dependencia'", "", $conn);
 	$tabla = busca_filtro_tabla(fecha_db_obtener('fecha', 'Y-m-d') . " as fech,a.*,b.*", "documento a, funcionario b", "a.iddocumento=" . $iddoc . " and ejecutor=funcionario_codigo and a.fecha<=" . fecha_db_almacenar($fecha[0]["valor"], 'Y-m-d'), "", $conn);
 	if($tabla["numcampos"]) {
 		$nombre_tabla = "ft_" . strtolower($tabla[0]["plantilla"]);
 		$formato = busca_filtro_tabla("dependencia", $nombre_tabla . " a", "a.documento_iddocumento=" . $iddoc, "", $conn);
 		$rol = busca_filtro_tabla("", "dependencia_cargo a", "a.funcionario_idfuncionario=" . $tabla[0]["idfuncionario"] . " and fecha_inicial<=" . fecha_db_almacenar($tabla[0]["fech"], 'Y-m-d') . " and fecha_final>=" . fecha_db_almacenar($doc[$i]["fech"], 'Y-m-d') . "", "", $conn);
-		
+
 		if($rol["numcampos"]) {
 			$sql1 = "UPDATE " . $nombre_tabla . " SET dependencia='" . $rol[0]["iddependencia_cargo"] . "' WHERE documento_iddocumento=" . $iddoc;
 		} else {
@@ -3192,7 +3192,7 @@ function firma_externa_funcion($idformato, $iddoc, $tabla, $campo = "firma_exter
 	if(!$llave_modificar)
 		$llave_modificar = $iddoc;
 	$ruta_firma = busca_filtro_tabla($campo, $tabla . " a", "a." . $campo_tabla . "=" . $llave_modificar, "", $conn);
-	
+
 	if($ruta_firma[0][$campo]) {
 		$ancho_firma = busca_filtro_tabla("valor", "configuracion A", "A.nombre='ancho_firma'", "", $conn);
 		if(!$ancho_firma["numcampos"])
@@ -3204,7 +3204,7 @@ function firma_externa_funcion($idformato, $iddoc, $tabla, $campo = "firma_exter
 	} else {
 		$texto = "<a href='" . $ruta_db_superior . "svg_edit/svg-editor.php?iddoc=" . $iddoc . "&idformato=" . $idformato . "&campo_modificar=" . $campo . $adicional . "&campo_tabla=" . $campo_tabla . "&llave_modificar=" . $llave_modificar . "&tabla=" . $tabla . "&ruta_retorno=../formatos/" . $formato[0]["nombre"] . "/" . $formato[0]["ruta_mostrar"] . "'>Firmar</a>";
 	}
-	
+
 	if($retorno == 2)
 		echo $texto;
 	else if($retorno == 1)
@@ -3260,12 +3260,12 @@ function fk_idexpediente_funcion($idformato, $iddoc) {
                       tree_fk_idexpediente.setOnLoadingEnd(fin_cargando_fk_idexpediente);
                       tree_fk_idexpediente.enableSmartXMLParsing(true);
                       tree_fk_idexpediente.loadXML("../../test_expediente.php?accion=1&permiso_editar=1");
-                	        
+
                       tree_fk_idexpediente.setOnCheckHandler(onNodeSelect_fk_idexpediente);
                       function onNodeSelect_fk_idexpediente(nodeId){
                       	seleccionados=tree_fk_idexpediente.getAllChecked();
                       	nuevo=seleccionados.replace(/\,{2,}(d)*/gi,",");
-                       	nuevo=nuevo.replace(/\,$/gi,"");   
+                       	nuevo=nuevo.replace(/\,$/gi,"");
                       	document.getElementById("fk_idexpediente").value=nuevo;
                       }
                       function fin_cargando_fk_idexpediente() {
@@ -3340,44 +3340,44 @@ function vincular_expediente_documento($idformato, $iddoc) {
 
 function insertar_ruta_aprobacion_documento($ruta, $iddoc) {
 	global $conn;
-	
+
 	for($i = 0; $i < count($ruta) - 1; $i++) {
-		
+
 		if(!isset($ruta[$i]["tipo_firma"])) {
 			$ruta[$i]["tipo_firma"] = 1;
 		}
-		
+
 		if(!$ruta[$i]["tipo_origen"]) {
 			$tipo_origen = 1;
 		} else {
 			$tipo_origen = $ruta[$i]["tipo_origen"];
 		}
-		
+
 		if(!$ruta[$i + 1]["tipo_origen"]) {
 			$tipo_destino = 1;
 		} else {
 			$tipo_destino = $ruta[$i + 1]["tipo_origen"];
 		}
-		
+
 		$sql = "insert into ruta(destino,origen,documento_iddocumento,condicion_transferencia,tipo_origen,tipo_destino,orden,obligatorio) values('" . $ruta[$i + 1]["funcionario"] . "','" . $ruta[$i]["funcionario"] . "','$iddoc','POR_APROBAR'," . $tipo_origen . "," . $tipo_destino . ",$i," . $ruta[$i]["tipo_firma"] . ")";
-		
+
 		phpmkr_query($sql);
 		$idruta = phpmkr_insert_id();
-		
+
 		if($tipo_origen == 5) {
 			$funcionario_origen = busca_filtro_tabla("funcionario_codigo", "vfuncionario_dc", "iddependencia_cargo=" . $ruta[$i]["funcionario"], "", $conn);
 			$funcionario_origen = $funcionario_origen[0]["funcionario_codigo"];
 		} else {
 			$funcionario_origen = $ruta[$i]["funcionario"];
 		}
-		
+
 		if($tipo_destino == 5) {
 			$funcionario_destino = busca_filtro_tabla("funcionario_codigo", "vfuncionario_dc", "iddependencia_cargo=" . $ruta[$i + 1]["funcionario"], "", $conn);
 			$funcionario_destino = $funcionario_destino[0]["funcionario_codigo"];
 		} else {
 			$funcionario_destino = $ruta[$i + 1]["funcionario"];
 		}
-		
+
 		$sql = "insert into buzon_entrada(origen,destino,archivo_idarchivo,activo,tipo_origen,tipo_destino,ruta_idruta,nombre) values('" . $funcionario_destino . "','" . $funcionario_origen . "'," . $iddoc . ",1," . $tipo_destino . "," . $tipo_origen . ",$idruta,'POR_APROBAR')";
 		phpmkr_query($sql);
 	}
@@ -3385,18 +3385,18 @@ function insertar_ruta_aprobacion_documento($ruta, $iddoc) {
 
 function obtener_datos_documento($iddocumento) {
 	global $conn;
-	
+
 	// $documento = busca_filtro_tabla("A.iddocumento, A.numero ,A.estado, B.nombre, B.etiqueta, A.descripcion, B.nombre_tabla,B.idformato,A.pdf","documento A, formato B","LOWER(A.plantilla) LIKE(B.nombre) AND A.iddocumento=".$iddocumento,"",$conn);
 	$documento = busca_filtro_tabla(fecha_db_obtener("A.fecha", "Y-m-d") . " as fecha, A.numero, A.iddocumento, B.nombre, B.etiqueta, A.descripcion, B.nombre_tabla,B.idformato,A.estado", "documento A, formato B", "LOWER(A.plantilla) LIKE(B.nombre) AND A.iddocumento=" . $iddocumento, "", $conn);
-	
+
 	if($_REQUEST["funcionario_codigo"]) {
 		$funcionario_codigo = $_REQUEST["funcionario_codigo"];
 	} else {
 		$funcionario_codigo = usuario_actual("funcionario_codigo");
 	}
-	
+
 	if($documento['numcampos']) {
-		
+
 		$documento = array(
 				"iddocumento" => $documento[0]['iddocumento'],
 				"numero" => $documento[0]['numero'],
@@ -3436,22 +3436,26 @@ function cargar_anexos_documento_web($datos_documento, $anexos) {
 	global $conn, $ruta_db_superior;
 	include_once ($ruta_db_superior . "pantallas/lib/librerias_archivo.php");
 	$formato_ruta = aplicar_plantilla_ruta_documento($datos_documento["iddocumento"]);
-	$ruta_archivos = ruta_almacenamiento("archivos");
+	$tipo_almacenamiento = new SaiaStorage("archivos");
+	//$ruta_archivos = ruta_almacenamiento("archivos");
 	$funcionario = busca_filtro_tabla("idfuncionario", "funcionario", "funcionario_codigo=" . $datos_documento["funcionario_codigo"], "", $conn);
 	foreach($anexos as $key => $value) {
 		// $ruta = RUTA_ARCHIVOS.$datos_documento["estado"]."/".$datos_documento["fecha"]."/".$datos_documento["iddocumento"]."/anexos";
-		$ruta = $ruta_archivos . $formato_ruta . "/anexos";
-		crear_destino($ruta);
-		$extencion = pathinfo($value['filename']);
-		$ruta .= "/" . rand() . "." . $extencion["extension"];
-		$archivo = fopen($ruta, "w+"); // crea el archivo jpg
-		fclose($archivo);
+		//$ruta = $ruta_archivos . $formato_ruta . "/anexos";
+		$ruta = $formato_ruta . "/anexos";
+		//crear_destino($ruta);
+		$extension = pathinfo($value['filename']);
+		$ruta .= "/" . rand() . "." . $extension["extension"];
+		//$archivo = fopen($ruta, "w+"); // crea el archivo jpg
+		//fclose($archivo);
 		$contenido = base64_decode($value['content']);
-		file_put_contents($ruta, $contenido);
+		$guardados = $tipo_almacenamiento->almacenar_contenido($ruta, $contenido);
+		//file_put_contents($ruta, $contenido);
 		
-		if(file_exists($ruta)) {
-			$ruta_alm = substr($ruta, strlen($ruta_db_superior));
-			$insert_anexo = "insert into anexos(documento_iddocumento, ruta, etiqueta, tipo, formato) VALUES (" . $datos_documento["iddocumento"] . ",'" . $ruta_alm . "','" . $value['filename'] . "','" . $extencion["extension"] . "'," . $datos_documento["idformato"] . ")";
+		if($guardados) {
+			//$ruta_alm = substr($ruta, strlen($ruta_db_superior));
+			$ruta_alm = array("servidor" => $tipo_almacenamiento->get_ruta_servidor(), "ruta" => $ruta);
+			$insert_anexo = "insert into anexos(documento_iddocumento, ruta, etiqueta, tipo, formato) VALUES (" . $datos_documento["iddocumento"] . ",'" . json_encode($ruta_alm) . "','" . $value['filename'] . "','" . $extencion["extension"] . "'," . $datos_documento["idformato"] . ")";
 			phpmkr_query($insert_anexo, $conn, $datos_documento["funcionario_codigo"]);
 			$idnexo = phpmkr_insert_id();
 			$insert_permiso = "insert into permiso_anexo (anexos_idanexos, idpropietario, caracteristica_propio, caracteristica_dependencia, caracteristica_cargo, caracteristica_total) VALUES (" . $idnexo . "," . $funcionario[0]["idfuncionario"] . ",'lem', '', '', 'l')";
@@ -3499,17 +3503,17 @@ function obtener_mes_letra($mes) {
 			$mes = 'diciembre';
 			break;
 	}
-	
+
 	return $mes;
 }
 
 function obtener_anexos_paginas_documento($datos_documento) {
 	global $ruta_db_superior;
-	
+
 	$documentos = array();
-	
+
 	$anexos = busca_filtro_tabla("ruta, etiqueta, tipo, idanexos", "anexos", "documento_iddocumento=" . $datos_documento["iddocumento"], "", $conn);
-	
+
 	for($i = 0; $i < $anexos['numcampos']; $i++) {
 		$documentos['anexos'][] = array(
 				"ruta" => $anexos[$i]['ruta'],
@@ -3518,79 +3522,81 @@ function obtener_anexos_paginas_documento($datos_documento) {
 				"idanexo" => $anexos[$i]['idanexos']
 		);
 	}
-	
+
 	$paginas = busca_filtro_tabla("ruta,pagina", "pagina", "id_documento=" . $datos_documento["iddocumento"], "", $conn);
-	
+
 	for($i = 0; $i < $paginas['numcampos']; $i++) {
 		$documentos['paginas'][] = array(
 				"ruta" => $paginas[$i]['ruta'],
 				"pagina" => $paginas[$i]['pagina']
 		);
 	}
-	
+
 	return ($documentos);
 }
 
 function crear_pdf_documento_tcpdf($datos_documento, $datos_ejecutor = null) {
 	global $conn, $ruta_db_superior;
 	include_once ($ruta_db_superior . "pantallas/lib/librerias_archivo.php");
-	
-	
 
-	
+
+
+
 	$pdf = busca_filtro_tabla("pdf,iddocumento,estado,plantilla," . fecha_db_obtener('fecha', 'Y-m-d') . " as fecha," . fecha_db_obtener('fecha', 'Y-m') . " as fecha2, numero", "documento", "iddocumento=" . $datos_documento['iddocumento'], "", $conn);
-		
-	 
+
+
 	$ruta = "";
-	
+
 	if($pdf[0]["pdf"]) {
 		$ruta_pdf = $pdf[0]["pdf"];
 	} else {
 		$ruta_pdf = "";
 	}
-	
+
 	if(!file_exists($ruta_pdf)) {
-		
+
 		// inicializa el curl
 		$ch = curl_init();
-		
+
 		// Establecer URL y otras opciones apropiadas
 		$url = PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . "/class_impresion.php?iddoc=" . $datos_documento['iddocumento'];
 		$datos_session = "&LOGIN=" . $_SESSION["LOGIN" . LLAVE_SAIA] . "&usuario_actual=" . $_SESSION["usuario_actual"] . "&llave_saia=" . LLAVE_SAIA;
 		$url = $url . $datos_session;
-        
+        if (strpos(PROTOCOLO_CONEXION, 'https') !== false) {
+		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false); 
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+	}		
 		curl_setopt($ch, CURLOPT_URL, $url);
-		
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-	
+
 		// Capturar la URL y pasarla al navegador
 		$responce = curl_exec($ch);
 
 		// Cerrar el recurso cURL y liberar recursos del sistema
 		curl_close($ch);
-		
+
 		$ruta_pdfs = ruta_almacenamiento("pdf",0);
-		
-		
+
+
 		$formato_ruta = aplicar_plantilla_ruta_documento($datos_documento["iddocumento"]);
-	
+
 		$fecha = explode("-", $datos_documento["fecha"]);
 		$fecha_guion_bajo = $fecha[0] . '_' . $fecha[1] . '_' . $fecha[2];
 		// $ruta = RUTA_PDFS . $datos_documento["estado"] . "/" . $fecha[0] . "-" . $fecha[1] . "/" . $datos_documento["iddocumento"] . "/pdf/";
 		$ruta = $ruta_pdfs . $formato_ruta . "/pdf/";
-			
+
 		$ruta .= strtoupper($datos_documento["plantilla"] . "_" . $datos_documento["numero"] . "_" . $fecha_guion_bajo) . ".pdf";
-	
+
 	} else {
 		$ruta = $pdf[0]["pdf"];
 	}
-	
-	
+
+
 	if($ruta) {
 		if(file_exists($ruta_db_superior.$ruta)) {
 			return ($ruta);
 		} else {
-		    
+
 			return (false);
 		}
 	} else {
@@ -3600,7 +3606,7 @@ function crear_pdf_documento_tcpdf($datos_documento, $datos_ejecutor = null) {
 
 function obtener_funciones_anexo($idanexo, $tipo, $ruta, $etiqueta) {
 	global $ruta_db_superior;
-	
+
 	$array_tipos = array(
 			'jpg',
 			'png',
@@ -3610,12 +3616,12 @@ function obtener_funciones_anexo($idanexo, $tipo, $ruta, $etiqueta) {
 	if(in_array($tipo, $array_tipos) && filesize($ruta_db_superior . $ruta) <= 110000) {
 		$button = '<div class="btn-group">
 		<!--a class="btn btn-mini abrir_higslide" alto="620" ruta="' . $ruta . '">Ver</a-->
-		<a href="' . $ruta_db_superior . 'versionamiento/download_file.php?etiqueta=' . $etiqueta . '&ruta=' . $ruta . '" class="btn btn-mini btn-primary" >Descargar</a>						    
+		<a href="' . $ruta_db_superior . 'versionamiento/download_file.php?etiqueta=' . $etiqueta . '&ruta=' . $ruta . '" class="btn btn-mini btn-primary" >Descargar</a>
 				   </div>
 			      ';
 	} else {
-		$button = '<div class="btn-group">					
-					<a href="' . $ruta_db_superior . 'versionamiento/download_file.php?etiqueta=' . $etiqueta . '&ruta=' . $ruta . '" class="btn btn-mini btn-primary" >Descargar</a>						    
+		$button = '<div class="btn-group">
+					<a href="' . $ruta_db_superior . 'versionamiento/download_file.php?etiqueta=' . $etiqueta . '&ruta=' . $ruta . '" class="btn btn-mini btn-primary" >Descargar</a>
 				   </div>
 			      ';
 	}

@@ -10,9 +10,12 @@ while ($max_salida > 0) {
 }
 include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."pantallas/expediente/librerias.php");
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+$validar_enteros=array("x_idserie");
+desencriptar_sqli('form_info');
 include_once($ruta_db_superior."librerias_saia.php");
+echo(librerias_jquery()); 
 echo(librerias_notificaciones());
-ini_set('display_errors',true);
 
 // Initialize common variables
 $x_idserie = Null;
@@ -36,9 +39,6 @@ $x_tipo_expediente = Null;
 ?>
 
 <?php include_once ("phpmkrfn.php");
-include_once ("librerias_saia.php");
-echo(librerias_jquery()); 
-echo(librerias_notificaciones());
 ?>
 <?php
 $sKey = @$_GET["key"];
@@ -693,6 +693,7 @@ function EditData($sKey,$conn)
 	}
 	return $EditData;
 }
+encriptar_sqli("serieedit",1);
 ?>
 <script>
 $(document).ready(function(){

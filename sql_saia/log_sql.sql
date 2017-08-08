@@ -470,3 +470,104 @@ INSERT INTO  configuracion (nombre ,valor ,tipo ,fecha ,encrypt) VALUES ('tipo_f
 // OJO CON "IP_LOCAL_DE_DONDE_SE_EJECUTA_LA_TAREA_PROGRAMADA"
 INSERT INTO configuracion(nombre,valor,tipo,fecha,encrypt) VALUES ('ip_valida_ws','IP_LOCAL_DE_DONDE_SE_EJECUTA_LA_TAREA_PROGRAMADA','empresa',CURRENT_TIMESTAMP ,'0');
 
+-- ------------------------------
+
+insert into encabezado_formato (idencabezado_formato,contenido,etiqueta) values (47,'<table style="border-collapse: collapse; width: 115%;" border="0">
+<tbody>
+<tr>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td style="border-collapse: collapse; width: 6.3%;">&nbsp;</td>
+<td style="border-collapse: collapse; width: 102.8%;">
+<table style="border-collapse: collapse; width: 102.8%;" border="1">
+<tbody>
+<tr>
+<td style="text-align: center; width: 27.75%;"><span><br />{*logo_empresa*}</span></td>
+<td style="text-align: center; width: 58.8%;"><strong><br />PLANILLA DE MENSAJERIA - DIVISON DE ADMINISTRACION DE BIENES Y SERVICIOS - SECCION DE GESTION DOCUMENTAL</strong></td>
+<td style="text-align: center; width: 13%;"><br /><br />{*qr_entrega_interna*}</td>
+</tr>
+<tr>
+<td><strong>Auxiliar de Oficina:&nbsp;</strong>{*mensajero_entrega_interna*}</td>
+<td><strong>Recorrido del Dia: </strong>{*recorrido*}<strong> - Fecha Planilla:&nbsp;</strong>{*fecha_planilla*}</td>
+<td style="text-align: center;">Pagina ##PAGE## de ##PAGES##</td>
+</tr>
+</tbody>
+</table>
+</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td style="border-collapse: collapse; width: 6.3%;">&nbsp;</td>
+<td colspan="5">
+<table style="border-collapse: collapse;" border="1">
+<tbody>
+<tr>
+<td style="text-align: center; width: 4.8%;"><strong>TRAMITE</strong></td>
+<td style="text-align: center; width: 2%;"><strong>TIPO</strong></td>
+<td style="text-align: center; width: 2.1%;"><strong>Rad. Item</strong></td>
+<td style="text-align: center; width: 3.5%;"><strong>FECHA DE RECIBO</strong></td>
+<td style="text-align: center; width: 6.8%;"><strong>ORIGEN</strong></td>
+<td style="text-align: center; width: 10.3%;"><strong>DESTINO</strong></td>
+<td style="text-align: center; width: 10.4%;"><strong>ASUNTO</strong></td>
+<td style="text-align: center; width: 6.9%;"><strong>NOTAS</strong></td>
+<td style="text-align: center; width: 10.2%;"><strong>FIRMA DE QUIEN RECIBE</strong></td>
+<td style="text-align: center; width: 11.84%;"><strong>OBSERVACIONES</strong></td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>','encabezado_despacho');
+
+update formato set margenes='15,20,52,20',encabezado=47 where idformato=353;
+
+INSERT INTO `funciones_formato` (`nombre`, `nombre_funcion`, `parametros`, `etiqueta`, `descripcion`, `ruta`, `formato`, `acciones`) VALUES
+('{*mensajero_entrega_interna*}', 'mensajero_entrega_interna', NULL, 'mensajero_entrega_interna', '', 'funciones.php', '353', 'm'),
+('{*recorrido*}', 'recorrido', NULL, 'recorrido', '', 'funciones.php', '353', 'm'),
+('{*fecha_planilla*}', 'fecha_planilla', NULL, 'fecha_planilla', '', 'funciones.php', '353', 'm'),
+('{*qr_entrega_interna*}', 'qr_entrega_interna', NULL, 'qr_entrega_interna', NULL, 'funciones.php', '353', 'm');
+
+-- ------------------------------------------------------------------------------------------------------------------
+UPDATE campos_formato SET valor='1,Servicio de Mensajeria;3,Entrega personal/Medios Propios del &Aacute;rea' WHERE  nombre='tipo_mensajeria' AND formato_idformato=3;
+
+
+INSERT INTO campos_formato (idcampos_formato, formato_idformato, nombre, etiqueta, tipo_dato, longitud, obligatoriedad, valor, acciones, ayuda, predeterminado, banderas, etiqueta_html, orden, mascara, adicionales, autoguardado, fila_visible) VALUES (NULL, '403', 'tipo_mensajero', 'tipo_mensajero', 'VARCHAR', '255', '0', NULL, 'a,e,b', NULL, 'i', NULL, 'hidden', '0', NULL, NULL, '0', '1');
+
+
+INSERT INTO campos_formato (idcampos_formato, formato_idformato, nombre, etiqueta, tipo_dato, longitud, obligatoriedad, valor, acciones, ayuda, predeterminado, banderas, etiqueta_html, orden, mascara, adicionales, autoguardado, fila_visible) VALUES (NULL, '353', 'tipo_mensajero', 'tipo_mensajero', 'VARCHAR', '255', '0', NULL, 'a,e,b', NULL, 'i', NULL, 'hidden', '0', NULL, NULL, '0', '1');
+
+
+	--   DESPUES DE GENERAR LOS FORMATOS INVOLUCRADOS CORRER --------------------------------------------
+
+
+	UPDATE ft_despacho_ingresados SET tipo_mensajero='i' WHERE tipo_mensajero='0';
+	UPDATE ft_destino_radicacion SET tipo_mensajero='i' WHERE tipo_mensajero='0';
+
+
+-- ----------------------------------------------------------------
+
+	UPDATE `saia_release1`.`busqueda_componente` SET `info` = 'Radicado|{*ver_items@iddocumento,numero,fecha_radicacion_entrada,tipo_radicado*}|center|-|No. Item|{*numero_item*}|center|-|Estado|{*mostrar_estado_destino_radicacion@idft_destino_radicacion*}|center|-|Diligencia|{*mostrar_tramite_radicacion@idft_destino_radicacion,tipo_mensajeria,estado_recogida*}|center|-|Ruta|{*mostrar_ruta_reporte@idft_destino_radicacion*}|center|-|Mensajero|{*mostrar_mensajeros_dependencia@idft_destino_radicacion*}|center|-|Planilla Asociada|{*planilla_mensajero@idft_destino_radicacion,mensajero_encargado*}|center|-|Acci&oacute;n|{*generar_accion_destino_radicacion@idft_destino_radicacion,mensajero_encargado,estado_item*}|center|-|Origen|{*mostrar_origen_reporte@idft_radicacion_entrada*}|center|-|Destino|{*mostrar_destino_reporte@idft_destino_radicacion*}|center|-|Fecha de Radicaci&oacute;n|{*fecha_radicacion_entrada*}|center|-|Asunto|{*descripcion*}|left|-|Observaciones|{*observacion_destino*}|left' WHERE `busqueda_componente`.`idbusqueda_componente` = 279;
+	
+	UPDATE `saia_release1`.`busqueda_componente` SET `info` = 'Radicado|{*ver_items@iddocumento,numero,fecha_radicacion_entrada,tipo_radicado*}|center|-|No. Item|{*numero_item*}|center|-|Estado|{*mostrar_estado_destino_radicacion@idft_destino_radicacion*}|center|-|Diligencia|{*mostrar_tramite_radicacion@idft_destino_radicacion,tipo_mensajeria,estado_recogida*}|center|-|Ruta|{*mostrar_ruta_reporte@idft_destino_radicacion*}|center|-|Mensajero|{*mostrar_mensajeros_dependencia@idft_destino_radicacion*}|center|-|Planilla Asociada|{*planilla_mensajero@idft_destino_radicacion,mensajero_encargado*}|center|-|Acci&oacute;n|{*generar_accion_destino_radicacion_endistribucion@idft_destino_radicacion,mensajero_encargado,estado_item*}|center|-|Origen|{*mostrar_origen_reporte@idft_radicacion_entrada*}|center|-|Destino|{*mostrar_destino_reporte@idft_destino_radicacion*}|center|-|Fecha de Radicaci&oacute;n|{*fecha_radicacion_entrada*}|center|-|Asunto|{*descripcion*}|left|-|Observaciones|{*observacion_destino*}|left' WHERE `busqueda_componente`.`idbusqueda_componente` = 281;	
+	
+	UPDATE  `saia_release1`.`busqueda_componente` SET  `info` = 'Radicado|{*ver_items@iddocumento,numero,fecha_radicacion_entrada,tipo_radicado*}|center|-|No. Item|{*numero_item*}|center|-|Estado|{*mostrar_estado_destino_radicacion@idft_destino_radicacion*}|center|-|Diligencia|{*mostrar_tramite_radicacion@idft_destino_radicacion,tipo_mensajeria,estado_recogida*}|center|-|Ruta|{*mostrar_ruta_reporte@idft_destino_radicacion*}|center|-|Mensajero|{*mostrar_mensajeros_dependencia@idft_destino_radicacion,estado_item*}|center|-|Planilla Asociada|{*planilla_mensajero@idft_destino_radicacion,mensajero_encargado*}|center|-|Origen|{*mostrar_origen_reporte@idft_radicacion_entrada*}|center|-|Destino|{*mostrar_destino_reporte@idft_destino_radicacion*}|center|-|Fecha de Radicaci&oacute;n|{*fecha_radicacion_entrada*}|center|-|Asunto|{*descripcion*}|left|-|Observaciones|{*observacion_destino*}|left' WHERE  `busqueda_componente`.`idbusqueda_componente` =282;
+	
+	-- ---------------
+	
+	UPDATE  `saia_release1`.`busqueda_componente` SET  `acciones_seleccionados` =  'filtrar_mensajero,select_finalizar_generar_item' WHERE  `busqueda_componente`.`idbusqueda_componente` =279;
+	UPDATE  `saia_release1`.`busqueda_componente` SET  `acciones_seleccionados` =  'filtrar_mensajero,select_finalizar_generar_item' WHERE  `busqueda_componente`.`idbusqueda_componente` =281;
+
+	INSERT INTO `saia_release1`.`cargo` (`idcargo`, `nombre`, `cod_padre`, `estado`, `codigo_cargo`, `tipo`, `tipo_cargo`) VALUES (NULL, 'ADMINISTRADOR DE MENSAJER&Iacute;A', '82', '1', '', '1', '2');
+-- ----------------------------------------------------------------
+
+UPDATE campos_formato SET tipo_dato='TEXT', longitud=NULL WHERE nombre='asignar_dependencias' AND formato_idformato=404;	
+
+
+
+

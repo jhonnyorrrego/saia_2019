@@ -1,4 +1,4 @@
-<?php 
+<?php
 include_once("db.php");
 $adicional=Null;
 $defecto=false;
@@ -10,14 +10,14 @@ if(@$_REQUEST["idcategoria_formato"]){
 		$cantidad=count($cat);
 		for($j=0;$j<$cantidad;$j++){
 			if($cat[$j]==$_REQUEST["idcategoria_formato"]){
-			    
+
                 $modulo_formato=busca_filtro_tabla('idmodulo','modulo','nombre="crear_'.$formatos[$i]["nombre"].'"','',$conn);
                 $ok=0;
             	if($modulo_formato['numcampos']){
-            	    $ok=acceso_modulo($modulo_formato[0]['idmodulo']);	
+            	    $ok=acceso_modulo($modulo_formato[0]['idmodulo']);
             	}
             	if($ok){
-            	    $defecto="formatos/".$formatos[$i]["nombre"]."/adicionar_".$formatos[$i]["nombre"].".php"; 
+            		$defecto=FORMATOS_CLIENTE.$formatos[$i]["nombre"]."/adicionar_".$formatos[$i]["nombre"].".php";
             	}
 				break;
 			}
@@ -27,25 +27,25 @@ if(@$_REQUEST["idcategoria_formato"]){
 }
 
 if(@$_REQUEST["defecto"]){
-    
+
     $modulo_formato=busca_filtro_tabla('idmodulo','modulo','nombre="crear_'.$_REQUEST["defecto"].'"','',$conn);
     $ok=0;
     if($modulo_formato['numcampos']){
-        $ok=acceso_modulo($modulo_formato[0]['idmodulo']);	
+        $ok=acceso_modulo($modulo_formato[0]['idmodulo']);
     }
-    if($ok){    
-        $defecto="formatos/".$_REQUEST["defecto"]."/adicionar_".$_REQUEST["defecto"].".php";
+    if($ok){
+    	$defecto=FORMATOS_CLIENTE.$_REQUEST["defecto"]."/adicionar_".$_REQUEST["defecto"].".php";
     }
 }
 else if(!$defecto){
             $modulo_formato=busca_filtro_tabla('idmodulo','modulo','nombre="crear_radicacion_entrada"','',$conn);
             $ok=0;
         	if($modulo_formato['numcampos']){
-        	    $ok=acceso_modulo($modulo_formato[0]['idmodulo']);	
-        	}                
-            
-		    if($ok){    
-                 $defecto="formatos/radicacion_entrada/adicionar_radicacion_entrada.php";
+        	    $ok=acceso_modulo($modulo_formato[0]['idmodulo']);
+        	}
+
+		    if($ok){
+		    	$defecto= FORMATOS_CLIENTE . "radicacion_entrada/adicionar_radicacion_entrada.php";
 		    }
 }
 ?>
@@ -53,7 +53,7 @@ else if(!$defecto){
 <style>
 .column{float: left;}
 </style>
-<div id="container"> 
+<div id="container">
     <iframe src="categoria_formatos.php<?php echo $adicional; ?>" name="filtro1" id="filtro1" scrolling="no" frameborder="0" class="alto_frame column" width="20%" resizable="false">
     </iframe>
     <iframe src="<?php echo($defecto);?>" name="previsualizar" id="previsualiza" scrolling="auto" frameborder="0" class="alto_frame column" width="79%" resizable="false">
@@ -64,7 +64,7 @@ $("document").ready(function(){
   var alto=$(window).height()-25;
   $(".alto_frame").height(alto);
 });
-</script>  
+</script>
 <?php
 	function acceso_modulo($idmodulo){
 	  if(usuario_actual("login")=="cerok"){
@@ -74,7 +74,7 @@ $("document").ready(function(){
 	  $modulo=busca_filtro_tabla("","modulo","idmodulo=".$idmodulo,"");
 	  $acceso=$ok->acceso_modulo_perfil($modulo[0]["nombre"]);
 	  return $acceso;
-	}	
-	
+	}
+
 
 ?>

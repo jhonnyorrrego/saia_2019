@@ -33,7 +33,10 @@ $x_fecha_ingreso = Null;
 <?php include ("phpmkrfn.php") ?>
 <?php include_once ("librerias_saia.php"); echo(librerias_notificaciones()); ?>
 <?php
-
+include_once ("pantallas/lib/librerias_cripto.php");
+$validar_enteros=array("x_iddependencia_cargo","x_funcionario_idfuncionario","x_dependencia_iddependencia","x_cargo_idcargo");
+desencriptar_sqli('form_info');
+echo(librerias_jquery());
 // Get action
 $sAction = @$_POST["a_add"];
 if (($sAction == "") || ((is_null($sAction)))) {
@@ -448,6 +451,7 @@ function AddData($conn)
 	phpmkr_query($strsql, $conn) or error("Fall� la b�squeda" . phpmkr_error() . ' SQL:' . $strsql);
 	return true;
 }
+encriptar_sqli("dependencia_cargoadd",1); 
 function validar_tipo_cargo($datos){
 	global $conn;
 	$idfuncionario=$datos["funcionario_idfuncionario"];

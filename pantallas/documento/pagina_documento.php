@@ -27,9 +27,10 @@ echo(librerias_bootstrap());
 <link href="<?php echo($ruta_db_superior);?>css/jquery.gzoom.css" type="text/css" rel="stylesheet" /-->
 <?php
 menu_paginas_documento($pagina[0]["consecutivo"]);
+$datos_img = StorageUtils::get_binary_file($pagina[0]["ruta"]);
 ?>
 <div href="<?php echo($ruta_db_superior.$pagina[0]["ruta"]);?>" class="pagina_zoom" rel="position:'inside'">
-    <img src="<?php echo($ruta_db_superior.$pagina[0]["ruta"]);?>" class="img-polaroid imagen_saia">
+    <img src="<?php echo($datos_img);?>" class="img-polaroid imagen_saia">
 </div>
 <script>
 $(document).ready(function(){

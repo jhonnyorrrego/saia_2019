@@ -1,4 +1,11 @@
 <?php 
+include_once("db.php");
+include_once("librerias_saia.php");
+include_once("pantallas/lib/librerias_cripto.php");
+$validar_enteros=array("iddoc","key","doc");
+desencriptar_sqli('form_info');
+echo(librerias_jquery());
+
 if(@$_REQUEST["iddoc"] || @$_REQUEST["key"] || @$_REQUEST["doc"]){
 	$_REQUEST["iddoc"]=@$_REQUEST["doc"];
 	include_once("pantallas/documento/menu_principal_documento.php");
@@ -13,32 +20,31 @@ while($max_salida>0){
   $ruta.="../";
   $max_salida--;
 }
-include_once("db.php");
-include_once("librerias_saia.php");
+
 echo(estilo_bootstrap());
 echo(librerias_notificaciones());
 
 
 ?>
-<?php include_once("class_transferencia.php"); 
+<?php include_once("class_transferencia.php");
 include_once("header.php"); ?>
 <script type="text/javascript">
 <!--
-function EW_checkMyForm(EW_this) 
-{  
+function EW_checkMyForm(EW_this)
+{
   if(EW_this.x_detalle.value=="")
-  { 
+  {
 		notificacion_saia('Por favor escriba una justificacion de la terminacion del documento.','warning','',3500);
     return false;
   }
-  else  
+  else
   { var jus = EW_this.x_detalle.value;
-    var num = jus.length;    
+    var num = jus.length;
    if(num <= 10 ){
    		notificacion_saia('La justificacion debe tener mas de 10 caracteres.','warning','',3500);
     return false;
    }
-  }      
+  }
   return true;
 }
 -->
@@ -62,36 +68,36 @@ $x_id_documento=$llave;
 
 $sAction = @$_POST["a_delete"];
 $x_detalle = @$_POST["x_detalle"];
-if (($sAction == "") || (($sAction == NULL))) 
+if (($sAction == "") || (($sAction == NULL)))
 $sAction = "I";	// Display with input box
 $ejecutor="";
-if(isset($_REQUEST["ejecutor"]) && $_REQUEST["ejecutor"]!="")   
+if(isset($_REQUEST["ejecutor"]) && $_REQUEST["ejecutor"]!="")
  $ejecutor = "&ejecutor=".$_REQUEST["ejecutor"];
 switch ($sAction)
 {
   case "I": // Display
-    if (LoadRecordCount($llave,$conn) <= 0) 
-    {     
+    if (LoadRecordCount($llave,$conn) <= 0)
+    {
       abrir_url($ruta_db_superior."pantallas/buscador_principal.php?idbusqueda=3&cmd=resetall","centro");
       exit();
     }
   break;
   case "D": // Delete
     $x_id_documento=DeleteData($llave,$conn);
-    if ($x_id_documento) 
-    {        
+    if ($x_id_documento)
+    {
       abrir_url($ruta_db_superior."pantallas/buscador_principal.php?idbusqueda=3&cmd=resetall","centro");
       exit();
     }
   break;
 }
-  if (LoadData($x_id_documento,$conn)) 
+  if (LoadData($x_id_documento,$conn))
   {
 menu_ordenar($x_id_documento);
     $pendiente = busca_filtro_tabla("idasignacion","asignacion","documento_iddocumento=$x_id_documento and entidad_identidad=1 and llave_entidad=".$_SESSION["usuario_actual"],"",$conn);
-    
+
     $formato=busca_filtro_tabla("B.ruta_mostrar,B.idformato,B.nombre","documento A, formato B","lower(A.plantilla)=lower(B.nombre) AND A.iddocumento=".$x_id_documento,"",$conn);
-    if(!$pendiente["numcampos"]) 
+    if(!$pendiente["numcampos"])
     {
      //alerta("El documento no se puede terminar porque no esta en su buzon de documentos pendientes.");
 		 ?>
@@ -99,10 +105,10 @@ menu_ordenar($x_id_documento);
 				notificacion_saia('El documento no se puede terminar porque no esta en su buzon de documentos pendientes.','warning','',3500);
 		 </script>
 		 <?php
-     abrir_url($ruta_db_superior."formatos/".$formato[0]["nombre"]."/".$formato[0]["ruta_mostrar"]."?iddoc=".$x_id_documento."&idformato=".$formato[0]["idformato"]."&random=".rand(),'_self');        
-    }  
-    $leido = busca_filtro_tabla("nombre,origen,destino","buzon_salida","archivo_idarchivo=$x_id_documento and nombre='LEIDO' and destino='".$_SESSION["usuario_actual"]."'","idtransferencia DESC",$conn);      
-    
+		 abrir_url($ruta_db_superior.FORMATOS_CLIENTE.$formato[0]["nombre"]."/".$formato[0]["ruta_mostrar"]."?iddoc=".$x_id_documento."&idformato=".$formato[0]["idformato"]."&random=".rand(),'_self');
+    }
+    $leido = busca_filtro_tabla("nombre,origen,destino","buzon_salida","archivo_idarchivo=$x_id_documento and nombre='LEIDO' and destino='".$_SESSION["usuario_actual"]."'","idtransferencia DESC",$conn);
+
     if($leido["numcampos"]>0 && ($leido[0]["nombre"]!='LEIDO' && $leido[0]["nombre"]!='TRAMITE' && $leido[0]["nombre"]!='DISTRIBUCION'))
     {
      //alerta("Antes de terminar un documento por favor leer el contenido del documento.");
@@ -111,10 +117,10 @@ menu_ordenar($x_id_documento);
 				notificacion_saia('Antes de terminar un documento por favor leer el contenido del documento.','warning','',3500);
 		 </script>
 		 <?php
-     abrir_url($ruta_db_superior."formatos/".$formato[0]["nombre"]."/".$formato[0]["ruta_mostrar"]."?iddoc=".$x_id_documento."&idformato=".$formato[0]["idformato"]."&random=".rand(),'_self');
-    }    
+		 abrir_url($ruta_db_superior.FORMATOS_CLIENTE.$formato[0]["nombre"]."/".$formato[0]["ruta_mostrar"]."?iddoc=".$x_id_documento."&idformato=".$formato[0]["idformato"]."&random=".rand(),'_self');
+    }
     ?>
-    <form action="documentoTerminar.php" method="post" onSubmit="return EW_checkMyForm(this);">
+    <form id="documentoTerminar" name="documentoTerminar"  action="documentoTerminar.php" method="post" onSubmit="return EW_checkMyForm(this);">
     <?php if(isset($_REQUEST["ejecutor"]) && $_REQUEST["ejecutor"]!="") 
       echo "<input type='hidden' name='ejecutor' value='".$_REQUEST["ejecutor"]."'>";
     ?>
@@ -129,11 +135,11 @@ menu_ordenar($x_id_documento);
     </tr><tr class="encabezado">
     <td width="131" valign="top"><span class="phpmaker" style="color: #FFFFFF;">TIPO DE DOCUMENTO</span></td>
     <td valign="top" bgcolor="#F5F5F5"><span class="phpmaker"><font color="#000000">
-    <?php 
+    <?php
     $nombre_serie = busca_filtro_tabla("nombre","serie","idserie=".$x_serie,"",$conn);
     if($nombre_serie["numcampos"]>0)
-      echo $nombre_serie[0][0]; 
-    
+      echo $nombre_serie[0][0];
+
     ?></font></span></td>
     </tr>
     <tr class="encabezado">
@@ -142,7 +148,7 @@ menu_ordenar($x_id_documento);
     </tr><!--tr class="encabezado">
     <td width="131" valign="top"><span class="phpmaker" style="color: #FFFFFF;">EJECUTOR</span></td>
     <td valign="top" bgcolor="#F5F5F5"><span class="phpmaker"><font color="#000000">
-    <?php 
+    <?php
     /*if($x_plantilla=="")
     {$funcionario=busca_filtro_tabla("nombre","ejecutor,datos_ejecutor","idejecutor=ejecutor_idejecutor and iddatos_ejecutor=".$x_ejecutor,"",$conn);
      echo ucwords(strtolower($funcionario[0]["nombre"]));
@@ -152,49 +158,49 @@ menu_ordenar($x_id_documento);
     //print_r($transferencia);
      $funcionario=busca_filtro_tabla("nombres,apellidos","funcionario","funcionario_codigo=".$transferencia[0]["origen"]."","",$conn);
      echo ucwords($funcionario[0]["nombres"]." ".$funcionario[0]["apellidos"]);
-    
-    } 
+
+    }
     include_once("funciones.php");
-    echo strip_tags(remitente($llave));*/    
+    echo strip_tags(remitente($llave));*/
     ?></font></span></td>
     </tr-->
     <tr class="encabezado">
     <td width="175" valign="top"><span class="phpmaker" style="color: #FFFFFF;">DESCRIPCI&Oacute;N</span></td>
     <td valign="top" bgcolor="#F5F5F5"><span class="phpmaker"><font color="#000000"><?php echo $x_descripcion; ?></font></span></td>
-    </tr>    
+    </tr>
     <tr class="encabezado">
     <td width="131" valign="top"><span class="phpmaker" style="color: #FFFFFF; text-aling:justify; font-family: Verdana;font-size: 9px;">JUSTIFICACI&Oacute;N</span></td>
     <td valign="top" bgcolor="#F5F5F5" colspan="3"><span class="phpmaker"><font color="#000000">
-    	
+
     <?php
     	$justificaciones_configuracion=busca_filtro_tabla('','configuracion','nombre="justificacion_terminar"','',$conn);
 		$justificaciones=explode(',',$justificaciones_configuracion[0]['valor']);
 		echo('<dl>');
 		for($i=0;$i<count($justificaciones);$i++){
 			echo("<dd><input type='radio' name='detalle' onclick='document.getElementById(\"x_detalle\").value=this.value;' style='font-family: Verdana;font-size: 9px;' value='".$justificaciones[$i]."'>".$justificaciones[$i]."</dd>");
-					
+
 		}
 		echo('</dl>');
 		echo('<br/>');
     ?>
-    
-    	
-    	
 
-    
-    
-     
+
+
+
+
+
+
     <textarea cols="100" rows="4" id="x_detalle" name="x_detalle" style="font-family: Verdana;font-size: 9px;"><?php echo @$x_detalle; ?></textarea>
     </font></span></td>
     </tr>
     <tr><td colspan="4" ><!--span style="text-aling:justify; font-family: Verdana;font-size: 9px;">
-    IMPORTANTE<br><br> Usted est&aacute; a punto de terminar el proceso de gesti&oacute;n de este documento, al hacerlo el estado del documento ser&aacute; de "TERMINADO" para todas las personas que tienen acceso al documento. Por esta raz&oacute;n debe estar seguro que todos los responsables del documento hayan ejecutado las acciones correspondientes, y que por lo tanto NO HAY NING&Uacute;N PROCESO PENDIENTE por ejecutar. �Realmente quiere TERMINAR el proceso de este documento?<br> 
+    IMPORTANTE<br><br> Usted est&aacute; a punto de terminar el proceso de gesti&oacute;n de este documento, al hacerlo el estado del documento ser&aacute; de "TERMINADO" para todas las personas que tienen acceso al documento. Por esta raz&oacute;n debe estar seguro que todos los responsables del documento hayan ejecutado las acciones correspondientes, y que por lo tanto NO HAY NING&Uacute;N PROCESO PENDIENTE por ejecutar. �Realmente quiere TERMINAR el proceso de este documento?<br>
     </span--><br>
-    
+
      <input type="button" class="btn btn-mini btn-danger" value="Cancelar" onclick="window.history.back(-1);">
   	<input type="submit" name="Action" value="Aceptar" class="btn btn-mini btn-primary">
-    
-    
+
+
    </td></tr>
     </table>
     <p>
@@ -240,11 +246,11 @@ function LoadData($sKey,$conn)
   {
    $sSql .= " GROUP BY " . $sGroupBy;
   }
-  if ($sHaving <> "") 
+  if ($sHaving <> "")
   {
    $sSql .= " HAVING " . $sHaving;
   }
-  if ($sOrderBy <> "") 
+  if ($sOrderBy <> "")
   {
    $sSql .= " ORDER BY " . $sOrderBy;
   }
@@ -268,7 +274,7 @@ function LoadData($sKey,$conn)
     $x_fecha = $row["fecha"];
     $x_ejecutor = $row["ejecutor"];
     $x_descripcion = $row["descripcion"];
-    $x_plantilla = $row["plantilla"];   
+    $x_plantilla = $row["plantilla"];
   }
   phpmkr_free_result($rs);
   //print_r($row);
@@ -282,7 +288,7 @@ function LoadData($sKey,$conn)
 // - Load Record Count based on input sql criteria sqlKey
 function LoadRecordCount($sqlKey,$conn)
 {
-global $_SESSION; 
+global $_SESSION;
 $sSql = "SELECT A.* FROM documento A";
 $sSql .= " WHERE iddocumento=" . $sqlKey;
 $sGroupBy = "";
@@ -314,7 +320,7 @@ function DeleteData($llave,$conn)
 {
   global $_SESSION;
   global $conn,$sql;
-  global $x_descripcion;  
+  global $x_descripcion;
   global $x_detalle;
   $estado=busca_filtro_tabla("estado","documento","iddocumento=".$llave,"",$conn);
 
@@ -327,7 +333,7 @@ function DeleteData($llave,$conn)
   $destinos = array();
   /*for($i=0;$i<$radicadores["numcampos"];$i++)
     array_push($destinos,$radicadores[$i][0]);*/
-  $destinos[0]=usuario_actual("funcionario_codigo");   
+  $destinos[0]=usuario_actual("funcionario_codigo");
   $fieldList = array();
   $fieldList["archivo_idarchivo"] = $llave;
   $fieldList["nombre"] = 'TERMINADO';
@@ -347,5 +353,7 @@ function DeleteData($llave,$conn)
   transferir_archivo_prueba($fieldList,$destinos,$datos_adicionales);
   return $llave;
 }
+
+encriptar_sqli("documentoTerminar",1);
 ?>
 

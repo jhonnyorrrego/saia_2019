@@ -26,7 +26,14 @@ $x_valor = Null;
 $x_predeterminado = Null;
 $x_ayuda = Null;
 ?>
-<?php include ("db.php") ?>
+<?php include ("db.php");
+include_once($ruta_db_superior."librerias_saia.php");
+echo(librerias_jquery());
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+$validar_enteros=array("idformato");
+desencriptar_sqli('form_info');
+
+?>
 <?php include ("phpmkrfn.php") ?>
 <?php
 $nStartRec = 0;
@@ -160,7 +167,7 @@ SetUpStartRec(); // Set Up Start Record Position
 ?>
 <p><span class="phpmaker"> Campos del Formato
 </span></p>
-<form action="campos_formatolist.php?idformato=<?php echo(@$_REQUEST["idformato"])?>">
+<form name="campos_formatolist" id="campos_formatolist" action="campos_formatolist.php?idformato=<?php echo(@$_REQUEST["idformato"])?>">
 <table border="0" cellspacing="0" cellpadding="0">
 	<tr>
 		<td><span class="phpmaker">
@@ -436,7 +443,7 @@ if ($nTotalRecs > 0) {
 // Function SetUpAdvancedSearch
 // - Set up Advanced Search parameter based on querystring parameters from Advanced Search Page
 // - Variables setup: sSrchAdvanced
-
+encriptar_sqli("campos_formatolist",1,"form_info",$ruta_db_superior);
 function SetUpAdvancedSearch()
 {
 	global $sSrchAdvanced;

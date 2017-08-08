@@ -17,16 +17,16 @@ for($i=0;$i<$busca_formatos_eliminar['numcampos'];$i++){
 	$elimina_campos_formato="DELETE FROM campos_formato WHERE formato_idformato=".$busca_formatos_eliminar[$i]['idformato'];
 	echo($elimina_campos_formato);
 	echo ("<br />");
-	
+
 	$busca_funciones_formato=busca_filtro_tabla("","funciones_formato","formato='".$busca_formatos_eliminar[$i]['idformato']."'","",$conn);
-	
+
 	for($j=0;$j<$busca_funciones_formato['numcampos'];$j++){
 		echo ("FUNCIONES DEL FORMATO ".$busca_formatos_eliminar[$i]['nombre']." ".$busca_formatos_eliminar[$i]['idformato']);
 		echo ("<br />");
 		echo ($busca_funciones_formato[$j]['nombre_funcion']." ".$busca_funciones_formato[$j]['idfunciones_formato']);
 		echo ("<br />");
 		if($busca_funciones_formato[$j]['ruta']=='funciones.php'){
-			echo ("RUTA: ".$ruta_db_superior."formatos/".$busca_formatos_eliminar[$i]["nombre"]."/funciones.php");			
+			echo ("RUTA: ".$ruta_db_superior.FORMATOS_CLIENTE.$busca_formatos_eliminar[$i]["nombre"]."/funciones.php");
 		}else{
 			echo ("RUTA: ".$ruta_db_superior."/".$busca_formatos_eliminar[$i]["nombre"]);
 		}

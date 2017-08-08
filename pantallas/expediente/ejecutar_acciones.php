@@ -2,6 +2,11 @@
   $max_salida=6; $ruta_db_superior=$ruta=""; while($max_salida>0){ if(is_file($ruta."db.php")){ $ruta_db_superior=$ruta;} $ruta.="../"; $max_salida--; } 
   include_once($ruta_db_superior."db.php");
   include_once($ruta_db_superior."pantallas/expediente/librerias.php");  
+  
+  include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+  $validar_enteros=array("iddoc");
+	desencriptar_sqli('form_info');
+	//print_r($_REQUEST);die();
 if(@$_REQUEST["ejecutar_expediente"]){  
   if(!@$_REQUEST["tipo_retorno"]){
     $_REQUEST["tipo_retorno"]=1;
@@ -371,6 +376,8 @@ function asignar_permiso_expediente() {
 	$retorno = new stdClass;
 	$retorno -> exito = 0;
 	$retorno -> mensaje = "Error al asignar el expediente";
+	
+	//print_r($_REQUEST);die();
 	if (@$_REQUEST["idexpediente"] && @$_REQUEST["tipo_entidad"] && $_REQUEST["idfuncionario"] && $_REQUEST["propietario"] != "") {
 		if ($_REQUEST["tipo_entidad"] == 5) {
 			$_REQUEST["tipo_entidad"] = 1;

@@ -39,15 +39,15 @@ if($acciones["numcampos"]){
   }
   // Funciones relacionadas con la accion y el formato
   $funciones_asociadas=busca_filtro_tabla("","funciones_formato_accion",$condicion,"orden asc",$conn);
- 
+
   if($funciones_asociadas["numcampos"]>0){
     $retorno="";
     $retorno=$funciones_asociadas[0]["idfunciones_formato"];
     for($i=1;$i<$funciones_asociadas["numcampos"];$i++){
       $retorno.="|".$funciones_asociadas[$i]["idfunciones_formato"];
-	   
+
     }
-    
+
     return($retorno);
   }
   else
@@ -64,7 +64,7 @@ if($acciones["numcampos"]){
 <Pre-condiciones><Pre-condiciones>
 <Post-condiciones><Post-condiciones>
 </Clase> */
-/* 
+/*
 function adicionar_accion($nombre,$ruta,$funcion,$parametros,$descripcion){
 global $conn;
 $sql="INSERT INTO accion(nombre,ruta,funcion,parametros,descripcion) VALUES(";
@@ -96,7 +96,7 @@ $datos_funcion_accion=busca_filtro_tabla("","funciones_formato_accion","idfuncio
 if(!$datos_funcion_accion["numcampos"] && $datos_accion["numcampos"]>0&&$datos_formato["numcampos"]>0&&$datos_funciones_formato["numcampos"]>0){
   $sql="INSERT INTO funciones_formato_accion(accion_idaccion,formato_idformato,idfunciones_formato,momento) VALUES(";
   $sql.=$idaccion.",".$idformato.",".$idfunciones_formato.",'".$momento."')";
-  $res=phpmkr_query($sql,$conn);   
+  $res=phpmkr_query($sql,$conn);
 }
 else if($datos_funcion_accion["numcampos"]){
   alerta("La Funcion ya se encuentra asiganda al formato");
@@ -192,7 +192,7 @@ return(false);
 <Pre-condiciones><Pre-condiciones>
 <Post-condiciones><Post-condiciones>
 </Clase>  */
-   
+
 function ejecutar_acciones_formato($iddoc=NULL,$idformato=NULL,$listado_func=NULL,$lista_parametros=NULL){
 global $conn,$ruta_db_superior;
 if(!$listado_func)
@@ -200,15 +200,16 @@ if(!$listado_func)
 $ar_func=explode("|",$listado_func);
 $encontrado=0;
 
+	$ruta = null;
 for($i=0;$i<count($ar_func);$i++){
   $datos_funcion=busca_filtro_tabla("","funciones_formato","idfunciones_formato=".$ar_func[$i],"",$conn);
   if($datos_funcion["numcampos"]){
     if(!function_exists($datos_funcion[0]["nombre_funcion"])){
       include_once($ruta_db_superior."class_transferencia.php");
       $datos_formato=busca_filtro_tabla("","formato","idformato IN(".$datos_funcion[0]["formato"].")","",$conn);
-      
+
       for($j=0;$j<$datos_formato["numcampos"];$j++){
-        $ruta=$ruta_db_superior."formatos/".$datos_formato[$j]["nombre"]."/".$datos_funcion[0]["ruta"];
+      	$ruta=$ruta_db_superior.FORMATOS_CLIENTE.$datos_formato[$j]["nombre"]."/".$datos_funcion[0]["ruta"];
         if(is_file($ruta)){
           include_once($ruta);
           if(function_exists($datos_funcion[0]["nombre_funcion"])){
@@ -217,8 +218,7 @@ for($i=0;$i<count($ar_func);$i++){
           }
         }
       }
-    }
-    else {
+			} else {
       $encontrado=1;
     }
 
@@ -226,9 +226,9 @@ for($i=0;$i<count($ar_func);$i++){
 
       if($datos_funcion[0]["parametros"]==""){
         $datos_funcion[0]["parametros"]=$idformato.','.$iddoc;
-      }
-      else
+	  } else {
        $datos_funcion[0]["parametros"]=$idformato.','.$iddoc.",".$datos_funcion[0]["parametros"];      
+      }
       ejecutar_funcion($datos_funcion[0]["nombre_funcion"],$ruta,$datos_funcion[0]["parametros"]);
     }
 	}
@@ -250,7 +250,7 @@ if($momento=="ANTERIOR" && $accion!='adicionar' && $accion!='responder' && $acci
   terminar_actividad_paso($iddoc,$accion);
 }
 if($momento=='POSTERIOR' && ($accion=='adicionar' || $accion=='responder' || $accion=='transferir')){
-  terminar_actividad_paso($iddoc,$accion); 
+  terminar_actividad_paso($iddoc,$accion);
 }
 //error($iddoc."-->".$idformato."-->".$accion."-->".$momento);
 $listado_acciones=listar_acciones_formato($idformato,$accion,$momento);
