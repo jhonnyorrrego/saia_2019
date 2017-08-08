@@ -218,10 +218,10 @@ function nombre_proceso($doc)
 
 function logo_empresa()
 {
- global $conn;
+ global $conn,$ruta_db_superior;
  $logo = busca_filtro_tabla("valor","configuracion","nombre='logo'","",$conn);
  if($logo["numcampos"]){
-  return('<img src="'.PROTOCOLO_CONEXION.RUTA_PDF_LOCAL.'/'.$logo[0][0].'" width="109" />');
+  return('<img src="'.$ruta_db_superior.$logo[0][0].'" width="109" />');
  }
 else return ("");
 }
@@ -359,11 +359,11 @@ function qr_entrega_interna($idformato,$iddoc){
 
 	$codigo_qr=busca_filtro_tabla("","documento_verificacion","documento_iddocumento=".$iddoc,"", $conn);
 	if($codigo_qr['numcampos']){
-		$qr='<img src="'.PROTOCOLO_CONEXION.RUTA_PDF.'/'.$codigo_qr[0]['ruta_qr'].'" width="80px" height="80px">';	
+		$qr='<img src="'.$ruta_db_superior.$codigo_qr[0]['ruta_qr'].'" width="80px" height="80px">';	
 	}else{
 		generar_codigo_qr($idformato,$iddoc);
 		$codigo_qr=busca_filtro_tabla("","documento_verificacion","documento_iddocumento=".$iddoc,"", $conn);	
-		$qr='<img src="'.PROTOCOLO_CONEXION.RUTA_PDF.'/'.$codigo_qr[0]['ruta_qr'].'" width="80px" height="80px">';	
+		$qr='<img src="'.$ruta_db_superior.$codigo_qr[0]['ruta_qr'].'" width="80px" height="80px">';	
 	}
 	return($qr."<br/>Planilla No. ".formato_numero($idformato,$iddoc,1));
 }
