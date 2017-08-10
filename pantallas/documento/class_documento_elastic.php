@@ -27,7 +27,7 @@ class DocumentoElastic {
 
 	public function __construct($iddocumento) {
 		$this->iddocumento = $iddocumento;
-		if($iddocumento) {
+		if ($iddocumento) {
 			$this->asignar_iddocumento($iddocumento);
 		}
 	}
@@ -49,12 +49,12 @@ class DocumentoElastic {
 		$resp = array();
 		$documento = busca_filtro_tabla("", "documento", "iddocumento=" . $iddocumento, "", $conn);
 		if ($documento["numcampos"]) {
-			if(@$documento[0]["fecha_creacion"]) {
-				$date=date_create($documento[0]["fecha_creacion"]);
+			if (@$documento[0]["fecha_creacion"]) {
+				$date = date_create($documento[0]["fecha_creacion"]);
 				$documento[0]["fecha_creacion"] = $date->format("c");
 			}
-			if(@$documento[0]["fecha"]) {
-				$date=date_create($documento[0]["fecha"]);
+			if (@$documento[0]["fecha"]) {
+				$date = date_create($documento[0]["fecha"]);
 				$documento[0]["fecha"] = $date->format("c");
 			}
 			$resp["documento"] = $documento;
@@ -95,7 +95,7 @@ class DocumentoElastic {
 
 	private function cargar_informacion_ft2($tabla_ft, $iddocumento) {
 		if ($iddocumento) {
-			//$tabla_ft= 'ft_' . strtolower($plantilla);
+			// $tabla_ft= 'ft_' . strtolower($plantilla);
 			$datos_ft = busca_filtro_tabla("", "$tabla_ft a", "a.documento_iddocumento = $iddocumento", "", $conn);
 			return $datos_ft;
 		}
@@ -104,7 +104,7 @@ class DocumentoElastic {
 
 	private function cargar_informacion_item($tabla_ft, $iddocumento) {
 		if ($iddocumento) {
-			//$tabla_ft= 'ft_' . strtolower($plantilla);
+			// $tabla_ft= 'ft_' . strtolower($plantilla);
 			$datos_ft = busca_filtro_tabla("", "$tabla_ft a", "a.id$tabla_ft= $iddocumento", "", $conn);
 			return $datos_ft;
 		}
@@ -220,7 +220,7 @@ class DocumentoElastic {
 		return ($response);
 	}
 
-	public function ejecutar_consulta_elasticsearch($body, $indice="_all", $tipo=null) {
+	public function ejecutar_consulta_elasticsearch($body, $indice = "_all", $tipo = null) {
 		if (empty($body)) {
 			$body = '{
 		    	"query": {
@@ -232,7 +232,7 @@ class DocumentoElastic {
 				"index" => $indice,
 				"body" => $body
 		);
-		if(!empty($tipo)) {
+		if (!empty($tipo)) {
 			$parametros["type"] = $tipo;
 		}
 
@@ -250,12 +250,12 @@ class DocumentoElastic {
 		return ($response);
 	}
 
-	public function validar_consulta_elasticsearch($body, $indice="_all", $tipo=null) {
+	public function validar_consulta_elasticsearch($body, $indice = "_all", $tipo = null) {
 		$parametros = array(
 				"index" => $indice,
 				"body" => $body
 		);
-		if(!empty($tipo)) {
+		if (!empty($tipo)) {
 			$parametros["type"] = $tipo;
 		}
 
@@ -288,7 +288,7 @@ class DocumentoElastic {
 		}
 		$doc = busca_filtro_tabla("plantilla", "documento", "iddocumento = " . $this->iddocumento, "", $conn);
 		$response_borrar = array();
-		if($doc["numcampos"]) {
+		if ($doc["numcampos"]) {
 			$tipo = $doc[0]["plantilla"];
 			array_push($response_borrar, $this->get_cliente_elasticsearch()->borrar_indice("documentos", $this->iddocumento, $tipo));
 		}
@@ -298,7 +298,7 @@ class DocumentoElastic {
 	public function get_cliente_elasticsearch() {
 		if (!@$this->cliente_elasticsearch) {
 			$config = busca_filtro_tabla("", "configuracion", "tipo='elasticsearch'", "", $conn);
-			if($config["numcampos"]) {
+			if ($config["numcampos"]) {
 				for($i = 0; $i < $config["numcampos"]; $i++) {
 					switch ($config[$i]["nombre"]) {
 						case "servidor_elasticsearch" :
@@ -351,7 +351,7 @@ class DocumentoElastic {
 			} else {
 				$documento[0]["nombre_contador"] = '';
 			}
-			foreach ($documento[0] as $key => $valor ) {
+			foreach ( $documento[0] as $key => $valor ) {
 				if (!is_int($key)) {
 					$datos_temporal["documento"][$key] = $valor;
 				}
@@ -398,7 +398,7 @@ class DocumentoElastic {
 
 		$info_formato = busca_filtro_tabla("idformato, nombre, nombre_tabla, item", "formato", "idformato=$idformato", "", $conn);
 
-		if(!$info_formato["numcampos"]) {
+		if (!$info_formato["numcampos"]) {
 			return $hijos;
 		}
 		$es_item1 = $info_formato[0]["item"] == '1';
@@ -407,7 +407,7 @@ class DocumentoElastic {
 		$idplantilla_padre = $info_formato[0]["idformato"];
 		$formatos_hijos = busca_filtro_tabla("h.idformato, h.nombre, h.nombre_tabla, h.item", "formato h", "h.cod_padre = $idplantilla_padre", "", $conn);
 
-		if($es_item1) {
+		if ($es_item1) {
 			$datos_ft = $this->obtener_info_item($tabla1, $iddocumento, $idformato);
 		} else {
 			$datos_ft = $this->cargar_informacion_ft2($tabla1, $iddocumento);
@@ -418,11 +418,11 @@ class DocumentoElastic {
 			$plantilla = strtoupper($formatos_hijos[$i]["nombre"]);
 			$tabla = $formatos_hijos[$i]["nombre_tabla"];
 			$es_item = $formatos_hijos[$i]["item"] == '1';
-			$idformato_hijo= $formatos_hijos[$i]["idformato"];
+			$idformato_hijo = $formatos_hijos[$i]["idformato"];
 			$documentos_hijos = busca_filtro_tabla("", $tabla, $tabla1 . " = " . $datos_ft[0]["id" . $tabla1], "", $conn);
 			if ($documentos_hijos["numcampos"]) {
 				for($h = 0; $h < $documentos_hijos["numcampos"]; $h++) {
-					if($es_item) {
+					if ($es_item) {
 						$id_hijo = $documentos_hijos[$h]["id$tabla"];
 					} else {
 						$id_hijo = $documentos_hijos[$h]["documento_iddocumento"];
@@ -442,13 +442,13 @@ class DocumentoElastic {
 				}
 			}
 		}
-		return  array_merge($hijos, $datos_hijos);
+		return array_merge($hijos, $datos_hijos);
 	}
 
 	private function buildTree(array $elements, $parentId = 0) {
 		$branch = array();
 
-		foreach ($elements as $element) {
+		foreach ( $elements as $element ) {
 			if ($element->id_padre == $parentId) {
 				$children = $this->buildTree($elements, $element->id_hijo);
 				if ($children) {
@@ -468,6 +468,7 @@ class DocumentoElastic {
 
 		if ($documento_origen) {
 			$nombre_tabla = $documento_origen["documento"]["nombre_tabla_ft"];
+			$nombre_formato = $documento_origen[$nombre_tabla]["nombre_formato"];
 
 			$hijos = array();
 
@@ -477,7 +478,7 @@ class DocumentoElastic {
 			$total = count($hijos);
 			if ($total > 0) {
 				$params = [
-						"index" => "documentos",
+						"index" => $nombre_formato,
 						"type" => $documento_origen["documento"]["plantilla"],
 						"id" => $doc_ppal
 				];
@@ -517,37 +518,37 @@ class DocumentoElastic {
 		return (true);
 	}
 
-	private function guardar_indice_simple($datos, $nombre_tabla, $padre=null) {
+	private function guardar_indice_simple($datos, $nombre_tabla, $padre = null) {
 		if ($datos) {
 			$indice = "documentos";
 			$tipo_dato = $datos["documento"]["plantilla"];
 			$id = $datos["documento"]["iddocumento"];
 
-			if(empty($nombre_tabla)) {
+			if (empty($nombre_tabla)) {
 				print_r($datos);
 				throw new \Exception("Sin nombre tabla $nombre_tabla" . $this->iddocumento);
 			}
 
-			if(empty($id)) {
+			if (empty($id)) {
 				$nombre = $datos[$nombre_tabla]["nombre_formato"];
 				$id = $datos[$nombre_tabla]["id$nombre_tabla"];
 			}
-			if(empty($id)) {
+			if (empty($id)) {
 				print_r($datos);
 				throw new \Exception("Sin ID $nombre_tabla " . $this->iddocumento);
 			}
-			if(empty($tipo_dato)) {
-				$tipo_dato= strtoupper($datos[$nombre_tabla]["nombre_formato"]);
+			if (empty($tipo_dato)) {
+				$tipo_dato = strtoupper($datos[$nombre_tabla]["nombre_formato"]);
 			}
-			if(empty($tipo_dato)) {
+			if (empty($tipo_dato)) {
 				print_r($datos);
 				throw new \Exception("Sin Tipo Indice $nombre_tabla " . $this->iddocumento);
 			}
 			$salida = "";
 			try {
 				$salida = $this->get_cliente_elasticsearch()->adicionar_indice_simple($indice, $id, $datos, $tipo_dato, $padre);
-			} catch (Exception $e) {
-				echo 'Excepción capturada: ',  $e->getMessage(), "<br>", $e->getTraceAsString(), "<br>";
+			} catch ( Exception $e ) {
+				echo 'Excepción capturada: ', $e->getMessage(), "<br>", $e->getTraceAsString(), "<br>";
 				die();
 			}
 			return $salida;
@@ -582,17 +583,75 @@ class DocumentoElastic {
 		}
 	}
 
-	public function crear_indice_saia() {
+	public function crear_indice_formato_saia($idformato) {
+		// echo $idformato, "<br>";
+		$idformato = formato_primero($idformato, "idformato");
+		if (empty($idformato)) {
+			return "No se encontro el formato o su padre: idformato = $idformato";
+		}
+		$formatos = busca_filtro_tabla("idformato, nombre, nombre_tabla", "formato", "idformato = $idformato", "", $conn);
+		if ($formatos["numcampos"]) {
+			$mapeo_datos_doc = $this->obtener_mapeo_doc();
+			$params = $this->get_config_params($formatos[0]["nombre"]);
+			$mapeo_datos_padre = $this->obtener_mapeo_formato($idformato);
+			$hijos = array();
+			// $hijos = $this->obtener_formato_hijo($hijos, $formatos[$i]["idformato"]);
+			$hijos = $this->obtener_formato_hijo($hijos, $idformato);
+			$tipo_indice = strtoupper($formatos[0]["nombre"]);
+			$mapa_formatos[] = $hijos;
+			$params["body"]["mappings"][$tipo_indice] = [
+					"_source" => [
+							"enabled" => true
+					]
+			];
+			$params["body"]["mappings"][$tipo_indice]["properties"]["documento"] = $mapeo_datos_doc;
+			if (!empty($mapeo_datos_padre)) {
+				$params["body"]["mappings"][$tipo_indice]["properties"][$formatos[0]["nombre_tabla"]] = $mapeo_datos_padre;
+			}
+			$num_hijos = count($hijos);
+			for($h = 0; $h < $num_hijos; $h++) {
+				$mapeo_datos_ft = $this->obtener_mapeo_formato($hijos[$h]->idformato_hijo);
+				$tipo_indice = $hijos[$h]->tipo_hijo;
+				// print_r($mapeo_datos_ft);die();
+				$params["body"]["mappings"][$tipo_indice] = [
+						"_source" => [
+								"enabled" => true
+						],
+						"_parent" => [
+								"type" => $hijos[$h]->tipo_padre
+						]
+				];
+				$mapeo_datos["body"]["mappings"][$tipo_indice]["properties"]["documento"] = $mapeo_datos_doc;
+				if (!empty($mapeo_datos_ft)) {
+					$mapeo_datos["body"]["mappings"][$tipo_indice]["properties"][$hijos[$h]->nombre_tabla] = $mapeo_datos_ft;
+				}
+			}
+		}
+		return $this->guardar_indice($params);
+	}
+
+	public function crear_indice_completo_saia() {
 		$formatos = busca_filtro_tabla("idformato, nombre, nombre_tabla", "formato", "cod_padre = 0", "nombre ", $conn);
 		$mapa_formatos = array();
+
+		for($i = 0; $i < $formatos["numcampos"]; $i++) {
+			$idformato = $formatos[$i]["idformato"];
+			$mapa_formatos[$idformato] = $this->crear_indice_formato_saia($idformato);
+		}
+		return $mapa_formatos;
+	}
+
+	/**
+	 */
+	private function get_config_params($index_name) {
 		$params = array(
-				"index" => "documentos"
+				"index" => $index_name
 		);
 
 		$params["body"]["settings"] = [
 				"analysis" => [
-						"filter" =>[
-								"spanish_stop" =>[
+						"filter" => [
+								"spanish_stop" => [
 										"type" => "stop",
 										"stopwords" => "_spanish_"
 								],
@@ -618,45 +677,7 @@ class DocumentoElastic {
 						]
 				]
 		];
-
-		$mapeo_datos_doc = $this->obtener_mapeo_doc();
-		// print_r($mapeo_datos_doc);die();
-		for($i = 0; $i < $formatos["numcampos"]; $i++) {
-			$mapeo_datos_padre = $this->obtener_mapeo_formato($formatos[$i]["idformato"]);
-			$hijos = array();
-			// $hijos = $this->obtener_formato_hijo($hijos, $formatos[$i]["idformato"]);
-			$hijos = $this->obtener_formato_hijo($hijos, $formatos[$i]["idformato"]);
-			$tipo_indice = strtoupper($formatos[$i]["nombre"]);
-			$mapa_formatos[] = $hijos;
-			$params["body"]["mappings"][$tipo_indice] = [
-					"_source" => [
-							"enabled" => true
-					]
-			];
-			$params["body"]["mappings"][$tipo_indice]["properties"]["documento"] = $mapeo_datos_doc;
-			if (!empty($mapeo_datos_padre)) {
-				$params["body"]["mappings"][$tipo_indice]["properties"][$formatos[$i]["nombre_tabla"]] = $mapeo_datos_padre;
-			}
-			$num_hijos = count($hijos);
-			for($h = 0; $h < $num_hijos; $h++) {
-				$mapeo_datos_ft = $this->obtener_mapeo_formato($hijos[$h]->idformato_hijo);
-				$tipo_indice = $hijos[$h]->tipo_hijo;
-				// print_r($mapeo_datos_ft);die();
-				$params["body"]["mappings"][$tipo_indice] = [
-						"_source" => [
-								"enabled" => true
-						],
-						"_parent" => [
-								"type" => $hijos[$h]->tipo_padre
-						]
-				];
-				$mapeo_datos["body"]["mappings"][$tipo_indice]["properties"]["documento"] = $mapeo_datos_doc;
-				if (!empty($mapeo_datos_ft)) {
-					$mapeo_datos["body"]["mappings"][$tipo_indice]["properties"][$hijos[$h]->nombre_tabla] = $mapeo_datos_ft;
-				}
-			}
-		}
-		return $this->guardar_indice($params);
+		return $params;
 	}
 
 	private function obtener_formato_hijo($hijos, $idformato) {
@@ -720,9 +741,15 @@ class DocumentoElastic {
 			 * } else {
 			 */
 
-			$mapeo_campo = ["type" => $tipo_dato];
-			if($tipo_dato == "text") {
-				$mapeo_campo = ["type" => "text", "fielddata" => true, "analyzer" => "spanish"];
+			$mapeo_campo = [
+					"type" => $tipo_dato
+			];
+			if ($tipo_dato == "text") {
+				$mapeo_campo = [
+						"type" => "text",
+						"fielddata" => true,
+						"analyzer" => "spanish"
+				];
 			}
 			$mapeo["properties"][$campos[$i]["nombre"]] = $mapeo_campo;
 			// }
@@ -757,12 +784,16 @@ class DocumentoElastic {
 						"fielddata" => true
 				],
 				"fecha" => [
-						"type" => "date"/*,
-						"format" => "yyyy-MM-dd HH:mm:ss"*/
+						"type" => "date"  /*
+						                  * ,
+						                  * "format" => "yyyy-MM-dd HH:mm:ss"
+						                  */
 				],
 				"fecha_creacion" => [
-						"type" => "date" /*,
-						"format" => "yyyy-MM-dd HH:mm:ss"*/
+						"type" => "date"  /*
+						                  * ,
+						                  * "format" => "yyyy-MM-dd HH:mm:ss"
+						                  */
 				],
 				"fk_idversion_documento" => [
 						"type" => "integer"
@@ -832,17 +863,21 @@ class DocumentoElastic {
 		$retorno = "";
 		if ($datos["numcampos"]) {
 			$campos = busca_filtro_tabla($campo, $datos[0]["nombre_tabla"], $llave . "=" . $iddoc, "", $conn);
-			/*if (($iddoc == 1393 || $iddoc == 27) && preg_match("/fecha/", $campo)) {
-				print_r($campos);
-				die();
-			}*/
+			/*
+			 * if (($iddoc == 1393 || $iddoc == 27) && preg_match("/fecha/", $campo)) {
+			 * print_r($campos);
+			 * die();
+			 * }
+			 */
 			if ($campos["numcampos"]) {
 				switch ($datos[0]["etiqueta_html"]) {
-					/*case "arbol" :
-						$tipo_arbol = explode(";", $datos[0]["valor"]);
-						$idcampo = busca_filtro_tabla("idcampos_formato", "campos_formato", "nombre like '$campo' and formato_idformato=$idformato", "", $conn);
-						$retorno = mostrar_seleccionados($idformato, $idcampo[0][0], $tipo_arbol[6], $iddoc, 1);
-						break;*/
+					/*
+					 * case "arbol" :
+					 * $tipo_arbol = explode(";", $datos[0]["valor"]);
+					 * $idcampo = busca_filtro_tabla("idcampos_formato", "campos_formato", "nombre like '$campo' and formato_idformato=$idformato", "", $conn);
+					 * $retorno = mostrar_seleccionados($idformato, $idcampo[0][0], $tipo_arbol[6], $iddoc, 1);
+					 * break;
+					 */
 					case "archivo" :
 						include_once ("../../anexosdigitales/funciones_archivo.php");
 						$idcampo = busca_filtro_tabla("idcampos_formato", "campos_formato", "nombre like '$campo' and formato_idformato=$idformato", "", $conn);
@@ -926,26 +961,26 @@ class DocumentoElastic {
 							$retorno = $campos[0][$campo];
 						}
 						break;
-					case "fecha":
-						if($campos[0][0]instanceof DateTime) {
+					case "fecha" :
+						if ($campos[0][0] instanceof DateTime) {
 							$retorno = $campos[0][0]->format("c");
 						} else {
-							$date=date_create($campos[0][0]);
+							$date = date_create($campos[0][0]);
 							$retorno = $date->format("c");
 						}
-						if(empty($retorno)) {
+						if (empty($retorno)) {
 							$retorno = null;
 						}
 						break;
 					default :
-						if(preg_match("/DATE|TIMESTAMP/", $datos[0]["tipo_dato"])) {
-							if($campos[0][0]instanceof DateTime) {
+						if (preg_match("/DATE|TIMESTAMP/", $datos[0]["tipo_dato"])) {
+							if ($campos[0][0] instanceof DateTime) {
 								$retorno = $campos[0][0]->format("c");
 							} else {
-								$date=date_create($campos[0][0]);
+								$date = date_create($campos[0][0]);
 								$retorno = $date->format("c");
 							}
-							if(empty($retorno)) {
+							if (empty($retorno)) {
 								$retorno = null;
 							}
 						} else {
@@ -970,13 +1005,15 @@ class DocumentoElastic {
 					$retorno = str_replace("<!-- pagebreak -->", '<pagebreak/>', $retorno);
 				}
 			}
-			/*if(preg_match("/fecha_ruta_distribuc/", $campo)) {
-				echo $retorno . "<br>";
-				print_r($datos[0]);
-				echo "Valor: '$retorno'" . "<br>";
-				print_r($campos);
-				die($campo);
-			}*/
+			/*
+			 * if(preg_match("/fecha_ruta_distribuc/", $campo)) {
+			 * echo $retorno . "<br>";
+			 * print_r($datos[0]);
+			 * echo "Valor: '$retorno'" . "<br>";
+			 * print_r($campos);
+			 * die($campo);
+			 * }
+			 */
 
 			return (stripslashes($retorno));
 		}

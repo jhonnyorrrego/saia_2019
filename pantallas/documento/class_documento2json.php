@@ -14,9 +14,12 @@ ini_set("display_errors", true);
 if ($_REQUEST["id"]) {
 	$d2j = new DocumentoElastic($_REQUEST["id"]);
 	switch ($_REQUEST["accion"]) {
+		case "indexar_formato":
+			print_r($d2j->crear_indice_formato_saia($_REQUEST["id"]));
+			break;
 		case "indexar" :
 			//$d2j->asignar_iddocumento($_REQUEST["id"]);
-			print_r($d2j->crear_indice_saia());
+			print_r($d2j->crear_indice_completo_saia());
 			break;
 		case "indexar_documento":
 			print_r($d2j->indexar_elasticsearch_completo());
@@ -53,7 +56,7 @@ if ($_REQUEST["id"]) {
 	}
 } else if($_REQUEST["accion"] == "indexar_completo") {
 	$elastic = new DocumentoElastic(null);
-	$elastic->crear_indice_saia();
+	$elastic->crear_indice_completo_saia();
 	//consultar todos los documentos que son padre
 	$documentos = busca_filtro_tabla("d.iddocumento", "documento d, formato f", "upper(f.nombre)=d.plantilla and f.cod_padre = 0 and d.estado<>'ELIMINADO'", "d.iddocumento", $conn);
 	for($i=0; $i < $documentos["numcampos"]; $i++) {
