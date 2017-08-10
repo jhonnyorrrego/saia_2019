@@ -55,6 +55,7 @@ class GenerarFormato {
 		// ir a la carpeta anterior
 		$ruta_padre = dirname(__DIR__);
 		chdir($ruta_padre);
+		$redireccion = false;
 		switch (@$this->accion) {
 			case "formato" :
 				$redireccion= $this->generar_formato();
@@ -1928,7 +1929,7 @@ else
 
 			$includes .= $this->incluir("../../librerias_saia.php", "librerias");
 			$includes .= "<?php echo(librerias_jquery('1.7')); ?>";
-			$includes .= "<?php echo(librerias_validar_formulario('1.16')); ?>";	
+			$includes .= "<?php echo(librerias_validar_formulario('1.16')); ?>";
 
 			$includes .= $this->incluir("../../js/title2note.js", "javascript");
 			if ($arboles) {
