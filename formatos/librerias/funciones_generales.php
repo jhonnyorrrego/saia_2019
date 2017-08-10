@@ -2883,7 +2883,7 @@ function formato_primero($idformato, $campo) {
 	global $conn;
 	$idformato_papa = busca_filtro_tabla("", "formato", "idformato=" . $idformato, "", $conn);
 	if($idformato_papa['numcampos']) {
-		if($idformato_papa[0]['cod_padre'] == "") {
+		if(empty($idformato_papa[0]['cod_padre'])) {
 			return ($idformato_papa[0][$campo]);
 		} else {
 			$dato = formato_primero($idformato_papa[0]['cod_padre'], $campo);
@@ -3451,7 +3451,7 @@ function cargar_anexos_documento_web($datos_documento, $anexos) {
 		$contenido = base64_decode($value['content']);
 		$guardados = $tipo_almacenamiento->almacenar_contenido($ruta, $contenido);
 		//file_put_contents($ruta, $contenido);
-		
+
 		if($guardados) {
 			//$ruta_alm = substr($ruta, strlen($ruta_db_superior));
 			$ruta_alm = array("servidor" => $tipo_almacenamiento->get_ruta_servidor(), "ruta" => $ruta);
@@ -3563,9 +3563,9 @@ function crear_pdf_documento_tcpdf($datos_documento, $datos_ejecutor = null) {
 		$datos_session = "&LOGIN=" . $_SESSION["LOGIN" . LLAVE_SAIA] . "&usuario_actual=" . $_SESSION["usuario_actual"] . "&llave_saia=" . LLAVE_SAIA;
 		$url = $url . $datos_session;
         if (strpos(PROTOCOLO_CONEXION, 'https') !== false) {
-		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false); 
+		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-	}		
+	}
 		curl_setopt($ch, CURLOPT_URL, $url);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 
