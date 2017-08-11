@@ -12,6 +12,7 @@ while($max_salida > 0) {
 include_once ($ruta_db_superior . "db.php");
 include_once ($ruta_db_superior . "formatos/librerias/funciones.php");
 include_once ($ruta_db_superior . "formatos/generar_formato_buscar.php");
+include_once ($ruta_db_superior . "pantallas/documento/class_documento_elastic.php");
 
 if (@$_REQUEST["sesion"] && !@$_SESSION["LOGIN" . LLAVE_SAIA]) {
 	$_SESSION["LOGIN" . LLAVE_SAIA] = $_REQUEST['sesion'];
@@ -63,6 +64,11 @@ class GenerarFormato {
 				break;
 			case "tabla" :
 				$this->generar_tabla();
+				if (INDEXA_ELASTICSEARCH) {
+					$doc_elastic = new DocumentoElastic(null);
+					$doc_elastic->actualizar_indice_formato($this->idformato);
+				}
+
 				$redireccion = "campos_formatolist.php?idformato=" . $this->idformato;
 				break;
 			case "vista" :

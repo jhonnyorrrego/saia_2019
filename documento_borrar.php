@@ -58,7 +58,7 @@ if (isset($_POST["iddoc"])) {
 	// Eliminar el documento del indice elasticsearch
 	if (INDEXA_ELASTICSEARCH) {
 		$d2j = new DocumentoElastic($_POST["iddoc"]);
-		$exportado = $d2j->borrar_elasticsearch();
+		$exportado = $d2j->borrar_documento_elasticsearch();
 	}
 
 	if (@$_REQUEST["doc_principal"]) {

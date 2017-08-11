@@ -57,13 +57,14 @@ class DocumentoElastic {
 				$date = date_create($documento[0]["fecha"]);
 				$documento[0]["fecha"] = $date->format("c");
 			}
-			$resp["documento"] = $documento;
-			$formato = busca_filtro_tabla("", "formato", "lower(nombre) LIKE '" . strtolower($documento[0]["plantilla"]) . "'", "", $conn);
+			$formato = busca_filtro_tabla("", "formato", "lower(nombre) = '" . strtolower($documento[0]["plantilla"]) . "'", "", $conn);
 			if ($formato["numcampos"]) {
 				$resp["idformato"] = $formato[0]["idformato"];
 				$resp["nombre_formato"] = $formato[0]["nombre"];
 				$resp["nombre_tabla"] = $formato[0]["nombre_tabla"];
+				$documento["formato_idformato"] = $formato[0]["idformato"];
 			}
+			$resp["documento"] = $documento;
 		}
 		return $resp;
 	}
@@ -277,12 +278,17 @@ class DocumentoElastic {
 		$response = $this->get_cliente_elasticsearch()->buscar_item_elastic($parametros, $json);
 		$response_borrar = array();
 		foreach ( $response["hits"]["hits"] as $key => $valor ) {
-			array_push($response_borrar, $this->get_cliente_elasticsearch()->borrar_indice($valor["_index"], $valor["_id"], $valor["_type"]));
+			array_push($response_borrar, $this->get_cliente_elasticsearch()->borrar_documento_indice($valor["_index"], $valor["_id"], $valor["_type"]));
 		}
 		return ($response_borrar);
 	}
 
-	public function borrar_elasticsearch($parametros = null) {
+	/**
+	 * Borra el documento con el id en $this->iddocumento del indice indicapo por $parametros["index"]
+	 * @param unknown $parametros
+	 * @return boolean|array
+	 */
+	public function borrar_documento_elasticsearch($parametros = null) {
 		if (empty($this->iddocumento)) {
 			return false;
 		}
@@ -290,7 +296,7 @@ class DocumentoElastic {
 		$response_borrar = array();
 		if ($doc["numcampos"]) {
 			$tipo = $doc[0]["plantilla"];
-			array_push($response_borrar, $this->get_cliente_elasticsearch()->borrar_indice("documentos", $this->iddocumento, $tipo));
+			array_push($response_borrar, $this->get_cliente_elasticsearch()->borrar_documento_indice("documentos", $this->iddocumento, $tipo));
 		}
 		return ($response_borrar);
 	}
@@ -333,6 +339,7 @@ class DocumentoElastic {
 		$documento = $info_doc["documento"];
 		$nombre_tabla = $info_doc["nombre_tabla"];
 		$nombre_formato = $info_doc["nombre_formato"];
+		$idformato = $info_doc["idformato"];
 		$datos_ft = $this->cargar_informacion_ft2($nombre_tabla, $iddocumento);
 
 		if ($documento["numcampos"]) {
@@ -357,6 +364,7 @@ class DocumentoElastic {
 				}
 			}
 			$datos_temporal["documento"]["nombre_tabla_ft"] = $nombre_tabla;
+			$datos_temporal["documento"]["formato_idformato"] = $idformato;
 		}
 
 		if (@$datos_ft["numcampos"]) {
@@ -496,13 +504,12 @@ class DocumentoElastic {
 				$arreglo_hijos = array();
 				// Primero es necesario crear el mapeo entre el documento padre y sus hijos
 				foreach ( $hijos as $hijo ) {
+					$datos_temporal["documento"]["nombre_tabla_ft"] = $nombre_tabla;
+
 					if ($hijo->hijo_es_item) {
 						$datos_hijo = $this->obtener_info_item($hijo->tabla_hijo, $hijo->id_hijo, $hijo->idformato_hijo);
 					} else {
 						$datos_hijo = $this->obtener_info_doc($hijo->id_hijo);
-					}
-					if ($datos_hijo) {
-						$resultado_indice = $this->guardar_indice_simple($nombre_formato, $datos_hijo, $hijo->tabla_hijo, $hijo->id_padre);
 					}
 				}
 			} else {
@@ -583,6 +590,11 @@ class DocumentoElastic {
 		}
 	}
 
+	/**
+	 * Crea un indice elastic search para el formato indicado. Si es un formato hijo, siempre se busca el formato padre para crear un solo indice para toda la jeranquia
+	 * @param int $idformato
+	 * @return string|boolean|NULL|number[]|array
+	 */
 	public function crear_indice_formato_saia($idformato) {
 		// echo $idformato, "<br>";
 		$idformato = formato_primero($idformato, "idformato");
@@ -630,6 +642,10 @@ class DocumentoElastic {
 		return $this->guardar_indice($params);
 	}
 
+	/**
+	 * Crea un indice elastic search por cada formato existente en SAIA
+	 * @return string[]|boolean[]|NULL[]|number[][]|array[]
+	 */
 	public function crear_indice_completo_saia() {
 		$formatos = busca_filtro_tabla("idformato, nombre, nombre_tabla", "formato", "cod_padre = 0", "nombre ", $conn);
 		$mapa_formatos = array();
@@ -639,6 +655,31 @@ class DocumentoElastic {
 			$mapa_formatos[$idformato] = $this->crear_indice_formato_saia($idformato);
 		}
 		return $mapa_formatos;
+	}
+
+	public function actualizar_indice_formato($idformato) {
+		$idformato = formato_primero($idformato, "idformato");
+		$nombre_indice = formato_primero($idformato, "nombre");
+		//TODO: Opcional: Reindexar el indice. Copiar el existente a uno nuevo con version
+		//TODO: 1 Eliminar el indice
+		$this->borrar_indice_elasticsearch($nombre_indice);
+		//TODO: 2 Crear el indice del formato (padre)
+		$this->crear_indice_formato_saia($idformato);
+		//TODO: 3 Indexar los documentos del formato (el padre)
+		$documentos = busca_filtro_tabla("d.iddocumento", "documento d, formato f", "upper(f.nombre)=d.plantilla and f.idformato = $idformato and d.estado<>'ELIMINADO'", "d.iddocumento", $conn);
+		for($i=0; $i < $documentos["numcampos"]; $i++) {
+			$d2j= new self($documentos[$i]["iddocumento"]);
+			$d2j->indexar_elasticsearch_completo();
+		}
+	}
+
+	/**
+	 * Borra el indice elasticsearch indicado por el parametro
+	 * @param string $nombre_indice
+	 */
+	public function borrar_indice_elasticsearch($nombre_indice) {
+		$parametros = ['index' => $nombre_indice];
+		$this->get_cliente_elasticsearch()->borrar_indice($parametros);
 	}
 
 	/**

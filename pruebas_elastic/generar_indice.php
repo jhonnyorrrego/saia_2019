@@ -234,7 +234,7 @@ class DocumentoElastic3 {
 		$response = $this->get_cliente_elasticsearch()->buscar_item_elastic($parametros, $json);
 		$response_borrar = array();
 		foreach ( $response["hits"]["hits"] as $key => $valor ) {
-			array_push($response_borrar, $this->cliente_elasticsearch->borrar_indice($valor["_index"], $valor["_id"], $valor["_type"]));
+			array_push($response_borrar, $this->cliente_elasticsearch->borrar_documento_indice($valor["_index"], $valor["_id"], $valor["_type"]));
 		}
 		return ($response_borrar);
 	}
