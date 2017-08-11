@@ -36,12 +36,14 @@ class elasticsearch_saia {
 		// print_r(exec('php composer.phar install --no-dev'));
 	}
 
-	function connect() {
+	public function connect() {
 		global $ruta_db_superior;
 		if (!file_exists($ruta_db_superior . 'vendor/autoload.php')) {
-			$this->install_elasticsearch();
+			require_once RUTA_ABS_SAIA . 'vendor/autoload.php';
+			//$this->install_elasticsearch();
+		} else {
+			require_once $ruta_db_superior . 'vendor/autoload.php';
 		}
-		require $ruta_db_superior . 'vendor/autoload.php';
 		$this->cliente = Elasticsearch\ClientBuilder::create()->setHosts($this->hosts)->build();
 	}
 
@@ -141,7 +143,7 @@ class elasticsearch_saia {
 		return ($this->resultado = $this->cliente->indices()->validate($parametros));
 	}
 
-	function borrar_indice($indice, $id, $tipo_dato) {
+	function borrar_documento_indice($indice, $id, $tipo_dato) {
 		$parametros['index'] = $indice;
 		$parametros['id'] = $id;
 		$parametros['type'] = $tipo_dato;
@@ -161,5 +163,10 @@ class elasticsearch_saia {
 		$response = $this->cliente->get($parametros);
 		return ($response);
 	}
+
+	public function borrar_indice($parametros) {
+		return ($this->resultado = $this->cliente->indices()->delete($parametros));
+	}
+
 }
 ?>
