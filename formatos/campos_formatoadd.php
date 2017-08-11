@@ -1,7 +1,7 @@
 <?php session_start(); ?>
 <?php ob_start(); ?>
 <?php
-$max_salida=6; $ruta_db_superior=$ruta=""; while($max_salida>0){ if(is_file($ruta."db.php")){ $ruta_db_superior=$ruta;} $ruta.="../"; $max_salida--; } 
+$max_salida=6; $ruta_db_superior=$ruta=""; while($max_salida>0){ if(is_file($ruta."db.php")){ $ruta_db_superior=$ruta;} $ruta.="../"; $max_salida--; }
 
 include ($ruta_db_superior."db.php");
 include ($ruta_db_superior."librerias_saia.php");
@@ -62,7 +62,7 @@ else
 	$x_valor = @$_POST["x_valor"];
 	$x_predeterminado = @$_POST["x_predeterminado"];
 	$x_ayuda = @$_POST["x_ayuda"];
-	$x_banderas = @$_POST["x_banderas"]; 
+	$x_banderas = @$_POST["x_banderas"];
   $x_autoguardado = @$_POST["x_autoguardado"];
 }
 
@@ -77,23 +77,24 @@ switch ($sAction)
 		break;
 	case "A": // Add
 		if (AddData($conn)) { // Add New Record
-      alerta("Adicion Exitosa"); 
+      alerta("Adicion Exitosa");
 			redirecciona("campos_formatolist.php?idformato=".$idformato);
 		}
 		break;
 }
 ?>
-<?php 
-echo(librerias_jquery());
-include ($ruta_db_superior."header.php"); 
+<?php
+echo(librerias_jquery("1.7"));
+include ($ruta_db_superior."header.php");
 
+echo(librerias_validar_formulario("1.11"));
 ?>
 <script type="text/javascript" src="<?php echo($ruta_db_superior);?>ew.js"></script>
-<script type="text/javascript" src="<?php echo($ruta_db_superior);?>js/jquery.js"></script>
-<script type="text/javascript" src="<?php echo($ruta_db_superior);?>js/jquery.validate.js"></script>
+<!-- <script type="text/javascript" src="<?php echo($ruta_db_superior);?>js/jquery.js"></script>  -->
+<!-- <script type="text/javascript" src="<?php echo($ruta_db_superior);?>js/jquery.validate.js"></script> -->
 <script type="text/javascript">
 <!--
-EW_dateSep = "/"; // set date separator	
+EW_dateSep = "/"; // set date separator
 
 //-->
 </script>
@@ -146,9 +147,9 @@ EW_dateSep = "/"; // set date separator
  				for(i=5;i<260;i+=5){
  					cadena+='<option value="'+i+'"';
  					if(i==255)
- 						cadena+=' selected '; 					
+ 						cadena+=' selected ';
  					cadena+='">'+i+'</option>';
- 					
+
  				}
 				$("#div_longitud").html('<select name="x_longitud" id="x_longitud">'+cadena+'</select>');
  			break;
@@ -168,9 +169,9 @@ EW_dateSep = "/"; // set date separator
  				for(i=5;i<260;i+=5){
  					cadena+='<option value="'+i+'"';
  					if(i==255)
- 						cadena+=' selected '; 					
+ 						cadena+=' selected ';
  					cadena+='">'+i+'</option>';
- 					
+
  				}
  				$("#div_longitud").html('<select name="x_longitud" id="x_longitud">'+cadena+'</select>');
  			break;
@@ -184,7 +185,7 @@ EW_dateSep = "/"; // set date separator
 		submitHandler: function(form) {
 				<?php encriptar_sqli("campos_formatoadd",0,"form_info",$ruta_db_superior);?>
 			    form.submit();
-			    
+
 			  }
 	});
 	});
@@ -358,18 +359,18 @@ $datos_formato=busca_filtro_tabla("item","formato","idformato=$x_formato_idforma
       <span class="phpmaker">
         <input type="radio" name="x_banderas[]"  <?php if(in_array("ffc",$x_banderas)){echo("CHECKED"); } ?> value="ffc">funcionario_codigo
         <input type="radio" name="x_banderas[]"  <?php if(in_array("fdc",$x_banderas)){echo("CHECKED"); } ?> value="fdc">iddependencia_cargo
-        <input type="radio" name="x_banderas[]"  <?php if(in_array("fid",$x_banderas)){echo("CHECKED"); } ?> value="fid">idfuncionario        
+        <input type="radio" name="x_banderas[]"  <?php if(in_array("fid",$x_banderas)){echo("CHECKED"); } ?> value="fid">idfuncionario
         <input type="radio" name="x_banderas[]"  <?php if(in_array("fc",$x_banderas)){echo("CHECKED"); } ?> value="fc">idcargo
         <input type="radio" name="x_banderas[]"  value="">Ninguno
       </span>
     </td>
-	</tr>	
-	
+	</tr>
+
 	<tr>
 		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">Acciones o Formularios</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
 <?php if (!(!is_null($x_acciones)) || ($x_acciones == "")) { $x_acciones = "a,e,b";} // Set default value ?>
-<?php 
+<?php
 $ar_x_acciones = explode(",",@$x_acciones);
 $x_accionesChk = "";
 $x_accionesChk .= "<input type=\"checkbox\" name=\"x_acciones[]\" value=\"" . htmlspecialchars("a"). "\"";
@@ -403,7 +404,7 @@ foreach ($ar_x_acciones as $cnt_x_acciones) {
 		break;
 	}
 }
-	$x_accionesChk .= ">" . "Detalles" . EditOptionSeparator(3);	
+	$x_accionesChk .= ">" . "Detalles" . EditOptionSeparator(3);
 $x_accionesChk .= "<input type=\"checkbox\" name=\"x_acciones[]\" value=\"" . htmlspecialchars("b"). "\"";
 foreach ($ar_x_acciones as $cnt_x_acciones) {
 	if (trim($cnt_x_acciones) == "b") {
@@ -447,7 +448,7 @@ echo $x_accionesChk;
 <input type="radio" name="x_etiqueta_html"<?php if (@$x_etiqueta_html == "select") { ?> checked<?php } ?> value="<?php echo htmlspecialchars("select"); ?>">
 <?php echo "Lista Deplegable"; ?>
 <?php echo EditOptionSeparator(5); ?>   <br>
-<input type="radio" name="x_etiqueta_html"<?php if (@$x_etiqueta_html == "dependientes") { ?> checked<?php } ?> value="<?php echo htmlspecialchars("dependientes"); ?>"> 
+<input type="radio" name="x_etiqueta_html"<?php if (@$x_etiqueta_html == "dependientes") { ?> checked<?php } ?> value="<?php echo htmlspecialchars("dependientes"); ?>">
 <?php echo "Listado Dependiente"; ?>
 
 <?php echo EditOptionSeparator(7); ?><br>
@@ -455,15 +456,15 @@ echo $x_accionesChk;
 <?php echo "Oculto"; ?>
 <?php echo EditOptionSeparator(9); ?><br>
 <input type="radio" name="x_etiqueta_html"<?php if (@$x_etiqueta_html == "arbol") { ?> checked<?php } ?> value="<?php echo htmlspecialchars("arbol"); ?>">
-<?php echo "Arbol"; ?> 
+<?php echo "Arbol"; ?>
 <?php echo EditOptionSeparator(10); ?><br>
 <input type="radio" name="x_etiqueta_html"<?php if (@$x_etiqueta_html == "fecha") { ?> checked<?php } ?> value="<?php echo htmlspecialchars("fecha"); ?>">
-<?php echo "fecha"; ?>  </td><td>   
+<?php echo "fecha"; ?>  </td><td>
 <?php echo EditOptionSeparator(11); ?><br>
 <?php
 if(!$datos_formato[0]["item"]){
 ?><input type="radio" name="x_etiqueta_html"<?php if (@$x_etiqueta_html == "archivo") { ?> checked<?php } ?> value="<?php echo htmlspecialchars("archivo"); ?>">
-<?php echo "archivo";}?> 
+<?php echo "archivo";}?>
 <?php echo EditOptionSeparator(12); ?><br>
 <input type="radio" name="x_etiqueta_html"<?php if (@$x_etiqueta_html == "detalle") { ?> checked<?php } ?> value="<?php echo htmlspecialchars("detalle"); ?>">
 <?php echo "detalle"; ?>
@@ -480,14 +481,14 @@ if(!$datos_formato[0]["item"]){
 <?php echo "Remitente"; ?> <?php echo EditOptionSeparator(16); ?>   <br>
 <input type="radio" name="x_etiqueta_html"<?php if (@$x_etiqueta_html == "spin") { ?> checked<?php } ?> value="<?php echo htmlspecialchars("spin"); ?>">
 <?php echo "Lista num&eacute;rica"; ?>
-<?php echo EditOptionSeparator(17); ?>   <br> 
+<?php echo EditOptionSeparator(17); ?>   <br>
 <input type="radio" name="x_etiqueta_html"<?php if (@$x_etiqueta_html == "link") { ?> checked<?php } ?> value="<?php echo htmlspecialchars("link"); ?>">
 <?php echo "Enlace"; ?>
 </td></tr></table>
 </span></td>
 	</tr>
 	<tr>
-	
+
 		<td class="encabezado">
     <span class="phpmaker" style="color: #FFFFFF;">Valor Llenado</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
@@ -509,7 +510,7 @@ if(!$datos_formato[0]["item"]){
 	</tr>
 </table>
 <p>
-<input type="submit" name="Action" value="ADICIONAR" id="action"> 
+<input type="submit" name="Action" value="ADICIONAR" id="action">
 </form>
 <?php include ("footer.php") ?>
 <?php
@@ -546,7 +547,7 @@ function LoadData($sKey,$conn)
 		$row = phpmkr_fetch_array($rs);
   global $x_idcampos_formato, $x_formato_idformato, $x_nombre, $x_etiqueta, $x_tipo_dato, $x_longitud, $x_obligatoriedad, $x_banderas,
   	$x_acciones, $x_etiqueta_html, $x_valor, $x_predeterminado, $x_ayuda;
- 
+
 		// Get the field contents
 		$x_idcampos_formato = $row["idcampos_formato"];
 		$x_formato_idformato = $row["formato_idformato"];
@@ -563,7 +564,7 @@ function LoadData($sKey,$conn)
 		$x_autoguardado = $row["x_autoguardado"];
 		if($row["banderas"])
 		  $x_banderas=explode(",",$row["banderas"]);
-		else $x_banderas=array();  
+		else $x_banderas=array();
 	}
 	phpmkr_free_result($rs);
 	return $LoadData;
@@ -602,25 +603,25 @@ global $x_autoguardado,$x_idcampos_formato, $x_formato_idformato, $x_nombre, $x_
 	$fieldList["formato_idformato"] = $theValue;
 
 	// Field nombre
-	$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_nombre) : $x_nombre; 
+	$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_nombre) : $x_nombre;
 	$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
 	$fieldList["nombre"] = $theValue;
 
 	// Field etiqueta
-	$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_etiqueta) : $x_etiqueta; 
+	$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_etiqueta) : $x_etiqueta;
 	$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
 	$fieldList["etiqueta"] = $theValue;
   // Field autoguardado
   $fieldList["autoguardado"] =$x_autoguardado ;
     if($fieldList["autoguardado"]<>1)
-      $fieldList["autoguardado"]=0; 
+      $fieldList["autoguardado"]=0;
 	// Field tipo_dato
-	$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_tipo_dato) : $x_tipo_dato; 
+	$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_tipo_dato) : $x_tipo_dato;
 	$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
 	$fieldList["tipo_dato"] = $theValue;
 
 	// Field longitud
-	$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_longitud) : $x_longitud; 
+	$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_longitud) : $x_longitud;
 	$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
 	$fieldList["longitud"] = $theValue;
 
@@ -631,27 +632,27 @@ global $x_autoguardado,$x_idcampos_formato, $x_formato_idformato, $x_nombre, $x_
 	// Field acciones
 	if(is_array($x_acciones))
 	 $theValue = implode(",", $x_acciones);
-	else $theValue=""; 
+	else $theValue="";
 	$theValue = (!get_magic_quotes_gpc()) ? addslashes($theValue) : $theValue;
 	$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
 	$fieldList["acciones"] = $theValue;
-	
+
 		// Field banderas
-	if(is_array($x_banderas))	
+	if(is_array($x_banderas))
 	 $theValue = implode(",",@$x_banderas);
-	else $theValue=""; 
+	else $theValue="";
 	$theValue = (!get_magic_quotes_gpc()) ? addslashes($theValue) : $theValue;
 	$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
 	$fieldList["banderas"] = $theValue;
 
 	// Field etiqueta_html
-	$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_etiqueta_html) : $x_etiqueta_html; 
+	$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_etiqueta_html) : $x_etiqueta_html;
 	$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
 	$fieldList["etiqueta_html"] = $theValue;
 
 	// Field valor
 	$x_valor=parsear_comilla_sencilla_cadena($x_valor);
-	$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_valor) : $x_valor; 
+	$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_valor) : $x_valor;
 	$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
 	$fieldList["valor"] = $theValue;
   if(strpos($GLOBALS["x_valor"],"*}")>0)
@@ -667,16 +668,16 @@ global $x_autoguardado,$x_idcampos_formato, $x_formato_idformato, $x_nombre, $x_
               $sqlf="UPDATE funciones_formato SET formato='".implode(",",$vector_f)."' WHERE idfunciones_formato=".$existe[0]["idfunciones_formato"];
 			  guardar_traza($sqlf,$formato[0]["nombre_tabla"]);
               phpmkr_query($sqlf,$conn) or error("Falla Al Ejecutar ".$sqlf." <br /> Al Generar el Formato.");
-             } 
-        }    
+             }
+        }
     }
 	// Field predeterminado
-	$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_predeterminado) : $x_predeterminado; 
+	$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_predeterminado) : $x_predeterminado;
 	$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
 	$fieldList["predeterminado"] = $theValue;
 
 	// Field ayuda
-	$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_ayuda) : $x_ayuda; 
+	$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_ayuda) : $x_ayuda;
 	$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
 	$fieldList["ayuda"] = $theValue;
 
