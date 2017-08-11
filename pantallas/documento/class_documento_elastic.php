@@ -468,7 +468,7 @@ class DocumentoElastic {
 
 		if ($documento_origen) {
 			$nombre_tabla = $documento_origen["documento"]["nombre_tabla_ft"];
-			$nombre_formato = $documento_origen[$nombre_tabla]["nombre_formato"];
+			$nombre_formato = formato_primero($documento_origen["documento"]["formato_idformato"], "nombre");
 
 			$hijos = array();
 
@@ -484,7 +484,7 @@ class DocumentoElastic {
 				];
 				$params["documento"] = $documento_origen["documento"];
 				$params[$nombre_tabla] = $documento_origen[$nombre_tabla];
-				$resultado_indice = $this->guardar_indice_simple($params, $nombre_tabla);
+				$resultado_indice = $this->guardar_indice_simple($nombre_formato, $params, $nombre_tabla);
 				if (!$resultado_indice["created"]) {
 					echo "No creado: ", $doc_ppal, "<br>";
 					return true;
@@ -502,11 +502,11 @@ class DocumentoElastic {
 						$datos_hijo = $this->obtener_info_doc($hijo->id_hijo);
 					}
 					if ($datos_hijo) {
-						$resultado_indice = $this->guardar_indice_simple($datos_hijo, $hijo->tabla_hijo, $hijo->id_padre);
+						$resultado_indice = $this->guardar_indice_simple($nombre_formato, $datos_hijo, $hijo->tabla_hijo, $hijo->id_padre);
 					}
 				}
 			} else {
-				$resultado_indice = $this->guardar_indice_simple($documento_origen, $nombre_tabla);
+				$resultado_indice = $this->guardar_indice_simple($nombre_formato, $documento_origen, $nombre_tabla);
 				if (!$resultado_indice["created"]) {
 					echo "No creado: ", $doc_ppal, "<br>";
 				}
@@ -518,9 +518,9 @@ class DocumentoElastic {
 		return (true);
 	}
 
-	private function guardar_indice_simple($datos, $nombre_tabla, $padre = null) {
+	private function guardar_indice_simple($indice, $datos, $nombre_tabla, $padre = null) {
 		if ($datos) {
-			$indice = "documentos";
+			//$indice = "documentos";
 			$tipo_dato = $datos["documento"]["plantilla"];
 			$id = $datos["documento"]["iddocumento"];
 
