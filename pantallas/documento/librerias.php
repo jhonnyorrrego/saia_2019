@@ -198,7 +198,7 @@ if(!$ruta){
 	    $datos_ejecutor=busca_filtro_tabla("A.ejecutor","documento A","A.iddocumento=".$doc,"",$conn);
 	    $cadena_concat=concatenar_cadena_sql(array("nombres","' '","apellidos"));
         $ejecutor=busca_filtro_tabla($cadena_concat." as nombre","funcionario","funcionario_codigo=".$datos_ejecutor[0]["ejecutor"],"",$conn);
-        
+
 	}
 
 	if($ejecutor["numcampos"]&&$datos_ejecutor[0]["plantilla"]==""){
@@ -360,6 +360,8 @@ if($tipo=='ver_versiones'||$tipo=='todos'){
 return($cantidades);
 }
 function serie_documento($idserie){
+	if($idserie == 'serie')
+		return("Sin Serie Asignada");
   $serie=busca_filtro_tabla("nombre","serie","idserie=".$idserie,"",$conn);
   if($serie["numcampos"]){
      return(ucwords(strtolower($serie[0]["nombre"])));
@@ -861,15 +863,15 @@ function mostrar_fecha_limite_documento($iddoc){
 	}
 	return('<div class="pull-right"><b>Vence:&nbsp;</b>'.$fecha_limite.'</div>');
 }
-function filtro_funcionario_etiquetados(){ 
+function filtro_funcionario_etiquetados(){
 	$condicional_etiquetados="AND d.funcionario='".usuario_actual('funcionario_codigo')."'";
 	return($condicional_etiquetados);
 }
 function mostrar_nombre_etiquetas($iddoc){
-	global $conn; 
+	global $conn;
 	$usuario=usuario_actual('funcionario_codigo');
-	$etiquetados=busca_filtro_tabla("c.nombre","documento_etiqueta b, etiqueta c","b.documento_iddocumento=".$iddoc." AND  b.etiqueta_idetiqueta=c.idetiqueta AND c.funcionario=".$usuario,"",$conn);	
-	$nombre_etiquetas='';	
+	$etiquetados=busca_filtro_tabla("c.nombre","documento_etiqueta b, etiqueta c","b.documento_iddocumento=".$iddoc." AND  b.etiqueta_idetiqueta=c.idetiqueta AND c.funcionario=".$usuario,"",$conn);
+	$nombre_etiquetas='';
 	for($i=0;$i<$etiquetados['numcampos'];$i++){
 		$nombre_etiquetas.=codifica_encabezado(html_entity_decode($etiquetados[$i]['nombre']));
 		if( ($i+1)!= $etiquetados['numcampos']){
