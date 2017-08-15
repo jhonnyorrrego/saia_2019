@@ -166,7 +166,7 @@ foreach ( $funciones_tablas as $key => $valor ) {
 $ordenar_consulta = "";
 $agrupar_consulta = $datos_busqueda[0]["agrupado_por"];
 
-if (MOTOR == 'MySql' || MOTOR == 'Oracle') {
+if (MOTOR == 'MySql' || MOTOR == 'Oracle' || MOTOR == 'Postgres') {
 	if ($agrupar_consulta != "") {
 		$ordenar_consulta .= " GROUP BY " . $agrupar_consulta;
 		$ordenar_consulta_aux = " GROUP BY " . implode(",", $agrupacion);
@@ -180,7 +180,7 @@ if (MOTOR == 'MySql' || MOTOR == 'Oracle') {
 	}
 }
 if ($sidx && $sord) {
-	if (MOTOR == 'MySql' || MOTOR == 'Oracle') {
+	if (MOTOR == 'MySql' || MOTOR == 'Oracle' || MOTOR == 'Postgres') {
 		$ordenar_consulta2 .= $ordenar_consulta;
 	}
 	$ordenar_consulta2 .= " ORDER BY " . $sidx . " " . $sord;

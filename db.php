@@ -845,39 +845,40 @@ global $sql, $conn;
 <Post-condiciones>
 */
 function busca_filtro_tabla_limit($campos,$tabla,$filtro,$orden,$inicio,$registros,$conn){
-  global $sql,$conn;
-  if(!$conn){
-    $conn=phpmkr_db_connect();
-  }
-  $retorno=array();
-  $temp=array();
-  $retorno["tabla"]=$tabla;
-  $sql="Select ";
-  if($campos)
-    $sql.=$campos;
-  else $sql.="*";
-  if($tabla)
-    $sql.=" FROM ".$tabla;
+	global $sql, $conn;
+	if (!$conn) {
+		$conn = phpmkr_db_connect();
+	}
+	$retorno = array();
+	$temp = array();
+	$retorno["tabla"] = $tabla;
+	$sql = "Select ";
+	if ($campos)
+		$sql .= $campos;
+	else
+		$sql .= "*";
+	if ($tabla)
+		$sql .= " FROM " . $tabla;
 
-  if($filtro)
-    $sql.=" WHERE ".str_replace('"',"'",$filtro);
-  if($orden){
-      $sql.=$orden;
-  }
-  $sql=htmlspecialchars_decode((($sql)));
-  $rs=$conn->Ejecutar_Limit($sql,$inicio,($inicio+$registros),$conn);
-  $temp=phpmkr_fetch_array($rs);
+	if ($filtro)
+		$sql .= " WHERE " . str_replace('"', "'", $filtro);
+	if ($orden) {
+		$sql .= $orden;
+	}
+	$sql = htmlspecialchars_decode((($sql)));
+	$rs = $conn->Ejecutar_Limit($sql, $inicio, ($inicio + $registros), $conn);
+	$temp = phpmkr_fetch_array($rs);
 
-  $retorno["sql"]=$sql;
+	$retorno["sql"] = $sql;
 
-  for($i=0;$temp;$temp=phpmkr_fetch_array($rs),$i++)
-    array_push($retorno,$temp);
-  $retorno["numcampos"]=$i;
-  phpmkr_free_result($rs);
-  if(DEBUGEAR_FLUJOS && strpos($tabla,'funcionario')===FALSE){
-    error(print_r($retorno,true));
-  }
-  return($retorno);
+	for($i = 0; $temp; $temp = phpmkr_fetch_array($rs), $i++)
+		array_push($retorno, $temp);
+	$retorno["numcampos"] = $i;
+	phpmkr_free_result($rs);
+	if (DEBUGEAR_FLUJOS && strpos($tabla, 'funcionario') === FALSE) {
+		error(print_r($retorno, true));
+	}
+	return ($retorno);
 }
 /*
 <Clase>
