@@ -12,6 +12,10 @@ $max_salida--;
 }
 include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."librerias_saia.php");
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+$validar_enteros=array("iddoc","key");
+desencriptar_sqli('form_info');
+echo(librerias_jquery());
 if((@$_REQUEST["iddoc"] || @$_REQUEST["key"]) && @$_REQUEST["no_menu"]!=1){
 	if(!@$_REQUEST["iddoc"])$_REQUEST["iddoc"]=@$_REQUEST["key"];
 	include_once($ruta_db_superior."pantallas/documento/menu_principal_documento.php");
@@ -81,7 +85,7 @@ if($extensiones =='' || $extensiones =='NULL')
 ?>
 <br>
 <div align="center">
-<form action="anexos_documento.php" method="POST" enctype="multipart/form-data" >
+<form name="anexos_documento" id="anexos_documento" action="anexos_documento.php" method="POST" enctype="multipart/form-data" >
 <input type="hidden" value="" id="permisos_anexos" name="permisos_anexos"/>
 <input type="hidden" value="<?php echo $iddocumento; ?>" id="key" name="key"/>
 <input type="hidden" value="<?php if(isset($_REQUEST["menu"])) echo $_REQUEST["menu"]; else echo "1"; ?>" id="menu" name="menu"/>
@@ -92,7 +96,7 @@ if($extensiones =='' || $extensiones =='NULL')
 <tr>
 <td class="celda_transparente" align='center'><input type="file" name="anexos[]" class="multi" accept="<?php echo $extensiones;?>"></td>
 </tr>
-<tr><td align='center'><input type="submit" value="Adicionar" name="Adicionar"> </td></tr>
+<tr><td align='center'><input type="hidden" value="Adicionar" name="Adicionar"><input type="submit" value="Adicionar" name="Adicionar"> </td></tr>
 </table>
 </form>
 </div>
@@ -223,4 +227,5 @@ if($config["numcampos"]){
  
 return;
 }
+encriptar_sqli("anexos_documento",1,"form_info",$ruta_db_superior);
 ?>

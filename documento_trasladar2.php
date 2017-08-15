@@ -2,6 +2,12 @@
 include_once("header.php");
 include_once("formatos/librerias/header_formato.php");
 
+include_once("pantallas/lib/librerias_cripto.php");
+$validar_enteros=array("proceso");
+include_once("librerias_saia.php");
+desencriptar_sqli('form_info');
+echo(librerias_jquery());
+
 if(@$_REQUEST["accion"]=="trasladar"){
 	$documentos=explode(",",$_REQUEST["documento_calidad"]);
   foreach($documentos as $fila){
@@ -46,7 +52,13 @@ $procesos=ejecuta_filtro_tabla("select valor,nombre from (select a.idft_proceso 
 <script type='text/javascript'>
   $().ready(function() {
 	// validar los campos del formato
-	$('#formulario_formatos').validate();
+	$('#formulario_formatos').validate({
+		submitHandler: function(form) {
+				<?php encriptar_sqli("formulario_formatos");?>
+			    form.submit();
+			    
+			  }
+	});
 	$('#header').hide();
 });
 
@@ -54,7 +66,7 @@ $procesos=ejecuta_filtro_tabla("select valor,nombre from (select a.idft_proceso 
 <br><B>TRASLADAR DOCUMENTO DE CALIDAD</B>
 <br>
 <br>
-<form name="formulario_formatos" id="formulario_formatos">
+<form name="formulario_formatos" id="formulario_formatos" method="post">
   <table border="1" style="border-collapse:collapse">
     <tr>
       <td class="encabezado">DOCUMENTOS QUE DESEA TRASLADAR</td><td>

@@ -46,7 +46,11 @@ else
 function contenido_documento($direccion){
 $mh = curl_multi_init();
 $ch = curl_init();
-curl_setopt($ch, CURLOPT_URL,$direccion);
+if (strpos(PROTOCOLO_CONEXION, 'https') !== false) {
+curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false); 
+curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+}
+curl_setopt($ch, CURLOPT_URL,$direccion); 
 curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
 $contenido=curl_exec ($ch);
 curl_close ($ch);

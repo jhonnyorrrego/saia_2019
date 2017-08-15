@@ -3,9 +3,12 @@
 $max_salida=6; $ruta_db_superior=$ruta=""; while($max_salida>0){ if(is_file($ruta."db.php")){ $ruta_db_superior=$ruta;} $ruta.="../"; $max_salida--; }
 
 include_once("db.php");
+include_once("pantallas/lib/librerias_cripto.php");
+$validar_enteros=array("iddoc");
 include_once("librerias_saia.php");
+desencriptar_sqli('form_info');
 include_once("pantallas/expediente/librerias.php");
-$iddoc = $_REQUEST["iddoc"];
+$iddoc = @$_REQUEST["iddoc"];
 $doc_menu=@$_REQUEST["iddoc"];
 include_once("pantallas/documento/menu_principal_documento.php");
 
@@ -27,7 +30,6 @@ $nombres_exp=array_unique(extrae_campo($expedientes_documento,"nombre"));
 <?php 
     echo(menu_principal_documento($doc_menu,1));
     echo(librerias_jquery('1.7'));
-    echo( librerias_validar_formulario(11) );
 ?>
 <script type="text/javascript" src="js/dhtmlXCommon.js"></script>
 <script type="text/javascript" src="js/dhtmlXTree.js"></script>
@@ -196,22 +198,28 @@ if(count($nombres_exp)){
  <script>
  $().ready(function() {
 	$('#form1').submit(function(){
-	    
+	    /*
 	seleccionados_series=tree3.getAllChecked();
     if(seleccionados_series!="")
       {$('#serie_idserie').val(seleccionados_series);
        
       }	  
-	    
+	    */
     seleccionados=tree2.getAllChecked();
     if(seleccionados!="")
       {$('#expedientes').val(seleccionados);
-       return(true);
+	    <?php encriptar_sqli("form1",0); ?>		
+		if(salida_sqli){
+			return true;
+		}
       }
     else
       {$('#expedientes').val('');
        //alert("Debe seleccionar al menos un expediente");
-       return(true);
+        <?php encriptar_sqli("form1",0); ?>
+        if(salida_sqli){
+       		return(true);
+       	}
       }
     return(false);
   });

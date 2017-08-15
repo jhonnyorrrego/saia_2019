@@ -1,4 +1,11 @@
 <?php
+
+include_once("pantallas/lib/librerias_cripto.php");
+include_once("librerias_saia.php");
+desencriptar_sqli('form_info');
+echo(librerias_jquery());
+
+
 if(@$_REQUEST["iddoc"] || @$_REQUEST["key"]){
   if(!@$_REQUEST["iddoc"])$_REQUEST["iddoc"]=@$_REQUEST["key"];
   include_once("pantallas/documento/menu_principal_documento.php");
@@ -41,7 +48,7 @@ if(isset($_REQUEST["configurar_impresion"]))
 {
 ?>
 <b>CONFIGURAR IMPRESI&Oacute;N</b><br><br>
-<form name='configurar_impresion' action='' method=post>  
+<form name='configurar_impresion' id='configurar_impresion' action='' method='post'>  
   <table border=0 width=100% align=center>    
     <tr>      
       <td width=40% class=encabezado>M&Aacute;RGENES</td>      
@@ -339,5 +346,6 @@ else $nodoinicial=$iddoc;
 	echo($texto);
 }
 }
+encriptar_sqli("configurar_impresion",1);
 include_once("footer.php");
 ?>

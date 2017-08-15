@@ -12,6 +12,7 @@ while($max_salida > 0) {
 include_once ($ruta_db_superior . "db.php");
 include_once ($ruta_db_superior . "formatos/librerias/funciones.php");
 include_once ($ruta_db_superior . "formatos/generar_formato_buscar.php");
+include_once ($ruta_db_superior . "pantallas/documento/class_documento_elastic.php");
 
 if (@$_REQUEST["sesion"] && !@$_SESSION["LOGIN" . LLAVE_SAIA]) {
 	$_SESSION["LOGIN" . LLAVE_SAIA] = $_REQUEST['sesion'];
@@ -55,6 +56,7 @@ class GenerarFormato {
 		// ir a la carpeta anterior
 		$ruta_padre = dirname(__DIR__);
 		chdir($ruta_padre);
+		$redireccion = false;
 		switch (@$this->accion) {
 			case "formato" :
 				$redireccion= $this->generar_formato();
@@ -62,6 +64,11 @@ class GenerarFormato {
 				break;
 			case "tabla" :
 				$this->generar_tabla();
+				if (INDEXA_ELASTICSEARCH) {
+					$doc_elastic = new DocumentoElastic(null);
+					$doc_elastic->actualizar_indice_formato($this->idformato);
+				}
+
 				$redireccion = "campos_formatolist.php?idformato=" . $this->idformato;
 				break;
 			case "vista" :
@@ -920,7 +927,8 @@ class GenerarFormato {
 				$includes .= $this->incluir($formato[0]["librerias"], "librerias", 1);
 			}
 			$includes .= $this->incluir_libreria("funciones_generales.php", "librerias");
-			$includes .= $this->incluir("../../js/jquery.js", "javascript");
+			$includes .= $this->incluir("../../librerias_saia.php", "librerias");
+			$includes .= "<?php echo(librerias_jquery('1.7')); ?>";
 			$includes .= $this->incluir_libreria("header_nuevo.php", "librerias");
 			$includes .= $this->incluir("../../class_transferencia.php", "librerias");
 
@@ -1920,12 +1928,14 @@ else
 			if ($textareas) {
 				$includes .= $this->incluir_libreria("header_formato.php", "librerias");
 			}
+			$includes.= $this->incluir("../../pantallas/lib/librerias_cripto.php", "librerias");
 			if ($fecha) {
 				$includes .= $this->incluir("../../calendario/calendario.php", "librerias");
 			}
 
-			$includes .= $this->incluir("../../js/jquery.js", "javascript");
-			$includes .= $this->incluir("../../js/jquery.validate.js", "javascript");
+			$includes .= $this->incluir("../../librerias_saia.php", "librerias");
+			$includes .= "<?php echo(librerias_jquery('1.7')); ?>";
+			$includes .= "<?php echo(librerias_validar_formulario('1.16')); ?>";
 
 			$includes .= $this->incluir("../../js/title2note.js", "javascript");
 			if ($arboles) {

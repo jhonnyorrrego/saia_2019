@@ -8,6 +8,7 @@ while ($max_salida > 0) {
 }
 include_once ($ruta_db_superior . "db.php");
 include_once ($ruta_db_superior . "librerias_saia.php");
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
 echo(estilo_bootstrap());
 echo(librerias_bootstrap());
 echo(librerias_notificaciones());
@@ -104,6 +105,8 @@ if($ult_datos["numcampos"]){
 		</tr>
 		<tr>
 			<td colspan="2" style="text-align: center">
+			<input type="hidden" name="ejecutar_remitente" value="set_remitente"/>
+			<input type="hidden" name="tipo_retorno" value="1"/>
 			<input type="hidden" name="ejecutor_idejecutor" id="ejecutor_idejecutor" value="<?php echo($_REQUEST["idejecutor"]); ?>">
 			<button class="btn btn-primary btn-mini" id="submit_formulario_ejecutor">
 				Aceptar
@@ -172,12 +175,13 @@ if($ult_datos["numcampos"]){
 
 		$("#submit_formulario_ejecutor").click(function() {
 			if(confirm("Esta Seguro de Guardar?")){
+				<?php encriptar_sqli("formulario_datos_ejecutor",0,"form_info",$ruta_db_superior); ?>
 				$.ajax({
 					type : 'POST',
 					async : false,
 					dataType: 'json',
 					url: "<?php echo($ruta_db_superior); ?>pantallas/remitente/ejecutar_acciones.php",
-					data : "ejecutar_remitente=set_remitente&tipo_retorno=1&rand=" + Math.round(Math.random() * 100000) + "&" + formulario_remitente.serialize(),
+					data : "rand=" + Math.round(Math.random() * 100000) + "&" + formulario_remitente.serialize(),
 					success : function(objeto) {
 						if (objeto.exito) {
 							notificacion_saia(objeto.mensaje, "success", "", 2500);

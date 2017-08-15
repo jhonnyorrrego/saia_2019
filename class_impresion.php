@@ -1,6 +1,9 @@
 <?php
 set_time_limit(0);
 
+
+
+
 if (!@$_SESSION["LOGIN" . $_REQUEST["llave_saia"]] && $_REQUEST["conexion_remota"]) {
 	@session_start();
 	$_SESSION["LOGIN" . $_REQUEST["llave_saia"]] = $_REQUEST["conexion_usuario"];
@@ -13,6 +16,8 @@ if (!@$_SESSION["LOGIN" . $_REQUEST["llave_saia"]] && $_REQUEST["conexion_remota
 	$_SESSION["conexion_remota"] = 1;
 }
 
+
+
 $max_salida = 10; // Previene algun posible ciclo infinito limitando a 10 los ../
 $ruta_db_superior = $ruta = "";
 while($max_salida > 0) {
@@ -24,6 +29,9 @@ while($max_salida > 0) {
 }
 
 include_once ($ruta_db_superior . "db.php");
+require_once $ruta_db_superior . 'StorageUtils.php';
+require_once $ruta_db_superior . 'filesystem/SaiaStorage.php';
+
 if (!$_SESSION["LOGIN" . LLAVE_SAIA] && @$_REQUEST["LOGIN"] && @$_REQUEST["usuario_actual"]) {
 	$_SESSION["LOGIN" . LLAVE_SAIA] = $_REQUEST["LOGIN"];
 	$_SESSION["usuario_actual"] = $_REQUEST["usuario_actual"];
@@ -68,7 +76,6 @@ class Imprime_Pdf {
 	 */
 	function __construct($iddocumento) {
 		global $conn;
-
 		if ($iddocumento != "url") {
 			$this->documento = busca_filtro_tabla("documento.*," . fecha_db_obtener("fecha", "Y-m-d") . " as fecha", "documento", "iddocumento=$iddocumento", "", $conn);
 
@@ -91,7 +98,6 @@ class Imprime_Pdf {
 						$this->tipo_salida = "FI"; // para generarlo de nuevo y guardar la ruta
 					}
 				}
-
 				// si el documento ya no esta activo, pero nunca le guardaron el pdf, se guarda
 				if ($this->documento[0]["pdf"] == "" && $this->documento[0]["estado"] != "ACTIVO") {
 					$this->tipo_salida = "FI";
@@ -162,13 +168,15 @@ class Imprime_Pdf {
 			if ($this->documento[0]["estado"] == "ANULADO") {
 				$marca_agua = 1;
 			}
-
+			//20170207. Se pone request tipo=5 para que se pueda generar el pdf desde el nuevo esquema de almacenamiento
+			$_REQUEST["tipo"] = 5;
 			$this->pdf->set_header(crear_encabezado_pie_pagina($encabezado[0]["contenido"], $this->documento[0]["iddocumento"], $this->formato[0]["idformato"], 1), $marca_agua);
 		}
 
 		if ($this->formato[0]["pie_pagina"]) {
 			$encabezado = busca_filtro_tabla("", "encabezado_formato", "idencabezado_formato=" . $this->formato[0]["pie_pagina"], "", $conn);
-
+			//20170207. Se pone request tipo=5 para que se pueda generar el pdf desde el nuevo esquema de almacenamiento
+			$_REQUEST["tipo"] = 5;
 			$this->pdf->set_footer(crear_encabezado_pie_pagina($encabezado[0]["contenido"], $this->documento[0]["iddocumento"], $this->formato[0]["idformato"], 1));
 		}
 
@@ -186,8 +194,14 @@ class Imprime_Pdf {
 		));
 	}
 
-	function imprimir() {
+	/**
+	 *
+	 * @param boolean $mostrar Indica si el pdf se imprime en la salida. Por defecto en true para no alterar el comportamiento estandar
+	 */
+	function imprimir($mostrar=true) {
+		//$this->pdf = new MYPDF($this->orientacion, PDF_UNIT, $this->papel, true, 'UTF-8', false, true);
 		$this->pdf = new MYPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false, true);
+
 		$this->pdf->SetMargins($this->margenes["izquierda"], $this->margenes["superior"], $this->margenes["derecha"], 1);
 		$this->pdf->AddFont($this->font_family);
 		$this->pdf->SetFont($this->font_family, '', $this->font_size);
@@ -235,44 +249,40 @@ class Imprime_Pdf {
 		} else {
 			$formato_ruta = $ruta_db_superior . "temporal_" . usuario_actual("login") . "/";
 		}
+		$ruta_temporal = busca_filtro_tabla("valor", "configuracion", "nombre='ruta_temporal'", "", $conn);
 
+		$ruta_tmp_usr=$ruta_temporal[0]["valor"]. "_" . usuario_actual("login");
+
+		$pdf_temp = StorageUtils::obtener_archivo_temporal("impresion_", $ruta_tmp_usr);
+		$tipo_almacenamiento = null;
 		if ($this->versionamiento) {
-			$ruta_versiones = ruta_almacenamiento("versiones");
-			$path_to_file = $ruta_versiones . $formato_ruta . "/version" . $this->version;
+			$tipo_almacenamiento = new SaiaStorage("versiones");
+			$path_to_file = $formato_ruta . "/version" . $this->version;
 			$nombre_pdf = $path_to_file . "/doc" . $this->documento[0]["iddocumento"] . ".pdf";
 
-			crear_destino($path_to_file);
+			//crear_destino($path_to_file);
 
 			$this->tipo_salida = "F";
 		} else if ($this->formato["numcampos"]) {
-			$ruta_pdfs = ruta_almacenamiento("pdf");
-			$carpeta = $ruta_pdfs . $formato_ruta . "/pdf";
-
+			//$ruta_pdfs = ruta_almacenamiento("pdf");
+			$tipo_almacenamiento = new SaiaStorage("pdf");
+			$carpeta = $formato_ruta . "/pdf";
 			$adicional = "";
 			if ($this->imprimir_vistas) {
 				$adicional = "_vista" . @$_REQUEST["vista"];
 			}
 
 			$nombre_pdf = $carpeta . "/" . strtoupper($this->formato[0]["nombre"]) . "_" . $this->documento[0]["numero"] . "_" . str_replace("-", "_", $this->documento[0]["fecha"]) . $adicional . ".pdf";
-
-			crear_destino($carpeta);
-			chmod($carpeta, 0777);
+			//crear_destino($carpeta);
+			//chmod($carpeta,0777);
 		} else {
+			$tipo_almacenamiento = new SaiaStorage("archivos");
 			$nombre_pdf = $this->documento[0]["numero"] . "_" . str_replace("-", "_", $this->documento[0]["fecha"]) . ".pdf";
 		}
-
-		chmod($nombre_pdf, 0777);
-		if ($this->documento[0]["estado"] == 'ACTIVO') {
-			$this->tipo_salida = "FI";
-		}
-		if ($this->tipo_salida == "FI") {
-			$codigo_hash = obtener_codigo_hash_pdf($nombre_pdf, 'crc32');
+		chmod($pdf_temp,0777);
+		if($this->tipo_salida == "FI" && ($this->documento[0]["estado"] != 'ACTIVO' || $this->formato[0]["mostrar_pdf"] == 1) ) {
+			$actualizar_y_hash = true;
 			$paginas_pdf = $this->pdf->getNumPages();
-			phpmkr_query("update documento set paginas='" . $paginas_pdf . "',pdf='" . $nombre_pdf . "',pdf_hash='" . $codigo_hash . "' where iddocumento=" . $this->documento[0]["iddocumento"]);
-		} else if ($this->tipo_salida == "FI" && $this->formato[0]["mostrar_pdf"] == 1) {
-			$codigo_hash = obtener_codigo_hash_pdf($nombre_pdf, 'crc32');
-			$paginas_pdf = $this->pdf->getNumPages();
-			phpmkr_query("update documento set paginas='" . $paginas_pdf . "',pdf='" . $nombre_pdf . "',pdf_hash='" . $codigo_hash . "' where iddocumento=" . $this->documento[0]["iddocumento"]);
 		} else if ($this->tipo_salida == "I") {
 			if ($this->imprimir_vistas) {
 				$this->tipo_salida = "FI";
@@ -281,41 +291,17 @@ class Imprime_Pdf {
 			}
 		}
 		
-		if($_REQUEST["url"]){
-			$nombre_pdf=basename($_REQUEST["url"]);
-			//$this->pdf->Output($nombre_pdf,$this->tipo_salida);
+		$ruta_pdf = array("servidor" => $tipo_almacenamiento->get_ruta_servidor(), "ruta" => $nombre_pdf);
+		$this->pdf->Output($pdf_temp, 'F');
+		$codigo_hash = $tipo_almacenamiento->almacenar_recurso($nombre_pdf, $pdf_temp, $actualizar_y_hash);
+		if($actualizar_y_hash) {
+			$sqlu = "update documento set paginas='" . $paginas_pdf . "',pdf='" . json_encode($ruta_pdf) . "',pdf_hash='".$codigo_hash."' where iddocumento=" . $this->documento[0]["iddocumento"];
+			phpmkr_query($sqlu) or die($sqlu);
 		}		
-			
-		$valor=$this->pdf->Output($nombre_pdf, $this->tipo_salida);
-	    if($this->documento[0]["estado"]<>'ACTIVO' && $this->tipo_salida=="I"){
-			//$valor=$this->pdf->Output($ruta,'F');
-			redirecciona("visores/pdf/web/viewer2.php?iddocumento=".$this->documento[0]["iddocumento"]);
-			die();
-		}else{
-			if($this->documento[0]["estado"]=='ACTIVO'){
-				//crear_destino('temporal_'.usuario_actual('login').'/');
-				//$ruta='temporal_'.usuario_actual('login').'/'.$this->documento[0]["iddocumento"];
-				//$valor=$this->pdf->Output($ruta,'F');
-				//redirecciona("visores/pdf/web/viewer2.php?print=".$this->formato[0]["permite_imprimir"]."&files=".base64_encode("../../../".$ruta));
-				redirecciona("visores/pdf/web/viewer2.php?iddocumento=".$this->documento[0]["iddocumento"]);
-				//redirecciona("pantallas/documento/visor_documento.php?iddoc=".$this->documento[0]["iddocumento"]."&ruta_pdf=".$ruta);
-				//redirecciona("visores/pdf/web/viewer2.php?iddocumento=".$this->documento[0]["iddocumento"]);
-				die();
-			}else{
-				if($_REQUEST["url"]){
-					$nombre_pdf=basename($_REQUEST["url"]);
-					//$this->pdf->Output($nombre_pdf,$this->tipo_salida);
-				}else{
-					//$valor=$this->pdf->Output($nombre_pdf,$this->tipo_salida);
-					redirecciona("visores/pdf/web/viewer2.php?iddocumento=".$this->documento[0]["iddocumento"]);
-					die();
+		if($mostrar) {
+			$this->pdf->Output($pdf_temp, 'I');
 				}
 			}
-		}		
-		
-		//$this->pdf->Output($nombre_pdf, $this->tipo_salida);
-	}
-
 	function imprimir_paginas() {
 		global $conn;
 		if ($this->idpaginas != "") {
@@ -324,6 +310,8 @@ class Imprime_Pdf {
 			$paginas = busca_filtro_tabla("", "pagina", "id_documento=" . $this->documento[0]["iddocumento"], "", $conn);
 		}
 
+	
+		
 		if ($paginas["numcampos"]) {
 
 			$this->pdf->setJPEGQuality(75);
@@ -349,6 +337,7 @@ class Imprime_Pdf {
 		$ch = curl_init();
 		$direccion = array();
 
+	
 		if ($_REQUEST["url"]) {
 			$request_url = str_replace('.php', '.php?1=1', $_REQUEST['url']);
 			$direccion[] = PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . "/" . str_replace('|', '&', $request_url);
@@ -378,7 +367,10 @@ class Imprime_Pdf {
 		foreach ( $direccion as $fila ) {
 
 			$fila .= "&font_size=" . $this->font_size;
-
+	        if (strpos(PROTOCOLO_CONEXION, 'https') !== false) {
+				curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+				curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+			}
 			curl_setopt($ch, CURLOPT_URL, $fila);
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 
@@ -403,9 +395,6 @@ class Imprime_Pdf {
 			$contenido = str_replace("<p>&nbsp;</p>", "<p></p>", $contenido);
 			$contenido = preg_replace('#<script(.*?)>(.*?)</script>#is', '', $contenido);
 			$contenido = preg_replace('#onclick="(.*?)"#is', '', $contenido);
-
-			// print_r($contenido);die("");
-
 			$this->pdf->writeHTML(stripslashes($contenido), true, true, false, false, '');
 		}
 
@@ -506,6 +495,8 @@ class Imprime_Pdf {
 	}
 
 	function configurar_pagina($datos) {
+	    
+	    
 		if (isset($datos["imprimir_paginas"]) && $datos["imprimir_paginas"]) {
 			$this->imprimir_paginas = $datos["imprimir_paginas"];
 		}
@@ -587,6 +578,8 @@ class Imprime_Pdf {
 		if (isset($datos["margen_izquierda"]) && $datos["margen_izquierda"]) {
 			$this->margenes["izquierda"] = $datos["margen_izquierda"];
 		}
+		
+		
 	}
 
 	function renombrar_pdf_actual() {
@@ -611,7 +604,6 @@ class Imprime_Pdf {
 		}
 	}
 }
-
 class MYPDF extends TCPDF {
 	public $encabezado = "";
 	public $pie_pagina = "";
@@ -707,6 +699,8 @@ class MYPDF extends TCPDF {
 
 if (@$_REQUEST["iddoc"]) {
 
+    
+    
 	$pdf = new Imprime_Pdf($_REQUEST["iddoc"]);
 	$pdf->configurar_pagina($_REQUEST);
 
@@ -733,9 +727,9 @@ if (@$_REQUEST["iddoc"]) {
 			$pdf->formato[0]["encabezado"] = $encabezado_papa[0]["encabezado"];
 			$pdf->formato[0]["idformato"] = $encabezado_papa[0]["idformato"];
 			$pdf->mostrar_encabezado = 1;
+		
 		}
 	}
-
 	$pdf->imprimir();
 }
 ?>

@@ -42,12 +42,11 @@ foreach($lcampos AS $key=>$valor){
     if(trim($valor)){
         $val=explode(".",$valor);
         if(count($val)==1){
-            array_push($campos_limpios,$val[0]);
+            array_push($campos_limpios,$val[0]);    
         }
         else{
             array_push($campos_limpios,$val[1]);
         }
-
     }
 }
 for($i=0;$i<$cant;$i++){
@@ -127,17 +126,17 @@ if($datos_busqueda[0]['enlace_adicionar']!=""){
 	$boton_adicionar='<button class=\"btn btn-mini btn-primary kenlace_saia pull-left\" titulo=\"Adicionar '.$datos_busqueda[0]["etiqueta"].'\" title=\"Adicionar '.$datos_busqueda[0]["etiqueta"].'\" conector=\"iframe\" enlace=\"'.$datos_busqueda[0]['enlace_adicionar'].'\">Adicionar</button>';
 }
 
-$acciones_selecionados='';
-if($datos_busqueda[0]["acciones_seleccionados"]!=''){
-	$datos_reporte=array();
-	$datos_reporte['idbusqueda_componente']=$datos_busqueda[0]["idbusqueda_componente"];
-	$datos_reporte['variable_busqueda']=@$_REQUEST["variable_busqueda"];
-     $acciones=explode(",",$datos_busqueda[0]["acciones_seleccionados"]);
-     $cantidad=count($acciones);
-     for($i=0;$i<$cantidad;$i++){
-	     $acciones_selecionados=($acciones[$i]($datos_reporte));
-     }
-}
+$acciones_selecionados='';		
+if($datos_busqueda[0]["acciones_seleccionados"]!=''){		
+	$datos_reporte=array();		
+	$datos_reporte['idbusqueda_componente']=$datos_busqueda[0]["idbusqueda_componente"];		
+	$datos_reporte['variable_busqueda']=@$_REQUEST["variable_busqueda"]; 		
+     $acciones=explode(",",$datos_busqueda[0]["acciones_seleccionados"]);		
+     $cantidad=count($acciones);		
+     for($i=0;$i<$cantidad;$i++){		
+	     $acciones_selecionados.=($acciones[$i]($datos_reporte));
+     }              		
+}  
 
 echo(librerias_jquery("1.7"));
 echo(librerias_UI());
@@ -145,7 +144,8 @@ echo(librerias_jqgrid());
 echo(librerias_tooltips());
 echo(librerias_notificaciones());
 echo(librerias_acciones_kaiten());
-?>
+echo(librerias_bootstrap());
+?>          
 <script type="text/javascript">
 var isOpera="";
 var isFirefox="";
@@ -177,7 +177,7 @@ $(document).ready(function(){
 	rownumWidth: 40,
     rowList : [20,30,50],
     jsonReader: {
-	    page: function (obj) { if(obj.exito){$("#busqueda_pagina").val(obj.page); return(obj.page);}else{ $("#busqueda_pagina").val(0); return(0); } },
+	  page: function (obj) { if(obj.exito){$("#busqueda_pagina").val(obj.page); return(obj.page);}else{ $("#busqueda_pagina").val(0); return(0); } },
 	    total: function (obj) {$("#busqueda_total_paginas").val(obj.total); return(obj.total);  }	   
 		},
         loadComplete: function () {
@@ -216,9 +216,17 @@ $(document).ready(function(){
 				}
 			?>
    	},
-   	<?php } ?>
-
-
+        loadComplete: function () {
+            var ts = this;
+            if (ts.p.reccount === 0) {
+                $(this).hide();
+                emptyMsgDiv.show();
+            } else {
+                $(this).show();
+                emptyMsgDiv.hide();
+            }
+        },   	
+<?php } ?>		
    	pager: '#nav_busqueda',
     caption:"<?php echo $boton_buscar;?><button class=\"btn btn-mini btn-primary exportar_reporte_saia pull-left\" title=\"Exportar reporte <?php echo($datos_busqueda[0]['etiqueta']);?>\" enlace=\"<?php echo($datos_busqueda[0]['busqueda_avanzada']);?>\">Exportar &nbsp;</button><?php echo($boton_adicionar); ?>  <?php echo $acciones_selecionados;?><div class=\"pull-left\" style=\"text-align:center; width:60%;\"><?php echo($datos_busqueda[0]['etiqueta']);?></div><div id=\"barra_exportar_ppal\"><iframe name='iframe_exportar_saia' height='25px' width='150px' frameborder=0 scrolling='no'></iframe></div></div>"
 });

@@ -3,6 +3,11 @@ include_once("db.php");
 include_once("header.php");
 include_once("pantallas/expediente/librerias.php");
 
+include_once("pantallas/lib/librerias_cripto.php");
+include_once("librerias_saia.php");
+desencriptar_sqli('form_info');
+echo(librerias_jquery('1.7'));
+
 function eliminar_permiso($idserie,$tipo_entidad,$entidad){
 	global $conn;
 

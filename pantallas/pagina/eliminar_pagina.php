@@ -10,6 +10,12 @@ while ($max_salida > 0) {
 }
 include_once($ruta_db_superior . "db.php");
 include_once($ruta_db_superior . "librerias_saia.php");
+
+echo(librerias_jquery('1.7'));	
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+$validar_enteros=array("iddocumento","paginas");
+desencriptar_sqli('form_info');
+
 include_once($ruta_db_superior."pantallas/pagina/librerias.php");
 echo(estilo_bootstrap());
 echo(librerias_notificaciones());
@@ -18,6 +24,8 @@ if($_REQUEST['evento'] == 'Aceptar'){
 	eliminar_paginas_documento2($_REQUEST['paginas'],$_REQUEST['iddocumento'],$_REQUEST['justificacion']);	
 }
 ?>
+
+
 <form class="form-horizontal" name="confirma_eliminacion_pagina" id="eliminar_pagina" action="#" method="POST">
 	<legend class="texto-azul">Eliminar p&aacute;ginas</legend>
   <div class="control-group">
@@ -48,6 +56,7 @@ if($_REQUEST['evento'] == 'Aceptar'){
   </div>
 </form>
 <?php	
+
 	function eliminar_paginas_documento2($paginas,$iddocumento,$justificacion){
 		global $conn,$ruta_db_superior;		
 		$idpaginas = explode(',',$paginas);				
@@ -55,14 +64,18 @@ if($_REQUEST['evento'] == 'Aceptar'){
 		foreach ($idpaginas as $key){
 			$inf_eliminado = busca_filtro_tabla("imagen,ruta","pagina","consecutivo=".$key,"",$conn);
 			if($inf_eliminado["numcampos"]){
-			   $imagen=$ruta_db_superior.$inf_eliminado[0]["imagen"];
-				 $ruta=$ruta_db_superior.$inf_eliminado[0]["ruta"];
+			$arr_imagen = StorageUtils::resolver_ruta($inf_eliminado[0]["imagen"]);
+			$arr_origen = StorageUtils::resolver_ruta($inf_eliminado[0]["ruta"]);
+			$alm_origen = $arr_origen["clase"];
+			$alm_imagen = $arr_imagen["clase"];
 				 
-			   $eliminacion=$ruta_db_superior."../backup/eliminados/".$iddocumento;
-			   $nombre=$eliminacion."/".date("Y-m-d_H_i_s")."_".basename($inf_eliminado[0]["ruta"]);
-			   crear_destino($eliminacion);
-			   copy($ruta,$nombre);
-				  if(unlink($imagen) && unlink($ruta)){
+			$alm_backup = new SaiaStorage(RUTA_BACKUP_ELIMINADOS);
+			$ruta_eliminacion = RUTA_BACKUP_ELIMINADOS . $iddocumento;
+			$nombre = $ruta_eliminacion . "/" . date("Y-m-d_H_i_s") . "_" . basename($arr_origen["ruta"]);
+			//crear_destino($ruta_eliminacion);
+			//copy($ruta, $nombre);
+			$alm_origen->copiar_contenido($alm_backup, $arr_origen["ruta"], $nombre);
+			if ($alm_imagen->eliminar($arr_imagen["ruta"]) && $alm_origen->eliminar($arr_origen["ruta"])) {
 							$sql_delete = "DELETE FROM pagina WHERE consecutivo=".$key.' AND id_documento='.$iddocumento;						
 							phpmkr_query($sql_delete);
 							$sql_digitalizacion ="INSERT INTO digitalizacion (documento_iddocumento,fecha,accion,funcionario, justificacion)VALUES (".$iddocumento.",'".date('Y-m-d H:m:s')."','ELIMINACION PAGINA','".$idfuncionario."','Identificador:".$key.",".$justificacion."')";
@@ -78,12 +91,17 @@ if($_REQUEST['evento'] == 'Aceptar'){
 		</script>
 		<?php
 		die();
-	}	
-echo(librerias_jquery('1.7'));		
-echo(librerias_validar_formulario());
+	}		
+echo(librerias_validar_formulario('1.16'));
 ?>
 <script type="text/javascript">
 $(document).ready(function(){
-	$('#eliminar_pagina').validate();	
+	$('#eliminar_pagina').validate({
+		submitHandler: function(form) {
+				<?php encriptar_sqli("eliminar_pagina",0,"form_info",$ruta_db_superior);?>
+			    form.submit();
+			    
+			  }
+	});	
 });
 </script>

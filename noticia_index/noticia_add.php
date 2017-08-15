@@ -13,10 +13,13 @@ $max_salida--;
 include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."librerias_saia.php"); 
 
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+
+
 echo(librerias_jquery('1.7'));
 echo(estilo_bootstrap());
 echo(librerias_notificaciones());
-echo( librerias_validar_formulario('11') );
+echo( librerias_validar_formulario('1.16') );
 ?>
 
 <!DOCTYPE html>
@@ -106,6 +109,7 @@ echo( librerias_validar_formulario('11') );
 			if( $('#titulo').val()=='' || $('#subtitulo').val()=='' || $('#noticia').val()=='' || $('#imagen_modulo').val()==''){
 				notificacion_saia('<b>Atenci&oacute;n</b><br>Todos los campos deben estar llenos','success','',3000);
 			}else{
+				<?php encriptar_sqli("formuploadajax",0,"form_info",$ruta_db_superior);?>
 				var formData = new FormData(document.getElementById("formuploadajax"));
 					$.ajax({
 				        type:"POST",

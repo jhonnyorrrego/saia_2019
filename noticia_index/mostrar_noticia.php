@@ -12,7 +12,8 @@ $max_salida--;
 }
 include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."librerias_saia.php"); 
-
+require_once $ruta_db_superior . 'StorageUtils.php';
+require_once $ruta_db_superior . 'filesystem/SaiaStorage.php';
 
 echo(librerias_jquery());
 echo(estilo_bootstrap());
@@ -46,7 +47,8 @@ $noticias=busca_filtro_tabla('','noticia_index','estado=1 and idnoticia_index='.
     <?php 
 		$cadena='';
 		for($i=0;$i<$noticias['numcampos'];$i++){
-			$imagen='<img src="'.$ruta_db_superior.$noticias[$i]['imagen'].'" height=200  width=200 align="left" class="img-rounded">';
+			$archivo_binario=StorageUtils::get_binary_file($noticias[$i]['imagen']);
+			$imagen='<img src="'.$archivo_binario.'" height=200  width=200 align="left" class="img-rounded">';
 			//<td><span class="icon icon-edit"></span></td> //icono editar, pendiente desarrollo
 			$cadena.='
 				<tr>

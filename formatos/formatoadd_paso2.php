@@ -18,6 +18,13 @@ while($max_salida > 0) {
 	$max_salida--;
 }
 
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+$validar_enteros=array("formato","key");
+include_once($ruta_db_superior."librerias_saia.php");
+$validar_enteros=array("key");
+desencriptar_sqli('form_info');
+echo(librerias_jquery());
+
 $sAction = @$_POST["a_add"];
 if (($sAction == "") || ((is_null($sAction)))) {
 	$sKey = @$_GET["key"];
@@ -114,6 +121,7 @@ function ventanaSecundaria (URL){
 	<input type="submit" name="Action" value="CONTINUAR">
 	</form>
 <?php
+encriptar_sqli("formatoadd",1,"form_info",$ruta_db_superior);	
 	function LoadData($sKey,$conn)
 {
 	$sKeyWrk = "" . addslashes($sKey) . "";

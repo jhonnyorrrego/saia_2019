@@ -113,7 +113,7 @@ else{
     </td>
     <td colspan="3">
        <?php
-			$aprobado = busca_filtro_tabla("nombres, apellidos, ".fecha_db_obtener("A.fecha","Y-m-d")." as fecha","buzon_salida A, funcionario B","B.funcionario_codigo=A.origen AND nombre LIKE 'APROBADO' AND A.archivo_idarchivo=".$iddocumento,"",$conn);
+			$aprobado = busca_filtro_tabla("nombres, apellidos, ".fecha_db_obtener("A.fecha","Y-m-d")." as fecha","buzon_salida A, funcionario B","B.funcionario_codigo=A.origen AND nombre = 'APROBADO' AND A.archivo_idarchivo=".$iddocumento,"",$conn);
 			if($aprobado['numcampos']){
 				$fecha=date_parse($aprobado[0]['fecha']);
 				$fecha = mostrar_fecha_saia($fecha["day"]."-".$fecha["month"]."-".$fecha["year"]);
@@ -131,7 +131,7 @@ else{
     </td>
     <td colspan="3">
        <?php
-       $revisado = busca_filtro_tabla("nombres, apellidos, ".fecha_db_obtener("A.fecha","Y-m-d")." as fecha","buzon_salida A, funcionario B","B.funcionario_codigo=A.origen AND nombre LIKE 'REVISADO' AND A.archivo_idarchivo=".$iddocumento,"",$conn);
+       $revisado = busca_filtro_tabla("nombres, apellidos, ".fecha_db_obtener("A.fecha","Y-m-d")." as fecha","buzon_salida A, funcionario B","B.funcionario_codigo=A.origen AND nombre = 'REVISADO' AND A.archivo_idarchivo=".$iddocumento,"",$conn);
        		if($revisado['numcampos']){
        			echo('<table>');
        			for($i=0; $i < $revisado['numcampos']; $i++){
@@ -159,6 +159,72 @@ else{
   </tr>
 </table>
 </div>
+
+<?php 
+
+$anulacion_documento=busca_filtro_tabla("b.nombres,b.apellidos,a.*,".fecha_db_obtener("fecha_solicitud","Y-m-d")." as fecha_solicitud,".fecha_db_obtener("fecha_anulacion","Y-m-d")." as fecha_anulacion,descripcion","documento_anulacion a,funcionario b","documento_iddocumento='$iddocumento' and funcionario=funcionario_codigo","",$conn);
+if($anulacion_documento['numcampos']){
+	?>
+	
+<div data-toggle="collapse" data-target="#div_info_doc_anulado" style="cursor:pointer;">
+  <i class="icon-minus-sign"></i>  <b>Informaci&oacute;n de Anulaci&oacute;n</b>
+</div>
+<div id="div_info_doc_anulado"  class="collapse in opcion_informacion">
+		<table class="table table-bordered">
+  			<tr>
+    			<td class="prettyprint">
+    				Solicitante
+    			</td>
+    			
+    			<td>
+    				<?php echo($anulacion_documento[0]["nombres"].' '.$anulacion_documento[0]["apellidos"]); ?>
+    			</td>
+			</tr>
+			<tr>
+    			<td class="prettyprint">
+    				Fecha Solicitud
+    			</td>
+    			<td>
+    				<?php echo($anulacion_documento[0]["nombres"]); ?>
+    			</td>
+			</tr>
+			<tr> 
+    			<td class="prettyprint">
+    				Justificaci&oacute;n
+    			</td>
+    			<td>
+    				<?php echo($anulacion_documento[0]["descripcion"]); ?>
+    			</td> 
+ 			</tr>
+			<tr>   			
+    			<td class="prettyprint">
+    				Estado
+    			</td>
+    			<td>
+    				ANULADO
+    			</td> 
+			</tr>
+			<tr>
+    			<td class="prettyprint">
+    				Fecha de anulaci&oacute;n
+    			</td>
+    			<td>
+    				<?php echo($anulacion_documento[0]["fecha_anulacion"]); ?>
+    			</td> 
+    			    			
+    		</tr>
+    	</table>			
+	</div>	
+	<?php 
+}
+
+
+
+
+?>
+
+
+
 <?php
 if($documento_origen_flujo["numcampos"]){
 ?>

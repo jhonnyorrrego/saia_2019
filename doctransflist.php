@@ -468,7 +468,7 @@ function rastro_documento($x_doc,$filtro){
  	$recorrido = busca_filtro_tabla("buzon_salida.*,".fecha_db_obtener("fecha","Y-m-d H:i:s")." as fecha_format","buzon_salida","archivo_idarchivo=$x_doc and nombre not in ('LEIDO','ELIMINA_LEIDO','ELIMINA_APROBADO','ELIMINA_REVISADO','ELIMINA_TERMINADO','ELIMINA_TRANSFERIDO','ELIMINA_BORRADOR')","idtransferencia DESC",$conn);
  }
 
- $documento=busca_filtro_tabla("plantilla","documento","iddocumento=$x_doc","",$conn);
+ $documento=busca_filtro_tabla("plantilla,estado","documento","iddocumento=$x_doc","",$conn);
  if($recorrido["numcampos"]>0)
  {
  	$id_tabla="tabla_rastro";
@@ -486,6 +486,21 @@ function rastro_documento($x_doc,$filtro){
   	<td valign="top"><span class="phpmaker" style="color: #FFFFFF;">Observaciones</span></td>
    </tr>
     <?php
+    	if(!$filtro){
+      if($documento[0]['estado']=='ANULADO'){
+      	$anulacion=busca_filtro_tabla("b.nombres,b.apellidos,a.*,".fecha_db_obtener("fecha_solicitud","Y-m-d")." as fecha_solicitud,".fecha_db_obtener("fecha_anulacion","Y-m-d")." as fecha_anulacion,descripcion","documento_anulacion a,funcionario b","documento_iddocumento='$x_doc' and funcionario=funcionario_codigo","",$conn);
+	
+      	$cadena_anulado='
+      		<tr> 
+      			<td>'.$anulacion[0]["nombres"].' '.$anulacion[0]["apellidos"].'</td>
+      			<td>ANULADO</td>
+      			<td>'.$anulacion[0]["nombres"].' '.$anulacion[0]["apellidos"].'</td>
+      			<td>'.$anulacion[0]["fecha_anulacion"].'</td>
+      			<td>'.$anulacion[0]["descripcion"].'</td>
+      		</tr>';
+       		echo($cadena_anulado);
+      }	
+		}
       for($i=0;$i<$recorrido["numcampos"];$i++)
       {
       	$sItemRowClass = " bgcolor=\"#FFFFFF\"";

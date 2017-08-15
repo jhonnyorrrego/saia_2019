@@ -35,16 +35,32 @@ $server->configureWSDL("TareasDigitalizacion");
 
 $server->wsdl->schemaTargetNamespace = $namespace;
 
-$server->wsdl->addComplexType('TareaDigitalizacion', 'complexType', 'struct', 'all', '', 
-	array(
-		'idtarea_dig' => array( 'name' => 'idtarea_dig', 'type' => 'xsd:int'),
-		'idfuncionario' => array( 'name' => 'idfuncionario', 'type' => 'xsd:int'),
-		'iddocumento' => array( 'name' => 'iddocumento', 'type' => 'xsd:int'),
-		'estado' => array( 'name' => 'estado', 'type' => 'xsd:int'),
-		'fecha' => array( 'name' => 'fecha', 'type' => 'xsd:date'),
-		'token' => array( 'name' => 'token', 'type' => 'xsd:string')
+$server->wsdl->addComplexType('TareaDigitalizacion', 'complexType', 'struct', 'all', '', array(
+		'idtarea_dig' => array(
+				'name' => 'idtarea_dig',
+				'type' => 'xsd:int'
+		),
+		'idfuncionario' => array(
+				'name' => 'idfuncionario',
+				'type' => 'xsd:int'
+		),
+		'iddocumento' => array(
+				'name' => 'iddocumento',
+				'type' => 'xsd:int'
+		),
+		'estado' => array(
+				'name' => 'estado',
+				'type' => 'xsd:int'
+		),
+		'fecha' => array(
+				'name' => 'fecha',
+				'type' => 'xsd:date'
+		),
+		'token' => array(
+				'name' => 'token',
+				'type' => 'xsd:string'
 	)
-);
+));
 
 $server->wsdl->addComplexType(
 	'TareasArray', 

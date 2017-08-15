@@ -65,9 +65,11 @@ if(count($request)){
 				}
 
 				if($mostrar){
-		              $texto.='<div title="'.$consulta[$i]["nombre"].'" data-load=\'{"kConnector":"'.$conector.'", "url":"'.$url.$adicional.'", "kTitle":"'.$proceso.' '.$consulta[$i]["nombre"].'"}\' class="items navigable">';
+					$etiqueta_formato=ucfirst(codifica_encabezado(html_entity_decode(strtolower($consulta[$i]["nombre"]))));	
+											
+		              $texto.='<div title="'.$etiqueta_formato.'" data-load=\'{"kConnector":"'.$conector.'", "url":"'.$url.$adicional.'", "kTitle":"'.$proceso.' '.$etiqueta_formato.'"}\' class="items navigable">';
 		              $texto.='<div class="head"></div>';
-		              $texto.='<div class="label">'.codifica_encabezado(html_entity_decode($consulta[$i]["nombre"])).'</div>';
+		              $texto.='<div class="label">'.$etiqueta_formato.'</div>';
 		              $texto.='<div class="info"></div>';
 		              $texto.='<div class="tail"></div>';
 				      $texto.='</div>';
@@ -89,6 +91,4 @@ if(count($request)){
 	  $acceso=$ok->acceso_modulo_perfil($modulo[0]["nombre"]);
 	  return $acceso;
 	}
-
-
 ?>

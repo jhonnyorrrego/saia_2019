@@ -57,7 +57,10 @@ include_once ($ruta_db_superior . "formatos/librerias/funciones.php");
 include_once ($ruta_db_superior . "phpmkrfn.php");
 include_once ($ruta_db_superior . "librerias_saia.php");
 include_once ($ruta_db_superior . "librerias/funciones.php");
-
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+$validar_enteros=array("idcontador","x_idformato");
+desencriptar_sqli('form_info'); 
+echo(librerias_jquery());
 // Get action
 $sAction = @$_POST["a_add"];
 if(($sAction == "") || ((is_null($sAction)))) {
@@ -144,7 +147,6 @@ switch($sAction) {
 
 include ("header.php");
 ?>
-<script type="text/javascript" src="../js/jquery.js"></script>
 <script type="text/javascript" src="../js/jquery.validate.js"></script>
 <script type="text/javascript" src="../js/cmxforms.js"></script>
 <script type="text/javascript" src="../js/dhtmlXTree.js"></script>
@@ -168,7 +170,13 @@ EW_dateSep = "/"; // set date separator
  		}
  	});
 	// validar los campos del formato
-	$('#formatoadd').validate();
+	$('#formatoadd').validate({
+		submitHandler: function(form) {
+				<?php encriptar_sqli("formatoadd",0,"form_info",$ruta_db_superior);?>
+			    form.submit();
+			    
+			  }
+	});
 	 	/*Valida que el nombre del campo no este repetido*/
  	$("#x_nombre").change(function(){
  		$.ajax({
@@ -806,7 +814,7 @@ detalles_mostrar_".$x_nombre.".php";
 	$fieldList["ruta_adicionar"] = "'" . "adicionar_" . $x_nombre . ".php'";
 	$fieldList["funcionario_idfuncionario"] = usuario_actual("funcionario_codigo");
 	$fieldList["pertenece_nucleo"] = intval($x_pertenece_nucleo);
-	print_r($fieldList);
+	//print_r($fieldList);
 	// insert into database
 	$strsql = "INSERT INTO formato (";
 	$strsql .= implode(",", array_keys($fieldList));

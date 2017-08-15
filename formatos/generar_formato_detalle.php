@@ -9,31 +9,39 @@ while($max_salida > 0) {
 	$max_salida--;
 }
 
-include_once ($ruta_db_superior . "db.php");
-include_once ($ruta_db_superior . "formatos/librerias/header_formato.php");
-if (@$_REQUEST["almacenar"] == "true" && $_REQUEST["ruta"] != "" && @$_REQUEST["formato"]) {
-	$enlace_adicion = "";
-	if (!crear_archivo($_REQUEST["ruta"], "<?php include_once('../librerias/estilo_formulario.php'); include_once('../librerias/funciones_formatos_generales.php');?" . ">" . limpia_tabla($_REQUEST["archivo"]) . "<?php listado_hijos_formato(" . $_REQUEST["formato"] . ',$_REQUEST["iddoc"]); ?' . ">")) {
-		alerta("<br>Archivo no se ha podido crear<br>");
-	}
+include_once($ruta_db_superior."db.php");
+
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+$validar_enteros=array("formato","iddoc","idformato");
+include_once($ruta_db_superior."librerias_saia.php");
+$validar_enteros=array("idformato");
+desencriptar_sqli('form_info');
+echo(librerias_jquery());
+
+include_once($ruta_db_superior."formatos/librerias/header_formato.php");
+if(@$_REQUEST["almacenar"]=="true" && $_REQUEST["ruta"]!="" && @$_REQUEST["formato"]){
+$enlace_adicion="";
+  if(!crear_archivo($_REQUEST["ruta"],"<?php include_once('../librerias/estilo_formulario.php'); include_once('../librerias/funciones_formatos_generales.php');?".">".limpia_tabla($_REQUEST["archivo"])."<?php listado_hijos_formato(".$_REQUEST["formato"].',$_REQUEST["iddoc"]); ?'.">")){
+    alerta("<br>Archivo no se ha podido crear<br>");
+  }
 }
-if (@$_REQUEST["idformato"]) {
-	$formato = busca_filtro_tabla("", "formato", "idformato=" . $_REQUEST["idformato"], "", $conn);
-	if ($formato["numcampos"]) {
-		if ($formato[0]["nombre"] == "proceso") {
+if(@$_REQUEST["idformato"]){
+  $formato=busca_filtro_tabla("","formato","idformato=".$_REQUEST["idformato"],"",$conn);
+  if($formato["numcampos"]){
+    if($formato[0]["nombre"]=="proceso"){
 			redirecciona($ruta_db_superior . FORMATOS_CLIENTE . $formato[0]["nombre"] . "/previo_" . $formato[0]["ruta_mostrar"] . "?editar=1");
-		}
-		$ruta = $formato[0]["nombre"] . "/previo_" . $formato[0]["ruta_mostrar"];
-		if (is_file($ruta)) {
-			$bufer = file_get_contents($ruta);
+    }
+    $ruta=$formato[0]["nombre"]."/previo_".$formato[0]["ruta_mostrar"];
+    if(is_file($ruta)){
+      $bufer = file_get_contents($ruta);
 		} else {
-			if (!crear_archivo($ruta, ""))
-				echo ("<br>Archivo no se ha podido crear<br>");
-		}
-	}
-	?>
-<form name="crear_archivo" action="" method="post" >
-	<!--select name="idformato">
+      if(!crear_archivo($ruta,""))
+        echo("<br>Archivo no se ha podido crear<br>");
+    }
+  }
+?>
+<form name="crear_archivo" id="crear_archivo" action="" method="post" >
+<!--select name="idformato">
 <?php
 	$formatos = busca_filtro_tabla("", "formato", "1=1", "", $conn);
 	for($i = 0; $i < $formatos["numcampos"]; $i++) {
@@ -53,4 +61,5 @@ Ruta:<input type="text" size="50"  name="ruta" value="<?php echo($ruta);?>" read
 </form>
 <?php
 }
+encriptar_sqli("crear_archivo",1,"form_info",$ruta_db_superior);
 ?>

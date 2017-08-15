@@ -10,13 +10,18 @@ while($max_salida>0){
 }
 include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."librerias_saia.php");
+
+echo(librerias_jquery("1.7"));
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+desencriptar_sqli('form_info');
+
+
 usuario_actual('idfuncionario');
 ?>   
 <!DOCTYPE html>
 <head>    
 <?php               
 echo(librerias_html5());
-echo(librerias_jquery("1.7"));
 echo(librerias_UI());
 echo(estilo_bootstrap()); 
 echo(librerias_tooltips());
@@ -35,7 +40,7 @@ echo(librerias_tooltips());
     </div>
     <br>
     <!-- The file upload form used as target for the file upload widget -->
-    <form id="fileupload" action="controlador_upload.php" method="POST" enctype="multipart/form-data">
+    <form id="fileupload" name="fileupload" action="controlador_upload.php" method="POST" enctype="multipart/form-data">
         <!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
         <div class="row fileupload-buttonbar">
             <div class="span7">
@@ -180,3 +185,4 @@ echo(librerias_tooltips());
 <!--[if gte IE 8]><script src="js/cors/jquery.xdr-transport.js"></script><![endif]-->
 </body> 
 </html>
+<?php encriptar_sqli("fileupload",1,"form_info",$ruta_db_superior);?>

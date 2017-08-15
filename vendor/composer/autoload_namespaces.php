@@ -7,4 +7,6 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Luracast\\Restler' => array($vendorDir . '/luracast/restler/vendor'),
+    'Imagine' => array($vendorDir . '/imagine/imagine/lib'),
+    'Gaufrette' => array($vendorDir . '/knplabs/gaufrette/src'),
 );

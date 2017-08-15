@@ -11,7 +11,12 @@ $ruta.="../";
 $max_salida--;
 }
 include_once($ruta_db_superior."db.php");
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+$validar_enteros=array("formato","iddoc");
+desencriptar_sqli('form_info');
 include_once($ruta_db_superior."class_transferencia.php");
+
+
 guardar_documento($_REQUEST["iddoc"],1);
 
 $datos_formato=busca_filtro_tabla("","formato","idformato=".$_REQUEST["formato"],"",$conn);

@@ -13,6 +13,9 @@ include_once($ruta_db_superior."formatos/librerias/header_formato.php");
 include_once($ruta_db_superior."formatos/librerias/funciones.php");
 include_once($ruta_db_superior."phpmkrfn.php");
 include_once($ruta_db_superior."librerias_saia.php");
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+$validar_enteros=array("x_idformato","x_contador_idcontador","x_serie_idserie");
+desencriptar_sqli('form_info'); 
 
 // Initialize common variables
 $x_idformato = Null;
@@ -895,7 +898,7 @@ detalles_mostrar_".$x_nombre.".php";
 	}
 	return $EditData;
 }
-
+encriptar_sqli("formatoedit",1,"form_info",$ruta_db_superior);
 function crear_contador($contador,$x_tabla){
 global $conn;
   $cont=busca_filtro_tabla("","contador","nombre LIKE '".$contador."","",$conn);

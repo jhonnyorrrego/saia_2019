@@ -1,11 +1,27 @@
 <?php 
+$max_salida=10; // Previene algun posible ciclo infinito limitando a 10 los ../
+$ruta_db_superior=$ruta="";
+while($max_salida>0)
+{
+if(is_file($ruta."db.php"))
+{
+$ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
+}
+$ruta.="../";
+$max_salida--;
+}
 include_once("../db.php");
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+$validar_enteros=array("idformato");
+include_once($ruta_db_superior."librerias_saia.php");
+$validar_enteros=array("idformato");
+desencriptar_sqli('form_info');
+echo(librerias_jquery());
 include_once("../header.php");
 include_once("librerias/header_formato.php");
 include_once("librerias/funciones_acciones.php");
 include_once("librerias/funciones.php"); 
 ?>
-<script type="text/javascript" src="../js/jquery.js"></script>
 <script type="text/javascript" src="../js/jquery.validate.js"></script>
 <script type="text/javascript" src="../anexosdigitales/highslide-4.0.10/highslide/highslide-with-html.js"></script>
 <link rel="stylesheet" type="text/css" href="../anexosdigitales/highslide-4.0.10/highslide/highslide.css" />
@@ -16,6 +32,11 @@ include_once("librerias/funciones.php");
 <script type='text/javascript'>
   $().ready(function() {
 	$("#asignar_funcion_formato").validate({
+		submitHandler: function(form) {
+			<?php encriptar_sqli("asignar_funcion_formato",0,"form_info",$ruta_db_superior);?>
+			form.submit();
+			    
+		},		
   rules: {
     entidad1: {
       required: "#tipo1:checked"

@@ -10,6 +10,9 @@ while ($max_salida > 0) {
 }
 include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."librerias_saia.php");
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+$validar_enteros=array("idbusqueda_componente");
+desencriptar_sqli('form_info');
 echo(estilo_bootstrap());
 echo(librerias_jquery("1.7"));
 echo (librerias_bootstrap());
@@ -20,7 +23,7 @@ if(@$_REQUEST["adicionar"]==1){
   if($idreemplazo){
     redirecciona($ruta_db_superior."pantallas/busquedas/consulta_busqueda.php?idbusqueda_componente=".$_REQUEST["idbusqueda_componente"]);
   }else{
-    alerta("<b>ATENCI&Oacute;N</b><br>Error al insertar el reemplazo");
+    alerta("<b>ATENCI&Oacute;N</b><br>Error al insertar el reemplazo","error");
   }
 }
 ?>
@@ -246,7 +249,13 @@ $(document).ready(function(){
       document.poppedLayer.style.display = "";
   }
   var formulario_reemplazo=$("#formulario_reemplazo");
-  formulario_reemplazo.validate();
+	formulario_reemplazo.validate({
+  		submitHandler: function(form) {
+			<?php encriptar_sqli("formulario_reemplazo",0,"form_info",$ruta_db_superior);?>
+			form.submit();
+			    
+		} 
+  });
   $("#submit_formulario_reemplazo").click(function(){
   	if($("#antiguo").val()=="" || $("#nuevo").val()==""){
       alert("Por Favor Ingrese los Funcionarios");
@@ -293,7 +302,7 @@ echo(librerias_arboles());
 function adicionar_reemplazo(){
 $fecha_fin="NULL";
 if(@$_REQUEST["antiguo"]==@$_REQUEST["nuevo"]){
-  alerta("<b>ATENCI&Oacute;N</b><br>El usuario no puede reemplazarse a si mismo");
+  alerta("<b>ATENCI&Oacute;N</b><br>El usuario no puede reemplazarse a si mismo","warning");
   return(0);
 }
 if(@$_REQUEST["fecha_fin"]){

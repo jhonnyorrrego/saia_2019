@@ -57,14 +57,14 @@ switch ($sAction)
 <?php include ("header.php") ?>
 <p><br />
 <a href="<?php echo $ruta_db_superior?>formatos/formatoedit.php?key=<?php echo $sKey; ?>">Editar</a>&nbsp;
-<a href="<?php echo $ruta_db_superior;?>formatos/<?php echo "formatoadd_paso2.php?key=" . urlencode($sKey); ?>">Editar cuerpo</a>&nbsp;
-<a href="<?php echo $ruta_db_superior;?>formatos/campos_formatolist.php?idformato=<?php echo $_REQUEST["key"];?>">Campos del Formato</a>&nbsp;&nbsp;
-<a href="<?php echo $ruta_db_superior;?>formatos/funciones_formatolist.php?idformato=<?php echo $_REQUEST["key"];?>">Funciones del Formato</a>&nbsp;&nbsp;
-<a href="<?php echo $ruta_db_superior;?>formatos/llamado_formatos.php?acciones_formato=formato,adicionar,buscar,editar,mostrar,tabla&accion=generar&condicion=idformato@<?php echo $_REQUEST["key"];?>">Generar el Formato</a>&nbsp;&nbsp;
-<a href="<?php echo $ruta_db_superior;?>formatos/formatoadd.php?x_cod_padre=<?php echo $_REQUEST["key"];?>">Adicionar hijo</a>&nbsp;&nbsp;
-<a href="<?php echo $ruta_db_superior;?>formatos/transferencias_automaticas.php?idformato=<?php echo $_REQUEST["key"];?>">Transferencias automaticas</a>&nbsp;&nbsp;
-<a href="<?php echo $ruta_db_superior;?>formatos/rutas_automaticas.php?idformato=<?php echo $_REQUEST["key"];?>">Rutas</a>&nbsp;&nbsp;
-<a href="<?php echo $ruta_db_superior;?>formatos/formatoexport.php?key=<?php echo $_REQUEST["key"];?>">Exportar Formato</a>
+<a href="<?php echo $ruta_db_superior; ?>formatos/<?php echo "formatoadd_paso2.php?key=" . urlencode($sKey); ?>">Editar cuerpo</a>&nbsp;
+<a href="<?php echo $ruta_db_superior; ?>formatos/campos_formatolist.php?idformato=<?php echo $_REQUEST["key"];?>">Campos del Formato</a>&nbsp;&nbsp;
+<a href="<?php echo $ruta_db_superior; ?>formatos/funciones_formatolist.php?idformato=<?php echo $_REQUEST["key"];?>">Funciones del Formato</a>&nbsp;&nbsp;
+<a href="<?php echo $ruta_db_superior; ?>formatos/llamado_formatos.php?acciones_formato=formato,adicionar,buscar,editar,mostrar,tabla&accion=generar&condicion=idformato@<?php echo $_REQUEST["key"];?>">Generar el Formato</a>&nbsp;&nbsp;
+<a href="<?php echo $ruta_db_superior; ?>formatos/formatoadd.php?x_cod_padre=<?php echo $_REQUEST["key"];?>">Adicionar hijo</a>&nbsp;&nbsp;
+<a href="<?php echo $ruta_db_superior; ?>formatos/transferencias_automaticas.php?idformato=<?php echo $_REQUEST["key"];?>">Transferencias automaticas</a>&nbsp;&nbsp;
+<a href="<?php echo $ruta_db_superior; ?>formatos/rutas_automaticas.php?idformato=<?php echo $_REQUEST["key"];?>">Rutas</a>&nbsp;&nbsp;
+<a href="<?php echo $ruta_db_superior; ?>formatos/formatoexport.php?key=<?php echo $_REQUEST["key"];?>">Exportar Formato</a>
 &nbsp;&nbsp;
 <a href="<?php echo $ruta_db_superior; ?>webservice_saia/exportar_importar_formato/exportar_formato/exportar_formato.php?pre_exportar_formato=1&idformato=<?php echo $_REQUEST["key"];?>">Pasar a productivo</a>
 </span></p>

@@ -3,4 +3,4 @@
 	url = http://laboratorio.netsaia.com:82/giovanni.montes/editor_codigo.git
 [submodule "formatos_cliente"]
 	path = formatos_cliente
-	url = http://laboratorio.netsaia.com:82/cerok/formatos_basic.git
+	url = http://laboratorio.netsaia.com:82/cerok/formatos_nucleo.git

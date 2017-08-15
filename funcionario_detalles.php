@@ -137,12 +137,10 @@ body
 <script>
 	$(document).ready(function(){
 		window.parent.frames["detalles"].location='funcionario_detalles_start.php?key=<?php echo(@$_REQUEST['key']); ?>';
-		
 		$('.enlace_detalles_funcionario').click(function(){
 			var enlace=$(this).attr('enlace');
 			window.parent.frames["detalles"].location=enlace;
 		});
-		
 	});
 </script>
 <style>

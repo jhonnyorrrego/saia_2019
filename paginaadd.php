@@ -1,5 +1,10 @@
 <?php
 include_once ("db.php");
+include_once("pantallas/lib/librerias_cripto.php");
+include_once("librerias_saia.php");
+desencriptar_sqli('form_info');
+echo(librerias_jquery());
+
 if (@$_REQUEST["iddoc"] || @$_REQUEST["key"]) {
 	include_once ("pantallas/documento/menu_principal_documento.php");
 	if (!$_REQUEST["iddoc"]) {
@@ -323,8 +328,7 @@ if($buscar_tarea["numcampos"]) {
 	$id_tarea = phpmkr_insert_id();
 }*/
 ?>
-
-            <div id="output"></div>
+    <div id="output"></div>
 
     <script type="text/javascript">
 
@@ -418,7 +422,6 @@ if($buscar_tarea["numcampos"]) {
     </script>
 
 <?php
-
 function abrir_url_digitalizacion($iddocumento, $location, $target = "_blank") {
 	if (!@$_SESSION['radicacion_masiva']) {
 		if ($target) {

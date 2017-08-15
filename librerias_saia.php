@@ -26,21 +26,19 @@ global $raiz_saia;
 $texto='';
 switch($version){
   case "1.4.2":
-    $texto='<script src="'.$raiz_saia.'js/jquery-1.4.2.js" type="text/javascript"></script>';
+    $texto='<script src="'.$raiz_saia.'js/jquery-1.4.2.js" type="text/javascript"><\/script>';
   break;
   case "1.7":
-    $texto='<script src="'.$raiz_saia.'js/jquery-1.7.min.js" type="text/javascript"></script>';
+    $texto='<script src="'.$raiz_saia.'js/jquery-1.7.min.js" type="text/javascript"><\/script>';
   break;
   case "1.2.3":
-    $texto='<script src="'.$raiz_saia.'js/jquery-1.2.3.min.js" type="text/javascript"></script>';
+    $texto='<script src="'.$raiz_saia.'js/jquery-1.2.3.min.js" type="text/javascript"><\/script>';
   break;
   case "sapi":
-    $texto='<script type="text/javascript" src="http://www.google.com/jsapi"></script>
-<script type="text/javascript">
-        google.load("jquery", "1.7");
-</script>';
+    $texto='<script type="text/javascript" src="http://www.google.com/jsapi"><\/script><script type="text/javascript">google.load("jquery", "1.7");<\/script>';
   break;
 }
+$texto='<script type="text/javascript"> if(typeof(window.jQuery) === "undefined"){ document.write(\''.$texto.'\'); } </script>';
 return($texto);
 }
 function librerias_fechas($hora=0){
@@ -123,16 +121,19 @@ return($texto);
 function librerias_validar_formulario($version=''){
 global $raiz_saia;
 
-
-if($version==11){
-	$texto='<script type="text/javascript" src="'.$raiz_saia.'js/jquery.validate_v1.11.js"></script>';
-}else{
-	$texto='<script type="text/javascript" src="'.$raiz_saia.'js/jquery.validate.js"></script>';
-}
-
-
-$texto.='<style>label.valid {width: 24px; height: 24px; background: url('.$raiz_saia.'asset/img/layout/valid.png) center center no-repeat; display: inline-block;text-indent: -9999px;}label.error {font-weight: bold;color: red;padding: 2px 8px;margin-top: 2px;}</style>';
-return($texto);
+	switch($version){
+		case "1.11":
+			$texto='<script type="text/javascript" src="'.$raiz_saia.'js/jquery.validate1.11.js"></script>';
+			break;
+		case "1.16":	
+			$texto='<script type="text/javascript" src="'.$raiz_saia.'js/jquery.validate1.16.js"></script>';
+			break;
+		default: //1.5
+			$texto='<script type="text/javascript" src="'.$raiz_saia.'js/jquery.validate.js"></script>';
+			break;	
+	}
+	$texto.='<style>label.valid {width: 24px; height: 24px; background: url('.$raiz_saia.'asset/img/layout/valid.png) center center no-repeat; display: inline-block;text-indent: -9999px;}label.error {font-weight: bold;color: red;padding: 2px 8px;margin-top: 2px;}</style>';
+	return($texto);
 }
 function librerias_html5(){
 global $raiz_saia;

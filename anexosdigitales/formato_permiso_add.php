@@ -1,5 +1,24 @@
 <?php 
 //die("INGRESE");
+
+$max_salida=10; // Previene algun posible ciclo infinito limitando a 10 los ../
+$ruta_db_superior=$ruta="";
+while($max_salida>0)
+{
+if(is_file($ruta."db.php"))
+{
+$ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
+}
+$ruta.="../";
+$max_salida--;
+}
+
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+$validar_enteros=array("idformato",);
+include_once($ruta_db_superior."librerias_saia.php");
+desencriptar_sqli('form_info');
+echo(librerias_jquery());
+
 include_once("funciones_archivo.php");
 //$_REQUEST["idformato"]=1;
 //$idformato=$_REQUEST["idformato"];
@@ -46,3 +65,4 @@ elseif(isset($_REQUEST["Guardar"])) // Preserva el valor en el formulario
 </table>
 </form>
 </html>
+<?php encriptar_sqli("asigpermiso",1,"form_info",$ruta_db_superior);?>

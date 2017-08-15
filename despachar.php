@@ -12,6 +12,11 @@ include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."calendario/calendario.php");
 include_once($ruta_db_superior."librerias_saia.php");
 include_once($ruta_db_superior."class_transferencia.php");
+
+require ($ruta_db_superior.'vendor/autoload.php');
+require_once $ruta_db_superior.'filesystem/SaiaStorage.php';
+include_once $ruta_db_superior."StorageUtils.php";
+
 echo (estilo_bootstrap());
 echo (librerias_jquery("1.7"));
 $campo_destino=array("CARTA"=>array("ft_carta","destinos"),"COMUNICACION_EXTERNA"=>array("ft_comunicacion_externa","destinos"),"RADICACION_SALIDA"=>array("ft_radicacion_salida","persona_natural"));
@@ -208,7 +213,7 @@ global $conn, $ruta_db_superior;
 
 	if ($_FILES["anexos_" . $iddoc."_".$responsable]) {
 		$formato_ruta = aplicar_plantilla_ruta_documento($iddoc);
-		$ruta_archivos = ruta_almacenamiento("archivos");
+		$alm_archivos = new SaiaStorage("archivos");
 		
 		$datos_documento = busca_filtro_tabla(fecha_db_obtener('A.fecha', 'Y-m-d') . " as fecha, A.*", "documento A", "A.iddocumento=" . $iddoc, "", $conn);
 		
@@ -218,22 +223,22 @@ global $conn, $ruta_db_superior;
 
 		$extension = end(explode(".", $_FILES["anexos_" . $iddoc."_".$responsable]["name"]));
 		//$archivo_destino = RUTA_ARCHIVOS . $datos_documento[0]["estado"] . "/" . $datos_documento[0]["fecha"] . "/" . $datos_documento[0]["iddocumento"] . "/anexos_despacho/";
-		$archivo_destino = $ruta_archivos . $formato_ruta . "/anexos_despacho/";
+		$archivo_destino = $formato_ruta . "/anexos_despacho/";
 		
-		if (!is_dir($archivo_destino)) {
+		/*if (!is_dir($archivo_destino)) {
 			crear_destino($archivo_destino);
-		}
+		}*/
 		$nuevo_nombre = rand(0, 999999999);
 		$nuevo_destino = $archivo_destino . $nuevo_nombre . "." . $extension;
-		if (is_dir($archivo_destino)) {
-			if (rename($_FILES["anexos_" . $iddoc."_".$responsable]["tmp_name"], $nuevo_destino)) {
+		$alm_archivos->copiar_contenido_externo($_FILES["anexos_" . $iddoc."_".$responsable]["tmp_name"], $nuevo_destino);
+		if ($alm_archivos->get_filesystem()->has($nuevo_destino)) {
 				$sql1 = "INSERT INTO anexos_despacho(documento_iddocumento, ruta, tipo, etiqueta, fk_idsalidas) VALUES ('" . $iddoc . "', '" . $nuevo_destino . "', '".$extension."', '" . $nombre . "', '" . $idsalida . "')";
 				phpmkr_query($sql1);
 				$idanexos_despacho = phpmkr_insert_id();
-
+			$ruta_arch = array("servidor" => $alm_archivos->get_ruta_servidor(), "ruta" => $nuevo_destino);
 				$idfuncionario = usuario_actual("idfuncionario");
 				$idformato=busca_filtro_tabla("", "formato", "lower(nombre) like '".strtolower($datos_documento[0]['plantilla'])."'", "", $conn);
-				$insert_anexo = "insert into anexos(documento_iddocumento, ruta, etiqueta, tipo, formato,fecha_anexo) VALUES (".$iddoc.",'".$nuevo_destino."','".$nombre."','".$extension."',".$idformato[0]["idformato"].",".fecha_db_almacenar(date("Y-m-d H:i:s"),'Y-m-d H:i:s').")";
+			$insert_anexo = "insert into anexos(documento_iddocumento, ruta, etiqueta, tipo, formato,fecha_anexo) VALUES (".$iddoc.",'". json_encode($ruta_arch) . "','".$nombre."','".$extension."',".$idformato[0]["idformato"].",".fecha_db_almacenar(date("Y-m-d H:i:s"),'Y-m-d H:i:s').")";
 				phpmkr_query($insert_anexo);
 				$idnexo = phpmkr_insert_id();
 
@@ -249,7 +254,7 @@ global $conn, $ruta_db_superior;
 				$otros["notas"] = "'Anexos despacho por guia'";
 				transferir_archivo_prueba($datos, array($datos_documento[0]["ejecutor"]), $otros);
 			}
-		}
+
 	}
 }
 

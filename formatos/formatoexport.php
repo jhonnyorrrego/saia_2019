@@ -1,7 +1,7 @@
 <?php
 include_once("../db.php");
 include_once("../header.php");
-if(@$_REQUEST["key"]){
+if(@$_REQUEST["key"] && is_int($_REQUEST["key"])){
   $idformato=$_REQUEST["key"];
   $formato=busca_filtro_tabla("","formato","idformato=".$idformato,"",$conn);
   $campos="";
@@ -44,6 +44,8 @@ if(@$_REQUEST["key"]){
   echo('</span>');
   include_once("../footer.php");
 //volver(1);
+}else if( !is_int($_REQUEST["key"]) ){
+	die("Se encuentra una posible infecci&oacute;n en su c&oacute;digo, en: la llave key por favor contacte a su administrador");
 }
 else alerta("Debe seleccionar un Formato para Exportar");
 

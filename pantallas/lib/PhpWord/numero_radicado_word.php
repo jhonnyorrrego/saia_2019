@@ -4,6 +4,14 @@
 include_once ($ruta_db_superior . "pantallas/lib/PhpWord/funciones_include.php");
 // require_once($ruta_db_superior.'pantallas/lib/PHPWord/src/PhpWord/Autoloader.php');
 require_once ($ruta_db_superior . 'pantallas/lib/PhpWord/Autoloader.php');
+
+require_once ($ruta_db_superior . 'vendor/autoload.php');
+require_once $ruta_db_superior . 'StorageUtils.php';
+require_once $ruta_db_superior . 'filesystem/SaiaStorage.php';
+
+use Stringy\StaticStringy as StringUtils;
+
+
 date_default_timezone_set('UTC');
 
 /**
@@ -11,14 +19,31 @@ date_default_timezone_set('UTC');
  */
 use PhpOffice\PhpWord\Autoloader;
 use PhpOffice\PhpWord\Settings;
+use function Gaufrette\Adapter\file_exists;
 
 error_reporting(E_ALL);
 
+<<<<<<< HEAD
+error_reporting(E_ALL);
+
 if (!defined('CLI')) {
+<<<<<<< HEAD
+define('CLI', (PHP_SAPI == 'cli') ? true : false);
+define('EOL', CLI ? PHP_EOL : '<br />');
+define('SCRIPT_FILENAME', basename($_SERVER['SCRIPT_FILENAME'], '.php'));
+define('IS_INDEX', SCRIPT_FILENAME == 'index');
+=======
+=======
+if (!defined('CLI')) {
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 	define('CLI', (PHP_SAPI == 'cli') ? true : false);
 	define('EOL', CLI ? PHP_EOL : '<br />');
 	define('SCRIPT_FILENAME', basename($_SERVER['SCRIPT_FILENAME'], '.php'));
 	define('IS_INDEX', SCRIPT_FILENAME == 'index');
+<<<<<<< HEAD
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 }
 
 Autoloader::register();
@@ -57,6 +82,44 @@ $combinar = false;
 $idformato = null;
 $ruta_combinar = null;
 
+<<<<<<< HEAD
+<<<<<<< HEAD
+if(@$anexo['numcampos']) {
+	$arr_ruta = StorageUtils::resolver_ruta($anexo[0]["ruta"]);
+
+	$temp_fs = StorageUtils::get_memory_filesystem("tmp_docx", "saia");
+
+	$ruta_docx = "saia://tmp_docx/docx";
+	$ruta_imagen = "saia://tmp_docx/firma_temp";
+	//$ruta_anexo = explode('anexos', $anexo[0]["ruta"]);
+	//$ruta_combinar = $ruta_db_superior . $ruta_anexo[0] . 'pdf_temp/';
+	//$ruta_docx = $ruta_db_superior . $ruta_anexo[0] . 'docx/';
+	$idformato = $anexo[0]["idformato"];
+}
+
+if ($arr_ruta["error"]) {
+	die("Error: " . $arr_ruta["mensaje"]);
+}
+
+if(@$anexo_csv['numcampos']) {
+	$archivo_csv = StorageUtils::resolver_ruta($anexo_csv[0]["ruta"]);
+	$combinar = true;
+}
+
+if($arr_ruta["ruta"] != '') {
+	$ruta_plantilla = $arr_ruta["ruta"];
+	$alm_plantilla = $arr_ruta["clase"];
+	// copiar desde el almacen al temporal
+	$archivo_plantilla = $alm_plantilla->get_filesystem()->get($ruta_plantilla);
+	$ruta_procesar = "saia://tmp_docx/" . basename($archivo_plantilla->getName());
+	
+	$temp_fs->write(basename($archivo_plantilla->getName()), $archivo_plantilla->getContent(), true);
+
+	$templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor($ruta_procesar);
+	
+=======
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 if (@$anexo['numcampos']) {
 	$ruta_anexo = explode('anexos', $anexo[0]["ruta"]);
 	$ruta_combinar = $ruta_db_superior . $ruta_anexo[0] . 'pdf_temp/';
@@ -73,6 +136,10 @@ if (file_exists($ruta_docx . 'documento_word.docx')) {
 
 	$templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor($ruta_docx . 'documento_word.docx');
 
+<<<<<<< HEAD
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 	$campos_word = $templateProcessor->getVariables();
 
 	if (@$_REQUEST["iddoc"] && count($campos_word)) {
@@ -82,9 +149,33 @@ if (file_exists($ruta_docx . 'documento_word.docx')) {
 			$templateProcessor->setValue('formato_numero', $numero_radicado[0]['numero']);
 
 			$campo_qr_word = "codigo_qr";
+<<<<<<< HEAD
+<<<<<<< HEAD
+			if(in_array($campo_qr_word, $campos_word)) {
+				$src_qr = obtener_codigo_qr($idformato, $_REQUEST["iddoc"]);
+				$arr_alm_qr = StorageUtils::resolver_ruta($src_qr);
+				$alm_qr = $arr_alm_qr["clase"];
+				$archivo_qr = $alm_qr->get_filesystem()->get($arr_alm_qr["ruta"]);
+				
+				$ext_qr = "." . pathinfo($arr_alm_qr["ruta"], PATHINFO_EXTENSION);
+				$src = StorageUtils::obtener_archivo_temporal("qr_");
+				file_put_contents($src, $archivo_qr->getContent());
+				rename($src, $src . $ext_qr);
+				$src .= $ext_qr;
+				//$temp_fs->write(basename($archivo_qr->getName()), $archivo_qr->getContent(), true);
+				//print_r($src);echo "<br>";
+				//print_r(is_file($src));die();
+				//$src = "../almacenamiento/APROBADO/2017-02-10/1242/qr/qr2017_02_10_21_02_30.png";
+=======
 			if (in_array($campo_qr_word, $campos_word)) {
 				$src = $ruta_db_superior . obtener_codigo_qr($idformato, $_REQUEST["iddoc"]);
 
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+			if (in_array($campo_qr_word, $campos_word)) {
+				$src = $ruta_db_superior . obtener_codigo_qr($idformato, $_REQUEST["iddoc"]);
+
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 				$img2 = array(
 						array(
 								'img' => htmlspecialchars($src),
@@ -96,6 +187,27 @@ if (file_exists($ruta_docx . 'documento_word.docx')) {
 				);
 				$templateProcessor->setImg($campo_qr_word, $img2);
 			}
+<<<<<<< HEAD
+<<<<<<< HEAD
+			
+			$directorio_out = $ruta_docx . "/";
+	
+=======
+
+			$directorio_out = $ruta_docx;
+
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+			$archivo_out = 'documento_word';
+
+			$extension_doc = '.docx';
+<<<<<<< HEAD
+			
+			/*if(file_exists($directorio_out . $archivo_out . $extension_doc)) {
+=======
+
+			if (file_exists($directorio_out . $archivo_out . $extension_doc)) {
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
 
 			$directorio_out = $ruta_docx;
 
@@ -104,18 +216,51 @@ if (file_exists($ruta_docx . 'documento_word.docx')) {
 			$extension_doc = '.docx';
 
 			if (file_exists($directorio_out . $archivo_out . $extension_doc)) {
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 				unlink($directorio_out . $archivo_out . $extension_doc);
 				unlink($directorio_out . $archivo_out . '.pdf');
-			}
+			}*/
 			$marca_agua = mostrar_estado_documento($_REQUEST['iddoc']);
 			$templateProcessor->setTextWatermark($marca_agua);
 			$templateProcessor->saveAs($directorio_out . $archivo_out . $extension_doc);
+<<<<<<< HEAD
+<<<<<<< HEAD
+			
+			$ruta_temporal = busca_filtro_tabla("valor", "configuracion", "nombre='ruta_temporal'", "", $conn);
+			$ruta_tmp_usr=$ruta_temporal[0]["valor"]. "_" . usuario_actual("login");
+			$word_temp = StorageUtils::obtener_archivo_temporal($archivo_out, $ruta_tmp_usr);
+			copy($directorio_out . $archivo_out. $extension_doc, $word_temp);
+			rename($word_temp, $word_temp . $extension_doc);
+
+			if(is_file($word_temp . $extension_doc)) {
+				$comando = 'export HOME=/tmp && libreoffice5.1 --headless --convert-to pdf:writer_pdf_Export --outdir ' . dirname($word_temp) . ' ' . $word_temp . $extension_doc;
+=======
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 
 			if (file_exists($directorio_out . $archivo_out . $extension_doc)) {
 				$comando = 'export HOME=/tmp && libreoffice5.1 --headless --convert-to pdf:writer_pdf_Export --outdir ' . $directorio_out . ' ' . $directorio_out . $archivo_out . $extension_doc;
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
 				$var = shell_exec($comando);
+				$pdf_name = "documento_word";
+				$dir_name = rtrim (dirname($ruta_plantilla), "anexos");
+				$dir_name .= "docx/";
+				$alm_plantilla->copiar_contenido_externo($word_temp . ".pdf", $dir_name . $pdf_name . ".pdf");
+				$alm_plantilla->copiar_contenido_externo($word_temp . $extension_doc, $ruta_plantilla);
+				$alm_plantilla->copiar_contenido_externo($word_temp . $extension_doc, $pdf_name . $extension_doc);
 			}
 		} else {
+<<<<<<< HEAD
+<<<<<<< HEAD
+			$ruta_combinar = StorageUtils::obtener_tempdir();
+			$tipo_alm_csv = $archivo_csv["clase"];
+			$csv_file = $tipo_alm_csv->get_filesystem()->get($archivo_csv["clase"]);
+			$archivo_csv = $ruta_combinar . "/tmp_csv.csv";
+			file_put_contents($archivo_csv, $csv_file->getContent());
+			combinar_documento($archivo_csv, $ruta_combinar, $ruta_docx, $idformato, $_REQUEST["iddoc"], $alm_plantilla, $ruta_plantilla);
+=======
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 			crear_destino($ruta_combinar);
 			chmod($ruta_combinar, 0777);
 			// TODO: Eliminar. Se genera pdf antes de procesar para ver porque no salen las firmas
@@ -128,6 +273,7 @@ if (file_exists($ruta_docx . 'documento_word.docx')) {
 			rename($ruta_docx . $archivo_out . ".pdf", $ruta_docx . $archivo_out . "0.pdf");
 			// TODO: Eliminar. Fin
 			combinar_documento($archivo_csv, $ruta_combinar, $ruta_docx, $idformato, $_REQUEST["iddoc"]);
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
 		}
 	} // fin si existe iddoc y el word tiene campos del formato
 }
@@ -146,20 +292,52 @@ function obtener_codigo_qr($idformato, $iddoc) {
 	return $codigo_qr[0]['ruta_qr'];
 }
 
-function combinar_documento($archivo_csv, $directorio_out, $ruta_docx, $idformato, $iddoc) {
+function combinar_documento($archivo_csv, $directorio_out, $ruta_docx, $idformato, $iddoc, $alm_plantilla, $ruta_plantilla) {
 	global $conn, $ruta_db_superior;
 
 	$numero_radicado = busca_filtro_tabla("", "documento", "iddocumento=" . $_REQUEST["iddoc"], "", $conn);
 	$campo_qr_word = "codigo_qr";
 	$marca_agua = mostrar_estado_documento($iddoc);
 	$extension_doc = '.docx';
+<<<<<<< HEAD
+<<<<<<< HEAD
+	
+=======
 
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 	//print_r($ruta_docx); echo "<br>";die();
 	$datos = cargar_csv($archivo_csv);
 	for($i = 0; $i < count($datos); $i++) {
 		// Cada elemento es un array campo => valor
 		$archivo_out = "documento_word_$i";
+<<<<<<< HEAD
+<<<<<<< HEAD
+		
+	    $templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor($ruta_docx . '/documento_word.docx');
+    	$campos_word = $templateProcessor->getVariables();
 
+    	$templateProcessor->setValue('formato_numero', $numero_radicado[0]['numero']);
+		if(in_array($campo_qr_word, $campos_word)) {
+
+			$src_qr = obtener_codigo_qr($idformato, $iddoc);
+			$arr_alm_qr = StorageUtils::resolver_ruta($src_qr);
+			$alm_qr = $arr_alm_qr["clase"];
+			$archivo_qr = $alm_qr->get_filesystem()->get($arr_alm_qr["ruta"]);
+
+			$ext_qr = "." . pathinfo($arr_alm_qr["ruta"], PATHINFO_EXTENSION);
+			$src = StorageUtils::obtener_archivo_temporal("qr_");
+			file_put_contents($src, $archivo_qr->getContent());
+			rename($src, $src . $ext_qr);
+			$src .= $ext_qr;
+			
+=======
+
+=======
+
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 		$templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor($ruta_docx . 'documento_word.docx');
 		$campos_word = $templateProcessor->getVariables();
 
@@ -167,6 +345,10 @@ function combinar_documento($archivo_csv, $directorio_out, $ruta_docx, $idformat
 		if (in_array($campo_qr_word, $campos_word)) {
 			$src = $ruta_db_superior . obtener_codigo_qr($idformato, $iddoc);
 
+<<<<<<< HEAD
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 			$img2 = array(
 					array(
 							'img' => htmlspecialchars($src),
@@ -182,18 +364,50 @@ function combinar_documento($archivo_csv, $directorio_out, $ruta_docx, $idformat
 		foreach ( $datos[$i] as $campo => $valor ) {
 			if (in_array($campo, $campos_word)) {
 				$templateProcessor->setValue($campo, $valor);
+<<<<<<< HEAD
+<<<<<<< HEAD
+				
+				if(is_file($directorio_out . "/$archivo_out" . $extension_doc)) {
+					unlink($directorio_out . "/$archivo_out" . $extension_doc);
+=======
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 
 				if (file_exists($directorio_out . $archivo_out . $extension_doc)) {
 					unlink($directorio_out . $archivo_out . $extension_doc);
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
 				}
 			} else {
 				die("No se encontr&oacute; el campo $campo en la plantilla");
 			}
 		}
 		$templateProcessor->setTextWatermark($marca_agua);
-		$templateProcessor->saveAs($directorio_out . $archivo_out . $extension_doc);
+		$templateProcessor->saveAs($directorio_out . "/$archivo_out" . $extension_doc);
 		$templateProcessor = null;
 	}
+<<<<<<< HEAD
+<<<<<<< HEAD
+	
+	if(is_dir($directorio_out)) {
+		$comando1 = 'export HOME=/tmp && libreoffice5.1 --headless -print-to-file --outdir ' . $directorio_out . ' ' . $directorio_out . "/*" . $extension_doc;
+		$var1 = shell_exec($comando1);
+		if(file_exists($directorio_out . "/documento_word.pdf")) {
+		    unlink($directorio_out . "/documento_word.pdf");
+		}
+		$entrada_ps = $directorio_out . "/*.ps";
+		$salida_ps = $directorio_out . "/documento_word.pdf";
+        $comando2 = "gs -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -dSAFER -sOutputFile=" . $salida_ps . " " . $entrada_ps;
+		$var2 = shell_exec($comando2);
+
+		$pdf_name = "documento_word";
+		$dir_name = rtrim (dirname($ruta_plantilla), "anexos");
+		$dir_name .= "docx/";
+		$alm_plantilla->copiar_contenido_externo($salida_ps, $dir_name . $pdf_name . ".pdf");
+		//$alm_plantilla->copiar_contenido_externo($word_temp . $extension_doc, $ruta_plantilla);
+		//$alm_plantilla->copiar_contenido_externo($word_temp . $extension_doc, $pdf_name . $extension_doc);
+=======
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 
 	if (is_dir($directorio_out)) {
 		$comando1 = 'export HOME=/tmp && libreoffice5.1 --headless -print-to-file --outdir ' . $directorio_out . ' ' . $directorio_out . "*" . $extension_doc;
@@ -209,6 +423,10 @@ function combinar_documento($archivo_csv, $directorio_out, $ruta_docx, $idformat
 		// print_r($salida_ps);echo "<br>";
 		// print_r($var2);echo "<br>";
 		// $comando2 = 'export HOME=/tmp && libreoffice5.1 --headless --convert-to pdf:writer_pdf_Export --outdir ' . $directorio_out . ' ' . $directorio_out . "*" . $extension_doc;
+<<<<<<< HEAD
+>>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
+=======
+>>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 	}
 	// die();
 }

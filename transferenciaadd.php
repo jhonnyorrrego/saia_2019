@@ -1,16 +1,24 @@
 <?php
-if (@$_REQUEST["iddoc"] || @$_REQUEST["key"]) {
-	if (!@$_REQUEST["iddoc"])
-		$_REQUEST["iddoc"] = @$_REQUEST["key"];
-	include_once ("pantallas/documento/menu_principal_documento.php");
+include_once("db.php");
+include_once("class_transferencia.php");
+include_once("librerias_saia.php");
+
+
+include_once("pantallas/lib/librerias_cripto.php");
+$validar_enteros=array("iddoc","key","idpaso_actividad","idpaso_documento","doc");
+desencriptar_sqli('form_info');
+echo(librerias_jquery());
+
+
+if(@$_REQUEST["iddoc"] || @$_REQUEST["key"]){
+	if(!@$_REQUEST["iddoc"])$_REQUEST["iddoc"]=@$_REQUEST["key"];
+	include_once("pantallas/documento/menu_principal_documento.php");
 	menu_principal_documento($_REQUEST["iddoc"]);
 }
-include_once ("db.php");
-include_once ("class_transferencia.php");
-include_once ("librerias_saia.php");
-echo (librerias_notificaciones());
-$accion_flujo = "";
-if (@$_REQUEST["idpaso_actividad"] != '') {
+
+echo( librerias_notificaciones() );
+$accion_flujo="";
+if(@$_REQUEST["idpaso_actividad"] != ''){
 	$accion_flujo = '&accion=1';
 	$paso = busca_filtro_tabla("B.destino,A.documento_iddocumento", "paso_documento A, paso_enlace B", "idpaso_documento=" . $_REQUEST["idpaso_documento"] . " and paso_idpaso=origen", "", $conn);
 

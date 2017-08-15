@@ -1,8 +1,18 @@
 <?php
 $ewCurSec = 0; // Initialise
-			
-?>
-<?php
+
+$max_salida=10; // Previene algun posible ciclo infinito limitando a 10 los ../
+$ruta_db_superior=$ruta="";
+while($max_salida>0)
+{
+if(is_file($ruta."db.php"))
+{
+$ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
+}
+$ruta.="../";
+$max_salida--;
+}
+
 
 // Initialize common variables
 $x_idreporte = Null;
@@ -21,10 +31,15 @@ $x_estado = Null;
 $x_modulo_idmodulo = Null;
 $palabras_restringidas = array("delete","update","truncate","drop","alter"); 
 $x_direccion_titulo= Null;
-?>
-<?php include ("../db.php") ?>
-<?php
 
+
+include ($ruta_db_superior."db.php");
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+$validar_enteros=array("x_idreporte","x_modulo_idmodulo","x_plantilla_idplantilla");
+include_once($ruta_db_superior."librerias_saia.php");
+$validar_enteros=array("key");
+desencriptar_sqli('form_info');
+echo(librerias_jquery());
 // Get action
 $sAction = @$_POST["a_add"];
 if (($sAction == "") || ((is_null($sAction)))) {
@@ -72,7 +87,7 @@ switch ($sAction)
 		break;
 	case "A": // Add
 		if (AddData($conn)) { // Add New Record
-			alerta("Edición exitosa del registro");
+			alerta("Ediciï¿½n exitosa del registro");
 			redirecciona("elegir_filtro.php?accion=listar");
 			exit();
 		}
@@ -92,7 +107,13 @@ EW_dateSep = "/"; // set date separator
 <script type="text/javascript">
 $().ready(function() {
 	// validar los campos del formato
-	$('#reporteedit').validate();
+	$('#reporteedit').validate({
+		submitHandler: function(form) {
+				<?php encriptar_sqli("reporteedit",0,"form_info",$ruta_db_superior);?>
+			    form.submit();
+			    
+			  }
+	});
 	
 });
 </script>
@@ -129,7 +150,7 @@ $().ready(function() {
     </td>
 	</tr>
 	<tr>
-		<td class="encabezado" title="Mascaras que se adaptan a tomar valores por defecto reemplazados en los valores del grafico asi: nombre_campo(resultado_sql_grafico)|valor_a_buscar@valor_a_reemplazar ejemplo: sql grafico->SELECT sexo FROM funcionario WHERE 1=1 el filtro queda: sexo|1@masculino!2@femenino asi cuando encuentre un 1 en el resultado de sexo lo cambiará por un masculino y cuando encuentre un 2 lo cambiara por femenino."><span class="phpmaker" style="color: #FFFFFF;">MASCARAS</span></td>
+		<td class="encabezado" title="Mascaras que se adaptan a tomar valores por defecto reemplazados en los valores del grafico asi: nombre_campo(resultado_sql_grafico)|valor_a_buscar@valor_a_reemplazar ejemplo: sql grafico->SELECT sexo FROM funcionario WHERE 1=1 el filtro queda: sexo|1@masculino!2@femenino asi cuando encuentre un 1 en el resultado de sexo lo cambiarï¿½ por un masculino y cuando encuentre un 2 lo cambiara por femenino."><span class="phpmaker" style="color: #FFFFFF;">MASCARAS</span></td>
 		<td bgcolor="#F5F5F5">
       <span class="phpmaker">
         <textarea id="x_mascaras" name="x_mascaras" cols="35" rows="10"><?php echo $x_mascaras; ?></textarea>

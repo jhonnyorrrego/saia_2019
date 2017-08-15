@@ -8,6 +8,11 @@ if(@$_REQUEST["iddoc"] || @$_REQUEST["key"] || @$_REQUEST["doc"]){
 }
 
 include_once("header.php");
+
+require_once('StorageUtils.php');
+require_once('filesystem/SaiaStorage.php');
+require('vendor/autoload.php');
+
   header("Expires: Mon, 26 Jul 1997 05:00:00 GMT"); // date in the past
   header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT"); // always modified
   header("Cache-Control: no-store, no-cache, must-revalidate"); // HTTP/1.1
@@ -242,8 +247,9 @@ $aux_formato = strtolower($detalle_doc[0]["plantilla"]);
 
 	if ($paginas_doc["numcampos"] > 0 || ($tipo_pag == 'PLANTILLA' && $detalle_doc[0]["numero"] == 0)) {
 
-/*if($tipo_pag=="PLANTILLA" && $detalle_doc[0]["numero"]==0)
- {  echo "<td align='center'>";
+		/*
+		 if($tipo_pag=="PLANTILLA" && $detalle_doc[0]["numero"]==0) {
+		 	echo "<td align='center'>";
     agrega_boton("images","botones/comentarios/eliminar_pagina.png","documento_borrar.php?iddoc=$llave","centro","Eliminar Borrador","","eliminar_borrador");
     echo "</td>";
 }   */
@@ -300,9 +306,9 @@ $aux_formato = strtolower($detalle_doc[0]["plantilla"]);
    <a href="comentario_mostrar.php?pagina=sig&key=<?php echo $_REQUEST["key"]; ?>" target="<?php echo $frame;?>"><img src="imagenes/adelante.gif" alt="Siguiente P&aacute;gina" border="0"></a>
    <a href="comentario_mostrar.php?pagina=fin&key=<?php echo $_REQUEST["key"]; ?>" target="<?php echo $frame;?>"><img src="imagenes/final.gif" alt="&Uacute;ltima P&aacute;gina" border="0"></a>&nbsp;
    </td>
-   <?php } ?>
-
-   <?php } ?>
+   <?php }
+	}
+?>
    </tr>
    </table></div><hr>
    </div>

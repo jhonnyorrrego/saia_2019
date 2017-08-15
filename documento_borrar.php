@@ -1,9 +1,11 @@
 <?php
-include_once("db.php");
-include_once("formatos/librerias/estilo_formulario.php");
-include_once("librerias_saia.php");
+include_once ("db.php");
+include_once ("formatos/librerias/estilo_formulario.php");
+include_once ("librerias_saia.php");
 
-echo(librerias_notificaciones());
+include_once($ruta_db_superior.'pantallas/documento/class_documento_elastic.php');
+
+echo (librerias_notificaciones());
 ?>
 <script src="js/jquery.js"></script>
 <script src="js/jquery.validate.js"></script>
@@ -30,42 +32,47 @@ $x_ejecutor = Null;
 $x_plantilla = Null;
 $x_descripcion = Null;
 $x_estado = Null;
-?>
-<?php include ("phpmkrfn.php") ?>
-<?php
-if(isset($_POST["iddoc"]))
- {
-  // Se cambia el estado del documento de ACTIVO a ELIMINADO.
-  $usuario = $_SESSION["usuario_actual"];
-  $sql_borrar = "UPDATE documento SET estado='ELIMINADO' WHERE iddocumento=".$_POST["iddoc"];
-  phpmkr_query($sql_borrar,$conn);
-  $sql_buzon="INSERT INTO buzon_entrada (archivo_idarchivo,nombre,destino,tipo_destino,fecha,origen,tipo_origen,notas) VALUES (".$_POST["iddoc"].",'ELIMINADO','$usuario',1,".fecha_db_almacenar(date("Y-m-d"),"Y-m-d").",'$usuario',1,'".$_POST["x_detalle"]."')";
-  //die($sql_buzon);
-  phpmkr_query($sql_buzon,$conn);
-  registrar_accion_digitalizacion($_POST["iddoc"],'ELIMINACION DOCUMENTO',$_POST["x_detalle"]);
-  $sql="UPDATE ruta SET tipo='INACTIVO' WHERE documento_iddocumento=".$_POST["iddoc"];
-  phpmkr_query($sql,$conn);
-  $buzones =busca_filtro_tabla("A.idtransferencia,A.nombre","buzon_entrada A","A.archivo_idarchivo=".$_POST["iddoc"]." AND A.nombre NOT LIKE('ELIMINA_%') AND A.nombre IN('POR_APROBAR','LEIDO','COPIA','BLOQUEADO','RECHAZADO','REVISADO','APROBADO','DEVOLUCION','TRANSFERIDO','BORRADOR','TERMINADO')","",$conn);
-  for($i=0; $i<$buzones["numcampos"]; $i++)
-  {
-   phpmkr_query("UPDATE buzon_entrada SET nombre=('ELIMINA_".$buzones[$i]["nombre"]."') WHERE idtransferencia=".$buzones[$i]["idtransferencia"],$conn);
-  }
-  phpmkr_query($sql_update,$conn);
-  $sql="UPDATE buzon_salida SET nombre=".concatenar_cadena_sql(array("'ELIMINA_'","nombre"))." WHERE archivo_idarchivo=".$_POST["iddoc"]." AND nombre NOT LIKE('ELIMINA_%') AND nombre IN('POR_APROBAR','LEIDO','COPIA','BLOQUEADO','RECHAZADO','REVISADO','APROBADO','DEVOLUCION','TRANSFERIDO','BORRADOR','TERMINADO')";
-  phpmkr_query($sql,$conn);
-  if(@$_REQUEST["doc_principal"]){
-  	$busqueda_componente=busca_filtro_tabla("","busqueda A","A.nombre='borradores'","",$conn);
-    abrir_url("pantallas/buscador_principal.php?idbusqueda=".$busqueda_componente[0]["idbusqueda"],"centro");
-    die();
+
+include ("phpmkrfn.php");
+
+if (isset($_POST["iddoc"])) {
+	// Se cambia el estado del documento de ACTIVO a ELIMINADO.
+	$usuario = $_SESSION["usuario_actual"];
+	$sql_borrar = "UPDATE documento SET estado='ELIMINADO' WHERE iddocumento=" . $_POST["iddoc"];
+	phpmkr_query($sql_borrar, $conn);
+	$sql_buzon = "INSERT INTO buzon_entrada (archivo_idarchivo,nombre,destino,tipo_destino,fecha,origen,tipo_origen,notas) VALUES (" . $_POST["iddoc"] . ",'ELIMINADO','$usuario',1," . fecha_db_almacenar(date("Y-m-d"), "Y-m-d") . ",'$usuario',1,'" . $_POST["x_detalle"] . "')";
+	// die($sql_buzon);
+	phpmkr_query($sql_buzon, $conn);
+	registrar_accion_digitalizacion($_POST["iddoc"], 'ELIMINACION DOCUMENTO', $_POST["x_detalle"]);
+	$sql = "UPDATE ruta SET tipo='INACTIVO' WHERE documento_iddocumento=" . $_POST["iddoc"];
+	phpmkr_query($sql, $conn);
+	$buzones = busca_filtro_tabla("A.idtransferencia,A.nombre", "buzon_entrada A", "A.archivo_idarchivo=" . $_POST["iddoc"] . " AND A.nombre NOT LIKE('ELIMINA_%') AND A.nombre IN('POR_APROBAR','LEIDO','COPIA','BLOQUEADO','RECHAZADO','REVISADO','APROBADO','DEVOLUCION','TRANSFERIDO','BORRADOR','TERMINADO')", "", $conn);
+	for($i = 0; $i < $buzones["numcampos"]; $i++) {
+		phpmkr_query("UPDATE buzon_entrada SET nombre=('ELIMINA_" . $buzones[$i]["nombre"] . "') WHERE idtransferencia=" . $buzones[$i]["idtransferencia"], $conn);
 	}
-  else
-    {echo "<script>
+	phpmkr_query($sql_update, $conn);
+	$sql = "UPDATE buzon_salida SET nombre=" . concatenar_cadena_sql(array("'ELIMINA_'","nombre"
+	)) . " WHERE archivo_idarchivo=" . $_POST["iddoc"] . " AND nombre NOT LIKE('ELIMINA_%') AND nombre IN('POR_APROBAR','LEIDO','COPIA','BLOQUEADO','RECHAZADO','REVISADO','APROBADO','DEVOLUCION','TRANSFERIDO','BORRADOR','TERMINADO')";
+	phpmkr_query($sql, $conn);
+
+	// Eliminar el documento del indice elasticsearch
+	if (INDEXA_ELASTICSEARCH) {
+		$d2j = new DocumentoElastic($_POST["iddoc"]);
+		$exportado = $d2j->borrar_documento_elasticsearch();
+	}
+
+	if (@$_REQUEST["doc_principal"]) {
+		$busqueda_componente = busca_filtro_tabla("", "busqueda A", "A.nombre='borradores'", "", $conn);
+		abrir_url("pantallas/buscador_principal.php?idbusqueda=" . $busqueda_componente[0]["idbusqueda"], "centro");
+		die();
+	} else {
+		echo "<script>
            direccion=window.parent.frames[0].location;
            window.parent.frames[0].location=direccion+'&no_seleccionar=1';
            </script>";
-     redirecciona("vacio.php");
-    }
- }
+		redirecciona("vacio.php");
+	}
+}
 $llave = $_REQUEST["iddoc"];
 
   if (LoadData($x_id_documento,$conn))

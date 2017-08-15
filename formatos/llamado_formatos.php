@@ -9,7 +9,6 @@ while($max_salida > 0) {
 	$max_salida--;
 }
 include_once ($ruta_db_superior . "db.php");
-;
 include_once ($ruta_db_superior . "librerias_saia.php");
 include_once ($ruta_db_superior . "formatos/generar_formato.php");
 
@@ -42,7 +41,7 @@ if (@$_REQUEST["accion"] == "generar") {
 			$generar = new GenerarFormato($formato["idformato"], $acciones[$i], '');
 			$redireccion = $generar->ejecutar_accion();
 
-			if ($contenido === false) {
+			if ($redireccion === false) {
 				alerta_formatos("No se puede generar el formato por favor verifique la generaci&oacute;n manual del formato");
 			} else {
 				$creados .= 'Formato ' . $acciones[$i] . " " . $formato["nombre"] . " <br>";
@@ -66,6 +65,5 @@ if (@$_REQUEST["accion"] == "generar") {
 		}
 		alerta_formatos("No se puede realizar (" . $cant_acciones . ") en " . $formatos["numcampos"] . " formatos ");
 	}
-
 }
 ?>

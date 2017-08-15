@@ -12,24 +12,28 @@ $max_salida--;
 }
 include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."librerias_saia.php");
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
 echo(librerias_jquery("1.7"));
 echo(librerias_notificaciones());
 echo(estilo_bootstrap());
 ?>
-
+<form name="form_cambiar_responsable" id="form_cambiar_responsable" method="post">
 <table class="table table-bordered">
   <tr class="contenedor_autocompletar_responsable_expediente">
   	<td class="prettyprint"><b>Nuevo responsable:</b></td>
   	<td colspan="3">
-  	    <input type="text" id="nuevo_funcionario_responsable">
+  	    <input type="text" id="nuevo_funcionario_responsable" name="funcionario_codigo">
         <?php autocompletar_funcionario_responsable_expediente($_REQUEST['idexpediente']); ?>
   	</td>
   </tr>
 </table>
-<input type="hidden" id="tomos_asociados">
-<input type="hidden" id="no_tomos">
+<input type="hidden" id="ejecutar_expediente" name="ejecutar_expediente" value="cambiar_responsable_expediente">
+<input type="hidden" id="idexpediente" name="idexpediente" value="<?php echo(@$_REQUEST['idexpediente']); ?>">
+<input type="hidden" id="tomos_asociados" name="tomos_asociados">
+<input type="hidden" id="no_tomos" name="no_tomos">
 <button class="btn btn-primary btn-mini" id="cambiar_responsable">Aceptar</button>
-<button class="btn btn-mini" onclick="window.parent.hs.close();">Cancelar</button> 
+<button class="btn btn-mini" onclick="window.parent.hs.close();">Cancelar</button>
+</form> 
 <script>
     $(document).ready(function(){
         $('#cambiar_responsable').click(function(){
@@ -44,20 +48,15 @@ echo(estilo_bootstrap());
                 if(cambiar_tomos){
                     tomos_asociados=$('#tomos_asociados').val();
                 }
+                $('#tomos_asociados').val(tomos_asociados);
             }
             
-            var idexpediente='<?php echo(@$_REQUEST['idexpediente']); ?>';
-            
+            <?php encriptar_sqli("form_cambiar_responsable",0,"form_info",$ruta_db_superior); ?>
             $.ajax({
                 type:'POST',
                 dataType: 'json',
                 url: "<?php echo($ruta_db_superior); ?>pantallas/expediente/ejecutar_acciones.php",
-                data: {
-                    idexpediente:idexpediente,
-                    ejecutar_expediente:'cambiar_responsable_expediente',
-                    tomos_asociados:tomos_asociados,
-                    funcionario_codigo:$('#nuevo_funcionario_responsable').val()
-                },
+                data:$("#form_cambiar_responsable").serialize(),
                 success: function(datos){
                     notificacion_saia('Cambio de responsable exitoso','success','',4000);
                     //window.parent.location.reload();

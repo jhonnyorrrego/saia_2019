@@ -145,6 +145,10 @@ class Imprime_Pdf {
 		if($_REQUEST["url_encabezado"]) {
 			$mh = curl_multi_init();
 			$ch = curl_init();
+        if (strpos(PROTOCOLO_CONEXION, 'https') !== false) {
+			curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false); 
+			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+	}			
 			curl_setopt($ch, CURLOPT_URL, $_REQUEST["url_encabezado"]);
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 			$contenido = curl_exec($ch);
@@ -337,6 +341,10 @@ class Imprime_Pdf {
 		foreach($this->direccion as $fila) {
 
 			$fila .= "&font_size=" . $this->font_size;
+        if (strpos(PROTOCOLO_CONEXION, 'https') !== false) {
+			curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false); 
+			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+		}			
 
 			curl_setopt($ch, CURLOPT_URL, $fila);
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);

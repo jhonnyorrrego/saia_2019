@@ -249,7 +249,6 @@ table tbody td {
 	if(!$params["ftp_type"] || $params["ftp_type"]==''){
 		$params["ftp_type"] = "ftp";
 	}
-
 	?>
 
 	<input type="hidden" name="EW_Max_File_Size" value="<?php echo($peso); ?>">

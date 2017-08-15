@@ -19,6 +19,15 @@ include_once($ruta_db_superior."asignacion.php");
 include_once($ruta_db_superior."formatos/librerias/funciones_acciones.php");
 include_once($ruta_db_superior."bpmn/librerias_formato.php");
 
+include_once($ruta_db_superior.'pantallas/documento/class_documento_elastic.php');
+
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+
+
+if (isset($_REQUEST["form_info"]) && $_REQUEST["form_info"]!="") {
+	desencriptar_sqli('form_info');
+}
+
 /*<Clase>
 <Nombre>buscar_funcionarios</Nombre>
 <Parametros>$dependencia:id de las dependencias a revisar;$arreglo:variable donde se va a guardar el resultado</Parametros>
@@ -1439,7 +1448,7 @@ global $idfactura;
                            $fila_abierta=1;
                            }
                        if($fila["nombre"]=="POR_APROBAR")
-                          {echo '<td align=left><img src="'.PROTOCOLO_CONEXION.$ruta.'/firmas/faltante.jpg" width="'.$ancho_firma[0]["valor"].'" height="'.$alto_firma[0]["valor"].'"><br />
+                          {echo '<td align=left><img src="'.PROTOCOLO_CONEXION.$ruta.'/firmas/faltante.jpg" style="width:'.$ancho_firma[0]["valor"].'px; height:'.$alto_firma[0]["valor"].'px;"><br />
                          '.mayusculas($fila["nombres"]." ".$fila["apellidos"]).'<br />';
 													  if($cargos["numcampos"])
                               {
@@ -1469,10 +1478,10 @@ global $idfactura;
 																 $ruta=RUTA_PDF;
                                 }
                               echo '<img src="'.PROTOCOLO_CONEXION.$ruta.'/formatos/librerias/mostrar_foto.php?codigo='.$fila["funcionario_codigo"];
-                              echo '" width="'.$ancho_firma[0]["valor"].'" height="'.$alto_firma[0]["valor"].'"/><br />';
+                              echo '" style="width:'.$ancho_firma[0]["valor"].'px; height:'.$alto_firma[0]["valor"].'px;"/><br />';
                              }
                            else
-                              echo '<img src="'.PROTOCOLO_CONEXION.$ruta.'/firmas/blanco.gif" width="'.$ancho_firma[0]["valor"].'" height="'.$alto_firma[0]["valor"].'" ><br />';
+                              echo '<img src="'.PROTOCOLO_CONEXION.$ruta.'/firmas/blanco.gif" style="width:'.$ancho_firma[0]["valor"].'px; height:'.$alto_firma[0]["valor"].'px;" ><br />';
                            echo "".mayusculas($fila["nombres"]." ".$fila["apellidos"])."&nbsp;&nbsp;&nbsp;<br />";
                           if($cargos["numcampos"])
                             {for($h=0;$h<$cargos["numcampos"];$h++)
@@ -1652,7 +1661,7 @@ global $conn,$idfactura;
 						}
 
 						if($fila["nombre"]=="POR_APROBAR"){
-							echo '<td align=left><img src="'.PROTOCOLO_CONEXION.RUTA_PDF_LOCAL.'/firmas/faltante.jpg" width="'.$ancho_firma[0]["valor"].'" height="'.$alto_firma[0]["valor"].'">&nbsp;&nbsp;&nbsp;<br /></td>';
+							echo '<td align=left><img src="'.PROTOCOLO_CONEXION.RUTA_PDF_LOCAL.'/firmas/faltante.jpg" style="width:'.$ancho_firma[0]["valor"].'px; height:'.$alto_firma[0]["valor"].'px;">&nbsp;&nbsp;&nbsp;<br /></td>';
 							if($iniciales == ($fila["funcionario_codigo"]))
 							$firma_actual = true;
 						}else if($mostrar_firmas==1){
@@ -1661,9 +1670,9 @@ global $conn,$idfactura;
 							if($firma[0]["firma"]<>""){
 								$pagina_actual=$_SERVER["PHP_SELF"];
 								echo '<img src="'.PROTOCOLO_CONEXION.RUTA_PDF_LOCAL.'/formatos/librerias/mostrar_foto.php?codigo='.$fila["funcionario_codigo"];
-								echo '" width="'.$ancho_firma[0]["valor"].'" height="'.$alto_firma[0]["valor"].'"/><br />';
+								echo '" style="width:'.$ancho_firma[0]["valor"].'px; height:'.$alto_firma[0]["valor"].'px;"/><br />';
 							}else
-								echo '<img src="'.PROTOCOLO_CONEXION.RUTA_PDF_LOCAL.'/firmas/blanco.jpg" width="100" height="'.$alto_firma[0]["valor"].'" ><br />';
+								echo '<img src="'.PROTOCOLO_CONEXION.RUTA_PDF_LOCAL.'/firmas/blanco.jpg" style="width:'.$ancho_firma[0]["valor"].'px; height:'.$alto_firma[0]["valor"].'px;" ><br />';
 
 							echo "<strong>".mayusculas($fila["nombres"]." ".$fila["apellidos"])."</strong>&nbsp;&nbsp;&nbsp;<br />";
 							if($cargos["numcampos"]){
@@ -1674,7 +1683,7 @@ global $conn,$idfactura;
 								$firma_actual = true;
 							echo "</td>";
 						}else{
-							echo "<td align='left'><img src='".PROTOCOLO_CONEXION.RUTA_PDF_LOCAL."/firmas/blanco.jpg' width='".$ancho_firma[0]["valor"]."' height='".$alto_firma[0]["valor"]."'>
+							echo "<td align='left'><img src='".PROTOCOLO_CONEXION.RUTA_PDF_LOCAL."/firmas/blanco.jpg' style='width:".$ancho_firma[0]["valor"]."px; height:".$alto_firma[0]["valor"]."px;'>
 							<br /><b>".mayusculas($fila["nombres"]." ".$fila["apellidos"])."</b>&nbsp;&nbsp;&nbsp;<br />";
 							if($cargos["numcampos"]){
 								for($h=0;$h<$cargos["numcampos"];$h++)
@@ -1865,7 +1874,7 @@ function transferencias_pendientes($serie)
 function radicar_plantilla() {
 	global $conn, $sql;
 	global $ruta_db_superior;
-	// print_r($_REQUEST); die("aquiii");
+	//print_r($_REQUEST); die("aquiii");
 	$valores = array();
 	$plantilla = "";
 	$idformato = 0;
@@ -2061,6 +2070,16 @@ function radicar_plantilla() {
 		if($formato["numcampos"]) {
 			$banderas = explode(",", $formato[0]["banderas"]);
 			// print_r($banderas);
+		}
+
+			// Ejemplo de uso de la clase elasticsearch
+		if (INDEXA_ELASTICSEARCH) {
+			$d2j = new DocumentoElastic($_POST["iddoc"]);
+			//$d2j->asignar_iddocumento();
+			$exportado = $d2j->exportar_informacion();
+			if ($exportado) {
+				$d2j->indexar_elasticsearch_completo();
+			}
 		}
 		// arreglo con los datos que necesita transferir archivo
 		$datos["archivo_idarchivo"] = $_POST["iddoc"];
