@@ -57,13 +57,13 @@ if(@$fecha[0][0]<0)
 $usuario=usuario_actual("funcionario_codigo");
 $idfuncionario=usuario_actual("idfuncionario");
 
-$etiquetados=busca_filtro_tabla("c.nombre","documento a, documento_etiqueta b, etiqueta c","LOWER(a.estado) NOT IN ('eliminado') AND a.iddocumento=b.documento_iddocumento AND b.etiqueta_idetiqueta=c.idetiqueta AND c.funcionario='".$usuario."' GROUP BY a.iddocumento","",$conn);
+$etiquetados=busca_filtro_tabla("c.nombre","documento a, documento_etiqueta b, etiqueta c","LOWER(a.estado) NOT IN ('eliminado') AND a.iddocumento=b.documento_iddocumento AND b.etiqueta_idetiqueta=c.idetiqueta AND c.funcionario='".$usuario."' GROUP BY a.iddocumento, c.nombre","",$conn);
 
 $pendientes=busca_filtro_tabla("count(*) AS cant","documento A,asignacion B,formato c ","LOWER(A.estado)<>'eliminado' AND A.iddocumento=B.documento_iddocumento AND B.tarea_idtarea<>-1 AND B.entidad_identidad=1 AND B.llave_entidad=".$usuario." and lower(A.plantilla)=c.nombre ","GROUP BY A.iddocumento",$conn);
 
-$con_indicador=busca_filtro_tabla("","documento a, prioridad_documento b,formato c ","b.documento_iddocumento=a.iddocumento AND b.prioridad in (1,2,3,4,5) AND lower(a.estado) not in('ELIMINADO') AND lower(a.plantilla)=c.nombre AND b.funcionario_idfuncionario=".usuario_actual("idfuncionario"),"group by a.iddocumento order by a.fecha  desc",$conn);
+$con_indicador=busca_filtro_tabla("a.iddocumento","documento a, prioridad_documento b,formato c ","b.documento_iddocumento=a.iddocumento AND b.prioridad in (1,2,3,4,5) AND lower(a.estado) not in('ELIMINADO') AND lower(a.plantilla)=c.nombre AND b.funcionario_idfuncionario=".usuario_actual("idfuncionario"),"group by a.iddocumento order by a.fecha  desc",$conn);
 //$destacados=busca_filtro_tabla("","prioridad_documento A, documento B","A.prioridad=2 AND iddocumento=documento_iddocumento AND B.estado<>'ELIMINADO' AND funcionario_idfuncionario=".usuario_actual("idfuncionario"),"",$conn);
-$borradores=busca_filtro_tabla("count(*) AS cant","documento A, formato c ","ejecutor=".$usuario." AND A.estado='ACTIVO' AND A.numero='0' and lower(A.plantilla)=c.nombre","",$conn);
+$borradores=busca_filtro_tabla("count(*) AS cant","documento A, formato c ","ejecutor='".$usuario."' AND A.estado='ACTIVO' AND A.numero='0' and lower(A.plantilla)=c.nombre","",$conn);
 $mis_roles=busca_filtro_tabla("","vfuncionario_dc","funcionario_codigo=".usuario_actual("funcionario_codigo"),"",$conn);
 if($mis_roles["numcampos"]){
 	$roles=extrae_campo($mis_roles,"iddependencia_cargo");
@@ -82,19 +82,19 @@ $actualizaciones=busca_filtro_tabla("count(*) AS cant","documento_accion A,asign
 
 $funcionario_idfuncionario=usuario_actual('idfuncionario');
 
-$tareas_responsable=busca_filtro_tabla("count(*) AS cant","tareas_listado A","A.generica=0 AND A.estado_tarea<>'TERMINADO' AND A.listado_tareas_fk<>-1 AND A.cod_padre=0 AND  A.responsable_tarea =".usuario_actual("idfuncionario"),"",$conn);
+$tareas_responsable=busca_filtro_tabla("count(*) AS cant","tareas_listado A","A.generica=0 AND A.estado_tarea<>'TERMINADO' AND A.listado_tareas_fk<>-1 AND A.cod_padre=0 AND  A.responsable_tarea ='".usuario_actual("idfuncionario") . "'","",$conn);
 $condicion_coparticipantes_unico=" AND ( a.co_participantes LIKE '%,".$funcionario_idfuncionario.",%' OR a.co_participantes LIKE '%,".$funcionario_idfuncionario."' OR a.co_participantes LIKE '".$funcionario_idfuncionario.",%' OR  a.co_participantes='".$funcionario_idfuncionario."' )";
 $tareas_coparticipante=busca_filtro_tabla("count(*) AS cant","tareas_listado a","a.generica=0 AND a.estado_tarea<>'TERMINADO'  AND a.listado_tareas_fk<>-1 AND a.cod_padre=0 ".$condicion_coparticipantes_unico,"",$conn);
 $condicion_seguidores_unico=" AND ( a.seguidores LIKE '%,".$funcionario_idfuncionario.",%' OR a.seguidores LIKE '%,".$funcionario_idfuncionario."' OR a.seguidores LIKE '".$funcionario_idfuncionario.",%' OR  a.seguidores='".$funcionario_idfuncionario."' )";
 $tareas_seguidor=busca_filtro_tabla("count(*) AS cant","tareas_listado a","a.generica=0 AND a.estado_tarea<>'TERMINADO' AND a.listado_tareas_fk<>-1 AND a.cod_padre=0 ".$condicion_seguidores_unico,"",$conn);
-$tareas_evaluador=busca_filtro_tabla("count(*) AS cant","tareas_listado A","A.generica=0 AND A.estado_tarea<>'TERMINADO' AND A.listado_tareas_fk<>-1 AND A.cod_padre=0 AND  A.evaluador =".usuario_actual("idfuncionario"),"",$conn);
+$tareas_evaluador=busca_filtro_tabla("count(*) AS cant","tareas_listado A","A.generica=0 AND A.estado_tarea<>'TERMINADO' AND A.listado_tareas_fk<>-1 AND A.cod_padre=0 AND  A.evaluador ='".usuario_actual("idfuncionario") . "'","",$conn);
 
 
 
 $condicion_coparticipantes=" OR ( a.co_participantes LIKE '%,".$funcionario_idfuncionario.",%' OR a.co_participantes LIKE '%,".$funcionario_idfuncionario."' OR a.co_participantes LIKE '".$funcionario_idfuncionario.",%' OR  a.co_participantes='".$funcionario_idfuncionario."' )";
 $condicion_seguidores=" OR ( a.seguidores LIKE '%,".$funcionario_idfuncionario.",%' OR a.seguidores LIKE '%,".$funcionario_idfuncionario."' OR a.seguidores LIKE '".$funcionario_idfuncionario.",%' OR  a.seguidores='".$funcionario_idfuncionario."' )";
-$condicion_evaluador=" OR a.evaluador=".$funcionario_idfuncionario;
-$condicion_tareas_total="generica=0 AND a.estado_tarea<>'TERMINADO' AND a.listado_tareas_fk<>-1 AND a.cod_padre=0 AND ( a.responsable_tarea=".$funcionario_idfuncionario."".$condicion_coparticipante.$condicion_coparticipantes.$condicion_seguidores.$condicion_evaluador."  )";
+$condicion_evaluador=" OR a.evaluador='".$funcionario_idfuncionario . "'";
+$condicion_tareas_total="generica=0 AND a.estado_tarea<>'TERMINADO' AND a.listado_tareas_fk<>-1 AND a.cod_padre=0 AND ( a.responsable_tarea='".$funcionario_idfuncionario."' ".$condicion_coparticipante.$condicion_coparticipantes.$condicion_seguidores.$condicion_evaluador."  )";
 
 $tareas_total=busca_filtro_tabla("count(*) AS cant","tareas_listado a",$condicion_tareas_total,"",$conn);
 //DESARROLLO TODAS LAS TAREAS
@@ -320,27 +320,27 @@ if($_SESSION["tipo_dispositivo"]=="movil"){ ?>
     width: 39px;"> <i class="icon-minus icon-white"></i></div>
         <div class="modbox-saia-main-content ui-corner-bottom">
           <ul id="MenuSaiaVin">
-             
-             
+
+
              <!-- INICIO OPCIONES PRINCIPALES -->
-             
+
              <!-- DOCUMENTOS RECIBIDOS -->
-              
+
             <li><i class="icon-inbox"></i><a href="pantallas/buscador_principal.php?idbusqueda=3&cmd=resetall" target="centro" class="enlace_indicadores_index" idcomponente="<?php echo($componente_pendiente[0]["idbusqueda_componente"]); ?>" nombre_componente="documento_pendiente">Documentos Recibidos <div class="pull-right"><span class="badge" id="documento_pendiente"><?php echo($pendientes["numcampos"]);?></span></div></a>
             </li>
-            
+
              <!-- DOCUMENTOS CON INDICADOR -->
-            
+
             <li><i class="icon-flag"></i><a href="pantallas/buscador_principal.php?idbusqueda=24&cmd=resetall" target="centro" class="enlace_indicadores_index" idcomponente="<?php echo($componente_prioridad[0]["idbusqueda_componente"]); ?>" nombre_componente="documentos_importantes">Con Indicador <div class="pull-right"><span class="badge" id="documentos_importantes"><?php echo(intval($con_indicador["numcampos"]));?></span></div></a>
             </li>
- 
+
              <!-- DOCUMENTOS EN BORRADOR -->
- 
+
             <li><i class="icon-calendar"></i><a href="pantallas/buscador_principal.php?idbusqueda=25&cmd=resetall" target="centro" class="enlace_indicadores_index" idcomponente="<?php echo($componente_borrador[0]["idbusqueda_componente"]); ?>" nombre_componente="borradores">Borradores <div class="pull-right"><span class="badge" id="borradores"><?php echo($borradores[0]["cant"]);?></span></div></a>
             </li>
-            
+
              <!-- TAREAS BASICAS -->
-            
+
             <li><i class="icon-tasks"></i><a href="pantallas/buscador_principal.php?nombre=listado_tareas&cmd=resetall" target="centro" class="enlace_indicadores_index" idcomponente="<?php echo($componente_tareas[0]["idbusqueda_componente"]); ?>" nombre_componente="listado_tareas_pendientes">Mis Tareas <div class="pull-right"><span class="badge" id="listado_tareas_pendientes"><?php echo($tareas[0]["cant"]);?></span></div></a>
             </li>
 
@@ -354,9 +354,9 @@ if($_SESSION["tipo_dispositivo"]=="movil"){ ?>
             			Planeador
             		</a>
             </li>
-            
+
             <!-- TAREAS AVANZADAS -->
-            
+
             <li>
             	<i class="icon-tasks"></i>
             		<a href="pantallas/tareas_listado/principal_listados_tareas_calendarios.php?click=tareas&rol_tareas=todos" target="centro" class="enlace_indicadores_index" nombre_componente="listado_tareas_total" idcomponente="<?php echo($componente_tareas_total[0]["idbusqueda_componente"]); ?>" >
@@ -388,11 +388,11 @@ if($_SESSION["tipo_dispositivo"]=="movil"){ ?>
 
             <li><i class="icon-tag"></i><a href="pantallas/buscador_principal.php?nombre=documentos_etiquetados&cmd=resetall" target="centro" class="enlace_indicadores_index" idcomponente="<?php echo($componente_etiquetados[0]["idbusqueda_componente"]); ?>" nombre_componente="documentos_etiquetados">Etiquetados <div class="pull-right"><span class="badge" id="documentos_etiquetados"><?php echo($etiquetados["numcampos"]);?></span></div></a>
             </li>
-            
-            
+
+
             <!-- FIN OPCIONES PRINCIPALES -->
-            
-            
+
+
             <li><i class="icon-refresh"></i><a href="#" id="actualizar_info_index">Actualizado<div class="pull-right"><span class="badge" id="div_actualizar_info_index"></span></div></a>
             </li>
             <!--li><i class="icon-tasks"></i><a href="pantallas/buscador_principal.php?idbusqueda=3&cmd=resetall" target="centro"> Tareas Pendientes <div class="pull-right"><span class="badge" id="documentos_pendientes"><?php echo(0);?></span></div></a>
