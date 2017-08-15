@@ -360,7 +360,7 @@ class SqlPostgres extends SQL2 {
 		if ($inicio < 0)
 			$inicio = 0;
 
-		$consulta = "$sql LIMIT $inicio,$cuantos";
+		$consulta = "$sql LIMIT $cuantos OFFSET $inicio";
 		$consulta = str_replace("key", "'key'", $consulta);
 		// echo $consulta;
 		$res = pg_query($this->Conn->conn, $consulta); // or die("consulta fallida ".pg_last_error($conn->Conn->conn));
