@@ -309,7 +309,7 @@ class SqlOracle extends SQL2 {
 		$func = $_SESSION["usuario_actual"];
 		$this->ultimo_insert = 0;
 		if (isset($_SESSION)) {
-			$fecha = fecha_db_almacenar(date("Y-m-d h:i:s"), "Y-m-d h:i:s");
+			$fecha = $this->fecha_db_almacenar(date("Y-m-d h:i:s"), "Y-m-d h:i:s");
 			if ($sqleve != "") {
 				$rs = @ OCIParse($this->Conn->conn, $sqleve);
 				if ($rs) {

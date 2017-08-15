@@ -645,17 +645,16 @@ function phpmkr_num_rows($rs){
 <Post-condiciones>
 */
 function phpmkr_fetch_array($rs){
-  global $conn;
-	if($conn){
-    if(!$rs&&$conn->res)
-      $rs = $conn->res;
-	  $retorno=$conn->sacar_fila($rs);
-    return $retorno;
+	global $conn;
+	if ($conn) {
+		if (!$rs && $conn->res)
+			$rs = $conn->res;
+		$retorno = $conn->sacar_fila($rs);
+		return $retorno;
+	} else {
+		alerta("Error en capturar resultado en arreglo." . $rs->sql);
+		return FALSE;
 	}
-  else{
-    alerta("Error en capturar resultado en arreglo.".$rs->sql);
-    return FALSE;
-  }
 }
 /*
 <Clase>
@@ -753,54 +752,55 @@ function phpmkr_error() {
 <Post-condiciones>
 */
 function busca_filtro_tabla($campos,$tabla,$filtro,$orden,$conn){
-global $sql,$conn;
-if(!$conn){
-  $conn=phpmkr_db_connect();
-}
-$retorno=array();
-$temp=array();
-$retorno["tabla"]=$tabla;
-switch ($tabla){
-  case ("dependencia2"):
-    $tabla = "dependencia";
-  break;
-  case ("cargo2"):
-    $tabla="cargo";
-  break;
-  case ("cargo3"):
-    $tabla="dependencia_cargo";
-  break;
-  case ("funcionario2"):
-    $tabla="funcionario";
-  break;
-}
-$sql="Select ";
-if($campos)
-  $sql.=$campos;
-else
-  $sql.="*";
-if($tabla)
-  $sql.=" FROM ".$tabla;
-if($filtro)
-  $sql.=" WHERE ".str_replace('"',"'",$filtro);
-if($orden){
-  if(substr(strtolower($orden),0,5)=="group")
-    $sql.=" ".$orden;
-  else
-    $sql.=" ORDER BY ".$orden;
-}
-$sql=htmlspecialchars_decode((($sql)));
-$rs=$conn->Ejecutar_Sql($sql);
-$temp=phpmkr_fetch_array($rs);
-$retorno["sql"]=$sql;
-for($i=0;$temp;$temp=phpmkr_fetch_array($rs),$i++)
-  array_push($retorno,$temp);
-$retorno["numcampos"]=$i;
-phpmkr_free_result($rs);
-if(DEBUGEAR_FLUJOS && strpos($tabla,'funcionario')===FALSE && strpos($tabla,'evento')===FALSE){
-  error(print_r($retorno,true));
-}
-return($retorno);
+global $sql, $conn;
+	if (!$conn) {
+		$conn = phpmkr_db_connect();
+	}
+	$retorno = array();
+	$temp = array();
+	$retorno["tabla"] = $tabla;
+	switch ($tabla) {
+		case ("dependencia2") :
+			$tabla = "dependencia";
+			break;
+		case ("cargo2") :
+			$tabla = "cargo";
+			break;
+		case ("cargo3") :
+			$tabla = "dependencia_cargo";
+			break;
+		case ("funcionario2") :
+			$tabla = "funcionario";
+			break;
+	}
+	$sql = "Select ";
+	if ($campos)
+		$sql .= $campos;
+	else
+		$sql .= "*";
+	if ($tabla)
+		$sql .= " FROM " . $tabla;
+	if ($filtro)
+		$sql .= " WHERE " . str_replace('"', "'", $filtro);
+	if ($orden) {
+		if (substr(strtolower($orden), 0, 5) == "group")
+			$sql .= " " . $orden;
+		else
+			$sql .= " ORDER BY " . $orden;
+	}
+	$sql = htmlspecialchars_decode((($sql)));
+	$rs = $conn->Ejecutar_Sql($sql);
+	$temp = phpmkr_fetch_array($rs);
+	$retorno["sql"] = $sql;
+	for($i = 0; $temp; $temp = phpmkr_fetch_array($rs), $i++) {
+		array_push($retorno, $temp);
+	}
+	$retorno["numcampos"] = $i;
+	phpmkr_free_result($rs);
+	if (DEBUGEAR_FLUJOS && strpos($tabla, 'funcionario') === FALSE && strpos($tabla, 'evento') === FALSE) {
+		error(print_r($retorno, true));
+	}
+	return ($retorno);
 }
 /*
 <Clase>
@@ -3134,70 +3134,70 @@ return $client_ip;
 </Clase>  */
 function almacenar_sesion($exito,$login){
 global $conn;
-$datos=array();
-if($login==""){
-  $login=usuario_actual("login");
-  $id=usuario_actual("id");
-  $idfun_intentetos=usuario_actual("idfuncionario");
-}
-$iplocal=getRealIP();
-$ipremoto=servidor_remoto();
-if($iplocal=="" || $ipremoto==""){
-  if($iplocal=="")
-      $iplocal=$ipremoto;
-  else $ipremoto=$iplocal;
-}
-if(!$exito){
-	$intentos=busca_filtro_tabla("intento_login, idfuncionario, estado","funcionario a","a.login='".$login."'","",$conn);
-	if($intentos["numcampos"] && $intentos[0]["estado"]!=0){//Desarrollo de validacion de intentos al loguearse
-		if(!$intentos[0]["intento_login"])$consecutivo=1;
-		else $consecutivo=$intentos[0]["intento_login"]+1;
-		$sql2="UPDATE funcionario SET intento_login=".$consecutivo." WHERE idfuncionario=".$intentos[0]["idfuncionario"];
-		$conn->Ejecutar_Sql($sql2);
-		$configuracion=busca_filtro_tabla("","configuracion a","a.nombre='intentos_login'","",$conn);
-		if($consecutivo>=$configuracion[0]["valor"]){
-			$correo_admin=busca_filtro_tabla("", "configuracion a", "a.nombre='correo_administrador'", "", $conn);
-			$sql3="INSERT INTO lista_negra_acceso(login,iplocal,ipremota,fecha)VALUES('".$login."', '".$iplocal."', '".$ipremoto."', ".fecha_db_almacenar(date("Y-m-d H:i:s"),"Y-m-d H:i:s").")";
-			$conn->Ejecutar_Sql($sql3);
-			$sql4="UPDATE funcionario SET estado='0' WHERE idfuncionario=".$intentos[0]["idfuncionario"];
-			$conn->Ejecutar_Sql($sql4);
-			//alerta("Usuario inactivado por exceso de intentos. Favor comunicarse con el administrador");
-			$datos["mensaje"]="Usuario inactivado por exceso de intentos. Favor comunicarse con el administrador ".$correo_admin[0]["valor"];
-		}
+	$datos = array();
+	if ($login == "") {
+		$login = usuario_actual("login");
+		$id = usuario_actual("id");
+		$idfun_intentetos = usuario_actual("idfuncionario");
 	}
-  $sql="INSERT INTO log_acceso(iplocal,ipremota,login,exito,fecha) VALUES('$iplocal','$ipremoto','".$login."',0,".fecha_db_almacenar(date("Y-m-d H:i:s"),"Y-m-d H:i:s").")";
-}
-else{
-	$sql2="UPDATE funcionario SET intento_login=0 WHERE idfuncionario=".$idfun_intentetos;
-	$conn->Ejecutar_Sql($sql2);
-}
-$idsesion=ultima_sesion();
-$accion="";
-if($idsesion==""){
-  $accion="INSERTA";
-}
-else {
-  $accion="ACTUALIZA";
-}
-$datos_sesion=datos_sesion();
-switch($accion){
-  case "INSERTA":
-    $sql="INSERT INTO log_acceso(iplocal,ipremota,login,exito,idsesion_php,sesion_php,fecha) VALUES('$iplocal','$ipremoto','".$login."',".$exito.",'".session_id()."','".$datos_sesion["datos"]."',".fecha_db_almacenar(date("Y-m-d H:i:s"),"Y-m-d H:i:s").")";
-  break;
-  case "ACTUALIZA":
-    $sql="UPDATE log_acceso A SET A.sesion_php='".$datos_sesion["ruta"]."' WHERE A.idlog_acceso=".$idsesion;
-  break;
-}
-if($sql!=""){
-  $conn->Ejecutar_Sql($sql);
-}
-else{
-  if($datos_sesion["ruta"]=="")
-    alerta("Ruta de Sesion, no definida. Por favor comunicarle al Administrador del sistema");
-  if($datos_sesion["datos"]=="")
-    alerta("Su sesion no fue encontrada. Por favor comunicarle al Administrador del sistema");
-}
-return($datos);
+	$iplocal = getRealIP();
+	$ipremoto = servidor_remoto();
+	if ($iplocal == "" || $ipremoto == "") {
+		if ($iplocal == "")
+			$iplocal = $ipremoto;
+		else
+			$ipremoto = $iplocal;
+	}
+	if (!$exito) {
+		$intentos = busca_filtro_tabla("intento_login, idfuncionario, estado", "funcionario a", "a.login='" . $login . "'", "", $conn);
+		if ($intentos["numcampos"] && $intentos[0]["estado"] != 0) { // Desarrollo de validacion de intentos al loguearse
+			if (!$intentos[0]["intento_login"])
+				$consecutivo = 1;
+			else
+				$consecutivo = $intentos[0]["intento_login"] + 1;
+			$sql2 = "UPDATE funcionario SET intento_login=" . $consecutivo . " WHERE idfuncionario=" . $intentos[0]["idfuncionario"];
+			$conn->Ejecutar_Sql($sql2);
+			$configuracion = busca_filtro_tabla("", "configuracion a", "a.nombre='intentos_login'", "", $conn);
+			if ($consecutivo >= $configuracion[0]["valor"]) {
+				$correo_admin = busca_filtro_tabla("", "configuracion a", "a.nombre='correo_administrador'", "", $conn);
+				$sql3 = "INSERT INTO lista_negra_acceso(login,iplocal,ipremota,fecha)VALUES('" . $login . "', '" . $iplocal . "', '" . $ipremoto . "', " . fecha_db_almacenar(date("Y-m-d H:i:s"), "Y-m-d H:i:s") . ")";
+				$conn->Ejecutar_Sql($sql3);
+				$sql4 = "UPDATE funcionario SET estado='0' WHERE idfuncionario=" . $intentos[0]["idfuncionario"];
+				$conn->Ejecutar_Sql($sql4);
+				// alerta("Usuario inactivado por exceso de intentos. Favor comunicarse con el administrador");
+				$datos["mensaje"] = "Usuario inactivado por exceso de intentos. Favor comunicarse con el administrador " . $correo_admin[0]["valor"];
+			}
+		}
+		$sql = "INSERT INTO log_acceso(iplocal,ipremota,login,exito,fecha) VALUES('$iplocal','$ipremoto','" . $login . "',0," . fecha_db_almacenar(date("Y-m-d H:i:s"), "Y-m-d H:i:s") . ")";
+	} else {
+		$sql2 = "UPDATE funcionario SET intento_login=0 WHERE idfuncionario=" . $idfun_intentetos;
+		$conn->Ejecutar_Sql($sql2);
+	}
+	$idsesion = ultima_sesion();
+	$accion = "";
+	if ($idsesion == "") {
+		$accion = "INSERTA";
+	} else {
+		$accion = "ACTUALIZA";
+	}
+	$datos_sesion = datos_sesion();
+	switch ($accion) {
+		case "INSERTA" :
+			$sql = "INSERT INTO log_acceso(iplocal,ipremota,login,exito,idsesion_php,sesion_php,fecha) VALUES('$iplocal','$ipremoto','" . $login . "'," . $exito . ",'" . session_id() . "','" . $datos_sesion["datos"] . "'," . fecha_db_almacenar(date("Y-m-d H:i:s"), "Y-m-d H:i:s") . ")";
+			break;
+		case "ACTUALIZA" :
+			$sql = "UPDATE log_acceso A SET A.sesion_php='" . $datos_sesion["ruta"] . "' WHERE A.idlog_acceso=" . $idsesion;
+			break;
+	}
+	if ($sql != "") {
+		$conn->Ejecutar_Sql($sql);
+	} else {
+		if ($datos_sesion["ruta"] == "")
+			alerta("Ruta de Sesion, no definida. Por favor comunicarle al Administrador del sistema");
+		if ($datos_sesion["datos"] == "")
+			alerta("Su sesion no fue encontrada. Por favor comunicarle al Administrador del sistema");
+	}
+	return ($datos);
 }
 /*<Clase>
 <Nombre>datos_sesion</Nombre>
@@ -3646,7 +3646,7 @@ function concatenar_cadena_sql($arreglo_cadena){
     break;
     case 'Oracle':
 	    return(implode("||",$arreglo_cadena));
-		break;    
+		break;
     default:
       if(@$arreglo_cadena[($i+1)]==""){
         return($arreglo_cadena[0]);
