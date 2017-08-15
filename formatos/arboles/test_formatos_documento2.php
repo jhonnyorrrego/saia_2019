@@ -86,18 +86,18 @@ $campo_descripcion=array();
 $permiso=new PERMISO();
 //$ok=$permiso->permiso_usuario($vista[0]["nombre"],"");
 //if($ok){
-  $vista=busca_filtro_tabla("","vista_formato","formato_padre=".$arreglo[0],"",$conn);
+  /*$vista=busca_filtro_tabla("","vista_formato","formato_padre=".$arreglo[0],"",$conn);
   for($i=0;$i<$vista["numcampos"];$i++){
     $texto.='<item style="font-family:verdana; font-size:7pt;" '.$imagenes;
     $texto.='text="'.$vista[$i]["etiqueta"].'" id="'.$arreglo[0].'-vista_formato-'.$arreglo[1].'-vista-'.$vista[$i]["idvista_formato"].'">';
     $texto.='</item>';
-  }
+  }*/
 //}
 return($texto);
 }
 function decodifica($cadena){
 //$cadena=htmlspecialchars(utf8_encode(html_entity_decode(strip_tags(htmlspecialchars_decode($cadena)))));
-$cadena=htmlspecialchars(strip_tags($cadena)); 
+$cadena=htmlspecialchars(strip_tags($cadena));
 $cadena=str_replace('"','',$cadena);
 return($cadena);
 }
