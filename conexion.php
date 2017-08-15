@@ -63,6 +63,9 @@ class Conexion {
 			case "MSSql" :
 				$this->Conectar_MSSql();
 				break;
+			case "Postgres" :
+				$this->Conectar_Postgres();
+				break;
 		}
 	}
 
@@ -106,6 +109,11 @@ class Conexion {
 		$this->conn = @oci_connect($this->Usuario, $this->Pass, "(DESCRIPTION =(ADDRESS =(PROTOCOL = TCP)(HOST = " . $this->Host . ")(PORT =" . $this->Puerto . "))(CONNECT_DATA = (SID = " . $this->Nombredb . ")))");
 	}
 
+	function Conectar_Postgres() {
+		$datos_con = "host" . "=" . $this->Host . " port" . "=" . $this->Puerto . " dbname" . "=" . $this->Db . " user" . "=" . $this->Usuario . " password" . "=" . $this->Pass;
+		$this->conn = pg_connect($datos_con) or die("NO SE PUEDE CONECTAR A LA BASE DE DATOS " . $this->Db . ": " . pg_last_error());
+	}
+
 	/*
 	 * <Clase>Conexion
 	 * <Nombre>Desconecta()
@@ -135,6 +143,10 @@ class Conexion {
 				if ($this->conn)
 					mssql_close($this->conn);
 				break;
+			case "Postgres" :
+				if ($this->conn)
+					pg_close($this->conn);
+					break;
 		}
 	}
 

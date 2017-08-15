@@ -4,6 +4,7 @@ include_once ("SqlMysql.php");
 include_once ("SqlSqlServer.php");
 include_once ("SqlOracle.php");
 include_once ("SqlMsSql.php");
+include_once ("SqlPostgres.php");
 use SqlMysql;
 use SqlSqlServer;
 use SqlOracle;
@@ -63,6 +64,9 @@ abstract class SQL2 {
 				break;
 			case "MSSql" :
 				$instance = new SqlMsSql($conn, $motorBd);
+				break;
+			case "Postgres" :
+				$instance = new SqlPostgres($conn, $motorBd);
 				break;
 		}
 

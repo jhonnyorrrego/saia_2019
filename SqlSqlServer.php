@@ -36,9 +36,9 @@ class SqlSqlServer extends SQL2 {
 			for($i = 0; $i < $this->Numero_Filas(); $i++)
 				$resultado[] = sqlsrv_fetch_array($this->res, SQLSRV_FETCH_ASSOC);
 			return $resultado;
-		} // se retorna la matriz
-else
+		} else {// se retorna la matriz
 			return (false);
+		}
 	}
 
 	function liberar_resultado($rs) {
@@ -48,6 +48,18 @@ else
 		@sqlsrv_cancel($rs);
 	}
 
+	/*
+	 * <Clase>SQL
+	 * <Nombre>ejecutar_sql_MySql
+	 * <Parametros>sql-cadena con el codigo a ejecutar
+	 * <Responsabilidades>ejecutar el comando recibido en la cadena sql
+	 * <Notas>Se utiliza generalmente para busquedas cuyos comandos se optienen de referencias que están en la base de datos,
+	 * la matriz con los valores del resultado se obtiene por medio de la función Resultado
+	 * <Excepciones>Cualquier problema que ocurra con la busqueda en la base de datos generará una excepcion
+	 * <Salida>
+	 * <Pre-condiciones>
+	 * <Post-condiciones>la matriz con los valores del resultado se obtiene por medio de la función Resultado
+	 */
 	function Ejecutar_Sql($sql) {
 		$strsql = trim($sql);
 		$strsql = str_replace(" =", "=", $strsql);
@@ -89,8 +101,9 @@ else
 		if ($arreglo = @sqlsrv_fetch_array($this->res, SQLSRV_FETCH_BOTH)) {
 			$this->filas++;
 			return ($arreglo);
-		} else
+		} else {
 			return (FALSE);
+		}
 	}
 
 	function sacar_fila_vector($rs = Null) {

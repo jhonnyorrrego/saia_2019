@@ -33,7 +33,7 @@ class SqlPostgres extends SQL2 {
 		// se le asignan a $resultado los valores obtenidos
 		if ($this->Numero_Filas() > 0) {
 			for($i = 0; $i < $this->Numero_Filas(); $i++)
-				$resultado[] = pg_fetch_array($this->res, PGSQL_ASSOC);
+				$resultado[] = pg_fetch_array($this->res, null, PGSQL_ASSOC);
 			return $resultado;
 		} else { // se retorna la matriz
 			return (false);
@@ -72,14 +72,16 @@ class SqlPostgres extends SQL2 {
 
 		$this->filas = 0;
 		if ($sql && $sql != "" && $this->Conn->conn) {
-			$this->res = pg_query($this->Conn->conn, $sql); // or die("ERROR SQL ".pg_last_error($this->Conn->conn)." en ".$_SERVER["PHP_SELF"]." ->".$sql);// or error//("Error al Ejecutar: $sql --- ".postgres_error());
+			//Quitar "from dual".
+			$sql = preg_replace("/from\s+dual\s*$/i", "", $sql);
+			$this->res = pg_query($this->Conn->conn, $sql) or die("ERROR SQL ".pg_last_error($this->Conn->conn)." en ".$_SERVER["PHP_SELF"]." ->".$sql);// or error//("Error al Ejecutar: $sql --- ".postgres_error());
 
 			if ($this->res) {
 				if (strpos(strtolower($sql), "insert") !== false)
 					$this->ultimo_insert = $this->Ultimo_Insert();
 				else if (strpos(strtolower($sql), "select") !== false) {
 					$this->ultimo_insert = 0;
-					$this->filas = $this->res->num_rows;
+					$this->filas = pg_num_rows($this->res);
 				} else {
 					$this->ultimo_insert = 0;
 				}
@@ -93,9 +95,12 @@ class SqlPostgres extends SQL2 {
 	}
 
 	function sacar_fila($rs = Null) {
-		if ($rs)
+		if ($rs) {
 			$this->res = $rs;
-		if ($arreglo = @pg_fetch_array($this->res, PGSQL_BOTH)) {
+		}
+		//$arreglo = @pg_fetch_array($this->res, null, PGSQL_BOTH) or die("ERROR PG_FETCH ".pg_last_error($rs)." en ".$_SERVER["PHP_SELF"]);
+
+		if ($arreglo = @pg_fetch_array($this->res, null, PGSQL_BOTH)) {
 			$this->filas++;
 			return ($arreglo);
 		} else {
@@ -220,7 +225,7 @@ class SqlPostgres extends SQL2 {
 		$resultado["numcampos"] = $this->Numero_Filas();
 		if ($this->Numero_Filas() > 0) {
 			for($i = 0; $i < $this->Numero_Filas(); $i++) {
-				$resultado[$i] = pg_fetch_array($this->res, PGSQL_ASSOC);
+				$resultado[$i] = pg_fetch_array($this->res, null, PGSQL_ASSOC);
 				$j = 0;
 				foreach ( $resultado[$i] as $key => $valor ) {
 					$resultado[$i][$j] = $resultado[$i][$key];
@@ -433,7 +438,7 @@ class SqlPostgres extends SQL2 {
 		$func = $_SESSION["usuario_actual"];
 		$this->ultimo_insert = 0;
 		if (isset($_SESSION)) {
-			$fecha = fecha_db_almacenar(date("Y-m-d h:i:s"), "Y-m-d h:i:s");
+			$fecha = $this->fecha_db_almacenar(date("Y-m-d h:i:s"), "Y-m-d h:i:s");
 			if ($sqleve != "") {
 				$result = pg_query($this->Conn->conn, $sqleve);
 				if (!$result)
@@ -445,8 +450,9 @@ class SqlPostgres extends SQL2 {
 
 	function resta_fechas($fecha1, $fecha2) {
 		if ($fecha2 == "")
-			$fecha2 = "CURDATE()";
-		return "DATEDIFF($fecha1,$fecha2)";
+			$fecha2 = "now()";
+			return "DATE_PART('day', $fecha1::date) - DATE_PART('day', $fecha2::date) ";
+		//return "$fecha1-$fecha2 ";
 	}
 
 	function fecha_db_almacenar($fecha, $formato = NULL) {
@@ -461,20 +467,20 @@ class SqlPostgres extends SQL2 {
 			$formato = "Y-m-d"; // formato por defecto php
 
 		$mystring = $fecha;
-		$findme = 'DATE_FORMAT';
+		$findme = 'TO_DATE';
 		$pos = strpos($mystring, $findme);
 		if ($pos === false) {
 			$reemplazos = array(
-					'd' => '%d',
-					'm' => '%m',
-					'y' => '%y',
-					'Y' => '%Y',
-					'h' => '%H',
-					'H' => '%H',
-					'i' => '%i',
-					's' => '%s',
-					'M' => '%b',
-					'yyyy' => '%Y'
+					'M' => 'MON',
+					'H' => 'HH24',
+					'd' => 'DD',
+					'm' => 'MM',
+					'Y' => 'YYYY',
+					'y' => 'YY',
+					'h' => 'HH',
+					'i' => 'MI',
+					's' => 'SS',
+					'yyyy' => 'YYYY'
 			);
 			$resfecha = $formato;
 			foreach ( $reemplazos as $ph => $mot ) { // echo $ph," = ",$mot,"<br>","^$ph([-/:])", "%Y\\1","<br>";
@@ -488,7 +494,7 @@ class SqlPostgres extends SQL2 {
 				 */
 			}
 
-			$fsql = "DATE_FORMAT('$fecha','$resfecha')";
+			$fsql = "TO_DATE('$fecha','$resfecha')";
 		} else {
 			$fsql = $fecha;
 		}
@@ -501,31 +507,23 @@ class SqlPostgres extends SQL2 {
 			$formato = "Y-m-d"; // formato por defecto php
 
 		$reemplazos = array(
-				'd' => '%d',
-				'm' => '%m',
-				'y' => '%y',
-				'Y' => '%Y',
-				'h' => '%h',
-				'H' => '%H',
-				'i' => '%i',
-				's' => '%s',
-				'M' => '%b',
-				'yyyy' => '%Y'
+				'Y' => 'YYYY',
+				'yyyy' => 'YYYY',
+				'd' => 'DD',
+				'M' => 'MON',
+				'm' => 'MM',
+				'y' => 'YY',
+				'H' => 'HH24',
+				'h' => 'HH',
+				'i' => 'MI',
+				's' => 'SS'
 		);
 		$resfecha = $formato;
 		foreach ( $reemplazos as $ph => $mot ) { // echo $ph," = ",$mot,"<br>","^$ph([-/:])", "%Y\\1","<br>";
 			$resfecha = preg_replace('/' . $ph . '/', "$mot", $resfecha);
-			/*
-			 * $resfecha=preg_replace('/'.$ph.'/', "$mot", $resfecha);
-			 * $resfecha=ereg_replace("^$ph([-/:])", "$mot\\1", $resfecha);
-			 * $resfecha=ereg_replace("( )$ph([-/:])", "\\1$mot\\2", $resfecha);
-			 * $resfecha=ereg_replace("^$ph", "$mot", $resfecha);
-			 * $resfecha=ereg_replace("([-/:])$ph([-/:])", "\\1$mot\\2", $resfecha);
-			 * $resfecha=ereg_replace("([-/:])$ph$", "\\1$mot", $resfecha);
-			 * $resfecha=ereg_replace("$ph( )", "$mot\\1", $resfecha); // espacio entre fecha y hora
-			 */
+			// $resfecha=ereg_replace("$ph", "$mot", $resfecha);
 		}
-		$fsql = "DATE_FORMAT($campo,'$resfecha')";
+		$fsql = "TO_CHAR($campo,'$resfecha')";
 		return $fsql;
 	}
 
@@ -588,7 +586,7 @@ class SqlPostgres extends SQL2 {
 		if (!strlen($fecha_control)) {
 			$fecha_control = date('Y-m-d');
 		}
-		$resultado = $this->ejecuta_filtro_tabla("SELECT " . $this->resta_fechas("'" . $fecha_control . "'", "'" . $fecha_inicial . "'") . " AS diff FROM dual");
+		$resultado = $this->ejecuta_filtro_tabla("SELECT " . $this->resta_fechas("'" . $fecha_control . "'", "'" . $fecha_inicial . "'") . " AS diff");
 		return ($resultado);
 	}
 
