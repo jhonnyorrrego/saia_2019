@@ -602,3 +602,9 @@ UPDATE busqueda SET cantidad_registros = '100' WHERE idbusqueda = 103;
 (403, 'ruta_origen', 'ruta_origen', 'INT', '11', 0, NULL, 'a,e,b', NULL, NULL, NULL, 'hidden', 0, NULL, NULL, 0, 1),
 (403, 'ruta_destino', 'ruta_destino', 'INT', '11', 0, NULL, 'a,e,b', NULL, NULL, NULL, 'hidden', 0, NULL, NULL, 0, 1);
 -- ----------------------------------------------------------------
+UPDATE `campos_formato` SET `etiqueta_html` = 'hidden' WHERE nombre='origen_externo' AND formato_idformato=403;
+UPDATE `campos_formato` SET `valor` = NULL WHERE nombre='origen_externo' AND formato_idformato=403;
+
+UPDATE `campos_formato` SET `etiqueta_html` = 'hidden' WHERE nombre='nombre_origen' AND formato_idformato=403;
+UPDATE `campos_formato` SET `valor` = NULL WHERE nombre='nombre_origen' AND formato_idformato=403;
+-- ----------------------------------------------------------------

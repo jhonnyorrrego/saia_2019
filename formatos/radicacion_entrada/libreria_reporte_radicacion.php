@@ -265,7 +265,7 @@ function condicion_adicional(){
 				}
 			} //fin rol funcionario
 			
-			$condicion.=" AND (B.mensajero_encargado IN(".$lista_roles_funcionarios.") AND B.tipo_mensajero='i') ";
+			$condicion.=" AND ( B.mensajero_encargado IN(".$lista_roles_funcionarios.") AND B.tipo_mensajero IN('i','0') ) ";
 	    	
 	    }
 
