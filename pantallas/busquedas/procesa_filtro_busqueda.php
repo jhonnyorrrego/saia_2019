@@ -554,7 +554,7 @@ function parsear_consulta($key, $valor, $req_condicion_llave) {
 				$str_quote1 = "''%";
 				$str_quote2 = "%''";
 				$valor_ = $valor;
-				$escaped_val = ((strtolower($valor)));
+				$escaped_val = strtolower($valor);
 				$valor = get_valor_condicion($key, $valor_, $escaped_val, $str_quote1, $str_quote2);
 				$cadena = ("lower(" . $key . ")" . $condicion . $valor);
 			}
@@ -597,7 +597,7 @@ function parsear_consulta($key, $valor, $req_condicion_llave) {
 			} else {
 				$str_quote1 = "''%,";
 				$str_quote2 = ",%''";
-				if (MOTOR == "Oracle") {
+				if (MOTOR == "Oracle" || MOTOR == 'Postgres') {
 					if (strpos($valor, ",") === false) {
 						$valor_ = $valor;
 						$escaped_val = ((strtolower($valor)));
