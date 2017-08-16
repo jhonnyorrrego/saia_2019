@@ -18,9 +18,9 @@ function ingresar_distribucion($iddoc,$datos){
 	
 	/*
 	 * $datos
-	 	* ['origen']   		---> iddependencia_cargo
+	 	* ['origen']   		---> iddependencia_cargo ó iddatos_ejecutor
 	 	* ['tipo_origen']	---> 1,funcionario;2,ejecutor
-	 	* ['destino']		---> iddependencia_cargo ó dependencia#
+	 	* ['destino']		---> iddependencia_cargo ó dependencia#, ó iddatos_ejecutor
 	 	* ['tipo_destino']	---> 1,funcionario;2,ejecutor
 	 	* ['estado_distribucion']  ---> 0,Pediente; 1,Por Distribuir; 2,En distribucion; 3,Finalizado
 	*/
@@ -199,27 +199,54 @@ function buscar_dependencias_hijas_distribucion($iddependencia){
 function mostrar_listado_distribucion_documento($idformato,$iddoc){  //PENDIENTE DE TERMINAR, ESTA TABLA SE VA AENLISTAR EN EL MOSTRAR DE LOS DOCUMENTOS QUE VAN A SER DISTRIBUIDOS
 	global $conn,$ruta_db_superior;
 	
-	$distribuciones=busca_filtro_tabla("","distribucion","documento_iddocumento=".$iddoc,"",$conn);
-    $tabla='
-    	<table class="table table-bordered adicionar_campo" style="width: 100%; font-size:10px; text-align:left;" border="1">
-    	<tr>
-        	<th style="text-align:center;">No. Item</th>
-        	<th style="text-align:center;">Nombre origen</th>
-        	<th style="text-align:center;">Nombre destino</th>
-       		<th style="text-align:center;">Cargo</th>
-        	<th style="text-align:center;">Ubicación</th>
-        	<th style="text-align:center;">Observaciones</th>
-        	<th style="text-align:center;">Acciones</th>
-      	</tr>
-    ';
-	$tabla.='</table>';
+	$distribuciones=busca_filtro_tabla("numero_distribucion,tipo_origen,origen,tipo_destino,destino,estado_distribucion","distribucion","documento_iddocumento=".$iddoc,"",$conn);
+	$tabla='';
+	if($distribuciones['numcampos']){
+
+	    $tabla='
+	    	<table class="table table-bordered adicionar_campo" style="width: 100%; font-size:10px; text-align:left;" border="1">
+	    	<tr>
+	    		<th style="text-align:center;" colspan="4">DISTRIBUCI&Oacute;NES</th>
+	    	</tr>
+	    	<tr>
+	    		<th style="text-align:center;">Estado</th>
+	        	<th style="text-align:center;">No. Item</th>
+	        	<th style="text-align:center;">Nombre origen</th>
+	        	<th style="text-align:center;">Nombre destino</th>
+	      	</tr>
+	    ';
+		
+		for($i=0;$i<$distribuciones['numcampos'];$i++){
+			$tabla.='
+			<tr>
+				<td style="text-align:center;"> '.ver_estado_distribucion($distribuciones[$i]['estado_distribucion']).' </td>
+				<td style="text-align:center;"> '.$distribuciones[$i]['numero_distribucion'].' </td>
+				<td> 
+					'.retornar_origen_destino_distribucion($distribuciones[$i]['tipo_origen'],$distribuciones[$i]['origen']).' 
+					<br>
+					'.retornar_ubicacion_origen_destino_distribucion($distribuciones[$i]['tipo_origen'],$distribuciones[$i]['origen']).'
+				</td>
+				<td> 
+					'.retornar_origen_destino_distribucion($distribuciones[$i]['tipo_destino'],$distribuciones[$i]['destino']).' 
+					<br>
+					'.retornar_ubicacion_origen_destino_distribucion($distribuciones[$i]['tipo_destino'],$distribuciones[$i]['destino']).'
+				</td>
+			</tr>
+			';
+			
+			
+		}
+		
+		$tabla.='</table>';	
+	} //fin if numcampos
+	echo($tabla);
 }
 
 //---------------------------------------------------------------------------------------------
 
 //REPORTE DE DISTRIBUCION
 
-function ver_documento_distribucion($iddocumento,$tipo_origen) {
+function ver_documento_distribucion($iddocumento,$tipo_origen) {  //Radicado
 	global $conn;
 	
 	$cadena_fecha_obtener=fecha_db_obtener('a.fecha','Y-m-d')." AS fecha";
@@ -235,17 +262,16 @@ function ver_documento_distribucion($iddocumento,$tipo_origen) {
 	return($enlace_documento);
 } 
 
-function ver_estado_distribucion($estado_distribucion){
+function ver_estado_distribucion($estado_distribucion){ //Estado
 	$array_estado_distribucion=array('estado_distribucion'=>'Pendiente',0=>'Pendiente',1=>'Pendiente por distribuir',2=>'En distribuci&oacute;n',3=>'Finalizado');
 	return($array_estado_distribucion[$estado_distribucion]);	
 }
 
-function mostrar_diligencia_distribucion($tipo_origen,$estado_recogida){
+function mostrar_diligencia_distribucion($tipo_origen,$estado_recogida){ //Diligencia
 
 	if($estado_recogida=='estado_recogida'){
 		$estado_recogida=0;
 	}
-	
 	$diligencia='ENTREGA';
 	if($tipo_origen==1 && !$estado_recogida){
 		$diligencia='RECOGIDA';
@@ -254,7 +280,7 @@ function mostrar_diligencia_distribucion($tipo_origen,$estado_recogida){
 	return($diligencia);
 }
 
-function mostrar_nombre_ruta_distribucion($tipo_origen,$estado_recogida,$ruta_origen,$ruta_destino){
+function mostrar_nombre_ruta_distribucion($tipo_origen,$estado_recogida,$ruta_origen,$ruta_destino){ //Ruta
 	global $conn;
 	
 	if($estado_recogida=='estado_recogida'){ $estado_recogida=0; }
@@ -276,12 +302,168 @@ function mostrar_nombre_ruta_distribucion($tipo_origen,$estado_recogida,$ruta_or
 	return($nombre_ruta_distribucion);	
 }
 
-function select_mensajeros_ruta_distribucion($iddistribucion){
+function select_mensajeros_ruta_distribucion($iddistribucion){ //Mensajero
 	global $conn;
 	
 	$datos_distribucion=busca_filtro_tabla("tipo_origen,estado_recogida,ruta_origen,ruta_destino,mensajero_origen,mensajero_destino","distribucion","iddistribucion=".$iddistribucion,"",$conn);
+	$atributos_input=' style="width:150px;" class="select_mensajeros_ditribucion" name="select_mensajeros_ditribucion_'.$iddistribucion.'" id="select_mensajeros_ditribucion_'.$iddistribucion.'" iddistribucion="'.$iddistribucion.'"';
+	$select_mensajeros=generar_select_mensajeros_distribucion($atributos_input,$datos_distribucion[0]['tipo_origen'],$datos_distribucion[0]['ruta_origen'],$datos_distribucion[0]['mensajero_origen']);
+
+	return($select_mensajeros);
 	
 }
+function generar_select_mensajeros_distribucion($atributos_input,$tipo_origen,$idft_ruta_distribucion=0,$selected=0){ 
+	global $conn;	
+	
+	$html='<select '.$atributos_input.'>';
+	
+	if(!$selected){
+		$html.='<option value="" selected>Seleccione...</option>';
+	}
+	
+	if($tipo_origen==1){  //internos
+	
+		if($idft_ruta_distribucion){ //mensajeros de la ruta de distribucion
+
+			$mensajeros_ruta=busca_filtro_tabla("b.mensajero_ruta","ft_ruta_distribucion a, ft_funcionarios_ruta b","a.idft_ruta_distribucion=b.ft_ruta_distribucion AND estado_mensajero=1 AND a.idft_ruta_distribucion=".$idft_ruta_distribucion,"",$conn);
+			//return($mensajeros_ruta['sql']);
+			for($i=0;$i<$mensajeros_ruta['numcampos'];$i++){
+				$selected_text='';
+				if($selected){
+					if($mensajeros_ruta[$i]['mensajero_ruta']==$selected){
+						$selected_text='selected';
+					}					
+				}
+				$posfijo_mensajero='-i';
+				$cnombre_mensajero=busca_filtro_tabla("nombres,apellidos","vfuncionario_dc","iddependencia_cargo=".$mensajeros_ruta[$i]['mensajero_ruta'],"",$conn);
+				$nombre_mensajero=$cnombre_mensajero[0]['nombres'].' '.$cnombre_mensajero[0]['apellidos'];
+				$html.='<option value="'.$mensajeros_ruta[$i]['mensajero_ruta'].$posfijo_mensajero.'" '.$selected_text.'>'.$nombre_mensajero.'</option>';
+			}
+			
+		}else{  //todos los funcionarios con cargo "mensajero"
+
+			$mensajeros_saia=busca_filtro_tabla("nombres,apellidos,iddependencia_cargo","vfuncionario_dc"," lower(cargo)='mensajero' AND estado_dc=1 ","",$conn);
+			for($i=0;$i<$mensajeros_saia['numcampos'];$i++){
+				$selected_text='';
+				if($selected){
+					if($mensajeros_saia[$i]['iddependencia_cargo']==$selected){
+						$selected_text='selected';
+					}					
+				}
+				$posfijo_mensajero='-i';
+
+				$nombre_mensajero=$mensajeros_saia[$i]['nombres'].' '.$mensajeros_saia[$i]['apellidos'];
+				$html.='<option value="'.$mensajeros_saia[$i]['iddependencia_cargo'].$posfijo_mensajero.'" '.$selected_text.'>'.$nombre_mensajero.'</option>';
+			}  //FIN: for $mensajeros_saia
+	
+		} //FIN: todos los funcionarios con cargo "mensajero"
+	
+	}else{  //externos
+
+    	$array_concat=array("nombres","' '","apellidos");
+    	$cadena_concat=concatenar_cadena_sql($array_concat);
+    	$mensajeros_externos=busca_filtro_tabla("iddependencia_cargo as id,".$cadena_concat." AS nombre","vfuncionario_dc","lower(cargo) LIKE 'mensajer%extern%' AND estado_dc=1","",$conn);
+		
+		$array_mensajeros_externos=array();
+		for($me=0;$me<$mensajeros_externos['numcampos'];$me++){
+			$array_mensajeros_externos[$me]['id']=$mensajeros_externos[$me]['id'].'-i';
+			$array_mensajeros_externos[$me]['nombre']=$mensajeros_externos[$me]['nombre'];
+		}
+
+		$empresas_transportadoras=busca_filtro_tabla("idcf_empresa_trans as id,nombre","cf_empresa_trans","","",$conn);
+		for($me=0;$me<$empresas_transportadoras['numcampos'];$me++){
+			$array_mensajeros_externos[$me+$mensajeros_externos['numcampos']]['id']=$empresas_transportadoras[$me]['id'].'-e';
+			$array_mensajeros_externos[$me+$mensajeros_externos['numcampos']]['nombre']=$empresas_transportadoras[$me]['nombre'];
+		}
+		
+
+		for($me=0;$me<count($array_mensajeros_externos);$me++){
+			$selected_text='';
+			if($selected){
+				if($array_mensajeros_externos[$me]['id']==$selected){
+					$selected_text='selected';
+				}					
+			}
+
+			$html.="<option value='".$array_mensajeros_externos[$me]['id']."' ".$selected_text.">".$array_mensajeros_externos[$me]['nombre']."</option>";
+		}  	
+
+	} //FIN: externos
+	
+	$html.='</select>';
+	
+	return($html);
+}
+
+function mostrar_planilla_diligencia_distribucion($iddistribucion){ //Planilla Asociada
+	global $conn;		
+
+	$planillas=busca_filtro_tabla("b.iddocumento,b.numero","ft_despacho_ingresados a, documento b, ft_item_despacho_ingres c","a.idft_despacho_ingresados=c.ft_despacho_ingresados AND a.documento_iddocumento=b.iddocumento AND lower(b.estado)='aprobado' AND c.distribucion_iddistribucion=".$iddistribucion,"",$conn);
+	$html="No tiene planilla asociada"; //Pendiente
+	if($planillas['numcampos']){
+		$html='';
+		for($i=0;$i<$planillas['numcampos'];$i++){
+			$html.='<div class="link kenlace_saia" enlace="ordenar.php?key='.$planillas[$i]['iddocumento'].'&amp;accion=mostrar&amp;mostrar_formato=1" conector="iframe" titulo="No Radicado '.$planillas[$i]['numero'].'"><center><span class="badge">'.$planillas[$i]['numero']."</span></center></div>\n";
+		}
+		
+	}
+	return($html);
+}
+
+
+function generar_check_accion_distribucion(){
+	$checkbox='<input type="checkbox">';
+	return($checkbox);
+}
+
+function mostrar_origen_distribucion($tipo_origen,$origen){
+	global $conn;
+	$nombre_origen=retornar_origen_destino_distribucion($tipo_origen,$origen);
+	return($nombre_origen);
+}
+function mostrar_destino_distribucion($tipo_destino,$destino){
+	global $conn;
+	$nombre_destino=retornar_origen_destino_distribucion($tipo_destino,$destino);
+	return($nombre_destino);
+}
+
+function retornar_ubicacion_origen_destino_distribucion($tipo,$valor){
+	global $conn;
+	
+	$ubicacion='';
+	if($tipo==1){  //iddependencia_cargo
+		$datos=busca_filtro_tabla("cargo,dependencia","vfuncionario_dc","iddependencia_cargo=".$valor,"",$conn);
+		$ubicacion='
+			<b>Dependencia:</b> '.$datos[0]['dependencia'].'
+			<br>
+			<b>Cargo: </b> '.$datos[0]['cargo'].'
+		';
+	}else{  //iddatos_ejecutor
+		$datos=busca_filtro_tabla("direccion,cargo","ejecutor a, datos_ejecutor b","a.idejecutor=b.ejecutor_idejecutor AND b.iddatos_ejecutor=".$valor,"",$conn);
+		$ubicacion='
+			<b>Direcci&oacute;n:</b> '.$datos[0]['direccion'].'
+			<br>
+			<b>Cargo: </b> '.$datos[0]['cargo'].'
+		';
+	}
+	return($ubicacion);		
+}
+
+function retornar_origen_destino_distribucion($tipo,$valor){
+	global $conn;
+	
+	if($tipo==1){  //iddependencia_cargo
+		$datos=busca_filtro_tabla("nombres,apellidos","vfuncionario_dc","iddependencia_cargo=".$valor,"",$conn);
+		$nombre=$datos[0]['nombres'].' '.$datos[0]['apellidos'];
+	}else{  //iddatos_ejecutor
+		$datos=busca_filtro_tabla("nombre","ejecutor a, datos_ejecutor b","a.idejecutor=b.ejecutor_idejecutor AND b.iddatos_ejecutor=".$valor,"",$conn);
+		$nombre=$datos[0]['nombre'];
+	}
+	return($nombre);	
+		
+}
+
+
 
 
 
