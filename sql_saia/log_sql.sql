@@ -608,3 +608,4 @@ UPDATE `campos_formato` SET `valor` = NULL WHERE nombre='origen_externo' AND for
 UPDATE `campos_formato` SET `etiqueta_html` = 'hidden' WHERE nombre='nombre_origen' AND formato_idformato=403;
 UPDATE `campos_formato` SET `valor` = NULL WHERE nombre='nombre_origen' AND formato_idformato=403;
 -- ----------------------------------------------------------------
+INSERT INTO funciones_formato (idfunciones_formato,nombre,nombre_funcion,parametros,etiqueta,descripcion,ruta,formato,acciones) VALUES (NULL, '{*mostrar_listado_distribucion_documento*}', 'mostrar_listado_distribucion_documento', '', 'mostrar_listado_distribucion_documento', NULL, '../../distribucion/funciones_distribucion.php', '', 'm');
