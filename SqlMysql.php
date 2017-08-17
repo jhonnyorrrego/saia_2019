@@ -595,7 +595,7 @@ class SqlMysql extends SQL2 {
 		if ($tabla == NULL)
 			$tabla = $_REQUEST["tabla"];
 		$datos_tabla = $this->Ejecutar_Sql("DESCRIBE " . $tabla);
-		while($fila = phpmkr_fetch_array($datos_tabla)) { // print_r($fila);
+		while($fila = $this->sacar_fila($datos_tabla)) { // print_r($fila);
 			if ($tipo_retorno) {
 				$lista_campos[] = array_map(strtolower, $fila);
 			} else {
@@ -631,5 +631,170 @@ class SqlMysql extends SQL2 {
 			mysqli_query($this->Conn->conn, $sql) or die(mysqli_error($this->Conn->conn));
 		}
 		return ($resultado);
+	}
+
+	public function campo_formato_tipo_dato($tipo_dato, $longitud, $predeterminado, $banderas=null) {
+		switch (strtoupper(@$tipo_dato)) {
+			case "NUMBER" :
+				$campo .= " decimal";
+				if ($longitud) {
+					$campo .= "(" . intval($longitud) . ",0) ";
+				} else {
+					$campo .= "(10,0) ";
+				}
+				if ($predeterminado) {
+					$campo .= " DEFAULT '" . intval($predeterminado) . "' ";
+				}
+				break;
+			case "DOUBLE" :
+				$campo .= " double";
+				if ($longitud) {
+					$campo .= "(" . intval($longitud) . ") ";
+				} else {
+					$campo .= "";
+				}
+				if ($predeterminado) {
+					$campo .= " DEFAULT '" . intval($predeterminado) . "' ";
+				}
+				break;
+			case "CHAR" :
+				$campo .= " char ";
+				if ($longitud) {
+					$campo .= "(" . $this->maximo_valor(intval($longitud), 255) . ") ";
+				} else {
+					$campo .= "(10) ";
+				}
+				if ($predeterminado) {
+					$campo .= " DEFAULT '" . $this->maximo_valor(intval($predeterminado), 255) . "' ";
+				}
+				break;
+			case "VARCHAR" :
+				$campo .= " varchar";
+				if ($longitud) {
+					$campo .= "(" . $this->maximo_valor(intval($longitud), 255) . ") ";
+				} else {
+					$campo .= "(255) ";
+				}
+				if ($predeterminado) {
+					$campo .= " DEFAULT '" . intval($predeterminado) . "' ";
+				}
+				break;
+			case "TEXT" :
+				if ($longitud == "")
+					$longitud = 4000;
+				$campo .= " text ";
+				break;
+			case "DATE" :
+				$campo .= " date ";
+				break;
+			case "TIME" :
+				$campo .= " time ";
+				break;
+			case "DATETIME" :
+				$campo .= " DATETIME ";
+				break;
+			case "BLOB" :
+				$campo .= " blob ";
+				break;
+			default :
+				$campo .= " int";
+				if ($longitud) {
+					$campo .= "(" . intval($longitud) . ") ";
+				} else {
+					$campo .= "(11) ";
+				}
+				if ($predeterminado) {
+					$campo .= " DEFAULT '" . intval($predeterminado) . "' ";
+				}
+				break;
+		}
+
+	}
+
+	public function formato_crear_indice($bandera, $nombre_campo, $nombre_tabla) {
+		$nombre_tabla = strtoupper($nombre_tabla);
+		$nombre_campo = strtoupper($nombre_campo);
+		$banderas = explode(",", $todas_banderas);
+		$traza = array();
+		if (strlen($nombre_tabla) > 26) {
+			$aux = substr($nombre_tabla, 0, 26);
+		} else {
+			$aux = $nombre_tabla;
+		}
+		$this->filas = 0;
+
+		switch (strtolower($bandera)) {
+			case "pk" :
+				$dato = "ALTER TABLE " . strtolower($nombre_tabla) . " ADD PRIMARY KEY ( " . strtolower($nombre_campo) . ")";
+				$traza[] = $dato;
+				$this->Ejecutar_sql($dato);
+				$dato = "ALTER TABLE " . strtolower($nombre_tabla) . " CHANGE " . strtolower($nombre_campo) . " " . strtolower($nombre_campo) . " INT(11) NOT NULL AUTO_INCREMENT ";
+				$traza[] = $dato;
+				$this->Ejecutar_sql($dato);
+
+				break;
+			case "u" :
+				if ($this->verificar_existencia($nombre_tabla)) {
+					$dato = "ALTER TABLE " . $nombre_tabla . " ADD UNIQUE( " . $nombre_campo . " )";
+					$traza[] = $dato;
+					$this->Ejecutar_sql($dato);
+				}
+				break;
+			case "i" :
+				if ($this->verificar_existencia($nombre_tabla)) {
+					$dato = "ALTER TABLE " . $nombre_tabla . " ADD INDEX ( " . $nombre_campo . " )";
+					$traza[] = $dato;
+					$this->Ejecutar_sql($dato);
+				}
+				break;
+		}
+		return $traza;
+	}
+
+	protected function formato_elimina_indices_tabla($tabla) {
+		global $conn, $sql;
+		$tabla = strtoupper($tabla);
+		if (MOTOR == "MySql") {
+			$indices = ejecuta_filtro_tabla("SHOW INDEX FROM " . strtolower($tabla), $conn);
+			for($i = 0; $i < $indices["numcampos"]; $i++) {
+				$this->elimina_indice($tabla, $indices[$i]);
+			}
+		} else if (MOTOR == "Oracle") {
+			$envio = array();
+			$sql2 = "select ai.index_name AS column_name, ai.uniqueness AS Key_name FROM all_indexes ai WHERE ai.TABLE_OWNER='" . DB . "' AND ai.table_name = '" . $tabla . "'";
+			$indices = ejecuta_filtro_tabla($sql2, $conn);
+			for($i = 0; $i < $indices["numcampos"]; $i++) {
+				array_push($envio, array(
+						"Key_name" => $indices[$i]["key_name"],
+						"Column_name" => $indices[$i]["column_name"]
+				));
+			}
+			$sql2 = "SELECT cols.column_name AS Column_name, cons.constraint_type AS Key_name FROM all_constraints cons, all_cons_columns cols WHERE cons.constraint_type = 'P' AND cons.constraint_name = cols.constraint_name AND cons.owner = cols.owner AND cons.owner='" . DB . "' AND cols.table_name='" . $tabla . "' ORDER BY cols.table_name, cols.position";
+			$primaria = ejecuta_filtro_tabla($sql2, $conn);
+			for($i = 0; $i < $primaria["numcampos"]; $i++) {
+				array_push($envio, array(
+						"Key_name" => "PRIMARY",
+						"Column_name" => $primaria[$i]["Column_name"]
+				));
+			}
+			$numero_indices = count($envio);
+
+			for($i = 0; $i < $numero_indices; $i++) {
+				$this->elimina_indice($tabla, $envio[$i]);
+			}
+		} else if (MOTOR == "SqlServer" || MOTOR == "MSSql") {
+			$sql2 = "SELECT name AS column_name FROM sys.objects WHERE type_desc LIKE '%CONSTRAINT' AND OBJECT_NAME(parent_object_id)='" . $tabla . "'";
+			$indices = ejecuta_filtro_tabla($sql2, $conn);
+			$numero_indices = count($indices);
+			for($i = 0; $i < $numero_indices; $i++) {
+				$this->elimina_indice($tabla, $envio[$i]);
+			}
+		}
+		return;
+	}
+
+	protected function verificar_existencia($table) {
+		$res = $this->Ejecutar_sql("SHOW TABLES LIKE '$table'");
+		return mysqli_num_rows($res) > 0;
 	}
 }

@@ -358,9 +358,46 @@ abstract class SQL2 {
 		return ($retorno);
 	}
 
+	protected function maximo_valor($valor, $maximo) {
+		if ($valor > $maximo || $valor == "NULL") {
+			return ($maximo);
+		}
+		return ($valor);
+	}
+
 	public abstract function listar_campos_tabla($tabla, $tipo_retorno);
 
 	public abstract function guardar_lob($campo, $tabla, $condicion, $contenido, $tipo, $log);
+
+	public abstract function campo_formato_tipo_dato($tipo_dato, $longitud, $predeterminado, $banderas = null);
+
+	public abstract function formato_crear_indice($bandera, $nombre_campo, $nombre_tabla);
+
+	public abstract function generar_tabla($formato, $idformato);
+
+	protected abstract function formato_elimina_indices_tabla($tabla);
+
+	protected abstract function elimina_indice_campo($tabla, $campo);
+
+	protected abstract function verificar_existencia($tabla);
+
+	protected function ejecuta_filtro_tabla($sql2) {
+		$retorno = array();
+		$rs = $this->Ejecutar_Sql($sql2) or alerta("Error en Busqueda de Proceso SQL: $sql2");
+		$temp = $this->sacar_fila($rs);
+		$i = 0;
+		if ($temp) {
+			array_push($retorno, $temp);
+			$i++;
+		}
+		for($temp; $temp = $this->sacar_fila($rs); $i++) {
+			array_push($retorno, $temp);
+		}
+		$retorno["numcampos"] = $i;
+		$retorno["sql"] = $sql2;
+		$this->liberar_resultado($rs);
+			return ($retorno);
+	}
 
 }
 ?>

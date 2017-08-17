@@ -600,4 +600,138 @@ class SqlSqlServer extends SQL2 {
 
 		return ($resultado);
 	}
+
+	public function campo_formato_tipo_dato($tipo_dato, $longitud, $predeterminado, $banderas=null) {
+		switch (strtoupper(@$tipo_dato)) {
+			case "NUMBER" :
+				$campo .= " decimal ";
+				if ($longitud) {
+					$campo .= "(" . intval($longitud) . ",0) ";
+				} else {
+					$campo .= "(10,0) ";
+				}
+				if ($predeterminado) {
+					$campo .= " DEFAULT '" . intval($predeterminado) . "' ";
+				}
+				break;
+			case "DOUBLE" :
+				$campo .= " FLOAT";
+				if ($longitud) {
+					$campo .= "(" . intval($longitud) . ") ";
+				} else {
+					$campo .= "";
+				}
+				if ($predeterminado) {
+					$campo .= " DEFAULT '" . intval($predeterminado) . "' ";
+				}
+				break;
+			case "CHAR" :
+				$campo .= " char ";
+				if ($longitud) {
+					$campo .= "(" . $this->maximo_valor(intval($longitud), 255) . ") ";
+				} else {
+					$campo .= "(10) ";
+				}
+				if ($predeterminado) {
+					$campo .= " DEFAULT '" . $this->maximo_valor(intval($predeterminado), 255) . "' ";
+				}
+				break;
+			case "VARCHAR" :
+				$campo .= " varchar";
+				if ($longitud) {
+					$campo .= "(" . $this->maximo_valor(intval($longitud), 255) . ") ";
+				} else {
+					$campo .= "(255) ";
+				}
+				if ($predeterminado) {
+					$campo .= " DEFAULT '" . intval($predeterminado) . "' ";
+				}
+				break;
+			case "TEXT" :
+				if ($longitud == "")
+					$longitud = 4000;
+				$campo .= " text";
+				break;
+			case "DATE" :
+				$campo .= " DATETIME ";
+				$campo .= " DEFAULT  getdate()";
+				break;
+			case "TIME" :
+				$campo .= " DATETIME ";
+				break;
+			case "DATETIME" :
+				$campo .= " DATETIME ";
+				$campo .= " DEFAULT  getdate()";
+				break;
+			case "BLOB" :
+				$campo .= " varBinary(MAX) ";
+				break;
+			default :
+				$campo .= " int ";
+				$pos = strpos($banderas, 'pk');
+				if ($pos !== false) {
+					$campo .= ' IDENTITY(1,1) NOT NULL ';
+				}
+				if ($predeterminado) {
+					$campo .= " DEFAULT '" . intval($predeterminado) . "' ";
+				}
+				break;
+		}
+
+	}
+
+	public function formato_crear_indice($bandera, $nombre_campo, $nombre_tabla) {
+		$nombre_tabla = strtoupper($nombre_tabla);
+		$nombre_campo = strtoupper($nombre_campo);
+		$traza = array();
+		if (strlen($nombre_tabla) > 26) {
+			$aux = substr($nombre_tabla, 0, 26);
+		} else {
+			$aux = $nombre_tabla;
+		}
+		$dato = "";
+		switch ($bandera) {
+			case "pk" :
+				// $datos_tabla=ejecuta_filtro_tabla("select c.* from syscolumns c, sysobjects o where c.status & 128 = 128 and o.id = c.id AND o.name='".$nombre_tabla."'",$conn);
+				$dato = "ALTER TABLE " . strtolower($nombre_tabla) . " ADD CONSTRAINT PK_" . strtoupper($nombre_campo) . "_" . rand() . " PRIMARY KEY CLUSTERED( " . strtolower($nombre_campo) . ")";
+				break;
+			case "u" :
+				$dato = "ALTER TABLE " . $nombre_tabla . " ADD CONSTRAINT UQ_" . strtoupper($nombre_campo) . "_" . rand() . " UNIQUE( " . $nombre_campo . " )";
+				break;
+			case "i" :
+				$dato = "CREATE UNIQUE NONCLUSTERED INDEX (I_" . strtoupper($nombre_campo) . "_" . rand() . ") ON " . $nombre_tabla . "( " . $nombre_campo . " )";
+				break;
+		}
+		$this->Ejecutar_sql($dato);
+		return $traza;
+	}
+
+	protected function formato_elimina_indices_tabla($tabla) {
+		global $conn, $sql;
+		$tabla = strtoupper($tabla);
+		$sql2 = "SELECT name AS column_name FROM sys.objects WHERE type_desc LIKE '%CONSTRAINT' AND OBJECT_NAME(parent_object_id)='" . $tabla . "'";
+		$indices = $this->ejecuta_filtro_tabla($sql2);
+		$numero_indices = count($indices);
+		for($i = 0; $i < $numero_indices; $i++) {
+			$this->elimina_indice_campo($tabla, $envio[$i]);
+		}
+		return;
+	}
+
+	protected function elimina_indice_campo($tabla, $campo) {
+		global $conn;
+		$sql = "ALTER TABLE " . strtolower($tabla) . " DROP CONSTRAINT " . $campo["Column_name"];
+		$this->Ejecutar_sql($sql);
+		return;
+	}
+
+	protected function verificar_existencia($tabla) {
+		$sql = "SELECT COUNT(table_name) FROM information_schema.tables WHERE table_name = '$tabla'";
+		$rs = $this->Ejecutar_sql($sql);
+		$fila = $this->sacar_fila($rs);
+		if($fila) {
+			return ($fila["existe"] > 0);
+		}
+		return false;
+	}
 }

@@ -319,27 +319,32 @@ class SqlPostgres extends SQL2 {
 	 * <Pre-condiciones>
 	 * <Post-condiciones>
 	 */
-	function Busca_tabla($tabla, $campo) {
+	function Busca_tabla($tabla, $campo='') {
 		if (!$tabla && @$_REQUEST["tabla"])
 			$tabla = $_REQUEST["tabla"];
-		else if (!$tabla)
+		if (!$tabla)
 			return (false);
-		$this->consulta = "show columns from " . $tabla;
+		$where_campo = '';
+		if ($campo != '') {
+			$where_campo = " AND column_name='" . $campo . "'";
+		}
+
+		$this->consulta = "select * from information_schema.columns where table_schema = 'public' AND table_name  = '$tabla'" . $where_campo;
 		$this->res = pg_query($this->Conn->conn, $this->consulta);
 		$resultado = array();
 		$i = 0;
-		while($row = pg_fetch_row($this->res)) {
-			if ($campo && $campo == $row[0]) {
-				array_push($resultado, $row[0]);
-				$i++;
-			} else if ($campo == '') {
-				array_push($resultado, $row[0]);
-				$i++;
-			}
+		$resultado = array();
+		for(; ($arreglo = $this->sacar_fila($this->res)); $i++) {
+			$arreglo = array_change_key_case($arreglo, CASE_LOWER);
+			array_push($resultado, $arreglo);
 		}
 		asort($resultado);
 		$resultado["numcampos"] = $i;
-		return ($resultado);
+		if ($i) {
+			return $resultado;
+		} else {
+			return (FALSE);
+		}
 	}
 
 	/*
@@ -630,5 +635,164 @@ class SqlPostgres extends SQL2 {
 			pg_query($this->Conn->conn, $sql) or die(pg_last_error($this->Conn->conn));
 		}
 		return ($resultado);
+	}
+
+	public function campo_formato_tipo_dato($tipo_dato, $longitud, $predeterminado, $banderas=null) {
+		switch (strtoupper(@$tipo_dato)) {
+			case "NUMBER" :
+				$campo .= " numeric";
+				if ($longitud) {
+					$campo .= "(" . intval($longitud) . ",0) ";
+				} else {
+					$campo .= "(10,0) ";
+				}
+				if ($predeterminado) {
+					$campo .= " DEFAULT '" . intval($predeterminado) . "' ";
+				}
+				break;
+			case "DOUBLE" :
+				$campo .= " double";
+				if ($longitud) {
+					$campo .= "(" . intval($longitud) . ") ";
+				} else {
+					$campo .= "";
+				}
+				if ($predeterminado) {
+					$campo .= " DEFAULT '" . intval($predeterminado) . "' ";
+				}
+				break;
+			case "CHAR" :
+				$campo .= " char ";
+				if ($longitud) {
+					$campo .= "(" . $this->maximo_valor(intval($longitud), 255) . ") ";
+				} else {
+					$campo .= "(10) ";
+				}
+				if ($predeterminado) {
+					$campo .= " DEFAULT '" . $this->maximo_valor(intval($predeterminado), 255) . "' ";
+				}
+				break;
+			case "VARCHAR" :
+				$campo .= " varchar";
+				if ($longitud) {
+					$campo .= "(" . $this->maximo_valor(intval($longitud), 255) . ") ";
+				} else {
+					$campo .= "(255) ";
+				}
+				if ($predeterminado) {
+					$campo .= " DEFAULT '" . intval($predeterminado) . "' ";
+				}
+				break;
+			case "TEXT" :
+				if ($longitud == "")
+					$longitud = 4000;
+					$campo .= " text ";
+					break;
+			case "DATE" :
+				$campo .= " date ";
+				//$campo .= " DEFAULT  now()";
+				break;
+			case "TIME" :
+				$campo .= " time ";
+				break;
+			case "DATETIME" :
+				$campo .= " timestamp ";
+				$campo .= " DEFAULT  now()";
+				break;
+			case "BLOB" :
+				$campo .= " bytea ";
+				break;
+			default :
+				$campo .= " integer ";
+				$pos = strpos($banderas, 'pk');
+				if ($pos !== false) {
+					$campo .= ' SERIAL ';
+				}
+
+				if ($predeterminado) {
+					$campo .= " DEFAULT '" . intval($predeterminado) . "' ";
+				}
+				break;
+		}
+	}
+
+	public function formato_crear_indice($todas_banderas, $nombre_campo, $nombre_tabla) {
+		$nombre_campo = strtoupper($nombre_campo);
+		$banderas = explode(",", $todas_banderas);
+		$traza = array();
+		for($j = 0; $j < count($banderas); $j++) {
+			if (strlen($nombre_tabla) > 26) {
+				$aux = substr($nombre_tabla, 0, 26);
+			} else {
+				$aux = $nombre_tabla;
+			}
+			$this->filas = 0;
+
+			switch (strtolower($banderas[$j])) {
+				case "pk" :
+
+					$sql2 = "SELECT last_value AS ultimo from " . $nombre_seq;
+
+					$rs_siguiente = $this->Ejecutar_sql($sql2, $conn);
+
+					if ($this->filas) {
+						$siguiente = $this->sacar_fila($rs_siguiente);
+
+						$inicio = $siguiente["ultimo"];
+						$dato = "DROP SEQUENCE " . $nombre_seq;
+						$traza[] = $dato;
+						$this->Ejecutar_sql($dato);
+					} else {
+						$inicio = 1;
+					}
+					// $dato = "CREATE INDEX PK_" . $nombre_campo . " ON " . $nombre_tabla . "(" . $nombre_campo . ") LOGGING TABLESPACE " . TABLESPACE . " PCTFREE 10 INITRANS 2 MAXTRANS 255 STORAGE (INITIAL 128K MINEXTENTS 1 MAXEXTENTS 2147483645 PCTINCREASE 0 BUFFER_POOL DEFAULT) NOPARALLEL";
+					// $traza[] = $dato;
+					// $this->Ejecutar_sql($dato);
+					if ($this->verificar_existencia($nombre_tabla)) {
+						$dato = "CREATE SEQUENCE " . $nombre_seq . " INCREMENT 1 START " . $inicio . " MINVALUE 1 MAXVALUE 9223372036854775807 CACHE 1";
+						$traza[] = $dato;
+						$this->Ejecutar_sql($dato);
+						$dato = "ALTER TABLE $nombre_tabla ALTER COLUMN $nombre_campo SET DEFAULT nextval('$nombre_seq')";
+						$traza[] = $dato;
+						$this->Ejecutar_sql($dato);
+						$dato = "ALTER TABLE " . $nombre_tabla . " ADD CONSTRAINT PK_" . $nombre_campo . "  PRIMARY KEY (" . $nombre_campo . ")";
+						$traza[] = $dato;
+						$this->Ejecutar_sql($dato);
+					}
+
+					// $dato = "CREATE OR REPLACE TRIGGER " . $aux . "_TRG BEFORE INSERT OR UPDATE ON " . $nombre_tabla . " FOR EACH ROW BEGIN IF INSERTING AND :NEW." . $nombre_campo . " IS NULL THEN SELECT " . $aux . "_SEQ.NEXTVAL INTO :NEW." . $nombre_campo . " FROM DUAL; END IF; END;";
+					// guardar_traza($dato, $nombre_tabla);
+					// $this->Ejecutar_sql($dato);
+					break;
+				case "u" :
+					if ($this->verificar_existencia($nombre_tabla)) {
+						$dato = "ALTER TABLE " . $nombre_tabla . " ADD CONSTRAINT U_" . $nombre_campo . " UNIQUE( " . $nombre_campo . " )";
+						$traza[] = $dato;
+						$this->Ejecutar_sql($dato);
+					}
+					break;
+				case "i" :
+					$campo2 = $nombre_tabla . "_" . $nombre_campo;
+					if (strlen($campo2) > 15) {
+						$campo2 = str_replace("FT_", "", substr($campo2, 0, 15));
+					}
+					$dato = "CREATE INDEX I_" . $campo2 . " ON " . $nombre_tabla . " (" . $nombre_campo . ") TABLESPACE " . TABLESPACE;
+					$traza[] = $dato;
+					$this->Ejecutar_sql($dato);
+
+					break;
+			}
+		}
+		return $traza;
+	}
+
+	protected function verificar_existencia($tabla) {
+		$sql = "SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = '$tabla') as existe";
+		$rs = pg_query($this->Conn->conn, $sql);
+		$fila = $this->sacar_fila($rs);
+		if($fila) {
+			return ($fila["existe"] == 'true');
+		}
+		return false;
 	}
 }
