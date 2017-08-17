@@ -349,18 +349,6 @@ function AddData($conn) {
 	$theValue = (!get_magic_quotes_gpc()) ? addslashes($GLOBALS["x_nit"]) : $GLOBALS["x_nit"];
 	$fieldList["nit"] = $theValue;
 
-	// Field funcionario_codigo
-	$theValue = ($GLOBALS["x_funcionario_codigo"] != "") ? $GLOBALS["x_funcionario_codigo"] : "NULL";
-	$sTmp = $theValue;
-	$srchFld = $sTmp;
-	$srchFld = (!get_magic_quotes_gpc()) ? addslashes($srchFld) : $srchFld;
-	$strsql = "SELECT * FROM funcionario A WHERE A.funcionario_codigo = " . $srchFld;
-	$rschk = phpmkr_query($strsql, $conn);
-	if (phpmkr_num_rows($rschk) > 0) {
-		error("El codigo de funcionario est&aacute; duplicado ");
-	}
-	@phpmkr_free_result($rschk);
-	$fieldList["funcionario_codigo"] = $theValue;
 
 	// Field login
 	$theValue = (!get_magic_quotes_gpc()) ? addslashes($GLOBALS["x_login"]) : $GLOBALS["x_login"];
@@ -412,12 +400,6 @@ function AddData($conn) {
 	$fieldList["fecha_ingreso"] = fecha_db_almacenar($theValue, "Y/m/d");
 	// Field perfil
 	$fieldList["perfil"] = "'" . implode(",", $GLOBALS["x_perfil"]) . "'";
-
-	//verifica si existe un codigo repetido en los funcionarios.
-	$verificar = busca_filtro_tabla("*", "funcionario A", "A.funcionario_codigo=" . $fieldList["funcionario_codigo"], "", $conn);
-	if ($verificar["numcampos"] > 0) { alerta("El codigo del funcionario ya se encuentra asignado");
-		redirecciona("funcionarioadd.php");
-	}
 
     //Verifica si el funcionario se va a adicionar en estado "Activo"		
     if ($_POST["x_estado"] == "1"){		
