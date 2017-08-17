@@ -473,13 +473,29 @@ function generar_accion_destino_radicacion($idft_destino_radicacion,$mensajero_e
 		
 		$esta_activo=0;
 		if($ruta_distribucion[0]['tipo_destino']==1 && $ruta_distribucion[0]['estado_recogida']==1 ){
+			if($tipo_mensajero[0]['tipo_mensajero']=='i'){
+				$tiene_cargo_me=busca_filtro_tabla("cargo","vfuncionario_dc","lower(cargo) LIKE 'mensajer%extern%' AND iddependencia_cargo=".$mensajero_encargado,"",$conn);
+				if($tiene_cargo_me['numcampos']){
 			$esta_activo=1;
+				}
+			}else if($tipo_mensajero[0]['tipo_mensajero']=='e'){
+					$esta_activo=1;
+			}
+
 		}else{
 			$campo_validar='ruta_destino';
 			if($ruta_distribucion[0]['tipo_origen']==2 && !$ruta_distribucion[0]['estado_recogida']){
 				$campo_validar='ruta_origen';
 			}
 			$busca_mensajero_activo=busca_filtro_tabla("mensajero_ruta","ft_ruta_distribucion a, ft_funcionarios_ruta b","b.estado_mensajero=1 AND a.idft_ruta_distribucion=b.ft_ruta_distribucion AND a.idft_ruta_distribucion=".$ruta_distribucion[0][$campo_validar],"",$conn);
+			if(!$busca_mensajero_activo['numcampos']){
+				if($campo_validar=='ruta_destino'){
+					$campo_validar='ruta_origen';
+				}else{
+					$campo_validar='ruta_destino';
+				}
+				$busca_mensajero_activo=busca_filtro_tabla("mensajero_ruta","ft_ruta_distribucion a, ft_funcionarios_ruta b","b.estado_mensajero=1 AND a.idft_ruta_distribucion=b.ft_ruta_distribucion AND a.idft_ruta_distribucion=".$ruta_distribucion[0][$campo_validar],"",$conn);
+			}
 			
 			for($i=0;$i<$busca_mensajero_activo['numcampos'];$i++){
 				if($busca_mensajero_activo[$i]['mensajero_ruta']==$mensajero_encargado){
