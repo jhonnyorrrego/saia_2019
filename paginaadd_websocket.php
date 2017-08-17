@@ -7,6 +7,10 @@ if (@$_REQUEST["iddoc"] || @$_REQUEST["key"]) {
 	}
 	menu_principal_documento($_REQUEST["iddoc"]);
 }
+
+include_once("librerias_saia.php");
+echo(librerias_notificaciones());
+
 $x_consecutivo = Null;
 $x_id_documento = Null;
 $x_imagen = Null;
@@ -40,9 +44,9 @@ if (@$_REQUEST["enlace"]) {
 } else if ($_REQUEST["x_enlace"] == "") {
 	$documento = busca_filtro_tabla("", "documento", "iddocumento=" . $key, "");
 	if ($documento[0]["tipo_radicado"] != 1 && $documento[0]["tipo_radicado"] != 2) {
-		$x_enlace = "ordenar.php?key=" . $key . "&accion=mostrar";
+		$x_enlace = "ordenar.php?key=" . $key . "&accion=mostrar&mostrar_formato=1";
 	} else {
-		$x_enlace = "ordenar.php?key=" . $key;
+		$x_enlace = "ordenar.php?key=" . $key."&accion=mostrar&mostrar_formato=1";
 	}
 }
 if ($_REQUEST["defecto"]) {
@@ -102,7 +106,7 @@ switch ($sAction) {
 				$x_enlace = 'documentoaddsal.php';
 			}
 		}
-		abrir_url($x_enlace, "_self");
+		abrir_url_digitalizacion($key, $x_enlace, "_self");
 		exit();
 		break;
 }
@@ -110,20 +114,24 @@ $config = busca_filtro_tabla("valor", "configuracion", "nombre='color_encabezado
 ?>
 
 <style type="text/css">
-	<!--INPUT, TEXTAREA, SELECT, body {
+<!--
+INPUT, TEXTAREA, SELECT, body {
 	font-family: Tahoma;
 	font-size: 10px;
 	}
+
 	.phpmaker {
 	font-family: Verdana;
 	font-size: 9px;
 	}
+
 	.encabezado {
 	background-color: <?php echo($config[0]["valor"]); ?>;
 	color:white ;
 	padding:10px;
 	text-align: left;
 	}
+
 	.encabezado_list {
 	background-color: <?php echo($config[0]["valor"]); ?>;
 	color:white ;
@@ -131,6 +139,7 @@ $config = busca_filtro_tabla("valor", "configuracion", "nombre='color_encabezado
 	text-align: center;
 	font-weight: bold;
 	}
+
 	table thead td {
 	font-weight:bold;
 	cursor:pointer;
@@ -141,11 +150,11 @@ $config = busca_filtro_tabla("valor", "configuracion", "nombre='color_encabezado
 	text-transform:Uppercase;
 	vertical-align:middle;
 	}
+
 	table tbody td {
 	font-family: Verdana;
 	font-size: 9px;
 	}
-
 	-->
 </style>
 <script type="text/javascript">
@@ -233,9 +242,10 @@ $config = busca_filtro_tabla("valor", "configuracion", "nombre='color_encabezado
 	<input type="hidden" name="x_enlace" value="<?php echo($x_enlace); ?>">
 	<table width="100%"  border="0" cellpadding="4" cellspacing="1" bgcolor="#CCCCCC">
 		<tr>
-			<td width="205" class="encabezado" ><span class="phpmaker" style="color: #FFFFFF;">DOCUMENTO
-				ASOCIADO</span></td>
-			<td width="335" bgcolor="#F5F5F5"><span class="phpmaker"> <?php
+			<td width="205" class="encabezado">
+                <span class="phpmaker" style="color: #FFFFFF;">DOCUMENTO ASOCIADO</span></td>
+			<td width="335" bgcolor="#F5F5F5"><span class="phpmaker">
+<?php
 			if ($key) {
 				$x_id_documento = $key;
 			} else {
@@ -249,8 +259,7 @@ $config = busca_filtro_tabla("valor", "configuracion", "nombre='color_encabezado
 			}
 			chmod($temporal_usuario, PERMISOS_CARPETAS);
 			?>
-				<input type="hidden" name="x_id_documento" id="x_id_documento"
-					size="30" value="<?php echo htmlspecialchars(@$x_id_documento) ?>">
+				<input type="hidden" name="x_id_documento" id="x_id_documento" size="30" value="<?php echo htmlspecialchars(@$x_id_documento) ?>">
 					<?php
 					$tabla = "documento";
 					if (isset($_SESSION["tipo_doc"]) && $_SESSION["tipo_doc"] == 'registro') {
@@ -272,8 +281,7 @@ $config = busca_filtro_tabla("valor", "configuracion", "nombre='color_encabezado
 		<tr>
 			<td width="205" class="encabezado" ><span class="phpmaker" style="color: #FFFFFF;">ESCANEAR DE NUEVO</span></td>
 			<td width="335" bgcolor="#F5F5F5"><span class="phpmaker"> SI
-				<input type="radio" name="x_escaneo" value="1">
-				NO
+				<input type="radio" name="x_escaneo" value="1">NO
 				<input type="radio" name="x_escaneo" value="0" checked>
 			</span></td>
 		</tr>
@@ -295,6 +303,36 @@ echo (librerias_notificaciones());
 $s_https = '';
 if (PROTOCOLO_CONEXION == 'https://') {
 	$s_https = 's';
+}
+
+function abrir_url_digitalizacion($iddocumento, $location, $target = "_blank") {
+	if (!@$_SESSION['radicacion_masiva']) {
+		if ($target) {
+			?>
+	<script language="javascript">
+		var iddoc = "<?php echo $iddocumento;?>";
+		//alert(iddoc);
+		//parent.getElementById('arbol_formato').cargar_cantidades_documento(iddoc);
+		if(parent.frames['arbol_formato']) {
+			parent.frames['arbol_formato'].postMessage({iddocumento: iddoc}, "*");
+		}
+    	window.open("<?php print($location);?>","<?php print($target);?>");
+    </script>
+<?php
+		} else {
+			?>
+	<script language="javascript">
+		var iddoc = "<?php echo $iddocumento;?>";
+		//alert(iddoc);
+		//parent.getElementById('arbol_formato').cargar_cantidades_documento(iddoc);
+		if(parent.frames['arbol_formato']) {
+			parent.frames['arbol_formato'].postMessage({iddocumento: iddoc}, "*");
+		}
+    	window.open("<?php print($location);?>","centro");
+    </script>
+<?php
+		}
+	}
 }
 ?>
 
