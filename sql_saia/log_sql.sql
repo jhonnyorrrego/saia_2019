@@ -568,6 +568,43 @@ INSERT INTO campos_formato (idcampos_formato, formato_idformato, nombre, etiquet
 
 UPDATE campos_formato SET tipo_dato='TEXT', longitud=NULL WHERE nombre='asignar_dependencias' AND formato_idformato=404;	
 
+-- ----------------------------------------------------------------
 
+UPDATE formato SET exportar='tcpdf';
 
+-- ----------------------------------------------------------------
 
+UPDATE encabezado_formato SET contenido='
+
+<table style="border-collapse: collapse; width: 102.8%;" border="1">
+<tbody>
+<tr>
+<td style="text-align: center; width: 27.75%;"><span><br />{*logo_empresa*}</span></td>
+<td style="text-align: center; width: 58.8%;"><strong><br /><br />PLANILLA DE MENSAJERIA<br />DIVISON DE ADMINISTRACION DE BIENES Y SERVICIOS - SECCION DE GESTION DOCUMENTAL</strong></td>
+<td style="text-align: center; width: 13%;"><br /><br />{*qr_entrega_interna*}</td>
+</tr>
+<tr>
+<td><strong>Auxiliar de Oficina:&nbsp;</strong>{*mensajero_entrega_interna*}</td>
+<td><strong>Recorrido del Dia: </strong>{*recorrido*}<strong> - Fecha Planilla:&nbsp;</strong>{*fecha_planilla*}</td>
+<td style="text-align: center;">Pagina {PAGENO}</td>
+</tr>
+</tbody>
+</table>' WHERE etiqueta='encabezado_despacho';
+
+-- -----------------------------------------------------------------
+UPDATE formato SET exportar='mpdf' WHERE nombre='despacho_ingresados';
+-- ----------------------------------------------------------------
+UPDATE campos_formato SET tipo_dato='TEXT', longitud=NULL WHERE nombre IN('destino','copia_a') AND formato_idformato=3;
+-- ----------------------------------------------------------------
+UPDATE busqueda SET cantidad_registros = '100' WHERE idbusqueda = 103;
+-- ----------------------------------------------------------------
+	INSERT INTO campos_formato ( formato_idformato, nombre, etiqueta, tipo_dato, longitud, obligatoriedad, valor, acciones, ayuda, predeterminado, banderas, etiqueta_html, orden, mascara, adicionales, autoguardado, fila_visible) VALUES
+(403, 'ruta_origen', 'ruta_origen', 'INT', '11', 0, NULL, 'a,e,b', NULL, NULL, NULL, 'hidden', 0, NULL, NULL, 0, 1),
+(403, 'ruta_destino', 'ruta_destino', 'INT', '11', 0, NULL, 'a,e,b', NULL, NULL, NULL, 'hidden', 0, NULL, NULL, 0, 1);
+-- ----------------------------------------------------------------
+UPDATE `campos_formato` SET `etiqueta_html` = 'hidden' WHERE nombre='origen_externo' AND formato_idformato=403;
+UPDATE `campos_formato` SET `valor` = NULL WHERE nombre='origen_externo' AND formato_idformato=403;
+
+UPDATE `campos_formato` SET `etiqueta_html` = 'hidden' WHERE nombre='nombre_origen' AND formato_idformato=403;
+UPDATE `campos_formato` SET `valor` = NULL WHERE nombre='nombre_origen' AND formato_idformato=403;
+-- ----------------------------------------------------------------

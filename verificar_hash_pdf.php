@@ -92,8 +92,8 @@ if(@$_REQUEST['verificar_hash']){
     
     
     $hash_request=obtener_codigo_hash_pdf($ruta_temporal,"crc32");
+    $cadena="<div class='alert alert-info'>";
     if($hash_original['numcampos']){
-        $cadena="";
         $cadena.="
             Hash radicado: ".$hash_original[0]['pdf_hash']."
             </br>
@@ -102,12 +102,16 @@ if(@$_REQUEST['verificar_hash']){
             </br>
         ";
         if($hash_original[0]['pdf_hash']==$hash_request){
-            $cadena.="<div class='badge alert-success'>El PDF es original</div>";
+            $cadena.="<div class='alert alert-success'>El PDF es original</div>";
         }else{
-            $cadena.="<div class='badge alert-warning'>El PDF fue modificado</div>";
+            $cadena.="<div class='alert alert-warning'>El PDF fue modificado</div>";
         }
-        echo($cadena);
     }
+    else{
+    	$cadena.="<div class='alert alert-danger'>No se ha encontrado informaci&oacute;n del documento para validar el c&oacute;digo de verificaci&oacute;n(HASH)</div>";	
+    }
+    $cadena.="</div>";
+    echo($cadena);
     
 }
 
