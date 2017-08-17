@@ -411,10 +411,38 @@ function mostrar_planilla_diligencia_distribucion($iddistribucion){ //Planilla A
 }
 
 
-function generar_check_accion_distribucion(){
-	$checkbox='<input type="checkbox">';
+function generar_check_accion_distribucion($iddistribucion){
+	$checkbox='<input type="checkbox" class="accion_distribucion" value="'.$iddistribucion.'">';
 	return($checkbox);
 }
+function opciones_acciones_distribucion($datos){
+	global $conn;
+	
+	$cnombre_componente=busca_filtro_tabla("nombre","busqueda_componente","idbusqueda_componente=".$datos['idbusqueda_componente'],"",$conn);
+	$nombre_componente=$cnombre_componente[0]['nombre'];
+	
+	$cadena_acciones.="<select id='opciones_acciones_distribucion' class='pull-left btn btn-mini' style='height:22px; margin-left: 10px;'>";
+		$cadena_acciones.="<option value=''>Acciones...</option>";
+		$cadena_acciones.="<option value='boton_generar_planilla'>Generar Planilla</option>";
+			
+		if($nombre_componente=='reporte_distribucion_general_endistribucion'){
+			$cadena_acciones.="<option value='boton_finalizar_entrega'>Finalizar Tr&aacute;mite</option>";
+		}
+			
+		//SELECCIONAR Y QUITAR SELECCIONADOS
+		$cadena_acciones.="<optgroup label='Seleccionar Distribuciones...'>";
+		$cadena_acciones.="<option value='seleccionar_todos_accion_distribucion'>Todos</option>";
+		$cadena_acciones.="<option value='quitar_seleccionados_accion_distribucion'>Niguno</option>";
+		$cadena_acciones.="</optgroup>";
+		//FIN SELECCIONAR Y QUITAR SELECCIONADOS	
+				
+	$cadena_acciones.="</select>";	
+
+	return($cadena_acciones);
+	
+}
+
+
 
 function mostrar_origen_distribucion($tipo_origen,$origen){
 	global $conn;
@@ -469,9 +497,6 @@ function retornar_origen_destino_distribucion($tipo,$valor){
 
 
 function filtrar_mensajero(){
-	
-}
-function select_finalizar_generar_item(){
 	
 }
 
