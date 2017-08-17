@@ -139,7 +139,7 @@ return($texto);
 }
 function contar_tareas($iddoc){
 	global $conn;
-	$tareas=busca_filtro_tabla("A.*,".resta_fechas("A.fecha_vencimiento","'".date("Y-m-d")."'")." AS dias","tareas A","documento_iddocumento=".$iddoc,"",$conn);
+	$tareas=busca_filtro_tabla("A.*,".resta_fechas("A.fecha_tarea","'".date("Y-m-d")."'")." AS dias","tareas A","documento_iddocumento=".$iddoc,"",$conn);
 	$fin=$tareas["numcampos"];
 	$realizados=0;
 	$clase1='';
@@ -336,7 +336,7 @@ if($tipo=='ver_notas'||$tipo=='todos'){
   if(@$funcionario!=="funcionario"){
   	$where_notas=" AND (destino=".$funcionario." OR origen=".$funcionario." OR ver_notas<>0)";
   }
-  $notas_transferencia=busca_filtro_tabla("count(notas) AS notas","buzon_salida","archivo_idarchivo=".$doc." AND notas!='' AND notas IS NOT NULL AND (lower(nombre) LIKE 'TRANSFERIDO' OR lower(nombre) LIKE 'DEVOLUCION')".$where_notas,"",$conn);
+  $notas_transferencia=busca_filtro_tabla("count(notas) AS notas","buzon_salida","archivo_idarchivo=".$doc." AND notas!='' AND notas IS NOT NULL AND (nombre LIKE 'TRANSFERIDO' OR nombre LIKE 'DEVOLUCION')".$where_notas,"",$conn);
   $cantidades["ver_notas"]=intval($comentarios[0]["notas"]+$notas_transferencia[0]["notas"]);
 }
 if($tipo=='ordenar_pag'||$tipo=='todos'){

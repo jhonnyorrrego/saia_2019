@@ -109,10 +109,10 @@ if(@$_REQUEST["tipo"]!==5 && !@$_REQUEST["output"] && !@$_REQUEST["imprimir"]){
 	             					window.parent.parent.frames[0].location="<?php echo($ruta_db_superior);?>ordenar.php?click_mostrar=1&accion=mostrar&mostrar_formato=1&key="+vector_iddoc[1];
 	             				}else if(window.parent.parent.frames[2].frameElement.name=='centro'){
 	             					window.parent.parent.frames[2].location="<?php echo($ruta_db_superior);?>ordenar.php?click_mostrar=1&accion=mostrar&mostrar_formato=1&key="+vector_iddoc[1];
-	             				}					  
+	             				}
                    			}else{
-                   				window.open("<?php echo($ruta_db_superior);?>ordenar.php?click_mostrar=1&accion=mostrar&mostrar_formato=1&key="+iddoc,"arbol_formato");				
-                   			}              			
+                   				window.open("<?php echo($ruta_db_superior);?>ordenar.php?click_mostrar=1&accion=mostrar&mostrar_formato=1&key="+iddoc,"arbol_formato");
+                   			}
                    		}
                    </script>
                 </div>
@@ -192,7 +192,7 @@ if(@$_REQUEST["tipo"]!==5 && !@$_REQUEST["output"] && !@$_REQUEST["imprimir"]){
                 </div>
               <?php
 							}
-              if($datos_admin["editar"]){ // || usuario_actual('login')=='cerok'
+							if($datos_admin["editar"] && !empty($documento->documento[0]["pantalla_idpantalla"])){ // || usuario_actual('login')=='cerok'
               	$titulo=true;
               	$datos_pantalla=busca_filtro_tabla("ruta_pantalla,nombre","pantalla A","A.idpantalla=".$documento->documento[0]["pantalla_idpantalla"],"",$conn);
               ?>
