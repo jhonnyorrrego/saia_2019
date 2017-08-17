@@ -608,3 +608,4 @@ UPDATE `campos_formato` SET `valor` = NULL WHERE nombre='origen_externo' AND for
 UPDATE `campos_formato` SET `etiqueta_html` = 'hidden' WHERE nombre='nombre_origen' AND formato_idformato=403;
 UPDATE `campos_formato` SET `valor` = NULL WHERE nombre='nombre_origen' AND formato_idformato=403;
 -- ----------------------------------------------------------------
+INSERT INTO funciones_formato_accion (idfunciones_formato_accion,idfunciones_formato,accion_idaccion,formato_idformato,momento,estado,orden) VALUES (NULL, '902', '5', '3', 'POSTERIOR', '1', '7'); //valida_tipo_destino_entrada, posterios al editar
