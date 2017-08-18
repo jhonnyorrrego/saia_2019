@@ -279,7 +279,12 @@ function mostrar_diligencia_distribucion($tipo_origen,$estado_recogida){ //Dilig
 	
 	return($diligencia);
 }
-
+function mostrar_tipo_radicado_distribucion($tipo_origen){
+	//1 fun 2 eje
+	$array_tipo_radicado=array(1=>'I',2=>'E');
+	return($array_tipo_radicado[$tipo_origen]);
+	
+}
 function mostrar_nombre_ruta_distribucion($tipo_origen,$estado_recogida,$ruta_origen,$ruta_destino){ //Ruta
 	global $conn;
 	
@@ -398,7 +403,7 @@ function generar_select_mensajeros_distribucion($atributos_input,$tipo_origen,$i
 function mostrar_planilla_diligencia_distribucion($iddistribucion){ //Planilla Asociada
 	global $conn;		
 
-	$planillas=busca_filtro_tabla("b.iddocumento,b.numero","ft_despacho_ingresados a, documento b, ft_item_despacho_ingres c","a.idft_despacho_ingresados=c.ft_despacho_ingresados AND a.documento_iddocumento=b.iddocumento AND lower(b.estado)='aprobado' AND c.distribucion_iddistribucion=".$iddistribucion,"",$conn);
+	$planillas=busca_filtro_tabla("b.iddocumento,b.numero","ft_despacho_ingresados a, documento b, ft_item_despacho_ingres c","a.idft_despacho_ingresados=c.ft_despacho_ingresados AND a.documento_iddocumento=b.iddocumento AND lower(b.estado)='aprobado' AND c.ft_destino_radicacio=".$iddistribucion,"",$conn);
 	$html="No tiene planilla asociada"; //Pendiente
 	if($planillas['numcampos']){
 		$html='';

@@ -610,5 +610,12 @@ UPDATE `campos_formato` SET `valor` = NULL WHERE nombre='nombre_origen' AND form
 -- ----------------------------------------------------------------
 INSERT INTO funciones_formato_accion (idfunciones_formato_accion,idfunciones_formato,accion_idaccion,formato_idformato,momento,estado,orden) VALUES (NULL, '902', '5', '3', 'POSTERIOR', '1', '7'); //valida_tipo_destino_entrada, posterios al editar
 -- ----------------------------------------------------------------
-INSERT INTO funciones_formato (idfunciones_formato,nombre,nombre_funcion,parametros,etiqueta,descripcion,ruta,formato,acciones) VALUES (NULL, '{*mostrar_listado_distribucion_documento*}', 'mostrar_listado_distribucion_documento', '', 'mostrar_listado_distribucion_documento', NULL, '../../distribucion/funciones_distribucion.php', '', 'm');
+//NUEVA DISTRIBUCION 
+DELETE FROM funciones_formato WHERE idfunciones_formato=904; //subir_planilla_despacho_ingresados
+DELETE FROM funciones_formato_accion WHERE idfunciones_formato=904; //subir_planilla_despacho_ingresados - POSTERIOR A SUBIR ANEXO
 -- ----------------------------------------------------------------
+
+
+
+
+
