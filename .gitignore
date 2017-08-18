@@ -9,6 +9,7 @@ errores.txt
 .project
 .settings/
 pruebas_ruben
+pruebas_*
 define.php
 define_*.php
 prueba_nuevo.php

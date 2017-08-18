@@ -62,7 +62,7 @@ function crear_encabezado_pie_pagina($texto,$iddoc,$idformato,$pagina=1){
     $texto=str_replace("##PAGE## DE ##PAGES##","",$texto);
   }
   $fuente = busca_filtro_tabla("valor","configuracion","nombre='tipo_letra'","",$conn);
-	$texto.='<style>table,td {font-size:'.$formato[0]["font_size"].'pt; font-family:'.$fuente[0]["valor"].';}</style>';
+	//$texto.='<style>table,td {font-size:'.$formato[0]["font_size"].'pt; font-family:'.$fuente[0]["valor"].';}</style>';
   return(codifica_encabezado(html_entity_decode(htmlspecialchars_decode($texto))));
 }
 

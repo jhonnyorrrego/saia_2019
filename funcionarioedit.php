@@ -416,12 +416,7 @@ function EditData($sKey,$conn)
 		$theValue =(!get_magic_quotes_gpc()) ? addslashes($GLOBALS["x_nit"]) : $GLOBALS["x_nit"]; 
 		$fieldList["nit"] = "'".$theValue."'";			
 				
-		
-		
-		$theValue = ($GLOBALS["x_funcionario_codigo"] != "") ? intval($GLOBALS["x_funcionario_codigo"]) : "NULL";
-		$fieldList["funcionario_codigo"] = "'".$theValue."'";	
-
-   		$codigo = $theValue;			
+			
 		$theValue = (!get_magic_quotes_gpc()) ? addslashes($GLOBALS["x_login"]) : $GLOBALS["x_login"]; 
 		$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
 		$fieldList["login"] = $theValue;
@@ -466,26 +461,7 @@ function EditData($sKey,$conn)
 		
     $theValue = ($GLOBALS["x_estado"] != "") ? intval($GLOBALS["x_estado"]) : "NULL";
 		$fieldList["estado"] = "'".$theValue."'";
-    		
-		$reemplazo = busca_filtro_tabla("nuevo,antiguo,iddependencia_cargo as id","reemplazo,dependencia_cargo,funcionario","funcionario_idfuncionario=idfuncionario and funcionario_codigo = $codigo and (nuevo=iddependencia_cargo or antiguo=iddependencia_cargo) and reemplazo.activo=1","",$conn);
-		if($reemplazo["numcampos"]>0)
-		 for($i=0; $i<$reemplazo["numcampos"]; $i++)
-     {
-      if($theValue==0 && $reemplazo[$i]["id"]==$reemplazo[$i]["nuevo"])
-      {
-       $nombre_r=busca_filtro_tabla(concatenar_cadena_sql(array("nombres","' '","apellidos"))." as nombre","funcionario,dependencia_cargo","funcionario_idfuncionario=idfuncionario and iddependencia_cargo=".$reemplazo[$i]["antiguo"],"",$conn);
-       confirmacion("El funcionario no se puede desactivar porque esta reemplazando a ".$nombre_r[0]["nombre"].". Desea desactivar el reemplazo ?");
-       $theValue=1;
-       return false;
-      }
-      if($theValue==1 && $reemplazo[$i]["id"]==$reemplazo[$i]["antiguo"])
-      {
-       $nombre_r=busca_filtro_tabla(concatenar_cadena_sql(array("nombres","' '","apellidos"))." as nombre","funcionario,dependencia_cargo","funcionario_idfuncionario=idfuncionario and iddependencia_cargo=".$reemplazo[$i]["nuevo"],"",$conn);
-       confirmacion("No se puede activar porque el funcionario ".$nombre_r[0]["nombre"]." lo esta reemplazando. Desea desactivar el reemplazo ?");
-       $theValue=0; 
-       return false;      
-      }
-     }		
+    			
 		if($theValue==0)
 		{
      phpmkr_query("update dependencia_cargo set estado=0 where funcionario_idfuncionario=$sKeyWrk",$conn) or error("Fallo inactivar los roles del funcioanrio");
@@ -502,18 +478,7 @@ function EditData($sKey,$conn)
 				phpmkr_query($sql1);
 			}
 		}
-    //$theValue = ($GLOBALS["x_acceso_web"] != "") ? intval($GLOBALS["x_acceso_web"]) : "NULL";
-  	//$fieldList["acceso_web"] = $theValue;
-  	
-  	/*$theValue = (!get_magic_quotes_gpc()) ? addslashes($GLOBALS["x_acceso_web"]) : $GLOBALS["x_acceso_web"]; 
-  	$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
-  	$fieldList["acceso_web"] = ($theValue);*/
-    //verifica si existe un codigo repetido en los funcionarios.
-  $verificar = busca_filtro_tabla("*","funcionario A","A.funcionario_codigo=".$fieldList["funcionario_codigo"]." and A.idfuncionario<>$sKeyWrk","",$conn);    
-    if($verificar["numcampos"]>0)
-    { alerta("El codigo del funcionario ya se encuentra asignado");      
-      redirecciona("funcionarioedit.php?key=$sKeyWrk");
-    } 
+
     if ($_POST["x_estado"] == "1"){
 			
     $respuesta=validar_usuarios_activos_edit();		
@@ -586,7 +551,7 @@ function validar_usuarios_activos_edit(){
 	$reemplazos_activos=$reemplazos['numcampos'];
 	$cupos_usados=$funcionarios_activos+$reemplazos_activos;
 	
-	$funcionario_editar=busca_filtro_tabla("estado","funcionario a","a.funcionario_codigo=".$_POST["x_funcionario_codigo"]." AND a.estado=1","",$conn);
+	$funcionario_editar=busca_filtro_tabla("estado","funcionario a","a.nit=".$_POST["x_nit"]." AND a.estado=1","",$conn);
 	
 	//Consulta la cantidad de usuarios definidos en la configuracion y desencripta el valor
 	$consulta_usuarios=busca_filtro_tabla("valor","configuracion","nombre='numero_usuarios'","",$conn);
