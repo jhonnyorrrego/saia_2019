@@ -36,7 +36,7 @@ class SqlSqlServer extends SQL2 {
 			for($i = 0; $i < $this->Numero_Filas(); $i++)
 				$resultado[] = sqlsrv_fetch_array($this->res, SQLSRV_FETCH_ASSOC);
 			return $resultado;
-		} else {// se retorna la matriz
+		} else { // se retorna la matriz
 			return (false);
 		}
 	}
@@ -178,7 +178,7 @@ class SqlSqlServer extends SQL2 {
 		sqlsrv_query($this->Conn->conn, "USE " . $this->Conn->Db);
 		$this->res = sqlsrv_query($this->Conn->conn, $this->consulta);
 		$this->Guardar_log($sql);
-		while($fila = sqlsrv_fetch_array($this->res, SQLSRV_FETCH_NUMERIC)) {
+		while ($fila = sqlsrv_fetch_array($this->res, SQLSRV_FETCH_NUMERIC)) {
 			foreach ( $fila as $valor )
 				$resultado[] = $valor;
 		}
@@ -270,7 +270,7 @@ class SqlSqlServer extends SQL2 {
 	function Lista_Tabla($db) {
 		sqlsrv_query($this->Conn->conn, "USE " . $this->Conn->Db);
 		$this->res = sqlsrv_query($this->Conn->conn, "select name AS nombre from sysobjects where type='U'");
-		while($row = sqlsrv_fetch_array($this->res, SQLSRV_FETCH_NUMERIC))
+		while ($row = sqlsrv_fetch_array($this->res, SQLSRV_FETCH_NUMERIC))
 			$resultado[] = $row[0];
 		asort($resultado);
 		return ($resultado);
@@ -288,7 +288,7 @@ class SqlSqlServer extends SQL2 {
 		}
 		sqlsrv_query($this->Conn->conn, "USE " . $this->Conn->Db) or die($this->consulta);
 		$this->res = sqlsrv_query($this->Conn->conn, $this->consulta);
-		while($row = sqlsrv_fetch_array($this->res, SQLSRV_FETCH_NUMERIC))
+		while ($row = sqlsrv_fetch_array($this->res, SQLSRV_FETCH_NUMERIC))
 			$resultado[] = $row[0];
 
 		asort($resultado);
@@ -440,7 +440,7 @@ class SqlSqlServer extends SQL2 {
 				$result = sqlsrv_query($this->Conn->conn, $sqleve);
 				if (!$result)
 					die(" Error en la consulta: " . sqlsrv_errors());
-					$registro = $this->Ultimo_Insert();
+				$registro = $this->Ultimo_Insert();
 			}
 		}
 	}
@@ -601,7 +601,7 @@ class SqlSqlServer extends SQL2 {
 		return ($resultado);
 	}
 
-	public function campo_formato_tipo_dato($tipo_dato, $longitud, $predeterminado, $banderas=null) {
+	public function campo_formato_tipo_dato($tipo_dato, $longitud, $predeterminado, $banderas = null) {
 		switch (strtoupper(@$tipo_dato)) {
 			case "NUMBER" :
 				$campo .= " decimal ";
@@ -677,7 +677,6 @@ class SqlSqlServer extends SQL2 {
 				}
 				break;
 		}
-
 	}
 
 	public function formato_crear_indice($bandera, $nombre_campo, $nombre_tabla) {
@@ -706,6 +705,52 @@ class SqlSqlServer extends SQL2 {
 		return $traza;
 	}
 
+	protected function formato_generar_tabla_motor($idformato, $formato, $campos_tabla, $campos, $tabla_esta) {
+		$sql_tabla = "";
+		$lcampos = array();
+		if (!$tabla_esta) {
+			$sql_tabla = "CREATE TABLE " . strtolower($formato[0]["nombre_tabla"]) . "(";
+		} else {
+			$this->formato_elimina_indices_tabla($formato[0]["nombre_tabla"]);
+		}
+		for($i = 0; $i < $campos["numcampos"]; $i++) {
+
+			$dato_campo = $this->crear_campo($campos[$i], $formato[0]["nombre_tabla"], $datos_campo);
+			if ($dato_campo && $dato_campo != "") {
+				if (!$tabla_esta) {
+					array_push($lcampos, $dato_campo);
+				} else {
+					$pos = array_search(strtolower($campos[$i]["nombre"]), $campos_tabla);
+					$dato = "";
+
+						if ($pos === false)
+							$dato = "ALTER TABLE " . strtolower($formato[0]["nombre_tabla"]) . " ADD " . $dato_campo;
+							else
+								$dato = "ALTER TABLE " . strtolower($formato[0]["nombre_tabla"]) . " ALTER COLUMN " . $dato_campo;
+								guardar_traza($dato, $formato[0]["nombre_tabla"]);
+								$this->Ejecutar_Sql($dato);
+				}
+			}
+		}
+		// die();
+		if (!$tabla_esta) {
+			$sql_tabla .= implode(",", $lcampos);
+			$sql_tabla .= ") ";
+			guardar_traza($sql_tabla, $formato[0]["nombre_tabla"]);
+
+			if ($this->Ejecutar_Sql($sql_tabla)) {
+				alerta_formatos("Tabla " . $formato[0]["nombre_tabla"] . " Generada con Exito");
+				$this->crear_indices_tabla($formato[0]["idformato"]);
+			} else {
+				die("No es posible Generar la tabla para el Formato " . $sql_tabla . "<br />" . phpmkr_error());
+				return (false);
+			}
+		} else {
+			$this->crear_indices_tabla($formato[0]["idformato"]);
+		}
+		return (false);
+	}
+
 	protected function formato_elimina_indices_tabla($tabla) {
 		global $conn, $sql;
 		$tabla = strtoupper($tabla);
@@ -729,7 +774,7 @@ class SqlSqlServer extends SQL2 {
 		$sql = "SELECT COUNT(table_name) FROM information_schema.tables WHERE table_name = '$tabla'";
 		$rs = $this->Ejecutar_sql($sql);
 		$fila = $this->sacar_fila($rs);
-		if($fila) {
+		if ($fila) {
 			return ($fila["existe"] > 0);
 		}
 		return false;

@@ -373,13 +373,225 @@ abstract class SQL2 {
 
 	public abstract function formato_crear_indice($bandera, $nombre_campo, $nombre_tabla);
 
-	public abstract function generar_tabla($formato, $idformato);
-
 	protected abstract function formato_elimina_indices_tabla($tabla);
 
+	/*
+	 * <Clase>
+	 * <Nombre>elimina_indice_campo</Nombre>
+	 * <Parametros>$tabla:define la tabla donde se debe hacer el cambio;$campo:arreglo que debe contener los siguentes parametros:
+	 * Key_name:Nombre o tipo de LLave de la llave.
+	 * Column_name: Nombre de la Columna.</Parametros>
+	 * <Responsabilidades>Elimina el indice seleccionado<Responsabilidades>
+	 * <Notas></Notas>
+	 * <Excepciones></Excepciones>
+	 * <Salida></Salida>
+	 * <Pre-condiciones><Pre-condiciones>
+	 * <Post-condiciones><Post-condiciones>
+	 * </Clase>
+	 */
 	protected abstract function elimina_indice_campo($tabla, $campo);
 
 	protected abstract function verificar_existencia($tabla);
+
+	protected abstract function formato_generar_tabla_motor($idformato, $formato, $campos_tabla, $campos, $tabla_esta);
+
+	public function formato_generar_tabla($idformato, $formato) {
+		global $sql, $conn;
+		$datos_tabla = $this->Busca_tabla($formato[0]["nombre_tabla"]);
+		$tabla_esta = $datos_tabla["numcampos"];
+		for($i = 0; $i < $datos_tabla["numcampos"]; $i++) {
+			$datos_tabla[$i] = array_change_key_case($datos_tabla[$i], CASE_LOWER);
+		}
+		if ($datos_tabla["numcampos"]) {
+			$campos_tabla = extrae_campo($datos_tabla, "field", "U,m"); // esto es para saber si existe el campo o no.
+		} else {
+			$campos_tabla = array();
+		}
+
+		$this->crear_campos_basicos_formato();
+		// 20160916 FIN Agregar el campo estado_documento si no existe
+		$campos = $this->ejecuta_filtro_tabla("select * from campos_formato A where A.formato_idformato=" . $idformato);
+		if (!$campos["numcampos"]) {
+			alerta_formatos("Problemas al Generar la tabla, No existen Campos");
+			return (false);
+		}
+
+		$this->formato_generar_tabla_motor($idformato, $formato, $campos_tabla, $campos, $tabla_esta);
+		$sql_tabla = "";
+		$lcampos = array();
+		$campos = $this->ejecuta_filtro_tabla("select * from campos_formato A where A.formato_idformato=" . $idformato);
+		if (!$tabla_esta) {
+			$sql_tabla = "CREATE TABLE " . strtolower($formato[0]["nombre_tabla"]) . "(";
+		} else {
+			$this->formato_elimina_indices_tabla($formato[0]["nombre_tabla"]);
+		}
+		for($i = 0; $i < $campos["numcampos"]; $i++) {
+			if (MOTOR == "Oracle") {
+				$datos_campo = ejecuta_filtro_tabla("SELECT decode(nullable,'Y',0,'N',1) as nulo FROM user_tab_columns WHERE table_name='" . strtoupper($formato[0]["nombre_tabla"]) . "' and lower(column_name)='{$campos[$i]["nombre"]}' ORDER BY column_name ASC", $conn);
+
+				if ($datos_campo[0]["nulo"] != $campos[$i]["obligatoriedad"]) {
+					if ($formato[0]["nombre_tabla"]) {
+						$sql = "alter table " . $formato[0]["nombre_tabla"] . " modify(" . $campos[$i]["nombre"];
+						if (!$campos[$i]["obligatoriedad"])
+							$sql .= " NULL)";
+							else
+								$sql .= " NOT NULL)";
+								guardar_traza($sql, $formato[0]["nombre_tabla"]);
+								ejecuta_sql($sql, $conn);
+					}
+				}
+			}
+
+			$dato_campo = $this->crear_campo($campos[$i], $formato[0]["nombre_tabla"], $datos_campo);
+			if ($dato_campo && $dato_campo != "") {
+				if (!$tabla_esta) {
+					array_push($lcampos, $dato_campo);
+				} else {
+					$pos = array_search(strtolower($campos[$i]["nombre"]), $campos_tabla);
+					$dato = "";
+
+					if (MOTOR == "MySql") {
+						if ($pos === false) {
+							if ($formato[0]["nombre_tabla"]) {
+								$dato = "ALTER TABLE " . strtolower($formato[0]["nombre_tabla"]) . " ADD " . $dato_campo;
+							}
+						} else {
+							if ($formato[0]["nombre_tabla"]) {
+								$dato = "ALTER TABLE " . strtolower($formato[0]["nombre_tabla"]) . " MODIFY " . $dato_campo;
+							}
+						}
+						if ($dato != "") {
+							guardar_traza($dato, $formato[0]["nombre_tabla"]);
+							phpmkr_query($dato);
+						}
+					} else if (MOTOR == "Oracle") {
+						if ($pos === false) {
+							if ($formato[0]["nombre_tabla"]) {
+								$dato = "ALTER TABLE " . strtolower($formato[0]["nombre_tabla"]) . " ADD " . $dato_campo;
+							}
+						} else {
+							if ($formato[0]["nombre_tabla"]) {
+								$dato = "ALTER TABLE " . strtolower($formato[0]["nombre_tabla"]) . " MODIFY " . $dato_campo;
+							}
+						}
+						guardar_traza($dato, $formato[0]["nombre_tabla"]);
+						phpmkr_query($dato, $conn);
+					} else if (MOTOR == "SqlServer" || MOTOR == "MSSql") {
+						if ($pos === false)
+							$dato = "ALTER TABLE " . strtolower($formato[0]["nombre_tabla"]) . " ADD " . $dato_campo;
+							else
+								$dato = "ALTER TABLE " . strtolower($formato[0]["nombre_tabla"]) . " ALTER COLUMN " . $dato_campo;
+								guardar_traza($dato, $formato[0]["nombre_tabla"]);
+								phpmkr_query($dato, $conn);
+					}
+				}
+			}
+		}
+		// die();
+		if (!$campos["numcampos"]) {
+			alerta_formatos("Problemas al Generar la tabla, No existen Campos");
+			return (false);
+		}
+		if (!$tabla_esta) {
+			$sql_tabla .= implode(",", $lcampos);
+			$sql_tabla .= ") ";
+			guardar_traza($sql_tabla, $formato[0]["nombre_tabla"]);
+
+			if (phpmkr_query($sql_tabla, $conn)) {
+				alerta_formatos("Tabla " . $formato[0]["nombre_tabla"] . " Generada con Exito");
+				$this->crear_indices_tabla($formato[0]["idformato"]);
+			} else {
+				die("No es posible Generar la tabla para el Formato " . $sql_tabla . "<br />" . phpmkr_error());
+				return (false);
+			}
+		} else {
+			$this->crear_indices_tabla($formato[0]["idformato"]);
+		}
+		return (false);
+	}
+
+	/*
+	 * <Clase>
+	 * <Nombre>crear_campo</Nombre>
+	 * <Parametros>$datos_campo:vector con los datos de configuracion del campo, guardados en campos_formato;$tabla:tabla a la que pertenece el campo;$estructura_campo:estructura actual del campo en la base de datos</Parametros>
+	 * <Responsabilidades>Compara los datos actuales del campo con la nueva configuraci�n y realiza los cambios necesarios<Responsabilidades>
+	 * <Notas></Notas>
+	 * <Excepciones></Excepciones>
+	 * <Salida></Salida>
+	 * <Pre-condiciones><Pre-condiciones>
+	 * <Post-condiciones><Post-condiciones>
+	 * </Clase>
+	 */
+	protected function crear_campo($datos_campo, $tabla, $estructura_campo = null) {
+		$campo = "";
+
+		if ($datos_campo["nombre"]) {
+			if (!is_numeric($datos_campo["nombre"]))
+				$campo .= strtolower(str_replace(" ", "_", trim($datos_campo["nombre"])));
+				else
+					return (false);
+		}
+		if ($datos_campo["etiqueta_html"] == "etiqueta") {
+			return false;
+		}
+		$campo = $this->campo_formato_tipo_dato($datos_campo["tipo_dato"], $datos_campo["longitud"], $datos_campo["predeterminado"], $datos_campo["banderas"]);
+		//Valida si se uso por defecto int(11) o number(11)
+		if ((MOTOR == "MySql" || MOTOR == "Oracle") && empty($datos_campo["longitud"]) && preg_match("/(int\(|NUMBER\()11/", $campo)) {
+			$sql = "UPDATE campos_formato SET longitud=11 WHERE idcampos_formato=" . $datos_campo["idcampos_formato"];
+			guardar_traza($sql, $tabla);
+			$this->Ejecutar_Sql($sql);
+		}
+
+		if ($estructura_campo["nulo"] != $datos_campo["obligatoriedad"] && MOTOR == "MySql") {
+			if (!$datos_campo["obligatoriedad"])
+				$campo .= " NULL ";
+				else
+					$campo .= " NOT NULL ";
+		}
+
+		return ($campo);
+	}
+
+	protected function crear_campos_basicos_formato($idformato, $formato) {
+		$pos = $this->ejecuta_filtro_tabla("select nombre from campos_formato where formato_idformato=" . $idformato . " and nombre='id{$formato[0]["nombre_tabla"]}'");
+		if (!$pos["numcampos"]) {
+			$sqlid = "INSERT INTO campos_formato(formato_idformato,nombre,etiqueta,tipo_dato,longitud,obligatoriedad,banderas,acciones,etiqueta_html) VALUES('" . $idformato . "','id{$formato[0]["nombre_tabla"]}','" . strtoupper($formato[0]["nombre"]) . "','INT','11','1','ai,pk','a,e','hidden')";
+			guardar_traza($sqlid, $formato[0]["nombre_tabla"]);
+			$this->Ejecutar_Sql($sqlid) or die($sqlid);
+		}
+		$pos = $this->ejecuta_filtro_tabla("select nombre from campos_formato where formato_idformato=" . $idformato . " and nombre='documento_iddocumento'");
+		if (!$pos["numcampos"] && !$formato[0]["item"]) {
+			$sqldoc = "INSERT INTO campos_formato(formato_idformato,nombre,etiqueta,tipo_dato,longitud,obligatoriedad,banderas,acciones,etiqueta_html) VALUES('" . $idformato . "','documento_iddocumento','DOCUMENTO ASOCIADO','INT','11','1','i','a,e','hidden')";
+			guardar_traza($sqldoc,$formato[0]["nombre_tabla"]);
+			$this->Ejecutar_Sql($sqldoc) or die($sqldoc);
+		}
+		$pos = $this->ejecuta_filtro_tabla("select nombre from campos_formato where formato_idformato=$idformato and nombre='dependencia'");
+		if (!$pos["numcampos"] && !$formato[0]["item"]) {
+			$sqldoc = "INSERT INTO campos_formato(formato_idformato,nombre,etiqueta,tipo_dato,longitud,obligatoriedad,banderas,acciones,etiqueta_html,valor) VALUES('" . $idformato . "','dependencia','DEPENDENCIA DEL CREADOR DEL DOCUMENTO','INT','11','1','i,fdc','a,e','hidden','{*buscar_dependencia*}')";
+			guardar_traza($sqldoc,$formato[0]["nombre_tabla"]);
+			$this->Ejecutar_Sql($sqldoc) or die($sqldoc);
+		}
+		$pos = $this->ejecuta_filtro_tabla("select nombre from campos_formato where formato_idformato=" . $idformato . " and nombre='encabezado'");
+		if (!$pos["numcampos"] && !$formato[0]["item"]) {
+			$sqldoc = "INSERT INTO campos_formato(formato_idformato,nombre,etiqueta,tipo_dato,longitud,obligatoriedad,acciones,etiqueta_html,predeterminado) VALUES('" . $idformato . "','encabezado','ENCABEZADO','INT','11','1','a,e','hidden',1)";
+			guardar_traza($sqldoc,$formato[0]["nombre_tabla"]);
+			$this->Ejecutar_Sql($sqldoc) or die($sqldoc);
+		}
+		$pos = $this->ejecuta_filtro_tabla("select nombre from campos_formato where formato_idformato=" . $idformato . " and nombre='firma'");
+		if (!$pos["numcampos"] && !$formato[0]["item"]) {
+			$sqldoc = "INSERT INTO campos_formato(formato_idformato,nombre,etiqueta,tipo_dato,longitud,obligatoriedad,banderas,acciones,etiqueta_html,predeterminado) VALUES('" . $idformato . "','firma','FIRMAS DIGITALES','INT','11','1','','a,e','hidden',1)";
+			guardar_traza($sqldoc,$formato[0]["nombre_tabla"]);
+			$this->Ejecutar_Sql($sqldoc) or die($sqldoc);
+		}
+		// 20160916 Agregar el campo estado_documento si no existe
+		$pos = $this->ejecuta_filtro_tabla("select nombre from campos_formato where formato_idformato=" . $idformato . " and nombre='estado_documento'");
+		if (!$pos["numcampos"] && !$formato[0]["item"]) {
+			$sqldoc = "INSERT INTO campos_formato(formato_idformato,nombre,etiqueta,tipo_dato,longitud,obligatoriedad,banderas,acciones,etiqueta_html,predeterminado) VALUES('" . $idformato . "','estado_documento','ESTADO DEL DOCUMENTO','INT','11','1','','a,e','hidden',1)";
+			guardar_traza($sqldoc,$formato[0]["nombre_tabla"]);
+			$this->Ejecutar_Sql($sqldoc) or die($sqldoc);
+		}
+
+	}
 
 	protected function ejecuta_filtro_tabla($sql2) {
 		$retorno = array();
