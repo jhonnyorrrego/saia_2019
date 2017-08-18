@@ -775,7 +775,9 @@ function mostrar_item_destino_radicacion($idformato,$iddoc){
     	    }
                 if(($_REQUEST['tipo']!=5 && $datos[$i]['estado_item']==2 && usuario_actual('funcionario_codigo')==$destino[0]['funcionario_codigo'])){
                     $parte_tabla='<a style="cursor:pointer;" class="highslide" onclick="return hs.htmlExpand(this, { objectType: \'iframe\',width: 300, height: 300,preserveContent:false} )" tipo="finalizacion" href="'.PROTOCOLO_CONEXION.RUTA_PDF.'/formatos/radicacion_entrada/finalizar_items.php?idft='.$datos[$i]['idft_destino_radicacion'].'">Finalizar</a>';
-                }elseif($datos[$i]['estado_item']<=2){
+                } elseif($datos[$i]['estado_item']==1){
+                	$parte_tabla='Por Distribuir';
+                }elseif($datos[$i]['estado_item']==2){
                     $parte_tabla='En Distribuci&oacute;n';
                 }elseif($datos[$i]['estado_item']==3){
                     $parte_tabla='Finalizado';
