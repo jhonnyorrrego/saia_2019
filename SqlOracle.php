@@ -684,7 +684,6 @@ class SqlOracle extends SQL2 {
 		$nombre_tabla = strtoupper($nombre_tabla);
 		$nombre_campo = strtoupper($nombre_campo);
 		$banderas = explode(",", $todas_banderas);
-		$traza = array();
 		if (strlen($nombre_tabla) > 26)
 			$aux = substr($nombre_tabla, 0, 26);
 		else
@@ -738,17 +737,10 @@ class SqlOracle extends SQL2 {
 
 				break;
 		}
-		return $traza;
 	}
 
 	protected function formato_generar_tabla_motor($idformato, $formato, $campos_tabla, $campos, $tabla_esta) {
-		$sql_tabla = "";
 		$lcampos = array();
-		if (!$tabla_esta) {
-			$sql_tabla = "CREATE TABLE " . strtolower($formato[0]["nombre_tabla"]) . "(";
-		} else {
-			$this->formato_elimina_indices_tabla($formato[0]["nombre_tabla"]);
-		}
 		for($i = 0; $i < $campos["numcampos"]; $i++) {
 			$datos_campo = ejecuta_filtro_tabla("SELECT decode(nullable,'Y',0,'N',1) as nulo FROM user_tab_columns WHERE table_name='" . strtoupper($formato[0]["nombre_tabla"]) . "' and lower(column_name)='{$campos[$i]["nombre"]}' ORDER BY column_name ASC", $conn);
 
@@ -788,22 +780,7 @@ class SqlOracle extends SQL2 {
 			}
 		}
 		// die();
-		if (!$tabla_esta) {
-			$sql_tabla .= implode(",", $lcampos);
-			$sql_tabla .= ") ";
-			guardar_traza($sql_tabla, $formato[0]["nombre_tabla"]);
-
-			if ($this->Ejecutar_Sql($sql_tabla, $conn)) {
-				alerta_formatos("Tabla " . $formato[0]["nombre_tabla"] . " Generada con Exito");
-				$this->crear_indices_tabla($formato[0]["idformato"]);
-			} else {
-				die("No es posible Generar la tabla para el Formato " . $sql_tabla . "<br />" . phpmkr_error());
-				return (false);
-			}
-		} else {
-			$this->crear_indices_tabla($formato[0]["idformato"]);
-		}
-		return (false);
+		return $lcampos;
 	}
 
 	protected function formato_elimina_indices_tabla($tabla) {
@@ -836,8 +813,7 @@ class SqlOracle extends SQL2 {
 
 	protected function elimina_indice_campo($tabla, $campo) {
 		if ($campo["Key_name"] == "PRIMARY") {
-			$verifica_existencia = busca_filtro_tabla("*", $tabla, "", "", $conn);
-			if ($verifica_existencia['numcampos']) {
+			if ($this->verificar_existencia($tabla)) {
 				$sql = "ALTER TABLE " . strtolower($tabla) . " DROP PRIMARY KEY DROP INDEX ";
 				guardar_traza($sql, strtolower($tabla));
 				$this->Ejecutar_Sql($sql);
@@ -845,8 +821,7 @@ class SqlOracle extends SQL2 {
 			}
 		}
 		if ($campo["Key_name"] == "UNIQUE") {
-			$verifica_existencia = busca_filtro_tabla("*", $tabla, "", "", $conn);
-			if ($verifica_existencia['numcampos']) {
+			if ($this->verificar_existencia($tabla)) {
 				$sql = "ALTER TABLE " . strtolower($tabla) . " DROP CONSTRAINT " . $campo["Column_name"] . " DROP INDEX ";
 				guardar_traza($sql, strtolower($tabla));
 				$this->Ejecutar_Sql($sql);

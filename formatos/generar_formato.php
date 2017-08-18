@@ -127,8 +127,11 @@ class GenerarFormato {
 		$iddocesta = 0;
 		$formato = busca_filtro_tabla("*", "formato A", "A.idformato=" . $this->idformato, "", $conn);
 		if ($formato["numcampos"]) {
-			//$campos = busca_filtro_tabla("*", "campos_formato A", "A.formato_idformato=" . $idformato, "", $conn);
-			return $conn->formato_generar_tabla($idformato, $formato);
+			//$resp["estado"] = "KO";
+			//$resp["mensaje"] = "Problemas al Generar la tabla, No existen Campos";
+
+			$resp = $conn->formato_generar_tabla($this->idformato, $formato);
+			alerta_formatos($resp["mensaje"]);
 		} else {
 			alerta_formatos("No es posible Generar la tabla para el Formato");
 			return (false);
@@ -211,54 +214,6 @@ class GenerarFormato {
 		return (true);
 	}
 
-	/*
-	 * <Clase>
-	 * <Nombre>crear_indices_tabla</Nombre>
-	 * <Parametros>$formato:id del formato</Parametros>
-	 * <Responsabilidades>Busca en la configuraci�n de los campos los que deben ser indices y llama la funci�n que los crea<Responsabilidades>
-	 * <Notas></Notas>
-	 * <Excepciones></Excepciones>
-	 * <Salida></Salida>
-	 * <Pre-condiciones><Pre-condiciones>
-	 * <Post-condiciones><Post-condiciones>
-	 * </Clase>
-	 */
-	private function crear_indices_tabla($formato) {
-		global $conn;
-		$campos = busca_filtro_tabla("", "campos_formato", "formato_idformato=" . $formato . " AND (banderas IS NOT NULL OR banderas<>'')", "", $conn);
-		$tabla = busca_filtro_tabla("nombre_tabla", "formato", "idformato=" . $formato, "", $conn);
-
-		for($i = 0; $i < $campos["numcampos"]; $i++) {
-			$this->crear_indice($campos[$i]["banderas"], $campos[$i]["nombre"], $tabla[0]["nombre_tabla"]);
-		}
-	}
-
-	/*
-	 * <Clase>
-	 * <Nombre>crear_indice</Nombre>
-	 * <Parametros>$todas_banderas:cadena de texto con las banderas del campo separadas por comas;$nombre_campo:nombre del campo;$nombre_tabla:nombre de la tabla donde se va a crear el indice</Parametros>
-	 * <Responsabilidades>Crea los indices en la tabla y campo especificados segun la informaci�n del campo bandera, el cual indica que tipo de indices se deben crear<Responsabilidades>
-	 * <Notas></Notas>
-	 * <Excepciones></Excepciones>
-	 * <Salida></Salida>
-	 * <Pre-condiciones><Pre-condiciones>
-	 * <Post-condiciones><Post-condiciones>
-	 * </Clase>
-	 */
-	private function crear_indice($todas_banderas, $nombre_campo, $nombre_tabla) {
-		global $conn;
-		$nombre_tabla = strtoupper($nombre_tabla);
-		$nombre_campo = strtoupper($nombre_campo);
-		$banderas = explode(",", $todas_banderas);
-		for($j = 0; $j < count($banderas); $j++) {
-			$traza = $conn->formato_crear_indice($banderas[$j], $nombre_campo, $nombre_tabla);
-			if(!empty($traza)) {
-				foreach ($traza as $dato) {
-					guardar_traza($dato, $nombre_tabla);
-				}
-			}
-		}
-	}
 
 
 	/*

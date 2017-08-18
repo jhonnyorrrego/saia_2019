@@ -74,7 +74,7 @@ class SqlPostgres extends SQL2 {
 		if ($sql && $sql != "" && $this->Conn->conn) {
 			// Quitar "from dual".
 			$sql = preg_replace("/from\s+dual\s*$/i", "", $sql);
-			$this->res = pg_query($this->Conn->conn, $sql) or die("ERROR SQL " . pg_last_error($this->Conn->conn) . " en " . $_SERVER["PHP_SELF"] . " ->" . $sql); // or error//("Error al Ejecutar: $sql --- ".postgres_error());
+			$this->res = pg_query($this->Conn->conn, $sql); // or die("ERROR SQL " . pg_last_error($this->Conn->conn) . " en " . $_SERVER["PHP_SELF"] . " ->" . $sql); // or error//("Error al Ejecutar: $sql --- ".postgres_error());
 
 			if ($this->res) {
 				if (strpos(strtolower($sql), "insert") !== false)
@@ -180,7 +180,7 @@ class SqlPostgres extends SQL2 {
 		$this->consulta = $sql;
 		$this->res = pg_query($this->Conn->conn, $this->consulta);
 		$this->Guardar_log($sql);
-		while ($fila = pg_fetch_row($this->res)) {
+		while($fila = pg_fetch_row($this->res)) {
 			foreach ( $fila as $valor )
 				$resultado[] = $valor;
 		}
@@ -284,7 +284,7 @@ class SqlPostgres extends SQL2 {
 	 */
 	function Lista_Tabla($db) {
 		$this->res = pg_query($this->Conn->conn, "SHOW TABLES") or die("Error en la Ejecucución del Proceso SQL: " . pg_last_error($this->Conn->conn));
-		while ($row = pg_fetch_row($this->res))
+		while($row = pg_fetch_row($this->res))
 			$resultado[] = $row[0];
 		return ($resultado);
 	}
@@ -302,7 +302,7 @@ class SqlPostgres extends SQL2 {
 	 */
 	function Lista_Bd() {
 		$this->res = pg_query($this->Conn->conn, "SHOW DATABASES") or die("Error " . pg_last_error($this->Conn->conn));
-		while ($row = pg_fetch_row($this->res))
+		while($row = pg_fetch_row($this->res))
 			$resultado[] = $row[0];
 		asort($resultado);
 		return ($resultado);
@@ -599,7 +599,7 @@ class SqlPostgres extends SQL2 {
 		if ($tabla == NULL)
 			$tabla = $_REQUEST["tabla"];
 		$datos_tabla = $this->Ejecutar_Sql("DESCRIBE " . $tabla);
-		while ($fila = phpmkr_fetch_array($datos_tabla)) { // print_r($fila);
+		while($fila = phpmkr_fetch_array($datos_tabla)) { // print_r($fila);
 			if ($tipo_retorno) {
 				$lista_campos[] = array_map(strtolower, $fila);
 			} else {
@@ -621,7 +621,7 @@ class SqlPostgres extends SQL2 {
 			if ($log) {
 				preg_match("/.*=(.*)/", strtolower($condicion), $resultados);
 				$llave = trim($resultados[1]);
-				$anterior = busca_filtro_tabla($campo, $tabla, $condicion, "", $this);
+				$anterior = $this->ejecuta_filtro_tabla("select $campo from $tabla where $condicion");
 				$sql_anterior = "update $tabla set $campo='" . addslashes(stripslashes($anterior[0][0])) . "' where $condicion";
 
 				$sqleve = "INSERT INTO evento(funcionario_codigo, fecha, evento, tabla_e, registro_id, estado,detalle,codigo_sql) VALUES('" . usuario_actual("funcionario_codigo") . "','" . date('Y-m-d H:i:s') . "','MODIFICAR', '$tabla', $llave, '0','" . addslashes($sql_anterior) . "','" . addslashes($sql) . "')";
@@ -716,78 +716,78 @@ class SqlPostgres extends SQL2 {
 		}
 	}
 
-	public function formato_crear_indice($todas_banderas, $nombre_campo, $nombre_tabla) {
-		$nombre_campo = strtoupper($nombre_campo);
-		$banderas = explode(",", $todas_banderas);
-		$traza = array();
-		for($j = 0; $j < count($banderas); $j++) {
-			if (strlen($nombre_tabla) > 26) {
-				$aux = substr($nombre_tabla, 0, 26);
-			} else {
-				$aux = $nombre_tabla;
-			}
-			$this->filas = 0;
+	public function formato_crear_indice($bandera, $nombre_campo, $nombre_tabla) {
+		$nombre_tabla = strtolower($nombre_tabla);
+		$nombre_campo = strtolower($nombre_campo);
 
-			switch (strtolower($banderas[$j])) {
-				case "pk" :
+		$nombre_seq = $nombre_tabla . "_" . $nombre_campo . "_seq";
+		if (strlen($nombre_tabla) > 26) {
+			$aux = substr($nombre_tabla, 0, 26);
+		} else {
+			$aux = $nombre_tabla;
+		}
+		$this->filas = 0;
 
-					$sql2 = "SELECT last_value AS ultimo from " . $nombre_seq;
+		switch (strtolower($bandera)) {
+			case "pk" :
 
-					$rs_siguiente = $this->Ejecutar_sql($sql2, $conn);
+				$sql2 = $this->ejecuta_filtro_tabla("SELECT last_value AS ultimo from " . $nombre_seq);
 
-					if ($this->filas) {
-						$siguiente = $this->sacar_fila($rs_siguiente);
+				if ($sql2["numcampos"]) {
+					$siguiente = $sql2[0]["ultimo"];
 
-						$inicio = $siguiente["ultimo"];
-						$dato = "DROP SEQUENCE " . $nombre_seq;
-						guardar_traza($dato, $nombre_tabla);
-						$this->Ejecutar_sql($dato);
-					} else {
-						$inicio = 1;
-					}
-					// $dato = "CREATE INDEX PK_" . $nombre_campo . " ON " . $nombre_tabla . "(" . $nombre_campo . ") LOGGING TABLESPACE " . TABLESPACE . " PCTFREE 10 INITRANS 2 MAXTRANS 255 STORAGE (INITIAL 128K MINEXTENTS 1 MAXEXTENTS 2147483645 PCTINCREASE 0 BUFFER_POOL DEFAULT) NOPARALLEL";
-					// guardar_traza($dato, $nombre_tabla);
-					// $this->Ejecutar_sql($dato);
-					if ($this->verificar_existencia($nombre_tabla)) {
-						$dato = "CREATE SEQUENCE " . $nombre_seq . " INCREMENT 1 START " . $inicio . " MINVALUE 1 MAXVALUE 9223372036854775807 CACHE 1";
-						guardar_traza($dato, $nombre_tabla);
-						$this->Ejecutar_sql($dato);
-						$dato = "ALTER TABLE $nombre_tabla ALTER COLUMN $nombre_campo SET DEFAULT nextval('$nombre_seq')";
-						guardar_traza($dato, $nombre_tabla);
-						$this->Ejecutar_sql($dato);
-						$dato = "ALTER TABLE " . $nombre_tabla . " ADD CONSTRAINT PK_" . $nombre_campo . "  PRIMARY KEY (" . $nombre_campo . ")";
-						guardar_traza($dato, $nombre_tabla);
-						$this->Ejecutar_sql($dato);
-					}
-
-					// $dato = "CREATE OR REPLACE TRIGGER " . $aux . "_TRG BEFORE INSERT OR UPDATE ON " . $nombre_tabla . " FOR EACH ROW BEGIN IF INSERTING AND :NEW." . $nombre_campo . " IS NULL THEN SELECT " . $aux . "_SEQ.NEXTVAL INTO :NEW." . $nombre_campo . " FROM DUAL; END IF; END;";
-					// guardar_traza($dato, $nombre_tabla);
-					// $this->Ejecutar_sql($dato);
-					break;
-				case "u" :
-					if ($this->verificar_existencia($nombre_tabla)) {
-						$dato = "ALTER TABLE " . $nombre_tabla . " ADD CONSTRAINT U_" . $nombre_campo . " UNIQUE( " . $nombre_campo . " )";
-						guardar_traza($dato, $nombre_tabla);
-						$this->Ejecutar_sql($dato);
-					}
-					break;
-				case "i" :
-					$campo2 = $nombre_tabla . "_" . $nombre_campo;
-					if (strlen($campo2) > 15) {
-						$campo2 = str_replace("FT_", "", substr($campo2, 0, 15));
-					}
-					$dato = "CREATE INDEX I_" . $campo2 . " ON " . $nombre_tabla . " (" . $nombre_campo . ") TABLESPACE " . TABLESPACE;
+					$inicio = $siguiente;
+					$dato = "DROP SEQUENCE " . $nombre_seq . " CASCADE";
 					guardar_traza($dato, $nombre_tabla);
 					$this->Ejecutar_sql($dato);
+				} else {
+					$inicio = 1;
+				}
+				// $dato = "CREATE INDEX PK_" . $nombre_campo . " ON " . $nombre_tabla . "(" . $nombre_campo . ") LOGGING TABLESPACE " . TABLESPACE . " PCTFREE 10 INITRANS 2 MAXTRANS 255 STORAGE (INITIAL 128K MINEXTENTS 1 MAXEXTENTS 2147483645 PCTINCREASE 0 BUFFER_POOL DEFAULT) NOPARALLEL";
+				// guardar_traza($dato, $nombre_tabla);
+				// $this->Ejecutar_sql($dato);
+				if ($this->verificar_existencia($nombre_tabla)) {
+					$dato = "CREATE SEQUENCE " . $nombre_seq . " INCREMENT 1 START " . $inicio . " MINVALUE 1 MAXVALUE 9223372036854775807 CACHE 1";
+					guardar_traza($dato, $nombre_tabla);
+					$this->Ejecutar_sql($dato);
+					$dato = "ALTER TABLE $nombre_tabla ALTER COLUMN $nombre_campo SET DEFAULT nextval('$nombre_seq')";
+					guardar_traza($dato, $nombre_tabla);
+					$this->Ejecutar_sql($dato);
+					$dato = "ALTER TABLE " . $nombre_tabla . " ADD CONSTRAINT PK_" . $nombre_campo . "  PRIMARY KEY (" . $nombre_campo . ")";
+					guardar_traza($dato, $nombre_tabla);
+					$this->Ejecutar_sql($dato);
+				}
 
-					break;
-			}
+				// $dato = "CREATE OR REPLACE TRIGGER " . $aux . "_TRG BEFORE INSERT OR UPDATE ON " . $nombre_tabla . " FOR EACH ROW BEGIN IF INSERTING AND :NEW." . $nombre_campo . " IS NULL THEN SELECT " . $aux . "_SEQ.NEXTVAL INTO :NEW." . $nombre_campo . " FROM DUAL; END IF; END;";
+				// guardar_traza($dato, $nombre_tabla);
+				// $this->Ejecutar_sql($dato);
+				break;
+			case "u" :
+				if ($this->verificar_existencia($nombre_tabla)) {
+					$dato = "ALTER TABLE " . $nombre_tabla . " ADD CONSTRAINT U_" . $nombre_campo . " UNIQUE( " . $nombre_campo . " )";
+					guardar_traza($dato, $nombre_tabla);
+					$this->Ejecutar_sql($dato);
+				}
+				break;
+			case "i" :
+				$campo2 = $nombre_tabla . "_" . $nombre_campo;
+				/*if (strlen($campo2) > 15) {
+					$campo2 = str_replace("FT_", "", substr($campo2, 0, 15));
+				}*/
+				$index_name = "i_" . $campo2;
+				$index_name = strtolower($index_name);
+				$existe = $this->ejecuta_filtro_tabla("select * from pg_indexes where indexname like '$index_name'");
+				if(!$existe["numcampos"]) {
+					$dato = "CREATE INDEX i_" . $campo2 . " ON " . $nombre_tabla . " (" . $nombre_campo . ") TABLESPACE " . TABLESPACE;
+					guardar_traza($dato, $nombre_tabla);
+					$this->Ejecutar_sql($dato);
+				}
+
+				break;
 		}
-		return $traza;
 	}
 
 	protected function formato_generar_tabla_motor($idformato, $formato, $campos_tabla, $campos, $tabla_esta) {
-		$sql_tabla = "";
 		$lcampos = array();
 		if (!$tabla_esta) {
 			$sql_tabla = "CREATE TABLE " . strtolower($formato[0]["nombre_tabla"]) . "(";
@@ -796,15 +796,15 @@ class SqlPostgres extends SQL2 {
 		}
 		for($i = 0; $i < $campos["numcampos"]; $i++) {
 			if (MOTOR == "Oracle") {
-				$datos_campo = ejecuta_filtro_tabla("SELECT decode(nullable,'Y',0,'N',1) as nulo FROM user_tab_columns WHERE table_name='" . strtoupper($formato[0]["nombre_tabla"]) . "' and lower(column_name)='{$campos[$i]["nombre"]}' ORDER BY column_name ASC", $conn);
+				$datos_campo = ejecuta_filtro_tabla("SELECT CASE is_nullable WHEN 'YES' THEN 1 ELSE 0 END as nulo FROM information_schema.columns WHERE table_schema = 'public' AND table_name='" . $formato[0]["nombre_tabla"] . "' and column_name='{$campos[$i]["nombre"]}' ORDER BY column_name ASC", $conn);
 
 				if ($datos_campo[0]["nulo"] != $campos[$i]["obligatoriedad"]) {
 					if ($formato[0]["nombre_tabla"]) {
-						$sql = "alter table " . $formato[0]["nombre_tabla"] . " modify(" . $campos[$i]["nombre"];
+						$sql = "ALTER TABLE " . $formato[0]["nombre_tabla"] . " ALTER COLUMN " . $campos[$i]["nombre"];
 						if (!$campos[$i]["obligatoriedad"]) {
-							$sql .= " NULL)";
+							$sql .= " DROP NOT NULL";
 						} else {
-							$sql .= " NOT NULL)";
+							$sql .= " SET NOT NULL";
 						}
 						guardar_traza($sql, $formato[0]["nombre_tabla"]);
 						$this->Ejecutar_Sql($sql);
@@ -820,165 +820,79 @@ class SqlPostgres extends SQL2 {
 					$pos = array_search(strtolower($campos[$i]["nombre"]), $campos_tabla);
 					$dato = "";
 
-					if (MOTOR == "MySql") {
-						if ($pos === false) {
-							if ($formato[0]["nombre_tabla"]) {
-								$dato = "ALTER TABLE " . strtolower($formato[0]["nombre_tabla"]) . " ADD " . $dato_campo;
-							}
-						} else {
-							if ($formato[0]["nombre_tabla"]) {
-								$dato = "ALTER TABLE " . strtolower($formato[0]["nombre_tabla"]) . " MODIFY " . $dato_campo;
-							}
-						}
-						if ($dato != "") {
-							guardar_traza($dato, $formato[0]["nombre_tabla"]);
-							$this->Ejecutar_Sql($dato);
-						}
-					} else if (MOTOR == "Oracle") {
-						if ($pos === false) {
-							if ($formato[0]["nombre_tabla"]) {
-								$dato = "ALTER TABLE " . strtolower($formato[0]["nombre_tabla"]) . " ADD " . $dato_campo;
-							}
-						} else {
-							if ($formato[0]["nombre_tabla"]) {
-								$dato = "ALTER TABLE " . strtolower($formato[0]["nombre_tabla"]) . " MODIFY " . $dato_campo;
-							}
-						}
-						guardar_traza($dato, $formato[0]["nombre_tabla"]);
-						$this->Ejecutar_Sql($dato);
-					} else if (MOTOR == "SqlServer" || MOTOR == "MSSql") {
-						if ($pos === false)
+					if ($pos === false) {
+						if ($formato[0]["nombre_tabla"]) {
 							$dato = "ALTER TABLE " . strtolower($formato[0]["nombre_tabla"]) . " ADD " . $dato_campo;
-							else
-								$dato = "ALTER TABLE " . strtolower($formato[0]["nombre_tabla"]) . " ALTER COLUMN " . $dato_campo;
-								guardar_traza($dato, $formato[0]["nombre_tabla"]);
-								$this->Ejecutar_Sql($dato);
+						}
+					} else {
+						if ($formato[0]["nombre_tabla"]) {
+							$dato = "ALTER TABLE " . strtolower($formato[0]["nombre_tabla"]) . " TYPE " . $dato_campo;
+						}
 					}
+					guardar_traza($dato, $formato[0]["nombre_tabla"]);
+					$this->Ejecutar_Sql($dato);
 				}
 			}
 		}
 		// die();
-		if (!$campos["numcampos"]) {
-			alerta_formatos("Problemas al Generar la tabla, No existen Campos");
-			return (false);
-		}
-		if (!$tabla_esta) {
-			$sql_tabla .= implode(",", $lcampos);
-			$sql_tabla .= ") ";
-			guardar_traza($sql_tabla, $formato[0]["nombre_tabla"]);
-
-			if ($this->Ejecutar_Sql($sql_tabla, $conn)) {
-				alerta_formatos("Tabla " . $formato[0]["nombre_tabla"] . " Generada con Exito");
-				$this->crear_indices_tabla($formato[0]["idformato"]);
-			} else {
-				die("No es posible Generar la tabla para el Formato " . $sql_tabla . "<br />" . phpmkr_error());
-				return (false);
-			}
-		} else {
-			$this->crear_indices_tabla($formato[0]["idformato"]);
-		}
-		return (false);
+		return $lcampos;
 	}
 
 	protected function formato_elimina_indices_tabla($tabla) {
 		global $conn, $sql;
 		$tabla = strtoupper($tabla);
-		if (MOTOR == "MySql") {
-			$indices = ejecuta_filtro_tabla("SHOW INDEX FROM " . strtolower($tabla), $conn);
-			for($i = 0; $i < $indices["numcampos"]; $i++) {
-				$this->elimina_indice($tabla, $indices[$i]);
-			}
-		} else if (MOTOR == "Oracle") {
-			$envio = array();
-			$sql2 = "select ai.index_name AS column_name, ai.uniqueness AS Key_name FROM all_indexes ai WHERE ai.TABLE_OWNER='" . DB . "' AND ai.table_name = '" . $tabla . "'";
-			$indices = ejecuta_filtro_tabla($sql2, $conn);
-			for($i = 0; $i < $indices["numcampos"]; $i++) {
-				array_push($envio, array(
-						"Key_name" => $indices[$i]["key_name"],
-						"Column_name" => $indices[$i]["column_name"]
-				));
-			}
-			$sql2 = "SELECT cols.column_name AS Column_name, cons.constraint_type AS Key_name FROM all_constraints cons, all_cons_columns cols WHERE cons.constraint_type = 'P' AND cons.constraint_name = cols.constraint_name AND cons.owner = cols.owner AND cons.owner='" . DB . "' AND cols.table_name='" . $tabla . "' ORDER BY cols.table_name, cols.position";
-			$primaria = ejecuta_filtro_tabla($sql2, $conn);
-			for($i = 0; $i < $primaria["numcampos"]; $i++) {
-				array_push($envio, array(
-						"Key_name" => "PRIMARY",
-						"Column_name" => $primaria[$i]["Column_name"]
-				));
-			}
-			$numero_indices = count($envio);
+		$envio = array();
+		$sql2 = "select ai.index_name AS column_name, ai.uniqueness AS Key_name FROM all_indexes ai WHERE ai.TABLE_OWNER='" . DB . "' AND ai.table_name = '" . $tabla . "'";
+		$sql2 = "SELECT tc.constraint_name,
+				tc.constraint_type,
+				tc.table_name,
+				kcu.column_name,
+				tc.is_deferrable,
+				tc.initially_deferred
+				FROM information_schema.table_constraints tc
+				LEFT JOIN information_schema.key_column_usage kcu ON tc.constraint_catalog = kcu.constraint_catalog
+					AND tc.constraint_schema = kcu.constraint_schema
+					AND tc.constraint_name = kcu.constraint_name
+				LEFT JOIN information_schema.referential_constraints rc ON tc.constraint_catalog = rc.constraint_catalog
+					AND tc.constraint_schema = rc.constraint_schema
+					AND tc.constraint_name = rc.constraint_name
+				WHERE tc.table_schema = 'public'
+				and tc.table_catalog = '" . DB . "'
+				and kcu.column_name is not null
+				AND tc.table_name = '$tabla'";
+		$indices = ejecuta_filtro_tabla($sql2, $conn);
+		for($i = 0; $i < $indices["numcampos"]; $i++) {
+			array_push($envio, array(
+					"constraint_type" => $indices[$i]["constraint_type"],
+					"constraint_name" => $indices[$i]["constraint_name"],
+					"column_name" => $indices[$i]["column_name"]
+			));
+		}
+		$numero_indices = count($envio);
 
-			for($i = 0; $i < $numero_indices; $i++) {
-				$this->elimina_indice($tabla, $envio[$i]);
-			}
-		} else if (MOTOR == "SqlServer" || MOTOR == "MSSql") {
-			$sql2 = "SELECT name AS column_name FROM sys.objects WHERE type_desc LIKE '%CONSTRAINT' AND OBJECT_NAME(parent_object_id)='" . $tabla . "'";
-			$indices = ejecuta_filtro_tabla($sql2, $conn);
-			$numero_indices = count($indices);
-			for($i = 0; $i < $numero_indices; $i++) {
-				$this->elimina_indice($tabla, $envio[$i]);
-			}
+		for($i = 0; $i < $numero_indices; $i++) {
+			$this->elimina_indice_campo($tabla, $envio[$i]);
 		}
 		return;
 	}
 
 	protected function elimina_indice_campo($tabla, $campo) {
 		global $conn;
-		if (MOTOR == "MySql") {
-			if ($campo["Key_name"] == "PRIMARY") {
-				$verifica_existencia = busca_filtro_tabla("*", $tabla, "", "", $conn);
-				if ($verifica_existencia['numcampos']) {
-					$sql = "ALTER TABLE " . strtolower($tabla) . " CHANGE " . $campo["Column_name"] . " " . $campo["Column_name"] . " INT( 11 ) NOT NULL";
-					guardar_traza($sql, strtolower($tabla));
-					$this->Ejecutar_Sql($sql);
-					$sql = "ALTER TABLE " . strtolower($tabla) . " DROP PRIMARY KEY";
-					guardar_traza($sql, strtolower($tabla));
-					$this->Ejecutar_Sql($sql);
-				}
-			} else {
-				$sql = "DROP INDEX " . $campo["Column_name"] . " ON " . $tabla;
-				guardar_traza($sql, strtolower($tabla));
-				$this->Ejecutar_Sql($sql);
-			}
-		} else if (MOTOR == "Oracle") {
 
-			if ($campo["Key_name"] == "PRIMARY") {
-				$verifica_existencia = busca_filtro_tabla("*", $tabla, "", "", $conn);
-				if ($verifica_existencia['numcampos']) {
-					$sql = "ALTER TABLE " . strtolower($tabla) . " DROP PRIMARY KEY DROP INDEX ";
-					guardar_traza($sql, strtolower($tabla));
-					$this->Ejecutar_Sql($sql);
-					echo ($sql . "<br />");
-				}
-			}
-			if ($campo["Key_name"] == "UNIQUE") {
-				$verifica_existencia = busca_filtro_tabla("*", $tabla, "", "", $conn);
-				if ($verifica_existencia['numcampos']) {
-					$sql = "ALTER TABLE " . strtolower($tabla) . " DROP CONSTRAINT " . $campo["Column_name"] . " DROP INDEX ";
-					guardar_traza($sql, strtolower($tabla));
-					$this->Ejecutar_Sql($sql);
-					echo ($sql . "<br />");
-				}
-			}
-			if ($campo["Key_name"] == "NONUNIQUE") {
-				$sql = "DROP INDEX " . $campo["Column_name"];
-				guardar_traza($sql, strtolower($tabla));
-				$this->Ejecutar_Sql($sql);
-				echo ($sql . "<br />");
-			}
-		} else if (MOTOR == "SqlServer" || MOTOR == "MSSql") {
-			$sql = "ALTER TABLE " . strtolower($tabla) . " DROP CONSTRAINT " . $campo["Column_name"];
-			$conn->Ejecutar_sql($sql);
+		if ($this->verificar_existencia($tabla)) {
+			$sql = "ALTER TABLE " . strtolower($tabla) . " DROP CONSTRAINT " . $campo["constraint_name"];
+			guardar_traza($sql, strtolower($tabla));
+			$this->Ejecutar_Sql($sql);
+			echo ($sql . "<br />");
 		}
 		return;
 	}
 
 	protected function verificar_existencia($tabla) {
 		$sql = "SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = '$tabla') as existe";
-		$rs = pg_query($this->Conn->conn, $sql);
-		$fila = $this->sacar_fila($rs);
-		if ($fila) {
-			return ($fila["existe"] == 'true');
+		$existe = $this->ejecuta_filtro_tabla($sql);
+		if ($existe["numcampos"]) {
+			return ($existe[0]["existe"] == 't');
 		}
 		return false;
 	}

@@ -7,19 +7,6 @@ class SqlSqlServer extends SQL2 {
 		parent::__construct($conn, $motorBd);
 	}
 
-	/*
-	 * <Clase>SQL
-	 * <Nombre>Buscar.
-	 * <Parametros>campos-las columnas a buscar; tablas-las tablas en las que se hará la búsqueda;
-	 * where-el filtro de la búsqueda; order_by-parametro para el orden.
-	 * <Responsabilidades>ejecutar consulta de selección para mysql
-	 * <Notas>
-	 * <Excepciones>Cualquier problema que ocurra con la busqueda en la base de datos generará una excepcion
-	 * <Salida>una matriz con los resultados de la consulta
-	 * la matriz es del tipo: resultado[0]['campo']='valor'
-	 * <Pre-condiciones>
-	 * <Post-condiciones>
-	 */
 	function Buscar($campos, $tablas, $where, $order_by) {
 		if ($campos == "" || $campos == null)
 			$campos = "*";
@@ -48,18 +35,6 @@ class SqlSqlServer extends SQL2 {
 		@sqlsrv_cancel($rs);
 	}
 
-	/*
-	 * <Clase>SQL
-	 * <Nombre>ejecutar_sql_MySql
-	 * <Parametros>sql-cadena con el codigo a ejecutar
-	 * <Responsabilidades>ejecutar el comando recibido en la cadena sql
-	 * <Notas>Se utiliza generalmente para busquedas cuyos comandos se optienen de referencias que están en la base de datos,
-	 * la matriz con los valores del resultado se obtiene por medio de la función Resultado
-	 * <Excepciones>Cualquier problema que ocurra con la busqueda en la base de datos generará una excepcion
-	 * <Salida>
-	 * <Pre-condiciones>
-	 * <Post-condiciones>la matriz con los valores del resultado se obtiene por medio de la función Resultado
-	 */
 	function Ejecutar_Sql($sql) {
 		$strsql = trim($sql);
 		$strsql = str_replace(" =", "=", $strsql);
@@ -115,18 +90,6 @@ class SqlSqlServer extends SQL2 {
 			return (FALSE);
 	}
 
-	/*
-	 * <Clase>SQL
-	 * <Nombre>Insertar.
-	 * <Parametros>campos-los campos a insertar; tabla-nombre de la tabla donde se hará la inserción;
-	 * valores-los valores a insertar
-	 * <Responsabilidades>Ejecutar una consulta del tipo insert en una base de datos sql server
-	 * <Notas>
-	 * <Excepciones>Cualquier problema con la ejecucion del INSERT generará una excepcion
-	 * <Salida>
-	 * <Pre-condiciones>
-	 * <Post-condiciones>
-	 */
 	function Insertar($campos, $tabla, $valores) {
 		if ($campos == "" || $campos == null)
 			$insert = "INSERT INTO " . $tabla . " VALUES (" . $valores . ")";
@@ -137,19 +100,6 @@ class SqlSqlServer extends SQL2 {
 		$this->Guardar_log($insert);
 	}
 
-	/*
-	 * <Clase>SQL
-	 * <Nombre>Modificar.
-	 * <Parametros>tabla-nombre de la tabla donde se hará la modificacion;
-	 * actualizaciones-Aquellos registros que serán modificados y sus nuevos valores;
-	 * where-filtro de los registros que serán modificados
-	 * <Responsabilidades>Ejecutar una sentencia de tipo UPDATE en una base de datos Sql Server
-	 * <Notas>
-	 * <Excepciones>Cualquier problema con la ejecucion del UPDATE generará una excepcion
-	 * <Salida>
-	 * <Pre-condiciones>
-	 * <Post-condiciones>
-	 */
 	function Modificar($tabla, $actualizaciones, $where) {
 		$actualizaciones = html_entity_decode(htmlentities(utf8_decode($actualizaciones)));
 		if ($where != null && $where != "")
@@ -161,41 +111,19 @@ class SqlSqlServer extends SQL2 {
 		$this->res = sqlsrv_query($this->Conn->conn, $update);
 	}
 
-	/*
-	 * <Clase>SQL
-	 * <Nombre>ejecutar_sql_tipo.
-	 * <Parametros>sql-cadena con el codigo a ejecutar
-	 * <Responsabilidades>Ejecuta una consulta sql
-	 * <Notas>el vector retornado es del tipo. resultado[0]='campo',resultado[1]='valor_campo'...
-	 * <Excepciones>Cualquier problema que ocurra con la busqueda en la base de datos
-	 * <Salida>un vector con los resultados de la consulta
-	 * <Pre-condiciones>
-	 * <Post-condiciones>
-	 */
 	function Ejecutar_Sql_Tipo($sql) {
 		$sql = html_entity_decode(htmlentities(utf8_decode($sql)));
 		$this->consulta = $sql;
 		sqlsrv_query($this->Conn->conn, "USE " . $this->Conn->Db);
 		$this->res = sqlsrv_query($this->Conn->conn, $this->consulta);
 		$this->Guardar_log($sql);
-		while ($fila = sqlsrv_fetch_array($this->res, SQLSRV_FETCH_NUMERIC)) {
+		while($fila = sqlsrv_fetch_array($this->res, SQLSRV_FETCH_NUMERIC)) {
 			foreach ( $fila as $valor )
 				$resultado[] = $valor;
 		}
 		return $resultado;
 	}
 
-	/*
-	 * <Clase>SQL
-	 * <Nombre>Eliminar.
-	 * <Parametros>tabla-nombre de la tabla donde se hará la eliminacion; where-cuales son los registros a eliminar
-	 * <Responsabilidades>Ejecutar una sentencia DELETE en una base de datos SqlServer
-	 * <Notas>
-	 * <Excepciones>Cualquier problema con la ejecucion del DELETE generará una excepcion
-	 * <Salida>
-	 * <Pre-condiciones>
-	 * <Post-condiciones>
-	 */
 	function Eliminar($tabla, $where) {
 		if ($where != null && $where != "")
 			$delete = "DELETE FROM " . $tabla . " WHERE " . $where;
@@ -270,7 +198,7 @@ class SqlSqlServer extends SQL2 {
 	function Lista_Tabla($db) {
 		sqlsrv_query($this->Conn->conn, "USE " . $this->Conn->Db);
 		$this->res = sqlsrv_query($this->Conn->conn, "select name AS nombre from sysobjects where type='U'");
-		while ($row = sqlsrv_fetch_array($this->res, SQLSRV_FETCH_NUMERIC))
+		while($row = sqlsrv_fetch_array($this->res, SQLSRV_FETCH_NUMERIC))
 			$resultado[] = $row[0];
 		asort($resultado);
 		return ($resultado);
@@ -288,26 +216,13 @@ class SqlSqlServer extends SQL2 {
 		}
 		sqlsrv_query($this->Conn->conn, "USE " . $this->Conn->Db) or die($this->consulta);
 		$this->res = sqlsrv_query($this->Conn->conn, $this->consulta);
-		while ($row = sqlsrv_fetch_array($this->res, SQLSRV_FETCH_NUMERIC))
+		while($row = sqlsrv_fetch_array($this->res, SQLSRV_FETCH_NUMERIC))
 			$resultado[] = $row[0];
 
 		asort($resultado);
 		return ($resultado);
 	}
 
-	/*
-	 * <Clase>SQL
-	 * <Nombre>Ejecutar_Limit
-	 * <Parametros>$sql-consulta a ejecutar; $inicio-primer registro a buscar; $fin-ultimo registro a buscar;
-	 * $conn-objeto de tipo sql
-	 * <Responsabilidades>Realizar la busqueda de cierta cantidad de filas de una tabla
-	 * <Notas>Funciona igual que Buscar_SqlServer pero con el parametro limit, fue necesaria su creacion al no tener en cuenta este parametro con anterioridad
-	 * <Excepciones>Cualquier problema con la ejecucion del SELECT generará una excepcion
-	 * <Salida>una matriz con los "limit" resultados de la busqueda
-	 * <Pre-condiciones>
-	 * <Post-condiciones>
-	 */
-	// devuelve los registro en el rango $inicio:$fin de la consulta, para SqlServer
 	function Ejecutar_Limit($sql, $inicio, $fin) {
 		$consulta = trim($sql);
 		$search = array(
@@ -364,17 +279,6 @@ class SqlSqlServer extends SQL2 {
 		return ($res);
 	}
 
-	/*
-	 * <Clase>SQL
-	 * <Nombre>total_registros_tabla.
-	 * <Parametros>tabla-nombre de la tabla a consultar
-	 * <Responsabilidades>consultar el número total de registros de una tabla para SqlServer
-	 * <Notas>
-	 * <Excepciones>Cualquier problema con la ejecucion del comando generará una excepcion
-	 * <Salida>devuelve un entero con el numero de filas de la tabla
-	 * <Pre-condiciones>
-	 * <Post-condiciones>
-	 */
 	function Total_Registros_Tabla($tabla) {
 		$this->consulta = "SELECT COUNT( * ) AS TOTAL FROM " . $tabla;
 		sqlsrv_query($this->Conn->conn, "USE " . $this->Conn->Db);
@@ -402,17 +306,6 @@ class SqlSqlServer extends SQL2 {
 		return ($numero);
 	}
 
-	/*
-	 * <Clase>SQL
-	 * <Nombre>Ultimo_Insert
-	 * <Parametros>
-	 * <Responsabilidades>Retornar el identificador del ultimo registro insertado
-	 * <Notas>se utiliza después de la función insert
-	 * <Excepciones>
-	 * <Salida>identificador del ultimo registro insertado
-	 * <Pre-condiciones>
-	 * <Post-condiciones>
-	 */
 	function Ultimo_Insert() {
 		sqlsrv_query($this->Conn->conn, "USE " . $this->Conn->Db);
 		$this->res = sqlsrv_query($this->Conn->conn, "SELECT @@identity") or print_r(sqlsrv_errors());
@@ -706,13 +599,7 @@ class SqlSqlServer extends SQL2 {
 	}
 
 	protected function formato_generar_tabla_motor($idformato, $formato, $campos_tabla, $campos, $tabla_esta) {
-		$sql_tabla = "";
 		$lcampos = array();
-		if (!$tabla_esta) {
-			$sql_tabla = "CREATE TABLE " . strtolower($formato[0]["nombre_tabla"]) . "(";
-		} else {
-			$this->formato_elimina_indices_tabla($formato[0]["nombre_tabla"]);
-		}
 		for($i = 0; $i < $campos["numcampos"]; $i++) {
 
 			$dato_campo = $this->crear_campo($campos[$i], $formato[0]["nombre_tabla"], $datos_campo);
@@ -723,32 +610,17 @@ class SqlSqlServer extends SQL2 {
 					$pos = array_search(strtolower($campos[$i]["nombre"]), $campos_tabla);
 					$dato = "";
 
-						if ($pos === false)
-							$dato = "ALTER TABLE " . strtolower($formato[0]["nombre_tabla"]) . " ADD " . $dato_campo;
-							else
-								$dato = "ALTER TABLE " . strtolower($formato[0]["nombre_tabla"]) . " ALTER COLUMN " . $dato_campo;
-								guardar_traza($dato, $formato[0]["nombre_tabla"]);
-								$this->Ejecutar_Sql($dato);
+					if ($pos === false)
+						$dato = "ALTER TABLE " . strtolower($formato[0]["nombre_tabla"]) . " ADD " . $dato_campo;
+					else
+						$dato = "ALTER TABLE " . strtolower($formato[0]["nombre_tabla"]) . " ALTER COLUMN " . $dato_campo;
+					guardar_traza($dato, $formato[0]["nombre_tabla"]);
+					$this->Ejecutar_Sql($dato);
 				}
 			}
 		}
 		// die();
-		if (!$tabla_esta) {
-			$sql_tabla .= implode(",", $lcampos);
-			$sql_tabla .= ") ";
-			guardar_traza($sql_tabla, $formato[0]["nombre_tabla"]);
-
-			if ($this->Ejecutar_Sql($sql_tabla)) {
-				alerta_formatos("Tabla " . $formato[0]["nombre_tabla"] . " Generada con Exito");
-				$this->crear_indices_tabla($formato[0]["idformato"]);
-			} else {
-				die("No es posible Generar la tabla para el Formato " . $sql_tabla . "<br />" . phpmkr_error());
-				return (false);
-			}
-		} else {
-			$this->crear_indices_tabla($formato[0]["idformato"]);
-		}
-		return (false);
+		return $lcampos;
 	}
 
 	protected function formato_elimina_indices_tabla($tabla) {
@@ -758,7 +630,7 @@ class SqlSqlServer extends SQL2 {
 		$indices = $this->ejecuta_filtro_tabla($sql2);
 		$numero_indices = count($indices);
 		for($i = 0; $i < $numero_indices; $i++) {
-			$this->elimina_indice_campo($tabla, $envio[$i]);
+			$this->elimina_indice_campo($tabla, $indices[$i]);
 		}
 		return;
 	}

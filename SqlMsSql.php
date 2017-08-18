@@ -404,6 +404,7 @@ else
 		}
 		return $fsql;
 	}
+
  // Fin Funcion fecha_db_obtener
 	function mostrar_error() {
 		if ($this->error != "")
@@ -412,6 +413,7 @@ else
 
 	function fecha_db($campo, $formato = NULL) {
 	}
+
  // Fin Funcion fecha_db_obtener
 	function case_fecha($dato, $compara, $valor1, $valor2) {
 		if ($compara = "" || $compara == 0)
@@ -450,7 +452,6 @@ else
 
 	function guardar_lob($campo, $tabla, $condicion, $contenido, $tipo, $log = 1) {
 		$resultado = TRUE;
-
 		if ($tipo == "archivo") {
 			$dato = busca_filtro_tabla("$campo", "$tabla", "$condicion", "", $this);
 			// CODIFICA EL ARCHIVO PARA SER GUARDADO
@@ -567,7 +568,6 @@ else
 				}
 				break;
 		}
-
 	}
 
 	public function formato_crear_indice($bandera, $nombre_campo, $nombre_tabla) {
@@ -596,6 +596,50 @@ else
 		return $traza;
 	}
 
+	protected function formato_generar_tabla_motor($idformato, $formato, $campos_tabla, $campos, $tabla_esta) {
+		$lcampos = array();
+		for($i = 0; $i < $campos["numcampos"]; $i++) {
+
+			$dato_campo = $this->crear_campo($campos[$i], $formato[0]["nombre_tabla"], $datos_campo);
+			if ($dato_campo && $dato_campo != "") {
+				if (!$tabla_esta) {
+					array_push($lcampos, $dato_campo);
+				} else {
+					$pos = array_search(strtolower($campos[$i]["nombre"]), $campos_tabla);
+					$dato = "";
+
+					if ($pos === false)
+						$dato = "ALTER TABLE " . strtolower($formato[0]["nombre_tabla"]) . " ADD " . $dato_campo;
+					else
+						$dato = "ALTER TABLE " . strtolower($formato[0]["nombre_tabla"]) . " ALTER COLUMN " . $dato_campo;
+					guardar_traza($dato, $formato[0]["nombre_tabla"]);
+					$this->Ejecutar_Sql($dato);
+				}
+			}
+		}
+		// die();
+		return $lcampos;
+	}
+
+	protected function formato_elimina_indices_tabla($tabla) {
+		global $conn, $sql;
+		$tabla = strtoupper($tabla);
+		$sql2 = "SELECT name AS column_name FROM sys.objects WHERE type_desc LIKE '%CONSTRAINT' AND OBJECT_NAME(parent_object_id)='" . $tabla . "'";
+		$indices = $this->ejecuta_filtro_tabla($sql2);
+		$numero_indices = count($indices);
+		for($i = 0; $i < $numero_indices; $i++) {
+			$this->elimina_indice_campo($tabla, $indices[$i]);
+		}
+		return;
+	}
+
+	protected function elimina_indice_campo($tabla, $campo) {
+		global $conn;
+		$sql = "ALTER TABLE " . strtolower($tabla) . " DROP CONSTRAINT " . $campo["Column_name"];
+		$this->Ejecutar_sql($sql);
+		return;
+	}
+
 	protected function verificar_existencia($tabla) {
 		$sql = "SELECT COUNT(table_name) FROM information_schema.tables WHERE table_name = '$tabla'";
 		$rs = $this->Ejecutar_sql($sql);
@@ -605,5 +649,4 @@ else
 		}
 		return false;
 	}
-
 }

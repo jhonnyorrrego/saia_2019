@@ -175,7 +175,7 @@ class SqlMysql extends SQL2 {
 		$this->consulta = $sql;
 		$this->res = mysqli_query($this->Conn->conn, $this->consulta);
 		$this->Guardar_log($sql);
-		while ($fila = mysqli_fetch_row($this->res)) {
+		while($fila = mysqli_fetch_row($this->res)) {
 			foreach ( $fila as $valor )
 				$resultado[] = $valor;
 		}
@@ -281,7 +281,7 @@ class SqlMysql extends SQL2 {
 	 */
 	function Lista_Tabla($db) {
 		$this->res = mysqli_query($this->Conn->conn, "SHOW TABLES") or die("Error en la Ejecucución del Proceso SQL: " . mysqli_error($this->Conn->conn));
-		while ($row = mysqli_fetch_row($this->res))
+		while($row = mysqli_fetch_row($this->res))
 			$resultado[] = $row[0];
 		return ($resultado);
 	}
@@ -299,7 +299,7 @@ class SqlMysql extends SQL2 {
 	 */
 	function Lista_Bd() {
 		$this->res = mysqli_query($this->Conn->conn, "SHOW DATABASES") or die("Error " . mysqli_error($this->Conn->conn));
-		while ($row = mysqli_fetch_row($this->res))
+		while($row = mysqli_fetch_row($this->res))
 			$resultado[] = $row[0];
 		asort($resultado);
 		return ($resultado);
@@ -325,7 +325,7 @@ class SqlMysql extends SQL2 {
 		$this->res = mysqli_query($this->Conn->conn, $this->consulta);
 		$resultado = array();
 		$i = 0;
-		while ($row = mysqli_fetch_row($this->res)) {
+		while($row = mysqli_fetch_row($this->res)) {
 			if ($campo && $campo == $row[0]) {
 				array_push($resultado, $row[0]);
 				$i++;
@@ -595,7 +595,7 @@ class SqlMysql extends SQL2 {
 		if ($tabla == NULL)
 			$tabla = $_REQUEST["tabla"];
 		$datos_tabla = $this->Ejecutar_Sql("DESCRIBE " . $tabla);
-		while ($fila = $this->sacar_fila($datos_tabla)) { // print_r($fila);
+		while($fila = $this->sacar_fila($datos_tabla)) { // print_r($fila);
 			if ($tipo_retorno) {
 				$lista_campos[] = array_map(strtolower, $fila);
 			} else {
@@ -751,30 +751,8 @@ class SqlMysql extends SQL2 {
 	}
 
 	protected function formato_generar_tabla_motor($idformato, $formato, $campos_tabla, $campos, $tabla_esta) {
-		$sql_tabla = "";
 		$lcampos = array();
-		if (!$tabla_esta) {
-			$sql_tabla = "CREATE TABLE " . strtolower($formato[0]["nombre_tabla"]) . "(";
-		} else {
-			$this->formato_elimina_indices_tabla($formato[0]["nombre_tabla"]);
-		}
 		for($i = 0; $i < $campos["numcampos"]; $i++) {
-			if (MOTOR == "Oracle") {
-				$datos_campo = ejecuta_filtro_tabla("SELECT decode(nullable,'Y',0,'N',1) as nulo FROM user_tab_columns WHERE table_name='" . strtoupper($formato[0]["nombre_tabla"]) . "' and lower(column_name)='{$campos[$i]["nombre"]}' ORDER BY column_name ASC", $conn);
-
-				if ($datos_campo[0]["nulo"] != $campos[$i]["obligatoriedad"]) {
-					if ($formato[0]["nombre_tabla"]) {
-						$sql = "alter table " . $formato[0]["nombre_tabla"] . " modify(" . $campos[$i]["nombre"];
-						if (!$campos[$i]["obligatoriedad"]) {
-							$sql .= " NULL)";
-						} else {
-							$sql .= " NOT NULL)";
-						}
-						guardar_traza($sql, $formato[0]["nombre_tabla"]);
-						$this->Ejecutar_Sql($sql);
-					}
-				}
-			}
 
 			$dato_campo = $this->crear_campo($campos[$i], $formato[0]["nombre_tabla"], $datos_campo);
 			if ($dato_campo && $dato_campo != "") {
@@ -784,64 +762,23 @@ class SqlMysql extends SQL2 {
 					$pos = array_search(strtolower($campos[$i]["nombre"]), $campos_tabla);
 					$dato = "";
 
-					if (MOTOR == "MySql") {
-						if ($pos === false) {
-							if ($formato[0]["nombre_tabla"]) {
-								$dato = "ALTER TABLE " . strtolower($formato[0]["nombre_tabla"]) . " ADD " . $dato_campo;
-							}
-						} else {
-							if ($formato[0]["nombre_tabla"]) {
-								$dato = "ALTER TABLE " . strtolower($formato[0]["nombre_tabla"]) . " MODIFY " . $dato_campo;
-							}
-						}
-						if ($dato != "") {
-							guardar_traza($dato, $formato[0]["nombre_tabla"]);
-							$this->Ejecutar_Sql($dato);
-						}
-					} else if (MOTOR == "Oracle") {
-						if ($pos === false) {
-							if ($formato[0]["nombre_tabla"]) {
-								$dato = "ALTER TABLE " . strtolower($formato[0]["nombre_tabla"]) . " ADD " . $dato_campo;
-							}
-						} else {
-							if ($formato[0]["nombre_tabla"]) {
-								$dato = "ALTER TABLE " . strtolower($formato[0]["nombre_tabla"]) . " MODIFY " . $dato_campo;
-							}
-						}
-						guardar_traza($dato, $formato[0]["nombre_tabla"]);
-						$this->Ejecutar_Sql($dato);
-					} else if (MOTOR == "SqlServer" || MOTOR == "MSSql") {
-						if ($pos === false)
+					if ($pos === false) {
+						if ($formato[0]["nombre_tabla"]) {
 							$dato = "ALTER TABLE " . strtolower($formato[0]["nombre_tabla"]) . " ADD " . $dato_campo;
-						else
-							$dato = "ALTER TABLE " . strtolower($formato[0]["nombre_tabla"]) . " ALTER COLUMN " . $dato_campo;
+						}
+					} else {
+						if ($formato[0]["nombre_tabla"]) {
+							$dato = "ALTER TABLE " . strtolower($formato[0]["nombre_tabla"]) . " MODIFY " . $dato_campo;
+						}
+					}
+					if ($dato != "") {
 						guardar_traza($dato, $formato[0]["nombre_tabla"]);
 						$this->Ejecutar_Sql($dato);
 					}
 				}
 			}
 		}
-		// die();
-		if (!$campos["numcampos"]) {
-			alerta_formatos("Problemas al Generar la tabla, No existen Campos");
-			return (false);
-		}
-		if (!$tabla_esta) {
-			$sql_tabla .= implode(",", $lcampos);
-			$sql_tabla .= ") ";
-			guardar_traza($sql_tabla, $formato[0]["nombre_tabla"]);
-
-			if ($this->Ejecutar_Sql($sql_tabla, $conn)) {
-				alerta_formatos("Tabla " . $formato[0]["nombre_tabla"] . " Generada con Exito");
-				$this->crear_indices_tabla($formato[0]["idformato"]);
-			} else {
-				die("No es posible Generar la tabla para el Formato " . $sql_tabla . "<br />" . phpmkr_error());
-				return (false);
-			}
-		} else {
-			$this->crear_indices_tabla($formato[0]["idformato"]);
-		}
-		return (false);
+		return $lcampos;
 	}
 
 	protected function formato_elimina_indices_tabla($tabla) {
@@ -855,8 +792,7 @@ class SqlMysql extends SQL2 {
 
 	protected function elimina_indice_campo($tabla, $campo) {
 		if ($campo["Key_name"] == "PRIMARY") {
-			$verifica_existencia = busca_filtro_tabla("*", $tabla, "", "", $conn);
-			if ($verifica_existencia['numcampos']) {
+			if ($this->verificar_existencia($tabla)) {
 				$sql = "ALTER TABLE " . strtolower($tabla) . " CHANGE " . $campo["Column_name"] . " " . $campo["Column_name"] . " INT( 11 ) NOT NULL";
 				guardar_traza($sql, strtolower($tabla));
 				phpmkr_query($sql, $conn);
