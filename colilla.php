@@ -384,19 +384,58 @@ function imprime(atras){
    	if(@$datos[0]['estado']=='INICIADO' && strtolower($datos[0]["plantilla"])=='radicacion_entrada'){
   		$ejecutor_radicacion=busca_filtro_tabla("nombres,apellidos","documento a, funcionario b","a.ejecutor=b.funcionario_codigo AND a.iddocumento=".$doc,"",$conn);
   		$origen=ucwords(strtolower($ejecutor_radicacion[0]["nombres"]." ".$ejecutor_radicacion[0]["apellidos"]));
-  		?>
-  		<b>Recibido Por: <?php echo($origen);?></b><br/>
-  		<?php
-		
+		   		
+		$datos_radicacion_entrada=busca_filtro_tabla("tipo_origen","ft_radicacion_entrada","documento_iddocumento=".$doc,"",$conn);
+		//print_r($_REQUEST);die();
+		if($datos_radicacion_entrada[0]['tipo_origen']==1 || @$_REQUEST['radicado_rapido']=='radicacion_entrada'){
+	  		?>
+	  		<b>Recibido Por: <?php echo($origen);?></b><br/>
+	  		<?php
+		}else{
+	  		?>
+	  		<b>Origen: <?php echo($origen);?></b><br/>
+	  		<?php			
+		}
   	}else{
-  		?>
-  		<b>Origen: <?php echo($origen);?></b><br/>
-  		<?php
+  		
+		if(strtolower($datos[0]["plantilla"])=='radicacion_entrada'){
+			$datos_radicacion_entrada=busca_filtro_tabla("tipo_origen","ft_radicacion_entrada","documento_iddocumento=".$doc,"",$conn);
+			if($datos_radicacion_entrada[0]['tipo_origen']==1){
+				$ejecutor_radicacion=busca_filtro_tabla("nombres,apellidos","documento a, funcionario b","a.ejecutor=b.funcionario_codigo AND a.iddocumento=".$doc,"",$conn);
+				$origen=ucwords(strtolower($ejecutor_radicacion[0]["nombres"]." ".$ejecutor_radicacion[0]["apellidos"]));
+				
+		  		?>
+		  		<b>Recibido Por: <?php echo($origen);?></b><br/>
+		  		<?php				
+			}else{
+		  		?>
+		  		<b>Origen: <?php echo($origen);?></b><br/>
+		  		<?php				
+			}				
+		}else{
+	  		?>
+	  		<b>Origen: <?php echo($origen);?></b><br/>
+	  		<?php			
+		}
+		
+
   	}
 
  ?>
+ 
+ <?php 
+ 
+ if(@$datos[0]['estado']=='INICIADO' && strtolower($datos[0]["plantilla"])=='radicacion_entrada'){
+ ?>
   
-  <b>Destino: <?php echo substr(($destino),0,22)."..."; ?></b>
+ <?php 
+ }else{
+ 	?>
+ 	<b>Destino: <?php echo substr(($destino),0,22)."..."; ?></b>
+ 	<?php 
+ }
+ ?> 
+  
   
    	<?php
   	$validar_impresion = busca_filtro_tabla("valor","configuracion","lower(nombre) LIKE'imprimir_colilla_automatico'","",$conn);
@@ -750,7 +789,7 @@ function validar_confirmacion_salida($consecutivo, $enlace,$enlace2){
 		<script>
 		var ingreso=confirm("Esta seguro de generar un nuevo radicado?");
 		if(ingreso){
-			window.open("colilla.php?consecutivo=<?php echo $consecutivo;?>&salidas=1&target=_self&enlace=<?php echo $enlace_redireccion;?>&descripcion_general=<?php echo $_REQUEST['descripcion_general'];?>","_self"); 
+			window.open("colilla.php?consecutivo=<?php echo $consecutivo;?>&salidas=1&target=_self&enlace=<?php echo $enlace_redireccion;?>&descripcion_general=<?php echo $_REQUEST['descripcion_general'];?>&radicado_rapido=<?php echo(@$_REQUEST['generar_consecutivo']); ?>","_self"); 
 		}else{
 			window.open("<?php echo $enlace2;?>","_self");
 		}

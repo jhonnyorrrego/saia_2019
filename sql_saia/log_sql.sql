@@ -612,10 +612,13 @@ INSERT INTO funciones_formato_accion (idfunciones_formato_accion,idfunciones_for
 -- ----------------------------------------------------------------
 UPDATE busqueda_componente SET busqueda_avanzada = 'formatos/radicacion_entrada/busqueda_reporte.php?idbusqueda_componente=282' WHERE idbusqueda_componente = 282;
 -- ----------------------------------------------------------------
+UPDATE funciones_formato_accion SET orden=16 WHERE  accion_idaccion=3 AND idfunciones_formato=902 AND formato_idformato=3;
+UPDATE funciones_formato_accion SET orden=15 WHERE  accion_idaccion=5 AND idfunciones_formato=902 AND formato_idformato=3;
+-- ---------------------------------------------------------------- 
 //NUEVA DISTRIBUCION 
 DELETE FROM funciones_formato WHERE idfunciones_formato=904; //subir_planilla_despacho_ingresados
 DELETE FROM funciones_formato_accion WHERE idfunciones_formato=904; //subir_planilla_despacho_ingresados - POSTERIOR A SUBIR ANEXO
--- ----------------------------------------------------------------
+-- ---------------------------------------------------------------- 
 
 
 
