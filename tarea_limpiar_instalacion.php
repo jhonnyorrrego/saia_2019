@@ -160,10 +160,10 @@ $conn->Ejecutar_Sql("truncate table tareas_listado_tiempo");
 $conn->Ejecutar_Sql("truncate table tareas_planeadas");
 $conn->Ejecutar_Sql("truncate table tareas_progreso");
 
-$conn->Ejecutar_Sql("truncate table dependencia_cargo");
+/*$conn->Ejecutar_Sql("truncate table dependencia_cargo");
 $conn->Ejecutar_Sql("truncate table serie");
 $conn->Ejecutar_Sql("truncate table entidad_serie");
-$conn->Ejecutar_Sql("truncate table contador");
+$conn->Ejecutar_Sql("truncate table contador");*/
 
 //EXPEDIENTES
 $conn->Ejecutar_Sql("truncate table expediente");
@@ -174,11 +174,11 @@ $conn->Ejecutar_Sql("truncate table caja");
 $conn->Ejecutar_Sql("truncate table entidad_caja");
 
 limpiar_formatos();
-limpiar_busquedas();
-limpiar_indicadores();
-limpiar_funcionarios();
+//limpiar_busquedas();
+//limpiar_indicadores();
+//limpiar_funcionarios();
 
-asignar_permisos_cerok();
+//asignar_permisos_cerok();
 
 
 echo ("Fin de la limpieza");
@@ -195,6 +195,9 @@ function limpiar_formatos(){
         elimina_funciones_formato_accion($formatos_eliminar[$i]['idformato']);
         $elimina_formato="DELETE FROM formato WHERE idformato=".$formatos_eliminar[$i]['idformato'];
         phpmkr_query($elimina_formato);
+        
+        $elimina_formato2="DROP TABLE ".$formatos_eliminar[$i]['nombre_tabla'];
+        phpmkr_query($elimina_formato2);
     }
 }
 function limpiar_busquedas(){
