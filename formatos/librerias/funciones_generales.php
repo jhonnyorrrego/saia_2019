@@ -1833,7 +1833,7 @@ function submit_formato($formato, $iddoc = NULL) {
   $("#continuar").click(function(){
     if($('#formulario_formatos').valid()){
   		$("#continuar").hide();
-  		$("#continuar").after('<input type="button" disabled="true" value="Enviando...">');
+  		$("#continuar").after('<input type="button" disabled="true" value="Enviando..." id="boton_enviando">');
      } 
   });  
   </script>
@@ -3222,8 +3222,20 @@ function firma_externa_funcion($idformato, $iddoc, $tabla, $campo = "firma_exter
  * <Responsabilidades>
  * </Clase>
  */
-function fk_idexpediente_funcion($idformato, $iddoc) {
+function fk_idexpediente_funcion($idformato, $campo, $iddoc) {
 	global $conn, $ruta_db_superior;
+  
+  $adicional="";
+  $seleccionado="";
+  
+  if($iddoc){
+    $formato=busca_filtro_tabla("a.nombre_tabla, b.nombre","formato a, campos_formato b","a.idformato=b.formato_idformato and a.idformato='".$idformato."' and b.idcampos_formato='".$campo."'","",$conn);
+    
+    $datos=busca_filtro_tabla($formato[0]["nombre"]." as expediente",$formato[0]["nombre_tabla"]." a","a.documento_iddocumento=".$iddoc,"",$conn);
+    $adicional="&seleccionado=".$datos[0]["expediente"];
+    $seleccionado=$datos[0]["expediente"];
+  }
+  
 	?>
 <td bgcolor="#F5F5F5">
 	<div id="seleccionados"></div> <br /> Buscar: <input tabindex='2'
@@ -3241,8 +3253,7 @@ function fk_idexpediente_funcion($idformato, $iddoc) {
 		<img src="../../imagenes/cargando.gif">
 	</div>
 	<div id="treeboxbox_fk_idexpediente" height="90%"></div> <input
-	type="hidden" maxlength="255" class="required" name="fk_idexpediente"
-	id="fk_idexpediente" value=""> <label style="display: none"
+	type="hidden" maxlength="255" class="required" name="fk_idexpediente" id="fk_idexpediente" value="<?php echo($seleccionado); ?>"> <label style="display: none"
 	class="error" for="fk_idexpediente">Campo obligatorio.</label> <script
 		type="text/javascript">
                   <!--
@@ -3259,7 +3270,7 @@ function fk_idexpediente_funcion($idformato, $iddoc) {
                 			tree_fk_idexpediente.setOnLoadingStart(cargando_fk_idexpediente);
                       tree_fk_idexpediente.setOnLoadingEnd(fin_cargando_fk_idexpediente);
                       tree_fk_idexpediente.enableSmartXMLParsing(true);
-                      tree_fk_idexpediente.loadXML("../../test_expediente.php?accion=1&permiso_editar=1");
+                      tree_fk_idexpediente.loadXML("../../test_expediente.php?accion=1&permiso_editar=1<?php echo($adicional); ?>");
                 	        
                       tree_fk_idexpediente.setOnCheckHandler(onNodeSelect_fk_idexpediente);
                       function onNodeSelect_fk_idexpediente(nodeId){
@@ -3423,7 +3434,7 @@ function resta_fechasphp($date1, $date2) {
 		$date1 = strtotime($date1);
 	if(!is_integer($date2))
 		$date2 = strtotime($date2);
-	return floor(abs($date1 - $date2) / 60 / 60 / 24);
+	return floor(($date1 - $date2) / 60 / 60 / 24);
 }
 
 function suma_fechasphp($fecha, $dias) {

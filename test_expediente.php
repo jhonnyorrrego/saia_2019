@@ -32,6 +32,10 @@ if(@$_REQUEST['estado_archivo']){
     $estado_archivo=" AND (a.estado_archivo IN(".$_REQUEST['estado_archivo']."))";
 }  
 
+if(@$_REQUEST["seleccionado"]){
+  $_REQUEST["seleccionado"]=explode(",",$_REQUEST["seleccionado"]);
+}
+
 if(@$_REQUEST["doc"]){
 	$varios=1;
 	$varios_docs=explode(",",$_REQUEST["doc"]);
@@ -103,7 +107,7 @@ if($papas["numcampos"]){
         	echo(" nocheckbox=\"1\" ");
 				}
     	}
-    	elseif(@$_REQUEST["seleccionado"]&&$_REQUEST["seleccionado"]==$papas[$i]["idexpediente"])
+    	elseif(@$_REQUEST["seleccionado"] && in_array($papas[$i]["idexpediente"], $_REQUEST["seleccionado"]))
     		echo " checked=\"1\" ";
 			if($papas[$i]["estado_cierre"]==2){
 				echo(" nocheckbox=\"1\" ");
