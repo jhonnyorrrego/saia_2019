@@ -11,7 +11,7 @@ errores.txt
 pruebas_ruben
 pruebas_*
 define.php
-define_*.php
+#define_*.php
 prueba_nuevo.php
 email_aprobacion/define_remoto.php
 phpqrcode/qr*.png-errors.txt
