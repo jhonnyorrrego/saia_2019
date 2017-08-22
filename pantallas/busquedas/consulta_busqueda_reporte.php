@@ -274,9 +274,20 @@ $(window).bind('resize', function() {
 function exportar_funcion_excel_reporte(){
 	var busqueda_total=$("#busqueda_total_paginas").val(); 
 	if(parseInt(busqueda_total)!=0){
+	<?php
+	$configuracion_temporal=busca_filtro_tabla("valor","configuracion","nombre='ruta_temporal' AND tipo='ruta'","",$conn);
+  if($configuracion_temporal['numcampos']){
+    $cont_ruta=$configuracion_temporal[0]['valor'];
+    $cont_ruta .= '_'.usuario_actual("login");
+    $ruta_temporal=$cont_ruta;
+    crear_destino($ruta_db_superior . $cont_ruta);
+  } else {
+    $ruta_temporal="temporal/temporal_" . usuario_actual('login');
+    crear_destino($ruta_db_superior . "temporal/temporal_" . usuario_actual('login'));
+  }
+	?>
 		
-
-	var ruta_file="temporal_<?php echo(usuario_actual('login'));?>/reporte_<?php echo($datos_busqueda[0]["nombre"].'_'.date('Ymd').'.xls'); ?>";
+	var ruta_file="<?php echo($ruta_temporal);?>/reporte_<?php echo($datos_busqueda[0]["nombre"].'_'.date('Ymd').'.xls'); ?>";
 	var url="exportar_saia.php?tipo_reporte=1&idbusqueda_componente=<?php echo $datos_busqueda[0]["idbusqueda_componente"]; ?>&page=1&exportar_saia=excel&ruta_exportar_saia="+ruta_file+"&rows="+$("#busqueda_registros").val()*4+"&actual_row=0&variable_busqueda="+$("#variable_busqueda").val()+"&idbusqueda_filtro_temp=<?php echo(@$_REQUEST['idbusqueda_filtro_temp']);?>&idbusqueda_filtro=<?php echo(@$_REQUEST['idbusqueda_filtro']);?>&idbusqueda_temporal=<?php echo (@$_REQUEST['idbusqueda_temporal']);?>";
 	window.open(url,"iframe_exportar_saia");
 	}else{
