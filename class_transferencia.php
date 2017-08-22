@@ -2073,7 +2073,7 @@ function radicar_plantilla() {
 		}
 
 			// Ejemplo de uso de la clase elasticsearch
-		if (INDEXA_ELASTICSEARCH) {
+		if (defined("INDEXA_ELASTICSEARCH") && INDEXA_ELASTICSEARCH) {
 			$d2j = new DocumentoElastic($_POST["iddoc"]);
 			//$d2j->asignar_iddocumento();
 			$exportado = $d2j->exportar_informacion();

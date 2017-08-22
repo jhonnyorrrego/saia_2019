@@ -56,7 +56,7 @@ if (isset($_POST["iddoc"])) {
 	phpmkr_query($sql, $conn);
 
 	// Eliminar el documento del indice elasticsearch
-	if (INDEXA_ELASTICSEARCH) {
+	if (defined("INDEXA_ELASTICSEARCH") && INDEXA_ELASTICSEARCH) {
 		$d2j = new DocumentoElastic($_POST["iddoc"]);
 		$exportado = $d2j->borrar_documento_elasticsearch();
 	}

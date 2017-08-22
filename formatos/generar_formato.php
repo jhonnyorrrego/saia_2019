@@ -64,7 +64,7 @@ class GenerarFormato {
 				break;
 			case "tabla" :
 				$this->generar_tabla();
-				if (INDEXA_ELASTICSEARCH) {
+				if (defined("INDEXA_ELASTICSEARCH") && INDEXA_ELASTICSEARCH) {
 					$doc_elastic = new DocumentoElastic(null);
 					$doc_elastic->actualizar_indice_formato($this->idformato);
 				}
