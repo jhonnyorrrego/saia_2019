@@ -324,11 +324,10 @@ class DocumentoElastic {
 							"$servidor:$puerto"
 					];
 				}
-				print_r($hosts);die();
 				$this->cliente_elasticsearch = new elasticsearch_saia($hosts);
-			}/* else {
+			} else {
 				$this->cliente_elasticsearch = new elasticsearch_saia();
-			}*/
+			}
 		}
 		return $this->cliente_elasticsearch;
 	}
