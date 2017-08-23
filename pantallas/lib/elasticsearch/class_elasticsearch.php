@@ -44,7 +44,7 @@ class elasticsearch_saia {
 		} else {
 			require_once $ruta_db_superior . 'vendor/autoload.php';
 		}
-		$this->cliente = Elasticsearch\ClientBuilder::create()->setHosts($this->hosts)->build();
+		$this->cliente = Elasticsearch\ClientBuilder::create()->setHosts($this->hosts)->allowBadJSONSerialization()->build();
 	}
 
 	function crear_indice($indice) {
