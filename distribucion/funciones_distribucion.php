@@ -512,8 +512,64 @@ function retornar_origen_destino_distribucion($tipo,$valor){
 }
 
 
+//---------------------------------------------------------------------------------------------
+
+//RUTAS DE DISTRIBUCION
+
+function actualizar_dependencia_ruta_distribucion($idft_ruta_distribucion,$iddependencia,$estado){
+	global $conn;
+	
+	/*
+	 * $estado = 1 -> activo ; 2-> inactivo 
+	*/
+	
+	$busca_distribuciones_origen=busca_filtro_tabla("a.iddistribucion","distribucion a, documento b, vfuncionario_dc c","a.documento_iddocumento=b.iddocumento AND lower(b.estado)='aprobado' AND a.estado_distribucion<>3 AND a.tipo_origen=1 AND a.estado_recogida=0 AND c.iddependencia_cargo=a.origen AND c.iddependencia=".$iddependencia,"",$conn);
+	
+	$busca_distribuciones_destino=busca_filtro_tabla("a.iddistribucion","distribucion a, documento b, vfuncionario_dc c","a.documento_iddocumento=b.iddocumento AND lower(b.estado)='aprobado' AND a.estado_distribucion<>3 AND a.tipo_destino=1 AND c.iddependencia_cargo=a.destino AND c.iddependencia=".$iddependencia,"",$conn);
+	
+	//ASIGNO O RETIRO RUTA DE DISTRIBUCION, SEGUN SI ACTIVAN O INACTIVAN UNA DEPENDENCIA EN UNA RUTA DE DISTRIBUCION.
+	
+	if($estado==1){   //ASIGNO RUTA DE DISTRIBUCION A LAS DISTRIBUCIONES
+		
+		//ACTUALIZACION_ORIGEN (RECOGIDA)
+		for($i=0;$i<$busca_distribuciones_origen['numcampos'];$i++){
+			$iddistribucion=$busca_distribuciones_origen[$i]['iddistribucion'];
+			$upro=" UPDATE distribucion SET mensajero_origen=0,ruta_origen=".$idft_ruta_distribucion." WHERE iddistribucion=".$iddistribucion;
+			phpmkr_query($upro);
+		}
+		
+		//ACTUALIZACION_DESTINO (ENTREGA)
+		for($i=0;$i<$busca_distribuciones_destino['numcampos'];$i++){
+			$iddistribucion=$busca_distribuciones_destino[$i]['iddistribucion'];
+			$uprd=" UPDATE distribucion SET mensajero_destino=0,ruta_destino=".$idft_ruta_distribucion." WHERE iddistribucion=".$iddistribucion;
+			phpmkr_query($uprd);
+		}		
+		
+	} //fin if $estado==1
+	
+	if($estado==2){   //RETIRO RUTA DE DISTRIBUCION A LAS DISTRIBUCIONES
+	
+		//ACTUALIZACION_ORIGEN (RECOGIDA)
+		for($i=0;$i<$busca_distribuciones_origen['numcampos'];$i++){
+			$iddistribucion=$busca_distribuciones_origen[$i]['iddistribucion'];
+			$upro=" UPDATE distribucion SET mensajero_origen=0,ruta_origen=0 WHERE iddistribucion=".$iddistribucion;
+			phpmkr_query($upro);
+		}
+		
+		//ACTUALIZACION_DESTINO (ENTREGA)
+		for($i=0;$i<$busca_distribuciones_destino['numcampos'];$i++){
+			$iddistribucion=$busca_distribuciones_destino[$i]['iddistribucion'];
+			$uprd=" UPDATE distribucion SET mensajero_destino=0,ruta_destino=0 WHERE iddistribucion=".$iddistribucion;
+			phpmkr_query($uprd);
+		}	
+			
+	} //fin if $estado==2
+	
+	
+}  //fin function actualizar_dependencia_ruta_distribucion()
 
 
+//---------------------------------------------------------------------------------------------
 
 
 function filtrar_mensajero(){
