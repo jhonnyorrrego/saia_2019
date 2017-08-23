@@ -432,9 +432,9 @@ abstract class SQL2 {
 			guardar_traza($sql_tabla, $formato[0]["nombre_tabla"]);
 
 			if ($this->Ejecutar_Sql($sql_tabla)) {
+				$this->crear_indices_tabla($formato[0]["idformato"]);
 				$resp["estado"] = "OK";
 				$resp["mensaje"] = "Tabla " . $formato[0]["nombre_tabla"] . " Generada con Exito";
-				$this->crear_indices_tabla($formato[0]["idformato"]);
 			} else {
 				$resp["estado"] = "KO";
 				$resp["mensaje"] = "No es posible Generar la tabla para el Formato " . $sql_tabla . "<br />" . $this->mostrar_error();
@@ -442,6 +442,8 @@ abstract class SQL2 {
 			}
 		} else {
 			$this->crear_indices_tabla($formato[0]["idformato"]);
+			$resp["estado"] = "OK";
+			$resp["mensaje"] = "Indices para la tabla " . $formato[0]["nombre_tabla"] . " Generados con Exito";
 		}
 		return $resp;
 	}
