@@ -31,8 +31,9 @@ echo(librerias_jquery('1.7'));
         		data: { 
                 	mensajero:mensajero,
                 	iddistribucion:iddistribucion,
+                	ejecutar_accion:'cambiar_mensajero_distribucion'
               	},
-        		url: '<?php echo($ruta_db_superior); ?>distribucion/cambiar_mensajero_distribucion.php',
+        		url: '<?php echo($ruta_db_superior); ?>distribucion/ejecutar_acciones_distribucion.php',
         		success : function(data) {
           			notificacion_saia('Mensajero asignado exitosamente','success','',4000);
                     window.location.reload();
