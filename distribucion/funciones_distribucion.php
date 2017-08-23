@@ -310,10 +310,21 @@ function mostrar_nombre_ruta_distribucion($tipo_origen,$estado_recogida,$ruta_or
 function select_mensajeros_ruta_distribucion($iddistribucion){ //Mensajero
 	global $conn;
 	
-	$datos_distribucion=busca_filtro_tabla("tipo_origen,estado_recogida,ruta_origen,ruta_destino,mensajero_origen,mensajero_destino","distribucion","iddistribucion=".$iddistribucion,"",$conn);
+	$datos_distribucion=busca_filtro_tabla("tipo_origen,tipo_destino,estado_recogida,ruta_origen,ruta_destino,mensajero_origen,mensajero_destino","distribucion","iddistribucion=".$iddistribucion,"",$conn);
 	$atributos_input=' style="width:150px;" class="select_mensajeros_ditribucion" name="select_mensajeros_ditribucion_'.$iddistribucion.'" id="select_mensajeros_ditribucion_'.$iddistribucion.'" iddistribucion="'.$iddistribucion.'"';
-	$select_mensajeros=generar_select_mensajeros_distribucion($atributos_input,$datos_distribucion[0]['tipo_origen'],$datos_distribucion[0]['ruta_origen'],$datos_distribucion[0]['mensajero_origen']);
 
+
+	$diligencia=mostrar_diligencia_distribucion($datos_distribucion[0]['tipo_origen'],$datos_distribucion[0]['estado_recogida']);
+	$upd='';
+	switch($diligencia){
+		case 'RECOGIDA':
+			$select_mensajeros=generar_select_mensajeros_distribucion($atributos_input,$datos_distribucion[0]['tipo_origen'],$datos_distribucion[0]['ruta_origen'],$datos_distribucion[0]['mensajero_origen']);
+			break;
+		case 'ENTREGA':	
+			$select_mensajeros=generar_select_mensajeros_distribucion($atributos_input,$datos_distribucion[0]['tipo_destino'],$datos_distribucion[0]['ruta_destino'],$datos_distribucion[0]['mensajero_destino']);		
+			break;
+	} //fin switch
+	
 	return($select_mensajeros);
 	
 }
@@ -345,23 +356,10 @@ function generar_select_mensajeros_distribucion($atributos_input,$tipo_origen,$i
 				$html.='<option value="'.$mensajeros_ruta[$i]['mensajero_ruta'].$posfijo_mensajero.'" '.$selected_text.'>'.$nombre_mensajero.'</option>';
 			}
 			
-		}else{  //todos los funcionarios con cargo "mensajero"
+		}else{  //si no tiene ruta de distribucion y es tipo=1 (interno) el select sale vacio
 
-			$mensajeros_saia=busca_filtro_tabla("nombres,apellidos,iddependencia_cargo","vfuncionario_dc"," lower(cargo)='mensajero' AND estado_dc=1 ","",$conn);
-			for($i=0;$i<$mensajeros_saia['numcampos'];$i++){
-				$selected_text='';
-				if($selected){
-					if($mensajeros_saia[$i]['iddependencia_cargo']==$selected){
-						$selected_text='selected';
-					}					
-				}
-				$posfijo_mensajero='-i';
-
-				$nombre_mensajero=$mensajeros_saia[$i]['nombres'].' '.$mensajeros_saia[$i]['apellidos'];
-				$html.='<option value="'.$mensajeros_saia[$i]['iddependencia_cargo'].$posfijo_mensajero.'" '.$selected_text.'>'.$nombre_mensajero.'</option>';
-			}  //FIN: for $mensajeros_saia
 	
-		} //FIN: todos los funcionarios con cargo "mensajero"
+		} //FIN: //si no tiene ruta de distribucion y es tipo=1 (interno) el select sale vacio
 	
 	}else{  //externos
 
@@ -417,7 +415,28 @@ function mostrar_planilla_diligencia_distribucion($iddistribucion){ //Planilla A
 
 
 function generar_check_accion_distribucion($iddistribucion){
-	$checkbox='<input type="checkbox" class="accion_distribucion" value="'.$iddistribucion.'">';
+	global $conn;
+	
+	$distribucion=busca_filtro_tabla("tipo_origen,estado_recogida,mensajero_origen,mensajero_destino","distribucion","iddistribucion=".$iddistribucion,"",$conn);
+	$diligencia=mostrar_diligencia_distribucion($distribucion[0]['tipo_origen'],$distribucion[0]['estado_recogida']);
+	$retornar_check=0;
+	switch($diligencia){
+		case 'RECOGIDA':
+			if($distribucion[0]['mensajero_origen']){
+				$retornar_check=1;	
+			}
+			break;
+		case 'ENTREGA':	
+			if($distribucion[0]['mensajero_destino']){
+				$retornar_check=1;	
+			}		
+			break;
+	} //fin switch	
+	
+	$checkbox='';
+	if($retornar_check){
+		$checkbox='<input type="checkbox" class="accion_distribucion" value="'.$iddistribucion.'">';
+	}	
 	return($checkbox);
 }
 function opciones_acciones_distribucion($datos){

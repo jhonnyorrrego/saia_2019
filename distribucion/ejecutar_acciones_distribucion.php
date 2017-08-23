@@ -41,6 +41,39 @@ function cambiar_mensajero_distribucion(){
 }
 
 
+function finalizar_distribucion(){
+	global $conn;
+	$retorno=array('exito'=>0);
+	if(@$_REQUEST['iddistribucion']){
+		
+		$vector_iddistribucion=explode(',',$_REQUEST['iddistribucion']);
+		
+		for($i=0;$i<count($vector_iddistribucion);$i++){
+			$iddistribucion=$vector_iddistribucion[$i];
+			
+			$distribucion=busca_filtro_tabla("tipo_origen,estado_recogida","distribucion","iddistribucion=".$iddistribucion,"",$conn);
+			$diligencia=mostrar_diligencia_distribucion($distribucion[0]['tipo_origen'],$distribucion[0]['estado_recogida']);
+			$upd='';
+			switch($diligencia){
+				case 'RECOGIDA':
+					$upd=" UPDATE distribucion SET estado_recogida=1,estado_distribucion=1 WHERE iddistribucion=".$iddistribucion;
+					break;
+				case 'ENTREGA':	
+					$upd=" UPDATE distribucion SET estado_distribucion=3 WHERE iddistribucion=".$iddistribucion;			
+					break;
+			} //fin switch
+			
+			if($upd!=''){
+				phpmkr_query($upd);	
+			}
+			
+		} //fin for $vector_iddistribucion
+		$retorno['exito']=1;
+	} //fin if $_REQUEST['iddistribucion']
+	return($retorno);
+	
+} //fin function finalizar_distribucion()
+
 
 if(@$_REQUEST['ejecutar_accion']){
 	$retorno=$_REQUEST['ejecutar_accion']();
