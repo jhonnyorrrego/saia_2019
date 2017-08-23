@@ -5,6 +5,6 @@
 		"knplabs/gaufrette" : "^0.3.1",
 		"imagine/imagine" : "~0.5.0",
 		"aws/aws-sdk-php" : "~3",
-		"elasticsearch/elasticsearch": "*"
+		"elasticsearch/elasticsearch": "~5.0"
 	}
 }
