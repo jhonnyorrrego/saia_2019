@@ -618,6 +618,9 @@ UPDATE funciones_formato_accion SET orden=15 WHERE  accion_idaccion=5 AND idfunc
 //NUEVA DISTRIBUCION 
 DELETE FROM funciones_formato WHERE idfunciones_formato=904; //subir_planilla_despacho_ingresados
 DELETE FROM funciones_formato_accion WHERE idfunciones_formato=904; //subir_planilla_despacho_ingresados - POSTERIOR A SUBIR ANEXO
+
+INSERT INTO `funciones_formato` (`idfunciones_formato`, `nombre`, `nombre_funcion`, `parametros`, `etiqueta`, `descripcion`, `ruta`, `formato`, `acciones`) VALUES (NULL, '{*vincular_dependencia_ruta_distribucion*}', 'vincular_dependencia_ruta_distribucion', NULL, 'vincular_dependencia_ruta_distribucion', '', 'funciones.php', '404', '');
+INSERT INTO `funciones_formato_accion` (`idfunciones_formato_accion`, `idfunciones_formato`, `accion_idaccion`, `formato_idformato`, `momento`, `estado`, `orden`) VALUES (NULL, '943', '3', '404', 'POSTERIOR', '1', '2');
 -- ---------------------------------------------------------------- 
 
 

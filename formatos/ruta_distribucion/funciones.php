@@ -339,7 +339,17 @@ function crear_items_ruta_distribucion($idformato,$iddoc){
 
 
 
-
+function vincular_dependencia_ruta_distribucion($idformato,$iddoc){  //POSTERIOR AL APROBAR
+	global $conn,$ruta_db_superior;
+	
+	$datos=busca_filtro_tabla("a.idft_ruta_distribucion,b.dependencia_asignada","ft_ruta_distribucion a, dependencias_ruta b","b.estado_dependencia=1 AND a.idft_ruta_distribucion=b.ft_ruta_distribucion AND a.documento_iddocumento=".$iddoc,"",$conn);
+	if($datos['numcampos']){
+		include_once($ruta_db_superior."distribucion/funciones_distribucion.php");
+		for($i=0;$i<$datos['numcampos'];$i++){		
+			actualizar_dependencia_ruta_distribucion($datos[$i]['idft_ruta_distribucion'],$datos[$i]['dependencia_asignada'],1);			
+		}		
+	}
+}
 
 
 
