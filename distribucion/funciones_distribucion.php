@@ -569,7 +569,40 @@ function actualizar_dependencia_ruta_distribucion($idft_ruta_distribucion,$iddep
 }  //fin function actualizar_dependencia_ruta_distribucion()
 
 
+function actualizar_mensajero_ruta_distribucion($idft_ruta_distribucion,$iddependencia_cargo_mensajero,$estado){
+	global $conn;
+	
+	
+	if($estado==2){ //SI INACTIVAN EL MENSAJERO, LO RETIRO DE LAS DISTRIBUCIONES
+	
+		//ACTUALIZACION_ORIGEN (RECOGIDA)
+		$busca_distribuciones_mensajero_origen=busca_filtro_tabla("a.iddistribucion","distribucion a, documento b","a.documento_iddocumento=b.iddocumento AND lower(b.estado)='aprobado' AND a.estado_distribucion<>3 AND a.tipo_origen=1 AND a.estado_recogida=0 AND mensajero_origen=".$iddependencia_cargo_mensajero." AND a.ruta_origen=".$idft_ruta_distribucion,"",$conn);	
+		
+		for($i=0;$i<$busca_distribuciones_mensajero_origen['numcampos'];$i++){
+			$iddistribucion=$busca_distribuciones_mensajero_origen[$i]['iddistribucion'];
+			$upro=" UPDATE distribucion SET mensajero_origen=0 WHERE iddistribucion=".$iddistribucion;
+			phpmkr_query($upro);				
+		}
+		
+		//ACTUALIZACION_DESTINO (ENTREGA)
+		$busca_distribuciones_mensajero_destino=busca_filtro_tabla("a.iddistribucion","distribucion a, documento b","a.documento_iddocumento=b.iddocumento AND lower(b.estado)='aprobado' AND a.estado_distribucion<>3 AND a.tipo_destino=1 AND mensajero_destino=".$iddependencia_cargo_mensajero." AND a.ruta_destino=".$idft_ruta_distribucion,"",$conn);	
+		
+		for($i=0;$i<$busca_distribuciones_mensajero_destino['numcampos'];$i++){
+			$iddistribucion=$busca_distribuciones_mensajero_destino[$i]['iddistribucion'];
+			$uprd=" UPDATE distribucion SET mensajero_destino=0 WHERE iddistribucion=".$iddistribucion;
+			phpmkr_query($uprd);				
+		}
+
+		
+	} //fin if $estado==2
+	
+} //fin function actualizar_mensajero_ruta_distribucion()
+
+
 //---------------------------------------------------------------------------------------------
+
+
+
 
 
 function filtrar_mensajero(){

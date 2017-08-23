@@ -239,7 +239,7 @@ function mostrar_datos_funcionarios_ruta($idformato,$iddoc){
 										
 									
 										<td>'.$mensajero[0]['nombre'].'</td>
-										<td><select class="cambio_estado" name="estado[]" data-idft="'.$item[$j]['idft_funcionarios_ruta'].'" style="width:100px;">
+										<td><select class="cambio_estado" name="estado[]" data-idft="'.$item[$j]['idft_funcionarios_ruta'].'"  mensajero_ruta="'.$item[$j]['mensajero_ruta'].'" style="width:100px;">
                                               <option value="1" '.$seleccionar[1].'>Activo</option>
                                               <option value="2" '.$seleccionar[2].'>Inactivo</option>
                                         </select></td>
@@ -285,12 +285,15 @@ function mostrar_datos_funcionarios_ruta($idformato,$iddoc){
 						$(".cambio_estado").change(function(){
 							var estado=$(this).val();
 							var idft=$(this).attr("data-idft");
+							var mensajero_ruta=$(this).attr("mensajero_ruta");
 							$.ajax({
 			                        type:"POST",
 			                        url: "actualizar_estado_mensajeros.php",
 			                        data: {
 			                                        idft:idft,
-			                                        estado:estado
+			                                        estado:estado,
+			                                        idft_ruta_distribucion:'.$dato[0]['idft_ruta_distribucion'].',
+			                                        iddependencia_cargo_mensajero:mensajero_ruta
 			                        },
 			                        success: function(datos){
 			                            notificacion_saia("Estado del funcionario actualizado correctamente","success","",4000);
