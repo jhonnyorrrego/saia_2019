@@ -315,13 +315,20 @@ class DocumentoElastic {
 							break;
 					}
 				}
-				$hosts = [
-						"$servidor:$puerto"
-				];
+				if(empty($puerto)) {
+					$hosts = [
+							"$servidor"
+					];
+				} else {
+					$hosts = [
+							"$servidor:$puerto"
+					];
+				}
+				print_r($hosts);die();
 				$this->cliente_elasticsearch = new elasticsearch_saia($hosts);
-			} else {
+			}/* else {
 				$this->cliente_elasticsearch = new elasticsearch_saia();
-			}
+			}*/
 		}
 		return $this->cliente_elasticsearch;
 	}
@@ -920,7 +927,7 @@ class DocumentoElastic {
 					 * break;
 					 */
 					case "archivo" :
-						include_once ("../../anexosdigitales/funciones_archivo.php");
+					include_once (RUTA_ABS_SAIA . "anexosdigitales/funciones_archivo.php");
 						$idcampo = busca_filtro_tabla("idcampos_formato", "campos_formato", "nombre like '$campo' and formato_idformato=$idformato", "", $conn);
 						$retorno = listar_anexos_ver_descargar($idformato, $iddoc, $idcampo[0][0], $_REQUEST["tipo"], 1);
 						break;

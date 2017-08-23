@@ -19,7 +19,7 @@ class elasticsearch_saia {
 
 	// var $error_saia;
 	function __construct($hosts) {
-		if ($hosts == '') {
+		if (empty($hosts)) {
 			//'192.168.0.13:9200' 'localhost:9200'
 			$hosts = [
 					'localhost:9200'
