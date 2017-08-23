@@ -471,11 +471,15 @@ function opciones_acciones_distribucion($datos){
 function mostrar_origen_distribucion($tipo_origen,$origen){
 	global $conn;
 	$nombre_origen=retornar_origen_destino_distribucion($tipo_origen,$origen);
+	$nombre_origen.='<br>';
+	$nombre_origen.=retornar_ubicacion_origen_destino_distribucion($tipo_origen,$origen);
 	return($nombre_origen);
 }
 function mostrar_destino_distribucion($tipo_destino,$destino){
 	global $conn;
 	$nombre_destino=retornar_origen_destino_distribucion($tipo_destino,$destino);
+	$nombre_destino.='<br>';
+	$nombre_destino.=retornar_ubicacion_origen_destino_distribucion($tipo_destino,$destino);	
 	return($nombre_destino);
 }
 
@@ -485,18 +489,10 @@ function retornar_ubicacion_origen_destino_distribucion($tipo,$valor){
 	$ubicacion='';
 	if($tipo==1){  //iddependencia_cargo
 		$datos=busca_filtro_tabla("cargo,dependencia","vfuncionario_dc","iddependencia_cargo=".$valor,"",$conn);
-		$ubicacion='
-			<b>Dependencia:</b> '.$datos[0]['dependencia'].'
-			<br>
-			<b>Cargo: </b> '.$datos[0]['cargo'].'
-		';
+		$ubicacion='<b>Dependencia:</b> '.$datos[0]['dependencia'].'<br><b>Cargo: </b> '.$datos[0]['cargo'].'';
 	}else{  //iddatos_ejecutor
 		$datos=busca_filtro_tabla("direccion,cargo","ejecutor a, datos_ejecutor b","a.idejecutor=b.ejecutor_idejecutor AND b.iddatos_ejecutor=".$valor,"",$conn);
-		$ubicacion='
-			<b>Direcci&oacute;n:</b> '.$datos[0]['direccion'].'
-			<br>
-			<b>Cargo: </b> '.$datos[0]['cargo'].'
-		';
+		$ubicacion='<b>Direcci&oacute;n:</b> '.$datos[0]['direccion'].'<br><b>Cargo: </b> '.$datos[0]['cargo'].'';
 	}
 	return($ubicacion);		
 }
