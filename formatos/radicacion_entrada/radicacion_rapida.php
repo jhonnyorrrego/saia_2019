@@ -110,7 +110,7 @@ if(@$_REQUEST["idcategoria_formato"]){
 	        </td>
             </tr>
             <tr><td style="font-size:8pt;"  align="center">Descripci&oacuten General</td>
-                <td align="center"><input type="text"  id="descripcion_general" name="descripcion_general"/></td>
+                <td align="center"><input type="text" class="required" id="descripcion_general" name="descripcion_general"/></td>
             </tr>
             <tr>
                 <td colspan="2" align="center"><input class="btn btn-primary btn-mini" type="submit" value="Radicar" id="enviar" name="enviar"/></td>
