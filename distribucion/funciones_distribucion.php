@@ -520,7 +520,30 @@ function retornar_origen_destino_distribucion($tipo,$valor){
 	return($nombre);	
 		
 }
-
+function condicion_adicional_distribucion(){
+	global $conn;
+	
+	$condicion_adicional="";
+	if(@$_REQUEST['variable_busqueda']){
+		
+		$vector_variable_busqueda=explode('|',$_REQUEST['variable_busqueda']);
+		
+		//FILTRO POR RUTA DE DISTRIBUCION
+		if($vector_variable_busqueda[0]=='idft_ruta_distribucion'){
+						
+			//CONDICION RUTA ORIGEN		
+			$condicion_adicional.=" AND ( (a.tipo_origen=1 AND a.estado_recogida<>1 AND a.ruta_origen=".$vector_variable_busqueda[1].")";
+			
+			//CONDICION RUTA DESTINO
+			$condicion_adicional.=" OR (a.tipo_destino=1 AND a.ruta_destino=".$vector_variable_busqueda[1]." AND ( (a.tipo_origen=1 AND estado_recogida=1) OR (a.estado_recogida<>1 AND a.tipo_origen=2) )  ) )";
+			
+		} //fin if $vector_variable_busqueda[0]=='idft_ruta_distribucion'
+		
+		
+	} //fin if $_REQUEST['variable_busqueda']
+	
+	return($condicion_adicional);
+}
 
 //---------------------------------------------------------------------------------------------
 
