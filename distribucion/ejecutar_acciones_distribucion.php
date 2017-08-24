@@ -23,15 +23,19 @@ function cambiar_mensajero_distribucion(){
 	
 		$vector_mensajero_nuevo=explode('-',@$_REQUEST['mensajero']);
 		
-		$distribucion=busca_filtro_tabla("tipo_origen,estado_recogida","distribucion","iddistribucion=".$iddistribucion,"",$conn);
+		$distribucion=busca_filtro_tabla("tipo_origen,estado_recogida,tipo_destino","distribucion","iddistribucion=".$iddistribucion,"",$conn);
 		$diligencia=mostrar_diligencia_distribucion($distribucion[0]['tipo_origen'],$distribucion[0]['estado_recogida']);
 		
 		switch($diligencia){
 			case 'RECOGIDA':
 				$upm=" UPDATE  distribucion SET mensajero_origen=".$vector_mensajero_nuevo[0]." WHERE iddistribucion=".$iddistribucion;
 				break;
-			case 'ENTREGA':	
-				$upm=" UPDATE  distribucion SET mensajero_destino=".$vector_mensajero_nuevo[0]." WHERE iddistribucion=".$iddistribucion;
+			case 'ENTREGA':
+				$update_adicional=',mensajero_empresad=0';
+				if($distribucion[0]['tipo_destino']==2 && $vector_mensajero_nuevo[1]=='e'){ //si es una empresa_transportadora es decir mensajero_empresad
+					$update_adicional=',mensajero_empresad=1';
+				}	
+				$upm=" UPDATE  distribucion SET mensajero_destino=".$vector_mensajero_nuevo[0].$update_adicional." WHERE iddistribucion=".$iddistribucion;
 				break;
 		}
 		phpmkr_query($upm);	

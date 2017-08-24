@@ -285,7 +285,7 @@ function mostrar_tipo_radicado_distribucion($tipo_origen){
 	return($array_tipo_radicado[$tipo_origen]);
 	
 }
-function mostrar_nombre_ruta_distribucion($tipo_origen,$estado_recogida,$ruta_origen,$ruta_destino){ //Ruta
+function mostrar_nombre_ruta_distribucion($tipo_origen,$estado_recogida,$ruta_origen,$ruta_destino,$tipo_destino){ //Ruta
 	global $conn;
 	
 	if($estado_recogida=='estado_recogida'){ $estado_recogida=0; }
@@ -304,13 +304,18 @@ function mostrar_nombre_ruta_distribucion($tipo_origen,$estado_recogida,$ruta_or
 			$nombre_ruta_distribucion=$ruta_distribucion[0]['nombre_ruta'];
 		}
 	}
+	
+	if($tipo_destino==2){ //DESTINO EXTERNO, NO TIENE RUTA SE PREDETERMINA NOMBRE
+		$nombre_ruta_distribucion='Distribuci&oacute;n Externa';
+	}
+	
 	return($nombre_ruta_distribucion);	
 }
 
 function select_mensajeros_ruta_distribucion($iddistribucion){ //Mensajero
 	global $conn;
 	
-	$datos_distribucion=busca_filtro_tabla("tipo_origen,tipo_destino,estado_recogida,ruta_origen,ruta_destino,mensajero_origen,mensajero_destino","distribucion","iddistribucion=".$iddistribucion,"",$conn);
+	$datos_distribucion=busca_filtro_tabla("tipo_origen,tipo_destino,estado_recogida,ruta_origen,ruta_destino,mensajero_origen,mensajero_destino,mensajero_empresad","distribucion","iddistribucion=".$iddistribucion,"",$conn);
 	$atributos_input=' style="width:150px;" class="select_mensajeros_ditribucion" name="select_mensajeros_ditribucion_'.$iddistribucion.'" id="select_mensajeros_ditribucion_'.$iddistribucion.'" iddistribucion="'.$iddistribucion.'"';
 
 
@@ -321,14 +326,14 @@ function select_mensajeros_ruta_distribucion($iddistribucion){ //Mensajero
 			$select_mensajeros=generar_select_mensajeros_distribucion($atributos_input,$datos_distribucion[0]['tipo_origen'],$datos_distribucion[0]['ruta_origen'],$datos_distribucion[0]['mensajero_origen']);
 			break;
 		case 'ENTREGA':	
-			$select_mensajeros=generar_select_mensajeros_distribucion($atributos_input,$datos_distribucion[0]['tipo_destino'],$datos_distribucion[0]['ruta_destino'],$datos_distribucion[0]['mensajero_destino']);		
+			$select_mensajeros=generar_select_mensajeros_distribucion($atributos_input,$datos_distribucion[0]['tipo_destino'],$datos_distribucion[0]['ruta_destino'],$datos_distribucion[0]['mensajero_destino'],$datos_distribucion[0]['mensajero_empresad']);		
 			break;
 	} //fin switch
 	
 	return($select_mensajeros);
 	
 }
-function generar_select_mensajeros_distribucion($atributos_input,$tipo_origen,$idft_ruta_distribucion=0,$selected=0){ 
+function generar_select_mensajeros_distribucion($atributos_input,$tipo,$idft_ruta_distribucion=0,$selected=0,$empresa_transportadora=0){ 
 	global $conn;	
 	
 	$html='<select '.$atributos_input.'>';
@@ -337,7 +342,7 @@ function generar_select_mensajeros_distribucion($atributos_input,$tipo_origen,$i
 		$html.='<option value="" selected>Seleccione...</option>';
 	}
 	
-	if($tipo_origen==1){  //internos
+	if($tipo==1){  //internos
 	
 		if($idft_ruta_distribucion){ //mensajeros de la ruta de distribucion
 
@@ -378,8 +383,14 @@ function generar_select_mensajeros_distribucion($atributos_input,$tipo_origen,$i
 			$array_mensajeros_externos[$me+$mensajeros_externos['numcampos']]['id']=$empresas_transportadoras[$me]['id'].'-e';
 			$array_mensajeros_externos[$me+$mensajeros_externos['numcampos']]['nombre']=$empresas_transportadoras[$me]['nombre'];
 		}
-		
 
+		if($selected){
+			if($empresa_transportadora){
+				$selected=$selected.'-e';
+			}else{
+				$selected=$selected.'-i';
+			}			
+		}		
 		for($me=0;$me<count($array_mensajeros_externos);$me++){
 			$selected_text='';
 			if($selected){
@@ -387,10 +398,9 @@ function generar_select_mensajeros_distribucion($atributos_input,$tipo_origen,$i
 					$selected_text='selected';
 				}					
 			}
-
 			$html.="<option value='".$array_mensajeros_externos[$me]['id']."' ".$selected_text.">".$array_mensajeros_externos[$me]['nombre']."</option>";
 		}  	
-
+		
 	} //FIN: externos
 	
 	$html.='</select>';
