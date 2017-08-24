@@ -529,7 +529,7 @@ function condicion_adicional_distribucion(){
 		$vector_variable_busqueda=explode('|',$_REQUEST['variable_busqueda']);
 		
 		//FILTRO POR RUTA DE DISTRIBUCION
-		if($vector_variable_busqueda[0]=='idft_ruta_distribucion'){
+		if($vector_variable_busqueda[0]=='idft_ruta_distribucion' && $vector_variable_busqueda[1]){
 						
 			//CONDICION RUTA ORIGEN		
 			$condicion_adicional.=" AND ( (a.tipo_origen=1 AND a.estado_recogida<>1 AND a.ruta_origen=".$vector_variable_busqueda[1].")";
