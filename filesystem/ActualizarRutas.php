@@ -99,21 +99,28 @@ class ActualizarRutas {
 				if($tabla == "pagina") {
 					$key = "consecutivo";
 				}
+				
 				$datos = busca_filtro_tabla("$key, $campo", $tabla, "$campo not like '{%'", "", $conn);
 				//print_r($datos);die();
 				if ($datos["numcampos"]) {
 					for($i = 0; $i < $datos["numcampos"]; $i++) {
 						$valor_origen = $datos[$i][$campo];
-						$arr_ruta = preg_split("#../almacenamiento/#", $valor_origen, null, PREG_SPLIT_NO_EMPTY);
+						$output_array = array();
+						$ruta_alm = "almacenamiento";
+						if(preg_match("#(\.\./)+(almacenamiento[0-9]*)/#", $valor_origen, $output_array)) {
+							$ruta_alm = $output_array[2];
+						}
+						$arr_ruta = preg_split("#(\.\./)+almacenamiento[0-9]*/#", $valor_origen, null, PREG_SPLIT_NO_EMPTY);
 						// {"servidor":"local:///vol1/almacenamiento/","ruta":"APROBADO/2016-11-11/276/pdf/MEMORANDO_54_2016_11_11.pdf"}
 						if (count($arr_ruta)) {
 							$json = array(
-									"servidor" => $this->prefijo_ruta . "almacenamiento/",
+									"servidor" => $this->prefijo_ruta . $ruta_alm . "/",
 									"ruta" => $arr_ruta[0]
 							);
 							$valor = json_encode($json);
 							$qry = sprintf($this->qry_upd, $tabla, $campo, $valor, $key, $datos[$i][$key]);
 							phpmkr_query($qry) or die($qry);
+							//echo "$valor_origen => $qry <br>";
 							$actualizados++;
 						}
 					}
