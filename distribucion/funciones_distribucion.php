@@ -250,14 +250,14 @@ function ver_documento_distribucion($iddocumento,$tipo_origen) {  //Radicado
 	global $conn;
 	
 	$cadena_fecha_obtener=fecha_db_obtener('a.fecha','Y-m-d')." AS fecha";
-	$datos_documento=busca_filtro_tabla("a.numero,".$cadena_fecha_obtener,"documento a, formato b","lower(a.plantilla)=lower(b.nombre) AND a.iddocumento=".$iddocumento,"",$conn);
+	$datos_documento=busca_filtro_tabla("b.etiqueta,a.numero,".$cadena_fecha_obtener,"documento a, formato b","lower(a.plantilla)=lower(b.nombre) AND a.iddocumento=".$iddocumento,"",$conn);
 
 	$numero=$datos_documento[0]['numero'];
 	$fecha=$datos_documento[0]['fecha'];
 	$array_tipo_origen=array(1=>'I',2=>'E');
 	$cadena_mostrar=$fecha.'-'.$numero.'-'.$array_tipo_origen[$tipo_origen];
-	
-	$enlace_documento='<div class="link kenlace_saia" enlace="ordenar.php?key='.$iddocumento.'&amp;accion=mostrar&amp;mostrar_formato=1" conector="iframe" titulo="No Radicado '.$numero.'"><center><span class="badge">'.$cadena_mostrar.'</span></center></div>';
+	$etiqueta_formato=$datos_documento[0]['etiqueta'].'<br>';
+	$enlace_documento='<div class="link kenlace_saia" enlace="ordenar.php?key='.$iddocumento.'&amp;accion=mostrar&amp;mostrar_formato=1" conector="iframe" titulo="No Radicado '.$numero.'"><center><span class="badge">'.$etiqueta_formato.$cadena_mostrar.'</span></center></div>';
 	
 	return($enlace_documento);
 } 
