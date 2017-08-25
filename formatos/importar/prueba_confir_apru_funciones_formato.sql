@@ -1,7 +1,0 @@
-INSERT INTO funciones_formato(nombre,nombre_funcion,parametros,etiqueta,descripcion,ruta,acciones,formato) VALUES('{*buscar_dependencia*}','buscar_dependencia','','buscar_dependencia','buscar_dependencia','funciones.php','m','|-formato-|')||
-INSERT INTO funciones_formato(nombre,nombre_funcion,parametros,etiqueta,descripcion,ruta,acciones,formato) VALUES('{*funcion_confirmar_pruebas*}','funcion_confirmar_pruebas','','funcion_confirmar_pruebas','','funciones.php','','|-formato-|')||
-INSERT INTO funciones_formato(nombre,nombre_funcion,parametros,etiqueta,descripcion,ruta,acciones,formato) VALUES('{*funcion_aprobar_pruebas*}','funcion_aprobar_pruebas','','funcion_aprobar_pruebas','','funciones.php','','|-formato-|')||
-INSERT INTO funciones_formato(nombre,nombre_funcion,parametros,etiqueta,descripcion,ruta,acciones,formato) VALUES('{*transferencia_automatica*}','transferencia_automatica','294,1','transferencia_automatica','transferencia_automatica','../librerias/funciones_generales.php','','|-formato-|')||
-INSERT INTO funciones_formato(nombre,nombre_funcion,parametros,etiqueta,descripcion,ruta,acciones,formato) VALUES('{*funcion_prueba*}','funcion_prueba','','funcion_prueba','','funciones.php','m,e','|-formato-|')||
-
-/*inicio_datos--{*buscar_dependencia*},{*funcion_aprobar_pruebas*},{*funcion_confirmar_pruebas*},{*funcion_prueba*},{*transferencia_automatica*}--fin_datos*/

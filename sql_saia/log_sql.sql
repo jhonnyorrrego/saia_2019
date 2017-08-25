@@ -608,24 +608,3 @@ UPDATE `campos_formato` SET `valor` = NULL WHERE nombre='origen_externo' AND for
 UPDATE `campos_formato` SET `etiqueta_html` = 'hidden' WHERE nombre='nombre_origen' AND formato_idformato=403;
 UPDATE `campos_formato` SET `valor` = NULL WHERE nombre='nombre_origen' AND formato_idformato=403;
 -- ----------------------------------------------------------------
-INSERT INTO funciones_formato_accion (idfunciones_formato_accion,idfunciones_formato,accion_idaccion,formato_idformato,momento,estado,orden) VALUES (NULL, '902', '5', '3', 'POSTERIOR', '1', '7'); //valida_tipo_destino_entrada, posterios al editar
--- ----------------------------------------------------------------
-UPDATE busqueda_componente SET busqueda_avanzada = 'formatos/radicacion_entrada/busqueda_reporte.php?idbusqueda_componente=282' WHERE idbusqueda_componente = 282;
--- ----------------------------------------------------------------
-UPDATE funciones_formato_accion SET orden=16 WHERE  accion_idaccion=3 AND idfunciones_formato=902 AND formato_idformato=3;
-UPDATE funciones_formato_accion SET orden=15 WHERE  accion_idaccion=5 AND idfunciones_formato=902 AND formato_idformato=3;
--- ---------------------------------------------------------------- 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
