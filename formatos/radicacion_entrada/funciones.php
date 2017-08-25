@@ -510,11 +510,11 @@ function tipo_radicado_radicacion($idformato,$iddoc){//en el adicionar
                     var vector_iddependencia_cargo=lista_iddependencia_cargo.split(',');
                    
                     var sin_open=undefined;
-                    for(i=0;i<vector_iddependencia_cargo.length;i++){
-                        var iddependencia_cargo=parseInt(vector_iddependencia_cargo[i]);
-                        sin_open=tree_area_responsable.openItem(iddependencia_cargo); //ARBOL: expande nodo hasta el item indicado
-                        tree_area_responsable.setCheck(iddependencia_cargo,true);
-                    }  
+                    
+                    var iddependencia_cargo=parseInt(vector_iddependencia_cargo[0]);
+                    sin_open=tree_area_responsable.openItem(iddependencia_cargo); //ARBOL: expande nodo hasta el item indicado
+                    tree_area_responsable.setCheck(iddependencia_cargo,true);
+                    
                     var str = tree_area_responsable.getAllChecked();
                     
                     var long=str.length;
