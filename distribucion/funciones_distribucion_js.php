@@ -129,6 +129,17 @@ echo(librerias_jquery('1.7'));
       });  //FIN IF opciones_acciones_distribucion
 		
 		
+		//Filtro por mensajero - class= filtro_mensajero_distribucion 
+        $('#filtro_mensajero_distribucion').live("change",function(){
+        	var mensajero='filtro_mensajero_distribucion|'+$(this).val();	
+			<?php                 
+            	$componente=$_REQUEST['idbusqueda_componente'];
+            ?>
+            var componente='<?php echo($componente); ?>';
+            window.location.href = "<?php echo $ruta_db_superior;?>pantallas/busquedas/consulta_busqueda_reporte.php?idbusqueda_componente="+componente+"&variable_busqueda="+mensajero;      	
+
+        });	//FIN IF filtro_mensajero_distribucion		
+		
 				
 	});  //FIN IF documento.ready
 

@@ -539,6 +539,27 @@ function condicion_adicional_distribucion(){
 			
 		} //fin if $vector_variable_busqueda[0]=='idft_ruta_distribucion'
 		
+		//FILTRO POR MENSAJERO
+		if($vector_variable_busqueda[0]=='filtro_mensajero_distribucion' && $vector_variable_busqueda[1]){
+			
+			$mensajero_tipo=explode('-',$vector_variable_busqueda[1]);
+			
+			if($mensajero_tipo[1]=='i'){
+				//CONDICION mensajero origen	
+				$condicion_adicional.=" AND ( (a.tipo_origen=1 AND a.estado_recogida<>1 AND a.mensajero_origen=".$mensajero_tipo[0].") OR ";					
+			}else{
+				$condicion_adicional.="  AND ( ";
+			}
+			
+			//CONDICION mensajero destino
+			$coondicion_tipo_mensajero_destino=0;
+			if($mensajero_tipo[1]=='e'){
+				$coondicion_tipo_mensajero_destino=1;
+			}
+			$condicion_adicional.="  (a.tipo_destino=1 AND a.mensajero_empresad=".$coondicion_tipo_mensajero_destino." AND a.mensajero_destino=".$mensajero_tipo[0]." AND ( (a.tipo_origen=1 AND estado_recogida=1) OR (a.estado_recogida<>1 AND a.tipo_origen=2) )  ) )";
+			
+		} //fin if $vector_variable_busqueda[0]=='filtro_mensajero_distribucion'
+		
 		
 	} //fin if $_REQUEST['variable_busqueda']
 	
@@ -662,7 +683,73 @@ function actualizar_mensajero_ruta_distribucion($idft_ruta_distribucion,$iddepen
 
 
 
-function filtrar_mensajero(){
+function filtro_mensajero_distribucion(){
+    global $ruta_db_superior, $conn;
+    
+	
+	$select="";
+	$funcionario_codigo_usuario_actual=usuario_actual('funcionario_codigo');
+	$cargo_administrador_mensajeria=busca_filtro_tabla("funcionario_codigo","vfuncionario_dc"," lower(cargo) LIKE 'administrador%de%mensajer%a' AND estado_dc=1 ","",$conn);
+	
+	$ver_select=false;
+	for($i=0;$i<$cargo_administrador_mensajeria['numcampos'];$i++){
+		if( $cargo_administrador_mensajeria[$i]['funcionario_codigo']==$funcionario_codigo_usuario_actual ){
+			$ver_select=true;
+		}
+	}
+	
+	if($ver_select){
+
+	    $select="<select class='pull-left btn btn-mini dropdown-toggle' style='height:22px; margin-left: 10px;' name='filtro_mensajero_distribucion' id='filtro_mensajero_distribucion'>";
+	    $select.="<option value=''>Todos Los Mensajeros</option>";
+		$array_concat=array("nombres","' '","apellidos");
+		$cadena_concat=concatenar_cadena_sql($array_concat);
+	    $datos=busca_filtro_tabla("iddependencia_cargo, ".$cadena_concat." AS nombre","vfuncionario_dc","lower(cargo)='mensajero' AND estado_dc=1","",$conn);
+		$vector_variable_busqueda=explode('|',@$_REQUEST['variable_busqueda']);
+	    $filtrar_mensajero=@$vector_variable_busqueda[0];
+	    for($i=0;$i<$datos['numcampos'];$i++){
+	        $selected='';	
+			if($filtrar_mensajero){
+				if($filtrar_mensajero==$datos[$i]['iddependencia_cargo']."-i"){
+					$selected='selected';
+				}
+			}	
+				
+	        $select.="<option value='".$datos[$i]['iddependencia_cargo']."-i' ".$selected.">".$datos[$i]['nombre']."&nbsp;-&nbsp;Mensajero</option>";
+			
+	    }
+	
+		$mensajeros_externos=busca_filtro_tabla("iddependencia_cargo, ".$cadena_concat." AS nombre","vfuncionario_dc","lower(cargo) LIKE 'mensajer%extern%' AND estado_dc=1","",$conn);
+		
+	    for($i=0;$i<$mensajeros_externos['numcampos'];$i++){
+	        $selected='';	
+			if($filtrar_mensajero){
+				if($filtrar_mensajero==$mensajeros_externos[$i]['iddependencia_cargo']."-i"){
+					$selected='selected';
+		}
+			}	
+				
+	        $select.="<option value='".$mensajeros_externos[$i]['iddependencia_cargo']."-i' ".$selected.">".$mensajeros_externos[$i]['nombre']."&nbsp;-&nbsp;Mensajero Externo</option>";
+			
+	    }
+
+		$empresas_transportadoras=busca_filtro_tabla("idcf_empresa_trans as id,nombre","cf_empresa_trans","","",$conn);
+	    for($i=0;$i<$empresas_transportadoras['numcampos'];$i++){
+	        $selected='';	
+			if($filtrar_mensajero){
+				if($filtrar_mensajero==$empresas_transportadoras[$i]['id']."-e"){
+					$selected='selected';
+				}
+			}	
+				
+	        $select.="<option value='".$empresas_transportadoras[$i]['id']."-e' ".$selected.">".$empresas_transportadoras[$i]['nombre']."&nbsp;-&nbsp;Empresa Transportadora</option>";
+			
+	    }		
+	    $select.="</select>";
+		
+	} //fin if $ver_select	
+	
+    return $select;	
 	
 }
 
