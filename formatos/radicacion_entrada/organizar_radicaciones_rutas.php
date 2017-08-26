@@ -61,8 +61,16 @@ for($r=0;$r<$destinos_radicacion['numcampos'];$r++){
 		phpmkr_query($up);
 	}
 	
+	
+	if(!$datos[0]['ruta_origen'] && !$datos[0]['ruta_destino'] && !$destino_externo){
+		$up3=" UPDATE ft_destino_radicacion SET mensajero_encargado=0 WHERE  idft_destino_radicacion=".$idft_destino_radicacions;
+	}
+	
 	echo($up.'<br>');
 
+	
+	
+	
 } //fin for $destinos_radicacion
 
 
