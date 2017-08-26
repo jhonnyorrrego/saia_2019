@@ -38,13 +38,15 @@ $busca_componente=busca_filtro_tabla("nombre","busqueda_componente","idbusqueda_
         $(".mensajeros").live("change",function(){
             var idft=$(this).attr("data-idft");
             var mensajero=$(this).val();
+            var idft_ruta_distribucion=$(this).attr("ruta_distribucion");
             $.ajax({
                         type:'POST',
                         dataType: 'json',
                         url: "<?php echo $ruta_db_superior;?>formatos/radicacion_entrada/actualizar_mensajero.php",
                         data: {
                                         idft_destino_radicacion:idft,
-                                        mensajero_encargado:mensajero
+                                        mensajero_encargado:mensajero,
+                                        idft_ruta_distribucion:idft_ruta_distribucion
                         },
                         success: function(datos){
                             notificacion_saia('Mensajero asignado exitosamente','success','',4000);
