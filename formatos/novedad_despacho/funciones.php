@@ -13,15 +13,14 @@ $max_salida--;
 
 include_once($ruta_db_superior."db.php");
 function cargar_items_radicacion($idformato,$iddoc){
-    global $conn;
+    global $conn,$ruta_db_superior;
 	
-	//include_once($ruta_db_superior.'librerias_saia.php');
-	//echo( librerias_jquery('1.7') );
+	include_once($ruta_db_superior."distribucion/funciones_distribucion.php");
 
 	$items_seleccionados=busca_filtro_tabla("iddestino_radicacion","ft_despacho_ingresados","documento_iddocumento=".$_REQUEST['anterior'],"",$conn);
 	$cadena_items_seleccionados=$items_seleccionados[0]['iddestino_radicacion'];
 	
-	$registros=busca_filtro_tabla("b.idft_destino_radicacion,b.numero_item,b.estado_recogida,d.iddocumento,d.plantilla,b.numero_item,b.nombre_destino,b.destino_externo,b.origen_externo,b.tipo_origen,b.tipo_destino,b.nombre_origen,a.documento_iddocumento,a.descripcion,a.tipo_mensajeria","ft_destino_radicacion b, ft_radicacion_entrada a, documento d","a.idft_radicacion_entrada=b.ft_radicacion_entrada AND a.documento_iddocumento=d.iddocumento AND b.idft_destino_radicacion in(".$cadena_items_seleccionados.")","",$conn);
+	$registros=busca_filtro_tabla("b.descripcion,a.tipo_origen,a.estado_recogida,a.numero_distribucion,a.fecha_creacion,a.origen,a.tipo_origen,a.destino,a.tipo_destino,a.iddistribucion","distribucion a,documento b","a.documento_iddocumento=b.iddocumento AND a.iddistribucion in(".$cadena_items_seleccionados.")","",$conn);
 	
 	$html="<td>
 		<table style='width:100%;border-collapse:collapse;border-color:#cac8c8;border-style:solid;border-width:1px;'  border='1'>
@@ -54,80 +53,29 @@ function cargar_items_radicacion($idformato,$iddoc){
 	";
     for ($i=0; $i < $registros['numcampos']; $i++) {
 			
-	    $array_concat=array("nombres","' '","apellidos");
-		$cadena_concat=concatenar_cadena_sql($array_concat);
-		$origen=busca_filtro_tabla($cadena_concat." AS nombre","vfuncionario_dc","funcionario_codigo=".$registros[$i]['nombre_origen'],"",$conn);
-
-			if($registros[$i]['tipo_origen']==1){
-				$origen=busca_filtro_tabla("nombre,ciudad,direccion","vejecutor a","a.iddatos_ejecutor=".$registros[$i]['nombre_origen'],"",$conn);
-				if(!$origen['numcampos']){
-					$origen=busca_filtro_tabla("nombre,ciudad,direccion","vejecutor a","a.iddatos_ejecutor=".$registros[$i]['origen_externo'],"",$conn);
-				}
-				$ciudad=busca_filtro_tabla("nombre","municipio","idmunicipio=".$origen[0]['ciudad'],"",$conn);
-            	$ubicacion_origen=$ciudad[0]['nombre'].' '.$origen[0]['direccion'];
-				
-			}else{
-				if($registros[$i]['tipo_origen']==2 && ($registros[$i]['tipo_mensajeria']==2 || $registros[$i]['tipo_mensajeria']==1)){
-	    			$array_concat=array("nombres","' '","apellidos");
-					$cadena_concat=concatenar_cadena_sql($array_concat);					
-					$origen=busca_filtro_tabla($cadena_concat." AS nombre,dependencia","vfuncionario_dc a","a.iddependencia_cargo=".$registros[$i]['nombre_origen'],"",$conn);
-					$ubicacion_origen=$origen[0]['dependencia'];
-				}
-			}		
-				
-		
-        $ubicacion="";
-		if($registros[$i]["tipo_destino"]==1){
-		    $destino=busca_filtro_tabla("b.nombre,a.direccion,a.ciudad","datos_ejecutor a, ejecutor b","b.idejecutor=a.ejecutor_idejecutor AND a.iddatos_ejecutor=".$registros[$i]['nombre_destino'],"",$conn);
-	        if(!$destino['numcampos']){
-	        	$destino=busca_filtro_tabla("b.nombre,a.direccion,a.ciudad","datos_ejecutor a, ejecutor b","b.idejecutor=a.ejecutor_idejecutor AND a.iddatos_ejecutor=".$registros[$i]['destino_externo'],"",$conn);
-	        }			
-			$ciudad=busca_filtro_tabla("nombre","municipio","idmunicipio=".$destino[0]['ciudad'],"",$conn);
-            $ubicacion=$ciudad[0]['nombre'].' '.$destino[0]['direccion'];
-		}elseif($registros[$i]["tipo_destino"]==2){
-	    	$array_concat=array("nombres","' '","apellidos");
-			$cadena_concat=concatenar_cadena_sql($array_concat);			
-		    $destino=busca_filtro_tabla($cadena_concat." AS nombre,dependencia","vfuncionario_dc","iddependencia_cargo=".$registros[$i]['nombre_destino'],"",$conn);
-		    $ubicacion=$destino[0]['dependencia'];
-		}
-		$texto.='<tr>';
-		$fecha_radicacion=busca_filtro_tabla(fecha_db_obtener("fecha","Y-m-d")." as fecha,tipo_radicado","documento","iddocumento=".$registros[$i]["documento_iddocumento"],"",$conn);
-        
-        $tipo_radicado="";
-        if($fecha_radicacion[0]['tipo_radicado']==1){
-            $tipo_radicado="E";
-        }else{
-            $tipo_radicado="I";
-        }
-        
-    	$tipo_tramite='ENTREGA';
-    	if(($registros[$i]['tipo_mensajeria']==2 || $registros[$i]['tipo_mensajeria']==1) && ($registros[$i]['estado_recogida']==0 || $registros[$i]['estado_recogida']=='estado_recogida') ){
-    		$tipo_tramite='RECOGIDA';
-    	}    	
-		
     	 $html.="
     	 
     	 <tr>
     	 	<td style='text-align:center; width:5%'>
-    	 		<input type='checkbox' name='item_radicacion[]' value='".$registros[$i]['idft_destino_radicacion']."' />
+    	 		<input type='checkbox' name='item_radicacion[]' value='".$registros[$i]['iddistribucion']."' />
     	 	</td>
     	 	<td style='text-align:center; width:5%'>
-    	 		".$tipo_radicado."
+    	 		".mostrar_diligencia_distribucion($registros[$i]["tipo_origen"],$registros[$i]["estado_recogida"])."
     	 	</td>    	 
     	 	<td style='text-align:center; width:10%'>
-    	 		".$tipo_tramite."
+    	 		".mostrar_tipo_radicado_distribucion($registros[$i]["tipo_origen"])."
     	 	</td>
     	 	<td style='text-align:center; width:5%'>
-    	 		".$registros[$i]['numero_item']."
+    	 		".$registros[$i]["numero_distribucion"]."
     	 	</td>
     	 	<td style='text-align:center; width:10%'>
-    	 		".$fecha_radicacion[0]["fecha"]."
+    	 		".$registros[$i]["fecha_creacion"]."
     	 	</td>
     	 	<td style='text-align:left; width:21,66%;'>
-    	 		".$origen[0]['nombre'].'<br><b>Ubicacion:</b>'.$ubicacion_origen."
+    	 		".retornar_origen_destino_distribucion($registros[$i]['tipo_origen'],$registros[$i]['origen']).'<br>'.retornar_ubicacion_origen_destino_distribucion($registros[$i]['tipo_origen'],$registros[$i]['origen'])."
     	 	</td>
     	 	<td style='text-align:left; width:21,66%;'>
-    	 		".$destino[0]["nombre"].'<br><b>Ubicacion:</b>'.$ubicacion."
+    	 		".retornar_origen_destino_distribucion($registros[$i]['tipo_destino'],$registros[$i]['destino']).'<br>'.retornar_ubicacion_origen_destino_distribucion($registros[$i]['tipo_destino'],$registros[$i]['destino'])."
     	 	</td>
     	 	<td style='text-align:left; width:21,66%;'>
     	 		".$registros[$i]["descripcion"]."
@@ -158,10 +106,10 @@ function cargar_items_radicacion($idformato,$iddoc){
 function mostrar_numero_item_novedad($idformato,$iddoc){
 	global $conn;			
 	$items_seleccionados=busca_filtro_tabla("item_radicacion","ft_novedad_despacho","documento_iddocumento=".$iddoc,"",$conn);	
-    $registros=busca_filtro_tabla("b.numero_item","ft_destino_radicacion b","b.idft_destino_radicacion in(".$items_seleccionados[0]['item_radicacion'].")","",$conn);
+    $registros=busca_filtro_tabla("b.numero_distribucion","distribucion b","b.iddistribucion in(".$items_seleccionados[0]['item_radicacion'].")","",$conn);
 	$cadena='';
 	for($i=0;$i<$registros['numcampos'];$i++){
-		$cadena.=$registros[$i]['numero_item'];
+		$cadena.=$registros[$i]['numero_distribucion'];
 		if( ($i+1) != $registros['numcampos'] ){
 			$cadena.=', ';
 		}
