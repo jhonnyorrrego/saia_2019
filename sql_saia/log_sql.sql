@@ -621,6 +621,8 @@ DELETE FROM funciones_formato_accion WHERE idfunciones_formato=904; //subir_plan
 
 INSERT INTO `funciones_formato` (`idfunciones_formato`, `nombre`, `nombre_funcion`, `parametros`, `etiqueta`, `descripcion`, `ruta`, `formato`, `acciones`) VALUES (NULL, '{*vincular_dependencia_ruta_distribucion*}', 'vincular_dependencia_ruta_distribucion', NULL, 'vincular_dependencia_ruta_distribucion', '', 'funciones.php', '404', '');
 INSERT INTO `funciones_formato_accion` (`idfunciones_formato_accion`, `idfunciones_formato`, `accion_idaccion`, `formato_idformato`, `momento`, `estado`, `orden`) VALUES (NULL, '943', '3', '404', 'POSTERIOR', '1', '2');
+
+UPDATE funciones_formato_accion SET accion_idaccion = '3' WHERE idfunciones_formato_accion = 283; //ingresar_item_destino_radicacion POSTERIOR AL APROBAR.
 -- ---------------------------------------------------------------- 
 
 
