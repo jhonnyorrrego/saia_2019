@@ -623,6 +623,8 @@ INSERT INTO `funciones_formato` (`idfunciones_formato`, `nombre`, `nombre_funcio
 INSERT INTO `funciones_formato_accion` (`idfunciones_formato_accion`, `idfunciones_formato`, `accion_idaccion`, `formato_idformato`, `momento`, `estado`, `orden`) VALUES (NULL, '943', '3', '404', 'POSTERIOR', '1', '2');
 
 UPDATE funciones_formato_accion SET accion_idaccion = '3' WHERE idfunciones_formato_accion = 283; //ingresar_item_destino_radicacion POSTERIOR AL APROBAR.
+
+INSERT INTO `modulo` (`idmodulo`, `pertenece_nucleo`, `nombre`, `tipo`, `imagen`, `etiqueta`, `enlace`, `enlace_mobil`, `destino`, `cod_padre`, `orden`, `ayuda`, `parametros`, `busqueda_idbusqueda`, `permiso_admin`, `busqueda`, `enlace_pantalla`) VALUES (NULL, '0', 'reporte_distribucion_documentos', 'secundario', 'botones/principal/distribucion.png', 'Distribuci&oacute;n', 'pantallas/buscador_principal.php?idbusqueda=109', NULL, 'centro', '1', '8', '', '', '1', '0', '1', '0');  //NUEVO MODULO DE DISTRIBUCION
 -- ---------------------------------------------------------------- 
 
 
