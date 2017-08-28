@@ -305,7 +305,7 @@ function mostrar_nombre_ruta_distribucion($tipo_origen,$estado_recogida,$ruta_or
 		}
 	}
 	
-	if($tipo_destino==2){ //DESTINO EXTERNO, NO TIENE RUTA SE PREDETERMINA NOMBRE
+	if($tipo_destino==2 && $estado_recogida){ //DESTINO EXTERNO, NO TIENE RUTA SE PREDETERMINA NOMBRE
 		$nombre_ruta_distribucion='Distribuci&oacute;n Externa';
 	}
 	
@@ -535,7 +535,7 @@ function condicion_adicional_distribucion(){
 			$condicion_adicional.=" AND ( (a.tipo_origen=1 AND a.estado_recogida<>1 AND a.ruta_origen=".$vector_variable_busqueda[1].")";
 			
 			//CONDICION RUTA DESTINO
-			$condicion_adicional.=" OR (a.tipo_destino=1 AND a.ruta_destino=".$vector_variable_busqueda[1]." AND ( (a.tipo_origen=1 AND estado_recogida=1) OR (a.estado_recogida<>1 AND a.tipo_origen=2) )  ) )";
+			$condicion_adicional.=" OR ( a.tipo_destino=1 AND a.ruta_destino=".$vector_variable_busqueda[1]." AND a.estado_recogida=1  ) )";
 			
 		} //fin if $vector_variable_busqueda[0]=='idft_ruta_distribucion'
 		
@@ -556,7 +556,7 @@ function condicion_adicional_distribucion(){
 			if($mensajero_tipo[1]=='e'){
 				$coondicion_tipo_mensajero_destino=1;
 			}
-			$condicion_adicional.="  (a.tipo_destino=1 AND a.mensajero_empresad=".$coondicion_tipo_mensajero_destino." AND a.mensajero_destino=".$mensajero_tipo[0]." AND ( (a.tipo_origen=1 AND estado_recogida=1) OR (a.estado_recogida<>1 AND a.tipo_origen=2) )  ) )";
+			$condicion_adicional.="  (a.tipo_destino=1 AND a.mensajero_empresad=".$coondicion_tipo_mensajero_destino." AND a.mensajero_destino=".$mensajero_tipo[0]." AND a.estado_recogida=1  ) )";
 			
 		} //fin if $vector_variable_busqueda[0]=='filtro_mensajero_distribucion'
 		
@@ -705,16 +705,21 @@ function filtro_mensajero_distribucion(){
 		$array_concat=array("nombres","' '","apellidos");
 		$cadena_concat=concatenar_cadena_sql($array_concat);
 	    $datos=busca_filtro_tabla("iddependencia_cargo, ".$cadena_concat." AS nombre","vfuncionario_dc","lower(cargo)='mensajero' AND estado_dc=1","",$conn);
+		
+		//if($vector_variable_busqueda[0]=='filtro_mensajero_distribucion' && $vector_variable_busqueda[1]){
 		$vector_variable_busqueda=explode('|',@$_REQUEST['variable_busqueda']);
-	    $filtrar_mensajero=@$vector_variable_busqueda[0];
+		$vector_mensajero_tipo=explode('-',$vector_variable_busqueda[1]);
+	   	$filtrar_mensajero=@$vector_variable_busqueda[1];
+		
 	    for($i=0;$i<$datos['numcampos'];$i++){
 	        $selected='';	
-			if($filtrar_mensajero){
-				if($filtrar_mensajero==$datos[$i]['iddependencia_cargo']."-i"){
-					$selected='selected';
-				}
+			if($vector_variable_busqueda[0]=='filtro_mensajero_distribucion' && $vector_variable_busqueda[1] && $vector_mensajero_tipo[1]=='i'){
+				if($filtrar_mensajero){
+					if($filtrar_mensajero==$datos[$i]['iddependencia_cargo']."-i"){
+						$selected='selected';
+					}
+				}	
 			}	
-				
 	        $select.="<option value='".$datos[$i]['iddependencia_cargo']."-i' ".$selected.">".$datos[$i]['nombre']."&nbsp;-&nbsp;Mensajero</option>";
 			
 	    }
@@ -723,12 +728,13 @@ function filtro_mensajero_distribucion(){
 		
 	    for($i=0;$i<$mensajeros_externos['numcampos'];$i++){
 	        $selected='';	
-			if($filtrar_mensajero){
-				if($filtrar_mensajero==$mensajeros_externos[$i]['iddependencia_cargo']."-i"){
-					$selected='selected';
-		}
+			if($vector_variable_busqueda[0]=='filtro_mensajero_distribucion' && $vector_variable_busqueda[1] && $vector_mensajero_tipo[1]=='i'){
+				if($filtrar_mensajero){
+					if($filtrar_mensajero==$mensajeros_externos[$i]['iddependencia_cargo']."-i"){
+						$selected='selected';
+					}
+				}	
 			}	
-				
 	        $select.="<option value='".$mensajeros_externos[$i]['iddependencia_cargo']."-i' ".$selected.">".$mensajeros_externos[$i]['nombre']."&nbsp;-&nbsp;Mensajero Externo</option>";
 			
 	    }
@@ -736,12 +742,13 @@ function filtro_mensajero_distribucion(){
 		$empresas_transportadoras=busca_filtro_tabla("idcf_empresa_trans as id,nombre","cf_empresa_trans","","",$conn);
 	    for($i=0;$i<$empresas_transportadoras['numcampos'];$i++){
 	        $selected='';	
-			if($filtrar_mensajero){
-				if($filtrar_mensajero==$empresas_transportadoras[$i]['id']."-e"){
-					$selected='selected';
-				}
+	        if($vector_variable_busqueda[0]=='filtro_mensajero_distribucion' && $vector_variable_busqueda[1] && $vector_mensajero_tipo[1]=='e'){
+				if($filtrar_mensajero){
+					if($filtrar_mensajero==$empresas_transportadoras[$i]['id']."-e"){
+						$selected='selected';
+					}
+				}	
 			}	
-				
 	        $select.="<option value='".$empresas_transportadoras[$i]['id']."-e' ".$selected.">".$empresas_transportadoras[$i]['nombre']."&nbsp;-&nbsp;Empresa Transportadora</option>";
 			
 	    }		
