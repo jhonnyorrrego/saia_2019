@@ -55,13 +55,20 @@ function campos_ocultos_entrega($idformato,$iddoc){
 //----------------------------------Mostrar-------------------------------------//
 function mostrar_seleccionados_entrega($idformato,$iddoc){
 	global $conn,$ruta_db_superior,$registros;
-	$seleccionado=busca_filtro_tabla("","ft_despacho_ingresados","documento_iddocumento=".$iddoc,"",$conn);
-	$documentos=explode(",",$seleccionado[0]['iddestino_radicacion']);
-	$docs=array_filter($documentos);
+
 	$texto='';
 	
-	$items_seleccionados=busca_filtro_tabla("iddestino_radicacion","ft_despacho_ingresados","documento_iddocumento=".$iddoc,"",$conn);
-	$cadena_items_seleccionados=$items_seleccionados[0]['iddestino_radicacion'];
+	$items_seleccionados=busca_filtro_tabla("idft_despacho_ingresados","ft_despacho_ingresados","documento_iddocumento=".$iddoc,"",$conn);
+
+	$items=busca_filtro_tabla("ft_destino_radicacio","ft_item_despacho_ingres","ft_despacho_ingresados=".$items_seleccionados[0]['idft_despacho_ingresados'],"",$conn);
+	$cadena_items_seleccionados='';
+	for($i=0;$i<$items['numcampos'];$i++){
+		$cadena_items_seleccionados.=$items[$i]['ft_destino_radicacio'];
+		if( ($i+1)!=$items['numcampos'] ){
+			$cadena_items_seleccionados.=',';
+		}
+	}	
+	
 	
 	$registros=busca_filtro_tabla("b.descripcion,a.tipo_origen,a.estado_recogida,a.numero_distribucion,a.fecha_creacion,a.origen,a.tipo_origen,a.destino,a.tipo_destino","distribucion a,documento b","a.documento_iddocumento=b.iddocumento AND a.iddistribucion in(".$cadena_items_seleccionados.")","",$conn);
 	
