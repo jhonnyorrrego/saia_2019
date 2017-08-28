@@ -524,6 +524,31 @@ function condicion_adicional_distribucion(){
 	global $conn;
 	
 	$condicion_adicional="";
+	
+	$funcionario_codigo_usuario_actual=usuario_actual('funcionario_codigo');
+	$cargo_administrador_mensajeria=busca_filtro_tabla("funcionario_codigo","vfuncionario_dc"," lower(cargo) LIKE 'administrador%de%mensajer%a' AND estado_dc=1 AND funcionario_codigo=".$funcionario_codigo_usuario_actual,"",$conn);	
+	$administrador_mensajeria=0;
+	if($cargo_administrador_mensajeria['numcampos']){
+		$administrador_mensajeria=1;
+	}
+	
+	if(!$administrador_mensajeria){ //si no es un administrador filtramos como si fuera un mensajero
+	
+		$rol_funcionario=busca_filtro_tabla("iddependencia_cargo","vfuncionario_dc","funcionario_codigo='".$funcionario_codigo_usuario_actual."' AND estado_dc=1","",$conn);
+		$lista_roles_funcionarios='';
+		for($i=0;$i<$rol_funcionario['numcampos'];$i++){
+			$lista_roles_funcionarios.=$rol_funcionario[$i]['iddependencia_cargo'];
+			if( ($i+1)!=$rol_funcionario['numcampos'] ){
+				$lista_roles_funcionarios.=',';
+			}
+		} //fin rol funcionario
+		
+		$condicion_adicional.=" AND ( (a.tipo_origen=1 AND a.estado_recogida<>1 AND a.mensajero_origen IN(".$lista_roles_funcionarios.") ) OR  ( a.tipo_destino=1 AND a.mensajero_empresad=0 AND a.mensajero_destino IN(".$lista_roles_funcionarios.") AND a.estado_recogida=1  ) ) ";
+		
+		
+	} // FIN: si no es un administrador filtramos como si fuera un mensajero
+	
+	
 	if(@$_REQUEST['variable_busqueda']){
 		
 		$vector_variable_busqueda=explode('|',$_REQUEST['variable_busqueda']);
