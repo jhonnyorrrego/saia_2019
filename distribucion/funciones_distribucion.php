@@ -13,6 +13,29 @@ $max_salida--;
 
 include_once($ruta_db_superior."db.php");
 
+function pre_ingresar_distribucion($iddoc,$campo_origen,$tipo_origen,$campo_destino,$tipo_destino,$estado_distribucion=1){
+	global $conn,$ruta_db_superior;
+		
+	$datos_plantilla=busca_filtro_tabla("b.nombre_tabla","documento a,formato b","lower(a.plantilla)=lower(b.nombre) AND a.iddocumento=".$iddoc,"",$conn);	
+	$nombre_tabla=$datos_plantilla[0]['nombre_tabla'];
+			
+	$datos_documento=busca_filtro_tabla($campo_origen.",".$campo_destino,$nombre_tabla,"documento_iddocumento=".$iddoc,"",$conn);
+	if($datos_documento['numcampos']){
+		
+		$lista_destinos=explode(',',$datos_documento[0][$campo_destino]);
+		for($i=0;$i<count($lista_destinos);$i++){
+			$datos_distribucion=array();
+			$datos_distribucion['origen']=$datos_documento[0][$campo_origen];
+			$datos_distribucion['tipo_origen']=$tipo_origen;
+			$datos_distribucion['destino']=$lista_destinos[$i];
+			$datos_distribucion['tipo_destino']=$tipo_destino;
+			$datos_distribucion['estado_distribucion']=$estado_distribucion;
+			
+			$ingresar=ingresar_distribucion($iddoc,$datos_distribucion);
+		}	
+			
+	} //fin if $datos_documento['numcampos']
+}
 function ingresar_distribucion($iddoc,$datos){
 	global $conn,$ruta_db_superior;
 	
