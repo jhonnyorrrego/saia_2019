@@ -170,9 +170,43 @@ function mostrar_mensajeros_dependencia($idft_destino_radicacion,$estado_item){
 		$responsable['numcampos']=0;
     }else{
     	$destino=busca_filtro_tabla("","vfuncionario_dc","iddependencia_cargo=".$datos[0]['nombre_destino'],"",$conn);
-		$responsable=busca_filtro_tabla("mensajero_ruta","ft_ruta_distribucion a, ft_dependencias_ruta b, ft_funcionarios_ruta c,documento d","a.documento_iddocumento=d.iddocumento AND lower(d.estado)='aprobado' AND b.estado_dependencia=1 AND c.estado_mensajero=1 AND a.idft_ruta_distribucion=b.ft_ruta_distribucion AND a.idft_ruta_distribucion=c.ft_ruta_distribucion AND b.dependencia_asignada=".$destino[0]['iddependencia'],"",$conn);
+		$responsable=busca_filtro_tabla("mensajero_ruta,a.idft_ruta_distribucion","ft_ruta_distribucion a, ft_dependencias_ruta b, ft_funcionarios_ruta c,documento d","a.documento_iddocumento=d.iddocumento AND lower(d.estado)='aprobado' AND b.estado_dependencia=1 AND c.estado_mensajero=1 AND a.idft_ruta_distribucion=b.ft_ruta_distribucion AND a.idft_ruta_distribucion=c.ft_ruta_distribucion AND b.dependencia_asignada=".$destino[0]['iddependencia'],"",$conn);
+		
 	}
-    $select="<select class='mensajeros' ".$disable." data-idft='$idft_destino_radicacion' name='responsable_{$idft_destino_radicacion}' style='width:150px;'>";
+	
+	$idft_ruta_distribucion=0;
+	if($responsable['numcampos']){
+		
+		
+		  $datos=busca_filtro_tabla('','ft_destino_radicacion','idft_destino_radicacion='.$idft_destino_radicacion,'',$conn);
+	
+//-------------------------------------------------
+
+	
+    if($datos[0]['tipo_origen']==2 && !$datos[0]['estado_recogida']){  //SI ES RECOGIDA
+    	$iddependencia=busca_filtro_tabla("iddependencia","vfuncionario_dc","iddependencia_cargo=".$datos[0]['nombre_origen'],"",$conn);
+		$nombre_ruta=busca_filtro_tabla("a.idft_ruta_distribucion","ft_ruta_distribucion a, ft_dependencias_ruta b, ft_funcionarios_ruta c,documento d","a.documento_iddocumento=d.iddocumento AND lower(d.estado)='aprobado' AND b.estado_dependencia=1 AND c.estado_mensajero=1 AND a.idft_ruta_distribucion=b.ft_ruta_distribucion AND a.idft_ruta_distribucion=c.ft_ruta_distribucion AND b.dependencia_asignada=".$iddependencia[0]['iddependencia'],"",$conn);
+		$idft_ruta_distribucion=$nombre_ruta[0]['idft_ruta_distribucion'];
+    }else if($datos[0]['tipo_destino']==2 && $datos[0]['estado_recogida']){  //SI ES ENTREGA INTERNA POSTERIOR A RECOGIDA
+    	$iddependencia=busca_filtro_tabla("iddependencia","vfuncionario_dc","iddependencia_cargo=".$datos[0]['nombre_destino'],"",$conn);
+		$nombre_ruta=busca_filtro_tabla("a.idft_ruta_distribucion","ft_ruta_distribucion a, ft_dependencias_ruta b, ft_funcionarios_ruta c,documento d","a.documento_iddocumento=d.iddocumento AND lower(d.estado)='aprobado' AND b.estado_dependencia=1 AND c.estado_mensajero=1 AND a.idft_ruta_distribucion=b.ft_ruta_distribucion AND a.idft_ruta_distribucion=c.ft_ruta_distribucion AND b.dependencia_asignada=".$iddependencia[0]['iddependencia'],"",$conn);
+		$idft_ruta_distribucion=$nombre_ruta[0]['idft_ruta_distribucion'];
+    }else if($datos[0]['tipo_origen']==1 && $datos[0]['tipo_destino']==2){  //SI ES ENTREGA INTERNA DE UN ORIGEN EXTERNO
+    	$iddependencia=busca_filtro_tabla("iddependencia","vfuncionario_dc","iddependencia_cargo=".$datos[0]['nombre_destino'],"",$conn);
+		$nombre_ruta=busca_filtro_tabla("a.idft_ruta_distribucion","ft_ruta_distribucion a, ft_dependencias_ruta b, ft_funcionarios_ruta c,documento d","a.documento_iddocumento=d.iddocumento AND lower(d.estado)='aprobado' AND b.estado_dependencia=1 AND c.estado_mensajero=1 AND a.idft_ruta_distribucion=b.ft_ruta_distribucion AND a.idft_ruta_distribucion=c.ft_ruta_distribucion AND b.dependencia_asignada=".$iddependencia[0]['iddependencia'],"",$conn);
+		$idft_ruta_distribucion=$nombre_ruta[0]['idft_ruta_distribucion'];	
+    }else if($datos[0]['tipo_destino']==1 && $datos[0]['estado_recogida']){
+    	$idft_ruta_distribucion=0;
+    } 
+
+
+//------------------------------------------------------		
+		
+		
+		
+	}// fin if responsable num campos
+	
+    $select="<select class='mensajeros' ".$disable." data-idft='$idft_destino_radicacion' name='responsable_{$idft_destino_radicacion}' style='width:150px;' ruta_distribucion=".$idft_ruta_distribucion.">";
     
 	
     
@@ -468,6 +502,13 @@ function generar_accion_destino_radicacion($idft_destino_radicacion,$mensajero_e
     	$tipo_mensajero=busca_filtro_tabla("tipo_mensajero","ft_destino_radicacion","idft_destino_radicacion=".$idft_destino_radicacion,"",$conn);
 		if($tipo_mensajero[0]['tipo_mensajero']=="0"){
 			$tipo_mensajero[0]['tipo_mensajero']='i';
+        }		
+		$html.="<input type='checkbox' class='planilla_mensajero' ".$disable." mensajero='".$mensajero_encargado."-".$tipo_mensajero[0]['tipo_mensajero']."' value='$idft_destino_radicacion'>";
+		return($html);
+		
+    	$tipo_mensajero=busca_filtro_tabla("tipo_mensajero","ft_destino_radicacion","idft_destino_radicacion=".$idft_destino_radicacion,"",$conn);
+		if($tipo_mensajero[0]['tipo_mensajero']=="0"){
+			$tipo_mensajero[0]['tipo_mensajero']='i';
             }
 		$ruta_distribucion=busca_filtro_tabla("estado_recogida,ruta_origen,ruta_destino,tipo_origen,tipo_destino","ft_destino_radicacion","idft_destino_radicacion=".$idft_destino_radicacion,"",$conn);
 		
@@ -537,7 +578,9 @@ function generar_accion_destino_radicacion_endistribucion($idft_destino_radicaci
     	$tipo_mensajero=busca_filtro_tabla("tipo_mensajero","ft_destino_radicacion","idft_destino_radicacion=".$idft_destino_radicacion,"",$conn);
 		if($tipo_mensajero[0]['tipo_mensajero']=="0"){
 			$tipo_mensajero[0]['tipo_mensajero']='i';
-            }
+        }		
+		$html.="<input type='checkbox' class='planilla_mensajero' ".$disable." mensajero='".$mensajero_encargado."-".$tipo_mensajero[0]['tipo_mensajero']."' value='$idft_destino_radicacion'>";
+		return($html);
 		
 		$ruta_distribucion=busca_filtro_tabla("estado_recogida,ruta_origen,ruta_destino,tipo_origen,tipo_destino","ft_destino_radicacion","idft_destino_radicacion=".$idft_destino_radicacion,"",$conn);
 		
