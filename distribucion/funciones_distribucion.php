@@ -37,10 +37,11 @@ function pre_ingresar_distribucion($iddoc,$campo_origen,$tipo_origen,$campo_dest
 			
 	} //fin if $datos_documento['numcampos']
 }
-function ingresar_distribucion($iddoc,$datos){
+function ingresar_distribucion($iddoc,$datos,$iddistribucion=0){
 	global $conn,$ruta_db_superior;
 	
 	/*
+	 * $iddoc = iddocumento de la tabla documento
 	 * $datos
 	 	* ['origen']   		---> iddependencia_cargo ó iddatos_ejecutor
 	 	* ['tipo_origen']	---> 1,funcionario;2,ejecutor
@@ -48,6 +49,7 @@ function ingresar_distribucion($iddoc,$datos){
 	 	* ['tipo_destino']	---> 1,funcionario;2,ejecutor
 	 	* ['estado_distribucion']  ---> 0,Pediente; 1,Por Distribuir; 2,En distribucion; 3,Finalizado
 	 	* ['estado_recogida'] ---> 0, No; 1, Si
+	 * $iddistribucion = si se desea ingresar la distribucion que una llave especifica, se usa para migrar viejas distribuciones a la nueva distribucion
 	*/
 	
 	//--------------------------------------------------------
@@ -70,7 +72,7 @@ function ingresar_distribucion($iddoc,$datos){
 	if($datos['tipo_origen']==2){  //SI VIENE DE AFUERA
 		$estado_recogida=1;
 	}
-	if(@$datos['estado_recogida']){
+	if(@$datos['estado_recogida']){ //SI NO REQUIEREN RECOGER
 		$estado_recogida=1;
 	}
 	
@@ -117,10 +119,18 @@ function ingresar_distribucion($iddoc,$datos){
 		}	
 		
 		//---------------------------------------------------------
+		$campo_iddistribucion="";
+		$valor_iddistribucion="";
+		if($iddistribucion){
+			$campo_iddistribucion="iddistribucion,";
+			$valor_iddistribucion=$iddistribucion.",";			
+		}
+		
 		
 		//INSERTAR DISTRIBUCION
 		$sqli="INSERT INTO distribucion
 			(
+				".$campo_iddistribucion."
 				origen,
 				tipo_origen,
 				ruta_origen,
@@ -140,6 +150,7 @@ function ingresar_distribucion($iddoc,$datos){
 			) 
 				VALUES 
 			(
+				".$valor_iddistribucion."
 				".$datos['origen'].",
 				".$datos['tipo_origen'].",
 				".$idft_ruta_distribucion_origen.",
