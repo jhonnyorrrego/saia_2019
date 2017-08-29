@@ -663,8 +663,13 @@ INSERT INTO `modulo` (`idmodulo`, `pertenece_nucleo`, `nombre`, `tipo`, `imagen`
 
 //FIN NUEVA DISTRIBUCION 
 -- ---------------------------------------------------------------- 
+//FORMATO carta, ADAPTACION PARA QUE HAGA DISTRIBUCION
 
+INSERT INTO `funciones_formato` (`idfunciones_formato`, `nombre`, `nombre_funcion`, `parametros`, `etiqueta`, `descripcion`, `ruta`, `formato`, `acciones`) VALUES
+(944, '{*vincular_distribucion_carta*}', 'vincular_distribucion_carta', NULL, 'vincular_distribucion_carta', 'vincula el formato carta a la distribucion', 'funciones.php', '1', '');
 
-
+INSERT INTO `funciones_formato_accion` (`idfunciones_formato_accion`, `idfunciones_formato`, `accion_idaccion`, `formato_idformato`, `momento`, `estado`, `orden`) VALUES
+(303, 944, 3, 1, 'POSTERIOR', 1, 8);
+-- ---------------------------------------------------------------- 
 
 
