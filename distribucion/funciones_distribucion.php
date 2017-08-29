@@ -13,7 +13,7 @@ $max_salida--;
 
 include_once($ruta_db_superior."db.php");
 
-function pre_ingresar_distribucion($iddoc,$campo_origen,$tipo_origen,$campo_destino,$tipo_destino,$estado_distribucion=1){
+function pre_ingresar_distribucion($iddoc,$campo_origen,$tipo_origen,$campo_destino,$tipo_destino,$estado_distribucion=1,$estado_recogida=0){
 	global $conn,$ruta_db_superior;
 		
 	$datos_plantilla=busca_filtro_tabla("b.nombre_tabla","documento a,formato b","lower(a.plantilla)=lower(b.nombre) AND a.iddocumento=".$iddoc,"",$conn);	
@@ -30,6 +30,7 @@ function pre_ingresar_distribucion($iddoc,$campo_origen,$tipo_origen,$campo_dest
 			$datos_distribucion['destino']=$lista_destinos[$i];
 			$datos_distribucion['tipo_destino']=$tipo_destino;
 			$datos_distribucion['estado_distribucion']=$estado_distribucion;
+			$datos_distribucion['estado_recogida']=$estado_recogida;
 			
 			$ingresar=ingresar_distribucion($iddoc,$datos_distribucion);
 		}	
@@ -46,6 +47,7 @@ function ingresar_distribucion($iddoc,$datos){
 	 	* ['destino']		---> iddependencia_cargo ó dependencia#, ó iddatos_ejecutor
 	 	* ['tipo_destino']	---> 1,funcionario;2,ejecutor
 	 	* ['estado_distribucion']  ---> 0,Pediente; 1,Por Distribuir; 2,En distribucion; 3,Finalizado
+	 	* ['estado_recogida'] ---> 0, No; 1, Si
 	*/
 	
 	//--------------------------------------------------------
@@ -68,6 +70,10 @@ function ingresar_distribucion($iddoc,$datos){
 	if($datos['tipo_origen']==2){  //SI VIENE DE AFUERA
 		$estado_recogida=1;
 	}
+	if(@$datos['estado_recogida']){
+		$estado_recogida=1;
+	}
+	
 	
 	//ESTADO_DISTRIBUCION
 	$estado_distribucion=0;
