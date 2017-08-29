@@ -616,15 +616,52 @@ UPDATE funciones_formato_accion SET orden=16 WHERE  accion_idaccion=3 AND idfunc
 UPDATE funciones_formato_accion SET orden=15 WHERE  accion_idaccion=5 AND idfunciones_formato=902 AND formato_idformato=3;
 -- ---------------------------------------------------------------- 
 //NUEVA DISTRIBUCION 
+
+CREATE TABLE `distribucion` (
+  `iddistribucion` int(11) NOT NULL,
+  `origen` int(11) NOT NULL,
+  `tipo_origen` int(11) NOT NULL,
+  `ruta_origen` int(11) DEFAULT NULL,
+  `mensajero_origen` int(11) DEFAULT '0',
+  `destino` int(11) NOT NULL,
+  `tipo_destino` int(11) NOT NULL,
+  `ruta_destino` int(11) DEFAULT NULL,
+  `mensajero_destino` int(11) DEFAULT '0',
+  `mensajero_empresad` int(11) DEFAULT '0',
+  `documento_iddocumento` int(11) NOT NULL,
+  `numero_distribucion` varchar(255) NOT NULL,
+  `estado_distribucion` int(11) NOT NULL DEFAULT '0',
+  `estado_recogida` int(11) NOT NULL,
+  `fecha_creacion` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+INSERT INTO `busqueda` (`idbusqueda`, `nombre`, `etiqueta`, `estado`, `ancho`, `campos`, `llave`, `tablas`, `ruta_libreria`, `ruta_libreria_pantalla`, `cantidad_registros`, `tiempo_refrescar`, `ruta_visualizacion`, `tipo_busqueda`, `badge_cantidades`) VALUES
+(109, 'reporte_distribucion_general', 'Distribuci&oacute;n', 1, 200, 'a.iddistribucion,a.tipo_origen,a.origen,a.tipo_destino,a.destino,a.numero_distribucion,a.estado_distribucion,a.estado_recogida,a.ruta_origen,a.ruta_destino,b.iddocumento,b.fecha,b.descripcion', 'a.iddistribucion', 'distribucion a, documento b', 'distribucion/funciones_distribucion.php', 'distribucion/funciones_distribucion_js.php', 100, 500, 'pantallas/busquedas/consulta_busqueda_reporte.php', 2, NULL);
+
+INSERT INTO `busqueda_componente` (`idbusqueda_componente`, `busqueda_idbusqueda`, `tipo`, `conector`, `url`, `etiqueta`, `nombre`, `orden`, `info`, `exportar`, `exportar_encabezado`, `encabezado_componente`, `estado`, `ancho`, `cargar`, `campos_adicionales`, `tablas_adicionales`, `ordenado_por`, `direccion`, `agrupado_por`, `busqueda_avanzada`, `acciones_seleccionados`, `modulo_idmodulo`, `menu_busqueda_superior`, `enlace_adicionar`, `encabezado_grillas`) VALUES
+(300, 109, 3, 2, 'pantallas/busquedas/consulta_busqueda_reporte.php', '1. Por Distribuir', 'reporte_distribucion_general_pordistribuir', 1, 'Radicado|{*ver_documento_distribucion@iddocumento,tipo_origen*}|center|-|No. Distribuci&oacute;n|{*numero_distribucion*}|center|-|Estado|{*ver_estado_distribucion@estado_distribucion*}|center|-|Diligencia|{*mostrar_diligencia_distribucion@tipo_origen,estado_recogida*}|center|-|Ruta|{*mostrar_nombre_ruta_distribucion@tipo_origen,estado_recogida,ruta_origen,ruta_destino,tipo_destino*}|center|-|Mensajero|{*select_mensajeros_ruta_distribucion@iddistribucion*}|center|-|Planilla Asociada|{*mostrar_planilla_diligencia_distribucion@iddistribucion*}|center|-|Acci&oacute;n|{*generar_check_accion_distribucion@iddistribucion*}|center|-|Origen|{*mostrar_origen_distribucion@tipo_origen,origen*}|center|-|Destino|{*mostrar_destino_distribucion@tipo_destino,destino*}|center|-|Fecha de Radicaci&oacute;n|{*fecha*}|center|-|Asunto|{*descripcion*}|left', NULL, NULL, NULL, 2, 600, 1, '', '', '', 'DESC', NULL, 'distribucion/busqueda_distribucion.php?idbusqueda_componente=300', 'filtro_mensajero_distribucion,opciones_acciones_distribucion', NULL, NULL, NULL, NULL),
+(301, 109, 3, 2, 'pantallas/busquedas/consulta_busqueda_reporte.php', '2. En distribuci&oacute;n', 'reporte_distribucion_general_endistribucion', 2, 'Radicado|{*ver_documento_distribucion@iddocumento,tipo_origen*}|center|-|No. Distribuci&oacute;n|{*numero_distribucion*}|center|-|Estado|{*ver_estado_distribucion@estado_distribucion*}|center|-|Diligencia|{*mostrar_diligencia_distribucion@tipo_origen,estado_recogida*}|center|-|Ruta|{*mostrar_nombre_ruta_distribucion@tipo_origen,estado_recogida,ruta_origen,ruta_destino,tipo_destino*}|center|-|Mensajero|{*select_mensajeros_ruta_distribucion@iddistribucion*}|center|-|Planilla Asociada|{*mostrar_planilla_diligencia_distribucion@iddistribucion*}|center|-|Acci&oacute;n|{*generar_check_accion_distribucion@iddistribucion*}|center|-|Origen|{*mostrar_origen_distribucion@tipo_origen,origen*}|center|-|Destino|{*mostrar_destino_distribucion@tipo_destino,destino*}|center|-|Fecha de Radicaci&oacute;n|{*fecha*}|center|-|Asunto|{*descripcion*}|left', NULL, NULL, NULL, 2, 600, 1, '', '', '', 'DESC', NULL, 'distribucion/busqueda_distribucion.php?idbusqueda_componente=301', 'filtro_mensajero_distribucion,opciones_acciones_distribucion', NULL, NULL, NULL, NULL),
+(302, 109, 3, 2, 'pantallas/busquedas/consulta_busqueda_reporte.php', '3. Finalizado', 'reporte_distribucion_general_finalizado', 3, 'Radicado|{*ver_documento_distribucion@iddocumento,tipo_origen*}|center|-|No. Distribuci&oacute;n|{*numero_distribucion*}|center|-|Estado|{*ver_estado_distribucion@estado_distribucion*}|center|-|Planilla Asociada|{*mostrar_planilla_diligencia_distribucion@iddistribucion*}|center|-|Origen|{*mostrar_origen_distribucion@tipo_origen,origen*}|center|-|Destino|{*mostrar_destino_distribucion@tipo_destino,destino*}|center|-|Fecha de Radicaci&oacute;n|{*fecha*}|center|-|Asunto|{*descripcion*}|left', NULL, NULL, NULL, 2, 600, 1, '', '', '', 'DESC', NULL, 'distribucion/busqueda_distribucion.php?idbusqueda_componente=302', '', NULL, NULL, NULL, NULL);
+
+INSERT INTO `busqueda_condicion` (`idbusqueda_condicion`, `busqueda_idbusqueda`, `fk_busqueda_componente`, `codigo_where`, `etiqueta_condicion`) VALUES
+(235, NULL, 300, 'a.documento_iddocumento=b.iddocumento AND lower(b.estado)=\'aprobado\' AND a.estado_distribucion=1 {*condicion_adicional_distribucion*}', 'condicion_reporte_distribucion_general_pordistribuir'),
+(236, NULL, 301, 'a.documento_iddocumento=b.iddocumento AND lower(b.estado)=\'aprobado\' AND a.estado_distribucion=2 {*condicion_adicional_distribucion*}', 'condicion_reporte_distribucion_general_endistribucion'),
+(237, NULL, 302, 'a.documento_iddocumento=b.iddocumento AND lower(b.estado)=\'aprobado\' AND a.estado_distribucion=3 {*condicion_adicional_distribucion*}', 'condicion_reporte_distribucion_general_finalizado');
+
+
 DELETE FROM funciones_formato WHERE idfunciones_formato=904; //subir_planilla_despacho_ingresados
 DELETE FROM funciones_formato_accion WHERE idfunciones_formato=904; //subir_planilla_despacho_ingresados - POSTERIOR A SUBIR ANEXO
 
 INSERT INTO `funciones_formato` (`idfunciones_formato`, `nombre`, `nombre_funcion`, `parametros`, `etiqueta`, `descripcion`, `ruta`, `formato`, `acciones`) VALUES (NULL, '{*vincular_dependencia_ruta_distribucion*}', 'vincular_dependencia_ruta_distribucion', NULL, 'vincular_dependencia_ruta_distribucion', '', 'funciones.php', '404', '');
-INSERT INTO `funciones_formato_accion` (`idfunciones_formato_accion`, `idfunciones_formato`, `accion_idaccion`, `formato_idformato`, `momento`, `estado`, `orden`) VALUES (NULL, '943', '3', '404', 'POSTERIOR', '1', '2');
+INSERT INTO `funciones_formato_accion` (`idfunciones_formato_accion`, `idfunciones_formato`, `accion_idaccion`, `formato_idformato`, `momento`, `estado`, `orden`) VALUES (NULL, '943', '3', '404', 'POSTERIOR', '1', '2');  //vincular_dependencia_ruta_distribucion POSTERIOR A APROBAR formato: ruta_distribucion
 
 UPDATE funciones_formato_accion SET accion_idaccion = '3' WHERE idfunciones_formato_accion = 283; //ingresar_item_destino_radicacion POSTERIOR AL APROBAR.
 
 INSERT INTO `modulo` (`idmodulo`, `pertenece_nucleo`, `nombre`, `tipo`, `imagen`, `etiqueta`, `enlace`, `enlace_mobil`, `destino`, `cod_padre`, `orden`, `ayuda`, `parametros`, `busqueda_idbusqueda`, `permiso_admin`, `busqueda`, `enlace_pantalla`) VALUES (NULL, '0', 'reporte_distribucion_documentos', 'secundario', 'botones/principal/distribucion.png', 'Distribuci&oacute;n', 'pantallas/buscador_principal.php?idbusqueda=109', NULL, 'centro', '1', '8', '', '', '1', '0', '1', '0');  //NUEVO MODULO DE DISTRIBUCION
+
+
+//FIN NUEVA DISTRIBUCION 
 -- ---------------------------------------------------------------- 
 
 
