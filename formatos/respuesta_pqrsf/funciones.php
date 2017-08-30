@@ -283,5 +283,28 @@ function mostrar_informacion_pqrsf_padre($idformato,$iddoc){
 	
 }
 
+function vincular_distribucion_respuesta_pqrsf($idformato,$iddoc){  //POSTERIOR AL APROBAR
+	global $conn,$ruta_db_superior;
+	
+	$remitente_origen=busca_filtro_tabla("dependencia,ft_pqrsf","ft_respuesta_pqrsf","documento_iddocumento=".$iddoc,"",$conn);
+	$origen=$remitente_origen[0]['dependencia'];
+	$datos_padre=busca_filtro_tabla("remitente_origen","ft_pqrsf","idft_pqrsf=".$remitente_origen[0]['ft_pqrsf'],"",$conn);
+	$destino=$datos_padre[0]['remitente_origen'];
+	
+	//INT -EXT	
+	if($origen && $destino){
+		include_once($ruta_db_superior."distribucion/funciones_distribucion.php");
+		
+		$datos_distribucion=array();
+		$datos_distribucion['origen']=$origen;
+		$datos_distribucion['tipo_origen']=1;
+		$datos_distribucion['destino']=$destino;
+		$datos_distribucion['tipo_destino']=2;
+		$datos_distribucion['estado_distribucion']=1;
+			
+		$ingresar=ingresar_distribucion($iddoc,$datos_distribucion);		
+	} //fin if $origen && $destino	
+
+}
 
 ?>

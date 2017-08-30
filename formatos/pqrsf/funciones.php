@@ -298,6 +298,8 @@ function vincular_distribucion_pqrsf($idformato,$iddoc){  //POSTERIOR AL APROBAR
 		$iddatos_ejecutor=phpmkr_insert_id();
 	}
 	
+	$upr="UPDATE ft_pqrsf SET remitente_origen=".$iddatos_ejecutor." WHERE documento_iddocumento=".$iddoc;
+	phpmkr_query($upr);
 	
 	//DESTINO INTERNO DE LA PQRSF
 	$lasignadas=busca_filtro_tabla("B.parametros","funciones_formato_accion C,accion A,funciones_formato B","C.accion_idaccion=A.idaccion AND B.idfunciones_formato=C.idfunciones_formato and B.nombre_funcion='transferencia_automatica' AND C.formato_idformato=".$idformato,"",$conn);
@@ -307,7 +309,6 @@ function vincular_distribucion_pqrsf($idformato,$iddoc){  //POSTERIOR AL APROBAR
 		$rol_destino=$vector_parametros[0];		
 	}
 
-	
 	if($iddatos_ejecutor && $rol_destino){
 		include_once($ruta_db_superior."distribucion/funciones_distribucion.php");
 		//EXT -INT

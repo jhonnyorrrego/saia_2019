@@ -793,3 +793,31 @@ UPDATE formato SET cuerpo='<p style="text-align: left;">{*enlace_llenar_datos_ra
 
 //<<FIN>> FORMATO pqrsf, ADAPTACION PARA QUE HAGA DISTRIBUCION
 -- ---------------------------------------------------------------- 
+-- ---------------------------------------------------------------- 
+-- ---------------------------------------------------------------- 
+//FORMATO respuesta_pqrsf, ADAPTACION PARA QUE HAGA DISTRIBUCION
+
+INSERT INTO `campos_formato` (`formato_idformato`, `nombre`, `etiqueta`, `tipo_dato`, `longitud`, `obligatoriedad`, `valor`, `acciones`, `ayuda`, `predeterminado`, `banderas`, `etiqueta_html`, `orden`, `mascara`, `adicionales`, `autoguardado`, `fila_visible`) VALUES
+( 305, 'remitente_origen', 'remitente_origen', 'INT', '11', 0, NULL, 'a,e,b', NULL, NULL, NULL, 'hidden', 0, NULL, NULL, 0, 1);
+
+
+INSERT INTO `funciones_formato` ( `nombre`, `nombre_funcion`, `parametros`, `etiqueta`, `descripcion`, `ruta`, `formato`, `acciones`) VALUES
+('{*vincular_distribucion_respuesta_pqrsf*}', 'vincular_distribucion_respuesta_pqrsf', NULL, 'vincular_distribucion_respuesta_pqrsf', 'Vincula las respuestas pqrsf a la distribucion', 'funciones.php', '307', '');
+
+INSERT INTO `funciones_formato_accion` (`idfunciones_formato_accion`, `idfunciones_formato`, `accion_idaccion`, `formato_idformato`, `momento`, `estado`, `orden`) VALUES
+(305, 946, 3, 307, 'POSTERIOR', 1, 5);  //POSTERIOR AL APROBAR vincular_distribucion_respuesta_pqrsf()
+
+UPDATE `funciones_formato` SET `formato` = '1,305,307' WHERE `funciones_formato`.`idfunciones_formato` = 942;   //vinculo mostrar_listado_distribucion_documento al formato respuesta_pqrsf
+
+UPDATE formato SET cuerpo='<p>{*mostrar_informacion_pqrsf_padre*}</p>
+<p>&nbsp;</p>
+<p>{*mostrar_listado_distribucion_documento*}</p>
+<p>&nbsp;</p>
+<p>{*mostrar_estado_proceso*}</p>' WHERE idformato=307; //funcion mostrar_listado_distribucion_documento en el cuerpo de respuesta_pqrsf
+
+//<<FIN>> FORMATO respuesta_pqrsf, ADAPTACION PARA QUE HAGA DISTRIBUCION
+-- ---------------------------------------------------------------- 
+
+
+
+
