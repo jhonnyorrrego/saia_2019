@@ -236,10 +236,10 @@ function buscar_dependencias_hijas_distribucion($iddependencia){
 	return($lista_hijas);
 }
 
-function mostrar_listado_distribucion_documento($idformato,$iddoc){  //PENDIENTE DE TERMINAR, ESTA TABLA SE VA AENLISTAR EN EL MOSTRAR DE LOS DOCUMENTOS QUE VAN A SER DISTRIBUIDOS
+function mostrar_listado_distribucion_documento($idformato,$iddoc){  
 	global $conn,$ruta_db_superior;
 	
-	$distribuciones=busca_filtro_tabla("numero_distribucion,tipo_origen,origen,tipo_destino,destino,estado_distribucion","distribucion","documento_iddocumento=".$iddoc,"",$conn);
+	$distribuciones=busca_filtro_tabla("numero_distribucion,tipo_origen,origen,tipo_destino,destino,estado_distribucion,iddistribucion","distribucion","documento_iddocumento=".$iddoc,"",$conn);
 	$tabla='';
 	if($distribuciones['numcampos']){
 
@@ -257,9 +257,11 @@ function mostrar_listado_distribucion_documento($idformato,$iddoc){  //PENDIENTE
 	    ';
 		
 		for($i=0;$i<$distribuciones['numcampos'];$i++){
+			$enlace_finalizar_distribucion=generar_enlace_finalizar_distribucion($distribuciones[$i]['iddistribucion']);
+			
 			$tabla.='
 			<tr>
-				<td style="text-align:center;"> '.ver_estado_distribucion($distribuciones[$i]['estado_distribucion']).' </td>
+				<td style="text-align:center;"> '.ver_estado_distribucion($distribuciones[$i]['estado_distribucion']).$enlace_finalizar_distribucion.' </td>
 				<td style="text-align:center;"> '.$distribuciones[$i]['numero_distribucion'].' </td>
 				<td> 
 					'.retornar_origen_destino_distribucion($distribuciones[$i]['tipo_origen'],$distribuciones[$i]['origen']).' 
@@ -278,8 +280,75 @@ function mostrar_listado_distribucion_documento($idformato,$iddoc){  //PENDIENTE
 		}
 		
 		$tabla.='</table>';	
+		$tabla.=generar_enlace_finalizar_distribucion(0,1);
 	} //fin if numcampos
 	echo($tabla);
+}
+
+function generar_enlace_finalizar_distribucion($iddistribucion,$js=0){
+	global $conn,$ruta_db_superior;
+	
+	$html='';
+	if($js){
+		$html='
+		<script>
+			$(document).ready(function(){
+				$(".finalizar_item_usuario_actual").click(function(){
+					if(confirm("'.codifica_encabezado(html_entity_decode('Esta seguro/a de finalizar la distribuci&oacute;n?')).'")){
+						var iddistribucion=$(this).attr("iddistribucion");
+						
+				    	$.ajax({
+				        	type:"POST",
+				            dataType: "json",
+				            url: "'.$ruta_db_superior.'distribucion/ejecutar_acciones_distribucion.php",
+				            data: {
+				            	iddistribucion:iddistribucion,
+				            	ejecutar_accion:"finalizar_distribucion"
+				            },
+				            success: function(datos){
+				            	top.noty({text: "distribuci&oacute;n finalizada satisfactoriamente!",type: "success",layout: "topCenter",timeout:3500});
+				                window.location.reload();
+				        	}
+				    	});	 //fin ajax
+			    	} //fin if confirm						
+				}); //fin if finalizar_item_usuario_actual
+				
+			});	//fin if document.ready
+		</script>
+		';		
+	}
+	
+	if(!$js && $iddistribucion){
+
+		//ROLES USUARIO _ACTUAL
+		$funcionario_codigo_usuario_actual=usuario_actual('funcionario_codigo');
+		$busca_roles_usuario_actual=busca_filtro_tabla("iddependencia_cargo","vfuncionario_dc","estado_dc=1 AND funcionario_codigo=".$funcionario_codigo_usuario_actual,"",$conn);
+		$vector_roles_usuario_actual=extrae_campo($busca_roles_usuario_actual,'iddependencia_cargo',"U");
+		
+		$distribucion=busca_filtro_tabla("tipo_origen,estado_recogida,origen,tipo_destino,destino","distribucion","iddistribucion=".$iddistribucion,"",$conn);
+		$diligencia=mostrar_diligencia_distribucion($distribucion[0]['tipo_origen'],$distribucion[0]['estado_recogida']);
+		
+		$retornar_enlace=0;
+		switch($diligencia){
+			case 'RECOGIDA':
+				if(in_array($distribucion[0]['origen'], $vector_roles_usuario_actual)){
+					$retornar_enlace=1;
+				}
+				break;
+			case 'ENTREGA':
+				if($distribucion[0]['tipo_destino']==1 && in_array($distribucion[0]['destino'], $vector_roles_usuario_actual) ){
+					$retornar_enlace=1;
+				}
+				break;	
+		}
+		
+		if($retornar_enlace){
+			$html='<br><a style="cursor:pointer;" class="finalizar_item_usuario_actual" iddistribucion='.$iddistribucion.'>Finalizar</a>';		
+		}
+		
+	} //fin if js
+
+	return($html);
 }
 
 //---------------------------------------------------------------------------------------------
