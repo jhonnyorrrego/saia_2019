@@ -979,16 +979,15 @@ function valida_tipo_destino_entrada($idformato,$iddoc){
     global $conn;
 	
     $padre=busca_filtro_tabla("a.idft_radicacion_entrada,a.tipo_destino,a.tipo_mensajeria","ft_radicacion_entrada a","a.documento_iddocumento=".$iddoc,"",$conn);
+
+    if($padre[0]['tipo_destino']==2){
+       	transferencia_automatica($idformato,$iddoc,"destino",2,"");
+    }
+    transferencia_automatica($idformato,$iddoc,"copia_a",2,'','COPIA');
 	
     if($padre[0]['tipo_mensajeria']==3){
-    	if($padre[0]['tipo_destino']==2){
-        	transferencia_automatica($idformato,$iddoc,"destino",2,"");
-        }
-        transferencia_automatica($idformato,$iddoc,"copia_a",2,'','COPIA');
-        
         $update_radicacion="UPDATE ft_radicacion_entrada SET despachado=1 WHERE idft_radicacion_entrada=".$padre[0]['idft_radicacion_entrada'];
-        phpmkr_query($update_radicacion);    
-			     
+        phpmkr_query($update_radicacion);    	     
    }
 }
 ?>
