@@ -264,4 +264,64 @@ function cambiar_estado_aprobado_pqrsf($idformato,$iddoc){//posterior al editar
 	
 }
 
+function vincular_distribucion_pqrsf($idformato,$iddoc){  //POSTERIOR AL APROBAR
+	global $conn,$ruta_db_superior;  	
+	
+	$datos=busca_filtro_tabla("a.nombre,a.documento,a.email,a.telefono","ft_pqrsf a,documento b","lower(b.estado)='aprobado' AND a.documento_iddocumento=b.iddocumento AND a.documento_iddocumento=".$iddoc,"",$conn);  
+	
+	//INGRESAMOS EL ORIGEN COMO UN REMITENTE
+	$ie=" INSERT INTO ejecutor (identificacion,nombre,fecha_ingreso,estado,tipo_ejecutor) VALUES
+	(
+		'".$datos[0]['documento']."',
+		'".$datos[0]['nombre']."',
+		".fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s').",
+		1,
+		1
+	)
+	";
+
+	phpmkr_query($ie);
+	$idejecutor=phpmkr_insert_id();
+	$iddatos_ejecutor=0;
+	if($idejecutor){
+		$ide=" INSERT INTO datos_ejecutor (ejecutor_idejecutor,email,telefono,fecha) VALUES
+		 (
+		 	".$idejecutor.",
+		 	'".$datos[0]['email']."',
+		 	'".$datos[0]['telefono']."',
+		 	".fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s')."
+		 )
+		
+		";
+		
+		phpmkr_query($ide);
+		$iddatos_ejecutor=phpmkr_insert_id();
+	}
+	
+	
+	//DESTINO INTERNO DE LA PQRSF
+	$lasignadas=busca_filtro_tabla("B.parametros","funciones_formato_accion C,accion A,funciones_formato B","C.accion_idaccion=A.idaccion AND B.idfunciones_formato=C.idfunciones_formato and B.nombre_funcion='transferencia_automatica' AND C.formato_idformato=".$idformato,"",$conn);
+	$rol_destino=0;
+	if($lasignadas['numcampos']){
+		$vector_parametros=explode(',',$lasignadas[0]['parametros']);
+		$rol_destino=$vector_parametros[0];		
+	}
+
+	
+	if($iddatos_ejecutor && $rol_destino){
+		include_once($ruta_db_superior."distribucion/funciones_distribucion.php");
+		//EXT -INT
+		$datos_distribucion=array();
+		$datos_distribucion['origen']=$iddatos_ejecutor;
+		$datos_distribucion['tipo_origen']=2;
+		$datos_distribucion['destino']=$rol_destino;
+		$datos_distribucion['tipo_destino']=1;
+		$datos_distribucion['estado_distribucion']=1;
+			
+		$ingresar=ingresar_distribucion($iddoc,$datos_distribucion);		
+		
+	} //fin if $iddatos_ejecutor && $rol_destino
+	
+	
+} // fin function vincular_distribucion_pqrsf
 ?>

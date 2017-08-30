@@ -734,5 +734,62 @@ UPDATE formato SET cuerpo='<table style="width: 100%; border-collapse: collapse;
 
 //<<<FIN>>> FORMATO carta, ADAPTACION PARA QUE HAGA DISTRIBUCION
 -- ---------------------------------------------------------------- 
+-- ---------------------------------------------------------------- 
+-- ---------------------------------------------------------------- 
+//FORMATO pqrsf, ADAPTACION PARA QUE HAGA DISTRIBUCION
 
+INSERT INTO `funciones_formato` (`idfunciones_formato`, `nombre`, `nombre_funcion`, `parametros`, `etiqueta`, `descripcion`, `ruta`, `formato`, `acciones`) VALUES
+(945, '{*vincular_distribucion_pqrsf*}', 'vincular_distribucion_pqrsf', NULL, 'vincular_distribucion_pqrsf', 'Vincula una pqrsf a la distribucion', 'funciones.php', '305', '');
 
+INSERT INTO `funciones_formato_accion` (`idfunciones_formato_accion`, `idfunciones_formato`, `accion_idaccion`, `formato_idformato`, `momento`, `estado`, `orden`) VALUES
+(304, 945, 3, 305, 'POSTERIOR', 1, 1); //FUNCION POSTERIOR AL APROBAR PARA QUE VINCULE LA DISTRIBUCION
+
+UPDATE `funciones_formato` SET `formato` = '1,305' WHERE `funciones_formato`.`idfunciones_formato` = 942; //se vincula la funcion mostrar_listado_distribucion_documento al formato pqrsf
+
+UPDATE formato SET cuerpo='<p style="text-align: left;">{*enlace_llenar_datos_radicacion_rapida_pqrsf*}</p>
+<table style="border-collapse: collapse; width: 100%;" border="1">
+<tbody>
+<tr>
+<td style="text-align: left; width: 20%;"><strong>&nbsp;Estado PQRSF</strong></td>
+<td style="text-align: left; width: 25%;">&nbsp;{*estado_reporte*}</td>
+<td style="text-align: left; width: 20%;">&nbsp;<strong>Fecha Cambio Estado</strong></td>
+<td style="text-align: left; width: 15%;">&nbsp;{*ver_fecha_reporte*}</td>
+<td style="text-align: center; width: 20%;" rowspan="5">{*generar_qr_pqrsf*}</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>&nbsp;Tipo Comentario:</strong></td>
+<td style="text-align: left;" colspan="3">&nbsp;{*tipo*}<strong></strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>&nbsp;Nombre Completo:</strong></td>
+<td>&nbsp;{*nombre*}</td>
+<td>&nbsp;<strong>Documento:</strong></td>
+<td>&nbsp;{*documento*}</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>&nbsp;Email:&nbsp;</strong></td>
+<td style="text-align: left;">&nbsp;{*email*}</td>
+<td style="text-align: left;">&nbsp;<strong>Telefono o Celular:</strong></td>
+<td style="text-align: left;">&nbsp;{*telefono*}</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>&nbsp;<strong>Rol en la Insitucion:</strong></strong></td>
+<td style="text-align: left;" colspan="3">&nbsp;{*rol_institucion*}</td>
+</tr>
+<tr>
+<td style="text-align: left;" colspan="5"><strong>&nbsp;Comentario:</strong></td>
+</tr>
+<tr>
+<td colspan="5">&nbsp;{*comentarios*}</td>
+</tr>
+<tr>
+<td colspan="5">&nbsp;<strong>Documento Soporte del Comentario:&nbsp;</strong>{*mostrar_anexos_pqrsf*}<strong></strong></td>
+</tr>
+</tbody>
+</table>
+<p>{*mostrar_datos_hijos*}</p>
+<p>{*mostrar_listado_distribucion_documento*}</p>
+<p>{*mostrar_estado_proceso*}</p>' WHERE idformato=305; //SE INCLUYE EN EL CUERPO DE LA PQRSF EL RESUMEN DE LAS DISTRIBUCIONES
+
+//<<FIN>> FORMATO pqrsf, ADAPTACION PARA QUE HAGA DISTRIBUCION
+-- ---------------------------------------------------------------- 
