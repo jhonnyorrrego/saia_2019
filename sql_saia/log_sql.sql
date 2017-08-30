@@ -660,6 +660,8 @@ UPDATE funciones_formato_accion SET accion_idaccion = '3' WHERE idfunciones_form
 
 INSERT INTO `modulo` (`idmodulo`, `pertenece_nucleo`, `nombre`, `tipo`, `imagen`, `etiqueta`, `enlace`, `enlace_mobil`, `destino`, `cod_padre`, `orden`, `ayuda`, `parametros`, `busqueda_idbusqueda`, `permiso_admin`, `busqueda`, `enlace_pantalla`) VALUES (NULL, '0', 'reporte_distribucion_documentos', 'secundario', 'botones/principal/distribucion.png', 'Distribuci&oacute;n', 'pantallas/buscador_principal.php?idbusqueda=109', NULL, 'centro', '1', '8', '', '', '1', '0', '1', '0');  //NUEVO MODULO DE DISTRIBUCION
 
+INSERT INTO `funciones_formato` (`idfunciones_formato`, `nombre`, `nombre_funcion`, `parametros`, `etiqueta`, `descripcion`, `ruta`, `formato`, `acciones`) VALUES
+(942, '{*mostrar_listado_distribucion_documento*}', 'mostrar_listado_distribucion_documento', '', 'mostrar_listado_distribucion_documento', NULL, '../../distribucion/funciones_distribucion.php', '', 'm'); //FUNCION PARA MOSTRAR DISTRIBUCIONES EN CADA PLANTILLA DONDE SE REQUIERA
 
 //FIN NUEVA DISTRIBUCION 
 -- ---------------------------------------------------------------- 
@@ -670,6 +672,67 @@ INSERT INTO `funciones_formato` (`idfunciones_formato`, `nombre`, `nombre_funcio
 
 INSERT INTO `funciones_formato_accion` (`idfunciones_formato_accion`, `idfunciones_formato`, `accion_idaccion`, `formato_idformato`, `momento`, `estado`, `orden`) VALUES
 (303, 944, 3, 1, 'POSTERIOR', 1, 8);
+
+UPDATE `funciones_formato` SET `formato` = '1' WHERE `funciones_formato`.`idfunciones_formato` = 942; //se vincula la funcion mostrar_listado_distribucion_documento al formato carta
+
+UPDATE formato SET cuerpo='<table style="width: 100%; border-collapse: collapse;" border="0">
+<tbody>
+<tr>
+<td colspan="2">{*ciudad*}, {*mostrar_fecha*}</td>
+<td style="text-align: right;" rowspan="4">{*mostrar_qr_carta*}<br /><span style="font-size: 8pt;">{*formato_radicado_enviada*}</span></td>
+</tr>
+<tr>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td colspan="2">{*mostrar_destinos*}</td>
+</tr>
+<tr>
+<td colspan="3"><br />
+<p>ASUNTO: &nbsp; &nbsp; {*asunto*}</p>
+</td>
+</tr>
+<tr>
+<td colspan="3" width="100%">
+<p>&nbsp;<br />Cordial saludo:</p>
+<p>{*contenido*}</p>
+</td>
+</tr>
+<tr>
+<td colspan="3" width="100%">
+<p><br />{*mostrar_listado_distribucion_documento*}</p>
+</td>
+</tr>
+<tr>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td>&nbsp;Atentamente,</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td colspan="3">&nbsp;{*mostrar_estado_proceso*}</td>
+</tr>
+<tr>
+<td colspan="3">{*mostrar_anexos_externa*}{*tamanio_texto_anexos_ext*}<br />{*mostrar_copias_comunicacion_ext*}Proyect&oacute;: {*iniciales*}</td>
+</tr>
+</tbody>
+</table>' WHERE idformato=1;  //SE INCLUYE EN EL CUERPO DE LA CARTA EL RESUMEN DE LAS DISTRIBUCIONES
+
+//<<<FIN>>> FORMATO carta, ADAPTACION PARA QUE HAGA DISTRIBUCION
 -- ---------------------------------------------------------------- 
 
 
