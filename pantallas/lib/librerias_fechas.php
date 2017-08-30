@@ -93,7 +93,7 @@ function dias_habiles_listado($dias, $formato = NULL, $fecha_inicial = NULL) {
 	$periodIterator = new PeriodoDiasHabilesIterador($period, $sabado_habil);
 	$adjustedEndingDate = clone $begin;
 
-	$years = [];
+	$years = array();
 	while($periodIterator->valid()) {
 		$adjustedEndingDate = $periodIterator->current();
 		$years[] = $adjustedEndingDate->format('Y');
