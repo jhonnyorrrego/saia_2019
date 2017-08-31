@@ -60,7 +60,11 @@ function finalizar_distribucion(){
 			$upd='';
 			switch($diligencia){
 				case 'RECOGIDA':
-					$upd=" UPDATE distribucion SET estado_recogida=1,estado_distribucion=1 WHERE iddistribucion=".$iddistribucion;
+					$estado_distribucion=1;
+					if(@$_REQUEST['finaliza_manual']){
+						$estado_distribucion=0;
+					}
+					$upd=" UPDATE distribucion SET estado_recogida=1,estado_distribucion=".$estado_distribucion." WHERE iddistribucion=".$iddistribucion;
 					break;
 				case 'ENTREGA':	
 					$upd=" UPDATE distribucion SET estado_distribucion=3 WHERE iddistribucion=".$iddistribucion;			

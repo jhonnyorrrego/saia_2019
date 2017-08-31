@@ -303,7 +303,8 @@ function generar_enlace_finalizar_distribucion($iddistribucion,$js=0){
 				            url: "'.$ruta_db_superior.'distribucion/ejecutar_acciones_distribucion.php",
 				            data: {
 				            	iddistribucion:iddistribucion,
-				            	ejecutar_accion:"finalizar_distribucion"
+				            	ejecutar_accion:"finalizar_distribucion",
+				            	finaliza_manual:1
 				            },
 				            success: function(datos){
 				            	top.noty({text: "distribuci&oacute;n finalizada satisfactoriamente!",type: "success",layout: "topCenter",timeout:3500});
