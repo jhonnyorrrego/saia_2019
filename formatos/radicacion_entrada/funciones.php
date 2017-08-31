@@ -370,6 +370,7 @@ function tipo_radicado_radicacion($idformato,$iddoc){//en el adicionar
             });
             function tipo_origen(tipo){
                 if(tipo==1){   //EXTERNO
+                	$('#tr_requiere_recogida').hide();
                 	
                 	$('#empresa_transportado').parent().parent().show();
                 	
@@ -395,7 +396,8 @@ function tipo_radicado_radicacion($idformato,$iddoc){//en el adicionar
                     $('#persona_natural').parent().parent().show();
                     //$('#anexos_digitales').parent().parent().show();
                 }else{ //INTERNO
-                
+                	$('#tr_requiere_recogida').show();
+                	
                 	$('#empresa_transportado').parent().parent().hide();
                 
                     seleccionar_interno_actual(1);
@@ -541,7 +543,7 @@ function buscar_dependencias_hijas_radicacion_correspondencia($iddependencia){
 function ingresar_item_destino_radicacion($idformato,$iddoc){//posterior al adicionar - editar
 	global $conn,$ruta_db_superior;
     
-	$datos=busca_filtro_tabla("a.tipo_origen,a.tipo_destino,a.tipo_mensajeria","ft_radicacion_entrada a, documento b"," lower(b.estado)<>'iniciado' AND a.documento_iddocumento=b.iddocumento AND  a.documento_iddocumento=".$iddoc,"",$conn);  
+	$datos=busca_filtro_tabla("a.tipo_origen,a.tipo_destino,a.tipo_mensajeria,a.requiere_recogida","ft_radicacion_entrada a, documento b"," lower(b.estado)<>'iniciado' AND a.documento_iddocumento=b.iddocumento AND  a.documento_iddocumento=".$iddoc,"",$conn);  
 	
 	//area_responsable --->  origen
 	//persona_natural ---> origen_externo
@@ -556,11 +558,19 @@ function ingresar_item_destino_radicacion($idformato,$iddoc){//posterior al adic
 		}
 		
 		if($datos[0]['tipo_origen']==2 && $datos[0]['tipo_destino']==2){  //INT - INT
-			pre_ingresar_distribucion($iddoc,'area_responsable',1,'destino',1,$estado_distribucion);  //INT -INT 
+			if($datos[0]['tipo_mensajeria']!=3 && !$datos[0]['requiere_recogida']){ //no quiere recogida
+				pre_ingresar_distribucion($iddoc,'area_responsable',1,'destino',1,0,1);  //INT -INT
+			}else{
+				pre_ingresar_distribucion($iddoc,'area_responsable',1,'destino',1,$estado_distribucion);  //INT -INT
+			}	 
 		}
 	
 		if($datos[0]['tipo_origen']==2 && $datos[0]['tipo_destino']==1){  //INT - EXT
-			pre_ingresar_distribucion($iddoc,'area_responsable',1,'persona_natural_dest',2,$estado_distribucion); //INT -EXT 
+			if($datos[0]['tipo_mensajeria']!=3 && !$datos[0]['requiere_recogida']){ //no quiere recogida
+				pre_ingresar_distribucion($iddoc,'area_responsable',1,'persona_natural_dest',2,0,1); //INT -EXT 
+			}else{
+				pre_ingresar_distribucion($iddoc,'area_responsable',1,'persona_natural_dest',2,$estado_distribucion); //INT -EXT 
+			}
 		}	
 		
 		if($datos[0]['tipo_origen']==1 && $datos[0]['tipo_destino']==2){  //EXT - INT
@@ -804,6 +814,7 @@ function datos_editar_radicacion($idformato,$iddoc){
                 <script>
                     $(document).ready(function(){
                         $('#tipo_origen1').parent().hide();
+                        $('#tr_requiere_recogida').hide();
                         $('#area_responsable').parent().parent().hide();
                         $('#area_responsable').removeClass('required');
                         $('#destino').addClass('required');

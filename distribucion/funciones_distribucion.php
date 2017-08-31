@@ -566,11 +566,18 @@ function opciones_acciones_distribucion($datos){
 	
 	$cadena_acciones.="<select id='opciones_acciones_distribucion' class='pull-left btn btn-mini' style='height:22px; margin-left: 10px;'>";
 		$cadena_acciones.="<option value=''>Acciones...</option>";
-		$cadena_acciones.="<option value='boton_generar_planilla'>Generar Planilla</option>";
-			
+		
+		if($nombre_componente=='reporte_distribucion_general_endistribucion' || $nombre_componente=='reporte_distribucion_general_pordistribuir'){
+			$cadena_acciones.="<option value='boton_generar_planilla'>Generar Planilla</option>";
+		}	
+		
 		if($nombre_componente=='reporte_distribucion_general_endistribucion'){
 			$cadena_acciones.="<option value='boton_finalizar_entrega'>Finalizar Tr&aacute;mite</option>";
 		}
+		
+		if($nombre_componente=='reporte_distribucion_general_sinrecogida'){
+			$cadena_acciones.="<option value='boton_confirmar_recepcion_distribucion'>Confirmar Recepcion</option>";
+		}		
 			
 		//SELECCIONAR Y QUITAR SELECCIONADOS
 		$cadena_acciones.="<optgroup label='Seleccionar Distribuciones...'>";

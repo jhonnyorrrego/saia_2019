@@ -78,6 +78,20 @@ function finalizar_distribucion(){
 	
 } //fin function finalizar_distribucion()
 
+function confirmar_recepcion_distribucion(){
+	global $conn;
+	$retorno=array('exito'=>0);
+	if(@$_REQUEST['iddistribucion']){	
+		$vector_iddistribucion=explode(',',$_REQUEST['iddistribucion']);
+		for($i=0;$i<count($vector_iddistribucion);$i++){
+			$iddistribucion=$vector_iddistribucion[$i];
+			$upd=" UPDATE distribucion SET estado_recogida=1,estado_distribucion=1 WHERE iddistribucion=".$iddistribucion;
+			phpmkr_query($upd);	
+		}			
+		$retorno['exito']=1;
+	}
+	return($retorno);		
+} //fin function confirmar_recepcion_distribucion()
 
 if(@$_REQUEST['ejecutar_accion']){
 	$retorno=$_REQUEST['ejecutar_accion']();
