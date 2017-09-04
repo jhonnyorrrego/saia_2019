@@ -286,13 +286,24 @@ function mostrar_informacion_pqrsf_padre($idformato,$iddoc){
 function vincular_distribucion_respuesta_pqrsf($idformato,$iddoc){  //POSTERIOR AL APROBAR
 	global $conn,$ruta_db_superior;
 	
-	$remitente_origen=busca_filtro_tabla("dependencia,ft_pqrsf","ft_respuesta_pqrsf","documento_iddocumento=".$iddoc,"",$conn);
+	$remitente_origen=busca_filtro_tabla("dependencia,ft_pqrsf,requiere_recogida,tipo_mensajeria","ft_respuesta_pqrsf","documento_iddocumento=".$iddoc,"",$conn);
 	$origen=$remitente_origen[0]['dependencia'];
 	$datos_padre=busca_filtro_tabla("remitente_origen","ft_pqrsf","idft_pqrsf=".$remitente_origen[0]['ft_pqrsf'],"",$conn);
 	$destino=$datos_padre[0]['remitente_origen'];
 	
 	//INT -EXT	
 	if($origen && $destino){
+		
+		$estado_recogida=0;
+		$estado_distribucion=1;
+		if(!$remitente_origen[0]['requiere_recogida']){
+			$estado_recogida=1;
+			$estado_distribucion=0;
+		}
+		if($remitente_origen[0]['tipo_mensajeria']==3){
+			$estado_distribucion=3;
+		}
+			
 		include_once($ruta_db_superior."distribucion/funciones_distribucion.php");
 		
 		$datos_distribucion=array();
@@ -300,7 +311,8 @@ function vincular_distribucion_respuesta_pqrsf($idformato,$iddoc){  //POSTERIOR 
 		$datos_distribucion['tipo_origen']=1;
 		$datos_distribucion['destino']=$destino;
 		$datos_distribucion['tipo_destino']=2;
-		$datos_distribucion['estado_distribucion']=1;
+		$datos_distribucion['estado_distribucion']=$estado_distribucion;
+		$datos_distribucion['estado_recogida']=$estado_recogida;
 			
 		$ingresar=ingresar_distribucion($iddoc,$datos_distribucion);		
 	} //fin if $origen && $destino	
