@@ -673,6 +673,10 @@ INSERT INTO `funciones_formato` (`idfunciones_formato`, `nombre`, `nombre_funcio
 -- ---------------------------------------------------------------- 
 //FORMATO carta, ADAPTACION PARA QUE HAGA DISTRIBUCION
 
+INSERT INTO `campos_formato` (`formato_idformato`, `nombre`, `etiqueta`, `tipo_dato`, `longitud`, `obligatoriedad`, `valor`, `acciones`, `ayuda`, `predeterminado`, `banderas`, `etiqueta_html`, `orden`, `mascara`, `adicionales`, `autoguardado`, `fila_visible`) VALUES
+(1, 'tipo_mensajeria', 'TIPO DE MENSAJER&Iacute;A', 'INT', '11', 0, '1,Servicio de Mensajer&iacute;a;3,Entrega personal/Medios Propios del &Aacute;rea', 'a,e,b', NULL, '1', NULL, 'radio', 11, NULL, NULL, 0, 1),
+(1, 'requiere_recogida', 'Requiere recogida?', 'INT', '11', 0, '0,No;1,Si', 'a,e,b', NULL, '1', NULL, 'radio', 10, NULL, NULL, 0, 1); //CAMPOS REQUIERE RECOGIDA Y TIPO MENSAJERIA
+
 INSERT INTO `funciones_formato` (`idfunciones_formato`, `nombre`, `nombre_funcion`, `parametros`, `etiqueta`, `descripcion`, `ruta`, `formato`, `acciones`) VALUES
 (944, '{*vincular_distribucion_carta*}', 'vincular_distribucion_carta', NULL, 'vincular_distribucion_carta', 'vincula el formato carta a la distribucion', 'funciones.php', '1', '');
 

@@ -854,9 +854,21 @@ function formato_radicado_enviada($idformato,$iddoc,$retorno=0){
 function vincular_distribucion_carta($idformato,$iddoc){  //POSTERIOR AL APROBAR
 	global $conn,$ruta_db_superior;
 	
+	$datos=busca_filtro_tabla("tipo_mensajeria,requiere_recogida","ft_carta","documento_iddocumento=".$iddoc,"",$conn);
+	
+	$estado_recogida=0;
+	$estado_distribucion=1;
+	if(!$datos[0]['requiere_recogida']){
+		$estado_recogida=1;
+		$estado_distribucion=0;
+	}
+	if($datos[0]['tipo_mensajeria']==3){
+		$estado_distribucion=3;
+	}
+	
 	include_once($ruta_db_superior."distribucion/funciones_distribucion.php");
 	
-	pre_ingresar_distribucion($iddoc,'dependencia',1,'destinos',2); //INT -EXT 
+	pre_ingresar_distribucion($iddoc,'dependencia',1,'destinos',2,$estado_distribucion,$estado_recogida); //INT -EXT 
 }
 
 ?>
