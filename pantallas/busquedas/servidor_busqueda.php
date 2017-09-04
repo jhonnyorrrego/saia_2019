@@ -407,8 +407,11 @@ if($result["numcampos"]){
 				if($_REQUEST["exportar_saia"]=="excel"){
 					//AQUI SE CREA EL ARCHIVO SI NO EXISTE
 					include_once($ruta_db_superior.'pantallas/busquedas/PHPExcel/IOFactory.php');
-
 					$archivo_excel=1;
+
+					$cacheMethod = PHPExcel_CachedObjectStorageFactory::cache_to_phpTemp;
+					$cacheSettings = array('memoryCacheSize' => '4GB');
+					PHPExcel_Settings::setCacheStorageMethod($cacheMethod, $cacheSettings);
 					$objPHPExcel = new PHPExcel();
 					$nombre=usuario_actual("nombres")." ".usuario_actual("apellidos");
 					if(@$_REQUEST["titulo_reporte_saia"]){
@@ -550,8 +553,10 @@ if($response->actual_row>$response->records){
 if($response->records<0){
   $response->records=0;
 }
-if(!@$_REQUEST["no_imprime"])
+if (!@$_REQUEST["no_imprime"]) {
 	echo json_encode($response);
+}
+clearstatcache();
 
 function crear_log_busqueda_excel($file,$texto){
   // Solo sirve para validar la informacion que se genera al momento de modificar el reporte
