@@ -553,6 +553,15 @@ function generar_check_accion_distribucion($iddistribucion){
 			break;
 	} //fin switch	
 	
+	if(!$retornar_check){ //si es 1. Entregas Interna a ventanilla habilita el check no importa si tiene o no mensajero
+		$idbusqueda_componente=@$_REQUEST['idbusqueda_componente'];
+		$cnombre_componente=busca_filtro_tabla("nombre","busqueda_componente","idbusqueda_componente=".$idbusqueda_componente,"",$conn);
+		$nombre_componente=$cnombre_componente[0]['nombre'];
+		if($nombre_componente=='reporte_distribucion_general_sinrecogida'){
+			$retornar_check=1;
+		}
+	}
+	
 	$checkbox='';
 	if($retornar_check){
 		$checkbox='<input type="checkbox" class="accion_distribucion" value="'.$iddistribucion.'">';
