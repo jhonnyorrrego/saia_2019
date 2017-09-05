@@ -365,7 +365,7 @@ function imprime(atras){
  <?php 
  }else{
  	?>
- 	<b>Destino: <?php echo substr(($destino),0,22)."..."; ?></b>
+ 	<b>Destino: <?php echo substr(codifica_encabezado(html_entity_decode($destino)),0,22)."..."; ?></b>
  	<?php 
  }
  ?> 

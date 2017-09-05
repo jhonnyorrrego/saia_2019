@@ -614,6 +614,54 @@ UPDATE busqueda_componente SET busqueda_avanzada = 'formatos/radicacion_entrada/
 -- ----------------------------------------------------------------
 UPDATE funciones_formato_accion SET orden=16 WHERE  accion_idaccion=3 AND idfunciones_formato=902 AND formato_idformato=3;
 UPDATE funciones_formato_accion SET orden=15 WHERE  accion_idaccion=5 AND idfunciones_formato=902 AND formato_idformato=3;
+-- ----------------------------------------------------------------
+-- ====================================================
+CAMBIOS DE COMPATIBILIDAD PARA MIGRACIONES DE SAIA DESDE MYSQL A OTROS MOTORES
+-- ====================================================
+update ft_prueba_compras set fecha_solicitud = null where fecha_solicitud = '0000-00-00';
+update caja set fecha_extrema_i = null where fecha_extrema_i = '0000-00-00';
+update calendario_saia set fecha = null where fecha = '0000-00-00';
+update buzon_entrada set fecha = null where fecha = '0000-00-00 00:00:00.000000';
+update ft_procedimiento set fecha_nomina = null where fecha_nomina  = '0000-00-00';
+update ft_ruta_distribucion set fecha_ruta_distribuc = null where fecha_ruta_distribuc = '0000-00-00';
+update tareas_planeadas set fecha_planeada = null where fecha_planeada = '0000-00-00 00:00:00.000000';
+update ft_dependencias_ruta set fecha_item_dependenc = null where fecha_item_dependenc = '0000-00-00';
+update asignacion set fecha_final = null where fecha_final = '0000-00-00 00:00:00.000000';
+update funcionario set fecha_fin_inactivo = null where fecha_fin_inactivo = '0000-00-00';
+update entidad_pretexto set fecha = null where fecha = '0000-00-00 00:00:00.000000';
+update ft_proceso set fecha = null where fecha = '0000-00-00';
+update expediente set fecha_extrema_i = null where fecha_extrema_i = '0000-00-00';
+update ft_novedad_despacho set fecha_novedad = '1970-01-01' where fecha_novedad = '0000-00-00 00:00:00.000000';
+update expediente set fecha_extrema_f = null where fecha_extrema_f = '0000-00-00';
+update caja set fecha_extrema_f = null where fecha_extrema_f = '0000-00-00';
+update tareas_planeadas set fecha_planeada_fin = null where fecha_planeada_fin = '0000-00-00 00:00:00.000000';
+update ft_ruta_distribucion set fecha_ruta_distribuc = '1970-01-01' where 'fecha_ruta_distribuc' = '0000-00-00';
+update ft_dependencias_ruta set fecha_item_dependenc = '1970-01-01' where fecha_item_dependenc = '0000-00-00';
+UPDATE `diagramdata` SET `type` = 'dia' WHERE type = '';
+
+ALTER TABLE `asignacion` CHANGE `fecha_final` `fecha_final` DATETIME NULL;
+ALTER TABLE `almacenamiento` CHANGE `registro_entrada` `registro_entrada` DATETIME NOT NULL;
+ALTER TABLE `buzon_entrada` CHANGE `fecha` `fecha` DATETIME NULL;
+ALTER TABLE `buzon_salida` CHANGE `fecha` `fecha` DATETIME NOT NULL;
+ALTER TABLE `calendario_saia` CHANGE `fecha` `fecha` DATE NULL;
+ALTER TABLE `entidad_pretexto` CHANGE `fecha` `fecha` DATETIME NULL;
+ALTER TABLE `error` CHANGE `fecha` `fecha` DATETIME NOT NULL;
+ALTER TABLE `evento` CHANGE `fecha` `fecha` DATETIME NULL;
+ALTER TABLE `expediente` CHANGE `fecha` `fecha` TIMESTAMP NOT NULL;
+ALTER TABLE `expediente_doc` CHANGE `fecha` `fecha` TIMESTAMP NOT NULL;
+ALTER TABLE `ft_procedimiento` CHANGE `fecha_nomina` `fecha_nomina` DATE NULL;
+ALTER TABLE `ft_proceso` CHANGE `fecha` `fecha` DATE NULL;
+ALTER TABLE `ft_prueba_compras` CHANGE `fecha_solicitud` `fecha_solicitud` DATE NULL;
+ALTER TABLE `funcionario` CHANGE `ultimo_pwd` `ultimo_pwd` DATETIME NULL;
+ALTER TABLE `funcionario_editor` CHANGE `fecha_ingreso` `fecha_ingreso` DATETIME NOT NULL;
+ALTER TABLE `funcionario_editor` CHANGE `ultimo_pwd` `ultimo_pwd` DATETIME NOT NULL;
+ALTER TABLE `log_acceso_editor` CHANGE `fecha` `fecha` DATETIME NOT NULL;
+ALTER TABLE `reemplazo` CHANGE `fecha_inicio` `fecha_inicio` TIMESTAMP NOT NULL;
+ALTER TABLE `reemplazo_saia` CHANGE `fecha_inicio` `fecha_inicio` DATE NOT NULL;
+ALTER TABLE `respuesta` CHANGE `fecha` `fecha` DATETIME NOT NULL;
+ALTER TABLE `tareas_planeadas` CHANGE `fecha_planeada_fin` `fecha_planeada_fin` DATETIME NULL;
+ALTER TABLE `documento` DROP `pantalla_idpantalla`;
+
 -- ---------------------------------------------------------------- 
 //NUEVA DISTRIBUCION 
 

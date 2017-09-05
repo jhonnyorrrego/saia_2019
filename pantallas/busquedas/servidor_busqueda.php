@@ -268,40 +268,32 @@ if(@$_REQUEST["idbusqueda_temporal"]){
 		}
 	}
 }
-if(!@$_REQUEST["cantidad_total"]){
-	$result = ejecuta_filtro_tabla("SELECT COUNT(*) AS cant FROM ".$tablas_consulta." WHERE ".$condicion.$ordenar_consulta,$conn);
-	if($result["numcampos"]>1){
-		$_REQUEST["cantidad_total"]=$result["numcampos"];
-	}else{
-		$_REQUEST["cantidad_total"]=$result[0]["cant"];
+
+if (!@$_REQUEST["cantidad_total"]) {
+	$consulta_conteo = "SELECT COUNT(1) AS cant FROM " . $tablas_consulta . " WHERE " . $condicion . $ordenar_consulta;
+	if (MOTOR == 'SqlServer' || MOTOR == 'MSSql') {
+		$consulta_conteo = "WITH conteo AS (SELECT " . $campos_consulta . " FROM " . $tablas_consulta . " WHERE " . $condicion . $ordenar_consulta . ") SELECT COUNT(*) as cant FROM conteo";
+		$conteo_filas = $conn->Ejecutar_sql($consulta_conteo);
+		$result = phpmkr_fetch_array($conteo_filas);
+		$result[0] = array();
+		$result[0]['cant'] = $result['cant'];
+		$result["numcampos"] = $result['cant'];
+	} else {
+		if (strpos(strtolower($campos_consulta), "sum(") !== false || strpos(strtolower($campos_consulta), "avg(") !== false) {
+			$consulta_conteo = "SELECT COUNT(1) AS cant FROM (SELECT " . $campos_consulta . " FROM " . $tablas_consulta . " WHERE " . $condicion . $ordenar_consulta . ") as cant";
+		}
+		$result = ejecuta_filtro_tabla($consulta_conteo, $conn);
 	}
-}
-else{
-	$result["numcampos"]=@$_REQUEST["cantidad_total"];
-	$result[0]['cant']=@$_REQUEST["cantidad_total"];
-}
-
-/*
-if(!@$_REQUEST["cantidad_total"]){ //DESARROLLO ALEJANDRO CARVAJAL
-    $consulta_conteo = "SELECT COUNT(1) AS cant FROM " . $tablas_consulta . " WHERE " . $condicion . $ordenar_consulta;
-    if(MOTOR == 'SqlServer' || MOTOR == 'MSSql'){
-        $consulta_conteo = "WITH conteo AS (SELECT " . $campos_consulta . " FROM " . $tablas_consulta . " WHERE " . $condicion . $ordenar_consulta.") SELECT COUNT(*) as cant FROM conteo";
-    } else if(strpos(strtolower($campos_consulta), "sum(") !== false || strpos(strtolower($campos_consulta), "avg(") !== false) {
-        $consulta_conteo = "SELECT COUNT(1) AS cant FROM (SELECT " . $campos_consulta . " FROM " . $tablas_consulta . " WHERE " . $condicion . $ordenar_consulta.") as cant";
-    }
-    $conteo_filas = $conn->Ejecutar_sql($consulta_conteo);
-    $result=phpmkr_fetch_array($conteo_filas);
-    $result[0]=array();
-    $result[0]['cant']=$result['cant'];
-    $result["numcampos"]=$result['cant'];
-    $_REQUEST["cantidad_total"]=$result["numcampos"];
-
+	if ($result["numcampos"] > 1) {
+		$_REQUEST["cantidad_total"] = $result["numcampos"];
+	} else {
+		$_REQUEST["cantidad_total"] = $result[0]["cant"];
+	}
 } else {
-	$result["numcampos"]=@$_REQUEST["cantidad_total"];
-	$result[0]['cant']=@$_REQUEST["cantidad_total"];
+	$result["numcampos"] = @$_REQUEST["cantidad_total"];
+	$result[0]['cant'] = @$_REQUEST["cantidad_total"];
 }
 
-*/
 $response=new stdClass();
 $response->cantidad_total = $result[0]['cant'];
 $response->exito=0;
@@ -415,8 +407,11 @@ if($result["numcampos"]){
 				if($_REQUEST["exportar_saia"]=="excel"){
 					//AQUI SE CREA EL ARCHIVO SI NO EXISTE
 					include_once($ruta_db_superior.'pantallas/busquedas/PHPExcel/IOFactory.php');
-
 					$archivo_excel=1;
+
+					$cacheMethod = PHPExcel_CachedObjectStorageFactory::cache_to_phpTemp;
+					$cacheSettings = array('memoryCacheSize' => '4GB');
+					PHPExcel_Settings::setCacheStorageMethod($cacheMethod, $cacheSettings);
 					$objPHPExcel = new PHPExcel();
 					$nombre=usuario_actual("nombres")." ".usuario_actual("apellidos");
 					if(@$_REQUEST["titulo_reporte_saia"]){
@@ -558,8 +553,10 @@ if($response->actual_row>$response->records){
 if($response->records<0){
   $response->records=0;
 }
-if(!@$_REQUEST["no_imprime"])
+if (!@$_REQUEST["no_imprime"]) {
 	echo json_encode($response);
+}
+clearstatcache();
 
 function crear_log_busqueda_excel($file,$texto){
   // Solo sirve para validar la informacion que se genera al momento de modificar el reporte
