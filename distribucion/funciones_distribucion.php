@@ -326,7 +326,7 @@ function generar_enlace_finalizar_distribucion($iddistribucion,$js=0){
 		$busca_roles_usuario_actual=busca_filtro_tabla("iddependencia_cargo","vfuncionario_dc","estado_dc=1 AND funcionario_codigo=".$funcionario_codigo_usuario_actual,"",$conn);
 		$vector_roles_usuario_actual=extrae_campo($busca_roles_usuario_actual,'iddependencia_cargo',"U");
 		
-		$distribucion=busca_filtro_tabla("tipo_origen,estado_recogida,origen,tipo_destino,destino","distribucion","iddistribucion=".$iddistribucion,"",$conn);
+		$distribucion=busca_filtro_tabla("tipo_origen,estado_recogida,origen,tipo_destino,destino,estado_distribucion","distribucion","iddistribucion=".$iddistribucion,"",$conn);
 		$diligencia=mostrar_diligencia_distribucion($distribucion[0]['tipo_origen'],$distribucion[0]['estado_recogida']);
 		
 		$retornar_enlace=0;
@@ -343,7 +343,7 @@ function generar_enlace_finalizar_distribucion($iddistribucion,$js=0){
 				break;	
 		}
 		
-		if($retornar_enlace){
+		if($retornar_enlace && $distribucion[0]['estado_distribucion']!=3){
 			$html='<br><a style="cursor:pointer;" class="finalizar_item_usuario_actual" iddistribucion='.$iddistribucion.'>Finalizar</a>';		
 		}
 		
