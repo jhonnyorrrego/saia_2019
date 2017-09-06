@@ -724,7 +724,7 @@ INSERT INTO `modulo` (`idmodulo`,`pertenece_nucleo`, `nombre`, `tipo`, `imagen`,
 UPDATE `busqueda_componente` SET `modulo_idmodulo` = '1655' WHERE `busqueda_componente`.`idbusqueda_componente` = 303; //modulo permiso_reporte_distribucion_general_sinrecogida al componente reporte_distribucion_general_sinrecogida
 
 INSERT INTO `funciones_formato` (`idfunciones_formato`, `nombre`, `nombre_funcion`, `parametros`, `etiqueta`, `descripcion`, `ruta`, `formato`, `acciones`) VALUES
-(942, '{*mostrar_listado_distribucion_documento*}', 'mostrar_listado_distribucion_documento', '', 'mostrar_listado_distribucion_documento', NULL, '../../distribucion/funciones_distribucion.php', '', 'm'); //FUNCION PARA MOSTRAR DISTRIBUCIONES EN CADA PLANTILLA DONDE SE REQUIERA
+(943, '{*mostrar_listado_distribucion_documento*}', 'mostrar_listado_distribucion_documento', '', 'mostrar_listado_distribucion_documento', NULL, '../../distribucion/funciones_distribucion.php', '', 'm'); //FUNCION PARA MOSTRAR DISTRIBUCIONES EN CADA PLANTILLA DONDE SE REQUIERA
 
 //FIN NUEVA DISTRIBUCION 
 -- ---------------------------------------------------------------- 
@@ -740,7 +740,7 @@ INSERT INTO `funciones_formato` (`idfunciones_formato`, `nombre`, `nombre_funcio
 INSERT INTO `funciones_formato_accion` (`idfunciones_formato_accion`, `idfunciones_formato`, `accion_idaccion`, `formato_idformato`, `momento`, `estado`, `orden`) VALUES
 (303, 944, 3, 1, 'POSTERIOR', 1, 8);
 
-UPDATE `funciones_formato` SET `formato` = '1' WHERE `funciones_formato`.`idfunciones_formato` = 942; //se vincula la funcion mostrar_listado_distribucion_documento al formato carta
+UPDATE `funciones_formato` SET `formato` = '1' WHERE `funciones_formato`.`idfunciones_formato` = 943; //se vincula la funcion mostrar_listado_distribucion_documento al formato carta
 
 UPDATE formato SET cuerpo='<table style="width: 100%; border-collapse: collapse;" border="0">
 <tbody>
@@ -858,22 +858,24 @@ UPDATE formato SET cuerpo='<p style="text-align: left;">{*enlace_llenar_datos_ra
 <p>{*mostrar_listado_distribucion_documento*}</p>
 <p>{*mostrar_estado_proceso*}</p>' WHERE idformato=305; //SE INCLUYE EN EL CUERPO DE LA PQRSF EL RESUMEN DE LAS DISTRIBUCIONES
 
+INSERT INTO `campos_formato` (`formato_idformato`, `nombre`, `etiqueta`, `tipo_dato`, `longitud`, `obligatoriedad`, `valor`, `acciones`, `ayuda`, `predeterminado`, `banderas`, `etiqueta_html`, `orden`, `mascara`, `adicionales`, `autoguardado`, `fila_visible`) VALUES
+( 305, 'remitente_origen', 'remitente_origen', 'INT', '11', 0, NULL, 'a,e,b', NULL, NULL, NULL, 'hidden', 0, NULL, NULL, 0, 1);
+
+
 //<<FIN>> FORMATO pqrsf, ADAPTACION PARA QUE HAGA DISTRIBUCION
 -- ---------------------------------------------------------------- 
 -- ---------------------------------------------------------------- 
 -- ---------------------------------------------------------------- 
 //FORMATO respuesta_pqrsf, ADAPTACION PARA QUE HAGA DISTRIBUCION
 
-INSERT INTO `campos_formato` (`formato_idformato`, `nombre`, `etiqueta`, `tipo_dato`, `longitud`, `obligatoriedad`, `valor`, `acciones`, `ayuda`, `predeterminado`, `banderas`, `etiqueta_html`, `orden`, `mascara`, `adicionales`, `autoguardado`, `fila_visible`) VALUES
-( 305, 'remitente_origen', 'remitente_origen', 'INT', '11', 0, NULL, 'a,e,b', NULL, NULL, NULL, 'hidden', 0, NULL, NULL, 0, 1);
 
 INSERT INTO `campos_formato` (`formato_idformato`, `nombre`, `etiqueta`, `tipo_dato`, `longitud`, `obligatoriedad`, `valor`, `acciones`, `ayuda`, `predeterminado`, `banderas`, `etiqueta_html`, `orden`, `mascara`, `adicionales`, `autoguardado`, `fila_visible`) VALUES
 (307, 'requiere_recogida', 'Requiere recogida?', 'INT', '11', 0, '0,No;1,Si', 'a,e,b', NULL, '1', NULL, 'radio', 4, NULL, NULL, 0, 1),
 (307, 'tipo_mensajeria', 'TIPO DE MENSAJER&Iacute;A', 'INT', '11', 0, '1,Servicio de Mensajer&iacute;a;3,Entrega personal/Medios Propios del &Aacute;rea', 'a,e,b', NULL, '1', NULL, 'radio', 5, NULL, NULL, 0, 1);
  //CAMPOS REQUIERE RECOGIDA Y TIPO MENSAJERIA
 
-INSERT INTO `funciones_formato` ( `nombre`, `nombre_funcion`, `parametros`, `etiqueta`, `descripcion`, `ruta`, `formato`, `acciones`) VALUES
-('{*vincular_distribucion_respuesta_pqrsf*}', 'vincular_distribucion_respuesta_pqrsf', NULL, 'vincular_distribucion_respuesta_pqrsf', 'Vincula las respuestas pqrsf a la distribucion', 'funciones.php', '307', '');
+INSERT INTO `funciones_formato` (`idfunciones_formato`, `nombre`, `nombre_funcion`, `parametros`, `etiqueta`, `descripcion`, `ruta`, `formato`, `acciones`) VALUES
+(946,'{*vincular_distribucion_respuesta_pqrsf*}', 'vincular_distribucion_respuesta_pqrsf', NULL, 'vincular_distribucion_respuesta_pqrsf', 'Vincula las respuestas pqrsf a la distribucion', 'funciones.php', '307', '');
 
 INSERT INTO `funciones_formato_accion` (`idfunciones_formato_accion`, `idfunciones_formato`, `accion_idaccion`, `formato_idformato`, `momento`, `estado`, `orden`) VALUES
 (305, 946, 3, 307, 'POSTERIOR', 1, 5);  //POSTERIOR AL APROBAR vincular_distribucion_respuesta_pqrsf()
