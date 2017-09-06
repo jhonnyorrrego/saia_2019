@@ -726,6 +726,14 @@ UPDATE `busqueda_componente` SET `modulo_idmodulo` = '1655' WHERE `busqueda_comp
 INSERT INTO `funciones_formato` (`idfunciones_formato`, `nombre`, `nombre_funcion`, `parametros`, `etiqueta`, `descripcion`, `ruta`, `formato`, `acciones`) VALUES
 (943, '{*mostrar_listado_distribucion_documento*}', 'mostrar_listado_distribucion_documento', '', 'mostrar_listado_distribucion_documento', NULL, '../../distribucion/funciones_distribucion.php', '', 'm'); //FUNCION PARA MOSTRAR DISTRIBUCIONES EN CADA PLANTILLA DONDE SE REQUIERA
 
+
+DELETE FROM modulo WHERE nombre='reporte_radicacion_correspondencia';  -- SE ELIMINA EL MODULO ANTIGUO DE DISTRIBUCION
+
+INSERT INTO `cargo` (`idcargo`, `nombre`, `cod_padre`, `estado`, `codigo_cargo`, `tipo`, `tipo_cargo`) VALUES
+(82, 'mensajero', 0, 1, NULL, 1, 1),
+(253, 'mensajero externo', 82, 1, NULL, 1, 1),
+(254, 'ADMINISTRADOR DE MENSAJER&Iacute;A', 82, 1, 0, 1, 2);  -- CARGOS REQUERIDOS EN LA NUEVA DISTRIBUCION
+
 //FIN NUEVA DISTRIBUCION 
 -- ---------------------------------------------------------------- 
 //FORMATO carta, ADAPTACION PARA QUE HAGA DISTRIBUCION
