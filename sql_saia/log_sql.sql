@@ -708,18 +708,18 @@ INSERT INTO `busqueda_condicion` (`idbusqueda_condicion`, `busqueda_idbusqueda`,
 DELETE FROM funciones_formato WHERE idfunciones_formato=904; //subir_planilla_despacho_ingresados
 DELETE FROM funciones_formato_accion WHERE idfunciones_formato=904; //subir_planilla_despacho_ingresados - POSTERIOR A SUBIR ANEXO
 
-INSERT INTO `funciones_formato` (`idfunciones_formato`, `nombre`, `nombre_funcion`, `parametros`, `etiqueta`, `descripcion`, `ruta`, `formato`, `acciones`) VALUES (NULL, '{*vincular_dependencia_ruta_distribucion*}', 'vincular_dependencia_ruta_distribucion', NULL, 'vincular_dependencia_ruta_distribucion', '', 'funciones.php', '404', '');
-INSERT INTO `funciones_formato_accion` (`idfunciones_formato_accion`, `idfunciones_formato`, `accion_idaccion`, `formato_idformato`, `momento`, `estado`, `orden`) VALUES (NULL, '943', '3', '404', 'POSTERIOR', '1', '2');  //vincular_dependencia_ruta_distribucion POSTERIOR A APROBAR formato: ruta_distribucion
+INSERT INTO `funciones_formato` (`idfunciones_formato`, `nombre`, `nombre_funcion`, `parametros`, `etiqueta`, `descripcion`, `ruta`, `formato`, `acciones`) VALUES (942, '{*vincular_dependencia_ruta_distribucion*}', 'vincular_dependencia_ruta_distribucion', NULL, 'vincular_dependencia_ruta_distribucion', '', 'funciones.php', '404', '');
+INSERT INTO `funciones_formato_accion` (`idfunciones_formato_accion`, `idfunciones_formato`, `accion_idaccion`, `formato_idformato`, `momento`, `estado`, `orden`) VALUES (NULL, '942', '3', '404', 'POSTERIOR', '1', '2');  //vincular_dependencia_ruta_distribucion POSTERIOR A APROBAR formato: ruta_distribucion
 
 UPDATE funciones_formato_accion SET accion_idaccion = '3' WHERE idfunciones_formato_accion = 283; //ingresar_item_destino_radicacion POSTERIOR AL APROBAR.
 
 INSERT INTO `campos_formato` (`formato_idformato`, `nombre`, `etiqueta`, `tipo_dato`, `longitud`, `obligatoriedad`, `valor`, `acciones`, `ayuda`, `predeterminado`, `banderas`, `etiqueta_html`, `orden`, `mascara`, `adicionales`, `autoguardado`, `fila_visible`) VALUES
 (3, 'requiere_recogida', 'Requiere recogida?', 'INT', '11', 0, '0,No;1,Si', 'a,e,b', NULL, '1', NULL, 'radio', 18, NULL, NULL, 0, 1);  //campo requiere recogida formato radicacion_entrada
 
-INSERT INTO `modulo` (`idmodulo`, `pertenece_nucleo`, `nombre`, `tipo`, `imagen`, `etiqueta`, `enlace`, `enlace_mobil`, `destino`, `cod_padre`, `orden`, `ayuda`, `parametros`, `busqueda_idbusqueda`, `permiso_admin`, `busqueda`, `enlace_pantalla`) VALUES (NULL, '0', 'reporte_distribucion_documentos', 'secundario', 'botones/principal/distribucion.png', 'Distribuci&oacute;n', 'pantallas/buscador_principal.php?idbusqueda=109', NULL, 'centro', '1', '8', '', '', '1', '0', '1', '0');  //NUEVO MODULO DE DISTRIBUCION
+INSERT INTO `modulo` (`idmodulo`, `pertenece_nucleo`, `nombre`, `tipo`, `imagen`, `etiqueta`, `enlace`, `enlace_mobil`, `destino`, `cod_padre`, `orden`, `ayuda`, `parametros`, `busqueda_idbusqueda`, `permiso_admin`, `busqueda`, `enlace_pantalla`) VALUES (1654, '0', 'reporte_distribucion_documentos', 'secundario', 'botones/principal/distribucion.png', 'Distribuci&oacute;n', 'pantallas/buscador_principal.php?idbusqueda=109', NULL, 'centro', '1', '8', '', '', '1', '0', '1', '0');  //NUEVO MODULO DE DISTRIBUCION
 
-INSERT INTO `modulo` (`pertenece_nucleo`, `nombre`, `tipo`, `imagen`, `etiqueta`, `enlace`, `enlace_mobil`, `destino`, `cod_padre`, `orden`, `ayuda`, `parametros`, `busqueda_idbusqueda`, `permiso_admin`, `busqueda`, `enlace_pantalla`) VALUES
-(0, 'permiso_reporte_distribucion_general_sinrecogida', 'secundario', 'botones/principal/defaut.png', 'Visualizar 1. Entregas Interna a ventanilla', '#', NULL, 'centro', 1654, 1, '', '', 0, 0, '1', 0); //PERMISO PARA VER COMPONENTE 1. Entregas Interna a ventanilla
+INSERT INTO `modulo` (`idmodulo`,`pertenece_nucleo`, `nombre`, `tipo`, `imagen`, `etiqueta`, `enlace`, `enlace_mobil`, `destino`, `cod_padre`, `orden`, `ayuda`, `parametros`, `busqueda_idbusqueda`, `permiso_admin`, `busqueda`, `enlace_pantalla`) VALUES
+(1655,0, 'permiso_reporte_distribucion_general_sinrecogida', 'secundario', 'botones/principal/defaut.png', 'Visualizar 1. Entregas Interna a ventanilla', '#', NULL, 'centro', 1654, 1, '', '', 0, 0, '1', 0); //PERMISO PARA VER COMPONENTE 1. Entregas Interna a ventanilla
 
 UPDATE `busqueda_componente` SET `modulo_idmodulo` = '1655' WHERE `busqueda_componente`.`idbusqueda_componente` = 303; //modulo permiso_reporte_distribucion_general_sinrecogida al componente reporte_distribucion_general_sinrecogida
 
