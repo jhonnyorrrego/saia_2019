@@ -683,6 +683,12 @@ CREATE TABLE `distribucion` (
   `fecha_creacion` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+ALTER TABLE `distribucion`
+  ADD PRIMARY KEY (`iddistribucion`);
+  
+ALTER TABLE `distribucion`
+  MODIFY `iddistribucion` int(11) NOT NULL AUTO_INCREMENT;  
+
 
 INSERT INTO `busqueda` (`idbusqueda`, `nombre`, `etiqueta`, `estado`, `ancho`, `campos`, `llave`, `tablas`, `ruta_libreria`, `ruta_libreria_pantalla`, `cantidad_registros`, `tiempo_refrescar`, `ruta_visualizacion`, `tipo_busqueda`, `badge_cantidades`) VALUES
 (109, 'reporte_distribucion_general', 'Distribuci&oacute;n', 1, 200, 'a.iddistribucion,a.tipo_origen,a.origen,a.tipo_destino,a.destino,a.numero_distribucion,a.estado_distribucion,a.estado_recogida,a.ruta_origen,a.ruta_destino,b.iddocumento,b.fecha,b.descripcion', 'a.iddistribucion', 'distribucion a, documento b', 'distribucion/funciones_distribucion.php', 'distribucion/funciones_distribucion_js.php', 100, 500, 'pantallas/busquedas/consulta_busqueda_reporte.php', 2, NULL);
