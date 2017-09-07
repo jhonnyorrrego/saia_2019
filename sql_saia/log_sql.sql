@@ -819,7 +819,7 @@ INSERT INTO `funciones_formato` (`idfunciones_formato`, `nombre`, `nombre_funcio
 INSERT INTO `funciones_formato_accion` (`idfunciones_formato_accion`, `idfunciones_formato`, `accion_idaccion`, `formato_idformato`, `momento`, `estado`, `orden`) VALUES
 (304, 945, 3, 305, 'POSTERIOR', 1, 1); //FUNCION POSTERIOR AL APROBAR PARA QUE VINCULE LA DISTRIBUCION
 
-UPDATE `funciones_formato` SET `formato` = '1,305' WHERE `funciones_formato`.`idfunciones_formato` = 942; //se vincula la funcion mostrar_listado_distribucion_documento al formato pqrsf
+UPDATE `funciones_formato` SET `formato` = '1,305' WHERE `funciones_formato`.`idfunciones_formato` = 943; //se vincula la funcion mostrar_listado_distribucion_documento al formato pqrsf
 
 UPDATE formato SET cuerpo='<p style="text-align: left;">{*enlace_llenar_datos_radicacion_rapida_pqrsf*}</p>
 <table style="border-collapse: collapse; width: 100%;" border="1">
@@ -888,7 +888,7 @@ INSERT INTO `funciones_formato` (`idfunciones_formato`, `nombre`, `nombre_funcio
 INSERT INTO `funciones_formato_accion` (`idfunciones_formato_accion`, `idfunciones_formato`, `accion_idaccion`, `formato_idformato`, `momento`, `estado`, `orden`) VALUES
 (305, 946, 3, 307, 'POSTERIOR', 1, 5);  //POSTERIOR AL APROBAR vincular_distribucion_respuesta_pqrsf()
 
-UPDATE `funciones_formato` SET `formato` = '1,305,307' WHERE `funciones_formato`.`idfunciones_formato` = 942;   //vinculo mostrar_listado_distribucion_documento al formato respuesta_pqrsf
+UPDATE `funciones_formato` SET `formato` = '1,305,307' WHERE `funciones_formato`.`idfunciones_formato` = 943;   //vinculo mostrar_listado_distribucion_documento al formato respuesta_pqrsf
 
 UPDATE formato SET cuerpo='<p>{*mostrar_informacion_pqrsf_padre*}</p>
 <p>&nbsp;</p>
