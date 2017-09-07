@@ -321,12 +321,12 @@ function recorrido($x_doc,$fun,$fecha,$tipo)
 
 function mostrar_leido($x_doc,$fun,$fecha)
 {
- global $conn;
+ global $conn,$ruta_db_superior;
  $leido = busca_filtro_tabla("idtransferencia","buzon_salida","archivo_idarchivo=$x_doc and origen=$fun and (nombre='LEIDO' or nombre='BORRADOR') and ".fecha_db_obtener("fecha","Y-m-d H:i:s")." >= '$fecha'","",$conn);
  if($leido["numcampos"]>0)
-  $texto.= "<img src='saia/images/leido.png' border='0'>";
+  $texto.= "<img src='".$ruta_db_superior."images/leido.png' border='0'>";
  else
-  $texto.= "<img src='saia/images/no_leido.png' border='0'>";
+  $texto.= "<img src='".$ruta_db_superior."images/no_leido.png' border='0'>";
  return $texto;
 }
 function busca_entidad_ruta($tipo,$llave)
