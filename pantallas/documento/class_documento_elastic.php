@@ -627,10 +627,11 @@ class DocumentoElastic {
 				$params["body"]["mappings"][$tipo_indice]["properties"][$formatos[0]["nombre_tabla"]] = $mapeo_datos_padre;
 			}
 			$num_hijos = count($hijos);
+			//print_r($hijos);die("<=== HIJOS");
 			for($h = 0; $h < $num_hijos; $h++) {
 				$mapeo_datos_ft = $this->obtener_mapeo_formato($hijos[$h]->idformato_hijo);
 				$tipo_indice = $hijos[$h]->tipo_hijo;
-				// print_r($mapeo_datos_ft);die();
+				//print_r($mapeo_datos_ft);die();
 				$params["body"]["mappings"][$tipo_indice] = [
 						"_source" => [
 								"enabled" => true
@@ -639,10 +640,13 @@ class DocumentoElastic {
 								"type" => $hijos[$h]->tipo_padre
 						]
 				];
-				$mapeo_datos["body"]["mappings"][$tipo_indice]["properties"]["documento"] = $mapeo_datos_doc;
-				if (!empty($mapeo_datos_ft)) {
-					$mapeo_datos["body"]["mappings"][$tipo_indice]["properties"][$hijos[$h]->nombre_tabla] = $mapeo_datos_ft;
+				if(!$hijos[$h]->hijo_es_item) {
+					$params["body"]["mappings"][$tipo_indice]["properties"]["documento"] = $mapeo_datos_doc;
 				}
+				if (!empty($mapeo_datos_ft)) {
+					$params["body"]["mappings"][$tipo_indice]["properties"][$hijos[$h]->nombre_tabla] = $mapeo_datos_ft;
+				}
+				//print_r($params);die("<=== MAPEO HIJO");
 			}
 		}
 		return $this->guardar_indice($params);
@@ -668,7 +672,11 @@ class DocumentoElastic {
 		$nombre_indice = formato_primero($idformato, "nombre");
 		//TODO: Opcional: Reindexar el indice. Copiar el existente a uno nuevo con version
 		//TODO: 1 Eliminar el indice
+		//try {
 		$this->borrar_indice_elasticsearch($nombre_indice);
+		/*} catch (Exception $e) {
+			//Se ignora. Falla si el indice no existe
+		}*/
 		//TODO: 2 Crear el indice del formato (padre)
 		$this->crear_indice_formato_saia($idformato);
 		//TODO: 3 Indexar los documentos del formato (el padre)
@@ -754,7 +762,7 @@ class DocumentoElastic {
 			$relacion->hijo_es_item = $es_item;
 			$relacion->idformato_hijo = $idformato_hijo;
 			$relacion->idformato_padre = $idplantilla_padre;
-			$ralacion->nombre_tabla = $tabla;
+			$relacion->nombre_tabla = $tabla;
 			$datos_hijos[] = $relacion;
 			$datos_hijos = $this->obtener_formato_hijo($datos_hijos, $idformato_hijo);
 		}
