@@ -339,6 +339,11 @@ class SqlMysql extends SQL2 {
 		return ($resultado);
 	}
 
+	function Busca_tabla_new($tabla, $campo) {
+		$datos_tabla = $this->ejecuta_filtro_tabla("DESCRIBE " . $tabla);
+		return $datos_tabla;
+	}
+
 	/*
 	 * <Clase>SQL
 	 * <Nombre>Ejecutar_Limit
@@ -708,6 +713,7 @@ class SqlMysql extends SQL2 {
 				}
 				break;
 		}
+		return $campo;
 	}
 
 	public function formato_crear_indice($bandera, $nombre_campo, $nombre_tabla) {
@@ -761,6 +767,7 @@ class SqlMysql extends SQL2 {
 				} else {
 					$pos = array_search(strtolower($campos[$i]["nombre"]), $campos_tabla);
 					$dato = "";
+
 
 					if ($pos === false) {
 						if ($formato[0]["nombre_tabla"]) {

@@ -516,7 +516,7 @@ abstract class SQL2 {
 		if ($datos_campo["etiqueta_html"] == "etiqueta") {
 			return false;
 		}
-		$campo = $this->campo_formato_tipo_dato($datos_campo["tipo_dato"], $datos_campo["longitud"], $datos_campo["predeterminado"], $datos_campo["banderas"]);
+		$campo .= $this->campo_formato_tipo_dato($datos_campo["tipo_dato"], $datos_campo["longitud"], $datos_campo["predeterminado"], $datos_campo["banderas"]);
 		// Valida si se uso por defecto int(11) o number(11)
 		if ((MOTOR == "MySql" || MOTOR == "Oracle") && empty($datos_campo["longitud"]) && preg_match("/(int\(|NUMBER\()11/", $campo)) {
 			$sql = "UPDATE campos_formato SET longitud=11 WHERE idcampos_formato=" . $datos_campo["idcampos_formato"];
