@@ -608,3 +608,293 @@ UPDATE `campos_formato` SET `valor` = NULL WHERE nombre='origen_externo' AND for
 UPDATE `campos_formato` SET `etiqueta_html` = 'hidden' WHERE nombre='nombre_origen' AND formato_idformato=403;
 UPDATE `campos_formato` SET `valor` = NULL WHERE nombre='nombre_origen' AND formato_idformato=403;
 -- ----------------------------------------------------------------
+INSERT INTO funciones_formato_accion (idfunciones_formato_accion,idfunciones_formato,accion_idaccion,formato_idformato,momento,estado,orden) VALUES (NULL, '902', '5', '3', 'POSTERIOR', '1', '7'); //valida_tipo_destino_entrada, posterios al editar
+-- ----------------------------------------------------------------
+UPDATE busqueda_componente SET busqueda_avanzada = 'formatos/radicacion_entrada/busqueda_reporte.php?idbusqueda_componente=282' WHERE idbusqueda_componente = 282;
+-- ----------------------------------------------------------------
+UPDATE funciones_formato_accion SET orden=16 WHERE  accion_idaccion=3 AND idfunciones_formato=902 AND formato_idformato=3;
+UPDATE funciones_formato_accion SET orden=15 WHERE  accion_idaccion=5 AND idfunciones_formato=902 AND formato_idformato=3;
+-- ----------------------------------------------------------------
+-- ====================================================
+CAMBIOS DE COMPATIBILIDAD PARA MIGRACIONES DE SAIA DESDE MYSQL A OTROS MOTORES
+-- ====================================================
+update ft_prueba_compras set fecha_solicitud = null where fecha_solicitud = '0000-00-00';
+update caja set fecha_extrema_i = null where fecha_extrema_i = '0000-00-00';
+update calendario_saia set fecha = null where fecha = '0000-00-00';
+update buzon_entrada set fecha = null where fecha = '0000-00-00 00:00:00.000000';
+update ft_procedimiento set fecha_nomina = null where fecha_nomina  = '0000-00-00';
+update ft_ruta_distribucion set fecha_ruta_distribuc = null where fecha_ruta_distribuc = '0000-00-00';
+update tareas_planeadas set fecha_planeada = null where fecha_planeada = '0000-00-00 00:00:00.000000';
+update ft_dependencias_ruta set fecha_item_dependenc = null where fecha_item_dependenc = '0000-00-00';
+update asignacion set fecha_final = null where fecha_final = '0000-00-00 00:00:00.000000';
+update funcionario set fecha_fin_inactivo = null where fecha_fin_inactivo = '0000-00-00';
+update entidad_pretexto set fecha = null where fecha = '0000-00-00 00:00:00.000000';
+update ft_proceso set fecha = null where fecha = '0000-00-00';
+update expediente set fecha_extrema_i = null where fecha_extrema_i = '0000-00-00';
+update ft_novedad_despacho set fecha_novedad = '1970-01-01' where fecha_novedad = '0000-00-00 00:00:00.000000';
+update expediente set fecha_extrema_f = null where fecha_extrema_f = '0000-00-00';
+update caja set fecha_extrema_f = null where fecha_extrema_f = '0000-00-00';
+update tareas_planeadas set fecha_planeada_fin = null where fecha_planeada_fin = '0000-00-00 00:00:00.000000';
+update ft_ruta_distribucion set fecha_ruta_distribuc = '1970-01-01' where 'fecha_ruta_distribuc' = '0000-00-00';
+update ft_dependencias_ruta set fecha_item_dependenc = '1970-01-01' where fecha_item_dependenc = '0000-00-00';
+UPDATE `diagramdata` SET `type` = 'dia' WHERE type = '';
+
+ALTER TABLE `asignacion` CHANGE `fecha_final` `fecha_final` DATETIME NULL;
+ALTER TABLE `almacenamiento` CHANGE `registro_entrada` `registro_entrada` DATETIME NOT NULL;
+ALTER TABLE `buzon_entrada` CHANGE `fecha` `fecha` DATETIME NULL;
+ALTER TABLE `buzon_salida` CHANGE `fecha` `fecha` DATETIME NOT NULL;
+ALTER TABLE `calendario_saia` CHANGE `fecha` `fecha` DATE NULL;
+ALTER TABLE `entidad_pretexto` CHANGE `fecha` `fecha` DATETIME NULL;
+ALTER TABLE `error` CHANGE `fecha` `fecha` DATETIME NOT NULL;
+ALTER TABLE `evento` CHANGE `fecha` `fecha` DATETIME NULL;
+ALTER TABLE `expediente` CHANGE `fecha` `fecha` TIMESTAMP NOT NULL;
+ALTER TABLE `expediente_doc` CHANGE `fecha` `fecha` TIMESTAMP NOT NULL;
+ALTER TABLE `ft_procedimiento` CHANGE `fecha_nomina` `fecha_nomina` DATE NULL;
+ALTER TABLE `ft_proceso` CHANGE `fecha` `fecha` DATE NULL;
+ALTER TABLE `ft_prueba_compras` CHANGE `fecha_solicitud` `fecha_solicitud` DATE NULL;
+ALTER TABLE `funcionario` CHANGE `ultimo_pwd` `ultimo_pwd` DATETIME NULL;
+ALTER TABLE `funcionario_editor` CHANGE `fecha_ingreso` `fecha_ingreso` DATETIME NOT NULL;
+ALTER TABLE `funcionario_editor` CHANGE `ultimo_pwd` `ultimo_pwd` DATETIME NOT NULL;
+ALTER TABLE `log_acceso_editor` CHANGE `fecha` `fecha` DATETIME NOT NULL;
+ALTER TABLE `reemplazo` CHANGE `fecha_inicio` `fecha_inicio` TIMESTAMP NOT NULL;
+ALTER TABLE `reemplazo_saia` CHANGE `fecha_inicio` `fecha_inicio` DATE NOT NULL;
+ALTER TABLE `respuesta` CHANGE `fecha` `fecha` DATETIME NOT NULL;
+ALTER TABLE `tareas_planeadas` CHANGE `fecha_planeada_fin` `fecha_planeada_fin` DATETIME NULL;
+ALTER TABLE `documento` DROP `pantalla_idpantalla`;
+
+-- ---------------------------------------------------------------- 
+//NUEVA DISTRIBUCION 
+
+CREATE TABLE `distribucion` (
+  `iddistribucion` int(11) NOT NULL,
+  `origen` int(11) NOT NULL,
+  `tipo_origen` int(11) NOT NULL,
+  `ruta_origen` int(11) DEFAULT NULL,
+  `mensajero_origen` int(11) DEFAULT '0',
+  `destino` int(11) NOT NULL,
+  `tipo_destino` int(11) NOT NULL,
+  `ruta_destino` int(11) DEFAULT NULL,
+  `mensajero_destino` int(11) DEFAULT '0',
+  `mensajero_empresad` int(11) DEFAULT '0',
+  `documento_iddocumento` int(11) NOT NULL,
+  `numero_distribucion` varchar(255) NOT NULL,
+  `estado_distribucion` int(11) NOT NULL DEFAULT '0',
+  `estado_recogida` int(11) NOT NULL,
+  `fecha_creacion` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+ALTER TABLE `distribucion`
+  ADD PRIMARY KEY (`iddistribucion`);
+  
+ALTER TABLE `distribucion`
+  MODIFY `iddistribucion` int(11) NOT NULL AUTO_INCREMENT;  
+
+
+INSERT INTO `busqueda` (`idbusqueda`, `nombre`, `etiqueta`, `estado`, `ancho`, `campos`, `llave`, `tablas`, `ruta_libreria`, `ruta_libreria_pantalla`, `cantidad_registros`, `tiempo_refrescar`, `ruta_visualizacion`, `tipo_busqueda`, `badge_cantidades`) VALUES
+(109, 'reporte_distribucion_general', 'Distribuci&oacute;n', 1, 200, 'a.iddistribucion,a.tipo_origen,a.origen,a.tipo_destino,a.destino,a.numero_distribucion,a.estado_distribucion,a.estado_recogida,a.ruta_origen,a.ruta_destino,b.iddocumento,b.fecha,b.descripcion', 'a.iddistribucion', 'distribucion a, documento b', 'distribucion/funciones_distribucion.php', 'distribucion/funciones_distribucion_js.php', 100, 500, 'pantallas/busquedas/consulta_busqueda_reporte.php', 2, NULL);
+
+INSERT INTO `busqueda_componente` (`idbusqueda_componente`, `busqueda_idbusqueda`, `tipo`, `conector`, `url`, `etiqueta`, `nombre`, `orden`, `info`, `exportar`, `exportar_encabezado`, `encabezado_componente`, `estado`, `ancho`, `cargar`, `campos_adicionales`, `tablas_adicionales`, `ordenado_por`, `direccion`, `agrupado_por`, `busqueda_avanzada`, `acciones_seleccionados`, `modulo_idmodulo`, `menu_busqueda_superior`, `enlace_adicionar`, `encabezado_grillas`) VALUES
+(303, 109, 3, 2, 'pantallas/busquedas/consulta_busqueda_reporte.php', '1. Entregas Interna a ventanilla', 'reporte_distribucion_general_sinrecogida', 1, 'Radicado|{*ver_documento_distribucion@iddocumento,tipo_origen*}|center|210|-|No. Distribuci&oacute;n|{*numero_distribucion*}|center|100|-|Estado|{*ver_estado_distribucion@estado_distribucion*}|center|-|Diligencia|{*mostrar_diligencia_distribucion@tipo_origen,estado_recogida*}|center|80|-|Ruta|{*mostrar_nombre_ruta_distribucion@tipo_origen,estado_recogida,ruta_origen,ruta_destino,tipo_destino*}|center|-|Mensajero|{*select_mensajeros_ruta_distribucion@iddistribucion*}|center|-|Planilla Asociada|{*mostrar_planilla_diligencia_distribucion@iddistribucion*}|center|-|Acci&oacute;n|{*generar_check_accion_distribucion@iddistribucion*}|center|80|-|Origen|{*mostrar_origen_distribucion@tipo_origen,origen*}|center|250|-|Destino|{*mostrar_destino_distribucion@tipo_destino,destino*}|center|250|-|Fecha de Radicaci&oacute;n|{*fecha*}|center|-|Asunto|{*descripcion*}|left', NULL, NULL, NULL, 2, 600, 1, '', '', '', 'DESC', NULL, 'distribucion/busqueda_distribucion.php?idbusqueda_componente=303', 'filtro_mensajero_distribucion,opciones_acciones_distribucion', 1655, NULL, NULL, NULL),
+(302, 109, 3, 2, 'pantallas/busquedas/consulta_busqueda_reporte.php', '4. Finalizado', 'reporte_distribucion_general_finalizado', 4, 'Radicado|{*ver_documento_distribucion@iddocumento,tipo_origen*}|center|210|-|No. Distribuci&oacute;n|{*numero_distribucion*}|center|100|-|Estado|{*ver_estado_distribucion@estado_distribucion*}|center|-|Planilla Asociada|{*mostrar_planilla_diligencia_distribucion@iddistribucion*}|center|-|Origen|{*mostrar_origen_distribucion@tipo_origen,origen*}|center|250|-|Destino|{*mostrar_destino_distribucion@tipo_destino,destino*}|center|250|-|Fecha de Radicaci&oacute;n|{*fecha*}|center|-|Asunto|{*descripcion*}|left', NULL, NULL, NULL, 2, 600, 1, '', '', '', 'DESC', NULL, 'distribucion/busqueda_distribucion.php?idbusqueda_componente=302', '', NULL, NULL, NULL, NULL),
+(301, 109, 3, 2, 'pantallas/busquedas/consulta_busqueda_reporte.php', '3. En distribuci&oacute;n', 'reporte_distribucion_general_endistribucion', 3, 'Radicado|{*ver_documento_distribucion@iddocumento,tipo_origen*}|center|210|-|No. Distribuci&oacute;n|{*numero_distribucion*}|center|100|-|Estado|{*ver_estado_distribucion@estado_distribucion*}|center|-|Diligencia|{*mostrar_diligencia_distribucion@tipo_origen,estado_recogida*}|center|80|-|Ruta|{*mostrar_nombre_ruta_distribucion@tipo_origen,estado_recogida,ruta_origen,ruta_destino,tipo_destino*}|center|-|Mensajero|{*select_mensajeros_ruta_distribucion@iddistribucion*}|center|-|Planilla Asociada|{*mostrar_planilla_diligencia_distribucion@iddistribucion*}|center|-|Acci&oacute;n|{*generar_check_accion_distribucion@iddistribucion*}|center|80|-|Origen|{*mostrar_origen_distribucion@tipo_origen,origen*}|center|250|-|Destino|{*mostrar_destino_distribucion@tipo_destino,destino*}|center|250|-|Fecha de Radicaci&oacute;n|{*fecha*}|center|-|Asunto|{*descripcion*}|left', NULL, NULL, NULL, 2, 600, 1, '', '', '', 'DESC', NULL, 'distribucion/busqueda_distribucion.php?idbusqueda_componente=301', 'filtro_mensajero_distribucion,opciones_acciones_distribucion', NULL, NULL, NULL, NULL),
+(300, 109, 3, 2, 'pantallas/busquedas/consulta_busqueda_reporte.php', '2. Por Distribuir', 'reporte_distribucion_general_pordistribuir', 2, 'Radicado|{*ver_documento_distribucion@iddocumento,tipo_origen*}|center|210|-|No. Distribuci&oacute;n|{*numero_distribucion*}|center|100|-|Estado|{*ver_estado_distribucion@estado_distribucion*}|center|-|Diligencia|{*mostrar_diligencia_distribucion@tipo_origen,estado_recogida*}|center|80|-|Ruta|{*mostrar_nombre_ruta_distribucion@tipo_origen,estado_recogida,ruta_origen,ruta_destino,tipo_destino*}|center|-|Mensajero|{*select_mensajeros_ruta_distribucion@iddistribucion*}|center|-|Planilla Asociada|{*mostrar_planilla_diligencia_distribucion@iddistribucion*}|center|-|Acci&oacute;n|{*generar_check_accion_distribucion@iddistribucion*}|center|80|-|Origen|{*mostrar_origen_distribucion@tipo_origen,origen*}|center|250|-|Destino|{*mostrar_destino_distribucion@tipo_destino,destino*}|center|250|-|Fecha de Radicaci&oacute;n|{*fecha*}|center|-|Asunto|{*descripcion*}|left', NULL, NULL, NULL, 2, 600, 1, '', '', '', 'DESC', NULL, 'distribucion/busqueda_distribucion.php?idbusqueda_componente=300', 'filtro_mensajero_distribucion,opciones_acciones_distribucion', NULL, NULL, NULL, NULL);
+
+INSERT INTO `busqueda_condicion` (`idbusqueda_condicion`, `busqueda_idbusqueda`, `fk_busqueda_componente`, `codigo_where`, `etiqueta_condicion`) VALUES
+(238, NULL, 303, 'a.documento_iddocumento=b.iddocumento AND lower(b.estado)=\'aprobado\' AND a.estado_distribucion=0 {*condicion_adicional_distribucion*}', 'condicion_reporte_distribucion_general_sinrecogida'),
+(237, NULL, 302, 'a.documento_iddocumento=b.iddocumento AND lower(b.estado)=\'aprobado\' AND a.estado_distribucion=3 {*condicion_adicional_distribucion*}', 'condicion_reporte_distribucion_general_finalizado'),
+(236, NULL, 301, 'a.documento_iddocumento=b.iddocumento AND lower(b.estado)=\'aprobado\' AND a.estado_distribucion=2 {*condicion_adicional_distribucion*}', 'condicion_reporte_distribucion_general_endistribucion'),
+(235, NULL, 300, 'a.documento_iddocumento=b.iddocumento AND lower(b.estado)=\'aprobado\' AND a.estado_distribucion=1 {*condicion_adicional_distribucion*}', 'condicion_reporte_distribucion_general_pordistribuir');
+
+DELETE FROM funciones_formato WHERE idfunciones_formato=904; //subir_planilla_despacho_ingresados
+DELETE FROM funciones_formato_accion WHERE idfunciones_formato=904; //subir_planilla_despacho_ingresados - POSTERIOR A SUBIR ANEXO
+
+INSERT INTO `funciones_formato` (`idfunciones_formato`, `nombre`, `nombre_funcion`, `parametros`, `etiqueta`, `descripcion`, `ruta`, `formato`, `acciones`) VALUES (942, '{*vincular_dependencia_ruta_distribucion*}', 'vincular_dependencia_ruta_distribucion', NULL, 'vincular_dependencia_ruta_distribucion', '', 'funciones.php', '404', '');
+INSERT INTO `funciones_formato_accion` (`idfunciones_formato_accion`, `idfunciones_formato`, `accion_idaccion`, `formato_idformato`, `momento`, `estado`, `orden`) VALUES (NULL, '942', '3', '404', 'POSTERIOR', '1', '2');  //vincular_dependencia_ruta_distribucion POSTERIOR A APROBAR formato: ruta_distribucion
+
+UPDATE funciones_formato_accion SET accion_idaccion = '3' WHERE idfunciones_formato_accion = 283; //ingresar_item_destino_radicacion POSTERIOR AL APROBAR.
+
+INSERT INTO `campos_formato` (`formato_idformato`, `nombre`, `etiqueta`, `tipo_dato`, `longitud`, `obligatoriedad`, `valor`, `acciones`, `ayuda`, `predeterminado`, `banderas`, `etiqueta_html`, `orden`, `mascara`, `adicionales`, `autoguardado`, `fila_visible`) VALUES
+(3, 'requiere_recogida', 'Requiere recogida?', 'INT', '11', 0, '0,No;1,Si', 'a,e,b', NULL, '1', NULL, 'radio', 18, NULL, NULL, 0, 1);  //campo requiere recogida formato radicacion_entrada
+
+INSERT INTO `modulo` (`idmodulo`, `pertenece_nucleo`, `nombre`, `tipo`, `imagen`, `etiqueta`, `enlace`, `enlace_mobil`, `destino`, `cod_padre`, `orden`, `ayuda`, `parametros`, `busqueda_idbusqueda`, `permiso_admin`, `busqueda`, `enlace_pantalla`) VALUES (1654, '0', 'reporte_distribucion_documentos', 'secundario', 'botones/principal/distribucion.png', 'Distribuci&oacute;n', 'pantallas/buscador_principal.php?idbusqueda=109', NULL, 'centro', '1', '8', '', '', '1', '0', '1', '0');  //NUEVO MODULO DE DISTRIBUCION
+
+INSERT INTO `modulo` (`idmodulo`,`pertenece_nucleo`, `nombre`, `tipo`, `imagen`, `etiqueta`, `enlace`, `enlace_mobil`, `destino`, `cod_padre`, `orden`, `ayuda`, `parametros`, `busqueda_idbusqueda`, `permiso_admin`, `busqueda`, `enlace_pantalla`) VALUES
+(1655,0, 'permiso_reporte_distribucion_general_sinrecogida', 'secundario', 'botones/principal/defaut.png', 'Visualizar 1. Entregas Interna a ventanilla', '#', NULL, 'centro', 1654, 1, '', '', 0, 0, '1', 0); //PERMISO PARA VER COMPONENTE 1. Entregas Interna a ventanilla
+
+UPDATE `busqueda_componente` SET `modulo_idmodulo` = '1655' WHERE `busqueda_componente`.`idbusqueda_componente` = 303; //modulo permiso_reporte_distribucion_general_sinrecogida al componente reporte_distribucion_general_sinrecogida
+
+INSERT INTO `funciones_formato` (`idfunciones_formato`, `nombre`, `nombre_funcion`, `parametros`, `etiqueta`, `descripcion`, `ruta`, `formato`, `acciones`) VALUES
+(943, '{*mostrar_listado_distribucion_documento*}', 'mostrar_listado_distribucion_documento', '', 'mostrar_listado_distribucion_documento', NULL, '../../distribucion/funciones_distribucion.php', '', 'm'); //FUNCION PARA MOSTRAR DISTRIBUCIONES EN CADA PLANTILLA DONDE SE REQUIERA
+
+
+DELETE FROM modulo WHERE nombre='reporte_radicacion_correspondencia';  -- SE ELIMINA EL MODULO ANTIGUO DE DISTRIBUCION
+
+INSERT INTO `cargo` (`idcargo`, `nombre`, `cod_padre`, `estado`, `codigo_cargo`, `tipo`, `tipo_cargo`) VALUES
+(82, 'mensajero', 0, 1, NULL, 1, 1),
+(253, 'mensajero externo', 82, 1, NULL, 1, 1),
+(254, 'ADMINISTRADOR DE MENSAJER&Iacute;A', 82, 1, 0, 1, 2);  -- CARGOS REQUERIDOS EN LA NUEVA DISTRIBUCION
+
+//FIN NUEVA DISTRIBUCION 
+-- ---------------------------------------------------------------- 
+//FORMATO carta, ADAPTACION PARA QUE HAGA DISTRIBUCION
+
+INSERT INTO `campos_formato` (`formato_idformato`, `nombre`, `etiqueta`, `tipo_dato`, `longitud`, `obligatoriedad`, `valor`, `acciones`, `ayuda`, `predeterminado`, `banderas`, `etiqueta_html`, `orden`, `mascara`, `adicionales`, `autoguardado`, `fila_visible`) VALUES
+(1, 'tipo_mensajeria', 'TIPO DE MENSAJER&Iacute;A', 'INT', '11', 0, '1,Servicio de Mensajer&iacute;a;3,Entrega personal/Medios Propios del &Aacute;rea', 'a,e,b', NULL, '1', NULL, 'radio', 11, NULL, NULL, 0, 1),
+(1, 'requiere_recogida', 'Requiere recogida?', 'INT', '11', 0, '0,No;1,Si', 'a,e,b', NULL, '1', NULL, 'radio', 10, NULL, NULL, 0, 1); //CAMPOS REQUIERE RECOGIDA Y TIPO MENSAJERIA
+
+INSERT INTO `funciones_formato` (`idfunciones_formato`, `nombre`, `nombre_funcion`, `parametros`, `etiqueta`, `descripcion`, `ruta`, `formato`, `acciones`) VALUES
+(944, '{*vincular_distribucion_carta*}', 'vincular_distribucion_carta', NULL, 'vincular_distribucion_carta', 'vincula el formato carta a la distribucion', 'funciones.php', '1', '');
+
+INSERT INTO `funciones_formato_accion` (`idfunciones_formato_accion`, `idfunciones_formato`, `accion_idaccion`, `formato_idformato`, `momento`, `estado`, `orden`) VALUES
+(303, 944, 3, 1, 'POSTERIOR', 1, 8);
+
+UPDATE `funciones_formato` SET `formato` = '1' WHERE `funciones_formato`.`idfunciones_formato` = 943; //se vincula la funcion mostrar_listado_distribucion_documento al formato carta
+
+UPDATE formato SET cuerpo='<table style="width: 100%; border-collapse: collapse;" border="0">
+<tbody>
+<tr>
+<td colspan="2">{*ciudad*}, {*mostrar_fecha*}</td>
+<td style="text-align: right;" rowspan="4">{*mostrar_qr_carta*}<br /><span style="font-size: 8pt;">{*formato_radicado_enviada*}</span></td>
+</tr>
+<tr>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td colspan="2">{*mostrar_destinos*}</td>
+</tr>
+<tr>
+<td colspan="3"><br />
+<p>ASUNTO: &nbsp; &nbsp; {*asunto*}</p>
+</td>
+</tr>
+<tr>
+<td colspan="3" width="100%">
+<p>&nbsp;<br />Cordial saludo:</p>
+<p>{*contenido*}</p>
+</td>
+</tr>
+<tr>
+<td colspan="3" width="100%">
+<p><br />{*mostrar_listado_distribucion_documento*}</p>
+</td>
+</tr>
+<tr>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td>&nbsp;Atentamente,</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td colspan="3">&nbsp;{*mostrar_estado_proceso*}</td>
+</tr>
+<tr>
+<td colspan="3">{*mostrar_anexos_externa*}{*tamanio_texto_anexos_ext*}<br />{*mostrar_copias_comunicacion_ext*}Proyect&oacute;: {*iniciales*}</td>
+</tr>
+</tbody>
+</table>' WHERE idformato=1;  //SE INCLUYE EN EL CUERPO DE LA CARTA EL RESUMEN DE LAS DISTRIBUCIONES
+
+//<<<FIN>>> FORMATO carta, ADAPTACION PARA QUE HAGA DISTRIBUCION
+-- ---------------------------------------------------------------- 
+-- ---------------------------------------------------------------- 
+-- ---------------------------------------------------------------- 
+//FORMATO pqrsf, ADAPTACION PARA QUE HAGA DISTRIBUCION
+
+INSERT INTO `funciones_formato` (`idfunciones_formato`, `nombre`, `nombre_funcion`, `parametros`, `etiqueta`, `descripcion`, `ruta`, `formato`, `acciones`) VALUES
+(945, '{*vincular_distribucion_pqrsf*}', 'vincular_distribucion_pqrsf', NULL, 'vincular_distribucion_pqrsf', 'Vincula una pqrsf a la distribucion', 'funciones.php', '305', '');
+
+INSERT INTO `funciones_formato_accion` (`idfunciones_formato_accion`, `idfunciones_formato`, `accion_idaccion`, `formato_idformato`, `momento`, `estado`, `orden`) VALUES
+(304, 945, 3, 305, 'POSTERIOR', 1, 1); //FUNCION POSTERIOR AL APROBAR PARA QUE VINCULE LA DISTRIBUCION
+
+UPDATE `funciones_formato` SET `formato` = '1,305' WHERE `funciones_formato`.`idfunciones_formato` = 943; //se vincula la funcion mostrar_listado_distribucion_documento al formato pqrsf
+
+UPDATE formato SET cuerpo='<p style="text-align: left;">{*enlace_llenar_datos_radicacion_rapida_pqrsf*}</p>
+<table style="border-collapse: collapse; width: 100%;" border="1">
+<tbody>
+<tr>
+<td style="text-align: left; width: 20%;"><strong>&nbsp;Estado PQRSF</strong></td>
+<td style="text-align: left; width: 25%;">&nbsp;{*estado_reporte*}</td>
+<td style="text-align: left; width: 20%;">&nbsp;<strong>Fecha Cambio Estado</strong></td>
+<td style="text-align: left; width: 15%;">&nbsp;{*ver_fecha_reporte*}</td>
+<td style="text-align: center; width: 20%;" rowspan="5">{*generar_qr_pqrsf*}</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>&nbsp;Tipo Comentario:</strong></td>
+<td style="text-align: left;" colspan="3">&nbsp;{*tipo*}<strong></strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>&nbsp;Nombre Completo:</strong></td>
+<td>&nbsp;{*nombre*}</td>
+<td>&nbsp;<strong>Documento:</strong></td>
+<td>&nbsp;{*documento*}</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>&nbsp;Email:&nbsp;</strong></td>
+<td style="text-align: left;">&nbsp;{*email*}</td>
+<td style="text-align: left;">&nbsp;<strong>Telefono o Celular:</strong></td>
+<td style="text-align: left;">&nbsp;{*telefono*}</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>&nbsp;<strong>Rol en la Insitucion:</strong></strong></td>
+<td style="text-align: left;" colspan="3">&nbsp;{*rol_institucion*}</td>
+</tr>
+<tr>
+<td style="text-align: left;" colspan="5"><strong>&nbsp;Comentario:</strong></td>
+</tr>
+<tr>
+<td colspan="5">&nbsp;{*comentarios*}</td>
+</tr>
+<tr>
+<td colspan="5">&nbsp;<strong>Documento Soporte del Comentario:&nbsp;</strong>{*mostrar_anexos_pqrsf*}<strong></strong></td>
+</tr>
+</tbody>
+</table>
+<p>{*mostrar_datos_hijos*}</p>
+<p>{*mostrar_listado_distribucion_documento*}</p>
+<p>{*mostrar_estado_proceso*}</p>' WHERE idformato=305; //SE INCLUYE EN EL CUERPO DE LA PQRSF EL RESUMEN DE LAS DISTRIBUCIONES
+
+INSERT INTO `campos_formato` (`formato_idformato`, `nombre`, `etiqueta`, `tipo_dato`, `longitud`, `obligatoriedad`, `valor`, `acciones`, `ayuda`, `predeterminado`, `banderas`, `etiqueta_html`, `orden`, `mascara`, `adicionales`, `autoguardado`, `fila_visible`) VALUES
+( 305, 'remitente_origen', 'remitente_origen', 'INT', '11', 0, NULL, 'a,e,b', NULL, NULL, NULL, 'hidden', 0, NULL, NULL, 0, 1);
+
+
+//<<FIN>> FORMATO pqrsf, ADAPTACION PARA QUE HAGA DISTRIBUCION
+-- ---------------------------------------------------------------- 
+-- ---------------------------------------------------------------- 
+-- ---------------------------------------------------------------- 
+//FORMATO respuesta_pqrsf, ADAPTACION PARA QUE HAGA DISTRIBUCION
+
+
+INSERT INTO `campos_formato` (`formato_idformato`, `nombre`, `etiqueta`, `tipo_dato`, `longitud`, `obligatoriedad`, `valor`, `acciones`, `ayuda`, `predeterminado`, `banderas`, `etiqueta_html`, `orden`, `mascara`, `adicionales`, `autoguardado`, `fila_visible`) VALUES
+(307, 'requiere_recogida', 'Requiere recogida?', 'INT', '11', 0, '0,No;1,Si', 'a,e,b', NULL, '1', NULL, 'radio', 4, NULL, NULL, 0, 1),
+(307, 'tipo_mensajeria', 'TIPO DE MENSAJER&Iacute;A', 'INT', '11', 0, '1,Servicio de Mensajer&iacute;a;3,Entrega personal/Medios Propios del &Aacute;rea', 'a,e,b', NULL, '1', NULL, 'radio', 5, NULL, NULL, 0, 1);
+ //CAMPOS REQUIERE RECOGIDA Y TIPO MENSAJERIA
+
+INSERT INTO `funciones_formato` (`idfunciones_formato`, `nombre`, `nombre_funcion`, `parametros`, `etiqueta`, `descripcion`, `ruta`, `formato`, `acciones`) VALUES
+(946,'{*vincular_distribucion_respuesta_pqrsf*}', 'vincular_distribucion_respuesta_pqrsf', NULL, 'vincular_distribucion_respuesta_pqrsf', 'Vincula las respuestas pqrsf a la distribucion', 'funciones.php', '307', '');
+
+INSERT INTO `funciones_formato_accion` (`idfunciones_formato_accion`, `idfunciones_formato`, `accion_idaccion`, `formato_idformato`, `momento`, `estado`, `orden`) VALUES
+(305, 946, 3, 307, 'POSTERIOR', 1, 5);  //POSTERIOR AL APROBAR vincular_distribucion_respuesta_pqrsf()
+
+UPDATE `funciones_formato` SET `formato` = '1,305,307' WHERE `funciones_formato`.`idfunciones_formato` = 943;   //vinculo mostrar_listado_distribucion_documento al formato respuesta_pqrsf
+
+UPDATE formato SET cuerpo='<p>{*mostrar_informacion_pqrsf_padre*}</p>
+<p>&nbsp;</p>
+<p>{*mostrar_listado_distribucion_documento*}</p>
+<p>&nbsp;</p>
+<p>{*mostrar_estado_proceso*}</p>' WHERE idformato=307; //funcion mostrar_listado_distribucion_documento en el cuerpo de respuesta_pqrsf
+
+//<<FIN>> FORMATO respuesta_pqrsf, ADAPTACION PARA QUE HAGA DISTRIBUCION
+-- ---------------------------------------------------------------- 

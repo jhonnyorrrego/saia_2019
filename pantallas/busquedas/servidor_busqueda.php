@@ -21,6 +21,7 @@ if (@$_REQUEST["exportar_saia"] == 'excel') {
 	include_once ($ruta_db_superior . "pantallas/lib/convertir_estructura.php");
 }
 $listado_funciones = array();
+
 $page = @$_REQUEST['page']; // pagina actual inicia en 1
 $limit = @$_REQUEST['rows']; // registros por listado de datos
 $sidx = @$_REQUEST['sidx']; // Campo por el que se debe ordenar
@@ -212,8 +213,22 @@ if (@$_REQUEST["idbusqueda_temporal"]) {
 		}
 	}
 }
+
 if (!@$_REQUEST["cantidad_total"]) {
-	$result = ejecuta_filtro_tabla("SELECT COUNT(*) AS cant FROM " . $tablas_consulta . " WHERE " . $condicion . $ordenar_consulta, $conn);
+    $consulta_conteo = "SELECT COUNT(1) AS cant FROM " . $tablas_consulta . " WHERE " . $condicion . $ordenar_consulta;
+    if(MOTOR == 'SqlServer' || MOTOR == 'MSSql'){
+        $consulta_conteo = "WITH conteo AS (SELECT " . $campos_consulta . " FROM " . $tablas_consulta . " WHERE " . $condicion . $ordenar_consulta.") SELECT COUNT(*) as cant FROM conteo";
+    $conteo_filas = $conn->Ejecutar_sql($consulta_conteo);
+    $result=phpmkr_fetch_array($conteo_filas);
+    $result[0]=array();
+    $result[0]['cant']=$result['cant'];
+    $result["numcampos"]=$result['cant'];
+	} else {
+		if (strpos(strtolower($campos_consulta), "sum(") !== false || strpos(strtolower($campos_consulta), "avg(") !== false) {
+			$consulta_conteo = "SELECT COUNT(1) AS cant FROM (SELECT " . $campos_consulta . " FROM " . $tablas_consulta . " WHERE " . $condicion . $ordenar_consulta . ") as cant";
+		}
+		$result = ejecuta_filtro_tabla($consulta_conteo, $conn);
+	}
 	if ($result["numcampos"] > 1) {
 		$_REQUEST["cantidad_total"] = $result["numcampos"];
 	} else {
@@ -361,8 +376,11 @@ function procesar_resultado($datos_busqueda, $result, $response, $lcampos, $page
 					if ($_REQUEST["exportar_saia"] == "excel") {
 						// AQUI SE CREA EL ARCHIVO SI NO EXISTE
 						include_once ($ruta_db_superior . 'pantallas/busquedas/PHPExcel/IOFactory.php');
+					$archivo_excel=1;
 
-						$archivo_excel = 1;
+					$cacheMethod = PHPExcel_CachedObjectStorageFactory::cache_to_phpTemp;
+					$cacheSettings = array('memoryCacheSize' => '4GB');
+					PHPExcel_Settings::setCacheStorageMethod($cacheMethod, $cacheSettings);
 						$objPHPExcel = new PHPExcel();
 						$nombre = usuario_actual("nombres") . " " . usuario_actual("apellidos");
 						if (@$_REQUEST["titulo_reporte_saia"]) {
@@ -373,7 +391,11 @@ function procesar_resultado($datos_busqueda, $result, $response, $lcampos, $page
 						crear_log_busqueda_excel($ruta_db_superior . "../backup/log_exportar.txt", "ANTES DEL SORT -------" . date("Y-m-d H:i:s") . "-----------\n");
 						ksort($array_export);
 						crear_log_busqueda_excel($ruta_db_superior . "../backup/log_exportar.txt", "DESPUES DEL SORT -------" . date("Y-m-d H:i:s") . "-----------\n");
-						$objPHPExcel->getProperties()->setCreator($nombre)->setLastModifiedBy($nombre)->setTitle($titulo)->setSubject($titulo)->setKeywords("cerok SAIA reporte");
+					$objPHPExcel->getProperties()->setCreator($nombre)
+					->setLastModifiedBy($nombre)
+					->setTitle($titulo)
+					->setSubject($titulo)
+					->setKeywords("cerok SAIA reporte");
 						$highestRow = 0;
 					}
 				} else if ($_REQUEST["exportar_saia"] == "excel") {

@@ -1915,7 +1915,7 @@ function radicar_plantilla() {
 	// print_r($_POST);
 	// echo("<br />-------<br />");
 	foreach($_POST as $key => $valor) {
-		if(in_array($key, $lista_campos) && $key != "estado" && $key != "descripcion") {
+		if(in_array($key, $lista_campos) && $key != "estado" && $key != "descripcion" && $key != "fecha") {
 			if($valor[0] != "'") {
 				$valor = "'" . $valor . "'";
 			}
@@ -2196,7 +2196,6 @@ global $conn;
 			$ruta_def .= "&idddoc=" . $_POST["iddoc"];
 	}
 	abrir_url($ruta_def, "centro");
-}
 
 /*
 <Clase>
