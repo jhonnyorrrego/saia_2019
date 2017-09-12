@@ -3,7 +3,7 @@ include_once ('festivos_colombia.php');
 
 class PeriodoDiasHabilesIterador implements \Iterator {
 	private $current;
-	private $period = [];
+	private $period = array();
 	private $sabado_habil = false;
 	private $festivos;
 	private $actualYear;
