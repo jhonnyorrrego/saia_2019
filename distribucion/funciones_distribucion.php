@@ -246,7 +246,7 @@ function mostrar_listado_distribucion_documento($idformato,$iddoc){
 	    $tabla='
 	    	<table class="table table-bordered adicionar_campo" style="width: 100%; font-size:10px; text-align:left;" border="1">
 	    	<tr>
-	    		<th style="text-align:center;" colspan="4">DISTRIBUCI&Oacute;NES</th>
+	    		<th style="text-align:center;" colspan="4">DISTRIBUCIONES</th>
 	    	</tr>
 	    	<tr>
 	    		<th style="text-align:center;">Estado</th>
