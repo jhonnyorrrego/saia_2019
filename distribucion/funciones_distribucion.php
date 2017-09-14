@@ -246,7 +246,7 @@ function mostrar_listado_distribucion_documento($idformato,$iddoc){
 	    $tabla='
 	    	<table class="table table-bordered adicionar_campo" style="width: 100%; font-size:10px; text-align:left;" border="1">
 	    	<tr>
-	    		<th style="text-align:center;" colspan="4">DISTRIBUCI&Oacute;NES</th>
+	    		<th style="text-align:center;" colspan="4">DISTRIBUCIONES</th>
 	    	</tr>
 	    	<tr>
 	    		<th style="text-align:center;">Estado</th>
@@ -669,7 +669,7 @@ function condicion_adicional_distribucion(){
 			}
 		} //fin rol funcionario
 		
-		$condicion_adicional.=" AND ( (a.tipo_origen=1 AND a.estado_recogida<>1 AND a.mensajero_origen IN(".$lista_roles_funcionarios.") ) OR  ( a.tipo_destino=1 AND a.mensajero_empresad=0 AND a.mensajero_destino IN(".$lista_roles_funcionarios.") AND a.estado_recogida=1  ) ) ";
+		$condicion_adicional.=" AND ( (a.tipo_origen=1 AND a.estado_recogida<>1 AND a.mensajero_origen IN(".$lista_roles_funcionarios.") ) OR  (a.mensajero_empresad=0 AND a.mensajero_destino IN(".$lista_roles_funcionarios.") AND a.estado_recogida=1  ) ) ";
 		
 		
 	} // FIN: si no es un administrador filtramos como si fuera un mensajero
@@ -707,7 +707,7 @@ function condicion_adicional_distribucion(){
 			if($mensajero_tipo[1]=='e'){
 				$coondicion_tipo_mensajero_destino=1;
 			}
-			$condicion_adicional.="  (a.tipo_destino=1 AND a.mensajero_empresad=".$coondicion_tipo_mensajero_destino." AND a.mensajero_destino=".$mensajero_tipo[0]." AND a.estado_recogida=1  ) )";
+			$condicion_adicional.="  (a.mensajero_empresad=".$coondicion_tipo_mensajero_destino." AND a.mensajero_destino=".$mensajero_tipo[0]." AND a.estado_recogida=1  ) )";
 			
 		} //fin if $vector_variable_busqueda[0]=='filtro_mensajero_distribucion'
 		
