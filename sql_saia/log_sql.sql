@@ -734,6 +734,12 @@ INSERT INTO `cargo` (`idcargo`, `nombre`, `cod_padre`, `estado`, `codigo_cargo`,
 (253, 'mensajero externo', 82, 1, NULL, 1, 1),
 (254, 'ADMINISTRADOR DE MENSAJER&Iacute;A', 82, 1, 0, 1, 2);  -- CARGOS REQUERIDOS EN LA NUEVA DISTRIBUCION
 
+
+INSERT INTO `funciones_formato` (`nombre`, `nombre_funcion`, `parametros`, `etiqueta`, `descripcion`, `ruta`, `formato`, `acciones`) VALUES
+('{*validar_nombre_ruta_distribucion*}', 'validar_nombre_ruta_distribucion', NULL, 'validar_nombre_ruta_distribucion', '', 'funciones.php', '404', 'a,e');
+
+UPDATE campos_formato SET acciones = 'a,e,b,p,d' WHERE formato_idformato=404 AND nombre='nombre_ruta';
+
 -- FIN NUEVA DISTRIBUCION 
 -- ---------------------------------------------------------------- 
 -- FORMATO carta, ADAPTACION PARA QUE HAGA DISTRIBUCION

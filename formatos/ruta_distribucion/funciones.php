@@ -14,33 +14,17 @@ $max_salida--;
 include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."formatos/librerias_funciones_generales.php");
 include_once($ruta_db_superior."librerias_saia.php");
+echo(librerias_jquery('1.7'));
 echo(librerias_notificaciones());
 
 function campo_fecha_ruta($idformato,$iddoc){
 	global $conn,$ruta_db_superior;
-	$dependencia_mensajeros=busca_filtro_tabla("iddependencia","dependencia","lower(nombre)='mensajeros' OR lower(nombre)='mensajero'","",$conn);
 	$fecha=date('Y-m-d');
 	?>
 	<script>
 	    $(document).ready(function(){
 	       $('#fecha_ruta_distribuc').attr('readonly', true);
 	       $('#fecha_ruta_distribuc').val('<?php echo $fecha;?>'); 
-	       recargar=1;
-	       tree_asignar_mensajeros.setOnLoadingEnd(recargar_arbol_asignar_mensajeros);
-	       
-	       function recargar_arbol_asignar_mensajeros(){
-	       	<?php
-	       		if($dependencia_mensajeros['numcampos']){
-	       	?>
-		       		if(recargar){
-		       			recargar=0;
-		       			tree_asignar_mensajeros.deleteItem('agrupador_<?php echo($dependencia_mensajeros[0]['iddependencia']); ?>');	
-		       			tree_asignar_mensajeros.loadXML("<?php echo($ruta_db_superior); ?>test.php?iddependencia=<?php echo($dependencia_mensajeros[0]['iddependencia']); ?>&rol=1&agrupar=1");	       			
-		       		}	   
-	       	<?php       			
-	       		}
-	       	?>	    		
-	       }
 	    });
 	</script>
 	<?php
@@ -351,7 +335,33 @@ function vincular_dependencia_ruta_distribucion($idformato,$iddoc){  //POSTERIOR
 	}
 }
 
-
+function validar_nombre_ruta_distribucion($idformato,$iddoc){ //ADICIONAR
+	global $conn,$ruta_db_superior;
+	?>
+	<script>
+		$(document).ready(function(){
+			$('#nombre_ruta').blur(function(){
+				$.ajax({
+			        type: "POST",
+			        dataType: 'json',
+			        data: { 
+			                nombre_ruta:$(this).val()
+			              },
+			        url: "validar_nombre_ruta_distribucion.php",
+			        success : function(data) {
+			        	if(data.existe){
+			        		$('#nombre_ruta').val('');
+			        		$('#nombre_ruta').focus();
+			        		top.noty({text: '<b>ATENCI&Oacute;N</b><br>El nombre de la ruta ya existe!',type: 'warning',layout: 'topCenter',timeout:2500});
+			        	}
+			        }
+			    }); 
+				
+			});
+		});
+	</script>
+	<?php	
+}
 
 
 ?>
