@@ -901,3 +901,36 @@ UPDATE formato SET cuerpo='<p>{*mostrar_informacion_pqrsf_padre*}</p>
 
 ALTER TABLE `funcionario` ADD UNIQUE(`funcionario_codigo`);
 ALTER TABLE `funcionario` ADD UNIQUE(`login`);
+
+-- Indices unicos en busquedas
+ALTER TABLE `busqueda` ADD UNIQUE(`nombre`);
+
+DELETE FROM `busqueda_componente` WHERE `busqueda_componente`.`idbusqueda_componente` = 106;
+DELETE FROM `busqueda_componente` WHERE `busqueda_componente`.`idbusqueda_componente` = 161;
+DELETE FROM `busqueda_componente` WHERE `busqueda_componente`.`idbusqueda_componente` = 151;
+DELETE FROM `busqueda_componente` WHERE `busqueda_componente`.`idbusqueda_componente` = 152;
+DELETE FROM `busqueda` WHERE `busqueda`.`idbusqueda` = 18;
+DELETE FROM `busqueda` WHERE `busqueda`.`idbusqueda` = 45;
+DELETE FROM `busqueda_componente` WHERE `busqueda_componente`.`idbusqueda_componente` = 139;
+DELETE FROM `busqueda_componente` WHERE `busqueda_componente`.`idbusqueda_componente` = 184;
+UPDATE `busqueda_componente` SET `nombre` = 'listado_documentos_avanzado' WHERE `busqueda_componente`.`idbusqueda_componente` = 33;
+UPDATE `busqueda_componente` SET `nombre` = 'listado_documentos_activar' WHERE `busqueda_componente`.`idbusqueda_componente` = 92;
+UPDATE `busqueda_componente` SET `nombre` = 'pendiente_ingresar' WHERE `busqueda_componente`.`idbusqueda_componente` = 280;
+
+ALTER TABLE `busqueda_componente` ADD UNIQUE(`nombre`);
+
+DELETE FROM `modulo` WHERE `modulo`.`idmodulo` = 1140;
+
+ALTER TABLE `modulo` ADD UNIQUE(`nombre`);
+
+ALTER TABLE `busqueda_grafico` ADD `nombre` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL;
+
+UPDATE busqueda_grafico SET nombre=LOWER(REPLACE(trim(etiqueta), ' ', '_'));
+UPDATE busqueda_grafico SET nombre=LOWER(REPLACE(nombre, '__', '_'));
+UPDATE busqueda_grafico SET nombre=LOWER(REPLACE(nombre, '\'', ''));
+UPDATE busqueda_grafico SET nombre=LOWER(REPLACE(nombre, '_de_', '_'));
+UPDATE busqueda_grafico SET nombre=LOWER(REPLACE(nombre, '_y_', '_'));
+UPDATE busqueda_grafico SET nombre=LOWER(REPLACE(nombre, '_en_', '_'));
+UPDATE busqueda_grafico SET nombre=LOWER(REPLACE(nombre, '_el_', '_'));
+UPDATE busqueda_grafico SET nombre=LOWER(REPLACE(nombre, '_la_', '_'));
+ALTER TABLE `busqueda_grafico` CHANGE `nombre` `nombre` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL;
