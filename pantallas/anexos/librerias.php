@@ -10,7 +10,7 @@ function documento_seleccionado(){
 }
 
 function vista_previa_anexo($idanexo,$tipo){
-    switch ($tipo){        
+    switch ($tipo){
         case "pdf":
             $imagen="";
             $ruta="".$idanexo;
@@ -25,7 +25,7 @@ function descargar_anexo($idanexo,$tipo_al=NULL){
 //Recibe el id del anexo y opcinalmente el id del binario para descargar archivos o desde la bd respectivamente
   global $conn;
    if(!$tipo_al){
-   	 // Si no se solicita directamente el origen (BD O ARCHIVO ) se busca en configuracion cual se va a descargar     
+   	 // Si no se solicita directamente el origen (BD O ARCHIVO ) se busca en configuracion cual se va a descargar
      	$config = busca_filtro_tabla("valor","configuracion","nombre='tipo_almacenamiento'","",$conn);
 		if ($config["numcampos"]) {
          $tipo_al=$config[0]['valor'];
@@ -33,7 +33,7 @@ function descargar_anexo($idanexo,$tipo_al=NULL){
          $tipo_al="archivo"; // Si no encuentra el registro en configuracion almacena en archivo
 		}
   }
-  if($tipo_al=="archivo"){   	
+  if($tipo_al=="archivo"){
     $datos=busca_filtro_tabla("","anexos","idanexos=".$idanexo,"",$conn);
 		if (! $datos["numcampos"]) {
        alerta('problema con el archivo anexo');
@@ -56,12 +56,12 @@ function descargar_anexo($idanexo,$tipo_al=NULL){
 	} elseif ($tipo_al == "db") {
    	// almacenamiento binario
    	$anexo=busca_filtro_tabla("ruta","anexos","idanexos='$id'","",$conn);
-    $archivo=busca_filtro_tabla("nombre_original,datos","binario","idbinario=".$anexo[0]["ruta"],"",$conn);
+    $archivo=busca_filtro_tabla("nombre_original,datos","binario","idbinario=".$anexo[0]["idbinario"],"",$conn);
 		$nomb_limpio = ereg_replace("[^A-Za-z0-9._]", "",$archivo[0]['nombre_original']);
 		header("Content-Type: application/force-download");
 		header("Content-Type: application/octet-stream");
 		header("Content-Type: application/download");
-		header("Content-Disposition: attachment; filename=".$nomb_limpio); 	
+		header("Content-Disposition: attachment; filename=".$nomb_limpio);
 		echo $archivo[0]['datos'];
 		exit();
    }
@@ -73,9 +73,9 @@ if($anexos["numcampos"]){
   $idfunc=$_SESSION["usuario_actual"];
   $texto='<table class="table table-bordered">';
   for($i=0;$i<$anexos["numcampos"];$i++){
-    $permisos=func_permiso_anexo($idfunc,$anexos[$i]["idanexos"]);        
+    $permisos=func_permiso_anexo($idfunc,$anexos[$i]["idanexos"]);
     $texto.='<tr><td>';
-    $texto.=$anexos[$i]["etiqueta"].'</td><td>';    
+    $texto.=$anexos[$i]["etiqueta"].'</td><td>';
     if(strpos($permisos,"l")!==false){
 				$mostrar = dirname(__FILE__) . '/../../filesystem/mostrar_binario.php?ruta=';
 				$ruta64 = base64_encode($anexos[$i]["ruta"]);
@@ -85,7 +85,7 @@ if($anexos["numcampos"]){
 				//TODO: En cuales casos se usa? como?
       $texto.='<div enlace="'.PROTOCOLO_CONEXION.RUTA_PDF."/".$anexos[$i]["ruta"].'"><i class="icon-minus-sign"></i></div>';
     }
-    $texto.='</td>';    
+    $texto.='</td>';
     $texto.='</tr>';
   }
   $texto.='</table>';
@@ -105,25 +105,24 @@ function eliminar_anexos($idanexo,$tipo_retorno=1){
 			"exito" => 0
 	);
   $config = busca_filtro_tabla("valor","configuracion","nombre='tipo_almacenamiento'","",$conn);
-  
-  $anexo=busca_filtro_tabla("","anexos","idanexos=".$idanexo,"",$conn);  
-	if ($anexo["numcampos"] > 0) {
-		if ($anexo[0]['idbinario'] != '' && $anexo[0]['idbinario'] != NULL) {// Evita errores si el binario no fue bien almacenado y no se asocio
+
+  $anexo=busca_filtro_tabla("","anexos","idanexos=".$idanexo,"",$conn);
+  if($anexo["numcampos"]>0)
+   if(!empty($anexo[0]['idbinario'])) { // Evita errores si el binario no fue bien almacenado y no se asocio
        $sql1="DELETE FROM binario WHERE idbinario=".$anexo[0]['idbinario'];
-        phpmkr_query($sql1,$conn); 
-		}
-     }  
+        phpmkr_query($sql1,$conn);
+     }
    $file=$ruta_db_superior.$anexo[0]["ruta"];
    $info=busca_filtro_tabla("","anexos","idanexos=".$idanexo,"",$conn);
    $carpeta_eliminados=RUTA_BACKUP_ELIMINADOS.$info[0]["documento_iddocumento"];
    crear_destino($ruta_db_superior.$carpeta_eliminados);
    $nombre=$carpeta_eliminados."/".date("Y-m-d_H_i_s")."_".$info[0]["etiqueta"];
-   
-    if(is_file($file))  
+
+    if(is_file($file))
      rename($file,$ruta_db_superior.$nombre);
-    
-    $sql2="DELETE FROM anexos WHERE idanexos=".$idanexo; 
-    phpmkr_query($sql2,$conn); 
+
+    $sql2="DELETE FROM anexos WHERE idanexos=".$idanexo;
+    phpmkr_query($sql2,$conn);
     $x_detalle= "Identificador: ".$info[0]["idanexos"]." ,Nombre: ".$info[0]["etiqueta"];
 		if($justificacion!=''){
     	$x_detalle.=" , Justificacion: ".$justificacion;
@@ -132,13 +131,13 @@ function eliminar_anexos($idanexo,$tipo_retorno=1){
     }
     $idregistro=registrar_accion_digitalizacion($info[0]["documento_iddocumento"],'ELIMINACION ANEXO',$x_detalle);
     if($idregistro){
-      $retorno["exito"]=1;      
+      $retorno["exito"]=1;
     }
 	if ($tipo_retorno == 1) {
   	echo(json_encode($retorno));
 	} else {
   	return($retorno);
-  }    
+  }
 }
 
 function mostrar_anexo($idanexo){
