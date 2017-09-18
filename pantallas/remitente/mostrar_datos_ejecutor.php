@@ -12,7 +12,7 @@ include_once ($ruta_db_superior . "librerias_saia.php");
 echo(estilo_bootstrap());
 echo(librerias_bootstrap());
 $sKey = @$_GET["idejecutor"];
-$remitente=busca_filtro_tabla("nombre,identificacion,fecha_ingreso","ejecutor","idejecutor=".$sKey,"",$conn);
+$remitente=busca_filtro_tabla("nombre,identificacion,".fecha_db_obtener('fecha_ingreso','Y-m-d')." AS fecha_ingreso","ejecutor","idejecutor=".$sKey,"",$conn);
 ?>
 	<table class="table table-bordered" style="width:50%;margin: 20px">
 		<tr>
