@@ -69,8 +69,9 @@ class StorageUtils {
 	 * @return binary (contenido del archivo)
 	 */
 	public static function get_binary_file($vector_ruta) {
-		// print_r($vector_ruta);die();
-		$tcpdf = @$_REQUEST["tipo"] == 5;
+		//print_r($_REQUEST);die();
+		$pdf = @$_REQUEST["tipo"] == 5;
+		$tipo_pdf=$_REQUEST['tipo_pdf'];
 		$resolver_ruta = static::resolver_ruta($vector_ruta);
 		$ruta = $resolver_ruta['ruta'];
 		$tipo_almacenamiento = $resolver_ruta['clase'];
@@ -97,8 +98,14 @@ class StorageUtils {
 		switch ($type) {
 			case 'image/png' :
 			case 'image/jpeg' :
-				if ($tcpdf) {
+				if($pdf) {
+					if($tipo_pdf=='tcpdf'){
 					$wtf = "@";
+					}
+					if($tipo_pdf=='mpdf'){
+						$wtf = "data:$type;base64,";
+					}
+					
 				} else {
 					$wtf = "data:$type;base64,";
 				}
