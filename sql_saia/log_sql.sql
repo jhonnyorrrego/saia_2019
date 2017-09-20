@@ -905,10 +905,11 @@ UPDATE formato SET cuerpo='<p>{*mostrar_informacion_pqrsf_padre*}</p>
 -- <<FIN>> FORMATO respuesta_pqrsf, ADAPTACION PARA QUE HAGA DISTRIBUCION
 -- ---------------------------------------------------------------- 
 
+-- Indices unicos en funcionario
 ALTER TABLE `funcionario` ADD UNIQUE(`funcionario_codigo`);
 ALTER TABLE `funcionario` ADD UNIQUE(`login`);
 
--- Indices unicos en busquedas
+-- Revision uso de tablas
 ALTER TABLE `busqueda` ADD UNIQUE(`nombre`);
 
 DELETE FROM `busqueda_componente` WHERE `busqueda_componente`.`idbusqueda_componente` = 106;
@@ -940,3 +941,33 @@ UPDATE busqueda_grafico SET nombre=LOWER(REPLACE(nombre, '_en_', '_'));
 UPDATE busqueda_grafico SET nombre=LOWER(REPLACE(nombre, '_el_', '_'));
 UPDATE busqueda_grafico SET nombre=LOWER(REPLACE(nombre, '_la_', '_'));
 ALTER TABLE `busqueda_grafico` CHANGE `nombre` `nombre` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL;
+
+ALTER TABLE `campos_formato` ADD UNIQUE `ix_campos_formato_formato` (`formato_idformato`, `nombre`);
+
+DROP TABLE ` caracteristica`;
+
+DELETE FROM `contador` WHERE `contador`.`idcontador` = 5;
+ALTER TABLE `contador` ADD UNIQUE(`nombre`);
+
+delete from contador where idcontador in (
+SELECT idcontador FROM `contador` c, formato f 
+WHERE c.nombre = f.nombre
+and f.pertenece_nucleo=0);
+
+DROP PROCEDURE `sp_asignar_radicado`;
+
+DELIMITER$$;
+CREATE PROCEDURE `sp_asignar_radicado`(IN `iddoc` INT, IN `tipo` INT, IN `funcionario` INT)
+BEGIN
+DECLARE valor VARCHAR(50);
+DECLARE idevento INT;
+DECLARE sentencia VARCHAR(2000);
+SELECT consecutivo INTO valor FROM contador WHERE idcontador=tipo;
+UPDATE documento SET numero=valor WHERE iddocumento=iddoc;
+UPDATE contador SET consecutivo=consecutivo+1 WHERE idcontador=tipo;
+set sentencia = concat('UPDATE documento SET numero=valor WHERE iddocumento=',iddoc);
+INSERT INTO evento(funcionario_codigo, fecha, evento, tabla_e, registro_id, estado, codigo_sql, detalle) VALUES(funcionario, CURRENT_TIMESTAMP, 'MODIFICAR', 'documento', valor, 0,sentencia,null);
+set sentencia = concat('UPDATE contador SET consecutivo=consecutivo+1 WHERE idcontador=',tipo);
+INSERT INTO evento(funcionario_codigo, fecha, evento, tabla_e, registro_id, estado, codigo_sql, detalle) VALUES(funcionario, CURRENT_TIMESTAMP, 'MODIFICAR', 'contador', valor+1, 0,sentencia,null);
+END$$
+DELIMITER ;

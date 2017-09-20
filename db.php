@@ -211,19 +211,19 @@ return($tabla);
 <Post-condiciones><Post-condiciones>
 </Clase>  */
 function listar_campos_tabla($tabla=NULL,$tipo_retorno=0)
-  {global $conn;   
+  {global $conn;
   	if($tabla==NULL)
       $tabla=$_REQUEST["tabla"];
    if(MOTOR=="MySql"){
       $datos_tabla=$conn->Ejecutar_Sql("DESCRIBE ".$tabla);
 	   while($fila=phpmkr_fetch_array($datos_tabla)){// print_r($fila);
         if($tipo_retorno){
-            $lista_campos[]=array_map(strtolower,$fila);    
-        }   
+            $lista_campos[]=array_map(strtolower,$fila);
+        }
         else{
             $lista_campos[]=strtolower($fila[0]);
        }
-      }   
+      }
    		return($lista_campos);
     }
    else if(MOTOR=="Oracle"){
@@ -231,18 +231,18 @@ function listar_campos_tabla($tabla=NULL,$tipo_retorno=0)
 	      $lista_campos=array();
 	  	  while($fila=phpmkr_fetch_array($datos_tabla)) {
 			  if($tipo_retorno){
-                    $lista_campos[]=array_map(strtolower,$fila);    
-                }   
+                    $lista_campos[]=array_map(strtolower,$fila);
+                }
                 else{
                     $lista_campos[]=strtolower($fila[0]);
                }
 	      }
-	   	  return($lista_campos);  
+	   	  return($lista_campos);
 	  }
 	  else{
 	   	return($conn->Busca_Tabla());
 	  }
-  } 
+  }
 /*
 <Clase>
 <Nombre>guardar_lob</Nombre>
@@ -264,23 +264,23 @@ function guardar_lob($campo,$tabla,$condicion,$contenido,$tipo,$conn,$log=1){
     OCIExecute($stmt, OCI_DEFAULT) or print_r(OCIError ($stmt));
     // Fetch the SELECTed row
     OCIFetchInto($stmt,$row,OCI_ASSOC);
-    
+
 	if(!count($row)){  //soluciona el problema del size() & ya no se necesita el emty_clob() en bd en los campos clob NULL, los campos obligatorios siguen dependendiendo de empty_clob() como valor predeterminado.
 		oci_rollback($conn->Conn->conn);
 		oci_free_statement($stmt);
 		$clob_blob='clob';
 		if($tipo=='archivo'){
 			$clob_blob='blob';
-		}		
+		}
     	$up_clob="UPDATE ".$tabla." SET ".$campo."=empty_".$clob_blob."() WHERE ".$condicion;
 		$conn->Ejecutar_Sql($up_clob);
 	    $stmt = OCIParse($conn->Conn->conn, $sql) or print_r(OCIError ($stmt));
 	    // Execute the statement using OCI_DEFAULT (begin a transaction)
 	    OCIExecute($stmt, OCI_DEFAULT) or print_r(OCIError ($stmt));
 	    // Fetch the SELECTed row
-	    OCIFetchInto($stmt,$row,OCI_ASSOC);		
-	}    
-    
+	    OCIFetchInto($stmt,$row,OCI_ASSOC);
+	}
+
     if(FALSE ===$row){
       OCIRollback($conn->Conn->conn);
       alerta("No se pudo modificar el campo.");
@@ -2084,10 +2084,13 @@ global $conn;
 function contador($iddocumento,$cad){
 global $sql, $conn;
 	$contador=busca_filtro_tabla("","contador a","a.nombre='".$cad."'","",$conn);
+
+	$func = usuario_actual("funcionario_codigo");
+
 	if(MOTOR=="MySql" || MOTOR=="Oracle"){
-		$strsql="CALL sp_asignar_radicado(".$iddocumento.",".$contador[0]["idcontador"].")";
-	}elseif(MOTOR=="SqlServer" || MOTOR=="MSSql"){
-		$strsql="EXEC sp_asignar_radicado @iddoc=".$iddocumento.", @idcontador=".$contador[0]["idcontador"].";";
+		$strsql="CALL sp_asignar_radicado($iddocumento," . $contador[0]["idcontador"] . ", $func)";
+	} elseif(MOTOR=="SqlServer" || MOTOR=="MSSql") {
+		$strsql="EXEC sp_asignar_radicado @iddoc=" . $iddocumento . ", @idcontador=".$contador[0]["idcontador"] . "@funcionario=$func;";
 	}
   ejecuta_sql($strsql);
 }
@@ -3251,7 +3254,7 @@ function fecha_db_almacenar($fecha, $formato = NULL)
 
   if($conn->motor=="Oracle")
     {
-    		
+
     	$mystring = $fecha;
 		$findme   = 'TO_DATE';
 		$pos = strpos($mystring, $findme);
@@ -3273,7 +3276,7 @@ function fecha_db_almacenar($fecha, $formato = NULL)
 		}ELSE{
 			$fsql=$fecha;
 		}
-		
+
  	 }
    	elseif($conn->motor=="MySql")
     	 {  //TO_DATE(TO_CHAR(sysdate,'dd/mm/yyyy '))
@@ -3296,7 +3299,7 @@ function fecha_db_almacenar($fecha, $formato = NULL)
     	 	$fsql="DATE_FORMAT('$fecha','$resfecha')";
 		}else{
 			$fsql=$fecha;
-		}	
+		}
     	 }
   elseif($conn->motor=="SqlServer"||$conn->motor=="MSSql"){
       //solo se relacionan los principales si se requiere de cualquier otro se debe adicionar al switch
@@ -4100,7 +4103,7 @@ function concatenar_cadena_sql($arreglo_cadena){
     break;
     case 'Oracle':
 	    return(implode("||",$arreglo_cadena));
-		break;    
+		break;
     default:
       if(@$arreglo_cadena[($i+1)]==""){
         return($arreglo_cadena[0]);
