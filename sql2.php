@@ -341,6 +341,8 @@ abstract class SQL2 {
 
 	public abstract function compara_fechas($fecha_control, $fecha_inicial);
 
+	public abstract function invocar_radicar_documento($iddocumento, $idcontador, $funcionario);
+
 	protected function ejecuta_filtro_tabla($sql2) {
 		$retorno = array();
 		$rs = $this->Ejecutar_Sql($sql2); // or alerta("Error en Busqueda de Proceso SQL: $sql2");

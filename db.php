@@ -1940,15 +1940,11 @@ global $conn;
 <Pre-condiciones>
 <Post-condiciones>
 */
-function contador($iddocumento,$cad){
-global $sql, $conn;
+function contador($iddocumento,$cad) {
+	global $conn;
+	$func = usuario_actual("funcionario_codigo");
 	$contador=busca_filtro_tabla("","contador a","a.nombre='".$cad."'","",$conn);
-	if(MOTOR=="MySql" || MOTOR=="Oracle"){
-		$strsql="CALL sp_asignar_radicado(".$iddocumento.",".$contador[0]["idcontador"].")";
-	}elseif(MOTOR=="SqlServer" || MOTOR=="MSSql"){
-		$strsql="EXEC sp_asignar_radicado @iddoc=".$iddocumento.", @idcontador=".$contador[0]["idcontador"].";";
-	}
-  ejecuta_sql($strsql);
+	$conn->invocar_radicar_documento($iddocumento, $contador[0]["idcontador"], $func);
 }
 
 /*

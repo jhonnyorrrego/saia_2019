@@ -448,6 +448,11 @@ class SqlSqlServer extends SQL2 {
 		return ($resultado);
 	}
 
+	function invocar_radicar_documento($iddocumento, $idcontador, $funcionario) {
+		$strsql="EXEC sp_asignar_radicado @iddoc=$iddocumento, @idcontador=$idcontador, @idfuncionario=$funcionario;";
+		$this->Ejecutar_Sql($sql);
+	}
+
 	function listar_campos_tabla($tabla = NULL, $tipo_retorno = 0) {
 		return ($this->Busca_Tabla());
 	}

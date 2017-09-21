@@ -468,6 +468,11 @@ class SqlOracle extends SQL2 {
 		return ($resultado);
 	}
 
+	function invocar_radicar_documento($iddocumento, $idcontador, $funcionario) {
+		$strsql="CALL sp_asignar_radicado($iddocumento, $idcontador, $funcionario)";
+		$this->Ejecutar_Sql($sql);
+	}
+
 	function listar_campos_tabla($tabla = NULL, $tipo_retorno = 0) {
 		if ($tabla == NULL)
 			$tabla = $_REQUEST["tabla"];
