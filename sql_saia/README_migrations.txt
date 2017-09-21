@@ -1,9 +1,11 @@
-Editar/Crear el archivo migrations.yml con los siguientes datos
+En las carpetas migracioes_[my|ora|mssql|pg] Editar/Crear el archivo migrations.yml con los siguientes datos
 
 name: Migrations
 migrations_namespace: Migrations
 table_name: migrations
 migrations_directory: migrations
+
+En las carpetas migracioes_[my|ora|mssql|pg] Editar/Crear el archivo migrations.yml con los siguientes datos
 
 Editar/Crear el archivo migrations-db.php con los datos de conexión a bdd
 <?php
@@ -15,8 +17,8 @@ return [
     'driver' => 'pdo_mysql',
 ];
 
-Desde esta carpeta  (sql_saia) ejecutar
-../vendor/bin/doctrine-migrations migrations:generate
+Desde la carpeta migracioes_[my|ora|mssql|pg] (migracioes_my) ejecutar
+../../vendor/bin/doctrine-migrations migrations:generate
 
 Se creará en la carpeta migrations un archivo Version<fecha_actual_con_hora>.php
 
@@ -28,4 +30,15 @@ Una vez modificada la clase que se genera, se debe ejecutar
 ../vendor/bin/doctrine-migrations migrations:migrate 
 
 Opcionalmente se puede pasar el parámetro --write-sql para generar un .sql de las sentencias ejecutadas.
+
+
+Resumen:
+
+1. Use el command de consolo para generar la migraciion (/ruta_saia/vendor/bin/doctrine-migrations migrations:generate)
+2. Modifique la migracion para modificar la estructura de la base de datos (tablas, campos, etc).
+3. Use el metodo postUp para modificar los datos (insert, update)
+4. Haga todos los drop al final del metodo postUp
+5. Si es posible ejecute consultas SQL simples para migrar los datos
+   Si un simple SQL no puede hacer el trabajo, use PHP dentro del metodo postUp ejecutando consultas con Doctrine\DBAL\Connection ($this->connection)
+6. Ejecute las migraciones (/ruta_saia/vendor/bin/doctrine-migrations migrations:migrate)
 

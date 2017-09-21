@@ -20,6 +20,7 @@ class Version20170915184511 extends AbstractMigration {
 		$this->abortIf($this->connection->getDatabasePlatform()->getName() != "mysql", "La migration solo puede ser ejecutada con seguridad en 'mysql'.");
 
 		//$this->addSql('ALTER TABLE person ADD title VARCHAR(255) DEFAULT NULL');
+		//$this->addIndex( 'table_name', 'index_name', $options );
 
 		$this->platform->registerDoctrineTypeMapping('enum', 'string');
 

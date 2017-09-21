@@ -970,3 +970,6 @@ set sentencia = concat('UPDATE contador SET consecutivo=', valor+1, ' WHERE idco
 INSERT INTO evento(funcionario_codigo, fecha, evento, tabla_e, registro_id, estado, codigo_sql, detalle) VALUES(funcionario, CURRENT_TIMESTAMP, 'MODIFICAR', 'contador', valor+1, 0,sentencia,null);
 END$$
 DELIMITER ;
+
+drop table if exists(correo_usuario);
+drop table if exists(dependencia2);
