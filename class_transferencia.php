@@ -2196,6 +2196,7 @@ global $conn;
 			$ruta_def .= "&idddoc=" . $_POST["iddoc"];
 	}
 	abrir_url($ruta_def, "centro");
+}
 
 /*
 <Clase>
