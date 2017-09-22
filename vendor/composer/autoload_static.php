@@ -44,6 +44,10 @@ class ComposerStaticInit718f03846feaff3d4705b9006384fb76
             'Psr\\Container\\' => 14,
             'Psr\\Cache\\' => 10,
         ),
+        'F' => 
+        array (
+            'Firebase\\JWT\\' => 13,
+        ),
         'D' => 
         array (
             'Doctrine\\DBAL\\Migrations\\' => 25,
@@ -148,6 +152,10 @@ class ComposerStaticInit718f03846feaff3d4705b9006384fb76
         'Psr\\Cache\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/cache/src',
+        ),
+        'Firebase\\JWT\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/firebase/php-jwt/src',
         ),
         'Doctrine\\DBAL\\Migrations\\' => 
         array (
