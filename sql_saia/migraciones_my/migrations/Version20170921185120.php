@@ -69,7 +69,7 @@ class Version20170921185120 extends AbstractMigration {
 
 		$table = $schema->getTable('busqueda_grafico');
 		if(!$table->hasColumn("nombre")) {
-			$this->addSql("ALTER TABLE busqueda_grafico ADD nombre VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL");
+			$this->connection->exec("ALTER TABLE busqueda_grafico ADD nombre VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL");
 		}
 
 		$table = $schema->getTable('campos_formato');
@@ -95,7 +95,7 @@ class Version20170921185120 extends AbstractMigration {
 		}
 
 		$result = $this->connection->fetchAssoc("SHOW PROCEDURE STATUS like '%" . $schema->getName() . ".sp_asignar_radicado'");
-		if(!$result) {
+		if($result) {
 			$this->addSql("DROP PROCEDURE " . $schema->getName() . ".sp_asignar_radicado");
 		}
 	}

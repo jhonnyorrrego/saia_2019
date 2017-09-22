@@ -1,6 +1,6 @@
 <?php
 return [
-    'dbname' => 'saia_release1',
+    'dbname' => 'saia_elastic_local',
     'user' => 'saia',
     'password' => 'cerok_saia',
     'host' => 'localhost',
