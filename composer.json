@@ -1,6 +1,6 @@
 {
     "require": {
-        "luracast/restler": "*"
+        "luracast/restler": "*",
+        "doctrine/doctrine-migrations-bundle": "*"
     }
 }
-
