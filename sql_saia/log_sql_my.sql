@@ -910,6 +910,8 @@ ALTER TABLE `funcionario` ADD UNIQUE(`funcionario_codigo`);
 ALTER TABLE `funcionario` ADD UNIQUE(`login`);
 
 -- Revision uso de tablas
+
+-- INICIO MIGRACION Version20170921185120.php
 ALTER TABLE `busqueda` ADD UNIQUE(`nombre`);
 
 DELETE FROM `busqueda_componente` WHERE `busqueda_componente`.`idbusqueda_componente` = 106;
@@ -973,3 +975,5 @@ DELIMITER ;
 
 drop table if exists(correo_usuario);
 drop table if exists(dependencia2);
+
+-- FIN MIGRACION Version20170921185120.php

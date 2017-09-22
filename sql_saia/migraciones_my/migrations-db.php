@@ -5,4 +5,5 @@ return [
     'password' => 'cerok_saia',
     'host' => 'localhost',
     'driver' => 'pdo_mysql',
+	'port' => '3306'
 ];
