@@ -1,6 +1,7 @@
 {
 	"require" : {
-		"luracast/restler" : "*",
+        "luracast/restler": "*",
+        "doctrine/doctrine-migrations-bundle": "*",
 		"danielstjules/stringy" : "~2.3",
 		"knplabs/gaufrette" : "^0.3.1",
 		"imagine/imagine" : "~0.5.0",
