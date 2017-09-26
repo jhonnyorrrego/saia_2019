@@ -105,7 +105,7 @@ class StorageUtils {
 					if($tipo_pdf=='mpdf'){
 						$wtf = "data:$type;base64,";
 					}
-					
+
 				} else {
 					$wtf = "data:$type;base64,";
 				}
@@ -272,9 +272,20 @@ class StorageUtils {
 			$ruta_srv = $ruta_servidor;
 		} else {
 			$prefijo_servidor = "";
-			if($str_ruta->startsWith(StorageUtils::SEPARADOR)) {
-				$prefijo_servidor = StorageUtils::SEPARADOR;
+			//Tener en cuenta la letra de la unidad si esta en la raiz
+			if (SO == "Windows") {
+				if (preg_match("/^([a-zA-Z]:)/", $str_ruta, $unidad)) {
+					$str_ruta = String::create(preg_replace("/^[a-zA-Z]:/", '', $str_ruta));
+					if ($str_ruta->startsWith(StorageUtils::SEPARADOR)) {
+						$prefijo_servidor = $unidad[0] . StorageUtils::SEPARADOR;
+					}
+				}
+			} else {
+				if ($str_ruta->startsWith(StorageUtils::SEPARADOR)) {
+					$prefijo_servidor = StorageUtils::SEPARADOR;
+				}
 			}
+
 			$ruta_srv = String::create($rutas[0])->prepend($prefijo_servidor)->prepend($storage_type);
 			if(count($rutas) > 1) {
 				unset($rutas[0]);
