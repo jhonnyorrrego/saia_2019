@@ -977,3 +977,32 @@ drop table if exists(correo_usuario);
 drop table if exists(dependencia2);
 
 -- FIN MIGRACION Version20170921185120.php
+
+-- INICIO MIGRACION Version20170926223831.php
+INSERT INTO busqueda
+(idbusqueda, nombre, etiqueta, estado, ancho, campos, llave, tablas, ruta_libreria, ruta_libreria_pantalla, cantidad_registros, tiempo_refrescar, ruta_visualizacion, tipo_busqueda, badge_cantidades)
+VALUES(114, 'hallazgos2', 'Hallazgos', 1, 200, 'fecha,numero,descripcion', 'iddocumento', 'documento a,ft_hallazgo b', 'pantallas/hallazgos/librerias_hallazgos.php', 'pantallas/hallazgos/adicionales_js.php', 20, 500, 'pantallas/busquedas/consulta_busqueda_reporte.php', 2, NULL);
+INSERT INTO busqueda
+(idbusqueda, nombre, etiqueta, estado, ancho, campos, llave, tablas, ruta_libreria, ruta_libreria_pantalla, cantidad_registros, tiempo_refrescar, ruta_visualizacion, tipo_busqueda, badge_cantidades)
+VALUES(113, 'planes_mejoramiento1', 'Planes Mejoramiento', 1, 200, 'numero,fecha,descripcion', 'iddocumento', 'documento A,ft_plan_mejoramiento B', 'pantallas/planes_mejoramiento/librerias_planes_mejoramiento.php', 'pantallas/planes_mejoramiento/adicionales_js.php', 20, 500, 'pantallas/busquedas/consulta_busqueda_reporte.php', 2, NULL);
+
+INSERT INTO busqueda_componente
+(idbusqueda_componente, busqueda_idbusqueda, tipo, conector, url, etiqueta, nombre, orden, info, exportar, exportar_encabezado, encabezado_componente, estado, ancho, cargar, campos_adicionales, tablas_adicionales, ordenado_por, direccion, agrupado_por, busqueda_avanzada, acciones_seleccionados, modulo_idmodulo, menu_busqueda_superior, enlace_adicionar, encabezado_grillas)
+VALUES(318, 113, 3, 2, 'pantallas/busquedas/consulta_busqueda_reporte.php', 'Planes Mejoramiento', 'planes_mejoramiento1', 1, 'Documento Numero|{*numero*}|center|-|Documento Fecha|{*fecha*}|center|-|Documento Descripcion|{*descripcion*}|center', NULL, NULL, NULL, 2, 320, 2, NULL, NULL, 'ORDER BY fecha', 'desc', NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO busqueda_componente
+(idbusqueda_componente, busqueda_idbusqueda, tipo, conector, url, etiqueta, nombre, orden, info, exportar, exportar_encabezado, encabezado_componente, estado, ancho, cargar, campos_adicionales, tablas_adicionales, ordenado_por, direccion, agrupado_por, busqueda_avanzada, acciones_seleccionados, modulo_idmodulo, menu_busqueda_superior, enlace_adicionar, encabezado_grillas)
+VALUES(319, 114, 3, 2, 'pantallas/busquedas/consulta_busqueda_reporte.php', 'Hallazgos', 'hallazgos2', 1, 'Documento Fecha|{*fecha*}|center|-|Documento Numero|{*numero*}|center|-|Documento Descripcion|{*descripcion*}|center', NULL, NULL, NULL, 2, 320, 2, NULL, NULL, 'ORDER BY documento__fecha', 'desc', NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+
+INSERT INTO busqueda_condicion
+(idbusqueda_condicion, busqueda_idbusqueda, fk_busqueda_componente, codigo_where, etiqueta_condicion)
+VALUES(243, NULL, 318, 'A.estado<>''ELIMINADO'' and documento_iddocumento=iddocumento {*tipo_plan*} {*filtro*}', 'condicion_planes_mejoramiento1');
+INSERT INTO busqueda_condicion
+(idbusqueda_condicion, busqueda_idbusqueda, fk_busqueda_componente, codigo_where, etiqueta_condicion)
+VALUES(244, NULL, 319, 'b.documento_iddocumento=a.iddocumento {*codigo_sql*}', 'condicion_hallazgos2');
+
+
+drop table if exists(campos);
+
+drop table if exists(busquedas);
+
+-- FIN MIGRACION Version20170926223831.php
