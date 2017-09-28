@@ -8,6 +8,7 @@ use Gaufrette\Filesystem;
 use Aws\S3\S3Client;
 use Gaufrette\Adapter\AwsS3 as AwsS3Adapter;
 use Gaufrette\Adapter\GoogleCloudStorage;
+use Gaufrette\Adapter\Ftp as FtpAdapter;
 
 use Stringy\Stringy as String;
 use Stringy\StaticStringy as StringUtils;
@@ -92,6 +93,18 @@ class SaiaStorage {
 				]);
 				$path = $path->removeRight(StorageUtils::SEPARADOR);
 				$this->adapter = new AwsS3Adapter($s3client, $path);
+				break;
+			case StorageUtils::FTP:
+				$this->adapter = new FtpAdapter('/media', 'my.host.com', array(
+				'port'     => 21,
+				'username' => 'my_username',
+				'password' => 'my_password',
+				'passive'  => true,
+				'create'   => true, // Whether to create the remote directory if it does not exist
+				'mode'     => FTP_BINARY, // Or FTP_TEXT
+				'ssl'      => true,
+				));
+
 				break;
 			default:
 					$this->adapter = new Local($path, true, 0777);

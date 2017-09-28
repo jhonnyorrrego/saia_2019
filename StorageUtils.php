@@ -24,6 +24,7 @@ class StorageUtils {
 	const NETWORK = 'net://';
 	const GOOGLE = 'gc://';
 	const S3 = 's3://';
+	const FTP = 'ftp://';
 
 	const SEPARADOR = "/"; //DIRECTORY_SEPARATOR
 

@@ -3294,5 +3294,35 @@
             "migrations",
             "schema"
         ]
+    },
+    {
+        "name": "gaufrette/ftp-adapter",
+        "version": "v0.4.0",
+        "version_normalized": "0.4.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/Gaufrette/ftp-adapter.git",
+            "reference": "2444c68d609c8755c0120c565c25ea7bc822b8c2"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/Gaufrette/ftp-adapter/zipball/2444c68d609c8755c0120c565c25ea7bc822b8c2",
+            "reference": "2444c68d609c8755c0120c565c25ea7bc822b8c2",
+            "shasum": ""
+        },
+        "require": {
+            "ext-ftp": "*",
+            "knplabs/gaufrette": "~0.3"
+        },
+        "time": "2017-06-17T16:27:56+00:00",
+        "type": "metapackage",
+        "notification-url": "https://packagist.org/downloads/",
+        "authors": [
+            {
+                "name": "KnpLabs",
+                "email": "hello@knplabs.com"
+            }
+        ],
+        "description": "FTP adapter for Gaufrette"
     }
 ]
