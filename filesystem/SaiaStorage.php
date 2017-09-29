@@ -19,6 +19,7 @@ class SaiaStorage {
 	private $adapter;
 	private $filesystem;
 	private $ruta_servidor;
+	private $opciones_ftp;
 
 	public function __construct($tipo=null) {
 		$this->tipo = $tipo;
@@ -64,7 +65,9 @@ class SaiaStorage {
 		$str_path = String::create($server_path);
 		$storage_type = $str_path->first($str_path->indexOf("://"))->ensureRight("://");
 
-		$ruta_resuelta = StorageUtils::parsear_ruta_servidor($server_path);
+		if(StorageUtils::FTP != $storage_type) {
+			$ruta_resuelta = StorageUtils::parsear_ruta_servidor($server_path);
+		}
 		//$path = $str_path->removeLeft($storage_type);
 		$path = String::create($ruta_resuelta["servidor"])->removeLeft($storage_type);
 		//print_r($path);die();
@@ -95,16 +98,25 @@ class SaiaStorage {
 				$this->adapter = new AwsS3Adapter($s3client, $path);
 				break;
 			case StorageUtils::FTP:
-				$this->adapter = new FtpAdapter('/media', 'my.host.com', array(
-				'port'     => 21,
-				'username' => 'my_username',
-				'password' => 'my_password',
-				'passive'  => true,
-				'create'   => true, // Whether to create the remote directory if it does not exist
-				'mode'     => FTP_BINARY, // Or FTP_TEXT
-				'ssl'      => true,
-				));
-
+				if(empty($this->opciones_ftp)) {
+					throw new \Exception("No ha definido las opciones para FTP");
+				}
+				$datos_ftp = parse_url($server_path);
+				if(empty($datos_ftp["path"]) || empty($datos_ftp["host"])) {
+					throw new \Exception("No ha definido las opciones para FTP");
+				}
+				//$datos_ftp["scheme"]; // ftp
+				if (!empty($datos_ftp["user"])) {
+					$this->opciones_ftp['username'] = $datos_ftp["user"];
+				}
+				if (!empty($datos_ftp["pass"])) {
+					$this->opciones_ftp['password'] = $datos_ftp["pass"];
+				}
+				if (!empty($datos_ftp["port"])) {
+					$this->opciones_ftp['port'] = $datos_ftp["port"];
+				}
+				$this->adapter = new FtpAdapter($datos_ftp["path"], $datos_ftp["host"], $this->opciones_ftp);
+				$ruta_resuelta["servidor"] = $datos_ftp["scheme"] . "://" . $datos_ftp["host"] . "/" . $datos_ftp["path"];
 				break;
 			default:
 					$this->adapter = new Local($path, true, 0777);
@@ -263,5 +275,9 @@ class SaiaStorage {
 				'acl' => 'public'
 		), true);
 		return $adapter;
+	}
+
+	public function set_opciones_ftp($opciones_ftp) {
+		$this->opciones_ftp = $opciones_ftp;
 	}
 }
