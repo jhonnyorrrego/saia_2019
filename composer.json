@@ -2,6 +2,7 @@
     "require": {
         "luracast/restler": "*",
 	"doctrine/doctrine-migrations-bundle": "*",
-        "firebase/php-jwt": "^5.0"
+        "firebase/php-jwt": "^5.0",
+        "phpoffice/phpword": "^0.13.0"
     }
 }
