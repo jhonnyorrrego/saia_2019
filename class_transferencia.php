@@ -2364,6 +2364,7 @@ function guardar_documento($iddoc, $tipo=0) {
 						break;
 					case "archivo":
 						array_push($larchivos, $lcampos[$j]["idcampos_formato"]);
+						$_REQUEST[$lcampos[$j]["nombre"]] = 0;
 						break;
 					case "fecha":
 						if(@$_REQUEST["asig_" . $lcampos[$j]["nombre"]] && $_REQUEST["asig_" . $lcampos[$j]["nombre"]] != "") {
