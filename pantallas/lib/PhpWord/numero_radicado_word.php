@@ -3,14 +3,17 @@
 // POSTERIOR AL APROBAR, se debe definir la variable ruta_db_superior desde donde se hace el llamado.
 include_once ($ruta_db_superior . "pantallas/lib/PhpWord/funciones_include.php");
 // require_once($ruta_db_superior.'pantallas/lib/PHPWord/src/PhpWord/Autoloader.php');
-require_once ($ruta_db_superior . 'pantallas/lib/PhpWord/Autoloader.php');
+require_once ($ruta_db_superior . 'vendor/autoload.php');
+
+require_once 'SaiaTemplateProcessor.php';
+
 date_default_timezone_set('UTC');
 
 /**
  * Header file
  */
-use PhpOffice\PhpWord\Autoloader;
 use PhpOffice\PhpWord\Settings;
+use PhpOffice\PhpWord\SaiaTemplateProcessor;
 
 error_reporting(E_ALL);
 
@@ -20,9 +23,6 @@ if (!defined('CLI')) {
 	define('SCRIPT_FILENAME', basename($_SERVER['SCRIPT_FILENAME'], '.php'));
 	define('IS_INDEX', SCRIPT_FILENAME == 'index');
 }
-
-Autoloader::register();
-Settings::loadConfig();
 
 // Return to the caller script when runs by CLI
 if (CLI) {
@@ -71,7 +71,7 @@ if (@$anexo_csv['numcampos']) {
 
 if (file_exists($ruta_docx . 'documento_word.docx')) {
 
-	$templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor($ruta_docx . 'documento_word.docx');
+	$templateProcessor = new SaiaTemplateProcessor($ruta_docx . 'documento_word.docx');
 
 	$campos_word = $templateProcessor->getVariables();
 
