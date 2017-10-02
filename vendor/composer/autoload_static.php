@@ -14,7 +14,10 @@ class ComposerStaticInit718f03846feaff3d4705b9006384fb76
     public static $prefixLengthsPsr4 = array (
         'Z' => 
         array (
+            'Zend\\Validator\\' => 15,
+            'Zend\\Stdlib\\' => 12,
             'Zend\\EventManager\\' => 18,
+            'Zend\\Escaper\\' => 13,
             'Zend\\Code\\' => 10,
         ),
         'S' => 
@@ -43,6 +46,8 @@ class ComposerStaticInit718f03846feaff3d4705b9006384fb76
             'Psr\\Log\\' => 8,
             'Psr\\Container\\' => 14,
             'Psr\\Cache\\' => 10,
+            'PhpOffice\\PhpWord\\' => 18,
+            'PhpOffice\\Common\\' => 17,
         ),
         'F' => 
         array (
@@ -61,9 +66,21 @@ class ComposerStaticInit718f03846feaff3d4705b9006384fb76
     );
 
     public static $prefixDirsPsr4 = array (
+        'Zend\\Validator\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/zendframework/zend-validator/src',
+        ),
+        'Zend\\Stdlib\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/zendframework/zend-stdlib/src',
+        ),
         'Zend\\EventManager\\' => 
         array (
             0 => __DIR__ . '/..' . '/zendframework/zend-eventmanager/src',
+        ),
+        'Zend\\Escaper\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/zendframework/zend-escaper/src',
         ),
         'Zend\\Code\\' => 
         array (
@@ -153,6 +170,14 @@ class ComposerStaticInit718f03846feaff3d4705b9006384fb76
         array (
             0 => __DIR__ . '/..' . '/psr/cache/src',
         ),
+        'PhpOffice\\PhpWord\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/phpoffice/phpword/src/PhpWord',
+        ),
+        'PhpOffice\\Common\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/phpoffice/common/src/Common',
+        ),
         'Firebase\\JWT\\' => 
         array (
             0 => __DIR__ . '/..' . '/firebase/php-jwt/src',
@@ -224,6 +249,7 @@ class ComposerStaticInit718f03846feaff3d4705b9006384fb76
     );
 
     public static $classMap = array (
+        'PclZip' => __DIR__ . '/..' . '/pclzip/pclzip/pclzip.lib.php',
         'SqlFormatter' => __DIR__ . '/..' . '/jdorn/sql-formatter/lib/SqlFormatter.php',
     );
 
