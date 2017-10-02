@@ -69,7 +69,7 @@ function mostrar_datos_dependencias_ruta($idformato,$iddoc){
 						</tr>
 			';
 				
-				$item=busca_filtro_tabla("","ft_dependencias_ruta A, ft_ruta_distribucion B","idft_ruta_distribucion=ft_ruta_distribucion and A.ft_ruta_distribucion=".$dato[0]['idft_ruta_distribucion'],"",$conn);					
+			$item=busca_filtro_tabla(fecha_db_obtener("fecha_item_dependenc","Y-m-d H:i:s")." AS fecha_item_dependenc,dependencia_asignada,descripcion_dependen,estado_dependencia","ft_dependencias_ruta A, ft_ruta_distribucion B","idft_ruta_distribucion=ft_ruta_distribucion and A.ft_ruta_distribucion=".$dato[0]['idft_ruta_distribucion'],"",$conn);					
 			
 
 			if($item['numcampos']!=0){
@@ -192,7 +192,7 @@ function mostrar_datos_funcionarios_ruta($idformato,$iddoc){
 						</tr>
 			';
 				
-				$item=busca_filtro_tabla("","ft_funcionarios_ruta A, ft_ruta_distribucion B","idft_ruta_distribucion=ft_ruta_distribucion and A.ft_ruta_distribucion=".$dato[0]['idft_ruta_distribucion'],"",$conn);					
+				$item=busca_filtro_tabla(fecha_db_obtener("fecha_mensajero","Y-m-d H:i:s")." AS fecha_mensajero,mensajero_ruta,estado_mensajero,idft_funcionarios_ruta","ft_funcionarios_ruta A, ft_ruta_distribucion B","idft_ruta_distribucion=ft_ruta_distribucion and A.ft_ruta_distribucion=".$dato[0]['idft_ruta_distribucion'],"",$conn);					
 			
 
 			if($item['numcampos']!=0){
