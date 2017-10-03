@@ -70,7 +70,7 @@ function mostrar_seleccionados_entrega($idformato,$iddoc){
 	}	
 	
 	
-	$registros=busca_filtro_tabla("b.descripcion,a.tipo_origen,a.estado_recogida,a.numero_distribucion,a.fecha_creacion,a.origen,a.tipo_origen,a.destino,a.tipo_destino","distribucion a,documento b","a.documento_iddocumento=b.iddocumento AND a.iddistribucion in(".$cadena_items_seleccionados.")","",$conn);
+	$registros=busca_filtro_tabla(fecha_db_obtener("a.fecha_creacion","Y-m-d")." as fecha_creacion,b.descripcion,a.tipo_origen,a.estado_recogida,a.numero_distribucion,a.origen,a.tipo_origen,a.destino,a.tipo_destino","distribucion a,documento b","a.documento_iddocumento=b.iddocumento AND a.iddistribucion in(".$cadena_items_seleccionados.")","",$conn);
 	
 	$texto.=reporte_entradas2($idformato,$iddoc);
 	echo($texto);
@@ -82,7 +82,7 @@ function generar_pdf_entrega($idformato,$iddoc){
 	$iddestino_radicacion=explode(",",$seleccionado[0]['iddestino_radicacion']);
 	$cont=count($iddestino_radicacion);
 	for($i=0;$i<$cont;$i++){
-	    $insert="INSERT INTO ft_item_despacho_ingres(idft_item_despacho_ingres,ft_destino_radicacio,ft_despacho_ingresados,serie_idserie) VALUES (NULL, '".$iddestino_radicacion[$i]."', '".$seleccionado[0]['idft_despacho_ingresados']."',".$seleccionado[0]['serie_idserie'].")";
+	    $insert="INSERT INTO ft_item_despacho_ingres(ft_destino_radicacio,ft_despacho_ingresados,serie_idserie) VALUES ('".$iddestino_radicacion[$i]."', '".$seleccionado[0]['idft_despacho_ingresados']."',".$seleccionado[0]['serie_idserie'].")";
 	    phpmkr_query($insert);
 	    $update="UPDATE distribucion SET estado_distribucion=2 WHERE iddistribucion=".$iddestino_radicacion[$i];
         phpmkr_query($update);
