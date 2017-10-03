@@ -110,7 +110,7 @@ echo(librerias_jquery('1.7'));
 			            	ejecutar_accion:'finalizar_distribucion'
 			            },
 			            success: function(datos){
-			            	top.noty({text: 'distribuci&oacute;nes finalizadas satisfactoriamente!',type: 'success',layout: "topCenter",timeout:3500});
+			            	top.noty({text: 'Distribuciones finalizadas satisfactoriamente!',type: 'success',layout: "topCenter",timeout:3500});
 			                window.location.reload();
 			        	}
 			    	});					
@@ -141,7 +141,7 @@ echo(librerias_jquery('1.7'));
 			            	ejecutar_accion:'confirmar_recepcion_distribucion'
 			            },
 			            success: function(datos){
-			            	top.noty({text: 'distribuci&oacute;nes confirmadas satisfactoriamente!',type: 'success',layout: "topCenter",timeout:3500});
+			            	top.noty({text: 'Distribuciones confirmadas satisfactoriamente!',type: 'success',layout: "topCenter",timeout:3500});
 			                window.location.reload();
 			        	}
 			    	});					
@@ -149,7 +149,37 @@ echo(librerias_jquery('1.7'));
         		
         	}//fin if boton_confirmar_recepcion_distribucion
         	
-        	
+        	if( valor=='boton_finalizar_entrega_personal' ){
+        		
+        		var registros_seleccionados="";
+				$('.accion_distribucion').each(function(){
+					var checkbox = $(this);
+					if(checkbox.is(':checked')===true){
+						var iddistribucion=$(this).val();
+					    registros_seleccionados+=iddistribucion+",";
+					}
+				});
+				
+				registros_seleccionados = registros_seleccionados.substring(0, registros_seleccionados.length-1);        		
+        		if(registros_seleccionados==""){
+					top.noty({text: 'No ha seleccionado ninguna distribuci&oacute;n',type: 'warning',layout: "topCenter",timeout:3500});
+				}else{
+			    	$.ajax({
+			        	type:'POST',
+			            dataType: 'json',
+			            url: '<?php echo($ruta_db_superior); ?>distribucion/ejecutar_acciones_distribucion.php',
+			            data: {
+			            	iddistribucion:registros_seleccionados,
+			            	ejecutar_accion:'finalizar_entrega_personal'
+			            },
+			            success: function(datos){
+			            	top.noty({text: 'Distribuciones Finalizadas satisfactoriamente!',type: 'success',layout: "topCenter",timeout:3500});
+			                window.location.reload();
+			        	}
+			    	});					
+				}				
+        			
+        	}
         	
         	if( valor=='seleccionar_todos_accion_distribucion' ){
          		$('.accion_distribucion').attr('checked',true);

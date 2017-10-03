@@ -680,7 +680,9 @@ CREATE TABLE distribucion (
   numero_distribucion varchar(255) NOT NULL,
   estado_distribucion int(11) NOT NULL DEFAULT '0',
   estado_recogida int(11) NOT NULL,
-  fecha_creacion datetime NOT NULL
+  fecha_creacion datetime NOT NULL,
+  finaliza_rol int(11) NULL,
+  finaliza_fecha datetime NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 ALTER TABLE distribucion

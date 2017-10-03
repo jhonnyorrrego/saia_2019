@@ -588,6 +588,10 @@ function opciones_acciones_distribucion($datos){
 		if($nombre_componente=='reporte_distribucion_general_sinrecogida'){
 			$cadena_acciones.="<option value='boton_confirmar_recepcion_distribucion'>Confirmar Recepcion</option>";
 		}		
+
+		if($nombre_componente!='reporte_distribucion_general_finalizado'){
+			$cadena_acciones.="<option value='boton_finalizar_entrega_personal'>Finalizar Proceso</option>";
+		}	
 			
 		//SELECCIONAR Y QUITAR SELECCIONADOS
 		$cadena_acciones.="<optgroup label='Seleccionar Distribuciones...'>";
