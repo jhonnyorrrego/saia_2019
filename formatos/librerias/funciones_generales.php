@@ -1218,7 +1218,7 @@ function genera_campo_listados_editar($idformato, $idcampo, $iddoc = NULL, $busc
  * <Post-condiciones><Post-condiciones>
  * </Clase>
  */
-function buscar_dependencia() {
+function buscar_dependencia($iformato=0) {
 	global $conn;
 	if($_REQUEST['iddoc']) {
 		$idformato = busca_filtro_tabla("idformato,nombre_tabla", "formato f,documento d", "lower(f.nombre)=lower(d.plantilla) and iddocumento=" . $_REQUEST['iddoc'], "", $conn);
@@ -1230,13 +1230,29 @@ function buscar_dependencia() {
 		$dep_sel = "";
 	}
 	
+	//VALIDACION FORMATO RADICACION PARA ENLISTAR SOLO LOS GRUPOS DE VENTANILLA
+	$idcategoria_formato=1;
+	$concatenar=array("','","fk_categoria_formato","','");
+	$formato_radicacion=busca_filtro_tabla("","formato","(cod_padre IS NULL OR cod_padre=0) AND (".concatenar_cadena_sql($concatenar)." like'%,".$idcategoria_formato.",%') AND idformato=".$iformato,"etiqueta ASC",$conn);
+	$valida_grupo_ventanilla='';
+	if($formato_radicacion['numcampos']){
+		$padre_ventanillas=busca_filtro_tabla("iddependencia","dependencia","lower(nombre)='ventanillas' AND tipo=0","",$conn);
+		$valida_grupo_ventanilla="dependencia.tipo=0 AND dependencia.cod_padre=".$padre_ventanillas[0]['iddependencia']." AND ";
+		
+	}
+	//FIN //VALIDACION FORMATO RADICACION PARA ENLISTAR SOLO LOS GRUPOS DE VENTANILLA
+	
 	$hoy = date('Y-m-d');
-	$dep = busca_filtro_tabla("distinct dependencia.nombre,iddependencia_cargo,cargo.nombre as cargo", "funcionario,dependencia_cargo,dependencia,cargo", "dependencia_cargo.funcionario_idfuncionario=funcionario.idfuncionario  AND cargo_idcargo=idcargo AND cargo.estado=1 AND dependencia_cargo.dependencia_iddependencia=dependencia.iddependencia AND dependencia_cargo.estado=1 AND funcionario.login='" . usuario_actual('login') . "' AND cargo.tipo_cargo='1' AND " . fecha_db_obtener('dependencia_cargo.fecha_inicial', 'Y-m-d') . "<='" . $hoy . "' AND " . fecha_db_obtener('dependencia_cargo.fecha_final', 'Y-m-d') . ">='" . $hoy . "'", "dependencia.nombre", $conn);
+	$dep = busca_filtro_tabla("distinct dependencia.nombre,iddependencia_cargo,cargo.nombre as cargo", "funcionario,dependencia_cargo,dependencia,cargo", $valida_grupo_ventanilla."dependencia_cargo.funcionario_idfuncionario=funcionario.idfuncionario  AND cargo_idcargo=idcargo AND cargo.estado=1 AND dependencia_cargo.dependencia_iddependencia=dependencia.iddependencia AND dependencia_cargo.estado=1 AND funcionario.login='" . usuario_actual('login') . "' AND cargo.tipo_cargo='1' AND " . fecha_db_obtener('dependencia_cargo.fecha_inicial', 'Y-m-d') . "<='" . $hoy . "' AND " . fecha_db_obtener('dependencia_cargo.fecha_final', 'Y-m-d') . ">='" . $hoy . "'", "dependencia.nombre", $conn);
 	$numfilas = $dep["numcampos"];
 	
 	$html = '<td width="79%" bgcolor="#F5F5F5">';
 	if($numfilas > 1) {
 		$html .= '<select name="dependencia" id="dependencia" class="required">';
+		if($dep_sel==''){
+			$html .= "<option value='' selected>Por favor seleccione...</option>";
+		}
+		
 		for($i = 0; $i < $dep["numcampos"]; $i++) {
 			if($dep_sel == $dep[$i]["iddependencia_cargo"]) {
 				$html .= "<option value='" . $dep[$i]["iddependencia_cargo"] . "' selected>" . $dep[$i]["nombre"] . " - (" . $dep[$i]["cargo"] . ")</option>";
@@ -1246,7 +1262,7 @@ function buscar_dependencia() {
 		}
 		$html .= '</select>';
 	} else if($numfilas == 1) {
-		$html .= "<input type='hidden' value='" . $dep[0]["iddependencia_cargo"] . "' id='dependencia' name='dependencia'>" . $dep[0]["nombre"] . " - (" . $dep[0]["cargo"] . ")";
+		$html .= "<input class='required' type='hidden' value='" . $dep[0]["iddependencia_cargo"] . "' id='dependencia' name='dependencia'>" . $dep[0]["nombre"] . " - (" . $dep[0]["cargo"] . ")";
 	} else {
 		alerta("Existe un problema al momento de definir su dependencia. Por favor Comuniquese con su administrador");
 		redirecciona("../../responder.php");
