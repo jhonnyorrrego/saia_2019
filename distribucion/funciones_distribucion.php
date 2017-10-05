@@ -661,28 +661,46 @@ function condicion_adicional_distribucion(){
 	$condicion_adicional="";
 	
 	$funcionario_codigo_usuario_actual=usuario_actual('funcionario_codigo');
+	$es_mensajero=busca_filtro_tabla("iddependencia_cargo","vfuncionario_dc","lower(cargo)='mensajero' AND funcionario_codigo='".$funcionario_codigo_usuario_actual."' AND estado_dc=1","",$conn);
 	$cargo_administrador_mensajeria=busca_filtro_tabla("funcionario_codigo","vfuncionario_dc"," lower(cargo) LIKE 'administrador%de%mensajer%a' AND estado_dc=1 AND funcionario_codigo=".$funcionario_codigo_usuario_actual,"",$conn);	
 	$administrador_mensajeria=0;
 	if($cargo_administrador_mensajeria['numcampos']){
 		$administrador_mensajeria=1;
 	}
 	
-	if(!$administrador_mensajeria){ //si no es un administrador filtramos como si fuera un mensajero
 	
-		$rol_funcionario=busca_filtro_tabla("iddependencia_cargo","vfuncionario_dc","funcionario_codigo='".$funcionario_codigo_usuario_actual."' AND estado_dc=1","",$conn);
-		$lista_roles_funcionarios='';
-		for($i=0;$i<$rol_funcionario['numcampos'];$i++){
-			$lista_roles_funcionarios.=$rol_funcionario[$i]['iddependencia_cargo'];
-			if( ($i+1)!=$rol_funcionario['numcampos'] ){
-				$lista_roles_funcionarios.=',';
-			}
-		} //fin rol funcionario
+	
+	//CONDICION VENTANILLA
+	if(!$administrador_mensajeria && !$es_mensajero['numcampos']){
+		$padre_ventanillas=busca_filtro_tabla("iddependencia","dependencia","lower(nombre)='ventanillas' AND tipo=0","",$conn);
+		$ventanillas=busca_filtro_tabla("iddependencia","dependencia","tipo=0 AND cod_padre=".$padre_ventanillas[0]['iddependencia'],"",$conn);
+		$lista_ventanillas=implode(',',extrae_campo($ventanillas,'iddependencia',"U"));
+		$ventanillas_usuario=busca_filtro_tabla("iddependencia","vfuncionario_dc","iddependencia IN(".$lista_ventanillas.") AND estado_dc=1 AND funcionario_codigo=".$funcionario_codigo_usuario_actual,"",$conn);
+		if($ventanillas_usuario['numcampos']){
+			$lista_ventanillas_usuario=implode(',',extrae_campo($ventanillas_usuario,'iddependencia',"U"));
+			$condicion_adicional.=" AND ( a.ventanilla IN(".$lista_ventanillas_usuario.") ) ";			
+		}else{
+			$condicion_adicional.=" AND ( 1=2 ) ";	//la consulta sale vacia si no pertenece a dependencia ventanilla		
+		}
 		
-		$condicion_adicional.=" AND ( (a.tipo_origen=1 AND a.estado_recogida<>1 AND a.mensajero_origen IN(".$lista_roles_funcionarios.") ) OR  (a.mensajero_empresad=0 AND a.mensajero_destino IN(".$lista_roles_funcionarios.") AND a.estado_recogida=1  ) ) ";
-		
-		
+	}
+	//FIN CONDICION VENTANILLA
+	
+	//FILTRO MENSAJERO
+	if(!$administrador_mensajeria && $es_mensajero['numcampos']){ //si no es un administrador filtramos como si fuera un mensajero
+		if($es_mensajero['numcampos']){ //si es mensajero
+			$lista_roles_funcionarios='';
+			for($i=0;$i<$es_mensajero['numcampos'];$i++){
+				$lista_roles_funcionarios.=$es_mensajero[$i]['iddependencia_cargo'];
+				if( ($i+1)!=$es_mensajero['numcampos'] ){
+					$lista_roles_funcionarios.=',';
+				}
+			} //fin for rol funcionario mensajero
+			
+			$condicion_adicional.=" AND ( (a.tipo_origen=1 AND a.estado_recogida<>1 AND a.mensajero_origen IN(".$lista_roles_funcionarios.") ) OR  (a.mensajero_empresad=0 AND a.mensajero_destino IN(".$lista_roles_funcionarios.") AND a.estado_recogida=1  ) ) ";	
+		} //fin $es_mensajero mensajero	
 	} // FIN: si no es un administrador filtramos como si fuera un mensajero
-	
+	//FIN FILTRO MENSAJERO
 	
 	if(@$_REQUEST['variable_busqueda']){
 		
