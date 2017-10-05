@@ -1031,4 +1031,19 @@ VALUES (321, '116', '3', '2', 'pantallas/busquedas/consulta_busqueda_reporte.php
 INSERT INTO `busqueda_condicion` (`idbusqueda_condicion`, `busqueda_idbusqueda`, `fk_busqueda_componente`, `codigo_where`, `etiqueta_condicion`) 
 VALUES (246, NULL, '321', '1=1 {*filtro_expediente_doc*}', 'condicion_reporte_docs_expediente_grid');
 
+CREATE OR REPLACE VIEW vexpediente_serie  AS 
+select a.propietario AS propietario,c.nombre AS nombre_serie,a.fecha AS fecha,a.nombre AS nombre,a.descripcion AS descripcion,a.cod_arbol AS cod_arbol,a.cod_padre AS cod_padre,a.estado_archivo AS estado_archivo,a.fk_idcaja AS fk_idcaja,a.estado_cierre AS estado_cierre,a.idexpediente AS idexpediente,b.entidad_identidad AS identidad_exp,b.llave_entidad AS llave_exp,d.entidad_identidad AS identidad_ser,d.llave_entidad AS llave_ser,d.estado AS estado_entidad_serie,a.prox_estado_archivo AS prox_estado_archivo,a.fecha_extrema_i,a.fecha_extrema_f,a.no_unidad_conservacion,a.no_folios,a.no_carpeta,a.soporte,a.notas_transf,a.tomo_no
+from expediente a 
+left join entidad_expediente b on a.idexpediente = b.expediente_idexpediente
+left join serie c on a.serie_idserie = c.idserie
+left join entidad_serie d on c.idserie = d.serie_idserie;
+
+update busqueda
+set campos = 'a.fecha,a.nombre,a.descripcion,a.cod_arbol,a.estado_cierre,a.nombre_serie,a.propietario,a.fecha_extrema_i,a.fecha_extrema_f,a.no_unidad_conservacion,a.no_folios,a.no_carpeta,a.soporte,a.notas_transf,a.tomo_no'
+where idbusqueda = 115;
+
+update busqueda_componente
+set info = 'CODIGO|{*cod_arbol*}|left|200|-|Nombre de la serie subserie o asuntos|{*descripcion*}|left|200|-|Fecha Extrema Inicial|{*fecha_extrema_i*}|left|200|-|Fecha Extrema Final|{*fecha_extrema_f*}|left|200|-|Unidad de conservacion|{*no_unidad_conservacion*}|left|200|-|Folios|{*no_folios*}|left|200|-|Soporte|{*soporte*}|left|200|-|Notas|{*notas_transf*}|left'
+where idbusqueda_componente=320;
+
 -- FIN DESARROLLO NUEVO REPORTE EXPEDIENTES 20171005
