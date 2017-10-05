@@ -682,7 +682,8 @@ CREATE TABLE distribucion (
   estado_recogida int(11) NOT NULL,
   fecha_creacion datetime NOT NULL,
   finaliza_rol int(11) NULL,
-  finaliza_fecha datetime NULL
+  finaliza_fecha datetime NULL,
+  ventanilla int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 ALTER TABLE distribucion
