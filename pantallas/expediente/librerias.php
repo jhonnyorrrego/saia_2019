@@ -173,14 +173,14 @@ function barra_superior_busqueda(){
 	<li class="divider-vertical"></li>
 	<li>
 	 <div class="btn-group">
-	    <button class="btn btn-mini kenlace_saia" conector="iframe" id="reporte_expediente_grid" idbusqueda_componente="320" title="Reporte Tabular" enlace="pantallas/busquedas/consulta_busqueda_reporte.php?variable_busqueda='.@$_REQUEST["cod_arbol"].'&idbusqueda_componente=320">Reporte Tabular</button>
+	    <button class="btn btn-mini kenlace_saia" conector="iframe" id="reporte_expediente_grid" idbusqueda_componente="320" titulo="Reporte de expedientes" enlace="pantallas/busquedas/consulta_busqueda_reporte.php?variable_busqueda='.@$_REQUEST["cod_arbol"].'&idbusqueda_componente=320">Reporte Tabular</button>
 	  </div>
 	</li>';
 	$cadena.='
 	<li class="divider-vertical"></li>
 	<li>
 	 <div class="btn-group">
-	    <button class="btn btn-mini kenlace_saia" conector="iframe" id="reporte_inventario_docs" idbusqueda_componente="321" title="Inventario de documentos" enlace="pantallas/busquedas/consulta_busqueda_reporte.php?variable_busqueda='.@$_REQUEST["idexpediente"].'&idbusqueda_componente=321">Inventario de documentos</button>
+	    <button class="btn btn-mini kenlace_saia" conector="iframe" id="reporte_inventario_docs" idbusqueda_componente="321" titulo="Inventario de documentos" enlace="pantallas/busquedas/consulta_busqueda_reporte.php?variable_busqueda='.@$_REQUEST["idexpediente"].'&idbusqueda_componente=321">Inventario de documentos</button>
 	  </div>
 	</li>';
 	// FIN NUEVO DESARROLLO REPORTE EXPEDIENTES 20171004
