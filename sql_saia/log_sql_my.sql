@@ -1006,3 +1006,29 @@ drop table if exists(campos);
 drop table if exists(busquedas);
 
 -- FIN MIGRACION Version20170926223831.php
+
+-- INICIO DESARROLLO NUEVO REPORTE EXPEDIENTES 20171005
+
+INSERT INTO `busqueda` (`idbusqueda`, `nombre`, `etiqueta`, `estado`, `ancho`, `campos`, `llave`, `tablas`, `ruta_libreria`, `ruta_libreria_pantalla`, `cantidad_registros`, `tiempo_refrescar`, `ruta_visualizacion`, `tipo_busqueda`, `badge_cantidades`) VALUES
+(115, 'reporte_expediente_grid', 'Reporte expediente grid', 1, 200, 'a.fecha,a.nombre,a.descripcion,a.cod_arbol,a.estado_cierre,a.nombre_serie,a.propietario', 'a.idexpediente ', 'vexpediente_serie a', 'pantallas/expediente/funciones_reporte_grid.php', 'pantallas/expediente/funciones_reporte_grid_js.php', 30, 500, 'pantallas/busquedas/consulta_busqueda_reporte.php', 2, NULL);
+
+INSERT INTO `busqueda_componente` (`idbusqueda_componente`, `busqueda_idbusqueda`, `tipo`, `conector`, `url`, `etiqueta`, `nombre`, `orden`, `info`, `exportar`, `exportar_encabezado`, `encabezado_componente`, `estado`, `ancho`, `cargar`, `campos_adicionales`, `tablas_adicionales`, `ordenado_por`, `direccion`, `agrupado_por`, `busqueda_avanzada`, `acciones_seleccionados`, `modulo_idmodulo`, `menu_busqueda_superior`, `enlace_adicionar`, `encabezado_grillas`) VALUES
+(320, 115, 3, 2, 'pantallas/busquedas/consulta_busqueda_reporte.php', 'Reporte expediente grid', 'reporte_expediente_grid_exp', 2, 'fecha|{*fecha*}|left|200|-|nombre|{*nombre*}|left|200|-|descripcion|{*descripcion*}|left|200|-|cod_arbol|{*cod_arbol*}|left|200|-|estado_cierre|{*estado_cierre*}|left|200|-|nombre_serie|{*nombre_serie*}|left|200|-|propietario|{*propietario*}|left', NULL, NULL, NULL, 1, 320, 2, NULL, NULL, '', '', NULL, '', '', NULL, NULL, NULL, NULL);
+
+INSERT INTO `busqueda_condicion` (`idbusqueda_condicion`, `busqueda_idbusqueda`, `fk_busqueda_componente`, `codigo_where`, `etiqueta_condicion`) VALUES
+(245, NULL, 320, '1=1 {*filtro_cod_arbol*}', 'condicion_reporte_expediente_grid');
+
+INSERT INTO `modulo` (`idmodulo`, `pertenece_nucleo`, `nombre`, `tipo`, `imagen`, `etiqueta`, `enlace`, `enlace_mobil`, `destino`, `cod_padre`, `orden`, `ayuda`, `parametros`, `busqueda_idbusqueda`, `permiso_admin`, `busqueda`, `enlace_pantalla`) 
+VALUES (1660, '0', 'modulo_reporte_expediente_grid', 'secundario', 'botones/principal/defaut.png', 'Reporte Expedientes Grid', 'pantallas/buscador_principal.php?idbusqueda=115', NULL, 'centro', '1057', '1', '', '', '0', '0', '1', '0');
+
+
+INSERT INTO `busqueda` (`idbusqueda`, `nombre`, `etiqueta`, `estado`, `ancho`, `campos`, `llave`, `tablas`, `ruta_libreria`, `ruta_libreria_pantalla`, `cantidad_registros`, `tiempo_refrescar`, `ruta_visualizacion`, `tipo_busqueda`, `badge_cantidades`) 
+VALUES (116, 'reporte_docs_expediente_grid', 'Reporte Docs Expediente Grid', '1', '200', 'a.expediente_idexpediente,a.documento_iddocumento,a.fecha', 'a.idexpediente_doc', 'expediente_doc a', 'pantallas/expediente/funciones_reporte_grid.php', 'pantallas/expediente/funciones_reporte_grid_js.php', '30', '500', 'pantallas/busquedas/consulta_busqueda_reporte.php', '2', NULL);
+
+INSERT INTO `busqueda_componente` (`idbusqueda_componente`, `busqueda_idbusqueda`, `tipo`, `conector`, `url`, `etiqueta`, `nombre`, `orden`, `info`, `exportar`, `exportar_encabezado`, `encabezado_componente`, `estado`, `ancho`, `cargar`, `campos_adicionales`, `tablas_adicionales`, `ordenado_por`, `direccion`, `agrupado_por`, `busqueda_avanzada`, `acciones_seleccionados`, `modulo_idmodulo`, `menu_busqueda_superior`, `enlace_adicionar`, `encabezado_grillas`) 
+VALUES (321, '116', '3', '2', 'pantallas/busquedas/consulta_busqueda_reporte.php', 'Reporte Docs Expediente Grid', 'reporte_docs_expediente_grid_exp', '2', 'expediente_idexpediente|{*expediente_idexpediente*}|left|200|-|documento_iddocumento|{*documento_iddocumento*}|left|200|-|fecha|{*fecha*}|left', NULL, NULL, NULL, '1', '320', '2', NULL, NULL, '', '', NULL, '', NULL, NULL, NULL, NULL, NULL);
+
+INSERT INTO `busqueda_condicion` (`idbusqueda_condicion`, `busqueda_idbusqueda`, `fk_busqueda_componente`, `codigo_where`, `etiqueta_condicion`) 
+VALUES (246, NULL, '321', '1=1 {*filtro_expediente_doc*}', 'condicion_reporte_docs_expediente_grid');
+
+-- FIN DESARROLLO NUEVO REPORTE EXPEDIENTES 20171005
