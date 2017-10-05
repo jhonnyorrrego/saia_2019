@@ -126,6 +126,11 @@ function ingresar_distribucion($iddoc,$datos,$iddistribucion=0){
 			$valor_iddistribucion=$iddistribucion.",";			
 		}
 		
+		//IDDEPENDENCIA VENTANILLA
+		$obtener_ft=busca_filtro_tabla("b.nombre_tabla","documento a, formato b","lower(a.plantilla)=lower(b.nombre) AND a.iddocumento=".$iddoc,"",$conn);
+		$ventanilla=busca_filtro_tabla("b.iddependencia",$obtener_ft[0]['nombre_tabla']." a, vfuncionario_dc b","a.dependencia=b.iddependencia_cargo AND a.documento_iddocumento=".$iddoc,"",$conn);
+		$iddependencia_ventanilla=$ventanilla[0]['iddependencia'];
+		//FIN IDDEPENDENCIA VENTANILLA
 		
 		//INSERTAR DISTRIBUCION
 		$sqli="INSERT INTO distribucion
@@ -146,7 +151,8 @@ function ingresar_distribucion($iddoc,$datos,$iddistribucion=0){
 				estado_recogida,
 				
 				documento_iddocumento,
-				fecha_creacion
+				fecha_creacion,
+				ventanilla
 			) 
 				VALUES 
 			(
@@ -166,14 +172,13 @@ function ingresar_distribucion($iddoc,$datos,$iddistribucion=0){
 				".$estado_recogida.",
 				
 				".$iddoc.",
-				".$fecha_creacion."
-				
+				".$fecha_creacion.",
+				".$iddependencia_ventanilla."
 			)
 				
 		";	
 		phpmkr_query($sqli);
 		$array_iddistribucion[]=phpmkr_insert_id();
-		
 	}
 	return($array_iddistribucion);
 	
