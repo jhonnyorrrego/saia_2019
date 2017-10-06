@@ -595,7 +595,7 @@ function opciones_acciones_distribucion($datos){
 		}		
 
 		if($nombre_componente!='reporte_distribucion_general_finalizado'){
-			$cadena_acciones.="<option value='boton_finalizar_entrega_personal'>Finalizar Proceso</option>";
+			$cadena_acciones.="<option value='boton_finalizar_entrega_personal'>Finalizar sin planilla</option>";
 		}	
 			
 		//SELECCIONAR Y QUITAR SELECCIONADOS
