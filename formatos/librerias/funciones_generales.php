@@ -1230,20 +1230,8 @@ function buscar_dependencia($iformato=0) {
 		$dep_sel = "";
 	}
 	
-	//VALIDACION FORMATO RADICACION PARA ENLISTAR SOLO LOS GRUPOS DE VENTANILLA
-	$idcategoria_formato=1;
-	$concatenar=array("','","fk_categoria_formato","','");
-	$formato_radicacion=busca_filtro_tabla("","formato","(cod_padre IS NULL OR cod_padre=0) AND (".concatenar_cadena_sql($concatenar)." like'%,".$idcategoria_formato.",%') AND idformato=".$iformato,"etiqueta ASC",$conn);
-	$valida_grupo_ventanilla='';
-	if($formato_radicacion['numcampos']){
-		$padre_ventanillas=busca_filtro_tabla("iddependencia","dependencia","lower(nombre)='ventanillas' AND tipo=0","",$conn);
-		$valida_grupo_ventanilla="dependencia.tipo=0 AND dependencia.cod_padre=".$padre_ventanillas[0]['iddependencia']." AND ";
-		
-	}
-	//FIN //VALIDACION FORMATO RADICACION PARA ENLISTAR SOLO LOS GRUPOS DE VENTANILLA
-	
 	$hoy = date('Y-m-d');
-	$dep = busca_filtro_tabla("distinct dependencia.nombre,iddependencia_cargo,cargo.nombre as cargo", "funcionario,dependencia_cargo,dependencia,cargo", $valida_grupo_ventanilla."dependencia_cargo.funcionario_idfuncionario=funcionario.idfuncionario  AND cargo_idcargo=idcargo AND cargo.estado=1 AND dependencia_cargo.dependencia_iddependencia=dependencia.iddependencia AND dependencia_cargo.estado=1 AND funcionario.login='" . usuario_actual('login') . "' AND cargo.tipo_cargo='1' AND " . fecha_db_obtener('dependencia_cargo.fecha_inicial', 'Y-m-d') . "<='" . $hoy . "' AND " . fecha_db_obtener('dependencia_cargo.fecha_final', 'Y-m-d') . ">='" . $hoy . "'", "dependencia.nombre", $conn);
+	$dep = busca_filtro_tabla("distinct dependencia.nombre,iddependencia_cargo,cargo.nombre as cargo", "funcionario,dependencia_cargo,dependencia,cargo", "dependencia_cargo.funcionario_idfuncionario=funcionario.idfuncionario  AND cargo_idcargo=idcargo AND cargo.estado=1 AND dependencia_cargo.dependencia_iddependencia=dependencia.iddependencia AND dependencia_cargo.estado=1 AND funcionario.login='" . usuario_actual('login') . "' AND cargo.tipo_cargo='1' AND " . fecha_db_obtener('dependencia_cargo.fecha_inicial', 'Y-m-d') . "<='" . $hoy . "' AND " . fecha_db_obtener('dependencia_cargo.fecha_final', 'Y-m-d') . ">='" . $hoy . "'", "dependencia.nombre", $conn);
 	$numfilas = $dep["numcampos"];
 	
 	$html = '<td width="79%" bgcolor="#F5F5F5">';
