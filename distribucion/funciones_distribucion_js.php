@@ -188,6 +188,29 @@ echo(librerias_jquery('1.7'));
         		$('.accion_distribucion').attr('checked',false);
         	}
         	
+        	//FILTRO TIPO ORIGEN DEL DOCUMENTO
+        	if( valor=='filtrar_tipo_origen_externo' ){ //Entrada
+	        	var tipo_origen='filtro_tipo_origen|2';	
+				<?php $componente=$_REQUEST['idbusqueda_componente']; ?>
+	            var componente='<?php echo($componente); ?>';
+	            window.location.href = "<?php echo $ruta_db_superior;?>pantallas/busquedas/consulta_busqueda_reporte.php?idbusqueda_componente="+componente+"&variable_busqueda="+tipo_origen;    
+        		
+        	}   
+        	if( valor=='filtrar_tipo_origen_interno' ){  //Salida a externo
+	        	var tipo_origen='filtro_tipo_origen|1';	
+				<?php $componente=$_REQUEST['idbusqueda_componente']; ?>
+	            var componente='<?php echo($componente); ?>';
+	            window.location.href = "<?php echo $ruta_db_superior;?>pantallas/busquedas/consulta_busqueda_reporte.php?idbusqueda_componente="+componente+"&variable_busqueda="+tipo_origen;          		
+        	}  
+        	if( valor=='filtrar_tipo_origen_todos' ){ //Mostrar Todos
+	        	var tipo_origen='filtro_tipo_origen|3';	
+				<?php $componente=$_REQUEST['idbusqueda_componente']; ?>
+	            var componente='<?php echo($componente); ?>';
+	            window.location.href = "<?php echo $ruta_db_superior;?>pantallas/busquedas/consulta_busqueda_reporte.php?idbusqueda_componente="+componente+"&variable_busqueda="+tipo_origen;             		
+        	}          	        	     	
+        	//FIN FILTRO TIPO ORIGEN DEL DOCUMENTO
+        	
+        	
        		$(this).val(''); 	
       });  //FIN IF opciones_acciones_distribucion
 		

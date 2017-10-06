@@ -604,6 +604,14 @@ function opciones_acciones_distribucion($datos){
 		$cadena_acciones.="<option value='quitar_seleccionados_accion_distribucion'>Niguno</option>";
 		$cadena_acciones.="</optgroup>";
 		//FIN SELECCIONAR Y QUITAR SELECCIONADOS	
+		
+		//SELECCIONAR Y QUITAR SELECCIONADOS
+		$cadena_acciones.="<optgroup label='Filtrar Origen...'>";
+		$cadena_acciones.="<option value='filtrar_tipo_origen_externo'>Externo</option>"; //PARA COLPATRIA Entrada
+		$cadena_acciones.="<option value='filtrar_tipo_origen_interno'>Interno</option>"; //PARA COLPATRIA Salida a externo
+		$cadena_acciones.="<option value='filtrar_tipo_origen_todos'>Mostrar Todos</option>";		
+		$cadena_acciones.="</optgroup>";
+		//FIN SELECCIONAR Y QUITAR SELECCIONADOS			
 				
 	$cadena_acciones.="</select>";	
 
@@ -737,6 +745,23 @@ function condicion_adicional_distribucion(){
 			$condicion_adicional.="  (a.mensajero_empresad=".$coondicion_tipo_mensajero_destino." AND a.mensajero_destino=".$mensajero_tipo[0]." AND a.estado_recogida=1  ) )";
 			
 		} //fin if $vector_variable_busqueda[0]=='filtro_mensajero_distribucion'
+		
+		
+		//FILTRO POR TIPO ORIGEN filtro_tipo_origen
+		if($vector_variable_busqueda[0]=='filtro_tipo_origen' && $vector_variable_busqueda[1]){
+			switch($vector_variable_busqueda[1]){
+				case 1: //Externo
+					$condicion_adicional.=" AND a.tipo_origen = 1 ";
+					break;
+				case 2: //Interno
+					$condicion_adicional.=" AND a.tipo_origen = 2 ";
+					break;
+				case 3: //Mostrar Todos
+					$condicion_adicional.="";
+					break;	
+			}
+		}
+		//FIN FILTRO POR TIPO ORIGEN
 		
 		
 	} //fin if $_REQUEST['variable_busqueda']
