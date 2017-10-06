@@ -705,7 +705,7 @@ function condicion_adicional_distribucion(){
 				}
 			} //fin for rol funcionario mensajero
 			
-			$condicion_adicional.=" AND ( (a.tipo_origen=1 AND a.estado_recogida<>1 AND a.mensajero_origen IN(".$lista_roles_funcionarios.") ) OR  (a.mensajero_empresad=0 AND a.mensajero_destino IN(".$lista_roles_funcionarios.") AND a.estado_recogida=1  ) ) ";	
+			$condicion_adicional.=" AND ( (a.tipo_origen=1 AND a.estado_recogida<>1 AND a.mensajero_origen IN(".$lista_roles_funcionarios.") ) OR  ( (a.mensajero_empresad=0 OR a.mensajero_empresad IS NULL) AND a.mensajero_destino IN(".$lista_roles_funcionarios.") AND a.estado_recogida=1  ) ) ";	
 		} //fin $es_mensajero mensajero	
 	} // FIN: si no es un administrador filtramos como si fuera un mensajero
 	//FIN FILTRO MENSAJERO
