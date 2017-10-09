@@ -708,6 +708,11 @@ function condicion_adicional_distribucion(){
 		
 		$vector_variable_busqueda=explode('|',$_REQUEST['variable_busqueda']);
 		
+		//FILTRO POR VENTANILLA DE RADICACION
+		if($vector_variable_busqueda[0]=='filtro_ventanilla_radicacion' && $vector_variable_busqueda[1]){	
+			$condicion_adicional.=" AND ( a.ventanilla=".$vector_variable_busqueda[1]." )";
+		} //fin if $vector_variable_busqueda[0]=='filtro_ventanilla_radicacion'		
+		
 		//FILTRO POR RUTA DE DISTRIBUCION
 		if($vector_variable_busqueda[0]=='idft_ruta_distribucion' && $vector_variable_busqueda[1]){
 						
@@ -876,9 +881,46 @@ function actualizar_mensajero_ruta_distribucion($idft_ruta_distribucion,$iddepen
 
 //---------------------------------------------------------------------------------------------
 
+function filtro_ventanilla_radicacion(){
+    global $ruta_db_superior, $conn;
+	
+	$select="";
+	$funcionario_codigo_usuario_actual=usuario_actual('funcionario_codigo');
+	$cargo_administrador_mensajeria=busca_filtro_tabla("funcionario_codigo","vfuncionario_dc"," lower(cargo) LIKE 'administrador%de%mensajer%a' AND estado_dc=1 ","",$conn);
+	
+	$ver_select=false;
+	for($i=0;$i<$cargo_administrador_mensajeria['numcampos'];$i++){
+		if( $cargo_administrador_mensajeria[$i]['funcionario_codigo']==$funcionario_codigo_usuario_actual ){
+			$ver_select=true;
+		}
+	}
+	
+	if($ver_select){
 
-
-
+	    $select="<select class='pull-left btn btn-mini dropdown-toggle' style='height:22px; margin-left: 10px;' name='filtro_ventanilla_radicacion' id='filtro_ventanilla_radicacion'>";
+	    $select.="<option value=''>Todas Las Ventanillas</option>";
+	    $datos=busca_filtro_tabla("nombre,valor,idcf_ventanilla","cf_ventanilla","estado=1","",$conn);
+		
+		//if($vector_variable_busqueda[0]=='filtro_mensajero_distribucion' && $vector_variable_busqueda[1]){
+		$vector_variable_busqueda=explode('|',@$_REQUEST['variable_busqueda']);
+		
+	    for($i=0;$i<$datos['numcampos'];$i++){
+	        $selected='';	
+			if($vector_variable_busqueda[0]=='filtro_ventanilla_radicacion' && $vector_variable_busqueda[1]){
+				if($vector_variable_busqueda[1]){
+					if($vector_variable_busqueda[1]==$datos[$i]['idcf_ventanilla']){
+						$selected='selected';
+					}
+				}	
+			}	
+	        $select.="<option value='".$datos[$i]['idcf_ventanilla']."' ".$selected.">".$datos[$i]['nombre']."</option>";
+			
+	    }
+		$select.="</select>";
+		
+	} //fin if $ver_select
+	return $select;		
+}
 
 function filtro_mensajero_distribucion(){
     global $ruta_db_superior, $conn;

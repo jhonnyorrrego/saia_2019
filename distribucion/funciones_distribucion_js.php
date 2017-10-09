@@ -225,6 +225,19 @@ echo(librerias_jquery('1.7'));
             window.location.href = "<?php echo $ruta_db_superior;?>pantallas/busquedas/consulta_busqueda_reporte.php?idbusqueda_componente="+componente+"&variable_busqueda="+mensajero;      	
 
         });	//FIN IF filtro_mensajero_distribucion		
+
+		//Filtro por ventanilla - class= filtro_ventanilla_radicacion 
+        $('#filtro_ventanilla_radicacion').live("change",function(){
+        	var ventanilla='filtro_ventanilla_radicacion|'+$(this).val();	
+			<?php                 
+            	$componente=$_REQUEST['idbusqueda_componente'];
+            ?>
+            var componente='<?php echo($componente); ?>';
+            window.location.href = "<?php echo $ruta_db_superior;?>pantallas/busquedas/consulta_busqueda_reporte.php?idbusqueda_componente="+componente+"&variable_busqueda="+ventanilla;      	
+
+        });	//FIN IF filtro_ventanilla_radicacion		
+				
+		
 		
 				
 	});  //FIN IF documento.ready
