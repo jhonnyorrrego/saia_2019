@@ -126,11 +126,9 @@ function ingresar_distribucion($iddoc,$datos,$iddistribucion=0){
 			$valor_iddistribucion=$iddistribucion.",";			
 		}
 		
-		//IDDEPENDENCIA VENTANILLA
-		$obtener_ft=busca_filtro_tabla("b.nombre_tabla","documento a, formato b","lower(a.plantilla)=lower(b.nombre) AND a.iddocumento=".$iddoc,"",$conn);
-		$ventanilla=busca_filtro_tabla("b.iddependencia",$obtener_ft[0]['nombre_tabla']." a, vfuncionario_dc b","a.dependencia=b.iddependencia_cargo AND a.documento_iddocumento=".$iddoc,"",$conn);
-		$iddependencia_ventanilla=$ventanilla[0]['iddependencia'];
-		//FIN IDDEPENDENCIA VENTANILLA
+		//VENTANILLA RADICACION
+		$ventanilla_radicacion=usuario_actual('ventanilla_radicacion');
+		//FIN VENTANILLA RADICACION
 		
 		//INSERTAR DISTRIBUCION
 		$sqli="INSERT INTO distribucion
@@ -173,7 +171,7 @@ function ingresar_distribucion($iddoc,$datos,$iddistribucion=0){
 				
 				".$iddoc.",
 				".$fecha_creacion.",
-				".$iddependencia_ventanilla."
+				".$ventanilla_radicacion."
 			)
 				
 		";	
@@ -680,13 +678,9 @@ function condicion_adicional_distribucion(){
 	
 	//CONDICION VENTANILLA
 	if(!$administrador_mensajeria && !$es_mensajero['numcampos']){
-		$padre_ventanillas=busca_filtro_tabla("iddependencia","dependencia","lower(nombre)='ventanillas' AND tipo=0","",$conn);
-		$ventanillas=busca_filtro_tabla("iddependencia","dependencia","tipo=0 AND cod_padre=".$padre_ventanillas[0]['iddependencia'],"",$conn);
-		$lista_ventanillas=implode(',',extrae_campo($ventanillas,'iddependencia',"U"));
-		$ventanillas_usuario=busca_filtro_tabla("iddependencia","vfuncionario_dc","iddependencia IN(".$lista_ventanillas.") AND estado_dc=1 AND funcionario_codigo=".$funcionario_codigo_usuario_actual,"",$conn);
-		if($ventanillas_usuario['numcampos']){
-			$lista_ventanillas_usuario=implode(',',extrae_campo($ventanillas_usuario,'iddependencia',"U"));
-			$condicion_adicional.=" AND ( a.ventanilla IN(".$lista_ventanillas_usuario.") ) ";			
+		$ventanilla_radicacion=usuario_actual('ventanilla_radicacion');
+		if($ventanilla_radicacion){
+			$condicion_adicional.=" AND ( a.ventanilla=".$ventanilla_radicacion." ) ";			
 		}else{
 			$condicion_adicional.=" AND ( 1=2 ) ";	//la consulta sale vacia si no pertenece a dependencia ventanilla		
 		}
