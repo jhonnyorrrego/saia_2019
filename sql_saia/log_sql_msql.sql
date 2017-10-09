@@ -743,6 +743,33 @@ INSERT INTO funciones_formato (nombre, nombre_funcion, parametros, etiqueta, des
 
 UPDATE campos_formato SET acciones = 'a,e,b,p,d' WHERE formato_idformato=404 AND nombre='nombre_ruta';
 
+-- CREACION DE CF cf_ventanilla
+
+CREATE TABLE cf_ventanilla (
+  idcf_ventanilla int(11) NOT NULL,
+  nombre varchar(255) DEFAULT NULL,
+  valor varchar(255) DEFAULT NULL,
+  cod_padre varchar(255) DEFAULT NULL,
+  descripcion varchar(255) DEFAULT NULL,
+  tipo varchar(255) DEFAULT NULL,
+  categoria varchar(255) DEFAULT NULL,
+  estado int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+ALTER TABLE cf_ventanilla
+  ADD PRIMARY KEY (idcf_ventanilla);
+  
+ALTER TABLE cf_ventanilla
+  MODIFY idcf_ventanilla int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+
+INSERT INTO busqueda_componente (idbusqueda_componente, busqueda_idbusqueda, tipo, conector, url, etiqueta, nombre, orden, info, exportar, exportar_encabezado, encabezado_componente, estado, ancho, cargar, campos_adicionales, tablas_adicionales, ordenado_por, direccion, agrupado_por, busqueda_avanzada, acciones_seleccionados, modulo_idmodulo, menu_busqueda_superior, enlace_adicionar, encabezado_grillas) VALUES (NULL, '19', '3', '2', 'pantallas/busquedas/consulta_busqueda_reporte.php', 'Ventanillas de Radicaci&oacute;n', 'cf_ventanilla', '2', 'Nombre|{*nombre*}|center|-|Valor|{*valor*}|center|-|Categoria|{*categoria*}|center|-|Estado|{*estado*}|center|-|Acciones|{*barra_superior_cf@idcf_ventanilla,nombre_tabla*}|center', NULL, NULL, '', '2', '320', '2', 'idcf_ventanilla,nombre,valor,categoria, case estado when 1 then \'activo\' else \'inactivo\' end as estado, \'cf_ventanilla\' as nombre_tabla', 'cf_ventanilla', 'nombre', 'ASC', NULL, 'pantallas/admin_cf/busqueda_avanzada_cf.php?tabla=cf_ventanilla&idbusqueda_componente=322', NULL, NULL, NULL, 'pantallas/admin_cf/pantalla_cf_adicionar.php?tabla=cf_ventanilla', NULL);
+
+INSERT INTO busqueda_condicion (idbusqueda_condicion, busqueda_idbusqueda, fk_busqueda_componente, codigo_where, etiqueta_condicion) VALUES (NULL, NULL, '322', '1=1', 'cf_ventanilla');
+
+-- MODIFICACION FUNCIONARIO ADD & EDIT 
+
+ALTER TABLE funcionario ADD ventanilla_radicacion INT(11) NULL AFTER foto_cordenadas;
+
 -- FIN NUEVA DISTRIBUCION 
 -- ---------------------------------------------------------------- 
 -- FORMATO carta, ADAPTACION PARA QUE HAGA DISTRIBUCION
