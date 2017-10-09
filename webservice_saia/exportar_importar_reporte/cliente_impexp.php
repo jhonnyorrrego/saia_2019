@@ -49,6 +49,19 @@ if($_REQUEST["ejecutar"]) {
 }
 
 function importar($datos) {
+	$nombre_reporte = $datos["reporte"];
+	$db = new Conexion();
+	$conn = $db->Obtener_Conexion();
+
+	$stmt = $conn->prepare("select * from busqueda where nombre = :nombre");
+	$stmt->bindParam(':nombre', $nombre_reporte, PDO::PARAM_STR);
+	if ($stmt->execute()) {
+		if ($stmt->rowCount() >= 1) {
+			echo '<script>alert("Ya existe el reporte \"' . $nombre_reporte . '\"");</script>';
+			die();
+		}
+	}
+
 	$url = $datos["url"];
 	$url .= "/webservice_saia/exportar_importar_reporte/impexprep_service.php?wsdl";
 	$client = new nusoap_client($url,'wsdl');
@@ -81,7 +94,33 @@ function importar($datos) {
 }
 
 function exportar($datos) {
-	die("No implementado");
+	//die("No implementado");
+	//TODO: Consultar si el remporte existe remoto
+	$url = $datos["url"];
+	$url .= "/webservice_saia/exportar_importar_reporte/impexprep_service.php?wsdl";
+	$client = new nusoap_client($url,'wsdl');
+
+	$params = array();
+	$params['reporte'] = $datos["reporte"];
+
+	$result = $client->call('consultar_reporte_existe', $params);
+
+	if ($client->fault) {
+		echo 'Fallo';
+		print_r($result);
+	} else {	// Chequea errores
+		$err = $client->getError();
+		if ($err) {		// Muestra el error
+			echo 'Error' . $err ;
+		} else {		// Muestra el resultado
+			$ok = $result["estado"]["status"];
+			$msg = $result["estado"]["message"];
+			if($ok == "OK") {
+				echo 'Error remoto: ';
+				die($msg);
+			}
+		}
+	}
 }
 
 function consultar_info_reporte_local($nombre_reporte) {
@@ -97,7 +136,9 @@ function consultar_info_reporte_local($nombre_reporte) {
 
 	if ($stmt->execute()) {
 		if ($stmt->rowCount() > 1) {
-			$respuesta['busqueda'] = "Mas de un reporte coincide con el criterio: $nombre_reporte";
+			$respuesta['estado'] = array("status" => "KO", "message" => "Mas de un reporte coincide con el criterio: $nombre_reporte");
+		} else if($stmt->rowCount() == 0) {
+			$respuesta['estado'] = array("status" => "KO", "message" => "No se encontr&oacute; el reporte solicitado: $nombre_reporte");
 		} else {
 			$datos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 			$fila = array();
@@ -107,9 +148,10 @@ function consultar_info_reporte_local($nombre_reporte) {
 			$respuesta['busqueda'] = json_encode($fila);
 			$datos_comp = consultar_componentes_local($conn, $fila["idbusqueda"]);
 			$respuesta['componentes'] = $datos_comp;
+			$respuesta['estado'] = array("status" => "OK", "message" => "Datos consultados con &eacute;xito");
 		}
 	} else {
-		$respuesta['busqueda'] = json_encode($stmt->errorInfo());
+		$respuesta['estado'] = array("status" => "KO", "message" => $stmt->errorInfo());
 	}
 	return $respuesta;
 }

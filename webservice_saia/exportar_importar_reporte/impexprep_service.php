@@ -92,6 +92,12 @@ $server->register("consultar_info_reporte", array(
 		"return" => "tns:DatosBusqueda"
 ), $namespace, false, 'rpc', 'encoded', 'Metodo consultar reporte');
 
+$server->register("consultar_reporte_existe", array(
+		"reporte" => "xsd:string"
+), array(
+		"return" => "tns:DatosBusqueda"
+), $namespace, false, 'rpc', 'encoded', 'Metodo verificar existencia reporte');
+
 $HTTP_RAW_POST_DATA = isset($HTTP_RAW_POST_DATA) ? $HTTP_RAW_POST_DATA : '';
 $server->service($HTTP_RAW_POST_DATA);
 
@@ -100,6 +106,7 @@ function consultar_info_reporte($nombre_reporte) {
 		return array();
 	}
 
+	$respuesta['estado'] = array("status" => "KO", "message" => "Error de ejecuci&oacute;n: $nombre_reporte");
 	$db = new Conexion();
 	$conn = $db->Obtener_Conexion();
 	$respuesta = array();
@@ -123,10 +130,34 @@ function consultar_info_reporte($nombre_reporte) {
 			$respuesta['estado'] = array("status" => "OK", "message" => "Datos consultados con &eacute;xito");
 		}
 	} else {
-		$respuesta['busqueda'] = json_encode($stmt->errorInfo());
+		$respuesta['estado'] = array("status" => "KO", "message" => $stmt->errorInfo());
 	}
 	return $respuesta;
 }
+
+function consultar_reporte_existe($nombre_reporte) {
+	$respuesta = array();
+	if (empty($nombre_reporte)) {
+		$respuesta['estado'] = array("status" => "KO", "message" => "Falta el par&aacute;metro 'nombre_reporte'");
+		return $respuesta;
+	}
+
+	$respuesta['estado'] = array("status" => "KO", "message" => "Error de ejecuci&oacute;n: $nombre_reporte");
+	$db = new Conexion();
+	$conn = $db->Obtener_Conexion();
+	$stmt = $conn->prepare("select * from busqueda where nombre = :nombre");
+	$stmt->bindParam(':nombre', $nombre_reporte, PDO::PARAM_STR);
+
+	if ($stmt->execute()) {
+		if ($stmt->rowCount() >= 1) {
+			$respuesta['estado'] = array("status" => "OK", "message" => "Ya existe el reporte: $nombre_reporte");
+		}
+	} else {
+		$respuesta['estado'] = array("status" => "KO", "message" => $stmt->errorInfo());
+	}
+	return $respuesta;
+}
+
 
 function consultar_componentes($conn, $idbusqueda) {
 	$respuesta = array();
