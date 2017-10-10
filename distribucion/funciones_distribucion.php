@@ -128,6 +128,9 @@ function ingresar_distribucion($iddoc,$datos,$iddistribucion=0){
 		
 		//VENTANILLA RADICACION
 		$ventanilla_radicacion=usuario_actual('ventanilla_radicacion');
+		if(!$ventanilla_radicacion){
+			$ventanilla_radicacion=0;
+		}
 		//FIN VENTANILLA RADICACION
 		
 		//INSERTAR DISTRIBUCION
