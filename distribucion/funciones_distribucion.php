@@ -680,19 +680,14 @@ function condicion_adicional_distribucion(){
 	
 	
 	//CONDICION VENTANILLA
-	$condicion_mensajero=' AND ';
-	if(!$administrador_mensajeria){
+	if(!$administrador_mensajeria && !$es_mensajero['numcampos']){
 		$ventanilla_radicacion=usuario_actual('ventanilla_radicacion');
 		if($ventanilla_radicacion){
-			$condicion_adicional.=" AND ( a.ventanilla=".$ventanilla_radicacion." ) ";	
-			if($es_mensajero['numcampos']){
-				$condicion_mensajero=' OR ';
-			}					
-		}else if($es_mensajero['numcampos']){
-			
+			$condicion_adicional.=" AND ( a.ventanilla=".$ventanilla_radicacion." ) ";			
 		}else{
 			$condicion_adicional.=" AND ( 1=2 ) ";	//la consulta sale vacia si no pertenece a dependencia ventanilla		
-		}		
+		}
+		
 	}
 	//FIN CONDICION VENTANILLA
 	
@@ -707,7 +702,7 @@ function condicion_adicional_distribucion(){
 				}
 			} //fin for rol funcionario mensajero
 			
-			$condicion_adicional.=$condicion_mensajero."  ( (a.tipo_origen=1 AND a.estado_recogida<>1 AND a.mensajero_origen IN(".$lista_roles_funcionarios.") ) OR  ( (a.mensajero_empresad=0 OR a.mensajero_empresad IS NULL) AND a.mensajero_destino IN(".$lista_roles_funcionarios.") AND a.estado_recogida=1  ) ) ";	
+			$condicion_adicional.=" AND ( (a.tipo_origen=1 AND a.estado_recogida<>1 AND a.mensajero_origen IN(".$lista_roles_funcionarios.") ) OR  ( (a.mensajero_empresad=0 OR a.mensajero_empresad IS NULL) AND a.mensajero_destino IN(".$lista_roles_funcionarios.") AND a.estado_recogida=1  ) ) ";	
 		} //fin $es_mensajero mensajero	
 	} // FIN: si no es un administrador filtramos como si fuera un mensajero
 	//FIN FILTRO MENSAJERO
