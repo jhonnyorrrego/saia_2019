@@ -60,7 +60,9 @@ echo(librerias_jquery('1.7'));
 					if(checkbox.is(':checked')===true){
 						var iddistribucion=$(this).val();
 					    mensajero=$('#select_mensajeros_ditribucion_'+iddistribucion).val();
-					        
+					    if(!mensajero){
+					    	error=2;
+					    }    
 					    registros_seleccionados+=iddistribucion+",";
 					        
 					    if(mensajero_temp){
@@ -75,9 +77,11 @@ echo(librerias_jquery('1.7'));
 				registros_seleccionados = registros_seleccionados.substring(0, registros_seleccionados.length-1);
 						
 				if(registros_seleccionados==""){
-					top.noty({text: 'No ha seleccionado ningun campo',type: 'warning',layout: "topCenter",timeout:3500});
+					top.noty({text: '<b>ATENCI&Oacute;N</b><br>No ha seleccionado ningun campo',type: 'warning',layout: "topCenter",timeout:3500});
 				}else if(error==1){
-					top.noty({text: 'No puede seleccionar diferentes mensajeros',type: 'warning',layout: "topCenter",timeout:3500});
+					top.noty({text: '<b>ATENCI&Oacute;N</b><br>No puede seleccionar diferentes mensajeros',type: 'warning',layout: "topCenter",timeout:3500});
+				}else if(error==2){
+					top.noty({text: '<b>ATENCI&Oacute;N</b><br>No es posible generar la planilla debido a que una &oacute; varias distribuciones no tienen mensajero asignado',type: 'warning',layout: "topCenter",timeout:4500});
 				}else{
 					
 					$("#opciones_acciones_distribucion").after("<div style='display:none;' id='ir_adicionar_documento' class='link kenlace_saia' enlace='formatos/despacho_ingresados/adicionar_despacho_ingresados.php?iddistribucion="+registros_seleccionados+"&mensajero="+mensajero+"' conector='iframe' titulo='Generar Planilla Mensajeros'>---</div>");

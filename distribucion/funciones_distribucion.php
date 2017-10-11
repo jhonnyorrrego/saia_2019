@@ -126,13 +126,6 @@ function ingresar_distribucion($iddoc,$datos,$iddistribucion=0){
 			$valor_iddistribucion=$iddistribucion.",";			
 		}
 		
-		//VENTANILLA RADICACION
-		$ventanilla_radicacion=usuario_actual('ventanilla_radicacion');
-		if(!$ventanilla_radicacion){
-			$ventanilla_radicacion=0;
-		}
-		//FIN VENTANILLA RADICACION
-		
 		//INSERTAR DISTRIBUCION
 		$sqli="INSERT INTO distribucion
 			(
@@ -152,8 +145,7 @@ function ingresar_distribucion($iddoc,$datos,$iddistribucion=0){
 				estado_recogida,
 				
 				documento_iddocumento,
-				fecha_creacion,
-				ventanilla
+				fecha_creacion
 			) 
 				VALUES 
 			(
@@ -173,8 +165,7 @@ function ingresar_distribucion($iddoc,$datos,$iddistribucion=0){
 				".$estado_recogida.",
 				
 				".$iddoc.",
-				".$fecha_creacion.",
-				".$ventanilla_radicacion."
+				".$fecha_creacion."
 			)
 				
 		";	
@@ -542,36 +533,7 @@ function mostrar_planilla_diligencia_distribucion($iddistribucion){ //Planilla A
 
 function generar_check_accion_distribucion($iddistribucion){
 	global $conn;
-	
-	$distribucion=busca_filtro_tabla("tipo_origen,estado_recogida,mensajero_origen,mensajero_destino","distribucion","iddistribucion=".$iddistribucion,"",$conn);
-	$diligencia=mostrar_diligencia_distribucion($distribucion[0]['tipo_origen'],$distribucion[0]['estado_recogida']);
-	$retornar_check=0;
-	switch($diligencia){
-		case 'RECOGIDA':
-			if($distribucion[0]['mensajero_origen']){
-				$retornar_check=1;	
-			}
-			break;
-		case 'ENTREGA':	
-			if($distribucion[0]['mensajero_destino']){
-				$retornar_check=1;	
-			}		
-			break;
-	} //fin switch	
-	
-	if(!$retornar_check){ //si es 1. Entregas Interna a ventanilla habilita el check no importa si tiene o no mensajero
-		$idbusqueda_componente=@$_REQUEST['idbusqueda_componente'];
-		$cnombre_componente=busca_filtro_tabla("nombre","busqueda_componente","idbusqueda_componente=".$idbusqueda_componente,"",$conn);
-		$nombre_componente=$cnombre_componente[0]['nombre'];
-		if($nombre_componente=='reporte_distribucion_general_sinrecogida'){
-			$retornar_check=1;
-		}
-	}
-	
-	$checkbox='';
-	if($retornar_check){
-		$checkbox='<input type="checkbox" class="accion_distribucion" value="'.$iddistribucion.'">';
-	}	
+	$checkbox='<input type="checkbox" class="accion_distribucion" value="'.$iddistribucion.'">';
 	return($checkbox);
 }
 function opciones_acciones_distribucion($datos){
@@ -686,11 +648,11 @@ function condicion_adicional_distribucion(){
 		$ventanilla_radicacion=usuario_actual('ventanilla_radicacion');
 		if($ventanilla_radicacion){
 			if($es_mensajero['numcampos']){
-				$condicion_adicional.=" AND ( ( a.ventanilla=".$ventanilla_radicacion." ) OR ";		
+				$condicion_adicional.=" AND ( ( b.ventanilla_radicacion=".$ventanilla_radicacion." ) OR ";		
 				$conector_mensajero='';
 				$conector_final_mensajero=' )';
 			}else{
-				$condicion_adicional.=" AND ( a.ventanilla=".$ventanilla_radicacion." ) ";		
+				$condicion_adicional.=" AND ( b.ventanilla_radicacion=".$ventanilla_radicacion." ) ";		
 			}		
 		}else if($es_mensajero['numcampos']){
 			
@@ -723,7 +685,7 @@ function condicion_adicional_distribucion(){
 		
 		//FILTRO POR VENTANILLA DE RADICACION
 		if($vector_variable_busqueda[0]=='filtro_ventanilla_radicacion' && $vector_variable_busqueda[1]){	
-			$condicion_adicional.=" AND ( a.ventanilla=".$vector_variable_busqueda[1]." )";
+			$condicion_adicional.=" AND ( b.ventanilla_radicacion=".$vector_variable_busqueda[1]." )";
 		} //fin if $vector_variable_busqueda[0]=='filtro_ventanilla_radicacion'		
 		
 		//FILTRO POR RUTA DE DISTRIBUCION
