@@ -533,36 +533,7 @@ function mostrar_planilla_diligencia_distribucion($iddistribucion){ //Planilla A
 
 function generar_check_accion_distribucion($iddistribucion){
 	global $conn;
-	
-	$distribucion=busca_filtro_tabla("tipo_origen,estado_recogida,mensajero_origen,mensajero_destino","distribucion","iddistribucion=".$iddistribucion,"",$conn);
-	$diligencia=mostrar_diligencia_distribucion($distribucion[0]['tipo_origen'],$distribucion[0]['estado_recogida']);
-	$retornar_check=0;
-	switch($diligencia){
-		case 'RECOGIDA':
-			if($distribucion[0]['mensajero_origen']){
-				$retornar_check=1;	
-			}
-			break;
-		case 'ENTREGA':	
-			if($distribucion[0]['mensajero_destino']){
-				$retornar_check=1;	
-			}		
-			break;
-	} //fin switch	
-	
-	if(!$retornar_check){ //si es 1. Entregas Interna a ventanilla habilita el check no importa si tiene o no mensajero
-		$idbusqueda_componente=@$_REQUEST['idbusqueda_componente'];
-		$cnombre_componente=busca_filtro_tabla("nombre","busqueda_componente","idbusqueda_componente=".$idbusqueda_componente,"",$conn);
-		$nombre_componente=$cnombre_componente[0]['nombre'];
-		if($nombre_componente=='reporte_distribucion_general_sinrecogida'){
-			$retornar_check=1;
-		}
-	}
-	
-	$checkbox='';
-	if($retornar_check){
-		$checkbox='<input type="checkbox" class="accion_distribucion" value="'.$iddistribucion.'">';
-	}	
+	$checkbox='<input type="checkbox" class="accion_distribucion" value="'.$iddistribucion.'">';
 	return($checkbox);
 }
 function opciones_acciones_distribucion($datos){
