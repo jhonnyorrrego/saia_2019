@@ -973,5 +973,19 @@ function filtro_mensajero_distribucion(){
     return $select;	
 	
 }
-
+function validar_administrador_mensajeria($funcionario_codigo=0){
+	global $conn;
+	
+	$funcionario_codigo_usuario_actual=$funcionario_codigo;
+	if(!$funcionario_codigo_usuario_actual){
+		$funcionario_codigo_usuario_actual=usuario_actual('funcionario_codigo');
+	}
+	$cargo_administrador_mensajeria=busca_filtro_tabla("funcionario_codigo","vfuncionario_dc"," lower(cargo) LIKE 'administrador%de%mensajer%a' AND estado_dc=1 AND funcionario_codigo=".$funcionario_codigo_usuario_actual,"",$conn);	
+	$administrador_mensajeria=0;
+	if($cargo_administrador_mensajeria['numcampos']){
+		$administrador_mensajeria=1;
+	}	
+	return($administrador_mensajeria);
+			
+}
 ?>
