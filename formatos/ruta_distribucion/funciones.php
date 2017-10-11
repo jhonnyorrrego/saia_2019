@@ -77,7 +77,11 @@ function mostrar_datos_dependencias_ruta($idformato,$iddoc){
 			$estado=array(1=>"Activo",2=>"Inactivo");				
 
 			for($j=$item['numcampos']-1;$j>=0;$j--){
-                    
+				if($item[$j]['estado_dependencia']==1){ //VINCULO RUTA DE DISTRIBUCION DE LAS DEPENDENCIAS ACTIVAS A LOS DOCUMENTOS
+					include_once($ruta_db_superior."distribucion/funciones_distribucion.php");
+					actualizar_dependencia_ruta_distribucion($dato[0]['idft_ruta_distribucion'],$item[$j]['dependencia_asignada'],1);
+				}
+
                     $dependencia=busca_filtro_tabla('','dependencia','iddependencia='.$item[$j]['dependencia_asignada'],'',conn);
 	               
 							$tabla.='		
