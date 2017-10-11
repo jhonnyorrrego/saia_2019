@@ -72,7 +72,7 @@ function importar($datos) {
 	$result = $client->call('consultar_info_reporte', $params);
 
 	if ($client->fault) {
-		echo 'Fallo';
+		echo 'Error';
 		print_r($result);
 	} else {	// Chequea errores
 		$err = $client->getError();
@@ -84,6 +84,7 @@ function importar($datos) {
 			if($ok == "OK") {
 				$busqueda = $result["busqueda"];
 				$componentes = $result["componentes"];
+				//TODO: Crear el reporte con los datos obtenidos
 				print_r ($result);
 			} else {
 				echo 'Error: ';
@@ -94,14 +95,13 @@ function importar($datos) {
 }
 
 function exportar($datos) {
-	//die("No implementado");
-	//TODO: Consultar si el remporte existe remoto
 	$url = $datos["url"];
 	$url .= "/webservice_saia/exportar_importar_reporte/impexprep_service.php?wsdl";
 	$client = new nusoap_client($url,'wsdl');
 
+	$nombre_reporte = $datos["reporte"];
 	$params = array();
-	$params['reporte'] = $datos["reporte"];
+	$params['reporte'] = $nombre_reporte;
 
 	$result = $client->call('consultar_reporte_existe', $params);
 
@@ -121,11 +121,20 @@ function exportar($datos) {
 			}
 		}
 	}
+	$respuesta = consultar_info_reporte_local($nombre_reporte);
+	$ok = $respuesta["estado"]["status"];
+	$msg = $respuesta["estado"]["message"];
+	if($ok == "KO") {
+		echo "Error al consultar la informaci&oacute;n del reporte '$nombre_reporte': ";
+		die($msg);
+	}
+	//TODO: insertar la informacion en el servidor remoto
 }
 
 function consultar_info_reporte_local($nombre_reporte) {
 	if (empty($nombre_reporte)) {
-		return array();
+		$respuesta['estado'] = array("status" => "KO", "message" => "Falta el par&aacute;metro 'nombre_reporte'");
+		return $respuesta;
 	}
 
 	$db = new Conexion();
