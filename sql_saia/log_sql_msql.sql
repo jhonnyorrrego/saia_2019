@@ -682,8 +682,7 @@ CREATE TABLE distribucion (
   estado_recogida int(11) NOT NULL,
   fecha_creacion datetime NOT NULL,
   finaliza_rol int(11) NULL,
-  finaliza_fecha datetime NULL,
-  ventanilla int(11) NOT NULL
+  finaliza_fecha datetime NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 ALTER TABLE distribucion
@@ -769,6 +768,9 @@ INSERT INTO busqueda_condicion (idbusqueda_condicion, busqueda_idbusqueda, fk_bu
 -- MODIFICACION FUNCIONARIO ADD & EDIT 
 
 ALTER TABLE funcionario ADD ventanilla_radicacion INT(11) NULL AFTER foto_cordenadas;
+ALTER TABLE documento ADD ventanilla_radicacion INT(11) NULL DEFAULT '0' AFTER fecha_limite;
+ALTER TABLE distribucion DROP ventanilla;
+
 
 -- FIN NUEVA DISTRIBUCION 
 -- ---------------------------------------------------------------- 

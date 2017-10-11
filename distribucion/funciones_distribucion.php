@@ -126,13 +126,6 @@ function ingresar_distribucion($iddoc,$datos,$iddistribucion=0){
 			$valor_iddistribucion=$iddistribucion.",";			
 		}
 		
-		//VENTANILLA RADICACION
-		$ventanilla_radicacion=usuario_actual('ventanilla_radicacion');
-		if(!$ventanilla_radicacion){
-			$ventanilla_radicacion=0;
-		}
-		//FIN VENTANILLA RADICACION
-		
 		//INSERTAR DISTRIBUCION
 		$sqli="INSERT INTO distribucion
 			(
@@ -152,8 +145,7 @@ function ingresar_distribucion($iddoc,$datos,$iddistribucion=0){
 				estado_recogida,
 				
 				documento_iddocumento,
-				fecha_creacion,
-				ventanilla
+				fecha_creacion
 			) 
 				VALUES 
 			(
@@ -173,8 +165,7 @@ function ingresar_distribucion($iddoc,$datos,$iddistribucion=0){
 				".$estado_recogida.",
 				
 				".$iddoc.",
-				".$fecha_creacion.",
-				".$ventanilla_radicacion."
+				".$fecha_creacion."
 			)
 				
 		";	
@@ -686,11 +677,11 @@ function condicion_adicional_distribucion(){
 		$ventanilla_radicacion=usuario_actual('ventanilla_radicacion');
 		if($ventanilla_radicacion){
 			if($es_mensajero['numcampos']){
-				$condicion_adicional.=" AND ( ( a.ventanilla=".$ventanilla_radicacion." ) OR ";		
+				$condicion_adicional.=" AND ( ( b.ventanilla_radicacion=".$ventanilla_radicacion." ) OR ";		
 				$conector_mensajero='';
 				$conector_final_mensajero=' )';
 			}else{
-				$condicion_adicional.=" AND ( a.ventanilla=".$ventanilla_radicacion." ) ";		
+				$condicion_adicional.=" AND ( b.ventanilla_radicacion=".$ventanilla_radicacion." ) ";		
 			}		
 		}else if($es_mensajero['numcampos']){
 			
@@ -723,7 +714,7 @@ function condicion_adicional_distribucion(){
 		
 		//FILTRO POR VENTANILLA DE RADICACION
 		if($vector_variable_busqueda[0]=='filtro_ventanilla_radicacion' && $vector_variable_busqueda[1]){	
-			$condicion_adicional.=" AND ( a.ventanilla=".$vector_variable_busqueda[1]." )";
+			$condicion_adicional.=" AND ( b.ventanilla_radicacion=".$vector_variable_busqueda[1]." )";
 		} //fin if $vector_variable_busqueda[0]=='filtro_ventanilla_radicacion'		
 		
 		//FILTRO POR RUTA DE DISTRIBUCION
