@@ -633,12 +633,7 @@ function condicion_adicional_distribucion(){
 	
 	$funcionario_codigo_usuario_actual=usuario_actual('funcionario_codigo');
 	$es_mensajero=busca_filtro_tabla("iddependencia_cargo","vfuncionario_dc","lower(cargo)='mensajero' AND funcionario_codigo='".$funcionario_codigo_usuario_actual."' AND estado_dc=1","",$conn);
-	$cargo_administrador_mensajeria=busca_filtro_tabla("funcionario_codigo","vfuncionario_dc"," lower(cargo) LIKE 'administrador%de%mensajer%a' AND estado_dc=1 AND funcionario_codigo=".$funcionario_codigo_usuario_actual,"",$conn);	
-	$administrador_mensajeria=0;
-	if($cargo_administrador_mensajeria['numcampos']){
-		$administrador_mensajeria=1;
-	}
-	
+	$administrador_mensajeria=validar_administrador_mensajeria();
 	
 	
 	//CONDICION VENTANILLA
@@ -859,15 +854,11 @@ function actualizar_mensajero_ruta_distribucion($idft_ruta_distribucion,$iddepen
 function filtro_ventanilla_radicacion(){
     global $ruta_db_superior, $conn;
 	
-	$select="";
-	$funcionario_codigo_usuario_actual=usuario_actual('funcionario_codigo');
-	$cargo_administrador_mensajeria=busca_filtro_tabla("funcionario_codigo","vfuncionario_dc"," lower(cargo) LIKE 'administrador%de%mensajer%a' AND estado_dc=1 ","",$conn);
-	
+	$select="";	
+	$administrador_mensajeria=validar_administrador_mensajeria();
 	$ver_select=false;
-	for($i=0;$i<$cargo_administrador_mensajeria['numcampos'];$i++){
-		if( $cargo_administrador_mensajeria[$i]['funcionario_codigo']==$funcionario_codigo_usuario_actual ){
-			$ver_select=true;
-		}
+	if($administrador_mensajeria){
+		$ver_select=true;
 	}
 	
 	if($ver_select){
@@ -900,16 +891,11 @@ function filtro_ventanilla_radicacion(){
 function filtro_mensajero_distribucion(){
     global $ruta_db_superior, $conn;
     
-	
 	$select="";
-	$funcionario_codigo_usuario_actual=usuario_actual('funcionario_codigo');
-	$cargo_administrador_mensajeria=busca_filtro_tabla("funcionario_codigo","vfuncionario_dc"," lower(cargo) LIKE 'administrador%de%mensajer%a' AND estado_dc=1 ","",$conn);
-	
+	$administrador_mensajeria=validar_administrador_mensajeria();
 	$ver_select=false;
-	for($i=0;$i<$cargo_administrador_mensajeria['numcampos'];$i++){
-		if( $cargo_administrador_mensajeria[$i]['funcionario_codigo']==$funcionario_codigo_usuario_actual ){
-			$ver_select=true;
-		}
+	if($administrador_mensajeria){
+		$ver_select=true;
 	}
 	
 	if($ver_select){
