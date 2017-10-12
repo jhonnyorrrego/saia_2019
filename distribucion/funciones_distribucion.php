@@ -974,4 +974,22 @@ function validar_administrador_mensajeria($funcionario_codigo=0){
 	return($administrador_mensajeria);
 			
 }
+function condicion_por_ingresar_ventanilla_distribucion(){
+	global $conn,$ruta_db_superior;	
+	
+	include_once($ruta_db_superior."distribucion/funciones_distribucion.php");
+	$administrador_mensajeria=validar_administrador_mensajeria();
+	$ventanilla_radicacion_usuario_actual=usuario_actual('ventanilla_radicacion');
+		
+	$condicion_adicional="";	
+	if(!$administrador_mensajeria){
+		$condicion_adicional.=" ";
+		if($ventanilla_radicacion_usuario_actual){
+			$condicion_adicional.=" AND ( a.ventanilla_radicacion=".$ventanilla_radicacion_usuario_actual." )";	
+		}else{
+			$condicion_adicional.=" AND (1=2)";
+		}		
+	}
+	return($condicion_adicional);
+}
 ?>
