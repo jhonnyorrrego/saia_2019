@@ -1949,7 +1949,7 @@ global $conn;
 	}
  $mail = new PHPMailer ();
  $mail->IsSMTP();
-// $mail->SMTPDebug  = 2;
+ //$mail->SMTPDebug  = 2;
  $mail->Host = $servidor_correo; //secure.emailsrvr.com - mail.rackspace.com
  $mail->Port = $puerto_correo_salida;
  $mail->SMTPAuth = true;

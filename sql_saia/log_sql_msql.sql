@@ -1015,7 +1015,7 @@ AS
 
       UPDATE dbo.contador
          SET 
-            consecutivo = contador.consecutivo + 1
+            consecutivo = contador.consecutivo + 1 
       WHERE contador.idcontador = @tipo
 
       SET @sentencia = concat('UPDATE documento SET numero=', @valor, ' WHERE iddocumento=',@iddoc)

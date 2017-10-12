@@ -962,7 +962,7 @@ DELIMITER$$;
 CREATE PROCEDURE `sp_asignar_radicado`(IN `iddoc` INT, IN `tipo` INT, IN `funcionario` INT)
 BEGIN
 DECLARE valor VARCHAR(50);
-DECLARE sentencia VARCHAR(2000);
+DECLARE sentencia VARCHAR(2000); 
 SELECT consecutivo INTO valor FROM contador WHERE idcontador=tipo;
 UPDATE documento SET numero=valor WHERE iddocumento=iddoc;
 UPDATE contador SET consecutivo=consecutivo+1 WHERE idcontador=tipo;
