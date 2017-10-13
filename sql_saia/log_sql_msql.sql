@@ -772,9 +772,12 @@ ALTER TABLE distribucion DROP ventanilla;
 
 -- MODIFICACION REPORTE POR INGRESAR DISTRIBUCION
 UPDATE busqueda SET ruta_libreria = 'pantallas/documento/librerias.php,pantallas/documento/librerias_pendientes_entrada.php,distribucion/funciones_distribucion.php' WHERE idbusqueda = 7;
-UPDATE busqueda_condicion SET codigo_where = 'lower(a.estado)=''iniciado'' AND a.tipo_radicado=1 {*condicion_por_ingresar_ventanilla_distribucion*}' WHERE idbusqueda_condicion = 13;
-UPDATE busqueda_condicion SET codigo_where = 'lower(A.estado)=''iniciado'' AND A.tipo_radicado=2 {*condicion_por_ingresar_ventanilla_distribucion*}' WHERE idbusqueda_condicion = 222;
+UPDATE busqueda_componente SET tablas_adicionales = 'ft_radicacion_entrada b' WHERE idbusqueda_componente = 16;
+UPDATE busqueda_componente SET tablas_adicionales = 'ft_radicacion_entrada b' WHERE idbusqueda_componente = 280;
+UPDATE busqueda_condicion SET codigo_where = 'lower(a.estado)=''iniciado'' AND a.tipo_radicado=1 AND a.iddocumento=b.documento_iddocumento {*condicion_por_ingresar_ventanilla_distribucion*}' WHERE idbusqueda_condicion = 13;
+UPDATE busqueda_condicion SET codigo_where = 'lower(A.estado)=''iniciado'' AND A.tipo_radicado=2 AND a.iddocumento=b.documento_iddocumento {*condicion_por_ingresar_ventanilla_distribucion*}' WHERE idbusqueda_condicion = 222;
 UPDATE busqueda_condicion SET codigo_where = 'lower(a.estado)=''iniciado'' AND a.iddocumento=b.documento_iddocumento {*condicion_por_ingresar_ventanilla_distribucion*}' WHERE idbusqueda_condicion = 233;
+
 
 
 -- FIN NUEVA DISTRIBUCION 
