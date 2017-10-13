@@ -778,7 +778,14 @@ UPDATE busqueda_condicion SET codigo_where = 'lower(a.estado)=''iniciado'' AND a
 UPDATE busqueda_condicion SET codigo_where = 'lower(A.estado)=''iniciado'' AND A.tipo_radicado=2 AND a.iddocumento=b.documento_iddocumento {*condicion_por_ingresar_ventanilla_distribucion*}' WHERE idbusqueda_condicion = 222;
 UPDATE busqueda_condicion SET codigo_where = 'lower(a.estado)=''iniciado'' AND a.iddocumento=b.documento_iddocumento {*condicion_por_ingresar_ventanilla_distribucion*}' WHERE idbusqueda_condicion = 233;
 
+-- MODIFICACION REPORTE INGRESADOS DISTRIBUCION
 
+UPDATE busqueda SET tablas = 'documento a' WHERE idbusqueda = 9;
+UPDATE busqueda SET ruta_libreria = 'pantallas/documento/librerias.php,pantallas/documento/librerias_flujo.php,pantallas/documento/librerias_transferencias.php,pantallas/documento/librerias_tramitados.php,distribucion/funciones_distribucion.php' WHERE idbusqueda = 9;
+UPDATE busqueda_componente SET tablas_adicionales = 'ft_radicacion_entrada b' WHERE busqueda_componente.idbusqueda_componente = 18;
+UPDATE busqueda_componente SET tablas_adicionales = 'ft_radicacion_entrada b' WHERE busqueda_componente.idbusqueda_componente = 23;
+UPDATE busqueda_condicion SET codigo_where = 'lower(a.estado)=''aprobado'' and a.tipo_radicado=1 and a.iddocumento=b.documento_iddocumento {*condicion_por_ingresar_ventanilla_distribucion*}' WHERE idbusqueda_condicion = 15;
+UPDATE busqueda_condicion SET codigo_where = 'lower(a.estado)=''aprobado'' and a.tipo_radicado=2 and a.iddocumento=b.documento_iddocumento {*condicion_por_ingresar_ventanilla_distribucion*}' WHERE idbusqueda_condicion = 18;
 
 -- FIN NUEVA DISTRIBUCION 
 -- ---------------------------------------------------------------- 
