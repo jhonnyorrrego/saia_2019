@@ -1962,10 +1962,6 @@ global $conn;
 	}else{
 		$mail->Subject = $asunto_defecto_correo;
 	}
-
-
-
-
   $config = busca_filtro_tabla("valor","configuracion","nombre='color_encabezado'","",$conn);
   $admin_saia= busca_filtro_tabla("valor","configuracion","nombre='login_administrador'","",$conn);
   $correo_admin=busca_filtro_tabla("email","funcionario","login='".$admin_saia[0]['valor']."'","",$conn);
@@ -2028,10 +2024,18 @@ global $conn;
 		$para[]=$fila;
 	}
  }
- /*
- $mail->AddAddress("soporte@cerok.com","soporte@cerok.com");
- $mail->AddBCC("notificaciones@cerok.com","notificaciones@cerok.com");*/
 
+ if(count(@$usuarios['copia'])){ //CON COPIA
+	 foreach($usuarios['copia'] as $fila){
+	 	$mail->AddCC($fila,$fila);
+	 } 	
+ }
+ if(count(@$usuarios['copia_oculta'])){ //CON COPIA OCULTA
+	 foreach($usuarios['copia_oculta'] as $fila){
+	 	$mail->AddBCC($fila,$fila);
+	 } 	
+ } 
+ 
   if(!empty($anexos)){
   	foreach($anexos as $fila){
   		$mail->AddAttachment($fila);
