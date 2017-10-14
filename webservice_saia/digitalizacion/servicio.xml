@@ -1,0 +1,136 @@
+<?xml version="1.0"?>
+<wsdl:definitions 
+    xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" 
+    xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" 
+    xmlns:s="http://www.w3.org/2001/XMLSchema" 
+    xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" 
+    targetNamespace="http://www.cerok.com/" 
+    xmlns:tns="http://www.cerok.com/" 
+    name="WebServiceDigitalizacionSAIA" 
+>
+<wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://www.cerok.com/">
+        <s:element name="consultar_infoRequest">
+            <s:complexType><s:sequence>
+                <s:element minOccurs="1" maxOccurs="1" name="usuario" type="s:string" />
+                <s:element minOccurs="1" maxOccurs="1" name="clave" type="s:string" />
+            </s:sequence></s:complexType>
+        </s:element>
+        <s:element name="consultar_infoResponse">
+            <s:complexType><s:sequence>
+                <s:element minOccurs="1" maxOccurs="1" name="status" type="s:int" />
+                <s:element nillable="true" name="iddoc" type="s:int" />
+                <s:element nillable="true" name="idfunc" type="s:int" />
+                <s:element minOccurs="1" maxOccurs="1" name="message" type="s:string" />
+            </s:sequence></s:complexType>
+        </s:element>
+        <s:element name="actualizar_estadoRequest">
+            <s:complexType><s:sequence>
+                <s:element minOccurs="1" maxOccurs="1" name="iddoc" type="s:int" />
+                <s:element minOccurs="1" maxOccurs="1" name="idfunc" type="s:int" />
+            </s:sequence></s:complexType>
+        </s:element>
+        <s:element name="actualizar_estadoResponse">
+            <s:complexType><s:sequence>
+                <s:element minOccurs="1" maxOccurs="1" name="status" type="s:int" />
+                <s:element minOccurs="1" maxOccurs="1" name="message" type="s:string" />
+            </s:sequence></s:complexType>
+        </s:element>
+        <s:element name="verificar_loginRequest">
+            <s:complexType><s:sequence>
+                <s:element minOccurs="1" maxOccurs="1" name="usuario" type="s:string" />
+                <s:element minOccurs="1" maxOccurs="1" name="clave" type="s:string" />
+            </s:sequence></s:complexType>
+        </s:element>
+        <s:element name="verificar_loginResponse">
+            <s:complexType><s:sequence>
+                <s:element minOccurs="1" maxOccurs="1" name="status" type="s:int" />
+                <s:element minOccurs="1" maxOccurs="1" name="message" type="s:string" />
+                <s:element nillable="true" name="idfunc" type="s:int" />
+            </s:sequence></s:complexType>
+        </s:element>
+    </s:schema>
+</wsdl:types>
+
+<wsdl:message name="consultar_infoRequest">
+    <wsdl:part name="parameters" element="tns:consultar_infoRequest" />
+</wsdl:message>
+<wsdl:message name="consultar_infoResponse">
+    <wsdl:part name="parameters" element="tns:consultar_infoResponse" />
+</wsdl:message>
+
+<wsdl:message name="actualizar_estadoRequest">
+    <wsdl:part name="parameters" element="tns:actualizar_estadoRequest" />
+</wsdl:message>
+<wsdl:message name="actualizar_estadoResponse">
+    <wsdl:part name="parameters" element="tns:actualizar_estadoResponse" />
+</wsdl:message>
+
+<wsdl:message name="verificar_loginRequest">
+    <wsdl:part name="parameters" element="tns:verificar_loginRequest" />
+</wsdl:message>
+<wsdl:message name="verificar_loginResponse">
+    <wsdl:part name="parameters" element="tns:verificar_loginResponse" />
+</wsdl:message>
+
+<wsdl:portType name="consultar_infoPortType">
+    <wsdl:operation name="consultar_info">
+        <wsdl:input message="tns:consultar_infoRequest" />
+        <wsdl:output message="tns:consultar_infoResponse" />
+    </wsdl:operation>
+</wsdl:portType>
+
+<wsdl:portType name="actualizar_estadoPortType">
+    <wsdl:operation name="actualizar_estado">
+        <wsdl:input message="tns:actualizar_estadoRequest" />
+        <wsdl:output message="tns:actualizar_estadoResponse" />
+    </wsdl:operation>
+</wsdl:portType>
+
+<wsdl:portType name="verificar_loginPortType">
+    <wsdl:operation name="verificar_login">
+        <wsdl:input message="tns:verificar_loginRequest" />
+        <wsdl:output message="tns:verificar_loginResponse" />
+    </wsdl:operation>
+</wsdl:portType>
+
+<wsdl:binding name="consultar_infoBinding" type="tns:consultar_infoPortType">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="consultar_info">
+        <soap:operation soapAction="http://saia-release.loc/saia_release/saia/webservice_saia/digitalizacion/digitalizacion_service.php#consultar_info" style="document" />
+        <wsdl:input><soap:body use="literal" /></wsdl:input>
+        <wsdl:output><soap:body use="literal" /></wsdl:output>
+    </wsdl:operation>
+</wsdl:binding>
+
+<wsdl:binding name="actualizar_estadoBinding" type="tns:actualizar_estadoPortType">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="actualizar_estado">
+        <soap:operation soapAction="http://saia-release.loc/saia_release/saia/webservice_saia/digitalizacion/digitalizacion_service.php#actualizar_estado" style="document" />
+        <wsdl:input><soap:body use="literal" /></wsdl:input>
+        <wsdl:output><soap:body use="literal" /></wsdl:output>
+    </wsdl:operation>
+</wsdl:binding>
+
+<wsdl:binding name="verificar_loginBinding" type="tns:verificar_loginPortType">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="verificar_login">
+        <soap:operation soapAction="http://saia-release.loc/saia_release/saia/webservice_saia/digitalizacion/digitalizacion_service.php#verificar_login" style="document" />
+        <wsdl:input><soap:body use="literal" /></wsdl:input>
+        <wsdl:output><soap:body use="literal" /></wsdl:output>
+    </wsdl:operation>
+</wsdl:binding>
+
+<wsdl:service name="WebServiceDigitalizacionSAIA">
+    <wsdl:port name="consultar_infoPort" binding="tns:consultar_infoBinding">
+        <soap:address location="http://saia-release.loc/saia_release/saia/webservice_saia/digitalizacion/digitalizacion_service.php" />
+    </wsdl:port>
+    <wsdl:port name="actualizar_estadoPort" binding="tns:actualizar_estadoBinding">
+        <soap:address location="http://saia-release.loc/saia_release/saia/webservice_saia/digitalizacion/digitalizacion_service.php" />
+    </wsdl:port>
+    <wsdl:port name="verificar_loginPort" binding="tns:verificar_loginBinding">
+        <soap:address location="http://saia-release.loc/saia_release/saia/webservice_saia/digitalizacion/digitalizacion_service.php" />
+    </wsdl:port>
+</wsdl:service>
+
+</wsdl:definitions>
