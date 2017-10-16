@@ -41,3 +41,4 @@ $tipo = $fs->mimeType($arr_almacen["ruta"]);
 header("Content-Type: $tipo");
 header("Content-Length: " . $archivo->getSize());
 echo($archivo->getContent());
+
