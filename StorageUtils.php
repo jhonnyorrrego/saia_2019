@@ -193,13 +193,12 @@ class StorageUtils {
 		$almacenamiento = null;
 		if ($ruta->isJson()) {
 			$rutaj = json_decode($path);
-			$ruta_resuelta = static::parsear_ruta_servidor($rutaj->servidor);
-			//print_r($ruta_resuelta);//die("<==== Resuelta");
+			/*$ruta_resuelta = static::parsear_ruta_servidor($rutaj->servidor);
 			$rutaj->servidor = (string)$ruta_resuelta["servidor"];
 			if(!empty($ruta_resuelta["ruta"])) {
 				$ruta_compuesta = String::create($ruta_resuelta["ruta"]);
 				$rutaj->ruta = (string)$ruta_compuesta->ensureRight(static::SEPARADOR)->append($rutaj->ruta);
-			}
+			}*/
 			$almacenamiento = SaiaStorage::con_ruta_servidor($rutaj->servidor);
 			$resp["servidor"] = $rutaj->servidor;
 			$resp["ruta"] = (string)$rutaj->ruta;
@@ -260,7 +259,12 @@ class StorageUtils {
 		return $resp;
 	}
 
-	public static function parsear_ruta_servidor($ruta_servidor) {
+	/**
+	 *
+	 * @param string $ruta_servidor
+	 * @return string[]
+	 */
+	private static function parsear_ruta_servidor($ruta_servidor) {
 		//debug_print_backtrace();
 		$str_ruta= String::create($ruta_servidor);
 		$storage_type = $str_ruta->first($str_ruta->indexOf("://"))->ensureRight("://");

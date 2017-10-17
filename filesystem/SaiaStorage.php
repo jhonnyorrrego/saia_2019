@@ -65,11 +65,9 @@ class SaiaStorage {
 		$str_path = String::create($server_path);
 		$storage_type = $str_path->first($str_path->indexOf("://"))->ensureRight("://");
 
-		if(StorageUtils::FTP != $storage_type) {
-			$ruta_resuelta = StorageUtils::parsear_ruta_servidor($server_path);
-		}
+		$ruta_resuelta = $server_path;
 		//$path = $str_path->removeLeft($storage_type);
-		$path = String::create($ruta_resuelta["servidor"])->removeLeft($storage_type);
+		$path = String::create($server_path)->removeLeft($storage_type);
 		//print_r($path);die();
 		switch ($storage_type) {
 			case StorageUtils::LOCAL:
@@ -116,13 +114,13 @@ class SaiaStorage {
 					$this->opciones_ftp['port'] = $datos_ftp["port"];
 				}
 				$this->adapter = new FtpAdapter($datos_ftp["path"], $datos_ftp["host"], $this->opciones_ftp);
-				$ruta_resuelta["servidor"] = $datos_ftp["scheme"] . "://" . $datos_ftp["host"] . "/" . $datos_ftp["path"];
+				$ruta_resuelta = $datos_ftp["scheme"] . "://" . $datos_ftp["host"] . "/" . $datos_ftp["path"];
 				break;
 			default:
 					$this->adapter = new Local($path, true, 0777);
 					break;
 		}
-		$this->ruta_servidor = $ruta_resuelta["servidor"];
+		$this->ruta_servidor = $ruta_resuelta;
 
 		if($this->adapter) {
 			$this->filesystem = new Filesystem($this->adapter);
