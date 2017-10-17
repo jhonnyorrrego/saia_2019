@@ -448,7 +448,7 @@ else
 
 	function invocar_radicar_documento($iddocumento, $idcontador, $funcionario) {
 		$strsql="EXEC sp_asignar_radicado @iddoc=$iddocumento, @idcontador=$idcontador, @idfuncionario=$funcionario;";
-		$this->Ejecutar_Sql($sql);
+		$this->Ejecutar_Sql($strsql) or die($strsql);
 	}
 
 	function listar_campos_tabla($tabla = NULL, $tipo_retorno = 0) {
