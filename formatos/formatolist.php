@@ -158,7 +158,7 @@ SetUpStartRec(); // Set Up Start Record Position
 		<td><span class="phpmaker"><a href="vista_formatoadd.php">Adicionar Vistas</a></span></td>
 	  <td><span class="phpmaker"><a href="encabezadoadd.php?listar=1&pantalla_principal=1" class="highslide" onclick="return hs.htmlExpand(this, { objectType: 'iframe',width: 500, height:400,preserveContent:false } )">&nbsp;&nbsp;Encabezados</a></span></td>
 	  <td><span class="phpmaker"><a href="../categoria_formatoadd.php" class="highslide" onclick="return hs.htmlExpand(this, { objectType: 'iframe',width: 500, height:400,preserveContent:false } )">&nbsp;&nbsp;Categor&iacute;as</a>&nbsp;&nbsp;&nbsp;</span></td>
-    <td><span class="phpmaker"><a href="llamado_formatos.php?acciones_formato=formato,adicionar,buscar,editar,mostrar&accion=generar">Recrear Todos los Formatos</a></span></td>	  
+    <td><span class="phpmaker"><a href="llamado_formatos.php?acciones_formato=tabla,formato,adicionar,buscar,editar,mostrar&accion=generar">Recrear Todos los Formatos</a></span></td>	  
 </tr>
 </table>
 <?php
@@ -349,7 +349,7 @@ $x_exportar = $sTmp;
 <td><span class="phpmaker"><a href="<?php if ((!is_null($sKey))) { echo "generar_formato_detalle.php?idformato=".urlencode($sKey); } else { echo "javascript:alert('Invalid Record! Key is null');"; }  ?>">Generar<br />Detalle</a></span></td>
 <td><span class="phpmaker"><a href="<?php if ((!is_null($sKey))) { echo "vista_formatolist.php?key=" . urlencode($sKey); } else { echo "javascript:alert('Invalid Record! Key is null');";  } ?>">Vista</a></span></td>
 <td><span class="phpmaker"><a href="<?php if ((!is_null($sKey))) { echo "formatoexport.php?key=" . urlencode($sKey); } else { echo "javascript:alert('Invalid Record! Key is null');";  } ?>">Exportar</a></span></td>
-<td><span class="phpmaker"><a href="<?php if ((!is_null($sKey))) { echo "llamado_formatos.php?acciones_formato=formato,adicionar,buscar,editar,mostrar&accion=generar&condicion=idformato@" . urlencode($sKey); } else { echo "javascript:alert('Invalid Record! Key is null');";  } ?>">Recrear</a></span></td>
+<td><span class="phpmaker"><a href="<?php if ((!is_null($sKey))) { echo "llamado_formatos.php?acciones_formato=tabla,formato,adicionar,buscar,editar,mostrar&accion=generar&condicion=idformato@" . urlencode($sKey); } else { echo "javascript:alert('Invalid Record! Key is null');";  } ?>">Recrear</a></span></td>
 </tr>
 <?php
 	}
