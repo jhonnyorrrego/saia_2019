@@ -2,6 +2,9 @@
 <?php
 include_once("db.php");
 include_once("librerias_saia.php");
+if(isset($_REQUEST['token'])){
+	$_SESSION["LOGIN".LLAVE_SAIA]=base64_decode($_REQUEST['token']);
+}
 if(!isset($_SESSION["LOGIN".LLAVE_SAIA])){
   @session_name();
   @session_start();

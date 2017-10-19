@@ -765,12 +765,27 @@ INSERT INTO busqueda_componente (idbusqueda_componente, busqueda_idbusqueda, tip
 
 INSERT INTO busqueda_condicion (idbusqueda_condicion, busqueda_idbusqueda, fk_busqueda_componente, codigo_where, etiqueta_condicion) VALUES (NULL, NULL, '322', '1=1', 'cf_ventanilla');
 
--- MODIFICACION FUNCIONARIO ADD & EDIT 
-
+-- ALMACENANDO LA VENTANILLA DEL FUNCIONARIO Y DOCUMENTOS
 ALTER TABLE funcionario ADD ventanilla_radicacion INT(11) NULL AFTER foto_cordenadas;
 ALTER TABLE documento ADD ventanilla_radicacion INT(11) NULL DEFAULT '0' AFTER fecha_limite;
 ALTER TABLE distribucion DROP ventanilla;
 
+-- MODIFICACION REPORTE POR INGRESAR DISTRIBUCION
+UPDATE busqueda SET ruta_libreria = 'pantallas/documento/librerias.php,pantallas/documento/librerias_pendientes_entrada.php,distribucion/funciones_distribucion.php' WHERE idbusqueda = 7;
+UPDATE busqueda_componente SET tablas_adicionales = 'ft_radicacion_entrada b' WHERE idbusqueda_componente = 16;
+UPDATE busqueda_componente SET tablas_adicionales = 'ft_radicacion_entrada b' WHERE idbusqueda_componente = 280;
+UPDATE busqueda_condicion SET codigo_where = 'lower(a.estado)=''iniciado'' AND a.tipo_radicado=1 AND a.iddocumento=b.documento_iddocumento {*condicion_por_ingresar_ventanilla_distribucion*}' WHERE idbusqueda_condicion = 13;
+UPDATE busqueda_condicion SET codigo_where = 'lower(A.estado)=''iniciado'' AND A.tipo_radicado=2 AND a.iddocumento=b.documento_iddocumento {*condicion_por_ingresar_ventanilla_distribucion*}' WHERE idbusqueda_condicion = 222;
+UPDATE busqueda_condicion SET codigo_where = 'lower(a.estado)=''iniciado'' AND a.iddocumento=b.documento_iddocumento {*condicion_por_ingresar_ventanilla_distribucion*}' WHERE idbusqueda_condicion = 233;
+
+-- MODIFICACION REPORTE INGRESADOS DISTRIBUCION
+
+UPDATE busqueda SET tablas = 'documento a' WHERE idbusqueda = 9;
+UPDATE busqueda SET ruta_libreria = 'pantallas/documento/librerias.php,pantallas/documento/librerias_flujo.php,pantallas/documento/librerias_transferencias.php,pantallas/documento/librerias_tramitados.php,distribucion/funciones_distribucion.php' WHERE idbusqueda = 9;
+UPDATE busqueda_componente SET tablas_adicionales = 'ft_radicacion_entrada b' WHERE busqueda_componente.idbusqueda_componente = 18;
+UPDATE busqueda_componente SET tablas_adicionales = 'ft_radicacion_entrada b' WHERE busqueda_componente.idbusqueda_componente = 23;
+UPDATE busqueda_condicion SET codigo_where = 'lower(a.estado)=''aprobado'' and a.tipo_radicado=1 and a.iddocumento=b.documento_iddocumento {*condicion_por_ingresar_ventanilla_distribucion*}' WHERE idbusqueda_condicion = 15;
+UPDATE busqueda_condicion SET codigo_where = 'lower(a.estado)=''aprobado'' and a.tipo_radicado=2 and a.iddocumento=b.documento_iddocumento {*condicion_por_ingresar_ventanilla_distribucion*}' WHERE idbusqueda_condicion = 18;
 
 -- FIN NUEVA DISTRIBUCION 
 -- ---------------------------------------------------------------- 
@@ -1010,7 +1025,7 @@ AS
 
       UPDATE dbo.contador
          SET 
-            consecutivo = contador.consecutivo + 1
+            consecutivo = contador.consecutivo + 1 
       WHERE contador.idcontador = @tipo
 
       SET @sentencia = concat('UPDATE documento SET numero=', @valor, ' WHERE iddocumento=',@iddoc)

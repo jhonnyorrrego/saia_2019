@@ -108,7 +108,7 @@ function crear_archivo_carpeta($nombre, $ruta, $extension, $tipo) {
 		}
 		if(file_exists($ruta_db_superior . $ruta . "/" . $nombre . "." . $extension)) {
 			$resultado = "EL archivo ya existe";
-		} else if(file_put_contents($ruta_db_superior . $ruta . "/" . $nombre . "." . $extension, "")) {
+		} else if(file_put_contents($ruta_db_superior . $ruta . "/" . $nombre . "." . $extension, "") === 0) {
 			$resultado = "Archivo creado con &eacute;xito";
 		} else {
 			$resultado = "Error al tratar de crear el archivo";

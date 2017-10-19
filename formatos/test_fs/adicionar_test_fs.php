@@ -1,0 +1,12 @@
+<html><title>.:ADICIONAR PRUEBA SISTEMA ARCHIVOS:.</title><head><script type="text/javascript" src="../librerias/funciones_formatos.js"></script><script type="text/javascript" src="../../js/cmxforms.js"></script><?php include_once("../librerias/funciones_generales.php"); ?><?php include_once("../librerias/funciones_acciones.php"); ?><?php include_once("../librerias/estilo_formulario.php"); ?><?php include_once("../librerias/header_formato.php"); ?><script type="text/javascript" src="../../js/jquery.js"></script><script type="text/javascript" src="../../js/jquery.validate.js"></script><script type="text/javascript" src="../../js/title2note.js"></script><script type='text/javascript'>
+  $().ready(function() {
+	// validar los campos del formato
+	$('#formulario_formatos').validate();
+	
+});
+</script> </head><body bgcolor="#F5F5F5"><?php llama_funcion_accion(@$_REQUEST["iddoc"],@$_REQUEST["idformato"],"ingresar","ANTERIOR");?><form name="formulario_formatos" id="formulario_formatos" method="post" action="../../class_transferencia.php" enctype="multipart/form-data"><table width="100%" cellspacing="1" cellpadding="4"><tr><td colspan="2" class="encabezado_list">PRUEBA SISTEMA ARCHIVOS</td></tr><input type="hidden" name="serie_idserie" value="<?php echo(validar_valor_campo(5154)); ?>"><input type="hidden" name="encabezado" value="<?php echo(validar_valor_campo(5152)); ?>"><input type="hidden" name="firma" value="<?php echo(validar_valor_campo(5153)); ?>"><tr>
+                     <td class="encabezado" width="20%" title="">DEPENDENCIA DEL CREADOR DEL DOCUMENTO*</td>
+                     <?php buscar_dependencia(416,5151);?></tr><input type="hidden" name="documento_iddocumento" value="<?php echo(validar_valor_campo(5150)); ?>"><input type="hidden" name="idft_test_fs" value="<?php echo(validar_valor_campo(5149)); ?>"><tr>
+                     <td class="encabezado" width="20%" title="">CONTENIDO*</td>
+                     <td class="celda_transparente"><textarea  tabindex='1'  name="contenido" id="contenido" cols="53" rows="3" class="tiny_basico required"><?php echo(validar_valor_campo(5148)); ?></textarea></td>
+                    </tr><input type="hidden" name="estado_documento" value="<?php echo(validar_valor_campo(5147)); ?>"><input type="hidden" name="campo_descripcion" value="5148"><tr><td colspan='2'><?php submit_formato(416);?></td></tr></table></form></body></html>

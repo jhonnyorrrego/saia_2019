@@ -230,9 +230,9 @@ function enviar_email($doc=0){
    $copia = array();
    $email=busca_filtro_tabla("valor","configuracion","nombre='servidor_correo'","",$conn);    
    $puerto=busca_filtro_tabla("valor","configuracion","nombre='puerto_servidor_correo'","",$conn);
-   include_once("class.phpmailer.php");    
-   $mail = new PHPMailer;
-   $mail->ClearAttachments();
+   $vector_anexos=array();
+   
+   
    if($email["numcampos"])
     {
      if($doc<>0) 
@@ -248,14 +248,16 @@ function enviar_email($doc=0){
         $copia = explode(",",$datos[0]["copia"]);
        
        $archivo = busca_filtro_tabla("*","anexos","documento_iddocumento=".$doc,"",$conn);
-       if($archivo["numcampos"]>0)
-        { for($i=0; $i<$archivo["numcampos"]; $i++)
-            $mail->AddAttachment("../".$archivo[$i]["ruta"],$archivo[$i]["etiqueta"]);
+       if($archivo["numcampos"]>0){
+       		for($i=0; $i<$archivo["numcampos"]; $i++){
+        		$vector_anexos[]=$archivo[$i]["ruta"];
+        	}
+			
         } 
         
         $pdf_documento=busca_filtro_tabla("pdf,numero","documento","iddocumento=".$doc,"",$conn);
         if($pdf_documento['numcampos']){
-            $mail->AddAttachment("../".$pdf_documento[0]["pdf"],'documento_'.$pdf_documento[0]['numero'].'.pdf');
+            $vector_anexos[]=$pdf_documento[0]["pdf"];
         }
                 
       }
@@ -276,110 +278,41 @@ function enviar_email($doc=0){
         $copia_asunto=utf8_decode($asunto);
 
         $nombre=busca_filtro_tabla("nombres,apellidos","funcionario","funcionario_codigo=".$_SESSION["usuario_actual"],"",$conn);        
-        $mail->FromName = "Gestion Documental SAIA (".utf8_decode(html_entity_decode($nombre[0]["nombres"]." ".$nombre[0]["apellidos"])).")";
-        $mail->Host     = $email[0]["valor"];
-        $mail->Port     = $puerto[0]["valor"];
-        $mail->Mailer   = "mail";       // Alternative to IsSMTP()
-        $mail->WordWrap = 75;      
-        $mail->From    = (($from));
-        $mail->Subject = $copia_asunto;
-        $mail->ClearAddresses();
-        $mail->ClearBCCs();
-        $mail->ClearCCs();
-		
-        $para=explode(",",$destinos);
-        foreach($para as $direccion)          
-        {  
-         $mail->AddAddress("$direccion","$direccion");
-        }  
-        if($_REQUEST["para_cc"]<>"")
-        {$para=explode(",",$_REQUEST["para_cc"]);
-         foreach($para as $direccion)          
-         {  
-          $mail->AddCC("$direccion","$direccion");
-         }
+        $vector_destinos=explode(",",$destinos);
+
+        if($_REQUEST["para_cc"]<>""){
+        	$vector_destinos_copia=explode(",",$_REQUEST["para_cc"]);
+			$vector_destinos['copia']=$vector_destinos_copia;
         }
          
-        if($_REQUEST["para_cco"]<>"")
-        {$para=explode(",",$_REQUEST["para_cco"]);
-          foreach($para as $direccion)          
-          {  
-           $mail->AddBCC("$direccion","$direccion");
-          }
+        if($_REQUEST["para_cco"]<>""){
+        	$vector_destinos_copia_oculta=explode(",",$_REQUEST["para_cco"]);
+			$vector_destinos['copia_oculta']=$vector_destinos_copia_oculta;
         }     
 		
-  $config = busca_filtro_tabla("valor","configuracion","nombre='color_encabezado'","",$conn);
-  $admin_saia= busca_filtro_tabla("valor","configuracion","nombre='login_administrador'","",$conn);
-  $correo_admin=busca_filtro_tabla("email","funcionario","login='".$admin_saia[0]['valor']."'","",$conn);
-  $texto_pie="
-  	<table style='border:none; width:100%; font-size:11px;font-family:Roboto,Arial,Helvetica,sans-serif;color:#646464;vertical-align:middle;	padding: 10px;'>
-		<tr>
-			<td>
-				Este email ha sido enviado autom&aacute;ticamente desde SAIA (Sistema de Administraci&oacute;n Integral de Documentos y Procesos). 
-				<br>
-				<br>
-				Por favor, NO responda a este mail. 
-				<br>
-				<br>
-				Para obtener soporte o realizar preguntas, envi&eacute; un correo electr&oacute;nico a ".$correo_admin[0]['email']."
-			</td>
-			<td style='text-align:right;'>
-				<img src='".PROTOCOLO_CONEXION.RUTA_PDF_LOCAL."/imagenes/saia_gray.png'>				
-			</td>
-		</tr>
-	</table>
-";  
+  	$config = busca_filtro_tabla("valor","configuracion","nombre='color_encabezado'","",$conn);
+  	$admin_saia= busca_filtro_tabla("valor","configuracion","nombre='login_administrador'","",$conn);
+  	$correo_admin=busca_filtro_tabla("email","funcionario","login='".$admin_saia[0]['valor']."'","",$conn);
   
-
-  $inicio_style='
-  <div id="fondo" style="   padding: 10px; 	background-color: #f5f5f5;	">
-  
-  	<div id="encabezado" style="background-color:'.$config[0]["valor"].';color:white ;  vertical-align:middle;   text-align: left;    font-weight: bold;  border-top-left-radius:5px;   border-top-right-radius:5px;   padding: 10px;">
-  		NOTIFICACI&Oacute;N - SAIA
-  	</div>
- 
-  	<div id="cuerpo" style="padding: 10px;background-color:white;">
-  		<br>
-  		<span style="font-weight:bold;color:'.$config[0]["valor"].';">'.$asunto.'</span>
-  		<hr>
-  		<br>';
-  
-  $fin_style='
-  	</div>
-  	<div  id="pie" style="font-size:11px;font-family:Roboto,Arial,Helvetica,sans-serif;color:#646464;vertical-align:middle;padding: 10px;">
-  		'.$texto_pie.'
-  	</div>
-  </div>';	
-	
- 		$contenido=$inicio_style.$contenido.$fin_style;			
-		
-		
-		
-		
-		
-		         
-        $mail->Body = $contenido;
-		$mail -> IsHTML (true);
-		
-		
         $anexo=@$_REQUEST["anexos"];
         if($anexo!=""){
           $anexos=busca_filtro_tabla("ruta,etiqueta,idanexos","anexos","idanexos IN(".implode(",",$anexo).")","",$conn);
           if($anexos["numcampos"]){
             for($i=0;$i<$anexos["numcampos"];$i++){
-              $mail->AddAttachment("../".$anexos[$i]["ruta"],$anexos[$i]["etiqueta"]);
+            	$vector_anexos[]=$anexos[$i]["ruta"];
             }
           }    
         }
         
         if(@$_REQUEST["paginas"]!="" && @$_REQUEST["nombre_paginas"]){
-          $mail->AddAttachment($_REQUEST["paginas"],$_REQUEST["nombre_paginas"]);    
+        	$vector_anexos[]=$_REQUEST["paginas"];
 
         }  
         if(@$_REQUEST["pdf"]!="" && @$_REQUEST["nombre_pdf"]){
-          $mail->AddAttachment($_REQUEST["pdf"],$_REQUEST["nombre_pdf"]);    
-        }        
-        if(!$mail->Send())
+        	$vector_anexos[]=$_REQUEST["pdf"]; 
+        }    
+		$resultado_envio=enviar_mensaje("",'correo',$vector_destinos,$copia_asunto,$contenido,$vector_anexos);    
+        if( !$resultado_envio )
         {
           alerta("No fue enviado el mensaje, configure los datos de su servidor de correo");
         }
