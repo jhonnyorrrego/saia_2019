@@ -1035,3 +1035,16 @@ AS
 
 
    END
+
+-- --------------------------------------------------------------------
+-- REPORTE DE PRESTAMO ANIDADO AL REPORTE DE ARCHIVO(ESPEDIENTES)
+
+INSERT INTO modulo (idmodulo, pertenece_nucleo, nombre, tipo, imagen, etiqueta, enlace, enlace_mobil, destino, cod_padre, orden, ayuda, parametros, busqueda_idbusqueda, permiso_admin, busqueda, enlace_pantalla) VALUES
+(1666, 0, 'modulo_reporte_expedientes_prestamo', 'secundario', 'botones/principal/defaut.png', 'Prestamo', 'pantallas/busquedas/consulta_busqueda_reporte.php?idbusqueda_componente=203', NULL, '_self', 0, 5, '', '', 0, 0, '1', 0);
+
+INSERT INTO busqueda_componente (idbusqueda_componente, busqueda_idbusqueda, tipo, conector, url, etiqueta, nombre, orden, info, exportar, exportar_encabezado, encabezado_componente, estado, ancho, cargar, campos_adicionales, tablas_adicionales, ordenado_por, direccion, agrupado_por, busqueda_avanzada, acciones_seleccionados, modulo_idmodulo, menu_busqueda_superior, enlace_adicionar, encabezado_grillas) VALUES
+(324, 37, 4, 2, 'pantallas/busquedas/consulta_busqueda_reporte.php?idbusqueda_componente=203', 'Prestamo', 'enlace_reporte_prestamo', 6, '', NULL, NULL, '', 2, 320, 2, NULL, '', '', '', '', '', '', 1666, '', NULL, NULL);
+
+-- --------------------------------------------------------------------
+   
+   
