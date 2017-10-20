@@ -33,9 +33,9 @@ if (!defined("PORT")) {
 $acceso = explode(".", $_SERVER["REMOTE_ADDR"]);
 // print_r($acceso);
 if ($acceso[0] == 192 || $acceso[0] == 172) {
-	$ruta = "saia-formatos.netsaia.com";
+	$ruta = "saia-formatos.netsaia.com:82";
 } else {
-	$ruta = "saia-formatos.netsaia.com";
+	$ruta = "saia-formatos.netsaia.com:82";
 }
 define("RUTA_SAIA", "saia_formatos/saia/");
 define("RUTA_ABS_SAIA", $_SERVER["DOCUMENT_ROOT"] . "/" . RUTA_SAIA);
@@ -43,7 +43,7 @@ if (!defined("RUTA_PDF")) {
 	define("RUTA_PDF", $ruta . "/" . rtrim(RUTA_SAIA, "/"));
 }
 if (!defined("RUTA_PDF_LOCAL")) {
-	define("RUTA_PDF_LOCAL", "saia-formatos.netsaia.com" . "/" . rtrim(RUTA_SAIA, "/"));
+	define("RUTA_PDF_LOCAL", "saia-formatos.netsaia.com:82" . "/" . rtrim(RUTA_SAIA, "/"));
 }
 if (!defined("PERMISOS_CARPETAS"))
 	define("PERMISOS_CARPETAS", 0777);
@@ -84,7 +84,7 @@ define("RUTA_ARCHIVOS","local:///vol1/almacenamiento/");
 define("RUTA_PDFS","local:///vol1/almacenamiento/");
 define("RUTA_IMAGENES","local:///vol1/almacenamiento/");
 define("RUTA_QR","local:///vol1/almacenamiento/");
-define("RUTA_INFO_QR", PROTOCOLO_CONEXION . "saia-formatos.netsaia.com/saia_formatos/info_doc.php");
+define("RUTA_INFO_QR", PROTOCOLO_CONEXION . "saia-formatos.netsaia.com:82/saia_formatos/info_doc.php");
 
 define("RUTA_BACKUP","local:///vol1/almacenamiento/backup/");
 define("RUTA_BACKUP_ELIMINADOS", RUTA_BACKUP . "eliminados/");

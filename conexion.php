@@ -3,7 +3,7 @@ require_once ("define.php");
 
 class Conexion {
 	public $conn = null;
-	var $Motor, $Host, $Usuario, $Pass, $Nombredb;
+	var $Motor, $Host, $Usuario, $Pass, $Nombredb, $Db;
 	public $Puerto;
 
 	/*
@@ -30,6 +30,7 @@ class Conexion {
 		} else {
 			$this->Motor = MOTOR;
 			$this->Host = HOST;
+			$this->Db = DB;
 			$this->Usuario = USER;
 			$this->Pass = PASS;
 			$this->Nombredb = BASEDATOS;
