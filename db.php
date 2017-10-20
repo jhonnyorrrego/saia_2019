@@ -1942,11 +1942,17 @@ global $conn;
 	}
 
 	switch ($correo) {
+		case 'personal':
+			$usuario_correo=usuario_actual("email");
+			$pass_correo=usuario_actual("email_contrasena");
+			break;
 		default:
 			$usuario_correo=$correo_notificacion;
 			$pass_correo=$clave_correo_notificacion;
 		break;
 	}
+	
+	
  $mail = new PHPMailer ();
  $mail->IsSMTP();
  //$mail->SMTPDebug  = 2;

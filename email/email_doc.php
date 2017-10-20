@@ -15,7 +15,7 @@ include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."class_transferencia.php");
 include_once($ruta_db_superior."header.php");
 include_once($ruta_db_superior."pantallas/lib/librerias_archivo.php");
-
+ini_set('display_errors',true);
 ?>
 <script> 
 /*
@@ -311,10 +311,10 @@ function enviar_email($doc=0){
         if(@$_REQUEST["pdf"]!="" && @$_REQUEST["nombre_pdf"]){
         	$vector_anexos[]=$_REQUEST["pdf"]; 
         }    
-		$resultado_envio=enviar_mensaje("",'correo',$vector_destinos,$copia_asunto,$contenido,$vector_anexos);    
+		$resultado_envio=enviar_mensaje("personal",'correo',$vector_destinos,$copia_asunto,$contenido,$vector_anexos);    
         if( !$resultado_envio )
         {
-          alerta("No fue enviado el mensaje, configure los datos de su servidor de correo");
+          alerta("No fue enviado el mensaje, configure los datos de su correo electronico");
         }
         else{
           $radicador_salida=busca_filtro_tabla("","configuracion","nombre LIKE 'radicador_salida'","",$conn);
