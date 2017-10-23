@@ -176,7 +176,7 @@ function generar_html_info_qr($datos){
 
 
 function rastro_documento_info($x_doc,$filtro){
-	global $conn;
+	global $conn,$ruta_db_superior;
  
  $html_retorno='';
  $condicion_radicador_salida='';
@@ -204,6 +204,18 @@ function rastro_documento_info($x_doc,$filtro){
  	if($filtro)$id_tabla="tabla_rastro_propio";
  	
  	$html_retorno.='
+	'.librerias_jquery('1.7').'
+	<script>
+	function mostrar_mas_rastro(){
+		var ini=$("#mostrar_mas").attr("inicio");
+		$.post("'.$ruta_db_superior.'rastro_documento.php",{iddoc: '.$x_doc.', inicio: ini},function(respuesta){
+			//alert(respuesta);
+			$("#mostrar_mas").remove();
+			$("#fila_mostrar_mas").remove();
+			$("#tabla_rastro").append(respuesta);
+		});
+	}
+	</script>	
 	<table border="0" cellspacing="1" cellpadding="4" bgcolor="#CCCCCC" id="'.$id_tabla.'" name="'.$id_tabla.'" style="width:100%">
 	   <tr class="encabezado_list">
 		  <td colspan="6"><span class="phpmaker" style="color:#ffffff">'.$titulo.'</span>
