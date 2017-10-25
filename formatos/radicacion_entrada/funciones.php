@@ -395,6 +395,8 @@ function tipo_radicado_radicacion($idformato,$iddoc){//en el adicionar
                     $('#persona_natural').addClass('required');
                     $('#persona_natural').parent().parent().show();
                     //$('#anexos_digitales').parent().parent().show();
+                    $('#numero_guia').parent().parent().show();
+                    
                 }else{ //INTERNO
                 	$('#tr_requiere_recogida').show();
                 	
@@ -416,6 +418,7 @@ function tipo_radicado_radicacion($idformato,$iddoc){//en el adicionar
                     $('#tr_tipo_mensajeria').show();
                     $('[name="tipo_mensajeria"]').addClass('required');
                                           
+                    $('#numero_guia').parent().parent().hide();
                  }
 	                  $.ajax({
 	                      type:'POST',
@@ -733,13 +736,13 @@ function mostrar_informacion_general_radicacion($idformato,$iddoc){
     	
         $empresa_transportadora=mostrar_valor_campo('empresa_transportado', $idformato, $iddoc, 1);
         $tabla.="<tr>
-                    <td style='width:25%;'><strong>Número Oficio:</strong></td>
+                    <td style='width:25%;'><strong>N&uacute;mero Oficio:</strong></td>
                     <td colspan='2' style='width:25%;'>".$datos[0]['numero_oficio']."</td>
                     <td style='width:25%;'><strong>Fecha Oficio:</strong></td>
                     <td colspan='2' style='width:25%;'>".$datos[0]['fecha_oficio_entrada']."</td>
                  </tr>
                  <tr>
-                    <td><strong>Número Gu&iacute;a:</strong></td>
+                    <td><strong>N&uacute;mero Gu&iacute;a:</strong></td>
                     <td colspan='2'>".$datos[0]['numero_guia']."</td>
                     <td><strong>Empresa Transportadora:</strong></td>
                     <td colspan='2'>".$empresa_transportadora."</td>
@@ -833,6 +836,8 @@ function datos_editar_radicacion($idformato,$iddoc){
                         $('#numero_oficio').parent().parent().show();
                         $('#persona_natural').addClass('required');
                         $('#persona_natural').parent().parent().show();
+                        
+                        $('#numero_guia').parent().parent().show();
                     });
                 </script>
         <?php
@@ -853,6 +858,8 @@ function datos_editar_radicacion($idformato,$iddoc){
                         //$('#anexos_digitales').parent().parent().hide();
                         $('#tr_tipo_mensajeria').show();
                         $('[name="tipo_mensajeria"]').addClass('required');
+                        
+                        $('#numero_guia').parent().parent().hide();
                     </script>
         <?php
     }
