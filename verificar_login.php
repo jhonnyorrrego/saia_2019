@@ -8,8 +8,8 @@ $retorno["mensaje"]="<b>El nombre de usuario o contrase&ntilde;a introducidos no
 $retorno["ingresar"]=0;
 if($dias_sesion["numcampos"]){
   $dias_sess=$dias_sesion[0]["valor"];
-}
-else $dias_sess=2;
+} else
+	$dias_sess = 2;
 $redirecciona='#';
 $redirecciona_exito='index_'.$_REQUEST["INDEX"].".php";
 if (@$_REQUEST["userid"]<>"" && @$_REQUEST["passwd"]<>"") {
@@ -40,7 +40,6 @@ if (@$_REQUEST["userid"]<>"" && @$_REQUEST["passwd"]<>"") {
 	      die(stripslashes(json_encode($retorno)));  	  
 	}
 	
-         
   }
     if (!($bValidPwd)) {			
 	    $sUserId = (!get_magic_quotes_gpc()) ? addslashes($sUserId) : $sUserId;
@@ -63,8 +62,7 @@ if (@$_REQUEST["userid"]<>"" && @$_REQUEST["passwd"]<>"") {
           $retorno["mensaje"]="<b>Error en roles !</b> <br> El usuario no cuenta con roles activos";
           $retorno["ingresar"]=0;
           die(stripslashes(json_encode($retorno)));  	  
-        }
-      else if (@$row["estado"]) {
+	} else if (@$row["estado"]) {
         if(($row["dias"]>30 || $row["ultimo_pwd1"]=="0000-00-00") && @$pass[0]["valor"]){
           $retorno["mensaje"]="<b>ATENCION!</b> <br>DEBE REALIZAR EL CAMBIO DE CLAVE!";
           $retorno["ruta"]="changepwd.php?login=".$sUserId;
@@ -73,35 +71,37 @@ if (@$_REQUEST["userid"]<>"" && @$_REQUEST["passwd"]<>"") {
         if($row["estado_dep"]){    
           if($row["cargo_estado"]){
     		if ($row["clave"] == encrypt_md5(trim($sPassWd))) {
+						$cant_concurrente = busca_filtro_tabla("A.valor", "configuracion A", "A.tipo='empresa' AND A.nombre='usuarios_concurrentes'", "", $conn);
+						if ($cant_concurrente["numcampos"]) {
+							$excluir_usuarios = array("'cerok'", "'mensajero'", "'radicador_web'", "'radicador_salida'");
+							$cant = busca_filtro_tabla("count(distinct login) as cant", "log_acceso", "fecha_cierre is null and exito=1 and login not in (" . implode(",", $excluir_usuarios) . ") and login<>'" . $sUserId . "'", "", $conn);
+							if (intval($cant[0]["cant"]) >= intval(decrypt_blowfish($cant_concurrente[0]["valor"]))) {
+								$retorno["mensaje"] = "Se ha alcanzado el limite de conexiones concurrentes";
+								$retorno["ingresar"] = 0;
+							} else {
               $_SESSION["LOGIN".LLAVE_SAIA]= $row["login"];
     		  $bValidPwd = TRUE;
-              cerrar_sesiones_activas($row["login"]);
+								//cerrar_sesiones_activas($row["login"]);
     		}
-    		else{           
+						} else {
+							$retorno["mensaje"] = "<b>Error, no se ha definido la cantidad de usuarios permitidos!</b> <br> Contacte al administrador";
+							$retorno["ingresar"] = 0;
+						}
+					} else {
               $retorno["mensaje"]="<b>Error en la clave de acceso!</b> <br> intente de nuevo";
               $retorno["ingresar"]=0;
             }
-    	  }
-  		  else{
+				} else {
             $retorno["mensaje"]="<b>El Cargo al que pertenece se encuentra inactivo!</b><br> por favor comuniquese con el administrador del sistema.";
             $retorno["ingresar"]=0;
           }
-        }
-  	    else{
+			} else {
           $retorno["mensaje"]="<b>La dependencia a la que pertenece se encuentra inactiva!</b><br> por favor comuniquese con el administrador del sistema.";
           $retorno["ingresar"]=0;
         }
-        if(@$retorno["ingresar"]==0){
-			   	/*@session_unset();
-          @session_destroy();*/
-          //almacenar_sesion(0,$sUserId); 
-        }
-			}
-			else{
+
+		} else {
           $retorno["mensaje"]="<b>El funcionario esta inactivo o no pertenece al sistema!<b> <br> por favor comuniquese con el administrador del sistema.";
-			   	/*@session_unset();
-          @session_destroy();*/
-          //almacenar_sesion(0,$sUserId);
 			}
 	 phpmkr_free_result($rs);
 	}
@@ -110,27 +110,23 @@ if (@$_REQUEST["userid"]<>"" && @$_REQUEST["passwd"]<>"") {
 			setCookie("saia_userid", $sUserId, time()+$dias_sess*24*60*60); 
   		if (@$_POST["rememberme_pwd"] <> "") {
   			setCookie("saia_pwd", $sPassWd, time()+$dias_sess*24*60*60); 
-  		}
-  		else setCookie("saia_pwd", "", 0);
-    }
-    else setCookie("saia_userid", "" ,0);
+			} else
+				setCookie("saia_pwd", "", 0);
+		} else
+			setCookie("saia_userid", "", 0);
      include_once("tarea_limpiar_carpeta.php");
      borrar_archivos_carpeta("temporal_".$_POST["userid"],false);
      $retorno["mensaje"]="<b>Bienvenido</b> <br>has ingresado al sistema SAIA";
      $retorno["ruta"]=$redirecciona_exito; 
      $retorno["ingresar"]=1;   
-	} 
-  else {	  
-		/*@session_unset();
-    @session_destroy();*/
+	} else {
     $dato=almacenar_sesion(0,$sUserId);
 		if($dato["mensaje"]){
 			$retorno["mensaje"]=$dato["mensaje"];
 		}
 		$retorno["ruta"]=$redirecciona;
 	}
-}
-else{
+} else {
 $retorno["ruta"]=$redirecciona;
 }
 echo(stripslashes(json_encode($retorno)));

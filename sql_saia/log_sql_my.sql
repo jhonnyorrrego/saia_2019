@@ -1105,3 +1105,22 @@ INSERT INTO busqueda_componente (idbusqueda_componente, busqueda_idbusqueda, tip
 (324, 37, 4, 2, 'pantallas/busquedas/consulta_busqueda_reporte.php?idbusqueda_componente=203', 'Prestamo', 'enlace_reporte_prestamo', 6, '', NULL, NULL, '', 2, 320, 2, NULL, '', '', '', '', '', '', 1666, '', NULL, NULL);
 
 -- --------------------------------------------------------------------
+-- DESARROLLO USUARIOS RECURRENTES, ANDRES AGUDELO TRAIDO DE EDUP
+
+INSERT INTO configuracion (nombre, valor, tipo, fecha, encrypt) VALUES
+('usuarios_concurrentes', '8b1af8960920cda5c6254b87385f081d', 'empresa', '2017-09-25 20:16:46', 1);
+
+CREATE OR REPLACE VIEW vusuarios_concurrentes AS select f.funcionario_codigo AS funcionario_codigo,f.nit AS nit,concat(f.nombres,' ',f.apellidos) AS nombre_completo,f.login AS login,count(l.login) AS cant_conexiones from (log_acceso l join funcionario f on((f.login = l.login))) where ((f.login not in ('cerok','mensajero','radicador_web','radicador_salida')) and (l.exito = 1) and isnull(l.fecha_cierre)) group by f.funcionario_codigo,f.nit,f.nombres,f.apellidos,f.login;
+
+
+INSERT INTO busqueda (idbusqueda, nombre, etiqueta, estado, ancho, campos, llave, tablas, ruta_libreria, ruta_libreria_pantalla, cantidad_registros, tiempo_refrescar, ruta_visualizacion, tipo_busqueda, badge_cantidades) VALUES
+(120, 'usuarios_concurrentes', 'Reporte Usuario Concurrentes', 1, 200, 'nit,nombre_completo,login,cant_conexiones', 'funcionario_codigo', NULL, NULL, NULL, 30, 500, 'pantallas/busquedas/consulta_busqueda_reporte.php', 2, NULL);
+
+INSERT INTO busqueda_componente (busqueda_idbusqueda, tipo, conector, url, etiqueta, nombre, orden, info, exportar, exportar_encabezado, encabezado_componente, estado, ancho, cargar, campos_adicionales, tablas_adicionales, ordenado_por, direccion, agrupado_por, busqueda_avanzada, acciones_seleccionados, modulo_idmodulo, menu_busqueda_superior, enlace_adicionar, encabezado_grillas) VALUES
+(120, 3, 2, 'pantallas/busquedas/consulta_busqueda_reporte.php', 'Reporte Usuario Concurrentes', 'usuarios_conectados_concurrentes', 1, 'Identificacion|{*nit*}|left|-|Nombres|{*nombre_completo*}|left|-|Login|{*login*}|left|-|Conexiones|{*cant_conexiones*}|center', NULL, NULL, NULL, 2, 320, 2, NULL, 'vusuarios_concurrentes', 'nombre_completo', 'ASC', 'funcionario_codigo,nit,nombre_completo,login', 'pantallas/funcionario/filtros_usu_recurrentes.php?idbusqueda_componente=304', NULL, 1667, NULL, NULL, NULL);
+
+
+INSERT INTO modulo (idmodulo, pertenece_nucleo, nombre, tipo, imagen, etiqueta, enlace, enlace_mobil, destino, cod_padre, orden, ayuda, parametros, busqueda_idbusqueda, permiso_admin, busqueda, enlace_pantalla) VALUES
+(1667, 0, 'reporte_usuarios_concurrentes', 'secundario', 'botones/principal/reportes.png', 'Usuarios Concurrentes', 'pantallas/buscador_principal.php?idbusqueda=120', NULL, 'centro', 1057, 22, '-', '', 0, 0, '1', 0);
+
+-- --------------------------------------------------------------------
