@@ -1835,6 +1835,17 @@ function submit_formato($formato, $iddoc = NULL) {
 	?>
 <script>
   $("#continuar").click(function(){
+  	
+  	var elementos = $('[class^="tiny_"]:not(.tiny_sin_tiny)');
+	var size = elementos.size();
+	
+	if(size){
+		$.each( elementos, function(i, val){
+			var contenido_textarea=tinyMCE.get($(val).attr('id')).getContent();
+			$("#"+$(val).attr('id')).val(contenido_textarea);
+		});
+	}
+	
     if($('#formulario_formatos').valid()){
   		$("#continuar").hide();
   		$("#continuar").after('<input type="button" disabled="true" value="Enviando..." id="boton_enviando">');
