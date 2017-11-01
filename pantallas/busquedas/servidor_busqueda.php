@@ -221,14 +221,14 @@ foreach($funciones_tablas AS $key=>$valor){
 
 $ordenar_consulta="";
 $agrupar_consulta=$datos_busqueda[0]["agrupado_por"];
-
+$ordenar_consulta2="";
 if(MOTOR=='MySql' || MOTOR=='Oracle') {
 	if($agrupar_consulta!=""){
 	  $ordenar_consulta.=" GROUP BY ".$agrupar_consulta;
+	  $ordenar_consulta2.=" GROUP BY ".$agrupar_consulta;
 	  $ordenar_consulta_aux=" GROUP BY ".implode(",",$agrupacion);
 	}
 } else if(MOTOR == 'SqlServer' || MOTOR == 'MSSql') {
-	$ordenar_consulta2="";
 	if($agrupar_consulta!=""){
 	  $ordenar_consulta.=" GROUP BY ".$agrupar_consulta;
 	  $ordenar_consulta2.=" GROUP BY ".$agrupar_consulta;
@@ -236,9 +236,6 @@ if(MOTOR=='MySql' || MOTOR=='Oracle') {
 	}
 }
 if($sidx && $sord){
-  if(MOTOR=='MySql' || MOTOR=='Oracle') {
-       $ordenar_consulta2.=$ordenar_consulta;
-  }
   $ordenar_consulta2.=" ORDER BY ".$sidx." ".$sord;
   $ordenar_grafico=" ORDER BY ".$sidx." ".$sord;
 }

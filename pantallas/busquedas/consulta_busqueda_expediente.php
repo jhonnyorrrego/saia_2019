@@ -95,6 +95,27 @@ if(@$_REQUEST["idbusqueda_componente"]){
       </div>
       <!-- /btn-group -->
       </li>
+      <li>          
+      <div class="btn-group">            
+        <button class="btn dropdown-toggle btn-mini" data-toggle="dropdown">Acciones &nbsp;
+          <span class="caret">
+          </span>&nbsp;
+        </button>            
+        <ul class="dropdown-menu" id='listado_seleccionados'>              
+          <?php 
+            if($datos_busqueda[0]["acciones_seleccionados"]!=''){
+              //echo('<li class="nav-header">Acciones</li>');
+            $acciones=explode(",",$datos_busqueda[0]["acciones_seleccionados"]);
+            $cantidad=count($acciones);
+		        for($i=0;$i<$cantidad;$i++){
+		            echo($acciones[$i]());
+		        }
+            }              
+          ?>                                
+        </ul>             
+      </div>
+      <!-- /btn-group -->               
+      </li> 
       <?php if(@$datos_busqueda[0]["menu_busqueda_superior"]){ ?>
         <?php
           $funcion_menu=explode("@",$datos_busqueda[0]["menu_busqueda_superior"]);

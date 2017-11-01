@@ -40,7 +40,7 @@ function generar_codigo_qr_carta($idformato,$iddoc){
   $datos=busca_filtro_tabla("A.fecha,A.estado, A.numero","documento A","A.iddocumento=".$iddoc,"",$conn);
 	$fecha=mostrar_fecha_saia($datos[0]['fecha']);
 	$datos_qr="Fecha: ".$fecha." \n";
-	$datos_qr.="Radicado No: ".$datos[0]["numero"]." \n";
+	$datos_qr.="Radicado No: ".$datos[0]["numero"]." <br/>";
 	$firmas=busca_filtro_tabla("CONCAT(B.nombres,CONCAT(' ',B.apellidos)) AS nombre","buzon_salida A, funcionario B","A.origen=B.funcionario_codigo AND (A.nombre LIKE 'APROBADO' OR A.nombre LIKE 'REVISADO')AND A.archivo_idarchivo=".$iddoc,"idtransferencia asc", $conn);
 	$datos_qr.="Firman: \n";
 	for($i=0; $i<$firmas['numcampos']; $i++){
