@@ -13,14 +13,12 @@ if(@$_REQUEST["ejecutar_expediente"]){
     $_REQUEST["ejecutar_expediente"]();
   }
 }
-
 function set_expediente(){
     $retorno=new stdClass;
     $retorno->exito=0;
     $retorno->mensaje="Error al guardar Prueba";
     $exito=0;
-    $campos=array("nombre","cod_padre","codigo","fecha", "serie_idserie", "codigo_numero", "fondo", "proceso", "fecha_extrema_i", "fecha_extrema_f", "no_unidad_conservacion", "no_folios", "no_carpeta", "soporte", "frecuencia_consulta", "ubicacion", "unidad_admin", "estado_archivo", "estado_cierre","fk_idcaja","agrupador","propietario","tomo_no");
-	
+    $campos=array("nombre","cod_padre","codigo","fecha", "serie_idserie","dependencia_iddependencia", "codigo_numero", "fondo", "proceso", "fecha_extrema_i", "fecha_extrema_f", "no_unidad_conservacion", "no_folios", "no_carpeta", "soporte", "frecuencia_consulta", "ubicacion", "unidad_admin", "estado_archivo", "estado_cierre","fk_idcaja","agrupador","propietario","tomo_no","indice_uno","indice_dos","indice_tres");
 	$array_vacios=array('cod_padre','serie_idserie','soporte','frecuencia_consulta','ubicacion','estado_archivo','estado_cierre','estado_cierre','fk_idcaja','agrupador');
 	for($i=0;$i<count($array_vacios);$i++){
 		if(!@$_REQUEST[$array_vacios[$i]] || @$_REQUEST[$array_vacios[$i]]==''){
@@ -35,6 +33,7 @@ function set_expediente(){
 			'".@$_REQUEST['codigo']."',
 			".fecha_db_almacenar(@$_REQUEST['fecha'],'Y-m-d').",
 			".@$_REQUEST['serie_idserie'].",
+			".@$_REQUEST['dependencia_iddependencia'].",
 			'".@$_REQUEST['codigo_numero']."',
 			'".@$_REQUEST['fondo']."',
 			'".@$_REQUEST['proceso']."',
@@ -52,7 +51,10 @@ function set_expediente(){
 			".@$_REQUEST['fk_idcaja'].",
 			".@$_REQUEST['agrupador'].",
 			".usuario_actual("funcionario_codigo").",
-			1
+			1,
+			'".@$_REQUEST['indice_uno']."',
+			'".@$_REQUEST['indice_dos']."',
+			'".@$_REQUEST['indice_tres']."'
 		)	
     ";
     phpmkr_query($sql2);
@@ -155,7 +157,8 @@ $update[]=" soporte=".@$_REQUEST['soporte'];
 $update[]=" frecuencia_consulta=".@$_REQUEST['frecuencia_consulta'];
 $update[]=" ubicacion=".@$_REQUEST['ubicacion'];
 $update[]=" serie_idserie=".@$_REQUEST['serie_idserie'];
-$update[]=" unidad_admin='".@$_REQUEST['unidad_admin']."' ";
+$update[]=" dependencia_iddependencia=".@$_REQUEST['dependencia_iddependencia'];
+//$update[]=" unidad_admin='".@$_REQUEST['unidad_admin']."' ";
 
 
 $antiguo=busca_filtro_tabla("cod_padre","expediente A","A.idexpediente=".$_REQUEST["idexpediente"],"",$conn);

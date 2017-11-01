@@ -117,6 +117,31 @@ $expediente=busca_filtro_tabla("a.*,".fecha_db_obtener("a.fecha","Y-m-d")." AS f
        <?php echo($expediente[0]["descripcion"]);?>
     </td>
   </tr>
+    <tr>
+    <td class="prettyprint">
+      <b>Indice uno:</b>
+    </td>
+    <td colspan="3">
+       <?php echo($expediente[0]["indice_uno"]);?>
+    </td>
+  </tr>
+  <tr>
+    <td class="prettyprint">
+      <b>Indice Dos:</b>
+    </td>
+    <td colspan="3">
+       <?php echo($expediente[0]["indice_dos"]);?>
+    </td>
+  </tr>
+  <tr>
+    <td class="prettyprint">
+      <b>Indice Tres:</b>
+    </td>
+    <td colspan="3">
+       <?php echo($expediente[0]["indice_tres"]);?>
+    </td>
+  </tr>
+  <tr>
   <tr>
     <td class="prettyprint">    	
       <b>Expediente superior:</b>

@@ -12,17 +12,130 @@ $max_salida=6; $ruta_db_superior=$ruta=""; while($max_salida>0){ if(is_file($rut
 <?php include_once($ruta_db_superior."db.php"); ?>
 <script type="text/javascript" src="<?php echo($ruta_db_superior);?>js/jquery-1.7.min.js"></script>
 <?php include_once($ruta_db_superior."librerias_saia.php");
+echo(librerias_arboles());
 ?>
 <form name="formulario_caja" id="formulario_caja">
 <input type="hidden" name="cod_padre" id="cod_padre" value="<?php echo($_REQUEST["cod_padre"]);?>">
 <input type="hidden" name="iddocumento" id="iddocumento" value="<?php echo($_REQUEST["iddocumento"]);?>">
 <input type="hidden" id="cerrar_higslide" value="<?php echo(@$_REQUEST["cerrar_higslide"]);?>">
 <legend>Crear caja</legend>
+
 <div class="control-group element">
-  <label class="control-label" for="no_consecutivo">No consecutivo
+  <label class="control-label" for="serie_idserie">Serie asociada *
+  </label>
+  <div class="controls">
+        <span class="phpmaker">
+    			<input type="text" id="stext_serie" width="200px" size="20">          
+          <a href="javascript:void(0)" onclick="tree3.findItem((document.getElementById('stext_serie').value),1)">
+          <img src="<?php echo $ruta_db_superior; ?>botones/general/anterior.png"border="0px"></a>
+          <a href="javascript:void(0)" onclick="tree3.findItem((document.getElementById('stext_serie').value),0,1)">
+          <img src="<?php echo $ruta_db_superior; ?>botones/general/buscar.png"border="0px"></a>
+          <a href="javascript:void(0)" onclick="tree3.findItem((document.getElementById('stext_serie').value))">
+          <img src="<?php echo $ruta_db_superior; ?>botones/general/siguiente.png"border="0px"></a>      
+          <div id="esperando_serie"><img src="<?php echo $ruta_db_superior; ?>imagenes/cargando.gif"></div>
+    			<div id="treeboxbox_tree3" class="arbol_saia"></div>
+         
+        </span>
+         <input type="hidden" name="serie_idserie" id="serie_idserie">
+         <input type="hidden" name="dependencia_iddependencia" id="dependencia_iddependencia">
+  </div>
+</div>
+<script type="text/javascript">
+
+var browserType;
+if (document.layers) {browserType = "nn4"}
+if (document.all) {browserType = "ie"}
+if (window.navigator.userAgent.toLowerCase().match("gecko")) {
+   browserType= "gecko"
+}    
+tree3=new dhtmlXTreeObject("treeboxbox_tree3","","",0);
+	tree3.setImagePath("<?php echo($ruta_db_superior);?>imgs/");
+	tree3.enableIEImageFix(true);
+tree3.enableCheckBoxes(1);
+tree3.enableRadioButtons(true);
+tree3.setOnLoadingStart(cargando_serie);
+tree3.setOnLoadingEnd(fin_cargando_serie);
+tree3.enableSmartXMLParsing(true);
+//tree3.setXMLAutoLoading("<?php echo($ruta_db_superior);?>test_serie_funcionario.php?con_padres=1&pantalla=expediente");	
+	//tree3.loadXML("<?php echo($ruta_db_superior);?>test_serie_funcionario.php?con_padres=1&pantalla=expediente");
+	tree3.setXMLAutoLoading("../../test_dependencia_serie.php?tabla=dependencia&admin=1&mostrar_nodos=dsa&sin_padre_dependencia=1&cargar_series=1&funcionario=1&carga_partes_dependencia=1&carga_partes_series=1&no_grupos=1&no_tipos=1");	
+	tree3.loadXML("../../test_dependencia_serie.php?tabla=dependencia&admin=1&mostrar_nodos=dsa&sin_padre_dependencia=1&cargar_series=1&funcionario=1&carga_partes_dependencia=1&carga_partes_series=1&no_grupos=1&no_tipos=1");
+tree3.setOnCheckHandler(onNodeSelect_serie);
+  
+	function onNodeSelect_serie(nodeId){
+	  if(tree3.isItemChecked(nodeId)){
+		var item_select=tree3.getAllChecked();
+		console.log(nodeId+" -- "+item_select);
+		if(item_select!=="undefined" && item_select!=nodeId){
+	  		lista_items=item_select.split(",");
+	  		for(i=0;i<lista_items.length;i++){
+	  			tree3.setCheck(lista_items[i],0);
+	  	  	}
+	  	}
+		tree3.setCheck(nodeId,1);
+    $("#serie_idserie").val(tree3.getUserData(nodeId,"idserie"));
+    $("#dependencia_iddependencia").val(tree3.getUserData(nodeId,"iddependencia"));
+    $("#codigo_numero_serie").val(tree3.getUserData(nodeId,"serie_codigo"));
+	$("#codigo_numero_dependencia").val(tree3.getUserData(nodeId,"dependencia_codigo"));
+	$("#fondo").val(tree3.getUserData(nodeId,"dependencia_nombre"));
+	$("#codigo_numero_serie").trigger('keyup');
+  }
+  else{
+	$("#serie_idserie").val("");
+	$("#dependencia_iddependencia").val("");
+	$("#codigo_numero_serie").val('');
+	  	$("#codigo_numero_dependencia").val('');
+	    $("#fondo").val('');
+	    $("#codigo_numero_serie").trigger('keyup');
+  }
+}
+function fin_cargando_serie() {
+  if (browserType == "gecko" )
+    document.poppedLayer = eval('document.getElementById("esperando_serie")');
+  else if (browserType == "ie")
+    document.poppedLayer = eval('document.getElementById("esperando_serie")');
+  else
+    document.poppedLayer = eval('document.layers["esperando_serie"]');
+  document.poppedLayer.style.display = "none";
+}
+function cargando_serie() {
+  if (browserType == "gecko" )
+    document.poppedLayer = eval('document.getElementById("esperando_serie")');
+  else if (browserType == "ie")
+    document.poppedLayer = eval('document.getElementById("esperando_serie")');
+  else
+    document.poppedLayer = eval('document.layers["esperando_serie"]');
+  document.poppedLayer.style.display = "";
+} 
+      
+      function llenar_campos_codigo(iddependencia,idserie){
+      	$.ajax({
+    		type : "GET",
+    		url : "<?php echo $ruta_db_superior."pantallas/caja/consulta_codigos.php"?>",
+    		data:{
+    			idserie : idserie,
+    			iddependencia : iddependencia
+    		},
+    		success : function (response){
+    			var response = $.parseJSON(response);
+    			$("#cod_serie").val(response.codigo_serie);
+    			$("#cod_dependencia").val(response.codigo_dependencia);
+    			$("#fondo").val(response.nombre_dependencia);
+    		},
+    		error : function (){
+    			alert("error consultando los codigos");
+    		}
+    	});
+      }
+</script>
+
+<div class="control-group element">
+  <label class="control-label" for="codigo">Codigo
   </label>
   <div class="controls"> 
-    <input type="text" name="no_consecutivo" id="no_consecutivo" value="">
+    <input type="text"  id="codigo_numero_dependencia" name="codigo_dependencia" value="" style="width:12%;" readonly="readonly">
+    <input type="text"  id="codigo_numero_serie"  value="" style="width:12%;" name="codigo_serie" readonly="readonly">
+    <input type="text"  id="cod_consecutivo" required="required" name="no_consecutivo" value="" style="width:12%;">
   </div>
 </div>
 
@@ -30,7 +143,7 @@ $max_salida=6; $ruta_db_superior=$ruta=""; while($max_salida>0){ if(is_file($rut
   <label class="control-label" for="fondo">Fondo
   </label>
   <div class="controls"> 
-    <input type="text" name="fondo" id="fondo" value="">
+    <input type="text" name="fondo" required="required" id="fondo" value="" readonly="readonly">
   </div>
 </div>
 
@@ -58,35 +171,7 @@ $max_salida=6; $ruta_db_superior=$ruta=""; while($max_salida>0){ if(is_file($rut
   </div>
 </div>
 
-<div class="control-group element">
-  <label class="control-label" for="codigo">Codigo
-  </label>
-  <div class="controls"> 
-    <input type="text" name="codigo" id="codigo" value="">
-  </div>
-</div>
-
-<div class="control-group element">
-  <label class="control-label" for="nombre">Serie asociada
-  </label>
-  <div class="controls">
-  	<b><?php echo(mostrar_seleccionados_caja($datos[0]["serie_idserie"],"nombre","serie")); ?></b>
-  	<br />
-    <span class="phpmaker">
-			<input type="text" id="stext_serie" width="200px" size="20">          
-      <a href="javascript:void(0)" onclick="tree3.findItem((document.getElementById('stext_serie').value),1)">
-      <img src="<?php echo $ruta_db_superior; ?>botones/general/anterior.png"border="0px"></a>
-      <a href="javascript:void(0)" onclick="tree3.findItem((document.getElementById('stext_serie').value),0,1)">
-      <img src="<?php echo $ruta_db_superior; ?>botones/general/buscar.png"border="0px"></a>
-      <a href="javascript:void(0)" onclick="tree3.findItem((document.getElementById('stext_serie').value))">
-      <img src="<?php echo $ruta_db_superior; ?>botones/general/siguiente.png"border="0px"></a>      
-      <div id="esperando_serie"><img src="<?php echo $ruta_db_superior; ?>imagenes/cargando.gif"></div>
-			<div id="treeboxbox_tree3" class="arbol_saia"></div>
-      <input type="hidden" name="serie_idserie" id="serie_idserie" value="">
-    </span>
-  </div>
-</div>
-
+<!--
 <div class="control-group element">
   <label class="control-label" for="no_carpetas">No carpetas
   </label>
@@ -95,21 +180,6 @@ $max_salida=6; $ruta_db_superior=$ruta=""; while($max_salida>0){ if(is_file($rut
   </div>
 </div>
 
-<div class="control-group element">
-  <label class="control-label" for="no_caja">No caja
-  </label>
-  <div class="controls"> 
-    <input type="text" name="no_cajas" id="no_cajas" value="">
-  </div>
-</div>
-
-<div class="control-group element">
-  <label class="control-label" for="no_correlativo">No correlativo
-  </label>
-  <div class="controls"> 
-    <input type="text" name="no_correlativo" id="no_correlativo" value="">
-  </div>
-</div>
 
 <div class="control-group element">
   <label class="control-label" for="fecha_extrema_i">Fecha extrema inicial
@@ -134,15 +204,15 @@ $max_salida=6; $ruta_db_superior=$ruta=""; while($max_salida>0){ if(is_file($rut
 		</span>
 	</div>
 </div>
+-->
 
 <div class="control-group element">
-  <label class="control-label" for="estanteria">Estanter&iacute;a
+  <label class="control-label" for="modulo">Módulo
   </label>
   <div class="controls"> 
-    <input type="text" name="estanteria" id="estanteria" value="">
+    <input type="text" name="modulo" id="modulo" value="">
   </div>
 </div>
-
 <div class="control-group element">
   <label class="control-label" for="panel">Panel
   </label>
@@ -150,12 +220,20 @@ $max_salida=6; $ruta_db_superior=$ruta=""; while($max_salida>0){ if(is_file($rut
     <input type="text" name="panel" id="panel" value="">
   </div>
 </div>
-
+<div class="control-group element">
+  <label class="control-label" for="nivel">Nivel
+  </label>
+  <div class="controls"> 
+    <input type="text" name="nivel" id="nivel" value="">
+  </div>
+</div>
 <div class="control-group element">
   <label class="control-label" for="material">Material
   </label>
-  <div class="controls"> 
-    <input type="text" name="material" id="material" value="">
+  <div class="controls">
+  	<select name="material" id="material"> 
+  	  <option value="">Seleccione.</option>
+	</select>
   </div>
 </div>
 
@@ -171,6 +249,7 @@ $max_salida=6; $ruta_db_superior=$ruta=""; while($max_salida>0){ if(is_file($rut
   	</select>
   </div>
 </div>
+
 
 <input type="hidden" name="funcionario_idfuncionario" id="funcionario_idfuncionario" value="<?php echo(usuario_actual('idfuncionario')); ?>">
 
@@ -194,6 +273,7 @@ $max_salida=6; $ruta_db_superior=$ruta=""; while($max_salida>0){ if(is_file($rut
 <?php echo(librerias_arboles()); ?>
 <script type="text/javascript">
 $(document).ready(function(){
+	consultar_materiales_caja();
 	$('#fecha_extrema_i').datetimepicker({
     language: 'es',
     pick12HourFormat: true,
@@ -269,49 +349,22 @@ $(document).ready(function(){
       notificacion_saia("Formulario con errores","error","",8500);
     }
   });  
-  
-  tree3=new dhtmlXTreeObject("treeboxbox_tree3","","",0);
-  	tree3.setImagePath("<?php echo($ruta_db_superior);?>imgs/");
-  	tree3.enableIEImageFix(true);
-    tree3.enableCheckBoxes(1);
-    tree3.enableRadioButtons(true);
-    tree3.setOnLoadingStart(cargando_serie);
-    tree3.setOnLoadingEnd(fin_cargando_serie);
-    tree3.enableSmartXMLParsing(true);
-    tree3.setXMLAutoLoading("<?php echo($ruta_db_superior);?>test_serie_funcionario.php?con_padres=1&seleccionado=<?php echo($datos[0]["serie_idserie"]); ?>&seleecionar_padre=1&pantalla=expediente");	
-  	tree3.loadXML("<?php echo($ruta_db_superior);?>test_serie_funcionario.php?con_padres=1&seleccionado=<?php echo($datos[0]["serie_idserie"]); ?>&seleecionar_padre=1&pantalla=expediente");
-    tree3.setOnCheckHandler(onNodeSelect_serie);
-      
-  	function onNodeSelect_serie(nodeId){
-  		valor_destino=document.getElementById("serie_idserie");
-  		if(tree3.isItemChecked(nodeId)){
-  			if(valor_destino.value!=="")
-        	tree3.setCheck(valor_destino.value,false);
-        if(nodeId.indexOf("_")!=-1)
-        	nodeId=nodeId.substr(0,nodeId.indexOf("_"));
-        valor_destino.value=nodeId;
-      }
-      else{
-      	valor_destino.value="";
-      }
-    }
-    function fin_cargando_serie() {
-      if (browserType == "gecko" )
-        document.poppedLayer = eval('document.getElementById("esperando_serie")');
-      else if (browserType == "ie")
-        document.poppedLayer = eval('document.getElementById("esperando_serie")');
-      else
-        document.poppedLayer = eval('document.layers["esperando_serie"]');
-      document.poppedLayer.style.display = "none";
-    }
-    function cargando_serie() {
-      if (browserType == "gecko" )
-        document.poppedLayer = eval('document.getElementById("esperando_serie")');
-      else if (browserType == "ie")
-        document.poppedLayer = eval('document.getElementById("esperando_serie")');
-      else
-        document.poppedLayer = eval('document.layers["esperando_serie"]');
-      document.poppedLayer.style.display = "";
+    
+    function consultar_materiales_caja(){
+    	$.ajax({
+    		type : "GET",
+    		url : "<?php echo $ruta_db_superior."pantallas/caja/consulta_materiales_caja.php"?>",
+    		success : function (response){
+    			response = $.parseJSON(response);
+    			$.each(response,function(index,value){
+    				$("#material").append(new Option(value.nombre,value.valor));
+    			});
+    		},
+    		error : function (){
+    			alert("error consultando los materiales");
+    		}
+    		
+    	});
     }
 });
 </script>

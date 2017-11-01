@@ -1105,3 +1105,32 @@ INSERT INTO busqueda_componente (idbusqueda_componente, busqueda_idbusqueda, tip
 (324, 37, 4, 2, 'pantallas/busquedas/consulta_busqueda_reporte.php?idbusqueda_componente=203', 'Prestamo', 'enlace_reporte_prestamo', 6, '', NULL, NULL, '', 2, 320, 2, NULL, '', '', '', '', '', '', 1666, '', NULL, NULL);
 
 -- --------------------------------------------------------------------
+DESARROLLO EXPEDIENTES BY JHON SEBASTIAN 2017/11/01
+
+ALTER TABLE expediente add (
+indice_uno varchar(255),
+indice_dos varchar(255),
+indice_tres varchar(255)
+);
+
+ALTER TABLE caja add (
+modulo varchar(255),
+nivel varchar(255)
+);
+
+CREATE TABLE `cf_material` (
+ `idcf_material` int(11) NOT NULL,
+ `nombre` varchar(255) NOT NULL,
+ `valor` varchar(255) NOT NULL,
+ `cod_padre` varchar(255) DEFAULT NULL,
+ `descripcion` varchar(255) DEFAULT NULL,
+ `tipo` varchar(255) DEFAULT NULL,
+ `categoria` varchar(255) DEFAULT NULL,
+ `estado` int(11) NOT NULL
+);
+
+INSERT INTO `cf_material` (`idcf_material`, `nombre`, `valor`, `cod_padre`, `descripcion`, `tipo`, `categoria`, `estado`) VALUES
+(1, 'Carton', '1', NULL, NULL, NULL, NULL, 1),
+(2, 'Otro', '2', NULL, NULL, NULL, NULL, 1);
+-- -----------------------------------------------------------------------
+
