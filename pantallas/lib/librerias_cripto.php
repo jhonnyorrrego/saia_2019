@@ -12,8 +12,11 @@ while($max_salida>0){
 function encrypt_md5($data){
 	return(md5(md5($data)));
 }
+
 function decrypt_blowfish($data,$key){
-	if(!$key && !defined("LLAVE_SAIA_CRYPTO")){
+	if (is_null($key) && defined("LLAVE_SAIA_CRYPTO")) {
+		$key = LLAVE_SAIA_CRYPTO;
+	} else if (is_null($key)) {
 		define("LLAVE_SAIA_CRYPTO", "cerok_saia421_5");
 		$key=LLAVE_SAIA_CRYPTO;
 	}
@@ -24,22 +27,26 @@ function decrypt_blowfish($data,$key){
 }
 
 function encrypt_blowfish($data,$key){
-	if(!$key && !defined("LLAVE_SAIA_CRYPTO")){
+	if (is_null($key) && defined("LLAVE_SAIA_CRYPTO")) {
+		$key = LLAVE_SAIA_CRYPTO;
+	} else if (is_null($key)) {
 		define("LLAVE_SAIA_CRYPTO", "cerok_saia421_5");
 		$key=LLAVE_SAIA_CRYPTO;
 	}
 	$iv_size = mcrypt_get_iv_size(MCRYPT_BLOWFISH, MCRYPT_MODE_CBC);
-  //die($iv_size);
 	$iv = mcrypt_create_iv($iv_size, MCRYPT_RAND);
-	$crypttext = mcrypt_encrypt(MCRYPT_BLOWFISH, $key, $data, MCRYPT_MODE_CBC, 
-$iv);
+	$crypttext = mcrypt_encrypt(MCRYPT_BLOWFISH, $key, $data, MCRYPT_MODE_CBC, $iv);
 	return trim(bin2hex($iv . $crypttext));
 }
+
 function cadena_aleatoria($length=10,$uc=TRUE,$n=TRUE,$sc=FALSE){
   $source = 'abcdefghijklmnopqrstuvwxyz';
-  if($uc==1) $source .= 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-  if($n==1) $source .= '1234567890';
-  if($sc==1) $source .= '|@#~$%()=^*+[]{}-_';
+	if ($uc == 1)
+		$source .= 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+	if ($n == 1)
+		$source .= '1234567890';
+	if ($sc == 1)
+		$source .= '|@#~$%()=^*+[]{}-_';
   if($length>0){
     $rstr = "";
     $source = str_split($source,1);
@@ -51,6 +58,7 @@ function cadena_aleatoria($length=10,$uc=TRUE,$n=TRUE,$sc=FALSE){
   }
   return $rstr;
 }
+
 function request_encriptado($param="key_cripto"){
 	$iddoc=0;
 	$parametros=array();
@@ -64,6 +72,7 @@ function request_encriptado($param="key_cripto"){
 	}
 	return($parametros);
 }
+
 function seguridad_externa($data){
 	global $ruta_db_superior;
 	
@@ -88,5 +97,4 @@ function seguridad_externa($data){
 	}
 	return(false);
 }
-
 ?>

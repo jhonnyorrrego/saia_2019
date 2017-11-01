@@ -1105,6 +1105,48 @@ INSERT INTO busqueda_componente (idbusqueda_componente, busqueda_idbusqueda, tip
 (324, 37, 4, 2, 'pantallas/busquedas/consulta_busqueda_reporte.php?idbusqueda_componente=203', 'Prestamo', 'enlace_reporte_prestamo', 6, '', NULL, NULL, '', 2, 320, 2, NULL, '', '', '', '', '', '', 1666, '', NULL, NULL);
 
 -- --------------------------------------------------------------------
+
+-- DESARROLLO USUARIOS RECURRENTES, ANDRES AGUDELO TRAIDO DE EDUP
+
+INSERT INTO configuracion (nombre, valor, tipo, fecha, encrypt) VALUES
+('usuarios_concurrentes', '8b1af8960920cda5c6254b87385f081d', 'empresa', '2017-09-25 20:16:46', 1);
+
+CREATE OR REPLACE VIEW vusuarios_concurrentes AS select f.funcionario_codigo AS funcionario_codigo,f.nit AS nit,concat(f.nombres,' ',f.apellidos) AS nombre_completo,f.login AS login,count(l.login) AS cant_conexiones from (log_acceso l join funcionario f on((f.login = l.login))) where ((f.login not in ('cerok','mensajero','radicador_web','radicador_salida')) and (l.exito = 1) and isnull(l.fecha_cierre)) group by f.funcionario_codigo,f.nit,f.nombres,f.apellidos,f.login;
+
+
+INSERT INTO busqueda (idbusqueda, nombre, etiqueta, estado, ancho, campos, llave, tablas, ruta_libreria, ruta_libreria_pantalla, cantidad_registros, tiempo_refrescar, ruta_visualizacion, tipo_busqueda, badge_cantidades) VALUES
+(120, 'usuarios_concurrentes', 'Reporte Usuario Concurrentes', 1, 200, 'nit,nombre_completo,login,cant_conexiones', 'funcionario_codigo', NULL, NULL, NULL, 30, 500, 'pantallas/busquedas/consulta_busqueda_reporte.php', 2, NULL);
+
+INSERT INTO busqueda_componente (busqueda_idbusqueda, tipo, conector, url, etiqueta, nombre, orden, info, exportar, exportar_encabezado, encabezado_componente, estado, ancho, cargar, campos_adicionales, tablas_adicionales, ordenado_por, direccion, agrupado_por, busqueda_avanzada, acciones_seleccionados, modulo_idmodulo, menu_busqueda_superior, enlace_adicionar, encabezado_grillas) VALUES
+(120, 3, 2, 'pantallas/busquedas/consulta_busqueda_reporte.php', 'Reporte Usuario Concurrentes', 'usuarios_conectados_concurrentes', 1, 'Identificacion|{*nit*}|left|-|Nombres|{*nombre_completo*}|left|-|Login|{*login*}|left|-|Conexiones|{*cant_conexiones*}|center', NULL, NULL, NULL, 2, 320, 2, NULL, 'vusuarios_concurrentes', 'nombre_completo', 'ASC', 'funcionario_codigo,nit,nombre_completo,login', 'pantallas/funcionario/filtros_usu_recurrentes.php?idbusqueda_componente=304', NULL, 1667, NULL, NULL, NULL);
+
+
+INSERT INTO modulo (idmodulo, pertenece_nucleo, nombre, tipo, imagen, etiqueta, enlace, enlace_mobil, destino, cod_padre, orden, ayuda, parametros, busqueda_idbusqueda, permiso_admin, busqueda, enlace_pantalla) VALUES
+(1667, 0, 'reporte_usuarios_concurrentes', 'secundario', 'botones/principal/reportes.png', 'Usuarios Concurrentes', 'pantallas/buscador_principal.php?idbusqueda=120', NULL, 'centro', 1057, 22, '-', '', 0, 0, '1', 0);
+
+-- --------------------------------------------------------------------
+-- -----------------ACTUALIZACION REPORTE reporte_radicacion_correspondencia_dependencias CON LA NUEVA DISTRIBUCION--------------
+
+UPDATE busqueda SET etiqueta = 'Reporte de Correspondencia' WHERE idbusqueda = 105;
+UPDATE busqueda SET campos = 'd.numero,d.ventanilla_radicacion' WHERE idbusqueda = 105;
+
+UPDATE busqueda_componente SET etiqueta = 'Correspondencia' WHERE idbusqueda_componente = 284;
+UPDATE busqueda_componente SET etiqueta = 'Indicadores de Correspondencia' WHERE idbusqueda_componente = 285;
+
+UPDATE busqueda_componente SET tablas_adicionales = 'ft_radicacion_entrada a, distribucion b, vfuncionario_dc c' WHERE idbusqueda_componente = 284;
+
+UPDATE busqueda_componente SET campos_adicionales = 'a.tipo_origen,a.idft_radicacion_entrada,a.fecha_radicacion_entrada,a.descripcion,a.descripcion_general,b.iddistribucion,b.mensajero_destino,b.numero_distribucion,b.finaliza_fecha,CASE b.estado_distribucion WHEN 0 THEN ''RADICADO EN VENTANILLA'' WHEN 1 THEN ''POR DISTRIBUIR'' WHEN 2 THEN ''EN DISTRIBUCI&Oacute;N'' ELSE ''FINALIZADO'' END as estado_distribucion,a.fecha_radicacion_entrada,d.tipo_radicado,c.dependencia' WHERE idbusqueda_componente = 284;
+
+UPDATE busqueda_componente SET info = 'Radicado|{*ver_items@iddocumento,numero,fecha_radicacion_entrada,tipo_radicado*}|center|-|No. Item|{*numero_distribucion*}|center|-|Ventanilla|{*mopstrar_nombre_ventanilla_radicacion@ventanilla_radicacion*}|center|-|Tipo de origen|{*mostrar_tipo_origen_reporte@tipo_origen*}|center|-|Fecha de Radicaci&oacute;n|{*fecha_radicacion_entrada*}|center|-|Asunto|{*descripcion*}|left|-|Origen|{*mostrar_origen_reporte@iddistribucion*}|center|-|Destino|{*mostrar_destino_reporte@iddistribucion*}|center|-|Ruta|{*mostrar_ruta_reporte@iddistribucion*}|left|-|Descripci&oacute;n o Asunto|{*descripcion*}|center|-|Estado|{*estado_distribucion*}|center' WHERE idbusqueda_componente = 284;
+
+UPDATE busqueda_condicion SET codigo_where = 'lower(d.estado)=''aprobado'' AND a.documento_iddocumento=d.iddocumento AND a.documento_iddocumento=b.documento_iddocumento AND a.tipo_destino=2 AND b.destino=c.iddependencia_cargo AND b.tipo_destino=1 {*condicion_adicional_indicadores*}' WHERE idbusqueda_condicion = 226;
+
+UPDATE busqueda_grafico_serie SET valor = 'count(b.destino)' WHERE idbusqueda_grafico_serie = 29;
+
+UPDATE busqueda_grafico_serie SET valor = 'count(b.destino)' WHERE idbusqueda_grafico_serie = 30;
+
+-- --------------------------------------------------------------------
+
 DESARROLLO EXPEDIENTES BY JHON SEBASTIAN 2017/11/01
 
 ALTER TABLE expediente add (
@@ -1235,3 +1277,4 @@ INSERT INTO modulo (idmodulo, pertenece_nucleo, nombre, tipo, imagen, etiqueta, 
 (1669, 0, 'permiso_armin_archivo', 'secundario', 'botones/principal/defaut.png', 'Administraci&oacute;n de Archivo', '#', NULL, '_self', 45, 2, '', '', 0, 0, '', 0);
 
 -- -----------------------------------------------------------------------
+
