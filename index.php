@@ -146,7 +146,7 @@ $mayor_informacion=busca_filtro_tabla("valor","configuracion","nombre='mayor_inf
 <table width="100%" border="0"  cellpadding="0" cellspacing="0" id="tabla_principal"  align="middle" >
     <?php
         if(@$_SESSION["tipo_dispositivo"]=="movil"){
-          echo('<tr><td valign="bottom" align="center"><img src="'.$ruta_db_superior.'asset/img/layout/logosaia.png"><br></td></tr>');
+         // echo('<tr><td valign="bottom" align="center"><img src="'.$ruta_db_superior.'asset/img/layout/logosaia.png"><br></td></tr>');
         }
     ?>
   <tr align="center">
@@ -184,7 +184,7 @@ $mayor_informacion=busca_filtro_tabla("valor","configuracion","nombre='mayor_inf
           ?>
         <table width="700" border="0" cellspacing="0" cellpadding="0">
           <tr>
-            <td height="25" colspan="5"><img class="pull-right" style="height: 30px;" src="asset/img/layout/logosaia.png"></td>
+            <td height="25" colspan="5"style="height: 30px;"><!--img class="pull-right" src="asset/img/layout/logosaia.png"--></td>
           </tr> 
           <tr>
             <td width="62" rowspan="2">&nbsp;</td>
@@ -261,9 +261,9 @@ $mayor_informacion=busca_filtro_tabla("valor","configuracion","nombre='mayor_inf
 		      	$titulo_mostrar=busca_filtro_tabla('','configuracion','nombre="titulo_index"','',$conn);
 				$subtitulo_mostrar=busca_filtro_tabla('','configuracion','nombre="subtitulo_index"','',$conn);
 				
-				$texto_tabla="<p style='font-weight:bold;color: #4099D2;text-align:left;font-size:16px;'>".$titulo_mostrar[0]['valor']."<p>";
+				$texto_tabla=$titulo_mostrar[0]['valor'];
 				$texto_tabla.="<hr>";
-				$texto_tabla.="<p style='color:#4099D2;text-align:left;font-size:15px'>".$subtitulo_mostrar[0]['valor']."</p><br />";
+				$texto_tabla.=$subtitulo_mostrar[0]['valor']."<br /><br />";
 				global $conn;
 				$dato=busca_filtro_tabla("","noticia_index","estado=1 AND mostrar=1","",$conn);
 				//print_r($dato);die();
