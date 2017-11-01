@@ -1189,3 +1189,4 @@ ALTER TABLE `caja` ADD `dependencia_iddependencia` INT NOT NULL AFTER `serie_ids
 UPDATE `busqueda_componente` SET `campos_adicionales` = 'b.documento_iddocumento, b.idft_solicitud_prestamo, b.serie_idserie, b.estado_documento, b.anexos, b.estado_devolucion, b.documento_archivo, b.observaciones, b.nombre_solicita, b.fecha, b.funcionario_prestamo, b.funcionario_devoluci, b.fecha_prestamo_rep, b.fecha_devolucion_rep, b.transferencia_presta'WHERE `busqueda_componente`.`idbusqueda_componente` = 203;
 
 -- -----------------------------------------------------------------------
+DESARROLLO EXPEDIENTES BY Ruben Pulgarin <ruben.pulgarin@cerok.com> 2017/11/01
