@@ -28,6 +28,7 @@ $dato_padre=busca_filtro_tabla("","expediente a","a.idexpediente=".$datos[0]["co
 <input type="hidden" name="iddocumento" id="iddocumento" value="<?php echo($_REQUEST["iddocumento"]);?>">
 <input type="hidden" id="cerrar_higslide" value="<?php echo(@$_REQUEST["cerrar_higslide"]);?>">
 <legend>Editar expediente</legend>
+<div id="informacion_completa_expediente">
 <?php
 if($dato_padre["numcampos"]){
 ?>
@@ -35,6 +36,13 @@ if($dato_padre["numcampos"]){
 	Este est&aacute; vinculado al expediente <b><?php echo($dato_padre[0]["nombre"]); ?></b> 
 </div>
 <?php } ?>
+<div class="control-group element">
+  <label class="control-label" for="nombre">Nombre *
+  </label>
+  <div class="controls"> 
+    <input type="text" name="nombre" id="nombre" value="<?php echo($datos[0]["nombre"]); ?>">
+  </div>
+</div>
 <div class="control-group element">
   <label class="control-label" for="fecha">Fecha de creaci&oacute;n *
   </label>
@@ -48,15 +56,7 @@ if($dato_padre["numcampos"]){
 		</div>
   </div>
 </div>
-<div class="control-group element">
-  <label class="control-label" for="nombre">Nombre *
-  </label>
-  <div class="controls"> 
-    <input type="text" name="nombre" id="nombre" value="<?php echo($datos[0]["nombre"]); ?>">
-  </div>
-</div>
 
-<div id="informacion_completa_expediente">
 
 <div class="control-group element">
   <label class="control-label" for="nombre">Descripci&oacute;n
@@ -77,7 +77,7 @@ if($dato_padre["numcampos"]){
 			for($i=0;$i<$cajas["numcampos"];$i++){
 				$selected="";
 				if($datos[0]["fk_idcaja"]==$cajas[$i]["idcaja"])$selected="selected";
-				echo("<option value='".$cajas[$i]["idcaja"]."' ".$selected.">".$cajas[$i]["fondo"]."(".$cajas[$i]["codigo"].")</option>");
+				echo("<option value='".$cajas[$i]["idcaja"]."' ".$selected.">".$cajas[$i]["fondo"]."(".$cajas[$i]["codigo_dependencia"]."-".$cajas[$i]["codigo_serie"]."-".$cajas[$i]["consecutivo"].")</option>");
 			}
   		?>
   	</select>
@@ -90,7 +90,7 @@ if($dato_padre["numcampos"]){
   <label class="control-label" for="nombre">Padre *
   </label>
   <div class="controls">
-  	<b><?php echo(mostrar_seleccionados_exp($datos[0]["cod_padre"],"nombre","expediente")); ?></b>
+  	<b><?php if($datos[0]["cod_padre"]){ echo("Serie. ".mostrar_seleccionados_exp($datos[0]["cod_padre"],"nombre","expediente")." | Fondo. ".mostrar_seleccionados_exp($datos[0]["cod_padre"],"fondo","expediente")); } ?></b>
   	<br />
     <span class="phpmaker">
 			<input type="text" id="stext" width="200px" size="20">          
@@ -111,7 +111,7 @@ if($dato_padre["numcampos"]){
   <label class="control-label" for="serie_idserie">Serie asociada *
   </label>
   <div class="controls">       
-  	<b><?php echo(mostrar_seleccionados_exp($datos[0]["serie_idserie"],"nombre","serie")); ?></b>
+  	<?php echo("<b>Serie.</b> <span id='serie_asociada'>".mostrar_seleccionados_exp($datos[0]["serie_idserie"],"nombre","serie")."</span> <b>| Fondo.</b> ".$datos[0]["fondo"]); ?>
   	<br />
     <span class="phpmaker">
 			<input type="text" id="stext_serie" width="200px" size="20">          
@@ -124,10 +124,11 @@ if($dato_padre["numcampos"]){
       <div id="esperando_serie"><img src="<?php echo $ruta_db_superior; ?>imagenes/cargando.gif"></div>
 			<div id="treeboxbox_tree3" class="arbol_saia"></div>
     </span>
-     <input type="text" style="display:none;" name="serie_idserie" id="serie_idserie" value="<?php echo($datos[0]["serie_idserie"]); ?>">
+     <input type="hidden" name="serie_idserie" id="serie_idserie" value="<?php echo($datos[0]["serie_idserie"]); ?>">
+     <input type="hidden" name="dependencia_iddependencia" id="dependencia_iddependencia" value="<?php echo($datos[0]["dependencia_iddependencia"]); ?>">
   </div>
 </div>
-
+</div>
 <div data-toggle="collapse" data-target="#datos_adicionales">
   <i class="icon-plus-sign"></i><b>Informaci&oacute;n adicional</b>
 </div>
@@ -170,7 +171,7 @@ if($dato_padre["numcampos"]){
 	  </div>
     
     
-	<div class="control-group element">
+	<!-- div class="control-group element">
 	  <label class="control-label" for="nombre">Unidad administrativa / seccion <br />Subseccion I<br />Subseccion II
 	  </label>
 	  <div class="controls">
@@ -189,17 +190,12 @@ if($dato_padre["numcampos"]){
 	      <input type="hidden" name="unidad_admin" id="unidad_admin" value="<?php echo($datos[0]["unidad_admin"]); ?>">
 	    </span>
 	  </div>
-	</div>
-	
-	
-
-	</div>
-	
+	</div-->
 	<div class="control-group element">
 	  <label class="control-label" for="fondo">Fondo
 	  </label>
 	  <div class="controls"> 
-	    <input name="fondo" id="fondo" value="<?php echo($datos[0]["fondo"]); ?>">
+	    <input name="fondo" id="fondo" value="<?php echo($datos[0]["fondo"]); ?>" readonly="readonly">
 	  </div>
 	</div>
 	
@@ -313,7 +309,7 @@ if($dato_padre["numcampos"]){
 	
 	
 	</div>
-	
+	</div>	
 </div>
 <br />
 <input type="hidden" name="key_formulario_saia" value="<?php echo(generar_llave_md5_saia());?>">
@@ -377,6 +373,7 @@ if($dato_padre["numcampos"]){
     tree2.setOnCheckHandler(onNodeSelect_expediente);
       
   	function onNodeSelect_expediente(nodeId){
+
   		valor_destino=document.getElementById("cod_padre");
   		if(tree2.isItemChecked(nodeId)){
   			if(valor_destino.value!=="")
@@ -409,6 +406,12 @@ if($dato_padre["numcampos"]){
       document.poppedLayer.style.display = "";
     }  
     
+    var browserType;
+    if (document.layers) {browserType = "nn4"}
+    if (document.all) {browserType = "ie"}
+    if (window.navigator.userAgent.toLowerCase().match("gecko")) {
+       browserType= "gecko"
+    }    
     tree3=new dhtmlXTreeObject("treeboxbox_tree3","","",0);
   	tree3.setImagePath("<?php echo($ruta_db_superior);?>imgs/");
   	tree3.enableIEImageFix(true);
@@ -417,34 +420,43 @@ if($dato_padre["numcampos"]){
     tree3.setOnLoadingStart(cargando_serie);
     tree3.setOnLoadingEnd(fin_cargando_serie);
     tree3.enableSmartXMLParsing(true);
-    tree3.setXMLAutoLoading("<?php echo($ruta_db_superior);?>test_serie_funcionario.php?seleccionado=<?php echo($datos[0]["serie_idserie"]); ?>&seleecionar_padre=1&pantalla=expediente&categoria=2&nivel=series,subseries&con_padres=1");	
-  	tree3.loadXML("<?php echo($ruta_db_superior);?>test_serie_funcionario.php?seleccionado=<?php echo($datos[0]["serie_idserie"]); ?>&seleecionar_padre=1&pantalla=expediente&categoria=2&nivel=series,subseries&con_padres=1");
+    //tree3.setXMLAutoLoading("<?php echo($ruta_db_superior);?>test_serie_funcionario.php?con_padres=1&pantalla=expediente");	
+  	//tree3.loadXML("<?php echo($ruta_db_superior);?>test_serie_funcionario.php?con_padres=1&pantalla=expediente");
+  	tree3.setXMLAutoLoading("../../test_dependencia_serie.php?tabla=dependencia&admin=1&mostrar_nodos=dsa&sin_padre_dependencia=1&cargar_series=1&funcionario=1&carga_partes_dependencia=1&carga_partes_series=1&no_grupos=1&no_tipos=1&seleccionado=<?php echo($datos[0]["serie_idserie"])?>&seleccionado_dep=<?php echo($datos[0]["dependencia_iddependencia"])?>");	
+  	tree3.loadXML("../../test_dependencia_serie.php?tabla=dependencia&admin=1&mostrar_nodos=dsa&sin_padre_dependencia=1&cargar_series=1&funcionario=1&carga_partes_dependencia=1&carga_partes_series=1&no_grupos=1&no_tipos=1&seleccionado=<?php echo($datos[0]["serie_idserie"])?>&seleccionado_dep=<?php echo($datos[0]["dependencia_iddependencia"])?>");
     tree3.setOnCheckHandler(onNodeSelect_serie);
       
   	function onNodeSelect_serie(nodeId){
-  		valor_destino=document.getElementById("serie_idserie");
-  		if(tree3.isItemChecked(nodeId)){
-  			if(valor_destino.value!=="")
-        	tree3.setCheck(valor_destino.value,false);
-        if(nodeId.indexOf("_")!=-1)
-        	nodeId=nodeId.substr(0,nodeId.indexOf("_"));
-        valor_destino.value=nodeId;
+  		var item_select=tree3.getAllChecked();
+  		console.log(nodeId+" -- "+item_select);
+  		if(item_select!=="undefined" && item_select!=nodeId){
+  	  		lista_items=item_select.split(",");
+  	  		for(i=0;i<lista_items.length;i++){
+  	  			tree3.setCheck(lista_items[i],0);
+  	  	  	}
+  	  	}
+  		tree3.setCheck(nodeId,1);
+  	  if(tree3.isItemChecked(nodeId)){
+  	  	
+  	  	console.log(tree3.getUserData(nodeId,"dependencia_nombre"));
+        $("#serie_idserie").val(tree3.getUserData(nodeId,"idserie"));
+        $("#dependencia_iddependencia").val(tree3.getUserData(nodeId,"iddependencia"));
+        $("#codigo_numero_serie").val(tree3.getUserData(nodeId,"serie_codigo"));
+    	$("#codigo_numero_dependencia").val(tree3.getUserData(nodeId,"dependencia_codigo"));
+    	$("#fondo").val(tree3.getUserData(nodeId,"dependencia_nombre"));
+    	$("#serie_asociada").empty().html(tree3.getUserData(nodeId,"serie_seleccionada"));
+    	$("#codigo_numero_dependencia").trigger('keyup');
+    	$("#codigo_numero_serie").trigger('keyup');
       }
       else{
-      	valor_destino.value="";
+    	$("#serie_idserie").val("");
+    	$("#dependencia_iddependencia").val("");
+    	$("#codigo_numero_serie").val('');
+  	  	$("#codigo_numero_dependencia").val('');
+  	    $("#fondo").val('');
+  	  	$("#codigo_numero_dependencia").trigger('keyup');
+  	    $("#codigo_numero_serie").trigger('keyup');
       }
-      
-      var text = tree3.getItemText(nodeId);
-      var vector_text=text.split('(');
-      var codigo_serie=vector_text[vector_text.length-1].substring(0,vector_text[vector_text.length-1].length-2);
-      	if(tree3.isItemChecked(nodeId)){ //checkqueado
-      	    $('[name="codigo_numero_serie"]').val(codigo_serie);
-      	    $('[name="codigo_numero_serie"]').trigger('keyup');
-      	}else{ //unchecked
-      	    $('[name="codigo_numero_serie"]').val('');
-      	    $('[name="codigo_numero_serie"]').trigger('keyup');
-      	}      
-      
     }
     function fin_cargando_serie() {
       if (browserType == "gecko" )
@@ -465,7 +477,7 @@ if($dato_padre["numcampos"]){
       document.poppedLayer.style.display = "";
     }   
     
-    tree4=new dhtmlXTreeObject("treeboxbox_tree4","","",0);
+    /*tree4=new dhtmlXTreeObject("treeboxbox_tree4","","",0);
   	tree4.setImagePath("<?php echo($ruta_db_superior);?>imgs/");
   	tree4.enableIEImageFix(true);
     tree4.enableCheckBoxes(1);
@@ -507,7 +519,7 @@ if($dato_padre["numcampos"]){
       else
         document.poppedLayer = eval('document.layers["esperando_unidad_admin"]');
       document.poppedLayer.style.display = "";
-    }
+    }*/
   });
   
   $(".opcion_informacion").on("hide",function(){

@@ -138,7 +138,31 @@ function barra_superior_busqueda(){
 	$ok1=$permiso->acceso_modulo_perfil('adicionar_expediente');
 	$ok2=$permiso->acceso_modulo_perfil('transferencia_doc');
 	$cadena='';
+	
+	$reporte_inventario=busca_filtro_tabla("idbusqueda_componente","busqueda_componente","nombre='reporte_expediente_grid_exp'","",$conn);
+	if($reporte_inventario['numcampos']){
+		$inventario=$reporte_inventario[0]['idbusqueda_componente'];
+	}
 
+	$reporte_indice=busca_filtro_tabla("idbusqueda_componente","busqueda_componente","nombre='reporte_docs_expediente_grid_exp'","",$conn);
+	if($reporte_indice['numcampos']){
+		$indice=$reporte_indice[0]['idbusqueda_componente'];
+	}
+	
+	$tipo_reporte_exp=busca_filtro_tabla("etiqueta","busqueda_componente","idbusqueda_componente=".$_REQUEST['idbusqueda_componente'],"",$conn);
+	$tipo='';
+	switch ($tipo_reporte_exp[0]['etiqueta']) {
+		case 'Gestion':
+			$tipo='1';
+			break;
+		case 'Central':
+			$tipo='2';
+			break;
+		case 'Historico':
+			$tipo='3';
+			break;
+	}
+	$registros_concatenados="cod_arbol|".@$_REQUEST["cod_arbol"]."|-|tipo_expediente|".$tipo;
 	if($ok1){
 		$cadena.='
 	<li class="divider-vertical"></li>
@@ -148,7 +172,7 @@ function barra_superior_busqueda(){
 	  </div>
 	</li>';
 	}
-	if($ok2){
+	/*if($ok2){
 		$cadena.='<li class="divider-vertical"></li>
 		<li>
 		 <div class="btn-group">
@@ -166,21 +190,21 @@ function barra_superior_busqueda(){
 			}
 		});
 		</script>';
-	}
+	}*/
 
 	// INICIO NUEVO DESARROLLO REPORTE EXPEDIENTES 20171004
 	$cadena.='
-	<li class="divider-vertical"></li>
+	<li class="divider-vertical"></li> 
 	<li>
 	 <div class="btn-group">
-	    <button class="btn btn-mini kenlace_saia" conector="iframe" id="reporte_expediente_grid" idbusqueda_componente="320" titulo="Reporte de expedientes" enlace="pantallas/busquedas/consulta_busqueda_reporte.php?variable_busqueda='.@$_REQUEST["cod_arbol"].'&idbusqueda_componente=320">Reporte Tabular</button>
+	    <button class="btn btn-mini kenlace_saia" conector="iframe" id="reporte_expediente_grid" idbusqueda_componente="'.$inventario.'" titulo="Inventario Documental" enlace="pantallas/busquedas/consulta_busqueda_reporte.php?variable_busqueda='.$registros_concatenados.'&idbusqueda_componente='.$inventario.'">Inventario Documental</button>
 	  </div>
 	</li>';
 	$cadena.='
 	<li class="divider-vertical"></li>
 	<li>
 	 <div class="btn-group">
-	    <button class="btn btn-mini kenlace_saia" conector="iframe" id="reporte_inventario_docs" idbusqueda_componente="321" titulo="Inventario de documentos" enlace="pantallas/busquedas/consulta_busqueda_reporte.php?variable_busqueda='.@$_REQUEST["idexpediente"].'&idbusqueda_componente=321">Inventario de documentos</button>
+	    <button class="btn btn-mini kenlace_saia" conector="iframe" id="reporte_inventario_docs" idbusqueda_componente="'.$indice.'" titulo="indice de Expediente" enlace="pantallas/busquedas/consulta_busqueda_reporte.php?variable_busqueda='.@$_REQUEST["idexpediente"].'&idbusqueda_componente='.$indice.'">Indice de Expediente</button>
 	  </div>
 	</li>';
 	// FIN NUEVO DESARROLLO REPORTE EXPEDIENTES 20171004
@@ -330,7 +354,7 @@ function filtro_where_expediente_serie(){
 function enlace_expediente2($idexpediente,$nombre){
 	return("<div style='' class='link' onclick=window.open('consulta_busqueda_expediente_serie.php?idbusqueda_componente=".$_REQUEST["idbusqueda_componente"]."&variable_busqueda=idexpediente/**/".$idexpediente."','_self'); titulo='".$nombre."'><b>".$nombre."</b></div>");
 }
-//Muestra la descripción del listado de documentos
+//Muestra la descripciÃ³n del listado de documentos
 function obtener_descripcion_expediente($descripcion){
 	return($descripcion);
 }
@@ -507,9 +531,9 @@ function enlaces_adicionales_expediente($idexpediente, $nombre,$estado_cierre,$p
 	}
 
 	$mostrar_seleccionar='';
-	if($estado_cierre==1){
+	/*if($estado_cierre==1){
 	    $mostrar_seleccionar='style="display:none;"';
-	}
+	}*/
 	$texto.='<div id="seleccionados_expediente_'.$idexpediente.'" idregistro=\''.$idexpediente.'\' titulo=\'Seleccionar\' class=\'btn btn-mini tooltip_saia adicionar_seleccionados_expediente pull-right\' '.$mostrar_seleccionar.'><i class=\'icon-uncheck\' ></i></div>';
 
 
@@ -532,7 +556,22 @@ function expedientes_asignados(){
 		if($busqueda_componente["numcampos"]){
 			return("1=1");
 		}
+		
+		
+		//INICIO SI TIENE PERMISO Administraci&oacute;n de Archivo & el reporte es Inventario documental
+		$permiso=new Permiso();
+		$ok=$permiso->acceso_modulo_perfil('permiso_armin_archivo');
+		$reporte_inventario_documental=busca_filtro_tabla("","busqueda_componente A","A.nombre='reporte_expediente_grid_exp' AND A.idbusqueda_componente=".$_REQUEST["idbusqueda_componente"],"",$conn);
+		if($reporte_inventario_documental["numcampos"] && $ok){
+			return("1=1");
+		}	
+		//FIN SI TIENE PERMISO Administraci&oacute;n de Archivo & el reporte es Inventario documental
+			
 	}
+	
+	
+	
+	
 
 	$roles=busca_filtro_tabla("","dependencia_cargo a","a.estado='1' and a.funcionario_idfuncionario=".usuario_actual('idfuncionario'),"",$conn);
 	$dependencias=extrae_campo($roles,"dependencia_iddependencia");
@@ -685,5 +724,69 @@ function obtener_super_padre_serie($idserie){
 			return($idserie);
 		}
 	}
+}
+function transferencia_documental(){
+	$cadena='<li><a href="#" id="transferencia_documental" titulo="Transferencia documental">Transferencia documental</a></li>
+	<script>
+		$("#transferencia_documental").click(function(){
+			var seleccionados=$("#seleccionados_expediente").val();			
+			$.ajax({
+				type : "GET",
+				url : "../expediente/validar_cierre_expedientes.php",
+				data : {
+					idexpedientes : seleccionados
+				},
+				success : function (response){
+					console.log(response);
+					response = JSON.parse(response);
+					if(response.tipo == 1){
+						if(seleccionados){
+							enlace_katien_saia("formatos/transferencia_doc/adicionar_transferencia_doc.php?id="+seleccionados,"Transferencia documental","iframe","");
+						}
+						else{
+							alert("Seleccione por lo menos un expediente");
+						}
+					}else{
+						alert("Expedientes abiertos : " + response.msn);
+					}
+				},
+				error : function (err){
+					console.log("error");
+				}
+			});	
+					
+		});
+		</script>';
+	
+	echo $cadena;
+}
+function prestamo_documento(){
+	$tipo=busca_filtro_tabla("nombre","busqueda_componente","idbusqueda_componente=".$_REQUEST['idbusqueda_componente'],"",$conn);
+	$estado="";
+	switch ($tipo[0]['nombre']) {
+		case 'expediente':
+			$estado=1;
+			break;
+		case 'documento_central':
+			$estado=2;
+			break;
+		case 'documento_historico':
+			$estado=3;
+			break;
+	}
+	$cadena='<li><a href="#" id="prestamo_documento" titulo="Solicitud de prestamo de documentos">Solicitud de prestamo de documentos</a></li>
+	<script>
+		$("#prestamo_documento").click(function(){
+			var seleccionados=$("#seleccionados_expediente").val();
+			var estado_archivo='.$estado.';
+			if(seleccionados){
+				enlace_katien_saia("formatos/solicitud_prestamo/adicionar_solicitud_prestamo.php?id="+seleccionados+"&estado_archivo="+estado_archivo,"Solicitud de prestamo","iframe","");
+			}else{
+				alert("Seleccione por lo menos un expediente");
+			}
+		});
+		</script>';
+	
+	echo $cadena;
 }
 ?>
