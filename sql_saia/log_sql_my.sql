@@ -1190,3 +1190,48 @@ UPDATE `busqueda_componente` SET `campos_adicionales` = 'b.documento_iddocumento
 
 -- -----------------------------------------------------------------------
 DESARROLLO EXPEDIENTES BY Ruben Pulgarin <ruben.pulgarin@cerok.com> 2017/11/01
+
+UPDATE campos_formato SET etiqueta_html = 'checkbox' WHERE campos_formato.idcampos_formato = 5205;	
+
+INSERT INTO formato (idformato, nombre, etiqueta, cod_padre, contador_idcontador, nombre_tabla, ruta_mostrar, ruta_editar, ruta_adicionar, librerias, estilos, javascript, encabezado, cuerpo, pie_pagina, margenes, orientacion, papel, exportar, funcionario_idfuncionario, fecha, mostrar, imagen, detalle, tipo_edicion, item, serie_idserie, ayuda, font_size, banderas, tiempo_autoguardado, mostrar_pdf, orden, enter2tab, firma_digital, fk_categoria_formato, flujo_idflujo, funcion_predeterminada, paginar, pertenece_nucleo, permite_imprimir, firma_crt, pos_firma_crt, logo_firma_crt, pos_logo_firma_crt) VALUES
+(422, 'item_prestamo_exp', 'item_prestamo_exp', 412, 235, 'ft_item_prestamo_exp', 'mostrar_item_prestamo_exp.php', 'editar_item_prestamo_exp.php', 'adicionar_item_prestamo_exp.php', NULL, NULL, NULL, '', '', '', '15,20,30,20', '0', 'A4', 'tcpdf', 1, '2017-10-20 21:54:19', '0', NULL, '0', 0, '1', 1347, NULL, '9', 'm', '300000', 1, NULL, 0, 0, '2,13', 0, '', '1', 0, 1, NULL, NULL, NULL, NULL);
+
+INSERT INTO campos_formato (idcampos_formato, formato_idformato, nombre, etiqueta, tipo_dato, longitud, obligatoriedad, valor, acciones, ayuda, predeterminado, banderas, etiqueta_html, orden, mascara, adicionales, autoguardado, fila_visible) VALUES
+(5207, 422, 'ft_solicitud_prestamo', 'item_prestamo_exp', 'INT', '11', 1, '412', 'a', 'item_prestamo_exp', NULL, 'fk', 'detalle', 0, NULL, NULL, 0, 1),
+(5208, 422, 'fk_expediente', 'fk_expediente', 'INT', '11', 1, NULL, 'a,e,b', NULL, NULL, NULL, 'hidden', 0, NULL, NULL, 0, 1),
+(5209, 422, 'idft_item_prestamo_exp', 'ITEM_PRESTAMO_EXP', 'INT', '11', 1, NULL, 'a,e', NULL, NULL, 'ai,pk', 'hidden', 0, NULL, NULL, 0, 1),
+(5214, 422, 'fecha_prestamo', 'fecha_prestamo', 'DATETIME', NULL, 0, NULL, 'a,e,b', NULL, NULL, NULL, 'hidden', 0, NULL, NULL, 0, 1),
+(5215, 422, 'fecha_devolucion', 'fecha_devolucion', 'DATETIME', NULL, 0, NULL, 'a,e,b', NULL, NULL, NULL, 'hidden', 0, NULL, NULL, 0, 1),
+(5216, 422, 'estado_prestamo', 'estado_prestamo', 'INT', '11', 0, NULL, 'a,e,b', NULL, NULL, NULL, 'hidden', 0, NULL, NULL, 0, 1),
+(5217, 422, 'observacion_prestamo', 'observacion_prestamo', 'VARCHAR', '255', 0, NULL, 'a,e,b', NULL, NULL, NULL, 'hidden', 0, NULL, NULL, 0, 1),
+(5218, 422, 'funcionario_prestamo', 'funcionario_prestamo', 'INT', '11', 0, NULL, 'a,e,b', NULL, NULL, NULL, 'hidden', 0, NULL, NULL, 0, 1),
+(5219, 422, 'funcionario_devoluci', 'funcionario_devoluci', 'INT', '11', 0, NULL, 'a,e,b', NULL, NULL, NULL, 'hidden', 0, NULL, NULL, 0, 1),
+(5220, 422, 'observacion_devolver', 'observacion_devolver', 'VARCHAR', '255', 0, NULL, 'a,e,b', NULL, NULL, NULL, 'hidden', 0, NULL, NULL, 0, 1); 
+
+INSERT INTO funciones_formato (idfunciones_formato, nombre, nombre_funcion, parametros, etiqueta, descripcion, ruta, formato, acciones) VALUES
+(958, '{*insertar_item_prestamo_exp*}', 'insertar_item_prestamo_exp', NULL, 'insertar_item_prestamo_exp', '', 'funciones.php', '412', '');
+
+INSERT INTO funciones_formato_accion (idfunciones_formato_accion, idfunciones_formato, accion_idaccion, formato_idformato, momento, estado, orden) VALUES
+(307, 958, 3, 412, 'POSTERIOR', 1, 1);
+
+UPDATE campos_formato SET etiqueta_html = 'checkbox' WHERE campos_formato.idcampos_formato = 3995;	
+	
+
+INSERT INTO busqueda (idbusqueda, nombre, etiqueta, estado, ancho, campos, llave, tablas, ruta_libreria, ruta_libreria_pantalla, cantidad_registros, tiempo_refrescar, ruta_visualizacion, tipo_busqueda, badge_cantidades) VALUES
+(54, 'reporte_solicitud_prestamo', 'Prestamo', 1, 200, 'a.fecha,a.ejecutor', 'a.iddocumento', 'documento a', 'formatos/solicitud_prestamo/librerias.php', 'formatos/solicitud_prestamo/funciones_js.php', 30, 500, 'pantallas/busquedas/consulta_busqueda_reporte.php', 2, NULL);
+
+INSERT INTO busqueda_componente (idbusqueda_componente, busqueda_idbusqueda, tipo, conector, url, etiqueta, nombre, orden, info, exportar, exportar_encabezado, encabezado_componente, estado, ancho, cargar, campos_adicionales, tablas_adicionales, ordenado_por, direccion, agrupado_por, busqueda_avanzada, acciones_seleccionados, modulo_idmodulo, menu_busqueda_superior, enlace_adicionar, encabezado_grillas) VALUES
+(203, 54, 3, 2, 'pantallas/busquedas/consulta_busqueda_reporte.php', 'Prestamo', 'reporte_solicitud_prestamo', 2, 'Fecha de solicitud|{*parsear_fecha_reserva1@fecha*}|left|-|Solicitante|{*nombre_solicitante@ejecutor*}|left|-|Solicitud de Prestamo|{*enlace_documento_reservar@documento_iddocumento*}|left|-|Expediente|{*mostrar_informacion_expediente@fk_expediente*}|left|300|-|Desde|{*parsear_fecha_reserva2@fecha_prestamo_rep*}|left|-|Hasta|{*parsear_fecha_reserva3@fecha_devolucion_rep*}|left|-|Entrega|{*accion_entrega@idft_item_prestamo_exp,funcionario_prestamo,fecha_prestamo,observacion_prestamo,estado_prestamo*}|center|-|Devolucion|{*accion_devuelto@idft_item_prestamo_exp,funcionario_devoluci,fecha_devolucion,observacion_devolver,estado_prestamo*}|center|-|Tiempo transcurrido|{*tiempo_transcurrido_reserva@fecha_prestamo,fecha_devolucion*}|left', NULL, NULL, NULL, 2, 320, 2, 'b.documento_iddocumento, b.idft_solicitud_prestamo, b.serie_idserie, b.estado_documento, b.anexos, b.documento_archivo, b.observaciones, b.nombre_solicita, b.fecha, b.fecha_prestamo_rep, b.fecha_devolucion_rep, b.transferencia_presta,c.idft_item_prestamo_exp, c.fecha_prestamo, c.fecha_devolucion, c.estado_prestamo, c.funcionario_prestamo, c.observacion_prestamo,c.fecha_devolucion,c.observacion_devolver,c.funcionario_devoluci,c.fk_expediente', 'ft_solicitud_prestamo b, ft_item_prestamo_exp c', 'a.fecha', 'desc', NULL, NULL, 'funcion_entregar_devolver', NULL, NULL, NULL, NULL);
+
+INSERT INTO busqueda_condicion (idbusqueda_condicion, busqueda_idbusqueda, fk_busqueda_componente, codigo_where, etiqueta_condicion) VALUES
+(170, NULL, 203, 'b.idft_solicitud_prestamo=c.ft_solicitud_prestamo AND a.iddocumento=b.documento_iddocumento and lower(a.estado) not in(''eliminado'',''anulado'',''activo'')', 'condicion_reporte_reserva_documentos');
+
+
+UPDATE busqueda_condicion SET codigo_where = '1=1 and agrupador=0 {*filtro_cod_arbol*}{*tipo_expediente*} AND {*expedientes_asignados*}' WHERE busqueda_condicion.idbusqueda_condicion = 245;
+
+UPDATE busqueda SET ruta_libreria = 'pantallas/expediente/funciones_reporte_grid.php,pantallas/expediente/librerias.php' WHERE busqueda.idbusqueda = 115;
+
+INSERT INTO modulo (idmodulo, pertenece_nucleo, nombre, tipo, imagen, etiqueta, enlace, enlace_mobil, destino, cod_padre, orden, ayuda, parametros, busqueda_idbusqueda, permiso_admin, busqueda, enlace_pantalla) VALUES
+(1669, 0, 'permiso_armin_archivo', 'secundario', 'botones/principal/defaut.png', 'Administraci&oacute;n de Archivo', '#', NULL, '_self', 45, 2, '', '', 0, 0, '', 0);
+
+-- -----------------------------------------------------------------------
