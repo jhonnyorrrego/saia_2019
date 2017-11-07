@@ -134,6 +134,7 @@ else{
 }
 
 function barra_superior_busqueda(){
+	global $conn;
 	$permiso=new Permiso();
 	$ok1=$permiso->acceso_modulo_perfil('adicionar_expediente');
 	$ok2=$permiso->acceso_modulo_perfil('transferencia_doc');
@@ -152,13 +153,13 @@ function barra_superior_busqueda(){
 	$tipo_reporte_exp=busca_filtro_tabla("etiqueta","busqueda_componente","idbusqueda_componente=".$_REQUEST['idbusqueda_componente'],"",$conn);
 	$tipo='';
 	switch ($tipo_reporte_exp[0]['etiqueta']) {
-		case 'Gestion':
+		case 'expediente':
 			$tipo='1';
 			break;
-		case 'Central':
+		case 'documento_central':
 			$tipo='2';
 			break;
-		case 'Historico':
+		case 'documento_historico':
 			$tipo='3';
 			break;
 	}

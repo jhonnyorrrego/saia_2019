@@ -14,6 +14,7 @@ if(@$_REQUEST["ejecutar_expediente"]){
   }
 }
 function set_expediente(){
+	global $conn;
     $retorno=new stdClass;
     $retorno->exito=0;
     $retorno->mensaje="Error al guardar Prueba";
@@ -87,6 +88,8 @@ function set_expediente(){
 
 
 function set_expediente_documento(){
+	global $conn;
+		
 $retorno=new stdClass;
 $retorno->exito=0;
 $retorno->mensaje="Error al guardar Prueba";
@@ -130,6 +133,7 @@ if($exito){
 return($retorno);
 }
 function update_expediente(){
+	global $conn;	
 $retorno=new stdClass;
 $retorno->exito=0;
 $retorno->mensaje="Error al guardar";
@@ -203,6 +207,7 @@ return($retorno);
 }
 
 function delete_expediente(){
+	global $conn;	
 $retorno=new stdClass;
 $retorno->exito=0;
 $retorno->mensaje="Error al eliminar";
@@ -283,6 +288,7 @@ function crear_tomo_expediente(){
 
 
 function vincular_expediente_documento(){
+	global $conn;	
 $retorno=new stdClass;
 $retorno->exito=0;
 $retorno->mensaje="Error al guardar Prueba";
@@ -371,6 +377,7 @@ if(@$_REQUEST["idexpediente"] && @$_REQUEST["tipo_entidad"]){
 return($retorno);
 }*/
 function asignar_permiso_expediente() {
+	global $conn;	
 	$retorno = new stdClass;
 	$retorno -> exito = 0;
 	$retorno -> mensaje = "Error al asignar el expediente";
@@ -414,6 +421,7 @@ function asignar_permiso_expediente() {
 }
 
 function delete_documento_expediente(){
+	global $conn;	
 $retorno=new stdClass;
 $retorno->exito=0;
 $retorno->mensaje="Error al eliminar";
