@@ -1146,11 +1146,15 @@ UPDATE busqueda_grafico_serie SET valor = 'count(b.destino)' WHERE idbusqueda_gr
 
 
 -- ------------------------------------------------------------------------
--- DESARROLLO OPCIONES PRINCIPALES DE SAIA BAJO PERMISO
+-- DESARROLLO OPCIONES PRINCIPALES DE SAIA BAJO PERMISO <andres.agudelo>
 
 INSERT INTO modulo (idmodulo, pertenece_nucleo, nombre, tipo, imagen, etiqueta, enlace, enlace_mobil, destino, cod_padre, orden, ayuda, parametros, busqueda_idbusqueda, permiso_admin, busqueda, enlace_pantalla) VALUES
 (1668, 1, 'centro_notificaciones', '1', 'botones/principal/defaut.png', '7. CENTRO DE NOTIFICACIONES', 'auxiliar2.php?modulo=1695', NULL, 'menu', 0, 1, '', '', 0, 0, '1', 0),
 (1669, 1, 'mis_tareas', 'secundario', 'botones/principal/defaut.png', 'Mis Tareas', '#', NULL, '#', 1668, 1, '', '', 0, 0, '1', 0),
 (1670, 1, 'mis_tareas_avanzadas', 'secundario', 'botones/principal/defaut.png', 'Mis Tareas (Av)', '#', NULL, '#', 1668, 2, '', '', 0, 0, '1', 0);
 
+-- ------------------------------------------------------------------------
+-- DESARROLLO PERMISOS ADMIN EN MODULOS <andres.agudelo>
+INSERT INTO busqueda_condicion (busqueda_idbusqueda, fk_busqueda_componente, codigo_where, etiqueta_condicion) VALUES
+(NULL, 30, '{*filtro_modulo_admin*}', 'condicion_modulo');
 -- ------------------------------------------------------------------------

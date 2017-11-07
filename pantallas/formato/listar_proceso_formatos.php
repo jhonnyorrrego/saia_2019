@@ -80,14 +80,14 @@ if(count($request)){
   </div>
 </div>
 
-
 <?php
 	function acceso_modulo($idmodulo){
-	  if(usuario_actual("login")=="cerok"){
+	$configuracion = busca_filtro_tabla("A.valor", "configuracion A", "A.tipo='usuario' AND A.nombre='login_administrador'", "", $conn);
+	if (trim($configuracion[0]["valor"]) == trim($_SESSION["LOGIN" . LLAVE_SAIA])) {
 	    return true;
 	  }
 	  $ok=new Permiso();
-	  $modulo=busca_filtro_tabla("","modulo","idmodulo=".$idmodulo,"");
+	$modulo = busca_filtro_tabla("nombre", "modulo", "idmodulo=" . $idmodulo, "", $conn);
 	  $acceso=$ok->acceso_modulo_perfil($modulo[0]["nombre"]);
 	  return $acceso;
 	}	
