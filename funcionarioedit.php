@@ -200,13 +200,13 @@ label.error{
   <tr>
 		<td class="encabezado" title="Telefono."><span class="phpmaker" style="color: #FFFFFF;">TEL&Eacute;FONO</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
-<input type="text" name="x_telefono" id="x_telefono" size="30" maxlength="255" value="<?php echo @$x_telefono ?>">
+<input type="text" name="x_telefono" id="x_telefono" class="number"  size="30" maxlength="255" value="<?php echo @$x_telefono ?>">
 </span></td>
 	</tr>
 	<tr>
 		<td class="encabezado" title="Correo electronico del funcionario."><span class="phpmaker" style="color: #FFFFFF;">Email</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
-<input type="text" name="x_email" id="x_email" size="30" maxlength="255" value="<?php echo @$x_email ?>">
+<input type="text" name="x_email" id="x_email" size="30"  class="email"  maxlength="255" value="<?php echo @$x_email ?>">
 </span></td>
 	</tr>
 	
