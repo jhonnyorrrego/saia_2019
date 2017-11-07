@@ -20,16 +20,16 @@ echo(librerias_html5());
 echo(librerias_bootstrap());
 echo(librerias_highslide());
 }
-//include_once("cargando.php");
+
 if(@$_SESSION["LOGIN".LLAVE_SAIA]){
+	$usuario = usuario_actual("funcionario_codigo");
+	$funcionario_idfuncionario = usuario_actual('idfuncionario');
 //$fondo=busca_filtro_tabla("A.valor","configuracion A","A.tipo='empresa' AND A.nombre='fondo'","A.fecha,A.valor DESC",$conn);
 almacenar_sesion(1,"");
-//$alto_menu=78;
 $recarga=busca_filtro_tabla("A.valor","configuracion A","A.tipo='interfaz' AND A.nombre='intervalo_recarga'","A.fecha DESC",$conn);
 if($recarga["numcampos"]){
   $intervalo_recarga_informacion=$recarga[0]["valor"];
-}
-else{
+}else{
   $intervalo_recarga_informacion=900000; ////Esto debería estar en configuración aquí recarga cada 15 minutos
 }
 include_once($ruta_db_superior."pantallas/lib/mobile_detect.php");
@@ -38,36 +38,17 @@ if ( $detect->isMobile() ) {
 	$_SESSION["tipo_dispositivo"]="movil";
 }
 /*************actualizacion de fin de año ********/
-/*
-$proxima=busca_filtro_tabla("valor","configuracion","nombre='actualizacion_fin_anio'","",$conn);
-if($proxima["numcampos"])
-{
-$fecha=busca_filtro_tabla(resta_fechas("'".$proxima[0][0]."'","'".date("Y-m-d")."'"),"","","",$conn);
-if(@$fecha[0][0]<0)
-  {alerta("Se van a realizar algunas actualizaciones por el cambio de año, por favor espere.");
-   abrir_url("actualizacion_cambio_anio.php");
-  }
-}
-*/
 $proxima=busca_filtro_tabla("valor","configuracion","nombre='actualizacion_fin_anio'","idconfiguracion DESC",$conn);
 if($proxima["numcampos"]){
 $fecha=busca_filtro_tabla(resta_fechas("'".$proxima[0][0]."'","'".date("Y-m-d")."'"),"dual","","",$conn);
-if(@$fecha[0][0]<0)
-  {alerta("Se van a realizar algunas actualizaciones por el cambio de año, por favor espere.",'success',6000);
-   abrir_url("actualizacion_cambio_anio.php");
+if(@$fecha[0][0]<0){
+	alerta("Se van a realizar algunas actualizaciones por el cambio de año, por favor espere.",'success',6000);
+	abrir_url("actualizacion_cambio_anio.php");
   }
 }
-$usuario=usuario_actual("funcionario_codigo");
-$idfuncionario=usuario_actual("idfuncionario");
 
-$etiquetados=busca_filtro_tabla("c.nombre","documento a, documento_etiqueta b, etiqueta c","LOWER(a.estado) NOT IN ('eliminado') AND a.iddocumento=b.documento_iddocumento AND b.etiqueta_idetiqueta=c.idetiqueta AND c.funcionario='".$usuario."' GROUP BY a.iddocumento","",$conn);
 
-$pendientes=busca_filtro_tabla("count(*) AS cant","documento A,asignacion B,formato c ","LOWER(A.estado)<>'eliminado' AND A.iddocumento=B.documento_iddocumento AND B.tarea_idtarea<>-1 AND B.entidad_identidad=1 AND B.llave_entidad=".$usuario." and lower(A.plantilla)=c.nombre ","GROUP BY A.iddocumento",$conn);
-
-$con_indicador=busca_filtro_tabla("","documento a, prioridad_documento b,formato c ","b.documento_iddocumento=a.iddocumento AND b.prioridad in (1,2,3,4,5) AND lower(a.estado) not in('ELIMINADO') AND lower(a.plantilla)=c.nombre AND b.funcionario_idfuncionario=".usuario_actual("idfuncionario"),"group by a.iddocumento order by a.fecha  desc",$conn);
-//$destacados=busca_filtro_tabla("","prioridad_documento A, documento B","A.prioridad=2 AND iddocumento=documento_iddocumento AND B.estado<>'ELIMINADO' AND funcionario_idfuncionario=".usuario_actual("idfuncionario"),"",$conn);
-$borradores=busca_filtro_tabla("count(*) AS cant","documento A, formato c ","ejecutor=".$usuario." AND A.estado='ACTIVO' AND A.numero='0' and lower(A.plantilla)=c.nombre","",$conn);
-$mis_roles=busca_filtro_tabla("","vfuncionario_dc","funcionario_codigo=".usuario_actual("funcionario_codigo"),"",$conn);
+	$mis_roles = busca_filtro_tabla("iddependencia_cargo", "vfuncionario_dc", "funcionario_codigo=" . $usuario, "", $conn);
 if($mis_roles["numcampos"]){
 	$roles=extrae_campo($mis_roles,"iddependencia_cargo");
 	$concat=array();
@@ -76,15 +57,30 @@ if($mis_roles["numcampos"]){
 		array_push($concat,concatenar_cadena_sql($cadena_concatenar)." LIKE('%,".$value.",%')");
 	}
 }
-$tareas=busca_filtro_tabla("count(*) AS cant","tareas A","((".implode(" OR ",$concat).") OR ejecutor =".$usuario.") AND estado_tarea<>2","",$conn);
-$actualizaciones=busca_filtro_tabla("count(*) AS cant","documento_accion A,asignacion B","A.documento_iddocumento=B.documento_iddocumento AND B.tarea_idtarea<>-1 AND B.entidad_identidad=1 AND B.llave_entidad=".$usuario,"GROUP BY A.documento_iddocumento",$conn);
 
+	$permiso=new PERMISO();
+	$per_pendientes = $permiso->acceso_modulo_perfil("documentos_pendientes");
+	if($per_pendientes){
+		$etiquetados = busca_filtro_tabla("c.nombre", "documento a, documento_etiqueta b, etiqueta c", "LOWER(a.estado) NOT IN ('eliminado') AND a.iddocumento=b.documento_iddocumento AND b.etiqueta_idetiqueta=c.idetiqueta AND c.funcionario='" . $usuario . "' GROUP BY a.iddocumento", "", $conn);
+		$pendientes = busca_filtro_tabla("count(*) AS cant", "documento A,asignacion B,formato c ", "LOWER(A.estado)<>'eliminado' AND A.iddocumento=B.documento_iddocumento AND B.tarea_idtarea<>-1 AND B.entidad_identidad=1 AND B.llave_entidad=" . $usuario . " and lower(A.plantilla)=c.nombre ", "GROUP BY A.iddocumento", $conn);
+		$con_indicador = busca_filtro_tabla("", "documento a, prioridad_documento b,formato c ", "b.documento_iddocumento=a.iddocumento AND b.prioridad in (1,2,3,4,5) AND lower(a.estado) not in('ELIMINADO') AND lower(a.plantilla)=c.nombre AND b.funcionario_idfuncionario=" . usuario_actual("idfuncionario"), "group by a.iddocumento order by a.fecha  desc", $conn);
+		$borradores = busca_filtro_tabla("count(*) AS cant", "documento A, formato c ", "ejecutor=" . $usuario . " AND A.estado='ACTIVO' AND A.numero='0' and lower(A.plantilla)=c.nombre", "", $conn);
 
+		$componente_etiquetados = busca_filtro_tabla("idbusqueda_componente", "busqueda_componente A", "A.nombre='documentos_etiquetados'", "", $conn);
+		$componente_pendiente = busca_filtro_tabla("idbusqueda_componente", "busqueda_componente A", "A.nombre='documento_pendiente'", "", $conn);
+		$componente_prioridad = busca_filtro_tabla("idbusqueda_componente", "busqueda_componente A", "A.nombre='documentos_importantes'", "", $conn);
+		$componente_borrador = busca_filtro_tabla("idbusqueda_componente", "busqueda_componente A", "A.nombre='borradores'", "", $conn);
 
+	}
 
+	$per_mis_tareas = $permiso->acceso_modulo_perfil("mis_tareas");
+	if($per_mis_tareas){
+		$tareas = busca_filtro_tabla("count(*) AS cant", "tareas A", "((" . implode(" OR ", $concat) . ") OR ejecutor =" . $usuario . ") AND estado_tarea<>2", "", $conn);
+		$componente_tareas = busca_filtro_tabla("", "busqueda_componente A", "A.nombre='listado_tareas_pendientes'", "", $conn);
+	}
 
-$funcionario_idfuncionario=usuario_actual('idfuncionario');
-
+	$per_mis_tareas_av = $permiso->acceso_modulo_perfil("mis_tareas_avanzadas");
+	if($per_mis_tareas_av){
 $tareas_responsable=busca_filtro_tabla("count(*) AS cant","tareas_listado A","A.generica=0 AND A.estado_tarea<>'TERMINADO' AND A.listado_tareas_fk<>-1 AND A.cod_padre=0 AND  A.responsable_tarea =".usuario_actual("idfuncionario"),"",$conn);
 $condicion_coparticipantes_unico=" AND ( a.co_participantes LIKE '%,".$funcionario_idfuncionario.",%' OR a.co_participantes LIKE '%,".$funcionario_idfuncionario."' OR a.co_participantes LIKE '".$funcionario_idfuncionario.",%' OR  a.co_participantes='".$funcionario_idfuncionario."' )";
 $tareas_coparticipante=busca_filtro_tabla("count(*) AS cant","tareas_listado a","a.generica=0 AND a.estado_tarea<>'TERMINADO'  AND a.listado_tareas_fk<>-1 AND a.cod_padre=0 ".$condicion_coparticipantes_unico,"",$conn);
@@ -92,26 +88,21 @@ $condicion_seguidores_unico=" AND ( a.seguidores LIKE '%,".$funcionario_idfuncio
 $tareas_seguidor=busca_filtro_tabla("count(*) AS cant","tareas_listado a","a.generica=0 AND a.estado_tarea<>'TERMINADO' AND a.listado_tareas_fk<>-1 AND a.cod_padre=0 ".$condicion_seguidores_unico,"",$conn);
 $tareas_evaluador=busca_filtro_tabla("count(*) AS cant","tareas_listado A","A.generica=0 AND A.estado_tarea<>'TERMINADO' AND A.listado_tareas_fk<>-1 AND A.cod_padre=0 AND  A.evaluador =".usuario_actual("idfuncionario"),"",$conn);
 
-
-
 $condicion_coparticipantes=" OR ( a.co_participantes LIKE '%,".$funcionario_idfuncionario.",%' OR a.co_participantes LIKE '%,".$funcionario_idfuncionario."' OR a.co_participantes LIKE '".$funcionario_idfuncionario.",%' OR  a.co_participantes='".$funcionario_idfuncionario."' )";
 $condicion_seguidores=" OR ( a.seguidores LIKE '%,".$funcionario_idfuncionario.",%' OR a.seguidores LIKE '%,".$funcionario_idfuncionario."' OR a.seguidores LIKE '".$funcionario_idfuncionario.",%' OR  a.seguidores='".$funcionario_idfuncionario."' )";
 $condicion_evaluador=" OR a.evaluador=".$funcionario_idfuncionario;
 $condicion_tareas_total="generica=0 AND a.estado_tarea<>'TERMINADO' AND a.listado_tareas_fk<>-1 AND a.cod_padre=0 AND ( a.responsable_tarea=".$funcionario_idfuncionario."".$condicion_coparticipante.$condicion_coparticipantes.$condicion_seguidores.$condicion_evaluador."  )";
-
 $tareas_total=busca_filtro_tabla("count(*) AS cant","tareas_listado a",$condicion_tareas_total,"",$conn);
 //DESARROLLO TODAS LAS TAREAS
-$componente_tareas_responsable=busca_filtro_tabla("","busqueda_componente A","A.nombre='listado_tareas_responsable'","",$conn);
-$componente_tareas_coparticipante=busca_filtro_tabla("","busqueda_componente A","A.nombre='listado_tareas_coparticipante'","",$conn);
-$componente_tareas_seguidor=busca_filtro_tabla("","busqueda_componente A","A.nombre='listado_tareas_seguidor'","",$conn);
-$componente_tareas_evaluador=busca_filtro_tabla("","busqueda_componente A","A.nombre='listado_tareas_evaluador'","",$conn);
-$componente_tareas_total=busca_filtro_tabla("","busqueda_componente A","A.nombre='listado_tareas_total'","",$conn);
+		$componente_tareas_responsable = busca_filtro_tabla("idbusqueda_componente", "busqueda_componente A", "A.nombre='listado_tareas_responsable'", "", $conn);
+		$componente_tareas_coparticipante = busca_filtro_tabla("idbusqueda_componente", "busqueda_componente A", "A.nombre='listado_tareas_coparticipante'", "", $conn);
+		$componente_tareas_seguidor = busca_filtro_tabla("idbusqueda_componente", "busqueda_componente A", "A.nombre='listado_tareas_seguidor'", "", $conn);
+		$componente_tareas_evaluador = busca_filtro_tabla("idbusqueda_componente", "busqueda_componente A", "A.nombre='listado_tareas_evaluador'", "", $conn);
+		$componente_tareas_total = busca_filtro_tabla("idbusqueda_componente", "busqueda_componente A", "A.nombre='listado_tareas_total'", "", $conn);
+		$componente_planeador=busca_filtro_tabla("idbusqueda_componente","busqueda_componente","lower(nombre)='tareas_listado_paneador'","",$conn);
+	}
 
-
-
-
-
-
+	//$actualizaciones = busca_filtro_tabla("count(*) AS cant", "documento_accion A,asignacion B", "A.documento_iddocumento=B.documento_iddocumento AND B.tarea_idtarea<>-1 AND B.entidad_identidad=1 AND B.llave_entidad=" . $usuario, "GROUP BY A.documento_iddocumento", $conn);
 
 
 //limpieza carpetas
@@ -130,19 +121,7 @@ if($configuracion_temporal['numcampos']){
 }else{
     borrar_archivos_carpeta('temporal_'.usuario_actual("login"), 0);
 }
-
-/*************actualizacion de fin de año ********/
-/*include_once("class_transferencia.php");
-include_once("paso_buzones.php");
-revisar_fechas2("gestion");
-revisar_fechas2("central");
-revisar_fechas2("historico");*/
 }
-$componente_etiquetados=busca_filtro_tabla("","busqueda_componente A","A.nombre='documentos_etiquetados'","",$conn);
-$componente_pendiente=busca_filtro_tabla("","busqueda_componente A","A.nombre='documento_pendiente'","",$conn);
-$componente_prioridad=busca_filtro_tabla("","busqueda_componente A","A.nombre='documentos_importantes'","",$conn);
-$componente_borrador=busca_filtro_tabla("","busqueda_componente A","A.nombre='borradores'","",$conn);
-$componente_tareas=busca_filtro_tabla("","busqueda_componente A","A.nombre='listado_tareas_pendientes'","",$conn);
 ?>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -285,10 +264,6 @@ if($_SESSION["tipo_dispositivo"]=="movil"){ ?>
       <ul class="dropdown-menu" >
       <li><a href="<?php echo($ruta_db_superior);?>pantallas/mi_cuenta/cambio_clave.php" data-toggle="modal" data-target="#ventana_modal" class="cambiar_pwd" titulo="Cambiar Contrase&ntilde;a">Cambiar Contrase&ntilde;a</a></li>
       <li><a href="<?php echo($ruta_db_superior);?>pantallas/mi_cuenta/cambio_clave_correo.php" data-toggle="modal" data-target="#ventana_modal_correo" class="cambiar_pwd" titulo="Cambiar Contrase&ntilde;a de correo">Contrase&ntilde;a de correo</a></li>
-      <!--li><a href="#">Another action</a></li>
-      <li><a href="#">Something else here</a></li>
-      <li class="divider"></li>
-      <li><a href="#">Separated link</a></li-->
     </ul>
   </div>
   <div class="dropdown pull-right">|<b><?php echo(usuario_actual("nombres")." ".usuario_actual("apellidos"));?></b></div>
@@ -328,7 +303,9 @@ if($_SESSION["tipo_dispositivo"]=="movil"){ ?>
              <!-- INICIO OPCIONES PRINCIPALES -->
              
              <!-- DOCUMENTOS RECIBIDOS -->
-              
+            <?php
+            if($per_pendientes){
+            ?>
             <li><i class="icon-inbox"></i><a href="pantallas/buscador_principal.php?idbusqueda=3&cmd=resetall" target="centro" class="enlace_indicadores_index" idcomponente="<?php echo($componente_pendiente[0]["idbusqueda_componente"]); ?>" nombre_componente="documento_pendiente">Documentos Recibidos <div class="pull-right"><span class="badge" id="documento_pendiente"><?php echo($pendientes["numcampos"]);?></span></div></a>
             </li>
             
@@ -341,18 +318,23 @@ if($_SESSION["tipo_dispositivo"]=="movil"){ ?>
  
             <li><i class="icon-calendar"></i><a href="pantallas/buscador_principal.php?idbusqueda=25&cmd=resetall" target="centro" class="enlace_indicadores_index" idcomponente="<?php echo($componente_borrador[0]["idbusqueda_componente"]); ?>" nombre_componente="borradores">Borradores <div class="pull-right"><span class="badge" id="borradores"><?php echo($borradores[0]["cant"]);?></span></div></a>
             </li>
-            
+            <?php
+            }
+            if($per_mis_tareas){
+            	?>
              <!-- TAREAS BASICAS -->
             
             <li><i class="icon-tasks"></i><a href="pantallas/buscador_principal.php?nombre=listado_tareas&cmd=resetall" target="centro" class="enlace_indicadores_index" idcomponente="<?php echo($componente_tareas[0]["idbusqueda_componente"]); ?>" nombre_componente="listado_tareas_pendientes">Mis Tareas <div class="pull-right"><span class="badge" id="listado_tareas_pendientes"><?php echo($tareas[0]["cant"]);?></span></div></a>
             </li>
-
+						<?php
+            }
+            if($per_mis_tareas_av){
+            	?>
 
             <!-- PLANEADOR TAREAS AVANZADAS -->
 
             <li>
             	<i class="icon-calendar"></i>
-            	<?php $componente_planeador=busca_filtro_tabla("idbusqueda_componente","busqueda_componente","lower(nombre)='tareas_listado_paneador'","",$conn); ?>
             		<a href="calendario/fullcalendar.php?nombre_calendario=calendario_tareas_planeador&idbusqueda_componente=<?php echo($componente_planeador[0]['idbusqueda_componente']); ?>" target="centro" class="enlace_indicadores_index"  >
             			Planeador
             		</a>
@@ -373,7 +355,6 @@ if($_SESSION["tipo_dispositivo"]=="movil"){ ?>
             					<span class="badge" id="listado_tareas_evaluador" title="Evaluador" data-toggle="tooltip"><?php echo($tareas_evaluador[0]["cant"]);?></span>
             				</a>
 
-
             				<a href="pantallas/tareas_listado/principal_listados_tareas_calendarios.php?click=tareas&rol_tareas=seguidor"  target="centro" class="enlace_indicadores_index" idcomponente="<?php echo($componente_tareas_seguidor[0]["idbusqueda_componente"]); ?>" nombre_componente="listado_tareas_seguidor" style="text-decoration:none;">
             					<span class="badge" id="listado_tareas_seguidor" title="Seguidor" data-toggle="tooltip"><?php echo($tareas_seguidor[0]["cant"]);?></span>
             				</a>
@@ -386,12 +367,17 @@ if($_SESSION["tipo_dispositivo"]=="movil"){ ?>
             			</div>
 
             </li>
-
+						<?php
+            }
+            if($per_pendientes){
+            	?>
             <!-- ETIQUETADOS -->
 
             <li><i class="icon-tag"></i><a href="pantallas/buscador_principal.php?nombre=documentos_etiquetados&cmd=resetall" target="centro" class="enlace_indicadores_index" idcomponente="<?php echo($componente_etiquetados[0]["idbusqueda_componente"]); ?>" nombre_componente="documentos_etiquetados">Etiquetados <div class="pull-right"><span class="badge" id="documentos_etiquetados"><?php echo($etiquetados["numcampos"]);?></span></div></a>
             </li>
-            
+            <?php
+            }
+            ?>
             
             <!-- FIN OPCIONES PRINCIPALES -->
             
@@ -479,9 +465,8 @@ if($_SESSION["tipo_dispositivo"]=="movil"){ ?>
 <!--div class="user-footer-main shadow ui-corner-tl ui-corner-tr"></div-->
 </body>
 </html>
-<?php //include_once("fin_cargando.php");
+<?php
 echo(librerias_UI());
-//echo(libreria_principal());
 echo(librerias_notificaciones());
 function mostrar_iconos($modulo_actual){
   global $conn;
@@ -505,8 +490,7 @@ function mostrar_iconos($modulo_actual){
     if($tablas["numcampos"]){
       if($_SESSION["tipo_dispositivo"]=='movil'){
         echo('<ul class="dropdown-menu">');
-      }
-      else{
+      }else{
         echo('<table width="100%" border="0" cellspacing="5" cellpadding="0"><tr>');
       }
       for($j=0;$j<$tablas["numcampos"];$j++){
@@ -537,8 +521,7 @@ function mostrar_iconos($modulo_actual){
             echo("&cmd=resetall\"");
           echo(' target="'.$tablas[$j]["destino"].'"><img src="'.$tablas[$j]["imagen"].'" border="0" width="35px"');
           echo (' ><br />'.$tablas[$j]["etiqueta"].'</a></td>');
-        }
-        else{
+        }else{
           if(!strpos($tablas[$j]["enlace"],"?"))
             $tablas[$j]["enlace"].='?cmd=resetall"';
           else
@@ -548,8 +531,7 @@ function mostrar_iconos($modulo_actual){
       }
       if($_SESSION["tipo_dispositivo"]=="movil"){
         echo('</ul>');
-      }
-      else{
+      }else{
         for(;$j%$cols!=0;$j++){
             echo('<td>&nbsp;</td>');
         }
@@ -557,9 +539,9 @@ function mostrar_iconos($modulo_actual){
         echo('</table>');
       }
     }
-//print_r($tablas);
   }
 }
+
 function menu_saia(){
   if(isset($_SESSION["LOGIN".LLAVE_SAIA])&& $_SESSION["LOGIN".LLAVE_SAIA]){
     $nombres=array();
@@ -582,8 +564,7 @@ function menu_saia(){
           echo('<li class="dropdown-submenu"><a tabindex="-1" href="#">'.strtoupper($modulo[$i]["etiqueta"]).'</a>');
           mostrar_iconos($modulo[$i]["idmodulo"]);
           echo('</li>');
-        }
-        else{
+        }else{
           echo '<div class="ac-title">'.strtoupper($modulo[$i]["etiqueta"]).'</div>';
           echo('<div class="ac-content">');
           mostrar_iconos($modulo[$i]["idmodulo"]);
