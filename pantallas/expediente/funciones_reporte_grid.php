@@ -37,10 +37,14 @@ function direcciona_nombre($idexpediente, $nombre) {
 
 	return ($nombre);
 }
-
+function print_cerok($dato){
+	if(usuario_actual("login")=="agomez"){
+		print_r($dato);
+		echo("<hr>");
+	}
+}
 function fecha_reten($idexpediente) {
 	global $conn, $ruta_db_superior;
-
 	$expediente = busca_filtro_tabla("estado_archivo,serie_idserie", "expediente a", "idexpediente=" . $idexpediente, "", $conn);
 	$estado_expediente = $expediente[0]["estado_archivo"];
 	$serie_idserie = $expediente[0]["serie_idserie"];
@@ -48,7 +52,6 @@ function fecha_reten($idexpediente) {
 	$datos_serie = busca_filtro_tabla("retencion_" . $vector_estado_expediente[$estado_expediente], "serie", "idserie=" . $serie_idserie, "", $conn);
 	$datos_cierre = busca_filtro_tabla("fecha_cierre,estado_cierre", "expediente_abce", "expediente_idexpediente=" . $idexpediente, "idexpediente_abce DESC", $conn);
 	$fecha_cierre = $datos_cierre[0]['fecha_cierre'];
-
 	if ($datos_cierre[0]['estado_cierre'] == 2) {
 
 		$dias_calcular = 365 * $datos_serie[0]["retencion_" . $vector_estado_expediente[$estado_expediente]];
@@ -70,7 +73,7 @@ function fecha_reten($idexpediente) {
 		list($h, $m, $s) = explode(':', $cadena_horas);
 		$segundos = ($h * 3600) + ($m * 60) + $s;
 		$horas_minutos_segundos_parseados = ( conversor_segundos_hm(intval($segundos)));
-		$cadena_final = '';
+		$cadena_final = ''; 
 		if($interval_pos_neg){
 			$cadena_inicial = '<div class="alert alert-danger">Retrasado ';
 		}
@@ -103,6 +106,9 @@ function fecha_reten($idexpediente) {
 		}
 		$cadena_final.='</div>';
 		return ($cadena_final);
+	}
+	else{
+		return('<div class="alert alert-warning">Expediente sin cerrar</div>');
 	}
 }
 
@@ -147,3 +153,4 @@ $html='<ul class=\"nav pull-left\"><li><div class=\"btn-group\"><button class=\"
 return ($html);
 }
 ?>
+
