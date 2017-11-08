@@ -150,9 +150,9 @@ function barra_superior_busqueda(){
 		$indice=$reporte_indice[0]['idbusqueda_componente'];
 	}
 	
-	$tipo_reporte_exp=busca_filtro_tabla("etiqueta","busqueda_componente","idbusqueda_componente=".$_REQUEST['idbusqueda_componente'],"",$conn);
+	$tipo_reporte_exp=busca_filtro_tabla("nombre","busqueda_componente","idbusqueda_componente=".$_REQUEST['idbusqueda_componente'],"",$conn);
 	$tipo='';
-	switch ($tipo_reporte_exp[0]['etiqueta']) {
+	switch ($tipo_reporte_exp[0]['nombre']) {
 		case 'expediente':
 			$tipo='1';
 			break;
