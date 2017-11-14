@@ -3,7 +3,7 @@
         "luracast/restler": "*",
         "doctrine/doctrine-migrations-bundle": "*",
         "firebase/php-jwt": "^5.0",
-        "phpoffice/phpword": "^0.13.0"
+        "phpoffice/phpword": "^0.13.0",
 		"danielstjules/stringy" : "~2.3",
 		"knplabs/gaufrette" : "^0.3.1",
 		"imagine/imagine" : "~0.5.0",
