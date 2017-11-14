@@ -60,7 +60,9 @@ echo(librerias_jquery('1.7'));
 					if(checkbox.is(':checked')===true){
 						var iddistribucion=$(this).val();
 					    mensajero=$('#select_mensajeros_ditribucion_'+iddistribucion).val();
-					        
+					    if(!mensajero){
+					    	error=2;
+					    }    
 					    registros_seleccionados+=iddistribucion+",";
 					        
 					    if(mensajero_temp){
@@ -75,9 +77,11 @@ echo(librerias_jquery('1.7'));
 				registros_seleccionados = registros_seleccionados.substring(0, registros_seleccionados.length-1);
 						
 				if(registros_seleccionados==""){
-					top.noty({text: 'No ha seleccionado ningun campo',type: 'warning',layout: "topCenter",timeout:3500});
+					top.noty({text: '<b>ATENCI&Oacute;N</b><br>No ha seleccionado ningun campo',type: 'warning',layout: "topCenter",timeout:3500});
 				}else if(error==1){
-					top.noty({text: 'No puede seleccionar diferentes mensajeros',type: 'warning',layout: "topCenter",timeout:3500});
+					top.noty({text: '<b>ATENCI&Oacute;N</b><br>No puede seleccionar diferentes mensajeros',type: 'warning',layout: "topCenter",timeout:3500});
+				}else if(error==2){
+					top.noty({text: '<b>ATENCI&Oacute;N</b><br>No es posible generar la planilla debido a que una &oacute; varias distribuciones no tienen mensajero asignado',type: 'warning',layout: "topCenter",timeout:4500});
 				}else{
 					
 					$("#opciones_acciones_distribucion").after("<div style='display:none;' id='ir_adicionar_documento' class='link kenlace_saia' enlace='formatos/despacho_ingresados/adicionar_despacho_ingresados.php?iddistribucion="+registros_seleccionados+"&mensajero="+mensajero+"' conector='iframe' titulo='Generar Planilla Mensajeros'>---</div>");
@@ -110,7 +114,7 @@ echo(librerias_jquery('1.7'));
 			            	ejecutar_accion:'finalizar_distribucion'
 			            },
 			            success: function(datos){
-			            	top.noty({text: 'distribuci&oacute;nes finalizadas satisfactoriamente!',type: 'success',layout: "topCenter",timeout:3500});
+			            	top.noty({text: 'Distribuciones finalizadas satisfactoriamente!',type: 'success',layout: "topCenter",timeout:3500});
 			                window.location.reload();
 			        	}
 			    	});					
@@ -141,7 +145,7 @@ echo(librerias_jquery('1.7'));
 			            	ejecutar_accion:'confirmar_recepcion_distribucion'
 			            },
 			            success: function(datos){
-			            	top.noty({text: 'distribuci&oacute;nes confirmadas satisfactoriamente!',type: 'success',layout: "topCenter",timeout:3500});
+			            	top.noty({text: 'Distribuciones confirmadas satisfactoriamente!',type: 'success',layout: "topCenter",timeout:3500});
 			                window.location.reload();
 			        	}
 			    	});					
@@ -149,7 +153,37 @@ echo(librerias_jquery('1.7'));
         		
         	}//fin if boton_confirmar_recepcion_distribucion
         	
-        	
+        	if( valor=='boton_finalizar_entrega_personal' ){
+        		
+        		var registros_seleccionados="";
+				$('.accion_distribucion').each(function(){
+					var checkbox = $(this);
+					if(checkbox.is(':checked')===true){
+						var iddistribucion=$(this).val();
+					    registros_seleccionados+=iddistribucion+",";
+					}
+				});
+				
+				registros_seleccionados = registros_seleccionados.substring(0, registros_seleccionados.length-1);        		
+        		if(registros_seleccionados==""){
+					top.noty({text: 'No ha seleccionado ninguna distribuci&oacute;n',type: 'warning',layout: "topCenter",timeout:3500});
+				}else{
+			    	$.ajax({
+			        	type:'POST',
+			            dataType: 'json',
+			            url: '<?php echo($ruta_db_superior); ?>distribucion/ejecutar_acciones_distribucion.php',
+			            data: {
+			            	iddistribucion:registros_seleccionados,
+			            	ejecutar_accion:'finalizar_entrega_personal'
+			            },
+			            success: function(datos){
+			            	top.noty({text: 'Distribuciones Finalizadas satisfactoriamente!',type: 'success',layout: "topCenter",timeout:3500});
+			                window.location.reload();
+			        	}
+			    	});					
+				}				
+        			
+        	}
         	
         	if( valor=='seleccionar_todos_accion_distribucion' ){
          		$('.accion_distribucion').attr('checked',true);
@@ -157,6 +191,29 @@ echo(librerias_jquery('1.7'));
         	if( valor=='quitar_seleccionados_accion_distribucion' ){
         		$('.accion_distribucion').attr('checked',false);
         	}
+        	
+        	//FILTRO TIPO ORIGEN DEL DOCUMENTO
+        	if( valor=='filtrar_tipo_origen_externo' ){ //Entrada
+	        	var tipo_origen='filtro_tipo_origen|2';	
+				<?php $componente=$_REQUEST['idbusqueda_componente']; ?>
+	            var componente='<?php echo($componente); ?>';
+	            window.location.href = "<?php echo $ruta_db_superior;?>pantallas/busquedas/consulta_busqueda_reporte.php?idbusqueda_componente="+componente+"&variable_busqueda="+tipo_origen;    
+        		
+        	}   
+        	if( valor=='filtrar_tipo_origen_interno' ){  //Salida a externo
+	        	var tipo_origen='filtro_tipo_origen|1';	
+				<?php $componente=$_REQUEST['idbusqueda_componente']; ?>
+	            var componente='<?php echo($componente); ?>';
+	            window.location.href = "<?php echo $ruta_db_superior;?>pantallas/busquedas/consulta_busqueda_reporte.php?idbusqueda_componente="+componente+"&variable_busqueda="+tipo_origen;          		
+        	}  
+        	if( valor=='filtrar_tipo_origen_todos' ){ //Mostrar Todos
+	        	var tipo_origen='filtro_tipo_origen|3';	
+				<?php $componente=$_REQUEST['idbusqueda_componente']; ?>
+	            var componente='<?php echo($componente); ?>';
+	            window.location.href = "<?php echo $ruta_db_superior;?>pantallas/busquedas/consulta_busqueda_reporte.php?idbusqueda_componente="+componente+"&variable_busqueda="+tipo_origen;             		
+        	}          	        	     	
+        	//FIN FILTRO TIPO ORIGEN DEL DOCUMENTO
+        	
         	
        		$(this).val(''); 	
       });  //FIN IF opciones_acciones_distribucion
@@ -172,6 +229,19 @@ echo(librerias_jquery('1.7'));
             window.location.href = "<?php echo $ruta_db_superior;?>pantallas/busquedas/consulta_busqueda_reporte.php?idbusqueda_componente="+componente+"&variable_busqueda="+mensajero;      	
 
         });	//FIN IF filtro_mensajero_distribucion		
+
+		//Filtro por ventanilla - class= filtro_ventanilla_radicacion 
+        $('#filtro_ventanilla_radicacion').live("change",function(){
+        	var ventanilla='filtro_ventanilla_radicacion|'+$(this).val();	
+			<?php                 
+            	$componente=$_REQUEST['idbusqueda_componente'];
+            ?>
+            var componente='<?php echo($componente); ?>';
+            window.location.href = "<?php echo $ruta_db_superior;?>pantallas/busquedas/consulta_busqueda_reporte.php?idbusqueda_componente="+componente+"&variable_busqueda="+ventanilla;      	
+
+        });	//FIN IF filtro_ventanilla_radicacion		
+				
+		
 		
 				
 	});  //FIN IF documento.ready

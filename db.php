@@ -1801,6 +1801,10 @@ global $conn;
 	}
 
 	switch ($correo) {
+		case 'personal':
+			$usuario_correo=usuario_actual("email");
+			$pass_correo=usuario_actual("email_contrasena");
+			break;
 		default:
 			$usuario_correo=$correo_notificacion;
 			$pass_correo=$clave_correo_notificacion;
@@ -1808,7 +1812,7 @@ global $conn;
 	}
  $mail = new PHPMailer ();
  $mail->IsSMTP();
-// $mail->SMTPDebug  = 2;
+ //$mail->SMTPDebug  = 2;
  $mail->Host = $servidor_correo; //secure.emailsrvr.com - mail.rackspace.com
  $mail->Port = $puerto_correo_salida;
  $mail->SMTPAuth = true;
@@ -1821,10 +1825,6 @@ global $conn;
 	}else{
 		$mail->Subject = $asunto_defecto_correo;
 	}
-
-
-
-
   $config = busca_filtro_tabla("valor","configuracion","nombre='color_encabezado'","",$conn);
   $admin_saia= busca_filtro_tabla("valor","configuracion","nombre='login_administrador'","",$conn);
   $correo_admin=busca_filtro_tabla("email","funcionario","login='".$admin_saia[0]['valor']."'","",$conn);
@@ -1887,10 +1887,18 @@ global $conn;
 		$para[]=$fila;
 	}
  }
- /*
- $mail->AddAddress("soporte@cerok.com","soporte@cerok.com");
- $mail->AddBCC("notificaciones@cerok.com","notificaciones@cerok.com");*/
 
+ if(count(@$usuarios['copia'])){ //CON COPIA
+	 foreach($usuarios['copia'] as $fila){
+	 	$mail->AddCC($fila,$fila);
+	 } 	
+ }
+ if(count(@$usuarios['copia_oculta'])){ //CON COPIA OCULTA
+	 foreach($usuarios['copia_oculta'] as $fila){
+	 	$mail->AddBCC($fila,$fila);
+	 } 	
+ } 
+ 
   if(!empty($anexos)){
   	foreach($anexos as $fila){
   		$mail->AddAttachment($fila);
@@ -1986,23 +1994,16 @@ return(0);
 */
 function usuario_actual($campo){
 global $usuactual,$sql,$conn;
-
-
-
-
-
 if(!isset($_SESSION["LOGIN".LLAVE_SAIA])){
   salir(utf8_decode("Su sesi&oacute;n ha expirado, por favor ingrese de nuevo."));
 }
-
-
 if($usuactual<>""){
 $dato=busca_filtro_tabla("A.*,A.idfuncionario AS id","funcionario A","A.login='".$usuactual."'","",$conn);
-
-if($dato["numcampos"])
+		if ($dato["numcampos"]) {
   return($dato[0][$campo]);
-else
+		} else {
   salir("No se encuentra el funcionario en el sistema, por favor comuniquese con el administrador");
+		}
 }
 }
 
@@ -2017,25 +2018,23 @@ else
 <Pre-condiciones>
 <Post-condiciones>
 */
-function salir($texto){
+function salir($texto,$login) {
 	global $usuactual,$conn;
-
-
-
+	cerrar_sesion($login);
 	if($texto){
 		$usuactual="";
 		$conn->Conn->Desconecta();
 		@session_unset();
 		@session_destroy();
-		abrir_url(PROTOCOLO_CONEXION.RUTA_PDF."/logout.php?texto_salir=".urlencode($texto),"_top");
-
+		abrir_url(PROTOCOLO_CONEXION.RUTA_PDF."/index.php?texto_salir=".urlencode($texto),"_top");
 	}else{
 		$usuactual="";
 		$conn->Conn->Desconecta();
 		@session_unset();
 		@session_destroy();
-		abrir_url(PROTOCOLO_CONEXION.RUTA_PDF."/logout.php","_top");
+		abrir_url(PROTOCOLO_CONEXION.RUTA_PDF."/index.php","_top");
 	}
+	die();
 }
 
 
@@ -3198,39 +3197,39 @@ return $client_ip;
 </Clase>  */
 function almacenar_sesion($exito,$login){
 global $conn;
-	$datos = array();
-	if ($login == "") {
-		$login = usuario_actual("login");
-		$id = usuario_actual("id");
-		$idfun_intentetos = usuario_actual("idfuncionario");
-	}
-	$iplocal = getRealIP();
-	$ipremoto = servidor_remoto();
-	if ($iplocal == "" || $ipremoto == "") {
-		if ($iplocal == "")
-			$iplocal = $ipremoto;
-		else
+$datos=array();
+if($login==""){
+  $login=usuario_actual("login");
+		$id = usuario_actual("idfuncionario");
+		$idfun_intentetos = $id;
+}
+$iplocal=getRealIP();
+$ipremoto=servidor_remoto();
+if($iplocal=="" || $ipremoto==""){
+		if ($iplocal == "") {
+      $iplocal=$ipremoto;
+		} else {
 			$ipremoto = $iplocal;
 	}
-	if (!$exito) {
-		$intentos = busca_filtro_tabla("intento_login, idfuncionario, estado", "funcionario a", "a.login='" . $login . "'", "", $conn);
-		if ($intentos["numcampos"] && $intentos[0]["estado"] != 0) { // Desarrollo de validacion de intentos al loguearse
-			if (!$intentos[0]["intento_login"])
+}
+if(!$exito){
+	$intentos=busca_filtro_tabla("intento_login, idfuncionario, estado","funcionario a","a.login='".$login."'","",$conn);
+	if($intentos["numcampos"] && $intentos[0]["estado"]!=0){//Desarrollo de validacion de intentos al loguearse
+			if (!$intentos[0]["intento_login"]) {
 				$consecutivo = 1;
-			else
+			} else {
 				$consecutivo = $intentos[0]["intento_login"] + 1;
-			$sql2 = "UPDATE funcionario SET intento_login=" . $consecutivo . " WHERE idfuncionario=" . $intentos[0]["idfuncionario"];
-			$conn->Ejecutar_Sql($sql2);
-			$configuracion = busca_filtro_tabla("", "configuracion a", "a.nombre='intentos_login'", "", $conn);
-			if ($consecutivo >= $configuracion[0]["valor"]) {
-				$correo_admin = busca_filtro_tabla("", "configuracion a", "a.nombre='correo_administrador'", "", $conn);
-				$sql3 = "INSERT INTO lista_negra_acceso(login,iplocal,ipremota,fecha)VALUES('" . $login . "', '" . $iplocal . "', '" . $ipremoto . "', " . fecha_db_almacenar(date("Y-m-d H:i:s"), "Y-m-d H:i:s") . ")";
-				$conn->Ejecutar_Sql($sql3);
-				$sql4 = "UPDATE funcionario SET estado='0' WHERE idfuncionario=" . $intentos[0]["idfuncionario"];
-				$conn->Ejecutar_Sql($sql4);
-				// alerta("Usuario inactivado por exceso de intentos. Favor comunicarse con el administrador");
-				$datos["mensaje"] = "Usuario inactivado por exceso de intentos. Favor comunicarse con el administrador " . $correo_admin[0]["valor"];
 			}
+		$sql2="UPDATE funcionario SET intento_login=".$consecutivo." WHERE idfuncionario=".$intentos[0]["idfuncionario"];
+		$conn->Ejecutar_Sql($sql2);
+			$configuracion = busca_filtro_tabla("valor", "configuracion a", "a.nombre='intentos_login'", "", $conn);
+		if($consecutivo>=$configuracion[0]["valor"]){
+				$correo_admin = busca_filtro_tabla("valor", "configuracion a", "a.nombre='correo_administrador'", "", $conn);
+			$sql3="INSERT INTO lista_negra_acceso(login,iplocal,ipremota,fecha)VALUES('".$login."', '".$iplocal."', '".$ipremoto."', ".fecha_db_almacenar(date("Y-m-d H:i:s"),"Y-m-d H:i:s").")";
+			$conn->Ejecutar_Sql($sql3);
+			$sql4="UPDATE funcionario SET estado='0' WHERE idfuncionario=".$intentos[0]["idfuncionario"];
+			$conn->Ejecutar_Sql($sql4);
+			$datos["mensaje"]="Usuario inactivado por exceso de intentos. Favor comunicarse con el administrador ".$correo_admin[0]["valor"];
 		}
 		$sql = "INSERT INTO log_acceso(iplocal,ipremota,login,exito,fecha) VALUES('$iplocal','$ipremoto','" . $login . "',0," . fecha_db_almacenar(date("Y-m-d H:i:s"), "Y-m-d H:i:s") . ")";
 	} else {
@@ -3275,8 +3274,7 @@ global $conn;
 </Clase>  */
 function datos_sesion(){
 global $conn;
-return ("");
-/*$datos=array();
+	$datos = array();
 $datos["ruta"]= "";
 $datos["datos"] = "";
 $path_sesion["numcampos"]=1;
@@ -3305,16 +3303,14 @@ if(is_file($datos["ruta"])){
   if(copy($datos["ruta"],$destino.$archivo_sesion2.".0k")){
     $datos["datos"]=$destino.$archivo_sesion2;
     return($datos);
-  }
-  else {
+		} else {
     //alerta("No se puede guardar la sesion");
     return($datos);
   }
-}
-else{
+	} else {
   //alerta("No se encuentra el archivo de sesion");
 }
-*/
+	return ("");
 }
 /*<Clase>
 <Nombre>crear_archivo</Nombre>
@@ -3419,11 +3415,11 @@ function crear_destino($destino){
 <Pre-condiciones><Pre-condiciones>
 <Post-condiciones><Post-condiciones>
 </Clase>  */
-function ultima_sesion(){
+function ultima_sesion($login) {
 global $conn;
 $iplocal=getRealIP();
 $ipremoto=servidor_remoto();
-$conexion=$conn->Ejecutar_sql("Select A.idsesion_php FROM log_acceso A WHERE A.iplocal='".$iplocal."' AND A.ipremota='".$ipremoto."' AND fecha_cierre IS NULL AND A.exito=1 ORDER BY A.fecha DESC");
+	$conexion = $conn -> Ejecutar_sql("Select idsesion_php FROM log_acceso WHERE iplocal='" . $iplocal . "' AND ipremota='" . $ipremoto . "' AND fecha_cierre IS NULL AND exito=1 AND login='" . $login . "' and idsesion_php='".session_id()."' ORDER BY fecha DESC");
 if($conexion->num_rows){
  $dato=$conn->sacar_fila();
  return($dato["idsesion_php"]);
@@ -3440,12 +3436,26 @@ return("");
 <Pre-condiciones><Pre-condiciones>
 <Post-condiciones><Post-condiciones>
 </Clase>  */
-function cerrar_sesion(){
+
+function cerrar_sesion($login) {
 global $conn;
+	if($login!=""){
 $iplocal=getRealIP();
 $ipremoto=servidor_remoto();
-$sql="UPDATE log_acceso SET fecha_cierre=".fecha_db_almacenar(date("Y-m-d H:i:s"),"Y-m-d H:i:s")." WHERE iplocal='".$iplocal."' AND ipremota='".$ipremoto."' AND fecha_cierre IS NULL AND exito=1";
+		$conexion = $conn -> Ejecutar_sql("Select idsesion_php FROM log_acceso WHERE fecha_cierre IS NULL AND exito=1 AND login='" . $login . "' ORDER BY fecha DESC");
+		if ($conexion -> num_rows) {
+			$temp=phpmkr_fetch_array($conexion);
+			for($i=0;$temp;$temp=phpmkr_fetch_array($conexion),$i++){
+				session_id($temp["idsesion_php"]);
+				session_start();
+				session_destroy();
+				session_commit();
+			}
+			$sql = "UPDATE log_acceso SET fecha_cierre=" . fecha_db_almacenar(date("Y-m-d H:i:s"), "Y-m-d H:i:s") . " WHERE fecha_cierre IS NULL AND exito=1 and login='".$login."'";
 $conn->Ejecutar_sql($sql);
+		}
+	}
+	return;
 }
 /*<Clase>
 <Nombre>cerrar_sesiones_activas</Nombre>

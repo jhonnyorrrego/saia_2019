@@ -12,14 +12,17 @@ while ($max_salida > 0) {
 // POSTERIOR AL APROBAR, se debe definir la variable ruta_db_superior desde donde se hace el llamado.
 include_once ($ruta_db_superior . "pantallas/lib/PhpWord/funciones_include.php");
 // require_once($ruta_db_superior.'pantallas/lib/PHPWord/src/PhpWord/Autoloader.php');
-require_once ($ruta_db_superior . 'pantallas/lib/PhpWord/Autoloader.php');
+require_once ($ruta_db_superior . 'vendor/autoload.php');
+
+require_once 'SaiaTemplateProcessor.php';
+
 date_default_timezone_set('UTC');
 
 /**
  * Header file
  */
-use PhpOffice\PhpWord\Autoloader;
 use PhpOffice\PhpWord\Settings;
+use PhpOffice\PhpWord\SaiaTemplateProcessor;
 
 error_reporting(E_ALL);
 
@@ -30,8 +33,6 @@ define('SCRIPT_FILENAME', basename($_SERVER['SCRIPT_FILENAME'], '.php'));
 define('IS_INDEX', SCRIPT_FILENAME == 'index');
 }
 
-Autoloader::register();
-Settings::loadConfig();
 class RadicadoWord {
 	private $idocumento;
 	private $ruta_docx;
@@ -52,13 +53,7 @@ class RadicadoWord {
 		$this->iddocumento = $iddoc;
 		$this->ruta_docx = '';
 		$this->archivo_csv = null;
-<<<<<<< HEAD
-<<<<<<< HEAD
 		$this->alm_csv = null;
-=======
->>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
-=======
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 		$this->combinar = false;
 		$this->ruta_procesar = null;
 		$this->idformato = null;
@@ -109,18 +104,17 @@ class RadicadoWord {
 		global $conn;
 		if (is_file($this->ruta_procesar)) {
 			
-			// $templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor($this->ruta_docx . 'documento_word.docx');
-			$templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor($this->ruta_procesar);
+			$templateProcessor = new SaiaTemplateProcessor($this->ruta_procesar);
 			
 			$campos_word = $templateProcessor->getVariables();
-			
+
 			if(@$this->iddocumento && count($campos_word)) {
 				$numero_radicado = busca_filtro_tabla("", "documento", "iddocumento=" . $this->iddocumento, "", $conn);
 				$radicado = $numero_radicado[0]['numero'];
 				if(!$this->combinar) {
 				    //echo "NO COMBINAR<br>";
 					$templateProcessor->setValue('formato_numero', $radicado);
-					
+
 					if(in_array($this->campo_qr_word, $campos_word)) {
 
 						$src_qr = $this->obtener_codigo_qr($idformato, $_REQUEST["iddoc"]);
@@ -147,9 +141,9 @@ class RadicadoWord {
 						);
 						$templateProcessor->setImg($this->campo_qr_word, $img2);
 					}
-					
+
 					$archivo_out = 'documento_word';
-					
+
 					$extension_doc = '.docx';
 					
 					/*
@@ -186,29 +180,13 @@ class RadicadoWord {
 				}
 			} // fin si existe iddoc y el word tiene campos del formato
 		} else { // fin si existe word
-<<<<<<< HEAD
-<<<<<<< HEAD
 			die("No existe la plantilla" . $this->ruta_procesar);
-=======
-=======
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
-		    die("No existe la plantilla" . $this->ruta_docx . 'documento_word.docx');
->>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
 		}
 	}
 
 	protected function combinar_documento($numero_radicado) {
 		global $conn;
-		
-<<<<<<< HEAD
-<<<<<<< HEAD
 		$archivo_original = $this->ruta_procesar;
-=======
-		$archivo_original = $this->ruta_docx . 'documento_word.docx';
->>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
-=======
-		$archivo_original = $this->ruta_docx . 'documento_word.docx';
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 		$marca_agua = mostrar_estado_documento($this->iddocumento);
 		$extension_doc = '.docx';
 
@@ -216,16 +194,9 @@ class RadicadoWord {
 		for($i = 0; $i < count($datos); $i++) {
 			// Cada elemento es un array campo => valor
 			$archivo_out = "documento_word_" . ($i + 1);
-<<<<<<< HEAD
 			$archivo_copia = $this->ruta_combinar . "/$archivo_out" . $extension_doc;
-=======
-			$archivo_copia = $this->ruta_combinar . $archivo_out . $extension_doc;
-<<<<<<< HEAD
->>>>>>> 291c36d2f5e15157a82bda0c29e88649ab09a744
-=======
->>>>>>> a3be8ae18cbe07df9e1e8665c11db7ae93bad889
 			copy($archivo_original, $archivo_copia);
-			$templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor($archivo_copia);
+			$templateProcessor = new SaiaTemplateProcessor($archivo_copia);
 			$campos_word = $templateProcessor->getVariables();
 			$templateProcessor->setValue('formato_numero', $numero_radicado);
 			if(in_array($this->campo_qr_word, $campos_word)) {
@@ -265,12 +236,12 @@ class RadicadoWord {
 			if(file_exists($archivo_copia)) {
 				unlink($archivo_copia);
 			}
-			
+
 			$templateProcessor->setTextWatermark($marca_agua);
 			$templateProcessor->saveAs($archivo_copia);
 			$templateProcessor = null;
 		}
-	
+
 		if(is_dir($this->ruta_combinar)) {
 			$comando1 = 'export HOME=/tmp && libreoffice5.1 --headless -print-to-file --outdir ' . $this->ruta_combinar . ' ' . $this->ruta_combinar . "/*" . $extension_doc;
 			$var1 = shell_exec($comando1);
@@ -295,18 +266,18 @@ class RadicadoWord {
 		}
 		//die();
 	}
-	
+
 	private function obtener_codigo_qr() {
 		global $conn, $ruta_db_superior;
 		$codigo_qr = busca_filtro_tabla("", "documento_verificacion", "documento_iddocumento=" . $this->iddocumento, "", $conn);
-		
+
 		if(!$codigo_qr['numcampos']) {
 			include_once ($this->ruta_db_superior . "pantallas/qr/librerias.php");
 			generar_codigo_qr($this->idformato, $this->iddocumento);
-			
+
 			$codigo_qr = busca_filtro_tabla("", "documento_verificacion", "documento_iddocumento=" . $this->iddocumento, "", $conn);
 		}
-		
+
 		return $codigo_qr[0]['ruta_qr'];
 	}
 

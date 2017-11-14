@@ -233,8 +233,10 @@ include("footer.php");
 function mostrar_leido($x_doc,$fun,$fecha)
 {
  global $conn;
+ $funcionario=busca_filtro_tabla("login","funcionario","funcionario_codigo=".$fun,"",$conn);
  $leido = busca_filtro_tabla("idtransferencia","buzon_salida","archivo_idarchivo=$x_doc and origen=$fun and (nombre='LEIDO' or nombre='BORRADOR') and ".fecha_db_obtener("fecha","Y-m-d H:i:s")." >= '$fecha'","",$conn);
- if($leido["numcampos"]>0)
+ 
+ if($leido["numcampos"]>0 || $funcionario[0]['login']=='radicador_salida')
   $texto.= "<img src='images/leido.png' border='0'>";
  else
   $texto.= "<img src='images/no_leido.png' border='0'>";

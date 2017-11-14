@@ -13,7 +13,7 @@ include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
 usuario_actual();
 ?>
-<htm>
+<html>
 <head>
 <?php
 $ewCurSec = 0; // Initialise
@@ -59,24 +59,22 @@ if(isset($_REQUEST["pantalla"]))
 <?php
  echo "<input type='hidden' name='perfil_seleccionado' id='perfil_seleccionado' value='$sKey'>";
 ?>
-<select name="x_perfil_idperfil" id="x_perfil_idperfil" class="required"><option value="0">Seleccionar...</option>
+<select name="x_perfil_idperfil" id="x_perfil_idperfil" class="required" disabled="true"><option value="0">Seleccionar...</option>
 <?php
 $x_perfil_idperfilList = "<label for='x_perfil_idperfil[]' class='error'>Campo obligatorio</label><br />";
-$sSqlWrk = "SELECT DISTINCT A.idperfil, A.nombre FROM perfil A ORDER BY A.nombre Asc";
-$rswrk = phpmkr_query($sSqlWrk,$conn);
-if ($rswrk) {
-	$rowcntwrk = 0;
-	while ($datawrk = phpmkr_fetch_array($rswrk)) {
-		if(strtolower($datawrk["nombre"])=="administrador"&&(usuario_actual('login')!="cerok"||usuario_actual('perfil')!=1))continue;
-		$x_perfil_idperfilList.='<option value="'.htmlspecialchars($datawrk[0]).'" ';
-		if ($datawrk["idperfil"] == $sKey) {
-			$x_perfil_idperfilList .= "' selected ";
+$configuracion = busca_filtro_tabla("A.valor", "configuracion A", "A.tipo='usuario' AND A.nombre='login_administrador'", "", $conn);
+$admin=0;
+$parte="lower(nombre)<>'administrador'";
+if($configuracion["numcampos"] && trim($configuracion[0]["valor"])==trim($_SESSION["LOGIN" . LLAVE_SAIA])){
+   $admin=1; 
+    $parte="";
 		}
-		$x_perfil_idperfilList.='>'.$datawrk["nombre"].'</option>';
-		$rowcntwrk++;
+$cons_perfil=busca_filtro_tabla("A.idperfil, A.nombre ","perfil A",$parte,"A.nombre ASC",$conn);
+if($cons_perfil["numcampos"]){
+    for ($i=0; $i <$cons_perfil["numcampos"] ; $i++) { 
+        $x_perfil_idperfilList.='<option value="'.$cons_perfil[$i]["idperfil"].'">'.$cons_perfil[$i]["nombre"].'</option>';
 	}
 }
-@phpmkr_free_result($rswrk);
 echo $x_perfil_idperfilList;
 ?>
 </select>
@@ -135,7 +133,7 @@ echo $x_perfil_idperfilList;
                   eval('document.layers["esperando_modulo"]');
             document.poppedLayer.style.visibility = "hidden";
             
-            
+            $("#x_perfil_idperfil").attr("disabled",false);
             <?php 
                 $cmodulo_crear=busca_filtro_tabla("idmodulo","modulo","nombre='creacion_formatos'","",$conn);
                 if($cmodulo_crear['numcampos']){
@@ -203,7 +201,6 @@ echo $x_perfil_idperfilList;
                 });   
             }    
           }
-          
           
           $(document).ready(function(){
               $("#x_perfil_idperfil").change(function() {

@@ -41,13 +41,13 @@ function permiso_funcionario_expediente($expediente,$entidad,$llave){
 }
 
 function mostrar_informacion_adicional_expediente($idexpediente){
-    global $conn; 
+    global $conn;
     $cadena='';
     //EXPEDIENTE
     $expediente_actual=busca_filtro_tabla("serie_idserie","expediente","idexpediente=".$idexpediente,"",$conn);
     //NOMBRE DE LA SERIE
     $serie=busca_filtro_tabla("nombre","serie","idserie=".$expediente_actual[0]['serie_idserie'],"",$conn);
-    
+
     if($serie['numcampos']){
         $cadena.=$serie[0]['nombre'];
     }
@@ -58,7 +58,7 @@ function mostrar_informacion_adicional_expediente($idexpediente){
 function enlace_expediente($idexpediente,$nombre){
 	global $conn;
 
-    $expediente_actual=busca_filtro_tabla("tomo_padre,tomo_no,serie_idserie,propietario,agrupador","expediente","idexpediente=".$idexpediente,"",$conn);
+    $expediente_actual=busca_filtro_tabla("tomo_padre,tomo_no,serie_idserie,propietario,agrupador,cod_arbol","expediente","idexpediente=".$idexpediente,"",$conn);
     $cadena_tomos="";
     if(!$expediente_actual[0]['agrupador']){
         $tomo_padre=$idexpediente;
@@ -66,11 +66,17 @@ function enlace_expediente($idexpediente,$nombre){
             $tomo_padre=$expediente_actual[0]['tomo_padre'];
         }
         $ccantidad_tomos=busca_filtro_tabla("idexpediente","expediente","tomo_padre=".$tomo_padre,"",$conn);
-        $cantidad_tomos=$ccantidad_tomos['numcampos']+1; //tomos + el padre  
+        $cantidad_tomos=$ccantidad_tomos['numcampos']+1; //tomos + el padre
         $cadena_tomos=("&nbsp;&nbsp;&nbsp;<i><b style='font-size:10px;'>Tomo: </b></i><i style='font-size:10px;'>".$expediente_actual[0]['tomo_no']." de ".$cantidad_tomos."</i>");
-            
     }
-    return("<div style='' class='link kenlace_saia' enlace='pantallas/busquedas/consulta_busqueda_expediente.php?idbusqueda_componente=".$_REQUEST["idbusqueda_componente"]."&idexpediente=".$idexpediente."&variable_busqueda=".@$_REQUEST['variable_busqueda']."' conector='iframe' titulo='".$nombre."'><table><tr><td style='font-size:12px;'> <i class=' icon-folder-open pull-left'></i>&nbsp;<b>".$nombre."</b>&nbsp;".$cadena_tomos."</td></tr></table></div>");
+	$data = array(
+			"idbusqueda_componente" => $_REQUEST["idbusqueda_componente"],
+			"idexpediente" => $idexpediente,
+			"variable_busqueda" => @$_REQUEST['variable_busqueda'],
+			"cod_arbol" => $expediente_actual[0]["cod_arbol"]
+	);
+    $req_parms = http_build_query($data);
+    return("<div style='' class='link kenlace_saia' enlace='pantallas/busquedas/consulta_busqueda_expediente.php?" . $req_parms . "' conector='iframe' titulo='".$nombre."'><table><tr><td style='font-size:12px;'> <i class=' icon-folder-open pull-left'></i>&nbsp;<b>".$nombre."</b>&nbsp;".$cadena_tomos."</td></tr></table></div>");
 }
 function request_expediente_padre(){
 $texto='';
@@ -161,6 +167,23 @@ function barra_superior_busqueda(){
 		});
 		</script>';
 	}
+
+	// INICIO NUEVO DESARROLLO REPORTE EXPEDIENTES 20171004
+	$cadena.='
+	<li class="divider-vertical"></li>
+	<li>
+	 <div class="btn-group">
+	    <button class="btn btn-mini kenlace_saia" conector="iframe" id="reporte_expediente_grid" idbusqueda_componente="320" titulo="Reporte de expedientes" enlace="pantallas/busquedas/consulta_busqueda_reporte.php?variable_busqueda='.@$_REQUEST["cod_arbol"].'&idbusqueda_componente=320">Reporte Tabular</button>
+	  </div>
+	</li>';
+	$cadena.='
+	<li class="divider-vertical"></li>
+	<li>
+	 <div class="btn-group">
+	    <button class="btn btn-mini kenlace_saia" conector="iframe" id="reporte_inventario_docs" idbusqueda_componente="321" titulo="Inventario de documentos" enlace="pantallas/busquedas/consulta_busqueda_reporte.php?variable_busqueda='.@$_REQUEST["idexpediente"].'&idbusqueda_componente=321">Inventario de documentos</button>
+	  </div>
+	</li>';
+	// FIN NUEVO DESARROLLO REPORTE EXPEDIENTES 20171004
 
 	return($cadena);
 }

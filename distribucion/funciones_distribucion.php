@@ -126,7 +126,6 @@ function ingresar_distribucion($iddoc,$datos,$iddistribucion=0){
 			$valor_iddistribucion=$iddistribucion.",";			
 		}
 		
-		
 		//INSERTAR DISTRIBUCION
 		$sqli="INSERT INTO distribucion
 			(
@@ -167,13 +166,11 @@ function ingresar_distribucion($iddoc,$datos,$iddistribucion=0){
 				
 				".$iddoc.",
 				".$fecha_creacion."
-				
 			)
 				
 		";	
 		phpmkr_query($sqli);
 		$array_iddistribucion[]=phpmkr_insert_id();
-		
 	}
 	return($array_iddistribucion);
 	
@@ -536,36 +533,7 @@ function mostrar_planilla_diligencia_distribucion($iddistribucion){ //Planilla A
 
 function generar_check_accion_distribucion($iddistribucion){
 	global $conn;
-	
-	$distribucion=busca_filtro_tabla("tipo_origen,estado_recogida,mensajero_origen,mensajero_destino","distribucion","iddistribucion=".$iddistribucion,"",$conn);
-	$diligencia=mostrar_diligencia_distribucion($distribucion[0]['tipo_origen'],$distribucion[0]['estado_recogida']);
-	$retornar_check=0;
-	switch($diligencia){
-		case 'RECOGIDA':
-			if($distribucion[0]['mensajero_origen']){
-				$retornar_check=1;	
-			}
-			break;
-		case 'ENTREGA':	
-			if($distribucion[0]['mensajero_destino']){
-				$retornar_check=1;	
-			}		
-			break;
-	} //fin switch	
-	
-	if(!$retornar_check){ //si es 1. Entregas Interna a ventanilla habilita el check no importa si tiene o no mensajero
-		$idbusqueda_componente=@$_REQUEST['idbusqueda_componente'];
-		$cnombre_componente=busca_filtro_tabla("nombre","busqueda_componente","idbusqueda_componente=".$idbusqueda_componente,"",$conn);
-		$nombre_componente=$cnombre_componente[0]['nombre'];
-		if($nombre_componente=='reporte_distribucion_general_sinrecogida'){
-			$retornar_check=1;
-		}
-	}
-	
-	$checkbox='';
-	if($retornar_check){
-		$checkbox='<input type="checkbox" class="accion_distribucion" value="'.$iddistribucion.'">';
-	}	
+	$checkbox='<input type="checkbox" class="accion_distribucion" value="'.$iddistribucion.'">';
 	return($checkbox);
 }
 function opciones_acciones_distribucion($datos){
@@ -588,6 +556,10 @@ function opciones_acciones_distribucion($datos){
 		if($nombre_componente=='reporte_distribucion_general_sinrecogida'){
 			$cadena_acciones.="<option value='boton_confirmar_recepcion_distribucion'>Confirmar Recepcion</option>";
 		}		
+
+		if($nombre_componente!='reporte_distribucion_general_finalizado'){
+			$cadena_acciones.="<option value='boton_finalizar_entrega_personal'>Finalizar sin planilla</option>";
+		}	
 			
 		//SELECCIONAR Y QUITAR SELECCIONADOS
 		$cadena_acciones.="<optgroup label='Seleccionar Distribuciones...'>";
@@ -595,6 +567,14 @@ function opciones_acciones_distribucion($datos){
 		$cadena_acciones.="<option value='quitar_seleccionados_accion_distribucion'>Niguno</option>";
 		$cadena_acciones.="</optgroup>";
 		//FIN SELECCIONAR Y QUITAR SELECCIONADOS	
+		
+		//SELECCIONAR Y QUITAR SELECCIONADOS
+		$cadena_acciones.="<optgroup label='Filtrar Origen...'>";
+		$cadena_acciones.="<option value='filtrar_tipo_origen_externo'>Externo</option>"; //PARA COLPATRIA Entrada
+		$cadena_acciones.="<option value='filtrar_tipo_origen_interno'>Interno</option>"; //PARA COLPATRIA Salida a externo
+		$cadena_acciones.="<option value='filtrar_tipo_origen_todos'>Mostrar Todos</option>";		
+		$cadena_acciones.="</optgroup>";
+		//FIN SELECCIONAR Y QUITAR SELECCIONADOS			
 				
 	$cadena_acciones.="</select>";	
 
@@ -652,32 +632,56 @@ function condicion_adicional_distribucion(){
 	$condicion_adicional="";
 	
 	$funcionario_codigo_usuario_actual=usuario_actual('funcionario_codigo');
-	$cargo_administrador_mensajeria=busca_filtro_tabla("funcionario_codigo","vfuncionario_dc"," lower(cargo) LIKE 'administrador%de%mensajer%a' AND estado_dc=1 AND funcionario_codigo=".$funcionario_codigo_usuario_actual,"",$conn);	
-	$administrador_mensajeria=0;
-	if($cargo_administrador_mensajeria['numcampos']){
-		$administrador_mensajeria=1;
+	$es_mensajero=busca_filtro_tabla("iddependencia_cargo","vfuncionario_dc","lower(cargo)='mensajero' AND funcionario_codigo='".$funcionario_codigo_usuario_actual."' AND estado_dc=1","",$conn);
+	$administrador_mensajeria=validar_administrador_mensajeria();
+	
+	
+	//CONDICION VENTANILLA
+	$conector_mensajero=' AND ';
+	$conector_final_mensajero='';
+	if(!$administrador_mensajeria){
+		$ventanilla_radicacion=usuario_actual('ventanilla_radicacion');
+		if($ventanilla_radicacion){
+			if($es_mensajero['numcampos']){
+				$condicion_adicional.=" AND ( ( b.ventanilla_radicacion=".$ventanilla_radicacion." ) OR ";		
+				$conector_mensajero='';
+				$conector_final_mensajero=' )';
+			}else{
+				$condicion_adicional.=" AND ( b.ventanilla_radicacion=".$ventanilla_radicacion." ) ";		
+			}		
+		}else if($es_mensajero['numcampos']){
+			
+		}else{
+			$condicion_adicional.=" AND ( 1=2 ) ";	//la consulta sale vacia si no pertenece a dependencia ventanilla		
+		}
+		
 	}
+	//FIN CONDICION VENTANILLA
 	
-	if(!$administrador_mensajeria){ //si no es un administrador filtramos como si fuera un mensajero
-	
-		$rol_funcionario=busca_filtro_tabla("iddependencia_cargo","vfuncionario_dc","funcionario_codigo='".$funcionario_codigo_usuario_actual."' AND estado_dc=1","",$conn);
-		$lista_roles_funcionarios='';
-		for($i=0;$i<$rol_funcionario['numcampos'];$i++){
-			$lista_roles_funcionarios.=$rol_funcionario[$i]['iddependencia_cargo'];
-			if( ($i+1)!=$rol_funcionario['numcampos'] ){
-				$lista_roles_funcionarios.=',';
-			}
-		} //fin rol funcionario
-		
-		$condicion_adicional.=" AND ( (a.tipo_origen=1 AND a.estado_recogida<>1 AND a.mensajero_origen IN(".$lista_roles_funcionarios.") ) OR  (a.mensajero_empresad=0 AND a.mensajero_destino IN(".$lista_roles_funcionarios.") AND a.estado_recogida=1  ) ) ";
-		
-		
+	//FILTRO MENSAJERO
+	if(!$administrador_mensajeria && $es_mensajero['numcampos']){ //si no es un administrador filtramos como si fuera un mensajero
+		if($es_mensajero['numcampos']){ //si es mensajero
+			$lista_roles_funcionarios='';
+			for($i=0;$i<$es_mensajero['numcampos'];$i++){
+				$lista_roles_funcionarios.=$es_mensajero[$i]['iddependencia_cargo'];
+				if( ($i+1)!=$es_mensajero['numcampos'] ){
+					$lista_roles_funcionarios.=',';
+				}
+			} //fin for rol funcionario mensajero
+			
+			$condicion_adicional.=$conector_mensajero."  ( (a.tipo_origen=1 AND a.estado_recogida<>1 AND a.mensajero_origen IN(".$lista_roles_funcionarios.") ) OR  ( (a.mensajero_empresad=0 OR a.mensajero_empresad IS NULL) AND a.mensajero_destino IN(".$lista_roles_funcionarios.") AND a.estado_recogida=1  ) ) ".$conector_final_mensajero;	
+		} //fin $es_mensajero mensajero	
 	} // FIN: si no es un administrador filtramos como si fuera un mensajero
-	
+	//FIN FILTRO MENSAJERO
 	
 	if(@$_REQUEST['variable_busqueda']){
 		
 		$vector_variable_busqueda=explode('|',$_REQUEST['variable_busqueda']);
+		
+		//FILTRO POR VENTANILLA DE RADICACION
+		if($vector_variable_busqueda[0]=='filtro_ventanilla_radicacion' && $vector_variable_busqueda[1]){	
+			$condicion_adicional.=" AND ( b.ventanilla_radicacion=".$vector_variable_busqueda[1]." )";
+		} //fin if $vector_variable_busqueda[0]=='filtro_ventanilla_radicacion'		
 		
 		//FILTRO POR RUTA DE DISTRIBUCION
 		if($vector_variable_busqueda[0]=='idft_ruta_distribucion' && $vector_variable_busqueda[1]){
@@ -710,6 +714,23 @@ function condicion_adicional_distribucion(){
 			$condicion_adicional.="  (a.mensajero_empresad=".$coondicion_tipo_mensajero_destino." AND a.mensajero_destino=".$mensajero_tipo[0]." AND a.estado_recogida=1  ) )";
 			
 		} //fin if $vector_variable_busqueda[0]=='filtro_mensajero_distribucion'
+		
+		
+		//FILTRO POR TIPO ORIGEN filtro_tipo_origen
+		if($vector_variable_busqueda[0]=='filtro_tipo_origen' && $vector_variable_busqueda[1]){
+			switch($vector_variable_busqueda[1]){
+				case 1: //Externo
+					$condicion_adicional.=" AND a.tipo_origen = 1 ";
+					break;
+				case 2: //Interno
+					$condicion_adicional.=" AND a.tipo_origen = 2 ";
+					break;
+				case 3: //Mostrar Todos
+					$condicion_adicional.="";
+					break;	
+			}
+		}
+		//FIN FILTRO POR TIPO ORIGEN
 		
 		
 	} //fin if $_REQUEST['variable_busqueda']
@@ -830,23 +851,51 @@ function actualizar_mensajero_ruta_distribucion($idft_ruta_distribucion,$iddepen
 
 //---------------------------------------------------------------------------------------------
 
+function filtro_ventanilla_radicacion(){
+    global $ruta_db_superior, $conn;
+	
+	$select="";	
+	$administrador_mensajeria=validar_administrador_mensajeria();
+	$ver_select=false;
+	if($administrador_mensajeria){
+		$ver_select=true;
+	}
+	
+	if($ver_select){
 
-
-
+	    $select="<select class='pull-left btn btn-mini dropdown-toggle' style='height:22px; margin-left: 10px;' name='filtro_ventanilla_radicacion' id='filtro_ventanilla_radicacion'>";
+	    $select.="<option value=''>Todas Las Ventanillas</option>";
+	    $datos=busca_filtro_tabla("nombre,valor,idcf_ventanilla","cf_ventanilla","estado=1","",$conn);
+		
+		//if($vector_variable_busqueda[0]=='filtro_mensajero_distribucion' && $vector_variable_busqueda[1]){
+		$vector_variable_busqueda=explode('|',@$_REQUEST['variable_busqueda']);
+		
+	    for($i=0;$i<$datos['numcampos'];$i++){
+	        $selected='';	
+			if($vector_variable_busqueda[0]=='filtro_ventanilla_radicacion' && $vector_variable_busqueda[1]){
+				if($vector_variable_busqueda[1]){
+					if($vector_variable_busqueda[1]==$datos[$i]['idcf_ventanilla']){
+						$selected='selected';
+					}
+				}	
+			}	
+	        $select.="<option value='".$datos[$i]['idcf_ventanilla']."' ".$selected.">".$datos[$i]['nombre']."</option>";
+			
+	    }
+		$select.="</select>";
+		
+	} //fin if $ver_select
+	return $select;		
+}
 
 function filtro_mensajero_distribucion(){
     global $ruta_db_superior, $conn;
     
-	
 	$select="";
-	$funcionario_codigo_usuario_actual=usuario_actual('funcionario_codigo');
-	$cargo_administrador_mensajeria=busca_filtro_tabla("funcionario_codigo","vfuncionario_dc"," lower(cargo) LIKE 'administrador%de%mensajer%a' AND estado_dc=1 ","",$conn);
-	
+	$administrador_mensajeria=validar_administrador_mensajeria();
 	$ver_select=false;
-	for($i=0;$i<$cargo_administrador_mensajeria['numcampos'];$i++){
-		if( $cargo_administrador_mensajeria[$i]['funcionario_codigo']==$funcionario_codigo_usuario_actual ){
-			$ver_select=true;
-		}
+	if($administrador_mensajeria){
+		$ver_select=true;
 	}
 	
 	if($ver_select){
@@ -910,5 +959,37 @@ function filtro_mensajero_distribucion(){
     return $select;	
 	
 }
-
+function validar_administrador_mensajeria($funcionario_codigo=0){
+	global $conn;
+	
+	$funcionario_codigo_usuario_actual=$funcionario_codigo;
+	if(!$funcionario_codigo_usuario_actual){
+		$funcionario_codigo_usuario_actual=usuario_actual('funcionario_codigo');
+	}
+	$cargo_administrador_mensajeria=busca_filtro_tabla("funcionario_codigo","vfuncionario_dc"," lower(cargo) LIKE 'administrador%de%mensajer%a' AND estado_dc=1 AND funcionario_codigo=".$funcionario_codigo_usuario_actual,"",$conn);	
+	$administrador_mensajeria=0;
+	if($cargo_administrador_mensajeria['numcampos']){
+		$administrador_mensajeria=1;
+	}	
+	return($administrador_mensajeria);
+			
+}
+function condicion_por_ingresar_ventanilla_distribucion(){
+	global $conn,$ruta_db_superior;	
+	
+	include_once($ruta_db_superior."distribucion/funciones_distribucion.php");
+	$administrador_mensajeria=validar_administrador_mensajeria();
+	$ventanilla_radicacion_usuario_actual=usuario_actual('ventanilla_radicacion');
+		
+	$condicion_adicional="";	
+	if(!$administrador_mensajeria){
+		$condicion_adicional.=" ";
+		if($ventanilla_radicacion_usuario_actual){
+			$condicion_adicional.=" AND ( a.ventanilla_radicacion=".$ventanilla_radicacion_usuario_actual." )";	
+		}else{
+			$condicion_adicional.=" AND (1=2)";
+		}		
+	}
+	return($condicion_adicional);
+}
 ?>

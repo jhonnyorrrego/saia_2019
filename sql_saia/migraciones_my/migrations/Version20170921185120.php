@@ -138,9 +138,9 @@ class Version20170921185120 extends AbstractMigration {
 			UPDATE documento SET numero=valor WHERE iddocumento=iddoc;
 			UPDATE contador SET consecutivo=consecutivo+1 WHERE idcontador=tipo;
 			set sentencia = concat('UPDATE documento SET numero=', valor, ' WHERE iddocumento=',iddoc);
-			INSERT INTO evento(funcionario_codigo, fecha, evento, tabla_e, registro_id, estado, codigo_sql, detalle) VALUES(funcionario, CURRENT_TIMESTAMP, 'MODIFICAR', 'documento', valor, 0,sentencia,null);
+			INSERT INTO evento(funcionario_codigo, fecha, evento, tabla_e, registro_id, estado, codigo_sql, detalle) VALUES(funcionario, CURRENT_TIMESTAMP, 'MODIFICAR', 'documento', valor, 0,sentencia,'No puede ir null');
 			set sentencia = concat('UPDATE contador SET consecutivo=', valor+1, ' WHERE idcontador=',tipo);
-			INSERT INTO evento(funcionario_codigo, fecha, evento, tabla_e, registro_id, estado, codigo_sql, detalle) VALUES(funcionario, CURRENT_TIMESTAMP, 'MODIFICAR', 'contador', valor+1, 0,sentencia,null);
+			INSERT INTO evento(funcionario_codigo, fecha, evento, tabla_e, registro_id, estado, codigo_sql, detalle) VALUES(funcionario, CURRENT_TIMESTAMP, 'MODIFICAR', 'contador', valor+1, 0,sentencia,'No puede ir null');
 			END");
 	}
 

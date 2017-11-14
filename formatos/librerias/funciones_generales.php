@@ -1221,7 +1221,7 @@ function genera_campo_listados_editar($idformato, $idcampo, $iddoc = NULL, $busc
  * <Post-condiciones><Post-condiciones>
  * </Clase>
  */
-function buscar_dependencia() {
+function buscar_dependencia($iformato=0) {
 	global $conn;
 	if($_REQUEST['iddoc']) {
 		$idformato = busca_filtro_tabla("idformato,nombre_tabla", "formato f,documento d", "lower(f.nombre)=lower(d.plantilla) and iddocumento=" . $_REQUEST['iddoc'], "", $conn);
@@ -1240,6 +1240,10 @@ function buscar_dependencia() {
 	$html = '<td width="79%" bgcolor="#F5F5F5">';
 	if($numfilas > 1) {
 		$html .= '<select name="dependencia" id="dependencia" class="required">';
+		if($dep_sel==''){
+			$html .= "<option value='' selected>Por favor seleccione...</option>";
+		}
+		
 		for($i = 0; $i < $dep["numcampos"]; $i++) {
 			if($dep_sel == $dep[$i]["iddependencia_cargo"]) {
 				$html .= "<option value='" . $dep[$i]["iddependencia_cargo"] . "' selected>" . $dep[$i]["nombre"] . " - (" . $dep[$i]["cargo"] . ")</option>";
@@ -1249,7 +1253,7 @@ function buscar_dependencia() {
 		}
 		$html .= '</select>';
 	} else if($numfilas == 1) {
-		$html .= "<input type='hidden' value='" . $dep[0]["iddependencia_cargo"] . "' id='dependencia' name='dependencia'>" . $dep[0]["nombre"] . " - (" . $dep[0]["cargo"] . ")";
+		$html .= "<input class='required' type='hidden' value='" . $dep[0]["iddependencia_cargo"] . "' id='dependencia' name='dependencia'>" . $dep[0]["nombre"] . " - (" . $dep[0]["cargo"] . ")";
 	} else {
 		alerta("Existe un problema al momento de definir su dependencia. Por favor Comuniquese con su administrador");
 		redirecciona("../../responder.php");
@@ -1832,6 +1836,17 @@ function submit_formato($formato, $iddoc = NULL) {
 	?>
 <script>
   $("#continuar").click(function(){
+  	
+  	var elementos = $('[class^="tiny_"]:not(.tiny_sin_tiny)');
+	var size = elementos.size();
+	
+	if(size){
+		$.each( elementos, function(i, val){
+			var contenido_textarea=tinyMCE.get($(val).attr('id')).getContent();
+			$("#"+$(val).attr('id')).val(contenido_textarea);
+		});
+	}
+	
     if($('#formulario_formatos').valid()){
   		$("#continuar").hide();
   		$("#continuar").after('<input type="button" disabled="true" value="Enviando...">');

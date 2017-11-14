@@ -21,7 +21,10 @@ class ComposerStaticInitd519995838db71c3b1d30a6ef56a6013
     public static $prefixLengthsPsr4 = array (
         'Z' => 
         array (
+            'Zend\\Validator\\' => 15,
+            'Zend\\Stdlib\\' => 12,
             'Zend\\EventManager\\' => 18,
+            'Zend\\Escaper\\' => 13,
             'Zend\\Code\\' => 10,
         ),
         'S' => 
@@ -56,6 +59,12 @@ class ComposerStaticInitd519995838db71c3b1d30a6ef56a6013
             'Psr\\Http\\Message\\' => 17,
             'Psr\\Container\\' => 14,
             'Psr\\Cache\\' => 10,
+            'PhpOffice\\PhpWord\\' => 18,
+            'PhpOffice\\Common\\' => 17,
+        ),
+        'F' => 
+        array (
+            'Firebase\\JWT\\' => 13,
         ),
         'J' => 
         array (
@@ -90,9 +99,21 @@ class ComposerStaticInitd519995838db71c3b1d30a6ef56a6013
     );
 
     public static $prefixDirsPsr4 = array (
+        'Zend\\Validator\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/zendframework/zend-validator/src',
+        ),
+        'Zend\\Stdlib\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/zendframework/zend-stdlib/src',
+        ),
         'Zend\\EventManager\\' => 
         array (
             0 => __DIR__ . '/..' . '/zendframework/zend-eventmanager/src',
+        ),
+        'Zend\\Escaper\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/zendframework/zend-escaper/src',
         ),
         'Zend\\Code\\' => 
         array (
@@ -221,6 +242,17 @@ class ComposerStaticInitd519995838db71c3b1d30a6ef56a6013
         'Elasticsearch\\' => 
         array (
             0 => __DIR__ . '/..' . '/elasticsearch/elasticsearch/src/Elasticsearch',
+        'PhpOffice\\PhpWord\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/phpoffice/phpword/src/PhpWord',
+        ),
+        'PhpOffice\\Common\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/phpoffice/common/src/Common',
+        ),
+        'Firebase\\JWT\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/firebase/php-jwt/src',
         ),
         'Doctrine\\DBAL\\Migrations\\' => 
         array (
@@ -307,6 +339,7 @@ class ComposerStaticInitd519995838db71c3b1d30a6ef56a6013
     );
 
     public static $classMap = array (
+        'PclZip' => __DIR__ . '/..' . '/pclzip/pclzip/pclzip.lib.php',
         'SqlFormatter' => __DIR__ . '/..' . '/jdorn/sql-formatter/lib/SqlFormatter.php',
     );
 

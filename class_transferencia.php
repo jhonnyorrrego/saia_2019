@@ -262,6 +262,15 @@ function radicar_documento_prueba($tipo_contador,$arreglo,$archivos=NULL,$idfluj
     elseif(!isset($arreglo["estado"]))
       $arreglo["estado"] = "'ACTIVO'";
     $arreglo["fecha_creacion"]=fecha_db_almacenar(date("Y-m-d H:i:s"),"Y-m-d H:i:s");
+    
+    
+	//VENTANILLA RADICACION
+	$ventanilla_radicacion=usuario_actual('ventanilla_radicacion');
+	if(!$ventanilla_radicacion){
+		$ventanilla_radicacion=0;
+	}    
+    $arreglo["ventanilla_radicacion"]=$ventanilla_radicacion;
+	
     $valores = implode(",",array_values($arreglo));
     $campos = implode(",",array_keys($arreglo));
 
@@ -2377,6 +2386,7 @@ function guardar_documento($iddoc, $tipo=0) {
 						break;
 					case "archivo":
 						array_push($larchivos, $lcampos[$j]["idcampos_formato"]);
+						$_REQUEST[$lcampos[$j]["nombre"]] = 0;
 						break;
 					case "fecha":
 						if(@$_REQUEST["asig_" . $lcampos[$j]["nombre"]] && $_REQUEST["asig_" . $lcampos[$j]["nombre"]] != "") {

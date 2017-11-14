@@ -36,6 +36,7 @@ $x_clave = Null;
 $x_nombres = Null;
 $x_apellidos = Null;
 $x_email = Null;
+$x_ventanilla_radicacion=Null;
 $x_direccion = Null;
 $x_telefono = Null;
 $x_firma = Null;
@@ -74,6 +75,7 @@ if (($sAction == "") || ((is_null($sAction)))) {
 	$x_nombres = @$_POST["x_nombres"];
 	$x_apellidos = @$_POST["x_apellidos"];
 	$x_email = @$_POST["x_email"];
+	$x_ventanilla_radicacion= @$_POST["x_ventanilla_radicacion"];
   $x_direccion = @$_POST["x_direccion"];
   $x_telefono = @$_POST["x_telefono"];
 	$x_firma = @$_POST["x_firma"];
@@ -201,13 +203,13 @@ label.error{
   <tr>
 		<td class="encabezado" title="Telefono."><span class="phpmaker" style="color: #FFFFFF;">TEL&Eacute;FONO</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
-<input type="text" name="x_telefono" id="x_telefono" size="30" maxlength="255" value="<?php echo @$x_telefono ?>">
+<input type="text" name="x_telefono" id="x_telefono" class="number"  size="30" maxlength="255" value="<?php echo @$x_telefono ?>">
 </span></td>
 	</tr>
 	<tr>
 		<td class="encabezado" title="Correo electronico del funcionario."><span class="phpmaker" style="color: #FFFFFF;">Email</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
-<input type="text" name="x_email" id="x_email" size="30" maxlength="255" value="<?php echo @$x_email ?>">
+<input type="text" name="x_email" id="x_email" size="30"  class="email"  maxlength="255" value="<?php echo @$x_email ?>">
 </span></td>
 	</tr>
 	
@@ -241,6 +243,28 @@ label.error{
 
 </td>
 	</tr>
+			<tr>
+				<td class="encabezado" title="Ventanilla de Radicaci6oacute;n del funcionario."><span class="phpmaker" style="color: #FFFFFF;">VENTANILLA DE RADICACI&Oacute;N</span></td>
+				<td bgcolor="#F5F5F5"><span class="phpmaker">					
+					<select name="x_ventanilla_radicacion" id="x_ventanilla_radicacion">
+						
+						<option value=''>Seleccione...</option>
+						<?php
+							$ventanilla_radicacion=busca_filtro_tabla("idcf_ventanilla,nombre","cf_ventanilla","estado=1","",$conn);
+							$options_ventanilla_radicacion='';
+							for($i=0;$i<$ventanilla_radicacion['numcampos'];$i++){
+								$selected='';
+								if($x_ventanilla_radicacion==$ventanilla_radicacion[$i]['idcf_ventanilla']){
+									$selected='selected';
+								}
+								$options_ventanilla_radicacion.='<option value="'.$ventanilla_radicacion[$i]['idcf_ventanilla'].'" '.$selected.'>'.$ventanilla_radicacion[$i]['nombre'].'</option>';
+							}
+							echo($options_ventanilla_radicacion);
+						?>
+					</select>
+					
+				</span></td>
+			</tr>		
 	<tr>
 		<td class="encabezado" title="Fecha de ingreso del funcionario"><span class="phpmaker" style="color: #FFFFFF;">FECHA DE INGRESO</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
@@ -356,6 +380,7 @@ function LoadData($sKey,$conn)
 		$GLOBALS["x_nombres"] = $row["nombres"];
 		$GLOBALS["x_apellidos"] = $row["apellidos"];
 		$GLOBALS["x_email"] = $row["email"];
+		$GLOBALS["x_ventanilla_radicacion"] = $row["ventanilla_radicacion"];
 		$GLOBALS["x_firma"] = $row["firma"];
 		$GLOBALS["x_estado"] = $row["estado"];
     $GLOBALS["x_direccion"] = $row["direccion"];
@@ -444,6 +469,13 @@ function EditData($sKey,$conn)
 		$theValue = (!get_magic_quotes_gpc()) ? addslashes($GLOBALS["x_email"]) : $GLOBALS["x_email"]; 
 		$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
 		$fieldList["email"] = ($theValue);
+
+
+		$theValue = (!get_magic_quotes_gpc()) ? addslashes($GLOBALS["x_ventanilla_radicacion"]) : $GLOBALS["x_ventanilla_radicacion"]; 
+		$theValue = ($theValue != "") ? " " . $theValue . "" : "NULL";
+		$fieldList["ventanilla_radicacion"] = ($theValue);		
+		
+		
 		if ($a_x_firma == "2") { // Remove
 			$fieldList["firma"] = "null";
 		} else if ($a_x_firma == "3") { // Update

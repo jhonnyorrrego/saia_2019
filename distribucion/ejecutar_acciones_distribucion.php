@@ -97,6 +97,25 @@ function confirmar_recepcion_distribucion(){
 	return($retorno);		
 } //fin function confirmar_recepcion_distribucion()
 
+function finalizar_entrega_personal(){
+	global $conn;
+	$retorno=array('exito'=>0);
+	if(@$_REQUEST['iddistribucion']){	
+		$vector_iddistribucion=explode(',',$_REQUEST['iddistribucion']);
+		$finaliza_rol=busca_filtro_tabla("iddependencia_cargo","vfuncionario_dc","estado_dc=1 AND idfuncionario=".usuario_actual('idfuncionario'),"",$conn);
+		$finaliza_fecha=fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s');
+		
+		for($i=0;$i<count($vector_iddistribucion);$i++){
+			$iddistribucion=$vector_iddistribucion[$i];
+			$upd=" UPDATE distribucion SET estado_distribucion=3,finaliza_rol=".$finaliza_rol[0]['iddependencia_cargo'].",finaliza_fecha=".$finaliza_fecha." WHERE iddistribucion=".$iddistribucion;
+			phpmkr_query($upd);	
+		}			
+		$retorno['exito']=1;
+	}
+	return($retorno);		
+}
+
+
 if(@$_REQUEST['ejecutar_accion']){
 	$retorno=$_REQUEST['ejecutar_accion']();
 	echo( json_encode($retorno) );

@@ -139,7 +139,7 @@ return($texto);
 }
 function contar_tareas($iddoc){
 	global $conn;
-	$tareas=busca_filtro_tabla("A.*,".resta_fechas("A.fecha_tarea","'".date("Y-m-d")."'")." AS dias","tareas A","documento_iddocumento=".$iddoc,"",$conn);
+	$tareas=busca_filtro_tabla("A.*,".resta_fechas("A.fecha_vencimiento","'".date("Y-m-d")."'")." AS dias","tareas A","documento_iddocumento=".$iddoc,"",$conn);
 	$fin=$tareas["numcampos"];
 	$realizados=0;
 	$clase1='';
@@ -360,8 +360,6 @@ if($tipo=='ver_versiones'||$tipo=='todos'){
 return($cantidades);
 }
 function serie_documento($idserie){
-	if($idserie == 'serie')
-		return("Sin Serie Asignada");
   $serie=busca_filtro_tabla("nombre","serie","idserie=".$idserie,"",$conn);
   if($serie["numcampos"]){
      return(ucwords(strtolower($serie[0]["nombre"])));
@@ -482,7 +480,7 @@ return($texto);
 function nombre_plantilla($plantilla,$iddoc=Null){
 	$formato=busca_filtro_tabla("","formato","lower(nombre)='".strtolower($plantilla)."'","",$conn);
 	if($formato["numcampos"])
-		return (ucfirst(codifica_encabezado(html_entity_decode(strtolower($formato[0]["etiqueta"])))));
+		return (ucfirst(codifica_encabezado(strtolower($formato[0]["etiqueta"]))));
 	else {
 		if($iddoc){
 			$tipo=busca_filtro_tabla("","documento a","a.iddocumento=".$iddoc,"",$conn);

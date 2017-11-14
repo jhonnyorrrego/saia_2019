@@ -680,7 +680,9 @@ CREATE TABLE distribucion (
   numero_distribucion varchar(255) NOT NULL,
   estado_distribucion int(11) NOT NULL DEFAULT '0',
   estado_recogida int(11) NOT NULL,
-  fecha_creacion datetime NOT NULL
+  fecha_creacion datetime NOT NULL,
+  finaliza_rol int(11) NULL,
+  finaliza_fecha datetime NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 ALTER TABLE distribucion
@@ -694,10 +696,10 @@ INSERT INTO busqueda (idbusqueda, nombre, etiqueta, estado, ancho, campos, llave
 (109, 'reporte_distribucion_general', 'Distribuci&oacute;n', 1, 200, 'a.iddistribucion,a.tipo_origen,a.origen,a.tipo_destino,a.destino,a.numero_distribucion,a.estado_distribucion,a.estado_recogida,a.ruta_origen,a.ruta_destino,b.iddocumento,b.fecha,b.descripcion', 'a.iddistribucion', 'distribucion a, documento b', 'distribucion/funciones_distribucion.php', 'distribucion/funciones_distribucion_js.php', 100, 500, 'pantallas/busquedas/consulta_busqueda_reporte.php', 2, NULL);
 
 INSERT INTO busqueda_componente (idbusqueda_componente, busqueda_idbusqueda, tipo, conector, url, etiqueta, nombre, orden, info, exportar, exportar_encabezado, encabezado_componente, estado, ancho, cargar, campos_adicionales, tablas_adicionales, ordenado_por, direccion, agrupado_por, busqueda_avanzada, acciones_seleccionados, modulo_idmodulo, menu_busqueda_superior, enlace_adicionar, encabezado_grillas) VALUES
-(303, 109, 3, 2, 'pantallas/busquedas/consulta_busqueda_reporte.php', '1. Entregas Interna a ventanilla', 'reporte_distribucion_general_sinrecogida', 1, 'Radicado|{*ver_documento_distribucion@iddocumento,tipo_origen*}|center|210|-|No. Distribuci&oacute;n|{*numero_distribucion*}|center|100|-|Estado|{*ver_estado_distribucion@estado_distribucion*}|center|-|Diligencia|{*mostrar_diligencia_distribucion@tipo_origen,estado_recogida*}|center|80|-|Ruta|{*mostrar_nombre_ruta_distribucion@tipo_origen,estado_recogida,ruta_origen,ruta_destino,tipo_destino*}|center|-|Mensajero|{*select_mensajeros_ruta_distribucion@iddistribucion*}|center|-|Planilla Asociada|{*mostrar_planilla_diligencia_distribucion@iddistribucion*}|center|-|Acci&oacute;n|{*generar_check_accion_distribucion@iddistribucion*}|center|80|-|Origen|{*mostrar_origen_distribucion@tipo_origen,origen*}|center|250|-|Destino|{*mostrar_destino_distribucion@tipo_destino,destino*}|center|250|-|Fecha de Radicaci&oacute;n|{*fecha*}|center|-|Asunto|{*descripcion*}|left', NULL, NULL, NULL, 2, 600, 1, '', '', 'iddistribucion', 'DESC', NULL, 'distribucion/busqueda_distribucion.php?idbusqueda_componente=303', 'filtro_mensajero_distribucion,opciones_acciones_distribucion', 1655, NULL, NULL, NULL),
+(303, 109, 3, 2, 'pantallas/busquedas/consulta_busqueda_reporte.php', '1. Entregas Interna a ventanilla', 'reporte_distribucion_general_sinrecogida', 1, 'Radicado|{*ver_documento_distribucion@iddocumento,tipo_origen*}|center|210|-|No. Distribuci&oacute;n|{*numero_distribucion*}|center|100|-|Estado|{*ver_estado_distribucion@estado_distribucion*}|center|-|Diligencia|{*mostrar_diligencia_distribucion@tipo_origen,estado_recogida*}|center|80|-|Ruta|{*mostrar_nombre_ruta_distribucion@tipo_origen,estado_recogida,ruta_origen,ruta_destino,tipo_destino*}|center|-|Mensajero|{*select_mensajeros_ruta_distribucion@iddistribucion*}|center|-|Planilla Asociada|{*mostrar_planilla_diligencia_distribucion@iddistribucion*}|center|-|Acci&oacute;n|{*generar_check_accion_distribucion@iddistribucion*}|center|80|-|Origen|{*mostrar_origen_distribucion@tipo_origen,origen*}|center|250|-|Destino|{*mostrar_destino_distribucion@tipo_destino,destino*}|center|250|-|Fecha de Radicaci&oacute;n|{*fecha*}|center|-|Asunto|{*descripcion*}|left', NULL, NULL, NULL, 2, 600, 1, '', '', 'iddistribucion', 'DESC', NULL, 'distribucion/busqueda_distribucion.php?idbusqueda_componente=303', 'filtro_mensajero_distribucion,opciones_acciones_distribucion,filtro_ventanilla_radicacion', 1655, NULL, NULL, NULL),
 (302, 109, 3, 2, 'pantallas/busquedas/consulta_busqueda_reporte.php', '4. Finalizado', 'reporte_distribucion_general_finalizado', 4, 'Radicado|{*ver_documento_distribucion@iddocumento,tipo_origen*}|center|210|-|No. Distribuci&oacute;n|{*numero_distribucion*}|center|100|-|Estado|{*ver_estado_distribucion@estado_distribucion*}|center|-|Planilla Asociada|{*mostrar_planilla_diligencia_distribucion@iddistribucion*}|center|-|Origen|{*mostrar_origen_distribucion@tipo_origen,origen*}|center|250|-|Destino|{*mostrar_destino_distribucion@tipo_destino,destino*}|center|250|-|Fecha de Radicaci&oacute;n|{*fecha*}|center|-|Asunto|{*descripcion*}|left', NULL, NULL, NULL, 2, 600, 1, '', '', 'iddistribucion', 'DESC', NULL, 'distribucion/busqueda_distribucion.php?idbusqueda_componente=302', '', NULL, NULL, NULL, NULL),
-(301, 109, 3, 2, 'pantallas/busquedas/consulta_busqueda_reporte.php', '3. En distribuci&oacute;n', 'reporte_distribucion_general_endistribucion', 3, 'Radicado|{*ver_documento_distribucion@iddocumento,tipo_origen*}|center|210|-|No. Distribuci&oacute;n|{*numero_distribucion*}|center|100|-|Estado|{*ver_estado_distribucion@estado_distribucion*}|center|-|Diligencia|{*mostrar_diligencia_distribucion@tipo_origen,estado_recogida*}|center|80|-|Ruta|{*mostrar_nombre_ruta_distribucion@tipo_origen,estado_recogida,ruta_origen,ruta_destino,tipo_destino*}|center|-|Mensajero|{*select_mensajeros_ruta_distribucion@iddistribucion*}|center|-|Planilla Asociada|{*mostrar_planilla_diligencia_distribucion@iddistribucion*}|center|-|Acci&oacute;n|{*generar_check_accion_distribucion@iddistribucion*}|center|80|-|Origen|{*mostrar_origen_distribucion@tipo_origen,origen*}|center|250|-|Destino|{*mostrar_destino_distribucion@tipo_destino,destino*}|center|250|-|Fecha de Radicaci&oacute;n|{*fecha*}|center|-|Asunto|{*descripcion*}|left', NULL, NULL, NULL, 2, 600, 1, '', '', 'iddistribucion', 'DESC', NULL, 'distribucion/busqueda_distribucion.php?idbusqueda_componente=301', 'filtro_mensajero_distribucion,opciones_acciones_distribucion', NULL, NULL, NULL, NULL),
-(300, 109, 3, 2, 'pantallas/busquedas/consulta_busqueda_reporte.php', '2. Por Distribuir', 'reporte_distribucion_general_pordistribuir', 2, 'Radicado|{*ver_documento_distribucion@iddocumento,tipo_origen*}|center|210|-|No. Distribuci&oacute;n|{*numero_distribucion*}|center|100|-|Estado|{*ver_estado_distribucion@estado_distribucion*}|center|-|Diligencia|{*mostrar_diligencia_distribucion@tipo_origen,estado_recogida*}|center|80|-|Ruta|{*mostrar_nombre_ruta_distribucion@tipo_origen,estado_recogida,ruta_origen,ruta_destino,tipo_destino*}|center|-|Mensajero|{*select_mensajeros_ruta_distribucion@iddistribucion*}|center|-|Planilla Asociada|{*mostrar_planilla_diligencia_distribucion@iddistribucion*}|center|-|Acci&oacute;n|{*generar_check_accion_distribucion@iddistribucion*}|center|80|-|Origen|{*mostrar_origen_distribucion@tipo_origen,origen*}|center|250|-|Destino|{*mostrar_destino_distribucion@tipo_destino,destino*}|center|250|-|Fecha de Radicaci&oacute;n|{*fecha*}|center|-|Asunto|{*descripcion*}|left', NULL, NULL, NULL, 2, 600, 1, '', '', 'iddistribucion', 'DESC', NULL, 'distribucion/busqueda_distribucion.php?idbusqueda_componente=300', 'filtro_mensajero_distribucion,opciones_acciones_distribucion', NULL, NULL, NULL, NULL);
+(301, 109, 3, 2, 'pantallas/busquedas/consulta_busqueda_reporte.php', '3. En distribuci&oacute;n', 'reporte_distribucion_general_endistribucion', 3, 'Radicado|{*ver_documento_distribucion@iddocumento,tipo_origen*}|center|210|-|No. Distribuci&oacute;n|{*numero_distribucion*}|center|100|-|Estado|{*ver_estado_distribucion@estado_distribucion*}|center|-|Diligencia|{*mostrar_diligencia_distribucion@tipo_origen,estado_recogida*}|center|80|-|Ruta|{*mostrar_nombre_ruta_distribucion@tipo_origen,estado_recogida,ruta_origen,ruta_destino,tipo_destino*}|center|-|Mensajero|{*select_mensajeros_ruta_distribucion@iddistribucion*}|center|-|Planilla Asociada|{*mostrar_planilla_diligencia_distribucion@iddistribucion*}|center|-|Acci&oacute;n|{*generar_check_accion_distribucion@iddistribucion*}|center|80|-|Origen|{*mostrar_origen_distribucion@tipo_origen,origen*}|center|250|-|Destino|{*mostrar_destino_distribucion@tipo_destino,destino*}|center|250|-|Fecha de Radicaci&oacute;n|{*fecha*}|center|-|Asunto|{*descripcion*}|left', NULL, NULL, NULL, 2, 600, 1, '', '', 'iddistribucion', 'DESC', NULL, 'distribucion/busqueda_distribucion.php?idbusqueda_componente=301', 'filtro_mensajero_distribucion,opciones_acciones_distribucion,filtro_ventanilla_radicacion', NULL, NULL, NULL, NULL),
+(300, 109, 3, 2, 'pantallas/busquedas/consulta_busqueda_reporte.php', '2. Por Distribuir', 'reporte_distribucion_general_pordistribuir', 2, 'Radicado|{*ver_documento_distribucion@iddocumento,tipo_origen*}|center|210|-|No. Distribuci&oacute;n|{*numero_distribucion*}|center|100|-|Estado|{*ver_estado_distribucion@estado_distribucion*}|center|-|Diligencia|{*mostrar_diligencia_distribucion@tipo_origen,estado_recogida*}|center|80|-|Ruta|{*mostrar_nombre_ruta_distribucion@tipo_origen,estado_recogida,ruta_origen,ruta_destino,tipo_destino*}|center|-|Mensajero|{*select_mensajeros_ruta_distribucion@iddistribucion*}|center|-|Planilla Asociada|{*mostrar_planilla_diligencia_distribucion@iddistribucion*}|center|-|Acci&oacute;n|{*generar_check_accion_distribucion@iddistribucion*}|center|80|-|Origen|{*mostrar_origen_distribucion@tipo_origen,origen*}|center|250|-|Destino|{*mostrar_destino_distribucion@tipo_destino,destino*}|center|250|-|Fecha de Radicaci&oacute;n|{*fecha*}|center|-|Asunto|{*descripcion*}|left', NULL, NULL, NULL, 2, 600, 1, '', '', 'iddistribucion', 'DESC', NULL, 'distribucion/busqueda_distribucion.php?idbusqueda_componente=300', 'filtro_mensajero_distribucion,opciones_acciones_distribucion,filtro_ventanilla_radicacion', NULL, NULL, NULL, NULL);
 
 INSERT INTO busqueda_condicion (idbusqueda_condicion, busqueda_idbusqueda, fk_busqueda_componente, codigo_where, etiqueta_condicion) VALUES
 (238, NULL, 303, 'a.documento_iddocumento=b.iddocumento AND lower(b.estado)=\'aprobado\' AND a.estado_distribucion=0 {*condicion_adicional_distribucion*}', 'condicion_reporte_distribucion_general_sinrecogida'),
@@ -739,6 +741,51 @@ INSERT INTO funciones_formato (nombre, nombre_funcion, parametros, etiqueta, des
 ('{*validar_nombre_ruta_distribucion*}', 'validar_nombre_ruta_distribucion', NULL, 'validar_nombre_ruta_distribucion', '', 'funciones.php', '404', 'a,e');
 
 UPDATE campos_formato SET acciones = 'a,e,b,p,d' WHERE formato_idformato=404 AND nombre='nombre_ruta';
+
+-- CREACION DE CF cf_ventanilla
+
+CREATE TABLE cf_ventanilla (
+  idcf_ventanilla int(11) NOT NULL,
+  nombre varchar(255) DEFAULT NULL,
+  valor varchar(255) DEFAULT NULL,
+  cod_padre varchar(255) DEFAULT NULL,
+  descripcion varchar(255) DEFAULT NULL,
+  tipo varchar(255) DEFAULT NULL,
+  categoria varchar(255) DEFAULT NULL,
+  estado int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+ALTER TABLE cf_ventanilla
+  ADD PRIMARY KEY (idcf_ventanilla);
+  
+ALTER TABLE cf_ventanilla
+  MODIFY idcf_ventanilla int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+
+INSERT INTO busqueda_componente (idbusqueda_componente, busqueda_idbusqueda, tipo, conector, url, etiqueta, nombre, orden, info, exportar, exportar_encabezado, encabezado_componente, estado, ancho, cargar, campos_adicionales, tablas_adicionales, ordenado_por, direccion, agrupado_por, busqueda_avanzada, acciones_seleccionados, modulo_idmodulo, menu_busqueda_superior, enlace_adicionar, encabezado_grillas) VALUES (NULL, '19', '3', '2', 'pantallas/busquedas/consulta_busqueda_reporte.php', 'Ventanillas de Radicaci&oacute;n', 'cf_ventanilla', '2', 'Nombre|{*nombre*}|center|-|Valor|{*valor*}|center|-|Categoria|{*categoria*}|center|-|Estado|{*estado*}|center|-|Acciones|{*barra_superior_cf@idcf_ventanilla,nombre_tabla*}|center', NULL, NULL, '', '2', '320', '2', 'idcf_ventanilla,nombre,valor,categoria, case estado when 1 then \'activo\' else \'inactivo\' end as estado, \'cf_ventanilla\' as nombre_tabla', 'cf_ventanilla', 'nombre', 'ASC', NULL, 'pantallas/admin_cf/busqueda_avanzada_cf.php?tabla=cf_ventanilla&idbusqueda_componente=322', NULL, NULL, NULL, 'pantallas/admin_cf/pantalla_cf_adicionar.php?tabla=cf_ventanilla', NULL);
+
+INSERT INTO busqueda_condicion (idbusqueda_condicion, busqueda_idbusqueda, fk_busqueda_componente, codigo_where, etiqueta_condicion) VALUES (NULL, NULL, '322', '1=1', 'cf_ventanilla');
+
+-- ALMACENANDO LA VENTANILLA DEL FUNCIONARIO Y DOCUMENTOS
+ALTER TABLE funcionario ADD ventanilla_radicacion INT(11) NULL AFTER foto_cordenadas;
+ALTER TABLE documento ADD ventanilla_radicacion INT(11) NULL DEFAULT '0' AFTER fecha_limite;
+ALTER TABLE distribucion DROP ventanilla;
+
+-- MODIFICACION REPORTE POR INGRESAR DISTRIBUCION
+UPDATE busqueda SET ruta_libreria = 'pantallas/documento/librerias.php,pantallas/documento/librerias_pendientes_entrada.php,distribucion/funciones_distribucion.php' WHERE idbusqueda = 7;
+UPDATE busqueda_componente SET tablas_adicionales = 'ft_radicacion_entrada b' WHERE idbusqueda_componente = 16;
+UPDATE busqueda_componente SET tablas_adicionales = 'ft_radicacion_entrada b' WHERE idbusqueda_componente = 280;
+UPDATE busqueda_condicion SET codigo_where = 'lower(a.estado)=''iniciado'' AND a.tipo_radicado=1 AND a.iddocumento=b.documento_iddocumento {*condicion_por_ingresar_ventanilla_distribucion*}' WHERE idbusqueda_condicion = 13;
+UPDATE busqueda_condicion SET codigo_where = 'lower(A.estado)=''iniciado'' AND A.tipo_radicado=2 AND a.iddocumento=b.documento_iddocumento {*condicion_por_ingresar_ventanilla_distribucion*}' WHERE idbusqueda_condicion = 222;
+UPDATE busqueda_condicion SET codigo_where = 'lower(a.estado)=''iniciado'' AND a.iddocumento=b.documento_iddocumento {*condicion_por_ingresar_ventanilla_distribucion*}' WHERE idbusqueda_condicion = 233;
+
+-- MODIFICACION REPORTE INGRESADOS DISTRIBUCION
+
+UPDATE busqueda SET tablas = 'documento a' WHERE idbusqueda = 9;
+UPDATE busqueda SET ruta_libreria = 'pantallas/documento/librerias.php,pantallas/documento/librerias_flujo.php,pantallas/documento/librerias_transferencias.php,pantallas/documento/librerias_tramitados.php,distribucion/funciones_distribucion.php' WHERE idbusqueda = 9;
+UPDATE busqueda_componente SET tablas_adicionales = 'ft_radicacion_entrada b' WHERE busqueda_componente.idbusqueda_componente = 18;
+UPDATE busqueda_componente SET tablas_adicionales = 'ft_radicacion_entrada b' WHERE busqueda_componente.idbusqueda_componente = 23;
+UPDATE busqueda_condicion SET codigo_where = 'lower(a.estado)=''aprobado'' and a.tipo_radicado=1 and a.iddocumento=b.documento_iddocumento {*condicion_por_ingresar_ventanilla_distribucion*}' WHERE idbusqueda_condicion = 15;
+UPDATE busqueda_condicion SET codigo_where = 'lower(a.estado)=''aprobado'' and a.tipo_radicado=2 and a.iddocumento=b.documento_iddocumento {*condicion_por_ingresar_ventanilla_distribucion*}' WHERE idbusqueda_condicion = 18;
 
 -- FIN NUEVA DISTRIBUCION 
 -- ---------------------------------------------------------------- 
@@ -978,7 +1025,7 @@ AS
 
       UPDATE dbo.contador
          SET 
-            consecutivo = contador.consecutivo + 1
+            consecutivo = contador.consecutivo + 1 
       WHERE contador.idcontador = @tipo
 
       SET @sentencia = concat('UPDATE documento SET numero=', @valor, ' WHERE iddocumento=',@iddoc)
@@ -988,3 +1035,34 @@ AS
 
 
    END
+
+-- --------------------------------------------------------------------
+-- REPORTE DE PRESTAMO ANIDADO AL REPORTE DE ARCHIVO(ESPEDIENTES)
+
+INSERT INTO modulo (idmodulo, pertenece_nucleo, nombre, tipo, imagen, etiqueta, enlace, enlace_mobil, destino, cod_padre, orden, ayuda, parametros, busqueda_idbusqueda, permiso_admin, busqueda, enlace_pantalla) VALUES
+(1666, 0, 'modulo_reporte_expedientes_prestamo', 'secundario', 'botones/principal/defaut.png', 'Prestamo', 'pantallas/busquedas/consulta_busqueda_reporte.php?idbusqueda_componente=203', NULL, '_self', 0, 5, '', '', 0, 0, '1', 0);
+
+INSERT INTO busqueda_componente (idbusqueda_componente, busqueda_idbusqueda, tipo, conector, url, etiqueta, nombre, orden, info, exportar, exportar_encabezado, encabezado_componente, estado, ancho, cargar, campos_adicionales, tablas_adicionales, ordenado_por, direccion, agrupado_por, busqueda_avanzada, acciones_seleccionados, modulo_idmodulo, menu_busqueda_superior, enlace_adicionar, encabezado_grillas) VALUES
+(324, 37, 4, 2, 'pantallas/busquedas/consulta_busqueda_reporte.php?idbusqueda_componente=203', 'Prestamo', 'enlace_reporte_prestamo', 6, '', NULL, NULL, '', 2, 320, 2, NULL, '', '', '', '', '', '', 1666, '', NULL, NULL);
+
+-- --------------------------------------------------------------------
+-- DESARROLLO USUARIOS RECURRENTES, ANDRES AGUDELO TRAIDO DE EDUP
+
+INSERT INTO configuracion (nombre, valor, tipo, fecha, encrypt) VALUES
+('usuarios_concurrentes', '8b1af8960920cda5c6254b87385f081d', 'empresa', '2017-09-25 20:16:46', 1);
+
+CREATE OR REPLACE VIEW vusuarios_concurrentes AS select f.funcionario_codigo AS funcionario_codigo,f.nit AS nit,concat(f.nombres,' ',f.apellidos) AS nombre_completo,f.login AS login,count(l.login) AS cant_conexiones from (log_acceso l join funcionario f on((f.login = l.login))) where ((f.login not in ('cerok','mensajero','radicador_web','radicador_salida')) and (l.exito = 1) and isnull(l.fecha_cierre)) group by f.funcionario_codigo,f.nit,f.nombres,f.apellidos,f.login;
+
+
+INSERT INTO busqueda (idbusqueda, nombre, etiqueta, estado, ancho, campos, llave, tablas, ruta_libreria, ruta_libreria_pantalla, cantidad_registros, tiempo_refrescar, ruta_visualizacion, tipo_busqueda, badge_cantidades) VALUES
+(120, 'usuarios_concurrentes', 'Reporte Usuario Concurrentes', 1, 200, 'nit,nombre_completo,login,cant_conexiones', 'funcionario_codigo', NULL, NULL, NULL, 30, 500, 'pantallas/busquedas/consulta_busqueda_reporte.php', 2, NULL);
+
+INSERT INTO busqueda_componente (busqueda_idbusqueda, tipo, conector, url, etiqueta, nombre, orden, info, exportar, exportar_encabezado, encabezado_componente, estado, ancho, cargar, campos_adicionales, tablas_adicionales, ordenado_por, direccion, agrupado_por, busqueda_avanzada, acciones_seleccionados, modulo_idmodulo, menu_busqueda_superior, enlace_adicionar, encabezado_grillas) VALUES
+(120, 3, 2, 'pantallas/busquedas/consulta_busqueda_reporte.php', 'Reporte Usuario Concurrentes', 'usuarios_conectados_concurrentes', 1, 'Identificacion|{*nit*}|left|-|Nombres|{*nombre_completo*}|left|-|Login|{*login*}|left|-|Conexiones|{*cant_conexiones*}|center', NULL, NULL, NULL, 2, 320, 2, NULL, 'vusuarios_concurrentes', 'nombre_completo', 'ASC', 'funcionario_codigo,nit,nombre_completo,login', 'pantallas/funcionario/filtros_usu_recurrentes.php?idbusqueda_componente=304', NULL, 1667, NULL, NULL, NULL);
+
+
+INSERT INTO modulo (idmodulo, pertenece_nucleo, nombre, tipo, imagen, etiqueta, enlace, enlace_mobil, destino, cod_padre, orden, ayuda, parametros, busqueda_idbusqueda, permiso_admin, busqueda, enlace_pantalla) VALUES
+(1667, 0, 'reporte_usuarios_concurrentes', 'secundario', 'botones/principal/reportes.png', 'Usuarios Concurrentes', 'pantallas/buscador_principal.php?idbusqueda=120', NULL, 'centro', 1057, 22, '-', '', 0, 0, '1', 0);
+
+-- --------------------------------------------------------------------   
+   
