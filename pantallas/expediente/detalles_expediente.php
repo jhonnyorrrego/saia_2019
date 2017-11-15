@@ -240,6 +240,9 @@ $expediente=busca_filtro_tabla("a.*,".fecha_db_obtener("a.fecha","Y-m-d")." AS f
 	}else if($expediente[0]["estado_cierre"]==2){
 		$estado_cierre="Cerrado";
 		$enlace_cerrar='';
+	}else{
+		$estado_cierre="Abierto";
+		$enlace_abrir='';		
 	}
 	
 	$cadena_cierre[]="<b>Estado:</b> ".$estado_cierre;
