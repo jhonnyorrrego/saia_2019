@@ -208,7 +208,7 @@ filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
 	</tr>
 	<tr>
 		<td style="text-align:center"><b>No. de Tomo</b></td>
-		<td style="text-align:center" colspan="2"><?php echo mayusculas($datos[0]["no_tomo"]); ?></td>
+		<td style="text-align:center" colspan="2"><?php echo mayusculas($datos[0]["tomo_no"]); ?></td>
 	</tr>
 	<tr>
 		<td style="text-align:center"><b>CODIGO No.</b></td>
