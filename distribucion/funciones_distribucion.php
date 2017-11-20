@@ -485,7 +485,7 @@ function generar_select_mensajeros_distribucion($atributos_input,$tipo,$idft_rut
 			$array_mensajeros_externos[$me]['nombre']=$mensajeros_externos[$me]['nombre'];
 		}
 
-		$empresas_transportadoras=busca_filtro_tabla("idcf_empresa_trans as id,nombre","cf_empresa_trans","","",$conn);
+		$empresas_transportadoras=busca_filtro_tabla("idcf_empresa_trans as id,nombre","cf_empresa_trans","estado=1","",$conn);
 		for($me=0;$me<$empresas_transportadoras['numcampos'];$me++){
 			$array_mensajeros_externos[$me+$mensajeros_externos['numcampos']]['id']=$empresas_transportadoras[$me]['id'].'-e';
 			$array_mensajeros_externos[$me+$mensajeros_externos['numcampos']]['nombre']=$empresas_transportadoras[$me]['nombre'];
