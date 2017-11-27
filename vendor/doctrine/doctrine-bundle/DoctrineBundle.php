@@ -14,6 +14,7 @@
 
 namespace Doctrine\Bundle\DoctrineBundle;
 
+use Doctrine\Bundle\DoctrineBundle\DependencyInjection\Compiler\ServiceRepositoryCompilerPass;
 use Doctrine\Common\Util\ClassUtils;
 use Doctrine\Bundle\DoctrineBundle\Command\CreateDatabaseDoctrineCommand;
 use Doctrine\Bundle\DoctrineBundle\Command\DropDatabaseDoctrineCommand;
@@ -54,6 +55,7 @@ class DoctrineBundle extends Bundle
 
         $container->addCompilerPass(new DoctrineValidationPass('orm'));
         $container->addCompilerPass(new EntityListenerPass());
+        $container->addCompilerPass(new ServiceRepositoryCompilerPass());
     }
 
     /**
@@ -139,18 +141,5 @@ class DoctrineBundle extends Bundle
      */
     public function registerCommands(Application $application)
     {
-        // Use the default logic when the ORM is available.
-        // This avoids listing all ORM commands by hand.
-        if (class_exists('Doctrine\\ORM\\Version')) {
-            parent::registerCommands($application);
-
-            return;
-        }
-
-        // Register only the DBAL commands if the ORM is not available.
-        $application->add(new CreateDatabaseDoctrineCommand());
-        $application->add(new DropDatabaseDoctrineCommand());
-        $application->add(new RunSqlDoctrineCommand());
-        $application->add(new ImportDoctrineCommand());
     }
 }
