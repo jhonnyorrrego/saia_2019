@@ -11,11 +11,13 @@ while($max_salida>0){
 include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."librerias_saia.php");
 echo(estilo_bootstrap());
+
 if($_SESSION["tipo_dispositivo"]=="movil"){
     if(!@$_REQUEST["iddoc"]) $_REQUEST["iddoc"]=@$_REQUEST["key"];
     include_once($ruta_db_superior."pantallas/documento/menu_principal_documento.php");
     menu_principal_documento($_REQUEST["iddoc"]);
 }
+
 $adicionales_enlace="";
 $busquedas = busca_filtro_tabla("idbusqueda_componente,nombre", "busqueda_componente", "nombre in ('notas_documento','anexos','paginas_documento','buzon_salida','documentos_relacionados','documentos_relacionados_a','documentos_relacionados_dest','documentos_respuesta','tareas_documento','versiones_documento')", "", $conn);
 $modulos=busca_filtro_tabla("nombre,etiqueta","modulo","nombre LIKE 'ordenar_pag' OR nombre LIKE 'ver_notas' OR nombre LIKE 'adjuntos_documento' OR nombre LIKE 'documentos_relacionados' OR nombre LIKE 'arbol_documento' OR nombre LIKE 'tareas_documento' OR nombre LIKE 'ver_versiones'","",$conn);
