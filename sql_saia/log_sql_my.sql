@@ -1175,4 +1175,16 @@ INSERT INTO busqueda_condicion (idbusqueda_condicion, busqueda_idbusqueda, fk_bu
 (229, NULL, 291, 'F.documento_destino=A.iddocumento AND F.documento_origen={*obtener_iddocumento*} AND lower(A.estado) NOT IN(''eliminado'',''anulado'')', 'documentos vinculados por el funcionario'),
 (251, NULL, 328, 'F.documento_origen=A.iddocumento AND F.documento_destino={*obtener_iddocumento*} AND lower(A.estado) NOT IN(''eliminado'',''anulado'')', 'documentos vinculados por el funcionario (Destino)');
 -- ------------------------------------------------------------------------
+-- ------------------------------------------------------------------------
+-- ------------------------------------------------------------------------
+-- CORRECCION DESARROLLO REMITENTES, REPORTE
+
+CREATE OR REPLACE VIEW vejecutor  AS  select A.idejecutor AS idejecutor,A.identificacion AS identificacion,A.nombre AS nombre,A.fecha_ingreso AS fecha_ingreso,A.estado AS estado,B.iddatos_ejecutor AS iddatos_ejecutor,B.ejecutor_idejecutor AS ejecutor_idejecutor,B.direccion AS direccion,B.telefono AS telefono,B.cargo AS cargo,B.ciudad AS ciudad,B.titulo AS titulo,B.empresa AS empresa,B.fecha AS fecha,B.email AS email,B.codigo AS codigo,C.nombre AS ciudad_ejecutor,A.tipo_ejecutor from ((ejecutor A left join datos_ejecutor B on((A.idejecutor = B.ejecutor_idejecutor))) left join municipio C on((B.ciudad = C.idmunicipio))) ;
+
+UPDATE busqueda SET campos = 'a.nombre,a.identificacion,a.fecha_ingreso,a.tipo_ejecutor' WHERE idbusqueda = 101 AND nombre='ejecutor';
+
+UPDATE busqueda_componente SET info = '<div class="row"><div class="span5">{*mostrar_nombre@nombre,idejecutor,tipo_ejecutor*}<br/><b>Identificaci&oacute;n:</b> {*identificacion*}<br/><b>Fecha de ingreso:</b> {*fecha_ingreso*}</div><div class="span3"><b>Contacto:</b> {*empresa*}<br/><b>Cargo:</b> {*cargo*}<br/><b>Email:</b> {*email*}</div><div class="span4"><b>Direcci&oacute;n:</b> {*direccion*}<br/><b>Tel&eacute;fono:</b> {*telefono*}<br/><b>Ciudad:</b> {*ciudad_ejecutor*}</div></div>{*barra_inferior_remitente@idejecutor*}' WHERE idbusqueda_componente = 276 AND nombre='remitentes';
+-- ------------------------------------------------------------------------
+-- ------------------------------------------------------------------------
+-- ------------------------------------------------------------------------
 

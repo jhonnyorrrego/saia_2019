@@ -9,7 +9,7 @@ include_once("../../librerias_saia.php");
 	echo(librerias_notificaciones());	
 $campos_auto=explode(",",$_REQUEST["campos_auto"]);
 $campos=explode(",",$_REQUEST["campos"]);
-$etiquetas=array("titulo"=>"T&iacute;tulo","cargo" => "Cargo","direccion"=>"Direcci&oacute;n","telefono"=>"Tel&eacute;fono","email"=>"Email","ciudad"=>"Ciudad","empresa"=>"Nombres y apellidos","identificacion"=>"Identificaci&oacute;n","nombre"=>"Nombres y apellidos","nombre_pj"=>"Entidad");
+$etiquetas=array("titulo"=>"T&iacute;tulo","cargo" => "Cargo","direccion"=>"Direcci&oacute;n","telefono"=>"Tel&eacute;fono","email"=>"Email","ciudad"=>"Ciudad","empresa"=>"Contacto","identificacion"=>"Identificaci&oacute;n","nombre"=>"Nombres y apellidos","nombre_pj"=>"Entidad");
 //Se adiciona el componente vacio porque no funciona la comparacion estricta 
 $orden_campos_pn=array("","titulo","direccion","cargo","telefono","email","ciudad");
 $orden_campos_pj=array("","direccion","cargo","ciudad","empresa","telefono","email");

@@ -14,9 +14,16 @@ include_once($ruta_db_superior.'librerias_saia.php');
 
 
 
-function mostrar_nombre($nombre, $idejecutor) {
+function mostrar_nombre($nombre, $idejecutor, $tipo_ejecutor) {
 	global $conn;
-	$texto = "<span class='link kenlace_saia' conector='iframe' enlace='pantallas/remitente/mostrar_datos_ejecutor.php?idejecutor=" . $idejecutor . "' titulo='" . $nombre . "'><b>Empresa:</b> " . $nombre . "</span>";
+	
+	$etiqueta='Nombres y apellidos';
+	if($tipo_ejecutor==2){
+		$etiqueta='Entidad';
+	}
+	
+	
+	$texto = "<span class='link kenlace_saia' conector='iframe' enlace='pantallas/remitente/mostrar_datos_ejecutor.php?idejecutor=" . $idejecutor . "' titulo='" . $nombre . "'><b>".$etiqueta.":</b> " . $nombre . "</span>";
 	return ($texto);
 }
 function barra_inferior_remitente($idejecutor){
