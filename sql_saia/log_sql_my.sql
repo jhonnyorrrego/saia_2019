@@ -1187,4 +1187,12 @@ UPDATE busqueda_componente SET info = '<div class="row"><div class="span5">{*mos
 -- ------------------------------------------------------------------------
 -- ------------------------------------------------------------------------
 -- ------------------------------------------------------------------------
+-- NUEVO BUZON DE PROCESO (ENVIADOS), TRAIDO DE AGUAS Y AGUAS ACTUALIZACION 2017 <ricardo.posada>
+update busqueda set campos='c.estado, MAX(c.fecha) AS fecha, c.descripcion, c.plantilla, c.numero, c.serie, c.tipo_ejecutor, c.tipo_radicado, c.fecha_limite, c.ejecutor',llave='c.iddocumento',tablas='documento c JOIN buzon_salida a ON c.iddocumento=a.archivo_idarchivo',ruta_visualizacion='pantallas/busquedas/consulta_busqueda_documento.php' where idbusqueda=5;
 
+update busqueda_componente set 	url='pantallas/busquedas/consulta_busqueda_documento.php',info='<div>{*origen_documento2@iddocumento,numero,ejecutor,tipo_radicado,estado,serie,tipo_ejecutor,ejecutor,plantilla*} {*fecha_creacion_documento@fecha,plantilla,iddocumento*}<br><br><div>{*descripcion*}</div><br><br>{*barra_inferior_documento@iddocumento,numero*}</div>', ordenado_por='fecha', agrupado_por='c.estado, c.descripcion, c.plantilla, c.numero, c.serie, c.tipo_ejecutor, c.tipo_radicado, c.fecha_limite,c.iddocumento, c.ejecutor' where idbusqueda_componente=14;
+
+update busqueda_condicion set codigo_where='(c.iddocumento NOT IN(SELECT documento_iddocumento FROM asignacion WHERE llave_entidad={*usuario_actual_buzon*}) AND a.origen ={*usuario_actual_buzon*} AND lower(a.nombre) NOT LIKE ''elimina%'' AND lower(a.nombre) NOT IN(''leido'') AND lower(c.estado) NOT IN(''eliminado'',''gestion'',''central'',''historico''))' where idbusqueda_condicion=19;
+-- ------------------------------------------------------------------------
+-- ------------------------------------------------------------------------
+-- ------------------------------------------------------------------------
