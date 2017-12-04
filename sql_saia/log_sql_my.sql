@@ -832,11 +832,6 @@ UPDATE formato SET cuerpo='<table style="width: 100%; border-collapse: collapse;
 </td>
 </tr>
 <tr>
-<td colspan="3" width="100%">
-<p><br />{*mostrar_listado_distribucion_documento*}</p>
-</td>
-</tr>
-<tr>
 <td>&nbsp;</td>
 <td>&nbsp;</td>
 <td>&nbsp;</td>
