@@ -669,7 +669,7 @@ function fecha_creacion_documento_expediente($fecha0,$plantilla=Null,$doc=Null){
 function validar_relacion_documento_expediente($doc){
     global $conn;
     $funcionario_codigo=usuario_actual('funcionario_codigo');
-    $estados_validar=array("'borrador'","'transferido'","'revisado'","'aprobado'");
+    $estados_validar=array("'borrador'","'transferido'","'revisado'","'aprobado'","'tramite'","'resopndido'");  ///Validar si con solo tener el estado leido deberia poder verse el docuemnto 
 
     $consulta=busca_filtro_tabla("archivo_idarchivo","buzon_salida","archivo_idarchivo=".$doc." AND tipo_destino=1 AND lower(nombre) IN(".implode(',',$estados_validar).") AND destino=".$funcionario_codigo,"",$conn);
     return($consulta);
