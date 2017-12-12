@@ -790,4 +790,18 @@ function prestamo_documento(){
 	
 	echo $cadena;
 }
+function hallar_expedientes_hijos($idexpediente=0){
+	global $conn;
+	
+	if($idexpediente){
+		$matriz_expedientes=array($idexpediente);
+		$hijos=busca_filtro_tabla("idexpediente","expediente","cod_padre=".$idexpediente,"",$conn);	
+		if($hijos['numcampos']){
+			for($i=0;$i<$hijos['numcampos'];$i++){
+				$matriz_expedientes=array_merge($matriz_expedientes, hallar_expedientes_hijos($hijos[$i]['idexpediente']) );				
+			}
+		}
+		return($matriz_expedientes);
+	} //fin if idexpediente
+}
 ?>
