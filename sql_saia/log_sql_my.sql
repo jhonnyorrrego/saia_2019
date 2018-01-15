@@ -832,11 +832,6 @@ UPDATE formato SET cuerpo='<table style="width: 100%; border-collapse: collapse;
 </td>
 </tr>
 <tr>
-<td colspan="3" width="100%">
-<p><br />{*mostrar_listado_distribucion_documento*}</p>
-</td>
-</tr>
-<tr>
 <td>&nbsp;</td>
 <td>&nbsp;</td>
 <td>&nbsp;</td>
@@ -1276,5 +1271,55 @@ UPDATE busqueda SET ruta_libreria = 'pantallas/expediente/funciones_reporte_grid
 INSERT INTO modulo (idmodulo, pertenece_nucleo, nombre, tipo, imagen, etiqueta, enlace, enlace_mobil, destino, cod_padre, orden, ayuda, parametros, busqueda_idbusqueda, permiso_admin, busqueda, enlace_pantalla) VALUES
 (1669, 0, 'permiso_armin_archivo', 'secundario', 'botones/principal/defaut.png', 'Administraci&oacute;n de Archivo', '#', NULL, '_self', 45, 2, '', '', 0, 0, '', 0);
 
--- -----------------------------------------------------------------------
 
+-- ------------------------------------------------------------------------
+-- DESARROLLO OPCIONES PRINCIPALES DE SAIA BAJO PERMISO <andres.agudelo>
+
+INSERT INTO modulo (idmodulo, pertenece_nucleo, nombre, tipo, imagen, etiqueta, enlace, enlace_mobil, destino, cod_padre, orden, ayuda, parametros, busqueda_idbusqueda, permiso_admin, busqueda, enlace_pantalla) VALUES
+(1668, 1, 'centro_notificaciones', '1', 'botones/principal/defaut.png', '7. CENTRO DE NOTIFICACIONES', 'auxiliar2.php?modulo=1668', NULL, 'menu', 0, 1, '', '', 0, 0, '1', 0),
+(1669, 1, 'mis_tareas', 'secundario', 'botones/principal/defaut.png', 'Mis Tareas', '#', NULL, '#', 1668, 1, '', '', 0, 0, '1', 0),
+(1670, 1, 'mis_tareas_avanzadas', 'secundario', 'botones/principal/defaut.png', 'Mis Tareas (Av)', '#', NULL, '#', 1668, 2, '', '', 0, 0, '1', 0);
+
+-- ------------------------------------------------------------------------
+-- DESARROLLO PERMISOS ADMIN EN MODULOS <andres.agudelo>
+INSERT INTO busqueda_condicion (busqueda_idbusqueda, fk_busqueda_componente, codigo_where, etiqueta_condicion) VALUES
+(NULL, 30, '{*filtro_modulo_admin*}', 'condicion_modulo');
+-- ------------------------------------------------------------------------
+-- DESARROLLO - CORRECCION DOCUMENTO VINCULADOS COMO RESPUESTA <andres.agudelo>
+
+DELETE FROM busqueda_componente WHERE idbusqueda_componente IN(165,167,291);
+DELETE FROM busqueda_condicion WHERE idbusqueda_condicion IN(131,133,229);
+
+INSERT INTO busqueda_componente (idbusqueda_componente, busqueda_idbusqueda, tipo, conector, url, etiqueta, nombre, orden, info, exportar, exportar_encabezado, encabezado_componente, estado, ancho, cargar, campos_adicionales, tablas_adicionales, ordenado_por, direccion, agrupado_por, busqueda_avanzada, acciones_seleccionados, modulo_idmodulo, menu_busqueda_superior, enlace_adicionar, encabezado_grillas) VALUES
+(165, 49, 3, 2, 'busquedas/consulta_busqueda.php', 'Vinculados como respuesta', 'documentos_respuesta', 1, '<div class="row-fluid"><div class="pull-left tootltip_saia_abajo">{*numero*}-{*obtener_descripcion_informacion@descripcion*}</div><div class=''pull-right''><a href="#" enlace=''ordenar.php?key={*iddocumento*}&mostrar_formato=1'' conector=''iframe''  titulo="Documento No.{*numero*}" class=''kenlace_saia pull-left'' ><i class=''icon-download tooltip_saia_izquierda'' title=''Ver documento''></i></a></div></div>', NULL, NULL, NULL, 1, 320, 1, 'G.fecha, G.origen,A.numero,A.ejecutor,A.descripcion,A.iddocumento,A.plantilla', 'respuesta G, documento A', 'G.fecha', 'DESC', NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(167, 49, 3, 2, 'busquedas/consulta_busqueda.php', 'asociado a', 'documentos_relacionados', 1, '<div class="row-fluid"><div class="pull-left tootltip_saia_abajo">{*numero*}-{*obtener_descripcion_informacion@descripcion*}</div><div class=''pull-right''><a href="#" enlace=''ordenar.php?key={*iddocumento*}&mostrar_formato=1'' conector=''iframe''  titulo="Documento No.{*numero*}" class=''kenlace_saia pull-left'' ><i class=''icon-download tooltip_saia_izquierda'' title=''Ver documento''></i></a></div></div>', NULL, NULL, NULL, 1, 320, 1, 'G.fecha, G.origen,A.numero,A.ejecutor,A.descripcion,A.iddocumento,A.plantilla', 'respuesta G, documento A', 'G.fecha', 'DESC', NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(291, 49, 3, 2, 'busquedas/consulta_busqueda.php', 'Vinculado  por el funcionario', 'documentos_relacionados_a', 1, '<div class="row-fluid"><div class="pull-left tooltip_saia_abajo">{*numero*}-{*obtener_descripcion_informacion@descripcion*}</div><div class=''pull-right''><a href="#" enlace=''ordenar.php?key={*iddocumento*}&mostrar_formato=1'' conector=''iframe''  titulo="Documento No.{*numero*}" class=''kenlace_saia pull-left'' ><i class=''icon-download tooltip_saia_izquierda'' title=''Ver documento''></i></a></div></div>\n</div>', NULL, NULL, NULL, 1, 320, 1, 'F.fecha,F.documento_origen,F.documento_destino,F.funcionario_idfuncionario,F.observaciones,A.ejecutor,A.numero,A.iddocumento,A.descripcion', 'documento_vinculados F, documento A', 'F.fecha', 'DESC', NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(328, 49, 3, 2, 'busquedas/consulta_busqueda.php', 'Vinculado  por el funcionario', 'documentos_relacionados_dest', 1, '<div class="row-fluid"><div class="pull-left tooltip_saia_abajo">{*numero*}-{*obtener_descripcion_informacion@descripcion*}</div><div class=''pull-right''><a href="#" enlace=''ordenar.php?key={*iddocumento*}&mostrar_formato=1'' conector=''iframe''  titulo="Documento No.{*numero*}" class=''kenlace_saia pull-left'' ><i class=''icon-download tooltip_saia_izquierda'' title=''Ver documento''></i></a></div></div>\n</div>', NULL, NULL, NULL, 1, 320, 1, 'F.fecha,F.documento_origen,F.documento_destino,F.funcionario_idfuncionario,F.observaciones,A.ejecutor,A.numero,A.iddocumento,A.descripcion', 'documento_vinculados F, documento A', 'F.fecha', 'DESC', NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+
+INSERT INTO busqueda_condicion (idbusqueda_condicion, busqueda_idbusqueda, fk_busqueda_componente, codigo_where, etiqueta_condicion) VALUES
+(131, NULL, 167, 'G.origen=A.iddocumento AND G.destino={*obtener_iddocumento*} AND lower(A.estado) NOT IN(''eliminado'',''anulado'')', 'documento asociados'),
+(133, NULL, 165, 'G.destino=A.iddocumento AND G.origen={*obtener_iddocumento*} AND lower(A.estado) NOT IN(''eliminado'',''anulado'')', 'documentos como respuesta'),
+(229, NULL, 291, 'F.documento_destino=A.iddocumento AND F.documento_origen={*obtener_iddocumento*} AND lower(A.estado) NOT IN(''eliminado'',''anulado'')', 'documentos vinculados por el funcionario'),
+(251, NULL, 328, 'F.documento_origen=A.iddocumento AND F.documento_destino={*obtener_iddocumento*} AND lower(A.estado) NOT IN(''eliminado'',''anulado'')', 'documentos vinculados por el funcionario (Destino)');
+-- ------------------------------------------------------------------------
+-- ------------------------------------------------------------------------
+-- ------------------------------------------------------------------------
+-- CORRECCION DESARROLLO REMITENTES, REPORTE
+
+CREATE OR REPLACE VIEW vejecutor  AS  select A.idejecutor AS idejecutor,A.identificacion AS identificacion,A.nombre AS nombre,A.fecha_ingreso AS fecha_ingreso,A.estado AS estado,B.iddatos_ejecutor AS iddatos_ejecutor,B.ejecutor_idejecutor AS ejecutor_idejecutor,B.direccion AS direccion,B.telefono AS telefono,B.cargo AS cargo,B.ciudad AS ciudad,B.titulo AS titulo,B.empresa AS empresa,B.fecha AS fecha,B.email AS email,B.codigo AS codigo,C.nombre AS ciudad_ejecutor,A.tipo_ejecutor from ((ejecutor A left join datos_ejecutor B on((A.idejecutor = B.ejecutor_idejecutor))) left join municipio C on((B.ciudad = C.idmunicipio))) ;
+
+UPDATE busqueda SET campos = 'a.nombre,a.identificacion,a.fecha_ingreso,a.tipo_ejecutor' WHERE idbusqueda = 101 AND nombre='ejecutor';
+
+UPDATE busqueda_componente SET info = '<div class="row"><div class="span5">{*mostrar_nombre@nombre,idejecutor,tipo_ejecutor*}<br/><b>Identificaci&oacute;n:</b> {*identificacion*}<br/><b>Fecha de ingreso:</b> {*fecha_ingreso*}</div><div class="span3"><b>Contacto:</b> {*empresa*}<br/><b>Cargo:</b> {*cargo*}<br/><b>Email:</b> {*email*}</div><div class="span4"><b>Direcci&oacute;n:</b> {*direccion*}<br/><b>Tel&eacute;fono:</b> {*telefono*}<br/><b>Ciudad:</b> {*ciudad_ejecutor*}</div></div>{*barra_inferior_remitente@idejecutor*}' WHERE idbusqueda_componente = 276 AND nombre='remitentes';
+-- ------------------------------------------------------------------------
+-- ------------------------------------------------------------------------
+-- ------------------------------------------------------------------------
+-- NUEVO BUZON DE PROCESO (ENVIADOS), TRAIDO DE AGUAS Y AGUAS ACTUALIZACION 2017 <ricardo.posada>
+update busqueda set campos='c.estado, MAX(c.fecha) AS fecha, c.descripcion, c.plantilla, c.numero, c.serie, c.tipo_ejecutor, c.tipo_radicado, c.fecha_limite, c.ejecutor',llave='c.iddocumento',tablas='documento c JOIN buzon_salida a ON c.iddocumento=a.archivo_idarchivo',ruta_visualizacion='pantallas/busquedas/consulta_busqueda_documento.php' where idbusqueda=5;
+
+update busqueda_componente set 	url='pantallas/busquedas/consulta_busqueda_documento.php',info='<div>{*origen_documento2@iddocumento,numero,ejecutor,tipo_radicado,estado,serie,tipo_ejecutor,ejecutor,plantilla*} {*fecha_creacion_documento@fecha,plantilla,iddocumento*}<br><br><div>{*descripcion*}</div><br><br>{*barra_inferior_documento@iddocumento,numero*}</div>', ordenado_por='fecha', agrupado_por='c.estado, c.descripcion, c.plantilla, c.numero, c.serie, c.tipo_ejecutor, c.tipo_radicado, c.fecha_limite,c.iddocumento, c.ejecutor' where idbusqueda_componente=14;
+
+update busqueda_condicion set codigo_where='(c.iddocumento NOT IN(SELECT documento_iddocumento FROM asignacion WHERE llave_entidad={*usuario_actual_buzon*}) AND a.origen ={*usuario_actual_buzon*} AND lower(a.nombre) NOT LIKE ''elimina%'' AND lower(a.nombre) NOT IN(''leido'') AND lower(c.estado) NOT IN(''eliminado'',''gestion'',''central'',''historico''))' where idbusqueda_condicion=19;
+-- ------------------------------------------------------------------------
+-- ------------------------------------------------------------------------
+-- ------------------------------------------------------------------------

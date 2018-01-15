@@ -711,7 +711,7 @@ function generar_tarea_recurrencia($idtareas_listado){
 			}			
 		}		
 		$sql="INSERT INTO tareas_listado ".$sql_keys.$sql_values;
-		
+
 		phpmkr_query($sql);
 		
 		$proxima_ejecucion=calcula_ejecuta_proxima($idtareas_listado);

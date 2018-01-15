@@ -10,15 +10,16 @@ while($max_salida>0){
 }
 include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."librerias_saia.php");
-//include_once($ruta_db_superior."pantallas/documento/librerias_flujo.php");
 echo(estilo_bootstrap());
+
 if($_SESSION["tipo_dispositivo"]=="movil"){
     if(!@$_REQUEST["iddoc"]) $_REQUEST["iddoc"]=@$_REQUEST["key"];
     include_once($ruta_db_superior."pantallas/documento/menu_principal_documento.php");
     menu_principal_documento($_REQUEST["iddoc"]);
 }
+
 $adicionales_enlace="";
-$busquedas=busca_filtro_tabla("", "busqueda_componente", "nombre LIKE 'notas_documento' OR nombre LIKE 'anexos' OR nombre LIKE 'paginas_documento' OR nombre LIKE 'buzon_salida' OR nombre LIKE 'documentos_relacionados' OR nombre LIKE 'documentos_relacionados_a' OR nombre LIKE 'documentos_respuesta' OR nombre LIKE 'tareas_documento' OR nombre LIKE 'versiones_documento'", "", $conn);
+$busquedas = busca_filtro_tabla("idbusqueda_componente,nombre", "busqueda_componente", "nombre in ('notas_documento','anexos','paginas_documento','buzon_salida','documentos_relacionados','documentos_relacionados_a','documentos_relacionados_dest','documentos_respuesta','tareas_documento','versiones_documento')", "", $conn);
 $modulos=busca_filtro_tabla("nombre,etiqueta","modulo","nombre LIKE 'ordenar_pag' OR nombre LIKE 'ver_notas' OR nombre LIKE 'adjuntos_documento' OR nombre LIKE 'documentos_relacionados' OR nombre LIKE 'arbol_documento' OR nombre LIKE 'tareas_documento' OR nombre LIKE 'ver_versiones'","",$conn);
 $iconos = array();
 for($i=0; $i< $modulos['numcampos']; $i++){
@@ -37,6 +38,9 @@ for($i=0;$i<$busquedas["numcampos"];$i++){
         break;
         case 'buzon_salida':
             $buzon_salida=$busquedas[$i]["idbusqueda_componente"];
+			break;
+		case 'documentos_respuesta' :
+			$documentos_respuesta = $busquedas[$i]["idbusqueda_componente"];
         break;
         case 'documentos_relacionados':
             $documentos_relacionados=$busquedas[$i]["idbusqueda_componente"];
@@ -44,8 +48,8 @@ for($i=0;$i<$busquedas["numcampos"];$i++){
         case 'documentos_relacionados_a':
             $documentos_relacionados_a=$busquedas[$i]["idbusqueda_componente"];
         break;
-		case 'documentos_respuesta':
-            $documentos_respuesta=$busquedas[$i]["idbusqueda_componente"];
+	case 'documentos_relacionados_dest' :
+		$documentos_relacionados_dest = $busquedas[$i]["idbusqueda_componente"];
         break;
         case 'tareas_documento':
             $tareas_documento=$busquedas[$i]["idbusqueda_componente"];
@@ -59,7 +63,6 @@ $iddocumento=0;
 if($_REQUEST["iddoc"]){
 $iddocumento=$_REQUEST["iddoc"];
   $formato=busca_filtro_tabla("A.numero,A.descripcion AS etiqueta,B.nombre_tabla,B.idformato,B.nombre, A.iddocumento","documento A,formato B","lower(A.plantilla)=B.nombre AND A.iddocumento=".$iddocumento,"",$conn);
-  //print_r($formato);
   if($formato["numcampos"]){
     $numero=$formato[0]["numero"];
     $texto.='<b>'.strtoupper($formato[0]["nombre"]).':</b><br>';
@@ -68,8 +71,7 @@ $iddocumento=$_REQUEST["iddoc"];
     $descripcion=busca_filtro_tabla("","campos_formato","formato_idformato=".$formato[0]["idformato"]." AND acciones LIKE '%d%'","",$conn);
     if($descripcion["numcampos"]){
       $campo_descripcion=$descripcion[0]["nombre"];
-    }
-    else{
+    }else{
       $campo_descripcion="id".$formato[0]["nombre_tabla"];
     }
   $papas=busca_filtro_tabla("id".$formato[0]["nombre_tabla"]." AS llave, ".$campo_descripcion." AS etiqueta ,'".$formato[0]["nombre_tabla"]."' AS nombre_tabla",$formato[0]["nombre_tabla"],"documento_iddocumento=".$iddocumento,"id".$formato[0]["nombre_tabla"]." ASC",$conn);
@@ -78,38 +80,30 @@ $iddocumento=$_REQUEST["iddoc"];
       $iddoc=$formato[0]["idformato"]."-".$papas[0]["llave"]."-id".$formato[0]["nombre_tabla"];
       $iddoc2=$iddoc;
       $llave_formato=$formato[0]["idformato"]."-id".$formato[0]["nombre_tabla"]."-".$papas[0]["llave"]."-".$iddocumento;
-    }
-    else {
+    }else {
       $iddoc=0;
       $llave_formato=0;
     }
-  $_SESSION["iddoc"]=$formato[0]["iddocumento"];
-  }
-  else {
+  }else {
     $iddoc=0;
     $texto="Existen Problemas al buscar el documento";
   }
 leido(usuario_actual("funcionario_codigo"),$iddocumento);
-}
-else {
+}else {
   alerta("No se ha podido encontrar el Documento");
   volver(1);
 }
-$_SESSION["iddoc"]=$iddocumento;
-if(@$_REQUEST["seleccionar"])
-  {$datos_seleccionar=explode("-",$_REQUEST["seleccionar"]);
+if(@$_REQUEST["seleccionar"]){
+   $datos_seleccionar=explode("-",$_REQUEST["seleccionar"]);
    $id=busca_filtro_tabla("id".$datos_seleccionar[2],$datos_seleccionar[2],"documento_iddocumento=".$datos_seleccionar[3],"",$conn);
    $nodoinicial=$datos_seleccionar[0]."-".$datos_seleccionar[1]."-".$id[0]["id".$datos_seleccionar[2]]."-".$datos_seleccionar[3];
-  }
-elseif(@$_REQUEST["llave"]){
+  }elseif(@$_REQUEST["llave"]){
   $nodoinicial=$_REQUEST["llave"];
-}
-else $nodoinicial=$llave_formato;
+}else $nodoinicial=$llave_formato;
 
 if(@$_REQUEST["alto_pantalla"]){
   $alto_inicial=($_REQUEST["alto_pantalla"]-47)."px";
-}
-else{
+}else{
   $alto_inicial='90%';
 }
 ?>
@@ -135,8 +129,7 @@ else{
     	</a>
     </li>
     <li>
-    	<a href="#respuesta" id="documentos_relacionados" data-toggle="tab" componente="<?php echo($documentos_relacionados);?>" componente2="<?php echo($documentos_respuesta);?>" componente3="<?php echo($documentos_relacionados_a);?>" class="tooltip_saia_izquierda" title="<?php echo($iconos['documentos_relacionados']);?>">
-
+    	<a href="#respuesta" id="documentos_relacionados" data-toggle="tab" componente="<?php echo($documentos_respuesta);?>" componente2="<?php echo($documentos_relacionados);?>" componente3="<?php echo($documentos_relacionados_a);?>" componente4="<?php echo($documentos_relacionados_dest);?>" class="tooltip_saia_izquierda" title="<?php echo($iconos['documentos_relacionados']);?>">
             <i class="icon-documentos_relacionados"><span class="badge badge-info" id="cantidad_documentos_relacionados"></span></i>
     	</a>
     </li>
@@ -183,12 +176,12 @@ else{
         <b><?php echo($iconos['documentos_relacionados']);?></b>
       </div>
     	<b>a. Vinculados como respuesta</b>
-    	<ul class="lista_datos" id="panel_respuesta"></ul>
+    	<ul class="lista_datos" id="panel_respuesta1"></ul>
     	<br />
     	<b>b. Asociado a</b>
     	<ul class="lista_datos" id="panel_asociado_a"></ul>
     	<br>
-    	<b>c. Vinculados por funcionario</b>
+    	<b>c. Vinculados por funcionarios</b>
     	<ul class="lista_datos" id="panel_relacionados_funcionario"></ul>
     	<div id="pie_relacionados"></div>
     </div>
@@ -237,21 +230,19 @@ else{
   </div>
 </div>
 <?php
-echo(librerias_arboles());
 echo(librerias_jquery('1.7'));
+echo(librerias_arboles());
 echo(librerias_UI());//Se mueve de posicion, se encontraba de ultima en esta lista.
 echo(librerias_tooltips());
 echo(librerias_bootstrap());
 echo(librerias_notificaciones());
 echo(librerias_acciones_kaiten());
 ?>
-<script>
+<script type="text/javascript">
 window.addEventListener("message", receiveMessage, false);
-
 function receiveMessage(event) {
   //var origin = event.origin || event.originalEvent.origin; // For Chrome, the origin property is in the event.originalEvent object.
   datos = event.data;
-  //alert(datos.iddocumento);
   if(datos.iddocumento) {
 	  refrescar_cantidades_documento(datos.iddocumento);
   }
@@ -277,15 +268,11 @@ function refrescar_cantidades_documento(iddocumento) {
 	});
 }
 
-
 $(document).ready(function(){
   $("#adicionar_anexos").live('click',function(){
     window.open("<?php echo($ruta_db_superior); ?>anexosdigitales/anexos_documento.php?key="+documento_saia,"detalles");
   });
-});
-</script>
-<script type="text/javascript">
-$(document).ready(function(){
+  
 documento_saia=0;
 var item="<?php echo($nodoinicial);?>";
 open_tabs=1;
@@ -319,11 +306,15 @@ function click_funcion(div){
         var componente = $(this).attr('componente');
         var componente2 = '';
         var componente3 = '';
+        var componente4 = '';
         if($(this).attr('componente2')){
         	var componente2 = $(this).attr('componente2');
         }
         if($(this).attr('componente3')){
         	var componente3 = $(this).attr('componente3');
+        }
+        if($(this).attr('componente4')){
+        	var componente4 = $(this).attr('componente4');
         }
         var div = "#panel_"+$(this).attr('href').replace("#","");
         var etiqueta = $(this).attr('href').replace("#","");
@@ -342,7 +333,6 @@ function click_funcion(div){
         							$('#encabezado_paginas').hide();
         						break;
         						case 'anexos':
-        						alert("12");
         							$(div).append("<li class='alert'>No hay "+etiqueta+"</li>");
         						break;
         						case 'respuesta':
@@ -385,72 +375,89 @@ function click_funcion(div){
 	                	$("#panel_notas_tranferencia").append("<li>"+item.info+"</li>");
 	                });
                }
-            	//iniciar_tooltip();
             }
           });
         }
-        if(componente === '<?php echo($documentos_relacionados);?>'){
-          $("#panel_relacionados_funcionario").html('');
-          $.ajax({
-            type: "POST",
-            url: "<?php echo $ruta_db_superior ;?>"+"pantallas/busquedas/servidor_busqueda.php",
-            data:{idbusqueda_componente:'<?php echo($documentos_relacionados);?>',iddocumento : documento_saia,actual_row:"0",limpio:"1",rows:"100"},
-            success:function(html){
-            	$("#panel_relacionados_funcionario").html('');
-            	var objeto2rf=jQuery.parseJSON(html)
-            	if(objeto2rf.records=='0'){
-            		$("#panel_relacionados_funcionario").append("<li class='alert' style='margin-bottom:3px;'>No hay documentos vinculados por funcionario</li>");
-            	}else{
-	                var objeto2rf=jQuery.parseJSON(html);
-	                $.each(objeto2rf.rows,function(i,itemrf){
-                        $("#panel_relacionados_funcionario").append("<li>"+itemrf.info+"</li>");
-	                });
-               }
-            	//iniciar_tooltip();
-            }
-          });
-        }
-        if(componente2 === '<?php echo($documentos_respuesta);?>'){
-          $("#panel_respuesta").html('');
+        
+        if(componente === '<?php echo($documentos_respuesta);?>'){
+          $("#panel_respuesta1").html('');
           $.ajax({
             type: "POST",
             url: "<?php echo $ruta_db_superior ;?>"+"pantallas/busquedas/servidor_busqueda.php",
             data:{idbusqueda_componente:'<?php echo($documentos_respuesta);?>',iddocumento : documento_saia, actual_row:"0",limpio:"1",rows:"100"},
+            async:false,
             success:function(html){
-            	$("#panel_respuesta").html('');
-            	var objetor=jQuery.parseJSON(html)
+            	var objetor=jQuery.parseJSON(html);
             	if(objetor.records=='0'){
-            		$("#panel_respuesta").append("<li class='alert' style='margin-bottom:3px;'>No hay documentos vinculados como respuesta</li>");
+            		$("#panel_respuesta1").append("<li class='alert' style='margin-bottom:3px;'>No hay documentos vinculados como respuesta</li>");
             	}else{
-	                var objetor=jQuery.parseJSON(html);
 	                $.each(objetor.rows,function(i,itemr){
-                  	$("#panel_respuesta").append("<li>"+itemr.info+"</li>");
+                  	$("#panel_respuesta1").append("<li>"+itemr.info+"</li>");
 	                });
                }
-            	//iniciar_tooltip();
             }
           });
         }
-        if(componente3 === '<?php echo($documentos_relacionados_a);?>'){
+        
+        if(componente2 === '<?php echo($documentos_relacionados);?>'){
           $("#panel_asociado_a").html('');
           $.ajax({
             type: "POST",
             url: "<?php echo $ruta_db_superior ;?>"+"pantallas/busquedas/servidor_busqueda.php",
-            data:{idbusqueda_componente:'<?php echo($documentos_relacionados_a);?>',iddocumento : documento_saia,actual_row:"0",limpio:"1",rows:"100"},
+            data:{idbusqueda_componente:'<?php echo($documentos_relacionados);?>',iddocumento : documento_saia,actual_row:"0",limpio:"1",rows:"100"},
+            async:false,
             success:function(html){
-            	$("#panel_asociado_a").html('');
-            	var objetoa=jQuery.parseJSON(html)
-            	if(objetoa.records=='0'){
-            		$("#panel_asociado_a").append("<li class='alert' style='margin-bottom:3px;'>No hay documentos vinculados al documento</li>");
+            	var objeto2rf=jQuery.parseJSON(html)
+            	if(objeto2rf.records=='0'){
+            		$("#panel_asociado_a").append("<li class='alert' style='margin-bottom:3px;'>No hay documentos asociados</li>");
             	}else{
-	                var objetoa=jQuery.parseJSON(html);
-	                $.each(objetoa.rows,function(i,itema){
-                        $("#panel_asociado_a").append("<li>"+itema.info+"</li>");
+	                $.each(objeto2rf.rows,function(i,itemrf){
+                        $("#panel_asociado_a").append("<li>"+itemrf.info+"</li>");
 	                });
                }
-            	//iniciar_tooltip();
             }
           });
+        }
+        var exis_reg=0;
+        if(componente3 === '<?php echo($documentos_relacionados_a);?>'){
+          $("#panel_relacionados_funcionario").html('');
+          $.ajax({
+            type: "POST",
+            url: "<?php echo $ruta_db_superior ;?>"+"pantallas/busquedas/servidor_busqueda.php",
+            data:{idbusqueda_componente:'<?php echo($documentos_relacionados_a);?>',iddocumento : documento_saia,actual_row:"0",limpio:"1",rows:"100"},
+            async:false,
+            success:function(html){
+            	var objetoa=jQuery.parseJSON(html);
+            	if(objetoa.records!='0'){
+            			exis_reg=1;
+	                $.each(objetoa.rows,function(i,itema){
+                  	$("#panel_relacionados_funcionario").append("<li>"+itema.info+"</li>");
+	                });
+               }
+            }
+          });
+        }
+       
+        if(componente4 === '<?php echo($documentos_relacionados_dest);?>'){
+          $.ajax({
+            type: "POST",
+            url: "<?php echo $ruta_db_superior ;?>"+"pantallas/busquedas/servidor_busqueda.php",
+            data:{idbusqueda_componente:'<?php echo($documentos_relacionados_dest);?>',iddocumento : documento_saia,actual_row:"0",limpio:"1",rows:"100"},
+            async:false,
+            success:function(html){
+            	var objetoa=jQuery.parseJSON(html)
+            	if(objetoa.records!='0'){
+            			exis_reg=1;
+	                var objetoa=jQuery.parseJSON(html);
+	                $.each(objetoa.rows,function(i,itema){
+                  	$("#panel_relacionados_funcionario").append("<li>"+itema.info+"</li>");
+	                });
+               }
+            }
+          });
+        }       
+        if(exis_reg==0){
+        	$("#panel_relacionados_funcionario").append("<li class='alert' style='margin-bottom:3px;'>No hay documentos vinculados por funcionarios</li>");
         }
         if(componente==='<?php echo($versiones_documento);?>'){
             tree5.deleteChildItems(0);

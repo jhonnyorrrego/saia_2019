@@ -153,10 +153,20 @@ echo(estilo_bootstrap());
               	<select name="bqsaia_perfil" id="bqsaia_perfil">
               		<option value="">Seleccione...</option>
               		<?php
-              		$perfiles=busca_filtro_tabla("","perfil","","",$conn);
-					for($i=0;$i<$perfiles["numcampos"];$i++){
-						echo '<option value="'.$perfiles[$i]["idperfil"].'">'.$perfiles[$i]["nombre"].'</option>';
+                        $configuracion = busca_filtro_tabla("A.valor", "configuracion A", "A.tipo='usuario' AND A.nombre='login_administrador'", "", $conn);
+                        $admin=0;
+                        $parte="lower(nombre)<>'administrador'";
+                        if($configuracion["numcampos"] && trim($configuracion[0]["valor"])==trim($_SESSION["LOGIN" . LLAVE_SAIA])){
+                           $admin=1; 
+                            $parte="";
 					}
+                        $cons_perfil=busca_filtro_tabla("A.idperfil, A.nombre ","perfil A",$parte,"A.nombre ASC",$conn);
+                        if($cons_perfil["numcampos"]){
+                            for ($i=0; $i <$cons_perfil["numcampos"] ; $i++) { 
+                                $x_perfil_idperfilList.='<option value="'.$cons_perfil[$i]["idperfil"].'">'.$cons_perfil[$i]["nombre"].'</option>';
+                            }   
+                        }
+                        echo $x_perfil_idperfilList;
               		?>
               	</select>
             </div>          

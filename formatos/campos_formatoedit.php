@@ -366,6 +366,7 @@ echo $x_formato_idformatoList;
       <span class="phpmaker">
         <input type="checkbox" name="x_banderas[]"  <?php if(in_array("u",$x_banderas)){echo("CHECKED");} ?> value="u">&Uacute;inco
         <input type="checkbox" name="x_banderas[]"  <?php if(in_array("i",$x_banderas)){echo("CHECKED"); } ?> value="i"> Indice
+        <input type="checkbox" name="x_banderas[]"  <?php if(in_array("pdfa",$x_banderas)){echo("CHECKED"); } ?> value="pdfa"> PDF/A
         <!--input type="checkbox" name="x_banderas[]"  <?php if(in_array("pk",$x_banderas)){echo("CHECKED"); } ?> value="pk"> Llave Primaria
         <input type="checkbox" name="x_banderas[]"  <?php if(in_array("ai",$x_banderas)){echo("CHECKED"); } ?> value="ai"> Auto incremental -->                
       </span>

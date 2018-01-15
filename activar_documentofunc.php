@@ -70,7 +70,7 @@ function desactiva($iddocumento)
      WHERE documento.iddocumento = '$iddocumento'
         AND  documento.estado = 'ACTIVO' AND  documento.activa_admin = '1' " ;   
      phpmkr_query($sql,$conn);
-     registrar_accion_digitalizacion($iddoc,'DESACTIVA DOCUMENTO');
+     registrar_accion_digitalizacion($iddocumento,'DESACTIVA DOCUMENTO');
      if($res[0]["tipo_radicado"]>1)
          redirecciona("borrar_pdf.php?iddoc=$iddocumento");
       else

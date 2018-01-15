@@ -1,8 +1,9 @@
 {
-    "require": {
-        "luracast/restler": "*",
-	"doctrine/doctrine-migrations-bundle": "*",
-        "firebase/php-jwt": "^5.0",
-        "phpoffice/phpword": "^0.13.0"
-    }
+	"require" : {
+		"luracast/restler" : "*",
+		"doctrine/doctrine-migrations-bundle" : "*",
+		"firebase/php-jwt" : "^5.0",
+		"phpoffice/phpword" : "^0.13.0",
+		"greenlion/php-sql-parser" : "^4.1"
+	}
 }

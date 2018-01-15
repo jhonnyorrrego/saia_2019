@@ -22,7 +22,8 @@ if($ult_datos["numcampos"]){
 	$titulo=$ult_datos[0]["titulo"];
 	$ciudad=$ult_datos[0]["ciudad"];
 	$correo=$ult_datos[0]["email"];
-	$nom_ciudad=$ult_datos[0]["ciudad_ejecutor"]."<br/>";;
+	$nom_ciudad=$ult_datos[0]["ciudad_ejecutor"]."<br/>";
+	$tipo_ejecutor=$ult_datos[0]["tipo_ejecutor"];
 }else{
 	$cargo="";
 	$empresa="";
@@ -65,18 +66,26 @@ if($ult_datos["numcampos"]){
 				<input type="text" name="email" id="email" value="<?php echo $correo;?>">			
 			</td>
 		</tr>
-		<tr>
-			<td class="prettyprint"><b>Titulo</b></td>
-			<td>
-			<select name="titulo" id="titulo">
-				<option value="Se&ntilde;or" <?php if($titulo=='Se&ntilde;or')echo("selected"); ?> >Se&ntilde;or</option>
-				<option value="Se&ntilde;ora" <?php if($titulo=='Se&ntilde;ora')echo("selected"); ?> >Se&ntilde;ora</option>
-				<option value="Doctor" <?php if($titulo=='Doctor')echo("selected"); ?> >Doctor</option>
-				<option value="Doctora" <?php if($titulo=='Doctora')echo("selected"); ?>>Doctora</option>
-				<option value="Ingeniero" <?php if($titulo=='Ingeniero')echo("selected"); ?>>Ingeniero</option>
-				<option value="Ingeniera" <?php if($titulo=='Ingeniera')echo("selected"); ?>>Ingeniera</option>
-			</select></td>
-		</tr>
+		<?php 
+			if(@$tipo_ejecutor==1){
+		?>
+				<tr>
+					<td class="prettyprint"><b>Titulo</b></td>
+					<td>
+					<select name="titulo" id="titulo">
+						<option value="Se&ntilde;or" <?php if($titulo=='Se&ntilde;or')echo("selected"); ?> >Se&ntilde;or</option>
+						<option value="Se&ntilde;ora" <?php if($titulo=='Se&ntilde;ora')echo("selected"); ?> >Se&ntilde;ora</option>
+						<option value="Doctor" <?php if($titulo=='Doctor')echo("selected"); ?> >Doctor</option>
+						<option value="Doctora" <?php if($titulo=='Doctora')echo("selected"); ?>>Doctora</option>
+						<option value="Ingeniero" <?php if($titulo=='Ingeniero')echo("selected"); ?>>Ingeniero</option>
+						<option value="Ingeniera" <?php if($titulo=='Ingeniera')echo("selected"); ?>>Ingeniera</option>
+					</select></td>
+				</tr>		
+		<?php		
+			}
+		?>
+			
+		
 		<tr>
 			<td class="prettyprint"><b>Ciudad</b></td>
 			<td>

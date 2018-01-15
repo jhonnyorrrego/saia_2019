@@ -79,4 +79,8 @@ function filtro_consulta_proceso($iddoc){
 	$destino=usuario_actual("funcionario_codigo");
 	return($destino);
 }
+function usuario_actual_buzon(){
+	$destino=usuario_actual("funcionario_codigo");
+	return $destino;
+}
 ?>

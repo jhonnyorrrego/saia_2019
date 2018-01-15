@@ -81,11 +81,11 @@ if($_REQUEST["mostrar_formato"]){
 if($doc<>FALSE){
   $ejecutor=busca_filtro_tabla("nombre AS nombre, empresa","ejecutor A,datos_ejecutor B","A.idejecutor=B.ejecutor_idejecutor AND iddatos_ejecutor=".$datos[0]["ejecutor"],"",$conn);
   $radicador1=busca_filtro_tabla("nombres,apellidos","digitalizacion,funcionario","funcionario=funcionario_codigo and documento_iddocumento=$doc","",$conn); 
-  $radicador = busca_filtro_tabla("destino,D.nombre,B.nombres, B.apellidos","buzon_salida A,funcionario B,dependencia_cargo C,dependencia D","A.destino=B.funcionario_codigo AND B.idfuncionario=C.funcionario_idfuncionario AND C.dependencia_iddependencia=D.iddependencia AND A.archivo_idarchivo=$doc AND A.nombre='TRANSFERIDO'","A.idtransferencia ASC",$conn);  
+  $radicador = busca_filtro_tabla("destino,b.dependencia,b.nombres,b.apellidos","buzon_salida a,vfuncionario_dc b","A.destino=B.funcionario_codigo AND A.archivo_idarchivo=$doc AND A.nombre='TRANSFERIDO'  AND   b.estado_dc=1 AND   b.estado=1 AND  b.estado_dep=1","A.idtransferencia ASC",$conn);
   $responsable=busca_filtro_tabla("B.nombres,B.apellidos","documento A,funcionario B","A.ejecutor=B.funcionario_codigo AND iddocumento=".$doc,"",$conn);
      
     if($radicador["numcampos"]){
-      $usu=$radicador[0]["nombre"];
+      $usu=$radicador[0]["dependencia"];
     }
     else{
         if(strtolower($datos[0]["plantilla"])=='radicacion_entrada'){
