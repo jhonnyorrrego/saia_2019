@@ -7344,7 +7344,10 @@ function webViewerInitialized() {
     function() {
       PDFViewerApplication.zoomIn();
     });
-
+  document.getElementById('transferir').addEventListener('click',
+	function() {
+	  parent.window.open(document.getElementById('transferir').getAttribute("enlace")+"&pag_pdf="+document.getElementById('pageNumber').value,"detalles");
+	});
   document.getElementById('zoomOut').addEventListener('click',
     function() {
       PDFViewerApplication.zoomOut();

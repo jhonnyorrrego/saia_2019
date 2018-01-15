@@ -241,10 +241,8 @@ class Imprime_Pdf {
 		include_once ($ruta_db_superior . "pantallas/lib/librerias_archivo.php");
 		if(!$_REQUEST['url']){
 		    $formato_ruta = aplicar_plantilla_ruta_documento($this->documento[0]["iddocumento"]);
-		}else{
-		    $formato_ruta=$ruta_db_superior."temporal_".usuario_actual("login")."/";
 		}
-		
+	
 		if($this->versionamiento) {
 			$ruta_versiones = ruta_almacenamiento("versiones");
 			$path_to_file = $ruta_versiones . $formato_ruta . "/version" . $this->version;
@@ -293,11 +291,30 @@ class Imprime_Pdf {
 		if($_REQUEST["url"]){
 			$nombre_pdf=basename($_REQUEST["url"]);
 			//$this->pdf->Output($nombre_pdf,$this->tipo_salida);
-		}		
-			
+		}
+		$datos= '<x:xmpmeta xmlns:x="adobe:ns:meta/" x:xmptk="Adobe XMP Core 5.2-c001 63.139439, 2010/09/27-13:37:26        ">
+		<rdf:RDF xmlns:rdf="[url]http://www.w3.org/1999/02/22-rdf-syntax-ns#[/url]">
+		<rdf:Description rdf:about=""
+		    xmlns:xmpRights="[url]http://ns.adobe.com/xap/1.0/rights/[/url]">
+		    <xmpRights:Marked>True</xmpRights:Marked>
+		    </rdf:Description>
+		    <rdf:Description rdf:about=""
+		        xmlns:dc="[url]http://purl.org/dc/elements/1.1/[/url]">
+		        <dc:rights>
+		        <rdf:Alt>
+		        <rdf:li xml:lang="x-default">Copyright (C) 2012 by alejo.</rdf:li>
+		        </rdf:Alt>
+		        </dc:rights>
+		        </rdf:Description>
+		        </rdf:RDF>
+		        </x:xmpmeta>';
+		$this->pdf->setExtraXMP($datos);
+		
 		$valor=$this->pdf->Output($nombre_pdf, $this->tipo_salida);
 	    if($this->documento[0]["estado"]<>'ACTIVO' && $this->tipo_salida=="I"){
 			//$valor=$this->pdf->Output($ruta,'F');
+			
+			//redirecciona("visores/pruebas/pdf-notas/docs/index.html?iddocumento=".$this->documento[0]["iddocumento"]);
 			redirecciona("visores/pdf/web/viewer2.php?iddocumento=".$this->documento[0]["iddocumento"]);
 			die();
 		}else{
@@ -306,6 +323,8 @@ class Imprime_Pdf {
 				//$ruta='temporal_'.usuario_actual('login').'/'.$this->documento[0]["iddocumento"];
 				//$valor=$this->pdf->Output($ruta,'F');
 				//redirecciona("visores/pdf/web/viewer2.php?print=".$this->formato[0]["permite_imprimir"]."&files=".base64_encode("../../../".$ruta));
+				//redirecciona("visores/pruebas/pdf-notas/docs/index.html?iddocumento=".$this->documento[0]["iddocumento"]);
+				
 				redirecciona("visores/pdf/web/viewer2.php?iddocumento=".$this->documento[0]["iddocumento"]);
 				//redirecciona("pantallas/documento/visor_documento.php?iddoc=".$this->documento[0]["iddocumento"]."&ruta_pdf=".$ruta);
 				//redirecciona("visores/pdf/web/viewer2.php?iddocumento=".$this->documento[0]["iddocumento"]);
