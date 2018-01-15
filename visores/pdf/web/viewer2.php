@@ -1,5 +1,27 @@
+<!DOCTYPE html>
+<!--
+Copyright 2012 Mozilla Foundation
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+Adobe CMap resources are covered by their own copyright but the same license:
+
+    Copyright 1990-2015 Adobe Systems Incorporated.
+
+See https://github.com/adobe-type-tools/cmap-resources
+-->
 <?php
-$max_salida=10; // Previene algun posible ciclo infinito limitando a 10 los ../
+$max_salida=6; // Previene algun posible ciclo infinito limitando a 10 los ../
 $ruta_db_superior=$ruta="";
 while($max_salida>0){
   if(is_file($ruta."db.php")){
@@ -9,18 +31,61 @@ while($max_salida>0){
   $max_salida--;
 }
 include_once($ruta_db_superior."db.php");
-
+include_once($ruta_db_superior."librerias_saia.php");
+echo(librerias_jquery());
+/*if(@$_REQUEST['iddoc']){
+	$iddoc=$_REQUEST['iddoc'];
+	$documentos=busca_filtro_tabla("","documento","iddocumento=".$iddoc,"",$conn);
+	if($documentos['numcampos']){
+		if(is_file($ruta_db_superior.$documentos[0]['pdf'])){
+			$ruta=$ruta_db_superior.$documentos[0]['pdf'];
+			redirecciona("viewer2.php?dato=".base64_encode("file=".$ruta));
+		}else{
+			alerta("No se ha encontrado el documento");
+			die();
+		}
+	}
+}*/
+if(@$_REQUEST['iddocumento']){
+  $dato=busca_filtro_tabla("","documento,formato","lower(plantilla)=lower(nombre) and iddocumento=".$_REQUEST["iddocumento"],"",$conn);
+  if($dato["numcampos"] && $dato[0]["pdf"]!=""){
+    $_REQUEST["file"]=$ruta_db_superior.$dato[0]["pdf"];
+    $url=$_REQUEST["file"];
+	$print=$dato[0]['permite_imprimir'];
+    //$_REQUEST['file']=base64_decode($_REQUEST['file']);
+  }
+}
+if(@$_REQUEST['files']){
+	$ruta=base64_decode($_REQUEST['files']);
+    $_REQUEST["file"]=$ruta_db_superior.$ruta;
+    $url=$_REQUEST["file"];
+	$print=$_REQUEST['print'];
+}
 ?>
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8"/>
-  <title>PDFJSAnnotate</title>
+<html dir="ltr" mozdisallowselectionprint moznomarginboxes>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="google" content="notranslate">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>PDF.js viewer</title>
+
+    <link rel="stylesheet" href="viewer.css"/>
+
+    <script src="compatibility.js"></script>
+
+
+
+<!-- This snippet is used in production (included from viewer.html) -->
+<link rel="resource" type="application/l10n" href="locale/locale.properties"/>
+<script src="l10n.js"></script>
+<script src="../build/pdf.js"></script>
+<!--script src="debugger.js"></script-->
+<script src="viewer.js"></script>
   <script src="<?php echo($ruta_db_superior);?>js/jquery-1.7.min.js" type="text/javascript"></script>
 <link rel="stylesheet" type="text/css" href="<?php echo($ruta_db_superior);?>visores/pruebas/pdf-notas/docs/shared/toolbar.css"/>
-<link rel="stylesheet" type="text/css" href="<?php echo($ruta_db_superior);?>css/bootstrap.css"/>
 <link rel="stylesheet" type="text/css" href="<?php echo($ruta_db_superior);?>visores/pruebas/pdf-notas/docs/shared/pdf_viewer.css"/>
-  <style type="text/css">
+<style type="text/css">
     body {
       background-color: #eee;
       font-family: sans-serif;
@@ -99,60 +164,15 @@ include_once($ruta_db_superior."db.php");
       border-image: none;
     }
   </style>
-</head>
-<body >
-  <div class="toolbar">
-  	<input type="hidden" id="documento_iddocumento" value="<?php echo($_REQUEST['iddoc']);?>" ruta="<?php echo($ruta_db_superior.$_REQUEST['ruta']);?>">
-    <button class="cursor" type="button" title="Cursor" data-tooltype="cursor">➚</button>
+  </head>
 
-    <div class="spacer"></div>
+  <body tabindex="1" class="loadingInProgress">
+    <div id="outerContainer">
 
-    <button class="rectangle btn btn-danger" type="button" title="Rectangle" data-tooltype="area">&nbsp;</button>
-    <!--div class="spacer"></div-->
-    <button id="opc_highlight" class="highlight" type="button" title="Highlight" data-tooltype="highlight">&nbsp;</button>
-    <div class="spacer"></div>
-    <!--button class="strikeout" type="button" title="Strikeout" data-tooltype="strikeout">&nbsp;</button-->
-	<button class="sello btn" id="opc_sello" type="button" title="Sello"  imagen="sello.jpg"  data-tooltype="sello">sello</button>
-    <!--div class="spacer"></div-->
-
-    <button id="opc_text" class="text" type="button" title="Text Tool" data-tooltype="text"></button>
-    <select id="opc_text-size" class="text-size"></select>
-    <div id="opc_text-color" class="text-color"></div>
-
-    <!--div class="spacer"></div-->
-
-    <!--button class="pen" type="button" title="Pen Tool" data-tooltype="draw">✎</button>
-    <select class="pen-size"></select>
-    <div class="pen-color"></div>
-
-    <div class="spacer"></div-->
-
-    <button id="opc_comment" class="comment" type="button" title="Comment" data-tooltype="point">🗨</button>
-
-    <div class="spacer"></div>
-
-    <select class="scale" id="opc_escala">
-      <option value=".5">50%</option>
-      <option value="1">100%</option>
-      <option value="1.33">133%</option>
-      <option value="1.5">150%</option>
-      <option value="2">200%</option>
-    </select>
-
-    <a href="javascript://" id="opc_derecha" class="rotate-ccw" title="Rotate Counter Clockwise">⟲</a>
-    <a href="javascript://" id="opc_izquierda" class="rotate-cw" title="Rotate Clockwise">⟳</a>
-
-    <!--div class="spacer"></div-->
-
-    <a href="javascript://" class="clear" title="Clear">×</a>
-  </div>
-  
-  
-<div id="outerContainer">
-      <div i d="sidebarContainer">
-        <div  id="toolbarSidebar">
-          <div  c lass="splitToolbarButton toggled">
-            <bu  tton id="viewThumbnail" class="toolbarButton group toggled" title="Show Thumbnails" tabindex="2" data-l10n-id="thumbs">
+      <div id="sidebarContainer">
+        <div id="toolbarSidebar">
+          <div class="splitToolbarButton toggled">
+            <button id="viewThumbnail" class="toolbarButton group toggled" title="Show Thumbnails" tabindex="2" data-l10n-id="thumbs">
                <span data-l10n-id="thumbs_label">Thumbnails</span>
             </button>
             <button id="viewOutline" class="toolbarButton group" title="Show Document Outline" tabindex="3" data-l10n-id="outline">
@@ -171,7 +191,8 @@ include_once($ruta_db_superior."db.php");
           <div id="attachmentsView" class="hidden">
           </div>
         </div>
-      </div>
+      </div>  <!-- sidebarContainer -->
+
       <div id="mainContainer">
         <div class="findbar hidden doorHanger hiddenSmallView" id="findbar">
           <label for="findInput" class="toolbarLabel" data-l10n-id="find_label">Find:</label>
@@ -192,7 +213,7 @@ include_once($ruta_db_superior."db.php");
           <span id="findResultsCount" class="toolbarLabel hidden"></span>
           <span id="findMsg" class="toolbarLabel"></span>
         </div>  <!-- findbar -->
-        
+
         <div id="secondaryToolbar" class="secondaryToolbar hidden doorHangerRight">
           <div id="secondaryToolbarButtonContainer">
             <button id="secondaryPresentationMode" class="secondaryToolbarButton presentationMode visibleLargeView" title="Switch to Presentation Mode" tabindex="51" data-l10n-id="presentation_mode">
@@ -246,6 +267,7 @@ include_once($ruta_db_superior."db.php");
             </button>
           </div>
         </div>  <!-- secondaryToolbar -->
+
         <div class="toolbar">
           <div id="toolbarContainer">
             <div id="toolbarViewer">
@@ -309,6 +331,49 @@ include_once($ruta_db_superior."db.php");
                     <button id="zoomIn" class="toolbarButton zoomIn" title="Zoom In" tabindex="22" data-l10n-id="zoom_in">
                       <span data-l10n-id="zoom_in_label">Zoom In</span>
                      </button>
+                      <input type="hidden" id="documento_iddocumento" value="<?php echo($_REQUEST['iddoc']);?>" ruta="<?php echo($ruta_db_superior.$_REQUEST['ruta']);?>">
+    <button class="cursor" type="button" title="Cursor" data-tooltype="cursor">➚</button>
+
+    <div class="spacer"></div>
+
+    <button class="rectangle btn btn-danger" type="button" title="Rectangle" data-tooltype="area">resaltar</button>
+    <!--div class="spacer"></div-->
+    <button id="opc_highlight" class="highlight" type="button" title="Highlight" data-tooltype="highlight">&nbsp;</button>
+    <div class="spacer"></div>
+    <!--button class="strikeout" type="button" title="Strikeout" data-tooltype="strikeout">&nbsp;</button-->
+	<button class="sello btn" id="opc_sello" type="button" title="Sello"  imagen="sello.jpg"  data-tooltype="sello">sello</button>
+    <!--div class="spacer"></div-->
+
+    <button id="opc_text" class="text" type="button" title="Text Tool" data-tooltype="text"></button>
+    <select id="opc_text-size" class="text-size"></select>
+    <div id="opc_text-color" class="text-color"></div>
+
+    <!--div class="spacer"></div-->
+
+    <!--button class="pen" type="button" title="Pen Tool" data-tooltype="draw">✎</button>
+    <select class="pen-size"></select>
+    <div class="pen-color"></div>
+
+    <div class="spacer"></div-->
+
+    <button id="opc_comment" class="comment" type="button" title="Comment" data-tooltype="point">🗨</button>
+
+    <div class="spacer"></div>
+
+    <select class="scale" id="opc_escala">
+      <option value=".5">50%</option>
+      <option value="1">100%</option>
+      <option value="1.33">133%</option>
+      <option value="1.5">150%</option>
+      <option value="2">200%</option>
+    </select>
+
+    <a href="javascript://" id="opc_derecha" class="rotate-ccw" title="Rotate Counter Clockwise">⟲</a>
+    <a href="javascript://" id="opc_izquierda" class="rotate-cw" title="Rotate Clockwise">⟳</a>
+
+    <!--div class="spacer"></div-->
+
+    <a href="javascript://" class="clear" title="Clear">×</a>
                   </div>
                   <span id="scaleSelectContainer" class="dropdownToolbarButton">
                      <select id="scaleSelect" title="Zoom" tabindex="23" data-l10n-id="zoom">
@@ -329,6 +394,10 @@ include_once($ruta_db_superior."db.php");
                   </span>
                 </div>
               </div>
+              
+             
+              
+              
             </div>
             <div id="loadingBar">
               <div class="progress">
@@ -338,6 +407,7 @@ include_once($ruta_db_superior."db.php");
             </div>
           </div>
         </div>
+
         <menu type="context" id="viewerContextMenu">
           <menuitem id="contextFirstPage" label="First Page"
                     data-l10n-id="first_page"></menuitem>
@@ -352,7 +422,18 @@ include_once($ruta_db_superior."db.php");
         <div id="viewerContainer" tabindex="0">
           <div id="viewer" class="pdfViewer"></div>
         </div>
-
+        
+		<div id="comment-wrapper">
+    <h4 id="comentario4">Comentarios</h4>
+    <div class="comment-list">
+      <div class="comment-list-container">
+        <div class="comment-list-item">No posee comentarios</div>
+      </div>
+      <form class="comment-list-form" style="display:none;">
+        <input type="text" placeholder="Adicionar comentario"/>
+      </form>
+    </div>
+  </div>
         <div id="errorWrapper" hidden='true'>
           <div id="errorMessageLeft">
             <span id="errorMessage"></span>
@@ -371,8 +452,9 @@ include_once($ruta_db_superior."db.php");
           <div class="clearBoth"></div>
           <textarea id="errorMoreInfo" hidden='true' readonly="readonly"></textarea>
         </div>
-       </div>
-       <div id="overlayContainer" class="hidden">
+      </div> <!-- mainContainer -->
+
+      <div id="overlayContainer" class="hidden">
         <div id="passwordOverlay" class="container hidden">
           <div class="dialog">
             <div class="row">
@@ -434,8 +516,9 @@ include_once($ruta_db_superior."db.php");
           </div>
         </div>
       </div>  <!-- overlayContainer -->
-</div>
-  <div id="printContainer"></div>
+
+    </div> <!-- outerContainer -->
+    <div id="printContainer"></div>
 <div id="mozPrintCallback-shim" hidden>
   <style>
 @media print {
@@ -515,26 +598,48 @@ include_once($ruta_db_superior."db.php");
     </div>
   </div>
 </div>
-      
+<script type="text/javascript">
+//
+  // If absolute URL from the remote server is provided, configure the CORS
+  // header on that server.
+  //
+  var url = '<?php echo($url); ?>';
   
-  <div id="content-wrapper">
-    <div id="viewer" class="pdfViewer"></div>
-  </div>
-  <div id="comment-wrapper">
-    <h4 id="comentario4">Comentarios</h4>
-    <div class="comment-list">
-      <div class="comment-list-container">
-        <div class="comment-list-item">No posee comentarios</div>
-      </div>
-      <form class="comment-list-form" style="display:none;">
-        <input type="text" placeholder="Adicionar comentario"/>
-      </form>
-    </div>
-  </div>
-<script src="<?php echo($ruta_db_superior);?>visores/pruebas/pdf-notas/docs/shared/pdf.js"></script>
+  DEFAULT_URL=url;
+  //
+  // Disable workers to avoid yet another cross-origin issue (workers need
+  // the URL of the script to be loaded, and dynamically loading a cross-origin
+  // script does not work).
+  //
+  // PDFJS.disableWorker = true;
+
+  //
+  // The workerSrc property shall be specified.
+  //
+  PDFJS.workerSrc = '../build/pdf.worker.js';
+
+  //
+  // Asynchronous download PDF
+  //
+  PDFJS.getDocument(url);
+  $("#document").ready(function(){
+  	$(this).bind("contextmenu", function(e) {
+    	e.preventDefault();
+    }); 
+  	var print='<?php echo($print)?>';
+  	if(print==0 || print==''){
+  		$("#print").hide();	
+  	}else{
+  		$("#print").show();	
+  	}
+    $("#download").hide();
+    $("#openFile").hide();
+    $("#viewBookmark").hide();
+  });
+</script>
   <script src="<?php echo($ruta_db_superior);?>visores/pruebas/pdf-notas/docs/shared/pdf_viewer.js"></script>
   <script src="<?php echo($ruta_db_superior);?>visores/pruebas/pdf-notas/docs/index.js"></script>
-</body>
+  </body>
 </html>
 <script>
 function activar_over(ft_notas_pdf,elemento,idelemento,comentario){
@@ -616,8 +721,5 @@ function eliminar_comentario(idcomentario,iddoc,ft_notas_pdf,elemento){
 		$('#'+ft_notas_pdf).attr('stroke','#f00');
 		$('#'+ft_notas_pdf).attr('fill','none');
 }
-
-
-
-
 </script>
+
