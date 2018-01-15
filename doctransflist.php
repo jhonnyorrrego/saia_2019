@@ -203,7 +203,14 @@ menu_ordenar($x_doc);
 <?php
 echo $ruta_doc=mostrar_ruta_documento($x_doc);
 ?>
-<br>
+<br />
+<div id="datos_digitalizacion">
+<?php echo(imprimir_datos_digitalizacion($x_doc)); ?>
+</div>
+<br />
+<br />
+<br />
+<br />
 <script>
 function mostrar_mas_rastro(){
 	var ini=$("#mostrar_mas").attr("inicio");
