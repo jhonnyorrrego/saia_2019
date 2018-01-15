@@ -97,7 +97,12 @@ global $conn,$ruta_db_superior;
 	$array=array("pdf","jpg","png");
 	if(in_array(strtolower($extension), $array)){
 		//$html='<a href="'.$ruta_db_superior.$ruta.'" target="detalles"><i class="icon-ver_pag_documento" tooltip_saia_izquierda" title=""></i></a>';
-		$ruta_mostrar='anexosdigitales/mostrar_menu_anexo.php?idanexo='.$idanexos.'&iddoc='.$iddocumento;
+	    if(strtolower($extension)=='pdf'){
+	        $info_anexo=busca_filtro_tabla("tipo,ruta","anexos","idanexos=".$idanexos,"",$conn);
+	        $ruta_mostrar="visores/pdf/web/viewer2.php?iddocumento=".$iddocumento."&files=".base64_encode($info_anexo[0]['ruta']);
+	    }else{
+	        $ruta_mostrar='anexosdigitales/mostrar_menu_anexo.php?idanexo='.$idanexos.'&iddoc='.$iddocumento;
+	    }
 		$html='<a href="'.$ruta_db_superior.$ruta_mostrar.'" target="detalles"><i class="icon-ver_pag_documento" tooltip_saia_izquierda" title=""></i></a>';
 	}
   if($extension=="eml"){

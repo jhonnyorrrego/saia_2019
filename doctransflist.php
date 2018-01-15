@@ -395,7 +395,7 @@ function mostrar_ruta_documento($iddoc){
 	$ruta_actual=busca_filtro_tabla("A.*,destino as destino1,origen as origen1,tipo_origen,tipo_destino","ruta A","A.documento_iddocumento=".$iddoc." AND A.tipo='ACTIVO'","idruta",$conn);
 
 	if(!$ruta_actual["numcampos"]){
-		$ruta_actual=busca_filtro_tabla("destino as origen1, origen as destino1,1 as obligatorio, 1 as tipo_origen, 1 as tipo_destino","buzon_entrada","nombre='POR_APROBAR' and archivo_idarchivo=$iddoc","",$conn);
+		$ruta_actual=busca_filtro_tabla("idtransferencia,destino as origen1, origen as destino1,1 as obligatorio, 1 as tipo_origen, 1 as tipo_destino","buzon_entrada","nombre='POR_APROBAR' and archivo_idarchivo=$iddoc","",$conn);
   	$unafirma=1;
 	}
 	$origen = @$ruta_actual[0]["origen1"];
@@ -420,28 +420,33 @@ function mostrar_ruta_documento($iddoc){
   		<td valign="top"><span class="phpmaker" style="color: #FFFFFF;">
         Opciones de firma
   		</span></td>
+<td valign="top"><span class="phpmaker" style="color: #FFFFFF;">
+        Anexo
+  		</span></td>
   	</tr>';
 		for($i=0;$i<$ruta_actual["numcampos"];$i++){
 			$sItemRowClass = " bgcolor=\"#FFFFFF\"";
 			if($i % 2 <> 0){
-      	$sItemRowClass = " bgcolor=\"#F5F5F5\"";
-     	}
+			    $sItemRowClass = " bgcolor=\"#F5F5F5\"";
+			}
+			
 			$tabla.='<tr'.$sItemRowClass.'>
 			<td><span class="phpmaker" >'.($i+1).'</span></td>
 			<td><span class="phpmaker" >'.codifica_encabezado(busca_entidad_ruta($ruta_actual[$i]["tipo_origen"],$ruta_actual[$i]["origen1"]))."</span></td>";
-      $tabla.='<td><span class="phpmaker" >'.codifica_encabezado(busca_entidad_ruta($ruta_actual[$i]["tipo_destino"],$ruta_actual[$i]["destino1"]))."</span></td>";
+            $tabla.='<td><span class="phpmaker" >'.codifica_encabezado(busca_entidad_ruta($ruta_actual[$i]["tipo_destino"],$ruta_actual[$i]["destino1"]))."</span></td>";
 
-      $tabla.='<td><span class="phpmaker" >'.codifica_encabezado(busca_entidad_ruta($ruta_actual[$i]["tipo_origen"],$ruta_actual[$i]["origen1"]))."</span></td>";
-      $tabla.='<td bgcolor="#F5F5F5"><span class="phpmaker" >';
+            $tabla.='<td><span class="phpmaker" >'.codifica_encabezado(busca_entidad_ruta($ruta_actual[$i]["tipo_origen"],$ruta_actual[$i]["origen1"]))."</span></td>";
+            $tabla.='<td bgcolor="#F5F5F5"><span class="phpmaker" >';
 			if($ruta_actual[$i]["obligatorio"]==1)
-      	$tabla.=' Firma visible ';
-    	if($ruta_actual[$i]["obligatorio"]==2)
-      	$tabla.= ' Revisado ';
-    	if($ruta_actual[$i]["obligatorio"]==5)
-      	$tabla.= ' Firma externa ';
-    	if($ruta_actual[$i]["obligatorio"]==0)
-      	$tabla.=' Ninguno ';
-    	$tabla.= '</span></td></tr>';
+			    $tabla.=' Firma visible ';
+			if($ruta_actual[$i]["obligatorio"]==2)
+			    $tabla.= ' Revisado ';
+			if($ruta_actual[$i]["obligatorio"]==5)
+			    $tabla.= ' Firma externa ';
+			if($ruta_actual[$i]["obligatorio"]==0)
+			    $tabla.=' Ninguno ';
+			$tabla.= '</span></td></tr>';
+
 		}
 		$tabla.='</table>';
 	}
@@ -484,6 +489,7 @@ function rastro_documento($x_doc,$filtro){
   	<td valign="top"><span class="phpmaker" style="color: #FFFFFF;">Destino</span></td>
   	<td valign="top"><span class="phpmaker" style="color: #FFFFFF;">Fecha</span></td>
   	<td valign="top"><span class="phpmaker" style="color: #FFFFFF;">Observaciones</span></td>
+  	<td valign="top"><span class="phpmaker" style="color: #FFFFFF;">Anexos</span></td>
    </tr>
     <?php
     	if(!$filtro){
@@ -501,6 +507,7 @@ function rastro_documento($x_doc,$filtro){
        		echo($cadena_anulado);
       }	
 		}
+		
       for($i=0;$i<$recorrido["numcampos"];$i++)
       {
       	$sItemRowClass = " bgcolor=\"#FFFFFF\"";
@@ -546,6 +553,18 @@ function rastro_documento($x_doc,$filtro){
         }else{
              echo('<td><span class="phpmaker" >&nbsp;</span></td>');
         }
+        
+        
+        echo '<td><ul>';
+        if($_SESSION["usuario_actual"]==$recorrido[$i]["origen"] || $_SESSION["usuario_actual"]==$recorrido[$i]["destino"] || $recorrido[$i]["ver_notas"]==1){
+            $anexos_transferencia=busca_filtro_tabla("ruta,etiqueta","anexos_transferencia","idbuzon_salida=".$recorrido[$i]['idtransferencia'],"",$conn);
+            for ($j = 0; $j < $anexos_transferencia['numcampos']; $j++) {
+                echo '<li><a href="visores/pdf/web/viewer2.php?files='.base64_encode($anexos_transferencia[$j]['ruta']).'">'.$anexos_transferencia[$j]['etiqueta'].'</a></li>';
+            }
+        }else{
+            echo('<td><span class="phpmaker" >&nbsp;</span></td>');
+        }
+        echo '</ul></td>';
       }
 	if($cantidad[0]["cant"]>$cantidad_maxima_rastro[0]["valor"] && !$filtro){
 		echo ('<tr '.$sItemRowClass.' id="fila_mostrar_mas"><td id="mostrar_mas" onclick="mostrar_mas_rastro();" colspan="6" style="cursor:pointer" inicio="'.$cantidad_maxima_rastro[0]["valor"].'"><button class="btn dropdown-toggle btn-mini" data-toggle="dropdown">Ver mas...</button></td></tr>');

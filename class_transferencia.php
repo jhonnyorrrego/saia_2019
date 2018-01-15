@@ -408,6 +408,7 @@ function busca_cargofuncionario($tipo,$dato,$dependencia)
 <Parametros>$datos-vector con los datos del formulario necesarios para hacer la transferencia;
 $tipo-; $destino-lista de usuarios a quienes se enviar� el documento;
 $adicionales-otros datos referentes a la transferencia;
+$anexos indica si la transferencia tiene anexos relacionados
 <Responsabilidades>enviar el documento a los funcionarios destino
 <Notas>
 <Excepciones>
@@ -415,9 +416,11 @@ $adicionales-otros datos referentes a la transferencia;
 <Pre-condiciones>
 <Post-condiciones>
 */
-function transferir_archivo_prueba($datos, $destino, $adicionales) {
+function transferir_archivo_prueba($datos, $destino, $adicionales,$anexos=NULL) {
 	global $conn;
+	$idtransferencia=array();
 	sort($destino);
+
 	$idarchivo = $datos["archivo_idarchivo"];
 	if (!isset($datos["ruta_idruta"]))
 		$datos["ruta_idruta"] = "";
@@ -463,10 +466,12 @@ function transferir_archivo_prueba($datos, $destino, $adicionales) {
 			}
 
 			$values_out .= "'" . $origen . "',1,1" . $otros_valores . ",'" . @$datos["ver_notas"] . "'";
+			
 			foreach ($destino as $user) {
 				if ($datos["nombre"] != "POR_APROBAR") {
 					$sql = "INSERT INTO buzon_salida (archivo_idarchivo,nombre,fecha,origen,tipo_origen,tipo_destino" . $otras_llaves . ",ver_notas,destino) values (" . $values_out . "," . $user . ")";
 					phpmkr_query($sql, $conn);
+					$idtransferencia[]=phpmkr_insert_id();
 				}
 				if ($datos["nombre"] == "POR_APROBAR") {
 					$sql = "INSERT INTO ruta(origen,tipo,destino,idtipo_documental,condicion_transferencia,documento_iddocumento,tipo_origen,tipo_destino,obligatorio) VALUES(" . $origen . ",'ACTIVO'," . $user . ",NULL,'POR_APROBAR'," . $idarchivo . ",1,1,1)";
@@ -476,6 +481,7 @@ function transferir_archivo_prueba($datos, $destino, $adicionales) {
 				}
 				$values_in = "$idarchivo,'" . $datos["nombre"] . "'," . fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s') . ",'$origen',1," . $datos["ruta_idruta"] . ",$tipo_destino" . $otros_valores . ",'" . @$datos["ver_notas"] . "'";
 				$sql = "INSERT INTO buzon_entrada(archivo_idarchivo,nombre,fecha,destino,tipo_origen,ruta_idruta,tipo_destino" . $otras_llaves . ",ver_notas,origen) values(" . $values_in . "," . $user . ")";
+				
 				phpmkr_query($sql, $conn);
 				procesar_estados($origen, $user, $datos["nombre"], $idarchivo);
 			}
@@ -502,7 +508,11 @@ function transferir_archivo_prueba($datos, $destino, $adicionales) {
 	}
 
 	llama_funcion_accion($idarchivo, $idformato, "transferir", "POSTERIOR");
-	return (TRUE);
+	if($anexos==1){
+	    return $idtransferencia;
+	}else{
+	   return (TRUE);
+	}
 }
 
 /*

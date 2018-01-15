@@ -165,6 +165,20 @@ if(@$_REQUEST["tipo"]!==5 && !@$_REQUEST["output"] && !@$_REQUEST["imprimir"]){
                     <?php
                     echo(permisos_modulo_menu_intermedio($iddoc,"rapidos_menu_intermedio",array("nombre"=>"rapidos_menu_intermedio","tipo"=>1)));
                     ?>
+                    <script type="text/javascript">
+                      $(document).ready(function(){
+                        $("#transferir").click(function(){
+                            var pagactual=1;
+                        	$("#transferir").removeAttr("enlace");
+                            try{
+                        		pagactual=document.getElementById('detalles').contentDocument.getElementById('pageNumber').value;
+                            }catch(err){
+                            	pagactual=1;
+                            }
+                          window.open("<?php echo($ruta_db_superior); ?>transferenciaadd.php?doc=<?php echo($iddoc); ?>&&mostrar=1&key=<?php echo($iddoc); ?>&pag_pdf="+pagactual,"_self");
+                        });
+                      });
+                    </script>
                     <h6>Acciones r&aacute;pidas</h6>
                 </div>
               </li>
@@ -321,6 +335,7 @@ function permisos_modulo_menu_intermedio($iddoc, $modulo_padre,$lista,$target="_
     
     $permiso=new PERMISO();
     $modulo=  busca_filtro_tabla("", "modulo", "nombre IN ('".implode("','",$datos_modulos)."')", "orden", $conn);
+    
     //$ok=1;
 
     //print_r($modulo);die();
@@ -349,7 +364,7 @@ function permisos_modulo_menu_intermedio($iddoc, $modulo_padre,$lista,$target="_
         }
         else if($lista["tipo"]==1){
           //Menu rapido
-           $texto.='<div class="btn btn-mini kenlace_saia_propio" titulo="'.$modulo[$i]["etiqueta"].'" enlace="'.$ruta_db_superior.$dir.'" title="'.$modulo[$i]["etiqueta"].'" destino="'.$target.'">
+           $texto.='<div class="btn btn-mini kenlace_saia_propio" titulo="'.$modulo[$i]["etiqueta"].'" enlace="'.$ruta_db_superior.$dir.'" title="'.$modulo[$i]["etiqueta"].'" destino="'.$target.'" id="'.$modulo[$i]["nombre"].'">
              &nbsp;<i class="icon-'.$modulo[$i]["nombre"].'"></i> &nbsp;
             </div>';
         }
