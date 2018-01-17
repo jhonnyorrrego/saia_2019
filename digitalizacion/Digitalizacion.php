@@ -108,6 +108,13 @@ class Digitalizacion {
 						case 'tipo_ftp':
 							$params["ftp_type"] = $configuracion[$i]["valor"];
 							break;
+						case "img_max_upload_size" :
+							$img_max_size = 16777216;
+							if($configuracion[$i]["valor"]) {
+								$img_max_size = $configuracion[$i]["valor"];
+							}
+							$params["max_upload_size"] = $img_max_size;
+							break;
 					}
 				}
 				if ($params["dftp"]) {
