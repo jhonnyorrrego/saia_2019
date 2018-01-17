@@ -87,10 +87,12 @@ $(document).ready(function(){
   
   
   
-  
-  
   $("#adicionar_expediente").live("click",function(){    
     window.open("<?php echo($ruta_db_superior);?>"+$(this).attr("enlace"),"iframe_detalle");
+  });
+  
+  $("#adicionar_documento_exp").live("click",function(){    
+    window.open("<?php echo($ruta_db_superior);?>"+$(this).attr("enlace"),"_self");
   });
   
   $(".sacar_expediente").live("click",function(){

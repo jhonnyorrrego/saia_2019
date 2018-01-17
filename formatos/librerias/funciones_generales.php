@@ -3239,89 +3239,77 @@ function firma_externa_funcion($idformato, $iddoc, $tabla, $campo = "firma_exter
  */
 function fk_idexpediente_funcion($idformato, $campo, $iddoc) {
 	global $conn, $ruta_db_superior;
-  
+	if (isset($_REQUEST["idexpediente"])){
+		echo '<td id="td_fk_idexpediente"></td>';
+	}else{
   $adicional="";
   $seleccionado="";
-  
   if($iddoc){
     $formato=busca_filtro_tabla("a.nombre_tabla, b.nombre","formato a, campos_formato b","a.idformato=b.formato_idformato and a.idformato='".$idformato."' and b.idcampos_formato='".$campo."'","",$conn);
-    
     $datos=busca_filtro_tabla($formato[0]["nombre"]." as expediente",$formato[0]["nombre_tabla"]." a","a.documento_iddocumento=".$iddoc,"",$conn);
     $adicional="&seleccionado=".$datos[0]["expediente"];
     $seleccionado=$datos[0]["expediente"];
   }
-  
 	?>
-<td bgcolor="#F5F5F5">
-	<div id="seleccionados"></div> <br /> Buscar: <input tabindex='2'
-	type="text" id="stext_fk_idexpediente" width="200px" size="25"><a
-	href="javascript:void(0)"
-	onclick="tree_fk_idexpediente.findItem((document.getElementById('stext_fk_idexpediente').value),1)">
-		<img src="../../botones/general/anterior.png" border="0px">
-</a> <a href="javascript:void(0)"
-	onclick="tree_fk_idexpediente.findItem((document.getElementById('stext_fk_idexpediente').value),0,1)"><img
-		src="../../botones/general/buscar.png" border="0px"></a> <a
-	href="javascript:void(0)"
-	onclick="tree_fk_idexpediente.findItem((document.getElementById('stext_fk_idexpediente').value))"><img
-		src="../../botones/general/siguiente.png" border="0px"></a> <br />
-<div id="esperando_fk_idexpediente">
-		<img src="../../imagenes/cargando.gif">
-	</div>
-	<div id="treeboxbox_fk_idexpediente" height="90%"></div> <input
-	type="hidden" maxlength="255" class="required" name="fk_idexpediente" id="fk_idexpediente" value="<?php echo($seleccionado); ?>"> <label style="display: none"
-	class="error" for="fk_idexpediente">Campo obligatorio.</label> <script
-		type="text/javascript">
-                  <!--
-                      var browserType;
-                      if (document.layers) {browserType = "nn4"}
-                      if (document.all) {browserType = "ie"}
-                      if (window.navigator.userAgent.toLowerCase().match("gecko")) {
-                         browserType= "gecko"
-                      }
-                			tree_fk_idexpediente=new dhtmlXTreeObject("treeboxbox_fk_idexpediente","100%","100%",0);
-                			tree_fk_idexpediente.setImagePath("../../imgs/");
-                			tree_fk_idexpediente.enableIEImageFix(true);
-                			tree_fk_idexpediente.enableCheckBoxes(1);
-                			tree_fk_idexpediente.setOnLoadingStart(cargando_fk_idexpediente);
-                      tree_fk_idexpediente.setOnLoadingEnd(fin_cargando_fk_idexpediente);
-                      tree_fk_idexpediente.enableSmartXMLParsing(true);
-                      tree_fk_idexpediente.loadXML("../../test_expediente.php?accion=1&permiso_editar=1<?php echo($adicional); ?>");
-                	        
-                      tree_fk_idexpediente.setOnCheckHandler(onNodeSelect_fk_idexpediente);
-                      function onNodeSelect_fk_idexpediente(nodeId){
-                      	seleccionados=tree_fk_idexpediente.getAllChecked();
-                      	nuevo=seleccionados.replace(/\,{2,}(d)*/gi,",");
-                       	nuevo=nuevo.replace(/\,$/gi,"");   
-                      	document.getElementById("fk_idexpediente").value=nuevo;
-                      }
-                      function fin_cargando_fk_idexpediente() {
-                        if (browserType == "gecko" )
-                           document.poppedLayer =
-                               eval('document.getElementById("esperando_fk_idexpediente")');
-                        else if (browserType == "ie")
-                           document.poppedLayer =
-                              eval('document.getElementById("esperando_fk_idexpediente")');
-                        else
-                           document.poppedLayer =
-                              eval('document.layers["esperando_fk_idexpediente"]');
-                        document.poppedLayer.style.display = "none";
-                      }
-
-                      function cargando_fk_idexpediente() {
-                        if (browserType == "gecko" )
-                           document.poppedLayer =
-                               eval('document.getElementById("esperando_fk_idexpediente")');
-                        else if (browserType == "ie")
-                           document.poppedLayer =
-                              eval('document.getElementById("esperando_fk_idexpediente")');
-                        else
-                           document.poppedLayer =
-                               eval('document.layers["esperando_fk_idexpediente"]');
-                        document.poppedLayer.style.display = "";
-                      }
-                	--></script>
-</td>
+	<td id="td_fk_idexpediente" bgcolor="#F5F5F5">
+		<div id="seleccionados"></div> <br /> Buscar: <input tabindex='2'	type="text" id="stext_fk_idexpediente" width="200px" size="25"><a	href="javascript:void(0)"	onclick="tree_fk_idexpediente.findItem((document.getElementById('stext_fk_idexpediente').value),1)">
+			<img src="../../botones/general/anterior.png" border="0px"></a> <a href="javascript:void(0)"	onclick="tree_fk_idexpediente.findItem((document.getElementById('stext_fk_idexpediente').value),0,1)"><img src="../../botones/general/buscar.png" border="0px"></a> <a	href="javascript:void(0)"	onclick="tree_fk_idexpediente.findItem((document.getElementById('stext_fk_idexpediente').value))">
+			<img src="../../botones/general/siguiente.png" border="0px"></a> <br />
+		<div id="esperando_fk_idexpediente">
+			<img src="../../imagenes/cargando.gif">
+		</div>
+		<div id="treeboxbox_fk_idexpediente" height="90%"></div> 
+		<input	type="hidden" maxlength="255" class="required" name="fk_idexpediente" id="fk_idexpediente" value="<?php echo($seleccionado); ?>"> <label style="display: none" class="error" for="fk_idexpediente">Campo obligatorio.</label> 
+		<script type="text/javascript">
+			var browserType;
+			if (document.layers) {browserType = "nn4"}
+			if (document.all) {browserType = "ie"}
+			if (window.navigator.userAgent.toLowerCase().match("gecko")) {
+			   browserType= "gecko"
+			}
+			tree_fk_idexpediente=new dhtmlXTreeObject("treeboxbox_fk_idexpediente","100%","100%",0);
+			tree_fk_idexpediente.setImagePath("../../imgs/");
+			tree_fk_idexpediente.enableIEImageFix(true);
+			tree_fk_idexpediente.enableCheckBoxes(1);
+			tree_fk_idexpediente.setOnLoadingStart(cargando_fk_idexpediente);
+			tree_fk_idexpediente.setOnLoadingEnd(fin_cargando_fk_idexpediente);
+			tree_fk_idexpediente.enableSmartXMLParsing(true);
+			tree_fk_idexpediente.loadXML("../../test_expediente.php?accion=1&permiso_editar=1<?php echo($adicional); ?>");
+			tree_fk_idexpediente.setOnCheckHandler(onNodeSelect_fk_idexpediente);
+			function onNodeSelect_fk_idexpediente(nodeId){
+				seleccionados=tree_fk_idexpediente.getAllChecked();
+				nuevo=seleccionados.replace(/\,{2,}(d)*/gi,",");
+			 	nuevo=nuevo.replace(/\,$/gi,"");   
+				document.getElementById("fk_idexpediente").value=nuevo;
+			}
+			function fin_cargando_fk_idexpediente() {
+			  if (browserType == "gecko" )
+			     document.poppedLayer =
+			         eval('document.getElementById("esperando_fk_idexpediente")');
+			  else if (browserType == "ie")
+			     document.poppedLayer =
+			        eval('document.getElementById("esperando_fk_idexpediente")');
+			  else
+			     document.poppedLayer =
+			        eval('document.layers["esperando_fk_idexpediente"]');
+			  document.poppedLayer.style.display = "none";
+			}
+			function cargando_fk_idexpediente() {
+			  if (browserType == "gecko" )
+			     document.poppedLayer =
+			         eval('document.getElementById("esperando_fk_idexpediente")');
+			  else if (browserType == "ie")
+			     document.poppedLayer =
+			        eval('document.getElementById("esperando_fk_idexpediente")');
+			  else
+			     document.poppedLayer =
+			         eval('document.layers["esperando_fk_idexpediente"]');
+			  document.poppedLayer.style.display = "";
+			}
+		</script>
+	</td>
 <?php
+	}
 }
 
 /*
@@ -3337,31 +3325,32 @@ function fk_idexpediente_funcion($idformato, $campo, $iddoc) {
  */
 function vincular_expediente_documento($idformato, $iddoc) {
 	global $conn;
-	$max_salida = 6; // Previene algun posible ciclo infinito limitando a 10 los ../
+	$max_salida = 6;
 	$ruta_db_superior = $ruta = "";
-	while($max_salida > 0) {
-		if(is_file($ruta . "db.php")) {
-			$ruta_db_superior = $ruta; // Preserva la ruta superior encontrada
+	while ($max_salida > 0) {
+		if (is_file($ruta . "db.php")) {
+			$ruta_db_superior = $ruta;
 		}
 		$ruta .= "../";
 		$max_salida--;
 	}
-	if(@$_REQUEST["fk_idexpediente"]) {
+	if (@$_REQUEST["fk_idexpediente"]) {
 		$expedientes = explode(",", $_REQUEST["fk_idexpediente"]);
 		$cant = count($expedientes);
 		include_once ($ruta_db_superior . "pantallas/expediente/librerias.php");
-		for($i = 0; $i < $cant; $i++) {
-			if($expedientes[$i]) {
+		for ($i = 0; $i < $cant; $i++) {
+			if ($expedientes[$i]) {
 				vincular_documento_expediente($expedientes[$i], $iddoc);
 			}
 		}
-	} else if(@$_REQUEST["serie_idserie"]) {
+	} else if (@$_REQUEST["serie_idserie"]) {
 		$idexpediente = busca_filtro_tabla("b.idexpediente", "serie a, expediente b", "a.idserie=" . $_REQUEST["serie_idserie"] . " and a.cod_padre=b.serie_idserie", "", $conn);
-		if($idexpediente["numcampos"]) {
+		if ($idexpediente["numcampos"]) {
 			include_once ($ruta_db_superior . "pantallas/expediente/librerias.php");
 			vincular_documento_expediente($idexpediente[0]["idexpediente"], $iddoc);
 		}
 	}
+	return;
 }
 
 function insertar_ruta_aprobacion_documento($ruta, $iddoc) {

@@ -18,12 +18,8 @@ include_once("cargando.php");
 
 
 if(@$_REQUEST['texto_salir']){
-	
-
 	echo(librerias_jquery("1.7"));
 	echo(librerias_notificaciones());
-	
-	
 	?>
 		<script>
 			var texto_salir='<?php echo(@$_REQUEST['texto_salir']); ?>';
@@ -287,11 +283,6 @@ $mayor_informacion=busca_filtro_tabla("valor","configuracion","nombre='mayor_inf
 				}
 			?>
 		</div>	
-
-
-
-
-
 </body>
 </html>
 <?php include_once("fin_cargando.php");
@@ -301,49 +292,60 @@ $mayor_informacion=busca_filtro_tabla("valor","configuracion","nombre='mayor_inf
   echo(librerias_notificaciones());
 ?>
 <script>
-var mensaje="<b>El nombre de usuario o contrase&ntilde;a introducidos no son correctos! </b> <br> intente de nuevo";
-var tiempo=3500;
-$("#tabla_principal").height($(window).height()-56);
-$("#ingresar").click(function(){	
-  if($("#userid").val() && $("#passwd").val()){
-      $('#contenedor_recordar_contrasena').css('pointer-events','none');  
-  	//$("#formulario_login").submit();
-    $.ajax({
-      type:'POST',
-      url: "verificar_login.php",
-      data: "userid="+$("#userid").val()+"&passwd="+$("#passwd").val()+"&INDEX=<?php echo(@$_REQUEST['INDEX']);?>",
-      success: function(html){   
-        if(html){
-          var objeto=jQuery.parseJSON(html);
-          mensaje=objeto.mensaje;          
-          if(objeto.ingresar==1){
-            noty({text: mensaje,type: 'success',layout: "topCenter",timeout:tiempo});
-             var ruta=objeto.ruta+'<?php  echo($parametro_tarea);?>';
-            setTimeout(function(){window.location=ruta},(tiempo+100));
-          }  
-          else{
-            $('#contenedor_recordar_contrasena').css('pointer-events','auto'); 
-            mensaje='<span style="color:white;">'+mensaje+'</span>';
-            noty({text: mensaje,type: 'error',layout: "topCenter",timeout:tiempo});
-          }                         
-        }
-      },
-      error:function(){
-        alert("ERROR");
-      }
-    });
-  }
-  else{                         
-    noty({text: "<span style='color:white;'>Por favor ingrese un usuario y una clave v&aacute;lidos! <br> intente de nuevo</span>",type: 'error',layout: "topCenter",timeout:tiempo});
-  }  
-});
-$(document).keypress(function(event) {
-    var keycode = (event.keyCode ? event.keyCode : event.which);
-    if(keycode == '13') {
-        $("#ingresar").click();
-    }
-});
-hs.graphicsDir = 'anexosdigitales/highslide-4.0.10/highslide/graphics/';
-hs.outlineType = 'rounded-white';
-
+	var mensaje = "<b>El nombre de usuario o contrase&ntilde;a introducidos no son correctos! </b> <br> intente de nuevo";
+	var tiempo = 3500;
+	$("#tabla_principal").height($(window).height() - 56);
+	$("#ingresar").click(function() {
+		if ($("#userid").val() && $("#passwd").val()) {
+			$('#contenedor_recordar_contrasena').css('pointer-events', 'none');
+			$.ajax({
+				type : 'POST',
+				url : "verificar_login.php",
+				data: {userid:$("#userid").val(),passwd:$("#passwd").val(),INDEX:'<?php echo(@$_REQUEST['INDEX']); ?>'},
+				dataType: 'json',
+				success : function(objeto) {
+					mensaje = objeto.mensaje;
+					if (objeto.ingresar == 1) {
+						noty({
+							text : mensaje,
+							type : 'success',
+							layout : "topCenter",
+							timeout : tiempo
+						});
+						var ruta=objeto.ruta+'<?php  echo($parametro_tarea);?>';
+						setTimeout(function() {
+							window.location = ruta
+						}, (tiempo + 100));
+					} else {
+						$('#contenedor_recordar_contrasena').css('pointer-events', 'auto');
+						mensaje = '<span style="color:white;">' + mensaje + '</span>';
+						noty({
+							text : mensaje,
+							type : 'error',
+							layout : "topCenter",
+							timeout : tiempo
+						});
+					}
+				},
+				error : function() {
+					alert("ERROR");
+				}
+			});
+		} else {
+			noty({
+				text : "<span style='color:white;'>Por favor ingrese un usuario y una clave v&aacute;lidos! <br> intente de nuevo</span>",
+				type : 'error',
+				layout : "topCenter",
+				timeout : tiempo
+			});
+		}
+	});
+	$(document).keypress(function(event) {
+		var keycode = (event.keyCode ? event.keyCode : event.which);
+		if (keycode == '13') {
+			$("#ingresar").click();
+		}
+	});
+	hs.graphicsDir = 'anexosdigitales/highslide-4.0.10/highslide/graphics/';
+	hs.outlineType = 'rounded-white';
 </script>

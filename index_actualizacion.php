@@ -1,66 +1,76 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9">
 <?php
-include_once("db.php");
-include_once("librerias_saia.php");
-if(isset($_REQUEST['token'])){
-	$_SESSION["LOGIN".LLAVE_SAIA]=base64_decode($_REQUEST['token']);
+include_once ("db.php");
+include_once ("librerias_saia.php");
+if (isset($_REQUEST['token'])) {
+	$_SESSION["LOGIN" . LLAVE_SAIA] = base64_decode($_REQUEST['token']);
 }
-if(!isset($_SESSION["LOGIN".LLAVE_SAIA])){
-  @session_name();
-  @session_start();
-  @ob_start();
+if (!isset($_SESSION["LOGIN" . LLAVE_SAIA])) {
+	@session_name();
+	@session_start();
+	@ob_start();
 }
-date_default_timezone_set ("America/Bogota");
-if(isset($_REQUEST['sesion']))
-  $_SESSION["LOGIN".LLAVE_SAIA]=$_REQUEST['sesion'];
-if(!isset($_GET['fin']) || !$_GET['fin']){
-echo(estilo_bootstrap());
-echo(librerias_jquery("1.7"));
-echo(librerias_html5());
-echo(librerias_bootstrap());
-echo(librerias_highslide());
-}
-
-if(@$_SESSION["LOGIN".LLAVE_SAIA]){
-	$usuario = usuario_actual("funcionario_codigo");
-	$funcionario_idfuncionario = usuario_actual('idfuncionario');
-//$fondo=busca_filtro_tabla("A.valor","configuracion A","A.tipo='empresa' AND A.nombre='fondo'","A.fecha,A.valor DESC",$conn);
-almacenar_sesion(1,"");
-$recarga=busca_filtro_tabla("A.valor","configuracion A","A.tipo='interfaz' AND A.nombre='intervalo_recarga'","A.fecha DESC",$conn);
-if($recarga["numcampos"]){
-  $intervalo_recarga_informacion=$recarga[0]["valor"];
-}else{
-  $intervalo_recarga_informacion=900000; ////Esto debería estar en configuración aquí recarga cada 15 minutos
-}
-include_once($ruta_db_superior."pantallas/lib/mobile_detect.php");
-$detect = new Mobile_Detect;
-if ( $detect->isMobile() ) {
-	$_SESSION["tipo_dispositivo"]="movil";
-}
-/*************actualizacion de fin de año ********/
-$proxima=busca_filtro_tabla("valor","configuracion","nombre='actualizacion_fin_anio'","idconfiguracion DESC",$conn);
-if($proxima["numcampos"]){
-$fecha=busca_filtro_tabla(resta_fechas("'".$proxima[0][0]."'","'".date("Y-m-d")."'"),"dual","","",$conn);
-if(@$fecha[0][0]<0){
-	alerta("Se van a realizar algunas actualizaciones por el cambio de año, por favor espere.",'success',6000);
-	abrir_url("actualizacion_cambio_anio.php");
-  }
-}
-
-
-	$mis_roles = busca_filtro_tabla("iddependencia_cargo", "vfuncionario_dc", "funcionario_codigo=" . $usuario, "", $conn);
-if($mis_roles["numcampos"]){
-	$roles=extrae_campo($mis_roles,"iddependencia_cargo");
-	$concat=array();
-	$cadena_concatenar=array("','","responsable","','");
-	foreach ($roles AS $key=>$value){
-		array_push($concat,concatenar_cadena_sql($cadena_concatenar)." LIKE('%,".$value.",%')");
+date_default_timezone_set("America/Bogota");
+if (isset($_REQUEST['sesion'])) {
+	$_SESSION["LOGIN" . LLAVE_SAIA] = $_REQUEST['sesion'];
+	$info_ses = busca_filtro_tabla("funcionario_codigo", "funcionario", "login='" . $_SESSION["LOGIN" . LLAVE_SAIA] . "'", "", $conn);
+	if ($info_ses["numcampos"]) {
+		$_SESSION["usuario_actual"] = $info_ses[0]["funcionario_codigo"];
+		$usuactual = $_SESSION["LOGIN" . LLAVE_SAIA];
+		global $usuactual;
+	} else {
+		salir("", $_SESSION['LOGIN' . LLAVE_SAIA]);
+		session_destroy();
+		die();
 	}
 }
 
-	$permiso=new PERMISO();
-	$per_pendientes = $permiso->acceso_modulo_perfil("documentos_pendientes");
-	if($per_pendientes){
+if (!isset($_GET['fin']) || !$_GET['fin']) {
+	echo(estilo_bootstrap());
+	echo(librerias_jquery("1.7"));
+	echo(librerias_html5());
+	echo(librerias_bootstrap());
+	echo(librerias_highslide());
+}
+
+if (@$_SESSION["LOGIN" . LLAVE_SAIA]) {
+	$usuario = usuario_actual("funcionario_codigo");
+	$funcionario_idfuncionario = usuario_actual('idfuncionario');
+	almacenar_sesion(1, "");
+	$recarga = busca_filtro_tabla("A.valor", "configuracion A", "A.tipo='interfaz' AND A.nombre='intervalo_recarga'", "A.fecha DESC", $conn);
+	if ($recarga["numcampos"]) {
+		$intervalo_recarga_informacion = $recarga[0]["valor"];
+	} else {
+		$intervalo_recarga_informacion = 900000;
+	}
+	include_once ($ruta_db_superior . "pantallas/lib/mobile_detect.php");
+	$detect = new Mobile_Detect;
+	if ($detect -> isMobile()) {
+		$_SESSION["tipo_dispositivo"] = "movil";
+	}
+
+	$proxima = busca_filtro_tabla("valor", "configuracion", "nombre='actualizacion_fin_anio'", "idconfiguracion DESC", $conn);
+	if ($proxima["numcampos"]) {
+		$fecha = busca_filtro_tabla(resta_fechas("'" . $proxima[0][0] . "'", "'" . date("Y-m-d") . "'"), "dual", "", "", $conn);
+		if (@$fecha[0][0] < 0) {
+			alerta("Se van a realizar algunas actualizaciones por el cambio de año, por favor espere.", 'success', 6000);
+			abrir_url("actualizacion_cambio_anio.php");
+		}
+	}
+
+	$mis_roles = busca_filtro_tabla("iddependencia_cargo", "vfuncionario_dc", "funcionario_codigo=" . $usuario, "", $conn);
+	if ($mis_roles["numcampos"]) {
+		$roles = extrae_campo($mis_roles, "iddependencia_cargo");
+		$concat = array();
+		$cadena_concatenar = array("','", "responsable", "','");
+		foreach ($roles AS $key => $value) {
+			array_push($concat, concatenar_cadena_sql($cadena_concatenar) . " LIKE('%," . $value . ",%')");
+		}
+	}
+
+	$permiso = new PERMISO();
+	$per_pendientes = $permiso -> acceso_modulo_perfil("documentos_pendientes");
+	if ($per_pendientes) {
 		$etiquetados = busca_filtro_tabla("c.nombre", "documento a, documento_etiqueta b, etiqueta c", "LOWER(a.estado) NOT IN ('eliminado') AND a.iddocumento=b.documento_iddocumento AND b.etiqueta_idetiqueta=c.idetiqueta AND c.funcionario='" . $usuario . "' GROUP BY a.iddocumento", "", $conn);
 		$pendientes = busca_filtro_tabla("count(*) AS cant", "documento A,asignacion B,formato c ", "LOWER(A.estado)<>'eliminado' AND A.iddocumento=B.documento_iddocumento AND B.tarea_idtarea<>-1 AND B.entidad_identidad=1 AND B.llave_entidad=" . $usuario . " and lower(A.plantilla)=c.nombre ", "GROUP BY A.iddocumento", $conn);
 		$con_indicador = busca_filtro_tabla("", "documento a, prioridad_documento b,formato c ", "b.documento_iddocumento=a.iddocumento AND b.prioridad in (1,2,3,4,5) AND lower(a.estado) not in('ELIMINADO') AND lower(a.plantilla)=c.nombre AND b.funcionario_idfuncionario=" . usuario_actual("idfuncionario"), "group by a.iddocumento order by a.fecha  desc", $conn);
@@ -73,54 +83,52 @@ if($mis_roles["numcampos"]){
 
 	}
 
-	$per_mis_tareas = $permiso->acceso_modulo_perfil("mis_tareas");
-	if($per_mis_tareas){
+	$per_mis_tareas = $permiso -> acceso_modulo_perfil("mis_tareas");
+	if ($per_mis_tareas) {
 		$tareas = busca_filtro_tabla("count(*) AS cant", "tareas A", "((" . implode(" OR ", $concat) . ") OR ejecutor =" . $usuario . ") AND estado_tarea<>2", "", $conn);
 		$componente_tareas = busca_filtro_tabla("", "busqueda_componente A", "A.nombre='listado_tareas_pendientes'", "", $conn);
 	}
 
-	$per_mis_tareas_av = $permiso->acceso_modulo_perfil("mis_tareas_avanzadas");
-	if($per_mis_tareas_av){
-$tareas_responsable=busca_filtro_tabla("count(*) AS cant","tareas_listado A","A.generica=0 AND A.estado_tarea<>'TERMINADO' AND A.listado_tareas_fk<>-1 AND A.cod_padre=0 AND  A.responsable_tarea =".usuario_actual("idfuncionario"),"",$conn);
-$condicion_coparticipantes_unico=" AND ( a.co_participantes LIKE '%,".$funcionario_idfuncionario.",%' OR a.co_participantes LIKE '%,".$funcionario_idfuncionario."' OR a.co_participantes LIKE '".$funcionario_idfuncionario.",%' OR  a.co_participantes='".$funcionario_idfuncionario."' )";
-$tareas_coparticipante=busca_filtro_tabla("count(*) AS cant","tareas_listado a","a.generica=0 AND a.estado_tarea<>'TERMINADO'  AND a.listado_tareas_fk<>-1 AND a.cod_padre=0 ".$condicion_coparticipantes_unico,"",$conn);
-$condicion_seguidores_unico=" AND ( a.seguidores LIKE '%,".$funcionario_idfuncionario.",%' OR a.seguidores LIKE '%,".$funcionario_idfuncionario."' OR a.seguidores LIKE '".$funcionario_idfuncionario.",%' OR  a.seguidores='".$funcionario_idfuncionario."' )";
-$tareas_seguidor=busca_filtro_tabla("count(*) AS cant","tareas_listado a","a.generica=0 AND a.estado_tarea<>'TERMINADO' AND a.listado_tareas_fk<>-1 AND a.cod_padre=0 ".$condicion_seguidores_unico,"",$conn);
-$tareas_evaluador=busca_filtro_tabla("count(*) AS cant","tareas_listado A","A.generica=0 AND A.estado_tarea<>'TERMINADO' AND A.listado_tareas_fk<>-1 AND A.cod_padre=0 AND  A.evaluador =".usuario_actual("idfuncionario"),"",$conn);
+	$per_mis_tareas_av = $permiso -> acceso_modulo_perfil("mis_tareas_avanzadas");
+	if ($per_mis_tareas_av) {
+		$tareas_responsable = busca_filtro_tabla("count(*) AS cant", "tareas_listado A", "A.generica=0 AND A.estado_tarea<>'TERMINADO' AND A.listado_tareas_fk<>-1 AND A.cod_padre=0 AND  A.responsable_tarea =" . usuario_actual("idfuncionario"), "", $conn);
+		$condicion_coparticipantes_unico = " AND ( a.co_participantes LIKE '%," . $funcionario_idfuncionario . ",%' OR a.co_participantes LIKE '%," . $funcionario_idfuncionario . "' OR a.co_participantes LIKE '" . $funcionario_idfuncionario . ",%' OR  a.co_participantes='" . $funcionario_idfuncionario . "' )";
+		$tareas_coparticipante = busca_filtro_tabla("count(*) AS cant", "tareas_listado a", "a.generica=0 AND a.estado_tarea<>'TERMINADO'  AND a.listado_tareas_fk<>-1 AND a.cod_padre=0 " . $condicion_coparticipantes_unico, "", $conn);
+		$condicion_seguidores_unico = " AND ( a.seguidores LIKE '%," . $funcionario_idfuncionario . ",%' OR a.seguidores LIKE '%," . $funcionario_idfuncionario . "' OR a.seguidores LIKE '" . $funcionario_idfuncionario . ",%' OR  a.seguidores='" . $funcionario_idfuncionario . "' )";
+		$tareas_seguidor = busca_filtro_tabla("count(*) AS cant", "tareas_listado a", "a.generica=0 AND a.estado_tarea<>'TERMINADO' AND a.listado_tareas_fk<>-1 AND a.cod_padre=0 " . $condicion_seguidores_unico, "", $conn);
+		$tareas_evaluador = busca_filtro_tabla("count(*) AS cant", "tareas_listado A", "A.generica=0 AND A.estado_tarea<>'TERMINADO' AND A.listado_tareas_fk<>-1 AND A.cod_padre=0 AND  A.evaluador =" . usuario_actual("idfuncionario"), "", $conn);
 
-$condicion_coparticipantes=" OR ( a.co_participantes LIKE '%,".$funcionario_idfuncionario.",%' OR a.co_participantes LIKE '%,".$funcionario_idfuncionario."' OR a.co_participantes LIKE '".$funcionario_idfuncionario.",%' OR  a.co_participantes='".$funcionario_idfuncionario."' )";
-$condicion_seguidores=" OR ( a.seguidores LIKE '%,".$funcionario_idfuncionario.",%' OR a.seguidores LIKE '%,".$funcionario_idfuncionario."' OR a.seguidores LIKE '".$funcionario_idfuncionario.",%' OR  a.seguidores='".$funcionario_idfuncionario."' )";
-$condicion_evaluador=" OR a.evaluador=".$funcionario_idfuncionario;
-$condicion_tareas_total="generica=0 AND a.estado_tarea<>'TERMINADO' AND a.listado_tareas_fk<>-1 AND a.cod_padre=0 AND ( a.responsable_tarea=".$funcionario_idfuncionario."".$condicion_coparticipante.$condicion_coparticipantes.$condicion_seguidores.$condicion_evaluador."  )";
-$tareas_total=busca_filtro_tabla("count(*) AS cant","tareas_listado a",$condicion_tareas_total,"",$conn);
-//DESARROLLO TODAS LAS TAREAS
+		$condicion_coparticipantes = " OR ( a.co_participantes LIKE '%," . $funcionario_idfuncionario . ",%' OR a.co_participantes LIKE '%," . $funcionario_idfuncionario . "' OR a.co_participantes LIKE '" . $funcionario_idfuncionario . ",%' OR  a.co_participantes='" . $funcionario_idfuncionario . "' )";
+		$condicion_seguidores = " OR ( a.seguidores LIKE '%," . $funcionario_idfuncionario . ",%' OR a.seguidores LIKE '%," . $funcionario_idfuncionario . "' OR a.seguidores LIKE '" . $funcionario_idfuncionario . ",%' OR  a.seguidores='" . $funcionario_idfuncionario . "' )";
+		$condicion_evaluador = " OR a.evaluador=" . $funcionario_idfuncionario;
+		$condicion_tareas_total = "generica=0 AND a.estado_tarea<>'TERMINADO' AND a.listado_tareas_fk<>-1 AND a.cod_padre=0 AND ( a.responsable_tarea=" . $funcionario_idfuncionario . "" . $condicion_coparticipante . $condicion_coparticipantes . $condicion_seguidores . $condicion_evaluador . "  )";
+		$tareas_total = busca_filtro_tabla("count(*) AS cant", "tareas_listado a", $condicion_tareas_total, "", $conn);
+		//DESARROLLO TODAS LAS TAREAS
 		$componente_tareas_responsable = busca_filtro_tabla("idbusqueda_componente", "busqueda_componente A", "A.nombre='listado_tareas_responsable'", "", $conn);
 		$componente_tareas_coparticipante = busca_filtro_tabla("idbusqueda_componente", "busqueda_componente A", "A.nombre='listado_tareas_coparticipante'", "", $conn);
 		$componente_tareas_seguidor = busca_filtro_tabla("idbusqueda_componente", "busqueda_componente A", "A.nombre='listado_tareas_seguidor'", "", $conn);
 		$componente_tareas_evaluador = busca_filtro_tabla("idbusqueda_componente", "busqueda_componente A", "A.nombre='listado_tareas_evaluador'", "", $conn);
 		$componente_tareas_total = busca_filtro_tabla("idbusqueda_componente", "busqueda_componente A", "A.nombre='listado_tareas_total'", "", $conn);
-		$componente_planeador=busca_filtro_tabla("idbusqueda_componente","busqueda_componente","lower(nombre)='tareas_listado_paneador'","",$conn);
+		$componente_planeador = busca_filtro_tabla("idbusqueda_componente", "busqueda_componente", "lower(nombre)='tareas_listado_paneador'", "", $conn);
 	}
 
 	//$actualizaciones = busca_filtro_tabla("count(*) AS cant", "documento_accion A,asignacion B", "A.documento_iddocumento=B.documento_iddocumento AND B.tarea_idtarea<>-1 AND B.entidad_identidad=1 AND B.llave_entidad=" . $usuario, "GROUP BY A.documento_iddocumento", $conn);
 
-
-//limpieza carpetas
-include_once("tarea_limpiar_carpeta.php");
-$configuracion_temporal=busca_filtro_tabla("valor","configuracion","nombre='ruta_temporal' AND tipo='ruta'","",$conn);
-if($configuracion_temporal['numcampos']){
-   	$cont_ruta=$configuracion_temporal[0]['valor'];
-	if(!is_dir($cont_ruta)) {
-          	mkdir($cont_ruta, 0777, true);
-            chmod($cont_ruta, 0777);
-    }
-    if(!is_dir($cont_ruta.'_'.usuario_actual("login"))){
-    	mkdir($cont_ruta.'_'.usuario_actual("login"),0777,true);
-    }
-    borrar_archivos_carpeta($configuracion_temporal[0]['valor'].'_'.usuario_actual("login"), 0);
-}else{
-    borrar_archivos_carpeta('temporal_'.usuario_actual("login"), 0);
-}
+	include_once ("tarea_limpiar_carpeta.php");
+	$configuracion_temporal = busca_filtro_tabla("valor", "configuracion", "nombre='ruta_temporal' AND tipo='ruta'", "", $conn);
+	if ($configuracion_temporal['numcampos']) {
+		$cont_ruta = $configuracion_temporal[0]['valor'];
+		if (!is_dir($cont_ruta)) {
+			mkdir($cont_ruta, 0777, true);
+			chmod($cont_ruta, 0777);
+		}
+		if (!is_dir($cont_ruta . '_' . usuario_actual("login"))) {
+			mkdir($cont_ruta . '_' . usuario_actual("login"), 0777, true);
+		}
+		borrar_archivos_carpeta($configuracion_temporal[0]['valor'] . '_' . usuario_actual("login"), 0);
+	} else {
+		borrar_archivos_carpeta('temporal_' . usuario_actual("login"), 0);
+	}
 }
 ?>
 <html xmlns="http://www.w3.org/1999/xhtml">
