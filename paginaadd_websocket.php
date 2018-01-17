@@ -234,8 +234,8 @@ table tbody td {
 				break;
 			case "img_max_upload_size" :
 				$img_max_size = 16777216;
-				if($configuracion[$i]["img_max_upload_size"]) {
-					$img_max_size = $configuracion[$i]["img_max_upload_size"];
+				if($configuracion[$i]["valor"]) {
+					$img_max_size = $configuracion[$i]["valor"];
 				}
 				break;
 		}
