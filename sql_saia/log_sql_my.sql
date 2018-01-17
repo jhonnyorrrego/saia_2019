@@ -1191,3 +1191,5 @@ update busqueda_condicion set codigo_where='(c.iddocumento NOT IN(SELECT documen
 -- ------------------------------------------------------------------------
 -- ------------------------------------------------------------------------
 -- ------------------------------------------------------------------------
+-- 20180116 Parametro para limitar el tamano de las imagenes cargadas por la digitalizacion
+INSERT INTO configuracion (idconfiguracion, nombre, valor, tipo, fecha, encrypt) VALUES (NULL, 'img_max_upload_size', '16777216', 'imagen', '2007-04-08 20:00:00', '0');
