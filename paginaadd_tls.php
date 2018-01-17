@@ -8,10 +8,8 @@ if (@$_REQUEST["iddoc"] || @$_REQUEST["key"]) {
 	menu_principal_documento($_REQUEST["iddoc"]);
 }
 
-
 include_once("librerias_saia.php");
 echo(librerias_notificaciones());
-
 
 $x_consecutivo = Null;
 $x_id_documento = Null;
@@ -211,15 +209,14 @@ table tbody td {
 				$params["url"]= $configuracion[$i]["valor"] . "_" . $_SESSION["LOGIN" . LLAVE_SAIA];
 				break;
 			case "puerto_ftp" :
-				$puerto_ftp = $configuracion[$i]["valor"];
-				if(empty($configuracion[$i]["valor"])) {
-					$params["port"]= 21;
-				} else {
-					$params["port"]= $configuracion[$i]["valor"];
+				$puerto_ftp = 21;
+				if(!empty($configuracion[$i]["valor"])) {
+					$puerto_ftp = $configuracion[$i]["valor"];
 				}
+				$params["port"]= $puerto_ftp;
 				break;
 			case "clave_ftp" :
-				if ($configuracion[$i]['encrypt']) {
+				if($configuracion[$i]['encrypt']) {
 					include_once ('pantallas/lib/librerias_cripto.php');
 					$configuracion[$i]['valor'] = decrypt_blowfish($configuracion[$i]['valor'], LLAVE_SAIA_CRYPTO);
 				}
@@ -230,7 +227,7 @@ table tbody td {
 				$usuario = $configuracion[$i]["valor"];
 				$params["usuario"]= $configuracion[$i]["valor"];
 				break;
-			case "maximo_tamanio_upload" :
+			case "tamanio_maximo_upload" :
 				$peso = $configuracion[$i]["valor"];
 				break;
 			case "ancho_imagen" :
@@ -242,7 +239,15 @@ table tbody td {
 				$params["alto"]= $configuracion[$i]["valor"];
 				break;
 			case 'tipo_ftp' :
+				$ftp_type = $configuracion[$i]["valor"];
 				$params["ftp_type"] = $configuracion[$i]["valor"];
+				break;
+			case "img_max_upload_size" :
+				$img_max_size = 16777216;
+				if($configuracion[$i]["img_max_upload_size"]) {
+					$img_max_size = $configuracion[$i]["img_max_upload_size"];
+				}
+				$params["max_upload_size"] = $img_max_size;
 				break;
 		}
 	}
@@ -256,8 +261,7 @@ table tbody td {
 	<input type="hidden" name="x_enlace" value="<?php echo($x_enlace); ?>">
 	<table width="100%" border="0" cellpadding="4" cellspacing="1" bgcolor="#CCCCCC">
 		<tr>
-			<td width="205" class="encabezado">
-				<span class="phpmaker" style="color: #FFFFFF;">DOCUMENTO ASOCIADO</span></td>
+			<td width="205" class="encabezado"> <span class="phpmaker" style="color: #FFFFFF;">DOCUMENTO ASOCIADO</span></td>
 			<td width="335" bgcolor="#F5F5F5"><span class="phpmaker">
 <?php
 			if ($key) {
@@ -289,7 +293,7 @@ table tbody td {
 					}
 					?> </span></td>
 			<td width="207" rowspan="2" bgcolor="#F5F5F5"><span class="phpmaker">
-					<input type="submit" name="Action" value="CONTINUAR" />
+				<input type="submit" name="Action" value="CONTINUAR" />
 			</span><div align="center"></div></td>
 		</tr>
 		<tr>

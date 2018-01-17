@@ -118,44 +118,44 @@ $config = busca_filtro_tabla("valor", "configuracion", "nombre='color_encabezado
 INPUT, TEXTAREA, SELECT, body {
 	font-family: Tahoma;
 	font-size: 10px;
-	}
+}
 
-	.phpmaker {
+.phpmaker {
 	font-family: Verdana;
 	font-size: 9px;
-	}
+}
 
-	.encabezado {
+.encabezado {
 	background-color: <?php echo($config[0]["valor"]); ?>;
-	color:white ;
-	padding:10px;
+	color: white;
+	padding: 10px;
 	text-align: left;
-	}
+}
 
-	.encabezado_list {
+.encabezado_list {
 	background-color: <?php echo($config[0]["valor"]); ?>;
-	color:white ;
-	vertical-align:middle;
+	color: white;
+	vertical-align: middle;
 	text-align: center;
 	font-weight: bold;
-	}
+}
 
-	table thead td {
-	font-weight:bold;
-	cursor:pointer;
+table thead td {
+	font-weight: bold;
+	cursor: pointer;
 	background-color: <?php echo($config[0]["valor"]); ?>;
 	text-align: center;
 	font-family: Verdana;
 	font-size: 9px;
-	text-transform:Uppercase;
-	vertical-align:middle;
-	}
+	text-transform: Uppercase;
+	vertical-align: middle;
+}
 
-	table tbody td {
+table tbody td {
 	font-family: Verdana;
 	font-size: 9px;
-	}
-	-->
+}
+-->
 </style>
 <script type="text/javascript">
 		<!--
@@ -174,14 +174,14 @@ INPUT, TEXTAREA, SELECT, body {
 	}
 	}
 	--></script>
-<div  align="center">
+<div align="center">
 	<?php
-  menu_ordenar($key);
+	menu_ordenar($key);
 	?>
 </div>
 <br />
 <br />
-<span class="internos" style="display:none;font-family:verdana;font-size:10px">&nbsp;&nbsp;<b>ADICI&Oacute;N DE P&Aacute;GINAS AL DOCUMENTO</b></span>
+<span class="internos" style="display: none; font-family: verdana; font-size: 10px">&nbsp;&nbsp;<b>ADICI&Oacute;N DE P&Aacute;GINAS AL DOCUMENTO</b></span>
 <form name="paginaadd" id="paginaadd" action="paginaadd.php<?php echo("?key=".$key) ?>" method="POST" onSubmit="return EW_checkMyForm(this);">
 	<input type="hidden" name="a_add" value="A">
 	<?php
@@ -205,19 +205,22 @@ INPUT, TEXTAREA, SELECT, body {
 				$temporal_usuario = $configuracion[$i]["valor"] . "_" . $_SESSION["LOGIN" . LLAVE_SAIA];
 				break;
 			case "puerto_ftp" :
-				$puerto_ftp = $configuracion[$i]["valor"];
+				$puerto_ftp = 21;
+				if(!empty($configuracion[$i]["valor"])) {
+					$puerto_ftp = $configuracion[$i]["valor"];
+				}
 				break;
 			case "clave_ftp" :
-				if($configuracion[$i]['encrypt']){
-					include_once('pantallas/lib/librerias_cripto.php');
-					$configuracion[$i]['valor']=decrypt_blowfish($configuracion[$i]['valor'],LLAVE_SAIA_CRYPTO);
+				if($configuracion[$i]['encrypt']) {
+					include_once ('pantallas/lib/librerias_cripto.php');
+					$configuracion[$i]['valor'] = decrypt_blowfish($configuracion[$i]['valor'], LLAVE_SAIA_CRYPTO);
 				}
 				$clave = $configuracion[$i]["valor"];
 				break;
 			case "usuario_ftp" :
 				$usuario = $configuracion[$i]["valor"];
 				break;
-			case "maximo_tamanio_upload" :
+			case "tamanio_maximo_upload" :
 				$peso = $configuracion[$i]["valor"];
 				break;
 			case "ancho_imagen" :
@@ -228,6 +231,12 @@ INPUT, TEXTAREA, SELECT, body {
 				break;
 			case 'tipo_ftp' :
 				$ftp_type = $configuracion[$i]["valor"];
+				break;
+			case "img_max_upload_size" :
+				$img_max_size = 16777216;
+				if($configuracion[$i]["img_max_upload_size"]) {
+					$img_max_size = $configuracion[$i]["img_max_upload_size"];
+				}
 				break;
 		}
 	}
@@ -240,10 +249,9 @@ INPUT, TEXTAREA, SELECT, body {
 
 	<input type="hidden" name="EW_Max_File_Size" value="<?php echo($peso); ?>">
 	<input type="hidden" name="x_enlace" value="<?php echo($x_enlace); ?>">
-	<table width="100%"  border="0" cellpadding="4" cellspacing="1" bgcolor="#CCCCCC">
+	<table width="100%" border="0" cellpadding="4" cellspacing="1" bgcolor="#CCCCCC">
 		<tr>
-			<td width="205" class="encabezado">
-                <span class="phpmaker" style="color: #FFFFFF;">DOCUMENTO ASOCIADO</span></td>
+			<td width="205" class="encabezado"> <span class="phpmaker" style="color: #FFFFFF;">DOCUMENTO ASOCIADO</span></td>
 			<td width="335" bgcolor="#F5F5F5"><span class="phpmaker">
 <?php
 			if ($key) {
@@ -279,7 +287,7 @@ INPUT, TEXTAREA, SELECT, body {
 			</span><div align="center"></div></td>
 		</tr>
 		<tr>
-			<td width="205" class="encabezado" ><span class="phpmaker" style="color: #FFFFFF;">ESCANEAR DE NUEVO</span></td>
+			<td width="205" class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">ESCANEAR DE NUEVO</span></td>
 			<td width="335" bgcolor="#F5F5F5"><span class="phpmaker"> SI
 				<input type="radio" name="x_escaneo" value="1">NO
 				<input type="radio" name="x_escaneo" value="0" checked>
@@ -458,7 +466,8 @@ function abrir_url_digitalizacion($iddocumento, $location, $target = "_blank") {
                     "maxtabs": "50",
                     "fileFilter" : "jpg,png,pdf,tiff,tif,doc,docx",
                     "descripcion":"<?php print(stripslashes($documento[0]["descripcion"])); ?>",
-                    "ftp_type" : "<?php echo $ftp_type;?>"
+                    "ftp_type" : "<?php echo $ftp_type;?>",
+                    "max_upload_size" : "<?php echo $img_max_size;?>"
                 };
                 var msg = {
                     clientId: clientId,
