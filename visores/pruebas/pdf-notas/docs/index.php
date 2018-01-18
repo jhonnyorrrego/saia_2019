@@ -10,6 +10,30 @@ while($max_salida>0){
 }
 include_once($ruta_db_superior."db.php");
 
+//$_REQUEST['iddocumento'] puede ser iddocumento,idanexo o  idanexos_transferencia dependiendo del tipo
+//$_REQUEST["tipo"] puede ser documento ,anexo o anexos_transferencia
+if(!$_REQUEST["ruta"]){
+	if($_REQUEST["tipo"]=='anexo'){
+		$pdf=busca_filtro_tabla("","anexos","idanexos=".$_REQUEST['iddocumento'],"",$conn);
+		$ruta_pdf=$pdf[0]['ruta'];
+		$tipo=$_REQUEST["tipo"];
+		$idarchivo=$pdf[0]['documento_iddocumento'];
+	}else if($_REQUEST["tipo"]=='anexo_trans'){
+		$pdf=busca_filtro_tabla("","anexos_transferencia","idanexos_transferencia=".$_REQUEST['iddocumento'],"",$conn);
+		$ruta_pdf=$pdf[0]['ruta'];
+		$tipo=$_REQUEST["tipo"];
+		$idarchivo=$pdf[0]['documento_iddocumento'];
+	}else{
+		$pdf=busca_filtro_tabla("","documento","iddocumento=".$_REQUEST['iddocumento'],"",$conn);
+		$ruta_pdf=$pdf[0]['pdf'];
+		$tipo='documento';
+		$idarchivo=$_REQUEST['iddocumento'];
+	}
+	
+}else{
+	$ruta_pdf=$_REQUEST["ruta"];
+}
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -102,17 +126,20 @@ include_once($ruta_db_superior."db.php");
 </head>
 <body >
   <div class="toolbar">
-  	<input type="hidden" id="documento_iddocumento" value="<?php echo($_REQUEST['iddoc']);?>" ruta="<?php echo($ruta_db_superior.$_REQUEST['ruta']);?>">
-    <button class="cursor" type="button" title="Cursor" data-tooltype="cursor">➚</button>
+  	<input type="hidden" id="documento_iddocumento" value="<?php echo($_REQUEST['iddocumento']);?>" iddoc_padre="<?php echo($idarchivo);?>" ruta="<?php echo($ruta_db_superior.$pdf[0]['pdf']);?>">
+  	<input type="hidden" id="ruta" value="<?php echo($ruta_db_superior.$ruta_pdf);?>" codificada="<?php echo(base64_encode($ruta_pdf));?>">
+  	<input type="hidden" id="tipo" value="<?php echo($tipo);?>">
+  	<div class="spacer"></div>
+    <button class="cursor btn btn-inverse" type="button" title="Cursor" data-tooltype="cursor">➚</button>
 
     <div class="spacer"></div>
-
+         
     <button class="rectangle btn btn-danger" type="button" title="Rectangle" data-tooltype="area">&nbsp;</button>
     <!--div class="spacer"></div-->
     <button id="opc_highlight" class="highlight" type="button" title="Highlight" data-tooltype="highlight">&nbsp;</button>
     <div class="spacer"></div>
     <!--button class="strikeout" type="button" title="Strikeout" data-tooltype="strikeout">&nbsp;</button-->
-	<button class="sello btn" id="opc_sello" type="button" title="Sello"  imagen="sello.jpg"  data-tooltype="sello">sello</button>
+	<button class="sello btn btn-inverse" id="opc_sello" type="button" title="Sello"  imagen="sello.jpg"  data-tooltype="sello">Sello</button>
     <!--div class="spacer"></div-->
 
     <button id="opc_text" class="text" type="button" title="Text Tool" data-tooltype="text"></button>
@@ -141,10 +168,10 @@ include_once($ruta_db_superior."db.php");
 
     <a href="javascript://" id="opc_derecha" class="rotate-ccw" title="Rotate Counter Clockwise">⟲</a>
     <a href="javascript://" id="opc_izquierda" class="rotate-cw" title="Rotate Clockwise">⟳</a>
-
-    <!--div class="spacer"></div-->
-
-    <a href="javascript://" class="clear" title="Clear">×</a>
+    <a href="javascript://" id="cambio_visor" class="cambiar_visor" title="Cambiar visor"><button class="sello btn btn-inverse">CV</button></a>
+	<div class="spacer"></div>
+	
+    <button class="sello btn btn-inverse"><a href="javascript://" class="clear" title="Clear">X</a></button>
   </div>
   <div id="content-wrapper">
     <div id="viewer" class="pdfViewer"></div>
@@ -223,6 +250,7 @@ function eliminar_elemento(idelemento,iddoc,elemento){
 			dataType: "html",
 			data: {
 				iddoc:iddoc,
+				tipo_archivo:document.getElementById('tipo').getAttribute("value"),
 				eliminar:1,
 				idft_notas_pdf:idelemento				
 			}
@@ -236,6 +264,7 @@ function eliminar_comentario(idcomentario,iddoc,ft_notas_pdf,elemento){
 			dataType: "html",
 			data: {
 				iddoc:iddoc,
+				tipo_archivo:document.getElementById('tipo').getAttribute("value"),
 				eliminar:1,
 				idcomentario_pdf:idcomentario				
 			}

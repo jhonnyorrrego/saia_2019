@@ -1,7 +1,14 @@
-var ruta_pdf='../../../../almacenamiento/ACTIVO/2017-08-09/1706/pdf/MEMORANDO_0_2017_08_09.pdf';
+//var ruta_pdf='../../../../almacenamiento/ACTIVO/2017-08-09/1706/pdf/MEMORANDO_0_2017_08_09.pdf';
+//var ruta_pdf='plano_1_h.pdf';
 //var ruta_pdf='pruebac.pdf';
 var documento = document.getElementById('documento_iddocumento');
 var iddoc =documento.getAttribute('value');
+
+var ruta = document.getElementById('ruta');
+var ruta_pdf =ruta.getAttribute('value');
+var pagina_cargada = [];
+var info_cargada = [];
+var idhojas = 0;
 
 $("#opc_text").hide();
 $("#opc_text-size").hide();
@@ -12,7 +19,7 @@ $("#opc_derecha").hide();
 $("#opc_izquierda").hide();
 $("#opc_highlight").hide();
 
-//var ruta_pdf =documento.getAttribute('ruta');
+
 
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
@@ -96,16 +103,36 @@ $("#opc_highlight").hide();
 	PDFJS.workerSrc = './shared/pdf.worker.js';
 	var NUM_PAGES = 0;
 	document.getElementById('content-wrapper').addEventListener('scroll', function (e) {
+		
+		console.log('-1-');
 	  var visiblePageNum = Math.round(e.target.scrollTop / PAGE_HEIGHT) + 1;
+	  var total=(e.target.scrollTop / PAGE_HEIGHT) + 1
+	  var entero=Math.trunc(total);
+	  var resultado=total-entero;
+	  
+	  
+	  /*console.log(visiblePageNum);
+	  console.log(e.target.scrollTop);
+	  console.log(PAGE_HEIGHT);
+	  console.log(total);
+	  console.log(resultado);*/
 	  var visiblePage = document.querySelector('.page[data-page-number="' + visiblePageNum + '"][data-loaded="false"]');
-	  if (visiblePage) {
-	    setTimeout(function () {
-	      UI.renderPage(visiblePageNum, RENDER_OPTIONS);
-	    });
+	 
+	  if (visiblePage && resultado>='0.90') {
+	  	if(!pagina_cargada.includes( visiblePageNum ) && resultado>='0.90'){
+	  		console.log(visiblePageNum);
+	  		console.log(resultado);
+	  		pagina_cargada[visiblePageNum]=visiblePageNum;
+		    setTimeout(function () {	    	
+		       UI.renderPage(visiblePageNum, RENDER_OPTIONS);
+		    });
+		   
+		 }
 	  }
 	});
 
 	function render() {
+		
 	  PDFJS.getDocument(RENDER_OPTIONS.documentId).then(function (pdf) {
 	    RENDER_OPTIONS.pdfDocument = pdf;
 
@@ -116,8 +143,8 @@ $("#opc_highlight").hide();
 	      var page = UI.createPage(i + 1);
 	      viewer.appendChild(page);
 	    }
-
-	    UI.renderPage(1, RENDER_OPTIONS).then(function (_ref) {
+		pagina_cargada[1]=1;
+	    UI.renderPage(1, RENDER_OPTIONS,1).then(function (_ref) {
 	      var _ref2 = _slicedToArray(_ref, 2);
 
 	      var pdfPage = _ref2[0];
@@ -126,7 +153,9 @@ $("#opc_highlight").hide();
 	      var viewport = pdfPage.getViewport(RENDER_OPTIONS.scale, RENDER_OPTIONS.rotate);
 	      PAGE_HEIGHT = viewport.height;
 	    });
+	    
 	  });
+	  localStorage.removeItem(RENDER_OPTIONS.documentId + '/annotations');
 	}
 	render();
 
@@ -356,11 +385,22 @@ $("#opc_highlight").hide();
 	  function handleRotateCCWClick() {
 	    setScaleRotate(RENDER_OPTIONS.scale, RENDER_OPTIONS.rotate - 90);
 	  }
+	  function handlecambiarvisorClick(iddoc) {
+	  	if(document.getElementById('tipo').getAttribute("value")=='anexo'){
+	  		 window.location="../../../pdf/web/viewer2.php?anexo="+documento.getAttribute('value')+"&iddocumento="+document.getElementById('documento_iddocumento').getAttribute("iddoc_padre")+"&files="+document.getElementById('ruta').getAttribute("codificada");
+	  	}else if(document.getElementById('tipo').getAttribute("value")=='anexo_trans'){
+	  		window.location="../../../pdf/web/viewer2.php?anexo_trans="+documento.getAttribute('value')+"&files="+document.getElementById('ruta').getAttribute("codificada");
+	  	}else{
+	  		 window.location="../../../pdf/web/viewer2.php?iddocumento="+documento.getAttribute('value');
+	  	}
+	   
+	  }
 
 	  document.querySelector('.toolbar select.scale').value = RENDER_OPTIONS.scale;
 	  document.querySelector('.toolbar select.scale').addEventListener('change', handleScaleChange);
 	  document.querySelector('.toolbar .rotate-ccw').addEventListener('click', handleRotateCCWClick);
 	  document.querySelector('.toolbar .rotate-cw').addEventListener('click', handleRotateCWClick);
+	  document.querySelector('.toolbar .cambiar_visor').addEventListener('click', handlecambiarvisorClick);
 	})();
 
 	// Clear toolbar button
@@ -378,6 +418,7 @@ $("#opc_highlight").hide();
 				dataType: "json",
 				data: {
 					iddoc:documento.getAttribute('value'),
+					tipo_archivo:document.getElementById('tipo').getAttribute("value"),
 					eliminar_todo:1
 				}
 			});	
@@ -442,6 +483,7 @@ $("#opc_highlight").hide();
 				dataType: "json",
 				data: {
 					iddoc:documento.getAttribute('value'),
+					tipo_archivo:document.getElementById('tipo').getAttribute("value"),
 					cargar_todo:1
 				},success:function (data){
 					$(".comment-list-container").empty();
@@ -472,6 +514,7 @@ $("#opc_highlight").hide();
 						dataType: "json",
 						data: {
 							iddoc:documento.getAttribute('value'),
+							tipo_archivo:document.getElementById('tipo').getAttribute("value"),
 							cargar:1,
 							ft_notas_pdf:idft_notas_pdf
 						},success:function (data){
@@ -500,6 +543,7 @@ $("#opc_highlight").hide();
 								data: {
 									iddoc:iddoc,
 									guardar:1,
+									tipo_archivo:document.getElementById('tipo').getAttribute("value"),
 									ft_notas_pdf:target.getAttribute('idft_notas_pdf'),
 									comentario:commentText.value.trim()
 								},success:function (data){
@@ -2138,6 +2182,9 @@ $("#opc_highlight").hide();
 		 *    - fulfilled: SVGElement
 		 *    - rejected: Error
 		 */function render(svg,viewport,data){return new Promise(function(resolve,reject){// Reset the content of the SVG
+		 	
+		 	//idhojas=idhojas+1;
+		 	//console.log('render'+idhojas);
 	svg.innerHTML='';svg.setAttribute('data-pdf-annotate-container',true);svg.setAttribute('id','idsvg');svg.setAttribute('data-pdf-annotate-viewport',JSON.stringify(viewport));svg.removeAttribute('data-pdf-annotate-document');svg.removeAttribute('data-pdf-annotate-page');// If there's no data nothing can be done
 	if(!data){return resolve(svg);}svg.setAttribute('data-pdf-annotate-document',data.documentId);svg.setAttribute('data-pdf-annotate-page',data.pageNumber);// Make sure annotations is an array
 	if(!Array.isArray(data.annotations)||data.annotations.length===0){return resolve(svg);}// Append annotation to svg
@@ -2401,6 +2448,7 @@ $("#opc_highlight").hide();
 						dataType: "html",
 						data: {
 							iddoc:iddoc,
+							tipo_archivo:document.getElementById('tipo').getAttribute("value"),
 							eliminar:1,
 							idft_notas_pdf:idft_notas_pdf
 							
@@ -2694,6 +2742,7 @@ if(flag==0){
 					tipo:'sello',
 					iddoc:iddoc,
 					guardar:1,
+					tipo_archivo:document.getElementById('tipo').getAttribute("value"),
 					x:x_sello-x_pagina,
 					y:y_sello-y_pagina,
 					width:ancho_final,
@@ -2755,6 +2804,7 @@ function saveRect(type,rects,color){
 							tipo:type,
 							iddoc:iddoc,
 							guardar:1,
+							tipo_archivo:document.getElementById('tipo').getAttribute("value"),
 							pageNumber:pageNumber,
 							valores:annotation
 							
@@ -2878,93 +2928,111 @@ function saveRect(type,rects,color){
 		 *  A settled Promise will be either:
 		 *    - fulfilled: [pdfPage, annotations]
 		 *    - rejected: Error
-		 */function renderPage(pageNumber,renderOptions){var documentId=renderOptions.documentId;var pdfDocument=renderOptions.pdfDocument;var scale=renderOptions.scale;var rotate=renderOptions.rotate;// Load the page and annotations
+		 */function renderPage(pageNumber,renderOptions,inicio){
+		 	
+		 	var documentId=renderOptions.documentId;
+		 	var pdfDocument=renderOptions.pdfDocument;
+		 	var scale=renderOptions.scale;
+		 	var rotate=renderOptions.rotate;// Load the page and annotations
 	return Promise.all([pdfDocument.getPage(pageNumber),_PDFJSAnnotate2.default.getAnnotations(documentId,pageNumber)]).then(function(_ref){var _ref2=_slicedToArray(_ref,2);var pdfPage=_ref2[0];var annotations=_ref2[1];var page=document.getElementById('pageContainer'+pageNumber);var svg=page.querySelector('.annotationLayer');var canvas=page.querySelector('.canvasWrapper canvas');var canvasContext=canvas.getContext('2d',{alpha:false});var viewport=pdfPage.getViewport(scale,rotate);var transform=scalePage(pageNumber,viewport,canvasContext);// Render the page
+	
+	
 	return Promise.all([pdfPage.render({canvasContext:canvasContext,viewport:viewport,transform:transform}),_PDFJSAnnotate2.default.render(svg,viewport,annotations)]).then(function(){// Text content is needed for a11y, but is also necessary for creating
 	// highlight and strikeout annotations which require selecting text.
 	
-
+		
 		//--------------------------------------
-		var _utils=__webpack_require__(6);
-		var _appendChild=__webpack_require__(11);
-		var _appendChild2=_interopRequireDefault(_appendChild);		
-		var svg=(0,_utils.findSVGAtPoint)(100,100);	
-	 	var node=void 0;
-	 	var annotation=void 0;if(!svg){return;}
-		var boundingRect=svg.getBoundingClientRect();
-		var documentId;
-		var pageNumber;
-		$.ajax({
-				type:'POST',
-				url: "cargar_notas_pdf.php",
-				dataType: "json",
-				data: {
-					iddoc:iddoc,
-					cargar:1
-				},
-				success:function (data){	
-						for(var i=0;i<data.numcampos;i++){							
-							documentId=data[i].iddocumento;
-							pageNumber=data[i].page;
-							if(data[i].type=='area'){							
-								_PDFJSAnnotate2.default.getStoreAdapter().addAnnotation(data[i].iddocumento.toString(),parseInt(data[i].page),{type: data[i].type,idft_notas_pdf:data[i].idft_notas_pdf,width: data[i].width,height: data[i].height,x: data[i].x,y: data[i].y}).then(function(annotation){(0,_appendChild2.default)(svg,annotation);});
+		//if(inicio==1){
+			if(pagina_cargada.includes( pageNumber ) && !info_cargada.includes( pageNumber )){
+			//setTimeout(function () {
 
-							}else if(data[i].type=='highlight'){
-
-								var opciones = new Array();
-								for(var j=0;j<data[i].x.length;j++){
-									opciones[j]={x:data[i].x[j],y:data[i].y[j],height:data[i].height[j],width:data[i].width[j]};
+			var _utils=__webpack_require__(6);
+			var _appendChild=__webpack_require__(11);
+			var _appendChild2=_interopRequireDefault(_appendChild);		
+			var svg=(0,_utils.findSVGAtPoint)(100,100);	
+		 	var node=void 0;
+		 	var annotation=void 0;if(!svg){return;}
+			var boundingRect=svg.getBoundingClientRect();
+			var documentId;
+			
+			$.ajax({
+					type:'POST',
+					async:false,
+					url: "cargar_notas_pdf.php",
+					dataType: "json",
+					data: {
+						iddoc:iddoc,
+						tipo_archivo:document.getElementById('tipo').getAttribute("value"),
+						cargar:1,
+						pagina:pageNumber
+					},
+					success:function (data){
+						console.log(pageNumber);
+							for(var i=0;i<data.numcampos;i++){							
+								documentId=data[i].iddocumento;
+								pageNumber=data[i].page;
+								if(data[i].type=='area'){							
+									_PDFJSAnnotate2.default.getStoreAdapter().addAnnotation(data[i].iddocumento.toString(),parseInt(data[i].page),{type: data[i].type,idft_notas_pdf:data[i].idft_notas_pdf,width: data[i].width,height: data[i].height,x: data[i].x,y: data[i].y}).then(function(annotation){(0,_appendChild2.default)(svg,annotation);});
+	
+								}else if(data[i].type=='highlight'){
+	
+									var opciones = new Array();
+									for(var j=0;j<data[i].x.length;j++){
+										opciones[j]={x:data[i].x[j],y:data[i].y[j],height:data[i].height[j],width:data[i].width[j]};
+										
+									}
 									
-								}
+									_PDFJSAnnotate2.default.getStoreAdapter().addAnnotation(data[i].iddocumento.toString(),parseInt(pageNumber),{idft_notas_pdf:data[i].idft_notas_pdf,'class':"Annotation",type:data[i].type,color:data[i].color,uuid:data[i].ui,page:data[i].page,"rectangles": opciones}).then(function(annotation){(0,_appendChild2.default)(svg,annotation);});
 								
-								_PDFJSAnnotate2.default.getStoreAdapter().addAnnotation(data[i].iddocumento.toString(),parseInt(pageNumber),{idft_notas_pdf:data[i].idft_notas_pdf,'class':"Annotation",type:data[i].type,color:data[i].color,uuid:data[i].ui,page:data[i].page,"rectangles": opciones}).then(function(annotation){(0,_appendChild2.default)(svg,annotation);});
-							
-							}else if(data[i].type=='sello'){
-								
-								
-								var pagina=document.getElementById(pageNumber);
-								var posicion = pagina.getBoundingClientRect();
-								
-							 	var div=document.createElement("div");
-								div.style.position="absolute";
-								div.style.left=data[i].x+"px";
-								div.style.top=data[i].y+"px";
-								div.style.width=(data[i].width)+"px";
-								div.style.height=(data[i].height)+"px";
-								//div.style.backgroundColor="#000";									
-								pagina.appendChild(div);
-								var img=document.createElement("img");
-								img.setAttribute('src',data[i].imagen);
-								div.appendChild(img);
-								img.setAttribute('id','img-'+data[i].idft_notas_pdf);
-								div.setAttribute('id','div-sello-'+data[i].idft_notas_pdf);
-								div.setAttribute('class','div-img');
-								
-								var eliminar=document.createElement("a");	
-								eliminar.setAttribute('href','#');
-								eliminar.setAttribute('display',''); 
-								eliminar.style.background="rgb(255, 255, 255)";
-								eliminar.style.position="absolute"; 
-								eliminar.style.top="-13px";
-								eliminar.style.right="-13px";
-								eliminar.style.width="25px";
-								eliminar.style.height="25px";
-								eliminar.style.borderRadius="20px";
-								eliminar.style.border="1px solid rgb(187, 187, 187)";
-								eliminar.style.fontSize="16px";
-								eliminar.style.textAlign="center";
-								eliminar.innerHTML = " X";
-								div.appendChild(eliminar);
-								
-								eliminar.setAttribute('id','elimina-sello-'+data[i].idft_notas_pdf);
-								eliminar.setAttribute('onclick','eliminar_elemento('+data[i].idft_notas_pdf+','+iddoc+',"sello")');
-								div.setAttribute('onmouseover','ubicar_elemento('+data[i].idft_notas_pdf+',"sello")');
-								div.setAttribute('onmouseout','salir_elemento('+data[i].idft_notas_pdf+',"sello")');
-							}									
-						}	
-				}
-			});
-		console.log('fin carga');
+								}else if(data[i].type=='sello'){
+									
+									
+									var pagina=document.getElementById(pageNumber);
+									var posicion = pagina.getBoundingClientRect();
+									
+								 	var div=document.createElement("div");
+									div.style.position="absolute";
+									div.style.left=data[i].x+"px";
+									div.style.top=data[i].y+"px";
+									div.style.width=(data[i].width)+"px";
+									div.style.height=(data[i].height)+"px";
+									//div.style.backgroundColor="#000";									
+									pagina.appendChild(div);
+									var img=document.createElement("img");
+									img.setAttribute('src',data[i].imagen);
+									div.appendChild(img);
+									img.setAttribute('id','img-'+data[i].idft_notas_pdf);
+									div.setAttribute('id','div-sello-'+data[i].idft_notas_pdf);
+									div.setAttribute('class','div-img');
+									
+									var eliminar=document.createElement("a");	
+									eliminar.setAttribute('href','#');
+									eliminar.setAttribute('display',''); 
+									eliminar.style.background="rgb(255, 255, 255)";
+									eliminar.style.position="absolute"; 
+									eliminar.style.top="-13px";
+									eliminar.style.right="-13px";
+									eliminar.style.width="25px";
+									eliminar.style.height="25px";
+									eliminar.style.borderRadius="20px";
+									eliminar.style.border="1px solid rgb(187, 187, 187)";
+									eliminar.style.fontSize="16px";
+									eliminar.style.textAlign="center";
+									eliminar.innerHTML = " X";
+									div.appendChild(eliminar);
+									
+									eliminar.setAttribute('id','elimina-sello-'+data[i].idft_notas_pdf);
+									eliminar.setAttribute('onclick','eliminar_elemento('+data[i].idft_notas_pdf+','+iddoc+',"sello")');
+									div.setAttribute('onmouseover','ubicar_elemento('+data[i].idft_notas_pdf+',"sello")');
+									div.setAttribute('onmouseout','salir_elemento('+data[i].idft_notas_pdf+',"sello")');
+								}									
+							}	
+					}
+				});
+				
+				//});
+			   }
+			//}
 	
 	
 	
@@ -2972,7 +3040,7 @@ function saveRect(type,rects,color){
 	var textLayer=page.querySelector('.textLayer');var textLayerFactory=new PDFJS.DefaultTextLayerFactory();var textLayerBuilder=textLayerFactory.createTextLayerBuilder(textLayer,pageNumber-1,viewport);textLayerBuilder.setTextContent(textContent);textLayerBuilder.render();// Enable a11y for annotations
 	// Timeout is needed to wait for `textLayerBuilder.render`
 	setTimeout(function(){try{(0,_renderScreenReaderHints2.default)(annotations.annotations);resolve();}catch(e){reject(e);}});});});}).then(function(){// Indicate that the page was loaded
-	page.setAttribute('data-loaded','true');return[pdfPage,annotations];});});}/**
+	page.setAttribute('data-loaded','true');return[pdfPage,annotations];});}); }/**
 		 * Scale the elements of a page.
 		 *
 		 * @param {Number} pageNumber The page number to be scaled

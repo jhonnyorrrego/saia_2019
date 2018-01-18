@@ -8,7 +8,7 @@ body {
 }
 
 .toolbar {
-  background-color: #eaeaea;
+  background-color: #444444;
   border-bottom: 1px solid #d0d0d0;
   height: 35px;
   position: fixed;
@@ -35,14 +35,13 @@ body {
 }
 
 .toolbar button {
-  background-color: #eaeaea;
+  background-color: #444444;
   border: 1px solid transparent;
   border-radius: 3px;
-  font-size: 15px;
+  font-size: 13px;
   padding: 3px;
   margin: 0;
   text-align: center;
-  text-shadow: 1px 1px 0 #fff;
   position: relative;
   min-width: 27px;
   min-height: 27px;

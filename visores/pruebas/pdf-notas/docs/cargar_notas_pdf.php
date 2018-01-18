@@ -14,7 +14,8 @@ while($max_salida > 0) {
 include_once ($ruta_db_superior . "db.php");
 
 if($_POST['cargar']){
-	$datos=busca_filtro_tabla("","notas_pdf","estado=1 and cod_padre is null and iddocumento=".$_POST['iddoc'],"",$conn);
+	$datos=busca_filtro_tabla("","notas_pdf","tipo_archivo='".$_POST["tipo_archivo"]."' and estado=1 and cod_padre is null and iddocumento=".$_POST['iddoc']." and (pagina='".$_POST['pagina']."' or pagina='pageContainer".$_POST['pagina']."')","",$conn);
+	
 	$notas=array();
 	for($i=0;$i<$datos['numcampos'];$i++){
 		
@@ -37,7 +38,7 @@ if($_POST['cargar']){
 			$notas[$i]["idft_notas_pdf"]=$datos[$i]['idft_notas_pdf'];
 			$notas[$i]["iddocumento"]=$datos[$i]['iddocumento'];
 			$notas[$i]["page"]=$datos[$j]['pagina'];
-			$coordenadas=busca_filtro_tabla("","notas_pdf","estado=1 and tipo='highlight' and (cod_padre='".$datos[$i]['idft_notas_pdf']."' or idft_notas_pdf=".$datos[$i]['idft_notas_pdf']." )and iddocumento=".$_POST['iddoc'],"",$conn);
+			$coordenadas=busca_filtro_tabla("","notas_pdf","tipo_archivo='".$_POST["tipo_archivo"]."' and estado=1 and tipo='highlight' and (cod_padre='".$datos[$i]['idft_notas_pdf']."' or idft_notas_pdf=".$datos[$i]['idft_notas_pdf']." )and iddocumento=".$_POST['iddoc'],"",$conn);
 			for($j=0;$j<$coordenadas['numcampos'];$j++){	
 				$notas[$i]["x"][]=$coordenadas[$j]['x'];
 				$notas[$i]["y"][]=$coordenadas[$j]['y'];
@@ -69,6 +70,7 @@ if($_POST['cargar']){
 	
 	if($_POST["tipo"]=='area'){
 		$info['iddocumento']=$_POST["iddoc"];
+		$info['tipo_archivo']=$_POST["tipo_archivo"];
 		$info['tipo']=$_POST["valores"]['type'];
 		$info['color']="FF0000";
 		$info['x']=$_POST["valores"]['x'];
@@ -87,6 +89,7 @@ if($_POST['cargar']){
 		
 	}else if($_POST["tipo"]=='highlight'){
 		$info['iddocumento']=$_POST["iddoc"];
+		$info['tipo_archivo']=$_POST["tipo_archivo"];
 		$info['tipo']=$_POST["valores"]['type'];
 		$info['color']="ffff00";
 		$info['pagina']=$_POST["pageNumber"];
@@ -111,6 +114,7 @@ if($_POST['cargar']){
 		echo($id);
 	}else if($_POST["tipo"]=='sello'){
 		$info['iddocumento']=$_POST["iddoc"];
+		$info['tipo_archivo']=$_POST["tipo_archivo"];
 		$info['tipo']=$_POST["tipo"];
 		$info['color']=null;
 		$info['x']=$_POST['x'];
@@ -139,18 +143,18 @@ if($_POST['cargar']){
 	}	
 }else if($_POST['eliminar']){
 	if($_POST['idft_notas_pdf']!="" && $_POST["iddoc"]!=''){
-		$sql_update="update notas_pdf set estado='0' where iddocumento='".$_POST["iddoc"]."' and  (idft_notas_pdf=".$_POST['idft_notas_pdf']." or cod_padre='".$_POST['idft_notas_pdf']."')";
+		$sql_update="update notas_pdf set estado='0' where iddocumento='".$_POST["iddoc"]."' and tipo_archivo='".$_POST["tipo_archivo"]."' and  (idft_notas_pdf=".$_POST['idft_notas_pdf']." or cod_padre='".$_POST['idft_notas_pdf']."')";
 		phpmkr_query($sql_update);
 		
-		$sql_comentarios="update comentario_pdf set estado='0' where iddocumento='".$_POST["iddoc"]."' and ft_notas_pdf='".$_POST['idft_notas_pdf']."' ";
+		$sql_comentarios="update comentario_pdf set estado='0' where iddocumento='".$_POST["iddoc"]."' and tipo_archivo='".$_POST["tipo_archivo"]."' and ft_notas_pdf='".$_POST['idft_notas_pdf']."' ";
 		phpmkr_query($sql_comentarios);
 	}
 }else if($_POST['eliminar_todo']){
 	if($_POST["iddoc"]!=''){
-		$sql_update="update notas_pdf set estado='0' where iddocumento='".$_POST["iddoc"]."'";
+		$sql_update="update notas_pdf set estado='0' where iddocumento='".$_POST["iddoc"]."' and tipo_archivo='".$_POST["tipo_archivo"]."'";
 		phpmkr_query($sql_update);
 			
-		$sql_comentarios="update comentario_pdf set estado='0' where iddocumento='".$_POST["iddoc"]."'";
+		$sql_comentarios="update comentario_pdf set estado='0' where iddocumento='".$_POST["iddoc"]."' and tipo_archivo='".$_POST["tipo_archivo"]."'";
 		phpmkr_query($sql_comentarios);
 	}
 }

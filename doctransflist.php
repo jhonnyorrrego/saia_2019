@@ -557,9 +557,9 @@ function rastro_documento($x_doc,$filtro){
         
         echo '<td><ul>';
         if($_SESSION["usuario_actual"]==$recorrido[$i]["origen"] || $_SESSION["usuario_actual"]==$recorrido[$i]["destino"] || $recorrido[$i]["ver_notas"]==1){
-            $anexos_transferencia=busca_filtro_tabla("ruta,etiqueta","anexos_transferencia","idbuzon_salida=".$recorrido[$i]['idtransferencia'],"",$conn);
+            $anexos_transferencia=busca_filtro_tabla("ruta,etiqueta,idanexos_transferencia","anexos_transferencia","idbuzon_salida=".$recorrido[$i]['idtransferencia'],"",$conn);
             for ($j = 0; $j < $anexos_transferencia['numcampos']; $j++) {
-                echo '<li><a href="visores/pdf/web/viewer2.php?files='.base64_encode($anexos_transferencia[$j]['ruta']).'">'.$anexos_transferencia[$j]['etiqueta'].'</a></li>';
+                echo '<li><a href="visores/pdf/web/viewer2.php?anexo_trans='.$anexos_transferencia[$j]['idanexos_transferencia'].'&files='.base64_encode($anexos_transferencia[$j]['ruta']).'">'.$anexos_transferencia[$j]['etiqueta'].'</a></li>';
             }
         }else{
             echo('<td><span class="phpmaker" >&nbsp;</span></td>');

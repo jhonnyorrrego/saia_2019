@@ -61,6 +61,19 @@ if(@$_REQUEST['files']){
     $url=$_REQUEST["file"];
 	$print=$_REQUEST['print'];
 }
+
+if(@$_REQUEST['anexo']){
+	$tipo_visor='anexo';
+	$id_archivo=$_REQUEST['anexo'];
+}else if(@$_REQUEST['anexo_trans']){
+	$tipo_visor='anexo_trans';
+	$id_archivo=$_REQUEST['anexo_trans'];
+}else{
+	$tipo_visor='documento';
+	$id_archivo=$_REQUEST['iddocumento'];
+}
+
+
 ?>
 <html dir="ltr" mozdisallowselectionprint moznomarginboxes>
   <head>
@@ -82,88 +95,6 @@ if(@$_REQUEST['files']){
 <script src="../build/pdf.js"></script>
 <!--script src="debugger.js"></script-->
 <script src="viewer.js"></script>
-  <script src="<?php echo($ruta_db_superior);?>js/jquery-1.7.min.js" type="text/javascript"></script>
-<link rel="stylesheet" type="text/css" href="<?php echo($ruta_db_superior);?>visores/pruebas/pdf-notas/docs/shared/toolbar.css"/>
-<link rel="stylesheet" type="text/css" href="<?php echo($ruta_db_superior);?>visores/pruebas/pdf-notas/docs/shared/pdf_viewer.css"/>
-<style type="text/css">
-    body {
-      background-color: #eee;
-      font-family: sans-serif;
-      margin: 0;
-    }
-
-    .pdfViewer .canvasWrapper {
-      box-shadow: 0 0 3px #bbb;
-    }
-    .pdfViewer .page {
-      margin-bottom: 10px;
-    }
-
-    .annotationLayer {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-    }
-
-    #content-wrapper {
-      position: absolute;
-      top: 35px;
-      left: 0;
-      right: 250px;
-      bottom: 0;
-      overflow: auto;
-    }
-
-    #comment-wrapper {
-      position: absolute;
-      top: 35px;
-      right: 0;
-      bottom: 0;
-      overflow: auto;
-      width: 250px;
-      background: #eaeaea;
-      border-left: 1px solid #d0d0d0;
-    }
-    #comment-wrapper h4 {
-      margin: 10px;
-    }
-    #comment-wrapper .comment-list {
-      font-size: 12px;
-      position: absolute;
-      top: 38px;
-      left: 0;
-      right: 0;
-      bottom: 0;
-    }
-    #comment-wrapper .comment-list-item {
-      border-bottom: 1px solid #d0d0d0;
-      padding: 10px;
-    }
-    #comment-wrapper .comment-list-container {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 47px;
-      overflow: auto;
-    }
-    #comment-wrapper .comment-list-form {
-      position: absolute;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      padding: 10px;
-    }
-    #comment-wrapper .comment-list-form input {
-      padding: 5px;
-      width: 100%;
-    }
-    .pdfViewer .page {
-      border-image: none;
-    }
-  </style>
   </head>
 
   <body tabindex="1" class="loadingInProgress">
@@ -324,56 +255,18 @@ if(@$_REQUEST['files']){
                   <button id="transferir" class="toolbarButton transferir" title="Transferir" tabindex="21" enlace="<?php echo($ruta_db_superior.'transferenciaadd.php?doc='.@$_REQUEST['iddocumento'].'&mostrar=1&key='.$_REQUEST['iddocumento'].'&ruta_pdf='.urlencode($ruta)); ?>" data-l10n-id="transferir">
                       <span data-l10n-id="transferir_label">Transferir</span>
                     </button>
+                    <div class="splitToolbarButtonSeparator"></div>
+                    <button id="cambio_visor" class="toolbarButton cambio_visor" title="Cambiar Visor" tabindex="23"  iddocumento="<?php echo($id_archivo);?>" tipo="<?php echo($tipo_visor);?>" data-l10n-id="cambio_visor">
+                       <span data-l10n-id="zoom_out_label">CV</span>CV
+                    </button>
+                    <div class="splitToolbarButtonSeparator"></div>
                     <button id="zoomOut" class="toolbarButton zoomOut" title="Zoom Out" tabindex="21" data-l10n-id="zoom_out">
                       <span data-l10n-id="zoom_out_label">Zoom Out</span>
                     </button>
-                    <div class="splitToolbarButtonSeparator"></div>
+                   <div class="splitToolbarButtonSeparator"></div>
                     <button id="zoomIn" class="toolbarButton zoomIn" title="Zoom In" tabindex="22" data-l10n-id="zoom_in">
                       <span data-l10n-id="zoom_in_label">Zoom In</span>
                      </button>
-                      <input type="hidden" id="documento_iddocumento" value="<?php echo($_REQUEST['iddoc']);?>" ruta="<?php echo($ruta_db_superior.$_REQUEST['ruta']);?>">
-    <button class="cursor" type="button" title="Cursor" data-tooltype="cursor">➚</button>
-
-    <div class="spacer"></div>
-
-    <button class="rectangle btn btn-danger" type="button" title="Rectangle" data-tooltype="area">resaltar</button>
-    <!--div class="spacer"></div-->
-    <button id="opc_highlight" class="highlight" type="button" title="Highlight" data-tooltype="highlight">&nbsp;</button>
-    <div class="spacer"></div>
-    <!--button class="strikeout" type="button" title="Strikeout" data-tooltype="strikeout">&nbsp;</button-->
-	<button class="sello btn" id="opc_sello" type="button" title="Sello"  imagen="sello.jpg"  data-tooltype="sello">sello</button>
-    <!--div class="spacer"></div-->
-
-    <button id="opc_text" class="text" type="button" title="Text Tool" data-tooltype="text"></button>
-    <select id="opc_text-size" class="text-size"></select>
-    <div id="opc_text-color" class="text-color"></div>
-
-    <!--div class="spacer"></div-->
-
-    <!--button class="pen" type="button" title="Pen Tool" data-tooltype="draw">✎</button>
-    <select class="pen-size"></select>
-    <div class="pen-color"></div>
-
-    <div class="spacer"></div-->
-
-    <button id="opc_comment" class="comment" type="button" title="Comment" data-tooltype="point">🗨</button>
-
-    <div class="spacer"></div>
-
-    <select class="scale" id="opc_escala">
-      <option value=".5">50%</option>
-      <option value="1">100%</option>
-      <option value="1.33">133%</option>
-      <option value="1.5">150%</option>
-      <option value="2">200%</option>
-    </select>
-
-    <a href="javascript://" id="opc_derecha" class="rotate-ccw" title="Rotate Counter Clockwise">⟲</a>
-    <a href="javascript://" id="opc_izquierda" class="rotate-cw" title="Rotate Clockwise">⟳</a>
-
-    <!--div class="spacer"></div-->
-
-    <a href="javascript://" class="clear" title="Clear">×</a>
                   </div>
                   <span id="scaleSelectContainer" class="dropdownToolbarButton">
                      <select id="scaleSelect" title="Zoom" tabindex="23" data-l10n-id="zoom">
@@ -394,10 +287,6 @@ if(@$_REQUEST['files']){
                   </span>
                 </div>
               </div>
-              
-             
-              
-              
             </div>
             <div id="loadingBar">
               <div class="progress">
@@ -422,18 +311,7 @@ if(@$_REQUEST['files']){
         <div id="viewerContainer" tabindex="0">
           <div id="viewer" class="pdfViewer"></div>
         </div>
-        
-		<div id="comment-wrapper">
-    <h4 id="comentario4">Comentarios</h4>
-    <div class="comment-list">
-      <div class="comment-list-container">
-        <div class="comment-list-item">No posee comentarios</div>
-      </div>
-      <form class="comment-list-form" style="display:none;">
-        <input type="text" placeholder="Adicionar comentario"/>
-      </form>
-    </div>
-  </div>
+
         <div id="errorWrapper" hidden='true'>
           <div id="errorMessageLeft">
             <span id="errorMessage"></span>
@@ -637,89 +515,6 @@ if(@$_REQUEST['files']){
     $("#viewBookmark").hide();
   });
 </script>
-  <script src="<?php echo($ruta_db_superior);?>visores/pruebas/pdf-notas/docs/shared/pdf_viewer.js"></script>
-  <script src="<?php echo($ruta_db_superior);?>visores/pruebas/pdf-notas/docs/index.js"></script>
   </body>
 </html>
-<script>
-function activar_over(ft_notas_pdf,elemento,idelemento,comentario){
-	
-	if(elemento=='area'){
-		$('#'+ft_notas_pdf).attr('stroke','yellow');
-		$('#'+ft_notas_pdf).attr('fill','yellow');
-		$('#'+ft_notas_pdf).attr('fill-opacity','0.2');
-	}
-	if(elemento=='highlight'){
-		$('#'+ft_notas_pdf).attr('stroke','green');
-		$('#'+ft_notas_pdf).attr('fill','green');
-	}
-	if(comentario=='comentario'){
-		var eliminar=document.getElementById('elimina-comentario-'+idelemento);
-		eliminar.style.display='';
-	}
-}
-
-function desactivar_over(ft_notas_pdf,elemento,idelemento,comentario){
-	
-	if(elemento=='area'){
-		$('#'+ft_notas_pdf).attr('stroke','#f00');
-		$('#'+ft_notas_pdf).attr('fill','none');
-	}
-	if(elemento=='highlight'){
-		$('#'+ft_notas_pdf).attr('stroke','yellow');
-		$('#'+ft_notas_pdf).attr('fill','yellow');
-	}
-	
-	if(comentario=='comentario'){
-		var eliminar=document.getElementById('elimina-comentario-'+idelemento);
-		eliminar.style.display='none';
-	}
-	
-}
-
-function ubicar_elemento(idelemento,elemento){
-
-	var eliminar=document.getElementById('elimina-'+elemento+'-'+idelemento);
-	eliminar.style.display=''; 
-
-}
-
-function salir_elemento(idelemento,elemento){
-	var eliminar=document.getElementById('elimina-'+elemento+'-'+idelemento);
-	eliminar.style.display='none'; 
-}
-
-function eliminar_elemento(idelemento,iddoc,elemento){
-	
-	$("#div-"+elemento+"-"+idelemento).remove();
-	
-	$.ajax({
-			type:'POST',
-			url: "cargar_notas_pdf.php",
-			dataType: "html",
-			data: {
-				iddoc:iddoc,
-				eliminar:1,
-				idft_notas_pdf:idelemento				
-			}
-		});
-}
-
-function eliminar_comentario(idcomentario,iddoc,ft_notas_pdf,elemento){
-	$.ajax({
-			type:'POST',
-			url: "almacenar_comentarios_pdf.php",
-			dataType: "html",
-			data: {
-				iddoc:iddoc,
-				eliminar:1,
-				idcomentario_pdf:idcomentario				
-			}
-		});
-		
-		$("#div-comentario-"+idcomentario).remove();
-		$('#'+ft_notas_pdf).attr('stroke','#f00');
-		$('#'+ft_notas_pdf).attr('fill','none');
-}
-</script>
 

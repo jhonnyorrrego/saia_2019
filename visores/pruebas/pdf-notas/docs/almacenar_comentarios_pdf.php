@@ -18,6 +18,7 @@ if($_POST['guardar']){
 	
 	$info=array();
 	$info['iddocumento']=$_POST["iddoc"];
+	$info['tipo_archivo']=$_POST["tipo_archivo"];
 	$info['ft_notas_pdf']=$_POST["ft_notas_pdf"];
 	$info['comentario']=$_POST["comentario"];
 	$info['estado']=1;
@@ -26,14 +27,14 @@ if($_POST['guardar']){
 	$sql_insert="insert into comentario_pdf (".implode(',',array_keys($info)).") values ('".implode("','",array_values($info))."')";
 	phpmkr_query($sql_insert);
 	$id=phpmkr_insert_id();
-	$comentario=busca_filtro_tabla("b.tipo","comentario_pdf a, notas_pdf b","b.idft_notas_pdf=ft_notas_pdf and a.idcomentario_pdf='".$id."' and a.estado=1","",$conn);
+	$comentario=busca_filtro_tabla("b.tipo","comentario_pdf a, notas_pdf b","b.idft_notas_pdf=ft_notas_pdf and a.tipo_archivo='".$_POST["tipo_archivo"]."' and a.idcomentario_pdf='".$id."' and a.estado=1","",$conn);
 	$resultado=array("idcomentario_pdf"=>$id,"elemento"=>$comentario[0]['tipo']);
 	
 	echo(json_encode($resultado));
 	
 }else if($_POST['cargar']){
 	
-	$comentario=busca_filtro_tabla("","comentario_pdf a, notas_pdf b","b.idft_notas_pdf=ft_notas_pdf and a.iddocumento='".$_POST['iddoc']."' and a.estado=1 and a.ft_notas_pdf='".$_POST["ft_notas_pdf"]."'","",$conn);
+	$comentario=busca_filtro_tabla("","comentario_pdf a, notas_pdf b","b.idft_notas_pdf=ft_notas_pdf and a.tipo_archivo='".$_POST["tipo_archivo"]."' and a.iddocumento='".$_POST['iddoc']."' and a.estado=1 and a.ft_notas_pdf='".$_POST["ft_notas_pdf"]."'","",$conn);
 	$info=array();
 	if($comentario["numcampos"]){
 		$info["numcampos"]=$comentario["numcampos"];
@@ -52,7 +53,7 @@ if($_POST['guardar']){
 	
 }else if($_POST['cargar_todo']){
 	
-	$comentario=busca_filtro_tabla("","comentario_pdf a, notas_pdf b","b.idft_notas_pdf=ft_notas_pdf and a.iddocumento='".$_POST['iddoc']."' and a.estado=1","",$conn);
+	$comentario=busca_filtro_tabla("","comentario_pdf a, notas_pdf b","b.idft_notas_pdf=ft_notas_pdf and a.tipo_archivo='".$_POST["tipo_archivo"]."' and a.iddocumento='".$_POST['iddoc']."' and a.estado=1","",$conn);
 	$info=array();
 	if($comentario["numcampos"]){
 		$info["numcampos"]=$comentario["numcampos"];
@@ -71,7 +72,7 @@ if($_POST['guardar']){
 	
 }else if($_POST['eliminar']){
 	if($_POST['idcomentario_pdf']!=""){
-		$sql_comentarios="update comentario_pdf set estado='0' where iddocumento='".$_POST["iddoc"]."' and idcomentario_pdf='".$_POST['idcomentario_pdf']."' ";
+		$sql_comentarios="update comentario_pdf set estado='0' where iddocumento='".$_POST["iddoc"]."' and tipo_archivo='".$_POST["tipo_archivo"]."' and idcomentario_pdf='".$_POST['idcomentario_pdf']."' ";
 		phpmkr_query($sql_comentarios);
 	}
 	
