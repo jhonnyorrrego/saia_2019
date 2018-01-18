@@ -15,12 +15,15 @@ if(@$_REQUEST["iddoc"] || @$_REQUEST["key"]){
 	if(!@$_REQUEST["iddoc"])$_REQUEST["iddoc"]=@$_REQUEST["key"];
 	include_once($ruta_db_superior."pantallas/documento/menu_principal_documento.php");
 	menu_principal_documento($_REQUEST["iddoc"]);
-	echo "<br/><br/><br/><br/>";
+	echo "<br/>";
 }
 
 if (isset($_REQUEST["idruta_aprob"]) && $_REQUEST["idruta_aprob"]) {
 	$ruta_aprob = busca_filtro_tabla("", "documento_ruta_aprob", "iddocumento_ruta_aprob=" . $_REQUEST["idruta_aprob"], "iddocumento_ruta_aprob desc", $conn);
+	$estado_doc_aprob='Sin ruta de aprobaci&oacute;n';
 	if ($ruta_aprob["numcampos"]) {
+			$equivalencia_doc_aprob=array(0=>"PENDIENTE DE APROBACION",1=>"APROBADO",3=>"RECHAZADO",4=>"CERRADO");
+			$estado_doc_aprob=$equivalencia_doc_aprob[$ruta_aprob[0]["estado_ruta_aprob"]];
 			$aprobacion_en = ($ruta_aprob[0]["aprobacion_en"]==1) ? "Aprobaci&oacute;n en serie" : "Aprobaci&oacute;n en paralelo" ;
 			if (is_object($ruta_aprob[0]["fecha_creacion"])) {
 				$fecha_creacion_ruta = $ruta_aprob[0]["fecha_creacion"] -> format("Y-m-d");
@@ -65,17 +68,32 @@ if (isset($_REQUEST["idruta_aprob"]) && $_REQUEST["idruta_aprob"]) {
 			}
 
 			$tabla = '';
-			$tareas_ruta = busca_filtro_tabla("v.nombres,v.apellidos,v.cargo,t.idtareas,t.accion_tareas,t.orden_tareas", "tareas t,vfuncionario_dc v", "t.responsable=v.iddependencia_cargo and t.ruta_aprob=".$_REQUEST["idruta_aprob"]." and t.documento_iddocumento=" . $documento[0]["iddocumento"], "idtareas asc", $conn);
+			$tareas_ruta = busca_filtro_tabla("v.nombres,v.apellidos,v.cargo,t.idtareas,t.accion_tareas,t.orden_tareas,v.funcionario_codigo", "tareas t,vfuncionario_dc v", "t.responsable=v.iddependencia_cargo and t.ruta_aprob=".$_REQUEST["idruta_aprob"]." and t.documento_iddocumento=" . $documento[0]["iddocumento"], "idtareas asc", $conn);
 			if ($tareas_ruta["numcampos"]) {
 				$tabla .= '<table align="center" style="width: 90%;" class="table table-bordered">';
 				$tabla .= '<thead>';
 				$tabla .= '<tr><th style="text-align:center;">Funcionario</th> <th style="text-align:center;">Cargo</th> <th style="text-align:center;">Acciones</th></tr>';
 				$tabla .= '</thead><tbody>';
-				$equivalencia_acciones=array(1=>"APROBADO",2=>"VISTO BUENO");
+				$equivalencia_acciones=array(1=>"APROBAR",2=>"CON VISTO BUENO");
+				$equivalencia_estado_avance=array(0=>"PENDIENTE",2=>"TERMINADO",3=>"APROBADO",4=>"CON VISTO BUENO",5=>"RECHAZADO");
 				for ($i = 0; $i < $tareas_ruta["numcampos"]; $i++) {
+					$avance=busca_filtro_tabla("estado","tareas_avance","tareas_idtareas=".$tareas_ruta[$i]["idtareas"]." and ejecutor=".$tareas_ruta[$i]["funcionario_codigo"],"idtareas_avance desc",$conn);
+					$estado="PENDIENTE";
+					if($avance["numcampos"]){
+						$estado=$equivalencia_estado_avance[$avance[0]["estado"]];
+					}
+					else{
+						$estado=$equivalencia_acciones[$tareas_ruta[$i]["accion_tareas"]];
+					}
 					$tabla .= '<tr>';
 					$tabla .= '<td>' . ucwords(strtolower($tareas_ruta[$i]["nombres"] . ' ' . $tareas_ruta[$i]["apellidos"])) . '</td> <td>' . $tareas_ruta[$i]["cargo"] . '</td>';
-					$tabla .= '<td style="text-align:center"><a class="btn btn-mini btn-info highslide" href="'.$ruta_db_superior.'pantallas/tareas/adicionar_avance_tareas.php?idtareas='.$tareas_ruta[$i]["idtareas"].'" onclick=\'return hs.htmlExpand(this, { objectType: "iframe",width:500, height:500,preserveContent:false } )\'>'.$equivalencia_acciones[$tareas_ruta[$i]["accion_tareas"]].'</a></td>';
+					$tabla .= '<td style="text-align:center">';
+						if($_SESSION["usuario_actual"]==$tareas_ruta[$i]["funcionario_codigo"] && $avance["numcampos"]==0){
+							$tabla .= '<a class="btn btn-mini btn-info highslide" href="'.$ruta_db_superior.'pantallas/tareas/adicionar_avance_tareas.php?idtareas='.$tareas_ruta[$i]["idtareas"].'" onclick=\'return hs.htmlExpand(this, { objectType: "iframe",width:500, height:500,preserveContent:false } )\'>Ingresar avance</a>';
+						}else{
+							$tabla .= $estado;
+						}
+					$tabla .= '</td>';
 					$tabla .= '</tr>';
 				}
 				$tabla .= '</tbody></table>';
@@ -118,7 +136,7 @@ echo(librerias_notificaciones());
 			</tr>
 			<tr>
 				<td><strong>Estado</strong></td>
-				<td colspan="3"><div class="label label-important" style="max-width:100px;">Pendiente</div></td>
+				<td colspan="3"><?php echo $estado_doc_aprob;?></td>
 			</tr>
 			<tr>
 				<td><strong>Descripci&oacute;n del documento</strong></td>

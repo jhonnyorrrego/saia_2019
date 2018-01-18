@@ -115,7 +115,7 @@ if($_REQUEST['guardar']==1){
 				<label class="control-label" for="accion_tareas">Acci&oacute;n*:</label>
 				<div class="controls">
 					<input type="radio" class="required" name="accion_tareas" id="accion_tarea1" value="1">Aprobar
-					<input type="radio" class="required" name="accion_tareas" id="accion_tarea2" value="2">Visto bueno
+					<input type="radio" class="required" name="accion_tareas" id="accion_tarea2" value="2">Con Visto bueno
 					<input type="hidden" name="prioridad" id="prioridad0" value="1">
 					<label class="error" for="accion_tarea"></label>
 				</div>
