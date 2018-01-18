@@ -306,6 +306,7 @@ $ingreso=0;
 if($verifica_flujo==-1){
   return("");
 }
+
 $func="";
 //GROUP BY funcionario_codigo 
 $where_usuarios= "C.tipo_cargo=1 AND B.cargo_idcargo=C.idcargo AND B.funcionario_idfuncionario=A.idfuncionario  AND B.dependencia_iddependencia <> 1 AND A.estado=1 AND B.estado=1 and C.estado=1 AND B.dependencia_iddependencia=".$codigo;
@@ -326,12 +327,14 @@ elseif(!empty($funcionarios_flujo) && $tipo_llenado==1){
 elseif(!empty($cargos_flujo) && $tipo_llenado==4){
   $where_usuarios.=" AND cargo_idcargo IN(".implode(",",$cargos_flujo).")";
   $ingreso=1;
-}   
+}  
+ 
 if(($tipo_llenado && $ingreso)||$verifica_flujo==0){
   if(count($excluidos)){
     $where_usuarios.=" AND idfuncionario NOT IN (".implode(",",$excluidos).")";
   }
   $usuarios=busca_filtro_tabla("distinct B.iddependencia_cargo,A.login,A.funcionario_codigo,UPPER(A.nombres) AS nombres_ord,UPPER(A.apellidos) AS apellidos,A.sistema,C.nombre AS cargo","funcionario A,dependencia_cargo B, cargo C",$where_usuarios,"nombres_ord ASC",$conn);
+
 
 }
 else 

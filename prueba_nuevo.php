@@ -15,6 +15,7 @@ include_once($ruta_db_superior."db.php");
 
 
 
+
 $formatos=busca_filtro_tabla("nombre,etiqueta","formato","","",$conn);
 
 $cod_padre_crear=1006;

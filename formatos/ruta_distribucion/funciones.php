@@ -14,33 +14,17 @@ $max_salida--;
 include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."formatos/librerias_funciones_generales.php");
 include_once($ruta_db_superior."librerias_saia.php");
+echo(librerias_jquery('1.7'));
 echo(librerias_notificaciones());
 
 function campo_fecha_ruta($idformato,$iddoc){
 	global $conn,$ruta_db_superior;
-	$dependencia_mensajeros=busca_filtro_tabla("iddependencia","dependencia","lower(nombre)='mensajeros' OR lower(nombre)='mensajero'","",$conn);
 	$fecha=date('Y-m-d');
 	?>
 	<script>
 	    $(document).ready(function(){
 	       $('#fecha_ruta_distribuc').attr('readonly', true);
 	       $('#fecha_ruta_distribuc').val('<?php echo $fecha;?>'); 
-	       recargar=1;
-	       tree_asignar_mensajeros.setOnLoadingEnd(recargar_arbol_asignar_mensajeros);
-	       
-	       function recargar_arbol_asignar_mensajeros(){
-	       	<?php
-	       		if($dependencia_mensajeros['numcampos']){
-	       	?>
-		       		if(recargar){
-		       			recargar=0;
-		       			tree_asignar_mensajeros.deleteItem('agrupador_<?php echo($dependencia_mensajeros[0]['iddependencia']); ?>');	
-		       			tree_asignar_mensajeros.loadXML("<?php echo($ruta_db_superior); ?>test.php?iddependencia=<?php echo($dependencia_mensajeros[0]['iddependencia']); ?>&rol=1&agrupar=1");	       			
-		       		}	   
-	       	<?php       			
-	       		}
-	       	?>	    		
-	       }
 	    });
 	</script>
 	<?php
@@ -85,7 +69,7 @@ function mostrar_datos_dependencias_ruta($idformato,$iddoc){
 						</tr>
 			';
 				
-				$item=busca_filtro_tabla("","ft_dependencias_ruta A, ft_ruta_distribucion B","idft_ruta_distribucion=ft_ruta_distribucion and A.ft_ruta_distribucion=".$dato[0]['idft_ruta_distribucion'],"",$conn);					
+			$item=busca_filtro_tabla(fecha_db_obtener("fecha_item_dependenc","Y-m-d H:i:s")." AS fecha_item_dependenc,dependencia_asignada,descripcion_dependen,estado_dependencia","ft_dependencias_ruta A, ft_ruta_distribucion B","idft_ruta_distribucion=ft_ruta_distribucion and A.ft_ruta_distribucion=".$dato[0]['idft_ruta_distribucion'],"",$conn);					
 			
 
 			if($item['numcampos']!=0){
@@ -93,7 +77,11 @@ function mostrar_datos_dependencias_ruta($idformato,$iddoc){
 			$estado=array(1=>"Activo",2=>"Inactivo");				
 
 			for($j=$item['numcampos']-1;$j>=0;$j--){
-                    
+				if($item[$j]['estado_dependencia']==1){ //VINCULO RUTA DE DISTRIBUCION DE LAS DEPENDENCIAS ACTIVAS A LOS DOCUMENTOS
+					include_once($ruta_db_superior."distribucion/funciones_distribucion.php");
+					actualizar_dependencia_ruta_distribucion($dato[0]['idft_ruta_distribucion'],$item[$j]['dependencia_asignada'],1);
+				}
+
                     $dependencia=busca_filtro_tabla('','dependencia','iddependencia='.$item[$j]['dependencia_asignada'],'',conn);
 	               
 							$tabla.='		
@@ -208,7 +196,7 @@ function mostrar_datos_funcionarios_ruta($idformato,$iddoc){
 						</tr>
 			';
 				
-				$item=busca_filtro_tabla("","ft_funcionarios_ruta A, ft_ruta_distribucion B","idft_ruta_distribucion=ft_ruta_distribucion and A.ft_ruta_distribucion=".$dato[0]['idft_ruta_distribucion'],"",$conn);					
+				$item=busca_filtro_tabla(fecha_db_obtener("fecha_mensajero","Y-m-d H:i:s")." AS fecha_mensajero,mensajero_ruta,estado_mensajero,idft_funcionarios_ruta","ft_funcionarios_ruta A, ft_ruta_distribucion B","idft_ruta_distribucion=ft_ruta_distribucion and A.ft_ruta_distribucion=".$dato[0]['idft_ruta_distribucion'],"",$conn);					
 			
 
 			if($item['numcampos']!=0){
@@ -239,7 +227,7 @@ function mostrar_datos_funcionarios_ruta($idformato,$iddoc){
 										
 									
 										<td>'.$mensajero[0]['nombre'].'</td>
-										<td><select class="cambio_estado" name="estado[]" data-idft="'.$item[$j]['idft_funcionarios_ruta'].'" style="width:100px;">
+										<td><select class="cambio_estado" name="estado[]" data-idft="'.$item[$j]['idft_funcionarios_ruta'].'"  mensajero_ruta="'.$item[$j]['mensajero_ruta'].'" style="width:100px;">
                                               <option value="1" '.$seleccionar[1].'>Activo</option>
                                               <option value="2" '.$seleccionar[2].'>Inactivo</option>
                                         </select></td>
@@ -285,12 +273,15 @@ function mostrar_datos_funcionarios_ruta($idformato,$iddoc){
 						$(".cambio_estado").change(function(){
 							var estado=$(this).val();
 							var idft=$(this).attr("data-idft");
+							var mensajero_ruta=$(this).attr("mensajero_ruta");
 							$.ajax({
 			                        type:"POST",
 			                        url: "actualizar_estado_mensajeros.php",
 			                        data: {
 			                                        idft:idft,
-			                                        estado:estado
+			                                        estado:estado,
+			                                        idft_ruta_distribucion:'.$dato[0]['idft_ruta_distribucion'].',
+			                                        iddependencia_cargo_mensajero:mensajero_ruta
 			                        },
 			                        success: function(datos){
 			                            notificacion_saia("Estado del funcionario actualizado correctamente","success","",4000);
@@ -336,9 +327,45 @@ function crear_items_ruta_distribucion($idformato,$iddoc){
 
 
 
+function vincular_dependencia_ruta_distribucion($idformato,$iddoc){  //POSTERIOR AL APROBAR
+	global $conn,$ruta_db_superior;
+	
+	$datos=busca_filtro_tabla("a.idft_ruta_distribucion,b.dependencia_asignada","ft_ruta_distribucion a, ft_dependencias_ruta b","b.estado_dependencia=1 AND a.idft_ruta_distribucion=b.ft_ruta_distribucion AND a.documento_iddocumento=".$iddoc,"",$conn);
+	if($datos['numcampos']){
+		include_once($ruta_db_superior."distribucion/funciones_distribucion.php");
+		for($i=0;$i<$datos['numcampos'];$i++){		
+			actualizar_dependencia_ruta_distribucion($datos[$i]['idft_ruta_distribucion'],$datos[$i]['dependencia_asignada'],1);			
+		}		
+	}
+}
 
-
-
+function validar_nombre_ruta_distribucion($idformato,$iddoc){ //ADICIONAR
+	global $conn,$ruta_db_superior;
+	?>
+	<script>
+		$(document).ready(function(){
+			$('#nombre_ruta').blur(function(){
+				$.ajax({
+			        type: "POST",
+			        dataType: 'json',
+			        data: { 
+			                nombre_ruta:$(this).val()
+			              },
+			        url: "validar_nombre_ruta_distribucion.php",
+			        success : function(data) {
+			        	if(data.existe){
+			        		$('#nombre_ruta').val('');
+			        		$('#nombre_ruta').focus();
+			        		top.noty({text: '<b>ATENCI&Oacute;N</b><br>El nombre de la ruta ya existe!',type: 'warning',layout: 'topCenter',timeout:2500});
+			        	}
+			        }
+			    }); 
+				
+			});
+		});
+	</script>
+	<?php	
+}
 
 
 ?>

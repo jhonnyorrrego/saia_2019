@@ -24,7 +24,7 @@ global $conn;
   <body>
  
     <div class="container master-container">
-        <legend>Filtrar despachos</legend>  
+        <legend>Filtrar Radicaciones</legend>  
 		<div class="container master-container">
        <form accept-charset="UTF-8" id="kformulario_saia"  method="post" >  
         <div class="control-group">
@@ -40,11 +40,11 @@ global $conn;
         <div class="control-group">
           <label class="string required control-label" for="numero">
             <b>N&uacute;mero Item:</b>
-            <input type="hidden" name="bksaiacondicion_numero_item" id="bksaiacondicion_numero_item" value="=">
+            <input type="hidden" name="bksaiacondicion_numero_distribucion" id="bksaiacondicion_numero_distribucion" value="=">
           </label>
           <div class="controls">
-            <input id="bqsaia_numero" name="bqsaia_numero_item" size="50" type="text">
-            <input type="hidden" name="bqsaiaenlace_numero_item" id="bqsaiaenlace_numero_item" value="y">
+            <input id="bqsaia_numero_distribucion" name="bqsaia_numero_distribucion" size="50" type="text">
+            <input type="hidden" name="bqsaiaenlace_numero_distribucion" id="bqsaiaenlace_numero_distribucion" value="y">
           </div>
         </div> 
          <strong>Entre las fechas</strong>
@@ -61,63 +61,7 @@ global $conn;
 
         <input type="hidden" name="bqsaiaenlace_fecha_radicacion_entrada_y" id="bqsaiaenlace_fecha_radicacion_entrada_y" value="y" />
 
-		<br>
-		
-		<?php 
-			$vector_rutas_dependencias=array();
-			$rutas_distribucion=busca_filtro_tabla("idft_ruta_distribucion,nombre_ruta","ft_ruta_distribucion a, documento b"," a.documento_iddocumento=b.iddocumento AND lower(b.estado)='aprobado' ","",$conn);
-			for($i=0;$i<$rutas_distribucion['numcampos'];$i++){
-				$dependencias_ruta_distribucion=busca_filtro_tabla("","ft_dependencias_ruta","estado_dependencia=1 AND ft_ruta_distribucion=".$rutas_distribucion[$i]['idft_ruta_distribucion'],"",$conn);
-				$lista_dependencia_ruta=extrae_campo($dependencias_ruta_distribucion,'dependencia_asignada');
-				$lista_dependencia_ruta=array_map('intval', $lista_dependencia_ruta);
-				$lista_dependencia_ruta=implode(',',$lista_dependencia_ruta);
-				
-				$vector_rutas_dependencias[$i]['idft_ruta_distribucion']=$rutas_distribucion[$i]['idft_ruta_distribucion'];
-				$vector_rutas_dependencias[$i]['nombre_ruta']=$rutas_distribucion[$i]['nombre_ruta'];
-				$vector_rutas_dependencias[$i]['dependencias_ruta']=$lista_dependencia_ruta;
-			}
-			
-			$select_rutas='<select id="select_rutas_distribucion">';
-			$select_rutas.='<option value=""  selected>Seleccione...</option>';
-			for($i=0;$i<count($vector_rutas_dependencias);$i++){
-				$select_rutas.='
-					<option value="'.$vector_rutas_dependencias[$i]['idft_ruta_distribucion'].'">
-						'.$vector_rutas_dependencias[$i]['nombre_ruta'].'
-					</option>
-				';
-			}
-			$select_rutas.='</select>';
-		?>
-		
-        <div class="control-group">
-          <label class="string required control-label" for="lista_dependencia">
-            <b>Rutas de Distribucion:</b>
-            
-          </label>
-          <div class="controls">
-          		<?php echo($select_rutas); ?>
-          		
-          	<input type="hidden" name="variable_busqueda" id="variable_busqueda" value="">
-
-
-          </div>
-          <script>
-          	$(document).ready(function(){
-          		$('#select_rutas_distribucion').change(function(){
-          			var valor=$(this).val();
-          			console.log(valor);
-          			$('#variable_busqueda').val('|'+valor);
-          			console.log($('#variable_busqueda').val());
-          		});
-          	});
-          </script>
-          
-          
-          	<!-- input type="hidden" name="bksaiacondicion_numero_item" id="bksaiacondicion_numero_item" value="=">
-          	<input id="bqsaia_numero" name="bqsaia_numero_item" size="50" type="hidden">
-            <input type="hidden" name="bqsaiaenlace_numero_item" id="bqsaiaenlace_numero_item" value="y" -->
-          
-        </div> 		
+	
 		
 		<br>
 
@@ -138,21 +82,29 @@ global $conn;
           </div> 
       </div>
       
-      <div class="row">
+        <div class="row">
           <div class="control-group radio_buttons span4">
-            <label class="radio_buttons optional control-label"><b>Con anexo?</b>
-            <input type="hidden" name="bksaiacondicion_anexos" id="bksaiacondicion_anexos" value="=">
+            <label class="radio_buttons optional control-label"><b>Ventanilla</b>
+            
             </label>
             <div class="controls">
-              <label class="radio inline">
-                <input class="radio_buttons optional" id="bqsaia_anexos" name="bqsaia_anexos" type="radio" value="0">No
-              </label>
-              <label class="radio inline">
-                <input class="radio_buttons optional" id="bqsaia_anexos2" name="bqsaia_anexos" type="radio" value="1">Si
-              </label>
+            	<?php 
+            		$options='<option value="" selected>Seleccione...</option>';
+            	 $ventanillas=busca_filtro_tabla("idcf_ventanilla,valor","cf_ventanilla","estado=1","",$conn);
+            	 for($i=0;$i<$ventanillas['numcampos'];$i++){
+            	 	$options.='<option value="'.$ventanillas[$i]['idcf_ventanilla'].'">'.$ventanillas[$i]['valor'].'</option>';
+            	 }
+            	?>
+            	<input type="hidden" name="bksaiacondicion_d@ventanilla_radicacion" id="bksaiacondicion_d@ventanilla_radicacion" value="=">
+            	<select id="bqsaia_d@ventanilla_radicacion" name="bqsaia_d@ventanilla_radicacion">
+            		<?php echo($options); ?>
+            	</select>
+            	<input type="hidden" name="bqsaiaenlace_d@ventanilla_radicacion" id="bqsaiaenlace_d@ventanilla_radicacion" value="y">
+					
             </div>          
           </div> 
-      </div>
+      </div>      
+      
 	<br>
         <div class="form-actions">    
           <input type="hidden" name="idbusqueda_componente" id="idbusqueda_componente" value="<?php echo @$_REQUEST["idbusqueda_componente"]; ?>">

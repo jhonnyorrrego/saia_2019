@@ -67,94 +67,111 @@ function calculaFecha($modo,$valor,$fecha_inicio=false,$formato=false){
 	return date($formato, $calculo);
 }
 
-function dias_habiles_listado($dias, $formato = NULL, $fecha_inicial = NULL) {
-	global $conn;
 
-	if (empty($formato)) {
-		$formato = "d-m-Y";
-	}
-	$formato_bd = "dd-mm-YYYY"; // Formato validor para el motor y DEBE SER COMPATIBLE CON $formato
-	if (!$fecha_inicial) {
-		$fecha_inicial = date($formato);
-	}
 
-	$dias_no_habiles = busca_filtro_tabla("valor", "configuracion", "tipo='festivos' AND nombre='dias_no_habiles'", "", $conn);
-	$sabado_habil = false;
-	if($dias_no_habiles["numcampos"]) {
-		$vector_dias_no_habiles = explode(',', $dias_no_habiles[0]['valor']);
-		$sabado_habil = !in_array("s", $vector_dias_no_habiles);
-	}
+$version_php=explode('.',phpversion());
+$version_php=array_map('intval', $version_php);
+if($version_php[0]>=5 && $version_php[1]>=5){ //si la version de php es mayor a 5.5 trabaja con el nuevo generador de festivos, sino todo como antes
 
-	$begin = new \DateTime($fecha_inicial);
-	$end = clone $begin;
-	$end->add(new \DateInterval('P' . $dias . 'D'))->setTime(23, 59, 59);
-	$period = new \DatePeriod($begin, new \DateInterval('P1D'), $end);
+	function dias_habiles_listado($dias, $formato = NULL, $fecha_inicial = NULL) {
+		global $conn;
 
-	$periodIterator = new PeriodoDiasHabilesIterador($period, $sabado_habil);
-	$adjustedEndingDate = clone $begin;
-
-	$years = array();
-	while($periodIterator->valid()) {
-		$adjustedEndingDate = $periodIterator->current();
-		$years[] = $adjustedEndingDate->format('Y');
-		// If we run into a weekend, extend our days
-		if ($periodIterator->isWeekend()) {
-			$periodIterator->extend();
+		if (empty($formato)) {
+			$formato = "d-m-Y";
 		}
-		if ($periodIterator->isHollyday()) {
-			$periodIterator->extend();
+		$formato_bd = "dd-mm-YYYY"; // Formato validor para el motor y DEBE SER COMPATIBLE CON $formato
+		if (!$fecha_inicial) {
+			$fecha_inicial = date($formato);
 		}
-		$periodIterator->next();
+	
+		$dias_no_habiles = busca_filtro_tabla("valor", "configuracion", "tipo='festivos' AND nombre='dias_no_habiles'", "", $conn);
+		$sabado_habil = false;
+		if($dias_no_habiles["numcampos"]) {
+			$vector_dias_no_habiles = explode(',', $dias_no_habiles[0]['valor']);
+			$sabado_habil = !in_array("s", $vector_dias_no_habiles);
+		}
+	
+		$begin = new \DateTime($fecha_inicial);
+		$end = clone $begin;
+		$end->add(new \DateInterval('P' . $dias . 'D'))->setTime(23, 59, 59);
+		$period = new \DatePeriod($begin, new \DateInterval('P1D'), $end);
+	
+		$periodIterator = new PeriodoDiasHabilesIterador($period, $sabado_habil);
+		$adjustedEndingDate = clone $begin;
+	
+		$years = array();
+		while($periodIterator->valid()) {
+			$adjustedEndingDate = $periodIterator->current();
+			$years[] = $adjustedEndingDate->format('Y');
+			// If we run into a weekend, extend our days
+			if ($periodIterator->isWeekend()) {
+				$periodIterator->extend();
+			}
+			if ($periodIterator->isHollyday()) {
+				$periodIterator->extend();
+			}
+			$periodIterator->next();
+		}
+		$years = array_unique($years);
+		// print_r($adjustedEndingDate->format($formato));
+		$fecha_legal= $adjustedEndingDate->format($formato);
+		return($fecha_legal);
 	}
-	$years = array_unique($years);
-	// print_r($adjustedEndingDate->format($formato));
-	$fecha_legal= $adjustedEndingDate->format($formato);
-	return($fecha_legal);
-}
 
-function dias_habiles_listado_old($dias, $formato = NULL, $fecha_inicial = NULL) {
-	global $conn;
-	if (!$formato)
-		$formato = "d-m-Y";
-	$formato_bd = "dd-mm-YYYY"; // Formato validor para el motor y DEBE SER COMPATIBLE CON $formato
-	if (!$fecha_inicial)
-		$fecha_inicial = date($formato);
 
-	$ar_fechaini = date_parse($fecha_inicial);
-	$anioinicial = $ar_fechaini["year"];
-	$mesinicial = $ar_fechaini["month"];
-	$diainicial = $ar_fechaini["day"];
+}else{
 
-	$cambio_anio = esCambioAnio($anioinicial . '-' . $mesinicial . '-' . $diainicial, $dias);
-
-	if ($cambio_anio['cambio']) {
-		$festivos = new CalendarCol(intval($cambio_anio['anio_validar']));
-		$dias = $cambio_anio['dias_validar'];
-		$fecha_inicial = $cambio_anio['fecha_validar'];
+	function dias_habiles_listado($dias, $formato = NULL, $fecha_inicial = NULL) {
+		global $conn;
+		if (!$formato)
+			$formato = "d-m-Y";
+		$formato_bd = "dd-mm-YYYY"; // Formato validor para el motor y DEBE SER COMPATIBLE CON $formato
+		if (!$fecha_inicial)
+			$fecha_inicial = date($formato);
+	
 		$ar_fechaini = date_parse($fecha_inicial);
 		$anioinicial = $ar_fechaini["year"];
 		$mesinicial = $ar_fechaini["month"];
 		$diainicial = $ar_fechaini["day"];
-	} else {
-		$festivos = new CalendarCol(date('Y'));
-	}
-	$cantidad_festivos = 0;
-	for($i = 1; $i <= $dias; $i++) {
-		$fecha = calculaFecha("days", $i, $fecha_inicial, $formato);
-		if ($festivos->esFestivo($fecha)) {
-
-			$cantidad_festivos++;
+	
+		$cambio_anio = esCambioAnio($anioinicial . '-' . $mesinicial . '-' . $diainicial, $dias);
+	
+		if ($cambio_anio['cambio']) {
+			$festivos = new CalendarCol(intval($cambio_anio['anio_validar']));
+			$dias = $cambio_anio['dias_validar'];
+			$fecha_inicial = $cambio_anio['fecha_validar'];
+			$ar_fechaini = date_parse($fecha_inicial);
+			$anioinicial = $ar_fechaini["year"];
+			$mesinicial = $ar_fechaini["month"];
+			$diainicial = $ar_fechaini["day"];
+		} else {
+			$festivos = new CalendarCol(date('Y'));
 		}
+		$cantidad_festivos = 0;
+		for($i = 1; $i <= $dias; $i++) {
+			$fecha = calculaFecha("days", $i, $fecha_inicial, $formato);
+			if ($festivos->esFestivo($fecha)) {
+	
+				$cantidad_festivos++;
+			}
+		}
+	
+		if ($cantidad_festivos) {
+			$no_laborales = $cantidad_festivos;
+			$fecha_legal = date($formato, mktime(0, 0, 0, $mesinicial, $diainicial + $dias, $anioinicial));
+			return (dias_habiles_listado($no_laborales, $formato, $fecha_legal));
+		}
+		$fecha_legal = date($formato, mktime(0, 0, 0, $mesinicial, $diainicial + $dias, $anioinicial));
+		return ($fecha_legal);
 	}
 
-	if ($cantidad_festivos) {
-		$no_laborales = $cantidad_festivos;
-		$fecha_legal = date($formato, mktime(0, 0, 0, $mesinicial, $diainicial + $dias, $anioinicial));
-		return (dias_habiles_listado_old($no_laborales, $formato, $fecha_legal));
-	}
-	$fecha_legal = date($formato, mktime(0, 0, 0, $mesinicial, $diainicial + $dias, $anioinicial));
-	return ($fecha_legal);
-}
+
+} //fin else version php
+
+
+
+
+
 
 /*
 function dias_habiles_listado($dias,$formato=NULL,$fecha_inicial=NULL){

@@ -36,6 +36,10 @@ if($retorno['exito']){
 	phpmkr_query($sql);
 	$retorno['mensaje']='Estado de la dependencia actualizado correctamente';
 	
+	
+	include_once($ruta_db_superior."distribucion/funciones_distribucion.php");
+	actualizar_dependencia_ruta_distribucion($idft_ruta_distribucion,$idft,$estado);
+	
 }
 
 

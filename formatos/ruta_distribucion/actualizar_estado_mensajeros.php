@@ -22,4 +22,11 @@ $estado=$_REQUEST['estado'];
 $sql="UPDATE ft_funcionarios_ruta SET estado_mensajero=$estado WHERE idft_funcionarios_ruta=$idft";
 phpmkr_query($sql);
 
+
+$idft_ruta_distribucion=@$_REQUEST['idft_ruta_distribucion'];
+$iddependencia_cargo_mensajero=@$_REQUEST['iddependencia_cargo_mensajero'];
+include_once($ruta_db_superior."distribucion/funciones_distribucion.php");
+actualizar_mensajero_ruta_distribucion($idft_ruta_distribucion,$iddependencia_cargo_mensajero,$estado);
+
+
 echo('<script>window.history.back(); window.location.reload();</script>');

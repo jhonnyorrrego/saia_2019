@@ -29,10 +29,11 @@ if(count($request)){
 		  $conector='iframe';
 	      	
 	      		$idcategoria_formato=1;
-			  	$mostrar=0;
+			  	
 				$concatenar=array("','","fk_categoria_formato","','");
-				$cuantos_formatos=busca_filtro_tabla("","formato","(cod_padre IS NULL OR cod_padre=0) AND (".concatenar_cadena_sql($concatenar)." like'%,".$idcategoria_formato.",%')","etiqueta ASC",$conn);
+				$cuantos_formatos=busca_filtro_tabla("nombre,ruta_adicionar,etiqueta","formato","(cod_padre IS NULL OR cod_padre=0) AND (".concatenar_cadena_sql($concatenar)." like'%,".$idcategoria_formato.",%')","etiqueta ASC",$conn);
 				for($i=0;$i<$cuantos_formatos['numcampos'];$i++){
+					$mostrar=0;
 					$url=$ruta_db_superior.'formatos/'.$cuantos_formatos[$i]['nombre'].'/'.$cuantos_formatos[$i]['ruta_adicionar']."?1=1";
 					$proceso='';
 					

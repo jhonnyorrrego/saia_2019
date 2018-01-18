@@ -40,7 +40,7 @@ function generar_codigo_qr_carta($idformato,$iddoc){
   $datos=busca_filtro_tabla("A.fecha,A.estado, A.numero","documento A","A.iddocumento=".$iddoc,"",$conn);
 	$fecha=mostrar_fecha_saia($datos[0]['fecha']);
 	$datos_qr="Fecha: ".$fecha." \n";
-	$datos_qr.="Radicado No: ".$datos[0]["numero"]." \n";
+	$datos_qr.="Radicado No: ".$datos[0]["numero"]." <br/>";
 	$firmas=busca_filtro_tabla("CONCAT(B.nombres,CONCAT(' ',B.apellidos)) AS nombre","buzon_salida A, funcionario B","A.origen=B.funcionario_codigo AND (A.nombre LIKE 'APROBADO' OR A.nombre LIKE 'REVISADO')AND A.archivo_idarchivo=".$iddoc,"idtransferencia asc", $conn);
 	$datos_qr.="Firman: \n";
 	for($i=0; $i<$firmas['numcampos']; $i++){
@@ -849,6 +849,26 @@ function formato_radicado_enviada($idformato,$iddoc,$retorno=0){
 	  return($cadena);
 	}
 	echo($cadena);	
+}
+
+function vincular_distribucion_carta($idformato,$iddoc){  //POSTERIOR AL APROBAR
+	global $conn,$ruta_db_superior;
+	
+	$datos=busca_filtro_tabla("tipo_mensajeria,requiere_recogida","ft_carta","documento_iddocumento=".$iddoc,"",$conn);
+	
+	$estado_recogida=0;
+	$estado_distribucion=1;
+	if(!$datos[0]['requiere_recogida']){
+		$estado_recogida=1;
+		$estado_distribucion=0;
+	}
+	if($datos[0]['tipo_mensajeria']==3){
+		$estado_distribucion=3;
+	}
+	
+	include_once($ruta_db_superior."distribucion/funciones_distribucion.php");
+	
+	pre_ingresar_distribucion($iddoc,'dependencia',1,'destinos',2,$estado_distribucion,$estado_recogida); //INT -EXT 
 }
 
 ?>

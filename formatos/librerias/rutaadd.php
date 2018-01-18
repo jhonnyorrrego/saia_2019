@@ -990,7 +990,7 @@ function AddData($conn)
   	unset($_SESSION['abrir_centro']);		
   }  
 
-  if(@$_REQUEST['cargar']){
+  if(@$_REQUEST['cargar'] || $_SESSION['tipo_dispositivo'] == 'movil'){
   	abrir_url("../../formatos/".$plantilla[0]["plantilla"]."/mostrar_".$plantilla[0]["plantilla"].".php?iddoc=".$fieldList["documento_iddocumento"]."&idformato=".$plantilla[0]["idformato"],"_self");
       	
   }else{

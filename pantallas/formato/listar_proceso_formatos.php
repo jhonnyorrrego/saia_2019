@@ -13,7 +13,7 @@ include_once($ruta_db_superior."librerias_saia.php");
 include_once($ruta_db_superior."pantallas/lib/encabezado_componente.php");
 usuario_actual("login");
 
-$consulta=busca_filtro_tabla('','categoria_formato','cod_padre=2 and estado=1','nombre ASC',$conn);
+$consulta=busca_filtro_tabla('idcategoria_formato,nombre','categoria_formato','cod_padre=2 and estado=1','nombre ASC',$conn);
 $adicional="";
 $request=array();
 foreach(@$_REQUEST as $id => $value){
@@ -32,7 +32,7 @@ if(count($request)){
 	      	
 	      		$idcategoria_formato=$consulta[$i]['idcategoria_formato'];
 			  	$mostrar=0;
-				$cuantos_formatos=busca_filtro_tabla("","formato","mostrar=1 AND (cod_padre IS NULL OR cod_padre=0) AND (fk_categoria_formato like'".$idcategoria_formato."' OR   fk_categoria_formato like'%,".$idcategoria_formato."'  OR   fk_categoria_formato like'".$idcategoria_formato.",%' OR   fk_categoria_formato like'%,".$idcategoria_formato.",%') AND (fk_categoria_formato like'2' OR   fk_categoria_formato like'%,2'  OR   fk_categoria_formato like'2,%' OR   fk_categoria_formato like'%,2,%') ","etiqueta ASC",$conn);
+				$cuantos_formatos=busca_filtro_tabla("nombre,ruta_adicionar","formato","mostrar=1 AND (cod_padre IS NULL OR cod_padre=0) AND (fk_categoria_formato like'".$idcategoria_formato."' OR   fk_categoria_formato like'%,".$idcategoria_formato."'  OR   fk_categoria_formato like'".$idcategoria_formato.",%' OR   fk_categoria_formato like'%,".$idcategoria_formato.",%') AND (fk_categoria_formato like'2' OR   fk_categoria_formato like'%,2'  OR   fk_categoria_formato like'2,%' OR   fk_categoria_formato like'%,2,%') ","etiqueta ASC",$conn);
 				
 				if($cuantos_formatos['numcampos']==1){
 					$url=$ruta_db_superior.'formatos/'.$cuantos_formatos[0]['nombre'].'/'.$cuantos_formatos[0]['ruta_adicionar']."?1=1";
@@ -80,14 +80,14 @@ if(count($request)){
   </div>
 </div>
 
-
 <?php
 	function acceso_modulo($idmodulo){
-	  if(usuario_actual("login")=="cerok"){
+	$configuracion = busca_filtro_tabla("A.valor", "configuracion A", "A.tipo='usuario' AND A.nombre='login_administrador'", "", $conn);
+	if (trim($configuracion[0]["valor"]) == trim($_SESSION["LOGIN" . LLAVE_SAIA])) {
 	    return true;
 	  }
 	  $ok=new Permiso();
-	  $modulo=busca_filtro_tabla("","modulo","idmodulo=".$idmodulo,"");
+	$modulo = busca_filtro_tabla("nombre", "modulo", "idmodulo=" . $idmodulo, "", $conn);
 	  $acceso=$ok->acceso_modulo_perfil($modulo[0]["nombre"]);
 	  return $acceso;
 	}	

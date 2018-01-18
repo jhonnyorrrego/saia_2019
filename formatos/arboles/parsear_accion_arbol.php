@@ -24,7 +24,6 @@ if(@$_REQUEST["id"]) {
 		if($datos[1] && $datos[2]) {
 			$datos_formato = busca_filtro_tabla("", $formato[0]["nombre_tabla"] . ",documento", "documento_iddocumento=iddocumento and id" . $formato[0]["nombre_tabla"] . "=" . $datos[2], "", $conn);
 		}
-		// die($datos[3]);
 		switch($datos[3]) {
 			case "documento_por_vincular":
 				$documento = busca_filtro_tabla("", "documento A," . $formato[0]["nombre_tabla"] . " B", "A.iddocumento=B.documento_iddocumento AND B.id" . $formato[0]["nombre_tabla"] . "=" . $datos[2], "", $conn);
@@ -167,6 +166,9 @@ if(@$_REQUEST["id"]) {
 					$ruta = "../../vacio.php";
 				break;
 			case "adicionar":
+			    if($_SESSION["tipo_dispositivo"]=="movil"){
+			        volver(1);
+			    }
 				if(!$datos[2] && $_REQUEST["llave"] && $datos[0]) {
 					
 					$datos_padre = parsea_idformato($_REQUEST["llave"]);

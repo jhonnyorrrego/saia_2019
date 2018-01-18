@@ -10,14 +10,18 @@ include_once ($ruta_db_superior . "pantallas/lib/librerias_cripto.php");
 // Template processor instance creation
 // require_once($ruta_db_superior.'pantallas/lib/PhpWord/Autoloader.php');
 // require_once($ruta_db_superior.'pantallas/lib/PHPWord/src/PhpWord/Autoloader.php');
-require_once ($ruta_db_superior . 'pantallas/lib/PhpWord/Autoloader.php');
+//require_once ($ruta_db_superior . 'pantallas/lib/PhpWord/Autoloader.php');
+require_once ($ruta_db_superior . 'vendor/autoload.php');
+
+require_once 'SaiaTemplateProcessor.php';
+
 date_default_timezone_set('UTC');
 
 /**
  * Header file
  */
-use PhpOffice\PhpWord\Autoloader;
 use PhpOffice\PhpWord\Settings;
+use PhpOffice\PhpWord\SaiaTemplateProcessor;
 
 error_reporting(E_ALL);
 
@@ -25,9 +29,6 @@ define('CLI', (PHP_SAPI == 'cli') ? true : false);
 define('EOL', CLI ? PHP_EOL : '<br />');
 define('SCRIPT_FILENAME', basename($_SERVER['SCRIPT_FILENAME'], '.php'));
 define('IS_INDEX', SCRIPT_FILENAME == 'index');
-
-Autoloader::register();
-Settings::loadConfig();
 
 // Return to the caller script when runs by CLI
 if (CLI) {
@@ -77,7 +78,7 @@ if (@$_REQUEST["iddoc"]) {
 
 if ($ruta_procesar != '') {
 	$ejecutar = 0;
-	$templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor($ruta_procesar);
+	$templateProcessor = new SaiaTemplateProcessor($ruta_procesar);
 	$campos_word = $templateProcessor->getVariables();
 	if (@$_REQUEST["iddoc"] && count($campos_word)) {
 		// include_once($ruta_db_superior."formatos/librerias/funciones_generales.php");
@@ -216,7 +217,7 @@ if ($ruta_procesar != '') {
 							break;
 						case 'nombre_formato' :
 							$templateProcessor->setValue('nombre_formato', $formato[0]['etiqueta']);
-							break;	
+							break;
 						case 'espacio_firma' :
 							$ruta = busca_filtro_tabla("tipo_origen,origen,idruta", "ruta", "obligatorio=1 AND condicion_transferencia='POR_APROBAR' AND tipo='ACTIVO' AND documento_iddocumento=" . $_REQUEST["iddoc"], "idruta asc", $conn);
 							$ruta_revisado = busca_filtro_tabla("tipo_origen,origen,idruta", "ruta", "obligatorio=2 AND condicion_transferencia='POR_APROBAR' AND tipo='ACTIVO' AND documento_iddocumento=" . $_REQUEST["iddoc"], "idruta asc", $conn);
@@ -387,7 +388,7 @@ if ($ruta_procesar != '') {
 							} else {
 								$templateProcessor -> setValue('nombre_revisado', '');
 							}
-							break;							
+							break;
 						/*case 'mostrar_estado_proceso' :
 
 							$ruta = busca_filtro_tabla("", "ruta", "obligatorio=1 AND condicion_transferencia='POR_APROBAR' AND tipo='ACTIVO' AND documento_iddocumento=" . $_REQUEST["iddoc"], "", $conn);
@@ -614,6 +615,7 @@ if ($ruta_procesar != '') {
 		if (file_exists($directorio_out . $archivo_out . $extension_doc)) {
 			$comando = 'export HOME=/tmp && libreoffice5.1 --headless --norestore --invisible --convert-to pdf:writer_pdf_Export --outdir ' . $directorio_out . ' ' . $directorio_out . $archivo_out . $extension_doc;
 			$var = shell_exec($comando);
+			//print_r($var);die();
 		}
 		if (@$anexo['numcampos']) { // elimina las imagenes de la carpeta
 

@@ -54,14 +54,18 @@ $lista2=expedientes_asignados();
 if(@$_REQUEST["id"] && @$_REQUEST["uid"]){
 	echo("<?xml version=\"1.0\" encoding=\"UTF-8\"?".">");
 	echo("<tree id=\"".$_REQUEST["id"]."\">\n");
+	echo("<item style=\"font-family:verdana; font-size:7pt;\" text=\"Expedientes\" nocheckbox=\"1\" id=\"exp\">");
 	llena_expediente($_REQUEST["id"]);
+	echo("</item>'\n");
 	echo("</tree>\n");
 	die();
 }
 
 echo("<?xml version=\"1.0\" encoding=\"UTF-8\"?".">");
 echo("<tree id=\"0\">\n");
+echo("<item style=\"font-family:verdana; font-size:7pt;\" text=\"Expedientes\" nocheckbox=\"1\" id=\"exp\">");
 llena_expediente($id);
+echo("</item>\n");
 echo("</tree>\n");
 
 function llena_expediente($id){

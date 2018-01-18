@@ -46,13 +46,13 @@ $caja=busca_filtro_tabla("","caja","idcaja=".$idcaja,"",$conn);
 </div><br />
 <div id="div_info_caja"  class="collapse in opcion_informacion"> 
 <table class="table table-bordered">
-  <tr>
-    <td width="40%" class="prettyprint">
-      <b>No consecutivo:</b>
+	<tr>
+    <td class="prettyprint">
+      <b>Codigo:</b>
     </td>
-    <td>
-       <?php echo($caja[0]["no_consecutivo"]);?>
-    </td>    
+    <td colspan="3">
+       <?php echo($caja[0]["codigo_serie"]."-".$caja[0]["codigo_dependencia"]."-".$caja[0]["no_consecutivo"]);?>
+    </td>
   </tr>
   <tr>
     <td class="prettyprint">
@@ -87,14 +87,6 @@ $caja=busca_filtro_tabla("","caja","idcaja=".$idcaja,"",$conn);
     </td>
   </tr>
   <tr>
-    <td class="prettyprint">
-      <b>Codigo:</b>
-    </td>
-    <td colspan="3">
-       <?php echo($caja[0]["codigo"]);?>
-    </td>
-  </tr>
-  <tr>
 <?php
 $nombre_serie=busca_filtro_tabla("","serie a","a.idserie=".$caja[0]["serie_idserie"],"",$conn);
 ?>
@@ -110,23 +102,7 @@ $nombre_serie=busca_filtro_tabla("","serie a","a.idserie=".$caja[0]["serie_idser
       <b>No carpetas:</b>
     </td>
     <td colspan="3">
-       <?php echo($caja[0]["no_carpetas"]);?>
-    </td>
-  </tr>
-  <tr>
-    <td class="prettyprint">
-      <b>No caja:</b>
-    </td>
-    <td colspan="3">
-       <?php echo($caja[0]["no_cajas"]);?>
-    </td>
-  </tr>
-  <tr>
-    <td class="prettyprint">
-      <b>No correlativo:</b>
-    </td>
-    <td colspan="3">
-       <?php echo($caja[0]["no_correlativo"]);?>
+       <?php echo consultar_numero_carpetas_caja($caja[0][idcaja])?>
     </td>
   </tr>
   <tr>
@@ -134,11 +110,7 @@ $nombre_serie=busca_filtro_tabla("","serie a","a.idserie=".$caja[0]["serie_idser
       <b>Fecha extrema inicial:</b>
     </td>
     <td colspan="3">
-       <?php 
-       if(is_object($caja[0]["fecha_extrema_i"])){
-       	$caja[0]["fecha_extrema_i"]=$caja[0]["fecha_extrema_i"]->format('Y-m-d');
-       }
-       echo($caja[0]["fecha_extrema_i"]);?>
+       <?php echo calcular_fecha_extrema_inicial($caja[0][idcaja]) ?>
     </td>
   </tr>
   <tr>
@@ -146,19 +118,15 @@ $nombre_serie=busca_filtro_tabla("","serie a","a.idserie=".$caja[0]["serie_idser
       <b>Fecha extrema final:</b>
     </td>
     <td colspan="3">
-       <?php 
-       if(is_object($caja[0]["fecha_extrema_f"])){
-       	$caja[0]["fecha_extrema_f"]=$caja[0]["fecha_extrema_f"]->format('Y-m-d');
-       }
-       echo($caja[0]["fecha_extrema_f"]);?>
+       <?php echo calcular_fecha_extrema_final($caja[0][idcaja])  ?>
     </td>
   </tr>
   <tr>
     <td class="prettyprint">
-      <b>Estanter&iacute;a:</b>
+      <b>Módulo:</b>
     </td>
     <td colspan="3">
-       <?php echo($caja[0]["estanteria"]);?>
+       <?php echo($caja[0]["modulo"]);?>
     </td>
   </tr>
   <tr>
@@ -169,14 +137,21 @@ $nombre_serie=busca_filtro_tabla("","serie a","a.idserie=".$caja[0]["serie_idser
        <?php echo($caja[0]["panel"]);?>
     </td>
   </tr>
+   <tr>
+    <td class="prettyprint">
+      <b>Nivel:</b>
+    </td>
+    <td colspan="3">
+       <?php echo($caja[0]["nivel"]);?>
+    </td>
+  </tr>
   <tr>
     <td class="prettyprint">
       <b>Material:</b>
     </td>
     <td colspan="3">
-       <?php echo($caja[0]["material"]);?>
+       <?php echo consulta_material_caja($caja[0][material])?>
     </td>
-  </tr>
   <tr>
     <td class="prettyprint">
       <b>Seguridad:</b>

@@ -10,7 +10,7 @@ while ($max_salida > 0) {
 }
 include_once ($ruta_db_superior . "db.php");
 include_once ($ruta_db_superior . "formatos/librerias/funciones_generales.php");
-
+ini_set("display_errors",true);
 
 /*MOSTRAR*/
 function solicitante_funcion($idformato, $iddoc) {
@@ -81,6 +81,7 @@ function transferir_documento_padre($idformato, $iddoc) {
 		$idformato2 = $datos_padre[0]["idformato"];
 		$iddoc2 = $datos_padre[0]["iddocumento"];
 		transferencia_automatica($idformato2, $iddoc2, $datos_padre[0]["ejecutor"], 3);
+		
 	}
 }
 
@@ -104,8 +105,30 @@ $datos_solicitud = busca_filtro_tabla("a.documento_iddocumento AS iddoc","ft_sol
 	}
 
 }
-
-
-
-
+function llenar_transferencia_vinculada_entrega($idformato,$iddoc)
+{	
+	global $conn;
+	$texto="";	
+	$tabla_solicitud_prestamo=busca_filtro_tabla("transferencia_presta","ft_solicitud_prestamo","documento_iddocumento=".$_REQUEST['anterior'],"",$conn);
+	$transferencia_prestamo = $tabla_solicitud_prestamo[0]['transferencia_presta'];
+	$expedientes = explode(',', $transferencia_prestamo);
+	for($i=0;$i<count($expedientes);$i++)
+	 {
+	 	$id_expedientes = $expedientes[$i];
+	 	$tabla_expedientes=busca_filtro_tabla("","expediente A","A.idexpediente =".$id_expedientes,"",$conn);
+		$nombre_expedientes = $tabla_expedientes[0]['nombre'];
+		$texto.="<td><input type='checkbox' name='transferencia_vinculada' id='transferencia_vinculada' value='".$id_expedientes."'>".$nombre_expedientes."</td>";
+		  
+	 }	
+	echo($texto);	
+}
+function numero_expediente($idformato,$iddoc){
+	
+}
+function no_caja($idformato,$iddoc){
+	
+}
+function numero_folios($idformato,$iddoc){
+	
+}
 ?>
