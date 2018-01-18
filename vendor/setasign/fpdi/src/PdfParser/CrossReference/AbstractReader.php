@@ -5,7 +5,7 @@
  * @package   setasign\Fpdi
  * @copyright Copyright (c) 2017 Setasign - Jan Slabon (https://www.setasign.com)
  * @license   http://opensource.org/licenses/mit-license The MIT License
- * @version   2.0.0-beta
+ * @version   2.0.0
  */
 
 namespace setasign\Fpdi\PdfParser\CrossReference;
@@ -65,7 +65,7 @@ abstract class AbstractReader
             $trailerKeyword->value !== 'trailer'
         ) {
             throw new CrossReferenceException(
-                sprintf(
+                \sprintf(
                     'Unexpected end of cross reference. "trailer"-keyword expected, got: %s',
                     $trailerKeyword instanceof PdfToken ? $trailerKeyword->value : 'nothing'
                 ),

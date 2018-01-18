@@ -5,7 +5,7 @@
  * @package   setasign\Fpdi
  * @copyright Copyright (c) 2017 Setasign - Jan Slabon (https://www.setasign.com)
  * @license   http://opensource.org/licenses/mit-license The MIT License
- * @version   2.0.0-beta
+ * @version   2.0.0
  */
 
 namespace setasign\Fpdi\PdfParser\Type;
@@ -30,7 +30,7 @@ class PdfName extends PdfType
     public static function parse(Tokenizer $tokenizer, StreamReader $streamReader)
     {
         $v = new self;
-        if (strspn($streamReader->getByte(), "\x00\x09\x0A\x0C\x0D\x20()<>[]{}/%") === 0) {
+        if (\strspn($streamReader->getByte(), "\x00\x09\x0A\x0C\x0D\x20()<>[]{}/%") === 0) {
             $v->value = (string) $tokenizer->getNextToken();
             return $v;
         }

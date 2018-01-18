@@ -5,7 +5,7 @@
  * @package   setasign\Fpdi
  * @copyright Copyright (c) 2017 Setasign - Jan Slabon (https://www.setasign.com)
  * @license   http://opensource.org/licenses/mit-license The MIT License
- * @version   2.0.0-beta
+ * @version   2.0.0
  */
 
 namespace setasign\Fpdi;
@@ -28,7 +28,10 @@ use setasign\Fpdi\PdfParser\Type\PdfType;
 use setasign\Fpdi\PdfReader\PageBoundaries;
 use setasign\Fpdi\PdfReader\PdfReader;
 use setasign\Fpdi\PdfReader\PdfReaderException;
-use setasign\FpdiPdfParser\PdfParser\PdfParser as FpdiPdfParser;
+use /* This namespace/class is used by the commercial FPDI PDF-Parser add-on. */
+    /** @noinspection PhpUndefinedClassInspection */
+    /** @noinspection PhpUndefinedNamespaceInspection */
+    setasign\FpdiPdfParser\PdfParser\PdfParser as FpdiPdfParser;
 
 /**
  * The FpdiTrait
@@ -82,11 +85,12 @@ trait FpdiTrait
      */
     protected function setMinPdfVersion($pdfVersion)
     {
-        if (version_compare($pdfVersion, $this->PDFVersion, '>')) {
+        if (\version_compare($pdfVersion, $this->PDFVersion, '>')) {
             $this->PDFVersion = $pdfVersion;
         }
     }
 
+    /** @noinspection PhpUndefinedClassInspection */
     /**
      * Get a new pdf parser instance.
      *
@@ -95,7 +99,9 @@ trait FpdiTrait
      */
     protected function getPdfParserInstance(StreamReader $streamReader)
     {
-        if (class_exists(FpdiPdfParser::class)) {
+        /** @noinspection PhpUndefinedClassInspection */
+        if (\class_exists(FpdiPdfParser::class)) {
+            /** @noinspection PhpUndefinedClassInspection */
             return new FpdiPdfParser($streamReader);
         }
 
@@ -111,18 +117,18 @@ trait FpdiTrait
      */
     protected function getPdfReaderId($file)
     {
-        if (is_resource($file)) {
+        if (\is_resource($file)) {
             $id = (string) $file;
-        } elseif (is_string($file)) {
-            $id = realpath($file);
+        } elseif (\is_string($file)) {
+            $id = \realpath($file);
             if (false === $id) {
                 $id = $file;
             }
-        } elseif (is_object($file)) {
-            $id = spl_object_hash($file);
+        } elseif (\is_object($file)) {
+            $id = \spl_object_hash($file);
         } else {
             throw new \InvalidArgumentException(
-                sprintf('Invalid type in $file parameter (%s)', gettype($file))
+                \sprintf('Invalid type in $file parameter (%s)', \gettype($file))
             );
         }
 
@@ -130,9 +136,9 @@ trait FpdiTrait
             return $id;
         }
 
-        if (is_resource($file)) {
+        if (\is_resource($file)) {
             $streamReader = new StreamReader($file);
-        } elseif (is_string($file)) {
+        } elseif (\is_string($file)) {
             $streamReader = StreamReader::createByFile($file);
         } else {
             $streamReader = $file;
@@ -157,7 +163,7 @@ trait FpdiTrait
         }
 
         throw new \InvalidArgumentException(
-            sprintf('No pdf reader with the given id (%s) exists.', $id)
+            \sprintf('No pdf reader with the given id (%s) exists.', $id)
         );
     }
 
@@ -199,9 +205,11 @@ trait FpdiTrait
         $pageNumber = (int)$pageNumber;
         $pageId .= '|' . $pageNumber . '|' . ($groupXObject ? '1' : '0');
 
+        // for backwards compatibility with FPDI 1
+        $box = \ltrim($box, '/');
         if (!PageBoundaries::isValidName($box)) {
             throw new \InvalidArgumentException(
-                sprintf('Box name is invalid: "%s"', $box)
+                \sprintf('Box name is invalid: "%s"', $box)
             );
         }
 
@@ -217,7 +225,7 @@ trait FpdiTrait
         $bbox = $page->getBoundary($box);
         if ($bbox === false) {
             throw new PdfReaderException(
-                sprintf("Page doesn't have a boundary box (%s).", $box),
+                \sprintf("Page doesn't have a boundary box (%s).", $box),
                 PdfReaderException::MISSING_DATA
             );
         }
@@ -255,8 +263,8 @@ trait FpdiTrait
         if ($rotation !== 0) {
             $rotation *= -1;
             $angle = $rotation * M_PI/180;
-            $a = cos($angle);
-            $b = sin($angle);
+            $a = \cos($angle);
+            $b = \sin($angle);
             $c = -$b;
             $d = $a;
 
@@ -292,7 +300,7 @@ trait FpdiTrait
 
         // just copy the stream reference if it is only a single stream
         if (($contentsIsStream = ($contents instanceof PdfStream))
-            || ($contents instanceof PdfArray && count($contents->value) === 1)
+            || ($contents instanceof PdfArray && \count($contents->value) === 1)
         ) {
             if ($contentsIsStream) {
                 /**
@@ -314,10 +322,10 @@ trait FpdiTrait
         // otherwise extract it from the array and re-compress the whole stream
         } else {
             $streamContent = $this->compress
-                ? gzcompress($page->getContentStream())
+                ? \gzcompress($page->getContentStream())
                 : $page->getContentStream();
 
-            $dict->value['Length'] = PdfNumeric::create(strlen($streamContent));
+            $dict->value['Length'] = PdfNumeric::create(\strlen($streamContent));
             if ($this->compress) {
                 $dict->value['Filter'] = PdfName::create('FlateDecode');
             }
@@ -355,11 +363,11 @@ trait FpdiTrait
      */
     public function useImportedPage($pageId, $x = 0, $y = 0, $width = null, $height = null, $adjustPageSize = false)
     {
-        if (is_array($x)) {
+        if (\is_array($x)) {
             unset($x['pageId']);
-            extract($x, EXTR_IF_EXISTS);
+            \extract($x, EXTR_IF_EXISTS);
             /** @noinspection NotOptimalIfConditionsInspection */
-            if (is_array($x)) {
+            if (\is_array($x)) {
                 $x = 0;
             }
         }
@@ -378,7 +386,7 @@ trait FpdiTrait
 
         $this->_out(
             // reset standard values, translate and scale
-            sprintf(
+            \sprintf(
                 'q 0 J 1 w 0 j 0 G 0 g %.4F 0 0 %.4F %.4F %.4F cm /%s Do Q',
                 ($newSize['width'] / $originalSize['width']),
                 ($newSize['height'] / $originalSize['height']),
@@ -442,10 +450,10 @@ trait FpdiTrait
     protected function writePdfType(PdfType $value)
     {
         if ($value instanceof PdfNumeric) {
-            if (is_int($value->value)) {
+            if (\is_int($value->value)) {
                 $this->_put($value->value . ' ', false);
             } else {
-                $this->_put(rtrim(rtrim(sprintf('%.5F', $value->value), '0'), '.') . ' ', false);
+                $this->_put(\rtrim(\rtrim(\sprintf('%.5F', $value->value), '0'), '.') . ' ', false);
             }
 
         } elseif ($value instanceof PdfName) {

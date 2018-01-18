@@ -5,7 +5,7 @@
  * @package   setasign\Fpdi
  * @copyright Copyright (c) 2017 Setasign - Jan Slabon (https://www.setasign.com)
  * @license   http://opensource.org/licenses/mit-license The MIT License
- * @version   2.0.0-beta
+ * @version   2.0.0
  */
 
 namespace setasign\Fpdi\PdfReader;
@@ -52,6 +52,15 @@ class PdfReader
     }
 
     /**
+     * PdfReader destructor.
+     */
+    public function __destruct()
+    {
+        /** @noinspection PhpInternalEntityUsedInspection */
+        $this->parser->cleanUp();
+    }
+
+    /**
      * Get the pdf parser instance.
      *
      * @return PdfParser
@@ -68,7 +77,7 @@ class PdfReader
      */
     public function getPdfVersion()
     {
-        return implode('.', $this->parser->getPdfVersion());
+        return \implode('.', $this->parser->getPdfVersion());
     }
 
     /**
@@ -98,7 +107,7 @@ class PdfReader
      */
     public function getPage($pageNumber)
     {
-        if (!is_numeric($pageNumber)) {
+        if (!\is_numeric($pageNumber)) {
             throw new \InvalidArgumentException(
                 'Page number needs to be a number.'
             );
@@ -106,7 +115,7 @@ class PdfReader
 
         if ($pageNumber < 1 || $pageNumber > $this->getPageCount()) {
             throw new \InvalidArgumentException(
-                sprintf(
+                \sprintf(
                     'Page number "%s" out of available page range (1 - %s)',
                     $pageNumber,
                     $this->getPageCount()
@@ -160,13 +169,13 @@ class PdfReader
      */
     protected function readPages()
     {
-        if (count($this->pages) > 0) {
+        if (\count($this->pages) > 0) {
             return;
         }
 
         $readPages = function ($kids, $count) use (&$readPages) {
             $kids = PdfArray::ensure($kids);
-            $isLeaf = $count->value === count($kids->value);
+            $isLeaf = $count->value === \count($kids->value);
 
             foreach ($kids->value as $reference) {
                 $reference = PdfIndirectObjectReference::ensure($reference);

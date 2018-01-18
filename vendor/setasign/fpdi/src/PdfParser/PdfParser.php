@@ -5,7 +5,7 @@
  * @package   setasign\Fpdi
  * @copyright Copyright (c) 2017 Setasign - Jan Slabon (https://www.setasign.com)
  * @license   http://opensource.org/licenses/mit-license The MIT License
- * @version   2.0.0-beta
+ * @version   2.0.0
  */
 
 namespace setasign\Fpdi\PdfParser;
@@ -79,6 +79,16 @@ class PdfParser
     }
 
     /**
+     * Removes cycled references.
+     *
+     * @internal
+     */
+    public function cleanUp()
+    {
+        $this->xref = null;
+    }
+
+    /**
      * Get the stream reader instance.
      *
      * @return StreamReader
@@ -114,7 +124,7 @@ class PdfParser
         $maxIterations = 1000;
         while (true) {
             $buffer = $this->streamReader->getBuffer(false);
-            $offset = strpos($buffer, '%PDF-');
+            $offset = \strpos($buffer, '%PDF-');
             if (false === $offset) {
                 if (!$this->streamReader->increaseLength(100) || (--$maxIterations === 0)) {
                     throw new PdfParserException(
@@ -130,7 +140,7 @@ class PdfParser
         $this->fileHeaderOffset = $offset;
         $this->streamReader->setOffset($offset);
 
-        $this->fileHeader = trim($this->streamReader->readLine());
+        $this->fileHeader = \trim($this->streamReader->readLine());
         return $this->fileHeaderOffset;
     }
 
@@ -158,7 +168,7 @@ class PdfParser
     {
         $this->resolveFileHeader();
 
-        if (preg_match('/%PDF-(\d)\.(\d)/', $this->fileHeader, $result) === 0) {
+        if (\preg_match('/%PDF-(\d)\.(\d)/', $this->fileHeader, $result) === 0) {
             throw new PdfParserException(
                 'Unable to extract PDF version from file header.',
                 PdfParserException::PDF_VERSION_NOT_FOUND
@@ -168,7 +178,7 @@ class PdfParser
 
         $catalog = $this->getCatalog();
         if (isset($catalog->value['Version'])) {
-            list($major, $minor) = explode('.', PdfType::resolve($catalog->value['Version'], $this)->value);
+            list($major, $minor) = \explode('.', PdfType::resolve($catalog->value['Version'], $this)->value);
         }
 
         return [(int) $major, (int) $minor];
@@ -248,9 +258,9 @@ class PdfParser
                 return PdfArray::parse($this->tokenizer, $this);
 
             default:
-                if (is_numeric($token)) {
+                if (\is_numeric($token)) {
                     if (($token2 = $this->tokenizer->getNextToken()) !== false) {
-                        if (is_numeric($token2)) {
+                        if (\is_numeric($token2)) {
                             if (($token3 = $this->tokenizer->getNextToken()) !== false) {
                                 switch ($token3) {
                                     case 'obj':

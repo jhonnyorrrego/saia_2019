@@ -5,7 +5,7 @@
  * @package   setasign\Fpdi
  * @copyright Copyright (c) 2017 Setasign - Jan Slabon (https://www.setasign.com)
  * @license   http://opensource.org/licenses/mit-license The MIT License
- * @version   2.0.0-beta
+ * @version   2.0.0
  */
 
 namespace setasign\Fpdi\PdfReader;
@@ -101,14 +101,14 @@ class Page
         }
 
         $inheritedKeys = ['Resources', 'MediaBox', 'CropBox', 'Rotate'];
-        if ($inherited && in_array($name, $inheritedKeys, true)) {
+        if ($inherited && \in_array($name, $inheritedKeys, true)) {
             if (null === $this->inheritedAttributes) {
                 $this->inheritedAttributes = [];
-                $inheritedKeys = array_filter($inheritedKeys, function ($key) use ($dict) {
+                $inheritedKeys = \array_filter($inheritedKeys, function ($key) use ($dict) {
                     return !isset($dict->value[$key]);
                 });
 
-                if (count($inheritedKeys) > 0) {
+                if (\count($inheritedKeys) > 0) {
                     $parentDict = PdfType::resolve(PdfDictionary::get($dict, 'Parent'), $this->parser);
                     while ($parentDict instanceof PdfDictionary) {
                         foreach ($inheritedKeys as $index => $key) {
@@ -119,7 +119,7 @@ class Page
                         }
 
                         /** @noinspection NotOptimalIfConditionsInspection */
-                        if (isset($parentDict->value['Parent']) && count($inheritedKeys) > 0) {
+                        if (isset($parentDict->value['Parent']) && \count($inheritedKeys) > 0) {
                             $parentDict = PdfType::resolve(PdfDictionary::get($parentDict, 'Parent'), $this->parser);
                         } else {
                             break;
@@ -236,7 +236,7 @@ class Page
                 $result[] = $content->getUnfilteredStream();
             }
 
-            return implode("\n", $result);
+            return \implode("\n", $result);
         }
 
         if ($contents instanceof PdfStream) {

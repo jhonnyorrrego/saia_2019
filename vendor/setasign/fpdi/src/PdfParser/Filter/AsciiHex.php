@@ -5,7 +5,7 @@
  * @package   setasign\Fpdi
  * @copyright Copyright (c) 2017 Setasign - Jan Slabon (https://www.setasign.com)
  * @license   http://opensource.org/licenses/mit-license The MIT License
- * @version   2.0.0-beta
+ * @version   2.0.0
  */
 
 namespace setasign\Fpdi\PdfParser\Filter;
@@ -25,12 +25,12 @@ class AsciiHex implements FilterInterface
      */
     public function decode($data)
     {
-        $data = preg_replace('/[^0-9A-Fa-f]/', '', rtrim($data, '>'));
-        if ((strlen($data) % 2) === 1) {
+        $data = \preg_replace('/[^0-9A-Fa-f]/', '', \rtrim($data, '>'));
+        if ((\strlen($data) % 2) === 1) {
             $data .= '0';
         }
 
-        return pack('H*', $data);
+        return \pack('H*', $data);
     }
 
     /**
@@ -42,8 +42,8 @@ class AsciiHex implements FilterInterface
      */
     public function encode($data, $leaveEOD = false)
     {
-        $t = unpack('H*', $data);
-        return current($t)
+        $t = \unpack('H*', $data);
+        return \current($t)
             . ($leaveEOD ? '' : '>');
     }
 }

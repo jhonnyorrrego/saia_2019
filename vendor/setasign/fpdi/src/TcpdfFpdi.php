@@ -5,7 +5,7 @@
  * @package   setasign\Fpdi
  * @copyright Copyright (c) 2017 Setasign - Jan Slabon (https://www.setasign.com)
  * @license   http://opensource.org/licenses/mit-license The MIT License
- * @version   2.0.0-beta
+ * @version   2.0.0
  */
 
 namespace setasign\Fpdi;
@@ -39,7 +39,7 @@ class TcpdfFpdi extends \TCPDF
      *
      * @string
      */
-    const VERSION = '2.0.0-beta2';
+    const VERSION = '2.0.0';
 
     /**
      * A counter for template ids.
@@ -126,7 +126,7 @@ class TcpdfFpdi extends \TCPDF
      */
     public function getTemplateSize($tpl, $width = null, $height = null)
     {
-       return $this->getImportedPageSize($tpl, $width, $height);
+        return $this->getImportedPageSize($tpl, $width, $height);
     }
 
     /**
@@ -156,11 +156,11 @@ class TcpdfFpdi extends \TCPDF
             $this->_put('endobj');
         }
 
-        foreach (array_keys($this->readers) as $readerId) {
+        foreach (\array_keys($this->readers) as $readerId) {
             $parser = $this->getPdfReader($readerId)->getParser();
             $this->currentReaderId = $readerId;
 
-            while (($objectNumber = array_pop($this->objectsToCopy[$readerId])) !== null) {
+            while (($objectNumber = \array_pop($this->objectsToCopy[$readerId])) !== null) {
                 try {
                     $object = $parser->getIndirectObject($objectNumber);
 
@@ -247,7 +247,7 @@ class TcpdfFpdi extends \TCPDF
             $stream = $value->getStream();
             $stream = $this->_encrypt_data($this->currentObjectNumber, $stream);
             $dictionary = $value->value;
-            $dictionary->value['Length'] = PdfNumeric::create(strlen($stream));
+            $dictionary->value['Length'] = PdfNumeric::create(\strlen($stream));
             $value = PdfStream::create($dictionary, $stream);
 
         } elseif ($value instanceof PdfIndirectObject) {
