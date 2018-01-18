@@ -65,7 +65,27 @@ if($dato_padre["numcampos"]){
     <textarea name="descripcion" id="descripcion"><?php echo($datos[0]["descripcion"]); ?></textarea>
   </div>
 </div>
-
+<div class="control-group element">
+  <label class="control-label" for="indice_uno">Indice uno
+  </label>
+  <div class="controls"> 
+    <input type="text" name="indice_uno" id="indice_uno" value="<?php echo($datos[0]["indice_uno"]); ?>">
+  </div>
+</div>
+<div class="control-group element">
+  <label class="control-label" for="indice_dos">Indice Dos
+  </label>
+  <div class="controls"> 
+    <input type="text" name="indice_dos" id="indice_dos" value="<?php echo($datos[0]["indice_dos"]); ?>">
+  </div>
+</div>
+<div class="control-group element">
+  <label class="control-label" for="indice_tres">Indice Tres
+  </label>
+  <div class="controls"> 
+    <input type="text" name="indice_tres" id="indice_tres" value="<?php echo($datos[0]["indice_tres"]); ?>">
+  </div>
+</div>
 <div class="control-group element">
   <label class="control-label" for="seguridad">Caja
   </label>

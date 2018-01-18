@@ -11,9 +11,19 @@ while ($max_salida > 0) {
 include_once ($ruta_db_superior . "db.php");
 include_once ($ruta_db_superior . "librerias_saia.php");
 
-$_REQUEST["iddoc"]=2;
+if(@$_REQUEST["iddoc"] || @$_REQUEST["key"]){
+	if(!@$_REQUEST["iddoc"])$_REQUEST["iddoc"]=@$_REQUEST["key"];
+	include_once($ruta_db_superior."pantallas/documento/menu_principal_documento.php");
+	menu_principal_documento($_REQUEST["iddoc"]);
+	echo "<br/><br/><br/><br/>";
+}
 
-$documento = busca_filtro_tabla("ejecutor,serie,iddocumento", "documento", "iddocumento=" . $_REQUEST["iddoc"], "", $conn);
+$documento_ruta_aprob=busca_filtro_tabla("","documento_ruta_aprob","documento_iddocumento=".$_REQUEST["iddoc"],"",$conn);
+if($documento_ruta_aprob["numcampos"]){
+	redirecciona($ruta_db_superior."pantallas/ruta_aprobacion/mostrar_ruta_aprobacion.php?iddoc=".$_REQUEST["iddoc"]."&idruta_aprob=".$documento_ruta_aprob[0]["iddocumento_ruta_aprob"]);
+	die();
+}
+$documento = busca_filtro_tabla("ejecutor,serie,iddocumento,fecha_creacion,descripcion", "documento", "iddocumento=" . $_REQUEST["iddoc"], "", $conn);
 if ($documento["numcampos"]) {
 	if (is_object($documento[0]["fecha_creacion"])) {
 		$fecha_creacion = $documento[0]["fecha_creacion"] -> format("Y-m-d");
@@ -28,7 +38,7 @@ if ($documento["numcampos"]) {
 	$nom_serie = "";
 	$serie = busca_filtro_tabla("nombre", "serie", "idserie=" . $documento[0]["serie"], "", $conn);
 	if ($serie["numcampos"]) {
-		$nom_serie = $serie[0]["nombre"];
+		$nom_serie = codifica_encabezado(html_entity_decode($serie[0]["nombre"]));
 	}
 	$nom_expe = "";
 	$expediente = busca_filtro_tabla("C.nombre", "expediente_doc B,expediente C", " B.expediente_idexpediente=C.idexpediente AND B.documento_iddocumento=" . $documento[0]["iddocumento"], "", $conn);
@@ -37,15 +47,37 @@ if ($documento["numcampos"]) {
 			$nom_expe .= ($expediente[$i]["nombre"] . "<br/>");
 		}
 	}
+
+	$tabla = '';
+	$tareas_ruta = busca_filtro_tabla("v.nombres,v.apellidos,v.cargo,t.idtareas,t.accion_tareas,t.orden_tareas", "tareas t,vfuncionario_dc v", "t.responsable=v.iddependencia_cargo and t.ruta_aprob=-1 and t.documento_iddocumento=" . $documento[0]["iddocumento"], "idtareas asc", $conn);
+	$resp=0;
+	if ($tareas_ruta["numcampos"]) {
+		$resp=1;
+		$tabla .= '<table align="center" style="width: 90%;" class="table table-bordered" border=1>';
+		$tabla .= '<thead>';
+		$tabla .= '<tr><th style="text-align:center;">Orden</th> <th style="text-align:center;">Funcionario</th> <th style="text-align:center;">Cargo</th><th>Acciones</th><th>&nbsp;</th></tr>';
+		$tabla .= '</thead><tbody>';
+		$equivalencia_acciones=array(1=>"APROBADO",2=>"VISTO BUENO");
+		for ($i = 0; $i < $tareas_ruta["numcampos"]; $i++) {
+			$tabla .= '<tr id="tr_'.$tareas_ruta[$i]["idtareas"].'">';
+			$tabla .= '<td>' .$tareas_ruta[$i]["orden_tareas"]. '</td> <td>' . ucwords(strtolower($tareas_ruta[$i]["nombres"] . ' ' . $tareas_ruta[$i]["apellidos"])) . '</td> <td>' . $tareas_ruta[$i]["cargo"] . '</td>';
+			$tabla .= '<td>'.$equivalencia_acciones[$tareas_ruta[$i]["accion_tareas"]].'</td>';
+			$tabla .= '<td style="text-align:center"><div class="btn btn-mini btn-danger" id="'.$tareas_ruta[$i]["idtareas"].'">X</div></td>';
+			$tabla .= '</tr>';
+		}
+		$tabla .= '</tbody></table>';
+	}
+
 } else {
-	die();
+	die("Las rutas de aprobacion deben estar asociadas a un documento");
 }
 
 echo(estilo_bootstrap());
 echo(librerias_jquery("1.7"));
 echo(librerias_validar_formulario('11'));
 echo(librerias_datepicker_bootstrap());
-echo (librerias_highslide());
+echo(librerias_highslide());
+echo(librerias_notificaciones());
 ?>
 <div class="container">
 	<legend>Informaci&oacute;n</legend>
@@ -58,12 +90,6 @@ echo (librerias_highslide());
 				<td><?php echo($nom_creador); ?></td>
 			</tr>
 			<tr>
-				<td><strong>&uacute;ltima modificaci&oacute;n</strong></td>
-				<td>No se tiene esta informacion</td>
-				<td><strong>Modificado por</strong></td>
-				<td>No se tiene esta informacion</td>
-			</tr>
-			<tr>
 				<td><strong>Tipo documental</strong></td>
 				<td><?php echo($nom_serie); ?></td>
 				<td><strong>Expedientes</strong></td>
@@ -71,7 +97,7 @@ echo (librerias_highslide());
 			</tr>
 			<tr>
 				<td><strong>Estado</strong></td>
-				<td colspan="3">&nbsp;</td>
+				<td colspan="3"><div class="label label-important" style="max-width:100px;">Pendiente</div></td>
 			</tr>
 			<tr>
 				<td><strong>Descripci&oacute;n del documento</strong></td>
@@ -81,21 +107,19 @@ echo (librerias_highslide());
 		
     <legend>Acciones</legend>
     <br>
-		<form name="formulario_adicionar_ruta_aprobacion" id="formulario_adicionar_ruta_aprobacion" method="POST" action="librerias.php">
+		<form name="formulario" id="formulario" method="POST">
 			<table align="center" style="width: 90%;" class="table table-bordered">
 				<tr>
 					<td colspan="2">
-						<div class="control-group element">
-							<label class="control-label" for="enviar_a">Enviar a * </label>
-							<div class="controls"> 
-								<a class="btn btn-mini btn-info highslide" href='adicionar_responsables.php?iddoc=<?php echo $_REQUEST["iddoc"];?>' onclick='return hs.htmlExpand(this, { objectType: "iframe",width:500, height:500,preserveContent:false } )'>Adicionar</a>
-							</div>
-						</div>
+						<strong>Responsables *:</strong>
+							<a class="btn btn-mini btn-info highslide" href='<?php echo $ruta_db_superior;?>pantallas/tareas/adicionar_tareas.php?tarea_ruta_aprob=1&iddoc=<?php echo $_REQUEST["iddoc"];?>' onclick='return hs.htmlExpand(this, { objectType: "iframe",width:500, height:500,preserveContent:false } )'>Adicionar</a><br/><br/>
+							<input type="hidden" name="responsables" id="responsables" value="<?php echo $resp;?>">
+						<?php echo $tabla;?>
 					</td>
 				</tr>
 				
 				<tr>
-					<td><strong>Aprobaci&oacute;n en:</strong></td>
+					<td><strong>Aprobaci&oacute;n en: *</strong></td>
 					<td>
 						<div class="control-group element">
 							<label class="control-label" for="aprobacion_en"></label>
@@ -108,12 +132,12 @@ echo (librerias_highslide());
 				</tr>
 				
 				<tr>
-					<td><strong>Fecha Vencimiento</strong></td>
+					<td><strong>Fecha Vencimiento *</strong></td>
 					<td>
 						<div class="control-group element">
 							<div class="controls"> 
 								<div id="fecha_vencimiento" class="input-append date">
-									<input data-format="yyyy-MM-dd" type="text" name="fecha_vencimiento" readonly="true"/>
+									<input data-format="yyyy-MM-dd" type="text" name="fecha_vencimiento" readonly="true" class="required"/>
 									<span class="add-on"><i data-time-icon="icon-time" data-date-icon="icon-calendar"></i></span>
 								</div>
 							</div>
@@ -122,7 +146,7 @@ echo (librerias_highslide());
 				</tr>
 				
 				<tr>
-					<td><strong>Asunto</strong></td>
+					<td><strong>Asunto *</strong></td>
 					<td>
 						<div class="control-group element">				
 							<div class="controls"> 
@@ -140,23 +164,12 @@ echo (librerias_highslide());
 						</div>  
 					</td>
 				</tr>
-				
-				<tr>
-					<td><strong>Anexos</strong></td>
-					<td>
-						<div class="control-group element">
-							<div class="controls"> 
-								<input type="file" name="anexos" id="anexos" multiple>
-							</div>        
-						</div> 
-					</td>
-				</tr>
-				
+							
 				<tr>
 					<td colspan="2" style="text-align: center">
-						<input type="hidden" name="ejecutar_funcion" value="set_ruta_aprobacion">
+						<input type="hidden" name="ejecutar_funcion" value="insertar_ruta_aprob">
 						<input type="hidden" name="iddoc" value="<?php echo $_REQUEST["iddoc"];?>">
-						<button class="btn btn-primary btn-mini" id="submit_formulario_adicionar_ruta_aprobacion">Aceptar</button>
+						<button class="btn btn-primary btn-mini" id="btn_submit">Aceptar</button>
 					</td>
 				</tr>
 			</table>
@@ -167,11 +180,69 @@ echo (librerias_highslide());
   hs.graphicsDir = '<?php echo $ruta_db_superior;?>anexosdigitales/highslide-4.0.10/highslide/graphics/';
   hs.outlineType = 'rounded-white';
 	$(document).ready(function() {
+		$(".btn-danger").click(function (){
+			var idtarea=$(this).attr("id");
+			if(confirm("Esta seguro de Eliminar?")===true){
+				$.ajax({
+					url : "librerias.php",
+					data : {idtarea:idtarea,ejecutar_funcion:"eliminar_resp_tarea"},
+					dataType : 'json',
+					type:  'post',
+					async: false,
+					success : function(data) {
+						if(data.exito){
+							$("#tr_"+idtarea).remove();
+							notificacion_saia("Responsable Eliminado","success","",2500);	
+						}else{
+							notificacion_saia(data.msn,"error","",2500);
+						}
+					},error : function() {
+						notificacion_saia("Error al procesar la solicitud","error","",2500);
+					}
+				});
+			}
+		});
+		
 		$('#fecha_vencimiento').datetimepicker({
 			language : 'es',
 			pick12HourFormat : true,
 			pickTime : false
 		});
-		$('#formulario_adicionar_ruta_aprobacion').validate();
+		$('#formulario').validate();
 	});
+	
+  $('#formulario').validate({
+    submitHandler : function(form) {
+    	var responsable=$("#responsables").val();
+    	if(responsable!=1){
+    		notificacion_saia("Por favor ingrese los responsables","error","",2500);
+    		return false;
+    	}else{
+    		$("#btn_submit").hide();
+    		$("#btn_submit").after('<div class="btn btn-primary btn-mini" id="btn_enviando">Enviando ...</div>');
+				var datos=$('#formulario').serialize();
+				$.ajax({
+					url : "librerias.php",
+					data : datos,
+					dataType : 'json',
+					type:  'post',
+					async: false,
+					success : function(data) {
+						if(data.exito){
+							notificacion_saia("Datos Guardados!","success","",2500);
+						}else{
+							notificacion_saia(data.msn,"error","",2500);
+						}
+						parent.refrescar_panel_kaiten();	
+						return false;
+					},error : function() {
+						notificacion_saia("Error al procesar la solicitud","error","",2500);
+						parent.refrescar_panel_kaiten();	
+						return false;
+					}
+				});
+    	}
+    	return false; 
+    }
+  });
 </script>

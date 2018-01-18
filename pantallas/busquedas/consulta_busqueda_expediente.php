@@ -75,30 +75,6 @@ if ($datos_busqueda[0]["busqueda_avanzada"] != '') {
       </li>
       
       
-      
-      <li class="divider-vertical"> </li>
-      <li>            
-      <div class="btn-group">            
-        <button type="button" class="btn btn-mini " id="loadmoreajaxloader" >M&aacute;s Resultados
-        </button>
-        <button type="button" class="btn dropdown-toggle btn-mini" data-toggle="dropdown">
-          <span class="caret">
-          </span>&nbsp;
-        </button>
-        <ul class="dropdown-menu" id='listado_resultados'>
-          <li class="nav-header">Resulta do por P&aacute;gina
-          </li>
-          <li>
-          <a href="#" id="resultado_20" >Mostrar 20 resultados</a>
-          </li>
-          <li>
-          <a href="#" id="resultado_50">Mostrar 50 resultados</a>
-          </li>
-          <li>
-          <a href="#" id="resultado_100">Mostrar 100 resultados</a>
-          </li>
-        </ul>
-      </div>
       <!-- /btn-group -->
       </li>
       <li>          
@@ -128,6 +104,29 @@ if ($datos_busqueda[0]["busqueda_avanzada"] != '') {
         ?>
       <?php }
       ?>
+       <li class="divider-vertical"> </li>
+      <li>            
+      <div class="btn-group">            
+        <button type="button" class="btn btn-mini " id="loadmoreajaxloader" >M&aacute;s Resultados
+        </button>
+        <button type="button" class="btn dropdown-toggle btn-mini" data-toggle="dropdown">
+          <span class="caret">
+          </span>&nbsp;
+        </button>
+        <ul class="dropdown-menu" id='listado_resultados'>
+          <li class="nav-header">Resulta do por P&aacute;gina
+          </li>
+          <li>
+          <a href="#" id="resultado_20" >Mostrar 20 resultados</a>
+          </li>
+          <li>
+          <a href="#" id="resultado_50">Mostrar 50 resultados</a>
+          </li>
+          <li>
+          <a href="#" id="resultado_100">Mostrar 100 resultados</a>
+          </li>
+        </ul>
+      </div>
     </ul>
   </div>
 </div>
