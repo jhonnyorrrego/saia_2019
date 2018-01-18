@@ -510,7 +510,7 @@ if(@$_REQUEST['anexo']){
   	}else{
   		$("#print").show();	
   	}
-    $("#download").hide();
+    //$("#download").hide();
     $("#openFile").hide();
     $("#viewBookmark").hide();
   });
