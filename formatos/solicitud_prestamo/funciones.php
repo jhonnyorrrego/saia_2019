@@ -12,7 +12,7 @@ $max_salida--;
 }
 include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."formatos/librerias/funciones_generales.php");
-ini_set("display_errors",true);
+ini_set("display_errors",false);
 
 function mostrar_solicitante($idformato,$iddoc){
 	global $conn;
@@ -94,7 +94,7 @@ function guardar_expedientes_prestamos($idformato,$iddoc){//Esta funcion se toma
 	$texto="";
 	if($ids){		
 		//$expedientes=busca_filtro_tabla("nombre,codigo","expediente A","A.idexpediente in(".$ids.")","",$conn);
-		$expedientes=busca_filtro_tabla("nombre,idexpediente,fecha,indice_uno,indice_dos,indice_tres,fk_idcaja,serie_idserie","expediente A","A.idexpediente in(".$ids.")","",$conn);
+		$expedientes=busca_filtro_tabla("nombre,idexpediente,".fecha_db_obtener('fecha','Y-m-d')." AS fecha,indice_uno,indice_dos,indice_tres,fk_idcaja,serie_idserie","expediente A","A.idexpediente in(".$ids.")","",$conn);
 		$texto.='<td><ul>';
 		for($i=0;$i<$expedientes["numcampos"];$i++){
 			//$texto.="<li><input type='checkbox' name='transferencia_presta_temp' id='transferencia_presta_temp' value='".$expedientes[$i]["idexpediente"]."'>".$expedientes[$i]["nombre"]."(".$expedientes[$i]["fondo"]." ".$expedientes[$i]["codigo"].")</li>";
@@ -104,7 +104,7 @@ function guardar_expedientes_prestamos($idformato,$iddoc){//Esta funcion se toma
 		$texto.="</td>";
 	}else if(@$_REQUEST['id_caja']){
 	    $ids_caja=$_REQUEST['id_caja'];
-        $expedientes=busca_filtro_tabla("A.nombre,A.idexpediente,fecha,indice_uno,indice_dos,indice_tres,fk_idcaja,serie_idserie","expediente A","A.fk_idcaja in(".$ids_caja.")","",$conn);
+        $expedientes=busca_filtro_tabla("A.nombre,A.idexpediente,".fecha_db_obtener('fecha','Y-m-d')." AS fecha,indice_uno,indice_dos,indice_tres,fk_idcaja,serie_idserie","expediente A","A.fk_idcaja in(".$ids_caja.")","",$conn);
         $etiquetas=extrae_campo($expedientes,"nombre","");
         $idexpedientes=implode(',',extrae_campo($expedientes,"idexpediente","U"));
         $texto.="<td><ul><li>".implode("</li><li>",$etiquetas)."</li></ul>

@@ -13,7 +13,6 @@ include_once ($ruta_db_superior . "db.php");
 /*ADICIONAR - EDITAR*/
 function add_edit_vincu_exp() {
 	global $conn;
-	print_r($_REQUEST);
 	if ($_REQUEST["iddoc"]) {
 		$opt = 1;
 	} else {
@@ -57,7 +56,7 @@ function ver_anexos_doc_vincu($idformato, $iddoc){
 			$html.='<a href="'.$ruta_anexo.'">'.$anexos[$i]["etiqueta"].'</a><br/>';
 		}
 	}
-	echo $html;
+	return $html;
 }
 
 /*POSTERIOR APROBAR*/
@@ -74,11 +73,14 @@ function post_aprob_vincu_exp($idformato, $iddoc) {
 }
 function mostrar_informacion_qr($idformato,$iddoc){
 	global $conn,$ruta_db_superior;
-	
-	$datos_vincular_doc=busca_filtro_tabla("serie_idserie,asunto,".fecha_db_obtener('fecha_documento', 'Y-m-d') . " as fecha_doc","ft_vincular_doc_expedie","documento_iddocumento=".$iddoc,"",$conn);
+	$datos_vincular_doc=busca_filtro_tabla("serie_idserie,asunto,".fecha_db_obtener('fecha_documento', 'Y-m-d') . " as fecha_doc,observaciones","ft_vincular_doc_expedie","documento_iddocumento=".$iddoc,"",$conn);
     
-    //$documento=busca_filtro_tabla("numero,tipo_radicado,".fecha_db_obtener("fecha","Y-m-d")." AS fecha","documento","iddocumento=".$iddoc,"",$conn);
-	$tipo_documento=busca_filtro_tabla("nombre","serie","idserie=".$datos_vincular_doc[0]["serie_idserie"],"",$conn);
+  //$documento=busca_filtro_tabla("numero,tipo_radicado,".fecha_db_obtener("fecha","Y-m-d")." AS fecha","documento","iddocumento=".$iddoc,"",$conn);
+	$tipo_documento=busca_filtro_tabla("nombre, cod_padre","serie","idserie=".$datos_vincular_doc[0]["serie_idserie"],"",$conn);
+
+	if($tipo_documento["numcampos"]){
+		$serie = busca_filtro_tabla("nombre","serie","idserie =".$tipo_documento[0]["cod_padre"],"",$conn);		
+	}
 	
 	$datos_fecha = date_parse($datos_vincular_doc[0]["fecha_doc"]);
 	$fecha_doc = $datos_fecha["day"] . " de " . mes($datos_fecha["month"]) . " del " . $datos_fecha["year"];
@@ -103,26 +105,45 @@ function mostrar_informacion_qr($idformato,$iddoc){
 			$extension=explode(".",$codigo_qr[0]['ruta_qr']);
 			$img='<img src="'.PROTOCOLO_CONEXION.RUTA_PDF.'/'.$codigo_qr[0]['ruta_qr'].'"   />';
 		}
-		//echo($img);
 	}
 	
     $tabla='
         <table class="table table-bordered" style="width: 100%; font-size:10px; text-align:left;" border="1">
   <tr>
-    <td style="width: 23%;"><b>Fecha:</b></td>
-    <td style="width: 18%;">'.$fecha_doc.'</td>
+    <td><b>Fecha:</b></td>
+    <td colspan="3">'.$fecha_doc.'</td>
     <td style="text-align:center; width: 23%;" colspan="2" rowspan="3">'.$img.'</td>
  </tr>
  <tr>
     <td style="width: 18%;"><b>Asunto:</b></td>
-    <td style="width: 18%;">'.$datos_vincular_doc[0]["asunto"].'</td>    
-  </tr>
-  <tr>
+    <td style="width: 18%;">'.$datos_vincular_doc[0]["asunto"].'</td> 
     <td><b>Serie:</b></td>
-    <td>'.$tipo_documento[0]["nombre"].'</td> 
+    <td>'.$serie[0]["nombre"].' - '.$tipo_documento[0]["nombre"].'.</td>   
+  </tr>
+ <tr>
+    <td style="width: 18%;"><b>Anexo:</b></td>
+    <td style="width: 18%;">'.ver_anexos_doc_vincu($idformato,$iddoc).'</td> 
+    <td><b>Observaciones:</b></td>
+    <td>'.$datos_vincular_doc[0]["observaciones"].'</td>   
   </tr>
   </table>';  
     echo $tabla;
     
+}
+function cargar_serie_documental($idformato,$iddoc){
+	global $conn;
+	$idex=$_REQUEST["idexpediente"];
+	$expedientes=busca_filtro_tabla("idserie","expediente e, serie s","e.serie_idserie = s.cod_padre and idexpediente=".$idex,"",$conn);	
+	?>
+	<script>
+		$(document).ready(function(){
+			var serie = "<?php echo $expedientes[0]["idserie"]?>";
+			tree_serie_idserie.setOnLoadingEnd(function(){
+				tree_serie_idserie.setCheck(serie,true);
+			});
+			$("#serie_idserie").val(serie);			
+		});
+	</script>
+	<?php
 }
 ?>
