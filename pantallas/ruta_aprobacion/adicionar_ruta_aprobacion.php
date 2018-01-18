@@ -15,7 +15,7 @@ if(@$_REQUEST["iddoc"] || @$_REQUEST["key"]){
 	if(!@$_REQUEST["iddoc"])$_REQUEST["iddoc"]=@$_REQUEST["key"];
 	include_once($ruta_db_superior."pantallas/documento/menu_principal_documento.php");
 	menu_principal_documento($_REQUEST["iddoc"]);
-	echo "<br/><br/><br/><br/>";
+	echo "<br/>";
 }
 
 $documento_ruta_aprob=busca_filtro_tabla("","documento_ruta_aprob","documento_iddocumento=".$_REQUEST["iddoc"],"",$conn);
@@ -57,7 +57,7 @@ if ($documento["numcampos"]) {
 		$tabla .= '<thead>';
 		$tabla .= '<tr><th style="text-align:center;">Orden</th> <th style="text-align:center;">Funcionario</th> <th style="text-align:center;">Cargo</th><th>Acciones</th><th>&nbsp;</th></tr>';
 		$tabla .= '</thead><tbody>';
-		$equivalencia_acciones=array(1=>"APROBADO",2=>"VISTO BUENO");
+		$equivalencia_acciones=array(1=>"APROBAR",2=>"CON VISTO BUENO");
 		for ($i = 0; $i < $tareas_ruta["numcampos"]; $i++) {
 			$tabla .= '<tr id="tr_'.$tareas_ruta[$i]["idtareas"].'">';
 			$tabla .= '<td>' .$tareas_ruta[$i]["orden_tareas"]. '</td> <td>' . ucwords(strtolower($tareas_ruta[$i]["nombres"] . ' ' . $tareas_ruta[$i]["apellidos"])) . '</td> <td>' . $tareas_ruta[$i]["cargo"] . '</td>';
@@ -97,7 +97,7 @@ echo(librerias_notificaciones());
 			</tr>
 			<tr>
 				<td><strong>Estado</strong></td>
-				<td colspan="3"><div class="label label-important" style="max-width:100px;">Pendiente</div></td>
+				<td colspan="3"><div class="label label-important" style="max-width:200px;">Sin ruta de aprobaci&oacute;n</div></td>
 			</tr>
 			<tr>
 				<td><strong>Descripci&oacute;n del documento</strong></td>
