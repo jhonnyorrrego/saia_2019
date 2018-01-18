@@ -90,6 +90,18 @@ if((@$_REQUEST["iddoc"] || @$_REQUEST["key"])&& !@$_REQUEST["idpaso_documento"])
 										$estado = "Terminada";
 										$color="green";
 									break;
+									case 3 :
+										$estado = "Aprobado";
+										$color="green";
+									break;
+									case 4 :
+										$estado = "Con visto bueno";
+										$color="green";
+									break;
+									case 5 :
+										$estado = "Rechazado";
+										$color="red";
+									break;
 							}
 								$campo.="<tr>
 											<td>".$busca_avances[$i]['fecha']."</td>
