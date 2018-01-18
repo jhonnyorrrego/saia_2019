@@ -125,7 +125,9 @@ function obtener_expedientes_negados() {
 function request_expediente_documento() {
 	if (@$_REQUEST["idexpediente"]) {
 		return ($_REQUEST["idexpediente"]);
-	} else {
+	}elseif(@$_REQUEST["variable_busqueda"]){
+		return ($_REQUEST["variable_busqueda"]);
+	}else {
 		return ("0");
 	}
 }
@@ -752,7 +754,7 @@ function adicionar_expediente() {
             $cadena .= '
 		<li></li>
 		<li>
-		    <a class="enlace_expediente" conector="iframe" titulo="Adicionar Documento" enlace="formatos/vincular_doc_expedie/adicionar_vincular_doc_expedie.php?idexpediente=' . @$_REQUEST["idexpediente"] . '">Adicionar Documento</a>
+		    <a id="adicionar_documento_exp" conector="iframe" titulo="Adicionar Documento" enlace="formatos/vincular_doc_expedie/adicionar_vincular_doc_expedie.php?idexpediente=' . @$_REQUEST["idexpediente"] . '">Adicionar Documento</a>
 		</li>';
         }
     }
