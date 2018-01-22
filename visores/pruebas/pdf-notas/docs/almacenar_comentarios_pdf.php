@@ -23,6 +23,7 @@ if($_POST['guardar']){
 	$info['comentario']=$_POST["comentario"];
 	$info['estado']=1;
 	$info['fecha_comentario']=date('Y-m-d H:i:s');
+	$info['funcionario']=usuario_actual('login');
 
 	$sql_insert="insert into comentario_pdf (".implode(',',array_keys($info)).") values ('".implode("','",array_values($info))."')";
 	phpmkr_query($sql_insert);

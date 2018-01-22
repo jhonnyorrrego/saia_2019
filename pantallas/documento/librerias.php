@@ -329,7 +329,8 @@ if($tipo=='ver_notas'||$tipo=='todos'){
   	$where_notas=" AND (destino=".$funcionario." OR origen=".$funcionario." OR ver_notas<>0)";
   }
   $notas_transferencia=busca_filtro_tabla("count(notas) AS notas","buzon_salida","archivo_idarchivo=".$doc." AND notas!='' AND notas IS NOT NULL AND (lower(nombre) LIKE 'TRANSFERIDO' OR lower(nombre) LIKE 'DEVOLUCION')".$where_notas,"",$conn);
-  $cantidades["ver_notas"]=intval($comentarios[0]["notas"]+$notas_transferencia[0]["notas"]);
+  $notas_pdf=busca_filtro_tabla("count(*) AS notas","comentario_pdf","tipo_archivo='documento' and iddocumento=".$doc,"",$conn);
+  $cantidades["ver_notas"]=intval($comentarios[0]["notas"]+$notas_transferencia[0]["notas"]+$notas_pdf[0]["notas"]);
 }
 if($tipo=='ordenar_pag'||$tipo=='todos'){
   $paginas=busca_filtro_tabla("count(*) AS paginas","pagina","id_documento=".$doc,"",$conn);

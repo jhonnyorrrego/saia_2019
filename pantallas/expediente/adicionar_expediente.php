@@ -20,6 +20,7 @@ $max_salida=6; $ruta_db_superior=$ruta=""; while($max_salida>0){ if(is_file($rut
 <?php include_once($ruta_db_superior."db.php"); ?>
 <script type="text/javascript" src="<?php echo($ruta_db_superior);?>js/jquery-1.7.min.js"></script>
 <?php include_once($ruta_db_superior."librerias_saia.php");
+echo(librerias_notificaciones());
 $dato_padre=busca_filtro_tabla("","expediente a","a.idexpediente=".$_REQUEST["cod_padre"],"",$conn);
 ?>
 <form name="formulario_expediente" id="formulario_expediente">
@@ -154,7 +155,8 @@ $dato_padre=busca_filtro_tabla("","expediente a","a.idexpediente=".$_REQUEST["co
     			<input type="text" id="stext_serie" width="200px" size="20">          
           <a href="javascript:void(0)" onclick="tree3.findItem((document.getElementById('stext_serie').value),1)">
           <img src="<?php echo $ruta_db_superior; ?>botones/general/anterior.png"border="0px"></a>
-          <a href="javascript:void(0)" onclick="tree3.findItem((document.getElementById('stext_serie').value),0,1)">
+          <!--a href="javascript:void(0)" onclick="tree3.findItem((document.getElementById('stext_serie').value),0,1)"-->
+          <a href="javascript:void(0)" id="buscar_arb">
           <img src="<?php echo $ruta_db_superior; ?>botones/general/buscar.png"border="0px"></a>
           <a href="javascript:void(0)" onclick="tree3.findItem((document.getElementById('stext_serie').value))">
           <img src="<?php echo $ruta_db_superior; ?>botones/general/siguiente.png"border="0px"></a>      
@@ -355,7 +357,38 @@ $dato_padre=busca_filtro_tabla("","expediente a","a.idexpediente=".$_REQUEST["co
   ?>
   <script type="text/javascript">
   $(document).ready(function(){
-            
+		j=0;
+		$("#buscar_arb").click(function(){
+			notificacion_saia('Ejecutando busqueda... Espere un momento','warning','',2000);
+			var nombre=document.getElementById('stext_serie').value;
+			$.ajax({
+				async:false,
+				type:'POST',
+				url: "busqueda_test_series.php",
+				dataType: "json",
+				data: {
+					nombre:nombre,
+				},
+				success:function (opciones){
+					console.log(opciones);
+					if(opciones.num_dependencias>0){												
+						for(var i=0;i<opciones.num_dependencias;i++){
+							onNodeSelect_dependencia(opciones[i].dependencia);
+						}							
+					}
+					
+					/*if(opciones.numcampos){					
+						onNodeSelect2(opciones); 
+					}
+					if(opciones.numcampos==0){
+						notificacion_saia('No se encontraron resultados','warning','',2000);
+					}
+					* 
+					* */
+				}
+			});
+		});
+    
     var browserType;
     if (document.layers) {browserType = "nn4"}
     if (document.all) {browserType = "ie"}
@@ -375,7 +408,20 @@ $dato_padre=busca_filtro_tabla("","expediente a","a.idexpediente=".$_REQUEST["co
   	tree3.setXMLAutoLoading("../../test_dependencia_serie.php?tabla=dependencia&admin=1&mostrar_nodos=dsa&sin_padre_dependencia=1&cargar_series=1&funcionario=1&carga_partes_dependencia=1&carga_partes_series=1&no_grupos=1&no_tipos=1");	
   	tree3.loadXML("../../test_dependencia_serie.php?tabla=dependencia&admin=1&mostrar_nodos=dsa&sin_padre_dependencia=1&cargar_series=1&funcionario=1&carga_partes_dependencia=1&carga_partes_series=1&no_grupos=1&no_tipos=1");
     tree3.setOnCheckHandler(onNodeSelect_serie);
-      
+	
+	
+	function onNodeSelect_dependencia(nodeId){
+    	tiempo=null;
+    	j=nodeId.length-1;
+    	tiempo=window.setInterval(abrir_dependencias,3000,nodeId);
+    }
+    function abrir_dependencias(dato){
+    	//console.log('d'+dato[j]);
+    	tree3.openItem('d'+dato[j]);
+    	j--;
+    	if (j<0){clearInterval(tiempo);};
+    }
+
   	function onNodeSelect_serie(nodeId){
   	  if(tree3.isItemChecked(nodeId)){
   		var item_select=tree3.getAllChecked();

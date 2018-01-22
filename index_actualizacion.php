@@ -715,19 +715,7 @@ function menu_saia(){
 <script type="text/javascript">
 	$(document).ready(function(){
 		var refreshInterval_SESSION;
-		refreshInterval_SESSION = setInterval(function(){
-			$.ajax({
-						url: 'actualizar_session.php',
-						cache: false,
-						data:{
-							id:$("#variable_session").val(),
-							login:$("#variable_log").val(),
-							usu_actual:$("#variable_uactual").val(),
-							llave: '<?php echo(LLAVE_SAIA); ?>'
-					    }
-					});
-			
-			}, 90000);
+
   	$("#encabezado_modal").click(function(event){
    		$("#encabezado_modal").html($("#ventana_modal").attr("titulo"));
    	});

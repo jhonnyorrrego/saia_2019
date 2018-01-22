@@ -11,17 +11,15 @@ while ($max_salida > 0) {
 include_once ($ruta_db_superior . "db.php");
 include_once ($ruta_db_superior . "librerias_saia.php");
 include_once ($ruta_db_superior . "pantallas/lib/librerias_fechas.php");
-
+echo(estilo_bootstrap());
 if(@$_REQUEST["iddoc"] || @$_REQUEST["key"]){
 	if(!@$_REQUEST["iddoc"])$_REQUEST["iddoc"]=@$_REQUEST["key"];
 	include_once($ruta_db_superior."pantallas/documento/menu_principal_documento.php");
 	menu_principal_documento($_REQUEST["iddoc"]);
-	echo "<br/>";
 }
-
 if (isset($_REQUEST["idruta_aprob"]) && $_REQUEST["idruta_aprob"]) {
 	$ruta_aprob = busca_filtro_tabla("", "documento_ruta_aprob", "iddocumento_ruta_aprob=" . $_REQUEST["idruta_aprob"], "iddocumento_ruta_aprob desc", $conn);
-	$estado_doc_aprob='<div class="label label-info">Sin ruta de aprobaci&oacute;n</div>';
+	$estado_doc_aprob='<div class="btn btn-mini btn-info">Sin ruta de aprobaci&oacute;n</div>';
 	$atrasado=false;
 	if ($ruta_aprob["numcampos"]) {
 			$equivalencia_doc_aprob=array(0=>"PENDIENTE DE APROBACION",1=>"APROBADO",3=>"RECHAZADO",4=>"CERRADO",6=>"CON VISTO BUENO");
@@ -29,18 +27,18 @@ if (isset($_REQUEST["idruta_aprob"]) && $_REQUEST["idruta_aprob"]) {
 			if($ruta_aprob[0]["estado_ruta_aprob"]==0){
 				$atrasado=fecha_atrasada('',$ruta_aprob[0]["fecha_vencimiento"]);
 				if($atrasado){
-					$estado_doc_aprob='<div class="label label-important">'.$estado_doc_aprob."</div>";
+					$estado_doc_aprob='<div class="btn btn-mini btn-danger">'.$estado_doc_aprob."</div>";
 				}
 				else{
-					$estado_doc_aprob='<div class="label label-success">'.$estado_doc_aprob."</div>";
+					$estado_doc_aprob='<div class="btn btn-mini btn-success">'.$estado_doc_aprob."</div>";
 				}
 			}
 			else if(in_array($ruta_aprob[0]["estado_ruta_aprob"],array(1,6))){
 				//estados de aprobado y visto bueno
-				$estado_doc_aprob='<div class="label label-success">'.$estado_doc_aprob."</div>";
+				$estado_doc_aprob='<div class="btn btn-mini btn-success">'.$estado_doc_aprob."</div>";
 			}
 			else{
-				$estado_doc_aprob='<div class="label label-important">'.$estado_doc_aprob."</div>";
+				$estado_doc_aprob='<div class="btn btn-mini btn-danger">'.$estado_doc_aprob."</div>";
 			}
 			$aprobacion_en = ($ruta_aprob[0]["aprobacion_en"]==1) ? "Aprobaci&oacute;n en serie" : "Aprobaci&oacute;n en paralelo" ;
 			if (is_object($ruta_aprob[0]["fecha_creacion"])) {
@@ -100,13 +98,13 @@ if (isset($_REQUEST["idruta_aprob"]) && $_REQUEST["idruta_aprob"]) {
 					if($avance["numcampos"]){
 						if($avance[0]["estado"]==5){
 							if( $tareas_ruta[$i]["accion_tareas"]==1){
-								$estado='<div class="label label-important">'.$equivalencia_estado_avance[$avance[0]["estado"]].'</div>';
+								$estado='<div class="btn btn-mini btn-danger">'.$equivalencia_estado_avance[$avance[0]["estado"]].'</div>';
 							}
 							else{
-								$estado='<div class="label label-info">'.$equivalencia_estado_avance[$avance[0]["estado"]].'</div>';
+								$estado='<div class="btn btn-mini btn-info">'.$equivalencia_estado_avance[$avance[0]["estado"]].'</div>';
 							}
 						}else{
-							$estado='<div class="label label-success">'.$equivalencia_estado_avance[$avance[0]["estado"]].'</div>';
+							$estado='<div class="btn btn-mini btn-success">'.$equivalencia_estado_avance[$avance[0]["estado"]].'</div>';
 						}
 					}
 					else{
@@ -142,15 +140,11 @@ if (isset($_REQUEST["idruta_aprob"]) && $_REQUEST["idruta_aprob"]) {
 	die();
 }
 
-echo(estilo_bootstrap());
 echo(librerias_jquery("1.7"));
-echo(librerias_validar_formulario('11'));
-echo(librerias_datepicker_bootstrap());
-echo(librerias_highslide());
-echo(librerias_notificaciones());
 ?>
+<body>
 <div class="container">
-	<legend>Informaci&oacute;n del documento</legend>
+	<legend>Solicitu de aprobaci&oacute;n</legend>
 	<br>
 		<table align="center" style="width: 90%;" class="table table-bordered">
 			<tr>
@@ -205,7 +199,14 @@ echo(librerias_notificaciones());
 		</table>	
 		<?php echo $tabla;?>
 </div>
+<?php 
+echo(librerias_validar_formulario('11'));
+echo(librerias_datepicker_bootstrap());
+echo(librerias_highslide());
+echo(librerias_notificaciones());
+?>
 <script type='text/javascript'>
   hs.graphicsDir = '<?php echo $ruta_db_superior;?>anexosdigitales/highslide-4.0.10/highslide/graphics/';
   hs.outlineType = 'rounded-white';
 </script>
+</body>

@@ -72,7 +72,7 @@ if($_POST['cargar']){
 		$info['iddocumento']=$_POST["iddoc"];
 		$info['tipo_archivo']=$_POST["tipo_archivo"];
 		$info['tipo']=$_POST["valores"]['type'];
-		$info['color']="FF0000";
+		$info['color']="f5f900";
 		$info['x']=$_POST["valores"]['x'];
 		$info['y']=$_POST["valores"]['y'];
 		$info['ancho']=$_POST["valores"]['width'];

@@ -19,7 +19,7 @@ if($_SESSION["tipo_dispositivo"]=="movil"){
 }
 
 $adicionales_enlace="";
-$busquedas = busca_filtro_tabla("idbusqueda_componente,nombre", "busqueda_componente", "nombre in ('notas_documento','anexos','paginas_documento','buzon_salida','documentos_relacionados','documentos_relacionados_a','documentos_relacionados_dest','documentos_respuesta','tareas_documento','versiones_documento')", "", $conn);
+$busquedas = busca_filtro_tabla("idbusqueda_componente,nombre", "busqueda_componente", "nombre in ('notas_documento','notas_pdf','anexos','paginas_documento','buzon_salida','documentos_relacionados','documentos_relacionados_a','documentos_relacionados_dest','documentos_respuesta','tareas_documento','versiones_documento')", "", $conn);
 $modulos=busca_filtro_tabla("nombre,etiqueta","modulo","nombre LIKE 'ordenar_pag' OR nombre LIKE 'ver_notas' OR nombre LIKE 'adjuntos_documento' OR nombre LIKE 'documentos_relacionados' OR nombre LIKE 'arbol_documento' OR nombre LIKE 'tareas_documento' OR nombre LIKE 'ver_versiones'","",$conn);
 $iconos = array();
 for($i=0; $i< $modulos['numcampos']; $i++){
@@ -29,6 +29,9 @@ for($i=0;$i<$busquedas["numcampos"];$i++){
     switch ($busquedas[$i]["nombre"]){
         case 'notas_documento':
             $notas_documento=$busquedas[$i]["idbusqueda_componente"];
+        break;
+		 case 'notas_pdf':
+            $notas_pdf=$busquedas[$i]["idbusqueda_componente"];
         break;
         case 'anexos':
             $anexos=$busquedas[$i]["idbusqueda_componente"];
@@ -193,6 +196,8 @@ if(@$_REQUEST["alto_pantalla"]){
     	<ul id="panel_notas_tranferencia" class="lista_datos"></ul>
     	b. Notas post-it
     	<ul id="panel_notas" class="lista_datos"></ul>
+    	C. Notas PDF
+    	<ul id="panel_notas_pdf" class="lista_datos"></ul>
     	<div id="pie_notas"></div>
     </div>
     <div class="tab-pane" id="tareas">
@@ -373,6 +378,32 @@ function click_funcion(div){
                             }
                         }
 	                	$("#panel_notas_tranferencia").append("<li>"+item.info+"</li>");
+	                });
+               }
+            }
+          });
+        }
+        console.log(componente);
+        if(componente === '<?php echo($notas_documento);?>'){
+        	$("#panel_notas_pdf").html('');
+            $.ajax({
+            type: "POST",
+            url: "<?php echo $ruta_db_superior ;?>"+"pantallas/busquedas/servidor_busqueda.php",
+            data:{idbusqueda_componente:'<?php echo($notas_pdf);?>',iddocumento : documento_saia,actual_row:"0",limpio:"1",rows:"100"},
+            success:function(html){
+            	$("#panel_notas_pdf").html('');
+            	if(jQuery.isEmptyObject(html)){
+            		$("#panel_notas_pdf").append("<li class='alert'>No hay notas en el PDF</li>");
+            	}else{
+	                var objeto=jQuery.parseJSON(html);
+	                $.each(objeto.rows,function(i,item){
+                        if(parseInt(item.ver_notas)==0){
+
+                            if( parseInt('<?php echo($_SESSION["usuario_actual"]) ?>')!=parseInt(item.origen) && parseInt('<?php echo($_SESSION["usuario_actual"]); ?>')!=parseInt(item.destino)){
+                                    item.info='';
+                            }
+                        }
+	                	$("#panel_notas_pdf").append("<li>"+item.info+"</li>");
 	                });
                }
             }

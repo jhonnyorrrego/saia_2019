@@ -12,7 +12,7 @@ $max_salida--;
 }
 include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."formatos/librerias/funciones_generales.php");
-ini_set("display_errors",false);
+ini_set("display_errors",true);
 
 function mostrar_solicitante($idformato,$iddoc){
 	global $conn;

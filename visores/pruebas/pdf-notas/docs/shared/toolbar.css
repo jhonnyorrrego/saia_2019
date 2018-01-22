@@ -74,7 +74,8 @@ body {
 .toolbar button.rectangle:after {
   width: 15px;
   height: 15px;
-  border: 1px solid red;
+  border: 1px solid yellow;
+  background: yellow;
   position: absolute;
   top: 4px;
   left: 4px;

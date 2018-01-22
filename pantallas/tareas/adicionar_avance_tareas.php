@@ -79,14 +79,14 @@ function cambiar_estado_documento_ruta_aprob($datos_tareas_ruta_aprob) {
 			else if($datos_tareas_ruta_aprob_total[$i]["accion_tareas"]==2){
 				$visto_bueno++;
 			}
-			if($aprobadas && $aprobadas==$aprobadas_avance){
-				$sql1 = "UPDATE documento_ruta_aprob SET estado_ruta_aprob=1 WHERE iddocumento_ruta_aprob=" . $datos_tareas_ruta_aprob[0]["iddocumento_ruta_aprob"];
-				phpmkr_query($sql1);
-			}
-			elseif($visto_bueno && $visto_bueno==$visto_bueno_avance){
-				$sql1 = "UPDATE documento_ruta_aprob SET estado_ruta_aprob=6 WHERE iddocumento_ruta_aprob=" . $datos_tareas_ruta_aprob[0]["iddocumento_ruta_aprob"];
-				phpmkr_query($sql1);
-			}
+		}
+		if($aprobadas && $aprobadas==$aprobadas_avance){
+			$sql1 = "UPDATE documento_ruta_aprob SET estado_ruta_aprob=1 WHERE iddocumento_ruta_aprob=" . $datos_tareas_ruta_aprob[0]["iddocumento_ruta_aprob"];
+			phpmkr_query($sql1);
+		}
+		elseif($visto_bueno && $visto_bueno==$visto_bueno_avance){
+			$sql1 = "UPDATE documento_ruta_aprob SET estado_ruta_aprob=6 WHERE iddocumento_ruta_aprob=" . $datos_tareas_ruta_aprob[0]["iddocumento_ruta_aprob"];
+			phpmkr_query($sql1);
 		}
 	}
 }

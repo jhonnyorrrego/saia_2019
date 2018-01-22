@@ -18,6 +18,7 @@ $("#opc_escala").hide();
 $("#opc_derecha").hide();
 $("#opc_izquierda").hide();
 $("#opc_highlight").hide();
+$("#opc_sello").hide();
 
 
 
@@ -2218,7 +2219,7 @@ $("#opc_highlight").hide();
 	if(child){// Set attributes
 		child.setAttribute('idft_notas_pdf',annotation.idft_notas_pdf);
 		child.setAttribute('id',annotation.idft_notas_pdf);
-	child.setAttribute('data-pdf-annotate-id',annotation.uuid);child.setAttribute('data-pdf-annotate-type',annotation.type);child.setAttribute('aria-hidden',true);svg.appendChild(transform(child,viewport));}return child;}module.exports=exports['default'];/***/},/* 12 *//***/function(module,exports){/* eslint-disable no-unused-vars */'use strict';var hasOwnProperty=Object.prototype.hasOwnProperty;var propIsEnumerable=Object.prototype.propertyIsEnumerable;function toObject(val){if(val===null||val===undefined){throw new TypeError('Object.assign cannot be called with null or undefined');}return Object(val);}module.exports=Object.assign||function(target,source){var from;var to=toObject(target);var symbols;for(var s=1;s<arguments.length;s++){from=Object(arguments[s]);for(var key in from){if(hasOwnProperty.call(from,key)){to[key]=from[key];}}if(Object.getOwnPropertySymbols){symbols=Object.getOwnPropertySymbols(from);for(var i=0;i<symbols.length;i++){if(propIsEnumerable.call(from,symbols[i])){to[symbols[i]]=from[symbols[i]];}}}}return to;};/***/},/* 13 *//***/function(module,exports,__webpack_require__){'use strict';Object.defineProperty(exports,"__esModule",{value:true});exports.default=renderLine;var _setAttributes=__webpack_require__(14);var _setAttributes2=_interopRequireDefault(_setAttributes);var _normalizeColor=__webpack_require__(15);var _normalizeColor2=_interopRequireDefault(_normalizeColor);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}/**
+	child.setAttribute('data-pdf-annotate-id',annotation.uuid);child.setAttribute('fill','yellow');child.setAttribute('fill-opacity','0.2');child.setAttribute('data-pdf-annotate-type',annotation.type);child.setAttribute('aria-hidden',true);svg.appendChild(transform(child,viewport));}return child;}module.exports=exports['default'];/***/},/* 12 *//***/function(module,exports){/* eslint-disable no-unused-vars */'use strict';var hasOwnProperty=Object.prototype.hasOwnProperty;var propIsEnumerable=Object.prototype.propertyIsEnumerable;function toObject(val){if(val===null||val===undefined){throw new TypeError('Object.assign cannot be called with null or undefined');}return Object(val);}module.exports=Object.assign||function(target,source){var from;var to=toObject(target);var symbols;for(var s=1;s<arguments.length;s++){from=Object(arguments[s]);for(var key in from){if(hasOwnProperty.call(from,key)){to[key]=from[key];}}if(Object.getOwnPropertySymbols){symbols=Object.getOwnPropertySymbols(from);for(var i=0;i<symbols.length;i++){if(propIsEnumerable.call(from,symbols[i])){to[symbols[i]]=from[symbols[i]];}}}}return to;};/***/},/* 13 *//***/function(module,exports,__webpack_require__){'use strict';Object.defineProperty(exports,"__esModule",{value:true});exports.default=renderLine;var _setAttributes=__webpack_require__(14);var _setAttributes2=_interopRequireDefault(_setAttributes);var _normalizeColor=__webpack_require__(15);var _normalizeColor2=_interopRequireDefault(_normalizeColor);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}/**
 		 * Create SVGLineElements from an annotation definition.
 		 * This is used for anntations of type `strikeout`.
 		 *
@@ -2775,7 +2776,7 @@ function saveRect(type,rects,color){
  	if(type==='highlight'){
  		color='ffff00';
  	}else if(type==='strikeout'){color='FF0000';}}// Initialize the annotation
-		 	 		
+	color='f5f900';
 	annotation={type:type,color:color,rectangles:[].concat(_toConsumableArray(rects)).map(function(r){
 	var offset=0;
 	if(type==='strikeout'){
@@ -2812,7 +2813,7 @@ function saveRect(type,rects,color){
 						success:function (data){
 							annotation.idft_notas_pdf=data;
 							_PDFJSAnnotate2.default.getStoreAdapter().addAnnotation(documentId,pageNumber,annotation).then(function(annotation){(0,_appendChild2.default)(svg,annotation);});
-									
+							
 						}
 					});	
 	//----------------------------	
@@ -2972,7 +2973,7 @@ function saveRect(type,rects,color){
 								documentId=data[i].iddocumento;
 								pageNumber=data[i].page;
 								if(data[i].type=='area'){							
-									_PDFJSAnnotate2.default.getStoreAdapter().addAnnotation(data[i].iddocumento.toString(),parseInt(data[i].page),{type: data[i].type,idft_notas_pdf:data[i].idft_notas_pdf,width: data[i].width,height: data[i].height,x: data[i].x,y: data[i].y}).then(function(annotation){(0,_appendChild2.default)(svg,annotation);});
+									_PDFJSAnnotate2.default.getStoreAdapter().addAnnotation(data[i].iddocumento.toString(),parseInt(data[i].page),{type: data[i].type,idft_notas_pdf:data[i].idft_notas_pdf,width: data[i].width,height: data[i].height,x: data[i].x,y: data[i].y,color:data[i].color}).then(function(annotation){(0,_appendChild2.default)(svg,annotation);});
 	
 								}else if(data[i].type=='highlight'){
 	
