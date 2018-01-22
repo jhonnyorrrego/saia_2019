@@ -349,6 +349,7 @@ $datos_formato=busca_filtro_tabla("item","formato","idformato=$x_formato_idforma
       <span class="phpmaker">
         <input type="checkbox" name="x_banderas[]"  <?php if(in_array("u",$x_banderas)){echo("CHECKED"); } ?> value="u">&Uacute;nico
         <input type="checkbox" name="x_banderas[]"  <?php if(in_array("i",$x_banderas)){echo("CHECKED"); } ?> value="i"> Indice
+        <input type="checkbox" name="x_banderas[]"  <?php if(in_array("pdfa",$x_banderas)){echo("CHECKED"); } ?> value="pdfa"> PDF/A
       </span>
     </td>
 	</tr>

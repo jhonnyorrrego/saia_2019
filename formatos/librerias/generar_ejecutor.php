@@ -2,7 +2,7 @@
 include_once ("../../db.php");
 
 $campos = explode(",", $_REQUEST["campos"]);
-$etiquetas = array("titulo" => "T&iacute;tulo","cargo" => "Cargo", "direccion" => "Direcci&oacute;n", "telefono" => "Tel&eacute;fono", "email" => "Email", "ciudad" => "Ciudad", "empresa" => "Nombres y apellidos", "identificacion" => "Identificaci&oacute;n", "nombre" => "Nombres y apellidos", "nombre_pj" => "Entidad");
+$etiquetas = array("titulo" => "T&iacute;tulo","cargo" => "Cargo", "direccion" => "Direcci&oacute;n", "telefono" => "Tel&eacute;fono", "email" => "Email", "ciudad" => "Ciudad", "empresa" => "Contacto", "identificacion" => "Identificaci&oacute;n", "nombre" => "Nombres y apellidos", "nombre_pj" => "Entidad");
 $texto = '';
 $texto .= '<table>';
 foreach ($campos as $nombre) {

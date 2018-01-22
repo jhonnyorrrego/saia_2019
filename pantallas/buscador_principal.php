@@ -59,6 +59,10 @@ if ($datos_buscador["numcampos"]) {
 		echo (librerias_UI());
 		echo (librerias_kaiten());
 		echo (librerias_acciones_kaiten());
+    $ktitle='B&uacute;squeda ';
+    if($datos_buscador[0]['etiqueta']){
+        $ktitle=$datos_buscador[0]['etiqueta']." ";
+    }
 		?>
 </head>
 <body>
@@ -87,8 +91,8 @@ body {
 	<script type="text/javascript">
         $('#contenedor_busqueda').kaiten({
           columnWidth : '100%',
-          startup : function(dataFromURL){
-            this.kaiten('load', { kConnector:'html.page', url:'<?php echo("busquedas/componentes_busqueda.php?idbusqueda=".$datos_buscador[0]["idbusqueda"].$complemento_componente);?>', 'kTitle':'B&uacute;squeda '});
+          startup : function(dataFromURL){          
+            this.kaiten('load', { kConnector:'html.page', url:'<?php echo("busquedas/componentes_busqueda.php?idbusqueda=".$datos_buscador[0]["idbusqueda"].$complemento_componente);?>', 'kTitle':'<?php echo($ktitle); ?>'});
             <?php if($datos_componente["numcampos"] && acceso_modulo($datos_componente[0]["modulo_idmodulo"]) && $datos_componente[0]["estado"]!=1) {  ?>
             this.kaiten('load', { kConnector:'iframe', url:'<?php echo($url_busqueda); ?>', 'kTitle':'<?php echo($datos_componente[0]["etiqueta"]);?> '});
             <?php } ?>

@@ -96,13 +96,17 @@ function redirecciona_visores($iddocumento,$idanexos,$ruta,$etiqueta,$extension)
 global $conn,$ruta_db_superior;
 	$html='';
 	$array = array(
-			"pdf",
+			/*"pdf",*/
 			"jpg",
 			"png"
 	);
 	if(in_array(strtolower($extension), $array)){
 		$ruta64 = base64_encode($ruta);
 		$html = '<a href="' . $ruta_db_superior . "filesystem/mostrar_binario.php?ruta=" . $ruta64 . '" target="detalles"><i class="icon-ver_pag_documento" tooltip_saia_izquierda" title=""></i></a>';
+    } else {
+	        $info_anexo=busca_filtro_tabla("tipo,ruta","anexos","idanexos=".$idanexos,"",$conn);
+	        $ruta_mostrar="visores/pdf/web/viewer2.php?anexo=".$idanexos."&iddocumento=".$iddocumento."&files=".base64_encode($info_anexo[0]['ruta']);
+			$html='<a href="'.$ruta_db_superior.$ruta_mostrar.'" target="detalles"><i class="icon-ver_pag_documento" tooltip_saia_izquierda" title=""></i></a>';
 	}
   if($extension=="eml"){
     $ruta=$ruta_db_superior."pantallas/visores_saia/visor_eml.php?filename=".$ruta_db_superior.$ruta;

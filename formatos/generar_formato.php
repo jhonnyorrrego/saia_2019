@@ -699,7 +699,7 @@ else
 				if (strpos($campos[$h]["valor"], "*}") > 0) {
 					$nombre_func = str_replace("{*", "", $campos[$h]["valor"]);
 					$nombre_func = str_replace("*}", "", $nombre_func);
-					$texto .= '<tr>
+					$texto .= '<tr id="tr_'.$campos[$h]["nombre"].'">
                      <td class="encabezado" width="20%" title="' . $campos[$h]["ayuda"] . '">' . $this->codifica($campos[$h]["etiqueta"]) . $obliga . '</td>
                      ';
 					$parametros = $this->idformato . "," . $campos[$h]["idcampos_formato"];
@@ -717,12 +717,12 @@ else
 					}
 					switch ($campos[$h]["etiqueta_html"]) {
 						case "etiqueta" :
-							$texto .= '<tr>
+							$texto .= '<tr id="tr_'.$campos[$h]["nombre"].'">
                      <td class="encabezado" width="20%" title="' . $campos[$h]["ayuda"] . '" colspan="2" id="' . $campos[$h]["nombre"] . '">' . $campos[$h]["valor"] . '</td>
                     </tr>';
 							break;
 						case "password" :
-							$texto .= '<tr>
+							$texto .= '<tr id="tr_'.$campos[$h]["nombre"].'">
                      <td class="encabezado" width="20%" title="' . $campos[$h]["ayuda"] . '">' . $this->codifica($campos[$h]["etiqueta"]) . $obliga . '</td>
                      <td bgcolor="#F5F5F5"><input ' . $tabindex . ' type="password" name="' . $campos[$h]["nombre"] . '" ' . $obligatorio . " $adicionales " . ' value="' . $valor . '"></td>
                     </tr>';
@@ -746,6 +746,7 @@ else
 									$valor = "";
 								}
 							}
+						}
 							echo ($valor);
 							if ($accion == "editar") {
 								$valor = "<?php echo(mostrar_valor_campo('" . $campos[$h]["nombre"] . "',$this->idformato,$" . "_REQUEST['iddoc'])); ? >";
@@ -753,7 +754,7 @@ else
 								$valor = '<?php echo(validar_valor_campo(' . $campos[$h]["idcampos_formato"] . ')); ? >';
 							if ($nivel_barra == "")
 								$nivel_barra = "basico";
-							$texto .= '<tr>
+							$texto .= '<tr id="tr_'.$campos[$h]["nombre"].'">
                      <td class="encabezado" width="20%" title="' . $campos[$h]["ayuda"] . '">' . $this->codifica($campos[$h]["etiqueta"]) . $obliga . '</td>
                      <td class="celda_transparente"><textarea ' . $tabindex . ' name="' . $campos[$h]["nombre"] . '" id="' . $campos[$h]["nombre"] . '" cols="53" rows="3" class="tiny_' . $nivel_barra;
 							if ($campos[$h]["obligatoriedad"])
@@ -768,7 +769,7 @@ else
 							if ($campos[$h]["tipo_dato"] == "DATE") {
 								$adicionales = str_replace("required", "required dateISO", $adicionales);
 
-								$texto .= '<tr>
+								$texto .= '<tr id="tr_'.$campos[$h]["nombre"].'">
                        <td class="encabezado" width="20%" title="' . $campos[$h]["ayuda"] . '">' . $this->codifica($campos[$h]["etiqueta"]) . $obliga . '</td><td colspan="2" bgcolor="#F5F5F5"><span class="phpmaker"><input ' . $tabindex . ' type="text" readonly="true" ' . $adicionales . ' name="' . $campos[$h]["nombre"] . '" id="' . $campos[$h]["nombre"] . '" tipo="fecha" value="';
 								if ($accion == "adicionar") {
 									if ($campos[$h]["predeterminado"] == "now()")
@@ -783,7 +784,7 @@ else
 								$indice_tabindex++;
 							} else if ($campos[$h]["tipo_dato"] == "DATETIME") {
 								$adicionales = str_replace("required", "required dateISO", $adicionales);
-								$texto .= '<tr>
+								$texto .= '<tr id="tr_'.$campos[$h]["nombre"].'">
                     <td class="encabezado" width="20%" title="' . $campos[$h]["ayuda"] . '">' . $this->codifica($campos[$h]["etiqueta"]) . $obliga . '</td><td colspan="2" bgcolor="#F5F5F5"><font size="1,5" face="Verdana, Arial, Helvetica, sans-serif"><span ><input ' . $tabindex . ' type="text" readonly="true" name="' . $campos[$h]["nombre"] . '" ' . $adicionales . ' id="' . $campos[$h]["nombre"] . '" value="';
 								if ($accion == "adicionar") {
 									if ($campos[$h]["predeterminado"] == "now()")
@@ -796,7 +797,7 @@ else
 								$fecha++;
 								$indice_tabindex++;
 							} else if ($campos[$h]["tipo_dato"] == "TIME") {
-								$texto .= '<tr>
+								$texto .= '<tr id="tr_'.$campos[$h]["nombre"].'">
                     <td class="encabezado" width="20%" title="' . $campos[$h]["ayuda"] . '">' . $this->codifica($campos[$h]["etiqueta"]) . $obliga . '</td><td colspan="2" bgcolor="#F5F5F5"><font size="1,5" face="Verdana, Arial, Helvetica, sans-serif"><span ><input ' . $tabindex . ' type="text"  name="' . $campos[$h]["nombre"] . '" ' . $adicionales . ' id="' . $campos[$h]["nombre"] . '" value="';
 								if ($accion == "adicionar") {
 									$texto .= '"></span></font>';
@@ -851,7 +852,7 @@ else
                 $texto .= '<td bgcolor="#F5F5F5">' . $this->arma_funcion("genera_campo_listados_editar", $this->idformato . "," . $campos[$h]["idcampos_formato"], 'editar') . '</td></tr>';
 							break;
 						case "link" :
-							$texto .= '<tr>
+							$texto .= '<tr id="tr_'.$campos[$h]["nombre"].'">
                      <td class="encabezado" width="20%" title="' . $campos[$h]["ayuda"] . '">' . $this->codifica($campos[$h]["etiqueta"]) . $obliga . '</td>';
 							if (strpos($adicionales, "class") !== false)
 								$adicionales = str_replace("required", "required url", $adicionales);
@@ -865,13 +866,13 @@ else
 							$texto .= $valor . '</textarea></td></tr>';
 							break;
 						case "checkbox" :
-							$texto .= '<tr>
+							$texto .= '<tr id="tr_'.$campos[$h]["nombre"].'">
                   <td class="encabezado" width="20%" title="' . $campos[$h]["ayuda"] . '">' . $this->codifica($campos[$h]["etiqueta"]) . $obliga . '</td>';
 							$texto .= '<td bgcolor="#F5F5F5">' . $this->arma_funcion("genera_campo_listados_editar", $this->idformato . "," . $campos[$h]["idcampos_formato"], 'editar') . '</td></tr>';
 							$checkboxes++;
 							break;
 						case "select" :
-							$texto .= '<tr>
+							$texto .= '<tr id="tr_'.$campos[$h]["nombre"].'">
                      <td class="encabezado" width="20%" title="' . $campos[$h]["ayuda"] . '">' . $this->codifica($campos[$h]["etiqueta"]) . $obliga . '</td>';
 							$texto .= '<td bgcolor="#F5F5F5">' . $this->arma_funcion("genera_campo_listados_editar", $this->idformato . "," . $campos[$h]["idcampos_formato"], 'editar') . '</td></tr>';
 							break;
@@ -883,10 +884,22 @@ else
 							if (count($parametros) < 2)
 								alerta_formatos("Por favor verifique los parametros de configuracion de su select dependiente " . $campos[$h]["etiqueta"]);
 							else {
-								$texto .= '<tr>
+								$texto .= '<tr id="tr_'.$campos[$h]["nombre"].'">
                      <td class="encabezado" width="20%" title="' . $campos[$h]["ayuda"] . '">' . $this->codifica($campos[$h]["etiqueta"]) . $obliga . '</td>';
 								$texto .= '<td bgcolor="#F5F5F5">' . $this->arma_funcion("genera_campo_listados_editar", $this->idformato . "," . $campos[$h]["idcampos_formato"], 'editar') . '</td></tr>';
 								$dependientes++;
+						}
+						break;
+					case "archivo" :
+						$tipo_input='unico';
+						if($campos[$h]["valor"]!=''){
+							$mystring = $campos[$h]["valor"];
+							$findme   = '@';
+							$pos = strpos($mystring, $findme);
+							if ($pos !== false) { //fue encontrada
+								$vector_extensiones_tipo=explode($findme,$mystring);
+								$tipo_input=$vector_extensiones_tipo[1];
+								$extensiones_fijas=$vector_extensiones_tipo[0];
 							}
 							break;
 						case "archivo" :
@@ -939,7 +952,7 @@ else
 									break;
 							}
 
-							$texto .= '<tr>
+							$texto .= '<tr id="tr_'.$campos[$h]["nombre"].'">
                      <td class="encabezado" width="20%" title="' . $campos[$h]["ayuda"] . '">' . $this->codifica($campos[$h]["etiqueta"]) . $obliga . '</td>
                      <td class="celda_transparente">' . $funcion_adicional_archivo;
 
@@ -967,7 +980,7 @@ else
 							break;
 						case "tarea" :
 							// parametros:id de la tarea
-							$texto .= '<tr>
+							$texto .= '<tr id="tr_'.$campos[$h]["nombre"].'">
                   <td class="encabezado" width="20%" title="' . $campos[$h]["ayuda"] . '">' . $this->codifica($campos[$h]["etiqueta"]) . $obliga . '</td><td colspan="2" bgcolor="#F5F5F5"><font size="1,5" face="Verdana, Arial, Helvetica, sans-serif"><span ><input type="hidden" name="tarea_' . $campos[$h]["nombre"] . '" value="' . $campos[$h]["valor"] . '"><input type="text" name="' . $campos[$h]["nombre"] . '" id="' . $campos[$h]["nombre"] . '" value="';
 							if ($accion == "adicionar") {
 								if ($campos[$h]["predeterminado"] == "now()")
@@ -1003,7 +1016,7 @@ else
                 /* parametros: campos a mostrar separados por comas; campo a guardar en el hidden; tabla
                   ej: nombres,apellidos;idfuncionario;funcionario
                 */
-                $texto .= '<tr>
+                $texto .= '<tr id="tr_'.$campos[$h]["nombre"].'">
                    <td class="encabezado" width="20%" title="' . $campos[$h]["ayuda"] . '">' . $this->codifica($campos[$h]["etiqueta"]) . $obliga . '</td>
                    <td bgcolor="#F5F5F5">';
 							$texto .= '<input type="text" size="30" ' . $adicionales . ' value="" id="input' . $campos[$h]["idcampos_formato"] . '" onkeyup="lookup(this.value,' . $campos[$h]["idcampos_formato"] . ');" onblur="fill(this.value,' . $campos[$h]["idcampos_formato"] . ');" />
@@ -1016,7 +1029,7 @@ else
 							$autocompletar++;
 							break;
 						case "etiqueta" :
-							$texto .= '<tr>
+							$texto .= '<tr id="tr_'.$campos[$h]["nombre"].'">
                    <td class="encabezado" width="20%" title="' . $campos[$h]["ayuda"] . '">' . $this->codifica($campos[$h]["etiqueta"]) . $obliga . '</td>
                    <td bgcolor="#F5F5F5"><label>' . $valor . '</label><input type="hidden" name="' . $campos[$h]["nombre"] . '" value="' . $valor . '"></td>
                   </tr>';
@@ -1028,7 +1041,7 @@ else
 							} else
 								$valor = $campos[$h]["predeterminado"];
 
-							$texto .= '<tr>
+							$texto .= '<tr id="tr_'.$campos[$h]["nombre"].'">
                    <td class="encabezado" width="20%" title="' . $campos[$h]["ayuda"] . '">' . $this->codifica($campos[$h]["etiqueta"]) . $obliga . '</td>
                    <td bgcolor="#F5F5F5">
                    <input type="hidden" ' . $adicionales . ' name="' . $campos[$h]["nombre"] . '" id="' . $campos[$h]["nombre"] . '" value="' . $valor . '"><?php componente_ejecutor("' . $campos[$h]["idcampos_formato"] . '",@$_REQUEST["iddoc"]); ?' . '>';
@@ -1046,7 +1059,7 @@ else
 								$arreglo[3] = 0;
 								$arreglo[4] = 1;
 							}
-							$texto .= '<tr>
+							$texto .= '<tr id="tr_'.$campos[$h]["nombre"].'">
                    <td class="encabezado" width="20%" title="' . $campos[$h]["ayuda"] . '">' . $this->codifica($campos[$h]["etiqueta"]) . $obliga . '</td>';
 							$texto .= '<td bgcolor="#F5F5F5">';
 							$texto .= '<div id="seleccionados">' . $this->arma_funcion("mostrar_seleccionados", $this->idformato . "," . $campos[$h]["idcampos_formato"] . ",'" . $arreglo[6] . "'", "mostrar") . '</div>
@@ -1218,9 +1231,14 @@ else
 								if (is_numeric($parametros[3]) && $parametros[3])
 									$aux[] = 'lock:true';
 							}
+							if (is_numeric($parametros[2]))
+								$aux[] = 'interval:' . $parametros[2];
+							if (is_numeric($parametros[3]) && $parametros[3])
+								$aux[] = 'lock:true';
+						}
 							if (is_array($aux2))
 								$adicionales .= implode(" ", $aux2);
-							$texto .= '<tr>
+							$texto .= '<tr id="tr_'.$campos[$h]["nombre"].'">
                      <td class="encabezado" width="20%" title="' . $campos[$h]["ayuda"] . '">' . $this->codifica($campos[$h]["etiqueta"]) . $obliga . '</td>
                      <td bgcolor="#F5F5F5"><input ' . " $adicionales $tabindex" . ' type="input" id="' . $campos[$h]["nombre"] . '" name="' . $campos[$h]["nombre"] . '" ' . $obligatorio . ' value="' . $valor . '"></td>
                     </tr>

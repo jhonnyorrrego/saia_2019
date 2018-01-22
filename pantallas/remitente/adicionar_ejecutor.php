@@ -19,7 +19,14 @@ include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
 <form name="formulario_datos_ejecutor" id="formulario_datos_ejecutor" method="post">
 	<table class="table table-bordered" style="width:70%;margin: 20px;margin-left: auto;margin-right: auto;">
 		<tr>
-			<td style="width:30%;" class="prettyprint"><b>Empresa</b></td>
+			<td style="width:30%;" class="prettyprint"><b>Tipo</b></td>
+			<td style="width:40%;">
+				Persona natural <input type="radio" name="tipo_ejecutor" id="tipo_ejecutor1" value="1" checked/> 
+				Persona Jur&iacute;dica <input type="radio" name="tipo_ejecutor" id="tipo_ejecutor2" value="2" /> 
+			</td>
+		</tr>		
+		<tr>
+			<td style="width:30%;" class="prettyprint" id="etiqueta_nombre"><b>Nombres y apellidos</b></td>
 			<td style="width:40%;">
 			<input type="text" name="nombre" id="nombre">
 			</td>
@@ -49,6 +56,16 @@ include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
 
 <script>
 	$(document).ready(function() {
+		
+		$('[name="tipo_ejecutor"]').click(function(){
+			var valor=parseInt($(this).val());
+			var etiqueta='<b>Nombres y apellidos</b>';
+			if(valor==2){
+				etiqueta='<b>Entidad</b>';
+			}
+			$('#etiqueta_nombre').html(etiqueta);
+		});	
+		
 	  $("#identificacion").keyup(function (){
 	    this.value = (this.value + '').replace(/[^0-9]/g, '');
 	  });

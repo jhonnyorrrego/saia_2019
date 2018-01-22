@@ -11,7 +11,7 @@ while ($max_salida>0){
 include_once $ruta_db_superior.'db.php';
 include_once ($ruta_db_superior . "sql.php");
 include_once $ruta_db_superior.'formatos/librerias/funciones_generales.php';
-require_once 'src/PHPSQLParser.php';
+require_once '../vendor/autoload.php';
 
 ini_set("display_errors", true);
 
@@ -32,14 +32,14 @@ $fin=1;
 for($i=0;$i<$fin;$i++){
 	if(!file_exists("eventos/".$nombre_origen."_log_".str_replace("-","_",$fechai).".txt")){
 		$archivo=fopen("eventos/".$nombre_origen."_log_".str_replace("-","_",$fechai).".txt",'ab');
-		
+
 		$log=$ruta_origen."evento/".$nombre_origen."_log_".str_replace("-","_",$fechai).".txt";
 	  	$contenido=file_get_contents($log);
 		procesar_evento($contenido,$archivo);
-		
+
 		fclose($archivo);
 	}
-	
+
 	$fechai=suma_fechasphp($fechai,1);
 }
 if($fechai<=$fechaf){
@@ -50,12 +50,12 @@ if($fechai<=$fechaf){
 
 function procesar_evento($contenido,$archivo){
 	global $conn;
-	
+
 	$filas=explode("*|*",$contenido);
 	$cant_filas=count($filas);
 	for($i=0;$i<$cant_filas;$i++){
 		$celdas=explode("|||",$filas[$i]);
-		
+
 		$idevento=$celdas[0];
 		$funcionario=$celdas[1];
 		$fecha=$celdas[2];
@@ -65,7 +65,7 @@ function procesar_evento($contenido,$archivo){
 		$detalle=$celdas[6];
 		$idregistro=$celdas[7];
 		$sql1=$celdas[8];
-		
+
 		$sql1='update pretexto set contenido=\'<p style=\\\"text-align: justify;\\\"><span>De la manera m&aacute;s respetuosa, a continuaci&oacute;n me permito adjuntar el listado de las siguientes consignaciones realizadas&nbsp;por los usuarios de los predios encontrados con irregularidad, lo anterior para su tr&aacute;mite y fines pertinentes:</span></p>
 <table style=\\\"434px; margin-left: 2.75pt; border-collapse: collapse;\\\" border=\\\"0\\\" cellspacing=\\\"0\\\" cellpadding=\\\"0\\\">
 
@@ -1400,24 +1400,24 @@ function procesar_evento($contenido,$archivo){
 </table>\', imagen=\'1\' where idpretexto=6795';
 
 		$sql1=str_replace(array("DATE_FORMAT(","%Y-%m-%d %H:%i:%s","%Y-%m-%d"), array("TO_DATE(","YYYY-MM-DD HH24:MI:SS","YYYY-MM-DD"), ($sql1));
-		
+
 		$tabla="ft_memo";
 		$campo_id="idft_memo";
 		$idregistro=1;
 		$accion='MODIFICAR';
-		
+
 		if($accion=='ADICIONAR'){
 			$parser = new PHPSQLParser($sql1, true);
-			
+
 			$campos=$parser->parsed["INSERT"][0]["columns"];
 			$valores=$parser->parsed["VALUES"][0]["data"];
 			$cant=count($campos);
-			
+
 			$consulta_tabla=busca_filtro_tabla("","user_tab_columns","table_name='".strtoupper($tabla)."'","",$conn);
-			
+
 			$nuevos_campos=array();
 			$nuevos_valores=array();
-			
+
 			$campos_clob=array();
 			$valores_clob=array();
 			for($i=0;$i<$cant;$i++){
@@ -1439,17 +1439,17 @@ function procesar_evento($contenido,$archivo){
 					}
 				}
 			}
-			
+
 			$nuevos_valores=implode(",",$nuevos_valores);
 			$sql1="insert into ".$tabla."(".implode(",",$nuevos_campos).") values(".$nuevos_valores.")";
 		}else if($accion=='MODIFICAR'){
 			$parser = new PHPSQLParser($sql1, true);
-			
+
 			$campos=$parser->parsed["SET"];
 			$cant=count($campos);
-			
+
 			$nuevos_datos=array();
-			
+
 			$campos_clob=array();
 			$valores_clob=array();
 			for($i=0;$i<$cant;$i++){
@@ -1460,14 +1460,14 @@ function procesar_evento($contenido,$archivo){
 					$nuevos_datos[]=$campos[$i]["sub_tree"][0]["base_expr"].$campos[$i]["sub_tree"][1]["base_expr"].$campos[$i]["sub_tree"][2]["base_expr"];
 				}
 			}
-			
+
 			$sql1="update ".$tabla." set ".implode(", ",$nuevos_datos)." where ".$parser->parsed["WHERE"][0]["base_expr"].$parser->parsed["WHERE"][1]["base_expr"].$parser->parsed["WHERE"][2]["base_expr"];
 		}
 		phpmkr_query($sql1);
-    
+
 		if($accion=='ADICIONAR'){
 			$exito=phpmkr_insert_id();
-      
+
 		    if($exito!=$idregistro && $exito){
 		    	$campo_id="id".$tabla;
 		        if($tabla=='buzon_entrada' || $tabla=='buzon_salida'){
@@ -1477,10 +1477,10 @@ function procesar_evento($contenido,$archivo){
 		        }else if($tabla=='salidas'){
 		          	$campo_id="idsalida";
 		        }
-		        
+
 		        $sql2="update ".$tabla." set ".$campo_id."='".$idregistro."' where ".$campo_id."=".$exito;
 		        phpmkr_query($sql2);
-				
+
 				$cant_clob=count($campos_clob);
 				if($cant_clob){
 					for($i=0;$i<$cant_clob;$i++){
@@ -1490,7 +1490,7 @@ function procesar_evento($contenido,$archivo){
 			}
 		}else if($accion=='MODIFICAR'){
 			$exito=true;
-			
+
 			$cant_clob=count($campos_clob);
 			if($cant_clob){
 				for($i=0;$i<$cant_clob;$i++){
@@ -1502,7 +1502,7 @@ function procesar_evento($contenido,$archivo){
 		}
 		if($exito){
 			$cadena=$idevento."|||".$funcionario."|||".$fecha."|||".$tabla."|||".$accion."|||".$estado."|||".$detalle."|||".$idregistro."|||".$sql1."*|*";
-			
+
 			fwrite($archivo,$cadena);
 		}
 		die();
@@ -1513,7 +1513,7 @@ function guardar_lob2($campo, $tabla, $condicion, $contenido, $tipo, $conn, $log
 	$stmt = OCIParse($conn->Conn->conn, $sql) or print_r(OCIError($stmt));
 	OCIExecute($stmt, OCI_DEFAULT) or print_r(OCIError($stmt));
 	OCIFetchInto($stmt, $row, OCI_ASSOC);
-	
+
 	if(!count($row)){  //soluciona el problema del size().
 		oci_rollback($conn->Conn->conn);
 		oci_free_statement($stmt);
@@ -1525,8 +1525,8 @@ function guardar_lob2($campo, $tabla, $condicion, $contenido, $tipo, $conn, $log
 		$conn->Ejecutar_Sql($up_clob);
 	    $stmt = OCIParse($conn->Conn->conn, $sql) or print_r(OCIError ($stmt));
 	    OCIExecute($stmt, OCI_DEFAULT) or print_r(OCIError ($stmt));
-	    OCIFetchInto($stmt,$row,OCI_ASSOC);		
-	}	
+	    OCIFetchInto($stmt,$row,OCI_ASSOC);
+	}
 	if (FALSE === $row) {
 		OCIRollback($conn->Conn->conn);
 		alerta("No se pudo modificar el campo.");

@@ -77,7 +77,7 @@ $(document).ready(function(){
   });
   $.ajax({
     url: "<?php echo($ruta_db_superior);?>pantallas/caja/arbol_caja_entidad.php" ,
-    data:"entidad=caja<?php if(@$_REQUEST['filtrar_caja']) echo '&filtrar_caja='.$_REQUEST['filtrar_caja']; if(@$_REQUEST['tipo_entidad']) echo '&tipo_entidad='.$_REQUEST['tipo_entidad'] ; if(@$_REQUEST['llave_entidad']) echo '&llave_entidad='.$_REQUEST['llave_entidad'];?>",
+    data:"entidad=caja<?php if(@$_REQUEST['filtrar_caja']) echo '&idcaja='.$_REQUEST['idcaja'].'&filtrar_caja='.$_REQUEST['filtrar_caja']; if(@$_REQUEST['tipo_entidad']) echo '&tipo_entidad='.$_REQUEST['tipo_entidad'] ; if(@$_REQUEST['llave_entidad']) echo '&llave_entidad='.$_REQUEST['llave_entidad'];?>",
     type: "POST",
     success: function(msg){
       $("#divcaja").html(msg);
@@ -120,9 +120,10 @@ $(document).ready(function(){
 });
 //funcion para cargar los elementos de la entidad seleccionada
 function valores_entidad(identidad){
+
   if(identidad!=""){
     $.ajax({url: "<?php echo($ruta_db_superior);?>pantallas/caja/arbol_caja_entidad.php" ,
-      data:"entidad="+identidad+"&cajas="+$("#caja_idcaja").val()+"<?php if(@$_REQUEST['tipo_entidad']) echo '&tipo_entidad='.$_REQUEST['tipo_entidad'] ; if(@$_REQUEST['llave_entidad']) echo '&llave_entidad='.$_REQUEST['llave_entidad']; ?>",
+      data:"entidad="+identidad+"&idcaja="+$("#idcaja").val()+"&cajas="+$("#caja_idcaja").val()+"<?php if(@$_REQUEST['tipo_entidad']) echo '&tipo_entidad='.$_REQUEST['tipo_entidad'] ; if(@$_REQUEST['llave_entidad']) echo '&llave_entidad='.$_REQUEST['llave_entidad']; ?>",
       type: "POST",
       success: function(msg){
         $("#sub_entidad").html(msg);

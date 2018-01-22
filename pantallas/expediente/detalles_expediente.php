@@ -10,7 +10,6 @@ while($max_salida>0){
 }
 include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."librerias_saia.php");
-include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
 ?>
 <!DOCTYPE html>     
 <?php               
@@ -118,6 +117,31 @@ $expediente=busca_filtro_tabla("a.*,".fecha_db_obtener("a.fecha","Y-m-d")." AS f
        <?php echo($expediente[0]["descripcion"]);?>
     </td>
   </tr>
+    <tr>
+    <td class="prettyprint">
+      <b>Indice uno:</b>
+    </td>
+    <td colspan="3">
+       <?php echo($expediente[0]["indice_uno"]);?>
+    </td>
+  </tr>
+  <tr>
+    <td class="prettyprint">
+      <b>Indice Dos:</b>
+    </td>
+    <td colspan="3">
+       <?php echo($expediente[0]["indice_dos"]);?>
+    </td>
+  </tr>
+  <tr>
+    <td class="prettyprint">
+      <b>Indice Tres:</b>
+    </td>
+    <td colspan="3">
+       <?php echo($expediente[0]["indice_tres"]);?>
+    </td>
+  </tr>
+  <tr>
   <tr>
     <td class="prettyprint">      
       <b>Expediente superior:</b>
@@ -191,13 +215,12 @@ $expediente=busca_filtro_tabla("a.*,".fecha_db_obtener("a.fecha","Y-m-d")." AS f
        ?>
     </td>
   </tr>
-  
   <?php
   $cadena_cierre=array();
   if(is_object($expediente[0]["fecha_cierre"]))$expediente[0]["fecha_cierre"]=$expediente[0]["fecha_cierre"]->format('Y-m-d');
   $usuario_cierre=busca_filtro_tabla("","vfuncionario_dc a","a.idfuncionario=".$expediente[0]["funcionario_cierre"],"",$conn);
   $estado_cierre="";
-  $enlace_abrir='<a style="cursor:pointer" class="accion_abrir_cierre" accion="1">Abrir</a><input type="hidden" name="accion" value="1" />';
+	$enlace_abrir='<a style="cursor:pointer" class="accion_abrir_cierre" accion="1">Abrir</a>';
   $permiso_abrir_expediente=new Permiso();
   $ok=$permiso_abrir_expediente->acceso_modulo_perfil("permiso_abrir_expediente");
   if(!$ok){
@@ -205,10 +228,10 @@ $expediente=busca_filtro_tabla("a.*,".fecha_db_obtener("a.fecha","Y-m-d")." AS f
   }
   
   $vector_abrir_cerrar=array(2=>'abrir',1=>'cerrar');
-  $enlace_cerrar='<a style="cursor:pointer" class="accion_abrir_cierre" accion="2">Cerrar</a><input type="hidden" name="accion" value="2" />';
+	$enlace_cerrar='<a style="cursor:pointer" class="accion_abrir_cierre" accion="2">Cerrar</a>';
   $observaciones_abrir_cerrar='
       <td style="text-align:center" colspan="2">
-            <textarea id="observaciones_abrir_cerrar" name="observaciones" placeholder="Observaci&oacute;n para '.$vector_abrir_cerrar[$expediente[0]["estado_cierre"]].' expediente..."></textarea>
+            <textarea id="observaciones_abrir_cerrar" placeholder="Observaci&oacute;n para '.$vector_abrir_cerrar[$expediente[0]["estado_cierre"]].' expediente..."></textarea>
     </td>
   ';
   if($expediente[0]["estado_cierre"]==1){
@@ -217,6 +240,9 @@ $expediente=busca_filtro_tabla("a.*,".fecha_db_obtener("a.fecha","Y-m-d")." AS f
   }else if($expediente[0]["estado_cierre"]==2){
     $estado_cierre="Cerrado";
     $enlace_cerrar='';
+	}else{
+		$estado_cierre="Abierto";
+		$enlace_abrir='';		
   }
   
   $cadena_cierre[]="<b>Estado:</b> ".$estado_cierre;
@@ -227,19 +253,16 @@ $expediente=busca_filtro_tabla("a.*,".fecha_db_obtener("a.fecha","Y-m-d")." AS f
     <td class="prettyprint">      
       <?php echo(implode("<br/>",$cadena_cierre)); ?>
     </td>
-    <td><form name="form_abrir_cerrar" id="form_abrir_cerrar">
+    <td>
       <table class="table table-bordered">
         <tr>
             <?php echo($observaciones_abrir_cerrar); ?>
           <td style="text-align:center;" >
                <br>
               <?php echo($enlace_abrir); ?><?php echo($enlace_cerrar); ?>
-              <input type="hidden" name="ejecutar_expediente" value="abrir_cerrar_expediente" />
-              <input type="hidden" name="tipo_retorno" value="1" />
-              <input type="hidden" name="idexpediente" value="<?php echo($expediente[0]["idexpediente"]); ?>" />
               <br>
               <br>
-                    <button class='btn btn-mini btn-default historial_abrir_cerrar' type="button" id="button_historial">
+                      <button class='btn btn-mini btn-default historial_abrir_cerrar'>
                       <i class='icon-info-sign ' title='Ver Historial de Cambio'></i>
                     </button>     
                       <script>
@@ -253,7 +276,6 @@ $expediente=busca_filtro_tabla("a.*,".fecha_db_obtener("a.fecha","Y-m-d")." AS f
           </td>
         </tr> 
       </table>
-      </form>
     </td>
   </tr>
   
@@ -363,10 +385,9 @@ if($expediente[0]["estado_cierre"]==2){  //si esta cerrado
         if(ejecutar_ajax){
           if(confirm('Esta seguro de realizar esta accion?')){
             if(ejecutar_ajax){
-              <?php encriptar_sqli("form_abrir_cerrar",0,"form_info",$ruta_db_superior); ?>
                 $.ajax({
                   url:"<?php echo($ruta_db_superior);?>pantallas/expediente/ejecutar_acciones.php",
-                  data:$("#form_abrir_cerrar").serialize(),
+          				data:{ejecutar_expediente: 'abrir_cerrar_expediente', tipo_retorno: 1, accion: x_accion, idexpediente: '<?php echo($expediente[0]["idexpediente"]); ?>',observaciones:observaciones},
                   type:"POST",
                   success: function(html){
                     if(html){

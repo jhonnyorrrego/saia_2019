@@ -23,7 +23,7 @@ $retorno=new stdClass;
 $retorno->exito=0;
 $retorno->mensaje="Error al guardar";
 $exito=0;
-$campos=array("fondo", "seccion", "subseccion", "division", "codigo", "serie_idserie", "no_carpetas", "no_cajas", "no_consecutivo", "no_correlativo", "fecha_extrema_i", "fecha_extrema_f", "estanteria", "panel", "material", "seguridad", "funcionario_idfuncionario");
+$campos=array("fondo", "seccion", "subseccion", "division", "codigo", "serie_idserie", "no_carpetas", "no_cajas", "no_consecutivo", "no_correlativo", "fecha_extrema_i", "fecha_extrema_f", "estanteria", "panel", "material", "seguridad", "funcionario_idfuncionario","modulo","nivel","codigo_serie","codigo_dependencia","dependencia_iddependencia");
 $valores=array();
 foreach($campos AS $key=>$campo){
   if(@$_REQUEST[$campo]){
@@ -53,7 +53,7 @@ $retorno=new stdClass;
 $retorno->exito=0;
 $retorno->mensaje="Error al guardar";
 $exito=0;
-$campos=array("fondo", "seccion", "subseccion", "division", "codigo", "serie_idserie", "no_carpetas", "no_cajas", "no_consecutivo", "no_correlativo", "fecha_extrema_i", "fecha_extrema_f", "estanteria", "panel", "material", "seguridad", "funcionario_idfuncionario");
+$campos=array("fondo", "seccion", "subseccion", "division", "codigo", "serie_idserie", "no_carpetas", "no_cajas", "no_consecutivo", "no_correlativo", "fecha_extrema_i", "fecha_extrema_f", "estanteria", "panel", "material", "seguridad", "funcionario_idfuncionario","dependencia_iddependencia");
 $valores=array();
 $update=array();
 foreach($campos AS $key=>$campo){

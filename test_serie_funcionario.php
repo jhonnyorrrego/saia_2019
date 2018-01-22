@@ -86,7 +86,7 @@ if(@$_REQUEST['tvd']){
 
 if($serie=="NULL")
 {
- $papas=busca_filtro_tabla("nombre,codigo,idserie,cod_padre","serie","idserie in($lista) and (cod_padre IS NULL OR cod_padre=0) $condicion $padre"." AND  tipo=1".$tvd,"nombre ASC",$conn);   //solo series
+ $papas=busca_filtro_tabla("nombre,codigo,idserie,cod_padre, tipo","serie","idserie in($lista) and (cod_padre IS NULL OR cod_padre=0) $condicion $padre"." AND  tipo=1".$tvd,"nombre ASC",$conn);   //solo series
 }
 else
  {
@@ -111,7 +111,7 @@ else
 	if($categoria==3){
 		$condicion_lista='';
 	}	
- 	$papas=busca_filtro_tabla("nombre,codigo,idserie,cod_padre","serie",$condicion_lista."cod_padre=$serie $condicion"." ".$condicion_nivel."".$tvd,"nombre ASC",$conn);
+ 	$papas=busca_filtro_tabla("nombre,codigo,idserie,cod_padre,tipo","serie",$condicion_lista."cod_padre=$serie $condicion"." ".$condicion_nivel."".$tvd,"nombre ASC",$conn);
 }
 
 if($papas["numcampos"]>0)
@@ -122,7 +122,7 @@ if($papas["numcampos"]>0)
       $hijos=llena_serie($papas[$i]["idserie"]);
     $texto.=("\n<item style=\"font-family:verdana; font-size:7pt;\" ");
     $texto.= "text=\"".ucwords(codifica_caracteres($papas[$i]["nombre"]))."(".strtoupper($papas[$i]["codigo"]).") \" ";
-    if($hijos<>""){
+    if($papas[$i]['tipo']!=3){
     	if(!@$_REQUEST["con_padres"])
       	$texto.=" nocheckbox=\"1\"";
 		} 

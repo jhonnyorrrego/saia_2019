@@ -7344,7 +7344,14 @@ function webViewerInitialized() {
     function() {
       PDFViewerApplication.zoomIn();
     });
-
+  document.getElementById('transferir').addEventListener('click',
+	function() {
+	  parent.window.open(document.getElementById('transferir').getAttribute("enlace")+"&pag_pdf="+document.getElementById('pageNumber').value,"detalles");
+	});
+	document.getElementById('cambio_visor').addEventListener('click',
+	function() {
+	  window.location="../../pruebas/pdf-notas/docs/index.php?tipo="+document.getElementById('cambio_visor').getAttribute("tipo")+"&iddocumento="+document.getElementById('cambio_visor').getAttribute("iddocumento")
+	});
   document.getElementById('zoomOut').addEventListener('click',
     function() {
       PDFViewerApplication.zoomOut();

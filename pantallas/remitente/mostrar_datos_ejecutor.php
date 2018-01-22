@@ -12,16 +12,30 @@ include_once ($ruta_db_superior . "librerias_saia.php");
 echo(estilo_bootstrap());
 echo(librerias_bootstrap());
 $sKey = @$_GET["idejecutor"];
-$remitente=busca_filtro_tabla("nombre,identificacion,".fecha_db_obtener('fecha_ingreso','Y-m-d')." AS fecha_ingreso","ejecutor","idejecutor=".$sKey,"",$conn);
+$remitente=busca_filtro_tabla("nombre,identificacion,".fecha_db_obtener('fecha_ingreso','Y-m-d')." AS fecha_ingreso,tipo_ejecutor","ejecutor","idejecutor=".$sKey,"",$conn);
 ?>
 	<table class="table table-bordered" style="width:50%;margin: 20px">
+		
+		<tr>
+			<td class="prettyprint"><b>Tipo:</b></td>
+			<td >
+				<?php 
+					$array_persona=array(1=>'Persona natural',2=>'Persona Jur&iacute;dica');
+					$array_etiqueta=array(1=>'Nombres y apellidos',2=>'Entidad');
+					$persona=$array_persona[$remitente[0]["tipo_ejecutor"]];
+					$etiqueta_nombre=$array_etiqueta[$remitente[0]["tipo_ejecutor"]];
+					echo($persona);
+				?>
+				
+			</td>
+		</tr>			
+		<tr>
+			<td class="prettyprint"><b><?php echo($etiqueta_nombre); ?>:</b></td>
+			<td><?php echo $remitente[0]["nombre"];; ?></td>
+		</tr>		
 		<tr>
 			<td class="prettyprint" style="width:20%"><b>Identificaci&oacute;n:</b></td>
 			<td style="width:30%"><?php echo $remitente[0]["identificacion"]; ?></td>
-		</tr>
-		<tr>
-			<td class="prettyprint"><b>Empresa:</b></td>
-			<td><?php echo $remitente[0]["nombre"];; ?></td>
 		</tr>
 		<tr>
 			<td class="prettyprint"><b>Fecha ingreso:</b></td>
@@ -36,7 +50,14 @@ $remitente=busca_filtro_tabla("nombre,identificacion,".fecha_db_obtener('fecha_i
 		<?php
 	}?>
 	<tr>
-    <td class="prettyprint"><b>T&iacute;tulo</b></td>
+		<?php 
+			if($remitente[0]["tipo_ejecutor"]==1){
+				?>
+					<td class="prettyprint"><b>T&iacute;tulo</b></td>
+				<?php 
+			} 
+		?>
+    
     <td class="prettyprint"><b>Cargo</b></td>
     <td class="prettyprint"><b>Contacto</b></td>
     <td class="prettyprint"><b>Tel&eacute;fono</b></td>
@@ -58,8 +79,13 @@ $remitente=busca_filtro_tabla("nombre,identificacion,".fecha_db_obtener('fecha_i
 		if($i==0){
 			$color='style="background-color: #BCF5A9"';
 		}
-		echo '<tr>
-			<td '.$color.'>' . $datos[$i]["titulo"] . '&nbsp;</td>
+		
+		echo '<tr>';
+			if($remitente[0]["tipo_ejecutor"]==1){
+				echo('<td '.$color.'>' . $datos[$i]["titulo"] . '&nbsp;</td>');
+			} 
+		
+		echo '
 			<td '.$color.'>' . $datos[$i]["cargo"] . '&nbsp;</td>
 			<td '.$color.'>' . $datos[$i]["empresa"] . '&nbsp;</td>
 		  <td '.$color.'>' . $datos[$i]["telefono"] . '&nbsp;</td>

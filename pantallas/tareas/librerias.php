@@ -51,8 +51,9 @@ switch ($estado_tarea) {
 return($estado);
 }
 function validar_request_tareas(){
+	$condicion='ruta_aprob<>-1 AND ';
 	if(!@$_REQUEST["iddoc"]){
-		$condicion=condicion_mis_tareas_pendientes();
+		$condicion.=condicion_mis_tareas_pendientes();
 		if($condicion){
 			$condicion.=' OR ';
 		}
@@ -60,7 +61,8 @@ function validar_request_tareas(){
 		return($condicion); 
 	}
 	else{
-		return("documento_iddocumento=".$_REQUEST["iddoc"]);	
+		$condicion.="documento_iddocumento=".$_REQUEST["iddoc"];
+		return($condicion);	
 	}
 }
 function condicion_todas_mis_pendientes(){

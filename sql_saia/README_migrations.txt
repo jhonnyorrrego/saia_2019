@@ -5,9 +5,7 @@ migrations_namespace: Migrations
 table_name: migrations
 migrations_directory: migrations
 
-En las carpetas migracioes_[my|ora|mssql|pg] Editar/Crear el archivo migrations.yml con los siguientes datos
-
-Editar/Crear el archivo migrations-db.php con los datos de conexión a bdd
+En las carpetas migracioes_[my|ora|mssql|pg] Editar/Crear el archivo migrations-db.php con los datos de conexión a bdd
 <?php
 return [
     'dbname' => 'saia_release1',
@@ -27,7 +25,7 @@ Modificar el archivo usando como plantilla : migrations/VersionPlantilla.php
 En el archivo migrations/VersionPlantilla.php se muestran ejemplos de ejecución de SQL y como agregar otros métodos de soporte para function up(Schema $schema)
 
 Una vez modificada la clase que se genera, se debe ejecutar
-../vendor/bin/doctrine-migrations migrations:migrate 
+../../vendor/bin/doctrine-migrations migrations:migrate 
 
 Opcionalmente se puede pasar el parámetro --write-sql para generar un .sql de las sentencias ejecutadas.
 

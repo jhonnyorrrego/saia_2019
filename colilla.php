@@ -82,11 +82,11 @@ if($_REQUEST["mostrar_formato"]){
 if($doc<>FALSE){
   $ejecutor=busca_filtro_tabla("nombre AS nombre, empresa","ejecutor A,datos_ejecutor B","A.idejecutor=B.ejecutor_idejecutor AND iddatos_ejecutor=".$datos[0]["ejecutor"],"",$conn);
   $radicador1=busca_filtro_tabla("nombres,apellidos","digitalizacion,funcionario","funcionario=funcionario_codigo and documento_iddocumento=$doc","",$conn);
-  $radicador = busca_filtro_tabla("destino,D.nombre,B.nombres, B.apellidos","buzon_salida A,funcionario B,dependencia_cargo C,dependencia D","A.destino=B.funcionario_codigo AND B.idfuncionario=C.funcionario_idfuncionario AND C.dependencia_iddependencia=D.iddependencia AND A.archivo_idarchivo=$doc AND A.nombre='TRANSFERIDO'","A.idtransferencia ASC",$conn);
+  $radicador = busca_filtro_tabla("destino,b.dependencia,b.nombres,b.apellidos","buzon_salida a,vfuncionario_dc b","A.destino=B.funcionario_codigo AND A.archivo_idarchivo=$doc AND A.nombre='TRANSFERIDO'  AND   b.estado_dc=1 AND   b.estado=1 AND  b.estado_dep=1","A.idtransferencia ASC",$conn);
   $responsable=busca_filtro_tabla("B.nombres,B.apellidos","documento A,funcionario B","A.ejecutor=B.funcionario_codigo AND iddocumento=".$doc,"",$conn);
 
     if($radicador["numcampos"]){
-      $usu=$radicador[0]["nombre"];
+      $usu=$radicador[0]["dependencia"];
     }
     else{
         if(strtolower($datos[0]["plantilla"])=='radicacion_entrada'){
@@ -298,14 +298,41 @@ function imprime(atras){
    	if(@$datos[0]['estado']=='INICIADO' && strtolower($datos[0]["plantilla"])=='radicacion_entrada'){
   		$ejecutor_radicacion=busca_filtro_tabla("nombres,apellidos","documento a, funcionario b","a.ejecutor=b.funcionario_codigo AND a.iddocumento=".$doc,"",$conn);
   		$origen=ucwords(strtolower($ejecutor_radicacion[0]["nombres"]." ".$ejecutor_radicacion[0]["apellidos"]));
+		   		
+		$datos_radicacion_entrada=busca_filtro_tabla("tipo_origen","ft_radicacion_entrada","documento_iddocumento=".$doc,"",$conn);
+		//print_r($_REQUEST);die();
+		if($datos_radicacion_entrada[0]['tipo_origen']==1 || @$_REQUEST['radicado_rapido']=='radicacion_entrada'){
   		?>
   		<b>Recibido Por: <?php echo($origen);?></b><br/>
   		<?php
+		}else{
+	  		?>
+	  		<b>Origen: <?php echo($origen);?></b><br/>
+	  		<?php			
+		}
+  	}else{
 		
+		if(strtolower($datos[0]["plantilla"])=='radicacion_entrada'){
+			$datos_radicacion_entrada=busca_filtro_tabla("tipo_origen","ft_radicacion_entrada","documento_iddocumento=".$doc,"",$conn);
+			if($datos_radicacion_entrada[0]['tipo_origen']==1){
+				$ejecutor_radicacion=busca_filtro_tabla("nombres,apellidos","documento a, funcionario b","a.ejecutor=b.funcionario_codigo AND a.iddocumento=".$doc,"",$conn);
+				$origen=ucwords(strtolower($ejecutor_radicacion[0]["nombres"]." ".$ejecutor_radicacion[0]["apellidos"]));
+				
+		  		?>
+		  		<b>Recibido Por: <?php echo($origen);?></b><br/>
+		  		<?php				
   	}else{
   		?>
   		<b>Origen: <?php echo($origen);?></b><br/>
   		<?php
+  	}
+		}else{
+	  		?>
+	  		<b>Origen: <?php echo($origen);?></b><br/>
+	  		<?php			
+		}
+		
+
   	}
 
  ?>
@@ -323,7 +350,6 @@ function imprime(atras){
  }
  ?> 
   
-  <b>Destino: <?php echo substr(($destino),0,22)."..."; ?></b>
 
    	<?php
   	$validar_impresion = busca_filtro_tabla("valor","configuracion","lower(nombre) LIKE'imprimir_colilla_automatico'","",$conn);
@@ -677,8 +703,7 @@ function validar_confirmacion_salida($consecutivo, $enlace,$enlace2){
 		<script>
 		var ingreso=confirm("Esta seguro de generar un nuevo radicado?");
 		if(ingreso){
-			window.open("colilla.php?consecutivo=<?php echo $consecutivo;?>&salidas=1&target=_self&enlace=<?php echo $enlace_redireccion;?>&descripcion_general=<?php echo $_REQUEST['descripcion_general'];?>","_self");
-
+			window.open("colilla.php?consecutivo=<?php echo $consecutivo;?>&salidas=1&target=_self&enlace=<?php echo $enlace_redireccion;?>&descripcion_general=<?php echo $_REQUEST['descripcion_general'];?>&radicado_rapido=<?php echo(@$_REQUEST['generar_consecutivo']); ?>","_self"); 
 		}else{
 			window.open("<?php echo $enlace2;?>","_self");
 		}
