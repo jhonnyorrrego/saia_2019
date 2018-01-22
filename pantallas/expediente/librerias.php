@@ -539,7 +539,7 @@ function expedientes_asignados() {
 		}
 		//INICIO SI TIENE PERMISO Administraci&oacute;n de Archivo & el reporte es Inventario documental
 		$permiso = new Permiso();
-		$ok = $permiso -> acceso_modulo_perfil('permiso_armin_archivo');
+		$ok = $permiso -> acceso_modulo_perfil('permiso_admin_archivo');
 		$reporte_inventario_documental = busca_filtro_tabla("idbusqueda_componente", "busqueda_componente A", "A.nombre='reporte_expediente_grid_exp' AND A.idbusqueda_componente=" . $_REQUEST["idbusqueda_componente"], "", $conn);
 		if ($reporte_inventario_documental["numcampos"] && $ok) {
 			return ("1=1");
