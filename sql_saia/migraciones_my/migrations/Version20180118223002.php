@@ -144,14 +144,14 @@ class Version20180118223002 extends AbstractMigration
         
         $resp = $conn->update('busqueda', $datos_busq, $ident_busq);
 
-        //modulo: permiso_armin_archivo
+        //modulo: permiso_admin_archivo
 
         $datos_mod = array('pertenece_nucleo' => 0, 'nombre' => 'permiso_armin_archivo', 'tipo' => 'secundario', 'imagen' => 'botones/principal/defaut.png',
             'etiqueta' => 'Administraci&oacute;n de Archivo', 'enlace' => '#', 'destino' => '_self', 'cod_padre' => 45, 'orden' => 2, 'ayuda' => '',
             'busqueda_idbusqueda' => 0, 'permiso_admin' => 0, 'busqueda' => '', 'enlace_pantalla' => 0);
         
         $result = $conn->fetchAll("select idmodulo from modulo where nombre = :nombre", [
-            'nombre' => 'permiso_armin_archivo'
+            'nombre' => 'permiso_admin_archivo'
         ]);
         
         if (!empty($result)) {

@@ -1275,7 +1275,7 @@ UPDATE busqueda SET ruta_libreria = 'pantallas/expediente/funciones_reporte_grid
 UPDATE busqueda_condicion SET codigo_where = '1=1 and agrupador=0 {*filtro_cod_arbol*}{*tipo_expediente*} AND {*expedientes_asignados*}' WHERE busqueda_condicion.idbusqueda_condicion = 245;
 
 INSERT INTO modulo (idmodulo, pertenece_nucleo, nombre, tipo, imagen, etiqueta, enlace, enlace_mobil, destino, cod_padre, orden, ayuda, parametros, busqueda_idbusqueda, permiso_admin, busqueda, enlace_pantalla) VALUES
-(1669, 0, 'permiso_armin_archivo', 'secundario', 'botones/principal/defaut.png', 'Administraci&oacute;n de Archivo', '#', NULL, '_self', 45, 2, '', '', 0, 0, '', 0);
+(1669, 0, 'permiso_admin_archivo', 'secundario', 'botones/principal/defaut.png', 'Administraci&oacute;n de Archivo', '#', NULL, '_self', 45, 2, '', '', 0, 0, '', 0);
 
 -- FIN MIGRACION Version20180118223002.php
 
