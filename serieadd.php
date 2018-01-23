@@ -94,7 +94,13 @@ switch ($sAction)
 	case "A": // Add
 		$ok=AddData($conn);
         if($ok){ // Add New Record
-        	        abrir_url("arbolserie.php","arbol");
+        
+              ?>
+              <script>
+              notificacion_saia('Serie adicionada con exito','success','',6000);
+              </script>
+              <?php
+        	        //abrir_url("arbolserie.php","arbol"); --Se modifica de acuerdo a ticket 18702
         			$parametro_dependencia_serie='';
         			if(@$_REQUEST['dependencia_serie']){
         				$parametro_dependencia_serie="&dependencia_serie=".$_REQUEST['dependencia_serie'];
@@ -103,7 +109,22 @@ switch ($sAction)
         			    $ok=$_REQUEST['x_cod_padre'];
         			}
         			
-					abrir_url("serieview.php?key=".$ok.$parametro_dependencia_serie,"_self");
+					//abrir_url("serieview.php?key=".$ok.$parametro_dependencia_serie,"_self"); --Se modifica de acuerdo a ticket 18702
+					$url=array();
+          if(@$_REQUEST['from_dependencia_request']){
+            $url[]="from_dependencia=".$_REQUEST['from_dependencia_request'];
+          }
+          if(@$_REQUEST['key_padre_request']){
+            $url[]="key_padre=".$_REQUEST['key_padre_request'];
+          }
+          if(@$_REQUEST['dependencia_serie_request']){
+            $url[]="dependencia_serie=".$_REQUEST['dependencia_serie_request'];
+          }
+          if(@$_REQUEST['tvd_request']){
+            $url[]="tvd=".$_REQUEST['tvd_request'];
+          }
+          abrir_url("serieadd.php?".implode("&",$url),"_self");
+					
 					exit();
 				}
 				break;
@@ -222,6 +243,20 @@ $(document).ready(function(){
 
 <p><span class="internos">&nbsp;&nbsp;ADICIONAR SERIES DOCUMENTALES<br><br><!--a href="serielistdep.php">Regresar al listado</a--></span></p>
 <form name="serieadd" id="serieadd" action="serieadd.php" method="post" onSubmit="return EW_checkMyForm(this);">
+
+<?php if(@$_REQUEST['from_dependencia']){ ?>
+  <input type="hidden" name="from_dependencia_request" value="<?php echo($_REQUEST['from_dependencia']); ?>">
+<?php } ?>
+<?php if(@$_REQUEST['key_padre']){ ?>
+  <input type="hidden" name="key_padre_request" value="<?php echo($_REQUEST['key_padre']); ?>">
+<?php } ?>
+<?php if(@$_REQUEST['dependencia_serie']){ ?>
+  <input type="hidden" name="dependencia_serie_request" value="<?php echo($_REQUEST['dependencia_serie']); ?>">
+<?php } ?>
+<?php if(@$_REQUEST['tvd']){ ?>
+  <input type="hidden" name="tvd_request" value="<?php echo($_REQUEST['tvd']); ?>">
+<?php } ?>
+
 <p>
 <input type="hidden" name="a_add" value="A">
 <table border="0" cellspacing="1" cellpadding="4" bgcolor="#CCCCCC">
