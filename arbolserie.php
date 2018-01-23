@@ -36,6 +36,10 @@ echo(librerias_jquery());
 	<script type="text/javascript">
   <!--
       var browserType;
+      var result;
+      var punteroi=0;
+      var punteroj=0;
+      
       if (document.layers) {browserType = "nn4"}
       if (document.all) {browserType = "ie"}
       if (window.navigator.userAgent.toLowerCase().match("gecko")) {
@@ -135,6 +139,35 @@ echo(librerias_jquery());
            document.poppedLayer =
               eval('document.layers["esperando_serie"]');
         document.poppedLayer.style.display = "none";
+       
+        console.log(result);
+        var llaves=Object.keys(result);
+        console.log('punteroi: '+punteroi);
+        console.log('punteroj: '+punteroj);
+        console.log('llavei: '+llaves.length);
+        console.log('llavej: '+result[llaves[punteroi]].length);
+       
+		if(punteroi<llaves.length){			
+			
+				if(punteroj<result[llaves[punteroi]].length){
+		           	console.log(result[llaves[punteroi]][punteroj]);
+		           	//tree2.openItem(result[llaves[punteroi]][punteroj]);
+		           	punteroj=punteroj+1;
+		           	console.log('----------');
+		           	//tree2.setOnLoadingEnd(fin_cargando_serie);
+	           		
+				}else{
+					punteroi=punteroi+1;
+					punteroj=0;
+					console.log('...................');
+					//tree2.setOnLoadingEnd(fin_cargando_serie);			 					
+				}
+	           	
+	        
+	    }
+        
+        
+        
       }
 
       function cargando_serie() {
@@ -148,12 +181,14 @@ echo(librerias_jquery());
            document.poppedLayer =
                eval('document.layers["esperando_serie"]');
         document.poppedLayer.style.display = "";
+        
+        
       }
       
       		   
       
         function buscar_nodo(){
-        	var result;
+        	
         	var delay = (function(){
 			var timer = 0;
 			 return function(callback, ms){
@@ -174,7 +209,7 @@ echo(librerias_jquery());
        		success: function(data){
            		//console.log(data.serie_base[0]);
            		result=data;
-
+//console.log(result);
            		/*$.each(data.serie_base, function(i, item) {          			
            			$.each(item, function(j, value) {
            				console.log(value);
@@ -198,22 +233,20 @@ console.log(typeof(item));
 			}
 		});
 		
-		delay(function(){
-		$.each(result.dependencias, function(i, item) {
-           		
-	           			$.each(item, function(j, value) {
-	           				console.log(value);
-	           				
-	           					console.log(value+"..");
-	           					tree2.openItem(value);
-	           				
-	           			});
-           
-         });
-         	},200 );
-		
-		
-		//tree2.findItem((document.getElementById('stext_serie_idserie').value));
+		//console.log(result);
+		//console.log('--------');
+		/*var llaves=Object.keys(result);
+		punteroi=0;
+		punteroj=0;
+			
+		for(var i=0;i<llaves.length;i++){
+			console.log(llaves[i]);
+           	for(var j=0;j<result[llaves[i]].length;j++){
+           		console.log(result[llaves[i]][j]);
+           	}
+        }*/
+		tree2.openItem('d38');
+        tree2.openItem('d37');
        }
         
        
