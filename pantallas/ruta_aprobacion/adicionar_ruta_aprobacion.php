@@ -10,12 +10,11 @@ while ($max_salida > 0) {
 }
 include_once ($ruta_db_superior . "db.php");
 include_once ($ruta_db_superior . "librerias_saia.php");
-
+echo(estilo_bootstrap());
 if(@$_REQUEST["iddoc"] || @$_REQUEST["key"]){
 	if(!@$_REQUEST["iddoc"])$_REQUEST["iddoc"]=@$_REQUEST["key"];
 	include_once($ruta_db_superior."pantallas/documento/menu_principal_documento.php");
 	menu_principal_documento($_REQUEST["iddoc"]);
-	echo "<br/>";
 }
 
 $documento_ruta_aprob=busca_filtro_tabla("","documento_ruta_aprob","documento_iddocumento=".$_REQUEST["iddoc"],"",$conn);
@@ -71,16 +70,10 @@ if ($documento["numcampos"]) {
 } else {
 	die("Las rutas de aprobacion deben estar asociadas a un documento");
 }
-
-echo(estilo_bootstrap());
-echo(librerias_jquery("1.7"));
-echo(librerias_validar_formulario('11'));
-echo(librerias_datepicker_bootstrap());
-echo(librerias_highslide());
-echo(librerias_notificaciones());
 ?>
+<body>
 <div class="container">
-	<legend>Informaci&oacute;n</legend>
+	<legend>Solicitu de aprobaci&oacute;n</legend>
 	<br>
 		<table align="center" style="width: 90%;" class="table table-bordered">
 			<tr>
@@ -97,7 +90,7 @@ echo(librerias_notificaciones());
 			</tr>
 			<tr>
 				<td><strong>Estado</strong></td>
-				<td colspan="3"><div class="label label-important" style="max-width:200px;">Sin ruta de aprobaci&oacute;n</div></td>
+				<td colspan="3"><div class="btn btn-mini btn-danger" style="max-width:200px;">Sin ruta de aprobaci&oacute;n</div></td>
 			</tr>
 			<tr>
 				<td><strong>Descripci&oacute;n del documento</strong></td>
@@ -112,7 +105,7 @@ echo(librerias_notificaciones());
 				<tr>
 					<td colspan="2">
 						<strong>Responsables *:</strong>
-							<a class="btn btn-mini btn-info highslide" href='<?php echo $ruta_db_superior;?>pantallas/tareas/adicionar_tareas.php?tarea_ruta_aprob=1&iddoc=<?php echo $_REQUEST["iddoc"];?>' onclick='return hs.htmlExpand(this, { objectType: "iframe",width:500, height:500,preserveContent:false } )'>Adicionar</a><br/><br/>
+							<a class="btn btn-mini btn-info highslide" href='<?php echo $ruta_db_superior;?>pantallas/tareas/adicionar_tareas.php?tarea_ruta_aprob=1&iddoc=<?php echo $_REQUEST["iddoc"];?>' onclick='return hs.htmlExpand(this, { objectType: "iframe",width:500, height:300,preserveContent:false } )'>Adicionar</a><br/><br/>
 							<input type="hidden" name="responsables" id="responsables" value="<?php echo $resp;?>">
 						<?php echo $tabla;?>
 					</td>
@@ -175,7 +168,13 @@ echo(librerias_notificaciones());
 			</table>
 		</form>
 </div>
-
+</body>
+<?php 
+echo(librerias_validar_formulario('11'));
+echo(librerias_datepicker_bootstrap());
+echo(librerias_highslide());
+echo(librerias_notificaciones());
+?>
 <script type='text/javascript'>
   hs.graphicsDir = '<?php echo $ruta_db_superior;?>anexosdigitales/highslide-4.0.10/highslide/graphics/';
   hs.outlineType = 'rounded-white';

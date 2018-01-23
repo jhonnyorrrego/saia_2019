@@ -134,10 +134,10 @@ if(!$_REQUEST["ruta"]){
 
     <div class="spacer"></div>
          
-    <button class="rectangle btn btn-danger" type="button" title="Rectangle" data-tooltype="area">&nbsp;</button>
+    <button  "background-color: #f5f900" class="rectangle btn btn-inverse" type="button" title="Rectangle" data-tooltype="area">&nbsp;</button>
     <!--div class="spacer"></div-->
     <button id="opc_highlight" class="highlight" type="button" title="Highlight" data-tooltype="highlight">&nbsp;</button>
-    <div class="spacer"></div>
+    
     <!--button class="strikeout" type="button" title="Strikeout" data-tooltype="strikeout">&nbsp;</button-->
 	<button class="sello btn btn-inverse" id="opc_sello" type="button" title="Sello"  imagen="sello.jpg"  data-tooltype="sello">Sello</button>
     <!--div class="spacer"></div-->
@@ -171,7 +171,7 @@ if(!$_REQUEST["ruta"]){
     <a href="javascript://" id="cambio_visor" class="cambiar_visor" title="Cambiar visor"><button class="sello btn btn-inverse">CV</button></a>
 	<div class="spacer"></div>
 	
-    <button class="sello btn btn-inverse"><a href="javascript://" class="clear" title="Clear">X</a></button>
+    <a href="javascript://" class="clear" title="Clear"><button id="borrar_todo" class="sello btn btn-inverse">X</button></a>
   </div>
   <div id="content-wrapper">
     <div id="viewer" class="pdfViewer"></div>
@@ -196,9 +196,8 @@ if(!$_REQUEST["ruta"]){
 function activar_over(ft_notas_pdf,elemento,idelemento,comentario){
 	
 	if(elemento=='area'){
-		$('#'+ft_notas_pdf).attr('stroke','yellow');
-		$('#'+ft_notas_pdf).attr('fill','yellow');
-		$('#'+ft_notas_pdf).attr('fill-opacity','0.2');
+		$('#'+ft_notas_pdf).attr('stroke','#f00');
+		$('#'+ft_notas_pdf).attr('fill','none');
 	}
 	if(elemento=='highlight'){
 		$('#'+ft_notas_pdf).attr('stroke','green');
@@ -213,8 +212,10 @@ function activar_over(ft_notas_pdf,elemento,idelemento,comentario){
 function desactivar_over(ft_notas_pdf,elemento,idelemento,comentario){
 	
 	if(elemento=='area'){
-		$('#'+ft_notas_pdf).attr('stroke','#f00');
-		$('#'+ft_notas_pdf).attr('fill','none');
+		
+		$('#'+ft_notas_pdf).attr('stroke','yellow');
+		$('#'+ft_notas_pdf).attr('fill','yellow');
+		$('#'+ft_notas_pdf).attr('fill-opacity','0.2');
 	}
 	if(elemento=='highlight'){
 		$('#'+ft_notas_pdf).attr('stroke','yellow');

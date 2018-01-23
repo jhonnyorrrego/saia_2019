@@ -10,20 +10,36 @@ while ($max_salida > 0) {
 }
 include_once ($ruta_db_superior . "db.php");
 include_once ($ruta_db_superior . "librerias_saia.php");
-
+include_once ($ruta_db_superior . "pantallas/lib/librerias_fechas.php");
+echo(estilo_bootstrap());
 if(@$_REQUEST["iddoc"] || @$_REQUEST["key"]){
 	if(!@$_REQUEST["iddoc"])$_REQUEST["iddoc"]=@$_REQUEST["key"];
 	include_once($ruta_db_superior."pantallas/documento/menu_principal_documento.php");
 	menu_principal_documento($_REQUEST["iddoc"]);
-	echo "<br/>";
 }
-
 if (isset($_REQUEST["idruta_aprob"]) && $_REQUEST["idruta_aprob"]) {
 	$ruta_aprob = busca_filtro_tabla("", "documento_ruta_aprob", "iddocumento_ruta_aprob=" . $_REQUEST["idruta_aprob"], "iddocumento_ruta_aprob desc", $conn);
-	$estado_doc_aprob='Sin ruta de aprobaci&oacute;n';
+	$estado_doc_aprob='<div class="btn btn-mini btn-info">Sin ruta de aprobaci&oacute;n</div>';
+	$atrasado=false;
 	if ($ruta_aprob["numcampos"]) {
-			$equivalencia_doc_aprob=array(0=>"PENDIENTE DE APROBACION",1=>"APROBADO",3=>"RECHAZADO",4=>"CERRADO");
+			$equivalencia_doc_aprob=array(0=>"PENDIENTE DE APROBACION",1=>"APROBADO",3=>"RECHAZADO",4=>"CERRADO",6=>"CON VISTO BUENO");
 			$estado_doc_aprob=$equivalencia_doc_aprob[$ruta_aprob[0]["estado_ruta_aprob"]];
+			if($ruta_aprob[0]["estado_ruta_aprob"]==0){
+				$atrasado=fecha_atrasada('',$ruta_aprob[0]["fecha_vencimiento"]);
+				if($atrasado){
+					$estado_doc_aprob='<div class="btn btn-mini btn-danger">'.$estado_doc_aprob."</div>";
+				}
+				else{
+					$estado_doc_aprob='<div class="btn btn-mini btn-success">'.$estado_doc_aprob."</div>";
+				}
+			}
+			else if(in_array($ruta_aprob[0]["estado_ruta_aprob"],array(1,6))){
+				//estados de aprobado y visto bueno
+				$estado_doc_aprob='<div class="btn btn-mini btn-success">'.$estado_doc_aprob."</div>";
+			}
+			else{
+				$estado_doc_aprob='<div class="btn btn-mini btn-danger">'.$estado_doc_aprob."</div>";
+			}
 			$aprobacion_en = ($ruta_aprob[0]["aprobacion_en"]==1) ? "Aprobaci&oacute;n en serie" : "Aprobaci&oacute;n en paralelo" ;
 			if (is_object($ruta_aprob[0]["fecha_creacion"])) {
 				$fecha_creacion_ruta = $ruta_aprob[0]["fecha_creacion"] -> format("Y-m-d");
@@ -77,10 +93,19 @@ if (isset($_REQUEST["idruta_aprob"]) && $_REQUEST["idruta_aprob"]) {
 				$equivalencia_acciones=array(1=>"APROBAR",2=>"CON VISTO BUENO");
 				$equivalencia_estado_avance=array(0=>"PENDIENTE",2=>"TERMINADO",3=>"APROBADO",4=>"CON VISTO BUENO",5=>"RECHAZADO");
 				for ($i = 0; $i < $tareas_ruta["numcampos"]; $i++) {
-					$avance=busca_filtro_tabla("estado","tareas_avance","tareas_idtareas=".$tareas_ruta[$i]["idtareas"]." and ejecutor=".$tareas_ruta[$i]["funcionario_codigo"],"idtareas_avance desc",$conn);
+					$avance=busca_filtro_tabla("estado","tareas_avance","tareas_idtareas=".$tareas_ruta[$i]["idtareas"]." and ejecutor=".$tareas_ruta[$i]["funcionario_codigo"]." AND estado IN(3,4,5)","idtareas_avance desc",$conn);
 					$estado="PENDIENTE";
 					if($avance["numcampos"]){
-						$estado=$equivalencia_estado_avance[$avance[0]["estado"]];
+						if($avance[0]["estado"]==5){
+							if( $tareas_ruta[$i]["accion_tareas"]==1){
+								$estado='<div class="btn btn-mini btn-danger">'.$equivalencia_estado_avance[$avance[0]["estado"]].'</div>';
+							}
+							else{
+								$estado='<div class="btn btn-mini btn-info">'.$equivalencia_estado_avance[$avance[0]["estado"]].'</div>';
+							}
+						}else{
+							$estado='<div class="btn btn-mini btn-success">'.$equivalencia_estado_avance[$avance[0]["estado"]].'</div>';
+						}
 					}
 					else{
 						$estado=$equivalencia_acciones[$tareas_ruta[$i]["accion_tareas"]];
@@ -89,9 +114,14 @@ if (isset($_REQUEST["idruta_aprob"]) && $_REQUEST["idruta_aprob"]) {
 					$tabla .= '<td>' . ucwords(strtolower($tareas_ruta[$i]["nombres"] . ' ' . $tareas_ruta[$i]["apellidos"])) . '</td> <td>' . $tareas_ruta[$i]["cargo"] . '</td>';
 					$tabla .= '<td style="text-align:center">';
 						if($_SESSION["usuario_actual"]==$tareas_ruta[$i]["funcionario_codigo"] && $avance["numcampos"]==0){
-							$tabla .= '<a class="btn btn-mini btn-info highslide" href="'.$ruta_db_superior.'pantallas/tareas/adicionar_avance_tareas.php?idtareas='.$tareas_ruta[$i]["idtareas"].'" onclick=\'return hs.htmlExpand(this, { objectType: "iframe",width:500, height:500,preserveContent:false } )\'>Ingresar avance</a>';
+							$tabla .= '<a class="highslide btn btn-mini btn-info" href="'.$ruta_db_superior.'pantallas/tareas/adicionar_avance_tareas.php?idtareas='.$tareas_ruta[$i]["idtareas"].'" onclick=\'return hs.htmlExpand(this, { objectType: "iframe",width:500, height:500,preserveContent:false } )\'>'.$estado.'</a>';
 						}else{
-							$tabla .= $estado;
+							if($avance["numcampos"]){
+								$tabla .= '<a class="highslide" href="'.$ruta_db_superior.'pantallas/tareas/mostrar_tareas.php?idtareas='.$tareas_ruta[$i]["idtareas"].'" onclick=\'return hs.htmlExpand(this, { objectType: "iframe",width:500, height:500,preserveContent:false } )\' style="text-decoration: none;">'.$estado.'</a>';
+							}
+							else{
+								$tabla .= $estado;
+							}
 						}
 					$tabla .= '</td>';
 					$tabla .= '</tr>';
@@ -110,15 +140,11 @@ if (isset($_REQUEST["idruta_aprob"]) && $_REQUEST["idruta_aprob"]) {
 	die();
 }
 
-echo(estilo_bootstrap());
 echo(librerias_jquery("1.7"));
-echo(librerias_validar_formulario('11'));
-echo(librerias_datepicker_bootstrap());
-echo(librerias_highslide());
-echo(librerias_notificaciones());
 ?>
+<body>
 <div class="container">
-	<legend>Informaci&oacute;n del documento</legend>
+	<legend>Solicitu de aprobaci&oacute;n</legend>
 	<br>
 		<table align="center" style="width: 90%;" class="table table-bordered">
 			<tr>
@@ -173,7 +199,14 @@ echo(librerias_notificaciones());
 		</table>	
 		<?php echo $tabla;?>
 </div>
+<?php 
+echo(librerias_validar_formulario('11'));
+echo(librerias_datepicker_bootstrap());
+echo(librerias_highslide());
+echo(librerias_notificaciones());
+?>
 <script type='text/javascript'>
   hs.graphicsDir = '<?php echo $ruta_db_superior;?>anexosdigitales/highslide-4.0.10/highslide/graphics/';
   hs.outlineType = 'rounded-white';
 </script>
+</body>

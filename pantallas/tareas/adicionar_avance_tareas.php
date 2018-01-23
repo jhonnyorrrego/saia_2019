@@ -21,16 +21,20 @@ echo(librerias_bootstrap());
 
 function cambiar_estado_documento_ruta_aprob($datos_tareas_ruta_aprob) {
 	global $equivalencia_estados;
-	//TODO: validar que pasa con el estado cerrado (cuando se termina o cierra la tarea en el avance)
-	if (@$_REQUEST["estado"] == 5) {
+	$aprobadas=0;
+	$visto_bueno=0;
+	$aprobadas_avance=0;
+	$visto_bueno_avance=0;
+	if (@$_REQUEST["estado"] == 5 && $datos_tareas_ruta_aprob[0]["accion_tareas"]==1) {
 		//Se actualiza el estado a rechazado de la ruta aprobacion
-		//TODO: se debe validar que se hace con las demas tareas
+		//TODO: se debe validar que se hace con las demas tarea REspuesta no se hace nada 
+		
 		$sql1 = "UPDATE documento_ruta_aprob SET estado_ruta_aprob=3 WHERE iddocumento_ruta_aprob=" . $datos_tareas_ruta_aprob[0]["iddocumento_ruta_aprob"];
 		phpmkr_query($sql1);
 	}
 	$datos_tareas_ruta_aprob_rechazados = busca_filtro_tabla("", "tareas A, documento_ruta_aprob B", "A.ruta_aprob=B.iddocumento_ruta_aprob AND iddocumento_ruta_aprob=" . $datos_tareas_ruta_aprob[0]["iddocumento_ruta_aprob"] . " AND B.estado_ruta_aprob=3", "", $conn);
 	if (!$datos_tareas_ruta_aprob_rechazados["numcampos"]) {
-		$datos_tareas_ruta_aprob_total = busca_filtro_tabla("", "tareas A, documento_ruta_aprob B", "A.ruta_aprob=B.iddocumento_ruta_aprob AND iddocumento_ruta_aprob=" . $datos_tareas_ruta_aprob[0]["iddocumento_ruta_aprob"], "orden_tareas", $conn);
+		$datos_tareas_ruta_aprob_total = busca_filtro_tabla("", "tareas A, documento_ruta_aprob B", "A.ruta_aprob=B.iddocumento_ruta_aprob AND iddocumento_ruta_aprob=" . $datos_tareas_ruta_aprob[0]["iddocumento_ruta_aprob"], "orden_tareas", $conn);		
 		//se verifica que no existan mas tareas, si existen se envia a la siguiente tarea
 		for ($i = 0; $i < $datos_tareas_ruta_aprob_total["numcampos"]; $i++) {
 			//Se encuentra la tarea a la que se esta dando el avance
@@ -47,15 +51,42 @@ function cambiar_estado_documento_ruta_aprob($datos_tareas_ruta_aprob) {
 						//TODO: Verificar que pasa con el stand by de las tareas si se debe actualizar algun estado a pendiente, esto es para validar el listado de las tareas y que no le aparezcan al usuario hasta que no le toca su momento de aprobacion de igual forma se debe validar si se debe actualizar la fecha en que se asigna la tarea ya que para todos aplica la misma fecha y es la fecha de vencimiento de la tareay el usuario solo la recibe en este momento
 						}
 					}
-				} else {
+				} /*else {
 					//Es la ultima tarea y Se verifica si se debe cerrar la ruta de aprobacion con el estado aprobado
 					//Aqui ya se garantiza que no existen rechazados
-					if (@$_REQUEST["estado"] == 3){
+					if (@$_REQUEST["estado"] == 3) {
 						$sql1 = "UPDATE documento_ruta_aprob SET estado_ruta_aprob=1 WHERE iddocumento_ruta_aprob=" . $datos_tareas_ruta_aprob[0]["iddocumento_ruta_aprob"];
 						phpmkr_query($sql1);
 					}
+				}*/
+
+			}
+			$avance=busca_filtro_tabla("","tareas_avance","tareas_idtareas=".$datos_tareas_ruta_aprob_total[$i]["idtareas"],"fecha DESC",$conn);
+			if($avance["numcampos"]){
+				//validamos si el estado del avance de cada tarea es 3=aprobado para que de sumas iguales con el total de tareas por aprobar
+				if($avance[0]["estado"]==3){
+					$aprobadas_avance++;
+				}
+				else if($avance[0]["estado"]==4){
+					$visto_bueno_avance++;
 				}
 			}
+			
+			///Estados 1=aprobar,2=visto_bueno
+			if($datos_tareas_ruta_aprob_total[$i]["accion_tareas"]==1){
+				$aprobadas++;
+			}
+			else if($datos_tareas_ruta_aprob_total[$i]["accion_tareas"]==2){
+				$visto_bueno++;
+			}
+		}
+		if($aprobadas && $aprobadas==$aprobadas_avance){
+			$sql1 = "UPDATE documento_ruta_aprob SET estado_ruta_aprob=1 WHERE iddocumento_ruta_aprob=" . $datos_tareas_ruta_aprob[0]["iddocumento_ruta_aprob"];
+			phpmkr_query($sql1);
+		}
+		elseif($visto_bueno && $visto_bueno==$visto_bueno_avance){
+			$sql1 = "UPDATE documento_ruta_aprob SET estado_ruta_aprob=6 WHERE iddocumento_ruta_aprob=" . $datos_tareas_ruta_aprob[0]["iddocumento_ruta_aprob"];
+			phpmkr_query($sql1);
 		}
 	}
 }
@@ -79,7 +110,6 @@ if ($_REQUEST['guardar'] == 1) {
 		$ruta_aprob=1;
 		cambiar_estado_documento_ruta_aprob($datos_tareas_ruta_aprob);
 	}
-
 	notificaciones("Avance asignado!", "success", 4500);
 	unset($_REQUEST);
 	?>
@@ -124,18 +154,31 @@ $datos_tareas=busca_filtro_tabla("","tareas","idtareas=".$_REQUEST['idtareas'],"
 			<label class="control-label" for="etiqueta">Estado*:</label>
 			<div class="controls">
 				<?php
+				$check=' checked="checked" ';
 				if($datos_tareas[0]["ruta_aprob"]){
-					//Si en la tarea dice aprobar aqui deberia solo salie el aprobar, lo mismo para el visto bueno 
+					//Si en la tarea dice aprobar aqui deberia solo sale el aprobar=1, lo mismo para el visto bueno=2
+					if($datos_tareas[0]["accion_tareas"]==1){
 					?>
-					<input type="radio" class="required" name="estado" id="estado3" value="3">
+					<input type="radio" class="required" name="estado" id="estado3" value="3" <?php echo($check);?>>
 					Aprobar
-					<input type="radio" class="required" name="estado" id="estado5" value="5">
-					Rechazado
-					<input type="radio" class="required" name="estado" id="estado4" value="4">
-					Con Visto Bueno <?php
+					<?php
+					$check='';
+					}
+					else if($datos_tareas[0]["accion_tareas"]==2){
+					?>
+					<input type="radio" class="required" name="estado" id="estado4" value="4" <?php echo($check);?>>
+					Con Visto Bueno
+					<?php 
+					$check='';
+					}
+					?>
+					<input type="radio" class="required" name="estado" id="estado5" value="5" <?php echo($check);?>>
+					Rechazar
+					<?php
+					$check='';
 				}
 				?>
-				<input type="radio" class="required" name="estado" id="estado0" value="0" checked="checked">
+				<input type="radio" class="required" name="estado" id="estado0" value="0" <?php echo($check);?>>
 				Pendiente
 				<input type="radio" class="required" name="estado" id="estado2" value="2">
 				Terminada/Cerrada <label class="error" for="estado"></label>

@@ -77,7 +77,7 @@ if(@$_REQUEST["tipo"]!==5 && !@$_REQUEST["output"] && !@$_REQUEST["imprimir"]){
 	$datos_admin=botones_administrativos_menu($iddoc);
     echo(librerias_acciones_kaiten());
         ?>
-    <style>
+    <style type="text/css">
         .navbar-inner{height: 50px;}
         body{ font-size:12px; line-height:100%; margin-top:70px}
         .navbar-fixed-top, .navbar-fixed-bottom{ position: fixed;}

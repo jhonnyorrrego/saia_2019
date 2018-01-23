@@ -221,7 +221,7 @@ function llena_dependencia($serie,$condicion="",$tvd=0,$codigo_dep=''){
 global $conn,$seleccionado,$activo,$excluidos,$lista_series_funcionario,$lista_dependencias_total;
 
 $prefijo_tvd='';
-$condicion_tvd=' AND b.tvd=0';
+$condicion_tvd=' AND (b.tvd=0 OR b.tvd IS NULL)';
 if($tvd){
 	$activo='';
 	$prefijo_tvd='_tv';
@@ -378,7 +378,7 @@ function llena_entidad_serie($iddependencia,$series,$tvd=0,$codigo_dep=''){
     global $conn,$activo,$seleccionado,$seleccionado_dep;
 	
 	$prefijo_tvd='';
-	$condicion_tvd=' AND tvd=0';
+	$condicion_tvd=' AND (tvd=0 OR tvd IS NULL)';
 	if($tvd){
 		$activo='';
 		$prefijo_tvd='_tv';
@@ -432,7 +432,7 @@ function llena_subseries_tipo_documental($iddependencia,$idserie,$tvd=0,$codigo_
     global $conn,$seleccionado,$activo,$excluidos;
 	
 	$prefijo_tvd='';
-	$condicion_tvd=' AND tvd=0';
+	$condicion_tvd=' AND (tvd=0 OR tvd IS NULL)';
 	if($tvd){
 		$activo='';
 		$prefijo_tvd='_tv';
