@@ -257,7 +257,7 @@ if(@$_REQUEST['anexo']){
                     </button>
                     <div class="splitToolbarButtonSeparator"></div>
                     <button id="cambio_visor" class="toolbarButton cambio_visor" title="Cambiar Visor" tabindex="23"  iddocumento="<?php echo($id_archivo);?>" tipo="<?php echo($tipo_visor);?>" data-l10n-id="cambio_visor">
-                       <span data-l10n-id="zoom_out_label">CV</span>CV
+                       <span data-l10n-id="zoom_out_label">COLOCR NOTAS</span>COLOCR NOTAS
                     </button>
                     <div class="splitToolbarButtonSeparator"></div>
                     <button id="zoomOut" class="toolbarButton zoomOut" title="Zoom Out" tabindex="21" data-l10n-id="zoom_out">
