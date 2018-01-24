@@ -11,7 +11,7 @@
  * https://opensource.org/licenses/MIT
  */
 -->
-<?php 
+<?php
 $max_salida = 10; // Previene algun posible ciclo infinito limitando a 10 los ../
 $ruta_db_superior = $ruta = "";
 while ($max_salida > 0) {
@@ -62,7 +62,7 @@ while ($max_salida > 0) {
     <form id="formulario_formatos" action="<?php echo $ruta_db_superior;?>pantallas/whatever_action.php" method="POST" enctype="multipart/form-data">
         <!-- Redirect browsers with JavaScript disabled to the origin page -->
         <!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
-        
+
         <div class="row">
             <div class="col-lg-7 fileupload-buttonbar">
                 <!-- The fileinput-button span is used to style the file input field as button -->
@@ -108,7 +108,7 @@ while ($max_salida > 0) {
                 <div class="progress-extended">&nbsp;</div>
             </div>
         </div>
-        
+
         <!-- The table listing the files available for upload/download -->
         <table role="presentation" class="table table-striped"><tbody class="files"></tbody></table>
     </form>
@@ -243,11 +243,11 @@ $(document).ready(function(){
 	  var formulario= $('#formulario_formatos');
 	  var error=0;
 	  redireccion=1;
-	  $('#formulario_formatos').fileupload({        
+	  $('#formulario_formatos').fileupload({
 	      url: '<?php echo($ruta_db_superior);?>fileupload/server/php/cargar_archivos.php?aleatorio=<?php echo(rand());?>',
-	      dataType: 'json',   
-	      paramName: 'anexo_formato',     
-	      autoUpload: false                 
+	      dataType: 'json',
+	      paramName: ['anexo_formato'],
+	      autoUpload: false
 	  });
 });
 </script>

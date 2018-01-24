@@ -89,6 +89,22 @@
             getFilesFromResponse: function (data) {
                 if (data.result && $.isArray(data.result.files)) {
                     return data.result.files;
+                } else if(data.result && data.paramName) {
+                	var resp = [];
+                	//console.log(data.paramName);
+                	if($.isArray(data.paramName)) {
+                		data.paramName.forEach(function(indice) {
+                		    //console.log(data.result[indice]);
+                			if(data.result[indice]) {
+                				resp = resp.concat(data.result[indice]);
+                			}
+                			//resp = data.result[indice];
+                		});
+                	} else {
+                		return data.result[data.paramName];
+                	}
+                	console.log(resp);
+                	return resp;
                 }
                 return [];
             },
