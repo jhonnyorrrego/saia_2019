@@ -365,7 +365,6 @@ $("#submit_formulario_asignar_expediente").click(function(){
             parent.window.hs.getExpander().close();                  
           }
           notificacion_saia(objeto.mensaje,"success","",2500);
-          //window.open("detalles_expediente.php?idexpediente=<?php echo(@$_REQUEST["idexpediente"]); ?>&idbusqueda_componente=<?php echo($_REQUEST['idbusqueda_componente']);?>&rand="+Math.round(Math.random()*100000),"_self");
         }else{
         	if(objeto.exito==2){
         		$("#submit_formulario_asignar_expediente").attr("disabled",false);
