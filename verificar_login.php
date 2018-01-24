@@ -14,7 +14,7 @@ $redirecciona = '#';
 $redirecciona_exito = 'index_' . $_REQUEST["INDEX"] . ".php";
 if (@$_REQUEST["userid"] <> "" && @$_REQUEST["passwd"] <> "") {
 	$_SESSION["LOGIN" . LLAVE_SAIA] = "";
-	
+
 	$sUserId = @$_REQUEST["userid"];
 	$sPassWd = @$_REQUEST["passwd"];
 	$configuracion = busca_filtro_tabla("A.valor", "configuracion A", "A.tipo='usuario' AND A.nombre='login_administrador'", "", $conn);
@@ -28,7 +28,6 @@ if (@$_REQUEST["userid"] <> "" && @$_REQUEST["passwd"] <> "") {
 		$estado_admin = busca_filtro_tabla("estado", "funcionario", "lower(login)='" . strtolower($sUserId) . "'", "", $conn);
 		if ($estado_admin[0]['estado']) {
 			$_SESSION["LOGIN" . LLAVE_SAIA] = $sUserId;
-			//cerrar_sesiones_activas($sUserId);
 			$bValidPwd = true;
 			$retorno["mensaje"] = "<b>IMPORTANTE!</b> <br> Acaba de ingresar como Administrador del sistema, todas las acciones realizadas son registradas bajo su responsabilidad";
 			$retorno["ingresar"] = 1;
@@ -41,7 +40,7 @@ if (@$_REQUEST["userid"] <> "" && @$_REQUEST["passwd"] <> "") {
 		}
 
 	}
-			
+
 	if (!($bValidPwd)) {
 		$sUserId = (!get_magic_quotes_gpc()) ? addslashes($sUserId) : $sUserId;
 		$usuario = busca_filtro_tabla("A.*," . fecha_db_obtener("A.ultimo_pwd", 'Y-m-d') . " AS ultimo_pwd1, " . resta_fechas('ultimo_pwd', '') . " AS dias,1 AS cargo_estado", "vfuncionario_dc A", "A.login = '" . $sUserId . "'", "", $conn);
@@ -136,12 +135,14 @@ if (@$_REQUEST["userid"] <> "" && @$_REQUEST["passwd"] <> "") {
 			setCookie("saia_userid", $sUserId, time() + $dias_sess * 24 * 60 * 60);
 			if (@$_POST["rememberme_pwd"] <> "") {
 				setCookie("saia_pwd", $sPassWd, time() + $dias_sess * 24 * 60 * 60);
-			} else
+			} else {
 				setCookie("saia_pwd", "", 0);
-		} else
+			}
+		} else {
 			setCookie("saia_userid", "", 0);
+		}
 		include_once ("tarea_limpiar_carpeta.php");
-		borrar_archivos_carpeta("temporal_" . $_POST["userid"], false);
+		borrar_archivos_carpeta("temporal/temporal_" . $_POST["userid"], false);
 		$retorno["mensaje"] = "<b>Bienvenido</b> <br>has ingresado al sistema SAIA";
 		$retorno["ruta"] = $redirecciona_exito;
 		$retorno["ingresar"] = 1;

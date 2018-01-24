@@ -56,8 +56,7 @@ if(isset($_REQUEST["serie_entidad"]) && $_REQUEST["serie_entidad"])
 	?>
 	<script>
 	top.noty({text: 'Asignacion realizada',type: 'success',layout: 'topCenter',timeout:4000});
-	//parent.location.reload();
-	window.open("asignarserie_entidad.php?filtrar_serie=<?php echo(@$_REQUEST["serie_idserie"]); ?>","_self")
+	parent.location.reload();
 	</script>
 	<?php
 	die();

@@ -7,15 +7,6 @@ if (!isset($_SESSION["LOGIN" . LLAVE_SAIA])) {
 	@ob_start();
 }
 
-if (@$_REQUEST['idfunc'] && !isset($_SESSION["LOGIN" . LLAVE_SAIA])) {
-	$fun = busca_filtro_tabla("login,funcionario_codigo", "funcionario", "idfuncionario=" . $_REQUEST['idfunc'], "", $conn);
-	if ($fun["numcampos"]) {
-		$_SESSION["LOGIN" . LLAVE_SAIA] = $fun[0]['login'];
-		$_SESSION["usuario_actual"] = $fun[0]['funcionario_codigo'];
-		$usuactual = $fun[0]['login'];
-		global $usuactual;
-	}
-}
 $error = array();
 $dat_orig = 0;
 $sql = "";
@@ -25,6 +16,7 @@ $conn = phpmkr_db_connect();
 $usuactual = @$_SESSION["LOGIN" . LLAVE_SAIA];
 if (isset($_SESSION["LOGIN" . LLAVE_SAIA]) && $_SESSION["LOGIN" . LLAVE_SAIA]) {
 	$_SESSION["usuario_actual"] = usuario_actual("funcionario_codigo");
+	$_SESSION["idfuncionario"] = usuario_actual("idfuncionario");
 }
 
 /*
@@ -2142,11 +2134,11 @@ return(0);
 function usuario_actual($campo) {
 	global $usuactual, $sql, $conn;
 	if (@$_REQUEST['idfunc'] && !isset($_SESSION["LOGIN" . LLAVE_SAIA])) {
-		$fun = busca_filtro_tabla("login,funcionario_codigo", "funcionario", "idfuncionario=" . $_REQUEST['idfunc'], "", $conn);
+		$fun = busca_filtro_tabla("login,funcionario_codigo,idfuncionario", "funcionario", "idfuncionario=" . $_REQUEST['idfunc'], "", $conn);
 		$_SESSION["LOGIN" . LLAVE_SAIA] = $fun[0]['login'];
 		$_SESSION["usuario_actual"] = $fun[0]['funcionario_codigo'];
+		$_SESSION["idfuncionario"]=$fun[0]['idfuncionario'];
 		$usuactual = $fun[0]['login'];
-		global $usuactual;
 	}
 
 	if (!isset($_SESSION["LOGIN" . LLAVE_SAIA])) {
@@ -3620,6 +3612,8 @@ function almacenar_sesion($exito, $login) {
 		$login = usuario_actual("login");
 		$id = usuario_actual("idfuncionario");
 		$idfun_intentetos = $id;
+	} else {
+		$id = $_SESSION["idfuncionario"];
 	}
 	$iplocal = getRealIP();
 	$ipremoto = servidor_remoto();
@@ -3682,10 +3676,10 @@ function almacenar_sesion($exito, $login) {
 				alerta("Su sesion no fue encontrada. Por favor comunicarle al Administrador del sistema");
 			}
 		}
-
 	}
 	return ($datos);
 }
+
 /*<Clase>
 <Nombre>datos_sesion</Nombre>
 <Parametros></Parametros>
