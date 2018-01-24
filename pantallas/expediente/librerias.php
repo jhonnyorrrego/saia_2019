@@ -551,8 +551,9 @@ function expedientes_asignados() {
 	$dependencias = extrae_campo($roles, "dependencia_iddependencia");
 	$cargos = extrae_campo($roles, "cargo_idcargo");
 	$cadena .= "";
-	$cadena .= "(((a.identidad_exp=1 AND a.llave_exp='" . $idfunc_actual . "') or (a.identidad_exp=2 AND a.llave_exp in ('" . implode("','", $dependencias) . "')) or (a.identidad_exp=4 AND a.llave_exp in('" . implode("','", $cargos) . "'))) or ((a.identidad_ser=1 AND a.llave_ser='" . $idfunc_actual . "') or (a.identidad_ser=2 AND a.llave_ser in ('" . implode("','", $dependencias) . "')) or (a.identidad_ser=4 AND a.llave_ser in('" . implode("','", $cargos) . "')) and a.estado_entidad_serie not in(2)))";
-
+	// Se comenta la siguiente linea y se coloca una nueva para que no muestre los expedientes de la serie asignada. 
+	//$cadena .= "(((a.identidad_exp=1 AND a.llave_exp='" . $idfunc_actual . "') or (a.identidad_exp=2 AND a.llave_exp in ('" . implode("','", $dependencias) . "')) or (a.identidad_exp=4 AND a.llave_exp in('" . implode("','", $cargos) . "'))) or ((a.identidad_ser=1 AND a.llave_ser='" . $idfunc_actual . "') or (a.identidad_ser=2 AND a.llave_ser in ('" . implode("','", $dependencias) . "')) or (a.identidad_ser=4 AND a.llave_ser in('" . implode("','", $cargos) . "')) and a.estado_entidad_serie not in(2)))";
+	$cadena .= "(((a.identidad_exp=1 AND a.llave_exp='" . $idfunc_actual . "') or (a.identidad_exp=2 AND a.llave_exp in ('" . implode("','", $dependencias) . "')) or (a.identidad_exp=4 AND a.llave_exp in('" . implode("','", $cargos) . "'))))";
 	return ($cadena);
 }
 
@@ -667,7 +668,7 @@ function origen_documento_expediente($doc, $numero, $origen = "", $tipo_radicado
 	//SE VALIDA SI EL USUARIO ESTA INVOLUCRADO CON EL DOCUMENTO (TRANSFERENCIA,RUTA)
 	$involucrado = validar_relacion_documento_expediente($doc);
 	if (!$involucrado['numcampos']) {
-		$enlace = preg_replace("/class=[\"\'][^\'\"]*kenlace_saia[^\'\"]*[\"\']/", "class='link pull-left enlace_documento_bloqueado' iddoc=" . $doc, $enlace, 1);
+		//$enlace = preg_replace("/class=[\"\'][^\'\"]*kenlace_saia[^\'\"]*[\"\']/", "class='link pull-left enlace_documento_bloqueado' iddoc=" . $doc, $enlace, 1);
 	}
 	return ($enlace);
 }
@@ -678,7 +679,7 @@ function fecha_creacion_documento_expediente($fecha0, $plantilla = Null, $doc = 
 	//SE VALIDA SI EL USUARIO ESTA INVOLUCRADO CON EL DOCUMENTO (TRANSFERENCIA,RUTA)
 	$involucrado = validar_relacion_documento_expediente($doc);
 	if (!$involucrado['numcampos']) {
-		$enlace = preg_replace("/class=[\"\'][^\'\"]*kenlace_saia[^\'\"]*[\"\']/", "class='link enlace_documento_bloqueado' iddoc=" . $doc, $enlace, 1);
+	//$enlace = preg_replace("/class=[\"\'][^\'\"]*kenlace_saia[^\'\"]*[\"\']/", "class='link enlace_documento_bloqueado' iddoc=" . $doc, $enlace, 1);
 	}
 
 	return ($enlace);
@@ -707,7 +708,7 @@ function obtener_super_padre_serie($idserie) {
 }
 
 function transferencia_documental() {
-	$cadena = '<li><a href="#" id="transferencia_documental" titulo="Transferencia documental">Transferencia documental</a></li>
+	$cadena = '<li><a href="#" id="transferencia_documental" titulo="Transferencia documental">Transferir a Archivo</a></li>
 	<script>
 		$("#transferencia_documental").click(function(){
 			var seleccionados=$("#seleccionados_expediente").val();			
@@ -748,7 +749,7 @@ function adicionar_expediente() {
         $cadena .= '
 	<li></li>
 	<li>
-	    <a  href="#" id="adicionar_expediente" idbusqueda_componente="' . $_REQUEST["idbusqueda_componente"] . '" conector="iframe" titulo="Adicionar expediente hijo" enlace="pantallas/expediente/adicionar_expediente.php?cod_padre=' . @$_REQUEST["idexpediente"] . '&div_actualiza=resultado_busqueda' . $_REQUEST["idbusqueda_componente"] . '&target_actualiza=parent&idbusqueda_componente=' . $_REQUEST["idbusqueda_componente"] . '&cod_padre=' . $_REQUEST["idexpediente"] . '&estado_archivo=' . @$_REQUEST["variable_busqueda"] . '&fk_idcaja=' . $_REQUEST["idcaja"] . '">Adicionar Expediente</a>
+	    <a  href="#" id="adicionar_expediente" idbusqueda_componente="' . $_REQUEST["idbusqueda_componente"] . '" conector="iframe" titulo="Adicionar expediente hijo" enlace="pantallas/expediente/adicionar_expediente.php?cod_padre=' . @$_REQUEST["idexpediente"] . '&div_actualiza=resultado_busqueda' . $_REQUEST["idbusqueda_componente"] . '&target_actualiza=parent&idbusqueda_componente=' . $_REQUEST["idbusqueda_componente"] . '&cod_padre=' . $_REQUEST["idexpediente"] . '&estado_archivo=' . @$_REQUEST["variable_busqueda"] . '&fk_idcaja=' . $_REQUEST["idcaja"] . '">Adicionar Expediente/Agrupador</a>
 	</li>';
         if ($_REQUEST["idexpediente"] != 0 && $_REQUEST["idexpediente"] != "") {
             $cadena .= '
@@ -774,7 +775,7 @@ function prestamo_documento() {
 			$estado = 3;
 			break;
 	}
-	$cadena = '<li><a href="#" id="prestamo_documento" titulo="Solicitud de prestamo de documentos">Solicitud de prestamo de documentos</a></li>
+	$cadena = '<li><a href="#" id="prestamo_documento" titulo="Solicitud de prestamo de documentos">Solicitar pr&eacute;stamo</a></li>
 	<script>
 		$("#prestamo_documento").click(function(){
 			var seleccionados=$("#seleccionados_expediente").val();
@@ -801,5 +802,18 @@ function hallar_expedientes_hijos($idexpediente = 0) {
 		}
 		return ($matriz_expedientes);
 	} //fin if idexpediente
+}
+
+function compartir_expediente(){
+	$permiso = new Permiso();
+    $ok1 = $permiso -> acceso_modulo_perfil('compartir_expediente');
+    if ($ok1) {
+        $cadena .= '
+		<li></li>
+		<li>
+		    <a  href="#" id="compartir_expediente" idbusqueda_componente="' . $_REQUEST["idbusqueda_componente"] . '" conector="iframe" titulo="Compartir Expediente" enlace="pantallas/expediente/asignar_expediente.php?div_actualiza=resultado_busqueda' . $_REQUEST["idbusqueda_componente"] . '&target_actualiza=parent&idbusqueda_componente=' . $_REQUEST["idbusqueda_componente"] . '">Compartir Expediente</a>
+		</li>';
+    }
+    echo($cadena);
 }
 ?>

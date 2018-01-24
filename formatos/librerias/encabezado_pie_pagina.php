@@ -387,4 +387,10 @@ function mensajero_entrega_interna($idformato,$iddoc){
 	}
 	return(ucwords(strtolower($cadena_nombre)));
 }
+function mostrar_num_pagina($idformato,$iddoc){
+	
+	if($_REQUEST['pagina']==1){
+		return('{PAGENO}');
+	}
+}
 ?>

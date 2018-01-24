@@ -402,8 +402,7 @@
           
           // Remove element, remove label, point to current
           if(slave.i==0){
-           $(MF.current).remove();
-           MF.current = slave;
+           $(slave).remove();
           }
           else{
            $(slave).remove();

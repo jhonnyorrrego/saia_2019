@@ -108,19 +108,32 @@ $datos_solicitud = busca_filtro_tabla("a.documento_iddocumento AS iddoc","ft_sol
 function llenar_transferencia_vinculada_entrega($idformato,$iddoc)
 {	
 	global $conn;
-	$texto="";	
 	$tabla_solicitud_prestamo=busca_filtro_tabla("transferencia_presta","ft_solicitud_prestamo","documento_iddocumento=".$_REQUEST['anterior'],"",$conn);
-	$transferencia_prestamo = $tabla_solicitud_prestamo[0]['transferencia_presta'];
-	$expedientes = explode(',', $transferencia_prestamo);
-	for($i=0;$i<count($expedientes);$i++)
-	 {
-	 	$id_expedientes = $expedientes[$i];
-	 	$tabla_expedientes=busca_filtro_tabla("","expediente A","A.idexpediente =".$id_expedientes,"",$conn);
-		$nombre_expedientes = $tabla_expedientes[0]['nombre'];
-		$texto.="<td><input type='checkbox' name='transferencia_vinculada' id='transferencia_vinculada' value='".$id_expedientes."'>".$nombre_expedientes."</td>";
-		  
-	 }	
-	echo($texto);	
+	if($tabla_solicitud_prestamo['numcampos']){
+		$texto="<td><table><tr>";	
+		$transferencia_prestamo = $tabla_solicitud_prestamo[0]['transferencia_presta'];
+		$expedientes = explode(',', $transferencia_prestamo);
+		$cont=0;
+		for($i=0;$i<count($expedientes);$i++)
+		 {
+		 	$id_expedientes = $expedientes[$i];
+		 	$tabla_expedientes=busca_filtro_tabla("","expediente A","A.idexpediente =".$id_expedientes,"",$conn);
+			$nombre_expedientes = $tabla_expedientes[0]['nombre'];
+			if($cont==3){
+				$cont=0;
+				$texto.="</tr><tr>";
+			}
+			$cont++;
+			$texto.="<td><input type='checkbox' name='transferencia_vinculada' id='transferencia_vinculada' value='".$id_expedientes."'>".$nombre_expedientes."</td>";
+			  
+		 }	
+		 $texto.="</tr></table></td>";
+		echo($texto);
+	}
+		
+}
+function nombre_expediente($idformato,$iddoc){
+	
 }
 function numero_expediente($idformato,$iddoc){
 	

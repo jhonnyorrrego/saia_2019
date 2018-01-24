@@ -127,7 +127,7 @@ function guardar_expedientes_prestamos($idformato,$iddoc){//Esta funcion se toma
 		<td>
 			<table style='width:100%;border-collapse:collapse;border-color:#cac8c8;border-style:solid;border-width:1px;'  border='1'>
 				<tr style='font-weight:bold;text-align:center;'>
-					<td> <input type='checkbox' name='boton_todos' id='boton_todos' value='todos'> </td>
+					<td> <input type='checkbox' name='boton_todos' id='boton_todos' value='todos' checked> </td>
 					<td> Nombre </td>
 					<td> Fecha de creaci&oacute;n </td>
 					<td> Indice uno </td>
@@ -147,7 +147,7 @@ function guardar_expedientes_prestamos($idformato,$iddoc){//Esta funcion se toma
 		$cadena_serie=$serie[0]['nombre'];
 		$html.="
 			<tr>
-				<td style='text-align:center; width:5%'> <input type='checkbox' name='transferencia_presta[]' value='".$expedientes[$i]['idexpediente']."' /> </td>
+				<td style='text-align:center; width:5%'> <input type='checkbox' name='transferencia_presta[]' value='".$expedientes[$i]['idexpediente']."' checked /> </td>
 				<td> ".$expedientes[$i]['nombre']." </td>
 				<td> ".$expedientes[$i]['fecha']." </td>
 				<td> ".$expedientes[$i]['indice_uno']." </td>

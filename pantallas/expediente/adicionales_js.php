@@ -36,6 +36,7 @@ $(document).ready(function(){
 	          if(objeto2.exito){
 	          	notificacion_saia(objeto2.mensaje,"success","",2500);
 	          	$("#resultado_pantalla_"+idregistro).remove();
+	          	window.location.reload();
 	          }
 	        }
 	      }
@@ -93,6 +94,15 @@ $(document).ready(function(){
   
   $("#adicionar_documento_exp").live("click",function(){    
     window.open("<?php echo($ruta_db_superior);?>"+$(this).attr("enlace"),"_self");
+  });
+  
+  $("#compartir_expediente").live("click",function(){    
+    var seleccionados=$("#seleccionados_expediente").val();
+	if(seleccionados){
+		window.open("<?php echo($ruta_db_superior);?>"+$(this).attr("enlace")+"&idexpediente="+seleccionados,"iframe_detalle");
+	}else{
+		alert("Seleccione por lo menos un expediente");
+	}
   });
   
   $(".sacar_expediente").live("click",function(){

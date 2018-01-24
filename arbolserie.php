@@ -12,6 +12,7 @@ include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."librerias_saia.php");		
 include_once("formatos/librerias/header_formato.php");		
 echo(librerias_jquery());
+echo(librerias_arboles());
 //echo(librerias_notificaciones());
 ?>
 <html>
@@ -21,6 +22,7 @@ echo(librerias_jquery());
   <meta http-equiv="Content-Type" content="text/html; charset= UTF-8 ">
 <script type="text/javascript" src="js/dhtmlXCommon.js"></script>
 <script type="text/javascript" src="js/dhtmlXTree.js"></script>
+<script type="text/javascript" src="js/dhtmlxtree_xw.js"></script>
     <link rel="STYLESHEET" type="text/css" href="css/dhtmlXTree.css">
 			  <!--span style="font-family: Verdana; font-size: 9px;">CLASIFICACI&Oacute;N DEL DOCUMENTO<br><br></span-->
 			  <span style="font-family: Verdana; font-size: 9px;">
@@ -36,10 +38,9 @@ echo(librerias_jquery());
 	<script type="text/javascript">
   <!--
       var browserType;
-      var result;
+      var result=[];
       var punteroi=0;
       var punteroj=0;
-      
       if (document.layers) {browserType = "nn4"}
       if (document.all) {browserType = "ie"}
       if (window.navigator.userAgent.toLowerCase().match("gecko")) {
@@ -140,31 +141,41 @@ echo(librerias_jquery());
               eval('document.layers["esperando_serie"]');
         document.poppedLayer.style.display = "none";
        
-        console.log(result);
+      /*  if(result.length>0){
         var llaves=Object.keys(result);
-        console.log('punteroi: '+punteroi);
+        /*console.log('punteroi: '+punteroi);
         console.log('punteroj: '+punteroj);
         console.log('llavei: '+llaves.length);
         console.log('llavej: '+result[llaves[punteroi]].length);
        
-		if(punteroi<llaves.length){			
-			
-				if(punteroj<result[llaves[punteroi]].length){
-		           	console.log(result[llaves[punteroi]][punteroj]);
-		           	//tree2.openItem(result[llaves[punteroi]][punteroj]);
-		           	punteroj=punteroj+1;
-		           	console.log('----------');
-		           	//tree2.setOnLoadingEnd(fin_cargando_serie);
-	           		
-				}else{
-					punteroi=punteroi+1;
-					punteroj=0;
-					console.log('...................');
-					//tree2.setOnLoadingEnd(fin_cargando_serie);			 					
-				}
-	           	
-	        
-	    }
+			if(punteroi<llaves.length){			
+				
+					if(punteroj<result[llaves[punteroi]].length){
+			           	console.log(result[llaves[punteroi]][punteroj]);
+			           	
+			           	if(tree2.getOpenState(result[llaves[punteroi]][punteroj])==1){
+			           		punteroj=punteroj+1;
+							console.log('...-----................');
+							fin_cargando_serie();
+			           	}else{
+			           		tree2.openItem(result[llaves[punteroi]][punteroj]);
+				           	punteroj=punteroj+1;
+				           	console.log('----------');
+				           	fin_cargando_serie();
+			           	}
+			           	
+					}else{
+						punteroi=punteroi+1;
+						punteroj=0;
+						console.log('...................');
+						fin_cargando_serie();		 					
+					}
+		           	
+		        
+		    }else{
+		    	result=[];
+		    }
+	    }*/
         
         
         
@@ -209,16 +220,11 @@ echo(librerias_jquery());
        		success: function(data){
            		//console.log(data.serie_base[0]);
            		result=data;
-//console.log(result);
-           		/*$.each(data.serie_base, function(i, item) {          			
-           			$.each(item, function(j, value) {
-           				console.log(value);
-           			});
-           		});*/
-           		
-           		
-           		
-           		
+           		punteroj=0;
+           		punteroi=0;
+           		tree2.openItemsDynamic(data["datos"],true);
+				//tree2.openItemsDynamic(data["datos"],true);
+           		    		
        			/*$.each(data, function(i, item) {
 console.log(typeof(item));
        				$.each(item, function(j, value) {
@@ -233,20 +239,8 @@ console.log(typeof(item));
 			}
 		});
 		
-		//console.log(result);
-		//console.log('--------');
-		/*var llaves=Object.keys(result);
-		punteroi=0;
-		punteroj=0;
-			
-		for(var i=0;i<llaves.length;i++){
-			console.log(llaves[i]);
-           	for(var j=0;j<result[llaves[i]].length;j++){
-           		console.log(result[llaves[i]][j]);
-           	}
-        }*/
-		tree2.openItem('d38');
-        tree2.openItem('d37');
+
+       // fin_cargando_serie();
        }
         
        
