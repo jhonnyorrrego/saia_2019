@@ -140,45 +140,7 @@ echo(librerias_arboles());
            document.poppedLayer =
               eval('document.layers["esperando_serie"]');
         document.poppedLayer.style.display = "none";
-       
-      /*  if(result.length>0){
-        var llaves=Object.keys(result);
-        /*console.log('punteroi: '+punteroi);
-        console.log('punteroj: '+punteroj);
-        console.log('llavei: '+llaves.length);
-        console.log('llavej: '+result[llaves[punteroi]].length);
-       
-			if(punteroi<llaves.length){			
-				
-					if(punteroj<result[llaves[punteroi]].length){
-			           	console.log(result[llaves[punteroi]][punteroj]);
-			           	
-			           	if(tree2.getOpenState(result[llaves[punteroi]][punteroj])==1){
-			           		punteroj=punteroj+1;
-							console.log('...-----................');
-							fin_cargando_serie();
-			           	}else{
-			           		tree2.openItem(result[llaves[punteroi]][punteroj]);
-				           	punteroj=punteroj+1;
-				           	console.log('----------');
-				           	fin_cargando_serie();
-			           	}
-			           	
-					}else{
-						punteroi=punteroi+1;
-						punteroj=0;
-						console.log('...................');
-						fin_cargando_serie();		 					
-					}
-		           	
-		        
-		    }else{
-		    	result=[];
-		    }
-	    }*/
-        
-        
-        
+
       }
 
       function cargando_serie() {
@@ -196,17 +158,7 @@ echo(librerias_arboles());
         
       }
       
-      		   
-      
         function buscar_nodo(){
-        	
-        	var delay = (function(){
-			var timer = 0;
-			 return function(callback, ms){
-			   clearTimeout (timer);
-			   timer = setTimeout(callback, ms);
-			 };
-			})();
 			
        	$.ajax({
        		type:'POST',
@@ -223,28 +175,11 @@ echo(librerias_arboles());
            		punteroj=0;
            		punteroi=0;
            		tree2.openItemsDynamic(data["datos"],true);
-				//tree2.openItemsDynamic(data["datos"],true);
-           		    		
-       			/*$.each(data, function(i, item) {
-console.log(typeof(item));
-       				$.each(item, function(j, value) {
-           				console.log(value);
-       					tree2.openItem(value);
-       					if(j==item.length-1){
-       						tree2.selectItem(value,true,true);
-       						//tree2.focusItem(value);
-       					}
-       				});
-       			});*/
 			}
 		});
-		
 
-       // fin_cargando_serie();
        }
-        
-       
-       
+
 	--> 		
 	</script>
 	<script>

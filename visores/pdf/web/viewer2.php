@@ -251,14 +251,15 @@ if(@$_REQUEST['anexo']){
               </div>
               <div class="outerCenter">
                 <div class="innerCenter" id="toolbarViewerMiddle">
-                  <div class="splitToolbarButton">
-                  <button id="transferir" class="toolbarButton transferir" title="Transferir" tabindex="21" enlace="<?php echo($ruta_db_superior.'transferenciaadd.php?doc='.@$_REQUEST['iddocumento'].'&mostrar=1&key='.$_REQUEST['iddocumento'].'&ruta_pdf='.urlencode($ruta)); ?>" data-l10n-id="transferir">
+                	<button id="transferir" class="toolbarButton transferir" title="Transferir" tabindex="21" enlace="<?php echo($ruta_db_superior.'transferenciaadd.php?doc='.@$_REQUEST['iddocumento'].'&mostrar=1&key='.$_REQUEST['iddocumento'].'&ruta_pdf='.urlencode($ruta)); ?>" data-l10n-id="transferir">
                       <span data-l10n-id="transferir_label">Transferir</span>
                     </button>
                     <div class="splitToolbarButtonSeparator"></div>
-                    <button id="cambio_visor" class="toolbarButton cambio_visor firstPage" title="Cambiar Visor" tabindex="23"  iddocumento="<?php echo($id_archivo);?>" tipo="<?php echo($tipo_visor);?>" data-l10n-id="cambio_visor">
-                       <span data-l10n-id="zoom_out_label">CV</span>CV
-                    </button>
+                    <button id="cambio_visor" class="toolbarButton cambiar_visor" title="Cambiar Visor" tabindex="23"  iddocumento="<?php echo($id_archivo);?>" tipo="<?php echo($tipo_visor);?>" data-l10n-id="cambio_visor">
+                       <span data-l10n-id="zoom_out_label">CV</span>
+                    </button> 
+                  <div class="splitToolbarButton">
+                  
                     <div class="splitToolbarButtonSeparator"></div>
                     <button id="zoomOut" class="toolbarButton zoomOut" title="Zoom Out" tabindex="21" data-l10n-id="zoom_out">
                       <span data-l10n-id="zoom_out_label">Zoom Out</span>

@@ -47,7 +47,7 @@ if($_REQUEST['tabla']){
 	$puntero_array=0;
 	$otras_cat='';
 	$serie_base=array();
-	$resultados=array();;
+	$resultados=array();
 	$resultado=array();
 	$final=array();
 	

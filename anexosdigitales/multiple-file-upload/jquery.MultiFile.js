@@ -369,7 +369,6 @@
        // Add a new file to the list
        MF.addToList = function( slave ){
         
-        
         ruta_esc=window.ruta_escape;
         if(ruta_esc==undefined || ruta_esc=='undefined')
             ruta_esc="../../";
@@ -392,7 +391,6 @@
         );
 	       
         b.click(function(){
-         
           //# Trigger Event! onFileRemove
           if(!MF.trigger('onFileRemove', slave, MF)) return false;
           //# End Event!
@@ -408,6 +406,8 @@
            $(slave).remove();
           };
           $(this).parent().remove();
+          MF.slaves.splice(slave.i, 1,"");
+          //$(MF.slave.i).remove();
           
           // Show most current element again (move into view) and clear selection
           $(MF.current).css({ position:'', top: '' }).reset().val('').attr('value', '')[0].value = '';
