@@ -37,7 +37,7 @@ $dato_padre=busca_filtro_tabla("","expediente a","a.idexpediente=".$_REQUEST["co
 
 
 <div class="control-group element">
-  <label class="control-label" for="agrupador">Agrupador
+  <label class="control-label" for="agrupador">Seleccione *
   </label>
   <div class="controls"> 
 		<input type="radio" name="agrupador" id="agrupado0"  value="0" checked>EXPEDIENTE &nbsp;
