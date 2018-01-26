@@ -38,7 +38,7 @@ class SaiaUploadHandler extends UploadHandler {
                 $campos = array(
                     "idanexos_tmp" => 'NULL',
                     "uuid" => "'" . $file->uuid . "'",
-                    "ruta" => "'" . $file->url . "'",
+                    "ruta" => "'" . $this->options["ruta_temp_saia"] . $file->name . "'",
                     "etiqueta" => "'" . $file->name . "'",
                     "tipo" => "'" . $file->type . "'",
                     "idformato" => $file->idformato,
@@ -112,10 +112,11 @@ if (@$_REQUEST["fu_idformato"] && @$_REQUEST['fu_idcampos_formato']) {
 
     $options = array(
         'upload_dir' => $ruta_db_superior . $ruta_temporal,
-        'upload_url' => $ruta_temporal,
+        'upload_url' => $ruta_db_superior . $ruta_temporal,
         'accept_file_types' => '/\.(' . $extensiones . ')$/i',
         'max_file_size' => $max_tamanio,
-        "param_name" => implode("[],", $lista_campos)
+        "param_name" => implode("[],", $lista_campos),
+        "ruta_temp_saia" => $ruta_temporal,
     );
     crear_destino($ruta_db_superior . $ruta_temporal);
     $upload_handler = new SaiaUploadHandler($options);
