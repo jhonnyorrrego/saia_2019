@@ -91,7 +91,6 @@ class GenerarFormato {
 				$generar = new GenerarBuscar($this->idformato, "buscar");
 				$generar->crear_formato_buscar();
 				$redireccion = "funciones_formatolist.php?idformato=" . $this->idformato;
-
 				break;
 			case "eliminar" :
 				$this->crear_formato_mostrar("eliminar");
@@ -504,8 +503,8 @@ else
 						} elseif (is_file($funciones[$i]["ruta"]) && $eslibreria === false) { // si el archivo existe en la ruta especificada partiendo de la raiz
 
 							$includes .= $this->incluir("../" . $funciones[$i]["ruta"], "librerias");
-						} else if ($eslibreria === false) // si no existe en ninguna de las dos
-{ // trato de crearlo dentro de la carpeta del formato actual
+						} else if ($eslibreria === false) { // si no existe en ninguna de las dos
+							// trato de crearlo dentro de la carpeta del formato actual
 							alerta_formatos("Las funciones del Formato " . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"] . " son requeridas  no se han encontrado");
 							if (crear_archivo(FORMATOS_CLIENTE . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
 								$includes .= $this->incluir($dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"], "librerias");
@@ -744,23 +743,23 @@ else
 									}
 								} else {
 									$valor = "";
-								}
 							}
 						}
 							echo ($valor);
 							if ($accion == "editar") {
 								$valor = "<?php echo(mostrar_valor_campo('" . $campos[$h]["nombre"] . "',$this->idformato,$" . "_REQUEST['iddoc'])); ? >";
-							} else if ($valor == "")
+							} else if ($valor == "") {
 								$valor = '<?php echo(validar_valor_campo(' . $campos[$h]["idcampos_formato"] . ')); ? >';
-							if ($nivel_barra == "")
+							}
+							if ($nivel_barra == "") {
 								$nivel_barra = "basico";
+							}
 							$texto .= '<tr id="tr_'.$campos[$h]["nombre"].'">
                      <td class="encabezado" width="20%" title="' . $campos[$h]["ayuda"] . '">' . $this->codifica($campos[$h]["etiqueta"]) . $obliga . '</td>
                      <td class="celda_transparente"><textarea ' . $tabindex . ' name="' . $campos[$h]["nombre"] . '" id="' . $campos[$h]["nombre"] . '" cols="53" rows="3" class="tiny_' . $nivel_barra;
 							if ($campos[$h]["obligatoriedad"])
 								$texto .= ' required';
-							$texto .= '">' . $valor . '</textarea></td>
-                    </tr>';
+							$texto .= '">' . $valor . '</textarea></td></tr>';
 							$textareas++;
 							$indice_tabindex++;
 							break;
@@ -890,18 +889,6 @@ else
 								$dependientes++;
 						}
 						break;
-					case "archivo" :
-						$tipo_input='unico';
-						if($campos[$h]["valor"]!=''){
-							$mystring = $campos[$h]["valor"];
-							$findme   = '@';
-							$pos = strpos($mystring, $findme);
-							if ($pos !== false) { //fue encontrada
-								$vector_extensiones_tipo=explode($findme,$mystring);
-								$tipo_input=$vector_extensiones_tipo[1];
-								$extensiones_fijas=$vector_extensiones_tipo[0];
-							}
-							break;
 						case "archivo" :
 							$tipo_input = 'unico';
 							if ($campos[$h]["valor"] != '') {
@@ -1049,6 +1036,16 @@ else
                   </tr>';
 							break;
 						case "arbol":
+                /*En campos valor se deben almacenar los siguientes datos:
+                ../../test.php;1;0;1;1;0;0   ../arboles/test.xml;2;0;1;1;0;0  ../arboles/test_secretarias.xml;1;0;1;1;1;2
+                arreglo[0]:ruta de el xml
+                arreglo[1]=1=> checkbox;arreglo[1]=2=>radiobutton
+                arreglo[2] Modo calcular numero de nodos hijo
+                arreglo[3] Forma de carga 0=>autoloading; 1=>smartXML
+                arreglo[4] Busqueda
+                arreglo[5] Almacenar 0=>iddato 1=>valordato
+                arreglo[6] Tipo de arbol 0=>funcionarios 1=>series 2=>dependencias 3=>Otro (se debe sacar el dato) 4=>Sale de la tabla enviada a test_serie.php?tabla=nombre_tabla
+                */
                 $arreglo = explode(";", $campos[$h]["valor"]);
 							if (isset($arreglo) && $arreglo[0] != "") {
 								$ruta = "\"" . $arreglo[0] . "\"";
@@ -1231,11 +1228,6 @@ else
 								if (is_numeric($parametros[3]) && $parametros[3])
 									$aux[] = 'lock:true';
 							}
-							if (is_numeric($parametros[2]))
-								$aux[] = 'interval:' . $parametros[2];
-							if (is_numeric($parametros[3]) && $parametros[3])
-								$aux[] = 'lock:true';
-						}
 							if (is_array($aux2))
 								$adicionales .= implode(" ", $aux2);
 							$texto .= '<tr id="tr_'.$campos[$h]["nombre"].'">
