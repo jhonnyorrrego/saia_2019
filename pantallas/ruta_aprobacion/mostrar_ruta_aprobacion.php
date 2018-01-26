@@ -12,6 +12,7 @@ include_once ($ruta_db_superior . "db.php");
 include_once ($ruta_db_superior . "librerias_saia.php");
 include_once ($ruta_db_superior . "pantallas/lib/librerias_fechas.php");
 echo(estilo_bootstrap());
+
 if(@$_REQUEST["iddoc"] || @$_REQUEST["key"]){
 	if(!@$_REQUEST["iddoc"])$_REQUEST["iddoc"]=@$_REQUEST["key"];
 	include_once($ruta_db_superior."pantallas/documento/menu_principal_documento.php");
@@ -19,26 +20,26 @@ if(@$_REQUEST["iddoc"] || @$_REQUEST["key"]){
 }
 if (isset($_REQUEST["idruta_aprob"]) && $_REQUEST["idruta_aprob"]) {
 	$ruta_aprob = busca_filtro_tabla("", "documento_ruta_aprob", "iddocumento_ruta_aprob=" . $_REQUEST["idruta_aprob"], "iddocumento_ruta_aprob desc", $conn);
-	$estado_doc_aprob='<div class="btn btn-mini btn-info">Sin ruta de aprobaci&oacute;n</div>';
+	$btn_estado_doc_aprob='<div class="btn btn-mini btn-info">Sin ruta de aprobaci&oacute;n</div>';
 	$atrasado=false;
 	if ($ruta_aprob["numcampos"]) {
-			$equivalencia_doc_aprob=array(0=>"PENDIENTE DE APROBACION",1=>"APROBADO",3=>"RECHAZADO",4=>"CERRADO",6=>"CON VISTO BUENO");
+			$equivalencia_doc_aprob=array(0=>"PENDIENTE DE APROBACION",1=>"APROBADO",3=>"RECHAZADO",6=>"CON VISTO BUENO");
 			$estado_doc_aprob=$equivalencia_doc_aprob[$ruta_aprob[0]["estado_ruta_aprob"]];
 			if($ruta_aprob[0]["estado_ruta_aprob"]==0){
 				$atrasado=fecha_atrasada('',$ruta_aprob[0]["fecha_vencimiento"]);
 				if($atrasado){
-					$estado_doc_aprob='<div class="btn btn-mini btn-danger">'.$estado_doc_aprob."</div>";
+					$btn_estado_doc_aprob='<div class="btn btn-mini btn-danger">'.$estado_doc_aprob."</div>";
 				}
 				else{
-					$estado_doc_aprob='<div class="btn btn-mini btn-success">'.$estado_doc_aprob."</div>";
+					$btn_estado_doc_aprob='<div class="btn btn-mini btn-success">'.$estado_doc_aprob."</div>";
 				}
 			}
 			else if(in_array($ruta_aprob[0]["estado_ruta_aprob"],array(1,6))){
 				//estados de aprobado y visto bueno
-				$estado_doc_aprob='<div class="btn btn-mini btn-success">'.$estado_doc_aprob."</div>";
+				$btn_estado_doc_aprob='<div class="btn btn-mini btn-success">'.$estado_doc_aprob."</div>";
 			}
 			else{
-				$estado_doc_aprob='<div class="btn btn-mini btn-danger">'.$estado_doc_aprob."</div>";
+				$btn_estado_doc_aprob='<div class="btn btn-mini btn-danger">'.$estado_doc_aprob."</div>";
 			}
 			$aprobacion_en = ($ruta_aprob[0]["aprobacion_en"]==1) ? "Aprobaci&oacute;n en serie" : "Aprobaci&oacute;n en paralelo" ;
 			if (is_object($ruta_aprob[0]["fecha_creacion"])) {
@@ -84,7 +85,7 @@ if (isset($_REQUEST["idruta_aprob"]) && $_REQUEST["idruta_aprob"]) {
 			}
 
 			$tabla = '';
-			$tareas_ruta = busca_filtro_tabla("v.nombres,v.apellidos,v.cargo,t.idtareas,t.accion_tareas,t.orden_tareas,v.funcionario_codigo", "tareas t,vfuncionario_dc v", "t.responsable=v.iddependencia_cargo and t.ruta_aprob=".$_REQUEST["idruta_aprob"]." and t.documento_iddocumento=" . $documento[0]["iddocumento"], "idtareas asc", $conn);
+			$tareas_ruta = busca_filtro_tabla("v.nombres,v.apellidos,v.cargo,t.idtareas,t.accion_tareas,t.orden_tareas,t.estado_tarea,v.funcionario_codigo", "tareas t,vfuncionario_dc v", "t.responsable=v.iddependencia_cargo and t.ruta_aprob=".$_REQUEST["idruta_aprob"]." and t.documento_iddocumento=" . $documento[0]["iddocumento"], "idtareas asc", $conn);
 			if ($tareas_ruta["numcampos"]) {
 				$tabla .= '<table align="center" style="width: 90%;" class="table table-bordered">';
 				$tabla .= '<thead>';
@@ -97,7 +98,7 @@ if (isset($_REQUEST["idruta_aprob"]) && $_REQUEST["idruta_aprob"]) {
 					$estado="PENDIENTE";
 					if($avance["numcampos"]){
 						if($avance[0]["estado"]==5){
-							if( $tareas_ruta[$i]["accion_tareas"]==1){
+							if($tareas_ruta[$i]["accion_tareas"]==1){
 								$estado='<div class="btn btn-mini btn-danger">'.$equivalencia_estado_avance[$avance[0]["estado"]].'</div>';
 							}
 							else{
@@ -114,12 +115,15 @@ if (isset($_REQUEST["idruta_aprob"]) && $_REQUEST["idruta_aprob"]) {
 					$tabla .= '<td>' . ucwords(strtolower($tareas_ruta[$i]["nombres"] . ' ' . $tareas_ruta[$i]["apellidos"])) . '</td> <td>' . $tareas_ruta[$i]["cargo"] . '</td>';
 					$tabla .= '<td style="text-align:center">';
 						if($_SESSION["usuario_actual"]==$tareas_ruta[$i]["funcionario_codigo"] && $avance["numcampos"]==0){
-							$tabla .= '<a class="highslide btn btn-mini btn-info" href="'.$ruta_db_superior.'pantallas/tareas/adicionar_avance_tareas.php?idtareas='.$tareas_ruta[$i]["idtareas"].'" onclick=\'return hs.htmlExpand(this, { objectType: "iframe",width:500, height:500,preserveContent:false } )\'>'.$estado.'</a>';
+							if(intval($tareas_ruta[$i]["estado_tarea"])===0){
+								$tabla .= '<a class="highslide btn btn-mini btn-info" href="'.$ruta_db_superior.'pantallas/tareas/adicionar_avance_tareas.php?idtareas='.$tareas_ruta[$i]["idtareas"].'" onclick=\'return hs.htmlExpand(this, { objectType: "iframe",width:500, height:500,preserveContent:false } )\'>'.$estado.'</a>';
+							}else{
+								$tabla .= $estado;
+							}
 						}else{
 							if($avance["numcampos"]){
-								$tabla .= '<a class="highslide" href="'.$ruta_db_superior.'pantallas/tareas/mostrar_tareas.php?idtareas='.$tareas_ruta[$i]["idtareas"].'" onclick=\'return hs.htmlExpand(this, { objectType: "iframe",width:500, height:500,preserveContent:false } )\' style="text-decoration: none;">'.$estado.'</a>';
-							}
-							else{
+								$tabla .= '<a class="highslide" href="'.$ruta_db_superior.'pantallas/tareas/mostrar_tareas.php?idtareas='.$tareas_ruta[$i]["idtareas"].'&idruta_aprob='.$_REQUEST["idruta_aprob"].'" onclick=\'return hs.htmlExpand(this, { objectType: "iframe",width:500, height:500,preserveContent:false } )\' style="text-decoration: none;">'.$estado.'</a>';
+							}else{
 								$tabla .= $estado;
 							}
 						}
@@ -144,7 +148,7 @@ echo(librerias_jquery("1.7"));
 ?>
 <body>
 <div class="container">
-	<legend>Solicitu de aprobaci&oacute;n</legend>
+	<legend>Solicitud de aprobaci&oacute;n</legend>
 	<br>
 		<table align="center" style="width: 90%;" class="table table-bordered">
 			<tr>
@@ -162,7 +166,7 @@ echo(librerias_jquery("1.7"));
 			</tr>
 			<tr>
 				<td><strong>Estado</strong></td>
-				<td colspan="3"><?php echo $estado_doc_aprob;?></td>
+				<td colspan="3"><?php echo $btn_estado_doc_aprob;?></td>
 			</tr>
 			<tr>
 				<td><strong>Descripci&oacute;n del documento</strong></td>

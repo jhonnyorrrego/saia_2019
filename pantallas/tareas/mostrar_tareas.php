@@ -63,9 +63,12 @@ if((@$_REQUEST["iddoc"] || @$_REQUEST["key"])&& !@$_REQUEST["idpaso_documento"])
 			<span class="control-label" for="etiqueta"><b>Fecha tarea:</b> <?php echo($tarea[0]['fecha_tarea']); ?></span>
 		</div>
 		<div class="control-group">
-			<a class="previo_high" enlace="pantallas/tareas/adicionar_avance_tareas.php?idtareas=<?php echo($_REQUEST['idtareas']); ?>">
-				<!--img width="16px" border="0" src="<?php echo($ruta_db_superior); ?>botones/formatos/adicionar.gif"-->Adicionar Avances
-			</a>
+			<?php if(!isset($_REQUEST["idruta_aprob"])){
+				?>
+					<a class="previo_high" enlace="pantallas/tareas/adicionar_avance_tareas.php?idtareas=<?php echo($_REQUEST['idtareas']); ?>"></a>
+				<?php
+			}
+				?>
 			<div class="table-responsive">
 				<table class="table">
 					<tbody>
