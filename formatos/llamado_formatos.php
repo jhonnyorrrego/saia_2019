@@ -10,7 +10,6 @@ while ($max_salida > 0) {
 }
 include_once($ruta_db_superior . "db.php");
 include_once($ruta_db_superior . "librerias_saia.php");
-include_once ($ruta_db_superior . "formatos/generar_formato.php");
 
 if(@$_REQUEST["accion"]=="generar"){
     if(!@$_REQUEST["condicion"]){
@@ -36,19 +35,28 @@ if(@$_REQUEST["accion"]=="generar"){
         if($_REQUEST["accion"]=="generar"){
             $redirecciona.='&accion='.$_REQUEST["accion"];            
         } 
-		// $ch = curl_init();
+        $ch = curl_init();
         for($i=0;$i<$cant_acciones;$i++){
-			$generar = new GenerarFormato($formato["idformato"], $acciones[$i], '');
-			$redireccion = $generar->ejecutar_accion();
-
-			if ($redireccion === false) {
-				alerta_formatos("No se puede generar el formato por favor verifique la generaci&oacute;n manual del formato");
-            } else {
-                $creados .= 'Formato ' . $acciones[$i] . " " . $formato["nombre"] . " <br>";
+            $url=PROTOCOLO_CONEXION.RUTA_PDF.'/formatos/generar_formato.php?crea='.$acciones[$i].'&idformato='.$formato["idformato"].'&sesion='.$_SESSION["LOGIN".LLAVE_SAIA];
+            //fwrite($abrir,"En la fecha ".date('Y-m-d H:i:s')." se ejecutaron las siguientes tareas ".$url." \n");
+	        if (strpos(PROTOCOLO_CONEXION, 'https') !== false) {
+				curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false); 
+				curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+			}		            
+            curl_setopt($ch, CURLOPT_URL,$url); 
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
+            curl_setopt($ch, CURLOPT_VERBOSE, true);
+			//curl_setopt($ch, CURLOPT_STDERR, $abrir);
+						$contenido=curl_exec ($ch);
+            if($contenido===false){
+                alerta("No se puede generar el formato por favor verifique la generaci&oacute;n manual del formato");
+            }
+            else{
+                $creados.='Fomato '.$acciones[$i]." ".$formato["nombre"]." <br>";
             } 
             //fwrite($abrir,"En la fecha ".date('Y-m-d H:i:s')." Termina el proceso ".$fila." =>  ".$contenido." \n \n");
         }
-		// curl_close ($ch);
+        curl_close ($ch);
         echo($creados);
 		//fclose($abrir);
         if($formatos["numcampos"]==1){
