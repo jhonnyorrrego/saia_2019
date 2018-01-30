@@ -19,9 +19,9 @@ include_once ($ruta_db_superior . "db.php");
 
 header('Content-type: application/json');
 
-var_dump($_REQUEST);
-var_dump($_FILES);
-die();
+//var_dump($_REQUEST);
+//var_dump($_FILES);
+//die();
 
 if (@$_REQUEST["idformato"] && @$_REQUEST['idcampo_formato']) {
 

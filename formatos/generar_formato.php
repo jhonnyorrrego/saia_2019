@@ -1517,7 +1517,7 @@ function crear_formato_ae($idformato, $accion) {
 						    $idelemento = "dz_campo_{$campos[$h]["idcampos_formato"]}";
 						    $texto .= '<div id="' . $idelemento . '" class="saia_dz" data-nombre-campo="' . $campos[$h]["nombre"] . '" data-idcampo-formato="' . $campos[$h]["idcampos_formato"] . '" data-extensiones="' . $extensiones . '" data-multiple="'. $multiple . '">';
 						    $texto .= '<div class="dz-message"><span>Arrastre aqu&iacute; los archivos adjuntos</span></div></div>';
-							$texto .= '<input ' . $tabindex . ' type="hidden" ' . $adicionales . ' id="'.$campos[$h]["nombre"].'" name="' . $campos[$h]["nombre"] . '">';
+							$texto .= '<input ' . $tabindex . ' type="hidden" ' . $adicionales . ' id="'.$campos[$h]["nombre"].'" name="' . $campos[$h]["nombre"] . '" value="">';
 							//$texto.=$ul_adicional_archivo;
 						}
 						if ($accion == "editar") {
@@ -2031,10 +2031,10 @@ $.ajax({url: '../librerias/validar_unico.php',
 			$includes .= incluir("../../anexosdigitales/funciones_archivo.php", "librerias");
 			//$includes .= incluir("../../anexosdigitales/highslide-4.0.10/highslide/highslide-with-html.js", "javascript");
 			//$includes .= '<link rel="stylesheet" type="text/css" href="../../anexosdigitales/highslide-4.0.10/highslide/highslide.css" /></style>';
-			$includes .= '<link href="dist/dropzone.css" type="text/css" rel="stylesheet" />';
+			$includes .= '<link href="../../dropzone/dist/dropzone.css" type="text/css" rel="stylesheet" />';
 			//$includes .= "<script type='text/javascript'> hs.graphicsDir = '../../anexosdigitales/highslide-4.0.10/highslide/graphics/'; hs.outlineType = 'rounded-white';</script>";
 			$js_archivos = "<script type='text/javascript'>
-                var upload_url = 'cargar_archivos.php';
+                var upload_url = '../../dropzone/cargar_archivos.php';
                 var mensaje = 'Arrastre aquí los archivos';
                 var idformato = 388;
                 Dropzone.autoDiscover = false;
@@ -2046,12 +2046,17 @@ $.ajax({url: '../librerias/validar_unico.php',
                     	var paramName = $(this).data('nombre-campo');
                     	var idcampoFormato = $(this).data('idcampo-formato');
                     	var extensiones = $(this).data('extensiones');
+                    	var multiple = false;
+                    	var multiple_text = $(this).data('multiple');
+                    	if(multiple_text == 'multiple') {
+                    		multiple = true;
+                    	}
                         var opciones = {
                         	ignoreHiddenFiles : true,
-                        	acceptedFiles: '.png',
+                        	acceptedFiles: extensiones,
                        		addRemoveLinks: true,
                        		dictRemoveFile: 'Quitar archivo',
-                    		uploadMultiple: true,
+                    		uploadMultiple: multiple,
                         	url: upload_url,
                         	paramName : paramName,
                         	params : {
@@ -2062,6 +2067,7 @@ $.ajax({url: '../librerias/validar_unico.php',
                             },
                             success : function(file, response){
                                 if(response && response[file.upload.uuid]) {
+                                    console.log(file.upload);
                                    	$('#'+paramName).val(file.upload.uuid);
                                 }
                             },
@@ -2471,18 +2477,19 @@ function crear_formato_buscar($idformato, $accion) {
 							alerta("No es posible generar el archivo " . $formato[0]["nombre_tabla"] . "/" . $funciones[$i]["ruta"]);
 					}
 				}
-			} else // $ruta_orig=$formato[0]["nombre"];
-{ // si el archivo existe dentro de la carpeta del formato actual
+			} else { // $ruta_orig=$formato[0]["nombre"];
+ // si el archivo existe dentro de la carpeta del formato actual
 				if (is_file($formato[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
 					$includes .= incluir($funciones[$i]["ruta"], "librerias");
 				} elseif (is_file($funciones[$i]["ruta"])) { // si el archivo existe en la ruta especificada partiendo de la raiz
 					$includes .= incluir("../" . $funciones[$i]["ruta"], "librerias");
-				} else // si no existe en ninguna de las dos
-{ // trato de crearlo dentro de la carpeta del formato actual
+				} else { // si no existe en ninguna de las dos
+ // trato de crearlo dentro de la carpeta del formato actual
 					if (crear_archivo($formato[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
 						$includes .= incluir($funciones[$i]["ruta"], "librerias");
-					} else
+					} else {
 						alerta("No es posible generar el archivo " . $formato[0]["nombre_tabla"] . "/" . $funciones[$i]["ruta"]);
+					}
 				}
 			}
 			if (!in_array($funciones[$i]["nombre_funcion"], $fun_campos)) {
@@ -2495,9 +2502,7 @@ function crear_formato_buscar($idformato, $accion) {
 		$valor1 = extrae_campo($campo_descripcion, "idcampos_formato", "U");
 		$valor = implode(",", $valor1);
 		if ($campo_descripcion["numcampos"]) {
-			if ($accion == 'adicionar')
-				;
-			elseif ($accion == "editar") {
+			if ($accion == "editar") {
 				if ($formato[0]["detalle"]) {
 					$valor = "<?php echo('" . $valor . "'); ? >";
 				} else {
@@ -2505,10 +2510,12 @@ function crear_formato_buscar($idformato, $accion) {
 				}
 			}
 			$texto .= '<input type="hidden" name="campo_descripcion" value="' . $valor . '">';
-		} else
+		} else {
 			alerta("Recuerde asignar el campo que sera almacenado como descripcion del documento");
-		if ($accion == "editar")
+		}
+		if ($accion == "editar") {
 			$texto .= '<input type="hidden" name="formato" value="' . $idformato . '">';
+		}
 		if ($formato[0]["detalle"]) {
 			$texto .= '<input type="hidden" name="padre" value="<?php echo $_REQUEST["padre"]; ?' . '>">';
 			$texto .= '<input type="hidden" name="anterior" value="<?php echo $_REQUEST["anterior"]; ?' . '>">';

@@ -25,7 +25,7 @@ while ($max_salida > 0) {
 		<!-- <button type="submit" class="btn btn-primary">
 			<i class="glyphicon glyphicon-upload"></i> <span>Enviar archivos</span>
 		</button> -->
-		<div id="dz_campo_4611" class="saia_dz" data-nombre-campo="archivo1" data-idcampo-formato="4611" data-extensiones='.png, .jpg'>
+		<div id="dz_campo_4611" class="saia_dz" data-nombre-campo="archivo1" data-idcampo-formato="4611" data-extensiones=".png, .jpg" data-multiple="unico">
 			<div class="dz-message"><span>Arrastre aquí los archivos adjuntos</span></div>
 		</div>
 		<input type="hidden" id="archivo1" name="archivo1" value="">
@@ -49,12 +49,17 @@ $(document).ready(function () {
     	var paramName = $(this).data('nombre-campo');
     	var idcampoFormato = $(this).data('idcampo-formato');
     	var extensiones = $(this).data('extensiones');
+    	var multiple_text = $(this).data('multiple');
+    	var multiple = false;
+    	if(multiple_text == 'multiple') {
+    		multiple = true;
+    	}
         var opciones = {
         	ignoreHiddenFiles : true,
-        	acceptedFiles: '.png',
+        	acceptedFiles: extensiones,
        		addRemoveLinks: true,
        		dictRemoveFile: 'Quitar archivo',
-    		uploadMultiple: true,
+    		uploadMultiple: multiple,
         	url: upload_url,
         	paramName : paramName,
         	params : {
