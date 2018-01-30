@@ -24,8 +24,8 @@ class SaiaUploadHandler extends UploadHandler {
         if(is_null($index)) {
             $index = 0;
         }
-        $file->idformato = @$_REQUEST['fu_idformato'][$index];
-        $file->idcampos_formato = @$_REQUEST['fu_idcampos_formato'][$index];
+        $file->idformato = @$_REQUEST['idformato'][$index];
+        $file->idcampos_formato = @$_REQUEST['idcampo_formato'][$index];
     }
 
     protected function handle_file_upload($uploaded_file, $name, $size, $type, $error,
