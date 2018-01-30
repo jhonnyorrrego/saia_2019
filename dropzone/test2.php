@@ -25,7 +25,7 @@ while ($max_salida > 0) {
 		<!-- <button type="submit" class="btn btn-primary">
 			<i class="glyphicon glyphicon-upload"></i> <span>Enviar archivos</span>
 		</button> -->
-		<div id="dz_campo_4611" class="saia_dz" data-nombre-campo="archivo1" data-idcampo-formato="4611">
+		<div id="dz_campo_4611" class="saia_dz" data-nombre-campo="archivo1" data-idcampo-formato="4611" data-extensiones='.png, .jpg'>
 			<div class="dz-message"><span>Arrastre aquí los archivos adjuntos</span></div>
 		</div>
 		<input type="hidden" id="archivo1" name="archivo1" value="">
@@ -36,23 +36,24 @@ while ($max_salida > 0) {
 	</form>
 
 </body>
-<script type="text/javascript">
-var upload_url = "cargar_archivos.php";
-var mensaje = "Arrastre aquí los archivos";
+<script type='text/javascript'>
+var upload_url = 'cargar_archivos.php';
+var mensaje = 'Arrastre aquí los archivos';
 var idformato = 388;
 Dropzone.autoDiscover = false;
 
 $(document).ready(function () {
     Dropzone.autoDiscover = false;
-    $(".saia_dz").each(function () {
+    $('.saia_dz').each(function () {
     	var idcampo = $(this).attr('id');
-    	var paramName = $(this).data("nombre-campo");
-    	var idcampoFormato = $(this).data("idcampo-formato");
+    	var paramName = $(this).data('nombre-campo');
+    	var idcampoFormato = $(this).data('idcampo-formato');
+    	var extensiones = $(this).data('extensiones');
         var opciones = {
         	ignoreHiddenFiles : true,
         	acceptedFiles: '.png',
        		addRemoveLinks: true,
-       		dictRemoveFile: "Quitar archivo",
+       		dictRemoveFile: 'Quitar archivo',
     		uploadMultiple: true,
         	url: upload_url,
         	paramName : paramName,
@@ -60,7 +61,7 @@ $(document).ready(function () {
             	idformato : idformato,
             	idcampo_formato : idcampoFormato,
             	nombre_campo : paramName,
-            	uuid : ""
+            	uuid : ''
             },
             success : function(file, response){
                 //console.log(file);
@@ -71,9 +72,14 @@ $(document).ready(function () {
             },
             /*addedfile: function(file) {
                 // obtener el uuid del archivo para usarlo como token. Aqui this es el objeto dropzone
-                this.options.params.uuid = file.upload.uuid
+                this.options.params.uuid = file.upload.uuid;
                 //console.log(this.options);
-            }*/
+            },*/
+            sending: function(file, xhr, formData) {
+            	  // Will send the filesize along with the file as POST data.
+            	  formData.append('uuid', file.upload.uuid);
+            	  //this.options.params.uuid = file.upload.uuid;
+            }
         };
         //new Dropzone($(this), opciones);
         $(this).dropzone(opciones);
