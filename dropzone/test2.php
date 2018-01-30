@@ -16,8 +16,7 @@ while ($max_salida > 0) {
 <head>
 
 <link href="dist/dropzone.css" type="text/css" rel="stylesheet" />
-<link href="bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" />
-
+<script type="text/javascript" src="../js/jquery-1.7.min.js"></script>
 <script src="dist/dropzone.js"></script>
 
 </head>
@@ -26,39 +25,62 @@ while ($max_salida > 0) {
 		<!-- <button type="submit" class="btn btn-primary">
 			<i class="glyphicon glyphicon-upload"></i> <span>Enviar archivos</span>
 		</button> -->
-		<div id="dz_campo_4611" class="row saia_dz">
-			<div class="dz-message"><span>Suelte aquí los archivos adjuntos</span></div>
+		<div id="dz_campo_4611" class="saia_dz" data-nombre-campo="archivo1" data-idcampo-formato="4611">
+			<div class="dz-message"><span>Arrastre aquí los archivos adjuntos</span></div>
 		</div>
-		<div id="dz_campo_4612" class="row saia_dz dropzone-previews">
-			<div class="dz-default dz-message"><span>Suelte aquí los archivos adjuntos</span></div>
+		<input type="hidden" id="archivo1" name="archivo1" value="">
+		<div id="dz_campo_4612" class="saia_dz" data-nombre-campo="archivo2" data-idcampo-formato="4612">
+			<div class="dz-default dz-message"><span>Arrastre aquí los archivos adjuntos</span></div>
 		</div>
+		<input type="hidden" id="archivo2" name="archivo2" value="">
 	</form>
 
 </body>
 <script type="text/javascript">
 var upload_url = "cargar_archivos.php";
 var mensaje = "Arrastre aquí los archivos";
+var idformato = 388;
 Dropzone.autoDiscover = false;
-var archivo1 = new Dropzone("div#dz_campo_4611", {
-	url: upload_url,
-	dictDefaultMessage: mensaje,
-	paramName: 'archivo1',
-	params: {idformato: 388, idcampo_formato: 4611},
-	addRemoveLinks: true,
-	dictRemoveFile: "Quitar archivo",
-	uploadMultiple: true
+
+$(document).ready(function () {
+    Dropzone.autoDiscover = false;
+    $(".saia_dz").each(function () {
+    	var idcampo = $(this).attr('id');
+    	var paramName = $(this).data("nombre-campo");
+    	var idcampoFormato = $(this).data("idcampo-formato");
+        var opciones = {
+        	ignoreHiddenFiles : true,
+        	acceptedFiles: '.png',
+       		addRemoveLinks: true,
+       		dictRemoveFile: "Quitar archivo",
+    		uploadMultiple: true,
+        	url: upload_url,
+        	paramName : paramName,
+        	params : {
+            	idformato : idformato,
+            	idcampo_formato : idcampoFormato,
+            	nombre_campo : paramName,
+            	uuid : ""
+            },
+            success : function(file, response){
+                //console.log(file);
+                //console.log(response);
+                if(response && response[file.upload.uuid]) {
+                   	$('#'+paramName).val(file.upload.uuid);
+                }
+            },
+            /*addedfile: function(file) {
+                // obtener el uuid del archivo para usarlo como token. Aqui this es el objeto dropzone
+                this.options.params.uuid = file.upload.uuid
+                //console.log(this.options);
+            }*/
+        };
+        //new Dropzone($(this), opciones);
+        $(this).dropzone(opciones);
+        $(this).addClass('dropzone');
+        //console.log(opciones);
+    });
 });
 
-var archivo2 = new Dropzone("div#dz_campo_4612", {
-	url: upload_url,
-	paramName: 'archivo2',
-	params: {idformato: 388, idcampo_formato: 4612},
-	addRemoveLinks: true,
-    dictRemoveFile: "Quitar archivo"
-});
-
-
-document.querySelector("div#dz_campo_4611").classList.add('dropzone');
-document.querySelector("div#dz_campo_4612").classList.add('dropzone');
 </script>
 </html>
