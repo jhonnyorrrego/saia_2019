@@ -1,25 +1,22 @@
 <?php
-$max_salida=6; // Previene algun posible ciclo infinito limitando a 10 los ../
-$ruta_db_superior=$ruta="";
-while($max_salida>0){
-  if(is_file($ruta."db.php")) {
-    $ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
-  }
-  $ruta.="../";
-  $max_salida--;
+$max_salida = 6;
+$ruta_db_superior = $ruta = "";
+while ($max_salida > 0) {
+	if (is_file($ruta . "db.php")) {
+		$ruta_db_superior = $ruta;
+	}
+	$ruta .= "../";
+	$max_salida--;
 }
-?>
-<meta http-equiv="X-UA-Compatible" content="IE=9">
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<?php 
-include_once("db.php");
-include_once("librerias_saia.php");
-include_once("cargando.php");
+date_default_timezone_set("America/Bogota");
+include_once ("db.php");
+include_once ("librerias_saia.php");
+include_once ("cargando.php");
 
+echo(librerias_jquery("1.7"));
+echo(librerias_notificaciones());
 
 if(@$_REQUEST['texto_salir']){
-	echo(librerias_jquery("1.7"));
-	echo(librerias_notificaciones());
 	?>
 		<script>
 			var texto_salir='<?php echo(@$_REQUEST['texto_salir']); ?>';
@@ -27,65 +24,48 @@ if(@$_REQUEST['texto_salir']){
 			notificacion_saia(texto_salir,'success','',4000);
 		</script>
 	<?php	
-	
 }
 
-
-if(!isset($_SESSION["LOGIN".LLAVE_SAIA])){
-  @session_name();
-  @session_start();
-  @ob_start();
-} 
-include_once($ruta_db_superior."pantallas/lib/mobile_detect.php");
+include_once ($ruta_db_superior . "pantallas/lib/mobile_detect.php");
 $detect = new Mobile_Detect;
-if(@$_REQUEST["INDEX"]!=''){
-  $_SESSION["INDEX"]=$_REQUEST["INDEX"];
+if ($detect -> isMobile()) {
+	$_SESSION["tipo_dispositivo"] = "movil";
 }
-/*else if ( $detect->isMobile() ) {
-    $_SESSION["tipo_dispositivo"]="movil";
-	$_REQUEST["INDEX"]="mobile";
-	$_SESSION["INDEX"]="mobile";
-}*/
-else{
-  $_REQUEST["INDEX"]="actualizacion"; 
-  $_SESSION["INDEX"]="actualizacion";
-} 
+if (@$_REQUEST["INDEX"] != '') {
+	$_SESSION["INDEX"] = $_REQUEST["INDEX"];
+} else {
+	$_REQUEST["INDEX"] = "actualizacion";
+	$_SESSION["INDEX"] = "actualizacion";
+}
 
-
-$parametro_tarea='';
-if(@$_SERVER['QUERY_STRING']){
-	$parametro=$_SERVER['QUERY_STRING'];
-	$parametro_uncrypt=base64_decode($parametro);
-	$vector_parametro=explode('=',$parametro_uncrypt);
-			
-	if(strtolower(@$vector_parametro[0])=='idtareas_listado_unico' && is_numeric(@$vector_parametro[1])){
-		$parametro_tarea='?'.$parametro;
+$parametro_tarea = '';
+if (@$_SERVER['QUERY_STRING']) {
+	$parametro = $_SERVER['QUERY_STRING'];
+	$parametro_uncrypt = base64_decode($parametro);
+	$vector_parametro = explode('=', $parametro_uncrypt);
+	if (strtolower(@$vector_parametro[0]) == 'idtareas_listado_unico' && is_numeric(@$vector_parametro[1])) {
+		$parametro_tarea = '?' . $parametro;
 	}
 }
 
+if (@$_SESSION["LOGIN" . LLAVE_SAIA]) {
+	$fondo = busca_filtro_tabla("A.valor", "configuracion A", "A.tipo='empresa' AND A.nombre='fondo'", "A.fecha,A.valor DESC", $conn);
+	redirecciona("index_" . $_SESSION["INDEX"] . ".php" . $parametro_tarea);
+}
 
-if ( $detect->isMobile() ) {
-    $_SESSION["tipo_dispositivo"]="movil";
+$logo = busca_filtro_tabla("valor", "configuracion", "nombre='logo'", "", $conn);
+$ruta_logo = "imagenes/" . $logo[0]["valor"];
+if ($logo["numcampos"] && is_file($logo[0]["valor"])) {
+	$ruta_logo = $logo[0]["valor"];
 }
-date_default_timezone_set ("America/Bogota");
-if(isset($_REQUEST['sesion']))
-  $_SESSION["LOGIN".LLAVE_SAIA]=$_REQUEST['sesion']; 
-if(@$_SESSION["LOGIN".LLAVE_SAIA]){
-    $fondo=busca_filtro_tabla("A.valor","configuracion A","A.tipo='empresa' AND A.nombre='fondo'","A.fecha,A.valor DESC",$conn);
-    almacenar_sesion(1,"");
-    redirecciona("index_".$_SESSION["INDEX"].".php".$parametro_tarea);
-}
-$logo=busca_filtro_tabla("valor","configuracion","nombre='logo'","",$conn);
-$ruta_logo="imagenes/".$logo[0]["valor"];
-if($logo["numcampos"] && is_file($logo[0]["valor"])){
-  $ruta_logo=$logo[0]["valor"];
-}
+$mayor_informacion = busca_filtro_tabla("valor", "configuracion", "nombre='mayor_informacion'", "", $conn);
 ?>
 <html>
 <head>
 <title>SAIA</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
+<meta http-equiv="X-UA-Compatible" content="IE=9">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <!-- PERMITE QUE LAS NOTICIAS FLOTEN EN LA PARTE INFERIOR IZQUIERDA DE LA PANTALLA-->
 <style type="text/css">
 
@@ -111,16 +91,12 @@ echo(estilo_bootstrap());
 if(@$_SESSION["tipo_dispositivo"]=="movil"){ 
     echo(index_estilos('temas_movil'));
     echo(index_estilos('temas_bootstrap'));
-}
-else{
+}else{
     echo(index_estilos('temas_index'));    
     echo(index_estilos('temas_main'));
 }
 ?>
 </head>
-<?php
-$mayor_informacion=busca_filtro_tabla("valor","configuracion","nombre='mayor_informacion'","",$conn);
-?>
 <body>
 <div class="footer_login">
   <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
@@ -240,7 +216,6 @@ $mayor_informacion=busca_filtro_tabla("valor","configuracion","nombre='mayor_inf
                 <td>&nbsp;</td>
               </tr>
             </table>
-              
               <?php
             }
             ?>
@@ -253,39 +228,35 @@ $mayor_informacion=busca_filtro_tabla("valor","configuracion","nombre='mayor_inf
 	
 </table>
 
+<div id="div_noticias">
+<?php
+$titulo_mostrar = busca_filtro_tabla('', 'configuracion', 'nombre="titulo_index"', '', $conn);
+$subtitulo_mostrar = busca_filtro_tabla('', 'configuracion', 'nombre="subtitulo_index"', '', $conn);
 
-
-
-  		<div id="div_noticias">
-			<?php
-		      	$titulo_mostrar=busca_filtro_tabla('','configuracion','nombre="titulo_index"','',$conn);
-				$subtitulo_mostrar=busca_filtro_tabla('','configuracion','nombre="subtitulo_index"','',$conn);
-				
-				$texto_tabla="<p style='font-weight:bold;color: #4099D2;text-align:left;font-size:16px;'>".$titulo_mostrar[0]['valor']."<p>";
-				$texto_tabla.="<hr>";
-				$texto_tabla.="<p style='color:#4099D2;text-align:left;font-size:15px'>".$subtitulo_mostrar[0]['valor']."</p><br />";
-				global $conn;
-				$dato=busca_filtro_tabla("","noticia_index","estado=1 AND mostrar=1","",$conn);
-				//print_r($dato);die();
-				if ($dato["numcampos"]){
-					$texto_tabla.="<table align='bottom' style='text-align:justify;'>";
-					for ($i=0;$i<$dato["numcampos"];$i++){
-						$texto_tabla.="<tr><td>";
-						$texto_tabla.="<p id='texto_pequenio'>";
-						$texto_tabla.=$dato[$i]["previo"].'...';
-						$texto_tabla .='<a href="noticia_index/mostrar_noticia.php?idnoticia_index='.$dato[$i]["idnoticia_index"].'" class="highslide" onclick="return         hs.htmlExpand(this, { objectType: \'iframe\',width:450, height:550,preserveContent:false } )"style="text-decoration: underline; cursor:pointer;"> Ver m&aacute;s</a><br>';
-						$texto_tabla.="</p>";
-						$texto_tabla.="</td></tr>";
-					}
-					$texto_tabla.="</table>";
-					$texto_tabla.="<br/>";
-					echo $texto_tabla;
-				}
-			?>
-		</div>	
+$texto_tabla = "<p style='font-weight:bold;color: #4099D2;text-align:left;font-size:16px;'>" . $titulo_mostrar[0]['valor'] . "<p>";
+$texto_tabla .= "<hr>";
+$texto_tabla .= "<p style='color:#4099D2;text-align:left;font-size:15px'>" . $subtitulo_mostrar[0]['valor'] . "</p><br />";
+$dato = busca_filtro_tabla("", "noticia_index", "estado=1 AND mostrar=1", "", $conn);
+if ($dato["numcampos"]) {
+	$texto_tabla .= "<table align='bottom' style='text-align:justify;'>";
+	for ($i = 0; $i < $dato["numcampos"]; $i++) {
+		$texto_tabla .= "<tr><td>";
+		$texto_tabla .= "<p id='texto_pequenio'>";
+		$texto_tabla .= $dato[$i]["previo"] . '...';
+		$texto_tabla .= '<a href="noticia_index/mostrar_noticia.php?idnoticia_index=' . $dato[$i]["idnoticia_index"] . '" class="highslide" onclick="return         hs.htmlExpand(this, { objectType: \'iframe\',width:450, height:550,preserveContent:false } )"style="text-decoration: underline; cursor:pointer;"> Ver m&aacute;s</a><br>';
+		$texto_tabla .= "</p>";
+		$texto_tabla .= "</td></tr>";
+	}
+	$texto_tabla .= "</table>";
+	$texto_tabla .= "<br/>";
+	echo $texto_tabla;
+}
+?>
+</div>	
 </body>
 </html>
-<?php include_once("fin_cargando.php");
+<?php
+	include_once("fin_cargando.php");
   echo(librerias_jquery("1.7"));
   echo(librerias_highslide());
   echo(librerias_bootstrap());

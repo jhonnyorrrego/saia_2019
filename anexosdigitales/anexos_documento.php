@@ -58,9 +58,11 @@ if(isset($_REQUEST["Adicionar"])) // Se procesa el formulario
     {
       ?>
       <script>
-      /*$(document).ready(function(){
-        $("#adjuntos_documento",window.parent.arbol_formato).click();
-      });*/
+     
+        if(parent.frames['arbol_formato']) {
+			parent.frames['arbol_formato'].postMessage({iddocumento: <?php echo($_REQUEST["key"]);?>}, "*");
+		}
+      
       </script>
       <?php
       abrir_url("anexos_documento.php?key=".$iddocumento."&adicional=".rand(),"_self");

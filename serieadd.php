@@ -95,22 +95,22 @@ switch ($sAction)
 		$ok=AddData($conn);
         if($ok){ // Add New Record
         
-              ?>
+        	    ?>
               <script>
               notificacion_saia('Serie adicionada con exito','success','',6000);
               </script>
               <?php
-        	        //abrir_url("arbolserie.php","arbol"); --Se modifica de acuerdo a ticket 18702
-        			$parametro_dependencia_serie='';
-        			if(@$_REQUEST['dependencia_serie']){
-        				$parametro_dependencia_serie="&dependencia_serie=".$_REQUEST['dependencia_serie'];
-        			}
-        			if(@$_REQUEST['x_cod_padre']){
-        			    $ok=$_REQUEST['x_cod_padre'];
-        			}
-        			
-					//abrir_url("serieview.php?key=".$ok.$parametro_dependencia_serie,"_self"); --Se modifica de acuerdo a ticket 18702
-					$url=array();
+                  //abrir_url("arbolserie.php","arbol"); --Se modifica de acuerdo a ticket 18702
+              $parametro_dependencia_serie='';
+              if(@$_REQUEST['dependencia_serie']){
+                $parametro_dependencia_serie="&dependencia_serie=".$_REQUEST['dependencia_serie'];
+              }
+              if(@$_REQUEST['x_cod_padre']){
+                  $ok=$_REQUEST['x_cod_padre'];
+              }
+              
+          //abrir_url("serieview.php?key=".$ok.$parametro_dependencia_serie,"_self"); --Se modifica de acuerdo a ticket 18702
+          $url=array();
           if(@$_REQUEST['from_dependencia_request']){
             $url[]="from_dependencia=".$_REQUEST['from_dependencia_request'];
           }
@@ -124,8 +124,8 @@ switch ($sAction)
             $url[]="tvd=".$_REQUEST['tvd_request'];
           }
           abrir_url("serieadd.php?".implode("&",$url),"_self");
-					
-					exit();
+          
+          exit();
 				}
 				break;
 }

@@ -12,6 +12,7 @@ include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."librerias_saia.php");		
 include_once("formatos/librerias/header_formato.php");		
 echo(librerias_jquery());
+echo(librerias_arboles());
 //echo(librerias_notificaciones());
 ?>
 <html>
@@ -21,6 +22,7 @@ echo(librerias_jquery());
   <meta http-equiv="Content-Type" content="text/html; charset= UTF-8 ">
 <script type="text/javascript" src="js/dhtmlXCommon.js"></script>
 <script type="text/javascript" src="js/dhtmlXTree.js"></script>
+<script type="text/javascript" src="js/dhtmlxtree_xw.js"></script>
     <link rel="STYLESHEET" type="text/css" href="css/dhtmlXTree.css">
 			  <!--span style="font-family: Verdana; font-size: 9px;">CLASIFICACI&Oacute;N DEL DOCUMENTO<br><br></span-->
 			  <span style="font-family: Verdana; font-size: 9px;">
@@ -36,10 +38,9 @@ echo(librerias_jquery());
 	<script type="text/javascript">
   <!--
       var browserType;
-      var result;
+      var result=[];
       var punteroi=0;
       var punteroj=0;
-      
       if (document.layers) {browserType = "nn4"}
       if (document.all) {browserType = "ie"}
       if (window.navigator.userAgent.toLowerCase().match("gecko")) {
@@ -139,35 +140,7 @@ echo(librerias_jquery());
            document.poppedLayer =
               eval('document.layers["esperando_serie"]');
         document.poppedLayer.style.display = "none";
-       
-        console.log(result);
-        var llaves=Object.keys(result);
-        console.log('punteroi: '+punteroi);
-        console.log('punteroj: '+punteroj);
-        console.log('llavei: '+llaves.length);
-        console.log('llavej: '+result[llaves[punteroi]].length);
-       
-		if(punteroi<llaves.length){			
-			
-				if(punteroj<result[llaves[punteroi]].length){
-		           	console.log(result[llaves[punteroi]][punteroj]);
-		           	//tree2.openItem(result[llaves[punteroi]][punteroj]);
-		           	punteroj=punteroj+1;
-		           	console.log('----------');
-		           	//tree2.setOnLoadingEnd(fin_cargando_serie);
-	           		
-				}else{
-					punteroi=punteroi+1;
-					punteroj=0;
-					console.log('...................');
-					//tree2.setOnLoadingEnd(fin_cargando_serie);			 					
-				}
-	           	
-	        
-	    }
-        
-        
-        
+
       }
 
       function cargando_serie() {
@@ -185,17 +158,7 @@ echo(librerias_jquery());
         
       }
       
-      		   
-      
         function buscar_nodo(){
-        	
-        	var delay = (function(){
-			var timer = 0;
-			 return function(callback, ms){
-			   clearTimeout (timer);
-			   timer = setTimeout(callback, ms);
-			 };
-			})();
 			
        	$.ajax({
        		type:'POST',
@@ -209,48 +172,14 @@ echo(librerias_jquery());
        		success: function(data){
            		//console.log(data.serie_base[0]);
            		result=data;
-//console.log(result);
-           		/*$.each(data.serie_base, function(i, item) {          			
-           			$.each(item, function(j, value) {
-           				console.log(value);
-           			});
-           		});*/
-           		
-           		
-           		
-           		
-       			/*$.each(data, function(i, item) {
-console.log(typeof(item));
-       				$.each(item, function(j, value) {
-           				console.log(value);
-       					tree2.openItem(value);
-       					if(j==item.length-1){
-       						tree2.selectItem(value,true,true);
-       						//tree2.focusItem(value);
-       					}
-       				});
-       			});*/
+           		punteroj=0;
+           		punteroi=0;
+           		tree2.openItemsDynamic(data["datos"],true);
 			}
 		});
-		
-		//console.log(result);
-		//console.log('--------');
-		/*var llaves=Object.keys(result);
-		punteroi=0;
-		punteroj=0;
-			
-		for(var i=0;i<llaves.length;i++){
-			console.log(llaves[i]);
-           	for(var j=0;j<result[llaves[i]].length;j++){
-           		console.log(result[llaves[i]][j]);
-           	}
-        }*/
-		tree2.openItem('d38');
-        tree2.openItem('d37');
+
        }
-        
-       
-       
+
 	--> 		
 	</script>
 	<script>

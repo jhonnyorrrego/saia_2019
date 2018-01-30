@@ -1,29 +1,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9">
 <?php
+date_default_timezone_set("America/Bogota");
 include_once ("db.php");
 include_once ("librerias_saia.php");
-if (isset($_REQUEST['token'])) {
-	$_SESSION["LOGIN" . LLAVE_SAIA] = base64_decode($_REQUEST['token']);
-}
-if (!isset($_SESSION["LOGIN" . LLAVE_SAIA])) {
-	@session_name();
-	@session_start();
-	@ob_start();
-}
-date_default_timezone_set("America/Bogota");
-if (isset($_REQUEST['sesion'])) {
-	$_SESSION["LOGIN" . LLAVE_SAIA] = $_REQUEST['sesion'];
-	$info_ses = busca_filtro_tabla("funcionario_codigo", "funcionario", "login='" . $_SESSION["LOGIN" . LLAVE_SAIA] . "'", "", $conn);
-	if ($info_ses["numcampos"]) {
-		$_SESSION["usuario_actual"] = $info_ses[0]["funcionario_codigo"];
-		$usuactual = $_SESSION["LOGIN" . LLAVE_SAIA];
-		global $usuactual;
-	} else {
-		salir("", $_SESSION['LOGIN' . LLAVE_SAIA]);
-		session_destroy();
-		die();
-	}
-}
 
 if (!isset($_GET['fin']) || !$_GET['fin']) {
 	echo(estilo_bootstrap());
@@ -34,9 +13,10 @@ if (!isset($_GET['fin']) || !$_GET['fin']) {
 }
 
 if (@$_SESSION["LOGIN" . LLAVE_SAIA]) {
-	$usuario = usuario_actual("funcionario_codigo");
-	$funcionario_idfuncionario = usuario_actual('idfuncionario');
-	almacenar_sesion(1, "");
+	almacenar_sesion(1, $_SESSION["LOGIN" . LLAVE_SAIA]);
+	$usuario =  $_SESSION["usuario_actual"];
+	$funcionario_idfuncionario = $_SESSION["idfuncionario"];
+		
 	$recarga = busca_filtro_tabla("A.valor", "configuracion A", "A.tipo='interfaz' AND A.nombre='intervalo_recarga'", "A.fecha DESC", $conn);
 	if ($recarga["numcampos"]) {
 		$intervalo_recarga_informacion = $recarga[0]["valor"];

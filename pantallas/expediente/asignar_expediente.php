@@ -16,9 +16,12 @@ $_REQUEST["tipo_entidad"]=5;
 <script type="text/javascript" src="<?php echo($ruta_db_superior);?>js/dhtmlXTree.js"></script>
 <?php 
 include_once($ruta_db_superior."librerias_saia.php");
-$propietario=busca_filtro_tabla("idfuncionario","expediente e,funcionario f","f.funcionario_codigo=e.propietario and idexpediente=".$_REQUEST["idexpediente"],"",$conn);
+$propietario=busca_filtro_tabla("idfuncionario","expediente e,funcionario f","f.funcionario_codigo=e.propietario and idexpediente IN(".$_REQUEST["idexpediente"].")","",$conn);
 
-$seleccionados=busca_filtro_tabla("identidad_expediente,idfuncionario,nombres,apellidos,permiso","entidad_expediente e,funcionario f","e.llave_entidad=f.idfuncionario and e.expediente_idexpediente=".@$_REQUEST["idexpediente"]." AND e.entidad_identidad=1 and f.idfuncionario<>".$propietario[0]["idfuncionario"],"",$conn);
+$array_propietarios=extrae_campo($propietario,'idfuncionario');
+
+$seleccionados=busca_filtro_tabla("identidad_expediente,idfuncionario,nombres,apellidos,permiso","entidad_expediente e,funcionario f","e.llave_entidad=f.idfuncionario and e.expediente_idexpediente IN (".@$_REQUEST["idexpediente"].") AND e.entidad_identidad=1 and f.idfuncionario NOT IN (".implode(',', $array_propietarios).")","",$conn);
+
 $table='<table class="table table-bordered" id="funcionarios_seleccionados">
 <thead>
 <tr>
@@ -54,7 +57,7 @@ $table.="</table>";
 <form name="formulario_asignar_expediente" id="formulario_asignar_expediente">
 <input type="hidden" name="idexpediente" id="idexpediente" value="<?php echo($_REQUEST["idexpediente"]);?>">
 <input type="hidden" id="cerrar_higslide" value="<?php echo(@$_REQUEST["cerrar_higslide"]);?>">
-<legend>Asignar acceso expediente <?php $expediente=busca_filtro_tabla("","expediente","idexpediente=".$_REQUEST["idexpediente"]); echo($expediente[0]["nombre"]);?></legend>
+<legend>Asignar acceso expediente(s) <?php $expediente=busca_filtro_tabla("","expediente","idexpediente IN(".$_REQUEST["idexpediente"].")","",$conn); echo(implode(", ", extrae_campo($expediente,'nombre','U')));?></legend>
 
 <div class="control-group element">
     <label class="control-label" for="nombre"><b>Seleccionar Expediente(s):</b>
@@ -107,7 +110,14 @@ $table.="</table>";
 
      </div>    
      <div id="esperando_expediente"><img src="<?php echo($ruta_db_superior);?>imagenes/cargando.gif"></div>
-    <img src="<?php echo($ruta_db_superior);?>imgs/iconCheckAll.gif">&nbsp;<?php echo($expediente[0]["nombre"]);?>
+     <?php
+     for ($i=0; $i <$expediente['numcampos'] ; $i++) {
+     	?> 
+         <img src="<?php echo($ruta_db_superior);?>imgs/iconCheckAll.gif">&nbsp;<?php echo($expediente[$i]["nombre"]);?><br>
+         <?php
+     }
+     ?>
+    
 	  <div id="treeboxbox_tree3"></div>
 	 
 	</div>
@@ -131,7 +141,15 @@ $table.="</table>";
       tree3.setOnLoadingEnd(fin_cargando_expediente);
       
 		//	tree3.setXMLAutoLoading("<?php echo($ruta_db_superior);?>test_expediente.php?doc=617&accion=1&permiso_editar=1");
-			tree3.loadXML("<?php echo($ruta_db_superior);?>test_expediente.php?carga_total=1&accion=1&permiso_editar=1&inicia=<?php echo($_REQUEST["idexpediente"]); ?>");
+		<?php
+		for ($i=0; $i <$expediente['numcampos'] ; $i++) { 
+			
+		?>
+			tree3.loadXML("<?php echo($ruta_db_superior);?>test_expediente.php?carga_total=1&accion=1&permiso_editar=1&inicia=<?php echo($expediente[$i]["idexpediente"]); ?>");
+			
+		<?php
+		}
+		?>
 			
 			function fin_cargando_expediente() {
         if (browserType == "gecko" )
@@ -365,7 +383,6 @@ $("#submit_formulario_asignar_expediente").click(function(){
             parent.window.hs.getExpander().close();                  
           }
           notificacion_saia(objeto.mensaje,"success","",2500);
-          //window.open("detalles_expediente.php?idexpediente=<?php echo(@$_REQUEST["idexpediente"]); ?>&idbusqueda_componente=<?php echo($_REQUEST['idbusqueda_componente']);?>&rand="+Math.round(Math.random()*100000),"_self");
         }else{
         	if(objeto.exito==2){
         		$("#submit_formulario_asignar_expediente").attr("disabled",false);
